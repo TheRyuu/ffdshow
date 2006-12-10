@@ -1,0 +1,99 @@
+author
+
+  Milan Cutka <milan_cutka@yahoo.com>
+
+video decoder based on Xvid DirectShow filter by 
+ 
+  Peter Ross
+
+audio decoder based on AAC DirectShow filter by
+
+  Robert Cioch
+
+MpaDecFilter by
+
+  Gabest
+
+and ac3filter by
+  
+  Vigovsky Alexander
+  
+using audio and video decoding routines from
+
+  libavcodec
+  libmpeg2
+  mplayer
+
+msvidc and msrle decoders by
+
+  Mike Melanson
+
+cinepak decoder by
+  
+  Dr. Tim Ferguson
+
+colorspaces conversion from
+
+  XviD
+  mplayer
+  AviSynth
+  
+various filters based on code or ideas by  
+
+  Marc Fauconneau
+  Avery Lee
+  Donald A. Graft
+  Tom Barry
+  Lindsey Dubb
+  Ben Rudiak-Gould
+  avih
+  Nic
+  Daniel Moreno
+  Boris Dorès
+  
+C++ string class by
+  
+  Douglas W. Sauder
+
+fast IDCT routines by
+
+  Pascal Massimino
+
+freeverb audio plugin based freeverb package by 
+
+  Jezar
+
+audio resampling from VirtualDub by
+
+  Avery Lee
+
+zlib library by
+
+  Jean-loup Gailly
+  Mark Adler
+
+AMR audio decoding using 3GPP AMR Floating-point Speech Codec from 
+
+  http://www.3gpp.org/ftp/Specs/archive/26_series/26.104/26104-510.zip
+
+using modified unrar.dll library by
+
+  Alexander L. Roshal
+  
+special thanks to
+
+  Fabrice Bellard
+  Michael Niedermayer
+  and to all other libavcodec developers
+
+translations provided by
+
+  Daniel Bergholm
+  Gianluigi Tiesi
+  Martin Skvrne
+  Eduardo Martins
+  Sunny SO
+  leolo
+  Vlad Bespalov
+  Tatsuya Suzuki
+  Dario Brama
