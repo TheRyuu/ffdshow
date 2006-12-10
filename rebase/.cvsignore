@@ -9,6 +9,7 @@ Release64
 *.suo
 *.vcproj.*
 *.o
+*.d
 Ankh.*
 debugwin32
 debugx64

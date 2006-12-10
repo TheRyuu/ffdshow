@@ -6,6 +6,7 @@ Release_ICL
 *.opt
 *.positions
 *.o
+*.d
 *.suo
 *.vcproj.*
 Ankh.*

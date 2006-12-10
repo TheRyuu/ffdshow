@@ -9,6 +9,7 @@ Release64
 *.opt
 *.positions
 *.o
+*.d
 .depend
 *.suo
 *.vcproj.*

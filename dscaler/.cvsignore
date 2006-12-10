@@ -10,6 +10,7 @@ Release_ICL
 *.suo
 *.vcproj.*
 *.o
+*.d
 .depend
 Ankh.*
 debugwin32

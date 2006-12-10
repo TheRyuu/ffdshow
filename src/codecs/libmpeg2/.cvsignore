@@ -1,13 +1,16 @@
 debug
+debug_icl9
 Debug_ICL
 Debug64
 release
+release_icl9
 Release_ICL
 Release64
 *.ncb
 *.opt
 *.positions
 *.o
+*.d
 *.suo
 *.vcproj.*
 .depend

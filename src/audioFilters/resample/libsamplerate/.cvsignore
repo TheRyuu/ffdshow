@@ -1,6 +1,8 @@
 debug
+debug_icl9
 Debug_ICL
 release
+release_icl9
 Release_ICL
 Release64
 *.ncb
@@ -8,6 +10,7 @@ Release64
 *.opt
 *.positions
 *.o
+*.d
 *.vcproj.*
 .depend
 Ankh.*

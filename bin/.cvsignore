@@ -10,9 +10,15 @@ ff_tremor.dll
 ff_unrar.dll
 ff_vfw.dll
 ff_wmv9.dll
+ff_wmv9_ansi.dll
+ff_wmv9_unicode.dll
 ff_x264.dll
 ffavisynth.dll
 ffdshow.ax
+ffdshow_ansi.ax
+ffdshow_unicode.ax
+ffdshow_ansi_icl9.ax
+ffdshow_unicode_icl9.ax
 ffvdub.vdf
 FLT_ffdshow.dll
 libavcodec.dll
