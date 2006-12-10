@@ -1,0 +1,666 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject 
+	ProjectType="Intel C++ Project"
+	Version="9.1"
+	Name="libmplayer"
+	ProjectGUID="{15EAD31E-83C9-4F93-A26E-6A0D83CA78CD}"
+	VCNestedProjectGUID="{16F12367-511D-41B4-871B-9F94E17E1CA3}"
+	VCNestedProjectFileName="libmplayer_test.vcproj">
+	<Platforms>
+		<Platform 
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration 
+			Name="Debug ICL|Win32">
+			<Tool 
+				Name="GeneralTool"
+				OutputDirectory=".\Debug_ICL"
+				IntermediateDirectory=".\Debug_ICL"
+				ConfigurationType="2"
+				UseOfMFC="0"
+				ATLMinimizesCRunTimeLibraryUsage="0"/>
+			<Tool 
+				Name="DebugTool"/>
+			<Tool 
+				Name="CppCmplrTool"
+				Optimization="0"
+				InlineFunctionExpansion="2"
+				AdditionalIncludeDirectories="../imgFilters,libvo,../codecs,..,."
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;HAVE_AV_CONFIG_H"
+				RuntimeLibrary="2"
+				PrecompiledHeaderFile=".\Debug_ICL/libmplayer.pch"
+				AssemblerListingLocation=".\Debug_ICL/"
+				ObjectFile=".\Debug_ICL/"
+				SuppressStartupBanner="1"
+				AdditionalOptions="/Qipo "/>
+			<Tool 
+				Name="LinkerTool"
+				DelayImpLib=""
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrt.lib libircmt.lib libmmt.lib svml_dispmt.lib libgcc.a libmingw32.a libmingwex.a"
+				OutputFile="../../bin/libmplayer.dll"
+				LinkIncremental="1"
+				SuppressStartupBanner="1"
+				AdditionalLibraryDirectories="C:\mingw\lib;C:\mingw\lib\gcc\mingw32\3.4.2;C:\mingw\lib\gcc\mingw32\3.4.5;C:\mingw\lib\gcc\mingw32\4.0.3;&quot;$(Inherit)&quot;"
+				IgnoreAllDefaultLibraries="1"
+				ModuleDefinitionFile=".\libmplayer.def"
+				GenerateDebugInformation="1"
+				ImportLibrary=".\Debug_ICL/libmplayer.lib"
+				TargetMachine="1"
+				AdditionalOptions="/Qipo"/>
+			<Tool 
+				Name="LibrarianTool"/>
+			<Tool 
+				Name="ResCmplrTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1051"/>
+			<Tool 
+				Name="MidlCmplrTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="1"
+				SuppressStartupBanner="1"
+				TargetEnvironment="1"
+				TypeLibraryName=".\Debug_ICL/libmplayer.tlb"
+				HeaderFileName=""/>
+			<Tool 
+				Name="BscMakeTool"
+				SuppressStartupBanner="1"
+				OutputFile=".\Debug_ICL/libmplayer.bsc"/>
+			<Tool 
+				Name="PreBuildEventTool"/>
+			<Tool 
+				Name="PreLinkEventTool"/>
+			<Tool 
+				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
+		</Configuration>
+		<Configuration 
+			Name="Release ICL|Win32">
+			<Tool 
+				Name="GeneralTool"
+				OutputDirectory=".\Release_ICL"
+				IntermediateDirectory=".\Release_ICL"
+				ConfigurationType="2"
+				UseOfMFC="0"
+				ATLMinimizesCRunTimeLibraryUsage="0"/>
+			<Tool 
+				Name="DebugTool"/>
+			<Tool 
+				Name="CppCmplrTool"
+				Optimization="2"
+				InlineFunctionExpansion="2"
+				AdditionalIncludeDirectories="../imgFilters,libvo,../codecs,..,."
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;HAVE_AV_CONFIG_H"
+				StringPooling="1"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="1"
+				PrecompiledHeaderFile=".\Release_ICL/libmplayer.pch"
+				AssemblerListingLocation=".\Release_ICL/"
+				ObjectFile=".\Release_ICL/"
+				SuppressStartupBanner="1"
+				AdditionalOptions="/Qipo "/>
+			<Tool 
+				Name="LinkerTool"
+				DelayImpLib=""
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrt.lib libircmt.lib libmmt.lib svml_dispmt.lib libgcc.a libmingw32.a libmingwex.a"
+				OutputFile="../../bin/libmplayer.dll"
+				LinkIncremental="1"
+				SuppressStartupBanner="1"
+				AdditionalLibraryDirectories="C:\mingw\lib;C:\mingw\lib\gcc\mingw32\3.4.2;C:\mingw\lib\gcc\mingw32\3.4.5;C:\mingw\lib\gcc\mingw32\4.0.3;&quot;$(Inherit)&quot;"
+				IgnoreAllDefaultLibraries="1"
+				ModuleDefinitionFile=".\libmplayer.def"
+				ImportLibrary=".\Release_ICL/libmplayer.lib"
+				TargetMachine="1"
+				AdditionalOptions="/Qipo"/>
+			<Tool 
+				Name="LibrarianTool"/>
+			<Tool 
+				Name="ResCmplrTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1051"/>
+			<Tool 
+				Name="MidlCmplrTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="1"
+				SuppressStartupBanner="1"
+				TargetEnvironment="1"
+				TypeLibraryName=".\Release_ICL/libmplayer.tlb"
+				HeaderFileName=""/>
+			<Tool 
+				Name="BscMakeTool"
+				SuppressStartupBanner="1"
+				OutputFile=".\Release_ICL/libmplayer.bsc"/>
+			<Tool 
+				Name="PreBuildEventTool"/>
+			<Tool 
+				Name="PreLinkEventTool"/>
+			<Tool 
+				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
+		</Configuration>
+	</Configurations>
+	<Files>
+		<File 
+			RelativePath=".\postproc\asmalign.h"/>
+		<File 
+			RelativePath=".\bswap.h"/>
+		<File 
+			RelativePath=".\config.h"/>
+		<File 
+			RelativePath=".\cpudetect.h"/>
+		<File 
+			RelativePath="..\ffmpeg\libavcodec\dsputil.h"/>
+		<File 
+			RelativePath=".\libvo\fastmemcpy.h"/>
+		<File 
+			RelativePath="..\codecs\ffcodecs.h"/>
+		<File 
+			RelativePath="..\imgFilters\ffImgfmt.h"/>
+		<File 
+			RelativePath=".\mp3lib\huffman.h"/>
+		<File 
+			RelativePath="..\inttypes.h"/>
+		<File 
+			RelativePath=".\mp3lib\l2tables.h"/>
+		<File 
+			RelativePath=".\mangle.h"/>
+		<File 
+			RelativePath=".\mp_msg.h"/>
+		<File 
+			RelativePath=".\mp3lib\mpg123.h"/>
+		<File 
+			RelativePath=".\postproc\postprocess.h"/>
+		<File 
+			RelativePath=".\postproc\postprocess_internal.h"/>
+		<File 
+			RelativePath=".\postproc\postprocFilters.h"/>
+		<File 
+			RelativePath="..\ffmpeg\libavcodec\rational.h"/>
+		<File 
+			RelativePath=".\postproc\rgb2rgb.h"/>
+		<File 
+			RelativePath=".\postproc\swscale.h"/>
+		<File 
+			RelativePath=".\postproc\swscale_internal.h"/>
+		<File 
+			RelativePath=".\postproc\swscale_multicpu.h"/>
+		<File 
+			RelativePath=".\libvo\aclib.c">
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\libvo\aclib_template.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\mp3lib\dct12.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\mp3lib\dct36.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\mp3lib\dct36_3dnow.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\mp3lib\dct36_k7.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\mp3lib\dct64.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\mp3lib\dct64_3dnow.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\mp3lib\dct64_k7.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\mp3lib\dct64_MMX.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\mp3lib\dct64_sse.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\mp3lib\decod386.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\mp3lib\decode_MMX.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\postproc\isP4HT.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\mp3lib\layer1.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\mp3lib\layer2.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\mp3lib\layer3.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath="..\ffmpeg\libavutil\mem.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="CppCmplrTool"
+					AdditionalIncludeDirectories=""
+					PreprocessorDefinitions=""/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="CppCmplrTool"
+					AdditionalIncludeDirectories=""
+					PreprocessorDefinitions=""/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\mplayer.c">
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\postproc\postprocess.c">
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\postproc\postprocess_template.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\postproc\rgb2rgb.c">
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\postproc\rgb2rgb_template.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\mp3lib\sr1.c">
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\postproc\swscale.c">
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\postproc\swscale_template.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\mp3lib\tabinit.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\mp3lib\tabinit_MMX.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\postproc\w32thread.c">
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\postproc\yuv2rgb.c">
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I./libvo -I./mp3lib -I./postproc -I. -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibvo -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\postproc\yuv2rgb_template.c">
+			<FileConfiguration 
+				Name="Debug ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release ICL|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\libmplayer.def"/>
+	</Files>
+</VisualStudioProject>
+

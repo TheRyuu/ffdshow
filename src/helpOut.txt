@@ -1,0 +1,3 @@
+You can save each frame to separate file (useful with MJPEG encoder): select raw frames storage and specify %i (or similar formatting mask) in the file name field.
+
+2 pass SNOW encoding: first pass works only with fixed quality, bitrate can be specified in the second pass.

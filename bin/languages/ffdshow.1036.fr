@@ -1,0 +1,1810 @@
+Français
+;14/09/2006 rearranged and updated translation by Lumina
+
+[-1]
+unknown=inconnu
+Unknown=Inconnu
+none=aucune
+None=Aucune
+default=défaut
+Default=Défaut
+yes=oui
+Yes=Oui
+no=non
+No=Non
+on=activé
+On=Activé
+off=désactivé
+Off=Désactivé
+enabled=activé
+disabled=désactivé
+never=jamais
+always=toujours
+and=et
+or=ou
+top=en haut
+bottom=en bas
+undefined=indéfini
+incomplete=incomplet
+auto=auto
+failed=échec
+input=entrée
+output=sortie
+Input=Entrée
+Output=Sortie
+left=à gauche
+center=centré
+right=à droite
+front left=avant-gauche
+front center=avant-centre
+front right=avant-droit
+back left=arrière-gauche
+back center=arrière-centre
+back right=arrière-droit
+L=G
+R=D
+C=C
+SL=AG
+SR=AD
+LFE=GRAVES
+UNKNOWN=INCONNU
+NORTH=NORD
+EAST=EST
+SOUTH=SUD
+WEST=OUEST
+NW=NO
+NE=NE
+SW=SO
+SE=SE
+File=Fichier
+Format=Format
+Decoder=Décodeur
+Encoder=Encodeur
+Details=Détails
+credits=crédits
+movie=film
+ffdshow error=erreur ffdshow
+Connection succeeded=Connecté avec succès
+Quantizer distribution:=Distribution de quantification :
+Invalid encoding mode=mode d'encodage non valide
+font=police
+Small fonts=Petites polices
+ffacm error=erreur ffacm
+
+front left of center=avant-gauche du milieu
+front right of center=avant-droit du milieu
+side left=côté gauche
+side right=côté droit
+top center=centre haut
+top front left=avant-gauche haut
+top front center=avant-centre haut
+top front right=avant-droit haut
+top back left=arrière-gauche haut
+top back center=arrière-centre haut
+top back right=arrière-droit haut
+
+present=présent
+not found=non trouvé
+
+uncompressed=non compressé
+
+Lossless JPEG=JPEG sans perte
+SNOW (experimental)=SNOW (expérimental)
+
+H.264 lossless=H.264 sans perte
+ lossless= sans perte
+
+Very low=Très bas
+Low=Bas
+Medium=Moyen
+High=Haut
+Very high=Très haut
+Ultra high=Ultra haut
+Limited search=Recherche limitée
+Medium search=Recherche intermédiaire
+Full search=Recherche complète
+XviD: not found=XviD : non trouvé
+
+FAILED in =ÉCHEC dans 
+
+fallback=repli
+colorspace conversion: %s -> %s (%s)=conversion espace couleur : %s -> %s (%s)
+
+Export ffdshow settings=Exporter les paramètres ffdshow
+Settings has been succefully exported=Les paramètres ont été exportés avec succès
+Settings export has failed=L'export des paramètres est un échec
+open=ouvrir
+
+Set all stable formats to libavcodec=Assigner tous les formats stables à libavcodec
+Set all supported formats to XviD=Assigner tous les formats pris en charge à XviD
+Supported FOURCCs/remarks=4CC pris en charge - notes
+Generic MPEG4=MPEG4 générique
+ffdshow and ffvfw internal FOURCCs=4CC internes de ffdshow et ffvfw
+Other MPEG4=Autre MPEG4
+Chinese AVS=AVS chinois
+may not work without special mpeg splitter=peut ne pas fonctionner sans splitter special mpeg
+H263, S263 (in 3gp files)=H263, S263 (dans les fichiers 3gp)
+skip deblocking when safe=Sauter le déblocage si sans risque
+skip deblocking always=Toujours sauter le déblocage
+H264, X264, VSSH - incomplete, DAVC, AVC1=H264, X264, VSSH - incomplet, DAVC, AVC1
+use speedup tricks=Utiliser combines d'accélération
+DVD decoding (not working yet)=Décodage DVD (non fonctionnel)   
+MPEG in AVI=MPEG dans AVI
+MJPG, LJPG (lossless)=MJPG, LJPG (sans perte de qualité)
+Internal postprocessing=Post-traitement interne
+doesn't support 24 bit compression=ne prend pas en charge la compression 24 bits
+AVIS (Avisynth AVI files)=AVIS (fichiers AVI de AviSynth)
+Raw video=Vidéo brute
+all supported=tous formats supportés
+all YUV=tous les YUV
+all RGB=tous les RVB
+8-bit palettized=8 bits palettisés
+not WMA9 pro, voice or lossless=sauf WM9pro, voix ou sans perte de qualité
+Dynamic range compression=Compression bande dynamique
+Check for DTS in WAV=Vérifier si DTS dans WAV
+high accuracy mode enabled for tremor=mode haute précision activé pour les tremblements
+in 3gp files=dans les fichiers 3gp
+Other ADPCM=Autres ADPCM
+all integer=tous entier
+all float=tous flottant
+8-bit integer=entier 8-bit
+16-bit integer=entier 16-bit
+24-bit integer=entier 24-bit
+32-bit integer=entier 32-bit
+32-bit float=flottant 32-bit
+64-bit float=flottant 64-bit
+Uncompressed=Non compressé
+
+Custom=Personnalisé
+JVT=H.264
+1:1=1:1
+4:3=4:3
+16:9=16:9
+2.21:1=2,21:1
+Square=Carré
+2 colors=2 couleurs
+16 colors=16 couleurs
+256 colors=256 couleurs
+RGB555=RVB555
+RGB565=RVB565
+RGB24=RVB24
+RGB32=RVB32
+no limitations=sans restriction
+only one - check previous filter only=1 seule - ne tester que filtre précédent
+only one - check all previous filters=1 seule - tester tous filtres précédents
+only one - check all filters in graph=1 seule - tester tous filtres du graphe
+none - disabled=aucune - désactivé
+
+hook=crocher
+ffdshow %s event=évènement ffdshow %s
+unhook=décrocher
+key %s=touche %s
+Activation key 1=Touche d'activation 1
+Activation key 2=Touche d'activation 2
+Second function=Deuxième fonction
+Seek forward=Saut avant
+Seek backward=Saut arrière
+Toggle OSD=Activer/désactiver les infos à l'écran
+Toggle visualizations=Activer/désactiver les effets graphiques
+Toggle crop/zoom=Activer/désactiver le recadrage/zoom
+Toggle deinterlace=Activer/désactiver le désentrelacement
+Toggle levels=Activer/désactiver les niveaux
+Toggle noise=Activer/désactiver le bruit
+Toggle picture properties=Activer/désactiver les propriétés de l'image
+Toggle postprocessing=Activer/désactiver le post-traitement
+Toggle blur=Activer/désactiver le flou
+Toggle resize=Activer/désactiver le redimensionnement
+Toggle subtitles=Activer/désactiver les sous-titres
+Toggle sharpen=Activer/désactiver l'accentuation
+Toggle flip=Activer/désactiver le retournement d'image
+Toggle avisynth=Activer/désactiver AviSynth
+Toggle warpsharp=Activer/désactiver la profondeur de champ
+Grab frame=Capturer l'image
+Subtitles delay/size decrease=Réduire le délai/taille des sous-titres
+Subtitles delay/size increase=Augmenter le délai/taille des sous-titres
+Subtitles position decrease=Déplacer les sous-titres vers le bas 
+Subtitles position increase=Déplacer les sous-titres vers le haut
+Decrease video delay=Réduire le délai vidéo
+Increase video delay=Augmenter le délai vidéo
+Previous preset=Présélection précédente
+Next preset=Présélection suivante
+subtitles language: %s=langue des sous-titres : %s
+backward=arrière
+forward=avant
+subtitles %s: %i=sous-titres %s : %i
+size=taille
+delay=retard
+subtitles %s position : %i=position %s des sous-titres : %i
+horizontal=horizontale
+vertical=verticale
+video delay: %i ms=retard vidéo : %i ms
+preset: %s=présélection : %s
+keys=touches
+
+downsampled=sous-échantillonné
+independent=indépendant
+high quality 3-pass=3 passes - haute qualité
+fast 3-pass=3 passes - rapide
+fast 1-pass=1 passe - rapide
+Warpsharp=profondeur de champ
+original warpsharp - depth:%i, threshold:%i=profondeur de champ originale - profondeur : %i, seuil : %i
+aWarpSharp - depth:%g, threshold:%g, %i %s blur, chroma mode:%s=aWarpSharp - profondeur : %g, seuil : %g, %i %s flou, mode chrom. : %s
+
+Fast bilinear=Bilinéaire rapide
+Bilinear=Bilinéaire
+Bicubic=Bicubique
+Experimental=Expérimental
+Point=Point
+Area=Zone
+Bicublin=Bicublin
+Gauss=Gauss
+Sinc=Sinc
+Lanczos=Lanczos
+Spline=Spline
+Simple resize=Redim. simple
+Warped resize=Redim. déformé
+Resize & aspect=Redimension et apparence
+, parameter: %-5.2f=, paramètre : %-5.2f
+Resizing =Redimensionnement 
+if source width is %s %i %s source height is %s %i=si la largeur source est %s %i %s la hauteur source est %s %i
+if number of pixels is %s %i=si le nombre de pixels est %s %i
+to size %ix%i=à la taille %ix%i
+to aspect ratio %i:%i=au ratio %i:%i
+to next multiply of %i=au prochain multiple de %i
+by %g=par %g
+\nAspect ratio: =\nRatio : 
+no change=pas de changement
+keeping original aspect ratio=conserver le ratio original
+set to %3.2f:1=fixer à %3.2f:1
+%s borders %i%s,%i%s=%s bords %i%s,%i%s
+Inside=Intérieur
+Outside=Extérieur
+ pixels= pixels
+No borders=Pas de bords
+Method: %s%s\n=Méthode : %s%s\n
+Luma method: %s%s\n=Méthode lum. : %s%s\n
+Chroma method: %s%s\n=Méthode chrom. : %s%s\n
+Luma gaussian blur:%3.2f, luma sharpen:%3.2f\nChroma gaussian blur:%3.2f, chroma sharpen:%3.2f=Flou gaussien lum. :%3.2f, accentuation lum. :%3.2f\nFlou gaussien chrom. :%3.2f, accentuation chrom. :%3.2f
+Method: %s=Méthode : %s
+, horizontal warp: %-5.3f, déformation verticale : %-5.3f=, déformation horizontale : %-5.3f, vertical warp: %-5.3f
+less than=inférieur à
+greater than=supérieur à
+
+Linear=Linéaire
+Cubic=Cubique
+Perspective=Perspective
+%s rectangle: [%i,%i] [%i,%i] [%i,%i] [%i,%i]\n%s interpolation=Rectangle %s : [%i,%i] [%i,%i] [%i,%i] [%i,%i]\nInterpolation %s
+Source=Source
+Destination=Destination
+
+ffdshow default=ffdshow par défaut
+none (fastest, most ugly)=aucun (le plus rapide, qualité médiocre)
+approximate=approximatif
+full (slowest)=complet (le plus lent)
+bilinear (fast and not too bad)=bilinéaire (rapide, qualité acceptable)
+swscaler gaussian=SWScaler gaussien
+subtitle=sous-titre
+line=ligne
+character=caractère
+Subtitles=Sous-titres
+Horizontal position:=position horizontale :
+Vertical position:=position verticale :
+\nDelay: %i ms=\nRetard : %i ms
+\nSpeed: %i/%i=\nVitesse : %i/%i
+
+blend=mélanger
+darken=assombrir
+lighten=éclaircir
+add=ajouter
+softlight=lumière douce
+exclusion=exclusion
+Bitmap overlay=Superposition de bitmap
+
+Bypass=Bipasse
+Linear interpolation=Interpolation linéaire
+Linear blending=Fusion linéaire
+Cubic interpolation=Interpolation cubique
+Cubic blending=Fusion cubique
+Median=Médiane
+TomsMoComp=TomsMoComp
+DGBob=Bob DG
+Framerate doubler=Doubleur de débit
+ffmpeg deinterlacer=Désentrelacement ffmpeg
+DScaler plugin=Plugin DScaler
+5-tap lowpass=Passe-bas à 5 connexions
+Kernel deinterlacer=Désentrelacement de noyau
+Kernel bob=Bob noyau
+equal number of frames, equal framerate=nombre d'images égal, débit égal
+double number of frames, double framerate=nombre d'images double, débit double
+double number of frames, equal framerate=nombre d'images double, débit égal
+No motion estimation - blend images=Pas d'estimation de mouvement - images mélangées
+Current location only=Position courante uniquement
+1 pixel motion, left & right=Mouvement d'1 pixel, gauche & droite
+3x3 square=Carré 3x3
+Deinterlacing=Désentrelacement
+
+UGLARM=UGLARM
+Solid fill=Remplissage uniforme
+Shape XY=Forme XY
+Direct=Direct
+Opposite=Opposé
+Interpolation=Interpolation
+Over video=sur la vidéo
+Over top letterbox=sur le cadre supérieur
+Over top & left letterbox=sur les cadres supérieur & gauche
+Over top & right letterbox=sur les cadres supérieur & droit
+Over bottom letterbox=sur le cadre inférieur
+Over bottom & left letterbox=sur les cadres inférieur & gauche
+Over bottom & right letterbox=sur les cadres inférieur & droit
+Over left letterbox=sur le cadre gauche
+Over right letterbox=sur le cadre droit
+Logoaway=Logoaway
+
+original=original
+Didee's Ylevels=Ylevels de Didée
+Didee's YlevelsG=YlevelsG de Didée
+Didee's YlevelsS=YlevelsS de Didée
+Didee's YlevelsC=YlevelsC de Didée
+curve=courbe
+Levels=Niveaux
+%s\nInput min: %i, input max: %i, output min:%i, output max:%i\nGamma correction: %5.2f=%s\nEntrée min : %i, entrée max : %i, sortie min :%i, sortie max :%i\nCorrection gamma : %5.2f
+\nPosterizing to %i levels=\nPostérise à %i niveaux
+
+libavcodec normal quality=Libavcodec - qualité normale
+libavcodec high quality=Libavcodec - haute qualité
+libavcodec highest quality=Libavcodec - qualité supérieur
+libsamplerate sinc high quality=Libsamplerate Sinc - haute qualité
+libsamplerate sinc medium quality=Libsamplerate Sinc - qualité moyenne
+libsamplerate sinc fastest=Libsamplerate Sinc - rapide
+Resample=Rééchantillon
+lower than=inférieure à
+higher than=supérieure à
+%s resampling to %i Hz=%s rééchantillonné à %i Hz
+ if sample rate is %s %i Hz= si taux d'échantillonnage est %s %i Hz
+
+Postprocessing=Post-traitement
+when decoding H.264 video=avec le décodeur H.264
+when decoding H.264 video and decoder deblocking is off=avec le décodeur H.264 lorsque le déblocage est désactivé
+custom: %s%s%s%s%s%s=personnalisé : %s%s%s%s%s%s
+luma deblock (V),=déblocage lum. (V),
+luma deblock (H),=déblocage lum. (H),
+chroma deblock (V),=déblocage chrom. (V),
+chroma deblock (H),=déblocage chrom. (H),
+luma dering,=dering lum.,
+chroma dering,=dering chrom.,
+presets: =présélections : 
+strength %i=force %i
+ automatic= automatique
+processing strength: %i\n=force de traitement : %i\n
+mplayer=Mplayer
+Nic's=Nic's
+Nic's + mplayer=Nic's + Mplayer
+mplayer + Nic's=Mplayer + Nic's
+SPP=SPP
+fast SPP=SPP rapide
+
+closest=le plus proche
+
+any filter=n'importe quel filtre
+
+lowpass=passe-bas
+highpass=passe-haut
+bandpass=passe-bande
+bandstop=bloque-bande
+box=boîte
+triangle=triangle
+FIR filter=filtre FIR
+, width %i Hz=, largeur %i Hz
+%s at %iHz%s\n%i taps\n%s window=%s à %i Hz%s\n%i taps\nfenêtre %s
+
+1/0 - mono=1/0 - mono
+2/0 - stereo=2/0 - stéréo
+3/0 - 3 front=3/0 - 3 voies
+2/1 - surround=2/1 - ambiance
+3/1 - surround=3/1 - ambiance
+2/2 - quadro=2/2 - quadriphoniques
+3/2 - 5 channels=3/2 - 5 voies
+1/0+LFE 1.1 mono=1/0+LFE 1.1 mono
+2/0+LFE 2.1 stereo=2/0+LFE 2.1 stéréo
+3/0+LFE 3.1 front=3/0+LFE 3.1 voies
+2/1+LFE 3.1 surround=2/1+LFE 3.1 ambiance
+3/1+LFE 4.1 surround=3/1+LFE 4.1 ambiance
+2/2+LFE 4.1 quadro=2/2+LFE 4.1 quadriphoniques
+3/2+LFE 5.1 channels=3/2+LFE 5.1 voies
+same as input=identique à la source
+headphone virtual spatialization=effet spatial virtuel pour casque
+Head-related transfer function (HRTF)=Fonction de transfert lié à la tête (HRTF)
+Mixer=Mixeur
+\ncustom matrix=\nmatrice personnalisée
+\nnormalize matrix=\nmatrice normalisée
+\nexpand stereo=\nélargissement stéréo
+\nvoice control=\ncontrôle de la voix
+
+simple MMX=MMX simple
+Skal's IDCT=IDCT de Skal
+simple=simple
+integer=entier
+XviD MMX=MMX XviD
+careful=précise
+compliant=conforme
+aggressive=agressive
+very aggressive=très agressive
+guess MVS=estimation du MVS
+deblock=déblocage
+guess MVS + deblock=estimation du MVS + déblocage
+adaptive with size 3=adaptatif de taille 3
+adaptive with size 2=adaptatif de taille 2
+experimental=expérimental
+size 1 diamond=diamant taille 1
+size 2 diamond=diamant taille 2
+size 3 diamond=diamant taille 3
+size 4 diamond=diamant taille 4
+size 5 diamond=diamant taille 5
+size 6 diamond=diamant taille 6
+
+ffdshow unknown=inconnu ffdshow
+ffdshow video decoder raw=décodeur vidéo brut ffdshow
+ffdshow video decoder=décodeur vidéo ffdshow
+embedded=embarqué
+Subtitle sources=Fichiers de sous-titres
+ffdshow raw audio decoder=décodeur audio brut ffdshow
+ffdshow audio decoder=décodeur audio ffdshow
+ffdshow video encoder=encodeur vidéo ffdshow
+
+Raw frames=images brutes
+MPEG 1 video stream=flux vidéo MPEG 1
+OGG (works with Theora only)=OGG (fonctionne avec Theora seulement)
+
+CPU load=Charge UC
+System time=Heure système
+Movie length=Durée du film
+Source file=Fichier source
+Source file name=Nom du fichier source
+Input description=Description de la source
+Output description=Description de la sortie
+Encoder info=Infos sur l'encodeur
+Short configuration description=Brève description de la configuration
+Host application=Application utilisée
+Input size=Taille en entrée
+Input aspect ratio=Ratio d'entrée
+Input size and aspect ratio=Taille et proportions originales
+Movie FPS=Débit img/s du film
+Decoder FPS=Décodage img/s
+Input bitrate=Débit source
+Frame mean quantizer=Quantification moyenne des images
+Current playing time=Temps écoulé
+Remaining time=Temps restant
+Accurate deblocking=Déblocage précis
+Input FOURCC=4CC original
+Input colorspace=Espace couleur en entrée
+Output colorspace=Espace couleur en sortie
+Current frame=Image active
+Subtitles delay=Délai des sous-titres
+Queued samples=Échantillons en file d'attente
+Video delay=Retard vidéo
+Time table=Horaires
+SAR: %u/%u, =SAR : %u/%u, 
+SAR: N/A, =SAR : N/A, 
+DAR: %u/%u=DAR : %u/%u
+DAR: N/A=DAR : N/A
+not available=non disponible
+Output size=Taille en sortie
+Output aspect ratio=Ratio de sortie
+Frame type=Type d'image
+Coded frame size=Taille de l'image encodée
+GMC warp points=Points de déformation du GMC
+MD5 sum=Signature MD5
+Frame timestamps=Temps des images
+Frame duration=Durée des images
+Number of channels=Nombre de canaux
+Sample frequency=Fréquence échantillon
+Sample format=Format échantillon
+Output speakers=Sortie de haut-parleurs
+Current input bitrate=Débit source actif
+
+Pixel aspect ratio=Ratio des pixels
+Display aspect ratio=Ratio d'affichage
+Left=Gauche
+diamond=diamant
+hexagonal=hexagonal
+exhaustive=exhaustif
+
+dummy=pseudo
+on movie file name match=si le nom du film correspond
+on movie file name match (with wildcards)=si le nom du film (+ jokers) correspond 
+on application exe file name match=si l'EXE de l'application correspond
+on volume name match=si le nom du volume correspond
+on volume serial match=si le n° de série du volume correspond
+Format: XXXX-YYYY=Format : XXXX-YYYY
+on decoder match=si le décodeur correspond
+on a DirectShow filter presence=en présence d'un filtre DirectShow
+Names of DirectShow filters, wildcard allowed=Noms de filtres DirectShow, jokers autorisés
+
+Enter logical expression with 'aspect' variable and comparison and arithmetic operators,\nfor example \"16/9<aspect AND aspect<2.35\" or \"aspect=1\".=Entrer une expression logique avec la variable 'aspect' et des opérateurs arithmetiques et de comparison,\npar exemple \"16/9<aspect AND aspect<2.35\" ou \"aspect=1\".
+Enter logical expression with 'fps' variable and comparison and arithmetic operators,\nfor example \"fps>30\".=Entrer une expression logique avec la variable 'fps' et des opérateurs arithmetiques et de comparison,\npar exemple \"fps>30\".
+on FOURCC match=si le 4CC correspond
+on pixel aspect ratio match=si le ratio des pixels correspond
+on picture aspect ratio match=si le ratio de l'image correspond
+on frame rate match=si le débit d'images correspond
+
+Enter logical expression with 'freq' variable and comparison and arithmetic operators,\nfor example \"44100<=freq AND 48000<=freq\".=Entrer une expression logique avec la variable 'freq' et des opérateurs arithmetiques et de comparison,\npar exemple \"44100<=freq AND 48000<=freq\".
+on number of channels match=si le nombre de canaux correspond
+on sampling frequency match=si la fréquence d'échantillonnage correspond
+
+luma:=lum. :
+chroma:=chrom. :
+time:=temps :
+radius:=portée :
+luma blur:=flou lum. :
+chroma blur:=flou chrom. :
+
+Preset name=Nom de la présélection
+Do you really want to remove selected preset?=Voulez-vous vraiment retirer cette présélection ?
+Removing preset=Retrait de la présélection
+Audio settings=Paramètres audio
+
+automatic=automatique
+disable=désactivé
+Flat=Plat
+
+amplitude=amplitude
+frequency=fréquence
+duration=durée
+opacity=opacité
+color=couleur
+
+OSD item=élément OSD
+ (show on startup)= (afficher au démarrage)
+user=utilisateur
+user%s=utilisateur%s
+New=Nouveau
+New preset...=Nouvelle présélection
+Save preset to...=Enregistrer la présélection vers...
+Save as...=Enregistrer sous...
+Rename preset...=Renommer la présélection
+Delete preset=Supprimer la présélection
+Show on startup=Afficher au démarrage
+Don't display, only save data to file=Ne pas afficher, seulement enregistrer les données vers le fichier
+New preset name=Nouveau nom de présélection
+Enter new preset name=Entrer le nouveau nom de présélection
+Preset already exists=Présélection déjà existante
+Do you really want to delete current OSD preset?=Voulez-vous vraiment supprimer la présélection OSD actuelle ?
+Startup OSD preset=Présélection OSD de démarrage
+Number of frames to show preset=
+File where to write statistics=Fichier où écrire les statistiques
+
+start=début
+constant=constant
+\nVideo delay: %i msec=\nRetard vidéo : %i ms
+
+Exponent:=Exposant :
+Blur:=Flou :
+
+high detail=détail élevé
+
+after I frames=après images I
+
+spatial=spatial
+temporal=temporel
+
+stats=stats
+
+"not needed": no custom channel mapping="pas nécessaire" : pas de répartition personnalisée des canaux
+Useful for directly storing encoded ac3 to a file in graphedt with File Writer filter=Utile pour stocker directement du ac3 encodé dans un fichier de GraphEdit avec le filtre File Writer
+WaveOut Device merit is too low. Do you want to raise it?=Le mérite de WaveOut Device est trop bas. Voulez-vous le monter ?
+Low merit=Mérite bas
+
+Use with care - can cause ffdshow to not unload after closing the movie.=À utiliser avec soin - peut empêcher ffdshow de se décharger après la fermeture du film.
+do not use=ne pas utiliser
+unlikely=improbable
+preferred=préféré
+very high=très élevé
+List of applications for which ffdshow should not load, separated by semicolons=Liste des applications pour lesquelles ffdshow ne doit pas se charger, séparées par des points-virgules
+Property=Propriété
+
+Action=Action
+Key=Touche
+press key=presser une touche
+GML file can be exported only if:\nActivation key 1 is 'ctrl'\nActivation key 2 is 'alt' and\nSecond function key is 'shift'=Le fichier GML ne peut être exporté uniquement lorsque :\nLa touche d'activation 1 est 'Ctrl'\nLa touche d'activation 2 est 'Alt' et\nLa touche deuxième fonction est 'Maj'
+Girder export=Exporter Girder
+GML file exported successfully=succès de l'export du fichier GML
+GML file export failed=échec de l'export du fichier GML
+This key is already assigned to=Cette touche est déjà assignée à
+
+Channel=Canal
+invalid=non valide
+ samples= échantillons
+
+Option=Option
+Greyscale=Échelle de gris
+Interlaced encoding=Encodage entrelacé
+Data partitioning=Partition de données
+Unlimited motion vector=Vecteur de mouvement illimité
+Sliced structure=Structure découpée
+Loop filter=Filtre de boucle
+
+Better compression, incompatible with original HuffYUV codec=Meilleure compression, incompatible avec le codec HuffYUV original
+
+Low - cosine curve=Basse - courbe cosinus
+Medium - linear=Moyenne- linéaire
+High - sine curve=Haute - courbe sinus
+
+DScaler: %s=DScaler : %s
+
+H.264 deblocking disables all other deblocking methods=La méthode de déblocage H.264 désactive toutes les autres
+
+mute=muet
+solo=isoler
+
+indeterminate state - first try overlay, then use fallback format=Statut indéterminé : essayer d'abord la superposition puis le format de repli
+indeterminate state - connect to any filter, allows output format changes only if connected to supported filter=Statut indéterminé : se connecter à n'importe quel filtre, permet le changement de format de sortie uniquement si connecté à un filtre pris en charge
+Filters known to support dynamic format change:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  ffdshow=Filtres connus prenant en charge le changement de format dynamique :\n  Mixeur de superposition\n  VMR\n  VMR9\n  VobSub\n  ffdshow
+Flip video=Retourner la vidéo
+
+one pass - constant bitrate=1 passe - débit constant
+one pass - quality=1 passe - qualité
+one pass - quantizer=1 passe - quantificateur
+two passes - 1st pass=2 passes - 1ère passe
+two passes - 2nd pass int=2 passes - 2e passe int
+two passes - 2nd pass ext=2 passes - 2e passe ext
+Bitrate (kbps)=Débit (kbps)
+Quality=Qualité
+Quantizer=Quantificateur
+No settings=Pas de paramètres
+Size (Kbytes)=Taille (Koctets)
+Save as...=Enregistrer sous...
+Load all=Ouvrir tout
+Load page=Ouvrir la page
+Save all=Enregistrer tout
+Save page=Enregistrer la page
+Manage presets...=Gérer les présélections
+Save as new preset=Enregistrer comme nouvelle présélection
+
+Thank you!=Merci !
+
+Preset '%s' will be autoloaded ...='%s' sera chargé automatiquement...
+
+mpeg1/2 decoder only=décodeur mpeg1/2 seulement
+IDCT: %s=IDCT : %s
+\nGrayscale=\nÉchelle de gris
+No quantization matrices available.=Pas de matrice de quantification disponible.
+
+From default=D'après les valeurs par défaut
+From selected=D'après la sélection
+From file...=D'après le fichier...
+Rename=Renommer
+Insert file name=Insérer le nom du fichier
+Insert exe file name=Insérer le nom de l'exécutable
+Control caption=Control caption
+Associated strings=Chaînes associées
+
+Select Winamp 2 directory (not the plugins directory!)=Sélectionner le répertoire de Winamp 2 (et non pas le répertoire des filtres !)
+Select directory with installed DScaler=Sélectionner le répertoire d'installation DScaler
+Select ffdshow instalation directory=Sélectionner le répertoire d'installation ffdshow
+Select directory where subtitles are stored=Sélectionner le répertoire des sous-titres
+Select directory for storing images=Sélectionner le répertoire des images
+Select file for storing frames=Sélectionner un fichier pour les images
+Select file for storing encoding statistics=Sélectionner un fichier pour les statistiques d'encodage
+Select file with stored encoding statistics=Sélectionner un fichier avec les statistiques d'encodage
+Select curve file=Sélectionner un fichier courbe
+Select file for debug info=Sélectionner un fichier pour les infos de débogage
+Select Winamp preset file=Sélectionner un fichier de présélection Winamp
+Select impulse file=Sélectionner un fichier impulsion
+Select name of exported Girder file=Sélectionner un nom de fichier Girder exporté
+Select DScaler filter=Sélectionner un filtre DScaler
+Load Avisynth script=Ouvrir un script Avisynth
+Save Avisynth script=Enregistrer un script Avisynth
+Load image file=Ouvrir un fichier image
+Save image file=Enregistrer un fichier image
+Load ffdshow preset=Ouvrir une présélection ffdshow
+Save ffdshow preset=Enregistrer une présélection ffdshow
+Load quantization matrices=Ouvrir des matrices de quantification
+Save quantization matrices=Enregistrer des matrices de quantification
+Load subtitles file=Ouvrir un fichier de sous-titres
+Save subtitles file=Enregistrer un fichier de sous-titres
+All files (*.*)\0*.*\0=Tous les fichiers (*.*)\0*.*\0
+Avisynth scripts (*.avs)\0*.avs\0\0=Scripts Avisynth (*.avs)\0*.avs\0\0
+DScaler filters (FLT_*.dll)\0FLT_*.dll\0\0=Filtres DScaler (FLT_*.dll)\0FLT_*.dll\0\0
+Girder Files (*.gml)\0*.gml\0=Fichiers Girder (*.gml)\0*.gml\0
+Subtitles (*.utf;*.sub;*.srt;*.smi;*.rt;*.txt;*.ssa;*.aqt;*.mpl;*.idx)\0*.utf;*.sub;*.srt;*.smi;*.rt;*.txt;*.ssa;*.aqt;*.mpl;*.usf;*.idx\0All files (*.*)\0*.*\0=Sous-titres (*.utf;*.sub;*.srt;*.smi;*.rt;*.txt;*.ssa;*.aqt;*.mpl;*.idx)\0*.utf;*.sub;*.srt;*.smi;*.rt;*.txt;*.ssa;*.aqt;*.mpl;*.usf;*.idx\0Tout fichier (*.*)\0*.*\0
+
+tab=Tab
+enter=Entrée
+shift=Maj
+ctrl=Ctrl
+alt=Alt
+caps lock=Maj lock
+esc=Échap
+space=Espace
+page up=PagePréc
+page down=PageSuiv
+end=Fin
+home=Origine
+left arrow=Flèche gauche
+up arrow=Flèche haut
+right arrow=Flèche droite
+down arrow=Flèche bas
+insert=Inser
+delete=Suppr
+left win=Windows (gauche)
+right win=Windows (droite)
+menu key=Touche menu
+numpad 0=0 Num
+numpad 1=1 Num
+numpad 2=2 Num
+numpad 3=3 Num
+numpad 4=4 Num
+numpad 5=5 Num
+numpad 6=6 Num
+numpad 7=7 Num
+numpad 8=8 Num
+numpad 9=9 Num
+numpad *=* Num
+numpad +=+ Num
+numpad -=- Num
+numpad /=/ Num
+numlock=Verr num
+scrlock=Verr écr
+mouse=souris
+
+thin=mince
+extralight=extra-fin
+light=fin
+normal=normal
+medium=moyen
+semibold=demi-gras
+bold=gras
+extrabold=extra-gras
+heavy=épais
+AnSi=ANSI
+Baltic=balte
+Cyrillic=cyrillique
+Easteurope=Europe de l'Est
+Hangul=hangul
+
+English (may work with other languages)=anglais (peut fonctionner pour d'autres langues)
+Abkhazian=abkhaze
+(Afan) Oromo=(afan) oromo
+Afar=afar
+Afrikaans=afrikaans
+Akan=akan
+Albanian=albanais
+Amharic=amharique
+Arabic=arabe
+Aragonese=aragonais
+Armenian=arménien
+Assamese=assamais
+Avaric=avaric
+Avestan=avestique
+Aymara=aymará
+Azerbaijani=azéri
+Bambara=bambara
+Bashkir=bachkir
+Basque=basque
+Belarusian=biélorusse
+Bengali; Bangla=bengalî
+Bhutani=bhoutani
+Bihari=bihãri
+Bislama=bichelamar
+Bosnian=bosnien
+Breton=breton
+Bulgarian=bulgare
+Burmese=birman
+Cambodian=cambodgien
+Catalan=catalan
+Chinese=chinois
+Corsican=corse
+Czech=tchèque
+Dansk=danois
+Deutsch=allemand
+English=anglais
+Espanol=espagnol
+Esperanto=esperanto
+Estonian=estonien
+Faroese=féroïen
+Fijian=fidjien
+Finnish=finnois
+French=français
+Frisian=frison
+Galician=galicien
+Georgian=géorgien
+Greek=grec
+Greenlandic=kalaallisut
+Guarani=guarani
+Gujarati=gujarâtî
+Hausa=haoussa
+Hebrew=hébreu
+Hindi=hindî
+Hrvatski=croate
+Hungarian=hongrois
+Icelandic=islandais
+Indonesian=indonésien
+Interlingua=interlingua
+Interlingue=interlingue
+Inuktitut=inuktitut
+Inupiak=inupiaq
+Irish=irlandais
+Italian=italien
+Japanese=japonais
+Javanese=javanais
+Kannada=kannara
+Kashmiri=kashmiri
+Kazakh=kazakh
+Kinyarwanda=kinyarwanda
+Kirghiz=kirghiz
+Kirundi=kirundi
+Korean=coréen
+Kurdish=kurde
+Laothian=laotien
+Latin=latin
+Latvian, Lettish=letton
+Lingala=lingala
+Lithuanian=lituanien
+Macedonian=macédonien
+Malagasy=malgache
+Malay=malais
+Malayalam=malayalam
+Maltese=maltais
+Maori=maori
+Marathi=marâthî
+Moldavian=moldave
+Mongolian=mongol
+Nauru=nauruan
+Nederlands=néerlandais
+Nepali=népalais
+Norsk=norvégien
+Norwegian=norvégien bokmål
+Occitan=occitan
+Oriya=oriya
+Pashto, Pushto=pachto
+Persian=perse
+Polish=polonais
+Portugues=portugais
+Punjabi=panjâbî
+Quechua=quechua
+Rhaeto-Romance=rhéto-roman
+Romanian=roumain
+Russian=russe
+Samoan=samoan
+Sangho=sango
+Sanskrit=sanskrit
+Scots Gaelic=écossais
+Serbian=serbe
+Serbo-Croatian=serbo-croate
+Sesotho=sesotho
+Setswana=setswana
+Shona=shona
+Sindhi=sindhi
+Sinhalese=cingalais
+Siswati=siswati
+Slovak=slovaque
+Slovenian=slovène
+Somali=somali
+Sundanese=sundanais
+Swahili=swahili
+Swedish=suédois
+Tagalog=tagalog
+Tajik=tadjik
+Tamil=tamoul
+Tatar=tatar
+Telugu=télougou
+Thai=thaï
+Tibetan=tibétain
+Tigrinya=tigrinya
+Tonga=tongien
+Tsonga=tsonga
+Turkish=turc
+Turkmen=turkmène
+Twi=twi
+Uighur=ouïghour
+Ukrainian=ukrainien
+Urdu=ourdou
+Uzbek=ouzbek
+Vietnamese=vietnamien
+Volapuk=volapük
+Welsh=gallois
+Wolof=wolof
+Xhosa=xhosa
+Yiddish=yiddish
+Yoruba=yoruba
+Zhuang=zhuang
+Zulu=zoulou
+
+white=blanc
+whitesmoke=blanc fumée
+ghostwhite=blanc spectral
+snow=blanc neigeux
+gainsboro=gris Gainsboro
+lightgrey=gris clair
+silver=argent
+darkgray=gris sombre
+gray=gris
+dimgray=gris rabattu
+lightslategray=gris ardoise clair
+slategray=gris ardoise
+darkslategray=gris ardoise sombre
+black=noir
+azure=azurin
+aliceblue=bleu Alice
+mintcream=blanc mentholé
+honeydew=miellé
+lightcyan=cyan clair
+paleturqoise=turquoise pâle
+powderblue=bleu poudré
+lightblue=bleu clair
+lightsteelblue=bleu acier clair
+skyblue=bleu ciel
+lightskyblue=bleu ciel clair
+cyan=cyan
+aqua=eau
+deepskyblue=bleu ciel profond
+aquamarine=aigue-marine
+turquoise=turquoise
+darkturquoise=turquoise sombre
+lightseagreen=vert océan clair
+mediumturquoise=turquoise moyen
+mediumaquamarine=aigue-marine moyen
+cadetblue=pétrole clair
+teal=sarcelle
+darkcyan=cyan sombre
+cornflowerblue=bleuet
+dodgerblue=bleu toile
+steelblue=bleu acier
+royalblue=bleu roi
+blue=bleu
+mediumblue=bleu moyen
+mediumslateblue=bleu ardoise moyen
+slateblue=bleu ardoise
+darkslateblue=bleu ardoise sombre
+darkblue=bleu sombre
+midnightblue=bleu nuit
+navy=bleu marine
+palegreen=vert pâle
+lightgreen=vert clair
+mediumspringgreen=vert printemps moyen
+springgreen=vert printemps
+chartreuse=vert chartreuse
+lawngreen=vert prairie
+lime=citron vert
+limegreen=citron vert foncé
+greenyellow=jaune-vert
+yellowgreen=vert jaunâtre
+darkseagreen=vert océan sombre
+mediumseagreen=vert océan moyen
+seagreen=vert océan
+olivedrab=vert olive terne
+forestgreen=vert forêt
+green=vert
+darkkhaki=kaki sombre
+olive=vert olive
+darkolivegreen=vert olive sombre
+darkgreen=vert sombre
+floralwhite=blanc floral
+seashell=coquillage
+ivory=ivoire
+beige=beige
+cornsilk=jaune maïs doux
+lemonchiffon=citron-soie
+lightyellow=jaune clair
+lightgoldenrodyellow=jaune paille clair
+papayawhip=papaye délavé
+blanchedalmond=amande blanchi
+palegoldenrod=jaune paille pâle
+khaki=kaki
+bisque=bisque
+moccasin=beige mocassin
+navajowhite=blanc navarro
+peachpuff=pêche passé
+yellow=jaune
+gold=or
+wheat=blé
+orange=orange
+darkorange=orange sombre
+oldlace=vieux blanc
+linen=blanc de lin
+antiquewhite=blanc antique
+lightsalmon=saumon clair
+darksalmon=saumon sombre
+salmon=saumon
+lightcoral=corail clair
+indianred=rouge indien
+coral=corail
+tomato=rouge tomate
+orangered=rouge orangé
+red=rouge
+crimson=pourpre
+firebrick=rouge brique
+maroon=marron
+darkred=rouge sombre
+lavender=lavande
+lavenderblush=lavande rougeâtre
+mistyrose=rose voilé
+thistle=chardon
+pink=rose
+lightpink=rose clair
+palevioletred=rouge violacé pâle
+hotpink=rose chaud
+fuchsia=fuchsia
+magenta=magenta
+mediumvioletred=rouge violacé moyen
+deeppink=rose profond
+plum=prune
+violet=parme
+orchid=orchidée
+mediumorchid=orchidée moyen
+mediumpurple=lavande
+purple=violet
+blueviolet=parme bleuté
+darkviolet=violet sombre
+darkorchid=orchidée sombre
+tan=brun tané
+burlywood=bois dur
+sandybrown=brun sable
+peru=pérou
+goldenrod=jaune paille
+darkgoldenrod=jaune paille sombre
+chocolate=chocolat
+rosybrown=bois de rose
+sienna=terre-de-sienne
+saddlebrown=cuir
+brown=brun
+
+[101]
+1=OK
+2=Annuler
+3=Appliquer
+1835=Exporter tout
+1836=Donation
+
+[102]
+0=À propos de
+1072=version de ffdshow :
+1251=encodeur vidéo ffdshow
+1835=Exporter tout
+1836=Donation
+1839=Détails version
+1849=Licence
+
+[111]
+1162=Rétablir
+1163=Aide
+1164=Image entière
+1167=Moitié droite
+1723=Rétablir l'ordre
+
+[113]
+0=Sous-titres
+1105=Sous-titres
+1120=...
+1122=Position horizontale :
+1124=...
+1126=Position verticale :
+1133=Rechercher
+1183=Fichier
+1244=Recharger
+1279=Recherche
+1280=Délai :
+1281=Vitesse :
+1282=ms
+1284=/
+1358=Letterbox :
+1360=Alignement :
+1364=Réint.
+1414=Actualiser modifications
+1683=Stéréoscopique
+1722=Parallaxe :
+1787=Accepter les ST incorporés
+1788=Décoder les sous-titres fidèles
+1837=Recherche heuristique
+
+[115]
+0=Codecs
+1283=Codecs pris en charge
+
+[116]
+0=Infos & Débogage
+1050=Fichier lu :
+1054=Dimensions :
+1055=Codec :
+1059=Image active :
+1060=Débit :
+1264=Sortie :
+1265=img/s :
+1266=Décodeur img/s :
+1284=Infos
+1285=Débogage
+1502=Instances multiples :
+1503=Mérite :
+1738=Rendu DirectShow disponible pour GraphEdit
+1832=Utiliser les jeux d'instructions SIMD suivants (si pris en charge par l'UC) :
+1935=Ne pas utiliser ffdshow dans :
+
+[118]
+0=Divers
+1016=Retourner l'image
+1045=IDCT :
+1047=Contourner les bogues :
+1268=Délai vidéo :
+1269=ms
+1283=Options Libavcodec
+1307=Autodétection
+1308=Ancien LAVC MS-Mpeg4
+1309=Ancien entrelacement XviD
+1310=UMP4
+1311=Remplissage
+1313=Quart de pixel XviD/DivX
+1314=Échelle de gris
+1315=Liseré
+1316=Chromin. entrelacée GMC DivX  
+1317=Clip DC
+1356=Autosélection
+1365=Autres contrôles
+1542=Récupération d'erreur :
+1544=Dissimulation d'erreur :
+1550=Source entrelacée si hauteur sup. à
+1764=fin
+1765=constant
+1916=Matrices quantification actives
+
+[119]
+0=Configuration
+1016=Nouveau
+1044=Retirer
+1045=Renom.
+1051=Chargement automatique
+1080=Présélection du fichier prioritaire
+1155=Sauvegarder
+1156=Charger
+1157=Conditions de chargement automatique
+1278=Présélections
+
+[120]
+0=Post-traitement
+1008=Contrôle automatique de qualité
+1027=Présélections
+1028=Personnalisé
+1035=Luminance
+1036=Chrominance (non implémenté)
+1038=Gamme complète
+1073=Post-traitement
+1158=Intensité du traitement:
+1160=Méthode :
+1238=MPlayer
+1239=Nic
+1242=Seuil X :
+1243=Seuil Y :
+1270=Lumin.
+1271=Chromin.
+1272=Déblocage H
+1273=Déblocage V
+1274=Anti-halo
+1275=Correction des niveaux
+1328=Nic (original)
+1456=Déblocage SPP
+1457=Déblocage SPP rapide
+1459=Seuil doux
+1534=Déblocage précis
+1899=Déblocage H.264 :
+
+[125]
+0=Propriétés de l'image
+1017=Gain de luminance (contraste) :
+1018=Décalage de luminance (luminosité) :
+1025=Teinte :
+1026=Saturation :
+1037=Correction gamma :
+1038=Correction gamma RVB :
+1072=Propriétés de l'image
+1781=Couleur :
+1782=Intensité :
+1787=Chrominance seule
+1830=Correction de luminance
+1831=Gamme complète
+1932=Rayures :
+
+[126]
+0=Bruit
+1038=Bruit
+1039=Bruit uniforme
+1041=Bruit de luminance :
+1049=Bruit de chrominance :
+1050=Tremblement :
+1051=Agitation :
+1052=Lignes verticales :
+1054=Poussière && rayures :
+1067=Ancien algorithme
+1068=Nouvel algorithme (avih)
+1069=Bruit MPlayer
+1231=Motif
+1232=Moyenne
+
+[127]
+0=Accentuation
+1019=Intensité :
+1021=Seuil :
+1023=Accentuation adaptée aux blocs :
+1063=Filtre XSharpen
+1064=Masque flou
+1065=Accentuation
+1066=Filtre MSharpen
+1068=Filtre ASharp
+1069=Filtre SWScaler
+1143=Filtre XSharpen : produit un effet de netteté subtil mais utile. Agit en ouvrant une petite fenêtre superposée à l'image où chaque pixel central est soit filtré sans modification (selon le seuil défini), soit remplacé par le pixel avoisinant le plus lumineux ou le plus sombre en fonction de sa proximité. Lorsqu'un pixel central est remplacé, il est également fusionné en transparence avec les valeurs du pixel original selon un degré d'intensité paramétrable. Il en résulte un effet de netteté qui non seulement s'efforce de ne pas amplifier le bruit mais tend à le réduire.\r\n\r\nMasque flou : implémente la célèbre technique d'accentuation/réhaussement de contraste. L'idée est de créer une version floue de l'image originale pour la soustraire ensuite à cette dernière. L'image résultante présentera une amplification de contraste au niveau des traits. On obtient une accentuation agréable, supérieure à celle obtenue simplement avec un noyau de circonvolution ou une amplification de haut niveau.\r\n\r\nFiltre MSharpen : accentue les contours importants de l'image sans amplifier le bruit. Commence par détecter les contours pour leur appliquer ensuite un noyau d'accentuation.\r\n\r\nDescriptions en provenance de la documentation originale accompagnant les filtres AviSynth et VirtualDub (C) Donald Graft.
+1215=Masque seul
+1216=Haute qualité
+1217=Filtrage de bloc de haute qualité
+
+[128]
+0=Flou & Réduction de bruit
+1134=Flou && Réduction de bruit
+1136=Adoucissement :
+1137=Lissage temporel :
+1138=Lissage de luminance :
+1139=Lissage de chrominance :
+1140=Réduction de bruit graduelle :
+1141=Réduction de bruit temporelle MPlayer :
+1142=Flou gaussien SWScaler :
+1232=Traiter la couleur
+1415=HQ
+1878=Débruiteur3D :
+
+[132]
+0=Police
+1108=Épais. :
+1110=Taille :
+1114=Jeu :
+1116=Espacement :
+1118=Opacité de l'ombre :
+1120=Largeur :
+1124=Couleur
+1130=Portée de l'ombre :
+1143=Espacement : distance entre les caractères.\r\nOpacité de l'ombre : régler à 100 pour aucune transparence.\r\nÉpaisseur : la plupart des polices ne prennent en charge qu'une petite partie des styles énumérés.
+1259=Police
+1335=Autodimensionnement
+1827=Rendu rapide
+
+[133]
+0=Redimensionnement & Proportions
+1083=Redimensionner
+1100=Ne pas corriger les proportions
+1101=Conserver les proportions
+1102=Correction manuelle :
+1185=Spécifier la taille
+1186=Spécifier les proportions
+1187=Élargir au prochain multiple de
+1188=Toujours redimensionner
+1189=Redimensionner si
+1190=ou
+1191=Redimensionner si nbre de pixels
+1192=supérieur à
+1199=Verrou
+1200=Verticaux
+1201=Horizontaux
+1234=Ratio de superposition :
+1285=Taille :
+1286=Ratio :
+1287=x
+1288=y
+1289=Proportions
+1290=Bords
+1322=:
+1540=Multiplier par
+
+[134]
+0=Recadrage
+1105=Élargissement horizontal :
+1107=Élargissement vertical :
+1109=Zoom
+1111=Position horizontale
+1113=Position verticale
+1137=Zoom && Recadrage
+1138=Zoom
+1139=Recadrage
+1140=Verr.
+1141=Panoramique && Recherche
+1143=Recadrage :\r\nLa largeur et la hauteur de la zone recadrée sont arrondies à un multiple de huit.\r\nSi vous saisissez une valeur incorrecte, la ligne d'édition s'affichera sur un fond rouge et la valeur ne sera pas sauvegardée.\r\nEn utilisant ces filtres, vous devrez probablement corriger les proportions.
+1252=Haut
+1254=Gche
+1255=Drte
+1256=Bas
+
+[136]
+0=Zone de notification
+1070=Afficher une icône
+1071=Restaurer la position
+1072=Afficher les infobulles
+1073=Ajouter le menu de l'icône au menu langues/flux du lecteur
+1074=Infos supplémentaires
+1143=Icône de la zone de notification : affiche une icône dans la barre des tâches à côté de l'horloge.\r\nUn double-clic ouvre le panneau de configuration.\r\nRestaurer la position : se souvient de la position du panneau de configuration (ne fonctionne pas avec GraphEdit).
+1257=Icône de la zone de notification
+1258=Panneau de configuration
+1259=Emplacements
+1293=Langue :
+
+[137]
+0=Décalage
+1120=Décalage de chrominance Y :
+1143=Modifie la position des plans de luminance et de chrominance.\r\nPeut servir à corriger de mauvaises captures.
+1148=Décalage
+1149=Décalage de luminance X :
+1151=Décalage de luminance Y :
+1153=Décalage de chrominance X :
+
+[138]
+0=Paramètres
+1282=Paramètres de redimensionnement
+1285=Méthode lum. :
+1021=Paramètre :
+1098=Flou gaussien de luminance :
+1019=Accentuation de luminance :
+1099=Flou gaussien de chrominance :
+1020=Accentuation de chrominance :
+1100=Déformation horizontale :
+1022=Déformation verticale :
+1360=Entrelacé
+1143=Algorithmes de redimensionnement :\r\n  Bilinéaire rapide - rapide, qualité acceptable\r\n  Bilinéaire - qualité légèrement amélioré par rapport au précédent mais un\r\n  peu  plus lent\r\n  Bicubique - haute qualité, plus lent\r\n  Point - plus rapide mais moins beau\r\n  Zone - échelle moyenne de la zone\r\n  Bicublin - bicubique pour la luminance, bilinéaire pour la chrominance\r\n  Aucun - ajoute des bandes noires ou rogne l'image\r\n\r\nFlou gaussien - au cours du redimensionnement l'image peut être légèrement flou, sans rapport avec le filtre de flou\r\nAccentuation - accentue l'image au cours du redimensionnement, sans rapport avec les filtres d'accentuation\r\n\r\nEntrelacé :\r\n  non sélectionné - les images sont traitées comme des images\r\n  progressives\r\n  sélectionné - les images sont traitées comme des images entrelacées\r\n  grisé - décision basée sur le type d'image à traiter (à utiliser pour les\r\n  vidéos MPEG2)
+1892=Verr.
+1023=Paramètre :
+1286=Méthode chrom. :
+
+[139]
+0=Effets graphiques
+1337=Effets graphiques
+1074=Vecteurs de mouvement
+1075=Quantificateurs
+1357=Courbe
+1143=Essayez, c'est sympa
+
+[140]
+0=Désentrelacement
+1167=Désentrelacer
+1209=Permuter trames   
+1169=Interpolation linéaire
+1170=Fusion linéaire
+1171=Interpolation cubique
+1173=Fusion cubique
+1172=Médiane
+1177=Désentrelaceur ffmpeg
+1179=5-tap lowpass
+1174=TomsMoComp
+1207=Intensité de ricerca :
+1210=Filtre vertical
+1175=DGBob
+1176=Doubleur de débit
+1212=Intensité de recherche :
+1367=Seuil :
+1178=Filtre DScaler
+1523=Méthode :
+
+[141]
+0=Infos à l'écran
+1182=Informations à l'écran
+1774=Position horizontale :
+1776=Position verticale :
+1491=Perso. :
+1493=Sauveg. :
+
+[142]
+0=Niveaux
+1170=Niveaux
+1179=Luminance seule
+1184=Afficher l'histogramme
+1185=Gamme complète
+1291=Entrée
+1267=Sortie
+1181=Correction gamma :
+1707=Mode :
+1189=Postériser :
+1909=Automatique
+
+[143]
+0=Raccourcis clavier
+1202=Raccourcis clavier
+1329=Traiter tous les raccourcis clavier
+1330=Afficher un message à l'écran après chaque utilisation du clavier
+1416=Saut en secondes :         
+1418=+ modificateur :
+1472=API de télécommande
+1536="message_ffdshow"
+1829=Exporter Girder
+1537=Personnalisé :
+1539=Accepter les messages du clavier
+
+[171]
+8=Fermer
+1211=si les dimensions du film correspondent
+1276=<= Largeur <=
+1277=<= Hauteur <=
+1212='%s' sera chargé automatiquement...
+1888=Séparer les éléments multiples par ;
+
+[172]
+0=Capture d'image
+1216=Capture d'image
+1223=Toutes les images
+1224=Image unique :
+1226=Étendue :
+1228=Capturer
+1218=...
+1261=Préfixe :
+1263=Nombre de chiffres :
+1262=Format :
+1230=Qualité :
+1232=Emp. :
+1740=Capturer :
+1741=image(s)
+
+[173]
+0=Superposition
+1235=Contrôle de superposition
+1236=Luminosité :
+1137=Contraste :
+1138=Teinte :
+1139=Saturation :
+1140=Netteté :
+1141=Gamma :
+1143=Fonctionne uniquement avec l'option "Utiliser le mixeur de superposition" dans la section "Sortie" et lorsque la superposition vidéo est prise en charge par la carte graphique.\r\n
+
+[176]
+0=Filtre DScaler
+1308=Filtre DScaler
+1309=Filtre :
+1311=...
+
+[177]
+0=Correction de perspective
+1317=Correction de perspective
+1321=Rectangle d'origine
+1319=Interpolation
+1143=Ce filtre est en cours de développement : il est possible que des points noirs apparaissent à l'image.
+
+[178]
+1323=DScaler
+1309=Filtre
+1311=...
+
+[179]
+0=Filtre DCT
+1324=Filtre DCT
+1325=Coefficients
+1919=Quantification H.263
+1922=Quantification MPEG
+1920=Quantificat. :
+1917=Matrice de quantification
+1143=DCT est un filtre expérimental qui, pour chaque bloc de 8x8 pixels, effectuera une transformation de cosinus discrète (DCT), réajustera les valeurs des fréquences sélectionnées puis inversera le processus en effectuant une transformation de cosinus discrète inversée (IDCT).
+
+[180]
+0=AviSynth
+1330=AviSynth
+1333=Charger
+1334=Sauveg.
+1353=Ajouter la source vidéo ffdshow
+1352=Espace couleur source:
+1348=YV12
+1349=YUY2
+1350=RVB24
+1351=RVB32
+
+[181]
+0=Profondeur de champ
+1338=Profondeur de champ
+1339=Profondeur de champ originale de ffdshow
+1340=aWarpSharp
+1019=Intensité :
+1021=Seuil :
+1023=Flou :
+1341=Mode chrominance :
+1343=Mode flou :
+1143=aWarpSharp implémente une technique de profondeur de champ (voile/accentuation) de haute qualité. "Originale" signifie que l'algorithme utilisé se différencie de celui des autres filtres par plusieurs points. Le code est entièrement optimisé pour le SSE avec une très grande précision. aWarpSharp est optimisé pour le processeur Athlon XP.\r\nPar Marc Fauconneau
+
+[182]
+1162=Rétablir
+1163=Aide
+1723=Rétablir l'ordre
+
+[183]
+1283=Codecs pris en charge
+
+[184]
+0=À propos de
+1251=Décodeur audio ffdshow
+
+[185]
+1284=Informations
+1050=Fichier lu :
+1368=Entrée :
+1194=SSE2
+1195=3DNOW
+1196=3DNOWEXT
+1056=Sortie :
+1193=SSE
+1192=MMXEXT
+1191=MMX
+1502=Instances multiples :
+1738=Rendu DirectShow disponible pour GraphEdit
+1832=Utiliser les jeux d'instructions SIMD suivants (si pris en charge par l'UC) :
+
+[188]
+1377=Volume
+1375=Volume principal :
+1457=Normaliser
+1637=Amplification max :
+1641=En cours :
+1683=Afficher les niveaux actifs
+1653=GRAVES
+1652=AD
+1648=G
+1650=D
+1651=AG
+1923=S
+1937=En décibels
+
+[189]
+0=Égaliseur
+1378=Égaliseur
+1814=Charger une présélection Winamp
+1826=SuperEG
+
+[190]
+0=Winamp 2
+1400=Plugins DSP de Winamp 2 
+1401=Sélectionner le répertoire Winamp 2...
+1404=Configurer
+
+[191]
+0=Mélangeur
+1934=GRV
+1405=Mélangeur
+1406=Configuration haut-parleurs :
+1586=Matrice normalisée
+1588=Contrôle de la voix
+1594=G
+1595=C
+1596=D
+1597=AG
+1598=AD
+1599=GRV
+1630=G
+1635=D
+1632=AG
+1633=AD
+1634=GRV
+1636=Matrice personnalisée
+1637=Élargissement stéréo
+1685=Distance des écouteurs
+1701=Voix :
+1702=Ambiance :
+1703=Graves :
+
+[193]
+2=Fermer
+
+[202]
+1446=Encodeur :
+1448=4CC :
+1450=Mode :
+1163=Aide
+1459=Présélections
+1460=Ne pas enregistrer dans le registre
+1453=Qualité
+
+[231]
+0=Sortie
+1284=Espaces couleur pris en charge
+1912=YUV planaires :
+1913=YUV groupés :
+1031=Utiliser le mixeur de superposition
+1033=Désentrelacement matériel
+1016=Retourner l'image
+1017=Permettre le changement de format de sortie en cours de lecture
+1034=Connexion de filtres compatibles uniquement
+1052=Conversion YV12/RVB de haute qualité
+1910=Profil :
+1051=RVB32
+1029=RVB16
+1028=RVB24
+1030=RVB15
+1036=Sélectionner l'espace couleur le mieux adapté
+1914=RVB :
+
+[233]
+0=Gestion des filtres
+1473=Filtres disponibles :
+1474=Filtres visibles :
+
+[236]
+0=Réverbération
+1484=Réverbération
+1485=Taille de la pièce :
+1487=Brillance :
+1490=Niveau du signal réverbéré :
+1019=Niveau du signal brut :
+1038=Largeur :
+
+[237]
+0=Rééchantillonnage
+1497=Rééchantillonnage
+1498=Rééchantillonner à
+1499=Mode :
+1143=Pressez "Appliquer" ou "OK" pour modifier la fréquence de rééchantillonnage.
+1875=Toujours rééchantillonner
+1876=Rééchantillonner si la fréquence est...
+
+[242]
+0=Filtre Logoaway
+1552=Filtre Logoaway
+1542=Gauche :
+1544=Haut :
+1546=Largeur :
+1548=Hauteur :
+1551=Mode :
+1553=Flou :
+1558=Couleur :
+1555=Intensité X-Y :
+1559=Présélection de contour :
+1562=Avancé :
+1574=Luminance seule
+1143=Logoaway est un filtre servant à supprimer les logos.
+
+[243]
+0=Sortie
+1573=Formats d'échantillonnage pris en charge
+1577=32 bits flottant
+1576=32 bits
+1575=24 bits
+1574=16 bits
+1811=N'utiliser l'en-tête WAVEFORMATEXTENSIBLE que si nécessaire 
+1813=Permettre la sortie directe vers un fichier
+1143=Pour une meilleure performance sur un ordinateur lent ou en cas d'incompatibilité de pilotes, décochez tout sauf l'option 16 bits.\r\nLa sortie LPCM sert à la connexion de filtres DVD audio comme celui de Cyberlink.
+1583=Tramage
+1580=16 bits
+1585=32 bits
+1586=32 bits flottant
+1743=Débit :
+1845=Connecter à :
+1846=Appliquer uniquement à la sortie S/PDIF
+
+[244]
+0=Décodeur Dolby
+1657=Décodeur Dolby
+1656=Délai des canaux arrière :
+
+[245]
+0=Délai
+1676=Délai
+1658=Canal gauche :
+1663=Canal central :
+1666=Canal droit :
+1669=Canal d'ambiance gauche :
+1672=Canal d'ambiance droit :
+1675=Canal des graves :
+
+[246]
+0=Filtre FIR
+1686=Filtre FIR
+1690=Type :
+1698=Largeur :
+1696=Fréquence :
+1692=Fenêtre :
+1683=Afficher le spectre
+1143=Ceci est un peu nouveau pour moi et ce dialogue et ses fonctionnalités risquent d'être erronés.
+1700=Fréq. max affichée :
+1688=Connexions :
+1694=Bêta :
+
+[247]
+0=Réduction de bruit
+1706=Réduction de bruit
+1704=Seuil :
+
+[248]
+0=Sélecteur de flux
+1709=Sélecteur de flux
+1683=Activer
+1710=Flux :
+
+[249]
+0=Clarification
+1711=Clarification
+1716=Amplificateur d'harmoniques :
+1718=Volume de l'écho :
+1720=Résonance de l'écho :
+1722=Élargissement stéréo :
+1712=Extension de bande :
+1714=Filtre passe-haut pour l'extension :
+
+[250]
+1726=Langues préférées :
+1725=Activer
+1727=Méthode de lissage :
+1730=Flou gaussien :
+1729=Échelle :
+1796=Respecter les paramètres de positionnement de la section "Sous-titres"
+1728=Langue active :
+
+[252]
+0=Répartiteur de graves
+1733=Répartiteur de graves
+1736=Gain :
+1734=Fréquence passe-bas :
+1741=Retirer les graves ajoutés aux canaux gauche et droit
+
+[253]
+0=Interversion des canaux
+1763=Interversion des canaux
+1749=Avant-gauche
+1748=Avant-centre
+1747=Avant-droit
+1746=Arrière-gauche
+1670=Arrière-centre
+1745=Arrière-droit
+1744=Graves
+1143=On peut également intervertir les canaux à l'aide du mélangeur mais cette méthode est la plus rapide.
+
+[254]
+0=Texte
+1571=Scinder les lignes trop longues
+1836=Marges gauche et droite :
+1723=Espacement des lignes :
+1572=Chevaucher les sous-titres de temps identique
+1767=Minimum
+1772=durée :
+1794=Corrections :
+1787=Remplacer les doubles ' par " et "" par '
+1788=Corriger les I et les l
+1790=Corriger la ponctuation (?. -> ? ; !. -> ! etc.)
+1795=Corriger l'orthographe
+1791=Corriger les majuscules
+1792=Supprimer les espaces indésirables entre les chiffres
+1793=Texte des sous-titres
+1775=pixel(s)
+1798=Retirer les sous-titres fidèles
+
+[255]
+0=Superposition de bitmap
+1798=Superposition de bitmap
+1810=Alignement :
+1361=Mode :
+1807=Opacité :
+1802=Position horizontale :
+1803=Position verticale :
+1799=Fichier :
+
+[259]
+0=Traitement
+1579=Formats d'échantillonnage autorisés pour le traitement du son
+1580=16 bits
+1585=32 bits
+1586=32 bits flottant
+1578=Conversion de flottant à entier
+1582=Type de bruit :
+1583=Tramage
+
+[260]
+0=Retourner l'image
+
+[261]
+0=Bords
+1858=Pourcentage
+1862=Horizontaux
+1863=Verticaux
+1199=Verrou
+1861=Externes
+1860=Internes
+1857=Bords
+1859=Pixel
+
+[262]
+0=Convolution
+1880=Convolution
+1881=Fichier impulsion :
+1905=Répartition manuelle des canaux :
+1902=Fichier
+1903=Effacer
+1891=Auto-ajustement
+1893=Ajustement des niveaux :
+1889=Intensité du mélange :
+1884=...
+
+[267]
+8=Fermer

@@ -1,0 +1,35 @@
+EXPORTS
+  avcodec_init
+  avcodec_register_all
+  avcodec_find_decoder
+  avcodec_open
+  avcodec_alloc_context
+  avcodec_alloc_frame
+  avcodec_decode_video
+  avcodec_decode_audio
+  avcodec_flush_buffers
+  avcodec_close
+  getVersion
+  av_free_static
+  av_free
+
+  av_register_all
+  guess_format
+  url_fopen
+  url_fclose
+  av_set_parameters
+  av_new_packet
+  av_write_header
+  av_write_frame
+  av_write_trailer
+
+  dsputil_init
+ 
+  avcodec_thread_init
+  avcodec_thread_free
+
+  av_log_set_callback
+
+  avcodec_default_get_buffer
+  avcodec_default_reget_buffer
+  avcodec_default_release_buffer

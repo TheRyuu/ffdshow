@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "libavcodec", "libavcodec_test.icproj", "{60153522-D3A8-4FC1-B996-D7044375E62F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug_ICL|Win32 = Debug_ICL|Win32
+		Release_ICL|Win32 = Release_ICL|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{60153522-D3A8-4FC1-B996-D7044375E62F}.Debug_ICL|Win32.ActiveCfg = Debug_ICL|Win32
+		{60153522-D3A8-4FC1-B996-D7044375E62F}.Debug_ICL|Win32.Build.0 = Debug_ICL|Win32
+		{60153522-D3A8-4FC1-B996-D7044375E62F}.Release_ICL|Win32.ActiveCfg = Release_ICL|Win32
+		{60153522-D3A8-4FC1-B996-D7044375E62F}.Release_ICL|Win32.Build.0 = Release_ICL|Win32
+		{32DD6F28-FAF1-464D-BD04-E8E80748CB6C}.Debug_ICL|Win32.ActiveCfg = Debug_ICL|Win32
+		{32DD6F28-FAF1-464D-BD04-E8E80748CB6C}.Release_ICL|Win32.ActiveCfg = Release_ICL|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

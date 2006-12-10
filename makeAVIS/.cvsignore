@@ -1,0 +1,17 @@
+debug
+Debug_ICL
+release
+Release_ICL
+*.ncb
+*.opt
+*.positions
+*.o
+*.aps
+*.suo
+*.vcproj.*
+.depend
+Ankh.*
+debugwin32
+debugx64
+releasewin32
+releasex64

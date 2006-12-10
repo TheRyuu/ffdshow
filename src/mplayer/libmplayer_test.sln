@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "libmplayer", "libmplayer_test.icproj", "{15EAD31E-83C9-4F93-A26E-6A0D83CA78CD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug ICL|Win32 = Debug ICL|Win32
+		Release ICL|Win32 = Release ICL|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{15EAD31E-83C9-4F93-A26E-6A0D83CA78CD}.Debug ICL|Win32.ActiveCfg = Debug ICL|Win32
+		{15EAD31E-83C9-4F93-A26E-6A0D83CA78CD}.Debug ICL|Win32.Build.0 = Debug ICL|Win32
+		{15EAD31E-83C9-4F93-A26E-6A0D83CA78CD}.Release ICL|Win32.ActiveCfg = Release ICL|Win32
+		{15EAD31E-83C9-4F93-A26E-6A0D83CA78CD}.Release ICL|Win32.Build.0 = Release ICL|Win32
+		{16F12367-511D-41B4-871B-9F94E17E1CA3}.Debug ICL|Win32.ActiveCfg = Debug ICL|Win32
+		{16F12367-511D-41B4-871B-9F94E17E1CA3}.Release ICL|Win32.ActiveCfg = Release ICL|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

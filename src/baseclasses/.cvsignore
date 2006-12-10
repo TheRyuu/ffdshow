@@ -1,0 +1,16 @@
+*.o
+*.a
+comlite.h
+control.h
+ddraw.h
+dinput.h
+errors.h
+evcode.h
+ks.h
+ksmedia.h
+ksuuids.h
+mpconfig.h
+qnetwork.h
+uuids.h
+vfwmsgs.h
+.depend

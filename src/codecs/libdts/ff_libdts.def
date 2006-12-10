@@ -1,0 +1,10 @@
+EXPORTS
+  dts_init
+  dts_syncinfo
+  dts_frame
+  dts_dynrng
+  dts_blocks_num
+  dts_block
+  dts_samples
+  dts_free
+  getVersion

@@ -1,0 +1,22 @@
+CFLAGS+= -I. -I../.. -DARCH_X86 -DALT_BITSTREAM_READER
+FORCECPP=1
+       
+SRCS_C=bit_allocate.c bitstream.c downmix.c imdct.c parse.c
+
+SLIB=../../../bin/ff_liba52.dll
+DEF=ff_liba52.def
+
+# enable SSE because compilation fails without it
+SSE=yes
+
+include ../../makefile_c.inc
+
+.all: $(SLIB)
+
+clean: 
+	rm -f *.o *~ $(SLIB)
+
+#
+# include dependency files if they exist
+#
+-include $(SRCS:.cpp=.d) $(SRCS_C:.c=.d)
