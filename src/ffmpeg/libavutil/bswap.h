@@ -26,6 +26,10 @@
 #ifndef __BSWAP_H__
 #define __BSWAP_H__
 
+#ifndef av_always_inline
+#define av_always_inline always_inline
+#endif
+
 #ifdef HAVE_BYTESWAP_H
 #include <byteswap.h>
 #else
