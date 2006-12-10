@@ -1,0 +1,3791 @@
+Changelog of ffdshow-tryouts revisions 0-614
+
+
+
+------------------------------------------------------------------------
+r614 | Sat Dec 2 12:10:43 2006 UTC | clsid2
+
+(ffmpeg 7202) Remove pretty much useless skiping of some predictors.
+This has pretty much no quality or speed effect except very small
+random changes.
+
+(ffmpeg 7204) hexagon search 
+	dia_size=512 + hexagon size (513 is the normal one used in h264)
+large to small diamond search
+        dia_size=256 + diamond size
+
+(ffmpeg 7205) dia_size=-1 -> funny_diamond_search()
+dia_siue=768 + size -> umh search (old -1 was 784)
+
+(fffpeg 7206) fix indention
+
+------------------------------------------------------------------------
+r613 | Sat Dec 2 11:16:08 2006 UTC | h_yamagata
+
+Bug fix: Crystal player freezes on seek.
+
+------------------------------------------------------------------------
+r612 | Sat Dec 2 10:24:10 2006 UTC | h_yamagata
+
+Bug fix: YV12 artifact.
+ VMR9 + YV12 + Queue : green artifact was seen.
+ This is VMR9's bug (if more than one buffer are taken...).
+
+------------------------------------------------------------------------
+r611 | Sat Dec 2 00:57:49 2006 UTC | h_yamagata
+
+If you want to use MSVC8 for ffdshow.ax, ff_vfw.dll should be compiled
+by GCC. Both MSVC7.1 and MSVC8 does not work in some environment such
+as Windows Xp SP2 without shared assembly of msvcr80.
+
+------------------------------------------------------------------------
+r610 | Fri Dec 1 19:30:55 2006 UTC | clsid2
+
+Small date fix for Inno Setup script.
+
+------------------------------------------------------------------------
+r609 | Fri Dec 1 17:19:36 2006 UTC | clsid2
+
+(ffmpeg 7186) return optimal fraction
+based on a patch by Uoti Urpala
+
+(ffmpeg 7187) fix overflow and remove wrong comment
+
+------------------------------------------------------------------------
+r608 | Fri Dec 1 17:13:26 2006 UTC | clsid2
+
+(ffmpeg 7189) 1 step diamond search around the median MV predictor
++0.01 PSNR
+idea from x264
+
+(ffmpeg 7191) cosmetic (prevent name clashes of variables in a macro
+with surrounding code)
+
+(ffmpeg 7192) UMH support (dia_size=-1 activates it)
+
+(ffmpeg 7193) typo in umh
+
+------------------------------------------------------------------------
+r607 | Fri Dec 1 17:07:32 2006 UTC | clsid2
+
+Updated flv muxer.
+
+------------------------------------------------------------------------
+r606 | Fri Dec 1 16:59:55 2006 UTC | clsid2
+
+Add intfloat functions,
+Move some stuff from avformat.h to allformats.h.
+
+------------------------------------------------------------------------
+r605 | Thu Nov 30 21:14:46 2006 UTC | clsid2
+
+Small update to cpu detection script.
+
+------------------------------------------------------------------------
+r604 | Thu Nov 30 17:00:31 2006 UTC | clsid2
+
+Updated Inno Setup script.
+
+------------------------------------------------------------------------
+r603 | Thu Nov 30 13:58:49 2006 UTC | drevil_xxl
+
+Updated mp3lib.
+
+------------------------------------------------------------------------
+r602 | Thu Nov 30 13:28:23 2006 UTC | h_yamagata
+
+Bug fix: subtitle: Fast rendering on UNICODE build was garbling.
+
+------------------------------------------------------------------------
+r601 | Tue Nov 28 13:47:17 2006 UTC | h_yamagata
+
+Bug fix: postprocessing: A green line was seen when we play odd line
+numbers flv file with mplayer's PP on.
+
+------------------------------------------------------------------------
+r600 | Tue Nov 28 12:42:12 2006 UTC | drevil_xxl
+
+Reverted revision 595.
+
+------------------------------------------------------------------------
+r599 | Tue Nov 28 08:10:15 2006 UTC | drevil_xxl
+
+Updated readme.txt.
+
+------------------------------------------------------------------------
+r598 | Mon Nov 27 15:24:52 2006 UTC | clsid2
+
+Installer now puts revision and build date in the registry.
+
+------------------------------------------------------------------------
+r597 | Mon Nov 27 15:10:20 2006 UTC | clsid2
+
+(ffmpeg 7172) Move copy_block* functions to dsp dsputil.h
+Patch by Brian Foley <bfoley at compsoc.nuigalway dot ie>
+Original thread:
+Date: Nov 26, 2006 6:44 PM
+Subject: Re: [FFmpeg-devel] [PATCH] put_mpeg4_qpel16_h_lowpass
+altivec, take 2
+
+------------------------------------------------------------------------
+r596 | Mon Nov 27 14:49:37 2006 UTC | drevil_xxl
+
+Updated readme.txt.
+
+------------------------------------------------------------------------
+r595 | Mon Nov 27 14:48:55 2006 UTC | clsid2
+
+(ffmpeg 7160) Bring AC3 encoder output up to input volume level.
+patch by Bill O'Shaughnessy <bill.oshaughnessy at gmail dot com>
++ reg tests update gruntwork by me
+Original thread:
+date: Nov 21, 2006 11:36 PM	 
+subject: [FFmpeg-devel] Simpler Patch to bring AC3 encoder output up to
+input level
+
+------------------------------------------------------------------------
+r594 | Mon Nov 27 14:30:32 2006 UTC | drevil_xxl
+
+x64 libDTS fix
+
+------------------------------------------------------------------------
+r593 | Mon Nov 27 14:28:57 2006 UTC | drevil_xxl
+
+x64 FAAD fix
+
+------------------------------------------------------------------------
+r592 | Mon Nov 27 14:22:24 2006 UTC | drevil_xxl
+
+(ffmpeg 7176) Alphabetic reordering of codec registration.
+patch by Robert Swain <robert.swain at gmail dot com>
+
+------------------------------------------------------------------------
+r591 | Mon Nov 27 14:10:18 2006 UTC | drevil_xxl
+
+(ffmpeg 7173) PIC fix
+
+------------------------------------------------------------------------
+r590 | Mon Nov 27 09:10:33 2006 UTC | drevil_xxl
+
+Removed unused Inno Setup Script.
+
+------------------------------------------------------------------------
+r589 | Sun Nov 26 08:44:22 2006 UTC | drevil_xxl
+
+Updated readme.txt & readmeAudio.txt.
+
+------------------------------------------------------------------------
+r588 | Sun Nov 26 08:25:55 2006 UTC | drevil_xxl
+
+(ffmpeg 7161) FLAC: allow reading of full metadata headers from
+extradata
+
+------------------------------------------------------------------------
+r587 | Sun Nov 26 07:53:37 2006 UTC | drevil_xxl
+
+(ffmpeg 7169) 100l: Initialize dc_scale with current quantizer for
+adv I frames
+
+(ffmpeg 7170) B-frames support for adv. profile
+
+(ffmpeg 7171) Correct rounding values in overlap filtering
+
+------------------------------------------------------------------------
+r586 | Sat Nov 25 22:39:14 2006 UTC | eragon4ever
+
+Change some XviD -> Xvid and ffmpeg -> FFmpeg as said on the official
+websites.
+Cosmetical update of the readme files.(Someone who knows more abot the
+current features, configuration etc. should updated them properly.)
+
+Updated changelog.txt.
+Small fixes to copying.de.txt.
+
+------------------------------------------------------------------------
+r585 | Sat Nov 25 11:48:22 2006 UTC | h_yamagata
+
+Bug fix: Mixer::headphone virtual spatialization was crashing on
+up-mixing from mono.
+
+------------------------------------------------------------------------
+r584 | Thu Nov 23 20:44:24 2006 UTC | clsid2
+
+Place ffSpkCfg.dll as the first file in the Inno Setup script.
+That slightly improves its loading time.
+
+------------------------------------------------------------------------
+r583 | Thu Nov 23 08:47:38 2006 UTC | drevil_xxl
+
+Put compiler info in few more libraries.
+
+------------------------------------------------------------------------
+r582 | Thu Nov 23 08:18:37 2006 UTC | h_yamagata
+
+Speaker setup for Inno Setup.
+
+------------------------------------------------------------------------
+r581 | Wed Nov 22 19:33:55 2006 UTC | foxyshadis
+
+Revised PP'able codecs list.
+
+------------------------------------------------------------------------
+r580 | Wed Nov 22 15:50:06 2006 UTC | h_yamagata
+
+A part of speaker setup.
+getSpeakerConfig@ffSpkCfg returns the speaker setting of the control panel.
+Speaker setup for Inno Setup is coming soon.
+
+------------------------------------------------------------------------
+r579 | Wed Nov 22 08:10:01 2006 UTC | drevil_xxl
+
+(ffmpeg 7147) 100l infinite loop fix
+
+(ffmpeg 7148) fix b frames + -mbd rd without -psnr (Yes, that was
+seriously buggy and probably hasn't been noticed as everyone who tested
+stuff used -psnr.)
+
+------------------------------------------------------------------------
+r578 | Tue Nov 21 18:50:27 2006 UTC | drevil_xxl
+
+minor fix
+
+------------------------------------------------------------------------
+r577 | Tue Nov 21 16:55:44 2006 UTC | eragon4ever
+
+much smaller German infobefore.rtf
+
+------------------------------------------------------------------------
+r576 | Tue Nov 21 13:57:45 2006 UTC | drevil_xxl
+
+added some remarks
+updated libavcodec makefile
+
+------------------------------------------------------------------------
+r575 | Tue Nov 21 11:56:14 2006 UTC | drevil_xxl
+
+(ffmpeg 7143) Decode non-interleaved scans.
+
+------------------------------------------------------------------------
+r574 | Mon Nov 20 21:21:23 2006 UTC | clsid2
+
+(ffmpeg 7133) Infiinit loop fix for CBR + adaptive quant.
+
+(ffmpeg 7134) Fix linking with H.261 support disabled.
+patch by Tom Harper, <d.thomas.harper at gmail dot com>
+
+------------------------------------------------------------------------
+r573 | Mon Nov 20 11:12:18 2006 UTC | drevil_xxl
+
+(ffmpeg 7132) 100l qprd fix 2nd try
+
+------------------------------------------------------------------------
+r572 | Mon Nov 20 08:55:43 2006 UTC | drevil_xxl
+
+(ffmpeg 7123) Fix typo in comment.
+
+(ffmpeg 7124) Correct GET/PUT_UTF8 comment: The get/put functions might
+be called up to 7 times, though only up to 4 times for valid UTF-8
+values.
+
+(ffmpeg 7126) Testing all dquant for qp_rd fixes the qp runaway to 31
+bug.
+
+(ffmpeg 7131) Some progressive JPEG support.
+
+------------------------------------------------------------------------
+r571 | Sun Nov 19 13:30:53 2006 UTC | eragon4ever
+
+Inno Setup:
+ new option include_setup_icon
+
+------------------------------------------------------------------------
+r570 | Sun Nov 19 12:13:12 2006 UTC | h_yamagata
+
+OSD item "CPU load" was not working for audio part.
+ ("CPU load" shows system CPU load, not that of audio part.)
+
+------------------------------------------------------------------------
+r569 | Sun Nov 19 12:06:21 2006 UTC | h_yamagata
+
+Deinterlacing -> DScaler: Video (TomsMoComp) was crashing
+(mainly MSVC builds).
+
+------------------------------------------------------------------------
+r568 | Sun Nov 19 11:32:57 2006 UTC | clsid2
+
+fix some en->de
+
+------------------------------------------------------------------------
+r567 | Sun Nov 19 10:26:33 2006 UTC | h_yamagata
+
+Updated Didee's YlevelsG/S/C (modified by Alain2).
+
+------------------------------------------------------------------------
+r566 | Sat Nov 18 14:18:31 2006 UTC | eragon4ever
+
+Updated changelog.txt
+
+------------------------------------------------------------------------
+r565 | Sat Nov 18 12:22:58 2006 UTC | eragon4ever
+
+-made some more Inno Setup strings translatable
+-updated German Inno Setup translation
+
+------------------------------------------------------------------------
+r564 | Sat Nov 18 12:13:49 2006 UTC | clsid2
+
+(ffmpeg 7117) Missed one log2().
+
+------------------------------------------------------------------------
+r563 | Fri Nov 17 19:33:02 2006 UTC | eragon4ever
+
+cosmetics: root -> Root
+
+------------------------------------------------------------------------
+r562 | Fri Nov 17 09:23:51 2006 UTC | h_yamagata
+
+Buf fix: 6) image settings -> preset autoload conditions ->
+"on FOURCC match" doesn't work. (reported by juskixxx)
+
+UNICODE build was not working.
+
+------------------------------------------------------------------------
+r561 | Fri Nov 17 07:16:25 2006 UTC | drevil_xxl
+
+Overlap filtering was done in reverse order.
+Fix comments.
+Optimize overlapping.
+Suggested by Skal, sprintf (mail, "skal%d@orange.fr", 0xFFFF)
+
+------------------------------------------------------------------------
+r560 | Thu Nov 16 23:14:57 2006 UTC | clsid2
+
+stupid typo
+
+------------------------------------------------------------------------
+r559 | Thu Nov 16 23:07:08 2006 UTC | clsid2
+
+Set installer default to "enable all supported" for ffdshow raw video
+filter (note: This is a different filter than the main ffdshow video
+decoder filter.). Mainly to be used in GraphEdit.
+
+Cleanup registry keys of ffdshow audio processor.
+
+------------------------------------------------------------------------
+r558 | Thu Nov 16 22:29:01 2006 UTC | clsid2
+
+(ffmpeg 7105) RGB555 has never been working as alpha supporting format.
+Remove the false setting.
+
+(ffmpeg 7106) Remove alpha channel from RGB555.
+
+------------------------------------------------------------------------
+r557 | Thu Nov 16 17:41:54 2006 UTC | clsid2
+
+some small config updates
+
+------------------------------------------------------------------------
+r556 | Thu Nov 16 16:54:46 2006 UTC | clsid2
+
+(ffmpeg 7097) Throw error if unsupported resolution is used with h261.
+
+------------------------------------------------------------------------
+r555 | Thu Nov 16 12:00:26 2006 UTC | h_yamagata
+
+remove error messages of "CPU load"
+
+------------------------------------------------------------------------
+r554 | Thu Nov 16 11:37:37 2006 UTC | h_yamagata
+
+Remove dependency to pdh.dll
+Restored Previous version of TcpuUsage.
+Some fixes were needed for the caller's side.
+
+------------------------------------------------------------------------
+r553 | Wed Nov 15 21:55:53 2006 UTC | eragon4ever
+
+wording
+
+------------------------------------------------------------------------
+r552 | Wed Nov 15 19:42:42 2006 UTC | clsid2
+
+(ffmpeg 7089) Detect a few more errors. (fixes libmp3-bug.avi again)
+Make pickyness of the decoder user selectable through error_resilience
+param like for video decoders.
+
+------------------------------------------------------------------------
+r551 | Wed Nov 15 15:57:48 2006 UTC | h_yamagata
+
+Bug fix trial around pdh.dll (alpha testing)
+ Load pdh.dll only when necessary. (OSD "CPU load" or automatic quality
+  control of PP)
+ Load pdh.dll only from system directory.
+
+------------------------------------------------------------------------
+r550 | Wed Nov 15 14:19:09 2006 UTC | drevil_xxl
+
+removed 2 warnings
+
+------------------------------------------------------------------------
+r549 | Wed Nov 15 13:52:15 2006 UTC | eragon4ever
+
+convert ffdshow.1031.de from Unicode to ANSI
+
+------------------------------------------------------------------------
+r548 | Wed Nov 15 13:46:21 2006 UTC | clsid2
+
+skip compilation of unused mpegaudio code
+
+------------------------------------------------------------------------
+r547 | Wed Nov 15 13:34:48 2006 UTC | clsid2
+
+skip compilation of unused SNOW code
+
+------------------------------------------------------------------------
+r546 | Wed Nov 15 13:33:27 2006 UTC | eragon4ever
+
+Fixed garbled German letter "¸".
+
+------------------------------------------------------------------------
+r545 | Wed Nov 15 13:31:24 2006 UTC | clsid2
+
+typo
+
+------------------------------------------------------------------------
+r544 | Wed Nov 15 11:42:48 2006 UTC | drevil_xxl
+
+Added more FourCCs.
+
+------------------------------------------------------------------------
+r543 | Wed Nov 15 08:52:47 2006 UTC | drevil_xxl
+
+minor fix
+
+------------------------------------------------------------------------
+r542 | Wed Nov 15 00:30:51 2006 UTC | clsid2
+
+(ffmpeg 7069) more checks and error messages
+
+(ffmpeg 7070) reset internal buffer during seeking
+
+(ffmpeg 7073) making decoding more error robust
+
+------------------------------------------------------------------------
+r541 | Wed Nov 15 00:22:54 2006 UTC | clsid2
+
+(ffmpeg 7068) remove workaround for missing inttypes.h
+
+------------------------------------------------------------------------
+r540 | Tue Nov 14 23:49:30 2006 UTC | clsid2
+
+(ffmpeg 7067) Changed rgba32_to routines to support both alpha and
+non-alpha formats (See r7066, too.).
+
+------------------------------------------------------------------------
+r539 | Tue Nov 14 23:05:45 2006 UTC | clsid2
+
+(ffmpeg 7063) Remove log2() usage.
+
+------------------------------------------------------------------------
+r538 | Tue Nov 14 18:52:38 2006 UTC | clsid2
+
+(ffmpeg 6250) Remove a redundant memset from libavformat.
+
+------------------------------------------------------------------------
+r537 | Tue Nov 14 18:38:51 2006 UTC | clsid2
+
+(ffmpeg 6875) kill AVImageFormat
+
+------------------------------------------------------------------------
+r536 | Tue Nov 14 18:26:03 2006 UTC | clsid2
+
+(ffmpeg 7035) split av_seek_frame_binary() so the code becomes
+idependant of AVInputFormat and AVIndex
+
+------------------------------------------------------------------------
+r535 | Tue Nov 14 13:38:40 2006 UTC | h_yamagata
+
+Codec configuration page: new column width for the resized dialog.
+
+------------------------------------------------------------------------
+r534 | Tue Nov 14 13:19:08 2006 UTC | h_yamagata
+
+Bug fix of rev 447.
+Try to open VFW configuration was crashing on Windows 98.
+Maybe Windows 98's bug??
+
+------------------------------------------------------------------------
+r533 | Tue Nov 14 09:26:54 2006 UTC | h_yamagata
+
+Updated German translation by eragon4ever.
+
+------------------------------------------------------------------------
+r532 | Tue Nov 14 09:23:17 2006 UTC | h_yamagata
+
+Updated changelog.txt by eragon4ever.
+
+------------------------------------------------------------------------
+r531 | Tue Nov 14 09:18:55 2006 UTC | h_yamagata
+
+Updated readmeMultiCPU.txt.
+
+------------------------------------------------------------------------
+r530 | Tue Nov 14 07:14:08 2006 UTC | drevil_xxl
+
+Updated libavcodec & ffdshow_icl9 vcproj.
+
+------------------------------------------------------------------------
+r529 | Mon Nov 13 20:11:26 2006 UTC | clsid2
+
+(ffmpeg 6995) rename squareTbl -> ff_squareTbl
+
+(ffmpeg 6996) make more tables static
+
+(ffmpeg 6998) zigzag_direct_noperm doesn't exist, remove declaration
+
+------------------------------------------------------------------------
+r528 | Mon Nov 13 17:57:02 2006 UTC | clsid2
+
+fix gcc warning
+
+------------------------------------------------------------------------
+r527 | Mon Nov 13 17:55:19 2006 UTC | clsid2
+
+typo
+
+------------------------------------------------------------------------
+r526 | Mon Nov 13 17:51:45 2006 UTC | clsid2
+
+(ffmpeg 6993) move all cavs-parsing to cavs.c
+This should help building parser without decoder
+
+------------------------------------------------------------------------
+r525 | Mon Nov 13 16:34:22 2006 UTC | clsid2
+
+some ffmpeg updates
+
+------------------------------------------------------------------------
+r524 | Mon Nov 13 15:59:37 2006 UTC | h_yamagata
+
+Alternative implementation of "CPU load".
+Now it can work on multiprocessor systems.
+It uses pdh.dll on your HDD in NT, registry hack in Win9x.
+Automatic quality control of postprocessing works again.
+If "CPU load" for the heaviest processor >90% and "Queued samples"<8...
+
+------------------------------------------------------------------------
+r523 | Mon Nov 13 09:49:21 2006 UTC | h_yamagata
+
+dialog box of "Mixer": fixed resource
+
+------------------------------------------------------------------------
+r522 | Sun Nov 12 17:11:45 2006 UTC | clsid2
+
+(ffmpeg 6981) make some tables static
+
+------------------------------------------------------------------------
+r521 | Sun Nov 12 17:09:12 2006 UTC | clsid2
+
+(ffmpeg 6976) adding more static keywords
+
+------------------------------------------------------------------------
+r520 | Sun Nov 12 17:05:40 2006 UTC | clsid2
+
+(ffmpeg 6975) make vp6_pcr_tree static
+
+------------------------------------------------------------------------
+r519 | Sun Nov 12 17:04:19 2006 UTC | clsid2
+
+(ffmpeg 6972) make some symbols static
+
+------------------------------------------------------------------------
+r518 | Fri Nov 10 22:20:57 2006 UTC | clsid2
+
+(ffmpeg 6960) store a identifer and the first header in extradata
+With this mp3 should be binary identical to what you had before header
+compression.
+support mp3 with crc (by droping the crc and putting it back during
+header decompress, currently it's just random tough, does any deocoder
+even check it?)
+
+(ffmpeg 6961) zero private bits
+
+------------------------------------------------------------------------
+r517 | Fri Nov 10 17:12:18 2006 UTC | clsid2
+
+some Inno Setup tweaks
+
+------------------------------------------------------------------------
+r516 | Fri Nov 10 06:43:13 2006 UTC | drevil_xxl
+
+(ffmpeg 6958) mp3 header (de)compression bitstream filter
+This will make mp3 frames 4 bytes smaller, it will not give you binary
+identical mp3 files, but it will give you mp3 files which decode to
+binary identical output.
+This will only work in containers providing at least packet size,
+sample_rate and number of channels.
+Bugreports about mp3 files for which this fails are welcome.
+This is experimental (Don't expect compatibility and don't even expect
+to be able to decompress what you compressed, hell don't even expect
+this to work without editing the source a little.)
+
+------------------------------------------------------------------------
+r515 | Thu Nov 9 18:45:47 2006 UTC | drevil_xxl
+
+(ffmpeg 6955) Remove the H264Context parameter from decode_init_vlc() as
+it is not being used.
+
+------------------------------------------------------------------------
+r514 | Thu Nov 9 08:06:38 2006 UTC | drevil_xxl
+
+(ffmpeg 6942) 100l for me, I am being to stupid to read the mpeg4 spec/
+eat stuffing mbs a the end of the picture
+
+(ffmpeg 6953) 10000l to myself, fixing regression test failure
+
+------------------------------------------------------------------------
+r513 | Wed Nov 8 17:45:56 2006 UTC | drevil_xxl
+
+Minor fix of rev 512.
+
+------------------------------------------------------------------------
+r512 | Wed Nov 8 16:52:59 2006 UTC | clsid2
+
+vs2003 compilation fix
+
+------------------------------------------------------------------------
+r511 | Wed Nov 8 09:31:26 2006 UTC | h_yamagata
+
+A few cosmetic fixes of the resource.
+
+------------------------------------------------------------------------
+r510 | Wed Nov 8 09:21:13 2006 UTC | h_yamagata
+
+XP visual style support for MSVC8 build.
+
+------------------------------------------------------------------------
+r509 | Wed Nov 8 07:12:49 2006 UTC | drevil_xxl
+
+Bump version for Fraps v[24] support
+add codec_tag and codec_stream_tag to MpegEncContext to not alter avctx
+values
+add option to set mpeg1/2 gop timecode start, and drop frame flag
+timecode flag
+
+typo
+
+------------------------------------------------------------------------
+r508 | Tue Nov 7 11:28:14 2006 UTC | drevil_xxl
+
+Removed error message. Updated libavcodec vcproj files.
+
+------------------------------------------------------------------------
+r507 | Tue Nov 7 06:22:54 2006 UTC | drevil_xxl
+
+Avoid void*-arithmetic, and uint8_t* is more correct anyway.
+
+------------------------------------------------------------------------
+r506 | Mon Nov 6 15:35:27 2006 UTC | clsid2
+
+(ffmpeg 6914) move AVCodecParser prototypes and definitions to parser.h,
+and move mpegvideo parser to mpeg12.c
+
+(ffmpeg 6915) rename ff_mpeg1_find_frame_end to mpeg1_find_frame_end and
+make it static
+
+------------------------------------------------------------------------
+r505 | Mon Nov 6 12:00:23 2006 UTC | drevil_xxl
+
+(ffmpeg 6910) Check for symbol count.
+
+------------------------------------------------------------------------
+r504 | Mon Nov 6 11:57:09 2006 UTC | h_yamagata
+
+Inno Setup: "Flags: unchecked;" for AAC and Vorbis,
+ so that the installer does not overwrite current setting.
+
+------------------------------------------------------------------------
+r503 | Mon Nov 6 11:57:08 2006 UTC | drevil_xxl
+
+(ffmpeg 6908) Limit output sample to 0..maxval
+fixes decoding of T16E0.JLS
+
+------------------------------------------------------------------------
+r502 | Mon Nov 6 11:50:45 2006 UTC | drevil_xxl
+
+(ffmpeg 6902) Move idct block array variable onto
+rtjpeg_decode_frame_yuv420 stack since it is only used there and is only
+128 byte large.
+Also make it aligned to fix playback with altivec.
+
+------------------------------------------------------------------------
+r501 | Sun Nov 5 15:52:37 2006 UTC | drevil_xxl
+
+Correct support for Fraps v4 (and Huffman tree for < 256 symbols)
+
+------------------------------------------------------------------------
+r500 | Sun Nov 5 12:33:18 2006 UTC | h_yamagata
+
+Updated Japanese translation.
+
+------------------------------------------------------------------------
+r499 | Sun Nov 5 11:38:59 2006 UTC | h_yamagata
+
+Minor fix of rev 497.
+
+------------------------------------------------------------------------
+r498 | Sun Nov 5 06:39:47 2006 UTC | drevil_xxl
+
+Fraps v2 and v4 support.
+
+------------------------------------------------------------------------
+r497 | Sat Nov 4 13:36:43 2006 UTC | h_yamagata
+
+Virtual Dub installation directory selection support.
+
+------------------------------------------------------------------------
+r496 | Sat Nov 4 06:00:20 2006 UTC | drevil_xxl
+
+(ffmpeg 6887) comment about failed optimization
+
+(ffmpeg 6888) 2 instructions less (same speed)
+
+(ffmpeg 6889) merging mov & and (no speedchange)
+
+(ffmpeg 6891) ensure alignment (no speed change)
+
+------------------------------------------------------------------------
+r495 | Sat Nov 4 04:14:30 2006 UTC | h_yamagata
+
+Work around Windows Vista's bug.
+
+http://forum.doom9.org/showthread.php?p=888312#post888312
+
+------------------------------------------------------------------------
+r494 | Fri Nov 3 13:14:41 2006 UTC | clsid2
+
+(ffmpeg 6880) 1 instruction less
+
+(ffmpeg 6881) preempt possible overflow
+
+(ffmpeg 6882) 2 instructions less in h264_loop_filter_luma_mmx2()
+
+------------------------------------------------------------------------
+r493 | Fri Nov 3 11:13:28 2006 UTC | h_yamagata
+
+Japanese translation by tnetsixenon
+ http://tnetsixenon.xrea.jp/ffdshow_tryouts.html
+
+------------------------------------------------------------------------
+r492 | Fri Nov 3 10:01:23 2006 UTC | h_yamagata
+
+resized dialog box
+
+------------------------------------------------------------------------
+r491 | Fri Nov 3 09:42:29 2006 UTC | drevil_xxl
+
+Added more FourCCs.
+
+------------------------------------------------------------------------
+r490 | Fri Nov 3 09:12:02 2006 UTC | drevil_xxl
+
+optimize H264_DEBLOCK_P0_Q0
+2.5% faster filter_mb_fast() on P3
+
+------------------------------------------------------------------------
+r489 | Fri Nov 3 08:55:41 2006 UTC | drevil_xxl
+
+new I/P frame selection heuristic
+PSNR/bitrate is slightly better for my (short) test videos
+more tests welcome...
+
+------------------------------------------------------------------------
+r488 | Fri Nov 3 08:34:04 2006 UTC | drevil_xxl
+
+10l (forgot ALT_SCAN)
+
+------------------------------------------------------------------------
+r487 | Fri Nov 3 08:16:06 2006 UTC | drevil_xxl
+
+reindentation, patch by From: Steve Lhomme
+<slhomme at divxcorp dot com>
+
+------------------------------------------------------------------------
+r486 | Thu Nov 2 15:54:33 2006 UTC | clsid2
+
+cosmetic: re-ordered some formats in codecs list
+
+------------------------------------------------------------------------
+r485 | Thu Nov 2 14:19:53 2006 UTC | h_yamagata
+
+Translation support code
+ vfw "Input" page: fix missing translation support
+ "About" page: translation support for readme*.txt
+ ffdshow.rc: cosmetic changes to support translations
+ ffdshow.rc: added some string resource
+
+------------------------------------------------------------------------
+r484 | Thu Nov 2 07:52:08 2006 UTC | drevil_xxl
+
+(ffmpeg 6863) Merge clip() into the alpha/beta/tc0 tables.
+(10% faster filter_mb_fast() on P3)
+
+------------------------------------------------------------------------
+r483 | Wed Nov 1 19:57:10 2006 UTC | drevil_xxl
+
+Added more FourCCs.
+
+------------------------------------------------------------------------
+r482 | Wed Nov 1 11:08:04 2006 UTC | h_yamagata
+
+Translation support for ToolTip hints.
+ Include Japanese translations for ToolTip hints.
+
+------------------------------------------------------------------------
+r481 | Wed Nov 1 06:21:14 2006 UTC | drevil_xxl
+
+(ffmpeg 6850) fix 1/0 b frames + CBR bug
+
+------------------------------------------------------------------------
+r480 | Tue Oct 31 19:13:15 2006 UTC | drevil_xxl
+
+Added more FourCCs.
+
+------------------------------------------------------------------------
+r479 | Tue Oct 31 13:36:43 2006 UTC | h_yamagata
+
+video decoder configuration - Output dialog
+ Now we can uncheck "DV"
+ Automatic enable/disable Planar YUV on HW deinterlacing 
+
+------------------------------------------------------------------------
+r478 | Tue Oct 31 12:15:22 2006 UTC | clsid2
+
+(ffmpeg 6845) Remove GCC warning about void * used in arithmetic.
+
+------------------------------------------------------------------------
+r477 | Tue Oct 31 11:54:24 2006 UTC | h_yamagata
+
+Show ToolTip hint for Bob and Weave.
+Show ToolTip hint for 15 seconds (was 1.7 seconds)
+Translation support for ToolTips in the page.
+Updated Japanese translations.
+
+------------------------------------------------------------------------
+r476 | Tue Oct 31 10:40:15 2006 UTC | drevil_xxl
+
+Fixed AC3 output. 
+
+------------------------------------------------------------------------
+r475 | Tue Oct 31 09:28:44 2006 UTC | h_yamagata
+
+OSD item: "Queued samples": Show the reason why queue is not working.
+
+------------------------------------------------------------------------
+r474 | Mon Oct 30 20:35:14 2006 UTC | drevil_xxl
+
+added IMC compatible decoder
+ftp://mplayerhq.hu/MPlayer/samples/A-codecs/IMC/imc-48000-2bit-mono.wav
+
+------------------------------------------------------------------------
+r473 | Mon Oct 30 15:50:59 2006 UTC | drevil_xxl
+
+Updated libmplayer vcproj files.
+
+------------------------------------------------------------------------
+r472 | Mon Oct 30 12:39:19 2006 UTC | drevil_xxl
+
+Updated libavcodec vcproj files.
+
+------------------------------------------------------------------------
+r471 | Mon Oct 30 12:15:29 2006 UTC | clsid2
+
+(ffmpeg 6820) sample rate fix
+patch by Andrew Voznytsa <andrew.voznytsa at gmail dot com>
+
+------------------------------------------------------------------------
+r470 | Mon Oct 30 11:35:33 2006 UTC | clsid2
+
+(ffmpeg 6829) CANDIDATE_MB_TYPE_INTER heuristic doesn't work at really
+low quality where the distortion becomes less relevant then the overhead
+of intra blocks.
+
+------------------------------------------------------------------------
+r469 | Mon Oct 30 11:24:24 2006 UTC | clsid2
+
+(ffmpeg 6836) avoid random noise on damaged frames
+
+(ffmpeg 6837) Don't set the sampling rate just because 1 mp3 packet
+header says so. (Fixes playback speed on some old mencoder generated avis
+which where then dumped to mp3.)
+
+------------------------------------------------------------------------
+r468 | Mon Oct 30 10:42:51 2006 UTC | h_yamagata
+
+more accurate "Time on ffdshow"
+
+------------------------------------------------------------------------
+r467 | Mon Oct 30 05:52:10 2006 UTC | drevil_xxl
+
+Removed distortions when encoding AAC to AC3.
+
+------------------------------------------------------------------------
+r466 | Sun Oct 29 14:52:50 2006 UTC | clsid2
+
+(ffmpeg 6834) Fix compilation with PIC enabled, BRANCHLESS_GET_CABAC is
+defined under !PIC but gets used without a check for !PIC.
+
+------------------------------------------------------------------------
+r465 | Sun Oct 29 10:53:50 2006 UTC | h_yamagata
+
+Bug fix: "Time on ffdshow" was not working with MPEG2.
+
+------------------------------------------------------------------------
+r464 | Sun Oct 29 07:52:56 2006 UTC | h_yamagata
+
+Register.bat does not work in Windows Vista. This is the work around for
+it.
+
+Here's register.bat for Windows Vista:
+
+@echo off
+REM compile bin/register.nsi to get register.exe
+start %~dp0%register.exe /S
+
+------------------------------------------------------------------------
+r463 | Sun Oct 29 07:33:56 2006 UTC | h_yamagata
+
+Compilation fix for MSVC8
+getting more and more incomplete, but was necessary to debug rev462
+issue.
+
+------------------------------------------------------------------------
+r462 | Sun Oct 29 07:30:58 2006 UTC | h_yamagata
+
+Bug fix: N-VOPs
+http://sourceforge.net/tracker/index.php?func=detail&aid=1471264&group_id=53761&atid=471489
+
+Japanese:
+http://pc7.2ch.net/test/read.cgi/software/1161264474/354
+
+Needs more testing
+custom code for h263dec.c
+
+------------------------------------------------------------------------
+r461 | Sat Oct 28 19:08:19 2006 UTC | clsid2
+
+(ffmpeg 6823) prevent overflow if lambda2 is "too" large
+
+(ffmpeg 6824) lambda* should be unsigned
+
+------------------------------------------------------------------------
+r460 | Sat Oct 28 13:52:13 2006 UTC | drevil_xxl
+
+Use lambda/lmax instead of qscale/qmax as end check for vbv retry.
+
+------------------------------------------------------------------------
+r459 | Sat Oct 28 13:08:23 2006 UTC | drevil_xxl
+
+Fix obvious typo, BGR555 was missing
+
+------------------------------------------------------------------------
+r458 | Sat Oct 28 00:13:53 2006 UTC | h_yamagata
+
+restart replace for libmpeg2_ff.dll
+
+------------------------------------------------------------------------
+r457 | Fri Oct 27 13:55:19 2006 UTC | clsid2
+
+Added detection of DScaler dir to Inno Setup script.
+
+------------------------------------------------------------------------
+r456 | Fri Oct 27 13:24:36 2006 UTC | drevil_xxl
+
+Removed error message. 
+
+------------------------------------------------------------------------
+r455 | Fri Oct 27 12:39:16 2006 UTC | h_yamagata
+
+More about rev 453 problem.
+
+------------------------------------------------------------------------
+r454 | Thu Oct 26 11:14:40 2006 UTC | h_yamagata
+
+update for Inno script
+ German infobefore file and my preference.
+
+------------------------------------------------------------------------
+r453 | Thu Oct 26 11:05:09 2006 UTC | h_yamagata
+
+Bug fix: Tray icon right click (context menu): ffdshow property page
+If you are using Japanese or some of non English language, you may have
+experienced insufficient horizontal size of the dialog box. This patch
+fixes it. Not perfect, cross audio-video does not work, but practically
+it's not problem.
+
+------------------------------------------------------------------------
+r452 | Thu Oct 26 07:45:56 2006 UTC | drevil_xxl
+
+added Real Audio 1.0 & Real Audio 2.0
+ftp://mplayerhq.hu/MPlayer/samples/real/AC-28_8/A0000040.rm
+ftp://mplayerhq.hu/MPlayer/samples/real/AC-28_8/A0000044.rm
+
+------------------------------------------------------------------------
+r451 | Wed Oct 25 18:40:43 2006 UTC | clsid2
+
+Restore VP5/VP6 IDCT fix that was overwritten in rev 446.
+
+------------------------------------------------------------------------
+r450 | Wed Oct 25 18:31:50 2006 UTC | clsid2
+
+Tiny update for Inno script.
+
+------------------------------------------------------------------------
+r449 | Wed Oct 25 12:09:33 2006 UTC | drevil_xxl
+
+added MSS1
+ftp://mplayerhq.hu/MPlayer/samples/V-codecs/MSS1/screen_codec.wmv
+
+------------------------------------------------------------------------
+r448 | Wed Oct 25 11:37:17 2006 UTC | drevil_xxl
+
+Compilation fix for MSVC8.
+
+------------------------------------------------------------------------
+r447 | Wed Oct 25 09:13:04 2006 UTC | h_yamagata
+
+ANSI/MBCS more security fixes
+
+------------------------------------------------------------------------
+r446 | Wed Oct 25 07:27:56 2006 UTC | drevil_xxl
+
+(ffmpeg 6790) Don't include inttypes.h/stdint.h directly, there is an
+abstraction in libavutil/common.h for platforms with no inttypes.h.
+patch by Steve Lhomme, <slhomme at divxcorp dot com>
+
+------------------------------------------------------------------------
+r445 | Wed Oct 25 07:21:31 2006 UTC | drevil_xxl
+
+(ffmpeg 6782) set v_edge_pos correctly for field picture mpeg2
+
+------------------------------------------------------------------------
+r444 | Tue Oct 24 13:54:30 2006 UTC | h_yamagata
+
+Bug fix (ANSI): ANSI debug build often crashes when we click task tray
+icons. This affects release build too, and is security issue.
+
+------------------------------------------------------------------------
+r443 | Tue Oct 24 11:18:27 2006 UTC | drevil_xxl
+
+Added wavpack missing code.
+
+------------------------------------------------------------------------
+r442 | Tue Oct 24 11:17:07 2006 UTC | clsid2
+
+(ffmpeg 6776) CABAC assembler optimizations ported to AMD64
+
+------------------------------------------------------------------------
+r441 | Tue Oct 24 11:14:47 2006 UTC | clsid2
+
+Prevent Wavpack from crashing on some files. Now it has no sound on
+those files.
+
+------------------------------------------------------------------------
+r440 | Tue Oct 24 11:09:18 2006 UTC | h_yamagata
+
+new OSD item: "Time on ffdshow"
+Successor of "CPU load".
+
+------------------------------------------------------------------------
+r439 | Tue Oct 24 11:02:52 2006 UTC | h_yamagata
+
+Bug fix: Quality control of post processing. It has been depending on
+CPU usage (performance monitor). Now that I removed the performance
+monitor related code, it has to be fixed.
+
+------------------------------------------------------------------------
+r438 | Tue Oct 24 10:49:35 2006 UTC | h_yamagata
+
+cosmetics
+
+------------------------------------------------------------------------
+r437 | Mon Oct 23 22:40:09 2006 UTC | h_yamagata
+
+Updated German translation for Inno Setup by eragon4ever
+
+------------------------------------------------------------------------
+r436 | Mon Oct 23 14:07:22 2006 UTC | h_yamagata
+
+Custom messages for Inno Setup.
+Bug fix of delvcr80.nsi
+
+------------------------------------------------------------------------
+r435 | Mon Oct 23 10:45:30 2006 UTC | clsid2
+
+(ffmpeg 6770) use the adjustment value present in FLV to crop VP6 video
+
+(ffmpeg 6772) document the extradata protocol for VP6F
+
+------------------------------------------------------------------------
+r434 | Sun Oct 22 22:10:13 2006 UTC | h_yamagata
+
+Show FPS1 v2 is not working.
+
+------------------------------------------------------------------------
+r433 | Sun Oct 22 19:25:58 2006 UTC | clsid2
+
+(ffmpeg 6769) Use coded_width and coded_height instead of width and
+height.
+
+------------------------------------------------------------------------
+r432 | Sun Oct 22 19:14:51 2006 UTC | clsid2
+
+Updated French translation for Inno Setup.
+
+------------------------------------------------------------------------
+r431 | Sun Oct 22 15:46:16 2006 UTC | clsid2
+
+typo
+
+------------------------------------------------------------------------
+r430 | Sun Oct 22 15:40:19 2006 UTC | clsid2
+
+Updated Inno Setup script.
+
+------------------------------------------------------------------------
+r429 | Sun Oct 22 14:32:38 2006 UTC | clsid2
+
+idem
+
+------------------------------------------------------------------------
+r428 | Sun Oct 22 12:59:01 2006 UTC | clsid2
+
+Updated German translation.
+
+------------------------------------------------------------------------
+r427 | Sun Oct 22 10:43:27 2006 UTC | h_yamagata
+
+Updated Japanese translation for Inno Setup.
+delvcr80.nsi deletes msvcr80.dll for application plugins.
+
+------------------------------------------------------------------------
+r426 | Sun Oct 22 06:33:20 2006 UTC | drevil_xxl
+
+(ffmpeg 6754) handle limit>32 for set_ur_golomb_jpegls()
+
+------------------------------------------------------------------------
+r425 | Sat Oct 21 22:38:36 2006 UTC | clsid2
+
+(ffmpeg 6753) prevent infinite loop
+
+------------------------------------------------------------------------
+r424 | Sat Oct 21 13:56:12 2006 UTC | clsid2
+
+Don't blacklist explorer.exe on Vista.
+
+------------------------------------------------------------------------
+r423 | Fri Oct 20 23:12:09 2006 UTC | clsid2
+
+(ffmpeg 6750) decode_significance_8x8_x86()
+8% faster decode_cabac_residual() (8x8 case only) on P3
+
+------------------------------------------------------------------------
+r422 | Fri Oct 20 12:00:58 2006 UTC | clsid2
+
+updated cabac
+
+------------------------------------------------------------------------
+r421 | Fri Oct 20 11:48:58 2006 UTC | clsid2
+
+(ffmpeg 6744) move memory reading ByteIOContext init from mov.c to
+avobuf.c 
+
+------------------------------------------------------------------------
+r420 | Thu Oct 19 22:31:35 2006 UTC | clsid2
+
+updated cabac
+
+------------------------------------------------------------------------
+r419 | Thu Oct 19 15:58:04 2006 UTC | h_yamagata
+
+Compilation fix for GCC.
+
+------------------------------------------------------------------------
+r418 | Thu Oct 19 15:37:29 2006 UTC | clsid2
+
+(ffmpeg 6735) slightly faster decode_cabac_mb_mvd()
+
+------------------------------------------------------------------------
+r417 | Thu Oct 19 11:45:11 2006 UTC | clsid2
+
+(ffmpeg 6734) 1 variable less in decode_cabac_residual() no speed change
+(but less vars means less things GCC can load and store redundantly)
+
+------------------------------------------------------------------------
+r416 | Thu Oct 19 09:54:14 2006 UTC | clsid2
+
+(ffmpeg 6732) optimize sign decoding code in decode_residual()
+x86 is 4% faster on P3
+C sign stuff + x86 code for everything else is also faster then before
+(sorry, forgot to test pure C)
+... and if i replace the second occurance of the sign decoding in
+decode_residual by the asm too then everything gets slower iam starting
+to think that it might be best to write the whole function in asm,
+playing this avoid random deoptimizations game with gcc is not fun at
+all
+
+------------------------------------------------------------------------
+r415 | Wed Oct 18 12:49:32 2006 UTC | drevil_xxl
+
+Updated Inno Setup script.
+
+------------------------------------------------------------------------
+r414 | Wed Oct 18 12:43:13 2006 UTC | h_yamagata
+
+Updated Japanese translation for Inno Setup.
+
+------------------------------------------------------------------------
+r413 | Wed Oct 18 12:27:20 2006 UTC | clsid2
+
+cabac updates
+
+------------------------------------------------------------------------
+r412 | Wed Oct 18 09:23:05 2006 UTC | h_yamagata
+
+Updated Japanese translation for Inno Setup.
+
+------------------------------------------------------------------------
+r411 | Tue Oct 17 15:43:54 2006 UTC | h_yamagata
+
+Japanese translation for Inno Setup
+
+------------------------------------------------------------------------
+r410 | Tue Oct 17 15:32:57 2006 UTC | clsid2
+
+Added ICL9 project files for VS2003.
+
+------------------------------------------------------------------------
+r409 | Tue Oct 17 15:17:14 2006 UTC | clsid2
+
+fix of previous rev
+
+------------------------------------------------------------------------
+r408 | Tue Oct 17 15:14:21 2006 UTC | clsid2
+
+add wmmediasubtype_wvc1
+
+------------------------------------------------------------------------
+r407 | Tue Oct 17 15:12:53 2006 UTC | clsid2
+
+fix of previous rev
+
+------------------------------------------------------------------------
+r406 | Tue Oct 17 15:09:30 2006 UTC | clsid2
+
+Disable SNOW decoder/encoder.
+
+------------------------------------------------------------------------
+r405 | Tue Oct 17 14:49:04 2006 UTC | clsid2
+
+Added localization support to Inno Setup install script.
+
+------------------------------------------------------------------------
+r404 | Tue Oct 17 12:45:26 2006 UTC | clsid2
+
+updated Inno script
+
+------------------------------------------------------------------------
+r403 | Tue Oct 17 12:29:06 2006 UTC | clsid2
+
+updated cabac
+
+------------------------------------------------------------------------
+r402 | Tue Oct 17 12:20:19 2006 UTC | clsid2
+
+updated and moved eval
+
+------------------------------------------------------------------------
+r401 | Tue Oct 17 10:25:28 2006 UTC | h_yamagata
+
+Compilation fix for MSVC.
+
+------------------------------------------------------------------------
+r400 | Tue Oct 17 10:24:39 2006 UTC | h_yamagata
+
+mjpeg: fixed crashes on mplayer2.exe and WMP by drevil_xxl
+
+------------------------------------------------------------------------
+r399 | Tue Oct 17 10:22:57 2006 UTC | h_yamagata
+
+Minor fix: resource leak
+
+------------------------------------------------------------------------
+r398 | Mon Oct 16 14:00:29 2006 UTC | drevil_xxl
+
+Fixed(?) stereoscopic subtitles.
+
+------------------------------------------------------------------------
+r397 | Mon Oct 16 11:17:46 2006 UTC | h_yamagata
+
+Bug fix of rev351
+
+------------------------------------------------------------------------
+r396 | Mon Oct 16 10:11:43 2006 UTC | clsid2
+
+(ffmpeg 6702) Shift CABACContext.range right, this reduces the number of
+shifts needed in get_cabac() and is slightly faster on P3.
+(And should be much faster on P4 as the P4 except the more recent
+variants lacks an integer shifter and so shifts have ~10 times longer
+latency then simple operations like adds.)
+
+(ffmpeg 6703) This code will not work with PIC as it needs 7 registers
+and GCC doesn't support that in PIC.
+
+(ffmpeg 6704) 10l
+
+------------------------------------------------------------------------
+r395 | Sun Oct 15 18:08:24 2006 UTC | clsid2
+
+removed unused snow code
+
+------------------------------------------------------------------------
+r394 | Sun Oct 15 15:34:19 2006 UTC | clsid2
+
+Added SNOW decoder to codec configuration. So now it is possible to
+disable it.
+
+------------------------------------------------------------------------
+r393 | Sun Oct 15 13:19:06 2006 UTC | h_yamagata
+
+Bug fix: IExplorer.exe hangs up.
+IFilterGraph::FindFilterByName seems to have serious bug.
+
+------------------------------------------------------------------------
+r392 | Sun Oct 15 12:46:17 2006 UTC | clsid2
+
+(ffmpeg 6694) Ignore blocks with no samples and flags
+(but usually with MD5 sum).
+
+------------------------------------------------------------------------
+r391 | Sun Oct 15 12:24:55 2006 UTC | h_yamagata
+
+Bug fix: 4) ffdshow.ax crashes when loading an impulse file with the
+Convolver audio filter. (reported by Yong)
+
+------------------------------------------------------------------------
+r390 | Sun Oct 15 08:21:37 2006 UTC | h_yamagata
+
+Bug fix: Hardware deinterlacing: Bob or Weave setting was not effective
+in case field 2 first movie.
+
+------------------------------------------------------------------------
+r389 | Sun Oct 15 04:41:34 2006 UTC | h_yamagata
+
+Bug fix: 2) Output queue enabled + VMR9 renderless + RGB32 + specific
+video cards + pause = blackout problem
+
+Patched Media Player Classic + newest ffdshow can use queue without
+these bugs.
+
+Patched Media Player Classic + old ffdshow: no merit.
+
+With non patched Media Player Classic, ffdshow does not use queue in
+the setting above.
+
+Patch for MPC is coming soon.
+
+------------------------------------------------------------------------
+r388 | Sat Oct 14 11:41:21 2006 UTC | clsid2
+
+re-enabled Wavpack support
+added warning to Wavpack that it may crash on some files
+added note to FLAC and Wavpack about required source filter
+
+------------------------------------------------------------------------
+r387 | Sat Oct 14 11:16:52 2006 UTC | clsid2
+
+(ffmpeg 6688) Move block size check to decoder
+
+------------------------------------------------------------------------
+r386 | Fri Oct 13 17:32:08 2006 UTC | clsid2
+
+(ffmpeg 6683) dehack *ps_state indexing in the branchless decoder
+
+------------------------------------------------------------------------
+r385 | Fri Oct 13 17:27:10 2006 UTC | clsid2
+
+(ffmpeg 6685) simplify escape decoding
+
+------------------------------------------------------------------------
+r384 | Fri Oct 13 13:38:03 2006 UTC | clsid2
+
+(ffmpeg 6679) add "memory" to the clobber list we change memory so we
+need it, this also fixes some problems with gcc svn
+
+------------------------------------------------------------------------
+r383 | Thu Oct 12 21:10:31 2006 UTC | clsid2
+
+(ffmpeg 6673) int->uint8_t for 2 tables
+
+(ffmpeg 6675) 10l int vs uint8_t
+
+------------------------------------------------------------------------
+r382 | Thu Oct 12 15:52:56 2006 UTC | clsid2
+
+more cabac updates
+
+------------------------------------------------------------------------
+r381 | Thu Oct 12 15:21:23 2006 UTC | drevil_xxl
+
+Updated libavcodec vcproj files.
+
+------------------------------------------------------------------------
+r380 | Thu Oct 12 15:21:00 2006 UTC | clsid2
+
+more cabac updates
+
+------------------------------------------------------------------------
+r379 | Thu Oct 12 15:12:53 2006 UTC | clsid2
+
+cabac updates
+
+------------------------------------------------------------------------
+r378 | Thu Oct 12 15:11:14 2006 UTC | drevil_xxl
+
+Fixed MSS2 crashes.
+
+------------------------------------------------------------------------
+r377 | Thu Oct 12 14:48:11 2006 UTC | clsid2
+
+Fix for rev376
+
+------------------------------------------------------------------------
+r376 | Thu Oct 12 13:20:26 2006 UTC | clsid2
+
+(ffmpeg 6666) Rename ABS macro to FFABS.
+
+------------------------------------------------------------------------
+r375 | Thu Oct 12 12:46:10 2006 UTC | clsid2
+
+(ffmpeg 6664) more prefetches, 2% faster h264
+
+------------------------------------------------------------------------
+r374 | Thu Oct 12 12:25:11 2006 UTC | clsid2
+
+remove unused internal.h file
+
+------------------------------------------------------------------------
+r373 | Thu Oct 12 12:07:51 2006 UTC | clsid2
+
+(ffmpeg 6671) fix SHOW_SBITS for ALT_BITSTREAM_READER_LE
+Patch by Gregory Montoir <cyx at users.sourceforge dot net>
+
+------------------------------------------------------------------------
+r372 | Thu Oct 12 07:23:22 2006 UTC | drevil_xxl
+
+Removed unused SMC decoder.
+
+------------------------------------------------------------------------
+r371 | Wed Oct 11 15:55:08 2006 UTC | drevil_xxl
+
+Fixed ffdshow crash in WMEncoder.
+
+------------------------------------------------------------------------
+r370 | Tue Oct 10 20:17:05 2006 UTC | clsid2
+
+forgot some quotes
+
+------------------------------------------------------------------------
+r369 | Tue Oct 10 12:42:46 2006 UTC | drevil_xxl
+
+Removed VC6 support.  
+
+------------------------------------------------------------------------
+r368 | Tue Oct 10 11:29:17 2006 UTC | clsid2
+
+typo
+
+------------------------------------------------------------------------
+r367 | Tue Oct 10 11:00:39 2006 UTC | clsid2
+
+Don't use ffdshow in Oblivion.
+
+------------------------------------------------------------------------
+r366 | Mon Oct 9 16:24:30 2006 UTC | clsid2
+
+(ffmpeg 6604) drop failed attempt to optimize *state= c->mps_state[s];
+
+------------------------------------------------------------------------
+r365 | Mon Oct 9 15:27:47 2006 UTC | clsid2
+
+(ffmpeg 6603) 10l bugfix for some disabled code
+
+------------------------------------------------------------------------
+r364 | Mon Oct 9 14:33:04 2006 UTC | h_yamagata
+
+Minor fix of rev 357
+
+------------------------------------------------------------------------
+r363 | Mon Oct 9 13:56:04 2006 UTC | clsid2
+
+Updated Inno script
+
+------------------------------------------------------------------------
+r362 | Mon Oct 9 13:44:36 2006 UTC | clsid2
+
+Added some additional FourCCs to ffdshow mediatype registration. That
+way GSpot will recognize those formats as installed.
+
+------------------------------------------------------------------------
+r361 | Mon Oct 9 13:25:49 2006 UTC | clsid2
+
+Disable VC-1, VMnc and Wavpack. Decoding these formats is currently not
+working or crashing.
+
+------------------------------------------------------------------------
+r360 | Mon Oct 9 13:18:50 2006 UTC | clsid2
+
+(ffmpeg 6599) Remove bytestream_end checks, seems to work fine without
+them and the bitstream reader doesn't check for the end either.
+
+------------------------------------------------------------------------
+r359 | Mon Oct 9 13:14:52 2006 UTC | h_yamagata
+
+Show message to users that ffdshow can't join the graph in WME.
+
+------------------------------------------------------------------------
+r358 | Mon Oct 9 12:16:11 2006 UTC | h_yamagata
+
+Bug fix (incomplete): ffdshow crashes in WMEncoder
+http://forum.doom9.org/showthread.php?t=114617
+
+If ffdshow audio decoder is enabled, WME always crashes. I tried to
+debug and found the crash was deep in WME. I though it should be hard
+to fix. So I disabled ffdshow audio decoder in WME.
+
+ToDo: Show message to users that ffdshow can't join the graph.
+
+------------------------------------------------------------------------
+r357 | Mon Oct 9 09:37:13 2006 UTC | h_yamagata
+
+Bug fix of rev 353 (memory leak)
+
+------------------------------------------------------------------------
+r356 | Mon Oct 9 08:24:45 2006 UTC | drevil_xxl
+
+(ffmpeg 6596) decrease ff_h264_norm_shift[] size
+
+------------------------------------------------------------------------
+r355 | Mon Oct 9 08:21:43 2006 UTC | drevil_xxl
+
+(ffmpeg 6591) Fixes:
+mpegvideo.h:777: warning: ëinlineÅEis not at beginning of declaration
+motion_est_template.c:236: warning: ëinlineÅEis not at beginning of
+declaration
+Approved by Diego.
+
+(ffmpeg 6592) Fixes:
+parser.c:555: warning: implicit declaration of function
+ëff_cavs_find_frame_end
+Approved by Michael.
+
+(ffmpeg 6595) Fixes:
+rv10.c:494: warning: implicit declaration of function
+ëff_mpeg4_init_direct_mv
+Approved by Michael.
+
+------------------------------------------------------------------------
+r354 | Mon Oct 9 07:24:05 2006 UTC | drevil_xxl
+
+Added FPS1.
+ftp://mplayerhq.hu/MPlayer/samples/V-codecs/FPS1/fraps_vidc_fps1_sample.avi
+
+------------------------------------------------------------------------
+r353 | Mon Oct 9 07:07:41 2006 UTC | h_yamagata
+
+Bug fix: WMA crashes.
+DECLARE_ALIGNED_16 or __attribute__ ((aligned (16))) is not fully
+supported by GCC 4.0.3. 
+I used av_malloc, which may be slower.
+
+------------------------------------------------------------------------
+r352 | Mon Oct 9 06:44:10 2006 UTC | foxyshadis
+
+Allow raw input video PP again.
+
+------------------------------------------------------------------------
+r351 | Mon Oct 9 04:04:10 2006 UTC | h_yamagata
+
+Remove broken OSD item "CPU load", because of this:
+
+10) Access Violation in ffdshow on Windows Vista.
+(reported by Microsoft Windows Reliability team)
+http://sourceforge.net/tracker/index.php?func=detail&aid=1567236&group_id=53761&atid=471489
+
+------------------------------------------------------------------------
+r350 | Mon Oct 9 02:29:26 2006 UTC | h_yamagata
+
+rev 349 missing TffDecoderVideo.h
+
+------------------------------------------------------------------------
+r349 | Mon Oct 9 02:27:51 2006 UTC | h_yamagata
+
+Bug fix: VIX.exe freezes.
+
+------------------------------------------------------------------------
+r348 | Sun Oct 8 14:43:20 2006 UTC | clsid2
+
+(ffmpeg 6590) Avoid void *-arithmetic
+
+------------------------------------------------------------------------
+r347 | Sun Oct 8 13:59:14 2006 UTC | clsid2
+
+(ffmpeg 6576) () 10l
+
+(ffmpeg 6578) refill cabac variables in 16bit steps,
+3% faster get_cabac()
+
+(ffmpeg 6585) output typo fixes
+
+(ffmpeg 6586) 5% faster get_cabac()
+
+(ffmpeg 6587) branchless renormalization (1% faster get_cabac) old
+branchless renormalization wasn't faster because GCC was scared of the
+shift variable (missusing bit variable now)
+
+------------------------------------------------------------------------
+r346 | Sun Oct 8 13:59:03 2006 UTC | h_yamagata
+
+Bug fix: Avisynth error message
+
+------------------------------------------------------------------------
+r345 | Fri Oct 6 11:50:22 2006 UTC | h_yamagata
+
+Hardware deinterlacing: Now we can chose Bob or Weave for
+HW deinterlacing.
+
+------------------------------------------------------------------------
+r344 | Fri Oct 6 11:47:10 2006 UTC | h_yamagata
+
+Bug fix: libmpeg2: Hardware deinterlacing was not working at all.
+
+------------------------------------------------------------------------
+r343 | Fri Oct 6 11:45:44 2006 UTC | clsid2
+
+(ffmpeg 6567) fix decoding of ED-small-sample-file.ogg
+
+------------------------------------------------------------------------
+r342 | Fri Oct 6 10:24:46 2006 UTC | drevil_xxl
+
+Updated libavcodec_test vcproj files.
+
+------------------------------------------------------------------------
+r341 | Thu Oct 5 21:07:13 2006 UTC | clsid2
+
+(ffmpeg 6565) fix buffer underflows by reencoding the current frame
+with a higher QP
+
+------------------------------------------------------------------------
+r340 | Thu Oct 5 21:04:04 2006 UTC | clsid2
+
+(ffmpeg 6564) message typo fixes
+
+------------------------------------------------------------------------
+r339 | Thu Oct 5 13:48:57 2006 UTC | clsid2
+
+Also include uppercase
+
+------------------------------------------------------------------------
+r338 | Thu Oct 5 13:31:58 2006 UTC | clsid2
+
+Use lowercase FourCC dvsd for compatibility with MS DV decoder.
+
+------------------------------------------------------------------------
+r337 | Thu Oct 5 06:48:54 2006 UTC | igor1st
+
+(libdca r30) Fix type-punning bug
+
+------------------------------------------------------------------------
+r336 | Thu Oct 5 06:32:56 2006 UTC | drevil_xxl
+
+(ffmpeg 6557) Switch idct_mmx_xvid.c from GPL to LGPL as permitted by
+the author, Peter Ross <pross at xvid dot org>.
+
+------------------------------------------------------------------------
+r335 | Wed Oct 4 20:59:01 2006 UTC | clsid2
+
+redo rev 332 correctly
+
+------------------------------------------------------------------------
+r334 | Wed Oct 4 20:14:55 2006 UTC | clsid2
+
+undo rev 332
+
+------------------------------------------------------------------------
+r333 | Wed Oct 4 20:07:38 2006 UTC | clsid2
+
+(ffmpeg 6550) mjpeg 4:2:2 encoding support
+
+------------------------------------------------------------------------
+r332 | Wed Oct 4 19:28:51 2006 UTC | clsid2
+
+(ffmpeg 6551) change extradata type to uint8_t *
+
+------------------------------------------------------------------------
+r331 | Wed Oct 4 19:09:54 2006 UTC | clsid2
+
+idem
+
+------------------------------------------------------------------------
+r330 | Wed Oct 4 18:55:05 2006 UTC | clsid2
+
+Re-numbered codecs ids.
+(Please do a full rebuild of ffdshow.ax and libavcodec.dll to avoid
+b0rken binaries.)
+
+------------------------------------------------------------------------
+r329 | Wed Oct 4 17:34:49 2006 UTC | foxyshadis
+
+Cleanup of codecs list.
+
+------------------------------------------------------------------------
+r328 | Wed Oct 4 15:49:21 2006 UTC | drevil_xxl
+
+Remove duplicate entry.
+
+------------------------------------------------------------------------
+r327 | Wed Oct 4 12:06:14 2006 UTC | drevil_xxl
+
+Remove unused codecs.
+Minor fix of rev 254 & 257.
+
+------------------------------------------------------------------------
+r326 | Wed Oct 4 11:10:30 2006 UTC | clsid2
+
+Added msvc71 build of FLT_ffdshow.dll
+
+------------------------------------------------------------------------
+r325 | Wed Oct 4 08:25:19 2006 UTC | drevil_xxl
+
+(ffmpeg 6549) Don't try to inline cabac functions.
+GCC ignored the hint anyway, and forcing it would make h264 slower.
+
+------------------------------------------------------------------------
+r324 | Wed Oct 4 08:24:21 2006 UTC | drevil_xxl
+
+(ffmpeg 6548) simplify write_back_motion for skip mbs
+
+------------------------------------------------------------------------
+r323 | Wed Oct 4 08:23:21 2006 UTC | drevil_xxl
+
+(ffmpeg 6547) 10l in r6412
+
+------------------------------------------------------------------------
+r322 | Wed Oct 4 00:05:46 2006 UTC | clsid2
+
+removed some unused stuff from libavcodec
+
+------------------------------------------------------------------------
+r321 | Tue Oct 3 21:44:16 2006 UTC | clsid2
+
+Inno script: added some video formats
+
+------------------------------------------------------------------------
+r320 | Tue Oct 3 21:11:00 2006 UTC | clsid2
+
+(ffmpeg 6536) Remove unused variables and the corresponding warnings
+along with them.
+
+------------------------------------------------------------------------
+r319 | Tue Oct 3 18:19:12 2006 UTC | clsid2
+
+Updated Inno Setup script:
+Simplified runtime installation. MSVC80 runtime is now installed into
+the ffdshow directory as a private assembly.
+There are 4 small components (vfw/acm/avisynth and vdb plugins) that are
+(potentially) placed outside the ffdshow directory. For these components
+binaries compiled with MSVC71 will be used. This to avoid the need to
+install the MSVC80 runtime as a shared assembly or into locations
+outside the ffdshow directory (which in theory could lead to version
+conflicts).
+These binaries are included in SVN, so having the MSVC71
+compiler is not required. The source code for these 4 components is
+almost never changed. In the event that the code is updated, I will
+update the binaries. All runtimes together are just 450KB
+(when compressed).
+
+------------------------------------------------------------------------
+r318 | Tue Oct 3 13:57:38 2006 UTC | clsid2
+
+updated inno script
+
+------------------------------------------------------------------------
+r317 | Tue Oct 3 12:11:05 2006 UTC | drevil_xxl
+
+Added RPZA.
+You need Quicktime Movie Parser.
+ftp://mplayerhq.hu/MPlayer/samples/V-codecs/RPZA/rpza2.mov
+
+------------------------------------------------------------------------
+r316 | Mon Oct 2 15:04:21 2006 UTC | clsid2
+
+Attempt at fixing VMnc. ffdshow now finally gets inserted into the
+filter graph. However, decoder crashes with integer devision by zero
+exception.
+
+------------------------------------------------------------------------
+r315 | Mon Oct 2 12:31:42 2006 UTC | drevil_xxl
+
+(ffmpeg 6410) Fix compilation with --disable-encoders.
+patch by Alexander Strange <astrange at ithinksw dot com>
+
+------------------------------------------------------------------------
+r314 | Mon Oct 2 12:19:48 2006 UTC | drevil_xxl
+
+(ffmpeg 6412) Approximate qpel functions: sacrifice some quality for
+some decoding speed. Enabled on B-frames with -lavdopts fast.
+
+------------------------------------------------------------------------
+r313 | Mon Oct 2 12:02:37 2006 UTC | drevil_xxl
+
+Updated libavcodec vcproj files.
+Removed unused codecs: MDEC codec, MM Video, RoQ Video,
+Quicktime Video (RPZA), Westwood Studios VQA Video,
+Wing Commander/Xan Video.
+
+
+------------------------------------------------------------------------
+r312 | Mon Oct 2 11:51:59 2006 UTC | clsid2
+
+small inno update
+
+------------------------------------------------------------------------
+r311 | Mon Oct 2 11:37:29 2006 UTC | clsid2
+
+textual fix
+
+------------------------------------------------------------------------
+r310 | Mon Oct 2 11:36:23 2006 UTC | clsid2
+
+fixed vp6f
+disabled vmnc
+
+------------------------------------------------------------------------
+r309 | Sun Oct 1 14:37:18 2006 UTC | h_yamagata
+
+Compilation fix for MSVC8. Incomplete, snow.c is excluded.
+
+------------------------------------------------------------------------
+r308 | Sun Oct 1 12:04:51 2006 UTC | clsid2
+
+added broken/incomplete comments to VMnc and RV10 
+
+------------------------------------------------------------------------
+r307 | Sun Oct 1 11:39:27 2006 UTC | clsid2
+
+(ffmpeg 6400) 1l: correct argument order in avcodec_check_dimensions
+
+------------------------------------------------------------------------
+r306 | Sun Oct 1 09:21:27 2006 UTC | clsid2
+
+(ffmpeg 6399) palette (if we memcpy it into AVFrame) must be uint32_t
+
+------------------------------------------------------------------------
+r305 | Sun Oct 1 09:21:27 2006 UTC | drevil_xxl
+
+remove unused rv10 encoding code.
+
+------------------------------------------------------------------------
+r304 | Sun Oct 1 09:05:13 2006 UTC | drevil_xxl
+
+updated rv10.c (ffmpeg 6395)
+updated h263.c (ffmpeg 6388)
+
+------------------------------------------------------------------------
+r303 | Sun Oct 1 08:47:46 2006 UTC | h_yamagata
+
+Textual fix
+
+------------------------------------------------------------------------
+r302 | Sat Sep 30 20:43:10 2006 UTC | foxyshadis
+
+Another minor r300 update.
+
+------------------------------------------------------------------------
+r301 | Sat Sep 30 19:51:30 2006 UTC | foxyshadis
+
+Fix of r300 - forgot to save prior to commit.
+
+------------------------------------------------------------------------
+r300 | Sat Sep 30 19:22:51 2006 UTC | foxyshadis
+
+QoS dialog start. Not ready yet, updates soon.
+
+------------------------------------------------------------------------
+r299 | Sat Sep 30 16:00:22 2006 UTC | clsid2
+
+installer tweaks
+
+------------------------------------------------------------------------
+r298 | Sat Sep 30 09:36:07 2006 UTC | h_yamagata
+
+Bug fix(??): 2) VC-1 crashes (FourCC wmva). (reported by clsid)
+
+WMVA from CODEC_ID_WMV9_LIB to CODEC_ID_VC1
+WMVA from WMV3/9 to VC1(configuration in the dialog)
+ffdshow fails to join in the graph, so no crash...
+
+------------------------------------------------------------------------
+r297 | Sat Sep 30 05:30:35 2006 UTC | h_yamagata
+
+Bug fix: 5) If there's an error in avisynth script in ffdshow, the error
+message is displayed on top of video. That's ok, but interestingly
+enough, even if I uncheck the whole avisynth page in ffdshow, the error
+message still remains. (reported by Egh)
+
+Show Message Box instead of OSD error message.
+
+------------------------------------------------------------------------
+r296 | Sat Sep 30 03:45:43 2006 UTC | h_yamagata
+
+Show error message if the source filter did not provide for necessary
+information to decode SVQ3.
+
+------------------------------------------------------------------------
+r295 | Sat Sep 30 03:20:35 2006 UTC | h_yamagata
+Revision 295 - Directory Listing
+Modified  (3 weeks, 1 day ago) by 
+
+Reverted svq3.c
+
+3) SVQ3 crashes when used in combination with Quick Time Movie Parser.
+Milan said "HACK: 3ivx splitter doesn't provide any extradata".
+
+------------------------------------------------------------------------
+r294 | Fri Sep 29 15:31:51 2006 UTC | clsid2
+
+more installer tweaks
+
+------------------------------------------------------------------------
+r293 | Fri Sep 29 13:59:10 2006 UTC | clsid2
+
+Inno script update
+
+------------------------------------------------------------------------
+r292 | Fri Sep 29 13:03:10 2006 UTC | h_yamagata
+
+after build registration for developers
+
+------------------------------------------------------------------------
+r291 | Fri Sep 29 12:54:00 2006 UTC | h_yamagata
+
+cosmetics
+
+------------------------------------------------------------------------
+r290 | Fri Sep 29 11:47:06 2006 UTC | clsid2
+
+cleaned up scripts
+
+------------------------------------------------------------------------
+r289 | Fri Sep 29 11:23:17 2006 UTC | clsid2
+
+several installer improvements
+
+------------------------------------------------------------------------
+r288 | Thu Sep 28 15:13:03 2006 UTC | clsid2
+
+Revert to old True Audio (TTA) decoding code.
+
+------------------------------------------------------------------------
+r287 | Thu Sep 28 13:25:12 2006 UTC | h_yamagata
+
+Minor fix of rev 283
+
+------------------------------------------------------------------------
+r286 | Thu Sep 28 11:41:23 2006 UTC | clsid2
+
+Remove references to non-existed WMV9 and VC-1 libavcodec encoders from
+VFW interface.
+
+------------------------------------------------------------------------
+r285 | Thu Sep 28 11:19:15 2006 UTC | h_yamagata
+
+Bug fix: black out in only one frame movie
+
+------------------------------------------------------------------------
+r284 | Thu Sep 28 10:35:45 2006 UTC | h_yamagata
+
+Bug fix: color space conversion (TffPict::convertCSP): A video with odd
+number lines often crashes when you use some filters, like swscaler
+gaussian blur. Color space conversion is used everywhere.
+
+------------------------------------------------------------------------
+r283 | Thu Sep 28 05:55:43 2006 UTC | drevil_xxl
+
+(ffmpeg 6365) Handle case of get_bits(0)
+
+------------------------------------------------------------------------
+r282 | Wed Sep 27 23:53:26 2006 UTC | clsid2
+
+(ffmpeg 6364) dc_val should be signed
+
+------------------------------------------------------------------------
+r281 | Wed Sep 27 23:47:45 2006 UTC | clsid2
+
+(ffmpeg 6363) Return 0 from encode_picture() and estimate_qp() on
+success.
+
+------------------------------------------------------------------------
+r280 | Wed Sep 27 23:43:50 2006 UTC | clsid2
+
+(ffmpeg 6356) add some #ifdef CONFIG_ENCODERS
+
+removed some unused encoding code for amr/g726/h264/png/rv10
+
+------------------------------------------------------------------------
+r279 | Wed Sep 27 22:57:40 2006 UTC | clsid2
+
+remove unused asv1/svq1/vcr1 encoding code
+
+------------------------------------------------------------------------
+r278 | Wed Sep 27 22:34:11 2006 UTC | clsid2
+
+(ffmpeg 6355) fix some signedness warnings
+
+------------------------------------------------------------------------
+r277 | Wed Sep 27 18:17:18 2006 UTC | clsid2
+
+Changed Wavpack comment from "broken!" to "incomplete!".
+
+------------------------------------------------------------------------
+r276 | Wed Sep 27 17:59:29 2006 UTC | clsid2
+
+removed x264 encoder
+
+------------------------------------------------------------------------
+r275 | Wed Sep 27 12:11:35 2006 UTC | clsid2
+
+indentation
+
+------------------------------------------------------------------------
+r274 | Wed Sep 27 11:55:17 2006 UTC | clsid2
+
+indentation
+
+------------------------------------------------------------------------
+r273 | Wed Sep 27 11:00:52 2006 UTC | h_yamagata
+
+Compilation fix for GCC
+
+------------------------------------------------------------------------
+r272 | Wed Sep 27 09:20:50 2006 UTC | drevil_xxl
+
+(ffmpeg 6351) free memory before return
+
+------------------------------------------------------------------------
+r271 | Wed Sep 27 09:18:56 2006 UTC | drevil_xxl
+
+(ffmpeg 6346) fix decoding of bastard1.rm
+(rv ver=0x10003001 ver0=0x8000000)
+
+(ffmpeg 6349) fix decoding of bastard3.rm
+(ver=0x10003001 ver0=0x9000000)
+
+------------------------------------------------------------------------
+r270 | Wed Sep 27 09:15:50 2006 UTC | drevil_xxl
+
+(ffmpeg 6350) bump lavc version for WavPack decoder
+
+------------------------------------------------------------------------
+r269 | Wed Sep 27 09:09:08 2006 UTC | h_yamagata
+
+Don't use ffdshow in explorer.exe by default for more stability.
+
+------------------------------------------------------------------------
+r268 | Wed Sep 27 08:46:56 2006 UTC | h_yamagata
+
+ff_vfw.dll should not be compiled by MSVC8 for now. Private assembly
+loading fails.
+
+------------------------------------------------------------------------
+r267 | Wed Sep 27 08:43:32 2006 UTC | h_yamagata
+
+Updated Japanese translation
+
+------------------------------------------------------------------------
+r266 | Wed Sep 27 08:42:53 2006 UTC | h_yamagata
+
+Updated helpQueue.txt
+
+------------------------------------------------------------------------
+r265 | Wed Sep 27 08:42:09 2006 UTC | h_yamagata
+
+Compilation fix (broken since rev 247)
+
+------------------------------------------------------------------------
+r264 | Tue Sep 26 19:13:09 2006 UTC | clsid2
+
+(ffmpeg 6339) simplify seek() failure check
+
+(ffmpeg 6340) Support forward seeking in non seekable streams.
+
+------------------------------------------------------------------------
+r263 | Tue Sep 26 18:53:14 2006 UTC | clsid2
+
+VIXL registry bugfix
+
+------------------------------------------------------------------------
+r262 | Tue Sep 26 16:10:14 2006 UTC | clsid2
+
+Revert to old version of SNOW, update broke snow encoding, updated
+version probably also needed some changes in VFW interface.
+
+------------------------------------------------------------------------
+r261 | Tue Sep 26 15:54:21 2006 UTC | clsid2
+
+updated SNOW
+
+------------------------------------------------------------------------
+r260 | Tue Sep 26 13:41:30 2006 UTC | clsid2
+
+typo
+
+------------------------------------------------------------------------
+r259 | Tue Sep 26 13:27:28 2006 UTC | clsid2
+
+Added wavpack. I probably forgot something, because it doesn't work yet.
+
+------------------------------------------------------------------------
+r258 | Tue Sep 26 12:37:00 2006 UTC | drevil_xxl
+
+Updated makefile.inc.
+
+------------------------------------------------------------------------
+r257 | Tue Sep 26 12:30:35 2006 UTC | drevil_xxl
+
+Added AASC.
+http://www.mplayerhq.hu/MPlayer/samples/V-codecs/AASC/
+
+Minor fix of rev 253.
+
+------------------------------------------------------------------------
+r256 | Tue Sep 26 11:34:56 2006 UTC | drevil_xxl
+
+Minor fix of rev 255.
+
+------------------------------------------------------------------------
+r255 | Tue Sep 26 10:23:56 2006 UTC | clsid2
+
+(ffmpeg 6336) WavPack lossless audio decoder
+
+ToDo: add to ffdshow
+
+------------------------------------------------------------------------
+r254 | Tue Sep 26 09:55:10 2006 UTC | drevil_xxl
+
+Added VIXL.
+http://www.mplayerhq.hu/MPlayer/samples/V-codecs/VIXL/
+
+------------------------------------------------------------------------
+r253 | Tue Sep 26 08:44:17 2006 UTC | drevil_xxl
+
+Updated libavcodec vcproj files.
+
+------------------------------------------------------------------------
+r252 | Tue Sep 26 06:12:51 2006 UTC | drevil_xxl
+
+(ffmpeg 6334) Get rid of get_bits_long_le, get_bits_long was fixed and
+now behaves the same way.
+
+------------------------------------------------------------------------
+r251 | Tue Sep 26 06:01:31 2006 UTC | drevil_xxl
+
+(ffmpeg 6335) Remove get_le16 and get_le32, get_bits and get_bits_long
+can just be used directly.
+
+------------------------------------------------------------------------
+r250 | Tue Sep 26 05:27:12 2006 UTC | drevil_xxl
+
+(ffmpeg 6333) Changes needed due to show_bits_long behaviour
+changes/fixes.
+
+------------------------------------------------------------------------
+r249 | Tue Sep 26 05:21:39 2006 UTC | drevil_xxl
+
+(ffmpeg 6332) Fix get_bits_long to work with ALT_BITSTREAM_READER_LE.
+Gives the same result as get_bits_long_le in vorbis.c instead of some
+wild big-/little-endian mixture.
+
+------------------------------------------------------------------------
+r248 | Mon Sep 25 19:03:08 2006 UTC | clsid2
+
+(ffmpeg 6331) rename vector to vect to avoid clash with Apple gcc
+
+------------------------------------------------------------------------
+r247 | Mon Sep 25 19:01:19 2006 UTC | clsid2
+
+(ffmpeg 6330) move memory functions from avcodec to avutil
+
+------------------------------------------------------------------------
+r246 | Sun Sep 24 21:53:29 2006 UTC | clsid2
+
+(ffmpeg 6325) segfault fix
+Thanks to takis for finding the cause of this.
+
+------------------------------------------------------------------------
+r245 | Sun Sep 24 21:50:41 2006 UTC | clsid2
+
+(ffmpeg 6327) Missing extern declaration for av_strtod.
+
+------------------------------------------------------------------------
+r244 | Sun Sep 24 21:50:00 2006 UTC | clsid2
+
+(ffmpeg 6328) fix to vorbis decoder for book==0
+
+------------------------------------------------------------------------
+r243 | Sun Sep 24 13:59:17 2006 UTC | h_yamagata
+
+Updated German translation by eragon4ever
+
+------------------------------------------------------------------------
+r242 | Sun Sep 24 11:00:35 2006 UTC | h_yamagata
+
+Minor fix of rev 237
+
+------------------------------------------------------------------------
+r241 | Sun Sep 24 10:59:28 2006 UTC | h_yamagata
+
+Bug fix: 9) If ffdshow is inputing DVD decoder's output as raw video,
+and if mpeg2 is disabled or DVD decoding is unchecked, and if Subtitles
+is unchecked and "File" is valid, the video shows subtitle unrelated to
+the DVD movie.
+
+------------------------------------------------------------------------
+r240 | Sun Sep 24 06:18:33 2006 UTC | foxyshadis
+
+FFV1 hasn't been considered experimental in ages, updated help. Also
+swapped a text input for a combo box.
+
+------------------------------------------------------------------------
+r239 | Sun Sep 24 05:41:15 2006 UTC | h_yamagata
+
+Minor fix of rev 237
+
+------------------------------------------------------------------------
+r238 | Sun Sep 24 04:55:05 2006 UTC | h_yamagata
+
+cosmetics
+
+------------------------------------------------------------------------
+r237 | Sun Sep 24 04:23:22 2006 UTC | h_yamagata
+
+Translations: mainly Japanese, ANSI build: fixed garbling of OSD
+Updated Japanese translation
+NSIS installer minor fix
+Updated helpQueue.txt
+
+------------------------------------------------------------------------
+r236 | Sat Sep 23 11:45:22 2006 UTC | clsid2
+
+Inno script now uses current settings from registry as defaults.
+
+------------------------------------------------------------------------
+r235 | Sat Sep 23 10:49:35 2006 UTC | h_yamagata
+
+Compilation fix for MSVC8
+
+------------------------------------------------------------------------
+r234 | Sat Sep 23 10:16:19 2006 UTC | clsid2
+
+(ffmpeg 6324) Define NAN -if not already defined- as 0.0/0.0
+
+------------------------------------------------------------------------
+r233 | Fri Sep 22 17:47:35 2006 UTC | clsid2
+
+(ffmpeg 6291) New single instruction math operation header.
+
+(ffmpeg 6323) Use mathops
+
+------------------------------------------------------------------------
+r232 | Fri Sep 22 14:04:39 2006 UTC | clsid2
+
+Disabled VP60 and VP61 support because FFMPEG only seems to decode VP62
+properly.
+
+------------------------------------------------------------------------
+r231 | Fri Sep 22 11:45:40 2006 UTC | clsid2
+
+textual update
+
+------------------------------------------------------------------------
+r230 | Fri Sep 22 11:40:22 2006 UTC | clsid2
+
+(ffmpeg 6316) simplify url_fseek()
+
+------------------------------------------------------------------------
+r229 | Fri Sep 22 11:05:58 2006 UTC | clsid2
+
+updated inno script
+
+------------------------------------------------------------------------
+r228 | Fri Sep 22 10:58:25 2006 UTC | h_yamagata
+
+NT 4.0 support bug fix
+
+------------------------------------------------------------------------
+r227 | Fri Sep 22 10:55:40 2006 UTC | clsid2
+
+Let VP3/VP5/VP6 decoders ignore iDCT settings and always use
+FF_IDCT_VP3.
+
+------------------------------------------------------------------------
+r226 | Fri Sep 22 10:49:25 2006 UTC | h_yamagata
+
+cosmetics
+
+------------------------------------------------------------------------
+r225 | Fri Sep 22 10:48:55 2006 UTC | h_yamagata
+
+Queue: seek problem with DScaler DVD decoder
+
+------------------------------------------------------------------------
+r224 | Fri Sep 22 10:34:38 2006 UTC | h_yamagata
+
+French translation support
+
+------------------------------------------------------------------------
+r223 | Fri Sep 22 10:16:51 2006 UTC | h_yamagata
+
+Updated Japanese translation
+
+------------------------------------------------------------------------
+r222 | Fri Sep 22 10:15:51 2006 UTC | h_yamagata
+
+Windows NT 4.0 support by MSVC8
+
+------------------------------------------------------------------------
+r221 | Fri Sep 22 10:13:38 2006 UTC | h_yamagata
+
+Updated French translation by Cúur (=Amour)
+
+------------------------------------------------------------------------
+r220 | Thu Sep 21 23:18:52 2006 UTC | clsid2
+
+textual fix
+
+------------------------------------------------------------------------
+r219 | Thu Sep 21 21:50:09 2006 UTC | clsid2
+
+(ffmpeg 6315) remove a division from STOP_TIMER
+
+------------------------------------------------------------------------
+r218 | Thu Sep 21 21:42:49 2006 UTC | clsid2
+
+(ffmpeg 6314) simplify asm mid_pred, as suggested by michaelni.
+
+------------------------------------------------------------------------
+r217 | Thu Sep 21 21:35:02 2006 UTC | clsid2
+
+(ffmpeg 6312) tweak ff_imdct_calc_3dn2
+
+------------------------------------------------------------------------
+r216 | Thu Sep 21 21:30:43 2006 UTC | clsid2
+
+(ffmpeg 6311) sse implementation of imdct.
+patch mostly by Zuxy Meng <zuxy.meng at gmail dot com>
+
+------------------------------------------------------------------------
+r215 | Thu Sep 21 07:50:10 2006 UTC | drevil_xxl
+
+(ffmpeg 6307) Reorder MV order in B-frames so no swapping in vc1_b_mc()
+is needed.
+
+(ffmpeg 6308) For B-frames if the second reference frame signals
+intensity compensation then the first reference frame should be
+intensity compensated.
+
+(ffmpeg 6309) Finally enable B-frame decoding as all known samples work
+perfect.
+
+------------------------------------------------------------------------
+r214 | Thu Sep 21 07:42:32 2006 UTC | drevil_xxl
+
+(ffmpeg 6306) Zero number of current scan after decoding one picture.
+This fixes grayscale JPEG-LS decoding.
+
+------------------------------------------------------------------------
+r213 | Thu Sep 21 07:34:03 2006 UTC | drevil_xxl
+
+(ffmpeg 6305) 1000l copy and paste typo
+
+------------------------------------------------------------------------
+r212 | Thu Sep 21 07:27:25 2006 UTC | drevil_xxl
+
+(ffmpeg 6303) set supported pixel formats for a few encoders (fixes
+crashes with grayscale)
+
+------------------------------------------------------------------------
+r211 | Wed Sep 20 12:32:27 2006 UTC | drevil_xxl
+
+Fixed RT21.
+
+------------------------------------------------------------------------
+r210 | Wed Sep 20 11:24:29 2006 UTC | clsid2
+
+pentium-mmx support
+
+------------------------------------------------------------------------
+r209 | Wed Sep 20 10:46:56 2006 UTC | clsid2
+
+Added comments to VC-1, VP5 and VP6 that those formats are not working
+correctly yet.
+
+------------------------------------------------------------------------
+r208 | Wed Sep 20 09:32:08 2006 UTC | h_yamagata
+
+Updated Japanese translation
+
+------------------------------------------------------------------------
+r207 | Wed Sep 20 09:29:32 2006 UTC | h_yamagata
+
+Remove stereoscopic subtitle, because it crashes and nobody can tell how
+to use.
+
+4) ffdshow crashes when enabling stereoscopic option on subtitles page.
+(reported by drevil_xxl) 
+
+------------------------------------------------------------------------
+r206 | Wed Sep 20 09:27:16 2006 UTC | clsid2
+
+Restored original values for IDFF_MOVIE_AUDX and IDFF_MOVIE_MAX, those
+should work too.
+
+------------------------------------------------------------------------
+r205 | Wed Sep 20 08:08:46 2006 UTC | drevil_xxl
+
+Fixed OSD crash.
+http://forum.doom9.org/showthread.php?p=877588#post877588
+
+------------------------------------------------------------------------
+r204 | Wed Sep 20 07:49:18 2006 UTC | drevil_xxl
+
+Updated Inno Setup Script.
+
+------------------------------------------------------------------------
+r203 | Tue Sep 19 17:28:07 2006 UTC | clsid2
+
+another two textual fixes
+
+------------------------------------------------------------------------
+r202 | Tue Sep 19 13:10:29 2006 UTC | clsid2
+
+(ffmpeg 6290) Use correct rounding functions.
+This should fix a floating point exception on some systems, lets hope
+these aren't missing anywhere, if so another solution must be found.
+
+------------------------------------------------------------------------
+r201 | Tue Sep 19 11:10:34 2006 UTC | h_yamagata
+
+Bug fix: 6) revision 173 broke presets 
+Automatic preset loading has been broken since 20060601.patch
+
+------------------------------------------------------------------------
+r200 | Tue Sep 19 10:28:19 2006 UTC | clsid2
+
+another two textual fixes
+
+------------------------------------------------------------------------
+r199 | Mon Sep 18 21:00:17 2006 UTC | clsid2
+
+fixed two typos
+
+------------------------------------------------------------------------
+r198 | Mon Sep 18 13:12:19 2006 UTC | h_yamagata
+
+Bug fix: 2) The "perspective correction" filter makes ffdshow crash when
+interpolation-mode is set to "cubic". Happens only if horizontal video
+size is 768 or greater.
+
+When horizontal video size is 768 or greater, use bilinear
+interpolation.
+
+------------------------------------------------------------------------
+r197 | Mon Sep 18 13:09:57 2006 UTC | h_yamagata
+
+revert the change of rev 150
+ side effect was reported (in 2ch/Japan).
+
+------------------------------------------------------------------------
+r196 | Mon Sep 18 01:50:07 2006 UTC | h_yamagata
+
+Bug fix: 9) If ffdshow gets uncompressed input, then the decoding
+options page is disabled. However the H.264 quality controls are not 
+isabled. (reported by Egh)
+
+Rename many misc to Decoderoptions
+
+------------------------------------------------------------------------
+r195 | Sun Sep 17 10:48:29 2006 UTC | h_yamagata
+
+Seek problem with MPC's internal source filter "AVI".
+
+------------------------------------------------------------------------
+r194 | Sun Sep 17 09:23:27 2006 UTC | drevil_xxl
+
+Bug fix of rev 190.
+
+------------------------------------------------------------------------
+r193 | Sat Sep 16 20:34:27 2006 UTC | drevil_xxl
+
+Added FourCC "RT21".
+
+------------------------------------------------------------------------
+r192 | Sat Sep 16 20:24:22 2006 UTC | drevil_xxl
+
+Removed Miro VideoXL.
+
+------------------------------------------------------------------------
+r191 | Sat Sep 16 18:25:46 2006 UTC | drevil_xxl
+
+Added Miro VideoXL.
+
+------------------------------------------------------------------------
+r190 | Sat Sep 16 17:43:36 2006 UTC | drevil_xxl
+
+Added Indeo 2.1.
+Updated libavcodec vcproj files.
+
+------------------------------------------------------------------------
+r189 | Fri Sep 15 14:02:48 2006 UTC | drevil_xxl
+
+(ffmpeg 6254) asm implementation of mid_pred.
+20% faster huffyuv decoding, 4% faster ffv1.
+
+------------------------------------------------------------------------
+r188 | Fri Sep 15 13:44:42 2006 UTC | drevil_xxl
+
+Removed -m3dnow & -msse switches.
+These switches enabled or disabled the use of built-in functions that
+allow direct access to the MMX, SSE, SSE2, SSE3 and 3Dnow extensions of
+the instruction set. 
+
+------------------------------------------------------------------------
+r187 | Fri Sep 15 12:02:23 2006 UTC | clsid2
+
+Removed creation of two unneeded registry keys for VP6. Added FLV4
+FourCC.
+
+------------------------------------------------------------------------
+r186 | Fri Sep 15 11:21:37 2006 UTC | clsid2
+
+(ffmpeg 6253) disable vp3 mmx idct for theora files to avoid artifacts
+
+------------------------------------------------------------------------
+r185 | Fri Sep 15 11:19:22 2006 UTC | clsid2
+
+(ffmpeg 6256) remove unused, uninitialized free format frame size
+
+------------------------------------------------------------------------
+r184 | Thu Sep 14 19:09:32 2006 UTC | drevil_xxl
+
+libavcodec vp6 decoder update.
+
+------------------------------------------------------------------------
+r183 | Thu Sep 14 17:33:13 2006 UTC | drevil_xxl
+
+libavcodec.dll can be compiled with MINGW 3.4.x, 4.0.x, ICL9 and MSVC80.
+
+------------------------------------------------------------------------
+r182 | Thu Sep 14 15:58:10 2006 UTC | drevil_xxl
+
+Updated libavcodec_test vcproj files.
+
+------------------------------------------------------------------------
+r181 | Wed Sep 13 22:11:13 2006 UTC | clsid2
+
+(ffmpeg 6245) replaces back some C code by dsp.put_pixels_tab[0][0]
+(revert r6231) but this time ensure proper alignment using av_malloc
+instead of av_realloc
+
+------------------------------------------------------------------------
+r180 | Wed Sep 13 22:07:20 2006 UTC | clsid2
+
+(ffmpeg 6194) print more correct error messges
+
+------------------------------------------------------------------------
+r179 | Wed Sep 13 22:01:30 2006 UTC | clsid2
+
+(ffmpeg 6241) Enables back the mmx/sse optimized version of the vp3
+idct. It generates different md5sum than the reference C implementation,
+but no visual difference, so enabled only when bitexact is not set.
+
+------------------------------------------------------------------------
+r178 | Wed Sep 13 17:00:23 2006 UTC | clsid2
+
+added MSVC80 runtime detection
+
+------------------------------------------------------------------------
+r177 | Wed Sep 13 14:38:32 2006 UTC | h_yamagata
+
+Japanese translation fix related to rev 176.
+
+------------------------------------------------------------------------
+r176 | Wed Sep 13 11:38:12 2006 UTC | h_yamagata
+
+Minor fix: potentially conflicted IDC_CHB_DROP_ON_DELAY and
+IDC_CHB_MULTITHREAD
+
+------------------------------------------------------------------------
+r175 | Wed Sep 13 11:06:40 2006 UTC | clsid2
+
+some small script tweaks
+
+------------------------------------------------------------------------
+r174 | Wed Sep 13 10:50:05 2006 UTC | h_yamagata
+
+Updated Japanese translation
+
+------------------------------------------------------------------------
+r173 | Wed Sep 13 10:00:48 2006 UTC | h_yamagata
+
+"Use queue only in:" "mplayerc.exe;" by default.
+
+------------------------------------------------------------------------
+r172 | Wed Sep 13 09:54:10 2006 UTC | h_yamagata
+
+Bug fix of rev 171
+
+------------------------------------------------------------------------
+r171 | Wed Sep 13 09:48:10 2006 UTC | h_yamagata
+
+msvcr80.dll and msvcr71.dll installer.
+
+If vcredist_x86 is not packed or the installation of vcredist_x86
+failed, and if MSVCR8 is defined, the installer trys to install
+msvcr80.dll as private assembly.
+
+Installation of private assembly has version check, reference count
+controls, etc.
+The version of VC80.CRT is checked before executing vcredist_x86.exe.
+
+MSVCR8 is defined by default.
+Please read the header of ffdshow.nsi carefully.
+
+------------------------------------------------------------------------
+r170 | Wed Sep 13 07:53:20 2006 UTC | igor1st
+
+Changed max limit for normalization buffer length.
+libdts cleanup.
+Little fix in clsid's Inno Setup script.
+
+------------------------------------------------------------------------
+r169 | Tue Sep 12 10:59:26 2006 UTC | drevil_xxl
+
+Updated libavcodec vcproj files.
+
+------------------------------------------------------------------------
+r168 | Tue Sep 12 09:35:05 2006 UTC | drevil_xxl
+
+Added VP6 flash version.
+
+------------------------------------------------------------------------
+r167 | Tue Sep 12 07:30:34 2006 UTC | drevil_xxl
+
+fix:IDFF_MOVIE_AUDX was conflicted with IDFF_MOVIE_MAX.
+
+------------------------------------------------------------------------
+r166 | Tue Sep 12 07:16:10 2006 UTC | drevil_xxl
+
+(ffmpeg 6233) 2989l: Set avctx->has_b_frames value in header and don't
+change it
+
+(ffmpeg 6234) Fix edge emulation for bicubic MC in B frames
+
+(ffmpeg 6235) Use h264_chroma funcs in B-frames MC too
+
+(ffmpeg 6236) Set motion vectors used in B-frames to zero by default
+
+(ffmpeg 6237) Swap back and forward motion vectors to achieve correct
+picture
+
+------------------------------------------------------------------------
+r165 | Tue Sep 12 07:13:00 2006 UTC | drevil_xxl
+
+(ffmpeg 6231) don't use dsp.put_pixels_tab[0][0] with unaligned ptr
+(fix artifacts on altivec)
+
+------------------------------------------------------------------------
+r164 | Mon Sep 11 08:24:51 2006 UTC | igor1st
+
+Fix for registry value of normalization buffer length.
+Added control for normalization "reset on seek" in GUI.
+
+------------------------------------------------------------------------
+r163 | Mon Sep 11 07:49:53 2006 UTC | igor1st
+
+Revert normalization tweak (r154) to default.
+Added control for normalization buffer length in GUI.
+
+------------------------------------------------------------------------
+r162 | Sun Sep 10 06:27:18 2006 UTC | drevil_xxl
+
+(ffmpeg 6218) Disable B-frames decoding until they produce correct
+picture
+
+------------------------------------------------------------------------
+r161 | Sun Sep 10 00:15:39 2006 UTC | drevil_xxl
+
+(ffmpeg 6217) rename vector to vect to avoid crash with Apple gcc
+
+------------------------------------------------------------------------
+r160 | Sat Sep 9 23:56:16 2006 UTC | drevil_xxl
+
+VP5 & VP6 compatible video decoder support.
+
+------------------------------------------------------------------------
+r159 | Sat Sep 9 22:20:40 2006 UTC | drevil_xxl
+
+Updated libavcodec vcproj.
+
+------------------------------------------------------------------------
+r158 | Sat Sep 9 22:03:54 2006 UTC | drevil_xxl
+
+Added VP5 and VP6 video decoder.
+Patch by Aurel. (incomplete)
+
+------------------------------------------------------------------------
+r157 | Sat Sep 9 20:50:10 2006 UTC | drevil_xxl
+
+Updated Inno Setup Script.
+
+------------------------------------------------------------------------
+r156 | Sat Sep 9 19:07:32 2006 UTC | drevil_xxl
+
+Updated DScaler and wmv9 makefile.
+Updated makefile.inc and makefile_c.inc.
+http://forum.doom9.org/showthread.php?p=727041#post727041
+
+------------------------------------------------------------------------
+r155 | Sat Sep 9 11:48:26 2006 UTC | drevil_xxl
+
+Proper support for B/BI frames.
+Support for BI-frames in Advanced Profile.
+Drop unneeded checks before av_free() and change to av_freep() where
+it's more suitable.
+Patches by kostya.
+
+------------------------------------------------------------------------
+r154 | Fri Sep 8 13:19:40 2006 UTC | igor1st
+
+Normalization tweak.
+ Increased memory size for past states.
+ Needs more testing with complicated dynamic streams.
+
+------------------------------------------------------------------------
+r153 | Fri Sep 8 11:25:27 2006 UTC | videomixer9
+
+revert instructionset changes
+
+------------------------------------------------------------------------
+r152 | Thu Sep 7 16:32:43 2006 UTC | videomixer9
+
+add cheap SSE3 detection (dunno if it works)
+
+------------------------------------------------------------------------
+r151 | Thu Sep 7 14:11:57 2006 UTC | videomixer9
+
+anti SSE3 & SSE4 whiners changes
+
+------------------------------------------------------------------------
+r150 | Thu Sep 7 13:15:17 2006 UTC | h_yamagata
+
+Bug fix(?) (alpha test): Raw video: When Divx5 = disabled and
+Raw video = all supported, the Divx5 video flips. The player is MPC.
+Please see if it does not have any side effects.
+
+------------------------------------------------------------------------
+r149 | Thu Sep 7 07:53:05 2006 UTC | drevil_xxl
+
+Updated vmnc decoder.
+
+------------------------------------------------------------------------
+r148 | Wed Sep 6 22:56:35 2006 UTC | videomixer9
+
+more forgotten vmnc stuff (next time i won't forget that much!)
+
+------------------------------------------------------------------------
+r147 | Wed Sep 6 19:08:17 2006 UTC | videomixer9
+
+same as 146
+
+------------------------------------------------------------------------
+r146 | Wed Sep 6 18:13:15 2006 UTC | videomixer9
+
+add new range for lavc codecs, rename decoder to match ffmpeg name
+
+------------------------------------------------------------------------
+r145 | Wed Sep 6 16:38:59 2006 UTC | drevil_xxl
+
+Updated libavcodec vcproj files.
+
+------------------------------------------------------------------------
+r144 | Wed Sep 6 15:50:40 2006 UTC | videomixer9
+
+fix some vmnc mistakes and add vmnc.c
+
+------------------------------------------------------------------------
+r143 | Wed Sep 6 15:20:58 2006 UTC | videomixer9
+
+VMnc support
+
+------------------------------------------------------------------------
+r142 | Wed Sep 6 14:58:28 2006 UTC | clsid2
+
+some small tweaks to install script
+
+------------------------------------------------------------------------
+r141 | Wed Sep 6 13:47:58 2006 UTC | clsid2
+
+(ffmpeg 6169) inline align_get_bits()
+
+------------------------------------------------------------------------
+r140 | Wed Sep 6 13:42:11 2006 UTC | clsid2
+
+(ffmpeg 6178) Fix buffer handling for stereo mace files, fixes some
+random sig11.
+
+Patch by Alan Curry <pacman at theworld dot com>
+
+------------------------------------------------------------------------
+r139 | Wed Sep 6 13:07:51 2006 UTC | h_yamagata
+
+Bug fix: wmav2: revert wmadec.c to rev 112
+
+------------------------------------------------------------------------
+r138 | Tue Sep 5 14:32:12 2006 UTC | h_yamagata
+
+Bug fix of rev 124 (beta test): LPCM output fix
+mono 16 bit integer PCM (and perhaps some) with raw audio connection was
+broken. Sorry for that dirty code.
+
+------------------------------------------------------------------------
+r137 | Tue Sep 5 00:17:20 2006 UTC | foxyshadis
+
+Add support for Leadtools h264 (fourcc l264).
+
+------------------------------------------------------------------------
+r136 | Mon Sep 4 13:37:21 2006 UTC | matmaul
+
+"wmv9" decoder (use ff_wmv9.dll) seems to works only with vfw mode
+(in original ffdshow, milan don't propose it in directshow decoder)
+
+------------------------------------------------------------------------
+r135 | Mon Sep 4 11:15:17 2006 UTC | videomixer9
+
+VC-1 Advanced Profile support (progressive only, tested on WVC1 samples)
+
+------------------------------------------------------------------------
+r134 | Mon Sep 4 11:14:10 2006 UTC | videomixer9
+
+* Restructuring the division of labor between DV codec and DV format
+  [ Based on a patch by Brian Brice (bbrice at newtek dot com) ]
+
+------------------------------------------------------------------------
+r133 | Mon Sep 4 11:06:41 2006 UTC | videomixer9
+
+Fix 2 bit allocation bugs. One fix enables using a higher bandwidth
+code. The other fixes an issue with floorcod=7.
+
+------------------------------------------------------------------------
+r132 | Sun Sep 3 12:40:28 2006 UTC | h_yamagata
+
+Japanese translation: Auto fix ANSI and Unicode
+
+------------------------------------------------------------------------
+r131 | Sun Sep 3 11:16:30 2006 UTC | videomixer9
+
+remove redundant declarations
+
+------------------------------------------------------------------------
+r130 | Sun Sep 3 11:02:38 2006 UTC | videomixer9
+
+Drop put_vc1_qpel_pixels_tab as they won't be needed anymore.
+
+------------------------------------------------------------------------
+r129 | Sun Sep 3 10:56:49 2006 UTC | videomixer9
+
+Replace usage of put_*_vc1_qpel_pixels_tab with
+put_*_h264_chroma_pixels_tab
+
+------------------------------------------------------------------------
+r128 | Sun Sep 3 10:55:29 2006 UTC | videomixer9
+
+New function for chroma MC (will be used in VC-1)
+
+------------------------------------------------------------------------
+r127 | Sat Sep 2 15:50:54 2006 UTC | h_yamagata
+
+help update
+"Miscellaneus settings" to "Decoder options"
+
+------------------------------------------------------------------------
+r126 | Sat Sep 2 15:43:09 2006 UTC | h_yamagata
+
+Updated Japanese translation
+
+------------------------------------------------------------------------
+r125 | Sat Sep 2 15:37:23 2006 UTC | clsid2
+
+some tweaks to install script
+
+------------------------------------------------------------------------
+r124 | Sat Sep 2 06:29:02 2006 UTC | h_yamagata
+
+Bug fix (alpha test): LPCM output broken since milan's rev 2437.
+ The bug was added when he added OSD for audio decoder.
+ Not tested with Cyberlink. Please test.
+
+------------------------------------------------------------------------
+r123 | Fri Sep 1 17:33:13 2006 UTC | drevil_xxl
+
+Updated Inno Setup.
+
+------------------------------------------------------------------------
+r122 | Fri Sep 1 12:17:42 2006 UTC | h_yamagata
+
+Bug fix of rev 121.
+
+------------------------------------------------------------------------
+r121 | Fri Sep 1 12:17:42 2006 UTC | h_yamagata
+
+Bug fix: frame is dropped on overlay mixer since rev 37.
+
+------------------------------------------------------------------------
+r120 | Fri Sep 1 09:06:08 2006 UTC | drevil_xxl
+
+Updated Inno Setup.
+
+------------------------------------------------------------------------
+r119 | Thu Aug 31 15:18:25 2006 UTC | drevil_xxl
+
+Motion compensation for luma always use halfpel precision.
+New qpel MC functions conforming to VC-1 standard.
+Existing DSPUtil functions cause chroma artifacts on some files.
+
+------------------------------------------------------------------------
+r118 | Thu Aug 31 06:48:58 2006 UTC | drevil_xxl
+
+Updated Inno Setup Script.
+
+------------------------------------------------------------------------
+r117 | Wed Aug 30 18:53:27 2006 UTC | videomixer9
+
+remove log.h dependancy
+
+------------------------------------------------------------------------
+r116 | Wed Aug 30 18:17:08 2006 UTC | foxyshadis
+
+Revert vorbis pending more testing.
+
+------------------------------------------------------------------------
+r115 | Wed Aug 30 18:09:04 2006 UTC | foxyshadis
+
+Vorbis simd speedups & cleanups.
+
+------------------------------------------------------------------------
+r114 | Wed Aug 30 18:08:30 2006 UTC | foxyshadis
+
+Restructuring of mpegaudiodec (mp1/2/3/aac). Much faster, possibly not
+finished, possibly buggy.
+
+------------------------------------------------------------------------
+r113 | Wed Aug 30 18:06:56 2006 UTC | foxyshadis
+
+Misc recent lavc tweaks & fixes.
+
+------------------------------------------------------------------------
+r112 | Wed Aug 30 17:33:55 2006 UTC | videomixer9
+
+add CAVS to ffdshow codec list, may only work with special MPEG splitter
+
+------------------------------------------------------------------------
+r111 | Wed Aug 30 16:49:42 2006 UTC | videomixer9
+
+slightly faster deblocking
+
+------------------------------------------------------------------------
+r110 | Wed Aug 30 15:08:29 2006 UTC | videomixer9
+
+nsis installer script updates
+
+------------------------------------------------------------------------
+r109 | Wed Aug 30 14:43:43 2006 UTC | clsid2
+
+some small tweaks to install script
+
+------------------------------------------------------------------------
+r108 | Wed Aug 30 12:44:45 2006 UTC | drevil_xxl
+
+Updated libavcodec Makefile
+
+------------------------------------------------------------------------
+r107 | Wed Aug 30 09:04:19 2006 UTC | h_yamagata
+
+Minor fix: _mm_empty() instead of emms
+
+------------------------------------------------------------------------
+r106 | Wed Aug 30 09:02:43 2006 UTC | h_yamagata
+
+Minor fix: Use of #if __STDC_VERSION >= 199901L
+
+------------------------------------------------------------------------
+r105 | Wed Aug 30 09:01:13 2006 UTC | h_yamagata
+
+Bug fix: slow decoder(MPEG4-ASP,etc): idct_algo
+
+------------------------------------------------------------------------
+r104 | Wed Aug 30 08:57:51 2006 UTC | h_yamagata
+
+Bug fix: libavcodec: Ignored "Info & debug" CPU setting
+
+------------------------------------------------------------------------
+r103 | Tue Aug 29 23:29:29 2006 UTC | foxyshadis
+
+Fix r102 for gcc 4.x.
+
+------------------------------------------------------------------------
+r102 | Tue Aug 29 00:27:08 2006 UTC | foxyshadis
+
+h264 deblocking speedup 2-3% by lorenm.
+
+------------------------------------------------------------------------
+r101 | Mon Aug 28 20:19:39 2006 UTC | drevil_xxl
+
+Updated Inno Setup Script.
+
+------------------------------------------------------------------------
+r100 | Mon Aug 28 08:56:23 2006 UTC | drevil_xxl
+
+tweak cabac.h 0.5% faster h264
+
+------------------------------------------------------------------------
+r99 | Sun Aug 27 22:23:22 2006 UTC | foxyshadis
+
+Remove h264 pp (reenable by defining H264PP).
+
+------------------------------------------------------------------------
+r98 | Sun Aug 27 17:45:55 2006 UTC | drevil_xxl
+
+added libavcodec_test and libmplayer_test
+
+------------------------------------------------------------------------
+r97 | Sun Aug 27 16:31:55 2006 UTC | drevil_xxl
+
+Updated vc6 projects
+
+------------------------------------------------------------------------
+r96 | Sun Aug 27 12:25:31 2006 UTC | h_yamagata
+
+mpeg1&2 encoder fix?
+
+------------------------------------------------------------------------
+r95 | Sun Aug 27 11:51:41 2006 UTC | h_yamagata
+
+Bug fix: hardware deinterlace: mpeg12.c based on 5578/ffmpeg
+
+------------------------------------------------------------------------
+r94 | Sat Aug 26 10:21:20 2006 UTC | h_yamagata
+
+Bug fix: Theora: block noise
+based on vp3.c/ffmpeg rev 5774 (applying 5775 may be hard)
+
+------------------------------------------------------------------------
+r93 | Fri Aug 25 18:47:23 2006 UTC | clsid2
+
+Another version of the Inno Setup script.
+
+------------------------------------------------------------------------
+r92 | Fri Aug 25 17:40:47 2006 UTC | drevil_xxl
+
+Updated Inno Setup Script.
+
+------------------------------------------------------------------------
+r91 | Fri Aug 25 11:23:06 2006 UTC | h_yamagata
+
+DPRINTF clean up
+
+------------------------------------------------------------------------
+r90 | Fri Aug 25 11:21:50 2006 UTC | h_yamagata
+
+mpegvideo.c update to 5689/ffmpeg
+I don't find anything changed by this, but I think this update is needed
+because some files depending on this file are updated.
+
+------------------------------------------------------------------------
+r89 | Fri Aug 25 11:19:07 2006 UTC | h_yamagata
+
+Bug fix: MPEG2/libavcodec: slugish
+milan's custom code is needed in ffdshow
+
+------------------------------------------------------------------------
+r88 | Fri Aug 25 05:54:44 2006 UTC | drevil_xxl
+
+Inno Setup Script made by clsid and modified by me.
+
+------------------------------------------------------------------------
+r87 | Thu Aug 24 21:05:21 2006 UTC | drevil_xxl
+
+Reverting back to rev 85, because is no speed improvement in
+libtheora-1.0alpha7.
+
+------------------------------------------------------------------------
+r86 | Thu Aug 24 14:14:50 2006 UTC | drevil_xxl
+
+updated libtheora-1.0alpha7
+
+------------------------------------------------------------------------
+r85 | Wed Aug 23 11:04:56 2006 UTC | h_yamagata
+
+Bug fix: VFW dialog: VFW decoder has dual entries for WMV3/9 in the
+Codecs list.
+
+------------------------------------------------------------------------
+r84 | Wed Aug 23 10:24:45 2006 UTC | h_yamagata
+
+Bug fix: makeAVIS.exe made by MSVC8 stops with error on start up.
+link static library.
+
+------------------------------------------------------------------------
+r83 | Mon Aug 21 13:47:41 2006 UTC | h_yamagata
+
+MBAFF bug fix: mpegvideo.c update to revision 5419/ffmpeg
+fft_sse.c: compilation fix for MSVC
+
+------------------------------------------------------------------------
+r82 | Sun Aug 20 15:12:57 2006 UTC | clsid2
+
+use ff_fft_calc_3dn2 instead of sse on a K8.
+1.5% faster vorbis.
+
+ff_fft_calc_3dn/3dn2/sse: convert intrinsics to inline asm.
+2.5% faster fft, 0.5% faster vorbis.
+
+------------------------------------------------------------------------
+r81 | Sun Aug 20 13:31:31 2006 UTC | h_yamagata
+
+mem.c fixed (unchangeable) config
+libmpalyer.dll compilation fix and aligned alloc
+
+------------------------------------------------------------------------
+r80 | Sun Aug 20 11:44:27 2006 UTC | h_yamagata
+
+noisy QDM2.c
+
+------------------------------------------------------------------------
+r79 | Sun Aug 20 07:17:25 2006 UTC | h_yamagata
+
+libavcodec/i386/fft_*.c updated to rev 6023/ffmpeg.
+config.h fixed (warning: "free" redefined)
+
+------------------------------------------------------------------------
+r78 | Sun Aug 20 06:57:54 2006 UTC | h_yamagata
+
+Vorbis bug fix: now SSE version works.
+mem.c needed configuration
+
+------------------------------------------------------------------------
+r77 | Sun Aug 20 04:03:34 2006 UTC | h_yamagata
+
+vorbis crash: fixed for the meantime.
+I can't fix SSE alignment problem(?), so I disabled SSE for the
+meantime. Not too slow. Vorbis decoder eats only 1 to 3% cpu usage on
+P4HT 3.2GHz without SSE.
+
+------------------------------------------------------------------------
+r76 | Sat Aug 19 08:05:25 2006 UTC | clsid2
+
+libsamplerate 0.1.2
+
+------------------------------------------------------------------------
+r75 | Thu Aug 17 11:42:19 2006 UTC | h_yamagata
+
+Swscaler: better API compliance
+(ffdshow is not affected, but MPlayer is. I mean I'm preparing to port
+back.)
+
+------------------------------------------------------------------------
+r74 | Wed Aug 16 16:35:06 2006 UTC | clsid2
+
+removed obsolete error message
+
+------------------------------------------------------------------------
+r73 | Wed Aug 16 14:36:12 2006 UTC | h_yamagata
+
+DPRINTF clean up
+
+------------------------------------------------------------------------
+r72 | Wed Aug 16 14:27:10 2006 UTC | h_yamagata
+
+finally fixed xsharpen + swscaler = green problem.
+It was a bug caused xsharpen that did not call EMMS.
+Now libmplayer.dll can be compiled GCC 3.x
+
+------------------------------------------------------------------------
+r71 | Wed Aug 16 13:20:58 2006 UTC | clsid2
+
+"-O3 -march=i586" -> "-O2 -march=i686"
+Should increase both stability and speed a tiny bit.
+
+------------------------------------------------------------------------
+r70 | Wed Aug 16 13:15:23 2006 UTC | clsid2
+
+FAAD v2.6 beta
+
+------------------------------------------------------------------------
+r69 | Tue Aug 15 22:38:02 2006 UTC | h_yamagata
+
+changelog.txt (Rev 7-13 only)
+
+------------------------------------------------------------------------
+r68 | Tue Aug 15 13:27:51 2006 UTC | videomixer9
+
+fix libavcodec vorbis playback
+
+------------------------------------------------------------------------
+r67 | Tue Aug 15 13:27:18 2006 UTC | videomixer9
+
+installer doesn't enable useless filters per default
+
+------------------------------------------------------------------------
+r66 | Tue Aug 15 13:02:26 2006 UTC | videomixer9
+
+past patch broke fft on cpus with 3dnow but without mm3dnow.h
+
+------------------------------------------------------------------------
+r65 | Tue Aug 15 13:01:22 2006 UTC | videomixer9
+
+Fix x86 SIMD asm and pic, patch from Martin von Gagern
+<Martin.vGagern at gmx dot net>
+
+------------------------------------------------------------------------
+r64 | Tue Aug 15 12:52:50 2006 UTC | videomixer9
+
+faad 2.5
+
+------------------------------------------------------------------------
+r63 | Sat Aug 12 07:30:46 2006 UTC | h_yamagata
+
+Swscaler: Compilation fixes
+
+------------------------------------------------------------------------
+r62 | Sat Aug 12 02:37:37 2006 UTC | h_yamagata
+
+swscaler multithreading: long life worker threads
+
+------------------------------------------------------------------------
+r61 | Thu Aug 10 01:46:40 2006 UTC | videomixer9
+
+some AVS detection code
+
+------------------------------------------------------------------------
+r60 | Wed Aug 9 18:02:35 2006 UTC | videomixer9
+
+correct compilation warning
+
+------------------------------------------------------------------------
+r59 | Wed Aug 9 17:53:07 2006 UTC | videomixer9
+
+emms -> femms
+
+------------------------------------------------------------------------
+r58 | Wed Aug 9 17:50:20 2006 UTC | videomixer9
+
+gcc 2.95 and 3.4.x on x86 32bit without fomit-frame-pointer can't even
+find 5 registers for asm input.
+0.5% slower vorbis.
+
+------------------------------------------------------------------------
+r57 | Wed Aug 9 17:49:20 2006 UTC | videomixer9
+
+slightly faster ff_imdct_calc_3dn2() on amd64. (gcc added a bunch of
+useless movsxd)
+
+------------------------------------------------------------------------
+r56 | Wed Aug 9 17:45:16 2006 UTC | videomixer9
+
+Fix some ""static" is not at beginning of declaration" warnings.
+
+------------------------------------------------------------------------
+r55 | Wed Aug 9 17:43:49 2006 UTC | videomixer9
+
+fix makefile to include 3dnow fft files
+
+------------------------------------------------------------------------
+r54 | Wed Aug 9 17:32:22 2006 UTC | videomixer9
+
+3dnow2 implementation of imdct.
+6% faster vorbis and wma.
+
+------------------------------------------------------------------------
+r53 | Wed Aug 9 12:41:33 2006 UTC | h_yamagata
+
+VS2003 support (maybe incompleate)
+
+------------------------------------------------------------------------
+r52 | Wed Aug 9 11:32:16 2006 UTC | h_yamagata
+
+fixed(?) crash on unloading swscaler.
+src/ffmpeg/libavutil/mem.c: revert to rev 13
+
+------------------------------------------------------------------------
+r51 | Wed Aug 9 09:25:57 2006 UTC | h_yamagata
+
+"It should help rebuilt process by properly tracking dependencies
+(gcc >=3.2 required) under mingw."
+patch by Kurosu. Thank you very much.
+
+------------------------------------------------------------------------
+r50 | Wed Aug 9 09:18:28 2006 UTC | h_yamagata
+
+Compilation fix (partial revert) for WIN64(?) (not tested)
+
+------------------------------------------------------------------------
+r49 | Tue Aug 8 10:51:12 2006 UTC | h_yamagata
+
+Compilation fix for mingw
+
+------------------------------------------------------------------------
+r48 | Tue Aug 8 10:36:47 2006 UTC | h_yamagata
+
+Compilation fix for mingw
+
+------------------------------------------------------------------------
+r47 | Sun Aug 6 11:39:12 2006 UTC | videomixer9
+
+make solid compression default, 5-10% better compression
+
+------------------------------------------------------------------------
+r46 | Sun Aug 6 11:15:44 2006 UTC | videomixer9
+
+Correct MC for B-frames and some improvements (not 100% complete though)
+
+------------------------------------------------------------------------
+r45 | Sun Aug 6 11:12:55 2006 UTC | videomixer9
+
+Bicubic interpolation requires two additional pixels for block
+
+------------------------------------------------------------------------
+r44 | Sat Aug 5 02:32:23 2006 UTC | h_yamagata
+
+Compilation fix for libmplayer.dll
+
+------------------------------------------------------------------------
+r43 | Sat Aug 5 02:28:53 2006 UTC | h_yamagata
+
+help and documentation update about the queue
+
+------------------------------------------------------------------------
+r42 | Fri Aug 4 22:14:58 2006 UTC | videomixer9
+
+add make parameter H264MBAFF to Makefile, set to yes to build with MBAFF
+support
+
+------------------------------------------------------------------------
+r41 | Fri Aug 4 20:24:58 2006 UTC | foxyshadis
+
+Accidental overwrite of vc-1 init w/ cavs init.
+
+------------------------------------------------------------------------
+r40 | Fri Aug 4 18:27:34 2006 UTC | matmaul
+
+the last libavcodec update broke the wmv3 decoder
+
+------------------------------------------------------------------------
+r39 | Fri Aug 4 17:32:37 2006 UTC | matmaul
+
+the last libavcodec update broke the wmv3 decoder
+
+------------------------------------------------------------------------
+r38 | Fri Aug 4 14:00:39 2006 UTC | h_yamagata
+
+fixed volume normalization. patch by Kurosu
+
+------------------------------------------------------------------------
+r37 | Fri Aug 4 13:49:22 2006 UTC | h_yamagata
+
+Better management of buffers of the queue.
+Bug fix: VMR9 blackout on reconnect.
+
+------------------------------------------------------------------------
+r36 | Fri Aug 4 13:43:42 2006 UTC | foxyshadis
+
+Minor vc-1 fix from lavc.
+
+------------------------------------------------------------------------
+r35 | Fri Aug 4 13:28:16 2006 UTC | foxyshadis
+
+Reverting back to xvid rc disabled... it'll need a lot of support files
+if used at all.
+
+------------------------------------------------------------------------
+r34 | Fri Aug 4 13:01:37 2006 UTC | foxyshadis
+
+Remove a few spurious CONFIG_* blocks
+
+------------------------------------------------------------------------
+r33 | Fri Aug 4 11:27:17 2006 UTC | matmaul
+
+fixe for vc1 support
+
+------------------------------------------------------------------------
+r32 | Fri Aug 4 11:19:27 2006 UTC | foxyshadis
+
+Temporary rollback of revision 14: ffvfw profile hack. Consistently
+crashes any vfw loading in vdub on my system. (It's such a tremendous
+hack atm that it should be left out of svn anyway.)
+
+------------------------------------------------------------------------
+r31 | Fri Aug 4 01:05:36 2006 UTC | foxyshadis
+
+Quick registration (place in any folder and run to register that folder
+as the ffdshow dll folder).
+
+------------------------------------------------------------------------
+r30 | Thu Aug 3 23:43:37 2006 UTC | foxyshadis
+
+Updated libavcodec. Not all codecs are configured. (xan, xl, rpza, roq)
+
+------------------------------------------------------------------------
+r29 | Thu Aug 3 20:37:40 2006 UTC | videomixer9
+
+svn:ignore updates
+
+------------------------------------------------------------------------
+r28 | Thu Aug 3 20:34:30 2006 UTC | videomixer9
+
+svn:ignore updates
+
+------------------------------------------------------------------------
+r27 | Thu Aug 3 20:24:38 2006 UTC | videomixer9
+
+add mp3lib sse dct to makefile
+
+------------------------------------------------------------------------
+r26 | Thu Aug 3 20:03:18 2006 UTC | videomixer9
+
+fixed typo in dialog "Windwos" -> "Windows"
+
+------------------------------------------------------------------------
+r25 | Thu Aug 3 19:51:50 2006 UTC | videomixer9
+
+fixing two typos in install script
+
+------------------------------------------------------------------------
+r24 | Thu Aug 3 19:19:45 2006 UTC | videomixer9
+
+updated installing script, changes codecs names
+adding MSVCRT8 and AUDX defines to incl. those into build packages
+
+------------------------------------------------------------------------
+r23 | Thu Aug 3 19:00:32 2006 UTC | videomixer9
+
+added neccessary files for VC-1 support from ffmpeg
+
+------------------------------------------------------------------------
+r22 | Thu Aug 3 18:42:42 2006 UTC | videomixer9
+
+VC-1 support patch by MatMaul
+
+------------------------------------------------------------------------
+r21 | Thu Aug 3 13:09:37 2006 UTC | videomixer9
+
+Add dct64_sse, a replacement for dct64_MMX. About 60% faster on its
+author's Pentium III. Currently only used on CPUs that _only_ support
+SSE (otherwise try 3DNow* before) Patch by The Mighty Zuxy Meng
+<zuxy.meng at gmail dot com>
+
+Original thread:
+Date: Jun 21, 2006 10:20 AM
+Subject: [MPlayer-dev-eng] [PATCH] SSE version of DCT64 for mp3lib
+
+------------------------------------------------------------------------
+r20 | Thu Aug 3 13:02:34 2006 UTC | videomixer9
+
+10l, vorbis_inverse_coupling_sse() was really 3dnow
+
+------------------------------------------------------------------------
+r19 | Thu Aug 3 12:52:01 2006 UTC | videomixer9
+
+int16_t is faster than int_fast16_t for division.
+2% faster vorbis (on a K8).
+
+------------------------------------------------------------------------
+r18 | Thu Aug 3 12:49:09 2006 UTC | videomixer9
+
+another div -> fastdiv, another 2% faster vorbis.
+
+------------------------------------------------------------------------
+r17 | Thu Aug 3 12:43:28 2006 UTC | videomixer9
+
+added sse&sse2 vorbis channel coupling
+
+------------------------------------------------------------------------
+r16 | Thu Aug 3 12:22:33 2006 UTC | videomixer9
+
+added h264 mbaff support
+
+------------------------------------------------------------------------
+r15 | Thu Aug 3 11:07:33 2006 UTC | videomixer9
+
+indicate we are using high accuracy tremor in gui
+
+------------------------------------------------------------------------
+r14 | Thu Aug 3 11:05:07 2006 UTC | videomixer9
+
+do not load default preset when using VFW decoder
+
+------------------------------------------------------------------------
+r13 | Thu Aug 3 11:01:31 2006 UTC | videomixer9
+
+multithread patch by haruhiko_yamagata 060730
+
+"Quality control
+ (1) Which do you give preference to image quality or frame rate?
+ (2) Which do you choose droping frame or to losing synchronization of
+     audio and video?
+
+ as for (1), it is supported only in H.264. By default, it is set to
+ skip loop filter/deblocking on delay > 350ms. When the video catches
+ up audio, the quality is back. Though the quality drops, I think it's
+ better than no new frame for seconds.
+
+ as for (2), on delay > 1500ms, ffdshow give up decoding for a while.
+ If the file is H.264, you may have no new frame for seconds.
+
+ Both (1) and (2) have configuration at "decoder options/
+ quality control" in the dialog.
+
+Resize
+ Update to libswscale rev 19211. It fixed the holizontal line problem.
+ It may be slower and if it is matter for you, uncheck "Resize &
+ aspect/Settings/Accurate rounding".
+
+ An old bug fix: While playing resized HD movie, when one try to enter
+ new holizontal size the the application sometimes crashes. I set
+ minimum holizontal size 64 instead of 8 to fix this.
+
+------------------------------------------------------------------------
+r12 | Thu Aug 3 10:59:53 2006 UTC | videomixer9
+
+multithread patch by haruhiko_yamagata 060721
+
+"OSD item "Video delay"
+ ffdshow has IQualityControl since rev2411 (just after the release of
+ the ffdshow-20051115.exe). When the video is delayed more than 1500ms,
+ ffdshow drops a frame. It improves audio-video sync. H.264 (and
+ perhaps some other codecs) cannot (?) show the next frame until it
+ gets "sync point". Next sync point may be very far, so sometimes
+ ffdshow cannot show a new frame for seconds.
+
+Resize setting - automatic vertical size setting
+ Improved(?) "non-square pixel" support (Bug fix).
+ As for MPC + MKV, use proper external mkv spliter and disable MPC
+ internal matroska source filter for non-square pixel support.
+
+Avoid multithreading of resize (swscaler) if the CPU is Pentium4-HT,
+it is not faster at all and use more CPU. (Swscaler depends much on
+MMX and P4HT have only one MMX unit.)
+
+Use more multithreading of resize (swscaler) if the CPU is dual core
+or multi-CPU.
+
+Imported changes of swscaler from mplayer/libswscale.
+ Rewrited multithreading of swscaler to synronize to mplayer/libswscale
+ (doesn't mean it fixes the holizontal line problem).
+
+------------------------------------------------------------------------
+r11 | Thu Aug 3 10:58:51 2006 UTC | videomixer9
+
+multithread patch by haruhiko_yamagata 060709
+
+"Resize setting - automatic vertical size setting
+ Specify horizontal size and enter 0 as vertical size for Auto.
+ I don't think the user interface is a good idea. What should it be
+ like? I'm trying to support the "non-square pixcel", but it depends on
+ video renderer's behavior.
+
+bug fix
+ Window media player hangs up when its picture tuning is on and
+ "Queue output samples" is on. Besides it is not effective to queue in
+ WMP (because WMP doesn't give buffer soon and ffdshow have to wait).
+ So, "Queue output samples" is off by default. It is reserved in dialog
+ expecting improvement by Microsoft in the future.
+
+hang up on ZoomPlayer on initialize.
+ TffdshowDecVideo::IsOldRenderer.
+
+hang up on Resize or aspect settings change
+ TffdshowDecVideo::reconnectOutput
+
+theoretical bug fix(?) of swscaler-multithreading.
+ Because the code seems not to be used in ffdshow, it is not tested.
+
+For better single CPU/multithreading:
+ THREAD_PRIORITY_ABOVE_NORMAL for video renderer.
+ THREAD_PRIORITY_BELOW_NORMAL, tested on prior patch, was not good
+ on WMP.
+
+fixed user defined OSD, broken since last patch.
+
+------------------------------------------------------------------------
+r10 | Thu Aug 3 10:57:46 2006 UTC | videomixer9
+
+multithread patch by haruhiko_yamagata 060625
+
+"Bug fix: 
+ fixed crash of huffyuv. Related to multithreading of swscaler.
+
+Refuse loading from blacklist:
+ Re-installing ffdshow.ax sometimes fails because ffdshow.ax cannot be
+ deleted. Explorer.exe loads ffdshow.ax and never releases. That causes
+ annoying error on re-install that one have to log off.
+ With this patch, ffdshow.ax avoids to be loaded by returning false on
+ DllMain if the caller is included in BlackList ("Don't use ffdshow
+ in:").
+
+aWarpSharp: changed default setting of "Chroma mode"
+
+For better single CPU/multithreading (test).
+ This time, THREAD_PRIORITY_BELOW_NORMAL for streaming thread, only
+ when it write to V-RAM (Single CPU only).
+
+OSD item: Queued samples (joke).
+
+Fixed resource leak: Thanks, hartlerl
+http://sourceforge.net/tracker/index.php?func=detail&aid=1386965&group_id=53761&atid=471489"
+
+------------------------------------------------------------------------
+r9 | Thu Aug 3 10:56:56 2006 UTC | videomixer9
+
+multithread patch by haruhiko_yamagata 060604
+
+"For better single CPU/multithreading (test). In some cases, output
+ queue lost performance. The streaming thread has access to the VRAM
+ buffer, the video renderer thread has it too. Nervus VRAM should not
+ be accessed from two threads simultaneously.
+
+ This time, THREAD_PRIORITY_ABOVE_NORMAL for video rendering thread.
+ This will prevent simultaneous access to VRAM from two threads. This
+ may cause conflict with audio rendering thread. The side effect would
+ be clicking noise in the audio. It was not heard in my limited tests.
+ If it apears, I have another option to test.
+ Please report.
+
+Bug fix: fixed reconnect to VMR9.
+ To change resize setting while playing may cause dynamic reconnect.
+ Prior revision VMR9 (non renderless) blacked out after changing resize
+ setting. Not all the video renderer succeed in reconnect."
+
+
+------------------------------------------------------------------------
+r8 | Thu Aug 3 10:56:04 2006 UTC | videomixer9
+
+multithread patch by haruhiko_yamagata 060601
+
+"Output queue
+
+This patch queue samples just before sent to video renderer and execute
+video renderer on worker thread. Compared to rev2546, 10 to 20%
+(Max 35%) of frame rate improvement is expected.
+Single CPU/multithreading is interesting, though it is not tested."
+
+------------------------------------------------------------------------
+r7 | Thu Aug 3 10:54:13 2006 UTC | videomixer9
+
+multithread patch by haruhiko_yamagata 060517
+
+"To 2546 bug fix. _beginthreadex instead of CreateThread. Giving up
+ReceiveOnThread."
+
+------------------------------------------------------------------------
+r6 | Thu Aug 3 10:48:11 2006 UTC | videomixer9
+
+updated libfaad2
+
+------------------------------------------------------------------------
+r5 | Thu Aug 3 10:47:19 2006 UTC | videomixer9
+
+updated libdts
+
+------------------------------------------------------------------------
+r4 | Thu Aug 3 10:46:20 2006 UTC | videomixer9
+
+fixed vorbis 5.1 decoding in libavcodec
+
+------------------------------------------------------------------------
+r3 | Thu Aug 3 10:45:43 2006 UTC | videomixer9
+
+fixed PCM audio playback
+
+------------------------------------------------------------------------
+r2 | Thu Aug 3 10:43:09 2006 UTC | videomixer9
+
+high accuracy libmad & tremor
+
+------------------------------------------------------------------------
+r1 | Thu Aug 3 10:13:33 2006 UTC | videomixer9
+
+adding original revision 2546
+
+------------------------------------------------------------------------
+Before r1 | Wed May 13 | h_yamagata
+
+ffdshow_multithread_060513a.patch
+To 2546 bug fix Swscaler
+
+Multithreading of swscaler handles "Resize", "Sharpen/swscaler" and
+"Blur & NR/swscaler gaussian blur". When two of them is checked and one
+try to uncheck one, older versions crashes. This patch includes bug fix
+for it.
+
+------------------------------------------------------------------------
+Before r1 | Wed May 3 | h_yamagata
+
+bug fix: Crash on default setting of Zoom Player, old renderer of
+MPC, etc.
+
+Certain video renderer cannot run on child thread. It includes the
+default renderer of Windows 2000 or older, the default of Zoom Player
+(Overlay Mixer, Standard Renderer), "Old Renderer" of MPC, etc. In this
+case, multithreading around video renderer is avoided and Resize is
+processed on multithread.
+
+knouwn bug: Seek problem is not fixed yet. Maily on DX50(?) it sometimes
+crashes after seek.
+
+------------------------------------------------------------------------
+Before r1 | Sat Apr 22 | h_yamagata
+
+ffdshow_multithread_060423.patch
+
+Patch to 2524.
+added comments in TffDecoder.cpp, swscale.c and swscale_template.c.
+fixed libmplayer.vcproj and libmplayer_2005.vcproj.
+
+------------------------------------------------------------------------
+Before r1 | Mon Apr 19 | h_yamagata
+
+I upload this patch for testing. Please test this. It might be buggy.
+Any advice is wellcome. This patch can be applied to Rev 2507. Go to
+trunk directory.
+
+1. About multithreading of ffdshow video playback
+
+The objective of multithreading is to reduce frame drops. This patch
+reduce frame drops by decording and resizing next frame while video
+renderer is working on other thread. Resize is processed on multithread
+when the video renderer is faster than the decoder. For example
+upscaling DVD to HDTV with ffdshow and VMR9 renderless mode of media
+player classic give very good quality. But it requires very high CPU
+power and even current powerfull CPU may drop frames without
+multithreading. This patch is optimized for such case.

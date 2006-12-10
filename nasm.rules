@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VisualStudioToolFile
+	Name="Nasm"
+	Version="8,00"
+	>
+	<Rules>
+		<CustomBuildRule
+			Name="Nasm"
+			DisplayName="Nasm"
+			CommandLine="nasmw -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath) "
+			Outputs="$(IntDir)\$(InputName).obj"
+			FileExtensions="*.asm"
+			ExecutionDescription="nasm assembling $(InputPath)"
+			>
+			<Properties>
+			</Properties>
+		</CustomBuildRule>
+	</Rules>
+</VisualStudioToolFile>

@@ -1,0 +1,20 @@
+TODO
+
+- support for video with dimensions not multiples of 16 [DONE BY ADDING BLACK BORDERS]
+- priorities
+- documentation
+- pan and scan
+- convert MMX assembly to something usable with GCC [DONE]
+- correct chroma smoother
+- allow changing of input frame size during playback [WIP]
+- show all subtitles in current directory [IN TRAY ICON MENU]
+- something between uniform and non-uniform noise
+- option to set bug workaround options depending on FOURCC [IN LIBAVCODEC]
+- fix acm
+- stream mixer
+- expand filter
+- avisynth + ICL
+
+not important
+
+- aspect ratio [DONE] => internal resizing [DONE]
