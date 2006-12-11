@@ -503,6 +503,7 @@ private:
 
  bool IsOldRenderer(void);
  bool IsOldVMR9RenderlessAndRGB(void);
+ bool IsVMR9Renderless(void);
  HRESULT setOutputMediaType(const CMediaType &mt);
  struct
   {

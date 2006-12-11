@@ -444,13 +444,15 @@ HRESULT TffdshowDecVideo::DecideBufferSizeVMR(IMemAllocator *pAlloc, ALLOCATOR_P
   cBuffersMax= MAX_SAMPLES_OPIN+1;
  else
   cBuffersMax= 1;
- if(ref==CLSID_VideoMixingRenderer9)
+ if(ref==CLSID_VideoMixingRenderer9 && IsVMR9Renderless()==false)
   {
-   CMediaType &mt=m_pOutput->CurrentMediaType();
-   if(mt.majortype==MEDIATYPE_Video && mt.subtype==MEDIASUBTYPE_YV12)
-    cBuffersMax= 1;
-    m_IsYV12andVMR9= true; // to let OSD getQueuedCount know the reason.
-    m_pOutputDecVideo->m_IsQueueListedApp= false; // queue off internaly.
+   //CMediaType &mt=m_pOutput->CurrentMediaType();
+   //if(mt.majortype==MEDIATYPE_Video && mt.subtype==MEDIASUBTYPE_YV12)
+   // {
+       cBuffersMax= 1;
+       m_IsYV12andVMR9= true; // to let OSD getQueuedCount know the reason.
+       m_pOutputDecVideo->m_IsQueueListedApp= false; // queue off internaly.
+   // }
   }
  TffPictBase pictOut=inpin->pictIn;calcNewSize(pictOut);
  ppropInputRequest->cbBuffer=pictOut.rectFull.dx*pictOut.rectFull.dy*4;
@@ -710,6 +712,27 @@ bool TffdshowDecVideo::IsOldVMR9RenderlessAndRGB(void)
        isVMR9rs= true;
       }
     }
+   pFilterInfo.pGraph->Release();
+  }
+ return isVMR9rs;
+}
+
+bool TffdshowDecVideo::IsVMR9Renderless(void)
+{
+ const char_t *fileName= getExeflnm();
+ if (_tcsnicmp(_l("mplayerc.exe"),fileName,13)!=0)
+  return false;
+
+ FILTER_INFO pFilterInfo;
+ IBaseFilter* pBaseFilter;
+
+ bool isVMR9rs= false;
+
+ QueryFilterInfo(&pFilterInfo);
+ if(pFilterInfo.pGraph)
+  {
+   if(pFilterInfo.pGraph->FindFilterByName(L"Video Mixing Render 9 (Renderless)", &pBaseFilter)==S_OK)
+    isVMR9rs= true;
    pFilterInfo.pGraph->Release();
   }
  return isVMR9rs;
