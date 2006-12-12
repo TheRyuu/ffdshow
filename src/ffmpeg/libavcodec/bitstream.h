@@ -123,7 +123,7 @@ static inline void flush_put_bits(PutBitContext *s)
     s->bit_buf<<= s->bit_left;
     while (s->bit_left < 32) {
         /* XXX: should test end of buffer */
-        *s->buf_ptr++=s->bit_buf >> 24;
+        *s->buf_ptr++=(uint8_t)(s->bit_buf >> 24);
         s->bit_buf<<=8;
         s->bit_left+=8;
     }
