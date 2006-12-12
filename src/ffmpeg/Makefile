@@ -54,6 +54,7 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/h263.c \
       $(LAVC_DIR)/h263dec.c \
       $(LAVC_DIR)/h264.c \
+      $(LAVC_DIR)/h264dsp.c \
       $(LAVC_DIR)/h264idct.c \
       $(LAVC_DIR)/h264enc.c \
       $(LAVC_DIR)/huffyuv.c \

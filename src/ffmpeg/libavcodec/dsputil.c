@@ -2550,7 +2550,8 @@ void ff_put_vc1_mspel_mc00_c(uint8_t *dst, uint8_t *src, int stride, int rnd) {
     put_pixels8_c(dst, src, stride, 8);
 }
 
-
+/* H264 specific */
+void ff_h264dsp_init(DSPContext* c, AVCodecContext *avctx);
 
 static void wmv2_mspel8_v_lowpass(uint8_t *dst, uint8_t *src, int dstStride, int srcStride, int w){
     uint8_t *cm = ff_cropTbl + MAX_NEG_CROP;
@@ -4034,6 +4035,7 @@ void dsputil_init(DSPContext* c, AVCodecContext *avctx)
 
     ff_cavsdsp_init(c,avctx);
     ff_vc1dsp_init(c,avctx);
+    ff_h264dsp_init(c,avctx);
 
     c->put_mspel_pixels_tab[0]= put_mspel8_mc00_c;
     c->put_mspel_pixels_tab[1]= put_mspel8_mc10_c;
