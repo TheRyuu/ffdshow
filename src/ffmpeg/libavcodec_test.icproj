@@ -56,7 +56,7 @@
 				OutputFile="../../bin/libavcodec.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="1"
-				AdditionalLibraryDirectories="C:\mingw\lib;C:\mingw\lib\gcc\mingw32\3.4.2;C:\mingw\lib\gcc\mingw32\3.4.5;C:\mingw\lib\gcc\mingw32\4.0.3"
+				AdditionalLibraryDirectories="C:\mingw\lib;C:\mingw\lib\gcc\mingw32\4.0.3"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\libavcodec.def"
 				GenerateDebugInformation="1"
@@ -106,20 +106,20 @@
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="0"
-				WholeProgramOptimization="1"/>
+				WholeProgramOptimization="0"/>
 			<Tool 
 				Name="DebugTool"/>
 			<Tool 
 				Name="CppCmplrTool"
-				WholeProgramOptimization="1"
-				Optimization="1000"
-				GlobalOptimizations="1"
+				WholeProgramOptimization="0"
+				Optimization="2"
+				GlobalOptimizations="0"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="1"
-				ImproveFloatingPointConsistency="1000"
+				ImproveFloatingPointConsistency="0"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="1"
-				EnableFiberSafeOptimizations="1"
+				EnableFiberSafeOptimizations="0"
 				AdditionalIncludeDirectories=".,..,../codecs,../imgFilters,../zlib,libavcodec,libavutil"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;HAVE_AV_CONFIG_H;HAVE_BUILTIN_VECTOR;HAVE_THREADS"
 				StringPooling="1"
@@ -129,7 +129,9 @@
 				AssemblerListingLocation=".\Release_ICL/"
 				ObjectFile=".\Release_ICL/"
 				SuppressStartupBanner="1"
-				AdditionalOptions="/D /Qc99 /Qipo"/>
+				AdditionalOptions="/Oa /Qc99 /Ogt /Qipo"
+				LoopUnrolling="0"
+				Parallelization="0"/>
 			<Tool 
 				Name="LinkerTool"
 				DelayImpLib=""
@@ -138,10 +140,12 @@
 				OutputFile="../../bin/libavcodec.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="1"
-				AdditionalLibraryDirectories="C:\mingw\lib;C:\mingw\lib\gcc\mingw32\3.4.2;C:\mingw\lib\gcc\mingw32\3.4.5;C:\mingw\lib\gcc\mingw32\4.0.3"
+				AdditionalLibraryDirectories="C:\mingw\lib;C:\mingw\lib\gcc\mingw32\4.0.3"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\libavcodec.def"
 				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
 				EntryPointSymbol="DllEntryPoint"
 				ImportLibrary=".\Release_ICL/libavcodec.lib"
 				TargetMachine="1"
@@ -352,7 +356,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 			<FileConfiguration 
@@ -360,7 +364,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 		</File>
@@ -371,7 +375,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 			<FileConfiguration 
@@ -379,7 +383,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 		</File>
@@ -405,7 +409,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 			<FileConfiguration 
@@ -413,7 +417,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 		</File>
@@ -428,7 +432,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 			<FileConfiguration 
@@ -436,7 +440,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 		</File>
@@ -447,7 +451,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 			<FileConfiguration 
@@ -455,7 +459,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 		</File>
@@ -466,7 +470,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 			<FileConfiguration 
@@ -474,7 +478,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 		</File>
@@ -485,7 +489,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 			<FileConfiguration 
@@ -493,7 +497,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 		</File>
@@ -519,7 +523,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 			<FileConfiguration 
@@ -527,7 +531,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 		</File>
@@ -538,7 +542,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 			<FileConfiguration 
@@ -546,7 +550,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 		</File>
@@ -561,7 +565,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 			<FileConfiguration 
@@ -569,7 +573,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 		</File>
@@ -580,7 +584,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 			<FileConfiguration 
@@ -588,7 +592,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 		</File>
@@ -599,7 +603,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 			<FileConfiguration 
@@ -607,7 +611,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 		</File>
@@ -696,7 +700,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 			<FileConfiguration 
@@ -704,7 +708,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 		</File>
@@ -715,7 +719,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H  -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H  -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 			<FileConfiguration 
@@ -723,7 +727,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H  -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H  -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 		</File>
@@ -734,7 +738,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 			<FileConfiguration 
@@ -742,7 +746,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 		</File>
@@ -838,6 +842,8 @@
 			</FileConfiguration>
 		</File>
 		<File 
+			RelativePath=".\libavformat\flv.h"/>
+		<File 
 			RelativePath=".\libavformat\flvenc.c">
 			<FileConfiguration 
 				Name="Debug_ICL|Win32">
@@ -876,18 +882,18 @@
 			<FileConfiguration 
 				Name="Debug_ICL|Win32">
 				<Tool 
-					Name="CppCmplrTool"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions=""
-					ObjectFile=".\Debug_ICL_F/"/>
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)_F\$(InputName).obj -Ilibavutil -w"
+					Outputs="$(IntDir)_F\$(InputName).obj"/>
 			</FileConfiguration>
 			<FileConfiguration 
 				Name="Release_ICL|Win32">
 				<Tool 
-					Name="CppCmplrTool"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions=""
-					ObjectFile=".\Release_ICL_F/"/>
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)_F\$(InputName).obj -Ilibavutil -w"
+					Outputs="$(IntDir)_F\$(InputName).obj"/>
 			</FileConfiguration>
 		</File>
 		<File 
@@ -1046,7 +1052,8 @@
 				<Tool 
 					Name="CppCmplrTool"
 					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions=""/>
+					PreprocessorDefinitions=""
+					AdditionalOptions=""/>
 			</FileConfiguration>
 		</File>
 		<File 
@@ -1434,7 +1441,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 			<FileConfiguration 
@@ -1442,7 +1449,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 		</File>
@@ -1585,6 +1592,10 @@
 			</FileConfiguration>
 		</File>
 		<File 
+			RelativePath=".\libavcodec\h264dsp.c"/>
+		<File 
+			RelativePath=".\libavcodec\h264enc.c"/>
+		<File 
 			RelativePath=".\libavcodec\h264idct.c">
 			<FileConfiguration 
 				Name="Debug_ICL|Win32">
@@ -1627,7 +1638,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 			<FileConfiguration 
@@ -1635,7 +1646,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 		</File>
@@ -1977,7 +1988,24 @@
 			</FileConfiguration>
 		</File>
 		<File 
-			RelativePath=".\libavcodec\opt.c"/>
+			RelativePath=".\libavcodec\opt.c">
+			<FileConfiguration 
+				Name="Release_ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Debug_ICL|Win32">
+				<Tool 
+					Name="CustomTool"
+					Description="gcc $(InputName)"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					Outputs="$(IntDir)\$(InputName).obj"/>
+			</FileConfiguration>
+		</File>
 		<File 
 			RelativePath=".\libavcodec\parser.c">
 			<FileConfiguration 
@@ -2118,8 +2146,6 @@
 					PreprocessorDefinitions=""/>
 			</FileConfiguration>
 		</File>
-		<File 
-			RelativePath=".\libavcodec\raw.c"/>
 		<File 
 			RelativePath=".\libavcodec\rpza.c"/>
 		<File 
@@ -2356,7 +2382,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 			<FileConfiguration 
@@ -2364,7 +2390,7 @@
 				<Tool 
 					Name="CustomTool"
 					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
+					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -std=gnu99 -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
 					Outputs="$(IntDir)\$(InputName).obj"/>
 			</FileConfiguration>
 		</File>
@@ -2473,81 +2499,13 @@
 			</FileConfiguration>
 		</File>
 		<File 
-			RelativePath=".\libavcodec\vp5.c">
-			<FileConfiguration 
-				Name="Debug_ICL|Win32">
-				<Tool 
-					Name="CustomTool"
-					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
-					Outputs="$(IntDir)\$(InputName).obj"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Release_ICL|Win32">
-				<Tool 
-					Name="CustomTool"
-					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
-					Outputs="$(IntDir)\$(InputName).obj"/>
-			</FileConfiguration>
-		</File>
+			RelativePath=".\libavcodec\vp5.c"/>
 		<File 
-			RelativePath=".\libavcodec\vp56.c">
-			<FileConfiguration 
-				Name="Debug_ICL|Win32">
-				<Tool 
-					Name="CustomTool"
-					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
-					Outputs="$(IntDir)\$(InputName).obj"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Release_ICL|Win32">
-				<Tool 
-					Name="CustomTool"
-					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
-					Outputs="$(IntDir)\$(InputName).obj"/>
-			</FileConfiguration>
-		</File>
+			RelativePath=".\libavcodec\vp56.c"/>
 		<File 
-			RelativePath=".\libavcodec\vp56data.c">
-			<FileConfiguration 
-				Name="Debug_ICL|Win32">
-				<Tool 
-					Name="CustomTool"
-					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
-					Outputs="$(IntDir)\$(InputName).obj"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Release_ICL|Win32">
-				<Tool 
-					Name="CustomTool"
-					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
-					Outputs="$(IntDir)\$(InputName).obj"/>
-			</FileConfiguration>
-		</File>
+			RelativePath=".\libavcodec\vp56data.c"/>
 		<File 
-			RelativePath=".\libavcodec\vp6.c">
-			<FileConfiguration 
-				Name="Debug_ICL|Win32">
-				<Tool 
-					Name="CustomTool"
-					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
-					Outputs="$(IntDir)\$(InputName).obj"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Release_ICL|Win32">
-				<Tool 
-					Name="CustomTool"
-					Description="gcc $(InputName)"
-					CommandLine="gcc -c -O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline -finline-functions -frename-registers -fweb -funit-at-a-time -DHAVE_AV_CONFIG_H -pipe -mno-cygwin -mdll -I. -I./libavcodec -I./libavformat -I./libavutil -I.. -I../codecs -I../imgFilters -I../zlib $(InputPath) -o $(IntDir)\$(InputName).obj -Ilibavutil -w&#xA;"
-					Outputs="$(IntDir)\$(InputName).obj"/>
-			</FileConfiguration>
-		</File>
+			RelativePath=".\libavcodec\vp6.c"/>
 		<File 
 			RelativePath=".\libavcodec\w32thread.c">
 			<FileConfiguration 

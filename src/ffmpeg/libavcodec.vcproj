@@ -276,6 +276,12 @@
 				RelativePath="libavcodec\h264.c">
 			</File>
 			<File
+				RelativePath=".\libavcodec\h264dsp.c">
+			</File>
+			<File
+				RelativePath=".\libavcodec\h264enc.c">
+			</File>
+			<File
 				RelativePath=".\libavcodec\h264idct.c">
 			</File>
 			<File
@@ -792,6 +798,9 @@
 			</File>
 			<File
 				RelativePath=".\libavformat\file.c">
+			</File>
+			<File
+				RelativePath=".\libavformat\flv.h">
 			</File>
 			<File
 				RelativePath=".\libavformat\flvenc.c">
