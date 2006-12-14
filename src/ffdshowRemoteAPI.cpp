@@ -160,6 +160,8 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
      return SUCCEEDED(deciD->cyclePresets(-1))?TRUE:FALSE;
     case WPRM_NEXTPRESET:
      return SUCCEEDED(deciD->cyclePresets(+1))?TRUE:FALSE;
+	case WPRM_SETCURTIME:
+     return SUCCEEDED(deciD->seek((int)lprm))?TRUE:FALSE;
    }
  if (acceptKeys && (msg==WM_SYSKEYDOWN || msg==WM_SYSKEYUP || msg==WM_KEYDOWN || msg==WM_KEYUP))
   {
@@ -194,6 +196,8 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
        if (SUCCEEDED(deci->getParamStr(paramid,buft,cds->cbData)))
         {
          text<char>(buft,cds->cbData,(char*)cds->lpData);
+		 ((COPYDATASTRUCT*)lprm)->dwData = paramid;
+		 SendMessage((HWND)wprm, WM_COPYDATA, paramid, lprm);
          return TRUE;
         } 
        return FALSE; 
@@ -215,7 +219,8 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
          strncpy((char*)cds->lpData,text<char>(files[subtitleIdx].c_str()),cds->cbData);
          ((char*)cds->lpData)[cds->cbData-1]='\0';
          subtitleIdx++;
-        } 
+        }
+	   SendMessage((HWND)wprm, WM_COPYDATA, paramid, lprm);
        return TRUE;  
       } 
     }
