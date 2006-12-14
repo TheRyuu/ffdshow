@@ -38,6 +38,9 @@
 #define WPRM_PREVPRESET 11
 #define WPRM_NEXTPRESET 12 
 
+//Set current time in seconds
+#define WPRM_SETCURTIME 13 
+
 
 //WM_COPYDATA 
 //COPYDATASTRUCT.dwData=
