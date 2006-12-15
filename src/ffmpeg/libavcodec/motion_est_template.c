@@ -824,7 +824,8 @@ static int sab_diamond_search(MpegEncContext * s, int *best, int dmin,
     chroma_cmpf= s->dsp.me_cmp[size+1];
     
     /*Note j<MAX_SAB_SIZE is needed if MAX_SAB_SIZE < ME_MAP_SIZE as j can
-              become larger due to MVs overflowing their ME_MAP_MV_BITS bits space in map*/
+      become larger due to MVs overflowing their ME_MAP_MV_BITS bits space in map
+     */
     for(j=i=0; i<ME_MAP_SIZE && j<MAX_SAB_SIZE; i++){
         uint32_t key= map[i];
 
