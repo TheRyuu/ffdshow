@@ -95,7 +95,7 @@ const FOURCC* getCodecFOURCCs(CodecID codecId)
     }
    case CODEC_ID_VP6:
     {
-     static const FOURCC fccs[]={FOURCC_VP62,0};
+     static const FOURCC fccs[]={FOURCC_VP60,FOURCC_VP61,FOURCC_VP62,0};
      return fccs;
     }
    case CODEC_ID_VP6F:

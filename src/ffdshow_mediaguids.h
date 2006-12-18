@@ -44,6 +44,8 @@
 #define FOURCC_WVC1 mmioFOURCC('W','V','C','1')
 #define FOURCC_WMVA mmioFOURCC('W','M','V','A')
 #define FOURCC_VP50 mmioFOURCC('V','P','5','0')
+#define FOURCC_VP60 mmioFOURCC('V','P','6','0')
+#define FOURCC_VP61 mmioFOURCC('V','P','6','1')
 #define FOURCC_VP62 mmioFOURCC('V','P','6','2')
 #define FOURCC_VP6F mmioFOURCC('V','P','6','F')
 #define FOURCC_FLV4 mmioFOURCC('F','L','V','4')

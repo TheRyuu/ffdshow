@@ -410,7 +410,7 @@ void TcodecsPageVideo::fillCodecs(void)
    formats.push_back(Tformat(_l("FLV1")       ,IDFF_flv1,IDFF_MOVIE_LAVC,_l("Flash Video (FLV1)")));
    formats.push_back(Tformat(_l("VP3")        ,IDFF_vp3 ,IDFF_MOVIE_LAVC,_l("VP3 Video (VP31)")));
    formats.push_back(Tformat(_l("VP5") ,IDFF_vp5,IDFF_MOVIE_LAVC,_l("VP5 Video (VP50)")));
-   formats.push_back(Tformat(_l("VP6") ,IDFF_vp6,IDFF_MOVIE_LAVC,_l("VP6 Video (VP62)")));
+   formats.push_back(Tformat(_l("VP6") ,IDFF_vp6,IDFF_MOVIE_LAVC,_l("VP6 Video (VP60, VP61, VP62)")));
    formats.push_back(Tformat(_l("VP6F") ,IDFF_vp6f,IDFF_MOVIE_LAVC,_l("VP6F Video (VP6F, FLV4)")));      
    static const int movies_mpeg12[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2,0};
    static const Tformat::Toption options_mpeg12[]={{IDFF_MOVIE_LAVC,_l("use speedup tricks"),IDFF_fastMpeg2,1},{0,NULL,0}};
