@@ -157,7 +157,7 @@ de.spk_Surround=Surround
 de.spk_Subwoofer=Subwoofer
 de.spk_dolby1=Dolby Surround/ProLogic
 de.spk_dolby2=Dolby ProLogic II
-de.spk_sameasinput=same as input
+de.spk_sameasinput=identisch mit Eingangskanälen
 de.spk_HRTF=Head-related transfer function(HRTF)
 
 ; French
