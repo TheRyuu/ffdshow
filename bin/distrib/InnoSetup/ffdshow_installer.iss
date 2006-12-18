@@ -71,6 +71,8 @@ AppName=ffdshow
 AppVerName=ffdshow [rev {#= tryout_revision}] [{#= buildyear}-{#= buildmonth}-{#= buildday}]
 AppVersion=1.0
 Compression=lzma/ultra
+InternalCompressLevel=ultra
+SolidCompression=true
 DefaultDirName={code:GetDefaultInstallDir|}
 DefaultGroupName=ffdshow
 DirExistsWarning=no
@@ -104,7 +106,6 @@ ShowLanguageDialog=no
 #endif
 ShowTasksTreeLines=yes
 ShowUndisplayableLanguages=no
-SolidCompression=yes
 UsePreviousTasks=no
 VersionInfoCompany=ffdshow
 VersionInfoCopyright=GNU
@@ -113,27 +114,27 @@ WizardImageFile=MicrosoftModern01.bmp
 WizardSmallImageFile=SetupModernSmall26.bmp
 
 [Languages]
-Name: en; MessagesFile: compiler:Default.isl;
+Name: en; MessagesFile: compiler:Default.isl
 #if localize
-Name: ba; MessagesFile: compiler:Languages\Basque.isl;
-Name: br; MessagesFile: compiler:Languages\BrazilianPortuguese.isl;
-Name: ca; MessagesFile: compiler:Languages\Catalan.isl;
-Name: cz; MessagesFile: compiler:Languages\Czech.isl; LicenseFile: ../../../copying.cz.txt;
-Name: da; MessagesFile: compiler:Languages\Danish.isl;
-Name: du; MessagesFile: compiler:Languages\Dutch.isl;
-Name: fi; MessagesFile: compiler:Languages\Finnish.isl;
-Name: fr; MessagesFile: compiler:Languages\French.isl;
-Name: de; MessagesFile: compiler:Languages\German.isl; LicenseFile: ../../../copying.de.txt; InfoBeforeFile: infobefore\infobefore.de.rtf;
-Name: hu; MessagesFile: compiler:Languages\Hungarian.isl;
-Name: it; MessagesFile: compiler:Languages\Italian.isl;
-Name: jp; MessagesFile: languages\Japanese.isl; LicenseFile: ../../../copying.jp.txt;
-Name: no; MessagesFile: compiler:Languages\Norwegian.isl;
-Name: pl; MessagesFile: compiler:Languages\Polish.isl;
-Name: pr; MessagesFile: compiler:Languages\Portuguese.isl;
-Name: ru; MessagesFile: compiler:Languages\Russian.isl; LicenseFile: ../../../copying.ru.txt;
-Name: sk; MessagesFile: compiler:Languages\Slovak.isl; LicenseFile: ../../../copying.sk.txt;
-Name: sn; MessagesFile: compiler:Languages\Slovenian.isl;
-Name: sp; MessagesFile: compiler:Languages\Spanish.isl;
+Name: ba; MessagesFile: compiler:Languages\Basque.isl
+Name: br; MessagesFile: compiler:Languages\BrazilianPortuguese.isl
+Name: ca; MessagesFile: compiler:Languages\Catalan.isl
+Name: cz; MessagesFile: compiler:Languages\Czech.isl; LicenseFile: ../../../copying.cz.txt
+Name: da; MessagesFile: compiler:Languages\Danish.isl
+Name: du; MessagesFile: compiler:Languages\Dutch.isl
+Name: fi; MessagesFile: compiler:Languages\Finnish.isl
+Name: fr; MessagesFile: compiler:Languages\French.isl
+Name: de; MessagesFile: compiler:Languages\German.isl; LicenseFile: ../../../copying.de.txt; InfoBeforeFile: infobefore\infobefore.de.rtf
+Name: hu; MessagesFile: compiler:Languages\Hungarian.isl
+Name: it; MessagesFile: compiler:Languages\Italian.isl
+Name: jp; MessagesFile: languages\Japanese.isl; LicenseFile: ../../../copying.jp.txt
+Name: no; MessagesFile: compiler:Languages\Norwegian.isl
+Name: pl; MessagesFile: compiler:Languages\Polish.isl
+Name: pr; MessagesFile: compiler:Languages\Portuguese.isl
+Name: ru; MessagesFile: compiler:Languages\Russian.isl; LicenseFile: ../../../copying.ru.txt
+Name: sk; MessagesFile: compiler:Languages\Slovak.isl; LicenseFile: ../../../copying.sk.txt
+Name: sn; MessagesFile: compiler:Languages\Slovenian.isl
+Name: sp; MessagesFile: compiler:Languages\Spanish.isl
 #endif
 
 [Types]
@@ -143,13 +144,13 @@ Name: Normal; Description: Normal; Flags: iscustom
 Name: ffdshow; Description: {cm:ffdshowds}; Types: Normal
 Name: ffdshow\vfw; Description: {cm:vfwinterface}; Types: Normal
 #if include_makeavis
-Name: ffdshow\makeavis; Description: {cm:makeavis}; Flags: dontinheritcheck;
+Name: ffdshow\makeavis; Description: {cm:makeavis}; Flags: dontinheritcheck
 #endif
 #if include_app_plugins
-Name: ffdshow\plugins; Description: {cm:appplugins}; Flags: dontinheritcheck;
-Name: ffdshow\plugins\avisynth; Description: AviSynth;
-Name: ffdshow\plugins\virtualdub; Description: VirtualDub;
-Name: ffdshow\plugins\dscaler; Description: DScaler;
+Name: ffdshow\plugins; Description: {cm:appplugins}; Flags: dontinheritcheck
+Name: ffdshow\plugins\avisynth; Description: AviSynth
+Name: ffdshow\plugins\virtualdub; Description: VirtualDub
+Name: ffdshow\plugins\dscaler; Description: DScaler
 #endif
 
 ; CPU detection code
@@ -251,21 +252,21 @@ Name: {group}\{cm:vfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,con
 #if include_makeavis
 Name: {group}\makeAVIS; Filename: {app}\makeAVIS.exe; Components: ffdshow\makeavis
 #endif
-Name: {group}\{cm:uninstall}; Filename: {uninstallexe};
+Name: {group}\{cm:uninstall}; Filename: {uninstallexe}
 
 [Files]
 ; For speaker config
-Source: msvc71\ffSpkCfg.dll; Flags: dontcopy;
+Source: msvc71\ffSpkCfg.dll; Flags: dontcopy
 
 ; MSVC71 runtimes are required for ffdshow components that are placed outside the ffdshow installation directory
-Source: msvcp71.dll; DestDir: {sys}; Flags: onlyifdoesntexist;
-Source: msvcr71.dll; DestDir: {sys}; Flags: onlyifdoesntexist;
+Source: msvcp71.dll; DestDir: {sys}; Flags: onlyifdoesntexist
+Source: msvcr71.dll; DestDir: {sys}; Flags: onlyifdoesntexist
 #if MSVC80
 ; Install MSVC80 runtime as private assembly (can only be used by components that are in the same directory)
-Source: ..\msvcr80.dll; DestDir: {app}; MinVersion: 4.1,5; Flags: ignoreversion restartreplace uninsrestartdelete;
-Source: ..\NT4.0\msvcr80.dll; DestDir: {app}; MinVersion: 0,4; OnlyBelowVersion: 0,5; Flags: ignoreversion restartreplace uninsrestartdelete;
-Source: ..\microsoft.vc80.crt.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete;
-Source: msvc80\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02;
+Source: ..\msvcr80.dll; DestDir: {app}; MinVersion: 4.1,5; Flags: ignoreversion restartreplace uninsrestartdelete
+Source: ..\NT4.0\msvcr80.dll; DestDir: {app}; MinVersion: 0,4; OnlyBelowVersion: 0,5; Flags: ignoreversion restartreplace uninsrestartdelete
+Source: ..\microsoft.vc80.crt.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete
+Source: msvc80\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
 #endif
 
 Source: ..\..\libavcodec.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
@@ -346,7 +347,7 @@ Source: msvc71\ff_acm.acm; DestDir: {sys}; Flags: ignoreversion restartreplace u
 Source: ..\..\ff_acm.acm; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
   #endif
 #endif
-Source: "..\..\languages\*.*"; DestDir: "{app}\languages"; Flags: ignoreversion; Components: ffdshow
+Source: ..\..\languages\*.*; DestDir: {app}\languages; Flags: ignoreversion; Components: ffdshow
 Source: ..\..\custom matrices\*.*; DestDir: {app}\custom matrices; Flags: ignoreversion; Components: ffdshow\vfw
 
 [InstallDelete]
@@ -472,7 +473,7 @@ Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: bl
 ; Registry keys for the audio/video formats:
 #include "reg_formats.iss"
 
-[Ini]
+[INI]
 #if !unicode_required
 Filename: {win}\system.ini; Section: drivers32; Key: vidc.ffds; String: ff_vfw.dll; Flags: uninsdeleteentry; MinVersion: 4,0; Components: ffdshow\vfw
   #if include_makeavis
@@ -705,7 +706,7 @@ end;
 function InitializeSetup(): Boolean;
 begin
   Result := True;
-  
+
   #if include_cpu_detection
     #if mmx_required
     if NOT Is_MMX_Supported() then begin
