@@ -230,7 +230,13 @@ static void zero_hpel(uint8_t *a, const uint8_t *b, int stride, int h){
 
 void ff_init_me(MpegEncContext *s){
     MotionEstContext * const c= &s->me;
+    int cache_size= FFMIN(ME_MAP_SIZE>>ME_MAP_SHIFT, 1<<ME_MAP_SHIFT);
+    int dia_size= FFMAX(FFABS(s->avctx->dia_size)&255, FFABS(s->avctx->pre_dia_size)&255);
     c->avctx= s->avctx;
+
+    if(cache_size < 2*dia_size && !c->stride){
+        av_log(s->avctx, AV_LOG_INFO, "ME_MAP size may be a little small for the selected diamond size\n");
+    }
 
     ff_set_cmp(&s->dsp, s->dsp.me_pre_cmp, c->avctx->me_pre_cmp);
     ff_set_cmp(&s->dsp, s->dsp.me_cmp, c->avctx->me_cmp);
@@ -689,6 +695,7 @@ static inline void set_p_mv_tables(MpegEncContext * s, int mx, int my, int mv4)
 static inline void get_limits(MpegEncContext *s, int x, int y)
 {
     MotionEstContext * const c= &s->me;
+    int range= c->avctx->me_range >> (1 + !!(c->flags&FLAG_QPEL));
 /*
     if(c->avctx->me_range) c->range= c->avctx->me_range >> 1;
     else                   c->range= 16;
@@ -709,6 +716,12 @@ static inline void get_limits(MpegEncContext *s, int x, int y)
         c->ymin = - y;
         c->xmax = - x + s->mb_width *16 - 16;
         c->ymax = - y + s->mb_height*16 - 16;
+    }
+    if(range){
+        c->xmin = FFMAX(c->xmin,-range);
+        c->xmax = FFMIN(c->xmax, range);
+        c->ymin = FFMAX(c->ymin,-range);
+        c->ymax = FFMIN(c->ymax, range);
     }
 }
 
