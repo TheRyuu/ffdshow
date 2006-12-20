@@ -24,6 +24,9 @@
 #include "TkeyboardDirect.h"
 #include "TsubtitlesFile.h"
 #include "reg.h"
+#include "Tpresets.h"
+#include "TpresetSettings.h"
+
 
 Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),Toptions(Icoll)
 {
@@ -151,7 +154,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
     case WPRM_RUN:
      return SUCCEEDED(deciD->run())?TRUE:FALSE;
     case WPRM_GETSTATE:
-     return SUCCEEDED(deciD->getState2()); 
+     return deciD->getState2(); 
     case WPRM_GETDURATION:
      return deci->getParam2(IDFF_movieDuration);
     case WPRM_GETCURTIME:
@@ -222,7 +225,52 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
         }
 	   SendMessage((HWND)wprm, WM_COPYDATA, paramid, lprm);
        return TRUE;  
-      } 
+      }
+	  case COPY_GET_PRESETLIST:
+	  {
+		COPYDATASTRUCT cd;
+		cd.dwData = COPY_GET_PRESETLIST;
+		Tpresets *presets;
+		deciD->getPresetsPtr(&presets);
+		int presetsNum = presets->size();
+		size_t string_size = 2048;
+		char_t *presetList = (char_t*)alloca(sizeof(char_t)*string_size);
+		strcpy(presetList, _l(""));
+		for (int i=0; i<presetsNum; i++)
+		{
+			Tpreset *preset = presets->at(i);
+			const char_t *presetName = preset->presetName;
+			// Resize the string if needed
+			if (strlen(presetList)+strlen(presetName)+ 1 >= string_size)
+			{
+				string_size += 2048;
+				char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
+				strcpy(tmpStr, presetList);
+				free(presetList); presetList = tmpStr;
+			}
+			strcat(presetList, presetName);
+			if (i != presetsNum - 1)
+				strcat(presetList, _l(";"));
+		}
+		cd.lpData = alloca(sizeof(char)*(strlen(presetList)+1));
+		strcpy((char*)cd.lpData, "");
+		text<char>(presetList, (char*)cd.lpData);
+		cd.cbData = strlen(presetList)+1;
+		SendMessage((HWND)wprm, WM_COPYDATA, COPY_GET_PRESETLIST, (LPARAM)&cd);
+		return TRUE;
+	  }
+	  case COPY_GET_SOURCEFILE:
+	  {
+		COPYDATASTRUCT cd;
+		cd.dwData = COPY_GET_SOURCEFILE;
+		const char_t *fileName = deci->getSourceName();
+		cd.lpData = alloca(sizeof(char)*(strlen(fileName)+1));
+		strcpy((char*)cd.lpData, "");
+		text<char>(fileName, (char*)cd.lpData);
+		cd.cbData = strlen(fileName)+1;
+		SendMessage((HWND)wprm, WM_COPYDATA, COPY_GET_SOURCEFILE, (LPARAM)&cd);
+		return TRUE;
+	  }
     }
   }
  return DefWindowProc(hwnd,msg,wprm,lprm); 

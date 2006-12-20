@@ -39,7 +39,9 @@
 #define WPRM_NEXTPRESET 12 
 
 //Set current time in seconds
-#define WPRM_SETCURTIME 13 
+#define WPRM_SETCURTIME 13
+
+
 
 
 //WM_COPYDATA 
@@ -49,5 +51,6 @@
 #define COPY_AVAILABLESUBTITLE_FIRST 11 // lpData points to buffer where first file name will be stored  - if no subtitle file is available, lpData will contain empty string
 #define COPY_AVAILABLESUBTITLE_NEXT  12 // lpData points to buffer where next file name will be stored  - if no subtitle file is available, lpData will contain empty string
 #define COPY_GETPARAMSTR       13 // lpData points to buffer where param value will be stored
-
+#define COPY_GET_PRESETLIST		14 //Get the list of presets (array of strings)
+#define COPY_GET_SOURCEFILE		15 //Get the filename currently played
 #endif
