@@ -4003,16 +4003,17 @@ static av_always_inline void encode_mb_internal(MpegEncContext *s, int motion_x,
         update_qscale(s);
 
         if(!(s->flags&CODEC_FLAG_QP_RD)){
+            s->qscale= s->current_picture_ptr->qscale_table[mb_xy];
             s->dquant= s->qscale - last_qp;
 
             if(s->out_format==FMT_H263){
-                s->dquant= clip(s->dquant, -2, 2); //FIXME RD
+                s->dquant= clip(s->dquant, -2, 2);
 
                 if(s->codec_id==CODEC_ID_MPEG4){
                     if(!s->mb_intra){
                         if(s->pict_type == B_TYPE){
                             if(s->dquant&1)
-                                s->dquant= (s->dquant/2)*2;
+                                s->dquant= 0;
                             if(s->mv_dir&MV_DIRECT)
                                 s->dquant= 0;
                         }
@@ -4833,16 +4834,6 @@ static int encode_thread(AVCodecContext *c, void *arg){
                     encode_mb_hq(s, &backup_s, &best_s, CANDIDATE_MB_TYPE_BIDIR, pb, pb2, tex_pb,
                                  &dmin, &next_block, 0, 0);
                 }
-                if(mb_type&CANDIDATE_MB_TYPE_DIRECT){
-                    int mx= s->b_direct_mv_table[xy][0];
-                    int my= s->b_direct_mv_table[xy][1];
-
-                    s->mv_dir = MV_DIR_FORWARD | MV_DIR_BACKWARD | MV_DIRECT;
-                    s->mb_intra= 0;
-                    ff_mpeg4_set_direct_mv(s, mx, my);
-                    encode_mb_hq(s, &backup_s, &best_s, CANDIDATE_MB_TYPE_DIRECT, pb, pb2, tex_pb,
-                                 &dmin, &next_block, mx, my);
-                }
                 if(mb_type&CANDIDATE_MB_TYPE_FORWARD_I){
                     s->mv_dir = MV_DIR_FORWARD;
                     s->mv_type = MV_TYPE_FIELD;
@@ -4897,8 +4888,8 @@ static int encode_thread(AVCodecContext *c, void *arg){
                     }
                 }
 
-                if(s->flags & CODEC_FLAG_QP_RD){
-                    if(best_s.mv_type==MV_TYPE_16X16 && !(best_s.mv_dir&MV_DIRECT)){
+                if((s->flags & CODEC_FLAG_QP_RD) && dmin < INT_MAX){
+                    if(best_s.mv_type==MV_TYPE_16X16){ //FIXME move 4mv after QPRD
                         const int last_qp= backup_s.qscale;
                         int qpi, qp, dc[6];
                         DCTELEM ac[6][16];
@@ -4941,10 +4932,28 @@ static int encode_thread(AVCodecContext *c, void *arg){
                                 }
                             }
                         }
-                        qp= best_s.qscale;
-                        s->current_picture.qscale_table[xy]= qp;
                     }
                 }
+                if(mb_type&CANDIDATE_MB_TYPE_DIRECT){
+                    int mx= s->b_direct_mv_table[xy][0];
+                    int my= s->b_direct_mv_table[xy][1];
+
+                    backup_s.dquant = 0;
+                    s->mv_dir = MV_DIR_FORWARD | MV_DIR_BACKWARD | MV_DIRECT;
+                    s->mb_intra= 0;
+                    ff_mpeg4_set_direct_mv(s, mx, my);
+                    encode_mb_hq(s, &backup_s, &best_s, CANDIDATE_MB_TYPE_DIRECT, pb, pb2, tex_pb,
+                                 &dmin, &next_block, mx, my);
+                }
+                if(mb_type&CANDIDATE_MB_TYPE_DIRECT0){
+                    backup_s.dquant = 0;
+                    s->mv_dir = MV_DIR_FORWARD | MV_DIR_BACKWARD | MV_DIRECT;
+                    s->mb_intra= 0;
+                    ff_mpeg4_set_direct_mv(s, 0, 0);
+                    encode_mb_hq(s, &backup_s, &best_s, CANDIDATE_MB_TYPE_DIRECT, pb, pb2, tex_pb,
+                                 &dmin, &next_block, 0, 0);
+                }
+                s->current_picture.qscale_table[xy]= best_s.qscale;
 
                 copy_context_after_encode(s, &best_s, -1);
 
