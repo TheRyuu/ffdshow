@@ -4012,9 +4012,7 @@ static av_always_inline void encode_mb_internal(MpegEncContext *s, int motion_x,
                 if(s->codec_id==CODEC_ID_MPEG4){
                     if(!s->mb_intra){
                         if(s->pict_type == B_TYPE){
-                            if(s->dquant&1)
-                                s->dquant= 0;
-                            if(s->mv_dir&MV_DIRECT)
+                            if(s->dquant&1 || s->mv_dir&MV_DIRECT)
                                 s->dquant= 0;
                         }
                         if(s->mv_type==MV_TYPE_8X8)
@@ -5031,6 +5029,11 @@ static int encode_thread(AVCodecContext *c, void *arg){
                     motion_x=s->b_direct_mv_table[xy][0];
                     motion_y=s->b_direct_mv_table[xy][1];
                     ff_mpeg4_set_direct_mv(s, motion_x, motion_y);
+                    break;
+                case CANDIDATE_MB_TYPE_DIRECT0:
+                    s->mv_dir = MV_DIR_FORWARD | MV_DIR_BACKWARD | MV_DIRECT;
+                    s->mb_intra= 0;
+                    ff_mpeg4_set_direct_mv(s, 0, 0);
                     break;
                 case CANDIDATE_MB_TYPE_BIDIR:
                     s->mv_dir = MV_DIR_FORWARD | MV_DIR_BACKWARD;
