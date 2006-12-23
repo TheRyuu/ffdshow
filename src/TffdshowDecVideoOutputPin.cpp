@@ -102,9 +102,9 @@ HRESULT TffdshowDecVideoOutputPin::DeliverBeginFlush(void)
   {
    return VFW_E_NOT_CONNECTED;
   }
+ fdv->m_aboutToFlash= true;
  if(fdv->m_IsOldVideoRenderer==false && oldSettingOfMultiThread && m_IsQueueListedApp && !fdv->m_IsOldVMR9RenderlessAndRGB)
   {
-   fdv->m_aboutToFlash= true;
    queue->BeginFlush();
   }
  else
