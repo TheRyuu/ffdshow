@@ -484,7 +484,7 @@ Filename: {win}\system.ini; Section: drivers32; Key: msacm.avis; String: ff_acm.
 [Run]
 Description: {cm:runaudioconfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; Flags: postinstall nowait unchecked; Components: ffdshow
 Description: {cm:runvideoconfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configure; WorkingDir: {app}; Flags: postinstall nowait unchecked; Components: ffdshow
-Description: {cm:runvfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW; WorkingDir: {app}; Flags: postinstall nowait unchecked; Components: ffdshow
+Description: {cm:runvfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW; WorkingDir: {app}; Flags: postinstall nowait unchecked; Components: ffdshow\vfw
 
 ; All custom strings in the installer:
 #include "custom_messages.iss"
