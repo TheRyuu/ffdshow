@@ -58,9 +58,9 @@ DEFINE_GUID(CLSID_DWSTRINGW, 0xa0606860, 0x51be, 0x4cf6, 0x99, 0xc0, 0x7c, 0xe5,
 #define FOURCC_wmv2 mmioFOURCC('w','m','v','2')
 #define FOURCC_wmv3 mmioFOURCC('w','m','v','3')
 #define FOURCC_cavs mmioFOURCC('c','a','v','s')
-#define FOURCC_vmnc mmioFOURCC('v','m','n','c')
 #define FOURCC_wvc1 mmioFOURCC('w','v','c','1')
-#define FOURCC_wmva mmioFOURCC('w','m','v','a')
+#define FOURCC_wmvp mmioFOURCC('w','m','v','p')
+#define FOURCC_wvp2 mmioFOURCC('w','v','p','2')
 #define FOURCC_vp50 mmioFOURCC('v','p','5','0')
 #define FOURCC_vp60 mmioFOURCC('v','p','6','0')
 #define FOURCC_vp61 mmioFOURCC('v','p','6','1')
@@ -79,6 +79,7 @@ DEFINE_GUID(CLSID_DWSTRINGW, 0xa0606860, 0x51be, 0x4cf6, 0x99, 0xc0, 0x7c, 0xe5,
 #define FOURCC_aasc mmioFOURCC('a','a','s','c')
 #define FOURCC_vixl mmioFOURCC('v','i','x','l')
 #define FOURCC_fps1 mmioFOURCC('f','p','s','1')
+//#define FOURCC_vmnc mmioFOURCC('v','m','n','c')
 
 DEFINE_GUID_FOURCC(XVID)
 DEFINE_GUID_FOURCC(xvid)
@@ -143,11 +144,13 @@ DEFINE_GUID_FOURCC(VIXL)
 DEFINE_GUID_FOURCC(vixl)
 DEFINE_GUID_FOURCC(FPS1)
 DEFINE_GUID_FOURCC(fps1)
-/*
 DEFINE_GUID_FOURCC(WVC1)
 DEFINE_GUID_FOURCC(wvc1)
-DEFINE_GUID_FOURCC(WMVA)
-DEFINE_GUID_FOURCC(wmva)
+DEFINE_GUID_FOURCC(WMVP)
+DEFINE_GUID_FOURCC(wmvp)
+DEFINE_GUID_FOURCC(WVP2)
+DEFINE_GUID_FOURCC(wvp2)
+/*
 DEFINE_GUID_FOURCC(VMNC)
 DEFINE_GUID_FOURCC(vmnc)
 */
@@ -220,11 +223,13 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]=
  { &MEDIATYPE_Video, &MEDIASUBTYPE_vixl   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_FPS1   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_fps1   },
-  /*
  { &MEDIATYPE_Video, &MEDIASUBTYPE_WVC1   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_wvc1   },
- { &MEDIATYPE_Video, &MEDIASUBTYPE_WMVA   },
- { &MEDIATYPE_Video, &MEDIASUBTYPE_wmva   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_WMVP   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_wmvp   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_WVP2   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_wvp2   },
+ /*
  { &MEDIATYPE_Video, &MEDIASUBTYPE_VMNC   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_vmnc   },
  */

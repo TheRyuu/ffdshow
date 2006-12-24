@@ -246,7 +246,9 @@ TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imod
    IDFF_wmv1           ,&TglobalSettingsDecVideo::wmv1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_wmv2           ,&TglobalSettingsDecVideo::wmv2           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_wmv3           ,&TglobalSettingsDecVideo::wmv3           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   //IDFF_vc1            ,&TglobalSettingsDecVideo::vc1            ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+   IDFF_wvc1           ,&TglobalSettingsDecVideo::wvc1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+   IDFF_mss2           ,&TglobalSettingsDecVideo::mss2           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+   IDFF_wvp2           ,&TglobalSettingsDecVideo::wvp2           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_vp5            ,&TglobalSettingsDecVideo::vp5            ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_vp6            ,&TglobalSettingsDecVideo::vp6            ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_vp6f           ,&TglobalSettingsDecVideo::vp6f           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
@@ -338,7 +340,9 @@ void TglobalSettingsDecVideo::reg_op_codec(TregOp &t,TregOp *t2)
  _reg_op_codec(IDFF_wmv1,t,t2,_l("wmv1"),wmv1,0);
  _reg_op_codec(IDFF_wmv2,t,t2,_l("wmv2"),wmv2,0);
  _reg_op_codec(IDFF_wmv3,t,t2,_l("wmv3"),wmv3,0);
- //_reg_op_codec(IDFF_vc1,t,t2, _l("vc1") ,vc1,0);
+ _reg_op_codec(IDFF_wvc1,t,t2,_l("wvc1"),wvc1,0);
+ _reg_op_codec(IDFF_mss2,t,t2,_l("mss2"),mss2,0);
+ _reg_op_codec(IDFF_wvp2,t,t2,_l("wvp2"),wvp2,0);
  _reg_op_codec(IDFF_vp5 ,t,t2,_l("vp5") ,vp5,0);
  _reg_op_codec(IDFF_vp6 ,t,t2,_l("vp6") ,vp6,0);
  _reg_op_codec(IDFF_vp6f,t,t2,_l("vp6f"),vp6f,0);
@@ -422,8 +426,10 @@ void TglobalSettingsDecVideo::load(void)
  fixMissing(h264,IDFF_MOVIE_LAVC);
  fixMissing(wmv1,IDFF_MOVIE_LAVC);
  fixMissing(wmv2,IDFF_MOVIE_LAVC);
- fixMissing(wmv3,IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9);
- //fixMissing(vc1 ,IDFF_MOVIE_LAVC);
+ fixMissing(wmv3,IDFF_MOVIE_LAVC);
+ fixMissing(wvc1,IDFF_MOVIE_WMV9);
+ fixMissing(mss2,IDFF_MOVIE_WMV9);
+ fixMissing(wvp2,IDFF_MOVIE_WMV9);
  fixMissing(vp5 ,IDFF_MOVIE_LAVC);
  fixMissing(vp6 ,IDFF_MOVIE_LAVC);
  fixMissing(vp6f,IDFF_MOVIE_LAVC);
@@ -499,8 +505,11 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(WMV1,wmv1 & rawmask,CODEC_ID_WMV1) \
  FF_FOURCC1_OP(WMV2,wmv2 & rawmask,CODEC_ID_WMV2) \
  FF_FOURCC1_OP(WMV3,wmv3 & rawmask,CODEC_ID_WMV3) \
- /*FF_FOURCC1_OP(WVC1,vc1 & rawmask,CODEC_ID_VC1)*/ \
- /*FF_FOURCC1_OP(WMVA,vc1 & rawmask,CODEC_ID_VC1)*/ \
+ FF_FOURCC1_OP(MSS1,mss2 & rawmask,CODEC_ID_WMV9_LIB) \
+ FF_FOURCC1_OP(MSS2,mss2 & rawmask,CODEC_ID_WMV9_LIB) \
+ FF_FOURCC1_OP(WVP2,wvp2 & rawmask,CODEC_ID_WMV9_LIB) \
+ FF_FOURCC1_OP(WMVP,wvp2 & rawmask,CODEC_ID_WMV9_LIB) \
+ FF_FOURCC1_OP(WVC1,wvc1 & rawmask,CODEC_ID_WMV9_LIB) \
  FF_FOURCC1_OP(VP50,vp5 & rawmask,CODEC_ID_VP5) \
  FF_FOURCC1_OP(VP60,vp6 & rawmask,CODEC_ID_VP6) \
  FF_FOURCC1_OP(VP61,vp6 & rawmask,CODEC_ID_VP6) \
@@ -509,8 +518,6 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(FLV4,vp6f & rawmask,CODEC_ID_VP6F) \
  FF_FOURCC1_OP(CAVS,cavs & rawmask,CODEC_ID_CAVS) \
  /*FF_FOURCC1_OP(VMNC,vmnc & rawmask,CODEC_ID_VMNC)*/ \
- FF_FOURCC1_OP(MSS1,wmv3 & rawmask,CODEC_ID_WMV9_LIB) \
- FF_FOURCC1_OP(MSS2,wmv3 & rawmask,CODEC_ID_WMV9_LIB) \
  FF_FOURCC_OP (MPG1,mpg1 & rawmask,c_mpeg1) \
  FF_FOURCC_OP (MPG2,mpg2 & rawmask,c_mpeg2) \
  FF_FOURCC_OP (MPEG,mpegAVI & rawmask,c_mpeg1) \

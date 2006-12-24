@@ -724,7 +724,7 @@
 #define IDFF_wmv1               1011
 #define IDFF_wmv2               1017
 #define IDFF_wmv3               1042
-#define IDFF_vc1                1090
+#define IDFF_wvc1                1090
 #define IDFF_cavs                1091
 #define IDFF_vmnc                1092
 #define IDFF_vp5                1093
@@ -797,6 +797,8 @@
 #define IDFF_snow               1078
 #define IDFF_ra                 1079
 #define IDFF_imc                1080
+#define IDFF_mss2               1081
+#define IDFF_wvp2               1082
 #define IDFF_rawa               1036
 #define IDFF_avisV              1043
 #define IDFF_avisA              1048

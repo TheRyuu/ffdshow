@@ -566,27 +566,28 @@ HRESULT InitializeVideoEncoder(  AM_MEDIA_TYPE      *pmtInput,
        static const CLSID clsids[]={CLSID_CMSSCEncMediaObject2,CLSID_NULL};
        clsid=clsids;
        break;
-      } 
+      }
+     case WMCFOURCC_WMV3:
      case WMCFOURCC_WMVA:
+     case WMCFOURCC_WVC1:
      case WMCFOURCC_WVP2:
       {
        static const CLSID clsids[]={CLSID_CWMV9EncMediaObject,CLSID_NULL};
        clsid=clsids;
        break;
-      } 
+      }
+     case WMCFOURCC_MP43:
+     case WMCFOURCC_MP4S:
      case WMCFOURCC_WMV1:
      case WMCFOURCC_WMV2:
-     case WMCFOURCC_WMV3:
      case WMCFOURCC_WMVP:
-     case WMCFOURCC_MP4S:
-     case WMCFOURCC_MP43:
      default:
       {
        static const CLSID clsids[]={CLSID_CWMVEncMediaObject2,CLSID_CWMVEncMediaObject2A,CLSID_NULL};
        clsid=clsids;
        break;
-      } 
-    }  
+      }
+    }
   nextclsid:  
    hr = CoCreateInstance( *clsid,
                            NULL,

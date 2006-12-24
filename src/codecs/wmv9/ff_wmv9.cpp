@@ -747,12 +747,16 @@ public:
      case WMCFOURCC_MSS2:
       decid=CLSID_CMSSCDecMediaObject;
       break;
-     case WMCFOURCC_WVC1:
      case WMCFOURCC_WMVA:
-     case WMCFOURCC_WVP2:
       decid=CLSID_CWMVDecMediaObject2;
-      break; 
+      break;
      default:
+     case WMCFOURCC_WMV1:
+     case WMCFOURCC_WMV2:
+     case WMCFOURCC_WMV3:
+     case WMCFOURCC_WVC1:
+     case WMCFOURCC_WMVP:
+     case WMCFOURCC_WVP2:
       decid=CLSID_CWMVDecMediaObject;
       break;
     }
@@ -806,6 +810,6 @@ extern "C" void __stdcall destroyWmv9(Iff_wmv9 *self)
 }
 extern "C" void __stdcall getVersion(char *ver,const char* *license)
 {
- strcpy(ver,"2.7, build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64")");
+ strcpy(ver,"2.7a, build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64")");
  *license="";
 }
