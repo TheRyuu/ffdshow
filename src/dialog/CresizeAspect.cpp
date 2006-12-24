@@ -25,8 +25,8 @@
 
 void TresizeAspectPage::init(void)
 {
- tbrSetRange(IDC_TBR_ASPECT_USER,int(0.1*256)*256,5*256*256,int(.6*256)*256);
- tbrSetRange(IDC_TBR_HWOVERLAY_ASPECT,0,5*256*256,int(.6*256)*256);
+ tbrSetRange(IDC_TBR_ASPECT_USER,int(0.1*256),5*256,int(.6*256));
+ tbrSetRange(IDC_TBR_HWOVERLAY_ASPECT,0,5*256,int(.6*256));
 
  setFont(IDC_BT_RESIZE_SIZE_MENU  ,parent->arrowsFont);
  setFont(IDC_BT_RESIZE_MOD_16     ,parent->arrowsFont);
@@ -97,9 +97,9 @@ void TresizeAspectPage::aspect2dlg(void)
   setText(IDC_RBT_ASPECT_KEEP,_l("%s %3.2f:1"),_(IDC_RBT_ASPECT_KEEP),float(dx)/dy);
  int aspectI=cfgGet(IDFF_aspectRatio);
  setText(IDC_RBT_ASPECT_USER,_l("%s %3.2f:1"),_(IDC_RBT_ASPECT_USER),float(aspectI/65536.0));
- tbrSet(IDC_TBR_ASPECT_USER,aspectI);
+ tbrSet(IDC_TBR_ASPECT_USER,aspectI/256);
  aspectI=cfgGet(IDFF_hwOverlayAspect);
- tbrSet(IDC_TBR_HWOVERLAY_ASPECT,aspectI);
+ tbrSet(IDC_TBR_HWOVERLAY_ASPECT,aspectI/256);
  tsprintf(pomS,_l("%s "),_(IDC_LBL_HWOVERLAY_ASPECT));
  if (aspectI==0) strcat(pomS,_(IDC_LBL_HWOVERLAY_ASPECT,_l("default")));else strcatf(pomS,_l("%3.2f:1"),float(aspectI/65536.0));
  setDlgItemText(m_hwnd,IDC_LBL_HWOVERLAY_ASPECT,pomS);
@@ -171,6 +171,25 @@ INT_PTR TresizeAspectPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
  switch (uMsg)
   {
+   case WM_HSCROLL:
+    switch (GetWindowLong(HWND(lParam),GWL_ID))
+     {
+      case IDC_TBR_ASPECT_USER:
+       {
+        int a=tbrGet(IDC_TBR_ASPECT_USER);
+        cfgSet(IDFF_aspectRatio,a*256);
+        aspect2dlg();
+        return TRUE;
+       }
+      case IDC_TBR_HWOVERLAY_ASPECT:
+       {
+        int a=tbrGet(IDC_TBR_HWOVERLAY_ASPECT);
+        cfgSet(IDFF_hwOverlayAspect,a*256);
+        aspect2dlg();
+        return TRUE;
+       }
+     } 
+    break;
    case WM_COMMAND:
     switch (LOWORD(wParam))  
      {
