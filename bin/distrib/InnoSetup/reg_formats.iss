@@ -1,6 +1,6 @@
 ; Video formats to decode
-Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: 8bps; ValueData: 0; Components: ffdshow; Tasks: NOT video\other3
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: _3iv; ValueData: 0; Components: ffdshow; Flags: createvalueifdoesntexist; Tasks: NOT video\mpeg4
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: 8bps; ValueData: 0; Components: ffdshow; Tasks: NOT video\other3
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: aasc; ValueData: 0; Components: ffdshow; Tasks: NOT video\other4
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: asv1; ValueData: 0; Components: ffdshow; Tasks: NOT video\other3
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: cram; ValueData: 0; Components: ffdshow; Tasks: NOT video\other2
@@ -10,12 +10,15 @@ Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: cyuv; Val
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: div3; ValueData: 0; Components: ffdshow; Tasks: NOT video\divx
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: divx; ValueData: 0; Components: ffdshow; Tasks: NOT video\mp4v
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: duck; ValueData: 0; Components: ffdshow; Tasks: NOT video\other2
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: dvsd; ValueData: 0; Components: ffdshow; Tasks: NOT video\dvsd
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: dx50; ValueData: 0; Components: ffdshow; Tasks: NOT video\divx
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: flv1; ValueData: 0; Components: ffdshow; Tasks: NOT video\flv1
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: fps1; ValueData: 0; Components: ffdshow; Tasks: NOT video\other4
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: h261; ValueData: 0; Components: ffdshow; Tasks: NOT video\other1
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: h263; ValueData: 0; Components: ffdshow; Tasks: NOT video\h263
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: h264; ValueData: 0; Components: ffdshow; Tasks: NOT video\h264
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: hfyu; ValueData: 0; Components: ffdshow; Tasks: NOT video\huffyuv
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: iv32; ValueData: 0; Components: ffdshow; Tasks: NOT video\other4
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: loco; ValueData: 0; Components: ffdshow; Tasks: NOT video\other3
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mjpg; ValueData: 0; Components: ffdshow; Tasks: NOT video\other1
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mp41; ValueData: 0; Components: ffdshow; Tasks: NOT video\mpeg4
@@ -24,6 +27,7 @@ Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mp43; Val
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mpegAVI; ValueData: 0; Components: ffdshow; Tasks: NOT video\mpeg1 AND NOT video\mpeg2
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mpg1; ValueData: 0; Components: ffdshow; Tasks: NOT video\mpeg1
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mpg2; ValueData: 0; Components: ffdshow; Tasks: NOT video\mpeg2
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mss2; ValueData: 0; Components: ffdshow; Tasks: NOT video\mss2
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mszh; ValueData: 0; Components: ffdshow; Tasks: NOT video\other3
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: png1; ValueData: 0; Components: ffdshow; Tasks: NOT video\other2
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qpeg; ValueData: 0; Components: ffdshow; Tasks: NOT video\other3
@@ -31,6 +35,7 @@ Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qtrle; Va
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qtrpza; ValueData: 1; Components: ffdshow; Tasks: NOT video\qt
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rawv; ValueData: 0; Components: ffdshow; Tasks: NOT video\rawv
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rle; ValueData: 0; Components: ffdshow; Tasks: NOT video\other2
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rt21; ValueData: 0; Components: ffdshow; Tasks: NOT video\other4
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: svq1; ValueData: 0; Components: ffdshow; Tasks: NOT video\qt
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: svq3; ValueData: 0; Components: ffdshow; Tasks: NOT video\qt
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: theo; ValueData: 0; Components: ffdshow; Flags: createvalueifdoesntexist; Tasks: NOT video\other1
@@ -42,13 +47,18 @@ Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: vp3; Valu
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: vp5; ValueData: 0; Components: ffdshow; Tasks: NOT video\vp56
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: vp6; ValueData: 0; Components: ffdshow; Tasks: NOT video\vp56
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: vp6f; ValueData: 0; Components: ffdshow; Tasks: NOT video\vp56
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wmv1; ValueData: 0; Components: ffdshow; Tasks: NOT video\wmv1
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wmv2; ValueData: 0; Components: ffdshow; Tasks: NOT video\wmv2
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wmv3; ValueData: 0; Components: ffdshow; Tasks: NOT video\wmv3
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wnv1; ValueData: 0; Components: ffdshow; Tasks: NOT video\other3
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wvc1; ValueData: 0; Components: ffdshow; Tasks: NOT video\wvc1
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wvp2; ValueData: 0; Components: ffdshow; Tasks: NOT video\wvp2
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: xvid; ValueData: 0; Components: ffdshow; Flags: createvalueifdoesntexist; Tasks: NOT video\xvid
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: zlib; ValueData: 0; Components: ffdshow; Tasks: NOT video\other3
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: zmbv; ValueData: 0; Components: ffdshow; Tasks: NOT video\other4
 
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: 8bps; ValueData: 0; Components: ffdshow; Tasks: NOT video\other3
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: _3iv; ValueData: 0; Components: ffdshow; Flags: createvalueifdoesntexist; Tasks: NOT video\mpeg4
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: 8bps; ValueData: 0; Components: ffdshow; Tasks: NOT video\other3
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: aasc; ValueData: 0; Components: ffdshow; Tasks: NOT video\other4
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: asv1; ValueData: 0; Components: ffdshow; Tasks: NOT video\other3
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: cram; ValueData: 0; Components: ffdshow; Tasks: NOT video\other2
@@ -58,12 +68,15 @@ Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: cyuv; Val
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: div3; ValueData: 0; Components: ffdshow; Tasks: NOT video\divx
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: divx; ValueData: 0; Components: ffdshow; Tasks: NOT video\mp4v
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: duck; ValueData: 0; Components: ffdshow; Tasks: NOT video\other2
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: dvsd; ValueData: 0; Components: ffdshow; Tasks: NOT video\dvsd
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: dx50; ValueData: 0; Components: ffdshow; Tasks: NOT video\divx
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: flv1; ValueData: 0; Components: ffdshow; Tasks: NOT video\flv1
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: fps1; ValueData: 0; Components: ffdshow; Tasks: NOT video\other4
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: h261; ValueData: 0; Components: ffdshow; Tasks: NOT video\other1
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: h263; ValueData: 0; Components: ffdshow; Tasks: NOT video\h263
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: h264; ValueData: 0; Components: ffdshow; Tasks: NOT video\h264
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: hfyu; ValueData: 0; Components: ffdshow; Tasks: NOT video\huffyuv
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: iv32; ValueData: 0; Components: ffdshow; Tasks: NOT video\other4
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: loco; ValueData: 0; Components: ffdshow; Tasks: NOT video\other3
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mjpg; ValueData: 0; Components: ffdshow; Tasks: NOT video\other1
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mp41; ValueData: 0; Components: ffdshow; Tasks: NOT video\mpeg4
@@ -72,6 +85,7 @@ Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mp43; Val
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mpegAVI; ValueData: 0; Components: ffdshow; Tasks: NOT video\mpeg1 AND NOT video\mpeg2
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mpg1; ValueData: 0; Components: ffdshow; Tasks: NOT video\mpeg1
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mpg2; ValueData: 0; Components: ffdshow; Tasks: NOT video\mpeg2
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mss2; ValueData: 0; Components: ffdshow; Tasks: NOT video\mss2
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mszh; ValueData: 0; Components: ffdshow; Tasks: NOT video\other3
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: png1; ValueData: 0; Components: ffdshow; Tasks: NOT video\other2
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qpeg; ValueData: 0; Components: ffdshow; Tasks: NOT video\other3
@@ -79,6 +93,7 @@ Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qtrle; Va
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qtrpza; ValueData: 1; Components: ffdshow; Tasks: NOT video\qt
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rawv; ValueData: 0; Components: ffdshow; Tasks: NOT video\rawv
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rle; ValueData: 0; Components: ffdshow; Tasks: NOT video\other2
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rt21; ValueData: 0; Components: ffdshow; Tasks: NOT video\other4
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: svq1; ValueData: 0; Components: ffdshow; Tasks: NOT video\qt
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: svq3; ValueData: 0; Components: ffdshow; Tasks: NOT video\qt
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: theo; ValueData: 0; Components: ffdshow; Flags: createvalueifdoesntexist; Tasks: NOT video\other1
@@ -90,13 +105,18 @@ Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: vp3; Valu
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: vp5; ValueData: 0; Components: ffdshow; Tasks: NOT video\vp56
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: vp6; ValueData: 0; Components: ffdshow; Tasks: NOT video\vp56
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: vp6f; ValueData: 0; Components: ffdshow; Tasks: NOT video\vp56
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wmv1; ValueData: 0; Components: ffdshow; Tasks: NOT video\wmv1
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wmv2; ValueData: 0; Components: ffdshow; Tasks: NOT video\wmv2
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wmv3; ValueData: 0; Components: ffdshow; Tasks: NOT video\wmv3
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wnv1; ValueData: 0; Components: ffdshow; Tasks: NOT video\other3
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wvc1; ValueData: 0; Components: ffdshow; Tasks: NOT video\wvc1
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wvp2; ValueData: 0; Components: ffdshow; Tasks: NOT video\wvp2
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: xvid; ValueData: 0; Components: ffdshow; Flags: createvalueifdoesntexist; Tasks: NOT video\xvid
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: zlib; ValueData: 0; Components: ffdshow; Tasks: NOT video\other3
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: zmbv; ValueData: 0; Components: ffdshow; Tasks: NOT video\other4
 
-Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: 8bps; ValueData: 1; Components: ffdshow; Tasks: video\other3
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: _3iv; ValueData: 1; Components: ffdshow; Tasks: video\mpeg4
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: 8bps; ValueData: 1; Components: ffdshow; Tasks: video\other3
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: aasc; ValueData: 1; Components: ffdshow; Tasks: video\other4
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: asv1; ValueData: 1; Components: ffdshow; Tasks: video\other3
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: cram; ValueData: 1; Components: ffdshow; Tasks: video\other2
@@ -106,14 +126,17 @@ Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: cyuv; Val
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: div3; ValueData: 1; Components: ffdshow; Tasks: video\divx
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: divx; ValueData: 1; Components: ffdshow; Tasks: video\mp4v
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: duck; ValueData: 1; Components: ffdshow; Tasks: video\other2
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: dvsd; ValueData: 1; Components: ffdshow; Tasks: video\dvsd
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: dx50; ValueData: 1; Components: ffdshow; Tasks: video\divx
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: ffv1; ValueData: 1; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: flv1; ValueData: 1; Components: ffdshow; Tasks: video\flv1
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: fps1; ValueData: 1; Components: ffdshow; Tasks: video\other4
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: fvfw; ValueData: 1; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: h261; ValueData: 1; Components: ffdshow; Tasks: video\other1
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: h263; ValueData: 1; Components: ffdshow; Tasks: video\h263
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: h264; ValueData: 1; Components: ffdshow; Tasks: video\h264
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: hfyu; ValueData: 1; Components: ffdshow; Tasks: video\huffyuv
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: iv32; ValueData: 1; Components: ffdshow; Tasks: video\other4
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: loco; ValueData: 1; Components: ffdshow; Tasks: video\other3
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mjpg; ValueData: 1; Components: ffdshow; Tasks: video\other1
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mp41; ValueData: 1; Components: ffdshow; Tasks: video\mpeg4
@@ -124,14 +147,16 @@ Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mpg1; Val
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mpg1; ValueData: 5; Components: ffdshow; Tasks: video\mpeg1\libmpeg2
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mpg2; ValueData: 1; Components: ffdshow; Tasks: video\mpeg2\libavcodec
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mpg2; ValueData: 5; Components: ffdshow; Tasks: video\mpeg2\libmpeg2
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mss2; ValueData: 12; Components: ffdshow; Tasks: video\mss2
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mszh; ValueData: 1; Components: ffdshow; Tasks: video\other3
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: png1; ValueData: 1; Components: ffdshow; Tasks: video\other2
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qpeg; ValueData: 1; Components: ffdshow; Tasks: video\other3
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qtrle; ValueData: 1; Components: ffdshow; Tasks: video\qt
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qtrpza; ValueData: 1; Components: ffdshow; Tasks: video\qt
-Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rawv; ValueData: 1; Components: ffdshow; Tasks: video\rawv
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: raw_rawv; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rawv; ValueData: 1; Components: ffdshow; Tasks: video\rawv
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rle; ValueData: 1; Components: ffdshow; Tasks: video\other2
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rt21; ValueData: 1; Components: ffdshow; Tasks: video\other4
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: svq1; ValueData: 1; Components: ffdshow; Tasks: video\qt
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: svq3; ValueData: 1; Components: ffdshow; Tasks: video\qt
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: theo; ValueData: 1; Components: ffdshow; Tasks: video\other1
@@ -143,13 +168,18 @@ Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: vp3; Valu
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: vp5; ValueData: 1; Components: ffdshow; Tasks: video\vp56
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: vp6; ValueData: 1; Components: ffdshow; Tasks: video\vp56
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: vp6f; ValueData: 1; Components: ffdshow; Tasks: video\vp56
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wmv1; ValueData: 1; Components: ffdshow; Tasks: video\wmv1
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wmv2; ValueData: 1; Components: ffdshow; Tasks: video\wmv2
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wmv3; ValueData: 1; Components: ffdshow; Tasks: video\wmv3
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wnv1; ValueData: 1; Components: ffdshow; Tasks: video\other3
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wvc1; ValueData: 12; Components: ffdshow; Tasks: video\wvc1
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wvp2; ValueData: 12; Components: ffdshow; Tasks: video\wvp2
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: xvid; ValueData: 1; Components: ffdshow; Tasks: video\xvid
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: zlib; ValueData: 1; Components: ffdshow; Tasks: video\other3
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: zmbv; ValueData: 1; Components: ffdshow; Tasks: video\other4
 
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: 8bps; ValueData: 1; Components: ffdshow; Tasks: video\other3
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: _3iv; ValueData: 1; Components: ffdshow; Tasks: video\mpeg4
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: 8bps; ValueData: 1; Components: ffdshow; Tasks: video\other3
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: aasc; ValueData: 1; Components: ffdshow; Tasks: video\other4
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: asv1; ValueData: 1; Components: ffdshow; Tasks: video\other3
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: cram; ValueData: 1; Components: ffdshow; Tasks: video\other2
@@ -159,14 +189,17 @@ Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: cyuv; Val
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: div3; ValueData: 1; Components: ffdshow; Tasks: video\divx
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: divx; ValueData: 1; Components: ffdshow; Tasks: video\mp4v
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: duck; ValueData: 1; Components: ffdshow; Tasks: video\other2
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: dvsd; ValueData: 1; Components: ffdshow; Tasks: video\dvsd
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: dx50; ValueData: 1; Components: ffdshow; Tasks: video\divx
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: ffv1; ValueData: 1; Components: ffdshow
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: flv1; ValueData: 1; Components: ffdshow; Tasks: video\flv1
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: fps1; ValueData: 1; Components: ffdshow; Tasks: video\other4
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: fvfw; ValueData: 1; Components: ffdshow
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: h261; ValueData: 1; Components: ffdshow; Tasks: video\other1
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: h263; ValueData: 1; Components: ffdshow; Tasks: video\h263
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: h264; ValueData: 1; Components: ffdshow; Tasks: video\h264
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: hfyu; ValueData: 1; Components: ffdshow; Tasks: video\huffyuv
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: iv32; ValueData: 1; Components: ffdshow; Tasks: video\other4
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: loco; ValueData: 1; Components: ffdshow; Tasks: video\other3
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mjpg; ValueData: 1; Components: ffdshow; Tasks: video\other1
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mp41; ValueData: 1; Components: ffdshow; Tasks: video\mpeg4
@@ -177,14 +210,16 @@ Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mpg1; Val
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mpg1; ValueData: 5; Components: ffdshow; Tasks: video\mpeg1\libmpeg2
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mpg2; ValueData: 1; Components: ffdshow; Tasks: video\mpeg2\libavcodec
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mpg2; ValueData: 5; Components: ffdshow; Tasks: video\mpeg2\libmpeg2
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mss2; ValueData: 12; Components: ffdshow; Tasks: video\mss2
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mszh; ValueData: 1; Components: ffdshow; Tasks: video\other3
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: png1; ValueData: 1; Components: ffdshow; Tasks: video\other2
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qpeg; ValueData: 1; Components: ffdshow; Tasks: video\other3
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qtrle; ValueData: 1; Components: ffdshow; Tasks: video\qt
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qtrpza; ValueData: 1; Components: ffdshow; Tasks: video\qt
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rawv; ValueData: 1; Components: ffdshow; Tasks: video\rawv
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: raw_rawv; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rawv; ValueData: 1; Components: ffdshow; Tasks: video\rawv
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rle; ValueData: 1; Components: ffdshow; Tasks: video\other2
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rt21; ValueData: 1; Components: ffdshow; Tasks: video\other4
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: svq1; ValueData: 1; Components: ffdshow; Tasks: video\qt
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: svq3; ValueData: 1; Components: ffdshow; Tasks: video\qt
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: theo; ValueData: 1; Components: ffdshow; Tasks: video\other1
@@ -196,7 +231,12 @@ Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: vp3; Valu
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: vp5; ValueData: 1; Components: ffdshow; Tasks: video\vp56
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: vp6; ValueData: 1; Components: ffdshow; Tasks: video\vp56
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: vp6f; ValueData: 1; Components: ffdshow; Tasks: video\vp56
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wmv1; ValueData: 1; Components: ffdshow; Tasks: video\wmv1
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wmv2; ValueData: 1; Components: ffdshow; Tasks: video\wmv2
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wmv3; ValueData: 1; Components: ffdshow; Tasks: video\wmv3
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wnv1; ValueData: 1; Components: ffdshow; Tasks: video\other3
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wvc1; ValueData: 12; Components: ffdshow; Tasks: video\wvc1
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: wvp2; ValueData: 12; Components: ffdshow; Tasks: video\wvp2
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: xvid; ValueData: 1; Components: ffdshow; Tasks: video\xvid
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: zlib; ValueData: 1; Components: ffdshow; Tasks: video\other3
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: zmbv; ValueData: 1; Components: ffdshow; Tasks: video\other4
@@ -204,6 +244,7 @@ Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: zmbv; Val
 ; 6 = libmp3
 ; 7 = ff_libmad.dll
 ; 8 = ff_libfaad2.dll
+; 12 = ff_wmv9.dll
 ; 15 = ff_liba52.dll
 ; 17 = ff_libdts.dll
 ; 18 = ff_tremor.dll
@@ -316,4 +357,3 @@ Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: mp41;
 Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: mp42; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow\vfw; Tasks: video\mpeg4
 Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: mp43; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow\vfw; Tasks: video\mpeg4
 Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: xvid; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow\vfw; Tasks: video\xvid
-

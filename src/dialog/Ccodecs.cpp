@@ -394,15 +394,15 @@ void TcodecsPageVideo::fillCodecs(void)
 {
  if ((filterMode&IDFF_FILTERMODE_VIDEORAW)==0)
   {
+   static const Tformat::Toption options_h264[]={{IDFF_MOVIE_LAVC,_l("skip deblocking when safe"),IDFF_fastH264,1},{IDFF_MOVIE_LAVC,_l("skip deblocking always"),IDFF_fastH264,2},{0,NULL,0,0}};
+   formats.push_back(Tformat(_l("H.264/AVC")  ,IDFF_h264,IDFF_MOVIE_LAVC,_l("H264, X264, VSSH (incomplete), DAVC, AVC1"),options_h264));
    static const int movies_mpeg4[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4,0};
-   formats.push_back(Tformat(_l("XviD")       ,IDFF_xvid,movies_mpeg4,_l("XVID, XVIX")));
-   formats.push_back(Tformat(_l("DivX 3")     ,IDFF_div3,IDFF_MOVIE_LAVC,_l("DIV3, DIV4, DIV5, DIV6, AP41, COL1, DVX3, MPG3")));
+   formats.push_back(Tformat(_l("Xvid")       ,IDFF_xvid,movies_mpeg4,_l("XVID, XVIX")));
    formats.push_back(Tformat(_l("Generic MPEG4"),IDFF_divx,movies_mpeg4,_l("DIVX, MP4S, MP4V, M4S2")));
    formats.push_back(Tformat(_l("DivX 5/6")     ,IDFF_dx50,movies_mpeg4,_l("DX50, BLZ0, DXGM")));
    formats.push_back(Tformat(_l("Other MPEG4"),IDFF_3ivx,movies_mpeg4,_l("3IV2, 3IVX, RMP4, DM4V, WV1F, FMP4, HDX4, SMP4, LMP4")));
    formats.push_back(Tformat(_l("FVFW,FFDS")  ,IDFF_fvfw,movies_mpeg4,_l("ffdshow and ffvfw internal FOURCCs")));
-   static const Tformat::Toption options_h264[]={{IDFF_MOVIE_LAVC,_l("skip deblocking when safe"),IDFF_fastH264,1},{IDFF_MOVIE_LAVC,_l("skip deblocking always"),IDFF_fastH264,2},{0,NULL,0,0}};
-   formats.push_back(Tformat(_l("H.264")      ,IDFF_h264,IDFF_MOVIE_LAVC,_l("H264, X264, VSSH (incomplete), DAVC, AVC1"),options_h264));
+   formats.push_back(Tformat(_l("DivX 3")     ,IDFF_div3,IDFF_MOVIE_LAVC,_l("DIV3, DIV4, DIV5, DIV6, AP41, COL1, DVX3, MPG3")));
    formats.push_back(Tformat(_l("MP43")       ,IDFF_mp43,IDFF_MOVIE_LAVC,_l("MP43")));
    formats.push_back(Tformat(_l("MP42")       ,IDFF_mp42,IDFF_MOVIE_LAVC,_l("MP42, DIV2")));
    formats.push_back(Tformat(_l("MP41")       ,IDFF_mp41,IDFF_MOVIE_LAVC,_l("MP41, MPG4, DIV1")));
@@ -436,8 +436,8 @@ void TcodecsPageVideo::fillCodecs(void)
    formats.push_back(Tformat(_l("SVQ1")       ,IDFF_svq1,IDFF_MOVIE_LAVC,_l("Sorenson Video (SVQ1)")));
    formats.push_back(Tformat(_l("SVQ3")       ,IDFF_svq3,IDFF_MOVIE_LAVC,_l("Sorenson Video (SVQ3)")));
    formats.push_back(Tformat(_l("8BPS")       ,IDFF_8bps,IDFF_MOVIE_LAVC,_l("Quicktime Planar RGB Video (8BPS)")));
-   formats.push_back(Tformat(_l("QTRLE")      ,IDFF_qtrle,IDFF_MOVIE_LAVC,_l("Quicktime Animation Video (QRLE)")));
-   formats.push_back(Tformat(_l("RPZA")       ,IDFF_qtrpza,IDFF_MOVIE_LAVC,_l("Quicktime Video Video (QRPZA)")));
+   formats.push_back(Tformat(_l("QTRLE")      ,IDFF_qtrle,IDFF_MOVIE_LAVC,_l("Quicktime Animation Video (QTRLE)")));
+   formats.push_back(Tformat(_l("QRPZA")      ,IDFF_qtrpza,IDFF_MOVIE_LAVC,_l("Quicktime Video Video (QRPZA)")));
    formats.push_back(Tformat(_l("FFV1")       ,IDFF_ffv1,IDFF_MOVIE_LAVC,_l("FFV1 codec for libavcodec (FFV1)")));
    formats.push_back(Tformat(_l("DV")         ,IDFF_dvsd,IDFF_MOVIE_LAVC,_l("dvsd, DVSD, DV25, DV50")));
    formats.push_back(Tformat(_l("CamStudio")  ,IDFF_cscd,IDFF_MOVIE_LAVC,_l("CamStudio Video (CSCD)")));
@@ -449,21 +449,21 @@ void TcodecsPageVideo::fillCodecs(void)
    formats.push_back(Tformat(_l("ZMBV")       ,IDFF_zmbv,IDFF_MOVIE_LAVC,_l("Zip Motion Blocks Video (ZMBV)")));
    formats.push_back(Tformat(_l("Autodesc RLE"),IDFF_aasc,IDFF_MOVIE_LAVC,_l("Autodesc RLE (AASC)")));
    formats.push_back(Tformat(_l("ASV1/2")     ,IDFF_asv1,IDFF_MOVIE_LAVC,_l("ASUS V1/V2 (ASV1, ASV2)")));
+   formats.push_back(Tformat(_l("ATI VCR1")   ,IDFF_vcr1,IDFF_MOVIE_LAVC,_l("ATI (VCR1)")));
    formats.push_back(Tformat(_l("Cinepak")    ,IDFF_cvid,IDFF_MOVIE_LAVC,_l("Cinepak (CVID)")));
    formats.push_back(Tformat(_l("Chinese AVS"),IDFF_cavs,IDFF_MOVIE_LAVC,_l("Chinese AVS video (AVS1-P2, JiZhun profile)")));
    formats.push_back(Tformat(_l("Creative YUV"),IDFF_cyuv,IDFF_MOVIE_LAVC,_l("Creative YUV Video (CYUV)")));
    formats.push_back(Tformat(_l("Indeo 2")    ,IDFF_rt21,IDFF_MOVIE_LAVC,_l("Intel Indeo 2 (RT21)")));
    formats.push_back(Tformat(_l("Indeo 3")    ,IDFF_iv32,IDFF_MOVIE_LAVC,_l("Intel Indeo 3 (IV31, IV32)")));
-   formats.push_back(Tformat(_l("FPS1")       ,IDFF_fps1,IDFF_MOVIE_LAVC,_l("Fraps v0, v1, v2 & v4 (FPS1)")));
+   formats.push_back(Tformat(_l("Fraps")      ,IDFF_fps1,IDFF_MOVIE_LAVC,_l("Fraps v0, v1, v2 & v4 (FPS1)")));
+   formats.push_back(Tformat(_l("Miro VideoXL"),IDFF_vixl,IDFF_MOVIE_LAVC,_l("Miro VideoXL (VIXL)")));
    formats.push_back(Tformat(_l("MS Video 1") ,IDFF_cram,IDFF_MOVIE_LAVC,_l("MS Video-1 (CRAM)")));
    formats.push_back(Tformat(_l("MS RLE")     ,IDFF_rle ,IDFF_MOVIE_LAVC,_l("MS RLE Video (MRLE)")));
-   formats.push_back(Tformat(_l("QPEG")       ,IDFF_qpeg,IDFF_MOVIE_LAVC,_l("Q-Team QPEG, Q1.0, Q1.1 (QPEQ)")));
-   formats.push_back(Tformat(_l("RV10,RV20")  ,IDFF_rv10,IDFF_MOVIE_LAVC,_l("Real Video (RV10, RV20, incomplete)")));
+   formats.push_back(Tformat(_l("Q-Team QPEG"),IDFF_qpeg,IDFF_MOVIE_LAVC,_l("Q-Team (QPEG, Q1.0, Q1.1)")));
+   formats.push_back(Tformat(_l("Real Video") ,IDFF_rv10,IDFF_MOVIE_LAVC,_l("Real Video (RV10, RV20, incomplete)")));
    formats.push_back(Tformat(_l("Truemotion 1,2"),IDFF_duck,IDFF_MOVIE_LAVC,_l("doesn't support 24 bit compression.")));
    formats.push_back(Tformat(_l("Ultimotion") ,IDFF_ulti,IDFF_MOVIE_LAVC,_l("IBM Ultimotion Video (ULTI)")));
-   formats.push_back(Tformat(_l("VCR1")       ,IDFF_vcr1,IDFF_MOVIE_LAVC,_l("ATI (VCR1)")));
-   formats.push_back(Tformat(_l("VIXL")       ,IDFF_vixl,IDFF_MOVIE_LAVC,_l("Miro VideoXL (VIXL)")));
-   formats.push_back(Tformat(_l("WNV1")       ,IDFF_wnv1,IDFF_MOVIE_LAVC,_l("Winnov WNV1 Video (WNV1)")));
+   formats.push_back(Tformat(_l("Winnov V1")  ,IDFF_wnv1,IDFF_MOVIE_LAVC,_l("Winnov WNV1 Video (WNV1)")));
    //formats.push_back(Tformat(_l("Vmware Video"),IDFF_vmnc,IDFF_MOVIE_LAVC,_l("broken!")));
    //formats.push_back(Tformat(_l("SNOW")       ,IDFF_snow,IDFF_MOVIE_LAVC,_l("incomplete!")));
    formats.push_back(Tformat(_l("Avisynth")   ,IDFF_avisV,IDFF_MOVIE_AVIS,_l("AVIS (Avisynth AVI files)")));
@@ -536,7 +536,7 @@ void TcodecsPageAudio::fillCodecs(void)
    formats.push_back(Tformat(_l("Real Audio")  ,IDFF_ra        ,IDFF_MOVIE_LAVC,_l("Real Audio 1.0 (14.4K) & RealAudio 2.0 (28.8K)")));
    formats.push_back(Tformat(_l("IMC")         ,IDFF_imc       ,IDFF_MOVIE_LAVC,_l("IMC compatible decoder")));
    formats.push_back(Tformat(_l("AVIS")        ,IDFF_avisA     ,IDFF_MOVIE_AVIS,_l("AVIS (Avisynth AVI files)")));
-  } 
+  }
  //Tformat::Tdecoder movie_raw[]={{"any",IDFF_MOVIE_RAW},{NULL,0)};
  for (Tformats::iterator f=formats.begin();f!=formats.end();f++)
   {
@@ -556,6 +556,6 @@ void TcodecsPageAudio::fillCodecs(void)
    {_l("32-bit float")  ,TsampleFormat::SF_FLOAT32<<8},
    {_l("64-bit float")  ,TsampleFormat::SF_FLOAT64<<8},
    {NULL,0}
-  }; 
+  };
  formats.push_back(Tformat(_l("Uncompressed"),IDFF_rawa,movie_raw,_l("raw,twos,sowt,fl32,fl64,in24,in32")));
 }
