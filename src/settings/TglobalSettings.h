@@ -78,7 +78,7 @@ protected:
  virtual int getDefault(int id);
 public:
  int buildHistogram;
- int xvid,div3,divx,dx50,fvfw,mp43,mp42,mp41,h263,h264,vp5,vp6,vp6f,wmv1,wmv2,wvc1,wmv3,mss2,wvp2,cavs,vmnc,rawv,mpg1,mpg2,mpegAVI,mjpg,dvsd,hfyu,cyuv,theo,asv1,_3iv,svq1,svq3,cram,rt21,iv32,cvid,rv10,ffv1,vp3,vcr1,rle,avis,mszh,zlib,flv1,_8bps,png1,qtrle,duck,tscc,qpeg,h261,loco,wnv1,cscd,zmbv,ulti,vixl,aasc,fps1,qtrpza,snow;
+ int xvid,div3,divx,dx50,fvfw,mp43,mp42,mp41,h263,h264,vp5,vp6,vp6f,wmv1,wmv2,wvc1,wmv3,mss2,wvp2,cavs,vmnc,rawv,mpg1,mpg2,mpegAVI,em2v,mjpg,dvsd,hfyu,cyuv,theo,asv1,_3iv,svq1,svq3,cram,rt21,iv32,cvid,rv10,ffv1,vp3,vcr1,rle,avis,mszh,zlib,flv1,_8bps,png1,qtrle,duck,tscc,qpeg,h261,loco,wnv1,cscd,zmbv,ulti,vixl,aasc,fps1,qtrpza,snow;
  int supdvddec;
  int fastMpeg2,fastH264,libtheoraPostproc;
 

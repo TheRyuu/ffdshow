@@ -263,6 +263,7 @@ TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imod
    IDFF_mpg1           ,&TglobalSettingsDecVideo::mpg1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_mpg2           ,&TglobalSettingsDecVideo::mpg2           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_mpegAVI        ,&TglobalSettingsDecVideo::mpegAVI        ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+   IDFF_em2v           ,&TglobalSettingsDecVideo::em2v           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_theo           ,&TglobalSettingsDecVideo::theo           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_3ivx           ,&TglobalSettingsDecVideo::_3iv           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_svq1           ,&TglobalSettingsDecVideo::svq1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
@@ -352,6 +353,7 @@ void TglobalSettingsDecVideo::reg_op_codec(TregOp &t,TregOp *t2)
  _reg_op_codec(IDFF_mpg1,t,t2,_l("mpg1"),mpg1,0);
  _reg_op_codec(IDFF_mpg2,t,t2,_l("mpg2"),mpg2,0);
  _reg_op_codec(IDFF_mpegAVI,t,t2,_l("mpegAVI"),mpegAVI,0);
+ _reg_op_codec(IDFF_em2v,t,t2,_l("em2v"),em2v,0);
  _reg_op_codec(IDFF_mjpg,t,t2,_l("mjpg"),mjpg,0);
  _reg_op_codec(IDFF_dvsd,t,t2,_l("dvsd"),dvsd,0);
  _reg_op_codec(IDFF_hfyu,t,t2,_l("hfyu"),hfyu,0);
@@ -398,6 +400,7 @@ void TglobalSettingsDecVideo::fixNewCodecs(void)
 {
  if (mpg1==2) mpg1=IDFF_MOVIE_LIBMPEG2;
  if (mpg2==2) mpg2=IDFF_MOVIE_LIBMPEG2;
+ if (em2v==2) em2v=IDFF_MOVIE_LIBMPEG2;
  if (mpegAVI==2) mpegAVI=IDFF_MOVIE_LIBMPEG2;
  if (theo==1) theo=IDFF_MOVIE_THEO;
  //if (rawv==1 && forceInCSP!=0) rawv=forceInCSP;
@@ -447,6 +450,7 @@ void TglobalSettingsDecVideo::load(void)
  fixMissing(mpg1,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
  fixMissing(mpg2,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
  fixMissing(mpegAVI,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
+ fixMissing(em2v,IDFF_MOVIE_LAVC,IDFF_MOVIE_LIBMPEG2);
  fixMissing(theo,IDFF_MOVIE_LAVC,IDFF_MOVIE_THEO);
  fixMissing(cram,IDFF_MOVIE_LAVC);
  fixMissing(rt21,IDFF_MOVIE_LAVC);
@@ -520,6 +524,7 @@ void TglobalSettingsDecVideo::load(void)
  /*FF_FOURCC1_OP(VMNC,vmnc & rawmask,CODEC_ID_VMNC)*/ \
  FF_FOURCC_OP (MPG1,mpg1 & rawmask,c_mpeg1) \
  FF_FOURCC_OP (MPG2,mpg2 & rawmask,c_mpeg2) \
+ FF_FOURCC_OP (EM2V,em2v & rawmask,c_mpeg2) \
  FF_FOURCC_OP (MPEG,mpegAVI & rawmask,c_mpeg1) \
  FF_FOURCC1_OP(H263,h263 & rawmask,CODEC_ID_H263) \
  FF_FOURCC1_OP(I263,h263 & rawmask,CODEC_ID_H263I) \
@@ -657,16 +662,16 @@ const char_t** TglobalSettingsDecVideo::getFOURCClist(void) const
 
 const CodecID TglobalSettingsDecVideo::c_mpeg4[IDFF_MOVIE_MAX+1]=
 {
- CODEC_ID_NONE, 
+ CODEC_ID_NONE,
  CODEC_ID_MPEG4,
- CODEC_ID_NONE, 
- CODEC_ID_NONE,          
- CODEC_ID_NONE,          
- CODEC_ID_NONE,          
- CODEC_ID_NONE,          
- CODEC_ID_NONE,          
- CODEC_ID_NONE,          
- CODEC_ID_XVID4,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_XVID4
 };
 const CodecID TglobalSettingsDecVideo::c_mpeg1[IDFF_MOVIE_MAX+1]=
 {
@@ -988,27 +993,27 @@ const char_t** TglobalSettingsDecAudio::getFOURCClist(void) const
 
 const CodecID TglobalSettingsDecAudio::c_mp123[IDFF_MOVIE_MAX+1]=
 {
- CODEC_ID_NONE,  
- CODEC_ID_NONE,  
- CODEC_ID_NONE,  
- CODEC_ID_NONE,  
- CODEC_ID_NONE,  
- CODEC_ID_NONE,  
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
  CODEC_ID_MP3LIB,
  CODEC_ID_LIBMAD,
- CODEC_ID_NONE,  
- CODEC_ID_NONE,  
- CODEC_ID_NONE,  
- CODEC_ID_NONE,  
- CODEC_ID_NONE,  
- CODEC_ID_NONE,  
- CODEC_ID_NONE,  
- CODEC_ID_NONE,  
- CODEC_ID_NONE,  
- CODEC_ID_NONE,  
- CODEC_ID_NONE,  
- CODEC_ID_NONE,  
- CODEC_ID_AUDX   
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_AUDX
 };
 const CodecID TglobalSettingsDecAudio::c_ac3[IDFF_MOVIE_MAX+1]=
 {
@@ -1077,24 +1082,24 @@ const CodecID TglobalSettingsDecAudio::c_aac[IDFF_MOVIE_MAX+1]=
 const CodecID TglobalSettingsDecAudio::c_vorbis[IDFF_MOVIE_MAX+1]=
 {
  CODEC_ID_NONE,
- CODEC_ID_VORBIS,    
- CODEC_ID_NONE,  
- CODEC_ID_NONE,    
- CODEC_ID_NONE,     
+ CODEC_ID_VORBIS,
  CODEC_ID_NONE,
- CODEC_ID_NONE, 
  CODEC_ID_NONE,
- CODEC_ID_NONE,  
- CODEC_ID_NONE, 
- CODEC_ID_NONE,   
- CODEC_ID_NONE,    
- CODEC_ID_NONE,    
- CODEC_ID_NONE,    
- CODEC_ID_NONE,    
- CODEC_ID_NONE,  
- CODEC_ID_NONE,   
- CODEC_ID_NONE,  
- CODEC_ID_TREMOR  
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_TREMOR
 };
 
 void TglobalSettingsDecAudio::getCodecsList(Tstrptrs &codecs) const
