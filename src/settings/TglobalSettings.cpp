@@ -400,7 +400,7 @@ void TglobalSettingsDecVideo::fixNewCodecs(void)
  if (mpg2==2) mpg2=IDFF_MOVIE_LIBMPEG2;
  if (mpegAVI==2) mpegAVI=IDFF_MOVIE_LIBMPEG2;
  if (theo==1) theo=IDFF_MOVIE_THEO;
- if (rawv==1 && forceInCSP!=0) rawv=forceInCSP;
+ //if (rawv==1 && forceInCSP!=0) rawv=forceInCSP;
 }
 
 void TglobalSettingsDecVideo::load(void)
