@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -52,7 +52,7 @@ INT_PTR TavisynthPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CHB_AVISYNTH:
        c=getCheck(IDC_CHB_AVISYNTH);
@@ -66,7 +66,7 @@ INT_PTR TavisynthPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          parent->setChange();
          return TRUE;
         }
-       break;   
+       break;
      }
     break;
   }
@@ -86,7 +86,7 @@ void TavisynthPage::onLoad(void)
      fclose(f);
      script[len]='\0';
      setDlgItemText(m_hwnd,IDC_ED_AVISYNTH,text<char_t>(script));
-    } 
+    }
   }
 }
 void TavisynthPage::onSave(void)
@@ -105,10 +105,10 @@ void TavisynthPage::onSave(void)
        line[len]='\0';
        if (i>0) fputs("\n",f);
        fputs(text<char>(line),f);
-      } 
+      }
      fclose(f);
     }
-  }   
+  }
 }
 
 void TavisynthPage::applySettings(void)

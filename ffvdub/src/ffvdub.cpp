@@ -8,7 +8,7 @@
 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
 
  * You should have received a copy of the GNU General Public License
@@ -35,21 +35,21 @@ static INT_PTR CALLBACK configProc(HWND m_hwnd,UINT msg,WPARAM wParam,LPARAM lPa
     break;
   };
  FilterActivation *fa=(FilterActivation*)GetWindowLongPtr(m_hwnd,GWLP_USERDATA);
- if (fa) 
+ if (fa)
   {
    Tffvdub *self=(Tffvdub*)fa->filter_data;
    return self->config(fa,m_hwnd,msg,wParam,lParam);
   }
  else
-  return FALSE; 
+  return FALSE;
 }
 
-static int __cdecl ffvdubInit(FilterActivation *fa, const FilterFunctions *ff) 
+static int __cdecl ffvdubInit(FilterActivation *fa, const FilterFunctions *ff)
 {
  new(fa->filter_data) Tffvdub;
  return 0;
 }
-static void __cdecl ffvdubDeinit(FilterActivation *fa, const FilterFunctions *ff) 
+static void __cdecl ffvdubDeinit(FilterActivation *fa, const FilterFunctions *ff)
 {
  ((Tffvdub*)fa->filter_data)->~Tffvdub();
 }
@@ -103,7 +103,7 @@ static FilterDefinition ffvdubDef=
  "Milan Cutka",                // maker
  NULL,                         // private_data
  sizeof(Tffvdub),              // inst_data_size
-                               
+
  ffvdubInit,                   // initProc
  ffvdubDeinit,                 // deinitProc
  ffvdubRun,                    // runProc
@@ -112,7 +112,7 @@ static FilterDefinition ffvdubDef=
  NULL,                         // stringProc
  NULL,                         // startProc
  NULL,                         // endProc
-                               
+
  &ffvbuf_obj,                  // script_obj
  ffvdubFss,                    // fssProc
  NULL,

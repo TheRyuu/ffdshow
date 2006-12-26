@@ -8,14 +8,14 @@
 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "Ccredits.h"
 
@@ -36,7 +36,7 @@ void TcreditsPage::cfg2dlg(void)
 
  start2dlg();
  end2dlg();
- 
+
  percent2dlg();
  quant2dlg();
  size2dlg();
@@ -86,7 +86,7 @@ void TcreditsPage::quant2dlg(void)
  enable(is,IDC_RBT_CREDITS_QUANT);
  static const int idCreditsQuant[]={IDC_LBL_CREDITS_I_QUANT,IDC_ED_CREDITS_I_QUANT,IDC_LBL_CREDITS_P_QUANT,IDC_ED_CREDITS_P_QUANT,0};
  enable(is && cfgGet(IDFF_enc_credits_mode)==CREDITS_MODE::QUANT,idCreditsQuant);
- 
+
  SetDlgItemInt(m_hwnd,IDC_ED_CREDITS_I_QUANT,cfgGet(IDFF_enc_credits_quant_i),FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_CREDITS_P_QUANT,cfgGet(IDFF_enc_credits_quant_p),FALSE);
 }
@@ -97,7 +97,7 @@ void TcreditsPage::size2dlg(void)
  enable(is,IDC_RBT_CREDITS_SIZE);
  static const int idCreditsSize[]={IDC_LBL_CREDITS_SIZE_START,IDC_LBL_CREDITS_SIZE_END,IDC_ED_CREDITS_SIZE_START,IDC_ED_CREDITS_SIZE_END,0};
  enable(is && cfgGet(IDFF_enc_credits_mode)==CREDITS_MODE::SIZE,idCreditsSize);
- 
+
  SetDlgItemInt(m_hwnd,IDC_ED_CREDITS_SIZE_START,cfgGet(IDFF_enc_credits_size_start),FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_CREDITS_SIZE_END  ,cfgGet(IDFF_enc_credits_size_end  ),FALSE);
 }
@@ -106,7 +106,7 @@ INT_PTR TcreditsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_ED_CREDITS_I_QUANT:
       case IDC_ED_CREDITS_P_QUANT:
@@ -122,7 +122,7 @@ INT_PTR TcreditsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
           }
          return TRUE;
         }
-       break; 
+       break;
      }
     break;
    case WM_CTLCOLOREDIT:
@@ -134,15 +134,15 @@ INT_PTR TcreditsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        case IDC_ED_CREDITS_I_QUANT:
        case IDC_ED_CREDITS_P_QUANT:
         ok=eval(hwnd,parent->qmin,parent->qmax);break;
-       default:return FALSE; 
-      } 
+       default:return FALSE;
+      }
      if (!ok)
-      { 
+      {
        HDC dc=HDC(wParam);
        SetBkColor(dc,RGB(255,0,0));
-       return INT_PTR(getRed()); 
+       return INT_PTR(getRed());
       }
-     else return FALSE;  
+     else return FALSE;
     }
   }
  return TconfPageEnc::msgProc(uMsg,wParam,lParam);
@@ -185,5 +185,5 @@ TcreditsPage::TcreditsPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
    IDC_ED_CREDITS_SIZE_END,1,1000000,IDFF_enc_credits_size_end,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
 }

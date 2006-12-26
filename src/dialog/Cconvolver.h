@@ -23,4 +23,4 @@ public:
  virtual void translate(void);
 };
 
-#endif 
+#endif

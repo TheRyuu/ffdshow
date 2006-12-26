@@ -8,7 +8,7 @@
 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
 
  * You should have received a copy of the GNU General Public License
@@ -50,7 +50,7 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
        char pth[MAX_PATH];
        r._REG_OP_S(0,"",pth,MAX_PATH,"");
        hdll=LoadLibrary(pth);
-      } 
+      }
      typedef Iffacm2creator* (__stdcall * Tcreate)(void);
      Tcreate create=(Tcreate)GetProcAddress(hdll,"ffacm2creator");
      if (!create) return DRVCNF_CANCEL;
@@ -59,20 +59,20 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
      //if (FAILED(CoCreateInstance(CLSID_FFACM2CREATOR,NULL,CLSCTX_INPROC_SERVER,IID_Iffacm2creator,(void**)&creator))) return DRVCNF_CANCEL;
      int size=creator->getSize();
      ffacm=(Iffacm2*)LocalAlloc(LPTR,size);
-     if (!ffacm) 
+     if (!ffacm)
       {
        creator->Release();
        return DRVCNF_CANCEL;
-      } 
+      }
      creator->create(ffacm);
-     creator->Release(); 
+     creator->Release();
      if (icopen!=NULL) icopen->dwError=DRV_OK;
      DPRINTF("ACM DRV_OPEN %i %p",hDriver,ffacm);
      return (LRESULT)ffacm;
     }
    case DRV_CLOSE:
     DPRINTF("ACM DRV_CLOSE %i %p",hDriver,ffacm);
-    if (ffacm) 
+    if (ffacm)
      LocalFree(ffacm);
     return DRV_OK;
    case DRV_CONFIGURE:

@@ -1,4 +1,4 @@
-#ifndef _CCURVENORMALPAGE_H_
+#ifndef _CCURVENORMALPAGE_H_1
 #define _CCURVENORMALPAGE_H_
 
 #include "TconfPageEnc.h"
@@ -11,4 +11,4 @@ public:
  virtual bool enabled(void);
 };
 
-#endif 
+#endif

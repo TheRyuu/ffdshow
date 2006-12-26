@@ -8,7 +8,7 @@
 //
 //	This program is distributed in the hope that it will be useful,
 //	but WITHOUT ANY WARRANTY; without even the implied warranty of
-//	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //	GNU General Public License for more details.
 //
 //	You should have received a copy of the GNU General Public License
@@ -105,9 +105,7 @@ public:
 		return pitch*h;
 	}
 
-	//////
-
-	VBitmap() throw() {
+		VBitmap() throw() {
 #ifdef VDEXT_VIDEO_FILTER
 		init();
 #endif
@@ -150,16 +148,13 @@ public:
 
 	virtual bool Histogram(PixCoord x, PixCoord y, PixCoord dx, PixCoord dy, long *pHisto, int iHistoType) const throw();
 
-	//// NEW AS OF VIRTUALDUB V1.2B
-
+	// NEW AS OF VIRTUALDUB V1.2B
 	virtual bool BitBltFromYUY2(PixCoord x2, PixCoord y2, const VBitmap *src, PixCoord x1, PixCoord y1, PixDim dx, PixDim dy) const throw();
 	virtual bool BitBltFromI420(PixCoord x2, PixCoord y2, const VBitmap *src, PixCoord x1, PixCoord y1, PixDim dx, PixDim dy) const throw();
 
-	//// NEW AS OF VIRTUALDUB V1.4C
-
+	// NEW AS OF VIRTUALDUB V1.4C
 	virtual void MakeBitmapHeaderNoPadding(BITMAPINFOHEADER *bih) const throw();
 
-	///////////
 
 	bool BitBltFromYUY2Fullscale(PixCoord x2, PixCoord y2, const VBitmap *src, PixCoord x1, PixCoord y1, PixDim dx, PixDim dy) const throw();
 

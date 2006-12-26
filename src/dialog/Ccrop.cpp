@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -88,9 +88,9 @@ INT_PTR TcropPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        zoom2dlg();
        return TRUE;
      }
-    break; 
+    break;
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CHB_MAGNIFICATION_LOCKED:
        cfgSet(IDFF_magnificationLocked,getCheck(IDC_CHB_MAGNIFICATION_LOCKED));
@@ -98,8 +98,8 @@ INT_PTR TcropPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        zoom2dlg();
        return TRUE;
      }
-    break; 
-  }   
+    break;
+  }
  return TconfPageDecVideo::msgProc(uMsg,wParam,lParam);
 }
 
@@ -130,5 +130,5 @@ TcropPage::TcropPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPage
    IDC_ED_CROP_BOTTOM,0,2048,IDFF_cropBottom,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
 }

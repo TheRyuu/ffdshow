@@ -11,7 +11,7 @@ private:
  void onExport(void),onAbout(void),onDonate(void),onLicense(void);
  char_t *lic;
 protected:
- const char_t *capt;int helpId; 
+ const char_t *capt;int helpId;
  int aboutStringID;
  virtual const TversionsDlg::TversionInfo* fcsVersions(void)=0;
  template<class T> static bool getVersion(const Tconfig *config,ffstring &vers,ffstring &license);
@@ -47,4 +47,4 @@ public:
  TaboutPageEnc(TffdshowPageBase *Iparent);
 };
 
-#endif 
+#endif

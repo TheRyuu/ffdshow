@@ -11,4 +11,4 @@ public:
  virtual void cfg2dlg(void);
 };
 
-#endif 
+#endif

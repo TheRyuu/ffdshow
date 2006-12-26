@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -51,8 +51,8 @@ void TaboutPage::init(void)
     {
      setDlgItemText(m_hwnd,IDC_ED_LICENSE,lic);
      SendDlgItemMessage(m_hwnd,IDC_ED_LICENSE,EM_SETSEL,0,-1);
-    } 
-  }  
+    }
+  }
 }
 
 void TaboutPage::exportReg(Twindow *w,char_t *regflnm)
@@ -82,7 +82,7 @@ template<class T> bool TaboutPage::getVersion(const Tconfig *config,ffstring &ve
  void (__stdcall *getVersion)(char *ver,const char* *license);
  dl->loadFunction(getVersion,"getVersion");
  bool res=false;
- if (getVersion) 
+ if (getVersion)
   {
    res=true;
    char ver[256];const char *lic;
@@ -95,7 +95,7 @@ template<class T> bool TaboutPage::getVersion(const Tconfig *config,ffstring &ve
    vers="not found";
    license.clear();
   }
- delete dl;  
+ delete dl;
  return res;
 }
 
@@ -122,7 +122,7 @@ TaboutPage::TaboutPage(TffdshowPageBase *Iparent):TconfPageBase(Iparent)
    IDC_CHB_LICENSE,&TaboutPage::onLicense,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
  lic=NULL;
 }
 TaboutPage::~TaboutPage()
@@ -130,7 +130,7 @@ TaboutPage::~TaboutPage()
  if (lic) free(lic);
 }
 void TaboutPage::translate(void)
-{ 
+{
  TconfPageBase::translate();
  setText(IDC_LBL_FFDSHOW,_(IDC_LBL_FFDSHOW,capt));
  const char_t *help= tr->translate(aboutStringID);

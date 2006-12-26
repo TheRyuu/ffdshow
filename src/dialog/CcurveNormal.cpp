@@ -8,14 +8,14 @@
 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "CcurveNormal.h"
 
@@ -26,7 +26,7 @@ bool TcurveNormalPage::enabled(void)
 }
 
 void TcurveNormalPage::cfg2dlg(void)
-{ 
+{
  SetDlgItemInt(m_hwnd,IDC_ED_CURVENORMAL_HIGH,cfgGet(IDFF_enc_curve_compression_high),FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_CURVENORMAL_LOW ,cfgGet(IDFF_enc_curve_compression_low ),FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_CURVENORMAL_BITRATEPAYBACKDELAY,cfgGet(IDFF_enc_bitrate_payback_delay),FALSE);
@@ -53,5 +53,5 @@ TcurveNormalPage::TcurveNormalPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparen
    IDC_ED_CURVENORMAL_BITRATEPAYBACKDELAY,1,10000000,IDFF_enc_bitrate_payback_delay,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
 }

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -65,8 +65,8 @@ public:
   {
    if (hdll)
     FreeLibrary(hdll);
-  } 
-  
+  }
+
  int (AVSC_CC *avs_add_function)(AVS_ScriptEnvironment *,const char * name, const char * params, AVS_ApplyFunc apply, void * user_data);
  void (AVSC_CC *avs_release_clip)(AVS_Clip *);
  struct AVS_Clip* (AVSC_CC *avs_new_c_filter)(AVS_ScriptEnvironment * e,AVS_FilterInfo * * fi,AVS_Value child, int store_child);
@@ -85,7 +85,7 @@ class TffavisynthVideo
 private:
  ~TffavisynthVideo()
   {
-   if (proc) 
+   if (proc)
     {
      proc->end();
      proc->Release();
@@ -119,7 +119,7 @@ public:
       incsp=FF_CSP_420P;
      else
       *error="ffdshow: unknown colorspace";
-      
+
      unsigned int outDx,outDy;
      proc->getNewSize(vi.width,vi.height,&outDx,&outDy);
      vi.width=outDx;vi.height=outDy;
@@ -167,12 +167,12 @@ class TffavisynthAudio
 private:
  ~TffavisynthAudio()
   {
-   if (proc) 
+   if (proc)
     {
      proc->end();
      proc->Release();
     }
-   if (tempbuffer) free(tempbuffer); 
+   if (tempbuffer) free(tempbuffer);
    CoUninitialize();
   }
  static void vi2wfmt(const AVS_VideoInfo &vi,WAVEFORMATEX &wfx)
@@ -201,7 +201,7 @@ private:
       case 32:vi.sample_type=AVS_SAMPLE_INT32;break;
      }
    else
-    vi.sample_type=AVS_SAMPLE_FLOAT;  
+    vi.sample_type=AVS_SAMPLE_FLOAT;
   }
  AVS_VideoInfo viIn;WAVEFORMATEX wfIn;
  IffProcAudio *proc;
@@ -228,9 +228,9 @@ public:
    else
     *error="ffdshowAudio: can't initialize IffProcAudio";
   }
- int __stdcall GetAudio(AVS_FilterInfo *fi,void* buf, __int64 start, __int64 count) 
+ int __stdcall GetAudio(AVS_FilterInfo *fi,void* buf, __int64 start, __int64 count)
   {
-   if (tempbuffer_size<(size_t)count) 
+   if (tempbuffer_size<(size_t)count)
     tempbuffer=(uint8_t*)realloc(tempbuffer,(tempbuffer_size=(size_t)count)*avs_bytes_per_audio_sample(&viIn));
    avisynth->avs_get_audio(fi->child,tempbuffer,start,count);
    size_t outcount;WAVEFORMATEX wfOut;
@@ -238,7 +238,7 @@ public:
    proc->process(&wfIn,(unsigned int)count,&wfOut,&outcount,&outsamples);
    memcpy(buf,outsamples,outcount*avs_bytes_per_audio_sample(&fi->vi));
    return 0;
-  } 
+  }
  static int AVSC_CC get_audio(AVS_FilterInfo *fi, void * buf, INT64 start, INT64 count)
   {
    return ((TffavisynthAudio*)fi->user_data)->GetAudio(fi,buf,start,count);
@@ -264,7 +264,7 @@ static AVS_Value AVSC_CC create_video(AVS_ScriptEnvironment * env, AVS_Value arg
    return v;
   }
  else
-  return avs_new_value_error(error);  
+  return avs_new_value_error(error);
 }
 
 static AVS_Value AVSC_CC create_audio(AVS_ScriptEnvironment * env, AVS_Value args, void *)
@@ -282,7 +282,7 @@ static AVS_Value AVSC_CC create_audio(AVS_ScriptEnvironment * env, AVS_Value arg
    return v;
   }
  else
-  return avs_new_value_error(error);  
+  return avs_new_value_error(error);
 }
 
 extern "C" __declspec(dllexport) const char* __stdcall avisynth_c_plugin_init(AVS_ScriptEnvironment * env)
@@ -290,10 +290,10 @@ extern "C" __declspec(dllexport) const char* __stdcall avisynth_c_plugin_init(AV
  if (!avisynth)
   avisynth=new Tavisynth;
  if (avisynth->ok)
-  { 
+  {
    avisynth->avs_add_function(env,"ffdshow","c[preset]s[options]s",create_video,0);
    avisynth->avs_add_function(env,"ffdshowAudio","c[preset]s[options]s",create_audio,0);
-  } 
+  }
  return "";
 }
 

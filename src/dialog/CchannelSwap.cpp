@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -22,12 +22,12 @@
 
 const TchannelSwapPage::Tspeaker TchannelSwapPage::speakers[]=
 {
- IDC_CBX_CHANNELSWAP_L   ,SPEAKER_FRONT_LEFT   ,IDFF_channelSwapL,   
- IDC_CBX_CHANNELSWAP_C   ,SPEAKER_FRONT_CENTER ,IDFF_channelSwapC,   
- IDC_CBX_CHANNELSWAP_R   ,SPEAKER_FRONT_RIGHT  ,IDFF_channelSwapR,   
- IDC_CBX_CHANNELSWAP_SL  ,SPEAKER_BACK_LEFT    ,IDFF_channelSwapSL,  
+ IDC_CBX_CHANNELSWAP_L   ,SPEAKER_FRONT_LEFT   ,IDFF_channelSwapL,
+ IDC_CBX_CHANNELSWAP_C   ,SPEAKER_FRONT_CENTER ,IDFF_channelSwapC,
+ IDC_CBX_CHANNELSWAP_R   ,SPEAKER_FRONT_RIGHT  ,IDFF_channelSwapR,
+ IDC_CBX_CHANNELSWAP_SL  ,SPEAKER_BACK_LEFT    ,IDFF_channelSwapSL,
  IDC_CBX_CHANNELSWAP_REAR,SPEAKER_BACK_CENTER  ,IDFF_channelSwapREAR,
- IDC_CBX_CHANNELSWAP_SR  ,SPEAKER_BACK_RIGHT   ,IDFF_channelSwapSR,  
+ IDC_CBX_CHANNELSWAP_SR  ,SPEAKER_BACK_RIGHT   ,IDFF_channelSwapSR,
  IDC_CBX_CHANNELSWAP_LFE ,SPEAKER_LOW_FREQUENCY,IDFF_channelSwapLFE
 };
 
@@ -52,11 +52,11 @@ INT_PTR TchannelSwapPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CBX_CHANNELSWAP_L:
-      case IDC_CBX_CHANNELSWAP_C:  
-      case IDC_CBX_CHANNELSWAP_R:  
+      case IDC_CBX_CHANNELSWAP_C:
+      case IDC_CBX_CHANNELSWAP_R:
       case IDC_CBX_CHANNELSWAP_SL:
       case IDC_CBX_CHANNELSWAP_REAR:
       case IDC_CBX_CHANNELSWAP_SR:

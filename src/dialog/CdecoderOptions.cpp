@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -45,7 +45,7 @@ void TmiscPage::init(void)
  islavc=((filterMode&IDFF_FILTERMODE_PLAYER) && source==IDFF_MOVIE_LAVC) || (filterMode&(IDFF_FILTERMODE_CONFIG|IDFF_FILTERMODE_VFW));
  for (int i=0;workarounds[i].ff_bug;i++)
   enable(islavc,workarounds[i].idc_chb);
- static const int idLavc[]={IDC_LBL_IDCT,IDC_CBX_IDCT,IDC_CHB_GRAY,IDC_LBL_BUGS,IDC_LBL_ERROR_CONCEALMENT,IDC_CBX_ERROR_CONCEALMENT,IDC_LBL_ERROR_RESILIENCE,IDC_CBX_ERROR_RESILIENCE,IDC_BT_QUANTMATRIX_EXPORT,IDC_ED_NUMTHREADS,IDC_CHB_H264_SKIP_ON_DELAY,IDC_ED_H264SKIP_ON_DELAY_TIME,0}; 
+ static const int idLavc[]={IDC_LBL_IDCT,IDC_CBX_IDCT,IDC_CHB_GRAY,IDC_LBL_BUGS,IDC_LBL_ERROR_CONCEALMENT,IDC_CBX_ERROR_CONCEALMENT,IDC_LBL_ERROR_RESILIENCE,IDC_CBX_ERROR_RESILIENCE,IDC_BT_QUANTMATRIX_EXPORT,IDC_ED_NUMTHREADS,IDC_CHB_H264_SKIP_ON_DELAY,IDC_ED_H264SKIP_ON_DELAY_TIME,0};
  enable(islavc,idLavc);
  if(tr)
   {
@@ -64,12 +64,12 @@ void TmiscPage::cfg2dlg(void)
    for (int i=0;workarounds[i].ff_bug;i++)
     setCheck(workarounds[i].idc_chb,bugs&workarounds[i].ff_bug);
    cbxSetCurSel(IDC_CBX_ERROR_RESILIENCE,cfgGet(IDFF_errorResilience));
-   cbxSetCurSel(IDC_CBX_ERROR_CONCEALMENT,cfgGet(IDFF_errorConcealment)); 
+   cbxSetCurSel(IDC_CBX_ERROR_CONCEALMENT,cfgGet(IDFF_errorConcealment));
    SetDlgItemInt(m_hwnd,IDC_ED_NUMTHREADS,cfgGet(IDFF_numLAVCdecThreads),FALSE);
-   setCheck(IDC_CHB_H264_SKIP_ON_DELAY,cfgGet(IDFF_h264skipOnDelay)); 
+   setCheck(IDC_CHB_H264_SKIP_ON_DELAY,cfgGet(IDFF_h264skipOnDelay));
    SetDlgItemInt(m_hwnd,IDC_ED_H264SKIP_ON_DELAY_TIME,cfgGet(IDFF_h264skipOnDelayTime),FALSE);
   }
- setCheck(IDC_CHB_DROP_ON_DELAY,cfgGet(IDFF_dropOnDelay)); 
+ setCheck(IDC_CHB_DROP_ON_DELAY,cfgGet(IDFF_dropOnDelay));
  SetDlgItemInt(m_hwnd,IDC_ED_DROP_ON_DELAY_TIME,cfgGet(IDFF_dropOnDelayTime),FALSE);
 }
 
@@ -78,13 +78,13 @@ INT_PTR TmiscPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CHB_WORKAROUND_AUTODETECT:
       case IDC_CHB_WORKAROUND_OLDMSMPEG4:
       case IDC_CHB_WORKAROUND_XVIDILACE:
       case IDC_CHB_WORKAROUND_UMP4:
-      case IDC_CHB_WORKAROUND_NOPADDING :
+      case IDC_CHB_WORKAROUND_NOPADDING:
       case IDC_CHB_WORKAROUND_QPELCHROMA:
       case IDC_CHB_WORKAROUND_EDGE:
       case IDC_CHB_WORKAROUND_HPELCHROMA:
@@ -115,14 +115,14 @@ bool TmiscPage::reset(bool testonly)
    deci->resetParam(IDFF_dropOnDelayTime);
    deci->resetParam(IDFF_h264skipOnDelay);
    deci->resetParam(IDFF_h264skipOnDelayTime);
-  } 
+  }
  return true;
 }
 
 void TmiscPage::translate(void)
-{ 
+{
  TconfPageBase::translate();
- 
+
  cbxTranslate(IDC_CBX_IDCT,Tlibavcodec::idctNames);
  cbxTranslate(IDC_CBX_ERROR_CONCEALMENT,Tlibavcodec::errorConcealments);
  cbxTranslate(IDC_CBX_ERROR_RESILIENCE,Tlibavcodec::errorResiliences);
@@ -168,7 +168,7 @@ TmiscPage::TmiscPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
    IDC_ED_H264SKIP_ON_DELAY_TIME,0,20000,IDFF_h264skipOnDelayTime,NULL,
    0,NULL,NULL
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
  static const TbindCombobox<TmiscPage> cbx[]=
   {
    IDC_CBX_IDCT,IDFF_idct,BINDCBX_SEL,NULL,

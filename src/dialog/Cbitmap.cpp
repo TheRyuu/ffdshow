@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -63,7 +63,7 @@ INT_PTR TbitmapPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_ED_BITMAP_FLNM:
        if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
@@ -86,13 +86,13 @@ void TbitmapPage::onFlnm(void)
   {
    setDlgItemText(m_hwnd,IDC_ED_BITMAP_FLNM,flnm);
    cfgSet(IDFF_bitmapFlnm,flnm);
-  } 
+  }
 }
 
 void TbitmapPage::translate(void)
-{ 
+{
  TconfPageBase::translate();
- 
+
  cbxTranslate(IDC_CBX_BITMAP_ALIGN,TsubtitlesSettings::alignments);
  cbxTranslate(IDC_CBX_BITMAP_MODE,TbitmapSettings::modes);
 }
@@ -120,5 +120,5 @@ TbitmapPage::TbitmapPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):Tconf
    IDC_BT_BITMAP_FLNM,&TbitmapPage::onFlnm,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
 }

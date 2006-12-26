@@ -77,7 +77,7 @@ protected:
    LAVC_STATUS lavc_status;
    int idff;
    Toptions options;
-   const char_t *getDecoderName(int val) const; 
+   const char_t *getDecoderName(int val) const;
    Tdecoders decoders;
    bool decoderCheck(const Tconfig *config);
   };
@@ -89,7 +89,7 @@ protected:
  int curitem;
  void beginCodecChange(int iItem);
  void moveCBX(bool isScroll);
- 
+
  TcodecsPage(TffdshowPageBase *Iparent);
  void initLV(const char_t *IthirdCol=NULL);
  virtual void fillCodecs(void)=0;
@@ -120,4 +120,4 @@ public:
  virtual void init(void);
 };
 
-#endif 
+#endif

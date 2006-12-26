@@ -8,7 +8,7 @@
 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
 
  * You should have received a copy of the GNU General Public License
@@ -40,8 +40,8 @@ void Tffvdub::initProc(void)
   {
    ok=true;
    proc->loadPreset("ffvdub");
-  } 
- else 
+  }
+ else
   ok=false;
 }
 
@@ -71,7 +71,7 @@ Tffvdub::Tffvdub(const Tffvdub* Iffvdub)
 }
 Tffvdub::~Tffvdub()
 {
- if (proc) 
+ if (proc)
   {
    proc->end();
    proc->Release();
@@ -128,7 +128,7 @@ int Tffvdub::config(FilterActivation *fa,HWND m_hwnd,UINT msg,WPARAM wParam,LPAR
     }
    case WM_COMMAND:
     {
-     switch(LOWORD(wParam)) 
+     switch(LOWORD(wParam))
       {
        case IDOK:
         page->Apply();
@@ -146,13 +146,13 @@ int Tffvdub::config(FilterActivation *fa,HWND m_hwnd,UINT msg,WPARAM wParam,LPAR
        case IDC_BT_CFG:
         proc->config(m_hwnd);
         fa->ifp->RedoFrame(0);
-        return TRUE; 
+        return TRUE;
        case IDC_BT_PREVIEW:
         fa->ifp->Toggle(0,GetDlgItem(m_hwnd,IDC_BT_PREVIEW));
-        return TRUE; 
+        return TRUE;
       }
      break;
-    } 
+    }
   }
  return FALSE;
 }
@@ -181,9 +181,9 @@ bool Tffvdub::fss(char *dstbuf,int dstbuflen)
   {
    _snprintf(dstbuf,dstbuflen,"Config2(%i,\"%s\")",buflenC,bufS);
    return true;
-  } 
- else 
-  return false; 
+  }
+ else
+  return false;
 }
 
 long Tffvdub::param(FilterActivation *fa)
@@ -199,7 +199,7 @@ long Tffvdub::param(FilterActivation *fa)
    dstDx=dstDx1;dstDy=dstDy1;
    dstStride=(dstDx*4 + 7) & -8;
   }
- fa->dst.w=dstDx;fa->dst.h=dstDy;fa->dst.pitch=dstStride; 
+ fa->dst.w=dstDx;fa->dst.h=dstDy;fa->dst.pitch=dstStride;
  return 0;
 }
 void Tffvdub::scriptConfig(IScriptInterpreter *isi, CScriptValue *argv, int argc)

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -70,11 +70,11 @@ ffstring TconvolverPage::getWavDesc(const char_t *flnm,int idc)
  if (wav.empty())
   return _(idc,_l("invalid"));
  else
-  { 
+  {
    char_t desc[256];
    wav.descriptionPCM(desc,256);
    return desc+ffstring(_l(", "))+ffstring::intToStr((int)wav[0].size())+_l(" samples");
-  } 
+  }
 }
 void TconvolverPage::format2dlg(const char_t *flnm)
 {
@@ -102,7 +102,7 @@ INT_PTR TconvolverPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     cfgSet(IDFF_lvConvolverSelected,lvGetSelItem(IDC_LV_CONVOLVER_FILES));
     break;
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_ED_CONVOLVER_FILE:
        if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
@@ -133,7 +133,7 @@ INT_PTR TconvolverPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
           if (nmia->iItem==-1 || nmia->iSubItem!=1) return FALSE;
           onManualFileSet();
           return TRUE;
-         } 
+         }
         case LVN_GETDISPINFO:
          {
           NMLVDISPINFO *nmdi=(NMLVDISPINFO*)lParam;
@@ -159,7 +159,7 @@ INT_PTR TconvolverPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
                ReleaseDC(hlv,dc);
                strcpy(nmdi->item.pszText,flnm);
                break;
-              } 
+              }
              case 2:
               if (const char_t *flnm=cfgGetStr(speakersIdffs[i]))
                if (flnm[0] && !speakerFormats[i])
@@ -171,7 +171,7 @@ INT_PTR TconvolverPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          }
        }
      break;
-    }   
+    }
   }
  return TconfPageDecAudio::msgProc(uMsg,wParam,lParam);
 }
@@ -184,10 +184,10 @@ ffstring TconvolverPage::selectFile(int idff,int idc)
    if (idc) setDlgItemText(m_hwnd,idc,flnm);
    cfgSet(idff,flnm);
    return flnm;
-  } 
+  }
  else
-  return ffstring(); 
-} 
+  return ffstring();
+}
 void TconvolverPage::onFile(void)
 {
  if (ffstring flnm=selectFile(IDFF_convolverFile,IDC_ED_CONVOLVER_FILE))
@@ -232,7 +232,7 @@ TconvolverPage::TconvolverPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff)
    IDC_BT_CONVOLVER_FILES_CLEAR,&TconvolverPage::onManualFileClear,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
  static const TbindCheckbox<TconvolverPage> chb[]=
   {
    IDC_CHB_CONVOLVER_LEVELADJUST_AUTO,IDFF_convolverLevelAdjustAuto,&TconvolverPage::adjust2dlg,

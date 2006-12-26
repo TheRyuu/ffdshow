@@ -46,9 +46,9 @@ long process(TDeinterlaceInfo* pInfo)
  return 1000;
 }
 
-////////////////////////////////////////////////////////////////////////////
-// Start of Settings related code
-/////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+//                       Start of Settings related code                      //
+///////////////////////////////////////////////////////////////////////////////
 
 SETTING FLT_ffdshowSettings=
 {
@@ -136,7 +136,7 @@ void __cdecl done(void)
        free(n->first);
        free(n->second);
       }
-     delete names;  
+     delete names;
     } 
    proc->saveActivePreset(NULL);
    proc->end();
@@ -154,7 +154,7 @@ FILTER_METHOD ffdshowMethod=
  "&ffdshow",
  FALSE,
  TRUE,
- process, 
+ process,
  0,
  TRUE,
  init,

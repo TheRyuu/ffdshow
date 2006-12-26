@@ -8,7 +8,7 @@
 //
 //	This program is distributed in the hope that it will be useful,
 //	but WITHOUT ANY WARRANTY; without even the implied warranty of
-//	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //	GNU General Public License for more details.
 //
 //	You should have received a copy of the GNU General Public License
@@ -58,11 +58,7 @@ extern struct FilterVTbls g_vtbls;
 
 #include "VBitmap.h"
 
-//////////////////
-
 struct CScriptObject;
-
-//////////////////
 
 enum {
 	FILTERPARAM_SWAP_BUFFERS	= 0x00000001L,
@@ -70,8 +66,6 @@ enum {
 };
 
 #define FILTERPARAM_HAS_LAG(frames) ((int)(frames) << 16)
-
-///////////////////
 
 class VFBitmap;
 class FilterActivation;
@@ -94,15 +88,13 @@ typedef void (*FilterCopy         )(FilterActivation *fa, const FilterFunctions 
 typedef int (__cdecl *FilterModuleInitProc)(struct FilterModule *fm, const FilterFunctions *ff, int& vdfd_ver, int& vdfd_compat);
 typedef void (__cdecl *FilterModuleDeinitProc)(struct FilterModule *fm, const FilterFunctions *ff);
 
-//////////
-
 typedef void (__cdecl *FilterPreviewButtonCallback)(bool fNewState, void *pData);
 typedef void (__cdecl *FilterPreviewSampleCallback)(VFBitmap *, long lFrame, long lCount, void *pData);
 
 class IFilterPreview {
 public:
-        //Adding an int as first parameter was needed to workaround missing 
-        //__thiscall convention in GCC. Now works both with Visual C++ and GCC
+        //Adding an int as first parameter was needed to workaround missing
+        //__thiscall convention in GCC. Now works both with Visual C++ and GCC.
 	virtual void SetButtonCallback(int,FilterPreviewButtonCallback, void *)=0;
 	virtual void SetSampleCallback(int,FilterPreviewSampleCallback, void *)=0;
 	virtual bool __fastcall isPreviewEnabled(int)=0;
@@ -116,8 +108,6 @@ public:
 	virtual bool __fastcall SampleCurrentFrame(int)=0;
 	virtual long __fastcall SampleFrames(int)=0;
 };
-
-//////////
 
 #define VIRTUALDUB_FILTERDEF_VERSION		(8)
 #define	VIRTUALDUB_FILTERDEF_COMPATIBLE		(4)
@@ -166,8 +156,6 @@ typedef struct FilterDefinition {
 	FilterDeserialize	deserializeProc;
 	FilterCopy			copyProc;
 } FilterDefinition;
-
-//////////
 
 // FilterStateInfo: contains dynamic info about file being processed
 

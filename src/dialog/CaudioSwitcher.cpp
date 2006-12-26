@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -51,7 +51,7 @@ INT_PTR TaudioSwitcherPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CBX_AUDIOSWITCHER:
        if (HIWORD(wParam)==CBN_SELCHANGE)
@@ -59,7 +59,7 @@ INT_PTR TaudioSwitcherPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          deciA->setCurrentStream(cbxGetCurSel(IDC_CBX_AUDIOSWITCHER));
          return TRUE;
         }
-       break;  
+       break;
      }
     break;
   }
