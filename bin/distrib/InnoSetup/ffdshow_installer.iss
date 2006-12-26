@@ -2,10 +2,10 @@
 ; Requires InnoSetup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 712
+#define tryout_revision = 714
 #define buildyear = 2006
 #define buildmonth = '12'
-#define buildday = '25'
+#define buildday = '26'
 
 ; Build specific options
 #define unicode_required = True
@@ -161,8 +161,8 @@ Name: ffdshow\plugins\dscaler; Description: DScaler
 [Tasks]
 Name: resetsettings; Description: {cm:resetsettings}; Flags: unchecked; Components: ffdshow
 Name: video; Description: {cm:videoformats}; Flags: unchecked; Components: ffdshow
-Name: video\h264; Description: H.264/AVC; Check: CheckTaskVideo('h264', 1, True); Components: ffdshow
-Name: video\h264; Description: H.264/AVC; Check: NOT CheckTaskVideo('h264', 1, True); Flags: unchecked; Components: ffdshow
+Name: video\h264; Description: H.264 / AVC; Check: CheckTaskVideo('h264', 1, True); Components: ffdshow
+Name: video\h264; Description: H.264 / AVC; Check: NOT CheckTaskVideo('h264', 1, True); Flags: unchecked; Components: ffdshow
 Name: video\divx; Description: DivX; Check: CheckTaskVideo('dx50', 1, True); Components: ffdshow
 Name: video\divx; Description: DivX; Check: NOT CheckTaskVideo('dx50', 1, True); Flags: unchecked; Components: ffdshow
 Name: video\xvid; Description: Xvid; Check: CheckTaskVideo('xvid', 1, True); Components: ffdshow
@@ -191,20 +191,20 @@ Name: video\qt; Description: SVQ1, SVQ3, Cinepak, RPZA, QTRLE; Check: CheckTaskV
 Name: video\qt; Description: SVQ1, SVQ3, Cinepak, RPZA, QTRLE; Check: NOT CheckTaskVideo('svq3', 1, True); Flags: unchecked; Components: ffdshow
 Name: video\vp56; Description: VP5, VP6; Check: CheckTaskVideo('vp6', 1, True); Components: ffdshow
 Name: video\vp56; Description: VP5, VP6; Check: NOT CheckTaskVideo('vp6', 1, True); Flags: unchecked; Components: ffdshow
-Name: video\wmv1; Description: WMV1; Check: CheckTaskVideo('wmv1', 1, True); Components: ffdshow; Flags: unchecked
-Name: video\wmv1; Description: WMV1; Check: NOT CheckTaskVideo('wmv1', 1, True); Flags: unchecked; Components: ffdshow
-Name: video\wmv2; Description: WMV2; Check: CheckTaskVideo('wmv2', 1, True); Components: ffdshow; Flags: unchecked
-Name: video\wmv2; Description: WMV2; Check: NOT CheckTaskVideo('wmv2', 1, True); Flags: unchecked; Components: ffdshow
-Name: video\wmv3; Description: WMV3; Check: CheckTaskVideo('wmv3', 1, True); Components: ffdshow; Flags: unchecked
-Name: video\wmv3; Description: WMV3; Check: NOT CheckTaskVideo('wmv3', 1, True); Flags: unchecked; Components: ffdshow
-Name: video\wvc1; Description: WVC1; Check: CheckTaskVideo('wvc1', 1, True); Components: ffdshow; Flags: unchecked
-Name: video\wvc1; Description: WVC1; Check: NOT CheckTaskVideo('wvc1', 1, True); Flags: unchecked; Components: ffdshow
-Name: video\wvp2; Description: WMVP, WVP2; Check: CheckTaskVideo('wvp2', 1, True); Components: ffdshow; Flags: unchecked
-Name: video\wvp2; Description: WMVP, WVP2; Check: NOT CheckTaskVideo('wvp2', 1, True); Flags: unchecked; Components: ffdshow
-Name: video\mss2; Description: MSS1, MSS2; Check: CheckTaskVideo('mss2', 1, True); Components: ffdshow; Flags: unchecked
-Name: video\mss2; Description: MSS1, MSS2; Check: NOT CheckTaskVideo('mss2', 1, True); Flags: unchecked; Components: ffdshow
-Name: video\dvsd; Description: DVSD, dvsd; Check: CheckTaskVideo('dvsd', 1, True); Components: ffdshow; Flags: unchecked
-Name: video\dvsd; Description: DVSD, dvsd; Check: NOT CheckTaskVideo('dvsd', 1, True); Flags: unchecked; Components: ffdshow
+Name: video\wmv1; Description: WMV1; Check: CheckTaskVideo('wmv1', 1, False); Components: ffdshow;
+Name: video\wmv1; Description: WMV1; Check: NOT CheckTaskVideo('wmv1', 1, False); Flags: dontinheritcheck unchecked; Components: ffdshow
+Name: video\wmv2; Description: WMV2; Check: CheckTaskVideo('wmv2', 1, False); Components: ffdshow;
+Name: video\wmv2; Description: WMV2; Check: NOT CheckTaskVideo('wmv2', 1, False); Flags: dontinheritcheck unchecked; Components: ffdshow
+Name: video\wmv3; Description: WMV3; Check: CheckTaskVideo('wmv3', 1, False); Components: ffdshow;
+Name: video\wmv3; Description: WMV3; Check: NOT CheckTaskVideo('wmv3', 1, False); Flags: dontinheritcheck unchecked; Components: ffdshow
+Name: video\wvc1; Description: WVC1; Check: CheckTaskVideo('wvc1', 12, False); Components: ffdshow;
+Name: video\wvc1; Description: WVC1; Check: NOT CheckTaskVideo('wvc1', 12, False); Flags: dontinheritcheck unchecked; Components: ffdshow
+Name: video\wvp2; Description: WMVP, WVP2; Check: CheckTaskVideo('wvp2', 12, False); Components: ffdshow;
+Name: video\wvp2; Description: WMVP, WVP2; Check: NOT CheckTaskVideo('wvp2', 12, False); Flags: dontinheritcheck unchecked; Components: ffdshow
+Name: video\mss2; Description: MSS1, MSS2; Check: CheckTaskVideo('mss2', 12, False); Components: ffdshow;
+Name: video\mss2; Description: MSS1, MSS2; Check: NOT CheckTaskVideo('mss2', 12, False); Flags: dontinheritcheck unchecked; Components: ffdshow
+Name: video\dvsd; Description: DV; Check: CheckTaskVideo('dvsd', 1, False); Components: ffdshow;
+Name: video\dvsd; Description: DV; Check: NOT CheckTaskVideo('dvsd', 1, False); Flags: dontinheritcheck unchecked; Components: ffdshow
 Name: video\other1; Description: H.261, MJPEG, Theora, VP3; Check: CheckTask('video\other1', True); Components: ffdshow
 Name: video\other1; Description: H.261, MJPEG, Theora, VP3; Check: NOT CheckTask('video\other1', True); Flags: unchecked; Components: ffdshow
 Name: video\other2; Description: CorePNG, MS Video 1, MSRLE, Techsmith, Truemotion; Check: CheckTask('video\other2', True); Components: ffdshow
