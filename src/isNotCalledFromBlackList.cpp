@@ -62,6 +62,7 @@ bool isNotCalledFromBlackList(HINSTANCE hInstance)
   }
  blacklistList2.push_back(_l("oblivion.exe"));
  blacklistList2.push_back(_l("morrowind.exe"));
+ blacklistList2.push_back(_l("YSO_WIN.exe"));
  for (strings::const_iterator b=blacklistList2.begin();b!=blacklistList2.end();b++)
   {
    if (DwStrcasecmp(*b,fileName)==0)
