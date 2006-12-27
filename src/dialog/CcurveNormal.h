@@ -1,4 +1,4 @@
-#ifndef _CCURVENORMALPAGE_H_1
+#ifndef _CCURVENORMALPAGE_H_
 #define _CCURVENORMALPAGE_H_
 
 #include "TconfPageEnc.h"
