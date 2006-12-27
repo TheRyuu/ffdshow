@@ -61,6 +61,7 @@ public:
    multiThread=src.multiThread;
    dontQueueInWMP=src.dontQueueInWMP;
    useQueueOnlyIn=src.useQueueOnlyIn;
+   queueCount=src.queueCount;
    dropOnDelay=src.dropOnDelay;
    dropDelayTime=src.dropDelayTime;
    h264skipOnDelay=src.h264skipOnDelay;
@@ -83,7 +84,7 @@ public:
  int lavcDecThreads;
  int grayscale;
  int multiThread;
- int dontQueueInWMP,useQueueOnlyIn;
+ int dontQueueInWMP,useQueueOnlyIn,queueCount;
  int dropOnDelay, dropDelayTime, dropDelayTimeReal;
  int h264skipOnDelay, h264skipDelayTime;
  char_t useQueueOnlyInList[256];

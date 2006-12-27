@@ -155,6 +155,9 @@
 #define IDD_README_VIDEO                288
 #define IDD_README_AUDIO                289
 #define IDD_README_ENC                  290
+#define IDD_QUEUEMSG_6                  292
+#define IDD_QUEUEMSG_7                  293
+#define IDD_QUEUEMSG_8                  294
 
 #define IDC_TBR_ASPECT_USER             1002
 #define IDC_TBR_PPQUAL                  1002

@@ -542,30 +542,32 @@ STDMETHODIMP TffdshowDecVideo::compat_getOutputFourcc(char *buf,unsigned int len
 
 STDMETHODIMP_(int) TffdshowDecVideo::getQueuedCount(void)
 {
- int queueCount= m_pOutputDecVideo->queue->GetCount();
- if(queueCount)
-  return queueCount;
+ int qCount= m_pOutputDecVideo->queue->GetCount();
+ if(qCount)
+  return qCount;
  if(!presetSettings->multiThread)
   return -1;
  if(m_IsOldVideoRenderer)
   return -2;
  if(m_IsYV12andVMR9)
-  return -5;
- if(!m_pOutputDecVideo->m_IsQueueListedApp)
+  return -7;
+ const char_t *fileName=getExeflnm();
+ if(_tcsnicmp(_l("wmplayer.exe"),fileName,13)==0)
+  return -6;
+ if(!m_IsQueueListedApp)
   return -3;
  if(m_IsOldVMR9RenderlessAndRGB)
   return -4;
  if(m_IsQueueError)
   return -5;
+ if(m_IsVMR9)
+  return -8;
  return 0;
 }
 
 STDMETHODIMP_(REFERENCE_TIME) TffdshowDecVideo::getLate(void)
 {
- if(late>0)
-  return late;
- else
-  return 0;
+ return late;
 }
 
 STDMETHODIMP_(bool) TffdshowDecVideo::shouldSkipH264loopFilter(void)

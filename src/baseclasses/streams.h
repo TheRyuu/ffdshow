@@ -160,7 +160,7 @@ typedef struct {
 //#include <transip.h>    // Generic transform-in-place filter
 #include <uuids.h>      // declaration of type GUIDs and well-known clsids
 //#include <source.h>	// Generic source filter
-//#include <outputq.h>    // Output pin queueing
+#include <outputq.h>    // Output pin queueing
 #include <errors.h>     // HRESULT status and error definitions
 //#include <renbase.h>    // Base class for writing ActiveX renderers
 //#include <winutil.h>    // Helps with filters that manage windows

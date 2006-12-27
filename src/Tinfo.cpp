@@ -434,11 +434,21 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
       strcpyf(s,trans->translate(IDD_QUEUEMSG_4));
      else if(val == -5)
       strcpyf(s,trans->translate(IDD_QUEUEMSG_5));
+     else if(val == -6)
+      strcpyf(s,trans->translate(IDD_QUEUEMSG_6));
+     else if(val == -7)
+      strcpyf(s,trans->translate(IDD_QUEUEMSG_7));
+     else if(val == -8)
+      {
+       int late=(-1)*deciV->getLate()/10000;
+       tsprintf(s,_l("%s %4dms"),trans->translate(IDD_QUEUEMSG_8),late>0?late:0);
+      }
      return s;
     }
    case IDFF_OSDtype_Late:
     {
-     tsprintf(s,_l("%7dms"),deciV->getLate()/10000);
+     int late=deciV->getLate()/10000;
+     tsprintf(s,_l("%7dms"),late>0?late:0);
      wasChange=true;
      return s;
     }

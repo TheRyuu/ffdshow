@@ -98,7 +98,11 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  isOSD_time_on_ffdshow(false),
  OSD_time_on_ffdshowFirstRun(true),
  m_IsQueueError(false),
- m_IsYV12andVMR9(false)
+ m_IsYV12andVMR9(false),
+ isQueue(-1),
+ m_IsQueueListedApp(-1),
+ m_IsVMR7(false),
+ m_IsVMR9(false)
 {
  DPRINTF(_l("TffdshowDecVideo::Constructor"));
 #ifdef OSDTIMETABALE
@@ -427,10 +431,17 @@ HRESULT TffdshowDecVideo::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROP
   return E_UNEXPECTED;
 
  if (!presetSettings) initPreset();
- if(m_pOutputDecVideo->m_IsQueueListedApp==-1) // Not initialized
-  m_pOutputDecVideo->m_IsQueueListedApp= m_pOutputDecVideo->IsQueueListedApp(getExeflnm());
+ if(m_IsQueueListedApp==-1) // Not initialized
+  m_IsQueueListedApp= IsQueueListedApp(getExeflnm());
 
+ m_IsOldVideoRenderer= IsOldRenderer();
  const CLSID &ref=GetCLSID(m_pOutput->GetConnected());
+ if(isQueue==-1)
+  isQueue=presetSettings->multiThread && m_IsQueueListedApp;
+ isQueue=isQueue && !m_IsOldVideoRenderer &&
+   (ref==CLSID_OverlayMixer || ref==CLSID_VideoMixingRenderer || ref==CLSID_VideoMixingRenderer9);
+ isQueue=isQueue && !(m_IsOldVMR9RenderlessAndRGB=IsOldVMR9RenderlessAndRGB()); // inform MPC about queue only when queue is effective.
+ //DPRINTF(_l("CLSID 0x%x,0x%x,0x%x"),ref.Data1,ref.Data2,ref.Data3);for(int i=0;i<8;i++) {DPRINTF(_l(",0x%2x"),ref.Data4[i]);}
  if(ref==CLSID_VideoRenderer || ref==CLSID_OverlayMixer)
   return DecideBufferSizeOld(pAlloc, ppropInputRequest,ref);
  else
@@ -439,21 +450,22 @@ HRESULT TffdshowDecVideo::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROP
 
 HRESULT TffdshowDecVideo::DecideBufferSizeVMR(IMemAllocator *pAlloc, ALLOCATOR_PROPERTIES *ppropInputRequest, const CLSID &ref)
 {
- int cBuffersMax; 
- if(presetSettings->multiThread && m_pOutputDecVideo->m_IsQueueListedApp && !m_IsOldVMR9RenderlessAndRGB)
-  cBuffersMax= MAX_SAMPLES_OPIN+1;
- else
-  cBuffersMax= 1;
  if(ref==CLSID_VideoMixingRenderer9 && IsVMR9Renderless()==false)
   {
-   //CMediaType &mt=m_pOutput->CurrentMediaType();
-   //if(mt.majortype==MEDIATYPE_Video && mt.subtype==MEDIASUBTYPE_YV12)
-   // {
-       cBuffersMax= 1;
+   m_IsVMR9=true;
+   CMediaType &mt=m_pOutput->CurrentMediaType();
+   if(mt.subtype==MEDIASUBTYPE_YV12)
+    {
        m_IsYV12andVMR9= true; // to let OSD getQueuedCount know the reason.
-       m_pOutputDecVideo->m_IsQueueListedApp= false; // queue off internaly.
-   // }
+       isQueue= false; // queue off internaly.
+    }
   }
+ if(ref==CLSID_VideoMixingRenderer) m_IsVMR7=true;
+ int cBuffersMax; 
+ if(isQueue==1)
+  cBuffersMax= presetSettings->queueCount+1;
+ else
+  cBuffersMax= 1;
  TffPictBase pictOut=inpin->pictIn;calcNewSize(pictOut);
  ppropInputRequest->cbBuffer=pictOut.rectFull.dx*pictOut.rectFull.dy*4;
  // cbAlign 16 causes problems with the resize filter
@@ -484,6 +496,8 @@ HRESULT TffdshowDecVideo::DecideBufferSizeVMR(IMemAllocator *pAlloc, ALLOCATOR_P
   }
  if (ppropActual.cbBuffer<ppropInputRequest->cbBuffer)
   return E_FAIL;
+ if(m_IsVMR9)
+  isQueue=0; // Use VMR9's internal queueing.
  return result;
 }
 
@@ -494,8 +508,8 @@ HRESULT TffdshowDecVideo::DecideBufferSizeOld(IMemAllocator *pAlloc, ALLOCATOR_P
  * Old renderer doesn't support multithreading, so cBuffers should be 1.
  */
  int cBuffersMax; 
- if(presetSettings->multiThread && m_pOutputDecVideo->m_IsQueueListedApp  && !m_IsOldVMR9RenderlessAndRGB)
-  cBuffersMax= MAX_SAMPLES_OPIN;
+ if(isQueue==1)
+  cBuffersMax= presetSettings->queueCount;
  else
   cBuffersMax= 1;
 
@@ -610,8 +624,8 @@ HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
    remote->onChange(0,0);
    lastTime=clock();
    m_IsOldVideoRenderer= IsOldRenderer();
+   isQueue=isQueue && !m_IsOldVideoRenderer;
 
-   m_IsOldVMR9RenderlessAndRGB= IsOldVMR9RenderlessAndRGB();
    assignThreadToProcessor();
   }
 
@@ -689,18 +703,17 @@ bool TffdshowDecVideo::IsOldVMR9RenderlessAndRGB(void)
   return false;
 
  // Check downstream filter
- FILTER_INFO pFilterInfo;
  IBaseFilter* pBaseFilter;
 
  bool isVMR9rs= false;
 
- QueryFilterInfo(&pFilterInfo);
- if(pFilterInfo.pGraph)
+ if(graph)
   {
-   if(pFilterInfo.pGraph->FindFilterByName(L"Video Mixing Render 9 (Renderless)", &pBaseFilter)==S_OK)
+   if(graph->FindFilterByName(L"Video Mixing Render 9 (Renderless)", &pBaseFilter)==S_OK)
     {
      IVMRffdshow9* ivmrffdshow9;
      pBaseFilter->QueryInterface(IID_IVMRffdshow9,(void**)&ivmrffdshow9);
+     pBaseFilter->Release();
      if(ivmrffdshow9)
       {
        ivmrffdshow9->support_ffdshow();
@@ -712,7 +725,6 @@ bool TffdshowDecVideo::IsOldVMR9RenderlessAndRGB(void)
        isVMR9rs= true;
       }
     }
-   pFilterInfo.pGraph->Release();
   }
  return isVMR9rs;
 }
@@ -723,17 +735,16 @@ bool TffdshowDecVideo::IsVMR9Renderless(void)
  if (_tcsnicmp(_l("mplayerc.exe"),fileName,13)!=0)
   return false;
 
- FILTER_INFO pFilterInfo;
  IBaseFilter* pBaseFilter;
 
  bool isVMR9rs= false;
 
- QueryFilterInfo(&pFilterInfo);
- if(pFilterInfo.pGraph)
+ if(graph)
   {
-   if(pFilterInfo.pGraph->FindFilterByName(L"Video Mixing Render 9 (Renderless)", &pBaseFilter)==S_OK)
+   if(graph->FindFilterByName(L"Video Mixing Render 9 (Renderless)", &pBaseFilter)==S_OK)
     isVMR9rs= true;
-   pFilterInfo.pGraph->Release();
+   if(pBaseFilter)
+    pBaseFilter->Release();
   }
  return isVMR9rs;
 }
@@ -1000,7 +1011,7 @@ HRESULT TffdshowDecVideo::onGraphRemove(void)
 
 STDMETHODIMP TffdshowDecVideo::Run(REFERENCE_TIME tStart)
 {
- DPRINTF(_l("TffdshowDecVideo::Run"));
+ DPRINTF(_l("TffdshowDecVideo::Run thread=%d"),GetCurrentThreadId());
  if (!wasVideoWindow)
   {
    wasVideoWindow=true;
@@ -1017,9 +1028,10 @@ STDMETHODIMP TffdshowDecVideo::Run(REFERENCE_TIME tStart)
 }
 STDMETHODIMP TffdshowDecVideo::Stop(void)
 {
- DPRINTF(_l("TffdshowDecVideo::Stop %d"),GetCurrentThreadId());
+ DPRINTF(_l("TffdshowDecVideo::Stop thread=%d"),GetCurrentThreadId());
  if (hReconnectEvent)
   SetEvent(hReconnectEvent);
+ m_pOutputDecVideo->BeginStop();
  if (videoWindow) {videoWindow=NULL;wasVideoWindow=false;}
  if (basicVideo) {basicVideo=NULL;wasBasicVideo=false;}
  return CTransformFilter::Stop();
@@ -1027,18 +1039,18 @@ STDMETHODIMP TffdshowDecVideo::Stop(void)
 
 void TffdshowDecVideo::lockReceive(void)
 {
- DPRINTF(_l("TffdshowDecVideo::lockReceive %d"),GetCurrentThreadId());
+ DPRINTF(_l("TffdshowDecVideo::lockReceive thread=%d"),GetCurrentThreadId());
  m_csReceive.Lock();
 } 
 void TffdshowDecVideo::unlockReceive(void)
 {
- DPRINTF(_l("TffdshowDecVideo::unlockReceive %d"),GetCurrentThreadId());
+ DPRINTF(_l("TffdshowDecVideo::unlockReceive thread=%d"),GetCurrentThreadId());
  m_csReceive.Unlock();
 } 
 
 HRESULT TffdshowDecVideo::NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,double dRate)
 {
- DPRINTF(_l("TffdshowDecVideo::NewSegment %d"),GetCurrentThreadId());
+ DPRINTF(_l("TffdshowDecVideo::NewSegment thread=%d"),GetCurrentThreadId());
  OSD_time_on_ffdshowStart=0;
  OSD_time_on_ffdshowBeforeGetBuffer=0;
  OSD_time_on_ffdshowAfterGetBuffer=0;
@@ -1320,30 +1332,29 @@ HRESULT TffdshowDecVideo::initializeOutputSample(IMediaSample **ppOutSample)
  //if (!(pProps->dwSampleFlags&AM_SAMPLE_SPLICEPOINT))
  // dwFlags|=AM_GBF_NOTASYNCPOINT;
 
- if(presetSettings->multiThread && m_pOutputDecVideo->m_IsQueueListedApp && !m_IsOldVMR9RenderlessAndRGB)
-  dwFlags|=AM_GBF_NOWAIT;  // without this, WMP10/11 freezes up. I don't know why.
-
  //ASSERT(m_pOutput->m_pAllocator != NULL);
  IMediaSample *pOutSample;
  HRESULT hr;
  if(isOSD_time_on_ffdshow && m_pClock)
   m_pClock->GetTime(&OSD_time_on_ffdshowBeforeGetBuffer);
- m_IsQueueError=false;
- do{
-  //DPRINTF(_l("About to call GetDeliveryBuffer"));
-  hr=m_pOutput->GetDeliveryBuffer(&pOutSample,
-                                         pProps->dwSampleFlags&AM_SAMPLE_TIMEVALID?&pProps->tStart:NULL,
-                                         pProps->dwSampleFlags&AM_SAMPLE_STOPVALID?&pProps->tStop :NULL,
-                                         dwFlags);
-  //DPRINTF(_l("GetDeliveryBuffer returned %x"),hr);
-  if(hr==S_OK || hr==VFW_E_NOT_COMMITTED || m_aboutToFlash)
-   break;
-  else if(hr == 0x8004022e)
-   m_IsQueueError= true;
-  Sleep(1); // Just quickly written. FIXME.
- }while(presetSettings->multiThread && m_pOutputDecVideo->m_IsQueueListedApp && !m_IsOldVMR9RenderlessAndRGB);
+ if(isQueue)
+  {
+   hr=S_OK;
+   pOutSample=m_pOutputDecVideo->GetBuffer();
+  }
+ else
+  {
+   //DPRINTF(_l("About to call GetDeliveryBuffer"));
+   hr=m_pOutput->GetDeliveryBuffer(&pOutSample,
+                                   pProps->dwSampleFlags&AM_SAMPLE_TIMEVALID?&pProps->tStart:NULL,
+                                   pProps->dwSampleFlags&AM_SAMPLE_STOPVALID?&pProps->tStop :NULL,
+                                   dwFlags);
+   //DPRINTF(_l("GetDeliveryBuffer returned %x"),hr);
+  }
  if(isOSD_time_on_ffdshow && m_pClock)
   m_pClock->GetTime(&OSD_time_on_ffdshowAfterGetBuffer);
+ if(!pOutSample)
+  return E_FAIL;
  if (FAILED(hr))
   return hr;
  *ppOutSample=pOutSample;
@@ -1387,6 +1398,26 @@ void TffdshowDecVideo::assignThreadToProcessor(void)
  if(anotherProcessor>=CPUcount())
   anotherProcessor= 0;
  SetThreadIdealProcessor(m_pOutputDecVideo->queue->GetWorkerThread(), anotherProcessor);
+}
+
+int TffdshowDecVideo::IsQueueListedApp(const char_t *exe)
+{
+ if (!presetSettings) initPreset();
+ if(presetSettings->useQueueOnlyIn)
+  {
+   strings queuelistList;
+   strtok(presetSettings->useQueueOnlyInList,_l(";"),queuelistList);
+   for (strings::const_iterator b=queuelistList.begin();b!=queuelistList.end();b++)
+    if (DwStrcasecmp(*b,exe)==0)
+     return 1;
+   return 0;
+  }
+ else
+  {
+   if (_tcsnicmp(_l("wmplayer.exe"),exe,13)==0)
+    return 0;
+   return 1;
+  }
 }
 
 void TffdshowDecVideo::DPRINTF_SampleTime(IMediaSample* pSample)

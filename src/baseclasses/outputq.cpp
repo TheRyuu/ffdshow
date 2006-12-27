@@ -10,9 +10,7 @@
 //------------------------------------------------------------------------------
 
 #include "stdafx.h"
-#include "outputq.h"
 #include <streams.h>
-#include "ffdebug.h"
 
 
 //
@@ -135,7 +133,7 @@ COutputQueue::COutputQueue(
         }
         SetThreadPriority(m_hThread, dwPriority);
     } else {
-        DPRINTF(_l("Calling input pin directly - no thread"));
+        DbgLog((LOG_TRACE, 2, TEXT("Calling input pin directly - no thread")));
     }
 }
 
@@ -149,7 +147,7 @@ COutputQueue::COutputQueue(
 //
 COutputQueue::~COutputQueue()
 {
-    DPRINTF(_l("COutputQueue::~COutputQueue"));
+    DbgLog((LOG_TRACE, 3, TEXT("COutputQueue::~COutputQueue")));
     /*  Free our pointer */
     if (m_pInputPin != NULL) {
         m_pInputPin->Release();
@@ -287,14 +285,14 @@ DWORD COutputQueue::ThreadProc()
                     }
                     break;
                 }
-            } // while(TRUE)
+            }
             if (!bWait) {
                 // We look at m_nBatched from the client side so keep
                 // it up to date inside the critical section
                 lNumberToSend = m_nBatched;  // Local copy
                 m_nBatched = 0;
             }
-        } // scope for CAutoLock
+        }
 
         //  Wait for some more data
 
@@ -315,11 +313,9 @@ DWORD COutputQueue::ThreadProc()
             long nProcessed;
             if (m_hr == S_OK) {
                 ASSERT(!m_bFlushed);
-
                 HRESULT hr = m_pInputPin->ReceiveMultiple(m_ppSamples,
                                                           lNumberToSend,
                                                           &nProcessed);
-                //DPRINTF(_l("Receive Returned %d"),hr);
                 /*  Don't overwrite a flushing state HRESULT */
                 CAutoLock lck(this);
                 if (m_hr == S_OK) {
@@ -335,7 +331,8 @@ DWORD COutputQueue::ThreadProc()
                 //  In any case wait for more data - S_OK just
                 //  means there wasn't an error
 
-                //DPRINTF(_l("ReceiveMultiple returned %8.8X"), m_hr);
+                DbgLog((LOG_ERROR, 2, TEXT("ReceiveMultiple returned %8.8X"),
+                       m_hr));
             }
         }
 
@@ -350,10 +347,10 @@ DWORD COutputQueue::ThreadProc()
             //  EndOfStream() or notified the filter graph
 
             if (m_hr == S_OK) {
-                DPRINTF(_l("COutputQueue sending EndOfStream()"));
+                DbgLog((LOG_TRACE, 2, TEXT("COutputQueue sending EndOfStream()")));
                 HRESULT hr = m_pPin->EndOfStream();
                 if (FAILED(hr)) {
-                    DPRINTF(_l("COutputQueue got code 0x%8.8X from EndOfStream()"));
+                    DbgLog((LOG_ERROR, 2, TEXT("COutputQueue got code 0x%8.8X from EndOfStream()")));
                 }
             }
         }
@@ -415,7 +412,6 @@ COutputQueue::NewSegment(
             // critical section) that the packet immediately following a
             // NEW_SEGMENT value is a NewSegmentPacket containing the
             // parameters.
-            DPRINTF(_l("COutputQueue::NewSegment"));
             NewSegmentPacket * ppack = new NewSegmentPacket;
             if (ppack == NULL) {
                 return;
@@ -444,11 +440,11 @@ void COutputQueue::EOS()
             SendAnyway();
         }
         if (m_hr == S_OK) {
-            DPRINTF(_l("COutputQueue sending EndOfStream()"));
+            DbgLog((LOG_TRACE, 2, TEXT("COutputQueue sending EndOfStream()")));
             m_bFlushed = FALSE;
             HRESULT hr = m_pPin->EndOfStream();
             if (FAILED(hr)) {
-                DPRINTF(_l("COutputQueue got code 0x%8.8X from EndOfStream()"), hr);
+                DbgLog((LOG_ERROR, 2, TEXT("COutputQueue got code 0x%8.8X from EndOfStream()")));
             }
         }
     } else {
@@ -518,8 +514,6 @@ void COutputQueue::BeginFlush()
 // leave flush mode - pass this downstream
 void COutputQueue::EndFlush()
 {
-    if(!m_bFlushing)
-     return;
     {
         CAutoLock lck(this);
         ASSERT(m_bFlushing);
@@ -619,7 +613,8 @@ HRESULT COutputQueue::ReceiveMultiple (
             //  We're supposed to Release() them anyway!
             *nSamplesProcessed = 0;
             for (int i = 0; i < nSamples; i++) {
-                DPRINTF(_l("COutputQueue (direct) : Discarding %d samples code 0x%8.8X"), nSamples, m_hr);
+                DbgLog((LOG_TRACE, 3, TEXT("COutputQueue (direct) : Discarding %d samples code 0x%8.8X"),
+                        nSamples, m_hr));
                 ppSamples[i]->Release();
             }
 
@@ -650,7 +645,8 @@ HRESULT COutputQueue::ReceiveMultiple (
             if (m_nBatched == m_lBatchSize ||
                 nSamples == 0 && (m_bSendAnyway || !m_bBatchExact)) {
                 LONG nDone;
-                DPRINTF(_l("Batching %d samples"), m_nBatched);
+                DbgLog((LOG_TRACE, 4, TEXT("Batching %d samples"),
+                       m_nBatched));
 
                 if (m_hr == S_OK) {
                     m_hr = m_pInputPin->ReceiveMultiple(m_ppSamples,
@@ -676,7 +672,8 @@ HRESULT COutputQueue::ReceiveMultiple (
 
         if (m_hr != S_OK) {
             *nSamplesProcessed = 0;
-            DPRINTF(_l("COutputQueue (queued) : Discarding %d samples code 0x%8.8X"), nSamples, m_hr);
+            DbgLog((LOG_TRACE, 3, TEXT("COutputQueue (queued) : Discarding %d samples code 0x%8.8X"),
+                    nSamples, m_hr));
             for (int i = 0; i < nSamples; i++) {
                 ppSamples[i]->Release();
             }
@@ -689,7 +686,6 @@ HRESULT COutputQueue::ReceiveMultiple (
         *nSamplesProcessed = nSamples;
         if (!m_bBatchExact ||
             m_nBatched + m_List->GetCount() >= m_lBatchSize) {
-            //DPRINTF(_l("COutputQueue queued a sample"));
             NotifyThread();
         }
         return S_OK;
@@ -702,11 +698,9 @@ void COutputQueue::Reset()
     if (!IsQueued()) {
         m_hr = S_OK;
     } else {
-        {
-            CAutoLock lck(this);
-            QueueSample(RESET_PACKET);
-            NotifyThread();
-        }
+        CAutoLock lck(this);
+        QueueSample(RESET_PACKET);
+        NotifyThread();
         m_evFlushComplete.Wait();
     }
 }

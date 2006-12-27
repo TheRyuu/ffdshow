@@ -33,3 +33,5 @@
 #include "Teval.cpp"
 #include "TffdshowDecVideoOutputPin.cpp"
 #include "isNotCalledFromBlackList.cpp"
+#include "TListEmptyIMediaSamples.cpp"
+#include "TffOutputQ.cpp"

@@ -1,20 +1,39 @@
 /*
- * Added to support multi-thread related features
- * by Haruhiko Yamagata <h.yamagata@nifty.com> in 2006.
+ * Copyright (c) 2006 h.yamagata
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
 #include "stdafx.h"
-#include "TffdshowDecVideoOutputPin.h"
 #include "ffdebug.h"
+#include "TffdshowDecVideoOutputPin.h"
 #include "TpresetSettingsVideo.h"
 #include "Tlibmplayer.h"
+#include "TListEmptyIMediaSamples.h"
 
 TffdshowDecVideoOutputPin::TffdshowDecVideoOutputPin(
         TCHAR *pObjectName,
         TffdshowDecVideo *Ifdv,
         HRESULT * phr,
         LPCWSTR pName)
-    :CTransformOutputPin(pObjectName, Ifdv, phr, pName), fdv(Ifdv), queue(NULL), oldSettingOfMultiThread(-1), m_IsQueueListedApp(-1), isFirstFrame(true)
+    :CTransformOutputPin(pObjectName, Ifdv, phr, pName),
+    fdv(Ifdv),
+    queue(NULL),
+    oldSettingOfMultiThread(-1),
+    isFirstFrame(true),
+    buffers(NULL)
 {
  DPRINTF(_l("TffdshowDecVideoOutputPin::Constructor"));
 }
@@ -35,6 +54,11 @@ void TffdshowDecVideoOutputPin::freeQueue(void)
    queue=  NULL;
    hEvent= NULL;
   }
+ if(buffers)
+  {
+   delete buffers;
+   buffers=NULL;
+  }
 }
 
 HRESULT TffdshowDecVideoOutputPin::Deliver(IMediaSample * pSample)
@@ -45,23 +69,15 @@ HRESULT TffdshowDecVideoOutputPin::Deliver(IMediaSample * pSample)
   return S_FALSE;
 
  isFirstFrame= false;
- if(fdv->m_IsOldVideoRenderer==false && fdv->presetSettings->multiThread && m_IsQueueListedApp && !fdv->m_IsOldVMR9RenderlessAndRGB)
+ if(fdv->isQueue==1)
   {
-   oldSettingOfMultiThread= fdv->presetSettings->multiThread;
-   //oldSettingOfDontQueueInWMP= fdv->presetSettings->dontQueueInWMP;
    ASSERT(queue);
+   ASSERT(buffers);
    pSample->AddRef();
    return queue->Receive(pSample);
   }
  else
   {
-   if(fdv->presetSettings->multiThread != oldSettingOfMultiThread)
-    {
-     DPRINTF(_l("Setting of presetSettings->multiThread have been changed"));
-     SendAnyway();
-     oldSettingOfMultiThread= fdv->presetSettings->multiThread;
-     //oldSettingOfDontQueueInWMP= fdv->presetSettings->dontQueueInWMP;
-    }
    return m_pInputPin->Receive(pSample);
   }
 }
@@ -76,6 +92,8 @@ void TffdshowDecVideoOutputPin::waitUntillQueueCleanedUp(void)
   {
    WaitForSingleObject(hEvent, INFINITE);
   }
+ if(buffers)
+  buffers->freeAll();
 }
 
 void TffdshowDecVideoOutputPin::waitForPopEvent(void)
@@ -103,8 +121,10 @@ HRESULT TffdshowDecVideoOutputPin::DeliverBeginFlush(void)
    return VFW_E_NOT_CONNECTED;
   }
  fdv->m_aboutToFlash= true;
- if(fdv->m_IsOldVideoRenderer==false && oldSettingOfMultiThread && m_IsQueueListedApp && !fdv->m_IsOldVMR9RenderlessAndRGB)
+ if(fdv->isQueue==1)
   {
+   ASSERT(buffers);
+   buffers->BeginFlush();
    queue->BeginFlush();
   }
  else
@@ -121,9 +141,11 @@ HRESULT TffdshowDecVideoOutputPin::DeliverEndFlush(void)
   {
    return VFW_E_NOT_CONNECTED;
   }
- if(fdv->m_IsOldVideoRenderer==false && oldSettingOfMultiThread && m_IsQueueListedApp && !fdv->m_IsOldVMR9RenderlessAndRGB)
+ if(fdv->isQueue==1)
   {
+   ASSERT(buffers);
    queue->EndFlush();
+   buffers->EndFlush();
   }
  else
   {
@@ -139,10 +161,12 @@ HRESULT TffdshowDecVideoOutputPin::DeliverNewSegment( REFERENCE_TIME tStart, REF
   return VFW_E_NOT_CONNECTED;
 
  isFirstFrame= true;
- if(fdv->m_IsOldVideoRenderer==false && oldSettingOfMultiThread && m_IsQueueListedApp && !fdv->m_IsOldVMR9RenderlessAndRGB)
+ if(fdv->isQueue==1)
   {
    DPRINTF(_l("queue->NewSegment"));
    queue->NewSegment(tStart, tStop, dRate);
+   ASSERT(buffers);
+   buffers->NewSegment();
   }
  else
   {
@@ -159,7 +183,7 @@ HRESULT TffdshowDecVideoOutputPin::DeliverEndOfStream(void)
   {
    return VFW_E_NOT_CONNECTED;
   }
- if(fdv->m_IsOldVideoRenderer==false && oldSettingOfMultiThread && m_IsQueueListedApp && !fdv->m_IsOldVMR9RenderlessAndRGB)
+ if(fdv->isQueue==1)
   {
    queue->EOS();
    waitUntillQueueCleanedUp();
@@ -180,8 +204,15 @@ void TffdshowDecVideoOutputPin::SendAnyway(void)
  waitUntillQueueCleanedUp();
 }
 
+void TffdshowDecVideoOutputPin::BeginStop(void)
+{
+ if(buffers)
+  buffers->BeginStop();
+}
+
 HRESULT TffdshowDecVideoOutputPin::Inactive(void)
 {
+ DPRINTF(_l("TffdshowDecVideoOutputPin::Inactive"));
  if (m_Connected==NULL)
   return VFW_E_NOT_CONNECTED;
 
@@ -191,7 +222,22 @@ HRESULT TffdshowDecVideoOutputPin::Inactive(void)
    DPRINTF(_l("queue->Reset()"));
    queue->Reset();
   }
- return CBaseOutputPin::Inactive();
+ HRESULT hr=CBaseOutputPin::Inactive();
+ if(buffers)
+  buffers->EndStop();
+ return hr;
+}
+
+IMediaSample* TffdshowDecVideoOutputPin::GetBuffer(void)
+{
+ ASSERT(buffers);
+ return buffers->GetBuffer();
+}
+
+void TffdshowDecVideoOutputPin::addOne(void)
+{
+ ASSERT(buffers);
+ return buffers->addOne();
 }
 
 HRESULT TffdshowDecVideoOutputPin::CompleteConnect(IPin *pReceivePin)
@@ -203,7 +249,8 @@ HRESULT TffdshowDecVideoOutputPin::CompleteConnect(IPin *pReceivePin)
   {
    if(queue)
     freeQueue();
-   queue= new COutputQueue(pReceivePin, &phr, false, true, 1, false);
+   queue= new TffOutputQueue(this,pReceivePin, &phr, false, true, 1, false);
+   buffers= new ListEmptyIMediaSamples(this,fdv->ppropActual.cBuffers);
    hEvent= CreateEvent(NULL, false, false, NULL);
    queue->SetPopEvent(hEvent);
   }
@@ -250,6 +297,7 @@ STDMETHODIMP TffdshowDecVideoOutputPin::Connect(
  // it. If it is non-null and fully specified, we will just try to connect
  // with this.
 
+ DPRINTF(_l("TffdshowDecVideoOutputPin::Connect"));
  const CMediaType * ptype = (CMediaType*)pmt;
  HRESULT hr = AgreeMediaType(pReceivePin, ptype);
  if (FAILED(hr))
@@ -263,21 +311,4 @@ STDMETHODIMP TffdshowDecVideoOutputPin::Connect(
   }
  DPRINTF(_l("Connection succeeded"));
  return NOERROR;
-}
-
-int TffdshowDecVideoOutputPin::IsQueueListedApp(const char_t *exe)
-{
- if (!fdv->presetSettings) fdv->initPreset();
- if(fdv->presetSettings->useQueueOnlyIn)
-  {
-   strtok(fdv->presetSettings->useQueueOnlyInList,_l(";"),queuelistList);
-   for (strings::const_iterator b=queuelistList.begin();b!=queuelistList.end();b++)
-    if (DwStrcasecmp(*b,exe)==0)
-     return 1;
-   return 0;
-  }
- else
-  {
-   return 1;
-  }
 }

@@ -34,7 +34,7 @@ public:
     void BeginFlush();      // Begin flushing samples
 
     // re-enable receives (pass this downstream)
-    void EndFlush();        // Complete flush of samples - downstream
+    virtual void EndFlush();        // Complete flush of samples - downstream
                             // pin guaranteed not to block at this stage
 
     void EOS();             // Call this on End of stream
@@ -49,12 +49,12 @@ public:
     HRESULT Receive(IMediaSample *pSample);
 
     // do something with these media samples
-    HRESULT ReceiveMultiple (
+    virtual HRESULT ReceiveMultiple (
         IMediaSample **pSamples,
         long nSamples,
         long *nSamplesProcessed);
 
-    void Reset();           // Reset m_hr ready for more data
+    virtual void Reset();           // Reset m_hr ready for more data
 
     //  See if its idle or not
     BOOL IsIdle();
@@ -62,22 +62,16 @@ public:
     // give the class an event to fire after everything removed from the queue
     void SetPopEvent(HANDLE hEvent);
 
-    // Added by haruhiko yamagata. return handle of the worker thread
-    HANDLE GetWorkerThread(void){return m_hThread;}
-
-    // Added by haruhiko yamagata. return the numbers of objects in the list
-    int GetCount(void){return m_List->GetCount();}
-
 protected:
     static DWORD WINAPI InitialThreadProc(LPVOID pv);
-    DWORD ThreadProc();
+    virtual DWORD ThreadProc();
     BOOL  IsQueued()
     {
         return m_List != NULL;
     }
 
     //  The critical section MUST be held when this is called
-    void QueueSample(IMediaSample *pSample);
+    virtual void QueueSample(IMediaSample *pSample);
 
     BOOL IsSpecialSample(IMediaSample *pSample)
     {
@@ -85,7 +79,7 @@ protected:
     }
 
     //  Remove and Release() batched and queued samples
-    void FreeSamples();
+    virtual void FreeSamples();
 
     //  Notify the thread there is something to do
     void NotifyThread();

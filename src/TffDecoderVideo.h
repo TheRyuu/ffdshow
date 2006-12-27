@@ -465,6 +465,7 @@ private:
 protected:
  TffdshowDecVideoOutputPin *m_pOutputDecVideo;
  void assignThreadToProcessor(void);
+ int IsQueueListedApp(const char_t *exe);
  HRESULT Receive(IMediaSample *pSample);
  virtual void getMinMax(int id,int &min,int &max);
  virtual bool isStreamsMenu(void) const; 
@@ -475,6 +476,7 @@ protected:
  TpresetVideo *presetSettings;
  TglobalSettingsDecVideo *globalSettings;
  bool m_aboutToFlash;
+ int m_IsQueueListedApp;        // -1: first run, 0: false, 1: true
 private:
  HRESULT ReceiveI(IMediaSample *pSample);
  static const int VERSION=38;
@@ -493,11 +495,13 @@ private:
  TpinsVector<TtextInputPin> textpins;
  strings subtitleLanguages;
  int subCurLang;
+ int isQueue;
  bool m_IsOldVideoRenderer;    // Does Video Renderer support multithreading? true:not supported false:supported
  bool m_IsWMP;                 // Windows Media Player10/11's picture tuning doesn't work with queue. Perhaps "WMplayer video processing DMO"'s incomplete support for multithreading.
  bool m_IsZoomPlayer;
  bool m_IsOldVMR9RenderlessAndRGB;
  bool m_IsQueueError,m_IsYV12andVMR9;
+ bool m_IsVMR7,m_IsVMR9;
  HANDLE hReconnectEvent;
  ALLOCATOR_PROPERTIES ppropActual;
 
@@ -538,6 +542,7 @@ public:
  static const AMOVIESETUP_FILTER filter;
  static const DWORD defaultMerit;
  friend class TffdshowDecVideoOutputPin;
+ friend class ListEmptyIMediaSamples;
 };
 
 class TffdshowDecVideoRaw :public TffdshowDecVideo

@@ -3,14 +3,12 @@
 
 #include "transfrm.h"
 #include "TffdecoderVideo.h"
-#include "outputq.h"
+#include "TffOutputQ.h"
 
-#ifdef DEBUG
-#define MAX_SAMPLES_OPIN 30  // This may cause out of memory.
-#else
-#define MAX_SAMPLES_OPIN 10
-#endif
 class TffdshowDecVideo;
+class ListEmptyIMediaSamples;
+struct IMediaSample;
+
 class TffdshowDecVideoOutputPin : public CTransformOutputPin
 {
 protected:
@@ -19,11 +17,9 @@ protected:
  int oldSettingOfMultiThread;     // -1: first run, 0: false, 1: true
  void waitUntillQueueCleanedUp(void);
  void freeQueue(void);
- COutputQueue* queue;
- strings queuelistList;
- int m_IsQueueListedApp;        // -1: first run, 0: false, 1: true
+ TffOutputQueue* queue;
  bool isFirstFrame;
-
+ ListEmptyIMediaSamples* buffers;
 public:
  TffdshowDecVideoOutputPin(
         TCHAR *pObjectName,
@@ -43,10 +39,13 @@ public:
  virtual HRESULT DeliverNewSegment(REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate);
  void waitForPopEvent(void);
  void resetPopEvent(void);
+ IMediaSample* GetBuffer(void);
+ void addOne(void);
  IMemAllocator* GetAllocator(void) {return m_pAllocator;}
  void SendAnyway(void);
- int IsQueueListedApp(const char_t *exe);
+ void BeginStop(void);
  friend class TffdshowDecVideo;
+ friend class ListEmptyIMediaSamples;
 };
 
 #endif
