@@ -97,9 +97,10 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  OSD_time_on_ffdshowDuration(0),
  isOSD_time_on_ffdshow(false),
  OSD_time_on_ffdshowFirstRun(true),
- m_IsYV12andVMR9(false),
  isQueue(-1),
+ m_IsYV12andVMR9(false),
  m_IsQueueListedApp(-1)
+ //,m_IsYV12oddLines(false)
 {
  DPRINTF(_l("TffdshowDecVideo::Constructor"));
 #ifdef OSDTIMETABALE
@@ -276,6 +277,15 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
  BITMAPINFOHEADER bih;memset(&bih,0,sizeof(bih));
  bih.biSize  =sizeof(BITMAPINFOHEADER);
  bih.biWidth =pictOut.rectFull.dx;
+#if 0
+ DPRINTF(_l("%s"),c->name);
+ if(c->id == FF_CSP_420P && (pictOut.rectFull.dy & 1)) // YV12 and odd number lines.
+  {
+   pictOut.rectFull.dy++;
+   oldRect=pictOut.rectFull;
+   m_IsYV12oddLines=true;
+  }
+#endif
  bih.biHeight=pictOut.rectFull.dy;
  bih.biPlanes=WORD(c->numPlanes);
  bih.biCompression=c->fcc;
@@ -972,6 +982,25 @@ if (!outdv && hwDeinterlace)
  if (pOut->GetPointer(&dst)!=S_OK) 
   return S_FALSE;
  LONG dstSize=pOut->GetSize(); 
+ #if 0
+ if(m_IsVMR9)
+  {
+   IVMRSurface9* ivmr9;
+   IDirect3DSurface9* id3d9;
+   D3DSURFACE_DESC desc;
+   pOut->QueryInterface(IID_IVMRSurface9,(void**)&ivmr9);
+   if(ivmr9)
+    {
+     ivmr9->GetSurface(&id3d9);
+     if(id3d9)
+      {
+       id3d9->GetDesc(&desc);
+       id3d9->Release();
+      }
+     ivmr9->Release();
+    }
+  }
+ #endif
  HRESULT cr=imgFilters->convertOutputSample(pict,m_frame.dstColorspace,&dst,&m_frame.dstStride,dstSize,presetSettings->output);
  pOut->SetActualDataLength(cr==S_FALSE?dstSize:m_frame.dstSize);
  if(isOSD_time_on_ffdshow && m_pClock && rtStart!=REFTIME_INVALID)
