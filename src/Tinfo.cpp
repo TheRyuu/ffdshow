@@ -424,24 +424,26 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
      wasChange=true;
      if(val>=0)
       tsprintf(s,_l("%2d"),val);
-     else if(val == -1)
-      strcpyf(s,trans->translate(IDD_QUEUEMSG_1));
-     else if(val == -2)
-      strcpyf(s,trans->translate(IDD_QUEUEMSG_2));
-     else if(val == -3)
-      strcpyf(s,trans->translate(IDD_QUEUEMSG_3));
-     else if(val == -4)
-      strcpyf(s,trans->translate(IDD_QUEUEMSG_4));
-     else if(val == -5)
-      strcpyf(s,trans->translate(IDD_QUEUEMSG_5));
-     else if(val == -6)
-      strcpyf(s,trans->translate(IDD_QUEUEMSG_6));
-     else if(val == -7)
-      strcpyf(s,trans->translate(IDD_QUEUEMSG_7));
-     else if(val == -8)
+     else
       {
-       int late=(-1)*deciV->getLate()/10000;
-       tsprintf(s,_l("%s %4dms"),trans->translate(IDD_QUEUEMSG_8),late>0?late:0);
+       val=-1*val;
+       switch(val)
+        {
+          case IDD_QUEUEMSG_1:
+          case IDD_QUEUEMSG_2:
+          case IDD_QUEUEMSG_3:
+          case IDD_QUEUEMSG_4:
+          case IDD_QUEUEMSG_5:
+          case IDD_QUEUEMSG_6:
+          case IDD_QUEUEMSG_7:
+           strcpyf(s,trans->translate(val));
+           break;
+          case IDD_QUEUEMSG_8:
+           {
+            int late=(-1)*deciV->getLate()/10000;
+            tsprintf(s,_l("%s %4dms"),trans->translate(val),late>0?late:0);
+           }
+        }
       }
      return s;
     }

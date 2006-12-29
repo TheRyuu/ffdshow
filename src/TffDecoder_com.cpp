@@ -546,22 +546,22 @@ STDMETHODIMP_(int) TffdshowDecVideo::getQueuedCount(void)
  if(qCount)
   return qCount;
  if(!presetSettings->multiThread)
-  return -1;
+  return -1*IDD_QUEUEMSG_1;
  if(m_IsOldVideoRenderer)
-  return -2;
+  return -1*IDD_QUEUEMSG_5;
  if(m_IsYV12andVMR9)
-  return -7;
+  return -1*IDD_QUEUEMSG_7;
  const char_t *fileName=getExeflnm();
  if(_tcsnicmp(_l("wmplayer.exe"),fileName,13)==0)
-  return -6;
+  return -1*IDD_QUEUEMSG_6;
  if(!m_IsQueueListedApp)
-  return -3;
+  return -1*IDD_QUEUEMSG_3;
  if(m_IsOldVMR9RenderlessAndRGB)
-  return -4;
- if(m_IsQueueError)
-  return -5;
+  return -1*IDD_QUEUEMSG_4;
  if(m_IsVMR9)
-  return -8;
+  return -1*IDD_QUEUEMSG_8;
+ if(!m_IsVMR7)
+  return -1*IDD_QUEUEMSG_5;
  return 0;
 }
 

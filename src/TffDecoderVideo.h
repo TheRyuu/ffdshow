@@ -500,8 +500,8 @@ private:
  bool m_IsWMP;                 // Windows Media Player10/11's picture tuning doesn't work with queue. Perhaps "WMplayer video processing DMO"'s incomplete support for multithreading.
  bool m_IsZoomPlayer;
  bool m_IsOldVMR9RenderlessAndRGB;
- bool m_IsQueueError,m_IsYV12andVMR9;
- bool m_IsVMR7,m_IsVMR9;
+ bool m_IsYV12andVMR9;
+ bool m_IsVMR7,m_IsVMR9,m_IsOverlay;
  HANDLE hReconnectEvent;
  ALLOCATOR_PROPERTIES ppropActual;
 

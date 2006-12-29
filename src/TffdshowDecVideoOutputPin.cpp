@@ -72,7 +72,6 @@ HRESULT TffdshowDecVideoOutputPin::Deliver(IMediaSample * pSample)
  if(fdv->isQueue==1)
   {
    ASSERT(queue);
-   ASSERT(buffers);
    pSample->AddRef();
    return queue->Receive(pSample);
   }
@@ -123,8 +122,8 @@ HRESULT TffdshowDecVideoOutputPin::DeliverBeginFlush(void)
  fdv->m_aboutToFlash= true;
  if(fdv->isQueue==1)
   {
-   ASSERT(buffers);
-   buffers->BeginFlush();
+   if(buffers)
+    buffers->BeginFlush();
    queue->BeginFlush();
   }
  else
@@ -143,9 +142,9 @@ HRESULT TffdshowDecVideoOutputPin::DeliverEndFlush(void)
   }
  if(fdv->isQueue==1)
   {
-   ASSERT(buffers);
    queue->EndFlush();
-   buffers->EndFlush();
+   if(buffers)
+    buffers->EndFlush();
   }
  else
   {
@@ -165,8 +164,8 @@ HRESULT TffdshowDecVideoOutputPin::DeliverNewSegment( REFERENCE_TIME tStart, REF
   {
    DPRINTF(_l("queue->NewSegment"));
    queue->NewSegment(tStart, tStop, dRate);
-   ASSERT(buffers);
-   buffers->NewSegment();
+   if(buffers)
+    buffers->NewSegment();
   }
  else
   {
@@ -230,14 +229,16 @@ HRESULT TffdshowDecVideoOutputPin::Inactive(void)
 
 IMediaSample* TffdshowDecVideoOutputPin::GetBuffer(void)
 {
- ASSERT(buffers);
- return buffers->GetBuffer();
+ if(buffers)
+  return buffers->GetBuffer();
+ else
+  return NULL;
 }
 
 void TffdshowDecVideoOutputPin::addOne(void)
 {
- ASSERT(buffers);
- return buffers->addOne();
+ if(buffers)
+  return buffers->addOne();
 }
 
 HRESULT TffdshowDecVideoOutputPin::CompleteConnect(IPin *pReceivePin)
@@ -250,7 +251,8 @@ HRESULT TffdshowDecVideoOutputPin::CompleteConnect(IPin *pReceivePin)
    if(queue)
     freeQueue();
    queue= new TffOutputQueue(this,pReceivePin, &phr, false, true, 1, false);
-   buffers= new ListEmptyIMediaSamples(this,fdv->ppropActual.cBuffers);
+   if(fdv->m_IsVMR7)
+    buffers= new ListEmptyIMediaSamples(this,fdv->ppropActual.cBuffers);
    hEvent= CreateEvent(NULL, false, false, NULL);
    queue->SetPopEvent(hEvent);
   }
@@ -311,4 +313,22 @@ STDMETHODIMP TffdshowDecVideoOutputPin::Connect(
   }
  DPRINTF(_l("Connection succeeded"));
  return NOERROR;
+}
+
+HRESULT TffdshowDecVideoOutputPin::GetDeliveryBuffer(IMediaSample ** ppSample,
+ REFERENCE_TIME * pStartTime,
+ REFERENCE_TIME * pEndTime,
+ DWORD dwFlags)
+{
+ if (!m_pAllocator)
+  return E_NOINTERFACE;
+ if(fdv->isQueue && buffers)
+  {
+   if(*ppSample=buffers->GetBuffer())
+    return S_OK;
+   else
+    return E_FAIL;
+  }
+ else
+  return m_pAllocator->GetBuffer(ppSample,pStartTime,pEndTime,dwFlags);
 }

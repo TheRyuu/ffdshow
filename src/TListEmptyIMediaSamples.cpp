@@ -57,8 +57,10 @@ void ListEmptyIMediaSamples::addOne(void)
  if(flashing) return;
 
  IMediaSample *pOutSample;
+ if(!m_pOutputDecVideo->m_pAllocator)
+  return;
  //DPRINTF(_l("ListEmptyIMediaSamples::addOne about to call GetDeliveryBuffer"));
- HRESULT hr=m_pOutputDecVideo->GetDeliveryBuffer(&pOutSample, NULL, NULL, 0);
+ HRESULT hr= m_pOutputDecVideo->m_pAllocator->GetBuffer(&pOutSample, NULL, NULL, 0);
  //DPRINTF(_l("ListEmptyIMediaSamples::addOne GetDeliveryBuffer returned %x"),hr);
  if(SUCCEEDED(hr))
   {

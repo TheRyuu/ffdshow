@@ -44,7 +44,11 @@ public:
  IMemAllocator* GetAllocator(void) {return m_pAllocator;}
  void SendAnyway(void);
  void BeginStop(void);
- friend class TffdshowDecVideo;
+ HRESULT GetDeliveryBuffer(IMediaSample ** ppSample,
+  REFERENCE_TIME * pStartTime,
+  REFERENCE_TIME * pEndTime,
+  DWORD dwFlags);
+friend class TffdshowDecVideo;
  friend class ListEmptyIMediaSamples;
 };
 

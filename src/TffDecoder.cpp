@@ -97,12 +97,9 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  OSD_time_on_ffdshowDuration(0),
  isOSD_time_on_ffdshow(false),
  OSD_time_on_ffdshowFirstRun(true),
- m_IsQueueError(false),
  m_IsYV12andVMR9(false),
  isQueue(-1),
- m_IsQueueListedApp(-1),
- m_IsVMR7(false),
- m_IsVMR9(false)
+ m_IsQueueListedApp(-1)
 {
  DPRINTF(_l("TffdshowDecVideo::Constructor"));
 #ifdef OSDTIMETABALE
@@ -427,6 +424,7 @@ HRESULT TffdshowDecVideo::CompleteConnect(PIN_DIRECTION direction,IPin *pReceive
 HRESULT TffdshowDecVideo::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROPERTIES *ppropInputRequest)
 {
  DPRINTF(_l("TffdshowDecVideo::DecideBufferSize"));
+ m_IsVMR7=m_IsVMR9=m_IsOverlay= false;
  if (m_pInput->IsConnected()==FALSE)
   return E_UNEXPECTED;
 
@@ -438,6 +436,9 @@ HRESULT TffdshowDecVideo::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROP
  const CLSID &ref=GetCLSID(m_pOutput->GetConnected());
  if(isQueue==-1)
   isQueue=presetSettings->multiThread && m_IsQueueListedApp;
+ // Queue and Overlay Mixer works only in MPC and
+ // when Overlay Mixer is not connected to old video renderer(rare).
+ // If queue can't work with Overlay Mixer, IsOldRenderer() returns true.
  isQueue=isQueue && !m_IsOldVideoRenderer &&
    (ref==CLSID_OverlayMixer || ref==CLSID_VideoMixingRenderer || ref==CLSID_VideoMixingRenderer9);
  isQueue=isQueue && !(m_IsOldVMR9RenderlessAndRGB=IsOldVMR9RenderlessAndRGB()); // inform MPC about queue only when queue is effective.
@@ -507,6 +508,7 @@ HRESULT TffdshowDecVideo::DecideBufferSizeOld(IMemAllocator *pAlloc, ALLOCATOR_P
  * Overlay mixer doesn't want SetPropoerties called twice. After successfull call of SetPropoerties, it never allow us change the properties.
  * Old renderer doesn't support multithreading, so cBuffers should be 1.
  */
+ if(ref==CLSID_OverlayMixer) m_IsOverlay=true;
  int cBuffersMax; 
  if(isQueue==1)
   cBuffersMax= presetSettings->queueCount;
@@ -1060,7 +1062,6 @@ HRESULT TffdshowDecVideo::NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,
  OSD_time_on_ffdshowDuration=0;
  segmentStart=tStart;
  segmentFrameCnt=0;
- m_IsQueueError=false;
  for (size_t i=0;i<textpins.size();i++)
   if (textpins[i]->needSegment) 
    textpins[i]->NewSegment(tStart,tStop,dRate);
@@ -1337,24 +1338,14 @@ HRESULT TffdshowDecVideo::initializeOutputSample(IMediaSample **ppOutSample)
  HRESULT hr;
  if(isOSD_time_on_ffdshow && m_pClock)
   m_pClock->GetTime(&OSD_time_on_ffdshowBeforeGetBuffer);
- if(isQueue)
-  {
-   hr=S_OK;
-   pOutSample=m_pOutputDecVideo->GetBuffer();
-  }
- else
-  {
-   //DPRINTF(_l("About to call GetDeliveryBuffer"));
-   hr=m_pOutput->GetDeliveryBuffer(&pOutSample,
-                                   pProps->dwSampleFlags&AM_SAMPLE_TIMEVALID?&pProps->tStart:NULL,
-                                   pProps->dwSampleFlags&AM_SAMPLE_STOPVALID?&pProps->tStop :NULL,
-                                   dwFlags);
-   //DPRINTF(_l("GetDeliveryBuffer returned %x"),hr);
-  }
+ //DPRINTF(_l("About to call GetDeliveryBuffer"));
+ hr=m_pOutputDecVideo->GetDeliveryBuffer(&pOutSample,
+                                pProps->dwSampleFlags&AM_SAMPLE_TIMEVALID?&pProps->tStart:NULL,
+                                pProps->dwSampleFlags&AM_SAMPLE_STOPVALID?&pProps->tStop :NULL,
+                                dwFlags);
+ //DPRINTF(_l("GetDeliveryBuffer returned %x"),hr);
  if(isOSD_time_on_ffdshow && m_pClock)
   m_pClock->GetTime(&OSD_time_on_ffdshowAfterGetBuffer);
- if(!pOutSample)
-  return E_FAIL;
  if (FAILED(hr))
   return hr;
  *ppOutSample=pOutSample;

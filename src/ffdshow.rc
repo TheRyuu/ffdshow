@@ -2970,7 +2970,7 @@ BEGIN
     IDD_QUEUEMSG_2          "off: old video renderer does not support queue"
     IDD_QUEUEMSG_3          "off: the application is not listed in 'Use queue only in:'"
     IDD_QUEUEMSG_4          "off: Update MPC. http://ffdshow.faireal.net/"
-    IDD_QUEUEMSG_5          "not effective: The video renderer in use does not support queue."
+    IDD_QUEUEMSG_5          "off: The video renderer in use is not supported."
     IDD_QUEUEMSG_6          "off: In Windows Media Player, queueing is not suported."
     IDD_QUEUEMSG_7          "off: Because some video driver can't work with YV12 + VMR9 + queue."
     IDD_QUEUEMSG_8          "VMR9's internal queue."
@@ -3006,4 +3006,5 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
+
 
