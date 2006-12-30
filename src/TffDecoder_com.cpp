@@ -560,7 +560,7 @@ STDMETHODIMP_(int) TffdshowDecVideo::getQueuedCount(void)
   return -1*IDD_QUEUEMSG_4;
  if(m_IsVMR9)
   return -1*IDD_QUEUEMSG_8;
- if(!m_IsVMR7)
+ if(!isQueue)
   return -1*IDD_QUEUEMSG_5;
  return 0;
 }
