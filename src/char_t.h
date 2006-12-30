@@ -56,8 +56,8 @@ static __forceinline FILE* fopen(const wchar_t *a, const wchar_t *b) {return _wf
 static __forceinline int fputs(const wchar_t *a, FILE *b) {return fputws(a,b);}
 static __forceinline int _stricoll(const wchar_t *a, const wchar_t *b) {return _wcsicoll(a,b);}
 static __forceinline wchar_t* strrchr(const wchar_t *a, wchar_t b) {return (wchar_t*)wcsrchr(a,b);}
-static __forceinline wchar_t* strupr(wchar_t *a) {return wcsupr(a);}
-static __forceinline wchar_t* strlwr(wchar_t *a) {return wcslwr(a);}
+static __forceinline wchar_t* strupr(wchar_t *a) {return _wcsupr(a);}
+static __forceinline wchar_t* strlwr(wchar_t *a) {return _wcslwr(a);}
 static __forceinline wchar_t* _strtime(wchar_t *a) {return _wstrtime(a);}
 static __forceinline wchar_t* memchr(wchar_t *a,wchar_t b,size_t c) {return wmemchr(a,b,c);}
 static __forceinline const wchar_t* memchr(const wchar_t *a,wchar_t b,size_t c) {return wmemchr(a,b,c);}
