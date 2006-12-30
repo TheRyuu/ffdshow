@@ -388,12 +388,12 @@ void TffPict::convertCSP(int Icsp,Tbuffer &buf,int edge)
     } 
    size_t size=0;
    for (unsigned int i=0;i<cspInfo.numPlanes;i++)
-    size+=stride[i]*(((rectFull.dy+1)>>cspInfo.shiftY[i])+edge); // rectFull.dy should be added by 1 when rectFull.dy is odd number. 
+    size+=stride[i]*((ODD2EVEN(rectFull.dy)>>cspInfo.shiftY[i])+edge); // rectFull.dy should be added by 1 when rectFull.dy is odd number. 
    buf.allocZ(size,128); 
    data[0]=buf;
-   data[1]=data[0]+stride[0]*(((rectFull.dy+1)>>cspInfo.shiftY[0])+edge);
-   data[2]=data[1]+stride[1]*(((rectFull.dy+1)>>cspInfo.shiftY[1])+edge);
-   data[3]=data[2]+stride[2]*(((rectFull.dy+1)>>cspInfo.shiftY[2])+edge);
+   data[1]=data[0]+stride[0]*((ODD2EVEN(rectFull.dy)>>cspInfo.shiftY[0])+edge);
+   data[2]=data[1]+stride[1]*((ODD2EVEN(rectFull.dy)>>cspInfo.shiftY[1])+edge);
+   data[3]=data[2]+stride[2]*((ODD2EVEN(rectFull.dy)>>cspInfo.shiftY[2])+edge);
   }
  else 
   {
