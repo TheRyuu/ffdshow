@@ -251,8 +251,8 @@ HRESULT TffdshowDecVideoOutputPin::CompleteConnect(IPin *pReceivePin)
    if(queue)
     freeQueue();
    queue= new TffOutputQueue(this,pReceivePin, &phr, false, true, 1, false);
-   if(fdv->m_IsVMR7)
-    buffers= new ListEmptyIMediaSamples(this,fdv->ppropActual.cBuffers);
+   //if(fdv->m_IsVMR7)
+   // buffers= new ListEmptyIMediaSamples(this,fdv->ppropActual.cBuffers);
    hEvent= CreateEvent(NULL, false, false, NULL);
    queue->SetPopEvent(hEvent);
   }
