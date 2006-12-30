@@ -2,6 +2,7 @@
 #define _FFIMGFMT_H_
 
 //================================ ffdshow ==================================
+#define ODD2EVEN(x) x&1?x+1:x
 
 enum
 {

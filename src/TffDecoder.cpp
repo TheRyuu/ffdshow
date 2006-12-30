@@ -277,15 +277,10 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
  BITMAPINFOHEADER bih;memset(&bih,0,sizeof(bih));
  bih.biSize  =sizeof(BITMAPINFOHEADER);
  bih.biWidth =pictOut.rectFull.dx;
-#if 0
- DPRINTF(_l("%s"),c->name);
- if(c->id == FF_CSP_420P && (pictOut.rectFull.dy & 1)) // YV12 and odd number lines.
+ if(c->id == FF_CSP_420P)    // YV12 and odd number lines.
   {
-   pictOut.rectFull.dy++;
-   oldRect=pictOut.rectFull;
-   m_IsYV12oddLines=true;
+   pictOut.rectFull.dy=ODD2EVEN(pictOut.rectFull.dy);
   }
-#endif
  bih.biHeight=pictOut.rectFull.dy;
  bih.biPlanes=WORD(c->numPlanes);
  bih.biCompression=c->fcc;
@@ -1217,13 +1212,16 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
    if(!m_pOutput->IsConnected())
     return VFW_E_NOT_CONNECTED;
 
+   int newdy=newpict.rectFull.dy;
+   if(newpict.cspInfo.id==FF_CSP_420P)
+    newdy=ODD2EVEN(newdy);
    CMediaType &mt=m_pOutput->CurrentMediaType();
    BITMAPINFOHEADER *bmi=NULL;
    if (mt.formattype==FORMAT_VideoInfo)
     {
      VIDEOINFOHEADER *vih=(VIDEOINFOHEADER*)mt.Format();
-     SetRect(&vih->rcSource,0,0,newpict.rectFull.dx,newpict.rectFull.dy);
-     SetRect(&vih->rcTarget,0,0,newpict.rectFull.dx,newpict.rectFull.dy);
+     SetRect(&vih->rcSource,0,0,newpict.rectFull.dx,newdy);
+     SetRect(&vih->rcTarget,0,0,newpict.rectFull.dx,newdy);
      bmi=&vih->bmiHeader;
      //bmi->biXPelsPerMeter = m_win * m_aryin;
      //bmi->biYPelsPerMeter = m_hin * m_arxin;
@@ -1231,8 +1229,8 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
    else if (mt.formattype==FORMAT_VideoInfo2)
     {
      VIDEOINFOHEADER2* vih=(VIDEOINFOHEADER2*)mt.Format();
-     SetRect(&vih->rcSource,0,0,newpict.rectFull.dx,newpict.rectFull.dy);
-     SetRect(&vih->rcTarget,0,0,newpict.rectFull.dx,newpict.rectFull.dy);
+     SetRect(&vih->rcSource,0,0,newpict.rectFull.dx,newdy);
+     SetRect(&vih->rcTarget,0,0,newpict.rectFull.dx,newdy);
      bmi=&vih->bmiHeader;
      setVIH2aspect(vih,newpict.rectFull,presetSettings->output->hwOverlayAspect);
      if(presetSettings->resize->is && presetSettings->resize->dy==0 && presetSettings->resize->mode==0)
@@ -1243,8 +1241,8 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
     }
 
    bmi->biWidth=newpict.rectFull.dx;
-   bmi->biHeight=newpict.rectFull.dy;
-   bmi->biSizeImage=newpict.rectFull.dx*newpict.rectFull.dy*bmi->biBitCount>>3;
+   bmi->biHeight=newdy;
+   bmi->biSizeImage=newpict.rectFull.dx*newdy*bmi->biBitCount>>3;
 
    FILTER_INFO filtInfo;
    IPinConnection* ipinConnection= NULL;  // if this is not supported, dynamic reconnect fails.
@@ -1332,7 +1330,7 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
     }
 
    // some renderers don't send this
-   NotifyEvent(EC_VIDEO_SIZE_CHANGED,MAKELPARAM(newpict.rectFull.dx,newpict.rectFull.dy),0);
+   NotifyEvent(EC_VIDEO_SIZE_CHANGED,MAKELPARAM(newpict.rectFull.dx,newdy),0);
    oldRect=newpict.rectFull;
    return S_OK;
   }

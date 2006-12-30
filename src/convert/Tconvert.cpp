@@ -49,6 +49,7 @@ void Tconvert::init(Tlibmplayer *Ilibmplayer,bool IavisynthYV12_RGB,unsigned int
  libmplayer=Ilibmplayer;
  dx=Idx;
  dy=Idy&~1;
+ outdy=Idy;
  swscale=NULL;
  oldincsp=oldoutcsp=-1;incspInfo=outcspInfo=NULL;
  initsws=true;
@@ -108,8 +109,22 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
    wasChange=true;
   }
  else wasChange=false;
- const unsigned char *src[]={src0[0],src0[1],src0[2],src0[3]};stride_t srcStride[]={srcStride0[0],srcStride0[1],srcStride0[2],srcStride0[3]};csp_yuv_adj_to_plane(incsp ,incspInfo ,dy,(unsigned char**)src,srcStride);csp_yuv_order(incsp ,(unsigned char**)src,srcStride);csp_vflip(incsp ,incspInfo, (unsigned char**)src,srcStride,dy);
- unsigned char       *dst[]={dst0[0],dst0[1],dst0[2],dst0[3]};stride_t dstStride[]={dstStride0[0],dstStride0[1],dstStride0[2],dstStride0[3]};csp_yuv_adj_to_plane(outcsp,outcspInfo,dy,(unsigned char**)dst,dstStride);csp_yuv_order(outcsp,(unsigned char**)dst,dstStride);csp_vflip(outcsp,outcspInfo,(unsigned char**)dst,dstStride,dy);
+
+ const unsigned char *src[]={src0[0],src0[1],src0[2],src0[3]};
+ stride_t srcStride[]={srcStride0[0],srcStride0[1],srcStride0[2],srcStride0[3]};
+ csp_yuv_adj_to_plane(incsp ,incspInfo ,dy,(unsigned char**)src,srcStride);
+ csp_yuv_order(incsp ,(unsigned char**)src,srcStride);
+ csp_vflip(incsp ,incspInfo, (unsigned char**)src,srcStride,dy);
+
+ unsigned char *dst[]={dst0[0],dst0[1],dst0[2],dst0[3]};
+ stride_t dstStride[]={dstStride0[0],dstStride0[1],dstStride0[2],dstStride0[3]};
+ if(outcspInfo->id==FF_CSP_420P)
+  csp_yuv_adj_to_plane(outcsp,outcspInfo,ODD2EVEN(outdy),(unsigned char**)dst,dstStride);
+ else
+  csp_yuv_adj_to_plane(outcsp,outcspInfo,dy,(unsigned char**)dst,dstStride);
+ csp_yuv_order(outcsp,(unsigned char**)dst,dstStride);
+ csp_vflip(outcsp,outcspInfo,(unsigned char**)dst,dstStride,dy);
+
  if (wasChange || oldincsp!=incsp || oldoutcsp!=outcsp)
   {
    oldincsp=incsp;oldoutcsp=outcsp;
@@ -312,10 +327,10 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
     {
      IMAGE srcPict;srcPict.y=(unsigned char*)src[0];srcPict.u=(unsigned char*)src[1];srcPict.v=(unsigned char*)src[2];
      image_output(&srcPict,
-                  dx,dy,srcStride,
+                  dx,outdy,srcStride,
                   dst,dstStride,
                   outcsp&~FF_CSP_FLAGS_INTERLACED,outcsp&FF_CSP_FLAGS_INTERLACED,(incsp|outcsp)&FF_CSP_FLAGS_YUV_JPEG);
-     return dy;
+     return outdy;
     }
    case MODE_avisynth_yuy2_to_yv12:
     avisynth_yuy2_to_yv12(src[0],dx*2,srcStride[0],

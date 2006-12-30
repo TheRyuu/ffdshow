@@ -127,7 +127,14 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
    inited=false;
    newpict.rectFull=pict.rectFull;newpict.rectClip=pict.rectClip;
    getOutputFmt(newpict,cfg);
-   if (pict.rectClip!=newpict.rectClip || pict.rectFull!=newpict.rectFull)
+   if ((pict.rectClip!=newpict.rectClip || pict.rectFull!=newpict.rectFull) 
+      &&!(   pict.cspInfo.id==FF_CSP_420P       // I want to avoid resizing here. YV12 odd number lines.
+          && pict.rectFull==newpict.rectFull
+          && newpict.rectClip.dy==(pict.rectClip.dy&~1)
+          && newpict.rectClip.dx==pict.rectClip.dx
+          && newpict.rectClip.x==pict.rectClip.x
+          && newpict.rectClip.y==pict.rectClip.y
+          ))
     {
      switch (TresizeAspectSettings::methodsProps[oldSettings.methodLuma].library)
       {
