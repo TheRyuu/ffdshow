@@ -760,6 +760,9 @@
 				RelativePath="src\TffdshowVideoInputPin.cpp">
 			</File>
 			<File
+				RelativePath=".\src\TffOutputQ.cpp">
+			</File>
+			<File
 				RelativePath=".\src\TffProcBase.cpp">
 			</File>
 			<File
@@ -770,6 +773,9 @@
 			</File>
 			<File
 				RelativePath="src\TkeyboardDirect.cpp">
+			</File>
+			<File
+				RelativePath=".\src\TListEmptyIMediaSamples.cpp">
 			</File>
 			<File
 				RelativePath="src\TtextInputPin.cpp">
@@ -956,6 +962,9 @@
 				RelativePath="src\TffdshowVideoInputPin.h">
 			</File>
 			<File
+				RelativePath=".\src\TffOutputQ.h">
+			</File>
+			<File
 				RelativePath=".\src\TffProcBase.h">
 			</File>
 			<File
@@ -966,6 +975,9 @@
 			</File>
 			<File
 				RelativePath="src\TkeyboardDirect.h">
+			</File>
+			<File
+				RelativePath=".\src\TListEmptyIMediaSamples.h">
 			</File>
 			<File
 				RelativePath="src\TtextInputPin.h">

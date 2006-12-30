@@ -712,6 +712,10 @@
 		<File 
 			RelativePath=".\src\TtrayIcon.cpp"/>
 		<File 
+			RelativePath=".\src\TListEmptyIMediaSamples.cpp"/>
+		<File 
+			RelativePath=".\src\TffOutputQ.cpp"/>
+		<File 
 			RelativePath=".\src\array_allocator.h"/>
 		<File 
 			RelativePath=".\src\autoptr.h"/>
@@ -879,6 +883,10 @@
 			RelativePath=".\src\uClibc++\utility"/>
 		<File 
 			RelativePath=".\src\uClibc++\vector"/>
+		<File 
+			RelativePath=".\src\TListEmptyIMediaSamples.h"/>
+		<File 
+			RelativePath=".\src\TffOutputQ.h"/>
 		<File 
 			RelativePath=".\src\arrows.bmp"/>
 		<File 
