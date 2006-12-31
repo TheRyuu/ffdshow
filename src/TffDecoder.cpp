@@ -820,7 +820,7 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
  if (pict.mediatimeStart!=REFTIME_INVALID)
   currentFrame=(unsigned long)pict.mediatimeStart;
  else if (frameTimeOk==S_OK && inpin->avgTimePerFrame)
-  currentFrame=long((pict.rtStart+segmentStart)/inpin->avgTimePerFrame);
+  currentFrame=long((pict.rtStart+segmentStart)/(inpin->avgTimePerFrame*1.0)+0.5);
  else
   currentFrame++; 
 
