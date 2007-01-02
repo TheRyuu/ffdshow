@@ -8,7 +8,7 @@ class TpostProcPage :public TconfPageDecVideo
 private:
  void postProc2dlg(void),setPPchbs(void);
  void strength2dlg(void);
- void mplayer2dlg(int is),mplayer2dlg_1(void),nic2dlg(int is),nic2dlg_1(void),h2642dlg(void);
+ void mplayer2dlg(int is),mplayer2dlg_1(void),nic2dlg(int is),nic2dlg_1(void);
  void onAuto(void);
  static const int idMplayer[],idNics[],idSPP[];
 protected:

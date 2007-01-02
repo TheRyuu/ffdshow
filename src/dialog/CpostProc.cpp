@@ -31,10 +31,6 @@ void TpostProcPage::init(void)
  tbrSetRange(IDC_TBR_DEBLOCKSTRENGTH,0,512,32);
  tbrSetRange(IDC_TBR_POSTPROC_NIC_XTHRES,0,255,16);
  tbrSetRange(IDC_TBR_POSTPROC_NIC_YTHRES,0,255,16);
-#ifdef H264PP
- cbxSetDroppedWidth(IDC_CBX_POSTPROC_H264,int(cbxGetDroppedWidth(IDC_CBX_POSTPROC_H264)*1.3));
- addHint(IDC_CBX_POSTPROC_H264,_l("H.264 deblocking disables all other deblocking methods"));
-#endif
 }
 
 void TpostProcPage::cfg2dlg(void)
@@ -70,9 +66,6 @@ void TpostProcPage::postProc2dlg(void)
  setPPchbs();
  setCheck(IDC_RBT_PPPRESETS,!cfgGet(IDFF_ppIsCustom));
  setCheck(IDC_RBT_PPCUSTOM , cfgGet(IDFF_ppIsCustom));
-#ifdef H264PP
- h2642dlg();
-#endif
 }
 void TpostProcPage::strength2dlg(void)
 {
@@ -110,21 +103,6 @@ void TpostProcPage::nic2dlg_1(void)
 {
  nic2dlg(-1);
 }
-#ifdef H264PP
-void TpostProcPage::h2642dlg(void)
-{
- int h264mode=cfgGet(IDFF_postprocH264mode);
- cbxSetCurSel(IDC_CBX_POSTPROC_H264,h264mode);
- /*
- if (h264mode==0)
-  {
-   enable(0,idMplayer);
-   enable(0,idNics);
-   enable(0,idSPP);
-  }*/ 
-}
-#endif
-
 void TpostProcPage::setPPchbs(void)
 {
  unsigned int ppmode; 
@@ -231,10 +209,6 @@ void TpostProcPage::onFrame(void)
 void TpostProcPage::translate(void)
 {
  TconfPageDecVideo::translate();
-
-#ifdef H264PP
- cbxTranslate(IDC_CBX_POSTPROC_H264,TpostprocSettings::h264modes);
-#endif
 }
 
 TpostProcPage::TpostProcPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecVideo(Iparent,idff)
@@ -269,9 +243,6 @@ TpostProcPage::TpostProcPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):T
  bindRadioButtons(rbt);
  static const TbindCombobox<TpostProcPage> cbx[]=
   {
-#ifdef H264PP
-   IDC_CBX_POSTPROC_H264,IDFF_postprocH264mode,BINDCBX_SEL,&TpostProcPage::h2642dlg,
-#endif
    0
   };
  bindComboboxes(cbx);

@@ -153,7 +153,6 @@
 #define IDFF_postprocNicXthresh     115
 #define IDFF_postprocNicYthresh     116
 #define IDFF_postprocSPPmode        119
-#define IDFF_postprocH264mode       122 //0 - never, 1 - always, 2 - when decoding h.264, 3 - when decoding h.264 and decoder deblocking is off
 
 #define IDFF_filterDeinterlace         1400
 #define IDFF_isDeinterlace             1401

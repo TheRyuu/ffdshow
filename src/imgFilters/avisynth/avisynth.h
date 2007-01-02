@@ -626,7 +626,7 @@ public:
   AVSValue(float f) { type = 'f'; floating_pt = f; }
   AVSValue(double f) { type = 'f'; floating_pt = float(f); }
   AVSValue(const char* s) { type = 's'; string = s; }
-  AVSValue(const AVSValue* a, int size) { type = 'a'; array = a; array_size = size; }
+  AVSValue(const AVSValue* a, int size) { type = 'a'; array = a; array_size = (short)size; }
   AVSValue(const AVSValue& v) { Assign(&v, true); }
 
   ~AVSValue() { if (IsClip() && clip) clip->Release(); }

@@ -94,47 +94,6 @@ public:
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
 };
 
-#if H264PP
-DECLARE_FILTER(TimgFilterPostprocH264,public,TimgFilterPostprocBase)
-private:
- static const int alphas[52],betas[52],cs[52];
- typedef void (Tfilter)(uint8_t *pix, stride_t stride, int alpha, int beta, const int *tc0);
- Tfilter *h264_h_loop_filter_luma,*h264_v_loop_filter_luma;
- Tfilter *h264_h_loop_filter_chroma,*h264_v_loop_filter_chroma;
- static __forceinline void h264_loop_filter_luma_c(uint8_t *pix, stride_t xstride, stride_t ystride, int alpha, int beta, const int *tc0);
- static void h264_h_loop_filter_luma_c(uint8_t *pix, stride_t stride, int alpha, int beta, const int *tc0);
- static void h264_v_loop_filter_luma_c(uint8_t *pix, stride_t stride, int alpha, int beta, const int *tc0);
- static __forceinline void h264_loop_filter_chroma_c(uint8_t *pix, stride_t xstride, stride_t ystride, int alpha, int beta, const int *tc0);
- static void h264_v_loop_filter_chroma_c(uint8_t *pix, stride_t stride, int alpha, int beta, const int *tc0);
- static void h264_h_loop_filter_chroma_c(uint8_t *pix, stride_t stride, int alpha, int beta, const int *tc0);
- static __forceinline void h264_loop_filter_chroma_intra_c(uint8_t *pix, stride_t xstride, stride_t ystride, int alpha, int beta);
- static void h264_v_loop_filter_chroma_intra_c(uint8_t *pix, stride_t stride, int alpha, int beta);
- static void h264_h_loop_filter_chroma_intra_c(uint8_t *pix, stride_t stride, int alpha, int beta);
-
- static __forceinline void transpose4x4(uint8_t *dst, uint8_t *src, stride_t dst_stride, stride_t src_stride);
- static __forceinline void H264_DEBLOCK_P0_Q0(const __m64 &pb_01, const __m64 &pb_3f,__m64 &mm0,__m64 &mm1,__m64 &mm2,__m64 &mm3,__m64 &mm4,__m64 &mm5,__m64 &mm6,__m64 &mm7);
- static __forceinline void DIFF_GT_MMX(__m64 &x,__m64 &y,__m64 &a,__m64 &o,__m64 &t);
- static __forceinline void H264_DEBLOCK_Q1(__m64 &p1, __m64 &q2, uint8_t *q2addr, uint8_t *q1addr, __m64 &tc0, __m64 &tmp,__m64 &mm1,__m64 &mm2,const __m64 &mm_bone);
- template<class Tsimd> struct TloopFilter
-  {
-  private:
-   static __forceinline void H264_DEBLOCK_MASK(int alpha1,int beta1,__m64 &mm0,__m64 &mm1,__m64 &mm2,__m64 &mm3,__m64 &mm4,__m64 &mm5,__m64 &mm6,__m64 &mm7);
-   static __forceinline void h264_loop_filter_luma_mmx2(uint8_t *pix, stride_t stride, int alpha1, int beta1, const int *tc0);
-   static __forceinline void h264_loop_filter_chroma_mmx2(uint8_t *pix, stride_t stride, int alpha1, int beta1, const int *tc0);
-  public: 
-   static void h264_v_loop_filter_luma(uint8_t *pix, stride_t stride, int alpha, int beta, const int *tc0);
-   static void h264_h_loop_filter_luma(uint8_t *pix, stride_t stride, int alpha, int beta, const int *tc0);
-   static void h264_v_loop_filter_chroma(uint8_t *pix, stride_t stride, int alpha, int beta, const int *tc0);
-   static void h264_h_loop_filter_chroma(uint8_t *pix, stride_t stride, int alpha, int beta, const int *tc0);
-  };
-protected:
- virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSP_420P;}
-public:
- TimgFilterPostprocH264(IffdshowBase *Ideci,Tfilters *Iparent);
- virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
-};
-#endif
-
 DECLARE_FILTER(TimgFilterPostprocFspp,public,TimgFilterPostprocBase)
 private:
  void filter(uint8_t *dst, const uint8_t *src,

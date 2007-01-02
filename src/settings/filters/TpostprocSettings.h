@@ -22,7 +22,6 @@ public:
  int fullYrange;
  int nicXthresh,nicYthresh;
  int sppMode;
- int h264mode;static const char_t* h264modes[];
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;
  virtual void createPages(TffdshowPageDec *parent) const;
  virtual bool getTip(unsigned int pageId,char_t *buf,size_t buflen);

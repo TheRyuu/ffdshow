@@ -37,15 +37,6 @@ const TfilterIDFF TpostprocSettings::idffs=
  /*dlgId*/     IDD_POSTPROC,
 };
 
-const char_t* TpostprocSettings::h264modes[]=
-{
- _l("off"),
- _l("always"),
- _l("when decoding H.264 video"),
- _l("when decoding H.264 video and decoder deblocking is off"),
- NULL
-};
-
 TpostprocSettings::TpostprocSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSettingsVideo(sizeof(*this),Icoll,filters,&idffs)
 {
  //levelFixChrom=0;
@@ -91,14 +82,9 @@ TpostprocSettings::TpostprocSettings(TintStrColl *Icoll,TfilterIDFFs *filters):T
      _l("postprocNicYthresh"),40,
    IDFF_postprocSPPmode       ,&TpostprocSettings::sppMode               ,0,1,_l(""),1,
      _l("postprocSPPmode"),0,
-#ifdef H264PP
-   IDFF_postprocH264mode      ,&TpostprocSettings::h264mode              ,0,3,_l(""),1,
-     _l("postprocH264mode"),3,  
-#endif
    0
   };
  addOptions(iopts);
- //static const TcreateParamList1 listH264modes(TpostprocSettings::h264modes);setParamList(IDFF_postprocH264mode,&listH264modes);
 }
 
 void TpostprocSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
@@ -110,9 +96,7 @@ void TpostprocSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfil
     {
      setOnChange(IDFF_postprocMethod,filters,&Tfilters::onQueueChange);
      setOnChange(IDFF_postprocMethodNicFirst,filters,&Tfilters::onQueueChange);
-     setOnChange(IDFF_postprocH264mode,filters,&Tfilters::onQueueChange);
-    } 
-   if (h264mode!=1)
+    }
     switch (method)
      {
       case 0:
@@ -136,10 +120,6 @@ void TpostprocSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfil
       case 5:
        queueFilter<TimgFilterPostprocFspp>(filtersorder,filters,queue); break;
      }
-#ifdef H264PP
-   if (h264mode!=0)
-    queueFilter<TimgFilterPostprocH264>(filtersorder,filters,queue); 
-#endif
   }  
 }
 void TpostprocSettings::createPages(TffdshowPageDec *parent) const
@@ -157,7 +137,7 @@ const int* TpostprocSettings::getResets(unsigned int pageId)
   IDFF_deblockStrength,
   IDFF_levelFixLum,/*IDFF_levelFixChrom,*/IDFF_fullYrange,
   IDFF_postprocNicXthresh,IDFF_postprocNicYthresh,
-  IDFF_postprocSPPmode,IDFF_postprocH264mode,
+  IDFF_postprocSPPmode,
   0};
  return idResets;
 }
