@@ -1812,13 +1812,13 @@ static void safe_packed_conv(uint8_t * x_ptr, stride_t x_stride,
 
         func_opt(x_ptr, x_stride,
                         y_ptr, u_ptr, v_ptr, y_stride, uv_stride,
-                        width_opt, height);
+                        width_opt, height&~1);
         if (width_c)
         {
                 _mm_empty();
                 func_c(x_ptr + size*width_opt, x_stride,
                         y_ptr + width_opt, u_ptr + width_opt/2, v_ptr + width_opt/2,
-                        y_stride, uv_stride, width_c, height);
+                        y_stride, uv_stride, width_c, height&~1);
         }
 }
 
