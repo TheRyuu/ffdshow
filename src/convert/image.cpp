@@ -33,6 +33,7 @@
 #include "ffImgfmt.h"
 #include "Tconfig.h"
 #include "simd.h"
+#include "ffdebug.h"
 
 typedef void (packedFunc)(uint8_t * x_ptr,
                           stride_t x_stride,
@@ -378,7 +379,8 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
    static __forceinline void PROCESS(uint8_t *x_ptr,stride_t x_stride,
                                      uint8_t *y_ptr,stride_t y_stride,
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
-                                     int r[4],int g[4],int b[4])
+                                     int r[4],int g[4],int b[4],
+                                     bool full=true)
     {
      int b_u = YUV_RGB_DATA<CCIR>::B_U_tab[ u_ptr[0] ];
      int g_uv = YUV_RGB_DATA<CCIR>::G_U_tab[ u_ptr[0] ] + YUV_RGB_DATA<CCIR>::G_V_tab[ v_ptr[0] ];
@@ -399,18 +401,25 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
    static __forceinline void PROCESS(uint8_t *x_ptr,stride_t x_stride,
                                      uint8_t *y_ptr,stride_t y_stride,
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
-                                     int r[4],int g[4],int b[4])
+                                     int r[4],int g[4],int b[4],
+                                     bool full=true)
     {                                 
      int b_u0 = YUV_RGB_DATA<CCIR>::B_U_tab[ u_ptr[0] ];
      int g_uv0 = YUV_RGB_DATA<CCIR>::G_U_tab[ u_ptr[0] ] + YUV_RGB_DATA<CCIR>::G_V_tab[ v_ptr[0] ];
      int r_v0 = YUV_RGB_DATA<CCIR>::R_V_tab[ v_ptr[0] ];
-     int b_u1 = YUV_RGB_DATA<CCIR>::B_U_tab[ u_ptr[uv_stride] ];
-     int g_uv1 = YUV_RGB_DATA<CCIR>::G_U_tab[ u_ptr[uv_stride] ] + YUV_RGB_DATA<CCIR>::G_V_tab[ v_ptr[uv_stride] ];
-     int r_v1 = YUV_RGB_DATA<CCIR>::R_V_tab[ v_ptr[uv_stride] ];
+     int b_u1=0,g_uv1=0,r_v1=0;
      WRITE_RGB16<0>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u0,g_uv0,r_v0);
-     WRITE_RGB16<1>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u1,g_uv1,r_v1);
-     WRITE_RGB16<2>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u0,g_uv0,r_v0);
-     WRITE_RGB16<3>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u1,g_uv1,r_v1);
+     if(full)
+      {
+       b_u1 = YUV_RGB_DATA<CCIR>::B_U_tab[ u_ptr[uv_stride] ];
+       g_uv1 = YUV_RGB_DATA<CCIR>::G_U_tab[ u_ptr[uv_stride] ] + YUV_RGB_DATA<CCIR>::G_V_tab[ v_ptr[uv_stride] ];
+       r_v1 = YUV_RGB_DATA<CCIR>::R_V_tab[ v_ptr[uv_stride] ];
+       WRITE_RGB16<1>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u1,g_uv1,r_v1);
+       WRITE_RGB16<2>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u0,g_uv0,r_v0);
+       WRITE_RGB16<3>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u1,g_uv1,r_v1);
+      }
+     else
+      WRITE_RGB16<1>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u0,g_uv0,r_v0);
     } 
   };
   
@@ -422,7 +431,8 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
    static __forceinline void PROCESS(uint8_t *x_ptr,stride_t x_stride,
                                      uint8_t *y_ptr,stride_t y_stride,
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
-                                     int r[4],int g[4],int b[4])
+                                     int r[4],int g[4],int b[4],
+                                     bool full=true)
      {                                
       int b_u = YUV_RGB_DATA<CCIR>::B_U_tab[ u_ptr[0] ];
       int g_uv = YUV_RGB_DATA<CCIR>::G_U_tab[ u_ptr[0] ] + YUV_RGB_DATA<CCIR>::G_V_tab[ v_ptr[0] ];
@@ -440,18 +450,26 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
    static __forceinline void PROCESS(uint8_t *x_ptr,stride_t x_stride,
                                      uint8_t *y_ptr,stride_t y_stride,
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
-                                     int r[4],int g[4],int b[4])
+                                     int r[4],int g[4],int b[4],
+                                     bool full=true)
     {                                 
      int b_u0 = YUV_RGB_DATA<CCIR>::B_U_tab[ u_ptr[0] ];
      int g_uv0 = YUV_RGB_DATA<CCIR>::G_U_tab[ u_ptr[0] ] + YUV_RGB_DATA<CCIR>::G_V_tab[ v_ptr[0] ];
      int r_v0= YUV_RGB_DATA<CCIR>::R_V_tab[ v_ptr[0] ];
-     int b_u1 = YUV_RGB_DATA<CCIR>::B_U_tab[ u_ptr[uv_stride] ];
-     int g_uv1 = YUV_RGB_DATA<CCIR>::G_U_tab[ u_ptr[uv_stride] ] + YUV_RGB_DATA<CCIR>::G_V_tab[ v_ptr[uv_stride] ];
-     int r_v1= YUV_RGB_DATA<CCIR>::R_V_tab[ v_ptr[uv_stride] ];
+     int b_u1=0,g_uv1=0,r_v1=0;
+
      WRITE_RGB<0>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u0,g_uv0,r_v0);
-     WRITE_RGB<1>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u1,g_uv1,r_v1);
-     WRITE_RGB<2>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u0,g_uv0,r_v0);
-     WRITE_RGB<3>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u1,g_uv1,r_v1);
+     if(full) // Without flag(full), it crashes when input size is not multiple of 4.
+      {
+       b_u1 = YUV_RGB_DATA<CCIR>::B_U_tab[ u_ptr[uv_stride] ];
+       g_uv1 = YUV_RGB_DATA<CCIR>::G_U_tab[ u_ptr[uv_stride] ] + YUV_RGB_DATA<CCIR>::G_V_tab[ v_ptr[uv_stride] ];
+       r_v1= YUV_RGB_DATA<CCIR>::R_V_tab[ v_ptr[uv_stride] ];
+       WRITE_RGB<1>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u1,g_uv1,r_v1);
+       WRITE_RGB<2>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u0,g_uv0,r_v0);
+       WRITE_RGB<3>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u1,g_uv1,r_v1);
+      }
+     else 
+      WRITE_RGB<1>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u0,g_uv0,r_v0);
     }
   };  
   
@@ -471,7 +489,8 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
    static __forceinline void PROCESS(uint8_t *x_ptr,stride_t x_stride,
                                      uint8_t *y_ptr,stride_t y_stride,
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
-                                     int r[4],int g[4],int b[4])
+                                     int r[4],int g[4],int b[4],
+                                     bool full=true)
     {                                 
      WRITE_YUYV<0, 0>(x_ptr,x_stride,y_ptr,y_stride,u_ptr,v_ptr,uv_stride);
      WRITE_YUYV<1, 0>(x_ptr,x_stride,y_ptr,y_stride,u_ptr,v_ptr,uv_stride);
@@ -497,7 +516,8 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
    static __forceinline void PROCESS(uint8_t *x_ptr,stride_t x_stride,
                                      uint8_t *y_ptr,stride_t y_stride,
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
-                                     int r[4],int g[4],int b[4])
+                                     int r[4],int g[4],int b[4],
+                                     bool full=true)
     {                                 
      WRITE_YUYV<0, 0>(x_ptr,x_stride,y_ptr,y_stride,u_ptr,v_ptr,uv_stride);
      WRITE_YUYV<1, 1>(x_ptr,x_stride,y_ptr,y_stride,u_ptr,v_ptr,uv_stride);
@@ -514,7 +534,8 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
    static __forceinline void PROCESS(uint8_t *x_ptr,stride_t x_stride,
                                      uint8_t *y_ptr,stride_t y_stride,
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
-                                     int r[4],int g[4],int b[4])
+                                     int r[4],int g[4],int b[4],
+                                     bool full=true)
     {                                 
         READ_YUYV_Y<0>(y_ptr,y_stride,x_ptr,x_stride);
         READ_YUYV_Y<1>(y_ptr,y_stride,x_ptr,x_stride);
@@ -529,7 +550,8 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
    static __forceinline void PROCESS(uint8_t *x_ptr,stride_t x_stride,
                                      uint8_t *y_ptr,stride_t y_stride,
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
-                                     int r[4],int g[4],int b[4])
+                                     int r[4],int g[4],int b[4],
+                                     bool full=true)
     {                                 
      READ_YUYV_Y<0>(y_ptr,y_stride,x_ptr,x_stride);
      READ_YUYV_Y<1>(y_ptr,y_stride,x_ptr,x_stride);
@@ -548,7 +570,8 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
    static __forceinline void PROCESS(uint8_t *x_ptr,stride_t x_stride,
                                      uint8_t *y_ptr,stride_t y_stride,
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
-                                     int [4],int [4],int [4])
+                                     int [4],int [4],int [4],
+                                     bool full=true)
     {                                 
      uint32_t r, g, b, r0, g0, b0;
      r0 = g0 = b0 = 0;
@@ -566,7 +589,8 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
    static __forceinline void PROCESS(uint8_t *x_ptr,stride_t x_stride,
                                      uint8_t *y_ptr,stride_t y_stride,
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
-                                     int [4],int [4],int [4])
+                                     int [4],int [4],int [4],
+                                     bool full=true)
     {                                 
      uint32_t r, g, b, r0, g0, b0, r1, g1, b1;  
      r0 = g0 = b0 = r1 = g1 = b1 = 0;        
@@ -587,7 +611,8 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
    static __forceinline void PROCESS(uint8_t *x_ptr,stride_t x_stride,
                                      uint8_t *y_ptr,stride_t y_stride,
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
-                                     int [4],int [4],int [4])
+                                     int [4],int [4],int [4],
+                                     bool full=true)
     {                                 
      uint32_t r, g, b, r0, g0, b0;           
      r0 = g0 = b0 = 0;                                       
@@ -605,7 +630,8 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
    static __forceinline void PROCESS(uint8_t *x_ptr,stride_t x_stride,
                                      uint8_t *y_ptr,stride_t y_stride,
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
-                                     int [4],int [4],int [4])
+                                     int [4],int [4],int [4],
+                                     bool full=true)
     {                                 
      uint32_t r, g, b, r0, g0, b0, r1, g1, b1;       
      r0 = g0 = b0 = r1 = g1 = b1 = 0;        
@@ -631,7 +657,7 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
                 int r[4], g[4], b[4];
                 FUNC.ROW(r,g,b);
                 for (int x = 0; x < fixed_width; x+=(PIXELS)) {     
-                        FUNC.PROCESS(x_ptr,x_stride,y_ptr,y_stride,u_ptr,v_ptr,uv_stride,r,g,b);
+                        FUNC.PROCESS(x_ptr,x_stride,y_ptr,y_stride,u_ptr,v_ptr,uv_stride,r,g,b,y+VPIXELS<=height);
                         x_ptr += (PIXELS)*(SIZE);                               
                         y_ptr += (PIXELS);                                              
                         u_ptr += (PIXELS)/2;                                    

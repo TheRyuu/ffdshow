@@ -96,7 +96,7 @@ template<bool RGB24,bool DUPL> struct Tmmx_ConvertRGBtoYUY2
    const __m64 mm5=_mm_cvtsi32_si64(y1y2_mult[MATRIX]);
    for (int y=0;y<h;SRC0+=src_pitch,DST+=dst_pitch,y++)
     {
-     unsigned char SRC[4096];memcpy(SRC,SRC0,lwidth_bytes);
+     unsigned char SRC[8192];memcpy(SRC,SRC0,lwidth_bytes);
      __m64 mm2,mm1;
      movq        (mm2,SRC);              // mm2= XXR2 G2B2 XXR1 G1B1
      punpcklbw   (mm1,mm2);             // mm1= XXxx R1xx G1xx B1xx

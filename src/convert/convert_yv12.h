@@ -627,7 +627,8 @@ template<class _mm> struct TconvertYV12
        ebx+=src_pitch_uv;
        ecx+=src_pitch_uv;
        skipnext=1;
-       goto yloop;
+       if(y+4<=height)
+        goto yloop;
       }  
     }  
    _mm::sfence();
