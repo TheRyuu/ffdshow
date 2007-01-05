@@ -2131,74 +2131,18 @@
 			<File
 				RelativePath=".\libavcodec\vp5.c"
 				>
-				<FileConfiguration
-					Name="Debug_ICL|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release_ICL|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\libavcodec\vp56.c"
 				>
-				<FileConfiguration
-					Name="Debug_ICL|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release_ICL|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\libavcodec\vp56data.c"
 				>
-				<FileConfiguration
-					Name="Debug_ICL|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release_ICL|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\libavcodec\vp6.c"
 				>
-				<FileConfiguration
-					Name="Debug_ICL|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release_ICL|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="libavcodec\w32thread.c"
@@ -2731,54 +2675,6 @@
 			</File>
 			<File
 				RelativePath="libavformat\file.c"
-				>
-				<FileConfiguration
-					Name="Debug_ICL|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release_ICL|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\libavformat\flv.h"
-				>
-			</File>
-			<File
-				RelativePath="libavformat\flvenc.c"
-				>
-				<FileConfiguration
-					Name="Debug_ICL|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release_ICL|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="libavformat\mpeg.c"
 				>
 				<FileConfiguration
 					Name="Debug_ICL|Win32"

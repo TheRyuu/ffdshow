@@ -21,7 +21,6 @@
 #include "TmuxerFile.h"
 #include "ffImgfmt.h"
 #include "ffcodecs.h"
-#include "TmuxerLibavformat.h"
 #include "TmuxerOGM.h"
 #include "TmuxerOGG.h"
 #include "IffdshowBase.h"
@@ -29,10 +28,8 @@
 const char_t* Tmuxer::muxers[]=
 {
  _l("Raw frames"),
- _l("MPEG 1 video stream"),
  _l("OGM"),
  _l("OGG (works with Theora only)"),
- _l("FLV"),
  NULL
 };
 
@@ -41,8 +38,6 @@ Tmuxer* Tmuxer::getMuxer(int id,IffdshowBase *deci)
  switch (id)
   {
    case MUXER_FILE:return new TmuxerFile(deci);
-   case MUXER_FLV:
-   case MUXER_MPEG:return new TmuxerLibavformat(deci,id);
    case MUXER_OGM:return new TmuxerOGM(deci);
    case MUXER_OGG:return new TmuxerOGG(deci);
    default:return NULL;

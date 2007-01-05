@@ -29,8 +29,6 @@
  */
 void av_register_all(void)
 {
-    av_register_output_format(&flv_muxer);
-
     /* file protocols */
     register_protocol(&file_protocol);
 }

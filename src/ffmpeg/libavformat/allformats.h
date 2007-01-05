@@ -23,11 +23,9 @@
 #define ALLFORMATS_H
 
 /* mpeg.c */
-extern AVInputFormat mpegps_demux;
 int mpegps_init(void);
 
 /* mpegts.c */
-extern AVInputFormat mpegts_demux;
 int mpegts_init(void);
 
 /* rm.c */
@@ -62,8 +60,6 @@ int movenc_init(void);
 
 /* flvdec.c */
 int flvdec_init(void);
-
-extern AVOutputFormat flv_muxer;
 
 /* jpeg.c */
 int jpeg_init(void);

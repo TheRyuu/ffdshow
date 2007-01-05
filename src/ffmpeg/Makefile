@@ -126,8 +126,6 @@ SRCS_C=DllEntry.c \
       $(LAVF_DIR)/aviobuf.c \
       $(LAVF_DIR)/cutils.c \
       $(LAVF_DIR)/file.c \
-      $(LAVF_DIR)/flvenc.c \
-      $(LAVF_DIR)/mpeg.c \
       $(LAVF_DIR)/utils.c \
 	\
       $(LAVU_DIR)/crc.c \

@@ -25,28 +25,36 @@
 #include "ffdshow_constants.h"
 #include "IffdshowBase.h"
 
-TmuxerOGM::TmuxerOGM(IffdshowBase *Ideci):TmuxerOGG(Ideci)
+TmuxerOGM::TmuxerOGM(IffdshowBase *Ideci):Tmuxer(Ideci)
 {
+ out=CreateFile(deci->getParamStr2(IDFF_enc_storeExtFlnm),GENERIC_WRITE,FILE_SHARE_READ,NULL,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);if (out==INVALID_HANDLE_VALUE) return;
+ serialno=rand();
+ ogg_stream_init(&os, serialno);
  tempbuf=(char*)malloc(max_frame_size=1024*1024);// max frame size (should be enough)
  packetno=0;
  next_is_key=-1;
- old_granulepos=0;last_granulepos = 0;
+ old_granulepos=0;last_granulepos=0;
 }
+
 TmuxerOGM::~TmuxerOGM()
 {
  if (out!=INVALID_HANDLE_VALUE)
   {
-   process(NULL,0,1,0,1);
+   process(NULL,0,1,1,1);
+   CloseHandle(out);
+   ogg_stream_clear(&os);
    free(tempbuf);
   } 
 }
+
 size_t TmuxerOGM::writeHeader(const void *data,size_t len,bool flush,const BITMAPINFOHEADER &bihdr)
 {
- if (out==INVALID_HANDLE_VALUE || data==NULL || len==0) return 0;
+ if (out==INVALID_HANDLE_VALUE) return 0;
  written=0;
  produce_header_packets(bihdr);
  return written;
 }
+
 size_t TmuxerOGM::writeFrame(const void *data,size_t len,const TencFrameParams &frameParams)
 {
  if (out==INVALID_HANDLE_VALUE) return 0;
@@ -84,6 +92,7 @@ void TmuxerOGM::produce_header_packets(const BITMAPINFOHEADER &bihdr)
  packetno++;
  flush_pages(PACKET_TYPE_HEADER);
 }
+
 int TmuxerOGM::flush_pages(int header_page) 
 {
  ogg_page page;
@@ -94,6 +103,7 @@ int TmuxerOGM::flush_pages(int header_page)
   }
  return 0;
 }
+
 int TmuxerOGM::queue_pages(int header_page) 
 {
  ogg_page page;
@@ -102,6 +112,21 @@ int TmuxerOGM::queue_pages(int header_page)
    add_ogg_page(&page, header_page, next_is_key);
    next_is_key = -1;
   }
+ return 0;
+}
+
+int TmuxerOGM::add_ogg_page(ogg_page *opage, int header_page, int index_serial) 
+{
+ DWORD bytes;
+
+ WriteFile(out,opage->header, opage->header_len,&bytes, NULL);
+ if (bytes != DWORD(opage->header_len)) return 1;
+ written+=bytes;
+
+ WriteFile(out,opage->body, opage->body_len, &bytes,NULL);
+ if (bytes != DWORD(opage->body_len)) return 1;
+ written+=bytes;
+
  return 0;
 }
 
@@ -156,7 +181,7 @@ void TmuxerOGM::next_page_contains_keyframe(int serial)
 int TmuxerOGM::process(const void *buf, size_t size, int num_frames,int key, int last_frame) 
 {
  ogg_packet op;
- int        offset;
+ int offset;
 
  if (!last_frame)
   {

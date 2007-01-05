@@ -673,6 +673,8 @@
 		<File 
 			RelativePath=".\src\TffdshowVideoInputPin.cpp"/>
 		<File 
+			RelativePath=".\src\TffOutputQ.cpp"/>
+		<File 
 			RelativePath=".\src\TffProcBase.cpp"/>
 		<File 
 			RelativePath=".\src\Tinfo.cpp"/>
@@ -680,6 +682,8 @@
 			RelativePath=".\src\TinputPin.cpp"/>
 		<File 
 			RelativePath=".\src\TkeyboardDirect.cpp"/>
+		<File 
+			RelativePath=".\src\TListEmptyIMediaSamples.cpp"/>
 		<File 
 			RelativePath=".\src\TtextInputPin.cpp"/>
 		<File 
@@ -711,10 +715,6 @@
 		</File>
 		<File 
 			RelativePath=".\src\TtrayIcon.cpp"/>
-		<File 
-			RelativePath=".\src\TListEmptyIMediaSamples.cpp"/>
-		<File 
-			RelativePath=".\src\TffOutputQ.cpp"/>
 		<File 
 			RelativePath=".\src\array_allocator.h"/>
 		<File 
@@ -814,6 +814,8 @@
 		<File 
 			RelativePath=".\src\TffdshowVideoInputPin.h"/>
 		<File 
+			RelativePath=".\src\TffOutputQ.h"/>
+		<File 
 			RelativePath=".\src\TffProcBase.h"/>
 		<File 
 			RelativePath=".\src\Tinfo.h"/>
@@ -821,6 +823,8 @@
 			RelativePath=".\src\TinputPin.h"/>
 		<File 
 			RelativePath=".\src\TkeyboardDirect.h"/>
+		<File 
+			RelativePath=".\src\TListEmptyIMediaSamples.h"/>
 		<File 
 			RelativePath=".\src\TtextInputPin.h"/>
 		<File 
@@ -883,10 +887,6 @@
 			RelativePath=".\src\uClibc++\utility"/>
 		<File 
 			RelativePath=".\src\uClibc++\vector"/>
-		<File 
-			RelativePath=".\src\TListEmptyIMediaSamples.h"/>
-		<File 
-			RelativePath=".\src\TffOutputQ.h"/>
 		<File 
 			RelativePath=".\src\arrows.bmp"/>
 		<File 
@@ -3517,10 +3517,6 @@
 			RelativePath=".\src\muxers\TmuxerFile.cpp"/>
 		<File 
 			RelativePath=".\src\muxers\TmuxerFile.h"/>
-		<File 
-			RelativePath=".\src\muxers\TmuxerLibavformat.cpp"/>
-		<File 
-			RelativePath=".\src\muxers\TmuxerLibavformat.h"/>
 		<File 
 			RelativePath=".\src\muxers\TmuxerOGG.cpp"/>
 		<File 

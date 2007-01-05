@@ -531,15 +531,13 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::begin(const BITMAPINFOHEADER *inhdr)
     break;
   }
 
- enc->setCoSettings(oldCodecId);
- LRESULT res=enc->beginCompress(cfgcomode,enccsp,Trect(0,0,outDx,outDy));
- if (res!=ICERR_OK) return res;
-
  if (coSettings->storeExt && !ownStoreExt && coSettings->storeExtFlnm[0])
   mux=Tmuxer::getMuxer(coSettings->muxer,this);
  else 
   mux=NULL;
- 
+ enc->setCoSettings(oldCodecId);
+ LRESULT res=enc->beginCompress(cfgcomode,enccsp,Trect(0,0,outDx,outDy));
+ if (res!=ICERR_OK) return res;
  switch (cfgcomode)
   {
    case ENC_MODE::PASS2_1:

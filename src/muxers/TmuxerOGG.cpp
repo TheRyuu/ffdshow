@@ -28,6 +28,7 @@ TmuxerOGG::TmuxerOGG(IffdshowBase *Ideci):Tmuxer(Ideci)
  serialno=rand();
  ogg_stream_init(&os, serialno);
 }
+
 TmuxerOGG::~TmuxerOGG()
 {
  if (out!=INVALID_HANDLE_VALUE)
@@ -37,7 +38,7 @@ TmuxerOGG::~TmuxerOGG()
   }
 }
 
-int TmuxerOGG::add_ogg_page(ogg_page *opage, int, int) 
+int TmuxerOGG::add_ogg_page(ogg_page *opage, int header_page, int index_serial) 
 {
  DWORD bytes;
 

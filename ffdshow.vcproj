@@ -4453,12 +4453,6 @@
 					RelativePath=".\src\muxers\TmuxerFile.h">
 				</File>
 				<File
-					RelativePath=".\src\muxers\TmuxerLibavformat.cpp">
-				</File>
-				<File
-					RelativePath=".\src\muxers\TmuxerLibavformat.h">
-				</File>
-				<File
 					RelativePath=".\src\muxers\TmuxerOGG.cpp">
 				</File>
 				<File

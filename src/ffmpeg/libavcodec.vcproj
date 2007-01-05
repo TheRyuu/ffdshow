@@ -800,15 +800,6 @@
 				RelativePath=".\libavformat\file.c">
 			</File>
 			<File
-				RelativePath=".\libavformat\flv.h">
-			</File>
-			<File
-				RelativePath=".\libavformat\flvenc.c">
-			</File>
-			<File
-				RelativePath=".\libavformat\mpeg.c">
-			</File>
-			<File
 				RelativePath=".\libavformat\utils.c">
 				<FileConfiguration
 					Name="Debug|Win32">
