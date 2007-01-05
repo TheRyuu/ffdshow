@@ -28,7 +28,6 @@ TmuxerOGG::TmuxerOGG(IffdshowBase *Ideci):Tmuxer(Ideci)
  serialno=rand();
  ogg_stream_init(&os, serialno);
 }
-
 TmuxerOGG::~TmuxerOGG()
 {
  if (out!=INVALID_HANDLE_VALUE)
@@ -37,8 +36,7 @@ TmuxerOGG::~TmuxerOGG()
    ogg_stream_clear(&os);
   }
 }
-
-int TmuxerOGG::add_ogg_page(ogg_page *opage, int header_page, int index_serial) 
+int TmuxerOGG::add_ogg_page(ogg_page *opage, int header_page, int index_serial)
 {
  DWORD bytes;
 
@@ -52,7 +50,6 @@ int TmuxerOGG::add_ogg_page(ogg_page *opage, int header_page, int index_serial)
 
  return 0;
 }
-
 size_t TmuxerOGG::writeHeader(const void *data,size_t len,bool flush,const BITMAPINFOHEADER &bihdr)
 {
  if (out==INVALID_HANDLE_VALUE || len!=0) return 0;
@@ -73,7 +70,6 @@ size_t TmuxerOGG::writeHeader(const void *data,size_t len,bool flush,const BITMA
   } 
  return written;
 }
-
 size_t TmuxerOGG::writeFrame(const void *data,size_t len,const TencFrameParams &frameParams)
 {
  if (out==INVALID_HANDLE_VALUE || !data || !frameParams.priv) return 0;
