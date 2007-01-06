@@ -190,6 +190,7 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
 //thanks to suxen_drol for the idea of simplifying this function
 extern "C" void CALLBACK configureVFW(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine,int nCmdShow)
 {
+ HRESULT hr= CoInitialize(NULL);
  DriverProc(0,0,DRV_LOAD,0,0);
  DWORD dwDriverId=(DWORD)DriverProc(0,0,DRV_OPEN,0,0);
  if (dwDriverId)
@@ -198,4 +199,6 @@ extern "C" void CALLBACK configureVFW(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine
    DriverProc(dwDriverId,0,DRV_CLOSE,0,0);
   }
  DriverProc(0,0,DRV_FREE,0,0);
+ if(SUCCEEDED(hr))
+  CoUninitialize();
 }
