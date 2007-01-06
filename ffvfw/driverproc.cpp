@@ -41,10 +41,18 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
    // driver primitives 
    case DRV_LOAD:
     InitCommonControls();
-    CoInitialize(NULL);
+    //CoInitialize(NULL);
     return DRV_OK;
+    /*
+     * Bug fix(?): Explorer.exe was crashing in Windows Vista.
+     * http://sourceforge.net/tracker/index.php?func=detail&aid=1611309&group_id=53761&atid=471489.
+
+     * Explorer.exe use vfw decoder to get thumbnail.
+     * I disabled CoInitialize & CoUninitialize.
+     * These two API functions were called from different threads, which was the cause of the crashes.
+     */
    case DRV_FREE:
-    CoUninitialize();
+    //CoUninitialize();
     return DRV_OK;
    case DRV_OPEN:
     {
