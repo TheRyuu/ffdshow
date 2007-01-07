@@ -28,10 +28,13 @@
 #include <initguid.h>
 #include "Iffvfw.h"
 #include "ffdebug.h"
+#include <map>
 
 #ifndef ICVERSION
 #define ICVERSION       0x0104
 #endif
+
+std::map<DWORD,HRESULT> CoInitializedThreads;
 
 extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRVR hDriver,UINT uMsg,LPARAM lParam1,LPARAM lParam2)
 {
@@ -40,20 +43,34 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
   {
    // driver primitives 
    case DRV_LOAD:
-    InitCommonControls();
-    //CoInitialize(NULL);
-    return DRV_OK;
+    {
+     InitCommonControls();
+     DWORD currentthread= GetCurrentThreadId();
+     std::map<DWORD,HRESULT>::iterator i= CoInitializedThreads.find(currentthread);
+     if(i==CoInitializedThreads.end()
+        || FAILED(CoInitializedThreads[currentthread]))
+      CoInitializedThreads[currentthread]= CoInitialize(NULL);
+     return DRV_OK;
+    }
     /*
+     * rev 742-746
      * Bug fix(?): Explorer.exe was crashing in Windows Vista.
      * http://sourceforge.net/tracker/index.php?func=detail&aid=1611309&group_id=53761&atid=471489.
 
      * Explorer.exe use vfw decoder to get thumbnail.
-     * I disabled CoInitialize & CoUninitialize.
-     * These two API functions were called from different threads, which was the cause of the crashes.
+     * CoInitialize & CoUninitialize were called from different threads,
+     * which was the cause of the crashes.
      */
    case DRV_FREE:
-    //CoUninitialize();
-    return DRV_OK;
+    {
+     DWORD currentthread= GetCurrentThreadId();
+     std::map<DWORD,HRESULT>::iterator i= CoInitializedThreads.find(currentthread);
+     if(i==CoInitializedThreads.end()
+        || FAILED(CoInitializedThreads[currentthread]))
+      return DRV_OK;
+     CoUninitialize();
+     return DRV_OK;
+    }
    case DRV_OPEN:
     {
      ICOPEN *icopen=(ICOPEN*)lParam2;
@@ -190,7 +207,6 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
 //thanks to suxen_drol for the idea of simplifying this function
 extern "C" void CALLBACK configureVFW(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine,int nCmdShow)
 {
- HRESULT hr= CoInitialize(NULL);
  DriverProc(0,0,DRV_LOAD,0,0);
  DWORD dwDriverId=(DWORD)DriverProc(0,0,DRV_OPEN,0,0);
  if (dwDriverId)
@@ -199,6 +215,4 @@ extern "C" void CALLBACK configureVFW(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine
    DriverProc(dwDriverId,0,DRV_CLOSE,0,0);
   }
  DriverProc(0,0,DRV_FREE,0,0);
- if(SUCCEEDED(hr))
-  CoUninitialize();
 }

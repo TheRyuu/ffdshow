@@ -7,7 +7,7 @@ SRCS_C=../src/ffdebug.c
 SLIB=../bin/ff_vfw.dll
 DEF=ff_vfw.def
 
-GCCLIBS=-lole32 -lwinmm -lcomctl32
+GCCLIBS=-lole32 -lwinmm -lcomctl32 -lstdc++
 CLLIBS=ole32.lib winmm.lib comctl32.lib
 
 include ../src/makefile_c.inc
