@@ -69,6 +69,7 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
         || FAILED(CoInitializedThreads[currentthread]))
       return DRV_OK;
      CoUninitialize();
+     CoInitializedThreads.erase(currentthread);
      return DRV_OK;
     }
    case DRV_OPEN:
