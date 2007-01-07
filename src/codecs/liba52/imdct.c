@@ -880,6 +880,6 @@ void a52_imdct_init (uint32_t mm_accel)
     {
       a52_imdct_512 = imdct_do_512_3dnow;
     }
-*/    
+*/
     a52_imdct_256 = a52_imdct_256_C;
 }
