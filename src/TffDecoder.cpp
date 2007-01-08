@@ -980,8 +980,8 @@ if (!outdv && hwDeinterlace)
  #if 0
  if(m_IsVMR9)
   {
-   IVMRSurface9* ivmr9;
-   IDirect3DSurface9* id3d9;
+   IVMRSurface9* ivmr9=NULL;
+   IDirect3DSurface9* id3d9=NULL;
    D3DSURFACE_DESC desc;
    pOut->QueryInterface(IID_IVMRSurface9,(void**)&ivmr9);
    if(ivmr9)
@@ -994,6 +994,16 @@ if (!outdv && hwDeinterlace)
       }
      ivmr9->Release();
     }
+  }
+ IBasicVideo* ibv=NULL;
+ graph->QueryInterface(IID_IBasicVideo,(void**)&ibv);
+ if(ibv)
+  {
+   long VideoHeight;
+   long DestinationHeight;
+   HRESULT hr1=ibv->get_VideoHeight(&VideoHeight);
+   HRESULT hr2=ibv->get_DestinationHeight(&DestinationHeight);
+   ibv->Release();
   }
  #endif
  HRESULT cr=imgFilters->convertOutputSample(pict,m_frame.dstColorspace,&dst,&m_frame.dstStride,dstSize,presetSettings->output);

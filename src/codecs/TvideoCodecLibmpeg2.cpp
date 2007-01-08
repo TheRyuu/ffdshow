@@ -56,7 +56,8 @@ TvideoCodecLibmpeg2::TvideoCodecLibmpeg2(IffdshowBase *Ideci,IdecVideoSink *Isin
    if (Tconfig::cpu_flags&FF_CPU_SSE2  ) accel|=MPEG2_ACCEL_X86_SSE2;
    mpeg2_set_accel(accel);
   }
- mpeg2dec=NULL;info=NULL;quants=NULL;quantBytes=1;extradata=NULL;
+ mpeg2dec=NULL;info=NULL;quants=NULL;quantBytes=1;extradata=NULL;buffer=NULL;
+ buffer=new Tbuffer();
 }
 void TvideoCodecLibmpeg2::init(void)
 {
@@ -84,9 +85,23 @@ TvideoCodecLibmpeg2::~TvideoCodecLibmpeg2()
  if (dll) delete dll;
  if (extradata) delete extradata;
  if (ccDecoder) delete ccDecoder;
+ if (buffer) delete buffer;
 }
 
 HRESULT TvideoCodecLibmpeg2::decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn)
+{
+ HRESULT hr=decompressI(src,srcLen,pIn);
+ int len=mpeg2dec->buf_end - mpeg2dec->buf_start;
+ if (len>0)
+  {
+   unsigned char *b=(unsigned char *)buffer->alloc(len);
+   memcpy(b, mpeg2dec->buf_start, len);
+   mpeg2_buffer(mpeg2dec, b, b+len);
+  }
+ return hr;
+}
+
+HRESULT TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,IMediaSample *pIn)
 {
  //if (pIn->IsDiscontinuity()) onSeek();
  REFERENCE_TIME rtStart=REFTIME_INVALID,rtStop=_I64_MIN;
