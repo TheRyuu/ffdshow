@@ -226,6 +226,15 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 	   SendMessage((HWND)wprm, WM_COPYDATA, paramid, lprm);
        return TRUE;  
       }
+	 case COPY_CURRENT_SUBTITLES:
+	  {
+		  if (!deciV || cds->cbData==0) return FALSE;
+		  const char_t *cursubflnm=deciV->getCurrentSubFlnm();
+		  strncpy((char*)cds->lpData,text<char>(cursubflnm),cds->cbData);
+          ((char*)cds->lpData)[cds->cbData-1]='\0';
+		  SendMessage((HWND)wprm, WM_COPYDATA, COPY_CURRENT_SUBTITLES, lprm);
+		  return TRUE;  
+	  }
 	  case COPY_GET_PRESETLIST:
 	  {
 		COPYDATASTRUCT cd;

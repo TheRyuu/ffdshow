@@ -53,4 +53,5 @@
 #define COPY_GETPARAMSTR       13 // lpData points to buffer where param value will be stored
 #define COPY_GET_PRESETLIST		14 //Get the list of presets (array of strings)
 #define COPY_GET_SOURCEFILE		15 //Get the filename currently played
+#define COPY_CURRENT_SUBTITLES	16 //Get the subtitle filename currently read
 #endif
