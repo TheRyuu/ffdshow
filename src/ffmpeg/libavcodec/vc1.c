@@ -4120,7 +4120,7 @@ static int vc1_decode_init(AVCodecContext *avctx)
         }
     } else { // VC1/WVC1
         int edata_size = avctx->extradata_size;
-        uint8_t *edata = avctx->extradata;
+        const uint8_t *edata = avctx->extradata;
 
         if(avctx->extradata_size < 16) {
             av_log(avctx, AV_LOG_ERROR, "Extradata size too small: %i\n", edata_size);

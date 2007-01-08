@@ -4815,7 +4815,7 @@ static inline int mpeg4_decode_block(MpegEncContext * s, DCTELEM * block,
     //Note intra & rvlc should be optimized away if this is inlined
 
     if(intra) {
-      if(s->use_intra_dc_vlc){
+        if(s->qscale < s->intra_dc_threshold){
         /* DC coef */
         if(s->partitioned_frame){
             level = s->dc_val[0][ s->block_index[n] ];
