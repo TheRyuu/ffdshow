@@ -1,9 +1,9 @@
 /*****************************************************************************
  *
- *  XVID MPEG-4 VIDEO CODEC
- *  - XviD Main header file -
+ * XVID MPEG-4 VIDEO CODEC
+ * - XviD Main header file -
  *
- *  Copyright(C) 2001-2003 Peter Ross <pross@xvid.org>
+ *  Copyright(C) 2001-2004 Peter Ross <pross@xvid.org>
  *
  *  This program is free software ; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program ; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
  *
  ****************************************************************************/
@@ -39,10 +39,10 @@
 		memset(&struct,0,sizeof(struct));
 		struct.version = XVID_VERSION;
 
-	XVID_UNSTABLE is defined only during development. 
+	XVID_UNSTABLE is defined only during development.
 	*/
 
-#define XVID_MAKE_VERSION(a,b,c)	( (((a)&0xff)<<16) | (((b)&0xff)<<8) | ((c)&0xff) )
+#define XVID_MAKE_VERSION(a,b,c) ((((a)&0xff)<<16) | (((b)&0xff)<<8) | ((c)&0xff))
 #define XVID_VERSION_MAJOR(a)    ((char)(((a)>>16) & 0xff))
 #define XVID_VERSION_MINOR(a)    ((char)(((a)>> 8) & 0xff))
 #define XVID_VERSION_PATCH(a)    ((char)(((a)>> 0) & 0xff))
@@ -54,10 +54,13 @@
 #define XVID_VERSION             XVID_MAKE_VERSION(1,0,2)
 #define XVID_API                 XVID_MAKE_API(4, 0)
 
-/* Bitstream Version 
- * this will be writen into the bitstream to allow easy detection of xvid 
- * encoder bugs in the decoder, without this it might not possible to 
- * automatically distinquish between a file which has been encoded with an 
+
+
+
+/* Bitstream Version
+ * this will be writen into the bitstream to allow easy detection of xvid
+ * encoder bugs in the decoder, without this it might not possible to
+ * automatically distinquish between a file which has been encoded with an
  * old & buggy XVID from a file which has been encoded with a bugfree version
  * see the infamous interlacing bug ...
  *
@@ -65,17 +68,17 @@
  * doesnt hurt but not increasing it could cause difficulty for decoders in the
  * future
  */
-#define XVID_BS_VERSION 36
+#define XVID_BS_VERSION 47
 
 /*****************************************************************************
  * error codes
  ****************************************************************************/
 
-    /*  all functions return values <0 indicate error */
+	/*	all functions return values <0 indicate error */
 
 #define XVID_ERR_FAIL		-1		/* general fault */
-#define XVID_ERR_MEMORY	    -2		/* memory allocation error */
-#define XVID_ERR_FORMAT	    -3		/* file format error */
+#define XVID_ERR_MEMORY		-2		/* memory allocation error */
+#define XVID_ERR_FORMAT		-3		/* file format error */
 #define XVID_ERR_VERSION	-4		/* structure version not supported */
 #define XVID_ERR_END		-5		/* encoder only; end of stream reached */
 
@@ -95,36 +98,36 @@ typedef struct {
 } xvid_image_t;
 
 /* video-object-sequence profiles */
-#define XVID_PROFILE_S_L0       0x08    /* simple */
-#define XVID_PROFILE_S_L1       0x01
-#define XVID_PROFILE_S_L2       0x02
-#define XVID_PROFILE_S_L3       0x03
-#define XVID_PROFILE_ARTS_L1    0x91    /* advanced realtime simple */
-#define XVID_PROFILE_ARTS_L2    0x92
-#define XVID_PROFILE_ARTS_L3    0x93
-#define XVID_PROFILE_ARTS_L4    0x94
-#define XVID_PROFILE_AS_L0      0xf0    /* advanced simple */
-#define XVID_PROFILE_AS_L1      0xf1
-#define XVID_PROFILE_AS_L2      0xf2
-#define XVID_PROFILE_AS_L3      0xf3
-#define XVID_PROFILE_AS_L4      0xf4
+#define XVID_PROFILE_S_L0    0x08 /* simple */
+#define XVID_PROFILE_S_L1    0x01
+#define XVID_PROFILE_S_L2    0x02
+#define XVID_PROFILE_S_L3    0x03
+#define XVID_PROFILE_ARTS_L1 0x91 /* advanced realtime simple */
+#define XVID_PROFILE_ARTS_L2 0x92
+#define XVID_PROFILE_ARTS_L3 0x93
+#define XVID_PROFILE_ARTS_L4 0x94
+#define XVID_PROFILE_AS_L0   0xf0 /* advanced simple */
+#define XVID_PROFILE_AS_L1   0xf1
+#define XVID_PROFILE_AS_L2   0xf2
+#define XVID_PROFILE_AS_L3   0xf3
+#define XVID_PROFILE_AS_L4   0xf4
 
 /* aspect ratios */
 #define XVID_PAR_11_VGA    1 /* 1:1 vga (square), default if supplied PAR is not a valid value */
-#define XVID_PAR_43_PAL	    2	/* 4:3 pal (12:11 625-line) */
-#define XVID_PAR_43_NTSC	3	/* 4:3 ntsc (10:11 525-line) */
-#define XVID_PAR_169_PAL	4	/* 16:9 pal (16:11 625-line) */
-#define XVID_PAR_169_NTSC	5	/* 16:9 ntsc (40:33 525-line) */
-#define XVID_PAR_EXT		15	/* extended par; use par_width, par_height */
+#define XVID_PAR_43_PAL    2 /* 4:3 pal (12:11 625-line) */
+#define XVID_PAR_43_NTSC   3 /* 4:3 ntsc (10:11 525-line) */
+#define XVID_PAR_169_PAL   4 /* 16:9 pal (16:11 625-line) */
+#define XVID_PAR_169_NTSC  5 /* 16:9 ntsc (40:33 525-line) */
+#define XVID_PAR_EXT      15 /* extended par; use par_width, par_height */
 
 /* frame type flags */
-#define XVID_TYPE_VOL		-1		/* decoder only: vol was decoded */
-#define XVID_TYPE_NOTHING	0		/* decoder only (encoder stats): nothing was decoded/encoded */
-#define XVID_TYPE_AUTO		0		/* encoder: automatically determine coding type */
-#define XVID_TYPE_IVOP		1		/* intra frame */
-#define XVID_TYPE_PVOP		2		/* predicted frame */
-#define XVID_TYPE_BVOP		3		/* bidirectionally encoded */
-#define XVID_TYPE_SVOP		4		/* predicted+sprite frame */
+#define XVID_TYPE_VOL     -1 /* decoder only: vol was decoded */
+#define XVID_TYPE_NOTHING  0 /* decoder only (encoder stats): nothing was decoded/encoded */
+#define XVID_TYPE_AUTO     0 /* encoder: automatically determine coding type */
+#define XVID_TYPE_IVOP     1 /* intra frame */
+#define XVID_TYPE_PVOP     2 /* predicted frame */
+#define XVID_TYPE_BVOP     3 /* bidirectionally encoded */
+#define XVID_TYPE_SVOP     4 /* predicted+sprite frame */
 
 
 /*****************************************************************************
@@ -140,6 +143,7 @@ typedef struct {
 #define XVID_CPU_MMXEXT   (1<< 1) /*   mmx-ext : pentium2, athlon */
 #define XVID_CPU_SSE      (1<< 2) /*       sse : pentium3, athlonXP */
 #define XVID_CPU_SSE2     (1<< 3) /*      sse2 : pentium4, athlon64 */
+#define XVID_CPU_SSE3     (1<< 8) /*      sse3 : pentium4, athlon64 */
 #define XVID_CPU_3DNOW    (1<< 4) /*     3dnow : k6-2 */
 #define XVID_CPU_3DNOWEXT (1<< 5) /* 3dnow-ext : athlon */
 #define XVID_CPU_TSC      (1<< 6) /*       tsc : Pentium */
@@ -161,34 +165,34 @@ typedef struct {
 typedef struct {
 	int version;
 	unsigned int cpu_flags; /* [in:opt] zero = autodetect cpu; XVID_CPU_FORCE|{cpu features} = force cpu features */
-    int debug;              /* [in:opt] debug level */
+	int debug;     /* [in:opt] debug level */
 } xvid_gbl_init_t;
 
 
 /* XVID_GBL_INFO param1 */
 typedef struct {
 	int version;
-	int actual_version;		/* [out]	returns the actual xvidcore version */
-	const char * build;		/* [out]	if !null, points to description of this xvid core build */
+	int actual_version; /* [out] returns the actual xvidcore version */
+	const char * build; /* [out] if !null, points to description of this xvid core build */
 	unsigned int cpu_flags;      /* [out] detected cpu features */
-	int num_threads;		/* [out]	detected number of cpus/threads */
+	int num_threads;    /* [out] detected number of cpus/threads */
 } xvid_gbl_info_t;
 
 
 /* XVID_GBL_CONVERT param1 */
 typedef struct {
 	int version;
-	xvid_image_t input;	/* [in]	input image & colorspace */
-	xvid_image_t output;	/* [in]	output image & colorspace */
- 	int width;				/* [in] width */
- 	int height;				/* [in] height */
-	int interlacing;		/* [in] interlacing */
+	xvid_image_t input;  /* [in] input image & colorspace */
+	xvid_image_t output; /* [in] output image & colorspace */
+	int width;           /* [in] width */
+	int height;          /* [in] height */
+	int interlacing;     /* [in] interlacing */
 } xvid_gbl_convert_t;
 
 
-#define XVID_GBL_INIT		0	/* initialize xvidcore; must be called before using xvid_decore, or xvid_encore) */
-#define XVID_GBL_INFO		1	/* return some info about xvidcore, and the host computer */
-#define XVID_GBL_CONVERT	2	/* colorspace conversion utility */
+#define XVID_GBL_INIT    0 /* initialize xvidcore; must be called before using xvid_decore, or xvid_encore) */
+#define XVID_GBL_INFO    1 /* return some info about xvidcore, and the host computer */
+#define XVID_GBL_CONVERT 2 /* colorspace conversion utility */
 
 extern int xvid_global(void *handle, int opt, void *param1, void *param2);
 
@@ -197,20 +201,20 @@ extern int xvid_global(void *handle, int opt, void *param1, void *param2);
  * xvid_decore()
  ****************************************************************************/
 
-#define XVID_DEC_CREATE	    0	/* create decore instance; return 0 on success */
-#define XVID_DEC_DESTROY	1	/* destroy decore instance: return 0 on success */
-#define XVID_DEC_DECODE	    2	/* decode a frame: returns number of bytes consumed >= 0 */
+#define XVID_DEC_CREATE  0 /* create decore instance; return 0 on success */
+#define XVID_DEC_DESTROY 1 /* destroy decore instance: return 0 on success */
+#define XVID_DEC_DECODE  2 /* decode a frame: returns number of bytes consumed >= 0 */
 
 extern int xvid_decore(void *handle, int opt, void *param1, void *param2);
 
-/* XVID_DEC_CREATE param 1  
+/* XVID_DEC_CREATE param 1
 	image width & height may be specified here when the dimensions are
 	known in advance. */
 typedef struct {
 	int version;
-	int width;				/* [in:opt]	image width */
-	int height;				/* [in:opt]	image width */
-	void * handle;			/* [out]	decore context handle */
+	int width;     /* [in:opt] image width */
+	int height;    /* [in:opt] image width */
+	void * handle; /* [out]	   decore context handle */
 } xvid_dec_create_t;
 
 
@@ -224,10 +228,12 @@ typedef struct {
 
 typedef struct {
 	int version;
-	int general;			/* [in:opt] general flags */
-	void *bitstream;		/* [in] bitstream (read from)*/
-	int length;				/* [in] bitstream length */
-	xvid_image_t output;	/* [in] output image (written to) */
+	int general;         /* [in:opt] general flags */
+	void *bitstream;     /* [in]     bitstream (read from)*/
+	int length;          /* [in]     bitstream length */
+	xvid_image_t output; /* [in]     output image (written to) */
+
+
 } xvid_dec_frame_t;
 
 
@@ -236,22 +242,22 @@ typedef struct
 {
 	int version;
 
-	int type;				/* [out]	output data type */
+	int type;                   /* [out] output data type */
 	union {
-		struct {	/* type>0 {XVID_TYPE_IVOP,XVID_TYPE_PVOP,XVID_TYPE_BVOP,XVID_TYPE_SVOP} */
-			int general;		/* [out]	flags */
-			int time_base;		/* [out]	time base */
-			int time_increment;	/* [out]	time increment */
+		struct { /* type>0 {XVID_TYPE_IVOP,XVID_TYPE_PVOP,XVID_TYPE_BVOP,XVID_TYPE_SVOP} */
+			int general;        /* [out] flags */
+			int time_base;      /* [out] time base */
+			int time_increment; /* [out] time increment */
 
 			/* XXX: external deblocking stuff */
-			int * qscale;	/* [out]	pointer to quantizer table */
-			int qscale_stride;		/* [out]	quantizer scale stride */
+			int * qscale;	    /* [out] pointer to quantizer table */
+			int qscale_stride;  /* [out] quantizer scale stride */
 
 		} vop;
 		struct {	/* XVID_TYPE_VOL */
-			int general;		/* [out]	flags */
-			int width;			/* [out]	width */
-			int height;			/* [out]	height */
+			int general;        /* [out] flags */
+			int width;          /* [out] width */
+			int height;         /* [out] height */
 			int par;            /* [out] pixel aspect ratio (refer to XVID_PAR_xxx above) */
 			int par_width;      /* [out] aspect ratio width  [1..255] */
 			int par_height;     /* [out] aspect ratio height [1..255] */
@@ -264,10 +270,10 @@ typedef struct
 
 typedef struct
 {
-    int frame;
-    int mode;
-    int increment;
-    int base;
+	int frame;
+	int mode;
+	int increment;
+	int base;
 } xvid_enc_zone_t;
 
 
@@ -328,41 +334,42 @@ typedef struct {
 
 typedef struct
 {
-    int version;
-    int flags;              /* [in:opt] plugin flags */
+	int version;
+	int flags;   /* [in:opt] plugin flags */
 } xvid_plg_info_t;
 
 
 typedef struct
 {
-    int version;
+	int version;
 
-    int num_zones;          /* [out] */
-    xvid_enc_zone_t * zones;    /* [out] */
+	int num_zones;           /* [out] */
+	xvid_enc_zone_t * zones; /* [out] */
 
-    int width;              /* [out] */
-    int height;             /* [out] */
-    int mb_width;           /* [out] */
-    int mb_height;          /* [out] */
-	int fincr;              /* [out] */
-    int fbase;              /* [out] */
+	int width;               /* [out] */
+	int height;              /* [out] */
+	int mb_width;            /* [out] */
+	int mb_height;           /* [out] */
+	int fincr;               /* [out] */
+	int fbase;               /* [out] */
 
-    void * param;           /* [out] */
+	void * param;            /* [out] */
 } xvid_plg_create_t;
 
 
 typedef struct
 {
-    int version;
+	int version;
 
 	int num_frames; /* [out] total frame encoded */
 } xvid_plg_destroy_t;
 
 typedef struct
 {
-    int version;
+	int version;
 
-    xvid_enc_zone_t * zone;    /* [out] current zone */
+	xvid_enc_zone_t * zone; /* [out] current zone */
+
     
     int width;              /* [out] */
     int height;             /* [out] */
@@ -391,7 +398,7 @@ typedef struct
 
 /* Deprecated, use the stats field instead.
  * Will disapear before 1.0 */
-    int length;                 /* [out] after: length of encoded frame */
+	int length;             /* [out] after: length of encoded frame */
 	int kblks;              /* [out] number of blocks compressed as Intra */
 	int mblks;              /* [out] number of blocks compressed as Inter */
 	int ublks;              /* [out] number of blocks marked not_coded */
@@ -420,7 +427,7 @@ typedef struct
   plugins[0].param = NULL;
   plugins[1].func = xvid_cbr_func;
   plugins[1].param = &cbr_data;
-  
+
   create.num_plugins = 2;
   create.plugins = plugins;
 
@@ -430,8 +437,8 @@ typedef int (xvid_plugin_func)(void * handle, int opt, void * param1, void * par
 
 typedef struct
 {
-    xvid_plugin_func * func;
-    void * param;
+	xvid_plugin_func * func;
+	void * param;
 } xvid_enc_plugin_t;
 
 
@@ -449,7 +456,7 @@ extern xvid_plugin_func xvid_plugin_dump;	/* dump before and after yuvpgms */
  * CBR and Constant quantizer modes */
 typedef struct
 {
-    int version;
+	int version;
 
 	int bitrate;               /* [in] bits per second */
 	int reaction_delay_factor; /* [in] */
@@ -459,21 +466,21 @@ typedef struct
 
 
 typedef struct {
-    int version;
+	int version;
 
-    char * filename;
+	char * filename;
 } xvid_plugin_2pass1_t;
 
 
-#define XVID_PAYBACK_BIAS   0   /* payback with bias */
-#define XVID_PAYBACK_PROP   1   /* payback proportionally */
+#define XVID_PAYBACK_BIAS 0 /* payback with bias */
+#define XVID_PAYBACK_PROP 1 /* payback proportionally */
 
 typedef struct {
-    int version;
-	
-	int bitrate;                  /* [in] bits per second */
+	int version;
+
+	int bitrate;                  /* [in] target bitrate (bits per second) */
 	char * filename;              /* [in] first pass stats filename */
-	
+
 	int keyframe_boost;           /* [in] keyframe boost percentage: [0..100] */
 	int curve_compression_high;   /* [in] percentage of compression performed on the high part of the curve (above average) */
 	int curve_compression_low;    /* [in] percentage of compression performed on the low  part of the curve (below average) */
@@ -498,9 +505,9 @@ typedef struct {
  * Encoder operations
  *--------------------------------------------------------------------------*/
 
-#define XVID_ENC_CREATE	    0	/* create encoder instance; returns 0 on success */
-#define XVID_ENC_DESTROY	1	/* destroy encoder instance; returns 0 on success */
-#define XVID_ENC_ENCODE	    2	/* encode a frame: returns number of ouput bytes
+#define XVID_ENC_CREATE  0 /* create encoder instance; returns 0 on success */
+#define XVID_ENC_DESTROY 1 /* destroy encoder instance; returns 0 on success */
+#define XVID_ENC_ENCODE  2 /* encode a frame: returns number of ouput bytes
                             * 0 means this frame should not be written (ie. encoder lag) */
 
 
@@ -563,9 +570,10 @@ extern int xvid_encore(void *handle, int opt, void *param1, void *param2);
 #define XVID_VOL_QUARTERPEL     (1<<2) /* enable quarterpel: frames will encoded as quarterpel */
 #define XVID_VOL_GMC            (1<<3) /* enable GMC; frames will be checked for gmc suitability */
 #define XVID_VOL_REDUCED_ENABLE (1<<4) /* enable reduced resolution vops: frames will be checked for rrv suitability */
+									   /* NOTE:  the reduced resolution feature is not supported anymore. This flag will have no effect! */
 #define XVID_VOL_INTERLACING    (1<<5) /* enable interlaced encoding */
 
-    
+
 /*----------------------------------------------------------------------------
  * "VOP" flags
  *
@@ -575,14 +583,14 @@ extern int xvid_encore(void *handle, int opt, void *param1, void *param2);
 
 /* Always valid */
 #define XVID_VOP_DEBUG                (1<< 0) /* print debug messages in frames */
-#define XVID_VOP_HALFPEL         (1<< 1) /* use halfpel interpolation */
+#define XVID_VOP_HALFPEL              (1<< 1) /* use halfpel interpolation */
 #define XVID_VOP_INTER4V              (1<< 2) /* use 4 motion vectors per MB */
-#define XVID_VOP_TRELLISQUANT    (1<< 3) /* use trellis based R-D "optimal" quantization */
-#define XVID_VOP_CHROMAOPT       (1<< 4) /* enable chroma optimization pre-filter */
-#define XVID_VOP_CARTOON         (1<< 5) /* use 'cartoon mode' */
-#define XVID_VOP_GREYSCALE       (1<< 6) /* enable greyscale only mode (even for  color input material chroma is ignored) */
-#define XVID_VOP_HQACPRED        (1<< 7) /* high quality ac prediction */
-#define XVID_VOP_MODEDECISION_RD (1<< 8) /* enable DCT-ME and use it for mode decision */
+#define XVID_VOP_TRELLISQUANT         (1<< 3) /* use trellis based R-D "optimal" quantization */
+#define XVID_VOP_CHROMAOPT            (1<< 4) /* enable chroma optimization pre-filter */
+#define XVID_VOP_CARTOON              (1<< 5) /* use 'cartoon mode' */
+#define XVID_VOP_GREYSCALE            (1<< 6) /* enable greyscale only mode (even for  color input material chroma is ignored) */
+#define XVID_VOP_HQACPRED             (1<< 7) /* high quality ac prediction */
+#define XVID_VOP_MODEDECISION_RD      (1<< 8) /* enable DCT-ME and use it for mode decision */
 #define XVID_VOP_FAST_MODEDECISION_RD (1<<12) /* use simplified R-D mode decision */
 
 /* Only valid for vol_flags|=XVID_VOL_INTERLACING */
@@ -607,11 +615,11 @@ extern int xvid_encore(void *handle, int opt, void *param1, void *param2);
 #define XVID_ME_USESQUARES8           (1<< 3) /* use square for XVID_ME_EXTSEARCH8 */
 
 /* SAD operator based flags */
-#define XVID_ME_HALFPELREFINE16       (1<< 4) 
-#define XVID_ME_HALFPELREFINE8        (1<< 6) 
-#define XVID_ME_QUARTERPELREFINE16    (1<< 7) 
-#define XVID_ME_QUARTERPELREFINE8     (1<< 8) 
-#define XVID_ME_GME_REFINE            (1<< 9) 
+#define XVID_ME_HALFPELREFINE16       (1<< 4)
+#define XVID_ME_HALFPELREFINE8        (1<< 6)
+#define XVID_ME_QUARTERPELREFINE16    (1<< 7)
+#define XVID_ME_QUARTERPELREFINE8     (1<< 8)
+#define XVID_ME_GME_REFINE            (1<< 9)
 #define XVID_ME_EXTSEARCH16           (1<<10) /* extend PMV by more searches */
 #define XVID_ME_EXTSEARCH8            (1<<11) /* use diamond/square for extended 8x8 search */
 #define XVID_ME_CHROMA_PVOP           (1<<12) /* also use chroma for P_VOP/S_VOP ME */
@@ -651,39 +659,39 @@ extern int xvid_encore(void *handle, int opt, void *param1, void *param2);
 typedef struct {
 	int version;
 
-    int profile;            /* [in]     profile@level; refer to XVID_PROFILE_xxx */
-	int width;				/* [in]		frame dimensions; width, pixel units */
-	int height;				/* [in]		frame dimensions; height, pixel units */
+	int profile;                 /* [in] profile@level; refer to XVID_PROFILE_xxx */
+	int width;                   /* [in] frame dimensions; width, pixel units */
+	int height;                  /* [in] frame dimensions; height, pixel units */
 
-    int num_zones;          /* [in:opt] number of bitrate zones */
-    xvid_enc_zone_t * zones; /*             ^^ zone array */
+	int num_zones;               /* [in:opt] number of bitrate zones */
+	xvid_enc_zone_t * zones;     /*          ^^ zone array */
 
-    int num_plugins;        /* [in:opt] number of plugins */
-    xvid_enc_plugin_t * plugins; /*        ^^ plugin array */
+	int num_plugins;             /* [in:opt] number of plugins */
+	xvid_enc_plugin_t * plugins; /*          ^^ plugin array */
 
-	int num_threads;		/* [in:opt]	number of threads */
-	int max_bframes;		/* [in:opt] max sequential bframes (0=disable bframes) */
+	int num_threads;             /* [in:opt] number of threads */
+	int max_bframes;             /* [in:opt] max sequential bframes (0=disable bframes) */
 
 	int global;                  /* [in:opt] global flags; controls encoding behavior */
 
 	/* --- vol-based stuff; included here for convenience */
-	int fincr;				/* [in:opt] framerate increment; set to zero for variable framerate */
+	int fincr;                   /* [in:opt] framerate increment; set to zero for variable framerate */
 	int fbase;                   /* [in] framerate base frame_duration = fincr/fbase seconds*/
     /* ---------------------------------------------- */
 
 	/* --- vop-based; included here for convenience */
-	int max_key_interval;	/* [in:opt] the maximum interval between key frames */
+	int max_key_interval;        /* [in:opt] the maximum interval between key frames */
 
-	int frame_drop_ratio;   /* [in:opt]	frame dropping: 0=drop none... 100=drop all */
+	int frame_drop_ratio;        /* [in:opt] frame dropping: 0=drop none... 100=drop all */
 
-	int bquant_ratio;		/* [in:opt]	bframe quantizer multipier/offeset; used to decide bframes quant when bquant==-1 */
-	int bquant_offset;		/*			bquant = (avg(past_ref_quant,future_ref_quant)*bquant_ratio + bquant_offset) / 100 */
+	int bquant_ratio;            /* [in:opt] bframe quantizer multipier/offeset; used to decide bframes quant when bquant==-1 */
+	int bquant_offset;           /* bquant = (avg(past_ref_quant,future_ref_quant)*bquant_ratio + bquant_offset) / 100 */
 
-    int min_quant[3];       /* [in:opt] */
-    int max_quant[3];       /* [in:opt] */
+	int min_quant[3];            /* [in:opt] */
+	int max_quant[3];            /* [in:opt] */
 	/* ---------------------------------------------- */
 
-	void *handle;			/* [out] encoder instance handle */
+	void *handle;                /* [out] encoder instance handle */
 } xvid_enc_create_t;
 
 
@@ -713,8 +721,8 @@ typedef struct xvid_enc_frame_t {
 	unsigned char *quant_inter_matrix; /* [in:opt] custom inter qmatrix */
 
 	int par;                           /* [in:opt] pixel aspect ratio (refer to XVID_PAR_xxx above) */
-	int par_width;			/* [in:opt] aspect ratio width */
-	int par_height;			/* [in:opt] aspect ratio height */
+	int par_width;                     /* [in:opt] aspect ratio width */
+	int par_height;                    /* [in:opt] aspect ratio height */
 
 	/* Other fields that can change on a frame base */
 
@@ -722,16 +730,16 @@ typedef struct xvid_enc_frame_t {
 	int vop_flags;                     /* [in] (general)vop-based flags */
 	int motion;                        /* [in] ME options */
 
-	xvid_image_t input;	/* [in] input image (read from) */
-	
-	int type;				/* [in:opt] coding type */
+	xvid_image_t input;                /* [in] input image (read from) */
+
+	int type;                          /* [in:opt] coding type */
 	int quant;                         /* [in] frame quantizer; if <=0, automatic (ratecontrol) */
 	int bframe_threshold;
 
-	void *bitstream;		/* [in:opt] bitstream ptr (written to)*/
-	int length;				/* [in:opt] bitstream length (bytes) */
+	void *bitstream;                   /* [in:opt] bitstream ptr (written to)*/
+	int length;                        /* [in:opt] bitstream length (bytes) */
 
-	int out_flags;				/* [out] bitstream output flags */
+	int out_flags;                     /* [out] bitstream output flags */
 } xvid_enc_frame_t;
 
 struct XVID_ME
