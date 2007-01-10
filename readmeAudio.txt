@@ -22,7 +22,7 @@
    http://www.mplayerhq.hu/
 
    or at Doom9:
-   http://forum.doom9.org/showthread.php?t=98600
+   http://forum.doom9.org/showthread.php?t=120465
 
 5. Copying
 
