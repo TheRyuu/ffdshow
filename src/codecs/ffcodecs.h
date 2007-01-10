@@ -266,8 +266,7 @@ static __inline bool sup_gmc(int x)               {return xvid_codec(x) || x==CO
 static __inline bool sup_me_mv0(int x)            {return sup_lavcme(x) && x!=CODEC_ID_SNOW;}
 static __inline bool sup_cbp_rd(int x)            {return x==CODEC_ID_MPEG4;}
 static __inline bool sup_qns(int x)               {return lavc_codec(x) && sup_quantProps(x) && x!=CODEC_ID_MSMPEG4V3 && x!=CODEC_ID_MSMPEG4V2 && x!=CODEC_ID_MSMPEG4V1 && x!=CODEC_ID_WMV1 && x!=CODEC_ID_WMV2 && x!=CODEC_ID_MJPEG && x!=CODEC_ID_SNOW;}
-//static __inline bool sup_threads(int x)           {return x==CODEC_ID_DVVIDEO || x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO || x==CODEC_ID_H263 || x==CODEC_ID_H263P || x==CODEC_ID_FLV1 || x==CODEC_ID_RV10 || x==CODEC_ID_MPEG4 || x==CODEC_ID_MSMPEG4V1 || x==CODEC_ID_MSMPEG4V2 || x==CODEC_ID_MSMPEG4V3 || x==CODEC_ID_WMV1 || x==CODEC_ID_WMV2 || x==CODEC_ID_MJPEG;}
-static __inline bool sup_threads(int x)           {return x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO || x==CODEC_ID_MPEG4;}
+static __inline bool sup_threads(int x)           {return x==CODEC_ID_MPEG1VIDEO || x==CODEC_ID_MPEG2VIDEO || x==CODEC_ID_MPEG4 || x==CODEC_ID_XVID4;}
 static __inline bool sup_palette(int x)           {return x==CODEC_ID_MSVIDEO1 || x==CODEC_ID_8BPS || x==CODEC_ID_QTRLE || x==CODEC_ID_TSCC || x==CODEC_ID_QPEG || x==CODEC_ID_PNG;}
 
 #endif
