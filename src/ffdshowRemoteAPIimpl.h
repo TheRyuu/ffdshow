@@ -22,6 +22,7 @@ private:
  unsigned int subtitleIdx;
  void start(void),stop(void); 
  bool inExplorer;
+ DWORD pdwROT;
 public:
  Tremote(TintStrColl *Icoll,IffdshowBase *Ideci);
  ~Tremote();

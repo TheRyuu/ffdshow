@@ -47,6 +47,7 @@ Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),Toptions(Ic
  load();
 
  h=NULL;
+ pdwROT = 0; // Initializes the running object table reference
  keys=NULL;hThread=NULL;
  inExplorer=deci->inExplorer()==S_OK;
 }
@@ -117,6 +118,13 @@ unsigned int __stdcall Tremote::threadProc(void *self0)
     }
   }  
  UnregisterClass(_l(FFDSHOW_REMOTE_CLASS),hi);
+ if (self->pdwROT)
+ {
+	comptr<IRunningObjectTable> pROT;
+	if (SUCCEEDED(GetRunningObjectTable(0,&pROT)))
+		pROT->Revoke(self->pdwROT);
+	self->pdwROT=0;
+ }
  self->h=NULL;
  _endthreadex(0);
  return 0;
@@ -165,6 +173,46 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
      return SUCCEEDED(deciD->cyclePresets(+1))?TRUE:FALSE;
 	case WPRM_SETCURTIME:
      return SUCCEEDED(deciD->seek((int)lprm))?TRUE:FALSE;
+	case WPRM_SETADDTOROT:
+		if ((int)lprm == 1) // 1 = Register to running object table (ROT) 0 = unregister
+		{
+			if (!pdwROT)
+			{
+				comptr<IRunningObjectTable> pROT;
+				if (SUCCEEDED(GetRunningObjectTable(0,&pROT))) 
+				{
+					IFilterGraph *pGraph = NULL;
+					deci->getGraph(&pGraph);
+					char_t entryName[256];
+					tsprintf(entryName, L"FilterGraph %08p pid %08x (ffdshow)", (DWORD_PTR)pGraph,GetCurrentProcessId());
+					comptr<IMoniker> pMoniker;
+					if (SUCCEEDED(CreateItemMoniker(L"!",entryName,&pMoniker)))
+					{
+						pROT->Register(ROTFLAGS_REGISTRATIONKEEPSALIVE && ROTFLAGS_ALLOWANYCLIENT,(IUnknown*)pGraph,pMoniker,&pdwROT);
+						//pMoniker->Release();
+						return TRUE;
+					}
+					pROT->Release();
+				}
+			}
+			return FALSE;
+		}
+		else
+		{
+			if (pdwROT)
+			{
+				comptr<IRunningObjectTable> pROT;
+				if (SUCCEEDED(GetRunningObjectTable(0,&pROT)))
+				{
+					pROT->Revoke(pdwROT);
+					pROT->Release();
+				}
+				pdwROT=0;
+				return TRUE;
+			}
+			return FALSE;
+		}
+
    }
  if (acceptKeys && (msg==WM_SYSKEYDOWN || msg==WM_SYSKEYUP || msg==WM_KEYDOWN || msg==WM_KEYUP))
   {
@@ -279,6 +327,45 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 		cd.cbData = strlen(fileName)+1;
 		SendMessage((HWND)wprm, WM_COPYDATA, COPY_GET_SOURCEFILE, (LPARAM)&cd);
 		return TRUE;
+	  }
+	  case COPY_GET_SUBTITLEFILESLIST:
+	  {
+		COPYDATASTRUCT cd;
+		cd.dwData = COPY_GET_SUBTITLEFILESLIST;
+		if (!deciV) return FALSE;
+        strings files;
+        TsubtitlesFile::findPossibleSubtitles(deci->getSourceName(),deci->getParamStr2(IDFF_subSearchDir),files);
+        if (files.size() == 0)
+		{
+			return FALSE;
+		}
+		else
+        {
+			size_t string_size = 2048;
+			char_t *filesList = (char_t*)alloca(sizeof(char_t)*string_size);
+			strcpy(filesList, _l(""));
+			for (int i=0; i<files.size(); i++)
+			{
+				const char_t *fileName = files[i].c_str();
+				// Resize the string if needed
+				if (strlen(filesList)+strlen(fileName)+ 1 >= string_size)
+				{
+					string_size += 2048;
+					char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
+					strcpy(tmpStr, filesList);
+					free(filesList); filesList = tmpStr;
+				}
+				strcat(filesList, fileName);
+				if (i != files.size() - 1)
+					strcat(filesList, _l(";"));
+			}
+			cd.lpData = alloca(sizeof(char)*(strlen(filesList)+1));
+			strcpy((char*)cd.lpData, "");
+			text<char>(filesList, (char*)cd.lpData);
+			cd.cbData = strlen(filesList)+1;
+			SendMessage((HWND)wprm, WM_COPYDATA, COPY_GET_PRESETLIST, (LPARAM)&cd);
+			return TRUE;
+        }
 	  }
     }
   }
