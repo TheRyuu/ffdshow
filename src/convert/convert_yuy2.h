@@ -94,9 +94,13 @@ template<bool RGB24,bool DUPL> struct Tmmx_ConvertRGBtoYUY2
    const __m64 mm0=_mm_cvtsi32_si64(fraction[MATRIX]);
    const __m64 mm7=*(__m64*)(cybgr_64+MATRIX);
    const __m64 mm5=_mm_cvtsi32_si64(y1y2_mult[MATRIX]);
+#define mmx_ConvertRGBtoYUY2_BUFSIZE 8192
+   if(lwidth_bytes>mmx_ConvertRGBtoYUY2_BUFSIZE)
+    lwidth_bytes=mmx_ConvertRGBtoYUY2_BUFSIZE;
    for (int y=0;y<h;SRC0+=src_pitch,DST+=dst_pitch,y++)
     {
-     unsigned char SRC[8192];memcpy(SRC,SRC0,lwidth_bytes);
+     unsigned char SRC[mmx_ConvertRGBtoYUY2_BUFSIZE];
+     memcpy(SRC,SRC0,lwidth_bytes);
      __m64 mm2,mm1;
      movq        (mm2,SRC);              // mm2= XXR2 G2B2 XXR1 G1B1
      punpcklbw   (mm1,mm2);             // mm1= XXxx R1xx G1xx B1xx
