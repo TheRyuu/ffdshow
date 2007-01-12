@@ -700,10 +700,8 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
  mb_width =(avctx->width+15)/16;
  mb_height=(avctx->height+15)/16;
  mb_count=mb_width*mb_height;
- //avctx->time_base.den=deci->getParam2(IDFF_enc_fpsRate);
- avctx->time_base.den=deci->getParam2(IDFF_enc_fpsScale);
- //avctx->time_base.num=deci->getParam2(IDFF_enc_fpsScale);
- avctx->time_base.num=deci->getParam2(IDFF_enc_fpsRate);
+ avctx->time_base.den=deci->getParam2(IDFF_enc_fpsRate);
+ avctx->time_base.num=deci->getParam2(IDFF_enc_fpsScale);
  avctx->gop_size=coCfg->max_key_interval;
 
  avctx->codec_tag=coCfg->fourcc;
