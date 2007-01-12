@@ -138,6 +138,8 @@ void TfontPage::font2dlg(void)
 
  if ((lang[0]=='J' || lang[0]=='j') && (lang[1]=='A' || lang[1]=='P' || lang[1]=='a'|| lang[1]=='p')) /* Japanese ANSI or Unicode */
   selectCharset(SHIFTJIS_CHARSET);
+ else
+  selectCharset(cfgGet(idff_fontcharset));
 #endif
  setCheck(IDC_CHB_FONT_FAST,cfgGet(idff_fontfast));
  repaint(GetDlgItem(m_hwnd,IDC_IMG_FONT_COLOR));
