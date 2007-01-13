@@ -183,8 +183,8 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 				{
 					IFilterGraph *pGraph = NULL;
 					deci->getGraph(&pGraph);
-					char_t entryName[256];
-					tsprintf(entryName, L"FilterGraph %08p pid %08x (ffdshow)", (DWORD_PTR)pGraph,GetCurrentProcessId());
+					WCHAR entryName[256];
+					wsprintfW(entryName, L"FilterGraph %08p pid %08x (ffdshow)", (DWORD_PTR)pGraph,GetCurrentProcessId());
 					comptr<IMoniker> pMoniker;
 					if (SUCCEEDED(CreateItemMoniker(L"!",entryName,&pMoniker)))
 					{
