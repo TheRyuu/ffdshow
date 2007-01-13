@@ -47,6 +47,7 @@
 #if PREF_YAMAGATA
   #define MSVC80 = True
   #define unicode_required = False
+  #define include_audx = True
   #define filename_prefix = '_Q'
 #endif
 #if PREF_XXL

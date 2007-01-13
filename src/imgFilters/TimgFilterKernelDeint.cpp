@@ -289,6 +289,7 @@ HRESULT TimgFilterKernelDeint2::process(TfilterQueue::iterator it,TffPict &pict,
      pict0.rtStop=pict.rtStart+rtDur-1;
      
      parent->deliverSample(++it,pict0);
+     --it;
      getNext(csp1,pict,cfg->full,dst);
      pict.rtStart=pict.rtStart+rtDur;
     } 
