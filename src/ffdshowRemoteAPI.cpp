@@ -344,7 +344,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			size_t string_size = 2048;
 			char_t *filesList = (char_t*)alloca(sizeof(char_t)*string_size);
 			strcpy(filesList, _l(""));
-			for (int i=0; i<files.size(); i++)
+			for (UINT i=0; i<files.size(); i++)
 			{
 				const char_t *fileName = files[i].c_str();
 				// Resize the string if needed
