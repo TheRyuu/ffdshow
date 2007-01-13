@@ -1,43 +1,48 @@
-List of known issues in revision 684:
+List of known issues in revision 755:
 
-1) Wavpack decoder only works with lossless wavpack. Lossy and hybrid wavpack
-   is not yet supported.
-2) Some files with interlaced H.264 video don't decode properly.
-   Sample file: "http://www.egoshare.com/9dad3c13be3968c0ed977ed5cd62e25f/3rd_rock_of_sun_sampleavi.html"
+1) Wavpack decoder only works with lossless wavpack. Lossy and hybrid wavpack is not
+   yet supported.
+2) Some files with interlaced H.264 video don't decode properly. 
+   (Sample: http://www.egoshare.com/9dad3c13be3968c0ed977ed5cd62e25f/3rd_rock_of_sun_sampleavi.html)
    FFmpeg bug or perhaps a x264 VFW bug? (Reported by Romario)
+3) Encoding fails if threads > 1 for the following formats: DivX 3, MS MPEG-4 V2,
+   H.263(+), WMV7, WMV8, MJPEG, DV and FLV1. Please test this fix
+   (http://forum.doom9.org/showthread.php?p=924629#post924629).
 
 Other bug reports:
 
-3) Writing an OGM file via VFW interface creates a corrupt file. (reported by clsid)
-4) FLV muxer seems to be buggy as well.
-5) The following encoders do not work for me: MPEG 4, MPEG 1, MPEG 2, h.263, H.261
-   and DV. VirtualDub 1.6.17 gives the following error: "Cannot start video
-   compression. An unknown error occurred (may be corrupt data). (error code -100)".
-   At least some of these encoders do work for others? Seems to depend on the input?
-   Sample: "http://www.mytempdir.com/1105695" (reported by: a few people)
-6) I think I have found a bug in the ffdshow subtitle filter. If I slow down the
+4) The following encoders do not work for me: MPEG 1, MPEG 2 and DV (does DV have
+   input limitations like H263?). VirtualDub 1.6.17 gives the following error:
+   "Cannot start video compression. An unknown error occurred (may be corrupt data).
+   (error code -100)". (reported by: clsid)
+5) I think I have found a bug in the ffdshow subtitle filter. If I slow down the
    playback speed of the video in Media Player Classic, then the subtitles will
    continue to play at their normal speed. So the subs go faster than the video and
    synchronization is lost. After changing the playback speed back to normal, the
    subtitles will synchronize and continue at the correct position. (reported by clsid)
+6) There is an abnormal increase in CPU usage when the ffdshow audio panel is open
+   during playback. (reported by foxyshadis)
+7) Queue is off in Overlay Mixer. (reported by clsid)
+8) ffdshow raw filter doesn't work in ZoomPlayer. (reported by midiboy)
 
 ToDo:
 
-7) Add WM9 decoder passthrough
-8) Update and fix SNOW support
-9) Fix VMnc decoding
-10) Fix VC-1 decoding
-11) Update libavcodec vorbis
+9) Update SNOW
+10) Fix VMnc decoding
+11) Fix libavcodec VC-1 decoding
+12) H.261 and H.263 encoders only support specific resolutions. An error message
+    should be added and shown when an unsupported input resolution is used. H.261
+    supports 176x144 and 352x288. H.263 supports 128x96, 176x144, 352x288, 704x576 and
+    1408x1152.
 
 Other issues:
 
-12) ICL9 builds of ffdshow.ax crash on files created by a specific old revision of
+13) ICL9 builds of ffdshow.ax crash on files created by a specific old revision of
     x264 (don't know the rev number). These files should be very rare. Funny thing
     however is that the files play fine and without crash if you first play another
     file and then play the 'troublesome' file in the same player instance. Also no
     crash when using an unoptimized debug build. So this seems to be a compiler bug.
-    Sample file: "http://rapidshare.com/files/1609924/sample.mp4.html"
-    (reported by clsid)
+    (Sample: http://rapidshare.com/files/1609924/sample.mp4.html). (reported by clsid)
 
 
 --------------------------------------------------------------------------------------

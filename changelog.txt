@@ -1,6 +1,435 @@
-Changelog of ffdshow-tryouts revisions 0-700
+Changelog of ffdshow-tryouts revisions 0-768
 
 
+
+------------------------------------------------------------------------
+r768 | Sat Jan 13 11:09:27 2007 UTC | albain
+
+Resolved compilation warning. (sorry again :))
+
+------------------------------------------------------------------------
+r767 | Sat Jan 13 11:04:41 2007 UTC | albain
+
+Sorry for this mistake: This should compile right now in ANSI mode.
+
+------------------------------------------------------------------------
+r766 | Sat Jan 13 02:33:05 2007 UTC | h_yamagata
+
+Bug fix: Kernel deinterlacer:  Next filter is skipped 2-for-1.
+Among others filters, it is worst if the next filter is resize.
+
+------------------------------------------------------------------------
+r765 | Fri Jan 12 22:50:41 2007 UTC | albain
+
+Added a command to remotely retrieve the subtitle files list, and a
+command to register the graph into the ROT (running object table).
+This lets other programs access to the graph and control its interfaces.
+Tested OK
+
+------------------------------------------------------------------------
+r764 | Fri Jan 12 15:14:27 2007 UTC | h_yamagata
+
+Bug fix: ANSI builds: Font-Charset setting was not working.
+
+------------------------------------------------------------------------
+r763 | Fri Jan 12 12:44:44 2007 UTC | h_yamagata
+
+Color space conversion: RGB to YUY2: security fix
+
+------------------------------------------------------------------------
+r762 | Fri Jan 12 08:47:48 2007 UTC | drevil_xxl
+
+Updated Inno Setup.
+
+------------------------------------------------------------------------
+r761 | Fri Jan 12 08:38:20 2007 UTC | drevil_xxl
+
+Revert rev 755.
+
+------------------------------------------------------------------------
+r760 | Wed Jan 10 19:27:14 2007 UTC | drevil_xxl
+
+Updated readme.
+
+------------------------------------------------------------------------
+r759 | Wed Jan 10 18:08:08 2007 UTC | drevil_xxl
+
+(ffmpeg 7431) Fix av_reduce() with things like 1/0 and 0/0.
+
+------------------------------------------------------------------------
+r758 | Wed Jan 10 18:02:54 2007 UTC | drevil_xxl
+
+(ffmpeg 7435) Unconditionally enable Theora decoder. It works fine now
+and there is no Theora support through libtheora in FFmpeg.
+
+------------------------------------------------------------------------
+r757 | Wed Jan 10 17:55:05 2007 UTC | drevil_xxl
+
+Added encoding support for multithreaded xvidcore 1.2.
+
+------------------------------------------------------------------------
+r756 | Tue Jan 9 14:37:33 2007 UTC | drevil_xxl
+
+Updated xvid main header file.
+
+------------------------------------------------------------------------
+r755 | Tue Jan 9 11:53:10 2007 UTC | clsid2
+
+Small encoding patch by drevil_xxl. This fixes MPEG4 encoding for me.
+
+------------------------------------------------------------------------
+r754 | Mon Jan 8 18:35:46 2007 UTC | foxyshadis
+
+Doesn't really need exceptions turned on.
+
+------------------------------------------------------------------------
+r753 | Mon Jan 8 18:12:09 2007 UTC | drevil_xxl
+
+Removed some warnings: no newline at end of file
+
+------------------------------------------------------------------------
+r752 | Mon Jan 8 13:06:41 2007 UTC | drevil_xxl
+
+minor fix
+
+------------------------------------------------------------------------
+r751 | Mon Jan 8 12:46:50 2007 UTC | drevil_xxl
+
+Updated vp3 & h263.
+
+------------------------------------------------------------------------
+r750 | Mon Jan 8 11:52:48 2007 UTC | h_yamagata
+
+libmpeg2: bug fix: MPEG 1/2 seek issue.
+ Crash and artifact on seek (or startup) is fixed.
+
+------------------------------------------------------------------------
+r749 | Mon Jan 8 08:31:07 2007 UTC | albain
+
+Added current subtitles retrieval.
+
+------------------------------------------------------------------------
+r748 | Sun Jan 7 14:44:49 2007 UTC | drevil_xxl
+
+Updated ff_vfw.dll binary.
+Minor fix.
+
+------------------------------------------------------------------------
+r747 | Sun Jan 7 10:24:35 2007 UTC | h_yamagata
+
+Bug fix of rev 746
+Missing erase.
+
+------------------------------------------------------------------------
+r746 | Sun Jan 7 00:06:13 2007 UTC | h_yamagata
+
+Minor fix of 742.
+Re-enabled CoInitialize & CoUninitialize with protection.
+
+------------------------------------------------------------------------
+r745 | Sat Jan 6 14:11:58 2007 UTC | clsid2
+
+Updated ff_vfw.dll binary.
+
+------------------------------------------------------------------------
+r744 | Sat Jan 6 13:48:16 2007 UTC | h_yamagata
+
+Bug fix of rev 742.
+
+------------------------------------------------------------------------
+r743 | Sat Jan 6 13:34:12 2007 UTC | clsid2
+
+Updated ff_vfw.dll binary.
+
+------------------------------------------------------------------------
+r742 | Sat Jan 6 12:46:43 2007 UTC | h_yamagata
+
+Bug fix: Explorer.exe was crashing in Windows Vista.
+http://sourceforge.net/tracker/index.php?func=detail&aid=1611309&group_id=53761&atid=471489.
+
+Explorer.exe use vfw decoder to get thumbnail.
+I disabled CoInitialize & CoUninitialize. These two API functions were
+called from different threads, which was the cause of the crashes.
+
+I think the application should have called CoInitialize before here.
+Need more testing though.
+
+------------------------------------------------------------------------
+r741 | Fri Jan 5 22:39:43 2007 UTC | drevil_xxl
+
+Partial revert rev 739.
+
+------------------------------------------------------------------------
+r740 | Fri Jan 5 15:45:33 2007 UTC | clsid2
+
+Updated version resource. This will synchronize the current build
+version between builders (once).
+
+------------------------------------------------------------------------
+r739 | Fri Jan 5 13:00:45 2007 UTC | drevil_xxl
+
+Fixed (?) ogg & ogm muxers.
+Removed flv & mpeg muxers.
+
+------------------------------------------------------------------------
+r738 | Thu Jan 4 12:08:23 2007 UTC | h_yamagata
+
+Color space conversion: Issue with lines non multiple of four.
+ For example, if you try to resize from DVD to 1280 x 966, it crashes
+ with RGB32, RGB16 and YUY2.
+
+------------------------------------------------------------------------
+r737 | Wed Jan 3 19:41:20 2007 UTC | drevil_xxl
+
+(ffmpeg 7407) Maybe fixing a segfault.
+
+------------------------------------------------------------------------
+r736 | Wed Jan 3 12:19:23 2007 UTC | h_yamagata
+
+odd lines: fixed crash in old video renderer
+
+------------------------------------------------------------------------
+r735 | Tue Jan 2 17:24:59 2007 UTC | drevil_xxl
+
+Removed h264 pp.
+
+------------------------------------------------------------------------
+r734 | Sun Dec 31 15:10:15 2006 UTC | foxyshadis
+
+GCC compatibility for avisynth update.
+
+------------------------------------------------------------------------
+r733 | Sun Dec 31 11:49:59 2006 UTC | foxyshadis
+
+Workaround for currentFrame being incorrect with timestamp jitter.
+(Needed for avisynth.) Still insufficient for VFR.
+
+------------------------------------------------------------------------
+r732 | Sun Dec 31 03:22:21 2006 UTC | foxyshadis
+
+Accidentally mixed an ICL file in there.
+
+------------------------------------------------------------------------
+r731 | Sat Dec 30 12:05:23 2006 UTC | foxyshadis
+
+Quiet some spurious VC8 warnings.
+
+------------------------------------------------------------------------
+r730 | Sat Dec 30 10:15:38 2006 UTC | drevil_xxl
+
+Updated ffdshow_icl9.
+
+------------------------------------------------------------------------
+r729 | Sat Dec 30 09:32:59 2006 UTC | h_yamagata
+
+Minor fix of rev 727.
+
+------------------------------------------------------------------------
+r728 | Sat Dec 30 08:53:19 2006 UTC | h_yamagata
+
+OSD:Queued Samples:VMR9 renderless fix.
+
+------------------------------------------------------------------------
+r727 | Sat Dec 30 08:37:59 2006 UTC | h_yamagata
+
+Bug fix of rev 726.
+
+------------------------------------------------------------------------
+r726 | Sat Dec 30 08:22:53 2006 UTC | h_yamagata
+
+YV12 and odd lines number.
+
+------------------------------------------------------------------------
+r725 | Sat Dec 30 08:17:08 2006 UTC | h_yamagata
+
+Queue: disable prefetch. Sorry I committed wrong file for rev 724.
+
+------------------------------------------------------------------------
+r724 | Fri Dec 29 23:47:11 2006 UTC | h_yamagata
+
+Queue :disable prefetch.
+
+------------------------------------------------------------------------
+r723 | Fri Dec 29 05:00:48 2006 UTC | h_yamagata
+
+Queue bug fix
+ OSD, Overlay Mixer.
+
+------------------------------------------------------------------------
+r722 | Wed Dec 27 19:19:12 2006 UTC | h_yamagata
+
+typo
+
+------------------------------------------------------------------------
+r721 | Wed Dec 27 14:47:28 2006 UTC | h_yamagata
+Revision 721 - Directory Listing
+Modified  (2 weeks ago) by 
+
+exclude YSO_WIN.exe (Y's origin)
+
+------------------------------------------------------------------------
+r720 | Wed Dec 27 14:20:13 2006 UTC | clsid2
+
+Updated msvc71 binaries.
+
+------------------------------------------------------------------------
+r719 | Wed Dec 27 11:11:33 2006 UTC | h_yamagata
+
+New version of queue. 
+As a result, queue becomes effective with Zoom player and MPC + VMR9.
+
+Another fix includes,
+ Only queue in VMR7 and overlay mixer.
+ In VMR9, try VMR9's internal queue.
+ Improved compatibility issue with BSPlayer.
+ Windows Media Player is excluded from queueing internally regardless
+ of the settings.
+ Registry option "queueCount".
+
+ListEmptyIMediaSamples is a helper class of queue and does prefetch.
+GetBuffer and Receive is now called from the same thread.
+If Receive and GetBuffer is called from other threads, GetBuffer often
+returns error.
+By cooperating with TffOutputQ, ListEmptyIMediaSamples buffers the
+IMediaSample as soon as it is released in TffOutputQ::ThreadProc.
+
+------------------------------------------------------------------------
+r718 | Wed Dec 27 10:07:50 2006 UTC | drevil_xxl
+
+Reordering the codec list.
+
+------------------------------------------------------------------------
+r717 | Tue Dec 26 20:45:10 2006 UTC | drevil_xxl
+
+minor fix
+
+------------------------------------------------------------------------
+r716 | Tue Dec 26 20:02:04 2006 UTC | drevil_xxl
+
+Added more FourCCs.
+
+------------------------------------------------------------------------
+r715 | Tue Dec 26 14:28:48 2006 UTC | eragon4ever
+
+Remove useless spaces.
+
+------------------------------------------------------------------------
+r714 | Tue Dec 26 13:53:04 2006 UTC | clsid2
+Revision 714 - Directory Listing
+Modified  (2 weeks, 1 day ago) by 
+
+Inno Setup tasks fix.
+
+------------------------------------------------------------------------
+r713 | Tue Dec 26 11:26:20 2006 UTC | h_yamagata
+
+fail CheckMediaType in Raw Video Format
+http://ffdshow-tryout.sourceforge.net/phpBB2/viewtopic.php?t=215
+
+------------------------------------------------------------------------
+r712 | Mon Dec 25 13:02:54 2006 UTC | drevil_xxl
+
+small IS update
+added some remarks
+
+------------------------------------------------------------------------
+r711 | Mon Dec 25 10:25:21 2006 UTC | drevil_xxl
+
+Reordering the codec list.
+
+------------------------------------------------------------------------
+r710 | Sun Dec 24 21:24:49 2006 UTC | drevil_xxl
+
+(ffmpeg 7357) bt 0 is invalid, setting min to 1
+
+(ffmpeg 7361) Test DIRECT{0,0} too if flag mv0 is used.
+Slight PSNR/bitrate increase.
+
+(ffmpeg 7365) skiped
+
+------------------------------------------------------------------------
+r709 | Sun Dec 24 19:09:46 2006 UTC | drevil_xxl
+
+Updated wmv9.
+
+------------------------------------------------------------------------
+r708 | Sun Dec 24 14:42:55 2006 UTC | h_yamagata
+
+Dialog Resize/Aspect ratio Manual & Overlay aspect ratio:
+Cursor key was not effective.
+
+------------------------------------------------------------------------
+r707 | Sat Dec 23 14:11:26 2006 UTC | h_yamagata
+
+MPC/Haali video renderer + MPC's internal source filter AVI + ffdshow:
+Fix seek problem (old issue).
+
+------------------------------------------------------------------------
+r706 | Sat Dec 23 03:03:27 2006 UTC | h_yamagata
+
+small fix for Inno Setup.
+
+http://sourceforge.net/tracker/index.php?func=detail&aid=1596080&group_id=173941&atid=867360
+
+------------------------------------------------------------------------
+r705 | Fri Dec 22 13:41:55 2006 UTC | drevil_xxl
+
+(ffmpeg 7351) 10l
+
+(ffmpeg 7352) more simplification
+
+------------------------------------------------------------------------
+r704 | Thu Dec 21 17:18:48 2006 UTC | drevil_xxl
+
+(ffmpeg 7333) Don't favor the zero MV if mv0 is used. (PSNR per bitrate
+gains ranging from 0 to 0.14, most are <=0.04 though.)
+
+(ffmpeg 7334) Fix special casing of the 0,0 MV for b frames.
+(slight PSNR/bitrate gain)
+
+(ffmpeg 7336) Try direct mode MB after QPRD, slight PSNR/bitrate gain if
+b frames + QPRD.
+
+(ffmpeg 7341) Don't randomly dissallow direct MBs. Some PSNR/bitrate gain
+for b frames with adaptive quant or QPRD.
+
+(ffmpeg 7342) Don't randomly disallow intr4v in adaptive quant.
+Some PSNR/bitrate gain if adaptive quant is used.
+Initalize qscale_table correctly. (It was pretty much random since the
+qp->lambda change.) This probably has not much effect as the table isn't
+used currently IIRC.
+
+(ffmpeg 7343) Skip motion estimation and encoding of non direct-0,0 MBs
+if the next MB is skiped. (MPEG4 doesn't allow such MBs and in the past
+we did ME and encoding until at the end we droped them, so this should
+be faster though i didn't benchmark it, benchmark welcome.) 
+
+(ffmpeg 7344) I think this if() is useless let's abuse our users to
+test this. ;)
+
+(ffmpeg 7345) simplify
+
+(ffmpeg 7346) Use qscale_table in adaptive quant. Some PSNR/bitrate
+improvement for adaptive quant.
+
+(ffmpeg 7347) simplify
+
+(ffmpeg 7348) FIXME has already been fixed ages ago.
+
+------------------------------------------------------------------------
+r703 | Wed Dec 20 15:52:29 2006 UTC | albain
+
+Added presets list retrieval, as well as source file name.
+
+------------------------------------------------------------------------
+r702 | Mon Dec 18 21:20:36 2006 UTC | eragon4ever
+
+Small Inno Setup update.
+
+------------------------------------------------------------------------
+r701 | Mon Dec 18 16:54:33 2006 UTC | eragon4ever
+
+Updated changelog & small update to German Inno Setup translation. 
 
 ------------------------------------------------------------------------
 r700 | Mon Dec 18 16:08:51 2006 UTC | drevil_xxl

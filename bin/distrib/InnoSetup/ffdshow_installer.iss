@@ -1,5 +1,5 @@
 ; Written by CLSID
-; Requires InnoSetup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
+; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
 #define tryout_revision = 762
@@ -16,7 +16,6 @@
 #define sse2_required = False
 #define _3dnow_required = False
 #define ext3dnow_required = False
-
 
 #define MSVC80 = True
 
@@ -276,11 +275,11 @@ Name: {group}\{cm:uninstall}; Filename: {uninstallexe}
 ; For speaker config
 Source: msvc71\ffSpkCfg.dll; Flags: dontcopy
 
-; MSVC71 runtimes are required for ffdshow components that are placed outside the ffdshow installation directory
+; MSVC71 runtimes are required for ffdshow components that are placed outside the ffdshow installation directory.
 Source: msvcp71.dll; DestDir: {sys}; Flags: onlyifdoesntexist
 Source: msvcr71.dll; DestDir: {sys}; Flags: onlyifdoesntexist
 #if MSVC80
-; Install MSVC80 runtime as private assembly (can only be used by components that are in the same directory)
+; Install MSVC80 runtime as private assembly (can only be used by components that are in the same directory).
 Source: ..\msvcr80.dll; DestDir: {app}; MinVersion: 4.1,5; Flags: ignoreversion restartreplace uninsrestartdelete
 Source: ..\NT4.0\msvcr80.dll; DestDir: {app}; MinVersion: 0,4; OnlyBelowVersion: 0,5; Flags: ignoreversion restartreplace uninsrestartdelete
 Source: ..\microsoft.vc80.crt.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete
@@ -306,7 +305,7 @@ Source: ..\..\libmpeg2_ff.dll; DestDir: {app}; Flags: ignoreversion restartrepla
 #if !PREF_CLSID
 Source: ..\..\ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Components: ffdshow
 #endif
-; Ansi + unicode:
+; ANSI + Unicode:
 #if PREF_CLSID
 Source: ..\..\ffdshow_ansi.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; MinVersion: 4,0; Components: ffdshow
 Source: ..\..\ffdshow_unicode.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; MinVersion: 0,4; Components: ffdshow
@@ -324,13 +323,13 @@ Source: ..\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartrepl
 #if !PREF_CLSID
 Source: ..\..\ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow\vfw
 #endif
-; Ansi + unicode:
+; ANSI + Unicode:
 #if PREF_CLSID
 Source: ..\..\ff_wmv9_ansi.dll; DestName: ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; MinVersion: 4,0; Components: ffdshow\vfw
 Source: ..\..\ff_wmv9_unicode.dll; DestName: ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; MinVersion: 0,4; Components: ffdshow\vfw
 #endif
 
-; If you want to use MSVC8 for ffdshow.ax, ff_vfw.dll should be compiled by GCC. Both MSVC7.1 and MSVC8 does not work in some environment such as Windows Xp sp2 without shared assembly of msvcr80.
+; If you want to use MSVC8 for ffdshow.ax, ff_vfw.dll should be compiled by GCC. Both MSVC7.1 and MSVC8 does not work in some environment such as Windows XP SP2 without shared assembly of MSVCR80.
 Source: ..\..\ff_vfw.dll; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
 Source: ..\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
 
@@ -374,13 +373,13 @@ Type: files; Name: {app}\ffdshow.ax.manifest; Components: ffdshow
 Type: files; Name: {app}\makeAVIS.exe.manifest; Components: ffdshow\makeavis
 #endif
 #if localize
-; localized shortcuts
+; Localized shortcuts
 Type: files; Name: {group}\Video decoder configuration.lnk; Components: ffdshow
 Type: files; Name: {group}\Audio decoder configuration.lnk; Components: ffdshow
 Type: files; Name: {group}\Uninstall ffdshow.lnk; Components: ffdshow
 Type: files; Name: {group}\VFW configuration.lnk; Components: ffdshow\vfw
 #endif
-; shortcuts belonging to old NSIS installers
+; Shortcuts belonging to old NSIS installers
 Type: files; Name: {group}\VFW codec configuration.lnk; Components: ffdshow\vfw
 Type: files; Name: {group}\Uninstall.lnk; Components: ffdshow
 
@@ -480,7 +479,7 @@ Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: postprocH
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: idct; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
 Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: dword; ValueName: libtheoraPostproc; ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
 
-; blacklist
+; Blacklist
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: isBlacklist; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: String; ValueName: blacklist; ValueData: "explorer.exe;oblivion.exe;morrowind.exe;powerdvd.exe"; Flags: createvalueifdoesntexist; OnlyBelowVersion: 0,6; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: String; ValueName: blacklist; ValueData: "oblivion.exe;morrowind.exe;powerdvd.exe"; Flags: createvalueifdoesntexist; MinVersion: 0,6; Components: ffdshow
@@ -508,7 +507,7 @@ Description: {cm:runvfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,c
 #include "custom_messages.iss"
 
 [Code]
-// global vars
+// Global vars
 var
   reg_mixerOut: Cardinal;
   reg_ismixer: Cardinal;
@@ -564,7 +563,7 @@ begin
 end;
 
 #if include_app_plugins
-// global vars
+// Global vars
 var
   avisynthplugindir: String;
   dscalerdir: String;
@@ -656,15 +655,15 @@ var
   dword: Cardinal;
 begin
   if RegKeyExists(HKLM, 'Software\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow') then begin
-    // remove uninstall.exe
+    // Remove uninstall.exe
     if RegQueryStringValue(HKLM, 'Software\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow', 'UninstallString', regval) then begin
       if FileExists(RemoveQuotes(regval)) then begin
         DeleteFile(RemoveQuotes(regval));
       end
       regval := ExtractFilePath(RemoveQuotes(regval));
-      // todo: also remove ffdshow files if new install path is different from old one
+      // ToDo: Also remove ffdshow files if new install path is different from old one.
     end
-    // remove MSVC80 runtimes
+    // Remove MSVC80 runtimes
     if RegQueryDwordValue(HKLM, 'Software\GNU\ffdshow', 'AvisynthMsvcr80Inst', dword) AND (dword = 1) then begin
       if RegQueryStringValue(HKLM, 'Software\GNU\ffdshow', 'pthAvisynth', regval) AND DirExists(regval) then begin
         try
@@ -716,7 +715,7 @@ begin
       end
       RegDeleteValue(HKLM, 'Software\GNU\ffdshow', 'DScalerMsvcr80Inst');
     end
-    // remove uninstall registry key
+    // Remove uninstall registry key
     RegDeleteKeyIncludingSubkeys(HKLM, 'Software\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow');
   end
 end;
@@ -771,7 +770,7 @@ var
   regval: String;
   ResultCode: Integer;
 begin
-  // Also uninstall NSIS build when uninstalling InnoSetup build
+  // Also uninstall NSIS build when uninstalling Inno Setup build.
   if RegQueryStringValue(HKLM, 'Software\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow', 'UninstallString', regval) then begin
     if FileExists(RemoveQuotes(regval)) then begin
       if NOT Exec(RemoveQuotes(regval), '/S', '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then begin
@@ -839,10 +838,11 @@ var
   reg_isSpkCfg: Cardinal;
   isMajorType: Boolean;
 begin
+
   { Create the pages }
-//
+
 // Speaker setup
-//
+
   is8DisableMixer := False;
   SpeakerPage := CreateInputOptionPage(wpSelectTasks,
     ExpandConstant('{cm:speakersetup}'),
@@ -942,9 +942,9 @@ begin
       SpeakerPage.Values[7] := True;
   end
 
-//
+
 // VirtualDub plugin install directory setting
-//
+
 #if include_app_plugins
   VdubDirPage := CreateInputDirPage(SpeakerPage.ID,
     ExpandConstant('{cm:SelectPluginDirLabel1,Virtual Dub}'),
