@@ -345,7 +345,6 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
  src+=skip;int size=int(srcLen0-skip);
  if (pIn) 
   pIn->GetTime(&rtStart,&rtStop);
- DPRINTF(_l("TvideoCodecLibavcodec::decompress %d %d"),(int)rtStart/10000,(int)rtStop/10000);
  b[posB].rtStart=rtStart;b[posB].rtStop=rtStop;b[posB].srcSize=size;posB=1-posB;
 
  if (codecId==CODEC_ID_H264)
@@ -467,6 +466,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
    else 
     if (!src)
      break;
+   if(!used_bytes && !got_picture) return S_FALSE;
    src+=used_bytes;
    size-=used_bytes;
   }
