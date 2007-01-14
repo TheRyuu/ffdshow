@@ -6,6 +6,7 @@
     <META Name="description" Content="ffdshow tryouts 更新履歴"> </HEAD>
 <BODY>
     <A href="http://ffdshow-tryout.sourceforge.net/phpBB2/"><IMG Src="../images/logo_phpBB.gif" border="0" Alt="ffdshow tryouts" Width=200 Height=91></A><BR>
+    <P>
     <H2>更新履歴<BR></H2>
     <H3>不具合の修正</H3>
     オリジナルのffdshow projectの最新バージョンからmtパッチを取り除いた状態を基準としています。<BR>
@@ -21,7 +22,7 @@
         <LI>幅1024ピクセルを超えるRGB→YUY2変換でクラッシュしていた。
         <LI>YV12が有効になっていると奇数ラインの動画再生時に画像が乱れた。
         <LI>HaaliのビデオレンダラとMPCの間にffdshowが入ったときにうまくシークできないことがあった。
-        <LI>Kernel deinterlaceの次の内部フィルターが１フレームおきにスキップされていた。次のフィルターがリサイズであった場合特にひどい結果になった。
+        <LI>Kernel deinterlaceの次の内部フィルターが１フレームおきにスキップされていた。次の内部フィルターがリサイズであった場合フレーム毎にビデオサイズが変化していた。
     </OL>
     <H4>beta1までの修正</H4>
     <OL Start=9>
@@ -60,6 +61,8 @@
         <LI>Windows Vistaのダイアログでコーデックの選択枝が上のほうに表示されていた。
         <LI>AvisynthのスクリプトにエラーがあるとOSD表示されるが、そのエラーメッセージがAvisynthを無効にしても消えなかった。
     </OL>
+    </P>
+    <P>
     <H3>新機能</H3><BR>
     <H4>beta1以降の追加</H4>
     <OL>
@@ -79,7 +82,11 @@
         <LI>画質と処理速度、同期との兼ね合いを設定できるようにした。
         <LI>SVQ3のデコード時にスプリッタから十分な情報が得られなかった際エラーメッセージを表示するようにした。
     </OL>
+    </P>
+    <P>
+    <H2>ダウンロード</H2> 
     <A href="http://downloads.sourceforge.net/ffdshow-tryout/ffdshow_beta1_20061211_clsid.exe">ダウンロード　beta1(安定版)</A><BR>
     <A href="http://sourceforge.net/project/showfiles.php?group_id=173941">ダウンロード　Nightly builds(最新版)</A>
+    </P>
 </BODY>
 </HTML>
