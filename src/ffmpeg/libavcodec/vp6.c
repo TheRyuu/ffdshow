@@ -244,7 +244,7 @@ static void vp6_parse_vector_adjustment(vp56_context_t *s, vp56_mv_t *vect)
     vp56_range_coder_t *c = &s->c;
     int comp;
 
-    *vect = (vp56_mv_t) {0,0};
+    vect->x=0;vect->y=0; // = (vp56_mv_t) {0,0};
     if (s->vector_candidate_pos < 2)
         *vect = s->vector_candidate[0];
 
