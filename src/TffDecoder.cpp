@@ -1276,12 +1276,14 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
      iVmrSC9->GetStreamActiveState(&isVMR9Active);
      iVmrSC9->Release();
     }
+   if (!m_IsOverlay)
+    {
+     hr= m_pOutput->GetConnected()->QueryAccept(&mt);
+     if (SUCCEEDED(hr))
+      hr= m_pOutput->GetConnected()->ReceiveConnection(m_pOutput, &mt);
+    }
 
-   hr= m_pOutput->GetConnected()->QueryAccept(&mt);
-   if(SUCCEEDED(hr))
-    hr= m_pOutput->GetConnected()->ReceiveConnection(m_pOutput, &mt);
-
-   if(FAILED(hr))  // try dynamic reconnect to re-negotiate cBuffers.
+   if (m_IsOverlay || FAILED(hr))  // try dynamic reconnect to re-negotiate cBuffers.
     {
      DPRINTF(_l("try dynamic reconnect."));
      if(ipinConnection && igraphConfig)
@@ -1329,7 +1331,20 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
       }
     }
 
-   if(iVmrSC9) // without this, the old renderer(tested with i82865G) sometimes hang up for unknown reason.
+#if 0
+   if (m_IsOverlay)
+    {
+     IBasicVideo2 *ibv=NULL;
+     graph->QueryInterface(IID_IBasicVideo2, (void **)(&ibv));
+     if (ibv)
+      {
+       HRESULT hr2=ibv->SetSourcePosition(newpict.rectFull.x,newpict.rectFull.y,newpict.rectFull.dx,newdy);
+       ibv->Release();
+      }
+    }
+#endif
+
+   if (iVmrSC9) // without this, the old renderer(tested with i82865G) sometimes hang up for unknown reason.
     {
      m_pOutput->GetConnected()->QueryInterface(IID_IVMRVideoStreamControl9, (void**)(&iVmrSC9));
      if(iVmrSC9)
