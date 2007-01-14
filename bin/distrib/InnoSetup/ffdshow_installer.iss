@@ -2,10 +2,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 762
+#define tryout_revision = 772
 #define buildyear = 2007
 #define buildmonth = '01'
-#define buildday = '12'
+#define buildday = '14'
 
 ; Build specific options
 #define unicode_required = True
@@ -164,36 +164,36 @@ Name: ffdshow\plugins\dscaler; Description: DScaler
 [Tasks]
 Name: resetsettings; Description: {cm:resetsettings}; Flags: unchecked; Components: ffdshow
 Name: video; Description: {cm:videoformats}; Flags: unchecked; Components: ffdshow
-Name: video\h264; Description: H.264 / AVC; Check: CheckTaskVideo('h264', 1, True); Components: ffdshow
-Name: video\h264; Description: H.264 / AVC; Check: NOT CheckTaskVideo('h264', 1, True); Flags: unchecked; Components: ffdshow
-Name: video\divx; Description: DivX; Check: CheckTaskVideo('dx50', 1, True); Components: ffdshow
-Name: video\divx; Description: DivX; Check: NOT CheckTaskVideo('dx50', 1, True); Flags: unchecked; Components: ffdshow
-Name: video\xvid; Description: Xvid; Check: CheckTaskVideo('xvid', 1, True); Components: ffdshow
-Name: video\xvid; Description: Xvid; Check: NOT CheckTaskVideo('xvid', 1, True); Flags: unchecked; Components: ffdshow
-Name: video\mp4v; Description: MP4V; Check: CheckTaskVideo('divx', 1, True); Components: ffdshow
-Name: video\mp4v; Description: MP4V; Check: NOT CheckTaskVideo('divx', 1, True); Flags: unchecked; Components: ffdshow
-Name: video\mpeg4; Description: {cm:genericMpeg4}; Check: CheckTaskVideo('_3iv', 1, True); Components: ffdshow
-Name: video\mpeg4; Description: {cm:genericMpeg4}; Check: NOT CheckTaskVideo('_3iv', 1, True); Flags: unchecked; Components: ffdshow
-Name: video\flv1; Description: FLV1; Check: CheckTaskVideo('flv1', 1, True); Components: ffdshow
-Name: video\flv1; Description: FLV1; Check: NOT CheckTaskVideo('flv1', 1, True); Flags: unchecked; Components: ffdshow
-Name: video\h263; Description: H.263; Check: CheckTaskVideo('h263', 1, True); Components: ffdshow
-Name: video\h263; Description: H.263; Check: NOT CheckTaskVideo('h263', 1, True); Flags: unchecked; Components: ffdshow
-Name: video\mpeg1; Description: MPEG-1; Flags: unchecked; Components: ffdshow
-Name: video\mpeg1\libmpeg2; Description: libmpeg2; Check: CheckTaskVideo('mpg1', 5, False); Flags: exclusive; Components: ffdshow
-Name: video\mpeg1\libmpeg2; Description: libmpeg2; Check: NOT CheckTaskVideo('mpg1', 5, False); Flags: exclusive unchecked; Components: ffdshow
-Name: video\mpeg1\libavcodec; Description: libavcodec; Check: CheckTaskVideo('mpg1', 1, False); Flags: exclusive; Components: ffdshow
-Name: video\mpeg1\libavcodec; Description: libavcodec; Check: NOT CheckTaskVideo('mpg1', 1, False); Flags: exclusive unchecked; Components: ffdshow
-Name: video\mpeg2; Description: MPEG-2; Flags: unchecked; Components: ffdshow
-Name: video\mpeg2\libmpeg2; Description: libmpeg2; Check: CheckTaskVideo('mpg2', 5, False); Flags: exclusive; Components: ffdshow
-Name: video\mpeg2\libmpeg2; Description: libmpeg2; Check: NOT CheckTaskVideo('mpg2', 5, False); Flags: exclusive unchecked; Components: ffdshow
-Name: video\mpeg2\libavcodec; Description: libavcodec; Check: CheckTaskVideo('mpg2', 1, False); Flags: exclusive; Components: ffdshow
-Name: video\mpeg2\libavcodec; Description: libavcodec; Check: NOT CheckTaskVideo('mpg2', 1, False); Flags: exclusive unchecked; Components: ffdshow
-Name: video\huffyuv; Description: Huffyuv; Check: CheckTaskVideo('hfyu', 1, True); Components: ffdshow
-Name: video\huffyuv; Description: Huffyuv; Check: NOT CheckTaskVideo('hfyu', 1, True); Flags: unchecked; Components: ffdshow
-Name: video\qt; Description: SVQ1, SVQ3, Cinepak, RPZA, QTRLE; Check: CheckTaskVideo('svq3', 1, True); Components: ffdshow
-Name: video\qt; Description: SVQ1, SVQ3, Cinepak, RPZA, QTRLE; Check: NOT CheckTaskVideo('svq3', 1, True); Flags: unchecked; Components: ffdshow
-Name: video\vp56; Description: VP5, VP6; Check: CheckTaskVideo('vp6', 1, True); Components: ffdshow
-Name: video\vp56; Description: VP5, VP6; Check: NOT CheckTaskVideo('vp6', 1, True); Flags: unchecked; Components: ffdshow
+Name: video\h264;      Description: H.264 / AVC;       Check:     CheckTaskVideo('h264', 1, True); Components: ffdshow
+Name: video\h264;      Description: H.264 / AVC;       Check: NOT CheckTaskVideo('h264', 1, True); Components: ffdshow; Flags: unchecked
+Name: video\divx;      Description: DivX;              Check:     CheckTaskVideoXvid('dx50');      Components: ffdshow
+Name: video\divx;      Description: DivX;              Check: NOT CheckTaskVideoXvid('dx50');      Components: ffdshow; Flags: unchecked
+Name: video\xvid;      Description: Xvid;              Check:     CheckTaskVideoXvid('xvid');      Components: ffdshow
+Name: video\xvid;      Description: Xvid;              Check: NOT CheckTaskVideoXvid('xvid');      Components: ffdshow; Flags: unchecked
+Name: video\mp4v;      Description: MP4V;              Check:     CheckTaskVideoXvid('divx');      Components: ffdshow
+Name: video\mp4v;      Description: MP4V;              Check: NOT CheckTaskVideoXvid('divx');      Components: ffdshow; Flags: unchecked
+Name: video\mpeg4;     Description: {cm:genericMpeg4}; Check:     CheckTaskVideoXvid('_3iv');      Components: ffdshow
+Name: video\mpeg4;     Description: {cm:genericMpeg4}; Check: NOT CheckTaskVideoXvid('_3iv');      Components: ffdshow; Flags: unchecked
+Name: video\flv1;      Description: FLV1;              Check:     CheckTaskVideo('flv1', 1, True); Components: ffdshow
+Name: video\flv1;      Description: FLV1;              Check: NOT CheckTaskVideo('flv1', 1, True); Components: ffdshow; Flags: unchecked
+Name: video\h263;      Description: H.263;             Check:     CheckTaskVideo('h263', 1, True); Components: ffdshow
+Name: video\h263;      Description: H.263;             Check: NOT CheckTaskVideo('h263', 1, True); Components: ffdshow; Flags: unchecked
+Name: video\mpeg1;            Description: MPEG-1;                                                 Components: ffdshow; Flags: unchecked
+Name: video\mpeg1\libmpeg2;   Description: libmpeg2;   Check:     CheckTaskVideo('mpg1', 5, False);Components: ffdshow; Flags: exclusive
+Name: video\mpeg1\libmpeg2;   Description: libmpeg2;   Check: NOT CheckTaskVideo('mpg1', 5, False);Components: ffdshow; Flags: exclusive unchecked
+Name: video\mpeg1\libavcodec; Description: libavcodec; Check:     CheckTaskVideo('mpg1', 1, False);Components: ffdshow; Flags: exclusive
+Name: video\mpeg1\libavcodec; Description: libavcodec; Check: NOT CheckTaskVideo('mpg1', 1, False);Components: ffdshow; Flags: exclusive unchecked
+Name: video\mpeg2;            Description: MPEG-2;                                                 Components: ffdshow; Flags: unchecked
+Name: video\mpeg2\libmpeg2;   Description: libmpeg2;   Check:     CheckTaskVideo('mpg2', 5, False);Components: ffdshow; Flags: exclusive
+Name: video\mpeg2\libmpeg2;   Description: libmpeg2;   Check: NOT CheckTaskVideo('mpg2', 5, False);Components: ffdshow; Flags: exclusive unchecked
+Name: video\mpeg2\libavcodec; Description: libavcodec; Check:     CheckTaskVideo('mpg2', 1, False);Components: ffdshow; Flags: exclusive
+Name: video\mpeg2\libavcodec; Description: libavcodec; Check: NOT CheckTaskVideo('mpg2', 1, False);Components: ffdshow; Flags: exclusive unchecked
+Name: video\huffyuv;   Description: Huffyuv;           Check:     CheckTaskVideo('hfyu', 1, True); Components: ffdshow
+Name: video\huffyuv;   Description: Huffyuv;           Check: NOT CheckTaskVideo('hfyu', 1, True); Components: ffdshow; Flags: unchecked
+Name: video\qt;        Description: SVQ1, SVQ3, Cinepak, RPZA, QTRLE; Check:     CheckTaskVideo('svq3', 1, True); Components: ffdshow
+Name: video\qt;        Description: SVQ1, SVQ3, Cinepak, RPZA, QTRLE; Check: NOT CheckTaskVideo('svq3', 1, True); Components: ffdshow; Flags: unchecked
+Name: video\vp56;      Description: VP5, VP6;          Check:     CheckTaskVideo('vp6', 1, True);  Components: ffdshow
+Name: video\vp56;      Description: VP5, VP6;          Check: NOT CheckTaskVideo('vp6', 1, True);  Components: ffdshow; Flags: unchecked
 Name: video\wmv1; Description: WMV1; Check: CheckTaskVideo('wmv1', 1, False); Components: ffdshow;
 Name: video\wmv1; Description: WMV1; Check: NOT CheckTaskVideo('wmv1', 1, False); Flags: dontinheritcheck unchecked; Components: ffdshow
 Name: video\wmv2; Description: WMV2; Check: CheckTaskVideo('wmv2', 1, False); Components: ffdshow;
@@ -542,6 +542,46 @@ begin
       Result := showbydefault;
     end
   end
+end;
+
+function CheckTaskVideoXvid(name: String): Boolean;
+var
+  regval: Cardinal;
+begin
+  Result := False;
+  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow', name, regval) then begin
+    Result := NOT(regval = 0);
+  end
+  else begin
+    if RegQueryDwordValue(HKLM, 'Software\GNU\ffdshow', name, regval) then begin
+      Result := NOT(regval = 0);
+    end
+    else begin
+      Result := TRUE;
+    end
+  end
+end;
+
+function GetTaskVideoI(name: String; defaultvalue: Cardinal): String;
+var
+  regval: Cardinal;
+begin
+  if NOT RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow', name, regval) then
+  if NOT RegQueryDwordValue(HKLM, 'Software\GNU\ffdshow', name, regval) then
+    regval :=defaultvalue;
+  if regval = 0 then
+    regval :=defaultvalue;
+  Result := IntToStr(regval);
+end;
+
+function GetTaskVideoXvid(name: String): String;
+begin
+  Result := GetTaskVideoI(name, 1);
+end;
+
+function GetTaskVideoTheora(name: String): String;
+begin
+  Result := GetTaskVideoI(name, 3);
 end;
 
 function CheckTaskAudio(name: String; value: Integer; showbydefault: Boolean): Boolean;
