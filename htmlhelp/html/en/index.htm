@@ -1,90 +1,99 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
-<HTML>
-<HEAD>
-    <META http-Equiv="Content-Type" Content="text/html;charset=iso-8859-1">
-    <TITLE>ffdshow tryouts changelog</TITLE>
-    <META Name="description" Content="ffdshow tryouts changelog"> </HEAD>
-<BODY>
-    <A href="http://ffdshow-tryout.sourceforge.net/phpBB2/"><IMG Src="../images/logo_phpBB.gif" border="0" Alt="ffdshow tryouts" Width=200 Height=91></A><BR>
-    <P>
-    <H2>Changelog</H2>
-    <H3>Bug fixes</H3>
-    This list is based on the latest revision of the original project except the mt patch.<BR>
-    Bugs that have been added and fixed in the tryouts are not included.    
-    <H4>Fixed after beta1</H4>
-    <OL>
-        <LI>Explorer.exe crashed on Windows Vista when you accessed a folder that contains AVI files.
-        <LI>When you started playing or seeking MPEG1/2 movies using libmpeg2, it sometimes crashed or produced ugly green artifacts (libmpeg2).
-        <LI>Fixed ogg & ogm muxers. Removed flv & mpeg muxers.
-        <LI>When you played a video which height was not a multiple of four, it crashed or artifacts were seen depending on the output color space.
-        <LI>When you played a video which width was over 1024, it crashed when using RGB to YUY2 conversion.
-        <LI>When you played a video which height was an odd number and YV12 was enabled, the video was distorted.
-        <LI>If ffdshow was connected to Haali's video renderer, seeking sometimes failed.
-        <LI>The next internal filter of Kernel deinterlace was skipped on every other frame. If the next internal filter was resize, the video size changed on every frame.
-    </OL>
-    <H4>Fixed before beta1</H4>
-    <OL Start=9>
-        <LI>When you tried to re-encode using Windows Media Encoder, ffdshow audio decoder would cause WME to crash.
-        <LI>Hardware deinterlacing did not work, when you used libmpeg2.
-        <LI>AAC was played back too fast that it was not audible. Audio-video synch was lost.
-        <LI>When you played a video which height was an odd number, it often freezed.
-        <LI>If Mixer-headphone virtual spatialization was enabled, it crashed on playback of mono sources.
-        <LI>When you played an Xvid stream with many consecutive N-VOPs, subtitles were not shown when no new frames were actually being displayed. If there were long consecutive N-VOPs at the end of the file, it closed too early.
-        <LI>'Video decoder configuration'-'Output'-'DV' couldn't be unchecked.
-        <LI>If one of the files that needed updating was locked, the installer stopped with an error message.
-        <LI>Didee's YlevelsG/S/C was not implemented correctly. It was the bright parts of the pictures that saw the most effect of the gamma.
-        <LI>ffdshow could not connect to Uncompressed audio input.
-        <LI>LPCM output was broken.
-        <LI>AC3 output was broken.
-        <LI>DTS was broken with large noise.
-        <LI>Perspective correction with cubic interpolation crashed if the width of the video was over 768.
-        <LI>5.1ch Vorbis (libavcodec) was broken.
-        <LI>When you tried to use ffdshow directshow decoder in PowerDVD, the video was black.
-        <LI>If ffdshow was inputing DVD decoder's output as raw video, and if subtitle-file was valid and mpeg2 was disabled, subtitles that were not related to the DVD were shown.
-        <LI>If subtitles including video image such as IDX+SUB (vobsub) format were enabled, it crashed where the height of the subtitles was an odd number.
-        <LI>Convolver, one of the audio filters, crashed when you tried to load impulse file.
-        <LI>When you used resize, horizontal lines were sometimes seen ('Resize'-'Settings'-'Accurate rounding').
-        <LI>If you used resize after xsharpen, the video was green.
-        <LI>Stereoscopic subtitle crashed.
-        <LI>OSD 'CPU Load' did not show correct value in multiprocessor system.
-        <LI>Postprocessing automatic quality control did not work in multiprocessor systems.
-        <LI>Volume normalization did not work properly.
-        <LI>DScaler: Video (TomsMoComp) crashed depending on the compiler used for building.
-        <LI>Overlay control could not load initial value properly.
-        <LI>Oblivion, Morrowind (both are games) crashed.
-        <LI>On Windows Vista, codec configuration dialog was broken.
-        <LI>If there's an error in avisynth script in ffdshow, the error message was displayed on top of video. The error message still remains after the whole avisynth page was unchecked.
-        <LI>The dialog was garbled, if Japanese (UNICODE) was selected for "Tray, dialog & paths" setting (ANSI builds). The problem was that the installer set it by default for Japanese version of Windows.
-        <LI>ANSI/MBCS was not processed properly. For example, OSD 'Source file' couldn't show last few characters if MBCS was used in the path. It was a security concern.
-        <LI>If you used translation of the dialog, content of the dialog was scaled about 130% but the size of the window was not. As a result, you couldn't see the right, hidden part of the dialog (depending on the way to launch the dialog).
-        <LI>Subtitles were garbled if 'Subtitles'-'Font'-'Fast rendering' was enabled, if you used MBCS on ANSI builds.
-    </OL>
-    </P>
-    <P>
-    <H3>New features</H3>
-    <H4>Added after beta1</H4>
-    <OL>
-        <LI>Queue: ffdshow now uses VMR9's internal queue.
-    </OL>
-    <H4>Added before beta1</H4>
-    <OL Start=2>
-        <LI>H.264 MBAFF (interlaced format) support.
-        <LI>VP6, RV10/20, Wavpack (lossless) and several codecs have been added.
-        <LI>VC-1 Advanced Profile support for wmv9lib. You need WMP11 or Microsoft's VC-1 codec.
-        <LI>The installer can set speaker configuration. It loads the setting of the OS (control panel) as default.
-        <LI>Queue: Accelerator. It deposits the time when CPU has finished work early and uses the time when delayed.
-        <LI>Multithreaded resize: Faster resize on dual-core CPU.
-        <LI>Calculate the vertical size automatically when you enter 0 for vertical size ('Resize'-'Specify size'-'New size').
-        <LI>Vorbis: High accuracy mode is enabled for tremor.
-        <LI>Quality control is now configurable ('Decoder options'-'Quality control')
-        <LI>Show error message if the splitter failed to provide necessary information to decode SVQ3.
-        <LI>Improved translations.
-    </OL>
-    </P>
-    <P>
-    <H2>Download</H2> 
-      <A href="http://downloads.sourceforge.net/ffdshow-tryout/ffdshow_beta1_20061211_clsid.exe">Download beta1 (stable)</A><BR>
-      <A href="http://sourceforge.net/project/showfiles.php?group_id=173941">Download nightly builds (latest)</A>
-    </P>
-</BODY>
-</HTML>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>ffdshow tryouts changelog</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <meta name="description" content="ffdshow tryouts changelog" />
+    <link rel="stylesheet" href="../styles/style.css" type="text/css" />
+</head>
+<body>
+    <a href="http://ffdshow-tryout.sourceforge.net/phpBB2/"><img src="../images/logo_phpBB.gif" title="ffdshow tryouts" alt="ffdshow tryouts" width="200" height="91" /></a><br />
+
+    <p><span class="big_caption">Changelog</span></p>
+    <span class="normal">This list is based on the latest revision of the original project except the multithreading patch.<br /></span>
+    <table class="normal" summary="Links to different sections of changelog">
+      <tr><td>Navigate to:</td><td><a class="nav" href="#fixes">Bug fixes</a></td></tr>
+      <tr><td></td><td><a class="nav" href="#features">New features</a></td></tr>
+      <tr><td></td><td><a class="nav" href="#download">Download</a></td></tr>
+    </table>
+
+    <p><a name="fixes" id="fixes"><span class="medium_caption">Bug fixes</span></a><br />
+    <span class="normal">Note: Bugs that have been added and fixed in the tryouts are not included.</span></p>
+    <p><span class="small_caption">Fixed after beta1</span></p>
+    <ul class="fixed">
+        <li>Explorer.exe crashed on Windows Vista when you accessed a folder that contains AVI files.</li>
+        <li>When you started playing or seeking MPEG1/2 movies using libmpeg2, it sometimes crashed or produced ugly green artifacts (libmpeg2).</li>
+        <li>Fixed ogg &amp; ogm muxers. Removed flv &amp; mpeg muxers.</li>
+        <li>When you played a video which height was not a multiple of four, it crashed or artifacts were seen depending on the output color space.</li>
+        <li>When you played a video which width was over 1024, it crashed when using RGB to YUY2 conversion.</li>
+        <li>When you played a video which height was an odd number and YV12 was enabled, the video was distorted.</li>
+        <li>If ffdshow was connected to Haali's video renderer, seeking sometimes failed.</li>
+        <li>The next internal filter of Kernel deinterlace was skipped on every other frame. If the next internal filter was resize, the video size changed on every frame.</li>
+    </ul>
+    <p><span class="small_caption">Fixed before beta1</span></p>
+    <ul class="fixed">
+        <li>When you tried to re-encode using Windows Media Encoder, ffdshow audio decoder would cause WME to crash.</li>
+        <li>Hardware deinterlacing did not work, when you used libmpeg2.</li>
+        <li>AAC was played back too fast that it was not audible. Audio-video synch was lost.</li>
+        <li>When you played a video which height was an odd number, it often freezed.</li>
+        <li>If Mixer-headphone virtual spatialization was enabled, it crashed on playback of mono sources.</li>
+        <li>When you played an Xvid stream with many consecutive N-VOPs, subtitles were not shown when no new frames were actually being displayed. If there were long consecutive N-VOPs at the end of the file, it closed too early.</li>
+        <li>'Video decoder configuration'-'Output'-'DV' couldn't be unchecked.</li>
+        <li>If one of the files that needed updating was locked, the installer stopped with an error message.</li>
+        <li>Didee's YlevelsG/S/C was not implemented correctly. It was the bright parts of the pictures that saw the most effect of the gamma.</li>
+        <li>ffdshow could not connect to Uncompressed audio input.</li>
+        <li>LPCM output was broken.</li>
+        <li>AC3 output was broken.</li>
+        <li>DTS was broken with large noise.</li>
+        <li>Perspective correction with cubic interpolation crashed if the width of the video was over 768.</li>
+        <li>5.1ch Vorbis (libavcodec) was broken.</li>
+        <li>When you tried to use ffdshow directshow decoder in PowerDVD, the video was black.</li>
+        <li>If ffdshow was inputing DVD decoder's output as raw video, and if subtitle-file was valid and mpeg2 was disabled, subtitles that were not related to the DVD were shown.</li>
+        <li>If subtitles including video image such as IDX+SUB (vobsub) format were enabled, it crashed where the height of the subtitles was an odd number.</li>
+        <li>Convolver, one of the audio filters, crashed when you tried to load impulse file.</li>
+        <li>When you used resize, horizontal lines were sometimes seen ('Resize'-'Settings'-'Accurate rounding').</li>
+        <li>If you used resize after xsharpen, the video was green.</li>
+        <li>Stereoscopic subtitle crashed.</li>
+        <li>OSD 'CPU Load' did not show correct value in multiprocessor system.</li>
+        <li>Postprocessing automatic quality control did not work in multiprocessor systems.</li>
+        <li>Volume normalization did not work properly.</li>
+        <li>DScaler: Video (TomsMoComp) crashed depending on the compiler used for building.</li>
+        <li>Overlay control could not load initial value properly.</li>
+        <li>Oblivion, Morrowind (both are games) crashed.</li>
+        <li>On Windows Vista, codec configuration dialog was broken.</li>
+        <li>If there's an error in avisynth script in ffdshow, the error message was displayed on top of video. The error message still remains after the whole avisynth page was unchecked.</li>
+        <li>The dialog was garbled, if Japanese (UNICODE) was selected for "Tray, dialog &amp; paths" setting (ANSI builds). The problem was that the installer set it by default for Japanese version of Windows.</li>
+        <li>ANSI/MBCS was not processed properly. For example, OSD 'Source file' couldn't show last few characters if MBCS was used in the path. It was a security concern.</li>
+        <li>If you used translation of the dialog, content of the dialog was scaled about 130% but the size of the window was not. As a result, you couldn't see the right, hidden part of the dialog (depending on the way to launch the dialog).</li>
+        <li>Subtitles were garbled if 'Subtitles'-'Font'-'Fast rendering' was enabled, if you used MBCS on ANSI builds.</li>
+    </ul>
+
+    <p><a name="features" id="features"><span class="medium_caption">New features</span></a></p>
+    <p><span class="small_caption">Added after beta1</span></p>
+    <ul class="added" style="list-style-type:disc">
+        <li>Queue: ffdshow now uses VMR9's internal queue.</li>
+    </ul>
+    <p><span class="small_caption">Added before beta1</span></p>
+    <ul class="added">
+        <li>H.264 MBAFF (interlaced format) support.</li>
+        <li>VP6, RV10/20, Wavpack (lossless) and several codecs have been added.</li>
+        <li>VC-1 Advanced Profile support for wmv9lib. You need WMP11 or Microsoft's VC-1 codec.</li>
+        <li>The installer can set speaker configuration. It loads the setting of the OS (control panel) as default.</li>
+        <li>Queue: Accelerator. It deposits the time when CPU has finished work early and uses the time when delayed.</li>
+        <li>Multithreaded resize: Faster resize on dual-core CPU.</li>
+        <li>Calculate the vertical size automatically when you enter 0 for vertical size ('Resize'-'Specify size'-'New size').</li>
+        <li>Vorbis: High accuracy mode is enabled for tremor.</li>
+        <li>Quality control is now configurable ('Decoder options'-'Quality control')</li>
+        <li>Show error message if the splitter failed to provide necessary information to decode SVQ3.</li>
+        <li>Improved translations.</li>
+    </ul>
+
+    <p><a name="download" id="download"><span class="big_caption">Download</span></a></p>
+    <ul class="download">
+        <li><a class="nav" href="http://downloads.sourceforge.net/ffdshow-tryout/ffdshow_beta1_20061211_clsid.exe">Download beta1 (stable)</a></li>
+        <li><a class="nav" href="http://sourceforge.net/project/showfiles.php?group_id=173941">Download nightly builds (latest)</a></li>
+    </ul>
+    <div><span class="normal"><a class="nav" href="index.htm" target="_top">Top</a></span></div>
+</body>
+</html>
