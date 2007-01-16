@@ -74,6 +74,7 @@ public:
  STDMETHODIMP_(const TfilterIDFF*) getNextFilterIDFF(void) {return nextFilters;}
  STDMETHODIMP currentSampleFormat(unsigned int *nchannels,unsigned int *freq,int *sampleFormat);
  STDMETHODIMP_(int) getJitter(void);
+ STDMETHODIMP Enable(long lIndex, DWORD dwFlags);
 
  static const AMOVIESETUP_MEDIATYPE inputMediaTypes[],outputMediaTypes[];
  static const AMOVIESETUP_PIN pins[];

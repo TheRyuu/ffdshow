@@ -759,6 +759,11 @@ STDMETHODIMP_(unsigned int) TffdshowDecAudio::getCurrentStream2(void)
     ii++;
  return (unsigned int)-1;
 }
+STDMETHODIMP TffdshowDecAudio::Enable(long lIndex, DWORD dwFlags)
+{
+	unsigned int i = (unsigned int)lIndex;
+	return setCurrentStream(i);
+}
 STDMETHODIMP TffdshowDecAudio::setCurrentStream(unsigned int i)
 {
  if (i>=inpins.getNumConnectedInpins()) return E_INVALIDARG;
