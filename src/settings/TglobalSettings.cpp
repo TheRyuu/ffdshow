@@ -255,6 +255,7 @@ TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imod
    IDFF_cavs           ,&TglobalSettingsDecVideo::cavs           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    //IDFF_vmnc           ,&TglobalSettingsDecVideo::vmnc           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_mjpg           ,&TglobalSettingsDecVideo::mjpg           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+   IDFF_avrn           ,&TglobalSettingsDecVideo::avrn           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_dvsd           ,&TglobalSettingsDecVideo::dvsd           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_hfyu           ,&TglobalSettingsDecVideo::hfyu           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_cyuv           ,&TglobalSettingsDecVideo::cyuv           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
@@ -354,6 +355,7 @@ void TglobalSettingsDecVideo::reg_op_codec(TregOp &t,TregOp *t2)
  _reg_op_codec(IDFF_mpg2,t,t2,_l("mpg2"),mpg2,0);
  _reg_op_codec(IDFF_mpegAVI,t,t2,_l("mpegAVI"),mpegAVI,0);
  _reg_op_codec(IDFF_em2v,t,t2,_l("em2v"),em2v,0);
+ _reg_op_codec(IDFF_avrn,t,t2,_l("avrn"),avrn,0);
  _reg_op_codec(IDFF_mjpg,t,t2,_l("mjpg"),mjpg,0);
  _reg_op_codec(IDFF_dvsd,t,t2,_l("dvsd"),dvsd,0);
  _reg_op_codec(IDFF_hfyu,t,t2,_l("hfyu"),hfyu,0);
@@ -438,6 +440,7 @@ void TglobalSettingsDecVideo::load(void)
  fixMissing(vp6f,IDFF_MOVIE_LAVC);
  fixMissing(cavs,IDFF_MOVIE_LAVC);
  //fixMissing(vmnc,IDFF_MOVIE_LAVC);
+ fixMissing(avrn,IDFF_MOVIE_LAVC);
  fixMissing(mjpg,IDFF_MOVIE_LAVC);
  fixMissing(dvsd,IDFF_MOVIE_LAVC);
  fixMissing(hfyu,IDFF_MOVIE_LAVC);
@@ -543,6 +546,8 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(LJPG,mjpg & rawmask,CODEC_ID_MJPEG) \
  FF_FOURCC1_OP(MJLS,mjpg & rawmask,CODEC_ID_MJPEG) \
  FF_FOURCC1_OP(JPEG,(mjpg || svq1 || svq3) & rawmask,CODEC_ID_MJPEG) \
+ FF_FOURCC1_OP(AVRN,avrn & rawmask,CODEC_ID_MJPEG) \
+ FF_FOURCC1_OP(MJPA,avrn & rawmask,CODEC_ID_MJPEG) \
  FF_FOURCC1_OP(DVSD,dvsd & rawmask,CODEC_ID_DVVIDEO) \
  FF_FOURCC1_OP(DV25,dvsd & rawmask,CODEC_ID_DVVIDEO) \
  FF_FOURCC1_OP(DV50,dvsd & rawmask,CODEC_ID_DVVIDEO) \

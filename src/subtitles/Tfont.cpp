@@ -27,6 +27,7 @@
 #include "simd.h"
 #include "Tconfig.h"
 #include <mbstring.h>
+#pragma warning(disable:4244)
 
 //============================ TrenderedSubtitleWordBase =============================
 TrenderedSubtitleWordBase::~TrenderedSubtitleWordBase()

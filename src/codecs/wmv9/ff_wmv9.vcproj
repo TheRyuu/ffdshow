@@ -222,7 +222,8 @@
 				ForceConformanceInForLoopScope="TRUE"
 				UsePrecompiledHeader="3"
 				WarningLevel="4"
-				DebugInformationFormat="0"/>
+				DebugInformationFormat="0"
+				DisableSpecificWarnings="4100;4201;4127;4005"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool

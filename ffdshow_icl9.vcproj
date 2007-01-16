@@ -1004,9 +1004,6 @@
 					RelativePath=".\src\uClibc++\basic_definitions">
 				</File>
 				<File
-					RelativePath=".\src\uClibc++\ChangeLog">
-				</File>
-				<File
 					RelativePath=".\src\uClibc++\char_traits">
 				</File>
 				<File

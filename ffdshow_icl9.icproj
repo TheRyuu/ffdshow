@@ -840,8 +840,6 @@
 		<File 
 			RelativePath=".\src\uClibc++\basic_definitions"/>
 		<File 
-			RelativePath=".\src\uClibc++\ChangeLog"/>
-		<File 
 			RelativePath=".\src\uClibc++\char_traits"/>
 		<File 
 			RelativePath=".\src\uClibc++\cstddef"/>

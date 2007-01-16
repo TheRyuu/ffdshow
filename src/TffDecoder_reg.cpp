@@ -57,6 +57,7 @@ DEFINE_GUID(CLSID_DWSTRINGW, 0xa0606860, 0x51be, 0x4cf6, 0x99, 0xc0, 0x7c, 0xe5,
 #define FOURCC_mp4v mmioFOURCC('m','p','4','v')
 #define FOURCC_mp4s mmioFOURCC('m','p','4','s')
 #define FOURCC_mpg2 mmioFOURCC('m','p','g','2')
+#define FOURCC_mjpg mmioFOURCC('m','j','p','g')
 #define FOURCC_wmv1 mmioFOURCC('w','m','v','1')
 #define FOURCC_wmv2 mmioFOURCC('w','m','v','2')
 #define FOURCC_wmv3 mmioFOURCC('w','m','v','3')
@@ -74,9 +75,11 @@ DEFINE_GUID(CLSID_DWSTRINGW, 0xa0606860, 0x51be, 0x4cf6, 0x99, 0xc0, 0x7c, 0xe5,
 #define FOURCC_tscc mmioFOURCC('t','s','c','c')
 #define FOURCC_cram mmioFOURCC('c','r','a','m')
 #define FOURCC_aasc mmioFOURCC('a','a','s','c')
+#define FOURCC_avrn mmioFOURCC('a','v','r','n')
 #define FOURCC_cavs mmioFOURCC('c','a','v','s')
 #define FOURCC_em2v mmioFOURCC('e','m','2','v')
 #define FOURCC_fps1 mmioFOURCC('f','p','s','1')
+#define FOURCC_mjpa mmioFOURCC('m','j','p','a')
 #define FOURCC_vixl mmioFOURCC('v','i','x','l')
 #define FOURCC_wmvp mmioFOURCC('w','m','v','p')
 #define FOURCC_wvp2 mmioFOURCC('w','v','p','2')
@@ -106,6 +109,8 @@ DEFINE_GUID_FOURCC(MP4S)
 DEFINE_GUID_FOURCC(mp4s)
 DEFINE_GUID_FOURCC(MPG2)
 DEFINE_GUID_FOURCC(mpg2)
+DEFINE_GUID_FOURCC(MJPG)
+DEFINE_GUID_FOURCC(mjpg)
 DEFINE_GUID_FOURCC(WMV1)
 DEFINE_GUID_FOURCC(wmv1)
 DEFINE_GUID_FOURCC(WMV2)
@@ -141,12 +146,16 @@ DEFINE_GUID_FOURCC(CRAM)
 DEFINE_GUID_FOURCC(cram)
 DEFINE_GUID_FOURCC(AASC)
 DEFINE_GUID_FOURCC(aasc)
+DEFINE_GUID_FOURCC(AVRN)
+DEFINE_GUID_FOURCC(avrn)
 DEFINE_GUID_FOURCC(CAVS)
 DEFINE_GUID_FOURCC(cavs)
 DEFINE_GUID_FOURCC(EM2V)
 DEFINE_GUID_FOURCC(em2v)
 DEFINE_GUID_FOURCC(FPS1)
 DEFINE_GUID_FOURCC(fps1)
+DEFINE_GUID_FOURCC(MJPA)
+DEFINE_GUID_FOURCC(mjpa)
 DEFINE_GUID_FOURCC(VIXL)
 DEFINE_GUID_FOURCC(vixl)
 DEFINE_GUID_FOURCC(WMVP)
@@ -187,6 +196,8 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]=
  { &MEDIATYPE_Video, &MEDIASUBTYPE_mp4s   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_MPG2   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_mpg2   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_MJPG   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_mjpg   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_WMV1   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_wmv1   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_WMV2   },
@@ -222,12 +233,16 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]=
  { &MEDIATYPE_Video, &MEDIASUBTYPE_cram   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_AASC   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_aasc   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_AVRN   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_avrn   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_CAVS   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_cavs   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_EM2V   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_em2v   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_FPS1   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_fps1   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_MJPA   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_mjpa   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_VIXL   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_vixl   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_WMVP   },
