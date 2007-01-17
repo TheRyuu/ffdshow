@@ -143,7 +143,7 @@ const FOURCC* getCodecFOURCCs(CodecID codecId)
    case CODEC_ID_DVVIDEO:
     {
      /* lowercase FourCC 'dvsd' for compatibility with MS DV decoder */
-     static const FOURCC fccs[]={mmioFOURCC('d','v','s','d'),FOURCC_DVSD,FOURCC_DV25,FOURCC_DV50,0};
+     static const FOURCC fccs[]={mmioFOURCC('d','v','s','d'),FOURCC_DVSD,mmioFOURCC('d','v','2','5'),FOURCC_DV25,mmioFOURCC('d','v','5','0'),FOURCC_DV50,0};
      return fccs;
     }
    case CODEC_ID_VP3:

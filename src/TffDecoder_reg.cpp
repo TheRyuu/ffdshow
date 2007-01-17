@@ -71,6 +71,13 @@ DEFINE_GUID(CLSID_DWSTRINGW, 0xa0606860, 0x51be, 0x4cf6, 0x99, 0xc0, 0x7c, 0xe5,
 #define FOURCC_hfyu mmioFOURCC('h','f','y','u')
 #define FOURCC_3iv2 mmioFOURCC('3','i','v','2')
 #define FOURCC_3ivx mmioFOURCC('3','i','v','x')
+#define FOURCC_dvsd mmioFOURCC('d','v','s','d')
+#define FOURCC_dv25 mmioFOURCC('d','v','2','5')
+#define FOURCC_dv50 mmioFOURCC('d','v','5','0')
+#define FOURCC_cdvc mmioFOURCC('c','d','v','c')
+#define FOURCC_cdv5 mmioFOURCC('c','d','v','5')
+#define FOURCC_dvis mmioFOURCC('d','v','i','s')
+#define FOURCC_pdvc mmioFOURCC('p','d','v','c')
 #define FOURCC_vp31 mmioFOURCC('v','p','3','1')
 #define FOURCC_tscc mmioFOURCC('t','s','c','c')
 #define FOURCC_cram mmioFOURCC('c','r','a','m')
@@ -138,6 +145,19 @@ DEFINE_GUID_FOURCC(3iv2)
 DEFINE_GUID_FOURCC(3IVX)
 DEFINE_GUID_FOURCC(3ivx)
 DEFINE_GUID_FOURCC(DVSD)
+DEFINE_GUID_FOURCC(dvsd)
+DEFINE_GUID_FOURCC(DV25)
+DEFINE_GUID_FOURCC(dv25)
+DEFINE_GUID_FOURCC(DV50)
+DEFINE_GUID_FOURCC(dv50)
+DEFINE_GUID_FOURCC(CDVC)
+DEFINE_GUID_FOURCC(cdvc)
+DEFINE_GUID_FOURCC(CDV5)
+DEFINE_GUID_FOURCC(cdv5)
+DEFINE_GUID_FOURCC(DVIS)
+DEFINE_GUID_FOURCC(dvis)
+DEFINE_GUID_FOURCC(PDVC)
+DEFINE_GUID_FOURCC(pdvc)
 DEFINE_GUID_FOURCC(VP31)
 DEFINE_GUID_FOURCC(vp31)
 DEFINE_GUID_FOURCC(TSCC)
@@ -225,6 +245,20 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]=
  { &MEDIATYPE_Video, &MEDIASUBTYPE_3IVX   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_3ivx   },
  // Some less common FourCCs
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_DVSD   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_dvsd   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_DV25   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_dv25   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_DV50   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_dv50   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_CDVC   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_cdvc   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_CDV5   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_cdv5   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_DVIS   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_dvis   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_PDVC   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_pdvc   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_VP31   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_vp31   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_TSCC   },

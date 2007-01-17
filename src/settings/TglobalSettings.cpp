@@ -257,6 +257,7 @@ TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imod
    IDFF_mjpg           ,&TglobalSettingsDecVideo::mjpg           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_avrn           ,&TglobalSettingsDecVideo::avrn           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_dvsd           ,&TglobalSettingsDecVideo::dvsd           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+   IDFF_cdvc           ,&TglobalSettingsDecVideo::cdvc           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_hfyu           ,&TglobalSettingsDecVideo::hfyu           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_cyuv           ,&TglobalSettingsDecVideo::cyuv           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_asv1           ,&TglobalSettingsDecVideo::asv1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
@@ -358,6 +359,7 @@ void TglobalSettingsDecVideo::reg_op_codec(TregOp &t,TregOp *t2)
  _reg_op_codec(IDFF_avrn,t,t2,_l("avrn"),avrn,0);
  _reg_op_codec(IDFF_mjpg,t,t2,_l("mjpg"),mjpg,0);
  _reg_op_codec(IDFF_dvsd,t,t2,_l("dvsd"),dvsd,0);
+ _reg_op_codec(IDFF_cdvc,t,t2,_l("cdvc"),cdvc,0);
  _reg_op_codec(IDFF_hfyu,t,t2,_l("hfyu"),hfyu,0);
  _reg_op_codec(IDFF_cyuv,t,t2,_l("cyuv"),cyuv,0);
  _reg_op_codec(IDFF_theo,t,t2,_l("theo"),theo,IDFF_MOVIE_THEO);
@@ -443,6 +445,7 @@ void TglobalSettingsDecVideo::load(void)
  fixMissing(avrn,IDFF_MOVIE_LAVC);
  fixMissing(mjpg,IDFF_MOVIE_LAVC);
  fixMissing(dvsd,IDFF_MOVIE_LAVC);
+ fixMissing(cdvc,IDFF_MOVIE_LAVC);
  fixMissing(hfyu,IDFF_MOVIE_LAVC);
  fixMissing(cyuv,IDFF_MOVIE_LAVC);
  fixMissing(asv1,IDFF_MOVIE_LAVC);
@@ -551,6 +554,10 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(DVSD,dvsd & rawmask,CODEC_ID_DVVIDEO) \
  FF_FOURCC1_OP(DV25,dvsd & rawmask,CODEC_ID_DVVIDEO) \
  FF_FOURCC1_OP(DV50,dvsd & rawmask,CODEC_ID_DVVIDEO) \
+ FF_FOURCC1_OP(CDVC,cdvc & rawmask,CODEC_ID_DVVIDEO) \
+ FF_FOURCC1_OP(CDV5,cdvc & rawmask,CODEC_ID_DVVIDEO) \
+ FF_FOURCC1_OP(DVIS,cdvc & rawmask,CODEC_ID_DVVIDEO) \
+ FF_FOURCC1_OP(PDVC,cdvc & rawmask,CODEC_ID_DVVIDEO) \
  FF_FOURCC1_OP(HFYU,hfyu & rawmask,CODEC_ID_HUFFYUV) \
  FF_FOURCC1_OP(FFVH,hfyu & rawmask,CODEC_ID_HUFFYUV) \
  FF_FOURCC1_OP(CYUV,cyuv & rawmask,CODEC_ID_CYUV) \

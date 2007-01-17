@@ -801,6 +801,7 @@
 #define IDFF_wvp2               1082
 #define IDFF_em2v               1083
 #define IDFF_avrn               1084
+#define IDFF_cdvc               1085
 #define IDFF_rawa               1036
 #define IDFF_avisV              1043
 #define IDFF_avisA              1048

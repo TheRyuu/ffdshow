@@ -441,7 +441,8 @@ void TcodecsPageVideo::fillCodecs(void)
    formats.push_back(Tformat(_l("QTRLE")         ,IDFF_qtrle,IDFF_MOVIE_LAVC,_l("Quicktime Animation Video (QTRLE)")));
    formats.push_back(Tformat(_l("QRPZA")         ,IDFF_qtrpza,IDFF_MOVIE_LAVC,_l("Quicktime Video Video (QRPZA)")));
    formats.push_back(Tformat(_l("FFV1")          ,IDFF_ffv1,IDFF_MOVIE_LAVC,_l("FFV1 codec for libavcodec (FFV1)")));
-   formats.push_back(Tformat(_l("DV")            ,IDFF_dvsd,IDFF_MOVIE_LAVC,_l("dvsd, DVSD, DV25, DV50")));
+   formats.push_back(Tformat(_l("DV")            ,IDFF_dvsd,IDFF_MOVIE_LAVC,_l("dvsd, DVSD, dv25, DV25, dv50, DV50")));
+   formats.push_back(Tformat(_l("Other DV")      ,IDFF_cdvc,IDFF_MOVIE_LAVC,_l("CDVC, CDV5, DVIS, PDVC")));
    formats.push_back(Tformat(_l("CamStudio")     ,IDFF_cscd,IDFF_MOVIE_LAVC,_l("CamStudio Video (CSCD)")));
    formats.push_back(Tformat(_l("CorePNG")       ,IDFF_png1,IDFF_MOVIE_LAVC,_l("CorePNG (PNG1, MPNG)")));
    formats.push_back(Tformat(_l("LOCO")          ,IDFF_loco,IDFF_MOVIE_LAVC,_l("LOCO Video (LOCO)")));
