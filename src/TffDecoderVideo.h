@@ -502,6 +502,7 @@ private:
  bool m_IsOldVMR9RenderlessAndRGB;
  bool m_IsYV12andVMR9;
  bool m_IsVMR7,m_IsVMR9,m_IsOverlay;
+ bool reconnectFirstError;
  HANDLE hReconnectEvent;
  ALLOCATOR_PROPERTIES ppropActual;
 

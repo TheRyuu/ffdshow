@@ -99,7 +99,8 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  OSD_time_on_ffdshowFirstRun(true),
  isQueue(-1),
  m_IsYV12andVMR9(false),
- m_IsQueueListedApp(-1)
+ m_IsQueueListedApp(-1),
+ reconnectFirstError(true)
  //,m_IsYV12oddLines(false)
 {
  DPRINTF(_l("TffdshowDecVideo::Constructor"));
@@ -1310,7 +1311,11 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
 
    if(FAILED(hr))
     {
-     MessageBox(NULL,_l("Reconnect failed.\nPlease restart the video application."),_l("ffdshow error"),MB_ICONERROR|MB_OK);
+     if (reconnectFirstError)
+      {
+       MessageBox(NULL,_l("Reconnect failed.\nPlease restart the video application."),_l("ffdshow error"),MB_ICONERROR|MB_OK);
+       reconnectFirstError=false;
+      }
      return hr;
     }
 
