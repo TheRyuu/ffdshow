@@ -13,11 +13,16 @@ private:
  IffdshowBase *deci;comptrQ<IffdshowDec> deciD;comptrQ<IffdshowDecVideo> deciV;
  UINT remotemsg;
  static unsigned int __stdcall threadProc(void*);
+ static unsigned int __stdcall ffwdThreadProc(void*); // Thread method for fast forward/rewind
  HWND h;
  LRESULT CALLBACK remoteWndProc(HWND wnd, UINT msg, WPARAM wprm, LPARAM lprm);
  static LRESULT CALLBACK remoteWndProc0(HWND hwnd, UINT msg, WPARAM wprm, LPARAM lprm);
  int paramid;
  HANDLE hThread;
+ HANDLE fThread; // Thread used to perform fast forward/rewind
+ HANDLE fEvent; // Manual reset event for terminating the thread
+ int fSeconds; // Step in seconds to perform fast forward/rewind
+ int fMode; // Fast forward/rewind mode
  Tkeyboard *keys;
  unsigned int subtitleIdx;
  void start(void),stop(void); 

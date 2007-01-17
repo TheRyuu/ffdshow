@@ -41,8 +41,12 @@
 //Set current time in seconds
 #define WPRM_SETCURTIME 13
 
+// Add graph to Running Object Table
 #define WPRM_SETADDTOROT 14
 
+// Change playing rate
+#define WPRM_FASTFORWARD 15
+#define WPRM_FASTREWIND 16
 
 
 //WM_COPYDATA 

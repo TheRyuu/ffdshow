@@ -49,6 +49,10 @@ Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),Toptions(Ic
  h=NULL;
  pdwROT = 0; // Initializes the running object table reference
  keys=NULL;hThread=NULL;
+ fThread=NULL;
+ fEvent=NULL;
+ fMode=1; // Default mode : fast forward
+ fSeconds=10; // Default step : 10 seconds
  inExplorer=deci->inExplorer()==S_OK;
 }
 Tremote::~Tremote()
@@ -95,6 +99,14 @@ void Tremote::stop(void)
    WaitForSingleObject(hThread,INFINITE);
    hThread=NULL;
   }
+if (fThread)
+{
+	SetEvent(fEvent);
+	WaitForSingleObject(fThread, 3000);
+	CloseHandle(fEvent);
+	CloseHandle(fThread);
+	fThread = NULL; fEvent = NULL;
+ }
  deciD=NULL;deciV=NULL;
 }
 unsigned int __stdcall Tremote::threadProc(void *self0)
@@ -126,6 +138,35 @@ unsigned int __stdcall Tremote::threadProc(void *self0)
 	self->pdwROT=0;
  }
  self->h=NULL;
+ _endthreadex(0);
+ return 0;
+}
+
+unsigned int __stdcall Tremote::ffwdThreadProc(void *self0)
+{
+ randomize();
+ setThreadName(DWORD(-1),"remote fast forward");
+ Tremote *self=(Tremote*)self0;
+ HANDLE fEvent=self->fEvent;
+ if (self->deci != NULL)
+ {
+	int seconds = self->fSeconds;
+	seconds *= self->fMode;
+	int pos;
+	int duration = self->deci->getParam2(IDFF_movieDuration);
+	self->deci->tell(&pos);
+	if (pos!=-1)
+	 while(WaitForSingleObject(fEvent, 0) != WAIT_OBJECT_0)
+	 {
+		pos+=seconds;
+		if (pos<0 || (duration>0 && pos >= duration))
+			break;
+		if (!SUCCEEDED(self->deci->seek(pos)))
+			break;
+		Sleep(100);
+	 }
+ }
+ self->fThread=NULL;
  _endthreadex(0);
  return 0;
 }
@@ -212,7 +253,26 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			}
 			return FALSE;
 		}
-
+	case WPRM_FASTFORWARD:
+	case WPRM_FASTREWIND:
+		fMode=(wprm==WPRM_FASTFORWARD)?1:-1;
+		fSeconds = (int) lprm; // Update the step size in seconds
+		if (fThread)
+		{
+			SetEvent(fEvent);
+			WaitForSingleObject(fThread, 3000);
+			CloseHandle(fEvent);
+			CloseHandle(fThread);
+			fThread = NULL; fEvent = NULL;
+		}
+		if (fSeconds != 0)
+		{
+			unsigned threadID;
+			// Create a manual-reset nonsignaled unnamed event
+			fEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+			fThread=(HANDLE)_beginthreadex(NULL,65536,ffwdThreadProc,this,NULL,&threadID);
+		}
+		return TRUE;
    }
  if (acceptKeys && (msg==WM_SYSKEYDOWN || msg==WM_SYSKEYUP || msg==WM_KEYDOWN || msg==WM_KEYUP))
   {
