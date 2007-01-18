@@ -69,7 +69,9 @@ en.spk_mono=mono
 en.spk_dolby1=Dolby Surround/ProLogic
 en.spk_dolby2=Dolby ProLogic II
 en.spk_sameasinput=same as input
-en.spk_HRTF=Head-related transfer function(HRTF)
+en.spk_HRTF=Head-related transfer function (HRTF)
+en.spk_ExpandStereo=Expand stereo (surround)
+en.spk_VoiceControl=Voice control (volume)
 
 #if localize
 ; Japanese
@@ -113,6 +115,8 @@ jp.spk_dolby1=ドルビーサラウンド/プロロジック
 jp.spk_dolby2=ドルビープロロジックII
 jp.spk_sameasinput=入力と同じ
 jp.spk_HRTF=頭部伝達関数 (HRTF)
+jp.spk_ExpandStereo=ステレオを拡張する（サラウンド）
+jp.spk_VoiceControl=ボイスコントロール （ボリューム）
 
 ; German
 de.langid=1031

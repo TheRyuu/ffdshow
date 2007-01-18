@@ -471,6 +471,8 @@ Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueN
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: isvolume; ValueData: 1; Components: ffdshow; Tasks: filter\normalize
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: ismixer; ValueData: {code:Get_ismixer}; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerOut; ValueData: {code:Get_mixerOut}; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerExpandStereo; ValueData: {code:Get_mixerExpandStereo}; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerVoiceControl; ValueData: {code:Get_mixerVoiceControl}; Components: ffdshow
 
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: allowOutChange; ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: hwOverlay; ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
@@ -512,6 +514,8 @@ var
   reg_mixerOut: Cardinal;
   reg_ismixer: Cardinal;
   SpeakerPage: TInputOptionWizardPage;
+  chbVoicecontrol: TCheckBox;
+  chbExpandStereo: TCheckBox;
   is8DisableMixer: Boolean;
 
 function CheckTask(name: String; defaultvalue: Boolean): Boolean;
@@ -869,7 +873,29 @@ function Get_ismixer(dummy: String): String;
 begin
   Result := '1';
   if (is8DisableMixer = True) and (SpeakerPage.Values[8] = True) then
-   Result := '0';
+    Result := '0';
+end;
+
+function Get_mixerExpandStereo(dummy: String): String;
+begin
+  Result := '0'
+  if chbExpandStereo.Checked then
+    Result := '1';
+end;
+
+function Get_mixerVoiceControl(dummy: String): String;
+begin
+  Result := '0'
+  if chbVoicecontrol.Checked then
+    Result := '1';
+end;
+
+function ffRegReadDWordHKCU(regKeyName: String; regValName: String; defaultValue: Cardinal): Cardinal;
+var
+  regval: Cardinal;
+begin
+  if NOT RegQueryDwordValue(HKCU, regKeyName, regValName, Result) then
+    Result :=defaultValue;
 end;
 
 procedure InitializeWizard;
@@ -877,6 +903,7 @@ var
   systemSpeakerConfig: Integer;
   reg_isSpkCfg: Cardinal;
   isMajorType: Boolean;
+  ii: Cardinal;
 begin
 
   { Create the pages }
@@ -982,6 +1009,32 @@ begin
       SpeakerPage.Values[7] := True;
   end
 
+  // Check boxes
+  chbVoicecontrol := TCheckBox.Create(SpeakerPage);
+  chbVoicecontrol.Top := ScaleY(222);
+  chbVoicecontrol.Left := ScaleX(20);
+  chbVoicecontrol.Width := ScaleX(170);
+  chbVoicecontrol.Height := ScaleY(16);
+  chbVoicecontrol.Caption := ExpandConstant('{cm:spk_VoiceControl}');
+  ii := ffRegReadDWordHKCU('Software\GNU\ffdshow_audio\default', 'mixerVoiceControl',0);
+  if ii = 0 then
+    chbVoicecontrol.Checked := False
+  else
+    chbVoicecontrol.Checked := True;
+  chbVoicecontrol.Parent := SpeakerPage.Surface;
+
+  chbExpandStereo := TCheckBox.Create(SpeakerPage);
+  chbExpandStereo.Top := ScaleY(222);
+  chbExpandStereo.Left := ScaleX(200);
+  chbExpandStereo.Width := ScaleX(200);
+  chbExpandStereo.Height := ScaleY(16);
+  chbExpandStereo.Caption := ExpandConstant('{cm:spk_ExpandStereo}');
+  ii := ffRegReadDWordHKCU('Software\GNU\ffdshow_audio\default', 'mixerExpandStereo',0);
+  if ii = 0 then
+    chbExpandStereo.Checked := False
+  else
+    chbExpandStereo.Checked := True;
+  chbExpandStereo.Parent := SpeakerPage.Surface;
 
 // VirtualDub plugin install directory setting
 
