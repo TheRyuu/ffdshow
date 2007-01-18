@@ -248,7 +248,9 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]=
  { &MEDIATYPE_Video, &MEDIASUBTYPE_3iv2   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_3IVX   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_3ivx   },
- // MPEG2 Video MediaSubType & FourCCs
+ // MPEG1 & 2 Video MediaSubType & FourCCs
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_MPEG1Packet   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_MPEG1Payload   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_MPEG2_VIDEO   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_MPG2   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_mpg2   },
