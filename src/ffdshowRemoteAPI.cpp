@@ -148,24 +148,32 @@ unsigned int __stdcall Tremote::ffwdThreadProc(void *self0)
  setThreadName(DWORD(-1),"remote fast forward");
  Tremote *self=(Tremote*)self0;
  HANDLE fEvent=self->fEvent;
- if (self->deci != NULL)
+ IFilterGraph    *m_pGraph = NULL;
+ self->deci->getGraph(&m_pGraph); // Graph we belong to
+ comptrQ<IMediaControl> _pMC=m_pGraph;
+ if (self->deci != NULL && _pMC != NULL)
  {
+	_pMC->Pause();
 	int seconds = self->fSeconds;
 	seconds *= self->fMode;
 	int pos;
 	int duration = self->deci->getParam2(IDFF_movieDuration);
+	//self->deci->
 	self->deci->tell(&pos);
 	if (pos!=-1)
 	 while(WaitForSingleObject(fEvent, 0) != WAIT_OBJECT_0)
 	 {
 		pos+=seconds;
-		if (pos<0 || (duration>0 && pos >= duration))
+		if (pos<0 || (duration>0 && pos >= duration) || self->deci->getState2()!=State_Paused)
 			break;
 		if (!SUCCEEDED(self->deci->seek(pos)))
 			break;
 		Sleep(100);
 	 }
+	 if (self->deci->getState2()==State_Paused)
+		 _pMC->Run();
  }
+ 
  self->fThread=NULL;
  _endthreadex(0);
  return 0;
@@ -203,7 +211,10 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
     case WPRM_RUN:
      return SUCCEEDED(deciD->run())?TRUE:FALSE;
     case WPRM_GETSTATE:
-     return deciD->getState2(); 
+		if (fThread)
+			return 3;
+		else
+			return deciD->getState2(); 
     case WPRM_GETDURATION:
      return deci->getParam2(IDFF_movieDuration);
     case WPRM_GETCURTIME:
