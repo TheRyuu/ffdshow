@@ -2,10 +2,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 772
+#define tryout_revision = 796
 #define buildyear = 2007
 #define buildmonth = '01'
-#define buildday = '14'
+#define buildday = '18'
 
 ; Build specific options
 #define unicode_required = True
@@ -112,9 +112,6 @@ VersionInfoCopyright=GNU
 VersionInfoVersion=1.0.0.{#= tryout_revision}
 WizardImageFile=MicrosoftModern01.bmp
 WizardSmallImageFile=SetupModernSmall26.bmp
-#if PREF_XXL
-MinVersion=0,4
-#endif
 
 [Languages]
 Name: en; MessagesFile: compiler:Default.isl
