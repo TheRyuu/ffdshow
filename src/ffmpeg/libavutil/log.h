@@ -1,3 +1,23 @@
+/*
+ * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
+
 #ifndef LOG_H
 #define LOG_H
 
@@ -13,7 +33,7 @@ struct AVCLASS {
                                         or AVFormatContext, which begin with an AVClass.
                                         Needed because av_log is in libavcodec and has no visibility
                                         of AVIn/OutputFormat */
-    struct AVOption *option;
+    const struct AVOption *option;
 };
 
 /* av_log API */
@@ -35,6 +55,7 @@ extern void av_vlog(void*, int level, const char *fmt, va_list);
 extern int av_log_get_level(void);
 extern void av_log_set_level(int);
 extern void av_log_set_callback(void (*)(void*, int, const char*, va_list));
+extern void av_log_default_callback(void* ptr, int level, const char* fmt, va_list vl);
 #else
 extern void (*av_vlog)(void*, int, const char*, va_list);
 #endif
