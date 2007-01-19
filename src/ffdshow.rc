@@ -485,7 +485,7 @@ BEGIN
                     "Button",BS_AUTORADIOBUTTON | WS_TABSTOP,4,66,112,11
     EDITTEXT        IDC_ED_RESIZE_MOD_16,80,78,31,13,ES_RIGHT | ES_AUTOHSCROLL
     PUSHBUTTON      "6",IDC_BT_RESIZE_MOD_16,111,78,11,13
-    CONTROL         "Multiply by",IDC_RBT_RESIZE_MODE_MULT,"Button",BS_AUTORADIOBUTTON,4,96,58,10
+    CONTROL         "Multiply by",IDC_RBT_RESIZE_MODE_MULT,"Button",BS_AUTORADIOBUTTON,4,96,56,10
     EDITTEXT        IDC_ED_RESIZE_MULT,61,95,50,13,ES_RIGHT | ES_AUTOHSCROLL
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDVERT,132,8,1,101
     CONTROL         "Resize if ...",IDC_RBT_RESIZE_IFSIZE,"Button",BS_AUTORADIOBUTTON | WS_GROUP,137,12,116,10
@@ -3006,5 +3006,4 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
-
 
