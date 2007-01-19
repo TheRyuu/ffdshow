@@ -80,6 +80,7 @@
 #define FOURCC_MPG1 mmioFOURCC('M','P','G','1')
 #define FOURCC_MPG2 mmioFOURCC('M','P','G','2')
 #define FOURCC_EM2V mmioFOURCC('E','M','2','V')
+#define FOURCC_MMES mmioFOURCC('M','M','E','S')
 #define FOURCC_DIV1 mmioFOURCC('D','I','V','1')
 #define FOURCC_DIV2 mmioFOURCC('D','I','V','2')
 #define FOURCC_DIV4 mmioFOURCC('D','I','V','4')
