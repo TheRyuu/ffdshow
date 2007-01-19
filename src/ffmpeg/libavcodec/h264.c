@@ -4469,8 +4469,8 @@ static int decode_slice_header(H264Context *h){
         return -1;
     }
 
-    if(h->dequant_coeff_pps != (int)pps_id){
-        h->dequant_coeff_pps = (int)pps_id;
+    if(h->dequant_coeff_pps != pps_id){
+        h->dequant_coeff_pps = pps_id;
         init_dequant_tables(h);
     }
 
