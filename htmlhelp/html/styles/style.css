@@ -11,13 +11,16 @@ div {
 	text-align: center
 }
 .big_caption {
-	font-size: 125%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold
+	font-size: 145%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold
 }
 .medium_caption {
 	font-size: 115%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold
 }
 .small_caption {
 	font-size: 105%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold
+}
+.ss_caption {
+	font-size: 90%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold
 }
 ul.added {
  color: rgb(0,0,100); list-style-type: disc; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 90%
@@ -36,4 +39,13 @@ a.nav:visited {
 }
 a.nav:hover {
 	color: rgb(77,77,77); text-decoration: underline; font-weight: bold
+}
+a.links:link {
+	color: rgb(0,0,255); text-decoration: underline;
+}
+a.links:visited {
+	color: rgb(128,0,128); text-decoration: underline;
+}
+a.links:hover {
+	color: rgb(0,0,255); text-decoration: underline;
 }

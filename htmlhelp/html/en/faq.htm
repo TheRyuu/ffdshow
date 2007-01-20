@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+	<title>ffdshow tryouts FAQ</title>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+	<meta name="description" content="ffdshow tryouts FAQ" />
+
+	<link rel="stylesheet" href="../styles/style.css" type="text/css" />
+
+</head>
+<body>
+
+	<p><span class="big_caption">FAQ</span></p>
+
+	<a class="nav" href="#builds">
+		What's the difference between generic builds, SSE builds and generic builds(ICL 9.1)?
+	</a><br />
+
+	<a class="nav" href="#threads">
+		Is ffdshow multithreaded?
+	</a><br />
+
+	<p><span class="small_caption"><a name="builds" id="builds">
+		What's the difference between generic builds, SSE builds and generic builds(ICL 9.1)?
+	</a></span></p>
+
+	<ul class="normal">
+
+		<li>generic builds work on Pentium-mmx/AMD K6 or later.</li>
+
+		<li>SSE builds work on Pentium3/Athlon Xp or later.</li>
+
+		<li>SSE2 builds work on Pentium4/Athlon64 or later.</li>
+
+		<li>generic builds(ICL 9.1) work on Pentium-mmx/AMD K6 or later.</li>
+
+	</ul>
+
+	<p><span class="normal">
+		Cardinal decoders and resize filter detect SSE/SSE2 automatically and 
+		achieve optimal performance even if the builds are "generic".<br /> 
+		They are written in assembler language and there are almost no room for compiler optimization.
+	</span></p>
+
+	<table border="1">
+
+		<caption align="left" class="ss_caption">libavcodec-DivX 5 720p CinderellaMan_HD.avi</caption>
+
+		<tr><th>builds</th><th>results(sec)</th></tr>
+
+		<tr><td>ffdshow_rev752_20070108_xxl.exe</td><td align="right">42</td></tr>
+
+		<tr><td>ffdshow_rev752_20070108_sse_xxl.exe</td><td align="right">41</td></tr>
+
+		<tr><td>ffdshow_rev756_20070109_clsid_icl9.exe</td><td align="right">42</td></tr>
+
+	</table>
+
+	<p><span class="normal">
+		SSE builds are faster than generic bulds if you use image filters such as xsharpen.
+	</span></p>
+
+	<table border="1">
+
+		<caption align="left" class="ss_caption">CinderellaMan_HD.avi + xsharpen</caption>
+
+		<tr><th>builds</th><th>results(sec)</th></tr>
+
+		<tr><td>ffdshow_rev752_20070108_xxl.exe</td><td align="right">148</td></tr>
+
+		<tr><td>ffdshow_rev752_20070108_sse_xxl.exe</td><td align="right">90</td></tr>
+
+		<tr><td>ffdshow_rev756_20070109_clsid_icl9.exe</td><td align="right">102</td></tr>
+
+	</table>
+
+	<p><span class="normal">
+		ICL 9.1 generates faster code with or without SSE.<br />
+		For example when you use denoise 3d, ICL 9.1 builds are faster than generic builds or SSE builds.
+	</span></p>
+
+	<table border="1">
+
+		<caption align="left" class="ss_caption">CinderellaMan_HD.avi + denoise 3d</caption>
+
+		<tr><th>builds</th><th>results(sec)</th></tr>
+
+		<tr><td>ffdshow_rev752_20070108_xxl.exe</td><td align="right">131</td></tr>
+
+		<tr><td>ffdshow_rev752_20070108_sse_xxl.exe</td><td align="right">130</td></tr>
+
+		<tr><td>ffdshow_rev756_20070109_clsid_icl9.exe</td><td align="right">115</td></tr>
+
+	</table>
+
+	<p><span class="normal">
+		Both SSE and ICL 9.1 builds have good advantage in using certain image filters. 
+		Each has likes and dislikes.<br />
+		It is interesting to reserch that issue. 
+		You'll need Haali's <a  class="links" href="http://haali.cs.msu.ru/mkv/timeCodec.exe">timeCodec.exe</a>.
+	</span></p>
+
+	<p><span class="normal">
+		Generic builds may have better stability compared to those optimized builds.<br />
+		If you are first to use ffdshow, we recommend you to try generic builds.<br />
+		If your CPU can't catch up when you use image filters, you may try SSE/ICL 9.1 builds.
+	</span></p>
+
+	<p><span class="small_caption"><a name="threads" id="threads">
+		Is ffdshow multithreaded?
+	</a></span></p>
+	<ul class="normal">
+		<li>Resize is fully multithreaded. It is faster on dual-core CPU. No configuration is needed. It is not effective on Pentium4 HT.</li>
+		<li>With 'Queue & misc'-'Queue output samples' checked, acceleration using multithreading is enabled. You may see some benefit on single CPU.</li>
+		<li>libavcodec mpeg1/2 decoders are multithreaded. By setting 'Decoder options'-'Number of decoding threads', it is accelerated. It is not effective on Pentium4 HT.</li>
+		<li>libavcodec MPEG4/MPEG2/MPEG1 encoders are multithreaded.</li>
+	</ul>
+	<div><span class="normal"><a class="nav" href="faq.htm" target="_top">Top</a></span></div>
+	<br />
+	<center>
+		<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" border="0" alt="SourceForge.net Logo" /></a>
+	</center>
+</body>
+</html>
