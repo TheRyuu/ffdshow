@@ -153,25 +153,28 @@ unsigned int __stdcall Tremote::ffwdThreadProc(void *self0)
  comptrQ<IMediaControl> _pMC=m_pGraph;
  if (self->deci != NULL && _pMC != NULL)
  {
-	_pMC->Pause();
+	_pMC->Run();
 	int seconds = self->fSeconds;
 	seconds *= self->fMode;
 	int pos;
 	int duration = self->deci->getParam2(IDFF_movieDuration);
-	//self->deci->
 	self->deci->tell(&pos);
+	DWORD currentTime, elapsedTime;
 	if (pos!=-1)
 	 while(WaitForSingleObject(fEvent, 0) != WAIT_OBJECT_0)
 	 {
-		pos+=seconds;
-		if (pos<0 || (duration>0 && pos >= duration) || self->deci->getState2()!=State_Paused)
+		currentTime = GetTickCount();
+		pos+=seconds/2;
+		if (pos<0 || (duration>0 && pos >= duration) || self->deci->getState2()!=State_Running)
 			break;
 		if (!SUCCEEDED(self->deci->seek(pos)))
 			break;
-		Sleep(100);
+		elapsedTime = GetTickCount() - currentTime;
+		if (elapsedTime < 500)
+			Sleep(500 - elapsedTime);
+		else
+			Sleep(100);
 	 }
-	 if (self->deci->getState2()==State_Paused)
-		 _pMC->Run();
  }
  
  self->fThread=NULL;
