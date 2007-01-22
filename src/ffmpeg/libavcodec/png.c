@@ -23,7 +23,6 @@
  * - use filters when generating a png (better compression)
  */
 
-#ifdef CONFIG_ZLIB
 #include <zlib.h>
 
 //#define DEBUG
@@ -760,4 +759,3 @@ AVCodec png_decoder = {
     NULL
 };
 
-#endif
