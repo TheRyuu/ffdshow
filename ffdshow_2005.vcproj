@@ -810,6 +810,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				AdditionalManifestFiles="bin\distrib\ffdshow.ax.manifest"
 				EmbedManifest="true"
 			/>
 			<Tool

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-  <title> ffdshow tryouts FAQ</title>
+  <title>ffdshow tryouts FAQ</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <meta name="description" content="ffdshow tryouts FAQ" />
   <link rel="stylesheet" href="../styles/style.css" type="text/css" />
@@ -22,8 +22,8 @@
   </p>
     
   <ul class="links">
-      <li><a class="nav" href="#builds">What is the difference between generic builds, SSE builds and generic builds (ICL 9.1)?</a></li>
-      <li><a class="nav" href="#threads">Is ffdshow multithreaded?</a></li>
+    <li><a class="nav" href="#builds">What is the difference between generic builds, SSE builds and generic builds (ICL 9.1)?</a></li>
+    <li><a class="nav" href="#threads">Is ffdshow multithreaded?</a></li>
   </ul>
     
   <p>
@@ -44,75 +44,75 @@
       Performance-critical parts are programmed in "hand-optimized" assembler code. So there is almost no room for compiler optimization.
     </span>
   </p>
-  
+    
+  <table class="normal" border="1" summary="Benchmark results">
+    <caption class="smaller_caption">libavcodec - DivX5 720p CinderellaMan_HD.avi</caption>
+    <tr>
+      <th>builds</th><th>results (sec)</th>
+    </tr>
+    <tr>
+      <td>ffdshow_rev752_20070108_xxl.exe</td>
+      <td align="right">42</td>
+    </tr>
+    <tr>
+      <td>ffdshow_rev752_20070108_sse_xxl.exe</td>
+      <td align="right">41</td>
+    </tr>
+    <tr>
+      <td>ffdshow_rev756_20070109_clsid_icl9.exe</td>
+      <td align="right">42</td>
+    </tr>
+  </table>
   <p>
-    <table class="normal" border="1" summary="Benchmark results">
-      <caption class="smaller_caption">libavcodec - DivX5 720p CinderellaMan_HD.avi</caption>
-      <tr>
-        <th>builds</th><th>results (sec)</th>
-      </tr>
-      <tr>
-        <td>ffdshow_rev752_20070108_xxl.exe</td>
-        <td align="right">42</td>
-      </tr>
-      <tr>
-        <td>ffdshow_rev752_20070108_sse_xxl.exe</td>
-        <td align="right">41</td>
-      </tr>
-      <tr>
-        <td>ffdshow_rev756_20070109_clsid_icl9.exe</td>
-        <td align="right">42</td>
-      </tr>
-    </table>
-    <span class="normal">The difference between generic and SSE/ICL 9.1 builds is negligible when using ffdshow just for basic decoding.</span>
-  </p>
-
-  <p>  
-    <table class="normal" border="1" summary="Benchmark results with xsharpen">
-      <caption class="smaller_caption">CinderellaMan_HD.avi + xsharpen</caption>
-      <tr>
-        <th>builds</th><th>results (sec)</th>
-      </tr>
-      <tr>
-        <td>ffdshow_rev752_20070108_xxl.exe</td>
-        <td align="right">148</td>
-      </tr>
-      <tr>
-        <td>ffdshow_rev752_20070108_sse_xxl.exe</td>
-        <td align="right">90</td>
-      </tr>
-      <tr>
-        <td>ffdshow_rev756_20070109_clsid_icl9.exe</td>
-        <td align="right">102</td>
-      </tr>
-    </table>  
-    <span class="normal">SSE builds are faster than generic builds if you use image filters such as xsharpen.</span>
+    <span class="normal">The difference between generic and SSE/ICL 9.1 builds is <strong>negligible</strong> when using ffdshow just for basic decoding.</span>
   </p>
     
+  <table class="normal" border="1" summary="Benchmark results with xsharpen">
+    <caption class="smaller_caption">CinderellaMan_HD.avi + xsharpen</caption>
+    <tr>
+      <th>builds</th><th>results (sec)</th>
+    </tr>
+    <tr>
+      <td>ffdshow_rev752_20070108_xxl.exe</td>
+      <td align="right">148</td>
+    </tr>
+    <tr>
+      <td>ffdshow_rev752_20070108_sse_xxl.exe</td>
+      <td align="right">90</td>
+    </tr>
+    <tr>
+      <td>ffdshow_rev756_20070109_clsid_icl9.exe</td>
+      <td align="right">102</td>
+    </tr>
+  </table>  
   <p>
-    <table class="normal" border="1" summary="Benchmark results with denoise3d">
-      <caption class="smaller_caption">CinderellaMan_HD.avi + denoise3d</caption>
-      <tr>
-        <th>builds</th><th>results(sec)</th>
-      </tr>
-      <tr>
-        <td>ffdshow_rev752_20070108_xxl.exe</td>
-        <td align="right">131</td>
-      </tr>
-      <tr>
-        <td>ffdshow_rev752_20070108_sse_xxl.exe</td>
-        <td align="right">130</td>
-      </tr>
-      <tr>
-        <td>ffdshow_rev756_20070109_clsid_icl9.exe</td>
-        <td align="right">115</td>
-      </tr>
-    </table>  
+    <span class="normal">SSE builds are faster than generic builds if you use image filters such as xsharpen.</span>
+  </p>
+  
+  <table class="normal" border="1" summary="Benchmark results with denoise3d">
+    <caption class="smaller_caption">CinderellaMan_HD.avi + denoise3d</caption>
+    <tr>
+      <th>builds</th><th>results(sec)</th>
+    </tr>
+    <tr>
+      <td>ffdshow_rev752_20070108_xxl.exe</td>
+      <td align="right">131</td>
+    </tr>
+    <tr>
+      <td>ffdshow_rev752_20070108_sse_xxl.exe</td>
+      <td align="right">130</td>
+    </tr>
+    <tr>
+      <td>ffdshow_rev756_20070109_clsid_icl9.exe</td>
+      <td align="right">115</td>
+    </tr>
+  </table>
+  <p>  
     <span class="normal">ICL 9.1 generates faster code with or without SSE.<br />
       For example, when you use denoise3d, ICL 9.1 builds are faster than generic or SSE builds.
     </span>
   </p>
-  
+    
   <p>
     <span class="normal">Both SSE/SSE2 and ICL 9.1 builds can have an impact on performance when using one of ffdshow's filters like <em>blur</em>, <em>sharpen</em>, <em>denoise3d</em> etc.
       Non-libavcodec decoders like <em>libdts</em> and <em>libfaad</em> can show a noticeable boost too.<br />
@@ -136,7 +136,11 @@
     <li>libavcodec's MPEG4/MPEG2/MPEG1 encoders are multithreaded.</li>
   </ul>
   
-  <div><span class="normal"><a class="nav" href="#top">Top</a></span></div>
+  <div>
+    <span class="normal">
+      <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.gif" alt="" /></a>
+    </span>
+  </div>
   
   <div style="padding-top:20px">
     <a href="http://sourceforge.net">

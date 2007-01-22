@@ -1,74 +1,137 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-	<title>ffdshow tryouts FAQ</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS" />
-	<meta name="description" content="ffdshow tryouts FAQ" />
-	<link rel="stylesheet" href="../styles/style.css" type="text/css" />
+  <title>ffdshow tryouts FAQ</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS" />
+  <meta name="description" content="ffdshow tryouts FAQ" />
+  <link rel="stylesheet" href="../styles/style.css" type="text/css" />
 </head>
+
 <body>
-	<p><span class="big_caption">FAQ</span></p>
-	<a class="nav" href="#builds">generic buildsとSSE builds、generic builds(ICL 9.1)の違いは？</a><br />
-	<a class="nav" href="#threads">ffdshowはマルチスレッドに対応していますか？</a><br />
+  <a href="http://ffdshow-tryout.sourceforge.net/phpBB2/">
+    <img src="../images/logo_phpBB.png" title="ffdshow tryouts" alt="ffdshow tryouts" width="200" height="91" />
+  </a>
+  
+  <p>
+    <span class="big_caption">
+      <a name="top" id="top">FAQ</a>
+    </span>
+  </p>
 
-	<p><span class="small_caption"><a name="builds" id="builds">generic buildsとSSE builds、generic builds(ICL 9.1)の違いは？</a></span></p>
-	<ul class="normal">
-		<li>generic buildsはPentium-mmx/AMD K6以降で使用可能です。</li>
-		<li>SSE buildsはPentium3/Athlon Xp以降のCPUが必要です。</li>
-		<li>SSE2 buildsはPentium4/Athlon64以降のCPUが必要です。</li>
-		<li>generic builds(ICL 9.1)はPentium-mmx/AMD K6以降で使用可能です。</li>
-	</ul>
+  <ul class="links">
+    <li><a class="nav" href="#builds">generic buildsとSSE builds、generic builds(ICL 9.1)の違いは？</a></li>
+    <li><a class="nav" href="#threads">ffdshowはマルチスレッドに対応していますか？</a></li>
+  </ul>
 
-	<p><span class="normal">主要なデコーダやリサイズはgenericビルドであってもCPUを自動検出しSSE/SSE2を使用して最大のパフォーマンスを発揮します。これらは主要部分がアセンブラで書かれておりコンパイラによる最適化の余地はほとんどありません。</span></p>
+  <p>
+    <span class="small_caption">
+      <a name="builds" id="builds">generic buildsとSSE builds、generic builds(ICL 9.1)の違いは？</a>
+    </span>
+  </p>
 
-	<table border="1">
-		<caption align="left" class="ss_caption">libavcodec-DivX 5 720p CinderellaMan_HD.avi</caption>
-		<tr><th>ビルド</th><th>結果（秒）</th></tr>
-		<tr><td>ffdshow_rev752_20070108_xxl.exe</td><td align="right">42</td></tr>
-		<tr><td>ffdshow_rev752_20070108_sse_xxl.exe</td><td align="right">41</td></tr>
-		<tr><td>ffdshow_rev756_20070109_clsid_icl9.exe</td><td align="right">42</td></tr>
-	</table>
+  <ul class="normal">
+    <li>generic buildsはPentium-mmx/AMD K6以降で使用可能です。</li>
+    <li>SSE buildsはPentium3/Athlon Xp以降のCPUが必要です。</li>
+    <li>SSE2 buildsはPentium4/Athlon64以降のCPUが必要です。</li>
+    <li>generic builds(ICL 9.1)はPentium-mmx/AMD K6以降で使用可能です。</li>
+  </ul>
 
-	<p><span class="normal">SSEビルドがgeneric buldsより高速なのはxsharpenなど画像処理フィルタを使用した場合です。</span></p>
+  <p>
+    <span class="normal">主要なデコーダやリサイズはgenericビルドであってもCPUを自動検出しSSE/SSE2を使用して最大のパフォーマンスを発揮します。これらは主要部分がアセンブラで書かれておりコンパイラによる最適化の余地はほとんどありません。
+    </span>
+  </p>
 
-	<table border="1">
-		<caption align="left" class="ss_caption">CinderellaMan_HD.avi + xsharpen</caption>
-		<tr><th>ビルド</th><th>結果（秒）</th></tr>
-		<tr><td>ffdshow_rev752_20070108_xxl.exe</td><td align="right">148</td></tr>
-		<tr><td>ffdshow_rev752_20070108_sse_xxl.exe</td><td align="right">90</td></tr>
-		<tr><td>ffdshow_rev756_20070109_clsid_icl9.exe</td><td align="right">102</td></tr>
-	</table>
+  <p>
+    <table class="normal" border="1" summary="Benchmark results">
+      <caption class="smaller_caption">libavcodec - DivX5 720p CinderellaMan_HD.avi</caption>
+      <tr>
+        <th>ビルド</th><th>結果（秒）</th>
+      </tr>
+      <tr>
+        <td>ffdshow_rev752_20070108_xxl.exe</td><td align="right">42</td>
+      </tr>
+      <tr>
+        <td>ffdshow_rev752_20070108_sse_xxl.exe</td><td align="right">41</td>
+      </tr>
+      <tr>
+        <td>ffdshow_rev756_20070109_clsid_icl9.exe</td><td align="right">42</td>
+      </tr>
+    </table>
+    <span class="normal">ffdshowを単にデコードのために用いる場合、genericビルドとSSE/ICL 9.1ビルドの違いは無視できます。</span>
+  </p>
 
-	<p><span class="normal">ICL 9.1はSSEを使用しない場合でもより高速なコードを生成します。例えばdenoise 3dはgenericビルドとSSEビルドで変わりありませんが、ICL 9.1ビルドはそれらより高速です。</span></p>
+  <p>
+    <table class="normal" border="1" summary="Benchmark results with xsharpen">
+      <caption class="smaller_caption">CinderellaMan_HD.avi + xsharpen</caption>
+        <tr>
+          <th>ビルド</th><th>結果（秒）</th>
+        </tr>
+        <tr>
+          <td>ffdshow_rev752_20070108_xxl.exe</td><td align="right">148</td>
+        </tr>
+        <tr>
+          <td>ffdshow_rev752_20070108_sse_xxl.exe</td><td align="right">90</td>
+        </tr>
+        <tr>
+          <td>ffdshow_rev756_20070109_clsid_icl9.exe</td><td align="right">102</td>
+        </tr>
+    </table>
+    <span class="normal">SSEビルドがgeneric buldsより高速なのはxsharpenなど画像処理フィルタを使用した場合です。</span>
+  </p>
 
-	<table border="1">
-		<caption align="left" class="ss_caption">CinderellaMan_HD.avi + denoise 3d</caption>
-		<tr><th>ビルド</th><th>結果（秒）</th></tr>
-		<tr><td>ffdshow_rev752_20070108_xxl.exe</td><td align="right">131</td></tr>
-		<tr><td>ffdshow_rev752_20070108_sse_xxl.exe</td><td align="right">130</td></tr>
-		<tr><td>ffdshow_rev756_20070109_clsid_icl9.exe</td><td align="right">115</td></tr>
-	</table>
+  <p>
+    <table class="normal" border="1" summary="Benchmark results with denoise3d">
+    <caption class="smaller_caption">CinderellaMan_HD.avi + denoise3d</caption>
+      <tr>
+        <th>ビルド</th><th>結果（秒）</th>
+      </tr>
+      <tr>
+        <td>ffdshow_rev752_20070108_xxl.exe</td><td align="right">131</td>
+      </tr>
+      <tr>
+        <td>ffdshow_rev752_20070108_sse_xxl.exe</td><td align="right">130</td>
+      </tr>
+      <tr>
+        <td>ffdshow_rev756_20070109_clsid_icl9.exe</td><td align="right">115</td>
+      </tr>
+    </table>
+    <span class="normal">ICL 9.1はSSEを使用しない場合でもより高速なコードを生成します。<br />
+      例えばdenoise 3dはgenericビルドとSSEビルドで変わりありませんが、ICL 9.1ビルドはそれらより高速です。
+    </span>
+  </p>
 
-	<p><span class="normal">
-		SSE、ICL 9.1ともある特定のフィルタを使う場合には少なからぬメリットがあります。
-		それぞれに得意・不得意があり、研究しだしたら面白いでしょう。
-		Haaliの<a  class="links" href="http://haali.cs.msu.ru/mkv/timeCodec.exe">timeCodec.exe</a>を使用します。
-	</span></p>
+  <p>
+    <span class="normal">SSE、ICL 9.1とも<em>シャープ</em>、<em>ぼかし</em>、<em>denoise 3d</em>のようなフィルタを使う場合には少なからぬメリットがあります。libavcodec以外のデコーダ、例えば <em>libdts</em>, <em>libfaad</em> などにも違いが現れます。<br />
+      改善の程度はPCによって異なりますので理想的には御自身のシステムでテストされると良いでしょう。<br />
+      ベンチマークにはHaaliの<a  class="links" href="http://haali.cs.msu.ru/mkv/timeCodec.exe">timeCodec.exe</a>を使用します。timeCodec.exeが動作するためには <a href="http://haali.cs.msu.ru/mkv/">Haali Media Splitter</a> が必要です。<br /><br />
+      genericビルドはこれらの高速化にこだわったビルドと比較して安定性の面で優れている可能性があります。初めての方にはgenericビルドをまず使ってみて、画像処理フィルタ使用時にCPUが追いつかない場合に限ってSSEやICL 9.1ビルドを試すという方法をお勧めします。
+    </span>
+  </p>
 
-	<p><span class="normal">genericビルドはこれらの高速化にこだわったビルドと比較して安定性の面で優れている可能性があります。初めての方にはgenericビルドをまず使ってみて、画像処理フィルタ使用時にCPUが追いつかない場合に限ってSSEやICL 9.1ビルドを試すという方法をお勧めします。</span></p>
 
-	<p><span class="small_caption"><a name="threads" id="threads">ffdshowはマルチスレッドに対応していますか？</a></span></p>
-	<ul class="normal">
-		<li>リサイズは完全にマルチスレッド化されておりデュアルコアCPUなどでより高速に処理されます（設定不要）。ただしPentium4 HTでは効果がありません。</li>
-		<li>「キュー、その他」の「出力サンプルをキューに入れる」をチェックするとマルチスレッド処理を使った高速化がなされます。シングルCPUでも効果が得られる場合があります。</li>
-		<li>libavcodecのmpeg1/2デコーダはマルチスレッド対応しており、「デコーダーオプション」のスレッド数を設定することで高速化されます。Pentium4 HTでは効果が見られません。</li>
-		<li>libavcodecのMPEG4/MPEG2/MPEG1エンコーダはマルチスレッドに対応しています</li>
-	</ul>
-	<div><span class="normal"><a class="nav" href="faq.htm" target="_top">Top</a></span></div>
-	<br />
-	<center>
-		<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" border="0" alt="SourceForge.net Logo" /></a>
-	</center>
+  <p>
+    <span class="small_caption">
+      <a name="threads" id="threads">ffdshowはマルチスレッドに対応していますか？</a>
+    </span>
+  </p>
+
+  <ul class="normal">
+    <li>リサイズは完全にマルチスレッド化されておりデュアルコアCPUなどでより高速に処理されます（設定不要）。ただしPentium4 HTでは効果がありません。</li>
+    <li>「キュー、その他」の「出力サンプルをキューに入れる」をチェックするとマルチスレッド処理を使った高速化がなされます。シングルCPUでも効果が得られる場合があります。</li>
+    <li>libavcodecのmpeg1/2デコーダはマルチスレッド対応しており、「デコーダーオプション」のスレッド数を設定することで高速化されます。Pentium4 HTでは効果が見られません。</li>
+    <li>libavcodecのMPEG4/MPEG2/MPEG1エンコーダはマルチスレッドに対応しています</li>
+  </ul>
+
+  <div><span class="normal"><a class="nav" href="#top">Top</a></span></div>
+
+  
+  <div style="padding-top:20px">
+    <a href="http://sourceforge.net">
+      <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
+    </a>
+  </div>
 </body>
 </html>

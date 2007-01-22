@@ -124,13 +124,25 @@ bool TimgFilterSubtitles::initSubtitles(int id,int type,const unsigned char *ext
 {
  csEmbedded.Lock();
  Tembedded::iterator e=embedded.find(id);
- if (e!=embedded.end()) delete e->second;
- e=embedded.insert(std::make_pair(id,TsubtitlesTextpin::create(type,extradata,extradatalen,deci))).first;
+ if (e!=embedded.end())
+  {
+   delete e->second;
+   e->second=TsubtitlesTextpin::create(type,extradata,extradatalen,deci);
+  }
+ else
+  {
+   e=embedded.insert(std::make_pair(id,TsubtitlesTextpin::create(type,extradata,extradatalen,deci))).first;
+  }
  csEmbedded.Unlock();
+ if(!e->second)
+  return false;
  return *e->second;
 }
 void TimgFilterSubtitles::addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg)
 {
+ //wchar_t buf[1024];
+ //MultiByteToWideChar(CP_UTF8,0,(LPCSTR)data,datalen,buf,1024);
+
  Tembedded::iterator e=embedded.find(id);
  if (e==embedded.end()) return;
  csEmbedded.Lock();

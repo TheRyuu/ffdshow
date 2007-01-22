@@ -470,7 +470,7 @@ template<class tchar> void TsubtitleParserSSA<tchar>::strToInt(const ffstring &s
 template<class tchar> void TsubtitleParserSSA<tchar>::Tstyle::toProps(void)
 {
  if (fontname)
-  text<char_t>(fontname.c_str(),LF_FACESIZE*2,(char_t*)props.fontname); // LF_FACESIZE chars max because of LF_FACESIZE.
+  text<char_t>(fontname.c_str(),LF_FACESIZE*2,(char_t*)props.fontname,true); // LF_FACESIZE chars max because of LF_FACESIZE.
  if (int size=atoi(fontsize.c_str()))
   props.size=size;
  const tchar *colorS=primaryColour.c_str();

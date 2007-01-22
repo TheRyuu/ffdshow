@@ -72,15 +72,18 @@ public:
  template<class Tin> inline text(const Tin *in);
  template<class Tin> inline text(const Tin *in,Tout *Ibuf);
  template<class Tin> inline text(const Tin *in,size_t inlen,Tout *Ibuf);
+ template<class Tin> inline text(const Tin *in,size_t inlen,Tout *Ibuf,bool autoInputSize);
  ~text() {if (own) delete []buf;}
  operator const Tout*() const {return buf;}
 };
 template<> template<> inline text<char>::text(const char *in):buf(const_cast<char*>(in)),own(false) {}
 template<> template<> inline text<char>::text(const char *in,char *Ibuf):buf(strcpy(Ibuf,in)),own(false) {}
 template<> template<> inline text<char>::text(const char *in,size_t inlen,char *Ibuf):buf(strncpy(Ibuf,in,inlen)),own(false) {}
+template<> template<> inline text<char>::text(const char *in,size_t inlen,char *Ibuf,bool autoInputSize):buf(strncpy(Ibuf,in,inlen)),own(false) {}
 template<> template<> inline text<wchar_t>::text(const wchar_t *in):buf(const_cast<wchar_t*>(in)),own(false) {}
 template<> template<> inline text<wchar_t>::text(const wchar_t *in,wchar_t *Ibuf):buf(strcpy(Ibuf,in)),own(false) {}
 template<> template<> inline text<wchar_t>::text(const wchar_t *in,size_t inlen,wchar_t *Ibuf):buf(strncpy(Ibuf,in,inlen)),own(false) {}
+template<> template<> inline text<wchar_t>::text(const wchar_t *in,size_t inlen,wchar_t *Ibuf,bool autoInputSize):buf(strncpy(Ibuf,in,inlen)),own(false) {}
 template<> template<> inline text<wchar_t>::text(const char *in):own(in?true:false)
 {
  if (in)
@@ -100,6 +103,13 @@ template<> template<> inline text<wchar_t>::text(const char *in,wchar_t *Ibuf):o
 template<> template<> inline text<wchar_t>::text(const char *in,size_t l,wchar_t *Ibuf):own(false),buf(Ibuf)
 {
  MultiByteToWideChar(CP_ACP,0,in,int(l),buf,int(l));
+}
+template<> template<> inline text<wchar_t>::text(const char *in,size_t l,wchar_t *Ibuf,bool autoInputSize):own(false),buf(Ibuf)
+{
+ if (autoInputSize)
+  MultiByteToWideChar(CP_ACP,0,in,-1,buf,int(l));
+ else
+  MultiByteToWideChar(CP_ACP,0,in,int(l),buf,int(l));
 }
 template<> template<> inline text<char>::text(const wchar_t *in):own(in?true:false)
 {
@@ -122,6 +132,12 @@ template<> template<> inline text<char>::text(const wchar_t *in,char *Ibuf):own(
 template<> template<> inline text<char>::text(const wchar_t *in,size_t l,char *Ibuf):own(false),buf(Ibuf)
 {
  WideCharToMultiByte(CP_ACP,0,in,int(l/2),buf,int(l),NULL,NULL);
+}
+template<> template<> inline text<char>::text(const wchar_t *in,size_t l,char *Ibuf,bool autoInputSize):own(false),buf(Ibuf){
+ if (autoInputSize)
+  WideCharToMultiByte(CP_ACP,0,in,-1,buf,int(l),NULL,NULL);
+ else
+  WideCharToMultiByte(CP_ACP,0,in,int(l/2),buf,int(l),NULL,NULL);
 }
 
 #endif

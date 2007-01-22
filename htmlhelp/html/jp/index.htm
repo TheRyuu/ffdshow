@@ -6,22 +6,41 @@
     <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS" />
     <meta name="description" content="ffdshow tryouts 更新履歴" />
     <link rel="stylesheet" href="../styles/style.css" type="text/css" />
- </head>
-<body>
-    <a href="http://ffdshow-tryout.sourceforge.net/phpBB2/"><img src="../images/logo_phpBB.png" border="0" alt="ffdshow tryouts" width="200" height="91" /></a><br />
-    <p><span class="big_caption">更新履歴</span></p>
-    <span class="normal">オリジナルのffdshow projectの最新バージョンからマルチスレッドパッチを取り除いた状態を基準としています。<br /></span>
-    <table class="normal" summary="Links to different sections of changelog">
-      <tr><td>Navigate to:</td><td><a class="nav" href="#fixes">不具合の修正</a></td></tr>
-      <tr><td></td><td><a class="nav" href="#features">新機能</a></td></tr>
-      <tr><td></td><td><a class="nav" href="#download">ダウンロード</a></td></tr>
-      <tr><td></td><td><a class="nav" href="faq.htm">FAQ</a></td></tr>
-    </table>
+</head>
 
-    <p><a name="fixes" id="fixes"><span class="medium_caption">不具合の修正</span></a><br />
-    
-    <span class="normal">tryoutsで新たに加わり修正された不具合は含みません。</span></p>
-    <p><span class="small_caption">beta1以降の修正</span></p>
+<body>
+    <a href="http://ffdshow-tryout.sourceforge.net/phpBB2/">
+      <img src="../images/logo_phpBB.png" border="0" alt="ffdshow tryouts" width="200" height="91" />
+    </a><br />
+
+    <p>
+      <span class="big_caption">
+       <a name="top" id="top">更新履歴</a>
+      </span>
+    </p>
+
+    <span class="normal">オリジナルのffdshow projectの最新バージョンからマルチスレッドパッチを取り除いた状態を基準としています。<br />
+      Navigate to:
+    </span>
+    <ul class="links">
+      <li><a class="nav" href="#fixes">不具合の修正</a></li>
+      <li><a class="nav" href="#features">新機能</a></li>
+      <li><a class="nav" href="#download">ダウンロード</a></li>
+      <li><a class="nav" href="faq.htm">FAQ</a></li>
+    </ul>
+
+
+    <p>
+      <a name="fixes" id="fixes">
+        <span class="medium_caption">不具合の修正</span>
+      </a><br />
+        <span class="normal">tryoutsで新たに加わり修正された不具合は含みません。</span>
+      </p>
+
+    <p>
+      <span class="small_caption">beta1以降の修正</span>
+    </p>
+
     <ul class="fixed">
         <li>Windows Vistaでエクスプローラーがクラッシュしていた（AVIファイルがあるフォルダにアクセスした時）。</li>
         <li>MPEG1/2で再生開始時およびシーク時にアーチファクトが出たりクラッシュしたりすることがあった(libmpeg2)。</li>
@@ -32,7 +51,11 @@
         <li>HaaliのビデオレンダラとMPCの間にffdshowが入ったときにうまくシークできないことがあった。</li>
         <li>Kernel deinterlaceの次の内部フィルターが１フレームおきにスキップされていた。次の内部フィルターがリサイズであった場合フレーム毎にビデオサイズが変化していた。</li>
     </ul>
-    <p><span class="small_caption">beta1までの修正</span></p>
+
+    <p>
+      <span class="small_caption">beta1までの修正</span>
+    </p>
+
     <ul class="fixed">
         <li>Windows Media Encoderでファイルの変換を行う時にffdshowがオーディオデコーダとして使用されクラッシュしていた。</li>
         <li>libmpeg2でハードウエア・デインタレーシングが無効だった。</li>
@@ -70,12 +93,24 @@
         <li>AvisynthのスクリプトにエラーがあるとOSD表示されるが、そのエラーメッセージがAvisynthを無効にしても消えなかった。</li>
     </ul>
 
-    <p><a name="features" id="features"><span class="medium_caption">新機能</span></a></p>
-    <p><span class="small_caption">beta1以降の追加</span></p>
-    <ul class="added" style="list-style-type:disc">
+    <p>
+      <a name="features" id="features">
+        <span class="medium_caption">新機能</span>
+      </a>
+    </p>
+
+    <p>
+      <span class="small_caption">beta1以降の追加</span>
+    </p>
+
+    <ul class="added">
         <li>キュー：VMR9に内蔵されているキューを利用できるようにした。</li>
     </ul>
-    <p><span class="small_caption">beta1までの追加</span></p>
+
+    <p>
+      <span class="small_caption">beta1までの追加</span>
+    </p>
+
     <ul class="added">
         <li>H.264 MBAFF（インターレース）のサポート</li>
         <li>VP6, Wavpack(lossless)他、いくつかのデコーダーを追加。</li>
@@ -90,15 +125,21 @@
         <li>SVQ3のデコード時にスプリッタから十分な情報が得られなかった際エラーメッセージを表示するようにした。</li>
     </ul>
 
-    <p><a name="download" id="download"><span class="big_caption">ダウンロード</span></a></p>
+    <p>
+      <a name="download" id="download">
+        <span class="big_caption">ダウンロード</span>
+      </a>
+    </p>
+
     <ul class="download">
         <li><a class="nav" href="http://downloads.sourceforge.net/ffdshow-tryout/ffdshow_beta1_20061211_clsid.exe">ダウンロード　beta1(安定版)</a></li>
         <li><a class="nav" href="http://sourceforge.net/project/showfiles.php?group_id=173941">ダウンロード　Nightly builds(最新版)</a></li>
     </ul>
-    <div><span class="normal"><a class="nav" href="index.htm" target="_top">Top</a></span></div>
+
+    <div><span class="normal"><a class="nav" href="#top">Top</a></span></div>
     <br />
-    <center>
-        <a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" border="0" alt="SourceForge.net Logo" /></a>
-    </center>
+    <div style="padding-top:20px">
+      <a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" /></a>
+    </div>
 </body>
 </html>
