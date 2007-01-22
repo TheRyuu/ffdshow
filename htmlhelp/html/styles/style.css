@@ -19,17 +19,20 @@ div {
 .small_caption {
 	font-size: 105%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold
 }
-.ss_caption {
+.smaller_caption {
 	font-size: 90%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold
 }
 ul.added {
- color: rgb(0,0,100); list-style-type: disc; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 90%
+  color: rgb(0,0,128); list-style-type: disc; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 90%
 }
 ul.fixed {
- color: rgb(32,0,0); list-style-type: circle; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 90%
+  color: rgb(128,0,0); list-style-type: circle; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 90%
 }
 ul.download {
- list-style-type: square; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 90%
+  list-style-type: square; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 90%
+}
+ul.links {
+  list-style-image:url(../images/arrow.gif); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 90%
 }
 a.nav:link {
 	color: rgb(0,0,0); text-decoration: none; font-weight: bold

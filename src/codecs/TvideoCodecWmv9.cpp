@@ -188,7 +188,7 @@ bool TvideoCodecWmv9::beginDecompress(TffPictBase &pict,FOURCC infcc,const CMedi
 HRESULT TvideoCodecWmv9::decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn)
 {
  unsigned char *dst[4]={NULL,NULL,NULL,NULL};stride_t stride[4]={0,0,0,0};
- if (wmv9->decompress(src,srcLen,&dst[0],&stride[0])!=0)
+ if (wmv9->decompress(src,srcLen,&dst[0],&stride[0])!=0 && dst[0])
   {
    if (pIn->IsPreroll()==S_OK)
     return sinkD->deliverPreroll(pIn->IsSyncPoint()?FRAME_TYPE::I:FRAME_TYPE::P);
