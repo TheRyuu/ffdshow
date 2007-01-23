@@ -158,6 +158,7 @@ unsigned int __stdcall Tremote::ffwdThreadProc(void *self0)
 	seconds *= self->fMode;
 	int pos;
 	int duration = self->deci->getParam2(IDFF_movieDuration);
+	int hh, mm, ss;
 	self->deci->tell(&pos);
 	DWORD currentTime, elapsedTime;
 	if (pos!=-1)
@@ -169,6 +170,12 @@ unsigned int __stdcall Tremote::ffwdThreadProc(void *self0)
 			break;
 		if (!SUCCEEDED(self->deci->seek(pos)))
 			break;
+		char_t msg[100];
+		hh = pos/3600;
+		mm = (pos - hh*3600)/60;
+		ss = pos - hh*3600 - mm*60;
+		tsprintf(msg,_l("Fast %s %02i:%02i:%02i"),pos<0?_l("backward"):_l("forward"), hh, mm, ss);
+        self->deciV->shortOSDmessage(msg,30);
 		elapsedTime = GetTickCount() - currentTime;
 		if (elapsedTime < 500)
 			Sleep(500 - elapsedTime);
