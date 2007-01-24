@@ -1268,9 +1268,23 @@ static int decode_sequence_header_adv(VC1Context *v, GetBitContext *gb)
     v->s.avctx->coded_height = (get_bits(gb, 12) + 1) << 1;
     v->broadcast = get_bits1(gb);
     v->interlace = get_bits1(gb);
+    if(v->interlace){
+        av_log(v->s.avctx, AV_LOG_ERROR, "Interlaced mode not supported (yet)\n");
+        return -1;
+    }
     v->tfcntrflag = get_bits1(gb);
     v->finterpflag = get_bits1(gb);
     get_bits1(gb); // reserved
+
+    av_log(v->s.avctx, AV_LOG_DEBUG,
+               "Advanced Profile level %i:\nfrmrtq_postproc=%i, bitrtq_postproc=%i\n"
+               "LoopFilter=%i, ChromaFormat=%i, Pulldown=%i, Interlace: %i\n"
+               "TFCTRflag=%i, FINTERPflag=%i\n",
+               v->level, v->frmrtq_postproc, v->bitrtq_postproc,
+               v->s.loop_filter, v->chromaformat, v->broadcast, v->interlace,
+               v->tfcntrflag, v->finterpflag
+               );
+
     v->psf = get_bits1(gb);
     if(v->psf) { //PsF, 6.1.13
         av_log(v->s.avctx, AV_LOG_ERROR, "Progressive Segmented Frame mode: not supported (yet)\n");
@@ -1279,8 +1293,8 @@ static int decode_sequence_header_adv(VC1Context *v, GetBitContext *gb)
     if(get_bits1(gb)) { //Display Info - decoding is not affected by it
         int w, h, ar = 0;
         av_log(v->s.avctx, AV_LOG_INFO, "Display extended info:\n");
-        w = get_bits(gb, 14);
-        h = get_bits(gb, 14);
+        w = get_bits(gb, 14) + 1;
+        h = get_bits(gb, 14) + 1;
         av_log(v->s.avctx, AV_LOG_INFO, "Display dimensions: %ix%i\n", w, h);
         //TODO: store aspect ratio in AVCodecContext
         if(get_bits1(gb))
@@ -1323,13 +1337,13 @@ static int decode_sequence_header_adv(VC1Context *v, GetBitContext *gb)
 static int decode_entry_point(AVCodecContext *avctx, GetBitContext *gb)
 {
     VC1Context *v = avctx->priv_data;
-    int i;
+    int i, blink, refdist;
 
     av_log(avctx, AV_LOG_DEBUG, "Entry point: %08X\n", show_bits_long(gb, 32));
-    get_bits1(gb); // broken link
+    blink = get_bits1(gb); // broken link
     avctx->max_b_frames = 1 - get_bits1(gb); // 'closed entry' also signalize possible B-frames
     v->panscanflag = get_bits1(gb);
-    get_bits1(gb); // refdist flag
+    refdist = get_bits1(gb); // refdist flag
     v->s.loop_filter = get_bits1(gb);
     v->fastuvmc = get_bits1(gb);
     v->extended_mv = get_bits1(gb);
@@ -1358,6 +1372,13 @@ static int decode_entry_point(AVCodecContext *avctx, GetBitContext *gb)
         av_log(avctx, AV_LOG_ERROR, "Chroma scaling is not supported, expect wrong picture\n");
         skip_bits(gb, 3); // UV range, ignored for now
     }
+
+    av_log(avctx, AV_LOG_DEBUG, "Entry point info:\n"
+        "BrokenLink=%i, ClosedEntry=%i, PanscanFlag=%i\n"
+        "RefDist=%i, Postproc=%i, FastUVMC=%i, ExtMV=%i\n"
+        "DQuant=%i, VSTransform=%i, Overlap=%i, Qmode=%i\n",
+        blink, 1 - avctx->max_b_frames, v->panscanflag, refdist, v->s.loop_filter,
+        v->fastuvmc, v->extended_mv, v->dquant, v->vstransform, v->overlap, v->quantizer_mode);
 
     return 0;
 }
@@ -4120,7 +4141,7 @@ static int vc1_decode_init(AVCodecContext *avctx)
         }
     } else { // VC1/WVC1
         int edata_size = avctx->extradata_size;
-        const uint8_t *edata = avctx->extradata;
+        uint8_t *edata = avctx->extradata;
 
         if(avctx->extradata_size < 16) {
             av_log(avctx, AV_LOG_ERROR, "Extradata size too small: %i\n", edata_size);
@@ -4128,7 +4149,7 @@ static int vc1_decode_init(AVCodecContext *avctx)
         }
         while(edata_size > 8) {
             // test if we've found header
-            if(BE_32(edata) == 0x0000010F) {
+            if(AV_RB32(edata) == 0x0000010F) {
                 edata += 4;
                 edata_size -= 4;
                 break;
@@ -4144,7 +4165,7 @@ static int vc1_decode_init(AVCodecContext *avctx)
 
         while(edata_size > 8) {
             // test if we've found entry point
-            if(BE_32(edata) == 0x0000010E) {
+            if(AV_RB32(edata) == 0x0000010E) {
                 edata += 4;
                 edata_size -= 4;
                 break;
