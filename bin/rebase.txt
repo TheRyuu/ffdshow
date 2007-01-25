@@ -5,6 +5,7 @@ ff_samplerate.dll
 ff_theora.dll
 ff_tremor.dll
 ff_wmv9.dll
+ff_x264.dll
 FLT_ffdshow.dll
 libmpeg2_ff.dll
 ff_realaac.dll

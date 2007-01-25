@@ -56,6 +56,11 @@ void TquantPage::cfg2dlg(void)
  static const int idIquants[]={IDC_LBL_Q_I,IDC_ED_Q_I_MIN,IDC_ED_Q_I_MAX,0};
  if (codecId==CODEC_ID_SKAL)
   enable(0,idIquants);
+ else if (codecId==CODEC_ID_X264)
+  {
+ setDlgItemText(m_hwnd,IDC_LBL_Q_P,_(IDC_LBL_Q_P,_l("All frames")));
+ enable(0,idIquants);
+  }
  else
   {
    setDlgItemText(m_hwnd,IDC_LBL_Q_P,_(IDC_LBL_Q_P,_l("P frames")));
@@ -72,7 +77,7 @@ void TquantPage::cfg2dlg(void)
  SetDlgItemInt(m_hwnd,IDC_ED_Q_B_MIN,cfgGet(IDFF_enc_q_b_min),FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_Q_B_MAX,cfgGet(IDFF_enc_q_b_max),FALSE);
  static const int idBquants[]={IDC_ED_Q_B_MIN,IDC_ED_Q_B_MAX,0};
- int isB=cfgGet(IDFF_enc_isBframes) && sup_bframes(codecId);
+ int isB=cfgGet(IDFF_enc_isBframes) && sup_bframes(codecId) && !x264_codec(codecId);
  enable(is && isB,idBquants);
  static const int idBoffset[]={IDC_LBL_B_QUANTFACTOR,IDC_LBL_B_QUANTOFFSET,IDC_ED_B_QUANTFACTOR,IDC_ED_B_QUANTOFFSET,0};
  setText(IDC_ED_B_QUANTFACTOR,_l("%.2f"),float(cfgGet(IDFF_enc_b_quant_factor)/100.0));
@@ -104,12 +109,12 @@ void TquantPage::type2dlg(void)
  for (int i=0;i<6;i++)
   switch (i)
    {
-    case 0:cbxAdd(IDC_CBX_QUANT_TYPE,_(IDC_CBX_QUANT_TYPE,encQuantTypes[i]),i);break;
+    case 0:cbxAdd(IDC_CBX_QUANT_TYPE,_(IDC_CBX_QUANT_TYPE,codecId==CODEC_ID_X264?_l("Flat"):encQuantTypes[i]),i);break;
     case 1:if (sup_MPEGquant(codecId)) cbxAdd(IDC_CBX_QUANT_TYPE,_(IDC_CBX_QUANT_TYPE,encQuantTypes[i]),i);break;
     case 2:
     case 3:if (xvid_codec(codecId)) cbxAdd(IDC_CBX_QUANT_TYPE,_(IDC_CBX_QUANT_TYPE,encQuantTypes[i]),i);break;
     case 4:if (sup_customQuantTables(codecId)) cbxAdd(IDC_CBX_QUANT_TYPE,_(IDC_CBX_QUANT_TYPE,encQuantTypes[i]),i);break;
-    case 5:break;
+    case 5:if (codecId==CODEC_ID_X264) cbxAdd(IDC_CBX_QUANT_TYPE,_(IDC_CBX_QUANT_TYPE,encQuantTypes[i]),i);break;
    }
  int cnt=cbxGetItemCount(IDC_CBX_QUANT_TYPE);
  if (cnt==1)

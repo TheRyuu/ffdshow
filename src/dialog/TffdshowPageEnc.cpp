@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "IffdshowEnc.h"
 #include "Cabout.h"
@@ -30,6 +30,7 @@
 #include "CgenericDV.h"
 #include "Cme.h"
 #include "CmeXvid.h"
+#include "CmeX264.h"
 #include "CmeSkal.h"
 #include "Cquant.h"
 #include "CquantTables.h"
@@ -37,6 +38,7 @@
 #include "CmaskingXVID.h"
 #include "CmaskingSKAL.h"
 #include "CmaskingTHEO.h"
+#include "CmaskingX264.h"
 #include "Conepass.h"
 #include "ConepassXvid.h"
 #include "Ccredits.h"
@@ -169,11 +171,13 @@ void TffdshowPageEnc::onActivate(void)
                           new TgenericRAWpage(this),
                           new TgenericFFV1page(this),
                           new TgenericLJPEGpage(this),
+                          new TgenericX264page(this),
                           new TgenericDVpage(this),
                           NULL),&localCfg.codecId);
    addTI(&tvis,TconfPages(new TmePage(this),
                           new TmeXvidPage(this),
                           new TmeSkalPage(this),
+                          new TmeX264page(this),
                           NULL),&localCfg.codecId);
    HTREEITEM htiQuant=addTI(&tvis,new TquantPage(this))->hti;
    tvis.hParent=htiQuant;
@@ -184,6 +188,7 @@ void TffdshowPageEnc::onActivate(void)
                           new TmaskingPageXvid(this),
                           new TmaskingPageSkal(this),
                           new TmaskingPageTheo(this),
+                          //new TmaskingPageX264(this),
                           NULL),&localCfg.codecId);
    addTI(&tvis,TconfPages(new TonePassPage(this),
                           new TonePassXvidPage(this),

@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "Conepass.h"
 
@@ -40,7 +40,7 @@ void TonePassPage::cfg2dlg(void)
  setText(IDC_ED_MAX_BITRATE,_l("%i"),cfgGet(IDFF_enc_ff1_rc_max_rate1000));
  setText(IDC_ED_BUFFER_SIZE,_l("%i"),cfgGet(IDFF_enc_ff1_rc_buffer_size));
  static const int lavconly[]={IDC_LBL_VRATETOL,IDC_ED_VRATETOL,IDC_LBL_VRATETOL2,IDC_LBL_VQDIFF,IDC_ED_VQDIFF,IDC_LBL_MIN_BITRATE,IDC_ED_MIN_BITRATE,IDC_LBL_MIN_BITRATE2,IDC_LBL_MAX_BITRATE,IDC_ED_MAX_BITRATE,IDC_LBL_MAX_BITRATE2,IDC_LBL_BUFFER_SIZE,IDC_ED_BUFFER_SIZE,IDC_LBL_BUFFER_SIZE2,IDC_CHB_RC_SQUISH,0};
- enable(1,lavconly);
+ enable(!x264_codec(codecId),lavconly);
 }
 
 TonePassPage::TonePassPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)

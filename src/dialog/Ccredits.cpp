@@ -27,7 +27,7 @@ void TcreditsPage::init(void)
 bool TcreditsPage::enabled(void)
 {
  int enc_mode=cfgGet(IDFF_enc_mode);
- return (sup_perFrameQuant(codecId) && ((enc_mode!=ENC_MODE::CBR && enc_mode!=ENC_MODE::PASS2_2_EXT && enc_mode!=ENC_MODE::VBR_QUAL) || (enc_mode==ENC_MODE::CBR && lavc_codec(codecId) && cfgGet(IDFF_enc_ff1_stats_mode)&FFSTATS::READ)));
+ return (sup_perFrameQuant(codecId) && ((enc_mode!=ENC_MODE::CBR && enc_mode!=ENC_MODE::PASS2_2_EXT && enc_mode!=ENC_MODE::VBR_QUAL) || (enc_mode==ENC_MODE::CBR && lavc_codec(codecId) && cfgGet(IDFF_enc_ff1_stats_mode)&FFSTATS::READ))) || codecId==CODEC_ID_X264;
 }
 
 void TcreditsPage::cfg2dlg(void)
@@ -74,14 +74,14 @@ void TcreditsPage::percent2dlg(void)
  tbrSet(IDC_TBR_CREDITS_PERCENT,x);
  setText(IDC_RBT_CREDITS_PERCENT,_l("%%: %i"),x);
  int mode=cfgGet(IDFF_enc_mode);
- bool is=(cfgGet(IDFF_enc_isCreditsStart) || cfgGet(IDFF_enc_isCreditsEnd)) && (mode==ENC_MODE::VBR_QUAL || mode==ENC_MODE::VBR_QUANT || mode==ENC_MODE::PASS2_2_INT || (mode==ENC_MODE::CBR && lavc_codec(codecId) && cfgGet(IDFF_enc_ff1_stats_mode)&FFSTATS::READ));
+ bool is=(cfgGet(IDFF_enc_isCreditsStart) || cfgGet(IDFF_enc_isCreditsEnd)) && (mode==ENC_MODE::VBR_QUAL || mode==ENC_MODE::VBR_QUANT || mode==ENC_MODE::PASS2_2_INT || (mode==ENC_MODE::CBR && lavc_codec(codecId) && cfgGet(IDFF_enc_ff1_stats_mode)&FFSTATS::READ) || codecId==CODEC_ID_X264);
  enable(is,IDC_RBT_CREDITS_PERCENT);
  enable(is && cfgGet(IDFF_enc_credits_mode)==CREDITS_MODE::PERCENT,IDC_TBR_CREDITS_PERCENT);
 }
 void TcreditsPage::quant2dlg(void)
 {
  int mode=cfgGet(IDFF_enc_mode);
- bool is=(cfgGet(IDFF_enc_isCreditsStart) || cfgGet(IDFF_enc_isCreditsEnd)) && (mode==ENC_MODE::VBR_QUAL || mode==ENC_MODE::VBR_QUANT || mode==ENC_MODE::PASS2_1 || mode==ENC_MODE::PASS2_2_INT || (mode==ENC_MODE::CBR && lavc_codec(codecId) && cfgGet(IDFF_enc_ff1_stats_mode)&FFSTATS::READ));
+ bool is=(cfgGet(IDFF_enc_isCreditsStart) || cfgGet(IDFF_enc_isCreditsEnd)) && (mode==ENC_MODE::VBR_QUAL || mode==ENC_MODE::VBR_QUANT || mode==ENC_MODE::PASS2_1 || mode==ENC_MODE::PASS2_2_INT || (mode==ENC_MODE::CBR && lavc_codec(codecId) && cfgGet(IDFF_enc_ff1_stats_mode)&FFSTATS::READ) || codecId==CODEC_ID_X264);
  setCheck(IDC_RBT_CREDITS_QUANT,cfgGet(IDFF_enc_credits_mode)==CREDITS_MODE::QUANT);
  enable(is,IDC_RBT_CREDITS_QUANT);
  static const int idCreditsQuant[]={IDC_LBL_CREDITS_I_QUANT,IDC_ED_CREDITS_I_QUANT,IDC_LBL_CREDITS_P_QUANT,IDC_ED_CREDITS_P_QUANT,0};

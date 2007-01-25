@@ -22,4 +22,14 @@ public:
  virtual void cfg2dlg(void);
 };
 
-#endif 
+class TgenericX264page :public TgenericPage
+  {
+  protected:
+   virtual void b2dlg(void);
+  public:
+   TgenericX264page(TffdshowPageEnc *Iparent);
+   virtual bool forCodec(int codecId) {return x264_codec(codecId);}
+   virtual void cfg2dlg(void);
+  };
+
+#endif

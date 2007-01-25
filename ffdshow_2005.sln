@@ -98,6 +98,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ff_kernelDeint", "src\imgFi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ff_libfaad2", "src\codecs\faad\ff_libfaad2_2005.vcproj", "{BF29FAFC-7E71-4671-A2F8-D510EF5C0685}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ff_x264", "src\codecs\x264\ff_x264_2005.vcproj", "{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Unicode|Win32 = Debug Unicode|Win32
@@ -462,6 +464,20 @@ Global
 		{BF29FAFC-7E71-4671-A2F8-D510EF5C0685}.Release|Win32.Build.0 = Release|Win32
 		{BF29FAFC-7E71-4671-A2F8-D510EF5C0685}.Release|x64.ActiveCfg = Release|x64
 		{BF29FAFC-7E71-4671-A2F8-D510EF5C0685}.Release|x64.Build.0 = Release|x64
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Debug Unicode|Win32.ActiveCfg = Debug|x64
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Debug Unicode|x64.ActiveCfg = Debug|x64
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Debug Unicode|x64.Build.0 = Debug|x64
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Debug|Win32.Build.0 = Debug|Win32
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Debug|x64.ActiveCfg = Debug|x64
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Debug|x64.Build.0 = Debug|x64
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Release Unicode|Win32.ActiveCfg = Release|x64
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Release Unicode|x64.ActiveCfg = Release|x64
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Release Unicode|x64.Build.0 = Release|x64
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Release|Win32.ActiveCfg = Release|Win32
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Release|Win32.Build.0 = Release|Win32
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Release|x64.ActiveCfg = Release|x64
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -16,7 +16,7 @@ private:
  void onIncspChange(int,int);
 public:
  TcoSettings(TintStrColl *Icoll=NULL);
- 
+
  TintStrColl *options;
  void saveReg(void),loadReg(void);
 
@@ -36,7 +36,7 @@ public:
  int forceIncsp,incspFourcc;TcspInfos incsps;void fillIncsps(void);
  int isProc;
  int flip;
- 
+
  int storeAVI;
  int storeExt;
  char_t storeExtFlnm[MAX_PATH];
@@ -49,10 +49,10 @@ public:
    ASPECT_DAR=1
   };
  static const char_t *aspectModes[];
-  
+
  int sarX1000,sarY1000,darX1000,darY1000;
  Rational sar(unsigned int dx,unsigned int dy) const,dar(unsigned int dx,unsigned int dy) const;
- 
+
  int q_i_min,q_i_max,q_p_min,q_p_max,q_b_min,q_b_max,q_mb_min,q_mb_max;
  bool isQuantControlActive(void) const
   {
@@ -96,7 +96,11 @@ public:
  int32_t qmatrix_inter4x4C_custom0,qmatrix_inter4x4C_custom4,qmatrix_inter4x4C_custom8,qmatrix_inter4x4C_custom12;
  static std::pair<int,int> getMinMaxQuant(int codecId)
   {
-  	return std::make_pair(1,31);
+   switch (codecId)
+   {
+   case CODEC_ID_X264:return std::make_pair(1,51);
+   default:return std::make_pair(1,31);
+   }
   }
  std::pair<int,int> getMinMaxQuant(void) const
   {
@@ -148,13 +152,13 @@ public:
  int twopass_max_overflow_degradation;
  int bitrate_payback_delay;
  int bitrate_payback_method;
- 
+
  int isBframes;
  int max_b_frames,b_dynamic,b_refine;
  int b_quant_factor; //*100
  int b_quant_offset; //*100
  int packedBitstream,dx50bvop;
- 
+
  int isElimLum,elimLumThres;
  int isElimChrom,elimChromThres;
  int is_lavc_nr,lavc_nr;
@@ -172,7 +176,7 @@ public:
  int xvid_lum_masking;
  int xvid_chromaopt;
  int isSkalMasking,skalMaskingAmp;
- 
+
  int xvid_motion_search;
  int is_xvid_me_custom,xvid_me_custom;
  int xvid_me_inter4v;
@@ -196,7 +200,7 @@ public:
  static const TcspFcc ffv1csps[];
  static const char_t *ffv1coders[];
  static const char_t *ffv1contexts[];
- 
+
  int dv_profile;
  std::vector<const DVprofile*> getDVprofile(unsigned int dx,unsigned int dy) const;
  const DVprofile* getDVprofile(unsigned int dx,unsigned int dy,PixelFormat lavc_pix_fmt) const;
@@ -206,11 +210,26 @@ public:
  int wmv9_cplx;
  int wmv9_crisp;
  int wmv9_aviout;
- 
+
  int theo_hq,theo_sharpness,theo_noisesensitivity;
- 
+
+ int x264_max_ref_frames;
+ int x264_cabac;
+ int x264_me_inter,x264_me_intra;
+ int x264_me_subpelrefine;
+ int x264_me_method,x264_me_range;
+ static const char_t *x264_me_methods[];
+ int x264_mv_range;
+ int x264_i_direct_mv_pred;
+ int x264_i_deblocking_filter_alphac0,x264_i_deblocking_filter_beta;
+ int x264_b_bframe_pyramid;
+ int x264_b_aud;
+ int x264_mixed_ref;
+ int x264_is_aq,x264_aq_strength100,x264_f_aq_sensitivity;
+ int x264_b_dct_decimate;
+
  FOURCC raw_fourcc;
- 
+
  int gray,graycredits;
 };
 

@@ -27,6 +27,7 @@
 #include "TvideoCodecSkal.h"
 #include "TvideoCodecTheora.h"
 #include "TvideoCodecWmv9.h"
+#include "TvideoCodecX264.h"
 #include "TaudioCodecLibMAD.h"
 #include "TaudioCodecLibFAAD.h"
 #include "TaudioCodecLiba52.h"
@@ -217,6 +218,7 @@ const TversionsDlg::TversionInfo* TaboutPageEnc::fcsVersions(void)
    TvideoCodecXviD4::dllname,TvideoCodecXviD4::getVersion,
    TvideoCodecTheora::dllname,getVersion<TvideoCodecTheora>,
    TvideoCodecWmv9::dllname,getVersion<TvideoCodecWmv9>,
+   TvideoCodecX264::dllname,getVersion<TvideoCodecX264>,
    TvideoCodecSkal::dllname,TvideoCodecSkal::getVersion,
    Tavisynth_c::dllname,Tavisynth_c::getVersion,
    NULL

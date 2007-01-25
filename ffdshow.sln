@@ -132,12 +132,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rebase", "rebase\rebase.vcp
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ff_x264", "src\codecs\x264\ff_x264.vcproj", "{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
 		Debug Unicode = Debug Unicode
 		Release = Release
 		Release Unicode = Release Unicode
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
 		{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}.Debug.ActiveCfg = Debug|Win32
@@ -324,6 +330,14 @@ Global
 		{BA17CB30-A775-4F55-B1F2-E5D0B2C8CC84}.Release.Build.0 = Release|Win32
 		{BA17CB30-A775-4F55-B1F2-E5D0B2C8CC84}.Release Unicode.ActiveCfg = Release|Win32
 		{BA17CB30-A775-4F55-B1F2-E5D0B2C8CC84}.Release Unicode.Build.0 = Release|Win32
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Debug.ActiveCfg = Debug|Win32
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Debug.Build.0 = Debug|Win32
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Debug Unicode.ActiveCfg = Debug|Win32
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Debug Unicode.Build.0 = Debug|Win32
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Release.ActiveCfg = Release|Win32
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Release.Build.0 = Release|Win32
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Release Unicode.ActiveCfg = Release|Win32
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Release Unicode.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		DPBuild = 5

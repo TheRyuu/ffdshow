@@ -76,6 +76,10 @@ AMR audio decoding using 3GPP AMR Floating-point Speech Codec from
 
   http://www.3gpp.org/ftp/Specs/archive/26_series/26.104/26104-510.zip
 
+H.264 encoding using x264 library by
+
+  Laurent Aimar
+
 using modified unrar.dll library by
 
   Alexander L. Roshal

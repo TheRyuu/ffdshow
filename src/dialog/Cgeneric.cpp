@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "Cgeneric.h"
 #include "libavcodec/avcodec.h"
@@ -24,7 +24,7 @@ void TgenericPage::init(void)
 {
  tbrSetRange(IDC_TBR_MAXKEYINTERVAL,1,500,10);
  tbrSetRange(IDC_TBR_MINKEYINTERVAL,1,500,10);
- 
+
  hlv=GetDlgItem(m_hwnd,IDC_LV_GENERIC);
  ListView_SetExtendedListViewStyleEx(hlv,LVS_EX_CHECKBOXES,LVS_EX_CHECKBOXES);
  int ncol=0;
@@ -36,7 +36,7 @@ void TgenericPage::init(void)
 }
 
 void TgenericPage::cfg2dlg(void)
-{ 
+{
  flags.clear();
  if (sup_globalheader(codecId)) flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Store global headers in extradata")),IDFF_enc_globalHeader,1,false));
  if (sup_gray(codecId)) flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Greyscale")),IDFF_enc_gray,1,false));
@@ -45,7 +45,7 @@ void TgenericPage::cfg2dlg(void)
    flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Interlaced encoding")),IDFF_enc_interlacing,1,false));
    if (codecId!=CODEC_ID_SKAL)
     flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Top field first (for intelaced encoding only)")),IDFF_enc_interlacing_tff,1,false));
-  } 
+  }
  if (sup_part(codecId)) flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Data partitioning")),IDFF_enc_part,1,false));
  switch (codecId)
   {
@@ -58,8 +58,15 @@ void TgenericPage::cfg2dlg(void)
    case CODEC_ID_MPEG2VIDEO:
     flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Reserve space for SVCD scan offset user data")),IDFF_enc_svcd_scan_offset,1,false));
     break;
+   case CODEC_ID_X264:
+   case CODEC_ID_X264_LOSSLESS:
+    flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Cabac")),IDFF_enc_x264_cabac,1,false));
+    flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Generate access unit delimiters")),IDFF_enc_x264_b_aud,1,false));
+    flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Each MB partition can independently select a reference frame")),IDFF_enc_x264_mixed_ref,1,false));
+    flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Transform coefficient thresholding on P-frames")),IDFF_enc_x264_b_dct_decimate,1,false));
+    break;
   }
- if (codecId==CODEC_ID_MPEG4)
+if (codecId==CODEC_ID_MPEG4 || codecId==CODEC_ID_X264)
   flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Loop filter")),IDFF_enc_H263Pflags,CODEC_FLAG_LOOP_FILTER,true));
 
  if ((codecId==CODEC_ID_H263 || codecId==CODEC_ID_H263P) && cfgGet(IDFF_enc_me_hq)==FF_MB_DECISION_SIMPLE)
@@ -118,7 +125,7 @@ void TgenericPage::b2dlg(void)
  enable(is && sup_packedBitstream(codecId),IDC_CHB_PACKEDBITSTREAM);
  enable(is && sup_closedGop(codecId),IDC_CHB_DX50BVOP);
  enable(is && sup_adaptiveBframes(codecId),IDC_CHB_B_DYNAMIC);
- enable(is && lavc_codec(codecId),IDC_CHB_B_REFINE);
+ enable(is && (lavc_codec(codecId) || x264_codec(codecId)),IDC_CHB_B_REFINE);
 }
 
 INT_PTR TgenericPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -170,7 +177,7 @@ INT_PTR TgenericPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 TgenericPage::TgenericPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
 {
  dialogId=IDD_GENERIC;
- static const int props[]={IDFF_enc_max_key_interval,IDFF_enc_min_key_interval,IDFF_enc_globalHeader,IDFF_enc_part,IDFF_enc_interlacing,IDFF_enc_interlacing_tff,IDFF_enc_gray,IDFF_enc_isBframes,IDFF_enc_max_b_frames,IDFF_enc_packedBitstream,IDFF_enc_dx50bvop,IDFF_enc_H263Pflags,IDFF_enc_b_dynamic,IDFF_enc_b_refine,IDFF_enc_svcd_scan_offset,IDFF_numthreads,0};
+ static const int props[]={IDFF_enc_max_key_interval,IDFF_enc_min_key_interval,IDFF_enc_globalHeader,IDFF_enc_part,IDFF_enc_interlacing,IDFF_enc_interlacing_tff,IDFF_enc_gray,IDFF_enc_isBframes,IDFF_enc_max_b_frames,IDFF_enc_packedBitstream,IDFF_enc_dx50bvop,IDFF_enc_H263Pflags,IDFF_enc_b_dynamic,IDFF_enc_b_refine,IDFF_enc_svcd_scan_offset,IDFF_enc_x264_cabac,IDFF_numthreads,0};
  propsIDs=props;
  static const TbindCheckbox<TgenericPage> chb[]=
   {
@@ -190,3 +197,43 @@ TgenericPage::TgenericPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
   };
  bindEditInts(edInt); 
 }
+
+  void TgenericX264page::cfg2dlg(void)
+  {
+   TgenericPage::cfg2dlg();
+   SetDlgItemInt(m_hwnd,IDC_ED_X264_DEBLOCK_ALPHA,cfgGet(IDFF_enc_x264_i_deblocking_filter_alphac0),TRUE); 
+   SetDlgItemInt(m_hwnd,IDC_ED_X264_DEBLOCK_BETA ,cfgGet(IDFF_enc_x264_i_deblocking_filter_beta   ),TRUE); 
+   static const int idDeblock[]={IDC_LBL_X264_DEBLOCK_ALPHA,IDC_ED_X264_DEBLOCK_ALPHA,IDC_LBL_X264_DEBLOCK_BETA,IDC_ED_X264_DEBLOCK_BETA,0};
+   enable((cfgGet(IDFF_enc_H263Pflags)&CODEC_FLAG_LOOP_FILTER)!=0 && codecId!=CODEC_ID_X264_LOSSLESS,idDeblock);
+  }
+  void TgenericX264page::b2dlg(void)
+  {
+   setCheck(IDC_CHB_B_PYRAMID,cfgGet(IDFF_enc_x264_b_bframe_pyramid)); 
+   setCheck(IDC_CHB_B_RDO,cfgGet(IDFF_enc_x264_b_rdo));
+   TgenericPage::b2dlg();
+  }
+  TgenericX264page::TgenericX264page(TffdshowPageEnc *Iparent):TgenericPage(Iparent)
+  {
+   dialogId=IDD_GENERIC_X264;
+   static const int props[]={IDFF_enc_max_key_interval,IDFF_enc_min_key_interval,IDFF_enc_isBframes,IDFF_enc_max_b_frames,IDFF_enc_H263Pflags,IDFF_enc_b_dynamic,IDFF_enc_x264_i_deblocking_filter_alphac0,IDFF_enc_x264_i_deblocking_filter_beta,IDFF_enc_b_dynamic,IDFF_enc_b_refine,IDFF_enc_x264_b_bframe_pyramid,IDFF_enc_x264_b_aud,IDFF_numthreads,IDFF_enc_x264_b_rdo,0};
+   propsIDs=props;
+   static const TbindCheckbox<TgenericX264page> chb[]=
+    {
+     IDC_CHB_B,IDFF_enc_isBframes,&TgenericX264page::b2dlg,
+     IDC_CHB_B_DYNAMIC,IDFF_enc_b_dynamic,NULL,
+     IDC_CHB_B_PYRAMID,IDFF_enc_x264_b_bframe_pyramid,NULL,
+     IDC_CHB_B_RDO,IDFF_enc_x264_b_rdo,NULL,
+     IDC_CHB_B_REFINE,IDFF_enc_b_refine,NULL,  
+     0,NULL,NULL
+    };
+   bindCheckboxes(chb);
+   static const TbindEditInt<TgenericX264page> edInt[]= 
+    {
+     IDC_ED_B_MAX,1,8,IDFF_enc_max_b_frames,NULL,
+     IDC_ED_NUMTHREADS,1,8,IDFF_numthreads,NULL,
+     IDC_ED_X264_DEBLOCK_ALPHA,-6,6,IDFF_enc_x264_i_deblocking_filter_alphac0,NULL,
+     IDC_ED_X264_DEBLOCK_BETA,-6,6,IDFF_enc_x264_i_deblocking_filter_beta,NULL,
+     0
+    };
+   bindEditInts(edInt);
+  }

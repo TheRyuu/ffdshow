@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "CquantTables.h"
 #include "Tconfig.h"
@@ -97,9 +97,15 @@ void TquantTablesPageBase::create(HWND parent)
 
 void TquantTablesPageBase::cfg2dlg(void)
 {
-	enable(0,IDC_CBX_QUANT_TABLE);
-   	cbxSetCurSel(IDC_CBX_QUANT_TABLE,0);
-	table2dlg();
+ codecId=getCodecId();
+   if (codecId==CODEC_ID_X264 || codecId==CODEC_ID_H264)
+    enable(1,IDC_CBX_QUANT_TABLE);
+   else
+    {
+    enable(0,IDC_CBX_QUANT_TABLE);
+    cbxSetCurSel(IDC_CBX_QUANT_TABLE,0);
+    }
+    table2dlg();
 }
 
 void TquantTablesPageBase::table2dlg(void)
@@ -135,6 +141,7 @@ void TquantTablesPageBase::table2dlg(void)
   }
  enable(1,cnt==64?idIntra8:idIntra4);
  enable(1,cnt==64?idInter8:idInter4);
+ enable(codecId==CODEC_ID_X264 || codecId==CODEC_ID_H264,IDC_ED_QUANT_TABLE_INTRA1);
 }
 
 
@@ -173,12 +180,66 @@ const char_t* TquantTablesPageBase::parse_jmlist(char_t *buf,const char_t *name,
 
 void TquantTablesPageBase::onLoad(void)
 {
- if (dlgGetFile(false,m_hwnd,_(-IDD_QUANT_TABLES,_l("Load quantization matrices")),_l("All matrix files (*.xcm;*.qmatrix;*.cqm;*.txt)\0*.xcm;*.qmatrix;*.txt\0XviD quantization matrices file (*.xcm)\0*.xcm\0ffdshow quantization matrices file (*.qmatrix;*.txt)\0*.qmatrix;*.txt\0Custom quantization matrix (*.cqm)\0*.cqm\0All files (*.*)\0*.*\0"),_l("*.xcm"),matrixflnm,firstdir?matrixdir:_l("."),0))
+ bool x264=codecId==CODEC_ID_X264 || codecId==CODEC_ID_H264;
+ if (dlgGetFile(false,m_hwnd,_(-IDD_QUANT_TABLES,_l("Load quantization matrices")),x264?_l("JM matrices file (*.cfg)\0*.cfg\0All files (*.*)\0*.*"):_l("All matrix files (*.xcm;*.qmatrix;*.cqm;*.txt)\0*.xcm;*.qmatrix;*.txt\0XviD quantization matrices file (*.xcm)\0*.xcm\0ffdshow quantization matrices file (*.qmatrix;*.txt)\0*.qmatrix;*.txt\0Custom quantization matrix (*.cqm)\0*.cqm\0All files (*.*)\0*.*\0"),x264?_l("*.cfg"):_l("*.xcm"),matrixflnm,firstdir?matrixdir:_l("."),0))
   {
    firstdir=false;
    const char_t *error=NULL;size_t readed=0;
- 
-     FILE *f=fopen(matrixflnm,_l("rb"));
+ if (x264)
+  {
+  char_t *buf=readTextFile(matrixflnm);
+  if (buf)
+   {
+    static const uint8_t jvt4i[16] =
+    {
+    6,13,20,28,
+    13,20,28,32,
+    20,28,32,37,
+    28,32,37,42
+    };
+    static const uint8_t jvt4p[16] =
+    {
+    10,14,20,24,
+    14,20,24,27,
+    20,24,27,30,
+    24,27,30,34
+    };
+    static const uint8_t jvt8i[64] =
+    {
+    6,10,13,16,18,23,25,27,
+    10,11,16,18,23,25,27,29,
+    13,16,18,23,25,27,29,31,
+    16,18,23,25,27,29,31,33,
+    18,23,25,27,29,31,33,36,
+    23,25,27,29,31,33,36,38,
+    25,27,29,31,33,36,38,40,
+    27,29,31,33,36,38,40,42
+    };
+    static const uint8_t jvt8p[64] =
+    {
+    9,13,15,17,19,21,22,24,
+    13,13,17,19,21,22,24,25,
+    15,17,19,21,22,24,25,27,
+    17,19,21,22,24,25,27,28,
+    19,21,22,24,25,27,28,30,
+    21,22,24,25,27,28,30,32,
+    22,24,25,27,28,30,32,33,
+    24,25,27,28,30,32,33,35
+    };
+    uint8_t *intra8,*inter8,*intra4Y,*inter4Y,*intra4C,*inter4C;getCustomQuantMatrixes(&intra8,&inter8,&intra4Y,&inter4Y,&intra4C,&inter4C);
+    if ((error=parse_jmlist(buf,_l("INTRA4X4_LUMA")  ,intra4Y,jvt4i,16))==NULL)
+    if ((error=parse_jmlist(buf,_l("INTRA4X4_CHROMA"),intra4C,jvt4i,16))==NULL)
+    if ((error=parse_jmlist(buf,_l("INTER4X4_LUMA")  ,inter4Y,jvt4p,16))==NULL)
+    if ((error=parse_jmlist(buf,_l("INTER4X4_CHROMA"),inter4C,jvt4p,16))==NULL)
+    if ((error=parse_jmlist(buf,_l("INTRA8X8_LUMA")  ,intra8,jvt8i,64))==NULL)
+    if ((error=parse_jmlist(buf,_l("INTER8X8_LUMA")  ,inter8,jvt8p,64))==NULL)
+    readed=1;
+    free(buf);
+    }
+   }
+   else
+   {
+    FILE *f=fopen(matrixflnm,x264?_l("rt"):_l("rb"));
      if (f)
       {
        uint8_t *qmatrix_intra_custom,*qmatrix_inter_custom;getCustomQuantMatrixes(&qmatrix_intra_custom,&qmatrix_inter_custom,NULL,NULL,NULL,NULL);
@@ -200,7 +261,7 @@ void TquantTablesPageBase::onLoad(void)
        if (readed!=128)
         error=_l("Error while loading quantization matrices"); 
       }
- 
+    }
    if (error)
     err(_(-IDD_QUANT_TABLES,error)); 
    else
@@ -227,18 +288,34 @@ void TquantTablesPageBase::writeMatrix(FILE *f,const char *section,const uint8_t
 
 void TquantTablesPageBase::onSave(void)
 {
- if (dlgGetFile(true,m_hwnd,_(-IDD_QUANT_TABLES,_l("Save quantization matrices")),_l("XviD quantization matrices file (*.xcm)\0*.xcm\0ffdshow quantization matrices file (*.qmatrix)\0*.qmatrix\0Custom quantization matrix (*.cqm)\0*.cqm\0All files (*.*)\0*.*\0"),_l("*.xcm"),matrixflnm,firstdir?matrixdir:_l("."),0))
+ bool x264=codecId==CODEC_ID_X264 || codecId==CODEC_ID_H264;
+ if (dlgGetFile(true,m_hwnd,_(-IDD_QUANT_TABLES,_l("Save quantization matrices")),x264?_l("JM matrices file (*.cfg)\0*.cfg\0All files (*.*)\0*.*"):_l("XviD quantization matrices file (*.xcm)\0*.xcm\0ffdshow quantization matrices file (*.qmatrix)\0*.qmatrix\0Custom quantization matrix (*.cqm)\0*.cqm\0All files (*.*)\0*.*\0"),x264?_l("*.cfg"):_l("*.xcm"),matrixflnm,firstdir?matrixdir:_l("."),0))
   {
    firstdir=false;
-   FILE *f=fopen(matrixflnm,_l("wb"));
+   FILE *f=fopen(matrixflnm,x264?_l("wt"):_l("wb"));
    if (f)
     {
+      if (x264)
+      {
+       uint8_t *intra8,*inter8,*intra4Y,*inter4Y,*intra4C,*inter4C;getCustomQuantMatrixes(&intra8,&inter8,&intra4Y,&inter4Y,&intra4C,&inter4C);
+      writeMatrix(f,"INTRA4X4_LUMA",intra4Y,16);
+      writeMatrix(f,"INTRA4X4_CHROMAU",intra4C,16);
+      writeMatrix(f,"INTRA4X4_CHROMAV",intra4C,16);
+      writeMatrix(f,"INTER4X4_LUMA",inter4Y,16);
+      writeMatrix(f,"INTER4X4_CHROMAU",inter4C,16);
+      writeMatrix(f,"INTER4X4_CHROMAV",inter4C,16);
+      writeMatrix(f,"INTRA8X8_LUMA",intra8,64);
+      writeMatrix(f,"INTER8X8_LUMA",inter8,64);
+      }
+      else
+      {
        uint8_t *qmatrix_intra_custom,*qmatrix_inter_custom;getCustomQuantMatrixes(&qmatrix_intra_custom,&qmatrix_inter_custom,NULL,NULL,NULL,NULL);
        if (qmatrix_intra_custom || qmatrix_inter_custom)
         {
          fwrite(qmatrix_intra_custom?qmatrix_intra_custom:qmatrix_inter_custom,1,64,f);
          fwrite(qmatrix_inter_custom?qmatrix_inter_custom:qmatrix_intra_custom,1,64,f);
-        } 
+        }
+      }
      fclose(f);
     }
    else

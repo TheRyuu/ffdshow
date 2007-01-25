@@ -588,6 +588,7 @@
    #define IDFF_MOVIE_AVIS    10
    #define IDFF_MOVIE_WMV9    12
    #define IDFF_MOVIE_SKAL    13
+   #define IDFF_MOVIE_X264    14
    #define IDFF_MOVIE_LIBA52  15
    #define IDFF_MOVIE_SPDIF   16
    #define IDFF_MOVIE_LIBDTS  17
@@ -1341,6 +1342,26 @@
 #define IDFF_enc_theo_noisesensitivity 3330
 
 #define IDFF_enc_raw_fourcc  3197
+
+#define IDFF_enc_x264_max_ref_frames              3316
+#define IDFF_enc_x264_cabac                       3317
+#define IDFF_enc_x264_me_inter                    3319
+#define IDFF_enc_x264_me_intra                    3320
+#define IDFF_enc_x264_me_subpelrefine             3323
+#define IDFF_enc_x264_mv_range                    3337
+#define IDFF_enc_x264_i_direct_mv_pred            3333
+#define IDFF_enc_x264_i_deblocking_filter_alphac0 3325
+#define IDFF_enc_x264_i_deblocking_filter_beta    3326
+#define IDFF_enc_x264_b_bframe_pyramid            3338
+#define IDFF_enc_x264_b_rdo                       3363
+#define IDFF_enc_x264_b_aud                       3339
+#define IDFF_enc_x264_me_method                   3340
+#define IDFF_enc_x264_me_range                    3341
+#define IDFF_enc_x264_mixed_ref                   3359
+#define IDFF_enc_x264_b_dct_decimate              3365
+#define IDFF_enc_x264_is_aq                       3360
+#define IDFF_enc_x264_aq_strength100              3361
+#define IDFF_enc_x264_f_aq_sensitivity            3362
 
 #define IDFF_enc_working               3198
 #define IDFF_enc_fpsRate               3206

@@ -13,6 +13,7 @@
 #include "TaudioCodecLiba52.cpp"
 #include "TencStats.cpp"
 #include "TvideoCodecAvisynth.cpp"
+#include "TvideoCodecX264.cpp"
 #include "TvideoCodecWmv9.cpp"
 #include "TvideoCodecXviD4.cpp"
 #include "TvideoCodecSkal.cpp"

@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "Cin.h"
 #include "TffProc.h"
@@ -55,7 +55,7 @@ void TinPage::interlaced2dlg(void)
 }
 void TinPage::lavcnr2dlg(void)
 {
- int is=sup_lavcQuant(codecId);
+ int is=sup_lavcQuant(codecId) || codecId==CODEC_ID_X264;
  static const int idLavcNR[]={IDC_LBL_LAVC_NR,IDC_ED_LAVC_NR,0};
  int is_lavc_nr=cfgGet(IDFF_enc_is_lavc_nr);
  setCheck(IDC_CHB_LAVC_NR,is_lavc_nr);enable(is,IDC_CHB_LAVC_NR);

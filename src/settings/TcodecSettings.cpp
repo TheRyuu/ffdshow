@@ -22,6 +22,7 @@
 #include "TcodecSettings.h"
 #include "reg.h"
 #include "TffProc.h"
+#include "x264/x264.h"
 #include "xvid4.h"
 #include "ffImgfmt.h"
 #include "Tmuxer.h"
@@ -69,6 +70,14 @@ const char_t* TcoSettings::ffv1contexts[]=
 {
  _l("Small"),
  _l("Large"),
+ NULL
+};
+const char_t* TcoSettings::x264_me_methods[]=
+{
+ _l("diamond"),
+ _l("hexagonal"),
+ _l("UMH"),
+ _l("exhaustive"),
  NULL
 };
 
@@ -554,7 +563,43 @@ TcoSettings::TcoSettings(TintStrColl *Icoll):Toptions(Icoll),options(Icoll)
 
    IDFF_enc_raw_fourcc,(TintVal)&TcoSettings::raw_fourcc,0,0,_l(""),1,
      _l("raw_fourcc"),FOURCC_RGB2,
+   IDFF_enc_x264_max_ref_frames             ,&TcoSettings::x264_max_ref_frames             , 1,  16,_l(""),1,
+       _l("x264_max_ref_frames"),1,
+   IDFF_enc_x264_cabac                      ,&TcoSettings::x264_cabac                      , 0,   0,_l(""),1,
+       _l("x264_cabac"),1,
+   IDFF_enc_x264_me_inter                   ,&TcoSettings::x264_me_inter                   , 1,   1,_l(""),1,
+       _l("x264_me_inter2"),X264_ANALYSE_I4x4|X264_ANALYSE_I8x8|X264_ANALYSE_PSUB16x16|X264_ANALYSE_BSUB16x16,
+   IDFF_enc_x264_me_intra                   ,&TcoSettings::x264_me_intra                   , 1,   1,_l(""),1,
+       _l("x264_me_intra2"),X264_ANALYSE_I4x4|X264_ANALYSE_I8x8,   
+   IDFF_enc_x264_me_subpelrefine            ,&TcoSettings::x264_me_subpelrefine            , 1,   6,_l(""),1,
+       _l("x264_me_subpelrefine"),5,
+   IDFF_enc_x264_mv_range                   ,&TcoSettings::x264_mv_range                   , 1,1024,_l(""),1,
+       _l("x264_mv_range"),512,
+   IDFF_enc_x264_me_method                  ,&TcoSettings::x264_me_method                  , 0,   3,_l(""),1,
+       _l("x264_me_method"),X264_ME_HEX,   
+   IDFF_enc_x264_me_range                   ,&TcoSettings::x264_me_range                   , 4,1024,_l(""),1,
+       _l("x264_me_range"),16,
+   IDFF_enc_x264_i_direct_mv_pred           ,&TcoSettings::x264_i_direct_mv_pred           , 0,   3,_l(""),1,
+       _l("x264_i_direct_mv_pred"),X264_DIRECT_PRED_SPATIAL,   
+   IDFF_enc_x264_i_deblocking_filter_alphac0,&TcoSettings::x264_i_deblocking_filter_alphac0,-6,   6,_l(""),1,
+       _l("x264_i_deblocking_filter_alphac0"),0,
+   IDFF_enc_x264_i_deblocking_filter_beta   ,&TcoSettings::x264_i_deblocking_filter_beta   ,-6,   6,_l(""),1,
+       _l("x264_i_deblocking_filter_beta"),0,
+   IDFF_enc_x264_b_bframe_pyramid           ,&TcoSettings::x264_b_bframe_pyramid           , 0,   0,_l(""),1,
+       _l("x264_b_bframe_pyramid"),0,
+   IDFF_enc_x264_b_aud                      ,&TcoSettings::x264_b_aud                      , 0,   0,_l(""),1,
+       _l("x264_b_aud"),0,
+   IDFF_enc_x264_mixed_ref                  ,&TcoSettings::x264_mixed_ref                  , 0,   0,_l(""),1,
+       _l("x264_mixed_ref"),0,
+   IDFF_enc_x264_b_dct_decimate             ,&TcoSettings::x264_b_dct_decimate             , 0,   0,_l(""),1,
+       _l("x264_b_dct_decimate"),1,
 
+   IDFF_enc_x264_is_aq                      ,&TcoSettings::x264_is_aq                      , 0,   0,_l(""),1,
+       _l("x264_is_aq"),0,
+   IDFF_enc_x264_aq_strength100             ,&TcoSettings::x264_aq_strength100             , 1, 100,_l(""),1,
+       _l("x264_aq_strength100"),30,
+   IDFF_enc_x264_f_aq_sensitivity           ,&TcoSettings::x264_f_aq_sensitivity           , 1,  30,_l(""),1,
+       _l("x264_f_aq_sensitivity"),15,
    0,
   };
  addOptions(iopts); 
@@ -574,7 +619,7 @@ TcoSettings::TcoSettings(TintStrColl *Icoll):Toptions(Icoll),options(Icoll)
  addOptions(sopts);
  setOnChange(IDFF_enc_forceIncsp,this,&TcoSettings::onIncspChange);
  setOnChange(IDFF_enc_incsp,this,&TcoSettings::onIncspChange);
- 
+
  static const TcreateParamList1 listAspectMode(aspectModes);setParamList(IDFF_enc_aspectMode,&listAspectMode);
  static const TcreateParamList1 listHuffYUVcaps(huffYUVcsps);setParamList(IDFF_enc_huffyuv_csp,&listHuffYUVcaps);
  static const TcreateParamList1 listHuffYUVpreds(huffYUVpreds);setParamList(IDFF_enc_huffyuv_pred,&listHuffYUVpreds);
@@ -582,6 +627,7 @@ TcoSettings::TcoSettings(TintStrColl *Icoll):Toptions(Icoll),options(Icoll)
  static const TcreateParamList1 listFFV1contexts(ffv1contexts);setParamList(IDFF_enc_ffv1_context,&listFFV1contexts);
  static const TcreateParamList2<TcspFcc> listFFV1csp(ffv1csps,&TcspFcc::name);setParamList(IDFF_enc_ffv1_csp,&listFFV1csp);
  static const TcreateParamList1 listMuxer(Tmuxer::muxers);setParamList(IDFF_enc_muxer,&listMuxer);
+ static const TcreateParamList1 listX264meMethod(x264_me_methods);setParamList(IDFF_enc_x264_me_method,&listX264meMethod);
 }
 
 void TcoSettings::saveReg(void)

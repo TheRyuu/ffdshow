@@ -2708,6 +2708,14 @@
 		<File 
 			RelativePath=".\src\dialog\Twindow.h"/>
 		<File 
+			RelativePath=".\src\dialog\CmaskingX264.cpp"/>
+		<File 
+			RelativePath=".\src\dialog\CmaskingX264.h"/>
+		<File 
+			RelativePath=".\src\dialog\CmeX264.cpp"/>
+		<File 
+			RelativePath=".\src\dialog\CmeX264.h"/>
+		<File 
 			RelativePath=".\src\settings\reg.cpp"/>
 		<File 
 			RelativePath=".\src\settings\reg.h"/>
@@ -3130,6 +3138,10 @@
 			RelativePath=".\src\codecs\libmpeg2\include\mpeg2.h"/>
 		<File 
 			RelativePath=".\src\codecs\xvid4.h"/>
+		<File 
+			RelativePath=".\src\codecs\TvideoCodecX264.cpp"/>
+		<File 
+			RelativePath=".\src\codecs\TvideoCodecX264.h"/>
 		<File 
 			RelativePath=".\src\convert\convert_yuy2.h"/>
 		<File 

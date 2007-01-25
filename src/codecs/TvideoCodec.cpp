@@ -29,6 +29,7 @@
 #include "TvideoCodecWmv9.h"
 #include "TvideoCodecAvisynth.h"
 #include "TvideoCodecSkal.h"
+#include "TvideoCodecX264.h"
 #include "dsutil.h"
 
 //======================================= TvideoCodec =======================================
@@ -113,6 +114,7 @@ void TvideoCodecs::init(IffdshowBase *deci,IencVideoSink *sink)
  push_back(new TvideoCodecLibavcodec(deci,sink));
  push_back(new TvideoCodecXviD4(deci,sink));
  push_back(new TvideoCodecSkal(deci,sink));
+ push_back(new TvideoCodecX264(deci,sink));
  push_back(new TvideoCodecTheora(deci,sink));
  push_back(new TvideoCodecWmv9(deci,sink));
  push_back(new TvideoCodecUncompressed(deci,sink));
