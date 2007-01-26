@@ -115,6 +115,7 @@
 				RuntimeLibrary="2"
 				BufferSecurityCheck="0"
 				EnableFunctionLevelLinking="0"
+				EnableEnhancedInstructionSet="1"
 				TreatWChar_tAsBuiltInType="1"
 				ForceConformanceInForLoopScope="1"
 				UsePrecompiledHeader="3"
@@ -282,6 +283,7 @@
 				RuntimeLibrary="2"
 				BufferSecurityCheck="0"
 				EnableFunctionLevelLinking="0"
+				EnableEnhancedInstructionSet="1"
 				TreatWChar_tAsBuiltInType="1"
 				ForceConformanceInForLoopScope="1"
 				UsePrecompiledHeader="3"
@@ -2444,6 +2446,10 @@
 		<File 
 			RelativePath=".\src\dialog\CmaskingTHEO.h"/>
 		<File 
+			RelativePath=".\src\dialog\CmaskingX264.cpp"/>
+		<File 
+			RelativePath=".\src\dialog\CmaskingX264.h"/>
+		<File 
 			RelativePath=".\src\dialog\CmaskingXVID.cpp"/>
 		<File 
 			RelativePath=".\src\dialog\CmaskingXVID.h"/>
@@ -2455,6 +2461,10 @@
 			RelativePath=".\src\dialog\CmeSkal.cpp"/>
 		<File 
 			RelativePath=".\src\dialog\CmeSkal.h"/>
+		<File 
+			RelativePath=".\src\dialog\CmeX264.cpp"/>
+		<File 
+			RelativePath=".\src\dialog\CmeX264.h"/>
 		<File 
 			RelativePath=".\src\dialog\CmeXvid.cpp"/>
 		<File 
@@ -2707,14 +2717,6 @@
 			RelativePath=".\src\dialog\Twindow.cpp"/>
 		<File 
 			RelativePath=".\src\dialog\Twindow.h"/>
-		<File 
-			RelativePath=".\src\dialog\CmaskingX264.cpp"/>
-		<File 
-			RelativePath=".\src\dialog\CmaskingX264.h"/>
-		<File 
-			RelativePath=".\src\dialog\CmeX264.cpp"/>
-		<File 
-			RelativePath=".\src\dialog\CmeX264.h"/>
 		<File 
 			RelativePath=".\src\settings\reg.cpp"/>
 		<File 
@@ -3125,6 +3127,10 @@
 		<File 
 			RelativePath=".\src\codecs\TvideoCodecWmv9.h"/>
 		<File 
+			RelativePath=".\src\codecs\TvideoCodecX264.cpp"/>
+		<File 
+			RelativePath=".\src\codecs\TvideoCodecX264.h"/>
+		<File 
 			RelativePath=".\src\codecs\TvideoCodecXviD4.cpp"/>
 		<File 
 			RelativePath=".\src\codecs\TvideoCodecXviD4.h"/>
@@ -3138,10 +3144,6 @@
 			RelativePath=".\src\codecs\libmpeg2\include\mpeg2.h"/>
 		<File 
 			RelativePath=".\src\codecs\xvid4.h"/>
-		<File 
-			RelativePath=".\src\codecs\TvideoCodecX264.cpp"/>
-		<File 
-			RelativePath=".\src\codecs\TvideoCodecX264.h"/>
 		<File 
 			RelativePath=".\src\convert\convert_yuy2.h"/>
 		<File 
@@ -3459,7 +3461,7 @@
 		<File 
 			RelativePath=".\src\audioFilters\TsampleFormat.h"/>
 		<File 
-			RelativePath=".\src\audioFilters\winamp2\DSP.H"/>
+			RelativePath=".\src\audioFilters\winamp2\Dsp.h"/>
 		<File 
 			RelativePath=".\src\audioFilters\winamp2\Twinamp2.cpp"/>
 		<File 
