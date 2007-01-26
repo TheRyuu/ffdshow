@@ -29,7 +29,6 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/asv1.c \
       $(LAVC_DIR)/avs.c \
       $(LAVC_DIR)/bitstream.c \
-      $(LAVC_DIR)/bitstream_filter.c \
       $(LAVC_DIR)/cabac.c \
       $(LAVC_DIR)/cavs.c \
       $(LAVC_DIR)/cavsdsp.c \

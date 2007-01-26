@@ -23,11 +23,6 @@
 #ifndef FFMPEG_PARSER_H
 #define FFMPEG_PARSER_H
 
-#define CONFIG_MPEGVIDEO_PARSER
-#define CONFIG_MPEG4VIDEO_PARSER
-#define CONFIG_MPEGAUDIO_PARSER
-#define CONFIG_AC3_PARSER
-#define CONFIG_AAC_PARSER
 
 typedef struct ParseContext{
     uint8_t *buffer;
@@ -60,8 +55,6 @@ typedef struct ParseContext1{
 
 int ff_combine_frame(ParseContext *pc, int next, uint8_t **buf, int *buf_size);
 int ff_mpeg4video_split(AVCodecContext *avctx, const uint8_t *buf, int buf_size);
-void ff_parse_close(AVCodecParserContext *s);
-void ff_parse1_close(AVCodecParserContext *s);
 
 /* h263dec.c */
 int ff_mpeg4_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size);

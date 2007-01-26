@@ -392,7 +392,6 @@ void av_register_all(void);
 #define AVERROR_NOTSUPP     (-7)  /* operation not supported */
 
 int av_read_packet(AVFormatContext *s, AVPacket *pkt);
-int av_read_frame(AVFormatContext *s, AVPacket *pkt);
 AVStream *av_new_stream(AVFormatContext *s, int id);
 void av_set_pts_info(AVStream *s, int pts_wrap_bits,
                      int pts_num, int pts_den);
@@ -401,7 +400,6 @@ void av_set_pts_info(AVStream *s, int pts_wrap_bits,
 #define AVSEEK_FLAG_BYTE     2 ///< seeking based on position in bytes
 #define AVSEEK_FLAG_ANY      4 ///< seek to any frame, even non keyframes
 
-int av_find_default_stream_index(AVFormatContext *s);
 int av_index_search_timestamp(AVStream *st, int64_t timestamp, int flags);
 int av_add_index_entry(AVStream *st,
                        int64_t pos, int64_t timestamp, int size, int distance, int flags);

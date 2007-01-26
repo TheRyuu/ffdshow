@@ -879,25 +879,6 @@ static int h261_find_frame_end(ParseContext *pc, AVCodecContext* avctx, const ui
     return END_NOT_FOUND;
 }
 
-static int h261_parse(AVCodecParserContext *s,
-                      AVCodecContext *avctx,
-                      uint8_t **poutbuf, int *poutbuf_size, 
-                      const uint8_t *buf, int buf_size)
-{
-    ParseContext *pc = s->priv_data;
-    int next;
-    
-    next= h261_find_frame_end(pc,avctx, buf, buf_size);
-    if (ff_combine_frame(pc, next, (uint8_t **)&buf, &buf_size) < 0) {
-        *poutbuf = NULL;
-        *poutbuf_size = 0;
-        return buf_size;
-    }
-    *poutbuf = (uint8_t *)buf;
-    *poutbuf_size = buf_size;
-    return next;
-}
-
 /**
  * returns the number of bytes consumed for building the current frame
  */
@@ -1039,10 +1020,3 @@ AVCodec h261_decoder = {
     CODEC_CAP_DR1,
 };
 
-AVCodecParser h261_parser = {
-    { CODEC_ID_H261 },
-    sizeof(ParseContext),
-    NULL,
-    h261_parse,
-    ff_parse_close,
-};

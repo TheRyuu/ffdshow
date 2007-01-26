@@ -187,26 +187,5 @@ void avcodec_register_all(void)
 
 #undef PCM_CODEC
 
-    /* parsers */
-    av_register_codec_parser(&h261_parser);
-    av_register_codec_parser(&h263_parser);
-    av_register_codec_parser(&mjpeg_parser);
-    av_register_codec_parser(&mpegvideo_parser);
-    av_register_codec_parser(&mpeg4video_parser);
-
-#ifdef CONFIG_H264_PARSER
-    av_register_codec_parser(&h264_parser);
-#endif
-
-#ifdef CONFIG_AC3
-    av_register_codec_parser(&ac3_parser);
-#endif
-
-    av_register_bitstream_filter(&dump_extradata_bsf);
-    av_register_bitstream_filter(&remove_extradata_bsf);
-    av_register_bitstream_filter(&noise_bsf);
-    av_register_bitstream_filter(&mp3_header_compress_bsf);
-    av_register_bitstream_filter(&mp3_header_decompress_bsf);
-    av_register_bitstream_filter(&mjpega_dump_header_bsf);
 }
 

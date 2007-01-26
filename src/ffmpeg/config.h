@@ -29,7 +29,6 @@
 #endif
 
 #define CONFIG_DECODERS 1
-//#define CONFIG_H264_PARSER 1
 
 
 #ifdef __GNUC__
