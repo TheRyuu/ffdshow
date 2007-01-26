@@ -42,8 +42,8 @@ extern "C" {
 #define AV_STRINGIFY(s)         AV_TOSTRING(s)
 #define AV_TOSTRING(s) #s
 
-#define LIBAVCODEC_VERSION_INT  ((51<<16)+(27<<8)+0)
-#define LIBAVCODEC_VERSION      51.27.0
+#define LIBAVCODEC_VERSION_INT  ((51<<16)+(29<<8)+0)
+#define LIBAVCODEC_VERSION      51.29.0
 #define LIBAVCODEC_BUILD        LIBAVCODEC_VERSION_INT
 
 #define LIBAVCODEC_IDENT        "Lavc" AV_STRINGIFY(LIBAVCODEC_VERSION)
@@ -684,7 +684,7 @@ typedef struct AVCodecContext {
     int qmax;
 
     /**
-     * maximum quantizer difference etween frames.
+     * maximum quantizer difference between frames.
      * - encoding: set by user.
      * - decoding: unused
      */
@@ -1963,6 +1963,7 @@ typedef struct AVPicture {
  * AVPaletteControl
  * This structure defines a method for communicating palette changes
  * between and demuxer and a decoder.
+ * this is totally broken, palette changes should be sent as AVPackets
  */
 #define AVPALETTE_SIZE 1024
 #define AVPALETTE_COUNT 256
