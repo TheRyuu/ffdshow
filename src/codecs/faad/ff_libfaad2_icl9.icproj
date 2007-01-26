@@ -44,7 +44,7 @@
 				Name="LinkerTool"
 				DelayImpLib=""
 				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmds.lib svml_dispmt.lib"
+				AdditionalDependencies="msvcrt.lib kernel32.lib libirc.lib libmmds.lib svml_disp.lib"
 				OutputFile="../../../bin/ff_libfaad2.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="1"
@@ -241,6 +241,8 @@
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
+		<File 
+			RelativePath=".\drm_dec.c"/>
 		<File 
 			RelativePath=".\error.c">
 			<FileConfiguration 
@@ -820,8 +822,6 @@
 		<File 
 			RelativePath=".\version.c"/>
 		<File 
-			RelativePath=".\drm_dec.c"/>
-		<File 
 			RelativePath=".\analysis.h"/>
 		<File 
 			RelativePath=".\bits.h"/>
@@ -835,6 +835,8 @@
 			RelativePath=".\decoder.h"/>
 		<File 
 			RelativePath=".\drc.h"/>
+		<File 
+			RelativePath=".\drm_dec.h"/>
 		<File 
 			RelativePath=".\error.h"/>
 		<File 
@@ -943,8 +945,6 @@
 			RelativePath=".\syntax.h"/>
 		<File 
 			RelativePath=".\tns.h"/>
-		<File 
-			RelativePath=".\drm_dec.h"/>
 		<File 
 			RelativePath=".\ff_libfaad2.def"/>
 	</Files>

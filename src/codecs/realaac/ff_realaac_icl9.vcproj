@@ -97,7 +97,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="TRUE"
-				AdditionalDependencies="kernel32.lib msvcrt.lib $(NOINHERIT) libircmt.lib libmmds.lib svml_dispmt.lib"
+				AdditionalDependencies="kernel32.lib msvcrt.lib $(NOINHERIT) libirc.lib"
 				OutputFile="../../../bin/ff_realaac.dll"
 				LinkIncremental="1"
 				IgnoreAllDefaultLibraries="TRUE"

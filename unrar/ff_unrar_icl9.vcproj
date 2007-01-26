@@ -96,7 +96,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="TRUE"
-				AdditionalDependencies="msvcrt.lib kernel32.lib user32.lib oldnames.lib $(NOINHERIT) libircmt.lib libmmds.lib svml_dispmt.lib"
+				AdditionalDependencies="msvcrt.lib kernel32.lib user32.lib oldnames.lib $(NOINHERIT) libirc.lib"
 				OutputFile="../bin/ff_unrar.dll"
 				LinkIncremental="1"
 				IgnoreAllDefaultLibraries="TRUE"

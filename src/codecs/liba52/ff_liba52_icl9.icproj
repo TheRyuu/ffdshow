@@ -15,47 +15,46 @@
 				IntermediateDirectory="release_icl9"
 				ConfigurationType="2"
 				UseOfMFC="0"
-				ATLMinimizesCRunTimeLibraryUsage="FALSE"
-				WholeProgramOptimization="TRUE"/>
+				ATLMinimizesCRunTimeLibraryUsage="0"
+				WholeProgramOptimization="1"/>
+			<Tool 
+				Name="DebugTool"/>
 			<Tool 
 				Name="CppCmplrTool"
-				AdditionalOptions="/Qip"
 				Optimization="1000"
-				GlobalOptimizations="TRUE"
+				GlobalOptimizations="1"
 				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="TRUE"
+				EnableIntrinsicFunctions="1"
 				FavorSizeOrSpeed="1"
-				OmitFramePointers="TRUE"
-				WholeProgramOptimization="TRUE"
+				OmitFramePointers="1"
 				AdditionalIncludeDirectories="../.."
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;ALT_BITSTREAM_READER"
-				StringPooling="TRUE"
-				ExceptionHandling="FALSE"
+				StringPooling="1"
+				ExceptionHandling="0"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="FALSE"
-				EnableFunctionLevelLinking="TRUE"
-				ForceConformanceInForLoopScope="TRUE"
+				BufferSecurityCheck="0"
+				EnableFunctionLevelLinking="1"
+				ForceConformanceInForLoopScope="1"
 				PrecompiledHeaderFile=".\Release/ff_liba52.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
-				ProgramDataBaseFileName=".\Release/"
 				WarningLevel="0"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="1"
 				DebugInformationFormat="0"
 				CompileAs="2"
-				DisableSpecificWarnings="4305,4244"/>
-			<Tool 
-				Name="CustomTool"/>
+				DisableSpecificWarnings="4305,4244"
+				AdditionalOptions="/Qip"/>
 			<Tool 
 				Name="LinkerTool"
-				IgnoreImportLibrary="TRUE"
-				AdditionalDependencies="kernel32.lib msvcrt.lib $(NOINHERIT) libircmt.lib libmmds.lib svml_dispmt.lib"
+				DelayImpLib=""
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="kernel32.lib msvcrt.lib $(NOINHERIT)  libirc.lib"
 				OutputFile="../../../bin/ff_liba52.dll"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
-				IgnoreAllDefaultLibraries="TRUE"
+				SuppressStartupBanner="1"
+				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\ff_liba52.def"
-				GenerateDebugInformation="FALSE"
+				GenerateDebugInformation="0"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -63,35 +62,31 @@
 				ImportLibrary=".\Release/ff_liba52.lib"
 				TargetMachine="1"/>
 			<Tool 
-				Name="MidlCmplrTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="TRUE"
-				SuppressStartupBanner="TRUE"
-				TargetEnvironment="1"
-				TypeLibraryName=".\Release/ff_liba52.tlb"
-				HeaderFileName=""/>
-			<Tool 
-				Name="PostBuildEventTool"/>
-			<Tool 
-				Name="PreBuildEventTool"/>
-			<Tool 
-				Name="PreLinkEventTool"/>
+				Name="LibrarianTool"/>
 			<Tool 
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="NDEBUG"
 				Culture="1051"/>
 			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="MidlCmplrTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="1"
+				SuppressStartupBanner="1"
+				TargetEnvironment="1"
+				TypeLibraryName=".\Release/ff_liba52.tlb"
+				HeaderFileName=""/>
 			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
+				Name="BscMakeTool"/>
 			<Tool 
-				Name="VCWebDeploymentTool"/>
+				Name="PreBuildEventTool"/>
 			<Tool 
-				Name="VCManagedWrapperGeneratorTool"/>
+				Name="PreLinkEventTool"/>
 			<Tool 
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="PostBuildEventTool"/>
 			<Tool 
-				Name="DebugTool"/>
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Debug|Win32">
@@ -101,203 +96,183 @@
 				IntermediateDirectory="debug_icl9"
 				ConfigurationType="2"
 				UseOfMFC="0"
-				ATLMinimizesCRunTimeLibraryUsage="FALSE"/>
+				ATLMinimizesCRunTimeLibraryUsage="0"/>
+			<Tool 
+				Name="DebugTool"/>
 			<Tool 
 				Name="CppCmplrTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../.."
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;ALT_BITSTREAM_READER"
-				MinimalRebuild="TRUE"
-				ExceptionHandling="FALSE"
+				MinimalRebuild="1"
+				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				BufferSecurityCheck="TRUE"
-				ForceConformanceInForLoopScope="TRUE"
+				BufferSecurityCheck="1"
+				ForceConformanceInForLoopScope="1"
 				PrecompiledHeaderFile=".\Debug/ff_liba52.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
-				ProgramDataBaseFileName=".\Debug/"
 				WarningLevel="3"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="1"
 				DebugInformationFormat="4"
 				CompileAs="1"
 				DisableSpecificWarnings="4305,4244"/>
 			<Tool 
-				Name="CustomTool"/>
-			<Tool 
 				Name="LinkerTool"
-				IgnoreImportLibrary="TRUE"
+				DelayImpLib=""
+				IgnoreImportLibrary="1"
 				AdditionalDependencies="kernel32.lib msvcrtd.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_liba52.dll"
 				LinkIncremental="2"
-				SuppressStartupBanner="TRUE"
-				IgnoreAllDefaultLibraries="TRUE"
+				SuppressStartupBanner="1"
+				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\ff_liba52.def"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="1"
 				SubSystem="2"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"/>
 			<Tool 
-				Name="MidlCmplrTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="TRUE"
-				SuppressStartupBanner="TRUE"
-				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/ff_liba52.tlb"
-				HeaderFileName=""/>
-			<Tool 
-				Name="PostBuildEventTool"/>
-			<Tool 
-				Name="PreBuildEventTool"/>
-			<Tool 
-				Name="PreLinkEventTool"/>
+				Name="LibrarianTool"/>
 			<Tool 
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1051"/>
 			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="MidlCmplrTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="1"
+				SuppressStartupBanner="1"
+				TargetEnvironment="1"
+				TypeLibraryName=".\Debug/ff_liba52.tlb"
+				HeaderFileName=""/>
 			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
+				Name="BscMakeTool"/>
 			<Tool 
-				Name="VCWebDeploymentTool"/>
+				Name="PreBuildEventTool"/>
 			<Tool 
-				Name="VCManagedWrapperGeneratorTool"/>
+				Name="PreLinkEventTool"/>
 			<Tool 
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="PostBuildEventTool"/>
 			<Tool 
-				Name="DebugTool"/>
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
 		</Configuration>
 	</Configurations>
 	<Files>
-		<Filter 
-			Name="Source Files"
-			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
-			<File 
-				RelativePath="bit_allocate.c">
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						BasicRuntimeChecks="3"
-						CompileAs="2"/>
-				</FileConfiguration>
-			</File>
-			<File 
-				RelativePath="bitstream.c">
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						BasicRuntimeChecks="3"
-						CompileAs="2"/>
-				</FileConfiguration>
-			</File>
-			<File 
-				RelativePath="downmix.c">
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						BasicRuntimeChecks="3"
-						CompileAs="2"/>
-				</FileConfiguration>
-			</File>
-			<File 
-				RelativePath="imdct.c">
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						AssemblerOutput="4"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						BasicRuntimeChecks="3"
-						CompileAs="2"/>
-				</FileConfiguration>
-			</File>
-			<File 
-				RelativePath="parse.c">
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						BasicRuntimeChecks="3"
-						CompileAs="2"/>
-				</FileConfiguration>
-			</File>
-		</Filter>
-		<Filter 
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl">
-			<File 
-				RelativePath="a52.h">
-			</File>
-			<File 
-				RelativePath="a52_internal.h">
-			</File>
-			<File 
-				RelativePath="bitstream.h">
-			</File>
-			<File 
-				RelativePath="config.h">
-			</File>
-			<File 
-				RelativePath="..\..\csimd.h">
-			</File>
-			<File 
-				RelativePath="..\..\inttypes.h">
-			</File>
-			<File 
-				RelativePath="tables.h">
-			</File>
-		</Filter>
 		<File 
-			RelativePath="ff_liba52.def">
+			RelativePath=".\bit_allocate.c">
+			<FileConfiguration 
+				Name="Release|Win32">
+				<Tool 
+					Name="CppCmplrTool"
+					Optimization="2"
+					AdditionalIncludeDirectories=""/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Debug|Win32">
+				<Tool 
+					Name="CppCmplrTool"
+					Optimization="0"
+					AdditionalIncludeDirectories=""
+					BasicRuntimeChecks="3"
+					CompileAs="2"/>
+			</FileConfiguration>
 		</File>
+		<File 
+			RelativePath=".\bitstream.c">
+			<FileConfiguration 
+				Name="Release|Win32">
+				<Tool 
+					Name="CppCmplrTool"
+					Optimization="2"
+					AdditionalIncludeDirectories=""/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Debug|Win32">
+				<Tool 
+					Name="CppCmplrTool"
+					Optimization="0"
+					AdditionalIncludeDirectories=""
+					BasicRuntimeChecks="3"
+					CompileAs="2"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\downmix.c">
+			<FileConfiguration 
+				Name="Release|Win32">
+				<Tool 
+					Name="CppCmplrTool"
+					Optimization="2"
+					AdditionalIncludeDirectories=""/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Debug|Win32">
+				<Tool 
+					Name="CppCmplrTool"
+					Optimization="0"
+					AdditionalIncludeDirectories=""
+					BasicRuntimeChecks="3"
+					CompileAs="2"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\imdct.c">
+			<FileConfiguration 
+				Name="Release|Win32">
+				<Tool 
+					Name="CppCmplrTool"
+					Optimization="2"
+					AdditionalIncludeDirectories=""
+					AssemblerOutput="4"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Debug|Win32">
+				<Tool 
+					Name="CppCmplrTool"
+					Optimization="0"
+					AdditionalIncludeDirectories=""
+					BasicRuntimeChecks="3"
+					CompileAs="2"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\parse.c">
+			<FileConfiguration 
+				Name="Release|Win32">
+				<Tool 
+					Name="CppCmplrTool"
+					Optimization="2"
+					AdditionalIncludeDirectories=""/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Debug|Win32">
+				<Tool 
+					Name="CppCmplrTool"
+					Optimization="0"
+					AdditionalIncludeDirectories=""
+					BasicRuntimeChecks="3"
+					CompileAs="2"/>
+			</FileConfiguration>
+		</File>
+		<File 
+			RelativePath=".\a52.h"/>
+		<File 
+			RelativePath=".\a52_internal.h"/>
+		<File 
+			RelativePath=".\bitstream.h"/>
+		<File 
+			RelativePath=".\config.h"/>
+		<File 
+			RelativePath="..\..\csimd.h"/>
+		<File 
+			RelativePath="..\..\inttypes.h"/>
+		<File 
+			RelativePath=".\tables.h"/>
+		<File 
+			RelativePath=".\ff_liba52.def"/>
 	</Files>
 </VisualStudioProject>
 

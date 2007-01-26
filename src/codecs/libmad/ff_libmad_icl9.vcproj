@@ -117,7 +117,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="TRUE"
 				AdditionalOptions=""
-				AdditionalDependencies="msvcrt.lib kernel32.lib $(NOINHERIT) libircmt.lib libmmds.lib svml_dispmt.lib"
+				AdditionalDependencies="msvcrt.lib kernel32.lib $(NOINHERIT) libirc.lib"
 				OutputFile="../../../bin/ff_libmad.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

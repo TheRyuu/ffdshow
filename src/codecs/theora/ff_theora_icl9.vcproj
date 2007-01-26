@@ -119,7 +119,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="TRUE"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="msvcrt.lib kernel32.lib $(NOINHERIT) libircmt.lib libmmds.lib svml_dispmt.lib"
+				AdditionalDependencies="msvcrt.lib kernel32.lib $(NOINHERIT) libirc.lib"
 				OutputFile="../../../bin/ff_theora.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

@@ -47,7 +47,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="TRUE"
-				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmds.lib svml_dispmt.lib"
+				AdditionalDependencies="msvcrt.lib kernel32.lib libirc.lib libmmds.lib svml_disp.lib"
 				OutputFile="../../../bin/ff_libfaad2.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

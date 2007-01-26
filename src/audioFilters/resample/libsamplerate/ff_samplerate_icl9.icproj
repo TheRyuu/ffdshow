@@ -17,56 +17,53 @@
 				ConfigurationType="2"
 				CharacterSet="0"/>
 			<Tool 
+				Name="DebugTool"/>
+			<Tool 
 				Name="CppCmplrTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".."
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL"
-				MinimalRebuild="TRUE"
-				ExceptionHandling="FALSE"
+				MinimalRebuild="1"
+				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				BufferSecurityCheck="TRUE"
-				ForceConformanceInForLoopScope="TRUE"
+				BufferSecurityCheck="1"
+				ForceConformanceInForLoopScope="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 				CompileAs="1"/>
 			<Tool 
-				Name="CustomTool"/>
-			<Tool 
 				Name="LinkerTool"
-				IgnoreImportLibrary="TRUE"
+				DelayImpLib=""
+				IgnoreImportLibrary="1"
 				AdditionalDependencies="msvcrtd.lib kernel32.lib $(NOINHERIT)"
 				OutputFile="../../../../bin/ff_samplerate.dll"
 				LinkIncremental="2"
-				IgnoreAllDefaultLibraries="TRUE"
+				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="ff_samplerate.def "
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="1"
 				SubSystem="2"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"/>
 			<Tool 
+				Name="LibrarianTool"/>
+			<Tool 
+				Name="ResCmplrTool"/>
+			<Tool 
 				Name="MidlCmplrTool"/>
 			<Tool 
-				Name="PostBuildEventTool"/>
+				Name="BscMakeTool"/>
 			<Tool 
 				Name="PreBuildEventTool"/>
 			<Tool 
 				Name="PreLinkEventTool"/>
 			<Tool 
-				Name="ResCmplrTool"/>
+				Name="PostBuildEventTool"/>
 			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="CustomTool"/>
 			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool 
-				Name="VCWebDeploymentTool"/>
-			<Tool 
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool 
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
-			<Tool 
-				Name="DebugTool"/>
+				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Release|Win32">
@@ -76,115 +73,89 @@
 				IntermediateDirectory="release_icl9"
 				ConfigurationType="2"
 				CharacterSet="0"
-				WholeProgramOptimization="TRUE"/>
+				WholeProgramOptimization="1"/>
+			<Tool 
+				Name="DebugTool"/>
 			<Tool 
 				Name="CppCmplrTool"
-				AdditionalOptions="/Qip"
 				Optimization="1000"
-				GlobalOptimizations="TRUE"
+				GlobalOptimizations="1"
 				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="TRUE"
+				EnableIntrinsicFunctions="1"
 				FavorSizeOrSpeed="1"
-				OmitFramePointers="TRUE"
-				WholeProgramOptimization="TRUE"
+				OmitFramePointers="1"
 				AdditionalIncludeDirectories=".."
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL"
-				StringPooling="TRUE"
-				ExceptionHandling="FALSE"
+				StringPooling="1"
+				ExceptionHandling="0"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="FALSE"
-				ForceConformanceInForLoopScope="TRUE"
+				BufferSecurityCheck="0"
+				ForceConformanceInForLoopScope="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="0"
 				DebugInformationFormat="0"
-				CompileAs="1"/>
-			<Tool 
-				Name="CustomTool"/>
+				CompileAs="1"
+				AdditionalOptions="/Qip"/>
 			<Tool 
 				Name="LinkerTool"
-				IgnoreImportLibrary="TRUE"
-				AdditionalDependencies="msvcrt.lib kernel32.lib $(NOINHERIT) libircmt.lib libmmds.lib svml_dispmt.lib"
+				DelayImpLib=""
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrt.lib kernel32.lib $(NOINHERIT) libirc.lib"
 				OutputFile="../../../../bin/ff_samplerate.dll"
 				LinkIncremental="1"
-				IgnoreAllDefaultLibraries="TRUE"
+				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="ff_samplerate.def "
-				GenerateDebugInformation="FALSE"
+				GenerateDebugInformation="0"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				ImportLibrary="$(OutDir)/ff_samplerate.lib"
 				TargetMachine="1"/>
 			<Tool 
+				Name="LibrarianTool"/>
+			<Tool 
+				Name="ResCmplrTool"/>
+			<Tool 
 				Name="MidlCmplrTool"/>
 			<Tool 
-				Name="PostBuildEventTool"/>
+				Name="BscMakeTool"/>
 			<Tool 
 				Name="PreBuildEventTool"/>
 			<Tool 
 				Name="PreLinkEventTool"/>
 			<Tool 
-				Name="ResCmplrTool"/>
+				Name="PostBuildEventTool"/>
 			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="CustomTool"/>
 			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool 
-				Name="VCWebDeploymentTool"/>
-			<Tool 
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool 
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
-			<Tool 
-				Name="DebugTool"/>
+				Name="CustomNodeTool"/>
 		</Configuration>
 	</Configurations>
 	<Files>
-		<Filter 
-			Name="Source Files"
-			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
-			<File 
-				RelativePath=".\samplerate.c">
-			</File>
-			<File 
-				RelativePath=".\src_linear.c">
-			</File>
-			<File 
-				RelativePath=".\src_sinc.c">
-			</File>
-			<File 
-				RelativePath=".\src_zoh.c">
-			</File>
-		</Filter>
-		<Filter 
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
-			<File 
-				RelativePath=".\common.h">
-			</File>
-			<File 
-				RelativePath=".\config.h">
-			</File>
-			<File 
-				RelativePath=".\fastest_coeffs.h">
-			</File>
-			<File 
-				RelativePath=".\float_cast.h">
-			</File>
-			<File 
-				RelativePath=".\high_qual_coeffs.h">
-			</File>
-			<File 
-				RelativePath=".\mid_qual_coeffs.h">
-			</File>
-			<File 
-				RelativePath=".\samplerate.h">
-			</File>
-			<File 
-				RelativePath=".\unistd.h">
-			</File>
-		</Filter>
+		<File 
+			RelativePath=".\samplerate.c"/>
+		<File 
+			RelativePath=".\src_linear.c"/>
+		<File 
+			RelativePath=".\src_sinc.c"/>
+		<File 
+			RelativePath=".\src_zoh.c"/>
+		<File 
+			RelativePath=".\common.h"/>
+		<File 
+			RelativePath=".\config.h"/>
+		<File 
+			RelativePath=".\fastest_coeffs.h"/>
+		<File 
+			RelativePath=".\float_cast.h"/>
+		<File 
+			RelativePath=".\high_qual_coeffs.h"/>
+		<File 
+			RelativePath=".\mid_qual_coeffs.h"/>
+		<File 
+			RelativePath=".\samplerate.h"/>
+		<File 
+			RelativePath=".\unistd.h"/>
 	</Files>
 </VisualStudioProject>
 
