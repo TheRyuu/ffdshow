@@ -1362,6 +1362,7 @@
 #define IDFF_enc_x264_is_aq                       3360
 #define IDFF_enc_x264_aq_strength100              3361
 #define IDFF_enc_x264_f_aq_sensitivity            3362
+#define IDFF_enc_x264_interlaced                  3224
 
 #define IDFF_enc_working               3198
 #define IDFF_enc_fpsRate               3206

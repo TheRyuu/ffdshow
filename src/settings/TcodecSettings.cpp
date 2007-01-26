@@ -567,6 +567,8 @@ TcoSettings::TcoSettings(TintStrColl *Icoll):Toptions(Icoll),options(Icoll)
        _l("x264_max_ref_frames"),1,
    IDFF_enc_x264_cabac                      ,&TcoSettings::x264_cabac                      , 0,   0,_l(""),1,
        _l("x264_cabac"),1,
+   IDFF_enc_x264_interlaced                 ,&TcoSettings::x264_interlaced                 , 0,   0,_l(""),1,
+       _l("x264_interlaced"),0,
    IDFF_enc_x264_me_inter                   ,&TcoSettings::x264_me_inter                   , 1,   1,_l(""),1,
        _l("x264_me_inter2"),X264_ANALYSE_I4x4|X264_ANALYSE_I8x8|X264_ANALYSE_PSUB16x16|X264_ANALYSE_BSUB16x16,
    IDFF_enc_x264_me_intra                   ,&TcoSettings::x264_me_intra                   , 1,   1,_l(""),1,

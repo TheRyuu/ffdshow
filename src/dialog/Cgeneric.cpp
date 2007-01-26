@@ -64,6 +64,7 @@ void TgenericPage::cfg2dlg(void)
     flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Generate access unit delimiters")),IDFF_enc_x264_b_aud,1,false));
     flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Each MB partition can independently select a reference frame")),IDFF_enc_x264_mixed_ref,1,false));
     flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Transform coefficient thresholding on P-frames")),IDFF_enc_x264_b_dct_decimate,1,false));
+    flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Interlaced")),IDFF_enc_x264_interlaced,1,false));
     break;
   }
 if (codecId==CODEC_ID_MPEG4 || codecId==CODEC_ID_X264)
@@ -177,7 +178,7 @@ INT_PTR TgenericPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 TgenericPage::TgenericPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
 {
  dialogId=IDD_GENERIC;
- static const int props[]={IDFF_enc_max_key_interval,IDFF_enc_min_key_interval,IDFF_enc_globalHeader,IDFF_enc_part,IDFF_enc_interlacing,IDFF_enc_interlacing_tff,IDFF_enc_gray,IDFF_enc_isBframes,IDFF_enc_max_b_frames,IDFF_enc_packedBitstream,IDFF_enc_dx50bvop,IDFF_enc_H263Pflags,IDFF_enc_b_dynamic,IDFF_enc_b_refine,IDFF_enc_svcd_scan_offset,IDFF_enc_x264_cabac,IDFF_numthreads,0};
+ static const int props[]={IDFF_enc_max_key_interval,IDFF_enc_min_key_interval,IDFF_enc_globalHeader,IDFF_enc_part,IDFF_enc_interlacing,IDFF_enc_interlacing_tff,IDFF_enc_gray,IDFF_enc_isBframes,IDFF_enc_max_b_frames,IDFF_enc_packedBitstream,IDFF_enc_dx50bvop,IDFF_enc_H263Pflags,IDFF_enc_b_dynamic,IDFF_enc_b_refine,IDFF_enc_svcd_scan_offset,IDFF_enc_x264_cabac,IDFF_enc_x264_interlaced,IDFF_numthreads,0};
  propsIDs=props;
  static const TbindCheckbox<TgenericPage> chb[]=
   {

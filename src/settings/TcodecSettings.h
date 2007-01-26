@@ -215,6 +215,7 @@ public:
 
  int x264_max_ref_frames;
  int x264_cabac;
+ int x264_interlaced;
  int x264_me_inter,x264_me_intra;
  int x264_me_subpelrefine;
  int x264_me_method,x264_me_range;

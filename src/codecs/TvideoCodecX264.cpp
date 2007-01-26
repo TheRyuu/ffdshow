@@ -113,6 +113,7 @@ LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
  param.i_deblocking_filter_alphac0=coCfg->x264_i_deblocking_filter_alphac0;
  param.i_deblocking_filter_beta=coCfg->x264_i_deblocking_filter_beta;
  param.b_cabac=coCfg->x264_cabac;
+ param.b_interlaced=coCfg->x264_interlaced;
 
  param.analyse.inter=coCfg->x264_me_inter;
  param.analyse.intra=coCfg->x264_me_intra;
