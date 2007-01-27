@@ -1,4 +1,4 @@
-#ifndef _LZO_H
+#ifndef LZO_H
 #define LZO_H
 
 #define LZO_INPUT_DEPLETED 1

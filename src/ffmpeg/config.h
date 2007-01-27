@@ -44,7 +44,7 @@
 
 /* CPU related stuff */
 //#define HAVE_CMOV
-//#define CMOV_IS_FAST
+//#define HAVE_FAST_CMOV
 
 
 /* disabled stuff */

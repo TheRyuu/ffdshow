@@ -464,7 +464,7 @@ static int av_always_inline get_cabac_inline(CABACContext *c, uint8_t * const st
 #else /* BRANCHLESS_CABAC_DECODER */
 
 
-#if defined CMOV_IS_FAST
+#if defined HAVE_FAST_CMOV
 #define BRANCHLESS_GET_CABAC_UPDATE(ret, cabac, statep, low, lowword, range, tmp, tmpbyte)\
         "mov    "tmp"       , %%ecx                                     \n\t"\
         "shl    $17         , "tmp"                                     \n\t"\
@@ -474,7 +474,7 @@ static int av_always_inline get_cabac_inline(CABACContext *c, uint8_t * const st
         "and    %%ecx       , "tmp"                                     \n\t"\
         "sub    "tmp"       , "low"                                     \n\t"\
         "xor    %%ecx       , "ret"                                     \n\t"
-#else /* CMOV_IS_FAST */
+#else /* HAVE_FAST_CMOV */
 #define BRANCHLESS_GET_CABAC_UPDATE(ret, cabac, statep, low, lowword, range, tmp, tmpbyte)\
         "mov    "tmp"       , %%ecx                                     \n\t"\
         "shl    $17         , "tmp"                                     \n\t"\
@@ -487,7 +487,7 @@ static int av_always_inline get_cabac_inline(CABACContext *c, uint8_t * const st
         "and    "tmp"       , %%ecx                                     \n\t"\
         "sub    %%ecx       , "low"                                     \n\t"\
         "xor    "tmp"       , "ret"                                     \n\t"
-#endif /* CMOV_IS_FAST */
+#endif /* HAVE_FAST_CMOV */
 
 
 #define BRANCHLESS_GET_CABAC(ret, cabac, statep, low, lowword, range, tmp, tmpbyte)\
