@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>ffdshow tryouts FAQ</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="description" content="ffdshow tryouts FAQ" />
+  <link rel="stylesheet" href="../styles/style.css" type="text/css" />
+</head>
+
+<body>
+  <a href="http://ffdshow-tryout.sourceforge.net/phpBB2/">
+    <img src="../images/logo_phpBB.png" width="200" height="91" title="ffdshow tryouts" alt="ffdshow tryouts" />
+  </a>
+
+  <p>
+    <span class="big_caption">
+      <a name="top" id="top">FAQ</a>
+    </span>
+  </p>
+
+  <ul class="links">
+    <li><a class="nav" href="#difference">Was ist der Unterschied zwischen generischen und SSE/SSE2-Builds?</a></li>
+    <li><a class="nav" href="#performance">Welches Build hat die beste Dekodierleistung?</a></li>
+    <li><a class="nav" href="#perf_filters">Welches Build hat die beste Dekodierleistung, wenn Filter verwendet werden?</a></li>
+
+    <li><a class="nav" href="#stable">Welches Build ist das Stabilste?</a></li>
+    <li><a class="nav" href="#multithreaded">Ist ffdshow Multicore-optimiert?</a></li>
+  </ul>
+
+  <p>
+    <span class="small_caption">
+      <a name="difference" id="difference">Was ist der Unterschied zwischen generischen und SSE/SSE2-Builds?</a>
+    </span>
+  </p>
+
+  <p>
+    <span class="normal">Der Hauptunterschied ist der Compieler, der zum kompilieren von <em>ffdshow.ax</em> verwendet wurde. Es werden vier verschiedene Compiler verwendet: <em>MSVC71</em>, <em>MSVC80</em>, <em>GCC</em> und <em>ICL9</em>.<br />
+      The CPU-Anforderungen f&uuml;r die Builds sind wie folgt:
+    </span>
+  </p>
+
+  <ul class="normal">
+    <li>Generische (MSVC &amp; ICL) Builds ben&ouml;tigen einen Pentium-MMX/AMD K6 oder neuer.</li>
+    <li>SSE-Builds ben&ouml;tigen einen Pentium III/Athlon XP oder neuer.</li>
+    <li>SSE2-Builds ben&ouml;tigen einen Pentium 4/Athlon 64 oder neuer.</li>
+  </ul>
+
+  <p>
+    <span class="small_caption">
+      <a name="performance" id="performance">Welches Build hat die beste Dekodierleistung?</a>
+    </span>
+  </p>
+
+  <p>
+    <span class="normal">Alle Builder verwenden den GCC-Compiler um <em>libavcodec</em>, welches ffdshows Hauptbibliothek zum Dekodieren ist, zu erstellen. Diese Bibliothek enth&auml;lt eine Menge handoptimierten Assembler-Code (welcher automatisch die von der CPU unterst&uuml;tzten Eigenschaften und Befehlss&auml;tze erkennt). Die Verwendung zus&auml;tzlicher Compileroptimierungen oder erweiterter Befehlss&auml;tze (wie SSE/SSE2) resultiert in keinem signifikanten oder sp&uuml;rbaren Geschwindigkeitszuwachs. Wenn also die reine Dekodiergeschwindigkeit verglichen wird, gibt es nahezu <strong>keinen Unterschied</strong> zwischen den Builds.
+    </span>
+  </p>
+
+  <p>
+    <span class="small_caption">
+      <a name="perf_filters" id="perf_filters">Welches Build hat die beste Dekodierleistung, wenn Filter verwendet werden?</a>
+    </span>
+  </p>
+
+  <p>
+    <span class="normal">Optimierte Builds von <em>ffdshow.ax</em> haben Auswirkungen auf die Geschwindigkeit, wenn bestimmte Filter in ffdshow verwendet werden.<br />
+      Unterhalb befindet sich eine Liste von - bis jetzt getesteten - Filteren, die von Optimierungen profitieren:
+    </span>
+  </p>
+
+  <ul class="normal">
+    <li>xsharpen</li>
+    <li>denoise3d</li>
+  </ul>
+
+  <p>
+    <span class="normal">Das folgende Diagramm stellt die m&ouml;glichen Zuw&auml;chse in Dekodiergeschindigkeit, wenn optimierte Builds <strong>und</strong> Filter verwendet werden, dar:<br /><br />
+      <img src="/images/benchmark.png" width="498" height="600" title="ffdshow-Build-802-Test" alt="ffdshow-Build-802-Test" /><br />
+    </span>
+    <span class="small">
+      Testsystem: Pentium 4 2.8GHz (Northwood), Windows XP SP2, null renderer verwendet<br />
+      Testbeispiel: <a href="http://trailers.divx.com/Dreamworks/Madagascar_HD.zip">Madagascar.avi</a> (DX50)
+    </span>
+  </p>
+
+  <p>
+    <span class="normal">Zusammenfassend:</span>
+  </p>
+
+  <ul class="normal">
+    <li>Wird ohne Filter anzuwenden dekodiert, sind die Ergebnisse <strong>nicht zu unterscheiden</strong>. Alle Builds bewegen sich innerhalb von 2%.</li>
+    <li>Das ICL9 (SSE)-Build zeigte sich als das Schnellste, wenn der <em>xsharpen</em>-Filter verwendet wird. Die Dekodierleistung liegt 88% &uuml;ber den generischen MSVC-Builds.</li>
+    <li>SSE2-optimierte Builds zeigten keinerlei Verbesserung gegen&uuml;ber SSE-Builds.</li>
+    <li>GCC SSE-Builds (nicht im Diagramm dargestellt) geben ebenfalls einen ansehnlichen Geschwindigkeitszuwachs.</li>
+    <li>Von System zu System unterscheiden sich die Zuw&auml;chse gegen&uuml;ber den generischen Builds allerdings. Es wird empfohlen die Builds auf seinem eigenen System zu testen.<br />
+      Zu Testzwecken wird Haalis <a class="links" href="http://haali.cs.msu.ru/mkv/timeCodec.exe">timeCodec.exe</a> [96KB] ben&ouml;tigt. Damit <em>timeCodec.exe</em> funktioniert, ist <a href="http://haali.cs.msu.ru/mkv/">Haali Media Splitter</a> Voraussetzung.</li>
+  </ul>
+
+  <p>
+    <span class="small_caption">
+      <a name="stable" id="stable">Welches Build ist das Stabilste?</a>
+    </span>
+  </p>
+
+  <p>
+    <span class="normal">MSVC-Builds von <em>ffdshow.ax</em> sind vermutlich die Stabilsten, allerdings sind auch keine Fehler in GCC-Builds bekannt. In ICL-Builds existiert nur ein bekannter Fehler: Sie st&uuml;rtzen bei Dateien, die mit einer sehr alten und fehlerhaften Version von x264 erstellt wurden, ab. Allerdings ist es unwahrscheinlich solchen Datien wirklich einmal zu begegnen. Von der Stabilit&auml;t betrachtet, spielt das Build also keine Rolle.
+    </span>
+  </p>
+
+  <p>
+    <span class="small_caption">
+      <a name="multithreaded" id="multithreaded">Ist ffdshow Multicore-optimiert?</a>
+    </span>
+  </p>
+  <p>
+    <span class="normal">Die folgende Liste gibt eine &Uuml;bersicht der Teile ffdshows, die Multicore-optimiert sind und somit Verbesserungen zeigen, wenn sie auf einem Multicore-System ausgef&uuml;hrt werden:
+    </span>
+  </p>
+
+  <ul class="normal">
+    <li>Der <em>resize</em>-Filter ist vollst&auml;ndig Multicore-optimiert. Er ist auf Mulicore-Systemen schneller (auf Pentium 4 HT-CPUs ineffektiv) und ben&ouml;tigt hierf&uuml;r keinerlei Konfiguration.</li>
+    <li>Ist "Queue &amp; misc"-"Queue output samples" markiert, wird Beschleunigung durch Multicoreunterst&uuml;tzung aktiviert, von dessen positivem Effekt man unter Umst&auml;nden selbst auf einem Singlecore CPU profitieren kann.</li>
+    <li>libavcodecs MPEG1/2-Dekoder sind Multicore-optimiert. Es wird effektiv, wenn "Decoder options"-"Number of decoding threads" auf die Zahl der vorhandenen Prozessorkerne gesetzt wird. Diese Einstellung hat keinen Effekt auf Pentium 4 HT-CPUs.</li>
+    <li>libavcodecs MPEG4/MPEG2/MPEG1-Encoder sind Multicore-optimiert.</li>
+  </ul>
+
+  <div>
+    <span class="normal">
+      <a class="nav" href="#top">Zum Anfang&nbsp;<img src="../images/arrow_up.gif" width="12" height="9" alt="" /></a>
+    </span>
+  </div>
+
+  <div style="padding-top:20px">
+    <a href="http://sourceforge.net">
+      <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
+    </a>
+  </div>
+</body>
+</html>
