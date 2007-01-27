@@ -13,6 +13,9 @@ img {
 div {
 	text-align: center
 }
+table {
+  width: 100%
+}
 .big_caption {
 	font-size: 145%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold
 }
