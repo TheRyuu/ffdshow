@@ -28,6 +28,9 @@ table {
 .smaller_caption {
 	font-size: 90%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold
 }
+.smallest_caption {
+	font-size: 75%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold
+}
 ul.added {
   color: rgb(0,0,128); list-style-type: disc; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 90%
 }

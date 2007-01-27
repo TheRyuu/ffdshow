@@ -14,6 +14,12 @@
   <a href="http://ffdshow-tryout.sourceforge.net/phpBB2/">
     <img src="../images/logo_phpBB.png" width="200" height="91" title="ffdshow tryouts" alt="ffdshow tryouts" />
   </a>
+  
+  <div style="text-align:right" class="smallest_caption">
+    &Uuml;bersetzungen verf&uuml;gbar in:
+    &nbsp;<a class="nav" href="../en/faq.htm"><img src="../images/england.gif" title="Englische FAQ" alt="Englische FAQ" width="27" height="17" />&nbsp;Englisch</a>
+    &nbsp;<a class="nav" href="../jp/faq.htm"><img src="../images/japan.gif" title="Japanische FAQ" alt="Japanische FAQ" width="27" height="17" />&nbsp;Japanisch</a>
+  </div>
 
   <p>
     <span class="big_caption">
@@ -25,7 +31,6 @@
     <li><a class="nav" href="#difference">Was ist der Unterschied zwischen generischen und SSE/SSE2-Builds?</a></li>
     <li><a class="nav" href="#performance">Welches Build hat die beste Dekodierleistung?</a></li>
     <li><a class="nav" href="#perf_filters">Welches Build hat die beste Dekodierleistung, wenn Filter verwendet werden?</a></li>
-
     <li><a class="nav" href="#stable">Welches Build ist das Stabilste?</a></li>
     <li><a class="nav" href="#multithreaded">Ist ffdshow Multicore-optimiert?</a></li>
   </ul>
@@ -37,7 +42,7 @@
   </p>
 
   <p>
-    <span class="normal">Der Hauptunterschied ist der Compieler, der zum kompilieren von <em>ffdshow.ax</em> verwendet wurde. Es werden vier verschiedene Compiler verwendet: <em>MSVC71</em>, <em>MSVC80</em>, <em>GCC</em> und <em>ICL9</em>.<br />
+    <span class="normal">Der Hauptunterschied ist der Compiler, der zum Kompilieren von <em>ffdshow.ax</em> verwendet wird. Es werden vier verschiedene Compiler verwendet: <em>MSVC71</em>, <em>MSVC80</em>, <em>GCC</em> und <em>ICL9</em>.<br />
       The CPU-Anforderungen f&uuml;r die Builds sind wie folgt:
     </span>
   </p>
@@ -67,7 +72,7 @@
 
   <p>
     <span class="normal">Optimierte Builds von <em>ffdshow.ax</em> haben Auswirkungen auf die Geschwindigkeit, wenn bestimmte Filter in ffdshow verwendet werden.<br />
-      Unterhalb befindet sich eine Liste von - bis jetzt getesteten - Filteren, die von Optimierungen profitieren:
+      Unterhalb befindet sich eine Liste von - bis jetzt getesteten - Filtern, die von Optimierungen profitieren:
     </span>
   </p>
 
@@ -77,11 +82,11 @@
   </ul>
 
   <p>
-    <span class="normal">Das folgende Diagramm stellt die m&ouml;glichen Zuw&auml;chse in Dekodiergeschindigkeit, wenn optimierte Builds <strong>und</strong> Filter verwendet werden, dar:<br /><br />
-      <img src="/images/benchmark.png" width="498" height="600" title="ffdshow-Build-802-Test" alt="ffdshow-Build-802-Test" /><br />
+    <span class="normal">Das folgende Diagramm stellt die m&ouml;glichen Zuw&auml;chse in der Dekodiergeschwindigkeit, wenn optimierte Builds <strong>und</strong> Filter verwendet werden, dar:<br /><br />
+      <img src="images/benchmark.png" width="503" height="600" title="ffdshow-Build-802-Test" alt="ffdshow-Build-802-Test" /><br />
     </span>
     <span class="small">
-      Testsystem: Pentium 4 2.8GHz (Northwood), Windows XP SP2, null renderer verwendet<br />
+      Testsystem: Pentium 4 2.8GHz (Northwood), Windows XP SP2, Null Renderer verwendet<br />
       Testbeispiel: <a href="http://trailers.divx.com/Dreamworks/Madagascar_HD.zip">Madagascar.avi</a> (DX50)
     </span>
   </p>
@@ -106,7 +111,7 @@
   </p>
 
   <p>
-    <span class="normal">MSVC-Builds von <em>ffdshow.ax</em> sind vermutlich die Stabilsten, allerdings sind auch keine Fehler in GCC-Builds bekannt. In ICL-Builds existiert nur ein bekannter Fehler: Sie st&uuml;rtzen bei Dateien, die mit einer sehr alten und fehlerhaften Version von x264 erstellt wurden, ab. Allerdings ist es unwahrscheinlich solchen Datien wirklich einmal zu begegnen. Von der Stabilit&auml;t betrachtet, spielt das Build also keine Rolle.
+    <span class="normal">MSVC-Builds von <em>ffdshow.ax</em> sind vermutlich die Stabilsten, allerdings sind auch keine Fehler in GCC-Builds bekannt. In ICL-Builds existiert nur ein bekannter Fehler: Sie st&uuml;rzen bei Dateien, die mit einer sehr alten und fehlerhaften Version von x264 erstellt wurden, ab. Allerdings ist es unwahrscheinlich solchen Dateien wirklich einmal zu begegnen. Von der Stabilit&auml;t betrachtet, spielt das Build also keine Rolle.
     </span>
   </p>
 
