@@ -129,7 +129,7 @@ Name: hu; MessagesFile: compiler:Languages\Hungarian.isl
 Name: it; MessagesFile: compiler:Languages\Italian.isl
 Name: jp; MessagesFile: languages\Japanese.isl; LicenseFile: ../../../copying.jp.txt
 Name: no; MessagesFile: compiler:Languages\Norwegian.isl
-Name: pl; MessagesFile: compiler:Languages\Polish.isl
+Name: pl; MessagesFile: compiler:Languages\Polish.isl; LicenseFile: ../../../copying.pl.txt
 Name: pr; MessagesFile: compiler:Languages\Portuguese.isl
 Name: ru; MessagesFile: compiler:Languages\Russian.isl; LicenseFile: ../../../copying.ru.txt
 Name: sk; MessagesFile: compiler:Languages\Slovak.isl; LicenseFile: ../../../copying.sk.txt
