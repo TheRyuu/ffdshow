@@ -1,3 +1,23 @@
+/*
+ * unbuffered io for ffmpeg system
+ * copyright (c) 2001 Fabrice Bellard
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 #ifndef AVIO_H
 #define AVIO_H
 
@@ -13,7 +33,11 @@ struct URLContext {
     int is_streamed;  /* true if streamed (no seek possible), default = false */
     int max_packet_size;  /* if non zero, the stream is packetized with this max packet size */
     void *priv_data;
+#if LIBAVFORMAT_VERSION_INT >= (52<<16)
+    char *filename; /* specified filename */
+#else
     char filename[1]; /* specified filename */
+#endif
 };
 
 typedef struct URLContext URLContext;
@@ -48,6 +72,13 @@ void url_set_interrupt_cb(URLInterruptCB *interrupt_cb);
 
 /* not implemented */
 int url_poll(URLPollEntry *poll_table, int n, int timeout);
+
+/**
+ * passing this as the "whence" parameter to a seek function causes it to
+ * return the filesize without seeking anywhere, supporting this is optional
+ * if its not supprted then the seek function will return <0
+ */
+#define AVSEEK_SIZE 0x10000
 
 typedef struct URLProtocol {
     const char *name;
@@ -99,6 +130,7 @@ void put_le64(ByteIOContext *s, uint64_t val);
 void put_be64(ByteIOContext *s, uint64_t val);
 void put_le32(ByteIOContext *s, unsigned int val);
 void put_be32(ByteIOContext *s, unsigned int val);
+void put_le24(ByteIOContext *s, unsigned int val);
 void put_be24(ByteIOContext *s, unsigned int val);
 void put_le16(ByteIOContext *s, unsigned int val);
 void put_be16(ByteIOContext *s, unsigned int val);
@@ -127,6 +159,7 @@ void put_flush_packet(ByteIOContext *s);
 int get_buffer(ByteIOContext *s, unsigned char *buf, int size);
 int get_partial_buffer(ByteIOContext *s, unsigned char *buf, int size);
 int get_byte(ByteIOContext *s);
+unsigned int get_le24(ByteIOContext *s);
 unsigned int get_le32(ByteIOContext *s);
 uint64_t get_le64(ByteIOContext *s);
 unsigned int get_le16(ByteIOContext *s);
@@ -158,7 +191,6 @@ int url_close_dyn_buf(ByteIOContext *s, uint8_t **pbuffer);
 
 unsigned long get_checksum(ByteIOContext *s);
 void init_checksum(ByteIOContext *s, unsigned long (*update_checksum)(unsigned long c, const uint8_t *p, unsigned int len), unsigned long checksum);
-unsigned long update_adler32(unsigned long adler, const uint8_t *buf, unsigned int len);
 
 /* file.c */
 extern URLProtocol file_protocol;

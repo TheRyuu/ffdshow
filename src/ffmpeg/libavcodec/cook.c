@@ -54,8 +54,8 @@
 #include "cookdata.h"
 
 /* the different Cook versions */
-#define MONO_COOK1      0x1000001
-#define MONO_COOK2      0x1000002
+#define MONO            0x1000001
+#define STEREO          0x1000002
 #define JOINT_STEREO    0x1000003
 #define MC_COOK         0x2000000   //multichannel Cook, not supported
 
@@ -68,7 +68,6 @@ typedef struct {
     int     qidx_table2[8];
 } COOKgain;
 
-#pragma pack(push,1)
 typedef struct __attribute__((__packed__)){
     /* codec data start */
     uint32_t cookversion;               //in network order, bigendian
@@ -80,7 +79,6 @@ typedef struct __attribute__((__packed__)){
     uint16_t js_vlc_bits;               //bigendian
     /* Stereo extradata ends here. */
 } COOKextradata;
-#pragma pack(pop)
 
 
 typedef struct {
@@ -279,16 +277,30 @@ static int init_cook_mlt(COOKContext *q) {
 /**
  * Cook indata decoding, every 32 bits are XORed with 0x37c511f2.
  * Why? No idea, some checksum/error detection method maybe.
+ *
+ * Out buffer size: extra bytes are needed to cope with
+ * padding/missalignment.
+ * Subpackets passed to the decoder can contain two, consecutive
+ * half-subpackets, of identical but arbitrary size.
+ *          1234 1234 1234 1234  extraA extraB
+ * Case 1:  AAAA BBBB              0      0
+ * Case 2:  AAAA ABBB BB--         3      3
+ * Case 3:  AAAA AABB BBBB         2      2
+ * Case 4:  AAAA AAAB BBBB BB--    1      5
+ *
  * Nice way to waste CPU cycles.
  *
- * @param in        pointer to 32bit array of indata
- * @param bits      amount of bits
- * @param out       pointer to 32bit array of outdata
+ * @param inbuffer  pointer to byte array of indata
+ * @param out       pointer to byte array of outdata
+ * @param bytes     number of bytes
  */
+#define DECODE_BYTES_PAD1(bytes) (3 - ((bytes)+3) % 4)
+#define DECODE_BYTES_PAD2(bytes) ((bytes) % 4 + DECODE_BYTES_PAD1(2 * (bytes)))
 
-static inline void decode_bytes(uint8_t* inbuffer, uint8_t* out, int bytes){
-    int i;
-    uint32_t* buf = (uint32_t*) inbuffer;
+static inline int decode_bytes(uint8_t* inbuffer, uint8_t* out, int bytes){
+    int i, off;
+    uint32_t c;
+    uint32_t* buf;
     uint32_t* obuf = (uint32_t*) out;
     /* FIXME: 64 bit platforms would be able to do 64 bits at a time.
      * I'm too lazy though, should be something like
@@ -296,14 +308,14 @@ static inline void decode_bytes(uint8_t* inbuffer, uint8_t* out, int bytes){
      *     (int64_t)out[i] = 0x37c511f237c511f2^be2me_64(int64_t)in[i]);
      * Buffer alignment needs to be checked. */
 
+    off = (uint32_t)inbuffer % 4;
+    buf = (uint32_t*) (inbuffer - off);
+    c = be2me_32((0x37c511f2 >> (off*8)) | (0x37c511f2 << (32-(off*8))));
+    bytes += 3 + off;
+    for (i = 0; i < bytes/4; i++)
+        obuf[i] = c ^ buf[i];
 
-    for(i=0 ; i<bytes/4 ; i++){
-#ifdef WORDS_BIGENDIAN
-        obuf[i] = 0x37c511f2^buf[i];
-#else
-        obuf[i] = 0xf211c537^buf[i];
-#endif
-    }
+    return off;
 }
 
 /**
@@ -950,6 +962,28 @@ static void joint_decode(COOKContext *q, float* mlt_buffer1,
 }
 
 /**
+ * First part of subpacket decoding:
+ *  decode raw stream bytes and read gain info.
+ *
+ * @param q                 pointer to the COOKContext
+ * @param inbuffer          pointer to raw stream data
+ * @param gain_ptr          array of current/prev gain pointers
+ */
+
+static inline void
+decode_bytes_and_gain(COOKContext *q, uint8_t *inbuffer, COOKgain *gain_ptr)
+{
+    int offset;
+
+    offset = decode_bytes(inbuffer, q->decoded_bytes_buffer,
+                          q->bits_per_subpacket/8);
+    init_get_bits(&q->gb, q->decoded_bytes_buffer + offset,
+                  q->bits_per_subpacket);
+    decode_gain_info(&q->gb, gain_ptr);
+}
+
+
+/**
  * Cook subpacket decoding. This function returns one decoded subpacket,
  * usually 1024 samples per channel.
  *
@@ -972,11 +1006,9 @@ static int decode_subpacket(COOKContext *q, uint8_t *inbuffer,
 //    }
 //    av_log(NULL, AV_LOG_ERROR, "\n");
 
-    decode_bytes(inbuffer, q->decoded_bytes_buffer, sub_packet_size);
-    init_get_bits(&q->gb, q->decoded_bytes_buffer, sub_packet_size*8);
-    decode_gain_info(&q->gb, &q->gain_current);
-
     if(q->nb_channels==2 && q->joint_stereo==1){
+        decode_bytes_and_gain(q, inbuffer, &q->gain_current);
+
         joint_decode(q, q->decode_buf_ptr[0], q->decode_buf_ptr[2]);
 
         /* Swap buffer pointers. */
@@ -1016,6 +1048,8 @@ static int decode_subpacket(COOKContext *q, uint8_t *inbuffer,
 
     } else if (q->nb_channels==2 && q->joint_stereo==0) {
             /* channel 0 */
+            decode_bytes_and_gain(q, inbuffer, &q->gain_current);
+
             mono_decode(q, q->decode_buf_ptr2[0]);
 
             tmp_ptr = q->decode_buf_ptr2[0];
@@ -1037,17 +1071,17 @@ static int decode_subpacket(COOKContext *q, uint8_t *inbuffer,
                 value = lrintf(q->mono_mdct_output[j]);
                 if(value < -32768) value = -32768;
                 else if(value > 32767) value = 32767;
-                outbuffer[2*j+1] = value;
+                outbuffer[2*j] = value;
             }
 
             /* channel 1 */
             //av_log(NULL,AV_LOG_ERROR,"bits = %d\n",get_bits_count(&q->gb));
-            init_get_bits(&q->gb, q->decoded_bytes_buffer, sub_packet_size*8+q->bits_per_subpacket);
+            decode_bytes_and_gain(q, inbuffer + sub_packet_size/2,
+                                  &q->gain_channel2[0]);
 
             q->gain_now_ptr = &q->gain_channel2[0];
             q->gain_previous_ptr = &q->gain_channel2[1];
 
-            decode_gain_info(&q->gb, &q->gain_channel2[0]);
             mono_decode(q, q->decode_buf_ptr[0]);
 
             tmp_ptr = q->decode_buf_ptr[0];
@@ -1069,10 +1103,12 @@ static int decode_subpacket(COOKContext *q, uint8_t *inbuffer,
                 value = lrintf(q->mono_mdct_output[j]);
                 if(value < -32768) value = -32768;
                 else if(value > 32767) value = 32767;
-                outbuffer[2*j] = value;
+                outbuffer[2*j+1] = value;
             }
 
     } else {
+        decode_bytes_and_gain(q, inbuffer, &q->gain_current);
+
         mono_decode(q, q->decode_buf_ptr[0]);
 
         /* Swap buffer pointers. */
@@ -1129,7 +1165,7 @@ static void dump_cook_context(COOKContext *q, COOKextradata *e)
 #define PRINT(a,b) av_log(NULL,AV_LOG_ERROR," %s = %d\n", a, b);
     av_log(NULL,AV_LOG_ERROR,"COOKextradata\n");
     av_log(NULL,AV_LOG_ERROR,"cookversion=%x\n",e->cookversion);
-    if (e->cookversion > MONO_COOK2) {
+    if (e->cookversion > STEREO) {
         PRINT("js_subband_start",e->js_subband_start);
         PRINT("js_vlc_bits",e->js_vlc_bits);
     }
@@ -1157,7 +1193,7 @@ static void dump_cook_context(COOKContext *q, COOKextradata *e)
 
 static int cook_decode_init(AVCodecContext *avctx)
 {
-    COOKextradata *e = avctx->extradata;
+    COOKextradata *e = (COOKextradata *)avctx->extradata;
     COOKContext *q = avctx->priv_data;
 
     /* Take care of the codec specific extradata. */
@@ -1201,19 +1237,19 @@ static int cook_decode_init(AVCodecContext *avctx)
     /* Initialize version-dependent variables */
     av_log(NULL,AV_LOG_DEBUG,"e->cookversion=%x\n",e->cookversion);
     switch (e->cookversion) {
-        case MONO_COOK1:
+        case MONO:
             if (q->nb_channels != 1) {
                 av_log(avctx,AV_LOG_ERROR,"Container channels != 1, report sample!\n");
                 return -1;
             }
-            av_log(avctx,AV_LOG_DEBUG,"MONO_COOK1\n");
+            av_log(avctx,AV_LOG_DEBUG,"MONO\n");
             break;
-        case MONO_COOK2:
+        case STEREO:
             if (q->nb_channels != 1) {
                 q->joint_stereo = 0;
                 q->bits_per_subpacket = q->bits_per_subpacket/2;
             }
-            av_log(avctx,AV_LOG_DEBUG,"MONO_COOK2\n");
+            av_log(avctx,AV_LOG_DEBUG,"STEREO\n");
             break;
         case JOINT_STEREO:
             if (q->nb_channels != 2) {
@@ -1260,9 +1296,21 @@ static int cook_decode_init(AVCodecContext *avctx)
     if(avctx->block_align >= UINT_MAX/2)
         return -1;
 
-    /* Pad the databuffer with FF_INPUT_BUFFER_PADDING_SIZE,
-       this is for the bitstreamreader. */
-    if ((q->decoded_bytes_buffer = av_mallocz((avctx->block_align+(4-avctx->block_align%4) + FF_INPUT_BUFFER_PADDING_SIZE)*sizeof(uint8_t)))  == NULL)
+    /* Pad the databuffer with:
+       DECODE_BYTES_PAD1 or DECODE_BYTES_PAD2 for decode_bytes(),
+       FF_INPUT_BUFFER_PADDING_SIZE, for the bitstreamreader. */
+    if (q->nb_channels==2 && q->joint_stereo==0) {
+        q->decoded_bytes_buffer =
+          av_mallocz(avctx->block_align/2
+                     + DECODE_BYTES_PAD2(avctx->block_align/2)
+                     + FF_INPUT_BUFFER_PADDING_SIZE);
+    } else {
+        q->decoded_bytes_buffer =
+          av_mallocz(avctx->block_align
+                     + DECODE_BYTES_PAD1(avctx->block_align)
+                     + FF_INPUT_BUFFER_PADDING_SIZE);
+    }
+    if (q->decoded_bytes_buffer == NULL)
         return -1;
 
     q->decode_buf_ptr[0] = q->decode_buffer_1;
@@ -1300,7 +1348,6 @@ static int cook_decode_init(AVCodecContext *avctx)
 #endif
     return 0;
 }
-
 
 
 AVCodec cook_decoder =
