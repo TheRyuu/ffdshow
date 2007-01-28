@@ -21,7 +21,12 @@ fr.WelcomeLabel2=Ceci installera [name] sur votre ordinateur.%n%nIl est recomman
 ru.WelcomeLabel2=Программа установит [name] на Ваш компьютер.%n%nРекомендуется закрыть все прочие приложения перед тем, как продолжить.
 ru.FileAbortRetryIgnore=Закройте все приложения, использующие ffdshow, и нажмите "Повтор". Если ситуация повторится, нажмите "Отказ", перезагрузите Ваш компьютер и попробуйте ещё раз.
 ru.FinishedRestartLabel=Для завершения установки [name] требуется перезагрузить компьютер. Произвести перезагрузку сейчас?%n%nПодсказка: избежать перезагрузки компьютера в следующий раз может помочь включение "Информация"-"Don't use ffdshow in:"-"explorer.exe" в конфигурации видеодекодера.
+; Polish
+pl.WelcomeLabel2=Instalator zainstaluje [name] na twoim komputerze.%n%nZaleca siк zamkniкcie wszystkich innych aplikacji przed kontynuowaniem procesu instalacji.
+pl.FileAbortRetryIgnore=Zamknij aplikacjк uїywaj№c№ ffdshow i wciњnij Ponуw. Jeњli problem nie ustкpuje, wciњnij Przerwij, zrestartuj komputer i ponownie uruchom instalacjк.
+pl.FinishedRestartLabel=By zakoсczyж instalacjк [name], instalator musi zrestartowaж twуj komputer. Czy chciaіbyњ zrestartowaж go teraz?%n%nPodpowiedџ: By unikn№ж restartowania komputera nastкpnym razem, zaznacz w zakіadce "Informacje" - "Nie uїywaj ffdshow w:" - "explorer.exe" w konfiguracji dekodera wideo.
 ; Add other languages here
+
 #endif
 
 [CustomMessages]
@@ -233,7 +238,55 @@ ru.spk_dolby2=Dolby ProLogic II
 ru.spk_sameasinput=совпадает со входом
 ru.spk_HRTF=Head-related transfer function (HRTF)
 
+; Polish
+pl.langid=1045
+pl.ffdshowds=ffdshow - filtr DirectShow
+pl.vfwinterface=interfejs VFW
+pl.makeavis=obsіuga skryptуw AviSynth
+pl.appplugins=Pluginy innych aplikacji:
+pl.resetsettings=Zresetuj wszystkie ustawienia ffdshow
+pl.videoformats=Dekoduj nastкpuj№ce fomaty wideo uїywaj№c ffdshow:
+pl.genericMpeg4=Ogуlne MPEG-4
+pl.rawvideo=Nieskompresowane wideo
+pl.audioformats=Dekoduj nastкpuj№ce fomaty wideo uїywaj№c ffdshow:
+pl.rawaudio=Nieskompresowane audio
+pl.defaultfilters=Wі№cz nastкpuj№ce filtry jako domyњlne:
+pl.volumenorm=Normalizacja gіoњnoњci
+pl.subtitles=Napisy
+pl.tweaks=Ustawienia dodatkowe:
+pl.skipinloop=Zawsze pomijaj odblokowywanie H.264
+pl.audioconfig=Konfiguracja dekodera audio
+pl.videoconfig=Konfiguracja dekodera wideo
+pl.vfwconfig=Konfiguracja VFW
+pl.uninstall=Odinstaluj ffdshow
+pl.runaudioconfig=Uruchom konfiguracjк dekodera audio
+pl.runvideoconfig=Uruchom konfiguracjк dekodera wideo
+pl.runvfwconfig=Uruchom konfiguracjк VFW
+pl.SelectPluginDirLabel1=Wybierz katalog pluginu %1
+pl.SelectPluginDirLabel2=Gdzie powinien zostaж zainstalowany plugin %1?
+pl.SelectPluginDirLabel3=Wybierz folder, w ktуrym instalator powinien zainstalowaж plugin %1 i wciњnij Dalej.
+
+pl.speakersetup=Ustawienia gіoњnikуw
+pl.SpeakerSetupLabel2=Wybierz rodzaj gіoњnikуw z listy poniїej, ktуry najbardziej odpowiada twojej konfiguracji. Po instalacji, ustawienia te moїesz zmieniж w zakіadce "Mikser" w konfiguracji dekodera audio.
+pl.SpeakerSetupLabel3=Rodzaj gіoњnikуw:
+pl.spk_headphone=sіuchawki
+pl.spk_stereo=stereofoniczne
+pl.spk_quadro=kwadrofoniczne
+pl.spk_5ch=3 kanaіy przednie + 2 tylne
+pl.spk_MixerDisable=wyі№cz Mikser
+pl.spk_front_3ch=3 kanaіy przednie
+pl.spk_front_2ch=2 kanaіy przednie
+pl.spk_Surround=surround (przestrzenne)
+pl.spk_Subwoofer=subwoofer (gіoњnik niskotonowy)
+pl.spk_mono=monofoniczne
+pl.spk_dolby1=zgodne z Dolby Surround/ProLogic
+pl.spk_dolby2=zgodne z Dolby ProLogic II
+pl.spk_sameasinput=takie same jak na wejњciu audio
+pl.spk_HRTF=Head-related transfer function (HRTF)
+pl.spk_ExpandStereo=Rozszerz sygnaі stereo (przestrzennie)
+pl.spk_VoiceControl=Kontrola gіosu (gіoњnoњж)
 ; Add other languages here
+
 ba.langid=1069
 br.langid=1046
 ca.langid=1027
@@ -244,7 +297,6 @@ fi.langid=1035
 hu.langid=1038
 it.langid=1040
 no.langid=1044
-pl.langid=1045
 pr.langid=2070
 sk.langid=1051
 sn.langid=1060
