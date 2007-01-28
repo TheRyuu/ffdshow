@@ -577,6 +577,7 @@ HRESULT TimgFilterNoise::process(TfilterQueue::iterator it,TffPict &pict,const T
      (this->*processChromaFc)(cfg,srcU,srcV,dstU,dstV);
     }
   }  
+ _mm_empty();
  return parent->deliverSample(++it,pict);
 }
 #pragma warning(pop)
