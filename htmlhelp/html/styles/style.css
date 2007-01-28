@@ -41,7 +41,7 @@ ul.download {
   list-style-type: square; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 90%
 }
 ul.links {
-  list-style-image: url(../images/arrow.gif); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 90%
+  list-style-image: url(../images/arrow.png); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 90%
 }
 a.nav:link {
 	color: rgb(0,0,0); text-decoration: none; font-weight: bold
