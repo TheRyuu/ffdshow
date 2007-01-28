@@ -462,7 +462,7 @@ static inline int decode_subframe(FLACContext *s, int channel)
     return 0;
 }
 
-static int decode_frame(FLACContext *s, int alloc_data_size)
+static int decode_frame(FLACContext *s)
 {
     int blocksize_code, sample_rate_code, sample_size_code, assignment, i, crc8;
     int decorrelation, bps, blocksize, samplerate;
@@ -523,9 +523,6 @@ static int decode_frame(FLACContext *s, int alloc_data_size)
         av_log(s->avctx, AV_LOG_ERROR, "blocksize %d > %d\n", blocksize, s->max_blocksize);
         return -1;
     }
-
-    if(blocksize * s->channels * sizeof(int16_t) > alloc_data_size)
-        return -1;
 
     if (sample_rate_code == 0){
         samplerate= s->samplerate;
@@ -590,9 +587,6 @@ static int flac_decode_frame(AVCodecContext *avctx,
     FLACContext *s = avctx->priv_data;
     int tmp = 0, i, j = 0, input_buf_size = 0;
     int16_t *samples = data;
-    int alloc_data_size= *data_size;
-
-    *data_size=0;
 
     if(s->max_framesize == 0){
         s->max_framesize= 65536; // should hopefully be enough for the first header
@@ -631,7 +625,7 @@ static int flac_decode_frame(AVCodecContext *avctx,
             goto end; // we may not have enough bits left to decode a frame, so try next time
         }
         skip_bits(&s->gb, 16);
-        if (decode_frame(s, alloc_data_size) < 0){
+        if (decode_frame(s) < 0){
             av_log(s->avctx, AV_LOG_ERROR, "decode_frame() failed\n");
             s->bitstream_size=0;
             s->bitstream_index=0;
