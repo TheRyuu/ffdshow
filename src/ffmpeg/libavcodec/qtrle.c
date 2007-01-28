@@ -94,15 +94,15 @@ static void qtrle_decode_4bpp(QtrleContext *s)
 
     /* fetch the header */
     CHECK_STREAM_PTR(2);
-    header = BE_16(&s->buf[stream_ptr]);
+    header = AV_RB16(&s->buf[stream_ptr]);
     stream_ptr += 2;
 
     /* if a header is present, fetch additional decoding parameters */
     if (header & 0x0008) {
         CHECK_STREAM_PTR(8);
-        start_line = BE_16(&s->buf[stream_ptr]);
+        start_line = AV_RB16(&s->buf[stream_ptr]);
         stream_ptr += 4;
-        lines_to_change = BE_16(&s->buf[stream_ptr]);
+        lines_to_change = AV_RB16(&s->buf[stream_ptr]);
         stream_ptr += 4;
     } else {
         start_line = 0;
@@ -185,15 +185,15 @@ static void qtrle_decode_8bpp(QtrleContext *s)
 
     /* fetch the header */
     CHECK_STREAM_PTR(2);
-    header = BE_16(&s->buf[stream_ptr]);
+    header = AV_RB16(&s->buf[stream_ptr]);
     stream_ptr += 2;
 
     /* if a header is present, fetch additional decoding parameters */
     if (header & 0x0008) {
         CHECK_STREAM_PTR(8);
-        start_line = BE_16(&s->buf[stream_ptr]);
+        start_line = AV_RB16(&s->buf[stream_ptr]);
         stream_ptr += 4;
-        lines_to_change = BE_16(&s->buf[stream_ptr]);
+        lines_to_change = AV_RB16(&s->buf[stream_ptr]);
         stream_ptr += 4;
     } else {
         start_line = 0;
@@ -267,15 +267,15 @@ static void qtrle_decode_16bpp(QtrleContext *s)
 
     /* fetch the header */
     CHECK_STREAM_PTR(2);
-    header = BE_16(&s->buf[stream_ptr]);
+    header = AV_RB16(&s->buf[stream_ptr]);
     stream_ptr += 2;
 
     /* if a header is present, fetch additional decoding parameters */
     if (header & 0x0008) {
         CHECK_STREAM_PTR(8);
-        start_line = BE_16(&s->buf[stream_ptr]);
+        start_line = AV_RB16(&s->buf[stream_ptr]);
         stream_ptr += 4;
-        lines_to_change = BE_16(&s->buf[stream_ptr]);
+        lines_to_change = AV_RB16(&s->buf[stream_ptr]);
         stream_ptr += 4;
     } else {
         start_line = 0;
@@ -297,7 +297,7 @@ static void qtrle_decode_16bpp(QtrleContext *s)
                 /* decode the run length code */
                 rle_code = -rle_code;
                 CHECK_STREAM_PTR(2);
-                rgb16 = BE_16(&s->buf[stream_ptr]);
+                rgb16 = AV_RB16(&s->buf[stream_ptr]);
                 stream_ptr += 2;
 
                 CHECK_PIXEL_PTR(rle_code * 2);
@@ -312,7 +312,7 @@ static void qtrle_decode_16bpp(QtrleContext *s)
 
                 /* copy pixels directly to output */
                 while (rle_code--) {
-                    rgb16 = BE_16(&s->buf[stream_ptr]);
+                    rgb16 = AV_RB16(&s->buf[stream_ptr]);
                     stream_ptr += 2;
                     *(unsigned short *)(&rgb[pixel_ptr]) = rgb16;
                     pixel_ptr += 2;
@@ -345,15 +345,15 @@ static void qtrle_decode_24bpp(QtrleContext *s)
 
     /* fetch the header */
     CHECK_STREAM_PTR(2);
-    header = BE_16(&s->buf[stream_ptr]);
+    header = AV_RB16(&s->buf[stream_ptr]);
     stream_ptr += 2;
 
     /* if a header is present, fetch additional decoding parameters */
     if (header & 0x0008) {
         CHECK_STREAM_PTR(8);
-        start_line = BE_16(&s->buf[stream_ptr]);
+        start_line = AV_RB16(&s->buf[stream_ptr]);
         stream_ptr += 4;
-        lines_to_change = BE_16(&s->buf[stream_ptr]);
+        lines_to_change = AV_RB16(&s->buf[stream_ptr]);
         stream_ptr += 4;
     } else {
         start_line = 0;
@@ -425,15 +425,15 @@ static void qtrle_decode_32bpp(QtrleContext *s)
 
     /* fetch the header */
     CHECK_STREAM_PTR(2);
-    header = BE_16(&s->buf[stream_ptr]);
+    header = AV_RB16(&s->buf[stream_ptr]);
     stream_ptr += 2;
 
     /* if a header is present, fetch additional decoding parameters */
     if (header & 0x0008) {
         CHECK_STREAM_PTR(8);
-        start_line = BE_16(&s->buf[stream_ptr]);
+        start_line = AV_RB16(&s->buf[stream_ptr]);
         stream_ptr += 4;
-        lines_to_change = BE_16(&s->buf[stream_ptr]);
+        lines_to_change = AV_RB16(&s->buf[stream_ptr]);
         stream_ptr += 4;
     } else {
         start_line = 0;
