@@ -19,8 +19,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifdef CONFIG_SNOW
-
 #ifndef _SNOW_H
 #define _SNOW_H
 
@@ -129,9 +127,13 @@ extern void ff_snow_vertical_compose97i(DWTELEM *b0, DWTELEM *b1, DWTELEM *b2, D
 extern void ff_snow_horizontal_compose97i(DWTELEM *b, int width);
 extern void ff_snow_inner_add_yblock(uint8_t *obmc, const int obmc_stride, uint8_t * * block, int b_w, int b_h, int src_x, int src_y, int src_stride, slice_buffer * sb, int add, uint8_t * dst8);
 
+#ifdef CONFIG_ENCODERS
 int w53_32_c(void *v, uint8_t * pix1, uint8_t * pix2, int line_size, int h);
 int w97_32_c(void *v, uint8_t * pix1, uint8_t * pix2, int line_size, int h);
-
+#else
+static int w53_32_c(void *v, uint8_t * pix1, uint8_t * pix2, int line_size, int h) {assert (0);}
+static int w97_32_c(void *v, uint8_t * pix1, uint8_t * pix2, int line_size, int h) {assert (0);}
+#endif
 
 /* C bits used by mmx/sse2/altivec */
 
@@ -172,5 +174,3 @@ static av_always_inline void snow_horizontal_compose_liftS_lead_out(int i, DWTEL
 }
 
 #endif
-
-#endif /*CONFIG_SNOW*/

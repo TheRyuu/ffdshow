@@ -467,7 +467,7 @@ void TcodecsPageVideo::fillCodecs(void)
    formats.push_back(Tformat(_l("Ultimotion")    ,IDFF_ulti,IDFF_MOVIE_LAVC,_l("IBM Ultimotion Video (ULTI)")));
    formats.push_back(Tformat(_l("Winnov V1")     ,IDFF_wnv1,IDFF_MOVIE_LAVC,_l("Winnov WNV1 Video (WNV1)")));
    //formats.push_back(Tformat(_l("Vmware Video"),IDFF_vmnc,IDFF_MOVIE_LAVC,_l("broken!")));
-   //formats.push_back(Tformat(_l("SNOW")        ,IDFF_snow,IDFF_MOVIE_LAVC,_l("incomplete!")));
+   formats.push_back(Tformat(_l("Snow")        ,IDFF_snow,IDFF_MOVIE_LAVC,_l("")));
    formats.push_back(Tformat(_l("Avisynth")      ,IDFF_avisV,IDFF_MOVIE_AVIS,_l("AVIS (Avisynth AVI files)")));
    for (Tformats::iterator f=formats.begin();f!=formats.end();f++)
     {

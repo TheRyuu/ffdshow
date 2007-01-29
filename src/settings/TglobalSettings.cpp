@@ -295,7 +295,7 @@ TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imod
    IDFF_vixl           ,&TglobalSettingsDecVideo::vixl           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_aasc           ,&TglobalSettingsDecVideo::aasc           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_fps1           ,&TglobalSettingsDecVideo::fps1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   //IDFF_snow           ,&TglobalSettingsDecVideo::snow           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+   IDFF_snow           ,&TglobalSettingsDecVideo::snow           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_avisV          ,&TglobalSettingsDecVideo::avis           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_rawv           ,&TglobalSettingsDecVideo::rawv           ,0,0,_l(""),0,
      NULL,0,
@@ -394,7 +394,7 @@ void TglobalSettingsDecVideo::reg_op_codec(TregOp &t,TregOp *t2)
  _reg_op_codec(IDFF_vixl,t,t2,_l("vixl"),vixl,0);
  _reg_op_codec(IDFF_aasc,t,t2,_l("aasc"),aasc,0);
  _reg_op_codec(IDFF_fps1,t,t2,_l("fps1"),fps1,0);
- //_reg_op_codec(IDFF_snow,t,t2,_l("snow"),snow,0);
+ _reg_op_codec(IDFF_snow,t,t2,_l("snow"),snow,0);
  _reg_op_codec(0,t,t2,_l("needCodecFix"),needCodecFix,1);
 }
 
@@ -481,7 +481,7 @@ void TglobalSettingsDecVideo::load(void)
  fixMissing(aasc,IDFF_MOVIE_LAVC);
  fixMissing(fps1,IDFF_MOVIE_LAVC);
  fixMissing(avis,IDFF_MOVIE_AVIS);
- //fixMissing(snow,IDFF_MOVIE_LAVC);
+ fixMissing(snow,IDFF_MOVIE_LAVC);
 }
 
 #define FF_FOURCC1_CODEC(fourCC1,decoder,codec)  \
@@ -587,7 +587,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(DUCK,duck & rawmask,CODEC_ID_TRUEMOTION1) \
  FF_FOURCC1_OP(TM20,duck & rawmask,CODEC_ID_TRUEMOTION2) \
  FF_FOURCC1_OP(TSCC,tscc & rawmask,CODEC_ID_TSCC) \
- /*FF_FOURCC1_OP(SNOW,snow && rawmask,CODEC_ID_SNOW)*/ \
+ FF_FOURCC1_OP(SNOW,snow && rawmask,CODEC_ID_SNOW) \
  FF_FOURCC1_OP(QPEG,qpeg & rawmask,CODEC_ID_QPEG) \
  FF_FOURCC1_OP(Q1_0,qpeg & rawmask,CODEC_ID_QPEG) \
  FF_FOURCC1_OP(Q1_1,qpeg & rawmask,CODEC_ID_QPEG) \

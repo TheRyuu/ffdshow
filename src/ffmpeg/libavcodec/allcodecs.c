@@ -60,9 +60,7 @@ void avcodec_register_all(void)
     register_avcodec(&wmv1_encoder);
     register_avcodec(&wmv2_encoder);
 #if __STDC_VERSION__ >= 199901L
-	#ifdef CONFIG_SNOW
     register_avcodec(&snow_encoder);
-	#endif
 #endif
     register_avcodec(&dvvideo_encoder);
 #endif
@@ -108,9 +106,7 @@ void avcodec_register_all(void)
     register_avcodec(&mace3_decoder);
     register_avcodec(&mace6_decoder);
 #if __STDC_VERSION__ >= 199901L
-        #ifdef CONFIG_SNOW
     register_avcodec(&snow_decoder);
-        #endif
 #endif
     register_avcodec(&asv1_decoder);
     register_avcodec(&asv2_decoder);

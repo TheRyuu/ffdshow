@@ -35,10 +35,8 @@
 #include "snow.h"
 #include "skl_dct.h"
 
-#ifdef CONFIG_SNOW
 /* snow.c */
 void ff_spatial_dwt(int *buffer, int width, int height, int stride, int type, int decomposition_count);
-#endif
 
 /* vorbis.c */
 void vorbis_inverse_coupling(float *mag, float *ang, int blocksize);
@@ -4071,12 +4069,10 @@ void dsputil_init(DSPContext* c, AVCodecContext *avctx)
     c->vsse[4]= vsse_intra16_c;
     c->nsse[0]= nsse16_c;
     c->nsse[1]= nsse8_c;
-#ifdef CONFIG_SNOW
     c->w53[0]= w53_16_c;
     c->w53[1]= w53_8_c;
     c->w97[0]= w97_16_c;
     c->w97[1]= w97_8_c;
-#endif
 
     c->add_bytes= add_bytes_c;
     c->diff_bytes= diff_bytes_c;
@@ -4100,11 +4096,9 @@ void dsputil_init(DSPContext* c, AVCodecContext *avctx)
     c->add_8x8basis= add_8x8basis_c;
 
 #if __STDC_VERSION__ >= 199901L
-#ifdef CONFIG_SNOW
     c->vertical_compose97i = ff_snow_vertical_compose97i;
     c->horizontal_compose97i = ff_snow_horizontal_compose97i;
     c->inner_add_yblock = ff_snow_inner_add_yblock;
-#endif
 #endif
 
     c->vorbis_inverse_coupling = vorbis_inverse_coupling;

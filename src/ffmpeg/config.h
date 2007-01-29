@@ -48,7 +48,6 @@
 
 
 /* disabled stuff */
-//#define CONFIG_SNOW 1
 //#define CONFIG_MP3ADU_DECODER 1
 //#define CONFIG_MP3ON4_DECODER 1
 //#define CONFIG_MP2_DECODER 1
