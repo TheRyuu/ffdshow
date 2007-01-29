@@ -2,10 +2,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 796
+#define tryout_revision = 850
 #define buildyear = 2007
 #define buildmonth = '01'
-#define buildday = '18'
+#define buildday = '29'
 
 ; Build specific options
 #define unicode_required = True
@@ -167,10 +167,8 @@ Name: video\divx; Description: DivX; Check: CheckTaskVideoXvid('dx50'); Componen
 Name: video\divx; Description: DivX; Check: NOT CheckTaskVideoXvid('dx50'); Components: ffdshow; Flags: unchecked
 Name: video\xvid; Description: Xvid; Check: CheckTaskVideoXvid('xvid'); Components: ffdshow
 Name: video\xvid; Description: Xvid; Check: NOT CheckTaskVideoXvid('xvid'); Components: ffdshow; Flags: unchecked
-Name: video\mp4v; Description: MP4V; Check: CheckTaskVideoXvid('divx'); Components: ffdshow
-Name: video\mp4v; Description: MP4V; Check: NOT CheckTaskVideoXvid('divx'); Components: ffdshow; Flags: unchecked
-Name: video\mpeg4; Description: {cm:genericMpeg4}; Check: CheckTaskVideoXvid('_3iv'); Components: ffdshow
-Name: video\mpeg4; Description: {cm:genericMpeg4}; Check: NOT CheckTaskVideoXvid('_3iv'); Components: ffdshow; Flags: unchecked
+Name: video\mpeg4; Description: {cm:genericMpeg4}; Check: CheckTaskVideoXvid('mp4v'); Components: ffdshow
+Name: video\mpeg4; Description: {cm:genericMpeg4}; Check: NOT CheckTaskVideoXvid('mp4v'); Components: ffdshow; Flags: unchecked
 Name: video\flv1; Description: FLV1; Check: CheckTaskVideo('flv1', 1, True); Components: ffdshow
 Name: video\flv1; Description: FLV1; Check: NOT CheckTaskVideo('flv1', 1, True); Components: ffdshow; Flags: unchecked
 Name: video\h263; Description: H.263; Check: CheckTaskVideo('h263', 1, True); Components: ffdshow
