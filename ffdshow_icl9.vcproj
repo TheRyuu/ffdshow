@@ -672,7 +672,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\src\TcpuUsage.cpp">
+				RelativePath="src\TcpuUsage.cpp">
 			</File>
 			<File
 				RelativePath=".\src\Teval.cpp">
@@ -925,7 +925,7 @@
 				RelativePath="src\stdafx.h">
 			</File>
 			<File
-				RelativePath=".\src\TcpuUsage.h">
+				RelativePath="src\TcpuUsage.h">
 			</File>
 			<File
 				RelativePath=".\src\Tdll.h">
@@ -1255,6 +1255,9 @@
 			</File>
 			<File
 				RelativePath=".\src\subtitles\TsubtitleDVD.h">
+			</File>
+			<File
+				RelativePath=".\src\subtitles\TsubtitleProps.h">
 			</File>
 			<File
 				RelativePath="src\subtitles\Tsubtitles.cpp">
