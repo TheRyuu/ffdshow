@@ -234,8 +234,8 @@ TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imod
      _l("buildHistogram"),0,
    IDFF_xvid           ,&TglobalSettingsDecVideo::xvid           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_div3           ,&TglobalSettingsDecVideo::div3           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_divx           ,&TglobalSettingsDecVideo::divx           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_dx50           ,&TglobalSettingsDecVideo::dx50           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+   IDFF_mp4v           ,&TglobalSettingsDecVideo::mp4v           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_fvfw           ,&TglobalSettingsDecVideo::fvfw           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_mp43           ,&TglobalSettingsDecVideo::mp43           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_mp42           ,&TglobalSettingsDecVideo::mp42           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
@@ -267,7 +267,6 @@ TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imod
    IDFF_mpegAVI        ,&TglobalSettingsDecVideo::mpegAVI        ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_em2v           ,&TglobalSettingsDecVideo::em2v           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_theo           ,&TglobalSettingsDecVideo::theo           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_3ivx           ,&TglobalSettingsDecVideo::_3iv           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_svq1           ,&TglobalSettingsDecVideo::svq1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_svq3           ,&TglobalSettingsDecVideo::svq3           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_qtrpza         ,&TglobalSettingsDecVideo::qtrpza         ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
@@ -332,8 +331,8 @@ void TglobalSettingsDecVideo::reg_op_codec(TregOp &t,TregOp *t2)
 {
  _reg_op_codec(IDFF_xvid,t,t2,_l("xvid"),xvid,0);
  _reg_op_codec(IDFF_div3,t,t2,_l("div3"),div3,0);
- _reg_op_codec(IDFF_divx,t,t2,_l("divx"),divx,0);
  _reg_op_codec(IDFF_dx50,t,t2,_l("dx50"),dx50,0);
+ _reg_op_codec(IDFF_mp4v,t,t2,_l("mp4v"),mp4v,0);
  _reg_op_codec(IDFF_mp43,t,t2,_l("mp43"),mp43,0);
  _reg_op_codec(IDFF_mp42,t,t2,_l("mp42"),mp42,0);
  _reg_op_codec(IDFF_mp41,t,t2,_l("mp41"),mp41,0);
@@ -366,7 +365,6 @@ void TglobalSettingsDecVideo::reg_op_codec(TregOp &t,TregOp *t2)
  _reg_op_codec(IDFF_fvfw,t,t2,_l("fvfw"),fvfw,IDFF_MOVIE_LAVC);
  _reg_op_codec(IDFF_asv1,t,t2,_l("asv1"),asv1,0);
  _reg_op_codec(IDFF_vcr1,t,t2,_l("vcr1"),vcr1,0);
- _reg_op_codec(IDFF_3ivx,t,t2,_l("_3iv"),_3iv,0);
  _reg_op_codec(IDFF_svq1,t,t2,_l("svq1"),svq1,0);
  _reg_op_codec(IDFF_svq3,t,t2,_l("svq3"),svq3,0);
  _reg_op_codec(IDFF_qtrpza,t,t2,_l("qtrpza"),qtrpza,0);
@@ -421,10 +419,9 @@ void TglobalSettingsDecVideo::load(void)
  
  fixMissing(xvid,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
  fixMissing(div3,IDFF_MOVIE_LAVC);
- fixMissing(divx,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
  fixMissing(dx50,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
+ fixMissing(mp4v,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
  fixMissing(fvfw,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
- fixMissing(_3iv,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
  fixMissing(mp43,IDFF_MOVIE_LAVC);
  fixMissing(mp42,IDFF_MOVIE_LAVC);
  fixMissing(mp41,IDFF_MOVIE_LAVC);
@@ -500,13 +497,13 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC_OP (FFDS,fvfw & rawmask,c_mpeg4) \
  FF_FOURCC_OP (FVFW,fvfw & rawmask,c_mpeg4) \
  FF_FOURCC_OP (XVID,xvid & rawmask,c_mpeg4) \
- FF_FOURCC_OP (DIVX,divx & rawmask,c_mpeg4) \
+ FF_FOURCC_OP (DIVX,mp4v & rawmask,c_mpeg4) \
  FF_FOURCC_OP (DX50,dx50 & rawmask,c_mpeg4) \
- FF_FOURCC_OP (MP4V,divx & rawmask,c_mpeg4) \
- FF_FOURCC_OP (3IVX,_3iv & rawmask,c_mpeg4) \
- FF_FOURCC_OP (WV1F,_3iv & rawmask,c_mpeg4) \
- FF_FOURCC_OP (FMP4,_3iv & rawmask,c_mpeg4) \
- FF_FOURCC_OP (SMP4,_3iv & rawmask,c_mpeg4) \
+ FF_FOURCC_OP (MP4V,mp4v & rawmask,c_mpeg4) \
+ FF_FOURCC_OP (3IVX,mp4v & rawmask,c_mpeg4) \
+ FF_FOURCC_OP (WV1F,mp4v & rawmask,c_mpeg4) \
+ FF_FOURCC_OP (FMP4,mp4v & rawmask,c_mpeg4) \
+ FF_FOURCC_OP (SMP4,mp4v & rawmask,c_mpeg4) \
  FF_FOURCC1_OP(DIV3,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
  FF_FOURCC1_OP(DVX3,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
  FF_FOURCC1_OP(MP43,mp43 & rawmask,CODEC_ID_MSMPEG4V3) \
@@ -636,17 +633,17 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(RGB15MPLAYER,rawv==1 || rawv==3 || rawv==FOURCC_RGB5,CODEC_ID_BGR5) \
  FF_FOURCC1_OP(RGB16MPLAYER,rawv==1 || rawv==3 || rawv==FOURCC_RGB6,CODEC_ID_BGR6) \
  /* exotic */ \
- FF_FOURCC_OP (MP4S,divx & rawmask,c_mpeg4) \
- FF_FOURCC_OP (M4S2,divx & rawmask,c_mpeg4) \
+ FF_FOURCC_OP (MP4S,mp4v & rawmask,c_mpeg4) \
+ FF_FOURCC_OP (M4S2,mp4v & rawmask,c_mpeg4) \
  FF_FOURCC1_OP(COL1,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
  FF_FOURCC_OP (BLZ0,dx50 & rawmask,c_mpeg4) \
  FF_FOURCC_OP (DXGM,dx50 & rawmask,c_mpeg4) \
- FF_FOURCC_OP (3IV2,_3iv & rawmask,c_mpeg4) \
- FF_FOURCC_OP (LMP4,_3iv & rawmask,c_mpeg4) \
- FF_FOURCC_OP (RMP4,_3iv & rawmask,c_mpeg4) \
- FF_FOURCC_OP (DM4V,_3iv & rawmask,c_mpeg4) \
- FF_FOURCC_OP (HDX4,_3iv & rawmask,c_mpeg4) \
- FF_FOURCC_OP (UMP4,_3iv & rawmask,c_mpeg4) \
+ FF_FOURCC_OP (3IV2,mp4v & rawmask,c_mpeg4) \
+ FF_FOURCC_OP (LMP4,mp4v & rawmask,c_mpeg4) \
+ FF_FOURCC_OP (RMP4,mp4v & rawmask,c_mpeg4) \
+ FF_FOURCC_OP (DM4V,mp4v & rawmask,c_mpeg4) \
+ FF_FOURCC_OP (HDX4,mp4v & rawmask,c_mpeg4) \
+ FF_FOURCC_OP (UMP4,mp4v & rawmask,c_mpeg4) \
  FF_FOURCC_OP (XVIX,xvid & rawmask,c_mpeg4) \
  FF_FOURCC1_OP(DIV4,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
  FF_FOURCC1_OP(DIV5,div3 & rawmask,CODEC_ID_MSMPEG4V3) \

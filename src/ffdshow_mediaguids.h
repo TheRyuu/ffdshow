@@ -96,6 +96,7 @@
 #define FOURCC_UMP4 mmioFOURCC('U','M','P','4')
 #define FOURCC_3IV2 mmioFOURCC('3','I','V','2')
 #define FOURCC_3IVX mmioFOURCC('3','I','V','X')
+#define FOURCC_NDIG mmioFOURCC('N','D','I','G')
 #define FOURCC_LMP4 mmioFOURCC('L','M','P','4')
 #define FOURCC_RMP4 mmioFOURCC('R','M','P','4')
 #define FOURCC_DM4V mmioFOURCC('D','M','4','V')

@@ -70,6 +70,7 @@ DEFINE_GUID(CLSID_DWSTRINGW, 0xa0606860, 0x51be, 0x4cf6, 0x99, 0xc0, 0x7c, 0xe5,
 #define FOURCC_hfyu mmioFOURCC('h','f','y','u')
 #define FOURCC_3iv2 mmioFOURCC('3','i','v','2')
 #define FOURCC_3ivx mmioFOURCC('3','i','v','x')
+#define FOURCC_ndig mmioFOURCC('n','d','i','g')
 #define FOURCC_mpg2 mmioFOURCC('m','p','g','2')
 #define FOURCC_mjpg mmioFOURCC('m','j','p','g')
 #define FOURCC_mjpa mmioFOURCC('m','j','p','a')
@@ -144,6 +145,8 @@ DEFINE_GUID_FOURCC(3IV2)
 DEFINE_GUID_FOURCC(3iv2)
 DEFINE_GUID_FOURCC(3IVX)
 DEFINE_GUID_FOURCC(3ivx)
+DEFINE_GUID_FOURCC(NDIG)
+DEFINE_GUID_FOURCC(ndig)
 DEFINE_GUID_FOURCC(MPG2)
 DEFINE_GUID_FOURCC(mpg2)
 DEFINE_GUID_FOURCC(MJPG)
@@ -251,6 +254,8 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]=
  { &MEDIATYPE_Video, &MEDIASUBTYPE_3iv2   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_3IVX   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_3ivx   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_NDIG   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_ndig   },
  // MPEG1 & 2 Video MediaSubType & FourCCs
  { &MEDIATYPE_Video, &MEDIASUBTYPE_MPEG1Packet   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_MPEG1Payload   },

@@ -713,7 +713,7 @@
 
 #define IDFF_xvid               1001 //are AVIs with this FOURCC played by ffdshow?
 #define IDFF_div3               1002
-#define IDFF_divx               1003
+#define IDFF_mp4v               1003
 #define IDFF_dx50               1004
 #define IDFF_fvfw               1022
 #define IDFF_mp43               1005
@@ -753,7 +753,6 @@
 #define IDFF_rawv               1009 // 0 - unsupported, 1 - all, 2 - all YUV, 3 - all RGB, else FOURCC of accepted colorspace
 #define IDFF_isDyInterlaced     1330 // enable height dependant interlaced colorspace conversions
 #define IDFF_dyInterlaced       1331
-#define IDFF_3ivx               1024
 #define IDFF_svq1               1025
 #define IDFF_svq3               1026
 #define IDFF_cram               1027
