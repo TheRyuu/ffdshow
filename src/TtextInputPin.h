@@ -14,6 +14,7 @@ private:
  int type;
  REFERENCE_TIME segmentStart;
  unsigned char *extradata;unsigned int extradatasize;
+ bool utf8;
 protected:
  virtual HRESULT CheckMediaType(const CMediaType *mtIn);
  virtual HRESULT SetMediaType(const CMediaType* mtIn);

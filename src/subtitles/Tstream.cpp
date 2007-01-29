@@ -61,32 +61,78 @@ char* Tstream::ugets(char *buf0,int len) const
   {
    case ENC_UTF8:
     {
-     char b[3];char bA[10];
-     while (read(&b[0],1,sizeof(b[0]))==sizeof(b[0]))
-      {        
+     wchar_t unicodeBuf[MAX_SUBTITLE_LENGTH+1];
+     char srcBuf[MAX_SUBTITLE_LENGTH*2+1];
+     unicodeBuf[MAX_SUBTITLE_LENGTH]=0;srcBuf[MAX_SUBTITLE_LENGTH]=0;
+
+     // read a line
+     int count=0;
+     char b;
+     while (read(&b,1,sizeof(b))==sizeof(b))
+      {
        eof=false;
-       char c='?';
-       if(!(b[0]&0x80)) // 0xxxxxxx
-        c=char(b[0]&0x7f);
-       else if ((b[0]&0xe0)==0xc0) // 110xxxxx 10xxxxxx
+       if (count>MAX_SUBTITLE_LENGTH*2-1) break;
+       if(!(b&0x80)) // 0xxxxxxx
+        srcBuf[count++]=b;
+       else if ((b&0xe0)==0xc0) // 110xxxxx 10xxxxxx
         {
-         if (read(&b[1],1,sizeof(b[0]))!=sizeof(b[0]))
+         srcBuf[count++]=b;
+         if (read(&b,1,sizeof(b))==sizeof(b))
+          {
+           if (count>MAX_SUBTITLE_LENGTH*2-1) break;
+           srcBuf[count++]=b;
+          }
+         else
           break;
-         c=*utf8toAnsi(b,2,bA);
         }
-       else if ((b[0]&0xf0)==0xe0) // 1110xxxx 10xxxxxx 10xxxxxx
+       else if ((b&0xf0)==0xe0) // 1110xxxx 10xxxxxx 10xxxxxx
         {
-         if (read(&b[1],1,sizeof(b[0]))!=sizeof(b[0])) 
+         srcBuf[count++]=b;
+         if (read(&b,1,sizeof(b))==sizeof(b)) 
+          {
+           if (count>MAX_SUBTITLE_LENGTH*2-1) break;
+           srcBuf[count++]=b;
+          }
+         else
           break;
-         if (read(&b[2],1,sizeof(b[0]))!=sizeof(b[0])) 
+         if (read(&b,1,sizeof(b))==sizeof(b)) 
+          {
+           if (count>MAX_SUBTITLE_LENGTH*2-1) break;
+           srcBuf[count++]=b;
+          }
+         else
           break;
-         c=*utf8toAnsi(b,3,bA);
         }
-       if (c=='\r') {if (crln) *buf++=c;wasr=true;continue;}
-       if (c=='\n') {if (utod &&!wasr) *buf++='\r';if (crln) *buf++=c;break;}
-       *buf++=c;
+       if (b=='\r')
+        {
+         if (crln)
+          {
+           if (count>MAX_SUBTITLE_LENGTH*2-1) break;
+           srcBuf[count++]=b;
+          }
+         wasr=true;
+         continue;
+        }
+       if (b=='\n')
+        {
+         if (utod &&!wasr)
+          {
+           if (count>MAX_SUBTITLE_LENGTH*2-1) break;
+           srcBuf[count++]='\r';
+          }
+         if (crln)
+          {
+           if (count>MAX_SUBTITLE_LENGTH*2-1) break;
+           srcBuf[count++]=b;
+          }
+         break;
+        }
       }
-     *buf='\0';
+     if (eof) break;
+     srcBuf[count]=0;
+     int unicodeLen=MultiByteToWideChar(CP_UTF8,0,srcBuf,-1,unicodeBuf,MAX_SUBTITLE_LENGTH*2);
+     int ansiLen=WideCharToMultiByte(CP_ACP,0,unicodeBuf,unicodeLen,srcBuf,MAX_SUBTITLE_LENGTH*2,NULL,NULL);
+     memcpy(buf0,srcBuf,ansiLen<len ? ansiLen : len);
      break;
     }
    case ENC_LE16:
@@ -180,32 +226,77 @@ wchar_t* Tstream::fgets(wchar_t *buf0,int len) const
     }
    case ENC_UTF8:
     {
-     char b[3];wchar_t bA[10];
-     while (read(&b[0],1,sizeof(b[0]))==sizeof(b[0]))
-      {        
+     wchar_t unicodeBuf[MAX_SUBTITLE_LENGTH+1];
+     char srcBuf[MAX_SUBTITLE_LENGTH+1];
+     unicodeBuf[MAX_SUBTITLE_LENGTH]=0;srcBuf[MAX_SUBTITLE_LENGTH]=0;
+
+     // read a line
+     int count=0;
+     char b;
+     while (read(&b,1,sizeof(b))==sizeof(b))
+      {
        eof=false;
-       wchar_t c='?';
-       if(!(b[0]&0x80)) // 0xxxxxxx
-        c=char(b[0]&0x7f);
-       else if ((b[0]&0xe0)==0xc0) // 110xxxxx 10xxxxxx
+       if (count>MAX_SUBTITLE_LENGTH-1) break;
+       if(!(b&0x80)) // 0xxxxxxx
+        srcBuf[count++]=b;
+       else if ((b&0xe0)==0xc0) // 110xxxxx 10xxxxxx
         {
-         if (read(&b[1],1,sizeof(b[0]))!=sizeof(b[0]))
+         srcBuf[count++]=b;
+         if (read(&b,1,sizeof(b))==sizeof(b))
+          {
+           if (count>MAX_SUBTITLE_LENGTH-1) break;
+           srcBuf[count++]=b;
+          }
+         else
           break;
-         c=*utf8toUnicode(b,2,bA);
         }
-       else if ((b[0]&0xf0)==0xe0) // 1110xxxx 10xxxxxx 10xxxxxx
+       else if ((b&0xf0)==0xe0) // 1110xxxx 10xxxxxx 10xxxxxx
         {
-         if (read(&b[1],1,sizeof(b[0]))!=sizeof(b[0])) 
+         srcBuf[count++]=b;
+         if (read(&b,1,sizeof(b))==sizeof(b)) 
+          {
+           if (count>MAX_SUBTITLE_LENGTH-1) break;
+           srcBuf[count++]=b;
+          }
+         else
           break;
-         if (read(&b[2],1,sizeof(b[0]))!=sizeof(b[0])) 
+         if (read(&b,1,sizeof(b))==sizeof(b)) 
+          {
+           if (count>MAX_SUBTITLE_LENGTH-1) break;
+           srcBuf[count++]=b;
+          }
+         else
           break;
-         c=*utf8toUnicode(b,3,bA);
         }
-       if (c=='\r') {if (crln) *buf++=c;wasr=true;continue;}
-       if (c=='\n') {if (utod &&!wasr) *buf++='\r';if (crln) *buf++=c;break;}
-       *buf++=c;
+       if (b=='\r')
+        {
+         if (crln)
+          {
+           if (count>MAX_SUBTITLE_LENGTH-1) break;
+           srcBuf[count++]=b;
+          }
+         wasr=true;
+         continue;
+        }
+       if (b=='\n')
+        {
+         if (utod &&!wasr)
+          {
+           if (count>MAX_SUBTITLE_LENGTH-1) break;
+           srcBuf[count++]='\r';
+          }
+         if (crln)
+          {
+           if (count>MAX_SUBTITLE_LENGTH-1) break;
+           srcBuf[count++]=b;
+          }
+         break;
+        }
       }
-     *buf='\0';
+     if (eof) break;
+     srcBuf[count]=0;
+     int unicodeLen=MultiByteToWideChar(CP_UTF8,0,srcBuf,-1,unicodeBuf,MAX_SUBTITLE_LENGTH);
+     strncpy(buf0,unicodeBuf,unicodeLen<len ? unicodeLen : len);
      break;
     }
   }  

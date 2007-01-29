@@ -121,9 +121,9 @@ bool TimgFilters::initSubtitles(int id,int type,const unsigned char *extradata,u
 {
  return subtitles->initSubtitles(id,type,extradata,extradatalen);
 }
-void TimgFilters::addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg)
+void TimgFilters::addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8)
 {
- subtitles->addSubtitle(id,start,stop,data,datalen,cfg);
+ subtitles->addSubtitle(id,start,stop,data,datalen,cfg,utf8);
 }
 void TimgFilters::resetSubtitles(int id)
 {

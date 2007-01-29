@@ -3,6 +3,7 @@
 
 #include "interfaces.h"
 #include "ffImgfmt.h"
+#include "TsubtitleProps.h"
 
 enum
 {
@@ -91,13 +92,15 @@ public:
 class TrenderedSubtitleLine : protected std::vector<TrenderedSubtitleWordBase*>
 {
 public:
- TrenderedSubtitleLine(void) {}
- TrenderedSubtitleLine(TrenderedSubtitleWordBase *w) {push_back(w);}
+ TrenderedSubtitleLine(void) {props.reset();}
+ TrenderedSubtitleLine(TSubtitleProps p) {props=p;}
+ TrenderedSubtitleLine(TrenderedSubtitleWordBase *w) {push_back(w);props.reset();}
  unsigned int width(void) const,height(void) const;
  using std::vector<value_type>::push_back;
  using std::vector<value_type>::empty;
  void clear(void);
  void print(int startx,int starty,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int prefsdx,unsigned int prefsdy) const;
+ TSubtitleProps props;
 };
 
 template<class tchar> struct TsubtitleWord;

@@ -141,7 +141,7 @@ TimgFilterOSD::TosdLine::TosdLine(IffdshowBase *Ideci,IffdshowDec *IdeciD,Iffdsh
 // deci(Ideci),
  config(Iconfig),
  font(Ideci),
- sub(0,TsubtitleFormat::Tprops(false,Iitalic,false)),
+ sub(0,TSubtitleProps(false,Iitalic,false)),
  provider(Iprovider)
 {
  duration=Iduration;

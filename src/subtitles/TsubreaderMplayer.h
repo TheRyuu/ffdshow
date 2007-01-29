@@ -10,7 +10,7 @@ class TsubtitleParserBase
 private:
  template<class tchar> static TsubtitleParserBase* getParser0(int format,double fps,const TsubtitlesSettings *cfg,const Tconfig *ffcfg,Tsubreader *subreader);
 protected:
- static const int LINE_LEN=1000; // Maximal length of line of a subtitle
+ static const int LINE_LEN=MAX_SUBTITLE_LENGTH; // Maximal length of line of a subtitle
  int format;
  double fps;
  REFERENCE_TIME frameToTime(int frame)
@@ -22,7 +22,7 @@ protected:
    return REF_SECOND_MULT*h*60*60+REF_SECOND_MULT*m*60+REF_SECOND_MULT*s+REF_SECOND_MULT*hunsec/100;
   }
 public:
- static TsubtitleParserBase* getParser(int format,double fps,const TsubtitlesSettings *cfg,const Tconfig *ffcfg,Tsubreader *Isubreader);
+ static TsubtitleParserBase* getParser(int format,double fps,const TsubtitlesSettings *cfg,const Tconfig *ffcfg,Tsubreader *Isubreader,bool utf8=false);
  TsubtitleParserBase(int Iformat,double Ifps):format(Iformat),fps(Ifps) {}
  enum FLAGS {PARSETIME=1,SSA_NODIALOGUE=2};
  virtual Tsubtitle* parse(Tstream &fd,int flags=PARSETIME)=0;
@@ -107,13 +107,13 @@ private:
    Tstyle(int playResX,int playResY):props(playResX,playResY) {}
    ffstring name,fontname,fontsize,primaryColour,bold,italic,underline,strikeout,encoding,spacing,fontScaleX,fontScaleY;
    ffstring secondaryColour,tertiaryColour,backgroundColour,alignment;
-   ffstring angleZ,borderStyle,outlineWidth,shadowDepth,marginLeft,marginRigth,marginTop,marginBottom,alpha,relativeTo;
-   TsubtitleFormat::Tprops props;
+   ffstring angleZ,borderStyle,outlineWidth,shadowDepth,marginLeft,marginRight,marginV,marginTop,marginBottom,alpha,relativeTo;
+   TSubtitleProps props;
    void toProps(void);
   };
  struct Tstyles : std::map<ffstring,Tstyle,ffstring_iless>
   {
-   const TsubtitleFormat::Tprops* getProps(const ffstring &style);
+   const TSubtitleProps* getProps(const ffstring &style);
    void add(Tstyle &style);
   };
  Tstyles styles; 
@@ -122,12 +122,13 @@ private:
  
  struct Tevent
   {
+   ffstring dummy;
    ffstring start,end,style,text;
    ffstring marked,readorder,layer,actor,marginT,marginB,name,marginL,marginR,marginV,effect;
   };
  typedef std::vector<ffstring Tevent::*> TeventFormat;
  TeventFormat eventFormat;
- TsubtitleFormat::Tprops defprops;
+ TSubtitleProps defprops;
 public:
  TsubtitleParserSSA(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader);
  virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME);

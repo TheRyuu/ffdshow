@@ -29,7 +29,7 @@ TsubtitlesTextpinUSF::~TsubtitlesTextpinUSF()
 {
 }
 
-void TsubtitlesTextpinUSF::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg)
+void TsubtitlesTextpinUSF::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg, bool utf8)
 {
  ((TsubreaderUSF2*)subs)->addSub(start,stop,data,datalen);
  init();

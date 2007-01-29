@@ -78,7 +78,9 @@ template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(HDC hdc,const
  ints::const_iterator cx=cxs.begin();
  for (typename strings::const_iterator s=s1.begin();s!=s1.end();s++,cx++)
   {
-   prefs.config->getGDI<tchar>().textOut(hdc,x,2,s->c_str(),(int)s->size());
+   const char *t=(const char *)s->c_str();
+   int sz=s->size();
+   prefs.config->getGDI<tchar>().textOut(hdc,x,2,s->c_str(),sz/*(int)s->size()*/);
    x+=*cx;
   } 
  drawShadow(hdc,hbmp,bmp16,old,xscale,sz,prefs,matrix,yuv); 
@@ -418,7 +420,50 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
   }
  unsigned int h=0;
  for (const_iterator i=begin();i!=end();i++) h+=prefs.linespacing*(*i)->height()/100;
- int y=(prefs.ypos<0)?-prefs.ypos:(prefs.ypos*prefsdy)/100-h/2;if (y<0) y=0;if (y+h>=prefsdy) y=prefsdy-h-1;
+
+ int y=(prefs.ypos<0) ? -prefs.ypos : (prefs.ypos*prefsdy)/100-h/2;
+
+ const_iterator it=begin();
+ unsigned int refResY= (*it)->props.refResY;
+ refResY=refResY>0 ? refResY : prefsdy;
+ unsigned int marginTop=0,marginBottom=0;
+
+ if ((*it)->props.marginTop>0)
+  marginTop=(*it)->props.marginTop; //ASS
+ else if ((*it)->props.marginV>0)
+  marginTop=(*it)->props.marginV; // SSA
+
+ if ((*it)->props.marginBottom>0)
+  marginBottom=(*it)->props.marginBottom; // ASS
+ else if ((*it)->props.marginV>0)
+  marginBottom=(*it)->props.marginV; // SSA
+
+ switch ((*it)->props.alignment)
+  {
+   case 1: // SSA bottom
+   case 2:
+   case 3:
+    y=prefsdy-h-marginBottom*prefsdy/refResY;
+    break;
+   case 9: // SSA mid
+   case 10:
+   case 11:
+    y=(prefsdy-h)/2;
+    break;
+   case 5: // SSA top
+   case 6:
+   case 7:
+    y=marginTop*prefsdy/refResY;
+    break;
+   default:
+    break;
+  }
+
+ if (y<0) y=0;
+ if (y+h>=prefsdy)
+  y=prefsdy-h-1;
+
+
  for (const_iterator i=begin();i!=end();y+=prefs.linespacing*(*i)->height()/100-2,i++)
   {
    if (y<0) continue;
@@ -428,14 +473,43 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
    if (prefs.xpos<0) x=-prefs.xpos;
    else
     {
-     x=(prefs.xpos*prefsdx)/100+prefs.posXpix;
      unsigned int cdx=(*i)->width();
-     switch (prefs.align)
+     unsigned int refResX= (*i)->props.refResX;
+     refResX=refResX>0 ? refResX : prefsdx;
+     switch ((*i)->props.alignment)
       {
-       case ALIGN_FFDSHOW:x=x-cdx/2;if (x<0) x=0;if (x+cdx>=prefsdx) x=prefsdx-cdx;break;
-       case ALIGN_LEFT:break;
-       case ALIGN_CENTER:x=x-cdx/2;break;
-       case ALIGN_RIGHT:x=x-cdx;break;
+       case 1: // left(SSA)
+       case 5:
+       case 9:
+        if ((*i)->props.marginL>0)
+         x=(*i)->props.marginL*prefsdx/refResX;
+        else
+         x=0;
+       case 2: // center(SSA)
+       case 6:
+       case 10:
+        x=(prefsdx-cdx)/2;
+        if (x<0) x=0;
+        if (x+cdx>=prefsdx) x=prefsdx-cdx;
+        break;
+       case 3: // right(SSA)
+       case 7:
+       case 11:
+        if ((*i)->props.marginR>0)
+         x=prefsdx-cdx-(*i)->props.marginR*prefsdx/refResX;
+        else
+         x=prefsdx-cdx;
+        break;
+       default: // -1 (non SSA)
+        x=(prefs.xpos*prefsdx)/100+prefs.posXpix;
+        switch (prefs.align)
+         {
+          case ALIGN_FFDSHOW:x=x-cdx/2;if (x<0) x=0;if (x+cdx>=prefsdx) x=prefsdx-cdx;break;
+          case ALIGN_LEFT:break;
+          case ALIGN_CENTER:x=x-cdx/2;break;
+          case ALIGN_RIGHT:x=x-cdx;break;
+         }
+        break;
       }
     }
    (*i)->print(x,y,prefs,prefsdx,prefsdy);
@@ -595,7 +669,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
        HGDIOBJ old=SelectObject(hdc,font);
        if (!oldFont) oldFont=old;
        SetTextCharacterExtra(hdc,w->props.spacing>=0?w->props.spacing:fontSettings->spacing);
-       if (!line) line=new TrenderedSubtitleLine;
+       if (!line) line=new TrenderedSubtitleLine(w->props);
        if (nosplit)
         line->push_back(newWord<tchar>(*w,strlen(*w),prefs,&*w));
        else
@@ -625,7 +699,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
            TrenderedSubtitleWord *rw=newWord(p,nfit,prefs,&*w);
            line->push_back(rw);
            lines.add(line,&height);
-           line=new TrenderedSubtitleLine;
+           line=new TrenderedSubtitleLine(w->props);
            splitdx=splitdx0;
            p+=nfit;
            while (*p && tchar_traits<tchar>::isspace((typename tchar_traits<tchar>::uchar_t)*p))

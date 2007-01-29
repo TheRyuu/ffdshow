@@ -438,10 +438,10 @@ bool TffdshowDecVideo::initSubtitles(int id,int type,const unsigned char *extrad
 {
  return imgFilters?imgFilters->initSubtitles(id,type,extradata,extradatalen):false;
 }
-void TffdshowDecVideo::addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen)
+void TffdshowDecVideo::addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,bool utf8)
 {
  if (imgFilters && presetSettings)
-  imgFilters->addSubtitle(id,start,stop,data,datalen,presetSettings->subtitles);
+  imgFilters->addSubtitle(id,start,stop,data,datalen,presetSettings->subtitles,utf8);
 }
 void TffdshowDecVideo::resetSubtitles(int id)
 {

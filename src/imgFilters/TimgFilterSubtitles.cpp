@@ -138,15 +138,12 @@ bool TimgFilterSubtitles::initSubtitles(int id,int type,const unsigned char *ext
   return false;
  return *e->second;
 }
-void TimgFilterSubtitles::addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg)
+void TimgFilterSubtitles::addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8)
 {
- //wchar_t buf[1024];
- //MultiByteToWideChar(CP_UTF8,0,(LPCSTR)data,datalen,buf,1024);
-
  Tembedded::iterator e=embedded.find(id);
  if (e==embedded.end()) return;
  csEmbedded.Lock();
- e->second->addSubtitle(start,stop,data,datalen,cfg);
+ e->second->addSubtitle(start,stop,data,datalen,cfg,utf8);
  csEmbedded.Unlock();
 }
 void TimgFilterSubtitles::resetSubtitles(int id)
@@ -248,7 +245,8 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
        font.init(oldFontCfg);
       }
      fontSizeChanged=false;
-/*     
+
+     /*     
      if (isdvdproc) 
       {
        if (!again || !prevCfg)
@@ -285,20 +283,20 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
      TsubPrintPrefs printprefs(dst,stride2,dx1,dy1,deci,cfg,pict,parent->config,!!isdvdproc);
      if (!cfg->stereoscopic || isdvdproc)
       {
-     printprefs.sizeDx=sizeDx;
-     printprefs.sizeDy=sizeDy;
-     sub->print(frameStart,wasDiscontinuity,font,forceChange,printprefs);
+       printprefs.sizeDx=sizeDx;
+       printprefs.sizeDy=sizeDy;
+       sub->print(frameStart,wasDiscontinuity,font,forceChange,printprefs);
       }
      else
       {
-      printprefs.sizeDx=sizeDx;
-      printprefs.sizeDy=sizeDy/2;
-      printprefs.posXpix=cfg->stereoscopic?cfg->stereoscopicPar*int(sizeDx)/2000:0;
-      sub->print(frameStart,wasDiscontinuity,font,forceChange,printprefs);
-      for (unsigned int i=0;i<pict.cspInfo.numPlanes;i++)
-      printprefs.dst[i]+=stride2[i]*(dy1[0]/2)>>pict.cspInfo.shiftY[i];
-      printprefs.posXpix=-printprefs.posXpix;
-      sub->print(frameStart,false,font,false,printprefs);
+       printprefs.sizeDx=sizeDx;
+       printprefs.sizeDy=sizeDy/2;
+       printprefs.posXpix=cfg->stereoscopic?cfg->stereoscopicPar*int(sizeDx)/2000:0;
+       sub->print(frameStart,wasDiscontinuity,font,forceChange,printprefs);
+       for (unsigned int i=0;i<pict.cspInfo.numPlanes;i++)
+       printprefs.dst[i]+=stride2[i]*(dy1[0]/2)>>pict.cspInfo.shiftY[i];
+       printprefs.posXpix=-printprefs.posXpix;
+       sub->print(frameStart,false,font,false,printprefs);
       }
      wasDiscontinuity=false;
     }

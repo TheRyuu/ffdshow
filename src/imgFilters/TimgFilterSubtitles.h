@@ -51,7 +51,7 @@ public:
  void onSubFlnmChange(int id,int),onSubFlnmChangeStr(int id,const char_t*);
 
  bool initSubtitles(int id,int type,const unsigned char *extradata,unsigned int extradatalen);
- void addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg);
+ void addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8);
  void resetSubtitles(int id);
  bool ctlSubtitles(int id,int type,unsigned int ctl_id,const void *ctl_data,unsigned int ctl_datalen);
  

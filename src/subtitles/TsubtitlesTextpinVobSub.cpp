@@ -46,7 +46,7 @@ void TsubtitlesTextpinVobsub::resetSubtitles(void)
  TsubtitlesTextpin::resetSubtitles();
 }
 
-void TsubtitlesTextpinVobsub::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg)
+void TsubtitlesTextpinVobsub::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8)
 {
 #ifndef DVDSUB
  int timer=(int)(90*start/10000LL);

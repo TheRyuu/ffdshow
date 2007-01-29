@@ -34,7 +34,8 @@ TtextInputPin::TtextInputPin(TffdshowDecVideo* pFilter,HRESULT* phr,const wchar_
  extradata(NULL),extradatasize(0),
  firsttime(true),
  needSegment(false),
- found(false)
+ found(false),
+ utf8(false)
 {
  supdvddec=filter->getParam2(IDFF_supDVDdec) && filter->getParam2(IDFF_mpg2);
  supssa=!!filter->getParam2(IDFF_subTextpinSSA);
@@ -87,8 +88,15 @@ HRESULT TtextInputPin::SetMediaType(const CMediaType* mtIn)
    extradatasize=mtIn->cbFormat-psi->dwOffset;
    if (extradatasize)
     {
+     unsigned char*extradataSrc=mtIn->pbFormat+psi->dwOffset;
+     if (extradatasize>=3 && extradataSrc[0]==0xef && extradataSrc[1]==0xbb && extradataSrc[2]==0xbf) // BOM UTF-8
+      {
+       extradataSrc+=3;
+       extradatasize-=3;
+       utf8=true;
+      }
      extradata=(unsigned char*)malloc(extradatasize);
-     memcpy(extradata,mtIn->pbFormat+psi->dwOffset,extradatasize);
+     memcpy(extradata,extradataSrc,extradatasize);
     }
    if (mtIn->subtype==MEDIASUBTYPE_UTF8) 
     type=Tsubreader::SUB_SUBVIEWER|Tsubreader::SUB_ENC_UTF8;
@@ -207,7 +215,7 @@ HRESULT TtextInputPin::Receive(IMediaSample *pSample)
  //data[datalen]='\0';
  //DPRINTF(_l("%02i:%02i:%02i-%02i:%02i:%02i %s"),sStart/3600,(sStart%3600)/60,sStart%60,sStop/3600,(sStop%3600)/60,sStop%60,(const char_t*)text<char_t>((const char*)data));
  if (data && datalen>0)
-  filter->addSubtitle(id,t1+segmentStart,t2+segmentStart,data,datalen);
+  filter->addSubtitle(id,t1+segmentStart,t2+segmentStart,data,datalen,utf8);
  return S_OK;
 }
 

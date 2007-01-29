@@ -34,7 +34,7 @@ void TsubtitlesTextpinDVD::resetSubtitles(void)
  TsubtitlesTextpin::resetSubtitles();
 }
 
-void TsubtitlesTextpinDVD::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg)
+void TsubtitlesTextpinDVD::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8)
 {
  if (type==Tsubreader::SUB_SVCD)
   {

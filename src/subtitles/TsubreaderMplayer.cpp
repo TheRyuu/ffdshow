@@ -496,13 +496,19 @@ template<class tchar> void TsubtitleParserSSA<tchar>::Tstyle::toProps(void)
  strToInt(spacing,&props.spacing);
  strToInt(fontScaleX,&props.scaleX);
  strToInt(fontScaleY,&props.scaleY);
+ strToInt(alignment,&props.alignment);
+ strToInt(marginLeft,&props.marginL);
+ strToInt(marginRight,&props.marginR);
+ strToInt(marginV,&props.marginV);
+ strToInt(marginTop,&props.marginTop);
+ strToInt(marginBottom,&props.marginBottom);
 }
 template<class tchar> void TsubtitleParserSSA<tchar>::Tstyles::add(Tstyle &s)
 {
  s.toProps();
  insert(std::make_pair(s.name,s)); 
 }
-template<class tchar> const TsubtitleFormat::Tprops* TsubtitleParserSSA<tchar>::Tstyles::getProps(const ffstring &style)
+template<class tchar> const TSubtitleProps* TsubtitleParserSSA<tchar>::Tstyles::getProps(const ffstring &style)
 {
  typename std::map<ffstring,Tstyle,ffstring_iless>::const_iterator si=this->find(style);
  return si!=this->end()?&si->second.props:NULL;
@@ -518,7 +524,8 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
  * http://www.scriptclub.org is a good place to find more examples
  * http://www.eswat.demon.co.uk is where the SSA specs can be found
  */
- tchar line[this->LINE_LEN+1];
+ tchar line0[this->LINE_LEN+1];
+ tchar *line=line0;
  while (fd.fgets(line,this->LINE_LEN))
   {
    if (line[0]==';') 
@@ -595,6 +602,12 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
         styleFormat.push_back(&Tstyle::alignment);
        else if (strnicmp(f->first,_L("encoding"),8)==0)
         styleFormat.push_back(&Tstyle::encoding);
+       else if (strnicmp(f->first,_L("marginl"),7)==0)
+        styleFormat.push_back(&Tstyle::marginLeft);
+       else if (strnicmp(f->first,_L("marginr"),7)==0)
+        styleFormat.push_back(&Tstyle::marginRight);
+       else if (strnicmp(f->first,_L("marginv"),7)==0)
+        styleFormat.push_back(&Tstyle::marginV);
        else
         styleFormat.push_back(NULL); 
       }  
@@ -627,7 +640,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
          styleFormat.push_back(&Tstyle::shadowDepth);
          styleFormat.push_back(&Tstyle::alignment);
          styleFormat.push_back(&Tstyle::marginLeft);
-         styleFormat.push_back(&Tstyle::marginRigth);
+         styleFormat.push_back(&Tstyle::marginRight);
          styleFormat.push_back(&Tstyle::marginTop);
          if (version>=ASS2) styleFormat.push_back(&Tstyle::marginBottom);
          styleFormat.push_back(&Tstyle::encoding);
@@ -655,7 +668,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
      for (typename Tparts::const_iterator f=fields.begin();f!=fields.end();f++)
       {
        if (strnicmp(f->first,_L("marked"),6)==0)
-        eventFormat.push_back(&Tevent::marked);
+        ;//eventFormat.push_back(&Tevent::marked);
        else if (strnicmp(f->first,_L("start"),5)==0)
         eventFormat.push_back(&Tevent::start);
        else if (strnicmp(f->first,_L("end"),3)==0)
@@ -707,11 +720,15 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
        eventFormat.push_back(&Tevent::text);
       }
      strings fields;
-     strtok(line+(flags&this->SSA_NODIALOGUE?0:9),_L(","),fields,true,eventFormat.size());
+     strtok(line+(flags&this->SSA_NODIALOGUE?0:9),_L(",") ,fields,true,eventFormat.size());
      Tevent event;
-     for (size_t i=0;i<fields.size() && i<eventFormat.size();i++)
-      if (eventFormat[i])
-       event.*(eventFormat[i])=fields[i];
+     event.dummy=""; // avoid being optimized.
+     for (size_t i=0;i<fields.size() && i<eventFormat.size();i++/*,it++*/)
+      {
+       const tchar *str=fields[i].data();
+       if (eventFormat[i])
+        event.*(eventFormat[i]/* *it*/)=fields[i];
+      }
      if (event.text)
       {
        int hour1=0,min1=0,sec1=0,hunsec1=0;
@@ -720,13 +737,26 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
            (tchar_traits<tchar>::sscanf()(event.start.c_str(),_L("%d:%d:%d.%d"),&hour1, &min1, &sec1, &hunsec1)==4 &&
             tchar_traits<tchar>::sscanf()(event.end.c_str()  ,_L("%d:%d:%d.%d"),&hour2, &min2, &sec2, &hunsec2)==4))
         {
-         const TsubtitleFormat::Tprops *props=styles.getProps(event.style);
+         const TSubtitleProps *props=styles.getProps(event.style);
          TsubtitleTextBase<tchar> current(this->format,props?*props:defprops);
          if (flags&this->PARSETIME)
           {
            current.start=timer.den*this->hmsToTime(hour1,min1,sec1,hunsec1)/timer.num;
            current.stop =timer.den*this->hmsToTime(hour2,min2,sec2,hunsec2)/timer.num;
           }
+
+         // FIXME
+         // ffdshow custom code
+         // \h removal : \h is hard space, so it should be replaced HARD sapce, soft space for band-aid.
+         for (size_t i=0 ; i<event.text.size() ; i++)
+         {
+          if (event.text[i]=='\\' && event.text[i+1]=='h')
+           {
+            event.text[i]=0x20; // ' '
+            event.text.erase(i+1,1);
+           }
+         }
+
          const tchar *line2=event.text.c_str();
          do
          {
@@ -923,9 +953,12 @@ template<class tchar> TsubtitleParserBase* TsubtitleParserBase::getParser0(int f
    default:return NULL;
   }
 }
-TsubtitleParserBase* TsubtitleParserBase::getParser(int format,double fps,const TsubtitlesSettings *cfg,const Tconfig *ffcfg,Tsubreader *subreader)
+TsubtitleParserBase* TsubtitleParserBase::getParser(int format,double fps,const TsubtitlesSettings *cfg,const Tconfig *ffcfg,Tsubreader *subreader,bool utf8)
 {
- return ffcfg->unicodeOS && Tsubreader::getSubEnc(format)&Tstream::ENC_UNICODE?getParser0<wchar_t>(format,fps,cfg,ffcfg,subreader):getParser0<char>(format,fps,cfg,ffcfg,subreader);
+ if (ffcfg->unicodeOS && (utf8 || Tsubreader::getSubEnc(format)&Tstream::ENC_UNICODE))
+  return getParser0<wchar_t>(format,fps,cfg,ffcfg,subreader);
+ else
+  return getParser0<char>(format,fps,cfg,ffcfg,subreader);
 }
 
 //======================================= TsubreaderMplayer =======================================

@@ -46,7 +46,7 @@ void TsubtitlesTextpinText::resetSubtitles(void)
  TsubtitlesTextpin::resetSubtitles();
 }
 
-void TsubtitlesTextpinText::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg)
+void TsubtitlesTextpinText::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8)
 {
  if (memcmp(data,"GAB2",4)==0)
   {
@@ -85,14 +85,14 @@ void TsubtitlesTextpinText::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop
      unsigned int fps1000=25000;
      if (comptrQ<IffdshowDecVideo> deciV=deci)
       deciV->getAVIfps(&fps1000);
-     parser=TsubtitleParserBase::getParser(type,fps1000/1000.0,cfg,ffcfg,subs);
+     parser=TsubtitleParserBase::getParser(type,fps1000/1000.0,cfg,ffcfg,subs,utf8);
      if (initdata.size())
       {
        TstreamMem fs(initdata,initdata.size());
        parser->parse(fs,0);
       } 
     }
-   TstreamMem fs(data,datalen,Tsubreader::getSubEnc(type));
+   TstreamMem fs(data,datalen,utf8 ? Tstream::ENC_UTF8 : Tsubreader::getSubEnc(type));
    Tsubtitle *sub=parser->parse(fs,(type&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SSA?TsubtitleParserBase::SSA_NODIALOGUE:0);
    if (sub)
     {

@@ -2,6 +2,7 @@
 #define _TSUBTITLETEXT_H_
 
 #include "Tsubtitle.h"
+#include "TsubtitleProps.h"
 
 struct TsubtitlesSettings;
 struct Tconfig;
@@ -40,31 +41,14 @@ class ThtmlColors;
 class TsubtitleFormat
 {
 public:
- struct Tprops
-  {
-   Tprops(void) {reset();}
-   Tprops(unsigned int IrefResX,unsigned int IrefResY) {reset();refResX=IrefResX;refResY=IrefResY;}
-   Tprops(bool Ibold,bool Iitalic, bool Iunderline) {reset();bold=Ibold;italic=Iitalic;underline=Iunderline;}
-   bool bold,italic,underline,strikeout;
-   bool isColor;COLORREF color;
-   bool isPos;int posx,posy;
-   unsigned int refResX,refResY;
-   int size;
-   int scaleX,scaleY; //in percents, -1 default
-   char_t fontname[LF_FACESIZE*2]; // LF_FACESIZE chars max because of LF_FACESIZE.
-   int encoding; //-1 = default
-   int spacing;  //-1 = default
-   void reset(void);
-   void toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy) const;
-  };
  struct Tword
   {
    size_t i1,i2;
-   Tprops props;
+   TSubtitleProps props;
   };
  struct Twords : std::vector<Tword> 
   {
-   template<class tchar> void add(const tchar *l,const tchar* &l1,const tchar* &l2,const Tprops &props,size_t step)
+   template<class tchar> void add(const tchar *l,const tchar* &l1,const tchar* &l2,const TSubtitleProps &props,size_t step)
     {
      Tword word;word.i1=l1-l;word.i2=l2-l;word.props=props;
      push_back(word);
@@ -72,7 +56,7 @@ public:
     }
   };
 private:
- Tprops props;
+ TSubtitleProps props;
  template<class tchar,int c> struct Tncasecmp
   {
    bool operator ()(tchar c1)
@@ -84,16 +68,16 @@ private:
  template<class tchar> struct Tssa
   {
   private:
-   Tprops &props;
-   const Tprops &defprops;
+   TSubtitleProps &props;
+   const TSubtitleProps &defprops;
    Twords &words;
   public:
-   Tssa(Tprops &Iprops,const Tprops &Idefprops,Twords &Iwords):props(Iprops),defprops(Idefprops),words(Iwords) {}
+   Tssa(TSubtitleProps &Iprops,const TSubtitleProps &Idefprops,Twords &Iwords):props(Iprops),defprops(Idefprops),words(Iwords) {}
    typedef void (Tssa::*TssaAction)(const tchar *start,const tchar *end);
    void fontName(const tchar *start,const tchar *end);
    //void fontSize(const tchar *start,const tchar *end);
-   template<int Tprops::*offset,int min,int max> void intProp(const tchar *start,const tchar *end);
-   template<bool Tprops::*offset> void boolProp(const tchar *start,const tchar *end);
+   template<int TSubtitleProps::*offset,int min,int max> void intProp(const tchar *start,const tchar *end);
+   template<bool TSubtitleProps::*offset> void boolProp(const tchar *start,const tchar *end);
    void color(const tchar *start,const tchar *end);
    void reset(const tchar *start,const tchar *end);
    bool processToken(const tchar* &l2,const tchar *tok,TssaAction action);
@@ -103,7 +87,7 @@ private:
 public:
  TsubtitleFormat(const ThtmlColors *Ihtmlcolors):htmlcolors(Ihtmlcolors) {}
  template<class tchar> Twords processHTML(const TsubtitleLine<tchar> &line);
- template<class tchar> Twords processSSA(const TsubtitleLine<tchar> &line);
+ template<class tchar> Twords processSSA(const TsubtitleLine<tchar> &line,TsubtitleTextBase<tchar> &parent);
  template<class tchar> void processMicroDVD(TsubtitleTextBase<tchar> &parent,typename std::vector< TsubtitleLine<tchar> >::iterator it);
  template<class tchar> void processMPL2(TsubtitleLine<tchar> &line);
 };
@@ -118,16 +102,16 @@ private:
  const ffstring& getText(void) const {return useFixed?fixed:text;}
  ffstring& getText(void) {return useFixed?fixed:text;}
 public:
- TsubtitleFormat::Tprops props;
+ TSubtitleProps props;
  
  TsubtitleWord(const ffstring &Itext):text(Itext),useFixed(false) {} 
- TsubtitleWord(const ffstring &Itext,const TsubtitleFormat::Tprops &defProps):text(Itext),useFixed(false),props(defProps) {} 
+ TsubtitleWord(const ffstring &Itext,const TSubtitleProps &defProps):text(Itext),useFixed(false),props(defProps) {} 
 
  TsubtitleWord(const tchar *Itext):text(Itext),useFixed(false) {}
- TsubtitleWord(const tchar *Itext,const TsubtitleFormat::Tprops &defProps):text(Itext),useFixed(false),props(defProps) {}
+ TsubtitleWord(const tchar *Itext,const TSubtitleProps &defProps):text(Itext),useFixed(false),props(defProps) {}
 
  TsubtitleWord(const tchar *s,size_t len):text(s,len),useFixed(false) {}
- TsubtitleWord(const tchar *s,size_t len,const TsubtitleFormat::Tprops &defProps):text(s,len),useFixed(false),props(defProps) {}
+ TsubtitleWord(const tchar *s,size_t len,const TSubtitleProps &defProps):text(s,len),useFixed(false),props(defProps) {}
  
  void set(const ffstring &s)
   {
@@ -159,30 +143,30 @@ private:
 public:
  TsubtitleLine(void) {} 
  TsubtitleLine(const ffstring &Itext) {push_back(Itext);}
- TsubtitleLine(const ffstring &Itext,const TsubtitleFormat::Tprops &defProps) {push_back(TsubtitleWord(Itext,defProps));}
+ TsubtitleLine(const ffstring &Itext,const TSubtitleProps &defProps) {push_back(TsubtitleWord(Itext,defProps));}
 
  TsubtitleLine(const tchar *Itext) {push_back(Itext);}
- TsubtitleLine(const tchar *Itext,const TsubtitleFormat::Tprops &defProps) {push_back(TsubtitleWord(Itext,defProps));}
+ TsubtitleLine(const tchar *Itext,const TSubtitleProps &defProps) {push_back(TsubtitleWord(Itext,defProps));}
 
  TsubtitleLine(const tchar *s,size_t len) {push_back(TsubtitleWord(s,len));}
- TsubtitleLine(const tchar *s,size_t len,const TsubtitleFormat::Tprops &defProps) {push_back(TsubtitleWord(s,len,defProps));}
+ TsubtitleLine(const tchar *s,size_t len,const TSubtitleProps &defProps) {push_back(TsubtitleWord(s,len,defProps));}
  size_t strlen(void) const;
- void format(TsubtitleFormat &format,int sfmt);
+ void format(TsubtitleFormat &format,int sfmt,TsubtitleTextBase<tchar> &parent);
  void fix(TtextFix<tchar> &fix);
 };
-
+#include "TsubreaderMplayer.h"
 template<class tchar> struct TsubtitleTextBase :public Tsubtitle,public std::vector< TsubtitleLine<tchar> > 
 {
 private:
  int subformat;
- TsubtitleFormat::Tprops defProps;
  typedef TsubtitleLine<tchar> TsubtitleLine;
  typedef std::vector<TsubtitleLine> Tbase;
  typedef typename tchar_traits<tchar>::ffstring ffstring;
  typedef typename tchar_traits<tchar>::strings strings;
 public:
+ TSubtitleProps defProps;
  TsubtitleTextBase(int Isubformat):subformat(Isubformat) {}
- TsubtitleTextBase(int Isubformat,const TsubtitleFormat::Tprops &IdefProps):subformat(Isubformat),defProps(IdefProps) {}
+ TsubtitleTextBase(int Isubformat,const TSubtitleProps &IdefProps):subformat(Isubformat),defProps(IdefProps) {}
  void set(const strings &strs)
   {
    this->clear();
@@ -212,17 +196,17 @@ public:
    this->push_back(TsubtitleLine(_L(" "),defProps));
   } 
  void format(TsubtitleFormat &format);
- template<class Tval> void propagateProps(typename Tbase::iterator it,Tval TsubtitleFormat::Tprops::*offset,Tval val,typename Tbase::iterator itend)
+ template<class Tval> void propagateProps(typename Tbase::iterator it,Tval TSubtitleProps::*offset,Tval val,typename Tbase::iterator itend)
   {
    for (;it!=itend;it++)
     for (typename TsubtitleLine::iterator w=it->begin();w!=it->end();w++)
      w->props.*offset=val;
   }
- template<class Tval> void propagateProps(typename Tbase::iterator it,Tval TsubtitleFormat::Tprops::*offset,Tval val)
+ template<class Tval> void propagateProps(typename Tbase::iterator it,Tval TSubtitleProps::*offset,Tval val)
   {
    propagateProps(it,offset,val,this->end());
   }
- template<class Tval> void propagateProps(Tval TsubtitleFormat::Tprops::*offset,Tval val)
+ template<class Tval> void propagateProps(Tval TSubtitleProps::*offset,Tval val)
   {
    propagateProps(this->begin(),offset,val,this->end());
   }

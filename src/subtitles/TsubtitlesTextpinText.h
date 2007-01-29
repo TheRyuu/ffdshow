@@ -21,7 +21,7 @@ private:
 public:
  TsubtitlesTextpinText(int Itype,IffdshowBase *Ideci,const unsigned char *extradata,unsigned int extradatalen);
  virtual ~TsubtitlesTextpinText();
- virtual void addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg);
+ virtual void addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8);
  virtual void resetSubtitles(void);
 };
 
