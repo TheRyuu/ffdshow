@@ -644,6 +644,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC_OP (DM4V,mp4v & rawmask,c_mpeg4) \
  FF_FOURCC_OP (HDX4,mp4v & rawmask,c_mpeg4) \
  FF_FOURCC_OP (UMP4,mp4v & rawmask,c_mpeg4) \
+ FF_FOURCC_OP (NDIG,mp4v & rawmask,c_mpeg4) \
  FF_FOURCC_OP (XVIX,xvid & rawmask,c_mpeg4) \
  FF_FOURCC1_OP(DIV4,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
  FF_FOURCC1_OP(DIV5,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
