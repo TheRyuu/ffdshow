@@ -148,6 +148,7 @@ static void a(uint8_t *block, const uint8_t *pixels, int line_size, int h){\
 // allthough currently h<4 is not used as functions with width <8 are not used and neither implemented
 typedef int (*me_cmp_func)(void /*MpegEncContext*/ *s, uint8_t *blk1/*align width (8 or 16)*/, uint8_t *blk2/*align 1*/, int line_size, int h)/* __attribute__ ((const))*/;
 
+
 // for snow slices
 typedef struct slice_buffer_s slice_buffer;
 
@@ -387,7 +388,7 @@ typedef struct DSPContext {
     /* snow wavelet */
     void (*vertical_compose97i)(DWTELEM *b0, DWTELEM *b1, DWTELEM *b2, DWTELEM *b3, DWTELEM *b4, DWTELEM *b5, int width);
     void (*horizontal_compose97i)(DWTELEM *b, int width);
-    void (*inner_add_yblock)(uint8_t *obmc, const int obmc_stride, uint8_t * * block, int b_w, int b_h, int src_x, int src_y, int src_stride, slice_buffer * sb, int add, uint8_t * dst8);
+    void (*inner_add_yblock)(const uint8_t *obmc, const int obmc_stride, uint8_t * * block, int b_w, int b_h, int src_x, int src_y, int src_stride, slice_buffer * sb, int add, uint8_t * dst8);
 	
     void (*prefetch)(void *mem, int stride, int h);
     
@@ -408,6 +409,8 @@ typedef struct DSPContext {
 
 void dsputil_static_init(void);
 void dsputil_init(DSPContext* p, AVCodecContext *avctx);
+
+int ff_check_alignment(void);
 
 /**
  * permute block according to permuatation.
@@ -477,6 +480,7 @@ int mm_support(void);
 #define MM_SSE2   0x0010 /* PIV SSE2 functions */
 #define MM_3DNOWEXT  0x0020 /* AMD 3DNowExt */
 #define MM_SSE3   0x0040 /* Prescott SSE3 functions */
+#define MM_SSSE3  0x0080 /* Conroe SSSE3 functions */
 
 #if defined(HAVE_MMX)
 
@@ -616,7 +620,7 @@ typedef struct FFTContext {
                        const FFTSample *input, FFTSample *tmp);
 } FFTContext;
 
-int ff_fft_init(FFTContext *avctx, int nbits, int inverse);
+int ff_fft_init(FFTContext *s, int nbits, int inverse);
 void ff_fft_permute(FFTContext *s, FFTComplex *z);
 void ff_fft_calc_c(FFTContext *s, FFTComplex *z);
 void ff_fft_calc_sse(FFTContext *s, FFTComplex *z);
@@ -641,7 +645,7 @@ typedef struct MDCTContext {
     FFTContext fft;
 } MDCTContext;
 
-int ff_mdct_init(MDCTContext *avctx, int nbits, int inverse);
+int ff_mdct_init(MDCTContext *s, int nbits, int inverse);
 void ff_imdct_calc(MDCTContext *s, FFTSample *output,
                const FFTSample *input, FFTSample *tmp);
 void ff_imdct_calc_3dn2(MDCTContext *s, FFTSample *output,

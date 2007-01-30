@@ -2451,6 +2451,7 @@ QPEL_2TAP(avg_, 16, 3dnow)
 QPEL_2TAP(put_,  8, 3dnow)
 QPEL_2TAP(avg_,  8, 3dnow)
 
+
 #if 0
 static void just_return() { return; }
 #endif
@@ -2746,7 +2747,6 @@ static void ff_vp3_idct_add_mmx(uint8_t *dest, int line_size, DCTELEM *block)
     ff_vp3_idct_mmx(block);
     add_pixels_clamped_mmx(block, dest, line_size);
 }
-
 static void ff_idct_xvid_mmx_put(uint8_t *dest, int line_size, DCTELEM *block)
 {
     ff_idct_xvid_mmx (block);
@@ -2767,15 +2767,6 @@ static void ff_idct_xvid_mmx2_add(uint8_t *dest, int line_size, DCTELEM *block)
     ff_idct_xvid_mmx2 (block);
     add_pixels_clamped_mmx(block, dest, line_size);
 }
-
-extern void ff_snow_horizontal_compose97i_sse2(DWTELEM *b, int width);
-extern void ff_snow_horizontal_compose97i_mmx(DWTELEM *b, int width);
-extern void ff_snow_vertical_compose97i_sse2(DWTELEM *b0, DWTELEM *b1, DWTELEM *b2, DWTELEM *b3, DWTELEM *b4, DWTELEM *b5, int width);
-extern void ff_snow_vertical_compose97i_mmx(DWTELEM *b0, DWTELEM *b1, DWTELEM *b2, DWTELEM *b3, DWTELEM *b4, DWTELEM *b5, int width);
-extern void ff_snow_inner_add_yblock_sse2(uint8_t *obmc, const int obmc_stride, uint8_t * * block, int b_w, int b_h,
-                           int src_x, int src_y, int src_stride, slice_buffer * sb, int add, uint8_t * dst8);
-extern void ff_snow_inner_add_yblock_mmx(uint8_t *obmc, const int obmc_stride, uint8_t * * block, int b_w, int b_h,
-                          int src_x, int src_y, int src_stride, slice_buffer * sb, int add, uint8_t * dst8);
 
 static void vorbis_inverse_coupling_3dnow(float *mag, float *ang, int blocksize)
 {
@@ -2804,7 +2795,6 @@ static void vorbis_inverse_coupling_3dnow(float *mag, float *ang, int blocksize)
     }
     asm volatile("femms");
 }
-
 static void vorbis_inverse_coupling_sse(float *mag, float *ang, int blocksize)
 {
     int i;
@@ -3046,12 +3036,27 @@ static void float_to_int16_sse(int16_t *dst, const float *src, int len){
     asm volatile("emms");
 }
 
+#ifdef CONFIG_ENCODERS
+extern void ff_snow_horizontal_compose97i_sse2(DWTELEM *b, int width);
+extern void ff_snow_horizontal_compose97i_mmx(DWTELEM *b, int width);
+extern void ff_snow_vertical_compose97i_sse2(DWTELEM *b0, DWTELEM *b1, DWTELEM *b2, DWTELEM *b3, DWTELEM *b4, DWTELEM *b5, int width);
+extern void ff_snow_vertical_compose97i_mmx(DWTELEM *b0, DWTELEM *b1, DWTELEM *b2, DWTELEM *b3, DWTELEM *b4, DWTELEM *b5, int width);
+extern void ff_snow_inner_add_yblock_sse2(const uint8_t *obmc, const int obmc_stride, uint8_t * * block, int b_w, int b_h,
+                           int src_x, int src_y, int src_stride, slice_buffer * sb, int add, uint8_t * dst8);
+extern void ff_snow_inner_add_yblock_mmx(const uint8_t *obmc, const int obmc_stride, uint8_t * * block, int b_w, int b_h,
+                          int src_x, int src_y, int src_stride, slice_buffer * sb, int add, uint8_t * dst8);
+#endif
+
 void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 {
-    if (avctx->dsp_mask)
-        mm_flags = (avctx->dsp_mask & 0xffff);
-    else
         mm_flags = mm_support();
+
+    if (avctx->dsp_mask) {
+        if (avctx->dsp_mask & FF_MM_FORCE)
+            mm_flags |= (avctx->dsp_mask & 0xffff);
+        else
+            mm_flags &= ~(avctx->dsp_mask & 0xffff);
+    }
 
 #if 0
     av_log(avctx, AV_LOG_INFO, "libavcodec: CPU flags:");
@@ -3349,6 +3354,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->h264_h_loop_filter_chroma= h264_h_loop_filter_chroma_mmx2;
             c->h264_v_loop_filter_chroma_intra= h264_v_loop_filter_chroma_intra_mmx2;
             c->h264_h_loop_filter_chroma_intra= h264_h_loop_filter_chroma_intra_mmx2;
+            c->h264_loop_filter_strength= h264_loop_filter_strength_mmx2;
 
             c->weight_h264_pixels_tab[0]= ff_h264_weight_16x16_mmx2;
             c->weight_h264_pixels_tab[1]= ff_h264_weight_16x8_mmx2;
@@ -3466,6 +3472,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->avg_h264_chroma_pixels_tab[1]= avg_h264_chroma_mc4_3dnow;
         }
 
+#ifdef CONFIG_ENCODERS
         if(mm_flags & MM_SSE2){
             c->horizontal_compose97i = ff_snow_horizontal_compose97i_sse2;
             c->vertical_compose97i = ff_snow_vertical_compose97i_sse2;
@@ -3476,6 +3483,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->vertical_compose97i = ff_snow_vertical_compose97i_mmx;
             c->inner_add_yblock = ff_snow_inner_add_yblock_mmx;
         }
+#endif
 
         if(mm_flags & MM_3DNOW){
             c->vorbis_inverse_coupling = vorbis_inverse_coupling_3dnow;
