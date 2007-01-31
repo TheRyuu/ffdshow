@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "CgenericDV.h"
 #include "libavcodec/avcodec.h"
@@ -31,15 +31,17 @@ bool TgenericDVpage::enabled(void)
 }
 
 void TgenericDVpage::cfg2dlg(void)
-{ 
+{
+ static const int idThreads[]={IDC_LBL_NUMTHREADS,IDC_ED_NUMTHREADS,0};
  SetDlgItemInt(m_hwnd,IDC_ED_NUMTHREADS,cfgGet(IDFF_numthreads),FALSE);
+ enable(sup_threads(codecId),idThreads);
  cbxSetDataCurSel(IDC_CBX_DV_PROFILE,cfgGet(IDFF_enc_dv_profile));
 }
 
 void TgenericDVpage::translate(void)
 {
  TconfPageEnc::translate();
- 
+
  int ii=cbxGetCurSel(IDC_CBX_DV_PROFILE);
  cbxClear(IDC_CBX_DV_PROFILE);
  cbxAdd(IDC_CBX_DV_PROFILE,_(IDC_CBX_DV_PROFILE,_l("automatic")),DV_PROFILE_AUTO);
@@ -53,7 +55,6 @@ TgenericDVpage::TgenericDVpage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
  dialogId=IDD_GENERIC_DV;
  static const int props[]={IDFF_enc_dv_profile,IDFF_numthreads,0};
  propsIDs=props;
-
  static const TbindCombobox<TgenericDVpage> cbx[]=
   {
    IDC_CBX_DV_PROFILE,IDFF_enc_dv_profile,BINDCBX_DATA,NULL,
@@ -66,5 +67,5 @@ TgenericDVpage::TgenericDVpage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
    IDC_ED_NUMTHREADS,1,8,IDFF_numthreads,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
 }
