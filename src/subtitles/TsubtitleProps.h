@@ -13,7 +13,7 @@ struct TSubtitleProps
  unsigned int refResX,refResY;
  int size;
  int scaleX,scaleY; //in percents, -1 default
- char_t fontname[LF_FACESIZE*2]; // LF_FACESIZE chars max because of LF_FACESIZE.
+ char_t fontname[LF_FACESIZE];
  int encoding; //-1 = default
  int spacing;  //-1 = default
  void reset(void);

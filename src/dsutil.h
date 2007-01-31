@@ -14,7 +14,7 @@ void setVIH2aspect(VIDEOINFOHEADER2 *vih2,const Trect &r,int userDAR256);
 CLSID GetCLSID(IBaseFilter* pBF);
 CLSID GetCLSID(IPin* pPin);
 
-void getFilterName(IBaseFilter *filter,char_t *name,char_t *filtername,int bufsize);
+void getFilterName(IBaseFilter *filter,char_t *name,char_t *filtername,int bufsize); // bufsize : count of characters, not byte size.
 
 struct pins_vector : array_vector<IPin*,40>
 {

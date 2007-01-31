@@ -270,8 +270,8 @@ HMENU TtrayIconDec::createMenu(int &ord)
      eff->Reset();
      for (comptr<IBaseFilter> bff;eff->Next(1,&bff,NULL)==S_OK;bff=NULL)
       {
-       char_t name[MAX_PATH],filtername[MAX_PATH*2]; // filtername MAX_PATH chars max, see next line.
-       getFilterName(bff,name,filtername,MAX_PATH*2);
+       char_t name[MAX_PATH],filtername[MAX_PATH];
+       getFilterName(bff,name,filtername,(int)countof(filtername));
        char_t compactname[41];
        PathCompactPathEx(compactname,name,40,0);
        graphnames[insertMenuItem(hm,ord,IDC_FIRST_GRAPH+(i++),compactname,false,false,!!comptrQ<ISpecifyPropertyPages>(bff))]=filtername;

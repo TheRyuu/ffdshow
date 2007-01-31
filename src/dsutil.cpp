@@ -139,7 +139,7 @@ void getFilterName(IBaseFilter *filter,char_t *name,char_t *filtername,int bufsi
  if (filter->QueryFilterInfo(&iff)==S_OK)
   {
    //WideCharToMultiByte(CP_ACP,0,iff.achName,-1,filtername,MAX_PATH,NULL,NULL);
-   text<char_t>(iff.achName, bufsize, filtername);
+   text<char_t>(iff.achName, -1, filtername, bufsize);
    if (iff.pGraph) iff.pGraph->Release();
   }
  if (name[0]=='\0') strcpy(name,filtername);

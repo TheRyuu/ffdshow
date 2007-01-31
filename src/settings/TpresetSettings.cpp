@@ -139,8 +139,8 @@ bool TautoPresetProps::dsfilterMatch(const char_t *f1,const char_t *)
        eff->Reset();
        for (comptr<IBaseFilter> bff;eff->Next(1,&bff,NULL)==S_OK;bff=NULL)
         {
-         char_t name[MAX_PATH],filtername[MAX_PATH*2];
-         getFilterName(bff,name,filtername,MAX_PATH*2); // filtername MAX_PATH chars max because of WideCharToMultiByte.
+         char_t name[MAX_PATH],filtername[MAX_PATH];
+         getFilterName(bff,name,filtername,(int)countof(filtername));
          filtersnames.push_back(name);
         } 
       }

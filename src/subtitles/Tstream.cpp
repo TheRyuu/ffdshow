@@ -200,7 +200,7 @@ wchar_t* Tstream::fgets(wchar_t *buf0,int len) const
       {
        eof=false;
        if (buf-buf0>len) break;
-       text<wchar_t>(&w,1,buf);//nCopyAnsiToWideChar(buf,&w,1);
+       text<wchar_t>(&w, 1, buf, 1);//nCopyAnsiToWideChar(buf,&w,1);
        if (w=='\r') {if (crln) *buf++=w;wasr=true;continue;}
        if (w=='\n') {if (utod &&!wasr) *buf++='\r';if (crln) *buf++=w;break;}
        buf++;//*buf++=w;

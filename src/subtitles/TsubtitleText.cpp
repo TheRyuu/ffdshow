@@ -761,7 +761,7 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::fontName(const tchar *s
  if (start!=end)
   {
    memset(props.fontname,0,sizeof(props.fontname));
-   text<char_t>(start,std::min((int)countof(props.fontname)-1,int(end-start)),(char_t*)props.fontname);
+   text<char_t>(start, int(end-start), (char_t*)props.fontname, (int)countof(props.fontname)-1);
   }
  else
   strcpy(props.fontname,defprops.fontname);

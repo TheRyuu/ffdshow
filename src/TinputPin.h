@@ -29,7 +29,7 @@ public:
  const char_t* getDecoderName(void);
  virtual HRESULT getEncoderInfo(char_t *buf,size_t buflen);
  const char_t* getFileSourceName(void);
- HRESULT connectedTo(char_t *buf,size_t buflen);
+ HRESULT connectedTo(char_t *buf,size_t buflen); // buflen : count of characters, not byte size.
 };
 
 template<class Tpin> class TpinsVector :public array_vector<Tpin*,40>

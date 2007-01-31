@@ -125,7 +125,7 @@ HRESULT TinputPin::getStreamName(char_t *buf,size_t buflen)
  HRESULT hr=getInCodecString(buf,buflen);
  if (FAILED(hr)) return hr;
  char_t pname[256];
- hr=connectedTo(pname,256);
+ hr=connectedTo(pname,(int)countof(pname));
  if (FAILED(hr)) return hr;
  if (pname[0]=='\0') return S_OK;
  char_t buf2[256];
@@ -142,7 +142,7 @@ HRESULT TinputPin::connectedTo(char_t *buf,size_t buflen)
  if (!m_Connected) return E_UNEXPECTED;
  PIN_INFO pi;
  m_Connected->QueryPinInfo(&pi);
- text<char_t>(pi.achName,buflen,buf);
+ text<char_t>(pi.achName, -1, buf, buflen);
  if (pi.pFilter) pi.pFilter->Release();
  return S_OK;
 }

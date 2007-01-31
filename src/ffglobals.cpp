@@ -1407,7 +1407,7 @@ char_t *guid2str(const GUID &riid,char_t *dest,int bufsize)
 {
  LPOLESTR str;
  StringFromIID(riid,&str);
- text<char_t>(str,bufsize,dest); // bufsize bytes, not l characters.
+ text<char_t>(str, -1, dest, bufsize);
  CoTaskMemFree(str);
  return dest;
 }

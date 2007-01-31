@@ -327,7 +327,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
        char_t *buft=(char_t*)alloca(cds->cbData*sizeof(char_t));
        if (SUCCEEDED(deci->getParamStr(paramid,buft,cds->cbData)))
         {
-         text<char>(buft,cds->cbData,(char*)cds->lpData);
+         text<char>(buft, cds->cbData, (char*)cds->lpData, cds->cbData);
 		 ((COPYDATASTRUCT*)lprm)->dwData = paramid;
 		 SendMessage((HWND)wprm, WM_COPYDATA, paramid, lprm);
          return TRUE;
