@@ -29,7 +29,7 @@
 //! define if we may read up to 8 bytes beyond the input buffer
 #define INBUF_PADDED 1
 typedef struct LZOContext {
-    const uint8_t *in, *in_end;
+    uint8_t *in, *in_end;
     uint8_t *out_start, *out, *out_end;
     int error;
 } LZOContext;
@@ -71,7 +71,7 @@ static inline int get_len(LZOContext *c, int x, int mask) {
  * \param cnt number of bytes to copy, must be > 0
  */
 static inline void copy(LZOContext *c, int cnt) {
-    register const uint8_t *src = c->in;
+    register uint8_t *src = c->in;
     register uint8_t *dst = c->out;
     if (src + cnt > c->in_end || src + cnt < src) {
         cnt = c->in_end - src;
@@ -168,7 +168,7 @@ static inline void copy_backptr(LZOContext *c, int back, int cnt) {
  * LZO_INPUT_PADDING, out must provide LZO_OUTPUT_PADDING additional bytes
  */
 int lzo1x_decode(void *out, int *outlen, void *in, int *inlen) {
-    enum {COPY, BACKPTR} state = COPY;
+    int state= 0;
     int x;
     LZOContext c;
     c.in = in;
@@ -182,13 +182,15 @@ int lzo1x_decode(void *out, int *outlen, void *in, int *inlen) {
         x = GETB(c);
         if (x < 16) c.error |= LZO_ERROR;
     }
+    if (c.in > c.in_end)
+        c.error |= LZO_INPUT_DEPLETED;
     while (!c.error) {
         int cnt, back;
-        if (x >> 4) {
-            if (x >> 6) {
+        if (x > 15) {
+            if (x > 63) {
                 cnt = (x >> 5) - 1;
                 back = (GETB(c) << 3) + ((x >> 2) & 7) + 1;
-            } else if (x >> 5) {
+            } else if (x > 31) {
                 cnt = get_len(&c, x, 31);
                 x = GETB(c);
                 back = (GETB(c) << 6) + (x >> 2) + 1;
@@ -203,25 +205,25 @@ int lzo1x_decode(void *out, int *outlen, void *in, int *inlen) {
                     break;
                 }
             }
-        } else
-        switch (state) {
-            case COPY:
+        } else if(!state){
                 cnt = get_len(&c, x, 15);
                 copy(&c, cnt + 3);
                 x = GETB(c);
-                if (x >> 4)
+                if (c.in > c.in_end) {
+                    c.error |= LZO_INPUT_DEPLETED;
+                    continue;
+                }
+                if (x > 15)
                     continue;
                 cnt = 1;
                 back = (1 << 11) + (GETB(c) << 2) + (x >> 2) + 1;
-                break;
-            case BACKPTR:
+        } else {
                 cnt = 0;
                 back = (GETB(c) << 2) + (x >> 2) + 1;
-                break;
         }
         copy_backptr(&c, back, cnt + 2);
+        state=
         cnt = x & 3;
-        state = cnt ? BACKPTR : COPY;
         if (cnt)
             copy(&c, cnt);
         x = GETB(c);
