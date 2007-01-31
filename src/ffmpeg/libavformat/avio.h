@@ -126,71 +126,14 @@ int init_put_byte(ByteIOContext *s,
 
 void put_byte(ByteIOContext *s, int b);
 void put_buffer(ByteIOContext *s, const unsigned char *buf, int size);
-void put_le64(ByteIOContext *s, uint64_t val);
-void put_be64(ByteIOContext *s, uint64_t val);
-void put_le32(ByteIOContext *s, unsigned int val);
-void put_be32(ByteIOContext *s, unsigned int val);
-void put_le24(ByteIOContext *s, unsigned int val);
-void put_be24(ByteIOContext *s, unsigned int val);
-void put_le16(ByteIOContext *s, unsigned int val);
-void put_be16(ByteIOContext *s, unsigned int val);
-void put_tag(ByteIOContext *s, const char *tag);
 
-void put_strz(ByteIOContext *s, const char *buf);
-
-offset_t url_fseek(ByteIOContext *s, offset_t offset, int whence);
-void url_fskip(ByteIOContext *s, offset_t offset);
-offset_t url_ftell(ByteIOContext *s);
-offset_t url_fsize(ByteIOContext *s);
-int url_feof(ByteIOContext *s);
 int url_ferror(ByteIOContext *s);
 
-#define URL_EOF (-1)
-int url_fgetc(ByteIOContext *s);
-#ifdef __GNUC__
-int url_fprintf(ByteIOContext *s, const char *fmt, ...) __attribute__ ((__format__ (__printf__, 2, 3)));
-#else
-int url_fprintf(ByteIOContext *s, const char *fmt, ...);
-#endif
-char *url_fgets(ByteIOContext *s, char *buf, int buf_size);
-
-void put_flush_packet(ByteIOContext *s);
-
 int get_buffer(ByteIOContext *s, unsigned char *buf, int size);
-int get_partial_buffer(ByteIOContext *s, unsigned char *buf, int size);
 int get_byte(ByteIOContext *s);
-unsigned int get_le24(ByteIOContext *s);
-unsigned int get_le32(ByteIOContext *s);
-uint64_t get_le64(ByteIOContext *s);
-unsigned int get_le16(ByteIOContext *s);
 
-char *get_strz(ByteIOContext *s, char *buf, int maxlen);
-unsigned int get_be16(ByteIOContext *s);
-unsigned int get_be24(ByteIOContext *s);
-unsigned int get_be32(ByteIOContext *s);
-uint64_t get_be64(ByteIOContext *s);
-
-static inline int url_is_streamed(ByteIOContext *s)
-{
-    return s->is_streamed;
-}
-
-int url_fdopen(ByteIOContext *s, URLContext *h);
-int url_setbufsize(ByteIOContext *s, int buf_size);
 int url_fopen(ByteIOContext *s, const char *filename, int flags);
 int url_fclose(ByteIOContext *s);
-URLContext *url_fileno(ByteIOContext *s);
-int url_fget_max_packet_size(ByteIOContext *s);
-
-int url_open_buf(ByteIOContext *s, uint8_t *buf, int buf_size, int flags);
-int url_close_buf(ByteIOContext *s);
-
-int url_open_dyn_buf(ByteIOContext *s);
-int url_open_dyn_packet_buf(ByteIOContext *s, int max_packet_size);
-int url_close_dyn_buf(ByteIOContext *s, uint8_t **pbuffer);
-
-unsigned long get_checksum(ByteIOContext *s);
-void init_checksum(ByteIOContext *s, unsigned long (*update_checksum)(unsigned long c, const uint8_t *p, unsigned int len), unsigned long checksum);
 
 /* file.c */
 extern URLProtocol file_protocol;
