@@ -466,7 +466,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
    else 
     if (!src)
      break;
-   if(!used_bytes && !got_picture) return S_FALSE;
+   if(!used_bytes) return S_FALSE;
    src+=used_bytes;
    size-=used_bytes;
   }
