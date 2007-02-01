@@ -8157,8 +8157,11 @@ static int decode_frame(AVCodecContext *avctx,
     if(s->flags&CODEC_FLAG_TRUNCATED){
         int next= find_frame_end(h, buf, buf_size);
 
-        if( ff_combine_frame(&s->parse_context, next, &buf, &buf_size) < 0 )
+        if( ff_combine_frame(&s->parse_context, next, &buf, &buf_size) < 0 ){
+            pict->interlaced_frame=MB_MBAFF;
+            pict->top_field_first=1;
             return buf_size;
+        }
 //printf("next:%d buf_size:%d last_index:%d\n", next, buf_size, s->parse_context.last_index);
     }
 
@@ -8310,6 +8313,8 @@ static int decode_frame(AVCodecContext *avctx,
     /* we substract 1 because it is added on utils.c    */
     avctx->frame_number = s->picture_number - 1;
 #endif
+    pict->interlaced_frame=MB_MBAFF;
+    pict->top_field_first=1;
     return get_consumed_bytes(s, buf_index, buf_size);
 }
 
