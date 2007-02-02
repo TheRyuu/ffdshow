@@ -431,7 +431,7 @@ void TglobalSettingsDecVideo::load(void)
  fixMissing(wmv1,IDFF_MOVIE_LAVC);
  fixMissing(wmv2,IDFF_MOVIE_LAVC);
  fixMissing(wmv3,IDFF_MOVIE_LAVC);
- fixMissing(wvc1,IDFF_MOVIE_WMV9);
+ fixMissing(wvc1,IDFF_MOVIE_LAVC);
  fixMissing(mss2,IDFF_MOVIE_WMV9);
  fixMissing(wvp2,IDFF_MOVIE_WMV9);
  fixMissing(vp5 ,IDFF_MOVIE_LAVC);
@@ -516,7 +516,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(MSS2,mss2 & rawmask,CODEC_ID_WMV9_LIB) \
  FF_FOURCC1_OP(WVP2,wvp2 & rawmask,CODEC_ID_WMV9_LIB) \
  FF_FOURCC1_OP(WMVP,wvp2 & rawmask,CODEC_ID_WMV9_LIB) \
- FF_FOURCC1_OP(WVC1,wvc1 & rawmask,CODEC_ID_WMV9_LIB) \
+ FF_FOURCC1_OP(WVC1,wvc1 & rawmask,CODEC_ID_VC1) \
  FF_FOURCC1_OP(VP50,vp5 & rawmask,CODEC_ID_VP5) \
  FF_FOURCC1_OP(VP60,vp6 & rawmask,CODEC_ID_VP6) \
  FF_FOURCC1_OP(VP61,vp6 & rawmask,CODEC_ID_VP6) \
