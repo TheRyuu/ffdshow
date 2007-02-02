@@ -669,10 +669,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\lzo.c"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\mace.c"
 				>
 			</File>
@@ -1103,10 +1099,6 @@
 			</File>
 			<File
 				RelativePath="libavcodec\indeo3data.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\lzo.h"
 				>
 			</File>
 			<File
@@ -1561,6 +1553,14 @@
 			</File>
 			<File
 				RelativePath=".\libavutil\log.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\lzo.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\lzo.h"
 				>
 			</File>
 			<File

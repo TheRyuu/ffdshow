@@ -65,7 +65,6 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/jrevdct.c \
       $(LAVC_DIR)/lcl.c \
       $(LAVC_DIR)/loco.c \
-      $(LAVC_DIR)/lzo.c \
       $(LAVC_DIR)/mace.c \
       $(LAVC_DIR)/mdct.c \
       $(LAVC_DIR)/mjpeg.c \
@@ -132,6 +131,7 @@ SRCS_C=DllEntry.c \
       $(LAVU_DIR)/intfloat_readwrite.c \
       $(LAVU_DIR)/lls.c \
       $(LAVU_DIR)/log.c \
+      $(LAVU_DIR)/lzo.c \
       $(LAVU_DIR)/mathematics.c \
       $(LAVU_DIR)/mem.c \
       $(LAVU_DIR)/rational.c \
