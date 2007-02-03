@@ -66,7 +66,7 @@ static __forceinline wchar_t* strpbrk(const wchar_t *a, const wchar_t *b) {retur
 template<class Tout> struct text
 // ANSI <--> UNICODE conversion.
 // in     : input  string in char* or wchar_t*.
-// inlen  : count of characters, not byte size!!
+// inlen  : count of characters, not byte size!! -1 for null terminated string.
 // out    : output string in char* or wchar_t*.
 // outlen : count of characters, not byte size!!
 {
@@ -79,20 +79,17 @@ public:
  template<class Tin> inline text(const Tin *in,size_t inlen,Tout *Ibuf,size_t outlen);
  ~text() {if (own) delete []buf;}
  operator const Tout*() const {return buf;}
- // template<class Tin> inline text(const Tin *in,size_t inlen,Tout *Ibuf);
 };
 
 
 template<> template<> inline text<char>::text(const char *in):buf(const_cast<char*>(in)),own(false) {}
 template<> template<> inline text<char>::text(const char *in,char *Ibuf):buf(strcpy(Ibuf,in)),own(false) {}
 template<> template<> inline text<char>::text(const char *in,size_t inlen,char *Ibuf,size_t outlen):buf(strncpy(Ibuf,in,(inlen < outlen ? inlen : outlen))),own(false) {}
-//template<> template<> inline text<char>::text(const char *in,size_t inlen,char *Ibuf):buf(strncpy(Ibuf,in,inlen)),own(false) {}
 
 
 template<> template<> inline text<wchar_t>::text(const wchar_t *in):buf(const_cast<wchar_t*>(in)),own(false) {}
 template<> template<> inline text<wchar_t>::text(const wchar_t *in,wchar_t *Ibuf):buf(strcpy(Ibuf,in)),own(false) {}
 template<> template<> inline text<wchar_t>::text(const wchar_t *in,size_t inlen,wchar_t *Ibuf,size_t outlen):buf(strncpy(Ibuf,in,(inlen < outlen ? inlen : outlen))),own(false) {}
-//template<> template<> inline text<wchar_t>::text(const wchar_t *in,size_t inlen,wchar_t *Ibuf):buf(strncpy(Ibuf,in,inlen)),own(false) {}
 
 
 template<> template<> inline text<wchar_t>::text(const char *in):own(in?true:false)
@@ -115,10 +112,6 @@ template<> template<> inline text<wchar_t>::text(const char *in,size_t inlen,wch
 {
   MultiByteToWideChar(CP_ACP,0,in,int(inlen),buf,int(outlen));
 }
-//template<> template<> inline text<wchar_t>::text(const char *in,size_t l,wchar_t *Ibuf):own(false),buf(Ibuf)
-//{
-// MultiByteToWideChar(CP_ACP,0,in,int(l),buf,int(l));
-//}
 
 
 template<> template<> inline text<char>::text(const wchar_t *in):own(in?true:false)
@@ -143,10 +136,6 @@ template<> template<> inline text<char>::text(const wchar_t *in,size_t inlen,cha
 {
  WideCharToMultiByte(CP_ACP,0,in,int(inlen),buf,int(outlen),NULL,NULL);
 }
-//template<> template<> inline text<char>::text(const wchar_t *in,size_t l,char *Ibuf):own(false),buf(Ibuf)
-//{
-// WideCharToMultiByte(CP_ACP,0,in,int(l/2),buf,int(l),NULL,NULL);
-//}
 
 #endif
 

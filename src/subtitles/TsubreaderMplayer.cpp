@@ -11,6 +11,7 @@
 #include "TsubtitlesSettings.h"
 #include "Tstream.h"
 #include "Tconfig.h"
+#include "ffdebug.h"
 
 //========================================= TsubtitleParser =========================================
 template<class tchar> TsubtitleParser<tchar>::TsubtitleParser(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader):
@@ -449,11 +450,12 @@ template<class tchar> Tsubtitle* TsubtitleParserRt<tchar>::parse(Tstream &fd,int
     return store(current);
 }
 
-template<class tchar>  TsubtitleParserSSA<tchar>::TsubtitleParserSSA(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader):
+template<class tchar>  TsubtitleParserSSA<tchar>::TsubtitleParserSSA(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader,bool isEmbedded0):
  TsubtitleParser<tchar>(Iformat,Ifps,Icfg,Iffcfg,Isubreader),
  inV4styles(0),inEvents(0),inInfo(0),
  playResX(0),playResY(0),
- timer(1,1)
+ timer(1,1),
+ isEmbedded(isEmbedded0)
 {
 } 
 
@@ -668,7 +670,9 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
      for (typename Tparts::const_iterator f=fields.begin();f!=fields.end();f++)
       {
        if (strnicmp(f->first,_L("marked"),6)==0)
-        ;//eventFormat.push_back(&Tevent::marked);
+        {
+         if (!isEmbedded) eventFormat.push_back(&Tevent::marked);
+        }
        else if (strnicmp(f->first,_L("start"),5)==0)
         eventFormat.push_back(&Tevent::start);
        else if (strnicmp(f->first,_L("end"),3)==0)
@@ -933,7 +937,7 @@ template<class tchar> Tsubtitle* TsubtitleParserMPL2<tchar>::parse(Tstream &fd,i
     return store(current);
 }
 
-template<class tchar> TsubtitleParserBase* TsubtitleParserBase::getParser0(int format,double fps,const TsubtitlesSettings *cfg,const Tconfig *ffcfg,Tsubreader *subreader)
+template<class tchar> TsubtitleParserBase* TsubtitleParserBase::getParser0(int format,double fps,const TsubtitlesSettings *cfg,const Tconfig *ffcfg,Tsubreader *subreader,bool isEmbedded)
 {
  switch (format&Tsubreader::SUB_FORMATMASK)
   {
@@ -943,7 +947,7 @@ template<class tchar> TsubtitleParserBase* TsubtitleParserBase::getParser0(int f
    case Tsubreader::SUB_SAMI      :return new TsubtitleParserSami<tchar>(format,fps,cfg,ffcfg,subreader);
    case Tsubreader::SUB_VPLAYER   :return new TsubtitleParserVplayer<tchar>(format,fps,cfg,ffcfg,subreader);
    case Tsubreader::SUB_RT        :return new TsubtitleParserRt<tchar>(format,fps,cfg,ffcfg,subreader);
-   case Tsubreader::SUB_SSA       :return new TsubtitleParserSSA<tchar>(format,fps,cfg,ffcfg,subreader);
+   case Tsubreader::SUB_SSA       :return new TsubtitleParserSSA<tchar>(format,fps,cfg,ffcfg,subreader,isEmbedded);
    case Tsubreader::SUB_DUNNOWHAT :return new TsubtitleParserDunnowhat<tchar>(format,fps,cfg,ffcfg,subreader);
    case Tsubreader::SUB_MPSUB     :return new TsubtitleParserMPsub<tchar>(format,fps,cfg,ffcfg,subreader);
    case Tsubreader::SUB_AQTITLE   :return new TsubtitleParserAqt<tchar>(format,fps,cfg,ffcfg,subreader);
@@ -953,18 +957,18 @@ template<class tchar> TsubtitleParserBase* TsubtitleParserBase::getParser0(int f
    default:return NULL;
   }
 }
-TsubtitleParserBase* TsubtitleParserBase::getParser(int format,double fps,const TsubtitlesSettings *cfg,const Tconfig *ffcfg,Tsubreader *subreader,bool utf8)
+TsubtitleParserBase* TsubtitleParserBase::getParser(int format,double fps,const TsubtitlesSettings *cfg,const Tconfig *ffcfg,Tsubreader *subreader,bool utf8,bool isEmbedded)
 {
  if (ffcfg->unicodeOS && (utf8 || Tsubreader::getSubEnc(format)&Tstream::ENC_UNICODE))
-  return getParser0<wchar_t>(format,fps,cfg,ffcfg,subreader);
+  return getParser0<wchar_t>(format,fps,cfg,ffcfg,subreader,isEmbedded);
  else
-  return getParser0<char>(format,fps,cfg,ffcfg,subreader);
+  return getParser0<char>(format,fps,cfg,ffcfg,subreader,isEmbedded);
 }
 
 //======================================= TsubreaderMplayer =======================================
-TsubreaderMplayer::TsubreaderMplayer(Tstream &fd,int sub_format,double fps,const TsubtitlesSettings *cfg,const Tconfig *ffcfg)
+TsubreaderMplayer::TsubreaderMplayer(Tstream &fd,int sub_format,double fps,const TsubtitlesSettings *cfg,const Tconfig *ffcfg,bool isEmbedded)
 {
- TsubtitleParserBase *parser=TsubtitleParserBase::getParser(sub_format,fps,cfg,ffcfg,this);
+ TsubtitleParserBase *parser=TsubtitleParserBase::getParser(sub_format,fps,cfg,ffcfg,this,false,isEmbedded);
  if (!parser) return;
  
  fd.rewind();

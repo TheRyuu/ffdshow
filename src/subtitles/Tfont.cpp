@@ -235,7 +235,7 @@ template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(TcharsChache 
   dx[i]=dy[i]=0;
  for (size_t i=0;i<strlens;i++)
   {
-   chars[i]=charsChache->getCharG(&s[i],prefs);
+   chars[i]=charsChache->getChar(&s[i],prefs);
    dx[0]+=chars[i]->dxCharY;
    if (s[i]=='\t')
     {
@@ -422,51 +422,63 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
  for (const_iterator i=begin();i!=end();i++) h+=prefs.linespacing*(*i)->height()/100;
 
  int y=(prefs.ypos<0) ? -prefs.ypos : (prefs.ypos*prefsdy)/100-h/2;
-
- const_iterator it=begin();
- unsigned int refResY= (*it)->props.refResY;
- refResY=refResY>0 ? refResY : prefsdy;
- unsigned int marginTop=0,marginBottom=0;
-
- if ((*it)->props.marginTop>0)
-  marginTop=(*it)->props.marginTop; //ASS
- else if ((*it)->props.marginV>0)
-  marginTop=(*it)->props.marginV; // SSA
-
- if ((*it)->props.marginBottom>0)
-  marginBottom=(*it)->props.marginBottom; // ASS
- else if ((*it)->props.marginV>0)
-  marginBottom=(*it)->props.marginV; // SSA
-
- switch ((*it)->props.alignment)
-  {
-   case 1: // SSA bottom
-   case 2:
-   case 3:
-    y=prefsdy-h-marginBottom*prefsdy/refResY;
-    break;
-   case 9: // SSA mid
-   case 10:
-   case 11:
-    y=(prefsdy-h)/2;
-    break;
-   case 5: // SSA top
-   case 6:
-   case 7:
-    y=marginTop*prefsdy/refResY;
-    break;
-   default:
-    break;
-  }
-
- if (y<0) y=0;
- if (y+h>=prefsdy)
-  y=prefsdy-h-1;
-
+ int old_alignment=-1;
 
  for (const_iterator i=begin();i!=end();y+=prefs.linespacing*(*i)->height()/100-2,i++)
   {
    if (y<0) continue;
+
+   unsigned int refResY= (*i)->props.refResY;
+   refResY=refResY>0 ? refResY : prefsdy;
+   unsigned int marginTop=0,marginBottom=0;
+
+   if ((*i)->props.marginTop>0)
+    marginTop=(*i)->props.marginTop; //ASS
+   else if ((*i)->props.marginV>0)
+    marginTop=(*i)->props.marginV; // SSA
+
+   if ((*i)->props.marginBottom>0)
+    marginBottom=(*i)->props.marginBottom; // ASS
+   else if ((*i)->props.marginV>0)
+    marginBottom=(*i)->props.marginV; // SSA
+
+   if ((*i)->props.alignment>0 && (*i)->props.alignment!=old_alignment)
+    {
+     old_alignment=(*i)->props.alignment;
+     unsigned int hParagaph=0;
+     for (const_iterator pi=i;pi!=end();pi++)
+      {
+       if ((*pi)->props.alignment!=old_alignment)
+        break;
+       hParagaph+=prefs.linespacing*(*pi)->height()/100;
+      }
+     
+     switch ((*i)->props.alignment)
+      {
+       case 1: // SSA bottom
+       case 2:
+       case 3:
+        y=prefsdy-hParagaph-marginBottom*prefsdy/refResY;
+        break;
+       case 9: // SSA mid
+       case 10:
+       case 11:
+        y=(prefsdy-hParagaph)/2;
+        break;
+       case 5: // SSA top
+       case 6:
+       case 7:
+        y=marginTop*prefsdy/refResY;
+        break;
+       default:
+        break;
+      }
+
+     if (y<0) y=0;
+     if (y+hParagaph>=prefsdy)
+      y=prefsdy-hParagaph-1;
+    }
+
    if (y+(*i)->height()>=prefsdy) break;
    //TODO: cleanup
    int x;
@@ -485,6 +497,7 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
          x=(*i)->props.marginL*prefsdx/refResX;
         else
          x=0;
+        break;
        case 2: // center(SSA)
        case 6:
        case 10:
@@ -540,46 +553,35 @@ TcharsChache::~TcharsChache()
  for (Tchars::iterator c=chars.begin();c!=chars.end();c++)
   delete c->second;
 }
-template<class tchar> const TrenderedSubtitleWord* TcharsChache::getChar(tchar c,const TrenderedSubtitleLines::TprintPrefs &prefs)
+template<> const TrenderedSubtitleWord* TcharsChache::getChar(const wchar_t *s,const TrenderedSubtitleLines::TprintPrefs &prefs)
 {
- Tchars::iterator l=chars.find(c);
+ const wchar_t *wcp=(wchar_t *)s;
+ Tchars::iterator l=chars.find(*wcp);
  if (l!=chars.end()) return l->second;
- TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,&c,1,matrix,yuv,prefs,xscale);
- chars[c]=ln;
+ TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,matrix,yuv,prefs,xscale);
+ chars[*wcp]=ln;
  return ln;
 }
 
-template<class tchar> const TrenderedSubtitleWord* TcharsChache::getCharG(tchar *s,const TrenderedSubtitleLines::TprintPrefs &prefs)
+template<> const TrenderedSubtitleWord* TcharsChache::getChar(const char *s,const TrenderedSubtitleLines::TprintPrefs &prefs)
 {
- if(sizeof(tchar)==sizeof(wchar_t))
+ if(_mbclen((unsigned char *)s)==1)
   {
-   const wchar_t *wcp=(wchar_t *)s;
-   Tchars::iterator l=chars.find(*wcp);
+   char c=*s;
+   Tchars::iterator l=chars.find(c);
    if (l!=chars.end()) return l->second;
    TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,matrix,yuv,prefs,xscale);
-   chars[*wcp]=ln;
+   chars[c]=ln;
    return ln;
   }
  else
   {
-   if(_mbclen((unsigned char *)s)==1)
-    {
-     char c=*s;
-     Tchars::iterator l=chars.find(c);
-     if (l!=chars.end()) return l->second;
-     TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,matrix,yuv,prefs,xscale);
-     chars[c]=ln;
-     return ln;
-    }
-   else
-    {
-     const wchar_t *wcp=(wchar_t *)s;
-     Tchars::iterator l=chars.find(*wcp);
-     if (l!=chars.end()) return l->second;
-     TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,2,matrix,yuv,prefs,xscale);
-     chars[*wcp]=ln;
-     return ln;
-    }
+   const wchar_t *wcp=(wchar_t *)s;
+   Tchars::iterator l=chars.find(*wcp);
+   if (l!=chars.end()) return l->second;
+   TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,2,matrix,yuv,prefs,xscale);
+   chars[*wcp]=ln;
+   return ln;
   }
 }
 

@@ -59,8 +59,7 @@ private:
  int xscale;
 public:
  TcharsChache(HDC Ihdc,const short (*Imatrix)[5],const YUVcolor &Iyuv,int Ixscale);
- template<class tchar> const TrenderedSubtitleWord *getChar(tchar c,const TrenderedSubtitleLines::TprintPrefs &prefs);
- template<class tchar> const TrenderedSubtitleWord *getCharG(tchar *s,const TrenderedSubtitleLines::TprintPrefs &prefs);
+ template<class tchar> const TrenderedSubtitleWord *getChar(tchar *s,const TrenderedSubtitleLines::TprintPrefs &prefs);
  ~TcharsChache();
 };
 

@@ -245,7 +245,7 @@ bool TsubtitlesFile::init(const TsubtitlesSettings *cfg,const char_t *IsubFlnm,d
    else if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_USF)
     subs=new TsubreaderUSF2(fs,deci,false);
    else 
-    subs=new TsubreaderMplayer(fs,sub_format,fps,cfg,ffcfg);
+    subs=new TsubreaderMplayer(fs,sub_format,fps,cfg,ffcfg,false);
   }  
  fclose(f);
  if (checkOnly==2)

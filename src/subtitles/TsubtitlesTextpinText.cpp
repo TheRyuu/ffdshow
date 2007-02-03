@@ -69,7 +69,7 @@ void TsubtitlesTextpinText::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop
          unsigned int fps1000=25000;
          if (comptrQ<IffdshowDecVideo> deciV=deci)
           deciV->getAVIfps(&fps1000);
-         subs=new TsubreaderMplayer(fs,sub_format,fps1000/1000.0,cfg,ffcfg);
+         subs=new TsubreaderMplayer(fs,sub_format,fps1000/1000.0,cfg,ffcfg,true);
         }
        else
         subs=NULL;
@@ -85,7 +85,7 @@ void TsubtitlesTextpinText::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop
      unsigned int fps1000=25000;
      if (comptrQ<IffdshowDecVideo> deciV=deci)
       deciV->getAVIfps(&fps1000);
-     parser=TsubtitleParserBase::getParser(type,fps1000/1000.0,cfg,ffcfg,subs,utf8);
+     parser=TsubtitleParserBase::getParser(type,fps1000/1000.0,cfg,ffcfg,subs,utf8,true);
      if (initdata.size())
       {
        TstreamMem fs(initdata,initdata.size());

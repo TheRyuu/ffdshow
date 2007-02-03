@@ -8,7 +8,7 @@
 class TsubtitleParserBase
 {
 private:
- template<class tchar> static TsubtitleParserBase* getParser0(int format,double fps,const TsubtitlesSettings *cfg,const Tconfig *ffcfg,Tsubreader *subreader);
+ template<class tchar> static TsubtitleParserBase* getParser0(int format,double fps,const TsubtitlesSettings *cfg,const Tconfig *ffcfg,Tsubreader *subreader,bool isEmbedded);
 protected:
  static const int LINE_LEN=MAX_SUBTITLE_LENGTH; // Maximal length of line of a subtitle
  int format;
@@ -22,7 +22,7 @@ protected:
    return REF_SECOND_MULT*h*60*60+REF_SECOND_MULT*m*60+REF_SECOND_MULT*s+REF_SECOND_MULT*hunsec/100;
   }
 public:
- static TsubtitleParserBase* getParser(int format,double fps,const TsubtitlesSettings *cfg,const Tconfig *ffcfg,Tsubreader *Isubreader,bool utf8=false);
+ static TsubtitleParserBase* getParser(int format,double fps,const TsubtitlesSettings *cfg,const Tconfig *ffcfg,Tsubreader *Isubreader,bool utf8,bool isEmbedded);
  TsubtitleParserBase(int Iformat,double Ifps):format(Iformat),fps(Ifps) {}
  enum FLAGS {PARSETIME=1,SSA_NODIALOGUE=2};
  virtual Tsubtitle* parse(Tstream &fd,int flags=PARSETIME)=0;
@@ -94,6 +94,7 @@ private:
  uint8_t inV4styles,inEvents,inInfo;
  int playResX,playResY;
  Rational timer;
+ bool isEmbedded;
  enum
   {
    SSA=4,ASS=5,ASS2=6
@@ -130,7 +131,7 @@ private:
  TeventFormat eventFormat;
  TSubtitleProps defprops;
 public:
- TsubtitleParserSSA(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader);
+ TsubtitleParserSSA(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader,bool isEmbedded0);
  virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME);
 };
 template<class tchar> class TsubtitleParserDunnowhat :public TsubtitleParser<tchar>
@@ -182,7 +183,7 @@ struct TsubreaderMplayer :Tsubreader
 private:
  void processOverlap(int sub_format);
 public:
- TsubreaderMplayer(Tstream &f,int Isub_format,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg);
+ TsubreaderMplayer(Tstream &f,int Isub_format,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,bool isEmbedded);
 };
 
 #endif
