@@ -489,7 +489,7 @@ void TffdshowVideoInputPin::setSampleSkipped(void)
   video->onDiscontinuity();
 }
 
-const char_t* TffdshowVideoInputPin::findAutoSubflnm(IcheckSubtitle *checkSubtitle,const char_t *searchDir,bool heuristic)
+const char_t* TffdshowVideoInputPin::findAutoSubflnm(IcheckSubtitle *checkSubtitle,const char_t *searchDir,const char_t *searchExt,bool heuristic)
 {
  if (IsConnected()==FALSE) return _l("");
  const char_t *AVIname=getFileSourceName();
@@ -497,7 +497,7 @@ const char_t* TffdshowVideoInputPin::findAutoSubflnm(IcheckSubtitle *checkSubtit
  if (autosubflnm[0]=='\0' || oldSubHeuristic!=heuristic || stricmp(oldSubSearchDir,searchDir)!=0)
   {
    oldSubHeuristic=heuristic;strcpy(oldSubSearchDir,searchDir);
-   TsubtitlesFile::findSubtitlesFile(AVIname,searchDir,autosubflnm,MAX_PATH,heuristic,checkSubtitle);
+   TsubtitlesFile::findSubtitlesFile(AVIname,searchDir,searchExt,autosubflnm,MAX_PATH,heuristic,checkSubtitle);
   } 
  return autosubflnm;
 }

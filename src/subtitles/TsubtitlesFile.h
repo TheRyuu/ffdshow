@@ -22,7 +22,7 @@ public:
  static const char_t *mask;
  static bool extMatch(const char_t *flnm);
  static void findPossibleSubtitles(const char_t *aviFlnm,const char_t *sdir,strings &files);
- static void findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,char_t *subFlnm,size_t buflen,int heuristic,IcheckSubtitle *checkSubtitle);
+ static void findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,const char_t *sext,char_t *subFlnm,size_t buflen,int heuristic,IcheckSubtitle *checkSubtitle);
 
  TsubtitlesFile(IffdshowBase *Ideci);
  virtual ~TsubtitlesFile();

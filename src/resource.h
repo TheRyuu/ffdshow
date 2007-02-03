@@ -161,7 +161,6 @@
 #define IDD_QUEUEMSG_6                  292
 #define IDD_QUEUEMSG_7                  293
 #define IDD_QUEUEMSG_8                  294
-
 #define IDC_TBR_ASPECT_USER             1002
 #define IDC_TBR_PPQUAL                  1002
 #define IDC_TBR_LUMGAIN                 1003
@@ -487,7 +486,7 @@
 #define IDC_LBL_POSTPROC_NIC_XTHRES     1242
 #define IDC_LBL_POSTPROC_NIC_YTHRES     1243
 #define IDC_BT_SUB_LOAD                 1244
-#define IDC_ED_SUB_SEARCHDIR            1246
+#define IDC_ED_SUB_SEARCH_DIR           1246
 #define IDC_BT_OSD_LINE_UP              1248
 #define IDC_BT_OSD_LINE_DOWN            1249
 #define IDC_LV_OSD_LINES                1250
@@ -1705,6 +1704,9 @@
 #define IDC_LBL_DELAY_H264              1964
 #define IDC_CBX_OUT_HWDEINT_METHOD      1965
 #define IDC_TXT_OUT_DEINT_METHOD        1966
+#define IDC_ED_SUB_SEARCH_EXT           1967
+#define IDC_TXT_SERCH_ORDER             1968
+#define IDH_ED_SUB_SEARCH_EXT            1969
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -1721,7 +1723,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        218
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         1967
+#define _APS_NEXT_CONTROL_VALUE         1970
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

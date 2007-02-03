@@ -427,6 +427,7 @@
 #define IDFF_subSpeed2               830
 #define IDFF_subAutoFlnm             814
 #define IDFF_subSearchDir            822
+#define IDFF_subSearchExt            862
 #define IDFF_subSearchHeuristic      856
 #define IDFF_subWatch                826
 #define IDFF_subStereoscopic         833

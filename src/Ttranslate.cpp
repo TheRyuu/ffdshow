@@ -285,8 +285,8 @@ again:
  const char_t *res=dlgs[dlgId].translate(dlgId,0,NULL,NULL);
  if (!res)
   {
-   char_t dlgname[256];
-   LoadString(hi,dlgId,dlgname,256);
+   char_t dlgname[1024];
+   LoadString(hi,dlgId,dlgname,(int)countof(dlgname));
    dlgs[dlgId][0]=dlgname;
    goto again;
   }

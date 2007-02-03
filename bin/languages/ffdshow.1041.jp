@@ -510,6 +510,7 @@ Set all supported formats to XviD=サポートされた形式すべてをXviDに設定する
 1789=SSA、ASSおよびASS2の字幕を受け入れる (実験的)
 1837=ヒューリスティック探索 (発見的探索)
 1872=:
+1968=拡張子の優先順位:
 [115]
 0=コーデック
 1283=サポートされたコーデック
@@ -1582,3 +1583,5 @@ Use \n for line breaks.=改行には\nを使用します。
 0=Windows Media Playerではキューを使用できません。
 [293]
 0=YV12 + VMR9ではキューを使用できません。
+[1969]
+0=ffdshowは字幕ファイルを上のエディトボックスで指定されたフォルダの中から探します。\r\n例えばvideo.aviに対してvideo.utf, video.idx, video.sub,...を検索し最初に見つかったものを採用します。\r\n拡張子をセミコロンで区切って好みの順番で列挙して下さい。\r\n\r\nなおデフォルトの設定はutf;idx;sub;srt;smi;rt;txt;ssa;aqt;mpl;usfです。

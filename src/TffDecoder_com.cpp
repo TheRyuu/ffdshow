@@ -301,7 +301,7 @@ STDMETHODIMP_(const char_t*) TffdshowDecVideo::findAutoSubflnm3(void)
 }
 STDMETHODIMP_(const char_t*) TffdshowDecVideo::findAutoSubflnms(IcheckSubtitle *checkSubtitle)
 {
- return inpin->findAutoSubflnm(checkSubtitle,getParamStr2(IDFF_subSearchDir),!!getParam2(IDFF_subSearchHeuristic));
+ return inpin->findAutoSubflnm(checkSubtitle,getParamStr2(IDFF_subSearchDir),getParamStr2(IDFF_subSearchExt),!!getParam2(IDFF_subSearchHeuristic));
 }
 
 STDMETHODIMP TffdshowDecVideo::shortOSDmessage(const char_t *msg,unsigned int duration)

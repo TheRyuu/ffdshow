@@ -91,7 +91,8 @@ public:
    virtual void getDefaultStr(int id,char_t *buf,size_t buflen);
   public:
    TsubtitlesSettings(TintStrColl *Icoll);
-   char_t searchDir[2*MAX_PATH];int searchHeuristic;
+   char_t searchDir[2*MAX_PATH];char_t searchExt[2*MAX_PATH];
+   int searchHeuristic;
    int watch;
    int textpin,textpinSSA;
   } sub;

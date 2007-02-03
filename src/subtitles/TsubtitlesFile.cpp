@@ -65,7 +65,7 @@ static void fixRelativePaths(strings &dirs,const char_t *basepath)
    }
 }
 
-void TsubtitlesFile::findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,char_t *subFlnm,size_t buflen,int heuristic,IcheckSubtitle *checkSubtitle)
+void TsubtitlesFile::findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,const char_t *sext,char_t *subFlnm,size_t buflen,int heuristic,IcheckSubtitle *checkSubtitle)
 {
  if (!subFlnm) return;
  if (heuristic)
@@ -136,9 +136,11 @@ void TsubtitlesFile::findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,
        if (!d) continue;
        char_t subFlnm0[MAX_PATH];
        //sub_extsfind(d->c_str(),name,subFlnm0);
-       for (const char_t* *e=exts;*e;e++)
+       strings etensions;strtok(sext,_l(";"),etensions);
+
+       for (strings::const_iterator e=etensions.begin();e!=etensions.end();e++)
         {
-         _makepath(subFlnm0,NULL,d->c_str(),name,*e);
+         _makepath(subFlnm0,NULL,d->c_str(),name,e->c_str());
          if (fileexists(subFlnm0) && (!checkSubtitle || checkSubtitle->checkSubtitle(subFlnm0)))
           {
            strncpy(subFlnm,subFlnm0,buflen);subFlnm[buflen-1]='\0';
@@ -154,8 +156,9 @@ void TsubtitlesFile::findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,
        for (strings::const_iterator f=files.begin();f!=files.end();f++)
         {
          char_t ext[MAX_PATH];extractfileext(f->c_str(),ext);strlwr(ext);
-         for (const char_t* *e=exts;*e;e++)
-          if (strcmp(ext,*e)==0 && (!checkSubtitle || checkSubtitle->checkSubtitle(f->c_str())))
+         strings etensions;strtok(sext,_l(";"),etensions);
+         for (strings::const_iterator e=etensions.begin();e!=etensions.end();e++)
+          if (strcmp(ext,e->c_str())==0 && (!checkSubtitle || checkSubtitle->checkSubtitle(f->c_str())))
            {
             strncpy(subFlnm,f->c_str(),buflen);subFlnm[buflen-1]='\0';
             return;

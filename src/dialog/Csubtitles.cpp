@@ -26,7 +26,8 @@
 void TsubtitlesPage::init(void)
 {
  SendDlgItemMessage(m_hwnd,IDC_CBX_SUB_FLNM,CB_LIMITTEXT,MAX_PATH,0);
- edLimitText(IDC_ED_SUB_SEARCHDIR,MAX_PATH);
+ edLimitText(IDC_ED_SUB_SEARCH_DIR,MAX_PATH);
+ edLimitText(IDC_ED_SUB_SEARCH_EXT,MAX_PATH);
  
  tbrSetRange(IDC_TBR_SUB_POSX,0,100,10);
  tbrSetRange(IDC_TBR_SUB_POSY,0,100,10);
@@ -36,6 +37,7 @@ void TsubtitlesPage::init(void)
  if(tr)
   {
    addHint(IDC_CHB_SUBTEXTPIN,tr->translate(IDH_CHB_SUBTEXTPIN));
+   addHint(IDC_ED_SUB_SEARCH_EXT,tr->translate(IDH_ED_SUB_SEARCH_EXT));
   }
  setFont(IDC_BT_SUBTITLES_EXPAND,parent->arrowsFont);
 }
@@ -79,7 +81,8 @@ void TsubtitlesPage::sub2dlg(void)
  setCheck(IDC_RBT_SUB_SEARCHDIR,autoflnm);
  setCheck(IDC_RBT_SUB_FLNM,!autoflnm);
 
- setDlgItemText(m_hwnd,IDC_ED_SUB_SEARCHDIR,cfgGetStr(IDFF_subSearchDir));
+ setDlgItemText(m_hwnd,IDC_ED_SUB_SEARCH_DIR,cfgGetStr(IDFF_subSearchDir));
+ setDlgItemText(m_hwnd,IDC_ED_SUB_SEARCH_EXT,cfgGetStr(IDFF_subSearchExt));
 
  SetDlgItemInt(m_hwnd,IDC_ED_SUB_DELAY ,cfgGet(IDFF_subDelay ),TRUE );
  SetDlgItemInt(m_hwnd,IDC_ED_SUB_SPEED ,cfgGet(IDFF_subSpeed ),FALSE);
@@ -93,8 +96,11 @@ void TsubtitlesPage::auto2dlg(void)
  static const int idFile[]={IDC_CBX_SUB_FLNM,IDC_BT_SUB_LOADFILE,0};
  enable(!a,idFile);
  setCheck(IDC_CHB_SUB_SEARCHHEURISTIC,cfgGet(IDFF_subSearchHeuristic));
- static const int idSearch[]={IDC_ED_SUB_SEARCHDIR,IDC_BT_SUB_SEARCHDIR,IDC_CHB_SUB_SEARCHHEURISTIC,0};
+ static const int idSearch[]={IDC_ED_SUB_SEARCH_DIR,IDC_BT_SUB_SEARCHDIR,IDC_CHB_SUB_SEARCHHEURISTIC,0};
+ static const int idSearchExt[]={IDC_ED_SUB_SEARCH_EXT,IDC_TXT_SERCH_ORDER,0};
  enable(a,idSearch);
+ int b=getCheck(IDC_CHB_SUB_SEARCHHEURISTIC);
+ enable(a && !b,idSearchExt);
  if (a && (filterMode&IDFF_FILTERMODE_PLAYER))
   {
    const char_t *autosubflnm=deciV->findAutoSubflnm3();
@@ -173,12 +179,21 @@ INT_PTR TsubtitlesPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          return TRUE; 
         }
        break; 
-      case IDC_ED_SUB_SEARCHDIR:
+      case IDC_ED_SUB_SEARCH_DIR:
        if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
          char_t sdir[MAX_PATH];
-         GetDlgItemText(m_hwnd,IDC_ED_SUB_SEARCHDIR,sdir,MAX_PATH);
+         GetDlgItemText(m_hwnd,IDC_ED_SUB_SEARCH_DIR,sdir,MAX_PATH);
          cfgSet(IDFF_subSearchDir,sdir);
+         return TRUE;
+        }
+       break;
+      case IDC_ED_SUB_SEARCH_EXT:
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
+        {
+         char_t sext[MAX_PATH];
+         GetDlgItemText(m_hwnd,IDC_ED_SUB_SEARCH_EXT,sext,MAX_PATH);
+         cfgSet(IDFF_subSearchExt,sext);
          return TRUE;
         }
        break;
@@ -286,7 +301,7 @@ TsubtitlesPage::TsubtitlesPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff)
    IDC_CHB_SUB_WATCH,IDFF_subWatch,NULL,
    IDC_CHB_SUB_STEREOSCOPIC,IDFF_subStereoscopic,&TsubtitlesPage::stereo2dlg,
    IDC_CHB_SUBTEXTPIN,IDFF_subTextpin,NULL,
-   IDC_CHB_SUB_SEARCHHEURISTIC,IDFF_subSearchHeuristic,NULL,
+   IDC_CHB_SUB_SEARCHHEURISTIC,IDFF_subSearchHeuristic,&TsubtitlesPage::auto2dlg,
    IDC_CHB_SUBTITLES_EXPAND,IDFF_subIsExpand,&TsubtitlesPage::expand2dlg,
    IDC_CHB_SUBCC,IDFF_subCC,NULL,
    IDC_CHB_SUBTEXTPIN_SSA,IDFF_subTextpinSSA,NULL,

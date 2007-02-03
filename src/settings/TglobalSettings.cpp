@@ -770,6 +770,8 @@ TglobalSettingsDecVideo::TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Ico
   {
    IDFF_subSearchDir,(TstrVal)&TsubtitlesSettings::searchDir,2*MAX_PATH ,_l(""),0,
      _l("subSearchDir"),NULL,
+   IDFF_subSearchExt,(TstrVal)&TsubtitlesSettings::searchExt,2*MAX_PATH ,_l(""),0,
+     _l("subSearchExt"),_l("utf;idx;sub;srt;smi;rt;txt;ssa;aqt;mpl;usf"),
    0
   };
  addOptions(sopts); 
@@ -855,7 +857,7 @@ int TglobalSettingsDecAudio::getDefault(int id)
    default:return TglobalSettingsDec::getDefault(id);
   }
 }
-void TglobalSettingsDecAudio::getDefaultStr(int id,char_t *buf,size_t buflen)
+    void TglobalSettingsDecAudio::getDefaultStr(int id,char_t *buf,size_t buflen)
 {
  if (id==IDFF_winamp2dir)
   {
