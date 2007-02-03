@@ -424,8 +424,10 @@ void TcodecsPageVideo::fillCodecs(void)
     }
    formats.push_back(Tformat(_l("MPEG in AVI")   ,IDFF_mpegAVI,movies_mpeg12,_l("MPEG, MPG1, MPG2, 1001, 1002"),options_mpeg12));
    formats.push_back(Tformat(_l("Other MPEG2")   ,IDFF_em2v,movies_mpeg12,_l("EM2V, MMES"),options_mpeg12));
-   formats.push_back(Tformat(_l("WMV1/7")        ,IDFF_wmv1,IDFF_MOVIE_LAVC,_l("Windows Media Video 7 (WMV1)")));
-   formats.push_back(Tformat(_l("WMV2/8")        ,IDFF_wmv2,IDFF_MOVIE_LAVC,_l("Windows Media Video 8 (WMV2)"),NULL,LAVC_UNSTABLE));
+   static const int movies_wmv1[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9,0};
+   formats.push_back(Tformat(_l("WMV1/7")        ,IDFF_wmv1,movies_wmv1,_l("Windows Media Video 7 (WMV1)")));
+   static const int movies_wmv2[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9,0};
+   formats.push_back(Tformat(_l("WMV2/8")        ,IDFF_wmv2,movies_wmv2,_l("Windows Media Video 8 (WMV2)"),NULL,LAVC_UNSTABLE));
    static const int movies_wmv3[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9,0};
    formats.push_back(Tformat(_l("WMV3/9")        ,IDFF_wmv3,movies_wmv3,_l("Windows Media Video 9 Simple & Main Profiles (WMV3)")));
    static const int movies_wvc1[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9,0};

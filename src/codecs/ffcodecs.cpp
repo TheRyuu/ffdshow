@@ -67,7 +67,7 @@ const FOURCC* getCodecFOURCCs(CodecID codecId)
     {
      static const FOURCC fccs[]={FOURCC_H261,0};
      return fccs;
-    } 
+    }
    case CODEC_ID_WMV1:
     {
      static const FOURCC fccs[]={FOURCC_WMV1,0};
@@ -80,7 +80,7 @@ const FOURCC* getCodecFOURCCs(CodecID codecId)
     }
    case CODEC_ID_WMV9_LIB:
     {
-     static const FOURCC fccs[]={FOURCC_WVC1,FOURCC_WMV3,FOURCC_MSS1,FOURCC_MSS2,FOURCC_WMVP,FOURCC_WVP2,0};
+     static const FOURCC fccs[]={FOURCC_WVC1,FOURCC_WMV3,FOURCC_WMV2,FOURCC_WMV1,FOURCC_MSS1,FOURCC_MSS2,FOURCC_WMVP,FOURCC_WVP2,0};
      return fccs;
     }
    case CODEC_ID_VP5:
