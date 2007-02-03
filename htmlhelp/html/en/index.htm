@@ -57,7 +57,12 @@
     <span class="small_caption">Fixed after beta1</span>
   </p>
 
-  <ul class="fixed">
+  <ul class="fixed">    
+    <li>Changing MKV subtitles channel ended in crash.</li>
+    <li>wmv9lib encoder dialog showed wrong encoding settings.</li>
+    <li>Launching VfW dialog in VirtualDub resulted in crash.</li>
+    <li>Multi-byte characters in Matroska-embedded subtitles were garbled.</li>
+    <li>If noise and resize filters were applied, chroma would become green.</li>
     <li>Explorer.exe crashed on Windows Vista when accessing a folder that contains AVI files.</li>
     <li>Playing or seeking in MPEG1/2 videos using libmpeg2, sometimes produced ugly green artifacts or ended with a crash (libmpeg2).</li>
     <li>Fixed OGG &amp; OGM muxers. Removed FLV &amp; MPEG muxers.</li>
@@ -119,8 +124,12 @@
     <span class="small_caption">Added after beta1</span>
   </p>
 
-  <ul class="added">
-    <li>Queue: ffdshow now uses VMR9's internal queue.</li>
+  <ul class="added">    
+    <li>x264 encoder re-added and updated.</li>    
+    <li>H.264 MBAFF hardware deinterlacing support.</li>
+    <li>Corrections and new features of the Remote API: presets, subtitles, fast forward/rewind etc.</li>
+    <li>Polish translation</li>
+    <li>Queue: ffdshow now uses VMR9's internal queue.</li>    
   </ul>
 
   <p>
