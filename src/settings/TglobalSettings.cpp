@@ -430,7 +430,7 @@ void TglobalSettingsDecVideo::load(void)
  fixMissing(h264,IDFF_MOVIE_LAVC);
  fixMissing(wmv1,IDFF_MOVIE_LAVC);
  fixMissing(wmv2,IDFF_MOVIE_LAVC);
- fixMissing(wmv3,IDFF_MOVIE_LAVC);
+ fixMissing(wmv3,IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9);
  fixMissing(wvc1,IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9);
  fixMissing(mss2,IDFF_MOVIE_WMV9);
  fixMissing(wvp2,IDFF_MOVIE_WMV9);
@@ -511,7 +511,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(MP41,mp41 & rawmask,CODEC_ID_MSMPEG4V1) \
  FF_FOURCC1_OP(WMV1,wmv1 & rawmask,CODEC_ID_WMV1) \
  FF_FOURCC1_OP(WMV2,wmv2 & rawmask,CODEC_ID_WMV2) \
- FF_FOURCC1_OP(WMV3,wmv3 & rawmask,CODEC_ID_WMV3) \
+ FF_FOURCC_OP (WMV3,wmv3 & rawmask,c_wmv3) \
  FF_FOURCC1_OP(MSS1,mss2 & rawmask,CODEC_ID_WMV9_LIB) \
  FF_FOURCC1_OP(MSS2,mss2 & rawmask,CODEC_ID_WMV9_LIB) \
  FF_FOURCC1_OP(WVP2,wvp2 & rawmask,CODEC_ID_WMV9_LIB) \
@@ -713,6 +713,22 @@ const CodecID TglobalSettingsDecVideo::c_wvc1[IDFF_MOVIE_MAX+1]=
 {
  CODEC_ID_NONE,
  CODEC_ID_VC1,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_NONE,
+ CODEC_ID_WMV9_LIB
+};
+const CodecID TglobalSettingsDecVideo::c_wmv3[IDFF_MOVIE_MAX+1]=
+{
+ CODEC_ID_NONE,
+ CODEC_ID_WMV3,
  CODEC_ID_NONE,
  CODEC_ID_NONE,
  CODEC_ID_NONE,

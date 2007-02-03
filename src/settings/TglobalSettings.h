@@ -71,7 +71,7 @@ private:
  int needCodecFix;
  void fixNewCodecs(void);
  static const char_t *fourccs[];
- static const CodecID c_mpeg4[IDFF_MOVIE_MAX+1],c_mpeg1[IDFF_MOVIE_MAX+1],c_mpeg2[IDFF_MOVIE_MAX+1],c_theora[IDFF_MOVIE_MAX+1],c_wvc1[IDFF_MOVIE_MAX+1];
+ static const CodecID c_mpeg4[IDFF_MOVIE_MAX+1],c_mpeg1[IDFF_MOVIE_MAX+1],c_mpeg2[IDFF_MOVIE_MAX+1],c_theora[IDFF_MOVIE_MAX+1],c_wvc1[IDFF_MOVIE_MAX+1],c_wmv3[IDFF_MOVIE_MAX+1];
 protected:
  virtual void reg_op(TregOp &t);
  virtual void reg_op_codec(TregOp &t,TregOp *t2);
