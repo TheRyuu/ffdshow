@@ -155,29 +155,31 @@ unsigned int __stdcall Tremote::ffwdThreadProc(void *self0)
  {
 	_pMC->Run();
 	int seconds = self->fSeconds;
-	seconds *= self->fMode;
+	int mode = self->fMode;
+	seconds *= mode;
+	seconds /= 2;
 	int pos;
 	int duration = self->deci->getParam2(IDFF_movieDuration);
 	int hh, mm, ss;
+	char_t msg[100];
 	self->deci->tell(&pos);
 	DWORD currentTime, elapsedTime;
-	if (pos!=-1)
+	if (pos!=-1 && duration >0)
 	 while(WaitForSingleObject(fEvent, 0) != WAIT_OBJECT_0)
 	 {
 		currentTime = GetTickCount();
-		pos+=seconds/2;
-		if (pos<0 || (duration>0 && pos >= duration) || self->deci->getState2()!=State_Running)
+		pos+=seconds;
+		if (pos<0 || pos >= duration)// || self->deci->getState2()!=State_Running)
 			break;
 		if (!SUCCEEDED(self->deci->seek(pos)))
 			break;
-		char_t msg[100];
 		hh = pos/3600;
 		mm = (pos - hh*3600)/60;
 		ss = pos - hh*3600 - mm*60;
-		tsprintf(msg,_l("Fast %s %02i:%02i:%02i"),pos<0?_l("backward"):_l("forward"), hh, mm, ss);
+		tsprintf(msg,_l("Fast %s %02i:%02i:%02i"),mode<0?_l("backward"):_l("forward"), hh, mm, ss);
         self->deciV->shortOSDmessage(msg,30);
 		elapsedTime = GetTickCount() - currentTime;
-		if (elapsedTime < 500)
+		if (elapsedTime < 500 && elapsedTime > 0)
 			Sleep(500 - elapsedTime);
 		else
 			Sleep(100);
@@ -278,10 +280,11 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 	case WPRM_FASTREWIND:
 		fMode=(wprm==WPRM_FASTFORWARD)?1:-1;
 		fSeconds = (int) lprm; // Update the step size in seconds
-		if (fThread)
+		if (fThread != NULL)
 		{
 			SetEvent(fEvent);
 			WaitForSingleObject(fThread, 3000);
+			
 			CloseHandle(fEvent);
 			CloseHandle(fThread);
 			fThread = NULL; fEvent = NULL;
@@ -294,6 +297,12 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			fThread=(HANDLE)_beginthreadex(NULL,65536,ffwdThreadProc,this,NULL,&threadID);
 		}
 		return TRUE;
+	case WPRM_GET_FASTFORWARD:
+		if (fThread == NULL)
+			return 0;
+		else
+			return fSeconds*fMode;
+
    }
  if (acceptKeys && (msg==WM_SYSKEYDOWN || msg==WM_SYSKEYUP || msg==WM_KEYDOWN || msg==WM_KEYUP))
   {
