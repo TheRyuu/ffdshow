@@ -47,6 +47,7 @@
 // Change playing rate
 #define WPRM_FASTFORWARD 15
 #define WPRM_FASTREWIND 16
+#define WPRM_GET_FASTFORWARD 17
 
 
 //WM_COPYDATA 
