@@ -1320,10 +1320,16 @@ static int decode_sequence_header_adv(VC1Context *v, GetBitContext *gb)
 
         if(get_bits1(gb)){ //framerate stuff
             if(get_bits1(gb)) {
-                get_bits(gb, 16);
+                v->s.avctx->time_base.num = 32;
+                v->s.avctx->time_base.den = get_bits(gb, 16) + 1;
             } else {
-                get_bits(gb, 8);
-                get_bits(gb, 4);
+                int nr, dr;
+                nr = get_bits(gb, 8);
+                dr = get_bits(gb, 4);
+                if(nr && nr < 8 && dr && dr < 3){
+                    v->s.avctx->time_base.num = fps_dr[dr - 1];
+                    v->s.avctx->time_base.den = fps_nr[nr - 1] * 1000;
+                }
             }
         }
 
@@ -1610,14 +1616,13 @@ static int vc1_parse_frame_header(VC1Context *v, GetBitContext* gb)
 
 static int vc1_parse_frame_header_adv(VC1Context *v, GetBitContext* gb)
 {
-    int fcm;
     int pqindex, lowquant;
     int status;
 
     v->p_frame_skipped = 0;
 
     if(v->interlace)
-        fcm = decode012(gb);
+        v->fcm = decode012(gb);
     switch(get_prefix(gb, 0, 4)) {
     case 0:
         v->s.pict_type = P_TYPE;
@@ -1640,10 +1645,10 @@ static int vc1_parse_frame_header_adv(VC1Context *v, GetBitContext* gb)
         get_bits(gb, 8);
     if(v->broadcast) {
         if(!v->interlace || v->panscanflag) {
-            get_bits(gb, 2);
+            v->rptfrm = get_bits(gb, 2);
         } else {
-            get_bits1(gb);
-            get_bits1(gb);
+            v->tff = get_bits1(gb);
+            v->rptfrm = get_bits1(gb);
         }
     }
     if(v->panscanflag) {
