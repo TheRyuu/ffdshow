@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>ffdshow tryouts FAQ</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS" />
+  <meta name="description" content="DirectShow入門 - ffdshow -" />
+  <link rel="stylesheet" href="../styles/style.css" type="text/css" />
+</head>
+
+<body>
+    <a href="http://ffdshow-tryout.sourceforge.net/phpBB2/">
+      <img src="../images/logo_phpBB.png" title="ffdshow tryouts" alt="ffdshow tryouts" width="200" height="91" />
+    </a>  
+
+  <p>
+    <span class="big_caption">
+      <a name="top" id="top">DirectShow入門</a>
+    </span>
+  </p>
+
+  <p>
+    <span class="normal">DirectShowとはマルチメディアの再生、記録を行うための仕組みで、その仕様はMicrosoftによって決められています｡<br /><br />
+      ここでLionSleepTonight.flvを例にとって、このファイルが再生される仕組みをみてみましょう。
+    </span>
+  </p>
+
+  <img src="../images/filtergraph.png" title="filter graph sample" alt="filter graph sample" width="764" height="218" />
+
+  <p>
+    <span class="normal">
+      ファイルをHDDから読み取ったら次の仕事はそれを動画と音声に分離することです｡この仕事を行う部品を<em>「スプリッタ」</em>と呼びます｡スプリッタは圧縮された動画と音声を各々次の部品に渡します｡<br /><br />
+      圧縮を解除する部品を<em>「デコーダ」</em>と呼びます｡ffdshowは主にこの部分を担当する部品です。<br /><br />
+      次の仕事は圧縮解除済みの動画や音声をハードウエアを使って出力することです｡この仕事を担当する部品を<em>「レンダラ」</em>と呼びます｡<br /><br />
+      DirectShowでは複数の部品が協力し合って一つのファイルを再生します｡これらの部品を<em>「フィルタ」</em>と呼びます｡スプリッタもデコーダもレンダラも、そしてffdshowもフィルタの一つです｡<br /><br />
+      DirectShow対応アプリケーションではコンピュータに登録されている数多くのフィルタの中からファイルの再生に必要なフィルタを上手に組み合わせて<em>「フィルタグラフ」</em>を作ります。
+    </span>
+  </p>
+
+  <p>
+    <span class="small_caption">
+      <a name="configCodec" id="configCodec">ffdshowの設定</a>
+    </span>
+  </p>
+
+  <p>
+    <span class="normal">
+      LionSleepTonight.flvの動画はflv1というコーデックで圧縮されています｡ffdshowでflv1をデコードするには設定画面を表示（スタート→プログラム→ffdshow→ビデオデコーダーの設定）し、左側のタブから「コーデック」を選択、右側のタブのFLV1を「libavcodec」に設定します｡
+    </span>
+  </p>
+
+  <img src="../images/codec_config.png" title="codec configuration" alt="codec configuration" width="557" height="412" />
+
+  <p>
+    <span class="small_caption">
+      <a name="sourcefilter" id="sourcefilter">ソースフィルタの入手</a>
+    </span>
+  </p>
+
+  <p>
+    <span class="normal">
+      LionSleepTonight.flvは
+      <a href="http://sourceforge.net/project/showfiles.php?group_id=82303&package_id=183318&release_id=403108">FLVSplitter</a>
+      というスプリッタによって動画と音声に分離されます｡FLVSplitterはffdshowと同様にユーザーがシステムにインストールする必要があります｡<br />
+      ただしMedia Player Classicを使っている場合は内蔵FLV splitterを有効にしておく（View→options Internal Filters→Source Filters→FLV）だけで再生できます。
+    </span>
+  </p>
+
+  <p>
+    <span class="small_caption">
+      <a name="sourcefilter" id="sourcefilter">メリット値</a>
+    </span>
+  </p>
+
+  <p>
+    <span class="normal">
+      例えばflv1をデコードするフィルタがシステムに複数存在した場合はどうなるのでしょう。この場合「メリット値」が高いフィルタが優先的に使用されます。ffdshowのメリット値については下図を参考に設定してください｡
+    </span>
+  </p>
+
+  <img src="../images/merit.png" title="merit configuration" alt="merit configuration" width="557" height="412" />
+
+
+
+    <div>
+      <span class="normal">
+        <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
+      </span>
+    </div> 
+
+  
+  <div style="padding-top:20px">
+    <a href="http://sourceforge.net">
+      <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
+    </a>
+  </div>
+</body>
+</html>
