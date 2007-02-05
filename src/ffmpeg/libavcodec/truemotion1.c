@@ -2,18 +2,20 @@
  * Duck TrueMotion 1.0 Decoder
  * Copyright (C) 2003 Alex Beregszaszi & Mike Melanson
  *
- * This library is free software; you can redistribute it and/or
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -372,10 +374,15 @@ static int truemotion1_decode_header(TrueMotion1Context *s)
 
     if (s->flags & FLAG_SPRITE) {
         av_log(s->avctx, AV_LOG_INFO, "SPRITE frame found, please report the sample to the developers\n");
+        /* FIXME header.width, height, xoffset and yoffset aren't initialized */
+#if 0
         s->w = header.width;
         s->h = header.height;
         s->x = header.xoffset;
         s->y = header.yoffset;
+#else
+        return -1;
+#endif
     } else {
         s->w = header.xsize;
         s->h = header.ysize;
