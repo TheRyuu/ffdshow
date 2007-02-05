@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS" />
+  <title>ffdshow 拡張子別攻略法</title>
+  <meta name="description" content="ffdshow 拡張子別攻略法" />
+  <link rel="stylesheet" href="../styles/style.css" type="text/css" />
+</head>
+
+<body>
+    <a href="http://ffdshow-tryout.sourceforge.net/phpBB2/">
+      <img src="../images/logo_phpBB.png" title="ffdshow tryouts" alt="ffdshow tryouts" width="200" height="91" />
+    </a>  
+
+  <p>
+    <span class="big_caption">
+      <a name="top" id="top">拡張子別攻略法</a>
+    </span>
+  </p>
+
+  <p>
+    <span class="small_caption">
+      <a name="container" id="container">コンテナ</a>
+    </span>
+  </p>
+
+  <p>
+    <span class="normal">DirectShowの世界で拡張子(AVI, MKV, MOVなど)が表すものはコンテナです。コンテナとは入れ物のことです。
+      コンテナには動画、音声、字幕などが格納されています（参考：<a href="dshow.htm" class="links">DirectShow入門</a>）。
+      そしてコンテナから動画や音声を取り出すには<em>スプリッタ</em>が必要になります。ffdshowにはこのスプリッタは含まれていません。
+      つまり本来ffdshowとは別の話ですが、「ffdshowを使って動画を見る」という視点から避けて通れない話題です。
+    </span>
+  </p>
+
+  <p>
+    <span class="small_caption">
+      <a name="flv" id="flv">flv</a>
+    </span>
+  </p>
+
+  <p>
+    <span class="normal">FLV(Flash Video)はアドビシステムズ（旧マクロメディア）が開発したコンテナでYouTubeなどでのストリーミング配信に多く用いられています。<br />
+      flvファイルを再生するには<a href="http://sourceforge.net/project/showfiles.php?group_id=82303&package_id=183318&release_id=403108">FLVSplitter</a>をインストールします。左のリンクからダウンロードしたファイルは<a href="http://sourceforge.net/project/showfiles.php?group_id=14481" class="links">7z</a>というアーカイバで圧縮されていますのでまずこれを解凍します（7zをインストール後ファイルを右クリックして7-Zip→解凍）。
+      Windows NT/2000/Xpでは"Release Unicode"を、Windows 95/98/Meでは"Release"を開きます。"&yenProgram
+      Files&yenguliverkli"というフォルダを作成しFLVSplitter.axをコピーします。<br />
+      スタートメニューから「ファイル名を指定して実行」を選択、次のように入力します。
+    </span>
+  </p>
+
+  <img src="images/regsvr.png" alt="regsvr32 ”￥Program Files￥guliverkli￥FLVSplitter.ax" title="regsvr32" width="403" height="175" />
+
+  <p>
+    <span class="normal">「&yenProgram Files&yenguliverkli&yenFLVSplitter.ax の DllRegisterServerは成功しました。」と表示されればインストールは完了です。<br />
+      中身の動画はFLV1かVP6Fです。ffdshowの<a href="dshow.htm#configCodec" class="links">コーデック設定</a>でlibavcodecに設定しておいて下さい。
+    </span>
+  </p>
+
+  <p>
+    <span class="normal">
+    </span>
+  </p>
+
+
+  <div>
+    <span class="normal">
+      <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
+    </span>
+  </div> 
+
+  
+  <div style="padding-top:20px">
+    <a href="http://sourceforge.net">
+      <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
+    </a>
+  </div>
+</body>
+</html>

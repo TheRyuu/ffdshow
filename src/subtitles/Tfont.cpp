@@ -41,6 +41,8 @@ TrenderedSubtitleWordBase::~TrenderedSubtitleWordBase()
 }
 
 //============================== TrenderedSubtitleWord ===============================
+
+// not fast rendering
 template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(HDC hdc,const tchar *s0,size_t strlens,const short (*matrix)[5],const YUVcolor &yuv,const TrenderedSubtitleLines::TprintPrefs &prefs,int xscale):TrenderedSubtitleWordBase(true),shiftChroma(true)
 {
  typedef typename tchar_traits<tchar>::ffstring ffstring;
@@ -65,7 +67,11 @@ template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(HDC hdc,const
   }
  OUTLINETEXTMETRIC otm;
  GetOutlineTextMetrics(hdc,sizeof(otm),&otm);
- sz.cx-=LONG(sz.cy*sin(otm.otmItalicAngle*M_PI/1800));
+ if (otm.otmItalicAngle)
+  sz.cx-=LONG(sz.cy*sin(otm.otmItalicAngle*M_PI/1800));
+ else
+  if (otm.otmTextMetrics.tmItalic)
+   sz.cx+=sz.cy*0.35;
  dx[0]=(sz.cx/4+2)*4;dy[0]=sz.cy+4;
  unsigned char *bmp16=(unsigned char*)calloc(dx[0]*4,dy[0]);
  HBITMAP hbmp=CreateCompatibleBitmap(hdc,dx[0],dy[0]);
@@ -228,6 +234,7 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
  _mm_empty();
 }
 
+// fast rendering
 template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(TcharsChache *charsChache,const tchar *s,size_t strlens,const TrenderedSubtitleLines::TprintPrefs &prefs):TrenderedSubtitleWordBase(true),shiftChroma(true)
 {
  const TrenderedSubtitleWord **chars=(const TrenderedSubtitleWord**)_alloca(strlens*sizeof(TrenderedSubtitleLine*));
@@ -249,6 +256,8 @@ template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(TcharsChache 
      i++;
   }
  dx[0]=(dx[0]/8+2)*8;dx[1]=dx[2]=(dx[0]/16+1)*8;
+ dxCharY=dx[0];
+ dyCharY=chars[0]->dyCharY;
  for (int i=0;i<3;i++)
   {
    bmp[i]=(unsigned char*)aligned_calloc(dx[i],dy[i]);//bmp[1]=(unsigned char*)aligned_calloc(dxUV,dyUV);bmp[2]=(unsigned char*)aligned_calloc(dxUV,dyUV);
@@ -525,7 +534,7 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
         break;
       }
     }
-   (*i)->print(x,y,prefs,prefsdx,prefsdy);
+   (*i)->print(x,y,prefs,prefsdx,prefsdy); // print a line (=print words).
   }
 }
 void TrenderedSubtitleLines::add(TrenderedSubtitleLine *ln,unsigned int *height)
@@ -555,11 +564,11 @@ TcharsChache::~TcharsChache()
 }
 template<> const TrenderedSubtitleWord* TcharsChache::getChar(const wchar_t *s,const TrenderedSubtitleLines::TprintPrefs &prefs)
 {
- const wchar_t *wcp=(wchar_t *)s;
- Tchars::iterator l=chars.find(*wcp);
+ int key=(int)*s;
+ Tchars::iterator l=chars.find(key);
  if (l!=chars.end()) return l->second;
  TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,matrix,yuv,prefs,xscale);
- chars[*wcp]=ln;
+ chars[key]=ln;
  return ln;
 }
 
@@ -567,20 +576,21 @@ template<> const TrenderedSubtitleWord* TcharsChache::getChar(const char *s,cons
 {
  if(_mbclen((unsigned char *)s)==1)
   {
-   char c=*s;
-   Tchars::iterator l=chars.find(c);
+   int key=(int)*s;
+   Tchars::iterator l=chars.find(key);
    if (l!=chars.end()) return l->second;
    TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,matrix,yuv,prefs,xscale);
-   chars[c]=ln;
+   chars[key]=ln;
    return ln;
   }
  else
   {
-   const wchar_t *wcp=(wchar_t *)s;
-   Tchars::iterator l=chars.find(*wcp);
+   const wchar_t *mbcs=(wchar_t *)s; // ANSI-MBCS
+   int key=(int)*mbcs;
+   Tchars::iterator l=chars.find(key);
    if (l!=chars.end()) return l->second;
    TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,2,matrix,yuv,prefs,xscale);
-   chars[*wcp]=ln;
+   chars[key]=ln;
    return ln;
   }
 }
@@ -632,7 +642,13 @@ void Tfont::done(void)
 
 template<class tchar> TrenderedSubtitleWord* Tfont::newWord(const tchar *s,size_t slen,const TrenderedSubtitleLines::TprintPrefs &prefs,const TsubtitleWord<tchar> *w)
 {
- return (!w->props.isColor && fontSettings->fast)?new TrenderedSubtitleWord(charsCache,s,slen,prefs):new TrenderedSubtitleWord(hdc,s,slen,fontSettings->shadowStrength==100?NULL:matrix,w->props.isColor?w->props.color:yuvcolor,prefs,w->props.scaleX!=-1?w->props.scaleX:fontSettings->xscale);
+ OUTLINETEXTMETRIC otm;
+ GetOutlineTextMetrics(hdc,sizeof(otm),&otm);
+
+ if (!w->props.isColor && fontSettings->fast && !otm.otmItalicAngle && !otm.otmTextMetrics.tmItalic)
+  return new TrenderedSubtitleWord(charsCache,s,slen,prefs);
+ else
+  return new TrenderedSubtitleWord(hdc,s,slen,fontSettings->shadowStrength==100?NULL:matrix,w->props.isColor?w->props.color:yuvcolor,prefs,w->props.scaleX!=-1?w->props.scaleX:fontSettings->xscale);
 }
 
 template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange)
