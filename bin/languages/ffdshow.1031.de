@@ -643,7 +643,7 @@ Custom=Benutzerdefiniert
 1143=Arbeitet nur, wenn"Owerlaymixer verwenden" auf der Ausgabeseite aktiviert ist und die Hardware es unterstützt.\r\n\r\nUnterstützt Overlaymixer und VMR9 renderer im Fenstermodus.
 
 [118]
-0=Weitere
+0=Dekoderoptionen
 1283=Libavcodec-Einstellungen
 1016=Video spiegeln
 1314=Graustufen-Decodierung
