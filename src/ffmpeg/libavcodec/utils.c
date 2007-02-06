@@ -232,12 +232,12 @@ int avcodec_default_get_buffer(AVCodecContext *s, AVFrame *pic){
     InternalBuffer *buf;
     int *picture_number;
 
-	/*
+/* VP5/VP6 decoding seems to be broken.Picture freezes at the beginning.
     if(pic->data[0]!=NULL) {
         av_log(s, AV_LOG_ERROR, "pic->data[0]!=NULL in avcodec_default_get_buffer\n");
         return -1;
     }
-    */
+*/
     if(s->internal_buffer_count >= INTERNAL_BUFFER_SIZE) {
         av_log(s, AV_LOG_ERROR, "internal_buffer_count overflow (missing release_buffer?)\n");
         return -1;

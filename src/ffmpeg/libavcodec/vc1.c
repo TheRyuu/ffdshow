@@ -1282,10 +1282,6 @@ static int decode_sequence_header_adv(VC1Context *v, GetBitContext *gb)
     v->s.avctx->height = v->s.avctx->coded_height;
     v->broadcast = get_bits1(gb);
     v->interlace = get_bits1(gb);
-    if(v->interlace){
-        av_log(v->s.avctx, AV_LOG_ERROR, "Interlaced mode not supported (yet)\n");
-        return -1;
-    }
     v->tfcntrflag = get_bits1(gb);
     v->finterpflag = get_bits1(gb);
     get_bits1(gb); // reserved
@@ -1304,6 +1300,7 @@ static int decode_sequence_header_adv(VC1Context *v, GetBitContext *gb)
         av_log(v->s.avctx, AV_LOG_ERROR, "Progressive Segmented Frame mode: not supported (yet)\n");
         return -1;
     }
+    v->s.max_b_frames = v->s.avctx->max_b_frames = 7;
     if(get_bits1(gb)) { //Display Info - decoding is not affected by it
         int w, h, ar = 0;
         av_log(v->s.avctx, AV_LOG_DEBUG, "Display extended info:\n");
@@ -1359,11 +1356,11 @@ static int decode_sequence_header_adv(VC1Context *v, GetBitContext *gb)
 static int decode_entry_point(AVCodecContext *avctx, GetBitContext *gb)
 {
     VC1Context *v = avctx->priv_data;
-    int i, blink, refdist;
+    int i, blink, clentry, refdist;
 
     av_log(avctx, AV_LOG_DEBUG, "Entry point: %08X\n", show_bits_long(gb, 32));
     blink = get_bits1(gb); // broken link
-    avctx->max_b_frames = 1 - get_bits1(gb); // 'closed entry' also signalize possible B-frames
+    clentry = get_bits1(gb); // closed entry
     v->panscanflag = get_bits1(gb);
     refdist = get_bits1(gb); // refdist flag
     v->s.loop_filter = get_bits1(gb);
@@ -1399,7 +1396,7 @@ static int decode_entry_point(AVCodecContext *avctx, GetBitContext *gb)
         "BrokenLink=%i, ClosedEntry=%i, PanscanFlag=%i\n"
         "RefDist=%i, Postproc=%i, FastUVMC=%i, ExtMV=%i\n"
         "DQuant=%i, VSTransform=%i, Overlap=%i, Qmode=%i\n",
-        blink, 1 - avctx->max_b_frames, v->panscanflag, refdist, v->s.loop_filter,
+        blink, clentry, v->panscanflag, refdist, v->s.loop_filter,
         v->fastuvmc, v->extended_mv, v->dquant, v->vstransform, v->overlap, v->quantizer_mode);
 
     return 0;
@@ -1623,8 +1620,10 @@ static int vc1_parse_frame_header_adv(VC1Context *v, GetBitContext* gb)
 
     v->p_frame_skipped = 0;
 
-    if(v->interlace)
+    if(v->interlace){
         v->fcm = decode012(gb);
+        if(v->fcm) return -1; // interlaced frames/fields are not implemented
+    }
     switch(get_prefix(gb, 0, 4)) {
     case 0:
         v->s.pict_type = P_TYPE;
@@ -1646,7 +1645,7 @@ static int vc1_parse_frame_header_adv(VC1Context *v, GetBitContext* gb)
     if(v->tfcntrflag)
         get_bits(gb, 8);
     if(v->broadcast) {
-        if(!v->interlace || v->panscanflag) {
+        if(!v->interlace || v->psf) {
             v->rptfrm = get_bits(gb, 2);
         } else {
             v->tff = get_bits1(gb);

@@ -609,6 +609,7 @@ int vp56_decode_frame(AVCodecContext *avctx, void *data, int *data_size,
     *picture = *p;
     *data_size = sizeof(AVPicture);
 
+    s->frames[VP56_FRAME_CURRENT].data[0] = NULL;
     return buf_size;
 }
 
@@ -621,7 +622,6 @@ void vp56_init(vp56_context_t *s, AVCodecContext *avctx, int flip)
 
     /* always use the VP3 IDCT */
     s->avctx->idct_algo = FF_IDCT_VP3;
-    
     dsputil_init(&s->dsp, s->avctx);
     ff_init_scantable(s->dsp.idct_permutation, &s->scantable,ff_zigzag_direct);
 
