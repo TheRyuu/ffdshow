@@ -428,9 +428,16 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
    prefsdy=prefs.dy;
   }
  unsigned int h=0;
- for (const_iterator i=begin();i!=end();i++) h+=prefs.linespacing*(*i)->height()/100;
+ for (const_iterator i=begin();i!=end();i++)
+  h+=prefs.linespacing*(*i)->height()/100;
+
+ const_reverse_iterator ri=rbegin();
+ unsigned int h1 = h - prefs.linespacing*(*ri)->height()/100 + (*ri)->height();
 
  int y=(prefs.ypos<0) ? -prefs.ypos : (prefs.ypos*prefsdy)/100-h/2;
+ if (y+h1 >= prefsdy) y=prefsdy-h1-1;
+ if (y<0) y=0;
+
  int old_alignment=-1;
 
  for (const_iterator i=begin();i!=end();y+=prefs.linespacing*(*i)->height()/100-2,i++)
