@@ -402,7 +402,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
        {
         case FF_P_TYPE:frametype=FRAME_TYPE::P;break;
         case FF_B_TYPE:frametype=FRAME_TYPE::B;break;
-        case FF_I_TYPE:frametype=FRAME_TYPE::I;DPRINTF(_l("I frame"));break;
+        case FF_I_TYPE:frametype=FRAME_TYPE::I;break;
         case FF_S_TYPE:frametype=FRAME_TYPE::GMC;break;
         case FF_SI_TYPE:frametype=FRAME_TYPE::SI;break;
         case FF_SP_TYPE:frametype=FRAME_TYPE::SP;break;
@@ -416,6 +416,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
      int csp=csp_lavc2ffdshow(avctx->pix_fmt);
      if ((avctx->flags&CODEC_FLAG_GRAY) && csp_isYUVplanar(csp)) // workaround for green picture when decoding mpeg with CODEC_FLAG_GRAY, the problem is probably somewhere else
       {
+       DPRINTF(_l("TvideoCodecLibavcodec::decompress Black and white."));
        if (frame->data[1][0]!=128) memset(frame->data[1],128,frame->linesize[1]*avctx->height/2);
        if (frame->data[2][0]!=128) memset(frame->data[2],128,frame->linesize[2]*avctx->height/2);
       }
