@@ -95,7 +95,7 @@
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="0"
-				DisableSpecificWarnings="4100;4127;4244"/>
+				DisableSpecificWarnings="4100;4127;4244;4201;4511;4512"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool

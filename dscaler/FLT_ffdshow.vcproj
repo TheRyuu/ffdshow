@@ -28,7 +28,7 @@
 				EnableIntrinsicFunctions="TRUE"
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories="C:\Program Files\STLport\stlport;../src"
+				AdditionalIncludeDirectories="../src"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="TRUE"
 				ExceptionHandling="FALSE"
@@ -100,7 +100,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\Program Files\STLport\stlport;../src"
+				AdditionalIncludeDirectories="../src"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;UCLIBCPP"
 				MinimalRebuild="TRUE"
 				ExceptionHandling="FALSE"

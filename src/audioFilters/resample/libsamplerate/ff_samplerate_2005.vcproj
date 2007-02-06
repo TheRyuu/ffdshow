@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="ff_samplerate"
 	ProjectGUID="{9687FAF7-4894-4D5A-A7B8-03EECF6E5F0B}"
 	RootNamespace="ff_samplerate"
@@ -240,7 +240,7 @@
 				WarningLevel="3"
 				DebugInformationFormat="3"
 				CompileAs="1"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="4996;4244"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

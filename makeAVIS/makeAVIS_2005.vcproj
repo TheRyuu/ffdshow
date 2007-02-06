@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="makeAVIS"
 	ProjectGUID="{5A4518FA-F2D9-4632-ACD3-85A7FCF91CE4}"
 	RootNamespace="makeAVIS"
