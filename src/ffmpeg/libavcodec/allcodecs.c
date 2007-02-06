@@ -57,6 +57,7 @@ void avcodec_register_all(void)
     register_avcodec(&msmpeg4v1_encoder);
     register_avcodec(&msmpeg4v2_encoder);
     register_avcodec(&msmpeg4v3_encoder);
+    register_avcodec(&png_encoder);
     register_avcodec(&wmv1_encoder);
     register_avcodec(&wmv2_encoder);
 #if __STDC_VERSION__ >= 199901L
