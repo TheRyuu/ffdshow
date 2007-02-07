@@ -75,6 +75,9 @@ public:
  STDMETHODIMP currentSampleFormat(unsigned int *nchannels,unsigned int *freq,int *sampleFormat);
  STDMETHODIMP_(int) getJitter(void);
  STDMETHODIMP Enable(long lIndex, DWORD dwFlags);
+ STDMETHODIMP Count(DWORD *pcStreams);
+ STDMETHODIMP Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlags, LCID* plcid, DWORD* pdwGroup, WCHAR** ppszName, IUnknown** ppObject, IUnknown** ppUnk);
+
 
  static const AMOVIESETUP_MEDIATYPE inputMediaTypes[],outputMediaTypes[];
  static const AMOVIESETUP_PIN pins[];

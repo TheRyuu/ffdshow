@@ -764,6 +764,39 @@ STDMETHODIMP TffdshowDecAudio::Enable(long lIndex, DWORD dwFlags)
 	unsigned int i = (unsigned int)lIndex;
 	return setCurrentStream(i);
 }
+STDMETHODIMP TffdshowDecAudio::Count(DWORD *pcStreams)
+{
+	if (pcStreams) *pcStreams = (DWORD) inpins.getNumConnectedInpins();
+	return S_OK;
+}
+STDMETHODIMP TffdshowDecAudio::Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlags, LCID* plcid, DWORD* pdwGroup, WCHAR** ppszName, IUnknown** ppObject, IUnknown** ppUnk)
+{
+ if (lIndex<0 || lIndex>=(long)inpins.getNumConnectedInpins() || !presetSettings) return E_INVALIDARG;
+ if (ppmt) *ppmt=getInputMediaType(lIndex);
+ if (pdwFlags)
+ {
+	if (getCurrentStream2() == (unsigned int) lIndex)
+		*pdwFlags=AMSTREAMSELECTINFO_ENABLED|AMSTREAMSELECTINFO_EXCLUSIVE;
+	else
+		*pdwFlags=0;
+ }
+ if (plcid) *plcid=0;
+ if (pdwGroup) *pdwGroup=1; //Audio
+ if (ppszName)
+  {
+	 char_t descr[250];
+     if (getStreamDescr((unsigned int) lIndex,descr,250)==S_OK)
+      {
+		ffstring name=descr;
+		size_t wlen=(name.size()+1)*sizeof(WCHAR);
+		*ppszName=(WCHAR*)CoTaskMemAlloc(wlen);memset(*ppszName,0,wlen);
+		nCopyAnsiToWideChar(*ppszName,name.c_str());
+	 }
+  }
+ if (ppObject) *ppObject=NULL;
+ if (ppUnk) *ppUnk=NULL;
+ return S_OK;
+}
 STDMETHODIMP TffdshowDecAudio::setCurrentStream(unsigned int i)
 {
  if (i>=inpins.getNumConnectedInpins()) return E_INVALIDARG;
