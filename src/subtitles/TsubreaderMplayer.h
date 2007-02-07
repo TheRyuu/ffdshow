@@ -180,8 +180,6 @@ public:
 
 struct TsubreaderMplayer :Tsubreader
 {
-private:
- void processOverlap(int sub_format);
 public:
  TsubreaderMplayer(Tstream &f,int Isub_format,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,bool isEmbedded);
 };

@@ -143,6 +143,7 @@ void TimgFilterSubtitles::addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME
  Tembedded::iterator e=embedded.find(id);
  if (e==embedded.end()) return;
  csEmbedded.Lock();
+ e->second->setModified();
  e->second->addSubtitle(start,stop,data,datalen,cfg,utf8);
  csEmbedded.Unlock();
 }
@@ -230,7 +231,11 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
     {
      Tembedded::iterator e=embedded.find(shownEmbedded);
      if (e!=embedded.end() && e->second)
-      sub=e->second->getSubtitle(cfg,frameStart,&forceChange);
+      {
+       if (!e->second->IsProcessOverlapDone())
+        e->second->processOverlap();
+       sub=e->second->getSubtitle(cfg,frameStart,&forceChange);
+      }
     } 
    csEmbedded.Unlock();
    if (!useembedded) 

@@ -49,13 +49,15 @@ public:
  static Tstream::ENCODING getSubEnc(int format);
  static void setSubEnc(int &format,const Tstream &fs);
  static int sub_autodetect(Tstream &fd,const Tconfig *config);
- Tsubreader(void):langid(-1) {}
+ Tsubreader(void):langid(-1),IsProcessOverlapDone(false) {}
  virtual ~Tsubreader();
  virtual void clear();
  int langid;
  virtual void setLang(int langid) {};
  virtual int findlang(int langname) {return 0;}
  void adjust_subs_time(float subtime);
+ void processOverlap(int sub_format);
+ bool IsProcessOverlapDone;
 };
 
 #endif

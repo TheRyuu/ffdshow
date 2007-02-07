@@ -77,6 +77,9 @@ const Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE
  // sub changed!
  if (time<0)
   return oldsub=NULL; // no sub here
+ // check current sub.
+ if (time>=(*subs)[current_sub]->start && time<=(*subs)[current_sub]->stop)
+  return oldsub=(*subs)[current_sub];  
  // check next sub.
  if(current_sub>=0 && current_sub+1<subs->size())
   {

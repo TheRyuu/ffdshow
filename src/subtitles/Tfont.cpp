@@ -26,6 +26,7 @@
 #include "TfontManager.h"
 #include "simd.h"
 #include "Tconfig.h"
+#include "ffdebug.h"
 #include <mbstring.h>
 #pragma warning(disable:4244)
 

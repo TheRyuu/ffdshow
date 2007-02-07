@@ -988,7 +988,7 @@ TsubreaderMplayer::TsubreaderMplayer(Tstream &fd,int sub_format,double fps,const
   } 
 }
 
-void TsubreaderMplayer::processOverlap(int sub_format)
+void Tsubreader::processOverlap(int sub_format)
 {
  static const int SUB_MAX_TEXT=INT_MAX/2;
  int sub_orig = size();
@@ -1148,4 +1148,5 @@ void TsubreaderMplayer::processOverlap(int sub_format)
  clear();
  for (std::vector<Tsubtitle*>::const_iterator s=newsubs.begin();s!=newsubs.end();s++)
   push_back(*s);
+ IsProcessOverlapDone=true;
 }
