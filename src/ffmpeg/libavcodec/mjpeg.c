@@ -441,7 +441,7 @@ void mjpeg_picture_header(MpegEncContext *s)
     }
 
     put_bits(&s->pb, 16, 17);
-    if(lossless && s->avctx->pix_fmt == PIX_FMT_RGBA32)
+    if(lossless && s->avctx->pix_fmt == PIX_FMT_RGB32)
         put_bits(&s->pb, 8, 9); /* 9 bits/component RCT */
     else
         put_bits(&s->pb, 8, 8); /* 8 bits/component */
@@ -700,7 +700,7 @@ static int encode_picture_lossless(AVCodecContext *avctx, unsigned char *buf, in
 
     s->header_bits= put_bits_count(&s->pb);
 
-    if(avctx->pix_fmt == PIX_FMT_RGBA32){
+    if(avctx->pix_fmt == PIX_FMT_RGB32){
         int x, y, i;
         const int linesize= p->linesize[0];
         uint16_t (*buffer)[4]= (void *) s->rd_scratchpad;
@@ -888,6 +888,7 @@ typedef struct MJpegDecodeContext {
     ScanTable scantable;
     void (*idct_put)(uint8_t *dest/*align 8*/, int line_size, DCTELEM *block/*align 16*/);
     void (*idct_add)(uint8_t *dest/*align 8*/, int line_size, DCTELEM *block/*align 16*/);
+
     int restart_interval;
     int restart_count;
 
@@ -945,6 +946,7 @@ static int mjpeg_decode_init(AVCodecContext *avctx)
     s->scantable= s2.intra_scantable;
     s->idct_put= s2.dsp.idct_put;
     s->idct_add= s2.dsp.idct_add;
+
     s->mpeg_enc_ctx_allocated = 0;
     s->buffer_size = 0;
     s->buffer = NULL;
@@ -1107,10 +1109,6 @@ static int mjpeg_decode_sof(MJpegDecodeContext *s)
         av_log(s->avctx, AV_LOG_ERROR, "only 8 bits/component accepted\n");
         return -1;
     }
-    if (s->bits > 8 && s->ls){
-        av_log(s->avctx, AV_LOG_ERROR, "only <= 8 bits/component accepted for JPEG-LS\n");
-        return -1;
-    }
 
     height = get_bits(&s->gb, 16);
     width = get_bits(&s->gb, 16);
@@ -1123,6 +1121,10 @@ static int mjpeg_decode_sof(MJpegDecodeContext *s)
     if (nb_components <= 0 ||
         nb_components > MAX_COMPONENTS)
         return -1;
+    if (s->ls && !(s->bits <= 8 || nb_components == 1)){
+        av_log(s->avctx, AV_LOG_ERROR, "only <= 8 bits/component or 16-bit gray accepted for JPEG-LS\n");
+        return -1;
+    }
     s->nb_components = nb_components;
     s->h_max = 1;
     s->v_max = 1;
@@ -1187,7 +1189,7 @@ static int mjpeg_decode_sof(MJpegDecodeContext *s)
     case 0x222222:
     case 0x111111:
         if(s->rgb){
-            s->avctx->pix_fmt = PIX_FMT_RGBA32;
+            s->avctx->pix_fmt = PIX_FMT_RGB32;
         }else if(s->nb_components==3)
             s->avctx->pix_fmt = s->cs_itu601 ? PIX_FMT_YUV444P : PIX_FMT_YUVJ444P;
         else
@@ -1205,8 +1207,10 @@ static int mjpeg_decode_sof(MJpegDecodeContext *s)
     if(s->ls){
         if(s->nb_components > 1)
             s->avctx->pix_fmt = PIX_FMT_RGB24;
-        else
+        else if(s->bits <= 8)
             s->avctx->pix_fmt = PIX_FMT_GRAY8;
+        else
+            s->avctx->pix_fmt = PIX_FMT_GRAY16;
     }
 
     if(s->picture.data[0])
@@ -1230,6 +1234,7 @@ static int mjpeg_decode_sof(MJpegDecodeContext *s)
     {
         dprintf("decode_sof0: error, len(%d) mismatch\n", len);
     }
+
     /* totally blank picture as progressive JPEG will only add details to it */
     if(s->progressive){
         memset(s->picture.data[0], 0, s->picture.linesize[0] * s->height);
@@ -1544,6 +1549,7 @@ static int ljpeg_decode_yuv_scan(MJpegDecodeContext *s, int predictor, int point
 static int mjpeg_decode_scan(MJpegDecodeContext *s, int nb_components, int ss, int se, int Ah, int Al){
     int i, mb_x, mb_y;
     int EOBRUN = 0;
+
     if(Ah) return 0; /* TODO decode refinement planes too */
     for(mb_y = 0; mb_y < s->mb_height; mb_y++) {
         for(mb_x = 0; mb_x < s->mb_width; mb_x++) {
@@ -2223,7 +2229,7 @@ read_header:
 
     skip_bits(&hgb, 32); /* reserved zeros */
 
-    if (get_bits_long(&hgb, 32) != be2me_32(ff_get_fourcc("mjpg")))
+    if (get_bits_long(&hgb, 32) != MKBETAG('m','j','p','g'))
     {
         dprintf("not mjpeg-b (bad fourcc)\n");
         return 0;
