@@ -472,7 +472,7 @@ template<class tchar> void TsubtitleParserSSA<tchar>::strToInt(const ffstring &s
 template<class tchar> void TsubtitleParserSSA<tchar>::Tstyle::toProps(void)
 {
  if (fontname)
-  text<char_t>(fontname.c_str(), -1, props.fontname, (int)countof(props.fontname));
+  text<char_t>(fontname.c_str(), -1, props.fontname, countof(props.fontname));
  if (int size=atoi(fontsize.c_str()))
   props.size=size;
  const tchar *colorS=primaryColour.c_str();
@@ -743,6 +743,11 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
         {
          const TSubtitleProps *props=styles.getProps(event.style);
          TsubtitleTextBase<tchar> current(this->format,props?*props:defprops);
+         if (event.marginL && event.marginL.compare(_l("0000"))!=0) strToInt(event.marginL,&current.defProps.marginL);
+         if (event.marginR && event.marginR.compare(_l("0000"))!=0) strToInt(event.marginL,&current.defProps.marginR);
+         if (event.marginV && event.marginV.compare(_l("0000"))!=0) strToInt(event.marginV,&current.defProps.marginV);
+         if (event.marginT && event.marginT.compare(_l("0000"))!=0) strToInt(event.marginL,&current.defProps.marginTop);
+         if (event.marginB && event.marginB.compare(_l("0000"))!=0) strToInt(event.marginL,&current.defProps.marginBottom);
          if (flags&this->PARSETIME)
           {
            current.start=timer.den*this->hmsToTime(hour1,min1,sec1,hunsec1)/timer.num;

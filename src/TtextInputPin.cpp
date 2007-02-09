@@ -82,7 +82,7 @@ HRESULT TtextInputPin::SetMediaType(const CMediaType* mtIn)
    const SUBTITLEINFO *psi=(const SUBTITLEINFO*)mtIn->Format();
    const char_t *isoname=TsubtitlesSettings::getLangDescrIso(text<char_t>(psi->IsoLang));
    char_t trackname[512];
-   text<char_t>(psi->TrackName, (int)countof(psi->TrackName), trackname, (int)countof(trackname));
+   text<char_t>(psi->TrackName, (int)countof(psi->TrackName), trackname, countof(trackname));
    tsnprintf(name,256,_l("%s%s%s"),trackname,trackname[0]?_l(" "):_l(""),isoname);
    if (extradata) free(extradata);
    extradatasize=mtIn->cbFormat-psi->dwOffset;
@@ -131,7 +131,7 @@ HRESULT TtextInputPin::CompleteConnect(IPin *pReceivePin)
   {
    PIN_INFO pi;
    pReceivePin->QueryPinInfo(&pi);
-   text<char_t>(pi.achName, -1, name, (int)countof(name));
+   text<char_t>(pi.achName, -1, name, countof(name));
    if (pi.pFilter) pi.pFilter->Release();
   }
  return CDeCSSInputPin::CompleteConnect(pReceivePin);

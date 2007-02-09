@@ -2288,6 +2288,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\subtitles\TsubtitleProps.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\subtitles\TsubtitleProps.h"
 				>
 			</File>

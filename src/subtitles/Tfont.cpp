@@ -445,29 +445,22 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
   {
    if (y<0) continue;
 
-   unsigned int refResY= (*i)->props.refResY;
-   refResY=refResY>0 ? refResY : prefsdy;
-   unsigned int marginTop=0,marginBottom=0;
-
-   if ((*i)->props.marginTop>0)
-    marginTop=(*i)->props.marginTop; //ASS
-   else if ((*i)->props.marginV>0)
-    marginTop=(*i)->props.marginV; // SSA
-
-   if ((*i)->props.marginBottom>0)
-    marginBottom=(*i)->props.marginBottom; // ASS
-   else if ((*i)->props.marginV>0)
-    marginBottom=(*i)->props.marginV; // SSA
+   unsigned int marginTop=(*i)->props.get_marginTop(prefsdy);
+   unsigned int marginBottom=(*i)->props.get_marginBottom(prefsdy);
 
    if ((*i)->props.alignment>0 && (*i)->props.alignment!=old_alignment)
     {
      old_alignment=(*i)->props.alignment;
-     unsigned int hParagaph=0;
+     // calculate the height of the paragraph
+     unsigned int hParagraph=0;
      for (const_iterator pi=i;pi!=end();pi++)
       {
        if ((*pi)->props.alignment!=old_alignment)
         break;
-       hParagaph+=prefs.linespacing*(*pi)->height()/100;
+       if (pi+1!=end() && (*(pi+1))->props.alignment==old_alignment)
+        hParagraph+=prefs.linespacing*(*pi)->height()/100;
+       else
+        hParagraph+=(*pi)->height();
       }
      
      switch ((*i)->props.alignment)
@@ -475,45 +468,40 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
        case 1: // SSA bottom
        case 2:
        case 3:
-        y=prefsdy-hParagaph-marginBottom*prefsdy/refResY;
+        y=prefsdy-hParagraph-marginBottom;
         break;
        case 9: // SSA mid
        case 10:
        case 11:
-        y=(prefsdy-hParagaph)/2;
+        y=(prefsdy-hParagraph)/2;
         break;
        case 5: // SSA top
        case 6:
        case 7:
-        y=marginTop*prefsdy/refResY;
+        y=marginTop;
         break;
        default:
         break;
       }
 
      if (y<0) y=0;
-     if (y+hParagaph>=prefsdy)
-      y=prefsdy-hParagaph-1;
+     if (y+hParagraph>=prefsdy)
+      y=prefsdy-hParagraph-1;
     }
 
    if (y+(*i)->height()>=prefsdy) break;
    //TODO: cleanup
    int x;
+   unsigned int cdx=(*i)->width();
    if (prefs.xpos<0) x=-prefs.xpos;
    else
     {
-     unsigned int cdx=(*i)->width();
-     unsigned int refResX= (*i)->props.refResX;
-     refResX=refResX>0 ? refResX : prefsdx;
      switch ((*i)->props.alignment)
       {
        case 1: // left(SSA)
        case 5:
        case 9:
-        if ((*i)->props.marginL>0)
-         x=(*i)->props.marginL*prefsdx/refResX;
-        else
-         x=0;
+        x=(*i)->props.get_marginL(prefsdx);
         break;
        case 2: // center(SSA)
        case 6:
@@ -525,10 +513,7 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
        case 3: // right(SSA)
        case 7:
        case 11:
-        if ((*i)->props.marginR>0)
-         x=prefsdx-cdx-(*i)->props.marginR*prefsdx/refResX;
-        else
-         x=prefsdx-cdx;
+        x=prefsdx-cdx-(*i)->props.get_marginR(prefsdx);
         break;
        default: // -1 (non SSA)
         x=(prefs.xpos*prefsdx)/100+prefs.posXpix;
@@ -542,6 +527,8 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
         break;
       }
     }
+   // if (x+cdx>prefsdx) x=prefsdx-cdx-1;
+   if (x<0) x=0;
    (*i)->print(x,y,prefs,prefsdx,prefsdy); // print a line (=print words).
   }
 }
@@ -707,7 +694,12 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
            SIZE sz;
            size_t strlenp=strlenp=strlen(p);
            int *pwidths=(int*)_alloca(sizeof(int)*(strlenp+1));
-           if (!prefs.config->getGDI<tchar>().getTextExtentExPoint(hdc,p,(int)strlenp,splitdx,&nfit,pwidths,&sz) || nfit>=(int)strlen(p)) 
+           int splitdx1;
+           if (w->props.get_marginR(dx) || w->props.get_marginL(dx))
+            splitdx1=(dx- w->props.get_marginR(dx) - w->props.get_marginL(dx))*4;
+           else
+            splitdx1=splitdx;
+           if (!prefs.config->getGDI<tchar>().getTextExtentExPoint(hdc,p,(int)strlenp,splitdx1,&nfit,pwidths,&sz) || nfit>=(int)strlen(p)) 
             {
              TrenderedSubtitleWord *rw=newWord(p,strlen(p),prefs,&*w);
              line->push_back(rw);

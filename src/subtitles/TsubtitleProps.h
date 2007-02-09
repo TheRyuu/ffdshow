@@ -26,6 +26,10 @@ struct TSubtitleProps
  int alignment;  // -1 = default(center)
 
  int marginR,marginL,marginV,marginTop,marginBottom; // -1 = default 
+ unsigned int get_marginR(unsigned int screenWidth) const;
+ unsigned int get_marginL(unsigned int screenWidth) const;
+ unsigned int get_marginTop(unsigned int screenHeight) const;
+ unsigned int get_marginBottom(unsigned int screenHeight) const;
 };
 
 #endif

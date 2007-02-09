@@ -659,40 +659,6 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
  return useFixed;
 }
 
-//============================ TSubtitleProps =============================
-void TSubtitleProps::reset(void)
-{
- refResX=refResY=0;
- bold=italic=underline=strikeout=false;
- isColor=false;
- isPos=false;
- size=0;
- fontname[0]='\0';
- encoding=spacing=-1;
- scaleX=scaleY=-1;
- alignment=-1;
- marginR=marginL=marginV=marginTop=marginBottom=-1;
-}
-void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy) const
-{
- memset(&lf,0,sizeof(lf));
- lf.lfHeight=(LONG)limit(size?size:fontSettings.getSize(dx,dy),3U,255U)*4;
- if (scaleY!=-1)
-  lf.lfHeight=scaleY*lf.lfHeight/100;
- if (refResY && dy)
-  lf.lfHeight=dy*lf.lfHeight/refResY;
- lf.lfWidth=0;
- lf.lfWeight=fontSettings.weight+(bold?400:0);
- lf.lfItalic=italic;
- lf.lfUnderline=underline;
- lf.lfStrikeOut=strikeout;
- lf.lfCharSet=BYTE(encoding!=-1?encoding:fontSettings.charset);
- lf.lfOutPrecision=OUT_DEFAULT_PRECIS;
- lf.lfClipPrecision=CLIP_DEFAULT_PRECIS;
- lf.lfQuality=DEFAULT_QUALITY;
- lf.lfPitchAndFamily=DEFAULT_PITCH|FF_DONTCARE;
- strncpy(lf.lfFaceName,fontname[0]?fontname:fontSettings.name,LF_FACESIZE);
-}
 //============================ TsubtitleFormat =============================
 template<class tchar> DwString<tchar> TsubtitleFormat::getAttribute(const tchar *start,const tchar *end,const tchar *attrname)
 {
@@ -761,7 +727,7 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::fontName(const tchar *s
  if (start!=end)
   {
    memset(props.fontname,0,sizeof(props.fontname));
-   text<char_t>(start, int(end-start), (char_t*)props.fontname, (int)countof(props.fontname)-1);
+   text<char_t>(start, int(end-start), (char_t*)props.fontname, countof(props.fontname)-1);
   }
  else
   strcpy(props.fontname,defprops.fontname);

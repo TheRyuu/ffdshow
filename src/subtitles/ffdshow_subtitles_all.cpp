@@ -22,3 +22,4 @@
 #include "TsubtitleUSF.cpp"
 #include "TsubtitlesTextpinUSF.cpp"
 #include "cc_decoder.cpp"
+#include "TsubtitleProps.cpp"

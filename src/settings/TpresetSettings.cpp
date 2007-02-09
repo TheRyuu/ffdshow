@@ -140,7 +140,7 @@ bool TautoPresetProps::dsfilterMatch(const char_t *f1,const char_t *)
        for (comptr<IBaseFilter> bff;eff->Next(1,&bff,NULL)==S_OK;bff=NULL)
         {
          char_t name[MAX_PATH],filtername[MAX_PATH];
-         getFilterName(bff,name,filtername,(int)countof(filtername));
+         getFilterName(bff,name,filtername,countof(filtername));
          filtersnames.push_back(name);
         } 
       }

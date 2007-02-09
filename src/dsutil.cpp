@@ -129,7 +129,7 @@ bool ExtractBIH(const AM_MEDIA_TYPE &mt, BITMAPINFOHEADER* bih)
   return false;
 }
 
-void getFilterName(IBaseFilter *filter,char_t *name,char_t *filtername,int bufsize)
+void getFilterName(IBaseFilter *filter,char_t *name,char_t *filtername,size_t bufsize)
 {
  name[0]='\0';filtername[0]='\0';
  CLSID iffclsid;
