@@ -2,18 +2,20 @@
  * Copyright (c) 2005 Zoltan Hidvegi <hzoli -a- hzoli -d- com>,
  *                    Loren Merritt
  *
- * This library is free software; you can redistribute it and/or
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -263,10 +265,9 @@ static void H264_CHROMA_MC4_TMPL(uint8_t *dst/*align 4*/, uint8_t *src/*align 1*
 #ifdef H264_CHROMA_MC2_TMPL
 static void H264_CHROMA_MC2_TMPL(uint8_t *dst/*align 2*/, uint8_t *src/*align 1*/, int stride, int h, int x, int y)
 {
-    int CD=((1<<16)-1)*x*y + 8*y;
-    int AB=((8<<16)-8)*x + 64 - CD;
-    int i;
-
+    int tmp = ((1<<16)-1)*x + 8;
+    int CD= tmp*y;
+    int AB= (tmp<<3) - CD;
     asm volatile(
         /* mm5 = {A,B,A,B} */
         /* mm6 = {C,D,C,D} */
@@ -275,50 +276,41 @@ static void H264_CHROMA_MC2_TMPL(uint8_t *dst/*align 2*/, uint8_t *src/*align 1*
         "punpckldq %%mm5, %%mm5\n\t"
         "punpckldq %%mm6, %%mm6\n\t"
         "pxor %%mm7, %%mm7\n\t"
-        :: "r"(AB), "r"(CD));
-
-    asm volatile(
         /* mm0 = src[0,1,1,2] */
-        "movd %0, %%mm0\n\t"
+        "movd %2, %%mm0\n\t"
         "punpcklbw %%mm7, %%mm0\n\t"
         "pshufw $0x94, %%mm0, %%mm0\n\t"
-        :: "m"(src[0]));
+        :: "r"(AB), "r"(CD), "m"(src[0]));
 
-    for(i=0; i<h; i++) {
-        asm volatile(
-            /* mm1 = A * src[0,1] + B * src[1,2] */
-            "movq    %%mm0, %%mm1\n\t"
-            "pmaddwd %%mm5, %%mm1\n\t"
-            ::);
 
-        src += stride;
-        asm volatile(
-            /* mm0 = src[0,1,1,2] */
-            "movd %0, %%mm0\n\t"
-            "punpcklbw %%mm7, %%mm0\n\t"
-            "pshufw $0x94, %%mm0, %%mm0\n\t"
-            :: "m"(src[0]));
+    asm volatile(
+        "1:\n\t"
+        "addl %4, %1\n\t"
+        /* mm1 = A * src[0,1] + B * src[1,2] */
+        "movq    %%mm0, %%mm1\n\t"
+        "pmaddwd %%mm5, %%mm1\n\t"
+        /* mm0 = src[0,1,1,2] */
+        "movd (%1), %%mm0\n\t"
+        "punpcklbw %%mm7, %%mm0\n\t"
+        "pshufw $0x94, %%mm0, %%mm0\n\t"
+        /* mm1 += C * src[0,1] + D * src[1,2] */
+        "movq    %%mm0, %%mm2\n\t"
+        "pmaddwd %%mm6, %%mm2\n\t"
+        "paddw   %%mm2, %%mm1\n\t"
+        /* dst[0,1] = pack((mm1 + 32) >> 6) */
+        "paddw %3, %%mm1\n\t"
+        "psrlw $6, %%mm1\n\t"
+        "packssdw %%mm7, %%mm1\n\t"
+        "packuswb %%mm7, %%mm1\n\t"
+        /* writes garbage to the right of dst.
+            * ok because partitions are processed from left to right. */
+        H264_CHROMA_OP4((%0), %%mm1, %%mm3)
+        "movd %%mm1, (%0)\n\t"
+        "addl %4, %0\n\t"
+        "subl $1, %2\n\t"
+        "jnz 1b\n\t"
+        : "+r" (dst), "+r"(src), "+r"(h) : "m" (ff_pw_32), "r"(stride));
 
-        asm volatile(
-            /* mm1 += C * src[0,1] + D * src[1,2] */
-            "movq    %%mm0, %%mm2\n\t"
-            "pmaddwd %%mm6, %%mm2\n\t"
-            "paddw   %%mm2, %%mm1\n\t"
-            ::);
-
-        asm volatile(
-            /* dst[0,1] = pack((mm1 + 32) >> 6) */
-            "paddw %1, %%mm1\n\t"
-            "psrlw $6, %%mm1\n\t"
-            "packssdw %%mm7, %%mm1\n\t"
-            "packuswb %%mm7, %%mm1\n\t"
-            /* writes garbage to the right of dst.
-             * ok because partitions are processed from left to right. */
-            H264_CHROMA_OP4(%0, %%mm1, %%mm3)
-            "movd %%mm1, %0\n\t"
-            : "=m" (dst[0]) : "m" (ff_pw_32));
-        dst += stride;
-    }
 }
 #endif
 
