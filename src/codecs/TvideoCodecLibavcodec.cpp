@@ -808,7 +808,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
        case FOURCC_422P:avctx->pix_fmt=PIX_FMT_YUV422P;break;
        case FOURCC_411P:avctx->pix_fmt=PIX_FMT_YUV411P;break;
        case FOURCC_410P:avctx->pix_fmt=PIX_FMT_YUV410P;break;
-       case FOURCC_RGB3:avctx->pix_fmt=PIX_FMT_RGBA32 ;break;
+       case FOURCC_RGB3:avctx->pix_fmt=PIX_FMT_RGB32;break;
       }
      break;
     }
@@ -820,7 +820,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
      switch (coCfg->ljpeg_csp)
       {
        case FOURCC_YV12:avctx->pix_fmt=PIX_FMT_YUVJ420P;break;
-       case FOURCC_RGB3:avctx->pix_fmt=PIX_FMT_RGBA32;break;
+       case FOURCC_RGB3:avctx->pix_fmt=PIX_FMT_RGB32;break;
       }
      break;
     }

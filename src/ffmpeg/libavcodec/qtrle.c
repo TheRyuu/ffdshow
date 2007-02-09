@@ -2,18 +2,20 @@
  * Quicktime Animation (RLE) Video Decoder
  * Copyright (C) 2004 the ffmpeg project
  *
- * This library is free software; you can redistribute it and/or
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  */
@@ -27,7 +29,7 @@
  * The QT RLE decoder has seven modes of operation:
  * 1, 2, 4, 8, 16, 24, and 32 bits per pixel. For modes 1, 2, 4, and 8
  * the decoder outputs PAL8 colorspace data. 16-bit data yields RGB555
- * data. 24-bit data is RGB24 and 32-bit data is RGBA32.
+ * data. 24-bit data is RGB24 and 32-bit data is RGB32.
  */
 
 #include <stdio.h>
@@ -513,7 +515,7 @@ static int qtrle_decode_init(AVCodecContext *avctx)
         break;
 
     case 32:
-        avctx->pix_fmt = PIX_FMT_RGBA32;
+        avctx->pix_fmt = PIX_FMT_RGB32;
         break;
 
     default:
@@ -625,4 +627,5 @@ AVCodec qtrle_decoder = {
     qtrle_decode_frame,
     CODEC_CAP_DR1,
 };
+
 
