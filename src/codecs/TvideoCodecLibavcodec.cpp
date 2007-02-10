@@ -1100,3 +1100,11 @@ HRESULT TvideoCodecLibavcodec::compress(const TffPict &pict,TencFrameParams &par
   } 
  return hr; 
 }
+
+const char* TvideoCodecLibavcodec::get_current_idct(void)
+{
+ if (avctx && (mpeg12_codec(codecId) || mpeg4_codec(codecId) || x264_codec(codecId) || codecId==CODEC_ID_FLV1))
+  return libavcodec->avcodec_get_current_idct(avctx);
+ else
+  return NULL;
+}

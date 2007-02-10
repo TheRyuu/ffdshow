@@ -64,6 +64,7 @@ public:
 
  float calcMeanQuant(void);
  virtual bool drawMV(unsigned char *dst,unsigned int dx,stride_t stride,unsigned int dy) const {return false;}
+ virtual const char* get_current_idct(void){return NULL;}
 };
 
 typedef vectorEx<int,array_allocator<int,FF_CSPS_NUM> > Tcsps;

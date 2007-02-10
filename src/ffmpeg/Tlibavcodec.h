@@ -76,6 +76,7 @@ public:
  int (*avcodec_default_get_buffer)(AVCodecContext *s, AVFrame *pic);
  void (*avcodec_default_release_buffer)(AVCodecContext *s, AVFrame *pic);
  int (*avcodec_default_reget_buffer)(AVCodecContext *s, AVFrame *pic);
+ const char* (*avcodec_get_current_idct)(AVCodecContext *avctx);
 
  void (*av_free)(void *ptr);
  

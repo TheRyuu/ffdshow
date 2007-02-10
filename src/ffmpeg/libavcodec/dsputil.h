@@ -753,4 +753,5 @@ static inline void copy_block17(uint8_t *dst, uint8_t *src, int dstStride, int s
     }
 }
 
+const char* avcodec_get_current_idct_mmx(AVCodecContext *avctx,DSPContext *c);
 #endif

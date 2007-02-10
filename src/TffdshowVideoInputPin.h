@@ -4,9 +4,8 @@
 #include "TinputPin.h"
 #include "TffdshowDecVideoAllocator.h"
 #include "TffPict.h"
+#include "TvideoCodec.h"
 
-class TvideoCodec;
-class TvideoCodecDec;
 class TffdshowDecVideo;
 class TffdshowVideo;
 struct IcheckSubtitle;
@@ -57,6 +56,7 @@ public:
  int sourceFlags;
  bool waitForKeyframes(void);
  void setSampleSkipped(void);
+ const char* get_current_idct(void){return video->get_current_idct();}
 };
 
 class TffdshowVideoEncInputPin :public IMixerPinConfig,public TffdshowVideoInputPin

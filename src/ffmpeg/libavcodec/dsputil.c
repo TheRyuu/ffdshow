@@ -4176,3 +4176,30 @@ void dsputil_init(DSPContext* c, AVCodecContext *avctx)
     }
 }
 
+// get_current_idct by h.yamagata
+// It's caller's responsibility to check avctx->priv_data is MpegEncContext*. 
+const char* avcodec_get_current_idct(AVCodecContext *avctx)
+{
+    MpegEncContext *s = avctx->priv_data;
+    DSPContext *c = &s->dsp;
+
+    if (c->idct_put==ff_jref_idct_put)
+        return "Integer (ff_jref_idct)";
+    if (c->idct_put==ff_jref_idct1_put)
+        return "Integer (ff_jref_idct1)";
+    if (c->idct_put==ff_jref_idct1_put)
+        return "Integer (ff_jref_idct2)";
+    if (c->idct_put==ff_jref_idct4_put)
+        return "Integer (ff_jref_idct4)";
+    if (c->idct_put==ff_h264_lowres_idct_put_c)
+        return "H.264 (ff_h264_lowres_idct_c)";
+    if (c->idct_put==ff_vp3_idct_put_c)
+        return "VP3 (ff_vp3_idct_c)";
+    if (c->idct_put==Skl_IDct16_Put_C)
+        return "Skal's IDCT (Skl_IDct16_C)";
+    if (c->idct_put==simple_idct_put)
+        return "Simple IDCT (simple_idct)";
+#if defined(HAVE_MMX)
+    return avcodec_get_current_idct_mmx(avctx,c);
+#endif
+}

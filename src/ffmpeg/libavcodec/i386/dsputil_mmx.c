@@ -3542,3 +3542,28 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
     //ff_idct = just_return;
 #endif
 }
+
+const char* avcodec_get_current_idct_mmx(AVCodecContext *avctx,DSPContext *c)
+{
+    if (c->idct_put==ff_idct_xvid_mmx_put)
+        return "XvidMMX (ff_idct_xvid_mmx)";
+    if (c->idct_put==ff_idct_xvid_mmx2_put)
+        return "XvidMMX (ff_idct_xvid_mmx2)";
+    if (c->idct_put==ff_simple_idct_put_mmx)
+        return "Simple MMX (ff_simple_idct_mmx)";
+    if (c->idct_put==Skl_IDct16_Put_SSE2)
+        return "Skal's IDCT (Skl_IDct16_SSE2)";
+    if (c->idct_put==Skl_IDct16_SSE)
+        return "Skal's IDCT (Skl_IDct16_SSE)";
+    if (c->idct_put==Skl_IDct16_Put_MMX)
+        return "Skal's IDCT (Skl_IDct16_MMX)";
+    if (c->idct_put==ff_libmpeg2mmx2_idct_put)
+        return "libmpeg2 (ff_libmpeg2mmx2_idct)";
+    if (c->idct_put==ff_libmpeg2mmx_idct_put)
+        return "libmpeg2 (ff_libmpeg2mmx_idct)";
+    if (c->idct_put==ff_vp3_idct_put_sse2)
+        return "VP3 (ff_vp3_idct_sse2)";
+    if (c->idct_put==ff_vp3_idct_put_mmx)
+        return "VP3 (ff_vp3_idct_mmx)";
+    return NULL;
+}

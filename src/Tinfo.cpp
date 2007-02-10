@@ -273,6 +273,7 @@ TinfoDecVideo::TinfoDecVideo(IffdshowBase *Ideci):
    IDFF_OSDtype_QueueCount,_l("Queued samples"),_l("queue"),
    IDFF_OSDtype_Late,_l("Video delay"),_l("late"),
    IDFF_OSDtype_TimeOnffdshow,_l("Time on ffdshow"),_l("timeon"),
+   IDFF_OSDtype_idct,_l("IDCT(libavcodec)"),_l("idct"),
 #ifdef OSDTIMETABALE
    IDFF_OSDtype_timetable,_l("Time table"),_l("timet"),
 #endif
@@ -453,6 +454,17 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
      tsprintf(s,_l("%7dms"),late>0?late:0);
      wasChange=true;
      return s;
+    }
+   case IDFF_OSDtype_idct:
+    {
+     const char *idct0=deciV->get_cuurent_idct();
+     if (idct0)
+      {
+       text<char_t> idct(idct0);
+       _tcsncpy(s,(const char_t*)idct,countof(s));
+      }
+     else
+      tsprintf(s,_l("unknown"));
     }
    default:
     return TinfoValueDec::getVal0(wasChange,splitline);

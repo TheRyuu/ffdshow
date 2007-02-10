@@ -616,6 +616,7 @@
   #define IDFF_OSDtype_nchannels         1559
   #define IDFF_OSDtype_audioSampleFormat 1560
   #define IDFF_OSDtype_audioJitter       1561
+  #define IDFF_OSDtype_idct              3370
   #ifdef OSDTIMETABALE
    #define IDFF_OSDtype_timetable        1562
   #endif
@@ -1378,6 +1379,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3369
+//max:3370
 
 #endif

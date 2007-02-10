@@ -68,6 +68,7 @@ public:
  virtual bool onDiscontinuity(void);
  virtual bool drawMV(unsigned char *dst,unsigned int dx,stride_t stride,unsigned int dy) const;
  virtual void getEncoderInfo(char_t *buf,size_t buflen) const;
+ virtual const char* get_current_idct(void);
 };
 
 #endif
