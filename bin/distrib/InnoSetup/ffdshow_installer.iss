@@ -2,10 +2,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 850
+#define tryout_revision = 903
 #define buildyear = 2007
-#define buildmonth = '01'
-#define buildday = '29'
+#define buildmonth = '02'
+#define buildday = '10'
 
 ; Build specific options
 #define unicode_required = True
@@ -446,7 +446,7 @@ Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.av
 ; Recommended settings
 Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: allowOutChange; ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: hwOverlay; ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: idct; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: idct; ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: outChangeCompatOnly; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: postprocH264mode; ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: resizeMethod; ValueData: 9; Flags: createvalueifdoesntexist; Components: ffdshow
@@ -474,7 +474,7 @@ Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: allowOutC
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: hwOverlay; ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: outChangeCompatOnly; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: postprocH264mode; ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: idct; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: idct; ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
 Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: dword; ValueName: libtheoraPostproc; ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
 
 ; Blacklist
