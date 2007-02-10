@@ -73,7 +73,7 @@ TvolumeSettings::TvolumeSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
      _l("volumeLFEmute"),0,
      
    IDFF_volumeNormalize     ,&TvolumeSettings::normalize   ,0,0,_l(""),1,
-     _l("volNormalize"),1,
+     _l("volNormalize"),0,
    IDFF_maxNormalization    ,&TvolumeSettings::normalizeMax,0,3200,_l(""),1,
      _l("volNormalizeMax"),500,
    IDFF_volumeNormalizeBufferLength     ,&TvolumeSettings::nSamples,128,1024,_l(""),1,

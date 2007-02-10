@@ -2,7 +2,7 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 903
+#define tryout_revision = 904
 #define buildyear = 2007
 #define buildmonth = '02'
 #define buildday = '10'
@@ -247,10 +247,10 @@ Name: audio\adpcm; Description: ADPCM, MS GSM, Truespeech; Check: NOT CheckTask(
 Name: audio\rawa; Description: {cm:rawaudio}; Check: CheckTaskAudio('rawa', 4, False); Flags: dontinheritcheck; Components: ffdshow
 Name: audio\rawa; Description: {cm:rawaudio}; Check: NOT CheckTaskAudio('rawa', 4, False); Flags: dontinheritcheck unchecked; Components: ffdshow
 Name: filter; Description: {cm:defaultfilters}; Flags: unchecked; Components: ffdshow
-Name: filter\normalize; Description: {cm:volumenorm}; Check: CheckTask('filter\normalize', False); Components: ffdshow
-Name: filter\normalize; Description: {cm:volumenorm}; Check: NOT CheckTask('filter\normalize', False); Flags: unchecked; Components: ffdshow
-Name: filter\subtitles; Description: {cm:subtitles}; Check: CheckTask('filter\subtitles', False); Components: ffdshow
-Name: filter\subtitles; Description: {cm:subtitles}; Check: NOT CheckTask('filter\subtitles', False); Flags: unchecked; Components: ffdshow
+Name: filter\normalize; Description: {cm:volumenorm}; Check:     GetTaskVolNormalize(); Components: ffdshow
+Name: filter\normalize; Description: {cm:volumenorm}; Check: NOT GetTaskVolNormalize(); Components: ffdshow; Flags: unchecked
+Name: filter\subtitles; Description: {cm:subtitles};  Check:     CheckTaskVideoInpreset('issubtitles', 1, False); Components: ffdshow
+Name: filter\subtitles; Description: {cm:subtitles};  Check: NOT CheckTaskVideoInpreset('issubtitles', 1, False); Components: ffdshow; Flags: unchecked;
 #if !PREF_YAMAGATA
 Name: tweaks; Description: {cm:tweaks}; Flags: unchecked; Components: ffdshow
 Name: tweaks\skipinloop; Description: {cm:skipinloop}; Check: CheckTask('tweaks\skipinloop', False); Components: ffdshow
@@ -463,8 +463,10 @@ Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: i
 Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: isSubtitles; ValueData: 1; Components: ffdshow; Tasks: filter\subtitles
 
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerNormalizeMatrix; ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: isvolume; ValueData: 0; Components: ffdshow; Tasks: NOT filter\normalize
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: isvolume; ValueData: 1; Components: ffdshow; Tasks: filter\normalize
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: volNormalize; ValueData: 0; Components: ffdshow; Tasks: NOT filter\normalize
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: isvolume;     ValueData: 1; Components: ffdshow; Tasks:     filter\normalize
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: volNormalize; ValueData: 1; Components: ffdshow; Tasks:     filter\normalize
+
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: ismixer; ValueData: {code:Get_ismixer}; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerOut; ValueData: {code:Get_mixerOut}; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerExpandStereo; ValueData: {code:Get_mixerExpandStereo}; Components: ffdshow
@@ -544,6 +546,17 @@ begin
   end
 end;
 
+function CheckTaskVideoInpreset(name: String; value: Integer; showbydefault: Boolean): Boolean;
+var
+  regval: Cardinal;
+begin
+  Result := False;
+  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow\default', name, regval) then
+    Result := (regval = value)
+  else
+    Result := showbydefault;
+end;
+
 function CheckTaskVideoXvid(name: String): Boolean;
 var
   regval: Cardinal;
@@ -600,6 +613,27 @@ begin
       Result := showbydefault;
     end
   end
+end;
+
+function CheckTaskAudioInpreset(name: String; value: Integer; showbydefault: Boolean): Boolean;
+var
+  regval: Cardinal;
+begin
+  Result := False;
+  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow_audio\default', name, regval) then
+    Result := (regval = value)
+  else
+    Result := showbydefault;
+end;
+
+function GetTaskVolNormalize(): Boolean;
+var
+  isvolume: Boolean;
+begin
+  Result := False;
+  if CheckTaskAudioInpreset('isvolume', 1, False) then
+    if CheckTaskAudioInpreset('volNormalize', 1, False) then
+     Result := True;
 end;
 
 #if include_app_plugins
