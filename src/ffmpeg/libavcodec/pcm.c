@@ -2,72 +2,75 @@
  * PCM codecs
  * Copyright (c) 2001 Fabrice Bellard.
  *
- * This library is free software; you can redistribute it and/or
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
- 
+
 /**
  * @file pcm.c
  * PCM codecs
  */
- 
+
 #include "avcodec.h"
+#include "bitstream.h" // for ff_reverse
 
 /* from g711.c by SUN microsystems (unrestricted use) */
 
-#define	SIGN_BIT	(0x80)		/* Sign bit for a A-law byte. */
-#define	QUANT_MASK	(0xf)		/* Quantization field mask. */
-#define	NSEGS		(8)		/* Number of A-law segments. */
-#define	SEG_SHIFT	(4)		/* Left shift for segment number. */
-#define	SEG_MASK	(0x70)		/* Segment field mask. */
+#define         SIGN_BIT        (0x80)      /* Sign bit for a A-law byte. */
+#define         QUANT_MASK      (0xf)       /* Quantization field mask. */
+#define         NSEGS           (8)         /* Number of A-law segments. */
+#define         SEG_SHIFT       (4)         /* Left shift for segment number. */
+#define         SEG_MASK        (0x70)      /* Segment field mask. */
 
-#define	BIAS		(0x84)		/* Bias for linear code. */
+#define         BIAS            (0x84)      /* Bias for linear code. */
 
 /*
  * alaw2linear() - Convert an A-law value to 16-bit linear PCM
  *
  */
-static int alaw2linear(unsigned char	a_val)
+static int alaw2linear(unsigned char a_val)
 {
-	int		t;
-	int		seg;
+        int t;
+        int seg;
 
-	a_val ^= 0x55;
+        a_val ^= 0x55;
 
-	t = a_val & QUANT_MASK;
-	seg = ((unsigned)a_val & SEG_MASK) >> SEG_SHIFT;
-	if(seg) t= (t + t + 1 + 32) << (seg + 2);
-	else    t= (t + t + 1     ) << 3;
+        t = a_val & QUANT_MASK;
+        seg = ((unsigned)a_val & SEG_MASK) >> SEG_SHIFT;
+        if(seg) t= (t + t + 1 + 32) << (seg + 2);
+        else    t= (t + t + 1     ) << 3;
 
-	return ((a_val & SIGN_BIT) ? t : -t);
+        return ((a_val & SIGN_BIT) ? t : -t);
 }
 
-static int ulaw2linear(unsigned char	u_val)
+static int ulaw2linear(unsigned char u_val)
 {
-	int		t;
+        int t;
 
-	/* Complement to obtain normal u-law value. */
-	u_val = ~u_val;
+        /* Complement to obtain normal u-law value. */
+        u_val = ~u_val;
 
-	/*
-	 * Extract and bias the quantization bits. Then
-	 * shift up by the segment number and subtract out the bias.
-	 */
-	t = ((u_val & QUANT_MASK) << 3) + BIAS;
-	t <<= ((unsigned)u_val & SEG_MASK) >> SEG_SHIFT;
+        /*
+         * Extract and bias the quantization bits. Then
+         * shift up by the segment number and subtract out the bias.
+         */
+        t = ((u_val & QUANT_MASK) << 3) + BIAS;
+        t <<= ((unsigned)u_val & SEG_MASK) >> SEG_SHIFT;
 
-	return ((u_val & SIGN_BIT) ? (BIAS - t) : (t - BIAS));
+        return ((u_val & SIGN_BIT) ? (BIAS - t) : (t - BIAS));
 }
 
 typedef struct PCMDecode {
@@ -95,8 +98,8 @@ static int pcm_decode_init(AVCodecContext * avctx)
 }
 
 static int pcm_decode_frame(AVCodecContext *avctx,
-			    void *data, int *data_size,
-			    uint8_t *buf, int buf_size)
+                            void *data, int *data_size,
+                            uint8_t *buf, int buf_size)
 {
     PCMDecode *s = avctx->priv_data;
     int n;
@@ -105,6 +108,12 @@ static int pcm_decode_frame(AVCodecContext *avctx,
 
     samples = data;
     src = buf;
+
+    n= av_get_bits_per_sample(avctx->codec_id)/8;
+    if(n && buf_size % n){
+        av_log(avctx, AV_LOG_ERROR, "invalid PCM packet\n");
+        return -1;
+    }
 
     if(buf_size > AVCODEC_MAX_AUDIO_FRAME_SIZE/2)
         buf_size = AVCODEC_MAX_AUDIO_FRAME_SIZE/2;
@@ -131,7 +140,7 @@ AVCodec name ## _decoder = {                    \
     CODEC_TYPE_AUDIO,                           \
     id,                                         \
     sizeof(PCMDecode),                          \
-    pcm_decode_init,				\
+    pcm_decode_init,                            \
     NULL,                                       \
     NULL,                                       \
     pcm_decode_frame,                           \
