@@ -589,7 +589,7 @@ STDMETHODIMP_(int) TffdshowDecVideo::get_time_on_ffdshow_percent(void)
   return -1;
 }
 
-STDMETHODIMP_(const char*) TffdshowDecVideo::get_cuurent_idct(void)
+STDMETHODIMP_(const char*) TffdshowDecVideo::get_current_idct(void)
 {
  return inpin->get_current_idct();
 }

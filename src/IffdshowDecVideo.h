@@ -95,7 +95,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
  STDMETHOD_(int,getOSDtime)(void) PURE;
  STDMETHOD_(int,getQueuedCount)(void) PURE;
  STDMETHOD_(__int64,getLate)(void) PURE;
- STDMETHOD_(const char*,get_cuurent_idct)(void) PURE;
+ STDMETHOD_(const char*,get_current_idct)(void) PURE;
  STDMETHOD_(int,get_time_on_ffdshow)(void) PURE;
  STDMETHOD_(int,get_time_on_ffdshow_percent)(void) PURE;
  STDMETHOD_(bool,shouldSkipH264loopFilter)(void) PURE;

@@ -457,7 +457,7 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
     }
    case IDFF_OSDtype_idct:
     {
-     const char *idct0=deciV->get_cuurent_idct();
+     const char *idct0=deciV->get_current_idct();
      if (idct0)
       {
        text<char_t> idct(idct0);

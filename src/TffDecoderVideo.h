@@ -293,7 +293,7 @@ public:
  void OSDtimeEndSamplingMax(void);
  STDMETHODIMP_(int) getQueuedCount(void);
  STDMETHODIMP_(__int64) getLate(void);
- STDMETHODIMP_(const char*)get_cuurent_idct(void);
+ STDMETHODIMP_(const char*)get_current_idct(void);
  STDMETHODIMP_(int) get_time_on_ffdshow(void);
  STDMETHODIMP_(int) get_time_on_ffdshow_percent(void);
  STDMETHODIMP_(bool) shouldSkipH264loopFilter(void);
@@ -457,7 +457,7 @@ private:
    STDMETHODIMP_(int) getOSDtime(void){return deciV->getOSDtime();}
    STDMETHODIMP_(int) getQueuedCount(void){return deciV->getQueuedCount();}
    STDMETHODIMP_(__int64) getLate(void){return deciV->getLate();}
-   STDMETHODIMP_(const char*)get_cuurent_idct(void){return deciV->get_cuurent_idct();}
+   STDMETHODIMP_(const char*)get_current_idct(void){return deciV->get_current_idct();}
    STDMETHODIMP_(int) get_time_on_ffdshow(void){return deciV->get_time_on_ffdshow();}
    STDMETHODIMP_(int) get_time_on_ffdshow_percent(void){return deciV->get_time_on_ffdshow_percent();}
    STDMETHODIMP_(bool) shouldSkipH264loopFilter(void){return deciV->shouldSkipH264loopFilter();}
