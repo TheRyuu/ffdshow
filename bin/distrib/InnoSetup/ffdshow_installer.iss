@@ -481,8 +481,8 @@ Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: dword; ValueName: libtheora
 
 ; Blacklist
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: isBlacklist; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: String; ValueName: blacklist; ValueData: "explorer.exe;oblivion.exe;morrowind.exe;powerdvd.exe"; Flags: createvalueifdoesntexist; OnlyBelowVersion: 0,6; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: String; ValueName: blacklist; ValueData: "oblivion.exe;morrowind.exe;powerdvd.exe"; Flags: createvalueifdoesntexist; MinVersion: 0,6; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: String; ValueName: blacklist; ValueData: "explorer.exe;oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist; OnlyBelowVersion: 0,6; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: String; ValueName: blacklist; ValueData: "oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist; MinVersion: 0,6; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: isBlacklist; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: blacklist; ValueData: "explorer.exe;oblivion.exe;morrowind.exe"; Flags: createvalueifdoesntexist; OnlyBelowVersion: 0,6; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: blacklist; ValueData: "oblivion.exe;morrowind.exe"; Flags: createvalueifdoesntexist; MinVersion: 0,6; Components: ffdshow

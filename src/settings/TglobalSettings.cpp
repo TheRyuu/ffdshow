@@ -807,10 +807,6 @@ CodecID TglobalSettingsDecVideo::getCodecId(DWORD fourCC,FOURCC *AVIfourCC) cons
 
 bool TglobalSettingsDecVideo::inBlacklist(const char_t *exe)
 {
- // PowerDVD7 does not work with ffdshow direct show decoder.
- // PowerDVD7 can work with ffdshow vfw decoder.
- if(_tcsnicmp(_l("powerdvd.exe"),exe,13)==0)
-  return true;
  return TglobalSettingsBase::inBlacklist(exe);
 }
 
