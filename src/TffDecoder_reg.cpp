@@ -254,13 +254,15 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]=
  { &MEDIATYPE_Video, &MEDIASUBTYPE_3iv2   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_3IVX   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_3ivx   },
- // MPEG1 & 2 Video MediaSubType & FourCCs
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_NDIG   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_ndig   },
+// MPEG1 & 2 Video MediaSubType & FourCCs
  { &MEDIATYPE_Video, &MEDIASUBTYPE_MPEG1Packet   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_MPEG1Payload   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_MPEG2_VIDEO   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_MPG2   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_mpg2   },
- // Some less common FourCCs
+// Some less common FourCCs
  { &MEDIATYPE_Video, &MEDIASUBTYPE_VP31   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_vp31   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_TSCC   },
@@ -285,16 +287,16 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]=
  { &MEDIATYPE_Video, &MEDIASUBTYPE_wmvp   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_WVP2   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_wvp2   },
- /*
+/*
  { &MEDIATYPE_Video, &MEDIASUBTYPE_VMNC   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_vmnc   },
- */
+*/
  // MJPEG Video MediaSubType & FourCCs
  { &MEDIATYPE_Video, &MEDIASUBTYPE_MJPG   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_mjpg   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_MJPA   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_mjpa   },
- // DVSD Video MediaSubType & FourCCs
+// DVSD Video MediaSubType & FourCCs
  { &MEDIATYPE_Video, &MEDIASUBTYPE_DVSD   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_dvsd   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_DV25   },
