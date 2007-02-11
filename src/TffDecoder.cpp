@@ -379,7 +379,7 @@ HRESULT TffdshowDecVideo::setOutputMediaType(const CMediaType &mt)
     }
   }  
  m_frame.dstColorspace=FF_CSP_NULL;
- return S_FALSE;  
+ return E_FAIL; //S_FALSE;  
 }
 
 // set output colorspace
@@ -450,8 +450,8 @@ HRESULT TffdshowDecVideo::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROP
    (ref==CLSID_OverlayMixer || ref==CLSID_VideoMixingRenderer || ref==CLSID_VideoMixingRenderer9);
  isQueue=isQueue && !(m_IsOldVMR9RenderlessAndRGB=IsOldVMR9RenderlessAndRGB()); // inform MPC about queue only when queue is effective.
  DPRINTF(_l("CLSID 0x%x,0x%x,0x%x"),ref.Data1,ref.Data2,ref.Data3);for(int i=0;i<8;i++) {DPRINTF(_l(",0x%2x"),ref.Data4[i]);}
- if (ref==CLSID_CyberLinkVideoSpDecoder)
-  return E_FAIL;
+ //if (ref==CLSID_CyberLinkVideoSpDecoder)
+ // return E_FAIL;
  if(ref==CLSID_VideoRenderer || ref==CLSID_OverlayMixer)
   return DecideBufferSizeOld(pAlloc, ppropInputRequest,ref);
  else
