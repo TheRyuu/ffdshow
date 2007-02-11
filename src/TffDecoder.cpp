@@ -176,7 +176,7 @@ extern "C"{
 DEFINE_GUID(CLSID_DecklinkVideoRenderFilter ,0xCEB13CC8,0x3591,0x45a5,0xBA,0x0F,0x20,0xE9,0xA1,0xD7,0x2F,0x76);
 DEFINE_GUID(CLSID_InfTee,0xf8388a40, 0xd5bb, 0x11d0, 0xbe, 0x5a, 0x0, 0x80, 0xc7, 0x6, 0x56, 0x8e);
 DEFINE_GUID(CLSID_SmartT,0xCC58E280, 0x8AA1, 0x11D1, 0xB3, 0xF1, 0x0, 0xAA, 0x0, 0x37, 0x61, 0xC5);
-DEFINE_GUID(CLSID_CyberLinkVideoSpDecoder,0x8acd52ed,0x9c2d,0x4008,0x91,0x29,0xdc,0xe9,0x55,0xd8,0x60,0x65);
+//DEFINE_GUID(CLSID_CyberLinkVideoSpDecoder,0x8acd52ed,0x9c2d,0x4008,0x91,0x29,0xdc,0xe9,0x55,0xd8,0x60,0x65);
 }
 
 HRESULT TffdshowDecVideo::CheckConnect(PIN_DIRECTION dir,IPin *pPin)
@@ -379,7 +379,7 @@ HRESULT TffdshowDecVideo::setOutputMediaType(const CMediaType &mt)
     }
   }  
  m_frame.dstColorspace=FF_CSP_NULL;
- return E_FAIL; //S_FALSE;  
+ return VFW_E_TYPE_NOT_ACCEPTED; //S_FALSE;  
 }
 
 // set output colorspace
@@ -449,7 +449,7 @@ HRESULT TffdshowDecVideo::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROP
  isQueue=isQueue && !m_IsOldVideoRenderer &&
    (ref==CLSID_OverlayMixer || ref==CLSID_VideoMixingRenderer || ref==CLSID_VideoMixingRenderer9);
  isQueue=isQueue && !(m_IsOldVMR9RenderlessAndRGB=IsOldVMR9RenderlessAndRGB()); // inform MPC about queue only when queue is effective.
- DPRINTF(_l("CLSID 0x%x,0x%x,0x%x"),ref.Data1,ref.Data2,ref.Data3);for(int i=0;i<8;i++) {DPRINTF(_l(",0x%2x"),ref.Data4[i]);}
+ //DPRINTF(_l("CLSID 0x%x,0x%x,0x%x"),ref.Data1,ref.Data2,ref.Data3);for(int i=0;i<8;i++) {DPRINTF(_l(",0x%2x"),ref.Data4[i]);}
  //if (ref==CLSID_CyberLinkVideoSpDecoder)
  // return E_FAIL;
  if(ref==CLSID_VideoRenderer || ref==CLSID_OverlayMixer)

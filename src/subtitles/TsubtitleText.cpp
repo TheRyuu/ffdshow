@@ -743,6 +743,25 @@ template<class tchar> template<int TSubtitleProps::*offset,int min,int max> void
  else 
   props.*offset=defprops.*offset;
 }
+template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void TsubtitleFormat::Tssa<tchar>::intProp2(const tchar *start,const tchar *end)
+{
+// (x,y) is expected.
+ tchar *buf=(tchar*)_alloca((end-start+1)*sizeof(tchar));memset(buf,0,(end-start+1)*sizeof(tchar));
+ memcpy(buf,start,(end-start)*sizeof(tchar));
+ const tchar *bufstart=strchr(buf,'(');
+ if(!bufstart) return;
+ bufstart++;
+ tchar *bufend;
+ int val=strtol(bufstart,&bufend,10);
+ if (bufstart!=bufend && isIn(val,min,max)) props.*offset1=val;
+ if (*bufend=='\0') return;
+
+ bufstart=strchr(bufend,',');
+ if(!bufstart) return;
+ bufstart++;
+ val=strtol(bufstart,&bufend,10);
+ if (bufstart!=bufend && isIn(val,min,max)) props.*offset2=val;
+}
 template<class tchar> void TsubtitleFormat::Tssa<tchar>::color(const tchar *start,const tchar *end)
 {
  tchar *buf=(tchar*)_alloca((end-start+1)*sizeof(tchar));memset(buf,0,(end-start+1)*sizeof(tchar));
@@ -824,6 +843,7 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::processTokens(const tch
        !processToken(l3,_L("\\clip"),NULL) &&
        !processToken(l3,_L("\\an"),NULL) &&
        !processToken(l3,_L("\\c"),&Tssa<tchar>::color) &&
+       !processToken(l3,_L("\\pos"),&Tssa<tchar>::template intProp2<&TSubtitleProps::marginL,&TSubtitleProps::marginTop,0,4096>) &&
        !processToken(l3,_L("\\1c"),NULL) && !processToken(l3,_L("\\1a"),NULL) &&
        !processToken(l3,_L("\\2c"),NULL) && !processToken(l3,_L("\\2a"),NULL) &&
        !processToken(l3,_L("\\3c"),NULL) && !processToken(l3,_L("\\3a"),NULL) &&
