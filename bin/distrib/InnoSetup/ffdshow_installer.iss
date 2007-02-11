@@ -2,7 +2,7 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 904
+#define tryout_revision = 912
 #define buildyear = 2007
 #define buildmonth = '02'
 #define buildday = '10'
@@ -203,14 +203,10 @@ Name: video\mss2; Description: MSS1, MSS2; Check: CheckTaskVideo('mss2', 12, Fal
 Name: video\mss2; Description: MSS1, MSS2; Check: NOT CheckTaskVideo('mss2', 12, False); Flags: dontinheritcheck unchecked; Components: ffdshow
 Name: video\dvsd; Description: DV; Check: CheckTaskVideo('dvsd', 1, False); Components: ffdshow
 Name: video\dvsd; Description: DV; Check: NOT CheckTaskVideo('dvsd', 1, False); Flags: dontinheritcheck unchecked; Components: ffdshow
-Name: video\other1; Description: H.261, MJPEG, Theora, VP3; Check: CheckTask('video\other1', True); Components: ffdshow
-Name: video\other1; Description: H.261, MJPEG, Theora, VP3; Check: NOT CheckTask('video\other1', True); Flags: unchecked; Components: ffdshow
-Name: video\other2; Description: CorePNG, MS Video 1, MSRLE, Techsmith, Truemotion; Check: CheckTask('video\other2', True); Components: ffdshow
-Name: video\other2; Description: CorePNG, MS Video 1, MSRLE, Techsmith, Truemotion; Check: NOT CheckTask('video\other2', True); Flags: unchecked; Components: ffdshow
-Name: video\other3; Description: ASV1/2, CYUV, ZLIB, 8BPS, LOCO, MSZH, QPEG, WNV1, VCR1; Check: CheckTask('video\other3', False); Components: ffdshow
-Name: video\other3; Description: ASV1/2, CYUV, ZLIB, 8BPS, LOCO, MSZH, QPEG, WNV1, VCR1; Check: NOT CheckTask('video\other3', False); Flags: unchecked; Components: ffdshow
-Name: video\other4; Description: CamStudio, ZMBV, Ultimotion, VIXL, AASC, IV32, FPS1, RT21; Check: CheckTask('video\other4', False); Components: ffdshow
-Name: video\other4; Description: CamStudio, ZMBV, Ultimotion, VIXL, AASC, IV32, FPS1, RT21; Check: NOT CheckTask('video\other4', False); Flags: unchecked; Components: ffdshow
+Name: video\other1; Description: H.261, MJPEG, Theora, VP3; Check: NOT IsUpdate; Components: ffdshow
+Name: video\other2; Description: CorePNG, MS Video 1, MSRLE, Techsmith, Truemotion; Check: NOT IsUpdate; Components: ffdshow
+Name: video\other3; Description: ASV1/2, CYUV, ZLIB, 8BPS, LOCO, MSZH, QPEG, WNV1, VCR1; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
+Name: video\other4; Description: CamStudio, ZMBV, Ultimotion, VIXL, AASC, IV32, FPS1, RT21; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
 Name: video\rawv; Description: {cm:rawvideo}; Check: CheckTaskVideo('rawv', 1, False); Flags: dontinheritcheck; Components: ffdshow
 Name: video\rawv; Description: {cm:rawvideo}; Check: NOT CheckTaskVideo('rawv', 1, False); Flags: dontinheritcheck unchecked; Components: ffdshow
 Name: audio; Description: {cm:audioformats}; Flags: unchecked; Components: ffdshow
@@ -242,8 +238,7 @@ Name: audio\amr; Description: AMR; Check: CheckTaskAudio('amr', 1, True); Compon
 Name: audio\amr; Description: AMR; Check: NOT CheckTaskAudio('amr', 1, True); Flags: unchecked; Components: ffdshow
 Name: audio\qt; Description: QDM2, MACE; Check: CheckTaskAudio('qdm2', 1, True); Components: ffdshow
 Name: audio\qt; Description: QDM2, MACE; Check: NOT CheckTaskAudio('qdm2', 1, True); Flags: unchecked; Components: ffdshow
-Name: audio\adpcm; Description: ADPCM, MS GSM, Truespeech; Check: CheckTask('audio\adpcm', False); Components: ffdshow
-Name: audio\adpcm; Description: ADPCM, MS GSM, Truespeech; Check: NOT CheckTask('audio\adpcm', False); Flags: unchecked; Components: ffdshow
+Name: audio\adpcm; Description: ADPCM, MS GSM, Truespeech; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
 Name: audio\rawa; Description: {cm:rawaudio}; Check: CheckTaskAudio('rawa', 4, False); Flags: dontinheritcheck; Components: ffdshow
 Name: audio\rawa; Description: {cm:rawaudio}; Check: NOT CheckTaskAudio('rawa', 4, False); Flags: dontinheritcheck unchecked; Components: ffdshow
 Name: filter; Description: {cm:defaultfilters}; Flags: unchecked; Components: ffdshow
@@ -252,9 +247,8 @@ Name: filter\normalize; Description: {cm:volumenorm}; Check: NOT GetTaskVolNorma
 Name: filter\subtitles; Description: {cm:subtitles};  Check:     CheckTaskVideoInpreset('issubtitles', 1, False); Components: ffdshow
 Name: filter\subtitles; Description: {cm:subtitles};  Check: NOT CheckTaskVideoInpreset('issubtitles', 1, False); Components: ffdshow; Flags: unchecked;
 #if !PREF_YAMAGATA
-Name: tweaks; Description: {cm:tweaks}; Flags: unchecked; Components: ffdshow
-Name: tweaks\skipinloop; Description: {cm:skipinloop}; Check: CheckTask('tweaks\skipinloop', False); Components: ffdshow
-Name: tweaks\skipinloop; Description: {cm:skipinloop}; Check: NOT CheckTask('tweaks\skipinloop', False); Flags: unchecked; Components: ffdshow
+Name: tweaks; Description: {cm:tweaks}; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
+Name: tweaks\skipinloop; Description: {cm:skipinloop}; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
 #endif
 
 [Icons]
@@ -516,18 +510,6 @@ var
   chbExpandStereo: TCheckBox;
   is8DisableMixer: Boolean;
 
-function CheckTask(name: String; defaultvalue: Boolean): Boolean;
-var
-  regval: String;
-begin
-  if RegQueryStringValue(HKLM, 'Software\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow_is1', 'Inno Setup: Selected Tasks', regval) then begin
-    Result := (Pos(name, regval) > 0);
-  end
-  else begin
-    Result := defaultvalue;
-  end
-end;
-
 function CheckTaskVideo(name: String; value: Integer; showbydefault: Boolean): Boolean;
 var
   regval: Cardinal;
@@ -691,6 +673,11 @@ begin
   end
 end;
 
+function IsUpdate(): Boolean;
+begin
+  Result := FileExists(GetDefaultInstallDir('') + '\libavcodec.dll');
+end;
+
 function NextButtonClick(CurPageID: Integer): Boolean;
 begin
   Result := True;
@@ -701,26 +688,6 @@ begin
     end
   end
 end;
-
-#if false
-procedure UninstallBuildUsingNSIS();
-var
-  regval: String;
-  ResultCode: Integer;
-begin
-  if RegQueryStringValue(HKLM, 'Software\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow', 'UninstallString', regval) then begin
-    if FileExists(RemoveQuotes(regval)) then begin
-      if msgbox('Setup has detected that you already have another build of ffdshow installed.'#13#10'It is recommended to uninstall that build first because it uses a different installer.'#13#10#13#10'Uninstall it now?', mbConfirmation, MB_YESNO) = IDYES then begin
-        if msgbox('Uninstalling your current build will also reset your ffdshow settings.'#13#10#13#10'Are you sure you want to uninstall your current build?', mbConfirmation, MB_YESNO) = IDYES then begin
-          if NOT Exec(RemoveQuotes(regval), '/S', '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then begin
-            MsgBox(SysErrorMessage(resultCode), mbError, MB_OK);
-          end
-        end
-      end
-    end
-  end
-end;
-#endif
 
 procedure RemoveBuildUsingNSIS();
 var
