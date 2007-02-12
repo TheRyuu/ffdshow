@@ -260,18 +260,18 @@ Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: ac3
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: amr; ValueData: 0; Components: ffdshow; Tasks: NOT audio\amr
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: dts; ValueData: 0; Components: ffdshow; Tasks: NOT audio\dts
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: flac; ValueData: 0; Components: ffdshow; Tasks: NOT audio\flac
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: gsm; ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: iadpcm; ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: law; ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: lpcm; ValueData: 0; Components: ffdshow; Tasks: NOT audio\lpcm
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: mace; ValueData: 0; Components: ffdshow; Tasks: NOT audio\qt
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: mp2; ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow; Tasks: NOT audio\mp2
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: mp3; ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow; Tasks: NOT audio\mp3
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: msadpcm; ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: otherAdpcm; ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: gsm;        ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm; Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: iadpcm;     ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm; Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: law;        ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm; Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: lpcm;       ValueData: 0; Components: ffdshow; Tasks: NOT audio\lpcm
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: mace;       ValueData: 0; Components: ffdshow; Tasks: NOT audio\qt
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: mp2;        ValueData: 0; Components: ffdshow; Tasks: NOT audio\mp2;   Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: mp3;        ValueData: 0; Components: ffdshow; Tasks: NOT audio\mp3;   Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: msadpcm;    ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm; Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: otherAdpcm; ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm; Flags: createvalueifdoesntexist
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: qdm2; ValueData: 0; Components: ffdshow; Tasks: NOT audio\qt
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: rawa; ValueData: 0; Components: ffdshow; Tasks: NOT audio\rawa
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: truespeech; ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: truespeech; ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm; Flags: createvalueifdoesntexist
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: tta; ValueData: 0; Components: ffdshow; Tasks: NOT audio\tta
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: vorbis; ValueData: 0; Components: ffdshow; Tasks: NOT audio\vorbis
 
@@ -280,18 +280,18 @@ Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: ac3
 Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: amr; ValueData: 0; Components: ffdshow; Tasks: NOT audio\amr
 Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: dts; ValueData: 0; Components: ffdshow; Tasks: NOT audio\dts
 Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: flac; ValueData: 0; Components: ffdshow; Tasks: NOT audio\flac
-Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: gsm; ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm
-Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: iadpcm; ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm
-Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: law; ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm
-Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: lpcm; ValueData: 0; Components: ffdshow; Tasks: NOT audio\lpcm
-Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: mace; ValueData: 0; Components: ffdshow; Tasks: NOT audio\qt
-Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: mp2; ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow; Tasks: NOT audio\mp2
-Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: mp3; ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow; Tasks: NOT audio\mp3
-Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: msadpcm; ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm
-Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: otherAdpcm; ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm
+Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: gsm;        ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm; Flags: createvalueifdoesntexist
+Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: iadpcm;     ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm; Flags: createvalueifdoesntexist
+Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: law;        ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm; Flags: createvalueifdoesntexist
+Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: lpcm;       ValueData: 0; Components: ffdshow; Tasks: NOT audio\lpcm
+Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: mace;       ValueData: 0; Components: ffdshow; Tasks: NOT audio\qt
+Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: mp2;        ValueData: 0; Components: ffdshow; Tasks: NOT audio\mp2; Flags: createvalueifdoesntexist
+Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: mp3;        ValueData: 0; Components: ffdshow; Tasks: NOT audio\mp3; Flags: createvalueifdoesntexist
+Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: msadpcm;    ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm; Flags: createvalueifdoesntexist
+Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: otherAdpcm; ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm; Flags: createvalueifdoesntexist
 Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: qdm2; ValueData: 0; Components: ffdshow; Tasks: NOT audio\qt
 Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: rawa; ValueData: 0; Components: ffdshow; Tasks: NOT audio\rawa
-Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: truespeech; ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm
+Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: truespeech; ValueData: 0; Components: ffdshow; Tasks: NOT audio\adpcm; Flags: createvalueifdoesntexist
 Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: tta; ValueData: 0; Components: ffdshow; Tasks: NOT audio\tta
 Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: vorbis; ValueData: 0; Components: ffdshow; Tasks: NOT audio\vorbis
 

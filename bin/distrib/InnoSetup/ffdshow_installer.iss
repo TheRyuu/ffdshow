@@ -446,8 +446,8 @@ Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: p
 Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: resizeMethod; ValueData: 9; Flags: createvalueifdoesntexist; Components: ffdshow
 
 #if !PREF_YAMAGATA
-Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: fastH264; ValueData: 0; Components: ffdshow; Tasks: NOT tweaks\skipinloop
-Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: fastH264; ValueData: 2; Components: ffdshow; Tasks: tweaks\skipinloop
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: fastH264; ValueData: 0; Components: ffdshow; Tasks: NOT tweaks\skipinloop; Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: fastH264; ValueData: 2; Components: ffdshow; Tasks:     tweaks\skipinloop;
 #endif
 
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: subTextpin; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
