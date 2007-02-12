@@ -11,6 +11,7 @@
 !define IDFF_MOVIE_MP2E    11
 !define IDFF_MOVIE_WMV9    12
 !define IDFF_MOVIE_SKAL    13
+!define IDFF_MOVIE_X264    14
 !define IDFF_MOVIE_LIBA52  15
 !define IDFF_MOVIE_SPDIF   16
 !define IDFF_MOVIE_LIBDTS  17

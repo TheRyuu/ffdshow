@@ -484,6 +484,7 @@ EXCLUDE                = src/baseclasses \
                          src/codecs/skal   \
                          src/codecs/theora \
                          src/codecs/tremor \
+                         src/codecs/x264 \
                          src/audioFilters/resample/libsamplerate \
                          unrar \
                          src/uClibc++

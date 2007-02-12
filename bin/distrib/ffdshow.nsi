@@ -411,6 +411,7 @@ Var INSTALLED_VC80CRT_VERSION
   File "..\ff_realaac.dll"
   File "..\ff_samplerate.dll"
   File "..\ff_unrar.dll"
+  File "..\ff_x264.dll"
   File "..\ff_kernelDeint.dll"
 !endif
 !ifndef ADDONS
@@ -597,6 +598,7 @@ Section /o $(TITLE_doc) Sec_doc
   File "..\help\Video+encoder+features.html"
   File "..\help\VirtualDub.html"
   File "..\help\Warpsharp.html"
+  File "..\help\x264.html"
   File "..\help\XviD.html"
   SetOutPath $INSTDIR\help\styles
   File "..\help\styles\geo-light.css"
