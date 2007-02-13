@@ -235,7 +235,7 @@ int url_fdopen(ByteIOContext *s, URLContext *h)
     }
     buffer = av_malloc(buffer_size);
     if (!buffer)
-        return -ENOMEM;
+        return AVERROR(ENOMEM);
 
     if (init_put_byte(s, buffer, buffer_size,
                       (h->flags & URL_WRONLY || h->flags & URL_RDWR), h,

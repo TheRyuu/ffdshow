@@ -1,3 +1,144 @@
+0.2.2
+-	Fixed default flags for ios
+-	Implemented locale::name() for compatability reasons
+-	Found embarassing = instead of == in code.  Fixed.
+-	Made algotest active.
+-	Ifdef out GCC specific pragmas and attribute foo to be more portable.  Thanks to asierllano.
+-	Stop initializing variables in destructor.
+-	Have destruction of ostream objects cause the buffers to be flushed.
+-	Implement deque::swap
+-	Remove variable name to avoid unused variable declaration warning.
+
+0.2.1
+-	Now export std::calloc & std::realloc
+-	Implement std::ws
+-	Implement istream>> (*pf)(istream)
+-	Implement istream>> (*pf)(ios_base)
+-	Implement string::find_last_not_of
+-	Convert some string functions to use traits::eq in spec compliance
+-	String now accepts resize filler character
+-	String::assign(iterator first, iterator last) now implemented
+-	Clean up double-semicolons
+-	Add parent class scoping as appropriate
+-	Make ios::Init() exported again
+-	Replace cwchar and cstdio with my own versions, getting rid of GNU badness
+-	Add eh_alloc to source - replacing more objects from the GNU implementation
+-	Add configurable use of TLS as appropriate (migrating this way - no support deprecated)
+-	Make ostream formating more accurately reflect specification (curtesy Gavin Lambert)
+-	Make streams respect the ios_base::app flag.  Added test case to check for this in fstream
+-	Elliminate unuse architecture config code (Thanks to Mike Frysinger)
+-	Added preliminary implementation of <limits>
+-	Fixed memory error in list::remove implementation
+-	Fix memory leak in vector
+
+
+0.2.0
+-	Now can compare set iterators and const_iterators
+-	Now can compare map iterators and const_iterators
+-	Now can get a const value from operator* on set/map iterator
+-	Added fixed to std::map / std::multimap
+-	Clean up test suite
+-	Map test now tests for some additional error conditions
+-	Map iterators still invalidated improperly
+-	Fix to functional binder using wrong type
+-	Long double support now depends on float support
+
+0.1.12
+-	Add missing const declarators to some data types (thanks to asierllano)
+-	Fix list::swap to alter the nubmer of elements
+-	Fix map and mmap code find functions
+-	Add const operator== and operator!= to multiple containers
+-	Removied 3-argument string::compare and substituted 5-arguement compare with defaults
+-	Re-instituted basic_ios() constructor.  istream/ostream now manually call protected init()
+-	Fixed implementation of uflow() (Thanks tommi)
+-	badbit now set if data not written in ostream code
+-	fix implementation of traits::copy
+-	Call flush far less often
+-	Now with multimap::operator== (thanks to tommi)
+-	Implementation of istreambuf_iterator::equal() (Thanks to tommi)
+-	Fix certain exception implementations
+-	Istream now sets error bits correctly (thanks to tommi)
+-	Change implementation of streambuf::xsputn
+-	Fix of binder2nd operator implementation
+-	Elliminated unneccessary pointers in ostream and istream - use pointers in base class instead
+-	Added tests of utilities
+-	Now handle calls to new() requesting 0 bytes without throwing exception
+-	Changed behaviour of sstream to more closely match standard, GNU libstdc++ and the rest of iostream
+-	Fix implementation for man_fun to use mem_fun1_t as appropriate
+-	Fix const on mem_fun1_t
+-	Remove const from auto_ptr::release()
+-	Add const to map::const_iterator operator->()
+-	Add const to set::const_iterator operator->()
+-	Provide for default argument to vector::resize()
+-	Implemented std::ends
+-	Implemented [multi]set comparison operators
+-	Fixed deque operator==
+-	Deque const_iterator now works properly
+-	Fix auto_ptr() copy constructor to not be const
+-	Better fix for deque const_iterator
+-	Undef min/max in algorithm to get rid of macro versions
+-	Yet Another Implementation of deque::iterator
+-	Implemented swap(string, string)
+-	Change algorithms swap to use copy constructor instead of default constructor
+-	Added a little more from gslice_array
+-	Created comparison operatators for list
+-	Added binary operators to valarray
+-	Added trig operators to valarray
+-	Fixed typos in valarray (thanks to psm)
+-	Broke spec slightly in slice_array to allow copying to make borken apps/compilers work
+-	More fixes to auto_ptr const correctness
+-	Fix deque constness in deque const_iterator typenames
+-	Fix stringstream buffer xsputn implementation
+
+
+0.1.11
+-	Expanding basic_string<char> automatically expands vector<char>, even if not
+	explicitly expanding vector for other data types.  No cost and may save space.
+-	Explicitly share istream code for tokenizing stream
+-	Fix of bind2nd in function (Thanks to Ted Schroeder)
+-	Properly implement fstream::sync() - now works
+-	Added std::streamoff
+-	Added operators for fpos in ios
+-	Fix resize() call in string wrapping non-existant resize() call
+-	Fix operator >= in string
+-	Performance speedup in vector/string (now *use* preallocated buffer space)
+-	Showbase is no longer on by default
+-	i|ostream now call the constructor for basic_ios properly
+-	Fixes to how snextc() works.  Code now fixed
+-	seekoff() and thus tellg now returns ftell to give useful information
+-	General iostream cleanups
+-	Additions to io and other tests
+-	Added test for streambuf
+-	Made changes to iostream - now reads first and last character!
+-	Update istream::read to list amount of data last read successfully
+-	Add configuration option to avoid expanding pesky [con|de]structors
+-	Implemented std::auto_ptr - don't know how I missed that one
+-	Now able to have all support libraries imported (libgcc_eh)
+-	wchar output now works properly - note that performance sucks necessarily
+-	Fix to string::erase() so it now actually erases
+
+
+0.1.10
+-	Implemented clog and changed cerr to meet spec (unbuffered)
+-	Implemented wcout, wcin, wcerr and wclog
+-	Added functions to support conversion of wchar to appropriate types
+-	Cleanup of #includes in header files to reduce bloat and compilation time
+-	Added ostream support for wchar
+-	Fixed missing const declaration in functional causing problems with algorithms
+Peter S. Mazinger:	Added -z defs to $(CC) -shared
+-	Fixed wchar enhancements if wchar is not enabled
+-	Cleaned up tests system to be much easier to add additional tests
+-	Fixed problems in getline() code
+-	Major performance increase on fstream input code (4.5X, approximately)
+-	Move libgcc_eh and libsupc++ code into separate directories
+-	More code expansion into the library to make executibles much smaller
+-	Remove unneeded typedefs to clean up the code and make it easier to understand
+-	<complex> nearly complete - only need to implement pow()
+-	Fixed problem with failing to handle end-of-file notification
+-	Removed certain enhancements until I can figure out why they are spewing warnings
+
+
+
 0.1.9
 Peter S. Mazinger:	wchar cleanups across the board
 -	Make sure that operator= changes the number of elements in the vector.

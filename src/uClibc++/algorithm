@@ -1130,7 +1130,7 @@ namespace std{
 		stable_sort(first, last, c);
 	}
 
-	template<class RandomAccessIterator,class Compare> _UCXXEXPORT
+	template<class RandomAccessIterator, class Compare> _UCXXEXPORT
 		void stable_sort(RandomAccessIterator first, RandomAccessIterator last, Compare comp)
 	{
 		//FIXME - bubble sort

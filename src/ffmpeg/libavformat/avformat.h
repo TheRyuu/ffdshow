@@ -25,8 +25,8 @@
 extern "C" {
 #endif
 
-#define LIBAVFORMAT_VERSION_INT ((51<<16)+(6<<8)+0)
-#define LIBAVFORMAT_VERSION     51.6.0
+#define LIBAVFORMAT_VERSION_INT ((51<<16)+(10<<8)+0)
+#define LIBAVFORMAT_VERSION     51.10.0
 #define LIBAVFORMAT_BUILD       LIBAVFORMAT_VERSION_INT
 
 #define LIBAVFORMAT_IDENT       "Lavf" AV_STRINGIFY(LIBAVFORMAT_VERSION)
@@ -382,14 +382,6 @@ AVOutputFormat *guess_format(const char *short_name,
                              const char *filename, const char *mime_type);
 
 void av_register_all(void);
-
-#define AVERROR_UNKNOWN     (-1)  /* unknown error */
-#define AVERROR_IO          (-2)  /* i/o error */
-#define AVERROR_NUMEXPECTED (-3)  /* number syntax expected in filename */
-#define AVERROR_INVALIDDATA (-4)  /* invalid data found */
-#define AVERROR_NOMEM       (-5)  /* not enough memory */
-#define AVERROR_NOFMT       (-6)  /* unknown format */
-#define AVERROR_NOTSUPP     (-7)  /* operation not supported */
 
 int av_read_packet(AVFormatContext *s, AVPacket *pkt);
 AVStream *av_new_stream(AVFormatContext *s, int id);

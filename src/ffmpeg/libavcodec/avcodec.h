@@ -42,8 +42,8 @@ extern "C" {
 #define AV_STRINGIFY(s)         AV_TOSTRING(s)
 #define AV_TOSTRING(s) #s
 
-#define LIBAVCODEC_VERSION_INT  ((51<<16)+(30<<8)+0)
-#define LIBAVCODEC_VERSION      51.30.0
+#define LIBAVCODEC_VERSION_INT  ((51<<16)+(33<<8)+0)
+#define LIBAVCODEC_VERSION      51.33.0
 #define LIBAVCODEC_BUILD        LIBAVCODEC_VERSION_INT
 
 #define LIBAVCODEC_IDENT        "Lavc" AV_STRINGIFY(LIBAVCODEC_VERSION)
@@ -2489,6 +2489,23 @@ extern int av_log_get_level(void);
 extern void av_log_set_level(int);
 extern void av_log_set_callback(void (*)(void*, int, const char*, va_list));
 extern unsigned int av_xiphlacing(unsigned char *s, unsigned int v);
+
+/* error handling */
+#if EINVAL > 0
+#define AVERROR(e) (-(e)) /**< returns a negative error code from a POSIX error code, to return from library functions. */
+#define AVUNERROR(e) (-(e)) /**< returns a POSIX error code from a library function error return value. */
+#else
+/* some platforms have E* and errno already negated. */
+#define AVERROR(e) (e)
+#define AVUNERROR(e) (e)
+#endif
+#define AVERROR_UNKNOWN     AVERROR(EINVAL)  /**< unknown error */
+#define AVERROR_IO          AVERROR(EIO)     /**< i/o error */
+#define AVERROR_NUMEXPECTED AVERROR(EDOM)    /**< number syntax expected in filename */
+#define AVERROR_INVALIDDATA AVERROR(EINVAL)  /**< invalid data found */
+#define AVERROR_NOMEM       AVERROR(ENOMEM)  /**< not enough memory */
+#define AVERROR_NOFMT       AVERROR(EILSEQ)  /**< unknown format */
+#define AVERROR_NOTSUPP     AVERROR(ENOSYS)  /**< operation not supported */
 
 #ifdef __cplusplus
 }
