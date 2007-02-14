@@ -1661,12 +1661,12 @@ BEGIN
     COMBOBOX        IDC_CBX_QUANT_DCPRECISION,95,168,108,70,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
 END
 
-IDD_QUANT_TABLES DIALOGEX 0, 0, 267, 195
+IDD_QUANT_TABLES DIALOGEX 0, 0, 267, 158
 STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | DS_CENTER | WS_CHILD
 EXSTYLE WS_EX_CONTROLPARENT
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,0,193,266,1
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,0,142,266,1
 END
 
 IDD_SECONDPASS DIALOGEX 0, 0, 267, 195
@@ -2430,7 +2430,7 @@ FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
 END
 
-IDD_QUANT_TABLES_BASE DIALOGEX 0, 0, 267, 195
+IDD_QUANT_TABLES_BASE DIALOGEX 0, 0, 267, 158
 STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | DS_CENTER | WS_CHILD | WS_VISIBLE
 EXSTYLE WS_EX_CONTROLPARENT
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
@@ -2570,13 +2570,13 @@ BEGIN
     PUSHBUTTON      "Save matrix...",IDC_BT_QUANT_TABLE_SAVE,68,138,62,14
 END
 
-IDD_QUANT_CURRENT DIALOGEX 0, 0, 245, 172
+IDD_QUANT_CURRENT DIALOGEX 0, 0, 267, 172
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "Current quantization matrices"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,0,155,255,1
-    PUSHBUTTON      "Close",IDCLOSE,192,159,50,12
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,0,155,264,1
+    DEFPUSHBUTTON   "Close",IDCLOSE,212,158,50,12
 END
 
 IDD_MASKING_X264 DIALOGEX 0, 0, 267, 195
@@ -2895,7 +2895,7 @@ BEGIN
 
     IDD_QUANT_CURRENT, DIALOG
     BEGIN
-        RIGHTMARGIN, 244
+        RIGHTMARGIN, 264
         VERTGUIDE, 99
     END
 END
@@ -3076,7 +3076,7 @@ BEGIN
     IDD_README_VIDEO        ""
     IDD_README_AUDIO        ""
     IDD_README_ENC          ""
-    IDH_ED_SUB_SEARCH_EXT    "ffdshow searches subtitle files in the folders which are configured in the edit box above.\nFor video.avi, ffdshow searches video.utf, video.idx, video.sub,... and use the file which is found at the first time.\nEnumerate extensions in the order you like and separate them by semicolons.\n\nutf;idx;sub;srt;smi;rt;txt;ssa;aqt;mpl;usf is the default settings."
+    IDH_ED_SUB_SEARCH_EXT   "ffdshow searches subtitle files in the folders which are configured in the edit box above.\nFor video.avi, ffdshow searches video.utf, video.idx, video.sub,... and use the file which is found at the first time.\nEnumerate extensions in the order you like and separate them by semicolons.\n\nutf;idx;sub;srt;smi;rt;txt;ssa;aqt;mpl;usf is the default settings."
 END
 
 #endif    // Neutral resources
