@@ -2,10 +2,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 912
+#define tryout_revision = 926
 #define buildyear = 2007
 #define buildmonth = '02'
-#define buildday = '10'
+#define buildday = '15'
 
 ; Build specific options
 #define unicode_required = True
@@ -163,12 +163,12 @@ Name: resetsettings; Description: {cm:resetsettings}; Flags: unchecked; Componen
 Name: video; Description: {cm:videoformats}; Flags: unchecked; Components: ffdshow
 Name: video\h264; Description: H.264 / AVC; Check: CheckTaskVideo('h264', 1, True); Components: ffdshow
 Name: video\h264; Description: H.264 / AVC; Check: NOT CheckTaskVideo('h264', 1, True); Components: ffdshow; Flags: unchecked
-Name: video\divx; Description: DivX; Check: CheckTaskVideoXvid('dx50'); Components: ffdshow
-Name: video\divx; Description: DivX; Check: NOT CheckTaskVideoXvid('dx50'); Components: ffdshow; Flags: unchecked
-Name: video\xvid; Description: Xvid; Check: CheckTaskVideoXvid('xvid'); Components: ffdshow
-Name: video\xvid; Description: Xvid; Check: NOT CheckTaskVideoXvid('xvid'); Components: ffdshow; Flags: unchecked
-Name: video\mpeg4; Description: {cm:genericMpeg4}; Check: CheckTaskVideoXvid('mp4v'); Components: ffdshow
-Name: video\mpeg4; Description: {cm:genericMpeg4}; Check: NOT CheckTaskVideoXvid('mp4v'); Components: ffdshow; Flags: unchecked
+Name: video\divx; Description: DivX; Check: CheckTaskVideo2('dx50', True); Components: ffdshow
+Name: video\divx; Description: DivX; Check: NOT CheckTaskVideo2('dx50', True); Components: ffdshow; Flags: unchecked
+Name: video\xvid; Description: Xvid; Check: CheckTaskVideo2('xvid', True); Components: ffdshow
+Name: video\xvid; Description: Xvid; Check: NOT CheckTaskVideo2('xvid', True); Components: ffdshow; Flags: unchecked
+Name: video\mpeg4; Description: {cm:genericMpeg4}; Check: CheckTaskVideo2('mp4v', True); Components: ffdshow
+Name: video\mpeg4; Description: {cm:genericMpeg4}; Check: NOT CheckTaskVideo2('mp4v', True); Components: ffdshow; Flags: unchecked
 Name: video\flv1; Description: FLV1; Check: CheckTaskVideo('flv1', 1, True); Components: ffdshow
 Name: video\flv1; Description: FLV1; Check: NOT CheckTaskVideo('flv1', 1, True); Components: ffdshow; Flags: unchecked
 Name: video\h263; Description: H.263; Check: CheckTaskVideo('h263', 1, True); Components: ffdshow
@@ -189,14 +189,14 @@ Name: video\qt; Description: SVQ1, SVQ3, Cinepak, RPZA, QTRLE; Check: CheckTaskV
 Name: video\qt; Description: SVQ1, SVQ3, Cinepak, RPZA, QTRLE; Check: NOT CheckTaskVideo('svq3', 1, True); Components: ffdshow; Flags: unchecked
 Name: video\vp56; Description: VP5, VP6; Check: CheckTaskVideo('vp6', 1, True); Components: ffdshow
 Name: video\vp56; Description: VP5, VP6; Check: NOT CheckTaskVideo('vp6', 1, True); Components: ffdshow; Flags: unchecked
-Name: video\wmv1; Description: WMV1; Check: CheckTaskVideo('wmv1', 1, False); Components: ffdshow
-Name: video\wmv1; Description: WMV1; Check: NOT CheckTaskVideo('wmv1', 1, False); Flags: dontinheritcheck unchecked; Components: ffdshow
-Name: video\wmv2; Description: WMV2; Check: CheckTaskVideo('wmv2', 1, False); Components: ffdshow
-Name: video\wmv2; Description: WMV2; Check: NOT CheckTaskVideo('wmv2', 1, False); Flags: dontinheritcheck unchecked; Components: ffdshow
-Name: video\wmv3; Description: WMV3; Check: CheckTaskVideo('wmv3', 1, False); Components: ffdshow
-Name: video\wmv3; Description: WMV3; Check: NOT CheckTaskVideo('wmv3', 1, False); Flags: dontinheritcheck unchecked; Components: ffdshow
-Name: video\wvc1; Description: WVC1; Check: CheckTaskVideo('wvc1', 12, False); Components: ffdshow
-Name: video\wvc1; Description: WVC1; Check: NOT CheckTaskVideo('wvc1', 12, False); Flags: dontinheritcheck unchecked; Components: ffdshow
+Name: video\wmv1; Description: WMV1; Check: CheckTaskVideo2('wmv1', False); Components: ffdshow
+Name: video\wmv1; Description: WMV1; Check: NOT CheckTaskVideo2('wmv1', False); Flags: dontinheritcheck unchecked; Components: ffdshow
+Name: video\wmv2; Description: WMV2; Check: CheckTaskVideo2('wmv2', False); Components: ffdshow
+Name: video\wmv2; Description: WMV2; Check: NOT CheckTaskVideo2('wmv2', False); Flags: dontinheritcheck unchecked; Components: ffdshow
+Name: video\wmv3; Description: WMV3; Check: CheckTaskVideo2('wmv3', False); Components: ffdshow
+Name: video\wmv3; Description: WMV3; Check: NOT CheckTaskVideo2('wmv3', False); Flags: dontinheritcheck unchecked; Components: ffdshow
+Name: video\wvc1; Description: WVC1; Check: CheckTaskVideo2('wvc1', False); Components: ffdshow
+Name: video\wvc1; Description: WVC1; Check: NOT CheckTaskVideo2('wvc1', False); Flags: dontinheritcheck unchecked; Components: ffdshow
 Name: video\wvp2; Description: WMVP, WVP2; Check: CheckTaskVideo('wvp2', 12, False); Components: ffdshow
 Name: video\wvp2; Description: WMVP, WVP2; Check: NOT CheckTaskVideo('wvp2', 12, False); Flags: dontinheritcheck unchecked; Components: ffdshow
 Name: video\mss2; Description: MSS1, MSS2; Check: CheckTaskVideo('mss2', 12, False); Components: ffdshow
@@ -528,55 +528,22 @@ begin
   end
 end;
 
-function CheckTaskVideoInpreset(name: String; value: Integer; showbydefault: Boolean): Boolean;
-var
-  regval: Cardinal;
-begin
-  Result := False;
-  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow\default', name, regval) then
-    Result := (regval = value)
-  else
-    Result := showbydefault;
-end;
-
-function CheckTaskVideoXvid(name: String): Boolean;
+function CheckTaskVideo2(name: String; showbydefault: Boolean): Boolean;
 var
   regval: Cardinal;
 begin
   Result := False;
   if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow', name, regval) then begin
-    Result := NOT(regval = 0);
+    Result := (regval > 0);
   end
   else begin
     if RegQueryDwordValue(HKLM, 'Software\GNU\ffdshow', name, regval) then begin
-      Result := NOT(regval = 0);
+      Result := (regval > 0);
     end
     else begin
-      Result := TRUE;
+      Result := showbydefault;
     end
   end
-end;
-
-function GetTaskVideoI(name: String; defaultvalue: Cardinal): String;
-var
-  regval: Cardinal;
-begin
-  if NOT RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow', name, regval) then
-  if NOT RegQueryDwordValue(HKLM, 'Software\GNU\ffdshow', name, regval) then
-    regval :=defaultvalue;
-  if regval = 0 then
-    regval :=defaultvalue;
-  Result := IntToStr(regval);
-end;
-
-function GetTaskVideoXvid(name: String): String;
-begin
-  Result := GetTaskVideoI(name, 1);
-end;
-
-function GetTaskVideoTheora(name: String): String;
-begin
-  Result := GetTaskVideoI(name, 3);
 end;
 
 function CheckTaskAudio(name: String; value: Integer; showbydefault: Boolean): Boolean;
@@ -595,6 +562,17 @@ begin
       Result := showbydefault;
     end
   end
+end;
+
+function CheckTaskVideoInpreset(name: String; value: Integer; showbydefault: Boolean): Boolean;
+var
+  regval: Cardinal;
+begin
+  Result := False;
+  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow\default', name, regval) then
+    Result := (regval = value)
+  else
+    Result := showbydefault;
 end;
 
 function CheckTaskAudioInpreset(name: String; value: Integer; showbydefault: Boolean): Boolean;
