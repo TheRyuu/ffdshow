@@ -40,7 +40,7 @@ int FIELD_TYPE::fromSample(IMediaSample *pIn)
     if (SUCCEEDED(pIn2->GetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES,tStart),(PBYTE)&inProp2)))
      {
       // Set interlace information (every sample)
-      if (inProp2.dwTypeSpecificFlags&AM_VIDEO_FLAG_WEAVE)
+      if (!(inProp2.dwTypeSpecificFlags&AM_VIDEO_FLAG_WEAVE))
        if ((inProp2.dwTypeSpecificFlags&AM_VIDEO_FLAG_FIELD_MASK)==AM_VIDEO_FLAG_FIELD1FIRST)
         return INT_TFF;
        else
