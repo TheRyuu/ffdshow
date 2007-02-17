@@ -99,6 +99,19 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
 STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM_MEDIA_TYPE* pmt)
 {
  CAutoLock cObjectLock(m_pLock);
+#if 0
+ PIN_INFO pininfo;
+ FILTER_INFO filterinfo;
+ pConnector->QueryPinInfo(&pininfo);
+ if (pininfo.pFilter)
+  {
+   pininfo.pFilter->QueryFilterInfo(&filterinfo);
+   DPRINTF (_l("TffdshowVideoInputPin::ReceiveConnection filter=%s pin=%s"),filterinfo.achName,pininfo.achName);
+   if (filterinfo.pGraph)
+    filterinfo.pGraph->Release();
+   pininfo.pFilter->Release();
+  }
+#endif
 
  if (m_Connected)
   {

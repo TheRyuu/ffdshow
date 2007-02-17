@@ -351,14 +351,14 @@ HRESULT TffdshowDecVideo::setOutputMediaType(const CMediaType &mt)
      if (m_frame.dstColorspace==FF_CSP_NV12) m_frame.dstColorspace=FF_CSP_NV12|FF_CSP_FLAGS_YUV_ORDER; // HACK
      int biWidth,outDy;
      BITMAPINFOHEADER *bih;
-     if (mt.formattype==FORMAT_VideoInfo)
+     if (mt.formattype==FORMAT_VideoInfo && mt.pbFormat) // && mt.pbFormat = work around other filter's bug.
       {
        VIDEOINFOHEADER *vih=(VIDEOINFOHEADER*)mt.pbFormat;
        m_frame.dstStride=calcBIstride(biWidth=vih->bmiHeader.biWidth,cspInfo->Bpp*8);
        outDy=vih->bmiHeader.biHeight;
        bih=&vih->bmiHeader;
       }
-     else if (mt.formattype==FORMAT_VideoInfo2)
+     else if (mt.formattype==FORMAT_VideoInfo2 && mt.pbFormat)
       {
        VIDEOINFOHEADER2 *vih2=(VIDEOINFOHEADER2*)mt.pbFormat;
        m_frame.dstStride=calcBIstride(biWidth=vih2->bmiHeader.biWidth,cspInfo->Bpp*8);
@@ -436,23 +436,21 @@ HRESULT TffdshowDecVideo::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROP
   return E_UNEXPECTED;
 
  if (!presetSettings) initPreset();
- if(m_IsQueueListedApp==-1) // Not initialized
+ if (m_IsQueueListedApp==-1) // Not initialized
   m_IsQueueListedApp= IsQueueListedApp(getExeflnm());
 
  m_IsOldVideoRenderer= IsOldRenderer();
  const CLSID &ref=GetCLSID(m_pOutput->GetConnected());
- if(isQueue==-1)
+ if (isQueue==-1)
   isQueue=presetSettings->multiThread && m_IsQueueListedApp;
  // Queue and Overlay Mixer works only in MPC and
- // when Overlay Mixer is not connected to old video renderer(rare).
+ // when Overlay Mixer is not connected to old video renderer(rare, usually RGB out).
  // If queue can't work with Overlay Mixer, IsOldRenderer() returns true.
  isQueue=isQueue && !m_IsOldVideoRenderer &&
    (ref==CLSID_OverlayMixer || ref==CLSID_VideoMixingRenderer || ref==CLSID_VideoMixingRenderer9);
  isQueue=isQueue && !(m_IsOldVMR9RenderlessAndRGB=IsOldVMR9RenderlessAndRGB()); // inform MPC about queue only when queue is effective.
  //DPRINTF(_l("CLSID 0x%x,0x%x,0x%x"),ref.Data1,ref.Data2,ref.Data3);for(int i=0;i<8;i++) {DPRINTF(_l(",0x%2x"),ref.Data4[i]);}
- //if (ref==CLSID_CyberLinkVideoSpDecoder)
- // return E_FAIL;
- if(ref==CLSID_VideoRenderer || ref==CLSID_OverlayMixer)
+ if (ref==CLSID_VideoRenderer || ref==CLSID_OverlayMixer)
   return DecideBufferSizeOld(pAlloc, ppropInputRequest,ref);
  else
   return DecideBufferSizeVMR(pAlloc, ppropInputRequest,ref);
@@ -460,19 +458,19 @@ HRESULT TffdshowDecVideo::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROP
 
 HRESULT TffdshowDecVideo::DecideBufferSizeVMR(IMemAllocator *pAlloc, ALLOCATOR_PROPERTIES *ppropInputRequest, const CLSID &ref)
 {
- if(ref==CLSID_VideoMixingRenderer9 && IsVMR9Renderless()==false)
+ if (ref==CLSID_VideoMixingRenderer9 && IsVMR9Renderless()==false)
   {
    m_IsVMR9=true;
    CMediaType &mt=m_pOutput->CurrentMediaType();
-   if(mt.subtype==MEDIASUBTYPE_YV12)
+   if (mt.subtype==MEDIASUBTYPE_YV12)
     {
        m_IsYV12andVMR9= true; // to let OSD getQueuedCount know the reason.
        isQueue= false; // queue off internaly.
     }
   }
- if(ref==CLSID_VideoMixingRenderer) m_IsVMR7=true;
+ if (ref==CLSID_VideoMixingRenderer) m_IsVMR7=true;
  int cBuffersMax; 
- if(isQueue==1)
+ if (isQueue==1)
   cBuffersMax= presetSettings->queueCount+1;
  else
   cBuffersMax= 1;
@@ -506,7 +504,7 @@ HRESULT TffdshowDecVideo::DecideBufferSizeVMR(IMemAllocator *pAlloc, ALLOCATOR_P
   }
  if (ppropActual.cbBuffer<ppropInputRequest->cbBuffer)
   return E_FAIL;
- if(m_IsVMR9)
+ if (m_IsVMR9)
   isQueue=0; // Use VMR9's internal queueing.
  return result;
 }
@@ -517,14 +515,14 @@ HRESULT TffdshowDecVideo::DecideBufferSizeOld(IMemAllocator *pAlloc, ALLOCATOR_P
  * Overlay mixer doesn't want SetPropoerties called twice. After successfull call of SetPropoerties, it never allow us change the properties.
  * Old renderer doesn't support multithreading, so cBuffers should be 1.
  */
- if(ref==CLSID_OverlayMixer) m_IsOverlay=true;
+ if (ref==CLSID_OverlayMixer) m_IsOverlay=true;
  int cBuffersMax; 
- if(isQueue==1)
+ if (isQueue==1)
   cBuffersMax= presetSettings->queueCount;
  else
   cBuffersMax= 1;
 
- if(ref==CLSID_OverlayMixer)
+ if (ref==CLSID_OverlayMixer)
   ppropInputRequest->cBuffers= cBuffersMax;
  else
   ppropInputRequest->cBuffers= 1;
@@ -1223,11 +1221,11 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
  if (newpict.rectFull!=oldRect || newpict.rectFull.sar!=oldRect.sar)
   {
    DPRINTF(_l("TffdshowDecVideo::reconnectOutput"));
-   if(!m_pOutput->IsConnected())
+   if (!m_pOutput->IsConnected())
     return VFW_E_NOT_CONNECTED;
 
    int newdy=newpict.rectFull.dy;
-   if(newpict.cspInfo.id==FF_CSP_420P)
+   if (newpict.cspInfo.id==FF_CSP_420P)
     newdy=ODD2EVEN(newdy);
    CMediaType &mt=m_pOutput->CurrentMediaType();
    BITMAPINFOHEADER *bmi=NULL;
@@ -1268,14 +1266,14 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
    m_pOutputDecVideo->SendAnyway();
 
    QueryFilterInfo(&filtInfo);
-   if(filtInfo.pGraph)
+   if (filtInfo.pGraph)
     {
      filtInfo.pGraph->QueryInterface(IID_IGraphConfig, (void **)(&igraphConfig));
      filtInfo.pGraph->Release();
     }
    m_pOutput->GetConnected()->QueryInterface(IID_IPinConnection, (void**)(&ipinConnection));
    m_pOutput->GetConnected()->QueryInterface(IID_IVMRVideoStreamControl9, (void**)(&iVmrSC9));
-   if(iVmrSC9)
+   if (iVmrSC9)
     {
      iVmrSC9->GetStreamActiveState(&isVMR9Active);
      iVmrSC9->Release();
@@ -1287,17 +1285,19 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
       hr= m_pOutput->GetConnected()->ReceiveConnection(m_pOutput, &mt);
     }
 
-   if (m_IsOverlay || FAILED(hr))  // try dynamic reconnect to re-negotiate cBuffers.
+   int isDynamicTried=false;
+   if (m_IsOverlay || (FAILED(hr) && isQueue))  // try dynamic reconnect to re-negotiate cBuffers.
     {
      DPRINTF(_l("try dynamic reconnect."));
-     if(ipinConnection && igraphConfig)
+     if (ipinConnection && igraphConfig)
       {
        hr= ipinConnection->DynamicQueryAccept(&mt);
-       if(SUCCEEDED(hr))
+       if (SUCCEEDED(hr))
         {
+         isDynamicTried=true;
          hReconnectEvent= CreateEvent(NULL, false, false, NULL);
          hr= igraphConfig->Reconnect((IPin *)m_pOutput, m_pOutput->GetConnected(),&mt,NULL,hReconnectEvent ,AM_GRAPH_CONFIG_RECONNECT_DIRECTCONNECT);
-         if(SUCCEEDED(hr))
+         if (SUCCEEDED(hr))
           m_pOutputDecVideo->GetAllocator()->Commit();
          else
           DPRINTF(_l("Reconnect failed."));
@@ -1307,14 +1307,14 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
       }
     }
 
-   if(ipinConnection)
+   if (ipinConnection)
     ipinConnection->Release();
-   if(igraphConfig)
+   if (igraphConfig)
     igraphConfig->Release();
 
-   if(FAILED(hr))
+   if (FAILED(hr))
     {
-     if (reconnectFirstError)
+     if (reconnectFirstError && isDynamicTried)
       {
        MessageBox(NULL,_l("Reconnect failed.\nPlease restart the video application."),_l("ffdshow error"),MB_ICONERROR|MB_OK);
        reconnectFirstError=false;
@@ -1355,7 +1355,7 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
    if (iVmrSC9) // without this, the old renderer(tested with i82865G) sometimes hang up for unknown reason.
     {
      m_pOutput->GetConnected()->QueryInterface(IID_IVMRVideoStreamControl9, (void**)(&iVmrSC9));
-     if(iVmrSC9)
+     if (iVmrSC9)
       {
        iVmrSC9->SetStreamActiveState(isVMR9Active);  // without this VMR9(windowed)/MPC black out.
        iVmrSC9->Release();

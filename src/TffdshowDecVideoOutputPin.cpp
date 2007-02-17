@@ -215,10 +215,9 @@ HRESULT TffdshowDecVideoOutputPin::Inactive(void)
  if (m_Connected==NULL)
   return VFW_E_NOT_CONNECTED;
 
- if(fdv->m_IsOldVideoRenderer==false)
+ if(fdv->isQueue==1)
   {
    waitUntillQueueCleanedUp();
-   DPRINTF(_l("queue->Reset()"));
    queue->Reset();
   }
  HRESULT hr=CBaseOutputPin::Inactive();
@@ -244,8 +243,8 @@ void TffdshowDecVideoOutputPin::addOne(void)
 HRESULT TffdshowDecVideoOutputPin::CompleteConnect(IPin *pReceivePin)
 {
  HRESULT phr= S_OK;
- HRESULT hr= CTransformOutputPin::CompleteConnect(pReceivePin);
  DPRINTF(_l("TffdshowDecVideoOutputPin::CompleteConnect"));
+ HRESULT hr= CTransformOutputPin::CompleteConnect(pReceivePin);
  if(SUCCEEDED(hr))
   {
    if(queue)
@@ -300,6 +299,19 @@ STDMETHODIMP TffdshowDecVideoOutputPin::Connect(
  // with this.
 
  DPRINTF(_l("TffdshowDecVideoOutputPin::Connect"));
+#if 0
+ PIN_INFO pininfo;
+ FILTER_INFO filterinfo;
+ pReceivePin->QueryPinInfo(&pininfo);
+ if (pininfo.pFilter)
+  {
+   pininfo.pFilter->QueryFilterInfo(&filterinfo);
+   DPRINTF (_l("connenting to : filter=%s pin=%s"),filterinfo.achName,pininfo.achName);
+   if (filterinfo.pGraph)
+    filterinfo.pGraph->Release();
+   pininfo.pFilter->Release();
+  }
+#endif
  const CMediaType * ptype = (CMediaType*)pmt;
  HRESULT hr = AgreeMediaType(pReceivePin, ptype);
  if (FAILED(hr))
