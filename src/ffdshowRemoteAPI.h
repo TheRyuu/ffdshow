@@ -49,6 +49,8 @@
 #define WPRM_FASTREWIND 16
 #define WPRM_GET_FASTFORWARD 17
 
+//Capture image file
+#define WPRM_CAPTUREIMAGE 18
 
 //WM_COPYDATA 
 //COPYDATASTRUCT.dwData=

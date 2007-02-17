@@ -302,6 +302,9 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			return 0;
 		else
 			return fSeconds*fMode;
+	case WPRM_CAPTUREIMAGE:
+		if (deciD != NULL)
+			deciD->grabNow();
 
    }
  if (acceptKeys && (msg==WM_SYSKEYDOWN || msg==WM_SYSKEYUP || msg==WM_KEYDOWN || msg==WM_KEYUP))
