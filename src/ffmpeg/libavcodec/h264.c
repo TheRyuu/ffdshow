@@ -326,6 +326,7 @@ typedef struct H264Context{
      * num_ref_idx_l0/1_active_minus1 + 1
      */
     unsigned int ref_count[2];   ///< counts frames or fields, depending on current mb mode
+    unsigned int list_count;
     Picture *short_ref[32];
     Picture *long_ref[32];
     Picture default_ref_list[2][32];
@@ -613,7 +614,7 @@ static void fill_caches(H264Context *h, int mb_type, int for_deblock){
             int v = *(uint16_t*)&h->non_zero_count[mb_xy][14];
             for(i=0; i<16; i++)
                 h->non_zero_count_cache[scan8[i]] = (v>>i)&1;
-            for(list=0; list<1+(h->slice_type==B_TYPE); list++){
+            for(list=0; list<h->list_count; list++){
                 if(USES_LIST(mb_type,list)){
                     uint32_t *src = (uint32_t*)s->current_picture.motion_val[list][h->mb2b_xy[mb_xy]];
                     uint32_t *dst = (uint32_t*)h->mv_cache[list][scan8[0]];
@@ -781,7 +782,7 @@ static void fill_caches(H264Context *h, int mb_type, int for_deblock){
 #if 1
     if(IS_INTER(mb_type) || IS_DIRECT(mb_type)){
         int list;
-        for(list=0; list<1+(h->slice_type==B_TYPE); list++){
+        for(list=0; list<h->list_count; list++){
             if(!USES_LIST(mb_type, list) && !IS_DIRECT(mb_type) && !h->deblocking_filter){
                 /*if(!h->mv_cache_clean[list]){
                     memset(h->mv_cache [list],  0, 8*5*2*sizeof(int16_t)); //FIXME clean only input? clean at all?
@@ -1039,7 +1040,7 @@ static inline int check_intra_pred_mode(H264Context *h, int mode){
     static const int8_t top [7]= {LEFT_DC_PRED8x8, 1,-1,-1};
     static const int8_t left[7]= { TOP_DC_PRED8x8,-1, 2,-1,DC_128_PRED8x8};
 
-    if(mode < 0 || mode > 6) {
+    if(mode > 6U) {
         av_log(h->s.avctx, AV_LOG_ERROR, "out of range intra chroma pred mode at %d %d\n", s->mb_x, s->mb_y);
         return -1;
     }
@@ -1702,7 +1703,7 @@ static inline void write_back_motion(H264Context *h, int mb_type){
     if(!USES_LIST(mb_type, 0))
         fill_rectangle(&s->current_picture.ref_index[0][b8_xy], 2, 2, h->b8_stride, (uint8_t)LIST_NOT_USED, 1);
 
-    for(list=0; list<2; list++){
+    for(list=0; list<h->list_count; list++){
         int y;
         if(!USES_LIST(mb_type, list))
             continue;
@@ -3479,7 +3480,7 @@ static void hl_decode_mb(H264Context *h){
         }
         if(FRAME_MBAFF) {
             int list;
-            for(list=0; list<2; list++){
+            for(list=0; list<h->list_count; list++){
                 if(!USES_LIST(mb_type, list))
                     continue;
                 if(IS_16X16(mb_type)){
@@ -3847,7 +3848,7 @@ static int decode_ref_pic_list_reordering(H264Context *h){
     print_long_term(h);
     if(h->slice_type==I_TYPE || h->slice_type==SI_TYPE) return 0; //FIXME move before func
 
-    for(list=0; list<2; list++){
+    for(list=0; list<h->list_count; list++){
         memcpy(h->ref_list[list], h->default_ref_list[list], sizeof(Picture)*h->ref_count[list]);
 
         if(get_bits1(&s->gb)){
@@ -3925,15 +3926,12 @@ static int decode_ref_pic_list_reordering(H264Context *h){
                 }
             }
         }
-
-        if(h->slice_type!=B_TYPE) break;
     }
-    for(list=0; list<2; list++){
+    for(list=0; list<h->list_count; list++){
         for(index= 0; index < h->ref_count[list]; index++){
             if(!h->ref_list[list][index].data[0])
                 h->ref_list[list][index]= s->current_picture;
         }
-        if(h->slice_type!=B_TYPE) break;
     }
 
     if(h->slice_type==B_TYPE && !h->direct_spatial_mv_pred)
@@ -3944,7 +3942,7 @@ static int decode_ref_pic_list_reordering(H264Context *h){
 
 static void fill_mbaff_ref_list(H264Context *h){
     int list, i, j;
-    for(list=0; list<2; list++){
+    for(list=0; list<2; list++){ //FIXME try list_count
         for(i=0; i<h->ref_count[list]; i++){
             Picture *frame = &h->ref_list[list][i];
             Picture *field = &h->ref_list[list][16+2*i];
@@ -4643,13 +4641,18 @@ static int decode_slice_header(H264Context *h){
             if(h->slice_type==B_TYPE)
                 h->ref_count[1]= get_ue_golomb(&s->gb) + 1;
 
-            if(h->ref_count[0] > 32 || h->ref_count[1] > 32){
+            if(h->ref_count[0]-1 > 32-1 || h->ref_count[1]-1 > 32-1){
                 av_log(h->s.avctx, AV_LOG_ERROR, "reference overflow\n");
                 h->ref_count[0]= h->ref_count[1]= 1;
                 return -1;
             }
         }
-    }
+        if(h->slice_type == B_TYPE)
+            h->list_count= 2;
+        else
+            h->list_count= 1;
+    }else
+        h->list_count= 0;
 
     if(!default_ref_list_done){
         fill_default_ref_list(h);
@@ -5189,9 +5192,8 @@ decode_intra_mb:
             }
         }
 
-        for(list=0; list<2; list++){
+        for(list=0; list<h->list_count; list++){
             int ref_count= IS_REF0(mb_type) ? 1 : h->ref_count[list];
-            if(ref_count == 0) continue;
             for(i=0; i<4; i++){
                 if(IS_DIRECT(h->sub_mb_type[i])) continue;
                 if(IS_DIR(h->sub_mb_type[i], 0, list)){
@@ -5211,9 +5213,8 @@ decode_intra_mb:
         if(dct8x8_allowed)
             dct8x8_allowed = get_dct8x8_allowed(h);
 
-        for(list=0; list<2; list++){
+        for(list=0; list<h->list_count; list++){
             const int ref_count= IS_REF0(mb_type) ? 1 : h->ref_count[list];
-            if(ref_count == 0) continue;
 
             for(i=0; i<4; i++){
                 if(IS_DIRECT(h->sub_mb_type[i])) {
@@ -5236,21 +5237,19 @@ decode_intra_mb:
                         tprintf("final mv:%d %d\n", mx, my);
 
                         if(IS_SUB_8X8(sub_mb_type)){
-                            mv_cache[ 0 ][0]= mv_cache[ 1 ][0]=
+                            mv_cache[ 1 ][0]=
                             mv_cache[ 8 ][0]= mv_cache[ 9 ][0]= mx;
-                            mv_cache[ 0 ][1]= mv_cache[ 1 ][1]=
+                            mv_cache[ 1 ][1]=
                             mv_cache[ 8 ][1]= mv_cache[ 9 ][1]= my;
                         }else if(IS_SUB_8X4(sub_mb_type)){
-                            mv_cache[ 0 ][0]= mv_cache[ 1 ][0]= mx;
-                            mv_cache[ 0 ][1]= mv_cache[ 1 ][1]= my;
+                            mv_cache[ 1 ][0]= mx;
+                            mv_cache[ 1 ][1]= my;
                         }else if(IS_SUB_4X8(sub_mb_type)){
-                            mv_cache[ 0 ][0]= mv_cache[ 8 ][0]= mx;
-                            mv_cache[ 0 ][1]= mv_cache[ 8 ][1]= my;
-                        }else{
-                            assert(IS_SUB_4X4(sub_mb_type));
-                            mv_cache[ 0 ][0]= mx;
-                            mv_cache[ 0 ][1]= my;
+                            mv_cache[ 8 ][0]= mx;
+                            mv_cache[ 8 ][1]= my;
                         }
+                        mv_cache[ 0 ][0]= mx;
+                        mv_cache[ 0 ][1]= my;
                     }
                 }else{
                     uint32_t *p= (uint32_t *)&h->mv_cache[list][ scan8[4*i] ][0];
@@ -5266,88 +5265,91 @@ decode_intra_mb:
         int list, mx, my, i;
          //FIXME we should set ref_idx_l? to 0 if we use that later ...
         if(IS_16X16(mb_type)){
-            for(list=0; list<2; list++){
-                if(h->ref_count[list]>0){
+            for(list=0; list<h->list_count; list++){
+                    unsigned int val;
                     if(IS_DIR(mb_type, 0, list)){
-                        unsigned int val= get_te0_golomb(&s->gb, h->ref_count[list]);
+                        val= get_te0_golomb(&s->gb, h->ref_count[list]);
                         if(val >= h->ref_count[list]){
                             av_log(h->s.avctx, AV_LOG_ERROR, "ref %u overflow\n", val);
                             return -1;
                         }
-                        fill_rectangle(&h->ref_cache[list][ scan8[0] ], 4, 4, 8, val, 1);
                     }else
-                        fill_rectangle(&h->ref_cache[list][ scan8[0] ], 4, 4, 8, (LIST_NOT_USED&0xFF), 1);
-                }
+                        val= LIST_NOT_USED&0xFF;
+                    fill_rectangle(&h->ref_cache[list][ scan8[0] ], 4, 4, 8, val, 1);
             }
-            for(list=0; list<2; list++){
+            for(list=0; list<h->list_count; list++){
+                unsigned int val;
                 if(IS_DIR(mb_type, 0, list)){
                     pred_motion(h, 0, 4, list, h->ref_cache[list][ scan8[0] ], &mx, &my);
                     mx += get_se_golomb(&s->gb);
                     my += get_se_golomb(&s->gb);
                     tprintf("final mv:%d %d\n", mx, my);
 
-                    fill_rectangle(h->mv_cache[list][ scan8[0] ], 4, 4, 8, pack16to32(mx,my), 4);
+                    val= pack16to32(mx,my);
                 }else
-                    fill_rectangle(h->mv_cache[list][ scan8[0] ], 4, 4, 8, 0, 4);
+                    val=0;
+                fill_rectangle(h->mv_cache[list][ scan8[0] ], 4, 4, 8, val, 4);
             }
         }
         else if(IS_16X8(mb_type)){
-            for(list=0; list<2; list++){
-                if(h->ref_count[list]>0){
+            for(list=0; list<h->list_count; list++){
                     for(i=0; i<2; i++){
+                        unsigned int val;
                         if(IS_DIR(mb_type, i, list)){
-                            unsigned int val= get_te0_golomb(&s->gb, h->ref_count[list]);
+                            val= get_te0_golomb(&s->gb, h->ref_count[list]);
                             if(val >= h->ref_count[list]){
                                 av_log(h->s.avctx, AV_LOG_ERROR, "ref %u overflow\n", val);
                                 return -1;
                             }
-                            fill_rectangle(&h->ref_cache[list][ scan8[0] + 16*i ], 4, 2, 8, val, 1);
                         }else
-                            fill_rectangle(&h->ref_cache[list][ scan8[0] + 16*i ], 4, 2, 8, (LIST_NOT_USED&0xFF), 1);
+                            val= LIST_NOT_USED&0xFF;
+                        fill_rectangle(&h->ref_cache[list][ scan8[0] + 16*i ], 4, 2, 8, val, 1);
                     }
-                }
             }
-            for(list=0; list<2; list++){
+            for(list=0; list<h->list_count; list++){
                 for(i=0; i<2; i++){
+                    unsigned int val;
                     if(IS_DIR(mb_type, i, list)){
                         pred_16x8_motion(h, 8*i, list, h->ref_cache[list][scan8[0] + 16*i], &mx, &my);
                         mx += get_se_golomb(&s->gb);
                         my += get_se_golomb(&s->gb);
                         tprintf("final mv:%d %d\n", mx, my);
 
-                        fill_rectangle(h->mv_cache[list][ scan8[0] + 16*i ], 4, 2, 8, pack16to32(mx,my), 4);
+                        val= pack16to32(mx,my);
                     }else
-                        fill_rectangle(h->mv_cache[list][ scan8[0] + 16*i ], 4, 2, 8, 0, 4);
+                        val=0;
+                    fill_rectangle(h->mv_cache[list][ scan8[0] + 16*i ], 4, 2, 8, val, 4);
                 }
             }
         }else{
             assert(IS_8X16(mb_type));
-            for(list=0; list<2; list++){
-                if(h->ref_count[list]>0){
+            for(list=0; list<h->list_count; list++){
                     for(i=0; i<2; i++){
+                        unsigned int val;
                         if(IS_DIR(mb_type, i, list)){ //FIXME optimize
-                            unsigned int val= get_te0_golomb(&s->gb, h->ref_count[list]);
+                            val= get_te0_golomb(&s->gb, h->ref_count[list]);
                             if(val >= h->ref_count[list]){
                                 av_log(h->s.avctx, AV_LOG_ERROR, "ref %u overflow\n", val);
                                 return -1;
                             }
-                            fill_rectangle(&h->ref_cache[list][ scan8[0] + 2*i ], 2, 4, 8, val, 1);
                         }else
-                            fill_rectangle(&h->ref_cache[list][ scan8[0] + 2*i ], 2, 4, 8, (LIST_NOT_USED&0xFF), 1);
+                            val= LIST_NOT_USED&0xFF;
+                        fill_rectangle(&h->ref_cache[list][ scan8[0] + 2*i ], 2, 4, 8, val, 1);
                     }
-                }
             }
-            for(list=0; list<2; list++){
+            for(list=0; list<h->list_count; list++){
                 for(i=0; i<2; i++){
+                    unsigned int val;
                     if(IS_DIR(mb_type, i, list)){
                         pred_8x16_motion(h, i*4, list, h->ref_cache[list][ scan8[0] + 2*i ], &mx, &my);
                         mx += get_se_golomb(&s->gb);
                         my += get_se_golomb(&s->gb);
                         tprintf("final mv:%d %d\n", mx, my);
 
-                        fill_rectangle(h->mv_cache[list][ scan8[0] + 2*i ], 2, 4, 8, pack16to32(mx,my), 4);
+                        val= pack16to32(mx,my);
                     }else
-                        fill_rectangle(h->mv_cache[list][ scan8[0] + 2*i ], 2, 4, 8, 0, 4);
+                        val=0;
+                    fill_rectangle(h->mv_cache[list][ scan8[0] + 2*i ], 2, 4, 8, val, 4);
                 }
             }
         }
@@ -6330,8 +6332,7 @@ decode_intra_mb:
             }
         }
 
-        for( list = 0; list < 2; list++ ) {
-            if( h->ref_count[list] > 0 ) {
+        for( list = 0; list < h->list_count; list++ ) {
                 for( i = 0; i < 4; i++ ) {
                     if(IS_DIRECT(h->sub_mb_type[i])) continue;
                     if(IS_DIR(h->sub_mb_type[i], 0, list)){
@@ -6345,13 +6346,12 @@ decode_intra_mb:
                                                        h->ref_cache[list][ scan8[4*i]+1 ]=
                     h->ref_cache[list][ scan8[4*i]+8 ]=h->ref_cache[list][ scan8[4*i]+9 ]= ref[list][i];
                 }
-            }
         }
 
         if(dct8x8_allowed)
             dct8x8_allowed = get_dct8x8_allowed(h);
 
-        for(list=0; list<2; list++){
+        for(list=0; list<h->list_count; list++){
             for(i=0; i<4; i++){
                 if(IS_DIRECT(h->sub_mb_type[i])){
                     fill_rectangle(h->mvd_cache[list][scan8[4*i]], 2, 2, 8, 0, 4);
@@ -6375,35 +6375,33 @@ decode_intra_mb:
                         tprintf("final mv:%d %d\n", mx, my);
 
                         if(IS_SUB_8X8(sub_mb_type)){
-                            mv_cache[ 0 ][0]= mv_cache[ 1 ][0]=
+                            mv_cache[ 1 ][0]=
                             mv_cache[ 8 ][0]= mv_cache[ 9 ][0]= mx;
-                            mv_cache[ 0 ][1]= mv_cache[ 1 ][1]=
+                            mv_cache[ 1 ][1]=
                             mv_cache[ 8 ][1]= mv_cache[ 9 ][1]= my;
 
-                            mvd_cache[ 0 ][0]= mvd_cache[ 1 ][0]=
+                            mvd_cache[ 1 ][0]=
                             mvd_cache[ 8 ][0]= mvd_cache[ 9 ][0]= mx - mpx;
-                            mvd_cache[ 0 ][1]= mvd_cache[ 1 ][1]=
+                            mvd_cache[ 1 ][1]=
                             mvd_cache[ 8 ][1]= mvd_cache[ 9 ][1]= my - mpy;
                         }else if(IS_SUB_8X4(sub_mb_type)){
-                            mv_cache[ 0 ][0]= mv_cache[ 1 ][0]= mx;
-                            mv_cache[ 0 ][1]= mv_cache[ 1 ][1]= my;
+                            mv_cache[ 1 ][0]= mx;
+                            mv_cache[ 1 ][1]= my;
 
-                            mvd_cache[ 0 ][0]= mvd_cache[ 1 ][0]= mx- mpx;
-                            mvd_cache[ 0 ][1]= mvd_cache[ 1 ][1]= my - mpy;
+                            mvd_cache[ 1 ][0]= mx - mpx;
+                            mvd_cache[ 1 ][1]= my - mpy;
                         }else if(IS_SUB_4X8(sub_mb_type)){
-                            mv_cache[ 0 ][0]= mv_cache[ 8 ][0]= mx;
-                            mv_cache[ 0 ][1]= mv_cache[ 8 ][1]= my;
+                            mv_cache[ 8 ][0]= mx;
+                            mv_cache[ 8 ][1]= my;
 
-                            mvd_cache[ 0 ][0]= mvd_cache[ 8 ][0]= mx - mpx;
-                            mvd_cache[ 0 ][1]= mvd_cache[ 8 ][1]= my - mpy;
-                        }else{
-                            assert(IS_SUB_4X4(sub_mb_type));
-                            mv_cache[ 0 ][0]= mx;
-                            mv_cache[ 0 ][1]= my;
-
-                            mvd_cache[ 0 ][0]= mx - mpx;
-                            mvd_cache[ 0 ][1]= my - mpy;
+                            mvd_cache[ 8 ][0]= mx - mpx;
+                            mvd_cache[ 8 ][1]= my - mpy;
                         }
+                        mv_cache[ 0 ][0]= mx;
+                        mv_cache[ 0 ][1]= my;
+
+                        mvd_cache[ 0 ][0]= mx - mpx;
+                        mvd_cache[ 0 ][1]= my - mpy;
                     }
                 }else{
                     uint32_t *p= (uint32_t *)&h->mv_cache[list][ scan8[4*i] ][0];
@@ -6421,16 +6419,14 @@ decode_intra_mb:
     } else {
         int list, mx, my, i, mpx, mpy;
         if(IS_16X16(mb_type)){
-            for(list=0; list<2; list++){
+            for(list=0; list<h->list_count; list++){
                 if(IS_DIR(mb_type, 0, list)){
-                    if(h->ref_count[list] > 0 ){
                         const int ref = h->ref_count[list] > 1 ? decode_cabac_mb_ref( h, list, 0 ) : 0;
                         fill_rectangle(&h->ref_cache[list][ scan8[0] ], 4, 4, 8, ref, 1);
-                    }
                 }else
-                    fill_rectangle(&h->ref_cache[list][ scan8[0] ], 4, 4, 8, (uint8_t)LIST_NOT_USED, 1);
+                    fill_rectangle(&h->ref_cache[list][ scan8[0] ], 4, 4, 8, (uint8_t)LIST_NOT_USED, 1); //FIXME factorize and the other fill_rect below too
             }
-            for(list=0; list<2; list++){
+            for(list=0; list<h->list_count; list++){
                 if(IS_DIR(mb_type, 0, list)){
                     pred_motion(h, 0, 4, list, h->ref_cache[list][ scan8[0] ], &mpx, &mpy);
 
@@ -6445,8 +6441,7 @@ decode_intra_mb:
             }
         }
         else if(IS_16X8(mb_type)){
-            for(list=0; list<2; list++){
-                if(h->ref_count[list]>0){
+            for(list=0; list<h->list_count; list++){
                     for(i=0; i<2; i++){
                         if(IS_DIR(mb_type, i, list)){
                             const int ref= h->ref_count[list] > 1 ? decode_cabac_mb_ref( h, list, 8*i ) : 0;
@@ -6454,9 +6449,8 @@ decode_intra_mb:
                         }else
                             fill_rectangle(&h->ref_cache[list][ scan8[0] + 16*i ], 4, 2, 8, (LIST_NOT_USED&0xFF), 1);
                     }
-                }
             }
-            for(list=0; list<2; list++){
+            for(list=0; list<h->list_count; list++){
                 for(i=0; i<2; i++){
                     if(IS_DIR(mb_type, i, list)){
                         pred_16x8_motion(h, 8*i, list, h->ref_cache[list][scan8[0] + 16*i], &mpx, &mpy);
@@ -6474,8 +6468,7 @@ decode_intra_mb:
             }
         }else{
             assert(IS_8X16(mb_type));
-            for(list=0; list<2; list++){
-                if(h->ref_count[list]>0){
+            for(list=0; list<h->list_count; list++){
                     for(i=0; i<2; i++){
                         if(IS_DIR(mb_type, i, list)){ //FIXME optimize
                             const int ref= h->ref_count[list] > 1 ? decode_cabac_mb_ref( h, list, 4*i ) : 0;
@@ -6483,9 +6476,8 @@ decode_intra_mb:
                         }else
                             fill_rectangle(&h->ref_cache[list][ scan8[0] + 2*i ], 2, 4, 8, (LIST_NOT_USED&0xFF), 1);
                     }
-                }
             }
-            for(list=0; list<2; list++){
+            for(list=0; list<h->list_count; list++){
                 for(i=0; i<2; i++){
                     if(IS_DIR(mb_type, i, list)){
                         pred_8x16_motion(h, i*4, list, h->ref_cache[list][ scan8[0] + 2*i ], &mpx, &mpy);
@@ -7863,7 +7855,7 @@ static inline int decode_picture_parameter_set(H264Context *h, int bit_length){
     }
     pps->ref_count[0]= get_ue_golomb(&s->gb) + 1;
     pps->ref_count[1]= get_ue_golomb(&s->gb) + 1;
-    if(pps->ref_count[0] > 32 || pps->ref_count[1] > 32){
+    if(pps->ref_count[0]-1 > 32-1 || pps->ref_count[1]-1 > 32-1){
         av_log(h->s.avctx, AV_LOG_ERROR, "reference overflow (pps)\n");
         pps->ref_count[0]= pps->ref_count[1]= 1;
         return -1;
