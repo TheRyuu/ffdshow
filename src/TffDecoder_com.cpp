@@ -593,3 +593,8 @@ STDMETHODIMP_(const char*) TffdshowDecVideo::get_current_idct(void)
 {
  return inpin->get_current_idct();
 }
+
+STDMETHODIMP_(bool) TffdshowDecVideo::getIsInterlacedRawVideo(void)
+{
+ return inpin->isInterlacedRawVideo;
+}

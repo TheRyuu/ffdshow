@@ -45,7 +45,7 @@ struct FRAME_TYPE
 
 struct FIELD_TYPE
 {
- static int fromSample(IMediaSample *pIn);
+ static int fromSample(IMediaSample *pIn,bool isInterlacedRawVideo);
  enum
   {
    PROGRESSIVE_FRAME=1,
@@ -99,7 +99,7 @@ private:
 public:
  TffPict(void);
  TffPict(int Icsp,unsigned char *data[4],const stride_t stride[4],const Trect &r,bool ro,int Iframetype,int Ifieldtype,size_t IsrcSize,IMediaSample *pIn,const Tpalette &Ipalette=Tpalette());
- TffPict(int Icsp,unsigned char *data[4],const stride_t stride[4],const Trect &r,bool ro,IMediaSample *pIn,const Tpalette &Ipalette=Tpalette());
+ TffPict(int Icsp,unsigned char *data[4],const stride_t stride[4],const Trect &r,bool ro,IMediaSample *pIn,const Tpalette &Ipalette=Tpalette(),bool isInterlacedRawVideo=false);
  TffPict(int Icsp,const char_t *flnm,Tbuffer &buf,IffdshowBase *deci);
  void setTimestamps(IMediaSample *pIn);
  ~TffPict() {}

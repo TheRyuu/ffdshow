@@ -297,6 +297,7 @@ public:
  STDMETHODIMP_(int) get_time_on_ffdshow(void);
  STDMETHODIMP_(int) get_time_on_ffdshow_percent(void);
  STDMETHODIMP_(bool) shouldSkipH264loopFilter(void);
+ STDMETHODIMP_(bool) getIsInterlacedRawVideo(void);
 #ifdef OSDTIMETABALE
  STDMETHODIMP_(int) getOSDtime(void){return (int)OSDtime3;}
 #else
@@ -462,6 +463,7 @@ private:
    STDMETHODIMP_(int) get_time_on_ffdshow_percent(void){return deciV->get_time_on_ffdshow_percent();}
    STDMETHODIMP_(bool) shouldSkipH264loopFilter(void){return deciV->shouldSkipH264loopFilter();}
    STDMETHODIMP findOverlayControl2(IhwOverlayControl* *overlayPtr) {return deciV->findOverlayControl2(overlayPtr);}
+   STDMETHODIMP_(bool) getIsInterlacedRawVideo(void) {return deciV->getIsInterlacedRawVideo();}
  } decVideo_char;
  template<class Tinterface> Tinterface* getDecVideoInterface(void);
 protected:

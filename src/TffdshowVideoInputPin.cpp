@@ -34,7 +34,8 @@ TffdshowVideoInputPin::TffdshowVideoInputPin(TCHAR *objectName,TffdshowVideo *If
  :TinputPin(objectName,Ifv->filter,phr,L"In"),
   allocator(Ifv->filter,phr),
   fv(Ifv),
-  video(NULL)
+  video(NULL),
+  isInterlacedRawVideo(false)
 {
  usingOwnAllocator=false;
  supdvddec=fv->deci->getParam2(IDFF_supDVDdec) && fv->deci->getParam2(IDFF_mpg2);
@@ -142,6 +143,7 @@ STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM
 bool TffdshowVideoInputPin::init(const CMediaType &mt)
 {
  bool neroavc=false,truncated=false;
+ isInterlacedRawVideo=false;
  if (mt.formattype==FORMAT_VideoInfo)
   {
    VIDEOINFOHEADER *vih=(VIDEOINFOHEADER*)mt.pbFormat;
@@ -152,6 +154,7 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
  else if (mt.formattype==FORMAT_VideoInfo2)
   {
    VIDEOINFOHEADER2 *vih2=(VIDEOINFOHEADER2*)mt.pbFormat;
+   isInterlacedRawVideo=vih2->dwInterlaceFlags & AMINTERLACE_IsInterlaced;
    biIn.bmiHeader=vih2->bmiHeader;
    pictIn.setSize(vih2->bmiHeader.biWidth,abs(vih2->bmiHeader.biHeight));
    pictIn.setDar(Rational(vih2->dwPictAspectRatioX,vih2->dwPictAspectRatioY));

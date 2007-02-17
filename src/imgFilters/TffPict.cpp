@@ -31,9 +31,9 @@ int FRAME_TYPE::fromSample(IMediaSample *pIn)
 {
  return (!pIn || pIn->IsSyncPoint()==S_OK)?I:P;
 }
-int FIELD_TYPE::fromSample(IMediaSample *pIn)
+int FIELD_TYPE::fromSample(IMediaSample *pIn,bool isInterlacedRawVideo)
 {
- if (pIn)
+ if (pIn && isInterlacedRawVideo)
   if (comptrQ<IMediaSample2> pIn2=pIn)
    {
     AM_SAMPLE2_PROPERTIES inProp2;
@@ -144,9 +144,9 @@ TffPict::TffPict(int Icsp,unsigned char *Idata[4],const stride_t Istride[4],cons
  init(Icsp,Idata,Istride,r,Iro,Iframetype,Ifieldtype,IsrcSize,Ipalette);
  if (pIn) setTimestamps(pIn);
 }
-TffPict::TffPict(int Icsp,unsigned char *data[4],const stride_t stride[4],const Trect &r,bool ro,IMediaSample *pIn,const Tpalette &Ipalette)
+TffPict::TffPict(int Icsp,unsigned char *data[4],const stride_t stride[4],const Trect &r,bool ro,IMediaSample *pIn,const Tpalette &Ipalette,bool isInterlacedRawVideo)
 {
- init(Icsp,data,stride,r,ro,FRAME_TYPE::fromSample(pIn),FIELD_TYPE::fromSample(pIn),pIn?pIn->GetSize():0,Ipalette);
+ init(Icsp,data,stride,r,ro,FRAME_TYPE::fromSample(pIn),FIELD_TYPE::fromSample(pIn,isInterlacedRawVideo),pIn?pIn->GetSize():0,Ipalette);
  if (pIn) setTimestamps(pIn);
 }
 void TffPict::setTimestamps(IMediaSample *pIn)

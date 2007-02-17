@@ -20,6 +20,7 @@
 #include "TvideoCodecUncompressed.h"
 #include "TcodecSettings.h"
 #include "dsutil.h"
+#include "IffdshowDecVideo.h"
 
 TvideoCodecUncompressed::TvideoCodecUncompressed(IffdshowBase *Ideci,IdecVideoSink *IsinkD):
  Tcodec(Ideci),TcodecDec(Ideci,IsinkD),
@@ -106,7 +107,7 @@ HRESULT TvideoCodecUncompressed::decompress(const unsigned char *src,size_t srcL
   stride[0]=srcLen/dy; 
 */  
  unsigned char *data[4]={(unsigned char*)src,NULL,NULL,NULL};
- TffPict pict(csp,data,stride,rd,true,pIn,Tpalette(palette,palcolors));
+ TffPict pict(csp,data,stride,rd,true,pIn,Tpalette(palette,palcolors),deciV->getIsInterlacedRawVideo());
  pict.frametype=FRAME_TYPE::I;
  return sinkD->deliverDecodedSample(pict);
 }
