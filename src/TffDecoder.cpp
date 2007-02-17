@@ -366,7 +366,7 @@ HRESULT TffdshowDecVideo::setOutputMediaType(const CMediaType &mt)
        bih=&vih2->bmiHeader;
       }
      else
-      return S_FALSE;
+      return VFW_E_TYPE_NOT_ACCEPTED; //S_FALSE;
      m_frame.dstSize=DIBSIZE(*bih);
      
      char_t s[256]; 
