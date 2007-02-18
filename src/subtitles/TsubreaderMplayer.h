@@ -104,8 +104,10 @@ private:
  static void strToInt(const ffstring &str,int *i);
  struct Tstyle
   {
+  private:
+   int version;
   public:
-   Tstyle(int playResX,int playResY):props(playResX,playResY) {}
+   Tstyle(int playResX,int playResY,int version):props(playResX,playResY) {this->version=version;}
    ffstring name,fontname,fontsize,primaryColour,bold,italic,underline,strikeout,encoding,spacing,fontScaleX,fontScaleY;
    ffstring secondaryColour,tertiaryColour,backgroundColour,alignment;
    ffstring angleZ,borderStyle,outlineWidth,shadowDepth,marginLeft,marginRight,marginV,marginTop,marginBottom,alpha,relativeTo;

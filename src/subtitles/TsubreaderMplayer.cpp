@@ -504,6 +504,26 @@ template<class tchar> void TsubtitleParserSSA<tchar>::Tstyle::toProps(void)
  strToInt(marginV,&props.marginV);
  strToInt(marginTop,&props.marginTop);
  strToInt(marginBottom,&props.marginBottom);
+ if (alignment && this->version != SSA)
+  {
+   switch (props.alignment)
+    {
+     case 1:
+     case 2:
+     case 3:
+      break;
+     case 4:
+     case 5:
+     case 6:
+      props.alignment+=5;
+      break;
+     case 7:
+     case 8:
+     case 9:
+      props.alignment-=2;
+      break;
+    }
+  }
 }
 template<class tchar> void TsubtitleParserSSA<tchar>::Tstyles::add(Tstyle &s)
 {
@@ -530,6 +550,11 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
  tchar *line=line0;
  while (fd.fgets(line,this->LINE_LEN))
   {
+#if 0
+   text<char_t> lineD0(line);
+   const char_t* lineD1=(const char_t*)lineD0;
+   DPRINTF(_l("%s"),lineD1);
+#endif
    if (line[0]==';') 
     continue;
    tchar *cr=strrchr(line,'\n');if (cr) *cr='\0';
@@ -653,7 +678,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
       }
      strings fields;
      strtok(line+7,_L(","),fields);
-     Tstyle style(playResX,playResY);
+     Tstyle style(playResX,playResY,version);
      for (size_t i=0;i<fields.size() && i<styleFormat.size();i++)
       if (styleFormat[i])
        style.*(styleFormat[i])=fields[i];
@@ -670,11 +695,11 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
      for (typename Tparts::const_iterator f=fields.begin();f!=fields.end();f++)
       {
        if (strnicmp(f->first,_L("marked"),6)==0)
-        {
-         if (!isEmbedded) eventFormat.push_back(&Tevent::marked);
-        }
+        eventFormat.push_back(&Tevent::marked);
        else if (strnicmp(f->first,_L("start"),5)==0)
-        eventFormat.push_back(&Tevent::start);
+        {
+         if (!isEmbedded) eventFormat.push_back(&Tevent::start);
+        }
        else if (strnicmp(f->first,_L("end"),3)==0)
         eventFormat.push_back(&Tevent::end);
        else if (strnicmp(f->first,_L("style"),5)==0)
@@ -735,6 +760,11 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
       }
      if (event.text)
       {
+#if 0
+       text<char_t> lineD2(event.text.c_str());
+       const char_t* lineD3=(const char_t*)lineD2;
+       DPRINTF(_l("%s"),lineD3);
+#endif
        int hour1=0,min1=0,sec1=0,hunsec1=0;
        int hour2=0,min2=0,sec2=0,hunsec2=0;
        if (!(flags&this->PARSETIME) ||
