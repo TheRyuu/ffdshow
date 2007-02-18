@@ -41,7 +41,7 @@ int FIELD_TYPE::fromSample(IMediaSample *pIn,bool isInterlacedRawVideo)
      {
       // Set interlace information (every sample)
       if (!(inProp2.dwTypeSpecificFlags&AM_VIDEO_FLAG_WEAVE))
-       if ((inProp2.dwTypeSpecificFlags&AM_VIDEO_FLAG_FIELD_MASK)==AM_VIDEO_FLAG_FIELD1FIRST)
+       if (inProp2.dwTypeSpecificFlags&AM_VIDEO_FLAG_FIELD1FIRST)
         return INT_TFF;
        else
         return INT_BFF;
