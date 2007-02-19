@@ -66,8 +66,8 @@
 
 typedef struct {
     int     size;
-    int     qidx_table1[8];
-    int     qidx_table2[8];
+    int     loccode[8];
+    int     levcode[8];
 } COOKgain;
 
 typedef struct {
@@ -92,7 +92,7 @@ typedef struct {
 
     /* transform data */
     FFTContext          fft_ctx;
-    FFTSample           mlt_tmp[1024] __attribute__((aligned(16))); /* temporary storage for imlt */
+    DECLARE_ALIGNED_16(FFTSample, mlt_tmp[1024]);  /* temporary storage for imlt */
     float*              mlt_window;
     float*              mlt_precos;
     float*              mlt_presin;
@@ -124,7 +124,7 @@ typedef struct {
     /* data buffers */
 
     uint8_t*            decoded_bytes_buffer;
-    float               mono_mdct_output[2048] __attribute__((aligned(16)));
+    DECLARE_ALIGNED_16(float,mono_mdct_output[2048]);
     float               mono_previous_buffer1[1024];
     float               mono_previous_buffer2[1024];
     float               decode_buffer_1[1024];
@@ -355,11 +355,11 @@ static void decode_gain_info(GetBitContext *gb, COOKgain* gaininfo) {
     if (get_bits_count(gb) - 1 <= 0) return;
 
     for (i=0 ; i<gaininfo->size ; i++){
-        gaininfo->qidx_table1[i] = get_bits(gb,3);
+        gaininfo->loccode[i] = get_bits(gb,3);
         if (get_bits1(gb)) {
-            gaininfo->qidx_table2[i] = get_bits(gb,4) - 7;  //convert to signed
+            gaininfo->levcode[i] = get_bits(gb,4) - 7;  //convert to signed
         } else {
-            gaininfo->qidx_table2[i] = -1;
+            gaininfo->levcode[i] = -1;
         }
     }
 }
@@ -802,8 +802,8 @@ static void gain_window(COOKContext *q, float* buffer, COOKgain* gain_now,
     gain_index[8]=0;
     index = gain_previous->size;
     for (i=7 ; i>=0 ; i--) {
-        if(index && gain_previous->qidx_table1[index-1]==i) {
-            gain_index[i] = gain_previous->qidx_table2[index-1];
+        if(index && gain_previous->loccode[index-1]==i) {
+            gain_index[i] = gain_previous->levcode[index-1];
             index--;
         } else {
             gain_index[i]=gain_index[i+1];
@@ -818,8 +818,8 @@ static void gain_window(COOKContext *q, float* buffer, COOKgain* gain_now,
     tmp_gain_index = gain_index[0];
     index = gain_now->size;
     for (i=7 ; i>=0 ; i--) {
-        if(index && gain_now->qidx_table1[index-1]==i) {
-            gain_index[i]= gain_now->qidx_table2[index-1];
+        if(index && gain_now->loccode[index-1]==i) {
+            gain_index[i]= gain_now->levcode[index-1];
             index--;
         } else {
             gain_index[i]=gain_index[i+1];
@@ -1033,8 +1033,8 @@ static int decode_subpacket(COOKContext *q, uint8_t *inbuffer,
             decode_bytes_and_gain(q, inbuffer + sub_packet_size/2,
                                   q->gain_ptr2);
             mono_decode(q, q->decode_buffer_2);
-            }
         }
+    }
 
     mlt_compensate_output(q, q->decode_buffer_1, q->gain_ptr1,
                           q->mono_previous_buffer1, outbuffer, 0);
@@ -1043,7 +1043,7 @@ static int decode_subpacket(COOKContext *q, uint8_t *inbuffer,
         if (q->joint_stereo) {
             mlt_compensate_output(q, q->decode_buffer_2, q->gain_ptr1,
                                   q->mono_previous_buffer2, outbuffer, 1);
-    } else {
+        } else {
             mlt_compensate_output(q, q->decode_buffer_2, q->gain_ptr2,
                                   q->mono_previous_buffer2, outbuffer, 1);
         }
@@ -1118,14 +1118,14 @@ static int cook_decode_init(AVCodecContext *avctx)
            Swap to right endianness so we don't need to care later on. */
         av_log(avctx,AV_LOG_DEBUG,"codecdata_length=%d\n",avctx->extradata_size);
         if (avctx->extradata_size >= 8){
-            q->cookversion = be2me_32(bytestream_get_le32(&edata_ptr));
-            q->samples_per_frame =  be2me_16(bytestream_get_le16(&edata_ptr));
-            q->subbands = be2me_16(bytestream_get_le16(&edata_ptr));
+            q->cookversion = bytestream_get_be32(&edata_ptr);
+            q->samples_per_frame =  bytestream_get_be16(&edata_ptr);
+            q->subbands = bytestream_get_be16(&edata_ptr);
         }
         if (avctx->extradata_size >= 16){
-            bytestream_get_le32(&edata_ptr);    //Unknown unused
-            q->js_subband_start = be2me_16(bytestream_get_le16(&edata_ptr));
-            q->js_vlc_bits = be2me_16(bytestream_get_le16(&edata_ptr));
+            bytestream_get_be32(&edata_ptr);    //Unknown unused
+            q->js_subband_start = bytestream_get_be16(&edata_ptr);
+            q->js_vlc_bits = bytestream_get_be16(&edata_ptr);
         }
     }
 
