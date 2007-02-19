@@ -458,6 +458,7 @@ HRESULT TffdshowDecVideo::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROP
 
 HRESULT TffdshowDecVideo::DecideBufferSizeVMR(IMemAllocator *pAlloc, ALLOCATOR_PROPERTIES *ppropInputRequest, const CLSID &ref)
 {
+ HRESULT result;
  if (ref==CLSID_VideoMixingRenderer9 && IsVMR9Renderless()==false)
   {
    m_IsVMR9=true;
@@ -482,16 +483,16 @@ HRESULT TffdshowDecVideo::DecideBufferSizeVMR(IMemAllocator *pAlloc, ALLOCATOR_P
  ppropInputRequest->cBuffers=1;
 
  // first try cBuffers=1, if succeeded try cBuffers=cBuffersMax. Faster than before(older than 20060730).
- HRESULT result=pAlloc->SetProperties(ppropInputRequest,&ppropActual);
+
  // retry because VMR9 does not release current MediaSample that VMR9 itself
  // is holding and waiting for the presentation time,
- // even when it is asked to Reconnect (I suspect a bug of VMR9).
+ // even when it is asked to Reconnect.
+ // if frame rate > 10, and 10 frames are queued in VMR9's internal queue, 1000ms would be enough.
  int retry=100;
- while (result!=S_OK && retry-->0)
-  {
-   Sleep(10); // if frame rate > 10, and 10 frames are queued in VMR9's internal queue, 1000ms would be enough.
+ do {
    result=pAlloc->SetProperties(ppropInputRequest,&ppropActual);
-  }
+   if (result==VFW_E_BUFFERS_OUTSTANDING) Sleep(10); 
+  } while (result==VFW_E_BUFFERS_OUTSTANDING && retry-->0);
  if (result!=S_OK)
   return result;
  if (cBuffersMax>1)
