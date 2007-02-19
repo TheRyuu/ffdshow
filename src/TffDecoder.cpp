@@ -486,10 +486,10 @@ HRESULT TffdshowDecVideo::DecideBufferSizeVMR(IMemAllocator *pAlloc, ALLOCATOR_P
  // retry because VMR9 does not release current MediaSample that VMR9 itself
  // is holding and waiting for the presentation time,
  // even when it is asked to Reconnect (I suspect a bug of VMR9).
- int retry=20;
+ int retry=100;
  while (result!=S_OK && retry-->0)
   {
-   Sleep(5); // if frame rate > 10, 100ms would be enough.
+   Sleep(10); // if frame rate > 10, and 10 frames are queued in VMR9's internal queue, 1000ms would be enough.
    result=pAlloc->SetProperties(ppropInputRequest,&ppropActual);
   }
  if (result!=S_OK)
@@ -1291,7 +1291,13 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
     {
      hr= m_pOutput->GetConnected()->QueryAccept(&mt);
      if (SUCCEEDED(hr))
-      hr= m_pOutput->GetConnected()->ReceiveConnection(m_pOutput, &mt);
+      {
+       int retry=isQueue ? 100:10; // Read comments in DecideBufferSizeVMR for the reason to retry.
+       do {
+        hr= m_pOutput->GetConnected()->ReceiveConnection(m_pOutput, &mt);
+        if (FAILED(hr)) Sleep(10);
+       } while (FAILED(hr) && retry-->0);
+      }
     }
 
    int isDynamicTried=false;
