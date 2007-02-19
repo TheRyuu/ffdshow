@@ -483,6 +483,15 @@ HRESULT TffdshowDecVideo::DecideBufferSizeVMR(IMemAllocator *pAlloc, ALLOCATOR_P
 
  // first try cBuffers=1, if succeeded try cBuffers=cBuffersMax. Faster than before(older than 20060730).
  HRESULT result=pAlloc->SetProperties(ppropInputRequest,&ppropActual);
+ // retry because VMR9 does not release current MediaSample that VMR9 itself
+ // is holding and waiting for the presentation time,
+ // even when it is asked to Reconnect (I suspect a bug of VMR9).
+ int retry=20;
+ while (result!=S_OK && retry-->0)
+  {
+   Sleep(5); // if frame rate > 10, 100ms would be enough.
+   result=pAlloc->SetProperties(ppropInputRequest,&ppropActual);
+  }
  if (result!=S_OK)
   return result;
  if (cBuffersMax>1)
