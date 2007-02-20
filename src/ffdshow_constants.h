@@ -1,7 +1,7 @@
 #ifndef _FFDSHOW_CONSTANTS_
 #define _FFDSHOW_CONSTANTS_
 
-#define FFDSHOW_NAME_L     L"ffdshow MPEG-4 Video Decoder"
+#define FFDSHOW_NAME_L     L"ffdshow Video Decoder"
 #define FFDSHOWRAW_NAME_L  L"ffdshow raw video filter"
 #define FFDSHOWVFW_NAME_L  L"ffdshow VFW decoder helper"
 
