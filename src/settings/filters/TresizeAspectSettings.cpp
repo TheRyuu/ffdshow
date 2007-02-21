@@ -542,6 +542,7 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
       rectFull->dx=borderX&~1;
       rectFull->dy=borderY&~1;
      }
+    if (rectClip->dx<64) rectClip->dx=64;
     if (rectClip->dx>rectFull->dx) rectClip->dx=rectFull->dx; 
     if (rectClip->dy>rectFull->dy) rectClip->dy=rectFull->dy;
     rectClip->x=((rectFull->dx-rectClip->dx)/2)&~1;
