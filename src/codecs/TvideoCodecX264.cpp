@@ -27,6 +27,8 @@
 #include "libavcodec/avcodec.h"
 #include "IffdshowBase.h"
 
+#pragma warning(disable: 4244)
+
 const char_t* TvideoCodecX264::dllname=_l("ff_x264.dll");
 
 TvideoCodecX264::TvideoCodecX264(IffdshowBase *Ideci,IencVideoSink *Isink):

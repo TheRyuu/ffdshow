@@ -150,7 +150,7 @@ bool TresizeAspectPage::sizeXok(HWND hed)
 bool TresizeAspectPage::sizeYok(HWND hed)
 {
  DWORD lasterr;
- int y;
+ int y=0;
  char_t *stop=NULL;
  char_t pomS[256];
  int err= GetWindowText(hed,pomS,255);

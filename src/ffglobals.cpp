@@ -423,8 +423,10 @@ int lavc_reduce(int *dst_nom, int *dst_den, int64_t nom, int64_t den, int64_t ma
     int sign= (nom<0) ^ (den<0);
     int64_t gcd= lavc_gcd(ff_abs(nom), ff_abs(den));
 
+    if(gcd){
     nom = ff_abs(nom)/gcd;
     den = ff_abs(den)/gcd;
+    }
     if(nom<=max && den<=max){
         a1.num=(int)nom;a1.den=(int)den;//= (AVRational){nom, den};
         den=0;
@@ -443,7 +445,7 @@ int lavc_reduce(int *dst_nom, int *dst_den, int64_t nom, int64_t den, int64_t ma
         nom= den;
         den= next_den;
     }
-    assert(lavc_gcd(a1.num, a1.den) == 1);
+    assert(lavc_gcd(a1.num, a1.den) == 1U);
     
     *dst_nom = sign ? -a1.num : a1.num;
     *dst_den = a1.den;
