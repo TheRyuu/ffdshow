@@ -505,7 +505,7 @@ void TtrayIconDecVideo::processCmd(HMENU hm,int cmd)
 
 bool TtrayIconDecVideo::showffdshowCfg(char_t* filterName)
 {
-   if (_tcsnicmp(_l("ffdshow Video Decoder"),filterName,29)==0)
+   if (_tcsnicmp(_l("ffdshow Video Decoder"),filterName,22)==0)
     {
      deci->showCfgDlg(NULL);
      return true;
