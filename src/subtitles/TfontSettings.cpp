@@ -103,7 +103,7 @@ void TfontSettings::reg_op(TregOp &t)
    TregOpRegRead tNSI(HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
    char_t langId[MAX_PATH];
    tNSI._REG_OP_S(0,_l("lang"),langId,MAX_PATH,_l("1033"));
-   if(_tcsncmp(langId,_l("1041"),4)==0)
+   if(strncmp(langId,_l("1041"),4)==0)
     {lang[0]='J';lang[1]='P';}
   }
 

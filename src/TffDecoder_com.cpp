@@ -552,13 +552,13 @@ STDMETHODIMP_(int) TffdshowDecVideo::getQueuedCount(void)
  if(m_IsYV12andVMR9)
   return -1*IDD_QUEUEMSG_7;
  const char_t *fileName=getExeflnm();
- if(_tcsnicmp(_l("wmplayer.exe"),fileName,13)==0)
+ if(_strnicmp(_l("wmplayer.exe"),fileName,13)==0)
   return -1*IDD_QUEUEMSG_6;
  if(!m_IsQueueListedApp)
   return -1*IDD_QUEUEMSG_3;
  if(m_IsOldVMR9RenderlessAndRGB)
   return -1*IDD_QUEUEMSG_4;
- if(m_IsVMR9)
+ if(downstreamID==VMR9)
   return -1*IDD_QUEUEMSG_8;
  if(!isQueue)
   return -1*IDD_QUEUEMSG_5;
@@ -597,4 +597,9 @@ STDMETHODIMP_(const char*) TffdshowDecVideo::get_current_idct(void)
 STDMETHODIMP_(bool) TffdshowDecVideo::getIsInterlacedRawVideo(void)
 {
  return inpin->isInterlacedRawVideo;
+}
+
+STDMETHODIMP_(int) TffdshowDecVideo::get_downstreamID(void)
+{
+ return downstreamID;
 }

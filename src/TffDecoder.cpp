@@ -18,8 +18,7 @@
  */
 
 /*
- * Modified to support multi-thread related features
- * by Haruhiko Yamagata <h.yamagata@nifty.com> in 2006.
+ * Modified by Haruhiko Yamagata in 2006-2007.
  */
 
 #include "stdafx.h"
@@ -101,7 +100,6 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  m_IsYV12andVMR9(false),
  m_IsQueueListedApp(-1),
  reconnectFirstError(true)
- //,m_IsYV12oddLines(false)
 {
  DPRINTF(_l("TffdshowDecVideo::Constructor"));
 #ifdef OSDTIMETABALE
@@ -157,6 +155,7 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  dvdproc=0;
  hwDeinterlace=false;
  waitForKeyframe=0;
+ ppropActual.cBuffers=1;
 }
 
 TffdshowDecVideoRaw::TffdshowDecVideoRaw(LPUNKNOWN punk,HRESULT *phr):TffdshowDecVideo(CLSID_FFDSHOWRAW,NAME("TffdshowDecVideoRaw"),CLSID_TFFDSHOWPAGERAW,IDS_FFDSHOWDECVIDEORAW,IDI_FFDSHOW,punk,phr,IDFF_FILTERMODE_PLAYER|IDFF_FILTERMODE_VIDEORAW,defaultMerit,new TintStrColl)
@@ -431,7 +430,6 @@ HRESULT TffdshowDecVideo::CompleteConnect(PIN_DIRECTION direction,IPin *pReceive
 HRESULT TffdshowDecVideo::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROPERTIES *ppropInputRequest)
 {
  DPRINTF(_l("TffdshowDecVideo::DecideBufferSize"));
- m_IsVMR7=m_IsVMR9=m_IsOverlay= false;
  if (m_pInput->IsConnected()==FALSE)
   return E_UNEXPECTED;
 
@@ -459,9 +457,8 @@ HRESULT TffdshowDecVideo::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROP
 HRESULT TffdshowDecVideo::DecideBufferSizeVMR(IMemAllocator *pAlloc, ALLOCATOR_PROPERTIES *ppropInputRequest, const CLSID &ref)
 {
  HRESULT result;
- if (ref==CLSID_VideoMixingRenderer9 && IsVMR9Renderless()==false)
+ if (downstreamID==VMR9)
   {
-   m_IsVMR9=true;
    CMediaType &mt=m_pOutput->CurrentMediaType();
    if (mt.subtype==MEDIASUBTYPE_YV12)
     {
@@ -469,7 +466,6 @@ HRESULT TffdshowDecVideo::DecideBufferSizeVMR(IMemAllocator *pAlloc, ALLOCATOR_P
        isQueue= false; // queue off internaly.
     }
   }
- if (ref==CLSID_VideoMixingRenderer) m_IsVMR7=true;
  int cBuffersMax; 
  if (isQueue==1)
   cBuffersMax= presetSettings->queueCount+1;
@@ -488,11 +484,13 @@ HRESULT TffdshowDecVideo::DecideBufferSizeVMR(IMemAllocator *pAlloc, ALLOCATOR_P
  // is holding and waiting for the presentation time,
  // even when it is asked to Reconnect.
  // if frame rate > 10, and 10 frames are queued in VMR9's internal queue, 1000ms would be enough.
- int retry=100;
+ int retry=ppropActual.cBuffers*10;
+ bool isretry;
  do {
    result=pAlloc->SetProperties(ppropInputRequest,&ppropActual);
-   if (result==VFW_E_BUFFERS_OUTSTANDING) Sleep(10); 
-  } while (result==VFW_E_BUFFERS_OUTSTANDING && retry-->0);
+   isretry=result==VFW_E_BUFFERS_OUTSTANDING && retry-->0 && !firsttransform && downstreamID!=VMR7;
+   if (isretry) Sleep(10);
+  } while (isretry);
  if (result!=S_OK)
   return result;
  if (cBuffersMax>1)
@@ -514,7 +512,7 @@ HRESULT TffdshowDecVideo::DecideBufferSizeVMR(IMemAllocator *pAlloc, ALLOCATOR_P
   }
  if (ppropActual.cbBuffer<ppropInputRequest->cbBuffer)
   return E_FAIL;
- if (m_IsVMR9)
+ if (downstreamID==VMR9)
   isQueue=0; // Use VMR9's internal queueing.
  return result;
 }
@@ -525,7 +523,6 @@ HRESULT TffdshowDecVideo::DecideBufferSizeOld(IMemAllocator *pAlloc, ALLOCATOR_P
  * Overlay mixer doesn't want SetPropoerties called twice. After successfull call of SetPropoerties, it never allow us change the properties.
  * Old renderer doesn't support multithreading, so cBuffers should be 1.
  */
- if (ref==CLSID_OverlayMixer) m_IsOverlay=true;
  int cBuffersMax; 
  if (isQueue==1)
   cBuffersMax= presetSettings->queueCount;
@@ -679,20 +676,11 @@ bool TffdshowDecVideo::IsOldRenderer(void)
  CLSID clsid;
 
  const char_t *fileName= getExeflnm();
- if (_tcsnicmp(_l("wmplayer.exe"),fileName,13)==0)
-  m_IsWMP=true;
- else
-  m_IsWMP=false;
-
- if (_tcsnicmp(_l("zplayer.exe"),fileName,12)==0)
-  m_IsZoomPlayer=true;
- else
-  m_IsZoomPlayer=false;
 
  bool isOld= false;
  // ZoomPlayer & Vix & IExplorer.exe hangs up on graph->FindFilterByName(L"Video Renderer", &pBaseFilter) for unknown reason.
  // IFilterGraph::FindFilterByName seems to have serious bug.
- if(_tcsnicmp(_l("mplayerc.exe"),fileName,13)!=0) 
+ if(_strnicmp(_l("mplayerc.exe"),fileName,13)!=0) 
   {
    const CLSID &ref=GetCLSID(m_pOutput->GetConnected());
    if(ref==CLSID_VideoRenderer || ref==CLSID_OverlayMixer)
@@ -718,7 +706,7 @@ bool TffdshowDecVideo::IsOldVMR9RenderlessAndRGB(void)
   return false;
 
  const char_t *fileName= getExeflnm();
- if (_tcsnicmp(_l("mplayerc.exe"),fileName,13)!=0)
+ if (_strnicmp(_l("mplayerc.exe"),fileName,13)!=0)
   return false;
 
  // Check downstream filter
@@ -748,24 +736,22 @@ bool TffdshowDecVideo::IsOldVMR9RenderlessAndRGB(void)
  return isVMR9rs;
 }
 
-bool TffdshowDecVideo::IsVMR9Renderless(void)
+bool TffdshowDecVideo::IsVMR9Renderless(IPin *downstream_input_pin)
 {
- const char_t *fileName= getExeflnm();
- if (_tcsnicmp(_l("mplayerc.exe"),fileName,13)!=0)
-  return false;
-
- IBaseFilter* pBaseFilter;
-
- bool isVMR9rs= false;
-
- if(graph)
+ bool result=false;
+ PIN_INFO pininfo;
+ FILTER_INFO filterinfo;
+ downstream_input_pin->QueryPinInfo(&pininfo);
+ if (pininfo.pFilter)
   {
-   if(graph->FindFilterByName(L"Video Mixing Render 9 (Renderless)", &pBaseFilter)==S_OK)
-    isVMR9rs= true;
-   if(pBaseFilter)
-    pBaseFilter->Release();
+   pininfo.pFilter->QueryFilterInfo(&filterinfo);
+   if (wcsncmp(L"Video Mixing Render 9 (Renderless)",filterinfo.achName,34)==0)
+    result=true;
+   if (filterinfo.pGraph)
+    filterinfo.pGraph->Release();
+   pininfo.pFilter->Release();
   }
- return isVMR9rs;
+ return result;
 }
 
 STDMETHODIMP TffdshowDecVideo::deliverPreroll(int frametype)
@@ -976,7 +962,7 @@ if (!outdv && hwDeinterlace)
   pOut->SetDiscontinuity(TRUE);
  
  REFERENCE_TIME rtStart=pict.rtStart-segmentStart;
- REFERENCE_TIME rtStop;
+ REFERENCE_TIME rtStop=rtStart+1;
  if (rtStart!=REFTIME_INVALID)
   {
    rtStop=pict.rtStop-segmentStart;
@@ -990,7 +976,7 @@ if (!outdv && hwDeinterlace)
   return S_FALSE;
  LONG dstSize=pOut->GetSize(); 
  #if 0
- if(m_IsVMR9)
+ if(downstreamID==VMR9)
   {
    IVMRSurface9* ivmr9=NULL;
    IDirect3DSurface9* id3d9=NULL;
@@ -1227,7 +1213,7 @@ STDMETHODIMP TffdshowDecVideo::FindPin(LPCWSTR Id,IPin **ppPin)
 }
 HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
 {
- HRESULT hr;
+ HRESULT hr=S_OK;
  if (newpict.rectFull!=oldRect || newpict.rectFull.sar!=oldRect.sar)
   {
    DPRINTF(_l("TffdshowDecVideo::reconnectOutput"));
@@ -1288,12 +1274,12 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
      iVmrSC9->GetStreamActiveState(&isVMR9Active);
      iVmrSC9->Release();
     }
-   if (!m_IsOverlay)
+   if (downstreamID!=OVERLAY_MIXER)
     {
      hr= m_pOutput->GetConnected()->QueryAccept(&mt);
      if (SUCCEEDED(hr))
       {
-       int retry=isQueue ? 100:10; // Read comments in DecideBufferSizeVMR for the reason to retry.
+       int retry=ppropActual.cBuffers*10; // Read comments in DecideBufferSizeVMR for the reason to retry.
        do {
         hr= m_pOutput->GetConnected()->ReceiveConnection(m_pOutput, &mt);
         if (FAILED(hr)) Sleep(10);
@@ -1302,7 +1288,7 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
     }
 
    int isDynamicTried=false;
-   if (m_IsOverlay || (FAILED(hr) && isQueue))  // try dynamic reconnect to re-negotiate cBuffers.
+   if (downstreamID==OVERLAY_MIXER || (FAILED(hr) && isQueue))  // try dynamic reconnect to re-negotiate cBuffers.
     {
      DPRINTF(_l("try dynamic reconnect."));
      if (ipinConnection && igraphConfig)
@@ -1356,7 +1342,7 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
     }
 
 #if 0
-   if (m_IsOverlay)
+   if (downstreamID==OVERLAY_MIXER)
     {
      IBasicVideo2 *ibv=NULL;
      graph->QueryInterface(IID_IBasicVideo2, (void **)(&ibv));
@@ -1481,7 +1467,7 @@ int TffdshowDecVideo::IsQueueListedApp(const char_t *exe)
   }
  else
   {
-   if (_tcsnicmp(_l("wmplayer.exe"),exe,13)==0)
+   if (_strnicmp(_l("wmplayer.exe"),exe,13)==0)
     return 0;
    return 1;
   }
@@ -1493,6 +1479,21 @@ void TffdshowDecVideo::DPRINTF_SampleTime(IMediaSample* pSample)
  REFERENCE_TIME TimeEnd;
  pSample->GetTime(&TimeStart, &TimeEnd);
  DPRINTF(_l(" tStart %7.0f, tEnd %7.0f"), TimeStart/10000.0, TimeEnd/10000.0);
+}
+
+void TffdshowDecVideo::set_downstreamID(IPin *downstream_input_pin)
+{
+ downstreamID=UNKNOWN;
+ const CLSID &ref=GetCLSID(downstream_input_pin);
+ if (ref==CLSID_VideoRenderer)        downstreamID=OLD_RENDERER;
+ if (ref==CLSID_OverlayMixer)         downstreamID=OVERLAY_MIXER;
+ if (ref==CLSID_VideoMixingRenderer)  downstreamID=VMR7;
+ if (ref==CLSID_VideoMixingRenderer9)
+  if (IsVMR9Renderless(downstream_input_pin))
+   downstreamID=VMR9RENDERLESS_MPC;
+  else
+   downstreamID=VMR9;
+ if (ref==CLSID_DirectVobSubFilter || ref==CLSID_DirectVobSubFilter2) downstreamID=DVOBSUB;
 }
 
 #ifdef OSDTIMETABALE

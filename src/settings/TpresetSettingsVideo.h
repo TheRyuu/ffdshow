@@ -66,7 +66,7 @@ public:
    dropDelayTime=src.dropDelayTime;
    h264skipOnDelay=src.h264skipOnDelay;
    h264skipDelayTime=src.h264skipDelayTime;
-   _tcsncpy(useQueueOnlyInList, src.useQueueOnlyInList, 256);
+   strncpy(useQueueOnlyInList, src.useQueueOnlyInList, 256);
    
    isDyInterlaced=src.isDyInterlaced;dyInterlaced=src.dyInterlaced;
    return *this;

@@ -461,7 +461,7 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
      if (idct0)
       {
        text<char_t> idct(idct0);
-       _tcsncpy(s,(const char_t*)idct,countof(s));
+       strncpy(s,(const char_t*)idct,countof(s));
       }
      else
       tsprintf(s,_l("unknown"));

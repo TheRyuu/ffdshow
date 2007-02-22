@@ -19,12 +19,14 @@
 #include "stdafx.h"
 #include "TimgFilterResize.h"
 #include "IffdshowBase.h"
+#include "IffdshowDecVideo.h"
 #include "postproc/swscale.h"
 #include "Tlibmplayer.h"
 #include "Tconfig.h"
 #include "SimpleResize.h"
 #include "TimgFilters.h"
 #include "2xsai.h"
+#include "TffDecoderVideo.h"
 
 TimgFilterResize::TimgFilterResize(IffdshowBase *Ideci,Tfilters *Iparent):
  TimgFilter(Ideci,Iparent),
@@ -127,6 +129,11 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
    inited=false;
    newpict.rectFull=pict.rectFull;newpict.rectClip=pict.rectClip;
    getOutputFmt(newpict,cfg);
+   enum TffdshowDecVideo::DOWNSTREAM_FILTER_TYPE downstream=(TffdshowDecVideo::DOWNSTREAM_FILTER_TYPE)deciV->get_downstreamID();
+   char_t outputfourcc[20];
+   deciV->getOutputFourcc(outputfourcc,20);
+   if (downstream==TffdshowDecVideo::DVOBSUB && strncmp(outputfourcc,_l("YV12"),4)==0) // vsfilter accepts only multiple of 8 on YV12.
+    newpict.rectFull.dx=(newpict.rectFull.dx+7)&~7;
    if ((pict.rectClip!=newpict.rectClip || pict.rectFull!=newpict.rectFull) 
       &&!(   pict.cspInfo.id==FF_CSP_420P       // I want to avoid resizing here. YV12 odd number lines.
           && pict.rectFull==newpict.rectFull

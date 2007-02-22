@@ -343,11 +343,13 @@ HRESULT TffdshowDecAudio::GetMediaType(int iPosition, CMediaType *mtOut)
  if (iPosition<0) return E_INVALIDARG;
  //FIXME
  const char_t *fileName= getExeflnm(); 
- if (_tcsnicmp(_l("wmenc.exe"),fileName,10)==0) 
+ if (_strnicmp(_l("wmenc.exe"),fileName,10)==0) 
   {
- if (iPosition>(allowOutStream?0:1)) return VFW_S_NO_MORE_ITEMS;
-  }else{
- if (iPosition>(allowOutStream?1:0)) return VFW_S_NO_MORE_ITEMS;
+   if (iPosition>(allowOutStream?0:1)) return VFW_S_NO_MORE_ITEMS;
+  }
+ else
+  {
+   if (iPosition>(allowOutStream?1:0)) return VFW_S_NO_MORE_ITEMS;
   }
  switch (iPosition)
   {

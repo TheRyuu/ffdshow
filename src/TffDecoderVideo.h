@@ -298,6 +298,7 @@ public:
  STDMETHODIMP_(int) get_time_on_ffdshow_percent(void);
  STDMETHODIMP_(bool) shouldSkipH264loopFilter(void);
  STDMETHODIMP_(bool) getIsInterlacedRawVideo(void);
+ STDMETHODIMP_(int) get_downstreamID(void);
 #ifdef OSDTIMETABALE
  STDMETHODIMP_(int) getOSDtime(void){return (int)OSDtime3;}
 #else
@@ -464,6 +465,7 @@ private:
    STDMETHODIMP_(bool) shouldSkipH264loopFilter(void){return deciV->shouldSkipH264loopFilter();}
    STDMETHODIMP findOverlayControl2(IhwOverlayControl* *overlayPtr) {return deciV->findOverlayControl2(overlayPtr);}
    STDMETHODIMP_(bool) getIsInterlacedRawVideo(void) {return deciV->getIsInterlacedRawVideo();}
+   STDMETHODIMP_(int) get_downstreamID(void) {return deciV->get_downstreamID();}
  } decVideo_char;
  template<class Tinterface> Tinterface* getDecVideoInterface(void);
 protected:
@@ -500,19 +502,16 @@ private:
  strings subtitleLanguages;
  int subCurLang;
  int isQueue;
- bool m_IsOldVideoRenderer;    // Does Video Renderer support multithreading? true:not supported false:supported
- bool m_IsWMP;                 // Windows Media Player10/11's picture tuning doesn't work with queue. Perhaps "WMplayer video processing DMO"'s incomplete support for multithreading.
- bool m_IsZoomPlayer;
+ bool m_IsOldVideoRenderer;    // Note: This flag may be true when ffdshow is connected to overlaymixer, because overlaymixer often connects to old video renderer.
  bool m_IsOldVMR9RenderlessAndRGB;
  bool m_IsYV12andVMR9;
- bool m_IsVMR7,m_IsVMR9,m_IsOverlay;
  bool reconnectFirstError;
  HANDLE hReconnectEvent;
  ALLOCATOR_PROPERTIES ppropActual;
 
  bool IsOldRenderer(void);
  bool IsOldVMR9RenderlessAndRGB(void);
- bool IsVMR9Renderless(void);
+ bool IsVMR9Renderless(IPin *downstream_input_pin);
  HRESULT setOutputMediaType(const CMediaType &mt);
  struct
   {
@@ -542,6 +541,17 @@ private:
  bool outOverlayMixer,outOldRenderer,outdv;
  int hwDeinterlace;
 public:
+ enum DOWNSTREAM_FILTER_TYPE
+  {
+   UNKNOWN,
+   OLD_RENDERER,
+   OVERLAY_MIXER,
+   VMR7,
+   VMR9,
+   VMR9RENDERLESS_MPC,
+   DVOBSUB,
+  } downstreamID;
+ void set_downstreamID(IPin *downstream_input_pin);
  static const AMOVIESETUP_MEDIATYPE inputMediaTypes[],outputMediaTypes[];
  static AMOVIESETUP_PIN pins[];
  static const AMOVIESETUP_FILTER filter;
