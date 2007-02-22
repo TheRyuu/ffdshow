@@ -441,7 +441,7 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
            break;
           case IDD_QUEUEMSG_8:
            {
-            __int64 late=(-1)*deciV->getLate()/10000;
+            int late=(int)((-1)*deciV->getLate()/10000);
             tsprintf(s,_l("%s %4dms"),trans->translate(val),late>0?late:0);
            }
         }
@@ -450,7 +450,7 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
     }
    case IDFF_OSDtype_Late:
     {
-     __int64 late=deciV->getLate()/10000;
+     int late=(int)deciV->getLate()/10000;
      tsprintf(s,_l("%7dms"),late>0?late:0);
      wasChange=true;
      return s;
