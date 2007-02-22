@@ -146,7 +146,6 @@ INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
          propertypages[i]->GetPageInfo(&ppi);
          char_t title[512];
          text<char_t>(ppi.pszTitle, -1, title, countof(title));//unicode16toAnsi(ppi.pszTitle,-1,title);
-         // title: 256 chars max because of WideCharToMultiByte.
          tci.pszText=title;
          TabCtrl_InsertItem(htab,i,&tci);
         } 

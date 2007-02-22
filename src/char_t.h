@@ -84,12 +84,30 @@ public:
 
 template<> template<> inline text<char>::text(const char *in):buf(const_cast<char*>(in)),own(false) {}
 template<> template<> inline text<char>::text(const char *in,char *Ibuf):buf(strcpy(Ibuf,in)),own(false) {}
-template<> template<> inline text<char>::text(const char *in,int inlen,char *Ibuf,size_t outlen):buf(strncpy(Ibuf,in,(inlen < outlen ? inlen : outlen))),own(false) {}
+template<> template<> inline text<char>::text(const char *in,int inlen,char *Ibuf,size_t outlen):own(false)
+{
+ if (inlen!=-1)
+  buf=strncpy(Ibuf,in,((size_t)inlen < outlen ? inlen : outlen));
+ else
+  {
+   size_t inlen1=strlen(in)+1;
+   buf=strncpy(Ibuf,in,inlen1 < outlen ? inlen1 : outlen);
+  }
+}
 
 
 template<> template<> inline text<wchar_t>::text(const wchar_t *in):buf(const_cast<wchar_t*>(in)),own(false) {}
 template<> template<> inline text<wchar_t>::text(const wchar_t *in,wchar_t *Ibuf):buf(strcpy(Ibuf,in)),own(false) {}
-template<> template<> inline text<wchar_t>::text(const wchar_t *in,int inlen,wchar_t *Ibuf,size_t outlen):buf(strncpy(Ibuf,in,(inlen < outlen ? inlen : outlen))),own(false) {}
+template<> template<> inline text<wchar_t>::text(const wchar_t *in,int inlen,wchar_t *Ibuf,size_t outlen):own(false)
+{
+ if (inlen!=-1)
+  buf=strncpy(Ibuf,in,((size_t)inlen < outlen ? inlen : outlen));
+ else
+  {
+   size_t inlen1=strlen(in)+1;
+   buf=strncpy(Ibuf,in,inlen1 < outlen ? inlen1 : outlen);
+  }
+}
 
 
 template<> template<> inline text<wchar_t>::text(const char *in):own(in?true:false)
