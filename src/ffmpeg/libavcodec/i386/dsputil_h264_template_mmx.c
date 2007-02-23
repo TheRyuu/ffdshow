@@ -218,8 +218,8 @@ static void H264_CHROMA_MC4_TMPL(uint8_t *dst/*align 4*/, uint8_t *src/*align 1*
         "movq %%mm1, %%mm0          \n\t"
         "pmullw %%mm5, %%mm6        \n\t"
         "pmullw %%mm3, %%mm1        \n\t"
+        "paddw %4, %%mm6            \n\t"
         "paddw %%mm6, %%mm1         \n\t"
-        "paddw %4, %%mm1            \n\t"
         "psrlw $6, %%mm1            \n\t"
         "packuswb %%mm1, %%mm1      \n\t"
         H264_CHROMA_OP4((%0), %%mm1, %%mm6)
@@ -236,8 +236,8 @@ static void H264_CHROMA_MC4_TMPL(uint8_t *dst/*align 4*/, uint8_t *src/*align 1*
         "movq %%mm1, %%mm6          \n\t"
         "pmullw %%mm5, %%mm0        \n\t"
         "pmullw %%mm3, %%mm1        \n\t"
+        "paddw %4, %%mm0            \n\t"
         "paddw %%mm0, %%mm1         \n\t"
-        "paddw %4, %%mm1            \n\t"
         "psrlw $6, %%mm1            \n\t"
         "packuswb %%mm1, %%mm1      \n\t"
         H264_CHROMA_OP4((%0), %%mm1, %%mm0)
@@ -265,9 +265,9 @@ static void H264_CHROMA_MC2_TMPL(uint8_t *dst/*align 2*/, uint8_t *src/*align 1*
         "punpckldq %%mm6, %%mm6\n\t"
         "pxor %%mm7, %%mm7\n\t"
         /* mm0 = src[0,1,1,2] */
-        "movd %2, %%mm0\n\t"
-        "punpcklbw %%mm7, %%mm0\n\t"
-        "pshufw $0x94, %%mm0, %%mm0\n\t"
+        "movd %2, %%mm2\n\t"
+        "punpcklbw %%mm7, %%mm2\n\t"
+        "pshufw $0x94, %%mm2, %%mm2\n\t"
         :: "r"(AB), "r"(CD), "m"(src[0]));
 
 
@@ -275,7 +275,7 @@ static void H264_CHROMA_MC2_TMPL(uint8_t *dst/*align 2*/, uint8_t *src/*align 1*
         "1:\n\t"
         "add %4, %1\n\t"
         /* mm1 = A * src[0,1] + B * src[1,2] */
-        "movq    %%mm0, %%mm1\n\t"
+        "movq    %%mm2, %%mm1\n\t"
         "pmaddwd %%mm5, %%mm1\n\t"
         /* mm0 = src[0,1,1,2] */
         "movd (%1), %%mm0\n\t"
@@ -283,21 +283,22 @@ static void H264_CHROMA_MC2_TMPL(uint8_t *dst/*align 2*/, uint8_t *src/*align 1*
         "pshufw $0x94, %%mm0, %%mm0\n\t"
         /* mm1 += C * src[0,1] + D * src[1,2] */
         "movq    %%mm0, %%mm2\n\t"
-        "pmaddwd %%mm6, %%mm2\n\t"
-        "paddw   %%mm2, %%mm1\n\t"
+        "pmaddwd %%mm6, %%mm0\n\t"
+        "paddw      %3, %%mm1\n\t"
+        "paddw   %%mm0, %%mm1\n\t"
         /* dst[0,1] = pack((mm1 + 32) >> 6) */
-        "paddw %3, %%mm1\n\t"
         "psrlw $6, %%mm1\n\t"
         "packssdw %%mm7, %%mm1\n\t"
         "packuswb %%mm7, %%mm1\n\t"
-        /* writes garbage to the right of dst.
-            * ok because partitions are processed from left to right. */
         H264_CHROMA_OP4((%0), %%mm1, %%mm3)
-        "movd %%mm1, (%0)\n\t"
+        "movd %%mm1, %%esi\n\t"
+        "movw %%si, (%0)\n\t"
         "add %4, %0\n\t"
         "sub $1, %2\n\t"
         "jnz 1b\n\t"
-        : "+r" (dst), "+r"(src), "+r"(h) : "m" (ff_pw_32), "r"(stride));
+        : "+r" (dst), "+r"(src), "+r"(h)
+        : "m" (ff_pw_32), "r"(stride)
+        : "%esi");
 
 }
 #endif

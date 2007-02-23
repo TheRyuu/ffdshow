@@ -578,7 +578,7 @@ static int av_always_inline get_cabac_inline(CABACContext *c, uint8_t * const st
 }
 
 #ifdef __GNUC__
-static int __attribute((noinline)) get_cabac_noinline(CABACContext *c, uint8_t * const state){
+static int av_noinline get_cabac_noinline(CABACContext *c, uint8_t * const state){
 #else
 static int get_cabac_noinline(CABACContext *c, uint8_t * const state){
 #endif
