@@ -3,18 +3,20 @@
  * Copyright (c) 2000, 2001 Fabrice Bellard.
  * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
  *
- * This library is free software; you can redistribute it and/or
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  * alternative bitstream reader & writer by Michael Niedermayer <michaelni@gmx.at>
@@ -24,9 +26,18 @@
  * @file bitstream.c
  * bitstream api.
  */
- 
+
 #include "avcodec.h"
 #include "bitstream.h"
+
+/**
+ * Same as av_mallocz_static(), but does a realloc.
+ *
+ * @param[in] ptr The block of memory to reallocate.
+ * @param[in] size The requested size.
+ * @return Block of memory of requested size.
+ */
+void *ff_realloc_static(void *ptr, unsigned int size);
 
 void align_put_bits(PutBitContext *s)
 {
@@ -76,18 +87,18 @@ static int alloc_table(VLC *vlc, int size, int use_static)
     if (vlc->table_size > vlc->table_allocated) {
         vlc->table_allocated += (1 << vlc->bits);
         if(use_static)
-            vlc->table = av_realloc_static(vlc->table,
+            vlc->table = ff_realloc_static(vlc->table,
                                            sizeof(VLC_TYPE) * 2 * vlc->table_allocated);
         else
-        vlc->table = av_realloc(vlc->table,
-                             sizeof(VLC_TYPE) * 2 * vlc->table_allocated);
+            vlc->table = av_realloc(vlc->table,
+                                    sizeof(VLC_TYPE) * 2 * vlc->table_allocated);
         if (!vlc->table)
             return -1;
     }
     return index;
 }
 
-static int build_table(VLC *vlc, int table_nb_bits, 
+static int build_table(VLC *vlc, int table_nb_bits,
                        int nb_codes,
                        const void *bits, int bits_wrap, int bits_size,
                        const void *codes, int codes_wrap, int codes_size,
@@ -100,7 +111,7 @@ static int build_table(VLC *vlc, int table_nb_bits,
     table_size = 1 << table_nb_bits;
     table_index = alloc_table(vlc, table_size, flags & INIT_VLC_USE_STATIC);
 #ifdef DEBUG_VLC
-    printf("new table index=%d size=%d code_prefix=%x n=%d\n", 
+    printf("new table index=%d size=%d code_prefix=%x n=%d\n",
            table_index, table_size, code_prefix, n_prefix);
 #endif
     if (table_index < 0)
@@ -194,7 +205,7 @@ static int build_table(VLC *vlc, int table_nb_bits,
    'nb_bits' set thee decoding table size (2^nb_bits) entries. The
    bigger it is, the faster is the decoding. But it should not be too
    big to save memory and L1 cache. '9' is a good compromise.
-   
+
    'nb_codes' : number of vlcs codes
 
    'bits' : table which gives the size (in bits) of each vlc code.
@@ -208,7 +219,7 @@ static int build_table(VLC *vlc, int table_nb_bits,
    or 'codes' tables.
 
    'wrap' and 'size' allows to use any memory configuration and types
-   (byte/word/long) to store the 'bits' and 'codes' tables.  
+   (byte/word/long) to store the 'bits' and 'codes' tables.
 
    'use_static' should be set to 1 for tables, which should be freed
    with av_free_static(), 0 if free_vlc() will be used.
@@ -220,9 +231,9 @@ int init_vlc(VLC *vlc, int nb_bits, int nb_codes,
 {
     vlc->bits = nb_bits;
     if(!use_static) {
-    vlc->table = NULL;
-    vlc->table_allocated = 0;
-    vlc->table_size = 0;
+        vlc->table = NULL;
+        vlc->table_allocated = 0;
+        vlc->table_size = 0;
     } else {
         /* Static tables are initially always NULL, return
            if vlc->table != NULL to avoid double allocation */

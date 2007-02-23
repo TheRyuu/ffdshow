@@ -42,8 +42,8 @@ extern "C" {
 #define AV_STRINGIFY(s)         AV_TOSTRING(s)
 #define AV_TOSTRING(s) #s
 
-#define LIBAVCODEC_VERSION_INT  ((51<<16)+(33<<8)+0)
-#define LIBAVCODEC_VERSION      51.33.0
+#define LIBAVCODEC_VERSION_INT  ((51<<16)+(34<<8)+0)
+#define LIBAVCODEC_VERSION      51.34.0
 #define LIBAVCODEC_BUILD        LIBAVCODEC_VERSION_INT
 
 #define LIBAVCODEC_IDENT        "Lavc" AV_STRINGIFY(LIBAVCODEC_VERSION)
@@ -142,7 +142,7 @@ typedef struct RcOverride{
 #define CODEC_FLAG_GMC    0x0020  ///< use GMC
 #define CODEC_FLAG_MV0    0x0040  ///< always try a MB with MV=<0,0>
 #define CODEC_FLAG_PART   0x0080  ///< use data partitioning
-/* parent program gurantees that the input for b-frame containing streams is not written to
+/* parent program guarantees that the input for b-frame containing streams is not written to
    for at least s->max_b_frames+1 frames, if this is not set than the input will be copied */
 #define CODEC_FLAG_INPUT_PRESERVED 0x0100
 #define CODEC_FLAG_PASS1 0x0200   ///< use internal 2pass ratecontrol in first  pass mode
@@ -210,7 +210,7 @@ typedef struct RcOverride{
 #define CODEC_CAP_HWACCEL         0x0010
 /**
  * codec has a non zero delay and needs to be feeded with NULL at the end to get the delayed data.
- * if this is not set, the codec is guranteed to never be feeded with NULL data
+ * if this is not set, the codec is guaranteed to never be feeded with NULL data
  */
 #define CODEC_CAP_DELAY           0x0020
 /**
@@ -713,9 +713,9 @@ typedef struct AVCodecContext {
 
     /**
      * hurry up amount.
-     * deprecated in favor of skip_idct and skip_frame
      * - encoding: unused
      * - decoding: set by user. 1-> skip b frames, 2-> skip idct/dequant too, 5-> skip everything except header
+     * @deprecated Deprecated in favor of skip_idct and skip_frame.
      */
     int hurry_up;
 
@@ -2208,16 +2208,6 @@ PCM_CODEC(CODEC_ID_ADPCM_SBPRO_2, adpcm_sbpro_2);
 extern AVCodec rawvideo_encoder;
 extern AVCodec rawvideo_decoder;
 
-/* the following codecs use external GPL libs */
-extern AVCodec ac3_decoder;
-extern AVCodec dts_decoder;
-
-/* subtitles */
-extern AVCodec dvdsub_encoder;
-extern AVCodec dvdsub_decoder;
-extern AVCodec dvbsub_encoder;
-extern AVCodec dvbsub_decoder;
-
 /* resample.c */
 
 struct ReSampleContext;
@@ -2235,28 +2225,6 @@ int av_resample(struct AVResampleContext *c, short *dst, short *src, int *consum
 void av_resample_compensate(struct AVResampleContext *c, int sample_delta, int compensation_distance);
 void av_resample_close(struct AVResampleContext *c);
 
-/* YUV420 format is assumed ! */
-
-struct ImgReSampleContext;
-
-typedef struct ImgReSampleContext ImgReSampleContext;
-
-ImgReSampleContext *img_resample_init(int output_width, int output_height,
-                                      int input_width, int input_height);
-
-ImgReSampleContext *img_resample_full_init(int owidth, int oheight,
-                                      int iwidth, int iheight,
-                                      int topBand, int bottomBand,
-                                      int leftBand, int rightBand,
-                                      int padtop, int padbottom,
-                                      int padleft, int padright);
-
-
-void img_resample(ImgReSampleContext *s,
-                  AVPicture *output, const AVPicture *input);
-
-void img_resample_close(ImgReSampleContext *s);
-
 /**
  * Allocate memory for a picture.  Call avpicture_free to free it.
  *
@@ -2264,11 +2232,15 @@ void img_resample_close(ImgReSampleContext *s);
  * @param pix_fmt the format of the picture.
  * @param width the width of the picture.
  * @param height the height of the picture.
- * @return 0 if successful, -1 if not.
+ * @return Zero if successful, a negative value if not.
  */
 int avpicture_alloc(AVPicture *picture, int pix_fmt, int width, int height);
 
-/* Free a picture previously allocated by avpicture_alloc. */
+/**
+ * Free a picture previously allocated by avpicture_alloc().
+ *
+ * @param picture The AVPicture to be freed.
+ */
 void avpicture_free(AVPicture *picture);
 
 int avpicture_fill(AVPicture *picture, uint8_t *ptr,
@@ -2299,11 +2271,6 @@ int avcodec_find_best_pix_fmt(int pix_fmt_mask, int src_pix_fmt,
 int img_get_alpha_info(const AVPicture *src,
                        int pix_fmt, int width, int height);
 
-/* convert among pixel formats */
-int img_convert(AVPicture *dst, int dst_pix_fmt,
-                const AVPicture *src, int pix_fmt,
-                int width, int height);
-
 /* deinterlace a picture */
 int avpicture_deinterlace(AVPicture *dst, const AVPicture *src,
                           int pix_fmt, int width, int height);
@@ -2316,24 +2283,95 @@ extern AVCodec *first_avcodec;
 unsigned avcodec_version(void);
 /* returns LIBAVCODEC_BUILD constant */
 unsigned avcodec_build(void);
+
+/**
+ * Initializes libavcodec.
+ *
+ * @warning This function \e must be called before any other libavcodec
+ * function.
+ */
 void avcodec_init(void);
 
 void register_avcodec(AVCodec *format);
+
+/**
+ * Finds an encoder with a matching codec ID.
+ *
+ * @param id CodecID of the requested encoder.
+ * @return An encoder if one was found, NULL otherwise.
+ */
 AVCodec *avcodec_find_encoder(enum CodecID id);
+
+/**
+ * Finds an encoder with the specified name.
+ *
+ * @param name Name of the requested encoder.
+ * @return An encoder if one was found, NULL otherwise.
+ */
 AVCodec *avcodec_find_encoder_by_name(const char *name);
+
+/**
+ * Finds a decoder with a matching codec ID.
+ *
+ * @param id CodecID of the requested decoder.
+ * @return A decoder if one was found, NULL otherwise.
+ */
 AVCodec *avcodec_find_decoder(enum CodecID id);
+
+/**
+ * Finds an decoder with the specified name.
+ *
+ * @param name Name of the requested decoder.
+ * @return A decoder if one was found, NULL otherwise.
+ */
 AVCodec *avcodec_find_decoder_by_name(const char *name);
 void avcodec_string(char *buf, int buf_size, AVCodecContext *enc, int encode);
 
+/**
+ * Sets the fields of the given AVCodecContext to default values.
+ *
+ * @param s The AVCodecContext of which the fields should be set to default values.
+ */
 void avcodec_get_context_defaults(AVCodecContext *s);
+
+/**
+ * Allocates an AVCodecContext and sets its fields to default values.  The
+ * resulting struct can be deallocated by simply calling av_free().
+ *
+ * @return An AVCodecContext filled with default values or NULL on failure.
+ * @see avcodec_get_context_defaults
+ */
 AVCodecContext *avcodec_alloc_context(void);
+
+/**
+ * Sets the fields of the given AVFrame to default values.
+ *
+ * @param pic The AVFrame of which the fields should be set to default values.
+ */
 void avcodec_get_frame_defaults(AVFrame *pic);
+
+/**
+ * Allocates an AVFrame and sets its fields to default values.  The resulting
+ * struct can be deallocated by simply calling av_free().
+ *
+ * @return An AVFrame filled with default values or NULL on failure.
+ * @see avcodec_get_frame_defaults
+ */
 AVFrame *avcodec_alloc_frame(void);
 
 int avcodec_default_get_buffer(AVCodecContext *s, AVFrame *pic);
 void avcodec_default_release_buffer(AVCodecContext *s, AVFrame *pic);
 int avcodec_default_reget_buffer(AVCodecContext *s, AVFrame *pic);
 void avcodec_align_dimensions(AVCodecContext *s, int *width, int *height);
+
+/**
+ * Checks if the given dimension of a picture is valid, meaning that all
+ * bytes of the picture can be addressed with a signed int.
+ *
+ * @param[in] w Width of the picture.
+ * @param[in] h Height of the picture.
+ * @return Zero if valid, a negative value if invalid.
+ */
 int avcodec_check_dimensions(void *av_log_ctx, unsigned int w, unsigned int h);
 enum PixelFormat avcodec_default_get_format(struct AVCodecContext *s, const enum PixelFormat * fmt);
 
@@ -2345,8 +2383,30 @@ const char* avcodec_get_current_idct(AVCodecContext *avctx);
 //FIXME func typedef
 
 /**
- * opens / inits the AVCodecContext.
- * not thread save!
+ * Initializes the AVCodecContext to use the given AVCodec. Prior to using this
+ * function the context has to be allocated.
+ *
+ * The functions avcodec_find_decoder_by_name(), avcodec_find_encoder_by_name(),
+ * avcodec_find_decoder() and avcodec_find_encoder() provide an easy way for
+ * retrieving a codec.
+ *
+ * @warning This function is not thread save!
+ *
+ * @code
+ * codec = avcodec_find_decoder(CODEC_ID_H264);
+ * if (!codec)
+ *     exit(1);
+ *
+ * context = avcodec_alloc_context();
+ *
+ * if (avcodec_open(context, codec) < 0)
+ *     exit(1);
+ * @endcode
+ *
+ * @param avctx The context which will be setup to use the given codec.
+ * @param codec The codec to use within the context.
+ * @return Zero on success, a negative value on error.
+ * @see avcodec_alloc_context, avcodec_find_decoder, avcodec_find_encoder
  */
 int avcodec_open(AVCodecContext *avctx, AVCodec *codec);
 
@@ -2364,17 +2424,76 @@ int avcodec_open(AVCodecContext *avctx, AVCodec *codec);
 int avcodec_decode_audio(AVCodecContext *avctx, int16_t *samples,
                          int *frame_size_ptr,
                          uint8_t *buf, int buf_size);
+
+/**
+ * Decodes a video frame from \p buf into \p picture.
+ * The avcodec_decode_video() function decodes a frame of video from the input
+ * buffer \p buf of size \p buf_size. To decode it, it makes use of the
+ * videocodec which was coupled with \p avctx using avcodec_open(). The
+ * resulting decoded frame is stored in \p picture.
+ *
+ * @warning The input buffer must be \c FF_INPUT_BUFFER_PADDING_SIZE larger than
+ * the actual read bytes because some optimized bitstream readers read 32 or 64
+ * bits at once and could read over the end.
+ *
+ * @warning The end of the input buffer \p buf should be set to 0 to ensure that
+ * no overreading happens for damaged MPEG streams.
+ *
+ * @note You might have to align the input buffer \p buf and output buffer \p
+ * samples. The alignment requirements depend on the CPU: on some CPUs it isn't
+ * necessary at all, on others it won't work at all if not aligned and on others
+ * it will work but it will have an impact on performance. In practice, the
+ * bitstream should have 4 byte alignment at minimum and all sample data should
+ * be 16 byte aligned unless the CPU doesn't need it (AltiVec and SSE do). If
+ * the linesize is not a multiple of 16 then there's no sense in aligning the
+ * start of the buffer to 16.
+ *
+ * @param avctx The codec context.
+ * @param[out] picture The AVFrame in which the decoded video frame will be stored.
+ * @param[in] buf The input buffer.
+ * @param[in] buf_size The size of the input buffer in bytes.
+ * @param[in,out] got_picture_ptr Zero if no frame could be decompressed, otherwise, it is non zero.
+ * @return On error a negative value is returned, otherwise the number of bytes
+ * used or zero if no frame could be decompressed.
+ */
 int avcodec_decode_video(AVCodecContext *avctx, AVFrame *picture,
                          int *got_picture_ptr,
                          uint8_t *buf, int buf_size);
-int avcodec_decode_subtitle(AVCodecContext *avctx, AVSubtitle *sub,
-                            int *got_sub_ptr,
-                            const uint8_t *buf, int buf_size);
-int avcodec_parse_frame(AVCodecContext *avctx, uint8_t **pdata,
-                        int *data_size_ptr,
-                        uint8_t *buf, int buf_size);
+
+/**
+ * Encodes an audio frame from \p samples into \p buf.
+ * The avcodec_encode_audio() function encodes a frame of audio from the input
+ * buffer \p samples. To encode it, it makes use of the audiocodec which was
+ * coupled with \p avctx using avcodec_open(). The resulting encoded frame is
+ * stored in output buffer \p buf.
+ *
+ * @note The output buffer should be at least \c FF_MIN_BUFFER_SIZE bytes large.
+ *
+ * @param avctx The codec context.
+ * @param[out] buf The output buffer.
+ * @param[in] buf_size The output buffer size.
+ * @param[in] samples The input buffer containing the samples.
+ * @return On error a negative value is returned, on succes zero or the number
+ * of bytes used from the input buffer.
+ */
 int avcodec_encode_audio(AVCodecContext *avctx, uint8_t *buf, int buf_size,
                          const short *samples);
+
+/**
+ * Encodes a video frame from \p pict into \p buf.
+ * The avcodec_encode_video() function encodes a frame of video from the input
+ * \p pict. To encode it, it makes use of the videocodec which was coupled with
+ * \p avctx using avcodec_open(). The resulting encoded bytes representing the
+ * frame are stored in the output buffer \p buf. The input picture should be
+ * stored using a specific format, namely \c avctx.pix_fmt.
+ *
+ * @param avctx The codec context.
+ * @param[out] buf The output buffer for the bitstream of encoded frame.
+ * @param[in] buf_size The size of the outputbuffer in bytes.
+ * @param[in] pict The input picture to encode.
+ * @return On error a negative value is returned, on success zero or the number
+ * of bytes used from the input buffer.
+ */
 int avcodec_encode_video(AVCodecContext *avctx, uint8_t *buf, int buf_size,
                          const AVFrame *pict);
 int avcodec_encode_subtitle(AVCodecContext *avctx, uint8_t *buf, int buf_size,
@@ -2384,19 +2503,28 @@ int avcodec_close(AVCodecContext *avctx);
 
 void avcodec_register_all(void);
 
+/**
+ * Flush buffers, should be called when seeking or when switching to a different stream.
+ */
 void avcodec_flush_buffers(AVCodecContext *avctx);
 
 void avcodec_default_free_buffers(AVCodecContext *s);
 
-/* misc usefull functions */
+/* misc useful functions */
 
 /**
- * returns a single letter to describe the picture type
+ * Returns a single letter to describe the given picture type \p pict_type.
+ *
+ * @param[in] pict_type The picture type.
+ * @return A single character representing the picture type.
  */
 char av_get_pict_type_char(int pict_type);
 
 /**
- * returns codec bits per sample
+ * Returns codec bits per sample.
+ *
+ * @param[in] codec_id The codec.
+ * @return Number of bits per sample or zero if unknown for the given codec.
  */
 int av_get_bits_per_sample(enum CodecID codec_id);
 
@@ -2449,12 +2577,31 @@ void *av_malloc(unsigned int size);
 void *av_realloc(void *ptr, unsigned int size);
 void av_free(void *ptr);
 
+/**
+ * Reallocates the given block if it is not large enough, otherwise it
+ * does nothing.
+ *
+ * @see av_realloc
+ */
 void *av_fast_realloc(void *ptr, unsigned int *size, unsigned int min_size);
+
 /* for static data only */
-/* call av_free_static to release all staticaly allocated tables */
+
+/**
+ * Frees all static arrays and reset their pointers to 0.
+ * Call this function to release all statically allocated tables.
+ */
 void av_free_static(void);
+
+/**
+ * Allocation of static arrays.
+ *
+ * @warning Do not use for normal allocation.
+ *
+ * @param[in] size The amount of memory you need in bytes.
+ * @return Block of memory of the requested size.
+ */
 void *av_mallocz_static(unsigned int size);
-void *av_realloc_static(void *ptr, unsigned int size);
 
 /* FOXFIX: Not in lavc */
 /* add by bero : in adx.c */
