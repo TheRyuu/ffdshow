@@ -67,7 +67,7 @@ void TgenericPage::cfg2dlg(void)
     flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Interlaced")),IDFF_enc_x264_interlaced,1,false));
     break;
   }
-if (codecId==CODEC_ID_MPEG4 || codecId==CODEC_ID_X264)
+if (codecId==CODEC_ID_X264)
   flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Loop filter")),IDFF_enc_H263Pflags,CODEC_FLAG_LOOP_FILTER,true));
 
  if ((codecId==CODEC_ID_H263 || codecId==CODEC_ID_H263P) && cfgGet(IDFF_enc_me_hq)==FF_MB_DECISION_SIMPLE)
