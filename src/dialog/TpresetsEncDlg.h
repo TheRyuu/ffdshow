@@ -13,7 +13,7 @@ private:
  void fillPresets(void);
  void selectPreset(int i);
  void onRemove(void),onRename(void);
-protected: 
+protected:
  virtual INT_PTR msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam);
 public:
  TpresetsEncDlg(HWND parent,IffdshowBase *Ideci,TpresetsEnc &Ipresets);

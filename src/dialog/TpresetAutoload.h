@@ -20,7 +20,7 @@ private:
    bool wasChange;
   };
  typedef std::vector<Titem> Titems;
- Titems items; 
+ Titems items;
  class TitemsWindow :public TdlgWindow
   {
   private:

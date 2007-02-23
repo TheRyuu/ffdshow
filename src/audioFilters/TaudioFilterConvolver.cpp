@@ -30,7 +30,7 @@ TaudioFilterConvolver::TaudioFilterConvolver(IffdshowBase *Ideci,Tfilters *Ipare
 //==================== TaudioFilterConvolver::Tconvolver::fft_response_t ========================
 void TaudioFilterConvolver::Tconvolver::fft_response_t::init(const TwavReader<float> &response,const TconvolverSettings *cfg,unsigned int chunk_length,float normalization_factor,Tfftforward &fft_plan_forward,unsigned int procchannel)
 {
- float levelAdjust=cfg->levelAdjustAuto?response.getAdjust():db2value((float)cfg->levelAdjustDB,10); 
+ float levelAdjust=cfg->levelAdjustAuto?response.getAdjust():db2value((float)cfg->levelAdjustDB,10);
  // create new response struct
  length=response[0].size();
  // make channel_data array big enough to hold pointers for all channels
@@ -40,21 +40,21 @@ void TaudioFilterConvolver::Tconvolver::fft_response_t::init(const TwavReader<fl
  number_of_chunks = (unsigned int)ceil((response[0].size())/(float)(chunk_length));
  // allocate per channel data buffer)
  // no need for double size, as we use r2c/c2r
- for (unsigned int index2 = 0; index2 < number_of_response_channels; ++index2) 
+ for (unsigned int index2 = 0; index2 < number_of_response_channels; ++index2)
   channel_data[index2].resize( (chunk_length + 1) * number_of_chunks);
  // for each  channel
  std::vector<float> fft_real(2*chunk_length);
  std::vector<complex> fft_complex(chunk_length+1);
- for (unsigned int index2 = 0; index2 < number_of_response_channels; ++index2) 
+ for (unsigned int index2 = 0; index2 < number_of_response_channels; ++index2)
   {
    unsigned int respchannel=procchannel!=INT32_MAX?std::min(response.nchannels-1,procchannel):index2;
    // for each chunk
-   for (unsigned int index3 = 0; index3 < number_of_chunks; ++index3) 
+   for (unsigned int index3 = 0; index3 < number_of_chunks; ++index3)
     {
      // copy original chunk to fft_real
-     for (unsigned int index4 = 0; index4 < chunk_length; ++index4) 
+     for (unsigned int index4 = 0; index4 < chunk_length; ++index4)
       {
-       if (index4 + index3 * chunk_length < length) 
+       if (index4 + index3 * chunk_length < length)
         fft_real[index4] = response[respchannel][index4+index3*chunk_length]*levelAdjust;
        else
         fft_real[index4] = 0;
@@ -91,7 +91,7 @@ TaudioFilterConvolver::Tconvolver::Tconvolver(const TsampleFormat &infmt,const T
  // --------------  chunk, pad, fft and store the responses
  // allocate array of response pointers
  // process input responses to padded, chunked, fft'ed internal representation
- //for (unsigned int index=0;index<number_of_responses;++index) 
+ //for (unsigned int index=0;index<number_of_responses;++index)
  fft_responses[0].init(response,cfg,chunk_length,normalization_factor,fft_plan_forward,procchannel);
 
  //  ------------- setup ringbuffers for storing FFT'ed input..
@@ -99,7 +99,7 @@ TaudioFilterConvolver::Tconvolver::Tconvolver(const TsampleFormat &infmt,const T
  //                we need number_of_chunks * (chunk_length + 1)
  //                frames
  // one for each response
- for (unsigned int index = 0; index < number_of_responses; ++index) 
+ for (unsigned int index = 0; index < number_of_responses; ++index)
   {
    input_chunk_ringbuffers[index].resize(fft_responses[index].number_of_chunks * (chunk_length + 1));
    // zero out
@@ -108,14 +108,14 @@ TaudioFilterConvolver::Tconvolver::Tconvolver(const TsampleFormat &infmt,const T
   }
  // allocate input_chunk_ringbuffer_index arrays
  input_chunk_ringbuffer_indexes.resize(number_of_responses);
- // zero out    
- for (unsigned int index = 0; index < number_of_responses; ++index) 
+ // zero out
+ for (unsigned int index = 0; index < number_of_responses; ++index)
   input_chunk_ringbuffer_indexes[index] = 0;
  // ---------------- setup overlap buffers
  //                  these need only be chunk_length sized
  overlap_buffers.resize(number_of_response_channels);
- for (unsigned int index = 0; index < number_of_response_channels; ++index) 
-  { 
+ for (unsigned int index = 0; index < number_of_response_channels; ++index)
+  {
    overlap_buffers[index].resize(chunk_length);
    // zero out
    for (unsigned int index2 = 0; index2 < chunk_length; ++index2)
@@ -127,27 +127,27 @@ TaudioFilterConvolver::Tconvolver::Tconvolver(const TsampleFormat &infmt,const T
    in_channel[0]=out_channel[0]=procchannel;
   }
  else
-  { 
-   in_channels=infmt.nchannels; 
+  {
+   in_channels=infmt.nchannels;
    for (unsigned int i=0;i<number_of_response_channels;i++)
     in_channel[i]=number_of_response_channels%in_channels;
-   out_channels=number_of_response_channels; 
+   out_channels=number_of_response_channels;
    for (unsigned int i=0;i<number_of_response_channels;i++)
     out_channel[i]=i;
-  }  
+  }
 }
 
 int TaudioFilterConvolver::Tconvolver::process(const float * const in_data,float *out_data,size_t numsamples,const TconvolverSettings *cfg)
 {
- float mixingStrength=cfg->mixingStrength/100.0f,mixingStrengthInv=1.0f-mixingStrength; 
+ float mixingStrength=cfg->mixingStrength/100.0f,mixingStrengthInv=1.0f-mixingStrength;
 
  int samplesPtr=0;
  for (;samplesPtr<int(numsamples-chunk_length);samplesPtr+=chunk_length)
   {
-   for (unsigned int index = 0; index < number_of_responses; ++index) 
+   for (unsigned int index = 0; index < number_of_responses; ++index)
     {
      // copy input chunk into fft_real
-     for (unsigned int index2 = 0; index2 < chunk_length; ++index2) 
+     for (unsigned int index2 = 0; index2 < chunk_length; ++index2)
       {
        fft_real[index2] = in_data[in_channel[0]+in_channels*(index2+samplesPtr)];//in_data[index][index2];
        // and pad at the same time
@@ -160,42 +160,42 @@ int TaudioFilterConvolver::Tconvolver::process(const float * const in_data,float
       input_chunk_ringbuffers[index][index2 + input_chunk_ringbuffer_indexes[index]]=complex(fft_complex[index2].real() / normalization_factor, fft_complex[index2].imag() / normalization_factor);
     }
 
-   // do the complex multiplications for all response input channels 
-   for (unsigned int index = 0; index < number_of_response_channels; ++index) 
+   // do the complex multiplications for all response input channels
+   for (unsigned int index = 0; index < number_of_response_channels; ++index)
     {
      // zero our the reverse fft input buffer
      for (unsigned int index2 = 0; index2 < chunk_length + 1; ++index2)
       fft_complex[index2]=0;
      // for all responses (of this output channel)
-     for (unsigned int index2 = 0; index2 < number_of_responses; ++index2) 
+     for (unsigned int index2 = 0; index2 < number_of_responses; ++index2)
       {
        // for all chunks
-       for (unsigned int index3 = 0; index3 < fft_responses[index2].number_of_chunks; ++index3) 
+       for (unsigned int index3 = 0; index3 < fft_responses[index2].number_of_chunks; ++index3)
         {
          // we go backward in time (from current chunk in input_chunnks_ringbuffers[] to oldest)
          int tmp_rb_chunk_index = input_chunk_ringbuffer_indexes[index2]
                                   - (index3 * (chunk_length + 1))
                                   + ((chunk_length + 1) * fft_responses[index2].number_of_chunks);
-         // constraint to the actual data length ("%")                          
+         // constraint to the actual data length ("%")
          tmp_rb_chunk_index %= (chunk_length + 1) * fft_responses[index2].number_of_chunks;
          complex_mul(&input_chunk_ringbuffers[index2][tmp_rb_chunk_index],
                      &fft_responses[index2].channel_data[index][index3 * (chunk_length + 1)],
                      &fft_complex[0],
-                     chunk_length + 1);            
+                     chunk_length + 1);
         } // chunks
       } // responses
      // reverse fft the results
      fft_plan_backward.execute(&fft_complex[0],&fft_real[0]);
      // copy to out_buffers, save overlap and add previous overlap
      if (cfg->mixingStrength==100)
-      for (unsigned int index2 = 0; index2 < chunk_length; ++index2) 
+      for (unsigned int index2 = 0; index2 < chunk_length; ++index2)
        {
         float out=fft_real[index2] / normalization_factor + overlap_buffers[index][index2];
         out_data[out_channel[index]+out_channels*(index2+samplesPtr)] = out;
         overlap_buffers[index][index2] = fft_real[index2 + chunk_length] / normalization_factor;
        }
      else
-      for (unsigned int index2 = 0; index2 < chunk_length; ++index2) 
+      for (unsigned int index2 = 0; index2 < chunk_length; ++index2)
        {
         float out=fft_real[index2] / normalization_factor + overlap_buffers[index][index2];
         out_data[out_channel[index]+out_channels*(index2+samplesPtr)] = mix(in_data[in_channel[index]+in_channels*(index2+samplesPtr)],out,mixingStrength,mixingStrengthInv);
@@ -203,13 +203,13 @@ int TaudioFilterConvolver::Tconvolver::process(const float * const in_data,float
        }
     }
    // advance input_chunk_ringbuffer_indexes
-   for (unsigned int index = 0; index < number_of_responses; ++index) 
+   for (unsigned int index = 0; index < number_of_responses; ++index)
     {
-     input_chunk_ringbuffer_indexes[index] += chunk_length + 1; 
+     input_chunk_ringbuffer_indexes[index] += chunk_length + 1;
      input_chunk_ringbuffer_indexes[index] %= fft_responses[index].number_of_chunks * (chunk_length + 1);
     }
   }
- return samplesPtr; 
+ return samplesPtr;
 }
 
 //==================================== TaudioFilterConvolver ====================================
@@ -219,7 +219,7 @@ void TaudioFilterConvolver::Tconvolver::Tfftforward::execute(const Tin *in,Tout 
   out[i]=complex(in[2*i+0],in[2*i+1]);
  rdft(length,1,(float*)out,&ip[0],&w[0]);
  out[length/2]=complex(out[0].imag(),0);
- out[0].imag()=0.0f; 
+ out[0].imag()=0.0f;
 }
 void TaudioFilterConvolver::Tconvolver::Tfftbackward::execute(const Tin *in,Tout *out)
 {
@@ -227,7 +227,7 @@ void TaudioFilterConvolver::Tconvolver::Tfftbackward::execute(const Tin *in,Tout
   {
    out[2*i+0]=in[i].real();
    out[2*i+1]=in[i].imag();
-  } 
+  }
  out[1]=in[length/2].real();
  rdft(length,-1,(float*)out,&ip[0],&w[0]);
  for (int i=0;i<length;i++)
@@ -237,7 +237,7 @@ void TaudioFilterConvolver::Tconvolver::Tfftbackward::execute(const Tin *in,Tout
 void TaudioFilterConvolver::done(void)
 {
  buffer.clear();
- convolvers.clear();  
+ convolvers.clear();
 }
 
 bool TaudioFilterConvolver::is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg0)
@@ -256,11 +256,11 @@ bool TaudioFilterConvolver::getOutputFmt(TsampleFormat &fmt,const TfilterSetting
      TwavReader<float> impulse(cfg->file,true);
      if (fmt.nchannels==1 && !(fmt.nchannels==impulse.nchannels || impulse.nchannels==1))
       fmt.setChannels(impulse.nchannels);
-    } 
+    }
    return true;
-  } 
+  }
  else
-  return false; 
+  return false;
 }
 
 void TaudioFilterConvolver::resampleImpulse(TwavReader<float> &impulse,int dstfreq)
@@ -273,8 +273,8 @@ void TaudioFilterConvolver::resampleImpulse(TwavReader<float> &impulse,int dstfr
    std::vector<float> bufIn(impulse[i]);bufIn.resize(bufIn.size()*2,impulse[i].back());
    int ret=resampler.audio_resample(&buffOut[0],&bufIn[0],(int)bufIn.size());
    impulse[i]=buffOut;impulse[i].resize(lenout);
-  } 
- impulse.freq=dstfreq; 
+  }
+ impulse.freq=dstfreq;
 }
 HRESULT TaudioFilterConvolver::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples0,size_t numsamples,const TfilterSettingsAudio *cfg0)
 {
@@ -285,7 +285,7 @@ HRESULT TaudioFilterConvolver::process(TfilterQueue::iterator it,TsampleFormat &
     {
      oldcfg=*cfg;
      done();
-     
+
      if (cfg->mappingMode==0)
       {
        TwavReader<float> impulse(cfg->file);
@@ -297,14 +297,14 @@ HRESULT TaudioFilterConvolver::process(TfilterQueue::iterator it,TsampleFormat &
           {
            convolvers.push_back(Tconvolver(fmt,impulse,cfg));
            outchannels=convolvers[0].number_of_response_channels;
-          } 
+          }
          else if (fmt.nchannels==impulse.nchannels || impulse.nchannels==1)
           {
            for (unsigned int i=0;i<fmt.nchannels;i++)
             convolvers.push_back(Tconvolver(fmt,impulse,cfg,i));
            outchannels=fmt.nchannels;
           }
-        }  
+        }
       }
      else
       {
@@ -335,20 +335,20 @@ HRESULT TaudioFilterConvolver::process(TfilterQueue::iterator it,TsampleFormat &
              if (impulses[i]->freq!=fmt.freq)
               resampleImpulse(*impulses[i],fmt.freq);
              oldsize=impulses[i]->at(0).size();
-            } 
-          } 
+            }
+          }
         }
        if (oldsize)
-        { 
+        {
          for (unsigned int i=0;i<fmt.nchannels;i++)
           convolvers.push_back(Tconvolver(fmt,(!impulses[i] || impulses[i]->empty())?TwavReader<float>(fmt.freq,1,oldsize,0.0f):*impulses[i],cfg,i));
-         outchannels=fmt.nchannels; 
-        } 
-      endManual: 
+         outchannels=fmt.nchannels;
+        }
+      endManual:
        for (unsigned int i=0;i<fmt.nchannels;i++)
         if (impulses[i])
          delete impulses[i];
-      }   
+      }
     }
 
    if (!convolvers.empty())

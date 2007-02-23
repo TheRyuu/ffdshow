@@ -58,7 +58,7 @@ void TlevelsSettings::calcMap(unsigned int map[256],int *divisor,int inMin,int i
       p=p*(outMax-outMin)+outMin;
       map[x]=limit(int(p),limitMin,limitMax);
      }
-   case 1: 
+   case 1:
     for (int x=0;x<256;x++) // Ylevels
      {
       double i=fullY?x:(x-16)*(255.0/219.0);
@@ -66,8 +66,8 @@ void TlevelsSettings::calcMap(unsigned int map[256],int *divisor,int inMin,int i
       if (!fullY) p=p*(219.0/255.0)+16.5;
       map[x]=limit(int(p),limitMin,limitMax);
      }
-    break; 
-   case 2: 
+    break;
+   case 2:
     for (int x=0;x<256;x++) // YlevelsG
      // Original script for Avisynth by Didee and Alain2
      // http://forum.doom9.org/showthread.php?p=897854
@@ -75,7 +75,7 @@ void TlevelsSettings::calcMap(unsigned int map[256],int *divisor,int inMin,int i
      // Function YlevelsG_DarkEnh(clip clp, int a, float gamma, int b, int c, int d)
      // {
      //  wicked = "x "+string(a)+" - "+string(b)+" "+string(a)+" - / "+string(d)+" "+string(c)+" - * "+string(c)+" + x 255 / * x "+string(a)+" - "+string(b)+" "+string(a)+" - / 1 "+string(gamma)+" / ^ "+string(d)+" "+string(c)+" - * "+string(c)+" + 1 x 255 / - * +"
-     //  Return( clp.mt_lut(Yexpr = wicked, U=2,V=2) )  
+     //  Return( clp.mt_lut(Yexpr = wicked, U=2,V=2) )
      // }
      {
       double i=fullY?x:(x-16)*(255.0/219.0);
@@ -83,15 +83,15 @@ void TlevelsSettings::calcMap(unsigned int map[256],int *divisor,int inMin,int i
       if (!fullY) p=p*(219.0/255.0)+16.5;
       map[x]=limit(int(p),limitMin,limitMax);
      }
-    break; 
-   case 3: 
+    break;
+   case 3:
     for (int x=0;x<256;x++) // YlevelsS
      // Original script for Avisynth by Didee and Alain2
      //
      // Function YlevelsS_DarkEnh(clip clp, int a, float gamma, int b, int c, int d)
      // {
      //  wicked = "x "+string(a)+" - "+string(b)+" "+string(a)+" - / "+string(d)+" "+string(c)+" - * "+string(c)+" + x 162.338 / sin * x "+string(a)+" - "+string(b)+" "+string(a)+" - / 1 "+string(gamma)+" / ^ "+string(d)+" "+string(c)+" - * "+string(c)+" + 1 x 162.338 / sin - * +"
-     //  Return( clp.mt_lut(Yexpr = wicked, U=2,V=2) )  
+     //  Return( clp.mt_lut(Yexpr = wicked, U=2,V=2) )
      // }
      {
       double i=fullY?x:(x-16)*(255.0/219.0);
@@ -99,15 +99,15 @@ void TlevelsSettings::calcMap(unsigned int map[256],int *divisor,int inMin,int i
       if (!fullY) p=p*(219.0/255.0)+16.5;
       map[x]=limit(int(p),limitMin,limitMax);
      }
-    break; 
-   case 4: 
+    break;
+   case 4:
     for (int x=0;x<256;x++) // YlevelsC
      // Original script for Avisynth by Didee and Alain2
      //
      // Function YlevelsC_DarkEnh(clip clp, int a, float gamma, int b, int c, int d)
      // {
      //  wicked = "x "+string(a)+" - "+string(b)+" "+string(a)+" - / "+string(d)+" "+string(c)+" - * "+string(c)+" + 1 x 162.338 / cos - * x "+string(a)+" - "+string(b)+" "+string(a)+" - / 1 "+string(gamma)+" / ^ "+string(d)+" "+string(c)+" - * "+string(c)+" + x 162.338 / cos * +"
-     //  Return( clp.mt_lut(Yexpr = wicked, U=2,V=2) )  
+     //  Return( clp.mt_lut(Yexpr = wicked, U=2,V=2) )
      // }
      {
       double i=fullY?x:(x-16)*(255.0/219.0);
@@ -115,17 +115,17 @@ void TlevelsSettings::calcMap(unsigned int map[256],int *divisor,int inMin,int i
       if (!fullY) p=p*(219.0/255.0)+16.5;
       map[x]=limit(int(p),limitMin,limitMax);
      }
-    break; 
+    break;
    case 5:
     calcCurve(map);
     break;
-  }  
+  }
  if (mode!=5 && posterize!=255)
-  { 
+  {
    unsigned int stepd=256/(posterize-1);
    for (unsigned int x=0;x<256;x++)
     map[x]=limit(((map[x]+stepd/2)/stepd)*stepd,0U,255U);
-  }  
+  }
 }
 
 void TlevelsSettings::calcCurve(unsigned int dp[256])
@@ -141,10 +141,10 @@ void TlevelsSettings::calcCurve(unsigned int dp[256])
    plot_curve(p1,p2,p3,p4,dp);
   }
  for (int x=this->*points[numPoints-1][0];x<256;x++)
-  dp[x]=this->*points[numPoints-1][1]; 
+  dp[x]=this->*points[numPoints-1][1];
  for (int i=0;i<numPoints;i++)
   dp[this->*points[i][0]]=this->*points[i][1];
-}  
+}
 
 void TlevelsSettings::plot_curve(int p1,int p2,int p3,int p4,unsigned int curve[256])
 {
@@ -156,7 +156,7 @@ void TlevelsSettings::plot_curve(int p1,int p2,int p3,int p4,unsigned int curve[
    { -0.5,  0.0,  0.5,  0.0 },
    {  0.0,  1.0,  0.0,  0.0 },
   };
- struct curves_CR_compose 
+ struct curves_CR_compose
   {
    void operator ()(const CRMatrix &a, const CRMatrix &b, CRMatrix &ab)
     {
@@ -273,7 +273,7 @@ TlevelsSettings::TlevelsSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
 {
  static const TintOptionT<TlevelsSettings> iopts[]=
   {
-   IDFF_isLevels       ,&TlevelsSettings::is      ,0,0,_l(""),1, 
+   IDFF_isLevels       ,&TlevelsSettings::is      ,0,0,_l(""),1,
      _l("isLevels"),0,
    IDFF_showLevels     ,&TlevelsSettings::show    ,0,0,_l(""),1,
      _l("showLevels"),1,
@@ -346,12 +346,12 @@ TlevelsSettings::TlevelsSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
      _l("levelsPoint9x"),0,
    IDFF_levelsPoint9y  ,&TlevelsSettings::point9y   ,0,255,_l(""),1,
      _l("levelsPoint9y"),0,
-   
+
    0
   };
  addOptions(iopts);
- 
- static const TcreateParamList1 listMode(modes);setParamList(IDFF_levelsMode,&listMode); 
+
+ static const TcreateParamList1 listMode(modes);setParamList(IDFF_levelsMode,&listMode);
 }
 
 void TlevelsSettings::getMinMax(int id,int &min,int &max)
@@ -369,7 +369,7 @@ void TlevelsSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfilte
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (show)
-  queueFilter<TimgFilterLevels>(filtersorder,filters,queue); 
+  queueFilter<TimgFilterLevels>(filtersorder,filters,queue);
 }
 void TlevelsSettings::createPages(TffdshowPageDec *parent) const
 {
@@ -389,7 +389,7 @@ const int* TlevelsSettings::getResets(unsigned int pageId)
 bool TlevelsSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
  tsnprintf(tipS,len,_l("%s\nInput min: %i, input max: %i, output min:%i, output max:%i\nGamma correction: %5.2f"),modes[mode],inMin,inMax,outMin,outMax,gamma/100.0f);
- if (posterize!=255) 
+ if (posterize!=255)
   strncatf(tipS,len,_l("\nPosterizing to %i levels"),posterize);
  return true;
 }

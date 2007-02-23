@@ -29,7 +29,7 @@ struct CRect :RECT
  CRect(int Ileft,int Itop,int Iright,int Ibottom) {left=Ileft;right=Iright;top=Itop;bottom=Ibottom;}
  CRect(const CPoint &topleft,const CPoint &rightbottom) {left=topleft.x;top=topleft.y;right=rightbottom.x;bottom=rightbottom.y;}
  CRect(const CPoint &topleft,const CSize &size) {left=topleft.x;top=topleft.y;right=left+size.cx;bottom=top+size.cy;}
- inline void operator&=(const CRect &rect2) 
+ inline void operator&=(const CRect &rect2)
   {
    RECT rect1=*this;
    IntersectRect(this,&rect1,&rect2);

@@ -19,7 +19,7 @@ public:
   }
  void setbuffer(float *buf, int size)
   {
-   buffer = buf; 
+   buffer = buf;
    bufsize = size;
   }
  __forceinline  float process(float input)
@@ -45,7 +45,7 @@ public:
   }
  void setdamp(float val)
   {
-   damp1 = val; 
+   damp1 = val;
    damp2 = 1-val;
   }
  float getdamp()

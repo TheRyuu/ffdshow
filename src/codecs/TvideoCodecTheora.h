@@ -40,7 +40,7 @@ private:
  ogg_packet openc;
  Trect rd;
  REFERENCE_TIME segmentTimeStart;
-protected: 
+protected:
  virtual LRESULT beginCompress(int cfgcomode,int csp,const Trect &r);
  virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);
 public:

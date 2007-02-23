@@ -68,7 +68,7 @@ Zasady i warunki kopiowania, rozpowszechniania i modyfikowania
         do³¹czyæ do niego pisemn¹ ofertê, wa¿n¹ co najmniej 3 lata, przyznaj¹c¹ ka¿dej stronie trzeciej - za op³at¹ nieprzekraczaj¹c¹ twego kosztu fizycznego wykonywania dystrybucji Ÿród³a - kompletn¹, odczytywaln¹ przez urz¹dzenia cyfrowe kopiê odpowiadaj¹cego mu kodu Ÿród³owego, rozprowadzan¹ na warunkach pkt.1 i 2 powy¿ej, na noœniku zwyczajowo u¿ywanym do wzajemnej wymiany oprogramowania; lub
 
     c.
-        do³¹czyæ do niego informacjê, jak¹ otrzyma³eœ na temat oferty rozprowadzania odpowiedniego kodu Ÿród³owego. (Ta mo¿liwoœæ dozwolona jest tylko dla dystrybucji niehandlowej i jedynie wtedy, gdy otrzyma³eœ dany program w kodzie wynikowym lub formie wykonywalnej wraz z wymienion¹ ofert¹ - zgodnie z podpunktem "b" powy¿ej). 
+        do³¹czyæ do niego informacjê, jak¹ otrzyma³eœ na temat oferty rozprowadzania odpowiedniego kodu Ÿród³owego. (Ta mo¿liwoœæ dozwolona jest tylko dla dystrybucji niehandlowej i jedynie wtedy, gdy otrzyma³eœ dany program w kodzie wynikowym lub formie wykonywalnej wraz z wymienion¹ ofert¹ - zgodnie z podpunktem "b" powy¿ej).
 
     Okreœlenie kod Ÿród³owy dla pracy oznacza formê pracy preferowan¹ dla wprowadzania do niej modyfikacji. Dla wykonanej pracy, kompletny kod Ÿród³owy oznacza ca³y kod Ÿród³owy wszystkich modu³ów, wszelkie sprzê¿one z ni¹ poœrednicz¹ce pliki opisuj¹ce oraz zbiory komend stosowane do sterowania kompilacj¹ i instalowaniem programów. Niemniej jednak, jako wyj¹tek specjalny, dystrybuowany (w formie Ÿród³owej albo binarnej) kod Ÿród³owy nie musi obejmowaæ niczego, co jest normalnie rozprowadzane przy pomocy g³ównych komponentów (kompilator, j¹dro itd.) systemu operacyjnego, na którym pracuje czêœæ wykonywalna, o ile sam taki komponent towarzyszy tej czêœci.
 
@@ -120,19 +120,19 @@ W tym celu do programu do³¹cz poni¿sze informacje. Bezpieczniej jest do³¹czyæ je
     nazwa programu i informacja, do czego on s³u¿y.
     Copyright (C) 19../20.. nazwisko autora
 
-    Niniejszy program jest wolnym oprogramowaniem; mo¿esz go 
+    Niniejszy program jest wolnym oprogramowaniem; mo¿esz go
     rozprowadzaæ dalej i/lub modyfikowaæ na warunkach Powszechnej
     Licencji Publicznej GNU, wydanej przez Fundacjê Wolnego
     Oprogramowania - wed³ug wersji 2-giej tej Licencji lub którejœ
-    z póŸniejszych wersji. 
+    z póŸniejszych wersji.
 
-    Niniejszy program rozpowszechniany jest z nadziej¹, i¿ bêdzie on 
-    u¿yteczny - jednak BEZ JAKIEJKOLWIEK GWARANCJI, nawet domyœlnej 
-    gwarancji PRZYDATNOŒCI HANDLOWEJ albo PRZYDATNOŒCI DO OKREŒLONYCH 
-    ZASTOSOWAÑ. W celu uzyskania bli¿szych informacji - Powszechna 
-    Licencja Publiczna GNU. 
+    Niniejszy program rozpowszechniany jest z nadziej¹, i¿ bêdzie on
+    u¿yteczny - jednak BEZ JAKIEJKOLWIEK GWARANCJI, nawet domyœlnej
+    gwarancji PRZYDATNOŒCI HANDLOWEJ albo PRZYDATNOŒCI DO OKREŒLONYCH
+    ZASTOSOWAÑ. W celu uzyskania bli¿szych informacji - Powszechna
+    Licencja Publiczna GNU.
 
-    Z pewnoœci¹ wraz z niniejszym programem otrzyma³eœ te¿ egzemplarz 
+    Z pewnoœci¹ wraz z niniejszym programem otrzyma³eœ te¿ egzemplarz
     Powszechnej Licencji Publicznej GNU (GNU General Public License);
     jeœli nie - napisz do Free Software Foundation, Inc., 675 Mass Ave,
     Cambridge, MA 02139, USA.
@@ -145,7 +145,7 @@ Jeœli dany program jest interaktywny, spraw, aby w momencie wchodzenia w tryb in
 
     Gnomovision wydawany jest ABSOLUTNIE BEZ ¯ADNEJ GWARANCJI -
     w celu uzyskania dalszych szczegó³ów wpisz "show w".
-    To jest wolne oprogramowanie i mile widziane jest dalsze 
+    To jest wolne oprogramowanie i mile widziane jest dalsze
     rozpowszechnianie go przez ciebie na okreœlonych warunkach -
     w celu uzyskania bli¿szych szczegó³ów wpisz "show c".
 

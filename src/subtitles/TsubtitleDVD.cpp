@@ -150,7 +150,7 @@ TsubtitleDVDparent::PARSE_RES TsubtitleDVDparent::idx_parse_forced_subs(const ch
    forced_subs=false;
    return PARSE_OK;
   }
- else 
+ else
   return PARSE_ERROR;
 }
 
@@ -159,7 +159,7 @@ TsubtitleDVDparent::PARSE_RES TsubtitleDVDparent::idx_parse_palette(const char *
  // palette: XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX, XXXXXX
  unsigned int n=0;
  PARSE_RES res=PARSE_OK;;
- while (1) 
+ while (1)
   {
    const char *p;
    int r, g, b, tmp;
@@ -172,7 +172,7 @@ TsubtitleDVDparent::PARSE_RES TsubtitleDVDparent::idx_parse_palette(const char *
     {
      res=PARSE_ERROR;
      break;
-    } 
+    }
    tmp = strtoul(line, NULL, 16);
    r = tmp >> 16 & 0xff;
    g = tmp >> 8 & 0xff;
@@ -199,12 +199,12 @@ TsubtitleDVDparent::PARSE_RES TsubtitleDVDparent::idx_parse_custom(const char *l
   {
    custom_colors=1;
    return PARSE_OK;
-  } 
+  }
  else if ((strncmp("OFF", line + 15, 3) == 0)||strncmp("0", line + 15, 1) == 0)
   {
    custom_colors=0;
    return PARSE_OK;
-  }  
+  }
  else
   return PARSE_ERROR;
 }
@@ -266,12 +266,12 @@ TsubtitleDVDparent::PARSE_RES TsubtitleDVDparent::idx_parse_one_line(const char 
       idx_parse_tridx(line)==PARSE_OK &&
       idx_parse_cuspal(line)==PARSE_OK)
    return PARSE_OK;
-  else 
+  else
    return PARSE_ERROR;
  else if (strncmp("forced subs:", line, 12) == 0)
   return idx_parse_forced_subs( line + 12);
  else
-  return PARSE_IGNORE; 
+  return PARSE_IGNORE;
 }
 
 TsubtitleDVDparent::PARSE_RES TsubtitleDVDparent::idx_parse(Tstream &fs)
@@ -283,7 +283,7 @@ TsubtitleDVDparent::PARSE_RES TsubtitleDVDparent::idx_parse(Tstream &fs)
     return PARSE_OK;
    if (*line == 0 || *line == '\r' || *line == '\n' || *line == '#')
     continue;
-   PARSE_RES res=idx_parse_one_line(line); 
+   PARSE_RES res=idx_parse_one_line(line);
    if (res==PARSE_IGNORE)
     {
      DPRINTF(_l("idx: ignoring %s"), line);
@@ -318,7 +318,7 @@ TsubtitleDVD::~TsubtitleDVD()
 {
  lines.clear();
 }
- 
+
 BYTE TsubtitleDVD::getNibble(const BYTE *p,DWORD *offset,int &nField,int &fAligned)
 {
  BYTE ret=BYTE((p[offset[nField]]>>(fAligned<<2))&0x0f);
@@ -354,17 +354,17 @@ void TsubtitleDVD::drawPixel(const CPoint &pt,const AM_DVD_YUV &c,CRect &rectRea
    if (ptx<rectReal.left) rectReal.left=ptx;
    if (ptx>rectReal.right) rectReal.right=ptx;
   }
- plane[0].c[pty*plane[0].stride+ptx]=c.Y; 
- plane[0].r[pty*plane[0].stride+ptx]=c.Reserved; 
+ plane[0].c[pty*plane[0].stride+ptx]=c.Y;
+ plane[0].r[pty*plane[0].stride+ptx]=c.Reserved;
 
  if (pty&1) return;
 
  ptx=(ptx+1)/2;pty/=2;
- plane[1].c[pty*plane[1].stride+ptx]=c.V; 
- plane[1].r[pty*plane[1].stride+ptx]=c.Reserved; 
+ plane[1].c[pty*plane[1].stride+ptx]=c.V;
+ plane[1].r[pty*plane[1].stride+ptx]=c.Reserved;
 
- plane[2].c[pty*plane[2].stride+ptx]=c.U; 
- plane[2].r[pty*plane[2].stride+ptx]=c.Reserved; 
+ plane[2].c[pty*plane[2].stride+ptx]=c.U;
+ plane[2].r[pty*plane[2].stride+ptx]=c.Reserved;
 }
 
 void TsubtitleDVD::drawPixels(CPoint pt,int len,const AM_DVD_YUV &c,const CRect &rc,CRect &rectReal,TspuPlane plane[3]) const
@@ -400,11 +400,11 @@ void TsubtitleDVD::createImage(const TspuPlane src[3],const CRect &rcclip,CRect 
 {
  lines.clear();
  rectReal.bottom++;rectReal.right++;
-#ifdef __SSE2__ 
+#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   image=new TspuImageSimd<Tsse2>(src,rcclip,rectReal,parent->rectOrig,prefs);
  else
-#endif 
+#endif
   image=new TspuImageSimd<Tmmx>(src,rcclip,rectReal,parent->rectOrig,prefs);
  lines.add(new TrenderedSubtitleLine(image),NULL);
 }
@@ -413,16 +413,16 @@ void TsubtitleDVD::linesprint(const TrenderedSubtitleLines::TprintPrefs &prefs) 
  if (prefs.dvd || !prefs.vobchangeposition)
   image->ownprint(prefs);
  else
-  lines.print(prefs); 
+  lines.print(prefs);
 }
 
 void TsubtitleDVD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs) const
 {
  if (this->offset[0]==DWORD(-1))
   return;
- 
+
  if (lines.empty() || changed)
-  { 
+  {
    changed=false;
 
    const BYTE *p=&*data.begin();
@@ -436,7 +436,7 @@ void TsubtitleDVD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceCha
     parent->rectOrig=CRect(0,0,prefs.dx,prefs.dy);
    CRect rcclip=parent->rectOrig;
    rcclip&=rc;
-   
+
    if (psphli)
     {
      rcclip&=CRect(psphli->StartX,psphli->StartY,psphli->StopX,psphli->StopY);
@@ -467,7 +467,7 @@ void TsubtitleDVD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceCha
          (code=(code<<4) | getNibble(p,offset,nField,fAligned))>=0x100)
       {
        drawPixels(pt,code>>2,pal[code&3],rcclip,rectReal,planes);
-       if ((pt.x+=code>>2)<rc.right) 
+       if ((pt.x+=code>>2)<rc.right)
         continue;
       }
 
@@ -482,7 +482,7 @@ void TsubtitleDVD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceCha
    DPRINTF(_l("rectReal: [%i,%i] - [%i,%i]"),rectReal.left,rectReal.top,rectReal.Width(),rectReal.Height());
    createImage(planes,rcclip,rectReal,prefs);
   }
- linesprint(prefs); 
+ linesprint(prefs);
 }
 
 void TsubtitleDVD::append(const unsigned char *Idata,unsigned int Idatalen)
@@ -584,7 +584,7 @@ bool TsubtitleDVD::parse(void)
 bool TsubtitleSVCD::parse(void)
 {
  BYTE *p=&*data.begin(),*p0=p;
- if (data.size()<2) 
+ if (data.size()<2)
   return false;
 
  WORD packetsize=WORD((p[0]<<8)|p[1]);p += 2;
@@ -664,9 +664,9 @@ void TsubtitleSVCD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceCh
      pt.y++;
      nField=1-nField;
     }
-   createImage(planes,rcclip,rectReal,prefs); 
-  }  
- linesprint(prefs); 
+   createImage(planes,rcclip,rectReal,prefs);
+  }
+ linesprint(prefs);
 }
 
 //===================================== TsubtitleCVD ======================================
@@ -684,54 +684,54 @@ bool TsubtitleCVD::parse(void)
  for (int i=datasize,j=packetsize-4;i<=j;i+=4,p+=4)
   switch(p[0])
    {
-    case 0x0c: 
+    case 0x0c:
      break;
-    case 0x04: 
+    case 0x04:
      stop=start+10000LL*((p[1]<<16)|(p[2]<<8)|p[3])/90;
      break;
-    case 0x17: 
+    case 0x17:
      sphli.StartX=USHORT(((p[1]&0x0f)<<6) + (p[2]>>2));
      sphli.StartY=USHORT(((p[2]&0x03)<<8) + p[3]);
      break;
-    case 0x1f: 
+    case 0x1f:
      sphli.StopX=USHORT(((p[1]&0x0f)<<6) + (p[2]>>2));
      sphli.StopY=USHORT(((p[2]&0x03)<<8) + p[3]);
      break;
-    case 0x24: 
-    case 0x25: 
-    case 0x26: 
-    case 0x27: 
+    case 0x24:
+    case 0x25:
+    case 0x26:
+    case 0x27:
      sppal[0][p[0]-0x24].Y=p[1];
      sppal[0][p[0]-0x24].U=p[2];
      sppal[0][p[0]-0x24].V=p[3];
      break;
-    case 0x2c: 
-    case 0x2d: 
-    case 0x2e: 
-    case 0x2f: 
+    case 0x2c:
+    case 0x2d:
+    case 0x2e:
+    case 0x2f:
      sppal[1][p[0]-0x2c].Y=p[1];
      sppal[1][p[0]-0x2c].U=p[2];
      sppal[1][p[0]-0x2c].V=p[3];
      break;
-    case 0x37: 
+    case 0x37:
      sppal[0][3].Reserved=UCHAR(p[2]>>4);
      sppal[0][2].Reserved=UCHAR(p[2]&0xf);
      sppal[0][1].Reserved=UCHAR(p[3]>>4);
      sppal[0][0].Reserved=UCHAR(p[3]&0xf);
      break;
-    case 0x3f: 
+    case 0x3f:
      sppal[1][3].Reserved=UCHAR(p[2]>>4);
      sppal[1][2].Reserved=UCHAR(p[2]&0xf);
      sppal[1][1].Reserved=UCHAR(p[3]>>4);
      sppal[1][0].Reserved=UCHAR(p[3]&0xf);
      break;
-    case 0x47: 
+    case 0x47:
      offset[0] = (p[2]<<8)|p[3];
      break;
-    case 0x4f: 
+    case 0x4f:
      offset[1] = (p[2]<<8)|p[3];
      break;
-    default: 
+    default:
      break;
    }
  return true;
@@ -777,14 +777,14 @@ void TsubtitleCVD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceCha
      code=getNibble(p,offset,nField,fAligned);
      drawPixels(pt,rc.right-pt.x,sppal[0][code&3],rcclip,rectReal,planes);
 
-     if (!fAligned) 
+     if (!fAligned)
       getNibble(p,offset,nField,fAligned); // align to byte
 
      pt.x=rc.left;
      pt.y++;
      nField=1-nField;
     }
-   createImage(planes,rcclip,rectReal,prefs); 
+   createImage(planes,rcclip,rectReal,prefs);
   }
- linesprint(prefs);   
+ linesprint(prefs);
 }

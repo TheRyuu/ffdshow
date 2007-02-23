@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="windows-1250"?>
-<VisualStudioProject 
+<VisualStudioProject
 	ProjectType="Intel C++ Project"
 	Version="9.1"
 	Name="libmpeg2_ff"
@@ -8,17 +8,17 @@
 	VCNestedProjectFileName="libmpeg2_ff_icl9.vcproj"
 	Keyword="Win32Proj">
 	<Configurations>
-		<Configuration 
+		<Configuration
 			Name="Debug|Win32">
-			<Tool 
+			<Tool
 				Name="GeneralTool"
 				OutputDirectory="debug_icl9"
 				IntermediateDirectory="debug_icl9"
 				ConfigurationType="2"
 				CharacterSet="0"/>
-			<Tool 
+			<Tool
 				Name="DebugTool"/>
-			<Tool 
+			<Tool
 				Name="CppCmplrTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;include;../.."
@@ -33,7 +33,7 @@
 				WarningLevel="3"
 				DebugInformationFormat="4"
 				CompileAs="2"/>
-			<Tool 
+			<Tool
 				Name="LinkerTool"
 				DelayImpLib=""
 				IgnoreImportLibrary="1"
@@ -47,37 +47,37 @@
 				SubSystem="2"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"/>
-			<Tool 
+			<Tool
 				Name="LibrarianTool"/>
-			<Tool 
+			<Tool
 				Name="ResCmplrTool"/>
-			<Tool 
+			<Tool
 				Name="MidlCmplrTool"/>
-			<Tool 
+			<Tool
 				Name="BscMakeTool"/>
-			<Tool 
+			<Tool
 				Name="PreBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="PreLinkEventTool"/>
-			<Tool 
+			<Tool
 				Name="PostBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="CustomTool"/>
-			<Tool 
+			<Tool
 				Name="CustomNodeTool"/>
 		</Configuration>
-		<Configuration 
+		<Configuration
 			Name="Release|Win32">
-			<Tool 
+			<Tool
 				Name="GeneralTool"
 				OutputDirectory="release_icl9"
 				IntermediateDirectory="release_icl9"
 				ConfigurationType="2"
 				CharacterSet="0"
 				WholeProgramOptimization="1"/>
-			<Tool 
+			<Tool
 				Name="DebugTool"/>
-			<Tool 
+			<Tool
 				Name="CppCmplrTool"
 				Optimization="1000"
 				GlobalOptimizations="1"
@@ -98,7 +98,7 @@
 				DebugInformationFormat="0"
 				CompileAs="2"
 				AdditionalOptions="/Oa /Qip"/>
-			<Tool 
+			<Tool
 				Name="LinkerTool"
 				DelayImpLib=""
 				IgnoreImportLibrary="1"
@@ -114,93 +114,97 @@
 				EnableCOMDATFolding="2"
 				ImportLibrary="$(OutDir)/libmpeg2_ff.lib"
 				TargetMachine="1"/>
-			<Tool 
+			<Tool
 				Name="LibrarianTool"/>
-			<Tool 
+			<Tool
 				Name="ResCmplrTool"/>
-			<Tool 
+			<Tool
 				Name="MidlCmplrTool"/>
-			<Tool 
+			<Tool
 				Name="BscMakeTool"/>
-			<Tool 
+			<Tool
 				Name="PreBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="PreLinkEventTool"/>
-			<Tool 
+			<Tool
 				Name="PostBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="CustomTool"/>
-			<Tool 
+			<Tool
 				Name="CustomNodeTool"/>
 		</Configuration>
 	</Configurations>
 	<Files>
-		<File 
+		<File
 			RelativePath=".\libmpeg2\alloc.c"/>
-		<File 
+		<File
 			RelativePath=".\libmpeg2\cpu_accel.c"/>
-		<File 
+		<File
 			RelativePath=".\libmpeg2\decode.c"/>
-		<File 
+		<File
 			RelativePath=".\libmpeg2\header.c"/>
-		<File 
+		<File
 			RelativePath=".\libmpeg2\idct.c"/>
-		<File 
+		<File
 			RelativePath=".\libmpeg2\idct_mmx.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					AssemblerOutput="4"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\libmpeg2\idct_sse2.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					AssemblerOutput="4"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\libmpeg2\mc_sse2.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					AssemblerOutput="4"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\libmpeg2\motion_comp.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					AssemblerOutput="4"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\libmpeg2\motion_comp_mmx.c"/>
-		<File 
+		<File
 			RelativePath=".\libmpeg2\slice.c"/>
-		<File 
+		<File
 			RelativePath=".\version.c"/>
-		<File 
+		<File
 			RelativePath=".\include\attributes.h"/>
-		<File 
+		<File
 			RelativePath=".\include\config.h"/>
-		<File 
+		<File
 			RelativePath=".\include\mmx.h"/>
-		<File 
+		<File
 			RelativePath=".\include\mpeg2.h"/>
-		<File 
+		<File
 			RelativePath=".\libmpeg2\mpeg2_internal.h"/>
-		<File 
+		<File
 			RelativePath=".\libmpeg2\vlc.h"/>
-		<File 
+		<File
 			RelativePath=".\libmpeg2_ff.def"/>
 	</Files>
 </VisualStudioProject>
+
+
+
+
 

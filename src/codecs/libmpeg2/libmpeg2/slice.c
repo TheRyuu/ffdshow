@@ -34,7 +34,7 @@
   #include "../../csimd.h"
 #else
   #define _mm_empty()
-#endif  
+#endif
 
 extern mpeg2_mc_t mpeg2_mc;
 extern void (* mpeg2_idct_copy) (int16_t * block, uint8_t * dest, int stride);

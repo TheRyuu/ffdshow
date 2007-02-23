@@ -15,11 +15,11 @@ namespace csimd
  static __forceinline void instruction(const __m64     &src,__m64 &dst) {dst=function(dst,          src);} \
  static __forceinline void instruction(const void      *src,__m64 &dst) {dst=function(dst,*(__m64*) src);} \
  static __forceinline void instruction(const long long &src,__m64 &dst) {dst=function(dst,*(__m64*)&src);}
- 
+
 #define SSE2I_INSTRUCTION(instruction,function) \
  static __forceinline void instruction(const __m128i &src,__m128i &dst) {dst=function(dst,           src);} \
  static __forceinline void instruction(const void    *src,__m128i &dst) {dst=function(dst,*(__m128i*)src);}
- 
+
 #include "simd_instructions.h"
 
 #undef MMX_INSTRUCTION

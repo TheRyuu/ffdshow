@@ -117,13 +117,13 @@ void TffdshowPageDecVideo::onActivate(void)
  const char *activePresetName=deciD->getActivePresetName2();
  if (activePresetName)
   deciD->createPresetPages(activePresetName,this);
-*/  
+*/
  if ((filterMode&IDFF_FILTERMODE_PROC)==0)
   {
    addTI(&tvis,new TmiscPage(this));
    addTI(&tvis,new TqueuePage(this));
    addTI(&tvis,new ToutcspsPage(this));
-  } 
+  }
  sortOrder();
  if ((filterMode&IDFF_FILTERMODE_VFW)==0)
   {
@@ -143,7 +143,7 @@ void TffdshowPageDecVideo::onActivate(void)
    IDC_BT_HELP,TanchorInfo::TOP|TanchorInfo::RIGHT,
    0,0
   };
- anchors.add(ainfo,*this); 
+ anchors.add(ainfo,*this);
  TffdshowPageDec::onActivate();
 }
 HRESULT TffdshowPageDecVideo::OnConnect(IUnknown *pUnk)
@@ -173,7 +173,7 @@ INT_PTR TffdshowPageDecVideo::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
      translate();
     break;
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CHB_PROCESSFULL:
        if (HIWORD(wParam)==BN_CLICKED)
@@ -182,7 +182,7 @@ INT_PTR TffdshowPageDecVideo::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
          page->setProcessFull(1-full);
          return TRUE;
         }
-       break; 
+       break;
       case IDC_CHB_PROCESSHALF:
        if (HIWORD(wParam)==BN_CLICKED)
         {
@@ -190,14 +190,14 @@ INT_PTR TffdshowPageDecVideo::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
          page->setProcessHalf(1-half);
          return TRUE;
         }
-       break; 
+       break;
      }
     break;
   }
  return TffdshowPageDec::msgProc(uMsg,wParam,lParam);
 }
 
-// -------------------- configure ---------------------- 
+// -------------------- configure ----------------------
 extern "C" void CALLBACK configure(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine,int nCmdShow);
 void CALLBACK configure(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine,int nCmdShow)
 {

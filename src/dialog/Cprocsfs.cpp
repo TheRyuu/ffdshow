@@ -69,8 +69,8 @@ INT_PTR TprocsfsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         return TRUE;
        }
      }
-    break; 
-  }    
+    break;
+  }
  return TconfPageDecAudio::msgProc(uMsg,wParam,lParam);
 }
 bool TprocsfsPage::reset(bool testonly)
@@ -85,9 +85,9 @@ bool TprocsfsPage::reset(bool testonly)
 }
 
 void TprocsfsPage::translate(void)
-{ 
+{
  TconfPageDec::translate();
- 
+
  cbxTranslate(IDC_CBX_NOISESHAPING,noiseShapings);
 }
 

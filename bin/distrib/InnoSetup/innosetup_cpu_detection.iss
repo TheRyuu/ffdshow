@@ -42,7 +42,7 @@ Type
 		nMaxPhysGetProcAff: Integer;	// Max number of physical processors to get Phys/Log Affinity table
 		pPhysProcAff: Integer;	// Allocate nMaxPhysGetProcAff*sizeof(PHYSPROCAFF_T) before calling WinCPUID_Init
 	end;
-	
+
 	TCPUInfo = record
 		bIsInitialized,				// Check this to see if structure was successfully initialized
 		bCPUID_Supported,

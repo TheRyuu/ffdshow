@@ -7,7 +7,7 @@
 class TsubtitlesTextpinDVD :public TsubtitlesTextpin, public TsubtitleDVDparent
 {
 private:
- struct Tsubtitles :public Tsubtitle,public std::vector<Tsubtitle*> 
+ struct Tsubtitles :public Tsubtitle,public std::vector<Tsubtitle*>
   {
    virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs) const;
    virtual Tsubtitle* copy(void);

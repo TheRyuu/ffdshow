@@ -339,13 +339,13 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecAudio::inputMediaTypes[]=
  { &MEDIATYPE_MPEG2_PACK         , &MEDIASUBTYPE_MPEG2_AUDIO       },
  { &MEDIATYPE_MPEG2_PES          , &MEDIASUBTYPE_MPEG2_AUDIO       },
  { &MEDIATYPE_DVD_ENCRYPTED_PACK , &MEDIASUBTYPE_MPEG2_AUDIO       },
- 
+
  { &MEDIATYPE_Audio              , &MEDIASUBTYPE_AC3_W     },
  { &MEDIATYPE_MPEG2_PES          , &MEDIASUBTYPE_DOLBY_AC3 },
  { &MEDIATYPE_MPEG2_PACK         , &MEDIASUBTYPE_DOLBY_AC3 },
  { &MEDIATYPE_Audio              , &MEDIASUBTYPE_DOLBY_AC3 },
  { &MEDIATYPE_DVD_ENCRYPTED_PACK , &MEDIASUBTYPE_DOLBY_AC3 },
- 
+
  { &MEDIATYPE_Audio              , &MEDIASUBTYPE_DTS_W },
  { &MEDIATYPE_MPEG2_PES          , &MEDIASUBTYPE_DTS   },
  { &MEDIATYPE_MPEG2_PACK         , &MEDIASUBTYPE_DTS   },
@@ -356,7 +356,7 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecAudio::inputMediaTypes[]=
  { &MEDIATYPE_MPEG2_PES          , &MEDIASUBTYPE_DVD_LPCM_AUDIO },
  { &MEDIATYPE_Audio              , &MEDIASUBTYPE_DVD_LPCM_AUDIO },
  { &MEDIATYPE_DVD_ENCRYPTED_PACK , &MEDIASUBTYPE_DVD_LPCM_AUDIO },
- 
+
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_AAC1       },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_AAC2       },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_AAC3       },
@@ -781,12 +781,12 @@ STDAPI DllRegisterServer()
    rf2FilterReg.cPins=2;
    rf2FilterReg.rgPins=TffdshowEnc::pins;
 
-   hr=pFM2->RegisterFilter(CLSID_FFDSHOWENC,   
-                           FFDSHOWENC_DESC_L,                      
-                           NULL,                           
-                           &CLSID_VideoCompressorCategory, 
-                           FFDSHOWENC_DESC_L,                      
-                           &rf2FilterReg                   
+   hr=pFM2->RegisterFilter(CLSID_FFDSHOWENC,
+                           FFDSHOWENC_DESC_L,
+                           NULL,
+                           &CLSID_VideoCompressorCategory,
+                           FFDSHOWENC_DESC_L,
+                           &rf2FilterReg
                           );
    pFM2->Release();
   }

@@ -64,7 +64,7 @@ cglobal x264_pixel_ssim_end4_sse2
     pmaddwd %1, [pw_1 GOT_ebx]
     movhlps %2, %1
     paddd   %1, %2
-    pshuflw %2, %1, 0xE 
+    pshuflw %2, %1, 0xE
     paddd   %1, %2
 %endmacro
 
@@ -430,20 +430,20 @@ x264_pixel_ssd_16x8_sse2:
     paddw   %2, %2
     paddw   %4, %4
     psubw   %2, %1
-    psubw   %4, %3  
+    psubw   %4, %3
 %endmacro
-    
+
 %macro HADAMARD1x4 4
     SUMSUB_BADC %1, %2, %3, %4
     SUMSUB_BADC %1, %3, %2, %4
 %endmacro
-    
+
 %macro SBUTTERFLY 5
     mov%1       %5, %3
     punpckl%2   %3, %4
     punpckh%2   %5, %4
 %endmacro
-    
+
 %macro SBUTTERFLY2 5  ; not really needed, but allows transpose4x4 to not shuffle registers
     mov%1       %5, %3
     punpckh%2   %3, %4
@@ -747,4 +747,7 @@ x264_pixel_ssim_end4_sse2:
     fld      dword [picesp+4]
     picpop   ebx
     ret
+
+
+
 

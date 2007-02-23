@@ -16,7 +16,7 @@ public:
 private:
  HWND hlv;
  const TversionInfo *fcs;
-protected: 
+protected:
  virtual INT_PTR msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam);
 public:
  TversionsDlg(IffdshowBase *Ideci,HWND parent,const TversionInfo *fcs);

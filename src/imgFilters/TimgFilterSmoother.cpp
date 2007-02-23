@@ -160,7 +160,7 @@ void TimgFilterSmootherLuma::Tblur::run(const unsigned char *src,stride_t srcStr
    else
     {
      int B=s>>5;
- 
+
      int p0=avg_rows[0][x];
      int p1=avg_rows[1][x];
      int p2=avg_rows[2][x];
@@ -425,7 +425,7 @@ HRESULT TimgFilterSmootherLuma::process(TfilterQueue::iterator it,TffPict &pict,
    getNext(csp1,pict,cfg->full,&dstY,NULL,NULL,NULL);
    if (!blur1) blur1=new Tblur(dx1[0],dy1[0]);
    blur1->run(srcY,stride1[0],dstY,stride2[0],cfg->smoothStrengthLuma);
-  } 
+  }
  return parent->deliverSample(++it,pict);
 }
 
@@ -458,6 +458,6 @@ HRESULT TimgFilterSmootherChroma::process(TfilterQueue::iterator it,TffPict &pic
    blur1->run(srcU,stride1[1],dstU,stride2[1],cfg->smoothStrengthChroma);
    if (!blur2) blur2=new Tblur(dx1[2],dy1[2]);
    blur2->run(srcV,stride1[2],dstV,stride2[2],cfg->smoothStrengthChroma);
-  } 
+  }
  return parent->deliverSample(++it,pict);
 }

@@ -46,7 +46,7 @@ public:
    size_t i1,i2;
    TSubtitleProps props;
   };
- struct Twords : std::vector<Tword> 
+ struct Twords : std::vector<Tword>
   {
    template<class tchar> void add(const tchar *l,const tchar* &l1,const tchar* &l2,const TSubtitleProps &props,size_t step)
     {
@@ -104,21 +104,21 @@ private:
  ffstring& getText(void) {return useFixed?fixed:text;}
 public:
  TSubtitleProps props;
- 
- TsubtitleWord(const ffstring &Itext):text(Itext),useFixed(false) {} 
- TsubtitleWord(const ffstring &Itext,const TSubtitleProps &defProps):text(Itext),useFixed(false),props(defProps) {} 
+
+ TsubtitleWord(const ffstring &Itext):text(Itext),useFixed(false) {}
+ TsubtitleWord(const ffstring &Itext,const TSubtitleProps &defProps):text(Itext),useFixed(false),props(defProps) {}
 
  TsubtitleWord(const tchar *Itext):text(Itext),useFixed(false) {}
  TsubtitleWord(const tchar *Itext,const TSubtitleProps &defProps):text(Itext),useFixed(false),props(defProps) {}
 
  TsubtitleWord(const tchar *s,size_t len):text(s,len),useFixed(false) {}
  TsubtitleWord(const tchar *s,size_t len,const TSubtitleProps &defProps):text(s,len),useFixed(false),props(defProps) {}
- 
+
  void set(const ffstring &s)
   {
    getText()=s;
   }
- operator const tchar *(void) const 
+ operator const tchar *(void) const
   {
    return getText().c_str();
   }
@@ -142,7 +142,7 @@ private:
  typedef typename tchar_traits<tchar>::strings strings;
  void applyWords(const TsubtitleFormat::Twords &words);
 public:
- TsubtitleLine(void) {} 
+ TsubtitleLine(void) {}
  TsubtitleLine(const ffstring &Itext) {push_back(Itext);}
  TsubtitleLine(const ffstring &Itext,const TSubtitleProps &defProps) {push_back(TsubtitleWord(Itext,defProps));}
 
@@ -156,7 +156,7 @@ public:
  void fix(TtextFix<tchar> &fix);
 };
 #include "TsubreaderMplayer.h"
-template<class tchar> struct TsubtitleTextBase :public Tsubtitle,public std::vector< TsubtitleLine<tchar> > 
+template<class tchar> struct TsubtitleTextBase :public Tsubtitle,public std::vector< TsubtitleLine<tchar> >
 {
 private:
  int subformat;
@@ -171,7 +171,7 @@ public:
  void set(const strings &strs)
   {
    this->clear();
-   for (typename strings::const_iterator s=strs.begin();s!=strs.end();s++) 
+   for (typename strings::const_iterator s=strs.begin();s!=strs.end();s++)
     this->push_back(TsubtitleLine(*s,defProps));
   }
  void set(const ffstring &str)
@@ -182,8 +182,8 @@ public:
     {
      this->clear();
      this->push_back(TsubtitleLine(str,defProps));
-    } 
-  } 
+    }
+  }
  void add(const tchar *s)
   {
    this->push_back(TsubtitleLine(s,defProps));
@@ -195,7 +195,7 @@ public:
  virtual void addEmpty(void)
   {
    this->push_back(TsubtitleLine(_L(" "),defProps));
-  } 
+  }
  void format(TsubtitleFormat &format);
  template<class Tval> void propagateProps(typename Tbase::iterator it,Tval TSubtitleProps::*offset,Tval val,typename Tbase::iterator itend)
   {
@@ -215,7 +215,7 @@ public:
  virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs) const;
  virtual Tsubtitle* copy(void);
  virtual Tsubtitle* create(void) {return new TsubtitleTextBase<tchar>(subformat);}
- virtual bool copyLine(Tsubtitle *dst,size_t linenum) 
+ virtual bool copyLine(Tsubtitle *dst,size_t linenum)
   {
    ((TsubtitleTextBase<tchar>*)dst)->push_back(this->at(linenum));
    return true;

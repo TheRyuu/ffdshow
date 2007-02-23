@@ -22,11 +22,11 @@ protected:
   {
   private:
    IffdshowBase *deci;
-  protected: 
+  protected:
    Ttranslate *trans;
    char_t s[512],olds[512];int oldVal;
    virtual const char_t *getVal0(bool &wasChange,bool &splitline);
-  public: 
+  public:
    const TinfoItem *item;
    TinfoValueBase(const TinfoItem *Iitem,IffdshowBase *Ideci):item(Iitem),deci(Ideci)
     {
@@ -47,10 +47,10 @@ protected:
   }
  void addItems(const TinfoItem *Iitems);
 private:
- struct Tvalues : std::hash_map<int,TinfoValueBase*> 
+ struct Tvalues : std::hash_map<int,TinfoValueBase*>
   {
    ~Tvalues()
-    { 
+    {
      for (iterator i=begin();i!=end();i++)
       delete i->second;
     }
@@ -77,9 +77,9 @@ protected:
   {
   private:
    IffdshowDec *deciD;
-  protected: 
+  protected:
    virtual const char_t *getVal0(bool &wasChange,bool &splitline);
-  public: 
+  public:
    TinfoValueDec(const TinfoItem *Iitem,IffdshowBase *Ideci,IffdshowDec *IdeciD):TinfoValueBase(Iitem,Ideci),deciD(IdeciD) {}
   };
 public:
@@ -101,9 +101,9 @@ protected:
    char_t sizeStr[256],aspectStr[256];
    unsigned int oldDx,oldDy,oldSar1,oldSar2,oldDar1,oldDar2;
    const char_t *getInputSize(char_t *s,bool &wasChange),*getInputAspect(char_t *s,bool &wasChange);
-  protected: 
+  protected:
    virtual const char_t *getVal0(bool &wasChange,bool &splitline);
-  public: 
+  public:
    TinfoValueDecVideo(const TinfoItem *Iitem,IffdshowBase *Ideci,IffdshowDec *IdeciD,IffdshowDecVideo *IdeciV):TinfoValueDec(Iitem,Ideci,IdeciD),deciV(IdeciV),oldDx(0),oldDy(0),oldSar1(0),oldSar2(0),oldDar1(0),oldDar2(0) {}
   };
 public:
@@ -130,9 +130,9 @@ protected:
    IffdshowDecAudio *deciA;
    const char_t *oldSampleFormat;
    unsigned int oldfreq,oldnchannels;
-  protected: 
+  protected:
    virtual const char_t *getVal0(bool &wasChange,bool &splitline);
-  public: 
+  public:
    TinfoValueDecAudio(const TinfoItem *Iitem,IffdshowBase *Ideci,IffdshowDec *IdeciD,IffdshowDecAudio *IdeciA):TinfoValueDec(Iitem,Ideci,IdeciD),deciA(IdeciA),oldSampleFormat(NULL),oldfreq(0),oldnchannels(0) {}
   };
 public:

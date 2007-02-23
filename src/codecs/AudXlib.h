@@ -43,16 +43,16 @@ int __cdecl encodeAudXframe ( long henc, short* pcm_block, unsigned char* audx_f
  *   audx_frame - output buffer filled with audx stream data.
  *
  * Returns:
- *   -1           - flushing finished - all internal buffers are empty and encoding process is reset 
- *                  (henc is no longer a handler of the process), 
+ *   -1           - flushing finished - all internal buffers are empty and encoding process is reset
+ *                  (henc is no longer a handler of the process),
  *                  or uninitialized encoding process,
  *    0           - flushing should be called once again - no output data produced,
  *    frameLength - frame length (in bytes) - the data in audx_frame can be consumed.
  */
 int __cdecl flushEncoder ( long henc, unsigned char* audx_frame );
 //============================================================================
-		
-		
+
+
 //============================================================================
 //:::::::::::::::::::::::::::::::DECODER::::::::::::::::::::::::::::::::::::::
 /**
@@ -85,8 +85,8 @@ long __cdecl initDecoding ( void );
 int __cdecl decodeAudXframe ( long hdec, unsigned char* audx_frame, long audx_frame_size, short* dec_pcm_block, long* dec_pcm_block_size, int* is_audx );
 
 /**
- * Resets an initialized decoding process 
- * (puts the process in a uninitialized state, hdec is no longer a handler of the process), 
+ * Resets an initialized decoding process
+ * (puts the process in a uninitialized state, hdec is no longer a handler of the process),
  * or does nothing if a decoding process is uninitialized
  * Input:
  *   hdec - handler to a decoding process

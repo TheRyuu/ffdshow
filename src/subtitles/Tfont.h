@@ -39,7 +39,7 @@ public:
    IffdshowBase *deci;
    const Tconfig *config;
   };
- TrenderedSubtitleLines(void) {} 
+ TrenderedSubtitleLines(void) {}
  TrenderedSubtitleLines(TrenderedSubtitleLine *ln) {push_back(ln);}
  void add(TrenderedSubtitleLine *ln,unsigned int *height);
  void clear(void);
@@ -69,7 +69,7 @@ private:
  bool own;
 public:
  TrenderedSubtitleWordBase(bool Iown):own(Iown) {}
- ~TrenderedSubtitleWordBase(); 
+ ~TrenderedSubtitleWordBase();
  unsigned int dx[3],dy[3];
  unsigned int dxCharY,dyCharY;
  unsigned char *bmp[3],*msk[3];stride_t bmpmskstride[3];

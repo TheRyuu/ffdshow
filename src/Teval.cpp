@@ -42,12 +42,12 @@ double Teval::operator ()(const char_t* *errPtr)
   {
    if (errPtr) *errPtr=err;
    return HUGE_VAL;
-  }  
+  }
  catch(...)
   {
    if (errPtr) *errPtr=_l("unknown");
    return HUGE_VAL;
-  } 
+  }
 }
 
 void Teval::next(void)
@@ -61,37 +61,37 @@ void Teval::unknown(char_t *s)
 void Teval::syntax(void)
 {
  throw "syntax error";
-} 
+}
 double Teval::constant(void)
 {
  double r = 0;
- 
- while(*c >= '0' && *c <= '9') 
+
+ while(*c >= '0' && *c <= '9')
   {
-   r = 10*r + (*c-'0'); 
+   r = 10*r + (*c-'0');
    next();
   }
- 
+
  if(*c == '.')
   {
    double p = 0.1;
    next();
-   
-   while(*c >= '0' && *c <= '9') 
+
+   while(*c >= '0' && *c <= '9')
     {
-     r += p * (*c-'0'); p /= 10; 
-     next(); 
+     r += p * (*c-'0'); p /= 10;
+     next();
     }
   }
- 
+
  if(*c == 'e' || *c == 'E')
-  { 
-   double m = 1;                     
- 
+  {
+   double m = 1;
+
    next();
-   if(*c == '-') 
-    { 
-     m = -m; next(); 
+   if(*c == '-')
+    {
+     m = -m; next();
     }
    else if(*c == '+')
     next();
@@ -104,7 +104,7 @@ bool Teval::getVariable(const char_t *name,double *val)
 {
  if      (strcmp(name,_l("pi"))==0) {*val=M_PI;return true;}
  else if (strcmp(name,_l("e") )==0) {*val=M_E;return true;}
- else 
+ else
   {
    for (const Tvariable *var=vars;var && var->name;var++)
     if (strcmp(var->name,name)==0)
@@ -113,28 +113,28 @@ bool Teval::getVariable(const char_t *name,double *val)
       return true;
      }
    return false;
-  } 
+  }
 }
 
 double Teval::function(void)
 {
  char_t f[20], *p;
  double v;
- 
+
  p = f;
  while (p-f < 19 && *c >= 'a' && *c <= 'z')
   {
-   *p++ = *c; 
+   *p++ = *c;
    next();
   }
- 
+
  *p = 0;
- 
+
  double var;
  if (getVariable(f,&var)) return var;
 
  v = term();
- 
+
  if      (strcmp(f,_l("abs")   )==0) return fabs(v);
  else if (strcmp(f,_l("fabs")  )==0) return fabs(v);
  else if (strcmp(f,_l("floor") )==0) return floor(v);
@@ -162,21 +162,21 @@ double Teval::term(void)
 {
  /*double m = 1;*/
  const int m = 1;
-         
+
  /*
    if(*c == '-') { m = -m; next(); }
-   else 
+   else
    if(*c == '+') next();
  */
-         
+
  if(*c=='(' || *c=='[')
   {
    double r;
-   
+
    next();
    r = L();
    if(*c != ')' && *c !=']') syntax();
-   
+
    next();
    return m * r;
   }
@@ -185,23 +185,23 @@ double Teval::term(void)
  else if(*c >= 'a' && *c <= 'z')
   return m * function();
  else
-  return 0;                          
+  return 0;
 }
 inline double Teval::factorial(double v)
 {
  double i, r = 1;
- 
- for(i=2;i<=v;i++) 
+
+ for(i=2;i<=v;i++)
   r *= i;
  return r;
 }
 double Teval::H(void)
 {
  double r = term();
- 
- if(*c == '!') 
-  { 
-   next(); 
+
+ if(*c == '!')
+  {
+   next();
    r = factorial(r);
   }
  return r;
@@ -209,14 +209,14 @@ double Teval::H(void)
 double Teval::G(void)
 {
  double q, r = H();
- 
+
  while(*c == '^')
   {
-   next(); 
-   q = G(); 
-   r = pow(r,q); 
+   next();
+   q = G();
+   r = pow(r,q);
   }
- 
+
  return r;
 }
 double Teval::F(void)
@@ -230,7 +230,7 @@ double Teval::F(void)
    else if(*c=='%') { next(); r = fmod(r,G()); }
    else break;
   }
- 
+
  return r;
 }
 double Teval::E(void)
@@ -243,7 +243,7 @@ double Teval::E(void)
    else if(*c=='-') { next(); r -= F(); }
    else break;
   }
- 
+
  return r;
 }
 double Teval::C(void)
@@ -270,8 +270,8 @@ double Teval::C(void)
        next();
        r=r<=E()?1:0;
       }
-     else 
-      r = r<E()?1:0; 
+     else
+      r = r<E()?1:0;
     }
    else if(*c=='>')
     {
@@ -281,12 +281,12 @@ double Teval::C(void)
        next();
        r = r>=E()?1:0;
       }
-     else  
-      r = r>E()?1:0; 
-    }  
+     else
+      r = r>E()?1:0;
+    }
    else break;
   }
- 
+
  return r;
 }
 double Teval::L(void)
@@ -299,14 +299,14 @@ double Teval::L(void)
    else if(*c=='|' && *(c+1)=='|') { next();next(); r = r || C(); }
    else break;
   }
- 
+
  return r;
 }
 
 double Teval::S(void)
 {
  double r = L();
- 
+
  if(*c != 0) syntax();
  return r;
 }

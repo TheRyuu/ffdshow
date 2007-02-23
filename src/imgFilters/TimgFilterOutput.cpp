@@ -59,16 +59,16 @@ HRESULT TimgFilterOutput::process(const TffPict &pict,int dstcsp,unsigned char *
         dvcsp=csp_lavc2ffdshow(avctx->pix_fmt);
         dvpict=new TffPict;
         dvpict->alloc(pict.rectFull.dx,pict.rectFull.dy,dvcsp,dvpictbuf);
-       } 
+       }
      }
   }
-  
+
  if (!convert || convert->dx!=pict.rectFull.dx || convert->dy!=pict.rectFull.dy)
   {
    if (convert) delete convert;
    convert=new Tconvert(deci,pict.rectFull.dx,pict.rectFull.dy);
   }
- stride_t cspstride[4];unsigned char *cspdst[4]; 
+ stride_t cspstride[4];unsigned char *cspdst[4];
  if (!dv)
   for (int i=0;i<4;i++)
    {
@@ -77,7 +77,7 @@ HRESULT TimgFilterOutput::process(const TffPict &pict,int dstcsp,unsigned char *
    }
  const TffPict *dvp;
  if (!dv || pict.csp!=dvcsp)
-  { 
+  {
    int cspret=convert->convert(pict,((dv?dvcsp:dstcsp)^(cfg->flip?FF_CSP_FLAGS_VFLIP:0))|((pict.fieldtype&FIELD_TYPE::MASK_INT)?FF_CSP_FLAGS_INTERLACED:0),dv?dvpict->data:cspdst,dv?dvpict->stride:cspstride);
    if (!dv) return cspret?S_OK:E_FAIL;
    dvp=dvpict;
@@ -88,7 +88,7 @@ HRESULT TimgFilterOutput::process(const TffPict &pict,int dstcsp,unsigned char *
   {
    frame->data[i]=dvp->data[i];
    frame->linesize[i]=(int)dvp->stride[i];
-  } 
+  }
  int ret=libavcodec->avcodec_encode_video(avctx,dst[0],dstSize,frame);
  if (ret<0)
   return E_FAIL;
@@ -96,7 +96,7 @@ HRESULT TimgFilterOutput::process(const TffPict &pict,int dstcsp,unsigned char *
   {
    dstSize=ret;
    return S_FALSE;
-  } 
+  }
 }
 
 HRESULT TimgFilterOutputConvert::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)

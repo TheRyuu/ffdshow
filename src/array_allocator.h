@@ -9,7 +9,7 @@ public:
  typedef T value_type;
  typedef size_t size_type;
  typedef ptrdiff_t difference_type;
- 
+
  typedef T* pointer;
  typedef const T* const_pointer;
 
@@ -18,7 +18,7 @@ public:
 
  pointer address(reference r) const { return &r; }
  const_pointer address(const_reference r) const { return &r; }
- 
+
  array_allocator() throw(){}
  template <class U,size_t sz> array_allocator(const array_allocator<U,sz>& ) throw() {}
  ~array_allocator() throw(){}

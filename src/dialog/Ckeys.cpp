@@ -33,7 +33,7 @@ LRESULT TkeysPage::TwidgetKeys::onKeyDown(HWND hwnd,UINT uMsg,WPARAM wParam,LPAR
    keysPage->endKeyChange();
    keysPage->ignoreNextKey=true;
    return 0;
-  } 
+  }
  return TwindowWidget::onKeyDown(hwnd,uMsg,wParam,lParam);
 }
 LRESULT TkeysPage::TwidgetKeys::onGetDlgCode(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
@@ -53,7 +53,7 @@ LRESULT TkeysPage::TwidgetKeys::onGetDlgCode(HWND hwnd,UINT uMsg,WPARAM wParam,L
        keysPage->endKeyChange();
        msg->message=WM_NULL;
        return DLGC_WANTALLKEYS;
-     } 
+     }
   }
  return TwindowWidget::onGetDlgCode(hwnd,uMsg,wParam,lParam);
 }
@@ -65,7 +65,7 @@ LRESULT TkeysPage::TwidgetKeys::onKeyUp(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM
    return 0;
   }
  else
-  switch (wParam) 
+  switch (wParam)
    {
     case VK_DELETE:
      keysPage->beginKeyChange();
@@ -74,8 +74,8 @@ LRESULT TkeysPage::TwidgetKeys::onKeyUp(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM
      return 0;
     case VK_SPACE:
      keysPage->beginKeyChange();
-     return 0; 
-   } 
+     return 0;
+   }
  return TwindowWidget::onKeyUp(hwnd,uMsg,wParam,lParam);
 }
 LRESULT TkeysPage::TwidgetKeys::onChar(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
@@ -129,7 +129,7 @@ INT_PTR TkeysPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     cfgSet(IDFF_lvKeysWidth1,ListView_GetColumnWidth(hlv,1));
     break;
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CHB_KEYS:
        cfgSet(IDFF_isKeys,getCheck(IDC_CHB_KEYS));
@@ -137,7 +137,7 @@ INT_PTR TkeysPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        parent->drawInter();
        return TRUE;
      }
-    break; 
+    break;
    case WM_NOTIFY:
     {
      NMHDR *nmhdr=LPNMHDR(lParam);
@@ -174,7 +174,7 @@ INT_PTR TkeysPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          }
        }
      break;
-    }   
+    }
   }
  return TconfPageDec::msgProc(uMsg,wParam,lParam);
 }
@@ -183,7 +183,7 @@ Twidget* TkeysPage::createDlgItem(int id,HWND h)
  if (id==IDC_LV_KEYS)
   return new TwidgetKeys(h,this);
  else
-  return TconfPageDec::createDlgItem(id,h); 
+  return TconfPageDec::createDlgItem(id,h);
 }
 
 void TkeysPage::onGirder(void)
@@ -224,7 +224,7 @@ void TkeysPage::keyChange(int newkey)
    ignoreNextKey=true;
    char_t s[256];tsprintf(s,_l("%s %s"),_(-IDD_KEYS,_l("This key is already assigned to")),_(IDC_LV_KEYS,prevDescr));
    msg(s);
-  } 
+  }
 }
 bool TkeysPage::reset(bool testonly)
 {
@@ -271,11 +271,11 @@ TkeysPage::TkeysPage(TffdshowPageDec *Iparent):TconfPageDec(Iparent,NULL,0)
    IDC_ED_REMOTE_USER,1,int(1<<30),IDFF_remoteMessageUser,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
  static const TbindButton<TkeysPage> bt[]=
   {
    IDC_BT_REMOTE_GIRDER,&TkeysPage::onGirder,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
 }

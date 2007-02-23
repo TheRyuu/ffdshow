@@ -60,7 +60,7 @@ cglobal x264_pixel_ssim_end4_sse2
 %macro HADDD 2 ; sum junk
     movhlps %2, %1
     paddd   %1, %2
-    pshuflw %2, %1, 0xE 
+    pshuflw %2, %1, 0xE
     paddd   %1, %2
 %endmacro
 
@@ -484,7 +484,7 @@ x264_pixel_sa8d_8x8_sse2:
     LOAD_DIFF_8P xmm5, xmm9, [parm1q+parm2q],   [parm3q+parm4q]
     LOAD_DIFF_8P xmm6, xmm8, [parm1q+2*parm2q], [parm3q+2*parm4q]
     LOAD_DIFF_8P xmm7, xmm9, [parm1q+r10],      [parm3q+r11]
-    
+
     HADAMARD1x8  xmm0, xmm1, xmm2, xmm3, xmm4, xmm5, xmm6, xmm7
     TRANSPOSE8x8 xmm0, xmm1, xmm2, xmm3, xmm4, xmm5, xmm6, xmm7, xmm8
     HADAMARD1x8  xmm0, xmm5, xmm7, xmm3, xmm8, xmm4, xmm2, xmm1
@@ -725,4 +725,7 @@ x264_pixel_ssim_end4_sse2:
     pshuflw  xmm1, xmm0, 0xE
     addss    xmm0, xmm1
     ret
+
+
+
 

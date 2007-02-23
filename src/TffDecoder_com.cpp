@@ -48,7 +48,7 @@ const TfilterIDFF TffdshowDecVideo::nextFilters[]=
   /*full*/  0,
   /*half*/  0,
   /*dlgId*/ IDD_FLIP,
- }, 
+ },
  {
   /*name*/  _l("OSD"),
   /*id*/    0,
@@ -58,7 +58,7 @@ const TfilterIDFF TffdshowDecVideo::nextFilters[]=
   /*full*/  0,
   /*half*/  0,
   /*dlgId*/ IDD_OSD,
- }, 
+ },
  {
   /*name*/  _l("Keyboard & remote"),
   /*id*/    0,
@@ -68,7 +68,7 @@ const TfilterIDFF TffdshowDecVideo::nextFilters[]=
   /*full*/  0,
   /*half*/  0,
   /*dlgId*/ IDD_KEYS,
- }, 
+ },
 #if 0
  {
   /*name*/  _l("Mouse"),
@@ -80,7 +80,7 @@ const TfilterIDFF TffdshowDecVideo::nextFilters[]=
   /*half*/  0,
   /*dlgId*/ IDD_MOUSE,
  },
-#endif 
+#endif
  NULL,0
 };
 
@@ -124,16 +124,16 @@ template<> interfaces<tchar_traits<char_t>::other_char_t>::IffdshowDecVideo* Tff
 STDMETHODIMP TffdshowDecVideo::NonDelegatingQueryInterface(REFIID riid,void **ppv)
 {
  CheckPointer(ppv,E_POINTER);
- if (riid==IID_IffdshowDecVideoA) 
+ if (riid==IID_IffdshowDecVideoA)
   return GetInterface<IffdshowDecVideoA>(getDecVideoInterface<IffdshowDecVideoA>(),ppv);
- else if (riid==IID_IffdshowDecVideoW) 
+ else if (riid==IID_IffdshowDecVideoW)
   return GetInterface<IffdshowDecVideoW>(getDecVideoInterface<IffdshowDecVideoW>(),ppv);
  else if (riid==IID_IffDecoder)
-  return GetInterface<IffDecoder>(this,ppv); 
+  return GetInterface<IffDecoder>(this,ppv);
 /*
  else if (riid==IID_IAMExtendedSeeking)
   return GetInterface((IAMExtendedSeeking*)this,ppv);*/
- else 
+ else
   return TffdshowDec::NonDelegatingQueryInterface(riid,ppv);
 }
 
@@ -152,7 +152,7 @@ STDMETHODIMP TffdshowDecVideo::getOutputFourcc(char_t *buf,size_t len)
   buf[0]='\0';
  else
   csp_getName(m_frame.dstColorspace,buf,len);
- return S_OK;  
+ return S_OK;
 }
 STDMETHODIMP TffdshowDecVideo::getAVIfps(unsigned int *fps1000)
 {
@@ -207,7 +207,7 @@ STDMETHODIMP TffdshowDecVideo::getMovieSource(const TvideoCodecDec* *moviePtr)
 }
 STDMETHODIMP_(int) TffdshowDecVideo::getInputBitrate2(void)
 {
- if (inpin->avgTimePerFrame>0 && frameCnt>0) 
+ if (inpin->avgTimePerFrame>0 && frameCnt>0)
   {
    unsigned int Bps=(unsigned int)(bytesCnt/(frameCnt/(10000000.0/inpin->avgTimePerFrame)));
    return 8*Bps/1000;
@@ -313,12 +313,12 @@ STDMETHODIMP TffdshowDecVideo::shortOSDmessage(const char_t *msg,unsigned int du
 STDMETHODIMP TffdshowDecVideo::registerOSDprovider(IOSDprovider *provider,const char *name)
 {
  if (!imgFilters) return E_UNEXPECTED;
- return imgFilters->registerOSDprovider(provider,name); 
+ return imgFilters->registerOSDprovider(provider,name);
 }
 STDMETHODIMP TffdshowDecVideo::unregisterOSDprovider(IOSDprovider *provider)
 {
  if (!imgFilters) return E_UNEXPECTED;
- return imgFilters->unregisterOSDprovider(provider); 
+ return imgFilters->unregisterOSDprovider(provider);
 }
 
 STDMETHODIMP TffdshowDecVideo::resetSubtitleTimes(void)
@@ -382,7 +382,7 @@ STDMETHODIMP TffdshowDecVideo::getVideoDestRect(RECT *r)
  if (FAILED(hr=basicVideo->GetDestinationPosition(&x,&y,&dx,&dy)))
   return hr;
  *r=CRect(CPoint(x,y),CSize(dx,dy));
- return S_OK; 
+ return S_OK;
 }
 
 STDMETHODIMP TffdshowDecVideo::fillSubtitleLanguages(const char_t **langs)
@@ -426,7 +426,7 @@ STDMETHODIMP TffdshowDecVideo::cycleSubLanguages(int step)
     curlang=subtitleLanguages.begin();
    else
     curlang+=sign(step);
-   if (*curlang!=_l("")) 
+   if (*curlang!=_l(""))
     i+=sign(step);
   }
  putParam(IDFF_subCurLang,int(curlang-subtitleLanguages.begin()));
@@ -446,7 +446,7 @@ void TffdshowDecVideo::addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME st
 void TffdshowDecVideo::resetSubtitles(int id)
 {
  if (imgFilters)
-  imgFilters->resetSubtitles(id); 
+  imgFilters->resetSubtitles(id);
 }
 bool TffdshowDecVideo::ctlSubtitles(int id,int type,unsigned int ctl_id,const void *ctl_data,unsigned int ctl_datalen)
 {
@@ -535,7 +535,7 @@ TinfoBase* TffdshowDecVideo::createInfo(void)
  return new TinfoDecVideoPict(this);
 }
 
-STDMETHODIMP TffdshowDecVideo::compat_getOutputFourcc(char *buf,unsigned int len) 
+STDMETHODIMP TffdshowDecVideo::compat_getOutputFourcc(char *buf,unsigned int len)
 {
  return getDecVideoInterface<IffdshowDecVideoA>()->getOutputFourcc(buf,len);
 }

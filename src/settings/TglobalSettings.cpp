@@ -35,7 +35,7 @@ TglobalSettingsBase::TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const 
  static const TintOptionT<TglobalSettingsBase> iopts[]=
   {
    IDFF_filterMode       ,&TglobalSettingsBase::filtermode       ,1,1,_l(""),0,
-     NULL,0, 
+     NULL,0,
    IDFF_trayIcon         ,&TglobalSettingsBase::trayIcon         ,0,0,_l(""),0,
      _l("trayIcon"),TintOption::DEF_DYN,
    IDFF_trayIconExt      ,&TglobalSettingsBase::trayIconExt      ,0,0,_l(""),0,
@@ -49,14 +49,14 @@ TglobalSettingsBase::TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const 
    IDFF_multipleInstances,&TglobalSettingsBase::multipleInstances,0,4,_l(""),0,
      _l("multipleInstances"),TintOption::DEF_DYN,
    IDFF_isBlacklist      ,&TglobalSettingsBase::isBlacklist      ,0,0,_l(""),0,
-     _l("isBlacklist"),1,   
+     _l("isBlacklist"),1,
    IDFF_addToROT         ,&TglobalSettingsBase::addToROT         ,0,0,_l(""),0,
      _l("addToROT"),0,
    IDFF_allowedCpuFlags  ,&TglobalSettingsBase::allowedCPUflags  ,1,1,_l(""),0,
      NULL,0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
  static const TstrOption sopts[]=
   {
    IDFF_debugfile  ,(TstrVal)&TglobalSettingsBase::debugfile ,MAX_PATH,_l(""),0,
@@ -64,10 +64,10 @@ TglobalSettingsBase::TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const 
    IDFF_dscalerPath,(TstrVal)&TglobalSettingsBase::dscalerPth,MAX_PATH,_l(""),0,
      NULL,NULL,
    IDFF_blacklist  ,(TstrVal)&TglobalSettingsBase::blacklist ,128,_l(""),0,
-     _l("blacklist"),_l("explorer.exe;oblivion.exe;morrowind.exe"),  
+     _l("blacklist"),_l("explorer.exe;oblivion.exe;morrowind.exe"),
    0
   };
- addOptions(sopts); 
+ addOptions(sopts);
  static const TcreateParamList3<TmultipleInstances> listMultipleInstances(::multipleInstances,&TmultipleInstances::id,&TmultipleInstances::name);setParamList(IDFF_multipleInstances,&listMultipleInstances);
 
 }
@@ -81,7 +81,7 @@ void TglobalSettingsBase::load(void)
  TregOpRegRead tDScaler(HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
  tDScaler._REG_OP_S(IDFF_dscalerPath,_l("dscalerPth"),dscalerPth,MAX_PATH,_l(""));
  TregOpRegRead tCPU(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
- tCPU._REG_OP_N(IDFF_allowedCpuFlags,_l("allowedCPUflags"),allowedCPUflags,255); 
+ tCPU._REG_OP_N(IDFF_allowedCpuFlags,_l("allowedCPUflags"),allowedCPUflags,255);
  firstBlacklist=true;
 }
 void TglobalSettingsBase::save(void)
@@ -129,7 +129,7 @@ void TglobalSettingsBase::_reg_op_codec(short id,TregOp &tHKCU,TregOp *tHKLM,con
  if (!tHKCU._REG_OP_N(id,name,val,def) && tHKLM)
   tHKLM->_REG_OP_N(id,name,val,def);
 }
- 
+
 bool TglobalSettingsBase::inBlacklist(const char_t *exe)
 {
  if (firstBlacklist)
@@ -141,7 +141,7 @@ bool TglobalSettingsBase::inBlacklist(const char_t *exe)
   if (DwStrcasecmp(*b,exe)==0)
    return true;
  return false;
-} 
+}
 //===================================== TglobalSettingsDec ======================================
 TglobalSettingsDec::TglobalSettingsDec(const Tconfig *Iconfig,int Imode,const char_t *Ireg_child,TintStrColl *Icoll,TOSDsettings *Iosd):TglobalSettingsBase(Iconfig,Imode,Ireg_child,Icoll),osd(Iosd)
 {
@@ -155,14 +155,14 @@ TglobalSettingsDec::TglobalSettingsDec(const Tconfig *Iconfig,int Imode,const ch
      _l("streamsOptionsMenu"),0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
  static const TstrOption sopts[]=
   {
    IDFF_defaultPreset,(TstrVal)&TglobalSettingsDec::defaultPreset,260,_l(""),0,
      _l("activePreset"),FFPRESET_DEFAULT,
    0
   };
- addOptions(sopts); 
+ addOptions(sopts);
 }
 
 void TglobalSettingsDec::reg_op(TregOp &t)
@@ -174,7 +174,7 @@ void TglobalSettingsDec::reg_op(TregOp &t)
 void TglobalSettingsDec::load(void)
 {
  TglobalSettingsBase::load();
- osd->loadPresets(reg_child); 
+ osd->loadPresets(reg_child);
 }
 void TglobalSettingsDec::save(void)
 {
@@ -185,8 +185,8 @@ void TglobalSettingsDec::save(void)
 void TglobalSettingsDec::fixMissing(int &codecId,int movie1,int movie2,int movie3)
 {
  fixMissing(codecId,movie1,movie2);
- fixMissing(codecId,movie2,movie3);   
- fixMissing(codecId,movie1,movie3);   
+ fixMissing(codecId,movie2,movie3);
+ fixMissing(codecId,movie1,movie3);
 }
 void TglobalSettingsDec::fixMissing(int &codecId,int movie1,int movie2)
 {
@@ -299,7 +299,7 @@ TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imod
    IDFF_avisV          ,&TglobalSettingsDecVideo::avis           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_rawv           ,&TglobalSettingsDecVideo::rawv           ,0,0,_l(""),0,
      NULL,0,
-   IDFF_supDVDdec      ,&TglobalSettingsDecVideo::supdvddec      ,0,0,_l(""),0, 
+   IDFF_supDVDdec      ,&TglobalSettingsDecVideo::supdvddec      ,0,0,_l(""),0,
      _l("supDVDdec"),0,
    IDFF_fastMpeg2      ,&TglobalSettingsDecVideo::fastMpeg2      ,0,0,_l(""),1,
      _l("fastMpeg2"),0,
@@ -309,7 +309,7 @@ TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imod
      _l("libtheoraPostproc"),0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
 }
 
 void TglobalSettingsDecVideo::reg_op(TregOp &t)
@@ -415,8 +415,8 @@ void TglobalSettingsDecVideo::load(void)
   {
    fixNewCodecs();
    needCodecFix=0;
-  } 
- 
+  }
+
  fixMissing(xvid,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
  fixMissing(div3,IDFF_MOVIE_LAVC);
  fixMissing(dx50,IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4);
@@ -492,7 +492,7 @@ void TglobalSettingsDecVideo::load(void)
  case FOURCC_##fourCC1:                          \
   codecId=codecs[decoder];                       \
   break;
-  
+
 #define VIDEO_FOURCCS  \
  FF_FOURCC_OP (FFDS,fvfw & rawmask,c_mpeg4) \
  FF_FOURCC_OP (FVFW,fvfw & rawmask,c_mpeg4) \
@@ -665,10 +665,10 @@ const char_t* TglobalSettingsDecVideo::fourccs[]=
  #define FF_FOURCC1_OP FF_FOURCC_LIST
  VIDEO_FOURCCS
  NULL
-}; 
+};
 const char_t** TglobalSettingsDecVideo::getFOURCClist(void) const
 {
- return fourccs; 
+ return fourccs;
 }
 
 const CodecID TglobalSettingsDecVideo::c_mpeg4[IDFF_MOVIE_MAX+1]=
@@ -802,7 +802,7 @@ CodecID TglobalSettingsDecVideo::getCodecId(DWORD fourCC,FOURCC *AVIfourCC) cons
 
  if (codecId && AVIfourCC)
   *AVIfourCC=fourCC;
- return codecId; 
+ return codecId;
 }
 
 bool TglobalSettingsDecVideo::inBlacklist(const char_t *exe)
@@ -825,7 +825,7 @@ TglobalSettingsDecVideo::TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Ico
      _l("subSearchHeuristic"),0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
  static const TstrOption sopts[]=
   {
    IDFF_subSearchDir,(TstrVal)&TsubtitlesSettings::searchDir,2*MAX_PATH ,_l(""),0,
@@ -834,7 +834,7 @@ TglobalSettingsDecVideo::TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Ico
      _l("subSearchExt"),_l("utf;idx;sub;srt;smi;rt;txt;ssa;aqt;mpl;usf"),
    0
   };
- addOptions(sopts); 
+ addOptions(sopts);
 }
 
 void TglobalSettingsDecVideo::TsubtitlesSettings::getDefaultStr(int id,char_t *buf,size_t buflen)
@@ -843,7 +843,7 @@ void TglobalSettingsDecVideo::TsubtitlesSettings::getDefaultStr(int id,char_t *b
   {
    TregOpRegRead tt(HKEY_LOCAL_MACHINE,_l("SOFTWARE\\PRR\\DivXG400"));
    tt._REG_OP_S(0,_l("SubPath"),buf,buflen,_l("."));
-  } 
+  }
 }
 
 //=================================== TglobalSettingsDecAudio ===================================
@@ -900,14 +900,14 @@ TglobalSettingsDecAudio::TglobalSettingsDecAudio(const Tconfig *Iconfig,int Imod
      _l("vorbisgain"),0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
  static const TstrOption sopts[]=
   {
    IDFF_winamp2dir,(TstrVal)&TglobalSettingsDecAudio::winamp2dir,MAX_PATH,_l(""),0,
      _l("winamp2dir"),NULL,
    0
   };
- addOptions(sopts); 
+ addOptions(sopts);
 }
 int TglobalSettingsDecAudio::getDefault(int id)
 {
@@ -925,7 +925,7 @@ int TglobalSettingsDecAudio::getDefault(int id)
    wt._REG_OP_S(0,NULL,buf,buflen,_l(""));
   }
  else
-  TglobalSettingsDec::getDefaultStr(id,buf,buflen); 
+  TglobalSettingsDec::getDefaultStr(id,buf,buflen);
 }
 
 void TglobalSettingsDecAudio::reg_op_codec(TregOp &t,TregOp *t2)
@@ -959,7 +959,7 @@ void TglobalSettingsDecAudio::reg_op_codec(TregOp &t,TregOp *t2)
 void TglobalSettingsDecAudio::load(void)
 {
  TglobalSettingsDec::load();
- 
+
  if (ac3==IDFF_MOVIE_MPLAYER || ac3==IDFF_MOVIE_LAVC) ac3=IDFF_MOVIE_LIBA52;
 
  fixMissing(wma1      ,IDFF_MOVIE_LAVC);
@@ -1058,10 +1058,10 @@ const char_t *TglobalSettingsDecAudio::wave_formats[]=
  #define FF_WAVE_FORMAT1_OP FF_FOURCC_LIST
  AUDIO_FOURCCS
  NULL
-}; 
+};
 const char_t** TglobalSettingsDecAudio::getFOURCClist(void) const
 {
- return wave_formats; 
+ return wave_formats;
 }
 
 const CodecID TglobalSettingsDecAudio::c_mp123[IDFF_MOVIE_MAX+1]=
@@ -1199,7 +1199,7 @@ CodecID TglobalSettingsDecAudio::getCodecId(DWORD fourCC,FOURCC*) const
    AUDIO_FOURCCS
    default:return CODEC_ID_NONE;
   }
- return codecId; 
+ return codecId;
 }
 
 //==================================== TglobalSettingsEnc ====================================
@@ -1215,7 +1215,7 @@ TglobalSettingsEnc::TglobalSettingsEnc(const Tconfig *Iconfig,int Imode,TintStrC
      _l("dyInterlaced"),288,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
 }
 int TglobalSettingsEnc::getDefault(int id)
 {

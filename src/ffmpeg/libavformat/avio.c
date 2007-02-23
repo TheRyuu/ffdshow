@@ -60,7 +60,7 @@ int url_open(URLContext **puc, const char *filename, int flags)
     } else {
         *q = '\0';
     }
-    
+
     up = first_protocol;
     while (up != NULL) {
         if (!strcmp(proto_str, up->name))
@@ -113,7 +113,7 @@ int url_write(URLContext *h, unsigned char *buf, int size)
         return AVERROR_IO;
     /* avoid sending too big packets */
     if (h->max_packet_size && size > h->max_packet_size)
-        return AVERROR_IO; 
+        return AVERROR_IO;
     ret = h->prot->url_write(h, buf, size);
     return ret;
 }
@@ -150,7 +150,7 @@ int url_exist(const char *filename)
 offset_t url_filesize(URLContext *h)
 {
     offset_t pos, size;
-    
+
     size= url_seek(h, 0, AVSEEK_SIZE);
     if(size<0){
     pos = url_seek(h, 0, SEEK_CUR);
@@ -162,11 +162,11 @@ offset_t url_filesize(URLContext *h)
     return size;
 }
 
-/* 
+/*
  * Return the maximum packet size associated to packetized file
  * handle. If the file is not packetized (stream like http or file on
  * disk), then 0 is returned.
- * 
+ *
  * @param h file handle
  * @return maximum packet size in bytes
  */
@@ -185,11 +185,11 @@ static int default_interrupt_cb(void)
     return 0;
 }
 
-/** 
+/**
  * The callback is called in blocking functions to test regulary if
  * asynchronous interruption is needed. AVERROR(EINTR) is returned
  * in this case by the interrupted function. 'NULL' means no interrupt
- * callback is given.  
+ * callback is given.
  */
 void url_set_interrupt_cb(URLInterruptCB *interrupt_cb)
 {

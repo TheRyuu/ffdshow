@@ -545,7 +545,7 @@ static int wavpack_decode_frame(AVCodecContext *avctx,
 	if(*data_size < buf_size){
 		return -1;
 	}
-	
+
     return buf_size;
 }
 

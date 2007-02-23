@@ -22,7 +22,7 @@ public:
  STDMETHODIMP Disconnect(void);
  STDMETHODIMP NewSegment(REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate);
  STDMETHODIMP EndOfStream(void);
- 
+
  int getInCodecId2(void) {return codecId;}
  virtual HRESULT getInCodecString(char_t *buf,size_t buflen)=0;
  HRESULT getStreamName(char_t *buf,size_t buflen);
@@ -56,12 +56,12 @@ public:
    return NULL;
   }
  Tpin* find(const wchar_t *id)
-  { 
+  {
    for (typename Tbase::iterator p=this->begin();p!=this->end();p++)
     if (wcscmp((*p)->Name(),id)==0)
      return *p;
-   return NULL;  
-  }   
+   return NULL;
+  }
 };
 
 #endif

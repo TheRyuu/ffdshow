@@ -90,7 +90,7 @@ int Tlibmplayer::getPPmode(const TpostprocSettings *cfg,int currentq)
    result=ppPresets[ppqual];
   }
  else
-  result=cfg->custom;  
+  result=cfg->custom;
  if (cfg->levelFixLum) result|=LUM_LEVEL_FIX;
  //if (cfg->levelFixChrom) result|=CHROM_LEVEL_FIX;
  return result;

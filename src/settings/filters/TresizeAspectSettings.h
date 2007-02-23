@@ -11,7 +11,7 @@ private:
  static const char_t* printSwsParams(char_t *algParam,int method,int bicubicParam,int gaussParam,int lanczosParam);
 protected:
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  TresizeAspectSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  int mode;
  unsigned int dx,dy,isResizeDy0,dyReg;
@@ -27,12 +27,12 @@ public:
  static const char_t *getXcondStr(int cond),*getXYcondStr(int cond),*getPixCondStr(int cond);
  bool ifResize(unsigned int AVIdx,unsigned int AVIdy) const;
  int isAspect,aspectRatio;
- 
+
  int bordersInside,bordersLocked;
  int bordersUnits; //0 - percent, 1 - pixels
  int bordersPercentX,bordersPercentY;
  int bordersPixelsX,bordersPixelsY;
- 
+
  bool areBorders(void) const
   {
    return (bordersUnits==0 && (bordersPercentX || bordersPercentY)) ||
@@ -40,7 +40,7 @@ public:
   }
  int methodLuma,methodChroma,methodsLocked;
  enum RESIZE_LIBRARY
-  { 
+  {
    LIB_SWSCALER,
    LIB_SIMPLE,
    LIB_SAI,
@@ -74,7 +74,7 @@ public:
    RESIZE_LIBRARY library;
    int flags;
   };
- static const TmethodProps methodsProps[];  
+ static const TmethodProps methodsProps[];
  static const int methodDef=METHOD_SWS_BICUBIC,numMethods=METHOD_LAST,methodsOrder[];
  int bicubicLumaParam,bicubicChromaParam;
  int gaussLumaParam,gaussChromaParam;

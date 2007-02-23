@@ -11,7 +11,7 @@ private:
  int oldAsharpT,oldAsharpD,oldAsharpB,oldAsharpHQBF;
  unsigned char *aline;
  asharp_run_fct *asharp_run;
-protected: 
+protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK_YUV_PLANAR;}
  virtual void onSizeChange(void) {done();}
@@ -30,7 +30,7 @@ private:
  SwsContext *swsc;
  SwsFilter *swsf;
  int oldmplayersharpenluma,oldmplayersharpenchroma;
-protected: 
+protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return SWS_IN_CSPS;}
  virtual int getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg) const {return SWS_OUT_CSPS;}
@@ -48,7 +48,7 @@ private:
  unsigned short *Ysum;stride_t minStride;
  void (TimgFilterUnsharp::*unsharpFc)(const TsharpenSettings *cfg,const unsigned char *src,unsigned char *dst,unsigned short *sum);
  template<class _mm> void unsharp(const TsharpenSettings *cfg,const unsigned char *src,unsigned char *dst,unsigned short *sum);
-protected: 
+protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK_YUV_PLANAR;}
  virtual void onSizeChange(void) {done();}
@@ -63,7 +63,7 @@ private:
  unsigned char *Ymin,*Ymax;stride_t minStride;
  void (TimgFilterXsharp::*xsharpenFc)(unsigned int dx1,unsigned int dy1,const TsharpenSettings *cfg,const unsigned char *srcY,stride_t stride1,unsigned char *dstY,stride_t stride2);
  template<class _mm> void xsharpen(unsigned int dx1,unsigned int dy1,const TsharpenSettings *cfg,const unsigned char *srcY,stride_t stride1,unsigned char *dstY,stride_t stride2);
-protected: 
+protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK_YUV_PLANAR;}
  virtual void onSizeChange(void) {done();}
@@ -79,7 +79,7 @@ private:
  stride_t stride;
  unsigned char *blur,*work;
  T3x3blurSWS *blur3x3;
-protected: 
+protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK_YUV_PLANAR;}
  virtual void onSizeChange(void) {done();}

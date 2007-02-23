@@ -80,7 +80,7 @@ bool TvideoCodecUncompressed::beginDecompress(TffPictBase &pict,FOURCC infcc,con
    default:return false;
   }
  cspInfo=csp_getInfo(pict.csp=csp);
- if (csp_isRGB(csp)) 
+ if (csp_isRGB(csp))
   stride[0]=(((pict.rectFull.dx*cspInfo->Bpp<<3)+31)&~31)>>3;
  else if (csp_isPAL(csp))
   {
@@ -91,7 +91,7 @@ bool TvideoCodecUncompressed::beginDecompress(TffPictBase &pict,FOURCC infcc,con
    if (extradata.data && extradata.size)
     memcpy(palette,extradata.data,std::min(extradata.size,sizeof(RGBQUAD)*size_t(1<<bih.biBitCount)));
    stride[0]=(((pict.rectFull.dx*cspInfo->Bpp<<3)+31)&~31)>>3;
-  } 
+  }
  else
   stride[0]=cspInfo->Bpp*pict.rectFull.dx;
  stride[1]=stride[2]=stride[3]=0;
@@ -104,8 +104,8 @@ HRESULT TvideoCodecUncompressed::decompress(const unsigned char *src,size_t srcL
  if (cspInfo->Bpp==1)
   stride[0]=dx;
  else
-  stride[0]=srcLen/dy; 
-*/  
+  stride[0]=srcLen/dy;
+*/
  unsigned char *data[4]={(unsigned char*)src,NULL,NULL,NULL};
  TffPict pict(csp,data,stride,rd,true,pIn,Tpalette(palette,palcolors),deciV->getIsInterlacedRawVideo());
  pict.frametype=FRAME_TYPE::I;
@@ -120,7 +120,7 @@ void TvideoCodecUncompressed::getCompressColorspaces(Tcsps &csps,unsigned int ou
    {
     csps.add(cspFccs[i].csp|(cspFccs[i].flip?FF_CSP_FLAGS_VFLIP:0));
     return;
-   } 
+   }
 }
 bool TvideoCodecUncompressed::prepareHeader(BITMAPINFOHEADER *outhdr)
 {
@@ -144,7 +144,7 @@ HRESULT TvideoCodecUncompressed::compress(const TffPict &pict,TencFrameParams &p
  HRESULT hr;
  if (FAILED(hr=sinkE->getDstBuffer(&sample,pict)))
   return hr;
- uint8_t *dst=sample;size_t dstLen=sample.size(); 
+ uint8_t *dst=sample;size_t dstLen=sample.size();
  if (pict.csp&FF_CSP_FLAGS_YUV_ADJ)
   for (int i=0;i<3;i++)
    for (unsigned int y=0;y<pict.rectFull.dy>>pict.cspInfo.shiftY[i];src+=pict.stride[i],dst+=stride[0]>>pict.cspInfo.shiftX[i],y++)

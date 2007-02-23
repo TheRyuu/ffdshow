@@ -36,12 +36,12 @@
 ; (see also Intel's Application Note 922:
 ;  http://developer.intel.com/vtune/cbts/strmsimd/922down.htm
 ;  Copyright (C) 1999 Intel Corporation)
-;  
+;
 ; Notes:
 ;  * tan(3pi/16) is greater than 0.5, and would use the
 ;    sign bit when turned into 16b fixed-point precision. So,
 ;    we use the trick: x*tan3 = x*(tan3-1)+x
-; 
+;
 ;  * There's only one SSE-specific instruction (pshufw).
 ;
 ;  * There's still 1 or 2 ticks to save in fLLM_PASS, but
@@ -494,7 +494,7 @@ idct_sse2_skal:
   pmulhw xmm5, xmm6         ; tm12*tan2
   paddsw xmm5, xmm7         ; out2 = tm12*tan2 + tm03
 
-  movdqa xmm6, [sqrt2]  
+  movdqa xmm6, [sqrt2]
   movdqa xmm7, [Rounder1]
 
   pmulhw xmm2, xmm6         ; xmm2: tp65 = (t6 + t5)*cos4
@@ -507,7 +507,7 @@ idct_sse2_skal:
   movdqa xmm5, xmm3         ; save t4
   movdqa [%1+6*16], xmm4   ; => out6
   movdqa xmm4, xmm0         ; save t7
-  
+
   psubsw xmm3, xmm1         ; xmm3: tm465 = t4 - tm65
   psubsw xmm0, xmm2         ; xmm0: tm765 = t7 - tp65
   paddsw xmm2, xmm4         ; xmm2: tp765 = t7 + tp65
@@ -572,7 +572,7 @@ idct_sse2_skal:
   paddd   xmm2, xmm3             ;  [ out4 | out5 ][ out6 | out7 ]
   psrad   xmm0, 16
   psrad   xmm2, 16
-  
+
   packssdw xmm0, xmm2            ;  [ out0 .. out7 ]
   paddsw   xmm0, [%3]            ;  Round
 
@@ -599,4 +599,8 @@ fdct_sse2_skal:
   fMTX_MULT  7, fTab2, Fdct_Rnd1
   ret
 .endfunc
+
+
+
+
 

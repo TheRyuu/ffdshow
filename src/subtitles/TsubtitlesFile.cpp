@@ -50,7 +50,7 @@ bool TsubtitlesFile::extMatch(const char_t *flnm)
  for (int i=0;exts[i];i++)
   if (strcmp(ext,exts[i])==0)
    return true;
- return false; 
+ return false;
 }
 
 static void fixRelativePaths(strings &dirs,const char_t *basepath)
@@ -97,12 +97,12 @@ void TsubtitlesFile::findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,
          if (mindist==0)
           break;
         }
-      }  
-     else 
-      subdists.push_back(std::make_pair(newdist,*sf)); 
+      }
+     else
+      subdists.push_back(std::make_pair(newdist,*sf));
     }
-   if (!checkSubtitle) 
-    {  
+   if (!checkSubtitle)
+    {
      if (s!=subfiles.end())
       {
        strncpy(subFlnm,s->c_str(),buflen);subFlnm[buflen-1]='\0';
@@ -118,10 +118,10 @@ void TsubtitlesFile::findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,
         strncpy(subFlnm,sd->second.c_str(),buflen);subFlnm[buflen-1]='\0';
         return;
        }
-    }   
+    }
   }
  else
-  { 
+  {
    char_t dsk[MAX_PATH],dir[MAX_PATH],name[MAX_PATH],ext[MAX_PATH];
    _splitpath(aviFlnm,dsk,dir,name,ext);
    char_t fname[MAX_PATH];_makepath(fname,NULL,NULL,name,ext); //fname - movie file name with extension (without path)
@@ -146,7 +146,7 @@ void TsubtitlesFile::findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,
            strncpy(subFlnm,subFlnm0,buflen);subFlnm[buflen-1]='\0';
            return;
           }
-        }  
+        }
       }
      //movie.avi -> movie en.txt, movie.en.sub,....
      for (strings::const_iterator d=dirs.begin();d!=dirs.end();d++)
@@ -162,12 +162,12 @@ void TsubtitlesFile::findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,
            {
             strncpy(subFlnm,f->c_str(),buflen);subFlnm[buflen-1]='\0';
             return;
-           } 
-        }   
+           }
+        }
       }
-    }  
-  } 
- subFlnm[0]='\0';  
+    }
+  }
+ subFlnm[0]='\0';
 }
 
 void TsubtitlesFile::findPossibleSubtitles(const char_t *dir,strings &files)
@@ -190,9 +190,9 @@ void TsubtitlesFile::findPossibleSubtitles(const char_t *aviFlnm,const char_t *s
    char_t dsk[MAX_PATH],dir[MAX_PATH],name[MAX_PATH];
    _splitpath(aviFlnm,dsk,dir,name,NULL);
    _makepath(avidir,dsk,dir,NULL,NULL);
-  } 
+  }
  else
-  strcpy(avidir,_l(".")); 
+  strcpy(avidir,_l("."));
  strings dirs;strtok(sdir,_l(";"),dirs);
  fixRelativePaths(dirs,avidir);
  for (strings::const_iterator sd=dirs.begin();sd!=dirs.end();sd++)
@@ -223,10 +223,10 @@ bool TsubtitlesFile::init(const TsubtitlesSettings *cfg,const char_t *IsubFlnm,d
  if (!IsubFlnm || (checkOnly==2 || stricmp(subFlnm,IsubFlnm)!=0))
   strcpy(subFlnm,IsubFlnm?IsubFlnm:_l(""));
  if (checkOnly<2)
-  { 
+  {
    fps=Ifps;
    done();
-  } 
+  }
  if (subFlnm[0]=='\0') return false;
  FILE *f=fopen(subFlnm,_l("r"));if (!f) return false;
  TstreamFile fs(f);
@@ -247,20 +247,20 @@ bool TsubtitlesFile::init(const TsubtitlesSettings *cfg,const char_t *IsubFlnm,d
     }
    else if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_USF)
     subs=new TsubreaderUSF2(fs,deci,false);
-   else 
+   else
     subs=new TsubreaderMplayer(fs,sub_format,fps,cfg,ffcfg,false);
-  }  
+  }
  fclose(f);
  if (checkOnly==2)
   return sub_format!=Tsubreader::SUB_INVALID;
- if (!subs || subs->empty()) 
+ if (!subs || subs->empty())
   {
    if (subs) delete subs;subs=NULL;
    subFlnm[0]='\0';
    return false;
   }
  if (!checkOnly)
-  { 
+  {
    subs->adjust_subs_time(6.0);
    Tsubtitles::init();
    char_t subPath[MAX_PATH];
@@ -270,8 +270,8 @@ bool TsubtitlesFile::init(const TsubtitlesSettings *cfg,const char_t *IsubFlnm,d
      hwatch=FindFirstChangeNotification(subPath,FALSE,FILE_NOTIFY_CHANGE_LAST_WRITE|FILE_NOTIFY_CHANGE_SIZE);
      lastwritetime=fileLastWriteTime(subFlnm);
     }
-  }  
- return true; 
+  }
+ return true;
 }
 
 void TsubtitlesFile::checkChange(const TsubtitlesSettings *cfg,bool *forceChange)
@@ -279,7 +279,7 @@ void TsubtitlesFile::checkChange(const TsubtitlesSettings *cfg,bool *forceChange
  if (hwatch)
   {
    DWORD res=WaitForSingleObject(hwatch,0);
-   if (res==WAIT_OBJECT_0 && lastwritetime!=fileLastWriteTime(subFlnm)) 
+   if (res==WAIT_OBJECT_0 && lastwritetime!=fileLastWriteTime(subFlnm))
     {
      init(cfg,subFlnm,fps,true,0);
      if (forceChange) *forceChange=true;

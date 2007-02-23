@@ -14,7 +14,7 @@ private:
   {
    int64_t ts;
    uint32_t ts1, ts2;
-   __asm 
+   __asm
     {
      rdtsc
      mov ts1, eax
@@ -23,7 +23,7 @@ private:
    ts = ((uint64_t) ts2 << 32) | ((uint64_t) ts1);
    return ts;
  }
- #else        
+ #else
  static int64_t read_counter(void)
   {
    int64_t ts;
@@ -37,7 +37,7 @@ private:
   {
    int64_t x, y;
    int32_t i;
-  
+
    i = time(NULL);
    while (i == time(NULL));
 
@@ -49,7 +49,7 @@ private:
    return (double) (y - x) / 1000.;
   }
 public:
- Ttimer(const char_t *Iname) 
+ Ttimer(const char_t *Iname)
   {
    //freq=get_freq();
    name=Iname;
@@ -63,7 +63,7 @@ public:
   {
    t1=read_counter();
   }
- void stop(void) 
+ void stop(void)
   {
    t+=read_counter()-t1;
   }
@@ -73,7 +73,7 @@ class TtimerAuto
 private:
  Ttimer *t;
  bool own;
-public: 
+public:
  TtimerAuto(const char_t *name):t(new Ttimer(name)),own(true)
   {
    t->start();

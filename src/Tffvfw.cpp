@@ -58,7 +58,7 @@ public:
   {
    if (imgFilters) delete imgFilters;
    Release();
-  } 
+  }
  HRESULT processPict(TffPict &pict)
   {
    if (!imgFilters) imgFilters=createImgFilters();
@@ -67,7 +67,7 @@ public:
  bool getFlip(void) const
   {
    return !!presetSettings->output->flip;
-  } 
+  }
 };
 
 //==================================================================
@@ -82,7 +82,7 @@ CUnknown* WINAPI Tffvfw::CreateInstance(LPUNKNOWN punk,HRESULT *phr)
 STDMETHODIMP Tffvfw::NonDelegatingQueryInterface(REFIID riid,void **ppv)
 {
  CheckPointer(ppv, E_POINTER);
- if (riid==IID_Iffvfw) 
+ if (riid==IID_Iffvfw)
   return GetInterface<Iffvfw>(this,ppv);
  else
   return CUnknown::NonDelegatingQueryInterface(riid,ppv);
@@ -112,7 +112,7 @@ bool Tffvfw::initCo(void)
    deciE=deciE_VFW;
    deciEB=deciE;
   }
- else 
+ else
   deciEB=NULL;
  return !!deciEB;
 }
@@ -189,7 +189,7 @@ STDMETHODIMP_(LRESULT) Tffvfw::coFramesInfo(ICCOMPRESSFRAMES *icf)
    deciEB->putParam(IDFF_enc_fpsRate ,icf->dwRate );
    deciEB->putParam(IDFF_enc_fpsScale,icf->dwScale);
    return ICERR_OK;
-  } 
+  }
  else
   return VFW_E_RUNTIME_ERROR;
 }
@@ -214,7 +214,7 @@ STDMETHODIMP_(LRESULT) Tffvfw::coRun(void *icc0)
    deciE_VFW->setICC(icc0);
    ICCOMPRESS *icc=(ICCOMPRESS*)icc0;
    return deciE_VFW->compress(icc->lpbiInput,(const uint8_t*)icc->lpInput,icc->lpbiInput->biSizeImage,0,0);
-  } 
+  }
  else
   return VFW_E_RUNTIME_ERROR;
 }
@@ -222,7 +222,7 @@ STDMETHODIMP_(LRESULT) Tffvfw::coRun(void *icc0)
 //------------------------------ decoding ------------------------------
 TcspInfos Tffvfw::TautoForcedCsps::decGetForcedCsp(IffdshowDec *deciD)
 {
- if (!empty()) 
+ if (!empty())
   return *this;
  else
   {
@@ -262,7 +262,7 @@ STDMETHODIMP_(LRESULT) Tffvfw::decQuery(BITMAPINFO *lpbiInput,BITMAPINFO *lpbiOu
      DPRINTF(_l("Tffvfw::decQuery: %s"),fourcc2str(hdr2fourcc(outhdr,NULL),pomS,60));
      if (lpbiInput->bmiHeader.biWidth!=outhdr->biWidth || abs(lpbiInput->bmiHeader.biHeight)!=abs(outhdr->biHeight) || getBMPcolorspace(outhdr,autoforcedcolorspaces.decGetForcedCsp(decVFW))==FF_CSP_NULL)
       return ICERR_BADFORMAT;
-    }  
+    }
    return ICERR_OK;
   }
  else
@@ -345,10 +345,10 @@ STDMETHODIMP Tffvfw::deliverDecodedSample(TffPict &pict)
  if (autoforcedilace==1)
   pict.csp&=~FF_CSP_FLAGS_INTERLACED;
  else if (autoforcedilace==2)
-  pict.csp|=FF_CSP_FLAGS_INTERLACED; 
-  
+  pict.csp|=FF_CSP_FLAGS_INTERLACED;
+
  return decVFW->processPict(pict);
-} 
+}
 
 STDMETHODIMP Tffvfw::deliverProcessedSample(TffPict &pict)
 {
@@ -356,7 +356,7 @@ STDMETHODIMP Tffvfw::deliverProcessedSample(TffPict &pict)
   {
    if (convert) delete convert;
    convert=new Tconvert(decVFW,icd->lpbiInput->biWidth,abs(icd->lpbiInput->biHeight));
-  } 
+  }
  unsigned char *dst[4]={(unsigned char*)icd->lpOutput,NULL,NULL};
  stride_t dstStride[4]={icd->lpbiInput->biWidth*csp_getInfo(colorspace)->Bpp,0,0};
  return convert->convert(pict,colorspace^(decVFW->getFlip()?FF_CSP_FLAGS_VFLIP:0),dst,dstStride)?ICERR_OK:ICERR_BADFORMAT;

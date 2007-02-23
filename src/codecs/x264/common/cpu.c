@@ -40,9 +40,9 @@ void     x264_cpu_restore( uint32_t cpu )
     {
      #ifdef WIN64
         x264_emms();
-     #else   
+     #else
         _mm_empty();
-     #endif   
+     #endif
     }
- #endif  
+ #endif
 }

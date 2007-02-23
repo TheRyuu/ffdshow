@@ -370,7 +370,7 @@ typedef struct
 
 	xvid_enc_zone_t * zone; /* [out] current zone */
 
-    
+
     int width;              /* [out] */
     int height;             /* [out] */
     int mb_width;           /* [out] */
@@ -380,7 +380,7 @@ typedef struct
 
     int min_quant[3];       /* [out] */
     int max_quant[3];       /* [out] */
-    
+
     xvid_image_t reference; /* [out] -> [out] */
     xvid_image_t current;   /* [out] -> [in,out] */
     xvid_image_t original;	/* [out] after: points the original (uncompressed) copy of the current frame */

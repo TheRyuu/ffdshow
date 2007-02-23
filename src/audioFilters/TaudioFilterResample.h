@@ -10,7 +10,7 @@ protected:
  Tbuffer buf;
  virtual bool is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg);
  TaudioFilterResampleBase(IffdshowBase *Ideci,Tfilters *Iparent);
-public: 
+public:
  virtual bool getOutputFmt(TsampleFormat &fmt,const TfilterSettingsAudio *cfg);
 };
 

@@ -32,7 +32,7 @@ TimgFilterTomsMoComp::TimgFilterTomsMoComp(IffdshowBase *Ideci,Tfilters *Iparent
  psrc[0]=psrc[1]=psrc[2]=NULL;
  t=NULL;
  se=-1;vf=-1;
-} 
+}
 TimgFilterTomsMoComp::~TimgFilterTomsMoComp()
 {
  done();
@@ -44,7 +44,7 @@ void TimgFilterTomsMoComp::done(void)
   {
    if (psrc[i]) aligned_free(psrc[i]);
    psrc[i]=NULL;
-  } 
+  }
  if (t) t->destroy();t=NULL;
  inited=false;
 }
@@ -61,7 +61,7 @@ bool TimgFilterTomsMoComp::is(const TffPictBase &pict,const TfilterSettingsVideo
    return (pictRect.dx&3)==0;
   }
  else
-  return false; 
+  return false;
 }
 
 HRESULT TimgFilterTomsMoComp::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
@@ -74,7 +74,7 @@ HRESULT TimgFilterTomsMoComp::process(TfilterQueue::iterator it,TffPict &pict,co
    bool cspChanged=getCur(FF_CSP_420P|FF_CSP_YUY2,pict,cfg->full,src);
    unsigned char *dst[4];
    cspChanged|=getNext(csp1,pict,cfg->full,dst);
-   
+
    if (cspChanged || se!=cfg->tomsmocompSE || vf!=cfg->tomsmocompVF || oldstride10!=stride1[0])
     {
      oldstride10=stride1[0];
@@ -89,15 +89,15 @@ HRESULT TimgFilterTomsMoComp::process(TfilterQueue::iterator it,TffPict &pict,co
       {
        pstride[i]=stride1[i];
        psrc[i]=(unsigned char*)aligned_calloc(pstride[i],dy1[i]);
-      } 
-     twidth=dx1[0];theight=dy1[0]; 
+      }
+     twidth=dx1[0];theight=dy1[0];
      t=createI();
      inited=t->create((Tconfig::cpu_flags&FF_CPU_SSE)!=0,(Tconfig::cpu_flags&FF_CPU_MMXEXT)!=0,(Tconfig::cpu_flags&FF_CPU_3DNOW)!=0,csp1&FF_CSP_YUY2?true:false,
                       -1,se,vf!=0,
                       twidth,theight,stride1,stride2);
      frameNum=0;
     }
-   
+
    if (inited)
     {
      t->GetFrame(frameNum,1,src,dst,(const unsigned char**)psrc);
@@ -105,8 +105,8 @@ HRESULT TimgFilterTomsMoComp::process(TfilterQueue::iterator it,TffPict &pict,co
      for (unsigned int i=0;i<pict.cspInfo.numPlanes;i++)
       TffPict::copy(psrc[i],pstride[i],src[i],stride1[i],dx2[i],dy2[i]);
      frameNum++;
-    }  
-  } 
+    }
+  }
  return parent->deliverSample(++it,pict);
 }
 void TimgFilterTomsMoComp::onSeek(void)

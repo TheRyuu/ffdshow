@@ -50,7 +50,7 @@ TsubreaderUSF2::TsubreaderUSF2(const Tstream &f,IffdshowBase *Ideci,bool initonl
  dll->loadFunction(changed,"changed");
  dll->loadFunction(FlushSubtitles,"FlushSubtitles");
  if (!dll->ok) return;
- 
+
  if (init(NULL,&pixi,&pcfg)!=0) return;
  wchar_t *text=stream2text(f);
  if (initonly)
@@ -59,14 +59,14 @@ TsubreaderUSF2::TsubreaderUSF2(const Tstream &f,IffdshowBase *Ideci,bool initonl
   loadUSFText(pixi,text);
  delete text;
  if (!initonly)
-  { 
+  {
    int cnt=countVSubs(pixi);
    for (int i=0;i<cnt;i++)
     {
      int start=getVSubStart(pixi,i),stop=getVSubStop(pixi,i);
      push_back(new TsubtitleUSF2(this,i,REF_SECOND_MULT*start/1000,REF_SECOND_MULT*stop/1000));
     }
-  }  
+  }
 }
 TsubreaderUSF2::~TsubreaderUSF2()
 {
@@ -118,7 +118,7 @@ void TsubreaderUSF2::addSub(REFERENCE_TIME start,REFERENCE_TIME stop,const unsig
  delete text;
  int i=addSubtitleText(pixi,stext.c_str())/2;
  int cnt=countVSubs(pixi);
-/* 
+/*
  for (int i=0;i<cnt;i++)
   {
    int start=getVSubStart(pixi,i),stop=getVSubStop(pixi,i);
@@ -134,9 +134,9 @@ void* TsubreaderUSF2::getSub(int idx,int ms,int *width,int *height,int32_t** *li
    if (subbmp && sublines) freeSub(subbmp,sublines);
    subbmp=getVSub(pixi,idx,ms,width,height,&sublines);
    *wasChangePtr=true;
-  } 
+  }
  else
-  *wasChangePtr=false; 
+  *wasChangePtr=false;
  *lines=sublines;
  return subbmp;
 }
@@ -166,5 +166,5 @@ wchar_t* TsubreaderUSF2::stream2text(const Tstream &f)
    if (!f.fgets(t,len)) break;
    t=strchr(t,'\0');
   }
- return text; 
+ return text;
 }

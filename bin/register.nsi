@@ -1,4 +1,3 @@
-;
 ; register.nsi
 ; After build registration helper for Windows Vista.
 ;

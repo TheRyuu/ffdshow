@@ -35,7 +35,7 @@
 #define IDFF_errorResilience      71
 #define IDFF_fastMpeg2            90
 #define IDFF_fastH264             91
-#define IDFF_libtheoraPostproc    92 
+#define IDFF_libtheoraPostproc    92
 //#define IDFF_subCurrentFlnm       29
 //#define IDFF_lastFrameLength      41
 #define IDFF_movieDuration        38
@@ -50,7 +50,7 @@
 //#define IDFF_xvidInited           68
 #define IDFF_defaultMerit         72
 #define IDFF_subCurLang           73
-#define IDFF_addToROT             74 
+#define IDFF_addToROT             74
 #define IDFF_streamsOptionsMenu   75
 #define IDFF_dvdproc              76
 #define IDFF_ac3drc               79
@@ -262,7 +262,7 @@
 #define IDFF_msharpHQ              415
 #define IDFF_msharpMask            416
 #define IDFF_asharpT               423
-#define IDFF_asharpD               424              
+#define IDFF_asharpD               424
 #define IDFF_asharpB               425
 #define IDFF_asharpHQBF            426
 #define IDFF_mplayerSharpLuma      440
@@ -284,7 +284,7 @@
 #define IDFF_awarpsharpBM          439 //0 - hq 3-pass, 1 - fast 3-pass, 2 - fast 1-pass
 
 #define IDFF_filterDCT    450
-#define IDFF_isDCT        451 
+#define IDFF_isDCT        451
 #define IDFF_showDCT      462
 #define IDFF_orderDCT     452
 #define IDFF_fullDCT      453
@@ -333,12 +333,12 @@
 #define IDFF_noiseShakeA                516
 #define IDFF_noiseShakeF                517
 #define IDFF_noiseLinesA                518
-#define IDFF_noiseLinesF                519 
-#define IDFF_noiseLinesC                524 
+#define IDFF_noiseLinesF                519
+#define IDFF_noiseLinesC                524
 #define IDFF_noiseLinesTransparency     520
 #define IDFF_noiseScratchesA            521
-#define IDFF_noiseScratchesF            522 
-#define IDFF_noiseScratchesC            525 
+#define IDFF_noiseScratchesF            522
+#define IDFF_noiseScratchesC            525
 #define IDFF_noiseScratchesTransparency 523
 
 #define IDFF_filterResize        700
@@ -396,7 +396,7 @@
 
 #define IDFF_filterCropNzoom     747
 #define IDFF_isCropNzoom         712
-#define IDFF_showCropNzoom       752 
+#define IDFF_showCropNzoom       752
 #define IDFF_orderCropNzoom      754
 #define IDFF_fullCropNzoom       765
 #define IDFF_cropNzoomMode       713 //0 - zoom, 1 - crop, 2 - pan&scan
@@ -434,7 +434,7 @@
 #define IDFF_subStereoscopicPar      834 // stereoscopic paralax <-10%,10%> of picture width
 #define IDFF_subDefLang              836
 #define IDFF_subDefLang2             852
-#define IDFF_subVobsub               835 
+#define IDFF_subVobsub               835
 #define IDFF_subVobsubAA             837
 #define IDFF_subVobsubAAswgauss      851
 #define IDFF_subVobsubChangePosition 849
@@ -520,7 +520,7 @@
 #define IDFF_transfMirror       1113
 
 #define IDFF_filterGradFun     1150
-#define IDFF_isGradFun         1151 
+#define IDFF_isGradFun         1151
 #define IDFF_showGradFun       1152
 #define IDFF_orderGradFun      1153
 #define IDFF_fullGradFun       1154
@@ -545,7 +545,7 @@
 #define IDFF_avisynthInYUY2        1256
 #define IDFF_avisynthInRGB24       1257
 #define IDFF_avisynthInRGB32       1258
-#define IDFF_avisynthFfdshowSource 1259            
+#define IDFF_avisynthFfdshowSource 1259
 
 #define IDFF_isOSD                 1501
 #define IDFF_OSDfontName           1509
@@ -556,7 +556,7 @@
 #define IDFF_OSDfontShadowRadius   1506
 #define IDFF_OSDfontSpacing        1507
 #define IDFF_OSDfontColor          1508
-#define IDFF_OSDfontXscale         1532 
+#define IDFF_OSDfontXscale         1532
 #define IDFF_OSDfontFast           1535
   #define IDFF_OSDtype_inputSize          1520
   #define IDFF_OSDtype_inputAspect        1550
@@ -598,11 +598,11 @@
    #define IDFF_MOVIE_AUDX    20
    #define IDFF_MOVIE_MAX     20 // max should equal highest value (see rev. 2540)
   #define IDFF_OSDtype_accurDeblock        30
-  #define IDFF_OSDtype_outputFOURCC      1540  
+  #define IDFF_OSDtype_outputFOURCC      1540
   #define IDFF_OSDtype_inputFPS          1541
-  #define IDFF_OSDtype_sourceFlnm        1542 
+  #define IDFF_OSDtype_sourceFlnm        1542
   #define IDFF_OSDtype_inputFOURCC       1543
-  #define IDFF_OSDtype_inCodecString     1544 
+  #define IDFF_OSDtype_inCodecString     1544
   #define IDFF_OSDtype_outCodecString    1545
   #define IDFF_OSDtype_outSpeakersConfig 1549
   #define IDFF_frameType                   31
@@ -761,7 +761,7 @@
 #define IDFF_iv32               1034
 #define IDFF_cvid               1035
 #define IDFF_mszh               1044
-#define IDFF_zlib               1045 
+#define IDFF_zlib               1045
 #define IDFF_flv1               1049
 #define IDFF_8bps               1050
 #define IDFF_png1               1051
@@ -1001,7 +1001,7 @@
 #define IDFF_mixerClev         2626
 #define IDFF_mixerSlev         2627
 #define IDFF_mixerLFElev       2628
-#define IDFF_headphone_dim     2625 
+#define IDFF_headphone_dim     2625
 
 #define IDFF_filterDolbyDecoder 2650
 #define IDFF_isDolbyDecoder     2651

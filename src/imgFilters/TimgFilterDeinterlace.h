@@ -16,12 +16,12 @@ public:
 struct Tlibmplayer;
 DECLARE_FILTER(TimgFilterMplayerDeinterlace,public,TimgFilter)
 private:
- Tlibmplayer *libmplayer; 
+ Tlibmplayer *libmplayer;
  void *pp_ctx;PPMode pp_mode;
 protected:
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK_YUV_PLANAR;}
  virtual void onSizeChange(void) {done();}
-public: 
+public:
  TimgFilterMplayerDeinterlace(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual ~TimgFilterMplayerDeinterlace();
  virtual void done(void);

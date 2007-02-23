@@ -45,7 +45,7 @@ public:
    Tpreset::operator =(src);
    needOutcspsFix=src.needOutcspsFix;
    needGlobalFix=src.needGlobalFix;
-   
+
    autoloadSize=src.autoloadSize;
    autoloadSizeXmin=src.autoloadSizeXmin;
    autoloadSizeXmax=src.autoloadSizeXmax;
@@ -67,14 +67,14 @@ public:
    h264skipOnDelay=src.h264skipOnDelay;
    h264skipDelayTime=src.h264skipDelayTime;
    strncpy(useQueueOnlyInList, src.useQueueOnlyInList, 256);
-   
+
    isDyInterlaced=src.isDyInterlaced;dyInterlaced=src.dyInterlaced;
    return *this;
   }
- 
+
  virtual Tpreset* copy(void) {return new_copy(this);}
  virtual void loadReg(void);
- 
+
  int autoloadSize,autoloadSizeXmin,autoloadSizeXmax,autoloadSizeCond,autoloadSizeYmin,autoloadSizeYmax;
  bool autoloadSizeMatch(int AVIdx,int AVIdy);
 
@@ -90,7 +90,7 @@ public:
  char_t useQueueOnlyInList[256];
 
  int isDyInterlaced,dyInterlaced;
- 
+
  TpostprocSettings *postproc;
  TsubtitlesSettings *subtitles;
  TlevelsSettings *levels;

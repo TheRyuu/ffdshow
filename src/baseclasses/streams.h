@@ -48,7 +48,7 @@
 
 // Disable warning message for C4201 - use of nameless struct/union
 // Otherwise, strmif.h will generate warnings for Win32 debug builds
-#pragma warning( disable : 4201 )  
+#pragma warning( disable : 4201 )
 
 #include <mmsystem.h>
 
@@ -122,7 +122,7 @@ typedef struct {
 #ifndef DWLP_MSGRESULT
   #define DWLP_MSGRESULT  0
 #endif
-#ifndef DWLP_DLGPROC 
+#ifndef DWLP_DLGPROC
   #define DWLP_DLGPROC    DWLP_MSGRESULT + sizeof(LRESULT)
 #endif
 #ifndef DWLP_USER
@@ -181,4 +181,8 @@ typedef struct {
     #pragma message("STREAMS.H included TWICE")
     #endif
 #endif // __STREAMS__
+
+
+
+
 

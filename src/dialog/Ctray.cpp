@@ -67,7 +67,7 @@ INT_PTR TdlgMiscPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CHB_DLG_SHOWHINTS:
        parent->enableHints(!!getCheck(IDC_CHB_DLG_SHOWHINTS));
@@ -87,9 +87,9 @@ INT_PTR TdlgMiscPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 #endif
            Twindow::cfgSet(IDFF_lang,text<char_t>((const char*)&langint));
            parent->translate();
-          } 
+          }
          return TRUE;
-        } 
+        }
        break;
       case IDC_BT_PATH_DSCALER:
        if (HIWORD(wParam)==BN_CLICKED)
@@ -98,7 +98,7 @@ INT_PTR TdlgMiscPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
           paths2dlg();
          return TRUE;
         }
-       break;  
+       break;
       case IDC_BT_PATH_FFDSHOW:
        if (HIWORD(wParam)==BN_CLICKED)
         {
@@ -106,10 +106,10 @@ INT_PTR TdlgMiscPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
           paths2dlg();
          return TRUE;
         }
-       break;  
+       break;
      }
-    break; 
-  }    
+    break;
+  }
  return TconfPageBase::msgProc(uMsg,wParam,lParam);
 }
 

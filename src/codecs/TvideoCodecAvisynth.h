@@ -19,7 +19,7 @@ private:
   } *avisynth;
  int csp;
  Trect r;
-protected: 
+protected:
  virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);
 public:
  static bool getVersion(const Tconfig *config,char *vers);

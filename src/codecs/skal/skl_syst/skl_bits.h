@@ -55,7 +55,7 @@ class SKL_BMASKS {
 //////////////////////////////////////////////////////////
 // These are fast, inlined, MSBF bitstream.
 // It heavily supposes you know what you're doing.
-// Read/write overflow is *NOT* checked. 
+// Read/write overflow is *NOT* checked.
 //////////////////////////////////////////////////////////
 
 struct SKL_FBB {
@@ -66,7 +66,7 @@ struct SKL_FBB {
   SKL_FBB() {}
   SKL_FBB(const SKL_BYTE *buf) { Init(buf); } // read
   SKL_FBB(SKL_BYTE *buf) { Init(buf); }       // write
-  
+
 
   inline void Init(const SKL_BYTE *buf) {
     SKL_ASSERT(buf!=0);

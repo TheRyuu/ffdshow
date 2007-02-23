@@ -15,4 +15,4 @@ public:
  virtual bool forCodec(int codecId) {return codecId==CODEC_ID_SKAL;}
 };
 
-#endif 
+#endif

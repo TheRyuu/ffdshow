@@ -21,4 +21,4 @@ public:
  TbitrateDlg(HWND hParent,IffdshowBase *Ideci);
 };
 
-#endif 
+#endif

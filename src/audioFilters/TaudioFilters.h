@@ -37,7 +37,7 @@ private:
  int outsfs;
 protected:
  virtual void makeQueue(const Tpreset *cfg,TfilterQueue &queue);
-public: 
+public:
  TaudioFiltersPlayer(IffdshowBase *Ideci,IprocAudioSink *Isink,TpresetAudio *presetSettings);
 };
 

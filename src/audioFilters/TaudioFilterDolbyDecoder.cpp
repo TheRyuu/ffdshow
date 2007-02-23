@@ -43,9 +43,9 @@ bool TaudioFilterDolbyDecoder2::getOutputFmt(TsampleFormat &fmt,const TfilterSet
   {
    fmt.setChannels(6);
    return true;
-  } 
+  }
  else
-  return false; 
+  return false;
 }
 
 float TaudioFilterDolbyDecoder2::passive_lock(float x)
@@ -98,7 +98,7 @@ void TaudioFilterDolbyDecoder2::matrix_decode(const float *in, const int k, cons
  l_agc = in[il] * passive_lock(*adapt_l_gain);
  r_agc = in[ir] * passive_lock(*adapt_r_gain);
  cf[k] = (l_agc + r_agc) * (float)M_SQRT1_2;
- if (decode_rear) 
+ if (decode_rear)
   {
    lr[kr] = rr[kr] = (l_agc - r_agc) * (float)M_SQRT1_2;
    /* Stereo rear channel is steered with the same AGC steering as
@@ -156,7 +156,7 @@ HRESULT TaudioFilterDolbyDecoder2::process(TfilterQueue::iterator it,TsampleForm
  static const unsigned int FWRDURATION=240;      /* FWR average duration (samples) */
 
  const TdolbyDecoderSettings *cfg=(const TdolbyDecoderSettings*)cfg0;
- 
+
  if (is(fmt,cfg))
   {
    if (olddelay!=cfg->delay || oldfreq!=fmt.freq)
@@ -170,13 +170,13 @@ HRESULT TaudioFilterDolbyDecoder2::process(TfilterQueue::iterator it,TsampleForm
      lf.resize(dlbuflen);rf.resize(dlbuflen);lr.resize(dlbuflen);rr.resize(dlbuflen);cf.resize(dlbuflen);cr.resize(dlbuflen);
      filter_coefs_lfe=calc_coefficients_125Hz_lowpass(fmt.freq);
      lfe_pos=0;memset(LFE_buf,0,sizeof(LFE_buf));
-    } 
+    }
 
    float *in=(float*)init(cfg,fmt,samples,numsamples); // Input audio data
    float *end=in+numsamples*fmt.nchannels; // Loop end
    fmt.setChannels(6);
    float *out=(float*)(samples=alloc_buffer(fmt,numsamples,buf));
-   while(in < end) 
+   while(in < end)
     {
      const int k = cyc_pos;
 
@@ -187,7 +187,7 @@ HRESULT TaudioFilterDolbyDecoder2::process(TfilterQueue::iterator it,TsampleForm
      r_fwr += fabs(in[1]) - fabs(fwrbuf_r[fwr_pos]);
      lpr_fwr += fabs(in[0] + in[1]) - fabs(fwrbuf_l[fwr_pos] + fwrbuf_r[fwr_pos]);
      lmr_fwr += fabs(in[0] - in[1]) - fabs(fwrbuf_l[fwr_pos] - fwrbuf_r[fwr_pos]);
-     
+
      /* Matrix encoded 2 channel sources */
      fwrbuf_l[k] = in[0];
      fwrbuf_r[k] = in[1];
@@ -197,7 +197,7 @@ HRESULT TaudioFilterDolbyDecoder2::process(TfilterQueue::iterator it,TsampleForm
                    &adapt_l_gain, &adapt_r_gain,
                    &adapt_lpr_gain, &adapt_lmr_gain,
                    &lf[0], &rf[0], &lr[0], &rr[0], &cf[0]);
-     
+
      out[0]=lf[k];
      out[1]=rf[k];
      out[2]=cf[k];
@@ -206,15 +206,15 @@ HRESULT TaudioFilterDolbyDecoder2::process(TfilterQueue::iterator it,TsampleForm
      lfe_pos++;if (lfe_pos==len125) lfe_pos=0;
      out[4]=lr[k];
      out[5]=rr[k];
-     // Next sample... 
+     // Next sample...
      in += 2;
      out += fmt.nchannels;
      cyc_pos--;
      if (cyc_pos < 0)
       cyc_pos += dlbuflen;
-    } 
-  }  
- return parent->deliverSamples(++it,fmt,samples,numsamples); 
+    }
+  }
+ return parent->deliverSamples(++it,fmt,samples,numsamples);
 }
 
 void TaudioFilterDolbyDecoder2::onSeek(void)

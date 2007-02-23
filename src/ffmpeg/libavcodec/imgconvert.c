@@ -370,7 +370,7 @@ void avpicture_init_pixfmtinfo(void)
  pix_fmt_info[PIX_FMT_YUV420P].pixel_type = FF_PIXEL_PLANAR;
  pix_fmt_info[PIX_FMT_YUV420P].depth = 8;
  pix_fmt_info[PIX_FMT_YUV420P].x_chroma_shift = 1;
- pix_fmt_info[PIX_FMT_YUV420P].y_chroma_shift = 1; 
+ pix_fmt_info[PIX_FMT_YUV420P].y_chroma_shift = 1;
 
  pix_fmt_info[PIX_FMT_YUV422P].name = "yuv422p";
  pix_fmt_info[PIX_FMT_YUV422P].nb_channels = 3;
@@ -426,7 +426,7 @@ void avpicture_init_pixfmtinfo(void)
  pix_fmt_info[PIX_FMT_YUVJ420P].color_type = FF_COLOR_YUV_JPEG;
  pix_fmt_info[PIX_FMT_YUVJ420P].pixel_type = FF_PIXEL_PLANAR;
  pix_fmt_info[PIX_FMT_YUVJ420P].depth = 8;
- pix_fmt_info[PIX_FMT_YUVJ420P].x_chroma_shift = 1;  
+ pix_fmt_info[PIX_FMT_YUVJ420P].x_chroma_shift = 1;
  pix_fmt_info[PIX_FMT_YUVJ420P].y_chroma_shift = 1;
 
  pix_fmt_info[PIX_FMT_YUVJ422P].name = "yuvj422p";
@@ -435,7 +435,7 @@ void avpicture_init_pixfmtinfo(void)
  pix_fmt_info[PIX_FMT_YUVJ422P].pixel_type = FF_PIXEL_PLANAR;
  pix_fmt_info[PIX_FMT_YUVJ422P].depth = 8;
  pix_fmt_info[PIX_FMT_YUVJ422P].x_chroma_shift = 1;
- pix_fmt_info[PIX_FMT_YUVJ422P].y_chroma_shift = 0; 
+ pix_fmt_info[PIX_FMT_YUVJ422P].y_chroma_shift = 0;
 
  pix_fmt_info[PIX_FMT_YUVJ444P].name = "yuvj444p";
  pix_fmt_info[PIX_FMT_YUVJ444P].nb_channels = 3;
@@ -486,20 +486,20 @@ void avpicture_init_pixfmtinfo(void)
  pix_fmt_info[PIX_FMT_RGB555].depth = 5;
  pix_fmt_info[PIX_FMT_RGB555].x_chroma_shift = 0;
  pix_fmt_info[PIX_FMT_RGB555].y_chroma_shift = 0;
- 
+
  /* gray / mono formats */
  pix_fmt_info[PIX_FMT_GRAY16BE].name = "gray16be";
  pix_fmt_info[PIX_FMT_GRAY16BE].nb_channels = 1;
  pix_fmt_info[PIX_FMT_GRAY16BE].color_type = FF_COLOR_GRAY;
  pix_fmt_info[PIX_FMT_GRAY16BE].pixel_type = FF_PIXEL_PLANAR;
  pix_fmt_info[PIX_FMT_GRAY16BE].depth = 16;
- 
+
  pix_fmt_info[PIX_FMT_GRAY16LE].name = "gray16le";
  pix_fmt_info[PIX_FMT_GRAY16LE].nb_channels = 1;
  pix_fmt_info[PIX_FMT_GRAY16LE].color_type = FF_COLOR_GRAY;
  pix_fmt_info[PIX_FMT_GRAY16LE].pixel_type = FF_PIXEL_PLANAR;
  pix_fmt_info[PIX_FMT_GRAY16LE].depth = 16;
- 
+
  pix_fmt_info[PIX_FMT_GRAY8].name = "gray";
  pix_fmt_info[PIX_FMT_GRAY8].nb_channels = 1;
  pix_fmt_info[PIX_FMT_GRAY8].color_type = FF_COLOR_GRAY;
@@ -520,7 +520,7 @@ void avpicture_init_pixfmtinfo(void)
 
  /* paletted formats */
  pix_fmt_info[PIX_FMT_PAL8].name = "pal8";
- pix_fmt_info[PIX_FMT_PAL8].nb_channels = 4; 
+ pix_fmt_info[PIX_FMT_PAL8].nb_channels = 4;
  pix_fmt_info[PIX_FMT_PAL8].is_alpha = 1;
  pix_fmt_info[PIX_FMT_PAL8].color_type = FF_COLOR_RGB;
  pix_fmt_info[PIX_FMT_PAL8].pixel_type = FF_PIXEL_PALETTE;

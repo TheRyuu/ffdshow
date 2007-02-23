@@ -30,12 +30,12 @@
    formats you want to support */
 
 /**
- * simple call to register all the codecs. 
+ * simple call to register all the codecs.
  */
 void avcodec_register_all(void)
 {
     static int inited = 0;
-    
+
     if (inited != 0)
 	return;
     inited = 1;
@@ -185,4 +185,8 @@ void avcodec_register_all(void)
 #undef PCM_CODEC
 
 }
+
+
+
+
 

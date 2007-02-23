@@ -31,22 +31,22 @@ void TOSDpageDec::init(void)
  setFont(IDC_BT_OSD_PRESETS  ,parent->arrowsFont);
  setFont(IDC_BT_OSD_LINE_UP  ,parent->arrowsFont);
  setFont(IDC_BT_OSD_LINE_DOWN,parent->arrowsFont);
- 
+
  hlv=GetDlgItem(m_hwnd,IDC_LV_OSD_LINES);
  ListView_SetExtendedListViewStyleEx(hlv,LVS_EX_FULLROWSELECT,LVS_EX_FULLROWSELECT);
  int ncol=0;
  RECT r;
  GetWindowRect(hlv,&r);
  ListView_AddCol(hlv,ncol,r.right-r.left-26,_l("OSD item"),false);
- 
+
  edLimitText(IDC_ED_OSD_USER,240);
  dragitem=-1;
  CRect rp;GetWindowRect(m_hwnd,&rp);
  CRect rc;GetWindowRect(hlv,&rc);
  lvx=rc.left-rp.left;lvy=rc.top-rp.top;
- 
+
  edLimitText(IDC_ED_OSD_SAVE,MAX_PATH);
-} 
+}
 
 void TOSDpageDec::cfg2dlg(void)
 {
@@ -81,17 +81,17 @@ void TOSDpageDec::osds2dlg(void)
    const char_t *presetname=deciD->getOSDpresetName2(i);
    if (startpresetname && strcmp(startpresetname,presetname)==0)
     osdslabels.push_back(ffstring(presetname)+ffstring(_(IDC_CBX_OSD_PRESETS,_l(" (show on startup)"))));
-   else  
+   else
     osdslabels.push_back(presetname);
    cbxAdd(IDC_CBX_OSD_PRESETS,osdslabels.back().c_str(),intptr_t(presetname));
-  } 
+  }
  const char_t *curpreset=cfgGetStr(IDFF_OSDcurPreset);
  for (int i=0;i<cnt;i++)
   if (strcmp(curpreset,(const char_t*)cbxGetItemData(IDC_CBX_OSD_PRESETS,i))==0)
    {
     cbxSetCurSel(IDC_CBX_OSD_PRESETS,i);
     break;
-   } 
+   }
  osd2dlg();
  nostate=false;
 }
@@ -121,7 +121,7 @@ void TOSDpageDec::osd2dlg(void)
    nostate=true;
    for (int j=0;j<cnt;j++)
     ListView_SetCheckState(hlv,j,FALSE);
-   nostate=false; 
+   nostate=false;
    for (ints::const_iterator i=osds.begin();i!=osds.end();i++)
     checkOSDline(*i,true);
    ListView_SortItems(hlv,osdsSort,LPARAM(this));
@@ -159,7 +159,7 @@ void TOSDpageDec::lv2osdFormat(void)
  for (int i=0;i<cnt;i++)
   if (ListView_GetCheckState(hlv,i))
    strcatf(format,_l("%i "),lvGetItemParam(IDC_LV_OSD_LINES,i));
- if (format[strlen(format)-1]==' ') format[strlen(format)-1]='\0';  
+ if (format[strlen(format)-1]==' ') format[strlen(format)-1]='\0';
  deciD->setOSDpresetFormat(NULL,format);
  parent->setChange();
 }
@@ -170,7 +170,7 @@ int TOSDpageDec::findPreset(const char_t *presetname)
  for (int i=0;i<cnt;i++)
   if (stricmp((const char_t*)cbxGetItemData(IDC_CBX_OSD_PRESETS,i),presetname)==0)
    return i;
- return CB_ERR; 
+ return CB_ERR;
 }
 
 INT_PTR TOSDpageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -178,7 +178,7 @@ INT_PTR TOSDpageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CHB_OSD:
        cfgSet(IDFF_isOSD,getCheck(IDC_CHB_OSD));
@@ -193,7 +193,7 @@ INT_PTR TOSDpageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        parent->setChange();
        break;
       case IDC_ED_OSD_USER:
-       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText) 
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
          char_t ed[250];
          GetDlgItemText(m_hwnd,IDC_ED_OSD_USER,ed,250);
@@ -208,7 +208,7 @@ INT_PTR TOSDpageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         parent->setChange();
        return TRUE;
      }
-    break; 
+    break;
    case WM_NOTIFY:
     {
      NMHDR *nmhdr=LPNMHDR(lParam);
@@ -231,9 +231,9 @@ INT_PTR TOSDpageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
              {
               dragitem=nmlv->iItem;
               SetCapture(m_hwnd);
-             } 
-           }   
-          break; 
+             }
+           }
+          break;
          }
         case NM_DBLCLK:
          {
@@ -248,14 +248,14 @@ INT_PTR TOSDpageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
                 char_t osd[240];
                 tsprintf(osd,_l("%%%s"),shortcut);
                 SendDlgItemMessage(m_hwnd,IDC_ED_OSD_USER,EM_REPLACESEL,TRUE,LPARAM(osd));
-               } 
-             }  
+               }
+             }
            }
-          break;   
+          break;
          }
        }
      break;
-    }    
+    }
    case WM_MOUSEMOVE:
     if (dragitem!=-1)
      {
@@ -263,21 +263,21 @@ INT_PTR TOSDpageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       lvhti.pt.x=LOWORD(lParam)-lvx;
       lvhti.pt.y=HIWORD(lParam)-lvy;
       int target=ListView_HitTest(hlv,&lvhti);
-      if (target!=-1) 
+      if (target!=-1)
        {
         lvSwapItems(IDC_LV_OSD_LINES,target,dragitem);
         lv2osdFormat();
         dragitem=target;
-       } 
+       }
       return TRUE;
      }
-    break; 
+    break;
    case WM_LBUTTONUP:
     if (dragitem!=-1)
      {
       dragitem=-1;
       ReleaseCapture();
-      return TRUE; 
+      return TRUE;
      }
     break;
   }
@@ -286,7 +286,7 @@ INT_PTR TOSDpageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 void TOSDpageDec::onLineUp(void)
 {
  int ii=lvGetSelItem(IDC_LV_OSD_LINES);
- if (ii>=1) 
+ if (ii>=1)
   {
    lvSwapItems(IDC_LV_OSD_LINES,ii,ii-1);
    lv2osdFormat();
@@ -311,11 +311,11 @@ void TOSDpageDec::onPresets(void)
    IDC_MNI_OSD_PRESETS_NEW       =6000,
    IDC_MNI_OSD_PRESETS_SAVEAS_NEW,
    IDC_MNI_OSD_PRESETS_RENAME,
-   IDC_MNI_OSD_PRESETS_DELETE,    
+   IDC_MNI_OSD_PRESETS_DELETE,
    IDC_MNI_OSD_PRESETS_ONSTARTUP,
    IDC_MNI_OSD_PRESETS_SAVEAS,
    IDC_MNI_OSD_PRESETS_SAVEONLY
-  }; 
+  };
  HMENU hm=CreatePopupMenu(),hmSaveAs=NULL;
  int ord=0;
  insertMenuItem(hm,ord,IDC_MNI_OSD_PRESETS_NEW,_l("New"),false);
@@ -329,13 +329,13 @@ void TOSDpageDec::onPresets(void)
      const char_t *name2=deciD->getOSDpresetName2(i);
      if (stricmp(curPresetName,name2)!=0)
       insertMenuItem(hmSaveAs,ord2,IDC_MNI_OSD_PRESETS_SAVEAS+i,name2,false);
-    }  
+    }
    insertSeparator(hmSaveAs,ord2);
    insertMenuItem(hmSaveAs,ord2,IDC_MNI_OSD_PRESETS_SAVEAS_NEW,_l("New preset..."),false);
    insertSubmenu(hm,ord,_l("Save preset to..."),hmSaveAs);
   }
  else
-  insertMenuItem(hm,ord,IDC_MNI_OSD_PRESETS_SAVEAS_NEW,_l("Save as..."),false);  
+  insertMenuItem(hm,ord,IDC_MNI_OSD_PRESETS_SAVEAS_NEW,_l("Save as..."),false);
  insertMenuItem(hm,ord,IDC_MNI_OSD_PRESETS_RENAME,_l("Rename preset..."),false);enable(hm,2,ii!=0);
  insertMenuItem(hm,ord,IDC_MNI_OSD_PRESETS_DELETE,_l("Delete preset"),false);enable(hm,3,ii!=0);
  insertSeparator(hm,ord);
@@ -344,8 +344,8 @@ void TOSDpageDec::onPresets(void)
   {
    insertSeparator(hm,ord);
    insertMenuItem(hm,ord,IDC_MNI_OSD_PRESETS_SAVEONLY,_l("Don't display, only save data to file"),!!cfgGet(IDFF_OSDsaveOnly));
-  } 
- RECT r;             
+  }
+ RECT r;
  GetWindowRect(GetDlgItem(m_hwnd,IDC_BT_OSD_PRESETS),&r);
  POINT p={0,r.bottom-r.top};
  ClientToScreen(GetDlgItem(m_hwnd,IDC_BT_OSD_PRESETS),&p);
@@ -360,7 +360,7 @@ void TOSDpageDec::onPresets(void)
     char_t newPreset[40];GetMenuString(hmSaveAs,cmd,newPreset,40,MF_BYCOMMAND);
     deciD->setOSDpresetFormat(newPreset,format);
    }
-  else 
+  else
    switch (cmd)
     {
      case IDC_MNI_OSD_PRESETS_RENAME:
@@ -374,10 +374,10 @@ void TOSDpageDec::onPresets(void)
           if (strcmp(startupPresetName,curPresetName)==0)
            cfgSet(IDFF_OSDstartPreset,newPresetName);
           osds2dlg();
-         } 
+         }
         else
          err(_(-IDD_OSD,_l("Preset already exists")));
-       break; 
+       break;
       }
      case IDC_MNI_OSD_PRESETS_SAVEAS_NEW:
       {
@@ -389,7 +389,7 @@ void TOSDpageDec::onPresets(void)
           deciD->addOSDpreset(newPresetName,format);
           cfgSet(IDFF_OSDcurPreset,newPresetName);
           osds2dlg();
-         } 
+         }
         else
          err(_(-IDD_OSD,_l("Preset already exists")));
        break;
@@ -413,18 +413,18 @@ void TOSDpageDec::onPresets(void)
           deciD->addOSDpreset(newPresetName,_l(""));
           cfgSet(IDFF_OSDcurPreset,newPresetName);
           osds2dlg();
-         } 
+         }
         else
          err(_(-IDD_OSD,_l("Preset already exists")));
        break;
-      } 
+      }
      case IDC_MNI_OSD_PRESETS_ONSTARTUP:
       {
        if (stricmp(startupPresetName,curPresetName)==0)
         {
          cfgSet(IDFF_OSDstartPreset,_l(""));
-         osds2dlg(); 
-        } 
+         osds2dlg();
+        }
        else
         {
          char_t durationS[20];_itoa(cfgGet(IDFF_OSDstartDuration),durationS,10);
@@ -432,12 +432,12 @@ void TOSDpageDec::onPresets(void)
           {
            cfgSet(IDFF_OSDstartPreset,curPresetName);
            deci->putParam(IDFF_OSDstartDuration,atoi(durationS));
-           osds2dlg(); 
+           osds2dlg();
           }
-        } 
+        }
        break;
-      } 
-    } 
+      }
+    }
  DestroyMenu(hm);
 }
 void TOSDpageDec::onSave(void)
@@ -447,7 +447,7 @@ void TOSDpageDec::onSave(void)
   {
    setDlgItemText(m_hwnd,IDC_ED_OSD_SAVE,flnm);
    cfgSet(IDFF_OSDsaveFlnm,flnm);
-  } 
+  }
 }
 
 void TOSDpageDec::applySettings(void)
@@ -460,7 +460,7 @@ void TOSDpageDec::applySettings(void)
 void TOSDpageDec::translate(void)
 {
  TconfPageDec::translate();
- 
+
  nostate=true;
  ListView_DeleteAllItems(hlv);
  for (int i=0;;i++)
@@ -473,7 +473,7 @@ void TOSDpageDec::translate(void)
     break;
    lvi.pszText=const_cast<char_t*>(_(IDC_LV_OSD_LINES,text));
    ListView_InsertItem(hlv,&lvi);
-  } 
+  }
  nostate=false;
 }
 
@@ -508,7 +508,7 @@ TOSDpageDec::TOSDpageDec(TffdshowPageDec *Iparent):TconfPageDec(Iparent,NULL,0)
    IDC_BT_OSD_SAVE,&TOSDpageDec::onSave,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
 }
 
 //================================ TOSDpageDecVideo ================================
@@ -523,7 +523,7 @@ bool TOSDpageVideo::reset(bool testonly)
 void TOSDpageAudio::init(void)
 {
  TOSDpageDec::init();
- 
+
  static const int idPos[]={IDC_LBL_OSD_POSX,IDC_TBR_OSD_POSX,IDC_LBL_OSD_POSY,IDC_TBR_OSD_POSY,0};
  enable(0,idPos);
 }

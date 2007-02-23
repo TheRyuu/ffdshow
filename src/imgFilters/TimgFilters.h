@@ -26,7 +26,7 @@ private:
  IimgFilterGrab *grab;
  TimgFilterOutput *output;
  bool firstprocess;
-protected: 
+protected:
  TimgFilters(IffdshowBase *Ideci,IprocVideoSink *Isink);
  comptrQ<IffdshowDecVideo> deciV;
  virtual void onFirstProcess(const TpresetVideo *cfg) {}
@@ -47,13 +47,13 @@ public:
  void resetSubtitles(int id);
  bool ctlSubtitles(int id,int type,unsigned int ctl_id,const void *ctl_data,unsigned int ctl_datalen);
  const char_t *getCurrentSubFlnm(void) const;
- 
+
  virtual HRESULT addClosedCaption(const char* line) {return E_NOTIMPL;}
  virtual HRESULT hideClosedCaptions(void) {return E_NOTIMPL;}
  virtual bool shortOSDmessage(const char_t *msg,unsigned int duration) {return false;}
  virtual HRESULT registerOSDprovider(IOSDprovider *provider,const char *name) {return E_NOTIMPL;}
  virtual HRESULT unregisterOSDprovider(IOSDprovider *provider) {return E_NOTIMPL;}
- 
+
  void grabNow(void);
 };
 
@@ -68,7 +68,7 @@ private:
  const bool &allowOutChange;
  TexpandSettings expandSettings;Tfilter *expand;
  TresizeAspectSettings *resizeSettingsDV;Tfilter *resizeDV;
-protected: 
+protected:
  virtual void onFirstProcess(const TpresetVideo *cfg);
  virtual void makeQueue(const Tpreset *cfg,TfilterQueue &queue);
 public:

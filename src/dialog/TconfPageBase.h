@@ -22,7 +22,7 @@ protected:
  char_t* loadText(int resId);
 
  virtual void onEditChange(void);
-public:  
+public:
  TconfPageBase(TffdshowPageBase *Iparent,int IfilterPageId=0);
  virtual ~TconfPageBase();
  void createWindow(void),destroyWindow(void);
@@ -55,4 +55,4 @@ public:
  void resize(const CRect &newrect);
 };
 
-#endif 
+#endif

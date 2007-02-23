@@ -81,7 +81,7 @@ static __inline int csp_xvid4_2ffdshow(int csp)
    case XVID4_CSP_YUY2  :return FF_CSP_YUY2;
    case XVID4_CSP_UYVY  :return FF_CSP_UYVY;
    case XVID4_CSP_I420  :return FF_CSP_420P|FF_CSP_FLAGS_YUV_ADJ|FF_CSP_FLAGS_YUV_ORDER;
-   case XVID4_CSP_RGB555:return FF_CSP_RGB15; 
+   case XVID4_CSP_RGB555:return FF_CSP_RGB15;
    case XVID4_CSP_RGB565:return FF_CSP_RGB16;
    case XVID4_CSP_PLANAR:return FF_CSP_420P;
    case XVID4_CSP_YVYU  :return FF_CSP_YVYU;
@@ -186,7 +186,7 @@ static __inline enum PixelFormat csp_ffdshow2lavc(int pix_fmt)
 
 //=================================== mplayer ===================================
 
-// RGB/BGR Formats 
+// RGB/BGR Formats
 
 #define IMGFMT_RGB_MASK 0xFFFFFF00
 #define IMGFMT_RGB (('R'<<24)|('G'<<16)|('B'<<8))
@@ -215,7 +215,7 @@ static __inline enum PixelFormat csp_ffdshow2lavc(int pix_fmt)
 
 #define IMGFMT_RGB_DEPTH(fmt) ((fmt)&0x3F)
 #define IMGFMT_BGR_DEPTH(fmt) ((fmt)&0x3F)
-                     
+
 // Planar YUV Formats
 
 #define IMGFMT_YVU9 0x39555659
@@ -229,7 +229,7 @@ static __inline enum PixelFormat csp_ffdshow2lavc(int pix_fmt)
 #define IMGFMT_NV12 0x3231564E
 #define IMGFMT_NV21 0x3132564E
 
-// unofficial Planar Formats, FIXME if official 4CC exists 
+// unofficial Planar Formats, FIXME if official 4CC exists
 #define IMGFMT_444P 0x50343434
 #define IMGFMT_422P 0x50323234
 #define IMGFMT_411P 0x50313134
@@ -277,20 +277,20 @@ static __inline int csp_ffdshow2mplayer(int csp)
    case FF_CSP_UYVY :return IMGFMT_UYVY;
    case FF_CSP_YVYU :return IMGFMT_YVYU;
    case FF_CSP_VYUY :return IMGFMT_VYUY;
-   
+
    case FF_CSP_ABGR :return IMGFMT_RGB32;
    case FF_CSP_RGBA :return IMGFMT_RGB32;
-   
+
    case FF_CSP_RGB15:return IMGFMT_BGR15;
    case FF_CSP_RGB16:return IMGFMT_BGR16;
    case FF_CSP_RGB24:return IMGFMT_BGR24;
    case FF_CSP_RGB32:return IMGFMT_BGR32;
-   
+
    case FF_CSP_BGR15:return IMGFMT_RGB15;
    case FF_CSP_BGR16:return IMGFMT_RGB16;
    case FF_CSP_BGR24:return IMGFMT_RGB24;
    case FF_CSP_BGR32:return IMGFMT_RGB32;
-   
+
    case FF_CSP_Y800 :return IMGFMT_Y800;
    case FF_CSP_NV12 :return csp&FF_CSP_FLAGS_YUV_ORDER?IMGFMT_NV12:IMGFMT_NV21;
    default          :return 0;
@@ -410,9 +410,9 @@ static __inline const TcspInfo* csp_getInfo(int csp)
      i++;
     if (i<=FF_CSPS_NUM)
      return &cspInfos[i];
-    else 
-     return NULL; 
-  }  
+    else
+     return NULL;
+  }
 }
 const TcspInfo* csp_getInfoFcc(FOURCC fcc);
 
@@ -462,7 +462,7 @@ static __inline void csp_yuv_adj_to_plane(int &csp,const TcspInfo *cspInfo,unsig
    csp&=~FF_CSP_FLAGS_YUV_ADJ;
    data[2]=data[0]+stride[0]*(dy>>cspInfo->shiftY[0]);stride[1]=stride[0]>>cspInfo->shiftX[1];
    data[1]=data[2]+stride[1]*(dy>>cspInfo->shiftY[1]);stride[2]=stride[0]>>cspInfo->shiftX[2];
-  } 
+  }
 }
 static __inline void csp_yuv_order(int &csp,unsigned char *data[4],stride_t stride[4])
 {
@@ -471,7 +471,7 @@ static __inline void csp_yuv_order(int &csp,unsigned char *data[4],stride_t stri
    csp&=~FF_CSP_FLAGS_YUV_ORDER;
    std::swap(data[1],data[2]);
    std::swap(stride[1],stride[2]);
-  } 
+  }
 }
 static __inline void csp_vflip(int &csp,const TcspInfo *cspInfo,unsigned char *data[],stride_t stride[],unsigned int dy)
 {
@@ -483,7 +483,7 @@ static __inline void csp_vflip(int &csp,const TcspInfo *cspInfo,unsigned char *d
      data[i]+=stride[i]*((dy>>cspInfo->shiftY[i])-1);
      stride[i]*=-1;
     }
-  }  
+  }
 }
 
 int getBMPcolorspace(const BITMAPINFOHEADER *hdr,const TcspInfos &forcedCsps);
@@ -494,7 +494,7 @@ struct TcspFcc
  FOURCC fcc;int csp;bool flip;
  bool supEnc;
 };
-extern const TcspFcc cspFccs[]; 
+extern const TcspFcc cspFccs[];
 
 #endif
 

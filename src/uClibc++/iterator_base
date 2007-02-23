@@ -42,7 +42,7 @@ namespace std{
 		}
 	}
 
-	template <class InputIterator> _UCXXEXPORT typename iterator_traits<InputIterator>::difference_type 
+	template <class InputIterator> _UCXXEXPORT typename iterator_traits<InputIterator>::difference_type
 		distance(InputIterator first, InputIterator last)
 	{
 		typename iterator_traits<InputIterator>::difference_type d = 0;
@@ -62,7 +62,7 @@ namespace std{
 	template <class Iterator> bool operator<=(const reverse_iterator<Iterator>& x, const reverse_iterator<Iterator>& y);
 	template <class Iterator> typename reverse_iterator<Iterator>::difference_type
 		operator-( const reverse_iterator<Iterator>& x, const reverse_iterator<Iterator>& y);
-	template <class Iterator> reverse_iterator<Iterator> 
+	template <class Iterator> reverse_iterator<Iterator>
 		operator+( typename reverse_iterator<Iterator>::difference_type n, const reverse_iterator<Iterator>& x);
 	template <class Container> class back_insert_iterator;
 	template <class Container> back_insert_iterator<Container> back_inserter(Container& x);
@@ -71,7 +71,7 @@ namespace std{
 	template <class Container> class insert_iterator;
 	template <class Container, class Iterator>
 		insert_iterator<Container> inserter(Container& x, Iterator i);
-	
+
 	//Actual Template definitions
 
 	template<class Iterator> struct _UCXXEXPORT iterator_traits {
@@ -114,7 +114,7 @@ namespace std{
 	};*/
 
 
-	template <class Category, class T, class Distance, class Pointer, class Reference> 
+	template <class Category, class T, class Distance, class Pointer, class Reference>
 		struct _UCXXEXPORT iterator
 	{
 		typedef T         value_type;
@@ -217,7 +217,7 @@ namespace std{
 		return reverse_iterator<Iterator> (x.base() - n);
 	}
 
-	template <class Container> class _UCXXEXPORT back_insert_iterator : 
+	template <class Container> class _UCXXEXPORT back_insert_iterator :
 		public iterator<output_iterator_tag,void,void,void,void>
 	{
 	protected:
@@ -284,7 +284,7 @@ namespace std{
 			++iter;
 			return *this;
 		}
-		insert_iterator<Container>& operator*() { return *this; } 
+		insert_iterator<Container>& operator*() { return *this; }
 		insert_iterator<Container>& operator++() { return *this; }
 		insert_iterator<Container> operator++(int) { return *this; }
 	};
@@ -299,5 +299,9 @@ namespace std{
 
 
 #endif
+
+
+
+
 
 

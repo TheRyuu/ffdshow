@@ -121,7 +121,7 @@ void TimgFilterLogoaway::Tplane::createBorderV(unsigned char *border,const unsig
        rt+=rd;
       }
      break;
-    } 
+    }
    case TlogoawaySettings::BM_DIRECT:
    case TlogoawaySettings::BM_OPPOSITE:
     for (i=0;i<h;i++)
@@ -247,7 +247,7 @@ void TimgFilterLogoaway::Tplane::setAverageVH(const TlogoawaySettings *cfg)
  // one empty vertical gradient step
  if (vstart==1)
   {
-   pRow+=logotempstride; // fix added on 
+   pRow+=logotempstride; // fix added on
    for (i=0;i<w;i++)
     vt[i]+=vd[i];
   }
@@ -287,7 +287,7 @@ void TimgFilterLogoaway::Tplane::blurLogotemp(bool useparambitmap)
 {
  unsigned char *rowp, *row, *rown;
  unsigned char *rowbkup;
-  
+
  rowp   =(unsigned char*)_alloca(w);
  rowbkup=(unsigned char*)_alloca(w);
 
@@ -311,7 +311,7 @@ void TimgFilterLogoaway::Tplane::blurLogotemp(bool useparambitmap)
              rown[j-1]+
              rown[j+1];
        row[j]=uint8_t(r/8);
-      } 
+      }
    row=rown;
    rown=rown+logotempstride;
    memcpy(rowp,rowbkup,w);
@@ -331,7 +331,7 @@ void TimgFilterLogoaway::Tplane::calcUweWeightTable(int w,int h,int power)
     }
    else
     uwetable[x+y*w]=1.0;
-    
+
  for (x=1;x<w-1;x++)
   for (int y=1;y<h-1;y++)
    {
@@ -340,14 +340,14 @@ void TimgFilterLogoaway::Tplane::calcUweWeightTable(int w,int h,int power)
      {
       weightsum+=uwetable[abs(bx-x)+y*w];
       weightsum+=uwetable[abs(bx-x)+abs(h-1-y)*w];
-     } 
+     }
     for (int by=1;by<h-1;by++)
      {
       weightsum+=uwetable[x+abs(by-y)*w];
       weightsum+=uwetable[abs(w-1-x)+abs(by-y)*w];
-     } 
+     }
     uweweightsum[y*w+x]=weightsum;
-   }  
+   }
 }
 
 void TimgFilterLogoaway::Tplane::uwe(const TlogoawaySettings *cfg)
@@ -358,7 +358,7 @@ void TimgFilterLogoaway::Tplane::uwe(const TlogoawaySettings *cfg)
    uweweightsum=(double*)aligned_malloc(w*h*sizeof(double));
    calcUweWeightTable(w,h,cfg->blur);
   }
- 
+
  for (int x=1;x<w-1;x++)
   for (int y=1;y<h-1;y++)
    {
@@ -368,13 +368,13 @@ void TimgFilterLogoaway::Tplane::uwe(const TlogoawaySettings *cfg)
      {
       r+=lineN[bx]*uwetable[abs(bx-x)+y*w];
       r+=lineS[bx]*uwetable[abs(bx-x)+abs(h-1-y)*w];
-     } 
+     }
     const unsigned char *lineW=bordw,*lineE=borde;
     for (int by=1;by<h-1;by++)
      {
       r+=lineW[by]*uwetable[x+abs(by-y)*w];
       r+=lineE[by]*uwetable[abs(w-1-x)+abs(by-y)*w];
-     } 
+     }
     logotempdata[y*logotempstride+x]=uint8_t(r/uweweightsum[y*w+x]);
    }
 }
@@ -436,7 +436,7 @@ void TimgFilterLogoaway::Tplane::init(const TlogoawaySettings *cfg)
    shapexy_cn=(SHAPEXY_VCNDEF*)aligned_malloc(w*h*sizeof(SHAPEXY_VCNDEF));
    for (int i=0;i<w*h;i++)
     {
-     shapexy_cn[i].up   =0; 
+     shapexy_cn[i].up   =0;
      shapexy_cn[i].left =0;
      shapexy_cn[i].right=w-1;
      shapexy_cn[i].down =h-1;
@@ -462,7 +462,7 @@ void TimgFilterLogoaway::Tplane::calcShapeXY_VContourNeighbours(const TlogoawayS
 {
  SHAPEXY_VCNDEF *vcn=shapexy_cn;
  //****************************************************************
- // CALCULATE VERTICAL CONTOUR NEIGHBOURS                             
+ // CALCULATE VERTICAL CONTOUR NEIGHBOURS
  for( int x=1;x<w-1;x++)
   {
    // find top neighbours
@@ -474,7 +474,7 @@ void TimgFilterLogoaway::Tplane::calcShapeXY_VContourNeighbours(const TlogoawayS
       lastcn=y;
      else if (b<=SHAPEMAP_NOCHANGE)
       continue;
-     else 
+     else
       vcn[y*w+x].up=lastcn;
     }
 
@@ -487,12 +487,12 @@ void TimgFilterLogoaway::Tplane::calcShapeXY_VContourNeighbours(const TlogoawayS
       lastcn=y;
      else if (b<=SHAPEMAP_NOCHANGE)
       continue;
-     else 
+     else
       vcn[y*w+x].down=lastcn;
     }
   }
  //****************************************************************
- // CALCULATE HORIZONTAL CONTOUR NEIGHBOURS                           
+ // CALCULATE HORIZONTAL CONTOUR NEIGHBOURS
  for(int y=1;y<h-1;y++)
   {
    // find left neighbours
@@ -504,7 +504,7 @@ void TimgFilterLogoaway::Tplane::calcShapeXY_VContourNeighbours(const TlogoawayS
       lastcn = x;
      else if (b<=SHAPEMAP_NOCHANGE)
       continue;
-     else 
+     else
       vcn[ y*w+x].left=lastcn;
     }
 
@@ -633,16 +633,16 @@ void TimgFilterLogoaway::Tplane::process(const TlogoawaySettings *cfg)
    case TlogoawaySettings::MODE_SOLIDFILL:
     setSolid(cfg);
     break;
-   case TlogoawaySettings::MODE_SHAPEXY: 
+   case TlogoawaySettings::MODE_SHAPEXY:
     if (parambitmapdata)
      {
       renderShapeXY(cfg);
       for (int i=1;i<=cfg->blur;i++)
        blurLogotemp(true);
-      break; 
-     }  
+      break;
+     }
     else
-     return; 
+     return;
     case TlogoawaySettings::MODE_SHAPEUGLARM:
     if (parambitmapdata)
      {
@@ -650,9 +650,9 @@ void TimgFilterLogoaway::Tplane::process(const TlogoawaySettings *cfg)
       for (int i=1;i<=cfg->blur;i++)
        blurLogotemp(true);
       break;
-     } 
+     }
     else
-     return; 
+     return;
   }
 
  loadLogo(cfg,
@@ -672,7 +672,7 @@ void TimgFilterLogoaway::done(void)
 {
  logotempbuf.clear();
  parambitmapbuf.clear();
- if (parambitmap) delete parambitmap;parambitmap=NULL; 
+ if (parambitmap) delete parambitmap;parambitmap=NULL;
  for (int i=0;i<3;i++)
   plane[i].done();
 }
@@ -691,7 +691,7 @@ bool TimgFilterLogoaway::is(const TffPictBase &pict,const TfilterSettingsVideo *
           (unsigned int)cfg->x+cfg->dx<=pictRect.dx && (unsigned int)cfg->y+cfg->dy<=pictRect.dy;
   }
  else
-  return false; 
+  return false;
 }
 
 HRESULT TimgFilterLogoaway::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
@@ -718,7 +718,7 @@ HRESULT TimgFilterLogoaway::process(TfilterQueue::iterator it,TffPict &pict,cons
          delete parambitmap;
          parambitmap=NULL;
         }
-      } 
+      }
      for (int i=0;i<(cfg->lumaonly?1:3);i++)
       {
        plane[i].shiftX=pict.cspInfo.shiftX[i];plane[i].shiftY=pict.cspInfo.shiftY[i];
@@ -732,9 +732,9 @@ HRESULT TimgFilterLogoaway::process(TfilterQueue::iterator it,TffPict &pict,cons
         {
          plane[i].parambitmapdata=NULL;
          plane[i].parambitmapstride=0;
-        } 
+        }
        plane[i].init(cfg);
-      } 
+      }
     }
 
    Trect tempR(cfg->x,cfg->y,cfg->dx,cfg->dy);
@@ -742,12 +742,12 @@ HRESULT TimgFilterLogoaway::process(TfilterQueue::iterator it,TffPict &pict,cons
 
    YUVcolor yuv(cfg->solidcolor);
    for (int i=0;i<(cfg->lumaonly?1:3);i++)
-    {       
+    {
      plane[i].stride2=stride2[i];
      plane[i].logotempdata=logotemp.data[i];plane[i].logotempstride=logotemp.stride[i];
      plane[i].solidcolor=(i==0?yuv.Y:(i==1?yuv.V+128:yuv.U+128));
      plane[i].process(cfg);
-    } 
-  }    
+    }
+  }
  return parent->deliverSample(++it,pict);
 }

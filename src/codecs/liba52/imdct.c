@@ -76,31 +76,31 @@ static sample_t roots128[31];
   #define attribute_used __attribute__((used))
   #define attribute_aligned __attribute__((aligned(16)))
 #else
-  #define attribute_used 
+  #define attribute_used
   #define attribute_aligned __declspec(align(16))
 #endif
 
 /* 128 point bit-reverse LUT */
 static const uint8_t attribute_aligned attribute_used bit_reverse_512[] = {
-	0x00, 0x40, 0x20, 0x60, 0x10, 0x50, 0x30, 0x70, 
-	0x08, 0x48, 0x28, 0x68, 0x18, 0x58, 0x38, 0x78, 
-	0x04, 0x44, 0x24, 0x64, 0x14, 0x54, 0x34, 0x74, 
-	0x0c, 0x4c, 0x2c, 0x6c, 0x1c, 0x5c, 0x3c, 0x7c, 
-	0x02, 0x42, 0x22, 0x62, 0x12, 0x52, 0x32, 0x72, 
-	0x0a, 0x4a, 0x2a, 0x6a, 0x1a, 0x5a, 0x3a, 0x7a, 
-	0x06, 0x46, 0x26, 0x66, 0x16, 0x56, 0x36, 0x76, 
-	0x0e, 0x4e, 0x2e, 0x6e, 0x1e, 0x5e, 0x3e, 0x7e, 
-	0x01, 0x41, 0x21, 0x61, 0x11, 0x51, 0x31, 0x71, 
-	0x09, 0x49, 0x29, 0x69, 0x19, 0x59, 0x39, 0x79, 
-	0x05, 0x45, 0x25, 0x65, 0x15, 0x55, 0x35, 0x75, 
-	0x0d, 0x4d, 0x2d, 0x6d, 0x1d, 0x5d, 0x3d, 0x7d, 
-	0x03, 0x43, 0x23, 0x63, 0x13, 0x53, 0x33, 0x73, 
-	0x0b, 0x4b, 0x2b, 0x6b, 0x1b, 0x5b, 0x3b, 0x7b, 
-	0x07, 0x47, 0x27, 0x67, 0x17, 0x57, 0x37, 0x77, 
+	0x00, 0x40, 0x20, 0x60, 0x10, 0x50, 0x30, 0x70,
+	0x08, 0x48, 0x28, 0x68, 0x18, 0x58, 0x38, 0x78,
+	0x04, 0x44, 0x24, 0x64, 0x14, 0x54, 0x34, 0x74,
+	0x0c, 0x4c, 0x2c, 0x6c, 0x1c, 0x5c, 0x3c, 0x7c,
+	0x02, 0x42, 0x22, 0x62, 0x12, 0x52, 0x32, 0x72,
+	0x0a, 0x4a, 0x2a, 0x6a, 0x1a, 0x5a, 0x3a, 0x7a,
+	0x06, 0x46, 0x26, 0x66, 0x16, 0x56, 0x36, 0x76,
+	0x0e, 0x4e, 0x2e, 0x6e, 0x1e, 0x5e, 0x3e, 0x7e,
+	0x01, 0x41, 0x21, 0x61, 0x11, 0x51, 0x31, 0x71,
+	0x09, 0x49, 0x29, 0x69, 0x19, 0x59, 0x39, 0x79,
+	0x05, 0x45, 0x25, 0x65, 0x15, 0x55, 0x35, 0x75,
+	0x0d, 0x4d, 0x2d, 0x6d, 0x1d, 0x5d, 0x3d, 0x7d,
+	0x03, 0x43, 0x23, 0x63, 0x13, 0x53, 0x33, 0x73,
+	0x0b, 0x4b, 0x2b, 0x6b, 0x1b, 0x5b, 0x3b, 0x7b,
+	0x07, 0x47, 0x27, 0x67, 0x17, 0x57, 0x37, 0x77,
 	0x0f, 0x4f, 0x2f, 0x6f, 0x1f, 0x5f, 0x3f, 0x7f};
 
-// NOTE: SSE needs 16byte alignment or it will segfault 
-// 
+// NOTE: SSE needs 16byte alignment or it will segfault
+//
 static float attribute_aligned sseSinCos1c[256];
 static float attribute_aligned sseSinCos1d[256];
 static const float attribute_used attribute_aligned ps111_1[4]={1,1,1,-1};
@@ -353,7 +353,7 @@ static void a52_imdct_512_C (sample_t * data, sample_t * delay, sample_t bias)
     sample_t t_r, t_i, a_r, a_i, b_r, b_i, w_1, w_2;
     const sample_t * window = a52_imdct_window;
     complex_t buf[128];
-	
+
     for (i = 0; i < 128; i++) {
 	k = fftorder[i];
 	t_r = pre1[i].real;
@@ -400,11 +400,11 @@ imdct_do_512_sse(sample_t data[],sample_t delay[], sample_t bias)
 
     sample_t *data_ptr;
     sample_t *delay_ptr;
-    
+
     complex_t attribute_aligned buf[128];
-    
+
     /* 512 IMDCT with source and dest data in 'data' */
-    /* see the c version (dct_do_512()), its allmost identical, just in C */ 
+    /* see the c version (dct_do_512()), its allmost identical, just in C */
 
     /* Pre IFFT complex multiply plus IFFT cmplx conjugate */
     /* Bit reversed shuffling */
@@ -422,12 +422,12 @@ imdct_do_512_sse(sample_t data[],sample_t delay[], sample_t bias)
 		    mulps (xmm0, xmm2);
 		    xmm0=_mm_shuffle_ps(xmm0,xmm0,0xB1); //shufps $0xB1, xmm0, xmm0		 // riRI
 		    mulps ((uint8_t*)sseSinCos1d+esi, xmm0);
-		    subps (xmm0, xmm2);			
-		    //movzbl (eax), edx			
-		    //movzbl 1(eax), ebp			
+		    subps (xmm0, xmm2);
+		    //movzbl (eax), edx
+		    //movzbl 1(eax), ebp
 		    movlps (xmm2, (uint8_t*)buf+ eax[0]*8);
-		    movhps (xmm2, (uint8_t*)buf+ eax[1]*8);		
-		}   
+		    movhps (xmm2, (uint8_t*)buf+ eax[1]*8);
+		}
 	}
 
 
@@ -457,22 +457,22 @@ imdct_do_512_sse(sample_t data[],sample_t delay[], sample_t bias)
 	}
     }
 */
-    
+
     /* 1. iteration */
 	// Note w[0][0]={1,0}
 	{
 	        __m128 xmm0,xmm1,xmm2;
-		xorps (xmm1, xmm1);	
-		xorps (xmm2, xmm2);	
+		xorps (xmm1, xmm1);
+		xorps (xmm2, xmm2);
 		for (unsigned char *esi=(unsigned char*)buf;(complex_t*)esi<buf+128;esi+=16){
 		    movlps (esi, xmm0);	 //buf[p]
 		    movlps (8+esi, xmm1); //buf[q]
 		    movhps (esi, xmm0);	 //buf[p]
 		    movhps (8+esi, xmm2); //buf[q]
-		    addps (xmm1, xmm0);	
-		    subps (xmm2, xmm0);	
-		    movaps (xmm0, esi);	
-		}    
+		    addps (xmm1, xmm0);
+		    subps (xmm2, xmm0);
+		    movaps (xmm0, esi);
+		}
         }
     /* 2. iteration */
 	// Note w[1]={{1,0}, {0,-1}}
@@ -485,11 +485,11 @@ imdct_do_512_sse(sample_t data[],sample_t delay[], sample_t bias)
 		    mulps (xmm7, xmm2);		 //r2,i2,i3,-r3
 		    movaps (esi, xmm0);		 //r0,i0,r1,i1
 		    movaps (esi, xmm1);		 //r0,i0,r1,i1
-		    addps (xmm2, xmm0);		
-		    subps (xmm2, xmm1);		
-		    movaps (xmm0, esi);		
-		    movaps (xmm1, 16+esi);	
-		}    
+		    addps (xmm2, xmm0);
+		    subps (xmm2, xmm1);
+		    movaps (xmm0, esi);
+		    movaps (xmm1, 16+esi);
+		}
 	};
 
     /* 3. iteration */
@@ -501,36 +501,36 @@ imdct_do_512_sse(sample_t data[],sample_t delay[], sample_t bias)
 */
 	{
 	        __m128 xmm6,xmm7,xmm5,xmm2,xmm3,xmm4,xmm0,xmm1;
-		movaps (48+(uint8_t*)sseW2, xmm6); 
+		movaps (48+(uint8_t*)sseW2, xmm6);
 		movaps (16+(uint8_t*)sseW2, xmm7);
-		xorps (xmm5, xmm5);		
-		xorps (xmm2, xmm2);		
+		xorps (xmm5, xmm5);
+		xorps (xmm2, xmm2);
 		for (unsigned char *esi=(unsigned char*)buf;(complex_t*)esi<buf+128;esi+=64){
 		    movaps (32+esi, xmm2);	 //r4,i4,r5,i5
 		    movaps (48+esi, xmm3);	 //r6,i6,r7,i7
 		    movaps ((uint8_t*)sseW2, xmm4);	 //r4,i4,r5,i5
 		    movaps (32+(uint8_t*)sseW2, xmm5); //r6,i6,r7,i7
-		    mulps (xmm2, xmm4);		
-		    mulps (xmm3, xmm5);		
+		    mulps (xmm2, xmm4);
+		    mulps (xmm3, xmm5);
 		    xmm2=_mm_shuffle_ps(xmm2,xmm2,0xB1);	 //i4,r4,i5,r5
 		    xmm3=_mm_shuffle_ps(xmm3,xmm3,0xB1);	 //i6,r6,i7,r7
-		    mulps (xmm6, xmm3);		
-		    mulps (xmm7, xmm2);		
+		    mulps (xmm6, xmm3);
+		    mulps (xmm7, xmm2);
 		    movaps (esi, xmm0);		 //r0,i0,r1,i1
 		    movaps (16+esi, xmm1);	 //r2,i2,r3,i3
-		    addps (xmm4, xmm2);		
-		    addps (xmm5, xmm3);		
-		    movaps (xmm2, xmm4);		
-		    movaps (xmm3, xmm5);		
-		    addps (xmm0, xmm2);		
-		    addps (xmm1, xmm3);		
-		    subps (xmm4, xmm0);		
-		    subps (xmm5, xmm1);		
-		    movaps (xmm2, esi);		 
-		    movaps (xmm3, 16+esi);	 
-		    movaps (xmm0, 32+esi);	 
-		    movaps (xmm1, 48+esi);	 
-		}    
+		    addps (xmm4, xmm2);
+		    addps (xmm5, xmm3);
+		    movaps (xmm2, xmm4);
+		    movaps (xmm3, xmm5);
+		    addps (xmm0, xmm2);
+		    addps (xmm1, xmm3);
+		    subps (xmm4, xmm0);
+		    subps (xmm5, xmm1);
+		    movaps (xmm2, esi);
+		    movaps (xmm3, 16+esi);
+		    movaps (xmm0, 32+esi);
+		    movaps (xmm1, 48+esi);
+		}
 	}
 
     /* 4-7. iterations */
@@ -542,19 +542,19 @@ imdct_do_512_sse(sample_t data[],sample_t delay[], sample_t bias)
 		for (unsigned char *esi=(unsigned char*)buf;(complex_t*)esi<buf+128;esi+=two_m_plus_one<<3){
 		    int edi=0;			 // k
 		    for (unsigned char *edx=esi+ (two_m<<3);edi< (two_m<<3);edi+=16){
-		        movaps (edx+ edi, xmm1);		
-		        movaps ((uint8_t*)sseW[m]+ edi* 2, xmm2);		
-		        mulps (xmm1, xmm2);			
+		        movaps (edx+ edi, xmm1);
+		        movaps ((uint8_t*)sseW[m]+ edi* 2, xmm2);
+		        mulps (xmm1, xmm2);
 		        xmm1=_mm_shuffle_ps(xmm1,xmm1,0xB1);
-		        mulps (16+(uint8_t*)sseW[m]+ edi* 2, xmm1);		
-		        movaps (esi+ edi, xmm0);		
-		        addps (xmm2, xmm1);			
-		        movaps( xmm1, xmm2);			
-		        addps (xmm0, xmm1);			
-		        subps (xmm2, xmm0);			
-		        movaps (xmm1, esi+ edi);		
-		        movaps (xmm0, edx+ edi);		
-		    }    
+		        mulps (16+(uint8_t*)sseW[m]+ edi* 2, xmm1);
+		        movaps (esi+ edi, xmm0);
+		        addps (xmm2, xmm1);
+		        movaps( xmm1, xmm2);
+		        addps (xmm0, xmm1);
+		        subps (xmm2, xmm0);
+		        movaps (xmm1, esi+ edi);
+		        movaps (xmm0, edx+ edi);
+		    }
 		}
 	}
     }
@@ -563,17 +563,17 @@ imdct_do_512_sse(sample_t data[],sample_t delay[], sample_t bias)
 	{
 		__m128 xmm0,xmm1;
 		for (int esi=-1024;esi!=0;esi+=16){
-		    movaps ((uint8_t*)(buf+128)+ esi, xmm0);		
-		    movaps ((uint8_t*)(buf+128)+ esi, xmm1);		
+		    movaps ((uint8_t*)(buf+128)+ esi, xmm0);
+		    movaps ((uint8_t*)(buf+128)+ esi, xmm1);
 		    xmm0=_mm_shuffle_ps(xmm0,xmm0,0xB1);
 		    mulps (1024+(uint8_t*)sseSinCos1c+esi, xmm1);
 		    mulps (1024+(uint8_t*)sseSinCos1d+esi, xmm0);
-		    addps (xmm1, xmm0);			
+		    addps (xmm1, xmm0);
 		    movaps (xmm0, (uint8_t*)(buf+128)+ esi);
 		}
 	}
 
-	
+
     data_ptr = data;
     delay_ptr = delay;
     //window_ptr = imdct_window;
@@ -590,15 +590,15 @@ imdct_do_512_sse(sample_t data[],sample_t delay[], sample_t bias)
 		    movhps (-8+(uint8_t*)(buf+64)+ edi, xmm0);		 // ? B A ?
 		    xmm0=_mm_shuffle_ps(xmm0,xmm1,0x99);// shufps $0x99, xmm1, xmm0		 // D C B A
 		    mulps ((uint8_t*)sseWindow+esi, xmm0);
-		    addps ((uint8_t*)delay_ptr+ esi, xmm0);		
-		    addps (xmm2, xmm0);			
+		    addps ((uint8_t*)delay_ptr+ esi, xmm0);
+		    addps (xmm2, xmm0);
 		    movaps (xmm0, (uint8_t*)data_ptr+ esi);
-		}    
+		}
 	}
 	data_ptr+=128;
 	delay_ptr+=128;
 //	window_ptr+=128;
-	
+
 	{
 		__m128 xmm0,xmm1,xmm2;
 		movss (bias, xmm2);			  // bias
@@ -610,10 +610,10 @@ imdct_do_512_sse(sample_t data[],sample_t delay[], sample_t bias)
 		    movhps (-8+(uint8_t*)buf+ edi, xmm0);		 // B ? ? A
 		    xmm0=_mm_shuffle_ps(xmm0,xmm1,0xCC);		 // D C B A
 		    mulps (512+(uint8_t*)sseWindow+esi, xmm0);
-		    addps ((uint8_t*)delay_ptr+ esi, xmm0);		
-		    addps (xmm2, xmm0);			
-		    movaps (xmm0, (uint8_t*)data_ptr+ esi);		
-		}    
+		    addps ((uint8_t*)delay_ptr+ esi, xmm0);
+		    addps (xmm2, xmm0);
+		    movaps (xmm0, (uint8_t*)data_ptr+ esi);
+		}
 	}
 	data_ptr+=128;
 //	window_ptr+=128;
@@ -626,27 +626,27 @@ imdct_do_512_sse(sample_t data[],sample_t delay[], sample_t bias)
 		for (int edi=0,esi=0;esi<512;esi+=16,edi-=16){
 		    movlps ((uint8_t*)(buf+64)+ esi, xmm0);		 // ? ? ? A
 		    movlps (8+(uint8_t*)(buf+64)+ esi, xmm1);		 // ? ? ? C
-		    movhps (-16+(uint8_t*)(buf+64)+ edi, xmm1);		 // D ? ? C 
-		    movhps (-8+(uint8_t*)(buf+64)+ edi, xmm0);		 // B ? ? A 
+		    movhps (-16+(uint8_t*)(buf+64)+ edi, xmm1);		 // D ? ? C
+		    movhps (-8+(uint8_t*)(buf+64)+ edi, xmm0);		 // B ? ? A
 		    xmm0=_mm_shuffle_ps(xmm0,xmm1,0xcc);//shufps $0xCC, xmm1, xmm0		 // D C B A
 		    mulps (1024+(uint8_t*)sseWindow+esi, xmm0);
 		    movaps (xmm0, (uint8_t*)delay_ptr+ esi);
-		}    
+		}
 	}
 	delay_ptr+=128;
 //	window_ptr-=128;
-	
+
 	{
 		__m128 xmm0,xmm1;
 		for (int edi=1024,esi=0;esi<512;esi+=16,edi-=16){
 		    movlps ((uint8_t*)buf+ esi, xmm0);		 // ? ? A ?
 		    movlps (8+(uint8_t*)buf+ esi, xmm1);		 // ? ? C ?
-		    movhps (-16+(uint8_t*)buf+ edi, xmm1);		 // ? D C ? 
-		    movhps (-8+(uint8_t*)buf+ edi, xmm0);		 // ? B A ? 
+		    movhps (-16+(uint8_t*)buf+ edi, xmm1);		 // ? D C ?
+		    movhps (-8+(uint8_t*)buf+ edi, xmm0);		 // ? B A ?
 		    xmm0=_mm_shuffle_ps(xmm0,xmm1,0x99);// shufps $0x99, xmm1, xmm0		 // D C B A
 		    mulps (1536+(uint8_t*)sseWindow+esi, xmm0);
 		    movaps (xmm0, (uint8_t*)delay_ptr+ esi);
-		}    
+		}
 	}
 }
 
@@ -676,7 +676,7 @@ static void a52_imdct_256_C(sample_t * data, sample_t * delay, sample_t bias)
     /* Post IFFT complex multiply */
     /* Window and convert to real valued signal */
     for (i = 0; i < 32; i++) {
-	/* y1[n] = z1[n] * (xcos2[n] + j * xs in2[n]) ; */ 
+	/* y1[n] = z1[n] * (xcos2[n] + j * xs in2[n]) ; */
 	t_r = post2[i].real;
 	t_i = post2[i].imag;
 
@@ -786,7 +786,7 @@ void a52_imdct_init (uint32_t mm_accel)
 
     {
 	int i, j, k;
-	
+
 /* Twiddle factors to turn IFFT into IMDCT */
 	for (i = 0; i < 128; i++) {
 	    xcos1[i] = -cos ((M_PI / 2048) * (8 * i + 1));
@@ -796,7 +796,7 @@ void a52_imdct_init (uint32_t mm_accel)
 	    sseSinCos1c[2*i+0]= xcos1[i];
 	    sseSinCos1c[2*i+1]= -xcos1[i];
 	    sseSinCos1d[2*i+0]= xsin1[i];
-	    sseSinCos1d[2*i+1]= xsin1[i];	
+	    sseSinCos1d[2*i+1]= xsin1[i];
 	}
 
 	/* More twiddle factors to turn IFFT into IMDCT */
@@ -815,7 +815,7 @@ void a52_imdct_init (uint32_t mm_accel)
 	for (i = 1; i < 7; i++) {
 	    j = 1 << i;
 	    for (k = 0; k < j; k+=2) {
-	    
+
 	    	sseW[i][4*k + 0] = w[i][k+0].real;
 	    	sseW[i][4*k + 1] = w[i][k+0].real;
 	    	sseW[i][4*k + 2] = w[i][k+1].real;
@@ -824,15 +824,15 @@ void a52_imdct_init (uint32_t mm_accel)
 	    	sseW[i][4*k + 4] = -w[i][k+0].imag;
 	    	sseW[i][4*k + 5] = w[i][k+0].imag;
 	    	sseW[i][4*k + 6] = -w[i][k+1].imag;
-	    	sseW[i][4*k + 7] = w[i][k+1].imag;	    
-	    	
+	    	sseW[i][4*k + 7] = w[i][k+1].imag;
+
 	//we multiply more or less uninitialized numbers so we need to use exactly 0.0
 		if(k==0)
 		{
 //			sseW[i][4*k + 0]= sseW[i][4*k + 1]= 1.0;
 			sseW[i][4*k + 4]= sseW[i][4*k + 5]= 0.0;
 		}
-		
+
 		if(2*k == j)
 		{
 			sseW[i][4*k + 0]= sseW[i][4*k + 1]= 0.0;
@@ -844,9 +844,9 @@ void a52_imdct_init (uint32_t mm_accel)
 	for(i=0; i<128; i++)
 	{
 		sseWindow[2*i+0]= -imdct_window[2*i+0];
-		sseWindow[2*i+1]=  imdct_window[2*i+1];	
+		sseWindow[2*i+1]=  imdct_window[2*i+1];
 	}
-	
+
 	for(i=0; i<64; i++)
 	{
 		sseWindow[256 + 2*i+0]= -imdct_window[254 - 2*i+1];
@@ -866,7 +866,7 @@ void a52_imdct_init (uint32_t mm_accel)
     if(mm_accel & FF_CPU_SSE)
         a52_imdct_512 = imdct_do_512_sse;
     else
-#endif    
+#endif
         a52_imdct_512 = a52_imdct_512_C;
 
 /*

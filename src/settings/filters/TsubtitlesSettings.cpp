@@ -611,7 +611,7 @@ TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters)
  half=0;
  static const TintOptionT<TsubtitlesSettings> iopts[]=
   {
-   IDFF_isSubtitles            ,&TsubtitlesSettings::is                      ,0,0,_l(""),1, 
+   IDFF_isSubtitles            ,&TsubtitlesSettings::is                      ,0,0,_l(""),1,
      _l("isSubtitles"), 0,
    IDFF_showSubtitles          ,&TsubtitlesSettings::show                    ,0,0,_l(""),1,
      _l("showSubtitles"), 1,
@@ -678,15 +678,15 @@ TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters)
      _l("subOpacity"),256,
    IDFF_subSplitBorder         ,&TsubtitlesSettings::splitBorder             ,0,4096,_l(""),1,
      _l("subSplitBorder"),0,
-     
+
    IDFF_subCC                  ,&TsubtitlesSettings::cc                      ,0,0,_l(""),1,
-     _l("subCC"),1,  
-     
+     _l("subCC"),1,
+
    0
-  }; 
- addOptions(iopts); 
+  };
+ addOptions(iopts);
  static const TstrOption sopts[]=
-  { 
+  {
    IDFF_subFilename ,(TstrVal)&TsubtitlesSettings::flnm    ,MAX_PATH ,_l(""),1,
      _l("subFlnm"),_l(""),
    IDFF_subFixDict  ,(TstrVal)&TsubtitlesSettings::fixDict ,60       ,_l(""),1,
@@ -729,7 +729,7 @@ void TsubtitlesSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfi
  idffOnChange(idffs,filters,queue.temporary);
  if ((is && show) || filters->isdvdproc)
   {
-   TimgFilterSubtitles *sub=queueFilter<TimgFilterSubtitles>(filtersorder,filters,queue); 
+   TimgFilterSubtitles *sub=queueFilter<TimgFilterSubtitles>(filtersorder,filters,queue);
    if (!queue.temporary)
     {
      setOnChange(IDFF_subAutoFlnm,sub,&TimgFilterSubtitles::onSubFlnmChange);
@@ -743,8 +743,8 @@ void TsubtitlesSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfi
      setOnChange(IDFF_subFixLang,sub,&TimgFilterSubtitles::onSubFlnmChange);
      setOnChange(IDFF_subFilename,sub,&TimgFilterSubtitles::onSubFlnmChangeStr);
      setOnChange(IDFF_subFixDict,sub,&TimgFilterSubtitles::onSubFlnmChangeStr);
-    } 
-  } 
+    }
+  }
 }
 void TsubtitlesSettings::createPages(TffdshowPageDec *parent) const
 {
@@ -797,11 +797,11 @@ bool TsubtitlesSettings::getTip(unsigned int pageId,char_t *buf,size_t len)
    if (speed!=speedDef || speed2!=speedDef)
     strcatf(tipS,_l("\nSpeed: %i/%i"),speed,speed2);
    strncpy(buf,tipS,len);
-   buf[len-1]='\0'; 
-  } 
+   buf[len-1]='\0';
+  }
  else if (pageId==2)
-  font.getTip(buf,len); 
- return true; 
+  font.getTip(buf,len);
+ return true;
 }
 
 void TsubtitlesSettings::reg_op(TregOp &t)
@@ -819,8 +819,8 @@ const int* TsubtitlesSettings::getResets(unsigned int pageId)
    static const int idResets[]={
     IDFF_subVobsubAA,IDFF_subVobsubAAswgauss,IDFF_subVobsubChangePosition,IDFF_subVobsubScale,
     0};
-   return idResets; 
+   return idResets;
   }
  else
-  return NULL; 
+  return NULL;
 }

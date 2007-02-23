@@ -41,7 +41,7 @@ TffdshowPageDec::TffdshowPageDec(LPUNKNOWN pUnk,HRESULT *phr,const wchar_t *Itit
    IDC_BT_RESETORDER,(TonClick)&TffdshowPageDec::onResetOrder,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
 }
 TffdshowPageDec::~TffdshowPageDec()
 {
@@ -66,7 +66,7 @@ void TffdshowPageDec::setFullHalf(void)
  int processHalf=page->getProcessHalf();
  enable(processHalf!=-1,IDC_CHB_PROCESSHALF);
  setCheck(IDC_CHB_PROCESSHALF,processHalf>0);
-} 
+}
 
 void TffdshowPageDec::drawInter(void)
 {
@@ -216,12 +216,12 @@ void TffdshowPageDec::presetChanged(const char_t *presetName)
  int previd=page?page->uniqueID():0,prevVisId=hti2page(TreeView_GetFirstVisible(htv))->uniqueID();
  for (ThtiPages::iterator p=filterPages.begin();p!=filterPages.end();p++)
   deletePage(*p);
- filterPages.clear(); 
+ filterPages.clear();
  deciD->createPresetPages(presetName,this);
  showShowHide(previd);
  InvalidateRect(htv,NULL,FALSE);
  sortOrder();
- setFullHalf(); 
+ setFullHalf();
 }
 void TffdshowPageDec::showShowHide(int previd,int prevVisId)
 {
@@ -256,9 +256,9 @@ void TffdshowPageDec::showShowHide(int previd,int prevVisId)
       if (htiLast0)
        TreeView_Expand(htv,htiLast0,TVE_EXPAND);
       htiLast0=hti;
-     } 
+     }
    }
- if (htiLast0) TreeView_Expand(htv,htiLast0,TVE_EXPAND);   
+ if (htiLast0) TreeView_Expand(htv,htiLast0,TVE_EXPAND);
  sortOrder();
  if (previd)
   treeSelectItem(previd,prevVisId);
@@ -269,7 +269,7 @@ INT_PTR TffdshowPageDec::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CBX_PRESETS:
        if (HIWORD(wParam)==CBN_SELCHANGE)
@@ -281,12 +281,12 @@ INT_PTR TffdshowPageDec::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
           selectPreset(presetName);
          return TRUE;
         }
-       break; 
+       break;
      }
     break;
    case WM_FFONNEWFILTERS:
     {
-     for (ThtiPages::const_iterator hp=filterPages.begin();hp!=filterPages.end();hp++) 
+     for (ThtiPages::const_iterator hp=filterPages.begin();hp!=filterPages.end();hp++)
       for (TconfPages::const_iterator i=(*hp)->begin();i!=(*hp)->end();i++)
        ((TconfPageDec*)(*i))->onNewFilter();
      return TRUE;
@@ -318,7 +318,7 @@ INT_PTR TffdshowPageDec::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
            {
             setDlgResult(CDRF_NOTIFYITEMDRAW);
             return TRUE;
-           } 
+           }
           else if (tvcd->nmcd.dwDrawStage==CDDS_ITEMPREPAINT)
            {
             TconfPageBase *page=((ThtiPage*)tvcd->nmcd.lItemlParam)->getPage();
@@ -336,7 +336,7 @@ INT_PTR TffdshowPageDec::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
               rr.left-=24;
               TconfPageBase *page=((ThtiPage*)tvcd->nmcd.lItemlParam)->getPage();
               if (page->getInter()!=-1) ImageList_Draw(hil,page->getInter()?ilChecked:ilClear,tvcd->nmcd.hdc,tr.left+8+rr.left,tr.top+(rcDy-16)/2,ILD_TRANSPARENT);
-              if (isIn(page->getOrder(),deciD->getMinOrder2(),deciD->getMaxOrder2()) && (tvcd->nmcd.uItemState&CDIS_SELECTED)) 
+              if (isIn(page->getOrder(),deciD->getMinOrder2(),deciD->getMaxOrder2()) && (tvcd->nmcd.uItemState&CDIS_SELECTED))
                {
                 int img;
                 HTREEITEM hti=page->hti;
@@ -347,9 +347,9 @@ INT_PTR TffdshowPageDec::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
                 else img=ilArrowUD;
                 ImageList_DrawEx(hil,img,tvcd->nmcd.hdc,tr.left+2+rr.left,tr.top+(rcDy-16)/2,5,16,CLR_DEFAULT,CLR_DEFAULT,ILD_TRANSPARENT);
                }
-             }  
+             }
             return TRUE;
-           } 
+           }
           return FALSE;
          }
         case NM_CLICK:
@@ -368,7 +368,7 @@ INT_PTR TffdshowPageDec::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
           ps.x-=rr.left-24;
           int iconTop=((r.bottom-r.top)-16)/2;
           ps.y-=r.top;
-          if (ps.x>=8 && ps.x<=16+8 && ps.y>=iconTop+2 && ps.y<=iconTop+13) 
+          if (ps.x>=8 && ps.x<=16+8 && ps.y>=iconTop+2 && ps.y<=iconTop+13)
            {
             if (invInter(hti2page(hti),&r))
              return TRUE;
@@ -410,24 +410,24 @@ INT_PTR TffdshowPageDec::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
       TVHITTESTINFO tvhti;
       tvhti.pt.x=LOWORD(lParam)-tvx;
       tvhti.pt.y=HIWORD(lParam)-tvy;
-      if (HTREEITEM htiTarget=TreeView_HitTest(htv,&tvhti)) 
-       { 
-        //TreeView_SelectDropTarget(htv,htiTarget); 
+      if (HTREEITEM htiTarget=TreeView_HitTest(htv,&tvhti))
+       {
+        //TreeView_SelectDropTarget(htv,htiTarget);
         TconfPageBase *targetpage=hti2page(htiTarget);
         if (isIn(targetpage->getOrder(),deciD->getMinOrder2(),deciD->getMaxOrder2()))
          swap(dragpage,targetpage);
-       } 
+       }
       return TRUE;
      }
-    break; 
+    break;
    case WM_LBUTTONUP:
     if (dragpage)
      {
       dragpage=NULL;
       ReleaseCapture();
-      return TRUE; 
+      return TRUE;
      }
-    break;  
+    break;
   }
  return TffdshowPageBase::msgProc(uMsg,wParam,lParam);
 }
@@ -437,7 +437,7 @@ Twidget* TffdshowPageDec::createDlgItem(int id,HWND h)
  if (id==IDC_TV_TREE)
   return new TwidgetTv(h,this);
  else
-  return TffdshowPageBase::createDlgItem(id,h); 
+  return TffdshowPageBase::createDlgItem(id,h);
 }
 
 void TffdshowPageDec::onReset(void)
@@ -446,7 +446,7 @@ void TffdshowPageDec::onReset(void)
  if (page->filterID)
   if (page->filterPageID)
    wasreset|=deciD->resetFilterEx(page->filterID,page->filterPageID)==S_OK;
-  else 
+  else
    wasreset|=deciD->resetFilter(page->filterID)==S_OK;
  wasreset|=page->reset();
  page->cfg2dlg();
@@ -460,8 +460,8 @@ void TffdshowPageDec::onResetOrder(void)
 
 LRESULT TffdshowPageDec::TwidgetTv::onKeyDown(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
- switch (wParam) 
-  { 
+ switch (wParam)
+  {
    case VK_SHIFT:
     self->isShift=true;
     break;
@@ -471,18 +471,18 @@ LRESULT TffdshowPageDec::TwidgetTv::onKeyDown(HWND hwnd,UINT uMsg,WPARAM wParam,
      {
       self->swap(wParam==VK_UP?-1:1);
       return 0;
-     }    
+     }
     else break;
    case VK_SPACE:
     self->invInter();
-    return 0; 
-  } 
- return Twidget::onKeyDown(hwnd,uMsg,wParam,lParam); 
+    return 0;
+  }
+ return Twidget::onKeyDown(hwnd,uMsg,wParam,lParam);
 }
 LRESULT TffdshowPageDec::TwidgetTv::onKeyUp(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
- switch (wParam) 
-  { 
+ switch (wParam)
+  {
    case VK_SHIFT:
     self->isShift=false;
     break;
@@ -490,13 +490,13 @@ LRESULT TffdshowPageDec::TwidgetTv::onKeyUp(HWND hwnd,UINT uMsg,WPARAM wParam,LP
     return 0;
    case VK_UP:
    case VK_DOWN:
-    if (self->isShift) return 0; 
+    if (self->isShift) return 0;
     else break;
-  } 
- return Twidget::onKeyUp(hwnd,uMsg,wParam,lParam); 
+  }
+ return Twidget::onKeyUp(hwnd,uMsg,wParam,lParam);
 }
 
-// -------------------- configure ---------------------- 
+// -------------------- configure ----------------------
 extern "C" void CALLBACK configureDec(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine,int nCmdShow);
 void CALLBACK configureDec(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine,int nCmdShow)
 {
@@ -512,7 +512,7 @@ void CALLBACK configureDec(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine,int nCmdSh
     {
      comptrQ<IffdshowBase>(deciV)->putParam(IDFF_alwaysOnTop,1);
      comptrQ<IffdshowBase>(deciA)->putParam(IDFF_alwaysOnTop,1);
-    } 
+    }
    TSpecifyPropertyPagesVE::show2configPages(IID_IffdshowDecVideo,deciV,IID_IffdshowDecAudio,deciA,IDS_FFDSHOWDEC,IDI_FFDSHOW,IDFF_dlgDecCurrentPage);
   }
  CoUninitialize();

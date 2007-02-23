@@ -15,19 +15,19 @@ For FAAD2 the following license applies:
 ******************************************************************************
 ** FAAD2 - Freeware Advanced Audio (AAC) Decoder including SBR decoding
 ** Copyright (C) 2003-2005 M. Bakker, Ahead Software AG, http://www.nero.com
-**  
+**
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU General Public License for more details.
-** 
+**
 ** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software 
+** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 **
 ** Any non-GPL usage of this software or parts of this software is strictly
@@ -75,20 +75,20 @@ faad2 - top level directory.
              as well as getting info from aac files.
 
       mp4ff - Small MP4 file format library (includes tagging abilities).
-      
+
    frontend - command line frontend to the FAAD2 library, also supports
               MPEG-4 file decoding.
 
    include - inlude file for the FAAD2 library.
 
    libfaad - the FAAD2 AAC decoder library including SBR.
-   
+
       codebook - Huffman codebooks
 
    plugins - plugins for all kinds of pograms.
-   
+
       in_mp4 - winamp MPEG-4 AAC file input plugin.
-      
+
       QCD - Quintessential player AAC plugin.
 
       QCDMp4 - Quintessential player MP4 plugin.
@@ -96,4 +96,8 @@ faad2 - top level directory.
       xmms - xmms AAC plugin
 
       mpeg4ip - plugin for the mpeg4ip player
+
+
+
+
 

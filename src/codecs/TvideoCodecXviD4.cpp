@@ -32,7 +32,7 @@ const TmeXviDpreset meXviDpresets[]=
  _l("Low")       ,0,
  _l("Medium")    ,0,
  _l("High")      ,XVID_ME::HALFPELREFINE16,
- _l("Very high") ,XVID_ME::HALFPELREFINE16|XVID_ME::ADVANCEDDIAMOND16, 
+ _l("Very high") ,XVID_ME::HALFPELREFINE16|XVID_ME::ADVANCEDDIAMOND16,
  _l("Ultra high"),XVID_ME::HALFPELREFINE16|XVID_ME::EXTSEARCH16|XVID_ME::HALFPELREFINE8|XVID_ME::USESQUARES16,
  NULL,0
 };
@@ -65,11 +65,11 @@ int TvideoCodecXviD4::me_(int me3)
  if (me3&XVID_ME::ADVANCEDDIAMOND16) me4|=XVID_ME_ADVANCEDDIAMOND16;
  if (me3&XVID_ME::HALFPELREFINE16  ) me4|=XVID_ME_HALFPELREFINE16;
  if (me3&XVID_ME::EXTSEARCH16      ) me4|=XVID_ME_EXTSEARCH16;
- if (me3&XVID_ME::USESQUARES16     ) me4|=XVID_ME_USESQUARES16;     
- if (me3&XVID_ME::ADVANCEDDIAMOND8 ) me4|=XVID_ME_ADVANCEDDIAMOND8; 
- if (me3&XVID_ME::HALFPELREFINE8   ) me4|=XVID_ME_HALFPELREFINE8;   
- if (me3&XVID_ME::EXTSEARCH8       ) me4|=XVID_ME_EXTSEARCH8;       
- if (me3&(int)XVID_ME::USESQUARES8 ) me4|=XVID_ME_USESQUARES8;      
+ if (me3&XVID_ME::USESQUARES16     ) me4|=XVID_ME_USESQUARES16;
+ if (me3&XVID_ME::ADVANCEDDIAMOND8 ) me4|=XVID_ME_ADVANCEDDIAMOND8;
+ if (me3&XVID_ME::HALFPELREFINE8   ) me4|=XVID_ME_HALFPELREFINE8;
+ if (me3&XVID_ME::EXTSEARCH8       ) me4|=XVID_ME_EXTSEARCH8;
+ if (me3&(int)XVID_ME::USESQUARES8 ) me4|=XVID_ME_USESQUARES8;
  return me4;
 }
 
@@ -80,7 +80,7 @@ TvideoCodecXviD4::TvideoCodecXviD4(IffdshowBase *Ideci,IdecVideoSink *IsinkD):
  TvideoCodecEnc(Ideci,NULL)
 {
  create();
-} 
+}
 
 TvideoCodecXviD4::TvideoCodecXviD4(IffdshowBase *Ideci,IencVideoSink *IsinkE):
  Tcodec(Ideci),TcodecDec(Ideci,NULL),
@@ -91,7 +91,7 @@ TvideoCodecXviD4::TvideoCodecXviD4(IffdshowBase *Ideci,IencVideoSink *IsinkE):
  create();
  if (ok)
   encoders.push_back(new Tencoder(_l("XviD"),CODEC_ID_XVID4));
-}  
+}
 
 void TvideoCodecXviD4::create(void)
 {
@@ -122,7 +122,7 @@ void TvideoCodecXviD4::create(void)
      ok=true;
      quantBytes=4;
      return;
-    } 
+    }
   }
  ok=false;
 }
@@ -142,7 +142,7 @@ bool TvideoCodecXviD4::getVersion(const Tconfig *config,ffstring &vers,ffstring 
  int (*xvid_global)(void *handle, int opt, void *param1, void *param2);
  dl->loadFunction(xvid_global,"xvid_global");
  bool res=false;
- if (xvid_global) 
+ if (xvid_global)
   {
    res=true;
    xvid_gbl_info_t info;
@@ -157,7 +157,7 @@ bool TvideoCodecXviD4::getVersion(const Tconfig *config,ffstring &vers,ffstring 
    vers=_l("XviD: not found");
    license.clear();
   }
- delete dl;  
+ delete dl;
  return res;
 }
 
@@ -202,7 +202,7 @@ HRESULT TvideoCodecXviD4::decompress(const unsigned char *src0,size_t srcLen0,IM
   {
    src=src0;
    srcLen=srcLen0;
-  } 
+  }
  if (pIn)
   if (FAILED(pIn->GetTime(&rtStart,&rtStop)))
    rtStart=rtStop=_I64_MIN;
@@ -258,12 +258,12 @@ repeat:
     {
      p1.rtStart=rtStart;
      p1.rtStop=rtStop;
-    } 
+    }
    else
     {
      p1.rtStart=rtStop;
      p1.rtStop=rtStop+(rtStop-rtStart);
-    } 
+    }
    p1.setRO(true);
    return sinkD->deliverDecodedSample(p1);
   }
@@ -315,7 +315,7 @@ LRESULT TvideoCodecXviD4::beginCompress(int cfgcomode,int csp,const Trect &r)
    case ENC_MODE::PASS2_2_INT:
     break;
    default:
-    return ICERR_ERROR; 
+    return ICERR_ERROR;
   }
  cr.width=r.dx;cr.height=r.dy;
  cr.fbase=deci->getParam2(IDFF_enc_fpsRate);cr.fincr=deci->getParam2(IDFF_enc_fpsScale);
@@ -341,7 +341,7 @@ LRESULT TvideoCodecXviD4::beginCompress(int cfgcomode,int csp,const Trect &r)
    cr.bquant_offset=coCfg->b_quant_offset;
    if (coCfg->packedBitstream) cr.global|=XVID_GLOBAL_PACKED;
    if (coCfg->dx50bvop) cr.global|=XVID_GLOBAL_CLOSED_GOP;
-  } 
+  }
 
  psnr=deci->getParam2(IDFF_enc_psnr);
  if (psnr) cr.global|=XVID_GLOBAL_EXTRASTATS_ENABLE;
@@ -358,7 +358,7 @@ LRESULT TvideoCodecXviD4::beginCompress(int cfgcomode,int csp,const Trect &r)
  cr.num_plugins=(int)plugins.size();
 
  int res=xvid_encore(NULL,XVID_ENC_CREATE,&cr,NULL);
- switch (res) 
+ switch (res)
   {
    case XVID_ERR_FAIL:return ICERR_ERROR;
    case XVID_ERR_MEMORY:return ICERR_MEMORY;
@@ -375,12 +375,12 @@ LRESULT TvideoCodecXviD4::beginCompress(int cfgcomode,int csp,const Trect &r)
  if (coCfg->trellisquant) frame->vop_flags|=XVID_VOP_TRELLISQUANT;
 
  if (coCfg->me_gmc) frame->vol_flags|=XVID_VOL_GMC;
- if (coCfg->interlacing) 
+ if (coCfg->interlacing)
   {
    frame->vol_flags|=XVID_VOL_INTERLACING;
    if (coCfg->interlacing_tff)
     frame->vop_flags|=XVID_VOP_TOPFIELDFIRST;
-  } 
+  }
  if (coCfg->xvid_chromaopt && !coCfg->gray) frame->vop_flags|=XVID_VOP_CHROMAOPT;
 
  if (coCfg->is_xvid_me_custom)
@@ -388,7 +388,7 @@ LRESULT TvideoCodecXviD4::beginCompress(int cfgcomode,int csp,const Trect &r)
    frame->motion=me_(coCfg->xvid_me_custom);
    if (coCfg->xvid_me_inter4v) frame->vop_flags|=XVID_VOP_INTER4V;
   }
- else 
+ else
   {
    frame->motion=me_(meXviDpresets[coCfg->xvid_motion_search].preset);
    if (coCfg->xvid_motion_search>4) frame->vop_flags|=XVID_VOP_INTER4V;
@@ -403,20 +403,20 @@ LRESULT TvideoCodecXviD4::beginCompress(int cfgcomode,int csp,const Trect &r)
   {
    frame->motion|=me_hq(vhqXviDpresets[coCfg->xvid_vhq].preset);
    if (coCfg->xvid_vhq>0) frame->vop_flags|=XVID_VOP_MODEDECISION_RD;
-  } 
+  }
 
  if (coCfg->me_qpel)
   {
    frame->vol_flags|=XVID_VOL_QUARTERPEL;
    frame->motion|=XVID_ME_QUARTERPELREFINE16|XVID_ME_QUARTERPELREFINE8;
-  } 
- if (coCfg->me_gmc) 
+  }
+ if (coCfg->me_gmc)
   {
    frame->vol_flags|=XVID_VOL_GMC;
    frame->motion|=XVID_ME_GME_REFINE;
   }
  if (coCfg->me_cmp_chroma && !coCfg->gray) frame->motion|=XVID_ME_CHROMA_PVOP|XVID_ME_CHROMA_BVOP;
- 
+
  frame->par=XVID_PAR_EXT;
  Rational sar=coCfg->sar(r.dx,r.dy).reduce(255);
  frame->par_width=sar.num;frame->par_height=sar.den;
@@ -431,7 +431,7 @@ LRESULT TvideoCodecXviD4::beginCompress(int cfgcomode,int csp,const Trect &r)
   {
    frame->quant_intra_matrix=(unsigned char*)&coCfg->qmatrix_intra_custom0;
    frame->quant_inter_matrix=(unsigned char*)&coCfg->qmatrix_inter_custom0;
-  } 
+  }
 
  return ICERR_OK;
 }
@@ -442,12 +442,12 @@ HRESULT TvideoCodecXviD4::compress(const TffPict &srcpict,TencFrameParams &param
   {
    frame->input.csp=XVID4_CSP_NULL;
    frame->input.plane[0]=frame->input.plane[1]=frame->input.plane[2]=NULL;
-  } 
+  }
  else
-  { 
+  {
    frame->input.plane[0]=srcpict.data[0];frame->input.plane[1]=srcpict.data[1];frame->input.plane[2]=srcpict.data[2];
    frame->input.stride[0]=(int)srcpict.stride[0];frame->input.stride[1]=(int)srcpict.stride[1];frame->input.stride[2]=(int)srcpict.stride[2];
-  } 
+  }
 
  if (params.quant==-1)
   frame->quant=0;
@@ -468,27 +468,27 @@ HRESULT TvideoCodecXviD4::compress(const TffPict &srcpict,TencFrameParams &param
    //case FRAME::PAD:frame->type=XVID_TYPE_;break;
    case FRAME_TYPE::DELAY:frame->type=XVID_TYPE_NOTHING;break;
    default:frame->type=XVID_TYPE_AUTO;
-  } 
+  }
 
- if (params.gray) 
+ if (params.gray)
   frame->vop_flags|=XVID_VOP_GREYSCALE;
- else 
+ else
   frame->vop_flags&=~XVID_VOP_GREYSCALE;
-  
+
  HRESULT hr=S_OK;
 again:
  TmediaSample sample;
  if (FAILED(hr=sinkE->getDstBuffer(&sample,srcpict)))
   return hr;
  frame->bitstream=sample;frame->length=sample.size();
-  
+
  xvid_enc_stats_t stats;
  memset(&stats,0,sizeof(stats));
  stats.version=XVID_VERSION;
  int length=xvid_encore(enchandle,XVID_ENC_ENCODE,frame,&stats);
  if ((length==0 || length==XVID_ERR_END) && !srcpict.data[0])
   return S_OK;
- else if (length<0) 
+ else if (length<0)
   return sinkE->deliverError();
 
  params.quant=stats.quant;
@@ -499,18 +499,18 @@ again:
    case XVID_TYPE_IVOP:params.frametype=FRAME_TYPE::I;break;
    case XVID_TYPE_BVOP:params.frametype=FRAME_TYPE::B;break;
    case XVID_TYPE_NOTHING:params.frametype=FRAME_TYPE::DELAY;break;
-   default:params.frametype=FRAME_TYPE::UNKNOWN;break; 
+   default:params.frametype=FRAME_TYPE::UNKNOWN;break;
   }
 
  params.kblks=stats.kblks;
  params.mblks=stats.mblks;
  params.ublks=stats.ublks;
- 
- if (length==0) 
+
+ if (length==0)
   {
    frame->length=1;
-   *(uint8_t*)frame->bitstream=0x7f; 
-  } 
+   *(uint8_t*)frame->bitstream=0x7f;
+  }
 
  if (psnr)
   {
@@ -523,7 +523,7 @@ again:
   return hr;
  if (!srcpict.data[0])
   goto again;
- return hr;  
+ return hr;
 }
 void TvideoCodecXviD4::end(void)
 {

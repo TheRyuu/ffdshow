@@ -9,12 +9,12 @@
 http://www.merriampark.com/ld.htm
 What is Levenshtein Distance?
 
-Levenshtein distance (LD) is a measure of the similarity between two strings, 
-which we will refer to as the source string (s) and the target string (t). 
+Levenshtein distance (LD) is a measure of the similarity between two strings,
+which we will refer to as the source string (s) and the target string (t).
 The distance is the number of deletions, insertions, or substitutions required
  to transform s into t. For example,
 
-    * If s is "test" and t is "test", then LD(s,t) = 0, because no transformations are needed. 
+    * If s is "test" and t is "test", then LD(s,t) = 0, because no transformations are needed.
     The strings are already identical.
     * If s is "test" and t is "tent", then LD(s,t) = 1, because one substitution
      (change "s" to "n") is sufficient to transform s into t.
@@ -30,7 +30,7 @@ The Levenshtein distance algorithm has been used in:
     * Spell checking
     * Speech recognition
     * DNA analysis
-    * Plagiarism detection 
+    * Plagiarism detection
 */
 
 #include "stdafx.h"
@@ -40,7 +40,7 @@ The Levenshtein distance algorithm has been used in:
 /*
 Cover transposition, in addition to deletion,
 insertion and substitution. This step is taken from:
-Berghel, Hal ; Roach, David : "An Extension of Ukkonen's 
+Berghel, Hal ; Roach, David : "An Extension of Ukkonen's
 Enhanced Dynamic Programming ASM Algorithm"
 (http://www.acm.org/~hlb/publications/asm/asm.html)
 */
@@ -74,7 +74,7 @@ int EditDistance::CalEditDistance(const char_t *s,const char_t *t, int limit)
 	{
 		m++;
 	}
-	
+
     // Remove rightmost matching portion of strings by decrement n and m.
     while ( n && m && (tolower(*(s+n-1))==tolower(*(t+m-1))) )
     {
@@ -146,7 +146,7 @@ int EditDistance::CalEditDistance(const char_t *s,const char_t *t,const int limi
 {
     //Step 1
     int k,i,j,n,m,cost;
-    n=strlen(s); 
+    n=strlen(s);
     m=strlen(t);
     if( n!=0 && m!=0 && d!=(int*)0 )
     {
@@ -158,12 +158,12 @@ int EditDistance::CalEditDistance(const char_t *s,const char_t *t,const int limi
             if ( (int*)0 == d )
                 return (m+n);
         }
-        //Step 2	
+        //Step 2
         for(k=0;k<n;k++)
             d[k]=k;
         for(k=0;k<m;k++)
             d[k*n]=k;
-        //Step 3 and 4	
+        //Step 3 and 4
         for(i=1;i<n;i++)
             for(j=1;j<m;j++)
             {
@@ -172,17 +172,17 @@ int EditDistance::CalEditDistance(const char_t *s,const char_t *t,const int limi
                     cost=0;
                 else
                     cost=1;
-                //Step 6			 
+                //Step 6
                 d[j*n+i]=minimum(d[(j-1)*n+i]+1,d[j*n+i-1]+1,d[(j-1)*n+i-1]+cost);
 #ifdef COVER_TRANSPOSITION
                 if ( i>=2 && j>=2 && (d[j*n+i]-d[(j-2)*n+i-2]==2)
                      && (s[i-2]==t[j-1]) && (s[i-1]==t[j-2]) )
                     d[j*n+i]--;
-#endif        
+#endif
             }
         return d[n*m-1];
     }
-    else 
+    else
         return (n+m);
 }
 #endif

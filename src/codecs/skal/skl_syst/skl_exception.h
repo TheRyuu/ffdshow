@@ -61,12 +61,12 @@ class SKL_MEM_EXCEPTION : public SKL_EXCEPTION {
 class SKL_ASSERT_EXCEPTION : public SKL_EXCEPTION {
   private:
     static char _Text[MAX_LEN];
-    static char _File[MAX_LEN]; 
+    static char _File[MAX_LEN];
     static int  _Line;
   public:
-    SKL_ASSERT_EXCEPTION(SKL_CST_STRING Msg, 
+    SKL_ASSERT_EXCEPTION(SKL_CST_STRING Msg,
                          SKL_CST_STRING Text,
-                         SKL_CST_STRING File, 
+                         SKL_CST_STRING File,
                          int Line);
     virtual ~SKL_ASSERT_EXCEPTION() {}
     virtual void Print() const;

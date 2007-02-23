@@ -14,13 +14,13 @@ private:
      size=(unsigned int)wParam;
      quant=(unsigned int)(lParam>>20);
      frametype=(unsigned int)(lParam&((1<<20)-1));
-    } 
+    }
    unsigned int frametype;
    unsigned int size;
    unsigned int quant;
   } *frames;
- void clearFrames(void); 
- struct 
+ void clearFrames(void);
+ struct
   {
    BITMAPINFOHEADER bmiHeader;
    RGBQUAD bmiColors[256];
@@ -46,4 +46,4 @@ public:
  virtual void cfg2dlg(void);
 };
 
-#endif 
+#endif

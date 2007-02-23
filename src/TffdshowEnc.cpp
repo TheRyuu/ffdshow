@@ -59,28 +59,28 @@ CUnknown* WINAPI TffdshowEncVFW::CreateInstance(LPUNKNOWN punk,HRESULT *phr)
 STDMETHODIMP TffdshowEnc::NonDelegatingQueryInterface(REFIID riid,void **ppv)
 {
  CheckPointer(ppv,E_POINTER);
- if (riid==IID_IffdshowEnc) 
+ if (riid==IID_IffdshowEnc)
   return GetInterface<IffdshowEnc>(this,ppv);
  else if (riid==IID_IffdshowBaseA)
-  return GetInterface<IffdshowBaseA>(getBaseInterface<IffdshowBaseA>(),ppv); 
+  return GetInterface<IffdshowBaseA>(getBaseInterface<IffdshowBaseA>(),ppv);
  else if (riid==IID_IffdshowBaseW)
-  return GetInterface<IffdshowBaseW>(getBaseInterface<IffdshowBaseW>(),ppv); 
- else if (riid==IID_ISpecifyPropertyPages) 
+  return GetInterface<IffdshowBaseW>(getBaseInterface<IffdshowBaseW>(),ppv);
+ else if (riid==IID_ISpecifyPropertyPages)
   return GetInterface<ISpecifyPropertyPages>(this,ppv);
  else if (riid==IID_IPersistStream)
   return GetInterface<IPersistStream>(this,ppv);
  else if (riid==IID_IffdshowParamsEnum)
   return GetInterface<IffdshowParamsEnum>(this,ppv);
- else 
+ else
   return CTransformFilter::NonDelegatingQueryInterface(riid,ppv);
 }
 
 STDMETHODIMP TffdshowEncVFW::NonDelegatingQueryInterface(REFIID riid,void **ppv)
 {
  CheckPointer(ppv,E_POINTER);
- if (riid==IID_IffdshowEncVFW) 
+ if (riid==IID_IffdshowEncVFW)
   return GetInterface<IffdshowEncVFW>(this,ppv);
- else 
+ else
   return TffdshowEnc::NonDelegatingQueryInterface(riid,ppv);
 }
 
@@ -116,7 +116,7 @@ TffdshowEnc::TffdshowEnc(LPUNKNOWN punk, HRESULT *phr,TintStrColl *Ioptions,cons
    IDFF_enc_working     ,&TffdshowEnc::working    ,-1,-1,_l(""),0,NULL,0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
 
  m_pInput=inpin=new TffdshowVideoEncInputPin(this,phr);
  if (!m_pInput) *phr=E_OUTOFMEMORY;
@@ -131,7 +131,7 @@ TffdshowEnc::TffdshowEnc(LPUNKNOWN punk, HRESULT *phr,TintStrColl *Ioptions,cons
   }
 
  trayIconStart=&TtrayIconBase::start<TtrayIconEnc>;
-  
+
  started=false;
  coSettings=NULL;
  fpsRate=25;fpsScale=1;
@@ -165,9 +165,9 @@ void TffdshowEnc::initCo(void)
 
 STDMETHODIMP TffdshowEnc::_release(void)
 {
- for (TvideoCodecs::iterator i=enclibs.begin();i!=enclibs.end();i++) 
+ for (TvideoCodecs::iterator i=enclibs.begin();i!=enclibs.end();i++)
   delete *i;
- enclibs.clear(); 
+ enclibs.clear();
  if (ffproc) delete ffproc;ffproc=NULL;
  if (coSettings) delete coSettings;coSettings=NULL;
  return S_OK;
@@ -231,7 +231,7 @@ HRESULT TffdshowEnc::CheckConnect(PIN_DIRECTION dir,IPin *pPin)
 {
  if (dir==PINDIR_INPUT)
   return S_OK;
- else 
+ else
   return CTransformFilter::CheckConnect(dir,pPin);
 }
 
@@ -252,7 +252,7 @@ HRESULT TffdshowEnc::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROPERTIE
 {
  DPRINTF(_l("TffdshowEnc::DecideBufferSize"));
  if (m_pInput->IsConnected()==FALSE) return E_UNEXPECTED;
- 
+
  ppropInputRequest->cBuffers=1;
  ppropInputRequest->cbBuffer=(long)getSize(&inpin->biIn);
  ppropInputRequest->cbPrefix=0;
@@ -270,7 +270,7 @@ HRESULT TffdshowEnc::GetMediaType(int iPosition, CMediaType *mtOut)
  DPRINTF(_l("TffdshowEnc::GetMediaType"));
 
  if (m_pInput->IsConnected()==FALSE) return E_UNEXPECTED;
- 
+
  if (iPosition<0) return E_INVALIDARG;
  if (iPosition>/*(mpeg_codec(ffvfw->cfg.co.codecId)?2:1)*/1) return VFW_S_NO_MORE_ITEMS;
 
@@ -332,7 +332,7 @@ HRESULT TffdshowEnc::GetMediaType(int iPosition, CMediaType *mtOut)
      else //mpeg2
       {
       }
-     break; 
+     break;
     }
   }
  return S_OK;
@@ -363,14 +363,14 @@ bool TffdshowEnc::start(void)
   }
  if (begin(&inpin->biIn.bmiHeader)!=ICERR_OK) return false;
  ft1=ft2=0;
- return true; 
+ return true;
 }
 
 int TffdshowEnc::getQuantFirst(void)
 {
  if (coSettings->credits_mode==CREDITS_MODE::QUANT && coSettings->isInCredits(params.framenum))
   return coSettings->credits_quant_p;
- else 
+ else
   return 2;
 }
 int TffdshowEnc::getQuantQuant(void)
@@ -414,15 +414,15 @@ void TffdshowEnc::getOut(unsigned int AVIdx,unsigned int AVIdy,unsigned int *out
 STDMETHODIMP_(LRESULT) TffdshowEnc::query(const BITMAPINFOHEADER *inhdr,BITMAPINFOHEADER *outhdr)
 {
  initCo();
- if (getBMPcolorspace(inhdr,coSettings->incsps)==FF_CSP_NULL) 
+ if (getBMPcolorspace(inhdr,coSettings->incsps)==FF_CSP_NULL)
   return ICERR_BADFORMAT;
- if (outhdr==NULL) 
+ if (outhdr==NULL)
   {
    unsigned int outDx,outDy;
    getOut(inhdr->biWidth,inhdr->biHeight,&outDx,&outDy);
-   if (outDx&1 || outDy&1) return ICERR_BADFORMAT; 
+   if (outDx&1 || outDy&1) return ICERR_BADFORMAT;
    return ICERR_OK;
-  } 
+  }
  if (inhdr->biWidth!=outhdr->biWidth || inhdr->biHeight!=outhdr->biHeight) return ICERR_BADFORMAT;
  if (outhdr->biCompression==coSettings->fourcc) return ICERR_OK; //FIX ?
  return ICERR_BADFORMAT;
@@ -435,7 +435,7 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::getFormat(const BITMAPINFOHEADER *inhdr,BITM
   return ICERR_BADFORMAT;
 
  unsigned int outDx,outDy;getOut(inhdr->biWidth,inhdr->biHeight,&outDx,&outDy);
- if (!findEncLib()) return 0; 
+ if (!findEncLib()) return 0;
  extradata.clear();
  if (enc->supExtradata())
   {
@@ -444,12 +444,12 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::getFormat(const BITMAPINFOHEADER *inhdr,BITM
    enc->beginCompress(coSettings->mode,enccsp,Trect(0,0,outDx,outDy));
    const void *edata0;size_t elen;
    enc->getExtradata(&edata0,&elen);
-   if (elen) 
+   if (elen)
     extradata.set(edata0,elen,0,true);
    enc->end();
-  }  
-  
- if (lpbiOutput==NULL) 
+  }
+
+ if (lpbiOutput==NULL)
   return sizeof(BITMAPINFOHEADER)+extradata.size;
  BITMAPINFOHEADER *outhdr=&lpbiOutput->bmiHeader;
 
@@ -499,7 +499,7 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::begin(const BITMAPINFOHEADER *inhdr)
    fpsRate =nom;
    fpsScale=den;
   }
- 
+
  dbgInit();
  getOut(inhdr->biWidth,inhdr->biHeight,&outDx,&outDy);
  ownStoreExt=false;
@@ -509,7 +509,7 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::begin(const BITMAPINFOHEADER *inhdr)
    enc->getCompressColorspaces(enccsps,outDx,outDy);
    if (enccsps.empty())
     return ICERR_BADFORMAT;
-  } 
+  }
  enccsp=enccsps[0];
 
  cfgcomode=coSettings->mode;
@@ -533,7 +533,7 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::begin(const BITMAPINFOHEADER *inhdr)
 
  if (coSettings->storeExt && !ownStoreExt && coSettings->storeExtFlnm[0])
   mux=Tmuxer::getMuxer(coSettings->muxer,this);
- else 
+ else
   mux=NULL;
  enc->setCoSettings(oldCodecId);
  LRESULT res=enc->beginCompress(cfgcomode,enccsp,Trect(0,0,outDx,outDy));
@@ -554,10 +554,10 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::begin(const BITMAPINFOHEADER *inhdr)
  totalsize=keyspacing=0;
  if (coSettings->isProc && ffproc)
   ffproc->begin(dx,dy,fpsRate,fpsScale);
- 
+
  if (mux)
   mux->writeHeader(extradata.data,extradata.size,1,biOutput.bmiHeader);
-  
+
  memset(&params,0,sizeof(params));
  encStats.init(outDx,outDy,enccsp);
  outputdebug=globalSettings->outputdebug;outputdebugfile=globalSettings->outputdebugfile;
@@ -588,18 +588,18 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::end(void)
      double psnrY,psnrU,psnrV;encStats.calcPSNR(&psnrY,&psnrU,&psnrV);
      if (psnrY!=-1)
       dbgWrite(_l("Average PSNR: %6.2f,%6.2f,%6.2f\n"),psnrY,psnrU,psnrV);
-    } 
+    }
   }
  working=false;
  if (h_graph) PostMessage(h_graph,TencStats::MSG_FF_CLEAR,0,0);
- hideTrayIcon(); 
+ hideTrayIcon();
  if (coSettings->isProc && ffproc) ffproc->end();
  if (pass) delete pass;pass=NULL;
  if (enc) enc->end();
  if (mux) delete mux;mux=NULL;
  if (convert) delete convert;convert=NULL;
  if (ownpictbuf.size()) {ownpictbuf.clear();memset(&ownpict,0,sizeof(ownpict));}
- enccsps.clear();  
+ enccsps.clear();
  dbgDone();
  return ICERR_OK;
 }
@@ -629,7 +629,7 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::compress(const BITMAPINFOHEADER *inhdr,const
     break;
    case ENC_MODE::PASS2_1:
     params.quant=getQuantFirst();
-    break; 
+    break;
    case ENC_MODE::PASS2_2_EXT:
    case ENC_MODE::PASS2_2_INT:
     if (!pass->getQuantSecond(params)) return ICERR_ERROR;
@@ -641,7 +641,7 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::compress(const BITMAPINFOHEADER *inhdr,const
     DPRINTF(_l("Invalid encoding mode"));
     return ICERR_ERROR;
   }
-  
+
  params.quanttype=coSettings->getQuantType(params.quant);
  params.gray=coSettings->gray || (coSettings->graycredits && coSettings->isInCredits(params.framenum));
 
@@ -663,20 +663,20 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::compress(const BITMAPINFOHEADER *inhdr,const
    csp_yuv_adj_to_plane(pict.csp,&pict.cspInfo,dy,pict.data,pict.stride);
    csp_yuv_order(pict.csp,pict.data,pict.stride);
    csp_vflip(pict.csp,&pict.cspInfo,pict.data,pict.stride,dy);
-  } 
+  }
  if (csp_isPAL(pict.csp))
   {
    pict.palette.pal=(unsigned char*)(inhdr+1);
    pict.palette.numcolors=inhdr->biClrUsed;
-  } 
- 
+  }
+
  if (!coSettings->isProc || !ffproc)
   {
    bool directYV12=false;
    for (Tcsps::const_iterator c=enccsps.begin();c!=enccsps.end();c++)
     if (*c==pict.csp)
      {
-      directYV12=true; 
+      directYV12=true;
       break;
      }
    if (!directYV12)
@@ -689,16 +689,16 @@ STDMETHODIMP_(LRESULT) TffdshowEnc::compress(const BITMAPINFOHEADER *inhdr,const
      pict=ownpict;
      if (!src)
       pict.data[0]=NULL;
-    } 
-  }  
- 
+    }
+  }
+
  params.length=0;
  params.priv=NULL;
  pict.rtStart=rtStart;
  pict.rtStop=rtStop;
  if (src && coSettings->isProc && ffproc)
   return ffproc->processPict(params.framenum,pict,enccsp);
- else 
+ else
   return src?enc->compress(pict,params):enc->flushEnc(pict,params);
 }
 
@@ -710,7 +710,7 @@ STDMETHODIMP TffdshowEnc::TffProcVideoEnc::deliverProcessedSample(TffPict &pict)
 STDMETHODIMP TffdshowEnc::deliverEncodedSample(const TmediaSample &sample,TencFrameParams &params)
 {
  _mm_empty();
- 
+
  params.outlength=coSettings->storeAVI?params.length:0;
 
  if (mux)
@@ -732,7 +732,7 @@ STDMETHODIMP TffdshowEnc::deliverEncodedSample(const TmediaSample &sample,TencFr
    return ICERR_ERROR;
 
  params.framenum++;keyspacing++;
- 
+
  encStats.add(params);
  if (h_graph) PostMessage(h_graph,TencStats::MSG_FF_FRAME,params.length,(params.quant<<20)|params.frametype);
 
@@ -740,7 +740,7 @@ STDMETHODIMP TffdshowEnc::deliverEncodedSample(const TmediaSample &sample,TencFr
 }
 
 STDMETHODIMP TffdshowEnc::JoinFilterGraph(IFilterGraph *pGraph,LPCWSTR pName)
-{ 
+{
  return onJoinFilterGraph(pGraph,pName);
 }
 
@@ -810,7 +810,7 @@ void TffdshowEnc::getColls(TintStrColls &colls)
 {
  if (coSettings)
   colls.push_back(coSettings->options);
- TffdshowBase::getColls(colls); 
+ TffdshowBase::getColls(colls);
 }
 
 TinfoBase* TffdshowEnc::createInfo(void)
@@ -870,7 +870,7 @@ STDMETHODIMP TffdshowEnc::getVideoCodecs(const TvideoCodecs* *codecs)
 
 void TffdshowEnc::getFFproc(void)
 {
- if (!ffproc) 
+ if (!ffproc)
   {
    HRESULT hr;
    ffproc=new TffProcVideoEnc(NULL,&hr,this);
@@ -902,7 +902,7 @@ STDMETHODIMP_(int) TffdshowEnc::loadEncodingSettingsMem(const void *buf,int len)
   {
    last+=3;
    ffproc->loadConfig(!!notreg,last,lenD-(last-bufD));
-  } 
+  }
  free(bufD);
  coSettings->fillIncsps();
  return len;
@@ -948,14 +948,14 @@ STDMETHODIMP_(LRESULT) TffdshowEncDshow::begin(const BITMAPINFOHEADER *inhdr)
  HRESULT hr=TffdshowEnc::begin(inhdr);
  if (SUCCEEDED(hr))
   times.clear();
- return hr; 
+ return hr;
 }
 
 HRESULT TffdshowEncDshow::Receive(IMediaSample *pIn)
 {
  if (!started)
   if (!start()) return E_FAIL;
-  
+
  BYTE *src=NULL;
  if (pIn->GetPointer(&src)!=S_OK) return S_FALSE;
  size_t srcLen=pIn->GetActualDataLength();
@@ -971,8 +971,8 @@ STDMETHODIMP TffdshowEncDshow::getDstBuffer(IMediaSample* *pOut,const TffPict &p
  HRESULT hr;
  if (FAILED(hr=getDeliveryBuffer(pOut,&data)))
   return hr;
- 
- if (coSettings->isFPSoverride || pict.rtStart==REFTIME_INVALID || pict.rtStop==REFTIME_INVALID) 
+
+ if (coSettings->isFPSoverride || pict.rtStart==REFTIME_INVALID || pict.rtStop==REFTIME_INVALID)
   {
    REFERENCE_TIME tStart=(params.framenum  )*inpin->avgTimePerFrame;
    REFERENCE_TIME tStop =(params.framenum+1)*inpin->avgTimePerFrame;
@@ -1009,8 +1009,8 @@ STDMETHODIMP TffdshowEncDshow::deliverEncodedSample(const TmediaSample &sample,T
  HRESULT hr;
  if (FAILED(hr=TffdshowEnc::deliverEncodedSample(sample,params)))
   return hr;
-  
- if (!times.empty()) 
+
+ if (!times.empty())
   {
    rtStart=times.front().first;
    rtStop=times.front().second;
@@ -1018,7 +1018,7 @@ STDMETHODIMP TffdshowEncDshow::deliverEncodedSample(const TmediaSample &sample,T
    times.pop_front();
   }
  sample->SetSyncPoint(params.keyframe?TRUE:FALSE);
- sample->SetActualDataLength(params.outlength); 
+ sample->SetActualDataLength(params.outlength);
 
  if (fileout)
   {
@@ -1026,7 +1026,7 @@ STDMETHODIMP TffdshowEncDshow::deliverEncodedSample(const TmediaSample &sample,T
    sample->SetTime(&ft1,&ft2);
    ft1+=params.outlength;
   }
- IMediaSample **s=(IMediaSample**)&sample; 
+ IMediaSample **s=(IMediaSample**)&sample;
  return m_pOutput->Deliver(*s);
 }
 
@@ -1041,7 +1041,7 @@ STDMETHODIMP TffdshowEncVFW::getDstBuffer(IMediaSample* *samplePtr,const TffPict
   public:
    TfakeEncMediaSample(void *Ibuf,long Ibufsize):buf(Ibuf),bufsize(Ibufsize),CUnknown("TfakeEncMediaSample",NULL) {}
    DECLARE_IUNKNOWN
-   virtual HRESULT STDMETHODCALLTYPE GetPointer(BYTE **ppBuffer) 
+   virtual HRESULT STDMETHODCALLTYPE GetPointer(BYTE **ppBuffer)
     {
      if (!ppBuffer) return E_POINTER;
      return (*ppBuffer=(uint8_t*)buf)!=NULL?S_OK:E_FAIL;

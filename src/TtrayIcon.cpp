@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-    
+
 #include "stdafx.h"
 #include <shellapi.h>
 #include <shlwapi.h>
@@ -47,13 +47,13 @@ unsigned int TtrayIconBase::run(CAMEvent *ev,HWND *hwndRef)
      TranslateMessage(&msg);
      DispatchMessage(&msg);
     }
-   hide(); 
+   hide();
   }
  else
   ev->Set();
- delete this; 
+ delete this;
  _endthreadex(0);
- return 0; 
+ return 0;
 }
 
 TtrayIconBase::TtrayIconBase(IffdshowBase *Ideci):deci(Ideci)
@@ -120,7 +120,7 @@ LRESULT CALLBACK TtrayIconBase::trayWndProc(HWND hwnd, UINT msg, WPARAM wprm, LP
 {
  TtrayIconBase *ti=(TtrayIconBase*)GetWindowLongPtr(hwnd,GWLP_USERDATA);
  switch (msg)
-  { 
+  {
    case WM_CREATE:
     SetTimer(hwnd,TMR_TRAYICON,500,NULL);
     break;
@@ -174,11 +174,11 @@ LRESULT TtrayIconBase::processTrayMsg(HWND hwnd,WPARAM wprm,LPARAM lprm)
        tsnprintf(tipptr,tiplen,_l("%s: %s%s%s%s%s%s"),tip,sep1,inputS,in,sep2,outputS,out);
       else if (in[0])
        tsnprintf(tipptr,tiplen,_l("%s: %s"),tip,in);
-      else 
+      else
        tsnprintf(tipptr,tiplen,_l("%s"),tip);
-      nid.szTip[tiplen-1]='\0';       
+      nid.szTip[tiplen-1]='\0';
       Shell_NotifyIcon(NIM_MODIFY,(NOTIFYICONDATA*)&nid);
-     } 
+     }
     break;
    case WM_LBUTTONDBLCLK:
     deci->showCfgDlg(NULL);
@@ -197,7 +197,7 @@ LRESULT TtrayIconBase::processTrayMsg(HWND hwnd,WPARAM wprm,LPARAM lprm)
      processCmd(hm,cmd);
      DestroyMenu(hm);
      return TRUE;
-    } 
+    }
   }
  return 0;
 }
@@ -300,7 +300,7 @@ HMENU TtrayIconDec::createMenu(int &ord)
    for (TfilterIDFFs::const_iterator f=filters->begin();f!=filters->end();f++)
     if (f->idff->is)
      ordFilters.push_back(std::make_pair(f->idff->order?cfgGet(f->idff->order):0,f->idff));
-  }  
+  }
  bool notorder=false;
  for (const TfilterIDFF *f=deciD->getNextFilterIDFF();f && f->name;f++)
   if (f->order)
@@ -308,13 +308,13 @@ HMENU TtrayIconDec::createMenu(int &ord)
   else
    notorder=true;
  std::sort(ordFilters.begin(),ordFilters.end(),sortOrdFilters);
- 
+
  for (TordFiltersVector::const_iterator fo=ordFilters.begin();fo!=ordFilters.end();fo++)
   if (fo->second->show==0 || cfgGet(fo->second->show))
    {
     insertMenuItemFilter(hm,ord,fo->second);
     insertSubmenuCallback(hm,ord,fo->second);
-   } 
+   }
  if (notorder)
   {
    insertSeparator(hm,ord);
@@ -350,10 +350,10 @@ LRESULT TtrayIconDec::processTrayMsg(HWND hwnd,WPARAM wprm,LPARAM lprm)
       {
        TSpecifyPropertyPagesVE::show2configPages(IID_IffdshowDecVideo,deciV,IID_IffdshowDecAudio,deciA,IDS_FFDSHOWDEC,IDI_FFDSHOW,IDFF_dlgDecCurrentPage);
        return TRUE;
-      } 
-    } 
+      }
+    }
   }*/
- return TtrayIconBase::processTrayMsg(hwnd,wprm,lprm);   
+ return TtrayIconBase::processTrayMsg(hwnd,wprm,lprm);
 }
 
 void TtrayIconDec::processCmd(HMENU hm,int cmd)
@@ -401,8 +401,8 @@ void TtrayIconDec::showFilterCfg(const char_t *fltname)
                             0,0
                            );
      CoTaskMemFree(pages.pElems);
-    }                       
-  } 
+    }
+  }
 }
 
 bool TtrayIconDec::sortOrdFilters(const TordFilters &of1,const TordFilters &of2)
@@ -443,15 +443,15 @@ HMENU TtrayIconDecVideo::makeSubtitlesMenu(void)
        if (textname[0])
         strcatf(s,_l(" (%s)"),textname);
        textpins.push_back(std::make_pair(ffstring(s),id));
-      } 
+      }
     }
    if (!textpins.empty())
-    { 
+    {
      if (!files.empty()) insertSeparator(hm,ord);
      int subShown=deci->getParam2(IDFF_subShowEmbedded);
      for (size_t i=0;i<textpins.size();i++)
       insertMenuItem(hm,ord,IDC_FIRST_TEXTPIN+textpins[i].second,textpins[i].first.c_str(),false,textpins[i].second==subShown,true);
-    } 
+    }
   }
  if (int langcnt=deciV->getSubtitleLanguagesCount2())
   {
@@ -481,7 +481,7 @@ void TtrayIconDecVideo::processCmd(HMENU hm,int cmd)
    int id=cmd-IDC_FIRST_TEXTPIN;
    int oldId=deci->getParam2(IDFF_subShowEmbedded);
    deci->putParam(IDFF_subShowEmbedded,id==oldId?0:id);
-  } 
+  }
  else if (cmd>=IDC_FIRST_SUBLANG)
   deci->putParam(IDFF_subCurLang,cmd-IDC_FIRST_SUBLANG);
  else if (cmd>=IDC_FIRST_SUBFILE)
@@ -496,10 +496,10 @@ void TtrayIconDecVideo::processCmd(HMENU hm,int cmd)
  else if (cmd==IDFF_isAvisynth+IDC_FIRST_FILTER)
   {
    deci->putParamStr(IDFF_OSDuser,_l(""));
-   TtrayIconDec::processCmd(hm,cmd);   
+   TtrayIconDec::processCmd(hm,cmd);
   }
  else
-  TtrayIconDec::processCmd(hm,cmd);   
+  TtrayIconDec::processCmd(hm,cmd);
 }
 
 
@@ -544,7 +544,7 @@ void TtrayIconDecAudio::processCmd(HMENU hm,int cmd)
 {
  if (cmd>=IDC_FIRST_STREAM)
   deciA->setCurrentStream(cmd-IDC_FIRST_STREAM);
- else TtrayIconDec::processCmd(hm,cmd);   
+ else TtrayIconDec::processCmd(hm,cmd);
 }
 
 

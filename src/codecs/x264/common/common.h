@@ -34,10 +34,10 @@
 #include <assert.h>
 
 #ifdef __GNUC__
- #define printf(...) 
+ #define printf(...)
 #else
  #define printf(x)
-#endif 
+#endif
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
@@ -158,10 +158,10 @@ char *x264_param2string( x264_param_t *p, int b_res );
 /* log */
 //void x264_log( x264_t *h, int i_level, const char *psz_fmt, ... );
 #ifdef __GNUC__
- #define x264_log(...) 
+ #define x264_log(...)
 #else
  #define x264_log(x)
-#endif 
+#endif
 
 void x264_reduce_fraction( int *n, int *d );
 
@@ -420,7 +420,7 @@ struct x264_t
         int     i_mb_xy;
         int     i_b8_xy;
         int     i_b4_xy;
-        
+
         /* Search parameters */
         int     i_me_method;
         int     i_subpel_refine;
@@ -448,10 +448,10 @@ struct x264_t
         unsigned int i_neighbour;
         unsigned int i_neighbour8[4];       /* neighbours of each 8x8 or 4x4 block that are available */
         unsigned int i_neighbour4[16];      /* at the time the block is coded */
-        int     i_mb_type_top; 
-        int     i_mb_type_left; 
-        int     i_mb_type_topleft; 
-        int     i_mb_type_topright; 
+        int     i_mb_type_top;
+        int     i_mb_type_left;
+        int     i_mb_type_topleft;
+        int     i_mb_type_topright;
         int     i_mb_prev_xy;
         int     i_mb_top_xy;
 
@@ -638,4 +638,7 @@ struct x264_t
 #include "macroblock.h"
 
 #endif
+
+
+
 

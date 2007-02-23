@@ -192,24 +192,24 @@ Tinifile::PROFILESECTION* Tinifile::PROFILE_Load(HANDLE hFile0)
     PROFILESECTION **next_section;
     PROFILEKEY *key, *prev_key, **next_key;
     DWORD dwFileSize;
-    
+
     dwFileSize = GetFileSize(hFile0, NULL);
     if (dwFileSize == INVALID_FILE_SIZE)
         return NULL;
 
     pBuffer = (uint8_t*)malloc(dwFileSize);
     if (!pBuffer) return NULL;
-    
+
     if (!ReadFile(hFile0, pBuffer, dwFileSize, &dwFileSize, NULL))
     {
         free(pBuffer);
         return NULL;
     }
     len = dwFileSize;
-    
+
     TstreamMem hFile(pBuffer,len,Tstream::ENC_AUTODETECT);hFile.stripEOLN(true);
     encoding=hFile.encoding;
-    
+
     //PROFILE_DetectTextEncoding(pBuffer, &len);
     /* len is set to the number of bytes in the character marker.
      * we want to skip these bytes */
@@ -246,9 +246,9 @@ Tinifile::PROFILESECTION* Tinifile::PROFILE_Load(HANDLE hFile0)
         //if (!szLineEnd)
             //szLineEnd = szEnd;
         //line++;
-        
+
         while (*szLineStart && PROFILE_isspace(*szLineStart)) szLineStart++;
-        
+
         if (!*szLineStart /*>= szLineEnd*/) continue;
 
         if (*szLineStart == '[')  /* section start */
@@ -302,7 +302,7 @@ Tinifile::PROFILESECTION* Tinifile::PROFILE_Load(HANDLE hFile0)
         szNameEnd++;
 
         len = (int)(szNameEnd - szLineStart);
-        
+
         if (len || !prev_key || *prev_key->name)
         {
             /* no need to allocate +1 for NULL terminating character as
@@ -401,7 +401,7 @@ BOOL Tinifile::PROFILE_Open(void)
     char_t buffer[MAX_PATH];
     HANDLE hFile = INVALID_HANDLE_VALUE;
     FILETIME LastWriteTime;
-    
+
     ZeroMemory(&LastWriteTime, sizeof(LastWriteTime));
 
     /* First time around */
@@ -431,9 +431,9 @@ BOOL Tinifile::PROFILE_Open(void)
         LPTSTR dummy;
         GetFullPathName(filename, sizeof(buffer)/sizeof(buffer[0]), buffer, &dummy);
     }
-        
+
     hFile = CreateFile(buffer, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-    
+
     if ((hFile == INVALID_HANDLE_VALUE) && (GetLastError() != ERROR_FILE_NOT_FOUND))
     {
         return FALSE;

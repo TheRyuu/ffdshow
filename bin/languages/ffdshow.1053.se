@@ -119,8 +119,8 @@ Swedish
 1017=Luminansökning
 1018=Luminansoffset
 1037=Gamma korrigering
-1025=Färgnyans 
-1026=Färgmättnad 
+1025=Färgnyans
+1026=Färgmättnad
 [142]
 0=Nivåer
 1170=Nivåer
@@ -282,4 +282,7 @@ Swedish
 1072=DirectShow filter build datum:
 1071=libavcodec version
 1073=xvid version
+
+
+
 

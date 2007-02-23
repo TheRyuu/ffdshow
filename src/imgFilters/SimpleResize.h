@@ -40,18 +40,18 @@ private:
  unsigned int* vWeightsUV;               // weighting masks, alternating dwords for Y & UV
  unsigned int* vWorkY;           // weighting masks 0Y0Y 0Y0Y...
  unsigned int* vWorkUV;          // weighting masks UVUV UVUV...
- bool SSE2enabled; 
- bool SSEMMXenabled; 
- bool Interlaced; 
- bool DoYV12; 
+ bool SSE2enabled;
+ bool SSEMMXenabled;
+ bool Interlaced;
+ bool DoYV12;
 
  //      void LoadFrame(int n,int offset, IScriptEnvironment* env);
  //void SimpleResize::InitTables();
  int InitTables(void);
  int InitTables_YV12(void);
- void GetFrame_YUY2(const PVideoFrame *src, PVideoFrame *dst, int Planar_Type); 
- void GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int Planar_Type); 
- 
+ void GetFrame_YUY2(const PVideoFrame *src, PVideoFrame *dst, int Planar_Type);
+ void GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int Planar_Type);
+
  static double WarpFactor(double z, double wFact);
 
  static __align16(const int64_t,YMask[2]);

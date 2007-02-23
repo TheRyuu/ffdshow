@@ -1,6 +1,6 @@
 Flip video - if the movie is displayed upside-down, check this
 
-IDCT 
+IDCT
 If you see periodically appearing faint horizontal lines in the movie or colors are slightly changing, try to select different IDCT routine
 Following descriptions are based only on some users experiences, you may obtain different results.
 Simple 16383 - this is preferred routine, it's fast and quite accurate, but may produce some artifacts with DIVX 4,5 and XVID movies

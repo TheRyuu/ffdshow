@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "TversionsDlg.h"
 #include "IffdshowBase.h"
@@ -66,7 +66,7 @@ INT_PTR TversionsDlg::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
      return TRUE;
     }
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDOK:
       case IDCANCEL:

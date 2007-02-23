@@ -19,4 +19,4 @@ public:
  virtual bool enabled(void);
 };
 
-#endif 
+#endif

@@ -84,11 +84,11 @@ void TresampleSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfil
     {
      const Tconfig *config;filters->deci->getConfig(&config);
      if (config->check(TaudioFilterResampleSRC::dllname))
-      queueFilter<TaudioFilterResampleSRC>(filtersorder,filters,queue); 
+      queueFilter<TaudioFilterResampleSRC>(filtersorder,filters,queue);
     }
    else
-    queueFilter<TaudioFilterResampleLavc>(filtersorder,filters,queue); 
-  }  
+    queueFilter<TaudioFilterResampleLavc>(filtersorder,filters,queue);
+  }
 }
 void TresampleSettings::createPages(TffdshowPageDec *parent) const
 {

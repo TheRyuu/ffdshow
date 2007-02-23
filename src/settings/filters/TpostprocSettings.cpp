@@ -42,7 +42,7 @@ TpostprocSettings::TpostprocSettings(TintStrColl *Icoll,TfilterIDFFs *filters):T
  //levelFixChrom=0;
  static const TintOptionT<TpostprocSettings> iopts[]=
   {
-   IDFF_isPostproc            ,&TpostprocSettings::is                    ,0,0,_l(""),1, 
+   IDFF_isPostproc            ,&TpostprocSettings::is                    ,0,0,_l(""),1,
      _l("isPostproc"),0,
    IDFF_showPostproc          ,&TpostprocSettings::show                  ,0,0,_l(""),1,
      _l("showPostproc"),1,
@@ -101,18 +101,18 @@ void TpostprocSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfil
      {
       case 0:
        queueFilter<TimgFilterPostprocMplayer>(filtersorder,filters,queue); break;
-      case 1: 
+      case 1:
        queueFilter<TimgFilterPostprocNic>(filtersorder,filters,queue); break;
       case 2:
        if (nicFirst)
         {
-         queueFilter<TimgFilterPostprocNic>(filtersorder,filters,queue); 
-         queueFilter<TimgFilterPostprocMplayer>(filtersorder,filters,queue); 
+         queueFilter<TimgFilterPostprocNic>(filtersorder,filters,queue);
+         queueFilter<TimgFilterPostprocMplayer>(filtersorder,filters,queue);
         }
        else
         {
-         queueFilter<TimgFilterPostprocMplayer>(filtersorder,filters,queue); 
-         queueFilter<TimgFilterPostprocNic>(filtersorder,filters,queue); 
+         queueFilter<TimgFilterPostprocMplayer>(filtersorder,filters,queue);
+         queueFilter<TimgFilterPostprocNic>(filtersorder,filters,queue);
         }
        break;
       case 4:
@@ -120,7 +120,7 @@ void TpostprocSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfil
       case 5:
        queueFilter<TimgFilterPostprocFspp>(filtersorder,filters,queue); break;
      }
-  }  
+  }
 }
 void TpostprocSettings::createPages(TffdshowPageDec *parent) const
 {
@@ -148,7 +148,7 @@ bool TpostprocSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
   {
    tsprintf(tipS,_l("custom: %s%s%s%s%s%s"),custom&LUM_V_DEBLOCK?_l("luma deblock (V),"):_l(""),custom&LUM_H_DEBLOCK?_l("luma deblock (H),"):_l(""),custom&CHROM_V_DEBLOCK?_l("chroma deblock (V),"):_l(""),custom&CHROM_H_DEBLOCK?_l("chroma deblock (H),"):_l(""),custom&LUM_DERING?_l("luma dering,"):_l(""),custom&CHROM_DERING?_l("chroma dering,"):_l(""));
    char_t *c=strrchr(tipS,',');if (c) *c='\n'; else strcat(tipS,_l("\n"));
-  } 
+  }
  else
   {
    strcpy(tipS,_l("presets: "));

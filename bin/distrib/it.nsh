@@ -18,7 +18,7 @@ LangString DESC_addons  ${NSH_LANG} "Installa librerie addizionali per la codifi
 LangString TITLE_plugins ${NSH_LANG} "Plugin per applicazioni"
 LangString DESC_plugins ${NSH_LANG} "Plugin per varie applicazioni per farle interagire con ffdshow"
 LangString TITLE_pluginAvisynth ${NSH_LANG} "Avisynth"
-LangString DESC_pluginAvisynth ${NSH_LANG} "Rende possibile utilizzare i filtri di processing di ffdshow direttamente dagli script avisynth" 
+LangString DESC_pluginAvisynth ${NSH_LANG} "Rende possibile utilizzare i filtri di processing di ffdshow direttamente dagli script avisynth"
 LangString DLG_AVISYNTH_TITLE ${NSH_LANG} "Avisynth"
 LangString DLG_AVISYNTH_SUBTITLE ${NSH_LANG} "Directory dei plugin di Avisynth"
 LangString DLG_AVISYNTH_LABEL ${NSH_LANG} "Seleziona la directory dei plugin di Avisynth"

@@ -43,13 +43,13 @@ bool TaudioCodecUncompressed::init(const CMediaType &mt)
     {
      fmt.sf=TsampleFormat::SF_FLOAT32;
      float64=true;
-    } 
+    }
    if (fmt.pcm_be)
     {
      be=true;
      fmt.pcm_be=false;
     }
-  }    
+  }
  else if (codecId==CODEC_ID_LPCM)
   {
    if (fmt.sf==TsampleFormat::SF_LPCM20)
@@ -61,8 +61,8 @@ bool TaudioCodecUncompressed::init(const CMediaType &mt)
     {
      fmt.sf=TsampleFormat::SF_PCM32;
      lpcm24=true;
-    } 
-  }  
+    }
+  }
  return true;
 }
 TaudioCodecUncompressed::~TaudioCodecUncompressed()
@@ -74,7 +74,7 @@ void TaudioCodecUncompressed::getInputDescr1(char_t *buf,size_t buflen) const
   strncpy(buf,_l("20-bit lpcm"),buflen);
  else if (lpcm24)
   strncpy(buf,_l("24-bit lpcm"),buflen);
- else 
+ else
   strncpy(buf,_l("pcm"),buflen);
  buf[buflen-1]='\0';
 }
@@ -118,7 +118,7 @@ HRESULT TaudioCodecUncompressed::decode(TbyteBuffer &src)
     {
      for (size_t i=0;i<src.size()/2;i++)
       std::swap(src[2*i],src[2*i+1]);
-    } 
+    }
   }
  else if (bit8)
   {
@@ -131,7 +131,7 @@ HRESULT TaudioCodecUncompressed::decode(TbyteBuffer &src)
   {
    if (float64)
     swapbe((double*)samples,src.size());
-   else 
+   else
     switch (fmt.sf)
      {
       case TsampleFormat::SF_PCM16:swapbe((int16_t*)samples,src.size());break;
@@ -143,11 +143,11 @@ HRESULT TaudioCodecUncompressed::decode(TbyteBuffer &src)
 
  if (float64)
   {
-   for (size_t i=0;i<numsamples;i++) 
+   for (size_t i=0;i<numsamples;i++)
     ((float*)samples)[i]=(float)((double*)samples)[i];
-   numsamples/=2; 
+   numsamples/=2;
   }
-  
+
  HRESULT hr=sinkA->deliverDecodedSample(samples,numsamples,fmt,1);
  src.clear();
  return hr;

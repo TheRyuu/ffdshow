@@ -1,4 +1,4 @@
-/* 
+/*
 style made by mose@localis.org
 for use of localis.org, and packaged in tikiwiki asis
 */
@@ -41,23 +41,23 @@ a:visited {
 	text-decoration:   none;
 }
 
-/* 
+/*
 GENERAL LAYOUT EXPLANATION
 
-The tiki application is enclosed as a whole in 
+The tiki application is enclosed as a whole in
 tiki-main tiki-main contains three divs: tiki-top,
-tiki-mid and tiki-botthat will be used for the header, 
+tiki-mid and tiki-botthat will be used for the header,
 application and footer.
 
-tiki-mid contains a 3-column table, the columns are 
+tiki-mid contains a 3-column table, the columns are
 called (ids) leftcolumn, centercolumn and rightcolumn
 
-Finally centercolumn contains tiki-center where the main 
+Finally centercolumn contains tiki-center where the main
 area of the application is displayed.
 */
 
 /*
-GENERAL LAYOUT 
+GENERAL LAYOUT
 */
 
 /* This div encloses the whole Tiki application */
@@ -145,18 +145,18 @@ span.off-option {
 }
 
 /*
-GENERAL STYLE PROPERTIES 
+GENERAL STYLE PROPERTIES
 
-BOXES boxes are used to present a box with a title 
+BOXES boxes are used to present a box with a title
 bar and content, they are used for modules and they
 are also used in the rankings, admin screen etc.
-The box class is used for modules while the cbox 
+The box class is used for modules while the cbox
 class is used for other boxes
 */
 
-/* 
-Boxes used for modules 
-(modules are those boxes in the left/right columns) 
+/*
+Boxes used for modules
+(modules are those boxes in the left/right columns)
 */
 div.box {
 	/*background: #e1e2b9; */
@@ -166,8 +166,8 @@ div.box {
 	margin-top:   13px;
 }
 
-/* 
-Boxes are divided in title and data, this is the title 
+/*
+Boxes are divided in title and data, this is the title
 */
 div.box-title {
 	border-bottom:    1px dashed #999970;
@@ -184,8 +184,8 @@ div.box-title table {
     width: 100%;
 }
 
-/* 
-And this is the data 
+/*
+And this is the data
 */
 div.box-data {
 	color:    #777750;
@@ -207,17 +207,17 @@ div.box-data li {
 	border-bottom:   1px solid #b1b299;
 }
 
-/* 
-When modules display a list of items each item is enclosed 
-in a cell with the following style 
+/*
+When modules display a list of items each item is enclosed
+in a cell with the following style
 */
 .module {
 	font-size:    10px;
 	text-align:   left;
 }
 
-/* 
-Links in modules 
+/*
+Links in modules
 */
 .linkmodule {
 	font-size:    11px;
@@ -232,8 +232,8 @@ Links in modules
 	background:   #f1f1c9;
 }
 
-/* 
-Now the boxes for the rest of Tiki (non-modules 
+/*
+Now the boxes for the rest of Tiki (non-modules
 */
 div.cbox {
 	background:    #f1f1c9;
@@ -244,8 +244,8 @@ div.cbox {
 	width:   100%;
 }
 
-/* 
-Boxes are divided in title and data, this is the title 
+/*
+Boxes are divided in title and data, this is the title
 */
 div.cbox-title {
 	border-bottom:    1px dashed #b1b299;
@@ -258,8 +258,8 @@ div.cbox-title {
 	width:   100%;
 }
 
-/* 
-When there's a link in a cbox-title 
+/*
+When there's a link in a cbox-title
 */
 .cboxtlink {
 	font-size:    11px;
@@ -273,8 +273,8 @@ When there's a link in a cbox-title
 	background-color:   #f1f1c9;
 }
 
-/* 
-And this is the data 
+/*
+And this is the data
 */
 div.cbox-data {
 	overflow:    hidden;
@@ -283,19 +283,19 @@ div.cbox-data {
 	width:   100%;
 }
 
-/* 
-Some boxes are identified by an ID, for example the  
+/*
+Some boxes are identified by an ID, for example the
 boxes in the main application menu, we set display to
-none to make the menu appear collapsed initially, 
-change this to 'block' if you want it to be extended fully 
+none to make the menu appear collapsed initially,
+change this to 'block' if you want it to be extended fully
 */
 
-/* 
+/*
 Menus
 */
 
-/* 
-Separators are used to sepparate menu areas in the application 
+/*
+Separators are used to sepparate menu areas in the application
 menu and user created menus
 */
 div.separator {
@@ -307,8 +307,8 @@ div.separator {
 	width:   100%;
 }
 
-/* 
-Links in menus 
+/*
+Links in menus
 */
 .linkmenu, .rsslink {
 	font-size:    11px;
@@ -343,8 +343,8 @@ Links in menus
 }
 
 
-/* 
-Links to extend/collapse menus 
+/*
+Links to extend/collapse menus
 */
 .separator {
 	font-size:    10px;
@@ -359,8 +359,8 @@ Links to extend/collapse menus
 	text-decoration:   none;
 }
 
-/* 
-Links to collapse menus for example the main menu 
+/*
+Links to collapse menus for example the main menu
 can be completely collapsed
 */
 .flip {
@@ -380,9 +380,9 @@ can be completely collapsed
 	text-decoration:   none;
 }
 
-/* 
-Banners of type text (textadds) are displayed 
-as links using the following style 
+/*
+Banners of type text (textadds) are displayed
+as links using the following style
 */
 .bannertext {
 	font-size:    10px;
@@ -394,17 +394,17 @@ as links using the following style
 	text-decoration:   none;
 }
 
-/* 
-Some boxes uses thumbnails this is the image style 
+/*
+Some boxes uses thumbnails this is the image style
 */
 div.imagerank {
 	margin-bottom:    10px;
 	margin-top:   10px;
 }
 
-/* 
-A simple box is just a div with a border around and 
-some margin. used for example in the admin screen 
+/*
+A simple box is just a div with a border around and
+some margin. used for example in the admin screen
 */
 div.simplebox {
 	margin-top:    5px;
@@ -420,8 +420,8 @@ div.simplebox {
 	font-size:   10px;
 }
 
-/* 
-Prevent forms from generating unwanted padding or margins 
+/*
+Prevent forms from generating unwanted padding or margins
 */
 FORM {
 	margin:    0px 0px 0px 0px;
@@ -431,8 +431,8 @@ FORM {
 	padding-top:   0px;
 }
 
-/* 
-General form elements 
+/*
+General form elements
 */
 input, select {
 	color:    #000000;
@@ -463,24 +463,24 @@ input[type = submit]:hover {
 	background-color:   #f1f1c9;
 	border:   1px solid #2255aa;
 }
-/* 
+/*
 General tables
 
-These styles apply to tables used to display common 
+These styles apply to tables used to display common
 listings such as the wiki page listing, last changes,
-listings in admin screens, etc. 
+listings in admin screens, etc.
 */
 
-/* 
-Cells where nothing is specified 
+/*
+Cells where nothing is specified
 */
 TD {
 	vertical-align: top;
 }
 
-/* 
-Cells in forms without background color 
-(inside a div for example) 
+/*
+Cells in forms without background color
+(inside a div for example)
 */
 TD.form {
 	font-size:    11px;
@@ -488,8 +488,8 @@ TD.form {
 	text-align:   left;
 }
 
-/* 
-Cells in forms using a background color 
+/*
+Cells in forms using a background color
 */
 TD.formcolor, td.galform, td.editblogform, td.editfgalform, TD.comform, td.forumform {
 	background:    #d1d2a9;
@@ -498,8 +498,8 @@ TD.formcolor, td.galform, td.editblogform, td.editfgalform, TD.comform, td.forum
 	text-align:   left;
 }
 
-/* 
-The table 
+/*
+The table
 */
 table.listgallery, table.creategalform, TABLE.normal, table.gallerylisting, table.bloglist, table.editblogform, table.editfgalform,
 	table.listfgal, table.listfiles, table.listarticles, table.forumstable, table.forumformtable, table.viewthread {
@@ -513,8 +513,8 @@ TABLE.normalnoborder {
 	width: 100%;
 }
 
-/* 
-Table headings 
+/*
+Table headings
 */
 TD.heading, td.gallistheading, td.listgalheading, td.bloglistheading, td.listfgalheading, td.listfilesheading, td.listartheading,
 	td.forumheading, td.thead {
@@ -535,8 +535,8 @@ TD.button {
 	vertical-align:   middle;
 }
 
-/* 
-Links to view an object from a table listing objects can be generalized to this link 
+/*
+Links to view an object from a table listing objects can be generalized to this link
 */
 a.tablename, a.galname, a.imagename, a.blogname, a.fgalname, a.artname, a.forumname {
 	font-weight:    bold;
@@ -554,8 +554,8 @@ a.tablename:hover, a.galname:hover, a.imagename:hover, a.blogname:hover, a.fgaln
 	text-decoration: underline;
 }
 
-/* 
-Links in table headings 
+/*
+Links in table headings
 */
 .tableheading, .gallistheading, .listgalheading, .bloglistheading, .llisfgalheading, .llistfileslink, .llistart, .lforumheading {
 	font-size:    11px;
@@ -577,9 +577,9 @@ Links in table headings
 	text-decoration:   none;
 }
 
-/* 
-When a find button is provided for a listing the table 
-form is displayed in a table with the following style 
+/*
+When a find button is provided for a listing the table
+form is displayed in a table with the following style
 */
 table.findtable {
 	width:    100%;
@@ -591,8 +591,8 @@ td.findtable {
 	font-size: 11px;
 }
 
-/* 
-Odd rows in several listings 
+/*
+Odd rows in several listings
 */
 TD.odd, td.gallistnameodd, td.gallistdescriptionodd, td.gallistcreatedodd, td.gallistlastModifodd, td.gallistuserodd,
 	td.gallistimagesodd, td.gallisthitsodd, td.gallistactionsodd, td.listgalidodd, td.listgalnameodd, td.listgalcreatedodd,
@@ -612,8 +612,8 @@ TD.odd, td.gallistnameodd, td.gallistdescriptionodd, td.gallistcreatedodd, td.ga
 	text-align:   left;
 }
 
-/* 
-Even rows in several listings 
+/*
+Even rows in several listings
 */
 TD.even, td.gallistnameeven, td.gallistdescriptioneven, td.gallistcreatedeven, td.gallistlastModifeven, td.gallistusereven,
 	td.gallistimageseven, td.gallisthitseven, td.gallistactionseven, td.listgalideven, td.listgalnameeven, td.listgalcreatedeven,
@@ -648,12 +648,12 @@ TD.third {
 	text-align:   left;
 }
 
-/* 
-Titles 
+/*
+Titles
 */
 
-/* 
-When the page title is a link this is the style 
+/*
+When the page title is a link this is the style
 */
 .pagetitle, .forumspagetitle {
 	font-weight:    bold;
@@ -679,8 +679,8 @@ a.pagetitle:hover, a.forumspagetitle:hover {
 	background-color:   #f1f1c9;
 }
 
-/* 
-Non-linking titles (three levels) 
+/*
+Non-linking titles (three levels)
 */
 H1, H2, H3 {
 	font-family:    Arial, Helvetica, sans-serif;
@@ -711,8 +711,8 @@ H1, H2, H3 {
 	font-size:    14px;
 	color:   #797950;
 }
-/* 
-Links where no special link style apply 
+/*
+Links where no special link style apply
 (usually with the general application background)
 */
 .link, .gallink, .bloglink, .fgallink, .trailer, .opencomlink, .commentslink, .admlink, .forumbutlink {
@@ -727,7 +727,7 @@ Links where no special link style apply
 	background-color:   #f1f1c9;
 }
 
-/* 
+/*
 Search results display a date using the following style
 */
 div.searchdate {
@@ -735,16 +735,16 @@ div.searchdate {
 	color:   #333333;
 }
 
-/* 
-Pagination for listings 
+/*
+Pagination for listings
 */
 .mini {
 	font-size:    10px;
 	color:   333300;
 }
 
-/* 
-prev & next buttons in pagination 
+/*
+prev & next buttons in pagination
 */
 .prevnext, .galprevnext, .blogprevnext, .fgalprevnext, .artprevnext, .forumprevnext {
 	font-size:    12px;
@@ -757,15 +757,15 @@ prev & next buttons in pagination
 	background-color:   #f1f1c9;
 }
 
-/* 
-Warning background/color 
+/*
+Warning background/color
 */
 span.warn {
 	color: red;
 }
 
 /*
-THE WIKI 
+THE WIKI
 */
 div.titlebar {
 	background:    #B5A58C;
@@ -781,16 +781,16 @@ div.titlebar {
 	font-weight:   bold;
 }
 
-/* 
-The bar where the actions for a page are displayed 
+/*
+The bar where the actions for a page are displayed
 */
 DIV#page-bar {
 	margin-left: 0px;
 }
 
-/* 
-Wiki action buttons (the buttons displayed at the 
-end of each page to edit/print/remove/etc a page 
+/*
+Wiki action buttons (the buttons displayed at the
+end of each page to edit/print/remove/etc a page
 */
 div.button2 {
 	border-top:    1px dashed #777750;
@@ -799,8 +799,8 @@ div.button2 {
 	margin-right:   10px;
 }
 
-/* 
-Links in buttons 
+/*
+Links in buttons
 */
 .linkbut {
 	padding-left:    5px;
@@ -844,8 +844,8 @@ div.button2top {
 	background-color:   #f1f1c9;
 }
 
-/* 
-When a cached version of an external link is displayed 
+/*
+When a cached version of an external link is displayed
 */
 div.cache {
 	background:    #f1f1c9;
@@ -868,9 +868,9 @@ div.cachedpage {
 	width:   100%;
 }
 
-/* 
-When an external link is cached a small link to the 
-cached version (cache) is displayed using this style 
+/*
+When an external link is cached a small link to the
+cached version (cache) is displayed using this style
 */
 .wikicache {
 	font-size:    8px;
@@ -892,8 +892,8 @@ td.wikicell {
 	background-color: #e1e2b9;
 }
 
-/* 
-Text in wiki pages is displayed using the following style 
+/*
+Text in wiki pages is displayed using the following style
 */
 div.wikitext {
 	background-color:    #f1f1c9;
@@ -910,8 +910,8 @@ div.wikitext {
 	clear:   both;
 }
 
-/* 
-Links to wiki pages 
+/*
+Links to wiki pages
 */
 .wiki {
 	color:    #2255aa;;
@@ -928,8 +928,8 @@ hr {
 	border:   0;
 	display:   none;
 }
-/* 
-Date displayed for last modification date of pages 
+/*
+Date displayed for last modification date of pages
 */
 .editdate {
 	font-size:    smaller;
@@ -953,9 +953,9 @@ Date displayed for last modification date of pages
 	font-family:   Helvetica, Arial, sans-serif;
 }
 
-/* 
-The edit-help used to display the wiki 
-syntax when editing a page 
+/*
+The edit-help used to display the wiki
+syntax when editing a page
 */
 div.wiki-edithelp {
 	background:    #f1f1c9;
@@ -966,15 +966,15 @@ div.wiki-edithelp {
 }
 
 /*
-IMAGE GALLERIES 
+IMAGE GALLERIES
 */
 TABLE.galtable {
         border-collapse: collapse;
         width: 100%;
 }
 
-/* 
-Gallery description 
+/*
+Gallery description
 */
 div.galdesc {
 	border:    1px solid black;
@@ -987,20 +987,20 @@ div.galdesc {
 	clear:   both;
 }
 
-/* 
-Container for the whole gallery 
+/*
+Container for the whole gallery
 */
 div.browsegallery {
 	width: 100%;
 }
 
-/* 
-You can set a different background color 
-for odd and even rows in the thumbnails table 
+/*
+You can set a different background color
+for odd and even rows in the thumbnails table
 */
 
-/* 
-Thumbnails in odd rows are shown inside oddthumb tds 
+/*
+Thumbnails in odd rows are shown inside oddthumb tds
 */
 TD.oddthumb {
 	background: #c1c299;
@@ -1010,8 +1010,8 @@ TD.eventhumb {
 	background: #d1d2a9;
 }
 
-/* 
-Gallery Title 
+/*
+Gallery Title
 */
 div.gallerytitle {
 	font-weight:    bold;
@@ -1040,8 +1040,8 @@ span.sorttitle {
 span.sortoptions {
 }
 
-/* 
-Container for thumbnails 
+/*
+Container for thumbnails
 */
 div.thumbnails {
 	border:    1px solid Black;
@@ -1049,8 +1049,8 @@ div.thumbnails {
 	margin-bottom:   10px;
 }
 
-/* 
-Thumbnails images 
+/*
+Thumbnails images
 */
 img.athumb {
 	border: 1px solid Silver;
@@ -1059,16 +1059,16 @@ img.athumb {
 .caption {
 }
 
-/* 
-No records found text  
-(displayed in the table when no records) 
+/*
+No records found text
+(displayed in the table when no records)
 */
 p.norecords {
 	font-weight: bold;
 }
 
-/* 
-Browsing an image 
+/*
+Browsing an image
 */
 table.imageinfo {
 	border-color:    black;
@@ -1085,8 +1085,8 @@ td.imageinfo {
 	text-align:   left;
 }
 
-/* 
-The whole container for the browse image screen (may be useful for a fancy background) 
+/*
+The whole container for the browse image screen (may be useful for a fancy background)
 */
 div.browseimage {
 	width: 100%;
@@ -2406,7 +2406,7 @@ div.tabrow {
 	font-size: 11px;
 }
 td.middle {
-	vertical-align: middle; 
+	vertical-align: middle;
 }
 .daterow {
 	margin-left: 10px;
@@ -2420,10 +2420,10 @@ td.middle {
 	background-color: #ffffff;
 	width: auto;
 	border: 1px solid #666666;
-	padding: 1px; 
+	padding: 1px;
 }
 .opaque .box-title,
-.opaque, .box-data 
+.opaque, .box-data
 {
 	width: auto;
 }

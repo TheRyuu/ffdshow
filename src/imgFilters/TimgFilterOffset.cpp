@@ -110,7 +110,7 @@ HRESULT TimgFilterOffset::process(TfilterQueue::iterator it,TffPict &pict,const 
       }
      offset(128,srcV,stride1[2],dstV,stride2[2],dx1[2],dy1[2],cfg->V_X>>pict.cspInfo.shiftX[2],-cfg->V_Y>>pict.cspInfo.shiftY[2]);
     }
-  }  
+  }
  return parent->deliverSample(++it,pict);
 }
 
@@ -143,7 +143,7 @@ HRESULT TimgFilterFlip::process(TfilterQueue::iterator it,TffPict &pict,const Tf
        memcpy(dst,tmp,dx);
       }
     }
-  }  
+  }
  return parent->deliverSample(++it,pict);
 }
 
@@ -195,7 +195,7 @@ HRESULT TimgFilterMirror::process(TfilterQueue::iterator it,TffPict &pict,const 
          std::swap(src[x+2],dst[-x  ]);
          std::swap(src[x+1],dst[-x+3]);
         }
-     else   
+     else
       for (unsigned int y=0;y<dy2[0];y++,src+=stride2[0],dst+=stride2[0])
        for (int x=0;x<dx;x+=4)
         {
@@ -205,14 +205,14 @@ HRESULT TimgFilterMirror::process(TfilterQueue::iterator it,TffPict &pict,const 
          std::swap(src[x+1],dst[-x+3]);
         }
     }
-   else   
-    if (mirrorFc)  
+   else
+    if (mirrorFc)
      for (unsigned int i=0;i<pict.cspInfo.numPlanes;i++)
       {
        unsigned int dx=dx2[i]/2;
        for (unsigned int y=0;y<dy2[i];y++,ptr[i]+=stride2[i])
         (this->*mirrorFc)(i,dx,ptr[i]);
-      }  
-  }  
+      }
+  }
  return parent->deliverSample(++it,pict);
 }

@@ -74,7 +74,7 @@
   SKL_CST_STRING ex1 = (SKL_CST_STRING)(EX1);  SKL_CST_STRING ex2 = (SKL_CST_STRING)(EX2);  \
   if (strcmp(ex1,ex2)!=0) { Skl_PError_Str(__LINE__, ex1, SKL_MK_STRING(EX1), ex2, SKL_MK_STRING(EX2)); } \
 } while(0)
-  
+
 
 // -- check 32/64b pointers
 
@@ -96,7 +96,7 @@
   SKL_UINT32 ex1 = (SKL_UINT32)(EX1); SKL_UINT32 ex2 = (SKL_UINT32)(EX2);  \
   if (ex1!=ex2) { Skl_PError_UInt(__LINE__, ex1, SKL_MK_STRING(EX1), ex2, SKL_MK_STRING(EX2)); } \
 } while(0)
-  
+
 
 // -- check equality for class with operator==
 

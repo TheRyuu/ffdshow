@@ -50,7 +50,7 @@ typedef struct AVPacket {
     void  (*destruct)(struct AVPacket *);
     void  *priv;
     int64_t pos;                            ///< byte position in stream, -1 if unknown
-} AVPacket; 
+} AVPacket;
 #define PKT_FLAG_KEY   0x0001
 
 void av_destruct_packet_nofree(AVPacket *pkt);
@@ -89,7 +89,7 @@ static inline void av_free_packet(AVPacket *pkt)
 /* the exact value of the fractional number is: 'val + num / den'. num
    is assumed to be such as 0 <= num < den */
 typedef struct AVFrac {
-    int64_t val, num, den; 
+    int64_t val, num, den;
 } AVFrac;
 
 /*************************************************/
@@ -128,7 +128,7 @@ typedef struct AVFormatParameters {
 } AVFormatParameters;
 
 #define AVFMT_NOFILE        0x0001 /* no file should be opened */
-#define AVFMT_NEEDNUMBER    0x0002 /* needs '%d' in filename */ 
+#define AVFMT_NEEDNUMBER    0x0002 /* needs '%d' in filename */
 #define AVFMT_SHOW_IDS      0x0008 /* show format stream IDs numbers */
 #define AVFMT_RAWPICTURE    0x0020 /* format wants AVPicture structure for
                                       raw picture data */
@@ -177,14 +177,14 @@ typedef struct AVInputFormat {
     /* close the stream. The AVFormatContext and AVStreams are not
        freed by this function */
     int (*read_close)(struct AVFormatContext *);
-    /** 
-     * seek to a given timestamp relative to the frames in 
+    /**
+     * seek to a given timestamp relative to the frames in
      * stream component stream_index
      * @param stream_index must not be -1
-     * @param flags selects which direction should be preferred if no exact 
+     * @param flags selects which direction should be preferred if no exact
      *              match is available
      */
-    int (*read_seek)(struct AVFormatContext *, 
+    int (*read_seek)(struct AVFormatContext *,
                      int stream_index, int64_t timestamp, int flags);
     /**
      * gets the next timestamp in AV_TIME_BASE units.
@@ -230,13 +230,13 @@ typedef struct AVStream {
      * this is the lowest framerate with which all timestamps can be
      * represented accurately (its the least common multiple of all
      * framerates in the stream), Note, this value is just a guess!
-     * for example if the timebase is 1/90000 and all frames have either 
+     * for example if the timebase is 1/90000 and all frames have either
      * approximately 3600 or 1800 timer ticks then r_frame_rate will be 50/1
      */
     AVRational r_frame_rate;
     void *priv_data;
     /* internal data used in av_find_stream_info() */
-    int64_t codec_info_duration;     
+    int64_t codec_info_duration;
     int codec_info_nb_frames;
     /* encoding: PTS generation when outputing stream */
     AVFrac pts;
@@ -255,10 +255,10 @@ typedef struct AVStream {
     //FIXME move stuff to a flags field?
     /* quality, as it has been removed from AVCodecContext and put in AVVideoFrame
      * MN:dunno if thats the right place, for it */
-    float quality; 
+    float quality;
     /* decoding: position of the first frame of the component, in
        AV_TIME_BASE fractional seconds. */
-    int64_t start_time; 
+    int64_t start_time;
     /* decoding: duration of the stream, in AV_TIME_BASE fractional
        seconds. */
     int64_t duration;
@@ -277,7 +277,7 @@ typedef struct AVStream {
                                     support seeking natively */
     int nb_index_entries;
     unsigned int index_entries_allocated_size;
-    
+
     int64_t nb_frames;                 ///< number of frames in this stream if known or 0
 
 #define MAX_REORDER_DELAY 4
@@ -321,7 +321,7 @@ typedef struct AVFormatContext {
     /* decoding: position of the first frame of the component, in
        AV_TIME_BASE fractional seconds. NEVER set this value directly:
        it is deduced from the AVStream values.  */
-    int64_t start_time; 
+    int64_t start_time;
     /* decoding: duration of the stream, in AV_TIME_BASE fractional
        seconds. NEVER set this value directly: it is deduced from the
        AVStream values.  */
@@ -342,17 +342,17 @@ typedef struct AVFormatContext {
     /* av_seek_frame() support */
     int64_t data_offset; /* offset of the first packet */
     int index_built;
-    
+
     int mux_rate;
     int packet_size;
     int preload;
     int max_delay;
 
-#define AVFMT_NOOUTPUTLOOP -1 
-#define AVFMT_INFINITEOUTPUTLOOP 0 
+#define AVFMT_NOOUTPUTLOOP -1
+#define AVFMT_INFINITEOUTPUTLOOP 0
     /* number of times to loop output in formats that support it */
     int loop_output;
-    
+
     int flags;
 #define AVFMT_FLAG_GENPTS       0x0001 ///< generate pts if missing even if it requires parsing future frames
 #define AVFMT_FLAG_IGNIDX       0x0002 ///< ignore index
@@ -378,7 +378,7 @@ enum CodecID av_guess_image2_codec(const char *filename);
 /* utils.c */
 void av_register_input_format(AVInputFormat *format);
 void av_register_output_format(AVOutputFormat *format);
-AVOutputFormat *guess_format(const char *short_name, 
+AVOutputFormat *guess_format(const char *short_name,
                              const char *filename, const char *mime_type);
 
 void av_register_all(void);
@@ -432,7 +432,7 @@ do {\
 
 time_t mktimegm(struct tm *tm);
 struct tm *brktimegm(time_t secs, struct tm *tm);
-const char *small_strptime(const char *p, const char *fmt, 
+const char *small_strptime(const char *p, const char *fmt,
                            struct tm *dt);
 
 int match_ext(const char *filename, const char *extensions);
@@ -444,4 +444,8 @@ int match_ext(const char *filename, const char *extensions);
 #endif
 
 #endif /* AVFORMAT_H */
+
+
+
+
 

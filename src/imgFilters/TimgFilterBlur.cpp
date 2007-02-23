@@ -30,11 +30,11 @@ TimgFilterBlur::TimgFilterBlur(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter
 {
  bluredPict=NULL;
  blur=NULL;
-#ifdef __SSE2__ 
+#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   mergeFc=&TimgFilterBlur::merge<Tsse2>;
- else 
-#endif 
+ else
+#endif
   mergeFc=&TimgFilterBlur::merge<Tmmx>;
 }
 
@@ -45,11 +45,11 @@ void TimgFilterBlur::done(void)
    aligned_free(bluredPict);
    bluredPict=NULL;
   }
- if (blur) 
+ if (blur)
   {
    delete blur;
    blur=NULL;
-  } 
+  }
 }
 void TimgFilterBlur::onSizeChange(void)
 {
@@ -67,7 +67,7 @@ template<class _mm> void TimgFilterBlur::merge(const TblurSettings *cfg,const un
  int strength=cfg->soften/2,invstrength=127-cfg->soften/2;
  typename _mm::__m strength64=_mm::set1_pi16(short(strength));
  typename _mm::__m invstrength64=_mm::set1_pi16(short(invstrength));
- typename _mm::__m m0=_mm::setzero_si64(); 
+ typename _mm::__m m0=_mm::setzero_si64();
  const int cnt3=dx1[0]-_mm::size/2+1;
  for (const unsigned char *blurPtr=bluredPict,*srcEnd=srcY+dy1[0]*stride1[0];srcY!=srcEnd;srcY+=stride1[0],blurPtr+=bluredStride,dstY+=stride2[0])
   {
@@ -79,8 +79,8 @@ template<class _mm> void TimgFilterBlur::merge(const TblurSettings *cfg,const un
     }
    for (;x<(int)dx1[0];x++)
     dstY[x]=uint8_t((srcY[x]*invstrength+blurPtr[x]*strength)>>7);
-  }  
- _mm::empty(); 
+  }
+ _mm::empty();
 }
 
 HRESULT TimgFilterBlur::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
@@ -93,18 +93,18 @@ HRESULT TimgFilterBlur::process(TfilterQueue::iterator it,TffPict &pict,const Tf
    getCur(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,&srcY,NULL,NULL,NULL);
    unsigned char *dstY;
    getNext(csp1,pict,cfg->full,&dstY,NULL,NULL,NULL);
-   
+
    if (!blur)
     blur=new T3x3blurSWS(deci,dx1[0],dy1[0]);
-   if (!bluredPict) 
+   if (!bluredPict)
     {
      bluredStride=(dx1[0]/16+2)*16;
      bluredPict=(unsigned char*)aligned_malloc(bluredStride*dy1[0]);
     }
-    
+
    blur->process(srcY,stride1[0],bluredPict,bluredStride);
    (this->*mergeFc)(cfg,srcY,dstY);
-  } 
+  }
  return parent->deliverSample(++it,pict);
 }
 
@@ -156,13 +156,13 @@ HRESULT TimgFilterMplayerBlur::process(TfilterQueue::iterator it,TffPict &pict,c
        swsf.lumH=libmplayer->sws_getGaussianVec(oldluma/100.0,oldradius);libmplayer->sws_normalizeVec(swsf.lumH,1.0);
        swsf.lumV=libmplayer->sws_getGaussianVec(oldluma/100.0,oldradius);libmplayer->sws_normalizeVec(swsf.lumV,1.0);
       }
-     else swsf.lumH=swsf.lumV=NULL; 
+     else swsf.lumH=swsf.lumV=NULL;
      if (oldchroma)
-      {  
+      {
        swsf.chrH=libmplayer->sws_getGaussianVec(oldchroma/100.0,oldradius);libmplayer->sws_normalizeVec(swsf.chrH,1.0);
        swsf.chrV=libmplayer->sws_getGaussianVec(oldchroma/100.0,oldradius);libmplayer->sws_normalizeVec(swsf.chrV,1.0);
-      } 
-     else swsf.chrH=swsf.chrV=NULL; 
+      }
+     else swsf.chrH=swsf.chrV=NULL;
      SwsParams params;Tlibmplayer::swsInitParams(&params,0);
      swsc=libmplayer->sws_getContext(dx1[0],dy1[0],csp_ffdshow2mplayer(csp1),dx1[0],dy1[0],csp_ffdshow2mplayer(csp2),&params,&swsf,NULL);
      if (oldluma)
@@ -171,16 +171,16 @@ HRESULT TimgFilterMplayerBlur::process(TfilterQueue::iterator it,TffPict &pict,c
        libmplayer->sws_freeVec(swsf.lumV);
       }
      if (oldchroma)
-      {  
+      {
        libmplayer->sws_freeVec(swsf.chrH);
        libmplayer->sws_freeVec(swsf.chrV);
-      } 
+      }
     }
 
    if (swsc)
     libmplayer->sws_scale_ordered(swsc,src,stride1,0,dy1[0],dst,stride2);
-  } 
- return parent->deliverSample(++it,pict); 
+  }
+ return parent->deliverSample(++it,pict);
 }
 
 //==================================== TimgFilterMplayerTNR ===================================
@@ -212,7 +212,7 @@ bool TimgFilterMplayerTNR::is(const TffPictBase &pict,const TfilterSettingsVideo
    return newRect.dx>=16 && newRect.dy>=16;
   }
  else
-  return false; 
+  return false;
 }
 
 HRESULT TimgFilterMplayerTNR::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
@@ -227,12 +227,12 @@ HRESULT TimgFilterMplayerTNR::process(TfilterQueue::iterator it,TffPict &pict,co
    unsigned char *tempPict2[4];
    cspChanged|=getNext(csp1,pict,cfg->full,tempPict2);
    if (cspChanged) done();
-   
+
    if (!pp_ctx)
     {
      if (!libmplayer) deci->getPostproc(&libmplayer);
      pp_ctx=libmplayer->pp_get_context(dx1[0],dy1[0],Tlibmplayer::ppCpuCaps(csp1));
-    } 
+    }
    pp_mode.lumMode=TEMP_NOISE_FILTER;
    pp_mode.chromMode=TEMP_NOISE_FILTER;
    pp_mode.maxTmpNoise[0]=cfg->mplayerTNR1;pp_mode.maxTmpNoise[1]=cfg->mplayerTNR2;pp_mode.maxTmpNoise[2]=cfg->mplayerTNR3;
@@ -240,9 +240,9 @@ HRESULT TimgFilterMplayerTNR::process(TfilterQueue::iterator it,TffPict &pict,co
    libmplayer->pp_postprocess(tempPict1,stride1,
                               tempPict2,stride2,
                               dx1[0],dy1[0],
-                              NULL,0,                         
+                              NULL,0,
                               &pp_mode,pp_ctx,pict.frametype&FRAME_TYPE::typemask);
-  }                            
+  }
  return parent->deliverSample(++it,pict);
 }
 

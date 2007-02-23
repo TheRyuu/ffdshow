@@ -82,14 +82,14 @@ typedef SKL_UINT32 SKL_SAFE_INT;      /**< generic integer type capable of safel
 #define SKL_MK_STRING(x)  #x
 #endif
 
-  /** When NDEBUG is _not_ defined (debug mode, e.g.), a 
+  /** When NDEBUG is _not_ defined (debug mode, e.g.), a
       faulty SKL_ASSERT( condition ) will call this function.
-      Its main purpose is for you to be able to put 
+      Its main purpose is for you to be able to put
       a breakpoint with a debugger (beside ensuring
       that no assert is violated, of course).
    */
-extern void Skl_Do_Assert(SKL_CST_STRING Condition, 
-                          SKL_CST_STRING File, 
+extern void Skl_Do_Assert(SKL_CST_STRING Condition,
+                          SKL_CST_STRING File,
                           int Line,
                           SKL_CST_STRING Msg);
 
@@ -165,7 +165,7 @@ class SKL_MEM_I
           segment of size 'Old_Size' referenced by 'Ptr'. The new size is
           passed a 'Size' argument.
         */
-    void Realloc(SKL_ANY &Ptr, 
+    void Realloc(SKL_ANY &Ptr,
                   const size_t Size,         // if Old_Size>0 -> "Grow" to Size
                   const size_t Old_Size=0 ); // else "Shrink" to Size
 };
@@ -178,21 +178,21 @@ extern SKL_MEM_I * const SKL_MEM;
 
   /** Overloaded new-with-placement operator, using SKL_MEM_I.
       @see SKL_MEM_I */
-inline void *operator new (size_t s, SKL_MEM_I *m) { 
+inline void *operator new (size_t s, SKL_MEM_I *m) {
   if (!s) return (void*)s;  // wow!   (this avoids some warning msg)
   if (m==0) return malloc(s);
-  return m->New(s); 
+  return m->New(s);
 }
 
 #if !defined(SKL_MSVC5)
 inline void *operator new[] (size_t s, SKL_MEM_I *m) {
   if (!s) return (void*)s;  // re-wow!
   if (m==0) return malloc(s);
-  return m->New(s); 
+  return m->New(s);
 }
 
 #if defined(SKL_MSVC6)
-  // Hmm... There seems to be a bug => I *must* 
+  // Hmm... There seems to be a bug => I *must*
   // redefine a '::new []' whenever I define a 'new (Mem) []'
 inline void *operator new[] (size_t s) {
   if (!s) return (void*)s;  // re-wow!
@@ -215,7 +215,7 @@ private:
 
 #else
 
-#define SKL_DEL_OP(T) 
+#define SKL_DEL_OP(T)
 #endif
 
 //////////////////////////////////////////////////////////

@@ -59,7 +59,7 @@ void TlfeCrossoverSettings::createFilters(size_t filtersorder,Tfilters *filters,
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (is && show)
-  queueFilter<TaudioFilterLFEcrossover>(filtersorder,filters,queue); 
+  queueFilter<TaudioFilterLFEcrossover>(filtersorder,filters,queue);
 }
 void TlfeCrossoverSettings::createPages(TffdshowPageDec *parent) const
 {

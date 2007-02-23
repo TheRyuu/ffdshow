@@ -9,7 +9,7 @@ private:
  static const TfilterIDFF idffs;
 protected:
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  TdolbyDecoderSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  int delay;
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;

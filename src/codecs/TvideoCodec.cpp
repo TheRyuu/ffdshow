@@ -126,7 +126,7 @@ TvideoCodecEnc* TvideoCodecs::getEncLib(int codecId)
    for (Tencoders::const_iterator e=(*l)->encoders.begin();e!=(*l)->encoders.end();e++)
     if ((*e)->id==codecId)
      return *l;
- return NULL;  
+ return NULL;
 }
 const Tencoder* TvideoCodecs::getEncoder(int codecId) const
 {
@@ -135,5 +135,5 @@ const Tencoder* TvideoCodecs::getEncoder(int codecId) const
    for (Tencoders::const_iterator e=(*l)->encoders.begin();e!=(*l)->encoders.end();e++)
     if ((*e)->id==codecId)
      return *e;
- return NULL;  
+ return NULL;
 }

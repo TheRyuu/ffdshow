@@ -166,7 +166,7 @@ DwStringRep::DwStringRep(FILE* aFile, size_t aSize)
     mPageMod = tell % pagesize;
     mSize = aSize;
     mRefCount = 1;
-    
+
     mBuffer = (char *)mmap(0, aSize + mPageMod, PROT_READ, MAP_SHARED, fileno(aFile), tell - mPageMod) + mPageMod;
     ++mPageMod;
     if (mBuffer == MAP_FAILED) {
@@ -298,7 +298,7 @@ template<class tchar> void DwString<tchar>::init2(const DwString& aStr, size_t a
         mStart = aStr.mStart + pos;
         mLength = len;
     }
-    else // if (len == 0) 
+    else // if (len == 0)
     {
         mRep = new_rep_reference(sEmptyRep);
         mStart = 0;
@@ -1072,7 +1072,7 @@ template<class tchar> DwString<tchar>& DwString<tchar>::Trim()
     if (mLength == 0) {
         assign(_L(""));
     }
- return *this;   
+ return *this;
 }
 
 /*

@@ -31,7 +31,7 @@
 // DwStringRep is an implementation class that should not be used externally.
 //=============================================================================
 
-template<class tchar> struct DwStringRep 
+template<class tchar> struct DwStringRep
 {
  DwStringRep(tchar* aBuf, size_t aSize);
  //DwStringRep(FILE* aFile, size_t aSize);
@@ -83,7 +83,7 @@ public:
 
 class CUnknown;
 
-template<class tchar> class DwString :public safe_bool< DwString<tchar> > 
+template<class tchar> class DwString :public safe_bool< DwString<tchar> >
 {
 private:
  void init1(const tchar*);
@@ -139,7 +139,7 @@ public:
     //. See also: TakeBuffer(), and ReleaseBuffer().
 
     ~DwString();
-    
+
     static DwString intToStr(int i);
 
     DwString& operator = (const DwString& aStr)
@@ -148,7 +148,7 @@ public:
      }
     inline DwString& operator = (const char* aCstr);
     inline DwString& operator = (const wchar_t* aCstr);
-    
+
     DwString& operator = (tchar aChar)
      {
       return assign(1, aChar);
@@ -202,7 +202,7 @@ public:
      }
     //. Returns a true value if and only if the contents of this string
     //. are empty.
-    bool boolean_test() const 
+    bool boolean_test() const
      {
       return !empty();
      }
@@ -722,7 +722,7 @@ typedef std::vector<ffwstring> wstrings;
 #else
  typedef DwString<char> ffstring;
  typedef std::vector<ffstring> strings;
-#endif 
+#endif
 
 template<class T> struct tchar_traits {};
 template<> struct tchar_traits<char>
@@ -732,11 +732,11 @@ template<> struct tchar_traits<char>
  typedef unsigned char uchar_t;
  typedef wchar_t other_char_t;
  typedef unsigned char toupper_t;
- 
+
  static __forceinline int isspace(int c) {return ::isspace(c);}
  static __forceinline int isupper(int c) {return ::isupper(c);}
  static __forceinline int toupper(int c) {return ::toupper(c);}
- 
+
  typedef int (*Tsscanf)(const char *,const char*, ...);
  static Tsscanf sscanf() {return ::sscanf;}
 
@@ -756,11 +756,11 @@ template<> struct tchar_traits<wchar_t>
  typedef unsigned short uchar_t;
  typedef char other_char_t;
  typedef wint_t toupper_t;
- 
+
  static __forceinline int isspace(wint_t c) {return ::iswspace(c);}
  static __forceinline int isupper(wint_t c) {return ::iswupper(c);}
  static __forceinline int toupper(wint_t c) {return ::towupper(c);}
- 
+
  typedef int (*Tsscanf)(const wchar_t *,const wchar_t*, ...);
  static Tsscanf sscanf() {return ::swscanf;}
 
@@ -769,14 +769,14 @@ template<> struct tchar_traits<wchar_t>
 
  typedef int (*Tsnprintf)(wchar_t *,size_t,const wchar_t*, ...);
  static Tsnprintf snprintf() {return ::_snwprintf;}
- 
+
  typedef int (*Tfprintf)(FILE *, const wchar_t *, ...);
  static Tfprintf fprintf() {return ::fwprintf;}
 };
 
 struct ffstring_iless
 {
- bool operator ()(const ffstring &s1,const ffstring &s2) const 
+ bool operator ()(const ffstring &s1,const ffstring &s2) const
   {
    return stricmp(s1.c_str(),s2.c_str())<0;
   }
@@ -815,7 +815,7 @@ public:
  passtring(void) {}
  passtring(const DwString<tchar> &Istr):DwString<tchar>(Istr) {}
  passtring(const tchar *Istr):DwString<tchar>(Istr) {}
- const tchar& operator [] (int aPos) const 
+ const tchar& operator [] (int aPos) const
   {
    return (1<=aPos && aPos<=size())?this->at(aPos-1):chr;
   }
@@ -849,7 +849,7 @@ public:
   }
  passtring copy(int pos,int len) const
   {
-   if (pos>size() || len<0) 
+   if (pos>size() || len<0)
     return passtring();
    else
     return this->substr(pos-1,len);

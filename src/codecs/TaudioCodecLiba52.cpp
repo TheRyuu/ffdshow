@@ -28,7 +28,7 @@ const char_t* TaudioCodecLiba52::dllname=_l("ff_liba52.dll");
 
 // dshow: left, right, center, LFE, left surround, right surround
 // ac3: LFE, left, center, right, left surround, right surround
-const TaudioCodecLiba52::Tscmap TaudioCodecLiba52::scmaps[2*11]= 
+const TaudioCodecLiba52::Tscmap TaudioCodecLiba52::scmaps[2*11]=
 {
  {2, {0, 1,-1,-1,-1,-1}, 0}, // A52_CHANNEL
  {1, {0,-1,-1,-1,-1,-1}, 0}, // A52_MONO
@@ -59,7 +59,7 @@ const TaudioCodecLiba52::Tscmap TaudioCodecLiba52::scmaps[2*11]=
 TaudioCodecLiba52::TaudioCodecLiba52(IffdshowBase *deci,IdecAudioSink *Isink):
  Tcodec(deci),
  TaudioCodec(deci,Isink)
-{        
+{
  dll=NULL;state=NULL;
  inited=false;
 }
@@ -74,7 +74,7 @@ bool TaudioCodecLiba52::init(const CMediaType &mt)
  dll->loadFunction(a52_frame,"a52_frame");
  dll->loadFunction(a52_block,"a52_block");
  dll->loadFunction(a52_free,"a52_free");
- 
+
  if (dll->ok)
   {
    state=a52_init(Tconfig::cpu_flags);
@@ -83,16 +83,16 @@ bool TaudioCodecLiba52::init(const CMediaType &mt)
    inited=true;
    return true;
   }
- else 
+ else
   return false;
 }
 TaudioCodecLiba52::~TaudioCodecLiba52()
 {
- if (dll) 
+ if (dll)
   {
    if (state) a52_free(state);
    delete dll;
-  } 
+  }
 }
 
 void TaudioCodecLiba52::getInputDescr1(char_t *buf,size_t buflen) const
@@ -121,9 +121,9 @@ HRESULT TaudioCodecLiba52::decode(TbyteBuffer &src)
          HRESULT hr=deciA->deliverSampleSPDIF(p,size,bit_rate,0x0001,true);
          if (hr!=S_OK)
           return hr;
-        } 
+        }
        else
-        { 
+        {
          flags|=A52_ADJUST_LEVEL;
          liba52::sample_t level=1,bias=0;
          if (a52_frame(state,p,&flags,&level,bias)==0)
@@ -152,20 +152,20 @@ HRESULT TaudioCodecLiba52::decode(TbyteBuffer &src)
               return hr;
             }
           }
-        }  
-       p+=size; 
-      } 
+        }
+       p+=size;
+      }
      memmove(base,p,end-p);
      end=base+(end-p);
      p=base;
      if (!enoughData)
       break;
-    }  
+    }
    else
     p++;
   }
  src.resize(end-p);
- return S_OK; 
+ return S_OK;
 }
 bool TaudioCodecLiba52::onSeek(REFERENCE_TIME segmentStart)
 {

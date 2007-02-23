@@ -23,9 +23,9 @@
 
 BITS 32
 
-%macro cglobal 1 
+%macro cglobal 1
     %ifdef PREFIX
-        global _%1 
+        global _%1
         %define %1 _%1
     %else
         global %1
@@ -90,14 +90,14 @@ SECTION .text
 
 cglobal check_cpu_features
 check_cpu_features:
-    
+
 	push ebx
 	push esi
 	push edi
 	push ebp
 
   sub esp, 12             ; Stack space for vendor name
-  
+
 	xor ebp,ebp
 
     ; CPUID command ?
@@ -116,7 +116,7 @@ check_cpu_features:
 
     ; get vendor string, used later
     xor     eax, eax
-    cpuid           
+    cpuid
   mov [esp], ebx       ; vendor string
   mov [esp+4], edx
   mov [esp+8], ecx
@@ -124,7 +124,7 @@ check_cpu_features:
 
     jz      near .cpu_quit
 
-    mov     eax, 1 
+    mov     eax, 1
     cpuid
 
     ; RDTSC command ?
@@ -147,7 +147,7 @@ check_cpu_features:
 
     mov     eax, 0x80000001
     cpuid
-         
+
     ; AMD cpu ?
     lea     esi, [vendorAMD]
   lea edi, [esp]
@@ -164,18 +164,18 @@ check_cpu_features:
 
     ; extended MMX ?
 	CHECK_FEATURE EXT_CPUID_AMD_MMXEXT, FF_CPU_MMXEXT, ebp
-        
-.cpu_quit:  
+
+.cpu_quit:
 
 	mov eax, ebp
-    
+
   add esp, 12
 
 	pop ebp
 	pop edi
 	pop esi
 	pop ebx
-    
+
     ret
 .endfunc
 
@@ -195,5 +195,9 @@ sse2_os_trigger:
 	xorpd xmm0, xmm0
 	ret
 .endfunc
+
+
+
+
 
 

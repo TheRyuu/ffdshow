@@ -29,6 +29,6 @@ public:
  HRESULT (STDMETHODCALLTYPE *WMCreateWriterFileSink)( IWMWriterFileSink **ppSink );
  HRESULT (STDMETHODCALLTYPE *WMCreateWriter)( IUnknown* pUnkCert, IWMWriter **ppWriter );
  HRESULT (STDMETHODCALLTYPE *WMCreateProfileManager)( IWMProfileManager **ppProfileManager );
-};  
+};
 
 #endif

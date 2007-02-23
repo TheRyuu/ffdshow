@@ -2,7 +2,7 @@ List of known issues in revision 755:
 
 1) Wavpack decoder only works with lossless wavpack. Lossy and hybrid wavpack is not
    yet supported.
-2) Some files with interlaced H.264 video don't decode properly. 
+2) Some files with interlaced H.264 video don't decode properly.
    (Sample: http://www.egoshare.com/9dad3c13be3968c0ed977ed5cd62e25f/3rd_rock_of_sun_sampleavi.html)
    FFmpeg bug or perhaps a x264 VFW bug? (Reported by Romario)
 3) Encoding fails if threads > 1 for the following formats: DivX 3, MS MPEG-4 V2,

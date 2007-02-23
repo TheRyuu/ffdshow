@@ -19,7 +19,7 @@ private:
  void (*mad_stream_buffer)(struct mad_stream *, unsigned char const *, unsigned long);
  bool inited;
  MPEG1WAVEFORMAT infmt;
- mad_synth  synth; 
+ mad_synth  synth;
  mad_stream stream;
  mad_frame  frame;
  static int32_t scale(mad_fixed_t sample);

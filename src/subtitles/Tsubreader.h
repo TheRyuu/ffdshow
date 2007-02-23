@@ -30,7 +30,7 @@ public:
    SUB_SUBRIP09  =12,
    SUB_USF       =13,
    SUB_VOBSUB    =14,
-   SUB_DVD       =15, 
+   SUB_DVD       =15,
    SUB_CVD       =16,
    SUB_SVCD      =17,
    SUB_MPL2      =18,

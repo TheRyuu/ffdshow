@@ -62,7 +62,7 @@ protected:
  bool enabled(int id)
   {
    return !!IsWindowEnabled(GetDlgItem(m_hwnd,id));
-  } 
+  }
 
  bool ownSetCheck;
  void setCheck(int id,int set)
@@ -86,7 +86,7 @@ protected:
    LRESULT c=SendDlgItemMessage(m_hwnd,id,BM_GETCHECK,0,0);
    return c==BST_CHECKED?1:(c==BST_UNCHECKED?0:2);
   }
- 
+
  void show(int is,int id)
   {
    ShowWindow(GetDlgItem(m_hwnd,id),is?SW_SHOW:SW_HIDE);
@@ -103,7 +103,7 @@ protected:
     for (;*wndIDs;wndIDs++)
      show(is,*wndIDs);
   }
-  
+
  static void repaint(HWND h)
   {
    InvalidateRect(h,NULL,TRUE);
@@ -126,7 +126,7 @@ protected:
    lc.mask=LVCF_TEXT;
    lc.pszText=LPTSTR(text);
    ListView_SetColumn(hlv,id,&lc);
-  } 
+  }
 
  void tbrSetRange(int id,int min,int max,int step=0,bool largethumb=true);
  void tbrSet(int id,int val,int lblId=0,const char_t *Icapt=NULL,float div=0);
@@ -216,7 +216,7 @@ protected:
  int cbxGetCurSel(int id)
   {
    return (int)SendDlgItemMessage(m_hwnd,id,CB_GETCURSEL,0,0);
-  } 
+  }
  int cbxClear(int id)
   {
    return (int)SendDlgItemMessage(m_hwnd,id,CB_RESETCONTENT,0,0);
@@ -228,11 +228,11 @@ protected:
  void cbxSetDroppedWidth(int id,int width)
   {
    SendDlgItemMessage(m_hwnd,id,CB_SETDROPPEDWIDTH,width,0);
-  } 
+  }
  int cbxGetDroppedWidth(int id)
   {
    return (int)SendDlgItemMessage(m_hwnd,id,CB_GETDROPPEDWIDTH,0,0);
-  } 
+  }
  void cbxTranslate(int id,const char_t **list);
 
  static void insertSeparator(HMENU hm,int &ord);
@@ -283,18 +283,18 @@ protected:
  int lbxGetCurSel(int id)
   {
    return (int)SendDlgItemMessage(m_hwnd,id,LB_GETCURSEL,0,0);
-  } 
+  }
  int lbxSetCurSel(int id,int ii)
   {
    return (int)SendDlgItemMessage(m_hwnd,id,LB_SETCURSEL,ii,0);
-  } 
+  }
  int lbxGetCurText(int id,char_t *buf)
   {
    LRESULT ret=SendDlgItemMessage(m_hwnd,id,LB_GETTEXT,lbxGetCurSel(id),LPARAM(buf));
    if (ret==LB_ERR)
     buf[0]='\0';
-   return (int)ret; 
-  } 
+   return (int)ret;
+  }
  int lbxFindItem(int id,const char_t *s,bool exact)
   {
    return (int)SendDlgItemMessage(m_hwnd,id,exact?LB_FINDSTRINGEXACT:LB_FINDSTRING,WPARAM(-1),LPARAM(s));
@@ -307,7 +307,7 @@ protected:
  void edReadOnly(int id,bool is)
   {
    SendDlgItemMessage(m_hwnd,id,EM_SETREADONLY,is?TRUE:FALSE,0);
-  } 
+  }
 
  int  cfgGet(unsigned int i);
  void cfgGet(unsigned int i,char_t *buf,size_t buflen);
@@ -317,14 +317,14 @@ protected:
 
  bool changeDir(int idff,const char_t *caption);
  bool chooseColor(int idff);
- 
+
  CRect getChildRect(int id) const;
 
  static void setSizeD(HWND m_hwnd,int dx,int dy);
  void setSizeD(int dx,int dy),setItemSizeD(int id,int dx,int dy);
  static void setSize(HWND m_hwnd,int dx,int dy);
  void setSize(int dx,int dy),setItemSize(int id,int dx,int dy);
- 
+
  static void setPosD(HWND m_hwnd,int x,int y);
  void setPosD(int x,int y),setItemPosD(int id,int x,int y);
  static void setPos(HWND m_hwnd,int x,int y);
@@ -360,11 +360,11 @@ protected:
     }
    void add(const TanchorInfo *ainfo,const Twindow &parent);
    void resize(const Twindow &parent,const CRect &newrect);
-  } anchors; 
+  } anchors;
 
  TOOLINFO addHint(int id,const char_t *text);
  HWND createHintWindow(HWND parent,int timePop=1700,int timeInit=70,int timeReshow=7);
- 
+
  void setFont(int id,HFONT hf,bool repaint=false)
   {
    SendDlgItemMessage(m_hwnd,id,WM_SETFONT,WPARAM(hf),LPARAM(repaint?TRUE:FALSE));
@@ -386,8 +386,8 @@ protected:
    void (T::*onClick)(void);
   };
  typedef const TbindCheckbox<Twindow> *TbindCheckboxes;
- template<class T> void bindCheckboxes(T *chb) {bindsCheckbox=(TbindCheckboxes)chb;} 
-  
+ template<class T> void bindCheckboxes(T *chb) {bindsCheckbox=(TbindCheckboxes)chb;}
+
  template<class T> struct TbindTrackbar
   {
    int idc;
@@ -398,7 +398,7 @@ protected:
  template<class T> void bindHtracks(T *htbr) {bindsHtrack=(TbindTrackbars)htbr;}
  template<class T> void bindVtracks(T *vtbr) {bindsVtrack=(TbindTrackbars)vtbr;}
  virtual int getTbrIdff(int id,const TbindTrackbars bind) {return ff_abs(bind->idff);}
- 
+
  template<class T> struct TbindRadiobutton
   {
    int idc;
@@ -408,7 +408,7 @@ protected:
   };
  typedef const TbindRadiobutton<Twindow> *TbindRadioButtons;
  template<class T> void bindRadioButtons(T *rbt) {bindsRadiobutton=(TbindRadioButtons)rbt;}
- 
+
  template<class T> struct TbindEditInt
   {
    int idc;
@@ -433,7 +433,7 @@ protected:
  template<class TbindEdit> bool onCtlColorEdit(TbindEdit *bindsEdit,LPARAM lParam,WPARAM wParam);
  virtual void onEditChange(void) {}
  HBRUSH getRed(void);
- 
+
  enum BINDCBX
   {
    BINDCBX_SEL,
@@ -451,19 +451,19 @@ protected:
   };
  typedef const TbindCombobox<Twindow> *TbindComboboxes;
  template<class T> void bindComboboxes(T *cbx) {bindsCombobox=(TbindComboboxes)cbx;}
- 
+
  template<class T> struct TbindButton
   {
    int idc;
    void (T::*onClick)(void);
   };
- typedef const TbindButton<Twindow> *TbindButtons; 
+ typedef const TbindButton<Twindow> *TbindButtons;
  template<class T> void bindButtons(T *bt) {bindsButton=(TbindButtons)bt;}
 private:
- TbindButtons bindsButton; 
+ TbindButtons bindsButton;
  TbindComboboxes bindsCombobox;
- TbindEditInts bindsEditInt; 
- TbindEditReals bindsEditReal; 
+ TbindEditInts bindsEditInt;
+ TbindEditReals bindsEditReal;
  TbindRadioButtons bindsRadiobutton;
  TbindCheckboxes bindsCheckbox;typedef std::hash_map<int,const TbindCheckbox<Twindow>*> TcheckboxesMap;TcheckboxesMap bindCheckboxesMap;
  TbindTrackbars bindsHtrack,bindsVtrack;typedef std::hash_map<int,const TbindTrackbar<Twindow>*> TtrackBarsMap;TtrackBarsMap bindTrackbarsMap;
@@ -473,10 +473,10 @@ private:
   {
   protected:
    Twindow *self;
-  public: 
+  public:
    TwidgetSubclass(HWND h,Twindow *Iself):self(Iself),TwindowWidget(h,Iself) {}
   };
-protected:  
+protected:
  struct TwidgetSubclassTbr : TwidgetSubclass
   {
   protected:
@@ -488,7 +488,7 @@ protected:
    virtual void storeEditValue(const TffdshowParamInfo &info,int min,int max,const char_t *valS);
   public:
    TwidgetSubclassTbr(HWND h,Twindow *Iself,const TbindTrackbar<Twindow> *Ibind):TwidgetSubclass(h,Iself),bind(Ibind) {allowOwnProc();}
-  }; 
+  };
  struct TwidgetSubclassChb : TwidgetSubclass
   {
   private:
@@ -497,7 +497,7 @@ protected:
    virtual LRESULT onContextMenu(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
   public:
    TwidgetSubclassChb(HWND h,Twindow *Iself,const TbindCheckbox<Twindow> *Ibind):TwidgetSubclass(h,Iself),bind(Ibind) {allowOwnProc();}
-  }; 
+  };
 public:
  comptrQ<IffdshowBase> deci;
  HWND m_hwnd;
@@ -512,7 +512,7 @@ public:
 
  virtual void init(void) {}
  virtual void cfg2dlg(void) {}
- 
+
  bool wndEnabled;
  bool enable(void)
   {
@@ -533,14 +533,14 @@ public:
 
  void msg(const char_t *text,const char_t *capt=_l("ffdshow"));
  void err(const char_t *text,const char_t *capt=NULL);
- 
+
  static int getId(HWND h) {return GetWindowLong(h,GWL_ID);}
 };
 
 class TdlgWindow :public Twindow
 {
 public:
- TdlgWindow(int IdialogId,IffdshowBase *Ideci=NULL); 
+ TdlgWindow(int IdialogId,IffdshowBase *Ideci=NULL);
 };
 
 class TdlgPropsEdit :public TdlgWindow

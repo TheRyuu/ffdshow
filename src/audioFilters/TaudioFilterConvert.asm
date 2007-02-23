@@ -2,9 +2,9 @@
 
 BITS 32
 
-%macro cglobal 1 
+%macro cglobal 1
  %ifdef PREFIX
-  global _%1 
+  global _%1
   %define %1 _%1
  %else
   global %1

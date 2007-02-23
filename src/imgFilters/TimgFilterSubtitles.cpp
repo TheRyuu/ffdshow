@@ -158,12 +158,12 @@ void TimgFilterSubtitles::resetSubtitles(int id)
 bool TimgFilterSubtitles::ctlSubtitles(int id,int type,unsigned int ctl_id,const void *ctl_data,unsigned int ctl_datalen)
 {
  Tembedded::iterator e=embedded.find(id);
- if (e==embedded.end()) 
+ if (e==embedded.end())
   e=embedded.insert(std::make_pair(id,TsubtitlesTextpin::create(type,NULL,0,deci))).first;
  csEmbedded.Lock();
  bool res=e->second->ctlSubtitles(ctl_id,ctl_data,ctl_datalen);
  csEmbedded.Unlock();
- if (res && prevCfg) 
+ if (res && prevCfg)
   {
    again=true;
    TffPict pict=prevPict;
@@ -182,7 +182,7 @@ const char_t* TimgFilterSubtitles::findAutoSubFlnm(const TsubtitlesSettings *cfg
    const TsubtitlesSettings *cfg;
    double fps;
   public:
-   TcheckSubtitle(IffdshowBase *deci,const TsubtitlesSettings *Icfg,double Ifps):subs(deci),cfg(Icfg),fps(Ifps) {}  
+   TcheckSubtitle(IffdshowBase *deci,const TsubtitlesSettings *Icfg,double Ifps):subs(deci),cfg(Icfg),fps(Ifps) {}
    STDMETHODIMP checkSubtitle(const char_t *subFlnm)
     {
      return subs.init(cfg,subFlnm,fps,false,2);
@@ -194,7 +194,7 @@ const char_t* TimgFilterSubtitles::findAutoSubFlnm(const TsubtitlesSettings *cfg
 HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  const TsubtitlesSettings *cfg=(const TsubtitlesSettings*)cfg0;
- 
+
  if (cfg->isExpand && cfg->expandCode && !isdvdproc)
   {
    Trect newExpandRect=cfg->full?pict.rectFull:pict.rectClip;
@@ -210,7 +210,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
    if (expand)
     expand->process(NULL,pict,&expandSettings);
   }
- 
+
  if (AVIfps==-1) AVIfps=deciV->getAVIfps1000_2()/1000.0;
  if (subFlnmChanged)
   {
@@ -236,9 +236,9 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
         e->second->processOverlap();
        sub=e->second->getSubtitle(cfg,frameStart,&forceChange);
       }
-    } 
+    }
    csEmbedded.Unlock();
-   if (!useembedded) 
+   if (!useembedded)
     sub=subs.getSubtitle(cfg,frameStart,&forceChange);
    if (sub)
     {
@@ -251,8 +251,8 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
       }
      fontSizeChanged=false;
 
-     /*     
-     if (isdvdproc) 
+     /*
+     if (isdvdproc)
       {
        if (!again || !prevCfg)
         {
@@ -284,7 +284,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
        sizeDx=pict.rectFull.dx;
        sizeDy=pict.rectFull.dy;
       }
-     
+
      TsubPrintPrefs printprefs(dst,stride2,dx1,dy1,deci,cfg,pict,parent->config,!!isdvdproc);
      if (!cfg->stereoscopic || isdvdproc)
       {
@@ -306,10 +306,10 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
      wasDiscontinuity=false;
     }
   }
-  
+
  if (cfg->cc)
   {
-   csCC.Lock(); 
+   csCC.Lock();
    if (cc && cc->numlines())
     {
      if (!again)
@@ -333,14 +333,14 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
        memcpy(oldFontCCcfg,&cfg2.font,sizeof(cfg2.font));oldsplitborder=cfg2.splitBorder;
        fontCC.init(oldFontCCcfg);
       }
-     
+
      cc->print(0,false,fontCC,wasCCchange,printprefs);
      wasCCchange=false;
-    } 
-   csCC.Unlock(); 
-  } 
+    }
+   csCC.Unlock();
+  }
  return parent->deliverSample(++it,pict);
-}                                  
+}
 void TimgFilterSubtitles::onSeek(void)
 {
  wasDiscontinuity=true;

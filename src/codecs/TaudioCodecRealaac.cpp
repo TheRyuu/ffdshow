@@ -28,8 +28,8 @@ const char_t* TaudioCodecRealaac::dllname=_l("ff_realaac.dll");
 
 TaudioCodecRealaac::TaudioCodecRealaac(IffdshowBase *deci,IdecAudioSink *Isink):
  Tcodec(deci),
- TaudioCodec(deci,Isink) 
-{        
+ TaudioCodec(deci,Isink)
+{
  dll=NULL;dec=NULL;
  inited=false;sbr_present_flag=-1;
 }
@@ -44,7 +44,7 @@ int TaudioCodecRealaac::gaSpecificConfig(GetBitContext *gb)
   }
 
  int extensionFlag=get_bits1(gb);
-/* 
+/*
  if (info.nChans==0)
   {
    if (program_config_element(&pce,&gb))
@@ -88,8 +88,8 @@ bool TaudioCodecRealaac::init(const CMediaType &mt)
     };
    if (samplingFrequencyIndex<12)
     info.sampRateCore=sample_rates[samplingFrequencyIndex];
-   else 
-    return false;    
+   else
+    return false;
    info.nChans=get_bits(&gb,4);
    if (info.nChans>7) return false;
    info.profile=1;
@@ -108,17 +108,17 @@ bool TaudioCodecRealaac::init(const CMediaType &mt)
      samplingFrequencyIndex=tmp;
      if (samplingFrequencyIndex==15)
       fmt.freq=get_bits(&gb,24);
-     else 
+     else
       fmt.freq=sample_rates[samplingFrequencyIndex];
      objectTypeIndex=get_bits(&gb,5);
     }
    if (objectTypeIndex==1 || objectTypeIndex==2 ||
        objectTypeIndex==3 || objectTypeIndex==4 ||
        objectTypeIndex==6 || objectTypeIndex==7)
-    {   
+    {
      if (gaSpecificConfig(&gb)<0)
       return false;
-    }  
+    }
    else if (objectTypeIndex>=ER_OBJECT_START)
     { /* ER */
      if (gaSpecificConfig(&gb)<0)
@@ -126,12 +126,12 @@ bool TaudioCodecRealaac::init(const CMediaType &mt)
      int epConfig=get_bits(&gb,2);
      if (epConfig!=0)
       return false;
-    } 
+    }
    else
     return false;
    if (objectTypeIndex==4 && frameLengthFlag)
     return false;
-    
+
    int bits_to_decode=16;//(extradata->size*8-get_bits_trace  faad_get_processed_bits(&ld));
    if (objectTypeIndex!=5 && bits_to_decode>=16)
     {
@@ -170,7 +170,7 @@ bool TaudioCodecRealaac::init(const CMediaType &mt)
    inited=true;
    return true;
   }
- else 
+ else
   return false;
 }
 TaudioCodecRealaac::~TaudioCodecRealaac()
@@ -191,7 +191,7 @@ void TaudioCodecRealaac::reorderChannels(int16_t *pcmBuf, int nSamps, int nChans
 {
  const int *map;
 
- switch (nChans) 
+ switch (nChans)
   {
    case 3:
     {
@@ -199,9 +199,9 @@ void TaudioCodecRealaac::reorderChannels(int16_t *pcmBuf, int nSamps, int nChans
          1,  // L
          2,  // R
          0}; // C
-     map=chanMap;    
+     map=chanMap;
      break;
-    } 
+    }
    case 4:
     {
      static const int chanMap[]={
@@ -209,9 +209,9 @@ void TaudioCodecRealaac::reorderChannels(int16_t *pcmBuf, int nSamps, int nChans
          2,  // R
          0,  // C
          3}; // S
-     map=chanMap;    
+     map=chanMap;
      break;
-    } 
+    }
    case 5:
     {
      static const int chanMap[]={
@@ -220,9 +220,9 @@ void TaudioCodecRealaac::reorderChannels(int16_t *pcmBuf, int nSamps, int nChans
          0,  // C
          3,  // LS
          4}; // RS
-     map=chanMap;    
+     map=chanMap;
      break;
-    } 
+    }
    case 6:
     {
      static const int chanMap[]={
@@ -232,14 +232,14 @@ void TaudioCodecRealaac::reorderChannels(int16_t *pcmBuf, int nSamps, int nChans
          5,  // LFE
          3,  // LS
          4}; // RS
-     map=chanMap;    
+     map=chanMap;
      break;
-    } 
+    }
    default:
     return;
   }
 
- for (int i=0;i<nSamps;i+=nChans) 
+ for (int i=0;i<nSamps;i+=nChans)
   {
    int16_t tmpBuf[6];
    for (int ch=0;ch<nChans;ch++)
@@ -260,7 +260,7 @@ HRESULT TaudioCodecRealaac::decode(TbyteBuffer &src0)
   if (err==ERR_AAC_INDATA_UNDERFLOW)
    return S_OK;
   else
-   return E_FAIL; 
+   return E_FAIL;
  src0.clear();
  AACGetLastFrameInfo(dec,&info);
  fmt.setChannels(info.nChans);

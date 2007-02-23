@@ -25,11 +25,11 @@
 
 TimgFilterChroma::TimgFilterChroma(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
-#ifdef __SSE2__ 
+#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   chromaFc=&TimgFilterChroma::chroma<Tsse2>;
  else
-#endif 
+#endif
   chromaFc=&TimgFilterChroma::chroma<Tmmx>;
  for (int i=-180,ii=0;i<=180;ii++,i++)
   {
@@ -73,9 +73,9 @@ template<class _mm> void TimgFilterChroma::chroma(const TpictPropSettings *cfg,c
      u=((u2*cfg->saturation)>>6)+128;
      v=((v2*cfg->saturation)>>6)+128;
      dstU[x]=limit_uint8(u);
-     dstV[x]=limit_uint8(v);    
+     dstV[x]=limit_uint8(v);
     }
-  }  
+  }
  _mm::empty();
 }
 
@@ -90,6 +90,6 @@ HRESULT TimgFilterChroma::process(TfilterQueue::iterator it,TffPict &pict,const 
    unsigned char *dstU,*dstV;
    getCurNext(csp1,pict,cfg->full,COPYMODE_NO,NULL,&dstU,&dstV,NULL);
    (this->*chromaFc)(cfg,srcU,srcV,dstU,dstV);
-  } 
+  }
  return parent->deliverSample(++it,pict);
 }

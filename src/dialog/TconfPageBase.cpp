@@ -61,8 +61,8 @@ void TconfPageBase::createWindow(void)
     {
      SendMessage(hed,EM_SETREADONLY,FALSE,0);
      SetWindowLong(hed,GWL_STYLE,GetWindowLong(hed,GWL_STYLE)|ES_WANTRETURN);
-    } 
-  } 
+    }
+  }
 }
 void TconfPageBase::destroyWindow(void)
 {
@@ -94,14 +94,14 @@ void TconfPageBase::loadHelpStr(int dialogId)
   {
    setDlgItemText(m_hwnd,IDC_ED_HELP,helpStr);
    SendDlgItemMessage(m_hwnd,IDC_ED_HELP,EM_SETSEL,0,-1);
-  } 
+  }
 }
 void TconfPageBase::translate(void)
 {
  HWND hed=GetDlgItem(m_hwnd,IDC_ED_HELP);
  if (hed) setWindowText(hed,_l(""));
  Twindow::translate();
- 
+
  if (hed && GetWindowTextLength(hed)==0)
   {
    loadHelpStr(dialogId);
@@ -141,7 +141,7 @@ LRESULT CALLBACK TconfPageBase::chbWndProc(HWND hwnd,UINT uMsg,WPARAM wParam,LPA
        subclass->self->cfgSet(bind->idff,!wParam);
       else
        subclass->self->cfgSet(bind->idff,wParam);
-      if (bind->onClick) 
+      if (bind->onClick)
        ((subclass->self)->*(bind->onClick))();
      }
     break;
@@ -160,7 +160,7 @@ LRESULT CALLBACK TconfPageBase::rbtWndProc(HWND hwnd,UINT uMsg,WPARAM wParam,LPA
       if (wParam)
        {
         subclass->self->cfgSet(bind->idff,bind->val);
-        if (bind->onClick) 
+        if (bind->onClick)
          ((subclass->self)->*(bind->onClick))();
        }
      }

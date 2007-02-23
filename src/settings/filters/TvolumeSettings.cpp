@@ -58,7 +58,7 @@ TvolumeSettings::TvolumeSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
      _l("volumeSR"),100,
    IDFF_volumeLFE           ,&TvolumeSettings::volLFE      ,0,3200,_l(""),1,
      _l("volumeLFE"),100,
-     
+
    IDFF_volumeLmute         ,&TvolumeSettings::volLmute    ,0,2,_l(""),1,
      _l("volumeLmute"),0,
    IDFF_volumeCmute         ,&TvolumeSettings::volCmute    ,0,2,_l(""),1,
@@ -71,7 +71,7 @@ TvolumeSettings::TvolumeSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
      _l("volumeSRmute"),0,
    IDFF_volumeLFEmute       ,&TvolumeSettings::volLFEmute  ,0,2,_l(""),1,
      _l("volumeLFEmute"),0,
-     
+
    IDFF_volumeNormalize     ,&TvolumeSettings::normalize   ,0,0,_l(""),1,
      _l("volNormalize"),0,
    IDFF_maxNormalization    ,&TvolumeSettings::normalizeMax,0,3200,_l(""),1,
@@ -89,7 +89,7 @@ void TvolumeSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfilte
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (show)
-  queueFilter<TaudioFilterVolume>(filtersorder,filters,queue); 
+  queueFilter<TaudioFilterVolume>(filtersorder,filters,queue);
 }
 void TvolumeSettings::createPages(TffdshowPageDec *parent) const
 {

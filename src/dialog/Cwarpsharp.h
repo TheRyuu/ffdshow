@@ -7,7 +7,7 @@ class TwarpsharpPage :public TconfPageDecVideo
 {
 private:
  void warpsharp2dlg(int sharpenMethod),awarpsharp2dlg(int sharpenMethod),awarpsharp2dlg1(void);
-protected: 
+protected:
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
  virtual Twidget* createDlgItem(int id,HWND h);
  virtual int getTbrIdff(int id,const TbindTrackbars bind);
@@ -18,4 +18,4 @@ public:
  virtual void translate(void);
 };
 
-#endif 
+#endif

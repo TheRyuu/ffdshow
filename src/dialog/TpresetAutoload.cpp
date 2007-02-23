@@ -41,7 +41,7 @@ void TpresetAutoloadDlgBase::TitemsWindow::showItems(void)
  THWNDs hwnds;getChildWindows(m_hwnd,hwnds);
  for (THWNDs::const_iterator h=hwnds.begin();h!=hwnds.end();h++)
   DestroyWindow(*h);
- int y=0; 
+ int y=0;
  HFONT fnt=(HFONT)SendMessage(m_hwnd,WM_GETFONT,0,0);
  CRect pr;GetWindowRect(m_hwnd,&pr);int prdlgdx=160; //TODO: compute
  int id=0;
@@ -66,20 +66,20 @@ void TpresetAutoloadDlgBase::TitemsWindow::showItems(void)
       addHint(1000+10*id+2,i->hint);
      int btx=prdlgdx-dxbt;
      if (i->isList)
-      { 
+      {
        r=CRect(CPoint(btx,y),CSize(10,12));MapDialogRect(m_hwnd,&r);btx+=dxbt1;
        HWND hbt=CreateWindow(_l("BUTTON"),_l("6"),WS_VISIBLE|WS_CHILD|BS_PUSHBUTTON|WS_TABSTOP,r.left-sbrWidth,r.top,r.Width(),r.Height(),m_hwnd,HMENU(1000+10*id+3),hi,0);
        SendMessage(hbt,WM_SETFONT,WPARAM(arrowsFont),TRUE);
-      } 
+      }
      if (i->isHelp)
       {
        r=CRect(CPoint(btx,y),CSize(10,12));MapDialogRect(m_hwnd,&r);
        HWND hbt=CreateWindow(_l("BUTTON"),_l("?"),WS_VISIBLE|WS_CHILD|BS_PUSHBUTTON|WS_TABSTOP,r.left-sbrWidth,r.top,r.Width(),r.Height(),m_hwnd,HMENU(1000+10*id+4),hi,0);
        SendMessage(hbt,WM_SETFONT,WPARAM(fnt),TRUE);
-      } 
+      }
      y+=14;
-    } 
-  } 
+    }
+  }
  SCROLLINFO si;
  si.cbSize=sizeof(si);
  si.fMask=SIF_PAGE|SIF_POS|SIF_RANGE;
@@ -102,16 +102,16 @@ INT_PTR TpresetAutoloadDlgBase::TitemsWindow::msgProc(UINT uMsg, WPARAM wParam, 
      if ((id%10)==1)
       {
        item.is=1-item.is;
-       item.wasChange=true; 
-      } 
+       item.wasChange=true;
+      }
      else if ((id%10)==2)
       {
        if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
          GetDlgItemText(m_hwnd,LOWORD(wParam),item.val,256);
-         item.wasChange=true; 
-        } 
-      }  
+         item.wasChange=true;
+        }
+      }
      else if ((id%10)==3)
       {
        Tstrptrs mitems;
@@ -129,15 +129,15 @@ INT_PTR TpresetAutoloadDlgBase::TitemsWindow::msgProc(UINT uMsg, WPARAM wParam, 
          SetWindowText(hed,item.val);
          size_t len=strlen(item.val);
          SendMessage(hed,EM_SETSEL,len,len);
-        } 
-      } 
+        }
+      }
      else if ((id%10)==4)
       {
        const char_t *help;
        if (deciD->getPresetAutoloadItemHelp(id/10,&help)==S_OK)
         msg(_(-IDD_PRESET_AUTOLOAD_ITEMS,help),_(-IDD_PRESET_AUTOLOAD_ITEMS,_l("Preset autoload condition help")));
-      } 
-    }  
+      }
+    }
   }
  else if (uMsg==WM_VSCROLL)
   {
@@ -176,7 +176,7 @@ void TpresetAutoloadDlgBase::init(void)
  if (capt && capt[0]) setWindowText(m_hwnd,capt);
  char_t presetname[260];deciD->getActivePresetName(presetname,260);
  setText(IDC_LBL_AUTOLOAD,_(IDC_LBL_AUTOLOAD,_l("Preset '%s' will be autoloaded ...")),presetname);
- 
+
  itemsw=new TitemsWindow(deci,m_hwnd,items);
  CRect ir=getChildRect(IDC_PLC_AUTOLOAD_ITEMS);
  SetWindowPos(itemsw->m_hwnd,GetDlgItem(m_hwnd,IDC_PLC_AUTOLOAD_ITEMS),ir.left,ir.top,ir.Width(),ir.Height(),0);
@@ -201,7 +201,7 @@ INT_PTR TpresetAutoloadDlgBase::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
    case WM_DESTROY:
     DeleteObject(red);
     if (itemsw) delete itemsw;itemsw=NULL;
-    break; 
+    break;
    case WM_COMMAND:
     switch (LOWORD(wParam))
      {
@@ -213,21 +213,21 @@ INT_PTR TpresetAutoloadDlgBase::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          {
           deciD->setPresetAutoloadItem(i,items[i].is,items[i].val);
           wasChange|=items[i].wasChange;
-         } 
+         }
         EndDialog(m_hwnd,wasChange);
         return TRUE;
-       } 
+       }
      }
     break;
-/*    
+/*
    case WM_NCACTIVATE:
     if (wParam==FALSE)
      {
       EndDialog(m_hwnd,0);
       return TRUE;
-     } 
+     }
     break;*/
-  }   
+  }
  return TdlgWindow::msgProc(uMsg,wParam,lParam);
 }
 
@@ -248,7 +248,7 @@ TpresetAutoloadDlgVideo::TpresetAutoloadDlgVideo(IffdshowBase *Ideci,HWND parent
    IDC_ED_PRESETAUTOLOAD_SIZE_YMAX,1,16384,IDFF_presetAutoloadSizeYmax,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
 }
 void TpresetAutoloadDlgVideo::init(void)
 {
@@ -269,7 +269,7 @@ Twidget* TpresetAutoloadDlgVideo::createDlgItem(int id,HWND h)
  if (id==IDC_BT_PRESETAUTOLOAD_SIZE_COMP)
   return new TflatButton(h,this);
  else
-  return TpresetAutoloadDlgBase::createDlgItem(id,h); 
+  return TpresetAutoloadDlgBase::createDlgItem(id,h);
 }
 INT_PTR TpresetAutoloadDlgVideo::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -292,11 +292,11 @@ INT_PTR TpresetAutoloadDlgVideo::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam
         DRAWITEMSTRUCT *dis=(LPDRAWITEMSTRUCT)lParam;
         ((TflatButton*)Twidget::getDlgItem(dis->hwndItem))->paint(dis);
         return TRUE;
-       } 
+       }
      }
-    break;   
+    break;
   }
- return TpresetAutoloadDlgBase::msgProc(uMsg,wParam,lParam);      
+ return TpresetAutoloadDlgBase::msgProc(uMsg,wParam,lParam);
 }
 
 //================================= TpresetAutoloadDlgAudio =================================

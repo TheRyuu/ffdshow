@@ -15,7 +15,7 @@ private:
  const char_t *defPreset;
  Tpresets presets;
  mutable bool changed;mutable const char_t *oldformat;
-protected: 
+protected:
  TOSDsettings(size_t IsizeofthisAll,TintStrColl *Icoll,TfilterIDFFs *filters,const char_t *IdefPreset);
 public:
  size_t getSize(void) const {return presets.size();}

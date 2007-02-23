@@ -10,9 +10,9 @@ struct FindData
   uint FileTime;
   bool IsDir;
 #ifdef _WIN_32
-  FILETIME ftCreationTime; 
-  FILETIME ftLastAccessTime; 
-  FILETIME ftLastWriteTime; 
+  FILETIME ftCreationTime;
+  FILETIME ftLastAccessTime;
+  FILETIME ftLastWriteTime;
 #endif
   bool Error;
 };

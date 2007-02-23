@@ -24,7 +24,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecT,IUnknown)
  STDMETHOD_(int,getCurTime2)(void) PURE;
  STDMETHOD (initKeys)(void) PURE;
  STDMETHOD_(int,getKeyParamCount2)(void) PURE;
- STDMETHOD (getKeyParamDescr)(unsigned int i,const tchar **descr) PURE; 
+ STDMETHOD (getKeyParamDescr)(unsigned int i,const tchar **descr) PURE;
  STDMETHOD_(int,getKeyParamKey2)(unsigned int i) PURE;
  STDMETHOD (setKeyParamKey)(unsigned int i,int key) PURE;
  STDMETHOD (getNumPresets)(unsigned int *value) PURE;
@@ -71,7 +71,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecT,IUnknown)
  STDMETHOD (initRemote)(void) PURE;
  STDMETHOD (saveRemoteSettings)(void) PURE;
  STDMETHOD (loadRemoteSettings)(void) PURE;
- STDMETHOD (setFilterOrder)(unsigned int filterID,unsigned int newOrder) PURE; 
+ STDMETHOD (setFilterOrder)(unsigned int filterID,unsigned int newOrder) PURE;
  STDMETHOD_(unsigned int,getPresetAutoloadItemsCount2)(void) PURE;
  STDMETHOD (getPresetAutoloadItemInfo)(unsigned int index,const tchar* *name,const tchar* *hint,int *allowWildcard,int *is,int *isVal,tchar *val,size_t vallen,int *isList,int *isHelp) PURE;
  STDMETHOD (setPresetAutoloadItem)(unsigned int index,int is,const tchar *val) PURE;

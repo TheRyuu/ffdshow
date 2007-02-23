@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "CmeSkal.h"
 
@@ -34,7 +34,7 @@ void TmeSkalPage::init(void)
 }
 
 void TmeSkalPage::cfg2dlg(void)
-{ 
+{
  setCheck(IDC_CHB_4MV,cfgGet(IDFF_enc_me_4mv));
  setCheck(IDC_CHB_QPEL,cfgGet(IDFF_enc_me_qpel));
  setCheck(IDC_CHB_GMC,cfgGet(IDFF_enc_me_gmc));

@@ -40,18 +40,18 @@ HRESULT TinputPin::SetMediaType(const CMediaType* mt)
 HRESULT TinputPin::Disconnect(void)
 {
  HRESULT hr=CDeCSSInputPin::Disconnect();
- if (hr==S_OK) 
+ if (hr==S_OK)
   {
    done();
    filesourceFlnm[0]='\0';wasGetSourceName=false;
-  } 
+  }
  return hr;
 }
 
 STDMETHODIMP TinputPin::NewSegment(REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate)
 {
  HRESULT hr=CDeCSSInputPin::NewSegment(tStart,tStop,dRate);
- if (hr==S_OK && codec) 
+ if (hr==S_OK && codec)
   codec->onSeek(tStart);
  return hr;
 }
@@ -63,7 +63,7 @@ STDMETHODIMP TinputPin::EndOfStream(void)
    HRESULT hr=codec->flush();
    if (FAILED(hr))
     return hr;
-  }  
+  }
  return CDeCSSInputPin::EndOfStream();
 }
 
@@ -79,12 +79,12 @@ HRESULT TinputPin::getEncoderInfo(char_t *buf,size_t buflen)
   {
    codec->getEncoderInfo(buf,buflen);
    return S_OK;
-  } 
- else 
+  }
+ else
   {
    buf[0]='\0';
-   return S_FALSE; 
-  } 
+   return S_FALSE;
+  }
 }
 
 struct TpinFileSourceComp
@@ -101,7 +101,7 @@ const char_t* TinputPin::getFileSourceName(void)
  IFilterGraph *graph=m_pFilter->GetFilterGraph();
  if (!graph || wasGetSourceName || filesourceFlnm[0]!='\0') return filesourceFlnm;
  wasGetSourceName=true;
- comptr<IBaseFilter> filter; 
+ comptr<IBaseFilter> filter;
  if (searchPrevNextFilter(PINDIR_INPUT,this,this,&filter,TpinFileSourceComp()) && filter)
   {
    comptr<IFileSourceFilter> ifsf;filter->QueryInterface(IID_IFileSourceFilter,(void**)&ifsf);
@@ -112,7 +112,7 @@ const char_t* TinputPin::getFileSourceName(void)
      strcpy(filesourceFlnm,text<char_t>(aviNameL));
      CoTaskMemFree(aviNameL);
     }
-   else  
+   else
     filesourceFlnm[0]='\0';
   }
  return filesourceFlnm;

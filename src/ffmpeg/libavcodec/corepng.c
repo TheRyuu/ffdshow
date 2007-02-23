@@ -13,8 +13,8 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
- 
+
+
 #include "avcodec.h"
 #include "common.h"
 #include "dsputil.h"
@@ -52,7 +52,7 @@ static int read_image(CorePNGcontext * const a, uint8_t *ptr, int linesize,int f
     return 0;
 }
 
-static int decode_frame(AVCodecContext *avctx, 
+static int decode_frame(AVCodecContext *avctx,
                         void *data, int *data_size,
                         uint8_t *buf, int buf_size)
 {
@@ -64,7 +64,7 @@ static int decode_frame(AVCodecContext *avctx,
         a->decctx=avcodec_alloc_context();
         avcodec_open(a->decctx,&png_decoder);
         avcodec_get_frame_defaults(&a->decframe);
-    }    
+    }
 
     temp= a->picture;
     a->picture= a->prev_picture;
@@ -130,14 +130,14 @@ static int decode_frame(AVCodecContext *avctx,
 }
 
 static int decode_init(AVCodecContext *avctx){
- 
+
     CorePNGcontext * const a = avctx->priv_data;
 
     dsputil_init(&a->dsp, avctx);
 
     a->avctx= avctx;
     a->picture.data[0]=a->prev_picture.data[0]=NULL;
- 
+
     if(avctx->extradata_size == sizeof(CorePNGCodecPrivate))
         memcpy(&a->private,avctx->extradata,sizeof(CorePNGCodecPrivate));
     else{
@@ -157,9 +157,9 @@ static int decode_init(AVCodecContext *avctx){
         break;
     }
     avctx->has_b_frames=0;
- 
+
     avcodec_get_chroma_sub_sample(avctx->pix_fmt, &a->shiftX, &a->shiftY);
-    
+
     a->decctx=NULL;
 
     return 0;
@@ -173,7 +173,7 @@ static int decode_done(AVCodecContext *avctx)
         av_free(a->decctx);
     }
     return 0;
-} 
+}
 
 AVCodec corepng_decoder = {
     "corepng",

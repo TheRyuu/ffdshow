@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="windows-1250"?>
-<VisualStudioProject 
+<VisualStudioProject
 	ProjectType="Intel C++ Project"
 	Version="9.1"
 	Name="ff_libmad"
@@ -7,9 +7,9 @@
 	VCNestedProjectGUID="{B8000FD0-4A45-4D79-B320-1AFBE61C01C0}"
 	VCNestedProjectFileName="ff_libmad_icl9.vcproj">
 	<Configurations>
-		<Configuration 
+		<Configuration
 			Name="Debug|Win32">
-			<Tool 
+			<Tool
 				Name="GeneralTool"
 				OutputDirectory="debug_icl9"
 				IntermediateDirectory="debug_icl9"
@@ -17,9 +17,9 @@
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="0"
 				CharacterSet="0"/>
-			<Tool 
+			<Tool
 				Name="DebugTool"/>
-			<Tool 
+			<Tool
 				Name="CppCmplrTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="."
@@ -37,7 +37,7 @@
 				DebugInformationFormat="4"
 				CompileAs="1"
 				AdditionalOptions=""/>
-			<Tool 
+			<Tool
 				Name="LinkerTool"
 				DelayImpLib=""
 				IgnoreImportLibrary="1"
@@ -50,30 +50,30 @@
 				GenerateDebugInformation="1"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				AdditionalOptions=""/>
-			<Tool 
+			<Tool
 				Name="LibrarianTool"/>
-			<Tool 
+			<Tool
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1033"/>
-			<Tool 
+			<Tool
 				Name="MidlCmplrTool"/>
-			<Tool 
+			<Tool
 				Name="BscMakeTool"/>
-			<Tool 
+			<Tool
 				Name="PreBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="PreLinkEventTool"/>
-			<Tool 
+			<Tool
 				Name="PostBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="CustomTool"/>
-			<Tool 
+			<Tool
 				Name="CustomNodeTool"/>
 		</Configuration>
-		<Configuration 
+		<Configuration
 			Name="Release|Win32">
-			<Tool 
+			<Tool
 				Name="GeneralTool"
 				OutputDirectory="release_icl9"
 				IntermediateDirectory="release_icl9"
@@ -82,9 +82,9 @@
 				ATLMinimizesCRunTimeLibraryUsage="0"
 				CharacterSet="0"
 				WholeProgramOptimization="1"/>
-			<Tool 
+			<Tool
 				Name="DebugTool"/>
-			<Tool 
+			<Tool
 				Name="CppCmplrTool"
 				Optimization="1000"
 				GlobalOptimizations="1"
@@ -109,7 +109,7 @@
 				DebugInformationFormat="0"
 				CompileAs="1"
 				AdditionalOptions="/Qip"/>
-			<Tool 
+			<Tool
 				Name="LinkerTool"
 				DelayImpLib=""
 				IgnoreImportLibrary="1"
@@ -125,91 +125,95 @@
 				OptimizeForWindows98="2"
 				ImportLibrary=".\Release/ff_libmad.lib"
 				AdditionalOptions=""/>
-			<Tool 
+			<Tool
 				Name="LibrarianTool"/>
-			<Tool 
+			<Tool
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="NDEBUG"
 				Culture="1033"/>
-			<Tool 
+			<Tool
 				Name="MidlCmplrTool"/>
-			<Tool 
+			<Tool
 				Name="BscMakeTool"/>
-			<Tool 
+			<Tool
 				Name="PreBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="PreLinkEventTool"/>
-			<Tool 
+			<Tool
 				Name="PostBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="CustomTool"/>
-			<Tool 
+			<Tool
 				Name="CustomNodeTool"/>
 		</Configuration>
 	</Configurations>
 	<Files>
-		<File 
+		<File
 			RelativePath=".\bit.c"/>
-		<File 
+		<File
 			RelativePath=".\decoder.c"/>
-		<File 
+		<File
 			RelativePath=".\fixed.c"/>
-		<File 
+		<File
 			RelativePath=".\frame.c"/>
-		<File 
+		<File
 			RelativePath=".\huffman.c"/>
-		<File 
+		<File
 			RelativePath=".\layer12.c"/>
-		<File 
+		<File
 			RelativePath=".\layer3.c"/>
-		<File 
+		<File
 			RelativePath=".\stream.c"/>
-		<File 
+		<File
 			RelativePath=".\synth.c"/>
-		<File 
+		<File
 			RelativePath=".\timer.c"/>
-		<File 
+		<File
 			RelativePath=".\version.c"/>
-		<File 
+		<File
 			RelativePath=".\bit.h"/>
-		<File 
+		<File
 			RelativePath=".\config.h"/>
-		<File 
+		<File
 			RelativePath=".\decoder.h"/>
-		<File 
+		<File
 			RelativePath=".\fixed.h"/>
-		<File 
+		<File
 			RelativePath=".\frame.h"/>
-		<File 
+		<File
 			RelativePath=".\global.h"/>
-		<File 
+		<File
 			RelativePath=".\huffman.h"/>
-		<File 
+		<File
 			RelativePath=".\layer12.h"/>
-		<File 
+		<File
 			RelativePath=".\layer3.h"/>
-		<File 
+		<File
 			RelativePath=".\mad.h"/>
-		<File 
+		<File
 			RelativePath=".\stream.h"/>
-		<File 
+		<File
 			RelativePath=".\synth.h"/>
-		<File 
+		<File
 			RelativePath=".\timer.h"/>
-		<File 
+		<File
 			RelativePath=".\version.h"/>
-		<File 
+		<File
 			RelativePath=".\D.dat"/>
-		<File 
+		<File
 			RelativePath=".\imdct_s.dat"/>
-		<File 
+		<File
 			RelativePath=".\qc_table.dat"/>
-		<File 
+		<File
 			RelativePath=".\rq_table.dat"/>
-		<File 
+		<File
 			RelativePath=".\sf_table.dat"/>
-		<File 
+		<File
 			RelativePath=".\ff_libmad.def"/>
 	</Files>
 </VisualStudioProject>
+
+
+
+
 

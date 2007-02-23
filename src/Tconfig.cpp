@@ -60,7 +60,7 @@ Tconfig::Tfastmemcpy* Tconfig::fastmemcpy=memcpy;
 #ifndef WIN64
 extern "C"
 {
- // cpu_flag detection helper functions 
+ // cpu_flag detection helper functions
  extern int check_cpu_features(void);
  extern void sse_os_trigger(void);
  extern void sse2_os_trigger(void);
@@ -76,7 +76,7 @@ Tconfig::Tconfig(TintStrColl *Icoll):Toptions(Icoll),htmlcolors(NULL)
    IDFF_unicodeOS          ,&Tconfig::unicodeOS           ,-1,-1,_l(""),0,NULL,0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
  static const TstrOption sopts[]=
   {
    IDFF_installPath,(TstrVal)&Tconfig::pth,MAX_PATH,_l(""),0,NULL,NULL,
@@ -109,17 +109,17 @@ void Tconfig::init1(HINSTANCE hi)
  exeflnm[0]='\0';
 
  load();
- 
+
  shellversion=(unsigned int)-1;
- 
+
  OSVERSIONINFO vi;
  vi.dwOSVersionInfoSize=sizeof(vi);
  if (GetVersionEx(&vi))
   winNT=vi.dwPlatformId==VER_PLATFORM_WIN32_NT;
  else
-  winNT=false; 
+  winNT=false;
 
- memset(isDecoder,0,sizeof(isDecoder)); 
+ memset(isDecoder,0,sizeof(isDecoder));
  isDecoder[IDFF_MOVIE_LAVC]=Tlibavcodec::check(this);
  isDecoder[IDFF_MOVIE_LIBMPEG2]=check(TvideoCodecLibmpeg2::dllname);
  isDecoder[IDFF_MOVIE_THEO]=check(TvideoCodecTheora::dllname);
@@ -138,7 +138,7 @@ void Tconfig::init1(HINSTANCE hi)
  isDecoder[IDFF_MOVIE_TREMOR]=check(TaudioCodecTremor::dllname);
  isDecoder[IDFF_MOVIE_REALAAC]=check(TaudioCodecRealaac::dllname);
  isDecoder[IDFF_MOVIE_AUDX]=check(TaudioCodecAudX::dllname);
- 
+
  gdiA.getTextExtentExPoint=GetTextExtentExPointA;
  gdiA.getTextExtentPoint32=GetTextExtentPoint32A;
  gdiA.textOut=TextOutA;
@@ -183,7 +183,7 @@ void Tconfig::save(void)
     old_handler=signal(SIGILL,sigill_handler);
     if (old_handler==SIG_ERR)
      return -1;
-  
+
     jmpret=setjmp(mark);
     if (jmpret==0)
      func();
@@ -193,11 +193,11 @@ void Tconfig::save(void)
  #else
   static int sigill_check(void (*func)())
    {
-    __try 
+    __try
      {
       func();
      }
-    __except(EXCEPTION_EXECUTE_HANDLER) 
+    __except(EXCEPTION_EXECUTE_HANDLER)
      {
       if (_exception_code()==STATUS_ILLEGAL_INSTRUCTION)
        return 1;
@@ -205,11 +205,11 @@ void Tconfig::save(void)
     return 0;
    }
  #endif
-#endif 
+#endif
 
 void Tconfig::initCPU(int allowed_cpu_flags)
 {
- if (available_cpu_flags==0) 
+ if (available_cpu_flags==0)
   {
    #ifndef WIN64
    available_cpu_flags=check_cpu_features();
@@ -224,8 +224,8 @@ void Tconfig::initCPU(int allowed_cpu_flags)
                        (IsProcessorFeaturePresent(PF_XMMI64_INSTRUCTIONS_AVAILABLE)?FF_CPU_SSE2:0);
    #ifdef __INTEL_COMPILER
    available_cpu_flags|=FF_CPU_MMX|FF_CPU_MMXEXT;
-   #endif                        
-   #endif 
+   #endif
+   #endif
    cpu_flags=available_cpu_flags&allowed_cpu_flags;
    sws_cpu_flags=Tlibmplayer::swsCpuCaps();
    lavc_cpu_flags=Tlibavcodec::lavcCpuFlags();
@@ -240,9 +240,9 @@ void Tconfig::initCPU(int allowed_cpu_flags)
    #else
    fastmemcpy=memcpy;
    #endif
-   
+
    TffPict::initCopy(cpu_flags);
-  } 
+  }
 }
 
 DWORD Tconfig::getCPUcount(void)
@@ -261,14 +261,14 @@ const char_t* Tconfig::getExeflnm(void) const
    HANDLE (WINAPI *CreateToolhelp32Snapshot)(DWORD dwFlags,DWORD th32ProcessID);kernel.loadFunction(CreateToolhelp32Snapshot,"CreateToolhelp32Snapshot");
    if (!CreateToolhelp32Snapshot)  //Windows NT
     return _l("");
-  #ifdef UNICODE 
+  #ifdef UNICODE
    BOOL (WINAPI *Process32First)(HANDLE hSnapshot,LPPROCESSENTRY32W lppe);kernel.loadFunction(Process32First,"Process32FirstW");
    BOOL (WINAPI *Process32Next)(HANDLE hSnapshot,LPPROCESSENTRY32W lppe);kernel.loadFunction(Process32Next,"Process32NextW");
   #else
    BOOL (WINAPI *Process32First)(HANDLE hSnapshot,LPPROCESSENTRY32 lppe);kernel.loadFunction(Process32First,"Process32First");
    BOOL (WINAPI *Process32Next)(HANDLE hSnapshot,LPPROCESSENTRY32 lppe);kernel.loadFunction(Process32Next,"Process32Next");
   #endif
-   if (Process32First && Process32Next) 
+   if (Process32First && Process32Next)
     {
      HANDLE hs=CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,0);
      PROCESSENTRY32 pe32;
@@ -280,11 +280,11 @@ const char_t* Tconfig::getExeflnm(void) const
         {
          extractfilename(pe32.szExeFile,exeflnm);
          break;
-        } 
+        }
        ret=Process32Next(hs,&pe32);
       }
      CloseHandle(hs);
-    } 
+    }
   }
  return exeflnm;
 }

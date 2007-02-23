@@ -36,7 +36,7 @@ void TaudioFilterEQ::Tequalizer::bp2(float* a, float* b, double fc, double q)
 
  a[0]=float(bp2mult*(1+C)*cos(th));
  a[1]=float(bp2mult*-1*C);
-           
+
  b[0]=float(bp2mult*(1.0-C)/2.0);
  b[1]=float(bp2mult*-1.0050);
 }
@@ -67,8 +67,8 @@ template<class sample_t> float TaudioFilterEQ::Tequalizer::equalize(const float 
    wq[1] = wq[0];
    wq[0] = w;
   }
- return yt; 
-}  
+ return yt;
+}
 template<class sample_t> void TaudioFilterEQ::Tequalizer::process(sample_t *samples,size_t numsamples,unsigned int nchannels)
 {
  unsigned int ci=nchannels;
@@ -97,12 +97,12 @@ HRESULT TaudioFilterEQ::process(TfilterQueue::iterator it,TsampleFormat &fmt,voi
    old=*cfg;
    eq.init(cfg,fmt.freq);
   }
-  
+
  if (oldsf!=fmt.sf)
   {
    oldsf=fmt.sf;
    eq.reset();
-  } 
+  }
 
  switch (fmt.sf)
   {

@@ -46,7 +46,7 @@ bool TaudioCodecMplayer::init(const CMediaType &mt)
      case ACM_MPEG_LAYER2:hdrlayer=layer=mp3header::MAD_LAYER_II;break;
      case ACM_MPEG_LAYER3:hdrlayer=layer=mp3header::MAD_LAYER_III;break;
     }
-  } 
+  }
  deci->getPostproc(&dll);
  ctx=dll->MP3_Init(fmt.nchannels==1?1:0);
  fmt.sf=TsampleFormat::SF_PCM16;
@@ -81,13 +81,13 @@ HRESULT TaudioCodecMplayer::decode(TbyteBuffer &src0)
     }
    bpssum+=(lastbps=hdr.bitrate/1000);numframes++;
    layer=hdr.layer;oldmode=hdr.mode;
-   int framelen=hdr.calc_frame_len(); 
+   int framelen=hdr.calc_frame_len();
    if (srcLength<framelen)
     break;
    unsigned int used_bytes=framelen;
    unsigned char *dst=(unsigned char*)getDst(102400);
    int decoded=dll->MP3_DecodeFrame(ctx,&*src,framelen,dst,-1,&used_bytes);
-   if (decoded>0) 
+   if (decoded>0)
     {
      HRESULT hr=sinkA->deliverDecodedSample(dst,decoded/fmt.blockAlign(),fmt,1);
      if (hr!=S_OK)
@@ -97,7 +97,7 @@ HRESULT TaudioCodecMplayer::decode(TbyteBuffer &src0)
   }
  if (src!=src0.begin())
   src0.erase(src0.begin(),src);
- return S_OK; 
+ return S_OK;
 }
 bool TaudioCodecMplayer::onSeek(REFERENCE_TIME segmentStart)
 {
@@ -109,5 +109,5 @@ bool TaudioCodecMplayer::onSeek(REFERENCE_TIME segmentStart)
    return true;
   }
  else
-  return false; 
+  return false;
 }

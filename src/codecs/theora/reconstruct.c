@@ -10,7 +10,7 @@
  *                                                                  *
  ********************************************************************
 
-  function: 
+  function:
 
  ********************************************************************/
 
@@ -35,7 +35,7 @@ static void recon_intra8x8__c (unsigned char *ReconPtr, ogg_int16_t *ChangePtr,
 		      ogg_uint32_t LineStep)
 {
   ogg_uint32_t i;
-  
+
   for (i = 8; i; i--){
     /* Convert the data back to 8 bit unsigned */
     /* Saturate the output to unsigend 8 bit values */
@@ -47,7 +47,7 @@ static void recon_intra8x8__c (unsigned char *ReconPtr, ogg_int16_t *ChangePtr,
     ReconPtr[5] = clamp255( ChangePtr[5] + 128 );
     ReconPtr[6] = clamp255( ChangePtr[6] + 128 );
     ReconPtr[7] = clamp255( ChangePtr[7] + 128 );
-    
+
     ReconPtr += LineStep;
     ChangePtr += 8;
   }
@@ -57,7 +57,7 @@ static void recon_inter8x8__c (unsigned char *ReconPtr, unsigned char *RefPtr,
 		      ogg_int16_t *ChangePtr, ogg_uint32_t LineStep)
 {
   ogg_uint32_t i;
-  
+
   for (i = 8; i; i--){
     ReconPtr[0] = clamp255(RefPtr[0] + ChangePtr[0]);
     ReconPtr[1] = clamp255(RefPtr[1] + ChangePtr[1]);
@@ -67,10 +67,10 @@ static void recon_inter8x8__c (unsigned char *ReconPtr, unsigned char *RefPtr,
     ReconPtr[5] = clamp255(RefPtr[5] + ChangePtr[5]);
     ReconPtr[6] = clamp255(RefPtr[6] + ChangePtr[6]);
     ReconPtr[7] = clamp255(RefPtr[7] + ChangePtr[7]);
-    
+
     ChangePtr += 8;
     ReconPtr += LineStep;
-    RefPtr += LineStep; 
+    RefPtr += LineStep;
   }
 }
 
@@ -79,7 +79,7 @@ static void recon_inter8x8_half__c (unsigned char *ReconPtr, unsigned char *RefP
 			   ogg_uint32_t LineStep)
 {
   ogg_uint32_t  i;
-  
+
   for (i = 8; i; i--){
     ReconPtr[0] = clamp255((((int)RefPtr1[0] + (int)RefPtr2[0]) >> 1) + ChangePtr[0] );
     ReconPtr[1] = clamp255((((int)RefPtr1[1] + (int)RefPtr2[1]) >> 1) + ChangePtr[1] );
@@ -92,8 +92,8 @@ static void recon_inter8x8_half__c (unsigned char *ReconPtr, unsigned char *RefP
 
     ChangePtr += 8;
     ReconPtr += LineStep;
-    RefPtr1 += LineStep; 
-    RefPtr2 += LineStep; 
+    RefPtr1 += LineStep;
+    RefPtr2 += LineStep;
   }
 }
 

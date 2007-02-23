@@ -44,4 +44,4 @@ public:
  virtual const char_t* dialogName(void);
 };
 
-#endif 
+#endif

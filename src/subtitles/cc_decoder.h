@@ -12,12 +12,12 @@ private:
  uint32_t capid;
 
  enum { WHITE, GREEN, BLUE, CYAN, RED, YELLOW, MAGENTA, BLACK };
- 
+
  static int good_parity(uint16_t data);
 
  static const uint8_t TRANSP_SPACE=0x19;   /* code for transparent space, essentially arbitrary */
  static const int CC_ROWS=15,CC_COLUMNS=32,CC_CHANNELS=2;
- static char chartbl[128]; 
+ static char chartbl[128];
 
  struct cc_attribute_t
   {
@@ -27,7 +27,7 @@ private:
    uint8_t background;
   };
 
- struct cc_char_cell_t 
+ struct cc_char_cell_t
   {
    uint8_t c;                   /* character code, not the same as ASCII */
    cc_attribute_t attributes;   /* attributes of this character, if changed here */
@@ -63,14 +63,14 @@ private:
    void ccbuf_render(cc_renderer_t *renderer);
   };
 
- struct cc_memory_t 
+ struct cc_memory_t
   {
    cc_memory_t(void) {ccmem_clear();}
    cc_buffer_t channel[CC_CHANNELS];
    int channel_no;          /* currently active channel */
    void ccmem_clear(void);
   } **active,*on_buf,*off_buf,buffer[2];
- 
+
  struct cc_renderer_t
   {
    cc_renderer_t(IffdshowDecVideo *IdeciV):deciV(IdeciV) {}
@@ -79,13 +79,13 @@ private:
    void cc_renderer_show_caption(cc_buffer_t *buf, int64_t vpts);
    void cc_renderer_hide_caption(int64_t vpts);
   } cc_renderer;
-  
+
  struct cc_state_t
   {
    cc_state_t(cc_renderer_t *Irenderer):renderer(Irenderer) {}
    cc_renderer_t *renderer;
-  } cc_state; 
- 
+  } cc_state;
+
  void cc_set_channel(int channel);
  void cc_decode_PAC(int channel,  uint8_t c1, uint8_t c2);
  void cc_decode_standard_char(uint8_t c1, uint8_t c2);

@@ -21,7 +21,7 @@
 #include "TaudioFilterDenoise.h"
 
 const int TaudioFilterDenoise::filtcount[BANDS-1]={10, 8, 6, 4, 3, 2, 1};
- 
+
 TaudioFilterDenoise::TaudioFilterDenoise(IffdshowBase *Ideci,Tfilters *Iparent):TaudioFilter(Ideci,Iparent)
 {
  oldthreshold=0;ethreshold=0;
@@ -40,11 +40,11 @@ HRESULT TaudioFilterDenoise::process(TfilterQueue::iterator it,TsampleFormat &fm
    if (cfg->threshold& 1)  ethreshold= (ethreshold*3)/2;
    onSeek();
   }
-  
+
  int16_t *samples=(int16_t*)init(cfg,fmt,samples0,numsamples);
- // do the work... 
+ // do the work...
  for (unsigned int i=0;i<numsamples;i++)
-  for (unsigned int channel=0;channel<fmt.nchannels;channel++) 
+  for (unsigned int channel=0;channel<fmt.nchannels;channel++)
    {
     int32_t inf[BANDS];memset(inf,0,sizeof(inf));
     // ...input voxels are 16 bits, but we'll use 32 to avoid rounding errors
@@ -52,9 +52,9 @@ HRESULT TaudioFilterDenoise::process(TfilterQueue::iterator it,TsampleFormat &fm
 
     int32_t data_= 0;
     register int j;
-      
-    // filter each frequency band... 
-    for (int band=0;band<BANDS;band++) 
+
+    // filter each frequency band...
+    for (int band=0;band<BANDS;band++)
      {
       FilterABand* pB= &Channel[channel].B[band];
       register int32_t inf_;
@@ -67,8 +67,8 @@ HRESULT TaudioFilterDenoise::process(TfilterQueue::iterator it,TsampleFormat &fm
         register int32_t in_;
         register int32_t * pprev_;  int j0;
         inf_= inf[band];
-        in_ = band? inf_ : in; // previous filter's output 
-        // ...voxel input to the filter 
+        in_ = band? inf_ : in; // previous filter's output
+        // ...voxel input to the filter
         inf_= in_; // the lowpass part
         j0= MAXPREVS-filtcount[band];  pprev_= &pprevs[j0];
         for (j= j0; j<MAXPREVS; j++)
@@ -84,31 +84,31 @@ HRESULT TaudioFilterDenoise::process(TfilterQueue::iterator it,TsampleFormat &fm
        {
         if (squelchgain< SQUELCHMULT)
          squelchgain+= SQUELCHMULT/256; // come out of squelch quickly so we don't blunt attacks
-        if ((inf_< threshold_) && (inf_> -threshold_)) 
+        if ((inf_< threshold_) && (inf_> -threshold_))
          {
-          // squelchable voxel 
+          // squelchable voxel
           pB->squelching= 1;
           if (squelchgain) squelchgain--;
          }
        }
-      if (pB->squelching) 
+      if (pB->squelching)
        {
         if (squelchgain) squelchgain--;
-        if ((inf_> threshold_) || (inf_< -threshold_)) 
+        if ((inf_> threshold_) || (inf_< -threshold_))
          {
-          pB->squelching= 0;  // kick out of squelch mode 
-         }       
+          pB->squelching= 0;  // kick out of squelch mode
+         }
        }
 
       safesquelch= squelchgain*HEADROOM;  safesquelch/= SQUELCHMULT;
       out_ *= safesquelch;  out_/= HEADROOM;
-        
-      pB->squelchgain= squelchgain;
-      data_ += out_;  // reassemble the bands here, after filtering 
 
-      if (band< (BANDS-1)) 
+      pB->squelchgain= squelchgain;
+      data_ += out_;  // reassemble the bands here, after filtering
+
+      if (band< (BANDS-1))
        {
-        // shift the prevs for next time... 
+        // shift the prevs for next time...
         register int32_t * pprev_, * pprev_1;  int j0;
         j0= MAXPREVS-filtcount[band];
         pprev_= &pprevs[j0]; pprev_1= pprev_+1;
@@ -118,8 +118,8 @@ HRESULT TaudioFilterDenoise::process(TfilterQueue::iterator it,TsampleFormat &fm
          }
         pprevs[MAXPREVS-1]= band? inf[band-1] : in;
        }
-     } 
-    samples[fmt.nchannels*i+channel] = int16_t(data_ / PRECISION);  // reverse *PRECISION above 
+     }
+    samples[fmt.nchannels*i+channel] = int16_t(data_ / PRECISION);  // reverse *PRECISION above
    }
  return parent->deliverSamples(++it,fmt,samples,numsamples);
 }

@@ -12,23 +12,23 @@
 class allpass
 {
 public:
- allpass() 
+ allpass()
   {
    bufidx = 0;
   }
  void setbuffer(float *buf, int size)
   {
-   buffer = buf; 
+   buffer = buf;
    bufsize = size;
   }
  __forceinline  float process(float input)
   {
    float output;
    float bufout;
-   
+
    bufout = buffer[bufidx];
    undenormalise(bufout);
-   
+
    output = -input + bufout;
    buffer[bufidx] = input + (bufout*feedback);
 

@@ -9,7 +9,7 @@ private:
  static const TfilterIDFF idffs;
 protected:
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  TperspectiveSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  int isSrc;
  int x1,y1,x2,y2,x3,y3,x4,y4;

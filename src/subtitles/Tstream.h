@@ -17,8 +17,8 @@ public:
   {
    ENC_AUTODETECT=0,
    ENC_ASCII=1,
-   ENC_UTF8=2, 
-   ENC_LE16=4, 
+   ENC_UTF8=2,
+   ENC_LE16=4,
    ENC_BE16=8,
    ENC_UNICODE=ENC_UTF8|ENC_LE16|ENC_BE16
   };
@@ -66,9 +66,9 @@ public:
    detectUnicode();
   }
  TstreamFile(const char_t *flnm,bool binary,bool write,ENCODING Iencoding=ENC_AUTODETECT);
- virtual ~TstreamFile() 
+ virtual ~TstreamFile()
   {
-   if (ownf && f) 
+   if (ownf && f)
     fclose(f);
   }
  virtual void rewind(void)
@@ -127,13 +127,13 @@ protected:
   }
 public:
  TstreamMem(const unsigned char *Ibuf,size_t Ibufsize,ENCODING Iencoding=ENC_ASCII):Tstream(Iencoding),buf(Ibuf),bufsize(Ibufsize),bufpos(0)
-  { 
+  {
    handleUnicode();
   }
  void convertUtoD(bool is)
   {
    utod=is;
-  } 
+  }
  virtual void rewind(void)
   {
    bufpos=0;
@@ -153,7 +153,7 @@ public:
      case SEEK_SET:
       bufpos=limit<size_t>(offset,0,bufsize-1);
       return 0;
-     case SEEK_CUR: 
+     case SEEK_CUR:
       bufpos=limit<size_t>(bufpos+offset,0,bufsize-1);
       return 0;
      case SEEK_END:
@@ -168,8 +168,8 @@ public:
     {
      memcpy(buf,this->buf+bufpos,copysize);
      bufpos+=copysize;
-    } 
-   return copysize/size; 
+    }
+   return copysize/size;
   }
  virtual long length(void) const
   {
@@ -186,10 +186,10 @@ private:
 public:
  static const char_t *dllname;
  TstreamRAR(const char_t *rarflmn,const char_t *flnm,const Tconfig *config);
- virtual ~TstreamRAR() 
+ virtual ~TstreamRAR()
   {
    if (buf) free(buf);
-  } 
+  }
 };
 
 #endif

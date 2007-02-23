@@ -18,7 +18,7 @@ LangString DESC_addons  ${NSH_LANG} "Ãß°¡ÀûÀÎ ÀÎÄÚµù/µðÄÚµù ¶óÀÌºê·¯¸®µéÀ» ¼³Ä¡Ç
 LangString TITLE_plugins ${NSH_LANG} "ÀÀ¿ëÇÁ·Î±×·¥ ÇÃ·¯±×ÀÎ"
 LangString DESC_plugins ${NSH_LANG} "ffdshow¿Í »óÈ£ ÀÛ¿ëÇÏ´Â ´Ù¾çÇÑ ÀÀ¿ëÇÁ·Î±×·¥À» À§ÇÑ ÇÃ·¯±×ÀÎ"
 LangString TITLE_pluginAvisynth ${NSH_LANG} "Avisynth"
-LangString DESC_pluginAvisynth ${NSH_LANG} "ffdshow°¡ Á÷Á¢ÀûÀ¸·Î avs ½ºÅ©¸³Æ®¿¡¼­ ÀÌ¹ÌÁö ÇÁ·Î¼¼½Ì ÇÊÅÍ¸¦ »ç¿ë°¡´ÉÇÏ°Ô ÇÕ´Ï´Ù." 
+LangString DESC_pluginAvisynth ${NSH_LANG} "ffdshow°¡ Á÷Á¢ÀûÀ¸·Î avs ½ºÅ©¸³Æ®¿¡¼­ ÀÌ¹ÌÁö ÇÁ·Î¼¼½Ì ÇÊÅÍ¸¦ »ç¿ë°¡´ÉÇÏ°Ô ÇÕ´Ï´Ù."
 LangString DLG_AVISYNTH_TITLE ${NSH_LANG} "Avisynth"
 LangString DLG_AVISYNTH_SUBTITLE ${NSH_LANG} "Avisynth ÇÃ·¯±×ÀÎ µð·ºÅä¸®"
 LangString DLG_AVISYNTH_LABEL ${NSH_LANG} "Avisynth ÇÃ·¯±×ÀÎ µð·ºÅä¸® ¼±ÅÃÇÏ¼¼¿ä"

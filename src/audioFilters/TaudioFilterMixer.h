@@ -20,7 +20,7 @@ public:
  TaudioFilterMixer(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual bool getOutputFmt(TsampleFormat &fmt,const TfilterSettingsAudio *cfg);
  virtual HRESULT process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0);
- 
+
  virtual HRESULT queryInterface(const IID &iid,void **ptr) const;
  STDMETHODIMP getMixerMatrixData(double matrix[6][6]);
 };

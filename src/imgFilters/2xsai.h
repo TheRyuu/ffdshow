@@ -19,14 +19,14 @@ private:
  static const uint32_t lowPixelMask=minr | ming | minb;
  static const uint32_t qcolorMask=(makecol_depth<d, 255, 0, 0>::value - 3 * minr) | (makecol_depth<d, 0, 255, 0>::value - 3 * ming) | (makecol_depth<d, 0, 0, 255>::value - 3 * minb);
  static const uint32_t qlowpixelMask=(minr * 3) | (ming * 3) | (minb * 3);
- 
+
  static int GET_RESULT(unsigned long A,unsigned long B,unsigned long C,unsigned long D) {return (A != C || A != D) - (B != C || B != D);}
  static unsigned long INTERPOLATE(unsigned long A,unsigned long B) {return ((A & colorMask) >> 1) + ((B & colorMask) >> 1) + (A & B & lowPixelMask);}
  static unsigned long Q_INTERPOLATE(unsigned long A,unsigned long B,unsigned long C,unsigned long D)
   {
    return ((A & qcolorMask) >> 2) + ((B & qcolorMask) >> 2) + ((C & qcolorMask) >> 2) + ((D & qcolorMask) >> 2) + ((((A & qlowpixelMask) + (B & qlowpixelMask) + (C & qlowpixelMask) + (D & qlowpixelMask)) >> 2) & qlowpixelMask);
   }
-  
+
  static inline uint32 Q_INTERPOLATE16(uint32 A, uint32 B, uint32 C, uint32 D)
   {
    static const uint32_t qcolorMask = 0xE79CE79C;

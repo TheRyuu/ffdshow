@@ -16,8 +16,8 @@ private:
  int sub_pos;
  SwsFilter filter;
  int oldgauss;
- 
- struct packet_t 
+
+ struct packet_t
   {
    unsigned char *packet;
    unsigned int palette[4];
@@ -33,7 +33,7 @@ private:
    unsigned int start_pts, end_pts;
    packet_t *next;
  };
- 
+
  packet_t *queue_head;
  packet_t *queue_tail;
  AM_DVD_YUV global_palette[16];
@@ -67,13 +67,13 @@ private:
  unsigned int forced_subs_only;     /* flag: 0=display all subtitle, !0 display only forced subtitles */
  unsigned int is_forced_sub;         /* true if current subtitle is a forced subtitle */
 
- struct scale_pixel 
+ struct scale_pixel
   {
    unsigned position;
    unsigned left_up;
    unsigned right_down;
   };
-  
+
  void spudec_queue_packet(packet_t *packet);
  packet_t *spudec_dequeue_packet(void);
  static void spudec_free_packet(packet_t *packet);

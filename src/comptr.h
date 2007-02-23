@@ -32,7 +32,7 @@ public:
   }
  void Release()
   {
-   if (p) p->Release(); 
+   if (p) p->Release();
    p=NULL;
   }
  operator T*() {return (T*)p;}

@@ -25,7 +25,7 @@
 #include "Tconfig.h"
 #include "TDScalerSettings.h"
 
-//========================= Tdscaler_DI ========================== 
+//========================= Tdscaler_DI ==========================
 Tdscaler_DI::Tdscaler_DI(const char_t *fltflnm,IffdshowBase *deci,bool Ionlyinfo):onlyinfo(Ionlyinfo)
 {
  hi=deci->getInstance2();
@@ -42,7 +42,7 @@ Tdscaler_DI::Tdscaler_DI(const char_t *fltflnm,IffdshowBase *deci,bool Ionlyinfo
      settings=new TDScalerSettings(deci,fm->nSettings,fm->pSettings);
     }
   }
- else 
+ else
   {
    fm=NULL;
    settings=NULL;
@@ -58,7 +58,7 @@ Tdscaler_DI::~Tdscaler_DI()
  if (f) delete f;
 }
 
-//============================== TimgFilterDScalerDI ========================= 
+//============================== TimgFilterDScalerDI =========================
 TimgFilterDScalerDI::TimgFilterDScalerDI(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
  oldfltflnm[0]='\0';oldfltcfg[0]='\0';
@@ -128,8 +128,8 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
    getCur(FF_CSP_YUY2,pict,cfg->full,&srcYUY2,NULL,NULL,NULL);
    if (di.PictureHistory[0]==NULL)
     {
-     //generic 
-     di.FrameWidth=dx1[0];               
+     //generic
+     di.FrameWidth=dx1[0];
      di.LineLength=di.FrameWidth*2;
      //source
      di.SourceRect=pictRect;di.SourceRect.bottom/=2;
@@ -145,15 +145,15 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
        TffPict::clear(pict.cspInfo.Bpp,pict.cspInfo.black[0],di.PictureHistory[i]->pData,stride1[0],di.LineLength,pictRect.dy);
        di.PictureHistory[0]->IsFirstInSeries=1;
       }
-    }  
+    }
    if (fieldnum==0)
     di.PictureHistory[0]->Flags=PICTURE_INTERLACED_EVEN;
    else
-    { 
+    {
      srcYUY2+=pict.stride[0];
      di.PictureHistory[0]->Flags=PICTURE_INTERLACED_ODD;
-    } 
-  
+    }
+
    TffPict::copy(di.PictureHistory[0]->pData,pict.stride[0],srcYUY2,2*pict.stride[0],di.LineLength,di.FieldHeight);
 
    unsigned char *dstYUV;
@@ -184,7 +184,7 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
      TPicture *p=di.PictureHistory[flt->fm->nFieldsRequired-1];
      memmove(di.PictureHistory+1,di.PictureHistory,(flt->fm->nFieldsRequired-1)*sizeof(TPicture*));
      di.PictureHistory[0]=p;
-    } 
+    }
    pict.fieldtype=FIELD_TYPE::PROGRESSIVE_FRAME;
    pict.rtStart=rtStart;pict.rtStop=pict.rtStart+rtDuration;rtStart+=rtDuration;
    HRESULT hr=parent->deliverSample(++it,pict);

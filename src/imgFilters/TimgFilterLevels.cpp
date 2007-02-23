@@ -39,7 +39,7 @@ HRESULT TimgFilterLevels::process(TfilterQueue::iterator it,TffPict &pict,const 
 {
  const TlevelsSettings *cfg=(const TlevelsSettings*)cfg0;
  const unsigned char *srcY=NULL;
- if (cfg->inAuto || (deci->getParam2(IDFF_buildHistogram) && deci->getCfgDlgHwnd())) 
+ if (cfg->inAuto || (deci->getParam2(IDFF_buildHistogram) && deci->getCfgDlgHwnd()))
   {
    if (cfg->inAuto)
     {
@@ -50,7 +50,7 @@ HRESULT TimgFilterLevels::process(TfilterQueue::iterator it,TffPict &pict,const 
    pict.histogram(histogram,cfg->full,cfg->half);
   }
  if (cfg->inAuto)
-  {  
+  {
    int newInMin,newInMax;
    unsigned int l=pictRect.dx*pictRect.dy/7000;
    for (newInMin=0;newInMin<250 && histogram[newInMin]<l;newInMin++)
@@ -62,7 +62,7 @@ HRESULT TimgFilterLevels::process(TfilterQueue::iterator it,TffPict &pict,const 
     {
      newInMin=limit(newInMin-20,0,254);
      newInMax=limit(newInMax+20,1,255);
-    } 
+    }
    inMinSum-=inMins[minMaxPos];inMins[minMaxPos]=newInMin;inMinSum+=newInMin;
    inMaxSum-=inMaxs[minMaxPos];inMaxs[minMaxPos]=newInMax;inMaxSum+=newInMax;
    minMaxPos++;if (minMaxPos==HISTORY) minMaxPos=0;
@@ -73,7 +73,7 @@ HRESULT TimgFilterLevels::process(TfilterQueue::iterator it,TffPict &pict,const 
   {
    inMin=cfg->inMin;
    inMax=cfg->inMax;
-  } 
+  }
  if (cfg->is && (cfg->mode==5 || cfg->inAuto || inMin!=0 || inMax!=255 || cfg->outMin!=0 || cfg->outMax!=255 || cfg->gamma!=100 || cfg->posterize!=255))
   {
    bool equal=cfg->equal(oldSettings);
@@ -88,13 +88,13 @@ HRESULT TimgFilterLevels::process(TfilterQueue::iterator it,TffPict &pict,const 
         divisor=cfg->inMax-cfg->inMin+(cfg->inMax==cfg->inMin);
        for (int x=0;x<256;x++)
         mapchroma[x]=limit(((x-128)*(oldSettings.outMax-oldSettings.outMin)+(divisor>>1))/divisor+128,16,240);
-      } 
+      }
     }
    if (!srcY)
     {
      init(pict,cfg->full,cfg->half);
      getCur(supportedcsps,pict,cfg->full,&srcY,NULL,NULL,NULL);
-    } 
+    }
    unsigned char *dstY;
    getCurNext(csp1,pict,cfg->full,COPYMODE_NO,&dstY,NULL,NULL,NULL);
    if (csp_isYUVplanar(csp1))
@@ -106,7 +106,7 @@ HRESULT TimgFilterLevels::process(TfilterQueue::iterator it,TffPict &pict,const 
         *(unsigned int*)dst=(map[src[3]]<<24)|(map[src[2]]<<16)|(map[src[1]]<<8)|map[src[0]];
        for (;dst!=dstEnd;src++,dst++)
         *dst=uint8_t(map[*src]);
-      }  
+      }
      if (!oldSettings.onlyLuma)
       {
        const unsigned char *srcU,*srcV;
@@ -127,8 +127,8 @@ HRESULT TimgFilterLevels::process(TfilterQueue::iterator it,TffPict &pict,const 
            *dstv=uint8_t(mapchroma[*srcv]);
           }
         }
-      }  
-    }  
+      }
+    }
    else if (csp_isYUVpacked(csp1))
     {
      int lumaoffset=pict.cspInfo.packedLumaOffset,chromaoffset=pict.cspInfo.packedChromaOffset;
@@ -136,8 +136,8 @@ HRESULT TimgFilterLevels::process(TfilterQueue::iterator it,TffPict &pict,const 
      else if (lumaoffset==0 && chromaoffset==1 && oldSettings.onlyLuma==1) processPacked<0,1,1>(srcY,dstY);
      else if (lumaoffset==1 && chromaoffset==0 && oldSettings.onlyLuma==0) processPacked<1,0,0>(srcY,dstY);
      else if (lumaoffset==1 && chromaoffset==0 && oldSettings.onlyLuma==1) processPacked<1,0,1>(srcY,dstY);
-    }  
-  }  
+    }
+  }
  return parent->deliverSample(++it,pict);
 }
 

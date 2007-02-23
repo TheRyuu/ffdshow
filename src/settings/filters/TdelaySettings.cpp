@@ -65,7 +65,7 @@ void TdelaySettings::createFilters(size_t filtersorder,Tfilters *filters,Tfilter
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (is && show)
-  queueFilter<TaudioFilterDelay>(filtersorder,filters,queue); 
+  queueFilter<TaudioFilterDelay>(filtersorder,filters,queue);
 }
 void TdelaySettings::createPages(TffdshowPageDec *parent) const
 {

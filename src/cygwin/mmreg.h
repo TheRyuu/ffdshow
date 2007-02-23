@@ -2,9 +2,9 @@
 #define _INC_MMREG
 
 typedef struct wavefilter_tag {
-    DWORD   cbStruct;     
-    DWORD   dwFilterTag;  
-    DWORD   fdwFilter;    
+    DWORD   cbStruct;
+    DWORD   dwFilterTag;
+    DWORD   fdwFilter;
     DWORD   dwReserved[5];
 } WAVEFILTER;
 typedef WAVEFILTER       *PWAVEFILTER;

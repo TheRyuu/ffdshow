@@ -60,15 +60,15 @@ ThwOverlayControlVMR9::ThwOverlayControlVMR9(IVMRMixerControl9 *Ivmr,int Iid):
  if (!vmr9 || FAILED(vmr9->GetProcAmpControl(id,&ctrl)))
   ctrl.dwFlags=0;
  else
-  { 
+  {
    for (int i=HWOC_BRIGHTNESS;i<=HWOC_SATURATION;i++)
     {
      ranges[i].dwSize=sizeof(ranges[i]);
      ranges[i].dwProperty=pacs[i];
      vmr9->GetProcAmpControlRange(id,ranges+i);
-    } 
-  } 
- defctrl=ctrl; 
+    }
+  }
+ defctrl=ctrl;
 }
 
 STDMETHODIMP_(bool) ThwOverlayControlVMR9::supported(int cap)
@@ -82,7 +82,7 @@ STDMETHODIMP_(bool) ThwOverlayControlVMR9::supported(int cap)
    case HWOC_SHARPNESS :return false;
    case HWOC_GAMMA     :return false;
    default: return false;
-  } 
+  }
 }
 STDMETHODIMP ThwOverlayControlVMR9::getRange(int cap,int *min,int *max)
 {

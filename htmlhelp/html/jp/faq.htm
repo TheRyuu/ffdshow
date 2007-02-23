@@ -13,12 +13,12 @@
 <body>
   <a href="http://ffdshow-tryout.sourceforge.net/phpBB2/">
       <img src="../images/logo_phpBB.png" title="ffdshow tryouts" alt="ffdshow tryouts" width="200" height="91" />
-  </a>  
-  
+  </a>
+
   <div style="text-align:right" class="smallest_caption">
     Translations available in:
     &nbsp;<a class="nav" href="../en/faq.htm"><img src="../images/england.png" title="English FAQ" alt="English FAQ" width="27" height="17" />&nbsp;English</a>
-    &nbsp;<a class="nav" href="../de/faq.htm"><img src="../images/germany.png" title="German FAQ" alt="German FAQ" width="27" height="17" />&nbsp;German</a>    
+    &nbsp;<a class="nav" href="../de/faq.htm"><img src="../images/germany.png" title="German FAQ" alt="German FAQ" width="27" height="17" />&nbsp;German</a>
   </div>
 
   <p>
@@ -46,7 +46,7 @@
       それぞれに対して必要なCPUは以下のとおりです｡
     </span>
   </p>
-  
+
 
   <ul class="normal">
     <li>generic buildsはPentium-mmx/AMD K6以降で使用可能です。</li>
@@ -61,7 +61,7 @@
     </span>
   </p>
 
-  <p>  
+  <p>
     <span class="normal">どのビルダーもffdshowの主力デコーダである<em>libavcodec</em> はGCCを使ってコンパイルしています。<em>libavcodec</em> はCPUのサポートする命令セット(SSE/SSE2など)を自動検出し利用できるアセンブラで書かれたコードをたくさん持っています｡コンパイラによる最適化の余地はほとんどないと言えます｡したがって純粋なデコーダとしての性能を比較した場合ビルドによる<strong>違いはありません</strong>。
     </span>
   </p>
@@ -72,7 +72,7 @@
     </span>
   </p>
 
-  <p>  
+  <p>
     <span class="normal"><em>ffdshow.ax</em> を最適化したビルドはある種のフィルタを使用する場合パフォーマンスに違いが見られます。<br />
       下のリストは最適化によってメリットが得られるフィルタです。
     </span>
@@ -80,7 +80,7 @@
 
   <ul class="normal">
     <li>xsharpen</li>
-    <li>denoise3d</li>          
+    <li>denoise3d</li>
   </ul>
 
   <p>
@@ -89,14 +89,14 @@
     </span>
     <span class="small">
       Test setup: Pentium 4 2.8GHz (Northwood), Windows XP SP2, null renderer使用<br />
-      Test sample: <a href="http://trailers.divx.com/Dreamworks/Madagascar_HD.zip">Madagascar.avi</a> (DX50)    
+      Test sample: <a href="http://trailers.divx.com/Dreamworks/Madagascar_HD.zip">Madagascar.avi</a> (DX50)
     </span>
   </p>
 
   <p>
     <span class="normal"><strong>まとめ</strong></span>
   </p>
-  
+
   <ul class="normal">
     <li>画像処理フィルタを使用しない場合、ほとんど<strong>差がありません</strong>｡</li>
     <li>ICL9 (SSE) ビルドは<em>xsharpen</em>使用時には最速であることが証明されました｡MSVCビルドと比較して88％の高速化がなされています。</li>
@@ -111,7 +111,7 @@
       <a name="stable" id="stable">どのビルドが一番安定していますか？</a>
     </span>
   </p>
-  
+
   <p>
     <span class="normal">多分generic buildsが最も安定しています｡しかしGCCによるビルドに既知の問題はありません。ICLビルドは唯一古いx264エンコーダによって作られたファイルでクラッシュするという問題があるのみで、通常実使用の場面でそういったファイルに遭遇することはないでしょう。したがって安定性の面ではどのビルドを使ってもよいと言えるでしょう｡
     </span>
@@ -135,7 +135,7 @@
       <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
     </span>
   </div>
-  
+
   <div style="padding-top:20px">
     <a href="http://sourceforge.net">
       <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />

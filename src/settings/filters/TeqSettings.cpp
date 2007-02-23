@@ -106,10 +106,10 @@ void TeqSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQue
   {
    if (!queue.temporary) setOnChange(IDFF_eqSuper,filters,&Tfilters::onQueueChange);
    if (super)
-    queueFilter<TaudioFilterEQsuper>(filtersorder,filters,queue); 
+    queueFilter<TaudioFilterEQsuper>(filtersorder,filters,queue);
    else
-    queueFilter<TaudioFilterEQ>(filtersorder,filters,queue); 
-  }  
+    queueFilter<TaudioFilterEQ>(filtersorder,filters,queue);
+  }
 }
 void TeqSettings::createPages(TffdshowPageDec *parent) const
 {
@@ -121,7 +121,7 @@ const int* TeqSettings::getResets(unsigned int pageId)
  static const int idResets[]={
   IDFF_eq0,IDFF_eq1,IDFF_eq2,IDFF_eq3,IDFF_eq4,IDFF_eq5,IDFF_eq6,IDFF_eq7,IDFF_eq8,IDFF_eq9,
   IDFF_eq0freq,IDFF_eq1freq,IDFF_eq2freq,IDFF_eq3freq,IDFF_eq4freq,IDFF_eq5freq,IDFF_eq6freq,IDFF_eq7freq,IDFF_eq8freq,IDFF_eq9freq,
-  IDFF_eqLowdb,IDFF_eqHighdb, 
+  IDFF_eqLowdb,IDFF_eqHighdb,
   IDFF_eqSuper,
   0};
  return idResets;

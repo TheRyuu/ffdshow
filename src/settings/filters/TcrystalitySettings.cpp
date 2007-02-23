@@ -65,7 +65,7 @@ void TcrystalitySettings::createFilters(size_t filtersorder,Tfilters *filters,Tf
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (is && show)
-  queueFilter<TaudioFilterCrystality>(filtersorder,filters,queue); 
+  queueFilter<TaudioFilterCrystality>(filtersorder,filters,queue);
 }
 void TcrystalitySettings::createPages(TffdshowPageDec *parent) const
 {

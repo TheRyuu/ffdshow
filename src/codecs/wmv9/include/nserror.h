@@ -809,7 +809,7 @@ Notes:
 // MessageText:
 //
 //  Cannot exceed the maximum client limit.%0
-//  
+//
 //
 #define NS_E_MAX_CLIENTS                 _HRESULT_TYPEDEF_(0xC00D0049L)
 
@@ -819,7 +819,7 @@ Notes:
 // MessageText:
 //
 //  The maximum log file size has been reached.%0
-//  
+//
 //
 #define NS_E_LOG_FILE_SIZE               _HRESULT_TYPEDEF_(0xC00D004AL)
 
@@ -2354,7 +2354,7 @@ Notes:
 //
 //  Windows Media Player cannot perform the requested action. Your computer's time and date might not be set correctly.%0
 //
-#define NS_E_WMP_MLS_STALE_DATA          _HRESULT_TYPEDEF_(0xC00D0FDDL)    
+#define NS_E_WMP_MLS_STALE_DATA          _HRESULT_TYPEDEF_(0xC00D0FDDL)
 
 //
 // Generic Media PlayerUI error codes
@@ -10047,4 +10047,8 @@ Notes:
 
 
 #endif // _NSERROR_H
+
+
+
+
 

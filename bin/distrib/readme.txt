@@ -2,7 +2,7 @@
 
 ffdshow is a DirectShow decoding filter for decompressing DIVX movies.
 It uses libavcodec from ffmpeg project or for video decompression (it can use
-xvid.dll installed with xvid codec too), postprocessing code from mplayer to 
+xvid.dll installed with xvid codec too), postprocessing code from mplayer to
 enhance visual quality of low bitrate movies, and is based on original
 DirectShow filter from XviD, which is GPL'ed educational implementation
 of MPEG4 encoder.
@@ -22,7 +22,7 @@ of MPEG4 encoder.
 - noising with two selectable algorithms
 - resizing and aspect ratio changing
 - subtitles
-- completely free software: ffdshow is distributed under GPL 
+- completely free software: ffdshow is distributed under GPL
 
 3. Configuration
 
@@ -39,7 +39,7 @@ DVD2AVI: http://arbor.ee.ntu.edu.tw/~jackei/dvd2avi/
 xsharpen, unsharp mask, msharpen, hue and saturation code
          http://sauron.mordor.net/dgraft/index.html
 
-and 
+and
 doom9:   http://www.doom9.org/
 
 5. Copying

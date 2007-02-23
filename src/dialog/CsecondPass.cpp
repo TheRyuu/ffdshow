@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "CsecondPass.h"
 #include "TperfectDlg.h"
@@ -32,7 +32,7 @@ bool TsecondPassPage::enabled(void)
 }
 
 void TsecondPassPage::cfg2dlg(void)
-{ 
+{
  setDlgItemText(m_hwnd,IDC_ED_STATS1,cfgGetStr(IDFF_enc_stats1flnm));
  setDlgItemText(m_hwnd,IDC_ED_STATS2,cfgGetStr(IDFF_enc_stats2flnm));
  SetDlgItemInt(m_hwnd,IDC_ED_MAX_BITRATE,cfgGet(IDFF_enc_twopass_max_bitrate)/1000,FALSE);
@@ -53,28 +53,28 @@ INT_PTR TsecondPassPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     if (perfectDlg) delete perfectDlg;perfectDlg=NULL;
     break;
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_ED_STATS1:
-       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText) 
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
          char_t stats1flnm[MAX_PATH];
          GetDlgItemText(m_hwnd,IDC_ED_STATS1,stats1flnm,MAX_PATH);
          cfgSet(IDFF_enc_stats1flnm,stats1flnm);
-         return TRUE;  
+         return TRUE;
         }
        break;
       case IDC_ED_STATS2:
-       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText) 
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
          char_t stats2flnm[MAX_PATH];
          GetDlgItemText(m_hwnd,IDC_ED_STATS2,stats2flnm,MAX_PATH);
          cfgSet(IDFF_enc_stats2flnm,stats2flnm);
-         return TRUE;  
+         return TRUE;
         }
        break;
-     }   
-    break; 
+     }
+    break;
   }
  return TconfPageEnc::msgProc(uMsg,wParam,lParam);
 }
@@ -134,13 +134,13 @@ TsecondPassPage::TsecondPassPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
    IDC_ED_KFREDUCTION,0,100,IDFF_enc_kfreduction,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
  static const TbindEditReal<TsecondPassPage> edReal[]=
   {
    IDC_ED_MAX_BITRATE,1,10000,IDFF_enc_twopass_max_bitrate,1000,NULL,
    0
   };
- bindEditReals(edReal); 
+ bindEditReals(edReal);
  static const TbindButton<TsecondPassPage> bt[]=
   {
    IDC_BT_STATS1,&TsecondPassPage::onStats1,
@@ -148,5 +148,5 @@ TsecondPassPage::TsecondPassPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
    IDC_BT_SECOND_SIMULATE,&TsecondPassPage::onSimulate,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
 }

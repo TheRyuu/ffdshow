@@ -246,7 +246,7 @@ BITS 32
 %macro SAD_X3_END 0
     mov     eax,  [esp+32]
     movd    [eax+0], mm0
-    movd    [eax+4], mm1  
+    movd    [eax+4], mm1
     movd    [eax+8], mm2
     pop     esi
     pop     edi
@@ -256,7 +256,7 @@ BITS 32
 %macro SAD_X4_END 0
     mov     eax,  [esp+40]
     movd    [eax+0], mm0
-    movd    [eax+4], mm1  
+    movd    [eax+4], mm1
     movd    [eax+8], mm2
     movd    [eax+12], mm3
     pop     ebx
@@ -931,7 +931,7 @@ x264_pixel_sa8d_8x8_mmxext:
     movq   mm5, [trans+0x48]
     movq   mm6, [trans+0x50]
     movq   mm7, [trans+0x58]
-    
+
     HADAMARD1x8 mm0, mm1, mm2, mm3, mm4, mm5, mm6, mm7
     SUM4x8_MM
 
@@ -1495,7 +1495,7 @@ x264_intra_sa8d_x3_8x8_core_mmxext:
     movq   mm5, [trans+0x48]
     movq   mm6, [trans+0x50]
     movq   mm7, [trans+0x58]
-    
+
     HADAMARD1x8 mm0, mm1, mm2, mm3, mm4, mm5, mm6, mm7
 
     movd   [sum+0x10], mm0

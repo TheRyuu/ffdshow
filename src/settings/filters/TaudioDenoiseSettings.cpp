@@ -55,7 +55,7 @@ void TaudioDenoiseSettings::createFilters(size_t filtersorder,Tfilters *filters,
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (is && show)
-  queueFilter<TaudioFilterDenoise>(filtersorder,filters,queue); 
+  queueFilter<TaudioFilterDenoise>(filtersorder,filters,queue);
 }
 void TaudioDenoiseSettings::createPages(TffdshowPageDec *parent) const
 {

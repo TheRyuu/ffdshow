@@ -29,7 +29,7 @@ private:
   public:
    TvolumeTbr(const bool &Iisdb,HWND h,Twindow *Iself,const TbindTrackbar<Twindow> *Ibind):isdb(Iisdb),TwidgetSubclassTbr(h,Iself,Ibind) {}
   };
- bool isdb; 
+ bool isdb;
 protected:
  virtual Twidget* createDlgItem(int id,HWND h);
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -40,4 +40,4 @@ public:
  virtual void onFrame(void);
 };
 
-#endif 
+#endif

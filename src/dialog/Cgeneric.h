@@ -8,7 +8,7 @@ class TgenericPage :public TconfPageEnc
 private:
  void kf2dlg(void);
  HWND hlv;
- typedef std::tuple<const char_t* /*name*/,int/*idff*/,int/*val*/,bool/*repaint*/> Tflag;  
+ typedef std::tuple<const char_t* /*name*/,int/*idff*/,int/*val*/,bool/*repaint*/> Tflag;
  enum {NAME=1,IDFF=2,VAL=3,REPAINT=4};
  typedef array_vector<Tflag,64> Tflags;
  Tflags flags;

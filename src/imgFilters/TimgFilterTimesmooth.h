@@ -15,7 +15,7 @@ private:
  int square_table[255*2+1];
  void smooth(const unsigned char *src,stride_t srcStride,unsigned char *dst,stride_t dstStride,unsigned char *Iaccum,unsigned int dx,unsigned int dy);
 protected:
- virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg); 
+ virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK_YUV_PLANAR;}
  virtual void onSizeChange(void);
 public:

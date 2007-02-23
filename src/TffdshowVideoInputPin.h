@@ -17,7 +17,7 @@ private:
  bool usingOwnAllocator,rawDecode;
  TvideoCodecDec *video;
  char_t autosubflnm[MAX_PATH];bool oldSubHeuristic;char_t oldSubSearchDir[MAX_PATH];
-protected: 
+protected:
  virtual bool init(const CMediaType &mt);
  virtual void done(void);
 public:
@@ -47,9 +47,9 @@ public:
  virtual HRESULT getInCodecString(char_t *buf,size_t buflen);
  HRESULT getAverageTimePerFrame(int64_t *avg);
  const char_t *findAutoSubflnm(IcheckSubtitle *checkSubtitle,const char_t *searchDir,const char_t *serchExt,bool heuristic);
- 
+
  HRESULT decompress(IMediaSample *pSample,long *srcLen);
- 
+
  TffdshowDecVideoAllocator allocator;
  BITMAPINFO biIn;TffPictBase pictIn;
  REFERENCE_TIME avgTimePerFrame;

@@ -38,7 +38,7 @@ TmuxerOGM::~TmuxerOGM()
   {
    process(NULL,0,1,0,1);
    free(tempbuf);
-  } 
+  }
 }
 size_t TmuxerOGM::writeHeader(const void *data,size_t len,bool flush,const BITMAPINFOHEADER &bihdr)
 {
@@ -54,7 +54,7 @@ size_t TmuxerOGM::writeFrame(const void *data,size_t len,const TencFrameParams &
  process(data,len,1,(frameParams.frametype&FRAME_TYPE::I)?1:0,0);
  return written;
 }
-void TmuxerOGM::produce_header_packets(const BITMAPINFOHEADER &bihdr) 
+void TmuxerOGM::produce_header_packets(const BITMAPINFOHEADER &bihdr)
 {
  *((unsigned char *)tempbuf) = PACKET_TYPE_HEADER;
  stream_header sh;
@@ -83,7 +83,7 @@ void TmuxerOGM::produce_header_packets(const BITMAPINFOHEADER &bihdr)
  packetno++;
  flush_pages(PACKET_TYPE_HEADER);
 }
-int TmuxerOGM::flush_pages(int header_page) 
+int TmuxerOGM::flush_pages(int header_page)
 {
  ogg_page page;
  while (ogg_stream_flush(&os, &page))
@@ -93,17 +93,17 @@ int TmuxerOGM::flush_pages(int header_page)
   }
  return 0;
 }
-int TmuxerOGM::queue_pages(int header_page) 
+int TmuxerOGM::queue_pages(int header_page)
 {
  ogg_page page;
- while (ogg_stream_pageout(&os, &page)) 
+ while (ogg_stream_pageout(&os, &page))
   {
    add_ogg_page(&page, header_page, next_is_key);
    next_is_key = -1;
   }
  return 0;
 }
-TmuxerOGM::stamp_t TmuxerOGM::make_timestamp(ogg_int64_t granulepos) 
+TmuxerOGM::stamp_t TmuxerOGM::make_timestamp(ogg_int64_t granulepos)
 {
  stamp_t stamp;
 
@@ -116,12 +116,12 @@ TmuxerOGM::stamp_t TmuxerOGM::make_timestamp(ogg_int64_t granulepos)
 
  return stamp;
 }
-ogg_page* TmuxerOGM::copy_ogg_page(ogg_page *src) 
+ogg_page* TmuxerOGM::copy_ogg_page(ogg_page *src)
 {
  ogg_page *dst;
 
  if (src == NULL) return NULL;
- 
+
  dst = (ogg_page *)malloc(sizeof(ogg_page));
  if (src->header_len == 0)
   {
@@ -137,26 +137,26 @@ ogg_page* TmuxerOGM::copy_ogg_page(ogg_page *src)
    dst->body_len = src->body_len;
    memcpy(dst->body, src->body, src->body_len);
   }
- else 
+ else
   {
    dst->body = (unsigned char *)malloc(1);
    dst->body_len = 0;
    *(dst->body) = 0;
-  }  
+  }
  return dst;
 }
-void TmuxerOGM::next_page_contains_keyframe(int serial) 
+void TmuxerOGM::next_page_contains_keyframe(int serial)
 {
  next_is_key = serial;
 }
-int TmuxerOGM::process(const void *buf, size_t size, int num_frames,int key, int last_frame) 
+int TmuxerOGM::process(const void *buf, size_t size, int num_frames,int key, int last_frame)
 {
  ogg_packet op;
  int offset;
 
  if (!last_frame)
   {
-   if (key) 
+   if (key)
     {
      flush_pages();
      next_page_contains_keyframe(serialno);
@@ -164,11 +164,11 @@ int TmuxerOGM::process(const void *buf, size_t size, int num_frames,int key, int
    *((unsigned char *)tempbuf) = (unsigned char)(key ? PACKET_IS_SYNCPOINT : 0);
    if (num_frames == 1)
      offset = 0;
-   else 
+   else
     {
      unsigned char *bptr;
      int nf, idx;
-     
+
      for (offset = 3; offset >= 0; offset--)
       if (num_frames > (1 << (8 * offset)))
        break;
@@ -176,7 +176,7 @@ int TmuxerOGM::process(const void *buf, size_t size, int num_frames,int key, int
      tempbuf[0] |= (((offset & 3) << 6) + ((offset & 4) >> 1));
      bptr = (unsigned char *)&tempbuf[1];
      nf = num_frames;
-     for (idx = 0; idx < offset; idx++) 
+     for (idx = 0; idx < offset; idx++)
       {
        *(bptr + idx) = (unsigned char)(nf & 0xFF);
        nf >>= 8;
@@ -192,7 +192,7 @@ int TmuxerOGM::process(const void *buf, size_t size, int num_frames,int key, int
    ogg_stream_packetin(&os, &op);
    queue_pages();
    last_granulepos += num_frames;
-  } 
+  }
  else
   {
    *((unsigned char *)tempbuf) = 0;

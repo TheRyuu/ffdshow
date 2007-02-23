@@ -479,7 +479,7 @@ x264_pixel_sad_%1x%2_mmxext:
     SAD_START
 %rep %2/2
     SAD_INC_2x%1P
-%endrep 
+%endrep
     SAD_END
 %endmacro
 
@@ -533,7 +533,7 @@ ALIGN 4
 ;-----------------------------------------------------------------------------
 ;   int x264_pixel_sad_pde_16x16_mmxext (uint8_t *, int, uint8_t *, int, int )
 ;-----------------------------------------------------------------------------
-%macro SAD_PDE 2    
+%macro SAD_PDE 2
 ALIGN 16
 x264_pixel_sad_pde_%1x%2_mmxext:
     SAD_START
@@ -550,7 +550,7 @@ ALIGN 4
 
 %rep %2/4
     SAD_INC_2x%1P
-%endrep  
+%endrep
     SAD_END
 %endmacro
 

@@ -41,7 +41,7 @@
 typedef struct MsrleContext {
     AVCodecContext *avctx;
     AVFrame frame;
-    
+
     unsigned char *buf;
     int size;
 
@@ -290,7 +290,7 @@ static int msrle_decode_end(AVCodecContext *avctx)
     /* release the last frame */
     if (s->frame.data[0])
         avctx->release_buffer(avctx, &s->frame);
-    
+
     return 0;
 }
 

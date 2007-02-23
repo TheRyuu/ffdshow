@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "CmaskingTHEO.h"
 
@@ -51,7 +51,7 @@ void TmaskingPageTheo::sensitivity2dlg(void)
 void TmaskingPageTheo::translate(void)
 {
  TconfPageEnc::translate();
- 
+
  cbxTranslate(IDC_CBX_THEO_SHARPNESS,sharpenesss);
 }
 

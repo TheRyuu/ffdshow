@@ -10,7 +10,7 @@
  *                                                                  *
  ********************************************************************
 
-  function: 
+  function:
 
  ********************************************************************/
 
@@ -24,14 +24,14 @@ static const ogg_int32_t BlockOrderMap1[4][4] = {
   { 3, 2, 0, 1 }
 };
 
-static ogg_int32_t QuadMapToIndex1( ogg_int32_t	(*BlockMap)[4][4], 
-				    ogg_uint32_t SB, ogg_uint32_t MB, 
+static ogg_int32_t QuadMapToIndex1( ogg_int32_t	(*BlockMap)[4][4],
+				    ogg_uint32_t SB, ogg_uint32_t MB,
 				    ogg_uint32_t B ){
   return BlockMap[SB][MBOrderMap[MB]][BlockOrderMap1[MB][B]];
 }
 
 
-static ogg_int32_t QuadMapToMBTopLeft( ogg_int32_t (*BlockMap)[4][4], 
+static ogg_int32_t QuadMapToMBTopLeft( ogg_int32_t (*BlockMap)[4][4],
 				       ogg_uint32_t SB, ogg_uint32_t MB ){
   return BlockMap[SB][MBOrderMap[MB]][0];
 }

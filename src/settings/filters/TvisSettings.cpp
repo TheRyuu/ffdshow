@@ -39,7 +39,7 @@ TvisSettings::TvisSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSett
  full=0;half=0;
  static const TintOptionT<TvisSettings> iopts[]=
   {
-   IDFF_isVis     ,&TvisSettings::is     ,0,0,_l(""),1, 
+   IDFF_isVis     ,&TvisSettings::is     ,0,0,_l(""),1,
      _l("isVis"),0,
    IDFF_showVis   ,&TvisSettings::show   ,0,0,_l(""),1,
      _l("showVis"),1,
@@ -62,14 +62,14 @@ void TvisSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQu
  if (is && show)
   if (mv || quants || graph)
    {
-    queueFilter<TimgFilterShowMV>(filtersorder,filters,queue); 
+    queueFilter<TimgFilterShowMV>(filtersorder,filters,queue);
     if (!queue.temporary)
      {
       setOnChange(IDFF_visMV,filters,&Tfilters::onQueueChange);
       setOnChange(IDFF_visQuants,filters,&Tfilters::onQueueChange);
       setOnChange(IDFF_visGraph,filters,&Tfilters::onQueueChange);
-     } 
-   } 
+     }
+   }
 }
 void TvisSettings::createPages(TffdshowPageDec *parent) const
 {

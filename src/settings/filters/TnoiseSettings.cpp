@@ -48,7 +48,7 @@ TnoiseSettings::TnoiseSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilter
 
  static const TintOptionT<TnoiseSettings> iopts[]=
   {
-   IDFF_isNoise                   ,&TnoiseSettings::is                   ,0,0,_l(""),1, 
+   IDFF_isNoise                   ,&TnoiseSettings::is                   ,0,0,_l(""),1,
      _l("isNoise"),0,
    IDFF_showNoise                 ,&TnoiseSettings::show                 ,0,0,_l(""),1,
      _l("showNoise"),1,
@@ -109,17 +109,17 @@ void TnoiseSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfilter
     {
      case NOISE_FF:
      case NOISE_AVIH:
-      queueFilter<TimgFilterNoise>(filtersorder,filters,queue); 
+      queueFilter<TimgFilterNoise>(filtersorder,filters,queue);
       break;
      case NOISE_MPLAYER:
-      queueFilter<TimgFilterNoiseMplayer>(filtersorder,filters,queue); 
-      break; 
+      queueFilter<TimgFilterNoiseMplayer>(filtersorder,filters,queue);
+      break;
     }
-   queueFilter<TimgFilterFlicker>(filtersorder,filters,queue); 
-   queueFilter<TimgFilterShake>(filtersorder,filters,queue); 
-   queueFilter<TimgFilterFilmLines>(filtersorder,filters,queue); 
-   queueFilter<TimgFilterScratches>(filtersorder,filters,queue); 
-  } 
+   queueFilter<TimgFilterFlicker>(filtersorder,filters,queue);
+   queueFilter<TimgFilterShake>(filtersorder,filters,queue);
+   queueFilter<TimgFilterFilmLines>(filtersorder,filters,queue);
+   queueFilter<TimgFilterScratches>(filtersorder,filters,queue);
+  }
 }
 void TnoiseSettings::createPages(TffdshowPageDec *parent) const
 {

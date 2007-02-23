@@ -68,7 +68,7 @@ void TchannelSwapSettings::createFilters(size_t filtersorder,Tfilters *filters,T
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (is && show)
-  queueFilter<TaudioFilterChannelSwap>(filtersorder,filters,queue); 
+  queueFilter<TaudioFilterChannelSwap>(filtersorder,filters,queue);
 }
 void TchannelSwapSettings::createPages(TffdshowPageDec *parent) const
 {

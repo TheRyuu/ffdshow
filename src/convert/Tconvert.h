@@ -24,7 +24,7 @@ private:
  int oldincsp,oldoutcsp;
  int incsp1,outcsp1;
  const TcspInfo *incspInfo,*outcspInfo;
- 
+
  enum
   {
    MODE_none,
@@ -44,12 +44,12 @@ private:
    MODE_avisynth_bitblt,
    MODE_fallback
   } mode;
- static const char_t* getModeName(int mode); 
+ static const char_t* getModeName(int mode);
 
- void (*avisynth_yv12_to_yuy2)(const BYTE* srcY, const BYTE* srcU, const BYTE* srcV, int src_rowsize, stride_t src_pitch, stride_t src_pitch_uv, 
+ void (*avisynth_yv12_to_yuy2)(const BYTE* srcY, const BYTE* srcU, const BYTE* srcV, int src_rowsize, stride_t src_pitch, stride_t src_pitch_uv,
                                BYTE* dst, stride_t dst_pitch,
                                int height);
- void (*avisynth_yuy2_to_yv12)(const BYTE* src, int src_rowsize, stride_t src_pitch, 
+ void (*avisynth_yuy2_to_yv12)(const BYTE* src, int src_rowsize, stride_t src_pitch,
                                BYTE* dstY, BYTE* dstU, BYTE* dstV, stride_t dst_pitch, stride_t dst_pitchUV,
                                int height);
  void (*palette8torgb)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
@@ -60,7 +60,7 @@ private:
  unsigned int rowsize;
  #endif
  void freeTmpConvert(void);
-public: 
+public:
  Tconvert(IffdshowBase *deci,unsigned int Idx,unsigned int Idy);
  Tconvert(Tlibmplayer *Ilibmplayer,bool IavisynthYV12_RGB,unsigned int Idx,unsigned int Idy);
  ~Tconvert();
@@ -69,7 +69,7 @@ public:
  int convert(const TffPict &pict,int outcsp,uint8_t* dst[],stride_t dstStride[]);
 };
 
-class TffColorspaceConvert :public CUnknown, 
+class TffColorspaceConvert :public CUnknown,
                             public IffColorspaceConvert
 {
 private:
@@ -83,7 +83,7 @@ public:
 
  TffColorspaceConvert(LPUNKNOWN punk,HRESULT *phr);
  virtual ~TffColorspaceConvert();
- 
+
  STDMETHODIMP allocPicture(int csp,unsigned int dx,unsigned int dy,uint8_t *data[],stride_t stride[]);
  STDMETHODIMP freePicture(uint8_t *data[]);
  STDMETHODIMP convert(unsigned int dx,unsigned int dy,int incsp,uint8_t *src[],const stride_t srcStride[],int outcsp,uint8_t *dst[],stride_t dstStride[]);

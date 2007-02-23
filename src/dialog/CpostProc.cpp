@@ -50,8 +50,8 @@ void TpostProcPage::postProc2dlg(void)
    case 0:isMplayer=1;break;
    case 1:isNic=1;break;
    case 2:isMplayer=isNic=1;break;
-   case 4:isSPP=1;break;       
-   case 5:isFSPP=1;break;       
+   case 4:isSPP=1;break;
+   case 5:isFSPP=1;break;
   }
  setCheck(IDC_CHB_POSTPROC_MPLAYER  ,isMplayer==1);
  setCheck(IDC_CHB_POSTPROC_NIC      ,isNic==1);
@@ -95,7 +95,7 @@ void TpostProcPage::mplayer2dlg_1(void)
 void TpostProcPage::nic2dlg(int is)
 {
  if (is!=-1) enable(is,idNics+1);
- 
+
  tbrSet(IDC_TBR_POSTPROC_NIC_XTHRES,cfgGet(IDFF_postprocNicXthresh),IDC_LBL_POSTPROC_NIC_XTHRES);
  tbrSet(IDC_TBR_POSTPROC_NIC_YTHRES,cfgGet(IDFF_postprocNicYthresh),IDC_LBL_POSTPROC_NIC_YTHRES);
 }
@@ -105,14 +105,14 @@ void TpostProcPage::nic2dlg_1(void)
 }
 void TpostProcPage::setPPchbs(void)
 {
- unsigned int ppmode; 
+ unsigned int ppmode;
  static const int idPPcustom[]={IDC_CHB_DEBLOCKV_LUM,IDC_CHB_DEBLOCKH_LUM,IDC_CHB_DEBLOCKV_CHROM,IDC_CHB_DEBLOCKH_CHROM,IDC_CHB_DERING_LUM,IDC_CHB_DERING_CHROM,0};
  static const int idPPpresets[]={IDC_TBR_PPQUAL,IDC_CHB_AUTOQ,0};
  int method=cfgGet(IDFF_postprocMethod);
  int isSPP=method==4 || method==5;
  enable(!isSPP,IDC_RBT_PPCUSTOM);
  if (isSPP) cfgSet(IDFF_ppIsCustom,0);
- if (!isSPP && cfgGet(IDFF_ppIsCustom)) 
+ if (!isSPP && cfgGet(IDFF_ppIsCustom))
   {
    enable(true,idPPcustom);
    enable(false,idPPpresets);
@@ -154,10 +154,10 @@ INT_PTR TpostProcPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         setPPchbs();
         return TRUE;
        }
-     }           
-    break;  
+     }
+    break;
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CHB_DEBLOCKV_LUM:
       case IDC_CHB_DEBLOCKH_LUM:
@@ -195,8 +195,8 @@ INT_PTR TpostProcPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         cfg2dlg();
         return TRUE;
        }
-     }  
-    break; 
+     }
+    break;
   }
  return TconfPageDecVideo::msgProc(uMsg,wParam,lParam);
 }

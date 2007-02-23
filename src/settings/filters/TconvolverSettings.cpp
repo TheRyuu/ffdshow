@@ -83,7 +83,7 @@ void TconvolverSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfi
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (is && show)
-  queueFilter<TaudioFilterConvolver>(filtersorder,filters,queue); 
+  queueFilter<TaudioFilterConvolver>(filtersorder,filters,queue);
 }
 void TconvolverSettings::createPages(TffdshowPageDec *parent) const
 {
@@ -108,6 +108,6 @@ bool TconvolverSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
    if (fileLFE[0]) strncatf(tipS,len,_l("\n%s channel impulse file: %s"),TsampleFormat::getSpeakerName(SPEAKER_LOW_FREQUENCY),fileLFE);
    if (fileSL[0]) strncatf(tipS,len,_l("\n%s channel impulse file: %s"),TsampleFormat::getSpeakerName(SPEAKER_BACK_LEFT),fileSL);
    if (fileSR[0]) strncatf(tipS,len,_l("\n%s channel impulse file: %s"),TsampleFormat::getSpeakerName(SPEAKER_BACK_RIGHT),fileSR);
-  } 
+  }
  return true;
 }

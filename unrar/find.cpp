@@ -126,7 +126,7 @@ bool FindFile::FastFind(const char *FindMask,const wchar *FindMaskW,struct FindD
 #ifndef _UNIX
   if (IsWildcard(FindMask,FindMaskW))
     return(false);
-#endif    
+#endif
 #ifdef _WIN_32
   HANDLE hFind=Win32Find(INVALID_HANDLE_VALUE,FindMask,FindMaskW,fd);
   if (hFind==INVALID_HANDLE_VALUE)
@@ -274,4 +274,7 @@ HANDLE FindFile::Win32Find(HANDLE hFind,const char *Mask,const wchar *MaskW,stru
   return(hFind);
 }
 #endif
+
+
+
 

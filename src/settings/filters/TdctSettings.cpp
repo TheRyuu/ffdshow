@@ -38,7 +38,7 @@ TdctSettings::TdctSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSett
 {
  static const TintOptionT<TdctSettings> iopts[]=
   {
-   IDFF_isDCT    ,&TdctSettings::is    ,0,0,_l(""),1, 
+   IDFF_isDCT    ,&TdctSettings::is    ,0,0,_l(""),1,
      _l("isDCT"),0,
    IDFF_showDCT  ,&TdctSettings::show  ,0,0,_l(""),1,
      _l("showDCT"),1,
@@ -49,7 +49,7 @@ TdctSettings::TdctSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSett
    IDFF_halfDCT  ,&TdctSettings::half  ,0,0,_l(""),1,
      _l("halfDCT"),0,
    IDFF_dctMode  ,&TdctSettings::mode  ,0,2,_l(""),1,
-     _l("dctMode"),0,  
+     _l("dctMode"),0,
    IDFF_dct0     ,&TdctSettings::fac0  ,0,3000,_l(""),1,
      _l("dct0"),1000,
    IDFF_dct1     ,&TdctSettings::fac1  ,0,3000,_l(""),1,
@@ -67,7 +67,7 @@ TdctSettings::TdctSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSett
    IDFF_dct7     ,&TdctSettings::fac7  ,0,3000,_l(""),1,
      _l("dct7"),0,
    IDFF_dctQuant ,&TdctSettings::quant ,1,31,_l(""),1,
-     _l("dctQuant"),5,  
+     _l("dctQuant"),5,
    IDFF_dctMatrix0 ,&TdctSettings::matrix0 ,1,1,_l(""),1,
      _l("dctMatrix0") ,0x13121110,
    IDFF_dctMatrix1 ,&TdctSettings::matrix4 ,1,1,_l(""),1,
@@ -101,7 +101,7 @@ TdctSettings::TdctSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSett
    IDFF_dctMatrix15,&TdctSettings::matrix60,1,1,_l(""),1,
      _l("dctMatrix15"),0x211f1e1c,
    0
-  }; 
+  };
  addOptions(iopts);
 }
 
@@ -109,7 +109,7 @@ void TdctSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQu
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (is && show)
-  queueFilter<TimgFilterDCT>(filtersorder,filters,queue); 
+  queueFilter<TimgFilterDCT>(filtersorder,filters,queue);
 }
 void TdctSettings::createPages(TffdshowPageDec *parent) const
 {
@@ -133,7 +133,7 @@ bool TdctSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
    case 2:
     tsnprintf(tipS,len,_l("%s quantization by quantizer %i"),mode==1?_l("H.263"):_l("MPEG"),quant);
     break;
-  } 
+  }
  tipS[len-1]='\0';
  return true;
 }

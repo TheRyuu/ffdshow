@@ -30,12 +30,12 @@ LANGUAGE LANG_SLOVAK, SUBLANG_DEFAULT
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
     "#include ""resource.h""\r\n"
     "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
@@ -44,7 +44,7 @@ BEGIN
     "\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
     "#include ""ffdshow.rc2""\r\n"
     "\0"
@@ -2701,7 +2701,7 @@ IDB_GRADIENT            BITMAP                  "gradient.bmp"
 // Menu
 //
 
-IDR_MENU_PRESET MENU 
+IDR_MENU_PRESET MENU
 BEGIN
     POPUP "New"
     BEGIN
@@ -2717,7 +2717,7 @@ BEGIN
     END
 END
 
-IDR_MENU_TRANSLATE MENU 
+IDR_MENU_TRANSLATE MENU
 BEGIN
     POPUP "Translate"
     BEGIN
@@ -2733,7 +2733,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_FFDSHOW, DIALOG
     BEGIN
@@ -2907,7 +2907,7 @@ END
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_FFDSHOWDECVIDEO     "ffdshow video decoder"
     IDS_FFDSHOWDECAUDIO     "ffdshow audio decoder"
@@ -2918,12 +2918,12 @@ BEGIN
     IDS_FFDSHOWDECVIDEORAW  "ffdshow raw video decoder"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_ABOUT               "About"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_BLUR                "Blur & NR"
     IDD_FONT                "Font"
@@ -2939,7 +2939,7 @@ BEGIN
     IDD_KEYS                "Keys & remote"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_SUBTITLES           "Subtitles"
     IDD_CODECS              "Codecs"
@@ -2953,13 +2953,13 @@ BEGIN
     IDD_SHARPEN             "Sharpen"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_GRAB                "Grab"
     IDD_OVERLAY             "Overlay"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_DSCALER             "DScaler filter"
     IDD_PERSPECTIVE         "Perspective corr."
@@ -2974,7 +2974,7 @@ BEGIN
     IDD_MIXER               "Mixer"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_GENERIC             "Generic"
     IDD_CREDITS             "Credits"
@@ -2984,7 +2984,7 @@ BEGIN
     IDD_GENERIC_FFV1        "Generic"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_GENERIC_RAW         "Generic"
     IDD_GENERIC_THEO        "Generic"
@@ -3001,7 +3001,7 @@ BEGIN
     IDD_QUANT               "Quantization"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_GENERIC_X264        "Generic"
     IDD_MASKING_THEO        "Masking"
@@ -3013,7 +3013,7 @@ BEGIN
     IDD_GRADFUN             "DeBand"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_SECONDPASS          "Two passes - 2nd pass"
     IDD_GENERIC_WMV9        "Generic"
@@ -3027,7 +3027,7 @@ BEGIN
     IDD_ME_X264             "Motion estimation"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_LOGOAWAY            "Logoaway"
     IDD_OUTSFS              "Output"
@@ -3044,14 +3044,14 @@ BEGIN
     IDD_BITMAP              "Bitmap overlay"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_FFDSHOWDECAUDIORAW  "ffdshow audio processor"
     IDS_FFDSHOWDEC          "ffdshow decoder"
     IDS_FFDSHOWVIDEOPROC    "ffdshow video processor"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_QUEUEMSG_1          "off"
     IDD_QUEUEMSG_2          "off: old video renderer does not support queue"
@@ -3094,4 +3094,8 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
+
+
+
+
 

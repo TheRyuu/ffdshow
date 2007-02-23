@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "Cme.h"
 #include "Tlibavcodec.h"
@@ -71,7 +71,7 @@ bool TmePage::enabled(void)
 }
 
 void TmePage::cfg2dlg(void)
-{ 
+{
  cbxSetCurSel(IDC_CBX_ME_CMP,cfgGet(IDFF_enc_me_cmp));setCheck(IDC_CHB_ME_CMP_CHROMA,cfgGet(IDFF_enc_me_cmp_chroma));
  cbxSetCurSel(IDC_CBX_ME_SUBCMP,cfgGet(IDFF_enc_me_subcmp));setCheck(IDC_CHB_ME_SUBCMP_CHROMA,cfgGet(IDFF_enc_me_subcmp_chroma));
  cbxSetCurSel(IDC_CBX_MB_CMP,cfgGet(IDFF_enc_mb_cmp));setCheck(IDC_CHB_MB_CMP_CHROMA,cfgGet(IDFF_enc_mb_cmp_chroma));
@@ -83,10 +83,10 @@ void TmePage::cfg2dlg(void)
  setCheck(IDC_CHB_4MV,cfgGet(IDFF_enc_me_4mv));enable(sup_4mv(codecId),IDC_CHB_4MV);
  setCheck(IDC_CHB_MV0,cfgGet(IDFF_enc_me_mv0));enable(sup_me_mv0(codecId) && cfgGet(IDFF_enc_me_hq)>0,IDC_CHB_MV0);
  setCheck(IDC_CHB_CBP_RD,cfgGet(IDFF_enc_me_cbp_rd));enable(sup_trellisQuant(codecId) && cfgGet(IDFF_enc_trellisquant),IDC_CHB_CBP_RD);
- 
+
  prepass2dlg();
  qpel2dlg();
- 
+
  SetDlgItemInt(m_hwnd,IDC_ED_ME_LAST_PRED_COUNT,cfgGet(IDFF_enc_me_last_predictor_count),FALSE);
  static const int idLastPredCount[]={IDC_LBL_ME_LAST_PRED_COUNT,IDC_ED_ME_LAST_PRED_COUNT,0};enable(codecId!=CODEC_ID_SNOW,idLastPredCount);
  cbxSetCurSel(IDC_CBX_ME_PREPASS,cfgGet(IDFF_enc_me_prepass));
@@ -118,7 +118,7 @@ void TmePage::prepass2dlg(void)
 void TmePage::translate(void)
 {
  TconfPageEnc::translate();
- 
+
  cbxTranslate(IDC_CBX_MB_DECISION,mb_decisions);
  cbxTranslate(IDC_CBX_ME_PREPASS,me_prepasses);
 
@@ -127,9 +127,9 @@ void TmePage::translate(void)
  for (int i=0;Tlibavcodec::dia_sizes[i].descr;i++)
   {
    const char_t *descr=_(IDC_CBX_DIA_SIZE,Tlibavcodec::dia_sizes[i].descr);
-   cbxAdd(IDC_CBX_DIA_SIZE,descr); 
+   cbxAdd(IDC_CBX_DIA_SIZE,descr);
    cbxAdd(IDC_CBX_DIA_SIZE_PRE,descr);
-  } 
+  }
  cbxSetCurSel(IDC_CBX_DIA_SIZE,sel1);cbxSetCurSel(IDC_CBX_DIA_SIZE_PRE,sel2);
 }
 
@@ -159,7 +159,7 @@ TmePage::TmePage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
    IDC_ED_ME_SUBQ,1,8,IDFF_enc_me_subq,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
  static const TbindCombobox<TmePage> cbx[]=
   {
    IDC_CBX_ME_CMP,IDFF_enc_me_cmp,BINDCBX_SEL,NULL,

@@ -58,21 +58,21 @@ protected:
     #endif
      IDFF_OSDtype_sourceFlnm,IDFF_OSDtype_inputSizeAspect,IDFF_OSDtype_inputFOURCC,IDFF_OSDtype_inputFPS,IDFF_OSDtype_bps,IDFF_OSDtype_movieSource,IDFF_OSDtype_outputFOURCC,IDFF_currentFrame,0};
    return infos;
-  } 
+  }
 public:
  TinfoPageDecVideo(TffdshowPageDec *Iparent);
 };
 
 class TinfoPageDecAudio :public TinfoPageDec
 {
-protected: 
+protected:
  virtual const int* getInfos(void)
   {
    static const int infos[]={IDFF_OSDtype_sourceFlnm,IDFF_OSDtype_inCodecString,IDFF_OSDtype_outCodecString,IDFF_OSDtype_outSpeakersConfig,IDFF_OSDtype_movieSource,IDFF_OSDtype_bps,IDFF_OSDtype_audioJitter,0};
    return infos;
-  } 
+  }
 public:
  TinfoPageDecAudio(TffdshowPageDec *Iparent);
 };
 
-#endif 
+#endif

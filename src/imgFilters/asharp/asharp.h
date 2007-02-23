@@ -29,7 +29,7 @@
 #define _ASHARP_H_
 
 typedef void (asharp_run_fct)(unsigned char *planeptr, int pitch,
-                              int height, int width, 
+                              int height, int width,
                               int T,int D, int B, int B2, int bf,unsigned char *lineptr);
 
 asharp_run_fct* getAsharp(void);

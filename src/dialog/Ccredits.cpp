@@ -110,7 +110,7 @@ INT_PTR TcreditsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
      {
       case IDC_ED_CREDITS_I_QUANT:
       case IDC_ED_CREDITS_P_QUANT:
-       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText) 
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
          HWND hed=GetDlgItem(m_hwnd,LOWORD(wParam));
          if (hed!=GetFocus()) return FALSE;

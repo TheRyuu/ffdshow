@@ -14,7 +14,7 @@ private:
   };
  static const Tworkaround workarounds[];
  void delay2dlg(void),interlaced2dlg(void);
-protected: 
+protected:
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 public:
  TqueuePage(TffdshowPageDec *Iparent);
@@ -25,4 +25,4 @@ public:
  virtual void translate(void);
 };
 
-#endif 
+#endif

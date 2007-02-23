@@ -7,9 +7,9 @@ struct TgradFunSettings :TfilterSettingsVideo
 {
 private:
  static const TfilterIDFF idffs;
-protected: 
+protected:
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  TgradFunSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  int threshold;
 

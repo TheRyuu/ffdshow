@@ -36,10 +36,10 @@ struct TspuImage : TrenderedSubtitleWordBase
 {
 protected:
  TspuPlane plane[3];
- CRect rect[3]; 
+ CRect rect[3];
  class Tscaler
   {
-  public: 
+  public:
    int srcdx,srcdy,dstdx,dstdy;
    static Tscaler *create(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
    Tscaler(int Isrcdx,int Isrcdy,int Idstdx,int Idstdy):srcdx(Isrcdx),srcdy(Isrcdy),dstdx(Idstdx),dstdy(Idstdy) {}
@@ -48,7 +48,7 @@ protected:
   };
  class TscalerPoint :public Tscaler
   {
-  public: 
+  public:
    TscalerPoint(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
    virtual void scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride);
   };
@@ -56,20 +56,20 @@ protected:
   {
   private:
    unsigned int scalex,scaley;
-  public: 
+  public:
    TscalerApprox(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
    virtual void scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride);
   };
  class TscalerFull :public Tscaler
   {
-  public: 
+  public:
    TscalerFull(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
    virtual void scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride);
   };
  class TscalerBilin :public Tscaler
   {
   private:
-   struct scale_pixel 
+   struct scale_pixel
     {
      unsigned position;
      unsigned left_up;
@@ -80,7 +80,7 @@ protected:
     {
      return alpha?256-alpha:0;
     }
-  public: 
+  public:
    TscalerBilin(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
    virtual ~TscalerBilin();
    virtual void scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride);
@@ -92,7 +92,7 @@ protected:
    SwsContext *ctx;
    Tlibmplayer *libmplayer;
    TscalerApprox approx;
-  public: 
+  public:
    TscalerSw(const TrenderedSubtitleLines::TprintPrefs &prefs,int srcdx,int srcdy,int dstdx,int dstdy);
    virtual ~TscalerSw();
    virtual void scale(const unsigned char *srci,const unsigned char *srca,stride_t srcStride,unsigned char *dsti,unsigned char *dsta,stride_t dstStride);

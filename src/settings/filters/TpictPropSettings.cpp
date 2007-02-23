@@ -40,7 +40,7 @@ TpictPropSettings::TpictPropSettings(TintStrColl *Icoll,TfilterIDFFs *filters):T
 {
  static const TintOptionT<TpictPropSettings> iopts[]=
   {
-   IDFF_isPictProp          ,&TpictPropSettings::is                ,0,0,_l(""),1, 
+   IDFF_isPictProp          ,&TpictPropSettings::is                ,0,0,_l(""),1,
      _l("isPictProp"),0,
    IDFF_showPictProp        ,&TpictPropSettings::show              ,0,0,_l(""),1,
      _l("showPictProp"),1,
@@ -89,12 +89,12 @@ void TpictPropSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfil
  if (is && show)
   {
    if (!queue.temporary) setOnChange(IDFF_pictPropLevelFix,filters,&Tfilters::onQueueChange);
-   queueFilter<TimgFilterLuma>(filtersorder,filters,queue); 
-   queueFilter<TimgFilterGammaRGB>(filtersorder,filters,queue); 
-   queueFilter<TimgFilterChroma>(filtersorder,filters,queue); 
-   queueFilter<TimgFilterColorize>(filtersorder,filters,queue); 
-   if (levelfix) queueFilter<TimgFilterLevelFix>(filtersorder,filters,queue); 
-  } 
+   queueFilter<TimgFilterLuma>(filtersorder,filters,queue);
+   queueFilter<TimgFilterGammaRGB>(filtersorder,filters,queue);
+   queueFilter<TimgFilterChroma>(filtersorder,filters,queue);
+   queueFilter<TimgFilterColorize>(filtersorder,filters,queue);
+   if (levelfix) queueFilter<TimgFilterLevelFix>(filtersorder,filters,queue);
+  }
 }
 void TpictPropSettings::createPages(TffdshowPageDec *parent) const
 {

@@ -9,7 +9,7 @@ private:
  static const TfilterIDFF idffs;
 protected:
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  TnoiseSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  static const char_t *methodsNames[];
  enum

@@ -21,8 +21,8 @@ struct Trect
  void setDar(const Rational &dar)
   {
    sar=(dar.num && dar.den)?Rational((dy*dar.num)/double(dx*dar.den),32768):Rational(1,1);
-  } 
- operator RECT(void) 
+  }
+ operator RECT(void)
   {
    RECT ret={x,y,dx-1,dy-1};
    return ret;
@@ -30,11 +30,11 @@ struct Trect
  operator CRect(void)
   {
    return CRect(CPoint(x,y),CSize(dx,dy));
-  } 
+  }
  static void calcNewSizeAspect(const Trect &in,int a1,int a2,Trect &out)
   {
    if (in.dx>in.dy) {out.dy=a2*in.dx/a1;out.dx=in.dx;}
-   else             {out.dx=a1*in.dy/a2;out.dy=in.dy;}  
+   else             {out.dx=a1*in.dy/a2;out.dy=in.dy;}
    if (out.dx&3) out.dx=(out.dx/4+1)*4;
    if (out.dy&1) out.dy=(out.dy/2+1)*2;
   }

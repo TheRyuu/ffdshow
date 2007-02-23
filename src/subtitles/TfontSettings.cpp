@@ -65,7 +65,7 @@ const char_t* TfontSettings::getCharset(int i)
    case BALTIC_CHARSET     :return _l("Baltic");
    default                 :return _l("unknown");
   }
-}  
+}
 int TfontSettings::getCharset(const char_t *name)
 {
  if      (stricmp(name,_l("Default"))==0) return DEFAULT_CHARSET;
@@ -147,14 +147,14 @@ TfontSettingsOSD::TfontSettingsOSD(TintStrColl *Icoll):TfontSettings(Icoll)
      _l("OSDfontFast"), 1,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
  static const TstrOption sopts[]=
   {
    IDFF_OSDfontName,(TstrVal)&TfontSettings::name,LF_FACESIZE,_l(""),0,
-     _l("OSDfontName"), _l("Arial"), 
+     _l("OSDfontName"), _l("Arial"),
    0
   };
- addOptions(sopts); 
+ addOptions(sopts);
  static const TcreateParamList2<TfontSettings::Tweigth> listOSDfontWeigth(weights,&Tweigth::name);setParamList(IDFF_OSDfontWeight,&listOSDfontWeigth);
 }
 
@@ -190,15 +190,15 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
    IDFF_fontFast               ,&TfontSettings::fast               ,0,0,_l(""),1,
      _l("fontFast"), 0,
    0
-  }; 
- addOptions(iopts); 
+  };
+ addOptions(iopts);
  static const Toptions::TstrOption sopts[]=
   {
    IDFF_fontName,(TstrVal)&TfontSettings::name,LF_FACESIZE,_l(""),1,
-     _l("fontName"), _l("Arial"), 
+     _l("fontName"), _l("Arial"),
    0
   };
- addOptions(sopts); 
+ addOptions(sopts);
 
  static const TcreateParamList2<TfontSettings::Tweigth> listFontWeigth(weights,&Tweigth::name);setParamList(IDFF_fontWeight,&listFontWeigth);
 }

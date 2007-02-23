@@ -61,7 +61,7 @@ revmodel::revmodel()
 void revmodel::mute()
 {
 	int i;
-	
+
 	if (getmode() >= freezemode)
 		return;
 

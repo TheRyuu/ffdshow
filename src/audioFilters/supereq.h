@@ -60,7 +60,7 @@ public:
                         elm = NULL;
                 }
         };
-        
+
         template<class T> class mem_ops
         {
         public:
@@ -110,7 +110,7 @@ public:
                                 {
                                         new_size = size;
                                         if (new_size < 1) new_size = 1;
-                                        while(new_size < new_used) new_size <<= 1; 
+                                        while(new_size < new_used) new_size <<= 1;
                                         if (mem_logic!=ALLOC_FAST_DONTGODOWN) while(new_size>>1 > new_used) new_size >>= 1;
                                 }
                                 else
@@ -132,7 +132,7 @@ public:
                                                 if (new_data) memcpy(new_data,data,new_size>size ? size : new_size);
                                                 if (size >= 4) *(DWORD*)data = 0xDEADBEEF;
                                                 free(data);
-                                                data = new_data;                                
+                                                data = new_data;
                 #else
                                                 new_data = realloc(data,new_size);
                                                 if (new_data==0) free(data);
@@ -160,7 +160,7 @@ public:
 
         };
 
-        template<class T> class mem_block_t //: public mem_block  
+        template<class T> class mem_block_t //: public mem_block
         {
                 mem_block theBlock;//msvc7 sucks
         public:
@@ -188,7 +188,7 @@ private:
         int *rfft_ip;
         REAL *rfft_w;
 
-  
+
         REAL fact[M+1];
         REAL aa;
         REAL iza;
@@ -318,7 +318,7 @@ private:
                 ret += e->gain*(hn_imp(n)-lhn);
 
                 return ret;
-        
+
         }
 
 
@@ -457,7 +457,7 @@ public:
                         rfft(tabsize,1,fsamples);
 
                         fsamples[0] = ires[0]*fsamples[0];
-                        fsamples[1] = ires[1]*fsamples[1]; 
+                        fsamples[1] = ires[1]*fsamples[1];
 
                         for(i=1;i<tabsize/2;i++)
                         {
@@ -502,9 +502,9 @@ public:
                 samples_done = 0;
                 return done.get_ptr();
         }
-        
+
         int samples_buffered() {return nbufsamples;}
-        
+
         ~supereq()
         {
                 if (lires1) free(lires1);

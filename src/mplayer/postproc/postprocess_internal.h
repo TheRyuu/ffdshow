@@ -54,7 +54,7 @@ typedef struct PPContext{
 	uint8_t *tempBlocks; ///<used for the horizontal code
 
 	/**
-	 * luma histogram.         
+	 * luma histogram.
 	 * we need 64bit here otherwise we'll going to have a problem
 	 * after watching a black picture for 5 hours
 	 */
@@ -78,16 +78,16 @@ typedef struct PPContext{
 
 	uint64_t __attribute__((aligned(8))) mmxDcOffset[64];
 	uint64_t __attribute__((aligned(8))) mmxDcThreshold[64];
-	
+
 	QP_STORE_T *stdQPTable;       ///< used to fix MPEG2 style qscale
 	QP_STORE_T *nonBQPTable;
 	QP_STORE_T *forcedQPTable;
-	
+
 	int QP;
 	int nonBQP;
 
 	int frameNum;
-	
+
 	int cpuCaps;
 
 	int qpStride; ///<size of qp buffers (needed to realloc them if needed)
@@ -98,5 +98,9 @@ typedef struct PPContext{
 
 	PPMode ppMode;
 } PPContext;
+
+
+
+
 
 

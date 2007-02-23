@@ -42,7 +42,7 @@ public:
   {
    DWORD size=(DWORD)(buflen*sizeof(char_t));
    if ((!hKey || RegQueryValueEx(hKey,X,0,0,(LPBYTE)Y,&size)!=ERROR_SUCCESS) && Z)
-    strcpy(Y,Z);  
+    strcpy(Y,Z);
   }
 };
 struct TregOpRegWrite :public TregOp
@@ -158,7 +158,7 @@ public:
 struct TregOpStreamWrite :public TregOp
 {
 private:
- char_t sep; 
+ char_t sep;
 public:
  TregOpStreamWrite(char_t Isep='\0'):sep(Isep) {}
  TbyteBuffer buf;

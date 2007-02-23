@@ -32,7 +32,7 @@ const TmixerSettings::TchConfig TmixerSettings::chConfigs[]=
   4,_l("3/1 - surround"),        4, 4, SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_BACK_CENTER                  , TsampleFormat::DOLBY_NO,
   5,_l("2/2 - quadro"),          5, 4, SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT                      , TsampleFormat::DOLBY_NO,
   6,_l("3/2 - 5 channels"),      6, 5, SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT , TsampleFormat::DOLBY_NO,
-                                
+
   7,_l("1/0+LFE 1.1 mono"),      0, 2, SPEAKER_FRONT_CENTER                                                                            |SPEAKER_LOW_FREQUENCY , TsampleFormat::DOLBY_NO,
   8,_l("2/0+LFE 2.1 stereo"),    1, 3, SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT                                                          |SPEAKER_LOW_FREQUENCY , TsampleFormat::DOLBY_NO,
   9,_l("3/0+LFE 3.1 front"),     2, 4, SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER                                     |SPEAKER_LOW_FREQUENCY , TsampleFormat::DOLBY_NO,
@@ -40,18 +40,18 @@ const TmixerSettings::TchConfig TmixerSettings::chConfigs[]=
  11,_l("3/1+LFE 4.1 surround"),  4, 5, SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_BACK_CENTER                 |SPEAKER_LOW_FREQUENCY , TsampleFormat::DOLBY_NO,
  12,_l("2/2+LFE 4.1 quadro"),    5, 5, SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT                     |SPEAKER_LOW_FREQUENCY , TsampleFormat::DOLBY_NO,
  13,_l("3/2+LFE 5.1 channels"),  6, 6, SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT|SPEAKER_LOW_FREQUENCY , TsampleFormat::DOLBY_NO,
-                                
+
  14,_l("Dolby Surround/ProLogic"), 14, 2, 0,TsampleFormat::DOLBY_SURROUND  ,
  15,_l("Dolby ProLogic II"),       15, 2, 0,TsampleFormat::DOLBY_PROLOGICII,
 
  16,_l("same as input"),           -1, 0, 0, TsampleFormat::DOLBY_NO,
- 
+
  17,_l("headphone virtual spatialization"),     -1, 2, 0, TsampleFormat::DOLBY_NO,
  18,_l("Head-related transfer function (HRTF)"),-1, 2, 0, TsampleFormat::DOLBY_NO,
 
  19,_l("Dolby Surround/ProLogic+LFE"), 14, 3, SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_LOW_FREQUENCY,TsampleFormat::DOLBY_SURROUND  ,
  20,_l("Dolby ProLogic II+LFE"),       15, 3, SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_LOW_FREQUENCY,TsampleFormat::DOLBY_PROLOGICII,
- 
+
  NULL
 };
 
@@ -71,7 +71,7 @@ TmixerSettings::TmixerSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilter
 {
  static const TintOptionT<TmixerSettings> iopts[]=
   {
-   IDFF_isMixer          ,&TmixerSettings::is             ,0,0,_l(""),1, 
+   IDFF_isMixer          ,&TmixerSettings::is             ,0,0,_l(""),1,
      _l("isMixer"),0,
    IDFF_showMixer        ,&TmixerSettings::show           ,0,0,_l(""),1,
      _l("showMixer"),1,
@@ -184,8 +184,8 @@ void TmixerSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfilter
      case 17:queueFilter<TaudioFilterHeadphone>(filtersorder,filters,queue);break;
      case 18:queueFilter<TaudioFilterHeadphone2>(filtersorder,filters,queue);break;
      default:queueFilter<TaudioFilterMixer>(filtersorder,filters,queue);break;
-    } 
-  }  
+    }
+  }
 }
 void TmixerSettings::createPages(TffdshowPageDec *parent) const
 {
@@ -216,7 +216,7 @@ void TmixerSettings::setFormatOut(TsampleFormat &fmt) const
 {
  if (out!=16)
   fmt.setChannels(chConfigs[out].nchannels,chConfigs[out].channelmask);
-} 
+}
 void TmixerSettings::setFormatOut(TsampleFormat &outfmt,const TsampleFormat &infmt) const
 {
  outfmt.setChannels(out==16?infmt.nchannels:chConfigs[out].nchannels,out==16?infmt.channelmask:chConfigs[out].channelmask);

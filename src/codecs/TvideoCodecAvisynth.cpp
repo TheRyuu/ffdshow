@@ -27,14 +27,14 @@ TvideoCodecAvisynth::Tavisynth::Tavisynth(const Textradata &extradata,TffPictBas
  env(NULL),clip(NULL)
 {
  if (ok)
-  {  
+  {
    env=CreateScriptEnvironment(AVISYNTH_INTERFACE_VERSION);
    if (env)
     {
      script=::Tavisynth::getScriptVideo(extradata.size+sizeof(VIDEOINFOHEADER)+2+4+1,(const char*)extradata.data,extradata.size);
      if (!script) {ok=false;return;}
      AVSValue eval_args[]={script,"ffdshow_dec_avisynth_script"};
-     try 
+     try
       {
        AVSValue val=env->Invoke("Eval",AVSValue(eval_args,2));
        if (val.IsClip())
@@ -48,14 +48,14 @@ TvideoCodecAvisynth::Tavisynth::Tavisynth(const Textradata &extradata,TffPictBas
          else if (vi.IsYV12())  pict.csp=csp=FF_CSP_420P;
          r=pict.rectFull;
          ok=true;
-        } 
+        }
       }
      catch (AvisynthError &err)
       {
        deci->dbgError(text<char_t>(err.msg));
        ok=false;
-      } 
-    } 
+      }
+    }
   }
 }
 
@@ -96,7 +96,7 @@ bool TvideoCodecAvisynth::beginDecompress(TffPictBase &pict,FOURCC infcc,const C
   {
    avisynth=new Tavisynth(extradata,pict,r,csp,deci);
    return avisynth->ok;
-  } 
+  }
  return false;
 }
 HRESULT TvideoCodecAvisynth::decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn)

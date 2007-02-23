@@ -42,7 +42,7 @@ Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),Toptions(Ic
      _l("remoteAcceptKeys"),1,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
  setOnChange(IDFF_isRemote,this,&Tremote::onChange);
  load();
 
@@ -77,7 +77,7 @@ void Tremote::onChange(int id,int val)
  int filtermode;
  if (is && !inExplorer && ((filtermode=deci->getParam2(IDFF_filterMode))&IDFF_FILTERMODE_PLAYER) && !(filtermode&IDFF_FILTERMODE_VFW))
   start();
- else 
+ else
   stop();
 }
 
@@ -93,7 +93,7 @@ void Tremote::start(void)
 }
 void Tremote::stop(void)
 {
- if (h) 
+ if (h)
   {
    SendMessage(h,WM_CLOSE,0,0);
    WaitForSingleObject(hThread,INFINITE);
@@ -113,7 +113,7 @@ unsigned int __stdcall Tremote::threadProc(void *self0)
 {
  randomize();
  setThreadName(DWORD(-1),"remote");
- 
+
  Tremote *self=(Tremote*)self0;
  HINSTANCE hi=self->deci->getInstance2();
  char_t windowName[80];tsprintf(windowName,_l("%s_window%i"),FFDSHOW_REMOTE_CLASS,rand());
@@ -128,7 +128,7 @@ unsigned int __stdcall Tremote::threadProc(void *self0)
      TranslateMessage(&msg);
      DispatchMessage(&msg);
     }
-  }  
+  }
  UnregisterClass(_l(FFDSHOW_REMOTE_CLASS),hi);
  if (self->pdwROT)
  {
@@ -185,7 +185,7 @@ unsigned int __stdcall Tremote::ffwdThreadProc(void *self0)
 			Sleep(100);
 	 }
  }
- 
+
  self->fThread=NULL;
  _endthreadex(0);
  return 0;
@@ -196,7 +196,7 @@ LRESULT CALLBACK Tremote::remoteWndProc0(HWND hwnd, UINT msg, WPARAM wprm, LPARA
  Tremote *self=(Tremote*)GetWindowLongPtr(hwnd,GWLP_USERDATA);
  //DPRINTF("got remote message %i",msg);
  switch (msg)
-  { 
+  {
    case WM_DESTROY:
     PostQuitMessage(0);
     break;
@@ -226,7 +226,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 		if (fThread)
 			return 3;
 		else
-			return deciD->getState2(); 
+			return deciD->getState2();
     case WPRM_GETDURATION:
      return deci->getParam2(IDFF_movieDuration);
     case WPRM_GETCURTIME:
@@ -243,7 +243,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			if (!pdwROT)
 			{
 				comptr<IRunningObjectTable> pROT;
-				if (SUCCEEDED(GetRunningObjectTable(0,&pROT))) 
+				if (SUCCEEDED(GetRunningObjectTable(0,&pROT)))
 				{
 					IFilterGraph *pGraph = NULL;
 					deci->getGraph(&pGraph);
@@ -284,7 +284,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 		{
 			SetEvent(fEvent);
 			WaitForSingleObject(fThread, 3000);
-			
+
 			CloseHandle(fEvent);
 			CloseHandle(fThread);
 			fThread = NULL; fEvent = NULL;
@@ -313,11 +313,11 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
    }
  if (acceptKeys && (msg==WM_SYSKEYDOWN || msg==WM_SYSKEYUP || msg==WM_KEYDOWN || msg==WM_KEYUP))
   {
-   if (!keys) 
+   if (!keys)
     {
      keys=new Tkeyboard(new TintStrColl,deci);
      keys->load();
-    } 
+    }
    switch (msg)
     {
      case WM_SYSKEYDOWN:
@@ -329,7 +329,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
       keys->keyUp((int)wprm);
       break;
     }
-  }  
+  }
  else if (msg==WM_COPYDATA)
   {
    const COPYDATASTRUCT *cds=(const COPYDATASTRUCT*)lprm;
@@ -347,10 +347,10 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 		 ((COPYDATASTRUCT*)lprm)->dwData = paramid;
 		 SendMessage((HWND)wprm, WM_COPYDATA, paramid, lprm);
          return TRUE;
-        } 
-       return FALSE; 
+        }
+       return FALSE;
        //return cds->cbData && SUCCEEDED(deci->getParamStr(paramid,(char*)cds->lpData,cds->cbData))?TRUE:FALSE;
-      } 
+      }
      case COPY_SETACTIVEPRESET:
       return SUCCEEDED(deciD->setActivePreset(text<char_t>((const char*)cds->lpData),false))?TRUE:FALSE;
      case COPY_AVAILABLESUBTITLE_FIRST:
@@ -369,7 +369,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
          subtitleIdx++;
         }
 	   SendMessage((HWND)wprm, WM_COPYDATA, paramid, lprm);
-       return TRUE;  
+       return TRUE;
       }
 	 case COPY_CURRENT_SUBTITLES:
 	  {
@@ -378,7 +378,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 		  strncpy((char*)cds->lpData,text<char>(cursubflnm),cds->cbData);
           ((char*)cds->lpData)[cds->cbData-1]='\0';
 		  SendMessage((HWND)wprm, WM_COPYDATA, COPY_CURRENT_SUBTITLES, lprm);
-		  return TRUE;  
+		  return TRUE;
 	  }
 	  case COPY_GET_PRESETLIST:
 	  {
@@ -466,5 +466,5 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 	  }
     }
   }
- return DefWindowProc(hwnd,msg,wprm,lprm); 
+ return DefWindowProc(hwnd,msg,wprm,lprm);
 }

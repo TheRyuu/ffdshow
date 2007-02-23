@@ -21,7 +21,7 @@
 
 /**
  * @file swscale.h
- * @brief 
+ * @brief
  *     external api for the swscale stuff
  */
 
@@ -70,7 +70,7 @@ typedef struct SwsMethodParams {
         #define SWS_SINC     0x100
         #define SWS_LANCZOS  0x200
         #define SWS_SPLINE   0x400
-        
+
         int param;
 } SwsMethodParams;
 
@@ -81,9 +81,9 @@ typedef struct SwsParams {
         #define SWS_CPU_CAPS_3DNOW 0x40000000
         #define SWS_CPU_CAPS_ALTIVEC 0x10000000
 
-        int debug;        
+        int debug;
         #define SWS_PRINT_INFO		0x1000
-        
+
         int subsampling;
         //the following 3 flags are not completly implemented
         //internal chrominace subsamling info
@@ -93,7 +93,7 @@ typedef struct SwsParams {
         #define SWS_DIRECT_BGR		0x8000
         #define SWS_ACCURATE_RND	0x40000
         int v_chr_drop;
-        
+
         SwsMethodParams methodLuma,methodChroma;
 } SwsParams;
 
@@ -129,7 +129,7 @@ void sws_freeVec(SwsVector *a);
 void *av_mallocz(unsigned int size);
 void av_freep(void *arg);
 
-SwsFilter *sws_getDefaultFilter(float lumaGBlur, float chromaGBlur, 
+SwsFilter *sws_getDefaultFilter(float lumaGBlur, float chromaGBlur,
 				float lumaSarpen, float chromaSharpen,
 				float chromaHShift, float chromaVShift,
 				int verbose);

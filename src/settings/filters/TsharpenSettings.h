@@ -9,7 +9,7 @@ private:
  static const TfilterIDFF idffs;
 protected:
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  TsharpenSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  enum
   {

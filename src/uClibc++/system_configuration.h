@@ -36,7 +36,7 @@
 #undef __DODEBUG__
 
 #ifndef __GNUC__
- #ifndef __attribute 
+ #ifndef __attribute
   #define __attribute__(x)
  #endif
 #endif

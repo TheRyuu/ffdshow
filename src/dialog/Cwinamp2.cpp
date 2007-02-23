@@ -32,7 +32,7 @@ void Twinamp2page::init(void)
    IDC_BT_WINAMP2_CONFIG,TanchorInfo::LEFT|TanchorInfo::BOTTOM,
    0,0
   };
- anchors.init(ainfo,*this); 
+ anchors.init(ainfo,*this);
  winamp2=NULL;
  currentdsp=NULL;
 }
@@ -50,7 +50,7 @@ void Twinamp2page::dir2dlg(void)
   {
    setText(IDC_BT_WINAMP2_DIR,dir);
    dsps2dlg();
-  } 
+  }
 }
 
 void Twinamp2page::dsps2dlg(void)
@@ -62,7 +62,7 @@ void Twinamp2page::dsps2dlg(void)
    int ii=lbxAdd(IDC_LBX_WINAMP2_DSPS,(*d)->descr.c_str(),intptr_t(*d));
    if ((*d)->descr==flnm)
     lbxSetCurSel(IDC_LBX_WINAMP2_DSPS,ii);
-  } 
+  }
  filter2dlg();
 }
 
@@ -98,7 +98,7 @@ INT_PTR Twinamp2page::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_LBX_WINAMP2_DSPS:
        if (HIWORD(wParam)==LBN_SELCHANGE)
@@ -133,7 +133,7 @@ void Twinamp2page::onDir(void)
    if (f)
     selectFilter(f->descr.c_str(),f->filters[0]->descr.c_str());
    else
-    selectFilter(_l(""),_l("")); 
+    selectFilter(_l(""),_l(""));
   }
 }
 void Twinamp2page::onConfig(void)
@@ -156,5 +156,5 @@ Twinamp2page::Twinamp2page(TffdshowPageDec *Iparent,const TfilterIDFF *idff):Tco
    IDC_BT_WINAMP2_CONFIG,&Twinamp2page::onConfig,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
 }

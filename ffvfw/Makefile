@@ -1,5 +1,5 @@
 CFLAGS+= -I. -I../src
-       
+
 SRCS=driverproc.cpp
 
 SRCS_C=../src/ffdebug.c
@@ -16,7 +16,7 @@ CFLAGS+=-UUNICODE -U_UNICODE
 
 .all: $(SLIB)
 
-clean: 
+clean:
 	rm -f *.o *~ $(SLIB)
 
 #

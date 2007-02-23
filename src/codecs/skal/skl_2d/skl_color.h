@@ -112,7 +112,7 @@ class SKL_COLOR
     static float R_From_Ycc(int Y, int /*Cb*/, int Cr) { return 1.0f*Y               + 1.40200f*Cr; }
     static float G_From_Ycc(int Y, int Cb, int Cr) { return 1.0f*Y - 0.34414f*Cb - 0.71414f*Cr; }
     static float B_From_Ycc(int Y, int Cb, int /*Cr*/) { return 1.0f*Y + 1.77200f*Cb; }
-    
+
 #if 0
     SKL_COLOR operator +(const SKL_COLOR c) const
       { return SKL_COLOR(R()+c.R(),G()+c.G(),B()+c.B()); }
@@ -185,7 +185,7 @@ class SKL_FCOLOR
     float Y() const { return 0.29900f*R() + 0.58700f*G() + 0.11400f*B(); }
     float Cb() const { return -0.16874f*R() - 0.33126f*G() + 0.50000f*B() + 128.0f; }
     float Cr() const { return 0.50000f*R() - 0.41869f*G() - 0.08131f*B() + 128.0f; }
-        
+
 #if 1
     SKL_FCOLOR operator +(const SKL_FCOLOR c) const
       { return SKL_FCOLOR(R()+c.R(),G()+c.G(),B()+c.B()); }

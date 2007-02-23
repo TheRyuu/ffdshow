@@ -58,7 +58,7 @@ private:
   {
    static __align16(const uint8_t,dither[8][_mm::size]);
    static void store_slice(uint8_t *dst, const int16_t *src, int dst_stride, int src_stride, unsigned int width, unsigned int height, int log2_scale);
-  }; 
+  };
  static void softthresh_mmx(DCTELEM dst[64], const DCTELEM src[64], int qp);
  static __forceinline void requant_core_soft(unsigned char *dst0,unsigned char *dst1,unsigned char *dst2,unsigned char *dst3,const unsigned char *src0,const unsigned char *src1,const unsigned char *src2,const unsigned char *src3,const __m64 &mm4,const __m64 &mm5);
  static void hardthresh_mmx(DCTELEM dst[64], const DCTELEM src[64], int qp);
@@ -71,9 +71,9 @@ private:
    int temp= ((src[x + y*src_stride + pos]<<log2_scale) + d[pos])>>6;
    if (temp & 0x100) temp= ~(temp>>31);
    dst[x + y*dst_stride + pos]= (uint8_t)temp;
-  } 
+  }
  static void ff_fdct_mmx2(int16_t *block);
-protected: 
+protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK_YUV_PLANAR;}
  virtual void onSizeChange(void);
@@ -116,7 +116,7 @@ private:
  static void store_slice2_s(uint8_t *dst, int16_t *src, stride_t dst_stride, stride_t src_stride, long width, long height, long log2_scale);
  static const int DCTSIZE_S=8;
  static const __int64 MM_FIX_0_382683433,MM_FIX_0_541196100,MM_FIX_0_707106781,MM_FIX_1_306562965,MM_FIX_1_414213562_A,MM_FIX_1_847759065,MM_FIX_2_613125930,MM_FIX_1_414213562,MM_FIX_1_082392200,MM_FIX_0_847759065,MM_FIX_0_566454497,MM_FIX_0_198912367,MM_DESCALE_RND,MM_2;
-protected: 
+protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK_YUV_PLANAR;}
  virtual void onSizeChange(void);

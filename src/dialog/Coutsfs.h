@@ -19,4 +19,4 @@ public:
  virtual void applySettings(void);
 };
 
-#endif 
+#endif

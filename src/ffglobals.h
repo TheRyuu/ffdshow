@@ -32,10 +32,10 @@ typedef const TCHAR *PCTSTR;
  #pragma intrinsic (_InterlockedDecrement)
  #define InterlockedDecrement _InterlockedDecrement
 
- extern "C" LONG  __cdecl _InterlockedExchange(LONG volatile *Target, LONG Value); 
+ extern "C" LONG  __cdecl _InterlockedExchange(LONG volatile *Target, LONG Value);
  #pragma intrinsic (_InterlockedExchange)
- #define InterlockedExchange _InterlockedExchange  
- 
+ #define InterlockedExchange _InterlockedExchange
+
  extern "C" LONG  __cdecl _InterlockedCompareExchange(LONG volatile *Dest, LONG Exchange, LONG Comp);
  #pragma intrinsic (_InterlockedCompareExchange)
  #define InterlockedCompareExchange _InterlockedCompareExchange
@@ -142,13 +142,13 @@ void fixMPEGinAVI(FOURCC &fcc);
 HWND createInvisibleWindow(HINSTANCE hi,const char_t *classname,const char_t *windowname,WNDPROC wndproc,void* lparam,ATOM *atom);
 void getCLSIDname(const CLSID &clsid,char_t *buf,size_t buflen);
 
-template<class T> inline T ff_abs(const T &x) 
-{ 
+template<class T> inline T ff_abs(const T &x)
+{
  return (x<0)?T(-x):T(x);
 }
 
-inline int ff_round(double x) {return int(x+(x>0.0?0.5:-0.5));} 
-inline int ff_round(float x) {return int(x+(x>0.0f?0.5f:-0.5f));} 
+inline int ff_round(double x) {return int(x+(x>0.0?0.5:-0.5));}
+inline int ff_round(float x) {return int(x+(x>0.0f?0.5f:-0.5f));}
 
 template<class T> inline T roundRshift(const T &x,int s)
 {
@@ -210,11 +210,11 @@ template<class T> inline bool even(T x)
  return (x&1)==0;
 }
 
-static inline double value2db(double value) {return value>0?log10(value)*20.0:0.0;} 
+static inline double value2db(double value) {return value>0?log10(value)*20.0:0.0;}
 static inline double db2value(double db) {return pow(10.0,db/20.0);}
 static inline double db2value(double db,int mul) {return pow(10.0,db/(mul*20.0));}
 
-static inline float value2db(float value) {return value>0?log10f(value)*20.0f:0.0f;} 
+static inline float value2db(float value) {return value>0?log10f(value)*20.0f:0.0f;}
 static inline float db2value(float db) {return powf(10.0f,db/20.0f);}
 static inline float db2value(float db,int mul) {return powf(10.0f,db/(mul*20.0f));}
 
@@ -223,7 +223,7 @@ template<typename T> inline const T& bswap(T& var)
  BYTE* s = (BYTE*)&var;
  for(BYTE* d = s + sizeof(var)-1; s < d; s++, d--)
   *s ^= *d, *d ^= *s, *s ^= *d;
- return var; 
+ return var;
 }
 
 #if defined(__INTEL_COMPILER) || defined(__GNUC__) || (_MSC_VER>=1300)
@@ -277,7 +277,7 @@ template<template <class> class alloc> struct TbyteBufferBase :public std::vecto
   {
    append(ptr,len);
   }
- template<class Ta> void append(const Ta &b) 
+ template<class Ta> void append(const Ta &b)
   {
    insert(this->end(),(const unsigned char*)&b,(const unsigned char*)&b+sizeof(Ta));
   }
@@ -293,7 +293,7 @@ class Tbuffer
 {
 private:
  void *buf;size_t buflen;
-public: 
+public:
  Tbuffer(void):buf(NULL),buflen(0),free(true) {}
  Tbuffer(size_t Ibuflen):buf(NULL),buflen(0),free(true) {alloc(Ibuflen);}
  ~Tbuffer() {if (free) clear();}
@@ -303,12 +303,12 @@ public:
    if (buf) aligned_free(buf);
    buf=NULL;buflen=0;
   }
- size_t size(void) const {return buflen;} 
+ size_t size(void) const {return buflen;}
  void* alloc(size_t Ibuflen)
   {
    if (buflen<Ibuflen)
     buf=aligned_realloc(buf,buflen=Ibuflen);
-   return buf; 
+   return buf;
   }
  void* allocZ(size_t Ibuflen,int z) // clear memory with z
   {
@@ -317,9 +317,9 @@ public:
      buf=aligned_realloc(buf,buflen=Ibuflen);
      memset(buf,z,Ibuflen);
     }
-   return buf; 
+   return buf;
   }
- template<class T> operator T*() const {return (T*)buf;} 
+ template<class T> operator T*() const {return (T*)buf;}
 };
 
 template<class T,class alloc=std::allocator<T> > struct vectorEx :public std::vector<T,alloc>
@@ -349,7 +349,7 @@ public:
  void add(T t)
   {
    push_back(t);
-  } 
+  }
  void add(T t1,T t2,...)
   {
    push_back(t1);

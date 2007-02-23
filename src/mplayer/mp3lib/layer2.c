@@ -1,5 +1,5 @@
-/* 
- * Mpeg Layer-2 audio decoder 
+/*
+ * Mpeg Layer-2 audio decoder
  * --------------------------
  * copyright (c) 1995 by Michael Hipp, All rights reserved. See also 'README'
  *
@@ -50,7 +50,7 @@ static void init_layer2(void)
   {
     double m=mulmul[k];
     table = muls[k];
-    if(_has_mmx) 
+    if(_has_mmx)
     {
         for(j=3,i=0;i<63;i++,j--)
 	  *table++ = (real)(16384 * m * pow(2.0,(double) j / 3.0));
@@ -109,21 +109,21 @@ static void II_step_one(mp3lib_ctx *ctx,unsigned int *bit_alloc,int *scale,struc
 
     bita = bit_alloc;
     scfsi=ctx->scfsi_buf;
-    for (i=sblimit2;i;i--) 
+    for (i=sblimit2;i;i--)
       if (*bita++)
-        switch (*scfsi++) 
+        switch (*scfsi++)
         {
-          case 0: 
+          case 0:
                 *scale++ = getbits_fast(ctx,6);
                 *scale++ = getbits_fast(ctx,6);
                 *scale++ = getbits_fast(ctx,6);
                 break;
-          case 1 : 
+          case 1 :
                 *scale++ = sc = getbits_fast(ctx,6);
                 *scale++ = sc;
                 *scale++ = getbits_fast(ctx,6);
                 break;
-          case 2: 
+          case 2:
                 *scale++ = sc = getbits_fast(ctx,6);
                 *scale++ = sc;
                 *scale++ = sc;
@@ -152,17 +152,17 @@ static void II_step_two(mp3lib_ctx *ctx,unsigned int *bit_alloc,real fraction[2]
       step = alloc1->bits;
       for (j=0;j<stereo;j++)
       {
-        if ( (ba=*bita++) ) 
+        if ( (ba=*bita++) )
         {
           k=(alloc2 = alloc1+ba)->bits;
-          if( (d1=alloc2->d) < 0) 
+          if( (d1=alloc2->d) < 0)
           {
             real cm=muls[k][scale[x1]];
             fraction[j][0][i] = ((real) ((int)getbits(ctx,k) + d1)) * cm;
             fraction[j][1][i] = ((real) ((int)getbits(ctx,k) + d1)) * cm;
             fraction[j][2][i] = ((real) ((int)getbits(ctx,k) + d1)) * cm;
-          }        
-          else 
+          }
+          else
           {
             static const int *table[] = { 0,0,0,grp_3tab,0,grp_5tab,0,0,0,grp_9tab };
             unsigned int idx,*tab,m=scale[x1];
@@ -170,7 +170,7 @@ static void II_step_two(mp3lib_ctx *ctx,unsigned int *bit_alloc,real fraction[2]
             tab = (unsigned int *) (table[d1] + idx + idx + idx);
             fraction[j][0][i] = muls[*tab++][m];
             fraction[j][1][i] = muls[*tab++][m];
-            fraction[j][2][i] = muls[*tab][m];  
+            fraction[j][2][i] = muls[*tab][m];
           }
           scale+=3;
         }
@@ -213,13 +213,13 @@ static void II_step_two(mp3lib_ctx *ctx,unsigned int *bit_alloc,real fraction[2]
         fraction[0][0][i] = fraction[0][1][i] = fraction[0][2][i] =
         fraction[1][0][i] = fraction[1][1][i] = fraction[1][2][i] = 0.0;
       }
-/* 
+/*
    should we use individual scalefac for channel 2 or
    is the current way the right one , where we just copy channel 1 to
-   channel 2 ?? 
+   channel 2 ??
    The current 'strange' thing is, that we throw away the scalefac
    values for the second channel ...!!
--> changed .. now we use the scalefac values of channel one !! 
+-> changed .. now we use the scalefac values of channel one !!
 */
     }
 
@@ -294,10 +294,10 @@ static int do_layer2(mp3lib_ctx *ctx,int outmode)
 
   II_step_one(ctx,bit_alloc, scale, fr);
 
-  for (i=0;i<SCALE_BLOCK;i++) 
+  for (i=0;i<SCALE_BLOCK;i++)
   {
     II_step_two(ctx,bit_alloc,fraction,scale,fr,i>>2);
-    for (j=0;j<3;j++) 
+    for (j=0;j<3;j++)
     {
       if(single >= 0)
       {

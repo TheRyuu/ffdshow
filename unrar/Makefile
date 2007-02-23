@@ -1,5 +1,5 @@
 CFLAGS+= -I. -I../.. -DRARDLL -DNOCRYPT -DSILENT -DNOVOLUME -DSFX_MODULE -DSHELL_EXT
-   
+
 SRCS=archive.cpp arcread.cpp cmddata.cpp crc.cpp dll.cpp encname.cpp errhnd.cpp \
      extinfo.cpp extract.cpp filcreat.cpp file.cpp filefn.cpp filestr.cpp \
      find.cpp getbits.cpp int64.cpp isnt.cpp match.cpp options.cpp pathfn.cpp \
@@ -20,7 +20,7 @@ CFLAGS+=-UUNICODE -U_UNICODE
 
 .all: $(SLIB)
 
-clean: 
+clean:
 	rm -f *.o *~ $(SLIB)
 
 #

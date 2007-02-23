@@ -12,7 +12,7 @@ private:
  bool searchdts;
  CCritSec m_csReceive;
  TbyteBuffer buf;
- TaudioCodec *audio;  
+ TaudioCodec *audio;
  int jitter;
  float prevpostgain;
 protected:
@@ -29,11 +29,11 @@ public:
  STDMETHODIMP Receive(IMediaSample* pSample);
  STDMETHODIMP EndFlush(void);
  STDMETHODIMP NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,double dRate);
- 
+
  // IdecAudioSink
  STDMETHODIMP deliverDecodedSample(void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain);
  STDMETHODIMP flushDecodedSamples(void);
- 
+
  HRESULT getMovieSource(const TaudioCodec* *moviePtr);
  virtual HRESULT getInCodecString(char_t *buf,size_t buflen);
  int getInputBitrate(void) const;

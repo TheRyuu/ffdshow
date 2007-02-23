@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="windows-1250"?>
-<VisualStudioProject 
+<VisualStudioProject
 	ProjectType="Intel C++ Project"
 	Version="9.1"
 	Name="ff_libfaad2"
@@ -7,9 +7,9 @@
 	VCNestedProjectGUID="{624F21F1-717B-4010-90F9-C908F4AEEB44}"
 	VCNestedProjectFileName="ff_libfaad2_icl9.vcproj">
 	<Configurations>
-		<Configuration 
+		<Configuration
 			Name="Release|Win32">
-			<Tool 
+			<Tool
 				Name="GeneralTool"
 				OutputDirectory="release_icl9"
 				IntermediateDirectory="release_icl9"
@@ -17,9 +17,9 @@
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="0"
 				WholeProgramOptimization="1"/>
-			<Tool 
+			<Tool
 				Name="DebugTool"/>
-			<Tool 
+			<Tool
 				Name="CppCmplrTool"
 				Optimization="1000"
 				GlobalOptimizations="1"
@@ -40,7 +40,7 @@
 				SuppressStartupBanner="1"
 				CompileAs="1"
 				AdditionalOptions="/Oa /Qip"/>
-			<Tool 
+			<Tool
 				Name="LinkerTool"
 				DelayImpLib=""
 				IgnoreImportLibrary="1"
@@ -54,13 +54,13 @@
 				EnableCOMDATFolding="2"
 				ImportLibrary=".\Release/ff_libfaad2.lib"
 				TargetMachine="1"/>
-			<Tool 
+			<Tool
 				Name="LibrarianTool"/>
-			<Tool 
+			<Tool
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="NDEBUG"
 				Culture="1031"/>
-			<Tool 
+			<Tool
 				Name="MidlCmplrTool"
 				PreprocessorDefinitions="NDEBUG"
 				MkTypLibCompatible="1"
@@ -68,31 +68,31 @@
 				TargetEnvironment="1"
 				TypeLibraryName=".\Release/ff_libfaad2.tlb"
 				HeaderFileName=""/>
-			<Tool 
+			<Tool
 				Name="BscMakeTool"/>
-			<Tool 
+			<Tool
 				Name="PreBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="PreLinkEventTool"/>
-			<Tool 
+			<Tool
 				Name="PostBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="CustomTool"/>
-			<Tool 
+			<Tool
 				Name="CustomNodeTool"/>
 		</Configuration>
-		<Configuration 
+		<Configuration
 			Name="Debug|Win32">
-			<Tool 
+			<Tool
 				Name="GeneralTool"
 				OutputDirectory="debug_icl9"
 				IntermediateDirectory="debug_icl9"
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="0"/>
-			<Tool 
+			<Tool
 				Name="DebugTool"/>
-			<Tool 
+			<Tool
 				Name="CppCmplrTool"
 				Optimization="0"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL"
@@ -108,7 +108,7 @@
 				SuppressStartupBanner="1"
 				DebugInformationFormat="4"
 				CompileAs="1"/>
-			<Tool 
+			<Tool
 				Name="LinkerTool"
 				DelayImpLib=""
 				IgnoreImportLibrary="1"
@@ -122,13 +122,13 @@
 				ProgramDatabaseFile=".\Debug/ff_libfaad2.pdb"
 				ImportLibrary=".\Debug/ff_libfaad2.lib"
 				TargetMachine="1"/>
-			<Tool 
+			<Tool
 				Name="LibrarianTool"/>
-			<Tool 
+			<Tool
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1031"/>
-			<Tool 
+			<Tool
 				Name="MidlCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				MkTypLibCompatible="1"
@@ -136,817 +136,821 @@
 				TargetEnvironment="1"
 				TypeLibraryName=".\Debug/ff_libfaad2.tlb"
 				HeaderFileName=""/>
-			<Tool 
+			<Tool
 				Name="BscMakeTool"/>
-			<Tool 
+			<Tool
 				Name="PreBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="PreLinkEventTool"/>
-			<Tool 
+			<Tool
 				Name="PostBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="CustomTool"/>
-			<Tool 
+			<Tool
 				Name="CustomNodeTool"/>
 		</Configuration>
 	</Configurations>
 	<Files>
-		<File 
+		<File
 			RelativePath=".\bits.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\cfft.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\common.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\decoder.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\drc.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\drm_dec.c"/>
-		<File 
+		<File
 			RelativePath=".\error.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\filtbank.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\hcr.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\huffman.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\ic_predict.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\is.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\lt_predict.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\mdct.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\mp4.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\ms.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\output.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\pns.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\ps_dec.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\ps_syntax.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\pulse.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\rvlc.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\sbr_dct.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\sbr_dec.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\sbr_e_nf.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\sbr_fbt.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\sbr_hfadj.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\sbr_hfgen.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\sbr_huff.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\sbr_qmf.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\sbr_syntax.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\sbr_tf_grid.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\specrec.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\ssr.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\ssr_fb.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\ssr_ipqf.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\syntax.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\tns.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\version.c"/>
-		<File 
+		<File
 			RelativePath=".\analysis.h"/>
-		<File 
+		<File
 			RelativePath=".\bits.h"/>
-		<File 
+		<File
 			RelativePath=".\cfft.h"/>
-		<File 
+		<File
 			RelativePath=".\cfft_tab.h"/>
-		<File 
+		<File
 			RelativePath=".\common.h"/>
-		<File 
+		<File
 			RelativePath=".\decoder.h"/>
-		<File 
+		<File
 			RelativePath=".\drc.h"/>
-		<File 
+		<File
 			RelativePath=".\drm_dec.h"/>
-		<File 
+		<File
 			RelativePath=".\error.h"/>
-		<File 
+		<File
 			RelativePath=".\filtbank.h"/>
-		<File 
+		<File
 			RelativePath=".\fixed.h"/>
-		<File 
+		<File
 			RelativePath=".\codebook\hcb.h"/>
-		<File 
+		<File
 			RelativePath=".\codebook\hcb_1.h"/>
-		<File 
+		<File
 			RelativePath=".\codebook\hcb_10.h"/>
-		<File 
+		<File
 			RelativePath=".\codebook\hcb_11.h"/>
-		<File 
+		<File
 			RelativePath=".\codebook\hcb_2.h"/>
-		<File 
+		<File
 			RelativePath=".\codebook\hcb_3.h"/>
-		<File 
+		<File
 			RelativePath=".\codebook\hcb_4.h"/>
-		<File 
+		<File
 			RelativePath=".\codebook\hcb_5.h"/>
-		<File 
+		<File
 			RelativePath=".\codebook\hcb_6.h"/>
-		<File 
+		<File
 			RelativePath=".\codebook\hcb_7.h"/>
-		<File 
+		<File
 			RelativePath=".\codebook\hcb_8.h"/>
-		<File 
+		<File
 			RelativePath=".\codebook\hcb_9.h"/>
-		<File 
+		<File
 			RelativePath=".\codebook\hcb_sf.h"/>
-		<File 
+		<File
 			RelativePath=".\huffman.h"/>
-		<File 
+		<File
 			RelativePath=".\ic_predict.h"/>
-		<File 
+		<File
 			RelativePath=".\iq_table.h"/>
-		<File 
+		<File
 			RelativePath=".\is.h"/>
-		<File 
+		<File
 			RelativePath=".\kbd_win.h"/>
-		<File 
+		<File
 			RelativePath=".\lt_predict.h"/>
-		<File 
+		<File
 			RelativePath=".\mdct.h"/>
-		<File 
+		<File
 			RelativePath=".\mdct_tab.h"/>
-		<File 
+		<File
 			RelativePath=".\mp4.h"/>
-		<File 
+		<File
 			RelativePath=".\ms.h"/>
-		<File 
+		<File
 			RelativePath=".\neaacdec.h"/>
-		<File 
+		<File
 			RelativePath=".\output.h"/>
-		<File 
+		<File
 			RelativePath=".\pns.h"/>
-		<File 
+		<File
 			RelativePath=".\ps_dec.h"/>
-		<File 
+		<File
 			RelativePath=".\ps_tables.h"/>
-		<File 
+		<File
 			RelativePath=".\pulse.h"/>
-		<File 
+		<File
 			RelativePath=".\rvlc.h"/>
-		<File 
+		<File
 			RelativePath=".\sbr_dct.h"/>
-		<File 
+		<File
 			RelativePath=".\sbr_dec.h"/>
-		<File 
+		<File
 			RelativePath=".\sbr_e_nf.h"/>
-		<File 
+		<File
 			RelativePath=".\sbr_fbt.h"/>
-		<File 
+		<File
 			RelativePath=".\sbr_hfadj.h"/>
-		<File 
+		<File
 			RelativePath=".\sbr_hfgen.h"/>
-		<File 
+		<File
 			RelativePath=".\sbr_huff.h"/>
-		<File 
+		<File
 			RelativePath=".\sbr_noise.h"/>
-		<File 
+		<File
 			RelativePath=".\sbr_qmf.h"/>
-		<File 
+		<File
 			RelativePath=".\sbr_qmf_c.h"/>
-		<File 
+		<File
 			RelativePath=".\sbr_syntax.h"/>
-		<File 
+		<File
 			RelativePath=".\sbr_tf_grid.h"/>
-		<File 
+		<File
 			RelativePath=".\sine_win.h"/>
-		<File 
+		<File
 			RelativePath=".\specrec.h"/>
-		<File 
+		<File
 			RelativePath=".\ssr.h"/>
-		<File 
+		<File
 			RelativePath=".\ssr_fb.h"/>
-		<File 
+		<File
 			RelativePath=".\ssr_ipqf.h"/>
-		<File 
+		<File
 			RelativePath=".\ssr_win.h"/>
-		<File 
+		<File
 			RelativePath=".\structs.h"/>
-		<File 
+		<File
 			RelativePath=".\syntax.h"/>
-		<File 
+		<File
 			RelativePath=".\tns.h"/>
-		<File 
+		<File
 			RelativePath=".\ff_libfaad2.def"/>
 	</Files>
 </VisualStudioProject>
+
+
+
+
 

@@ -9,7 +9,7 @@ private:
  static const TfilterIDFF idffs;
 protected:
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  ToffsetSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  int Y_X,Y_Y,U_X,U_Y,V_X,V_Y;
  int flip,mirror;

@@ -39,7 +39,7 @@ TcropSettings::TcropSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSe
  half=0;
  static const TintOptionT<TcropSettings> iopts[]=
   {
-   IDFF_isCropNzoom        ,&TcropSettings::is                 ,0,0,_l(""),1, 
+   IDFF_isCropNzoom        ,&TcropSettings::is                 ,0,0,_l(""),1,
      _l("isCropNzoom"),0,
    IDFF_showCropNzoom      ,&TcropSettings::show               ,0,0,_l(""),1,
      _l("showCropNzoom"),1,
@@ -71,7 +71,7 @@ TcropSettings::TcropSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSe
      _l("panscanY"),0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
 }
 
 void TcropSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
@@ -81,10 +81,10 @@ void TcropSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQ
   {
    if (!queue.temporary) setOnChange(IDFF_fullCropNzoom,filters,&Tfilters::onQueueChange);
    if (full)
-    queueFilter<TimgFilterCropExpand>(filtersorder,filters,queue); 
+    queueFilter<TimgFilterCropExpand>(filtersorder,filters,queue);
    else
-    queueFilter<TimgFilterCrop>(filtersorder,filters,queue); 
-  }  
+    queueFilter<TimgFilterCrop>(filtersorder,filters,queue);
+  }
 }
 void TcropSettings::createPages(TffdshowPageDec *parent) const
 {
@@ -110,13 +110,13 @@ bool TcropSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
            tsnprintf(tipS,len,_l("zoom: %i%%"),magnificationX);
           else
            tsnprintf(tipS,len,_l("horizontal magnification: %i%%, vertical magnification: %i%%"),magnificationX,magnificationY);
-          break; 
+          break;
    case 1:tsnprintf(tipS,len,_l("crop: left:%i, top:%i, right:%i, bottom:%i"),cropLeft,cropTop,cropRight,cropBottom);
           break;
    case 2:tsnprintf(tipS,len,_l("Pan & scan"));
           break;
    default:tipS[0]='\0';
-  } 
+  }
  tipS[len-1]='\0';
- return true; 
+ return true;
 }

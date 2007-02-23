@@ -35,7 +35,7 @@ void TaudioFilterDelay::TdelayBuffer::init(unsigned int ms,const TsampleFormat &
    buf=realloc(buf,len*Bpp);
    memset(buf,0,len*Bpp);
    pos=0;
-  } 
+  }
 }
 void TaudioFilterDelay::TdelayBuffer::clear(void)
 {
@@ -64,31 +64,31 @@ HRESULT TaudioFilterDelay::process(TfilterQueue::iterator it,TsampleFormat &fmt,
      else if (fmt.speakers[i]&SPEAKER_BACK_RIGHT)
       ms=cfg->sr;
      else if (fmt.speakers[i]&SPEAKER_LOW_FREQUENCY)
-      ms=cfg->lfe; 
-     else 
-      ms=0; 
-     delay[i].init(ms,fmt); 
+      ms=cfg->lfe;
+     else
+      ms=0;
+     delay[i].init(ms,fmt);
     }
   }
- 
+
  switch (fmt.sf)
   {
    case TsampleFormat::SF_PCM16:
     for (unsigned int i=0;i<fmt.nchannels;i++)
      delay[i].delay((int16_t*)samples0+i,numsamples);
-    break; 
+    break;
    case TsampleFormat::SF_PCM24:
     for (unsigned int i=0;i<fmt.nchannels;i++)
      delay[i].delay((int24_t*)samples0+i,numsamples);
-    break; 
+    break;
    case TsampleFormat::SF_PCM32:
     for (unsigned int i=0;i<fmt.nchannels;i++)
      delay[i].delay((int32_t*)samples0+i,numsamples);
-    break; 
+    break;
    case TsampleFormat::SF_FLOAT32:
     for (unsigned int i=0;i<fmt.nchannels;i++)
      delay[i].delay((float*)samples0+i,numsamples);
-    break; 
+    break;
   }
  return parent->deliverSamples(++it,fmt,samples0,numsamples);
 }

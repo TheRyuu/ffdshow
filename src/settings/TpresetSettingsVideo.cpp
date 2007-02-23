@@ -68,8 +68,8 @@ void TvideoAutoPresetProps::getSourceResolution(unsigned int *dxPtr,unsigned int
   {
    wasResolution=true;
    deciV->getAVIdimensions(&dx,&dy);
-  }  
- *dxPtr=dx;*dyPtr=dy; 
+  }
+ *dxPtr=dx;*dyPtr=dy;
 }
 const char_t* TvideoAutoPresetProps::getFOURCC(void)
 {
@@ -85,8 +85,8 @@ const char_t* TvideoAutoPresetProps::getFOURCC(void)
    memcpy(fourcc,&fcc,4);
 #endif
    fourcc[4]='\0';
-  } 
- return fourcc; 
+  }
+ return fourcc;
 }
 const char_t* TvideoAutoPresetProps::getFOURCCitem(IffdshowDec *deciD,unsigned int index)
 {
@@ -113,7 +113,7 @@ const char_t* TvideoAutoPresetProps::getDAR(void)
    if (deciV->getInputDAR(&a1,&a2)==S_OK)
     DAR=double(a1)/a2;
   }
- return &aspectDAR; 
+ return &aspectDAR;
 }
 bool TvideoAutoPresetProps::aspectMatch(const char_t *expr,const char_t *aspectStr)
 {
@@ -132,7 +132,7 @@ const char_t* TvideoAutoPresetProps::getFps(void)
    if (deciV->getAVIfps(&fps1000)==S_OK)
     fps=fps1000/1000.0;
   }
- return _l("fps"); 
+ return _l("fps");
 }
 bool TvideoAutoPresetProps::fpsMatch(const char_t *expr,const char_t *)
 {
@@ -203,7 +203,7 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child,const char_t *IpresetName):
      _l("dyInterlaced"),288,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
 
  static const TstrOption sopts[]=
   {
@@ -211,12 +211,12 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child,const char_t *IpresetName):
      _l("useQueueOnlyInList"),_l("mplayerc.exe;"),
    0
   };
- addOptions(sopts); 
+ addOptions(sopts);
 
  static const TcreateParamList1 listIDCT(Tlibavcodec::idctNames);setParamList(IDFF_idct,&listIDCT);
  static const TcreateParamList1 listErrorConcealment(Tlibavcodec::errorConcealments);setParamList(IDFF_errorConcealment,&listErrorConcealment);
  static const TcreateParamList1 listErrorResilience(Tlibavcodec::errorResiliences);setParamList(IDFF_errorResilience,&listErrorResilience);
- 
+
  static const char_t *aspectHelp=_l("Enter logical expression with 'aspect' variable and comparison and arithmetic operators,\nfor example \"16/9<aspect AND aspect<2.35\" or \"aspect=1\".");
  static const char_t *fpsHelp=_l("Enter logical expression with 'fps' variable and comparison and arithmetic operators,\nfor example \"fps>30\".");
  static const TautoPresetItemDef autoPresetItems[]=
@@ -253,10 +253,10 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child,const char_t *IpresetName):
     (TautoPresetItemDef::TgetValFc)&TvideoAutoPresetProps::getFps,
     NULL,fpsHelp
    },
-   0 
+   0
   };
- addAutoPresetItems(autoPresetItems); 
- 
+ addAutoPresetItems(autoPresetItems);
+
  new TcropSettings(options,filters);
  new TdeinterlaceSettings(options,filters);
  new TlogoawaySettings(options,filters);
@@ -292,8 +292,8 @@ int TpresetVideo::getDefault(int id)
 {
  if (id==IDFF_multiThreadDec)
   return Tconfig::getCPUcount()>1?1:0;
- else 
-  return Tpreset::getDefault(id); 
+ else
+  return Tpreset::getDefault(id);
 }
 
 

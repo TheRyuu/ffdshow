@@ -16,7 +16,7 @@ private:
    __GAB1_LANGUAGE_UNICODE__=2,
    __GAB1_RAWTEXTSUBTITLE__ =4
   };
- TsubtitleParserBase *parser;  
+ TsubtitleParserBase *parser;
  Tbuffer initdata;
 public:
  TsubtitlesTextpinText(int Itype,IffdshowBase *Ideci,const unsigned char *extradata,unsigned int extradatalen);

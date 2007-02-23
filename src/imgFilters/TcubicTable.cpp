@@ -22,7 +22,7 @@
 
 TcubicTable::TcubicTable(double A)
 {
- for (int i=0; i<256; i++) 
+ for (int i=0; i<256; i++)
   {
    double d = (double)i / 256.0;
    int y1, y2, y3, y4, ydiff;

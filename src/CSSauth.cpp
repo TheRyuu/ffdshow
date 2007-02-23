@@ -90,7 +90,7 @@ static void CSSgenbits(unsigned char *output, int len,unsigned char const *s)
 #undef BIT0
 #undef BIT1
 		}
-	
+
 		*--output = val;
 	} while (--len > 0);
 }

@@ -13,7 +13,7 @@ private:
  void dir2dlg(void),dsps2dlg(void),filter2dlg(void);
  void selectFilter(const char_t *flnm,const char_t *filtername);
  void onDir(void),onConfig(void);
-protected: 
+protected:
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 public:
  Twinamp2page(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
@@ -21,4 +21,4 @@ public:
  virtual void cfg2dlg(void);
 };
 
-#endif 
+#endif

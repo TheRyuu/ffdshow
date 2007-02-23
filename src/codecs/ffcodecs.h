@@ -205,7 +205,7 @@
  CODEC_OP(CODEC_ID_X264_LOSSLESS ,1901,"x264 lossless")
 
 enum CodecID
-{ 
+{
  #define CODEC_OP(codecEnum,codecId,codecName) codecEnum=codecId,
  FFDSHOW_CODECS
  #undef CODEC_OP

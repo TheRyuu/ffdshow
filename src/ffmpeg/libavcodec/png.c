@@ -567,7 +567,7 @@ static int decode_frame(AVCodecContext *avctx,
                 if(picture->data[0]==NULL){
                     if(p->data[0])
                         avctx->release_buffer(avctx, p);
-            
+
                     p->reference= 0;
                     if(avctx->get_buffer(avctx, p) < 0){
                         av_log(avctx, AV_LOG_ERROR, "get_buffer() failed\n");

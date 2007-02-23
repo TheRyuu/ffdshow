@@ -69,11 +69,11 @@ void TsubtitleVobsub::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool force
   {
    if (vobsub) vobsub->vobsub_seek(timer);
    spu->spudec_reset();
-   if (dvdsub) 
+   if (dvdsub)
     {
      delete dvdsub;
      dvdsub=NULL;
-    } 
+    }
   }
  if (oldtimer!=timer)
   spu->spudec_heartbeat(timer);
@@ -88,25 +88,25 @@ void TsubtitleVobsub::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool force
    unsigned char* packet=NULL;
    int timestamp;
    int len=vobsub->vobsub_get_packet(timer,(void**)&packet,&timestamp);
-   if (len>0) 
+   if (len>0)
     {
      //timestamp -= (sh_video->pts + sub_delay - sh_video->timer)*90000;
      //mp_dbg(MSGT_CPLAYER,MSGL_V,"\rVOB sub: len=%d v_pts=%5.3f v_timer=%5.3f sub=%5.3f ts=%d \n",len,sh_video->pts,sh_video->timer,timestamp / 90000.0,timestamp);
     }
    if (len<=0 || !packet) break;
-   if (timestamp<0) 
+   if (timestamp<0)
     timestamp = 0;
-   else 
+   else
     {
      #ifdef DVDSUB
      if (!dvdsub)
       dvdsub=new TsubtitleDVD(time,packet,len,vobsub);
      else
-      dvdsub->append(packet,len); 
-     #else 
+      dvdsub->append(packet,len);
+     #else
      spu->spudec_assemble(packet,len,timestamp);
      #endif
-    } 
+    }
   }
  if (dvdsub)
   dvdsub->print(time,wasseek,f,forceChange,prefs);

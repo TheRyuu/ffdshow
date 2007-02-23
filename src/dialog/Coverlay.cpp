@@ -31,8 +31,8 @@ void ToverlayPage::init(void)
                             {IDC_LBL_OVERLAY_HUE,IDC_TBR_OVERLAY_HUE,0},
                             {IDC_LBL_OVERLAY_SATURATION,IDC_TBR_OVERLAY_SATURATION,0},
                             {IDC_LBL_OVERLAY_SHARPNESS,IDC_TBR_OVERLAY_SHARPNESS,0},
-                            {IDC_LBL_OVERLAY_GAMMA,IDC_TBR_OVERLAY_GAMMA,0}}; 
-                            
+                            {IDC_LBL_OVERLAY_GAMMA,IDC_TBR_OVERLAY_GAMMA,0}};
+
  for (int i=HWOC_BRIGHTNESS;i<=HWOC_GAMMA;i++)
   {
    bool is=hwoc?hwoc->supported(i):false;
@@ -41,7 +41,7 @@ void ToverlayPage::init(void)
      int min,max;
      if (hwoc->getRange(i,&min,&max)==S_OK)
       tbrSetRange(tbrs[i-1],min,max);
-    } 
+    }
    enable(is,ids[i-1]);
   }
 }
@@ -79,7 +79,7 @@ INT_PTR ToverlayPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CHB_OVERLAY:
        cfgSet(IDFF_isOverlayControl,getCheck(IDC_CHB_OVERLAY));

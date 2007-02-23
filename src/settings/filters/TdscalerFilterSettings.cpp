@@ -40,7 +40,7 @@ TDScalerFilterSettings::TDScalerFilterSettings(TintStrColl *Icoll,TfilterIDFFs *
  memset(cfg,0,sizeof(cfg));
  static const TintOptionT<TDScalerFilterSettings> iopts[]=
   {
-   IDFF_isDScaler            ,&TDScalerFilterSettings::is    ,0,0,_l(""),1, 
+   IDFF_isDScaler            ,&TDScalerFilterSettings::is    ,0,0,_l(""),1,
      _l("isDScaler"),0,
    IDFF_showDScaler          ,&TDScalerFilterSettings::show  ,0,0,_l(""),1,
      _l("showDScaler"),1,
@@ -52,7 +52,7 @@ TDScalerFilterSettings::TDScalerFilterSettings(TintStrColl *Icoll,TfilterIDFFs *
      _l("halfDScaler"),0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
  static const TstrOption sopts[]=
   {
    IDFF_dscalerFltflnm,(TstrVal)&TDScalerFilterSettings::fltflnm,MAX_PATH,_l(""),1,
@@ -63,12 +63,12 @@ TDScalerFilterSettings::TDScalerFilterSettings(TintStrColl *Icoll,TfilterIDFFs *
   };
  addOptions(sopts);
 }
-                             
+
 void TDScalerFilterSettings ::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (is && show)
-  queueFilter<TimgFilterDScalerFLT>(filtersorder,filters,queue); 
+  queueFilter<TimgFilterDScalerFLT>(filtersorder,filters,queue);
 }
 void TDScalerFilterSettings::createPages(TffdshowPageDec *parent) const
 {

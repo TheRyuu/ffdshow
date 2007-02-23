@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "CmeXvid.h"
 #include "xvid4.h"
@@ -28,7 +28,7 @@ bool TmeXvidPage::enabled(void)
 }
 
 void TmeXvidPage::cfg2dlg(void)
-{ 
+{
  setCheck(IDC_CHB_QPEL,cfgGet(IDFF_enc_me_qpel));
  setCheck(IDC_CHB_GMC,cfgGet(IDFF_enc_me_gmc));
  setCheck(IDC_CHB_XVID_CHROMA_ME,cfgGet(IDFF_enc_me_cmp_chroma));enable(!cfgGet(IDFF_enc_gray),IDC_CHB_XVID_CHROMA_ME);
@@ -54,12 +54,12 @@ void TmeXvidPage::me2dlg(void)
  setCheck(IDC_CHB_XVIDME_HALFPELREFINE16  ,me&XVID_ME::HALFPELREFINE16  );
  setCheck(IDC_CHB_XVIDME_EXTSEARCH16      ,me&XVID_ME::EXTSEARCH16      );
  setCheck(IDC_CHB_XVIDME_USESQUARES16     ,me&XVID_ME::USESQUARES16     );
-                                          
+
  setCheck(IDC_CHB_XVIDME_ADVANCEDDIAMOND8 ,me&XVID_ME::ADVANCEDDIAMOND8 );
  setCheck(IDC_CHB_XVIDME_HALFPELREFINE8   ,me&XVID_ME::HALFPELREFINE8   );
  setCheck(IDC_CHB_XVIDME_EXTSEARCH8       ,me&XVID_ME::EXTSEARCH8       );
  setCheck(IDC_CHB_XVIDME_USESQUARES8      ,me&(int)XVID_ME::USESQUARES8 );
- 
+
  if (cfgGet(IDFF_enc_is_xvid_me_custom))
   setCheck(IDC_CHB_XVIDME_INTER4V,cfgGet(IDFF_enc_xvid_me_inter4v));
  else
@@ -78,7 +78,7 @@ void TmeXvidPage::vhq2dlg(void)
   {
    setCheck(IDC_CHB_XVIDVHQ_MODEDECISION_BITS,cfgGet(IDFF_enc_xvid_vhq_modedecisionbits));
    enable(cfgGet(IDFF_enc_xvid_vhq_modedecisionbits),idCustomVHQs+1);
-  } 
+  }
  else
   setCheck(IDC_CHB_XVIDVHQ_MODEDECISION_BITS,cfgGet(IDFF_enc_xvid_vhq)>0);
 }
@@ -88,7 +88,7 @@ INT_PTR TmeXvidPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CHB_XVIDME_ADVANCEDDIAMOND16:
       case IDC_CHB_XVIDME_HALFPELREFINE16  :
@@ -104,14 +104,14 @@ INT_PTR TmeXvidPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         if (getCheck(IDC_CHB_XVIDME_HALFPELREFINE16  )) me|=XVID_ME::HALFPELREFINE16  ;
         if (getCheck(IDC_CHB_XVIDME_EXTSEARCH16      )) me|=XVID_ME::EXTSEARCH16      ;
         if (getCheck(IDC_CHB_XVIDME_USESQUARES16     )) me|=XVID_ME::USESQUARES16     ;
-                                        
+
         if (getCheck(IDC_CHB_XVIDME_ADVANCEDDIAMOND8 )) me|=XVID_ME::ADVANCEDDIAMOND8 ;
         if (getCheck(IDC_CHB_XVIDME_HALFPELREFINE8   )) me|=XVID_ME::HALFPELREFINE8   ;
         if (getCheck(IDC_CHB_XVIDME_EXTSEARCH8       )) me|=XVID_ME::EXTSEARCH8       ;
         if (getCheck(IDC_CHB_XVIDME_USESQUARES8      )) me|=(int)XVID_ME::USESQUARES8 ;
         cfgSet(IDFF_enc_xvid_me_custom,me);
         return TRUE;
-       } 
+       }
       case IDC_CHB_XVIDVHQ_EXTSEARCH_BITS:
       case IDC_CHB_XVIDVHQ_CHECKPREDICTION_BITS:
       case IDC_CHB_XVIDVHQ_HALFPELREFINE16_BITS:
@@ -138,18 +138,18 @@ INT_PTR TmeXvidPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 void TmeXvidPage::translate(void)
 {
  TconfPageEnc::translate();
- 
+
  int sel;
 
  sel=cbxGetCurSel(IDC_CBX_ME_XVID);
  cbxClear(IDC_CBX_ME_XVID);
- for (int i=0;meXviDpresets[i].name;i++) 
+ for (int i=0;meXviDpresets[i].name;i++)
   cbxAdd(IDC_CBX_ME_XVID,_(IDC_CBX_ME_XVID,meXviDpresets[i].name));
  cbxSetCurSel(IDC_CBX_ME_XVID,sel);
 
  sel=cbxGetCurSel(IDC_CBX_VHQ_XVID);
  cbxClear(IDC_CBX_VHQ_XVID);
- for (int i=0;vhqXviDpresets[i].name;i++) 
+ for (int i=0;vhqXviDpresets[i].name;i++)
   cbxAdd(IDC_CBX_VHQ_XVID,_(IDC_CBX_VHQ_XVID,vhqXviDpresets[i].name));
  cbxSetCurSel(IDC_CBX_VHQ_XVID,sel);
 }

@@ -71,7 +71,7 @@ void TdeinterlacePageDGbob::cfg2dlg(void)
 void TdeinterlacePageDGbob::translate(void)
 {
  TdeinterlacePanel::translate();
- 
+
  cbxTranslate(IDC_CBX_DGBOB_MODE,TdeinterlaceSettings::dgbobModes);
 }
 

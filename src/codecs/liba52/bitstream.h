@@ -52,7 +52,7 @@ static inline uint32_t unaligned32(const void *v) {
 #endif //!ARCH_X86
 
 #endif
- 
+
 /* (stolen from the kernel) */
 #ifdef WORDS_BIGENDIAN
 
@@ -101,11 +101,11 @@ static inline uint32_t bitstream_get (a52_state_t * state, uint32_t num_bits) //
     result<<= (state->indx&0x07);
     result>>= 32 - num_bits;
     state->indx+= num_bits;
-    
+
     return result;
 #else
     uint32_t result;
-	
+
     if (num_bits < state->bits_left) {
 	result = (state->current_word << (32 - state->bits_left)) >> (32 - num_bits);
 	state->bits_left -= num_bits;
@@ -125,11 +125,11 @@ static inline int32_t bitstream_get_2 (a52_state_t * state, uint32_t num_bits)
     result<<= (state->indx&0x07);
     result>>= 32 - num_bits;
     state->indx+= num_bits;
-        
+
     return result;
 #else
     int32_t result;
-	
+
     if (num_bits < state->bits_left) {
 	result = (((int32_t)state->current_word) << (32 - state->bits_left)) >> (32 - num_bits);
 	state->bits_left -= num_bits;

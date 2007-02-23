@@ -10,7 +10,7 @@ private:
  static const TfilterIDFF idffs;
 protected:
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  TbitmapSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  char_t flnm[MAX_PATH];
  int posx,posy,posmode;

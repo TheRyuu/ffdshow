@@ -189,7 +189,7 @@
 #define CREATEBINARY "w+"
 #define APPENDTEXT   "a"
 
-#define _stdfunction 
+#define _stdfunction
 
 #ifdef _APPLE
 	#ifndef BIG_ENDIAN

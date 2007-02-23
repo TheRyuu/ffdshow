@@ -7,9 +7,9 @@ struct TdctSettings :TfilterSettingsVideo
 {
 private:
  static const TfilterIDFF idffs;
-protected: 
+protected:
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  TdctSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  int mode;
  int fac0,fac1,fac2,fac3,fac4,fac5,fac6,fac7; //coefficients * 1000

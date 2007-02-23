@@ -47,8 +47,8 @@ LRESULT TlevelsPage::TwidgetLevels::onMouseMove(HWND hwnd,UINT uMsg,WPARAM wPara
    InvalidateRect(hwnd,NULL,FALSE);
    InvalidateRect(GetDlgItem(levelsPage->m_hwnd,IDC_BMP_HISTOGRAM),NULL,FALSE);
    return 0;
-  } 
- return TwindowWidget::onMouseMove(hwnd,uMsg,wParam,lParam); 
+  }
+ return TwindowWidget::onMouseMove(hwnd,uMsg,wParam,lParam);
 }
 LRESULT TlevelsPage::TwidgetLevels::onLbuttonUp(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
@@ -59,7 +59,7 @@ LRESULT TlevelsPage::TwidgetLevels::onLbuttonUp(HWND hwnd,UINT uMsg,WPARAM wPara
 }
 void TlevelsPage::TwidgetLevels::draw(LPDRAWITEMSTRUCT dis)
 {
- if (dragIdff) 
+ if (dragIdff)
   {
    HPEN pen = CreatePen(PS_DOT,0,RGB(0,0,0));
    HPEN penOld = (HPEN) SelectObject(dis->hDC, pen);
@@ -70,7 +70,7 @@ void TlevelsPage::TwidgetLevels::draw(LPDRAWITEMSTRUCT dis)
    SetBkColor(dis->hDC, bgColor);
    SelectObject(dis->hDC, penOld);
    DeleteObject(pen);
-  } 
+  }
 }
 
 //============================== TlevelsPage::TwidgetCurves =============================
@@ -114,7 +114,7 @@ void TlevelsPage::TwidgetCurves::load(void)
    pt[i].x=levelsPage->cfgGet(idffs[2*i+0]);
    pt[i].y=levelsPage->cfgGet(idffs[2*i+1]);
   }
- print(); 
+ print();
 }
 void TlevelsPage::TwidgetCurves::save(void)
 {
@@ -124,7 +124,7 @@ void TlevelsPage::TwidgetCurves::save(void)
    levelsPage->cfgSet(idffs[2*i+0],pt[i].x);
    levelsPage->cfgSet(idffs[2*i+1],pt[i].y);
   }
- print(); 
+ print();
 }
 void TlevelsPage::TwidgetCurves::print(void)
 {
@@ -133,9 +133,9 @@ void TlevelsPage::TwidgetCurves::print(void)
   {
    char_t s[30];tsprintf(s,_l("%u:[%li,%li]"),i,pt[i].x,pt[i].y);
    levelsPage->lbxAdd(IDC_LBX_LEVELS_CURVES,s,i);
-  } 
- if (dragpoint!=-1) 
-  levelsPage->lbxSetCurSel(IDC_LBX_LEVELS_CURVES,dragpoint); 
+  }
+ if (dragpoint!=-1)
+  levelsPage->lbxSetCurSel(IDC_LBX_LEVELS_CURVES,dragpoint);
 }
 
 void TlevelsPage::TwidgetCurves::draw(LPDRAWITEMSTRUCT dis)
@@ -150,7 +150,7 @@ void TlevelsPage::TwidgetCurves::draw(LPDRAWITEMSTRUCT dis)
 
 std::pair<int,int> TlevelsPage::TwidgetCurves::findPoint(int sx,int sy)
 {
- size_t mindist=INT_MAX,mindisti=0; 
+ size_t mindist=INT_MAX,mindisti=0;
  for (size_t i=0;i<pt.size();i++)
   {
    int x=dxy*pt[i].x/256,y=dxy*(255-pt[i].y)/256;
@@ -159,11 +159,11 @@ std::pair<int,int> TlevelsPage::TwidgetCurves::findPoint(int sx,int sy)
     {
      mindist=dist;
      mindisti=i;
-     if (mindist==0) 
+     if (mindist==0)
       break;
     }
   }
- return std::make_pair((int)mindist,(int)mindisti); 
+ return std::make_pair((int)mindist,(int)mindisti);
 }
 
 bool TlevelsPage::TwidgetCurves::setCursor(void)
@@ -219,12 +219,12 @@ LRESULT TlevelsPage::TwidgetCurves::onMouseMove(HWND hwnd,UINT uMsg,WPARAM wPara
     {
      pt[dragpoint].x=limit(x,int(dragpoint==0?0:pt[dragpoint-1].x),int(dragpoint==(int)pt.size()-1?255:pt[dragpoint+1].x));
      pt[dragpoint].y=limit_uint8(y);
-    } 
+    }
    save();
    levelsPage->map2dlg();
    return 0;
-  } 
- return TwindowWidget::onMouseMove(hwnd,uMsg,wParam,lParam); 
+  }
+ return TwindowWidget::onMouseMove(hwnd,uMsg,wParam,lParam);
 }
 
 //===================================== TlevelsPage =====================================
@@ -244,15 +244,15 @@ void TlevelsPage::init(void)
  histogramBmp.bmiColors[1].rgbRed=histogramBmp.bmiColors[1].rgbGreen=histogramBmp.bmiColors[1].rgbBlue=255;
  histogramBmp.bmiColors[2].rgbRed=histogramBmp.bmiColors[2].rgbGreen=histogramBmp.bmiColors[2].rgbBlue=192;
  memset(histogramBits,1,sizeof(histogramBits));
- 
+
  curvesBmp=histogramBmp;
  curvesBmp.bmiHeader.biHeight=256;
  hcurves=GetDlgItem(m_hwnd,IDC_BMP_LEVELS_CURVES);
- 
+
  bmpGradient=LoadBitmap(hi,MAKEINTRESOURCE(IDB_GRADIENT));
- HDC hdc=GetDC(m_hwnd); 
- hdcGradient=CreateCompatibleDC(hdc); 
- oldHDCgradient=SelectObject(hdcGradient,bmpGradient); 
+ HDC hdc=GetDC(m_hwnd);
+ hdcGradient=CreateCompatibleDC(hdc);
+ oldHDCgradient=SelectObject(hdcGradient,bmpGradient);
  LOGFONT oldFont;
  HFONT hf=(HFONT)GetCurrentObject(hdc,OBJ_FONT);
  GetObject(hf,sizeof(LOGFONT),&oldFont);
@@ -270,10 +270,10 @@ void TlevelsPage::init(void)
 
  hIn=GetDlgItem(m_hwnd,IDC_BMP_LEVELS_IN);
  hOut=GetDlgItem(m_hwnd,IDC_BMP_LEVELS_OUT);
- 
+
  RECT r;GetWindowRect(hIn,&r);
  bdx=r.right-r.left-2;
- 
+
  tbrSetRange(IDC_TBR_LEVELS_GAMMA,1,400,40);
  tbrSetRange(IDC_TBR_LEVELS_POSTERIZE,1,255);
  startup=true;
@@ -329,7 +329,7 @@ void TlevelsPage::drawTriangle(DRAWITEMSTRUCT *dis,int cl,bool fade)
    HGDIOBJ oldFont=SelectObject(dis->hDC,fontGradient);
    SetTextAlign(dis->hDC,TA_LEFT|TA_TOP);
    char_t pomS[10];_itoa(cl,pomS,10);
-   SIZE sz; 
+   SIZE sz;
    GetTextExtentPoint32(dis->hDC,pomS,(int)strlen(pomS),&sz);
    int tx=x;
    if (tx-sz.cx/2<0) tx=0;
@@ -337,7 +337,7 @@ void TlevelsPage::drawTriangle(DRAWITEMSTRUCT *dis,int cl,bool fade)
    else tx-=sz.cx/2;
    TextOut(dis->hDC,tx,22,pomS,(int)strlen(pomS));
    SelectObject(dis->hDC,oldFont);
-  } 
+  }
  int trsz=fade?6:10;
  POINT tri[]={{x,10},{x-trsz/2,10+trsz},{x+trsz/2,10+trsz}};
  Polygon(dis->hDC,tri,3);
@@ -355,7 +355,7 @@ INT_PTR TlevelsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     SelectObject(hdcGradient,oldHDCgradient);DeleteDC(hdcGradient);
     DeleteBitmap(bmpGradient);
     DeleteFont(fontGradient);
-    SendMessage(GetDlgItem(m_hwnd,IDC_LBX_LEVELS_CURVES),WM_SETFONT,NULL,FALSE);DeleteFont(fontCurier); 
+    SendMessage(GetDlgItem(m_hwnd,IDC_LBX_LEVELS_CURVES),WM_SETFONT,NULL,FALSE);DeleteFont(fontCurier);
     break;
    case WM_DRAWITEM:
     switch (wParam)
@@ -380,7 +380,7 @@ INT_PTR TlevelsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
           filter->getInAuto(&min,&max);
           drawTriangle(dis,min,true);
           drawTriangle(dis,max,true);
-         } 
+         }
         drawTriangle(dis,cfgGet(IDFF_levelsInMin));
         drawTriangle(dis,cfgGet(IDFF_levelsInMax));
         return TRUE;
@@ -411,10 +411,10 @@ INT_PTR TlevelsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        {
         SetCursor(LoadCursor(NULL,IDC_SIZEALL));
         setDlgResult(TRUE);
-       } 
+       }
       return TRUE;
      }
-    break; 
+    break;
   }
  return TconfPageDecVideo::msgProc(uMsg,wParam,lParam);
 }
@@ -423,19 +423,19 @@ Twidget* TlevelsPage::createDlgItem(int id,HWND h)
 {
  if (id==IDC_BMP_LEVELS_IN)
   return wIn=new TwidgetLevels(h,this,IDFF_levelsInMin,IDFF_levelsInMax);
- else if (id==IDC_BMP_LEVELS_OUT)  
+ else if (id==IDC_BMP_LEVELS_OUT)
   return new TwidgetLevels(h,this,IDFF_levelsOutMin,IDFF_levelsOutMax);
  else if (id==IDC_BMP_LEVELS_CURVES)
   return wCurves=new TwidgetCurves(h,this);
  else
-  return TconfPageDecVideo::createDlgItem(id,h); 
+  return TconfPageDecVideo::createDlgItem(id,h);
 }
 
 void TlevelsPage::onFrame(void)
 {
  if (!startup && !IsWindowVisible(m_hwnd)) return;
  startup=false;
- int mode=cfgGet(IDFF_levelsMode); 
+ int mode=cfgGet(IDFF_levelsMode);
  memset(histogramBits,1,sizeof(histogramBits));
  if (mode==5)
   for (int i=32;i<256;i+=32)
@@ -449,17 +449,17 @@ void TlevelsPage::onFrame(void)
  int isHist=getCheck(IDC_CHB_LEVELS_SHOW_HISTOGRAM);
  if (isHist && filter)
   filter->getHistogram(histogram);
- else 
+ else
   memset(histogram,0,sizeof(histogram));
  unsigned int min,max;
  if (mode==5 || cfgGet(IDFF_levelsFullY))
   {
    min=0;max=255;
   }
- else 
+ else
   {
    min=16;max=234;
-  } 
+  }
  unsigned int histogramMax=0;
  histogramMax=*std::max_element(histogram+min,histogram+max+1);
  int dy=mode==5?256:64;
@@ -477,8 +477,8 @@ void TlevelsPage::onFrame(void)
       histogramBits[x+256*(map[x]/(256/dy))]=0;
     }
    repaint(mode==5?hcurves:GetDlgItem(m_hwnd,IDC_BMP_HISTOGRAM));
-  } 
- repaint(GetDlgItem(m_hwnd,IDC_BMP_LEVELS_IN));  
+  }
+ repaint(GetDlgItem(m_hwnd,IDC_BMP_LEVELS_IN));
 }
 
 void TlevelsPage::onCurveLoad(void)
@@ -506,13 +506,13 @@ void TlevelsPage::onCurveLoad(void)
           pts[numpoints].second=limit_uint8(be2me_16(y));
           numpoints++;
          }
-        std::sort(pts,pts+numpoints); 
+        std::sort(pts,pts+numpoints);
         for (int i=0;i<numpoints;i++)
-         { 
-          cfgSet(TwidgetCurves::idffs[2*i+0],pts[i].first); 
-          cfgSet(TwidgetCurves::idffs[2*i+1],pts[i].second); 
-         } 
-        wCurves->reset(); 
+         {
+          cfgSet(TwidgetCurves::idffs[2*i+0],pts[i].first);
+          cfgSet(TwidgetCurves::idffs[2*i+1],pts[i].second);
+         }
+        wCurves->reset();
         map2dlg();
        }
      }
@@ -527,14 +527,14 @@ bool TlevelsPage::reset(bool testonly)
    repaint(GetDlgItem(m_hwnd,IDC_BMP_LEVELS_IN));
    repaint(GetDlgItem(m_hwnd,IDC_BMP_LEVELS_OUT));
    wCurves->reset();
-  } 
+  }
  return true;
 }
 
 void TlevelsPage::translate(void)
 {
  TconfPageDecVideo::translate();
- 
+
  cbxTranslate(IDC_CBX_LEVELS_MODE,TlevelsSettings::modes);
 }
 

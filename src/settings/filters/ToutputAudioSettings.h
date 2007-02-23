@@ -9,7 +9,7 @@ private:
  static const TfilterIDFF idffs;
 protected:
  const int* getResets(unsigned int pageId);
-public: 
+public:
  ToutputAudioSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  int outsfs;
  int outAC3bitrate;

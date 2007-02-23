@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="windows-1250"?>
-<VisualStudioProject 
+<VisualStudioProject
 	ProjectType="Intel C++ Project"
 	Version="9.1"
 	Name="ff_libdts"
@@ -7,9 +7,9 @@
 	VCNestedProjectGUID="{29432947-08F2-41AA-953F-47E45252DD57}"
 	VCNestedProjectFileName="ff_libdts_icl9.vcproj">
 	<Configurations>
-		<Configuration 
+		<Configuration
 			Name="Release|Win32">
-			<Tool 
+			<Tool
 				Name="GeneralTool"
 				OutputDirectory="release_icl9"
 				IntermediateDirectory="release_icl9"
@@ -17,9 +17,9 @@
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="0"
 				WholeProgramOptimization="1"/>
-			<Tool 
+			<Tool
 				Name="DebugTool"/>
-			<Tool 
+			<Tool
 				Name="CppCmplrTool"
 				Optimization="1000"
 				GlobalOptimizations="1"
@@ -44,7 +44,7 @@
 				DebugInformationFormat="0"
 				CompileAs="1"
 				AdditionalOptions="/Qip"/>
-			<Tool 
+			<Tool
 				Name="LinkerTool"
 				DelayImpLib=""
 				IgnoreImportLibrary="1"
@@ -60,13 +60,13 @@
 				EnableCOMDATFolding="2"
 				ImportLibrary=".\Release/ff_libdts.lib"
 				TargetMachine="1"/>
-			<Tool 
+			<Tool
 				Name="LibrarianTool"/>
-			<Tool 
+			<Tool
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="NDEBUG"
 				Culture="1051"/>
-			<Tool 
+			<Tool
 				Name="MidlCmplrTool"
 				PreprocessorDefinitions="NDEBUG"
 				MkTypLibCompatible="1"
@@ -74,31 +74,31 @@
 				TargetEnvironment="1"
 				TypeLibraryName=".\Release/ff_libdts.tlb"
 				HeaderFileName=""/>
-			<Tool 
+			<Tool
 				Name="BscMakeTool"/>
-			<Tool 
+			<Tool
 				Name="PreBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="PreLinkEventTool"/>
-			<Tool 
+			<Tool
 				Name="PostBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="CustomTool"/>
-			<Tool 
+			<Tool
 				Name="CustomNodeTool"/>
 		</Configuration>
-		<Configuration 
+		<Configuration
 			Name="Debug|Win32">
-			<Tool 
+			<Tool
 				Name="GeneralTool"
 				OutputDirectory="debug_icl9"
 				IntermediateDirectory="debug_icl9"
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="0"/>
-			<Tool 
+			<Tool
 				Name="DebugTool"/>
-			<Tool 
+			<Tool
 				Name="CppCmplrTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../.."
@@ -116,7 +116,7 @@
 				SuppressStartupBanner="1"
 				DebugInformationFormat="4"
 				CompileAs="1"/>
-			<Tool 
+			<Tool
 				Name="LinkerTool"
 				DelayImpLib=""
 				IgnoreImportLibrary="1"
@@ -130,13 +130,13 @@
 				SubSystem="2"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"/>
-			<Tool 
+			<Tool
 				Name="LibrarianTool"/>
-			<Tool 
+			<Tool
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1051"/>
-			<Tool 
+			<Tool
 				Name="MidlCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				MkTypLibCompatible="1"
@@ -144,34 +144,34 @@
 				TargetEnvironment="1"
 				TypeLibraryName=".\Debug/ff_libdts.tlb"
 				HeaderFileName=""/>
-			<Tool 
+			<Tool
 				Name="BscMakeTool"/>
-			<Tool 
+			<Tool
 				Name="PreBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="PreLinkEventTool"/>
-			<Tool 
+			<Tool
 				Name="PostBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="CustomTool"/>
-			<Tool 
+			<Tool
 				Name="CustomNodeTool"/>
 		</Configuration>
 	</Configurations>
 	<Files>
-		<File 
+		<File
 			RelativePath=".\bitstream.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
@@ -179,19 +179,19 @@
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\downmix.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
@@ -199,19 +199,19 @@
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\parse.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;$(NoInherit)"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
@@ -219,32 +219,36 @@
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\bitstream.h"/>
-		<File 
+		<File
 			RelativePath=".\config.h"/>
-		<File 
+		<File
 			RelativePath=".\dts.h"/>
-		<File 
+		<File
 			RelativePath=".\dts_internal.h"/>
-		<File 
+		<File
 			RelativePath="..\..\inttypes.h"/>
-		<File 
+		<File
 			RelativePath=".\tables.h"/>
-		<File 
+		<File
 			RelativePath=".\tables_adpcm.h"/>
-		<File 
+		<File
 			RelativePath=".\tables_dynrange.h"/>
-		<File 
+		<File
 			RelativePath=".\tables_fir.h"/>
-		<File 
+		<File
 			RelativePath=".\tables_huffman.h"/>
-		<File 
+		<File
 			RelativePath=".\tables_quantization.h"/>
-		<File 
+		<File
 			RelativePath=".\tables_vq.h"/>
-		<File 
+		<File
 			RelativePath=".\ff_libdts.def"/>
 	</Files>
 </VisualStudioProject>
+
+
+
+
 

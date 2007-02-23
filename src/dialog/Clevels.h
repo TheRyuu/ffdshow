@@ -14,7 +14,7 @@ private:
  HWND hIn,hOut;
  int bdx;
  static LRESULT CALLBACK bmpWndProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam);
- struct 
+ struct
   {
    BITMAPINFOHEADER bmiHeader;
    RGBQUAD bmiColors[256];
@@ -33,7 +33,7 @@ private:
    virtual LRESULT onLbuttonDown(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
    virtual LRESULT onLbuttonUp(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
    virtual LRESULT onMouseMove(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
-  public: 
+  public:
    TwidgetLevels(HWND h,TlevelsPage *Iself,int IidffMin,int IidffMax):levelsPage(Iself),TwindowWidget(h,Iself),dragIdff(0),idffMin(IidffMin),idffMax(IidffMax),dx(0) {allowOwnProc();}
    void draw(LPDRAWITEMSTRUCT dis);
   } *wIn;
@@ -49,11 +49,11 @@ private:
    HBRUSH br;
    int curpoint,dragpoint;
    std::pair<int,int> findPoint(int sx,int sy);
-  protected: 
+  protected:
    virtual LRESULT onLbuttonDown(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
    virtual LRESULT onLbuttonUp(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
    virtual LRESULT onMouseMove(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
-  public: 
+  public:
    static const int idffs[];
    TwidgetCurves(HWND h,TlevelsPage *Iself);
    virtual ~TwidgetCurves();
@@ -61,7 +61,7 @@ private:
    bool setCursor(void);
    void reset(void) {load();}
   } *wCurves;
- HWND hcurves; 
+ HWND hcurves;
  IimgFilterLevels *filter;
 protected:
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -75,4 +75,4 @@ public:
  virtual bool reset(bool testonly=false);
 };
 
-#endif 
+#endif

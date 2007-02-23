@@ -32,7 +32,7 @@
  * subpel_iters[i_subpel_refine] = { refine_hpel, refine_qpel, me_hpel, me_qpel }
  * where me_* are the number of EPZS iterations run on all candidate block types,
  * and refine_* are run only on the winner. */
-static const int subpel_iterations[][4] = 
+static const int subpel_iterations[][4] =
    {{1,0,0,0},
     {1,1,0,0},
     {0,1,1,0},
@@ -160,7 +160,7 @@ void x264_me_search_ref( x264_t *h, x264_me_t *m, int (*mvc)[2], int i_mvc, int 
     int omx, omy, pmx, pmy;
     uint8_t *p_fref = m->p_fref[0];
     DECLARE_ALIGNED( uint8_t, pix[16*16], 16 );
-    
+
     int i, j;
     int dir;
     int costs[6];
@@ -202,7 +202,7 @@ void x264_me_search_ref( x264_t *h, x264_me_t *m, int (*mvc)[2], int i_mvc, int 
         COST_MV( pmx, pmy );
         /* I don't know why this helps */
         bcost -= BITS_MVD(bmx,bmy);
-        
+
         for( i = 0; i < i_mvc; i++ )
         {
              const int mx = x264_clip3( ( mvc[i][0] + 2 ) >> 2, mv_x_min, mv_x_max );
@@ -211,7 +211,7 @@ void x264_me_search_ref( x264_t *h, x264_me_t *m, int (*mvc)[2], int i_mvc, int 
                  COST_MV( mx, my );
         }
     }
-    
+
     COST_MV( 0, 0 );
 
     switch( h->mb.i_me_method )
@@ -538,7 +538,7 @@ void x264_me_refine_qpel( x264_t *h, x264_me_t *m )
 
     if( m->i_pixel <= PIXEL_8x8 && h->sh.i_type == SLICE_TYPE_P )
         m->cost -= m->i_ref_cost;
-	
+
     refine_subpel( h, m, hpel, qpel, NULL, 1 );
 }
 
@@ -931,4 +931,7 @@ void x264_me_refine_qpel_rd( x264_t *h, x264_me_t *m, int i_lambda2, int i8 )
     x264_macroblock_cache_mv ( h, 2*(i8&1), i8&2, bw, bh, 0, bmx, bmy );
     x264_macroblock_cache_mvd( h, 2*(i8&1), i8&2, bw, bh, 0, bmx - pmx, bmy - pmy );
 }
+
+
+
 

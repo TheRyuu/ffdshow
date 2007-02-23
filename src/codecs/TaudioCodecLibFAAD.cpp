@@ -32,7 +32,7 @@ const char_t* TaudioCodecLibFAAD::dllname=_l("ff_libfaad2.dll");
 TaudioCodecLibFAAD::TaudioCodecLibFAAD(IffdshowBase *deci,IdecAudioSink *Isink):
  Tcodec(deci),
  TaudioCodec(deci,Isink)
-{        
+{
  dll=NULL;m_decHandle=NULL;
  inited=false;
  ps=sbr=false;
@@ -75,7 +75,7 @@ bool TaudioCodecLibFAAD::init(const CMediaType &mt)
    inited=true;
    return true;
   }
- else 
+ else
   return false;
 }
 TaudioCodecLibFAAD::~TaudioCodecLibFAAD()
@@ -102,7 +102,7 @@ HRESULT TaudioCodecLibFAAD::decode(TbyteBuffer &src)
    DPRINTF(_l("AAC: Error %d [%s]\n"),frameInfo.error,(const char_t*)text<char_t>(NeAACDecGetErrorMessage(frameInfo.error)));
    return S_OK;//S_FALSE
   }
- else 
+ else
   if (outsamples && frameInfo.samples)
    {
     ps=!!frameInfo.ps;sbr=!!frameInfo.sbr;
@@ -111,8 +111,8 @@ HRESULT TaudioCodecLibFAAD::decode(TbyteBuffer &src)
      {
       frameInfo.channel_position[0]=FRONT_CHANNEL_LEFT;
       frameInfo.channel_position[1]=FRONT_CHANNEL_RIGHT;
-     } 
-    
+     }
+
     fmt=this->fmt;
     fmt.channelmask=0;
     for (int i=0;i<frameInfo.channels;i++)
@@ -136,14 +136,14 @@ HRESULT TaudioCodecLibFAAD::decode(TbyteBuffer &src)
      }
 
     if (frameInfo.channels<=2) fmt.channelmask=0;
-    
+
     float *dst,*dst0;dst=dst0=(float*)getDst(frameInfo.samples*sizeof(float));
     for (unsigned int j=0;j<frameInfo.samples;j+=frameInfo.channels,dst+=frameInfo.channels)
      for (int i=0;i<frameInfo.channels;i++)
       dst[chmap[i]]=*outsamples++;
 
     return sinkA->deliverDecodedSample(dst0,frameInfo.samples/frameInfo.channels,fmt,1);
-   } 
+   }
   else
    return S_OK;
 }

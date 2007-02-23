@@ -86,7 +86,7 @@ public:
  TOSDsettingsVideo osd;
 
  struct TsubtitlesSettings : Toptions
-  { 
+  {
   protected:
    virtual void getDefaultStr(int id,char_t *buf,size_t buflen);
   public:
@@ -113,7 +113,7 @@ protected:
  virtual void reg_op_codec(TregOp &t,TregOp *t2);
  virtual int getDefault(int id);
  virtual void getDefaultStr(int id,char_t *buf,size_t buflen);
-public: 
+public:
  TglobalSettingsDecAudio(const Tconfig *Iconfig,int Imode,TintStrColl *Icoll,const char_t *Ireg_child=FFDSHOWDECAUDIO);
  TOSDsettingsAudio osd;
  int wma1,wma2,mp2,mp3,ac3,aac,amr,rawa,avis,iadpcm,msadpcm,flac,lpcm,dts,vorbis,law,gsm,tta,otherAdpcm,qdm2,truespeech,mace,ra,imc,wavpack;

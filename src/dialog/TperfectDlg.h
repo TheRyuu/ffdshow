@@ -20,7 +20,7 @@ private:
 
  void drawGraph(void);
  void onAnalyze(void),onSimulate(void);
- struct 
+ struct
  {
   BITMAPINFOHEADER bmiHeader;
   RGBQUAD bmiColors[256];
@@ -43,4 +43,4 @@ public:
  void show(void);
 };
 
-#endif 
+#endif

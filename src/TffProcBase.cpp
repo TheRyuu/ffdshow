@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "TffProcBase.h"
 #include "IffdshowBase.h"
@@ -50,7 +50,7 @@ STDMETHODIMP TffProcBase::setTempPreset(const char *tempPresetName)
  return S_OK;
 }
 STDMETHODIMP TffProcBase::setActivePreset(const char *presetName)
-{ 
+{
  return deciD->setActivePreset(text<char_t>(presetName),false);
 }
 STDMETHODIMP TffProcBase::saveBytestreamConfig(void *buf,size_t len)
@@ -85,7 +85,7 @@ void TffProcBase::loadConfig(bool notreg,const unsigned char *buf,size_t len)
 }
 
 STDMETHODIMP TffProcBase::config(HWND owner)
-{ 
+{
  return deci->showCfgDlg(owner);
 }
 

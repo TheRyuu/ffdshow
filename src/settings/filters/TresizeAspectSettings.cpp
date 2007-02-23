@@ -50,15 +50,15 @@ const int TresizeAspectSettings::methodsOrder[]=
 {
  METHOD_SWS_FAST_BILINEAR,
  METHOD_SWS_BILINEAR,
- METHOD_SWS_BICUBIC,      
-// METHOD_SWS_X,            
- METHOD_SWS_POINT,        
- METHOD_SWS_AREA,         
- //METHOD_SWS_BICUBLIN,     
- METHOD_SWS_GAUSS,        
- METHOD_SWS_SINC,         
- METHOD_SWS_LANCZOS,      
- METHOD_SWS_SPLINE,       
+ METHOD_SWS_BICUBIC,
+// METHOD_SWS_X,
+ METHOD_SWS_POINT,
+ METHOD_SWS_AREA,
+ //METHOD_SWS_BICUBLIN,
+ METHOD_SWS_GAUSS,
+ METHOD_SWS_SINC,
+ METHOD_SWS_LANCZOS,
+ METHOD_SWS_SPLINE,
  METHOD_SIMPLE,
  METHOD_WARPED,
  METHOD_SUPER2XSAI,
@@ -85,7 +85,7 @@ TresizeAspectSettings::TresizeAspectSettings(TintStrColl *Icoll,TfilterIDFFs *fi
  half=0;
  static const TintOptionT<TresizeAspectSettings> iopts[]=
   {
-   IDFF_isResize           ,&TresizeAspectSettings::is             ,0,0,_l(""),1, 
+   IDFF_isResize           ,&TresizeAspectSettings::is             ,0,0,_l(""),1,
      _l("isResize"),0,
    IDFF_showResize         ,&TresizeAspectSettings::show           ,0,0,_l(""),1,
      _l("showResize"),1,
@@ -108,7 +108,7 @@ TresizeAspectSettings::TresizeAspectSettings(TintStrColl *Icoll,TfilterIDFFs *fi
    IDFF_resizeA1           ,&TresizeAspectSettings::a1             ,1,10000,_l(""),1,
      _l("resizeA1"),4,
    IDFF_resizeA2           ,&TresizeAspectSettings::a2             ,1,10000,_l(""),1,
-     _l("resizeA2"),3,       
+     _l("resizeA2"),3,
    IDFF_resizeMult1000     ,&TresizeAspectSettings::mult1000       ,1,1000*1000,_l(""),1,
      _l("resizeMult1000"),2000,
    IDFF_resizeIf           ,&TresizeAspectSettings::_if            ,0,2,_l(""),1,
@@ -153,23 +153,23 @@ TresizeAspectSettings::TresizeAspectSettings(TintStrColl *Icoll,TfilterIDFFs *fi
    IDFF_resizeMethodChroma    ,&TresizeAspectSettings::methodChroma    ,0,numMethods-1,_l(""),1,
      _l("resizeMethodChroma"),-1,
    IDFF_resizeMethodsLocked   ,&TresizeAspectSettings::methodsLocked   ,0,0,_l(""),1,
-     _l("resizeMethodsLocked"),1,  
-     
+     _l("resizeMethodsLocked"),1,
+
    IDFF_resizeBicubicLumaParam   ,&TresizeAspectSettings::bicubicLumaParam    ,0,400,_l(""),1,
      _l("resizeBicubicParam"),0,
    IDFF_resizeBicubicChromaParam ,&TresizeAspectSettings::bicubicChromaParam  ,0,400,_l(""),1,
      _l("resizeBicubicChromaParam"),-1,
-     
+
    IDFF_resizeGaussLumaParam     ,&TresizeAspectSettings::gaussLumaParam      ,0,100,_l(""),1,
      _l("resizeGaussParam"),0,
    IDFF_resizeGaussChromaParam   ,&TresizeAspectSettings::gaussChromaParam    ,0,100,_l(""),1,
      _l("resizeGaussChromaParam"),-1,
-     
+
    IDFF_resizeLanczosLumaParam   ,&TresizeAspectSettings::lanczosLumaParam    ,0,10,_l(""),1,
      _l("resizeLanczosParam"),0,
    IDFF_resizeLanczosChromaParam ,&TresizeAspectSettings::lanczosChromaParam  ,0,10,_l(""),1,
      _l("resizeLanczosChromaParam"),-1,
-     
+
    IDFF_resizeSimpleWarpXparam,&TresizeAspectSettings::simpleWarpXparam,800,1300,_l(""),1,
      _l("resizeSimpleWarpXparam"),int(1.15*1000),
    IDFF_resizeSimpleWarpYparam,&TresizeAspectSettings::simpleWarpYparam,800,1300,_l(""),1,
@@ -188,8 +188,8 @@ TresizeAspectSettings::TresizeAspectSettings(TintStrColl *Icoll,TfilterIDFFs *fi
      _l("resizeAccurateRounding"),1,
    0
   };
- addOptions(iopts); 
- 
+ addOptions(iopts);
+
  static const TcreateParamList2<TmethodProps> listMethod(TresizeAspectSettings::methodsProps,&TmethodProps::name);setParamList(IDFF_resizeMethodLuma,&listMethod);setParamList(IDFF_resizeMethodChroma,&listMethod);
 }
 
@@ -197,20 +197,20 @@ void TresizeAspectSettings::createFilters(size_t filtersorder,Tfilters *filters,
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (show)
-  queueFilter<TimgFilterResize>(filtersorder,filters,queue); 
+  queueFilter<TimgFilterResize>(filtersorder,filters,queue);
 }
 void TresizeAspectSettings::createPages(TffdshowPageDec *parent) const
 {
- if ((parent->deci->getParam2(IDFF_filterMode)&IDFF_FILTERMODE_VFW)==0) 
+ if ((parent->deci->getParam2(IDFF_filterMode)&IDFF_FILTERMODE_VFW)==0)
   {
    parent->addFilterPage<TresizeAspectPage>(&idffs);
    parent->addFilterPage<TresizeBordersPage>(&idffs);
    parent->addFilterPage<TresizeSettingsPage>(&idffs);
-  } 
+  }
 }
 
 const int* TresizeAspectSettings::getResets(unsigned int pageId)
-{ 
+{
  if (pageId==0) // TODO: unify
   {
    static const int idResets[]={
@@ -228,7 +228,7 @@ const int* TresizeAspectSettings::getResets(unsigned int pageId)
     IDFF_resizeSimpleWarpXparam,IDFF_resizeSimpleWarpYparam,
     IDFF_resizeInterlaced,IDFF_resizeAccurateRounding,
     0};
-   return idResets; 
+   return idResets;
   }
  else if (pageId==2)
   {
@@ -237,8 +237,8 @@ const int* TresizeAspectSettings::getResets(unsigned int pageId)
     IDFF_bordersX,IDFF_bordersY,
     IDFF_bordersPixelsX,IDFF_bordersPixelsY,
     0};
-   return idResets; 
-  } 
+   return idResets;
+  }
  else if (pageId==3)
   {
    static const int idResets[]={
@@ -251,10 +251,10 @@ const int* TresizeAspectSettings::getResets(unsigned int pageId)
     IDFF_resizeSimpleWarpXparam,IDFF_resizeSimpleWarpYparam,
     IDFF_resizeInterlaced,IDFF_resizeAccurateRounding,
     0};
-   return idResets; 
-  } 
+   return idResets;
+  }
  else
-  return NULL; 
+  return NULL;
 }
 bool TresizeAspectSettings::reset(unsigned int pageId)
 {
@@ -265,8 +265,8 @@ bool TresizeAspectSettings::reset(unsigned int pageId)
    bicubicChromaParam=bicubicLumaParam;
    gaussChromaParam=gaussLumaParam;
    lanczosChromaParam=lanczosLumaParam;
-  } 
- return res; 
+  }
+ return res;
 }
 
 const char_t* TresizeAspectSettings::printSwsParams(char_t *algParam,int method,int bicubicParam,int gaussParam,int lanczosParam)
@@ -284,9 +284,9 @@ const char_t* TresizeAspectSettings::printSwsParams(char_t *algParam,int method,
     break;
    default:
     algParam[0]='\0';
-    break;       
+    break;
   }
- return algParam; 
+ return algParam;
 }
 bool TresizeAspectSettings::getTip(unsigned int pageId,char_t *buf,size_t len)
 {
@@ -321,10 +321,10 @@ bool TresizeAspectSettings::getTip(unsigned int pageId,char_t *buf,size_t len)
      case 3:
       strcatf(tipS,_l("by %g"),mult1000/1000.0f);
       break;
-    } 
+    }
    strcat(tipS,_l("\nAspect ratio: "));
    switch (isAspect)
-    { 
+    {
      case 0:
       strcat(tipS,_l("no change"));
       break;
@@ -336,7 +336,7 @@ bool TresizeAspectSettings::getTip(unsigned int pageId,char_t *buf,size_t len)
       break;
     }
    strncpy(buf,tipS,len);
-   buf[len-1]='\0'; 
+   buf[len-1]='\0';
   }
  else if (pageId==2)
   {
@@ -344,8 +344,8 @@ bool TresizeAspectSettings::getTip(unsigned int pageId,char_t *buf,size_t len)
     tsnprintf(buf,len,_l("%s borders %i%s,%i%s"),bordersInside?_l("Inside"):_l("Outside"),bordersUnits==0?bordersPercentX:bordersPixelsX,bordersUnits==0?_l("%"):_l(" pixels"),bordersUnits==0?bordersPercentY:bordersPixelsY,bordersUnits==0?_l("%"):_l(" pixels"));
    else
     tsnprintf(buf,len,_l("No borders"));
-   buf[len-1]='\0';  
-  } 
+   buf[len-1]='\0';
+  }
  else if (pageId==3)
   {
    if (methodsProps[methodLuma].library==LIB_SWSCALER)
@@ -355,12 +355,12 @@ bool TresizeAspectSettings::getTip(unsigned int pageId,char_t *buf,size_t len)
        char_t algParam[256];
        tsnprintf(buf,len,_l("Method: %s%s\n"),methodsProps[methodLuma].name,printSwsParams(algParam,methodLuma,bicubicLumaParam,gaussLumaParam,lanczosLumaParam));
       }
-     else 
+     else
       {
        char_t algParam[256];
        tsnprintf(buf,len,_l("Luma method: %s%s\n"),methodsProps[methodLuma].name,printSwsParams(algParam,methodLuma,bicubicLumaParam,gaussLumaParam,lanczosLumaParam));
        strncatf(buf,len,_l("Chroma method: %s%s\n"),methodsProps[methodChroma].name,printSwsParams(algParam,methodChroma,bicubicChromaParam,gaussChromaParam,lanczosChromaParam));
-      } 
+      }
      strncatf(buf,len,_l("Luma gaussian blur:%3.2f, luma sharpen:%3.2f\nChroma gaussian blur:%3.2f, chroma sharpen:%3.2f"),GblurLum/100.0f,sharpenLum/100.0f,GblurChrom/100.0f,sharpenChrom/100.0f);
     }
    else if (methodsProps[methodLuma].library==LIB_SIMPLE)
@@ -368,12 +368,12 @@ bool TresizeAspectSettings::getTip(unsigned int pageId,char_t *buf,size_t len)
      tsnprintf(buf,len,_l("Method: %s"),methodsProps[methodLuma].name);
      if (methodLuma==METHOD_WARPED)
       strncatf(buf,len,_l(", horizontal warp: %-5.3f, vertical warp: %-5.3f"),simpleWarpXparam/1000.0f,simpleWarpYparam/1000.0f);
-    } 
+    }
    else
     tsnprintf(buf,len,_l("Method: %s"),methodsProps[methodLuma].name);
    buf[len-1]='\0';
-  } 
- return true; 
+  }
+ return true;
 }
 const char_t* TresizeAspectSettings::getXcondStr(int cond)
 {
@@ -401,7 +401,7 @@ const char_t* TresizeAspectSettings::getPixCondStr(int cond)
    case  1:return _l("greater than");
    default:return _l("");
   }
-}  
+}
 
 bool TresizeAspectSettings::ifResize(unsigned int AVIdx,unsigned int AVIdy) const
 {
@@ -420,14 +420,14 @@ bool TresizeAspectSettings::ifResize(unsigned int AVIdx,unsigned int AVIdy) cons
      unsigned int pixnum=AVIdx*AVIdy;
      return (pixcond==-1 && pixnum<pixval) || (pixcond==1 && pixnum>pixval);
     }
-   default:return true;  
+   default:return true;
   }
 }
 
 void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
 { //TODO: fix this mess!
  const Trect inRect=*(full?rectFull:rectClip);
- 
+
  //resize
  if (is && ifResize(inRect.dx,inRect.dy))
   if (methodsProps[methodLuma].library==LIB_SAI)
@@ -437,7 +437,7 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
     rectClip->dx*=2;rectClip->dy*=2;
     //return;
    }
-  else 
+  else
    {
     switch (mode)
      {
@@ -467,7 +467,7 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
         }
        break;
      }
-    rectFull->dx&=~1;rectFull->dy&=~1; 
+    rectFull->dx&=~1;rectFull->dy&=~1;
    }
 
  //aspect
@@ -478,7 +478,7 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
    rectClip->dy=std::min(inRect.dy,rectFull->dy);
    rectClip->y=std::max(0,int(rectFull->dy-rectClip->dy)/2)&~1;
   }
- else 
+ else
   if (isAspect==0 || methodsProps[methodLuma].library==LIB_SAI)
    *rectClip=*rectFull;
   else
@@ -503,7 +503,7 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
       ax=aspectRatio;
       ay=1<<16;
      }
-    if (ax==0) ax=1;if (ay==0) ay=1; 
+    if (ax==0) ax=1;if (ay==0) ay=1;
     rectClip->dx=rectFull->dx;
     rectClip->dy=rectFull->dx*ay/ax;
     if (rectClip->dy>rectFull->dy)
@@ -529,7 +529,7 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
    {
     borderX=std::max(8,int(rectClip->dx+(bordersInside?-2:2)*bordersPixelsX));
     borderY=std::max(8,int(rectClip->dy+(bordersInside?-2:2)*(bordersLocked?rectClip->dy*bordersPixelsY/rectClip->dx:bordersPixelsY)));
-   } 
+   }
   if (borderX || borderY)
    {
     if (bordersInside)
@@ -543,11 +543,11 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
       rectFull->dy=borderY&~1;
      }
     if (rectClip->dx<64) rectClip->dx=64;
-    if (rectClip->dx>rectFull->dx) rectClip->dx=rectFull->dx; 
+    if (rectClip->dx>rectFull->dx) rectClip->dx=rectFull->dx;
     if (rectClip->dy>rectFull->dy) rectClip->dy=rectFull->dy;
     rectClip->x=((rectFull->dx-rectClip->dx)/2)&~1;
     rectClip->y=((rectFull->dy-rectClip->dy)/2)&~1;
-   }  
+   }
 }
 
 void TresizeAspectSettings::reg_op(TregOp &t)
@@ -564,11 +564,11 @@ void TresizeAspectSettings::reg_op(TregOp &t)
  if (methodChroma==-1)
   {
    if (methodsProps[methodLuma].library==LIB_SWSCALER)
-    methodChroma=methodLuma; 
+    methodChroma=methodLuma;
    else
-    methodChroma=METHOD_SWS_BICUBIC; 
-   methodsLocked=1; 
-  }  
+    methodChroma=METHOD_SWS_BICUBIC;
+   methodsLocked=1;
+  }
  if (bicubicChromaParam==-1) bicubicChromaParam=bicubicLumaParam;
  if (gaussChromaParam==-1) gaussChromaParam=gaussLumaParam;
  if (lanczosChromaParam==-1) lanczosChromaParam=lanczosLumaParam;

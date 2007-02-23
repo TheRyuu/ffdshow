@@ -36,7 +36,7 @@
 #define WPRM_GETCURTIME  8
 
 #define WPRM_PREVPRESET 11
-#define WPRM_NEXTPRESET 12 
+#define WPRM_NEXTPRESET 12
 
 //Set current time in seconds
 #define WPRM_SETCURTIME 13
@@ -52,7 +52,7 @@
 //Capture image file
 #define WPRM_CAPTUREIMAGE 18
 
-//WM_COPYDATA 
+//WM_COPYDATA
 //COPYDATASTRUCT.dwData=
 #define COPY_PUTPARAMSTR        9 // lpData points to new param value
 #define COPY_SETACTIVEPRESET   10 // lpData points to new preset name

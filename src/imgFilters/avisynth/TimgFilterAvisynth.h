@@ -9,7 +9,7 @@ class Tdll;
 DECLARE_FILTER(TimgFilterAvisynth,public,TimgFilter)
 private:
  TavisynthSettings oldcfg;
- 
+
  class Tffdshow_source : Tavisynth_c
   {
   public:
@@ -47,13 +47,13 @@ private:
    void init(const TavisynthSettings &oldcfg,const Tffdshow_source::Tinput &input,int *outcsp);
    void process(TimgFilterAvisynth *self,TffPict &pict,const TavisynthSettings *cfg);
    PClip *clip;
-   
-  private: 
+
+  private:
    Trect outrect;
    REFERENCE_TIME fpsscaleNum,fpsscaleDen;
    IScriptEnvironment *env;
    bool isFirstError;
-  } *avisynth; 
+  } *avisynth;
 
  int getWantedCsp(const TavisynthSettings *cfg) const;
  static const int NUM_FRAMES=1078920;
@@ -61,8 +61,8 @@ private:
  int outcsp;
 protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
- virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const; 
- virtual int getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg) const; 
+ virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const;
+ virtual int getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg) const;
  virtual void onSizeChange(void);
 public:
  TimgFilterAvisynth(IffdshowBase *Ideci,Tfilters *Iparent);

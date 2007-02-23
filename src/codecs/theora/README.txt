@@ -7,15 +7,15 @@
 Theora is Xiph.Org's first publicly released video codec, intended
 for use within the Foundation's Ogg multimedia streaming system.
 Theora is derived directly from On2's VP3 codec; Currently the two are
-nearly identical, varying only in encapsulating decoder tables in the 
-bitstream headers, but Theora will make use of this extra freedom 
+nearly identical, varying only in encapsulating decoder tables in the
+bitstream headers, but Theora will make use of this extra freedom
 in the future to improve over what is possible with VP3.
 
 *** Where is Theora?
 
 Theora's main site is www.theora.org.  Theora and related libraries
 can be gotten from www.theora.org or the main Xiph.Org site at
-www.xiph.org.  Development source is kept in an open subversion 
+www.xiph.org.  Development source is kept in an open subversion
 repository, see http://theora.org/svn.html for instructions.
 
 *** What is the goal of this alpha release?
@@ -24,15 +24,15 @@ The Theora bitstream format was frozen after the alpha3 release. This
 means that files produced by the alpha3 encoder will always be playable
 according to the Theora I specification.
 
-Traditionally alpha mean proof of concept, not a production-ready 
+Traditionally alpha mean proof of concept, not a production-ready
 release. However the code is very robust, ready for and indeed
-in general use. But WE DO INTEND TO MAKE INCOMPATIBLE API changes 
+in general use. But WE DO INTEND TO MAKE INCOMPATIBLE API changes
 before stable beta release however, particularly on the encoding side.
 
-The purpose of this release is to provide an updated testing base for 
+The purpose of this release is to provide an updated testing base for
 those interested in theora and to dissiminate more widely the changes
 we've made since the last alpha release. These include some helper
-utility functions, a draft format specification and rough api 
+utility functions, a draft format specification and rough api
 documentation located in the doc directory.
 
 -------------------------------------------------------------------------
@@ -43,8 +43,8 @@ Getting started with the code
 
 Requirements summary:
 
-  For libtheora:  
-         
+  For libtheora:
+
       libogg 1.1 or newer.
       (there is optional support for libogg2, unreleased at this time)
 
@@ -56,10 +56,10 @@ Requirements summary:
 
   For the player only:
 
-      as above, 
+      as above,
 
       SDL (Simple Direct media Layer) libraries and headers
- 
+
       OSS audio driver and development headers
 
 The provided build system is the GNU automake/autoconf system, and
@@ -83,7 +83,7 @@ wav file named audiodump.wav and a YUV video file in the correct
 format for encoder_example as stream.yuv.  Be careful when exporting
 video alone; MPlayer may drop frames to 'keep up' with the audio
 timer.  The example encoder can't properly synchronize input audio and
-video file that aren't in sync to begin with.  
+video file that aren't in sync to begin with.
 
 The encoder will also take video or audio on stdin if '-' is specified
 as the input file name.
@@ -91,7 +91,7 @@ as the input file name.
 *** How do I use the sample player?
 
 The sample player takes an Ogg file on standard in; the file may be
-audio alone, video alone or video with audio.  
+audio alone, video alone or video with audio.
 
 *** What other tools are available?
 
@@ -108,9 +108,9 @@ Troubleshooting the build process
 
 encoder_internal.h:664: parse error before `ogg_uint16_t'
 
-This means you have version of libogg prior to 1.1. A *complete* new Ogg 
-install, libs and headers, from a new release or CVS is needed.  Don't 
-forget to re-reun autogen.sh so that autoconf sucks in the new type 
+This means you have version of libogg prior to 1.1. A *complete* new Ogg
+install, libs and headers, from a new release or CVS is needed.  Don't
+forget to re-reun autogen.sh so that autoconf sucks in the new type
 declarations.
 
 Also be sure that there aren't multiple copies of Ogg installed in
@@ -145,4 +145,8 @@ libtool: link: warning: library `/usr/lib/libogg.la' was moved.
 libtool: link: warning: library `/usr/lib/libogg.la' was moved.
 
 Re-run theora/autogen.sh after an Ogg or Vorbis rebuild/reinstall
+
+
+
+
 

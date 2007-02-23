@@ -55,7 +55,7 @@ Tpalette::Tpalette(const AVPaletteControl *palctrl)
 {
  pal=palctrl?(const unsigned char*)palctrl->palette:NULL;
  numcolors=palctrl?256:0;
-} 
+}
 
 //=================================== TffPictBase ===================================
 TffPictBase::TffPictBase(unsigned int Idx,unsigned int Idy)
@@ -93,7 +93,7 @@ void TffPict::initCopy(int cpu_flags)
  #ifndef WIN64
  if (cpu_flags&FF_CPU_MMXEXT)
   copy=::asm_BitBlt_ISSE;
- else 
+ else
  #endif
  if (cpu_flags&FF_CPU_MMX)
   copy=asm_BitBlt_MMX;
@@ -101,7 +101,7 @@ void TffPict::initCopy(int cpu_flags)
   copy=asm_BitBlt_C;
 }
 
-TffPict::TffPict(void) 
+TffPict::TffPict(void)
 {
  init();
 }
@@ -117,7 +117,7 @@ void TffPict::init(void)
 void TffPict::init(int Icsp,unsigned char *Idata[4],const stride_t Istride[4],const Trect &r,bool Iro,int Iframetype,int Ifieldtype,size_t IsrcSize,const Tpalette &Ipalette)
 {
  cspInfo=*csp_getInfo(csp=Icsp);
- frametype=Iframetype;fieldtype=Ifieldtype;  
+ frametype=Iframetype;fieldtype=Ifieldtype;
  unsigned int i;
  for (i=0;i<cspInfo.numPlanes;i++)
   {
@@ -132,7 +132,7 @@ void TffPict::init(int Icsp,unsigned char *Idata[4],const stride_t Istride[4],co
    stride[i]=diff[i]=0;
    ro[i]=false;
   }
- palette=Ipalette; 
+ palette=Ipalette;
  rectFull=rectClip=r;
  rtStart=rtStop=mediatimeStart=mediatimeStop=REFTIME_INVALID;
  gmcWarpingPoints=gmcWarpingPointsReal=0;
@@ -184,7 +184,7 @@ void TffPict::readLibavcodec(int Icsp,const char_t *flnm,const char_t *ext,Tbuff
      delete convert;
     }
    else
-    readOle(Icsp,flnm,ext,buf,deci); 
+    readOle(Icsp,flnm,ext,buf,deci);
    free(src);
    libavcodec->av_free(frame);
   }
@@ -319,7 +319,7 @@ void TffPict::histogram(unsigned int histogram[256],int full,int half) const
    for (const unsigned char *src=data[0]+diff[0],*srcEnd=src+r.dy*stride[0];src!=srcEnd;src+=stride[0])
     for (unsigned int x=0;x<r.dx;x+=2)
      histogram[src[2*x+lumaoffset]]++;
-  }    
+  }
 }
 void TffPict::calcDiff(const TcspInfo &cspInfo,const Trect &rectClip,const stride_t stride[4],stride_t diff[4])
 {
@@ -353,11 +353,11 @@ void TffPict::setCSP(int Icsp)
 }
 void TffPict::convertCSP(int Icsp,Tbuffer &buf,Tconvert *convert,int edge)
 {
- if (csp&FF_CSP_FLAGS_YUV_ADJ) 
+ if (csp&FF_CSP_FLAGS_YUV_ADJ)
   {
    csp_yuv_adj_to_plane(csp,&cspInfo,rectFull.dy,data,stride);
    calcDiff();
-  } 
+  }
  if (csp&FF_CSP_FLAGS_YUV_ORDER) csp_yuv_order(csp,data,stride);
  int csp0=csp;
  const unsigned char *data0[4]={data[0],data[1],data[2],data[3]};
@@ -380,28 +380,28 @@ void TffPict::convertCSP(int Icsp,Tbuffer &buf,int edge)
      stride[0]+=edge;
     }
    else
-    { 
+    {
      stride[0]=(((rectFull.dx>>cspInfo.shiftX[0])+edge)/16+2)*16;
      stride[1]=(((rectFull.dx>>cspInfo.shiftX[1])+edge)/16+2)*16;
      stride[2]=(((rectFull.dx>>cspInfo.shiftX[2])+edge)/16+2)*16;
      stride[3]=(((rectFull.dx>>cspInfo.shiftX[3])+edge)/16+2)*16;
-    } 
+    }
    size_t size=0;
    for (unsigned int i=0;i<cspInfo.numPlanes;i++)
-    size+=stride[i]*((ODD2EVEN(rectFull.dy)>>cspInfo.shiftY[i])+edge); // rectFull.dy should be added by 1 when rectFull.dy is odd number. 
-   buf.allocZ(size,128); 
+    size+=stride[i]*((ODD2EVEN(rectFull.dy)>>cspInfo.shiftY[i])+edge); // rectFull.dy should be added by 1 when rectFull.dy is odd number.
+   buf.allocZ(size,128);
    data[0]=buf;
    data[1]=data[0]+stride[0]*((ODD2EVEN(rectFull.dy)>>cspInfo.shiftY[0])+edge);
    data[2]=data[1]+stride[1]*((ODD2EVEN(rectFull.dy)>>cspInfo.shiftY[1])+edge);
    data[3]=data[2]+stride[2]*((ODD2EVEN(rectFull.dy)>>cspInfo.shiftY[2])+edge);
   }
- else 
+ else
   {
    stride[0]=rectFull.dx*cspInfo.Bpp;
    size_t bufsize0=stride[0]*rectFull.dy;
    buf.alloc(bufsize0);
    data[0]=buf;
-  } 
+  }
  calcDiff();
 }
 void TffPict::alloc(unsigned int dx,unsigned int dy,int Icsp,Tbuffer &buf,int edge)
@@ -409,7 +409,7 @@ void TffPict::alloc(unsigned int dx,unsigned int dy,int Icsp,Tbuffer &buf,int ed
  rectFull=rectClip=Trect(0,0,dx,dy);
  convertCSP(Icsp,buf,edge);
 }
- 
+
 // copied from AviSynth
 /*****************************
  * Assembler bitblit by Steady
@@ -523,8 +523,8 @@ void TffPict::createEdge(unsigned int Iedge,Tbuffer &buf)
    unsigned int dx=rectFull0.dx>>cspInfo.shiftX[i],dy=rectFull0.dy>>cspInfo.shiftY[i];
    copy(data[i]+=diff[i],stride[i],data0[i],stride0[i],dx*cspInfo.Bpp,dy);
    draw_edges(data[i],stride[i],dx,dy,edge);
-  } 
- rectFull=rectFull0;rectClip=rectClip0; 
+  }
+ rectFull=rectFull0;rectClip=rectClip0;
  calcDiff();
 }
 

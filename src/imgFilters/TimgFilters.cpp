@@ -60,23 +60,23 @@ HRESULT TimgFilters::process(TffPict &pict,const TpresetVideo *cfg)
   {
    firstprocess=false;
    onFirstProcess(cfg);
-  } 
+  }
 
  deci->lock(IDFF_lockPresetPtr);
- if (queueChanged) 
+ if (queueChanged)
   {
    makeQueue(cfg,queue);
-   if (queryFilterInterface(IID_IimgFilterGrab,(void**)&grab)!=S_OK) 
+   if (queryFilterInterface(IID_IimgFilterGrab,(void**)&grab)!=S_OK)
     grab=NULL;
    InterlockedDecrement((LONG*)&queueChanged);
    deciD->sendOnNewFiltersMsg();
-  } 
- queue.copyCfg(cfg); 
+  }
+ queue.copyCfg(cfg);
  deci->unlock(IDFF_lockPresetPtr);
 
  if (cfg->isDyInterlaced && pict.rectFull.dy>(unsigned int)cfg->dyInterlaced)
-  pict.csp|=FF_CSP_FLAGS_INTERLACED; 
-  
+  pict.csp|=FF_CSP_FLAGS_INTERLACED;
+
  return deliverSample(queue.begin(),pict);
 }
 
@@ -91,7 +91,7 @@ HRESULT TimgFilters::deliverSample(TfilterQueue::iterator it,TffPict &pict)
      dirtyBorder=2;
     }
    return sink->deliverProcessedSample(pict);
-  } 
+  }
  else
   {
    TimgFilter *filter=(TimgFilter*)it->filter;
@@ -99,8 +99,8 @@ HRESULT TimgFilters::deliverSample(TfilterQueue::iterator it,TffPict &pict)
    if (pict.csp!=FF_CSP_NULL)
     return filter->process(it,pict,cfg);
    else
-    return filter->flush(it,pict,cfg); 
-  } 
+    return filter->flush(it,pict,cfg);
+  }
 }
 
 HRESULT TimgFilters::convertOutputSample(const TffPict &pict,int dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg)
@@ -165,7 +165,7 @@ TimgFiltersPlayer::~TimgFiltersPlayer()
 void TimgFiltersPlayer::makeQueue(const Tpreset *cfg,TfilterQueue &queue)
 {
  TimgFilters::makeQueue(cfg,queue);
- if (expand) queue.add(expand,&expandSettings); 
+ if (expand) queue.add(expand,&expandSettings);
  if (resizeDV) queue.add(resizeDV,resizeSettingsDV);
  queue.add(osd,&globalCfg->osd);
 }
@@ -213,7 +213,7 @@ HRESULT TimgFiltersPlayer::process(TffPict &pict,const TpresetVideo *cfg)
 {
  memcpy(fontSettingsOSD,&globalFontSettingsOSD,sizeof(*fontSettingsOSD));
  return TimgFilters::process(pict,cfg);
-} 
+}
 
 HRESULT TimgFiltersPlayer::addClosedCaption(const char *line)
 {

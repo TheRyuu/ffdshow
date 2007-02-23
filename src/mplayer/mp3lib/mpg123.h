@@ -130,18 +130,18 @@ typedef struct mp3lib_ctx
  int bitindex;
  unsigned char *wordpointer;
  int bitsleft;
- 
+
  unsigned char *pcm_sample;   // outbuffer address
  int pcm_point;           // outbuffer offset
- 
+
  const unsigned char *src;int srclen;
- 
+
  real buffs[2][2][0x110];
  short __attribute__((aligned(16))) buffsMMX[2][2][0x110];
  int bo;
 
  unsigned int scfsi_buf[64];
- 
+
  real block[2][2][SBLIMIT*SSLIMIT];
  int blc[2];
  real hybridIn[2][SBLIMIT][SSLIMIT];

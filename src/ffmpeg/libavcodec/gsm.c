@@ -83,7 +83,7 @@ static const int16_t gsm_FAC[8] = { 18431, 20479, 22527, 24575, 26623, 28671, 30
 #define	SASR(x, by)	((x) >= 0 ? (x) >> (by) : (~(-((x) + 1) >> (by))))
 #endif	/* SASR */
 
-/* 
+/*
  * #define GSM_MULT_R(a, b) (* word a, word b, !(a == b == MIN_WORD) *)	\
  *	(0x0FFFF & SASR(((int32_t)(a) * (int32_t)(b) + 16384), 15))
  */
@@ -213,7 +213,7 @@ register int16_t   * xMc,  /* [0..12]                      IN      */
 int16_t            mant,
 int16_t            exp,
 register int16_t   * xMp)  /* [0..12]                      OUT     */
-/* 
+/*
  *  This part is for decoding the RPE sequence of coded xMc[0..12]
  *  samples to obtain the xMp[0..12] array.  Table 4.6 is used to get
  *  the mantissa of xmaxc (FAC[0..7]).
@@ -223,7 +223,7 @@ register int16_t   * xMp)  /* [0..12]                      OUT     */
         int16_t    temp, temp1, temp2, temp3;
         int32_t        ltmp;
 
-        assert( mant >= 0 && mant <= 7 ); 
+        assert( mant >= 0 && mant <= 7 );
 
         temp1 = gsm_FAC[ mant ];        /* see 4.2-15 for mant */
         temp2 = gsm_sub( 6, exp );      /* see 4.2-15 for exp  */
@@ -310,7 +310,7 @@ register int16_t 	* s)
   register int32_t	ltmp;	/* for GSM_ADD */
   register int16_t		tmp;
 
-  for (k = 160; k--; s++) 
+  for (k = 160; k--; s++)
   {
     tmp = GSM_MULT_R( msr, 28180 );
     msr = GSM_ADD(*s, tmp);  	   /* Deemphasis 	     */
@@ -347,7 +347,7 @@ register int16_t           * drp)     /* [-120..-1] IN, [-120..40] OUT */
          */
         brp = gsm_QLB[ bcr ];
 
-        /*  Computation of the reconstructed short term residual 
+        /*  Computation of the reconstructed short term residual
          *  signal drp[0..39]
          */
         assert(brp != MIN_WORD);
@@ -460,7 +460,7 @@ int16_t    * LARpp)        /* out: decoded ..                      */
 }
 
 /* 4.2.9 */
-/* Computation of the quantized reflection coefficients 
+/* Computation of the quantized reflection coefficients
  */
 
 /* 4.2.9.1  Interpolation of the LARpp[1..8] to get the LARp[1..8]
@@ -623,7 +623,7 @@ int16_t		*s)		/* [0..159]		OUT 	*/
   int16_t		erp[40], wt[160];
   int16_t		*drp = S->dp0 + 120;
 
-  for (j=0; j <= 3; j++, xmaxcr++, bcr++, Ncr++, Mcr++, xMcr += 13) 
+  for (j=0; j <= 3; j++, xmaxcr++, bcr++, Ncr++, Mcr++, xMcr += 13)
   {
     Gsm_RPE_Decoding( S, *xmaxcr, *Mcr, xMcr, erp );
     Gsm_Long_Term_Synthesis_Filtering( S, *Ncr, *bcr, erp, drp );
@@ -640,7 +640,7 @@ int16_t		*s)		/* [0..159]		OUT 	*/
  ****-------------------------------------------------------------------****/
 static void XA_MSGSM_Decoder(XAGSMstate *gsm_state,const unsigned char *ibuf,unsigned short *obuf)
 { int16_t sr;
-  int16_t  LARc[8], Nc[4], Mc[4], bc[4], xmaxc[4], xmc[13*4];	
+  int16_t  LARc[8], Nc[4], Mc[4], bc[4], xmaxc[4], xmc[13*4];
 
   sr = *ibuf++;
 
@@ -830,7 +830,7 @@ static void XA_MSGSM_Decoder(XAGSMstate *gsm_state,const unsigned char *ibuf,uns
   xmaxc[2] = sr & 0x3f;  sr >>= 6;
   xmc[26] = sr & 0x7;  sr >>= 3;
   xmc[27] = sr & 0x7;  sr >>= 3;
-  sr |= (int16_t)*ibuf++ << 1;	
+  sr |= (int16_t)*ibuf++ << 1;
   xmc[28] = sr & 0x7;  sr >>= 3;
   xmc[29] = sr & 0x7;  sr >>= 3;
   xmc[30] = sr & 0x7;  sr >>= 3;
@@ -847,7 +847,7 @@ static void XA_MSGSM_Decoder(XAGSMstate *gsm_state,const unsigned char *ibuf,uns
   xmc[38] = sr & 0x7;  sr >>= 3;
   sr = *ibuf++;
   Nc[3] = sr & 0x7f;  sr >>= 7;
-  sr |= (int16_t)*ibuf++ << 1;		
+  sr |= (int16_t)*ibuf++ << 1;
   bc[3] = sr & 0x3;  sr >>= 2;
   Mc[3] = sr & 0x3;  sr >>= 2;
   sr |= (int16_t)*ibuf++ << 5;
@@ -873,7 +873,7 @@ static void XA_MSGSM_Decoder(XAGSMstate *gsm_state,const unsigned char *ibuf,uns
   GSM_Decode(gsm_state, LARc, Nc, bc, Mc, xmaxc, xmc, &obuf[160]);
 
   /* Return number of source bytes consumed and output samples produced */
-//  *icnt = 65;		
+//  *icnt = 65;
 //  *ocnt = 320;
   return;
 }
@@ -888,13 +888,13 @@ static int gsm_decode_frame(AVCodecContext *avctx,
     return 65;
 }
 
-AVCodec msgsm_decoder = { 
-    "msgsm",            
-    CODEC_TYPE_AUDIO,   
-    CODEC_ID_GSM_MS,                 
-    sizeof(XAGSMstate),  
-    gsm_decode_init,	
-    NULL,               
-    NULL,               
-    gsm_decode_frame,   
+AVCodec msgsm_decoder = {
+    "msgsm",
+    CODEC_TYPE_AUDIO,
+    CODEC_ID_GSM_MS,
+    sizeof(XAGSMstate),
+    gsm_decode_init,
+    NULL,
+    NULL,
+    gsm_decode_frame,
 };

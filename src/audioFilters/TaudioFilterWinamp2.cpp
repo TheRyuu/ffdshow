@@ -45,7 +45,7 @@ HRESULT TaudioFilterWinamp2::process(TfilterQueue::iterator it,TsampleFormat &fm
 {
  if (!is(fmt,cfg0))
   {
-   if (filter) 
+   if (filter)
     {
      done();
      old.flnm[0]=old.modulename[0]='\0';

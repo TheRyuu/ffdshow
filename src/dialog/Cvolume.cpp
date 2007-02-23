@@ -51,14 +51,14 @@ void TvolumePage::init(void)
    addHint(mutes[i],_l("mute"));
    addHint(solos[i],_l("solo"));
    SendDlgItemMessage(m_hwnd,pbrs[i],PBM_SETRANGE,0,MAKELPARAM(0,50));
-  } 
+  }
   for (int i=128;i<769;i+=128)
   {
 	  char_t buf[5];
 	  tsprintf(buf,_l("%4d"),i);
 	  cbxAdd(IDC_CBX_NORMALIZE_BUFFER_LENGTH,buf,i);
   }
-  switchDb(); 
+  switchDb();
 }
 
 void TvolumePage::switchDb(void)
@@ -74,10 +74,10 @@ void TvolumePage::switchDb(void)
     tbrSetRange(tbrs[i],-30,30,5);
    else
     tbrSetRange(tbrs[i],-300,0,10);
-  } 
- setDlgItemText(m_hwnd,IDC_LBL_VOLUME_NORMALIZE_MAX2,isdb?_l("db"):_l("%")); 
- master2dlg(); 
- speakers2dlg(); 
+  }
+ setDlgItemText(m_hwnd,IDC_LBL_VOLUME_NORMALIZE_MAX2,isdb?_l("db"):_l("%"));
+ master2dlg();
+ speakers2dlg();
  normalize2dlg();
 }
 
@@ -108,7 +108,7 @@ void TvolumePage::speakers2dlg(void)
 {
  for (int i=0;i<6;i++)
   cfg2volTbr(tbrs[i],lbls[i],idffs[i],0,-1);
- mute2dlg(); 
+ mute2dlg();
 }
 
 void TvolumePage::mute2dlg(void)
@@ -118,7 +118,7 @@ void TvolumePage::mute2dlg(void)
    int v=cfgGet(idffsMS[i]);
    setCheck(mutes[i],v==1);
    setCheck(solos[i],v==2);
-  } 
+  }
 }
 
 void TvolumePage::volTbr2cfg(int idc,int idff,int mult)
@@ -127,7 +127,7 @@ void TvolumePage::volTbr2cfg(int idc,int idff,int mult)
  if (isdb)
   x=mult*ff_round(db2value((double)x*mult)*100);
  cfgSet(idff,mult*x);
-} 
+}
 void TvolumePage::cfg2volTbr(int tbr,int lbl,int idff,int lbltran,int mult)
 {
  int x=cfgGet(idff);
@@ -136,10 +136,10 @@ void TvolumePage::cfg2volTbr(int tbr,int lbl,int idff,int lbltran,int mult)
    int db=ff_round(value2db(x/100.0));
    tbrSet(tbr,mult*db);
    if (lbltran)
-    setText(lbl,_l("%s %i db"),_(lbltran),db); 
+    setText(lbl,_l("%s %i db"),_(lbltran),db);
    else
-    setText(lbl,_l("%i db"),db); 
-  } 
+    setText(lbl,_l("%i db"),db);
+  }
  else
   {
    if (!isIn(x,0,300))
@@ -149,7 +149,7 @@ void TvolumePage::cfg2volTbr(int tbr,int lbl,int idff,int lbltran,int mult)
     setText(lbl,_l("%s %i%%"),_(lbltran),x);
    else
     setText(lbl,_l("%i%%"),x);
-  } 
+  }
 }
 
 INT_PTR TvolumePage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -160,8 +160,8 @@ INT_PTR TvolumePage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     switch (getId(HWND(lParam)))
      {
       case IDC_TBR_VOLUME_MASTER:volTbr2cfg(IDC_TBR_VOLUME_MASTER,IDFF_volume,1);master2dlg();return TRUE;
-     }  
-    break; 
+     }
+    break;
    case WM_VSCROLL:
     switch (getId(HWND(lParam)))
      {
@@ -171,10 +171,10 @@ INT_PTR TvolumePage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       case IDC_TBR_VOLUME_SL:volTbr2cfg(IDC_TBR_VOLUME_SL,IDFF_volumeSL,-1);speakers2dlg();return TRUE;
       case IDC_TBR_VOLUME_SR:volTbr2cfg(IDC_TBR_VOLUME_SR,IDFF_volumeSR,-1);speakers2dlg();return TRUE;
       case IDC_TBR_VOLUME_LFE:volTbr2cfg(IDC_TBR_VOLUME_LFE,IDFF_volumeLFE,-1);speakers2dlg();return TRUE;
-     }  
-    break; 
+     }
+    break;
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_ED_VOLUME_NORMALIZE_MAX:
        if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
@@ -194,15 +194,15 @@ INT_PTR TvolumePage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
                  db=ff_round(db2value((double)db)*100);
                  cfgSet(IDFF_maxNormalization,db);
                 }
-              } 
+              }
              else
-              eval(hed,0,3200,IDFF_maxNormalization); 
+              eval(hed,0,3200,IDFF_maxNormalization);
              break;
             }
           }
-         return TRUE; 
+         return TRUE;
         }
-       break; 
+       break;
       case IDC_CHB_VOLUME_L_MUTE:
       case IDC_CHB_VOLUME_C_MUTE:
       case IDC_CHB_VOLUME_R_MUTE:
@@ -227,12 +227,12 @@ INT_PTR TvolumePage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          if (idffsMS[i]==idff)
           cfgSet(idff,getCheck(LOWORD(wParam))?2:0);
          else
-          cfgSet(idffsMS[i],0); 
+          cfgSet(idffsMS[i],0);
         mute2dlg();
         break;
        }
      }
-    break;   
+    break;
    case WM_CTLCOLOREDIT:
     {
      HWND hwnd=HWND(lParam);
@@ -241,17 +241,17 @@ INT_PTR TvolumePage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       {
        case IDC_ED_VOLUME_NORMALIZE_MAX:
         ok=eval(hwnd,0,isdb?30:3200);break;
-       default:return FALSE; 
+       default:return FALSE;
       }
      if (!ok)
-      { 
+      {
        HDC dc=HDC(wParam);
        SetBkColor(dc,RGB(255,0,0));
        return INT_PTR(getRed());
       }
-     else return FALSE;  
+     else return FALSE;
     }
-  } 
+  }
  return TconfPageDecAudio::msgProc(uMsg,wParam,lParam);
 }
 Twidget* TvolumePage::createDlgItem(int id,HWND h)
@@ -262,11 +262,11 @@ Twidget* TvolumePage::createDlgItem(int id,HWND h)
     return new TwidgetMS(h,this,idffsMS[ii]);
    else if (id==tbrs[ii])
     return new TvolumeTbr(isdb,h,this,TbindTrackbars(htbr+ii));
-   else if (id==IDC_TBR_VOLUME_MASTER) 
+   else if (id==IDC_TBR_VOLUME_MASTER)
     return new TvolumeTbr(isdb,h,this,TbindTrackbars(htbr+6));
-  }  
- return TconfPageDecAudio::createDlgItem(id,h); 
-} 
+  }
+ return TconfPageDecAudio::createDlgItem(id,h);
+}
 
 void TvolumePage::TvolumeTbr::getEditMinMaxVal(const TffdshowParamInfo &info,int *min,int *max,int *val)
 {
@@ -275,7 +275,7 @@ void TvolumePage::TvolumeTbr::getEditMinMaxVal(const TffdshowParamInfo &info,int
    *min=-30;*max=30;
    *val=ff_round(value2db(self->deci->getParam2(info.id)/100.0));
   }
- else 
+ else
   TwidgetSubclassTbr::getEditMinMaxVal(info,min,max,val);
 }
 void TvolumePage::TvolumeTbr::storeEditValue(const TffdshowParamInfo &info,int min,int max,const char_t *valS)
@@ -284,7 +284,7 @@ void TvolumePage::TvolumeTbr::storeEditValue(const TffdshowParamInfo &info,int m
  self->eval(valS,min,max,&x,1,true);
  if (isdb)
   x=ff_round(db2value((double)x)*100);
- self->deci->putParam(info.id,x); 
+ self->deci->putParam(info.id,x);
 }
 
 void TvolumePage::onFrame(void)
@@ -307,46 +307,46 @@ void TvolumePage::onFrame(void)
         {
          pbr=IDC_PBR_VOLUME_L;
          isPbr[0]=true;
-        } 
+        }
        else if (channels[i]&SPEAKER_FRONT_RIGHT)
         {
          pbr=IDC_PBR_VOLUME_R;
          isPbr[2]=true;
-        } 
+        }
        else if (channels[i]&SPEAKER_FRONT_CENTER)
         {
          pbr=IDC_PBR_VOLUME_C;
          isPbr[1]=true;
-        } 
+        }
        else if (channels[i]&(SPEAKER_BACK_LEFT|SPEAKER_BACK_CENTER))
         {
-         pbr=IDC_PBR_VOLUME_SL; 
+         pbr=IDC_PBR_VOLUME_SL;
          isPbr[3]=true;
-        } 
+        }
        else if (channels[i]&SPEAKER_BACK_RIGHT)
         {
          pbr=IDC_PBR_VOLUME_SR;
          isPbr[4]=true;
-        } 
+        }
        else if (channels[i]&SPEAKER_LOW_FREQUENCY)
         {
          pbr=IDC_PBR_VOLUME_LFE;
          isPbr[5]=true;
-        } 
+        }
        else
         continue;
        SendDlgItemMessage(m_hwnd,pbr,PBM_SETPOS,volumes[i]?50+ff_round(value2db(volumes[i]/65536.0)):0,0);
        //SendDlgItemMessage(m_hwnd,pbr,PBM_SETBARCOLOR,0,LPARAM(CLR_DEFAULT));
-      } 
+      }
      for (unsigned int i=0;i<6;i++)
       if (!isPbr[i])
        {
         SendDlgItemMessage(m_hwnd,pbrs[i],PBM_SETPOS,0,0);
         //SendDlgItemMessage(m_hwnd,pbrs[i],PBM_SETBARCOLOR,0,LPARAM(CLR_NONE));
-       } 
-     return;  
-    } 
-  }  
+       }
+     return;
+    }
+  }
  for (int i=0;i<6;i++)
   SendDlgItemMessage(m_hwnd,pbrs[i],PBM_SETPOS,0,0);
 }
@@ -370,6 +370,6 @@ TvolumePage::TvolumePage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):Tconf
 	 0,NULL,BINDCBX_NONE,NULL
  };
  bindComboboxes(cbx);
- 
+
  bindHtracks(htbr);
 }

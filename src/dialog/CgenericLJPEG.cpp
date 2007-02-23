@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "CgenericLJPEG.h"
 #include "ffdshow_mediaguids.h"
@@ -39,7 +39,7 @@ bool TgenericLJPEGpage::enabled(void)
 }
 
 void TgenericLJPEGpage::cfg2dlg(void)
-{ 
+{
  cbxSetDataCurSel(IDC_CBX_LJPEG_CSP,cfgGet(IDFF_enc_ljpeg_csp));
 }
 

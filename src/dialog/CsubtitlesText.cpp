@@ -91,7 +91,7 @@ INT_PTR TsubtitlesTextPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_ED_SUB_MINDURATION:
        if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
@@ -108,9 +108,9 @@ INT_PTR TsubtitlesTextPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
              break;
             }
           }
-         return TRUE; 
+         return TRUE;
         }
-       break; 
+       break;
       case IDC_CHB_SUBFIX_AP:
       case IDC_CHB_SUBFIX_IL:
       case IDC_CHB_SUBFIX_PUNCTUATION:
@@ -132,7 +132,7 @@ INT_PTR TsubtitlesTextPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         break;
        }
      }
-    break;   
+    break;
    case WM_CTLCOLOREDIT:
     {
      HWND hwnd=HWND(lParam);
@@ -141,24 +141,24 @@ INT_PTR TsubtitlesTextPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       {
        case IDC_ED_SUB_MINDURATION:
         ok=eval(hwnd,1,3600000);break;
-       default:return FALSE; 
+       default:return FALSE;
       }
      if (!ok)
-      { 
+      {
        HDC dc=HDC(wParam);
        SetBkColor(dc,RGB(255,0,0));
        return INT_PTR(getRed());
       }
-     else return FALSE;  
+     else return FALSE;
     }
-  } 
+  }
  return TconfPageDecVideo::msgProc(uMsg,wParam,lParam);
 }
 
 void TsubtitlesTextPage::translate(void)
-{ 
+{
  TconfPageBase::translate();
- 
+
  cbxTranslate(IDC_CBX_SUB_MINDURATION,TsubtitlesSettings::durations);
  cbxTranslate(IDC_CBX_SUBFIX_IL,TsubtitlesSettings::fixIls);
 }
@@ -193,5 +193,5 @@ TsubtitlesTextPage::TsubtitlesTextPage(TffdshowPageDec *Iparent,const TfilterIDF
    IDC_ED_SUB_SPLIT_BORDER,0,4096,IDFF_subSplitBorder,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
 }

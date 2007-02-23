@@ -30,7 +30,7 @@ T3x3blurSWS::T3x3blurSWS(IffdshowBase *deci,unsigned int Idx,unsigned int Idy):d
  deci->getPostproc(&libmplayer);
  SwsFilter swsf;
  swsf.lumV=swsf.lumH=libmplayer->sws_getConstVec(1/3.0,3);
- swsf.chrH=swsf.chrV=NULL; 
+ swsf.chrH=swsf.chrV=NULL;
  SwsParams params;Tlibmplayer::swsInitParams(&params,0);
  swsc=libmplayer->sws_getContext(dx,dy,IMGFMT_Y800,dx,dy,IMGFMT_Y800,&params,&swsf,NULL);
  libmplayer->sws_freeVec(swsf.lumH);
@@ -45,5 +45,5 @@ void T3x3blurSWS::process(const unsigned char *src,stride_t srcStride,unsigned c
  if (swsc)
   libmplayer->sws_scale_ordered(swsc,&src,&srcStride,0,dy,&dst,&dstStride);
  else
-  TffPict::copy(dst,dstStride,src,srcStride,dx,dy); 
+  TffPict::copy(dst,dstStride,src,srcStride,dx,dy);
 }

@@ -97,7 +97,7 @@ void TimgFilterWarpsharp::warpsharpblur(const unsigned char *src,stride_t srcStr
  if (swsblur)
   libmplayer->sws_scale_ordered(swsblur,&src,&srcStride,0,dy,&dst,&dstStride);
  else
-  TffPict::copy(dst,dstStride,src,srcStride,dx,dy); 
+  TffPict::copy(dst,dstStride,src,srcStride,dx,dy);
 }
 
 void TimgFilterWarpsharp::warpsharp(const unsigned char *src,unsigned char *dst,const TwarpsharpSettings *cfg)
@@ -120,11 +120,11 @@ void TimgFilterWarpsharp::warpsharp(const unsigned char *src,unsigned char *dst,
    swsf.lumV->coeff[3]=4;
    swsf.lumV->coeff[4]=1;
    libmplayer->sws_normalizeVec(swsf.lumV,1);
-   swsf.chrH=swsf.chrV=NULL; 
+   swsf.chrH=swsf.chrV=NULL;
    SwsParams params;Tlibmplayer::swsInitParams(&params,0);
    swsblur=libmplayer->sws_getContext(dx1[0],dy1[0],IMGFMT_Y800,dx1[0],dy1[0],IMGFMT_Y800,&params,&swsf,NULL);
    libmplayer->sws_freeVec(swsf.lumV);
-  } 
+  }
  warpsharpblur(dst,stride2[0],blur,blurworkStride,dx1[0],dy1[0]);
 
  memcpy(dst,src,dx1[0]);dst+=stride2[0];src+=stride1[0];
@@ -146,7 +146,7 @@ void TimgFilterWarpsharp::warpsharp(const unsigned char *src,unsigned char *dst,
      dst[x]=warpcubic.interpolate(src+x+stride1[0]*(dispy-1)+(dispx-1)+1,stride1[0],qx,qy);
     }
   }
- _mm_empty(); 
+ _mm_empty();
  memcpy(dst,src,dx1[0]);src+=stride1[0];dst+=stride2[0];
  memcpy(dst,src,dx1[0]);src+=stride1[0];dst+=stride2[0];
  memcpy(dst,src,dx1[0]);
@@ -161,7 +161,7 @@ bool TimgFilterWarpsharp::is(const TffPictBase &pict,const TfilterSettingsVideo 
 HRESULT TimgFilterWarpsharp::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  if (is(pict,cfg0))
-  {   
+  {
    const TwarpsharpSettings *cfg=(const TwarpsharpSettings*)cfg0;
    init(pict,cfg->full,cfg->half);
    if (!libmplayer) deci->getPostproc(&libmplayer);
@@ -172,7 +172,7 @@ HRESULT TimgFilterWarpsharp::process(TfilterQueue::iterator it,TffPict &pict,con
    warpsharp(srcY,dstY,cfg);
   }
  return parent->deliverSample(++it,pict);
-}                             
+}
 
 //=========================================== TimgFilterAwarpsharp ===========================================
 TimgFilterAwarpsharp::TimgFilterAwarpsharp(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
@@ -185,7 +185,7 @@ void TimgFilterAwarpsharp::done(void)
   {
    aligned_free(aws.work.yplane.ptr);
    aws.work.yplane.ptr=NULL;
-  } 
+  }
 }
 
 bool TimgFilterAwarpsharp::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0)
@@ -198,7 +198,7 @@ HRESULT TimgFilterAwarpsharp::process(TfilterQueue::iterator it,TffPict &pict,co
 {
  #if !defined(__GNUC__) && !defined(WIN64)
  if (is(pict,cfg0))
-  {   
+  {
    const TwarpsharpSettings *cfg=(const TwarpsharpSettings*)cfg0;
    init(pict,cfg->full,cfg->half);
    getCur(FF_CSP_420P|FF_CSP_FLAGS_YUV_ADJ,pict,cfg->full,(const unsigned char**)&aws.src.yplane.ptr,(const unsigned char**)&aws.src.uplane.ptr,(const unsigned char**)&aws.src.vplane.ptr,NULL);
@@ -208,11 +208,11 @@ HRESULT TimgFilterAwarpsharp::process(TfilterQueue::iterator it,TffPict &pict,co
      aws.work.yplane.width=aws.work.yplane.pitch=dx1[0];aws.work.yplane.height=dy1[0];aws.work.yplane.ptr=(unsigned char*)aligned_calloc(dx1[0]*dy1[0]*pict.cspInfo.bpp/8,1);
      aws.work.uplane.width=aws.work.uplane.pitch=dx1[1];aws.work.uplane.height=dy1[1];aws.work.uplane.ptr=aws.work.yplane.ptr+dx1[0]*dy1[0];
      aws.work.vplane.width=aws.work.vplane.pitch=dx1[2];aws.work.vplane.height=dy1[2];aws.work.vplane.ptr=aws.work.uplane.ptr+dx1[1]*dy1[1];
-     pict.clear(cfg->full); 
+     pict.clear(cfg->full);
     }
    aws.blurlevel=cfg->awarpsharpBlur;
    aws.cm=cfg->awarpsharpCM;
-   aws.bm=cfg->awarpsharpBM; 
+   aws.bm=cfg->awarpsharpBM;
    aws.depth=(int)((cfg->awarpsharpDepth/100.0)*512*aws.blurlevel/4.0+0.5);
    aws.thresh=(int)((cfg->awarpsharpThresh/100.0)*256+0.5);
    aws.src.yplane.width=dx1[0];aws.src.yplane.height=dy1[0];aws.src.uplane.width=dx1[1];aws.src.uplane.height=dy1[1];aws.src.vplane.width=dx1[2];aws.src.vplane.height=dy1[2];aws.src.yplane.pitch=stride1[0];aws.src.uplane.pitch=stride1[1];aws.src.vplane.pitch=stride1[2];

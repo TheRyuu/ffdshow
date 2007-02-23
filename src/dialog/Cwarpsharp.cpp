@@ -86,9 +86,9 @@ INT_PTR TwarpsharpPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
                 break;
         }
        return TRUE;
-     }  
-    break; 
-  }    
+     }
+    break;
+  }
  return TconfPageDecVideo::msgProc(uMsg,wParam,lParam);
 }
 
@@ -96,9 +96,9 @@ Twidget* TwarpsharpPage::createDlgItem(int id,HWND h)
 {
  if (id==IDC_TBR_SHARPEN1 || id==IDC_TBR_SHARPEN1 || id==IDC_TBR_SHARPEN1)
   return new TwidgetSubclassTbr(h,this,NULL);
- else 
-  return TconfPageDecVideo::createDlgItem(id,h); 
-} 
+ else
+  return TconfPageDecVideo::createDlgItem(id,h);
+}
 int TwarpsharpPage::getTbrIdff(int id,const TbindTrackbars bind)
 {
  int mode=cfgGet(IDFF_warpsharpMethod);
@@ -108,13 +108,13 @@ int TwarpsharpPage::getTbrIdff(int id,const TbindTrackbars bind)
    case IDC_TBR_SHARPEN2:return mode==0?IDFF_warpsharpThreshold:IDFF_awarpsharpThresh;
    case IDC_TBR_SHARPEN3:return mode==0?0:IDFF_awarpsharpBlur;
    default:return 0;
-  } 
+  }
 }
 
 void TwarpsharpPage::translate(void)
 {
  TconfPageDec::translate();
- 
+
  cbxTranslate(IDC_CBX_WARPSHARP_AWARPSHARP_CM,TwarpsharpSettings::cms);
  cbxTranslate(IDC_CBX_WARPSHARP_AWARPSHARP_BM,TwarpsharpSettings::bms);
 }

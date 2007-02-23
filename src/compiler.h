@@ -11,7 +11,7 @@
     #define COMPILER "icl 9"
   #elif __INTEL_COMPILER  >= 800
     #define COMPILER "icl 8"
-  #else  
+  #else
     #define COMPILER "icl"
   #endif
 #elif defined(_MSC_VER)
@@ -28,16 +28,16 @@
     #ifdef __SSE2__
       #define COMPILER_SSE2 ",sse2"
     #else
-      #define COMPILER_SSE2 "" 
+      #define COMPILER_SSE2 ""
     #endif
   #else
     #define COMPILER_SSE ""
-    #define COMPILER_SSE2 "" 
+    #define COMPILER_SSE2 ""
   #endif
   #define COMPILER "gcc "STRINGIFY(__GNUC__)"."STRINGIFY(__GNUC_MINOR__)"."STRINGIFY(__GNUC_PATCHLEVEL__) COMPILER_SSE COMPILER_SSE2
 #else
   #define COMPILER "unknown"
-#endif  
+#endif
 
 #ifdef WIN64
   #define COMPILER_X64 ", x64"

@@ -22,7 +22,7 @@ private:
    Tblendplane blend;
    virtual void print(unsigned int dx[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const;
   } w;
- TrenderedSubtitleLine l; 
+ TrenderedSubtitleLine l;
  TrenderedSubtitleLines ls;
  int oldmode;
  template<class _mm> static void blend(const TcspInfo &cspInfo,const unsigned int dx[3],const unsigned int dy[3],unsigned char *dst[3],const stride_t dststride[3],const unsigned char *src[3],const stride_t srcstride[3],int strength,int invstrength);

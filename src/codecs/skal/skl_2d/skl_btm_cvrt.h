@@ -18,7 +18,7 @@
 // converters
 //////////////////////////////////////////////////////////
 
-extern "C" 
+extern "C"
 SKL_CVRT_FUNC Skl_Get_Cvrt_Convert_Ops(int In_Quantum, int Out_Quantum);
 extern "C"
 SKL_CVRT_FUNC Skl_Get_Cvrt_Copy_Ops(int Quant);
@@ -36,7 +36,7 @@ class SKL_CONVERTER_MAP
     SKL_CVRT_FUNC _Func;
 
       // yes. private. Use Get_Or_Make_Map() (+Dispose()) instead
-    SKL_CONVERTER_MAP(SKL_FORMAT In, SKL_FORMAT Out); 
+    SKL_CONVERTER_MAP(SKL_FORMAT In, SKL_FORMAT Out);
 
     void Init_Colormapper();
     void Init_Converter();

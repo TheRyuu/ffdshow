@@ -27,7 +27,7 @@ private:
  NeAACDecConfigurationPtr (NEAACDECAPI *NeAACDecGetCurrentConfiguration)(NeAACDecHandle hDecoder);
  unsigned char (NEAACDECAPI *NeAACDecSetConfiguration)(NeAACDecHandle hDecoder,
                                                        NeAACDecConfigurationPtr config);
-                                
+
  NeAACDecHandle m_decHandle;
  mp4AudioSpecificConfig info;
  std::map<int,int> chmask;

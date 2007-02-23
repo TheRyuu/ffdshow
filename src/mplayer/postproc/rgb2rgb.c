@@ -372,7 +372,7 @@ void palette8tobgr32(const uint8_t *src, uint8_t *dst, long num_pixels, const ui
 		dst[2]= palette[ src[i]*4+2 ];
 //		dst[3]= 0; /* do we need this cleansing? */
 		#endif
-		
+
 		dst+= 4;
 	}
 }
@@ -531,7 +531,7 @@ void rgb16tobgr16(const uint8_t *src, uint8_t *dst, stride_t src_size)
 {
 	long i;
 	stride_t num_pixels = src_size >> 1;
-	
+
 	for(i=0; i<num_pixels; i++)
 	{
 	    unsigned b,g,r;
@@ -548,7 +548,7 @@ void rgb16tobgr15(const uint8_t *src, uint8_t *dst, stride_t src_size)
 {
 	long i;
 	stride_t num_pixels = src_size >> 1;
-	
+
 	for(i=0; i<num_pixels; i++)
 	{
 	    unsigned b,g,r;
@@ -605,7 +605,7 @@ void rgb15tobgr16(const uint8_t *src, uint8_t *dst, stride_t src_size)
 {
 	long i;
 	stride_t num_pixels = src_size >> 1;
-	
+
 	for(i=0; i<num_pixels; i++)
 	{
 	    unsigned b,g,r;
@@ -622,7 +622,7 @@ void rgb15tobgr15(const uint8_t *src, uint8_t *dst, stride_t src_size)
 {
 	long i;
 	stride_t num_pixels = src_size >> 1;
-	
+
 	for(i=0; i<num_pixels; i++)
 	{
 	    unsigned b,g,r;

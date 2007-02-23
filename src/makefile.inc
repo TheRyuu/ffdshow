@@ -9,10 +9,10 @@ endif
 
 ifeq ($(CC),icl)
   OUTPUTFLAG=/Fo
-  CFLAGS+=/nologo /MD /LD 
+  CFLAGS+=/nologo /MD /LD
   CFLAGS+=/D "WIN64" /D "_WIN64" /D "_WINDOWS" /D "_USERDLL" /D "NDEBUG" -DUCLIBCPP -D_WIN32_IE=0x0500
   OPTFLAGS=/O3 /G7 /GF /Oa /Zc:forScope /Qip /Zc:wchar_t
-else 
+else
 ifeq ($(CC),cl)
   OUTPUTFLAG=/Fo
 
@@ -56,23 +56,23 @@ CFLAGS+=-I. -I.. -Iuclibc++ -Ibaseclasses -I../baseclasses \
 OBJS=$(SRCS:.cpp=.o) $(SRCS_C:.c=.o) $(SRCS_NASM:.asm=.o) $(RESSRC:.rc:.res.o)
 
 .c.o:
-	$(FFDSHOW_PREFIX)$(CC) -c $(CFLAGS) $(OPTFLAGS) $(OUTPUTFLAG)$@ $< 
+	$(FFDSHOW_PREFIX)$(CC) -c $(CFLAGS) $(OPTFLAGS) $(OUTPUTFLAG)$@ $<
 
 .cpp.o:
-	$(FFDSHOW_PREFIX)$(CC) -c $(CFLAGS) $(OPTFLAGS) $(OUTPUTFLAG)$@ $< 
+	$(FFDSHOW_PREFIX)$(CC) -c $(CFLAGS) $(OPTFLAGS) $(OUTPUTFLAG)$@ $<
 
 %.o: %.asm
 	$(NASM) -f win32 -DWIN32 -DPREFIX $(NASMFLAGS) -I$(<D)/ -o $@ $<
 
 ifeq ($(CC),icl)
-%.res.o: %.rc 
-	rc /Fo$@ $<
-else 
-ifeq ($(CC),cl)
-%.res.o: %.rc 
+%.res.o: %.rc
 	rc /Fo$@ $<
 else
-%.res.o: %.rc 
+ifeq ($(CC),cl)
+%.res.o: %.rc
+	rc /Fo$@ $<
+else
+%.res.o: %.rc
 	$(FFDSHOW_PREFIX)windres $< -o $@ -D_WIN32_IE=0x0500 -DIDCLOSE=8
 endif
 endif
@@ -80,9 +80,9 @@ endif
 ifeq ($(CC),icl)
 $(LIBNAME): $(OBJS)
 	lib $(OBJS) /OUT:$(LIBNAME)
-else 
+else
 $(LIBNAME): $(OBJS)
-	$(FFDSHOW_PREFIX)ar rcs $@ $^ 
+	$(FFDSHOW_PREFIX)ar rcs $@ $^
 endif
 
 .distclean: clean

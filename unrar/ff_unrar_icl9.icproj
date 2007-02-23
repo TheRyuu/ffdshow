@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="windows-1250"?>
-<VisualStudioProject 
+<VisualStudioProject
 	ProjectType="Intel C++ Project"
 	Version="9.1"
 	Name="ff_unrar"
@@ -8,17 +8,17 @@
 	VCNestedProjectFileName="ff_unrar_icl9.vcproj"
 	Keyword="Win32Proj">
 	<Configurations>
-		<Configuration 
+		<Configuration
 			Name="Debug|Win32">
-			<Tool 
+			<Tool
 				Name="GeneralTool"
 				OutputDirectory="debug_icl9"
 				IntermediateDirectory="debug_icl9"
 				ConfigurationType="2"
 				CharacterSet="0"/>
-			<Tool 
+			<Tool
 				Name="DebugTool"/>
-			<Tool 
+			<Tool
 				Name="CppCmplrTool"
 				Optimization="0"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;SFX_MODULE;SHELL_EXT"
@@ -31,7 +31,7 @@
 				PrecompiledHeaderThrough="rar.hpp"
 				WarningLevel="0"
 				DebugInformationFormat="4"/>
-			<Tool 
+			<Tool
 				Name="LinkerTool"
 				DelayImpLib=""
 				IgnoreImportLibrary="1"
@@ -44,37 +44,37 @@
 				SubSystem="2"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"/>
-			<Tool 
+			<Tool
 				Name="LibrarianTool"/>
-			<Tool 
+			<Tool
 				Name="ResCmplrTool"/>
-			<Tool 
+			<Tool
 				Name="MidlCmplrTool"/>
-			<Tool 
+			<Tool
 				Name="BscMakeTool"/>
-			<Tool 
+			<Tool
 				Name="PreBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="PreLinkEventTool"/>
-			<Tool 
+			<Tool
 				Name="PostBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="CustomTool"/>
-			<Tool 
+			<Tool
 				Name="CustomNodeTool"/>
 		</Configuration>
-		<Configuration 
+		<Configuration
 			Name="Release|Win32">
-			<Tool 
+			<Tool
 				Name="GeneralTool"
 				OutputDirectory="release_icl9"
 				IntermediateDirectory="release_icl9"
 				ConfigurationType="2"
 				CharacterSet="0"
 				WholeProgramOptimization="1"/>
-			<Tool 
+			<Tool
 				Name="DebugTool"/>
-			<Tool 
+			<Tool
 				Name="CppCmplrTool"
 				Optimization="1000"
 				GlobalOptimizations="1"
@@ -93,7 +93,7 @@
 				WarningLevel="0"
 				DebugInformationFormat="0"
 				AdditionalOptions="/Qip"/>
-			<Tool 
+			<Tool
 				Name="LinkerTool"
 				DelayImpLib=""
 				IgnoreImportLibrary="1"
@@ -109,208 +109,211 @@
 				OptimizeForWindows98="1"
 				ImportLibrary="$(OutDir)/ff_unrar.lib"
 				TargetMachine="1"/>
-			<Tool 
+			<Tool
 				Name="LibrarianTool"/>
-			<Tool 
+			<Tool
 				Name="ResCmplrTool"/>
-			<Tool 
+			<Tool
 				Name="MidlCmplrTool"/>
-			<Tool 
+			<Tool
 				Name="BscMakeTool"/>
-			<Tool 
+			<Tool
 				Name="PreBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="PreLinkEventTool"/>
-			<Tool 
+			<Tool
 				Name="PostBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="CustomTool"/>
-			<Tool 
+			<Tool
 				Name="CustomNodeTool"/>
 		</Configuration>
 	</Configurations>
 	<Files>
-		<File 
+		<File
 			RelativePath=".\archive.cpp"/>
-		<File 
+		<File
 			RelativePath=".\arcread.cpp"/>
-		<File 
+		<File
 			RelativePath=".\cmddata.cpp"/>
-		<File 
+		<File
 			RelativePath=".\crc.cpp"/>
-		<File 
+		<File
 			RelativePath=".\dll.cpp">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					UsePrecompiledHeader="1"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					UsePrecompiledHeader="1"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\encname.cpp"/>
-		<File 
+		<File
 			RelativePath=".\errhnd.cpp"/>
-		<File 
+		<File
 			RelativePath=".\extinfo.cpp"/>
-		<File 
+		<File
 			RelativePath=".\extract.cpp"/>
-		<File 
+		<File
 			RelativePath=".\filcreat.cpp"/>
-		<File 
+		<File
 			RelativePath=".\file.cpp"/>
-		<File 
+		<File
 			RelativePath=".\filefn.cpp"/>
-		<File 
+		<File
 			RelativePath=".\find.cpp"/>
-		<File 
+		<File
 			RelativePath=".\getbits.cpp"/>
-		<File 
+		<File
 			RelativePath=".\int64.cpp"/>
-		<File 
+		<File
 			RelativePath=".\isnt.cpp"/>
-		<File 
+		<File
 			RelativePath=".\match.cpp"/>
-		<File 
+		<File
 			RelativePath=".\options.cpp"/>
-		<File 
+		<File
 			RelativePath=".\pathfn.cpp"/>
-		<File 
+		<File
 			RelativePath=".\rarvm.cpp"/>
-		<File 
+		<File
 			RelativePath=".\rawread.cpp"/>
-		<File 
+		<File
 			RelativePath=".\rdwrfn.cpp"/>
-		<File 
+		<File
 			RelativePath=".\recvol.cpp"/>
-		<File 
+		<File
 			RelativePath=".\rs.cpp"/>
-		<File 
+		<File
 			RelativePath=".\savepos.cpp"/>
-		<File 
+		<File
 			RelativePath=".\scantree.cpp"/>
-		<File 
+		<File
 			RelativePath=".\strfn.cpp"/>
-		<File 
+		<File
 			RelativePath=".\strlist.cpp"/>
-		<File 
+		<File
 			RelativePath=".\system.cpp"/>
-		<File 
+		<File
 			RelativePath=".\unicode.cpp"/>
-		<File 
+		<File
 			RelativePath=".\unpack.cpp"/>
-		<File 
+		<File
 			RelativePath=".\archive.hpp"/>
-		<File 
+		<File
 			RelativePath=".\array.hpp"/>
-		<File 
+		<File
 			RelativePath=".\cmddata.hpp"/>
-		<File 
+		<File
 			RelativePath=".\coder.hpp"/>
-		<File 
+		<File
 			RelativePath=".\compress.hpp"/>
-		<File 
+		<File
 			RelativePath=".\consio.hpp"/>
-		<File 
+		<File
 			RelativePath=".\crc.hpp"/>
-		<File 
+		<File
 			RelativePath=".\dll.hpp"/>
-		<File 
+		<File
 			RelativePath=".\encname.hpp"/>
-		<File 
+		<File
 			RelativePath=".\errhnd.hpp"/>
-		<File 
+		<File
 			RelativePath=".\extinfo.hpp"/>
-		<File 
+		<File
 			RelativePath=".\extract.hpp"/>
-		<File 
+		<File
 			RelativePath=".\filcreat.hpp"/>
-		<File 
+		<File
 			RelativePath=".\file.hpp"/>
-		<File 
+		<File
 			RelativePath=".\filefn.hpp"/>
-		<File 
+		<File
 			RelativePath=".\filestr.hpp"/>
-		<File 
+		<File
 			RelativePath=".\find.hpp"/>
-		<File 
+		<File
 			RelativePath=".\getbits.hpp"/>
-		<File 
+		<File
 			RelativePath=".\global.hpp"/>
-		<File 
+		<File
 			RelativePath=".\headers.hpp"/>
-		<File 
+		<File
 			RelativePath=".\int64.hpp"/>
-		<File 
+		<File
 			RelativePath=".\isnt.hpp"/>
-		<File 
+		<File
 			RelativePath=".\loclang.hpp"/>
-		<File 
+		<File
 			RelativePath=".\log.hpp"/>
-		<File 
+		<File
 			RelativePath=".\match.hpp"/>
-		<File 
+		<File
 			RelativePath=".\model.hpp"/>
-		<File 
+		<File
 			RelativePath=".\options.hpp"/>
-		<File 
+		<File
 			RelativePath=".\os.hpp"/>
-		<File 
+		<File
 			RelativePath=".\pathfn.hpp"/>
-		<File 
+		<File
 			RelativePath=".\rar.hpp"/>
-		<File 
+		<File
 			RelativePath=".\rardefs.hpp"/>
-		<File 
+		<File
 			RelativePath=".\rarfn.hpp"/>
-		<File 
+		<File
 			RelativePath=".\rarlang.hpp"/>
-		<File 
+		<File
 			RelativePath=".\raros.hpp"/>
-		<File 
+		<File
 			RelativePath=".\rartypes.hpp"/>
-		<File 
+		<File
 			RelativePath=".\rarvm.hpp"/>
-		<File 
+		<File
 			RelativePath=".\rawread.hpp"/>
-		<File 
+		<File
 			RelativePath=".\rdwrfn.hpp"/>
-		<File 
+		<File
 			RelativePath=".\recvol.hpp"/>
-		<File 
+		<File
 			RelativePath=".\resource.hpp"/>
-		<File 
+		<File
 			RelativePath=".\rs.hpp"/>
-		<File 
+		<File
 			RelativePath=".\savepos.hpp"/>
-		<File 
+		<File
 			RelativePath=".\scantree.hpp"/>
-		<File 
+		<File
 			RelativePath=".\smallfn.hpp"/>
-		<File 
+		<File
 			RelativePath=".\strfn.hpp"/>
-		<File 
+		<File
 			RelativePath=".\strlist.hpp"/>
-		<File 
+		<File
 			RelativePath=".\suballoc.hpp"/>
-		<File 
+		<File
 			RelativePath=".\system.hpp"/>
-		<File 
+		<File
 			RelativePath=".\timefn.hpp"/>
-		<File 
+		<File
 			RelativePath=".\unicode.hpp"/>
-		<File 
+		<File
 			RelativePath=".\unpack.hpp"/>
-		<File 
+		<File
 			RelativePath=".\version.hpp"/>
-		<File 
+		<File
 			RelativePath=".\dll.def"/>
 	</Files>
 </VisualStudioProject>
+
+
+
 

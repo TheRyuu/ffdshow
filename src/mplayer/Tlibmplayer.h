@@ -39,7 +39,7 @@ public:
  void (*pp_free_context)(pp_context_t *ppContext);
 
  SwsVector* (*sws_getGaussianVec)(double variance, double quality);
- SwsVector* (*sws_getConstVec)(double c,int length); 
+ SwsVector* (*sws_getConstVec)(double c,int length);
  void (*sws_freeVec)(SwsVector *a);
  void (*sws_normalizeVec)(SwsVector *a, double height);
  SwsFilter* (*sws_getDefaultFilter)(float lumaGBlur, float chromaGBlur, float lumaSarpen, float chromaSharpen, float chromaHShift, float chromaVShift, int verbose);
@@ -63,7 +63,7 @@ public:
  void (*palette8tobgr15)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
  void (*decCPUCount)(void);
  void (*incCPUCount)(void);
- 
+
  static int swsCpuCaps(void);
  static void swsInitParams(SwsParams *params,int resizeMethod);
  static int ppCpuCaps(int csp=0);

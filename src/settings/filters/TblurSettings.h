@@ -10,7 +10,7 @@ private:
 protected:
  virtual void getMinMax(int id,int &min,int &max);
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  TblurSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  int isSoften,soften;
  int isTempSmooth,tempSmooth,tempSmoothColor;

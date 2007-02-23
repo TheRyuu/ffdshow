@@ -35,7 +35,7 @@ Twinamp2::Twinamp2(const char_t *Iwinampdir)
    Twinamp2dspDll *dsp=new Twinamp2dspDll(*flnm);
    if (!dsp->filters.empty())
     dsps.push_back(dsp);
-   else 
+   else
     delete dsp;
   }
 }
@@ -50,7 +50,7 @@ Twinamp2dspDll* Twinamp2::getFilter(const char_t *flnm)
  for (Twinamp2dspDlls::iterator d=dsps.begin();d!=dsps.end();d++)
   if ((*d)->descr==flnm)
    return *d;
- return NULL;  
+ return NULL;
 }
 
 Twinamp2dsp* Twinamp2::getFilter(const Twinamp2settings *cfg)
@@ -76,7 +76,7 @@ Twinamp2dspDll::Twinamp2dspDll(const ffstring &flnm):refcount(1)
  if (dll->ok)
   {
    hdr=winampDSPGetHeaderType();
-   if (hdr->version!=DSP_HDRVER) 
+   if (hdr->version!=DSP_HDRVER)
     {
      hdr=NULL;
      return;
@@ -98,16 +98,16 @@ Twinamp2dspDll::~Twinamp2dspDll()
   delete *f;
  delete dll;
 }
-void Twinamp2dspDll::addref(void) 
+void Twinamp2dspDll::addref(void)
 {
  refcount++;
  DPRINTFA("Twinamp2dspDll: %s: %i",hdr->description,refcount);
 }
-void Twinamp2dspDll::release(void) 
+void Twinamp2dspDll::release(void)
 {
  refcount--;
  DPRINTFA("Twinamp2dspDll: %s: %i",hdr->description,refcount);
- if (refcount==0) 
+ if (refcount==0)
   {
    DPRINTFA("Twinamp2dspDll: deleting: %s",hdr->description);
    delete this;
@@ -129,7 +129,7 @@ int Twinamp2dsp::init(void)
    while (!h) Sleep(20);
    return (h!=(HWND)-1)?1:(h=NULL,0);
   }
- else 
+ else
   return 0;
 }
 void Twinamp2dsp::config(HWND parent)
@@ -144,7 +144,7 @@ void Twinamp2dsp::done(void)
 {
  if (!inited) return;
  inited--;
- if (inited==0 && h) 
+ if (inited==0 && h)
   {
    SendMessage(h,WM_CLOSE,0,0);
    WaitForSingleObject(hThread,INFINITE);
@@ -163,7 +163,7 @@ size_t Twinamp2dsp::process(int16_t *samples,size_t numsamples,int bps,int nch,i
 LRESULT CALLBACK Twinamp2dsp::wndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM lprm)
 {
  switch (msg)
-  { 
+  {
    case WM_DESTROY:
     PostQuitMessage(0);
     break;
@@ -177,7 +177,7 @@ unsigned int __stdcall Twinamp2dsp::threadProc(void *self0)
  static const char_t *FFDSHOW_WINAMP_CLASS=_l("ffdshow_winamp_class");
  randomize();
  setThreadName(DWORD(-1),"winamp2");
- 
+
  HINSTANCE hi=self->mod->hDllInstance;
  char_t windowName[80];tsprintf(windowName,_l("%s_window%i"),FFDSHOW_WINAMP_CLASS,rand());
  HWND h=createInvisibleWindow(hi,FFDSHOW_WINAMP_CLASS,windowName,wndProc,self,NULL);
@@ -194,14 +194,14 @@ unsigned int __stdcall Twinamp2dsp::threadProc(void *self0)
        TranslateMessage(&msg);
        DispatchMessage(&msg);
       }
-    }  
+    }
    self->mod->Quit(self->mod);
   }
  else
   {
    self->h=(HWND)-1;
    DestroyWindow(h);
-  } 
+  }
  UnregisterClass(FFDSHOW_WINAMP_CLASS,hi);
  _endthreadex(0);
  return 0;

@@ -9,7 +9,7 @@ private:
  static const TfilterIDFF idffs;
 protected:
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  TpostprocSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  int method,nicFirst;
  int qual;

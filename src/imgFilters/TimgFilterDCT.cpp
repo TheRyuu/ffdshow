@@ -36,28 +36,28 @@ TimgFilterDCT::TimgFilterDCT(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(I
    fdct=fdct_sse2;
    idct=idct_sse2;
   }
-#endif  
-#ifndef WIN64 
+#endif
+#ifndef WIN64
  #ifdef __SSE2__
  else
- #endif 
+ #endif
  if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
   {
-   fdct=fdct_xmm_skal;  
+   fdct=fdct_xmm_skal;
    idct=Skl_IDct16_SSE;
   }
  else if (Tconfig::cpu_flags&FF_CPU_MMX)
   {
-   fdct=fdct_mmx_skal;  
+   fdct=fdct_mmx_skal;
    idct=Skl_IDct16_MMX;
   }
-#endif 
+#endif
  else
   {
    fdct=fdct_c;
    idct=idct_c;
    idct_c_init();
-  } 
+  }
  oldfac[0]=INT_MAX;oldMode=-1;oldmatrix[0]=0;
  pWorkArea=(short*)aligned_malloc(64*sizeof(short),16);
 }
@@ -78,7 +78,7 @@ void TimgFilterDCT::multiply(void)
 
  *(__m64*)(pWorkArea+2*8+0)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+2*8+0),*(__m64*)(factors8+2*16  )),3);
  *(__m64*)(pWorkArea+2*8+4)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+2*8+4),*(__m64*)(factors8+2*16+8)),3);
- 
+
  *(__m64*)(pWorkArea+3*8+0)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+3*8+0),*(__m64*)(factors8+3*16  )),3);
  *(__m64*)(pWorkArea+3*8+4)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+3*8+4),*(__m64*)(factors8+3*16+8)),3);
 
@@ -90,7 +90,7 @@ void TimgFilterDCT::multiply(void)
 
  *(__m64*)(pWorkArea+6*8+0)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+6*8+0),*(__m64*)(factors8+6*16  )),3);
  *(__m64*)(pWorkArea+6*8+4)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+6*8+4),*(__m64*)(factors8+6*16+8)),3);
- 
+
  *(__m64*)(pWorkArea+7*8+0)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+7*8+0),*(__m64*)(factors8+7*16  )),3);
  *(__m64*)(pWorkArea+7*8+4)=_mm_srai_pi16(_mm_mullo_pi16(*(__m64*)(pWorkArea+7*8+4),*(__m64*)(factors8+7*16+8)),3);
 }
@@ -187,9 +187,9 @@ void TimgFilterDCT::quant_mpeg_inter(int16_t * coeff,const uint32_t quant,const 
    FIX(48), FIX(50), FIX(52), FIX(54),
    FIX(56), FIX(58), FIX(60), FIX(62)
   };
- #undef FIX  
+ #undef FIX
  #undef SCALEBITS
- 
+
  const uint32_t mult = multipliers[quant];
  const uint16_t *inter_matrix = mpeg_quant_matrices;
  uint32_t sum = 0;
@@ -262,10 +262,10 @@ HRESULT TimgFilterDCT::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
    if (modechange)
     switch (oldMode=cfg->mode)
      {
-      case 1:processDct=&TimgFilterDCT::h263;break; 
-      case 2:processDct=&TimgFilterDCT::mpeg;break; 
+      case 1:processDct=&TimgFilterDCT::h263;break;
+      case 2:processDct=&TimgFilterDCT::mpeg;break;
       default:
-      case 0:processDct=&TimgFilterDCT::multiply;break; 
+      case 0:processDct=&TimgFilterDCT::multiply;break;
      }
    if (oldMode==0 && (modechange || memcmp(oldfac,&cfg->fac0,sizeof(oldfac))!=0))
     {
@@ -281,8 +281,8 @@ HRESULT TimgFilterDCT::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
      for (int i=0;i<8;i++)
       for (int j=0;j<8;j++)
        factors[i][j]=(short)limit<int>(*m++,1,255);
-    } 
-   quant=cfg->quant; 
+    }
+   quant=cfg->quant;
    const unsigned char *srcY;
    getCur(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,&srcY,NULL,NULL,NULL);
    unsigned char *dstY;
@@ -292,7 +292,7 @@ HRESULT TimgFilterDCT::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
 
    if (dx1[0]&7)
     TffPict::copy(dstY+cycles,stride2[0],srcY+cycles,stride1[0],dx1[0]&7,dy1[0]);
-    
+
    __m64 m0=_mm_setzero_si64();
    const stride_t stride1_0=stride1[0],stride2_0=stride2[0];
    for (unsigned int y=0;y<=dy1[0]-7;srcY+=8*stride1_0,dstY+=8*stride2_0,y+=8)
@@ -327,7 +327,7 @@ HRESULT TimgFilterDCT::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
        *(__m64*)(pWorkArea+52)=_mm_unpackhi_pi8(mm0,m0);
        *(__m64*)(pWorkArea+56)=_mm_unpacklo_pi8(mm2,m0);
        *(__m64*)(pWorkArea+60)=_mm_unpackhi_pi8(mm2,m0);
-       
+
        fdct(pWorkArea);
        (this->*processDct)();
        idct(pWorkArea);
@@ -345,7 +345,7 @@ HRESULT TimgFilterDCT::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
    _mm_empty();
    if (dy1[0]&7)
     TffPict::copy(dstY,stride2[0],srcY,stride1[0],dx1[0],dy1[0]&7);
-  }  
+  }
  return parent->deliverSample(++it,pict);
 }
 
@@ -665,7 +665,7 @@ void TimgFilterDCT::fdct_sse2(short *block)
    0x539f, 0xdd5d, 0x4b42, 0xa73b,
    0xc000, 0x4000, 0x11a8, 0x4b42,
    0x22a3, 0xac61, 0x11a8, 0xcdb7
-  }; 
+  };
  static __align16(const unsigned short,fTab2[])=
   {
    0x58c5, 0x58c5, 0x7b21, 0x6862,
@@ -687,7 +687,7 @@ void TimgFilterDCT::fdct_sse2(short *block)
    0x6d41, 0xd2bf, 0x6254, 0x8c04,
    0xac61, 0x539f, 0x1712, 0x6254,
    0x2d41, 0x92bf, 0x1712, 0xbe4d
-  }; 
+  };
  static __align16(const unsigned short,fTab4[])=
   {
    0x4b42, 0x4b42, 0x6862, 0x587e,
@@ -699,11 +699,11 @@ void TimgFilterDCT::fdct_sse2(short *block)
    0xb4be, 0x4b42, 0x14c3, 0x587e,
    0x28ba, 0x9dac, 0x14c3, 0xc4df
   };
-  
+
  static __align16(const unsigned short,Fdct_Rnd0[])={ 6,8,8,8, 6,8,8,8};
  static __align16(const unsigned short,Fdct_Rnd1[])={ 8,8,8,8, 8,8,8,8};
  static __align16(const unsigned short,Fdct_Rnd2[])={10,8,8,8, 8,8,8,8};
- 
+
  struct Tfdct
   {
    static __forceinline void fLLM_PASS(unsigned char *src,int shift,__m128i &xmm0,__m128i &xmm1,__m128i &xmm2,__m128i &xmm3,__m128i &xmm4,__m128i &xmm5,__m128i &xmm6,__m128i &xmm7)
@@ -768,7 +768,7 @@ void TimgFilterDCT::fdct_sse2(short *block)
      pmulhw (xmm5, xmm6);         // tm12*tan2
      paddsw (xmm5, xmm7);         // out2 = tm12*tan2 + tm03
 
-     movdqa (xmm6, sqrt2);  
+     movdqa (xmm6, sqrt2);
      movdqa (xmm7, Rounder1);
 
      pmulhw (xmm2, xmm6);         // xmm2: tp65 = (t6 + t5)*cos4
@@ -781,7 +781,7 @@ void TimgFilterDCT::fdct_sse2(short *block)
      movdqa (xmm5, xmm3    );     // save t4
      movdqa (src+6*16, xmm4);   // => out6
      movdqa (xmm4, xmm0    );     // save t7
-     
+
      psubsw (xmm3, xmm1);         // xmm3: tm465 = t4 - tm65
      psubsw (xmm0, xmm2);         // xmm0: tm765 = t7 - tp65
      paddsw (xmm2, xmm4);         // xmm2: tp765 = t7 + tp65
@@ -825,9 +825,9 @@ void TimgFilterDCT::fdct_sse2(short *block)
      xmm2=_mm_shuffle_epi32(xmm0,0x4e);//pshufd    (xmm2, xmm0, 01001110b); // xmm2 = a2 a3 b2 b3a0 a1 b0 b1
 
        //  M00 M01    M16 M17 M06 M07    M22 M23  x mm0 = 0 /1 /2'/3'
-       //  M02 M03    M18 M19 M04 M05    M20 M21  x mm2 = 0'/1'/2 /3 
+       //  M02 M03    M18 M19 M04 M05    M20 M21  x mm2 = 0'/1'/2 /3
        //  M08 M09    M24 M25 M14 M15    M30 M31  x mm0 = 4 /5 /6'/7'
-       //  M10 M11    M26 M27 M12 M13    M28 M29  x mm2 = 4'/5'/6 /7 
+       //  M10 M11    M26 M27 M12 M13    M28 M29  x mm2 = 4'/5'/6 /7
 
      movdqa  (xmm1, Coeffs+16);
      movdqa  (xmm3, Coeffs+32);
@@ -836,12 +836,12 @@ void TimgFilterDCT::fdct_sse2(short *block)
      pmaddwd (xmm2, Coeffs+48);
      pmaddwd (xmm0, Coeffs+ 0);
 
-     paddd   (xmm0, xmm1);             //   out0 | out1  out2 | out3 
-     paddd   (xmm2, xmm3);             //   out4 | out5  out6 | out7 
+     paddd   (xmm0, xmm1);             //   out0 | out1  out2 | out3
+     paddd   (xmm2, xmm3);             //   out4 | out5  out6 | out7
      psrad   (xmm0, 16  );
      psrad   (xmm2, 16  );
-     
-     packssdw (xmm0, xmm2);            //   out0 .. out7 
+
+     packssdw (xmm0, xmm2);            //   out0 .. out7
      paddsw   (xmm0, rounders);            //  Round
 
      psraw    (xmm0, 4);               // => -2048, 2047
@@ -849,7 +849,7 @@ void TimgFilterDCT::fdct_sse2(short *block)
      movdqa  (ecx+src*16+0, xmm0);
     }
   };
- 
+
  __m128i xmm0,xmm1,xmm2,xmm3,xmm4,xmm5,xmm6,xmm7;
  unsigned char *ecx=(unsigned char*)block;
  Tfdct::fLLM_PASS(ecx,3,xmm0,xmm1,xmm2,xmm3,xmm4,xmm5,xmm6,xmm7);
@@ -875,7 +875,7 @@ void TimgFilterDCT::idct_sse2(short *block)
    0x3249, 0xa73b, 0x11a8, 0xcdb7,
    0x3249, 0x11a8, 0xa73b, 0xcdb7,
    0x11a8, 0x4b42, 0x4b42, 0xa73b
-  }; 
+  };
  static __align16(const unsigned short,iTab2[])=
   {
    0x58c5, 0x73fc, 0x58c5, 0x300b,
@@ -886,7 +886,7 @@ void TimgFilterDCT::idct_sse2(short *block)
    0x45bf, 0x84df, 0x187e, 0xba41,
    0x45bf, 0x187e, 0x84df, 0xba41,
    0x187e, 0x6862, 0x6862, 0x84df
-  }; 
+  };
  static __align16(const unsigned short,iTab3[])=
   {
    0x539f, 0x6d41, 0x539f, 0x2d41,
@@ -909,7 +909,7 @@ void TimgFilterDCT::idct_sse2(short *block)
    0x3b21, 0x14c3, 0x979e, 0xc4df,
    0x14c3, 0x587e, 0x587e, 0x979e
   };
-  
+
  static __align16(const uint32_t,Idct_Rnd0[])={65535, 65535, 65535, 65535};
  static __align16(const uint32_t,Idct_Rnd1[])={ 3612,  3612,  3612,  3612};
  static __align16(const uint32_t,Idct_Rnd2[])={ 2271,  2271,  2271,  2271};
@@ -918,7 +918,7 @@ void TimgFilterDCT::idct_sse2(short *block)
  static __align16(const uint32_t,Idct_Rnd5[])={  102,   102,   102,   102};
  static __align16(const uint32_t,Idct_Rnd6[])={  398,   398,   398,   398};
  static __align16(const uint32_t,Idct_Rnd7[])={  469,   469,   469,   469};
-  
+
  struct Tidct
   {
    static __forceinline void iMTX_MULT(unsigned char *ecx,int src,const unsigned char *Table,const unsigned char *rounder,int shift,__m128i &xmm0,__m128i &xmm4,__m128i &xmm5,__m128i &xmm6,__m128i &xmm7)
@@ -990,27 +990,27 @@ void TimgFilterDCT::idct_sse2(short *block)
      psubsw (xmm2, xmm0 );      // tm17-tm35 = b3
      paddsw (xmm1, xmm7 );      // tp17+tp35 = b0
      paddsw (xmm0, xmm6 );      // tm17+tm35 = t2
-                        
+
        // xmm1 = b0, xmm2 = b3. preserved
 
      movdqa (xmm6, xmm4 );
      psubsw (xmm4, xmm0 );      // t1-t2
      paddsw (xmm0, xmm6 );      // t1+t2
-                        
+
      pmulhw (xmm4, xmm3 );      // (t1-t2)/(2.sqrt2)
      pmulhw (xmm0, xmm3 );      // (t1+t2)/(2.sqrt2)
-                        
+
      paddsw (xmm0, xmm0 );      // 2.(t1+t2) = b1
      paddsw (xmm4, xmm4    );   // 2.(t1-t2) = b2
-                           
+
      movdqa (xmm7, tan2    ); // t2
      movdqa (xmm3, src+2*16);  // x2
      movdqa (xmm6, src+6*16);  // x6
      movdqa (xmm5, xmm7    );   // t2
-                           
+
      pmulhw (xmm7, xmm6    );   // x6*t2
      pmulhw (xmm5, xmm3    );   // x2*t2
-                           
+
      paddsw (xmm7, xmm3    );   // x2+x6*t2 = tp26
      psubsw (xmm5, xmm6    );   // x2*t2-x6 = tm26
 
@@ -1019,14 +1019,14 @@ void TimgFilterDCT::idct_sse2(short *block)
 
      movdqa (xmm3, src+0*16); // x0
      movdqa (xmm6, src+4*16); // x4
-                           
+
        // we spill 1 reg to perform safe butterflies
      movdqa( src   , xmm2);
-                         
+
      movdqa( xmm2, xmm3  );
      psubsw( xmm3, xmm6  ); // x0-x4 = tm04
      paddsw( xmm6, xmm2  ); // x0+x4 = tp04
-                         
+
      movdqa( xmm2, xmm6  );
      psubsw( xmm6, xmm7  );
      paddsw( xmm7, xmm2  );
@@ -1040,7 +1040,7 @@ void TimgFilterDCT::idct_sse2(short *block)
      movdqa( xmm2, xmm3  );
      psubsw( xmm3, xmm4  );
      paddsw( xmm4, xmm2  );
-                         
+
      movdqa( xmm2, src   );
 
      psraw ( xmm5, 6);      // out6
@@ -1061,12 +1061,12 @@ void TimgFilterDCT::idct_sse2(short *block)
      psubsw( xmm6, xmm2);   // a3-b3
      paddsw( xmm1, xmm0);   // a0+b0
      paddsw( xmm2, xmm4);   // a3+b3
-                       
+
      psraw ( xmm1, 6   );   // out0
      psraw ( xmm7, 6   );   // out7
      psraw ( xmm2, 6   );   // out3
      psraw ( xmm6, 6   );   // out4
-                       
+
        // combine result
      movdqa( src+0*16, xmm1);
      movdqa( src+3*16, xmm2);

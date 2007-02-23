@@ -82,18 +82,18 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
    hdr=&hdr0;
    hdr->biWidth=oggFormat->width;hdr->biHeight=oggFormat->height;
    hdr->biCompression=FOURCC_THEO;
-  } 
+  }
  else if (mt->formattype==FORMAT_RLTheora)
   {
    hdr=&hdr0;
    hdr->biCompression=FOURCC_THEO;
-  } 
+  }
  else
   return VFW_E_TYPE_NOT_ACCEPTED;
 
  char_t pomS[60];
  DPRINTF(_l("TffdshowVideoInputPin::CheckMediaType: %s, %i, %i"),fourcc2str(hdr2fourcc(hdr,&mt->subtype),pomS,60),hdr->biWidth,hdr->biHeight);
- 
+
  return fv->getVideoCodecId(hdr,&mt->subtype,NULL)==CODEC_ID_NONE?VFW_E_TYPE_NOT_ACCEPTED:S_OK;
 }
 
@@ -125,7 +125,7 @@ STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM
    // HACK: for the intervideo filter, when it tries to change the pitch from 720 to 704...
    //if(bihCur.biWidth != bih.biWidth  && bihCur.biHeight == bih.biHeight)
    // return S_OK;
- 
+
    return (CheckMediaType(&mt) != S_OK || SetMediaType(&mt) != S_OK/* || !initVideo(mt)*/)
            ? VFW_E_TYPE_NOT_ACCEPTED
            : S_OK;
@@ -179,7 +179,7 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
     {
      biIn.bmiHeader.biCompression=FCCupper(biIn.bmiHeader.biCompression);
      neroavc=true;
-    } 
+    }
   }
  else if (mt.formattype==FORMAT_TheoraIll)
   {
@@ -189,21 +189,21 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
    pictIn.setSize(biIn.bmiHeader.biWidth=oggFormat->width,biIn.bmiHeader.biHeight=oggFormat->height);
    pictIn.setDar(Rational(oggFormat->aspectNumerator,oggFormat->aspectDenominator));
    biIn.bmiHeader.biBitCount=12;
-  } 
+  }
  else if (mt.formattype==FORMAT_RLTheora)
   {
-   struct RLTheora 
+   struct RLTheora
     {
      VIDEOINFOHEADER hdr;
      DWORD headerSize[3];	// 0: Header, 1: Comment, 2: Codebook
     };
-   const RLTheora *rl=(const RLTheora*)mt.pbFormat; 
+   const RLTheora *rl=(const RLTheora*)mt.pbFormat;
    GetBitContext gb;
    init_get_bits(&gb,(const uint8_t*)(rl+1),rl->headerSize[0]);
    int ptype = get_bits(&gb, 8);
    if (!(ptype&0x80))
     return false;
-   biIn.bmiHeader.biCompression=FOURCC_THEO; 
+   biIn.bmiHeader.biCompression=FOURCC_THEO;
    skip_bits(&gb, 6*8); /* "theora" */
    int major=get_bits(&gb,8); /* version major */
    int minor=get_bits(&gb,8); /* version minor */
@@ -214,11 +214,11 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
     {
      ;//flipped_image = 1;
     }
-    
+
     biIn.bmiHeader.biWidth = get_bits(&gb, 16) << 4;
     biIn.bmiHeader.biHeight = get_bits(&gb, 16) << 4;
     pictIn.setSize(biIn.bmiHeader.biWidth,biIn.bmiHeader.biHeight);
-    
+
     skip_bits(&gb, 24); /* frame width */
     skip_bits(&gb, 24); /* frame height */
 
@@ -232,7 +232,7 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
     sample_aspect_ratio.num = get_bits(&gb, 24); /* aspect numerator */
     sample_aspect_ratio.den = get_bits(&gb, 24); /* aspect denumerator */
     pictIn.setSar(sample_aspect_ratio);
-  } 
+  }
  else
   return false;
 
@@ -245,7 +245,7 @@ again:
  if (video) {delete video;codec=video=NULL;}
  codecId=(CodecID)fv->getVideoCodecId(&biIn.bmiHeader,&mt.subtype,&biIn.bmiHeader.biCompression);
  if (codecId==CODEC_ID_NONE) return false;
- 
+
  if (codecId==CODEC_ID_H264)
   {
    Textradata extradata(mt,16);
@@ -257,7 +257,7 @@ again:
    Textradata extradata(mt,16);
    if (extradata.size)
     decodeMPEG4pictureHeader(extradata.data,extradata.size,pictIn);
-  } 
+  }
  else if (mpeg12_codec(codecId))
   {
    Textradata extradata(mt,16);
@@ -270,18 +270,18 @@ again:
        truncated=true;
        goto again;
       }
-    } 
+    }
   }
-  
+
  if (!fv->sink)
   rawDecode=true;
  else
   {
    fv->initCodecSettings();
    codec=video=TvideoCodecDec::initDec(fv->deci,fv->sink,codecId,biIn.bmiHeader.biCompression,mt);
-   if (!video) 
+   if (!video)
     return false;
-   else 
+   else
     {
      static const GUID CLSID_NeroDigitalParser={0xE206E4DE,0xA7EE,0x4A62,0xB3,0xE9,0x4F,0xBC,0x8F,0xE8,0x4C,0x73};
      static const GUID CLSID_HalliMatroskaFile={0x55DA30FC,0xF16B,0x49FC,0xBA,0xA5,0xAE,0x59,0xFC,0x65,0xF8,0x2D};
@@ -291,7 +291,7 @@ again:
        delete video;codec=video=NULL;
        return false;
       }
-    }  
+    }
    rawDecode=raw_codec(codecId);
   }
  allocator.NotifyMediaType(mt);
@@ -310,10 +310,10 @@ void TffdshowVideoInputPin::done(void)
 
 STDMETHODIMP TffdshowVideoInputPin::GetAllocator(IMemAllocator** ppAllocator)
 {
- if (!raw_codec(codecId)) 
+ if (!raw_codec(codecId))
   return TinputPin::GetAllocator(ppAllocator);
  else
-  { 
+  {
    CheckPointer(ppAllocator, E_POINTER);
    if (m_pAllocator==NULL)
     {
@@ -323,7 +323,7 @@ STDMETHODIMP TffdshowVideoInputPin::GetAllocator(IMemAllocator** ppAllocator)
    m_pAllocator->AddRef();
    *ppAllocator=m_pAllocator;
    return NOERROR;
-  } 
+  }
 }
 STDMETHODIMP TffdshowVideoInputPin::NotifyAllocator(IMemAllocator *pAllocator,BOOL bReadOnly)
 {
@@ -337,7 +337,7 @@ STDMETHODIMP TffdshowVideoInputPin::NewSegment(REFERENCE_TIME tStart, REFERENCE_
 {
  fv->lockReceive();
  HRESULT hr=TinputPin::NewSegment(tStart,tStop,dRate);
- fv->unlockReceive(); 
+ fv->unlockReceive();
  return hr;
 }
 
@@ -357,11 +357,11 @@ STDMETHODIMP TffdshowVideoInputPin::Receive(IMediaSample* pSample)
 HRESULT TffdshowVideoInputPin::decompress(IMediaSample *pSample,long *srcLen)
 {
  BYTE *bitstream;
- if (pSample->GetPointer(&bitstream)!=S_OK) 
-  { 
+ if (pSample->GetPointer(&bitstream)!=S_OK)
+  {
    *srcLen=-1;
    return S_FALSE;
-  } 
+  }
  *srcLen=pSample->GetActualDataLength();
  if (bitstream && strippacket)
   StripPacket(bitstream,*srcLen);
@@ -371,7 +371,7 @@ HRESULT TffdshowVideoInputPin::decompress(IMediaSample *pSample,long *srcLen)
 HRESULT TffdshowVideoInputPin::getAVIfps(unsigned int *fps1000)
 {
  if (!fps1000 || avgTimePerFrame==0) return S_FALSE;
- 
+
  *fps1000=(unsigned int)(REF_SECOND_MULT*1000/avgTimePerFrame);
  return S_OK;
 }
@@ -449,37 +449,37 @@ HRESULT TffdshowVideoInputPin::getQuantMatrices(uint8_t intra8[64],uint8_t inter
   for (int i=0;i<64;i++)
    inter8[i]=(uint8_t)video->inter_matrix[i];
  else
-   memset(inter8,0,64); 
+   memset(inter8,0,64);
  if (video->intra_matrix)
   for (int i=0;i<64;i++)
    intra8[i]=(uint8_t)video->intra_matrix[i];
  else
-   memset(intra8,0,64); 
- if (inter4luma)  
+   memset(intra8,0,64);
+ if (inter4luma)
   if (video->inter_matrix_luma)
-   for (int i=0;i<16;i++)  
+   for (int i=0;i<16;i++)
     inter4luma[i]=(uint8_t)video->inter_matrix_luma[i];
-  else 
+  else
    memset(inter4luma,0,16);
- if (inter4chroma)  
+ if (inter4chroma)
   if (video->inter_matrix_chroma)
-   for (int i=0;i<16;i++)  
+   for (int i=0;i<16;i++)
     inter4chroma[i]=(uint8_t)video->inter_matrix_chroma[i];
-  else 
+  else
    memset(inter4chroma,0,16);
- if (intra4luma)  
+ if (intra4luma)
   if (video->intra_matrix_luma)
-   for (int i=0;i<16;i++)  
+   for (int i=0;i<16;i++)
     intra4luma[i]=(uint8_t)video->intra_matrix_luma[i];
-  else 
+  else
    memset(intra4luma,0,16);
- if (intra4chroma)  
+ if (intra4chroma)
   if (video->intra_matrix_chroma)
-   for (int i=0;i<16;i++)  
+   for (int i=0;i<16;i++)
     intra4chroma[i]=(uint8_t)video->intra_matrix_chroma[i];
-  else 
+  else
    memset(intra4chroma,0,16);
- return S_OK;  
+ return S_OK;
 }
 
 HRESULT TffdshowVideoInputPin::getInCodecString(char_t *buf,size_t buflen)
@@ -490,7 +490,7 @@ HRESULT TffdshowVideoInputPin::getInCodecString(char_t *buf,size_t buflen)
    char_t name[60];
    tsnprintf(buf,buflen,_l("%s (%s)"),fourcc2str(biIn.bmiHeader.biCompression,name,60),video->getName());
    buf[buflen-1]='\0';
-  } 
+  }
  else
   buf[0]='\0';
  return S_OK;
@@ -514,7 +514,7 @@ const char_t* TffdshowVideoInputPin::findAutoSubflnm(IcheckSubtitle *checkSubtit
   {
    oldSubHeuristic=heuristic;strcpy(oldSubSearchDir,searchDir);
    TsubtitlesFile::findSubtitlesFile(AVIname,searchDir,searchExt,autosubflnm,MAX_PATH,heuristic,checkSubtitle);
-  } 
+  }
  return autosubflnm;
 }
 
@@ -524,9 +524,9 @@ STDMETHODIMP TffdshowVideoEncInputPin::NonDelegatingQueryInterface(REFIID riid, 
  if (riid==IID_IMixerPinConfig)
   {
    isOverlay=true;
-   return GetInterface<IMixerPinConfig>(this,ppv); 
-  } 
- else  
+   return GetInterface<IMixerPinConfig>(this,ppv);
+  }
+ else
   return TffdshowVideoInputPin::NonDelegatingQueryInterface(riid, ppv);
 }
 
@@ -534,59 +534,59 @@ STDMETHODIMP TffdshowVideoEncInputPin::SetRelativePosition(THIS_ IN DWORD dwLeft
 {
  DPRINTF(_l(" SetRelativePosition"));
  return S_OK;
-}    
+}
 STDMETHODIMP TffdshowVideoEncInputPin::GetRelativePosition(THIS_ OUT DWORD *pdwLeft,OUT DWORD *pdwTop,OUT DWORD *pdwRight,OUT DWORD *pdwBottom)
 {
  DPRINTF(_l(" GetRelativePosition"));
  return S_OK;
-}    
+}
 STDMETHODIMP TffdshowVideoEncInputPin::SetZOrder(THIS_ IN DWORD dwZOrder)
 {
  DPRINTF(_l(" SetZOrder"));
  return S_OK;
-}    
+}
 STDMETHODIMP TffdshowVideoEncInputPin::GetZOrder(THIS_ OUT DWORD *pdwZOrder)
 {
  DPRINTF(_l(" GetZOrder"));
  return S_OK;
-}    
+}
 STDMETHODIMP TffdshowVideoEncInputPin::SetColorKey(THIS_ IN COLORKEY *pColorKey)
 {
  DPRINTF(_l(" SetColorKey"));
  return S_OK;
-}    
+}
 STDMETHODIMP TffdshowVideoEncInputPin::GetColorKey(THIS_ OUT COLORKEY *pColorKey,OUT DWORD *pColor)
 {
  DPRINTF(_l(" GetColorKey"));
  return S_OK;
-}    
+}
 STDMETHODIMP TffdshowVideoEncInputPin::SetBlendingParameter(THIS_ IN DWORD dwBlendingParameter)
 {
  DPRINTF(_l(" SetBlendingParameter"));
  return S_OK;
-}    
+}
 STDMETHODIMP TffdshowVideoEncInputPin::GetBlendingParameter(THIS_ OUT DWORD *pdwBlendingParameter)
 {
  DPRINTF(_l(" GetBlendingParameter"));
  return S_OK;
-}    
+}
 STDMETHODIMP TffdshowVideoEncInputPin::SetAspectRatioMode(THIS_ IN AM_ASPECT_RATIO_MODE amAspectRatioMode)
 {
  DPRINTF(_l(" SetAspectRatioMode"));
  return S_OK;
-}    
+}
 STDMETHODIMP TffdshowVideoEncInputPin::GetAspectRatioMode(THIS_ OUT AM_ASPECT_RATIO_MODE* pamAspectRatioMode)
 {
  DPRINTF(_l(" GetAspectRatioMode"));
  return S_OK;
-}    
+}
 STDMETHODIMP TffdshowVideoEncInputPin::SetStreamTransparent(THIS_ IN BOOL bStreamTransparent)
 {
  DPRINTF(_l(" SetStreamTransparent"));
  return S_OK;
-}    
+}
 STDMETHODIMP TffdshowVideoEncInputPin::GetStreamTransparent(THIS_ OUT BOOL *pbStreamTransparent)
 {
  DPRINTF(_l(" GetStreamTransparent"));
  return S_OK;
-}    
+}

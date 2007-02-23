@@ -62,7 +62,7 @@ TvideoCodecLibmpeg2::TvideoCodecLibmpeg2(IffdshowBase *Ideci,IdecVideoSink *Isin
 void TvideoCodecLibmpeg2::init(void)
 {
  mpeg2dec=mpeg2_init();
- info=mpeg2_info(mpeg2dec); 
+ info=mpeg2_info(mpeg2dec);
  wait4Iframe=true;
 }
 bool TvideoCodecLibmpeg2::beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags)
@@ -106,7 +106,7 @@ HRESULT TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,
  //if (pIn->IsDiscontinuity()) onSeek();
  REFERENCE_TIME rtStart=REFTIME_INVALID,rtStop=_I64_MIN;
  HRESULT hr=pIn->GetTime(&rtStart,&rtStop);
- if (FAILED(hr)) 
+ if (FAILED(hr))
   rtStart=rtStop=REFTIME_INVALID;
 
  int len=(int)srcLen;
@@ -118,7 +118,7 @@ HRESULT TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,
      case STATE_BUFFER:
       if (len==0)
        len=-1;
-      else 
+      else
        {
         mpeg2_buffer(mpeg2dec,src,src+len);
         len=0;
@@ -186,19 +186,19 @@ HRESULT TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,
         oldpict=pict;
         if (frametype==FRAME_TYPE::I)
          wait4Iframe=false;
-        if (!wait4Iframe) 
+        if (!wait4Iframe)
          {
           hr=sinkD->deliverDecodedSample(pict);
           if (FAILED(hr))
            return hr;
-         }  
+         }
         else
          DPRINTF(_l("libmpeg2: waiting for keyframe"));
        }
-      break; 
+      break;
     }
   }
- return S_OK; 
+ return S_OK;
 }
 
 bool TvideoCodecLibmpeg2::onSeek(REFERENCE_TIME segmentStart)

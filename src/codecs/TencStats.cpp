@@ -49,6 +49,6 @@ void TencStats::calcPSNR(double *psnrY,double *psnrU,double *psnrV) const
    *psnrU=psnr(sumPsnrU*mult[1]/f);
    *psnrV=psnr(sumPsnrV*mult[2]/f);
   }
- else 
+ else
   *psnrY=*psnrU=*psnrV=0;
 }

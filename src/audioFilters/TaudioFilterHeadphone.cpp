@@ -233,7 +233,7 @@ bool TaudioFilterHeadphone::getOutputFmt(TsampleFormat &fmt,const TfilterSetting
    return true;
   }
  else
-  return false;  
+  return false;
 }
 
 HRESULT TaudioFilterHeadphone::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples0,size_t numsamples,const TfilterSettingsAudio *cfg0)
@@ -252,7 +252,7 @@ HRESULT TaudioFilterHeadphone::process(TfilterQueue::iterator it,TsampleFormat &
    p_sys->p_atomic_operations=NULL;
    inited=p_sys->Init(fmt,cfg)>=0;
   }
- 
+
  if (inited)
   {
    float *p_in=(float*)init(cfg,fmt,samples0,numsamples);
@@ -260,7 +260,7 @@ HRESULT TaudioFilterHeadphone::process(TfilterQueue::iterator it,TsampleFormat &
    fmt.setChannels(2);
    float *p_out=(float*)alloc_buffer(fmt,numsamples,buf);
    unsigned int i_output_nb=fmt.nchannels;
- 
+
    /* Slide the overflow buffer */
    byte_t *p_overflow = p_sys->p_overflow_buffer;
    size_t i_overflow_size = p_sys->i_overflow_buffer_size;
@@ -271,7 +271,7 @@ HRESULT TaudioFilterHeadphone::process(TfilterQueue::iterator it,TsampleFormat &
     memcpy ( p_out , p_overflow , i_overflow_size );
    else
     memcpy ( p_out , p_overflow , i_out_size );
- 
+
    byte_t *p_slide = p_sys->p_overflow_buffer;
    while ( p_slide < p_overflow + i_overflow_size )
     {
@@ -778,7 +778,7 @@ bool TaudioFilterHeadphone2::getOutputFmt(TsampleFormat &fmt,const TfilterSettin
    return true;
   }
  else
-  return false;  
+  return false;
 }
 
 /* Detect when the impulse response starts (significantly) */
@@ -865,13 +865,13 @@ float TaudioFilterHeadphone2::conv(const int nx, const int nk, const float *sx, 
 HRESULT TaudioFilterHeadphone2::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0)
 {
  const TmixerSettings *cfg=(const TmixerSettings*)cfg0;
- 
+
  if (!s || oldfmt!=fmt)
   {
    oldfmt=fmt;
    done();
    /* MPlayer's 5 channel layout (notation for the variable):
-    * 
+    *
     * 0: L (LF), 1: R (RF), 2: Ls (LR), 3: Rs (RR), 4: C (CF), matrix
     * encoded: Cs (CR)
     *
@@ -883,20 +883,20 @@ HRESULT TaudioFilterHeadphone2::process(TfilterQueue::iterator it,TsampleFormat 
    indexes[4]=fmt.findSpeaker(SPEAKER_FRONT_CENTER);
    indexes[5]=fmt.findSpeaker(SPEAKER_LOW_FREQUENCY);
    s=new af_hrtf_s(fmt);
-  } 
+  }
 
  float *inbuf=(float*)init(cfg,fmt,samples,numsamples); // Input audio data
  float *end=inbuf+numsamples*fmt.nchannels; // Loop end
  fmt.setChannels(2);
  float *out=(float*)(samples=alloc_buffer(fmt,numsamples,buf));
- 
+
  const int dblen = s->dlbuflen, hlen = s->hrflen, blen = s->basslen;
- while(inbuf < end) 
+ while(inbuf < end)
   {
 	const int k = s->cyc_pos;
 	for (int i=0;i<6;i++)
          in[i]=indexes[i]!=-1?inbuf[indexes[i]]:0.0f;
-        
+
 	s->update_ch(in, k);
 
 	/* Simulate a 7.5 ms -20 dB echo of the center channel in the
@@ -906,11 +906,11 @@ HRESULT TaudioFilterHeadphone2::process(TfilterQueue::iterator it,TsampleFormat 
 	static const float CFECHOAMPL=M17_0DB;	/* Center front echo amplitude */
         s->lf[k] += CFECHOAMPL * s->cf[(k + CFECHODELAY) % s->dlbuflen];
 	s->rf[k] += CFECHOAMPL * s->cf[(k + CFECHODELAY) % s->dlbuflen];
-	
+
 	float common,left,right;
 
 	   common = conv(dblen, hlen, &s->cf[0], &s->cf_ir[0], k + s->cf_o);
-	
+
 	      left    =
 		 ( conv(dblen, hlen, &s->lf[0], s->af_ir, k + s->af_o) +
 		   conv(dblen, hlen, &s->rf[0], s->of_ir, k + s->of_o) +
@@ -923,7 +923,7 @@ HRESULT TaudioFilterHeadphone2::process(TfilterQueue::iterator it,TsampleFormat 
 		   conv(dblen, hlen, &s->rr[0], s->ar_ir, k + s->ar_o) +
 		   conv(dblen, hlen, &s->lr[0], s->or_ir, k + s->or_o) +
 		   common);
-	
+
 	/* Bass compensation for the lower frequency cut of the HRTF.  A
 	   cross talk of the left and right channel is introduced to
 	   match the directional characteristics of higher frequencies.
@@ -957,6 +957,6 @@ HRESULT TaudioFilterHeadphone2::process(TfilterQueue::iterator it,TsampleFormat 
 	s->cyc_pos--;
 	if(s->cyc_pos < 0)
 	    s->cyc_pos += dblen;
-  } 
- return parent->deliverSamples(++it,fmt,samples,numsamples); 
+  }
+ return parent->deliverSamples(++it,fmt,samples,numsamples);
 }

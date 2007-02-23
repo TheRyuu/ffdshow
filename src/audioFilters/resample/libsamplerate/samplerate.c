@@ -487,7 +487,7 @@ psrc_set_converter (SRC_PRIVATE	*psrc, int converter_type)
 
 /*
 ** Do not edit or modify anything in this comment block.
-** The arch-tag line is a file identity tag for the GNU Arch 
+** The arch-tag line is a file identity tag for the GNU Arch
 ** revision control system.
 **
 ** arch-tag: a5c5f514-a370-4210-a066-7f2035de67fb

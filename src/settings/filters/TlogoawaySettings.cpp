@@ -41,15 +41,15 @@ const char_t* TlogoawaySettings::borderModes[]=
 };
 const char_t* TlogoawaySettings::navigators[]=
 {
- _l("UNKNOWN"), 
- _l("NORTH"), 
- _l("EAST"), 
- _l("SOUTH"), 
- _l("WEST"), 
- _l("NW"), 
- _l("NE"), 
- _l("SW"), 
- _l("SE"), 
+ _l("UNKNOWN"),
+ _l("NORTH"),
+ _l("EAST"),
+ _l("SOUTH"),
+ _l("WEST"),
+ _l("NW"),
+ _l("NE"),
+ _l("SW"),
+ _l("SE"),
  NULL
 };
 
@@ -85,7 +85,7 @@ TlogoawaySettings::TlogoawaySettings(TintStrColl *Icoll,TfilterIDFFs *filters):T
  memset(parambitmap,0,sizeof(parambitmap));
  static const TintOptionT<TlogoawaySettings> iopts[]=
   {
-   IDFF_isLogoaway           ,&TlogoawaySettings::is            ,0,0,_l(""),1, 
+   IDFF_isLogoaway           ,&TlogoawaySettings::is            ,0,0,_l(""),1,
      _l("isLogoaway"),0,
    IDFF_showLogoaway         ,&TlogoawaySettings::show          ,0,0,_l(""),1,
      _l("showLogoaway"),1,
@@ -130,24 +130,24 @@ TlogoawaySettings::TlogoawaySettings(TintStrColl *Icoll,TfilterIDFFs *filters):T
      _l("logoawayLumaOnly"),0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
  static const TstrOption sopts[]=
   {
    IDFF_logoawayParamBitmapFlnm ,(TstrVal)&TlogoawaySettings::parambitmap,MAX_PATH,_l(""),1,
      _l("logoawayParambitmap"),_l(""),
    0
   };
- addOptions(sopts); 
- 
+ addOptions(sopts);
+
  static const TcreateParamList2<Tmode> listMode(modes,&Tmode::name);setParamList(IDFF_logoawayMode,&listMode);
- static const TcreateParamList1 listBord(borderModes);setParamList(IDFF_logoawayBordn_mode,&listBord);setParamList(IDFF_logoawayBords_mode,&listBord);setParamList(IDFF_logoawayBordw_mode,&listBord);setParamList(IDFF_logoawayBorde_mode,&listBord); 
+ static const TcreateParamList1 listBord(borderModes);setParamList(IDFF_logoawayBordn_mode,&listBord);setParamList(IDFF_logoawayBords_mode,&listBord);setParamList(IDFF_logoawayBordw_mode,&listBord);setParamList(IDFF_logoawayBorde_mode,&listBord);
 }
 
 void TlogoawaySettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (is && show)
-  queueFilter<TimgFilterLogoaway>(filtersorder,filters,queue); 
+  queueFilter<TimgFilterLogoaway>(filtersorder,filters,queue);
 }
 void TlogoawaySettings::createPages(TffdshowPageDec *parent) const
 {

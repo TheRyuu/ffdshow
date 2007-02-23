@@ -10,7 +10,7 @@
  *                                                                  *
  ********************************************************************
 
-  function: 
+  function:
 
  ********************************************************************/
 
@@ -85,7 +85,7 @@ void theora_clear(theora_state *t){
   if(t){
     CP_INSTANCE *cpi=(CP_INSTANCE *)(t->internal_encode);
     PB_INSTANCE *pbi=(PB_INSTANCE *)(t->internal_decode);
-    
+
     if (cpi) theora_encoder_clear (cpi);
 
     if(pbi){
@@ -211,7 +211,7 @@ int theora_decode_header(theora_info *ci, theora_comment *cc, ogg_packet *op){
   oggpack_buffer *opb;
 
   if(!op)return OC_BADHEADER;
-  
+
 #ifndef LIBOGG2
   opb = _ogg_malloc(sizeof(oggpack_buffer));
   oggpackB_readinit(opb,op->packet,op->bytes);
@@ -229,7 +229,7 @@ int theora_decode_header(theora_info *ci, theora_comment *cc, ogg_packet *op){
       free(opb);
       return(OC_NOTFORMAT);
     }
-    
+
     _tp_readbuffer(opb,id,6);
     if(memcmp(id,"theora",6)) {
       free(opb);
@@ -277,7 +277,7 @@ int theora_decode_header(theora_info *ci, theora_comment *cc, ogg_packet *op){
 
     default:
       free(opb);
-      if(ci->version_major==0 || cc->vendor==NULL || 
+      if(ci->version_major==0 || cc->vendor==NULL ||
          ((codec_setup_info *)ci->codec_setup)->HuffRoot[0]==NULL){
         /* we haven't gotten the three required headers */
         return(OC_BADHEADER);
@@ -294,20 +294,20 @@ int theora_decode_header(theora_info *ci, theora_comment *cc, ogg_packet *op){
 int theora_decode_init(theora_state *th, theora_info *c){
   PB_INSTANCE *pbi;
   codec_setup_info *ci;
-  
+
   dsp_static_init ();
 
   ci=(codec_setup_info *)c->codec_setup;
   memset(th, 0, sizeof(*th));
   th->internal_decode=pbi=_ogg_calloc(1,sizeof(*pbi));
   th->internal_encode=NULL;
-  
+
   InitPBInstance(pbi);
   memcpy(&pbi->info,c,sizeof(*c));
   pbi->info.codec_setup=NULL;
   th->i=&pbi->info;
   th->granulepos=-1;
-        
+
   InitFrameDetails(pbi);
   pbi->PostProcessingLevel=c->postprocessingLevel;
 
@@ -333,7 +333,7 @@ int theora_decode_init(theora_state *th, theora_info *c){
 int theora_decode_packetin(theora_state *th,ogg_packet *op){
   long ret;
   PB_INSTANCE *pbi=(PB_INSTANCE *)(th->internal_decode);
-  
+
   pbi->DecoderErrorCode = 0;
 
 #ifndef LIBOGG2
@@ -349,7 +349,7 @@ int theora_decode_packetin(theora_state *th,ogg_packet *op){
     ret=LoadAndDecode(pbi);
 
     if(ret)return ret;
-    
+
     if(pbi->PostProcessingLevel)
       PostProcess(pbi);
 
@@ -368,7 +368,7 @@ int theora_decode_packetin(theora_state *th,ogg_packet *op){
 	  th->granulepos++;
       }
     }
-           
+
     return(0);
   }
 
@@ -381,12 +381,12 @@ int theora_decode_YUVout(theora_state *th,yuv_buffer *yuv){
   yuv->y_width = pbi->info.width;
   yuv->y_height = pbi->info.height;
   yuv->y_stride = pbi->YStride;
-  
+
   yuv->uv_width = pbi->info.width / 2;
   yuv->uv_height = pbi->info.height / 2;
   yuv->uv_stride = pbi->UVStride;
   yuv->keyframe=pbi->FrameType==KEY_FRAME?1:0;
-  
+
   if(pbi->PostProcessingLevel){
     yuv->y = &pbi->PostProcessBuffer[pbi->ReconYDataOffset];
     yuv->u = &pbi->PostProcessBuffer[pbi->ReconUDataOffset];
@@ -414,7 +414,7 @@ double theora_granule_time(theora_state *th,ogg_int64_t granulepos){
 #ifndef THEORA_DISABLE_FLOAT
   CP_INSTANCE *cpi=(CP_INSTANCE *)(th->internal_encode);
   PB_INSTANCE *pbi=(PB_INSTANCE *)(th->internal_decode);
-  
+
   if(cpi)pbi=&cpi->pb;
 
   if(granulepos>=0){

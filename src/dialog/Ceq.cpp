@@ -88,7 +88,7 @@ void TeqPage::cfg2dlg(void)
 float TeqPage::getEqDb(int lowdb,int highdb,int i)
 {
  return ((highdb-lowdb)*cfgGet(idffsDb[i])/200+lowdb)/100.0f;
-}  
+}
 void TeqPage::lblsdb2dlg(void)
 {
  int lowdb=cfgGet(IDFF_eqLowdb),highdb=cfgGet(IDFF_eqHighdb);
@@ -122,14 +122,14 @@ INT_PTR TeqPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         cfgSet(idffsDb[i],200-tbrGet(tbrs[i]));
        cfg2dlg();
        return TRUE;
-     }  
+     }
     break;
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_ED_EQ_HIGHDB:
       case IDC_ED_EQ_LOWDB:
-       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText) 
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
          HWND hed=GetDlgItem(m_hwnd,LOWORD(wParam));
          if (hed!=GetFocus()) return FALSE;
@@ -139,7 +139,7 @@ INT_PTR TeqPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
            case IDC_ED_EQ_HIGHDB:eval(hed,cfgGet(IDFF_eqLowdb)/100.0+0.1,100.0,IDFF_eqHighdb,100.0);lblsdb2dlg();break;
            case IDC_ED_EQ_LOWDB :eval(hed,-100.0,cfgGet(IDFF_eqHighdb)/100.0-0.1,IDFF_eqLowdb,100.0);lblsdb2dlg();break;
           }
-         return TRUE;  
+         return TRUE;
         }
        break;
      }
@@ -155,12 +155,12 @@ INT_PTR TeqPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        default:goto endColor;
       }
      if (!ok)
-      { 
+      {
        HDC dc=HDC(wParam);
        SetBkColor(dc,RGB(255,0,0));
-       return INT_PTR(getRed()); 
+       return INT_PTR(getRed());
       }
-     else return FALSE;  
+     else return FALSE;
      endColor:;
     }
   }
@@ -178,10 +178,10 @@ void TeqPage::onWinampLoad(void)
    fread(header,1,31,file);
    typedef std::vector<TwinampQ1preset> TwinampQ1presets;
    TwinampQ1presets presets;
-   if (strncmp(header,"Winamp EQ library file v1.1",27)==0) 
+   if (strncmp(header,"Winamp EQ library file v1.1",27)==0)
     {
      char name[257];
-     while (fread(name,1,257,file)) 
+     while (fread(name,1,257,file))
       {
        TwinampQ1preset preset;
        preset.name=name;
@@ -201,7 +201,7 @@ void TeqPage::onWinampLoad(void)
      int ord=0;
      for (TwinampQ1presets::const_iterator p=presets.begin();p!=presets.end();p++)
       insertMenuItem(hm,ord,ord+1,stringreplace(p->name,"&","&&",rfReplaceAll).c_str(),false);
-     RECT r;             
+     RECT r;
      GetWindowRect(GetDlgItem(m_hwnd,IDC_BT_EQ_PRESET_LOAD),&r);
      POINT pt={0,r.bottom-r.top};
      ClientToScreen(GetDlgItem(m_hwnd,IDC_BT_EQ_PRESET_LOAD),&pt);
@@ -229,8 +229,8 @@ Twidget* TeqPage::createDlgItem(int id,HWND h)
  for (int ii=0;ii<countof(tbrs);ii++)
   if (id==tbrs[ii])
    return new TeqTbr(ii,h,this,TbindTrackbars(htbr+ii));
- return TconfPageDecAudio::createDlgItem(id,h); 
-} 
+ return TconfPageDecAudio::createDlgItem(id,h);
+}
 void TeqPage::TeqTbr::getEditMinMaxVal(const TffdshowParamInfo &info,int *min,int *max,int *val)
 {
  int imin,imax;
@@ -275,7 +275,7 @@ TeqPage::TeqPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecA
    IDC_BT_EQ_PRESET_LOAD,&TeqPage::onWinampLoad,
    0,NULL
   };
- bindButtons(bt); 
- 
+ bindButtons(bt);
+
  bindHtracks(htbr);
 }

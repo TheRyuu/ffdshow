@@ -40,7 +40,7 @@ bool TffdshowDecAudioInputPin::init(const CMediaType &mt)
 {
  DPRINTF(_l("TffdshowDecAudioInputPin::initAudio"));
  codecId=filter->getCodecId(mt);
- if (codecId==CODEC_ID_NONE) return false; 
+ if (codecId==CODEC_ID_NONE) return false;
  strippacket=(mt.majortype==MEDIATYPE_DVD_ENCRYPTED_PACK || mt.majortype==MEDIATYPE_MPEG2_PES);
  if (mt.formattype==FORMAT_WaveFormatEx)
   {
@@ -57,12 +57,12 @@ bool TffdshowDecAudioInputPin::init(const CMediaType &mt)
 
 void TffdshowDecAudioInputPin::done(void)
 {
- if (audio) 
+ if (audio)
   {
    delete audio;
    codec=audio=NULL;
   }
- codecId=CODEC_ID_NONE; 
+ codecId=CODEC_ID_NONE;
 }
 
 STDMETHODIMP TffdshowDecAudioInputPin::EndFlush(void)
@@ -113,7 +113,7 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
   {
    searchdts=false;
    BYTE *buf=src;
-   for (int i=0;i<srclen-5;i+=2) 
+   for (int i=0;i<srclen-5;i+=2)
     //from mplayer DTS support patch by Roberto Togni
     if((buf[i]==0xff && buf[i+1]==0x1f && buf[i+2]==0x00 && buf[i+3]== 0xe8 && (buf[i+4]&0xfe)==0xf0 && buf[i+5]==0x07) || // DTS, 14 bit, LE
        (buf[i]==0x1f && buf[i+1]==0xff && buf[i+2]==0xe8 && buf[i+3]== 0x00 && buf[i+4]==0x07 && (buf[i+5]&0xfe)==0xf0) || // DTS, 14 bit, BE
@@ -134,7 +134,7 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
 
  if (pIn->IsDiscontinuity()==S_OK)
   {
-   filter->discontinuity=true; 
+   filter->discontinuity=true;
    buf.clear();
    if (FAILED(hr)) return S_OK;
    filter->m_rtStartDec=filter->m_rtStartProc=rtStart;
@@ -150,7 +150,7 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
      buf.clear();
      filter->m_rtStartDec=filter->m_rtStartProc=rtStart;
     }
-  }  
+  }
 
  buf.append(src,srclen);
  buf.reserve(buf.size()+32);
@@ -169,7 +169,7 @@ STDMETHODIMP TffdshowDecAudioInputPin::flushDecodedSamples(void)
 {
  return filter->flushDecodedSamples(this,prevpostgain);
 }
- 
+
 HRESULT TffdshowDecAudioInputPin::getMovieSource(const TaudioCodec* *moviePtr)
 {
  if (!moviePtr) return S_FALSE;
@@ -188,7 +188,7 @@ HRESULT TffdshowDecAudioInputPin::getInCodecString(char_t *buf,size_t buflen)
   {
    buf[0]='\0';
    return S_FALSE;
-  }  
+  }
 }
 
 int TffdshowDecAudioInputPin::getInputBitrate(void) const
@@ -205,8 +205,8 @@ bool TffdshowDecAudioInputPin::getsf(TsampleFormat &outsf)
    {
     outsf=TsampleFormat::createMediaTypeSPDIF();
     return true;
-   } 
-  else 
+   }
+  else
    outsf=audio->getInputSF();
- return false;  
+ return false;
 }

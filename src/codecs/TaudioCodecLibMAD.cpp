@@ -55,7 +55,7 @@ bool TaudioCodecLibMAD::init(const CMediaType &mt)
    fmt.freq=mp3header::findNearestFreq(fmt.freq);
    return true;
   }
- else 
+ else
   return false;
 }
 TaudioCodecLibMAD::~TaudioCodecLibMAD()
@@ -77,7 +77,7 @@ void TaudioCodecLibMAD::getInputDescr1(char_t *buf,size_t buflen) const
  buf[buflen-1]='\0';
 }
 
-int32_t TaudioCodecLibMAD::scale(mad_fixed_t sample) 
+int32_t TaudioCodecLibMAD::scale(mad_fixed_t sample)
 {
  // clip
  if (sample >= MAD_F_ONE)
@@ -122,7 +122,7 @@ HRESULT TaudioCodecLibMAD::decode(TbyteBuffer &src)
       *output++=scale(*left_ch++);
       *output++=scale(*right_ch++);
      }
-   else 
+   else
     for (int i=0;i<decoded;i++)
      *output++=scale(*left_ch++);
    HRESULT hr=sinkA->deliverDecodedSample(output0,decoded,fmt,1);

@@ -5,7 +5,7 @@
 namespace libdts
 {
  #include "libdts/dts.h"
-} 
+}
 
 class Tdll;
 class TaudioCodecLibDTS :public TaudioCodec

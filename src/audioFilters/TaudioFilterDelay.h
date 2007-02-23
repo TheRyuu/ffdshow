@@ -14,7 +14,7 @@ private:
    TsampleFormat sf;
    void *buf;
    unsigned int len,pos,Bpp;
-  public: 
+  public:
    TdelayBuffer(void):buf(NULL),len(0),Bpp(0) {}
    ~TdelayBuffer() {if (buf) free(buf);}
    void init(unsigned int ms,const TsampleFormat &Isf);
@@ -31,7 +31,7 @@ private:
        pos++;if (pos==len) pos=0;
       }
     }
-  } delay[6]; 
+  } delay[6];
 protected:
  virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {*honourPreferred=false;return TsampleFormat::SF_ALL;}
 public:

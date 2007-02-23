@@ -49,7 +49,7 @@ TgrabSettings::TgrabSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSe
  memset(prefix,0,sizeof(prefix));
  static const TintOptionT<TgrabSettings> iopts[]=
   {
-   IDFF_isGrab           ,&TgrabSettings::is        ,0,0,_l(""),1, 
+   IDFF_isGrab           ,&TgrabSettings::is        ,0,0,_l(""),1,
      _l("isGrab"),0,
    IDFF_showGrab         ,&TgrabSettings::show      ,0,0,_l(""),1,
     _l("showGrab"),1,
@@ -74,8 +74,8 @@ TgrabSettings::TgrabSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSe
    IDFF_grabStep         ,&TgrabSettings::step      ,1,1000,_l(""),1,
      _l("grabStep"),1,
    0
-  }; 
- addOptions(iopts); 
+  };
+ addOptions(iopts);
  static const TstrOption sopts[]=
   {
    IDFF_grabPath   ,(TstrVal)&TgrabSettings::path   ,MAX_PATH ,_l(""),1,
@@ -85,7 +85,7 @@ TgrabSettings::TgrabSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSe
    0
   };
  addOptions(sopts);
- 
+
  static const TcreateParamList2<Tformat> listFormat(formats,&Tformat::name);setParamList(IDFF_grabFormat,&listFormat);
 }
 
@@ -93,7 +93,7 @@ void TgrabSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQ
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (show)
-  queueFilter<TimgFilterGrab>(filtersorder,filters,queue); 
+  queueFilter<TimgFilterGrab>(filtersorder,filters,queue);
 }
 void TgrabSettings::createPages(TffdshowPageDec *parent) const
 {

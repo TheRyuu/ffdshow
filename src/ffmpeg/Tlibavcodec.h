@@ -19,7 +19,7 @@ private:
  int refcount;
  static int get_buffer(AVCodecContext *c, AVFrame *pic);
  CCritSec csOpenClose;
-public: 
+public:
  void AddRef(void)
   {
    refcount++;
@@ -32,7 +32,7 @@ public:
  static bool getVersion(const Tconfig *config,ffstring &vers,ffstring &license);
  static bool check(const Tconfig *config);
  static int lavcCpuFlags(void);
- 
+
  bool ok,dec_only;
  AVCodecContext* avcodec_alloc_context(TlibavcodecExt *ext=NULL);
 
@@ -45,10 +45,10 @@ public:
  int  (*avcodec_open0)(AVCodecContext *avctx, AVCodec *codec);
  int  avcodec_open(AVCodecContext *avctx, AVCodec *codec);
  AVFrame* (*avcodec_alloc_frame)(void);
- int (*avcodec_decode_video)(AVCodecContext *avctx, AVFrame *picture, 
+ int (*avcodec_decode_video)(AVCodecContext *avctx, AVFrame *picture,
                              int *got_picture_ptr,
                              const uint8_t *buf, int buf_size);
- int (*avcodec_decode_audio)(AVCodecContext *avctx, void *samples, 
+ int (*avcodec_decode_audio)(AVCodecContext *avctx, void *samples,
                              int *frame_size_ptr,
                              const uint8_t *buf, int buf_size);
  int (*avcodec_encode_video)(AVCodecContext *avctx, uint8_t *buf, int buf_size, const AVFrame *pict);
@@ -57,7 +57,7 @@ public:
  int  (*avcodec_close0)(AVCodecContext *avctx);
  int  avcodec_close(AVCodecContext *avctx);
  //void (*av_free_static)(void);
- 
+
  void (*av_register_all)(void);
  AVOutputFormat* (*guess_format)(const char *short_name, const char *filename, const char *mime_type);
  int (*url_fopen)(ByteIOContext *s, const char *filename, int flags);
@@ -79,14 +79,14 @@ public:
  const char* (*avcodec_get_current_idct)(AVCodecContext *avctx);
 
  void (*av_free)(void *ptr);
- 
+
  static const char_t *idctNames[],*errorResiliences[],*errorConcealments[];
  struct Tdia_size
   {
    int size;
    const char_t *descr;
   };
- static const Tdia_size dia_sizes[]; 
+ static const Tdia_size dia_sizes[];
 };
 
 struct TlibavcodecExt
@@ -101,7 +101,7 @@ private:
  static void handle_user_data0(AVCodecContext *c,const uint8_t *buf,int buf_len);
 public:
  virtual ~TlibavcodecExt() {}
- void connectTo(AVCodecContext *ctx,Tlibavcodec *libavcodec); 
+ void connectTo(AVCodecContext *ctx,Tlibavcodec *libavcodec);
  virtual void onGetBuffer(AVFrame *pic) {}
  virtual void onRegetBuffer(AVFrame *pic) {}
  virtual void onReleaseBuffer(AVFrame *pic) {}

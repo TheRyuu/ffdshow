@@ -17,7 +17,7 @@ private:
  // Silence level
  // FIXME: should be relative to the level of the samples
  static const float SIL_S16;
- 
+
  TsampleFormat oldfmt;
  TvolumeSettings oldcfg;
  int volumes[6];
@@ -28,8 +28,8 @@ private:
    float avg;   // average level of the sample
    size_t len; // sample size (weight)
   } *mem;
- int idx; 
-  
+ int idx;
+
  static const float MUL_INIT,MUL_MIN;//,MUL_MAX;
  float mul;
 
@@ -55,7 +55,7 @@ private:
          samples[i]=TsampleFormatInfo<sample_t>::limit(tmp);
         }
      else
-      { 
+      {
        typedef typename TsampleFormatInfo<sample_t>::helper_t helper_t;
        helper_t mulT=helper_t(mul*(-TsampleFormatInfo<sample_t>::min()/16));
        for (size_t i=0;i<numsamples*nchannels;)
@@ -65,7 +65,7 @@ private:
           helper_t tmp=mulT*yt/(-TsampleFormatInfo<sample_t>::min()/16);
           samples[i]=TsampleFormatInfo<sample_t>::limit(tmp);
          }
-      }   
+      }
     }
   };
  template<class sample_t> void volume(sample_t* const samples,size_t numsamples,const TsampleFormat &fmt,const TvolumeSettings *cfg);
@@ -75,7 +75,7 @@ private:
    bool have;
    unsigned int volumes[6]; // 0 - 65536
   } storedvolumes;
- CCritSec csVolumes; 
+ CCritSec csVolumes;
 protected:
  virtual bool is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg);
  virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_ALL_24;}

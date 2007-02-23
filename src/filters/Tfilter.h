@@ -12,8 +12,8 @@ public:
  virtual ~Tfilter();
  virtual HRESULT queryInterface(const IID &iid,void **ptr) const {return E_NOINTERFACE;}
  virtual void done(void) {}
- virtual void onSeek(void) {} 
- virtual void onStop(void) {} 
+ virtual void onSeek(void) {}
+ virtual void onStop(void) {}
  virtual void onDisconnect(PIN_DIRECTION dir) {}
 };
 
@@ -48,7 +48,7 @@ struct TfilterQueue :public std::list<TfilterQueueItem>
 {
 private:
  TfilterQueue& operator=(const TfilterQueue&);
-public: 
+public:
  TfilterQueue(bool Itemporary=false):temporary(Itemporary) {}
  bool temporary;
  void add(Tfilter *f,size_t cfgsize,size_t index) {push_back(TfilterQueueItem(f,cfgsize,index));}

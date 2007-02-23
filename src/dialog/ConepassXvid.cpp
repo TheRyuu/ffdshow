@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "ConepassXvid.h"
 
@@ -25,7 +25,7 @@ bool TonePassXvidPage::enabled(void)
 }
 
 void TonePassXvidPage::cfg2dlg(void)
-{ 
+{
  SetDlgItemInt(m_hwnd,IDC_ED_XVID_REACTION_DELAY_FACTOR,cfgGet(IDFF_enc_xvid_rc_reaction_delay_factor),FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_XVID_AVERAGING_PERIOD,cfgGet(IDFF_enc_xvid_rc_averaging_period),FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_XVID_BUFFER,cfgGet(IDFF_enc_xvid_rc_buffer),FALSE);
@@ -43,5 +43,5 @@ TonePassXvidPage::TonePassXvidPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparen
    IDC_ED_XVID_BUFFER,0,10000000,IDFF_enc_xvid_rc_buffer,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
 }

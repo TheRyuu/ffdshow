@@ -10,7 +10,7 @@
  *                                                                  *
  ********************************************************************
 
-  function: 
+  function:
 
  ********************************************************************/
 
@@ -27,7 +27,7 @@
 
 const ogg_int32_t SharpenModifier[ Q_TABLE_SIZE ] =
 {  -12, -11, -10, -10,  -9,  -9,  -9,  -9,
-   -6,  -6,  -6,  -6,  -6,  -6,  -6,  -6, 
+   -6,  -6,  -6,  -6,  -6,  -6,  -6,  -6,
    -4,  -4,  -4,  -4,  -4,  -4,  -4,  -4,
    -2,  -2,  -2,  -2,  -2,  -2,  -2,  -2,
    -2,  -2,  -2,  -2,  -2,  -2,  -2,  -2,
@@ -44,7 +44,7 @@ static const ogg_uint32_t DcQuantScaleV1[ Q_TABLE_SIZE ] = {
   6,  5,  5,  5,  5,  4,  4,  4,
   4,  4,  3,  3,  3,  3,  3,  3,
   3,  2,  2,  2,  2,  2,  2,  2,
-  2,  1,  1,  1,  1,  1,  1,  1 
+  2,  1,  1,  1,  1,  1,  1,  1
 };
 
 static const ogg_uint32_t * const DeringModifierV1=DcQuantScaleV1;
@@ -58,7 +58,7 @@ static void PClearFrameInfo(PP_INSTANCE * ppi){
   if(ppi->ScanDisplayFragments) _ogg_free(ppi->ScanDisplayFragments);
   ppi->ScanDisplayFragments=0;
 
-  for(i = 0 ; i < MAX_PREV_FRAMES ; i ++) 
+  for(i = 0 ; i < MAX_PREV_FRAMES ; i ++)
     if(ppi->PrevFragments[i]){
       _ogg_free(ppi->PrevFragments[i]);
       ppi->PrevFragments[i]=0;
@@ -93,55 +93,55 @@ static void PClearFrameInfo(PP_INSTANCE * ppi){
 
   if(ppi->yuv_differences) _ogg_free(ppi->yuv_differences);
   ppi->yuv_differences=0;
-  
+
 }
 
 void PInitFrameInfo(PP_INSTANCE * ppi){
   int i;
   PClearFrameInfo(ppi);
 
-  ppi->ScanPixelIndexTable = 
+  ppi->ScanPixelIndexTable =
     _ogg_malloc(ppi->ScanFrameFragments*sizeof(*ppi->ScanPixelIndexTable));
 
-  ppi->ScanDisplayFragments = 
+  ppi->ScanDisplayFragments =
     _ogg_malloc(ppi->ScanFrameFragments*sizeof(*ppi->ScanDisplayFragments));
 
-  for(i = 0 ; i < MAX_PREV_FRAMES ; i ++) 
-    ppi->PrevFragments[i] = 
+  for(i = 0 ; i < MAX_PREV_FRAMES ; i ++)
+    ppi->PrevFragments[i] =
       _ogg_malloc(ppi->ScanFrameFragments*sizeof(*ppi->PrevFragments));
-   
-  ppi->FragScores = 
+
+  ppi->FragScores =
     _ogg_malloc(ppi->ScanFrameFragments*sizeof(*ppi->FragScores));
 
-  ppi->SameGreyDirPixels = 
+  ppi->SameGreyDirPixels =
     _ogg_malloc(ppi->ScanFrameFragments*sizeof(*ppi->SameGreyDirPixels));
 
-  ppi->FragDiffPixels = 
+  ppi->FragDiffPixels =
     _ogg_malloc(ppi->ScanFrameFragments*sizeof(*ppi->FragScores));
-  
-  ppi->BarBlockMap= 
+
+  ppi->BarBlockMap=
     _ogg_malloc(3 * ppi->ScanHFragments*sizeof(*ppi->BarBlockMap));
 
-  ppi->TmpCodedMap = 
+  ppi->TmpCodedMap =
     _ogg_malloc(ppi->ScanHFragments*sizeof(*ppi->TmpCodedMap));
 
-  ppi->RowChangedPixels = 
+  ppi->RowChangedPixels =
     _ogg_malloc(3 * ppi->ScanConfig.VideoFrameHeight*
 		sizeof(*ppi->RowChangedPixels));
 
-  ppi->PixelScores = 
+  ppi->PixelScores =
     _ogg_malloc(ppi->ScanConfig.VideoFrameWidth*
 		sizeof(*ppi->PixelScores) * PSCORE_CB_ROWS);
 
-  ppi->PixelChangedMap = 
+  ppi->PixelChangedMap =
     _ogg_malloc(ppi->ScanConfig.VideoFrameWidth*
 		sizeof(*ppi->PixelChangedMap) * PMAP_CB_ROWS);
 
-  ppi->ChLocals = 
+  ppi->ChLocals =
     _ogg_malloc(ppi->ScanConfig.VideoFrameWidth*
 		sizeof(*ppi->ChLocals) * CHLOCALS_CB_ROWS);
 
-  ppi->yuv_differences = 
+  ppi->yuv_differences =
     _ogg_malloc(ppi->ScanConfig.VideoFrameWidth*
 		sizeof(*ppi->yuv_differences) * YDIFF_CB_ROWS);
 }
@@ -163,22 +163,22 @@ void InitPPInstance(PP_INSTANCE *ppi){
   /* Scan control variables. */
   ppi->HFragPixels = 8;
   ppi->VFragPixels = 8;
-  
+
   ppi->SRFGreyThresh = 4;
   ppi->SRFColThresh = 5;
   ppi->NoiseSupLevel = 3;
   ppi->SgcLevelThresh = 3;
   ppi->SuvcLevelThresh = 4;
-  
+
   /* Variables controlling S.A.D. breakouts. */
   ppi->GrpLowSadThresh = 10;
   ppi->GrpHighSadThresh = 64;
   ppi->PrimaryBlockThreshold = 5;
   ppi->SgcThresh = 16;  /* (Default values for 8x8 blocks). */
-  
+
   ppi->UVBlockThreshCorrection = 1.25;
   ppi->UVSgcCorrection = 1.5;
-  
+
   ppi->MaxLineSearchLen = MAX_SEARCH_LINE_LEN;
 }
 
@@ -187,24 +187,24 @@ void DeringBlockStrong(unsigned char *SrcPtr,
 			      ogg_int32_t Pitch,
 			      ogg_uint32_t FragQIndex,
                               const ogg_uint32_t *QuantScale){
-    
+
   ogg_int16_t UDMod[72];
   ogg_int16_t LRMod[72];
   unsigned int j,k,l;
   const unsigned char * Src;
   unsigned int QValue = QuantScale[FragQIndex];
-  
+
   unsigned char p;
   unsigned char pl;
   unsigned char pr;
   unsigned char pu;
   unsigned char pd;
-  
+
   int  al;
   int  ar;
   int  au;
   int  ad;
-  
+
   int  atot;
   int  B;
   int  newVal;
@@ -213,61 +213,61 @@ void DeringBlockStrong(unsigned char *SrcPtr,
   unsigned char *dstRow = DstPtr;
   const unsigned char *lastRow = SrcPtr-Pitch;
   const unsigned char *nextRow = SrcPtr+Pitch;
- 
+
   unsigned int rowOffset = 0;
   unsigned int round = (1<<6);
-  
+
   int High;
   int Low;
   int TmpMod;
-  
+
   int Sharpen = SharpenModifier[FragQIndex];
   High = 3 * QValue;
   if(High>32)High=32;
   Low = 0;
 
-    
+
   /* Initialize the Mod Data */
   Src = SrcPtr-Pitch;
-  for(k=0;k<9;k++){           
+  for(k=0;k<9;k++){
     for(j=0;j<8;j++){
-      
+
       TmpMod = 32 + QValue - (abs(Src[j+Pitch]-Src[j]));
-      
+
       if(TmpMod< -64)
 	TmpMod = Sharpen;
-      
+
       else if(TmpMod<Low)
 	TmpMod = Low;
-      
+
       else if(TmpMod>High)
 	TmpMod = High;
-      
+
       UDMod[k*8+j] = (ogg_int16_t)TmpMod;
     }
     Src +=Pitch;
   }
-  
+
   Src = SrcPtr-1;
-  
-  for(k=0;k<8;k++){           
+
+  for(k=0;k<8;k++){
     for(j=0;j<9;j++){
       TmpMod = 32 + QValue - (abs(Src[j+1]-Src[j]));
-      
+
       if(TmpMod< -64 )
 	TmpMod = Sharpen;
-      
+
       else if(TmpMod<0)
 	TmpMod = Low;
-      
+
       else if(TmpMod>High)
 	TmpMod = High;
-      
+
       LRMod[k*9+j] = (ogg_int16_t)TmpMod;
     }
     Src+=Pitch;
   }
-  
+
   for(k=0;k<8;k++){
     /* In the case that this function called with same buffer for
      source and destination, To keep the c and the mmx version to have
@@ -275,33 +275,33 @@ void DeringBlockStrong(unsigned char *SrcPtr,
      eight pixel value before writing them to destination
      (i.e. Overwriting souce for the speical case) */
     for(l=0;l<8;l++){
-    
+
       atot = 128;
       B = round;
       p = curRow[ rowOffset +l +1];
-      
+
       pl = curRow[ rowOffset +l];
       al = LRMod[k*9+l];
       atot -= al;
-      B += al * pl; 
-      
+      B += al * pl;
+
       pu = lastRow[ rowOffset +l];
       au = UDMod[k*8+l];
       atot -= au;
       B += au * pu;
-      
+
       pd = nextRow[ rowOffset +l];
       ad = UDMod[(k+1)*8+l];
       atot -= ad;
       B += ad * pd;
-      
+
       pr = curRow[ rowOffset +l+2];
       ar = LRMod[k*9+l+1];
       atot -= ar;
       B += ar * pr;
-      
+
       newVal = ( atot * p + B) >> 7;
-      
+
       dstRow[ rowOffset +l]= clamp255( newVal );
     }
     rowOffset += Pitch;
@@ -313,36 +313,36 @@ void DeringBlockWeak(unsigned char *SrcPtr,
 			    ogg_int32_t Pitch,
 			    ogg_uint32_t FragQIndex,
                              const ogg_uint32_t *QuantScale){
-  
+
   ogg_int16_t UDMod[72];
   ogg_int16_t LRMod[72];
   unsigned int j,k;
   const unsigned char * Src;
   unsigned int QValue = QuantScale[FragQIndex];
-  
+
   unsigned char p;
   unsigned char pl;
   unsigned char pr;
   unsigned char pu;
   unsigned char pd;
-  
+
   int  al;
   int  ar;
   int  au;
   int  ad;
-  
+
   int  atot;
   int  B;
   int  newVal;
-  
+
   const unsigned char *curRow = SrcPtr-1;
   unsigned char *dstRow = DstPtr;
   const unsigned char *lastRow = SrcPtr-Pitch;
   const unsigned char *nextRow = SrcPtr+Pitch;
-  
+
   unsigned int rowOffset = 0;
   unsigned int round = (1<<6);
-  
+
   int High;
   int Low;
   int TmpMod;
@@ -352,84 +352,84 @@ void DeringBlockWeak(unsigned char *SrcPtr,
   if(High>24)
     High=24;
   Low = 0 ;
-  
+
   /* Initialize the Mod Data */
   Src=SrcPtr-Pitch;
-  for(k=0;k<9;k++) {           
+  for(k=0;k<9;k++) {
     for(j=0;j<8;j++) {
-      
+
       TmpMod = 32 + QValue - 2*(abs(Src[j+Pitch]-Src[j]));
 
       if(TmpMod< -64)
 	TmpMod = Sharpen;
-      
+
       else if(TmpMod<Low)
 	TmpMod = Low;
-      
+
             else if(TmpMod>High)
 	      TmpMod = High;
-      
+
       UDMod[k*8+j] = (ogg_int16_t)TmpMod;
     }
     Src +=Pitch;
   }
-  
+
   Src = SrcPtr-1;
 
-  for(k=0;k<8;k++){           
+  for(k=0;k<8;k++){
     for(j=0;j<9;j++){
       TmpMod = 32 + QValue - 2*(abs(Src[j+1]-Src[j]));
-            
+
       if(TmpMod< -64 )
 	TmpMod = Sharpen;
-      
+
       else if(TmpMod<Low)
 	TmpMod = Low;
-      
+
       else if(TmpMod>High)
 	TmpMod = High;
-      
+
       LRMod[k*9+j] = (ogg_int16_t)TmpMod;
     }
     Src+=Pitch;
   }
-  
+
   for(k=0;k<8;k++) {
     for(j=0;j<8;j++){
       atot = 128;
       B = round;
       p = curRow[ rowOffset +j+1];
-      
+
       pl = curRow[ rowOffset +j];
       al = LRMod[k*9+j];
       atot -= al;
       B += al * pl;
-	
+
       pu = lastRow[ rowOffset +j];
       au = UDMod[k*8+j];
       atot -= au;
       B += au * pu;
-	
+
       pd = nextRow[ rowOffset +j];
       ad = UDMod[(k+1)*8+j];
       atot -= ad;
       B += ad * pd;
-      
+
       pr = curRow[ rowOffset +j+2];
       ar = LRMod[k*9+j+1];
       atot -= ar;
       B += ar * pr;
-      
+
       newVal = ( atot * p + B) >> 7;
-      
+
       dstRow[ rowOffset +j] = clamp255( newVal );
     }
-    
+
     rowOffset += Pitch;
   }
 }
 
-static void DeringFrame(PB_INSTANCE *pbi, 
+static void DeringFrame(PB_INSTANCE *pbi,
 			unsigned char *Src, unsigned char *Dst){
   ogg_uint32_t  col,row;
   unsigned char  *SrcPtr;
@@ -438,65 +438,65 @@ static void DeringFrame(PB_INSTANCE *pbi,
   const ogg_uint32_t *QuantScale;
   ogg_uint32_t Block;
   ogg_uint32_t LineLength;
-  
+
   ogg_int32_t Thresh1,Thresh2,Thresh3,Thresh4;
 
-  Thresh1 = 384;                  
-  Thresh2 = 4 * Thresh1;          
-  Thresh3 = 5 * Thresh2/4;        
-  Thresh4 = 5 * Thresh2/2;        
-  
+  Thresh1 = 384;
+  Thresh2 = 4 * Thresh1;
+  Thresh3 = 5 * Thresh2/4;
+  Thresh4 = 5 * Thresh2/2;
+
   QuantScale = DeringModifierV1;
-  
+
   BlocksAcross = pbi->HFragments;
   BlocksDown = pbi->VFragments;
-  
+
   SrcPtr = Src + pbi->ReconYDataOffset;
   DestPtr = Dst + pbi->ReconYDataOffset;
   LineLength = pbi->YStride;
-  
+
   Block = 0;
-  
+
   for ( row = 0 ; row < BlocksDown; row ++){
     for (col = 0; col < BlocksAcross; col ++){
-      ogg_uint32_t Quality = pbi->FragQIndex[Block]; 
-      ogg_int32_t Variance = pbi->FragmentVariances[Block]; 
-      
+      ogg_uint32_t Quality = pbi->FragQIndex[Block];
+      ogg_int32_t Variance = pbi->FragmentVariances[Block];
+
       if( pbi->PostProcessingLevel >5 && Variance > Thresh3 ){
-	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col, 
+	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col,
 			  LineLength,Quality,QuantScale);
-				
-	if( (col > 0 && 
+
+	if( (col > 0 &&
 	     pbi->FragmentVariances[Block-1] > Thresh4 ) ||
-	    (col + 1 < BlocksAcross && 
+	    (col + 1 < BlocksAcross &&
 	     pbi->FragmentVariances[Block+1] > Thresh4 ) ||
-	    (row + 1 < BlocksDown && 
+	    (row + 1 < BlocksDown &&
 	     pbi->FragmentVariances[Block+BlocksAcross] > Thresh4) ||
-	    (row > 0 && 
+	    (row > 0 &&
 	     pbi->FragmentVariances[Block-BlocksAcross] > Thresh4) ){
 
-	  dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col, 
+	  dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col,
 			    LineLength,Quality,QuantScale);
-	  dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col, 
+	  dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col,
 			    LineLength,Quality,QuantScale);
-	}			
+	}
       } else if(Variance > Thresh2 ) {
-	
-	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col, 
+
+	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col,
 			  LineLength,Quality,QuantScale);
       } else if(Variance > Thresh1 ) {
 
-	dsp_funcs.DeringBlockWeak(SrcPtr + 8 * col, DestPtr + 8 * col, 
+	dsp_funcs.DeringBlockWeak(SrcPtr + 8 * col, DestPtr + 8 * col,
 			LineLength,Quality,QuantScale);
-      
+
       } else {
 
         dsp_static_copy8x8(SrcPtr + 8 * col, DestPtr + 8 * col, LineLength);
 
       }
-			
+
       ++Block;
-      
+
     }
     SrcPtr += 8 * LineLength;
     DestPtr += 8 * LineLength;
@@ -507,98 +507,98 @@ static void DeringFrame(PB_INSTANCE *pbi,
   BlocksAcross /= 2;
   BlocksDown /= 2;
   LineLength /= 2;
-  
+
   SrcPtr = Src + pbi->ReconUDataOffset;
   DestPtr = Dst + pbi->ReconUDataOffset;
   for ( row = 0 ; row < BlocksDown; row ++) {
     for (col = 0; col < BlocksAcross; col ++) {
-      ogg_uint32_t Quality = pbi->FragQIndex[Block]; 
-      ogg_int32_t Variance = pbi->FragmentVariances[Block]; 
-			
+      ogg_uint32_t Quality = pbi->FragQIndex[Block];
+      ogg_int32_t Variance = pbi->FragmentVariances[Block];
+
       if( pbi->PostProcessingLevel >5 && Variance > Thresh4 ) {
-	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col, 
+	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col,
 			  LineLength,Quality,QuantScale);
-	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col, 
+	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col,
 			  LineLength,Quality,QuantScale);
-	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col, 
+	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col,
 			  LineLength,Quality,QuantScale);
-	
+
       }else if(Variance > Thresh2 ){
-	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col, 
+	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col,
 			  LineLength,Quality,QuantScale);
       }else if(Variance > Thresh1 ){
-	dsp_funcs.DeringBlockWeak(SrcPtr + 8 * col, DestPtr + 8 * col, 
+	dsp_funcs.DeringBlockWeak(SrcPtr + 8 * col, DestPtr + 8 * col,
 			LineLength,Quality,QuantScale);
       }else{
         dsp_static_copy8x8(SrcPtr + 8 * col, DestPtr + 8 * col, LineLength);
       }
-      
+
       ++Block;
-      
+
     }
     SrcPtr += 8 * LineLength;
     DestPtr += 8 * LineLength;
   }
-  
+
   /* Then V */
   SrcPtr = Src + pbi->ReconVDataOffset;
   DestPtr = Dst + pbi->ReconVDataOffset;
-  
+
   for ( row = 0 ; row < BlocksDown; row ++){
     for (col = 0; col < BlocksAcross; col ++){
-      
-      ogg_uint32_t Quality = pbi->FragQIndex[Block]; 
-      ogg_int32_t Variance = pbi->FragmentVariances[Block]; 
-      
-			
+
+      ogg_uint32_t Quality = pbi->FragQIndex[Block];
+      ogg_int32_t Variance = pbi->FragmentVariances[Block];
+
+
       if( pbi->PostProcessingLevel >5 && Variance > Thresh4) {
-	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col, 
+	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col,
 			  LineLength,Quality,QuantScale);
-	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col, 
+	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col,
 			  LineLength,Quality,QuantScale);
-	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col, 
+	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col,
 			  LineLength,Quality,QuantScale);
-				
+
       }else if(Variance > Thresh2 ){
-	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col, 
+	dsp_funcs.DeringBlockStrong(SrcPtr + 8 * col, DestPtr + 8 * col,
 			  LineLength,Quality,QuantScale);
       }else if(Variance > Thresh1 ){
-	dsp_funcs.DeringBlockWeak(SrcPtr + 8 * col, DestPtr + 8 * col, 
+	dsp_funcs.DeringBlockWeak(SrcPtr + 8 * col, DestPtr + 8 * col,
 			LineLength,Quality,QuantScale);
       }else{
         dsp_static_copy8x8(SrcPtr + 8 * col, DestPtr + 8 * col, LineLength);
       }
-      
+
       ++Block;
-      
+
     }
     SrcPtr += 8 * LineLength;
     DestPtr += 8 * LineLength;
-    
+
   }
-  
+
 }
 
 void UpdateFragQIndex(PB_INSTANCE *pbi){
-  
+
   ogg_uint32_t  ThisFrameQIndex;
   ogg_uint32_t  i;
 
   /* Check this frame quality  index */
   ThisFrameQIndex = pbi->FrameQIndex;
-  
-  
+
+
   /* It is not a key frame, so only reset those are coded */
   for( i = 0; i < pbi->UnitFragments; i++  )
     if( pbi->display_fragments[i])
       pbi->FragQIndex[i] = ThisFrameQIndex;
-  
+
 }
 
-void DeblockLoopFilteredBand(PB_INSTANCE *pbi, 
-			     unsigned char *SrcPtr, 
+void DeblockLoopFilteredBand(PB_INSTANCE *pbi,
+			     unsigned char *SrcPtr,
 			     unsigned char *DesPtr,
-			     ogg_uint32_t PlaneLineStep, 
+			     ogg_uint32_t PlaneLineStep,
 			     ogg_uint32_t FragsAcross,
 			     ogg_uint32_t StartFrag,
                              const ogg_uint32_t *QuantScale){
@@ -609,15 +609,15 @@ void DeblockLoopFilteredBand(PB_INSTANCE *pbi,
   unsigned char *Src, *Des;
   ogg_int32_t  x[10];
   ogg_int32_t  Sum1, Sum2;
-  
+
   while(CurrentFrag < StartFrag + FragsAcross){
-    
+
     Src=SrcPtr+8*(CurrentFrag-StartFrag)-PlaneLineStep*5;
     Des=DesPtr+8*(CurrentFrag-StartFrag)-PlaneLineStep*4;
-    
+
     QStep = QuantScale[pbi->FragQIndex[CurrentFrag+FragsAcross]];
     FLimit = ( QStep * 3 ) >> 2;
-    
+
     for( j=0; j<8 ; j++){
       x[0] = Src[0];
       x[1] = Src[PlaneLineStep];
@@ -631,38 +631,38 @@ void DeblockLoopFilteredBand(PB_INSTANCE *pbi,
       x[9] = Src[PlaneLineStep*9];
 
       Sum1=Sum2=0;
-      
-      for(k=1;k<=4;k++){   
+
+      for(k=1;k<=4;k++){
 	Sum1 += abs(x[k]-x[k-1]);
-	Sum2 += abs(x[k+4]-x[k+5]);           
+	Sum2 += abs(x[k+4]-x[k+5]);
       }
-      
+
       pbi->FragmentVariances[CurrentFrag] +=((Sum1>255)?255:Sum1);
       pbi->FragmentVariances[CurrentFrag + FragsAcross] += ((Sum2>255)?255:Sum2);
-      
+
       if( Sum1 < FLimit &&
 	  Sum2 < FLimit &&
-	  (x[5] - x[4]) < QStep && 
+	  (x[5] - x[4]) < QStep &&
 	  (x[4] - x[5]) < QStep ){
-	
+
 	/* low pass filtering (LPF7: 1 1 1 2 1 1 1) */
-	Des[0              ] = (x[0] + x[0] +x[0] + x[1] * 2 + 
+	Des[0              ] = (x[0] + x[0] +x[0] + x[1] * 2 +
 				x[2] + x[3] +x[4] + 4) >> 3;
-	Des[PlaneLineStep  ] = (x[0] + x[0] +x[1] + x[2] * 2 + 
+	Des[PlaneLineStep  ] = (x[0] + x[0] +x[1] + x[2] * 2 +
 				x[3] + x[4] +x[5] + 4) >> 3;
-	Des[PlaneLineStep*2] = (x[0] + x[1] +x[2] + x[3] * 2 + 
+	Des[PlaneLineStep*2] = (x[0] + x[1] +x[2] + x[3] * 2 +
 				x[4] + x[5] +x[6] + 4) >> 3;
-	Des[PlaneLineStep*3] = (x[1] + x[2] +x[3] + x[4] * 2 + 
+	Des[PlaneLineStep*3] = (x[1] + x[2] +x[3] + x[4] * 2 +
 				x[5] + x[6] +x[7] + 4) >> 3;
-	Des[PlaneLineStep*4] = (x[2] + x[3] +x[4] + x[5] * 2 + 
+	Des[PlaneLineStep*4] = (x[2] + x[3] +x[4] + x[5] * 2 +
 				x[6] + x[7] +x[8] + 4) >> 3;
-	Des[PlaneLineStep*5] = (x[3] + x[4] +x[5] + x[6] * 2 + 
+	Des[PlaneLineStep*5] = (x[3] + x[4] +x[5] + x[6] * 2 +
 				x[7] + x[8] +x[9] + 4) >> 3;
-	Des[PlaneLineStep*6] = (x[4] + x[5] +x[6] + x[7] * 2 + 
+	Des[PlaneLineStep*6] = (x[4] + x[5] +x[6] + x[7] * 2 +
 				x[8] + x[9] +x[9] + 4) >> 3;
-	Des[PlaneLineStep*7] = (x[5] + x[6] +x[7] + x[8] * 2 + 
+	Des[PlaneLineStep*7] = (x[5] + x[6] +x[7] + x[8] * 2 +
 				x[9] + x[9] +x[9] + 4) >> 3;
-	
+
       }else {
 	/* copy the pixels to destination */
         Des[0              ]= (unsigned char)x[1];
@@ -675,9 +675,9 @@ void DeblockLoopFilteredBand(PB_INSTANCE *pbi,
         Des[PlaneLineStep*7]= (unsigned char)x[8];
       }
       Src ++;
-      Des ++;             
+      Des ++;
     }
-    
+
 
     /* done with filtering the horizontal edge, now let's do the
        vertical one */
@@ -688,10 +688,10 @@ void DeblockLoopFilteredBand(PB_INSTANCE *pbi,
       Des=DesPtr-8*PlaneLineStep+8*(CurrentFrag-StartFrag);
       Src=Des-5;
       Des-=4;
-      
+
       QStep = QuantScale[pbi->FragQIndex[CurrentFrag]];
       FLimit = ( QStep * 3 ) >> 2;
-      
+
       for( j=0; j<8 ; j++){
 	x[0] = Src[0];
 	x[1] = Src[1];
@@ -703,22 +703,22 @@ void DeblockLoopFilteredBand(PB_INSTANCE *pbi,
 	x[7] = Src[7];
 	x[8] = Src[8];
 	x[9] = Src[9];
-	
+
 	Sum1=Sum2=0;
-	
-	for(k=1;k<=4;k++){   
+
+	for(k=1;k<=4;k++){
 	  Sum1 += abs(x[k]-x[k-1]);
-	  Sum2 += abs(x[k+4]-x[k+5]);           
+	  Sum2 += abs(x[k+4]-x[k+5]);
 	}
-	
+
 	pbi->FragmentVariances[CurrentFrag-1] += ((Sum1>255)?255:Sum1);
 	pbi->FragmentVariances[CurrentFrag] += ((Sum2>255)?255:Sum2);
-	
+
 	if( Sum1 < FLimit &&
 	    Sum2 < FLimit &&
-	    (x[5] - x[4]) < QStep && 
+	    (x[5] - x[4]) < QStep &&
 	    (x[4] - x[5]) < QStep ){
-	  
+
 	  /* low pass filtering (LPF7: 1 1 1 2 1 1 1) */
 	  Des[0] = (x[0] + x[0] +x[0] + x[1] * 2 + x[2] + x[3] +x[4] + 4) >> 3;
 	  Des[1] = (x[0] + x[0] +x[1] + x[2] * 2 + x[3] + x[4] +x[5] + 4) >> 3;
@@ -729,18 +729,18 @@ void DeblockLoopFilteredBand(PB_INSTANCE *pbi,
 	  Des[6] = (x[4] + x[5] +x[6] + x[7] * 2 + x[8] + x[9] +x[9] + 4) >> 3;
 	  Des[7] = (x[5] + x[6] +x[7] + x[8] * 2 + x[9] + x[9] +x[9] + 4) >> 3;
 	}
-	
+
 	Src += PlaneLineStep;
-	Des += PlaneLineStep;               
+	Des += PlaneLineStep;
       }
       CurrentFrag ++;
     }
   }
 }
 
-static void DeblockVerticalEdgesInLoopFilteredBand(PB_INSTANCE *pbi, 
-					    unsigned char *SrcPtr, 
-					    unsigned char *DesPtr, 
+static void DeblockVerticalEdgesInLoopFilteredBand(PB_INSTANCE *pbi,
+					    unsigned char *SrcPtr,
+					    unsigned char *DesPtr,
 					    ogg_uint32_t PlaneLineStep,
 					    ogg_uint32_t FragsAcross,
 					    ogg_uint32_t StartFrag,
@@ -752,16 +752,16 @@ static void DeblockVerticalEdgesInLoopFilteredBand(PB_INSTANCE *pbi,
   unsigned char *Src, *Des;
   ogg_int32_t  x[10];
   ogg_int32_t  Sum1, Sum2;
-    
+
   while(CurrentFrag < StartFrag + FragsAcross-1) {
-    
+
     Src=SrcPtr+8*(CurrentFrag-StartFrag+1)-5;
     Des=DesPtr+8*(CurrentFrag-StartFrag+1)-4;
-    
+
     QStep = QuantScale[pbi->FragQIndex[CurrentFrag+1]];
-    FLimit = ( QStep * 3)>>2 ;        
-    
-    for( j=0; j<8 ; j++){                
+    FLimit = ( QStep * 3)>>2 ;
+
+    for( j=0; j<8 ; j++){
       x[0] = Src[0];
       x[1] = Src[1];
       x[2] = Src[2];
@@ -772,23 +772,23 @@ static void DeblockVerticalEdgesInLoopFilteredBand(PB_INSTANCE *pbi,
       x[7] = Src[7];
       x[8] = Src[8];
       x[9] = Src[9];
-                
+
       Sum1=Sum2=0;
-      
-      for(k=1;k<=4;k++){   
+
+      for(k=1;k<=4;k++){
 	Sum1 += abs(x[k]-x[k-1]);
-	Sum2 += abs(x[k+4]-x[k+5]);           
+	Sum2 += abs(x[k+4]-x[k+5]);
       }
-      
+
       pbi->FragmentVariances[CurrentFrag] += ((Sum1>255)?255:Sum1);
       pbi->FragmentVariances[CurrentFrag+1] += ((Sum2>255)?255:Sum2);
-      
-                               
+
+
       if( Sum1 < FLimit &&
 	  Sum2 < FLimit &&
-	  (x[5] - x[4]) < QStep && 
+	  (x[5] - x[4]) < QStep &&
 	  (x[4] - x[5]) < QStep ){
-	
+
 	/* low pass filtering (LPF7: 1 1 1 2 1 1 1) */
 	Des[0] = (x[0] + x[0] +x[0] + x[1] * 2 + x[2] + x[3] +x[4] + 4) >> 3;
 	Des[1] = (x[0] + x[0] +x[1] + x[2] * 2 + x[3] + x[4] +x[5] + 4) >> 3;
@@ -800,18 +800,18 @@ static void DeblockVerticalEdgesInLoopFilteredBand(PB_INSTANCE *pbi,
 	Des[7] = (x[5] + x[6] +x[7] + x[8] * 2 + x[9] + x[9] +x[9] + 4) >> 3;
       }
       Src +=PlaneLineStep;
-                Des +=PlaneLineStep;                
+                Des +=PlaneLineStep;
 
-    }     
+    }
     CurrentFrag ++;
-  } 
+  }
 }
 
-static void DeblockPlane(PB_INSTANCE *pbi, 
-		  unsigned char *SourceBuffer, 
-		  unsigned char *DestinationBuffer, 
+static void DeblockPlane(PB_INSTANCE *pbi,
+		  unsigned char *SourceBuffer,
+		  unsigned char *DestinationBuffer,
 		  ogg_uint32_t Channel ){
-  
+
   ogg_uint32_t i,k;
   ogg_uint32_t PlaneLineStep=0;
   ogg_uint32_t StartFrag =0;
@@ -820,11 +820,11 @@ static void DeblockPlane(PB_INSTANCE *pbi,
   ogg_uint32_t FragsAcross=0;
   ogg_uint32_t FragsDown=0;
   const ogg_uint32_t *QuantScale=0;
-  
-  switch( Channel ){    
+
+  switch( Channel ){
   case 0:
     /* Get the parameters */
-    PlaneLineStep = pbi->YStride; 
+    PlaneLineStep = pbi->YStride;
     FragsAcross = pbi->HFragments;
     FragsDown = pbi->VFragments;
     StartFrag = 0;
@@ -832,14 +832,14 @@ static void DeblockPlane(PB_INSTANCE *pbi,
     SrcPtr = & SourceBuffer[PixelIndex];
     DesPtr = & DestinationBuffer[PixelIndex];
     break;
-    
+
   case 1:
     /* Get the parameters */
-    PlaneLineStep = pbi->UVStride;    
+    PlaneLineStep = pbi->UVStride;
     FragsAcross = pbi->HFragments / 2;
     FragsDown = pbi->VFragments / 2;
     StartFrag = pbi->YPlaneFragments;
-    
+
     PixelIndex = pbi->ReconUDataOffset;
     SrcPtr = & SourceBuffer[PixelIndex];
     DesPtr = & DestinationBuffer[PixelIndex];
@@ -847,19 +847,19 @@ static void DeblockPlane(PB_INSTANCE *pbi,
 
   default:
     /* Get the parameters */
-    PlaneLineStep = pbi->UVStride;    
+    PlaneLineStep = pbi->UVStride;
     FragsAcross = pbi->HFragments / 2;
     FragsDown = pbi->VFragments / 2;
     StartFrag =   pbi->YPlaneFragments + pbi->UVPlaneFragments;
-	
+
     PixelIndex = pbi->ReconVDataOffset;
     SrcPtr = & SourceBuffer[PixelIndex];
     DesPtr = & DestinationBuffer[PixelIndex];
     break;
   }
-  
+
   QuantScale = DcQuantScaleV1;
-    
+
   for(i=0;i<4;i++)
     memcpy(DesPtr+i*PlaneLineStep, SrcPtr+i*PlaneLineStep, PlaneLineStep);
 
@@ -869,48 +869,48 @@ static void DeblockPlane(PB_INSTANCE *pbi,
 
     SrcPtr += 8*PlaneLineStep;
     DesPtr += 8*PlaneLineStep;
-    
+
     /* Filter both the horizontal and vertical block edges inside the band */
-    dsp_funcs.DeblockLoopFilteredBand(pbi, SrcPtr, DesPtr, PlaneLineStep, 
+    dsp_funcs.DeblockLoopFilteredBand(pbi, SrcPtr, DesPtr, PlaneLineStep,
 			    FragsAcross, StartFrag, QuantScale);
-    
+
     /* Move Pointers */
     StartFrag += FragsAcross;
-    
-    k ++;   
+
+    k ++;
   }
 
   /* The Last band */
   for(i=0;i<4;i++)
-    memcpy(DesPtr+(i+4)*PlaneLineStep, 
-	   SrcPtr+(i+4)*PlaneLineStep, 
+    memcpy(DesPtr+(i+4)*PlaneLineStep,
+	   SrcPtr+(i+4)*PlaneLineStep,
 	   PlaneLineStep);
-  
-  DeblockVerticalEdgesInLoopFilteredBand(pbi,SrcPtr,DesPtr,PlaneLineStep, 
+
+  DeblockVerticalEdgesInLoopFilteredBand(pbi,SrcPtr,DesPtr,PlaneLineStep,
 					 FragsAcross,StartFrag,QuantScale);
-  
+
 }
 
-static void DeblockFrame(PB_INSTANCE *pbi, unsigned char *SourceBuffer, 
-		  unsigned char *DestinationBuffer){ 
+static void DeblockFrame(PB_INSTANCE *pbi, unsigned char *SourceBuffer,
+		  unsigned char *DestinationBuffer){
 
   memset(pbi->FragmentVariances, 0 , sizeof(ogg_int32_t) * pbi->UnitFragments);
-  
-  
+
+
   UpdateFragQIndex(pbi);
 
-  
+
   SetupLoopFilter(pbi);
-  
+
   /* Y */
   DeblockPlane( pbi, SourceBuffer, DestinationBuffer, 0);
-        
+
   /* U */
   DeblockPlane( pbi, SourceBuffer, DestinationBuffer, 1);
-        
+
   /* V */
   DeblockPlane( pbi, SourceBuffer, DestinationBuffer, 2);
-  
+
 }
 
 void PostProcess(PB_INSTANCE *pbi){
@@ -921,14 +921,14 @@ void PostProcess(PB_INSTANCE *pbi){
     DeblockFrame(pbi, pbi->LastFrameRecon,pbi->PostProcessBuffer);
     _mm_empty();
     break;
-    
+
   case 6:
     DeblockFrame(pbi, pbi->LastFrameRecon,pbi->PostProcessBuffer);
     UpdateUMVBorder(pbi, pbi->PostProcessBuffer );
     DeringFrame(pbi, pbi->PostProcessBuffer, pbi->PostProcessBuffer);
     _mm_empty();
     break;
-    
+
   case 5:
     DeblockFrame(pbi, pbi->LastFrameRecon,pbi->PostProcessBuffer);
     UpdateUMVBorder(pbi, pbi->PostProcessBuffer );
@@ -942,10 +942,10 @@ void PostProcess(PB_INSTANCE *pbi){
   case 1:
     UpdateFragQIndex(pbi);
     break;
-    
+
   case 0:
     break;
-    
+
   default:
     DeblockFrame(pbi, pbi->LastFrameRecon, pbi->PostProcessBuffer);
     UpdateUMVBorder(pbi, pbi->PostProcessBuffer );
@@ -954,4 +954,8 @@ void PostProcess(PB_INSTANCE *pbi){
     break;
   }
 }
+
+
+
+
 

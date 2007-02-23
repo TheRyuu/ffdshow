@@ -6,8 +6,8 @@
 #include "rational.h"
 #include "interfaces.h"
 
-struct FRAME_TYPE 
-{ 
+struct FRAME_TYPE
+{
  static int fromSample(IMediaSample *pIn);
  enum
   {
@@ -103,7 +103,7 @@ public:
  TffPict(int Icsp,const char_t *flnm,Tbuffer &buf,IffdshowBase *deci);
  void setTimestamps(IMediaSample *pIn);
  ~TffPict() {}
- 
+
  TcspInfo cspInfo;
  int frametype,fieldtype;
  REFERENCE_TIME rtStart,rtStop;

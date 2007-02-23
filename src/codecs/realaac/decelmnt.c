@@ -1,38 +1,38 @@
-/* ***** BEGIN LICENSE BLOCK *****  
- *   
- * Portions Copyright (c) 1995-2005 RealNetworks, Inc. All Rights Reserved.  
- *       
- * The contents of this file, and the files included with this file, 
- * are subject to the current version of the RealNetworks Public 
- * Source License (the "RPSL") available at 
- * http://www.helixcommunity.org/content/rpsl unless you have licensed 
- * the file under the current version of the RealNetworks Community 
- * Source License (the "RCSL") available at 
- * http://www.helixcommunity.org/content/rcsl, in which case the RCSL 
- * will apply. You may also obtain the license terms directly from 
- * RealNetworks.  You may not use this file except in compliance with 
- * the RPSL or, if you have a valid RCSL with RealNetworks applicable 
- * to this file, the RCSL.  Please see the applicable RPSL or RCSL for 
- * the rights, obligations and limitations governing use of the 
- * contents of the file. 
- *   
- * This file is part of the Helix DNA Technology. RealNetworks is the 
- * developer of the Original Code and owns the copyrights in the 
- * portions it created. 
- *   
- * This file, and the files included with this file, is distributed 
- * and made available on an 'AS IS' basis, WITHOUT WARRANTY OF ANY 
- * KIND, EITHER EXPRESS OR IMPLIED, AND REALNETWORKS HEREBY DISCLAIMS 
- * ALL SUCH WARRANTIES, INCLUDING WITHOUT LIMITATION, ANY WARRANTIES 
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, QUIET 
- * ENJOYMENT OR NON-INFRINGEMENT. 
- *  
- * Technology Compatibility Kit Test Suite(s) Location:  
- *    http://www.helixcommunity.org/content/tck  
- *  
- * Contributor(s):  
- *   
- * ***** END LICENSE BLOCK ***** */  
+/* ***** BEGIN LICENSE BLOCK *****
+ *
+ * Portions Copyright (c) 1995-2005 RealNetworks, Inc. All Rights Reserved.
+ *
+ * The contents of this file, and the files included with this file,
+ * are subject to the current version of the RealNetworks Public
+ * Source License (the "RPSL") available at
+ * http://www.helixcommunity.org/content/rpsl unless you have licensed
+ * the file under the current version of the RealNetworks Community
+ * Source License (the "RCSL") available at
+ * http://www.helixcommunity.org/content/rcsl, in which case the RCSL
+ * will apply. You may also obtain the license terms directly from
+ * RealNetworks.  You may not use this file except in compliance with
+ * the RPSL or, if you have a valid RCSL with RealNetworks applicable
+ * to this file, the RCSL.  Please see the applicable RPSL or RCSL for
+ * the rights, obligations and limitations governing use of the
+ * contents of the file.
+ *
+ * This file is part of the Helix DNA Technology. RealNetworks is the
+ * developer of the Original Code and owns the copyrights in the
+ * portions it created.
+ *
+ * This file, and the files included with this file, is distributed
+ * and made available on an 'AS IS' basis, WITHOUT WARRANTY OF ANY
+ * KIND, EITHER EXPRESS OR IMPLIED, AND REALNETWORKS HEREBY DISCLAIMS
+ * ALL SUCH WARRANTIES, INCLUDING WITHOUT LIMITATION, ANY WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, QUIET
+ * ENJOYMENT OR NON-INFRINGEMENT.
+ *
+ * Technology Compatibility Kit Test Suite(s) Location:
+ *    http://www.helixcommunity.org/content/tck
+ *
+ * Contributor(s):
+ *
+ * ***** END LICENSE BLOCK ***** */
 
 /**************************************************************************************
  * Fixed-point HE-AAC decoder
@@ -49,7 +49,7 @@
  *
  * Description: decode one SCE
  *
- * Inputs:      BitStreamInfo struct pointing to start of SCE (14496-3, table 4.4.4) 
+ * Inputs:      BitStreamInfo struct pointing to start of SCE (14496-3, table 4.4.4)
  *
  * Outputs:     updated element instance tag
  *
@@ -74,7 +74,7 @@ static int DecodeSingleChannelElement(AACDecInfo *aacDecInfo, BitStreamInfo *bsi
  *
  * Description: decode one CPE
  *
- * Inputs:      BitStreamInfo struct pointing to start of CPE (14496-3, table 4.4.5) 
+ * Inputs:      BitStreamInfo struct pointing to start of CPE (14496-3, table 4.4.5)
  *
  * Outputs:     updated element instance tag
  *              updated commonWin
@@ -101,7 +101,7 @@ static int DecodeChannelPairElement(AACDecInfo *aacDecInfo, BitStreamInfo *bsi)
 	/* read instance tag */
 	aacDecInfo->currInstTag = GetBits(bsi, NUM_INST_TAG_BITS);
 
-	/* read common window flag and mid-side info (if present) 
+	/* read common window flag and mid-side info (if present)
 	 * store msMask bits in psi->msMaskBits[] as follows:
 	 *  long blocks -  pack bits for each SFB in range [0, maxSFB) starting with lsb of msMaskBits[0]
 	 *  short blocks - pack bits for each SFB in range [0, maxSFB), for each group [0, 7]
@@ -126,7 +126,7 @@ static int DecodeChannelPairElement(AACDecInfo *aacDecInfo, BitStreamInfo *bsi)
 						*maskPtr = 0;
 						maskOffset = 0;
 					}
-				}		
+				}
 			}
 		}
 	}
@@ -139,7 +139,7 @@ static int DecodeChannelPairElement(AACDecInfo *aacDecInfo, BitStreamInfo *bsi)
  *
  * Description: decode one LFE
  *
- * Inputs:      BitStreamInfo struct pointing to start of LFE (14496-3, table 4.4.9) 
+ * Inputs:      BitStreamInfo struct pointing to start of LFE (14496-3, table 4.4.9)
  *
  * Outputs:     updated element instance tag
  *
@@ -164,7 +164,7 @@ static int DecodeLFEChannelElement(AACDecInfo *aacDecInfo, BitStreamInfo *bsi)
  *
  * Description: decode one DSE
  *
- * Inputs:      BitStreamInfo struct pointing to start of DSE (14496-3, table 4.4.10) 
+ * Inputs:      BitStreamInfo struct pointing to start of DSE (14496-3, table 4.4.10)
  *
  * Outputs:     updated element instance tag
  *              filled in data stream buffer
@@ -204,7 +204,7 @@ static int DecodeDataStreamElement(AACDecInfo *aacDecInfo, BitStreamInfo *bsi)
  *
  * Description: decode one PCE
  *
- * Inputs:      BitStreamInfo struct pointing to start of PCE (14496-3, table 4.4.2) 
+ * Inputs:      BitStreamInfo struct pointing to start of PCE (14496-3, table 4.4.2)
  *
  * Outputs:     filled-in ProgConfigElement struct
  *              updated BitStreamInfo struct
@@ -291,7 +291,7 @@ int DecodeProgramConfigElement(ProgConfigElement *pce, BitStreamInfo *bsi)
  * Description: decode one fill element
  *
  * Inputs:      BitStreamInfo struct pointing to start of fill element
- *                (14496-3, table 4.4.11) 
+ *                (14496-3, table 4.4.11)
  *
  * Outputs:     updated element instance tag
  *              unpacked extension payload
@@ -322,9 +322,9 @@ static int DecodeFillElement(AACDecInfo *aacDecInfo, BitStreamInfo *bsi)
 	aacDecInfo->fillExtType = 0;
 
 #ifdef AAC_ENABLE_SBR
-	/* check for SBR 
-	 * aacDecInfo->sbrEnabled is sticky (reset each raw_data_block), so for multichannel 
-	 *    need to verify that all SCE/CPE/ICCE have valid SBR fill element following, and 
+	/* check for SBR
+	 * aacDecInfo->sbrEnabled is sticky (reset each raw_data_block), so for multichannel
+	 *    need to verify that all SCE/CPE/ICCE have valid SBR fill element following, and
 	 *    must upsample by 2 for LFE
 	 */
 	if (psi->fillCount > 0) {
@@ -380,7 +380,7 @@ int DecodeNextElement(AACDecInfo *aacDecInfo, unsigned char **buf, int *bitOffse
 
 	/* set defaults (could be overwritten by DecodeXXXElement(), depending on currBlockID) */
 	psi->commonWin = 0;
- 
+
 	err = 0;
 	switch (aacDecInfo->currBlockID) {
 	case AAC_ID_SCE:
@@ -421,4 +421,8 @@ int DecodeNextElement(AACDecInfo *aacDecInfo, unsigned char **buf, int *bitOffse
 
 	return ERR_AAC_NONE;
 }
+
+
+
+
 

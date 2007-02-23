@@ -4,9 +4,9 @@
 /*
 
   GLT OpenGL C++ Toolkit (LGPL)
-  Copyright (C) 2000-2002 Nigel Stewart  
+  Copyright (C) 2000-2002 Nigel Stewart
 
-  Email: nigels@nigels.com   
+  Email: nigels@nigels.com
   WWW:   http://www.nigels.com/glt/
 
   This library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 
 */
 
-/*! \file 
+/*! \file
 	\brief   Templated Circular Buffer Container
 	\ingroup Misc
 */
@@ -65,13 +65,13 @@ public:
 			//parent::resize(capacity,def);
 			_begin = _end = parent::begin();
 	}
-	
+
 	/*! \brief Destructor
 	*/
 	~circular_buffer()
 	{
 	}
-	
+
 	/*! \brief Get the buffer capacity (maximum size)
 	*/
 	 size_type capacity() const
@@ -100,11 +100,11 @@ public:
 
 	/*! \brief Push an item to the front of the buffer
 	    \param x Item to push to the front
-		
+
 		Because the buffer is circular, the last item will
 		be overwritten if the buffer is already full.
 	*/
-	 void push_front(const T &x) 
+	 void push_front(const T &x)
 	{
 		if (parent_size())
 		{
@@ -121,10 +121,10 @@ public:
 			}
 		}
 	}
-	
+
 	/*! \brief Push an item to the back of the buffer
 	    \param x Item to push to the back
-		
+
 		Because the buffer is circular, the first item will
 		be overwritten if the buffer is already full.
 	*/
@@ -144,7 +144,7 @@ public:
 			}
 		}
 	}
-	
+
 	/// Erase the item at the front of the buffer
 	 void pop_front()
 	{
@@ -157,7 +157,7 @@ public:
 			_full = false;
 		}
 	}
-	
+
 	/// Erase the item at the back of the buffer
 	 void pop_back()
 	{
@@ -172,39 +172,39 @@ public:
 	}
 
 	/// Access the front item
-	 T &front()       
+	 T &front()
 	{
 		assert(parent_size());
-		assert(_size>0); 
-		return *_begin; 
+		assert(_size>0);
+		return *_begin;
 	}
 
 	/// Access the front item
-	 const T &front() const 
-	{ 
+	 const T &front() const
+	{
 		assert(parent_size());
-		assert(_size>0); 
-		return *_begin; 
+		assert(_size>0);
+		return *_begin;
 	}
 
 	/// Access the back item
 	 T &back()
-	{ 
+	{
 		assert(parent_size());
-		assert(_size>0); 
-		iterator i=_end; 
-		decrement(i); 
-		return *i; 
+		assert(_size>0);
+		iterator i=_end;
+		decrement(i);
+		return *i;
 	}
 
 	/// Access the back item
 	 const T &back() const
-	{ 
+	{
 		assert(parent_size());
-		assert(_size>0); 
-		iterator i=_end; 
-		decrement((const_iterator&)i); 
-		return *i; 
+		assert(_size>0);
+		iterator i=_end;
+		decrement((const_iterator&)i);
+		return *i;
 	}
 
 	/// Access the i'th item in the buffer
@@ -251,7 +251,7 @@ private:
 	iterator _end;
 	size_type        _size;
 	bool             _full;
-	
+
 	/// Increment an iterator, checking for wrap-around
 	 void increment(const_iterator &i) const
 	{
@@ -270,7 +270,7 @@ private:
 	}
 
 	/// Increment an iterator, checking for wrap-around
-	 void increment(iterator &i) 
+	 void increment(iterator &i)
 	{
 		i++;
 		if (i==parent::end())
@@ -278,7 +278,7 @@ private:
 	}
 
 	/// Decrement an iterator, checking for wrap-around
-	 void decrement(iterator &i) 
+	 void decrement(iterator &i)
 	{
 		if (i==parent::begin())
 			i += parent_size()-1;

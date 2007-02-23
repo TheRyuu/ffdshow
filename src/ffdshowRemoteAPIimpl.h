@@ -25,7 +25,7 @@ private:
  int fMode; // Fast forward/rewind mode
  Tkeyboard *keys;
  unsigned int subtitleIdx;
- void start(void),stop(void); 
+ void start(void),stop(void);
  bool inExplorer;
  DWORD pdwROT;
 public:

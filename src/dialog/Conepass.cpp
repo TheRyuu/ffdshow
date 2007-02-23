@@ -29,7 +29,7 @@ bool TonePassPage::enabled(void)
 }
 
 void TonePassPage::cfg2dlg(void)
-{ 
+{
  SetDlgItemInt(m_hwnd,IDC_ED_VRATETOL,cfgGet(IDFF_enc_ff1_vratetol),FALSE);
  setText(IDC_ED_VQCOMP ,_l("%g"),float(cfgGet(IDFF_enc_ff1_vqcomp )/100.0));
  setText(IDC_ED_VQBLUR1,_l("%g"),float(cfgGet(IDFF_enc_ff1_vqblur1)/100.0));
@@ -46,7 +46,7 @@ void TonePassPage::cfg2dlg(void)
 TonePassPage::TonePassPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
 {
  dialogId=IDD_ONEPASS;
- static const int props[]={IDFF_enc_ff1_vratetol,IDFF_enc_ff1_vqcomp,IDFF_enc_ff1_vqblur1,IDFF_enc_ff1_vqblur2,IDFF_enc_ff1_vqdiff,IDFF_enc_ff1_rc_squish,IDFF_enc_ff1_rc_min_rate1000,IDFF_enc_ff1_rc_max_rate1000,IDFF_enc_ff1_rc_buffer_size,0}; 
+ static const int props[]={IDFF_enc_ff1_vratetol,IDFF_enc_ff1_vqcomp,IDFF_enc_ff1_vqblur1,IDFF_enc_ff1_vqblur2,IDFF_enc_ff1_vqdiff,IDFF_enc_ff1_rc_squish,IDFF_enc_ff1_rc_min_rate1000,IDFF_enc_ff1_rc_max_rate1000,IDFF_enc_ff1_rc_buffer_size,0};
  propsIDs=props;
  static const TbindCheckbox<TonePassPage> chb[]=
   {
@@ -63,7 +63,7 @@ TonePassPage::TonePassPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
    IDC_ED_BUFFER_SIZE,0,INT_MAX,IDFF_enc_ff1_rc_buffer_size,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
  static const TbindEditReal<TonePassPage> edReal[]=
   {
    IDC_ED_VQCOMP,0.0,1.0,IDFF_enc_ff1_vqcomp,100.0,NULL,
@@ -71,5 +71,5 @@ TonePassPage::TonePassPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
    IDC_ED_VQBLUR2,0.0,1.0,IDFF_enc_ff1_vqblur2,100.0,NULL,
    0
   };
- bindEditReals(edReal); 
+ bindEditReals(edReal);
 }

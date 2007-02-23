@@ -23,12 +23,12 @@
 
 void TinPage::init(void)
 {
- if (!ffproc) 
+ if (!ffproc)
   deciE->getFFproc(&ffproc);
 }
 
 void TinPage::cfg2dlg(void)
-{ 
+{
  in2dlg();
  incsp2dlg();
  interlaced2dlg();
@@ -79,7 +79,7 @@ void TinPage::translate(void)
  cbxAdd(IDC_CBX_INCSP,_(IDC_CBX_INCSP,_l("8-bit palettized")),FOURCC_MASK_PAL);
  for (int i=0;cspFccs[i].name;i++)
   cbxAdd(IDC_CBX_INCSP,cspFccs[i].name,cspFccs[i].fcc);
- cbxSetCurSel(IDC_CBX_INCSP,ii); 
+ cbxSetCurSel(IDC_CBX_INCSP,ii);
 }
 
 TinPage::TinPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
@@ -104,7 +104,7 @@ TinPage::TinPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
    IDC_ED_LAVC_NR,0,10000,IDFF_enc_lavc_nr,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
  static const TbindCombobox<TinPage> cbx[]=
   {
    IDC_CBX_INCSP,IDFF_enc_incsp,BINDCBX_DATA,NULL,
@@ -116,5 +116,5 @@ TinPage::TinPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
    IDC_BT_PROC_CONFIG,&TinPage::onProcConfig,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
 }

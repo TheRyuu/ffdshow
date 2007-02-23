@@ -38,7 +38,7 @@ void mpeg2_mc_init (uint32_t accel)
     #ifdef __SSE2__
       if (accel & MPEG2_ACCEL_X86_SSE2)
           mpeg2_mc = mpeg2_mc_sse2;
-      else 
+      else
     #endif
     #ifndef WIN64
     if (accel & MPEG2_ACCEL_X86_MMXEXT)
@@ -48,7 +48,7 @@ void mpeg2_mc_init (uint32_t accel)
     else if (accel & MPEG2_ACCEL_X86_MMX)
 	mpeg2_mc = mpeg2_mc_mmx;
     else
-    #endif	
+    #endif
 #endif
 #ifdef ARCH_PPC
     if (accel & MPEG2_ACCEL_PPC_ALTIVEC)

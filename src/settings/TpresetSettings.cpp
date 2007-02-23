@@ -61,7 +61,7 @@ const char_t* TautoPresetProps::getExeItem(IffdshowDec*,unsigned int index)
    _l("coreplayer.exe"),
    _l("mplayer2.exe"),_l("wmplayer.exe"),
    _l("graphedt.exe")
-  }; 
+  };
  return index<countof(exes)?exes[index]:NULL;
 }
 void TautoPresetProps::getVolume(void)
@@ -85,13 +85,13 @@ const char_t* TautoPresetProps::getVolumeName(void)
  if (wasVolume==-1)
   getVolume();
  return wasVolume?volumeName:_l("");
-} 
+}
 const char_t* TautoPresetProps::getVolumeSerial(void)
 {
  if (wasVolume==-1)
   getVolume();
  return wasVolume?volumeSerial:_l("");
-} 
+}
 const char_t* TautoPresetProps::getDecoder(void)
 {
  if (!decoder)
@@ -101,7 +101,7 @@ const char_t* TautoPresetProps::getDecoder(void)
 const char_t* TautoPresetProps::getDecoderItem(IffdshowDec *deciD,unsigned int index)
 {
  const Tstrptrs *decoders=deciD->getCodecsList();
- return index<decoders->size()?(*decoders)[index]:NULL; 
+ return index<decoders->size()?(*decoders)[index]:NULL;
 }
 const char_t* TautoPresetProps::getPresetName(void)
 {
@@ -142,10 +142,10 @@ bool TautoPresetProps::dsfilterMatch(const char_t *f1,const char_t *)
          char_t name[MAX_PATH],filtername[MAX_PATH];
          getFilterName(bff,name,filtername,countof(filtername));
          filtersnames.push_back(name);
-        } 
+        }
       }
-    }  
-  } 
+    }
+  }
  for (strings::const_iterator f2=filtersnames.begin();f2!=filtersnames.end();f2++)
   if (fnmatch(f1,f2->c_str()))
    return true;
@@ -172,7 +172,7 @@ void Tpreset::TautoPresetItem::reg_op(TregOp &t)
    char_t val[MAX_PATH];mergetok(val,MAX_PATH,_l(";"),vals);
    t._REG_OP_S(0,item->regVal,val,MAX_PATH,item->defVal);
    strtok(val,_l(";"),vals);
-  } 
+  }
 }
 bool Tpreset::TautoPresetItem::match(TautoPresetProps &props) const
 {
@@ -181,13 +181,13 @@ bool Tpreset::TautoPresetItem::match(TautoPresetProps &props) const
  if (!testVal || testVal[0]=='\0') return false;
  if (item->regVal==NULL)
   return (props.*(item->compareFc))(NULL,testVal);
- else 
+ else
   {
    for (strings::const_iterator val=vals.begin();val!=vals.end();val++)
     if ((props.*(item->compareFc))(val->c_str(),testVal))
      return true;
-   return false;     
-  } 
+   return false;
+  }
 }
 void Tpreset::TautoPresetItem::get(const char_t* *name,const char_t* *hint,int *allowWildcard,int *isPtr,int *isVal,char_t *val,size_t vallen,int *isList,int *isHelp) const
 {
@@ -198,7 +198,7 @@ void Tpreset::TautoPresetItem::get(const char_t* *name,const char_t* *hint,int *
  *isVal=item->regVal!=NULL;
  if (*isVal)
   mergetok(val,vallen,_l(";"),vals);
- if (isList) *isList=item->getListItem!=NULL; 
+ if (isList) *isList=item->getListItem!=NULL;
  if (isHelp) *isHelp=item->help!=NULL;
 }
 void Tpreset::TautoPresetItem::set(int Iis,const char_t *Ival)
@@ -247,14 +247,14 @@ Tpreset::Tpreset(const char_t *Ireg_child,const char_t *IpresetName,int Imin_ord
     &TautoPresetProps::getExeflnm,
     &TautoPresetProps::getExeItem,
    },
-   { 
+   {
     _l("on volume name match"),NULL,
     _l("autoloadVolumeName"),0,
     _l("autoloadVolumeNames"),_l(""),
     &TautoPresetProps::wildcardmatch,
     &TautoPresetProps::getVolumeName,
    },
-   { 
+   {
     _l("on volume serial match"),_l("Format: XXXX-YYYY"),
     _l("autoloadVolumeSerial"),0,
     _l("autoloadVolumeSerials"),_l(""),
@@ -268,25 +268,25 @@ Tpreset::Tpreset(const char_t *Ireg_child,const char_t *IpresetName,int Imin_ord
     &TautoPresetProps::stricoll,
     &TautoPresetProps::getDecoder,
     &TautoPresetProps::getDecoderItem,
-   }, 
+   },
    {
     _l("on a DirectShow filter presence"),_l("Names of DirectShow filters, wildcard allowed"),
     _l("autoloadDSfilter"),0,
     _l("autoloadDSfilters"),_l(""),
     &TautoPresetProps::dsfilterMatch,
     &TautoPresetProps::getDSfilterName
-   }, 
+   },
    NULL
   };
- addAutoPresetItems(autoPresetItems); 
-   
+ addAutoPresetItems(autoPresetItems);
+
  static const TintOptionT<Tpreset> iopts[]=
   {
    IDFF_autoLoadedFromFile         ,&Tpreset::autoLoadedFromFile     ,0,0,_l(""),0,
      NULL,0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
 }
 Tpreset::~Tpreset()
 {
@@ -299,12 +299,12 @@ Tpreset& Tpreset::operator =(const Tpreset &src)
 {
  min_order=src.min_order;
  reg_child=src.reg_child;
- 
+
  strcpy(presetName,src.presetName);
  autoLoadedFromFile=src.autoLoadedFromFile;
  autoloadExtsNeedFix=src.autoloadExtsNeedFix;
  autoPresetItems=src.autoPresetItems;
- 
+
  filters->copy(src.filters);
  return *this;
 }
@@ -325,8 +325,8 @@ void Tpreset::reg_op(TregOp &t)
      {
       autoloadExtsNeedFix=0;
       a->addWild();
-     } 
-  } 
+     }
+  }
 }
 
 void Tpreset::loadDefault(void)
@@ -388,7 +388,7 @@ bool Tpreset::isValidPresetName(const char_t *presetName)
  if (presetName[0]=='\0') return false;
  for (unsigned int i=0;i<strlen(presetName);i++)
   if (presetName[i]=='*' || presetName[i]=='?') return false;
- return true; 
+ return true;
 }
 
 void Tpreset::addAutoPresetItems(const TautoPresetItemDef *IautoPresetItems)
@@ -403,7 +403,7 @@ bool Tpreset::isAutoPreset(TautoPresetProps &props) const
  for (TautoPresetItems::const_iterator a=autoPresetItems.begin();a!=autoPresetItems.end();a++)
   if (a->match(props))
    return true;
- return false;  
+ return false;
 }
 
 int Tpreset::getMinOrder(void) const
@@ -425,7 +425,7 @@ bool Tpreset::Torders::orderSort(const Torder &o1,const Torder &o2)
 void Tpreset::Torders::sort(void)
 {
  std::sort(begin(),end(),orderSort);
-} 
+}
 
 void Tpreset::fixOrder(void)
 {
@@ -440,7 +440,7 @@ TfilterSettings* Tpreset::getSettings(int filterID) const
  for (TfilterIDFFs::iterator f=filters->begin();f!=filters->end();f++)
   if (f->idff->id==filterID)
    return f->cfg;
- return NULL;  
+ return NULL;
 }
 const TfilterSettings* Tpreset::indexGetSettings(size_t index) const
 {

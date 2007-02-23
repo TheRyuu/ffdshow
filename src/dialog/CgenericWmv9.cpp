@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "ffcodecs.h"
 #include "CgenericWmv9.h"
@@ -27,7 +27,7 @@ bool TgenericWmv9page::enabled(void)
 }
 
 void TgenericWmv9page::cfg2dlg(void)
-{ 
+{
  if (!wmv9_codec(codecId)) return;
  int aviout=cfgGet(IDFF_enc_wmv9_aviout);
  setCheck(IDC_CHB_WMV9_ASFOUT,!aviout);
@@ -47,10 +47,10 @@ INT_PTR TgenericWmv9page::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_ED_WMV9_CPLX:
-       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText) 
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
          HWND hed=GetDlgItem(m_hwnd,LOWORD(wParam));
          if (hed!=GetFocus()) return FALSE;
@@ -59,7 +59,7 @@ INT_PTR TgenericWmv9page::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
           {
            case IDC_ED_WMV9_CPLX:eval(hed,0,enc?enc->cplxMax:0,IDFF_enc_wmv9_cplx);break;
           }
-         return TRUE;  
+         return TRUE;
         }
        break;
      }
@@ -74,12 +74,12 @@ INT_PTR TgenericWmv9page::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        default:goto colorEnd;
       }
      if (!ok)
-      { 
+      {
        HDC dc=HDC(wParam);
        SetBkColor(dc,RGB(255,0,0));
-       return INT_PTR(getRed()); 
+       return INT_PTR(getRed());
       }
-     else return FALSE;  
+     else return FALSE;
      colorEnd:;
     }
   }
@@ -105,5 +105,5 @@ TgenericWmv9page::TgenericWmv9page(TffdshowPageEnc *Iparent):TconfPageEnc(Iparen
    IDC_ED_WMV9_CRISP,0,100,IDFF_enc_wmv9_crisp,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
 }

@@ -76,7 +76,7 @@ private:
    void print(IffdshowBase *deci,const TffPict &pict,unsigned char *dst[4],stride_t stride[4],unsigned int dxY,unsigned int dyY,unsigned int x,unsigned int &y,int linespace,FILE *f,bool fileonly);
    const char_t *getName(unsigned int i) const;
   };
-  
+
  struct Tosds : public std::vector<TosdLine*>
   {
   private:
@@ -96,15 +96,15 @@ private:
    void freeOsds(void);
   };
  Tosds shortOSD;
-  
- // IOSDprovider 
+
+ // IOSDprovider
  STDMETHODIMP_(const char_t*) getInfoItemName(int type);
- 
+
  struct TprovOSDs : std::vector<Tosds*>
   {
    bool empty(void) const;
   };
- TprovOSDs provOSDs; 
+ TprovOSDs provOSDs;
  CCritSec csProvider;
 
  TfontSettingsOSD *oldFont;
@@ -113,7 +113,7 @@ private:
  TsubtitleTextBase<char_t> subUser;
  char_t oldLinesUser[256];
  strings linesUser;
- 
+
  CCritSec cs;
  typedef std::pair<ffstring,unsigned int> TshortOsdTemp;
  std::vector<TshortOsdTemp> shortOSDtemp;

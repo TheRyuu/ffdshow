@@ -142,7 +142,7 @@ template<> template<> inline text<char>::text(const wchar_t *in):own(in?true:fal
    WideCharToMultiByte(CP_ACP,0,in,int(l+1),buf,int(length+1),NULL,NULL);
   }
  else
-  buf=NULL;  
+  buf=NULL;
 }
 template<> template<> inline text<char>::text(const wchar_t *in,char *Ibuf):own(false),buf(Ibuf)
 {

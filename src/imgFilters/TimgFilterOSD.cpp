@@ -57,16 +57,16 @@ const char_t* TimgFilterOSD::TosdLine::TosdValue::getVal(bool &wasChange,bool &s
        if (sarOk)
         tsprintf(s,_l("SAR: %i/%i, "),sar.num,sar.den);
        else
-        tsprintf(s,_l("SAR: N/A, ")); 
+        tsprintf(s,_l("SAR: N/A, "));
        if (darOk)
         strcatf(s,_l("DAR: %i/%i"),dar.num,dar.den);
        else
-        strcatf(s,_l("DAR: N/A")); 
-       wasChange=true; 
-      }  
+        strcatf(s,_l("DAR: N/A"));
+       wasChange=true;
+      }
      oldSar=sar;oldDar=dar;
      break;
-    } 
+    }
    case IDFF_frameType:
     {
      const char_t *ipb0=FRAME_TYPE::name(pict.frametype&FRAME_TYPE::typemask);
@@ -81,11 +81,11 @@ const char_t* TimgFilterOSD::TosdLine::TosdValue::getVal(bool &wasChange,bool &s
      tsprintf(s,_l("%u"),(unsigned int)pict.srcSize);
      wasChange=true;
      break;
-    } 
+    }
    case IDFF_OSDtype_gmcWarpPoints:
     tsprintf(s,_l("%i (used: %i)"),pict.gmcWarpingPoints,pict.gmcWarpingPointsReal);
     wasChange=strcmp(s,olds)!=0;
-    break; 
+    break;
    case IDFF_OSDtype_frameMD5:
     {
      uint32_t sum[4];
@@ -93,7 +93,7 @@ const char_t* TimgFilterOSD::TosdLine::TosdValue::getVal(bool &wasChange,bool &s
      tsprintf(s,_l("%08X%08X%08X%08X"),sum[0],sum[1],sum[2],sum[3]);
      wasChange=true;
      break;
-    } 
+    }
    case IDFF_OSDtype_frameTimestamps:
     {
      tsprintf(s,_l("%I64i - %I64i"),pict.rtStart,pict.rtStop);
@@ -115,9 +115,9 @@ const char_t* TimgFilterOSD::TosdLine::TosdValue::getVal(bool &wasChange,bool &s
       {
        strncpy(s,val,countof(s)-1);s[countof(s)-1]='\0';
        wasChange=!!wasChangeI;splitline=!!splitlineI;
-      } 
+      }
      else
-      assert(0); 
+      assert(0);
      break;
     }
   }
@@ -247,10 +247,10 @@ void TimgFilterOSD::TosdLine::print(IffdshowBase *deci,const TffPict &pict,unsig
       {
        printprefs.fontchangesplit=1;
        printprefs.fontsplit=1;
-      } 
+      }
      sub.set(text);
      font.print(&sub,wasChange,printprefs,&y);
-    } 
+    }
   }
 }
 
@@ -261,12 +261,12 @@ TimgFilterOSD::Tosds::Tosds(IOSDprovider *Iprovider,const char_t *Iname):f(NULL)
   startupFormat=sfmt;
  oldFormat[0]='\0';
  oldSave=-1;oldSaveFlnm[0]='\0';
- if (Iname) 
+ if (Iname)
   {
    strncpy(name,Iname,260);
    name[259]='\0';
-  } 
- else 
+  }
+ else
   name[0]='\0';
 }
 TimgFilterOSD::Tosds::~Tosds()
@@ -283,15 +283,15 @@ void TimgFilterOSD::Tosds::init(bool allowSave,IffdshowBase *deci,IffdshowDec *d
    if (framecnt<startupDuration)
     format=startupFormat.c_str();
    else
-    format=provider->getFormat(); 
-   
+    format=provider->getFormat();
+
    int cfgIsSave=false;const char_t* cfgSaveFlnm;provider->getSave(&cfgIsSave,&cfgSaveFlnm);
    int initSave=-1;
    if (oldSave!=cfgIsSave || stricmp(oldSaveFlnm,cfgSaveFlnm))
     {
      oldSave=cfgIsSave;strcpy(oldSaveFlnm,cfgSaveFlnm);
      initSave=allowSave && cfgIsSave && cfgSaveFlnm[0]!='\0'?1:0;
-    } 
+    }
    if (strcmp(oldFormat,format)!=0)
     {
      strcpy(oldFormat,format);
@@ -304,17 +304,17 @@ void TimgFilterOSD::Tosds::init(bool allowSave,IffdshowBase *deci,IffdshowDec *d
        strtok(format,_l("\\n"),lines);
        for (size_t i=0;i<lines.size();i++)
         push_back(new TosdLine(deci,deciD,deciV,config,ffstring(i==0?_l(""):_l("user"))+lines[i],oldFont,0,provider));
-       initSave=0; 
+       initSave=0;
       }
      else
-      { 
+      {
        ints types;strtok(format,_l(" "),types);
        for (size_t i=0;i<types.size();i++)
         {
          char_t pomS[10];
          push_back(new TosdLine(deci,deciD,deciV,config,ffstring(_l("%"))+ffstring(_itoa(types[i],pomS,10)),oldFont,0,provider));
-        } 
-       initSave=cfgIsSave && cfgSaveFlnm[0]!='\0'?1:0; 
+        }
+       initSave=cfgIsSave && cfgSaveFlnm[0]!='\0'?1:0;
       }
     }
    if (initSave!=-1)
@@ -327,9 +327,9 @@ void TimgFilterOSD::Tosds::init(bool allowSave,IffdshowBase *deci,IffdshowDec *d
         {
          for (const_iterator o=begin();o!=end();o++)
           tfprintf(f,_l("%s%s"),(*o)->getName(0),o!=end()-1?_l(";"):_l(""));
-         tfprintf(f,_l("\n")); 
+         tfprintf(f,_l("\n"));
         }
-      }  
+      }
     }
   }
  else
@@ -361,11 +361,11 @@ void TimgFilterOSD::Tosds::print(IffdshowBase *deci,const TffPict &pict,unsigned
        delete *o;
        o=erase(o);
        continue;
-      } 
+      }
     }
    o++;
-  } 
- if (f) fprintf(f,"\n"); 
+  }
+ if (f) fprintf(f,"\n");
 }
 
 void TimgFilterOSD::Tosds::done(void)
@@ -386,7 +386,7 @@ bool TimgFilterOSD::TprovOSDs::empty(void) const
  for (const_iterator op=begin();op!=end();op++)
   if ((*op)->is && !(*op)->empty())
    return false;
- return true;  
+ return true;
 }
 
 //===================================== TimgFilterOSD ========================================
@@ -443,7 +443,7 @@ bool TimgFilterOSD::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0)
 HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  const TOSDsettingsVideo *cfg=(const TOSDsettingsVideo*)cfg0;tempcfg=cfg;
- 
+
  init(pict,true,0);
  csProvider.Lock();
  if (memcmp(oldFont->name,parent->fontSettingsOSD->name,sizeof(TfontSettingsOSD)-sizeof(Toptions))!=0)
@@ -457,16 +457,16 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
  for (TprovOSDs::iterator po=provOSDs.begin();po!=provOSDs.end();po++)
   (*po)->init(true,deci,deciD,deciV,parent->config,oldFont,cfg,framecnt);
  framecnt++;
- 
+
  if (!shortOSDtemp.empty())
   {
    cs.Lock();
    for (std::vector<TshortOsdTemp>::const_iterator o=shortOSDtemp.begin();o!=shortOSDtemp.end();o++)
     shortOSD.push_back(new TosdLine(deci,deciD,deciV,parent->config,_l("shortosd")+o->first,oldFont,o->second,NULL));
-   shortOSDtemp.clear(); 
+   shortOSDtemp.clear();
    cs.Unlock();
   }
- 
+
  if (!provOSDs.empty()/*!osds.empty()*/ || !shortOSD.empty() || cfg->user[0]!='\0')
   {
    unsigned char *dst[4];
@@ -478,7 +478,7 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
     if ((*po)->is)
      (*po)->print(deci,pict,dst,stride2,dx1[0],dy1[0],x,y,cfg->linespace,!!cfg->saveOnly);
    shortOSD.print(deci,pict,dst,stride2,dx1[0],dy1[0],x,y,cfg->linespace,false);
-    
+
    if (cfg->user[0]!='\0')
     {
      if (strcmp(oldLinesUser,cfg->user)!=0)
@@ -486,7 +486,7 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
        strcpy(oldLinesUser,cfg->user);
        strtok(cfg->user,_l("\n"),linesUser);
        subUser.set(linesUser);
-      } 
+      }
      TrenderedSubtitleLines::TprintPrefs printprefs(deci);
      printprefs.dst=dst;
      printprefs.stride=stride2;
@@ -500,8 +500,8 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
      printprefs.deci=deci;
      printprefs.config=parent->config;
      fontUser.print(&subUser,true,printprefs);
-    } 
-  }  
+    }
+  }
  csProvider.Unlock();
  return parent->deliverSample(++it,pict);
 }
@@ -510,7 +510,7 @@ STDMETHODIMP_(const char_t*) TimgFilterOSD::getInfoItemName(int type)
 {
  if (!trans)
   deci->getTranslator(&trans);
- const char_t *name=deci->getInfoItemName(type); 
+ const char_t *name=deci->getInfoItemName(type);
  return trans?trans->translate(name):name;
 }
 
@@ -534,6 +534,6 @@ HRESULT TimgFilterOSD::unregisterOSDprovider(IOSDprovider *provider)
     delete *po;
     provOSDs.erase(po);
     return S_OK;
-   } 
+   }
  return VFW_E_NOT_FOUND;
 }

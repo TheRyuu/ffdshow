@@ -27,7 +27,7 @@ private:
  static void fill_x264_pict(x264_frame_t *out,const TffPict *in);
  bool lossless;
  mutable char_t codecName[50];
-protected: 
+protected:
  virtual LRESULT beginCompress(int cfgcomode,int csp,const Trect &r);
 public:
  TvideoCodecX264(IffdshowBase *Ideci,IencVideoSink *Isink);

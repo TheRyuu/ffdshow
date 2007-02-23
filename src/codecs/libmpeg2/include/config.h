@@ -2,16 +2,16 @@
 /* include/config.h.in.  Generated from configure.in by autoheader.  */
 
 /* autodetect accelerations */
-//#define ACCEL_DETECT 
+//#define ACCEL_DETECT
 
 /* ppc architecture */
 /* #undef ARCH_PPC */
 
 /* x86 architecture */
-#define ARCH_X86 
+#define ARCH_X86
 #ifdef __GNUC__
 /* Define if you have the `__builtin_expect' function. */
-#define HAVE_BUILTIN_EXPECT 
+#define HAVE_BUILTIN_EXPECT
 #endif
 
 /* Define to 1 if you have the <ddraw.h> header file. */
@@ -146,7 +146,7 @@
 
 /* Define to `__inline__' or `__inline' if that's what the C compiler
    calls it, or to nothing if 'inline' is not supported under any name.  */
-#ifdef __GNUC__   
+#ifdef __GNUC__
 #define inline __attribute__ ((__always_inline__)) __inline
 #else
 #define inline __forceinline

@@ -12,7 +12,7 @@ private:
  static const TfilterIDFF idffs;
 protected:
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  TsubtitlesSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  virtual void copy(const TfilterSettings *src);
 

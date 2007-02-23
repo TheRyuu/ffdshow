@@ -8,7 +8,7 @@ class Tdither
 private:
  struct Trandom
   {
-  private: 
+  private:
    static unsigned int __r1,__r2;
    static const unsigned char Parity [256];
    static unsigned int random_int(void);

@@ -21,12 +21,12 @@ class TffdshowDecAudio :public TffdshowDec,
 {
 public:
  static CUnknown *WINAPI CreateInstance(LPUNKNOWN punk, HRESULT *phr);
- STDMETHODIMP NonDelegatingQueryInterface(REFIID riid, void **ppv);    
+ STDMETHODIMP NonDelegatingQueryInterface(REFIID riid, void **ppv);
  DECLARE_IUNKNOWN
 
  TffdshowDecAudio(CLSID Iclsid,const char_t *className,const CLSID &Iproppageid,int IcfgDlgCaptionId,int IiconId,LPUNKNOWN punk,HRESULT *phr,int Imode,int IdefaultMerit,TintStrColl *Ioptions);
  virtual ~TffdshowDecAudio();
- 
+
  HRESULT Receive(IMediaSample* pIn);
  HRESULT CheckConnect(PIN_DIRECTION dir,IPin *pPin);
  HRESULT CheckInputType(const CMediaType *mtIn);
@@ -86,7 +86,7 @@ public:
 private:
  struct TffdshowDecAudio_char : interfaces<tchar_traits<char_t>::other_char_t>::IffdshowDecAudio, CUnknown
   {
-  protected: 
+  protected:
    typedef tchar_traits<char_t>::other_char_t tchar;
   private:
    IffdshowDecAudioT<char_t> *deciA;
@@ -105,8 +105,8 @@ private:
      HRESULT hr;
      if (SUCCEEDED(hr=deciA->inputSampleFormatDescription(buft,buflen)))
       text<tchar>(buft,buf);
-     return hr; 
-    } 
+     return hr;
+    }
    STDMETHODIMP getWinamp2(Twinamp2* *winamp2ptr) {return deciA->getWinamp2(winamp2ptr);}
    STDMETHODIMP deliverSample_(void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain) {return deciA->deliverSample_(buf,numsamples,fmt,postgain);}
    STDMETHODIMP storeMixerMatrixData_(const double matrix[6][6]) {return deciA->storeMixerMatrixData_(matrix);}
@@ -124,14 +124,14 @@ private:
      HRESULT hr;
      if (SUCCEEDED(hr=deciA->getStreamDescr(i,buft,buflen)))
       text<tchar>(buft,buf);
-     return hr; 
-    } 
+     return hr;
+    }
    STDMETHODIMP_(unsigned int) getCurrentStream2(void) {return deciA->getCurrentStream2();}
    STDMETHODIMP setCurrentStream(unsigned int i) {return deciA->setCurrentStream(i);}
    STDMETHODIMP setAudioFilters(TaudioFilters *audioFiltersPtr)
     {
      return E_NOTIMPL;
-    } 
+    }
    STDMETHODIMP inputSampleFormat(unsigned int *nchannels,unsigned int *freq) {return deciA->inputSampleFormat(nchannels,freq);}
    STDMETHODIMP getOutSpeakersDescr(tchar *buf,size_t buflen,int shortcuts)
     {
@@ -139,8 +139,8 @@ private:
      HRESULT hr;
      if (SUCCEEDED(hr=deciA->getOutSpeakersDescr(buft,buflen,shortcuts)))
       text<tchar>(buft,buf);
-     return hr; 
-    } 
+     return hr;
+    }
    STDMETHODIMP currentSampleFormat(unsigned int *nchannels,unsigned int *freq,int *sampleFormat) {return deciA->currentSampleFormat(nchannels,freq,sampleFormat);}
    STDMETHODIMP_(int) getJitter(void) {return deciA->getJitter();}
   } decAudio_char;
@@ -160,7 +160,7 @@ protected:
    virtual const char_t* getName(void);
    virtual bool action(void);
   };
- virtual bool isStreamsMenu(void) const; 
+ virtual bool isStreamsMenu(void) const;
 private:
  static const int VERSION=15;
  friend class TffdshowDecAudioInputPin;
@@ -171,7 +171,7 @@ private:
  TpresetsAudio *presets;
  TpresetAudio *presetSettings;
  virtual TinfoBase* createInfo(void);
- 
+
  static const TfilterIDFF nextFilters[];
 
  TsampleFormat insf,currentOutsf;

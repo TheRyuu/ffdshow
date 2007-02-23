@@ -41,7 +41,7 @@ private:
      &TaudioFilterChannelSwap::swapChannels<5,sample_t>,
      &TaudioFilterChannelSwap::swapChannels<6,sample_t>
     };
-   (this->*swapChannelsFc[oldfmt.nchannels])(samples,numsamples); 
+   (this->*swapChannelsFc[oldfmt.nchannels])(samples,numsamples);
   }
 protected:
  virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {*honourPreferred=false;return TsampleFormat::SF_ALL;}

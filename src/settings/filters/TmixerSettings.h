@@ -10,7 +10,7 @@ private:
  static const TfilterIDFF idffs;
 protected:
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  TmixerSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  struct TchConfig
   {
@@ -20,7 +20,7 @@ public:
    int dolby;
   };
  static const TchConfig chConfigs[];
- 
+
  int out;
  void setFormatOut(TsampleFormat &fmt) const;
  void setFormatOut(TsampleFormat &outfmt,const TsampleFormat &infmt) const;

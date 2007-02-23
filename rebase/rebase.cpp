@@ -2,7 +2,7 @@
 #include <imagehlp.h>
 #include <stdio.h>
 
-const char* stristr(const char *haystack,const char *needle) 
+const char* stristr(const char *haystack,const char *needle)
 {
  if (!(haystack && needle)) return NULL;
 
@@ -23,7 +23,7 @@ int main(int argc, const char *argv[])
 
  FILE *f=fopen(argv[1],"rt");
  if (!f) return -2;
- 
+
  DWORD err=0;
  ULONG_PTR newImageBase=0x30000000;
  char file[MAX_PATH];
@@ -37,11 +37,11 @@ int main(int argc, const char *argv[])
    err=GetLastError();
    if (err)
     printf("rebase %s: error %i\n",file,err);
-   else 
+   else
     printf("rebase %s: %08x -> %08x, size %i\n",file,oldImageBase,newImageBase,newImageSize);
    newImageBase=((newImageBase+newImageSize)&~65535)+65536;
   }
- 
+
  fclose(f);
  return err;
 }

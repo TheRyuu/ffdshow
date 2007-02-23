@@ -26,8 +26,8 @@ public:
    const char *msg;
   };
 private:
- AVS_ScriptEnvironment* (AVSC_CC *avs_create_script_environment)(int version); 
-protected: 
+ AVS_ScriptEnvironment* (AVSC_CC *avs_create_script_environment)(int version);
+protected:
  Tavisynth_c(void);
 
  struct AVSValue :public AVS_Value
@@ -46,7 +46,7 @@ protected:
    const char* AsString() const {return avs_as_string(*this);}
    int IsClip() const {return avs_is_clip(*this);}
   };
-  
+
  struct IScriptEnvironment
   {
   private:
@@ -78,13 +78,13 @@ protected:
 	const char * error;
       };
      delete ((Ta*)env)->env;
-    } 
+    }
    AVS_Value Invoke(const char* name, const AVS_Value args, const char** arg_names=0)
     {
      AVS_Value val=avs_invoke(env,name,args,arg_names);
      if (avs_is_error(val))
       throw AvisynthError(avs_as_error(val));
-     return val; 
+     return val;
     }
    IScriptEnvironment* operator ->() {return this;}
    operator AVS_ScriptEnvironment*() {return env;}
@@ -92,12 +92,12 @@ protected:
    struct AVS_Value (AVSC_CC *avs_invoke)(AVS_ScriptEnvironment *, const char * name, AVS_Value args, const char** arg_names);
    struct AVS_Value (AVSC_CC *avs_release_value)(AVS_Value);
    AVS_Clip* (AVSC_CC *avs_take_clip)(AVS_Value, AVS_ScriptEnvironment *);
-   const AVS_VideoInfo* (AVSC_CC *avs_get_video_info)(AVS_Clip *);  
+   const AVS_VideoInfo* (AVSC_CC *avs_get_video_info)(AVS_Clip *);
    AVS_VideoFrame* (AVSC_CC *avs_get_frame)(AVS_Clip *, int n);
    void (AVSC_CC *avs_release_clip)(AVS_Clip *);
    void (AVSC_CC *avs_release_video_frame)(AVS_VideoFrame *);
    const char* (AVSC_CC *avs_clip_get_error)(AVS_Clip *);
-   int (AVSC_CC *avs_get_audio)(AVS_Clip *, void * buf, INT64 start, INT64 count); 
+   int (AVSC_CC *avs_get_audio)(AVS_Clip *, void * buf, INT64 start, INT64 count);
    int (AVSC_CC *avs_add_function)(AVS_ScriptEnvironment *, const char * name, const char * params, AVS_ApplyFunc apply, void * user_data);
    AVS_Clip* (AVSC_CC *avs_new_c_filter)(AVS_ScriptEnvironment * e,AVS_FilterInfo * * fi,AVS_Value child, int store_child);
    void (AVSC_CC *avs_set_to_clip)(AVS_Value *, AVS_Clip *);
@@ -141,7 +141,7 @@ protected:
    using AVS_VideoInfo::num_frames;
    using AVS_VideoInfo::pixel_type;
   };
-public:  
+public:
  struct PVideoFrame
   {
   private:
@@ -151,7 +151,7 @@ public:
    PVideoFrame(IScriptEnvironment *Ienv,AVS_VideoFrame *Iframe):frame(Iframe),env(Ienv) {}
    ~PVideoFrame() {env->avs_release_video_frame(frame);}
    PVideoFrame* operator ->() {return this;}
-   operator AVS_VideoFrame*() 
+   operator AVS_VideoFrame*()
     {
      AVS_VideoFrame *frame2=env->avs_copy_video_frame(frame);
      return frame2;
@@ -168,7 +168,7 @@ public:
    int GetRowSize() const {return avs_get_row_size(frame);}
    int GetRowSize(int plane) const {return avs_get_row_size_p(frame,plane);}
   };
-protected:   
+protected:
  struct PClip
   {
   private:
@@ -176,20 +176,20 @@ protected:
    AVS_Clip *clip;
    VideoInfo info;
   public:
-   PClip(AVSValue &val,IScriptEnvironment *Ienv):env(Ienv),clip(env->avs_take_clip(val,*Ienv)) 
+   PClip(AVSValue &val,IScriptEnvironment *Ienv):env(Ienv),clip(env->avs_take_clip(val,*Ienv))
     {
-     if (!clip) 
+     if (!clip)
       throw AvisynthError("no clip");
      else if (const char *err=env->avs_clip_get_error(clip))
       throw AvisynthError(err);
-     env->avs_release_value(val); 
+     env->avs_release_value(val);
     }
-   ~PClip() {env->avs_release_clip(clip);} 
+   ~PClip() {env->avs_release_clip(clip);}
    PClip* operator ->() {return this;}
    const VideoInfo& GetVideoInfo(void) {return info=env->avs_get_video_info(clip);}
-   PVideoFrame GetFrame(int n) {return PVideoFrame(env,env->avs_get_frame(clip,n));} 
+   PVideoFrame GetFrame(int n) {return PVideoFrame(env,env->avs_get_frame(clip,n));}
    int GetAudio( void * buf,INT64 start, INT64 count) {return env->avs_get_audio(clip,buf,start,count);}
-  }; 
+  };
 public:
  static bool getVersion(const Tconfig *config,ffstring &vers,ffstring &license);
  static const char_t *dllname;

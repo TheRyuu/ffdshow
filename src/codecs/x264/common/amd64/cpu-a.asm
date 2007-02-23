@@ -57,12 +57,12 @@ x264_cpu_cpuid_test:
     mov     ebx, eax
     xor     eax, 0x200000
     push    rax
-    
+
     popfq
     pushfq
     pop     rax
     xor     eax, ebx
-    
+
     lea     rsp, [rbp]
     pop     rbp
     pop     rbx
@@ -77,14 +77,14 @@ x264_cpu_cpuid:
     firstpush rbx
     pushreg   rbx
     endprolog
-    
+
     mov     r10,   parm4q
     mov     r11,   parm3q
     mov     r9,    parm2q
 %ifdef WIN64
     mov     r8,    [rsp+40+8]
-%endif    
-    
+%endif
+
     mov     eax,   parm1d
     cpuid
 
@@ -104,4 +104,7 @@ ALIGN 16
 x264_emms:
     emms
     ret
+
+
+
 

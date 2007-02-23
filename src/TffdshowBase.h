@@ -103,15 +103,15 @@ public:
  STDMETHODIMP_(int) getInfoShortcutItem(const char_t *s,int *toklen);
  STDMETHODIMP_(DWORD) CPUcount(void);
 
- 
+
  //IffdshowParamsEnum
  STDMETHODIMP resetEnum(void);
  STDMETHODIMP nextEnum(TffdshowParamInfo *paramPtr);
- 
+
 protected:
  struct TffdshowBase_char : interfaces<tchar_traits<char_t>::other_char_t>::IffdshowBase, CUnknown
   {
-  protected: 
+  protected:
    typedef tchar_traits<char_t>::other_char_t tchar;
   private:
    IffdshowBaseT<char_t> *deci;
@@ -121,7 +121,7 @@ protected:
    STDMETHODIMP QueryInterface(REFIID riid, void **ppv) {return deci->QueryInterface(riid,ppv);}
    STDMETHODIMP_(ULONG) AddRef() {return deci->AddRef();}
    STDMETHODIMP_(ULONG) Release() {return deci->Release();}
-   
+
    STDMETHODIMP_(int) getVersion2(void) {return deci->getVersion2();}
    STDMETHODIMP getParam(unsigned int paramID, int* value) {return deci->getParam(paramID,value);}
    STDMETHODIMP_(int) getParam2(unsigned int paramID) {return deci->getParam2(paramID);}
@@ -133,7 +133,7 @@ protected:
      HRESULT hr;
      if (SUCCEEDED(hr=deci->getParamStr(paramID,buft,buflen)))
       text<tchar>(buft,buf);
-     return hr; 
+     return hr;
     }
    STDMETHODIMP_(const tchar*) getParamStr2(unsigned int paramID)
     {
@@ -153,7 +153,7 @@ protected:
      HRESULT hr;
      if (SUCCEEDED(hr=deci->getParamName(i,buft,len)))
       text<tchar>(buft,buf);
-     return hr; 
+     return hr;
     }
    STDMETHODIMP getParamName3(unsigned int i,const tchar* *namePtr)
     {
@@ -185,14 +185,14 @@ protected:
    STDMETHODIMP cpuSupports3DNOW(void) {return deci->cpuSupports3DNOW();}
    STDMETHODIMP cpuSupports3DNOWEXT(void) {return deci->cpuSupports3DNOWEXT();}
    STDMETHODIMP dbgInit(void) {return deci->dbgInit();}
-   STDMETHODIMP dbgError(const tchar *fmt,...) 
+   STDMETHODIMP dbgError(const tchar *fmt,...)
     {
      return E_NOTIMPL;
     }
    STDMETHODIMP dbgWrite(const tchar *fmt,...)
     {
      return E_NOTIMPL;
-    } 
+    }
    STDMETHODIMP dbgDone(void) {return deci->dbgDone();}
    STDMETHODIMP_(const tchar*) getExeflnm(void)
     {
@@ -218,7 +218,7 @@ protected:
      HRESULT hr;
      if (SUCCEEDED(hr=deci->getInCodecString(buft,len)))
       text<tchar>(buft,buf);
-     return hr; 
+     return hr;
     }
    STDMETHODIMP getOutCodecString(tchar *buf,size_t len)
     {
@@ -226,7 +226,7 @@ protected:
      HRESULT hr;
      if (SUCCEEDED(hr=deci->getOutCodecString(buft,len)))
       text<tchar>(buft,buf);
-     return hr; 
+     return hr;
     }
    STDMETHODIMP getMerit(DWORD *merit) {return deci->getMerit(merit);}
    STDMETHODIMP setMerit(DWORD  merit) {return deci->setMerit(merit);}
@@ -274,14 +274,14 @@ protected:
     {
      return deci->getInfoShortcutItem(text<char_t>(s),toklen);
     }
-   STDMETHODIMP_(DWORD) CPUcount(void) {return deci->CPUcount();} 
+   STDMETHODIMP_(DWORD) CPUcount(void) {return deci->CPUcount();}
   } base_char;
  template<class Tinterface> Tinterface* getBaseInterface(void);
 private:
  DWORD m_CPUCount;
 
  static const int VERSION=23;
- 
+
  double tell(void);
  static HRESULT changeFilterMerit(const CLSID &clsid,DWORD merit);
  int defaultMerit;
@@ -299,7 +299,7 @@ private:
 
  CCritSec* locks[LOCKS_COUNT];
  int cpuUsage,cpuUsageCounter;
-protected: 
+protected:
  TintStrColl *options;
  typedef std::vector<TintStrColl*> TintStrColls;
  virtual void getColls(TintStrColls &colls) {colls.push_back(options);}

@@ -36,12 +36,12 @@ TvideoCodecX264::TvideoCodecX264(IffdshowBase *Ideci,IencVideoSink *Isink):
  TvideoCodecEnc(Ideci,Isink),
  TvideoCodec(Ideci)
 {
- ok=false; 
+ ok=false;
  dll=new Tdll(dllname,config);
  dll->loadFunction(x264_encoder_open   ,"x264_encoder_open"   );
  dll->loadFunction(x264_encoder_headers,"x264_encoder_headers");
  dll->loadFunction(x264_encoder_encode ,"x264_encoder_encode" );
- dll->loadFunction(x264_encoder_close  ,"x264_encoder_close"  ); 
+ dll->loadFunction(x264_encoder_close  ,"x264_encoder_close"  );
  dll->loadFunction(x264_param_default  ,"x264_param_default"  );
  dll->loadFunction(x264_picture_alloc  ,"x264_picture_alloc"  );
  dll->loadFunction(x264_picture_clean  ,"x264_picture_clean"  );
@@ -51,7 +51,7 @@ TvideoCodecX264::TvideoCodecX264(IffdshowBase *Ideci,IencVideoSink *Isink):
   {
    encoders.push_back(new Tencoder(_l("H.264"),CODEC_ID_X264));
    encoders.push_back(new Tencoder(_l("H.264 lossless"),CODEC_ID_X264_LOSSLESS));
-  } 
+  }
  h=NULL;lossless=false;
 }
 TvideoCodecX264::~TvideoCodecX264()
@@ -92,7 +92,7 @@ LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
  param.i_fps_num=deci->getParam2(IDFF_enc_fpsRate);param.i_fps_den=deci->getParam2(IDFF_enc_fpsScale);
 
  // Maximum number of reference frames
- param.i_frame_reference=coCfg->x264_max_ref_frames; 
+ param.i_frame_reference=coCfg->x264_max_ref_frames;
 
  // every i_iframe are intra
  param.i_keyint_max=coCfg->max_key_interval;
@@ -100,7 +100,7 @@ LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
 
  if (sup_bframes(coCfg->codecId) && coCfg->isBframes)
   {
-   // how many b-frame between 2 references pictures 
+   // how many b-frame between 2 references pictures
    param.i_bframe=coCfg->max_b_frames;
    if (coCfg->max_b_frames>1)
    param.analyse.b_weighted_bipred=1;
@@ -109,7 +109,7 @@ LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
    param.b_bframe_adaptive=coCfg->b_dynamic;
    param.b_bframe_pyramid=coCfg->x264_b_bframe_pyramid;
    param.analyse.b_bidir_me=coCfg->b_refine;
-  } 
+  }
 
  param.b_deblocking_filter=coCfg->codecId!=CODEC_ID_X264_LOSSLESS && (coCfg->H263Pflags&CODEC_FLAG_LOOP_FILTER)?1:0;
  param.i_deblocking_filter_alphac0=coCfg->x264_i_deblocking_filter_alphac0;
@@ -137,8 +137,8 @@ LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
   {
    lossless=true;
    param.rc.i_qp_constant=0;
-  } 
- else 
+  }
+ else
   {
    if (coCfg->mode==ENC_MODE::CBR || coCfg->mode==ENC_MODE::VBR_QUAL)
     {
@@ -161,7 +161,7 @@ LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
      param.rc.f_ip_factor=1.0f;
      param.rc.f_pb_factor=1.0f;
     }
-   param.analyse.i_trellis=coCfg->trellisquant; 
+   param.analyse.i_trellis=coCfg->trellisquant;
    if (coCfg->is_lavc_nr) param.analyse.i_noise_reduction=coCfg->lavc_nr;
    if (coCfg->quant_type==5)
     param.i_cqm_preset=X264_CQM_JVT;
@@ -174,9 +174,9 @@ LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
      memcpy(param.cqm_4pc,&coCfg->qmatrix_inter4x4C_custom0,16);
      memcpy(param.cqm_8iy,&coCfg->qmatrix_intra_custom0,64);
      memcpy(param.cqm_8py,&coCfg->qmatrix_inter_custom0,64);
-    } 
-  }  
-  
+    }
+  }
+
  param.analyse.b_psnr=deci->getParam2(IDFF_enc_psnr);
  param.analyse.b_ssim=0;
  if (coCfg->ff1_stats_mode&FFSTATS::READ && cfgcomode==ENC_MODE::CBR)
@@ -193,7 +193,7 @@ LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
   }
  param.i_log_level=X264_LOG_NONE;
  param.b_aud=coCfg->x264_b_aud;
- 
+
  x264_zone_t zones[2];int zonescount=0;
  if (coCfg->isCreditsStart && cfgcomode==ENC_MODE::CBR)
   {
@@ -204,9 +204,9 @@ LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
     {
      case CREDITS_MODE::QUANT:zone.i_qp=coCfg->limitq(coCfg->credits_quant_i);zone.b_force_qp=1;break;
      case CREDITS_MODE::PERCENT:zone.b_force_qp=0;zone.f_bitrate_factor=coCfg->credits_percent/100.0f;break;
-    } 
-   zonescount++;    
-  } 
+    }
+   zonescount++;
+  }
  if (coCfg->isCreditsEnd && cfgcomode==ENC_MODE::CBR)
   {
    x264_zone_t &zone=zones[zonescount];
@@ -216,9 +216,9 @@ LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
     {
      case CREDITS_MODE::QUANT:zone.i_qp=coCfg->limitq(coCfg->credits_quant_i);zone.b_force_qp=1;break;
      case CREDITS_MODE::PERCENT:zone.b_force_qp=0;zone.f_bitrate_factor=coCfg->credits_percent/100.0f;break;
-    } 
-   zonescount++;    
-  } 
+    }
+   zonescount++;
+  }
  if ((param.rc.i_zones=zonescount)!=0)
   param.rc.zones=zones;
 
@@ -240,11 +240,11 @@ HRESULT TvideoCodecX264::compress(const TffPict &pict,TencFrameParams &params)
  int i_nal;
  x264_nal_t *nal;
  x264_picture_t pic_out;
-again: 
+again:
  if (x264_encoder_encode(h,&nal,&i_nal,pict.data[0]?(void*)fill_x264_pict:NULL,&pict,&pic_out)<0)
   return sinkE->deliverError();
  if (!pict.data[0] && i_nal==0)
-  return S_OK; 
+  return S_OK;
  params.length=0;
 
  TmediaSample sample;
@@ -258,7 +258,7 @@ again:
    if ((i_size=x264_nal_encode(dst,&i_data,1,&nal[i]))>0)
     {
      dst+=i_size;
-     dstLen-=i_size;            
+     dstLen-=i_size;
      params.length+=i_size;;
     }
    else if(i_size<0)
@@ -294,7 +294,7 @@ again:
   return hr;
  if (!pict.data[0])
   goto again;
- return hr; 
+ return hr;
 }
 
 void TvideoCodecX264::end(void)
@@ -303,5 +303,5 @@ void TvideoCodecX264::end(void)
   {
    if (h) x264_encoder_close(h);h=NULL;
   }
- lossless=false; 
+ lossless=false;
 }

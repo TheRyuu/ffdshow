@@ -152,7 +152,7 @@ static unsigned int mszh_decomp(unsigned char * srcptr, int srclen, unsigned cha
     unsigned char mask = 0;
     unsigned char maskbit = 0;
     unsigned int ofs, cnt;
-  
+
     while ((srclen > 0) && (destptr < destptr_end)) {
         if (maskbit == 0) {
             mask = *(srcptr++);
@@ -290,7 +290,7 @@ static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, uint8
                 c->zstream.next_in = encoded + 8;
                 c->zstream.avail_in = mthread_inlen;
                 c->zstream.next_out = c->decomp_buf;
-                c->zstream.avail_out = c->decomp_size;    
+                c->zstream.avail_out = c->decomp_size;
                 zret = inflate(&(c->zstream), Z_FINISH);
                 if ((zret != Z_OK) && (zret != Z_STREAM_END)) {
                     av_log(avctx, AV_LOG_ERROR, "Mthread1 inflate error: %d\n", zret);
@@ -309,7 +309,7 @@ static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, uint8
                 c->zstream.next_in = encoded + 8 + mthread_inlen;
                 c->zstream.avail_in = len - mthread_inlen;
                 c->zstream.next_out = c->decomp_buf + mthread_outlen;
-                c->zstream.avail_out = c->decomp_size - mthread_outlen;    
+                c->zstream.avail_out = c->decomp_size - mthread_outlen;
                 zret = inflate(&(c->zstream), Z_FINISH);
                 if ((zret != Z_OK) && (zret != Z_STREAM_END)) {
                     av_log(avctx, AV_LOG_ERROR, "Mthread2 inflate error: %d\n", zret);
@@ -565,7 +565,7 @@ static int decode_init(AVCodecContext *avctx)
 
 #ifdef CONFIG_ZLIB
     // Needed if zlib unused or init aborted before inflateInit
-    memset(&(c->zstream), 0, sizeof(z_stream)); 
+    memset(&(c->zstream), 0, sizeof(z_stream));
 #endif
 
     if (avctx->extradata_size < 8) {
@@ -577,7 +577,7 @@ static int decode_init(AVCodecContext *avctx)
         return 1;
     }
 
-    /* Check codec type */ 
+    /* Check codec type */
     if (((avctx->codec_id == CODEC_ID_MSZH)  && (*((char *)avctx->extradata + 7) != CODEC_MSZH)) ||
         ((avctx->codec_id == CODEC_ID_ZLIB)  && (*((char *)avctx->extradata + 7) != CODEC_ZLIB))) {
         av_log(avctx, AV_LOG_ERROR, "Codec id and codec type mismatch. This should not happen.\n");
@@ -673,8 +673,8 @@ static int decode_init(AVCodecContext *avctx)
             return 1;
         }
     }
-  
-    /* Detect flags */ 
+
+    /* Detect flags */
     c->flags = *((char *)avctx->extradata + 6);
     if (c->flags & FLAG_MULTITHREAD)
         av_log(avctx, AV_LOG_INFO, "Multithread encoder flag set.\n");

@@ -55,7 +55,7 @@ void TdolbyDecoderSettings::createFilters(size_t filtersorder,Tfilters *filters,
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (is && show)
-  queueFilter<TaudioFilterDolbyDecoder2>(filtersorder,filters,queue); 
+  queueFilter<TaudioFilterDolbyDecoder2>(filtersorder,filters,queue);
 }
 void TdolbyDecoderSettings::createPages(TffdshowPageDec *parent) const
 {

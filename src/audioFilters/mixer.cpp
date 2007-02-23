@@ -61,7 +61,7 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
      else if (in_nrear == 2)
       {
        switch (outfmt.dolby)
-        { 
+        {
          case TsampleFormat::DOLBY_PROLOGICII:
           matrix[CH_SL][CH_L] = -0.8660*slev;
           matrix[CH_SR][CH_L] = -0.5000*slev;
@@ -144,7 +144,7 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
           {
            matrix[CH_SL][CH_L] = slev;
            matrix[CH_SR][CH_R] = slev;
-          }         
+          }
          else if (out_nrear == 1)
           {
            matrix[CH_SL][CH_S] = slev * LEVEL_3DB;
@@ -166,7 +166,7 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
        matrix[CH_L][CH_M] = clev * LEVEL_3DB;
        matrix[CH_R][CH_M] = clev * LEVEL_3DB;
       }
-     
+
      if (expand_stereo_allowed && in_nfront == 2 && out_nrear)
       {
        if (out_nrear == 1)
@@ -215,7 +215,7 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
     }
 
    // LFE mixing
-   if (in_ch & out_ch & SPEAKER_LOW_FREQUENCY) 
+   if (in_ch & out_ch & SPEAKER_LOW_FREQUENCY)
     matrix[CH_LFE][CH_LFE] = lfelev;
 
    // mix LFE into front channels if exists in input
@@ -231,7 +231,7 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
       matrix[CH_LFE][CH_C]  = lfelev;
     }
   }
-   
+
  if (cfg->normalizeMatrix)
   {
    double levels[NCHANNELS] = { 0, 0, 0, 0, 0, 0 };
@@ -245,7 +245,7 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
 
    max_level = levels[0];
    for (i = 1; i < NCHANNELS; i++)
-    if (levels[i] > max_level) 
+    if (levels[i] > max_level)
      max_level = levels[i];
 
    if (max_level > 0)
@@ -257,7 +257,7 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
     for (j = 0; j < NCHANNELS; j++)
      matrix[j][i] *= norm;
   }
-  
+
  for (int i = 0; i < NCHANNELS; i++)
   for (int j = 0; j < NCHANNELS; j++)
    matrix[j][i] = limit(matrix[j][i],-4.0,4.0);

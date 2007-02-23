@@ -79,7 +79,7 @@ DECLARE_INTERFACE_(IffDecoder, IUnknown)
  STDMETHOD (compat_tell)(int*seconds) PURE;
  STDMETHOD (compat_getDuration)(int*seconds) PURE;
  STDMETHOD (compat_getKeyParamCount2)(void) PURE;
- STDMETHOD (compat_getKeyParamDescr)(unsigned int i,const char **descr) PURE; 
+ STDMETHOD (compat_getKeyParamDescr)(unsigned int i,const char **descr) PURE;
  STDMETHOD (compat_getKeyParamKey2)(unsigned int i) PURE;
  STDMETHOD (compat_setKeyParamKey)(unsigned int i,int key) PURE;
  STDMETHOD (compat_getImgFilters)(TimgFilters* *imgFiltersPtr) PURE;

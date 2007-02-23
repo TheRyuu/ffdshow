@@ -120,8 +120,8 @@ INT_PTR ToutsfsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         return TRUE;
        }
      }
-    break; 
-  }    
+    break;
+  }
  return TconfPageDecAudio::msgProc(uMsg,wParam,lParam);
 }
 
@@ -152,9 +152,9 @@ bool ToutsfsPage::reset(bool testonly)
 }
 
 void ToutsfsPage::translate(void)
-{ 
+{
  TconfPageDec::translate();
- 
+
  cbxTranslate(IDC_CBX_AOUT_CONNECTTO,ToutputAudioSettings::connetTos);
 }
 

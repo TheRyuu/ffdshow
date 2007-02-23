@@ -12,7 +12,7 @@ protected:
  virtual void precalcCoefs(int nCt, double Dist25)=0;
  virtual void deNoise(TffPict &pict,unsigned int dx,unsigned int dy,const unsigned char *src[4],stride_t stride1[4],unsigned char *dst[4],stride_t stride2[4])=0;
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
- virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK_YUV_PLANAR;} 
+ virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK_YUV_PLANAR;}
 public:
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
  virtual void onSizeChange(void);
@@ -23,18 +23,18 @@ DECLARE_FILTER(TimgFilterDenoise3dNormal,public,TimgFilterDenoise3d)
 private:
  int Coefs[4][512];
  unsigned char *Line;
- unsigned char *Frame[3]; 
+ unsigned char *Frame[3];
  static inline uint8_t LowPass(uint8_t Prev,uint8_t Curr,const int *Coef)
   {
    return uint8_t(Curr+Coef[Prev-Curr]);
   }
- static void deNoise(const unsigned char *Frame,    
+ static void deNoise(const unsigned char *Frame,
                      const unsigned char *FramePrev,
-                     unsigned char *FrameDest,     
-                     unsigned char *LineAnt,       
+                     unsigned char *FrameDest,
+                     unsigned char *LineAnt,
                      int W, int H, stride_t sStride, stride_t pStride, stride_t dStride,
                      int *Horizontal, int *Vertical, int *Temporal);
-protected:                     
+protected:
  void precalcCoefs(int nCt, double Dist25);
  virtual void deNoise(TffPict &pict,unsigned int dx,unsigned int dy,const unsigned char *src[4],stride_t stride1[4],unsigned char *dst[4],stride_t stride2[4]);
 public:
@@ -71,7 +71,7 @@ private:
 		     unsigned short **FrameAntPtr, int *FrameAntStride,
                      int W, int H, stride_t sStride, stride_t dStride,
                      int *Horizontal, int *Vertical, int *Temporal);
-protected:                     
+protected:
  virtual void precalcCoefs(int nCt, double Dist25);
  virtual void deNoise(TffPict &pict,unsigned int dx,unsigned int dy,const unsigned char *src[4],stride_t stride1[4],unsigned char *dst[4],stride_t stride2[4]);
 public:

@@ -154,7 +154,7 @@ INT_PTR TlogoawayPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       DeleteObject(br);
       return TRUE;
      }
-    break; 
+    break;
   }
  return TconfPageDecVideo::msgProc(uMsg,wParam,lParam);
 }
@@ -166,11 +166,11 @@ void TlogoawayPage::onParamFlnm(void)
   {
    setDlgItemText(m_hwnd,IDC_ED_LOGOAWAY_PARAMBITMAP,flnm);
    cfgSet(IDFF_logoawayParamBitmapFlnm,flnm);
-  } 
+  }
 }
 
 void TlogoawayPage::translate(void)
-{ 
+{
  TconfPageBase::translate();
 
  int sel=cbxGetCurSel(IDC_CBX_LOGOAWAY_MODE);
@@ -228,11 +228,11 @@ TlogoawayPage::TlogoawayPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):T
    IDC_ED_LOGOAWAY_DY,4,16384,IDFF_logoawayDy,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
  static const TbindButton<TlogoawayPage> bt[]=
   {
    IDC_BT_LOGOAWAY_PARAMBITMAP,&TlogoawayPage::onParamFlnm,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
 }

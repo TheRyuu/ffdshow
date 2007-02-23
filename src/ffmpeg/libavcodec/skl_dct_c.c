@@ -6,7 +6,7 @@
 /*
  *  skl_dct16_LLM.cpp
  *
- *  "Fast and precise" LLM implementation of FDCT/IDCT, where 
+ *  "Fast and precise" LLM implementation of FDCT/IDCT, where
  *  rotations are decomposed using:
  *    tmp = (x+y).cos t
  *    x' = tmp + y.(sin t - cos t)
@@ -16,8 +16,8 @@
  *  and at the end of this file...
  *
  * Reference (e.g.):
- *  Loeffler C., Ligtenberg A., and Moschytz C.S.: 
- *    Practical Fast 1D DCT Algorithm with Eleven Multiplications, 
+ *  Loeffler C., Ligtenberg A., and Moschytz C.S.:
+ *    Practical Fast 1D DCT Algorithm with Eleven Multiplications,
  *  Proc. ICASSP 1989, 988-991.
  *
  *  IEEE-1180-like error specs for FDCT:
@@ -28,7 +28,7 @@
  * Overall ME:   -0.0033
  *
  *  error specs for IDCT:
- * Peak error:   1.0000 
+ * Peak error:   1.0000
  * Peak MSE:     0.0065
  * Overall MSE:  0.0051
  * Peak ME:      0.0015
@@ -236,7 +236,7 @@ void Skl_IDct16_C( TYPE *In )
   {
     int mm0, mm1, mm2, mm3, mm4, mm5, mm6, mm7, Spill;
 
-      // odd    
+      // odd
 
     mm4 = (int)pIn[7];
     mm5 = (int)pIn[5];
@@ -290,7 +290,7 @@ void Skl_IDct16_C( TYPE *In )
   {
     int mm0, mm1, mm2, mm3, mm4, mm5, mm6, mm7, Spill;
 
-      // odd    
+      // odd
 
     mm4 = (int)pIn[7*8];
     mm5 = (int)pIn[5*8];
@@ -308,7 +308,7 @@ void Skl_IDct16_C( TYPE *In )
     mm5 += mm3;
     mm6 += mm2;
     mm7 += mm3;
-    
+
       // even
 
     mm3 = (int)pIn[2*8];
@@ -398,7 +398,7 @@ void Skl_IDct16_Sparse_C( TYPE *In )
         pIn[4] = SHIFTR(mm4, FIX-IPASS);
       }
     }
-    else 
+    else
     {
       int mm0, mm1, mm2, mm3, mm4, mm5, mm6, mm7, Spill;
 
@@ -455,7 +455,7 @@ void Skl_IDct16_Sparse_C( TYPE *In )
   {
     int mm0, mm1, mm2, mm3, mm4, mm5, mm6, mm7, Spill;
 
-      // odd    
+      // odd
 
     mm4 = (int)pIn[7*8];
     mm5 = (int)pIn[5*8];
@@ -473,7 +473,7 @@ void Skl_IDct16_Sparse_C( TYPE *In )
     mm5 += mm3;
     mm6 += mm2;
     mm7 += mm3;
-    
+
       // even
 
     mm3 = (int)pIn[2*8];
@@ -509,9 +509,9 @@ void Skl_IDct16_Sparse_C( TYPE *In )
 
 #define CLIP(v)  ((v)<0 ? 0 : (v)>255 ? 255 : (SKL_BYTE)(v))
 void Skl_IDct16_Put_C(SKL_BYTE *Dst, int BpS, TYPE *In)
-{ 
+{
   int j;
-  Skl_IDct16_Sparse_C( In ); 
+  Skl_IDct16_Sparse_C( In );
   for(j=8; j>0; --j) {
     Dst[0] = CLIP(In[0]);
     Dst[1] = CLIP(In[1]);
@@ -527,9 +527,9 @@ void Skl_IDct16_Put_C(SKL_BYTE *Dst, int BpS, TYPE *In)
   }
 }
 void Skl_IDct16_Add_C(SKL_BYTE *Dst, int BpS, TYPE *In)
-{ 
+{
   int j;
-  Skl_IDct16_Sparse_C( In ); 
+  Skl_IDct16_Sparse_C( In );
   for(j=8; j>0; --j) {
     int v;
     v = In[0] + Dst[0]; Dst[0] = CLIP(v);
@@ -585,7 +585,7 @@ void Skl_IDct16_Add_C(SKL_BYTE *Dst, int BpS, TYPE *In)
  in5 mm5
 
  <---------Stage2 =odd part=---------------->
- 
+
  mm7*___._________.___-___[xSqrt2]___* out3
         |          \ /
       (Rot3)        \
@@ -646,7 +646,7 @@ void Skl_IDct16_Add_C(SKL_BYTE *Dst, int BpS, TYPE *In)
 
     Alternative schematics for stage 1:
     -----------------------------------
- 
+
  in1 *________.____.___-_____[xSqrt2]__* mm1
               |     \ /
             (Rot1)   \
@@ -664,9 +664,9 @@ void Skl_IDct16_Add_C(SKL_BYTE *Dst, int BpS, TYPE *In)
  <---------Stage2 =odd part=--------->
 
  in6 *__o___________o___+___* mm6 -> butterfly with mm3 -> out3/out4
- mm6    |            \ /    
+ mm6    |            \ /
         |             /
-        |            / \    
+        |            / \
  in4 *_ | ___o___+__.___-___* mm4 -> butf. w/ mm1 -> out7/out0
  mm4    |     \ /
       (Rot6)   /
@@ -680,5 +680,9 @@ void Skl_IDct16_Add_C(SKL_BYTE *Dst, int BpS, TYPE *In)
 
 */
 //////////////////////////////////////////////////////////
+
+
+
+
 
 

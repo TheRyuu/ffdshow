@@ -48,9 +48,9 @@ const TfilterIDFF TffdshowDecAudio::nextFilters[]=
   /*full*/  0,
   /*half*/  0,
   /*dlgId*/ IDD_OSD,
- }, 
+ },
  NULL,0
-}; 
+};
 
 STDMETHODIMP_(int) TffdshowDecAudio::getVersion2(void)
 {
@@ -83,11 +83,11 @@ STDMETHODIMP TffdshowDecAudio::NonDelegatingQueryInterface(REFIID riid,void **pp
 {
  //char riidS[256];guid2str(riid,riidS,256);OutputDebugString(riidS);
  CheckPointer(ppv,E_POINTER);
- if (riid==IID_IffdshowDecAudioA) 
+ if (riid==IID_IffdshowDecAudioA)
   return GetInterface<IffdshowDecAudioA>(getDecAudioInterface<IffdshowDecAudioA>(),ppv);
- else if (riid==IID_IffdshowDecAudioW) 
+ else if (riid==IID_IffdshowDecAudioW)
   return GetInterface<IffdshowDecAudioW>(getDecAudioInterface<IffdshowDecAudioW>(),ppv);
- else 
+ else
   return TffdshowDec::NonDelegatingQueryInterface(riid,ppv);
 }
 
@@ -159,7 +159,7 @@ CBasePin* TffdshowDecAudio::GetPin(int n)
  if (n==0)
   return m_pOutput;
  n--;
- if (n<(int)inpins.size()) 
+ if (n<(int)inpins.size())
   return inpins[n];
  else
   {
@@ -180,11 +180,11 @@ STDMETHODIMP TffdshowDecAudio::FindPin(LPCWSTR Id, IPin **ppPin)
   *ppPin=inpins.find(Id);
 
  if (*ppPin)
-  { 
+  {
    (*ppPin)->AddRef();
    return S_OK;
-  } 
- else 
+  }
+ else
   return VFW_E_NOT_FOUND;
 }
 
@@ -194,27 +194,27 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
  //char typeS[256];DPRINTF("TffdshowDecAudio::getCodecId Type:%s",guid2str(type,typeS,256));
  if (mt.majortype!=MEDIATYPE_Audio && mt.majortype!=MEDIATYPE_MPEG2_PES && mt.majortype!=MEDIATYPE_DVD_ENCRYPTED_PACK) return CODEC_ID_NONE;
  //char subtypeS[256],formattypeS[256];DPRINTF("TffdshowDecAudio::getCodecId Subtype:%s, FormatType:%s",guid2str(subtype,subtypeS,256),guid2str(formattype,formattypeS,256));
- if (mt.formattype!=FORMAT_WaveFormatEx && 
-     mt.formattype!=FORMAT_VorbisFormat && 
-     mt.formattype!=FORMAT_VorbisFormat2 && 
+ if (mt.formattype!=FORMAT_WaveFormatEx &&
+     mt.formattype!=FORMAT_VorbisFormat &&
+     mt.formattype!=FORMAT_VorbisFormat2 &&
      mt.formattype!=FORMAT_VorbisFormatIll)  return CODEC_ID_NONE;
- 
+
  DWORD wFormatTag=0;
  if (mt.subtype==MEDIASUBTYPE_Vorbis || mt.subtype==MEDIASUBTYPE_Vorbis2 || mt.subtype==MEDIASUBTYPE_VorbisIll)
   wFormatTag=WAVE_FORMAT_VORBIS;
  else if (mt.subtype==MEDIASUBTYPE_DOLBY_AC3)
   wFormatTag=WAVE_FORMAT_AC3_W;
  else if (mt.subtype==MEDIASUBTYPE_DTS)
-  wFormatTag=WAVE_FORMAT_DTS_W; 
+  wFormatTag=WAVE_FORMAT_DTS_W;
  else if (mt.subtype==MEDIASUBTYPE_DVD_LPCM_AUDIO)
   wFormatTag=WAVE_FORMAT_LPCM;
  else if (mt.subtype==MEDIASUBTYPE_AAC3)
-  wFormatTag=WAVE_FORMAT_AAC3; 
+  wFormatTag=WAVE_FORMAT_AAC3;
  else if (mt.subtype==MEDIASUBTYPE_MPEG2_AUDIO)
-  wFormatTag=WAVE_FORMAT_MPEG; 
+  wFormatTag=WAVE_FORMAT_MPEG;
  else if (mt.subtype==MEDIASUBTYPE_SAMR)
-  wFormatTag=WAVE_FORMAT_SAMR; 
- else 
+  wFormatTag=WAVE_FORMAT_SAMR;
+ else
   {
    const WAVEFORMATEX *wfex=(const WAVEFORMATEX*)mt.pbFormat;
    if ((mt.subtype==MEDIASUBTYPE_MPEG1AudioPayload || wfex->wFormatTag==WAVE_FORMAT_MPEG) && mt.cbFormat)
@@ -248,11 +248,11 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
    else if (mt.subtype==MEDIASUBTYPE_ALAW || mt.subtype==MEDIASUBTYPE_alaw)
     wFormatTag=WAVE_FORMAT_ALAW;
    else if (mt.subtype==MEDIASUBTYPE_SOWT || mt.subtype==MEDIASUBTYPE_sowt || mt.subtype==MEDIASUBTYPE_TWOS || mt.subtype==MEDIASUBTYPE_twos)
-    wFormatTag=WAVE_FORMAT_PCM16; 
+    wFormatTag=WAVE_FORMAT_PCM16;
    else if (mt.subtype==MEDIASUBTYPE_IN32 || mt.subtype==MEDIASUBTYPE_in32)
-    wFormatTag=WAVE_FORMAT_PCM32; 
+    wFormatTag=WAVE_FORMAT_PCM32;
    else if (mt.subtype==MEDIASUBTYPE_IN24 || mt.subtype==MEDIASUBTYPE_in24)
-    wFormatTag=WAVE_FORMAT_PCM24; 
+    wFormatTag=WAVE_FORMAT_PCM24;
    else if (mt.subtype==MEDIASUBTYPE_FL32 || mt.subtype==MEDIASUBTYPE_fl32)
     wFormatTag=WAVE_FORMAT_FLOAT32;
    else if (mt.subtype==MEDIASUBTYPE_FL64 || mt.subtype==MEDIASUBTYPE_fl64)
@@ -300,7 +300,7 @@ HRESULT TffdshowDecAudio::CheckConnect(PIN_DIRECTION dir,IPin *pPin)
       CLSID clsid=GetCLSID(pPin);
       res=((presetSettings->output->connectTo==1 && clsid==CLSID_DSoundRender) || (presetSettings->output->connectTo==2 && clsid==CLSID_AudioRender))?S_OK:E_FAIL;
      }
-    else 
+    else
      res=S_OK;
     break;
   };
@@ -312,12 +312,12 @@ TsampleFormat TffdshowDecAudio::getOutsf(void)
  TsampleFormat outsf;
  if (inpin->getsf(outsf)) // SPDIF
   return outsf;
- else 
+ else
   {
    if (!audioFilters) audioFilters=new TaudioFiltersPlayer(this,this,presetSettings);
    audioFilters->getOutputFmt(outsf,presetSettings);
    return outsf;
-  } 
+  }
 }
 
 HRESULT TffdshowDecAudio::getMediaType(CMediaType *mtOut)
@@ -332,10 +332,10 @@ HRESULT TffdshowDecAudio::getMediaType(CMediaType *mtOut)
     *mtOut=TsampleFormat::createMediaTypeSPDIF();
    else
     *mtOut=outsf.toCMediaType(alwaysextensible);
-   char_t descS[256]; 
-   outsf.descriptionPCM(descS,256); 
+   char_t descS[256];
+   outsf.descriptionPCM(descS,256);
    DPRINTF(_l("TffdshowDecAudio::getMediaType:%s"),descS);
-  } 
+  }
  return S_OK;
 }
 
@@ -344,8 +344,8 @@ HRESULT TffdshowDecAudio::GetMediaType(int iPosition, CMediaType *mtOut)
  if (!inpin->IsConnected()) return E_UNEXPECTED;
  if (iPosition<0) return E_INVALIDARG;
  //FIXME
- const char_t *fileName= getExeflnm(); 
- if (_strnicmp(_l("wmenc.exe"),fileName,10)==0) 
+ const char_t *fileName= getExeflnm();
+ if (_strnicmp(_l("wmenc.exe"),fileName,10)==0)
   {
    if (iPosition>(allowOutStream?0:1)) return VFW_S_NO_MORE_ITEMS;
   }
@@ -380,7 +380,7 @@ HRESULT TffdshowDecAudio::DecideBufferSize(IMemAllocator *pAllocator, ALLOCATOR_
  pProperties->cbBuffer=48000*6*4/5;
  pProperties->cbAlign=1;
  pProperties->cbPrefix=0;
- 
+
  DPRINTF(_l("TffAudioDecoder::DecideBufferSize %d"),pProperties->cbBuffer);
 
  HRESULT hr;
@@ -423,7 +423,7 @@ HRESULT TffdshowDecAudio::CompleteConnect(PIN_DIRECTION direction,IPin *pReceive
    const CLSID &out=GetCLSID(m_pOutput->GetConnected());
    static const GUID CLSID_TMPGencGetSample={0x10AA1647,0xCECE,0x40D4,0x8C,0x35,0xD2,0x5D,0xDA,0x77,0x5B,0xEF};
    isTmpgEnc=!!(out==CLSID_TMPGencGetSample);
-  } 
+  }
  return CTransformFilter::CompleteConnect(direction,pReceivePin);
 }
 
@@ -471,7 +471,7 @@ HRESULT TffdshowDecAudio::Receive(IMediaSample* pIn)
 }
 
 HRESULT TffdshowDecAudio::onGraphRemove(void)
-{ 
+{
  //if (inpin->audio) delete inpin->audio;inpin->audio=NULL;
  if (audioFilters) delete audioFilters;audioFilters=NULL;
  currentOutsf.reset();
@@ -505,8 +505,8 @@ STDMETHODIMP TffdshowDecAudio::deliverProcessedSample(const void *buf,size_t num
  HRESULT hr=S_OK;
  if (!fileout && FAILED(hr=ReconnectOutput(numsamples,mt)))
   return hr;
-  
- comptr<IMediaSample> pOut; 
+
+ comptr<IMediaSample> pOut;
  BYTE *dst=NULL;
  if (FAILED(getDeliveryBuffer(&pOut,&dst)))
   return E_FAIL;
@@ -538,7 +538,7 @@ STDMETHODIMP TffdshowDecAudio::deliverProcessedSample(const void *buf,size_t num
    pOut->SetTime(&ft1,&ft2);
    ft1+=dstlen;
   }
- return m_pOutput->Deliver(pOut); 
+ return m_pOutput->Deliver(pOut);
 }
 
 STDMETHODIMP TffdshowDecAudio::deliverSampleSPDIF(void *buf,size_t size,int bit_rate,BYTE type,int incRtDec)
@@ -709,13 +709,13 @@ HRESULT TffdshowDecAudio::ReconnectOutput(size_t numsamples, CMediaType& mt)
 
      HRESULT hr;
      comptr<IMemAllocator> pAllocator;
-     if (FAILED(hr=pPin->GetAllocator(&pAllocator)) || !pAllocator) 
+     if (FAILED(hr=pPin->GetAllocator(&pAllocator)) || !pAllocator)
       return S_OK;//hr; Avisynth GetSample filter can't handle format changes
 
      ALLOCATOR_PROPERTIES props;
      if (FAILED(hr=pAllocator->GetProperties(&props)))
       return hr;
-      
+
      props.cBuffers=4;
      props.cbBuffer=cbBuffer*3/2;
 
@@ -723,7 +723,7 @@ HRESULT TffdshowDecAudio::ReconnectOutput(size_t numsamples, CMediaType& mt)
          FAILED(hr=m_pOutput->DeliverEndFlush()) ||
          FAILED(hr=pAllocator->Decommit()) ||
          FAILED(hr=pAllocator->SetProperties(&props,&actual)) ||
-         FAILED(hr=pAllocator->Commit())) 
+         FAILED(hr=pAllocator->Commit()))
       return hr;
 
      if (props.cBuffers>actual.cBuffers || props.cbBuffer>actual.cbBuffer)
@@ -748,7 +748,7 @@ STDMETHODIMP TffdshowDecAudio::getStreamDescr(unsigned int i,char_t *buf,size_t 
  TffdshowDecAudioInputPin *pin=inpins.getConnectedInpin(i);
  if (pin && pin->getStreamName(buf,buflen)==S_OK)
   return S_OK;
- else 
+ else
   return E_FAIL;
 }
 STDMETHODIMP_(unsigned int) TffdshowDecAudio::getCurrentStream2(void)

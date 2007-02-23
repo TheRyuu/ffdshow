@@ -26,7 +26,7 @@
  * long constant values MUST be suffixed by LL and unsigned long long
  * values by ULL, lest they be truncated by the compiler)
  */
- 
+
 #include "../../csimd.h"
 
 

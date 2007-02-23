@@ -99,8 +99,8 @@ Caption "${FULLNAME}"
 !endif
 SetCompressor /SOLID ${COMPRESSION}
 
-!define MUI_LANGDLL_REGISTRY_ROOT "HKLM" 
-!define MUI_LANGDLL_REGISTRY_KEY "SOFTWARE\GNU\ffdshow" 
+!define MUI_LANGDLL_REGISTRY_ROOT "HKLM"
+!define MUI_LANGDLL_REGISTRY_KEY "SOFTWARE\GNU\ffdshow"
 !define MUI_LANGDLL_REGISTRY_VALUENAME "lang"
 
 ;--------------------------------
@@ -109,7 +109,7 @@ SetCompressor /SOLID ${COMPRESSION}
 !insertmacro MUI_PAGE_WELCOME
 !ifdef SIMPLE
   ;Page custom CustomPageSimple
-!else  
+!else
   !insertmacro MUI_PAGE_LICENSE $(ffdshowLicense)
   !insertmacro MUI_PAGE_COMPONENTS
   Page custom CustomPageCodecVideo
@@ -124,7 +124,7 @@ SetCompressor /SOLID ${COMPRESSION}
     !endif
   !endif
   !insertmacro MUI_PAGE_DIRECTORY
-!endif  
+!endif
 Var SHORTCUTS_FOLDER
 !define MUI_STARTMENUPAGE_REGISTRY_ROOT ${MUI_LANGDLL_REGISTRY_ROOT}
 !define MUI_STARTMENUPAGE_REGISTRY_KEY ${MUI_LANGDLL_REGISTRY_KEY}
@@ -133,7 +133,7 @@ Var SHORTCUTS_FOLDER
  !ifndef SIMPLE
    !insertmacro MUI_PAGE_STARTMENU ffdshowApplication $SHORTCUTS_FOLDER
  !else
- !endif  
+ !endif
 !endif
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
@@ -234,7 +234,7 @@ Var SHORTCUTS_FOLDER
 
 ;Folder-selection page
 InstallDir "$PROGRAMFILES\ffdshow"
-; Registry key to check for directory (so if you install again, it will 
+; Registry key to check for directory (so if you install again, it will
 ; overwrite the old one automatically)
 InstallDirRegKey HKLM SOFTWARE\GNU\ffdshow "pth"
 
@@ -249,7 +249,7 @@ AutoCloseWindow false
   ReserveFile "filtersvideo.ini"
   ReserveFile "filtersaudio.ini"
   ReserveFile "filtersaudio.ini"
-!endif  
+!endif
 !insertmacro MUI_RESERVEFILE_INSTALLOPTIONS
 
 ;--------------------------------
@@ -432,14 +432,14 @@ Var INSTALLED_VC80CRT_VERSION
   WriteRegStr       HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow" "Publisher" "Milan Cutka"
   WriteRegDWORD     HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow" "NoModify" "1"
   WriteRegDWORD     HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow" "NoRepair" "1"
-                                 
+
   WriteUninstaller "uninstall.exe"
   ; Shortcuts
   SetShellVarContext all
   !ifndef SIMPLE
     !insertmacro MUI_STARTMENU_WRITE_BEGIN ffdshowApplication
   !else
-    StrCpy $SHORTCUTS_FOLDER "ffdshow"  
+    StrCpy $SHORTCUTS_FOLDER "ffdshow"
   !endif
   CreateDirectory "$SMPROGRAMS\$SHORTCUTS_FOLDER"
   Delete "$SMPROGRAMS\ffdshow\Configuration.lnk"
@@ -536,7 +536,7 @@ Var INSTALLED_VC80CRT_VERSION
 errorCantReg:
   MessageBox MB_OK|MB_ICONEXCLAMATION $(ERROR_regdll)
   Abort
-!endif 
+!endif
 ffdshow_end:
 SectionEnd
 
@@ -641,7 +641,7 @@ Var ALLUSERS
  ${FOURCC}def:
   StrCpy $DECODER_${FOURCC}_DEFDEC ${DEFDEC}
  ${FOURCC}errend:
- 
+
   IntOp $0 $0 || $1
   IntCmp $0 0 ${FOURCC}Equal ${FOURCC}Less
   StrCpy $DECODER_${FOURCC} $2
@@ -807,13 +807,13 @@ SubSection /e $(TITLE_vfw) Sec_vfw
     Call VFWRegSetup
     !ifndef SIMPLE
       !insertmacro MUI_STARTMENU_WRITE_BEGIN ffdshowApplication
-    !endif  
+    !endif
     CreateDirectory "$SMPROGRAMS\$SHORTCUTS_FOLDER"
     Delete "$SMPROGRAMS\$SHORTCUTS_FOLDER\VFW Configuration.lnk"
     CreateShortCut  "$SMPROGRAMS\$SHORTCUTS_FOLDER\VFW codec configuration.lnk" "rundll32.exe" "ff_vfw.dll,configureVFW" "regedit.exe" 0
     !ifndef SIMPLE
       !insertmacro MUI_STARTMENU_WRITE_END
-    !endif  
+    !endif
   SectionEnd
 
   Section /o $(TITLE_vfwAVIS) Sec_vfwAVIS
@@ -829,7 +829,7 @@ SubSection /e $(TITLE_vfw) Sec_vfw
       File "..\makeAVIS.exe"
     !ifndef SIMPLE
       !insertmacro MUI_STARTMENU_WRITE_BEGIN ffdshowApplication
-    !endif  
+    !endif
     CreateDirectory "$SMPROGRAMS\$SHORTCUTS_FOLDER"
     CreateShortCut "$SMPROGRAMS\$SHORTCUTS_FOLDER\makeAVIS.lnk" "$INSTDIR\makeAVIS.exe"
     !ifndef SIMPLE
@@ -878,7 +878,7 @@ FunctionEnd
     Section $(TITLE_pluginAvisynth) Sec_pluginAvisynth
       SetOutPath $AVISYNTHDIR
       File "..\ffavisynth.dll"
-      WriteRegStr ${MUI_LANGDLL_REGISTRY_ROOT} ${MUI_LANGDLL_REGISTRY_KEY} "pthAvisynth" $AVISYNTHDIR   
+      WriteRegStr ${MUI_LANGDLL_REGISTRY_ROOT} ${MUI_LANGDLL_REGISTRY_KEY} "pthAvisynth" $AVISYNTHDIR
       StrCpy $REG_MSVCR_PLUGIN_INSTFLAG "AvisynthMsvcr80Inst"
       call install_msvcr80_as_private_assembly_for_plugins
     SectionEnd
@@ -899,7 +899,7 @@ FunctionEnd
         StrCpy $REG_MSVCR_PLUGIN_INSTFLAG "DScalerMsvcr80Inst"
         call install_msvcr80_as_private_assembly_for_plugins
       SectionEnd
-    !endif 
+    !endif
   SubSectionEnd
 !endif
 ;--------------------------------
@@ -934,8 +934,8 @@ Section "Uninstall"
   !ifndef SIMPLE
     !insertmacro MUI_STARTMENU_GETFOLDER ffdshowApplication $SHORTCUTS_FOLDER
   !else
-     StrCpy $SHORTCUTS_FOLDER "ffdshow"  
-  !endif  
+     StrCpy $SHORTCUTS_FOLDER "ffdshow"
+  !endif
   Delete "$SMPROGRAMS\$SHORTCUTS_FOLDER\*.*"
   RMDir  "$SMPROGRAMS\$SHORTCUTS_FOLDER"
 
@@ -976,13 +976,13 @@ Section "Uninstall"
   Delete "$INSTDIR\TomsMoComp_ff.dll"
   Delete "$INSTDIR\ff_kernelDeint.dll"
   Delete "$INSTDIR\libmplayer.dll"
-  Delete "$INSTDIR\ff_libmad.dll"  
+  Delete "$INSTDIR\ff_libmad.dll"
   Delete "$INSTDIR\ff_mpeg2enc.dll"
-  Delete "$INSTDIR\ff_theora.dll"  
-  Delete "$INSTDIR\ff_wmv9.dll"    
+  Delete "$INSTDIR\ff_theora.dll"
+  Delete "$INSTDIR\ff_wmv9.dll"
   Delete "$INSTDIR\ff_x264.dll"
-  Delete "$INSTDIR\ff_liba52.dll"    
-  Delete "$INSTDIR\ff_libdts.dll"    
+  Delete "$INSTDIR\ff_liba52.dll"
+  Delete "$INSTDIR\ff_libdts.dll"
   Delete "$INSTDIR\ff_libfaad2.dll"
   Delete "$INSTDIR\ff_realaac.dll"
   Delete "$INSTDIR\ff_samplerate.dll"
@@ -1029,76 +1029,76 @@ Section "Uninstall"
   Delete "$INSTDIR\languages\ffdshow.1053.se"
   Delete "$INSTDIR\languages\ffdshow.2052.sc"
   RMDir  "$INSTDIR\languages"
-  Delete "$INSTDIR\custom matrices\andreas_78er.matrix.xcm"                   
-  Delete "$INSTDIR\custom matrices\andreas_doppelte_99er.matrix.xcm"          
-  Delete "$INSTDIR\custom matrices\andreas_einfache_99er.matrix.xcm"          
+  Delete "$INSTDIR\custom matrices\andreas_78er.matrix.xcm"
+  Delete "$INSTDIR\custom matrices\andreas_doppelte_99er.matrix.xcm"
+  Delete "$INSTDIR\custom matrices\andreas_einfache_99er.matrix.xcm"
   Delete "$INSTDIR\custom matrices\Bulletproof's Heavy Compression Matrix.xcm"
-  Delete "$INSTDIR\custom matrices\Bulletproof's High Quality Matrix.xcm"     
-  Delete "$INSTDIR\custom matrices\CG-Animation Matrix.xcm"                   
-  Delete "$INSTDIR\custom matrices\hvs-best-picture.xcm"                      
-  Delete "$INSTDIR\custom matrices\hvs-better-picture.xcm"                    
-  Delete "$INSTDIR\custom matrices\hvs-good-picture.xcm"                      
-  Delete "$INSTDIR\custom matrices\Low Bitrate Matrix.xcm"                    
-  Delete "$INSTDIR\custom matrices\MPEG.xcm"                                  
-  Delete "$INSTDIR\custom matrices\pvcd.xcm"                                  
-  Delete "$INSTDIR\custom matrices\Standard.xcm"                              
-  Delete "$INSTDIR\custom matrices\Ultimate Matrix.xcm"                       
-  Delete "$INSTDIR\custom matrices\Ultra Low Bitrate Matrix.xcm"              
-  Delete "$INSTDIR\custom matrices\Very Low Bitrate Matrix.xcm"               
+  Delete "$INSTDIR\custom matrices\Bulletproof's High Quality Matrix.xcm"
+  Delete "$INSTDIR\custom matrices\CG-Animation Matrix.xcm"
+  Delete "$INSTDIR\custom matrices\hvs-best-picture.xcm"
+  Delete "$INSTDIR\custom matrices\hvs-better-picture.xcm"
+  Delete "$INSTDIR\custom matrices\hvs-good-picture.xcm"
+  Delete "$INSTDIR\custom matrices\Low Bitrate Matrix.xcm"
+  Delete "$INSTDIR\custom matrices\MPEG.xcm"
+  Delete "$INSTDIR\custom matrices\pvcd.xcm"
+  Delete "$INSTDIR\custom matrices\Standard.xcm"
+  Delete "$INSTDIR\custom matrices\Ultimate Matrix.xcm"
+  Delete "$INSTDIR\custom matrices\Ultra Low Bitrate Matrix.xcm"
+  Delete "$INSTDIR\custom matrices\Very Low Bitrate Matrix.xcm"
   Delete "$INSTDIR\custom matrices\Soulhunters V3.xcm"
   Delete "$INSTDIR\custom matrices\Soulhunters V5.xcm"
   RMDir  "$INSTDIR\custom matrices"
   Delete "$INSTDIR\help\styles\geo-light.css"
   RMDir  "$INSTDIR\help\styles"
-  Delete "$INSTDIR\help\About+audio+decompressor.html"        
-  Delete "$INSTDIR\help\About+ffdshow.html"                   
-  Delete "$INSTDIR\help\About+video+compressor.html"          
-  Delete "$INSTDIR\help\About+video+decompressor.html"        
-  Delete "$INSTDIR\help\ac3filter.html"                       
-  Delete "$INSTDIR\help\avis.html"                            
-  Delete "$INSTDIR\help\AviSynth.html"                        
-  Delete "$INSTDIR\help\Credits.html"                         
-  Delete "$INSTDIR\help\DirectShow.html"                      
-  Delete "$INSTDIR\help\Encoding+library.html"                
-  Delete "$INSTDIR\help\ffavisynth.html"                      
-  Delete "$INSTDIR\help\ffdshow+audio+decoder.html"           
-  Delete "$INSTDIR\help\ffdshow+video+decoder.html"           
-  Delete "$INSTDIR\help\ffdshow+video+encoder.html"           
-  Delete "$INSTDIR\help\ffmpeg.html"                          
-  Delete "$INSTDIR\help\ffvdub.html"                          
-  Delete "$INSTDIR\help\FOURCC.html"                          
-  Delete "$INSTDIR\help\From+sources.html"                    
-  Delete "$INSTDIR\help\HomePage.html"                        
-  Delete "$INSTDIR\help\IDCT.html"                            
-  Delete "$INSTDIR\help\Installing+ffdshow.html"              
-  Delete "$INSTDIR\help\Keyboard+and+remote+control.html"     
-  Delete "$INSTDIR\help\Levels.html"                          
-  Delete "$INSTDIR\help\liba52.html"                          
-  Delete "$INSTDIR\help\libavcodec.html"                      
-  Delete "$INSTDIR\help\libdts.html"                          
-  Delete "$INSTDIR\help\libFAAD2.html"                        
-  Delete "$INSTDIR\help\libmad.html"                          
-  Delete "$INSTDIR\help\libmpeg2.html"                        
-  Delete "$INSTDIR\help\License.html"                         
-  Delete "$INSTDIR\help\makeAVIS.html"                        
-  Delete "$INSTDIR\help\Masking.html"                         
-  Delete "$INSTDIR\help\Miscellaneus+settings.html"           
-  Delete "$INSTDIR\help\Motion+estimation.html"               
-  Delete "$INSTDIR\help\mpadecfilter.html"                    
-  Delete "$INSTDIR\help\mplayer.html"                         
-  Delete "$INSTDIR\help\Noise.html"                           
-  Delete "$INSTDIR\help\Prepare+baseclasses+library.html"     
-  Delete "$INSTDIR\help\Quantization.html"                    
-  Delete "$INSTDIR\help\Subtitles.html"                       
-  Delete "$INSTDIR\help\tremor.html"                          
-  Delete "$INSTDIR\help\unrar.dll.html"                       
-  Delete "$INSTDIR\help\VFW.html"                             
-  Delete "$INSTDIR\help\Video+decoder+features.html"          
-  Delete "$INSTDIR\help\Video+encoder+features.html"          
-  Delete "$INSTDIR\help\VirtualDub.html"                      
-  Delete "$INSTDIR\help\Warpsharp.html"                        
-  Delete "$INSTDIR\help\x264.html"                            
-  Delete "$INSTDIR\help\XviD.html"                            
+  Delete "$INSTDIR\help\About+audio+decompressor.html"
+  Delete "$INSTDIR\help\About+ffdshow.html"
+  Delete "$INSTDIR\help\About+video+compressor.html"
+  Delete "$INSTDIR\help\About+video+decompressor.html"
+  Delete "$INSTDIR\help\ac3filter.html"
+  Delete "$INSTDIR\help\avis.html"
+  Delete "$INSTDIR\help\AviSynth.html"
+  Delete "$INSTDIR\help\Credits.html"
+  Delete "$INSTDIR\help\DirectShow.html"
+  Delete "$INSTDIR\help\Encoding+library.html"
+  Delete "$INSTDIR\help\ffavisynth.html"
+  Delete "$INSTDIR\help\ffdshow+audio+decoder.html"
+  Delete "$INSTDIR\help\ffdshow+video+decoder.html"
+  Delete "$INSTDIR\help\ffdshow+video+encoder.html"
+  Delete "$INSTDIR\help\ffmpeg.html"
+  Delete "$INSTDIR\help\ffvdub.html"
+  Delete "$INSTDIR\help\FOURCC.html"
+  Delete "$INSTDIR\help\From+sources.html"
+  Delete "$INSTDIR\help\HomePage.html"
+  Delete "$INSTDIR\help\IDCT.html"
+  Delete "$INSTDIR\help\Installing+ffdshow.html"
+  Delete "$INSTDIR\help\Keyboard+and+remote+control.html"
+  Delete "$INSTDIR\help\Levels.html"
+  Delete "$INSTDIR\help\liba52.html"
+  Delete "$INSTDIR\help\libavcodec.html"
+  Delete "$INSTDIR\help\libdts.html"
+  Delete "$INSTDIR\help\libFAAD2.html"
+  Delete "$INSTDIR\help\libmad.html"
+  Delete "$INSTDIR\help\libmpeg2.html"
+  Delete "$INSTDIR\help\License.html"
+  Delete "$INSTDIR\help\makeAVIS.html"
+  Delete "$INSTDIR\help\Masking.html"
+  Delete "$INSTDIR\help\Miscellaneus+settings.html"
+  Delete "$INSTDIR\help\Motion+estimation.html"
+  Delete "$INSTDIR\help\mpadecfilter.html"
+  Delete "$INSTDIR\help\mplayer.html"
+  Delete "$INSTDIR\help\Noise.html"
+  Delete "$INSTDIR\help\Prepare+baseclasses+library.html"
+  Delete "$INSTDIR\help\Quantization.html"
+  Delete "$INSTDIR\help\Subtitles.html"
+  Delete "$INSTDIR\help\tremor.html"
+  Delete "$INSTDIR\help\unrar.dll.html"
+  Delete "$INSTDIR\help\VFW.html"
+  Delete "$INSTDIR\help\Video+decoder+features.html"
+  Delete "$INSTDIR\help\Video+encoder+features.html"
+  Delete "$INSTDIR\help\VirtualDub.html"
+  Delete "$INSTDIR\help\Warpsharp.html"
+  Delete "$INSTDIR\help\x264.html"
+  Delete "$INSTDIR\help\XviD.html"
   RMDir  "$INSTDIR\help"
   Delete "$INSTDIR\dict\Czech.dic"
   Delete "$INSTDIR\dict\dicts.txt"
@@ -1119,7 +1119,7 @@ Section "Uninstall"
       ${EndIf}
     ${EndIf}
  noDeleteAvisynth:
-  StrCmp $VIRTUALDUBDIR "" noDeleteVirtualDub                              
+  StrCmp $VIRTUALDUBDIR "" noDeleteVirtualDub
   Delete "$VIRTUALDUBDIR\ffvdub.vdf"
     ${If} $VIRTUALDUBDIR != $INSTDIR
       ${If} $VDUB_MSVCR80_UNINST == '1'
@@ -1131,7 +1131,7 @@ Section "Uninstall"
     ${EndIf}
  noDeleteVirtualDub:
   !ifndef X64
-    StrCmp $DSCALERDIR "" noDeleteDScaler                              
+    StrCmp $DSCALERDIR "" noDeleteDScaler
     Delete "$DSCALERDIR\FLT_ffdshow.dll"
       ${If} $DSCALERDIR != $INSTDIR
         ${If} $DSCALER_MSVCR80_UNINST == '1'
@@ -1141,7 +1141,7 @@ Section "Uninstall"
         nodeleteVC80manifestD:
         ${EndIf}
       ${EndIf}
-   noDeleteDScaler:                             
+   noDeleteDScaler:
   !endif
   ; MUST REMOVE UNINSTALLER, too
   Delete "$INSTDIR\uninstall.exe"
@@ -1185,14 +1185,14 @@ Function .onInit
   add_dir:
 !endif
 
- !ifdef SIMPLE   
+ !ifdef SIMPLE
    !insertmacro MUI_INSTALLOPTIONS_EXTRACT "simple.ini"
  !else
    !insertmacro MUI_INSTALLOPTIONS_EXTRACT "codecvideo.ini"
    !insertmacro MUI_INSTALLOPTIONS_EXTRACT "codecaudio.ini"
    !insertmacro MUI_INSTALLOPTIONS_EXTRACT "filtersvideo.ini"
    !insertmacro MUI_INSTALLOPTIONS_EXTRACT "filtersaudio.ini"
- !endif 
+ !endif
 
 !ifndef CORE
   ReadRegStr $AVISYNTHDIR "HKLM" "SOFTWARE\Avisynth" "plugindir2_5"
@@ -1208,10 +1208,10 @@ Function .onInit
   ReadRegStr $VIRTUALDUBDIR ${MUI_LANGDLL_REGISTRY_ROOT} ${MUI_LANGDLL_REGISTRY_KEY} "pthVirtualDub"
   SectionSetFlags ${Sec_pluginVirtualDub} 1
   IfErrors errorPthVirtualDub noErrorPthVirtualDub
- errorPthVirtualDub: 
+ errorPthVirtualDub:
   StrCpy $VIRTUALDUBDIR $INSTDIR
   SectionSetFlags ${Sec_pluginVirtualDub} 0
- noErrorPthVirtualDub: 
+ noErrorPthVirtualDub:
   ClearErrors
 
   !ifndef X64
@@ -1227,10 +1227,10 @@ Function .onInit
   ;Language selection
   !ifndef SIMPLE
     !insertmacro MUI_LANGDLL_DISPLAY
-  !endif  
+  !endif
 
   SectionSetFlags ${Sec_ffdshow} 17
-  
+
   !ifdef SIMPLE
     StrCpy $R0 0
   !else
@@ -1271,13 +1271,13 @@ Function .onInit
     !insertmacro testcodec ffdshow_audio DTS ${IDFF_MOVIE_LIBDTS}  1
   !endif
   !insertmacro testcodec ffdshow_audio rawa    4                     0
-  
+
   !insertmacro testfilter ffdshow oqueue    1 multiThread
   !insertmacro testfilter ffdshow postproc  0 ispostproc
   !insertmacro testfilter ffdshow noise     0 isnoise
   !insertmacro testfilter ffdshow sharpen   0 xsharpen
   !insertmacro testfilter ffdshow subtitles 0 issubtitles
-   
+
   !insertmacro testfilter ffdshow_audio volume    0 isvolume
   !insertmacro testfilter ffdshow_audio equalizer 0 iseq
   !insertmacro testfilter ffdshow_audio mixer     0 ismixer
@@ -1335,7 +1335,7 @@ Function VFWRegSetup
   WriteRegStr HKLM SYSTEM\CurrentControlSet\Control\MediaResources\icm\vidc.ffds "FriendlyName" "ffdshow Video Codec"
   WriteINIStr $WINDIR\System.ini drivers32 vidc.ffds ff_vfw.dll
   Goto done
-    winnt: 
+    winnt:
     WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc" ff_vfw.dll "ffdshow Video Codec"
     WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers32" vidc.ffds ff_vfw.dll
   done:
@@ -1351,7 +1351,7 @@ Function un.VFWRegSetup
   DeleteRegKey HKLM SYSTEM\CurrentControlSet\Control\MediaResources\icm\vidc.ffds
   DeleteINIStr $WINDIR\System.ini drivers32 vidc.ffds
   Goto end
-    winnt1: 
+    winnt1:
     DeleteRegValue HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc" ff_vfw.dll
     DeleteRegValue HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers32" vidc.ffds
     Call un.vfwcleanup
@@ -1370,7 +1370,7 @@ Function VFWRegSetupAVIS
   WriteRegStr HKLM SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis FriendlyName "ffdshow ACM codec"
   WriteINIStr $WINDIR\System.ini drivers32 msacm.avis ff_acm.acm
   Goto done2
-    winnt2: 
+    winnt2:
     WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers32" msacm.avis ff_acm.acm
   done2:
   Pop $9
@@ -1385,7 +1385,7 @@ Function un.VFWRegSetupAVIS
   DeleteRegKey HKLM SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis
   DeleteINIStr $WINDIR\System.ini drivers32 msacm.avis
   Goto end2
-    winnt3: 
+    winnt3:
     DeleteRegValue HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers32" msacm.avis
     Call un.vfwcleanup
   end2:
@@ -1515,10 +1515,10 @@ Function CustomPageCodecAudio
   !insertmacro codecpageset codecaudio.ini FLAC 1
   !insertmacro codecpageset codecaudio.ini RAWA 1
   !insertmacro codecpagesetALLUSERS codecaudio.ini
-  
+
   !insertmacro MUI_HEADER_TEXT "$(DLG_CODECAUDIO_TITLE)" "$(DLG_CODECAUDIO_SUBTITLE)"
   !insertmacro MUI_INSTALLOPTIONS_DISPLAY "codecaudio.ini"
-  
+
   StrCpy $R2 2
   !insertmacro codecpageget codecaudio.ini MP2
   !insertmacro codecpageget codecaudio.ini MP3
@@ -1592,12 +1592,12 @@ Function CustomPageSimple
   !insertmacro MUI_INSTALLOPTIONS_WRITE "simple.ini" "Field 2" "State" 1
 customPageSimple_video_off:
 
-  StrCpy $R0        $DECODER_MP2   
-  IntOp  $R0 $R0 || $DECODER_MP3   
+  StrCpy $R0        $DECODER_MP2
+  IntOp  $R0 $R0 || $DECODER_MP3
   IntOp  $R0 $R0 || $DECODER_VORBIS
-  IntOp  $R0 $R0 || $DECODER_AC3   
-  IntOp  $R0 $R0 || $DECODER_DTS   
-  IntOp  $R0 $R0 || $DECODER_AAC   
+  IntOp  $R0 $R0 || $DECODER_AC3
+  IntOp  $R0 $R0 || $DECODER_DTS
+  IntOp  $R0 $R0 || $DECODER_AAC
   IntCmp $R0 0 customPageSimple_audio_off
   !insertmacro MUI_INSTALLOPTIONS_WRITE "simple.ini" "Field 3" "State" 1
 customPageSimple_audio_off:
@@ -1640,13 +1640,13 @@ customPageSimple_video_set_end:
 
   !insertmacro MUI_INSTALLOPTIONS_READ $R0 "simple.ini" "Field 3" "State"
   IntCmp $R0 0 customPageSimple_audio_set_off
-  StrCpy $DECODER_MP2    $DECODER_MP2_DEFDEC   
-  StrCpy $DECODER_MP3    $DECODER_MP3_DEFDEC   
+  StrCpy $DECODER_MP2    $DECODER_MP2_DEFDEC
+  StrCpy $DECODER_MP3    $DECODER_MP3_DEFDEC
   StrCpy $DECODER_VORBIS $DECODER_VORBIS_DEFDEC
-    StrCpy $DECODER_AC3    $DECODER_AC3_DEFDEC   
+    StrCpy $DECODER_AC3    $DECODER_AC3_DEFDEC
   !ifndef CORE
-    StrCpy $DECODER_DTS    $DECODER_DTS_DEFDEC   
-    StrCpy $DECODER_AAC    $DECODER_AAC_DEFDEC   
+    StrCpy $DECODER_DTS    $DECODER_DTS_DEFDEC
+    StrCpy $DECODER_AAC    $DECODER_AAC_DEFDEC
   !endif
   goto customPageSimple_audio_set_end
 customPageSimple_audio_set_off:
@@ -1694,7 +1694,7 @@ Function GetWindowsVersion
   "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
 
   IfErrors 0 lbl_winnt
-  
+
   ; we are not NT
   ReadRegStr $R0 HKLM \
   "SOFTWARE\Microsoft\Windows\CurrentVersion" VersionNumber

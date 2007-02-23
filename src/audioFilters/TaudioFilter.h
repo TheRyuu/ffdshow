@@ -23,7 +23,7 @@ private:
 protected:
  comptrQ<IffdshowDecAudio> deciA;
  virtual bool is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg);
- virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const=0; 
+ virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const=0;
  void* init(const TfilterSettingsAudio *cfg,TsampleFormat &sf,const void *bufIn,size_t numsamples,size_t samplestoalloc=0);
  TaudioFilters *parent;
 public:

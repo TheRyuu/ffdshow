@@ -277,7 +277,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, ULONG ulReason, LPVOID pv)
     	    // full unicode support is available or not.  Hence the
     	    // default will be the lowest common denominator - i.e. N/A
                 g_amPlatform = VER_PLATFORM_WIN32_WINDOWS; // win95 assumed in case GetVersionEx fails
-    
+
                 g_osInfo.dwOSVersionInfoSize = sizeof(g_osInfo);
                 if (GetVersionEx(&g_osInfo)) {
             	g_amPlatform = g_osInfo.dwPlatformId;
@@ -334,5 +334,9 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, ULONG ulReason, LPVOID pv)
 #endif
     return result;
 }
+
+
+
+
 
 

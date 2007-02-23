@@ -149,7 +149,7 @@ void x264_mc_mmxext_init( x264_mc_functions_t *pf )
     pf->avg[PIXEL_4x8]   = x264_pixel_avg_4x8_mmxext;
     pf->avg[PIXEL_4x4]   = x264_pixel_avg_4x4_mmxext;
     pf->avg[PIXEL_4x2]   = x264_pixel_avg_4x2_mmxext;
-    
+
     pf->avg_weight[PIXEL_16x16] = x264_pixel_avg_weight_16x16_mmxext;
     pf->avg_weight[PIXEL_16x8]  = x264_pixel_avg_weight_16x8_mmxext;
     pf->avg_weight[PIXEL_8x16]  = x264_pixel_avg_weight_8x16_mmxext;

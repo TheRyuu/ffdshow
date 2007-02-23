@@ -69,13 +69,13 @@ const char_t* TinfoBase::TinfoValueBase::getVal0(bool &wasChange,bool &splitline
        wasChange=true;
       }
      return s;
-    } 
+    }
    case IDFF_OSDtype_sourceFlnm:
     {
      strcpy(s,deci->getSourceName());
      wasChange=strcmp(s,olds)!=0;
      return s;
-    } 
+    }
    case IDFF_OSDtype_sourceFlnmWOpath:
     {
      const char_t *flnm=deci->getSourceName();
@@ -84,26 +84,26 @@ const char_t* TinfoBase::TinfoValueBase::getVal0(bool &wasChange,bool &splitline
      strcpy(s,pathend?pathend+1:flnm);
      wasChange=strcmp(s,olds)!=0;
      return s;
-    } 
+    }
    case IDFF_OSDtype_inCodecString:
     {
      deci->getInCodecString(s,countof(s));
      wasChange=strcmp(s,olds)!=0;
      return s;
-    } 
+    }
    case IDFF_OSDtype_outCodecString:
     {
      deci->getOutCodecString(s,countof(s));
      wasChange=strcmp(s,olds)!=0;
      return s;
-    } 
+    }
    case IDFF_OSDtype_exeflnm:
     {
      strcpy(s,deci->getExeflnm());
      wasChange=strcmp(s,olds)!=0;
      return s;
-    } 
-   default:        
+    }
+   default:
     {
      int val;
      HRESULT res=deci->getParam(item->type,&val);
@@ -149,7 +149,7 @@ TinfoBase::TinfoBase(IffdshowBase *Ideci):deci(Ideci)
    IDFF_OSDtype_outCodecString,_l("Output description"),_l("outd"),
    0
   };
- addItems(items); 
+ addItems(items);
 }
 
 void TinfoBase::addItems(const TinfoItem *Iitems)
@@ -223,7 +223,7 @@ const char_t* TinfoDec::TinfoValueDec::getVal0(bool &wasChange,bool &splitline)
      {
       char_t encoder[100]=_l("unknown");
       deciD->getEncoderInfo(encoder,100);
-      tsprintf(s,_l("%s"),encoder); 
+      tsprintf(s,_l("%s"),encoder);
       wasChange=true;
      }
     return s;
@@ -242,7 +242,7 @@ const char_t* TinfoDec::TinfoValueDec::getVal0(bool &wasChange,bool &splitline)
      tsprintf(s,bps==-1?_l("N/A"):_l("%i kbps"),bps);
      wasChange=true;
      return s;
-    } 
+    }
    default:
     return TinfoValueBase::getVal0(wasChange,splitline);
   }
@@ -252,7 +252,7 @@ const char_t* TinfoDec::TinfoValueDec::getVal0(bool &wasChange,bool &splitline)
 TinfoDecVideo::TinfoDecVideo(IffdshowBase *Ideci):
  TinfoDec(Ideci),
  deciV(comptrQ<IffdshowDecVideo>(deci))
-{ 
+{
  static const TinfoItem items[]=
   {
    IDFF_OSDtype_inputSize,_l("Input size"),_l("idim"),
@@ -291,7 +291,7 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getInputSize(char_t *s,bool &wa
    tsprintf(s,_l("%ux%u"),dx,dy);
    wasChange=true;
   }
- oldDx=dx;oldDy=dy; 
+ oldDx=dx;oldDy=dy;
  return s;
 }
 const char_t* TinfoDecVideo::TinfoValueDecVideo::getInputAspect(char_t *s,bool &wasChange)
@@ -304,15 +304,15 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getInputAspect(char_t *s,bool &
    if (sarOk)
     tsprintf(s,_l("SAR: %u/%u, "),sar1,sar2);
    else
-    tsprintf(s,_l("SAR: N/A, ")); 
+    tsprintf(s,_l("SAR: N/A, "));
    if (darOk)
     strcatf(s,_l("DAR: %u/%u"),dar1,dar2);
    else
-    strcatf(s,_l("DAR: N/A")); 
-   wasChange=true; 
-  }  
+    strcatf(s,_l("DAR: N/A"));
+   wasChange=true;
+  }
  oldSar1=sar1;oldSar2=sar2;oldDar1=dar1;oldDar2=dar2;
- return s; 
+ return s;
 }
 const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &splitline)
 {
@@ -345,7 +345,7 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
      getInputAspect(aspectStr,wasChangeAspect);
      if (wasChange=(wasChangeSize || wasChangeAspect))
       tsprintf(s,_l("%s, %s"),sizeStr,aspectStr);
-     return s; 
+     return s;
     }
    case IDFF_OSDtype_meanQuant:
     {
@@ -373,13 +373,13 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
       {
        tsprintf(s,_l("%02i:%02i:%02i"),val/3600,(val/60)%60,val%60);
        wasChange=true;
-      } 
+      }
      else
       {
        strcpy(s,_l("failed"));
        wasChange=false;
-      } 
-     return s; 
+      }
+     return s;
     }
    case IDFF_OSDtype_remainingFrameTime:
     {
@@ -388,13 +388,13 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
       {
        tsprintf(s,_l("%02i:%02i:%02i"),val/3600,(val/60)%60,val%60);
        wasChange=true;
-      } 
+      }
      else
       {
        strcpyf(s,_l("failed"));
        wasChange=false;
-      } 
-     return s; 
+      }
+     return s;
     }
    case IDFF_OSDtype_accurDeblock:
     if (olds[0]=='\0')
@@ -402,7 +402,7 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
       tsprintf(s,deciV->quantsAvailable()==S_OK?_l("yes"):_l("no"));
       wasChange=true;
      }
-    return s;  
+    return s;
    case IDFF_OSDtype_inputFPS:
     {
      unsigned int fps1000;
@@ -410,15 +410,15 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
       s[0]='\0';
      else
       tsprintf(s,_l("%-7.3f"),float(fps1000/1000.0));
-     wasChange=strcmp(s,olds)!=0; 
-     return s; 
+     wasChange=strcmp(s,olds)!=0;
+     return s;
     }
    case IDFF_OSDtype_inputFOURCC:
     {
      fourcc2str(deciV->getMovieFOURCC(),s,countof(s));
      wasChange=strcmp(s,olds)!=0;
      return s;
-    } 
+    }
    case IDFF_OSDtype_QueueCount:
     {
      int val= deciV->getQueuedCount();
@@ -486,12 +486,12 @@ TinfoDecVideoPict::TinfoDecVideoPict(IffdshowBase *Ideci):TinfoDecVideo(Ideci)
    IDFF_OSDtype_frameDuration,_l("Frame duration"),_l("fdur"),
    0
   };
- addItems(items);  
+ addItems(items);
 }
 
 //================================== TinfoDecAudio ===================================
 TinfoDecAudio::TinfoDecAudio(IffdshowBase *Ideci):TinfoDec(Ideci),deciA(comptrQ<IffdshowDecAudio>(deci))
-{ 
+{
  static const TinfoItem items[]=
   {
    IDFF_OSDtype_nchannels,_l("Number of channels"),_l("nch"),
@@ -521,7 +521,7 @@ const char_t* TinfoDecAudio::TinfoValueDecAudio::getVal0(bool &wasChange,bool &s
      wasChange=oldSampleFormat!=sampleFormat;
      oldSampleFormat=sampleFormat;
      return s;
-    } 
+    }
    case IDFF_OSDtype_sampleFrequency:
     {
      unsigned int freq;
@@ -530,7 +530,7 @@ const char_t* TinfoDecAudio::TinfoValueDecAudio::getVal0(bool &wasChange,bool &s
      wasChange=oldfreq!=freq;
      oldfreq=freq;
      return _itoa(freq,s,10);
-    } 
+    }
    case IDFF_OSDtype_nchannels:
     {
      unsigned int nchannels;
@@ -539,7 +539,7 @@ const char_t* TinfoDecAudio::TinfoValueDecAudio::getVal0(bool &wasChange,bool &s
      wasChange=oldnchannels!=nchannels;
      oldnchannels=nchannels;
      return _itoa(nchannels,s,10);
-    } 
+    }
    case IDFF_OSDtype_audioJitter:
     tsprintf(s,_l("%5i ms"),deciA->getJitter());
     wasChange=true;

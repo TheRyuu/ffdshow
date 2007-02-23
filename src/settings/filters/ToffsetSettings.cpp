@@ -38,7 +38,7 @@ ToffsetSettings::ToffsetSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
 {
  static const TintOptionT<ToffsetSettings> iopts[]=
   {
-   IDFF_isOffset          ,&ToffsetSettings::is    ,0,0,_l(""),1, 
+   IDFF_isOffset          ,&ToffsetSettings::is    ,0,0,_l(""),1,
      _l("isOffset"),0,
    IDFF_showOffset        ,&ToffsetSettings::show  ,0,0,_l(""),1,
      _l("showOffset"),1,
@@ -65,27 +65,27 @@ ToffsetSettings::ToffsetSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
      _l("transfFlip"),0,
    IDFF_transfMirror      ,&ToffsetSettings::mirror,0,0,_l(""),1,
      _l("transMirror"),0,
-   
+
    0
-  }; 
+  };
  addOptions(iopts);
 }
 
 void ToffsetSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
 {
  idffOnChange(idffs,filters,queue.temporary);
- 
+
  if (is && show)
   {
    if (!queue.temporary)
     {
      setOnChange(IDFF_transfFlip,filters,&Tfilters::onQueueChange);
      setOnChange(IDFF_transfMirror,filters,&Tfilters::onQueueChange);
-    } 
-   queueFilter<TimgFilterOffset>(filtersorder,filters,queue); 
+    }
+   queueFilter<TimgFilterOffset>(filtersorder,filters,queue);
    if (flip) queueFilter<TimgFilterFlip>(filtersorder,filters,queue);
    if (mirror) queueFilter<TimgFilterMirror>(filtersorder,filters,queue);
-  } 
+  }
 }
 void ToffsetSettings::createPages(TffdshowPageDec *parent) const
 {
@@ -103,6 +103,6 @@ bool ToffsetSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
  tsnprintf(tipS,len,_l("luma offset:[%i,%i] chroma offset:[%i,%i]"),Y_X,Y_Y,U_X,U_Y);
  if (flip) strncat(tipS,_l("\nflip"),len);
  if (mirror) strncat(tipS,_l("\nmirror"),len);
- tipS[len-1]='\0'; 
+ tipS[len-1]='\0';
  return true;
 }

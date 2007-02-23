@@ -137,7 +137,7 @@ void __cdecl done(void)
        free(n->second);
       }
      delete names;
-    } 
+    }
    proc->saveActivePreset(NULL);
    proc->end();
    proc->Release();

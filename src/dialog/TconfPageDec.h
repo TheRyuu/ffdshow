@@ -33,4 +33,4 @@ public:
  virtual void onNewFilter(void) {}
 };
 
-#endif 
+#endif

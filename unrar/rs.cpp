@@ -133,7 +133,7 @@ bool RSCoder::Decode(byte *Data,int DataSize,int *EraLoc,int EraSize)
     for (int I=0;I<ErrCount;I++)
     {
       int Loc=ErrorLocs[I],DLoc=MAXPAR-Loc,N=0;
-      for (int J=0;J<ParSize;J++) 
+      for (int J=0;J<ParSize;J++)
         N^=gfMult(PolD[J],gfExp[DLoc*J%MAXPAR]);
       int DataPos=DataSize-Loc-1;
       if (DataPos>=0 && DataPos<DataSize)

@@ -47,7 +47,7 @@ struct TdialogSettingsDecAudio :public TdialogSettingsDec
 {
 protected:
  virtual int getDefault(int id);
-public: 
+public:
  TdialogSettingsDecAudio(TintStrColl *Icoll,const char_t *Ireg_child=FFDSHOWDECAUDIO);
  int convolverLvWidth0,convolverLvWidth1,convolverLvWidth2,convolverLvSelected;
  int volumeDb;
@@ -61,7 +61,7 @@ struct TdialogSettingsEnc :public TdialogSettingsBase
 {
 protected:
  virtual int getDefault(int id);
-public: 
+public:
  TdialogSettingsEnc(TintStrColl *Icoll);
  int showGraph;
  int perfectDlgX,perfectDlgY;

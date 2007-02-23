@@ -8,12 +8,12 @@ struct TcubicTable
 {
 private:
  int table[1024];
-public: 
+public:
  TcubicTable(double A=-0.6);
  unsigned char interpolate(const unsigned char *src, stride_t stride, int x, int y)
   {
    __m64 mm0=_mm_cvtsi32_si64(*(int*)src);
-   __m64 mm7=_mm_setzero_si64();          
+   __m64 mm7=_mm_setzero_si64();
    __m64 mm1=_mm_cvtsi32_si64(*(int*)(src+stride));
    mm0=_mm_unpacklo_pi8(mm0,mm7);
    __m64 mm2=_mm_cvtsi32_si64(*(int*)(src+stride*2));
@@ -50,8 +50,8 @@ public:
    mm0=_mm_unpacklo_pi32(mm0,mm2);
    mm1=_mm_unpacklo_pi32(mm1,mm3);
 
-   mm0=_mm_add_pi32(mm0,mm4);   
-   mm1=_mm_add_pi32(mm1,mm4);   
+   mm0=_mm_add_pi32(mm0,mm4);
+   mm1=_mm_add_pi32(mm1,mm4);
 
    mm4=_mm_set1_pi32(0x0000ffff);
 

@@ -1705,7 +1705,7 @@ void ff_print_debug_info(MpegEncContext *s, AVFrame *pict){
      pict->play_flags=(s->quarter_sample?CODEC_FLAG_QPEL:0);
      pict->num_sprite_warping_points=s->num_sprite_warping_points;
      pict->real_sprite_warping_points=s->real_sprite_warping_points;
-    } 
+    }
 }
 
 #ifdef CONFIG_ENCODERS
@@ -5231,10 +5231,10 @@ static int estimate_qp(MpegEncContext *s, int dry_run){
         {
             extern float ff_adaptive_quantization(MpegEncContext *s, double q);
             s->current_picture_ptr->quality=s->current_picture.quality=ff_adaptive_quantization(s, s->current_picture.quality);
-        } 
+        }
         else
             ;//s->frame_qscale = s->current_picture.quality;
-    }    
+    }
     else {
         s->current_picture_ptr->quality=s->current_picture.quality = ff_rate_estimate_qscale(s,dry_run);
     }

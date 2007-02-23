@@ -13,22 +13,22 @@ typedef HACMSTREAM     FAR *LPHACMSTREAM;
 
 typedef struct tACMDRIVERDETAILSA
 {
-    DWORD           cbStruct;   
+    DWORD           cbStruct;
 
-    FOURCC          fccType;    
-    FOURCC          fccComp;    
+    FOURCC          fccType;
+    FOURCC          fccComp;
 
-    WORD            wMid;       
-    WORD            wPid;       
+    WORD            wMid;
+    WORD            wPid;
 
-    DWORD           vdwACM;     
-    DWORD           vdwDriver;  
+    DWORD           vdwACM;
+    DWORD           vdwDriver;
 
-    DWORD           fdwSupport; 
+    DWORD           fdwSupport;
     DWORD           cFormatTags;
     DWORD           cFilterTags;
 
-    HICON           hicon;      
+    HICON           hicon;
 
     char            szShortName[ACMDRIVERDETAILS_SHORTNAME_CHARS];
     char            szLongName[ACMDRIVERDETAILS_LONGNAME_CHARS];
@@ -40,22 +40,22 @@ typedef struct tACMDRIVERDETAILSA
 
 typedef struct tACMDRIVERDETAILSW
 {
-    DWORD           cbStruct;   
+    DWORD           cbStruct;
 
-    FOURCC          fccType;    
-    FOURCC          fccComp;    
+    FOURCC          fccType;
+    FOURCC          fccComp;
 
-    WORD            wMid;       
-    WORD            wPid;       
+    WORD            wMid;
+    WORD            wPid;
 
-    DWORD           vdwACM;     
-    DWORD           vdwDriver;  
+    DWORD           vdwACM;
+    DWORD           vdwDriver;
 
-    DWORD           fdwSupport; 
+    DWORD           fdwSupport;
     DWORD           cFormatTags;
     DWORD           cFilterTags;
 
-    HICON           hicon;      
+    HICON           hicon;
 
     WCHAR           szShortName[ACMDRIVERDETAILS_SHORTNAME_CHARS];
     WCHAR           szLongName[ACMDRIVERDETAILS_LONGNAME_CHARS];

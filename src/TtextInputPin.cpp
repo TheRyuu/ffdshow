@@ -25,7 +25,7 @@
 #include "matroskaSubs.h"
 #include "Tsubreader.h"
 #include "TsubtitlesSettings.h"
-               
+
 TtextInputPin::TtextInputPin(TffdshowDecVideo* pFilter,HRESULT* phr,const wchar_t *pinname,int Iid):
  CDeCSSInputPin(NAME("TtextInputPin"),pFilter,phr,pinname),
  id(Iid),
@@ -50,8 +50,8 @@ HRESULT TtextInputPin::CheckMediaType(const CMediaType *mtIn)
 {
  return (filter->getParam2(IDFF_subTextpin) || (mtIn->majortype==MEDIATYPE_DVD_ENCRYPTED_PACK && supdvddec)) &&
          (mtIn->majortype==MEDIATYPE_Text ||
-         (mtIn->majortype==MEDIATYPE_Subtitle && 
-          (mtIn->subtype==MEDIASUBTYPE_UTF8 || 
+         (mtIn->majortype==MEDIATYPE_Subtitle &&
+          (mtIn->subtype==MEDIASUBTYPE_UTF8 ||
            mtIn->subtype==MEDIASUBTYPE_VOBSUB ||
            mtIn->subtype==MEDIASUBTYPE_USF ||
            (mtIn->subtype==MEDIASUBTYPE_SSA  && supssa) ||
@@ -59,13 +59,13 @@ HRESULT TtextInputPin::CheckMediaType(const CMediaType *mtIn)
            (mtIn->subtype==MEDIASUBTYPE_ASS2 && supssa))
          ) ||
          (
-          ((mtIn->majortype==MEDIATYPE_DVD_ENCRYPTED_PACK && supdvddec) || 
-           mtIn->majortype==MEDIATYPE_MPEG2_PACK || 
-           mtIn->majortype==MEDIATYPE_MPEG2_PES || 
+          ((mtIn->majortype==MEDIATYPE_DVD_ENCRYPTED_PACK && supdvddec) ||
+           mtIn->majortype==MEDIATYPE_MPEG2_PACK ||
+           mtIn->majortype==MEDIATYPE_MPEG2_PES ||
            mtIn->majortype==MEDIATYPE_Video ||
-           mtIn->majortype==MEDIATYPE_Stream) && 
-          (mtIn->subtype==MEDIASUBTYPE_DVD_SUBPICTURE || 
-           mtIn->subtype==MEDIASUBTYPE_CVD_SUBPICTURE || 
+           mtIn->majortype==MEDIATYPE_Stream) &&
+          (mtIn->subtype==MEDIASUBTYPE_DVD_SUBPICTURE ||
+           mtIn->subtype==MEDIASUBTYPE_CVD_SUBPICTURE ||
            mtIn->subtype==MEDIASUBTYPE_SVCD_SUBPICTURE)
         ))?S_OK:VFW_E_TYPE_NOT_ACCEPTED;
 }
@@ -98,7 +98,7 @@ HRESULT TtextInputPin::SetMediaType(const CMediaType* mtIn)
      extradata=(unsigned char*)malloc(extradatasize);
      memcpy(extradata,extradataSrc,extradatasize);
     }
-   if (mtIn->subtype==MEDIASUBTYPE_UTF8) 
+   if (mtIn->subtype==MEDIASUBTYPE_UTF8)
     type=Tsubreader::SUB_SUBVIEWER|Tsubreader::SUB_ENC_UTF8;
    else if (mtIn->subtype==MEDIASUBTYPE_VOBSUB)
     type=Tsubreader::SUB_VOBSUB;
@@ -109,13 +109,13 @@ HRESULT TtextInputPin::SetMediaType(const CMediaType* mtIn)
   }
  else if (mtIn->majortype==MEDIATYPE_Text)
   type=Tsubreader::SUB_SUBVIEWER/*|Tsubreader::SUB_ENC_UTF8*/; //TODO: enable for mp4 subtitles?
- else 
+ else
   if (mtIn->subtype==MEDIASUBTYPE_DVD_SUBPICTURE)
    {
     if (mtIn->majortype==MEDIATYPE_Stream)
      needSegment=true;
     type=Tsubreader::SUB_DVD;
-   } 
+   }
   else if (mtIn->subtype==MEDIASUBTYPE_CVD_SUBPICTURE)
    type=Tsubreader::SUB_CVD;
   else if (mtIn->subtype==MEDIASUBTYPE_SVCD_SUBPICTURE)
@@ -147,7 +147,7 @@ STDMETHODIMP TtextInputPin::EndOfStream(void)
 {
  return S_OK;
 }
-STDMETHODIMP TtextInputPin::BeginFlush(void) 
+STDMETHODIMP TtextInputPin::BeginFlush(void)
 {
  return S_OK;
 }
@@ -202,10 +202,10 @@ HRESULT TtextInputPin::Receive(IMediaSample *pSample)
    firsttime=false;
    found=filter->initSubtitles(id,type,extradata,extradatasize);
   }
- 
+
  REFERENCE_TIME t1=-1,t2=-1;
  pSample->GetTime(&t1,&t2);
- 
+
  BYTE *data;
  pSample->GetPointer(&data);
  long datalen=pSample->GetActualDataLength();

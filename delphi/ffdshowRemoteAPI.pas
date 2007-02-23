@@ -35,11 +35,14 @@ const
   //returns current position in seconds
   WPRM_GETCURTIME=8;
 
-  //WM_COPYDATA 
+  //WM_COPYDATA
   //COPYDATASTRUCT.dwData=
   COPY_PUTPARAMSTR    = 9; // lpData points to new param value
   COPY_SETACTIVEPRESET=10; // lpData points to new preset name
 implementation
 
 end.
+
+
+
 

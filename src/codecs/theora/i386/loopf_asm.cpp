@@ -46,12 +46,12 @@
 /****************************************************************************
 *  Module constants.
 *****************************************************************************
-*/        
+*/
 
 /****************************************************************************
 *  Explicit Imports
 *****************************************************************************
-*/              
+*/
 
 /****************************************************************************
 *  Exported Global Variables
@@ -61,26 +61,26 @@
 /****************************************************************************
 *  Exported Functions
 *****************************************************************************
-*/              
+*/
 
 /****************************************************************************
 *  Module Statics
 *****************************************************************************
-*/              
+*/
 
 /****************************************************************************
- * 
+ *
  *  ROUTINE       :     SetupBoundingValueArray_ForMMX
  *
- *  INPUTS        :      
- *                               
+ *  INPUTS        :
+ *
  *  OUTPUTS       :     None
  *
  *  RETURNS       :     None
  *
  *  FUNCTION      :     Applies a loop filter to the edge pixels of coded blocks.
  *
- *  SPECIAL NOTES :     
+ *  SPECIAL NOTES :
  *
  *
  *  ERRORS        :     None.
@@ -90,12 +90,12 @@ extern "C" void SetupBoundingValueArray_ForMMX(PB_INSTANCE *pbi, ogg_int32_t FLi
 {
     ogg_int32_t * BoundingValuePtr;
 
-     
+
     //    Since the FiltBoundingValue array is currently only used in the generic version, we are going
     //    to reuse this memory for our own purposes.
-    //    2 longs for limit, 2 longs for _4ONES, 2 longs for LFABS_MMX, and 8 longs for temp work storage 
-    
-    BoundingValuePtr = (ogg_int32_t *)((ogg_uint32_t)(&pbi->FiltBoundingValue[256]) & 0xffffffe0);    
+    //    2 longs for limit, 2 longs for _4ONES, 2 longs for LFABS_MMX, and 8 longs for temp work storage
+
+    BoundingValuePtr = (ogg_int32_t *)((ogg_uint32_t)(&pbi->FiltBoundingValue[256]) & 0xffffffe0);
 
     //expand for mmx code
     BoundingValuePtr[0] = BoundingValuePtr[1] = FLimit * 0x00010001;
@@ -105,18 +105,18 @@ extern "C" void SetupBoundingValueArray_ForMMX(PB_INSTANCE *pbi, ogg_int32_t FLi
     pbi->BoundingValuePtr=BoundingValuePtr;
 }
 /****************************************************************************
- * 
+ *
  *  ROUTINE       :     FilterHoriz_MMX
  *
  *  INPUTS        :     None
- *                               
+ *
  *  OUTPUTS       :     None
  *
  *  RETURNS       :     None
  *
  *  FUNCTION      :     Applies a loop filter to the vertical edge horizontally
  *
- *  SPECIAL NOTES :     
+ *  SPECIAL NOTES :
  *
  *
  *  ERRORS        :     None.
@@ -134,7 +134,7 @@ extern "C" void FilterHoriz_MMX(unsigned char * PixelPtr, ogg_int32_t LineLength
 
         unsigned char *ebx=PixelPtr;
         int         ecx=LineLength;            //stride
-        
+
         __m64 mm0,mm1,mm2,mm3,mm4,mm5,mm6,mm7;
 
         movd        (mm0,ebx + -2              );//xx xx xx xx 01 00 xx xx
@@ -256,7 +256,7 @@ extern "C" void FilterHoriz_MMX(unsigned char * PixelPtr, ogg_int32_t LineLength
         psubsw      (mm1,mm6                         );//abs(i)
         punpcklbw   (mm5,mm4);
 
-        por         (mm6,eax + FOURONES_OFFSET     );//now have -1 or 1 
+        por         (mm6,eax + FOURONES_OFFSET     );//now have -1 or 1
         movq        (mm3,mm2);
 
         punpcklbw   (mm7,mm4);
@@ -265,7 +265,7 @@ extern "C" void FilterHoriz_MMX(unsigned char * PixelPtr, ogg_int32_t LineLength
         movq        (mm4,mm3);
         psraw       (mm3,15);
 
-        //push        ebp                        
+        //push        ebp
     //-
 
         psubw       (mm5,mm7                         );//x = p0 - pms
@@ -312,7 +312,7 @@ extern "C" void FilterHoriz_MMX(unsigned char * PixelPtr, ogg_int32_t LineLength
         psraw       (mm0,15);
 
 //values to write out
-        punpcklbw   (mm3,mm7                     );//32 31 22 21 12 11 02 01                    
+        punpcklbw   (mm3,mm7                     );//32 31 22 21 12 11 02 01
         movq        (mm7,mm0                     );//save sign
 
         unsigned int ebp;
@@ -330,7 +330,7 @@ extern "C" void FilterHoriz_MMX(unsigned char * PixelPtr, ogg_int32_t LineLength
         *(uint16_t*)(ebx + ecx + 1)=ebp;
         psrlq       (mm3,32                      );//xx xx xx xx 32 31 22 21
 
-        por         (mm7,eax + FOURONES_OFFSET                );//now have -1 or 1 
+        por         (mm7,eax + FOURONES_OFFSET                );//now have -1 or 1
         psubw       (mm5,mm1                     );//limit - abs(i)
 
         movd        ((int&)ebp,mm3                     );//32 31 22 21
@@ -398,18 +398,18 @@ extern "C" void FilterHoriz_MMX(unsigned char * PixelPtr, ogg_int32_t LineLength
     //-
 }
 /****************************************************************************
- * 
+ *
  *  ROUTINE       :     FilterVert_MMX
  *
  *  INPUTS        :     None
- *                               
+ *
  *  OUTPUTS       :     None
  *
  *  RETURNS       :     None
  *
  *  FUNCTION      :     Applies a loop filter to a horizontal edge vertically
  *
- *  SPECIAL NOTES :     
+ *  SPECIAL NOTES :
  *
  *
  *  ERRORS        :     None.
@@ -428,7 +428,7 @@ extern "C" void FilterVert_MMX(unsigned char * PixelPtr, ogg_int32_t LineLength,
         unsigned char *ebx=(unsigned char*)PixelPtr;
         int         ecx=ms;                    //negative stride
         __m64 mm0,mm1,mm2,mm3,mm4,mm5,mm6,mm7;
-        movd        (mm1,ebx + 0               );//p0   
+        movd        (mm1,ebx + 0               );//p0
         pxor        (mm4,mm4);
 
         movd        (mm0,ebx + ecx             );//get row above -- pms
@@ -455,7 +455,7 @@ extern "C" void FilterVert_MMX(unsigned char * PixelPtr, ogg_int32_t LineLength,
         movq        (mm2,eax + LIMIT_OFFSET                 );//get the limit value
         paddw       (mm6,mm1);
 
-        movd        (mm5,ebx + 4               );//p0   
+        movd        (mm5,ebx + 4               );//p0
         psraw       (mm6,3                       );//values to be clipped
 
         movq        (mm1,mm6  );
@@ -470,7 +470,7 @@ extern "C" void FilterVert_MMX(unsigned char * PixelPtr, ogg_int32_t LineLength,
         punpcklbw   (mm5,mm0);
         movq        (mm3,mm2);
 
-        por         (mm6,eax + FOURONES_OFFSET                );//now have -1 or 1 
+        por         (mm6,eax + FOURONES_OFFSET                );//now have -1 or 1
         punpcklbw   (mm7,mm0);
 
         psubw       (mm3,mm1                     );//limit - abs(i)
@@ -503,7 +503,7 @@ extern "C" void FilterVert_MMX(unsigned char * PixelPtr, ogg_int32_t LineLength,
         paddw       (mm0,mm5);
         pxor        (mm6,mm6     );
 
-        movd        (mm7,ebx + 0               );//p0   
+        movd        (mm7,ebx + 0               );//p0
         psraw       (mm0,3                       );//values to be clipped
 
         movd        (mm3,ebx + ecx             );//get row above -- pms
@@ -533,7 +533,7 @@ extern "C" void FilterVert_MMX(unsigned char * PixelPtr, ogg_int32_t LineLength,
         psubsw      (mm1,mm0                     );//abs(i)
         movq        (mm5,mm2);
 
-        por         (mm7,eax + FOURONES_OFFSET                );//now have -1 or 1 
+        por         (mm7,eax + FOURONES_OFFSET                );//now have -1 or 1
         psubw       (mm5,mm1                     );//limit - abs(i)
 
         movq        (mm4,mm5);
@@ -545,7 +545,7 @@ extern "C" void FilterVert_MMX(unsigned char * PixelPtr, ogg_int32_t LineLength,
         psubsw      (mm4,mm5                     );//abs(limit - abs(i))
         pxor        (mm6,mm6);
 
-        movd        (mm5,ebx + 4               );//p0  
+        movd        (mm5,ebx + 4               );//p0
         psubusw     (mm2,mm4                     );//limit - abs(limit - abs(i))
 
         movd        (mm3,ebx + ecx + 4         );//pms

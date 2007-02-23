@@ -51,11 +51,11 @@ OBJS+=$(SRCS:.cpp=.o) $(SRCS_C:.c=.o) $(SRCS_NASM:.asm=.o) $(RESSRC:.rc=.res.o)
 ifeq ($(FORCECPP),1)
   ifeq ($(CC),icl)
     CFLAGS+=/TP
-  else 
+  else
   ifeq ($(CC),cl)
     CFLAGS+=/TP
   else
-    CFLAGS+=-x c++ 
+    CFLAGS+=-x c++
   endif
   endif
 endif
@@ -81,23 +81,23 @@ else
 endif
 
 .c.o:
-	$(FFDSHOW_PREFIX)$(CC) -c $(CFLAGS) $(OPTFLAGS) $(OUTPUTFLAG)$@ $< 
+	$(FFDSHOW_PREFIX)$(CC) -c $(CFLAGS) $(OPTFLAGS) $(OUTPUTFLAG)$@ $<
 
 .cpp.o:
-	$(FFDSHOW_PREFIX)$(CC) -c $(CFLAGS) $(CPPFLAGS) $(OPTFLAGS) $(OUTPUTFLAG)$@ $< 
+	$(FFDSHOW_PREFIX)$(CC) -c $(CFLAGS) $(CPPFLAGS) $(OPTFLAGS) $(OUTPUTFLAG)$@ $<
 
 %.o: %.asm
 	$(NASM) -f win32 -DPREFIX $(NASMFLAGS) -I$(<D)/ -o $@  $<
 
 ifeq ($(CC),icl)
-%.res.o: %.rc 
-	rc /Fo$@ $<
-else 
-ifeq ($(CC),cl)
-%.res.o: %.rc 
+%.res.o: %.rc
 	rc /Fo$@ $<
 else
-%.res.o: %.rc 
+ifeq ($(CC),cl)
+%.res.o: %.rc
+	rc /Fo$@ $<
+else
+%.res.o: %.rc
 	$(FFDSHOW_PREFIX)windres $< -o $@ -D_WIN32_IE=0x0500 -DIDCLOSE=8
 endif
 endif
@@ -116,7 +116,7 @@ $(SLIB):$(OBJS) $(DEF)
              /dll /machine:I386 /nodefaultlib \
              /def:"$(DEF)" \
              $(CLDLLENTRY) \
-             /out:$(SLIB) 
+             /out:$(SLIB)
 else
 $(SLIB): $(OBJS) $(DEF)
 	$(FFDSHOW_PREFIX)dllwrap -mno-cygwin --target=i386-mingw32 \
@@ -129,13 +129,13 @@ ifeq ($(CC),icl)
 $(SEXE): $(OBJS) $(DEF)
 	link $(OBJS) msvcrt.lib kernel32.lib oldnames.lib libircmt.lib libmmds.lib $(CLLIBS) $(ICLLIBS) \
              /machine:AMD64 /nodefaultlib \
-             /out:$(SEXE) 
+             /out:$(SEXE)
 else
 ifeq ($(CC),cl)
 $(SEXE): $(OBJS) $(DEF)
 	link $(OBJS) msvcrt.lib kernel32.lib oldnames.lib $(CLLIBS) \
              /machine:I386 /nodefaultlib \
-             /out:$(SEXE) 
+             /out:$(SEXE)
 else
 $(SEXE): $(OBJS)
 	$(FFDSHOW_PREFIX)$(CC) -mno-cygwin --target=i386-mingw32 \

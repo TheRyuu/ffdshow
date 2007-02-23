@@ -835,8 +835,8 @@ local int build_bl_tree(
  */
 local void send_all_trees(
     deflate_state *s,
-    int lcodes, 
-    int dcodes, 
+    int lcodes,
+    int dcodes,
     int blcodes) /* number of codes for each tree */
 {
     int rank;                    /* index in bl_order */

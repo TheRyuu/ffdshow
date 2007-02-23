@@ -26,7 +26,7 @@ static void copy8x8__mmx (unsigned char *src,
       __m64 mm0,mm1,mm2,mm3;
 
       movq        (src, mm0          );
-      movq        (src+ stride, mm1  );   
+      movq        (src+ stride, mm1  );
       movq        (src+ stride*2, mm2);
       movq        (src+ stride*3, mm3);
 
@@ -62,7 +62,7 @@ static void recon_intra8x8__mmx (unsigned char *ReconPtr, ogg_int16_t *ChangePtr
        movq         (ChangePtr, mm2);         /* First four input values */
 
        packsswb    (4+ChangePtr, mm2);         /* pack with next(high) four values */
-       por         (mm0, mm0);         
+       por         (mm0, mm0);
        pxor        (mm0, mm2);         /* Convert result to unsigned (same as add 128) */
        ChangePtr+=8;// lea         16(ChangePtr), ChangePtr           /* Step source buffer */
        //cmp         edi, ChangePtr            /* are we done */
@@ -81,7 +81,7 @@ static void recon_inter8x8__mmx (unsigned char *ReconPtr, unsigned char *RefPtr,
   {
    movq        (RefPtr, mm2);          /* (+3 misaligned) 8 reference pixels */
    movq        (ChangePtr, mm4);          /* first 4 changes */
-   movq        (mm2, mm3);        
+   movq        (mm2, mm3);
    movq        (4+ChangePtr, mm5);         /* last 4 changes */
    punpcklbw   (mm0, mm2);         /* turn first 4 refs into positive 16-bit #s */
    paddsw      (mm4, mm2);         /* add in first 4 changes */
@@ -103,9 +103,9 @@ static void recon_inter8x8_half__mmx (unsigned char *ReconPtr, unsigned char *Re
         movq        (RefPtr1, mm2);          /* (+3 misaligned) 8 reference pixels */
         movq        (RefPtr2, mm4);          /* (+3 misaligned) 8 reference pixels */
 
-        movq        (mm2, mm3);        
+        movq        (mm2, mm3);
         punpcklbw   (mm0, mm2);         /* mm2 = start ref1 as positive 16-bit #s */
-        movq        (mm4, mm5);        
+        movq        (mm4, mm5);
         movq        (ChangePtr, mm6);          /* first 4 changes */
         punpckhbw   (mm0, mm3);         /* mm3 = end ref1 as positive 16-bit #s */
         movq        (4+ChangePtr, mm7);         /* last 4 changes */
@@ -133,4 +133,8 @@ void dsp_i386_mmx_recon_init(DspFunctions *funcs)
   funcs->recon_inter8x8 = recon_inter8x8__mmx;
   funcs->recon_inter8x8_half = recon_inter8x8_half__mmx;
 }
+
+
+
+
 

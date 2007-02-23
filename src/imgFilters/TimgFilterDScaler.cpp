@@ -25,7 +25,7 @@
 #include "Tconfig.h"
 #include "TDScalerSettings.h"
 
-//========================= Tdscaler_FLT ========================== 
+//========================= Tdscaler_FLT ==========================
 Tdscaler_FLT::Tdscaler_FLT(const char_t *fltflnm,IffdshowBase *deci)
 {
  hi=HINSTANCE(deci->getInstance2());
@@ -39,7 +39,7 @@ Tdscaler_FLT::Tdscaler_FLT(const char_t *fltflnm,IffdshowBase *deci)
    fm->bActive=1;
    settings=new TDScalerSettings(deci,fm->nSettings,fm->pSettings);
   }
- else 
+ else
   {
    fm=NULL;
    settings=NULL;
@@ -52,7 +52,7 @@ Tdscaler_FLT::~Tdscaler_FLT()
  if (f) delete f;
 }
 
-//============================== TimgFilterDScaler ========================= 
+//============================== TimgFilterDScaler =========================
 TimgFilterDScalerFLT::TimgFilterDScalerFLT(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
  oldfltflnm[0]='\0';oldfltcfg[0]='\0';
@@ -124,24 +124,24 @@ HRESULT TimgFilterDScalerFLT::process(TfilterQueue::iterator it,TffPict &pict,co
       }
      di.SourceRect=pictRect;
      di.OverlayPitch=(DWORD)stride1[0];
-     di.FrameWidth=dx1[0];               
+     di.FrameWidth=dx1[0];
      di.LineLength=di.FrameWidth*2;
      di.FrameHeight=dy1[0];
      di.FieldHeight=dy1[0];
      di.DestRect=pictRect;
      di.InputPitch=(long)stride1[0];
      di.PictureHistory[0]->IsFirstInSeries=1;
-    }  
+    }
    di.PictureHistory[0]->Flags=PICTURE_PROGRESSIVE;
    TffPict::copy(di.PictureHistory[0]->pData,stride1[0],srcYUY2,stride1[0],dx1[0]*2,dy1[0]);
    unsigned char *dstYUV;
    getNext(FF_CSP_YUY2,pict,cfg->full,&dstYUV,NULL,NULL,NULL);
    di.Overlay=dstYUV;
-   
+
    deciV->lock(IDFF_lockDScaler);
    flt->fm->pfnAlgorithm(&di);
    deciV->unlock(IDFF_lockDScaler);
-   
+
    di.PictureHistory[0]->IsFirstInSeries=0;
    TffPict::copy(dstYUV,stride2[0],di.PictureHistory[0]->pData,stride1[0],dx1[0]*2,dy1[0]);
    if (flt->fm->HistoryRequired>1)
@@ -149,7 +149,7 @@ HRESULT TimgFilterDScalerFLT::process(TfilterQueue::iterator it,TffPict &pict,co
      TPicture *p=di.PictureHistory[flt->fm->HistoryRequired-1];
      memmove(di.PictureHistory+1,di.PictureHistory,(flt->fm->HistoryRequired-1)*sizeof(TPicture*));
      di.PictureHistory[0]=p;
-    } 
-  }  
+    }
+  }
  return parent->deliverSample(++it,pict);
 }

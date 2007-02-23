@@ -49,7 +49,7 @@ void TimgFilterPerspective::initPv(int W, int H,bool src,int border)
      - (ref[0][0] - ref[1][0] - ref[2][0] + ref[3][0])*(ref[1][1] - ref[3][1]))*W;
  D=   (ref[1][0] - ref[3][0])*(ref[2][1] - ref[3][1])
     - (ref[2][0] - ref[3][0])*(ref[1][1] - ref[3][1]);
- 
+
  a= D*(ref[1][0] - ref[0][0])*H + g*ref[1][0];
  b= D*(ref[2][0] - ref[0][0])*W + h*ref[2][0];
  c= D*ref[0][0]*W*H;
@@ -65,21 +65,21 @@ void TimgFilterPerspective::initPv(int W, int H,bool src,int border)
     double uu,vv;
     uu=(a*x + b*y + c)/(g*x + h*y + D*W*H);
     vv=(d*x + e*y + f)/(g*x + h*y + D*W*H);
-   
+
     u= (int)floor( SUB_PIXELS*uu + 0.5);
     v= (int)floor( SUB_PIXELS*vv + 0.5);
     if (src)
      {
       pv[x + y*W][0]=isIn(u>>SUB_PIXEL_BITS,0,W-1)?u:-1;
       pv[x + y*W][1]=isIn(v>>SUB_PIXEL_BITS,0,H-1)?v:-1;
-     } 
-    else 
+     }
+    else
      if (uu>=border && uu<W-border && vv>=border && vv<H-border)
       {
        int i=(int)(limit<double>(floor(uu+0.5),0,W-1)+limit<double>(floor(vv+0.5),0,H-1)*W);
        pv[i][0]=(int)floor(SUB_PIXELS*x+0.5);
        pv[i][1]=(int)floor(SUB_PIXELS*y+0.5);
-      } 
+      }
    }
 }
 void TimgFilterPerspective::resampleNone(uint8_t *dst, stride_t dstStride, const uint8_t *src, stride_t srcStride, int w, int h, int chromaX,int chromaY,unsigned char black)
@@ -168,7 +168,7 @@ HRESULT TimgFilterPerspective::process(TfilterQueue::iterator it,TffPict &pict,c
  getCur(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,&srcY,&srcU,&srcV,NULL);
  unsigned char *dstY,*dstU,*dstV;
  getNext(csp1,pict,cfg->full,&dstY,&dstU,&dstV,NULL);
- 
+
  if (!pv || !cfg->equal(old))
   {
    old=*cfg;

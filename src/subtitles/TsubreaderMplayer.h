@@ -119,10 +119,10 @@ private:
    const TSubtitleProps* getProps(const ffstring &style);
    void add(Tstyle &style);
   };
- Tstyles styles; 
+ Tstyles styles;
  typedef std::vector<ffstring Tstyle::*> TstyleFormat;
  TstyleFormat styleFormat;
- 
+
  struct Tevent
   {
    ffstring dummy;

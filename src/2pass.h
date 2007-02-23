@@ -15,10 +15,10 @@ struct NNSTATS
  int mk_u, mk_y;
  int md_u, md_y;
 
- // q used for this frame set bit 31 for keyframe 
+ // q used for this frame set bit 31 for keyframe
  int quant;
 
- // key, motion, not-coded macroblocks 
+ // key, motion, not-coded macroblocks
  int kblk, mblk, ublk;
 
  // lum_noise is actually a double (as 8 bytes) for some reason msvc6.0 stores doubles as 12 bytes!? lum_noise is not used so it doesnt matter
@@ -65,15 +65,15 @@ private:
    DLG_MODE_2PASS_1=ENC_MODE::PASS2_1,
    DLG_MODE_2PASS_2_EXT=ENC_MODE::PASS2_2_EXT,
    DLG_MODE_2PASS_2_INT=ENC_MODE::PASS2_2_INT
-  }; 
+  };
  enum
-  { 
+  {
    CREDITS_MODE_RATE=CREDITS_MODE::PERCENT,
    CREDITS_MODE_QUANT=CREDITS_MODE::QUANT,
    CREDITS_MODE_SIZE=CREDITS_MODE::SIZE
   };
  enum
-  { 
+  {
    CREDITS_START=CREDITS_POS::START,
    CREDITS_END=CREDITS_POS::END
   };
@@ -83,9 +83,9 @@ protected:
  virtual void DEBUGERR(const char_t*) {}
  virtual void DEBUG2P(const char_t*s) {}
  virtual int codec_is_in_credits(int framenum) {return 0;}
-  
+
  struct
-  { 
+  {
    int bytes1;
    int bytes2;
    int desired_bytes2;
@@ -117,14 +117,14 @@ protected:
    int nns_array_length;
    int nns_array_pos;
   } twopass;
-  
+
  int framenum;
-  
+
  int codec_2pass_init(void);
  int codec_2pass_get_quant(TencFrameParams *frame);
  int codec_2pass_update(const TencFrameParams *frame);
  void codec_2pass_finish(void);
-public: 
+public:
  enum
   {
    NNSTATS_QUANTMASK=127,
@@ -140,7 +140,7 @@ public:
  virtual void writeInfo(const TencFrameParams &frame) {};
  virtual bool update(const TencFrameParams &frame)=0;
 
- struct 
+ struct
   {
    int thresh;
    int percent;
@@ -164,7 +164,7 @@ private:
  void start(void);
 protected:
  virtual void DEBUG2P(const char_t*s);
-public: 
+public:
  T2passSecond(IffdshowEnc *IdeciE,bool Iquiet=false);
  T2passSecond(IffdshowEnc *IdeciE,TxvidStats *statsRead,TxvidStats *statsRead2,TxvidStats *statsWrite,bool Iquiet=false);
  virtual ~T2passSecond();

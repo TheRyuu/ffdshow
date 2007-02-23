@@ -22,7 +22,7 @@
 #include "ffdebug.h"
 
 const char_t* Tlibavcodec::idctNames[]=
-{                    
+{
  _l("auto"),
  _l("libmpeg2"),
  _l("simple MMX"),
@@ -36,8 +36,8 @@ const char_t* Tlibavcodec::errorResiliences[]=
 {
  _l("none"),
  _l("careful"),
- _l("compliant"),    
- _l("aggressive"),   
+ _l("compliant"),
+ _l("aggressive"),
  _l("very aggressive"),
  NULL
 };
@@ -75,7 +75,7 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
    dec_only=true;
   }
  else
-  dec_only=false; 
+  dec_only=false;
  dll->loadFunction(avcodec_init,"avcodec_init");
  dll->loadFunction(dsputil_init,"dsputil_init");
  dll->loadFunction(avcodec_register_all,"avcodec_register_all");
@@ -105,19 +105,19 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(avcodec_default_release_buffer,"avcodec_default_release_buffer");
  dll->loadFunction(avcodec_default_reget_buffer,"avcodec_default_reget_buffer");
  dll->loadFunction(avcodec_get_current_idct,"avcodec_get_current_idct");
- 
+
  if (!dec_only)
   {
    dll->loadFunction(avcodec_find_encoder,"avcodec_find_encoder");
    dll->loadFunction(avcodec_encode_video,"avcodec_encode_video");
    dll->loadFunction(avcodec_encode_audio,"avcodec_encode_audio");
-  } 
+  }
  else
   {
    avcodec_find_encoder=NULL;
    avcodec_encode_video=NULL;
    avcodec_encode_audio=NULL;
-  } 
+  }
 
  ok=dll->ok;
 
@@ -152,7 +152,7 @@ AVCodecContext* Tlibavcodec::avcodec_alloc_context(TlibavcodecExt *ext)
  ctx->dsp_mask=Tconfig::lavc_cpu_flags;
  if (ext)
   ext->connectTo(ctx,this);
- ctx->postgain=1.0f; 
+ ctx->postgain=1.0f;
  ctx->scenechange_factor=1;
  return ctx;
 }
@@ -171,7 +171,7 @@ bool Tlibavcodec::getVersion(const Tconfig *config,ffstring &vers,ffstring &lice
 {
  const char *x=text<char>("aaa");
  Tdll *dl=new Tdll(_l("libavcodec.dll"),config);
- if (!dl->ok) 
+ if (!dl->ok)
   {
    delete dl;
    dl=new Tdll(_l("libavcodec_dec.dll"),config);
@@ -179,7 +179,7 @@ bool Tlibavcodec::getVersion(const Tconfig *config,ffstring &vers,ffstring &lice
  void (*av_getVersion)(char **version,char **build,char **datetime,const char* *license);
  dl->loadFunction(av_getVersion,"getVersion");
  bool res;
- if (av_getVersion) 
+ if (av_getVersion)
   {
    res=true;
    char *version,*build,*datetime;const char *lic;
@@ -187,13 +187,13 @@ bool Tlibavcodec::getVersion(const Tconfig *config,ffstring &vers,ffstring &lice
    vers=(const char_t*)text<char_t>(version)+/*ffstring(", build ")+build+*/ffstring(_l(" ("))+(const char_t*)text<char_t>(datetime)+_l(")");
    license=text<char_t>(lic);
   }
- else 
+ else
   {
    res=false;
    vers.clear();
    license.clear();
-  } 
- delete dl;  
+  }
+ delete dl;
  return res;
 }
 bool Tlibavcodec::check(const Tconfig *config)

@@ -71,8 +71,8 @@ TffdshowBase::TffdshowBase(LPUNKNOWN pUnk,TintStrColl *Ioptions,TglobalSettingsB
 {
  DPRINTF(_l("TffdshowBase::Constructor"));
  randomize();
- 
- Ioptions->setSendOnChange(fastdelegate::MakeDelegate(this,&TffdshowBase::sendOnChange)); 
+
+ Ioptions->setSendOnChange(fastdelegate::MakeDelegate(this,&TffdshowBase::sendOnChange));
  static const TintOptionT<TffdshowBase> iopts[]=
   {
    IDFF_alwaysOnTop  ,&TffdshowBase::cfgDlgAlwaysOnTop ,0,0,_l(""),0,NULL,0,
@@ -84,7 +84,7 @@ TffdshowBase::TffdshowBase(LPUNKNOWN pUnk,TintStrColl *Ioptions,TglobalSettingsB
  addOptions(iopts);
  setOnChange(IDFF_lang,this,&TffdshowBase::onLangChange);
  setOnChange(IDFF_trayIcon,this,&TffdshowBase::onTrayIconChange);
- 
+
  config.init1(g_hInst);
  globalSettings->load();
  config.initCPU(globalSettings->allowedCPUflags);
@@ -100,7 +100,7 @@ TffdshowBase::TffdshowBase(LPUNKNOWN pUnk,TintStrColl *Ioptions,TglobalSettingsB
  libmplayer=NULL;libavcodec=NULL;
  dbgfile=NULL;
  notreg=false;
- moviesecs=-1; 
+ moviesecs=-1;
  memset(locks,0,sizeof(locks));
  pdwROT=0;
  curEnumInfo=enumInfos.begin();
@@ -128,12 +128,12 @@ STDMETHODIMP TffdshowBase::getParam(unsigned int paramID,int* value)
   {
    *value=0;
    return S_FALSE;
-  } 
+  }
 }
 STDMETHODIMP_(int) TffdshowBase::getParam2(unsigned int paramID)
 {
  int val;
- return getParam(paramID,&val)==S_OK?val:0; 
+ return getParam(paramID,&val)==S_OK?val:0;
 }
 STDMETHODIMP TffdshowBase::putParam(unsigned int paramID,int val)
 {
@@ -157,12 +157,12 @@ STDMETHODIMP TffdshowBase::getParamStr(unsigned int paramID,char_t *buf,size_t b
    strncpy(buf,bufPtr,buflen);
    buf[buflen-1]='\0';
    return S_OK;
-  } 
+  }
  else
   {
    buf[0]='\0';
    return S_FALSE;
-  } 
+  }
 }
 STDMETHODIMP TffdshowBase::getParamStr3(unsigned int paramID,const char_t* *value)
 {
@@ -173,7 +173,7 @@ STDMETHODIMP TffdshowBase::getParamStr3(unsigned int paramID,const char_t* *valu
   {
    *value=NULL;
    return S_FALSE;
-  } 
+  }
 }
 STDMETHODIMP_(const char_t*) TffdshowBase::getParamStr2(unsigned int paramID)
 {
@@ -182,7 +182,7 @@ STDMETHODIMP_(const char_t*) TffdshowBase::getParamStr2(unsigned int paramID)
 }
 STDMETHODIMP TffdshowBase::putParamStr(unsigned int paramID,const char_t *buf)
 {
- if (!buf) return S_FALSE; 
+ if (!buf) return S_FALSE;
  return options->set(paramID,buf)?S_OK:S_FALSE;
 }
 
@@ -258,9 +258,9 @@ STDMETHODIMP TffdshowBase::setOnFrameMsg(HWND wnd,unsigned int msg)
 }
 void TffdshowBase::sendOnFrameMsg(void)
 {
- if (onFrameMsg) 
+ if (onFrameMsg)
   PostMessage(onFrameWnd,onFrameMsg,0,0);
-}  
+}
 STDMETHODIMP TffdshowBase::getGlobalSettings(TglobalSettingsBase* *globalSettingsPtr)
 {
  if (!globalSettingsPtr) return E_POINTER;
@@ -336,7 +336,7 @@ STDMETHODIMP TffdshowBase::initDialog(void)
    InitCommonControls();
    return onInitDialog();
   }
- else 
+ else
   return E_UNEXPECTED;
 }
 STDMETHODIMP TffdshowBase::doneDialog(void)
@@ -347,7 +347,7 @@ STDMETHODIMP TffdshowBase::doneDialog(void)
    return onDoneDialog();
   }
  else
-  return E_UNEXPECTED; 
+  return E_UNEXPECTED;
 }
 
 STDMETHODIMP TffdshowBase::showCfgDlg(HWND owner)
@@ -421,14 +421,14 @@ STDMETHODIMP TffdshowBase::getPostproc(Tlibmplayer* *postprocPtr)
  if (!libmplayer)
   libmplayer=new Tlibmplayer(&config);
  libmplayer->AddRef();
- *postprocPtr=libmplayer; 
+ *postprocPtr=libmplayer;
  return S_OK;
 }
 
 STDMETHODIMP TffdshowBase::dbgInit(void)
 {
  dbgDone();
- if (globalSettings->outputdebugfile && globalSettings->debugfile) 
+ if (globalSettings->outputdebugfile && globalSettings->debugfile)
   dbgfile=fopen(globalSettings->debugfile,_l("wt"));
  return S_OK;
 }
@@ -464,7 +464,7 @@ STDMETHODIMP TffdshowBase::dbgWrite(const char_t *fmt,...)
 }
 STDMETHODIMP TffdshowBase::dbgDone(void)
 {
- if (dbgfile) 
+ if (dbgfile)
   {
    fflush(dbgfile);fclose(dbgfile);
    dbgfile=NULL;
@@ -501,13 +501,13 @@ STDMETHODIMP TffdshowBase::getLibavcodec(Tlibavcodec* *libavcodecPtr)
 void TffdshowBase::onTrayIconChange(int id,int newval)
 {
  if (globalSettings->trayIcon && inExplorer()!=S_OK)
-  if (!trayHwnd) 
+  if (!trayHwnd)
    {
     unsigned threadID;
     CAMEvent ev;
     hTrayThread=(HANDLE)_beginthreadex(NULL,128*1024,(unsigned(__stdcall *)(void*))trayIconStart,&std::make_tuple((IffdshowBase*)this,&ev,&trayHwnd),0,&threadID);
     ev.Wait();
-   } 
+   }
 }
 
 STDMETHODIMP TffdshowBase::showTrayIcon(void)
@@ -517,7 +517,7 @@ STDMETHODIMP TffdshowBase::showTrayIcon(void)
 }
 STDMETHODIMP TffdshowBase::hideTrayIcon(void)
 {
- if (hTrayThread && trayHwnd) 
+ if (hTrayThread && trayHwnd)
   {
    SendMessage(trayHwnd,WM_CLOSE,0,0);
    //MsgWaitForMultipleObjects(1,&hTrayThread,TRUE,INFINITE,QS_ALLEVENTS);
@@ -525,7 +525,7 @@ STDMETHODIMP TffdshowBase::hideTrayIcon(void)
    trayHwnd=NULL;
    CloseHandle(hTrayThread); // Thanks, hartlerl.
    hTrayThread= NULL;
-  } 
+  }
  return S_OK;
 }
 
@@ -543,9 +543,9 @@ HRESULT TffdshowBase::onJoinFilterGraph(IFilterGraph *pGraph,LPCWSTR pName)
    res=mfilter->TransformJoinFilterGraph(pGraph,pName);
    if (res==S_OK)
     res=onGraphRemove();
-  } 
+  }
  return res;
-} 
+}
 
 HRESULT TffdshowBase::onGraphJoin(IFilterGraph *pGraph)
 {
@@ -565,16 +565,16 @@ HRESULT TffdshowBase::onGraphJoin(IFilterGraph *pGraph)
  if (globalSettings->addToROT && !pdwROT)
   {
    comptr<IRunningObjectTable> pROT;
-   if (SUCCEEDED(GetRunningObjectTable(0,&pROT))) 
+   if (SUCCEEDED(GetRunningObjectTable(0,&pROT)))
     {
      WCHAR wsz[256];
      wsprintfW(wsz, L"FilterGraph %08p pid %08x (ffdshow)", (DWORD_PTR)pGraph,GetCurrentProcessId());
      comptr<IMoniker> pMoniker;
-     if (SUCCEEDED(CreateItemMoniker(L"!",wsz,&pMoniker))) 
+     if (SUCCEEDED(CreateItemMoniker(L"!",wsz,&pMoniker)))
       pROT->Register(ROTFLAGS_REGISTRATIONKEEPSALIVE,(IUnknown*)pGraph,pMoniker,&pdwROT);
     }
   }
- return S_OK; 
+ return S_OK;
 }
 HRESULT TffdshowBase::onGraphRemove(void)
 {
@@ -583,11 +583,11 @@ HRESULT TffdshowBase::onGraphRemove(void)
  if (pdwROT)
   {
    comptr<IRunningObjectTable> pROT;
-   if (SUCCEEDED(GetRunningObjectTable(0,&pROT))) 
+   if (SUCCEEDED(GetRunningObjectTable(0,&pROT)))
     pROT->Revoke(pdwROT);
    pdwROT=0;
   }
- hideTrayIcon(); 
+ hideTrayIcon();
  return S_OK;
 }
 
@@ -609,9 +609,9 @@ HRESULT TffdshowBase::checkInputConnect(IPin *pin)
    mfilter->GetClassID(&clsid);
    if (searchPrevNextFilter(PINDIR_INPUT,pin,clsid))
     res=VFW_E_INVALID_DIRECTION;
-  } 
+  }
  else
-  { 
+  {
    PIN_INFO pi;
    if (globalSettings->multipleInstances==1 && SUCCEEDED(pin->QueryPinInfo(&pi)))
     {
@@ -620,8 +620,8 @@ HRESULT TffdshowBase::checkInputConnect(IPin *pin)
       res=VFW_E_INVALID_DIRECTION;
      pi.pFilter->Release();
     }
-  }  
- return res; 
+  }
+ return res;
 }
 
 STDMETHODIMP TffdshowBase::getGraph(IFilterGraph* *graphPtr)
@@ -640,8 +640,8 @@ double TffdshowBase::tell(void)
    REFTIME pos;
    return (mpos->get_CurrentPosition(&pos)==S_OK)?pos:-1;
   }
- else 
-  return S_FALSE;  
+ else
+  return S_FALSE;
 }
 STDMETHODIMP TffdshowBase::tell(int *seconds)
 {
@@ -666,7 +666,7 @@ STDMETHODIMP TffdshowBase::seek(int seconds)
    return res;
   }
  else
-  return S_FALSE;  
+  return S_FALSE;
 }
 int TffdshowBase::getDuration(void)
 {
@@ -678,14 +678,14 @@ int TffdshowBase::getDuration(void)
    return (int)duration;
   }
  else
-  return -1;  
+  return -1;
 }
 STDMETHODIMP TffdshowBase::stop(void)
 {
  if (!graph) return E_UNEXPECTED;
  if (comptrQ<IMediaControl> mc=graph)
   return mc->Stop();
- else 
+ else
   return S_FALSE;
 }
 STDMETHODIMP_(int) TffdshowBase::getCurTime2(void)
@@ -697,7 +697,7 @@ STDMETHODIMP_(int) TffdshowBase::getCurTime2(void)
    return FAILED(mpos->get_CurrentPosition(&curtime))?-1:int(curtime);
   }
  else
-  return -1;  
+  return -1;
 }
 STDMETHODIMP TffdshowBase::run(void)
 {
@@ -705,7 +705,7 @@ STDMETHODIMP TffdshowBase::run(void)
  if (comptrQ<IMediaControl> mc=graph)
   return mc->Run();
  else
-  return S_FALSE; 
+  return S_FALSE;
 }
 STDMETHODIMP_(int) TffdshowBase::getState2(void)
 {
@@ -723,7 +723,7 @@ STDMETHODIMP TffdshowBase::frameStep(int diff)
    GUID oldtf;
    if (FAILED(hr=ms->GetTimeFormat(&oldtf)))
     return hr;
-   if (oldtf!=TIME_FORMAT_FRAME) 
+   if (oldtf!=TIME_FORMAT_FRAME)
     if (FAILED(hr=ms->SetTimeFormat(&TIME_FORMAT_FRAME)))
      return hr;
    LONGLONG curpos;
@@ -733,12 +733,12 @@ STDMETHODIMP TffdshowBase::frameStep(int diff)
      curpos+=diff;
      hr=ms->SetPositions(&curpos,AM_SEEKING_AbsolutePositioning,NULL,AM_SEEKING_NoPositioning);
     }
-   if (oldtf!=TIME_FORMAT_FRAME) 
+   if (oldtf!=TIME_FORMAT_FRAME)
     ms->SetTimeFormat(&oldtf);
    return hr;
   }
  else
-  return E_NOINTERFACE;  
+  return E_NOINTERFACE;
 }
 
 STDMETHODIMP TffdshowBase::getInCodecString(char_t *buf,size_t buflen)
@@ -793,7 +793,7 @@ STDMETHODIMP TffdshowBase::getParamListItem(int paramId,int index,const char_t* 
  if (index<0) return S_FALSE;
  TparamListItems *items=options->getParamList(paramId);
  if (!items) return E_FAIL;
- if (index>=(int)items->size()) return S_FALSE; 
+ if (index>=(int)items->size()) return S_FALSE;
  *ptr=items->at(index).second;
  delete items;
  return S_OK;
@@ -865,7 +865,7 @@ STDMETHODIMP_(int)TffdshowBase::getInfoShortcutItem(const char_t *s,int *toklen)
 
 void TffdshowBase::setPropsTime(IMediaSample *sample,REFERENCE_TIME t1,REFERENCE_TIME t2,AM_SAMPLE2_PROPERTIES* const pProps,BOOL *m_bSampleSkipped)
 {
- if (comptrQ<IMediaSample2> pOutSample2=sample) 
+ if (comptrQ<IMediaSample2> pOutSample2=sample)
   {
    AM_SAMPLE2_PROPERTIES OutProps;
    EXECUTE_ASSERT(SUCCEEDED(pOutSample2->GetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES,tStart),(PBYTE)&OutProps)));
@@ -878,7 +878,7 @@ void TffdshowBase::setPropsTime(IMediaSample *sample,REFERENCE_TIME t1,REFERENCE
    if (pProps->dwSampleFlags&AM_SAMPLE_DATADISCONTINUITY)
     *m_bSampleSkipped=FALSE;
   }
- else 
+ else
   {
    if (pProps->dwSampleFlags&AM_SAMPLE_TIMEVALID)
     sample->SetTime(&t1,&t2);
@@ -893,7 +893,7 @@ void TffdshowBase::setPropsTime(IMediaSample *sample,REFERENCE_TIME t1,REFERENCE
    LONGLONG MediaStart, MediaEnd;
    if (pSample->GetMediaTime(&MediaStart,&MediaEnd)==NOERROR)
     pOutSample->SetMediaTime(&MediaStart,&MediaEnd);
-   */ 
+   */
   }
 }
 

@@ -40,7 +40,7 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IdecVideoSink *
  TvideoCodecEnc(Ideci,NULL)
 {
  create();
-} 
+}
 TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IencVideoSink *IsinkE):
  Tcodec(Ideci),TcodecDec(Ideci,NULL),
  TvideoCodec(Ideci),
@@ -67,9 +67,9 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IencVideoSink *
    encoders.push_back(new Tencoder(_l("DV"),CODEC_ID_DVVIDEO));
    encoders.push_back(new Tencoder(_l("Snow (experimental)"),CODEC_ID_SNOW));
    encoders.push_back(new Tencoder(_l("FLV1"),CODEC_ID_FLV1));
-  }  
+  }
 }
-void TvideoCodecLibavcodec::create(void) 
+void TvideoCodecLibavcodec::create(void)
 {
  ownmatrices=false;
  deci->getLibavcodec(&libavcodec);
@@ -91,7 +91,7 @@ TvideoCodecLibavcodec::~TvideoCodecLibavcodec()
 }
 void TvideoCodecLibavcodec::end(void)
 {
- if (statsfile) 
+ if (statsfile)
   {
    fflush(statsfile);
    fclose(statsfile);
@@ -108,7 +108,7 @@ void TvideoCodecLibavcodec::end(void)
      if (avctx->inter_matrix_luma) free(avctx->inter_matrix_luma);
      if (avctx->inter_matrix_chroma) free(avctx->inter_matrix_chroma);
      ownmatrices=false;
-    } 
+    }
    if (avctx->slice_offset) free(avctx->slice_offset);
    if (codecinited) libavcodec->avcodec_close(avctx);codecinited=false;
    if (threadcount) libavcodec->avcodec_thread_free(avctx);
@@ -123,7 +123,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
 {
  avcodec=libavcodec->avcodec_find_decoder(codecId);
  if (!avcodec) return false;
- 
+
  avctx=libavcodec->avcodec_alloc_context(this);
 
  int numthreads=deci->getParam2(IDFF_numLAVCdecThreads);
@@ -131,7 +131,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
   libavcodec->avcodec_thread_init(avctx,threadcount=numthreads);
  else
   threadcount=0;
-  
+
  frame=libavcodec->avcodec_alloc_frame();
  avctx->width =pict.rectFull.dx;
  avctx->height=pict.rectFull.dy;
@@ -144,12 +144,12 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
  ownmatrices=true;
 
  if (deci->getParam2(IDFF_grayscale)) avctx->flags|=CODEC_FLAG_GRAY;
- 
+
  avctx->codec_tag=fcc;
  avctx->workaround_bugs=deci->getParam2(IDFF_workaroundBugs);
  avctx->error_concealment=deci->getParam2(IDFF_errorConcealment);
  avctx->error_resilience=deci->getParam2(IDFF_errorResilience);
- if (sourceFlags&SOURCE_TRUNCATED || mpeg12_codec(codecId) || codecId==CODEC_ID_MJPEG) 
+ if (sourceFlags&SOURCE_TRUNCATED || mpeg12_codec(codecId) || codecId==CODEC_ID_MJPEG)
   avctx->flags|=CODEC_FLAG_TRUNCATED;
  if (mpeg12_codec(codecId) && deci->getParam2(IDFF_fastMpeg2))
   avctx->flags2=CODEC_FLAG2_FAST;
@@ -157,7 +157,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
   if (int skip=deci->getParam2(IDFF_fastH264))
    avctx->skip_loop_filter=skip&2?AVDISCARD_ALL:AVDISCARD_NONREF;
  initialSkipLoopFilter= avctx->skip_loop_filter;
-  
+
  avctx->debug_mv=1;//(deci->getParam2(IDFF_isVis) & deci->getParam2(IDFF_visMV));
 
  avctx->idct_algo=limit(deci->getParam2(IDFF_idct),0,6);
@@ -197,7 +197,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
        dst[0]=src[1+2*sizeof(DWORD)];
        DWORD len2=*(DWORD*)&src[2*sizeof(DWORD)];
        memcpy(dst+2,src+16+len0+len1,len2);
-       
+
        extradata->clear();
        extradata->set(dst0,dstsize,0,true);
        free(dst0);
@@ -220,11 +220,11 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
        free(dst);
        avctx->extradata=extradata->data;
        avctx->extradata_size=(int)extradata->size;
-      } 
-    }  
+      }
+    }
   }
  else
-  sendextradata=false; 
+  sendextradata=false;
  if (fcc==FOURCC_RLE4 || fcc==FOURCC_RLE8 || fcc==FOURCC_CSCD || sup_palette(codecId))
   {
    BITMAPINFOHEADER bih;ExtractBIH(mt,&bih);
@@ -245,15 +245,15 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
          palette=qt_default_palette_16;
          palettesize=16*4;
          break;
-        default: 
+        default:
         case 8:
          palette=qt_default_palette_256;
          palettesize=256*4;
-         break; 
+         break;
        }
-     else 
+     else
       {
-       palette=extradata->data; 
+       palette=extradata->data;
        palettesize=AVPALETTE_SIZE;
       }
      memcpy(pal.palette,palette,std::min(palettesize,AVPALETTE_SIZE));
@@ -262,10 +262,10 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
  else if (extradata->data && (codecId==CODEC_ID_RV10 || codecId==CODEC_ID_RV20))
   {
    #pragma pack(push, 1)
-   struct rvinfo 
+   struct rvinfo
     {
-     DWORD dwSize, fcc1, fcc2; 
-     WORD w, h, bpp; 
+     DWORD dwSize, fcc1, fcc2;
+     WORD w, h, bpp;
      DWORD unk1, fps, type1, type2;
      BYTE w2, h2, w3, h3;
     } __attribute__((packed));
@@ -328,22 +328,22 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
   avctx->sample_fmt=pIn && pIn->IsSyncPoint()==S_OK?SAMPLE_I:SAMPLE_P;
  else if (src && theorart)
   {
-   struct _TheoraPacket 
+   struct _TheoraPacket
     {
      long  bytes;
      long  b_o_s;
      long  e_o_s;
      int64_t  granulepos;
-     int64_t  packetno;    
+     int64_t  packetno;
     };
-   _TheoraPacket *packet=(_TheoraPacket*)src; 
-   if (packet->bytes==0 || src[sizeof(_TheoraPacket)]&0x80) 
+   _TheoraPacket *packet=(_TheoraPacket*)src;
+   if (packet->bytes==0 || src[sizeof(_TheoraPacket)]&0x80)
     return S_OK;
-   skip+=sizeof(_TheoraPacket); 
+   skip+=sizeof(_TheoraPacket);
    avctx->granulepos=packet->granulepos;
-  } 
+  }
  src+=skip;int size=int(srcLen0-skip);
- if (pIn) 
+ if (pIn)
   pIn->GetTime(&rtStart,&rtStop);
  b[posB].rtStart=rtStart;b[posB].rtStop=rtStop;b[posB].srcSize=size;posB=1-posB;
 
@@ -377,19 +377,19 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
      sendextradata=false;
      if (used_bytes>0) used_bytes=0;
     }
-   else   
+   else
     {
      unsigned int neededsize=size+FF_INPUT_BUFFER_PADDING_SIZE;
      if (ffbuflen<neededsize)
       ffbuf=(unsigned char*)realloc(ffbuf,ffbuflen=neededsize);
-     if (src) 
+     if (src)
       {
        memcpy(ffbuf,src,size);memset(ffbuf+size,0,FF_INPUT_BUFFER_PADDING_SIZE);
        used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,ffbuf,size);
       }
-     else 
-      used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,NULL,0); 
-    } 
+     else
+      used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,NULL,0);
+    }
    if (used_bytes<0)
     return S_FALSE;
    if (got_picture && frame->data[0])
@@ -397,7 +397,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
      int frametype;
      if (avctx->codec_id==CODEC_ID_H261)
       frametype=FRAME_TYPE::I;
-     else 
+     else
       switch (frame->pict_type)
        {
         case FF_P_TYPE:frametype=FRAME_TYPE::P;break;
@@ -424,7 +424,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
      if (avctx->sample_aspect_ratio.num)
       r.sar=avctx->sample_aspect_ratio;
      else
-      r.sar=containerSar; 
+      r.sar=containerSar;
      quants=frame->qscale_table;
      quantsStride=frame->qstride;
      quantType=frame->qscale_type;
@@ -442,29 +442,29 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
         pict.rtStart=oldpict.rtStop;
        if (avgTimePerFrame==-1)
         deciV->getAverageTimePerFrame(&avgTimePerFrame);
-       if (avgTimePerFrame) 
+       if (avgTimePerFrame)
         pict.rtStop=pict.rtStart+avgTimePerFrame+frame->repeat_pict*avgTimePerFrame/2;
-       else 
-        pict.rtStop=pict.rtStart+1; 
+       else
+        pict.rtStop=pict.rtStart+1;
        if (avctx->codec_tag==FOURCC_MPG1 || avctx->codec_tag==FOURCC_MPG2)
-        pict.mediatimeStart=pict.mediatimeStop=REFTIME_INVALID; 
+        pict.mediatimeStart=pict.mediatimeStop=REFTIME_INVALID;
        oldpict=pict;
-      } 
+      }
      else if (theorart)
       pict.rtStop=(pict.rtStart=frame->rtStart-segmentTimeStart)+1;
-     else 
+     else
       if (avctx->has_b_frames)
        {
         pict.rtStart=b[posB].rtStart;
         pict.rtStop=b[posB].rtStop;
         pict.srcSize=b[posB].srcSize;
-       } 
+       }
      //DPRINTF("%I64i",pict.rtStart);
      HRESULT hr=sinkD->deliverDecodedSample(pict);
      if (FAILED(hr) || (used_bytes && sinkD->acceptsManyFrames()!=S_OK) || avctx->codec_id==CODEC_ID_LOCO)
       return hr;
     }
-   else 
+   else
     if (!src)
      break;
    if(!used_bytes && codecId==CODEC_ID_SVQ3) return S_FALSE;
@@ -505,36 +505,36 @@ void TvideoCodecLibavcodec::getEncoderInfo(char_t *buf,size_t buflen) const
    tsnprintf(buf,buflen,_l("libavcodec build %i"),avctx->lavc_build);
   else if (avctx->divx_version || avctx->divx_build)
    tsnprintf(buf,buflen,_l("DivX version %i.%02i, build %i"),avctx->divx_version/100,avctx->divx_version%100,avctx->divx_build);
-  else 
+  else
    strncpy(buf,_l("unknown"),buflen);
  else
   strncpy(buf,_l("unknown"),buflen);
- buf[buflen-1]='\0'; 
+ buf[buflen-1]='\0';
 }
 
 void TvideoCodecLibavcodec::line(unsigned char *dst,unsigned int _x0,unsigned int _y0,unsigned int _x1,unsigned int _y1,stride_t strideY)
 {
- drawline< TaddColor<100> >(_x0,_y0,_x1,_y1,100,dst,strideY); 
+ drawline< TaddColor<100> >(_x0,_y0,_x1,_y1,100,dst,strideY);
 }
 
 void TvideoCodecLibavcodec::draw_arrow(uint8_t *buf, int sx, int sy, int ex, int ey, stride_t stride,int mulx,int muly,int dstdx,int dstdy)
-{ 
+{
  sx=limit(mulx*sx>>12,0,dstdx-1);sy=limit(muly*sy>>12,0,dstdy-1);
  ex=limit(mulx*ex>>12,0,dstdx-1);ey=limit(muly*ey>>12,0,dstdy-1);
     int dx,dy;
 
     dx= ex - sx;
     dy= ey - sy;
-    
+
     if(dx*dx + dy*dy > 3*3){
         int rx=  dx + dy;
         int ry= -dx + dy;
         int length= ff_sqrt((rx*rx + ry*ry)<<8);
-        
+
         //FIXME subpixel accuracy
         rx= roundDiv(rx*3<<4, length);
         ry= roundDiv(ry*3<<4, length);
-        
+
         line(buf, sx, sy, sx + rx, sy + ry, stride);
         line(buf, sx, sy, sx - ry, sy + rx, stride);
     }
@@ -555,10 +555,10 @@ bool TvideoCodecLibavcodec::drawMV(unsigned char *dst,unsigned int dstdx,stride_
  const int mv_sample_log2= 4 - frame->motion_subsample_log2;
  const int mv_stride= (frame->mb_width << mv_sample_log2) + (avctx->codec_id == CODEC_ID_H264 ? 0 : 1);
  int direction=0;
- 
+
  int mulx=(dstdx<<12)/avctx->width;
  int muly=(dstdy<<12)/avctx->height;
- 
+
  for(int mb_y=0; mb_y<frame->mb_height; mb_y++)
   for(int mb_x=0; mb_x<frame->mb_width; mb_x++)
    {
@@ -655,7 +655,7 @@ void TvideoCodecLibavcodec::getCompressColorspaces(Tcsps &csps,unsigned int outD
       {
        for (std::vector<const DVprofile*>::const_iterator p=profiles.begin();p!=profiles.end();p++)
         csps.add(csp_lavc2ffdshow((*p)->pix_fmt));
-      } 
+      }
      else
       csps.add(FF_CSP_420P); //won't be used anyway
      break;
@@ -664,7 +664,7 @@ void TvideoCodecLibavcodec::getCompressColorspaces(Tcsps &csps,unsigned int outD
     csps.add(FF_CSP_410P);
     break;
    default:
-    csps.add(FF_CSP_420P); 
+    csps.add(FF_CSP_420P);
     break;
   }
 }
@@ -711,7 +711,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
  if (sup_part(coCfg->codecId) &&coCfg->part) avctx->flags|=CODEC_FLAG_PART;
  if (coCfg->codecId!=CODEC_ID_SNOW && coCfg->codecId!=CODEC_ID_H261) avctx->mb_decision=coCfg->me_hq;
  if (coCfg->me_4mv && sup_4mv(coCfg->codecId)) avctx->flags|=CODEC_FLAG_4MV;
- if (sup_qpel(coCfg->codecId) && coCfg->me_qpel) 
+ if (sup_qpel(coCfg->codecId) && coCfg->me_qpel)
   {
    avctx->flags|=CODEC_FLAG_QPEL;
    avctx->me_subpel_quality=coCfg->me_subq;
@@ -728,7 +728,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
  avctx->pre_dia_size=Tlibavcodec::dia_sizes[coCfg->dia_size_pre].size;
  avctx->nsse_weight=coCfg->me_nsse_weight;
  if (sup_gray(coCfg->codecId) && coCfg->gray) avctx->flags|=CODEC_FLAG_GRAY;
- 
+
  if (coCfg->isQuantControlActive())
   {
    avctx->qmin_i=coCfg->limitq(coCfg->q_i_min);avctx->qmax_i=coCfg->limitq(coCfg->q_i_max);
@@ -747,10 +747,10 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
    avctx->i_quant_offset=coCfg->i_quant_offset/100.0f;
   }
  else
-  { 
+  {
    avctx->i_quant_factor=1.0f;
    avctx->i_quant_offset=0.0f;
-  } 
+  }
 
  if (coCfg->trellisquant && sup_trellisQuant(coCfg->codecId))
   {
@@ -777,7 +777,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
    if (coCfg->isIntraQuantBias) avctx->intra_quant_bias=coCfg->intraQuantBias;
    if (coCfg->isInterQuantBias) avctx->inter_quant_bias=coCfg->interQuantBias;
   }
- avctx->dct_algo=coCfg->dct_algo; 
+ avctx->dct_algo=coCfg->dct_algo;
  if (sup_qns(coCfg->codecId)) avctx->quantizer_noise_shaping=coCfg->qns;
  if (mpeg2_codec(coCfg->codecId)) avctx->intra_dc_precision=coCfg->mpeg2_dc_prec;
 
@@ -793,7 +793,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
        case 0:avctx->pix_fmt=PIX_FMT_YUV422P;break;
        case 1:avctx->pix_fmt=PIX_FMT_YUV420P;break;
       }
-     avctx->context_model=coCfg->huffyuv_ctx; 
+     avctx->context_model=coCfg->huffyuv_ctx;
      break;
     }
    case CODEC_ID_FFV1:
@@ -827,7 +827,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
    case CODEC_ID_DVVIDEO:
     {
      PixelFormat lavc_csp=csp_ffdshow2lavc(csp);
-     if (!coCfg->getDVprofile(avctx->width,avctx->height,lavc_csp)) 
+     if (!coCfg->getDVprofile(avctx->width,avctx->height,lavc_csp))
       {
        deci->dbgError(_l("Can't find matching DV profile"));
        return ICERR_ERROR;
@@ -841,20 +841,20 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
      if ((avctx->width==176 && avctx->height==144) || (avctx->width==352 && avctx->height==288))
       break;
      else
-      return ICERR_ERROR; 
-    } 
+      return ICERR_ERROR;
+    }
    case CODEC_ID_SVQ1:
     avctx->pix_fmt=PIX_FMT_YUV410P;break;
     break;
    case CODEC_ID_H263P:
     avctx->flags|=coCfg->H263Pflags;
-    break; 
+    break;
    case CODEC_ID_H263:
     avctx->flags|=coCfg->H263Pflags&CODEC_FLAG_OBMC;
-    break; 
+    break;
    case CODEC_ID_MPEG4:
     avctx->flags|=coCfg->H263Pflags&CODEC_FLAG_LOOP_FILTER;
-    break; 
+    break;
    case CODEC_ID_MPEG2VIDEO:
     if (coCfg->svcd_scan_offset) avctx->flags|=CODEC_FLAG_SVCD_SCAN_OFFSET;
     break;
@@ -881,7 +881,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
     avctx->rc_buffer_size=coCfg->ff1_rc_buffer_size;
     avctx->rc_initial_buffer_occupancy=avctx->rc_buffer_size*3/4;
     avctx->rc_buffer_aggressivity=1.0f;
-    break;  
+    break;
    case ENC_MODE::VBR_QUAL:
    case ENC_MODE::VBR_QUANT:
     avctx->bit_rate=400000;
@@ -895,7 +895,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
     break;
    case ENC_MODE::UNKNOWN:
     break;
-   default:return ICERR_ERROR; 
+   default:return ICERR_ERROR;
   }
 
  if (sup_LAVC2PASS(coCfg->codecId))
@@ -922,9 +922,9 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
   }
 
  if (sup_quantProps(coCfg->codecId) && coCfg->is_lavc_nr) avctx->noise_reduction=coCfg->lavc_nr;
- 
+
  avctx->sample_aspect_ratio=coCfg->sar(avctx->width,avctx->height).reduce(255);
- 
+
  if (sup_bframes(coCfg->codecId) && coCfg->isBframes)
   {
    avctx->max_b_frames=coCfg->max_b_frames;
@@ -932,11 +932,11 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
    avctx->b_quant_offset=coCfg->b_quant_offset/100.0f;
    avctx->b_frame_strategy=coCfg->b_dynamic && !(avctx->flags&CODEC_FLAG_PASS2)?1:0;
    avctx->bidir_refine=coCfg->b_refine;
-   if (coCfg->dx50bvop && sup_closedGop(coCfg->codecId)) 
+   if (coCfg->dx50bvop && sup_closedGop(coCfg->codecId))
     {
      avctx->flags|=CODEC_FLAG_CLOSED_GOP;
      avctx->scenechange_threshold=1000000000;
-    } 
+    }
   }
 
  if (sup_masking(coCfg->codecId))
@@ -958,11 +958,11 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
    avctx->lmax=coCfg->q_mb_max*FF_QP2LAMBDA;
   }
  else
-  { 
+  {
    avctx->lmin=coCfg->getMinMaxQuant().first *FF_QP2LAMBDA;
    avctx->lmax=coCfg->getMinMaxQuant().second*FF_QP2LAMBDA;
   }
- 
+
  RcOverride rces[2];int rcescount=0;
  if (coCfg->isCreditsStart && cfgcomode==ENC_MODE::CBR && coCfg->ff1_stats_mode&FFSTATS::READ)
   {
@@ -973,9 +973,9 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
     {
      case CREDITS_MODE::QUANT:rce.qscale=coCfg->limitq(coCfg->credits_quant_i);rce.quality_factor=1;break;
      case CREDITS_MODE::PERCENT:rce.qscale=0;rce.quality_factor=coCfg->credits_percent/100.0f;break;
-    } 
-   rcescount++;    
-  } 
+    }
+   rcescount++;
+  }
  if (coCfg->isCreditsEnd && cfgcomode==ENC_MODE::CBR && coCfg->ff1_stats_mode&FFSTATS::READ)
   {
    RcOverride &rce=rces[rcescount];
@@ -985,12 +985,12 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
     {
      case CREDITS_MODE::QUANT:rce.qscale=coCfg->limitq(coCfg->credits_quant_i);rce.quality_factor=1;break;
      case CREDITS_MODE::PERCENT:rce.qscale=0;rce.quality_factor=coCfg->credits_percent/100.0f;break;
-    } 
+    }
    rcescount++;
-  } 
+  }
  if ((avctx->rc_override_count=rcescount)!=0)
   avctx->rc_override=rces;
- if (libavcodec->avcodec_open(avctx,avcodec)<0) 
+ if (libavcodec->avcodec_open(avctx,avcodec)<0)
   {
    avctx->codec=NULL;
    return ICERR_ERROR;
@@ -1029,7 +1029,7 @@ HRESULT TvideoCodecLibavcodec::compress(const TffPict &pict,TencFrameParams &par
     avctx->lmin=coCfg->getMinMaxQuant().first *FF_QP2LAMBDA;
     avctx->lmax=coCfg->getMinMaxQuant().second*FF_QP2LAMBDA;
    }
-   
+
  frame->top_field_first=(avctx->flags&CODEC_FLAG_INTERLACED_DCT && coCfg->interlacing_tff)?1:0;
 
  switch (params.frametype)
@@ -1040,12 +1040,12 @@ HRESULT TvideoCodecLibavcodec::compress(const TffPict &pict,TencFrameParams &par
    default:frame->pict_type=0;break;
   }
  bool flushing=!pict.data[0];
- if (!flushing) 
+ if (!flushing)
   for (int i=0;i<4;i++)
-   { 
+   {
     frame->data[i]=(uint8_t*)pict.data[i];
     frame->linesize[i]=(int)pict.stride[i];
-   } 
+   }
  HRESULT hr=S_OK;
  while (frame->data[0] || flushing)
   {
@@ -1054,14 +1054,14 @@ HRESULT TvideoCodecLibavcodec::compress(const TffPict &pict,TencFrameParams &par
    if (FAILED(hr=sinkE->getDstBuffer(&sample,pict)))
     return hr;
    params.length=libavcodec->avcodec_encode_video(avctx,sample,sample.size(),!flushing?frame:NULL);
-   if ((int)params.length<0) 
+   if ((int)params.length<0)
     return sinkE->deliverError();
    else if (params.length==0 && flushing)
     break;
    if (coCfg->ff1_stats_mode&FFSTATS::WRITE && statsfile)
     fprintf(statsfile,"%s",avctx->stats_out);
-    
-   if (/*!isAdaptive || */!avctx->coded_frame->qscale_table) 
+
+   if (/*!isAdaptive || */!avctx->coded_frame->qscale_table)
     params.quant=int(avctx->coded_frame->quality/FF_QP2LAMBDA+0.5);
    else
     {
@@ -1070,12 +1070,12 @@ HRESULT TvideoCodecLibavcodec::compress(const TffPict &pict,TencFrameParams &par
       for (unsigned int x=0;x<mb_width;x++)
        sum+=avctx->coded_frame->qscale_table[x+y*avctx->coded_frame->qstride];
      params.quant=roundDiv(sum,mb_count);
-    } 
+    }
 
    params.kblks=avctx->i_count;
    params.mblks=avctx->p_count;
    params.ublks=avctx->skip_count;
-   
+
    switch (avctx->coded_frame->pict_type)
     {
      case FF_I_TYPE:params.frametype=FRAME_TYPE::I;break;
@@ -1096,9 +1096,9 @@ HRESULT TvideoCodecLibavcodec::compress(const TffPict &pict,TencFrameParams &par
     }
    if (FAILED(hr=sinkE->deliverEncodedSample(sample,params)))
     return hr;
-   frame->data[0]=NULL; 
-  } 
- return hr; 
+   frame->data[0]=NULL;
+  }
+ return hr;
 }
 
 const char* TvideoCodecLibavcodec::get_current_idct(void)

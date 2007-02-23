@@ -35,7 +35,7 @@
 
 #if !defined(DEBUG) && (!defined(__INTEL_COMPILER) && !defined(__GNUC__))
  #pragma message("Microsoft compilers are unable to produce optimized binary of ff_kernelDeint, use GCC or Intel C++ Compiler instead.")
-#endif  
+#endif
 
 static const __int64 qword_4354h=0x4354435443544354LL;
 static const __int64 qword_15c2h=0x15c215c215c215c2LL;
@@ -61,7 +61,7 @@ private:
    memset(dy,0,sizeof(dy));
    memset(stride,0,sizeof(stride));
    Bpp=0;
-  } 
+  }
 public:
  TVideoFrame(void)
   {
@@ -78,13 +78,13 @@ public:
      stride[i]=Istride;
      ptr[i]=(unsigned char*)aligned_malloc(stride[i]*dy[i]);
      copy(ptr[i],stride[i],src[i]+field*srcStride[i],srcStride[i]*2,Bpp*dx[i],dy[i]);
-    } 
+    }
   }
  ~TVideoFrame(void)
   {
    for (int i=0;i<3;i++)
     if (ptr[i]) aligned_free(ptr[i]);
-  } 
+  }
  unsigned char* ptr[3];
  unsigned int dx[3],dy[3];
  stride_t stride[3];
@@ -131,7 +131,7 @@ struct KernelDeintMask
  void set(int b)
   {
    memset(buffer,b,bytePitch*height);
-  } 
+  }
 
  int width;
  int byteWidth;
@@ -153,7 +153,7 @@ private:
  KernelDeintMask *fullsizeMask;
  KernelDeintMask *halfsizeMask;
  Tcopy *copy;
- 
+
  unsigned char *scratch;int scratchPitch;
  void (TkernelDeint::*Deinterlace_0fc)(int plane,int n,int order,KernelDeintMask* mask,unsigned char *dst[3],stride_t dstStride[3]);
  bool masksFilled;
@@ -170,7 +170,7 @@ public:
   map(Imap),
   bob(Ibob),
   fieldsptr(0),fieldstart(0),
-  
+
   masksFilled(false)
   {
    if (isYV12)
@@ -179,11 +179,11 @@ public:
      halfsizeMask=new KernelDeintMask(width/2,height/4);
      if (!sharp && !twoway)
       Deinterlace_0fc=&TkernelDeint::Deinterlace_0<false,false,8,YV12>;
-     else if (!sharp && twoway) 
+     else if (!sharp && twoway)
       Deinterlace_0fc=&TkernelDeint::Deinterlace_0<false,true,8,YV12>;
-     else if (sharp && !twoway) 
+     else if (sharp && !twoway)
       Deinterlace_0fc=&TkernelDeint::Deinterlace_0<true,false,8,YV12>;
-     else if (sharp && twoway) 
+     else if (sharp && twoway)
       Deinterlace_0fc=&TkernelDeint::Deinterlace_0<true,true,8,YV12>;
     }
    else
@@ -192,17 +192,17 @@ public:
      halfsizeMask=NULL;
      if (!sharp && !twoway)
       Deinterlace_0fc=&TkernelDeint::Deinterlace_0<false,false,8,YUY2>;
-     else if (!sharp && twoway) 
+     else if (!sharp && twoway)
       Deinterlace_0fc=&TkernelDeint::Deinterlace_0<false,true,8,YUY2>;
-     else if (sharp && !twoway) 
+     else if (sharp && !twoway)
       Deinterlace_0fc=&TkernelDeint::Deinterlace_0<true,false,8,YUY2>;
-     else if (sharp && twoway) 
+     else if (sharp && twoway)
       Deinterlace_0fc=&TkernelDeint::Deinterlace_0<true,true,8,YUY2>;
-    } 
-    
+    }
+
    scratchPitch=(rowsize+15)&(-16);
    scratch=(unsigned char*)aligned_malloc(scratchPitch*8*3);
-   
+
    framenum=0;memset(fields,0,sizeof(fields));
   }
  ~TkernelDeint()
@@ -217,7 +217,7 @@ public:
   }
 private:
  enum {PLANAR_Y=0,PLANAR_U=1,PLANAR_V=2};
- int framenum; 
+ int framenum;
  STDMETHODIMP_(void) getFrame(const unsigned char *cur[3],stride_t srcStride[3],unsigned char *dst[3],stride_t dstStride[3],int bobframe) //hinting is done by caller
   {
    if (bobframe==0)
@@ -225,17 +225,17 @@ private:
      if (fields[fieldsptr]) delete fields[fieldsptr];fields[fieldsptr++]=new TVideoFrame(isYV12,width,height,cur,srcStride,scratchPitch,0,copy);
      if (fields[fieldsptr]) delete fields[fieldsptr];fields[fieldsptr++]=new TVideoFrame(isYV12,width,height,cur,srcStride,scratchPitch,1,copy);
      fieldstart+=2;if (fieldsptr==NFIELDS) fieldsptr=0;
-    } 
+    }
    //if (!bob) n*=2;
    if (isYV12)
     KernelDeint<YV12>(dst,dstStride,framenum*2+bobframe);
-   else 
+   else
     KernelDeint<YUY2>(dst,dstStride,framenum*2+bobframe);
-   if (!bob || bobframe==1) 
-    framenum++; 
+   if (!bob || bobframe==1)
+    framenum++;
    _mm_empty();
   }
- static const int NFIELDS=6; 
+ static const int NFIELDS=6;
  PVideoFrame fields[NFIELDS];int fieldstart,fieldsptr;
  PVideoFrame GetField(int n)
   {
@@ -247,10 +247,10 @@ private:
      if (n<0) n+=NFIELDS;
      field=fields[n^(1-order)];
      n--;
-    } while (!field); 
+    } while (!field);
    return field;
   }
-  
+
  static void HalveMotionMask_YV12_MMX(KernelDeintMask* halfsizeMask, KernelDeintMask* fullsizeMask)
   {
    unsigned char* halfMaskPtr=halfsizeMask->buffer;
@@ -300,7 +300,7 @@ private:
        pcmpgtb (mm0,mm2);
 
        movq (edi+ecx,mm0);
-      } 
+      }
     }
     //_mm_empty();
   }
@@ -357,12 +357,12 @@ private:
 		      pxor (mm0,mm5);
 		      pxor (mm2,mm5);
 
-		      // build a mask in mm3 of which bytes in mm2 are bigger 
-		      // than their counterparts in mm0 
+		      // build a mask in mm3 of which bytes in mm2 are bigger
+		      // than their counterparts in mm0
 
 		      movq (mm3,mm2);
 		      pcmpgtb (mm3,mm0);
-        	      
+
 		      // calculate the differences
 
 		      psubb (mm0,mm2);
@@ -375,7 +375,7 @@ private:
 
 		      pxor (mm0,mm5);
 		      pcmpgtb (mm0,mm7);
-        	      
+
 	      }else{
 		      pxor (mm0,mm0);
 	      }
@@ -391,12 +391,12 @@ private:
 		      pxor (mm1,mm5);
 		      pxor (mm2,mm5);
 
-		      // build a mask in mm3 of which bytes in mm2 are bigger 
+		      // build a mask in mm3 of which bytes in mm2 are bigger
 		      // than their counterparts in mm1
 
 		      movq (mm3,mm2);
 		      pcmpgtb (mm3,mm1);
-        	      
+
 		      // calculate the differences
 
 		      psubb (mm1,mm2);
@@ -466,7 +466,7 @@ private:
 	      }
        	}
   }
- 
+
  template<int PART> static __forceinline void MotionMaskLine_YV12_1(const int rowSize,const unsigned char* &srcAPtr,const stride_t srcAPitch,const unsigned char* &srcBPtr,const stride_t srcBPitch,unsigned char* &maskPtr,const stride_t maskPitch,bool halfsize,bool overwrite,int threshold,int order)
   {
 	int bytesLeft=rowSize;
@@ -695,10 +695,10 @@ private:
 
    MotionMaskLine_YV12_1<4>(rowSize,srcAPtr,srcAPitch,srcBPtr,srcBPitch,maskPtr,maskPitch,halfsize,overwrite,threshold,order);
   }
- 
- __forceinline void BuildPlaneMotionMask_YV12_MMX(KernelDeintMask* mask, 
-                                    int order, 
-                                    int plane, 
+
+ __forceinline void BuildPlaneMotionMask_YV12_MMX(KernelDeintMask* mask,
+                                    int order,
+                                    int plane,
                                     bool linked,
                                     bool overwrite,int n)
   {
@@ -761,12 +761,12 @@ ColLoop:
                 pxor (mm0,mm5);
                 pxor (mm2,mm5);
 
-                //; build a mask in mm3 of which bytes in mm2 are bigger 
-                //; than their counterparts in mm0 
+                //; build a mask in mm3 of which bytes in mm2 are bigger
+                //; than their counterparts in mm0
 
                 movq (mm3,mm2);
                 pcmpgtb (mm3,mm0);
-                
+
                 //; calculate the differences
 
                 psubb (mm0,mm2);
@@ -779,7 +779,7 @@ ColLoop:
 
                 pxor (mm0,mm5);
                 pcmpgtb (mm0,mm7);
-                
+
         }else{
                 pxor (mm0,mm0);
         }
@@ -794,12 +794,12 @@ ColLoop:
                 pxor (mm1,mm5);
                 pxor (mm2,mm5);
 
-                //; build a mask in mm3 of which bytes in mm2 are bigger 
+                //; build a mask in mm3 of which bytes in mm2 are bigger
                 //; than their counterparts in mm1
 
                 movq (mm3,mm2);
                 pcmpgtb (mm3,mm1);
-                
+
                 //; calculate the differences
 
                 psubb (mm1,mm2);
@@ -823,7 +823,7 @@ ColLoop:
                 //;punpckldq mm1,mm1
 
                 movq (mm1,qword_ff00h);
-                
+
                 pand (mm1,mm0);
                 psrld (mm1,1);
                 pcmpgtd (mm1,mm4);
@@ -851,7 +851,7 @@ ColLoop:
                 psubusb (mm1,mm3);
 
                 por (mm0,mm1);
-                
+
                 pand (mm3,mm0);
                 psrld (mm3,1);
                 pcmpgtd (mm3,mm4);
@@ -923,9 +923,9 @@ ColLoop:
                         }
                 }
                 //else
-        
+
         }
-        
+
         if (linked)
         {
                 if      (order == 1)
@@ -1084,10 +1084,10 @@ ColLoop:
 
         MotionMaskLine_YUY2_RGB_1<COLORSPACE,4>(rowSize,srcAPtr,srcAPitch,srcBPtr,srcBPitch,maskPtr,maskPitch,linked,order,threshold);
 
-  }                                              
+  }
 
- void BuildMotionMask_YUY2_MMX(KernelDeintMask* mask, 
-                               int order, 
+ void BuildMotionMask_YUY2_MMX(KernelDeintMask* mask,
+                               int order,
                                int n)
   {
    //#define COLORSPACE COLORSPACE_YUY2
@@ -1095,16 +1095,16 @@ ColLoop:
 
    //#define MOTIONMASK_STAGE1 "include/MotionMaskLine_YUY2+RGB_1.cpp"
    //#define MOTIONMASK_STAGE2 "include/MotionMaskLine_YUY2_2_MMX.cpp"
-   
+
    MotionMask_YUY2_RGB_0<YUY2,8>(mask,order,n);
-   
+
    //#include "include\MotionMask_YUY2+RGB_0.cpp"
    //_mm_empty();
   }
 
- template<bool YV12> void BuildMotionMask(KernelDeintMask* fullsizeMask, 
-                                          KernelDeintMask* halfsizeMask, 
-                                          int order, 
+ template<bool YV12> void BuildMotionMask(KernelDeintMask* fullsizeMask,
+                                          KernelDeintMask* halfsizeMask,
+                                          int order,
                                           bool linked,
                                           int n)
   {
@@ -1125,7 +1125,7 @@ ColLoop:
    else
     BuildMotionMask_YUY2_MMX(fullsizeMask,order,n);
   }
- 
+
  static __forceinline void COPY_LINE(const unsigned char* &srcPtr,stride_t srcPitch,unsigned char* &dstPtr,stride_t dstPitch,int rowSize,int order)
   {
    const unsigned char *esi=srcPtr;
@@ -1154,7 +1154,7 @@ ColLoop:
 
      //mov eax,ecx
 
-     
+
 
      movq (edi+eax   ,mm0);
      movq (edi+eax+8 ,mm1);
@@ -1166,7 +1166,7 @@ ColLoop:
    edi+=edx;
 
    edx=-edx;
-   if (edx!=0) 
+   if (edx!=0)
     for (;edx;edx+=8)
      {
       int eax=edx;
@@ -1203,7 +1203,7 @@ ColLoop:
                 ASOURCE=ecx;
         else if (SOURCE == SRC_NEXT)
                 ASOURCE=edi;
-        
+
 
         if ((DIRECTION == -2) || (DIRECTION == 2))
                 movq (TARGET,ASOURCE + 2*eax);
@@ -1211,7 +1211,7 @@ ColLoop:
                 movq (TARGET,ASOURCE + eax);
         else
                 movq (TARGET,ASOURCE);
-        
+
 
   }
 
@@ -1334,7 +1334,7 @@ ColLoop:
 
                         if (EAX_INVERTED)
                                 eax=-eax;
-                        
+
 
 
                 }else{// defined TWOWAY
@@ -1586,7 +1586,7 @@ ColLoop:
 
                         psrlw (mm2,2);
                         psrlw (mm3,2);
-                        
+
                         paddsw (mm0,mm2);
                         paddsw (mm1,mm3);
 
@@ -1996,7 +1996,7 @@ ColLoop:
                         paddsw (mm1,mm3);
 
                         //;                                 +*(curPrevPtr+D2*prevPitch ));
- 
+
                         //#define SOURCE SRC_PREV
                         //#define TARGET mm2
                         //#define DIRECTION D2
@@ -2112,7 +2112,7 @@ ColLoop:
         por (mm0,mm4);
 
         movq (edx,mm0);
-        
+
         //; Update pointers
 
         esi+=8;
@@ -2263,7 +2263,7 @@ RowEnd:;
         //#define U1 1
         //#define D1 1
         //#define D2 2
-        
+
         //#define SU2 2
         //#define SU1 1
         //#define SD1 1
@@ -2448,7 +2448,7 @@ RowEnd:;
         if (order == 0)
           COPY_LINE(srcPtr,srcPitch,dstPtr,dstPitch,rowSize,order);
   }
- 
+
  template<bool YV12> inline void Deinterlace(unsigned char *dst[3],stride_t dstStride[3],
 	                                     int order,
 	                                     int n,
@@ -2463,7 +2463,7 @@ RowEnd:;
     }
    else
     (this->*Deinterlace_0fc)(PLANAR_Y,n,order,fullsizeMask,dst,dstStride);
-  }   
+  }
  template<bool YV12> void KernelDeint(unsigned char *dst[3],stride_t dstStride[3],int n)
   {
    int usedOrder=order^(n&1);
@@ -2480,7 +2480,7 @@ RowEnd:;
    else
     Deinterlace<YV12>(dst,dstStride,usedOrder,n,fullsizeMask,halfsizeMask);
   }
- 
+
  template<bool YV12> void ShowMotionMask(unsigned char *dst[3],stride_t dstStride[3],int order,const KernelDeintMask *fullsizeMask)
   {
    stride_t maskPitch=fullsizeMask->bytePitch;
@@ -2495,7 +2495,7 @@ RowEnd:;
     {
      const typename TshowMotionMaskTraits<YV12>::Tpixel* curMaskPtr=(const typename TshowMotionMaskTraits<YV12>::Tpixel*)maskPtr;
      typename TshowMotionMaskTraits<YV12>::Tpixel* curDstPtr=(typename TshowMotionMaskTraits<YV12>::Tpixel*)dstPtr;
-     
+
      for (int colsLeft=rowSize/sizeof(typename TshowMotionMaskTraits<YV12>::Tpixel); colsLeft > 0; colsLeft--)
       {
        typename TshowMotionMaskTraits<YV12>::Tpixel curMask=*curMaskPtr&TshowMotionMaskTraits<YV12>::mask;
@@ -2534,7 +2534,7 @@ void* aligned_malloc(size_t size, size_t /*alignment*/)
 void* aligned_realloc(void *ptr,size_t size,size_t alignment)
 {
  if (!ptr)
-  return aligned_malloc(size,alignment);  
+  return aligned_malloc(size,alignment);
  else
   if (size==0)
    {

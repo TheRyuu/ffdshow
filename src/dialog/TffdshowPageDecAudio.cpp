@@ -69,7 +69,7 @@ HRESULT TffdshowPageDecAudio::OnConnect(IUnknown *pUnk)
   {
    ve->setIffdshowBase(getGUID<IffdshowDecAudio>(),deci);
    resorePos=false;
-  } 
+  }
  return FAILED(res)?res:S_OK;
 }
 HRESULT TffdshowPageDecAudio::OnDisconnect(void)
@@ -106,11 +106,11 @@ void TffdshowPageDecAudio::onActivate(void)
  htiPresets=addTI(&tvis,new TpresetsPageAudio(this))->hti;
  tvis.hParent=htiPresets;
  htiBeforeShowHide=addTI(&tvis,new ThideShowPage(this,filterPages))->hti;
-/* 
+/*
  const char *activePresetName=deciD->getActivePresetName2();
  if (activePresetName)
   deciD->createPresetPages(activePresetName,this);
-*/  
+*/
  addTI(&tvis,new TprocsfsPage(this));
  addTI(&tvis,new ToutsfsPage(this));
  tvis.hParent=NULL;
@@ -125,11 +125,11 @@ void TffdshowPageDecAudio::onActivate(void)
    IDC_BT_HELP,TanchorInfo::TOP|TanchorInfo::RIGHT,
    0,0
   };
- anchors.add(ainfo,*this); 
+ anchors.add(ainfo,*this);
  TffdshowPageDec::onActivate();
 }
 
-// -------------------- configure ---------------------- 
+// -------------------- configure ----------------------
 extern "C" void CALLBACK configureAudio(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine,int nCmdShow);
 void CALLBACK configureAudio(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine,int nCmdShow)
 {

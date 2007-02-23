@@ -51,31 +51,31 @@
 #pragma warning( disable : 4799 )  // Disable no emms instruction warning!
 
 static ogg_int16_t idctconstants[(4+7+1) * 4];
-static const ogg_int16_t idctcosTbl[ 7] = 
+static const ogg_int16_t idctcosTbl[ 7] =
 {
 	64277, 60547, 54491, 46341, 36410, 25080, 12785
 };
 
 extern "C" void fillidctconstants(void)
 {
-	int j = 16;  
-	ogg_int16_t * p; 
-	do 
-	{ 
+	int j = 16;
+	ogg_int16_t * p;
+	do
+	{
 		idctconstants[ --j] = 0;
-	}  
+	}
 	while( j);
-	
+
 	idctconstants[0] = idctconstants[5] = idctconstants[10] = idctconstants[15] = 65535;
-	
-	j = 1; 
-	do 
+
+	j = 1;
+	do
 	{
 		p = idctconstants + ( (j+3) << 2);
 		p[0] = p[1] = p[2] = p[3] = idctcosTbl[ j - 1];
-	} 
+	}
 	while( ++j <= 7);
-	
+
 	idctconstants[44] = idctconstants[45] = idctconstants[46] = idctconstants[47] = IdctAdjustBeforeShift;
 }
 
@@ -177,26 +177,26 @@ extern "C" void fillidctconstants(void)
    i and j are the horizontal and vertical spatial coordinates;
    all indices vary from 0 ... 7 (as above)
    and there are now 4 cases of normalization.
-  
+
    Our 1-D idct expansion uses constants C1 ... C7 given by
 
-   	(*)  Ck = C(-k) = cos( pi * k/16) = S(8-k) = -S(k-8) = sin( pi * (8-k)/16) 
+   	(*)  Ck = C(-k) = cos( pi * k/16) = S(8-k) = -S(k-8) = sin( pi * (8-k)/16)
 
    and the following 1-D algorithm transforming I0 ... I7  to  R0 ... R7 :
-  
+
    A = (C1 * I1) + (C7 * I7)		B = (C7 * I1) - (C1 * I7)
    C = (C3 * I3) + (C5 * I5)		D = (C3 * I5) - (C5 * I3)
    A. = C4 * (A - C)				B. = C4 * (B - D)
    C. = A + C						D. = B + D
-   
+
    E = C4 * (I0 + I4)				F = C4 * (I0 - I4)
    G = (C2 * I2) + (C6 * I6)		H = (C6 * I2) - (C2 * I6)
    E. = E - G
    G. = E + G
-   
+
    A.. = F + A.					B.. = B. - H
    F.  = F - A. 				H.  = B. + H
-   
+
    R0 = G. + C.	R1 = A.. + H.	R3 = E. + D.	R5 = F. + B..
    R7 = G. - C.	R2 = A.. - H.	R4 = E. - D.	R6 = F. - B..
 
@@ -234,7 +234,7 @@ extern "C" void fillidctconstants(void)
 
 	2. You always need at least 2 extra registers to calculate products,
 	   so storing 2 temporaries is inevitable.  C. and D. seem to be
-	   the best candidates.   
+	   the best candidates.
 
 	3. The products should be calculated in decreasing order of complexity
 	   (which translates into register pressure).  Since C1 ... C5 require
@@ -244,14 +244,14 @@ extern "C" void fillidctconstants(void)
 /**************************************************************************************
  *
  *		Routine:		BeginIDCT
- *		
+ *
  *		Description:	The Macro does IDct on 4 1-D Dcts
  *
  *		Input:			None
  *
  *		Output:			None
- *		
- *		Return:			None			
+ *
+ *		Return:			None
  *
  *		Special Note:	None
  *
@@ -263,98 +263,98 @@ extern "C" void fillidctconstants(void)
 template<class Ti,class Tj,class Tc> static __forceinline void BeginIDCT(__m64 &r0,__m64 &r1,__m64 &r2,__m64 &r3,__m64 &r4,__m64 &r5,__m64 &r6,__m64 &r7,Ti I,Tj J, Tc C)
 {
 		movq		(r2, I(3)  );
-	                       
+
 		movq		(r6, C(3) );
 		 movq		(r4, r2 );
 		movq		(r7, J(5) );
-		 pmulhw		(r4, r6		);/* r4 = c3*i3 - i3 */ 
+		 pmulhw		(r4, r6		);/* r4 = c3*i3 - i3 */
 		movq		(r1, C(5) );
-		 pmulhw		(r6, r7		);/* r6 = c3*i5 - i5 */ 
-		movq		(r5, r1); 
-		 pmulhw		(r1, r2		);/* r1 = c5*i3 - i3 */ 
+		 pmulhw		(r6, r7		);/* r6 = c3*i5 - i5 */
+		movq		(r5, r1);
+		 pmulhw		(r1, r2		);/* r1 = c5*i3 - i3 */
 		movq		(r3, I(1) );
-		 pmulhw		(r5, r7		);/* r5 = c5*i5 - i5 */ 
-		movq		(r0, C(1)	);/* (all registers are in use) */ 
-		 paddw		(r4, r2		);/* r4 = c3*i3 */ 
-		paddw		(r6, r7		);/* r6 = c3*i5 */ 
-		 paddw		(r2, r1		);/* r2 = c5*i3 */ 
+		 pmulhw		(r5, r7		);/* r5 = c5*i5 - i5 */
+		movq		(r0, C(1)	);/* (all registers are in use) */
+		 paddw		(r4, r2		);/* r4 = c3*i3 */
+		paddw		(r6, r7		);/* r6 = c3*i5 */
+		 paddw		(r2, r1		);/* r2 = c5*i3 */
 		movq		(r1, J(7) );
-		 paddw		(r7, r5		);/* r7 = c5*i5 */ 
-		movq		(r5, r0		);/* r5 = c1 */ 
-		 pmulhw		(r0, r3		);/* r0 = c1*i1 - i1 */ 
-		paddsw		(r4, r7		);/* r4 = C = c3*i3 + c5*i5 */ 
-		 pmulhw		(r5, r1		);/* r5 = c1*i7 - i7 */ 
+		 paddw		(r7, r5		);/* r7 = c5*i5 */
+		movq		(r5, r0		);/* r5 = c1 */
+		 pmulhw		(r0, r3		);/* r0 = c1*i1 - i1 */
+		paddsw		(r4, r7		);/* r4 = C = c3*i3 + c5*i5 */
+		 pmulhw		(r5, r1		);/* r5 = c1*i7 - i7 */
 		movq		(r7, C(7) );
-		 psubsw		(r6, r2		);/* r6 = D = c3*i5 - c5*i3  (done w/r2) */ 
-		paddw		(r0, r3		);/* r0 = c1*i1 */ 
-		 pmulhw		(r3, r7		);/* r3 = c7*i1 */ 
+		 psubsw		(r6, r2		);/* r6 = D = c3*i5 - c5*i3  (done w/r2) */
+		paddw		(r0, r3		);/* r0 = c1*i1 */
+		 pmulhw		(r3, r7		);/* r3 = c7*i1 */
 		movq		(r2, I(2) );
-		 pmulhw		(r7, r1		);/* r7 = c7*i7 */ 
-		paddw		(r5, r1		);/* r5 = c1*i7 */ 
-		 movq		(r1, r2		);/* r1 = i2 */ 
-		pmulhw		(r2, C(2)	);/* r2 = c2*i2 - i2 */ 
-		 psubsw		(r3, r5		);/* r3 = B = c7*i1 - c1*i7 */ 
+		 pmulhw		(r7, r1		);/* r7 = c7*i7 */
+		paddw		(r5, r1		);/* r5 = c1*i7 */
+		 movq		(r1, r2		);/* r1 = i2 */
+		pmulhw		(r2, C(2)	);/* r2 = c2*i2 - i2 */
+		 psubsw		(r3, r5		);/* r3 = B = c7*i1 - c1*i7 */
 		movq		(r5, J(6) );
-		 paddsw		(r0, r7		);/* r0 = A = c1*i1 + c7*i7 */ 
-		movq		(r7, r5		);/* r7 = i6 */ 
-		 psubsw		(r0, r4		);/* r0 = A - C */ 
-		pmulhw		(r5, C(2)	);/* r5 = c2*i6 - i6 */ 
-		 paddw		(r2, r1		);/* r2 = c2*i2 */ 
-		pmulhw		(r1, C(6)	);/* r1 = c6*i2 */ 
-		 paddsw		(r4, r4		);/* r4 = C + C */ 
-		paddsw		(r4, r0		);/* r4 = C. = A + C */ 
-		 psubsw		(r3, r6		);/* r3 = B - D */ 
-		paddw		(r5, r7		);/* r5 = c2*i6 */ 
-		 paddsw		(r6, r6		);/* r6 = D + D */ 
-		pmulhw		(r7, C(6)	);/* r7 = c6*i6 */ 
-		 paddsw		(r6, r3		);/* r6 = D. = B + D */ 
-		movq		(I(1), r4	);/* save C. at I(1) */ 
-		 psubsw		(r1, r5		);/* r1 = H = c6*i2 - c2*i6 */ 
+		 paddsw		(r0, r7		);/* r0 = A = c1*i1 + c7*i7 */
+		movq		(r7, r5		);/* r7 = i6 */
+		 psubsw		(r0, r4		);/* r0 = A - C */
+		pmulhw		(r5, C(2)	);/* r5 = c2*i6 - i6 */
+		 paddw		(r2, r1		);/* r2 = c2*i2 */
+		pmulhw		(r1, C(6)	);/* r1 = c6*i2 */
+		 paddsw		(r4, r4		);/* r4 = C + C */
+		paddsw		(r4, r0		);/* r4 = C. = A + C */
+		 psubsw		(r3, r6		);/* r3 = B - D */
+		paddw		(r5, r7		);/* r5 = c2*i6 */
+		 paddsw		(r6, r6		);/* r6 = D + D */
+		pmulhw		(r7, C(6)	);/* r7 = c6*i6 */
+		 paddsw		(r6, r3		);/* r6 = D. = B + D */
+		movq		(I(1), r4	);/* save C. at I(1) */
+		 psubsw		(r1, r5		);/* r1 = H = c6*i2 - c2*i6 */
 		movq		(r4, C(4) );
-		 movq		(r5, r3		);/* r5 = B - D */ 
-		pmulhw		(r3, r4		);/* r3 = (c4 - 1) * (B - D) */ 
-		 paddsw		(r7, r2		);/* r7 = G = c6*i6 + c2*i2 */ 
-		movq		(I(2), r6	);/* save D. at I(2) */ 
-		 movq		(r2, r0		);/* r2 = A - C */ 
+		 movq		(r5, r3		);/* r5 = B - D */
+		pmulhw		(r3, r4		);/* r3 = (c4 - 1) * (B - D) */
+		 paddsw		(r7, r2		);/* r7 = G = c6*i6 + c2*i2 */
+		movq		(I(2), r6	);/* save D. at I(2) */
+		 movq		(r2, r0		);/* r2 = A - C */
 		movq		(r6, I(0) );
-		 pmulhw		(r0, r4		);/* r0 = (c4 - 1) * (A - C) */ 
-		paddw		(r5, r3		);/* r5 = B. = c4 * (B - D) */ 
-	                        
+		 pmulhw		(r0, r4		);/* r0 = (c4 - 1) * (A - C) */
+		paddw		(r5, r3		);/* r5 = B. = c4 * (B - D) */
+
 		movq		(r3, J(4) );
-		 psubsw		(r5, r1		);/* r5 = B.. = B. - H */ 
-		paddw		(r2, r0		);/* r0 = A. = c4 * (A - C) */ 
-		 psubsw		(r6, r3		);/* r6 = i0 - i4 */ 
+		 psubsw		(r5, r1		);/* r5 = B.. = B. - H */
+		paddw		(r2, r0		);/* r0 = A. = c4 * (A - C) */
+		 psubsw		(r6, r3		);/* r6 = i0 - i4 */
 		movq		(r0, r6 );
-		 pmulhw		(r6, r4		);/* r6 = (c4 - 1) * (i0 - i4) */ 
-		paddsw		(r3, r3		);/* r3 = i4 + i4 */ 
-		 paddsw		(r1, r1		);/* r1 = H + H */ 
-		paddsw		(r3, r0		);/* r3 = i0 + i4 */ 
-		 paddsw		(r1, r5		);/* r1 = H. = B + H */ 
-		pmulhw		(r4, r3		);/* r4 = (c4 - 1) * (i0 + i4) */ 
-		 paddsw		(r6, r0		);/* r6 = F = c4 * (i0 - i4) */ 
-		psubsw		(r6, r2		);/* r6 = F. = F - A. */ 
-		 paddsw		(r2, r2		);/* r2 = A. + A. */ 
-		movq		(r0, I(1)	);/* r0 = C. */ 
-		 paddsw		(r2, r6		);/* r2 = A.. = F + A. */ 
-		paddw		(r4, r3		);/* r4 = E = c4 * (i0 + i4) */ 
-		 psubsw		(r2, r1		);/* r2 = R2 = A.. - H. */ 
-}                               
+		 pmulhw		(r6, r4		);/* r6 = (c4 - 1) * (i0 - i4) */
+		paddsw		(r3, r3		);/* r3 = i4 + i4 */
+		 paddsw		(r1, r1		);/* r1 = H + H */
+		paddsw		(r3, r0		);/* r3 = i0 + i4 */
+		 paddsw		(r1, r5		);/* r1 = H. = B + H */
+		pmulhw		(r4, r3		);/* r4 = (c4 - 1) * (i0 + i4) */
+		 paddsw		(r6, r0		);/* r6 = F = c4 * (i0 - i4) */
+		psubsw		(r6, r2		);/* r6 = F. = F - A. */
+		 paddsw		(r2, r2		);/* r2 = A. + A. */
+		movq		(r0, I(1)	);/* r0 = C. */
+		 paddsw		(r2, r6		);/* r2 = A.. = F + A. */
+		paddw		(r4, r3		);/* r4 = E = c4 * (i0 + i4) */
+		 psubsw		(r2, r1		);/* r2 = R2 = A.. - H. */
+}
 // end BeginIDCT macro (38 cycle(s).
-                                
+
 // Two versions of the end of th(e idct depending on whether we're feeding
 // into a transpose or dividing the final results by 16 and storing them.
 
 /**************************************************************************************
  *
  *		Routine:		RowIDCT
- *		
+ *
  *		Description:	The Macro does 1-D IDct on 4 Rows
  *
  *		Input:			None
  *
  *		Output:			None
- *		
- *		Return:			None			
+ *
+ *		Return:			None
  *
  *		Special Note:	None
  *
@@ -368,23 +368,23 @@ template<class Ti,class Tj,class Tc> static __forceinline void BeginIDCT(__m64 &
 template<class Ti,class Tj,class Tc> static __forceinline void RowIDCT(__m64 &r0,__m64 &r1,__m64 &r2,__m64 &r3,__m64 &r4,__m64 &r5,__m64 &r6,__m64 &r7,Ti I,Tj J, Tc C)
 {
 	BeginIDCT(r0,r1,r2,r3,r4,r5,r6,r7,I,J,C);
-	
-		movq		(r3, I(2)	);/* r3 = D. */ 
-		 psubsw		(r4, r7		);/* r4 = E. = E - G */ 
-		paddsw		(r1, r1		);/* r1 = H. + H. */ 
-		 paddsw		(r7, r7		);/* r7 = G + G */ 
-		paddsw		(r1, r2		);/* r1 = R1 = A.. + H. */ 
-		 paddsw		(r7, r4		);/* r7 = G. = E + G */ 
-		psubsw		(r4, r3		);/* r4 = R4 = E. - D. */ 
+
+		movq		(r3, I(2)	);/* r3 = D. */
+		 psubsw		(r4, r7		);/* r4 = E. = E - G */
+		paddsw		(r1, r1		);/* r1 = H. + H. */
+		 paddsw		(r7, r7		);/* r7 = G + G */
+		paddsw		(r1, r2		);/* r1 = R1 = A.. + H. */
+		 paddsw		(r7, r4		);/* r7 = G. = E + G */
+		psubsw		(r4, r3		);/* r4 = R4 = E. - D. */
 		 paddsw		(r3, r3 );
-		psubsw		(r6, r5		);/* r6 = R6 = F. - B.. */ 
+		psubsw		(r6, r5		);/* r6 = R6 = F. - B.. */
 		 paddsw		(r5, r5 );
-		paddsw		(r3, r4		);/* r3 = R3 = E. + D. */ 
-		 paddsw		(r5, r6		);/* r5 = R5 = F. + B.. */ 
-		psubsw		(r7, r0		);/* r7 = R7 = G. - C. */ 
+		paddsw		(r3, r4		);/* r3 = R3 = E. + D. */
+		 paddsw		(r5, r6		);/* r5 = R5 = F. + B.. */
+		psubsw		(r7, r0		);/* r7 = R7 = G. - C. */
 		 paddsw		(r0, r0 );
-		movq		(I(1), r1	);/* save R1 */ 
-		 paddsw		(r0, r7		);/* r0 = R0 = G. + C. */ 
+		movq		(I(1), r1	);/* save R1 */
+		 paddsw		(r0, r7		);/* r0 = R0 = G. + C. */
 }
 // end RowIDCT macro (8 + 38 = 46 cycles)
 
@@ -392,14 +392,14 @@ template<class Ti,class Tj,class Tc> static __forceinline void RowIDCT(__m64 &r0
 /**************************************************************************************
  *
  *		Routine:		ColumnIDCT
- *		
+ *
  *		Description:	The Macro does 1-D IDct on 4 columns
  *
  *		Input:			None
  *
  *		Output:			None
- *		
- *		Return:			None			
+ *
+ *		Return:			None
  *
  *		Special Note:	None
  *
@@ -412,59 +412,59 @@ template<class Ti,class Tj,class Tc> static __forceinline void RowIDCT(__m64 &r0
 template<class Ti,class Tj,class Tc> static __forceinline void ColumnIDCT(__m64 &r0,__m64 &r1,__m64 &r2,__m64 &r3,__m64 &r4,__m64 &r5,__m64 &r6,__m64 &r7,Ti I,Tj J, Tc C,unsigned char *Eight)
 {
 	BeginIDCT (r0,r1,r2,r3,r4,r5,r6,r7,I,J,C);
-	
-		paddsw		(r2, Eight	);/* adjust R2 (and R1) for shift */ 
-		 paddsw		(r1, r1		);/* r1 = H. + H. */ 
-		paddsw		(r1, r2		);/* r1 = R1 = A.. + H. */ 
-		 psraw		(r2, 4		);/* r2 = NR2 */ 
-		psubsw		(r4, r7		);/* r4 = E. = E - G */ 
-		 psraw		(r1, 4		);/* r1 = NR1 */ 
-		movq		(r3, I(2)	);/* r3 = D. */ 
-		 paddsw		(r7, r7		);/* r7 = G + G */ 
-		movq		(I(2), r2	);/* store NR2 at I2 */ 
-		 paddsw		(r7, r4		);/* r7 = G. = E + G */ 
-		movq		(I(1), r1	);/* store NR1 at I1 */ 
-		 psubsw		(r4, r3		);/* r4 = R4 = E. - D. */ 
-		paddsw		(r4, Eight	);/* adjust R4 (and R3) for shift */ 
-		 paddsw		(r3, r3		);/* r3 = D. + D. */ 
-		paddsw		(r3, r4		);/* r3 = R3 = E. + D. */ 
-		 psraw		(r4, 4		);/* r4 = NR4 */ 
-		psubsw		(r6, r5		);/* r6 = R6 = F. - B.. */ 
-		 psraw		(r3, 4		);/* r3 = NR3 */ 
-		paddsw		(r6, Eight	);/* adjust R6 (and R5) for shift */ 
-		 paddsw		(r5, r5		);/* r5 = B.. + B.. */ 
-		paddsw		(r5, r6		);/* r5 = R5 = F. + B.. */ 
-		 psraw		(r6, 4		);/* r6 = NR6 */ 
-		movq		(J(4), r4	);/* store NR4 at J4 */ 
-		 psraw		(r5, 4		);/* r5 = NR5 */ 
-		movq		(I(3), r3	);/* store NR3 at I3 */ 
-		 psubsw		(r7, r0		);/* r7 = R7 = G. - C. */ 
-		paddsw		(r7, Eight	);/* adjust R7 (and R0) for shift */ 
-		 paddsw		(r0, r0 		);/* r0 = C. + C. */ 
-		paddsw		(r0, r7		);/* r0 = R0 = G. + C. */ 
-		 psraw		(r7, 4		);/* r7 = NR7 */ 
-		movq		(J(6), r6	);/* store NR6 at J6 */ 
-		 psraw		(r0, 4		);/* r0 = NR0 */ 
-		movq		(J(5), r5	);/* store NR5 at J5 */ 
-	 
-		movq		(J(7), r7	);/* store NR7 at J7 */ 
-	 
-		movq		(I(0), r0	);/* store NR0 at I0 */ 
-	 
+
+		paddsw		(r2, Eight	);/* adjust R2 (and R1) for shift */
+		 paddsw		(r1, r1		);/* r1 = H. + H. */
+		paddsw		(r1, r2		);/* r1 = R1 = A.. + H. */
+		 psraw		(r2, 4		);/* r2 = NR2 */
+		psubsw		(r4, r7		);/* r4 = E. = E - G */
+		 psraw		(r1, 4		);/* r1 = NR1 */
+		movq		(r3, I(2)	);/* r3 = D. */
+		 paddsw		(r7, r7		);/* r7 = G + G */
+		movq		(I(2), r2	);/* store NR2 at I2 */
+		 paddsw		(r7, r4		);/* r7 = G. = E + G */
+		movq		(I(1), r1	);/* store NR1 at I1 */
+		 psubsw		(r4, r3		);/* r4 = R4 = E. - D. */
+		paddsw		(r4, Eight	);/* adjust R4 (and R3) for shift */
+		 paddsw		(r3, r3		);/* r3 = D. + D. */
+		paddsw		(r3, r4		);/* r3 = R3 = E. + D. */
+		 psraw		(r4, 4		);/* r4 = NR4 */
+		psubsw		(r6, r5		);/* r6 = R6 = F. - B.. */
+		 psraw		(r3, 4		);/* r3 = NR3 */
+		paddsw		(r6, Eight	);/* adjust R6 (and R5) for shift */
+		 paddsw		(r5, r5		);/* r5 = B.. + B.. */
+		paddsw		(r5, r6		);/* r5 = R5 = F. + B.. */
+		 psraw		(r6, 4		);/* r6 = NR6 */
+		movq		(J(4), r4	);/* store NR4 at J4 */
+		 psraw		(r5, 4		);/* r5 = NR5 */
+		movq		(I(3), r3	);/* store NR3 at I3 */
+		 psubsw		(r7, r0		);/* r7 = R7 = G. - C. */
+		paddsw		(r7, Eight	);/* adjust R7 (and R0) for shift */
+		 paddsw		(r0, r0 		);/* r0 = C. + C. */
+		paddsw		(r0, r7		);/* r0 = R0 = G. + C. */
+		 psraw		(r7, 4		);/* r7 = NR7 */
+		movq		(J(6), r6	);/* store NR6 at J6 */
+		 psraw		(r0, 4		);/* r0 = NR0 */
+		movq		(J(5), r5	);/* store NR5 at J5 */
+
+		movq		(J(7), r7	);/* store NR7 at J7 */
+
+		movq		(I(0), r0	);/* store NR0 at I0 */
+
 }
 // end ColumnIDCT macro (38 + 19 = 57 cycles)
 
 /**************************************************************************************
  *
  *		Routine:		Transpose
- *		
+ *
  *		Description:	The Macro does two 4x4 transposes in place.
  *
  *		Input:			None
  *
  *		Output:			None
- *		
- *		Return:			None			
+ *
+ *		Return:			None
  *
  *		Special Note:	None
  *
@@ -493,7 +493,7 @@ template<class Ti,class Tj,class Tc> static __forceinline void ColumnIDCT(__m64 
 	I(1) = d1 c1 b1 a1
 	I(2) = d2 c2 b2 a2
 	I(3) = d3 c3 b3 a3
-	
+
 	J(4) = h0 g0 f0 e0
 	J(5) = h1 g1 f1 e1
 	J(6) = h2 g2 f2 e2
@@ -507,42 +507,42 @@ template<class Ti,class Tj,class Tc> static __forceinline void ColumnIDCT(__m64 
 
 template<class Ti,class Tj> static __forceinline void Transpose(__m64 &r0,__m64 &r1,__m64 &r2,__m64 &r3,__m64 &r4,__m64 &r5,__m64 &r6,__m64 &r7,Ti I,Tj J)
 {
-		movq		(r1, r4			);// r1 = e3 e2 e1 e0  
-		 punpcklwd	(r4, r5			);// r4 = f1 e1 f0 e0  
-		movq		(I(0), r0		);// save a3 a2 a1 a0  
-		 punpckhwd	(r1, r5			);// r1 = f3 e3 f2 e2  
-		movq		(r0, r6			);// r0 = g3 g2 g1 g0  
-		 punpcklwd	(r6, r7			);// r6 = h1 g1 h0 g0  
-		movq		(r5, r4			);// r5 = f1 e1 f0 e0  
-		 punpckldq	(r4, r6			);// r4 = h0 g0 f0 e0 = R4  
-		punpckhdq	(r5, r6			);// r5 = h1 g1 f1 e1 = R5  
-		 movq		(r6, r1			);// r6 = f3 e3 f2 e2  
+		movq		(r1, r4			);// r1 = e3 e2 e1 e0
+		 punpcklwd	(r4, r5			);// r4 = f1 e1 f0 e0
+		movq		(I(0), r0		);// save a3 a2 a1 a0
+		 punpckhwd	(r1, r5			);// r1 = f3 e3 f2 e2
+		movq		(r0, r6			);// r0 = g3 g2 g1 g0
+		 punpcklwd	(r6, r7			);// r6 = h1 g1 h0 g0
+		movq		(r5, r4			);// r5 = f1 e1 f0 e0
+		 punpckldq	(r4, r6			);// r4 = h0 g0 f0 e0 = R4
+		punpckhdq	(r5, r6			);// r5 = h1 g1 f1 e1 = R5
+		 movq		(r6, r1			);// r6 = f3 e3 f2 e2
 		movq		(J(4), r4 );
-		 punpckhwd	(r0, r7			);// r0 = h3 g3 h2 g2  
+		 punpckhwd	(r0, r7			);// r0 = h3 g3 h2 g2
 		movq		(J(5), r5 );
-		 punpckhdq	(r6, r0			);// r6 = h3 g3 f3 e3 = R7  
-		movq		(r4, I(0)		);// r4 = a3 a2 a1 a0  
-		 punpckldq	(r1, r0			);// r1 = h2 g2 f2 e2 = R6  
-		movq		(r5, I(1)		);// r5 = b3 b2 b1 b0  
-		 movq		(r0, r4			);// r0 = a3 a2 a1 a0  
+		 punpckhdq	(r6, r0			);// r6 = h3 g3 f3 e3 = R7
+		movq		(r4, I(0)		);// r4 = a3 a2 a1 a0
+		 punpckldq	(r1, r0			);// r1 = h2 g2 f2 e2 = R6
+		movq		(r5, I(1)		);// r5 = b3 b2 b1 b0
+		 movq		(r0, r4			);// r0 = a3 a2 a1 a0
 		movq		(J(7), r6 );
-		 punpcklwd	(r0, r5			);// r0 = b1 a1 b0 a0  
+		 punpcklwd	(r0, r5			);// r0 = b1 a1 b0 a0
 		movq		(J(6), r1 );
-		 punpckhwd	(r4, r5			);// r4 = b3 a3 b2 a2  
-		movq		(r5, r2			);// r5 = c3 c2 c1 c0  
-		 punpcklwd	(r2, r3			);// r2 = d1 c1 d0 c0  
-		movq		(r1, r0			);// r1 = b1 a1 b0 a0  
-		 punpckldq	(r0, r2			);// r0 = d0 c0 b0 a0 = R0  
-		punpckhdq	(r1, r2			);// r1 = d1 c1 b1 a1 = R1  
-		 movq		(r2, r4			);// r2 = b3 a3 b2 a2  
+		 punpckhwd	(r4, r5			);// r4 = b3 a3 b2 a2
+		movq		(r5, r2			);// r5 = c3 c2 c1 c0
+		 punpcklwd	(r2, r3			);// r2 = d1 c1 d0 c0
+		movq		(r1, r0			);// r1 = b1 a1 b0 a0
+		 punpckldq	(r0, r2			);// r0 = d0 c0 b0 a0 = R0
+		punpckhdq	(r1, r2			);// r1 = d1 c1 b1 a1 = R1
+		 movq		(r2, r4			);// r2 = b3 a3 b2 a2
 		movq		(I(0), r0 );
-		 punpckhwd	(r5, r3			);// r5 = d3 c3 d2 c2  
+		 punpckhwd	(r5, r3			);// r5 = d3 c3 d2 c2
 		movq		(I(1), r1 );
-		 punpckhdq	(r4, r5			);// r4 = d3 c3 b3 a3 = R3  
-		punpckldq	(r2, r5			);// r2 = d2 c2 b2 a2 = R2  
-	 
+		 punpckhdq	(r4, r5			);// r4 = d3 c3 b3 a3 = R3
+		punpckldq	(r2, r5			);// r2 = d2 c2 b2 a2 = R2
+
 		movq		(I(3), r4 );
-	 
+
 		movq		(I(2), r2 );
 }
 // end Transpose macro (19 cycles).
@@ -552,14 +552,14 @@ template<class Ti,class Tj> static __forceinline void Transpose(__m64 &r0,__m64 
 /**************************************************************************************
  *
  *		Routine:		MMX_idct
- *		
+ *
  *		Description:	Perform IDCT on a 8x8 block
  *
- *		Input:			Pointer to input and output buffer				
+ *		Input:			Pointer to input and output buffer
  *
  *		Output:			None
- *		
- *		Return:			None			
+ *
+ *		Return:			None
  *
  *		Special Note:	The input coefficients are in ZigZag order
  *
@@ -567,7 +567,7 @@ template<class Ti,class Tj> static __forceinline void Transpose(__m64 &r0,__m64 
  *
  ***************************************************************************************
  */
- 
+
 struct I10_1
 {
 private:
@@ -585,7 +585,7 @@ public:
  I_2(unsigned char *Iedx):edx(Iedx) {}
  unsigned char* operator()(int K) const {return edx + (  K      * 16) + 64;}
 };
- 
+
 struct I10_2
 {
 private:
@@ -594,7 +594,7 @@ public:
  I10_2(unsigned char *Iedx):edx(Iedx) {}
  unsigned char* operator()(int K) const {return edx + (K * 16);}
 };
- 
+
 struct I10_3
 {
 private:
@@ -603,7 +603,7 @@ public:
  I10_3(unsigned char *Iedx):edx(Iedx) {}
  unsigned char* operator()(int K) const {return edx + (K * 16) + 8;}
 };
- 
+
 struct J10_1
 {
 private:
@@ -621,7 +621,7 @@ public:
  J_2(unsigned char *Iedx):edx(Iedx) {}
  unsigned char* operator()(int K) const {return edx + ( (K - 4) * 16) + 72;}
 };
- 
+
 struct C10
 {
 private:
@@ -631,7 +631,7 @@ public:
  unsigned char* operator()(int I) const {return ecx + CosineOffset + (I-1)*8;}
 };
 
-extern "C" void MMX_idct (	ogg_int16_t * input, ogg_int16_t * qtbl, ogg_int16_t * output) 
+extern "C" void MMX_idct (	ogg_int16_t * input, ogg_int16_t * qtbl, ogg_int16_t * output)
 {
 
 //	uint16 *constants = idctconstants;
@@ -757,7 +757,7 @@ __m64 r0,r1,r2,r3,r4,r5,r6,r7;
 	 por	(r7, r6			);// r7 = 50 36 32 17 = R5
 	pmullw	(r4, ebx+88	);// r4 = 57 56 55 54
 	 psrlq	(r3, 16			);// r3 = __ __ FF __
-	movq	(edx+24, r7	);// write R5 = r7	 
+	movq	(edx+24, r7	);// write R5 = r7
 	 pand	(r3, r1			);// r3 = __ __ 35 __
 	psrlq	(r5, 48			);// r5 = __ __ __ 33
 	 pand	(r1, r2			);// r1 = __ __ __ 34
@@ -810,7 +810,7 @@ __m64 r0,r1,r2,r3,r4,r5,r6,r7;
 	por	(	r6, r5			);// r6 = 76 73 67 64 = R14
 	 pand	(r0, r2			);// r0 = __ __ __ 70
 	pxor	(r7, r0			);// r7 = 73 72 71 __
-	 psllq	(r0, 32			);// r0 = __ 70 __ __	
+	 psllq	(r0, 32			);// r0 = __ 70 __ __
 	movq	(edx+104, r6	);// write R14 = r6
 	 psrlq	(r4, 16			);// r4 = __ 57 56 55
 	movq	(r5, eax+72);
@@ -836,7 +836,7 @@ __m64 r0,r1,r2,r3,r4,r5,r6,r7;
 	movq	(edx+88, r7	);// write R13 = r7
 	 psrlq	(r5, 48			);// r5 = __ __ __ 47
 	movq	(r7, eax+64);
-	 por	(r6, r3			);// r6 = 71 62 56 __	 
+	 por	(r6, r3			);// r6 = 71 62 56 __
 	pmullw	(r7, ebx+64	);// r7 = 43 42 41 40
 	 por	(r6, r5			);// r6 = 71 62 56 47 = R12
 	pand	(r4, M(2)		);// r4 = __ 57 __ __
@@ -863,7 +863,7 @@ __m64 r0,r1,r2,r3,r4,r5,r6,r7;
 	 por	(r6, r2			);// r6 = 60 __ __ 27
 	movq	(r2, M(1)		);// r2 = __ __ FF __
 	 por	(r6, r4			);// r6 = 60 45 __ 27
-	pand	(r2, r7			);// r2 = __ __ 41 __	 
+	pand	(r2, r7			);// r2 = __ __ 41 __
 	 psllq	(r3, 32			);// r3 = 44 __ __ __
 	por	(	r3, edx+80	);// r3 = 44 __ __ 23
 	 por	(r6, r2			);// r6 = 60 45 41 27 = R10
@@ -884,7 +884,7 @@ __m64 r0,r1,r2,r3,r4,r5,r6,r7;
 	movq	(edx+80, r6	);// store R9 = r6
 	 //
 	movq	(edx+64, r7	);// store R8 = r7
-	 
+
 	// 123c  ( / 64 coeffs  < 2c / coeff)
 #	undef M
 
@@ -926,14 +926,14 @@ __m64 r0,r1,r2,r3,r4,r5,r6,r7;
 /**************************************************************************************
  *
  *		Routine:		MMX_idct10
- *		
+ *
  *		Description:	Perform IDCT on a 8x8 block with at most 10 nonzero coefficients
  *
- *		Input:			Pointer to input and output buffer				
+ *		Input:			Pointer to input and output buffer
  *
  *		Output:			None
- *		
- *		Return:			None			
+ *
+ *		Return:			None
  *
  *		Special Note:	The input coefficients are in transposed ZigZag order
  *
@@ -953,95 +953,95 @@ template<class Ti,class Tc> static __forceinline void BeginIDCT_10(__m64 &r0,__m
 		movq		(r4, r2 );
 
 		movq		(r1, C(5) );
-		pmulhw		(r4, r6		);/* r4 = c3*i3 - i3 */ 
+		pmulhw		(r4, r6		);/* r4 = c3*i3 - i3 */
 
 		movq		(r3, I(1) );
-		pmulhw		(r1, r2		);/* r1 = c5*i3 - i3 */ 
+		pmulhw		(r1, r2		);/* r1 = c5*i3 - i3 */
 
-		movq		(r0, C(1)	);/* (all registers are in use) */ 
-		paddw		(r4, r2		);/* r4 = C = c3*i3 */ 
+		movq		(r0, C(1)	);/* (all registers are in use) */
+		paddw		(r4, r2		);/* r4 = C = c3*i3 */
 
-                pxor            (r6,r6       );/* used to get -(c5*i3) */ 
-		paddw		(r2, r1		);/* r2 = c5*i3 */ 
+                pxor            (r6,r6       );/* used to get -(c5*i3) */
+		paddw		(r2, r1		);/* r2 = c5*i3 */
 
 		movq		(r5, I(2)   );
-		pmulhw		(r0, r3		);/* r0 = c1*i1 - i1 */ 
+		pmulhw		(r0, r3		);/* r0 = c1*i1 - i1 */
 
 		movq		(r1, r5       );
-		paddw		(r0, r3		);/* r0 = A = c1*i1 */ 
+		paddw		(r0, r3		);/* r0 = A = c1*i1 */
 
-		pmulhw		(r3, C(7)	);/* r3 = B = c7*i1 */ 
-		psubsw		(r6, r2		);/* r6 = D = -c5*i3 */ 
+		pmulhw		(r3, C(7)	);/* r3 = B = c7*i1 */
+		psubsw		(r6, r2		);/* r6 = D = -c5*i3 */
 
-		pmulhw		(r5, C(2)	);/* r1 = c2*i2 - i2 */ 
-		psubsw		(r0, r4		);/* r0 = A - C */ 
+		pmulhw		(r5, C(2)	);/* r1 = c2*i2 - i2 */
+		psubsw		(r0, r4		);/* r0 = A - C */
 
                 movq            (r7,I(2)        );
-		paddsw		(r4, r4		);/* r4 = C + C */ 
+		paddsw		(r4, r4		);/* r4 = C + C */
 
-		paddw		(r7, r5		);/* r7 = G = c2*i2 */ 
-		paddsw		(r4, r0		);/* r4 = C. = A + C */ 
+		paddw		(r7, r5		);/* r7 = G = c2*i2 */
+		paddsw		(r4, r0		);/* r4 = C. = A + C */
 
-		pmulhw		(r1, C(6)	);/* r1 = H = c6*i2 */ 
-		psubsw		(r3, r6		);/* r3 = B - D */ 
+		pmulhw		(r1, C(6)	);/* r1 = H = c6*i2 */
+		psubsw		(r3, r6		);/* r3 = B - D */
 
-		movq		(I(1), r4	);/* save C. at I(1) */ 
-		paddsw		(r6, r6		);/* r6 = D + D */ 
+		movq		(I(1), r4	);/* save C. at I(1) */
+		paddsw		(r6, r6		);/* r6 = D + D */
 
     	        movq		(r4, C(4) );
-		paddsw		(r6, r3		);/* r6 = D. = B + D */ 
+		paddsw		(r6, r3		);/* r6 = D. = B + D */
 
-		movq		(r5, r3		);/* r5 = B - D */ 
-		pmulhw		(r3, r4		);/* r3 = (c4 - 1) * (B - D) */ 
+		movq		(r5, r3		);/* r5 = B - D */
+		pmulhw		(r3, r4		);/* r3 = (c4 - 1) * (B - D) */
 
-		movq		(I(2), r6	);/* save D. at I(2) */ 
-		movq		(r2, r0		);/* r2 = A - C */ 
+		movq		(I(2), r6	);/* save D. at I(2) */
+		movq		(r2, r0		);/* r2 = A - C */
 
 		movq		(r6, I(0)   );
-		pmulhw		(r0, r4		);/* r0 = (c4 - 1) * (A - C) */ 
+		pmulhw		(r0, r4		);/* r0 = (c4 - 1) * (A - C) */
 
-		paddw		(r5, r3		);/* r5 = B. = c4 * (B - D) */ 
-		paddw		(r2, r0		);/* r0 = A. = c4 * (A - C) */ 
+		paddw		(r5, r3		);/* r5 = B. = c4 * (B - D) */
+		paddw		(r2, r0		);/* r0 = A. = c4 * (A - C) */
 
-		psubsw		(r5, r1		);/* r5 = B.. = B. - H */ 
-		pmulhw		(r6, r4		);/* r6 = c4*i0 - i0 */ 
+		psubsw		(r5, r1		);/* r5 = B.. = B. - H */
+		pmulhw		(r6, r4		);/* r6 = c4*i0 - i0 */
 
-                paddw           (r6, I(0)    );/* r6 = E = c4*i0 */ 
-		paddsw		(r1, r1		);/* r1 = H + H */ 
+                paddw           (r6, I(0)    );/* r6 = E = c4*i0 */
+		paddsw		(r1, r1		);/* r1 = H + H */
 
-		movq		(r4, r6      );/* r4 = E */ 
-		paddsw		(r1, r5		);/* r1 = H. = B + H */ 
+		movq		(r4, r6      );/* r4 = E */
+		paddsw		(r1, r5		);/* r1 = H. = B + H */
 
-		psubsw		(r6, r2		);/* r6 = F. = E - A. */ 
-		paddsw		(r2, r2		);/* r2 = A. + A. */ 
+		psubsw		(r6, r2		);/* r6 = F. = E - A. */
+		paddsw		(r2, r2		);/* r2 = A. + A. */
 
-		movq		(r0, I(1)	);/* r0 = C. */ 
-		paddsw		(r2, r6		);/* r2 = A.. = E + A. */ 
+		movq		(r0, I(1)	);/* r0 = C. */
+		paddsw		(r2, r6		);/* r2 = A.. = E + A. */
 
-		psubsw		(r2, r1		);/* r2 = R2 = A.. - H. */ 
+		psubsw		(r2, r1		);/* r2 = R2 = A.. - H. */
 }
 // end BeginIDCT_10 macro (25 cycles).
 
 template<class Ti,class Tc> static __forceinline void RowIDCT_10(__m64 &r0,__m64 &r1,__m64 &r2,__m64 &r3,__m64 &r4,__m64 &r5,__m64 &r6,__m64 &r7,Ti I,Tc C)
 {
 	BeginIDCT_10 (r0,r1,r2,r3,r4,r5,r6,r7,I,C);
-	
-	movq		(r3, I(2)	);/* r3 = D. */ 
-	 psubsw		(r4, r7		);/* r4 = E. = E - G */ 
-	paddsw		(r1, r1		);/* r1 = H. + H. */ 
-	 paddsw		(r7, r7		);/* r7 = G + G */ 
-	paddsw		(r1, r2		);/* r1 = R1 = A.. + H. */ 
-	 paddsw		(r7, r4		);/* r7 = G. = E + G */ 
-	psubsw		(r4, r3		);/* r4 = R4 = E. - D. */ 
-	 paddsw		(r3, r3); 
-	psubsw		(r6, r5		);/* r6 = R6 = F. - B.. */ 
+
+	movq		(r3, I(2)	);/* r3 = D. */
+	 psubsw		(r4, r7		);/* r4 = E. = E - G */
+	paddsw		(r1, r1		);/* r1 = H. + H. */
+	 paddsw		(r7, r7		);/* r7 = G + G */
+	paddsw		(r1, r2		);/* r1 = R1 = A.. + H. */
+	 paddsw		(r7, r4		);/* r7 = G. = E + G */
+	psubsw		(r4, r3		);/* r4 = R4 = E. - D. */
+	 paddsw		(r3, r3);
+	psubsw		(r6, r5		);/* r6 = R6 = F. - B.. */
 	 paddsw		(r5, r5 );
-	paddsw		(r3, r4		);/* r3 = R3 = E. + D. */ 
-	 paddsw		(r5, r6		);/* r5 = R5 = F. + B.. */ 
-	psubsw		(r7, r0		);/* r7 = R7 = G. - C. */ 
+	paddsw		(r3, r4		);/* r3 = R3 = E. + D. */
+	 paddsw		(r5, r6		);/* r5 = R5 = F. + B.. */
+	psubsw		(r7, r0		);/* r7 = R7 = G. - C. */
 	 paddsw		(r0, r0  );
-	movq		(I(1), r1	);/* save R1 */ 
-	 paddsw		(r0, r7		);/* r0 = R0 = G. + C. */ 
+	movq		(I(1), r1	);/* save R1 */
+	 paddsw		(r0, r7		);/* r0 = R0 = G. + C. */
 }
 // end RowIDCT macro (8 + 38 = 46 cycles)
 
@@ -1049,47 +1049,47 @@ template<class Ti,class Tc> static __forceinline void RowIDCT_10(__m64 &r0,__m64
 
 template<class Ti,class Tj,class Tc> static __forceinline void ColumnIDCT_10(__m64 &r0,__m64 &r1,__m64 &r2,__m64 &r3,__m64 &r4,__m64 &r5,__m64 &r6,__m64 &r7,Ti I,Tj J,Tc C,unsigned char *Eight)
 {
-	
+
 	BeginIDCT_10 (r0,r1,r2,r3,r4,r5,r6,r7,I,C);
-	
-		paddsw		(r2, Eight	);/* adjust R2 (and R1) for shift */ 
-		 paddsw		(r1, r1		);/* r1 = H. + H. */ 
-		paddsw		(r1, r2		);/* r1 = R1 = A.. + H. */ 
-		 psraw		(r2, 4		);/* r2 = NR2 */ 
-		psubsw		(r4, r7		);/* r4 = E. = E - G */ 
-		 psraw		(r1, 4		);/* r1 = NR1 */ 
-		movq		(r3, I(2)	);/* r3 = D. */ 
-		 paddsw		(r7, r7		);/* r7 = G + G */ 
-		movq		(I(2), r2	);/* store NR2 at I2 */ 
-		 paddsw		(r7, r4		);/* r7 = G. = E + G */ 
-		movq		(I(1), r1	);/* store NR1 at I1 */ 
-		 psubsw		(r4, r3		);/* r4 = R4 = E. - D. */ 
-		paddsw		(r4, Eight	);/* adjust R4 (and R3) for shift */ 
-		 paddsw		(r3, r3		);/* r3 = D. + D. */ 
-		paddsw		(r3, r4		);/* r3 = R3 = E. + D. */ 
-		 psraw		(r4, 4		);/* r4 = NR4 */ 
-		psubsw		(r6, r5		);/* r6 = R6 = F. - B.. */ 
-		 psraw		(r3, 4		);/* r3 = NR3 */ 
-		paddsw		(r6, Eight	);/* adjust R6 (and R5) for shift */ 
-		 paddsw		(r5, r5		);/* r5 = B.. + B.. */ 
-		paddsw		(r5, r6		);/* r5 = R5 = F. + B.. */ 
-		 psraw		(r6, 4		);/* r6 = NR6 */ 
-		movq		(J(4), r4	);/* store NR4 at J4 */ 
-		 psraw		(r5, 4		);/* r5 = NR5 */ 
-		movq		(I(3), r3	);/* store NR3 at I3 */ 
-		 psubsw		(r7, r0		);/* r7 = R7 = G. - C. */ 
-		paddsw		(r7, Eight	);/* adjust R7 (and R0) for shift */ 
-		 paddsw		(r0, r0 		);/* r0 = C. + C. */ 
-		paddsw		(r0, r7		);/* r0 = R0 = G. + C. */ 
-		 psraw		(r7, 4		);/* r7 = NR7 */ 
-		movq		(J(6), r6	);/* store NR6 at J6 */ 
-		 psraw		(r0, 4		);/* r0 = NR0 */ 
-		movq		(J(5), r5	);/* store NR5 at J5 */ 
-	 
-		movq		(J(7), r7	);/* store NR7 at J7 */ 
-	 
-		movq		(I(0), r0	);/* store NR0 at I0 */ 
-	 
+
+		paddsw		(r2, Eight	);/* adjust R2 (and R1) for shift */
+		 paddsw		(r1, r1		);/* r1 = H. + H. */
+		paddsw		(r1, r2		);/* r1 = R1 = A.. + H. */
+		 psraw		(r2, 4		);/* r2 = NR2 */
+		psubsw		(r4, r7		);/* r4 = E. = E - G */
+		 psraw		(r1, 4		);/* r1 = NR1 */
+		movq		(r3, I(2)	);/* r3 = D. */
+		 paddsw		(r7, r7		);/* r7 = G + G */
+		movq		(I(2), r2	);/* store NR2 at I2 */
+		 paddsw		(r7, r4		);/* r7 = G. = E + G */
+		movq		(I(1), r1	);/* store NR1 at I1 */
+		 psubsw		(r4, r3		);/* r4 = R4 = E. - D. */
+		paddsw		(r4, Eight	);/* adjust R4 (and R3) for shift */
+		 paddsw		(r3, r3		);/* r3 = D. + D. */
+		paddsw		(r3, r4		);/* r3 = R3 = E. + D. */
+		 psraw		(r4, 4		);/* r4 = NR4 */
+		psubsw		(r6, r5		);/* r6 = R6 = F. - B.. */
+		 psraw		(r3, 4		);/* r3 = NR3 */
+		paddsw		(r6, Eight	);/* adjust R6 (and R5) for shift */
+		 paddsw		(r5, r5		);/* r5 = B.. + B.. */
+		paddsw		(r5, r6		);/* r5 = R5 = F. + B.. */
+		 psraw		(r6, 4		);/* r6 = NR6 */
+		movq		(J(4), r4	);/* store NR4 at J4 */
+		 psraw		(r5, 4		);/* r5 = NR5 */
+		movq		(I(3), r3	);/* store NR3 at I3 */
+		 psubsw		(r7, r0		);/* r7 = R7 = G. - C. */
+		paddsw		(r7, Eight	);/* adjust R7 (and R0) for shift */
+		 paddsw		(r0, r0 		);/* r0 = C. + C. */
+		paddsw		(r0, r7		);/* r0 = R0 = G. + C. */
+		 psraw		(r7, 4		);/* r7 = NR7 */
+		movq		(J(6), r6	);/* store NR6 at J6 */
+		 psraw		(r0, 4		);/* r0 = NR0 */
+		movq		(J(5), r5	);/* store NR5 at J5 */
+
+		movq		(J(7), r7	);/* store NR7 at J7 */
+
+		movq		(I(0), r0	);/* store NR0 at I0 */
+
 }
 // end ColumnIDCT macro (38 + 19 = 57 cycles)
 /* --------------------------------------------------------------- */
@@ -1097,7 +1097,7 @@ template<class Ti,class Tj,class Tc> static __forceinline void ColumnIDCT_10(__m
 /* --------------------------------------------------------------- */
 /* IDCT 10 */
 
-extern "C" void MMX_idct10 (	ogg_int16_t * input, ogg_int16_t * qtbl, ogg_int16_t * output) 
+extern "C" void MMX_idct10 (	ogg_int16_t * input, ogg_int16_t * qtbl, ogg_int16_t * output)
 {
 
 #	define M(I)		(ecx + MaskOffset + I*8)
@@ -1221,7 +1221,7 @@ __m64 r0,r1,r2,r3,r4,r5,r6,r7;
 	 por	(r7, r6			);// r7 = 50 36 32 17 = R5
 	pmullw	(r4, ebx+88	);// r4 = 57 56 55 54
 	 psrlq	(r3, 16			);// r3 = __ __ FF __
-	movq	(edx+24, r7	);// write R5 = r7	 
+	movq	(edx+24, r7	);// write R5 = r7
 	 pand	(r3, r1			);// r3 = __ __ 35 __
 	psrlq	(r5, 48			);// r5 = __ __ __ 33
 	 pand	(r1, r2			);// r1 = __ __ __ 34
@@ -1274,7 +1274,7 @@ __m64 r0,r1,r2,r3,r4,r5,r6,r7;
 	por	(	r6, r5			);// r6 = 76 73 67 64 = R14
 	 pand	(r0, r2			);// r0 = __ __ __ 70
 	pxor	(r7, r0			);// r7 = 73 72 71 __
-	 psllq	(r0, 32			);// r0 = __ 70 __ __	
+	 psllq	(r0, 32			);// r0 = __ 70 __ __
 	movq	(edx+104, r6	);// write R14 = r6
 	 psrlq	(r4, 16			);// r4 = __ 57 56 55
 	movq	(r5, eax+72);
@@ -1300,7 +1300,7 @@ __m64 r0,r1,r2,r3,r4,r5,r6,r7;
 	movq	(edx+88, r7	);// write R13 = r7
 	 psrlq	(r5, 48			);// r5 = __ __ __ 47
 	movq	(r7, eax+64);
-	 por	(r6, r3			);// r6 = 71 62 56 __	 
+	 por	(r6, r3			);// r6 = 71 62 56 __
 	pmullw	(r7, ebx+64	);// r7 = 43 42 41 40
 	 por	(r6, r5			);// r6 = 71 62 56 47 = R12
 	pand	(r4, M(2)		);// r4 = __ 57 __ __
@@ -1327,7 +1327,7 @@ __m64 r0,r1,r2,r3,r4,r5,r6,r7;
 	 por	(r6, r2			);// r6 = 60 __ __ 27
 	movq	(r2, M(1)		);// r2 = __ __ FF __
 	 por	(r6, r4			);// r6 = 60 45 __ 27
-	pand	(r2, r7			);// r2 = __ __ 41 __	 
+	pand	(r2, r7			);// r2 = __ __ 41 __
 	 psllq	(r3, 32			);// r3 = 44 __ __ __
 	por	(	r3, edx+80	);// r3 = 44 __ __ 23
 	 por	(r6, r2			);// r6 = 60 45 41 27 = R10
@@ -1344,9 +1344,9 @@ __m64 r0,r1,r2,r3,r4,r5,r6,r7;
 	por	(	r7, edx+64	);// r7 = 43 __ __ 12
 	 por	(r6, r3			);// r6 = 44 42 26 23 = R9
 	por	(	r7, r5			);// r7 = 43 25 24 12 = R8
-	 
+
 	movq	(edx+80, r6	);// store R9 = r6
-	 
+
 	movq	(edx+64, r7	);// store R8 = r7
 	 //
 	// 123c  ( / 64 coeffs  < 2c / coeff)
@@ -1381,14 +1381,14 @@ __m64 r0,r1,r2,r3,r4,r5,r6,r7;
 /**************************************************************************************
  *
  *		Routine:		MMX_idct1
- *		
+ *
  *		Description:	Perform IDCT on a 8x8 block with at most 1 nonzero coefficients
  *
- *		Input:			Pointer to input and output buffer				
+ *		Input:			Pointer to input and output buffer
  *
  *		Output:			None
- *		
- *		Return:			None			
+ *
+ *		Return:			None
  *
  *		Special Note:	None
  *
@@ -1399,17 +1399,17 @@ __m64 r0,r1,r2,r3,r4,r5,r6,r7;
 
 /* --------------------------------------------------------------- */
 /* IDCT 1 */
-extern "C" void MMX_idct1 (ogg_int16_t * input, ogg_int16_t * qtbl, ogg_int16_t * output) 
+extern "C" void MMX_idct1 (ogg_int16_t * input, ogg_int16_t * qtbl, ogg_int16_t * output)
 {
- 
+
         if(input[0])
         {
             int i;
             ogg_int32_t temp = (ogg_int32_t)input[0];
 	    __m64 *iBuf=(__m64*)output;
-        
+
             temp *= qtbl[0];
-            
+
             //necessary in order to match tim's
             temp += 15;
 

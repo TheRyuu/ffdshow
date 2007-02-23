@@ -30,7 +30,7 @@ TffdshowDecVideoAllocator::TffdshowDecVideoAllocator(CBaseFilter* Ifilter,HRESUL
 
 STDMETHODIMP TffdshowDecVideoAllocator::GetBuffer(IMediaSample** ppBuffer,REFERENCE_TIME *pStartTime,REFERENCE_TIME *pEndTime,DWORD dwFlags)
 {
- if (!m_bCommitted) 
+ if (!m_bCommitted)
   return VFW_E_NOT_COMMITTED;
 
  if (mtChanged)

@@ -58,11 +58,11 @@ const Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE
    if (subs->langid!=newlang)
     subs->setLang(newlang);
   }
-/*  
+/*
  for (Tsubreader::const_iterator s=subs->begin();s!=subs->end();s++)
   if ((*s)->start<time && time<(*s)->stop)
    return *s;
- return NULL;  
+ return NULL;
 */
  if (oldsub)
   {
@@ -79,7 +79,7 @@ const Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE
   return oldsub=NULL; // no sub here
  // check current sub.
  if (time>=(*subs)[current_sub]->start && time<=(*subs)[current_sub]->stop)
-  return oldsub=(*subs)[current_sub];  
+  return oldsub=(*subs)[current_sub];
  // check next sub.
  if(current_sub>=0 && current_sub+1<subs->size())
   {
@@ -92,7 +92,7 @@ const Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE
    // next sub?
    ++current_sub;
    oldsub=(*subs)[current_sub];
-   if (time>=oldsub->start && time<=oldsub->stop) 
+   if (time>=oldsub->start && time<=oldsub->stop)
     return oldsub; // OK!
   }
   // use logarithmic search:
@@ -101,11 +101,11 @@ const Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE
   {
    current_sub=(i+j+1)/2;
    oldsub=(*subs)[current_sub];
-   if (time<oldsub->start) 
+   if (time<oldsub->start)
     j=current_sub-1;
-   else if(time>oldsub->stop) 
+   else if(time>oldsub->stop)
     i=current_sub+1;
-   else 
+   else
     return oldsub; // found!
   }
  // check where are we...

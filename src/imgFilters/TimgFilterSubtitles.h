@@ -30,12 +30,12 @@ private:
  TfilterQueue::iterator prevIt;TffPict prevPict;const TfilterSettingsVideo *prevCfg;bool again;Tbuffer prevbuf;
  int subFlnmChanged;
  const char_t* findAutoSubFlnm(const TsubtitlesSettings *cfg);
- 
+
  struct TsubPrintPrefs : TrenderedSubtitleLines::TprintPrefs
   {
    TsubPrintPrefs(unsigned char *Idst[4],stride_t Istride[4],unsigned int Idx[4],unsigned int Idy[4],IffdshowBase *Ideci,const TsubtitlesSettings *cfg,const TffPict &pict,const Tconfig *Iconfig,bool Idvd);
   };
- 
+
  TsubtitleTextBase<char> *cc;
  bool wasCCchange;
 protected:
@@ -54,9 +54,9 @@ public:
  void addSubtitle(int id,REFERENCE_TIME start,REFERENCE_TIME stop,const unsigned char *data,unsigned int datalen,const TsubtitlesSettings *cfg,bool utf8);
  void resetSubtitles(int id);
  bool ctlSubtitles(int id,int type,unsigned int ctl_id,const void *ctl_data,unsigned int ctl_datalen);
- 
+
  const char_t *getCurrentFlnm(void) const;
- 
+
  void addClosedCaption(const char *line),hideClosedCaptions(void);
 };
 

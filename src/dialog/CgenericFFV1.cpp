@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "CgenericFFV1.h"
 
@@ -35,7 +35,7 @@ bool TgenericFFV1page::enabled(void)
 }
 
 void TgenericFFV1page::cfg2dlg(void)
-{ 
+{
  cbxSetDataCurSel(IDC_CBX_FFV1_CSP,cfgGet(IDFF_enc_ffv1_csp));
  cbxSetCurSel(IDC_CBX_FFV1_CODER,cfgGet(IDFF_enc_ffv1_coder));
  cbxSetCurSel(IDC_CBX_FFV1_CONTEXT,cfgGet(IDFF_enc_ffv1_context));
@@ -54,7 +54,7 @@ TgenericFFV1page::TgenericFFV1page(TffdshowPageEnc *Iparent) :TconfPageEnc(Ipare
    IDC_ED_MAXKEYINTERVAL,1,500,IDFF_enc_max_key_interval,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
  static const TbindCombobox<TgenericFFV1page> cbx[]=
   {
    IDC_CBX_FFV1_CSP,IDFF_enc_ffv1_csp,BINDCBX_DATA,NULL,

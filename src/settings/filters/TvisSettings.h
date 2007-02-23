@@ -9,7 +9,7 @@ private:
  static const TfilterIDFF idffs;
 protected:
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  TvisSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  int mv,quants,graph;
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;

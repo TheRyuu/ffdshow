@@ -1,5 +1,5 @@
 CFLAGS+=-I.
-       
+
 SRCS=rebase.cpp
 
 SEXE=../bin/rebase.exe
@@ -11,7 +11,7 @@ include ../src/makefile_c.inc
 
 .all: $(SEXE)
 
-clean: 
+clean:
 	rm -f *.o *~ $(SEXE)
 
 #

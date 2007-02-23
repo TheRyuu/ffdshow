@@ -1,24 +1,24 @@
-/*	
- *      Copyright (C) 2003-2005 Gabest	
- *      http://www.gabest.org	
- *	
- *  This Program is free software; you can redistribute it and/or modify	
- *  it under the terms of the GNU General Public License as published by	
- *  the Free Software Foundation; either version 2, or (at your option)	
- *  any later version.	
- *	
- *  This Program is distributed in the hope that it will be useful,	
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of	
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the	
- *  GNU General Public License for more details.	
- *	
- *  You should have received a copy of the GNU General Public License	
- *  along with GNU Make; see the file COPYING.  If not, write to	
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.	
- *  http://www.gnu.org/copyleft/gpl.html	
- *	
- *  Based on Intel's AP-942	
- *	
+/*
+ *      Copyright (C) 2003-2005 Gabest
+ *      http://www.gabest.org
+ *
+ *  This Program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2, or (at your option)
+ *  any later version.
+ *
+ *  This Program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with GNU Make; see the file COPYING.  If not, write to
+ *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+ *  http://www.gnu.org/copyleft/gpl.html
+ *
+ *  Based on Intel's AP-942
+ *
  */
 
 #include <inttypes.h>
@@ -145,7 +145,7 @@ static void MC_put_y_8_sse2(uint8_t* ecx, const uint8_t* edx, const int eax, int
                 //movhpd (xmm0,edx);
                 //movlpd (xmm0,edx+eax);
 		movlpd (xmm0, edx);
-                
+
         for (;esi;edx+=edi*2,ecx+=edi*2,esi-=4){
                 __m128i xmm1,xmm2,xmm3,xmm4;
 		movlpd (xmm1, edx+eax );
@@ -191,7 +191,7 @@ static void MC_put_xy_16_sse2(uint8_t* dest, const uint8_t* ref, const int strid
                 movdqa (ecx, xmm0);
                 movdqa (xmm0, xmm4);
                 movdqa (ecx+eax, xmm2);
-        }       
+        }
 }
 
 static void MC_put_xy_8_sse2(uint8_t* dest, const uint8_t* ref, const int stride, int height)
@@ -221,7 +221,7 @@ static void MC_put_xy_8_sse2(uint8_t* dest, const uint8_t* ref, const int stride
 		movlpd (ecx, xmm0);
 		movdqa (xmm0, xmm4);
 		movlpd (ecx+eax, xmm2);
-        }        
+        }
 }
 
 static void MC_avg_o_16_sse2(uint8_t* dest, const uint8_t* ref, const int stride, int height)
@@ -484,7 +484,7 @@ static void MC_avg_xy_8_sse2(uint8_t* dest, const uint8_t* ref, const int stride
         }
 }
 
-mpeg2_mc_t mpeg2_mc_sse2 = 
+mpeg2_mc_t mpeg2_mc_sse2 =
 {
         {MC_put_o_16_sse2, MC_put_x_16_sse2, MC_put_y_16_sse2, MC_put_xy_16_sse2,
         MC_put_o_8_sse2,  MC_put_x_8_sse2,  MC_put_y_8_sse2,  MC_put_xy_8_sse2},

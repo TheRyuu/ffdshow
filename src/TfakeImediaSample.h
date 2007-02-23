@@ -18,7 +18,7 @@ public:
  virtual HRESULT STDMETHODCALLTYPE SetActualDataLength( long __MIDL_0010) {return E_NOTIMPL;}
  virtual HRESULT STDMETHODCALLTYPE GetMediaType( AM_MEDIA_TYPE **ppMediaType) {return E_NOTIMPL;}
  virtual HRESULT STDMETHODCALLTYPE SetMediaType( AM_MEDIA_TYPE *pMediaType) {return E_NOTIMPL;}
- virtual HRESULT STDMETHODCALLTYPE IsDiscontinuity( void) {return isDiscontinuity?S_OK:S_FALSE;} 
+ virtual HRESULT STDMETHODCALLTYPE IsDiscontinuity( void) {return isDiscontinuity?S_OK:S_FALSE;}
  virtual HRESULT STDMETHODCALLTYPE SetDiscontinuity( BOOL bDiscontinuity) {return E_NOTIMPL;}
  virtual HRESULT STDMETHODCALLTYPE GetMediaTime( LONGLONG *pTimeStart,LONGLONG *pTimeEnd) {return E_NOTIMPL;}
  virtual HRESULT STDMETHODCALLTYPE SetMediaTime( LONGLONG *pTimeStart,LONGLONG *pTimeEnd) {return E_NOTIMPL;}

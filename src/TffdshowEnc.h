@@ -50,7 +50,7 @@ public:
  virtual int SizeMax(void);
  virtual HRESULT WriteToStream(IStream *pStream);
  virtual HRESULT ReadFromStream(IStream *pStream);
- 
+
  STDMETHODIMP_(int) getVersion2(void);
  STDMETHODIMP getEncStats(TencStats* *encStatsPtr);
  STDMETHODIMP getFFproc(TffProcVideo* *procPtr);
@@ -93,14 +93,14 @@ protected:
  virtual void onTrayIconChange(int id,int newval);
  virtual void sendOnChange(int paramID,int val);
  bool started,start(void);
- 
+
  TvideoCodecs enclibs;
  uint64_t totalsize;
  TvideoCodecEnc *enc;CodecID oldCodecId;
  TvideoCodecEnc *findEncLib(void);
  Textradata extradata;
  Tmuxer *mux;
- 
+
  struct TffProcVideoEnc : TffProcVideo
   {
   private:
@@ -126,7 +126,7 @@ protected:
 
  HWND h_graph;
  int inColorspace;
- BITMAPINFO biOutput; 
+ BITMAPINFO biOutput;
  TencStats encStats;
 
  int working;
@@ -134,7 +134,7 @@ protected:
  TcoSettings *coSettings;
  void initCo(void);
  void getOut(unsigned int AVIdx,unsigned int AVIdy,unsigned int *outDx,unsigned int *outDy);
- 
+
  STDMETHODIMP_(LRESULT) query(const BITMAPINFOHEADER *inhdr,BITMAPINFOHEADER *outhdr);
  STDMETHODIMP_(LRESULT) getFormat(const BITMAPINFOHEADER *inhdr,BITMAPINFO *lpbiOutput);
  STDMETHODIMP_(LRESULT) getSize(const BITMAPINFO *lpbiInput);
@@ -142,7 +142,7 @@ protected:
  STDMETHODIMP_(LRESULT) end(void);
  STDMETHODIMP_(LRESULT) compress(const BITMAPINFOHEADER *inhdr,const uint8_t *src,size_t srclen,REFERENCE_TIME rtStart,REFERENCE_TIME rtStop);
  STDMETHODIMP_(void) setICC(void *icc0) {}
- 
+
  int fpsRate,fpsScale;
  int ownStoreExt;
 
@@ -166,7 +166,7 @@ public:
 
  STDMETHODIMP_(LRESULT) begin(const BITMAPINFOHEADER *inhdr);
  virtual HRESULT Receive(IMediaSample *pSample);
- 
+
  //IencVideoSink
  STDMETHODIMP getDstBuffer(IMediaSample* *samplePtr,const TffPict &pict);
  STDMETHODIMP deliverEncodedSample(const TmediaSample &sample,TencFrameParams &params);
@@ -181,11 +181,11 @@ public:
  static CUnknown* WINAPI CreateInstance(LPUNKNOWN punk,HRESULT *phr);
  STDMETHODIMP NonDelegatingQueryInterface(REFIID riid,void **ppv);
  TffdshowEncVFW(LPUNKNOWN punk,HRESULT *phr,TintStrColl *Ioptions):TffdshowEnc(punk,phr,Ioptions,NAME("TffdshowEncVFW"),CLSID_FFDSHOWENCVFW,IDFF_FILTERMODE_PLAYER|IDFF_FILTERMODE_ENC|IDFF_FILTERMODE_VFW) {}
- 
+
  STDMETHODIMP getDstBuffer(IMediaSample* *samplePtr,const TffPict &pict);
  STDMETHODIMP deliverEncodedSample(const TmediaSample &sample,TencFrameParams &params);
  STDMETHODIMP deliverError(void);
- 
+
  STDMETHODIMP_(void) setICC(void *icc0) {icc=(ICCOMPRESS*)icc0;}
 };
 

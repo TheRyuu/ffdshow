@@ -34,7 +34,7 @@ STDMETHODIMP TSpecifyPropertyPagesVE::NonDelegatingQueryInterface(REFIID riid,vo
  CheckPointer(ppv, E_POINTER);
  if (riid==IID_ISpecifyPropertyPagesVE)
   return GetInterface<ISpecifyPropertyPagesVE>(this,ppv);
- else 
+ else
   return CUnknown::NonDelegatingQueryInterface(riid,ppv);
 }
 
@@ -82,7 +82,7 @@ HRESULT TSpecifyPropertyPagesVE::commonOptionChanged(int idff,IffdshowBase *deci
    if (deciSrc->getParamStr3(idff,&valS)==S_OK)
     return deciDst->putParamStr(idff,valS);
   }
- return S_FALSE; 
+ return S_FALSE;
 }
 
 void TSpecifyPropertyPagesVE::show2configPages(const IID &iidD,IUnknown *deciD,const IID &iidE,IUnknown *deciE,int idCaption,int icon,int idff_multiplePages)
@@ -108,4 +108,4 @@ void TSpecifyPropertyPagesVE::show2configPages(const IID &iidD,IUnknown *deciD,c
  site.show(deciDB,NULL,idCaption,icon,pages,isppVE);
  isppVE->Release();
  CoTaskMemFree(pagesD.pElems);CoTaskMemFree(pagesE.pElems);
-} 
+}

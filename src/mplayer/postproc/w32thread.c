@@ -58,7 +58,7 @@ static unsigned __stdcall sws_thread_func(void *v){
 //printf("sws_thread_func %X signal complete\n", (int)v); fflush(stdout);
         ReleaseSemaphore(c->done_sem, 1, 0);
     }
-    
+
     return 0;
 }
 

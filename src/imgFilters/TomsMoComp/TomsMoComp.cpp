@@ -16,11 +16,11 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details
-//  
-//  Also, this program is "Philanthropy-Ware".  That is, if you like it and 
+//
+//  Also, this program is "Philanthropy-Ware".  That is, if you like it and
 //  feel the need to reward or inspire the author then please feel free (but
 //  not obligated) to consider joining or donating to the Electronic Frontier
-//  Foundation. This will help keep cyber space free of barbed wire and bullsh*t.  
+//  Foundation. This will help keep cyber space free of barbed wire and bullsh*t.
 //
 /////////////////////////////////////////////////////////////////////////////
 /*
@@ -39,26 +39,26 @@ From the Readme_TomsMoComp.txt file:
         clip = AVISource("c:\vcr\bikes.avi")
         return clip.TomsMoComp(...)
 
-        It specifies the file spec (change yours) and asks for TopFirst and SearchEffort=10 
-        to be turned on. I've so far tested it only 
-        with Avisynth/VirtualDub. 
-        
+        It specifies the file spec (change yours) and asks for TopFirst and SearchEffort=10
+        to be turned on. I've so far tested it only
+        with Avisynth/VirtualDub.
+
         TomsMoComp Parm list:
 
           return clip.TomsMoComp(TopFirst, SearchEffort, Vertical_Filter)
 
         All the values are integer, 0=no, 1=yes:
-        
-         TopFirst - assume the top field, lines 0,2,4,... should be displayed first. 
+
+         TopFirst - assume the top field, lines 0,2,4,... should be displayed first.
             The default is the supposedly more common BottomFirst (not for me).
 
-         SearchEffort - determines how much effort (cpu time) will be used to find 
+         SearchEffort - determines how much effort (cpu time) will be used to find
             moved pixels. Currently numbers from 0-45 with 0 being practially
             just a smarter bob.
 
         Known issues and limitation:
         1)  Assumes YUV (YUY2) Frame Based input. Use an AVIsynth function to convert first if
-         needed.        
+         needed.
 
         For now, see www.trbarry.com/TomsMoComp.zip
 
@@ -99,50 +99,50 @@ private:
   {
    static __forceinline void merge4PIXavg(const unsigned char *PADDR1,const unsigned char *PADDR2,__m64 &mm0,__m64 &mm1,__m64 &mm2,__m64 &mm3,__m64 &mm5,__m64 &mm7)
     {
-     movq (mm0, PADDR1); /* our 4 pixels */ 
-     movq (mm1, PADDR2); /* our pixel2 value */ 
-     movq (mm2, mm0);                        /* another copy of our pixel1 value */ 
-     movq (mm3, mm1);                        /* another copy of our pixel1 value */ 
+     movq (mm0, PADDR1); /* our 4 pixels */
+     movq (mm1, PADDR2); /* our pixel2 value */
+     movq (mm2, mm0);                        /* another copy of our pixel1 value */
+     movq (mm3, mm1);                        /* another copy of our pixel1 value */
      psubusb (mm2, mm1 );
      psubusb (mm3, mm0 );
      por (mm2,mm3   );
-     Tsimd::v_pavgb(mm0, mm1, mm3, ShiftMask); /* avg of 2 pixels */ 
-     movq (mm3, mm2 );                       /* another copy of our our weights */ 
-     pxor  (mm1, mm1); 
-     psubusb (mm3, mm7);                     /* nonzero where old weights lower, else 0 */ 
-     pcmpeqb (mm3, mm1);                     /* now ff where new better, else 00     */ 
-     pcmpeqb (mm1, mm3);             /* here ff where old better, else 00 */ 
-     pand (mm0, mm3   );                     /* keep only better new pixels */ 
-     pand ( mm2, mm3  );                     /* and weights */ 
-     pand (mm5, mm1   );                     /* keep only better old pixels */ 
+     Tsimd::v_pavgb(mm0, mm1, mm3, ShiftMask); /* avg of 2 pixels */
+     movq (mm3, mm2 );                       /* another copy of our our weights */
+     pxor  (mm1, mm1);
+     psubusb (mm3, mm7);                     /* nonzero where old weights lower, else 0 */
+     pcmpeqb (mm3, mm1);                     /* now ff where new better, else 00     */
+     pcmpeqb (mm1, mm3);             /* here ff where old better, else 00 */
+     pand (mm0, mm3   );                     /* keep only better new pixels */
+     pand ( mm2, mm3  );                     /* and weights */
+     pand (mm5, mm1   );                     /* keep only better old pixels */
      pand ( mm7, mm1  );
-     por  (mm5, mm0   );                     /* and merge new & old vals */ 
+     por  (mm5, mm0   );                     /* and merge new & old vals */
      por  (mm7, mm2   );
     }
    static __forceinline void merge4PIXavgH(const unsigned char *PADDR1A, const unsigned char *PADDR1B, const unsigned char *PADDR2A, const unsigned char *PADDR2B,__m64 &mm0,__m64 &mm1,__m64 &mm2,__m64 &mm3,__m64 &mm5,__m64 &mm7)
     {
-     movq (mm0, PADDR1A); /* our 4 pixels */ 
-     movq (mm1, PADDR2A); /* our pixel2 value */ 
-     movq (mm2, PADDR1B); /* our 4 pixels */ 
-     movq (mm3, PADDR2B); /* our pixel2 value */ 
+     movq (mm0, PADDR1A); /* our 4 pixels */
+     movq (mm1, PADDR2A); /* our pixel2 value */
+     movq (mm2, PADDR1B); /* our 4 pixels */
+     movq (mm3, PADDR2B); /* our pixel2 value */
      Tsimd::v_pavgb(mm0, mm2, mm2, ShiftMask);
      Tsimd::v_pavgb(mm1, mm3, mm3, ShiftMask);
-     movq (mm2, mm0);                        /* another copy of our pixel1 value */ 
-     movq (mm3, mm1);                        /* another copy of our pixel1 value */ 
-     psubusb (mm2, mm1); 
-     psubusb (mm3, mm0); 
-     por (mm2,mm3); 
-     Tsimd::v_pavgb(mm0, mm1, mm3, ShiftMask);    /* avg of 2 pixels */ 
-     movq (mm3, mm2  );                      /* another copy of our our weights */ 
+     movq (mm2, mm0);                        /* another copy of our pixel1 value */
+     movq (mm3, mm1);                        /* another copy of our pixel1 value */
+     psubusb (mm2, mm1);
+     psubusb (mm3, mm0);
+     por (mm2,mm3);
+     Tsimd::v_pavgb(mm0, mm1, mm3, ShiftMask);    /* avg of 2 pixels */
+     movq (mm3, mm2  );                      /* another copy of our our weights */
      pxor  (mm1, mm1 );
-     psubusb (mm3, mm7);                     /* nonzero where old weights lower, else 0 */ 
-     pcmpeqb (mm3, mm1);                     /* now ff where new better, else 00     */ 
-     pcmpeqb (mm1, mm3);             /* here ff where old better, else 00 */ 
-     pand (mm0, mm3   );                     /* keep only better new pixels */ 
-     pand  (mm2, mm3  );                     /* and weights */ 
-     pand (mm5, mm1   );                     /* keep only better old pixels */ 
+     psubusb (mm3, mm7);                     /* nonzero where old weights lower, else 0 */
+     pcmpeqb (mm3, mm1);                     /* now ff where new better, else 00     */
+     pcmpeqb (mm1, mm3);             /* here ff where old better, else 00 */
+     pand (mm0, mm3   );                     /* keep only better new pixels */
+     pand  (mm2, mm3  );                     /* and weights */
+     pand (mm5, mm1   );                     /* keep only better old pixels */
      pand ( mm7, mm1  );
-     por  (mm5, mm0   );                     /* and merge new & old vals */ 
+     por  (mm5, mm0   );                     /* and merge new & old vals */
      por  (mm7, mm2   );
     }
    template<int r> static __forceinline void search(stride_t &ecx,const unsigned char* const esi,const unsigned char* const edi,__m64 &mm0,__m64 &mm1,__m64 &mm2,__m64 &mm3,__m64 &mm5,__m64 &mm7)
@@ -151,7 +151,7 @@ private:
       {
        merge4PIXavg(edi+ecx-BPP, esi+ecx+BPP,mm0,mm1,mm2,mm3,mm5,mm7); // left, right
        merge4PIXavg(edi+ecx+BPP, esi+ecx-BPP,mm0,mm1,mm2,mm3,mm5,mm7); // right, left
-      } 
+      }
      if (r==5)
       {
        merge4PIXavgH(edi+ecx-BPP, edi+ecx, esi+ecx, esi+ecx+BPP,mm0,mm1,mm2,mm3,mm5,mm7); // left, right
@@ -164,17 +164,17 @@ private:
        merge4PIXavg(edi+ecx-6, esi+ecx+6,mm0,mm1,mm2,mm3,mm5,mm7); // left, right
        merge4PIXavg(edi+ecx+6, esi+ecx-6,mm0,mm1,mm2,mm3,mm5,mm7); // right, left
        merge4PIXavg(edi+2*ecx-6, esi+6,mm0,mm1,mm2,mm3,mm5,mm7);   // down left, up right
-       merge4PIXavg(edi+2*ecx+6, esi-6,mm0,mm1,mm2,mm3,mm5,mm7);   // down right, up left   
-      } 
+       merge4PIXavg(edi+2*ecx+6, esi-6,mm0,mm1,mm2,mm3,mm5,mm7);   // down right, up left
+      }
      if (r==9 || r==11 || r==13 || r==15 || r==19 || r==21 || r==99)
       {
        merge4PIXavg(edi-BPP, esi+2*ecx+BPP,mm0,mm1,mm2,mm3,mm5,mm7);  // up left, down right
        merge4PIXavg(edi+BPP, esi+2*ecx-BPP,mm0,mm1,mm2,mm3,mm5,mm7);  // up right, down left
        merge4PIXavg(edi+2*ecx-BPP, esi+BPP,mm0,mm1,mm2,mm3,mm5,mm7);   // down left, up right
-       merge4PIXavg(edi+2*ecx+BPP, esi-BPP,mm0,mm1,mm2,mm3,mm5,mm7);   // down right, up left   
+       merge4PIXavg(edi+2*ecx+BPP, esi-BPP,mm0,mm1,mm2,mm3,mm5,mm7);   // down right, up left
        merge4PIXavg(edi+ecx-BPP, esi+ecx+BPP,mm0,mm1,mm2,mm3,mm5,mm7); // left, right
        merge4PIXavg(edi+ecx+BPP, esi+ecx-BPP,mm0,mm1,mm2,mm3,mm5,mm7); // right, left
-      } 
+      }
      if (r==11 || r==13 || r==19)
       {
        merge4PIXavgH(edi+ecx-BPP, edi+ecx, esi+ecx, esi+ecx+BPP,mm0,mm1,mm2,mm3,mm5,mm7); // left, right
@@ -184,12 +184,12 @@ private:
      if (r!=0)
       if (!USE_YV12)
        por (mm7,UVMask);
-  
+
      if (r==13)
       {
        merge4PIXavgH(edi+2*ecx, edi+ecx, esi+ecx, esi,mm0,mm1,mm2,mm3,mm5,mm7);	// down, up
        merge4PIXavgH(edi, edi+ecx, esi+ecx, esi+2*ecx,mm0,mm1,mm2,mm3,mm5,mm7);	// up, down
-      } 
+      }
      if (r==99)
       {
        merge4PIXavg(edi-8, esi+2*ecx+8,mm0,mm1,mm2,mm3,mm5,mm7);  // up left, down right
@@ -197,8 +197,8 @@ private:
        merge4PIXavg(edi+ecx-8, esi+ecx+8,mm0,mm1,mm2,mm3,mm5,mm7); // left, right
        merge4PIXavg(edi+ecx+8, esi+ecx-8,mm0,mm1,mm2,mm3,mm5,mm7); // right, left
        merge4PIXavg(edi+2*ecx-8, esi+8,mm0,mm1,mm2,mm3,mm5,mm7);   // down left, up right
-       merge4PIXavg(edi+2*ecx+8, esi-8,mm0,mm1,mm2,mm3,mm5,mm7);   // down right, up left   
-      } 
+       merge4PIXavg(edi+2*ecx+8, esi-8,mm0,mm1,mm2,mm3,mm5,mm7);   // down right, up left
+      }
      if (r==15 || r==19 || r==21 || r==99)
       {
        merge4PIXavg(edi-2*BPP, esi+2*ecx+2*BPP,mm0,mm1,mm2,mm3,mm5,mm7);  // up left, down right
@@ -206,19 +206,19 @@ private:
        merge4PIXavg(edi+ecx-2*BPP, esi+ecx+2*BPP,mm0,mm1,mm2,mm3,mm5,mm7); // left, right
        merge4PIXavg(edi+ecx+2*BPP, esi+ecx-2*BPP,mm0,mm1,mm2,mm3,mm5,mm7); // right, left
        merge4PIXavg(edi+2*ecx-2*BPP, esi+2*BPP,mm0,mm1,mm2,mm3,mm5,mm7);   // down left, up right
-       merge4PIXavg(edi+2*ecx+2*BPP, esi-2*BPP,mm0,mm1,mm2,mm3,mm5,mm7);   // down right, up left   
-      } 
+       merge4PIXavg(edi+2*ecx+2*BPP, esi-2*BPP,mm0,mm1,mm2,mm3,mm5,mm7);   // down right, up left
+      }
      if (r==19)
       {
        merge4PIXavgH(edi+2*ecx, edi+ecx, esi+ecx, esi,mm0,mm1,mm2,mm3,mm5,mm7);	// down, up
        merge4PIXavgH(edi, edi+ecx, esi+ecx, esi+2*ecx,mm0,mm1,mm2,mm3,mm5,mm7);	// up, down
-      } 
+      }
      if (r==9 || r==11 || r==13 || r==15 || r==19 || r==21 || r==99)
       {
        merge4PIXavg(edi+2*ecx, esi,mm0,mm1,mm2,mm3,mm5,mm7);	// down, up
        merge4PIXavg(edi, esi+2*ecx,mm0,mm1,mm2,mm3,mm5,mm7);	// up, down
-      } 
- 
+      }
+
      if (r!=0)
       {
        paddusb (mm7, ONES);   // bias toward no motion
@@ -236,7 +236,7 @@ private:
      const uint8_t *pBob;
      const uint8_t *pBobP;
      int LineCt;
-  
+
      stride_t src_pitch2;
      if (DBL_RESIZE)
       src_pitch2 = src_pitch;                     // even & odd lines are not interleaved in DScaler
@@ -249,7 +249,7 @@ private:
 
      stride_t dst_pitchw = dst_pitch; // local stor so asm can ref
      pSrc  = pWeaveSrc;                      // points 1 weave line above
-     pSrcP = pWeaveSrcP;                     // " 
+     pSrcP = pWeaveSrcP;                     // "
 
      if (DBL_RESIZE)
       {
@@ -257,12 +257,12 @@ private:
         pDest = pWeaveDest;                     //  but will appear 1 line lower than with not VF
        else
         pDest = pWeaveDest;
-       pBob =  pCopySrc;                       
+       pBob =  pCopySrc;
        pBobP =  pCopySrcP;                     // not used
        LineCt = FldHeight-1;
       }
      else
-      { 
+      {
        // Not DBL_RESIZE here
        if (USE_VERTICAL_FILTER)
         pDest = pWeaveDest + dst_pitch;
@@ -281,12 +281,12 @@ private:
        LineCt = FldHeight - 2;
       }
      __m64 Min_Vals,Max_Vals;
-     for (y=1; y <= LineCt; y++)     
+     for (y=1; y <= LineCt; y++)
       {
        __m64 mm0,mm1,mm2,mm3,mm4,mm5,mm6,mm7;
        // Loop general reg usage
        //
-       // eax - pBobP, then pDest 
+       // eax - pBobP, then pDest
        // ebx - pBob
        // ecx - src_pitch2
        // edx - current offset
@@ -329,7 +329,7 @@ private:
            Tsimd::movntq(edi, mm0);
            Tsimd::movntq(edi+eaxx, mm1);
           }
-         else 
+         else
           {
            movq    (mm0, ebx);
            //pavgb   mm0, qword ptr[ebx+ecx]
@@ -349,31 +349,31 @@ private:
          esi= pSrc;
          edi= (unsigned char*)pSrcP;
          edx= 8;                          // curr offset into all lines
-        LoopQ:  
+        LoopQ:
          eax= (unsigned char*)pBobP;
          edi+= 8;
          esi+= 8;
          ebx+= 8;
          eax+= edx;
-      
-         //weirdbob.inc   
+
+         //weirdbob.inc
          // First, get and save our possible Bob values
          // Assume our pixels are layed out as follows with x the calc'd bob value
          // and the other pixels are from the current field
-         //  
+         //
          //                j a b c k             current field
          //            x                 calculated line
          //        m d e f n             current field
          //
          // we calc the bob value as:
          //              x2 = either avg(a,f), avg(c,d), avg(b,e), avg(j,n), or avg(k,m)
-       
+
          // selected for the     smallest of abs(a,f), abs(c,d), or abs(b,e), etc.
 
          // a,f
          // 2003/06/17 Use BPP (bits per pixel) here
-         movq    (mm0, ebx-BPP);         // value a from top left                
-         movq    (mm1, ebx+ecx+BPP);     // value f from bottom right                    
+         movq    (mm0, ebx-BPP);         // value a from top left
+         movq    (mm1, ebx+ecx+BPP);     // value f from bottom right
          movq    (mm6, mm0);
          //pavgb   mm6, mm1                                        // avg(a,f), also best so far
          Tsimd::v_pavgb(mm6, mm1, mm7, ShiftMask);      // avg(a,f), also best so far
@@ -383,8 +383,8 @@ private:
          por     (mm7, mm1);                                        // abs diff, also best so far
 
          // c,d
-         movq    (mm0, ebx+BPP);         // value a from top left                
-         movq    (mm1, ebx+ecx-BPP);     // value f from bottom right                    
+         movq    (mm0, ebx+BPP);         // value a from top left
+         movq    (mm1, ebx+ecx-BPP);     // value f from bottom right
          movq    (mm2, mm0);
          //pavgb   mm2, mm1                                        // avg(c,d)
          Tsimd::v_pavgb(mm2, mm1, mm3, ShiftMask);      // avg(c,d)
@@ -393,10 +393,10 @@ private:
          psubusb (mm1, mm0);
          por     (mm3, mm1);                                        // abs(c,d)
          movq    (mm1, mm3);                                        // keep copy
-                       
+
          psubusb (mm3, mm7);                        // nonzero where new weights bigger, else 0
          pxor    (mm4, mm4);
-         pcmpeqb (mm3, mm4);                        // now ff where new better, else 00     
+         pcmpeqb (mm3, mm4);                        // now ff where new better, else 00
          pcmpeqb (mm4, mm3);                        // here ff where old better, else 00
 
          pand    (mm1, mm3);                        // keep only better new avg and abs
@@ -415,8 +415,8 @@ private:
           }
 
          // j,n
-         movq    (mm0, ebx-2*BPP);               // value j from top left                
-         movq    (mm1, ebx+ecx+2*BPP);   // value n from bottom right                    
+         movq    (mm0, ebx-2*BPP);               // value j from top left
+         movq    (mm1, ebx+ecx+2*BPP);   // value n from bottom right
          movq    (mm2, mm0);
          // pavgb   mm2, mm1                                        // avg(j,n)
          Tsimd::v_pavgb(mm2, mm1, mm3, ShiftMask);      // avg(j,n)
@@ -425,10 +425,10 @@ private:
          psubusb (mm1, mm0);
          por     (mm3, mm1);                                        // abs(j-n)
          movq    (mm1, mm3);                                        // keep copy
-                       
+
          psubusb (mm3, mm7);                        // nonzero where new weights bigger, else 0
          pxor    (mm4, mm4);
-         pcmpeqb (mm3, mm4);                        // now ff where new better, else 00     
+         pcmpeqb (mm3, mm4);                        // now ff where new better, else 00
          pcmpeqb (mm4, mm3);                        // here ff where old better, else 00
 
          pand    (mm1, mm3);                        // keep only better new avg and abs
@@ -441,8 +441,8 @@ private:
          por     (mm7, mm1);                        // "
 
          // k, m
-         movq    (mm0, ebx+2*BPP);               // value k from top right               
-         movq    (mm1, ebx+ecx-2*BPP);   // value n from bottom left                     
+         movq    (mm0, ebx+2*BPP);               // value k from top right
+         movq    (mm1, ebx+ecx-2*BPP);   // value n from bottom left
          movq    (mm4, mm0);
          //pavgb   mm4, mm1                                        // avg(k,m)
          Tsimd::v_pavgb(mm4, mm1, mm3, ShiftMask);      // avg(k,m)
@@ -451,12 +451,12 @@ private:
          psubusb (mm1, mm0);
          por     (mm3, mm1);                                        // abs(k,m)
          movq    (mm1, mm3);                                        // keep copy
-                      
+
          movq    (mm2, mm4);                        // avg(k,m)
 
          psubusb (mm3, mm7);                        // nonzero where new weights bigger, else 0
          pxor    (mm4, mm4);
-         pcmpeqb (mm3, mm4);                        // now ff where new better, else 00     
+         pcmpeqb (mm3, mm4);                        // now ff where new better, else 00
          pcmpeqb (mm4, mm3);                        // here ff where old better, else 00
 
          pand    (mm1, mm3);                        // keep only better new avg and abs
@@ -469,8 +469,8 @@ private:
          por     (mm7, mm1);                        // "
 
          // b,e
-         movq    (mm0,ebx);             // value b from top             
-         movq    (mm1,ebx+ecx); // value e from bottom 
+         movq    (mm0,ebx);             // value b from top
+         movq    (mm1,ebx+ecx); // value e from bottom
 
          // We will also calc here the max/min values to later limit comb
          // so the max excursion will not exceed the Max_Comb constant
@@ -487,13 +487,13 @@ private:
            Tsimd::v_pminub(mm6, mm2, mm4);
           }
          else
-          { 
+          {
            movq    (mm2, mm0);
            movq    (mm4, eax);
            psubusb (mm2, mm4);
            psubusb (mm4, mm0);
            por     (mm4, mm2);                        // abs diff
-                         
+
            movq    (mm2, mm1);
            movq    (mm3, eax+ecx);
            psubusb (mm2, mm3);
@@ -520,20 +520,20 @@ private:
            paddusb (mm2, mm3);                        // maybe increase it to ffffff if no surround motion
            movq    (Max_Vals, mm2);
           }
-              
+
          movq    (mm2, mm0);
          //pavgb   mm2, mm1                                        // avg(b,e)
          Tsimd::v_pavgb(mm2, mm1, mm3, ShiftMask);      // avg(b,e)
-                      
+
          movq    (mm3, mm0);
          psubusb (mm3, mm1);
          psubusb (mm1, mm0);
          por     (mm3, mm1);                        // abs(c,d)
          movq    (mm1, mm3);                        // keep copy of diffs
-                       
-         pxor    (mm4, mm4);                        
+
+         pxor    (mm4, mm4);
          psubusb (mm3, mm7);                        // nonzero where new weights bigger, else 0
-         pcmpeqb (mm3, mm4);                        // now ff where new better, else 00     
+         pcmpeqb (mm3, mm4);                        // now ff where new better, else 00
          pcmpeqb (mm4, mm3);                        // here ff where old better, else 00
 
          pand    (mm1, mm3);
@@ -545,12 +545,12 @@ private:
          por     (mm6, mm2);                        // our x2 value
          por     (mm7, mm1);                        // our x2 diffs
          movq    (mm4, mm7);                        // save as bob uncertainty indicator
-                       
+
          // For non-SSE2:
          // through out most of the rest of this loop we will maintain
          //      mm4             our min bob value
          //      mm5             best weave pixels so far
-         //  mm6         our max Bob value 
+         //  mm6         our max Bob value
          //      mm7             best weighted pixel ratings so far
 
          // We will keep a slight bias to using the weave pixels
@@ -559,7 +559,7 @@ private:
          // our best and only rating so far
          pcmpeqb(mm7, mm7);                        // ffff, say we didn't find anything good yet
         }
-       // end of top 
+       // end of top
        search<SearchRange>(ecx,esi,edi,mm0,mm1,mm2,mm3,mm5,mm7);
        // bottom
        if (IS_SSE2)
@@ -618,7 +618,7 @@ private:
        pDest += dst_pitch2;
        pBob += src_pitch2;
        pBobP += src_pitch2;
-      }  
+      }
      _mm_empty();
     }
   };
@@ -650,7 +650,7 @@ public:
     return TsearchLoop<false,false,19>::SearchLoop;
    else if (SearchEffort <= 21)
     return TsearchLoop<false,false,21>::SearchLoop;
-   else 
+   else
     return TsearchLoop<false,false,99>::SearchLoop;
   }
 };
@@ -704,7 +704,7 @@ template<class Tsimd> struct TdblResize
    movq (mm0, esi);  // orig luma, in register as VYUYVYUY
    movq (mm2, mm0);    // keep a copy while we got it
    movq (mm6, mm0);    // and another to work on now
-   
+
    psrlq (mm6, 16);     // pretend most of it came from +2 offs (remem revers order)
    Tsimd::pavgb (  mm6, mm0);    // 3 pixels of valid new luma averag, plus garbage
    pand (mm0, YMask);    // keep only old luma, 0Y0Y0Y0Y
@@ -730,27 +730,27 @@ template<class Tsimd> struct TdblResize
    movq (edi, mm6);    // store low qword
    movq (edi+8, mm7);     // store high qword
 
-   *(edi+13)=*(esi+5);   
+   *(edi+13)=*(esi+5);
    *(short*)(edi+14)=*(short*)(esi+6);
   }
  static __forceinline void isBobBetter(__m64 &mm0,__m64 &mm1,__m64 &mm2,__m64 &mm3,__m64 &mm4,__m64 &mm6,__m64 &mm7)
-  { 
+  {
    movq   (mm2, mm0 );
    Tsimd::v_pavgb(mm2, mm1, mm3, ShiftMask) ;
    movq   (mm3, mm0 );
    psubusb(mm3, mm1 );
    psubusb(mm1, mm0 );
-   por    (mm3, mm1 );       /* abs diff */ 
-   movq   (mm1, mm3 );       /* keep copy */ 
-   psubusb(mm3, mm7 );       /* nonzero where new weights bigger, else 0 */ 
+   por    (mm3, mm1 );       /* abs diff */
+   movq   (mm1, mm3 );       /* keep copy */
+   psubusb(mm3, mm7 );       /* nonzero where new weights bigger, else 0 */
    pxor   (mm4, mm4 );
-   pcmpeqb(mm3, mm4 );       /* now ff where new better, else 00     */ 
-   pcmpeqb(mm4, mm3 );       /* here ff where old better, else 00 */ 
-   pand   (mm1, mm3 );       /* keep only better new avg and abs */ 
+   pcmpeqb(mm3, mm4 );       /* now ff where new better, else 00     */
+   pcmpeqb(mm4, mm3 );       /* here ff where old better, else 00 */
+   pand   (mm1, mm3 );       /* keep only better new avg and abs */
    pand   (mm2, mm3 );
    pand   (mm6, mm4 );
    pand   (mm7, mm4 );
-   por    (mm6, mm2 );       /* and merge new & old vals keeping best */ 
+   por    (mm6, mm2 );       /* and merge new & old vals keeping best */
    por    (mm7, mm1 );
   }
 
@@ -770,8 +770,8 @@ template<class Tsimd> struct TdblResize
     {
      // Loop general reg usage
      //
-     // eax -  
-     // ebx - src 2 lines above curr 
+     // eax -
+     // ebx - src 2 lines above curr
      // ecx loop ctr
      // edx - dst_pit
      // edi - dest
@@ -786,8 +786,8 @@ template<class Tsimd> struct TdblResize
       {
        // Assume our pixels are layed out as follows with x the calc'd value
        // and the other pixels are from the current field, top, curr, and lower lines.
-       //  
-       //    i   j   2 lines above 
+       //
+       //    i   j   2 lines above
        //    a   b   above line
        //        c x d   curr line
        //        e   f   next line
@@ -795,17 +795,17 @@ template<class Tsimd> struct TdblResize
        //
        // we calc the middle x value as:
        //  x = either avg(a,f), avg(c,d), avg(b,e)
-        
+
        // selected for the smallest of SAD(a,f), SAD(c,d), or SAD(b,e), etc.
        // where SAD() = sum of absolute diff
        //
        // we do this first for luma. For now we will just horizontally average chroma
-       
+
        const unsigned char *esi=ebx+edx;
 
        // i,n
-       movq (mm0, ebx);   // value i from top left  
-       movq (mm1, ebx+4*edx+2); // value n from bottom right   
+       movq (mm0, ebx);   // value i from top left
+       movq (mm1, ebx+4*edx+2); // value n from bottom right
        movq (mm6, mm0);
        //  pavgb mm6, mm1     // avg(i,n), also best so far
        Tsimd::v_pavgb(mm6, mm1, mm7, ShiftMask); // avg(i,n), also best so far
@@ -815,23 +815,23 @@ template<class Tsimd> struct TdblResize
        por  (mm7, mm1);     // abs diff (SAD), also best so far
 
        // m,j
-       movq    (mm0, ebx+2);  // value j from top right  
-       movq    (mm1, ebx+4*edx); // value m from bottom left   
+       movq    (mm0, ebx+2);  // value j from top right
+       movq    (mm1, ebx+4*edx); // value m from bottom left
        isBobBetter(mm0,mm1,mm2,mm3,mm4,mm6,mm7);
 
        // a,f
-       movq    (mm0, esi);   // value a from top left  
-       movq    (mm1, esi+2*edx+2); // value f from bottom right   
+       movq    (mm0, esi);   // value a from top left
+       movq    (mm1, esi+2*edx+2); // value f from bottom right
        isBobBetter(mm0,mm1,mm2,mm3,mm4,mm6,mm7);
 
 
        // e,b
-       movq    (mm0, esi+2);  // value b from top right  
-       movq    (mm1, esi+2*edx); // value e from bottom left   
+       movq    (mm0, esi+2);  // value b from top right
+       movq    (mm1, esi+2*edx); // value e from bottom left
        isBobBetter(mm0,mm1,mm2,mm3,mm4,mm6,mm7);
 
        // c,d
-       movq    (mm0, esi+edx); // value c from left   
+       movq    (mm0, esi+edx); // value c from left
        movq    (mm1, esi+edx+2); // value d from right
 
        // We will also clip what we've got so far to avoid artifacts
@@ -847,7 +847,7 @@ template<class Tsimd> struct TdblResize
        Tsimd::v_pminub (mm6, mm2, mm4);
 
        isBobBetter(mm0,mm1,mm2,mm3,mm4,mm6,mm7);
-       
+
        // we have now create 4 new luma values for pixel offsets 1,3,5,7. But we need to merge these
        // with luma values for offsets 0,2,4,6 and some chroma info. First the other luma.
        movq (mm0, esi+edx); // orig luma, in register as VYUYVYUY
@@ -862,8 +862,8 @@ template<class Tsimd> struct TdblResize
 
 
        // a,f - Chroma
-       movq (mm0, esi);   // value a from top left  
-       movq (mm1, esi+2*edx+4); // value f from bottom right   
+       movq (mm0, esi);   // value a from top left
+       movq (mm1, esi+2*edx+4); // value f from bottom right
        movq (mm6, mm0 );
        //  pavgb mm6, mm1     // avg(a,f), also best so far
        Tsimd::v_pavgb(mm6, mm1, mm7, ShiftMask);
@@ -873,12 +873,12 @@ template<class Tsimd> struct TdblResize
        por  (mm7, mm1);     // abs diff (SAD), also best so far
 
        // e,b - Chroma
-       movq    (mm0, esi+4);  // value b from top right  
-       movq    (mm1, esi+2*edx); // value e from bottom left   
+       movq    (mm0, esi+4);  // value b from top right
+       movq    (mm1, esi+2*edx); // value e from bottom left
        isBobBetter(mm0,mm1,mm2,mm3,mm4,mm6,mm7);
 
        // c,d - Chroma
-       movq    (mm0, esi+edx); // value c from left   
+       movq    (mm0, esi+edx); // value c from left
        movq    (mm1, esi+edx+4); // value d from right
 
        // We will also clip what we've got so far to avoid artifacts
@@ -902,7 +902,7 @@ template<class Tsimd> struct TdblResize
        punpcklwd (mm2,mm6);    // vuVUvuVU, merged old and new chroma
 
        // merge luma & chroma
-       movq (mm6, SaveLuma);   // get luma again  
+       movq (mm6, SaveLuma);   // get luma again
        movq (mm7, mm6);    // copy of luma
        punpcklbw (mm6, mm2);    // low bytes vyuYVyUY
        punpckhbw (mm7, mm2);    // hi bytes vyuYVyUY
@@ -910,15 +910,15 @@ template<class Tsimd> struct TdblResize
        //  movntq qword ptr[eax+edx], mm0
        Tsimd::movntq (edi, mm6); // store low qword
        Tsimd::movntq (edi+8, mm7); // store high qword
-      } 
-     
+      }
+
      // done with our horizontal loop but we have 8 more bytes of input to process
      // we will be fairly lazy with this and for now just use the current line, first luma
      const unsigned char *esi= ebx+edx;
      movq (mm0, esi+edx); // orig luma, in register as VYUYVYUY
      movq (mm2, mm0);    // keep a copy while we got it
      movq (mm6, mm0);    // and another to work on now
-     
+
      psrlq( mm6, 16  );   // pretend most of it came from +2 offs (remem revers order)
      Tsimd::pavgb(   mm6, mm0);    // 3 pixels of valid new luma averag, plus garbage
      pand (mm0, YMask );  // keep only old luma, 0Y0Y0Y0Y
@@ -943,10 +943,10 @@ template<class Tsimd> struct TdblResize
 
      movq (edi, mm6);    // store low qword
      movq (edi+8, mm7);     // store high qword
-     
+
      *(edi+13)=*(esi+edx+5);    // last U source byte
      *(short*)(edi+14)=*(short*)(esi+edx+6);    // last 2 YV source bytes
-    } 
+    }
   }
 };
 
@@ -976,7 +976,7 @@ private:
  uint8_t* pWorkArea;
  const uint8_t* pWeaveSrcP;
  const uint8_t* pCopySrcP;
- 
+
  int TopFirst;
  int searchEffort,oldSearchEffort;
  bool IsYUY2,Use_Vertical_Filter;
@@ -986,7 +986,7 @@ private:
  int PrevFrame;
  int PrevInFrame;
  int dropFrame;
- 
+
  stride_t src_pitch;
 
  static void Fieldcopy(void *dest, const void *src, size_t count, int rows, stride_t dst_pitch, stride_t src_pitch)
@@ -1000,7 +1000,7 @@ private:
     pDest += dst_pitch;
    }
  }
- 
+
  void ProcessFrame(int SearchEffort,const unsigned char *srcp,unsigned char *dstp,stride_t dst_pitch,int rowsize,int FldHeight,int height)
   {
    unsigned char *pWeaveDest;const unsigned char *pWeaveSrc;
@@ -1049,7 +1049,7 @@ private:
       Fieldcopy(pCopyDest, pCopySrc, rowsize, 1, dst_pitch, src_pitch); // copy top EVEN line
      else
       Fieldcopy(pCopyDest, pCopySrc, rowsize,  FldHeight, dst_pitch*2, src_pitch);  // copy all EVEN lines (base 0) I don't remember why???
-     Fieldcopy(pWeaveDest + (height-2)*dst_pitch, pCopySrc+(FldHeight-1)*src_pitch, rowsize, 1, dst_pitch, src_pitch); // copy bottom Odd line 
+     Fieldcopy(pWeaveDest + (height-2)*dst_pitch, pCopySrc+(FldHeight-1)*src_pitch, rowsize, 1, dst_pitch, src_pitch); // copy bottom Odd line
     }
    else if (TopFirst)
     {
@@ -1076,7 +1076,7 @@ private:
      Fieldcopy(pWeaveDest, pCopySrc, rowsize, 1, dst_pitch*2, src_pitch*2);
      Fieldcopy(pWeaveDest+(FldHeight-1)*dst_pitch*2, pCopySrc+(FldHeight-1)*src_pitch*2, rowsize,  1, dst_pitch*2, src_pitch*2); // bob this later
      if (Use_Vertical_Filter)
-      {       
+      {
        Fieldcopy(pCopyDest, pCopySrc, rowsize, 1, dst_pitch*2, src_pitch*2); // copy first bob line
        Fieldcopy(pCopyDest+(FldHeight-1)*dst_pitch*2, pCopySrc+(FldHeight-1)*src_pitch*2, rowsize, 1, dst_pitch*2, src_pitch*2); // copy last bob line
        pWeaveDest += dst_pitch;                // bug, adj for poor planning
@@ -1084,7 +1084,7 @@ private:
      else
       Fieldcopy(pCopyDest, pCopySrc, rowsize, FldHeight, dst_pitch*2, src_pitch*2);
     }
-   
+
    if (oldSearchEffort!=SearchEffort)
     searchLoopFc=getSearchFc(SearchEffort);
    searchLoopFc(src_pitch, dst_pitch, rowsize, pWeaveSrc, pWeaveSrcP,pWeaveDest, TopFirst, pCopySrc,pCopySrcP, FldHeight);
@@ -1104,9 +1104,9 @@ private:
       Fieldcopy(pCopyDest, pCopySrc, rowsize, 1, dst_pitch, src_pitch);// copy top EVEN line
      else
       Fieldcopy(pCopyDest, pCopySrc, rowsize, FldHeight, dst_pitch*2, src_pitch); // copy all EVEN lines (base 0) I don't remember why???
-     Fieldcopy(pWeaveDest + (height-2)*dst_pitch, pCopySrc+(FldHeight-1)*src_pitch, rowsize, 1, dst_pitch, src_pitch); // copy bottom Odd line 
+     Fieldcopy(pWeaveDest + (height-2)*dst_pitch, pCopySrc+(FldHeight-1)*src_pitch, rowsize, 1, dst_pitch, src_pitch); // copy bottom Odd line
     }
-   else 
+   else
    if (TopFirst)
     {
      pWeaveSrc = srcp+src_pitch;
@@ -1132,7 +1132,7 @@ private:
      Fieldcopy(pWeaveDest, pCopySrc, rowsize, 1, dst_pitch*2, src_pitch*2);
      Fieldcopy(pWeaveDest+(FldHeight-1)*dst_pitch*2,pCopySrc+(FldHeight-1)*src_pitch*2, rowsize, 1, dst_pitch*2, src_pitch*2);   // bob this later
      if (Use_Vertical_Filter)
-      { 
+      {
        Fieldcopy(pCopyDest, pCopySrc, rowsize, 1, dst_pitch*2, src_pitch*2);   // copy first bob line
        Fieldcopy(pCopyDest+(FldHeight-1)*dst_pitch*2,pCopySrc+(FldHeight-1)*src_pitch*2, rowsize, 1, dst_pitch*2, src_pitch*2); // copy last bob line
        pWeaveDest += dst_pitch;  // bug, adj for poor planning
@@ -1146,7 +1146,7 @@ private:
    searchLoopFc(src_pitch, dst_pitch, rowsize, pWeaveSrc, pWeaveSrcP,pWeaveDest, TopFirst, pCopySrc,pCopySrcP, FldHeight);
   }
  TsearchLoopFc getSearchFc(int searchEffort)
-  { 
+  {
    oldSearchEffort=searchEffort;
    if (IsYUY2)
     if (Use_Vertical_Filter)
@@ -1186,7 +1186,7 @@ public:
    dst=NULL;
    prevSrc=NULL;
    pWorkArea=NULL;
-  } 
+  }
  virtual ~TomsMoComp()
   {
    if (src) delete src;
@@ -1232,7 +1232,7 @@ public:
     {
      height = 2 * height;
      TopFirst = 0;
-    }  
+    }
 
    if (searchEffort == -2)
     {
@@ -1241,9 +1241,9 @@ public:
      TopFirst = 0;
      if (Use_Vertical_Filter)
       {
-       pWorkArea = (BYTE*) malloc(width*height*2+128); 
+       pWorkArea = (BYTE*) malloc(width*height*2+128);
       }
-    } 
+    }
 
    oldSearchEffort=-1;
    return true;
@@ -1265,7 +1265,7 @@ public:
     return;
 
    int SearchEffortW=0;
-   
+
    if (useFrame)
     {
      SearchEffortW = searchEffort;
@@ -1299,7 +1299,7 @@ public:
      unsigned char *dstp = dst->GetWritePtr(PLANAR_Y);
      src_pitch = src->GetPitch(PLANAR_Y);
      stride_t dst_pitch = dst->GetPitch(PLANAR_Y);
-     int rowsize = dst->GetRowSize(PLANAR_Y);   // Could also be PLANAR_Y_ALIGNED which would return a mod16 row_size   
+     int rowsize = dst->GetRowSize(PLANAR_Y);   // Could also be PLANAR_Y_ALIGNED which would return a mod16 row_size
      int height = dst->GetHeight(PLANAR_Y);
      int FldHeight = height / 2;
      if (useFrame)
@@ -1314,7 +1314,7 @@ public:
      dstp = dst->GetWritePtr(PLANAR_U);
      src_pitch = src->GetPitch(PLANAR_U);
      dst_pitch = dst->GetPitch(PLANAR_U);
-     rowsize = dst->GetRowSize(PLANAR_U);  // Could also be PLANAR_U_ALIGNED which would return a mod8 row_size   
+     rowsize = dst->GetRowSize(PLANAR_U);  // Could also be PLANAR_U_ALIGNED which would return a mod8 row_size
      height = dst->GetHeight(PLANAR_U);
      FldHeight = height / 2;
      if (useFrame)
@@ -1325,8 +1325,8 @@ public:
      ProcessFrame_YV12(SearchEffortW,srcp,dstp,dst_pitch,rowsize,FldHeight,height);       // table and then write the frame
 
      // And the V plane, same sizes as U, different locations
-     srcp = src->GetReadPtr(PLANAR_V);   
-     dstp = dst->GetWritePtr(PLANAR_V);   
+     srcp = src->GetReadPtr(PLANAR_V);
+     dstp = dst->GetWritePtr(PLANAR_V);
      if (useFrame)
       {
        pWeaveSrcP = TopFirst ? prevSrc->GetReadPtr(PLANAR_V) + src_pitch : prevSrc->GetReadPtr(PLANAR_V);
@@ -1336,7 +1336,7 @@ public:
     }
    PrevFrame = useFrame;
    PrevInFrame = inFrame;
-   
+
    _mm_empty();
   }
 };

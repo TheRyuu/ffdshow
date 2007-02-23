@@ -41,9 +41,9 @@ TaudioCodec* TaudioCodec::initSource(IffdshowBase *Ideci,IdecAudioSink *Isink,Co
    if (movie->init(mt))
     return movie;
    else
-    delete movie;  
+    delete movie;
   }
- return NULL; 
+ return NULL;
 }
 
 TaudioCodec::TaudioCodec(IffdshowBase *Ideci,IdecAudioSink *Isink):

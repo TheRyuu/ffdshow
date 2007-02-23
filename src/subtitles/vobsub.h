@@ -12,8 +12,8 @@ class Tvobsub :public TsubtitleDVDparent
 private:
  const Tconfig *config;
  Tstream* rar_open(const char_t *flnm);
-public: 
- struct packet_t 
+public:
+ struct packet_t
   {
    unsigned int pts100;
    long filepos;
@@ -41,7 +41,7 @@ public:
  unsigned int spu_streams_size;
  unsigned int spu_streams_current;
 private:
- struct mpeg_t 
+ struct mpeg_t
   {
    Tstream *stream;
    unsigned int pts;
@@ -82,7 +82,11 @@ public:
  //int vobsub_set_from_lang(const char * lang);
  unsigned int vobsub_get_forced_subs_flag(void);
  void vobsub_seek(int pts);
-}; 
+};
 
 #endif
+
+
+
+
 

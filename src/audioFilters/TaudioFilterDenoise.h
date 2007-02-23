@@ -16,9 +16,9 @@ private:
  struct FilterABand
   {
    int32_t prevs[MAXPREVS];
-   // ...Previous voxels, averaged in to filter apart bands. One between each pair of adjacent bands 
-   unsigned long squelchgain; 
-   // ...*SQUELCHMULT allows less obstrusive squelch switching 
+   // ...Previous voxels, averaged in to filter apart bands. One between each pair of adjacent bands
+   unsigned long squelchgain;
+   // ...*SQUELCHMULT allows less obstrusive squelch switching
    unsigned char squelching;
  };
  struct FilterAChannel

@@ -205,7 +205,7 @@ int x264_cqm_parse_file( x264_t *h, const char *filename )
     int b_error = 0;
 
     h->param.i_cqm_preset = X264_CQM_CUSTOM;
-    
+
     buf = x264_slurp_file( filename );
     if( !buf )
     {
@@ -226,4 +226,7 @@ int x264_cqm_parse_file( x264_t *h, const char *filename )
     x264_free( buf );
     return b_error;
 }
+
+
+
 

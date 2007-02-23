@@ -30,7 +30,7 @@ private:
    atomic_operation_t * p_atomic_operations;
    int Init(const TsampleFormat &fmt,const TmixerSettings *cfg);
   } *p_sys;
- bool inited; 
+ bool inited;
 protected:
  virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_FLOAT32;}
 public:
@@ -48,13 +48,13 @@ private:
  float in[6];
  Tbuffer buf;
 
- struct af_hrtf_s 
+ struct af_hrtf_s
   {
   public:
    af_hrtf_s(const TsampleFormat &fmt);
    ~af_hrtf_s();
    void update_ch(const float *in, const int k);
-   
+
    /* Lengths */
    int dlbuflen, hrflen;
    unsigned int basslen;
@@ -71,29 +71,29 @@ private:
 
  static float passive_lock(float x);
  static float conv(const int nx, const int nk, const float *sx, const float *sk,const int offset);
-  
+
  static const int DELAYBUFLEN=1024;	/* Length of the delay buffer */
  static const int HRTFFILTLEN=64;	/* HRTF filter length */
  static const int BASSFILTFREQ=180;	/* Bass compensation filter cut (Hz) */
  static const int BASSFILTLEN=193;	/* Bass compensation filter length */
  static const float BASSGAIN;       	/* Bass compensation gain */
  static const float BASSCROSS;    	/* Bass cross talk */
- 
+
  static const float IRTHRESH;	/* Impulse response pruning thresh. */
- 
+
  static const float M17_0DB;
  static const float M9_03DB;
  static const float M6_99DB;
  static const float M4_77DB;
  static const float M3_01DB;
  static const float M1_76DB;
- 
+
  static const int CFECHODELAY=360;	/* Center front echo delay (samples) */
- 
+
  static const float STEXPAND2;	/* Stereo expansion / 2 */
- 
+
  static const float cf_filt[128],af_filt[128],of_filt[128],ar_filt[128],or_filt[128],cr_filt[128];
- 
+
  static int pulse_detect(const float *sx);
 protected:
  virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_FLOAT32;}

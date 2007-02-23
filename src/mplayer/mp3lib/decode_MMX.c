@@ -164,8 +164,8 @@ __asm __volatile(
 	"movw %%ax, (%%edi)\n\t"
         "leal 32(%%esi),%%esi\n\t"
         "leal 64(%%edx),%%edx\n\t"
-        "leal 4(%%edi),%%edi\n\t"               
-	
+        "leal 4(%%edi),%%edi\n\t"
+
 ".next_loop:\n\t"
         "subl $64,%%esi\n\t"
         "movl $7,%%ecx\n\t"

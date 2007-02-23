@@ -28,9 +28,9 @@ public:
    TdeinterlacePanel* (*create)(Twindow *parent);
   };
  static const TmethodProps methodProps[];
- 
+
  TdeinterlaceSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
- 
+
  int swapfields;
  int cfgId;
  static const int cfgIdDef=2;
@@ -45,7 +45,7 @@ public:
    const char_t *name;
    int id;
   };
- static const TframerateDoublerSEs frameRateDoublerSEs[]; 
+ static const TframerateDoublerSEs frameRateDoublerSEs[];
 
  int kernelThreshold,kernelSharp,kernelTwoway,kernelMap,kernelLinked;
 

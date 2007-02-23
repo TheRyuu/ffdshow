@@ -21,7 +21,7 @@
 #include "TaudioFilterFreeverb.h"
 #include "Cfreeverb.h"
 #include "TffdshowPageDec.h"
-    
+
 const TfilterIDFF TfreeverbSettings::idffs=
 {
  /*name*/      _l("Freeverb"),
@@ -65,7 +65,7 @@ void TfreeverbSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfil
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (is && show)
-  queueFilter<TaudioFilterFreeverb>(filtersorder,filters,queue); 
+  queueFilter<TaudioFilterFreeverb>(filtersorder,filters,queue);
 }
 void TfreeverbSettings::createPages(TffdshowPageDec *parent) const
 {

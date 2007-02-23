@@ -36,11 +36,11 @@ void Ttranslate::Tfont::init(Tinifile &ini)
  ini.getPrivateProfileString(_l("Font"),Tconfig::winNT?_l("typefaceNT"):_l("typeface9x"),_l(""),typeface,256);
  pointsize=ini.getPrivateProfileInt(_l("Font"),Tconfig::winNT?_l("pointsizeNT"):_l("pointsize9x"),pointsizeDef);
  italic=ini.getPrivateProfileInt(_l("Font"),Tconfig::winNT?_l("italicNT"):_l("italic9x"),italicDef)?TRUE:FALSE;
-/* 
+/*
  char charsetS[256];
- ini.getPrivateProfileString("Font",Tconfig::winNT?"charsetNT":"charset9x","Ansi",charsetS,256); 
+ ini.getPrivateProfileString("Font",Tconfig::winNT?"charsetNT":"charset9x","Ansi",charsetS,256);
  charset=TfontSettings::getCharset(charsetS);
-*/ 
+*/
 }
 
 //====================== Ttranslate::Tstrs ==========================
@@ -118,7 +118,7 @@ void Ttranslate::Tdialog::translate(int dlgId,HWND hwnd,Tdialog &builtin)
      if (id==IDC_ED_HELP || stricmp(className,_l("BUTTON"))==0 || stricmp(className,_l("STATIC"))==0)
       {
        const char_t *newtext=translate(dlgId,id,NULL,&builtin);
-       if (newtext && newtext[0]) 
+       if (newtext && newtext[0])
         {
          SetDlgItemText(hwnd,id,newtext);
          int exstyle=GetWindowExStyle(*w);
@@ -250,7 +250,7 @@ void Ttranslate::init(const char_t *newlang,int ItranslateMode)
    {
     font.init(ini);
     initfont=false;
-   } 
+   }
   else
    {
     int dlgId=atoi(sect);
@@ -261,7 +261,7 @@ void Ttranslate::init(const char_t *newlang,int ItranslateMode)
 }
 void Ttranslate::done(void)
 {
- dlgs.clear(); 
+ dlgs.clear();
  strs.clear();
 }
 
@@ -335,16 +335,16 @@ DLGTEMPLATE *Ttranslate::translateDialogTemplate(int dialogId) const
      if (!font.typeface[0])
       while ((*p++=*orig++)!=NULL)
        ;
-     else  
+     else
       {
        int nchar=nCopyAnsiToWideChar(p,text<char_t>(font.typeface));
        p+=nchar;
        while (*orig++)
         ;
-      }  
-    } 
+      }
+    }
    for (int i=0;i<numitems;i++)
-    { 
+    {
      p=lpwAlign(p);orig=lpwAlign(orig);
      *p++=*orig++; // LOWORD(DWORD helpID);
      *p++=*orig++; // HIWORD(DWORD helpID);
@@ -362,13 +362,13 @@ DLGTEMPLATE *Ttranslate::translateDialogTemplate(int dialogId) const
       for (;(windowclass=*p++=*orig++)!=NULL;)
        ;
      else
-      *p++=*orig++; 
+      *p++=*orig++;
      WCHAR title=*p++=*orig++; // sz_Or_Ord title;
      if (title!=0xffff)
       for (;(title=*p++=*orig++)!=NULL;)
        ;
      else
-      *p++=*orig++; 
+      *p++=*orig++;
      int extracount=*p++=*orig++; // WORD extraCount;
      if (extracount>0)
       {
@@ -378,7 +378,7 @@ DLGTEMPLATE *Ttranslate::translateDialogTemplate(int dialogId) const
         pb[j]=origb[j];
        p=lpwAlign(p+roundDiv(extracount,2));orig=lpwAlign(orig+roundDiv(extracount,2));
       }
-    } 
-  } 
+    }
+  }
  return (DLGTEMPLATE*)trans0;
 }

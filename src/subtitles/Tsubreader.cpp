@@ -31,10 +31,10 @@ void Tsubreader::clear(void)
 {
  for (iterator s=begin();s!=end();s++)
   delete *s;
- std::vector<value_type>::clear(); 
+ std::vector<value_type>::clear();
 }
 
-int Tsubreader::sub_autodetect(Tstream &fd,const Tconfig *config) 
+int Tsubreader::sub_autodetect(Tstream &fd,const Tconfig *config)
 {
  int j=0;
  static const int LINE_LEN=1000;
@@ -47,53 +47,53 @@ int Tsubreader::sub_autodetect(Tstream &fd,const Tconfig *config)
     {
      format=SUB_INVALID;
      break;
-    } 
+    }
    int i;char p;
    if (sscanf (line, "{%d}{%d}", &i, &i)==2)
     {
      format=SUB_MICRODVD;
      break;
-    } 
+    }
    if (sscanf (line, "{%d}{}", &i)==1)
     {
      format=SUB_MICRODVD;
      break;
-    } 
+    }
    if (sscanf (line, "[%d][%d]", &i, &i)==2)
     {
      format=SUB_MPL2|SUB_USESTIME;
      break;
-    } 
+    }
    if (sscanf (line, "%d:%d:%d.%d,%d:%d:%d.%d",     &i, &i, &i, &i, &i, &i, &i, &i)==8)
     {
      format=SUB_SUBRIP|SUB_USESTIME;
      break;
-    } 
+    }
    if (sscanf (line, "%d:%d:%d%[,.:]%d --> %d:%d:%d%[,.:]%d", &i, &i, &i, (char *)&i, &i, &i, &i, &i, (char *)&i, &i)==10)
     {
      format=SUB_SUBVIEWER|SUB_USESTIME;
      break;
-    } 
+    }
    if (sscanf (line, "{T %d:%d:%d:%d",&i, &i, &i, &i)==4)
     {
      format=SUB_SUBVIEWER2|SUB_USESTIME;
      break;
-    } 
+    }
    if (strstr (line, "<SAMI>"))
     {
      format=SUB_SAMI|SUB_USESTIME;
      break;
-    } 
+    }
    if (sscanf (line, "%d:%d:%d:",     &i, &i, &i )==3)
     {
      format=SUB_VPLAYER|SUB_USESTIME;
      break;
-    } 
+    }
    if (sscanf (line, "%d:%d:%d ",     &i, &i, &i )==3)
     {
      format=SUB_VPLAYER|SUB_USESTIME;
      break;
-    } 
+    }
    if (stristr(line,"<USFSubtitles ")!=NULL)
     {
      if (config->check(TsubreaderUSF2::dllname))
@@ -109,50 +109,50 @@ int Tsubreader::sub_autodetect(Tstream &fd,const Tconfig *config)
     {
      format=SUB_RT|SUB_USESTIME;
      break;
-    } 
+    }
 
    if (!memcmp(line, "Dialogue: Marked", 16))
     {
      format=SUB_SSA|SUB_USESTIME;
-     break; 
-    } 
+     break;
+    }
    if (!memcmp(line, "Dialogue: ", 10))
     {
      format=SUB_SSA|SUB_USESTIME;
      break;
-    } 
+    }
    if (!memcmp(line, "# VobSub index file", 19))
     {
      format=SUB_VOBSUB|SUB_USESTIME;
      break;
-    } 
+    }
    if (sscanf (line, "%d,%d,\"%c", &i, &i, (char *) &i) == 3)
     {
      format=SUB_DUNNOWHAT;
      break;
-    } 
+    }
    if (sscanf (line, "FORMAT=%d", &i) == 1)
     {
      format=SUB_MPSUB;
      break;
-    } 
+    }
    if (sscanf (line, "FORMAT=TIM%c", &p)==1 && p=='E')
     {
      format=SUB_MPSUB|SUB_USESTIME;
      break;
-    } 
+    }
    if (strstr (line, "-->>"))
     {
      format=SUB_AQTITLE|SUB_USESTIME;
      break;
-    } 
+    }
    if (sscanf (line, "[%d:%d:%d]", &i, &i, &i)==3)
     {
      format=SUB_SUBRIP09|SUB_USESTIME;
      break;
     }
   }
- if (format!=SUB_INVALID) setSubEnc(format,fd); 
+ if (format!=SUB_INVALID) setSubEnc(format,fd);
  return format;  // too many bad lines
 }
 

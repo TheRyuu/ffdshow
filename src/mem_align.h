@@ -10,7 +10,7 @@ void aligned_free(void *mem_ptr);
 
 template <class T> class aligned_allocator;
 
-template <> class aligned_allocator<void> 
+template <> class aligned_allocator<void>
 {
 public:
  typedef void*       pointer;
@@ -25,7 +25,7 @@ public:
  typedef T value_type;
  typedef size_t size_type;
  typedef ptrdiff_t difference_type;
- 
+
  typedef T* pointer;
  typedef const T* const_pointer;
 
@@ -34,7 +34,7 @@ public:
 
  pointer address(reference r) const { return &r; }
  const_pointer address(const_reference r) const { return &r; }
- 
+
  aligned_allocator() throw(){}
  template <class U> aligned_allocator(const aligned_allocator<U>& ) throw() {}
  ~aligned_allocator() throw(){}

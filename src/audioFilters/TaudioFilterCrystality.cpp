@@ -38,7 +38,7 @@ void TaudioFilterCrystality::Techo3d::init(const TcrystalitySettings *cfg)
  harmonics_sfactor=cfg->harmonics_level;
 
  static const int COND=0;
- for (int i=0;i<32768;i++) 
+ for (int i=0;i<32768;i++)
   {
    double lsum=0,rsum=0;
    if (COND || i < 32768 )lsum+=  ((cos((double)i * 3.141592535 / 32768/2  )) + 0) / 2;
@@ -67,10 +67,10 @@ void TaudioFilterCrystality::Techo3d::process(int16_t *data, size_t datasize)
  int lharm0, rharm0;
  dataptr = data;
 
- for (size_t x = 0; x < datasize; x += 4) 
+ for (size_t x = 0; x < datasize; x += 4)
   {
    // ************ load sample **********
-   left0 = dataptr[0]; 
+   left0 = dataptr[0];
    right0 = dataptr[1];
 
    // ************ slightly expand stereo for direct input **********
@@ -80,7 +80,7 @@ void TaudioFilterCrystality::Techo3d::process(int16_t *data, size_t datasize)
    right0 -= dif;
    ll2= ll1; ll1= ll0;
    rr2= rr1; rr1= rr0;
-   
+
    // ************ echo from buffer - first echo **********
    // ************  **********
    left1 = buf[bufPos1++];
@@ -98,7 +98,7 @@ void TaudioFilterCrystality::Techo3d::process(int16_t *data, size_t datasize)
    // ************ second echo  **********
    left2 = buf[bufPos2++];
    if (bufPos2 == BUF_SIZE)
-     bufPos2 = 0;      
+     bufPos2 = 0;
    right2 = buf[bufPos2++];
    if (bufPos2 == BUF_SIZE)
      bufPos2 = 0;
@@ -111,7 +111,7 @@ void TaudioFilterCrystality::Techo3d::process(int16_t *data, size_t datasize)
    // ************ third echo  **********
    left3 = buf[bufPos3++];
    if (bufPos3 == BUF_SIZE)
-     bufPos3 = 0;      
+     bufPos3 = 0;
    right3 = buf[bufPos3++];
    if (bufPos3 == BUF_SIZE)
      bufPos3 = 0;
@@ -119,7 +119,7 @@ void TaudioFilterCrystality::Techo3d::process(int16_t *data, size_t datasize)
    // ************ fourth echo  **********
    left4 = buf[bufPos4++];
    if (bufPos4 == BUF_SIZE)
-     bufPos4 = 0;      
+     bufPos4 = 0;
    right4 = buf[bufPos4++];
    if (bufPos4 == BUF_SIZE)
      bufPos4 = 0;
@@ -189,7 +189,7 @@ void TaudioFilterCrystality::Techo3d::process(int16_t *data, size_t datasize)
    right = 0
     // +rsf
        + rharm0 - rharmb / 32768
-       + right 
+       + right
        ;
 
    left0p = left0;
@@ -217,7 +217,7 @@ void TaudioFilterCrystality::Techo3d::onSeek(void)
 
 // simple pith shifter, plays short fragments at 1.5 speed
 void TaudioFilterCrystality::Tbandext::pitchShifter(const int &in, int *out)
-{ 
+{
  shBuf[shBufPos++] = in;
 
  if (shBufPos == SH_BUF_SIZE) shBufPos = 0;
@@ -288,7 +288,7 @@ void TaudioFilterCrystality::Tbandext::process(int16_t *dataptr, const size_t da
 {
  int left=0;
 
- for (size_t x = 0; x < datasize; x += sizeof(*dataptr)*N) 
+ for (size_t x = 0; x < datasize; x += sizeof(*dataptr)*N)
   {
    // ************ load sample **********
    int left0 = *dataptr;
@@ -320,7 +320,7 @@ void TaudioFilterCrystality::Tbandext::process(int16_t *dataptr, const size_t da
      amplUp   = (amplUp   * 1000) /1024;
      amplDown = (amplDown * 1000) /1024;
      lampl = amplUp - amplDown;
-    } 
+    }
 
    interpolate(&bandext_amplitude, lampl);
 
@@ -328,7 +328,7 @@ void TaudioFilterCrystality::Tbandext::process(int16_t *dataptr, const size_t da
    interpolate(&bandext_energy, left0  - prev0);
 
    // ************ mixer ***********
-   left   = left0  + left  * calc_scalefactor(bandext_amplitude.lval, bandext_energy.lval) / bext_sfactor; 
+   left   = left0  + left  * calc_scalefactor(bandext_amplitude.lval, bandext_energy.lval) / bext_sfactor;
 
    // ************ highpass filter part 2 **********
    // ************ save previous values for filter
@@ -365,11 +365,11 @@ HRESULT TaudioFilterCrystality::process(TfilterQueue::iterator it,TsampleFormat 
    old=*cfg;oldnchannels=fmt.nchannels;
    if (fmt.nchannels==2)
     echo3d.init(cfg);
-   for (int i=0;i<6;i++) 
+   for (int i=0;i<6;i++)
     bandext[i].init(cfg);
   }
 
- if (is(fmt,cfg)) 
+ if (is(fmt,cfg))
   {
    int16_t *samples=(int16_t*)(samples0=init(cfg,fmt,samples0,numsamples));
    if (fmt.nchannels==2)

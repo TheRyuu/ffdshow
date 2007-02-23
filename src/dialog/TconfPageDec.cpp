@@ -28,7 +28,7 @@ TconfPageDec::TconfPageDec(TffdshowPageDec *Iparent,const TfilterIDFF *idff,int 
  resInter=0;
  if (!idff)
   idffInter=idffFull=idffHalf=idffShow=0;
- else 
+ else
   {
    inPreset=1;
    filterID=idff->id;
@@ -39,8 +39,8 @@ TconfPageDec::TconfPageDec(TffdshowPageDec *Iparent,const TfilterIDFF *idff,int 
      idffFull=idff->full;
      idffHalf=idff->half;
      dialogId=idff->dlgId;
-    } 
-   else 
+    }
+   else
     idffInter=idffFull=idffHalf=0;
   }
  idffOrder=(idff && idff->order && filterPageID<=1)?idff->order:deciD->getMinOrder2()-1;
@@ -53,7 +53,7 @@ int TconfPageDec::getInter(void)
 }
 bool TconfPageDec::invInter(void)
 {
- if (idffInter) 
+ if (idffInter)
   {
    cfgInv(idffInter);
    return true;
@@ -72,7 +72,7 @@ void TconfPageDec::setShow(int s)
 int TconfPageDec::getProcessFull(void)
 {
  return !idffFull?-1:cfgGet(idffFull);
-} 
+}
 void TconfPageDec::setProcessHalf(int half)
 {
  if (idffHalf) cfgSet(idffHalf,half);
@@ -80,7 +80,7 @@ void TconfPageDec::setProcessHalf(int half)
 int TconfPageDec::getProcessHalf(void)
 {
  return !idffHalf?-1:cfgGet(idffHalf);
-} 
+}
 void TconfPageDec::setProcessFull(int full)
 {
  if (idffFull) cfgSet(idffFull,full);
@@ -96,7 +96,7 @@ void TconfPageDec::setOrder(int o)
 int TconfPageDec::getOrder(void)
 {
  return (idffOrder<=0 || idffOrder>=maxOrder)?idffOrder:cfgGet(idffOrder);
-} 
+}
 
 void TconfPageDec::cfgInv(unsigned int i)
 {

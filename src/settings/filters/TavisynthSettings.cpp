@@ -40,7 +40,7 @@ TavisynthSettings::TavisynthSettings(TintStrColl *Icoll,TfilterIDFFs *filters):T
  memset(script,0,sizeof(script));
  static const TintOptionT<TavisynthSettings> iopts[]=
   {
-   IDFF_isAvisynth               ,&TavisynthSettings::is           ,0,0,_l(""),1, 
+   IDFF_isAvisynth               ,&TavisynthSettings::is           ,0,0,_l(""),1,
      _l("isAvisynth"),0,
    IDFF_showAvisynth             ,&TavisynthSettings::show         ,0,0,_l(""),1,
      _l("showAvisynth"),1,
@@ -60,21 +60,21 @@ TavisynthSettings::TavisynthSettings(TintStrColl *Icoll,TfilterIDFFs *filters):T
      _l("avisynthFfdshowSource"),1,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
  static const TstrOption sopts[]=
   {
    IDFF_avisynthScript,(TstrVal)&TavisynthSettings::script,2048,_l(""),1,
      _l("avisynthScript"),_l(""),
    0
-  }; 
- addOptions(sopts); 
+  };
+ addOptions(sopts);
 }
 
 void TavisynthSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (is && show)
-  queueFilter<TimgFilterAvisynth>(filtersorder,filters,queue); 
+  queueFilter<TimgFilterAvisynth>(filtersorder,filters,queue);
 }
 void TavisynthSettings::createPages(TffdshowPageDec *parent) const
 {

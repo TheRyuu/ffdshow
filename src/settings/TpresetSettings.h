@@ -55,7 +55,7 @@ private:
   private:
    static bool orderSort(const Torder &o1,const Torder &o2);
   public:
-   void sort(void); 
+   void sort(void);
   };
  void getOrders(Torders &orders,bool all=false) const;
  void fixOrder(void);
@@ -68,7 +68,7 @@ protected:
  friend class TffdshowDec;
  Tpreset& operator =(const Tpreset &src);
  TintStrColl *options;
- TfilterIDFFs *filters; 
+ TfilterIDFFs *filters;
  template<class T> static T* new_copy(T *self)
   {
    T *newpreset=new T(_l(""),_l(""));
@@ -84,7 +84,7 @@ public:
  void saveReg(void);
  bool loadFile(const char_t *flnm),saveFile(const char_t *flnm);
  virtual void reg_op(TregOp &t);
- 
+
  struct TautoPresetItemDef
   {
    const char_t *desc,*hint;
@@ -99,7 +99,7 @@ public:
   };
  void addAutoPresetItems(const TautoPresetItemDef *IautoPresetItems);
  int autoLoadedFromFile;
- 
+
  int autoloadExtsNeedFix;
  virtual bool isAutoPreset(TautoPresetProps &props) const;
 
@@ -117,7 +117,7 @@ private:
   private:
    int is;
    strings vals;
-  public: 
+  public:
    TautoPresetItem(const TautoPresetItemDef *Iitem);
    const TautoPresetItemDef *item;
    void reg_op(TregOp &t);
@@ -127,7 +127,7 @@ private:
    void set(int is,const char_t *val);
    const char_t* getList(IffdshowDec *deciD,unsigned int index);
   };
- typedef std::vector<TautoPresetItem> TautoPresetItems; 
+ typedef std::vector<TautoPresetItem> TautoPresetItems;
  TautoPresetItems autoPresetItems;
 public:
  int getMinOrder(void) const,getMaxOrder(void) const;

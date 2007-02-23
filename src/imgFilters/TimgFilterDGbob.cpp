@@ -130,9 +130,9 @@ HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it,TffPict &pict0,const 
                if (cfg->dgbobAP)
                 {
                  int v1 = (int) srcp[x] - AP;
-                 if (v1 < 0) v1 = 0; 
+                 if (v1 < 0) v1 = 0;
                  int v2 = (int) srcp[x] + AP;
-                 if (v2 > 235) v2 = 235; 
+                 if (v2 > 235) v2 = 235;
                  if ((v1 > srcpp[x] && v1 > srcpn[x]) || (v2 < srcpp[x] && v2 < srcpn[x]))
                   {
                    dstp[x] = (unsigned char)(((int)srcpp[x] + srcpn[x]) >> 1);
@@ -153,9 +153,9 @@ HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it,TffPict &pict0,const 
              else
               {
                int v1 = (int) srcp[x] - T;
-               if (v1 < 0) v1 = 0; 
+               if (v1 < 0) v1 = 0;
                int v2 = (int) srcp[x] + T;
-               if (v2 > 235) v2 = 235; 
+               if (v2 > 235) v2 = 235;
                if ((v1 > srcpp[x] && v1 > srcpn[x]) || (v2 < srcpp[x] && v2 < srcpn[x]))
                 {
                  dstp[x] = (unsigned char)(((int)srcpp[x] + srcpn[x]) >> 1);
@@ -197,7 +197,7 @@ HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it,TffPict &pict0,const 
           }
          // Copy through the line that will be missed below.
          memcpy(dstp_saved + order*(h-1)*stride2[z], srcp_saved + order*(h-1)*src->stride[z], w);
-         // For the other field choose adaptively between using the previous field or the interpolant from the current field. 
+         // For the other field choose adaptively between using the previous field or the interpolant from the current field.
          const unsigned char *prvp = prv->data[z] + prv->stride[z] + (1-order)*prv->stride[z];
          const unsigned char *prvpp = prvp - prv->stride[z];
          const unsigned char *prvpn = prvp + prv->stride[z];
@@ -234,9 +234,9 @@ HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it,TffPict &pict0,const 
                if (cfg->dgbobAP)
                 {
                  int v1 = (int) prvp[x] - AP;
-                 if (v1 < 0) v1 = 0; 
+                 if (v1 < 0) v1 = 0;
                  int v2 = (int) prvp[x] + AP;
-                 if (v2 > 235) v2 = 235; 
+                 if (v2 > 235) v2 = 235;
                  if ((v1 > srcpp[x] && v1 > srcpn[x]) || (v2 < srcpp[x] && v2 < srcpn[x]))
                   {
                    dstp[x] = (unsigned char)(((int)srcpp[x] + srcpn[x]) >> 1);
@@ -253,13 +253,13 @@ HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it,TffPict &pict0,const 
                  dstp[x] = prvp[x];
                  //if (x & 1) dstp[x] = 128; else dstp[x] = 235;
                 }
-              } 
+              }
              else
               {
                int v1 = (int) prvp[x] - T;
-               if (v1 < 0) v1 = 0; 
+               if (v1 < 0) v1 = 0;
                int v2 = (int) prvp[x] + T;
-               if (v2 > 235) v2 = 235; 
+               if (v2 > 235) v2 = 235;
                if ((v1 > srcpp[x] && v1 > srcpn[x]) || (v2 < srcpp[x] && v2 < srcpn[x]))
                 {
                  dstp[x] = (unsigned char)(((int)srcpp[x] + srcpn[x]) >> 1);

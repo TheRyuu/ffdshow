@@ -32,10 +32,10 @@ bool TaudioFilterMixer::getOutputFmt(TsampleFormat &fmt,const TfilterSettingsAud
  if (super::getOutputFmt(fmt,cfg0))
   {
    ((const TmixerSettings*)cfg0)->setFormatOut(fmt);
-   return true; 
+   return true;
   }
  else
-  return false;  
+  return false;
 }
 
 HRESULT TaudioFilterMixer::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0)

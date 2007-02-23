@@ -92,7 +92,7 @@ x264_pixel_avg_w4_mmxext:
     mov         eax, parm7d         ; i_height
 
 ALIGN 4
-.height_loop    
+.height_loop
     movd        mm0, [parm3q]
     movd        mm1, [parm3q+parm4q]
     pavgb       mm0, [r10]
@@ -106,7 +106,7 @@ ALIGN 4
     jne         .height_loop
     rep ret
 
-                          
+
 
 ALIGN 16
 ;-----------------------------------------------------------------------------
@@ -121,7 +121,7 @@ x264_pixel_avg_w8_mmxext:
     mov         eax, parm7d         ; i_height
 
 ALIGN 4
-.height_loop    
+.height_loop
     movq        mm0, [parm3q]
     movq        mm1, [parm3q+parm4q]
     pavgb       mm0, [r10]
@@ -148,7 +148,7 @@ x264_pixel_avg_w16_mmxext:
     mov         eax, parm7d         ; i_height
 
 ALIGN 4
-.height_loop    
+.height_loop
     movq        mm0, [parm3q  ]
     movq        mm1, [parm3q+8]
     pavgb       mm0, [r10  ]
@@ -175,7 +175,7 @@ x264_pixel_avg_w16_sse2:
     mov         eax, parm7d         ; i_height
 
 ALIGN 4
-.height_loop    
+.height_loop
     movdqu      xmm0, [parm3q]
     pavgb       xmm0, [r10]
     movdqu      [parm1q], xmm0
@@ -290,7 +290,7 @@ ALIGN 16
 ;-----------------------------------------------------------------------------
 x264_mc_copy_w4_mmx:
     mov     eax, parm5d         ; i_height
-    
+
 ALIGN 4
 .height_loop
     mov     r10d, [parm3q]
@@ -327,7 +327,7 @@ ALIGN 4
     movq    [parm1q+r11], mm3
     lea     parm3q, [parm3q+parm4q*4]
     lea     parm1q, [parm1q+parm2q*4]
-    
+
     sub     eax, byte 4
     jnz     .height_loop
     rep ret
@@ -339,7 +339,7 @@ ALIGN 16
 ;-----------------------------------------------------------------------------
 x264_mc_copy_w16_mmx:
     mov     eax, parm5d         ; i_height
-    
+
     lea     r10, [parm4q+parm4q*2] ; 3 * i_src_stride
     lea     r11, [parm2q+parm2q*2] ; 3 * i_dst_stride
 
@@ -556,7 +556,7 @@ ALIGN 4
 
 
 ;-----------------------------------------------------------------------------
-; void x264_prefetch_fenc_mmxext( uint8_t *pix_y, int stride_y, 
+; void x264_prefetch_fenc_mmxext( uint8_t *pix_y, int stride_y,
 ;                                 uint8_t *pix_uv, int stride_uv, int mb_x )
 ;-----------------------------------------------------------------------------
 ALIGN 16

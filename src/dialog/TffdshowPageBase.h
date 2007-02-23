@@ -14,7 +14,7 @@ struct ThtiPage :TconfPages
 {
 private:
  int *id;
-public: 
+public:
  ThtiPage(int *Iid):id(Iid) {}
  ThtiPage(int *Iid,const TconfPages &Ipages):id(Iid),TconfPages(Ipages) {}
  ~ThtiPage();
@@ -87,7 +87,7 @@ public:
  STDMETHODIMP Activate(HWND hwndParent,LPCRECT prect,BOOL fModal);
  STDMETHODIMP Deactivate(void);
  virtual HRESULT OnApplyChanges(void);
- 
+
  STDMETHODIMP toTop(void);
  STDMETHODIMP resize(const CRect &newrect);
 
@@ -97,7 +97,7 @@ public:
  void enableHints(bool is);
  void setChange(void);
  virtual void showShowHide(int previd=0,int prevVisId=0) {}
- 
+
  template<class Iff> static void configure(const CLSID &clsid,int filtermode,LPTSTR lpCmdLine)
   {
    if (CoInitialize(NULL)!=S_OK) return;

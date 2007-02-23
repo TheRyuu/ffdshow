@@ -49,14 +49,14 @@ TdialogSettingsBase::TdialogSettingsBase(const char_t *Ireg_child,TintStrColl *I
      _l("lvCodecsSelected"),0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
  static const TstrOption sopts[]=
   {
    IDFF_lang,(TstrVal)&TdialogSettingsBase::lang,20,_l(""),0,
      NULL,NULL,
    0
   };
- addOptions(sopts); 
+ addOptions(sopts);
 }
 void TdialogSettingsBase::reg_op(TregOp &t)
 {
@@ -97,7 +97,7 @@ TdialogSettingsDec::TdialogSettingsDec(const char_t *Ireg_child,TintStrColl *Ico
      _l("dlgDecCurrentPage"),0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
 }
 
 //==================================== TdialogSettingsDecVideo =====================================
@@ -139,7 +139,7 @@ TdialogSettingsDecVideo::TdialogSettingsDecVideo(bool vfwdec,TintStrColl *Icoll)
      _l("dlgCustColor15"),RGB(  255,  255,  255),
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
 }
 
 int TdialogSettingsDecVideo::getDefault(int id)
@@ -167,12 +167,12 @@ TdialogSettingsDecAudio::TdialogSettingsDecAudio(TintStrColl *Icoll,const char_t
      _l("lvConvolverWidth2"),300,
    IDFF_lvConvolverSelected   ,&TdialogSettingsDecAudio::convolverLvSelected,0,5,_l(""),0,
      _l("lvConvolverSelected"),0,
-     
-   IDFF_dlgVolumeDb           ,&TdialogSettingsDecAudio::volumeDb,0,0,_l(""),0,  
+
+   IDFF_dlgVolumeDb           ,&TdialogSettingsDecAudio::volumeDb,0,0,_l(""),0,
      _l("dlgVolumeDb"),0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
 }
 int TdialogSettingsDecAudio::getDefault(int id)
 {
@@ -205,7 +205,7 @@ TdialogSettingsEnc::TdialogSettingsEnc(TintStrColl *Icoll):TdialogSettingsBase(F
      _l("dlgEncCurrentPage"),0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
 }
 
 int TdialogSettingsEnc::getDefault(int id)

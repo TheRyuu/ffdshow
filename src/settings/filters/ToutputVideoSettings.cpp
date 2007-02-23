@@ -53,7 +53,7 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
   {
    IDFF_flip               ,&ToutputVideoSettings::flip               ,0,0,_l(""),1,
      _l("flip"),0,
-     
+
    IDFF_hwOverlay          ,&ToutputVideoSettings::hwOverlay          ,0,2,_l(""),1,
      _l("hwOverlay"),2,
    IDFF_hwOverlayAspect    ,&ToutputVideoSettings::hwOverlayAspect    ,1,1,_l(""),1,
@@ -62,9 +62,9 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
      _l("hwDeinterlace"),0,
    IDFF_hwDeintMethod      ,&ToutputVideoSettings::hwDeintMethod      ,0,1,_l(""),1,
      _l("hwDeintMethod"),0,
-   
+
    IDFF_outI420            ,&ToutputVideoSettings::i420               ,0,0,_l(""),0,
-     _l("outI420"),0, 
+     _l("outI420"),0,
    IDFF_outYV12            ,&ToutputVideoSettings::yv12               ,0,0,_l(""),0,
      _l("outYV12"),1,
    IDFF_outYUY2            ,&ToutputVideoSettings::yuy2               ,0,0,_l(""),0,
@@ -106,7 +106,7 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
 
 void ToutputVideoSettings::reg_op_outcsps(TregOp &t)
 {
- t._REG_OP_N(IDFF_outI420  ,_l("outI420")  ,i420  ,0); 
+ t._REG_OP_N(IDFF_outI420  ,_l("outI420")  ,i420  ,0);
  t._REG_OP_N(IDFF_outYV12  ,_l("outYV12")  ,yv12  ,1);
  t._REG_OP_N(IDFF_outYUY2  ,_l("outYUY2")  ,yuy2  ,1);
  t._REG_OP_N(IDFF_outYVYU  ,_l("outYVYU")  ,yvyu  ,1);

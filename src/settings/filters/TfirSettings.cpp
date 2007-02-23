@@ -81,14 +81,14 @@ TfirSettings::TfirSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSett
  addOptions(iopts);
  static const TcreateParamList1 listFirType(types);setParamList(IDFF_firType,&listFirType);
  static const TcreateParamList1 listFirWindow(windows);setParamList(IDFF_firWindow,&listFirWindow);
- 
+
 }
 
 void TfirSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (show)
-  queueFilter<TaudioFilterFir>(filtersorder,filters,queue); 
+  queueFilter<TaudioFilterFir>(filtersorder,filters,queue);
 }
 void TfirSettings::createPages(TffdshowPageDec *parent) const
 {

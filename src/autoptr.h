@@ -21,7 +21,7 @@ public:
   }
  void release(void)
   {
-   if (ptr) 
+   if (ptr)
     {
      delete ptr;
      ptr=NULL;

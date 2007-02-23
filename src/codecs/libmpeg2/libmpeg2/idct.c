@@ -253,9 +253,9 @@ void mpeg2_idct_init (uint32_t accel)
 	mpeg2_idct_copy = mpeg2_idct_copy_mmx;
 	mpeg2_idct_add = mpeg2_idct_add_mmx;
 	mpeg2_idct_mmx_init ();
-    } 
+    }
     else
-   #endif 
+   #endif
 #endif
 #ifdef ARCH_PPC
     if (accel & MPEG2_ACCEL_PPC_ALTIVEC) {

@@ -52,7 +52,7 @@ TbitmapSettings::TbitmapSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
  memset(flnm,0,sizeof(flnm));
  static const TintOptionT<TbitmapSettings> iopts[]=
   {
-   IDFF_isBitmap       ,&TbitmapSettings::is        ,0,0,_l(""),1, 
+   IDFF_isBitmap       ,&TbitmapSettings::is        ,0,0,_l(""),1,
      _l("isBitmap"),0,
    IDFF_showBitmap     ,&TbitmapSettings::show      ,0,0,_l(""),1,
      _l("showBitmap"),1,
@@ -73,8 +73,8 @@ TbitmapSettings::TbitmapSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
    IDFF_bitmapStrength ,&TbitmapSettings::strength  ,0,256,_l(""),1,
      _l("bitmapStrength"),128,
    0
-  }; 
- addOptions(iopts); 
+  };
+ addOptions(iopts);
  static const TstrOption sopts[]=
   {
    IDFF_bitmapFlnm ,(TstrVal)&TbitmapSettings::flnm,MAX_PATH,_l(""),1,
@@ -82,7 +82,7 @@ TbitmapSettings::TbitmapSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
    0
   };
  addOptions(sopts);
- 
+
  static const TcreateParamList1 listMode(modes);setParamList(IDFF_bitmapMode,&listMode);
  static const TcreateParamList1 listAlign(TsubtitlesSettings::alignments);setParamList(IDFF_bitmapAlign,&listAlign);
 }
@@ -91,7 +91,7 @@ void TbitmapSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfilte
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (is && show)
-  queueFilter<TimgFilterBitmap>(filtersorder,filters,queue); 
+  queueFilter<TimgFilterBitmap>(filtersorder,filters,queue);
 }
 void TbitmapSettings::createPages(TffdshowPageDec *parent) const
 {
@@ -105,7 +105,7 @@ const int* TbitmapSettings::getResets(unsigned int pageId)
    IDFF_bitmapPosx,IDFF_bitmapPosy,IDFF_bitmapPosmode,IDFF_bitmapAlign,IDFF_bitmapMode,IDFF_bitmapStrength,
    0
   };
- return idResets; 
+ return idResets;
 }
 
 bool TbitmapSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
@@ -115,7 +115,7 @@ bool TbitmapSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
    tsnprintf(tipS,len,_l("%s %s"),modes[mode],flnm);
    tipS[len-1]='\0';
   }
- else 
-  tipS[0]='\0';  
+ else
+  tipS[0]='\0';
  return true;
 }

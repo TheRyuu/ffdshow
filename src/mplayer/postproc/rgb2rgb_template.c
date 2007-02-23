@@ -347,7 +347,7 @@ static inline void RENAME(rgb32to16)(const uint8_t *src, uint8_t *dst, stride_t 
 		"pmaddwd %%mm7, %%mm3		\n\t"
 		"pand %%mm5, %%mm1		\n\t"
 		"pand %%mm5, %%mm4		\n\t"
-		"por %%mm1, %%mm0		\n\t"	
+		"por %%mm1, %%mm0		\n\t"
 		"por %%mm4, %%mm3		\n\t"
 		"psrld $5, %%mm0		\n\t"
 		"pslld $11, %%mm3		\n\t"
@@ -504,7 +504,7 @@ static inline void RENAME(rgb32to15)(const uint8_t *src, uint8_t *dst, stride_t 
 		"pmaddwd %%mm7, %%mm3		\n\t"
 		"pand %%mm5, %%mm1		\n\t"
 		"pand %%mm5, %%mm4		\n\t"
-		"por %%mm1, %%mm0		\n\t"	
+		"por %%mm1, %%mm0		\n\t"
 		"por %%mm4, %%mm3		\n\t"
 		"psrld $6, %%mm0		\n\t"
 		"pslld $10, %%mm3		\n\t"
@@ -950,7 +950,7 @@ static inline void RENAME(rgb15to24)(const uint8_t *src, uint8_t *dst, stride_t 
 
 		"movq	%%mm0, %%mm6\n\t"
 		"movq	%%mm3, %%mm7\n\t"
-		
+
 		"movq	8%1, %%mm0\n\t"
 		"movq	8%1, %%mm1\n\t"
 		"movq	8%1, %%mm2\n\t"
@@ -987,7 +987,7 @@ static inline void RENAME(rgb15to24)(const uint8_t *src, uint8_t *dst, stride_t 
 		"movq	%%mm3, %%mm5\n\t"
 		"movq	%%mm6, %%mm0\n\t"
 		"movq	%%mm7, %%mm1\n\t"
-		
+
 		"movq	%%mm4, %%mm6\n\t"
 		"movq	%%mm5, %%mm7\n\t"
 		"movq	%%mm0, %%mm2\n\t"
@@ -1089,7 +1089,7 @@ static inline void RENAME(rgb16to24)(const uint8_t *src, uint8_t *dst, stride_t 
 		"psllq	$16, %%mm5\n\t"
 		"por	%%mm4, %%mm3\n\t"
 		"por	%%mm5, %%mm3\n\t"
-		
+
 		"movq	%%mm0, %%mm6\n\t"
 		"movq	%%mm3, %%mm7\n\t"
 
@@ -1120,7 +1120,7 @@ static inline void RENAME(rgb16to24)(const uint8_t *src, uint8_t *dst, stride_t 
 		"por	%%mm4, %%mm3\n\t"
 		"por	%%mm5, %%mm3\n\t"
 		:"=m"(*d)
-		:"m"(*s),"m"(mask16b),"m"(mask16g),"m"(mask16r),"m"(mmx_null)		
+		:"m"(*s),"m"(mask16b),"m"(mask16g),"m"(mask16r),"m"(mmx_null)
 		:"memory");
 	    /* Borrowed 32 to 24 */
 	    __asm __volatile(
@@ -1128,7 +1128,7 @@ static inline void RENAME(rgb16to24)(const uint8_t *src, uint8_t *dst, stride_t 
 		"movq	%%mm3, %%mm5\n\t"
 		"movq	%%mm6, %%mm0\n\t"
 		"movq	%%mm7, %%mm1\n\t"
-		
+
 		"movq	%%mm4, %%mm6\n\t"
 		"movq	%%mm5, %%mm7\n\t"
 		"movq	%%mm0, %%mm2\n\t"
@@ -1372,7 +1372,7 @@ static inline void RENAME(rgb32tobgr32)(const uint8_t *src, uint8_t *dst, stride
 	stride_t num_pixels = src_size >> 2;
 	for(i=0; i<num_pixels; i++)
 	{
-#ifdef WORDS_BIGENDIAN  
+#ifdef WORDS_BIGENDIAN
 	  dst[4*i + 1] = src[4*i + 3];
 	  dst[4*i + 2] = src[4*i + 2];
 	  dst[4*i + 3] = src[4*i + 1];
@@ -1405,7 +1405,7 @@ static inline void RENAME(rgb24tobgr24)(const uint8_t *src, uint8_t *dst, stride
 		"pand %%mm6, %%mm1		\n\t"
 		"pand %%mm7, %%mm2		\n\t"
 		"por %%mm0, %%mm1		\n\t"
-		"por %%mm2, %%mm1		\n\t"                
+		"por %%mm2, %%mm1		\n\t"
 		"movq  6(%1, %%"REG_a"), %%mm0	\n\t" // BGR BGR BG
 		MOVNTQ" %%mm1,   (%2, %%"REG_a")\n\t" // RGB RGB RG
 		"movq  8(%1, %%"REG_a"), %%mm1	\n\t" // R BGR BGR B
@@ -1414,7 +1414,7 @@ static inline void RENAME(rgb24tobgr24)(const uint8_t *src, uint8_t *dst, stride
 		"pand %%mm5, %%mm1		\n\t"
 		"pand %%mm6, %%mm2		\n\t"
 		"por %%mm0, %%mm1		\n\t"
-		"por %%mm2, %%mm1		\n\t"                
+		"por %%mm2, %%mm1		\n\t"
 		"movq 14(%1, %%"REG_a"), %%mm0	\n\t" // R BGR BGR B
 		MOVNTQ" %%mm1,  8(%2, %%"REG_a")\n\t" // B RGB RGB R
 		"movq 16(%1, %%"REG_a"), %%mm1	\n\t" // GR BGR BGR
@@ -1423,7 +1423,7 @@ static inline void RENAME(rgb24tobgr24)(const uint8_t *src, uint8_t *dst, stride
 		"pand %%mm7, %%mm1		\n\t"
 		"pand %%mm5, %%mm2		\n\t"
 		"por %%mm0, %%mm1		\n\t"
-		"por %%mm2, %%mm1		\n\t"                
+		"por %%mm2, %%mm1		\n\t"
 		MOVNTQ" %%mm1, 16(%2, %%"REG_a")\n\t"
 		"add $24, %%"REG_a"		\n\t"
 		" js 1b				\n\t"
@@ -1931,16 +1931,16 @@ static inline void RENAME(yvu9toyv12)(const uint8_t *ysrc, const uint8_t *usrc, 
 static inline void RENAME(planar2x)(const uint8_t *src, uint8_t *dst, long srcWidth, long srcHeight, stride_t srcStride, stride_t dstStride)
 {
 	long x,y;
-	
+
 	dst[0]= src[0];
-        
+
 	// first line
 	for(x=0; x<srcWidth-1; x++){
 		dst[2*x+1]= (3*src[x] +   src[x+1])>>2;
 		dst[2*x+2]= (  src[x] + 3*src[x+1])>>2;
 	}
 	dst[2*srcWidth-1]= src[srcWidth-1];
-	
+
 	dst+= dstStride;
 
 	for(y=1; y<srcHeight; y++){
@@ -2006,11 +2006,11 @@ static inline void RENAME(planar2x)(const uint8_t *src, uint8_t *dst, long srcWi
 		dst+=dstStride*2;
 		src+=srcStride;
 	}
-	
+
 	// last line
 #if 1
 	dst[0]= src[0];
-        
+
 	for(x=0; x<srcWidth-1; x++){
 		dst[2*x+1]= (3*src[x] +   src[x+1])>>2;
 		dst[2*x+2]= (  src[x] + 3*src[x+1])>>2;
@@ -2680,7 +2680,7 @@ static inline void RENAME(yvu9_to_yuy2)(const uint8_t *src1, const uint8_t *src2
 		"punpckhbw %%mm1, %%mm3\n\t" /* Y4U1 Y5V1 Y6U1 Y7V1*/
 		MOVNTQ"	%%mm0, (%4, %0, 8)\n\t"
 		MOVNTQ"	%%mm3, 8(%4, %0, 8)\n\t"
-		
+
 		"punpckhbw %%mm2, %%mm6\n\t" /* U2V2 U2V2 U3V3 U3V3*/
 		"movq	8(%1, %0, 4), %%mm0\n\t"
 		"movq	%%mm0, %%mm3\n\t"
@@ -2697,7 +2697,7 @@ static inline void RENAME(yvu9_to_yuy2)(const uint8_t *src1, const uint8_t *src2
 		"punpckhbw %%mm4, %%mm3\n\t" /* Y U5 Y V5 Y U5 Y V5*/
 		MOVNTQ"	%%mm0, 32(%4, %0, 8)\n\t"
 		MOVNTQ"	%%mm3, 40(%4, %0, 8)\n\t"
-		
+
 		"punpckhbw %%mm5, %%mm6\n\t"
 		"movq	24(%1, %0, 4), %%mm0\n\t"
 		"movq	%%mm0, %%mm3\n\t"

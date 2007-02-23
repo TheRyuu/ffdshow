@@ -277,11 +277,11 @@ HRESULT TimgFilterShowMV::process(TfilterQueue::iterator it,TffPict &pict,const 
    unsigned char *dstY=NULL;
    if (movie && (movie->caps()&(TvideoCodec::CAPS::VIS_MV|TvideoCodec::CAPS::VIS_QUANTS)))
     {
-     if (cfg->mv) 
+     if (cfg->mv)
       {
        getCurNext(FF_CSPS_MASK_YUV_PLANAR,pict,0,COPYMODE_DEF,&dstY,NULL,NULL,NULL);
        movie->drawMV(dstY,dx1[0],stride2[0],dy1[0]);
-      } 
+      }
      if (cfg->quants && movie->quants)
       {
        if (!dstY) getCurNext(FF_CSPS_MASK_YUV_PLANAR,pict,0,COPYMODE_DEF,&dstY,NULL,NULL,NULL);
@@ -297,13 +297,13 @@ HRESULT TimgFilterShowMV::process(TfilterQueue::iterator it,TffPict &pict,const 
              drawNum(numsL+(qq/10)*64,maskL,dstY+(x+4)+y*stride2[0],stride2[0]);
              drawNum(numsR+(qq%10)*64,maskR,dstY+(x+4)+y*stride2[0],stride2[0]);
             }
-           else 
-            drawNum(numsL+qq*64,maskL,dstY+(x+6)+y*stride2[0],stride2[0]); 
+           else
+            drawNum(numsL+qq*64,maskL,dstY+(x+6)+y*stride2[0],stride2[0]);
           }
         }
-       _mm_empty(); 
+       _mm_empty();
       }
-    }  
+    }
    if (cfg->graph)
     {
      if (!dstY) getCurNext(FF_CSPS_MASK_YUV_PLANAR,pict,0,COPYMODE_DEF,&dstY,NULL,NULL,NULL);
@@ -329,8 +329,8 @@ HRESULT TimgFilterShowMV::process(TfilterQueue::iterator it,TffPict &pict,const 
         for (unsigned char *dst1=dst,*dst1end=dst1-std::min(int((dy1[0]/4)*f.first/max),int(dy1[0])-1)*stride2[0];dst1!=dst1end;dst1-=stride2[0])
          *dst1=c;
        }
-    } 
-  }  
+    }
+  }
  return parent->deliverSample(++it,pict);
 }
 

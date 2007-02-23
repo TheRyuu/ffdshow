@@ -20,7 +20,7 @@ private:
      const uint8_t *src;uint16_t *dst,*dstEnd;
      for (src=srcY+stride1[0]*y,dst=(uint16_t*)(dstY+stride2[0]*y),dstEnd=dst+dx1[0];dst!=dstEnd;src+=2,dst++)
       *dst=uint16_t((map[src[lumaoffset]]<<(8*lumaoffset))|((onlyLuma?src[chromaoffset]:mapchroma[src[chromaoffset]])<<(8*chromaoffset)));
-    }  
+    }
   }
 protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);

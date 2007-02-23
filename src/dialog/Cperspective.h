@@ -7,7 +7,7 @@ class TperspectivePage :public TconfPageDecVideo
 {
 private:
  HWND hg;
- struct 
+ struct
   {
    BITMAPINFOHEADER bmiHeader;
    RGBQUAD bmiColors[256];
@@ -29,7 +29,7 @@ private:
    virtual LRESULT onLbuttonDown(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
    virtual LRESULT onLbuttonUp(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
    virtual LRESULT onMouseMove(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
-  public:  
+  public:
    TwidgetPerspective(HWND h,TperspectivePage *Iself):self(Iself),TwindowWidget(h,Iself) {allowOwnProc();}
   };
 protected:
@@ -42,4 +42,4 @@ public:
  virtual void translate(void);
 };
 
-#endif 
+#endif

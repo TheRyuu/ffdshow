@@ -28,7 +28,7 @@ STDMETHODIMP TpageSite::NonDelegatingQueryInterface(REFIID riid,void **ppv)
  if (riid==IID_IPropertyPageSite)
   return GetInterface<IPropertyPageSite>(this,ppv);
  else if (riid==IID_IPropertyPageSiteFF)
-  return GetInterface<IPropertyPageSiteFF>(this,ppv); 
+  return GetInterface<IPropertyPageSiteFF>(this,ppv);
  else
   return CUnknown::NonDelegatingQueryInterface(riid,ppv);
 }
@@ -56,7 +56,7 @@ INT_PTR TpageSite::show(IffdshowBase *deci,HWND parent,int Iidcaption,int Iicon)
    deci->QueryInterface(IID_IUnknown,(void**)&deciU);
    return show(deci,parent,Iidcaption,Iicon,pages,deciU);
   }
- else  
+ else
   return E_FAIL;
 }
 INT_PTR TpageSite::show(IffdshowBase *deci,HWND parent,int Iidcaption,int Iicon,CAUUID &pages,IUnknown *unk)
@@ -69,11 +69,11 @@ INT_PTR TpageSite::show(IffdshowBase *deci,HWND parent,int Iidcaption,int Iicon,
      page->SetPageSite(this);
      page->SetObjects(1,&unk);
      propertypages.push_back(page);
-    } 
+    }
   }
- CoTaskMemFree(pages.pElems); 
+ CoTaskMemFree(pages.pElems);
  if (!propertypages.empty())
-  { 
+  {
    HINSTANCE hi=deci->getInstance2();
    setDeci(deci);
    idcaption=Iidcaption;
@@ -82,11 +82,11 @@ INT_PTR TpageSite::show(IffdshowBase *deci,HWND parent,int Iidcaption,int Iicon,
    INT_PTR res=dialogBox(dialogId,parent);
    for (TpropertyPages::iterator p=propertypages.begin();p!=propertypages.end();p++)
     (*p)->Release();
-   if (hicon) DestroyIcon(hicon); 
+   if (hicon) DestroyIcon(hicon);
    return res;
-  }  
+  }
  else
-  return E_FAIL; 
+  return E_FAIL;
 }
 
 INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
@@ -148,21 +148,21 @@ INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
          text<char_t>(ppi.pszTitle, -1, title, countof(title));//unicode16toAnsi(ppi.pszTitle,-1,title);
          tci.pszText=title;
          TabCtrl_InsertItem(htab,i,&tci);
-        } 
+        }
        setSizeD(4,0);
-      } 
+      }
      static const TanchorInfo ainfo2[]=
       {
        IDC_PLACE_PAGE,TanchorInfo::LEFT|TanchorInfo::TOP|TanchorInfo::RIGHT|TanchorInfo::BOTTOM,
        0,0
       };
      anchors.add(ainfo2,*this);
-       
+
      CPoint sitetl=siterect.TopLeft();
      siterect-=siterect.TopLeft();
      int dx=pagerect.right-siterect.right,dy=pagerect.bottom-siterect.bottom;
      setSizeD(dx,dy);
-     
+
      ScreenToClient(m_hwnd,&sitetl);
      pagerect+=sitetl;
      setActivePage(propertypages.front());
@@ -171,7 +171,7 @@ INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
        int pg=deci->getParam2(idff_multiplePages);
        PostMessage(htab,TCM_SETCURSEL,pg,0);
        setActivePage(propertypages[pg]);
-      } 
+      }
      addHint(IDC_BT_DONATE,_l("Thank you!"));
      return TRUE;
     }
@@ -182,7 +182,7 @@ INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
      return TRUE;
     }
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDOK:
       case IDCANCEL:
@@ -192,7 +192,7 @@ INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
           {
            deci->putParam(idff_multiplePages,(int)SendMessage(htab,TCM_GETCURSEL,0,0));
            deci->saveDialogSettings();
-          } 
+          }
          if (LOWORD(wParam)==IDOK)
           for (TpropertyPages::iterator p=propertypages.begin();p!=propertypages.end();p++)
            if ((*p)->IsPageDirty()==S_OK)
@@ -221,17 +221,17 @@ INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
              _l("https://order.kagi.com/?6FAEY")
             };
            ShellExecute(m_hwnd,_l("open"),urls[cmd],NULL,_l("."),SW_SHOWNORMAL);
-          } 
+          }
 */
-        } 
+        }
        return TRUE;
       case IDC_BT_EXPORT:
        if (HIWORD(wParam)==BN_CLICKED)
         {
          applyChanges();
          TaboutPage::exportReg(this,regflnm);
-        }   
-       return TRUE;  
+        }
+       return TRUE;
      };
     break;
    case WM_NOTIFY:
@@ -257,7 +257,7 @@ void TpageSite::setActivePage(IPropertyPage *page)
    applyChanges();
    activepage->Deactivate();
    activepageFF=NULL;
-  } 
+  }
  activepage=page;
  activepage->Activate(m_hwnd,&pagerect,FALSE);
  activepage->Show(SW_SHOW);
@@ -275,7 +275,7 @@ HRESULT STDMETHODCALLTYPE TpageSite::OnStatusChange(DWORD dwFlags)
 }
 void TpageSite::setDirty(int d)
 {
- enable(d,IDC_BT_APPLY); 
+ enable(d,IDC_BT_APPLY);
 }
 void TpageSite::applyChanges(void)
 {
@@ -307,8 +307,8 @@ void TpageSite::resize(CRect &newrect)
      CRect r;GetWindowRect(GetDlgItem(m_hwnd,IDC_PLACE_PAGE),&r);
      SetWindowPos(GetDlgItem(m_hwnd,IDC_PLACE_PAGE),NULL,0,0,r.Width(),r.Height(),SWP_NOMOVE|SWP_NOZORDER);
      if (activepageFF) activepageFF->resize(r);
-    } 
-  } 
+    }
+  }
  prevrect=newrect;
 }
 

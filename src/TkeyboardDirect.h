@@ -21,14 +21,14 @@ private:
  static void thread(void *self);
  void *state,*stateprev;size_t statesize;
  bool inExplorer;
-protected: 
+protected:
  TdirectInput(TintStrColl *Icoll,const char_t *Iname,const GUID &IdeviceId,const DIDATAFORMAT &IdeviceFormat,void *Istate,void *Istateprev,size_t Istatesize,IffdshowBase *Ideci);
  int is,always;
  void onChange(int id,int newval);
  IffdshowBase* deci;
- virtual void processState(void)=0; 
+ virtual void processState(void)=0;
  static bool windowActive(void);
-public: 
+public:
  virtual void hook(void);
  void unhook(void);
  void load(void),save(void);
@@ -60,7 +60,7 @@ private:
   idff_videodelaySub=-8,
   idff_videodelayAdd=-9,
   idff_presetPrev   =-10,
-  idff_presetNext   =-11 
+  idff_presetNext   =-11
  };
  virtual void reg_op(TregOp &t);
  void keyProc(int code,bool remote);
@@ -76,7 +76,7 @@ private:
  int keydown;
  void exportGMLkey(int &id,FILE *f,TkeysParams::const_iterator k,const char *second=NULL);
 protected:
- virtual void processState(void); 
+ virtual void processState(void);
 public:
  Tkeyboard(TintStrColl *Icoll,IffdshowBase *Ideci);
  ~Tkeyboard();
@@ -97,7 +97,7 @@ class Tmouse :public TdirectInput
 private:
  DIMOUSESTATE state,prevstate;
 protected:
- virtual void processState(void); 
+ virtual void processState(void);
 public:
  Tmouse(TintStrColl *Icoll,IffdshowBase *Ideci);
  ~Tmouse();

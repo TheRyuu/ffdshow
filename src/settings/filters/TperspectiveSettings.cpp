@@ -46,7 +46,7 @@ TperspectiveSettings::TperspectiveSettings(TintStrColl *Icoll,TfilterIDFFs *filt
 {
  static const TintOptionT<TperspectiveSettings> iopts[]=
   {
-   IDFF_isPerspective            ,&TperspectiveSettings::is              ,0,0,_l(""),1, 
+   IDFF_isPerspective            ,&TperspectiveSettings::is              ,0,0,_l(""),1,
      _l("isPerspective"),0,
    IDFF_showPerspective          ,&TperspectiveSettings::show            ,0,0,_l(""),1,
      _l("showPerspective"),1,
@@ -77,7 +77,7 @@ TperspectiveSettings::TperspectiveSettings(TintStrColl *Icoll,TfilterIDFFs *filt
    IDFF_perspectiveInterpolation ,&TperspectiveSettings::interpolation   ,0,2,_l(""),1,
      _l("perspectiveInterpolation"),0,
    0
-  }; 
+  };
  addOptions(iopts);
 
  static const TcreateParamList1 listInterpolation(interpolationNames);setParamList(IDFF_perspectiveInterpolation,&listInterpolation);
@@ -87,7 +87,7 @@ void TperspectiveSettings::createFilters(size_t filtersorder,Tfilters *filters,T
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (is && show)
-  queueFilter<TimgFilterPerspective>(filtersorder,filters,queue); 
+  queueFilter<TimgFilterPerspective>(filtersorder,filters,queue);
 }
 void TperspectiveSettings::createPages(TffdshowPageDec *parent) const
 {

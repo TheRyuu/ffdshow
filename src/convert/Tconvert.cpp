@@ -141,7 +141,7 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
    #else
     switch (incsp1)
      {
-      case FF_CSP_420P: 
+      case FF_CSP_420P:
        switch (outcsp1)
         {
          case FF_CSP_YUY2: //YV12 -> YUY2
@@ -150,21 +150,21 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
          #ifdef __SSE2__
            if (Tconfig::cpu_flags&FF_CPU_SSE2)
             avisynth_yv12_to_yuy2=TconvertYV12<Tsse2>::yv12_i_to_yuy2;
-           else 
+           else
          #endif
            if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
             avisynth_yv12_to_yuy2=TconvertYV12<Tmmxext>::yv12_i_to_yuy2;
-           else 
+           else
             avisynth_yv12_to_yuy2=TconvertYV12<Tmmx>::yv12_i_to_yuy2;
           else
          #ifdef __SSE2__
            if (Tconfig::cpu_flags&FF_CPU_SSE2)
             avisynth_yv12_to_yuy2=TconvertYV12<Tsse2>::yv12_to_yuy2;
            else
-         #endif  
+         #endif
            if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
             avisynth_yv12_to_yuy2=TconvertYV12<Tmmxext>::yv12_to_yuy2;
-           else 
+           else
             avisynth_yv12_to_yuy2=TconvertYV12<Tmmx>::yv12_to_yuy2;
           break;
          default:
@@ -178,15 +178,15 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
             tmpConvert2=new Tconvert(libmplayer,avisynthYV12_RGB,dx,dy);
             if (incsp&FF_CSP_FLAGS_INTERLACED || outcsp&FF_CSP_FLAGS_INTERLACED) tmpcsp|=FF_CSP_FLAGS_INTERLACED;
            }
-          else 
-           if (csp_supXvid(outcsp1) 
+          else
+           if (csp_supXvid(outcsp1)
             #ifndef XVID_BITBLT
              && outcsp1!=FF_CSP_420P
             #endif
              )
             mode=MODE_xvidImage_output;
           break;
-        }  
+        }
        break;
       case FF_CSP_YUY2:
        switch (outcsp1)
@@ -194,24 +194,24 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
          case FF_CSP_420P: // YUY2 -> YV12
           mode=MODE_avisynth_yuy2_to_yv12;
           if (incsp&FF_CSP_FLAGS_INTERLACED)
-         #ifdef __SSE2__ 
+         #ifdef __SSE2__
            if (Tconfig::cpu_flags&FF_CPU_SSE2)
             avisynth_yuy2_to_yv12=TconvertYV12<Tsse2>::yuy2_i_to_yv12;
-           else 
-         #endif  
+           else
+         #endif
            if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
             avisynth_yuy2_to_yv12=TconvertYV12<Tmmxext>::yuy2_i_to_yv12;
-           else 
+           else
             avisynth_yuy2_to_yv12=TconvertYV12<Tmmx>::yuy2_i_to_yv12;
-          else  
-         #ifdef __SSE2__ 
+          else
+         #ifdef __SSE2__
            if (Tconfig::cpu_flags&FF_CPU_SSE2)
             avisynth_yuy2_to_yv12=TconvertYV12<Tsse2>::yuy2_to_yv12;
-           else 
-         #endif  
+           else
+         #endif
            if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
             avisynth_yuy2_to_yv12=TconvertYV12<Tmmxext>::yuy2_to_yv12;
-           else 
+           else
             avisynth_yuy2_to_yv12=TconvertYV12<Tmmx>::yuy2_to_yv12;
           break;
          case FF_CSP_RGB24:
@@ -241,7 +241,7 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
        if (outcsp1==FF_CSP_YUY2) // RGB24 -> YUY2
         mode=MODE_mmx_ConvertRGB24toYUY2;
        break;
-      case FF_CSP_PAL8:  
+      case FF_CSP_PAL8:
        switch (outcsp1)
         {
          case FF_CSP_RGB32:palette8torgb=libmplayer->palette8tobgr32;break;
@@ -256,11 +256,11 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
         }
        if (palette8torgb)
         mode=MODE_palette8torgb;
-       break; 
+       break;
       case FF_CSP_CLJR:
        if (outcsp1==FF_CSP_420P)
         mode=MODE_CLJR;
-       break; 
+       break;
      }
    #endif
    if (mode==MODE_none)
@@ -270,10 +270,10 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
      {
       if (!swscale) swscale=new Tswscale(libmplayer);
       swscale->init(dx,dy,incsp,outcsp);
-      mode=MODE_swscale; 
-     } 
+      mode=MODE_swscale;
+     }
     else
-     { 
+     {
       mode=MODE_fallback;
       tmpcsp=(incsp1==FF_CSP_PAL8)?FF_CSP_RGB32:FF_CSP_420P;
       if (tmpcsp==FF_CSP_RGB32)
@@ -303,11 +303,11 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
       {
        inited=true;
        xvid_colorspace_init();
-      } 
+      }
     }
   }
  if (outcsp==FF_CSP_NULL) return 0;
- 
+
  switch (mode)
   {
    #ifdef AVISYNTH_BITBLT
@@ -323,7 +323,7 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
                           dst[0],dstStride[0],
                           dy);
     return dy;
-   case MODE_xvidImage_output: 
+   case MODE_xvidImage_output:
     {
      IMAGE srcPict;srcPict.y=(unsigned char*)src[0];srcPict.u=(unsigned char*)src[1];srcPict.v=(unsigned char*)src[2];
      image_output(&srcPict,
@@ -362,7 +362,7 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
        palette8torgb(src[0]+srcStride[0]*y,dst[0]+dstStride[0]*y,dx,srcpal->pal);
      return dy;
     }
-   case MODE_CLJR: 
+   case MODE_CLJR:
     {
      // Copyright (c) 2003 Alex Beregszaszi
      GetBitContext gb;
@@ -385,22 +385,22 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
       }
      return dy;
     }
-   case MODE_xvidImage_input: 
+   case MODE_xvidImage_input:
     {
      IMAGE dstPict={dst[0],dst[1],dst[2]};
      image_input(&dstPict,dx,dy,dstStride[0],dstStride[1],src[0],srcStride[0],incsp,incsp&FF_CSP_FLAGS_INTERLACED,(incsp|outcsp)&FF_CSP_FLAGS_YUV_JPEG);
      return dy;
     }
-   case MODE_swscale: 
+   case MODE_swscale:
     swscale->convert(src,srcStride,dst,dstStride);
     return dy;
    case MODE_fallback:
-    tmpConvert1->convert(incsp,src,srcStride,tmpcsp,tmp,tmpStride,srcpal); 
-    tmpConvert2->convert(tmpcsp,(const uint8_t**)tmp,tmpStride,outcsp,dst,dstStride,NULL); 
+    tmpConvert1->convert(incsp,src,srcStride,tmpcsp,tmp,tmpStride,srcpal);
+    tmpConvert2->convert(tmpcsp,(const uint8_t**)tmp,tmpStride,outcsp,dst,dstStride,NULL);
     return dy;
    default:
-    return 0; 
-  }   
+    return 0;
+  }
 }
 int Tconvert::convert(const TffPict &pict,int outcsp,uint8_t* dst[],stride_t dstStride[])
 {
@@ -418,9 +418,9 @@ CUnknown* WINAPI TffColorspaceConvert::CreateInstance(LPUNKNOWN punk,HRESULT *ph
 STDMETHODIMP TffColorspaceConvert::NonDelegatingQueryInterface(REFIID riid,void **ppv)
 {
  CheckPointer(ppv, E_POINTER);
- if (riid==IID_IffColorspaceConvert) 
+ if (riid==IID_IffColorspaceConvert)
   return GetInterface<IffColorspaceConvert>(this,ppv);
- else 
+ else
   return CUnknown::NonDelegatingQueryInterface(riid,ppv);
 }
 
@@ -451,14 +451,14 @@ STDMETHODIMP TffColorspaceConvert::allocPicture(int csp,unsigned int dx,unsigned
    data[i]=pict.data[i];
    stride[i]=pict.stride[i];
   }
- return S_OK; 
+ return S_OK;
 }
 STDMETHODIMP TffColorspaceConvert::freePicture(uint8_t *data[])
 {
  if (!data) return E_POINTER;
  if (data[0])
   aligned_free(data[0]);
- return S_OK; 
+ return S_OK;
 }
 
 STDMETHODIMP TffColorspaceConvert::convert(unsigned int dx,unsigned int dy,int incsp,uint8_t *src[],const stride_t srcStride[],int outcsp,uint8_t *dst[],stride_t dstStride[])
@@ -473,6 +473,6 @@ STDMETHODIMP TffColorspaceConvert::convertPalette(unsigned int dx,unsigned int d
    c=new Tconvert(libmplayer,false,dx,dy);
   }
  Tpalette p(pal,numcolors);
- c->convert(incsp,src,srcStride,outcsp,dst,dstStride,&p); 
- return S_OK; 
+ c->convert(incsp,src,srcStride,outcsp,dst,dstStride,&p);
+ return S_OK;
 }

@@ -17,15 +17,15 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 */
- 
+
 /**
  * @file simple_idct.c
  * simpleidct in C.
  */
- 
+
 /*
   based upon some outcommented c code from mpeg2dec (idct_mmx.c
-  written by Aaron Holtzman <aholtzma@ess.engr.uvic.ca>) 
+  written by Aaron Holtzman <aholtzma@ess.engr.uvic.ca>)
 */
 #include "avcodec.h"
 #include "dsputil.h"
@@ -70,7 +70,7 @@
 
 /* signed 16x16 -> 32 multiply */
 #define MUL16(rt, ra, rb) rt = (ra) * (rb)
-	
+
 #endif
 
 static inline void idctRowCondDC (DCTELEM * row)
@@ -89,7 +89,7 @@ static inline void idctRowCondDC (DCTELEM * row)
 #define ROW0_MASK 0xffffLL
 #endif
         if(sizeof(DCTELEM)==2){
-	if ( ((((uint64_t *)row)[0] & ~ROW0_MASK) | 
+	if ( ((((uint64_t *)row)[0] & ~ROW0_MASK) |
               ((uint64_t *)row)[1]) == 0) {
             temp = (row[0] << 3) & 0xffff;
             temp += temp << 16;
@@ -108,7 +108,7 @@ static inline void idctRowCondDC (DCTELEM * row)
         if(sizeof(DCTELEM)==2){
 	if (!(((uint32_t*)row)[1] |
               ((uint32_t*)row)[2] |
-              ((uint32_t*)row)[3] | 
+              ((uint32_t*)row)[3] |
               row[1])) {
             temp = (row[0] << 3) & 0xffff;
             temp += temp << 16;
@@ -178,7 +178,7 @@ static inline void idctRowCondDC (DCTELEM * row)
 	row[4] = (a3 - b3) >> ROW_SHIFT;
 }
 
-static inline void idctSparseColPut (uint8_t *dest, int line_size, 
+static inline void idctSparseColPut (uint8_t *dest, int line_size,
                                      DCTELEM * col)
 {
 	int a0, a1, a2, a3, b0, b1, b2, b3;
@@ -250,7 +250,7 @@ static inline void idctSparseColPut (uint8_t *dest, int line_size,
         dest[0] = cm[(a0 - b0) >> COL_SHIFT];
 }
 
-static inline void idctSparseColAdd (uint8_t *dest, int line_size, 
+static inline void idctSparseColAdd (uint8_t *dest, int line_size,
                                      DCTELEM * col)
 {
 	int a0, a1, a2, a3, b0, b1, b2, b3;
@@ -390,7 +390,7 @@ void simple_idct_put(uint8_t *dest, int line_size, DCTELEM *block)
     int i;
     for(i=0; i<8; i++)
         idctRowCondDC(block + i*8);
-    
+
     for(i=0; i<8; i++)
         idctSparseColPut(dest + i, line_size, block + i);
 }
@@ -400,7 +400,7 @@ void simple_idct_add(uint8_t *dest, int line_size, DCTELEM *block)
     int i;
 	for(i=0; i<8; i++)
 		idctRowCondDC(block + i*8);
-	
+
 	for(i=0; i<8; i++)
         idctSparseColAdd(dest + i, line_size, block + i);
 }
@@ -410,7 +410,7 @@ void simple_idct(DCTELEM *block)
     int i;
     for(i=0; i<8; i++)
         idctRowCondDC(block + i*8);
-    
+
     for(i=0; i<8; i++)
         idctSparseCol(block + i);
 }
@@ -467,7 +467,7 @@ void simple_idct248_put(uint8_t *dest, int line_size, DCTELEM *block)
 {
     int i;
     DCTELEM *ptr;
-    
+
     /* butterfly */
     ptr = block;
     for(i=0;i<4;i++) {
@@ -582,4 +582,8 @@ void simple_idct48_add(uint8_t *dest, int line_size, DCTELEM *block)
         idctSparseColAdd(dest + i, line_size, block + i);
     }
 }
+
+
+
+
 

@@ -104,13 +104,13 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
          //Godfather III / Godfather III.
          if (!(in(TrChar(-2),_L(".[")) && (in(TrChar(+3),_L(" .!?,")))))
           {
-           TakeI = true; 
+           TakeI = true;
            St1[W1 + 1] = 'I';
            St1[W1 + 2] = 'I';
           }
         }
        //_lgelit _lglu _lgnition _lgrafpapier _lguana
-       if (in(TrChar(-1),_L(" [(#")) && (TrChar(+1) == 'g') && in(TrChar(+2),_L("elnru"))) 
+       if (in(TrChar(-1),_L(" [(#")) && (TrChar(+1) == 'g') && in(TrChar(+2),_L("elnru")))
         TakeI = true;
        //ME LOVES MAKARONl! (MY TO SLYSELl. (!?) [cz; no others affected])
        if (in(TrChar(+1),_L(".!?")) &&
@@ -175,7 +175,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
           if (((in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == ' ')) || //but Brain as Frenchman: lonesome I doesn't exist
               (TrChar(+1) == '\''))//*unknown*: An I followed by an apostrophe cannot exist. Must be an l.
            {
-            TakeI = false; 
+            TakeI = false;
             Takel = true;
            }
           break;
@@ -196,7 +196,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
           if ((TrChar(+1) == '\'')) //Ita always has l before apostrophe (if ' is not used as an accent for a capital letter! [rare, and followed by whitespace])
            if ((in(TrChar(+2),_L("aAeEiIloOuUhH\xe0\xe8\xe9\xef\xf2\xf9"))))
             {
-             Takel = true; 
+             Takel = true;
              TakeI = false;
             }
            //else: unknown pattern!? Probably an English sentence within an Italian movie. We rely on the general algorithm.
@@ -204,9 +204,9 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
          case 5:// StCorrectIl_Pl;
           if (St1[W1] == 'l')
            //no Czech word beginning with "lc", "ld", "lr"
-           if ((in(TrChar(-1),_L("., \"#"))) && (in(TrChar(+1),_L("bcdfhjkrstz\346\263\361\237")))) 
+           if ((in(TrChar(-1),_L("., \"#"))) && (in(TrChar(+1),_L("bcdfhjkrstz\346\263\361\237"))))
             {
-             Takel = false; 
+             Takel = false;
              TakeI = true;
             }
           break;
@@ -220,7 +220,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
           else
            if ((St1[W1 - 4] == 'l') && (St1[W1 - 3] == '-'))
             {
-             St1[W1 - 2] = 'I'; 
+             St1[W1 - 2] = 'I';
              St1[W1 - 4] = 'I';
             }
         }
@@ -239,7 +239,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
            //other than BoL cases not reflected
            ((in(TrChar(-2),_L(".["))) && (in(TrChar(+3),_L(" .")))))
           {
-           St1[W1 + 1] = 'l'; 
+           St1[W1 + 1] = 'l';
            St1[W1 + 2] = 'l';
           }
            //Godfather III / Godfather III. *PASS*
@@ -291,7 +291,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
        //'II_ --> 'll_
        if ((TrChar(-1) == '\'') && (TrChar(+1) == 'I') && (TrChar(+2) == ' '))
         {
-         Takel = true; 
+         Takel = true;
          St1[W1 + 1] = 'l';
         }
        //_Iodic, Iolanthe/Iolite, Ion, Iowa, *Ioya* (but loyalty and more), Iota
@@ -299,7 +299,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
        //Ioch Iogick˝/Iogo Ioket Iomcov·k Iopata Iovit
        //. Io... (Italian)
        if (!(in(TrChar(-2),_L(".!?"))) &&
-            (in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == 'o') && 
+            (in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == 'o') &&
             !(in(TrChar(+2),_L("dlnwt .,!?"))))
         Takel = true;
        //IodnÅEetc. vs Iodate Ioderma Iodic Iodoethanol [cz only, won't affect others]
@@ -320,7 +320,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
         Takel = true;
        //Iot_ etc. vs Iota
        if ((in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == 'o') &&
-            (TrChar(+2) == 't') && (TrChar(+3) != 'a')) 
+            (TrChar(+2) == 't') && (TrChar(+3) != 'a'))
         Takel = true;
        //Iow_ etc. vs Iowa
        if ((in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == 'o') &&
@@ -362,8 +362,8 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
           else
            if ((St1[W1 - 4] == 'I') && (St1[W1 - 3] == '-'))
             {
-             St1[W1 - 2] = 'l'; 
-             St1[W1 - 4] = 'l'; 
+             St1[W1 - 2] = 'l';
+             St1[W1 - 4] = 'l';
             }
         }
       }
@@ -407,7 +407,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
    //"--" at the beginning of dialogs (Spy Kids 2, Stolen Summer, Sweet Home Alabama)
    if (S1[i]=='-' && S1[i+1]=='-' && S1[i+2]!='-')
     S1.erase(i,1);
-   
+
    //dict
    for (i=0;punctinations[2*i];i++)
     S1=stringreplace(S1,punctinations[2*i],punctinations[2*i+1],rfReplaceAll);
@@ -426,7 +426,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
      }
 
    //"..."
-   do 
+   do
     {
      W1 = S1.find(_L("..."));
      if (W1 > 0)
@@ -565,7 +565,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
 
    //Capital letters after ". " "? " "! " "- "
    for (unsigned int i=0;i<countof(chars2);i++)
-    { 
+    {
      do
       {
        W1 = S1.find(chars2[i]+ffstring(_L(" ")));
@@ -586,7 +586,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
      S1 = stringreplace(S1, _L("()()"), chars2[i], rfReplaceAll);
     }
 
-   //Change "<><>" back to "..." 
+   //Change "<><>" back to "..."
    S1 = stringreplace(S1, _L("<><>"), _L("..."), rfReplaceAll);
 
    //change the 1st letter case according to previous subtitle line
@@ -605,7 +605,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
          {
           S1[J] = (tchar)toupper(S1[J]);
           break;
-         } 
+         }
         J++;
        }
      }
@@ -635,7 +635,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
          (S1.size() >= I + 3) /*Delete!*/ &&
          (S1[I + 3]=='0' || S1[I + 3]=='1' || S1[I + 3]=='2' || S1[I + 3]=='3' || S1[I + 3]=='4' || S1[I + 3]=='5' || S1[I + 3]=='6' || S1[I + 3]=='7' || S1[I + 3]=='8' || S1[I + 3]=='9')))
      S1.erase(I + 1, 1);
-     
+
  if (cfg->fix&fixHearingImpaired)
   for (int I=1;I<=S1.size();I++)
    if (inHearing)
@@ -647,12 +647,12 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
       {
        S1.erase(std::max(1,I-1),S1.size());
        break;
-      } 
-     inHearing=false; 
+      }
+     inHearing=false;
      I=W1+1;
     }
    else if (S1[I]=='[')
-    inHearing=true; 
+    inHearing=true;
  bool useFixed=strcmp(text.c_str(),S1.c_str())!=0;
  if (useFixed)
   fixed=S1.c_str();
@@ -694,29 +694,29 @@ template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processHTML(const
     if (end)
      {
       const tchar *start=l2+6;
-      DwString<tchar> face=getAttribute(start,end,_L("face")); 
-      DwString<tchar> color=getAttribute(start,end,_L("color")).ConvertToLowerCase(); 
-      DwString<tchar> size=getAttribute(start,end,_L("size")); 
+      DwString<tchar> face=getAttribute(start,end,_L("face"));
+      DwString<tchar> color=getAttribute(start,end,_L("color")).ConvertToLowerCase();
+      DwString<tchar> size=getAttribute(start,end,_L("size"));
       words.add(l,l1,l2,props,end-l2+1);
       if (!face.empty()) strncpy(props.fontname,text<char_t>(face.c_str()),countof(props.fontname));
       if (!color.empty() && ((color[0]=='#' && tchar_traits<tchar>::sscanf()(color.c_str()+1,_L("%x"),&props.color)) || (htmlcolors->getColor(color,&props.color,0xffffff),true)))
        {
         std::swap(((uint8_t*)&props.color)[0],((uint8_t*)&props.color)[2]);
         props.isColor=true;
-       } 
+       }
       if (!size.empty())
        {
         tchar *ll;
         int s=strtol(size.c_str(),&ll,10);
         if (*ll=='\0') props.size=s;
-       } 
+       }
      }
    }
-  else if (_strnicmp(l2,_L("</font>"),7)==0) 
+  else if (_strnicmp(l2,_L("</font>"),7)==0)
    {
     words.add(l,l1,l2,props,7);props.isColor=false;props.size=0;props.fontname[0]='\0';
    }
-  else 
+  else
    l2++;
  words.add(l,l1,l2,props,0);
  return words;
@@ -740,7 +740,7 @@ template<class tchar> template<int TSubtitleProps::*offset,int min,int max> void
  int enc=strtol(buf,&bufend,10);
  if (buf!=bufend && *bufend=='\0' && isIn(enc,min,max))
   props.*offset=enc;
- else 
+ else
   props.*offset=defprops.*offset;
 }
 template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void TsubtitleFormat::Tssa<tchar>::intProp2(const tchar *start,const tchar *end)
@@ -773,26 +773,26 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::color(const tchar *star
    buf+=2;
   }
  else
-  radix=10; 
- tchar *endbuf; 
+  radix=10;
+ tchar *endbuf;
  int c=strtol(buf,&endbuf,radix);
  if (*endbuf=='&')
   {
    props.color=c;
    props.isColor=true;
-  } 
+  }
  else
   {
    props.color=defprops.color;
    props.isColor=defprops.isColor;
-  } 
+  }
 }
 
 template<class tchar> template<bool TSubtitleProps::*offset> void TsubtitleFormat::Tssa<tchar>::boolProp(const tchar *start,const tchar *end)
 {
  if (start!=end && start[0]=='1')
   props.*offset=true;
- else 
+ else
   props.*offset=defprops.*offset;
 }
 
@@ -814,12 +814,12 @@ template<class tchar> bool TsubtitleFormat::Tssa<tchar>::processToken(const tcha
      const tchar *start=l2+toklen;
      if (action)
       (this->*action)(start,end);
-     l2=(end1 && end1<end2)?end1:end2+1; 
+     l2=(end1 && end1<end2)?end1:end2+1;
     }
-   return true; 
+   return true;
   }
  else
-  return false; 
+  return false;
 }
 
 template<class tchar> void TsubtitleFormat::Tssa<tchar>::processTokens(const tchar *l,const tchar* &l1,const tchar* &l2,const tchar *end)
@@ -849,7 +849,7 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::processTokens(const tch
        !processToken(l3,_L("\\2c"),NULL) && !processToken(l3,_L("\\2a"),NULL) &&
        !processToken(l3,_L("\\3c"),NULL) && !processToken(l3,_L("\\3a"),NULL) &&
        !processToken(l3,_L("\\4c"),NULL) && !processToken(l3,_L("\\4a"),NULL))
-    l3++;   
+    l3++;
   }
 }
 
@@ -871,7 +871,7 @@ template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processSSA(const 
       l2=end+1;
       continue;
      }
-   l2++; 
+   l2++;
   }
  parent.defProps=props;
  words.add(l,l1,l2,props,0);
@@ -917,10 +917,10 @@ template<class tchar> void TsubtitleFormat::processMicroDVD(TsubtitleTextBase<tc
        {
         parent.propagateProps(tchar_traits<tchar>::isupper(line[1])?parent.begin():it,&TSubtitleProps::isColor,true,tchar_traits<tchar>::isupper(line[1])?parent.end():it+1);
         line=r+1;
-       } 
-     } 
-   } 
-  else 
+       }
+     }
+   }
+  else
    break;
  (*it)[0].eraseLeft(line-line0);
 }
@@ -932,8 +932,8 @@ template<class tchar> void TsubtitleFormat::processMPL2(TsubtitleLine<tchar> &li
   {
    for (typename TsubtitleLine<tchar>::iterator w=line.begin();w!=line.end();w++)
     w->props.italic=true;
-   line[0].eraseLeft(1); 
-  }  
+   line[0].eraseLeft(1);
+  }
 }
 
 //================================= TsubtitleLine ==================================
@@ -954,13 +954,13 @@ template<class tchar> void TsubtitleLine<tchar>::applyWords(const TsubtitleForma
     {
      this->front().props=w->props;
      return;
-    } 
-   TsubtitleWord word(this->front()+w->i1,w->i2-w->i1); 
+    }
+   TsubtitleWord word(this->front()+w->i1,w->i2-w->i1);
    word.props=w->props;
    this->push_back(word);
   }
- if (!this->empty()) 
-  this->erase(this->begin()); 
+ if (!this->empty())
+  this->erase(this->begin());
 }
 template<class tchar> void TsubtitleLine<tchar>::format(TsubtitleFormat &format,int sfmt,TsubtitleTextBase<tchar> &parent)
 {
@@ -986,7 +986,7 @@ template<class tchar> void TsubtitleTextBase<tchar>::format(TsubtitleFormat &for
  if (sfmt==Tsubreader::SUB_MPL2)
   for (typename Tbase::iterator l=this->begin();l!=this->end();l++)
    format.processMPL2(*l);
-}  
+}
 template<class tchar> void TsubtitleTextBase<tchar>::fix(TtextFix<tchar> &fix)
 {
  for (typename Tbase::iterator l=this->begin();l!=this->end();l++)

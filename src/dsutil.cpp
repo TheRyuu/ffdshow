@@ -53,10 +53,10 @@ HRESULT getFilterMerit(HKEY hive,const char_t *reg,DWORD *merit)
     {
      *merit=buf.merit;
      res=S_OK;
-    } 
+    }
    RegCloseKey(hKey);
   }
- return res; 
+ return res;
 }
 HRESULT getFilterMerit(const CLSID &clsid,DWORD *merit)
 {
@@ -78,10 +78,10 @@ HRESULT setFilterMerit(HKEY hive,const char_t *reg,DWORD merit)
      buf.merit=merit;
      if (RegSetValueEx(hKey,_l("FilterData"),NULL,REG_BINARY,LPBYTE(&buf),buflen)==ERROR_SUCCESS)
       res=S_OK;
-    } 
+    }
    RegCloseKey(hKey);
   }
- return res; 
+ return res;
 }
 HRESULT setFilterMerit(const CLSID &clsid,DWORD merit)
 {
@@ -125,7 +125,7 @@ bool ExtractBIH(const AM_MEDIA_TYPE &mt, BITMAPINFOHEADER* bih)
    bih->biBitCount=12;
    return true;
   }
- else 
+ else
   return false;
 }
 
@@ -166,10 +166,10 @@ pins_vector::pins_vector(IBaseFilter *filter,PIN_DIRECTION dir)
         {
          p->AddRef();
          push_back(p);
-        } 
-       pi.pFilter->Release(); 
+        }
+       pi.pFilter->Release();
       }
-    } 
+    }
   }
 }
 
@@ -210,7 +210,7 @@ struct TfilterInterfaceCmp
 private:
  const IID &iid;
 public:
- TfilterInterfaceCmp(const IID &Iiid):iid(Iiid) {} 
+ TfilterInterfaceCmp(const IID &Iiid):iid(Iiid) {}
  bool operator()(IBaseFilter *f,IUnknown* *dest)
   {
    return f->QueryInterface(iid,(void**)dest)==S_OK && *dest;
@@ -226,7 +226,7 @@ struct TpinInterfaceCmp
 private:
  const IID &iid;
 public:
- TpinInterfaceCmp(const IID &Iiid):iid(Iiid) {} 
+ TpinInterfaceCmp(const IID &Iiid):iid(Iiid) {}
  bool operator()(IBaseFilter *f,IUnknown* *dest)
   {
    comptr<IEnumPins> epi;
@@ -239,7 +239,7 @@ public:
         return true;
       }
     }
-   return false; 
+   return false;
   }
 };
 bool searchPinInterface(IFilterGraph *graph,const IID &iid,IUnknown **dest)
@@ -261,7 +261,7 @@ IBaseFilter* searchFilter(IFilterGraph *graph,const CLSID &clsid,IBaseFilter *ex
        return bff;
      }
   }
- return NULL; 
+ return NULL;
 }
 
 CLSID GetCLSID(IBaseFilter* pBF)
@@ -328,7 +328,7 @@ void bih2mediatype(const BITMAPINFOHEADER &bih,CMediaType *mt)
    vih->bmiHeader=bih;
    if (elen)
     memcpy(&vih->bmiHeader+1,&bih+1,elen);
-  } 
+  }
 }
 
 REFERENCE_TIME getAvgTimePerFrame(const CMediaType &mt)
@@ -345,9 +345,9 @@ REFERENCE_TIME getAvgTimePerFrame(const CMediaType &mt)
   {
    const sTheoraFormatBlock *oggFormat=(const sTheoraFormatBlock*)mt.pbFormat;
    return oggFormat->frameRateDenominator*REF_SECOND_MULT/oggFormat->frameRateNumerator;
-  } 
+  }
  else
-  return 0; 
+  return 0;
 }
 
 Textradata::Textradata(const CMediaType &mt,int padding):data(NULL),size(0)
@@ -357,22 +357,22 @@ Textradata::Textradata(const CMediaType &mt,int padding):data(NULL),size(0)
   {
    set(parse((const WAVEFORMATEX*)mt.pbFormat),padding);
    return;
-  } 
+  }
  else if (mt.formattype==FORMAT_VideoInfo)
   {
    size=mt.cbFormat-sizeof(VIDEOINFOHEADER);
    data=size?mt.pbFormat+sizeof(VIDEOINFOHEADER):NULL;
-  } 
+  }
  else if (mt.formattype==FORMAT_VideoInfo2)
   {
    size=mt.cbFormat-sizeof(VIDEOINFOHEADER2);
    data=size?mt.pbFormat+sizeof(VIDEOINFOHEADER2):NULL;
-  } 
+  }
  else if (mt.formattype==FORMAT_MPEGVideo)
   {
    set(parse((const MPEG1VIDEOINFO*)mt.pbFormat),padding);
    return;
-  } 
+  }
  else if (mt.formattype==FORMAT_MPEG2Video)
   {
    set(parse((const MPEG2VIDEOINFO*)mt.pbFormat),padding);
@@ -383,17 +383,17 @@ Textradata::Textradata(const CMediaType &mt,int padding):data(NULL),size(0)
    const VORBISFORMAT2 *vf2=(const VORBISFORMAT2*)mt.pbFormat;
    size=mt.cbFormat-sizeof(VORBISFORMAT2);
    data=size?mt.pbFormat+sizeof(VORBISFORMAT2):NULL;
-  } 
+  }
  else if (mt.formattype==FORMAT_RLTheora)
   {
    size=mt.cbFormat-sizeof(VIDEOINFOHEADER);
    data=size?mt.pbFormat+sizeof(VIDEOINFOHEADER):NULL;
-  } 
+  }
  set(data,size,padding);
 }
 Textradata::Textradata(const WAVEFORMATEX &wfex,int padding):data(NULL),size(0)
 {
- set(parse(&wfex),0); 
+ set(parse(&wfex),0);
 }
 Textradata::Textradata(const MPEG1VIDEOINFO &mpeg1info,int padding)
 {
@@ -449,5 +449,5 @@ void Textradata::set(const TdataSize &dataSize,unsigned int padding,bool Iown)
    own=false;
    data=(const unsigned char*)dataSize.first;
    size=dataSize.second;
-  }  
+  }
 }

@@ -42,11 +42,11 @@ static void calcGamma(int &oldGamma,int newGamma,unsigned int tab[256],unsigned 
 TimgFilterLuma::TimgFilterLuma(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
  oldGamma=-1;
-#ifdef __SSE2__ 
+#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   processLumaFc=&TimgFilterLuma::processLuma<Tsse2>;
- else 
-#endif 
+ else
+#endif
   processLumaFc=&TimgFilterLuma::processLuma<Tmmx>;
 }
 void TimgFilterLuma::processGamma(const unsigned char *srcY,unsigned char *dstY,const TpictPropSettings *cfg)
@@ -61,7 +61,7 @@ void TimgFilterLuma::processGamma(const unsigned char *srcY,unsigned char *dstY,
      gammaTab8[i]=gammaTab[i]<<8;
      gammaTab16[i]=gammaTab8[i]<<8;
      gammaTab24[i]=gammaTab16[i]<<8;
-    } 
+    }
   }
  if (oldGamma!=cfg->gammaCorrectionDef)
   for (unsigned int y=0;y<dy1[0];y++)
@@ -70,7 +70,7 @@ void TimgFilterLuma::processGamma(const unsigned char *srcY,unsigned char *dstY,
     for (src=srcY+stride1[0]*y,dst=dstY+stride2[0]*y,dstEnd=dst+dx1[0];dst<dstEnd;src+=4,dst+=4)
      *(unsigned int*)dst=gammaTab24[src[3]]|gammaTab16[src[2]]|gammaTab8[src[1]]|gammaTab[src[0]];
      //*(unsigned int*)dst=(gammaTab[src[3]]<<24)|(gammaTab[src[2]]<<16)|(gammaTab[src[1]]<<8)|gammaTab[src[0]];
-   }  
+   }
 }
 
 bool TimgFilterLuma::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0)
@@ -83,7 +83,7 @@ bool TimgFilterLuma::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0
    bool procgamma=cfg->gammaCorrection!=cfg->gammaCorrectionDef;
    if (procgamma) return true;
   }
- return false;  
+ return false;
 }
 
 template<class _mm> void TimgFilterLuma::processLuma(const TpictPropSettings *cfg,const unsigned char *srcY,unsigned char *dstY,int ystep)
@@ -111,11 +111,11 @@ template<class _mm> void TimgFilterLuma::processLuma(const TpictPropSettings *cf
      }
     for (;x<(int)dx1[0];x++)
      dstY[x]=limit_uint8((srcY[x]*cfg->lumGain>>7)+cfg->lumOffset);
-   }  
+   }
  else
   if (dstY!=srcY)
    memcpy(dstY,srcY,dx1[0]);
- _mm::empty();  
+ _mm::empty();
 }
 HRESULT TimgFilterLuma::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
@@ -139,7 +139,7 @@ HRESULT TimgFilterLuma::process(TfilterQueue::iterator it,TffPict &pict,const Tf
      getCurNext(csp1,pict,cfg->full,COPYMODE_NO,&dstY,NULL,NULL,NULL);
      processGamma(srcY,dstY,cfg);
     }
-  }  
+  }
  return parent->deliverSample(++it,pict);
 }
 
@@ -159,7 +159,7 @@ void TimgFilterGammaRGB::processGammaRGB32(const unsigned char *src,unsigned cha
    unsigned int *dstLn=(unsigned int*)dst;
    for (const unsigned int *dstLnEnd=dstLn+dx1[0];dstLn<dstLnEnd;srcLn+=4,dstLn++)
     *dstLn=gammaTabB[srcLn[0]]|gammaTabG[srcLn[1]]|gammaTabR[srcLn[2]];
-  } 
+  }
 }
 void TimgFilterGammaRGB::processGammaYUV(TffPict &pict,const unsigned char *src[4],unsigned char *dst[4],const TpictPropSettings *cfg)
 {
@@ -177,7 +177,7 @@ void TimgFilterGammaRGB::processGammaYUV(TffPict &pict,const unsigned char *src[
      gammaTabYUV[0][i]=(unsigned char)(255.0*pow((i/255.0),gY));
      gammaTabYUV[1][i]=(unsigned char)(255.0*pow((i/255.0),gU));
      gammaTabYUV[2][i]=(unsigned char)(255.0*pow((i/255.0),gV));
-    } 
+    }
   }
  for (unsigned int i=0;i<pict.cspInfo.numPlanes;i++)
   for (const unsigned char *srcEnd=src[i]+dy1[i]*stride1[i];src[i]!=srcEnd;src[i]+=stride1[i],dst[i]+=stride2[i])
@@ -209,7 +209,7 @@ HRESULT TimgFilterGammaRGB::process(TfilterQueue::iterator it,TffPict &pict,cons
     processGammaYUV(pict,src,dst,cfg);
    else
     processGammaRGB32(src[0],dst[0],cfg);
-  } 
+  }
  return parent->deliverSample(++it,pict);
 }
 
@@ -255,17 +255,17 @@ HRESULT TimgFilterLevelFix::process(TfilterQueue::iterator it,TffPict &pict,cons
     {
      if (!libmplayer) deci->getPostproc(&libmplayer);
      pp_ctx=libmplayer->pp_get_context(dx1[0],dy1[0],Tlibmplayer::ppCpuCaps(csp1));
-    } 
+    }
 
    pp_mode.lumMode=LUM_LEVEL_FIX;
    if (cfg->levelfixFull)
     {
-     pp_mode.minAllowedY=0; 
+     pp_mode.minAllowedY=0;
      pp_mode.maxAllowedY=255;
     }
    else
     {
-     pp_mode.minAllowedY=16; 
+     pp_mode.minAllowedY=16;
      pp_mode.maxAllowedY=234;
     }
    libmplayer->pp_postprocess(tempPict1,stride1,
@@ -273,6 +273,6 @@ HRESULT TimgFilterLevelFix::process(TfilterQueue::iterator it,TffPict &pict,cons
                               dx1[0],dy1[0],
                               NULL,0,
                               &pp_mode,pp_ctx,pict.frametype&FRAME_TYPE::typemask);
-  }                            
+  }
  return parent->deliverSample(++it,pict);
 }

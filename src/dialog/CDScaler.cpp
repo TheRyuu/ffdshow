@@ -32,7 +32,7 @@ TDScalerSettings* TDScalerPageFlt::load(const char_t *flnm)
 void TDScalerPageFlt::cfg2dlg(void)
 {
  const char_t *fltflnm=cfgGetStr(IDFF_dscalerFltflnm);
- if (fltflnm[0]) 
+ if (fltflnm[0])
   {
    cbxClear(IDC_CBX_DSCALER_FLTFLNM);
    char_t dsk[MAX_PATH],dir[MAX_PATH];
@@ -43,7 +43,7 @@ void TDScalerPageFlt::cfg2dlg(void)
    findFiles(fltmask,fltflnms);
    for (strings::const_iterator i=fltflnms.begin();i!=fltflnms.end();i++)
     cbxAdd(IDC_CBX_DSCALER_FLTFLNM,i->c_str());
-   SendDlgItemMessage(m_hwnd,IDC_CBX_DSCALER_FLTFLNM,CB_SELECTSTRING,WPARAM(-1),LPARAM(fltflnm)); 
+   SendDlgItemMessage(m_hwnd,IDC_CBX_DSCALER_FLTFLNM,CB_SELECTSTRING,WPARAM(-1),LPARAM(fltflnm));
    settings=load(fltflnm);
    if (settings)
     {
@@ -55,7 +55,7 @@ void TDScalerPageFlt::cfg2dlg(void)
      OffsetRect(&placer,-parentr.left,-parentr.top);
      HWND hprm=settings->createWindow(hi,this,placer,WM_DSCALER_CHANGE,bActive);
      if (hprm) SetWindowPos(hprm,place,placer.left,placer.top,placer.right-placer.left,placer.bottom-placer.top,SWP_SHOWWINDOW);
-    } 
+    }
   }
 }
 
@@ -83,7 +83,7 @@ INT_PTR TDScalerPageFlt::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
      }
     break;
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_BT_DSCALER_FLTFLNM:
        if (HIWORD(wParam)==BN_CLICKED)
@@ -95,10 +95,10 @@ INT_PTR TDScalerPageFlt::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
            storeCfg();
            cfgSet(IDFF_dscalerFltflnm,fltflnm);
            cfg2dlg();
-          } 
+          }
          return TRUE;
-        }  
-       break; 
+        }
+       break;
       case IDC_CBX_DSCALER_FLTFLNM:
        if (HIWORD(wParam)==CBN_SELCHANGE)
         {
@@ -109,10 +109,10 @@ INT_PTR TDScalerPageFlt::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
            storeCfg();
            cfgSet(IDFF_dscalerFltflnm,fltflnm);
            cfg2dlg();
-          } 
+          }
          return TRUE;
-        } 
-       break; 
+        }
+       break;
      }
     break;
   }

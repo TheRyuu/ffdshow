@@ -73,5 +73,5 @@ HRESULT Tfilters::queryFilterInterface(const IID &iid,void **ptr) const
  for (const_iterator i=begin();i!=end();i++)
   if (i->second->queryInterface(iid,ptr)==S_OK)
    return S_OK;
- return E_NOINTERFACE;  
+ return E_NOINTERFACE;
 }

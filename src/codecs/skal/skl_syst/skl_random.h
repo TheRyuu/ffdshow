@@ -21,7 +21,7 @@
 // Adapted from the Mersenne Twister which is:
 //
 //    Coded by Takuji Nishimura, considering the suggestions by
-//  Topher Cooper and Marc Rieffel in July-Aug. 1997.          
+//  Topher Cooper and Marc Rieffel in July-Aug. 1997.
 //
 // and
 //

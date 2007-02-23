@@ -27,12 +27,12 @@ public:
      insert(std::make_pair(key,filter));
      return filter;
     }
-   else  
+   else
     return (Tkey*)f->second;
   }
  void onSeek(void),onStop(void),onDisconnect(PIN_DIRECTION dir);
  const Tconfig *config;
- void onQueueChange(int id,int val); 
+ void onQueueChange(int id,int val);
  HRESULT queryFilterInterface(const IID &iid,void **ptr) const;
 };
 

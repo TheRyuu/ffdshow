@@ -27,9 +27,9 @@ Twidget::Twidget(HWND Ih):h(Ih),ownproc(false)
   {
    SetWindowLongPtr(h,GWLP_USERDATA,LONG_PTR(this));
    id=Twindow::getId(h);
-  } 
- else 
-  id=0; 
+  }
+ else
+  id=0;
 }
 
 LRESULT TwindowWidget::onContextMenu(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
@@ -69,7 +69,7 @@ LRESULT TwindowWidget::onContextMenu(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lP
           {
            self->tr->newTranslation(self->dialogId,id,Ttranslate::eolnFile2string(newtrans));
            SetWindowText(hwnd,newtrans);
-          } 
+          }
          return TRUE;
         }
        case 1:
@@ -77,7 +77,7 @@ LRESULT TwindowWidget::onContextMenu(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lP
          TdlgPropsEdit::TstringProps props;
          for (strings::const_iterator s=translateCbx->second.begin();s!=translateCbx->second.end();s++)
           props.push_back(std::make_pair(Ttranslate::eolnString2file(*s),Ttranslate::eolnString2file(self->_(0,s->c_str(),false))));
-         TdlgPropsEdit dlgProps(props,self->deci); 
+         TdlgPropsEdit dlgProps(props,self->deci);
          if (dlgProps.execute(self->m_hwnd))
           {
            for (TdlgPropsEdit::TstringProps::const_iterator p=props.begin();p!=props.end();p++)
@@ -88,7 +88,7 @@ LRESULT TwindowWidget::onContextMenu(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lP
          return TRUE;
         }
       }
-    }  
+    }
   }
  return Twidget::onContextMenu(hwnd,uMsg,wParam,lParam);
 }

@@ -9,7 +9,7 @@ private:
  static const TfilterIDFF idffs;
 protected:
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  TpictPropSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  int lumGain,lumOffset;
  int gammaCorrection,gammaCorrectionR,gammaCorrectionG,gammaCorrectionB;

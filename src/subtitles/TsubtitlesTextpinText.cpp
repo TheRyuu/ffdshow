@@ -31,7 +31,7 @@ TsubtitlesTextpinText::TsubtitlesTextpinText(int Itype,IffdshowBase *Ideci,const
  subs=new Tsubreader;
  if ((type&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SSA && extradata && extradatalen)
   memcpy(initdata,extradata,extradatalen);
- parser=NULL;  
+ parser=NULL;
 }
 
 TsubtitlesTextpinText::~TsubtitlesTextpinText()
@@ -54,7 +54,7 @@ void TsubtitlesTextpinText::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop
    const unsigned char *ptr=data+strlen("GAB2")+1;
    const unsigned char *end=data+datalen;
    while (data<end)
-    {        
+    {
      WORD tag = *((WORD*)(ptr)); ptr += 2;
      DWORD size = *((DWORD*)(ptr)); ptr += 4;
      if (tag==__GAB1_LANGUAGE_UNICODE__)
@@ -90,7 +90,7 @@ void TsubtitlesTextpinText::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop
       {
        TstreamMem fs(initdata,initdata.size());
        parser->parse(fs,0);
-      } 
+      }
     }
    TstreamMem fs(data,datalen,utf8 ? Tstream::ENC_UTF8 : Tsubreader::getSubEnc(type));
    Tsubtitle *sub=parser->parse(fs,(type&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SSA?TsubtitleParserBase::SSA_NODIALOGUE:0);
@@ -99,6 +99,6 @@ void TsubtitlesTextpinText::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop
      sub->start=start;
      sub->stop=stop;
      init();
-    } 
+    }
   }
 }

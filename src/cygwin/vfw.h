@@ -258,7 +258,7 @@ typedef struct _AVIFILEINFOW {
     DWORD		dwWidth;
     DWORD		dwHeight;
 
-    DWORD		dwScale;	
+    DWORD		dwScale;
     DWORD		dwRate;	/* dwRate / dwScale == samples/second */
     DWORD		dwLength;
 
@@ -277,7 +277,7 @@ typedef struct _AVIFILEINFOA {
     DWORD		dwWidth;
     DWORD		dwHeight;
 
-    DWORD		dwScale;	
+    DWORD		dwScale;
     DWORD		dwRate;	/* dwRate / dwScale == samples/second */
     DWORD		dwLength;
 
@@ -416,9 +416,9 @@ STDAPI AVIFileOpenA       (PAVIFILE FAR * ppfile, LPCSTR szFile,
 STDAPI AVIFileOpenW       (PAVIFILE FAR * ppfile, LPCWSTR szFile,
 			  UINT uMode, LPCLSID lpHandler);
 #ifdef UNICODE
-#define AVIFileOpen	  AVIFileOpenW	
+#define AVIFileOpen	  AVIFileOpenW
 #else
-#define AVIFileOpen	  AVIFileOpenA	
+#define AVIFileOpen	  AVIFileOpenA
 #endif
 #else // win16
 STDAPI AVIFileOpen       (PAVIFILE FAR * ppfile, LPCSTR szFile,

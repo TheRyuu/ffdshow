@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "TbitrateDlg.h"
 #include "ffdshow_constants.h"
@@ -97,9 +97,9 @@ INT_PTR TbitrateDlg::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
      if (capt && capt[0]) setWindowText(m_hwnd,capt);
      init();
      return TRUE;
-    } 
+    }
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDOK:
        {
@@ -127,7 +127,7 @@ INT_PTR TbitrateDlg::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
        return TRUE;
       case IDC_ED_BR_LEN:
-       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText) 
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         bps2dlg();
        return TRUE;
      }

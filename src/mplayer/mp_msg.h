@@ -87,9 +87,9 @@
 
 #if 1
  #ifdef __GNUC__
-  #define mp_msg(mod,lev, args... ) 
+  #define mp_msg(mod,lev, args... )
  #else
-  #define mp_msg(x) 
+  #define mp_msg(x)
  #endif
 #else
  #include "ffImgfmt.h"
@@ -159,7 +159,7 @@
  #include <stdarg.h>
  #define WINAPI __stdcall
  void WINAPI OutputDebugStringA(const char*); //rather than including windows.h
- static inline void mp_msg(int mod,int len,const char* fmt,...) 
+ static inline void mp_msg(int mod,int len,const char* fmt,...)
   {
    va_list args;
    char buf[1024];
@@ -168,6 +168,6 @@
    va_end(args);
    OutputDebugStringA(buf);
   };
-#endif 
+#endif
 
 #endif

@@ -8,7 +8,7 @@ class TfirPage :public TconfPageDecAudio
 {
 private:
  HWND hg;
- struct 
+ struct
   {
    BITMAPINFOHEADER bmiHeader;
    RGBQUAD bmiColors[256];
@@ -31,4 +31,4 @@ public:
  virtual void onFrame(void);
 };
 
-#endif 
+#endif

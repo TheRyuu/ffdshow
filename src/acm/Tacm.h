@@ -13,7 +13,7 @@ public:
 
  TacmCreator(LPUNKNOWN punk,HRESULT *phr);
  virtual ~TacmCreator();
- 
+
  STDMETHODIMP_(int) getSize(void);
  STDMETHODIMP create(void *ptr);
 };

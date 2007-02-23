@@ -1,4 +1,4 @@
-/* 
+/*
  *	Copyright (C) 2003-2004 Gabest
  *	http://www.gabest.org
  *
@@ -6,12 +6,12 @@
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2, or (at your option)
  *  any later version.
- *   
+ *
  *  This Program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
- *   
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with GNU Make; see the file COPYING.  If not, write to
  *  the Free Software Foundation, 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -52,7 +52,7 @@ STDMETHODIMP CDeCSSInputPin::NonDelegatingQueryInterface(REFIID riid, void** ppv
 STDMETHODIMP CDeCSSInputPin::Receive(IMediaSample* pSample)
 {
 	long len = pSample->GetActualDataLength();
-	
+
 	BYTE* p = NULL;
 	if(SUCCEEDED(pSample->GetPointer(&p)) && len > 0)
 	{
@@ -98,8 +98,8 @@ void CDeCSSInputPin::StripPacket(BYTE*& p, long& len)
 		len -= hdrlen; p += hdrlen;
 	}
 
-	if(len > 0 
-	&& ((*(DWORD*)p&0xf0ffffff) == 0xe0010000 
+	if(len > 0
+	&& ((*(DWORD*)p&0xf0ffffff) == 0xe0010000
 	|| (*(DWORD*)p&0xe0ffffff) == 0xc0010000
 	|| (*(DWORD*)p&0xbdffffff) == 0xbd010000)) // PES
 	{
@@ -119,7 +119,7 @@ void CDeCSSInputPin::StripPacket(BYTE*& p, long& len)
 		}
 		else // mpeg1
 		{
-			if((*p&0xc0) == 0x40) 
+			if((*p&0xc0) == 0x40)
 			{
 				len -= 2; p += 2;
 			}

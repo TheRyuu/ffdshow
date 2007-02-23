@@ -75,7 +75,7 @@ static void convert_16_32_mmx(const int16_t *inbuf,int32_t *outbuf,unsigned int 
    movq (edi+2*eax,mm0);
    movq (edi+2*eax+8,mm1);
   }
- _mm_empty(); 
+ _mm_empty();
 }
 #endif
 template<> int32_t* convert<int16_t,int32_t>(const int16_t *inbuf,int32_t * const outbuf,size_t count)
@@ -105,7 +105,7 @@ template<class _mm> static void convert_32_16_simd(const int32_t *inbuf,int16_t 
    psrad (mm1,16);
    packssdw (mm0,mm1);
    movq (edi+eax,mm0);
-  } 
+  }
  _mm::empty();
 }
 template<> int16_t* convert<int32_t,int16_t>(const int32_t *inbuf,int16_t * const outbuf,size_t count)
@@ -156,7 +156,7 @@ static void convert_float_16_sse(const float *inbuf,int16_t *samples,unsigned in
    cvtps2pi( mm1, xmm1);
    packssdw (mm0, mm1);
    movq (edx+ebx, mm0);
-  } 
+  }
  _mm_empty();
 }
 #ifdef __SSE2__
@@ -172,8 +172,8 @@ static void convert_float_16_sse2(const float *inbuf,int16_t *samples,unsigned i
  for (unsigned char  *edi=(unsigned char*)samples;ecx!=edx;edx+=16)
   {
    __m128 xmm0,xmm1;
-   movups   (xmm0, eax+edx*2);           // xd | xc | xb | xa         
-   movups   (xmm1, eax+edx*2+16);        // xh | xg | xf | xe         
+   movups   (xmm0, eax+edx*2);           // xd | xc | xb | xa
+   movups   (xmm1, eax+edx*2+16);        // xh | xg | xf | xe
    mulps    (xmm0, xmm7);                  // *= MAX_SHORT
    mulps    (xmm1, xmm7);                  // *= MAX_SHORT
    minps    (xmm0, xmm7);                  // x=min(x, MAX_SHORT)  --  +ve Signed Saturation > 2^31
@@ -183,7 +183,7 @@ static void convert_float_16_sse2(const float *inbuf,int16_t *samples,unsigned i
    cvtps2dq (xmm3, xmm1);                  // float -> hh | gg | ff | ee
    packssdw (xmm2, xmm3);                  // h g | f e | d c | b a  --  +/-ve Signed Saturation > 2^15
    movdqa   (edi+edx-16+16, xmm2);          // store h g | f e | d c | b a
-  } 
+  }
 }
 #else
  #define convert_float_16_sse2 NULL
@@ -218,7 +218,7 @@ static void convert_float_32_sse(const float *inbuf,int32_t *samples,unsigned in
    pxor     (mm1, (uint8_t*)&xmm0+8);
    movq     (edi+edx-16+16, mm0);           //store bb | aa
    movq     (edi+edx-8+16, mm1);            // store dd | cc
-  } 
+  }
  _mm_empty();
 }
 #ifdef __SSE2__
@@ -235,8 +235,8 @@ static void convert_float_32_sse2(const float *inbuf,int32_t *samples,unsigned i
  for (unsigned char *edi=(unsigned char*)samples;ecx!=edx;edx+=32)
   {
    __m128 xmm0,xmm1;
-   movups   (xmm0, eax+edx);             // xd | xc | xb | xa         
-   movups   (xmm1, eax+edx+16);          // xh | xg | xf | xe         
+   movups   (xmm0, eax+edx);             // xd | xc | xb | xa
+   movups   (xmm1, eax+edx+16);          // xh | xg | xf | xe
    mulps    (xmm0, xmm7);                  // *= MAX_INT
    mulps    (xmm1, xmm7);                  // *= MAX_INT
    // Bloody Intel and their "indefinite integer value" it
@@ -247,7 +247,7 @@ static void convert_float_32_sse2(const float *inbuf,int32_t *samples,unsigned i
    cvtps2dq (xmm3, xmm1);                  // float -> hh | gg | ff | ee  --  -ve Signed Saturation
    cmpnltps (xmm0, xmm7);                  // !(xd | xc | xb | xa < MAX_INT)
    cmpnltps (xmm1, xmm7);                  // !(xh | xg | xf | xe < MAX_INT)
-   
+
    pxor     (xmm2, _mm_castps_si128(xmm0));                  // 0x80000000 -> 0x7FFFFFFF if +ve saturation
    pxor     (xmm3, _mm_castps_si128(xmm1));
    movdqa   (edi+edx-32+32, xmm2);          // store dd | cc | bb | aa
@@ -275,8 +275,8 @@ template<class Tout> struct TconvertFromFloat
      c_loop=count-c_miss;
      if (c_loop)
       fc_sse2(inbuf,samples,(unsigned int)c_loop);
-    }  
-   #ifndef WIN64 
+    }
+   #ifndef WIN64
    else if (fc_3dnow && Tconfig::cpu_flags&FF_CPU_3DNOW)
     {
      c_miss=count&3;
@@ -284,7 +284,7 @@ template<class Tout> struct TconvertFromFloat
      if (c_loop)
       fc_3dnow(inbuf,samples,(unsigned int)c_loop);
     }
-   #endif  
+   #endif
    else if (fc_sse && Tconfig::cpu_flags&FF_CPU_SSE) //TODO fix?
     {
      c_miss=count&3;
@@ -297,7 +297,7 @@ template<class Tout> struct TconvertFromFloat
      c_miss=count;
      c_loop=0;
     }
-   for (size_t i=0;i<c_miss;i++) 
+   for (size_t i=0;i<c_miss;i++)
     samples[i+c_loop]=TsampleFormatInfo<Tout>::limit(inbuf[i+c_loop]*TsampleFormatInfo<Tout>::max());
    return samples;
   }
@@ -331,7 +331,7 @@ static void convert_16_float_sse(const int16_t*inbuf,float *samples,unsigned int
    movlhps   (xmm0, xmm1);                //;  xd  xc || xb  xa
    mulps     (xmm0, xmm7);                //;  *=1/MAX_SHORT
    movups    (edi+(eax+8)*2-16, xmm0);      //;  store xd | xc | xb | xa
-  } 
+  }
  _mm_empty();
 }
 #ifdef __SSE2__
@@ -346,7 +346,7 @@ static void convert_16_float_sse2(const int16_t*inbuf,float *samples,unsigned in
   {
    __m128i xmm0,xmm1;
    movdqu    (xmm1, esi+eax);           //  h g | f e | d c | b a
-   
+
    punpcklwd (xmm0, xmm1);                //  d x | c x | b x | a x
    punpckhwd (xmm1, xmm1);                //  h h | g g | f f | e e
    psrad     (xmm0, 16 );                 //  sign extend
@@ -358,7 +358,7 @@ static void convert_16_float_sse2(const int16_t*inbuf,float *samples,unsigned in
    mulps     (xmm3, xmm7);                //  *=1/MAX_SHORT
    movaps    (edi+(eax+16)*2-32, xmm2);      //  store xd | xc | xb | xa
    movaps    (edi+(eax+16)*2-16, xmm3);      //  store xh | xg | xf | xe
-  } 
+  }
 }
 #else
  #define convert_16_float_sse2 NULL
@@ -389,7 +389,7 @@ static void convert_32_float_sse(const int32_t*inbuf,float *samples,unsigned int
    movlhps  (xmm0, xmm1);            // xd  xc || xb  xa
    mulps    (xmm0, xmm7);            // *=1/MAX_INT
    movups   (edi+eax-16+16, xmm0);    // store xd | xc | xb | xa
-  } 
+  }
  _mm_empty();
 }
 #ifdef __SSE2__
@@ -412,9 +412,9 @@ static void convert_32_float_sse2(const int32_t*inbuf,float *samples,unsigned in
    mulps    (xmm3, xmm7);             //  *=1/MAX_INT
    movaps   (edi+eax+32-32, xmm2);     //  store xd | xc | xb | xa
    movaps   (edi+eax+32-16, xmm3);     //  store xh | xg | xf | xe
-  } 
+  }
 }
-#else 
+#else
  #define convert_32_float_sse2 NULL
 #endif
 
@@ -437,7 +437,7 @@ template<class Tin> struct TconvertToFloat
      if (c_loop)
       fc_sse2(samples,outbuf,(unsigned int)c_loop);
     }
-   #ifndef WIN64 
+   #ifndef WIN64
    else if (fc_3dnow && Tconfig::cpu_flags&FF_CPU_3DNOW)
     {
      c_miss=count&3;
@@ -445,7 +445,7 @@ template<class Tin> struct TconvertToFloat
      if (c_loop)
       fc_3dnow(samples,outbuf,(unsigned int)c_loop);
     }
-   #endif 
+   #endif
    else if (fc_sse && Tconfig::cpu_flags&FF_CPU_SSE)
     {
      c_miss=count&3;
@@ -457,7 +457,7 @@ template<class Tin> struct TconvertToFloat
     {
      c_miss=count;
      c_loop=0;
-    } 
+    }
    for (size_t i=0;i<c_miss;i++)
     outbuf[i+c_loop]=(float)samples[i+c_loop]*divisor;
    return outbuf;
@@ -487,9 +487,9 @@ void* TaudioFilter::convertTo(const TsampleFormat &sfIn,const void *bufIn,size_t
          case TsampleFormat::SF_PCM16:return dither->process((const float*)bufIn,(int16_t*)bufOut,sfOut.nchannels,numsamples,dithering);
          case TsampleFormat::SF_PCM24:return dither->process((const float*)bufIn,(int24_t*)bufOut,sfOut.nchannels,numsamples,dithering);
          case TsampleFormat::SF_PCM32:return dither->process((const float*)bufIn,(int32_t*)bufOut,sfOut.nchannels,numsamples,dithering);
-        } 
-      }  
-     else 
+        }
+      }
+     else
       switch (sfOut.sf)
        {
         case TsampleFormat::SF_PCM16:return TconvertFromFloat<int16_t>::convert((const float*)bufIn,(int16_t*)bufOut,count,convert_float_16_3dnow,convert_float_16_sse,convert_float_16_sse2);
@@ -533,7 +533,7 @@ void* TaudioFilter::init(const TfilterSettingsAudio *cfg,TsampleFormat &sf,const
  int honouredSF=honourPreferred?(parent->preferredsfs|TsampleFormat::SF_PCM24):TsampleFormat::SF_ALL;
  if (supSF&honouredSF)
   supSF&=honouredSF;
- if (sf.sf&supSF) 
+ if (sf.sf&supSF)
   return (void*)bufIn;
  TsampleFormat sfIn=sf;
  sf.sf=TsampleFormat::sf_bestMatch(sf.sf,supSF);
@@ -553,12 +553,12 @@ bool TaudioFilter::getOutputFmt(TsampleFormat &sf,const TfilterSettingsAudio *cf
  int honouredSF=honourPreferred?(parent->preferredsfs|TsampleFormat::SF_PCM24):TsampleFormat::SF_ALL;
  if (supSF&honouredSF)
   supSF&=honouredSF;
- if ((sf.sf&supSF)==0) 
+ if ((sf.sf&supSF)==0)
   sf.sf=TsampleFormat::sf_bestMatch(sf.sf,supSF);
- return true; 
+ return true;
 }
 
 HRESULT TaudioFilter::flush(TfilterQueue::iterator it,TsampleFormat &fmt,const TfilterSettingsAudio *cfg0)
 {
- return parent->deliverSamples(++it,fmt,NULL,0); 
+ return parent->deliverSamples(++it,fmt,NULL,0);
 }

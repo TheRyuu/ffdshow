@@ -88,14 +88,14 @@ char* Tstream::ugets(char *buf0,int len) const
        else if ((b&0xf0)==0xe0) // 1110xxxx 10xxxxxx 10xxxxxx
         {
          srcBuf[count++]=b;
-         if (read(&b,1,sizeof(b))==sizeof(b)) 
+         if (read(&b,1,sizeof(b))==sizeof(b))
           {
            if (count>MAX_SUBTITLE_LENGTH*2-1) break;
            srcBuf[count++]=b;
           }
          else
           break;
-         if (read(&b,1,sizeof(b))==sizeof(b)) 
+         if (read(&b,1,sizeof(b))==sizeof(b))
           {
            if (count>MAX_SUBTITLE_LENGTH*2-1) break;
            srcBuf[count++]=b;
@@ -143,7 +143,7 @@ char* Tstream::ugets(char *buf0,int len) const
        eof=false;
        if (buf-buf0>len) break;
        char c='?';
-       if (!(w&0xff00)) 
+       if (!(w&0xff00))
         c=char(w&0xff);
        else
         {
@@ -179,7 +179,7 @@ char* Tstream::ugets(char *buf0,int len) const
      *buf='\0';
      break;
     }
-  }  
+  }
  return eof?NULL:buf0;
 }
 int Tstream::ugetc(void) const
@@ -253,14 +253,14 @@ wchar_t* Tstream::fgets(wchar_t *buf0,int len) const
        else if ((b&0xf0)==0xe0) // 1110xxxx 10xxxxxx 10xxxxxx
         {
          srcBuf[count++]=b;
-         if (read(&b,1,sizeof(b))==sizeof(b)) 
+         if (read(&b,1,sizeof(b))==sizeof(b))
           {
            if (count>MAX_SUBTITLE_LENGTH-1) break;
            srcBuf[count++]=b;
           }
          else
           break;
-         if (read(&b,1,sizeof(b))==sizeof(b)) 
+         if (read(&b,1,sizeof(b))==sizeof(b))
           {
            if (count>MAX_SUBTITLE_LENGTH-1) break;
            srcBuf[count++]=b;
@@ -299,7 +299,7 @@ wchar_t* Tstream::fgets(wchar_t *buf0,int len) const
      strncpy(buf0,unicodeBuf,unicodeLen<len ? unicodeLen : len);
      break;
     }
-  }  
+  }
  return eof?NULL:buf0;
 }
 
@@ -342,7 +342,7 @@ TstreamFile::TstreamFile(const char_t *flnm,bool binary,bool write,ENCODING Ienc
      }
    }
  else
-  encoding=ENC_ASCII;  
+  encoding=ENC_ASCII;
 }
 
 int TstreamFile::fputs(const char *buf)
@@ -350,7 +350,7 @@ int TstreamFile::fputs(const char *buf)
  if (encoding==ENC_LE16)
   return fputs(text<wchar_t>(buf));
  else
-  return ::fputs(buf,f); 
+  return ::fputs(buf,f);
 }
 wint_t TstreamFile::fputs(const wchar_t *buf)
 {
@@ -367,9 +367,9 @@ wint_t TstreamFile::fputs(const wchar_t *buf)
       }
      fwrite(buf,1,2,f);
      buf++;
-    } 
-   return 1; 
-  } 
+    }
+   return 1;
+  }
 }
 
 //==================================== TstreamMem =====================================
@@ -412,7 +412,7 @@ TstreamRAR::TstreamRAR(const char_t *rarflnm,const char_t *flnm,const Tconfig *c
    delete unrar;
    unrar=new Tdll(dllname,config);
   }
- typedef HANDLE (PASCAL *RAROpenArchiveEx)(struct RAROpenArchiveDataEx *ArchiveData);  
+ typedef HANDLE (PASCAL *RAROpenArchiveEx)(struct RAROpenArchiveDataEx *ArchiveData);
  typedef int    (PASCAL* RARCloseArchive)(HANDLE hArcData);
  typedef int    (PASCAL* RARReadHeaderEx)(HANDLE hArcData,struct RARHeaderDataEx *HeaderData);
  typedef int    (PASCAL* RARProcessFile)(HANDLE hArcData,int Operation,char *DestPath,char *DestName);
@@ -426,7 +426,7 @@ TstreamRAR::TstreamRAR(const char_t *rarflnm,const char_t *flnm,const Tconfig *c
   {
    delete unrar;
    return;
-  } 
+  }
  RAROpenArchiveDataEx ArchiveDataEx;
  memset(&ArchiveDataEx,0,sizeof(ArchiveDataEx));
  #ifdef UNICODE
@@ -437,11 +437,11 @@ TstreamRAR::TstreamRAR(const char_t *rarflnm,const char_t *flnm,const Tconfig *c
  ArchiveDataEx.OpenMode=RAR_OM_EXTRACT;
  ArchiveDataEx.CmtBuf=0;
  HANDLE hrar=OpenArchiveEx(&ArchiveDataEx);
- if(!hrar) 
+ if(!hrar)
   {
    delete unrar;
    return;
-  } 
+  }
  SetCallback64(hrar,callback,LONG_PTR(this));
  RARHeaderDataEx HeaderDataEx;
  HeaderDataEx.CmtBuf=NULL;
@@ -457,7 +457,7 @@ TstreamRAR::TstreamRAR(const char_t *rarflnm,const char_t *flnm,const Tconfig *c
     FileName=HeaderDataEx.FileNameW;
    #else
     FileName=HeaderDataEx.FileName;
-   #endif 
+   #endif
    if (stricmp(FileName,flnm)==0 || fnmatch(extpattern,FileName))
     {
      buf=(unsigned char*)malloc(bufsize=HeaderDataEx.UnpSize);
@@ -468,7 +468,7 @@ TstreamRAR::TstreamRAR(const char_t *rarflnm,const char_t *flnm,const Tconfig *c
        delete unrar;
        return;
       }
-     bufpos=0; 
+     bufpos=0;
      break;
     }
    ProcessFile(hrar,RAR_SKIP,NULL,NULL);

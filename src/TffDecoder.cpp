@@ -106,7 +106,7 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  OSDtimeMax= 0;
 #endif
  ASSERT(phr);
- 
+
  setThreadName(DWORD(-1),"decVideo");
 
  static const TintOptionT<TffdshowDecVideo> iopts[]=
@@ -115,7 +115,7 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
    IDFF_decodingFps        ,&TffdshowDecVideo::decodingFps       ,-1,-1,_l("Decoding Fps"),0,NULL,0,
    IDFF_AVIcolorspace      ,&TffdshowDecVideo::decodingCsp       ,-1,-1,_l("Input colorspace"),0,NULL,0,
    IDFF_dvdproc            ,&TffdshowDecVideo::dvdproc           ,-1,-1,_l(""),0,NULL,0,
- 
+
    IDFF_currentq           ,&TffdshowDecVideo::currentq          ,0,6,_l(""),0,NULL,0,
 
    IDFF_subShowEmbedded    ,&TffdshowDecVideo::subShowEmbedded   ,0,40,_l(""),0,NULL,0,
@@ -193,30 +193,30 @@ HRESULT TffdshowDecVideo::CheckConnect(PIN_DIRECTION dir,IPin *pPin)
      outOldRenderer=!!(clsid==CLSID_VideoRenderer);
      if (presetSettings->output->allowOutChange3 || dvdproc)
       {
-       bool filterOk=clsid==CLSID_OverlayMixer || 
-                     clsid==CLSID_VideoMixingRenderer || 
+       bool filterOk=clsid==CLSID_OverlayMixer ||
+                     clsid==CLSID_VideoMixingRenderer ||
                      clsid==CLSID_VideoMixingRenderer9 ||
                      clsid==CLSID_DirectVobSubFilter ||
                      clsid==CLSID_DirectVobSubFilter2 ||
                      clsid==CLSID_FFDSHOW || clsid==CLSID_FFDSHOWRAW;
-       allowOutChange=dvdproc || 
+       allowOutChange=dvdproc ||
                       presetSettings->output->allowOutChange3==1 ||
                       (presetSettings->output->allowOutChange3==2 && filterOk);
 
        if (presetSettings->output->allowOutChange3==1 && presetSettings->output->outChangeCompatOnly)
         res=filterOk?S_OK:E_FAIL;
        else
-        res=S_OK; 
-      }  
-     else 
+        res=S_OK;
+      }
+     else
       {
        allowOutChange=false;
        res=S_OK;
-      } 
+      }
       if (clsid==CLSID_DecklinkVideoRenderFilter || clsid==CLSID_InfTee || clsid==CLSID_SmartT)
        allowOutChange=false;
      break;
-    } 
+    }
    default:
     return E_UNEXPECTED;
   }
@@ -235,14 +235,14 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
  if (m_pInput->IsConnected()==FALSE) return E_UNEXPECTED;
 
  if (!presetSettings) initPreset();
- 
+
  int hwOverlay=presetSettings->output->hwOverlay;
  if (hwOverlay==2 && m_pOutput->IsConnected())
   {
    const CLSID &ref=GetCLSID(m_pOutput->GetConnected());
    if (ref==CLSID_VideoMixingRenderer || ref==CLSID_VideoMixingRenderer9)
     hwOverlay=1;
-  } 
+  }
 
  bool isVIH2=!outdv && (hwOverlay==1 || (hwOverlay==2 && (iPosition&1)==0));
 
@@ -252,16 +252,16 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
  if (outdv)
   osize=1;
  else
-  { 
+  {
    presetSettings->output->getOutputColorspaces(ocsps);
    osize=ocsps.size();
-  } 
+  }
  if ((size_t)iPosition>=osize) return VFW_S_NO_MORE_ITEMS;
 
  TffPictBase pictOut=inpin->pictIn;
  calcNewSize(pictOut);
  if (presetSettings->output->closest && !outdv) ocsps.sort(pictOut.csp);
- 
+
  oldRect=pictOut.rectFull;
 
  static const TcspInfo dv=
@@ -295,18 +295,18 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
  mtOut->SetSampleSize(bih.biSizeImage);
 
  if (!isVIH2)
-  {  
+  {
    VIDEOINFOHEADER *vih=(VIDEOINFOHEADER*)mtOut->ReallocFormatBuffer(sizeof(VIDEOINFOHEADER));
    if (!vih) return E_OUTOFMEMORY;
    ZeroMemory(vih,sizeof(VIDEOINFOHEADER));
-  
+
    vih->rcSource.left=0;vih->rcSource.right=bih.biWidth;vih->rcSource.top=0;vih->rcSource.bottom=bih.biHeight;
    vih->rcTarget=vih->rcSource;
    vih->AvgTimePerFrame=inpin->avgTimePerFrame;
    vih->bmiHeader=bih;
   }
  else
-  { 
+  {
    VIDEOINFOHEADER2 *vih2=(VIDEOINFOHEADER2*)mtOut->ReallocFormatBuffer(sizeof(VIDEOINFOHEADER2));
    if (!vih2) return E_OUTOFMEMORY;
    ZeroMemory(vih2,sizeof(VIDEOINFOHEADER2));
@@ -322,7 +322,7 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
    vih2->bmiHeader=bih;
    hwDeinterlace=presetSettings->output->hwDeinterlace;
    if (hwDeinterlace)
-    vih2->dwInterlaceFlags=AMINTERLACE_IsInterlaced|AMINTERLACE_DisplayModeBobOrWeave;  
+    vih2->dwInterlaceFlags=AMINTERLACE_IsInterlaced|AMINTERLACE_DisplayModeBobOrWeave;
   }
  return S_OK;
 }
@@ -367,8 +367,8 @@ HRESULT TffdshowDecVideo::setOutputMediaType(const CMediaType &mt)
      else
       return VFW_E_TYPE_NOT_ACCEPTED; //S_FALSE;
      m_frame.dstSize=DIBSIZE(*bih);
-     
-     char_t s[256]; 
+
+     char_t s[256];
      DPRINTF(_l("TffdshowDecVideo::setOutputMediaType: colorspace:%s, biWidth:%i, dstStride:%i, Bpp:%i, dstSize:%i"),csp_getName(m_frame.dstColorspace,s,256),biWidth,m_frame.dstStride,cspInfo->Bpp,m_frame.dstSize);
      if (csp_isRGB(m_frame.dstColorspace) && outDy>0)
       m_frame.dstColorspace|=FF_CSP_FLAGS_VFLIP;
@@ -376,9 +376,9 @@ HRESULT TffdshowDecVideo::setOutputMediaType(const CMediaType &mt)
      // m_frame.colorspace|=FF_CSP_FLAGS_VFLIP;
      return S_OK;
     }
-  }  
+  }
  m_frame.dstColorspace=FF_CSP_NULL;
- return VFW_E_TYPE_NOT_ACCEPTED; //S_FALSE;  
+ return VFW_E_TYPE_NOT_ACCEPTED; //S_FALSE;
 }
 
 // set output colorspace
@@ -393,7 +393,7 @@ HRESULT TffdshowDecVideo::SetMediaType(PIN_DIRECTION direction, const CMediaType
     return setOutputMediaType(*pmt);
    default:
     return E_UNEXPECTED;
-  }  
+  }
 }
 
 // check input<->output compatibility
@@ -408,9 +408,9 @@ HRESULT TffdshowDecVideo::CheckTransform(const CMediaType *mtIn, const CMediaTyp
    ExtractBIH(*mtOut,&biOut);
    if ((unsigned int)ff_abs(biOut.biWidth)>=oldRect.dx && (unsigned int)ff_abs(biOut.biHeight)==oldRect.dy)
     return S_OK;
-   else 
+   else
     return VFW_E_TYPE_NOT_ACCEPTED;
-  }  
+  }
 }
 
 HRESULT TffdshowDecVideo::CompleteConnect(PIN_DIRECTION direction,IPin *pReceivePin)
@@ -422,7 +422,7 @@ HRESULT TffdshowDecVideo::CompleteConnect(PIN_DIRECTION direction,IPin *pReceive
   {
    const CLSID &out=GetCLSID(m_pOutput->GetConnected());
    outOverlayMixer=!!(out==CLSID_OverlayMixer);
-  } 
+  }
  return CTransformFilter::CompleteConnect(direction,pReceivePin);
 }
 
@@ -466,7 +466,7 @@ HRESULT TffdshowDecVideo::DecideBufferSizeVMR(IMemAllocator *pAlloc, ALLOCATOR_P
        isQueue= false; // queue off internaly.
     }
   }
- int cBuffersMax; 
+ int cBuffersMax;
  if (isQueue==1)
   cBuffersMax= presetSettings->queueCount+1;
  else
@@ -523,7 +523,7 @@ HRESULT TffdshowDecVideo::DecideBufferSizeOld(IMemAllocator *pAlloc, ALLOCATOR_P
  * Overlay mixer doesn't want SetPropoerties called twice. After successfull call of SetPropoerties, it never allow us change the properties.
  * Old renderer doesn't support multithreading, so cBuffers should be 1.
  */
- int cBuffersMax; 
+ int cBuffersMax;
  if (isQueue==1)
   cBuffersMax= presetSettings->queueCount;
  else
@@ -558,14 +558,14 @@ HRESULT TffdshowDecVideo::DecideBufferSizeOld(IMemAllocator *pAlloc, ALLOCATOR_P
  return S_OK;
 }
 
-HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample) 
+HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample)
 {
  m_aboutToFlash= false;
  HRESULT hr= ReceiveI(pSample);
  m_aboutToFlash= false;
  return hr;
 }
-HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample) 
+HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
 {
  // If the next filter downstream is the video renderer, then it may
  // be able to operate in DirectDraw mode which saves copying the data
@@ -589,7 +589,7 @@ HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
  if(isOSD_time_on_ffdshow && m_pClock)
   m_pClock->GetTime(&OSD_time_on_ffdshowStart);
  pSample->GetMediaType(&pmt);
- if (pmt!=NULL && pmt->pbFormat!=NULL) 
+ if (pmt!=NULL && pmt->pbFormat!=NULL)
   {
    // spew some debug output
    ASSERT(!IsEqualGUID(pmt->majortype, GUID_NULL));
@@ -653,19 +653,19 @@ HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
 
  if (waitForKeyframe)
   waitForKeyframe--;
- 
+
  if (hr==S_FALSE)
   {
    setSampleSkipped(false);
    DPRINTF_SAMPLE_TIME(pSample);
-   if (!m_bQualityChanged) 
+   if (!m_bQualityChanged)
     {
      m_bQualityChanged=TRUE;
      NotifyEvent(EC_QUALITY_CHANGE,0,0);
     }
    hr=S_OK;
   }
- return hr; 
+ return hr;
 }
 
 bool TffdshowDecVideo::IsOldRenderer(void)
@@ -680,7 +680,7 @@ bool TffdshowDecVideo::IsOldRenderer(void)
  bool isOld= false;
  // ZoomPlayer & Vix & IExplorer.exe hangs up on graph->FindFilterByName(L"Video Renderer", &pBaseFilter) for unknown reason.
  // IFilterGraph::FindFilterByName seems to have serious bug.
- if(_strnicmp(_l("mplayerc.exe"),fileName,13)!=0) 
+ if(_strnicmp(_l("mplayerc.exe"),fileName,13)!=0)
   {
    const CLSID &ref=GetCLSID(m_pOutput->GetConnected());
    if(ref==CLSID_VideoRenderer || ref==CLSID_OverlayMixer)
@@ -760,7 +760,7 @@ STDMETHODIMP TffdshowDecVideo::deliverPreroll(int frametype)
  if (waitForKeyframe && (frametype&FRAME_TYPE::typemask)==FRAME_TYPE::I)
   waitForKeyframe=FALSE;
  // if so, then we don't want to pass this on to the renderer
- if (waitForKeyframe) 
+ if (waitForKeyframe)
   DPRINTF(_l("still waiting for a keyframe"));
  return S_FALSE;
 }
@@ -777,7 +777,7 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
  if (waitForKeyframe && (pict.frametype&FRAME_TYPE::typemask)==FRAME_TYPE::I)
   waitForKeyframe=FALSE;
  // if so, then we don't want to pass this on to the renderer
- if (waitForKeyframe) 
+ if (waitForKeyframe)
   {
    DPRINTF(_l("still waiting for a keyframe"));
    return S_FALSE;
@@ -790,14 +790,14 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
   {
    if (pict.rtStart<0)
     return S_FALSE;
-   frameTimeOk=S_OK; 
+   frameTimeOk=S_OK;
   }
  else
   if (inpin->sourceFlags&TvideoCodecDec::SOURCE_NEROAVC && pict.rtStart!=REFTIME_INVALID && pict.rtStop==REFTIME_INVALID)
    {
-    pict.rtStop=pict.rtStart+inpin->avgTimePerFrame; 
+    pict.rtStop=pict.rtStart+inpin->avgTimePerFrame;
     frameTimeOk=S_OK;
-   } 
+   }
 
  if (frameTimeOk!=S_OK)
   frameTimeOk=(pict.rtStart!=REFTIME_INVALID)?S_OK:S_FALSE;// pIn->GetTime(&pict.rtStart,&pict.rtStop);
@@ -806,7 +806,7 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
    if (inpin->avgTimePerFrame==0)
     inpin->avgTimePerFrame=pict.rtStop-pict.rtStart;
   }
- else 
+ else
   {
    frameTimeOk=S_OK;
    pict.rtStart=REFERENCE_TIME((segmentFrameCnt  )*inpin->avgTimePerFrame);
@@ -820,7 +820,7 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
  else if (frameTimeOk==S_OK && inpin->avgTimePerFrame)
   currentFrame=long((pict.rtStart+segmentStart)/(inpin->avgTimePerFrame*1.0)+0.5);
  else
-  currentFrame++; 
+  currentFrame++;
 
  int videoDelay;
  if (moviesecs>0 && presetSettings->isVideoDelayEnd && presetSettings->videoDelay!=presetSettings->videoDelayEnd)
@@ -834,7 +834,7 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
  else
   videoDelay=presetSettings->videoDelay;
 
- if (videoDelay) 
+ if (videoDelay)
   {
    REFERENCE_TIME delay100ns=videoDelay*10000LL;
    pict.rtStart+=delay100ns;
@@ -846,7 +846,7 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
  clock_t t=clock();
  decodingFps=(t!=lastTime)?1000*CLOCKS_PER_SEC/(t-lastTime):0;
  lastTime=t;
- 
+
  if (pict.csp!=FF_CSP_NULL) decodingCsp=pict.csp;
 
  if (!cpu && cpus==-1)
@@ -865,24 +865,24 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
 {
  if (pict.csp==FF_CSP_NULL)
   return S_OK;
- 
- sendOnFrameMsg(); 
+
+ sendOnFrameMsg();
 
  if (presetSettings->output->hwOverlayAspect)
   pict.setDar(Rational(presetSettings->output->hwOverlayAspect>>8,256));
- if (!outdv && allowOutChange) 
+ if (!outdv && allowOutChange)
   {
    HRESULT hr=reconnectOutput(pict);
    if (FAILED(hr))
     return S_FALSE;//hr;
-  }  
+  }
 
  segmentFrameCnt++;
  frameCnt++;
 
  comptr<IMediaSample> pOut=NULL;
  HRESULT hr=initializeOutputSample(&pOut);
- if (FAILED(hr)) 
+ if (FAILED(hr))
   return hr;
 
 if (!outdv && hwDeinterlace)
@@ -909,7 +909,7 @@ if (!outdv && hwDeinterlace)
          outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_WEAVE;
        }
       pOut2->SetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES,dwStreamId),(PBYTE)&outProp2);
-     } 
+     }
    }
 
  m_bSampleSkipped=FALSE;
@@ -917,7 +917,7 @@ if (!outdv && hwDeinterlace)
  // different format.  If we don't obey it, we'll draw garbage
  AM_MEDIA_TYPE *pmtOut;
  pOut->GetMediaType(&pmtOut);
- if (pmtOut!=NULL && pmtOut->pbFormat!=NULL) 
+ if (pmtOut!=NULL && pmtOut->pbFormat!=NULL)
   {
    // spew some debug output
    ASSERT(!IsEqualGUID(pmtOut->majortype, GUID_NULL));
@@ -928,7 +928,7 @@ if (!outdv && hwDeinterlace)
    m_pOutput->CurrentMediaType() = *pmtOut;
    DeleteMediaType(pmtOut);
    hr = StartStreaming();
-   if (SUCCEEDED(hr)) 
+   if (SUCCEEDED(hr))
     {
      // a new format, means a new empty buffer, so wait for a keyframe
      // before passing anything on to the renderer.
@@ -952,7 +952,7 @@ if (!outdv && hwDeinterlace)
   {
    hr=setOutputMediaType(*mtOut);
    DeleteMediaType(mtOut);
-   if (hr!=S_OK) 
+   if (hr!=S_OK)
     return hr;
   }
 
@@ -960,21 +960,21 @@ if (!outdv && hwDeinterlace)
  pOut->SetSyncPoint(sync);
  if (outOverlayMixer)
   pOut->SetDiscontinuity(TRUE);
- 
+
  REFERENCE_TIME rtStart=pict.rtStart-segmentStart;
  REFERENCE_TIME rtStop=rtStart+1;
  if (rtStart!=REFTIME_INVALID)
   {
    rtStop=pict.rtStop-segmentStart;
    pOut->SetTime(&rtStart,&rtStop);
-  } 
+  }
  if (pict.mediatimeStart!=REFTIME_INVALID)
   pOut->SetMediaTime(&pict.mediatimeStart,&pict.mediatimeStop);
 
  unsigned char *dst;
- if (pOut->GetPointer(&dst)!=S_OK) 
+ if (pOut->GetPointer(&dst)!=S_OK)
   return S_FALSE;
- LONG dstSize=pOut->GetSize(); 
+ LONG dstSize=pOut->GetSize();
  #if 0
  if(downstreamID==VMR9)
   {
@@ -1075,12 +1075,12 @@ void TffdshowDecVideo::lockReceive(void)
 {
  DPRINTF(_l("TffdshowDecVideo::lockReceive thread=%d"),GetCurrentThreadId());
  m_csReceive.Lock();
-} 
+}
 void TffdshowDecVideo::unlockReceive(void)
 {
  DPRINTF(_l("TffdshowDecVideo::unlockReceive thread=%d"),GetCurrentThreadId());
  m_csReceive.Unlock();
-} 
+}
 
 HRESULT TffdshowDecVideo::NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,double dRate)
 {
@@ -1095,7 +1095,7 @@ HRESULT TffdshowDecVideo::NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,
  segmentStart=tStart;
  segmentFrameCnt=0;
  for (size_t i=0;i<textpins.size();i++)
-  if (textpins[i]->needSegment) 
+  if (textpins[i]->needSegment)
    textpins[i]->NewSegment(tStart,tStop,dRate);
  late=lastrtStart=0;
  frameCnt=0;bytesCnt=0;
@@ -1105,7 +1105,7 @@ HRESULT TffdshowDecVideo::NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,
 STDMETHODIMP TffdshowDecVideo::findOverlayControl(IMixerPinConfig2* *overlayPtr)
 {
  if (!overlayPtr) return E_POINTER;
- *overlayPtr=NULL; 
+ *overlayPtr=NULL;
  if (!m_pGraph) return E_UNEXPECTED;
  return searchPinInterface(m_pGraph,IID_IMixerPinConfig2,(IUnknown**)overlayPtr)?S_OK:S_FALSE;
 }
@@ -1116,7 +1116,7 @@ private:
  const IID &iid;
 public:
  mutable comptr<IVMRMixerControl9> vmr9;mutable int id;
- TvmrInterfaceCmp(const IID &Iiid):iid(Iiid),vmr9(NULL),id(-1) {} 
+ TvmrInterfaceCmp(const IID &Iiid):iid(Iiid),vmr9(NULL),id(-1) {}
  bool operator()(IBaseFilter *f,IPin *ipin) const
   {
    if (FAILED(f->QueryInterface(iid,(void**)&vmr9)) || vmr9==NULL)
@@ -1132,14 +1132,14 @@ public:
         return true;
       }
     }
-   return false; 
+   return false;
   }
 };
 
 STDMETHODIMP TffdshowDecVideo::findOverlayControl2(IhwOverlayControl* *overlayPtr)
 {
  if (!overlayPtr) return E_POINTER;
- *overlayPtr=NULL; 
+ *overlayPtr=NULL;
  if (m_pGraph)
   {
    comptr<IMixerPinConfig2> overlay;
@@ -1148,16 +1148,16 @@ STDMETHODIMP TffdshowDecVideo::findOverlayControl2(IhwOverlayControl* *overlayPt
      (*overlayPtr=new ThwOverlayControlOverlay(overlay))->AddRef();
      return S_OK;
     }
-   else 
+   else
     {
      TvmrInterfaceCmp vmr9comp(IID_IVMRMixerControl9);
      if (searchPrevNextFilter(PINDIR_OUTPUT,m_pOutput,m_pOutput,NULL,vmr9comp))
       {
        (*overlayPtr=new ThwOverlayControlVMR9(vmr9comp.vmr9,vmr9comp.id))->AddRef();
        return S_OK;
-      } 
-    } 
-  }  
+      }
+    }
+  }
  (*overlayPtr=new ThwOverlayControlBase)->AddRef();
  return S_FALSE;
 }
@@ -1173,42 +1173,42 @@ CBasePin* TffdshowDecVideo::GetPin(int n)
  else if (n==1)
   return m_pOutput;
  else
-  { 
+  {
    n-=2;
    if (n<(int)textpins.size())
     return textpins[n];
    else
-    { 
+    {
      wchar_t name[50];
      if (n==0)
       swprintf(name,L"In Text");
-     else 
+     else
       swprintf(name,L"In Text %i",n+1);
      HRESULT phr=0;
      TtextInputPin *textpin=new TtextInputPin(this,&phr,name,n+1);
      if (FAILED(phr)) return NULL;
      textpins.push_back(textpin);
      return textpin;
-    } 
+    }
   }
 }
 STDMETHODIMP TffdshowDecVideo::FindPin(LPCWSTR Id,IPin **ppPin)
 {
  CheckPointer(ppPin,E_POINTER);
 
- if (lstrcmpW(Id,m_pInput->Name())==0) 
+ if (lstrcmpW(Id,m_pInput->Name())==0)
   *ppPin=m_pInput;
- else if (lstrcmpW(Id,m_pOutput->Name())==0) 
+ else if (lstrcmpW(Id,m_pOutput->Name())==0)
   *ppPin=m_pOutput;
- else 
+ else
   *ppPin=textpins.find(Id);
-  
+
  if (*ppPin)
-  { 
+  {
    (*ppPin)->AddRef();
    return S_OK;
-  } 
- else 
+  }
+ else
   return VFW_E_NOT_FOUND;
 }
 HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)

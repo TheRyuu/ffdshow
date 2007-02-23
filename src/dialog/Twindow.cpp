@@ -39,7 +39,7 @@ Twindow::Twindow(IffdshowBase *Ideci):
 {
  if (Ideci)
   setDeci(Ideci);
- else 
+ else
   {
    deci=NULL;
    hi=NULL;
@@ -67,14 +67,14 @@ Twidget* Twindow::createDlgItem(int id,HWND h)
  TtrackBarsMap::const_iterator t=bindTrackbarsMap.find(id);
  if (t!=bindTrackbarsMap.end())
   return new TwidgetSubclassTbr(h,this,t->second);
- else 
+ else
   {
    TcheckboxesMap::const_iterator t=bindCheckboxesMap.find(id);
    if (t!=bindCheckboxesMap.end())
     return new TwidgetSubclassChb(h,this,t->second);
-   else 
+   else
     return new TwindowWidget(h,this);
-  }  
+  }
 }
 
 void Twindow::setHWND(HWND Im_hwnd,int IdialogId)
@@ -106,15 +106,15 @@ void Twindow::setHWND(HWND Im_hwnd,int IdialogId)
              RECT r;
              GetWindowRect(*wnd,&r);
              SetWindowPos(*wnd,NULL,0,0,r.right-r.left,15,SWP_NOMOVE|SWP_NOZORDER);
-            } 
-          } 
-        } 
+            }
+          }
+        }
        EnableWindow(*wnd,TRUE);
        dlgitem->allowOwnProc(); //setDlgItemProc(*wnd,translateProc);
       }
     }
   }
- Twidget *dlgitem=createDlgItem(0,m_hwnd); 
+ Twidget *dlgitem=createDlgItem(0,m_hwnd);
  //SetWindowLong(m_hwnd,GWL_USERDATA,LONG(createDlgItem()));
  if (tr->translateMode)
    dlgitem->allowOwnProc();// setDlgItemProc(m_hwnd,translateProc);
@@ -157,7 +157,7 @@ HMENU Twindow::_(HMENU hmn)
 void Twindow::translate(void)
 {
  tr->translate(m_hwnd,dialogId);
-/* 
+/*
  HFONT hf=(HFONT)SendMessage(m_hwnd,WM_GETFONT,NULL,NULL);
  LOGFONT lf;
  GetObject(hf,sizeof(lf),&lf);
@@ -168,7 +168,7 @@ void Twindow::translate(void)
  for (THWNDs::const_iterator w=wnds.begin();w!=wnds.end();w++)
   SendMessage(*w,WM_SETFONT,(WPARAM)hf2,TRUE);
  SendMessage(m_hwnd,WM_SETFONT,(WPARAM)hf2,TRUE);
-*/ 
+*/
 }
 
 void Twindow::enable2(HWND hwnd,BOOL is,bool uncheck)
@@ -200,7 +200,7 @@ template<class T> bool Twindow::eval(const char_t *pomS,T min,T max,int *val,T m
   if (!dolimit)
    return false;
   else
-   x=limit(x,min,max); 
+   x=limit(x,min,max);
  if (val) *val=int(x*mult); //round?
  return true;
 }
@@ -218,7 +218,7 @@ bool Twindow::eval(HWND hed,double min,double max,int *val,double mult,bool limi
  char_t pomS[256];
  GetWindowText(hed,pomS,255);
  return eval(pomS,min,max,val,mult,limit);
-} 
+}
 
 bool Twindow::inputString(const char_t *capt,const char_t *query,char_t *str,size_t len)
 {
@@ -229,10 +229,10 @@ bool Twindow::inputString(const char_t *capt,const char_t *query,char_t *str,siz
 void Twindow::ListView_AddCol(HWND hlv,int &ncol,int w,const char_t *txt,bool right)
 {
  LVCOLUMN lvc;
- lvc.mask=LVCF_FMT|LVCF_WIDTH|LVCF_TEXT|LVCF_SUBITEM; 
+ lvc.mask=LVCF_FMT|LVCF_WIDTH|LVCF_TEXT|LVCF_SUBITEM;
  lvc.iSubItem=ncol;
- lvc.pszText=LPTSTR(txt);    
- lvc.cx=w; 
+ lvc.pszText=LPTSTR(txt);
+ lvc.cx=w;
  lvc.fmt=(right)?LVCFMT_RIGHT:LVCFMT_LEFT;
  ListView_InsertColumn(hlv,ncol,&lvc);
  ncol++;
@@ -308,7 +308,7 @@ void Twindow::tbrSetRange(int id,int min,int max,int step,bool largethumb)
     SendMessage(hcbx,TBM_SETTHUMBLENGTH,r.right-r.left-2,0);
    else
     SendMessage(hcbx,TBM_SETTHUMBLENGTH,r.bottom-r.top-2,0);
-  } 
+  }
 }
 
 int Twindow::cfgGet(unsigned int i)
@@ -404,14 +404,14 @@ int Twindow::selectFromMenu(const char_t **items,int id,bool translate,int colum
  for (int ord=0,i=0;items[ord];i++)
   insertMenuItem(hm,ord,i+1,items[i],false,columnHeight && i && (i%columnHeight)==0);
  RECT r;
- if (id)  
+ if (id)
   GetWindowRect(GetDlgItem(m_hwnd,id),&r);
  else
   {
    POINT pt;
    GetCursorPos(&pt);
    r.left=pt.x;r.bottom=pt.y;
-  } 
+  }
  int cmd=TrackPopupMenu(translate?_(hm):hm,TPM_LEFTALIGN|TPM_TOPALIGN|TPM_RETURNCMD,r.left-1,r.bottom,0,m_hwnd,0);
  DestroyMenu(hm);
  return cmd?cmd-1:-1;
@@ -422,7 +422,7 @@ int Twindow::selectFromMenu(const strings &items,int id,bool translate,int colum
  for (strings::const_iterator s=items.begin();s!=items.end();s++)
   ptritems.push_back(s->c_str());
  ptritems.push_back(NULL);
- return selectFromMenu(&ptritems[0],id,translate,columnHeight); 
+ return selectFromMenu(&ptritems[0],id,translate,columnHeight);
 }
 
 bool Twindow::changeDir(int idff,const char_t *caption)
@@ -458,7 +458,7 @@ bool Twindow::chooseColor(int idff)
    return true;
   }
  else
-  return false; 
+  return false;
 }
 
 void Twindow::setSize(HWND hwnd,int dx,int dy)
@@ -514,7 +514,7 @@ HWND Twindow::createHintWindow(HWND parent,int timePop,int timeInit,int timeResh
  HWND hhint=CreateWindowEx(WS_EX_TOPMOST,
                           TOOLTIPS_CLASS,
                           NULL,
-                          WS_POPUP|TTS_NOPREFIX|TTS_ALWAYSTIP,  
+                          WS_POPUP|TTS_NOPREFIX|TTS_ALWAYSTIP,
                           CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,CW_USEDEFAULT,
                           parent,NULL,hi,NULL
                          );
@@ -523,7 +523,7 @@ HWND Twindow::createHintWindow(HWND parent,int timePop,int timeInit,int timeResh
  SendMessage(hhint,TTM_SETDELAYTIME,TTDT_INITIAL,MAKELONG(timeInit,0));
  SendMessage(hhint,TTM_SETDELAYTIME,TTDT_RESHOW,MAKELONG(timeReshow,0));
  SendMessage(hhint,TTM_SETMAXTIPWIDTH,0,470);
- return hhint;  
+ return hhint;
 }
 
 TOOLINFO Twindow::addHint(int id,const char_t *text)
@@ -564,11 +564,11 @@ Twindow::Tanchor::Tanchor(int Iid,int Ianchors,const Twindow &parent,const CRect
     rules.x=r.left;
   else
    rules.x=r.left+r.Width()/2;
-   
+
  if (TanchorInfo::BOTTOM&anchors)
   if (TanchorInfo::TOP&anchors)
    rules.y=r.Height();
-  else 
+  else
    rules.y=r.top;
  else
   rules.y=r.top+r.Height()/2;
@@ -592,7 +592,7 @@ void Twindow::Tanchor::resize(const Twindow &parent,const CRect &newrect)
    newLeft=parentSize.cx-(originalParentSize.cx-rules.x);
  else if (!(TanchorInfo::LEFT&anchors))
    newLeft=rules.x*parentSize.cx/originalParentSize.cx-newWidth/2;
-   
+
  if (TanchorInfo::BOTTOM&anchors)
   if (TanchorInfo::TOP&anchors)
    newHeight=parentSize.cy-(originalParentSize.cy-rules.y);
@@ -602,7 +602,7 @@ void Twindow::Tanchor::resize(const Twindow &parent,const CRect &newrect)
   newTop=rules.y*parentSize.cy/originalParentSize.cy-newHeight/2;
  MoveWindow(h,newLeft,newTop,newWidth,newHeight,TRUE);
  repaint(h);
-} 
+}
 
 void Twindow::Tanchors::add(const TanchorInfo *ainfo,const Twindow &parent)
 {
@@ -626,7 +626,7 @@ template<class Tret,class TcreateFunc1,class TcreateFunc2> Tret Twindow::createD
    bindTrackbarsMap.insert(std::make_pair(bindsVtrack[i].idc,bindsVtrack+i));
  if (bindsCheckbox)
   for (int i=0;i<bindsCheckbox[i].idc;i++)
-   bindCheckboxesMap.insert(std::make_pair(bindsCheckbox[i].idc,bindsCheckbox+i));  
+   bindCheckboxesMap.insert(std::make_pair(bindsCheckbox[i].idc,bindsCheckbox+i));
  HINSTANCE hi=this->hi?this->hi:g_hInst;//HACK!!
  if (!tr || !tr->isCustomFont())
   {
@@ -646,7 +646,7 @@ template<class Tret,class TcreateFunc1,class TcreateFunc2> Tret Twindow::createD
    Tret ret=createFunc2(hi,dlg,hWndParent,msgProc0,lparam);
    LocalFree(dlg);
    return ret;
-  } 
+  }
 }
 HWND Twindow::createDialog(int dlgId,HWND hWndParent)
 {
@@ -677,7 +677,7 @@ bool Twindow::onTrack(TbindTrackbars bindsTrack,LPARAM lParam)
        cfgSet(-bindsTrack[i].idff,-tbrGet(bindsTrack[i].idc));
       else
        cfgSet(bindsTrack[i].idff,tbrGet(bindsTrack[i].idc));
-      if (bindsTrack[i].onClick) 
+      if (bindsTrack[i].onClick)
        (this->*bindsTrack[i].onClick)();
       return true;
      }
@@ -695,9 +695,9 @@ template<class TbindEdit> bool Twindow::onCtlColorEdit(TbindEdit *bindsEdit,LPAR
     {
      HDC dc=HDC(wParam);
      SetBkColor(dc,RGB(255,0,0));
-     return true; 
+     return true;
     }
- return false;  
+ return false;
 }
 HBRUSH Twindow::getRed(void)
 {
@@ -719,18 +719,18 @@ INT_PTR Twindow::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
      for (THWNDs::const_iterator wnd=wnds.begin();wnd!=wnds.end();wnd++)
       {
        ::Twidget *item=Twidget::getDlgItem(*wnd);
-       if (item) 
+       if (item)
         {
          item->restore();
          delete item;
-        } 
+        }
       }
      ::Twidget *item=Twidget::getDlgItem(m_hwnd);
-     if (item) 
+     if (item)
       {
        item->restore();
        delete item;
-      } 
+      }
      if (red) DeleteObject(red);red=NULL;
      break;
     }
@@ -752,7 +752,7 @@ INT_PTR Twindow::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
           cfgSet(-bindsCheckbox[i].idff,!getCheck(LOWORD(wParam)));
          else
           cfgSet(bindsCheckbox[i].idff,getCheck(LOWORD(wParam)));
-         if (bindsCheckbox[i].onClick) 
+         if (bindsCheckbox[i].onClick)
           (this->*bindsCheckbox[i].onClick)();
          return TRUE;
         }
@@ -761,7 +761,7 @@ INT_PTR Twindow::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
        if (bindsRadiobutton[i].idc==LOWORD(wParam) && getCheck(LOWORD(bindsRadiobutton[i].idc)))
         {
          cfgSet(bindsRadiobutton[i].idff,bindsRadiobutton[i].val);
-         if (bindsRadiobutton[i].onClick) 
+         if (bindsRadiobutton[i].onClick)
           (this->*bindsRadiobutton[i].onClick)();
          return TRUE;
         }
@@ -772,9 +772,9 @@ INT_PTR Twindow::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
          {
           (this->*bindsButton[i].onClick)();
           return TRUE;
-         } 
+         }
      if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
-      {   
+      {
        if (LOWORD(wParam)==IDC_ED_HELP && tr->translateMode)
         onEditChange();
        if (bindsEditInt)
@@ -785,7 +785,7 @@ INT_PTR Twindow::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
            if (hed!=GetFocus()) return FALSE;
            repaint(hed);
            eval(hed,bindsEditInt[i].min,bindsEditInt[i].max,bindsEditInt[i].idff);
-           if (bindsEditInt[i].onClick) 
+           if (bindsEditInt[i].onClick)
             (this->*bindsEditInt[i].onClick)();
            return TRUE;
           }
@@ -797,11 +797,11 @@ INT_PTR Twindow::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
            if (hed!=GetFocus()) return FALSE;
            repaint(hed);
            eval(hed,bindsEditReal[i].min,bindsEditReal[i].max,bindsEditReal[i].idff,bindsEditReal[i].mult);
-           if (bindsEditReal[i].onClick) 
+           if (bindsEditReal[i].onClick)
             (this->*bindsEditReal[i].onClick)();
            return TRUE;
           }
-      }  
+      }
      else if (HIWORD(wParam)==CBN_SELCHANGE)
       {
        if (bindsCombobox)
@@ -814,14 +814,14 @@ INT_PTR Twindow::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
              case BINDCBX_SEL:cfgSet(bindsCombobox[i].idff,cbxGetCurSel(bindsCombobox[i].idc));break;
              case BINDCBX_TEXT:cfgSet(bindsCombobox[i].idff,cbxGetCurText(bindsCombobox[i].idc));break;
              case BINDCBX_DATATEXT:cfgSet(bindsCombobox[i].idff,(const char_t*)cbxGetCurItemData(bindsCombobox[i].idc));break;
-            } 
-           if (bindsCombobox[i].onClick) 
+            }
+           if (bindsCombobox[i].onClick)
             (this->*bindsCombobox[i].onClick)();
-           return TRUE; 
+           return TRUE;
           }
       }
      break;
-    } 
+    }
    case WM_CTLCOLOREDIT:
     if (bindsEditInt)
      if (onCtlColorEdit(bindsEditInt,lParam,wParam))
@@ -830,8 +830,8 @@ INT_PTR Twindow::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
      if (onCtlColorEdit(bindsEditReal,lParam,wParam))
       return INT_PTR(getRed());
     break;
-  }  
- return defMsgProc(uMsg,wParam,lParam); 
+  }
+ return defMsgProc(uMsg,wParam,lParam);
 }
 
 INT_PTR CALLBACK Twindow::msgProc0(HWND m_hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
@@ -847,15 +847,15 @@ INT_PTR CALLBACK Twindow::msgProc0(HWND m_hwnd,UINT uMsg,WPARAM wParam,LPARAM lP
       SetWindowLongPtr(m_hwnd,DWLP_MSGRESULT,TRUE);
       return TRUE;
      }
-    break; 
+    break;
    case WM_INITDIALOG:
     {
      TwindowWidget *self=(TwindowWidget*)lParam;
      if (self) self->window->setHWND(m_hwnd,0);
      break;
-    } 
+    }
    case WM_NCDESTROY:
-    return FALSE; 
+    return FALSE;
    case WM_NOTIFYFORMAT:
     {
      #ifdef UNICODE
@@ -879,22 +879,22 @@ LRESULT Twindow::TwidgetSubclassTbr::onContextMenu(HWND hwnd,UINT uMsg,WPARAM wP
     if (!onReset())
      return 0;
     else
-     break; 
+     break;
    case 1:
     {
      if (!onEdit())
       return 0;
      else
-      break; 
-    } 
+      break;
+    }
    default:
-    return 0; 
+    return 0;
   }
  if (bind && bind->onClick)
   (self->*bind->onClick)();
  else
-  self->cfg2dlg(); 
- return 0; 
+  self->cfg2dlg();
+ return 0;
 }
 bool Twindow::TwidgetSubclassTbr::onReset(void)
 {
@@ -921,7 +921,7 @@ bool Twindow::TwidgetSubclassTbr::onEdit(void)
  char_t query[100];tsprintf(query,self->_(0,_l("Enter value in range from %i to %i")),min,max);
  if (!self->inputString(self->_(0,_l("Edit trackbar value")),query,valS,20))
   return false;
- storeEditValue(info,min,max,valS); 
+ storeEditValue(info,min,max,valS);
  return true;
 }
 
@@ -932,11 +932,11 @@ LRESULT Twindow::TwidgetSubclassChb::onContextMenu(HWND hwnd,UINT uMsg,WPARAM wP
  if (self->selectFromMenu(menu,0)==0)
   if (self->deci->resetParam(ff_abs(bind->idff))!=S_OK)
    return 0;
-  else 
+  else
    if (bind->onClick)
     (self->*bind->onClick)();
    else
-    self->cfg2dlg(); 
+    self->cfg2dlg();
  return 0;
 }
 
@@ -973,7 +973,7 @@ INT_PTR TdlgPropsEdit::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
      return TRUE;
     }
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDOK:
       case IDCANCEL:
@@ -1014,7 +1014,7 @@ INT_PTR TdlgPropsEdit::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
            {
             setDlgResult(CDRF_NOTIFYITEMDRAW);
             return TRUE;
-           } 
+           }
           if (lvcd->nmcd.dwDrawStage==CDDS_ITEMPREPAINT)
            {
             if (!italicFont)
@@ -1025,7 +1025,7 @@ INT_PTR TdlgPropsEdit::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
               oldFont.lfItalic=TRUE;
               italicFont=CreateFontIndirect(&oldFont);
              }
-            if ((lvcd->nmcd.dwItemSpec&1)==0) 
+            if ((lvcd->nmcd.dwItemSpec&1)==0)
              SelectObject(lvcd->nmcd.hdc,italicFont);
             setDlgResult(CDRF_NEWFONT);
             return TRUE;
@@ -1065,7 +1065,7 @@ INT_PTR TdlgPropsEdit::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
          }
        }
      break;
-    }   
+    }
   }
  return Twindow::msgProc(uMsg,wParam,lParam);
 }

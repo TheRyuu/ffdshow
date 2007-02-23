@@ -90,8 +90,8 @@ template<class tchar,class TlistItem> void strtok(const tchar *s,const tchar *de
     lst.push_back(TlistItem(s,f-s));
    s=f+delimLen;
   }
- if (s[0] || add_empty) 
-  lst.push_back(s); 
+ if (s[0] || add_empty)
+  lst.push_back(s);
 }
 template<class tchar> void strtok(const tchar *s,const tchar *delim,ints &lst,bool add_empty,size_t max_parts)
 {
@@ -103,7 +103,7 @@ template<class tchar> void strtok(const tchar *s,const tchar *delim,ints &lst,bo
    tchar *end;
    int x=strtol(i->c_str(),&end,10);
    if (*end=='\0') lst.push_back(x);
-  } 
+  }
 }
 void mergetok(char_t *dst,size_t dstlen,const char_t *delim,const strings &list)
 {
@@ -118,9 +118,9 @@ void mergetok(char_t *dst,size_t dstlen,const char_t *delim,const strings &list)
      n=std::min(dstlen-pos,delimlen);
      memcpy(dst+pos,delim,n*sizeof(char_t));
      pos+=n;
-    } 
+    }
   }
- dst[pos]='\0'; 
+ dst[pos]='\0';
 }
 
 //inspired by XBrowseForFolder by Hans Dietrich
@@ -149,26 +149,26 @@ bool dlgGetDir(HWND owner,char_t *dir,const char_t *capt)
  bool ret=false;
  IMalloc *g_pMalloc;CoGetMalloc(1,&g_pMalloc);
  LPTSTR lpBuffer=(LPTSTR)g_pMalloc->Alloc(MAX_PATH*sizeof(char_t));strcpy(lpBuffer,dir);
- BROWSEINFO bi; 
- bi.hwndOwner=owner; 
+ BROWSEINFO bi;
+ bi.hwndOwner=owner;
  bi.pidlRoot=NULL;
  bi.pszDisplayName=lpBuffer;
- bi.lpszTitle=capt; 
+ bi.lpszTitle=capt;
  bi.ulFlags=BIF_RETURNONLYFSDIRS/*|BIF_NEWDIALOGSTYLE*/;
- bi.lpfn=dlgGetDirFn; 
+ bi.lpfn=dlgGetDirFn;
  bi.lParam=LPARAM(dir);
  LPITEMIDLIST pidlBrowse=SHBrowseForFolder(&bi);
  if (pidlBrowse)
-  { 
+  {
    SHGetPathFromIDList(pidlBrowse,lpBuffer);
-   g_pMalloc->Free((void*)pidlBrowse); 
+   g_pMalloc->Free((void*)pidlBrowse);
    if (lpBuffer[0])
     {
      strcpy(dir,lpBuffer);
      ret=true;
-    }  
-  } 
- g_pMalloc->Free(lpBuffer); 
+    }
+  }
+ g_pMalloc->Free(lpBuffer);
  return ret;
 }
 
@@ -190,7 +190,7 @@ void findFiles(const char_t *mask,strings &lst,bool fullpaths)
    else
     lst.push_back(ff.cFileName);
    bOk=FindNextFile(hFind,&ff);
-  }  
+  }
  if (hFind!=(HANDLE)-1) FindClose(hFind);
 }
 bool fileexists(const char_t *flnm)
@@ -290,13 +290,13 @@ bool dlgGetFile(bool save,HWND owner,const char_t *capt,const char_t *filter,con
  ofn.lpstrInitialDir=initdir;
  ofn.lpstrFile      =flnm;
  ofn.lpstrTitle     =capt;
- ofn.lpstrDefExt    =defext;  
+ ofn.lpstrDefExt    =defext;
  ofn.nMaxFile       =MAX_PATH;
  ofn.Flags          =flags|(save?OFN_PATHMUSTEXIST|OFN_OVERWRITEPROMPT:OFN_PATHMUSTEXIST|OFN_FILEMUSTEXIST)|OFN_ENABLESIZING|OFN_HIDEREADONLY;
  bool ret=(save?GetSaveFileName(&ofn):GetOpenFileName(&ofn))?true:false;
  if (ret && filterIndex)
   *filterIndex=ofn.nFilterIndex;
- return ret; 
+ return ret;
 }
 bool dlgOpenFiles(HWND owner,const char_t *capt,const char_t *filter,const char_t *defext,strings &files,const char_t *initdir,DWORD flags)
 {
@@ -309,7 +309,7 @@ bool dlgOpenFiles(HWND owner,const char_t *capt,const char_t *filter,const char_
  char_t *flnm=(char_t*)malloc(65536*sizeof(char_t));if (files.empty()) flnm[0]='\0';else strcpy(flnm,files[0].c_str());
  ofn.lpstrFile      =LPTSTR(flnm);
  ofn.lpstrTitle     =capt;
- ofn.lpstrDefExt    =defext;  
+ ofn.lpstrDefExt    =defext;
  ofn.nMaxFile       =MAX_PATH;
  ofn.Flags          =flags|OFN_PATHMUSTEXIST|OFN_FILEMUSTEXIST|OFN_ENABLESIZING|OFN_HIDEREADONLY|OFN_ALLOWMULTISELECT|OFN_EXPLORER;
  BOOL ret=GetOpenFileName(&ofn);
@@ -322,17 +322,17 @@ bool dlgOpenFiles(HWND owner,const char_t *capt,const char_t *filter,const char_
       char_t flnm1[MAX_PATH];
       _makepath(flnm1,NULL,dir,ofn.lpstrFile,NULL);
       files.push_back(flnm1);
-     } 
-   else 
+     }
+   else
     files.push_back(dir);
    free(flnm);
    return true;
   }
- else 
+ else
   {
    free(flnm);
    return false;
-  } 
+  }
 }
 
 // copied from ffmpeg
@@ -347,7 +347,7 @@ static const unsigned char ff_sqrt_tab[128]={
 unsigned int ff_sqrt(unsigned int a)
 {
  if (a<128) return ff_sqrt_tab[a];
-    
+
  unsigned int ret=0;
  unsigned int ret_sq=0;
  for(int s=15; s>=0; s--)
@@ -378,16 +378,16 @@ int lavc_reduce(int *dst_nom, int *dst_den, int64_t nom, int64_t den, int64_t ma
         den= -den;
         nom= -nom;
     }
-    
+
     if(nom < 0){
         nom= -nom;
         sign= 1;
     }
-    
+
         gcd = lavc_gcd(nom, den);
         nom /= gcd;
         den /= gcd;
-    
+
     if(nom > max || den > max){
         AVRational a0={0,1}, a1={1,0};
         exact=0;
@@ -398,9 +398,9 @@ int lavc_reduce(int *dst_nom, int *dst_den, int64_t nom, int64_t den, int64_t ma
             int64_t a2d= x*a1.den + a0.den;
 
             if(a2n > max || a2d > max) break;
-    
+
             nom %= den;
-        
+
             a0= a1;
             a1.num=int(a2n);a1.den=int(a2d);// = (AVRational){a2n, a2d};
             if(nom==0) break;
@@ -409,14 +409,14 @@ int lavc_reduce(int *dst_nom, int *dst_den, int64_t nom, int64_t den, int64_t ma
         nom= a1.num;
         den= a1.den;
     }
-    
+
     assert(lavc_gcd(nom, den) == 1);
-    
+
     if(sign) nom= -nom;
-    
+
     *dst_nom = int(nom);
     *dst_den = int(den);
-    
+
     return exact;
 */
     AVRational a0={0,1}, a1={1,0};
@@ -431,7 +431,7 @@ int lavc_reduce(int *dst_nom, int *dst_den, int64_t nom, int64_t den, int64_t ma
         a1.num=(int)nom;a1.den=(int)den;//= (AVRational){nom, den};
         den=0;
     }
-    
+
     while(den){
         int64_t x       = nom / den;
         int64_t next_den= nom - den*x;
@@ -446,10 +446,10 @@ int lavc_reduce(int *dst_nom, int *dst_den, int64_t nom, int64_t den, int64_t ma
         den= next_den;
     }
     assert(lavc_gcd(a1.num, a1.den) == 1U);
-    
+
     *dst_nom = sign ? -a1.num : a1.num;
     *dst_den = a1.den;
-    
+
     return den==0;
 
 }
@@ -507,8 +507,8 @@ bool decodeMPEGsequenceHeader(bool mpeg2,const unsigned char *hdr,size_t len,Tff
   {
    *isH264=true;
    return decodeH264SPS(hdr+2,len,pict);
-  } 
- *isH264=false; 
+  }
+ *isH264=false;
 
  len*=8;
  if (!hdr || len<12+12+4) return false;
@@ -528,7 +528,7 @@ bool decodeMPEGsequenceHeader(bool mpeg2,const unsigned char *hdr,size_t len,Tff
      1.0000f,
      0.6735f,
      0.7031f,
-    
+
      0.7615f,
      0.8055f,
      0.8437f,
@@ -560,7 +560,7 @@ bool decodeMPEGsequenceHeader(bool mpeg2,const unsigned char *hdr,size_t len,Tff
      -9.0/16.0,
      -1.0/2.21,
     };
-   */ 
+   */
    switch (aspect_ratio_info)
     {
      case 1:pict.setSar(Rational(1,1));break;
@@ -568,13 +568,13 @@ bool decodeMPEGsequenceHeader(bool mpeg2,const unsigned char *hdr,size_t len,Tff
      case 3:pict.setDar(Rational(16,9));break;
      case 4:pict.setDar(Rational(221,100));break;
      default:pict.setSar(Rational(1,1));break;
-    } 
+    }
    /*
    aspect=mpeg2_aspect[aspect_ratio_info];
    if(aspect>0.0)      aspect_ratio= *width/(aspect**height);
    else if(aspect<0.0) aspect_ratio= -1.0/aspect;
    */
-  } 
+  }
  return true;
 }
 
@@ -615,21 +615,21 @@ static const uint8_t zigzag_scan8x8[64]={
  7+5*8, 7+6*8, 6+7*8, 7+7*8,
 };
 static const uint8_t zigzag_scan[16]={
- 0+0*4, 1+0*4, 0+1*4, 0+2*4, 
- 1+1*4, 2+0*4, 3+0*4, 2+1*4, 
- 1+2*4, 0+3*4, 1+3*4, 2+2*4, 
- 3+1*4, 3+2*4, 2+3*4, 3+3*4, 
+ 0+0*4, 1+0*4, 0+1*4, 0+2*4,
+ 1+1*4, 2+0*4, 3+0*4, 2+1*4,
+ 1+2*4, 0+3*4, 1+3*4, 2+2*4,
+ 3+1*4, 3+2*4, 2+3*4, 3+3*4,
 };
-    
+
     const uint8_t *scan = size == 16 ? zigzag_scan : zigzag_scan8x8;
     if(!get_bits1(&gb)) /* matrix not written, we use the default one */
-        ;//memcpy(factors, default_list, size*sizeof(uint8_t)); 
+        ;//memcpy(factors, default_list, size*sizeof(uint8_t));
     else
     for(i=0;i<size;i++){
         if(next)
             next = (last + get_se_golomb(&gb)) & 0xff;
         if(!i && !next){ /* matrix not written, we use the default one */
-            ;//memcpy(factors, default_list, size*sizeof(uint8_t)); 
+            ;//memcpy(factors, default_list, size*sizeof(uint8_t));
             break;
         }
         last = factors[scan[i]] = uint8_t(next ? next : last);
@@ -664,7 +664,7 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
     get_bits(&gb, 4); // reserved
     level_idc= get_bits(&gb, 8);
     sps_id= get_ue_golomb(&gb);
-    
+
     sps->profile_idc= profile_idc;
     sps->level_idc= level_idc;
 
@@ -693,12 +693,12 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
             }
         }
     }
-    else 
+    else
         sps->scaling_matrix_present=0;
-    
+
     sps->log2_max_frame_num= get_ue_golomb(&gb) + 4;
     sps->poc_type= get_ue_golomb(&gb);
-    
+
     if(sps->poc_type == 0){ //FIXME #define
         sps->log2_max_poc_lsb= get_ue_golomb(&gb) + 4;
     } else if(sps->poc_type == 1){//FIXME #define
@@ -706,7 +706,7 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
         sps->offset_for_non_ref_pic= get_se_golomb(&gb);
         sps->offset_for_top_to_bottom_field= get_se_golomb(&gb);
         sps->poc_cycle_length= get_ue_golomb(&gb);
-        
+
         for(i=0; i<sps->poc_cycle_length; i++)
             sps->offset_for_ref_frame[i]= get_se_golomb(&gb);
     }
@@ -723,7 +723,7 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
     sps->gaps_in_frame_num_allowed_flag= get_bits1(&gb);
     sps->mb_width= get_ue_golomb(&gb) + 1;
     sps->mb_height= get_ue_golomb(&gb) + 1;
-    if((unsigned)sps->mb_width >= INT_MAX/16 || (unsigned)sps->mb_height >= INT_MAX/16 /*|| 
+    if((unsigned)sps->mb_width >= INT_MAX/16 || (unsigned)sps->mb_height >= INT_MAX/16 /*||
        avcodec_check_dimensions(NULL, 16*sps->mb_width, 16*sps->mb_height)*/)
         return false;
 
@@ -745,9 +745,9 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
             //DPRINTF("insane cropping not completely supported, this could look slightly wrong ...\n");
         }
     }else{
-        sps->crop_left  = 
-        sps->crop_right = 
-        sps->crop_top   = 
+        sps->crop_left  =
+        sps->crop_right =
+        sps->crop_top   =
         sps->crop_bottom= 0;
     }
 
@@ -757,7 +757,7 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
         int nal_hrd_parameters_present_flag, vcl_hrd_parameters_present_flag;
 
         aspect_ratio_info_present_flag= get_bits1(&gb);
-        
+
         if( aspect_ratio_info_present_flag ) {
             aspect_ratio_idc= get_bits(&gb, 8);
             static const int EXTENDED_SAR=255;
@@ -789,10 +789,10 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
             if (sps->sar.num && sps->sar.den)
                 pict.setSar(sps->sar);
         }else{
-            sps->sar.num= 
+            sps->sar.num=
             sps->sar.den= 0;
         }
-        
+
 
 
         if(get_bits1(&gb)){      /* overscan_info_present_flag */
@@ -840,12 +840,12 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
             get_ue_golomb(&gb); /* log2_max_mv_length_vertical */
             sps->num_reorder_frames = get_ue_golomb(&gb);
             get_ue_golomb(&gb); /* max_dec_frame_buffering */
-        }    
+        }
     }
-/*            
+/*
 //=============== PPS ================
     skip_bits(&gb,24);
-    struct 
+    struct
      {
       int sps_id,pic_order_present,slice_group_count,mb_slice_group_map_type,ref_count[2],cabac,weighted_pred,weighted_bipred_idc,init_qp,init_qs,chroma_qp_index_offset,deblocking_filter_parameters_present,constrained_intra_pred,redundant_pic_cnt_present;
      } _pps, *pps=&_pps;
@@ -896,7 +896,7 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
         //DPRINTF("reference overflow (pps)\n");
         return false;
     }
-    
+
     pps->weighted_pred= get_bits1(&gb);
     pps->weighted_bipred_idc= get_bits(&gb, 2);
     pps->init_qp= get_se_golomb(&gb) + 26;
@@ -905,7 +905,7 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
     pps->deblocking_filter_parameters_present= get_bits1(&gb);
     pps->constrained_intra_pred= get_bits1(&gb);
     pps->redundant_pic_cnt_present = get_bits1(&gb);
-*/    
+*/
     return true;
 }
 void* memsetd(void *dest,uint32_t c,size_t bytes)
@@ -920,13 +920,13 @@ void* memsetd(void *dest,uint32_t c,size_t bytes)
    cld
    rep stosd
   }
- return dest; 
+ return dest;
 #else
  uint32_t *dest2=(uint32_t*)dest;
  for (;bytes>=sizeof(uint32_t);dest2++,bytes-=sizeof(uint32_t))
   *dest2=c;
- return dest2; 
-#endif  
+ return dest2;
+#endif
 }
 
 void saveFrame(unsigned int num,const unsigned char *buf,size_t len)
@@ -959,10 +959,10 @@ char_t *readTextFile(const char_t *filename)
  buf=(char_t*)malloc((i_size+2)*sizeof(char_t));
  if (buf==NULL)
   return NULL;
- char_t *buf1=buf; 
+ char_t *buf1=buf;
  while (fh.fgets(buf1,i_size))
   buf1=strchr(buf1,'\0');
-   
+
  //b_error|=fh.read(buf,1,i_size)!=i_size;
  if (buf[i_size-1]!='\n')
      buf[i_size++]='\n';
@@ -1032,7 +1032,7 @@ static int decode_vol_header(MPEG4context *s, GetBitContext *gb)
  }
  //printf("vo type:%d\n",s->vo_type);
  s->aspect_ratio_info= get_bits(gb, 4);
-	if(s->aspect_ratio_info == FF_ASPECT_EXTENDED){	    
+	if(s->aspect_ratio_info == FF_ASPECT_EXTENDED){
    s->aspected_width = get_bits(gb, 8); // par_width
    s->aspected_height = get_bits(gb, 8); // par_height
  }else{
@@ -1055,24 +1055,24 @@ bool decodeMPEG4pictureHeader(const unsigned char *hdr,size_t len,TffPictBase &p
     for(;;) {
         v = get_bits(&gb, 8);
         startcode = ((startcode << 8) | v) & 0xffffffff;
-        
+
         if(get_bits_count(&gb) >= gb.size_in_bits){
                 return false; //end of stream
         }
 
         if((startcode&0xFFFFFF00) != 0x100)
             continue; //no startcode
-        
+
         switch(startcode){
         case 0x120:
-            if(decode_vol_header(&s, &gb) < 0) 
+            if(decode_vol_header(&s, &gb) < 0)
              return false;
-            else 
+            else
              {
               pict.setSar(Rational(s.aspected_width,s.aspected_height));
               return true;
-             } 
-/*            
+             }
+/*
 #define VOS_STARTCODE        0x1B0
 #define USER_DATA_STARTCODE  0x1B2
 #define GOP_STARTCODE        0x1B3
@@ -1085,7 +1085,7 @@ bool decodeMPEG4pictureHeader(const unsigned char *hdr,size_t len,TffPictBase &p
             break;
         case VOP_STARTCODE:
             return decode_vop_header(s, gb);
-*/            
+*/
         default:
             break;
         }
@@ -1151,7 +1151,7 @@ YUVcolor::YUVcolor(COLORREF rgb,bool vob)
    V=(int8_t) ((((int16_t)  ((-0.08435) * (1L << 8) + 0.5)) * r -
                 ((int16_t)  (( 0.3422 ) * (1L << 8) + 0.5)) * g +
                 ((int16_t)  (( 0.4266 ) * (1L << 8) + 0.5)) * b) >> 8) + 128;
-  }                
+  }
 }
 
 // Copyright (C) 1995,1998,1999 DJ Delorie
@@ -1213,7 +1213,7 @@ bool fnmatch(const char_t *pattern, const char_t *string, int flags)
      break;
     case '*':
      c = *pattern;
-     // collapse multiple stars 
+     // collapse multiple stars
      while (c=='*')
       c=*++pattern;
      // optimize for pattern with * at end or before /
@@ -1231,7 +1231,7 @@ bool fnmatch(const char_t *pattern, const char_t *string, int flags)
        break;
       }
 
-     // general case, use recursion 
+     // general case, use recursion
      while ((test = *string) != 0)
       {
        if (fnmatch(pattern, string, flags) == true)
@@ -1259,7 +1259,7 @@ bool fnmatch(const char_t *pattern, const char_t *string, int flags)
         return false;
        break;
       }
-      // FALLTHROUGH 
+      // FALLTHROUGH
     default:
      if (isslash(c) && isslash(*string))
       {
@@ -1280,7 +1280,7 @@ bool fnmatch(const char_t *pattern, const char_t *string, int flags)
    }
 }
 
-template<class tchar> const tchar* stristr(const tchar *haystack,const tchar *needle) 
+template<class tchar> const tchar* stristr(const tchar *haystack,const tchar *needle)
 {
  if (!(haystack && needle)) return NULL;
 
@@ -1294,7 +1294,7 @@ template<class tchar> const tchar* stristr(const tchar *haystack,const tchar *ne
  return NULL;
 }
 
-template<class tchar> const tchar* strnistr(const tchar *haystack,size_t n,const tchar *needle) 
+template<class tchar> const tchar* strnistr(const tchar *haystack,size_t n,const tchar *needle)
 {
  if (!(haystack && needle)) return NULL;
 
@@ -1308,7 +1308,7 @@ template<class tchar> const tchar* strnistr(const tchar *haystack,size_t n,const
  return NULL;
 }
 
-template<class tchar> const tchar* strnstr(const tchar *haystack,size_t n,const tchar *needle) 
+template<class tchar> const tchar* strnstr(const tchar *haystack,size_t n,const tchar *needle)
 {
  if (!(haystack && needle)) return NULL;
 
@@ -1325,7 +1325,7 @@ template<class tchar> const tchar* strnstr(const tchar *haystack,size_t n,const 
 template<class tchar> const void* memnstr(const void *haystack,size_t n,const tchar *needle)
 {
  if (!(haystack && needle)) return NULL;
- 
+
  int step=sizeof(tchar);
  size_t len=strlen(needle)*step;n-=len-step;
  const tchar *p=(const tchar*)haystack;
@@ -1343,8 +1343,8 @@ template<class tchar> const tchar *strnchr(const tchar *s,size_t n,int c)
   if (*s==c)
    return s;
   else
-   s++; 
- return NULL;  
+   s++;
+ return NULL;
 }
 template<class char_t> char_t* strrmchar(char_t *s,int c)
 {
@@ -1352,7 +1352,7 @@ template<class char_t> char_t* strrmchar(char_t *s,int c)
  for (const char_t *p2=p1;*p2;*p1=*p2,p2++,p1+=*p1!=c);
  *p1='\0';
  return s;
-} 
+}
 
 int countbits(uint32_t x)
 {
@@ -1426,7 +1426,7 @@ FOURCC hdr2fourcc(const BITMAPINFOHEADER *hdr,const GUID *subtype)
      else if (*subtype==MEDIASUBTYPE_RGB565) return FOURCC_RGB6;
      else if (*subtype==MEDIASUBTYPE_RGB24 ) return FOURCC_RGB2;
      else if (*subtype==MEDIASUBTYPE_RGB32 || *subtype==MEDIASUBTYPE_ARGB32) return FOURCC_RGB3;
-    } 
+    }
    switch (hdr->biBitCount)
     {
      case 1:return FOURCC_PAL1;break;
@@ -1467,7 +1467,7 @@ const char_t *fourcc2str(FOURCC fcc,char_t *name,size_t namelength)
      memcpy(nameA,&fcc,std::min(namelength,(size_t)4));nameA[std::min(namelength,(size_t)4)]='\0';
      text<char_t>(nameA,name);
      break;
-    } 
+    }
   }
  name[namelength-1]='\0';
  return name;
@@ -1497,7 +1497,7 @@ HWND createInvisibleWindow(HINSTANCE hi,const char_t *classname,const char_t *wi
    wndclass.lpszClassName=classname;
    ATOM at=RegisterClass(&wndclass);
    if (atom) *atom=at;
-  } 
+  }
 
  return CreateWindow(classname,
                      windowname,

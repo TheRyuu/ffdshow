@@ -20,7 +20,7 @@ private:
    Tcbx cbxs[8];
    struct {Tcbx borders[4],points[4];};
   } const cbxs;
- void onParamFlnm(void); 
+ void onParamFlnm(void);
 protected:
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 public:
@@ -32,4 +32,4 @@ public:
 
 #pragma warning(pop)
 
-#endif 
+#endif

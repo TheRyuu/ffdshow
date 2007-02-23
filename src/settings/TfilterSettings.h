@@ -41,7 +41,7 @@ public:
    resize(size()+1,TfilterTriple(idff,filter,orderDef));
    if (incOrder) orderDef++;
   }
- int maxOrder(void) const {return orderDef-1;} 
+ int maxOrder(void) const {return orderDef-1;}
 };
 
 
@@ -84,7 +84,7 @@ public:
    return *this;
   }
  virtual void copy(const TfilterSettings *src) {}
- 
+
  int is,order,show;
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const =0;
  virtual void createPages(TffdshowPageDec *parent) const =0;
@@ -92,7 +92,7 @@ public:
  virtual bool reset(unsigned int pageId=0);
  virtual bool getTip(unsigned int pageId,char_t *buf,size_t buflen) {return false;}
  virtual ~TfilterSettings() {}
- inline bool equal(const TfilterSettings &second) const 
+ inline bool equal(const TfilterSettings &second) const
   {
    uint8_t *p1=(uint8_t*)this+sizeofthis;
    uint8_t *p2=(uint8_t*)&second+sizeofthis;

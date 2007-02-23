@@ -19,7 +19,7 @@ private:
  static LRESULT CALLBACK trayWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM lprm);
  HINSTANCE hi;
  #ifdef UNICODE
- struct NOTIFYICONDATAW 
+ struct NOTIFYICONDATAW
   {
    DWORD cbSize;
    HWND hWnd;
@@ -31,7 +31,7 @@ private:
    DWORD dwState;
    DWORD dwStateMask;
    WCHAR   szInfo[256];
-   union 
+   union
     {
      UINT  uTimeout;
      UINT  uVersion;
@@ -52,7 +52,7 @@ private:
    DWORD dwState;
    DWORD dwStateMask;
    CHAR   szInfo[256];
-   union 
+   union
     {
      UINT  uTimeout;
      UINT  uVersion;
@@ -60,7 +60,7 @@ private:
    CHAR   szInfoTitle[64];
    DWORD dwInfoFlags;
   } nid;
- #endif 
+ #endif
  enum
   {
    TRAYICON=2999,

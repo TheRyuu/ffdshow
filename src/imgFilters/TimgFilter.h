@@ -33,8 +33,8 @@ protected:
  virtual void onSizeChange(void) {}
  void checkBorder(TffPict &pict);
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
- virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const=0; 
- virtual int getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg) const {return getSupportedInputColorspaces(cfg);} 
+ virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const=0;
+ virtual int getSupportedOutputColorspaces(const TfilterSettingsVideo *cfg) const {return getSupportedInputColorspaces(cfg);}
  bool getCur(int csp,TffPict &pict,int full,const unsigned char **src0,const unsigned char **src1,const unsigned char **src2,const unsigned char **src3)
   {
    const unsigned char **src[4]={src0,src1,src2,src3};
@@ -65,7 +65,7 @@ protected:
    unsigned char **dstP[4]={&dst[0],&dst[1],&dst[2],&dst[3]};
    return getNext(csp,pict,clipRect,dstP,rect2);
   }
- enum 
+ enum
   {
    COPYMODE_NO  =0,
    COPYMODE_CLIP=1,

@@ -51,7 +51,7 @@ private:
  std::vector<Tff_wmv9codecInfo> codecs;
  Twmv9dll *wmv9dll;
 public:
- Tff_wmv9(void) 
+ Tff_wmv9(void)
   {
    ok=false;
    pProfile=NULL;m_pCodecInfo=NULL;
@@ -64,7 +64,7 @@ public:
 
    #define JIF(x) if (FAILED(hr=(x))) {DEBUGS(_l("FAILED in ")_l(#x)_l("\n"));return;}
    HRESULT hr;
-   JIF(EnsureIWMCodecInfo3(wmv9dll,&m_pCodecInfo)); 
+   JIF(EnsureIWMCodecInfo3(wmv9dll,&m_pCodecInfo));
    DWORD codecCount;
    m_pCodecInfo->GetCodecInfoCount(WMMEDIATYPE_Video,&codecCount);
    for (DWORD i=0;i<codecCount;i++)
@@ -105,11 +105,11 @@ public:
                info.fcc=type->subtype.Data1;
                codecs.push_back(info);
                free(type);
-              } 
+              }
              mp->Release();
-            } 
+            }
            wsc->Release();
-          } 
+          }
         }
       }
     }
@@ -121,15 +121,15 @@ public:
    end();
    delete wmv9dll;
   }
- virtual bool __stdcall getOk(void) {return ok;} 
+ virtual bool __stdcall getOk(void) {return ok;}
  virtual size_t  __stdcall getCodecCount(void) {return codecs.size();}
- virtual bool __stdcall getCodecInfo(size_t i,const Tff_wmv9codecInfo* *info) 
+ virtual bool __stdcall getCodecInfo(size_t i,const Tff_wmv9codecInfo* *info)
   {
    if (i>=codecs.size() || !info) return false;
    *info=&codecs[i];
    return true;
   }
- virtual bool __stdcall start(const Tff_wmv9cfg &Icfg) 
+ virtual bool __stdcall start(const Tff_wmv9cfg &Icfg)
   {
    cfg=Icfg;
    if (cfg.avioutput) return startAVI();
@@ -142,10 +142,10 @@ public:
    JIF(pProfileManager->CreateEmptyProfile(WMT_VER_9_0,&pProfile));
    IWMProfile3 *pProfile3=NULL;
    JIF(pProfile->QueryInterface(IID_IWMProfile3,(void**)&pProfile3));
-   
+
    JIF(pProfile->SetName(L"ff_wmv9 profile"));
    JIF(pProfile->SetDescription(L"ff_wmv9 description"));
-   
+
    IWMStreamConfig *pNewStreamConfig=NULL;
    JIF(CreateVideoStream(wmv9dll,
                          &pNewStreamConfig,
@@ -163,7 +163,7 @@ public:
                          cfg.vbr_mode, // VBR mode ( VIDEO_VBR_MODE )
                          cfg.vbrquality, // VBR Quality
                          cfg.maxbitrate, // Max Bitrate (VBR)
-                         10000,      // Max VBR Video Buffer 
+                         10000,      // Max VBR Video Buffer
                          GetSystemDefaultLCID()));
 
    JIF(pNewStreamConfig->SetStreamNumber(1));
@@ -171,7 +171,7 @@ public:
    #define CONN_NAME L"VideoConnect"
    JIF(pNewStreamConfig->SetConnectionName(CONN_NAME));
    JIF(pNewStreamConfig->SetBufferWindow(3000));
-   
+
    IWMPropertyVault *strprops=NULL;
    if (SUCCEEDED(pNewStreamConfig->QueryInterface(IID_IWMPropertyVault,(void**)&strprops)))
     {
@@ -179,7 +179,7 @@ public:
      strprops->SetProperty(g_wszComplexity,WMT_TYPE_WORD,(BYTE*)&cplx,sizeof(cplx));
      strprops->Release();
     }
-   
+
    JIF(pProfile->AddStream(pNewStreamConfig));
    pNewStreamConfig->Release();pNewStreamConfig=NULL;
    pProfile3->Release();pProfile3=NULL;
@@ -236,23 +236,23 @@ public:
       {
        DWORD a=WM_DM_DEINTERLACE_NORMAL;
        hr=writerA2->SetInputSetting(wrinputnum,g_wszDeinterlaceMode,WMT_TYPE_DWORD,(const unsigned char *)&a,sizeof(DWORD));
-      } 
+      }
      writerA2->Release();
     }
-   
-   if (0) 
+
+   if (0)
     {
      mysink=new TmyWriterSink(NULL,&hr);
      pWMWriterA->AddSink((IWMWriterSink*)mysink);
-    } 
-   if (cfg.flnm) 
+    }
+   if (cfg.flnm)
     {
      wmv9dll->WMCreateWriterFileSink(&filesink);
      //WCHAR flnmW[MAX_PATH];
      //MultiByteToWideChar(CP_ACP,0,cfg.flnm,(int)strlen(cfg.flnm)+1,flnmW,MAX_PATH);
      filesink->Open(text<wchar_t>(cfg.flnm));
      pWMWriterA->AddSink(filesink);
-    } 
+    }
    JIF(pWMWriter->BeginWriting());
    writing=true;
    return true;
@@ -273,8 +273,8 @@ public:
      buf->Release();
      return 1;
     }
-   else 
-    return 0; 
+   else
+    return 0;
   }
  virtual void __stdcall end(void)
   {
@@ -318,7 +318,7 @@ private:
  int nOutFrames;
  DWORD cbVideoOut;
  HRESULT InitializeEncoder(IMediaObject  **ppDMO,
-                           AM_MEDIA_TYPE *pmtIn, 
+                           AM_MEDIA_TYPE *pmtIn,
                            AM_MEDIA_TYPE *pmtOut,
                            CHandlingMediaBuffer *pMediaBuffer)
   {
@@ -393,13 +393,13 @@ private:
      {
       pParams.dwTag=c->fcc;
       break;
-     } 
+     }
    hr=InitializeEncoder(&pContext.pDMO,
                         &pContext.mtIn,
                         &pContext.mtOut,
                         pContext.pInputBuffer);
    if (FAILED(hr)) return false;
-    
+
    //
    // The codecs used in this sample don't perform lookahead on the incoming data.
    // If this changes the scheme used here may not work.
@@ -436,7 +436,7 @@ private:
  void __stdcall getExtradata(const void* *ptr,size_t *len)
   {
    unsigned int dif;
-   if (pContext.mtOut.cbFormat==0 || (dif=pContext.mtOut.cbFormat-sizeof(VIDEOINFOHEADER))==0) 
+   if (pContext.mtOut.cbFormat==0 || (dif=pContext.mtOut.cbFormat-sizeof(VIDEOINFOHEADER))==0)
     {
      *ptr=NULL;
      *len=NULL;
@@ -574,13 +574,13 @@ private:
   {
    if (csp&FF_CSP_FLAGS_YUV_ADJ)
     memcpy(pContext.input,src[0],(csp&FF_CSP_420P)?3*cfg.width*cfg.height/2:srcStride[0]*cfg.height);
-   else 
+   else
     {
      int Bpp=csp_getInfo(csp)->Bpp;
      for (int y=0;y<cfg.height;y++)
       memcpy(pContext.input+cfg.width*Bpp*y,src[0]+srcStride[0]*y,cfg.width*Bpp);
     }
-   
+
    HRESULT hr=FeedFrame(framenum);
    if (S_FALSE==hr || FAILED( hr )) return 0;
    DWORD           dwVideoStatus;
@@ -598,7 +598,7 @@ private:
     return 0;
    DWORD ulLength;
    hr=pContext.pOutputBuffer->GetBufferAndLength( NULL, &ulLength );
-   if( S_OK != hr || 0 == ulLength ) 
+   if( S_OK != hr || 0 == ulLength )
     return 0;
    /*
    while( nOutFrames > 0 && rtStartOut - pContext.rtTimeStamp >= pContext.rtMaxJitter )
@@ -645,7 +645,7 @@ private:
    SAFEDELETES( pContext.pInputBuffer );
    SAFEDELETES( pContext.pOutputBuffer );
   };
-private:  
+private:
  REFERENCE_TIME decRtLength;
  int decmult;
 public:
@@ -739,7 +739,7 @@ public:
    pContext.mtOut.pUnk=NULL;
    pContext.mtOut.cbFormat=sizeof(VIDEOINFOHEADER);
    pContext.mtOut.pbFormat=(unsigned char*)vih;
-   
+
    CLSID decid;
    switch (fcc)
     {

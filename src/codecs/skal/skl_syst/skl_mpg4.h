@@ -42,7 +42,7 @@ typedef struct SKL_METRIC_DSP SKL_METRIC_DSP;
 #define SKL_MB_SKIPPED 6
 #define SKL_MB_LAST    7
 
-typedef SKL_INT16 SKL_MV[2]; 
+typedef SKL_INT16 SKL_MV[2];
 
   // some compilers don't like copying typedef'd arrays...
 #define SKL_COPY_MV(a,b)  ((a)[0]=(b)[0], (a)[1]=(b)[1])
@@ -55,11 +55,11 @@ typedef SKL_INT16 SKL_MV[2];
   /** @file */
   /** @var SKL_MP4_SLICER
       Hook function for pre/post processing of pictures. <p>
-      This function is called after a macroblock row has been decoded, 
+      This function is called after a macroblock row has been decoded,
       or just before encoding a row. The vertical row position is given
       by the parameter 'y', and its height is given by the parameter 'Height'.<p>
-      In addition, this hook is called two more times at the start and 
-      end of picture scan. In this case, the 'Height' parameter is zero, 
+      In addition, this hook is called two more times at the start and
+      end of picture scan. In this case, the 'Height' parameter is zero,
       and 'y' is either equal to 0 or to picture's Height.
       @see SKL_MP4_ENC
       @see SKL_MP4_DEC
@@ -71,7 +71,7 @@ typedef void (*SKL_MP4_SLICER)(const SKL_MP4_PIC *Pic,
 
 extern "C" {
 
-  /** @internal 
+  /** @internal
       Macroblock types for SKL_MP4_MAP::Type attribute, used
       by the analyzer. */
 #define SKL_MAP_SKIPPED 0
@@ -101,11 +101,11 @@ struct SKL_MP4_MAP {
   /** @class SKL_MP4_PIC
       This class is used for storing input/output frame informations
       such as dimensions, YUV data, time stamps...<p>
-      <b>Warning</b> : The size of luma component is Width x Height, 
+      <b>Warning</b> : The size of luma component is Width x Height,
       whereas the U and V components are of size Width/2 x Height/2 each.<br>
       However, <b>all</b> of the Y, U and V component planes share the
       same stride, given by BpS (Bytes Per Scanline).<br>
-      Here is an example of the layout, with internal hidden edges 
+      Here is an example of the layout, with internal hidden edges
       shown in blue:<br>
       <img src="../mp4_yuv.jpg">
       Note: This video format is often called "IMC2".
@@ -157,7 +157,7 @@ extern SKL_EXPORT void Skl_MP4_Delete_Decoder(SKL_MP4_DEC *);
 
  /** @class SKL_MP4_DEC
     SKL_MP4_DEC is the main decoding class.
-    
+
     All methods are virtual, just like the COM-object
     paradigm. It eases the dynamic class loading
     (just map the proxy's symbol from dll, the vtbl
@@ -192,7 +192,7 @@ struct SKL_MP4_DEC
       /** This function is the equivalent of Decode(), for partial MPEG1/2 decoding function.
           It only supports FRAME pic struct/4:2:0 format. You must call it when you
           are sure the bitstream is a MPEG1/2 one (no autodetection is available).
-          @see Decode 
+          @see Decode
         */
     virtual int Decode_MPEG12(const SKL_BYTE *Buf, int Len) = 0;
 
@@ -213,21 +213,21 @@ struct SKL_MP4_DEC
     virtual void Consume_Frame(SKL_MP4_PIC *Pic) = 0;
 
       /** Set a new memory pool to use internally for subsequent memory allocation.
-          Warning: it should preferably be called at start-up only, 
+          Warning: it should preferably be called at start-up only,
           to ensure that cycles of New()/Delete() are performed on the
           same memory pool.
           @param Mem The memory pool to use. If equal to 0 (default),
-          the C++ heap will be used. 
+          the C++ heap will be used.
           @return This function will return the previous memory manager.
           @see SKL_MEM_I */
     virtual SKL_MEM_I *Set_Memory_Manager(SKL_MEM_I *Mem=0) = 0;
 
       /** Sets the CPU feature to use.
-          @param Cpu : see the enum description for a list of available 
+          @param Cpu : see the enum description for a list of available
           cpu features. */
     virtual void Set_CPU(SKL_CPU_FEATURE Cpu = SKL_CPU_DETECT) = 0;
 
-       /** Set post-decoding hook function. 
+       /** Set post-decoding hook function.
            @ see SKL_MP4_SLICER
            @param Slicer callback function to use
            @param Slicer_Data can be anything, and will be passed as is
@@ -237,8 +237,8 @@ struct SKL_MP4_DEC
       /** @internal Sets the internal debug level. */
     virtual void Set_Debug_Level(int Level=0) = 0;
 
-      /** @internal 
-          For debug only. Returns all the Y/U/V planes in a single, edged, frame 
+      /** @internal
+          For debug only. Returns all the Y/U/V planes in a single, edged, frame
           @param Pic the structure filled with frame's pixels  */
     virtual void Get_All_Frames(SKL_MP4_PIC *Pic) const = 0;
 
@@ -325,17 +325,17 @@ struct SKL_MP4_ENC
     virtual int Get_Bits_Length() const = 0;
 
       /** Set a new memory pool to use internally for subsequent memory allocation.
-          Warning: it should preferably be called at start-up only, 
+          Warning: it should preferably be called at start-up only,
           to ensure that cycles of New()/Delete() are performed on the
           same memory pool.
           @param Mem The memory pool to use. If equal to 0 (default),
-          the C++ heap will be used. 
+          the C++ heap will be used.
           @return This function will return the previous memory manager.
           @see SKL_MEM_I */
     virtual SKL_MEM_I *Set_Memory_Manager(SKL_MEM_I *Mem=0) = 0;
 
       /** Sets the CPU feature to use.
-          @param Cpu : see the enum description for a list of available 
+          @param Cpu : see the enum description for a list of available
           cpu features. */
     virtual void Set_CPU(SKL_CPU_FEATURE Cpu = SKL_CPU_DETECT) = 0;
 
@@ -348,14 +348,14 @@ struct SKL_MP4_ENC
     virtual void Set_Custom_Matrix(int Intra, const SKL_BYTE *M=0) = 0;
 
       /** This function plugs a new analyzer code in replacement of
-          the previous one. 
+          the previous one.
           @return Set_Analyzer() returns previous analyzer.
           @param Analyzer Should be 0 to restore the default, built-in, analyzer.
           @see Get_analyzer
           @see SKL_MP4_ANALYZER */
     virtual SKL_MP4_ANALYZER *Set_Analyzer(SKL_MP4_ANALYZER *Analyzer=0) = 0;
 
-      /** Returns the analyzer currently associated with the encoder. 
+      /** Returns the analyzer currently associated with the encoder.
           @see Set_analyzer */
     virtual SKL_MP4_ANALYZER *Get_Analyzer() const = 0;
 
@@ -367,8 +367,8 @@ struct SKL_MP4_ENC
            to the Slicer hook function. */
     virtual void Set_Slicer(SKL_MP4_SLICER Slicer, SKL_ANY Slicer_Data=0) = 0;
 
-      /** @internal 
-          For debug only. Returns all the Y/U/V planes in a single, edged, frame 
+      /** @internal
+          For debug only. Returns all the Y/U/V planes in a single, edged, frame
           @param Pic the structure filled with frame's pixels  */
     virtual void Get_All_Frames(SKL_MP4_PIC *Pic) const = 0;
 
@@ -397,7 +397,7 @@ struct SKL_MP4_ENC
 // Frame analyzers to be plugged into SKL_MP4_ENC
 //////////////////////////////////////////////////////////
 
-  /** @struct SKL_MP4_INFOS 
+  /** @struct SKL_MP4_INFOS
       SKL_MP4_INFOS is used to share informations between
       the bitstream-coding core (instance of SKL_MP4_ENC)
       and the frame analyzer (instance of SKL_MP4_ANALYZER)
@@ -436,8 +436,8 @@ struct SKL_MP4_INFOS
   /** @class SKL_MP4_ANALYZER
       Base class for analyzing input, making coding decisions
       and performing bit-rate control. Actually drives
-      the bitstream-coder (SKL_MP4_ENC). 
-      Setting/Access/Control of internal parameter is granted 
+      the bitstream-coder (SKL_MP4_ENC).
+      Setting/Access/Control of internal parameter is granted
       through the Set_Param() and Get_Param() functions.
       See description of this function for details. We encourage you
       to have a look at the example 'tmp4.cpp', that exercises every
@@ -476,10 +476,10 @@ class SKL_MP4_ANALYZER
 
       /** This function handles variable per-macroblocks quantization.
 
-          New->Map[].dQ should be filled with dQ hints. 
-          This is a separate virtual, not merged with the above Analyze() 
+          New->Map[].dQ should be filled with dQ hints.
+          This is a separate virtual, not merged with the above Analyze()
           motion estimation, since the coding type can be changed by the
-          encoder inbetween. This impacts the range of allowed dQ 
+          encoder inbetween. This impacts the range of allowed dQ
           values (eg.: for B-VOP).
         */
     virtual void Analyze_dQ(SKL_MP4_INFOS * const Frame, int For_BVOP) = 0;
@@ -499,18 +499,18 @@ class SKL_MP4_ANALYZER
           <ul>
           <li>"buffer-size": If non-zero, specify the size of coded bits buffer to allocate for each frame coding.<br></li>
 
-          <li>"quant": Sets the main quantizer (the lower, the higher the quality). 
-          Should be in range [1..31]. When variable bitrate is used, this value is 
+          <li>"quant": Sets the main quantizer (the lower, the higher the quality).
+          Should be in range [1..31]. When variable bitrate is used, this value is
           internally adjusted after each frame coding, while trying to meet the
           desired bitrate.<br></li>
-          <li>"base-quant": Similar to "quant" parameter, but sets the quantizer of key-frames. 
+          <li>"base-quant": Similar to "quant" parameter, but sets the quantizer of key-frames.
           By default, key-frames are assumed to share the global quantizer, if this parameter
           is not set.<br></li>
           <li>"quant-type": Quantization method used: 0 for H263's, 1 for MPEG4's.<br></li>
 
           <li>"hi-mem": Consumes more memory for faster motion search. Only useful for Quarter Pixel.</li>
 
-          <li>"intra-limit": Percentage of INTRA macroblock necessary to trigger a scene 
+          <li>"intra-limit": Percentage of INTRA macroblock necessary to trigger a scene
           change (with key frame signaled).<br></li>
           <li>"intra-max-delay": Maximum allowed number of P-frames between each INTRA key-frame.<br></li>
           <li>"intra-max-count": Counter for "intra-max-delay". When it reaches 0, an INTRA frame is emitted.<br></li>
@@ -562,7 +562,7 @@ class SKL_MP4_ANALYZER
 
       /** Sets the value of the float parameter described by Param string.
           These parameter settings control the core of the codec during
-          motion estimation and bitstream coding. 
+          motion estimation and bitstream coding.
           @return 0 if parameter is not applicable, or -1 if Value has invalid range.
           @param Param can be one of the following constant strings:<br>
 
@@ -632,13 +632,13 @@ class SKL_MP4_ANALYZER
     virtual const int *Get_Param(const char * const Param) const = 0;
 
       /** Set a new memory pool to use internally for subsequent memory allocation.
-          Warning: it should preferably be called at start-up only, 
+          Warning: it should preferably be called at start-up only,
           to ensure that cycles of New()/Delete() are performed on the
           same memory pool.
           @param Mem The memory pool to use. If equal to 0 (default),
-          the C++ heap will be used. 
+          the C++ heap will be used.
           @return This function will return the previous memory manager.
-          @see SKL_MEM_I 
+          @see SKL_MEM_I
           @see Get_Mem() */
     virtual SKL_MEM_I *Set_Memory_Manager(SKL_MEM_I *Mem=0) = 0;
       /** This function returns the current memory pool, as set by

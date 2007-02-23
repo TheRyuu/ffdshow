@@ -34,7 +34,7 @@ void TpresetsPage::init(void)
 {
  nochange=true;
  enable();
- hlv=GetDlgItem(m_hwnd,IDC_LV_PRESETS); 
+ hlv=GetDlgItem(m_hwnd,IDC_LV_PRESETS);
 
  italicFont=boldFont=NULL;
  int ncol=0;
@@ -106,20 +106,20 @@ INT_PTR TpresetsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
           NMLVKEYDOWN *nmkd=(NMLVKEYDOWN*)lParam;
           switch (nmkd->wVKey)
            {
-            case VK_F2: 
-             ListView_EditLabel(hlv,ListView_GetNextItem(hlv,-1,LVNI_SELECTED)); 
-             return TRUE; 
+            case VK_F2:
+             ListView_EditLabel(hlv,ListView_GetNextItem(hlv,-1,LVNI_SELECTED));
+             return TRUE;
             case VK_SPACE:
              changePresetState();
-             return TRUE; 
+             return TRUE;
            }
-          break; 
+          break;
          }
         case NM_DBLCLK:
         case NM_CLICK:
          {
           NMITEMACTIVATE *nmia=LPNMITEMACTIVATE(lParam);
-          if (nmia->iItem==-1) 
+          if (nmia->iItem==-1)
            {
             char_t activePresetName[260];
             deciD->getActivePresetName(activePresetName,260);
@@ -145,7 +145,7 @@ INT_PTR TpresetsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
            }
           else
            setDlgResult(FALSE);
-         } 
+         }
         case NM_CUSTOMDRAW:
          {
           NMLVCUSTOMDRAW *lvcd=LPNMLVCUSTOMDRAW(lParam);
@@ -153,7 +153,7 @@ INT_PTR TpresetsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
            {
             setDlgResult(CDRF_NOTIFYITEMDRAW);
             return TRUE;
-           } 
+           }
           if (lvcd->nmcd.dwDrawStage==CDDS_ITEMPREPAINT)
            {
             if (!italicFont)
@@ -167,9 +167,9 @@ INT_PTR TpresetsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
               boldFont=CreateFontIndirect(&oldFont);
              }
             Tpreset *preset=(*parent->localPresets)[lvcd->nmcd.dwItemSpec];
-            if (preset->autoLoadedFromFile) 
+            if (preset->autoLoadedFromFile)
              SelectObject(lvcd->nmcd.hdc,italicFont);
-            const char_t *defaultPreset=cfgGetStr(IDFF_defaultPreset); 
+            const char_t *defaultPreset=cfgGetStr(IDFF_defaultPreset);
             if (stricmp(defaultPreset,preset->presetName)==0)
              SelectObject(lvcd->nmcd.hdc,boldFont);
             setDlgResult(/*CDRF_NOTIFYPOSTPAINT*/CDRF_NEWFONT);
@@ -178,7 +178,7 @@ INT_PTR TpresetsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
           return TRUE;
          }
        }
-     break; 
+     break;
     }
   }
  return TconfPageDec::msgProc(uMsg,wParam,lParam);
@@ -187,7 +187,7 @@ INT_PTR TpresetsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 void TpresetsPage::onAutopreset(void)
 {
  TpresetAutoloadDlgBase *dlg=autoDlgCreate(deci,m_hwnd,10,10);
- if (dlg->show()) 
+ if (dlg->show())
   parent->setChange();
  delete dlg;
 }
@@ -202,14 +202,14 @@ void TpresetsPage::onNewMenu(void)
 void TpresetsPage::addNewPreset(Tpreset *newPreset)
 {
  parent->localPresets->nextUniqueName(newPreset);
- parent->localPresets->storePreset(newPreset); 
+ parent->localPresets->storePreset(newPreset);
  deciD->setPresets(parent->localPresets);
  ListView_SetItemCountEx(hlv,parent->localPresets->size(),0);
  parent->selectPreset(newPreset->presetName);
  cfg2dlg();
  parent->setChange();
  //SetActiveWindow(hlv);
- //PostMessage(hlv,LVM_EDITLABEL,ListView_GetNextItem(hlv,-1,LVNI_SELECTED),0); 
+ //PostMessage(hlv,LVM_EDITLABEL,ListView_GetNextItem(hlv,-1,LVNI_SELECTED),0);
 }
 void TpresetsPage::onNew(int menuCmd)
 {
@@ -220,7 +220,7 @@ void TpresetsPage::onNew(int menuCmd)
    GetWindowRect(GetDlgItem(m_hwnd,IDC_BT_PRESET_NEW_MENU),&r);
    menuCmd=TrackPopupMenu(hmn2,TPM_LEFTALIGN|TPM_TOPALIGN|TPM_RETURNCMD,r.left-1,r.bottom,0,m_hwnd,0);
    DestroyMenu(hmn);
-  } 
+  }
  switch (menuCmd)
   {
    case ID_MNI_PRESET_NEWFROMDEFAULT:
@@ -243,10 +243,10 @@ void TpresetsPage::onNew(int menuCmd)
         if (!newPreset->loadFile(fileDlgFlnm->c_str()))
          delete newPreset;
         else
-         addNewPreset(newPreset); 
-       } 
+         addNewPreset(newPreset);
+       }
      }
-    break; 
+    break;
   }
 }
 void TpresetsPage::onReadFromFile(void)
@@ -293,7 +293,7 @@ void TpresetsPage::onRemove(void)
 void TpresetsPage::renamePreset(const char_t *presetName)
 {
  deciD->renameActivePreset(presetName);
- deciD->setPresets(parent->localPresets); 
+ deciD->setPresets(parent->localPresets);
  parent->presetChanged(presetName);
  parent->fillPresetsCbx();
  parent->setChange();
@@ -318,24 +318,24 @@ void TpresetsPage::onRename(int menuCmd)
     EnableMenuItem(hmn2,1,MF_BYPOSITION|MF_GRAYED);
    menuCmd=TrackPopupMenu(hmn2,TPM_LEFTALIGN|TPM_TOPALIGN|TPM_RETURNCMD,r.left-1,r.bottom,0,m_hwnd,0);
    DestroyMenu(hmn);
-  } 
- int i=lvGetSelItem(IDC_LV_PRESETS); 
+  }
+ int i=lvGetSelItem(IDC_LV_PRESETS);
  if (menuCmd==ID_MNI_PRESET_RENAMETOFILE)
   {
    char_t presetName[260];Tpreset::normalizePresetName(presetName,AVIname);
    parent->localPresets->nextUniqueName(presetName);
    renamePreset(presetName);
    InvalidateRect(hlv,NULL,FALSE);
-  } 
+  }
  else if (menuCmd==ID_MNI_PRESET_RENAMETOEXE)
   {
    char_t presetName[260];Tpreset::normalizePresetName(presetName,deci->getExeflnm());
    parent->localPresets->nextUniqueName(presetName);
    renamePreset(presetName);
    InvalidateRect(hlv,NULL,FALSE);
-  } 
+  }
  else if (menuCmd==ID_MNI_PRESET_RENAME)
-  { 
+  {
    SetFocus(hlv);
    ListView_EditLabel(hlv,i);
   }
@@ -348,13 +348,13 @@ void TpresetsPage::changePresetState(void)
    cfgSet(IDFF_autoLoadedFromFile,0);
    InvalidateRect(hlv,NULL,FALSE);
   }
- else 
+ else
   {
    char_t presetName[260];
    deciD->getActivePresetName(presetName,260);
    cfgSet(IDFF_defaultPreset,presetName);
    InvalidateRect(hlv,NULL,FALSE);
-  }  
+  }
 }
 void TpresetsPage::translate(void)
 {
@@ -384,7 +384,7 @@ TpresetsPage::TpresetsPage(TffdshowPageDec *Iparent,const char_t *Ipresetfilter,
    IDC_BT_PRESET_RENAME_MENU,&TpresetsPage::onRenameMenu,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
 }
 
 //========================= TpresetsPageVideo ============================

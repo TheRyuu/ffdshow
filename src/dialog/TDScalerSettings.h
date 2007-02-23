@@ -3,7 +3,7 @@
 
 #include "interfaces.h"
 
-struct TregOp; 
+struct TregOp;
 struct SETTING;
 class Twindow;
 struct TDScalerSettings

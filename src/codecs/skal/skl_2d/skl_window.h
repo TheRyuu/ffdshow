@@ -76,7 +76,7 @@ class SKL_WINDOW_CVRT : public SKL_WINDOW
   public:
 
     SKL_WINDOW_CVRT(SKL_MEM_I *Mem, SKL_FORMAT In_Format, SKL_WINDOW &Dst);
-    virtual ~SKL_WINDOW_CVRT(); 
+    virtual ~SKL_WINDOW_CVRT();
 
     virtual void Store_CMap();
     virtual void Unlock() { Convert_To(*Get_Dst(), _Map); }

@@ -39,4 +39,4 @@ public:
  TfontPageOSD(TffdshowPageDec *Iparent);
 };
 
-#endif 
+#endif

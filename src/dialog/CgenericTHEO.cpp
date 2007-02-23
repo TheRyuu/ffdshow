@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "CgenericTHEO.h"
 
@@ -27,7 +27,7 @@ void TgenericTHEOpage::init(void)
 }
 
 void TgenericTHEOpage::cfg2dlg(void)
-{ 
+{
  kf2dlg();
  scenechange2dlg();
  setCheck(IDC_CHB_THEO_HQ,cfgGet(IDFF_enc_theo_hq));
@@ -62,14 +62,14 @@ INT_PTR TgenericTHEOpage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     switch (getId(HWND(lParam)))
      {
       case IDC_TBR_MAXKEYINTERVAL:
-       cfgSet(IDFF_enc_max_key_interval,std::max(cfgGet(IDFF_enc_min_key_interval),tbrGet(IDC_TBR_MAXKEYINTERVAL))); 
+       cfgSet(IDFF_enc_max_key_interval,std::max(cfgGet(IDFF_enc_min_key_interval),tbrGet(IDC_TBR_MAXKEYINTERVAL)));
        kf2dlg();
        return TRUE;
       case IDC_TBR_MINKEYINTERVAL:
        cfgSet(IDFF_enc_min_key_interval,std::min(cfgGet(IDFF_enc_max_key_interval),tbrGet(IDC_TBR_MINKEYINTERVAL)));
        kf2dlg();
        return TRUE;
-     }  
+     }
     break;
   }
  return TconfPageEnc::msgProc(uMsg,wParam,lParam);

@@ -23,5 +23,5 @@
 
 void TexpandSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
 {
- queueFilter<TimgFilterExpand>(filtersorder,filters,queue); 
+ queueFilter<TimgFilterExpand>(filtersorder,filters,queue);
 }

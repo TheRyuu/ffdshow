@@ -1,4 +1,4 @@
-//Empty declarations of MMX intrinisc to make ffdshow.ax 
+//Empty declarations of MMX intrinisc to make ffdshow.ax
 //link successfully with Microsoft 64-bit C++ Compiler.
 void _mm_setzero_si64() {}
 void _mm_set_pi32() {}

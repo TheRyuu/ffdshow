@@ -10,7 +10,7 @@
  *                                                                  *
  ********************************************************************
 
-  function: 
+  function:
 
  ********************************************************************/
 
@@ -31,7 +31,7 @@ ogg_buffer_state *ogg_buffer_create(void);
 #endif
 
 /** \mainpage
- * 
+ *
  * \section intro Introduction
  *
  * This is the documentation for the libtheora C API.
@@ -49,11 +49,11 @@ ogg_buffer_state *ogg_buffer_create(void);
  * A YUV buffer for passing uncompressed frames to and from the codec.
  * This holds a Y'CbCr frame in planar format. The CbCr planes can be
  * subsampled and have their own separate dimensions and row stride
- * offsets. Note that the strides may be negative in some 
+ * offsets. Note that the strides may be negative in some
  * configurations. For theora the width and height of the largest plane
- * must be a multiple of 16. The actual meaningful picture size and 
+ * must be a multiple of 16. The actual meaningful picture size and
  * offset are stored in the theora_info structure; frames returned by
- * the decoder may need to be cropped for display. 
+ * the decoder may need to be cropped for display.
  * All samples are 8 bits.
  */
 typedef struct {
@@ -99,10 +99,10 @@ typedef enum {
  * Theora bitstream info.
  * Contains the basic playback parameters for a stream,
  * corresponds to the initial 'info' header packet.
- * 
+ *
  * Encoded theora frames must be a multiple of 16 is size;
  * this is what the width and height members represent. To
- * handle other sizes, a crop rectangle is specified in 
+ * handle other sizes, a crop rectangle is specified in
  * frame_height and frame_width, offset_x and offset_y. The
  * offset and size should still be a power of 2 to avoid
  * chroma sampling shifts.
@@ -111,7 +111,7 @@ typedef enum {
  * fraction. So is the aspect ratio. Note that this refers
  * to the aspect ratio of the frame pixels, not of the
  * overall frame itself.
- * 
+ *
  * see the example code for use of the other parameters and
  * good default settings for the encoder parameters.
  */
@@ -166,14 +166,14 @@ typedef struct{
 
 } theora_state;
 
-/** 
+/**
  * Comment header metadata.
  *
  * This structure holds the in-stream metadata corresponding to
  * the 'comment' header packet.
  *
  * Meta data is stored as a series of (tag, value) pairs, in
- * length-encoded string vectors. The first occurence of the 
+ * length-encoded string vectors. The first occurence of the
  * '=' character delimits the tag and value. A particular tag
  * may occur more than once. The character set encoding for
  * the strings is always utf-8, but the tag names are limited
@@ -203,7 +203,7 @@ typedef struct theora_comment{
 #define OC_BADPACKET   -24	/**< Packet is corrupt */
 #define OC_NEWPACKET   -25	/**< Packet is an (ignorable) unhandled extension */
 
-/** 
+/**
  * Retrieve a human-readable string to identify the encoder vendor and version.
  * \returns A version string.
  */
@@ -239,7 +239,7 @@ extern int theora_encode_init(theora_state *th, theora_info *ti);
 extern int theora_encode_YUVin(theora_state *t, yuv_buffer *yuv, int *fixedq, int *keyframe);
 
 /**
- * Request the next packet of encoded video. 
+ * Request the next packet of encoded video.
  * The encoded data is placed in a user-provided ogg_packet structure.
  * \param t A theora_state handle previously initialized for encoding.
  * \param last_p whether this is the last packet the encoder should produce.
@@ -390,22 +390,22 @@ extern int theora_packet_iskeyframe(ogg_packet *op);
 /**
  * Report the granulepos shift radix
  *
- * When embedded in Ogg, Theora uses a two-part granulepos, 
+ * When embedded in Ogg, Theora uses a two-part granulepos,
  * splitting the 64-bit field into two pieces. The more-significant
  * section represents the frame count at the last keyframe,
  * and the less-significant section represents the count of
  * frames since the last keyframe. In this way the overall
  * field is still non-decreasing with time, but usefully encodes
  * a pointer to the last keyframe, which is necessary for
- * correctly restarting decode after a seek. 
+ * correctly restarting decode after a seek.
  *
  * This function reports the number of bits used to represent
  * the distance to the last keyframe, and thus how the granulepos
  * field must be shifted or masked to obtain the two parts.
- * 
+ *
  * Since libtheora returns compressed data in an ogg_packet
  * structure, this may be generally useful even if the Theora
- * packets are not being used in an Ogg container. 
+ * packets are not being used in an Ogg container.
  *
  * \param ti A previously initialized theora_info struct
  * \returns The bit shift dividing the two granulepos fields
@@ -434,7 +434,7 @@ extern ogg_int64_t theora_granule_frame(theora_state *th,ogg_int64_t granulepos)
  * \param granulepos The granulepos to convert.
  * \returns The absolute time in seconds corresponding to \a granulepos.
  * \retval -1. The given granulepos is undefined (i.e. negative), or
- * \retval -1. The function has been disabled because floating 
+ * \retval -1. The function has been disabled because floating
  *		point support is not available.
  */
 extern double theora_granule_time(theora_state *th,ogg_int64_t granulepos);
@@ -462,7 +462,7 @@ extern void theora_clear(theora_state *t);
 
 /**
  * Initialize an allocated theora_comment structure
- * \param tc An allocated theora_comment structure 
+ * \param tc An allocated theora_comment structure
  **/
 extern void theora_comment_init(theora_comment *tc);
 
@@ -483,7 +483,7 @@ extern void theora_comment_add(theora_comment *tc, char *comment);
 /**
  * Add a comment to an initialized theora_comment structure.
  * \param tc A previously initialized theora comment structure
- * \param tag A null-terminated string containing the tag 
+ * \param tag A null-terminated string containing the tag
  *            associated with the comment.
  * \param value The corresponding value as a null-terminated string
  *
@@ -515,9 +515,9 @@ extern char *theora_comment_query(theora_comment *tc, char *tag, int count);
  *  \param tc An initialized theora_comment structure
  *  \param tag The tag to look up
  *  \returns The number on instances of a particular tag.
- * 
+ *
  *  Call this first when querying for a specific tag and then interate
- *  over the number of instances with separate calls to 
+ *  over the number of instances with separate calls to
  *  theora_comment_query() to retrieve all instances in order.
  **/
 extern int   theora_comment_query_count(theora_comment *tc, char *tag);

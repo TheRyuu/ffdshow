@@ -25,7 +25,7 @@ LRESULT TperspectivePage::TwidgetPerspective::onLbuttonDown(HWND hwnd,UINT uMsg,
 {
  self->dragx=GET_X_LPARAM(lParam);self->dragy=GET_Y_LPARAM(lParam);
  self->drag=self->bits[self->dragy*self->stride+self->dragx];
- if (self->drag<3 || self->drag>10) 
+ if (self->drag<3 || self->drag>10)
   self->drag=0;
  else
   SetCapture(hwnd);
@@ -72,15 +72,15 @@ LRESULT TperspectivePage::TwidgetPerspective::onMouseMove(HWND hwnd,UINT uMsg,WP
        self->cfgSet(idffy1,y1);
        self->cfgSet(idffx2,x2);
        self->cfgSet(idffy2,y2);
-      } 
+      }
      else
       {
        POINT p={dragx=self->dragx,dragy=self->dragy};
        ClientToScreen(hwnd,&p);
        SetCursorPos(p.x,p.y);
-      } 
-    }  
-   self->dragx=dragx;self->dragy=dragy; 
+      }
+    }
+   self->dragx=dragx;self->dragy=dragy;
    self->drawCorners();
   }
  return 0;
@@ -122,12 +122,12 @@ void TperspectivePage::cfg2dlg(void)
 {
  memset(bits,2,stride*gy);
  deciV->getAVIdimensions(&AVIdx,&AVIdy);
- if (AVIdx==0 || AVIdy==0) 
+ if (AVIdx==0 || AVIdy==0)
   {
    AVIdx=640;AVIdy=480;
   }
  vy=AVIdy*gx/AVIdx;vx=gx;
- if (vy>gy) 
+ if (vy>gy)
   {
    vx=AVIdx*gy/AVIdy;
    vy=gy;
@@ -146,7 +146,7 @@ void TperspectivePage::box3( int x, int y,unsigned char c)
 }
 
 void TperspectivePage::line(int x1,int y1,int x2,int y2,unsigned char color)
-{ 
+{
  drawline<TputColor>(x1,y1,x2,y2,color,bits,stride);
 }
 
@@ -222,7 +222,7 @@ INT_PTR TperspectivePage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         else cursor=IDC_SIZENESW;
         SetCursor(LoadCursor(NULL,cursor));
         setDlgResult(TRUE);
-       } 
+       }
       return TRUE;
      }
     break;
@@ -234,13 +234,13 @@ Twidget* TperspectivePage::createDlgItem(int id,HWND h)
  if (id==IDC_BMP_PERSPECTIVE)
   return new TwidgetPerspective(h,this);
  else
-  return TconfPageDecVideo::createDlgItem(id,h); 
+  return TconfPageDecVideo::createDlgItem(id,h);
 }
 
 void TperspectivePage::translate(void)
-{ 
+{
  TconfPageBase::translate();
- 
+
  cbxTranslate(IDC_CBX_PERSPECTIVE_INTERPOLATION,TperspectiveSettings::interpolationNames);
 }
 

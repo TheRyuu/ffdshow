@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "CgenericHuffyuv.h"
 #include "Ttranslate.h"
@@ -36,7 +36,7 @@ bool TgenericHuffyuvPage::enabled(void)
 }
 
 void TgenericHuffyuvPage::cfg2dlg(void)
-{ 
+{
  cbxSetCurSel(IDC_CBX_HUFFYUV_CSP,cfgGet(IDFF_enc_huffyuv_csp));
  cbxSetCurSel(IDC_CBX_HUFFYUV_PRED,cfgGet(IDFF_enc_huffyuv_pred));
  setCheck(IDC_CHB_HUFFYUV_CTX,cfgGet(IDFF_enc_huffyuv_ctx));
@@ -46,7 +46,7 @@ void TgenericHuffyuvPage::cfg2dlg(void)
 void TgenericHuffyuvPage::translate(void)
 {
  TconfPageEnc::translate();
- 
+
  cbxTranslate(IDC_CBX_HUFFYUV_PRED,TcoSettings::huffYUVpreds);
 }
 

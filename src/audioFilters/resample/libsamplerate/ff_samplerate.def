@@ -1,6 +1,6 @@
 EXPORTS
-  src_new 		
-  src_delete		
-  src_process		
-  src_reset		
+  src_new
+  src_delete
+  src_process
+  src_reset
   getVersion

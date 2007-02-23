@@ -38,7 +38,7 @@ TsharpenSettings::TsharpenSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfi
 {
  static const TintOptionT<TsharpenSettings> iopts[]=
   {
-   IDFF_isSharpen            ,&TsharpenSettings::is              ,0,0,_l(""),1, 
+   IDFF_isSharpen            ,&TsharpenSettings::is              ,0,0,_l(""),1,
      _l("xsharpen"),0,
    IDFF_showSharpen          ,&TsharpenSettings::show            ,0,0,_l(""),1,
      _l("showSharpen"),1,
@@ -79,7 +79,7 @@ TsharpenSettings::TsharpenSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfi
    IDFF_mplayerSharpChroma   ,&TsharpenSettings::mplayerChroma   ,0,400,_l(""),1,
      _l("mplayerSharpChroma"),50,
    0
-  }; 
+  };
  addOptions(iopts);
 }
 
@@ -97,7 +97,7 @@ void TsharpenSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfilt
      case SHARPEN_ASHARP:queueFilter<TimgFilterAsharp>(filtersorder,filters,queue); return;
      case SHARPEN_MPLAYER:queueFilter<TimgFilterMplayerSharp>(filtersorder,filters,queue); return;
     }
-  }  
+  }
 }
 void TsharpenSettings::createPages(TffdshowPageDec *parent) const
 {
@@ -145,7 +145,7 @@ bool TsharpenSettings::getTip(unsigned int pageId,char_t *buf,size_t len)
    case 5:name=_l("swscaler");capts[0]=_l("Luma sharpening");capts[1]=_l("Chroma sharpening");
           vals[0]=mplayerLuma;
           vals[1]=mplayerChroma;
-          break;       
+          break;
   }
  tsprintf(tipS,_l("method:%s\n"),name);
  if (capts[0]) strcatf(tipS,_l("%s: %i"),capts[0],vals[0]);

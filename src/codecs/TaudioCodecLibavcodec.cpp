@@ -53,13 +53,13 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
      avctx->bit_rate=wfex->nAvgBytesPerSec*8;
      avctx->bits_per_sample=wfex->wBitsPerSample;
      avctx->block_align=wfex->nBlockAlign;
-    } 
+    }
    else
     {
      avctx->bit_rate=fmt.avgBytesPerSec()*8;
      avctx->bits_per_sample=fmt.bitsPerSample();
      avctx->block_align=fmt.blockAlign();
-    } 
+    }
    if (codecId==CODEC_ID_WMAV1 || codecId==CODEC_ID_WMAV2)
     {
      bpssum=lastbps=avctx->bit_rate/1000;
@@ -70,7 +70,7 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
     {
      avctx->extradata=extradata.data+8;
      avctx->extradata_size=34;
-    } 
+    }
    else if (codecId==CODEC_ID_COOK && mt.formattype==FORMAT_WaveFormatEx && mt.pbFormat)
     {
      avctx->extradata=mt.pbFormat+sizeof(WAVEFORMATEX);
@@ -82,12 +82,12 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
         avctx->extradata_size-=12;
         break;
        }
-    } 
+    }
    else
     {
      avctx->extradata=extradata.data;
      avctx->extradata_size=(int)extradata.size;
-    } 
+    }
    if (codecId==CODEC_ID_VORBIS && mt.formattype==FORMAT_VorbisFormat2)
     {
      const VORBISFORMAT2 *vf2=(const VORBISFORMAT2*)mt.pbFormat;
@@ -102,10 +102,10 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
      case SAMPLE_FMT_S16:fmt.sf=TsampleFormat::SF_PCM16;break;
      case SAMPLE_FMT_FLT:fmt.sf=TsampleFormat::SF_FLOAT32;break;
     }
-   isGain=deci->getParam2(IDFF_vorbisgain); 
+   isGain=deci->getParam2(IDFF_vorbisgain);
    return true;
   }
- else 
+ else
   return false;
 }
 TaudioCodecLibavcodec::~TaudioCodecLibavcodec()

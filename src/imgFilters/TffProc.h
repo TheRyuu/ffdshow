@@ -11,9 +11,9 @@ struct TglobalSettingsDecVideo;
 class Tconvert;
 struct TcspInfo;
 class TffdshowDecVideoProc;
-class TffProcVideo :public CUnknown, 
-                    public TffProcBase, 
-                    public IffProc, 
+class TffProcVideo :public CUnknown,
+                    public TffProcBase,
+                    public IffProc,
                     public IprocVideoSink
 {
 public:
@@ -46,7 +46,7 @@ public:
  STDMETHODIMP_(const TcspInfo*) getCspInfo(int csp);
  // IprocVideoSink
  STDMETHODIMP deliverProcessedSample(TffPict &pict);
- 
+
  HRESULT processPict(unsigned int framenum,TffPict &pict,int outcsp);
 private:
  Trect srcR;

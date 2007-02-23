@@ -19,7 +19,7 @@
  */
 
 #include "stdafx.h"
-#include "TimgFilterNoise.h" 
+#include "TimgFilterNoise.h"
 #include "Tconfig.h"
 #include "TimgFilterLuma.h"
 #include "TimgFilterOffset.h"
@@ -41,13 +41,13 @@ TimgFilterNoiseMplayer::Tprocess::Tprocess(void)
   }
  if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
   lineNoise=lineNoise_simd<Tmmxext>;
-#ifdef __SSE2__  
+#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   {
    lineNoise=lineNoise_simd<Tsse2>;
    lineNoiseAvg=lineNoiseAvg_simd<Tsse2>;
-  } 
-#endif  
+  }
+#endif
 }
 
 void TimgFilterNoiseMplayer::Tprocess::done(void)
@@ -83,11 +83,11 @@ void TimgFilterNoiseMplayer::Tprocess::init(int strength,const TnoiseSettings *I
        x2=2.0*rand()/(float)RAND_MAX-1.0;
        w=x1*x1+x2*x2;
       } while (w>=1.0);
-     
+
      w=sqrt((-2.0*log(w))/w);
      y1=x1*w;
      y1*=strength/sqrt(3.0);
-     if (cfg.pattern) 
+     if (cfg.pattern)
       {
        y1/=2;
        y1+=TimgFilterNoise::patt[j%4]*strength*0.35;
@@ -121,9 +121,9 @@ void TimgFilterNoiseMplayer::Tprocess::process(const uint8_t *src,uint8_t *dst,s
    else
     shift=nonTempRandShift[y];
 
-   if (cfg.mplayerQuality==0) 
+   if (cfg.mplayerQuality==0)
     shift&=~7;
-   
+
    if (cfg.averaged)
     {
      lineNoiseAvg(dst,src,width,prev_shift[y]);
@@ -166,10 +166,10 @@ template<class _mm> void TimgFilterNoiseMplayer::Tprocess::lineNoise_simd(uint8_
   {
    lineNoise_simd<typename _mm::T64>(dst,src,noise,len,shift);
    return;
-  } 
+  }
  int mmx_len=len&(~(_mm::size-1));
  noise+=shift;
- 
+
  typename _mm::__m mm7;
  pcmpeqb(mm7,mm7);
  psllw(mm7,15);
@@ -178,7 +178,7 @@ template<class _mm> void TimgFilterNoiseMplayer::Tprocess::lineNoise_simd(uint8_
   {
    //".balign 16			\n\t"
    typename _mm::__m mm0,mm1;
-   movq   (mm0,src+mmx_len+x); 
+   movq   (mm0,src+mmx_len+x);
    movdqu (mm1,noise+mmx_len+x); //SSE3
    pxor   (mm0,mm7);
    paddsb (mm0,mm1);
@@ -195,7 +195,7 @@ template<class _mm> void TimgFilterNoiseMplayer::Tprocess::lineNoiseAvg_simd(uin
   {
    lineNoiseAvg_simd<typename _mm::T64>(dst,src,len,shift_);
    return;
-  } 
+  }
  const int mmx_len=len&(~(_mm::size-1));
 
  int8_t *shift2[3]={shift_[0]+mmx_len, shift_[1]+mmx_len, shift_[2]+mmx_len};
@@ -213,14 +213,14 @@ template<class _mm> void TimgFilterNoiseMplayer::Tprocess::lineNoiseAvg_simd(uin
    movq (mm3,mm1);
    punpcklbw (mm0,mm0);
    punpckhbw (mm2,mm2);
-   punpcklbw (mm1,mm1);      
-   punpckhbw (mm3,mm3);      
+   punpcklbw (mm1,mm1);
+   punpckhbw (mm3,mm3);
    pmulhw (mm1,mm0);
    pmulhw (mm3,mm2);
-   paddw (mm1,mm1);         
-   paddw (mm3,mm3);         
-   paddw (mm1,mm0);         
-   paddw (mm3,mm2);         
+   paddw (mm1,mm1);
+   paddw (mm3,mm3);
+   paddw (mm1,mm0);
+   paddw (mm3,mm2);
    psrlw (mm1,8);
    psrlw (mm3,8);
    packuswb (mm1,mm3);
@@ -262,7 +262,7 @@ HRESULT TimgFilterNoiseMplayer::process(TfilterQueue::iterator it,TffPict &pict,
     }
    int csp=0;
    if (cfg->strength)
-    {  
+    {
      const unsigned char *srcY;
      getCur(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,&srcY,NULL,NULL,NULL);
      unsigned char *dstY;
@@ -290,7 +290,7 @@ HRESULT TimgFilterNoiseMplayer::process(TfilterQueue::iterator it,TffPict &pict,
      _mm_empty();
     }
   }
- return parent->deliverSample(++it,pict);  
+ return parent->deliverSample(++it,pict);
 }
 
 //========================================= TimgFilterNoise =========================================
@@ -327,7 +327,7 @@ TimgFilterNoise::TimgFilterNoise(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilt
 {
  noiseMask[0]=noiseMask[1]=noiseMask[2]=NULL;
  oldnoise.strength=-1;oldcsp=FF_CSP_NULL;
-#ifdef __SSE2__ 
+#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   {
    Tnoise<Tsse2>::init();
@@ -335,11 +335,11 @@ TimgFilterNoise::TimgFilterNoise(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilt
    processChromaFc=&TimgFilterNoise::processChroma<Tsse2>;
   }
  else
-#endif 
+#endif
   {
    processLumaFc=&TimgFilterNoise::processLuma<Tmmx>;
    processChromaFc=&TimgFilterNoise::processChroma<Tmmx>;
-  }  
+  }
  Tnoise<Tmmx>::init();
  _mm_empty();
 }
@@ -355,17 +355,17 @@ void TimgFilterNoise::doneChroma(void)
    {
     aligned_free(noiseMask[i]);
     noiseMask[i]=NULL;
-   } 
+   }
 }
 void TimgFilterNoise::onSizeChange(void)
 {
  done();
  noiseCount[0]=noiseCount[1]=noiseCount[2]=-1;
  noiseAvihStrength=0;oldPattern=-1;
-#ifdef __SSE2__ 
+#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   Tnoise<Tsse2>::reset();
-#endif  
+#endif
  Tnoise<Tmmx>::reset();
  _mm_empty();
 }
@@ -376,7 +376,7 @@ template<class _mm,bool chroma,bool avih,bool uniform> void TimgFilterNoise::add
  if (!avih)
   noisenext64=Tnoise<_mm>::noisenext();
  typename _mm::__m noiseStrength64=_mm::set1_pi16((short)noiseStrength);
- typename _mm::__m m0=_mm::setzero_si64(),m255=_mm::set1_pi16(255),m128=_mm::set1_pi16(128); 
+ typename _mm::__m m0=_mm::setzero_si64(),m255=_mm::set1_pi16(255),m128=_mm::set1_pi16(128);
  for (const unsigned char *srcEnd=src+srcStride*dy;src!=srcEnd;src+=srcStride,dst+=dstStride,noiseMask+=noiseMaskStride)
   {
    int x=0;
@@ -400,7 +400,7 @@ template<class _mm,bool chroma,bool avih,bool uniform> void TimgFilterNoise::add
         {
          noiseMul=_mm::subs_pi16(noiseMul,m128);
          noiseMul=_mm::slli_pi16(noiseMul,3);
-        } 
+        }
        noiseMul=_mm::srai_pi16(_mm::mullo_pi16(noiseMul,noise),8);
       }
      if (!avih)
@@ -415,10 +415,10 @@ template<class _mm,bool chroma,bool avih,bool uniform> void TimgFilterNoise::add
        typename _mm::integer2_t val;
        _mm::store2(&val,noisenext64=_mm::add_pi16(_mm::madd_pi16(noisenext64,Tnoise<_mm>::noiseConst()),Tnoise<_mm>::noiseConst()));
        mm1=(char)val;
-      } 
+      }
      else
       mm1=(char)noiseMask[x];
-     int mm0,mm7=src[x]; 
+     int mm0,mm7=src[x];
      if (uniform)
       mm0=mm1;
      else
@@ -430,9 +430,9 @@ template<class _mm,bool chroma,bool avih,bool uniform> void TimgFilterNoise::add
       }
      if (!avih)
       noiseMask[x]=(short)(mm0=(mm0*noiseStrength)>>8);
-     dst[x]=limit_uint8(mm0+mm7); 
+     dst[x]=limit_uint8(mm0+mm7);
     }
-  }  
+  }
  if (!avih)
   Tnoise<_mm>::noisenext()=noisenext64;
 }
@@ -444,7 +444,7 @@ template<class _mm,bool chroma,bool avih> void TimgFilterNoise::generateAddNoise
    return;
   }
  typename _mm::__m m0=_mm::setzero_si64();
- if (!avih && noiseCount&1) 
+ if (!avih && noiseCount&1)
   {
    for (const unsigned char *srcEnd=src+srcStride*dy;src!=srcEnd;src+=srcStride,dst+=dstStride,noiseMask+=noiseMaskStride)
     {
@@ -453,7 +453,7 @@ template<class _mm,bool chroma,bool avih> void TimgFilterNoise::generateAddNoise
       _mm::store2(dst+x,_mm::packs_pu16(_mm::add_pi16(_mm::unpacklo_pi8(_mm::load2(src+x),m0),*(typename _mm::__m*)(noiseMask+x)),m0));
      for (;x<(int)dx;x++)
       dst[x]=limit_uint8(src[x]+noiseMask[x]);
-    } 
+    }
    return;
   }
  if (!uniformNoise)
@@ -482,21 +482,21 @@ template<class _mm> void TimgFilterNoise::processLuma(const TnoiseSettings *cfg,
      generateAddNoise<_mm,false,false>(srcY,stride1[0],dstY,stride2[0],dx1[0],dy1[0],cfg->strength,cfg->uniform,noiseMask[0],noiseMaskStride[0],noiseCount[0]);
      noiseAvihStrength=0;
      break;
-    } 
+    }
    case TnoiseSettings::NOISE_AVIH:
     {
      if (cfg->strength!=noiseAvihStrength)
       genAVIHnoise(0,noiseAvihStrength=cfg->strength);
      generateAddNoise<_mm,false,true>(srcY,stride1[0],dstY,stride2[0],dx1[0],dy1[0],0,cfg->uniform,noiseMask[0]+((rand()%(dx1[0]*dy1[0]))&~15),noiseMaskStride[0],0);
      break;
-    } 
+    }
   }
  _mm::empty();
-} 
+}
 template<class _mm> void TimgFilterNoise::processChroma(const TnoiseSettings *cfg,const unsigned char *srcU,const unsigned char *srcV,unsigned char *dstU,unsigned char *dstV)
 {
  switch (cfg->method)
-  { 
+  {
    case TnoiseSettings::NOISE_FF:
     {
      noiseCount[1]++;noiseCount[2]++;
@@ -505,7 +505,7 @@ template<class _mm> void TimgFilterNoise::processChroma(const TnoiseSettings *cf
      generateAddNoise<_mm,true,false>(srcV,stride1[2],dstV,stride2[2],dx1[2],dy1[2],cfg->strengthChroma,cfg->uniform,noiseMask[2],noiseMaskStride[2],noiseCount[2]);
      noiseAvihStrengthChroma=0;
      break;
-    } 
+    }
    case TnoiseSettings::NOISE_AVIH:
     {
      if (cfg->strengthChroma!=noiseAvihStrengthChroma)
@@ -517,7 +517,7 @@ template<class _mm> void TimgFilterNoise::processChroma(const TnoiseSettings *cf
      generateAddNoise<_mm,true,true>(srcU,stride1[1],dstU,stride2[1],dx1[1],dy1[1],0,cfg->uniform,noiseMask[1]+rand()%(noiseMaskStride[1]*dy1[1]),noiseMaskStride[1],0);
      generateAddNoise<_mm,true,true>(srcV,stride1[2],dstV,stride2[2],dx1[2],dy1[2],0,cfg->uniform,noiseMask[2]+rand()%(noiseMaskStride[2]*dy1[2]),noiseMaskStride[2],0);
      break;
-    } 
+    }
   }
  _mm::empty();
 }
@@ -541,17 +541,17 @@ HRESULT TimgFilterNoise::process(TfilterQueue::iterator it,TffPict &pict,const T
     }
    int csp=0;
    if (cfg->strength)
-    {  
+    {
      const unsigned char *srcY;
      getCur(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,&srcY,NULL,NULL,NULL);
      unsigned char *dstY;
      getCurNext(csp=csp1,pict,cfg->full,COPYMODE_NO,&dstY,NULL,NULL,NULL);
-     if (!noiseMask[0]) 
+     if (!noiseMask[0])
       {
        noiseMaskStride[0]=(dx1[0]/16+2)*16;
        noiseMask[0]=(short*)aligned_calloc(noiseMaskStride[0]*dy1[0]*2,2);
-      } 
-     (this->*processLumaFc)(cfg,srcY,dstY); 
+      }
+     (this->*processLumaFc)(cfg,srcY,dstY);
     }
    if (cfg->strengthChroma)
     {
@@ -568,15 +568,15 @@ HRESULT TimgFilterNoise::process(TfilterQueue::iterator it,TffPict &pict,const T
       {
        noiseMaskStride[1]=(dx1[1]/16+2)*16;
        noiseMask[1]=(short*)aligned_calloc(noiseMaskStride[1]*dy1[2]*2,2);
-      } 
+      }
      if (!noiseMask[2])
       {
        noiseMaskStride[2]=(dx1[2]/16+2)*16;
        noiseMask[2]=(short*)aligned_calloc(noiseMaskStride[2]*dy1[2]*2,2);
-      } 
+      }
      (this->*processChromaFc)(cfg,srcU,srcV,dstU,dstV);
     }
-  }  
+  }
  _mm_empty();
  return parent->deliverSample(++it,pict);
 }
@@ -612,7 +612,7 @@ HRESULT TimgFilterFlicker::process(TfilterQueue::iterator it,TffPict &pict,const
    return luma->process(it,pict,&lumaSettings);
   }
  else
-  return parent->deliverSample(++it,pict); 
+  return parent->deliverSample(++it,pict);
 }
 
 //========================================= TimgFilterShake =========================================
@@ -654,7 +654,7 @@ HRESULT TimgFilterShake::process(TfilterQueue::iterator it,TffPict &pict,const T
    return offset->process(it,pict,&offsetSettings);
   }
  else
-  return parent->deliverSample(++it,pict); 
+  return parent->deliverSample(++it,pict);
 }
 
 //======================================= TimgFilterFilmLines =======================================
@@ -708,7 +708,7 @@ HRESULT TimgFilterFilmLines::process(TfilterQueue::iterator it,TffPict &pict,con
       }
     }
   }
- return parent->deliverSample(++it,pict); 
+ return parent->deliverSample(++it,pict);
 }
 void TimgFilterFilmLines::onSeek(void)
 {
@@ -792,5 +792,5 @@ HRESULT TimgFilterScratches::process(TfilterQueue::iterator it,TffPict &pict,con
    else
     scratchesT++;
   }
- return parent->deliverSample(++it,pict); 
+ return parent->deliverSample(++it,pict);
 }

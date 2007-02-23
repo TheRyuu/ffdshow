@@ -3,17 +3,17 @@
 // Copyright (C) 1999, 2000 Jaakko Järvi (jaakko.jarvi@cs.utu.fi)
 //
 // Permission to copy, use, sell and distribute this software is granted
-// provided this copyright notice appears in all copies. 
+// provided this copyright notice appears in all copies.
 // Permission to modify the code and to distribute modified code is granted
-// provided this copyright notice appears in all copies, and a notice 
+// provided this copyright notice appears in all copies, and a notice
 // that the code was modified is included with the copyright notice.
 //
-// This software is provided "as is" without express or implied warranty, 
+// This software is provided "as is" without express or implied warranty,
 // and with no claim as to its suitability for any purpose.
 
-// For more information, see http://lambda.cs.utu.fi 
+// For more information, see http://lambda.cs.utu.fi
 
-// ----------------------------------------------------------------- 
+// -----------------------------------------------------------------
 
 #ifndef TUPLE_HPP
 #define TUPLE_HPP
@@ -41,7 +41,7 @@ namespace std {
 
 namespace tuple_internal {
 
-// -- generate error template, referencing to non-existing members of this 
+// -- generate error template, referencing to non-existing members of this
 // template is used to produce compilation erros intentionally
 template<class T>
 class generate_error;
@@ -104,30 +104,30 @@ template <class Then, class Else> struct IF<false, Then, Else> {
 
 // reference wrappers --------------------------------------------------
 
-// const_reference_wrapper is used in various functions to  specify 
+// const_reference_wrapper is used in various functions to  specify
 // that a tuple element should be stored as const reference
 template<class T> class  const_reference_wrapper;
 
 template <class T> inline const const_reference_wrapper<T> cref(const T& t);
 
 template<class T>
-class  const_reference_wrapper { 
-  const T&  x; 
-  explicit const_reference_wrapper(const T& t) : x(t) {} 
+class  const_reference_wrapper {
+  const T&  x;
+  explicit const_reference_wrapper(const T& t) : x(t) {}
 public:
   operator const T&() const { return x; }
-  friend const const_reference_wrapper cref<>(const T& t); 
+  friend const const_reference_wrapper cref<>(const T& t);
 };
 
 template <class T>
-inline const const_reference_wrapper<T> cref(const T& t) { 
+inline const const_reference_wrapper<T> cref(const T& t) {
   return const_reference_wrapper<T>(t);
 }
 
-// reference_wrapper is used to specify that a tuple element should be 
+// reference_wrapper is used to specify that a tuple element should be
 // stored as non-const reference
-// A disguise for non-const references. 
-// Can only be created via the ref function, which accepts only 
+// A disguise for non-const references.
+// Can only be created via the ref function, which accepts only
 // non-const references. The conversion operator converts the constenss away
 
 template<class T> class reference_wrapper;
@@ -136,9 +136,9 @@ template<class T> inline const reference_wrapper<T> ref(T& t);
 template<class T> inline const reference_wrapper<T> ref(const T& t);
 
 template<class T>
-class reference_wrapper { 
-  T& x; 
-  explicit reference_wrapper(T& t) : x(t) {} 
+class reference_wrapper {
+  T& x;
+  explicit reference_wrapper(T& t) : x(t) {}
 public:
   operator T&() const { return x; }
 
@@ -146,18 +146,18 @@ public:
   friend const reference_wrapper ref<>(const T& t);
 };
 
-template<class T> 
+template<class T>
 inline const reference_wrapper<T> ref(T& t) { return reference_wrapper<T>(t); }
 
 
 template <class T>
-inline const reference_wrapper<T> ref(const T& t) { 
-  return tuple_internal::generate_error<T>::const_reference_not_allowed;  
+inline const reference_wrapper<T> ref(const T& t) {
+  return tuple_internal::generate_error<T>::const_reference_not_allowed;
 }
 
 
 // -- type conversion templates -------------------------------------
-// T1 is the default type, specialisations for 
+// T1 is the default type, specialisations for
 // reference_wrapper, const_reference_wrapper and  array types.
 // references to functions require special handling as well
 
@@ -175,7 +175,7 @@ template<class Ret> struct is_function_reference<Ret (...)> {
 };
 
 
-template<class T1, class T2 = T1> 
+template<class T1, class T2 = T1>
 struct general_type_conversion {
   typedef typename IF<
     is_function_reference<typename remove_const<T1>::type >::test,
@@ -187,40 +187,40 @@ template<class T, int n, class Any> struct general_type_conversion<T[n], Any> {
   typedef const T (&type)[n];
 };
 
-template<class T, int n, class Any> 
+template<class T, int n, class Any>
 struct general_type_conversion<const T[n], Any> {
   typedef const T (&type)[n];
 };
 
-template<class T, class Any> 
+template<class T, class Any>
 struct general_type_conversion<const_reference_wrapper<T>, Any> {
   typedef const T& type;
 };
-template<class T, class Any> 
+template<class T, class Any>
 struct general_type_conversion<const const_reference_wrapper<T>, Any >{
   typedef const T& type;
 };
 
-template<class T, class Any> 
+template<class T, class Any>
 struct general_type_conversion<reference_wrapper<T>, Any >{
   typedef T& type;
 };
-template<class T, class Any> 
+template<class T, class Any>
 struct general_type_conversion<const reference_wrapper<T>, Any >{
   typedef T& type;
 };
 
 
 // ---------------------------------------------------------------------------
-// Use these conversion templates instead of general_type_conversion 
+// Use these conversion templates instead of general_type_conversion
 
 // These must be instantiated with plain or const plain types
 // from template<class T> foo(const T& t) : convert_to_xxx<const T>::type
 // from template<class T> foo(T& t) : convert_to_xxx<T>::type
 
 // The default is plain type -------------------------
-// const T -> const T, 
-// T -> T, 
+// const T -> const T,
+// T -> T,
 // T[n] -> const T (&) [n]
 // references -> compile_time_error
 // reference_wrapper<T> -> T&
@@ -230,7 +230,7 @@ struct convert_to_plain_by_default {
   typedef typename general_type_conversion<
                      T,
                      T
-                   >::type type; 
+                   >::type type;
 };
 template<class T>
 struct convert_to_plain_by_default<T&>; // error
@@ -246,7 +246,7 @@ template <class HT, class TT>
 struct cons;
 
 // - tuple forward declaration -----------------------------------------------
-template <class T1, LL_REPEAT1(class T, = nil), class LL_TLAST = nil> class tuple; 
+template <class T1, LL_REPEAT1(class T, = nil), class LL_TLAST = nil> class tuple;
 
 // tuple_length forward declaration
 template<class T> struct tuple_length;
@@ -262,7 +262,7 @@ struct tuple_default_arg_wrap {
 
 template <class T>
 struct tuple_default_arg_wrap<T&> {
-  static T& f() { 
+  static T& f() {
     return tuple_internal::generate_error<T>::no_default_values_for_reference_types;
   }
 };
@@ -287,12 +287,12 @@ struct tuple_element {
 
 template<>
 struct tuple_element<1> {
-  template<class RET, class HT, class TT> 
+  template<class RET, class HT, class TT>
   inline static RET get(const cons<HT, TT>& t)
   {
     return t.head;
   }
-  template<class RET, class HT, class TT> 
+  template<class RET, class HT, class TT>
   inline static RET get(cons<HT, TT>& t)
   {
     return t.head;
@@ -300,7 +300,7 @@ struct tuple_element<1> {
 };
 
 // -cons type accessors ----------------------------------------
-// typename tuple_element_type<N,T>::type gets the type of the 
+// typename tuple_element_type<N,T>::type gets the type of the
 // Nth element ot T
 // -------------------------------------------------------
 
@@ -319,33 +319,33 @@ struct tuple_element_type<1,T>
 // -get function templates -----------------------------------------------
 // Usage: get<N>(aTuple)
 
-// non-const version, returns a non-const reference 
+// non-const version, returns a non-const reference
 // (unless the element itself is const)
 
   template<int N, class HT, class TT>
   inline typename convert<
                     typename tuple_element_type<N, cons<HT, TT> >::type
                   >::plain_to_reference
-  get(cons<HT, TT>& c) { 
+  get(cons<HT, TT>& c) {
     return tuple_element<N>::template get<
              typename convert<
-               typename tuple_element_type<N, cons<HT, TT> 
+               typename tuple_element_type<N, cons<HT, TT>
              >::type
-           >::plain_to_reference>(c); 
-  } 
+           >::plain_to_reference>(c);
+  }
 
 // const version, returns a const reference to element
   template<int N, class HT, class TT>
   inline typename convert<
-                    typename tuple_element_type<N, cons<HT, TT> 
+                    typename tuple_element_type<N, cons<HT, TT>
                   >::type>::plain_to_c_reference
-  get(const cons<HT, TT>& c) { 
+  get(const cons<HT, TT>& c) {
     return tuple_element<N>::template get<
              typename convert<
-               typename tuple_element_type<N, cons<HT, TT> 
+               typename tuple_element_type<N, cons<HT, TT>
              >::type
            >::plain_to_c_reference>(c);
-  } 
+  }
 
 
 // -- the cons template  --------------------------------------------------
@@ -355,7 +355,7 @@ struct cons {
   typedef TT tail_type;
   HT head;
   TT tail;
- 
+
   template <class T1, LL_REPEAT1(class T,), class LL_TLAST>
   cons( T1& t1, LL_REPEAT2( T, & t,), LL_TLAST& tlast)
   : head (t1) , tail (LL_REPEAT1(t,), tlast, cnil()) {}
@@ -364,8 +364,8 @@ struct cons {
    cons( const cons<HT2, TT2>& u ) : head(u.head), tail(u.tail) {}
 
   template <class HT2, class TT2>
-  cons& operator=( const cons<HT2, TT2>& u ) { 
-    head=u.head; tail=u.tail; return *this; 
+  cons& operator=( const cons<HT2, TT2>& u ) {
+    head=u.head; tail=u.tail; return *this;
   }
 
   // must define assignment operator explicitely, implicit version is illformed if HT is a reference
@@ -373,7 +373,7 @@ struct cons {
 
 
   template <class T1, class T2>
-  cons& operator=( const std::pair<T1, T2>& u ) { 
+  cons& operator=( const std::pair<T1, T2>& u ) {
     tuple_internal::ct_assert<(tuple_length<cons>::value == 2)>(); // check_length = 2
     head = u.first; tail.head = u.second; return *this;
   }
@@ -405,14 +405,14 @@ struct cons<HT, nil> {
   typedef nil tail_type;
 
   head_type head;
-  
+
   template<class T1>
   cons( T1& t1, LL_REPEAT0(const nil&), const nil&)
   : head (t1) {}
 
   template <class HT2>
   cons( const cons<HT2, nil>& u ) : head(u.head) {}
-  
+
   template <class HT2>
   cons& operator=(const cons<HT2, nil>& u ) {  head = u.head; return *this; }
 
@@ -446,9 +446,9 @@ template<class HT> struct tuple_length<cons<HT, nil> > {
   enum { value = 1 };
 };
 
-// If K=tuple type, allows to write tuple_length<K> instead of 
+// If K=tuple type, allows to write tuple_length<K> instead of
 // tuple_lenght<typename K::inherited>
-template <class T1, LL_REPEAT1(class T,), class LL_TLAST> 
+template <class T1, LL_REPEAT1(class T,), class LL_TLAST>
 struct tuple_length<tuple<T1, LL_REPEAT1(T,), LL_TLAST> >
 {
   enum { value = tuple_length<
@@ -458,10 +458,10 @@ struct tuple_length<tuple<T1, LL_REPEAT1(T,), LL_TLAST> >
 
 
 // Tuple to cons mapper --------------------------------------------------
-template <class T1, LL_REPEAT1(class T,), class LL_TLAST> 
+template <class T1, LL_REPEAT1(class T,), class LL_TLAST>
 struct map_tuple_to_cons
 {
-  typedef cons<T1, 
+  typedef cons<T1,
                typename map_tuple_to_cons<LL_REPEAT1(T,), LL_TLAST, nil>::type
               > type;
 };
@@ -474,34 +474,34 @@ struct map_tuple_to_cons<T1, LL_REPEAT0(nil), nil>
 
 // -------------------------------------------------------------------
 // -- tuple ------------------------------------------------------
-template <class T1, LL_REPEAT1(class T,), class LL_TLAST> 
-class tuple : public map_tuple_to_cons<T1, LL_REPEAT1(T,), LL_TLAST>::type   
+template <class T1, LL_REPEAT1(class T,), class LL_TLAST>
+class tuple : public map_tuple_to_cons<T1, LL_REPEAT1(T,), LL_TLAST>::type
 {
 public:
   typedef typename map_tuple_to_cons<T1, LL_REPEAT1(T,), LL_TLAST>::type inherited;
-  
+
   explicit tuple(typename convert<T1>::plain_to_c_reference t1
           = tuple_default_arg_wrap<T1>::f(),
         LL_REPEAT3(typename convert<T,>::plain_to_c_reference t,
-          = tuple_default_arg_wrap<T,>::f()), 
+          = tuple_default_arg_wrap<T,>::f()),
         typename convert<LL_TLAST>::plain_to_c_reference tlast
-          = tuple_default_arg_wrap<LL_TLAST>::f()) 
+          = tuple_default_arg_wrap<LL_TLAST>::f())
         : inherited(t1, LL_REPEAT1(t,), tlast) {}
 
   template<class U1, class U2>
   tuple( const cons<U1, U2>& p) : inherited(p) {}
 
   template <class U1, LL_REPEAT1(class U,), class LL_ULAST>
-  tuple& operator=(const tuple<U1, LL_REPEAT1(U,), LL_ULAST>& k) { 
-    inherited::operator=(k); 
+  tuple& operator=(const tuple<U1, LL_REPEAT1(U,), LL_ULAST>& k) {
+    inherited::operator=(k);
     return *this;
   }
 
   template <class U1, class U2>
-  tuple& operator=(const std::pair<U1, U2>& k) { 
+  tuple& operator=(const std::pair<U1, U2>& k) {
     tuple_internal::ct_assert<(tuple_length<tuple>::value == 2)>();// check_length = 2
     this->head = k.first;
-    this->tail.head =  k.second; 
+    this->tail.head =  k.second;
     return *this;
   }
 

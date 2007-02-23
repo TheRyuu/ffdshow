@@ -19,7 +19,7 @@ void getFilterName(IBaseFilter *filter,char_t *name,char_t *filtername,size_t bu
 struct pins_vector : array_vector<IPin*,40>
 {
 public:
- pins_vector(IBaseFilter *filter,PIN_DIRECTION dir); 
+ pins_vector(IBaseFilter *filter,PIN_DIRECTION dir);
  ~pins_vector();
 };
 typedef std::vector<IBaseFilter*> IbaseFilters;
@@ -55,12 +55,12 @@ template<class Tcompare> bool searchPrevNextFilter(PIN_DIRECTION direction,IPin 
            pi.pFilter->Release();
            return true;
           }
-        }  
+        }
       }
-    }  
+    }
    pi.pFilter->Release();
   }
- return false; 
+ return false;
 }
 bool searchPrevNextFilter(PIN_DIRECTION direction,IPin *pin,const CLSID &clsid);
 bool searchFilterInterface(IFilterGraph *graph,const IID &iid,IUnknown* *dest);

@@ -2,7 +2,7 @@
 ---------------
 
 ffmpeg is a hyper fast realtime audio/video encoder, a streaming
-server and a generic audio and video file converter. 
+server and a generic audio and video file converter.
 
 It can grab from a standard Video4Linux video source and convert it
 into several file formats based on DCT/motion compensation

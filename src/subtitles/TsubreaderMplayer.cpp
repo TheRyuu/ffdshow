@@ -63,7 +63,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSami<tchar>::parse(Tstream &fd,i
 
         case 0: /* find "START=" or "Slacktime:" */
             slacktime_s = stristr (s, _L("Slacktime:"));
-	    if (slacktime_s) 
+	    if (slacktime_s)
                 sub_slacktime = strtol (slacktime_s+10, NULL, 0) / 10;
 
             s = (tchar*)stristr (s, _L("Start="));
@@ -219,7 +219,7 @@ template<class tchar> Tsubtitle* TsubtitleParserMicrodvd<tchar>::parse(Tstream &
                (tchar_traits<tchar>::sscanf() (line,
                         _L("{%ld}{%ld}%[^\r\n]"),
                         &start, &stop, line2) < 3));
-      skip=false;                  
+      skip=false;
       if (start==1 && stop==1)
        {
         tchar *e;double newfps;
@@ -227,7 +227,7 @@ template<class tchar> Tsubtitle* TsubtitleParserMicrodvd<tchar>::parse(Tstream &
          {
           this->fps=newfps;
           skip=true;
-         } 
+         }
        }
     } while (skip);
 
@@ -257,7 +257,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSubrip<tchar>::parse(Tstream &fd
           current.start = this->hmsToTime(a1,a2,a3,a4);
           current.stop  = this->hmsToTime(b1,b2,b3,b4);
           if (!fd.fgets (line, this->LINE_LEN)) return NULL;
-         } 
+         }
 
         p=q=line;
         for (;;) {
@@ -269,7 +269,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSubrip<tchar>::parse(Tstream &fd
         }
         break;
     }
-    
+
     return store(current);
 }
 
@@ -320,7 +320,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSubviewer<tchar>::parse(Tstream 
             }
         }
     }
-end:    
+end:
     return current.empty()?NULL:store(current);
 }
 
@@ -350,7 +350,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSubviewer2<tchar>::parse(Tstream
         }
         //current->lines=i;
     }
-  end:  
+  end:
     return current.empty()?NULL:store(current);
 }
 
@@ -370,7 +370,7 @@ template<class tchar> Tsubtitle* TsubtitleParserVplayer<tchar>::parse(Tstream &f
                   ret=tchar_traits<tchar>::sscanf() (line, T_L<tchar>("%d:%d:%d%c%n",L"%d:%d:%d%lc%n"),&a1,&a2,&a3,&separator1,&plen);
                   if (ret!=4)
                    continue;
-                 } 
+                 }
 
                 if ((current.start = this->hmsToTime(a1,a2,a3,a4*10))==NULL)
                         continue;
@@ -399,7 +399,7 @@ template<class tchar> Tsubtitle* TsubtitleParserVplayer<tchar>::parse(Tstream &f
                          ;
                 }
         }
-        
+
         return store(current);
 }
 
@@ -430,7 +430,7 @@ template<class tchar> Tsubtitle* TsubtitleParserRt<tchar>::parse(Tstream &fd,int
 	(tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d.%d\"%*[^<]<clear/>%n"),&a3,&a4,&plen) < 2) &&
 	(tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d:%d\"%*[^<]<clear/>%n"),&a2,&a3,&plen) < 2) &&
 	(tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d:%d.%d\"%*[^<]<clear/>%n"),&a2,&a3,&a4,&plen) < 3) &&
-	(tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d:%d:%d.%d\"%*[^<]<clear/>%n"),&a1,&a2,&a3,&a4,&plen) < 4) 
+	(tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d:%d:%d.%d\"%*[^<]<clear/>%n"),&a1,&a2,&a3,&a4,&plen) < 4)
         )
             continue;
         current.start = this->hmsToTime(a1,a2,a3,a4);
@@ -446,7 +446,7 @@ template<class tchar> Tsubtitle* TsubtitleParserRt<tchar>::parse(Tstream &fd,int
            ;
         }
     }
-    
+
     return store(current);
 }
 
@@ -457,7 +457,7 @@ template<class tchar>  TsubtitleParserSSA<tchar>::TsubtitleParserSSA(int Iformat
  timer(1,1),
  isEmbedded(isEmbedded0)
 {
-} 
+}
 
 template<class tchar> void TsubtitleParserSSA<tchar>::strToInt(const ffstring &str,int *i)
 {
@@ -466,7 +466,7 @@ template<class tchar> void TsubtitleParserSSA<tchar>::strToInt(const ffstring &s
    tchar *end;
    int val=strtol(str.c_str(),&end,10);
    if (*end=='\0' && val>=0) *i=val;
-  } 
+  }
 }
 
 template<class tchar> void TsubtitleParserSSA<tchar>::Tstyle::toProps(void)
@@ -483,17 +483,17 @@ template<class tchar> void TsubtitleParserSSA<tchar>::Tstyle::toProps(void)
   }
  else
   radix=10;
- tchar *endcolor; 
- COLORREF color=strtol(colorS,&endcolor,radix);  
+ tchar *endcolor;
+ COLORREF color=strtol(colorS,&endcolor,radix);
  if (*endcolor=='\0')
   {
    props.color=color;
    props.isColor=true;
   }
- if (bold==_L("-1")) props.bold=true; 
- if (italic==_L("-1")) props.italic=true; 
- if (underline==_L("-1")) props.underline=true; 
- if (strikeout==_L("-1")) props.strikeout=true; 
+ if (bold==_L("-1")) props.bold=true;
+ if (italic==_L("-1")) props.italic=true;
+ if (underline==_L("-1")) props.underline=true;
+ if (strikeout==_L("-1")) props.strikeout=true;
  strToInt(encoding,&props.encoding);
  strToInt(spacing,&props.spacing);
  strToInt(fontScaleX,&props.scaleX);
@@ -528,7 +528,7 @@ template<class tchar> void TsubtitleParserSSA<tchar>::Tstyle::toProps(void)
 template<class tchar> void TsubtitleParserSSA<tchar>::Tstyles::add(Tstyle &s)
 {
  s.toProps();
- insert(std::make_pair(s.name,s)); 
+ insert(std::make_pair(s.name,s));
 }
 template<class tchar> const TSubtitleProps* TsubtitleParserSSA<tchar>::Tstyles::getProps(const ffstring &style)
 {
@@ -555,7 +555,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
    const char_t* lineD1=(const char_t*)lineD0;
    DPRINTF(_l("%s"),lineD1);
 #endif
-   if (line[0]==';') 
+   if (line[0]==';')
     continue;
    tchar *cr=strrchr(line,'\n');if (cr) *cr='\0';
    cr=strrchr(line,'\r');if (cr) *cr='\0';
@@ -582,21 +582,21 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
      inV4styles=2;
      inEvents=0;
      inInfo=0;
-    } 
+    }
    else if (strnicmp(line,_L("[V4+ Styles]"),11)==0)
     {
      version=ASS;
      inV4styles=2;
      inEvents=0;
      inInfo=0;
-    } 
+    }
    else if (strnicmp(line,_L("[V4++ Styles]"),11)==0)
     {
      version=ASS2;
      inV4styles=2;
      inEvents=0;
      inInfo=0;
-    } 
+    }
    else if (strnicmp(line,_L("[Events]"),8)==0)
     {
      inV4styles=0;
@@ -636,9 +636,9 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
        else if (strnicmp(f->first,_L("marginv"),7)==0)
         styleFormat.push_back(&Tstyle::marginV);
        else
-        styleFormat.push_back(NULL); 
-      }  
-     inV4styles=1;  
+        styleFormat.push_back(NULL);
+      }
+     inV4styles=1;
     }
    else if (inV4styles && strnicmp(line,_L("Style:"),6)==0)
     {
@@ -673,7 +673,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
          styleFormat.push_back(&Tstyle::encoding);
          if (version<=SSA) styleFormat.push_back(&Tstyle::alpha);
          styleFormat.push_back(&Tstyle::relativeTo);
-        } 
+        }
        inV4styles=1;
       }
      strings fields;
@@ -719,9 +719,9 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
        else if (strnicmp(f->first,_L("text"),4)==0)
         eventFormat.push_back(&Tevent::text);
        else
-        eventFormat.push_back(NULL); 
+        eventFormat.push_back(NULL);
       }
-     inEvents=1; 
+     inEvents=1;
     }
    else if ((flags&this->SSA_NODIALOGUE) || (inEvents==1 && strnicmp(line,_L("Dialogue:"),8)==0))
     {
@@ -735,10 +735,10 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
          eventFormat.push_back(&Tevent::end);
         }
        else
-        { 
+        {
          eventFormat.push_back(&Tevent::readorder);
          eventFormat.push_back(&Tevent::layer);
-        } 
+        }
        eventFormat.push_back(&Tevent::style);
        eventFormat.push_back(&Tevent::actor);
        eventFormat.push_back(&Tevent::marginL);
@@ -808,11 +808,11 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
           current.add(line2);
          } while (flags&this->SSA_NODIALOGUE && fd.fgets((tchar*)(line2=line),this->LINE_LEN));
          return store(current);
-        }    
-      }  
+        }
+      }
     }
   }
- return NULL; 
+ return NULL;
 }
 
 template<class tchar> Tsubtitle* TsubtitleParserDunnowhat<tchar>::parse(Tstream &fd,int flags) {
@@ -821,15 +821,15 @@ template<class tchar> Tsubtitle* TsubtitleParserDunnowhat<tchar>::parse(Tstream 
 
     if (!fd.fgets (line, this->LINE_LEN))
         return NULL;
-    long start,stop;    
+    long start,stop;
     if (tchar_traits<tchar>::sscanf() (line, _L("%ld,%ld,\"%[^\"]"), &start,
                 &stop, text) <3)
         return NULL;
     TsubtitleTextBase<tchar> current(this->format);
     current.start=this->frameToTime(start);
-    current.stop =this->frameToTime(stop );    
+    current.stop =this->frameToTime(stop );
     current.add(text);
-    
+
     return store(current);
 }
 
@@ -877,7 +877,7 @@ template<class tchar> Tsubtitle* TsubtitleParserAqt<tchar>::parse(Tstream &fd,in
     const tchar *next;
     //int i;
 
-    long start;        
+    long start;
     while (1) {
     // try to locate next subtitle
         if (!fd.fgets (line, this->LINE_LEN))
@@ -910,7 +910,7 @@ template<class tchar> Tsubtitle* TsubtitleParserAqt<tchar>::parse(Tstream &fd,in
         previous = NULL;
         return NULL;
         }
-    
+
     return previous=store(current);
 }
 
@@ -947,7 +947,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSubrip09<tchar>::parse(Tstream &
         previous = NULL;
         return NULL;
         }
-    
+
     return previous=store(current);
 }
 
@@ -1005,7 +1005,7 @@ TsubreaderMplayer::TsubreaderMplayer(Tstream &fd,int sub_format,double fps,const
 {
  TsubtitleParserBase *parser=TsubtitleParserBase::getParser(sub_format,fps,cfg,ffcfg,this,false,isEmbedded);
  if (!parser) return;
- 
+
  fd.rewind();
 
  while (parser->parse(fd))
@@ -1020,7 +1020,7 @@ TsubreaderMplayer::TsubreaderMplayer(Tstream &fd,int sub_format,double fps,const
     if ((*s)->stop<(*s)->start)
      (*s)->stop=(*(s+1))->start-1;
    processOverlap(sub_format);
-  } 
+  }
 }
 
 void Tsubreader::processOverlap(int sub_format)
@@ -1054,7 +1054,7 @@ void Tsubreader::processOverlap(int sub_format)
    // used by the subs, a 'placeholder'
    counter = 2 * sub_to_add + 1;  // the maximum number of subs derived rom a block of sub_to_add+1 subs
    placeholder = (int **) malloc(sizeof(int *) * counter);
-   for (int i = 0; i < counter; ++i) 
+   for (int i = 0; i < counter; ++i)
     {
      placeholder[i] = (int *) malloc(sizeof(int) * lines_to_add);
      for (int j = 0; j < lines_to_add; ++j)
@@ -1078,9 +1078,9 @@ void Tsubreader::processOverlap(int sub_format)
      // display in current local_start-local_end interval.
      // if the subs were yet presents in the previous interval
      // they keep the same lines, otherwise they get unused lines
-     for (int j = 0; j <= sub_to_add; ++j) 
+     for (int j = 0; j <= sub_to_add; ++j)
       {
-       if ((at(sub_first + j)->start <= local_end) && (at(sub_first + j)->stop > local_start)) 
+       if ((at(sub_first + j)->start <= local_end) && (at(sub_first + j)->stop > local_start))
         {
          unsigned long sub_lines=at(sub_first + j)->numlines(), fragment_length = lines_to_add + 1,tmp=0;
          char boolean = 0;
@@ -1107,7 +1107,7 @@ void Tsubreader::processOverlap(int sub_format)
          int i;
          for (i = 0; i < lines_to_add; ++i)
           {
-           if (placeholder[counter][i] == -1) 
+           if (placeholder[counter][i] == -1)
             ++tmp; // placeholder[counter][i] is part of the current group of blank lines
            else
             {
@@ -1127,8 +1127,8 @@ void Tsubreader::processOverlap(int sub_format)
                fragment_length = tmp;
                fragment_position = i - tmp;
                tmp = 0;
-              } 
-             else 
+              }
+             else
               tmp = 0; // current group doesn't fit at all, so we forget it
             }
           }
@@ -1158,7 +1158,7 @@ void Tsubreader::processOverlap(int sub_format)
      Tsubtitle *second=at(0)->create();
      second->start = local_start;
      second->stop  = local_end;
-     for (int i = 0, j = 0; j < lines_to_add ; ++j) 
+     for (int i = 0, j = 0; j < lines_to_add ; ++j)
       if (placeholder[counter][j] != -1)
        {
         int lines = at(placeholder[counter][j])->numlines();
@@ -1168,7 +1168,7 @@ void Tsubreader::processOverlap(int sub_format)
          at(placeholder[counter][j])->copyLine(second,ls);
         j+=lines-1;
        }
-      else 
+      else
        second->addEmpty();
      newsubs.push_back(second);
      ++sub_num;

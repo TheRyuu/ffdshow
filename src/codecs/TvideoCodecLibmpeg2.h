@@ -21,7 +21,7 @@ private:
  void (*mpeg2_reset)(mpeg2dec_t *mpeg2dec, int full_reset);
  void (*mpeg2_set_rtStart)(mpeg2dec_t *mpeg2dec,int64_t rtStart);
  int (*mpeg2_guess_aspect)(const mpeg2_sequence_t * sequence,unsigned int * pixel_width,unsigned int * pixel_height);
- 
+
  mpeg2dec_t *mpeg2dec;
  const mpeg2_info_t *info;
  bool wait4Iframe;

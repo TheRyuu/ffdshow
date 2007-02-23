@@ -34,7 +34,7 @@
 #pragma warning (disable:4799)
 
 static void asharp_run_c(unsigned char* planeptr, int pitch,
-                         int height, int width, 
+                         int height, int width,
                          int T,int D, int B, int B2, int bf,unsigned char* lineptr)
 {
  unsigned char *cfp=planeptr+pitch;
@@ -67,10 +67,10 @@ static void asharp_run_c(unsigned char* planeptr, int pitch,
 
      #define CHECK(A) \
      if (abs(A-cfp[x])>dev) dev = abs(A-cfp[x]);
-     
+
      if (bf)
       {
-       if (y%8>0) 
+       if (y%8>0)
         {
          if (x%8>0) CHECK(lp[x-1])
          CHECK(lp[x  ])
@@ -78,7 +78,7 @@ static void asharp_run_c(unsigned char* planeptr, int pitch,
         }
        if (x%8>0) CHECK(last)
        if (x%8<7) CHECK(cfp[x  +1])
-       if (y%8<7) 
+       if (y%8<7)
         {
          if (x%8>0) CHECK(cfp[x+pitch-1])
          CHECK(cfp[x+pitch  ])
@@ -127,7 +127,7 @@ static void asharp_run_c(unsigned char* planeptr, int pitch,
    lp[x] = cfp[x];
    cfp += pitch;
   }
-} 
+}
 
 static __forceinline void apply(__m64 &srch,__m64 &srcl,__m64 &difl,__m64 &difh,const __m64 &thrh,const __m64 &thrl)
 {
@@ -141,11 +141,11 @@ static __forceinline void apply(__m64 &srch,__m64 &srcl,__m64 &difl,__m64 &difh,
 
 static __forceinline void diff(__m64 &srch,__m64 &srcl,__m64 &difl,__m64 &difh,__m64 &acch,__m64 &accl,const __m64 &c4w_inv9,const __m64 &zero)
 {
- acch=_mm_mulhi_pi16(acch,c4w_inv9);//  pmulhw    acch,c4w_inv9 
+ acch=_mm_mulhi_pi16(acch,c4w_inv9);//  pmulhw    acch,c4w_inv9
  accl=_mm_mulhi_pi16(accl,c4w_inv9);//  pmulhw    accl,c4w_inv9
- srcl=srch;                         //  movq      srcl,srch              
- srch=_mm_unpackhi_pi8(srch,zero);  //  punpckhbw srch,zero              
- srcl=_mm_unpacklo_pi8(srcl,zero);  //  punpcklbw srcl,zero       
+ srcl=srch;                         //  movq      srcl,srch
+ srch=_mm_unpackhi_pi8(srch,zero);  //  punpckhbw srch,zero
+ srcl=_mm_unpacklo_pi8(srcl,zero);  //  punpcklbw srcl,zero
  difh=srch;                         //  movq      difh,srch
  difl=srcl;                         //  movq      difl,srcl
  difh=_mm_subs_pi16(difh,acch);     //  psubsw    difh,acch
@@ -235,16 +235,16 @@ template<class Tsimd> struct Tasharp
  static __forceinline void atresh(__m64 &thrh,__m64 &thrl,const __m64 &c4w_D1,const __m64 &c4w_D2,const __m64 &c4w_Td4,const __m64 &c4w_Da,__m64 &zero)
   {
    thrl=thrh;                        //  movq      thrl,thrh
-   thrh=_mm_unpackhi_pi8(thrh,zero); //  punpckhbw thrh,zero        
-   thrl=_mm_unpacklo_pi8(thrl,zero); //  punpcklbw thrl,zero        
-   thrh=_mm_slli_pi16(thrh,7);       //  psllw     thrh,7   
-   thrl=_mm_slli_pi16(thrl,7);       //  psllw     thrl,7   
-   thrh=_mm_mulhi_pi16(thrh,c4w_D1); //  pmulhw    thrh,c4w_D1      
-   thrl=_mm_mulhi_pi16(thrl,c4w_D2); //  pmulhw    thrl,c4w_D2      
+   thrh=_mm_unpackhi_pi8(thrh,zero); //  punpckhbw thrh,zero
+   thrl=_mm_unpacklo_pi8(thrl,zero); //  punpcklbw thrl,zero
+   thrh=_mm_slli_pi16(thrh,7);       //  psllw     thrh,7
+   thrl=_mm_slli_pi16(thrl,7);       //  psllw     thrl,7
+   thrh=_mm_mulhi_pi16(thrh,c4w_D1); //  pmulhw    thrh,c4w_D1
+   thrl=_mm_mulhi_pi16(thrl,c4w_D2); //  pmulhw    thrl,c4w_D2
    Tsimd::pminsw(thrh,c4w_Td4);
    Tsimd::pminsw(thrl,c4w_Td4);
-   thrh=_mm_adds_pi16(thrh,c4w_Da);  //  paddsw    thrh,c4w_Da   
-   thrl=_mm_adds_pi16(thrl,c4w_Da);  //  paddsw    thrl,c4w_Da   
+   thrh=_mm_adds_pi16(thrh,c4w_Da);  //  paddsw    thrh,c4w_Da
+   thrl=_mm_adds_pi16(thrl,c4w_Da);  //  paddsw    thrl,c4w_Da
    thrh=_mm_slli_pi16(thrh,4);       //  psllw             thrh,4
    thrl=_mm_slli_pi16(thrl,4);       //  psllw             thrl,4
   }
@@ -330,7 +330,7 @@ template<class Tsimd> struct Tasharp
   }
 
  static void asharp_run(unsigned char* planeptr, int pitch,
-                        int height, int width, 
+                        int height, int width,
                         int T,int D, int B, int B2, int bf, unsigned char* lineptrna)
   {
    unsigned char* lineptr = (unsigned char*)(((intptr_t)lineptrna)+8-(((intptr_t)lineptrna)&7));
@@ -341,7 +341,7 @@ template<class Tsimd> struct Tasharp
    __align8(uint16_t,c4w_Dtab[3*8]);
    __align8(uint16_t,*c4w_Dtabp) = c4w_Dtab;
 
-   for (int i=0;i<3;i++) 
+   for (int i=0;i<3;i++)
     {
      int D2=D;
      int D3=D;
@@ -374,14 +374,14 @@ template<class Tsimd> struct Tasharp
    __align8(uint8_t,v8b_first[8]);
 
    __m64 mm2,c4w_D1,c4w_D2;
-   for (int y=1;y<height-1;y++) 
+   for (int y=1;y<height-1;y++)
     {
-     if ((y&7)==0 || (y&7)==7) 
+     if ((y&7)==0 || (y&7)==7)
       {
        c4w_D1=*(__m64*)(c4w_Dtabp+0);
        c4w_D2=mm2=*(__m64*)(c4w_Dtabp+4);
       }
-     else if ((y&7)==1 || (y&7)==6) 
+     else if ((y&7)==1 || (y&7)==6)
       {
        c4w_D1=*(__m64*)(c4w_Dtabp+8);
        c4w_D2=mm2=*(__m64*)(c4w_Dtabp+12);
@@ -404,7 +404,7 @@ template<class Tsimd> struct Tasharp
       else if ((y&7)==7)
        for (int x=0;x<width;x+=8)
         run2<Trun_c2u>(cfp,x,lineptr,mm7,pitch,mm2,mm3,mm4,mm5,mm6,c4w_inv9,mm1,c8b_00r,c8b_00l,c4w_D1,c4w_D2,c4w_Td4,c4w_Da);
-      else 
+      else
        for (int x=0;x<width;x+=8)
         run2<Trun_c2d>(cfp,x,lineptr,mm7,pitch,mm2,mm3,mm4,mm5,mm6,c4w_inv9,mm1,c8b_00r,c8b_00l,c4w_D1,c4w_D2,c4w_Td4,c4w_Da);
      else if (D>0)
@@ -415,7 +415,7 @@ template<class Tsimd> struct Tasharp
        run1(cfp,x,lineptr,mm7,pitch,mm2,mm3,mm4,mm5,mm6,c4w_inv9,c4w_T,mm1);
      cfp+=pitch;
     }
-  } 
+  }
 };
 
 asharp_run_fct* getAsharp(void)

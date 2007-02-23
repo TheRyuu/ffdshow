@@ -22,7 +22,7 @@
  * @file postprocess.c
  * postprocessing.
  */
- 
+
 /*
 			C	MMX	MMX2	3DNow	AltiVec
 isVertDC		Ec	Ec			Ec
@@ -223,7 +223,7 @@ static inline int isHorizMinMaxOk_C(uint8_t src[], stride_t stride, int QP)
 		if((unsigned)(src[6] - src[3] + 2*QP) > 4*QP) return 0;
 		src += stride;
 	}
-#else        
+#else
 	for(i=0; i<8; i++){
 		if((unsigned)(src[0] - src[7] + 2*QP) > 4*QP) return 0;
 		src += stride;
@@ -459,7 +459,7 @@ static always_inline void do_a_deblock_C(uint8_t *src, stride_t step, stride_t s
 		if(((unsigned)(src[ 7*step] - src[8*step] + dcOffset)) < dcThreshold) numEq++;
 		if(numEq > c->ppMode.flatnessThreshold){
 			int min, max, x;
-			
+
 			if(src[0] > src[step]){
 			    max= src[0];
 			    min= src[step];
@@ -479,7 +479,7 @@ static always_inline void do_a_deblock_C(uint8_t *src, stride_t step, stride_t s
 			if(max-min < 2*QP){
 				const int first= ABS(src[-1*step] - src[0]) < QP ? src[-1*step] : src[0];
 				const int last= ABS(src[8*step] - src[7*step]) < QP ? src[8*step] : src[7*step];
-				
+
 				int sums[10];
 				sums[0] = 4*first + src[0*step] + src[1*step] + src[2*step] + 4;
 				sums[1] = sums[0] - first       + src[3*step];
@@ -512,10 +512,10 @@ static always_inline void do_a_deblock_C(uint8_t *src, stride_t step, stride_t s
 
 				int d= ABS(middleEnergy) - MIN( ABS(leftEnergy), ABS(rightEnergy) );
 				d= MAX(d, 0);
-	
+
 				d= (5*d + 32) >> 6;
 				d*= SIGN(-middleEnergy);
-	
+
 				if(q>0)
 				{
 					d= d<0 ? 0 : d;
@@ -526,7 +526,7 @@ static always_inline void do_a_deblock_C(uint8_t *src, stride_t step, stride_t s
 					d= d>0 ? 0 : d;
 					d= d<q ? q : d;
 				}
-	
+
 				src[3*step]-= d;
 				src[4*step]+= d;
 			}
@@ -738,10 +738,10 @@ pp_context_t *pp_get_context(int width, int height, int cpuCaps){
 void pp_free_context(void *vc){
 	PPContext *c = (PPContext*)vc;
 	int i;
-	
+
 	for(i=0; i<3; i++) free(c->tempBlured[i]);
 	for(i=0; i<3; i++) free(c->tempBluredPast[i]);
-	
+
 	free(c->tempBlocks);
 	free(c->yHistogram);
 	free(c->tempDst);
@@ -750,9 +750,9 @@ void pp_free_context(void *vc){
 	free(c->stdQPTable);
 	free(c->nonBQPTable);
 	free(c->forcedQPTable);
-        
+
 	memset(c, 0, sizeof(PPContext));
-	
+
 	free(c);
 }
 
@@ -767,13 +767,13 @@ void  pp_postprocess(uint8_t * src[3], stride_t srcStride[3],
 	PPMode *mode = (PPMode*)vm;
 	PPContext *c = (PPContext*)vc;
         stride_t minStride= MAX(srcStride[0], dstStride[0]);
-	
+
 	if(c->stride < minStride || c->qpStride < QPStride)
-		reallocBuffers(c, width, height, 
-				MAX(minStride, c->stride), 
+		reallocBuffers(c, width, height,
+				MAX(minStride, c->stride),
 				MAX(c->qpStride, QPStride));
-        
-        if(QP_store==NULL || (mode->lumMode & FORCE_QUANT)) 
+
+        if(QP_store==NULL || (mode->lumMode & FORCE_QUANT))
         {
                 int i;
 		QP_store= c->forcedQPTable;
@@ -853,4 +853,8 @@ for(y=0; y<mbHeight; y++){
                 }
         }
 }
+
+
+
+
 

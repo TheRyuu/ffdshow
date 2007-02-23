@@ -19,7 +19,7 @@
 #include <xmmintrin.h>
 #ifdef __SSE2__
   #include <emmintrin.h>
-#endif  
+#endif
 
 #ifdef __GNUC__
  #undef __inline

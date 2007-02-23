@@ -21,7 +21,7 @@
 #include "mp3header.h"
 #include "libavcodec/bitstream.h"
 
-const unsigned long mp3header::bitrate_table[5][15] = 
+const unsigned long mp3header::bitrate_table[5][15] =
 {
   /* MPEG-1 */
   { 0,  32000,  64000,  96000, 128000, 160000, 192000, 224000,  /* Layer I   */
@@ -39,7 +39,7 @@ const unsigned long mp3header::bitrate_table[5][15] =
 };
 const unsigned int mp3header::samplerate_table[3] =
 {
- 44100, 48000, 32000 
+ 44100, 48000, 32000
 };
 unsigned int mp3header::findNearestFreq(unsigned int f)
 {
@@ -55,8 +55,8 @@ unsigned int mp3header::findNearestFreq(unsigned int f)
       if (mindiff==0) goto end;
      }
    }
-end:  
- return dstf?dstf:f;  
+end:
+ return dstf?dstf:f;
 }
 
 mp3header::mp3header(const unsigned char *buf,unsigned int buflen)
@@ -184,5 +184,5 @@ unsigned int mp3header::calc_frame_len(void)
 
     N = (slots_per_frame * bitrate / samplerate) + pad_slot;
   }
- return N; 
+ return N;
 }

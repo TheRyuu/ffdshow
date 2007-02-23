@@ -10,8 +10,8 @@ struct IffdshowDecAideo;
 struct TpresetAudio;
 struct TglobalSettingsDecAideo;
 struct TregOpIDstreamWrite;
-class TffProcAudio :public CUnknown, 
-                    public TffProcBase, 
+class TffProcAudio :public CUnknown,
+                    public TffProcBase,
                     public IffProcAudio,
                     public IprocAudioSink
 {
@@ -41,9 +41,9 @@ public:
  STDMETHODIMP end(void);
  // IprocAudioSink
  STDMETHODIMP deliverProcessedSample(const void *buf,size_t numsamples,const TsampleFormat &outsf);
- 
+
  void saveConfig(TregOpIDstreamWrite &t);
- void loadConfig(bool notreg,const unsigned char *buf,size_t len); 
+ void loadConfig(bool notreg,const unsigned char *buf,size_t len);
 private:
  comptr<IffdshowDecAudio> deciA;
  TaudioFilters *audioFilters;void initAudioFilters(void);

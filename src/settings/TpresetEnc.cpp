@@ -56,7 +56,7 @@ void TpresetEnc::load(const char_t *Iname)
 {
  char_t key[MAX_PATH];strcpy(key,FFDSHOW_REG_PARENT _l("\\") FFDSHOWENC);
  strcpy(name,Iname?Iname:_l("Default"));
- if (Iname) 
+ if (Iname)
   {
    strcat(key,_l("\\"));
    strcat(key,name);
@@ -86,7 +86,7 @@ void TpresetEnc::load(const char_t *Iname)
        preset->vals.insert(std::make_pair(X,Tval(val)));
        return true;
       }
-     else 
+     else
       return false;
     }
    virtual void _REG_OP_S(short int id,const char_t *X,char_t *Y,size_t buflen,const char_t *Z)
@@ -95,7 +95,7 @@ void TpresetEnc::load(const char_t *Iname)
      char_t val[MAX_PATH];
      if (hKey && RegQueryValueEx(hKey,X,0,0,(LPBYTE)val,&size)==ERROR_SUCCESS)
       preset->vals.insert(std::make_pair(X,Tval(val)));
-    } 
+    }
   } t(this,HKEY_CURRENT_USER,key);
  TcoSettings co(new TintStrColl);
  co.reg_op(t);
@@ -144,7 +144,7 @@ void TpresetEnc::apply(TcoSettings *co,const int *propsIDs)
          Y=val->second.i;
          return false;
         }
-      }  
+      }
      return true;
     }
    virtual void _REG_OP_S(short int id,const char_t *X,char_t *Y,size_t buflen,const char_t *Z)
@@ -157,7 +157,7 @@ void TpresetEnc::apply(TcoSettings *co,const int *propsIDs)
          strncpy(Y,val->second.s.c_str(),buflen);
          Y[buflen-1]='\0';
         }
-      }  
+      }
     }
   } t(this,co,propsIDs);
  co->reg_op(t);
@@ -209,8 +209,8 @@ void TpresetsEnc::init(void)
 
  HKEY hKey;
  RegOpenKeyEx(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOWENC,0,KEY_READ,&hKey);
- for (int i=0,retCode=ERROR_SUCCESS;retCode==ERROR_SUCCESS;i++) 
-  { 
+ for (int i=0,retCode=ERROR_SUCCESS;retCode==ERROR_SUCCESS;i++)
+  {
    char_t keyName[MAX_PATH];DWORD keyNameSize=MAX_PATH;
    FILETIME ftLastWriteTime;
    retCode = RegEnumKeyEx(hKey,
@@ -221,7 +221,7 @@ void TpresetsEnc::init(void)
                           NULL,
                           NULL,
                           &ftLastWriteTime
-                         ); 
+                         );
    if (retCode==ERROR_SUCCESS)
     {
      if (strcmp(keyName,_l("makeAVIS"))!=0)
@@ -229,7 +229,7 @@ void TpresetsEnc::init(void)
        TpresetEnc presetAVIS;
        presetAVIS.load(keyName);
        push_back(presetAVIS);
-      } 
+      }
     }
    else
     break;
@@ -350,7 +350,7 @@ void TpresetsEnc::save(void)
 TpresetEnc* TpresetsEnc::getPreset(const char_t *name)
 {
  for (iterator i=begin();i!=end();i++)
-  if (stricmp(name,i->name)==0) 
+  if (stricmp(name,i->name)==0)
    return &*i;
  return NULL;
 }

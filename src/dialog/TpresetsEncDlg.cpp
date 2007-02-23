@@ -30,7 +30,7 @@ TpresetsEncDlg::TpresetsEncDlg(HWND parent,IffdshowBase *Ideci,TpresetsEnc &Ipre
    IDC_BT_PRESET_REMOVE,&TpresetsEncDlg::onRemove,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
  dialogBox(dialogId,parent);
 }
 
@@ -42,7 +42,7 @@ INT_PTR TpresetsEncDlg::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
     init();
     return TRUE;
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDOK:
       case IDCANCEL:
@@ -55,7 +55,7 @@ INT_PTR TpresetsEncDlg::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
          selectPreset(i+2);
          return TRUE;
         }
-       break;  
+       break;
      };
     break;
   }
@@ -110,7 +110,7 @@ void TpresetsEncDlg::fillPresets(void)
 void TpresetsEncDlg::selectPreset(int i)
 {
  static const int idPreset[]={IDC_BT_PRESET_RENAME,IDC_BT_PRESET_REMOVE,0};
- if (cbxSetCurSel(IDC_CBX_PRESETS,i-2)==CB_ERR) 
+ if (cbxSetCurSel(IDC_CBX_PRESETS,i-2)==CB_ERR)
   {
    enable(false,idPreset);
    return;

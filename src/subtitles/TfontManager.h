@@ -13,7 +13,7 @@ private:
     }
    LOGFONT lf;
    HFONT hf;
-   unsigned int count; 
+   unsigned int count;
    bool operator ==(const LOGFONT &lf1) const
     {
      return memcmp(&lf,&lf1,sizeof(LOGFONT))==0;
@@ -34,16 +34,16 @@ public:
  HFONT getFont(const LOGFONT &font)
   {
    THFONTs::iterator f=std::find(fonts.begin(),fonts.end(),font);
-   if (f!=fonts.end()) 
+   if (f!=fonts.end())
     {
      f->count++;
      return f->hf;
-    } 
+    }
    if (fonts.size()==32)
     fonts.erase(std::min_element(fonts.begin(),fonts.end()));
    fonts.push_back(font);
-   return fonts.back().hf; 
-  } 
+   return fonts.back().hf;
+  }
 };
 
 #endif

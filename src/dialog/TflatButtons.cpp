@@ -20,20 +20,20 @@
 #include "TflatButtons.h"
 #include "ffdebug.h"
 
-VOID CALLBACK TflatButton::trackMouseTimerProc(HWND hwnd,UINT uMsg,UINT idEvent,DWORD dwTime) 
+VOID CALLBACK TflatButton::trackMouseTimerProc(HWND hwnd,UINT uMsg,UINT idEvent,DWORD dwTime)
 {
  RECT rect;
  POINT pt;
  GetClientRect(hwnd,&rect);
  MapWindowPoints(hwnd,NULL,(LPPOINT)&rect,2);
  GetCursorPos(&pt);
- if (!PtInRect(&rect,pt) || (WindowFromPoint(pt)!=hwnd)) 
+ if (!PtInRect(&rect,pt) || (WindowFromPoint(pt)!=hwnd))
   {
    KillTimer(hwnd,idEvent);
    TflatButton *self=(TflatButton*)getDlgItem(hwnd);
    self->isMouse=false;
    InvalidateRect(hwnd,NULL,FALSE);
-  } 
+  }
 }
 
 LRESULT TflatButton::onMouseMove(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
@@ -49,8 +49,8 @@ LRESULT TflatButton::onMouseMove(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam
     {
      isMouse=true;
      InvalidateRect(hwnd,NULL,FALSE);
-     SetTimer(hwnd,UINT_PTR(hwnd),100,(TIMERPROC)trackMouseTimerProc);      
-    } 
+     SetTimer(hwnd,UINT_PTR(hwnd),100,(TIMERPROC)trackMouseTimerProc);
+    }
   }
  return TwindowWidget::onMouseMove(hwnd,uMsg,wParam,lParam);
 }

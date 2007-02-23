@@ -136,12 +136,12 @@ protected:
 		const Map * container;
 	public:
 		__map_citer() : element(0), container(0) {  }
-		__map_citer(const typename Map::const_iterator & m) 
+		__map_citer(const typename Map::const_iterator & m)
 			: element(m.element), container(m.container) {  }
-		__map_citer(typename Map::size_type e, const Map * const c) 
+		__map_citer(typename Map::size_type e, const Map * const c)
 			: element(e), container(c) {  }
 		~__map_citer() {  }
-		
+
 		typename Map::value_type operator*() const{
 			return container->data[element];
 		}
@@ -204,12 +204,12 @@ protected:
 		Map * container;
 	public:
 		__map_iter() : element(0), container(0) {  }
-		__map_iter(const typename Map::iterator & m) 
+		__map_iter(const typename Map::iterator & m)
 			: element(m.element), container(m.container) {  }
-		__map_iter(typename Map::size_type e, Map * c) 
+		__map_iter(typename Map::size_type e, Map * c)
 			: element(e), container(c) {  }
 		~__map_iter() {  }
-		
+
 		typename Map::value_type & operator*(){
 			return container->data[element];
 		}
@@ -263,7 +263,7 @@ protected:
 
 
 	//Compare the keys of the two items
-	template<class Key, class T, class Compare, class Allocator> class _UCXXEXPORT 
+	template<class Key, class T, class Compare, class Allocator> class _UCXXEXPORT
 		__base_map<Key, T, Compare, Allocator>::value_compare : public binary_function<
 			typename map<Key, T, Compare, Allocator>::value_type,
 			typename map<Key, T, Compare, Allocator>::value_type,
@@ -280,11 +280,11 @@ protected:
 		}
 	};
 
-	template <class Key, class T, class Compare, class Allocator> 
+	template <class Key, class T, class Compare, class Allocator>
 		__base_map<Key, T, Compare, Allocator>::__base_map(const Compare& comp, const Allocator&)
 		: data(), c(comp)
 	{
-		
+
 	}
 
 	template <class Key, class T, class Compare, class Allocator>
@@ -297,7 +297,7 @@ protected:
 	template <class Key, class T, class Compare, class Allocator>
 		__base_map<Key, T, Compare, Allocator>::~__base_map()
 	{
-		
+
 	}
 
 
@@ -315,7 +315,7 @@ protected:
 		return const_iterator(0, this);
 
 	}
-	
+
 	template <class Key, class T, class Compare, class Allocator>
 		typename __base_map<Key, T, Compare, Allocator>::iterator
 		__base_map<Key, T, Compare, Allocator>::end()
@@ -372,7 +372,7 @@ protected:
 	}
 
 	template <class Key, class T, class Compare, class Allocator>
-		typename __base_map<Key, T, Compare, Allocator>::size_type 
+		typename __base_map<Key, T, Compare, Allocator>::size_type
 		__base_map<Key, T, Compare, Allocator>::max_size() const
 	{
 		return data.max_size();
@@ -603,7 +603,7 @@ protected:
 			retval.second = false;
 			return retval;
 		}
-		
+
 		//If we have an exact match
 		if( !c( retval.first->first, x.first) && !c(x.first, retval.first->first ) ){
 			retval.second = false;
@@ -630,7 +630,7 @@ protected:
 	}
 
 	template <class Key, class T, class Compare, class Allocator>
-		template <class InputIterator> void 
+		template <class InputIterator> void
 		map<Key, T, Compare, Allocator>::insert(InputIterator first, InputIterator last)
 	{
 		while(first !=last){
@@ -639,13 +639,13 @@ protected:
 		}
 	}
 
-	template <class Key, class T, class Compare, class Allocator> void 
+	template <class Key, class T, class Compare, class Allocator> void
 		map<Key, T, Compare, Allocator>::erase(iterator position)
 	{
 		//Create a deque iterator from position information and then
 		//Use built in erase feature because it is handy.
 		typename deque<pair<Key, T>, allocator<pair<Key, T> > >::iterator pos(&data, position.element);
-		data.erase(pos);		
+		data.erase(pos);
 	}
 
 	template <class Key, class T, class Compare, class Allocator>
@@ -724,7 +724,7 @@ protected:
 	}
 
 	template <class Key, class T, class Compare, class Allocator>
-		typename map<Key, T, Compare, Allocator>::iterator 
+		typename map<Key, T, Compare, Allocator>::iterator
 		map<Key, T, Compare, Allocator>::upper_bound(const key_type& x)
 	{
 		typename map<Key, T, Compare, Allocator>::iterator i = __base_map<Key, T, Compare, Allocator>::lower_bound(x);
@@ -756,7 +756,7 @@ protected:
                 > retval;
 		retval.first = __base_map<Key, T, Compare, Allocator>::lower_bound(x);
 		retval.second = upper_bound(x);
-		return retval;		
+		return retval;
 	}
 
 	template <class Key, class T, class Compare, class Allocator>
@@ -769,7 +769,7 @@ protected:
                 > retval;
 		retval.first = __base_map<Key, T, Compare, Allocator>::lower_bound(x);
 		retval.second = upper_bound(x);
-		return retval;		
+		return retval;
 	}
 
 	template <class Key, class T, class Compare, class Allocator> bool operator==
@@ -897,7 +897,7 @@ protected:
 		if( !c(x.first, retval->first) ){
 			++retval;
 		}
-		
+
 		typename deque<pair<Key, T>, allocator<pair<Key, T> > >::iterator q(&data, retval.element);
 		data.insert(q, x);
 
@@ -906,7 +906,7 @@ protected:
 
 
 	template <class Key, class T, class Compare, class Allocator>
-		typename multimap<Key, T, Compare, Allocator>::iterator 
+		typename multimap<Key, T, Compare, Allocator>::iterator
 		multimap<Key, T, Compare, Allocator>::insert(iterator position, const value_type& x)
 	{
 
@@ -934,7 +934,7 @@ protected:
 	}
 
 	template <class Key, class T, class Compare, class Allocator>
-		template <class InputIterator> void 
+		template <class InputIterator> void
 		multimap<Key, T, Compare, Allocator>::insert(InputIterator first, InputIterator last)
 	{
 		while(first !=last){
@@ -945,13 +945,13 @@ protected:
 
 
 
-	template <class Key, class T, class Compare, class Allocator> void 
+	template <class Key, class T, class Compare, class Allocator> void
 		multimap<Key, T, Compare, Allocator>::erase(iterator position)
 	{
 		//Create a deque iterator from position information and then
 		//Use built in erase feature because it is handy.
 		typename deque<pair<Key, T>, allocator<pair<Key, T> > >::iterator pos(&data, position.element);
-		data.erase(pos);		
+		data.erase(pos);
 	}
 
 	template <class Key, class T, class Compare, class Allocator>
@@ -977,7 +977,7 @@ protected:
 
 
 	template <class Key, class T, class Compare, class Allocator>
-		typename multimap<Key, T, Compare, Allocator>::iterator 
+		typename multimap<Key, T, Compare, Allocator>::iterator
 		multimap<Key, T, Compare, Allocator>::find(const key_type& x)
 	{
 		if(data.size() == 0){
@@ -1081,7 +1081,7 @@ protected:
                 > retval;
 		retval.first = __base_map<Key, T, Compare, Allocator>::lower_bound(x);
 		retval.second = upper_bound(x);
-		return retval;		
+		return retval;
 	}
 
 	template <class Key, class T, class Compare, class Allocator>
@@ -1094,7 +1094,7 @@ protected:
                 > retval;
 		retval.first = __base_map<Key, T, Compare, Allocator>::lower_bound(x);
 		retval.second = upper_bound(x);
-		return retval;		
+		return retval;
 	}
 
 
@@ -1102,11 +1102,11 @@ protected:
 
 
 /* Non-member functions.  These are at the end because they are not associated with any
-   particular class.  These will be implemented as I figure out exactly what all of 
+   particular class.  These will be implemented as I figure out exactly what all of
    them are supposed to do, and I have time.
  */
 
-	template <class Key, class T, class Compare, class Allocator> _UCXXEXPORT bool operator< 
+	template <class Key, class T, class Compare, class Allocator> _UCXXEXPORT bool operator<
 		(const map<Key,T,Compare,Allocator>& x, const map<Key,T,Compare,Allocator>& y);
 	template <class Key, class T, class Compare, class Allocator> _UCXXEXPORT bool operator!=
 		(const map<Key,T,Compare,Allocator>& x, const map<Key,T,Compare,Allocator>& y);
@@ -1122,11 +1122,11 @@ protected:
 
 	template <class Key, class T, class Compare, class Allocator> _UCXXEXPORT bool operator==
 		(const multimap<Key,T,Compare,Allocator>& x, const multimap<Key,T,Compare,Allocator>& y);
-	template <class Key, class T, class Compare, class Allocator> _UCXXEXPORT bool operator< 
+	template <class Key, class T, class Compare, class Allocator> _UCXXEXPORT bool operator<
 		(const multimap<Key,T,Compare,Allocator>& x, const multimap<Key,T,Compare,Allocator>& y);
 	template <class Key, class T, class Compare, class Allocator> _UCXXEXPORT bool operator!=
 		(const multimap<Key,T,Compare,Allocator>& x, const multimap<Key,T,Compare,Allocator>& y);
-	template <class Key, class T, class Compare, class Allocator> _UCXXEXPORT bool operator> 
+	template <class Key, class T, class Compare, class Allocator> _UCXXEXPORT bool operator>
 		(const multimap<Key,T,Compare,Allocator>& x, const multimap<Key,T,Compare,Allocator>& y);
 	template <class Key, class T, class Compare, class Allocator> _UCXXEXPORT bool operator>=
 		(const multimap<Key,T,Compare,Allocator>& x, const multimap<Key,T,Compare,Allocator>& y);
@@ -1140,4 +1140,4 @@ protected:
 
 #endif
 
-	
+

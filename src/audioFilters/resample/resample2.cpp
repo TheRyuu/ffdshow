@@ -93,7 +93,7 @@ private:
      double v=1;
      double t=1;
      int i;
-    
+
      for(i=1; i<50; i++){
          t *= i;
          v += pow(x*x/4, i)/(t*t);
@@ -129,7 +129,7 @@ private:
    }
   #endif
  #endif
- 
+
  template<class T> static inline void storeSample(T &dst,FELEM2 val)
   {
    val = (val + (1<<(FILTER_SHIFT-1)))>>FILTER_SHIFT;
@@ -228,12 +228,12 @@ public:
    int dst_incr_frac= c->dst_incr % c->src_incr;
    int dst_incr=      c->dst_incr / c->src_incr;
    int compensation_distance= c->compensation_distance;
-   
+
   if(compensation_distance == 0 && c->filter_length == 1 && c->phase_shift==0){
         int64_t index2= ((int64_t)index)<<32;
         int64_t incr= (1LL<<32) * c->dst_incr / c->src_incr;
         dst_size= FFMIN(dst_size, int((src_size-1-index) * (int64_t)c->src_incr / c->dst_incr));
-        
+
         for(dst_index=0; dst_index < dst_size; dst_index++){
             dst[dst_index] = src[index2>>32];
             index2 += incr;
@@ -247,7 +247,7 @@ public:
        FELEM *filter= c->filter_bank + c->filter_length*(index & c->phase_mask);
        int sample_index= index >> c->phase_shift;
        FELEM2 val=0;
-       
+
        if(sample_index < 0){
            for(i=0; i<c->filter_length; i++)
                val += src[ABS(sample_index + i) % src_size] * filter[i];
@@ -296,14 +296,14 @@ public:
        c->dst_incr= dst_incr_frac + c->src_incr*dst_incr;
        c->compensation_distance= compensation_distance;
    }
-#if 0    
+#if 0
    if(update_ctx && !c->compensation_distance){
 #undef rand
        av_resample_compensate(c, rand() % (8000*2) - 8000, 8000*2);
 av_log(NULL, AV_LOG_DEBUG, "%d %d %d\n", c->dst_incr, c->ideal_dst_incr, c->compensation_distance);
    }
 #endif
-   
+
    return dst_index;
   }
 };
@@ -312,7 +312,7 @@ template<class sample_t> void TreSampleContext<sample_t>::init(int io_channels,i
 {
  memset(this,0,sizeof(*this));
  this->ratio = (float)output_rate / (float)input_rate;
-    
+
  this->io_channels = io_channels;
  this->filter_channels = this->io_channels;
 }
@@ -320,7 +320,7 @@ template<class sample_t> void TreSampleContext<sample_t>::init(int io_channels,i
 template<> TreSampleContext<int16_t>::TreSampleContext(int io_channels,int output_rate, int input_rate, int filter_size, int phase_shift, int linear, double cutoff,int bits)
 {
  init(io_channels,output_rate,input_rate);
- switch (bits) 
+ switch (bits)
   {
    case 15:resample_context=new TAVResampleContext<int16_t,int16_t,int32_t,int32_t,INT16_MAX,INT16_MIN,15>(output_rate, input_rate, filter_size, phase_shift,linear, cutoff);break;
    case 22:resample_context=new TAVResampleContext<int16_t,int32_t,int64_t,int64_t,INT32_MAX,INT32_MIN,22>(output_rate, input_rate, filter_size, phase_shift,linear, cutoff);break;
@@ -331,7 +331,7 @@ template<> TreSampleContext<float>::TreSampleContext(int io_channels,int output_
 {
  init(io_channels,output_rate,input_rate);
  resample_context=new TAVResampleContext<float,float,float,int,1,-1,0>(output_rate, input_rate, filter_size, phase_shift,linear, cutoff);
-} 
+}
 
 /* resample audio. 'nb_samples' is the number of input samples */
 /* XXX: optimize it ! */
@@ -346,7 +346,7 @@ template<class sample_t> int TreSampleContext<sample_t>::audio_resample(sample_t
     bufin.alloc(bufinsizewanted);
     memcpy(bufin, this->temp, this->temp_len * sizeof(sample_t));
     buftmp2 = (sample_t*)bufin + this->temp_len;
-    
+
     /* make some zoom to avoid round pb */
     lenout= (int)(nb_samples * this->ratio) + 16;
 

@@ -166,7 +166,7 @@ API version=wersja API
 1021=Granica
 [128]
 0=Rozmywanie
-1134=Rozmywanie 
+1134=Rozmywanie
 1136=Zmiêkczanie
 1137=Temporal smooth
 1232=Uwzglêdniaj kolory

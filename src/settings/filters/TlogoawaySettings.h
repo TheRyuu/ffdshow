@@ -9,7 +9,7 @@ private:
  static const TfilterIDFF idffs;
 protected:
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  TlogoawaySettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  int x,y,dx,dy;
  int mode,lumaonly;
@@ -29,7 +29,7 @@ public:
    MODE_SHAPEUGLARM,
    MODE_LAST
   };
- struct Tmode 
+ struct Tmode
   {
    int id;
    const char_t *name;
@@ -39,22 +39,22 @@ public:
  enum BORDERMODE
   {
    BM_UNKNOWN,
-   BM_DIRECT, 
-   BM_OPPOSITE, 
-   BM_INTERPOLATE 
+   BM_DIRECT,
+   BM_OPPOSITE,
+   BM_INTERPOLATE
   };
  static const char_t *borderModes[];
- enum NAVIGATOR 
-  { 
-   UNKNOWN, 
-   NORTH, 
-   EAST, 
-   SOUTH, 
-   WEST, 
-   NW, 
-   NE, 
-   SW, 
-   SE 
+ enum NAVIGATOR
+  {
+   UNKNOWN,
+   NORTH,
+   EAST,
+   SOUTH,
+   WEST,
+   NW,
+   NE,
+   SW,
+   SE
   };
  static const char_t *navigators[];
  struct TborderPreset

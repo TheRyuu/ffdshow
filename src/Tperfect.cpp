@@ -51,13 +51,13 @@ void Tperfect::analyze(const TxvidStats *stats)
      if (bytes<Pmin) Pmin=bytes;
      else if (bytes>Pmax) Pmax=bytes;
     }
-  }  
- if (Pnum) 
+  }
+ if (Pnum)
   {
    avg=float(Psize)/Pnum;
    avgmax=100*Pmax/avg;
    avgmin=100*Pmin/avg;
-  
+
    framesCount=(unsigned int*)calloc(framesCountCount=Pmax+1,sizeof(unsigned int));
    for (size_t i=0;i<stats->size();i++)
     if (((*stats)[i]->quant&Txvid_2pass::NNSTATS_KEYFRAME)==0 || (*stats)[i]->bytes==0)

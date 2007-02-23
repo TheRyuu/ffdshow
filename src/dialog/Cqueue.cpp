@@ -28,8 +28,8 @@ void TqueuePage::init(void)
 
 void TqueuePage::cfg2dlg(void)
 {
- setCheck(IDC_CHB_MULTITHREAD,cfgGet(IDFF_multiThreadDec)); 
- setCheck(IDC_CHB_USE_QUEUE_ONLY_IN,cfgGet(IDFF_useQueueOnlyIn)); 
+ setCheck(IDC_CHB_MULTITHREAD,cfgGet(IDFF_multiThreadDec));
+ setCheck(IDC_CHB_USE_QUEUE_ONLY_IN,cfgGet(IDFF_useQueueOnlyIn));
  SetDlgItemText(m_hwnd,IDC_ED_USE_QUEUE_ONLY_IN_LIST,cfgGetStr(IDFF_useQueueOnlyInList));
  delay2dlg();
  interlaced2dlg();
@@ -79,12 +79,12 @@ bool TqueuePage::reset(bool testonly)
    deci->resetParam(IDFF_videoDelay);
    deci->resetParam(IDFF_multiThreadDec);
    deci->resetParam(IDFF_useQueueOnlyIn);
-  } 
+  }
  return true;
 }
 
 void TqueuePage::translate(void)
-{ 
+{
  TconfPageBase::translate();
 }
 
@@ -114,5 +114,5 @@ TqueuePage::TqueuePage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
    IDC_ED_DY_INTERLACED,0,4096,IDFF_dyInterlaced,NULL,
    0,NULL,NULL
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
 }

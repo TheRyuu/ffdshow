@@ -72,11 +72,11 @@ if (codecId==CODEC_ID_X264)
 
  if ((codecId==CODEC_ID_H263 || codecId==CODEC_ID_H263P) && cfgGet(IDFF_enc_me_hq)==FF_MB_DECISION_SIMPLE)
   flags.push_back(std::make_tuple(_l("OBMC"),IDFF_enc_H263Pflags,CODEC_FLAG_OBMC,false));
- 
+
  nostate=true;
  int iig=lvGetSelItem(IDC_LV_GENERIC);
  ListView_DeleteAllItems(hlv);
- for (Tflags::const_iterator f=flags.begin();f!=flags.end();f++) 
+ for (Tflags::const_iterator f=flags.begin();f!=flags.end();f++)
   {
    LVITEM lvi;memset(&lvi,0,sizeof(lvi));
    lvi.mask=LVIF_TEXT|LVIF_PARAM;
@@ -86,9 +86,9 @@ if (codecId==CODEC_ID_X264)
    int ii=ListView_InsertItem(hlv,&lvi);
    ListView_SetCheckState(hlv,ii,cfgGet(f->get<IDFF>())&f->get<VAL>());
   }
- lvSetSelItem(IDC_LV_GENERIC,iig); 
+ lvSetSelItem(IDC_LV_GENERIC,iig);
  nostate=false;
- 
+
  kf2dlg();
  b2dlg();
 
@@ -144,7 +144,7 @@ INT_PTR TgenericPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        cfgSet(IDFF_enc_min_key_interval,std::min(cfgGet(IDFF_enc_max_key_interval),tbrGet(IDC_TBR_MINKEYINTERVAL)));
        kf2dlg();
        return TRUE;
-     }  
+     }
     break;
    case WM_NOTIFY:
     {
@@ -164,13 +164,13 @@ INT_PTR TgenericPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
              cfgSet(f->get<IDFF>(),cfgGet(f->get<IDFF>())&~f->get<VAL>());
             if (f->get<REPAINT>())
              cfg2dlg();
-           } 
+           }
           return TRUE;
          }
-        break; 
+        break;
        }
      break;
-    }    
+    }
   }
  return TconfPageEnc::msgProc(uMsg,wParam,lParam);
 }
@@ -196,20 +196,20 @@ TgenericPage::TgenericPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
    IDC_ED_NUMTHREADS,1,8,IDFF_numthreads,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
 }
 
   void TgenericX264page::cfg2dlg(void)
   {
    TgenericPage::cfg2dlg();
-   SetDlgItemInt(m_hwnd,IDC_ED_X264_DEBLOCK_ALPHA,cfgGet(IDFF_enc_x264_i_deblocking_filter_alphac0),TRUE); 
-   SetDlgItemInt(m_hwnd,IDC_ED_X264_DEBLOCK_BETA ,cfgGet(IDFF_enc_x264_i_deblocking_filter_beta   ),TRUE); 
+   SetDlgItemInt(m_hwnd,IDC_ED_X264_DEBLOCK_ALPHA,cfgGet(IDFF_enc_x264_i_deblocking_filter_alphac0),TRUE);
+   SetDlgItemInt(m_hwnd,IDC_ED_X264_DEBLOCK_BETA ,cfgGet(IDFF_enc_x264_i_deblocking_filter_beta   ),TRUE);
    static const int idDeblock[]={IDC_LBL_X264_DEBLOCK_ALPHA,IDC_ED_X264_DEBLOCK_ALPHA,IDC_LBL_X264_DEBLOCK_BETA,IDC_ED_X264_DEBLOCK_BETA,0};
    enable((cfgGet(IDFF_enc_H263Pflags)&CODEC_FLAG_LOOP_FILTER)!=0 && codecId!=CODEC_ID_X264_LOSSLESS,idDeblock);
   }
   void TgenericX264page::b2dlg(void)
   {
-   setCheck(IDC_CHB_B_PYRAMID,cfgGet(IDFF_enc_x264_b_bframe_pyramid)); 
+   setCheck(IDC_CHB_B_PYRAMID,cfgGet(IDFF_enc_x264_b_bframe_pyramid));
    setCheck(IDC_CHB_B_RDO,cfgGet(IDFF_enc_x264_b_rdo));
    TgenericPage::b2dlg();
   }
@@ -224,11 +224,11 @@ TgenericPage::TgenericPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
      IDC_CHB_B_DYNAMIC,IDFF_enc_b_dynamic,NULL,
      IDC_CHB_B_PYRAMID,IDFF_enc_x264_b_bframe_pyramid,NULL,
      IDC_CHB_B_RDO,IDFF_enc_x264_b_rdo,NULL,
-     IDC_CHB_B_REFINE,IDFF_enc_b_refine,NULL,  
+     IDC_CHB_B_REFINE,IDFF_enc_b_refine,NULL,
      0,NULL,NULL
     };
    bindCheckboxes(chb);
-   static const TbindEditInt<TgenericX264page> edInt[]= 
+   static const TbindEditInt<TgenericX264page> edInt[]=
     {
      IDC_ED_B_MAX,1,8,IDFF_enc_max_b_frames,NULL,
      IDC_ED_NUMTHREADS,1,8,IDFF_numthreads,NULL,

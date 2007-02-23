@@ -7,7 +7,7 @@
 
 /* NOTE: The following code is suboptimal! It can be improved (at least) by
 
-   1. Replace all movups by movaps. (Can Parameter c be always aligned on 
+   1. Replace all movups by movaps. (Can Parameter c be always aligned on
       a 16-byte boundary?)
 
    2. Rewritten using intrinsics. (GCC generally optimizes intrinsics
@@ -434,4 +434,8 @@ void dct64_sse(real *a,real *b,real *c)
 #endif
     out1[0] = out0[0];
 }
+
+
+
+
 

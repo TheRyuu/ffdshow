@@ -28,7 +28,7 @@ const char_t* TwarpsharpSettings::cms[]=
  _l("downsampled"),
  _l("independent"),
  NULL
-}; 
+};
 const char_t* TwarpsharpSettings::bms[]=
 {
  _l("high quality 3-pass"),
@@ -53,7 +53,7 @@ TwarpsharpSettings::TwarpsharpSettings(TintStrColl *Icoll,TfilterIDFFs *filters)
 {
  static const TintOptionT<TwarpsharpSettings> iopts[]=
   {
-   IDFF_isWarpsharp          ,&TwarpsharpSettings::is                ,0,0,_l(""),1, 
+   IDFF_isWarpsharp          ,&TwarpsharpSettings::is                ,0,0,_l(""),1,
      _l("isWarpsharp"),0,
    IDFF_showWarpsharp        ,&TwarpsharpSettings::show              ,0,0,_l(""),1,
      _l("showWarpsharp"),1,
@@ -80,7 +80,7 @@ TwarpsharpSettings::TwarpsharpSettings(TintStrColl *Icoll,TfilterIDFFs *filters)
    IDFF_awarpsharpBM         ,&TwarpsharpSettings::awarpsharpBM      ,0,2,_l(""),1,
      _l("awarpsharpBM"),2,
    0
-  }; 
+  };
  addOptions(iopts);
 }
 
@@ -95,7 +95,7 @@ void TwarpsharpSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfi
      case WARPSHARP_FF:queueFilter<TimgFilterWarpsharp>(filtersorder,filters,queue); return;
      case WARPSHARP_A:queueFilter<TimgFilterAwarpsharp>(filtersorder,filters,queue); return;
     }
-  }  
+  }
 }
 void TwarpsharpSettings::createPages(TffdshowPageDec *parent) const
 {
@@ -121,6 +121,6 @@ bool TwarpsharpSettings::getTip(unsigned int pageId,char_t *buf,size_t buflen)
    case 1:tsnprintf(buf,buflen,_l("aWarpSharp - depth:%g, threshold:%g, %i %s blur, chroma mode:%s"),awarpsharpDepth/100.0f,awarpsharpThresh/100.0f,awarpsharpBlur,bms[awarpsharpBM],cms[awarpsharpCM]);
           break;
   }
- buf[buflen-1]='\0'; 
- return true; 
+ buf[buflen-1]='\0';
+ return true;
 }

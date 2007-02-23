@@ -27,7 +27,7 @@ void DPRINTFvaA(const char *fmt,va_list valist)
  int len=_vsnprintf(buf,1023,fmt,valist);
  if (len>0)
   {
-   if (buf[len-1]!='\n') 
+   if (buf[len-1]!='\n')
     {
      buf[len]='\n';
      buf[len+1]='\0';
@@ -41,7 +41,7 @@ void DPRINTFvaW(const wchar_t *fmt,va_list valist)
  int len=_vsnwprintf(buf,1023,fmt,valist);
  if (len>0)
   {
-   if (buf[len-1]!='\n') 
+   if (buf[len-1]!='\n')
     {
      buf[len]='\n';
      buf[len+1]='\0';

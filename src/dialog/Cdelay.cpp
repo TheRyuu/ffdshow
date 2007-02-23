@@ -42,5 +42,5 @@ TdelayPage::TdelayPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPa
    IDC_ED_DELAY_LFE,0,5000,IDFF_delayLFE,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
 }

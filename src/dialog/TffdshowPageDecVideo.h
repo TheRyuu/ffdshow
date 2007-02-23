@@ -9,10 +9,10 @@ class TffdshowPageDecVideo :public TffdshowPageDec
 private:
  comptrQ<IffdshowDecVideo> deciV;
  comptrQ<ISpecifyPropertyPagesVE> ve;
-protected: 
+protected:
  virtual void onActivate(void);
  virtual INT_PTR msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam);
-public: 
+public:
  static CUnknown* WINAPI CreateInstance(LPUNKNOWN lpunk,HRESULT *phr);
  TffdshowPageDecVideo(LPUNKNOWN pUnk,HRESULT *phr,const wchar_t *ItitleW,const char_t *name,int dialogId,int resstr);
 
@@ -41,4 +41,4 @@ public:
  TffdshowPageDecVideoProc(LPUNKNOWN pUnk,HRESULT *phr,const wchar_t *ItitleW,const char_t *name,int dialogId,int resstr);
 };
 
-#endif 
+#endif

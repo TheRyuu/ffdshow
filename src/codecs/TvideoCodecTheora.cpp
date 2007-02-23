@@ -92,7 +92,7 @@ TvideoCodecTheora::~TvideoCodecTheora()
 }
 void TvideoCodecTheora::end(void)
 {
- if (inited) 
+ if (inited)
   {
    theora_clear(&td);
    theora_info_clear(&ti);// memset(&td,0,sizeof(td));
@@ -118,9 +118,9 @@ bool TvideoCodecTheora::beginDecompress(TffPictBase &pict,FOURCC infcc,const CMe
    frameDuration=(UNITS*ill.frameRateDenominator)/ill.frameRateNumerator;
    frameCount=0;
   }
- rd=pict.rectFull; 
+ rd=pict.rectFull;
  pict.csp=FF_CSP_420P;
- Textradata extradata(mt); 
+ Textradata extradata(mt);
  if (extradata.data && extradata.size>2)
   {
    if (theorart)
@@ -137,7 +137,7 @@ bool TvideoCodecTheora::beginDecompress(TffPictBase &pict,FOURCC infcc,const CMe
      op.bytes=len0;
      if (theora_decode_header(&ti,&tc,&op)!=0)
       return false;
-     
+
      op.packet=(unsigned char*)src+16+len0;
      DWORD len1=*(DWORD*)&src[1*sizeof(DWORD)];
      op.bytes=len1;
@@ -168,7 +168,7 @@ bool TvideoCodecTheora::beginDecompress(TffPictBase &pict,FOURCC infcc,const CMe
      long len=*(long*)op.packet;op.packet+=4;op.bytes-=4;
      if (theora_decode_header(&ti,&tc,&op)!=0)
       return false;
-    } 
+    }
    else
     {
      const unsigned char *ptr=extradata.data;
@@ -185,41 +185,41 @@ bool TvideoCodecTheora::beginDecompress(TffPictBase &pict,FOURCC infcc,const CMe
        if (theora_decode_header(&ti,&tc,&op)!=0)
         return false;
        ptr+=size;
-      } 
+      }
     }
    ti.postprocessingLevel=deci->getParam2(IDFF_libtheoraPostproc)?6:0;
    if (theora_decode_init(&td,&ti)==0)
     return inited=true;
-   else 
-    return false; 
-  }   
+   else
+    return false;
+  }
  else
   {
    theora_info_init(&ti);
    theora_comment_init(&tc);
    return true;
-  } 
+  }
 }
 HRESULT TvideoCodecTheora::decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn)
 {
  ogg_packet op;memset(&op,0,sizeof(op));
  if (theorart)
   {
-   struct _TheoraPacket 
+   struct _TheoraPacket
     {
      long  bytes;
      long  b_o_s;
      long  e_o_s;
      int64_t  granulepos;
-     int64_t  packetno;    
+     int64_t  packetno;
     };
-   _TheoraPacket *packet=(_TheoraPacket*)src; 
-   if (packet->bytes==0 || src[sizeof(_TheoraPacket)]&0x80) 
+   _TheoraPacket *packet=(_TheoraPacket*)src;
+   if (packet->bytes==0 || src[sizeof(_TheoraPacket)]&0x80)
     return S_OK;
    src+=sizeof(_TheoraPacket);srcLen-=sizeof(_TheoraPacket);
    op.granulepos=packet->granulepos;
-  }  
-  
+  }
+
  if (ill.width)
   {
    REFERENCE_TIME rtStart=0,rtStop=0;
@@ -271,7 +271,7 @@ HRESULT TvideoCodecTheora::decompress(const unsigned char *src,size_t srcLen,IMe
      pict.rtStart=locFrameStart;
      pict.rtStop=locFrameEnd;
      pict.mediatimeStart=pict.mediatimeStop=REFTIME_INVALID;
-    } 
+    }
    else if (theorart)
     {
      pict.rtStart=ti.fps_denominator*REF_SECOND_MULT*theora_granule_frame(&td,td.granulepos)/ti.fps_numerator;
@@ -313,7 +313,7 @@ LRESULT TvideoCodecTheora::beginCompress(int cfgcomode,int csp,const Trect &r)
     ti.target_bitrate=coCfg->bitrate1000*1000;
     ti.keyframe_data_target_bitrate=ogg_uint32_t(ti.target_bitrate*1.5);
     ti.quality=0;
-    break;  
+    break;
    case ENC_MODE::VBR_QUAL:
    case ENC_MODE::VBR_QUANT:
    case ENC_MODE::PASS2_1:
@@ -323,7 +323,7 @@ LRESULT TvideoCodecTheora::beginCompress(int cfgcomode,int csp,const Trect &r)
     ti.target_bitrate=0;ti.keyframe_data_target_bitrate=0;
     break;
    default:
-    return ICERR_ERROR; 
+    return ICERR_ERROR;
   }
  if (theora_encode_init(&td,&ti)==0)
   {
@@ -360,7 +360,7 @@ HRESULT TvideoCodecTheora::compress(const TffPict &pict,TencFrameParams &params)
  yuv.y_width =ti.width      ;yuv.uv_width =yuv.y_width /2;
  yuv.y_stride=(int)pict.stride[0];yuv.uv_stride=(int)pict.stride[1];
  yuv.y_height=ti.height     ;yuv.uv_height=yuv.y_height/2;
- 
+
  yuv.y=pict.data[0];
  yuv.u=pict.data[1];
  yuv.v=pict.data[2];
@@ -387,9 +387,9 @@ HRESULT TvideoCodecTheora::compress(const TffPict &pict,TencFrameParams &params)
    params.priv=&openc;
    params.frametype=keyframe?(params.keyframe=true,FRAME_TYPE::I):FRAME_TYPE::P;
    if (params.quant==-1) params.quant=30*(63-fixedq)/63+1;
- 
+
    return sinkE->deliverEncodedSample(sample,params);
-  } 
+  }
 }
 
 bool TvideoCodecTheora::onSeek(REFERENCE_TIME segmentStart)

@@ -72,9 +72,9 @@ private:
           allpasstuningR3=341+stereospread,
           allpasstuningL4=225,
           allpasstuningR4=225+stereospread
-         }; 
+         };
 
-        // The following are all declared inline 
+        // The following are all declared inline
         // to remove the need for dynamic allocation
         // with its subsequent error-checking messiness
 

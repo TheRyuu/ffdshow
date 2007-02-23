@@ -34,7 +34,7 @@ TimgFilter::TimgFilter(IffdshowBase *Ideci,Tfilters *Iparent):Tfilter(Ideci),par
 TimgFilter::~TimgFilter()
 {
  free();
-} 
+}
 void TimgFilter::checkBorder(TffPict &pict)
 {
  if (pict.rectFull!=pict.rectClip && parent->dirtyBorder)
@@ -42,7 +42,7 @@ void TimgFilter::checkBorder(TffPict &pict)
    pict.clearBorder();
    parent->dirtyBorder=0;
   }
-} 
+}
 
 void TimgFilter::free(void)
 {
@@ -69,19 +69,19 @@ bool TimgFilter::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg)
 
 HRESULT TimgFilter::flush(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
- return parent->deliverSample(++it,pict); 
+ return parent->deliverSample(++it,pict);
 }
 
 bool TimgFilter::getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *cfg)
 {
  if (!is(pict,cfg)) return false;
  int supcsp1=getSupportedInputColorspaces(cfg);
- if (((pict.csp&FF_CSPS_MASK)&(supcsp1&FF_CSPS_MASK))==0) 
+ if (((pict.csp&FF_CSPS_MASK)&(supcsp1&FF_CSPS_MASK))==0)
   pict.csp=csp_bestMatch(pict.csp,supcsp1&FF_CSPS_MASK)|(supcsp1&FF_CSP_FLAGS_VFLIP);
  int supcsp2=getSupportedOutputColorspaces(cfg);
- if (((pict.csp&FF_CSPS_MASK)&(supcsp2&FF_CSPS_MASK))==0) 
+ if (((pict.csp&FF_CSPS_MASK)&(supcsp2&FF_CSPS_MASK))==0)
   pict.csp=csp_bestMatch(pict.csp,supcsp2&FF_CSPS_MASK)|(supcsp2&FF_CSP_FLAGS_VFLIP);
- return true; 
+ return true;
 }
 
 bool TimgFilter::getCur(int csp,TffPict &pict,int full,const unsigned char **src[4])
@@ -99,25 +99,25 @@ bool TimgFilter::getCur(int csp,TffPict &pict,int full,const unsigned char **src
  const Trect &r=pictRect; //full?pict.rectFull:pict.rectClip;
  for (unsigned int i=0;i<pict.cspInfo.numPlanes;i++)
   {
-   if (src[i]) 
+   if (src[i])
     *src[i]=pict.data[i]+(full?0:pict.diff[i])+(pictHalf?r.x*pict.cspInfo.Bpp>>pict.cspInfo.shiftX[i]:0);
-   stride1[i]=pict.stride[i]; 
+   stride1[i]=pict.stride[i];
    dx1[i]=r.dx>>pict.cspInfo.shiftX[i];
    dy1[i]=r.dy>>pict.cspInfo.shiftY[i];
-  }  
- return cspChanged; 
+  }
+ return cspChanged;
 }
 bool TimgFilter::getNext(int csp,TffPict &pict,int full,unsigned char **dst[4],const Trect *rect2)
 {
  if (rect2) pict.rectFull=pict.rectClip=*rect2;
  const Trect &r=pictRect;//full?pict.rectFull:pict.rectClip;
- TffPict pictN; 
+ TffPict pictN;
  if (((csp&FF_CSPS_MASK)&(pict.csp&FF_CSPS_MASK))==0)
   {
    pict.convertCSP(csp_bestMatch(pict.csp,csp&FF_CSPS_MASK)|(csp&FF_CSP_FLAGS_YUV_ADJ),own2);
    pict.setRO(false);
    pictN=pict;
-  } 
+  }
  else
   {
    pictN=pict;
@@ -140,10 +140,10 @@ bool TimgFilter::getNext(int csp,TffPict &pict,int full,unsigned char **dst[4],c
      if (pictHalf && !rect2)
       *dst[i]+=(pictRect.x>>pict.cspInfo.shiftX[i])*pict.cspInfo.Bpp;
     }
-   stride2[i]=pict.stride[i]; 
+   stride2[i]=pict.stride[i];
    dx2[i]=r.dx>>pict.cspInfo.shiftX[i];
    dy2[i]=r.dy>>pict.cspInfo.shiftY[i];
-  }  
+  }
  bool cspChanged=csp2!=pict.csp;
  csp2=pictN.csp;
  return cspChanged;
@@ -163,7 +163,7 @@ bool TimgFilter::getNext(int csp,TffPict &pict,const Trect &clipRect,unsigned ch
 bool TimgFilter::getCurNext(int csp,TffPict &pict,int full,int copy,unsigned char **dst[4])
 {
  csp_yuv_adj_to_plane(pict.csp,&pict.cspInfo,pict.rectFull.dy,pict.data,pict.stride);csp_yuv_order(pict.csp,pict.data,pict.stride);
- TffPict pictN; 
+ TffPict pictN;
  if (((csp&FF_CSPS_MASK)&(pict.csp&FF_CSPS_MASK))==0)
   {
    if (!convert2) convert2=new Tconvert(deci,pict.rectFull.dx,pict.rectFull.dy);
@@ -206,7 +206,7 @@ bool TimgFilter::getCurNext(int csp,TffPict &pict,int full,int copy,unsigned cha
      }
     stride2[i]=pict.stride[i];
     *dst[i]=pict.data[i]+(full?0:pict.diff[i])+(pictHalf?r.x*pict.cspInfo.Bpp>>pict.cspInfo.shiftX[i]:0);
-   } 
+   }
  bool cspChanged=csp2!=pict.csp;
  csp2=pictN.csp;
  if (full) checkBorder(pict);
@@ -228,6 +228,6 @@ bool TimgFilter::screenToPict(CPoint &pt)
      if (isIn(pt.x,0L,long(dx2[0]-1)) && isIn(pt.y,0L,long(dy2[0]-1)))
       return true;
     }
-  }  
- return false; 
+  }
+ return false;
 }

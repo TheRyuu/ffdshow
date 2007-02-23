@@ -58,7 +58,7 @@ struct avs_t
   AVS_Value handler;
   AVS_Clip* clip;
   AVS_ScriptEnvironment* (AVSC_CC *CreateScriptEnvironment)(int version);
-  struct AVS_Value (AVSC_CC *Invoke)(AVS_ScriptEnvironment *, const char * name, 
+  struct AVS_Value (AVSC_CC *Invoke)(AVS_ScriptEnvironment *, const char * name,
                       AVS_Value args, const char** arg_names);
   void (AVSC_CC *Release_Value)(AVS_Value val);
   AVS_Clip* (AVSC_CC *Take_Clip)(AVS_Value val, AVS_ScriptEnvironment *env);
@@ -74,7 +74,7 @@ struct avs_t
 
 class Tdll
 {
-private:            
+private:
   HMODULE hdll;
   void loadDll(const char *dllName);
 public:
@@ -104,7 +104,7 @@ public:
     *fnc=(void*)GetProcAddress(hdll,name);
     ok&=(*fnc!=NULL);
   }
-}; 
+};
 
 #define MAKEAVIS_REG_CLASS  "config"
 #define MAKEAVIS_REG "Software\\GNU\\makeAVIS"
@@ -139,8 +139,8 @@ public:
   {
     DWORD size=MAX_PATH;
     if ((!hKey || RegQueryValueEx(hKey,X,0,0,(unsigned char*)Y,&size)!=ERROR_SUCCESS) && Z)
-      strcpy(Y,Z);  
-  } 
+      strcpy(Y,Z);
+  }
 };
 struct TregOpRegWrite :public TregOp
 {
@@ -188,7 +188,7 @@ bool dlgGetFile(bool save,const char *capt,const char *filter,const char *defext
   ofn.lpstrInitialDir=".";
   ofn.lpstrFile      =flnm;
   ofn.lpstrTitle     =capt;
-  ofn.lpstrDefExt    =defext;  
+  ofn.lpstrDefExt    =defext;
   ofn.nMaxFile       =MAX_PATH;
   ofn.Flags          =flags|(save?OFN_PATHMUSTEXIST|OFN_OVERWRITEPROMPT:OFN_PATHMUSTEXIST|OFN_FILEMUSTEXIST)|OFN_ENABLESIZING|OFN_HIDEREADONLY;
   return (save?GetSaveFileName(&ofn):GetOpenFileName(&ofn))?true:false;
@@ -313,21 +313,21 @@ int createClip(const char *script) throw(EmakeAVIS)
   //assert(script != avs_void.);
   param = avs_new_value_array(&code, 1);
   //assert(param != avs_void);
-    
+
   DBG("Invoking with:\n%s\n", script);
   avs.handler=avs.Invoke(avs.env, "Eval", param, NULL);
   DBG("Done\n");
-  
+
   //Free values
   avs.Release_Value(code);
   avs.Release_Value(param);
-  
+
   if (avs_is_error(avs.handler))
   {
     DBG("If no MessageBox or one with 'unknow error' after this, stack corruption\n");
     return 2;
   }
-  
+
   if (avs_is_clip(avs.handler))
   {
     DBG("Taking clip...\n");
@@ -340,7 +340,7 @@ int createClip(const char *script) throw(EmakeAVIS)
     }
     return 0;
   }
-  
+
   DBG("Not a clip\n");
   return 1;
 }
@@ -365,11 +365,11 @@ void convertToWav(const AVS_VideoInfo* vi,AVS_Clip *clip,size_t len,const char *
   wfx->nSamplesPerSec=avs_samples_per_second(vi);
   wfx->wBitsPerSample=WORD( (avs_bytes_per_audio_sample(vi)/
                              avs_audio_channels(vi)) << 3);
-  
+
   try
   {
     FILE *wavefile;
-    
+
     if (strcmp(aviflnm, "-")!=0)
     {
       wavefile = fopen(aviflnm, "wb");
@@ -380,7 +380,7 @@ void convertToWav(const AVS_VideoInfo* vi,AVS_Clip *clip,size_t len,const char *
       wavefile = stdout;
       if (_setmode(_fileno(wavefile), _O_BINARY)==-1) throw EmakeAVIS(7);
     }
-    
+
     /* See http://www.borg.com/~jglatt/tech/wave.htm */
     /* RIFF Wave chunk */
     fwrite("RIFF", 4, 1, wavefile);
@@ -425,11 +425,11 @@ void convertToWav(const AVS_VideoInfo* vi,AVS_Clip *clip,size_t len,const char *
                   4 /*"fmt "*/ + sizeof(dwChunkSize) + dwChunkSize ;
     fwrite(&dwFileSize, 1, sizeof(dwFileSize), wavefile);
     fwrite("WAVE", 4, 1, wavefile);
-    
+
     /* Format chunk */
     fwrite("fmt ", 4, 1, wavefile);
     fwrite(&dwChunkSize, 1, sizeof(dwChunkSize), wavefile);
-    
+
     fwrite(&wfx->wFormatTag, 1, sizeof(wfx->wFormatTag), wavefile);
     fwrite(&wfx->nChannels, 1, sizeof(wfx->nChannels), wavefile);
     fwrite(&wfx->nSamplesPerSec, 1, sizeof(wfx->nSamplesPerSec), wavefile);
@@ -447,8 +447,8 @@ void convertToWav(const AVS_VideoInfo* vi,AVS_Clip *clip,size_t len,const char *
         case 1:fputc(0x01, wavefile);fwrite(script, 1, len+1, wavefile); break;
         case 2:fputc(0x02, wavefile);fwrite(avsflnm, 1, (len=strlen(avsflnm))+1, wavefile); break;
         default:throw EmakeAVIS(7);
-       } 
-      
+       }
+
       /* Fact chunk: in case we write AVIS audio */
       if (len&1) //padding required?
        fputc(0,wavefile);
@@ -460,20 +460,20 @@ void convertToWav(const AVS_VideoInfo* vi,AVS_Clip *clip,size_t len,const char *
       unsigned long dwSizeInSamplePoints = (DWORD)vi->num_audio_samples;
       fwrite(&dwSizeInSamplePoints, 1, sizeof(dwSizeInSamplePoints), wavefile);
     }
-    
+
     /* data chunk */
     fwrite("data", 1, 4, wavefile);
     DWORD dwNum;
     if (!rawaudio) dwNum = vi->num_frames * 16;
     else dwNum = DWORD(vi->num_audio_samples * avs_bytes_per_audio_sample(vi));
     fwrite(&dwNum, 1, sizeof(dwNum), wavefile);
-   
+
     rawaudiobuf=calloc(4, LONG((avs_audio_samples_from_frames(vi, 1)-
                                 avs_audio_samples_from_frames(vi, 0))*
                                avs_bytes_per_audio_sample(vi)));
     for (int frame=0; frame<vi->num_frames; frame++)
     {
-      if ((frame&255)==0) 
+      if ((frame&255)==0)
         updateProgress(frame);
       int64_t asample[2]={avs_audio_samples_from_frames(vi, frame),
                           avs_audio_samples_from_frames(vi, frame+1)-1};
@@ -489,7 +489,7 @@ void convertToWav(const AVS_VideoInfo* vi,AVS_Clip *clip,size_t len,const char *
         fwrite(rawaudiobuf, 1, rawaudiolen, wavefile);
       }
       else throw EmakeAVIS(7);
-    } 
+    }
     if (bUseMMI)
       SendDlgItemMessage(m_hwnd,IDC_PBR_GO,PBM_SETPOS,vi->num_frames,0);
     if (strcmp(aviflnm, "-")!=0) fclose(wavefile);
@@ -502,7 +502,7 @@ void convertToWav(const AVS_VideoInfo* vi,AVS_Clip *clip,size_t len,const char *
     if (wfx) free(wfx);
     if (rawaudiobuf) free(rawaudiobuf);
     throw e;
-  } 
+  }
 }
 void convertToAVI(const AVS_VideoInfo* vi,AVS_Clip *clip,int len,const char *script)
 {
@@ -511,7 +511,7 @@ void convertToAVI(const AVS_VideoInfo* vi,AVS_Clip *clip,int len,const char *scr
   BITMAPINFOHEADER *bih=NULL;
   WAVEFORMATEX *wfx=NULL;
   void *rawaudiobuf=NULL;
-  
+
   char aviflnm2[MAX_PATH];bool tempavi=false;
   try
   {
@@ -527,7 +527,7 @@ void convertToAVI(const AVS_VideoInfo* vi,AVS_Clip *clip,int len,const char *scr
       tempavi=false;
     }
     if (FAILED(AVIFileOpen(&avifile,aviflnm2,OF_CREATE|OF_WRITE,NULL))) throw EmakeAVIS(3);
-    
+
     if (avs_has_video(vi) && bVideo)
     {
       AVISTREAMINFOW asi;
@@ -550,7 +550,7 @@ void convertToAVI(const AVS_VideoInfo* vi,AVS_Clip *clip,int len,const char *scr
       asi.dwFormatChangeCount=0;
       wcscpy(asi.szName,L"avisynth");
       if (FAILED(avifile->CreateStream(&avistreamV,&asi))) throw EmakeAVIS(4);
-      
+
       //type    1   1=script, 2=filename
       //outcsp  4   forced output colorspace (0 if none)
       //ilace   1   0=not forced, 1=progressive, 2=interlaced
@@ -563,13 +563,13 @@ void convertToAVI(const AVS_VideoInfo* vi,AVS_Clip *clip,int len,const char *scr
         *((unsigned char*)bih+sizeof(BITMAPINFOHEADER))=1;
         memcpy((unsigned char*)bih+sizeof(BITMAPINFOHEADER)+1+4+1,script,len+1);
         break;
-      case 2: 
+      case 2:
         bih=(BITMAPINFOHEADER*)malloc(sizeof(BITMAPINFOHEADER)+strlen(avsflnm)+2+4+1);
         bih->biSize=DWORD(sizeof(BITMAPINFOHEADER)+strlen(avsflnm)+2+4+1);
         *((unsigned char*)bih+sizeof(BITMAPINFOHEADER))=2;
         memcpy((unsigned char*)bih+sizeof(BITMAPINFOHEADER)+1+4+1,avsflnm,strlen(avsflnm)+1);
         break;
-      } 
+      }
       FOURCC fcc=isForceoutcsp?forceoutcsp:0;
       *(FOURCC*)((unsigned char*)bih+sizeof(BITMAPINFOHEADER)+1)=fcc;
       unsigned char ilace=(unsigned char)(isForceIlace?forceilace:0);
@@ -586,7 +586,7 @@ void convertToAVI(const AVS_VideoInfo* vi,AVS_Clip *clip,int len,const char *scr
       bih->biClrImportant=0;
       if (FAILED(avistreamV->SetFormat(0,bih,bih->biSize))) throw EmakeAVIS(5);
     }
-    
+
     if (avs_has_audio(vi) && UseAudio==AUDIO_IN_AVI)
     {
       AVISTREAMINFOW asi;
@@ -602,7 +602,7 @@ void convertToAVI(const AVS_VideoInfo* vi,AVS_Clip *clip,int len,const char *scr
         asi.dwRate=vi->fps_numerator;
         asi.dwSampleSize=16;
         asi.dwLength=DWORD((vi->num_audio_samples*int64_t(asi.dwRate))/
-                           (avs_samples_per_second(vi)*int64_t(asi.dwScale))); 
+                           (avs_samples_per_second(vi)*int64_t(asi.dwScale)));
         //vi->num_frames*asi.dwRate/asi.dwScale;
       }
       else
@@ -611,7 +611,7 @@ void convertToAVI(const AVS_VideoInfo* vi,AVS_Clip *clip,int len,const char *scr
         asi.dwRate=avs_samples_per_second(vi)*asi.dwScale;
         asi.dwSampleSize=avs_bytes_per_audio_sample(vi);
         asi.dwLength=DWORD(vi->num_audio_samples);
-      }  
+      }
       asi.dwStart=0;
       asi.dwInitialFrames=0;
       asi.dwSuggestedBufferSize=0;
@@ -621,9 +621,9 @@ void convertToAVI(const AVS_VideoInfo* vi,AVS_Clip *clip,int len,const char *scr
       asi.dwFormatChangeCount=0;
       wcscpy(asi.szName,L"avisynth audio");
       if (FAILED(avifile->CreateStream(&avistreamA,&asi))) throw EmakeAVIS(7);
-      
+
       if (!rawaudio)
-      {    
+      {
         switch (mode)
         {
         case 1:
@@ -632,13 +632,13 @@ void convertToAVI(const AVS_VideoInfo* vi,AVS_Clip *clip,int len,const char *scr
           *((unsigned char*)wfx+sizeof(WAVEFORMATEX))=1;
           memcpy((unsigned char*)wfx+sizeof(WAVEFORMATEX)+1,script,len+1);
           break;
-        case 2: 
+        case 2:
           wfx=(WAVEFORMATEX*)malloc(sizeof(WAVEFORMATEX)+1+strlen(avsflnm)+1);
           wfx->cbSize=WORD(1+strlen(avsflnm)+1);
           *((unsigned char*)wfx+sizeof(WAVEFORMATEX))=2;
           memcpy((unsigned char*)wfx+sizeof(WAVEFORMATEX)+1,avsflnm,strlen(avsflnm)+1);
           break;
-        } 
+        }
         wfx->wFormatTag=WAVE_FORMAT_AVIS;
         wfx->nBlockAlign=16;
         wfx->nAvgBytesPerSec=16*vi->fps_numerator/vi->fps_denominator;
@@ -661,13 +661,13 @@ void convertToAVI(const AVS_VideoInfo* vi,AVS_Clip *clip,int len,const char *scr
     {
       if ((frame&255)==0)
         updateProgress(frame);
-      
+
       if (avistreamV)
       {
         LONG samplesWritten=0,bytesWritten=0;
         if (FAILED(avistreamV->Write(frame,1,&frame,4,AVIIF_KEYFRAME,
                                      &samplesWritten,&bytesWritten))) throw EmakeAVIS(6);
-      } 
+      }
       if (avistreamA)
       {
         LONG samplesWritten=0,bytesWritten=0;
@@ -686,12 +686,12 @@ void convertToAVI(const AVS_VideoInfo* vi,AVS_Clip *clip,int len,const char *scr
           //No need for env ?
           avs.Get_Audio(clip, rawaudiobuf,asample[0],asample[1]-asample[0]+1);
           if (FAILED(avistreamA->Write(frame,1,rawaudiobuf,rawaudiolen,
-                                       AVIIF_KEYFRAME,&samplesWritten,&bytesWritten))) 
+                                       AVIIF_KEYFRAME,&samplesWritten,&bytesWritten)))
             throw EmakeAVIS(9);
-        }  
-      } 
-    } 
-    throw EmakeAVIS(0); 
+        }
+      }
+    }
+    throw EmakeAVIS(0);
   }
   catch (EmakeAVIS e)
   {
@@ -718,7 +718,7 @@ int convert(void)
   int ret=0;
   char *script=NULL;
   AVS_Clip *clip=NULL;
- 
+
   if (bUseMMI)
     for (i=0;ids[i];i++) enable(FALSE,ids[i]);
   else
@@ -753,7 +753,7 @@ int convert(void)
     }
     //Work around stack corruption anytime in createClip
     clip = avs.clip;
-    
+
     const AVS_VideoInfo* vi=avs.Get_Video_Info(clip);
     num_frames=vi->num_frames;
     if (bUseMMI)
@@ -765,17 +765,17 @@ int convert(void)
       _splitpath(aviflnm,NULL,NULL,NULL,ext);
       if (_stricmp(ext,".avi")==0)
         convertToAVI(vi,clip,len,script);
-      else 
+      else
         convertToWav(vi,clip,len,script);
     }
     else
     {
       if (getCheck(IDC_RBT_OUTPUTFORMAT_AVI))
         convertToAVI(vi,clip,len,script);
-      else 
+      else
         convertToWav(vi,clip,len,script);
     }
-    
+
     if (strcmp(aviflnm, "-")!=0) DeleteFile(aviflnm);
     if (bUseMMI)
       SendDlgItemMessage(m_hwnd,IDC_PBR_GO,PBM_SETPOS,num_frames,0);
@@ -786,17 +786,17 @@ int convert(void)
       DBG("Boom convert\n");
     ret=e.code;
   }
-  
+
   if (script) free(script);
   if (avs.clip) avs.Release_Clip(avs.clip);
   avs.Release_Value(avs.handler);
   DBG("Ready\n");
-  
+
   if (bUseMMI)
     for (i=0;ids[i];i++) enable(TRUE,ids[i]);
   return ret;
 }
-    
+
 int cbxAdd(int id,const char *s,int data)
 {
  int ii=(int)SendDlgItemMessage(m_hwnd,id,CB_ADDSTRING,0,LPARAM(s));
@@ -893,7 +893,7 @@ int showProps(void)
     int secs=vi->num_frames*vi->fps_denominator/vi->fps_numerator;
     sprintf(pomS,"Time: %02i:%02i:%02i",secs/3600,(secs/60)%60,secs%60);
     SetDlgItemText(m_hwnd,IDC_LBL_VIDEO_TIME,pomS);
-  } 
+  }
   else
     setCheck(IDC_CHB_VIDEO,0);
 
@@ -943,8 +943,8 @@ INT_PTR CALLBACK dlgProc(HWND m_hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
         cbxAdd(IDC_CBX_FORCECSP,csps[i].name,csps[i].fcc);
       for (i=0;ilaces[i];i++)
         cbxAdd(IDC_CBX_FORCEILACE,ilaces[i],i+1);
-      SendDlgItemMessage(m_hwnd,IDC_CHB_VIDEO,BM_SETCHECK,BST_CHECKED,0); 
-      SendDlgItemMessage(m_hwnd,IDC_CHB_AUDIO,BM_SETCHECK,BST_CHECKED,0); 
+      SendDlgItemMessage(m_hwnd,IDC_CHB_VIDEO,BM_SETCHECK,BST_CHECKED,0);
+      SendDlgItemMessage(m_hwnd,IDC_CHB_AUDIO,BM_SETCHECK,BST_CHECKED,0);
       cfg2dlg();
       DBG("Init\n");
       showProps();
@@ -955,7 +955,7 @@ INT_PTR CALLBACK dlgProc(HWND m_hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
     DestroyIcon(hIcon);
     break;
   case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
     {
     case IDCANCEL:
       EndDialog(m_hwnd,wParam);
@@ -965,7 +965,7 @@ INT_PTR CALLBACK dlgProc(HWND m_hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
         TregOpRegWrite t(HKEY_CURRENT_USER,MAKEAVIS_REG);
         reg_op(t);
         EndDialog(m_hwnd,wParam);
-        return TRUE; 
+        return TRUE;
       }
     case IDC_BT_AVS:
       if (dlgGetFile(false,"Select AviSynth script","AviSynth scripts (*.avs)\0*.avs\0All files (*.*)\0*.*\0\0","*.avs",avsflnm,0))
@@ -1007,19 +1007,19 @@ INT_PTR CALLBACK dlgProc(HWND m_hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
     case IDC_BT_GO:
       if (!fileexists(avsflnm))
         MessageBox(m_hwnd,"AviSynth script doesn't exists","Error",MB_ICONERROR|MB_OK);
-      else 
+      else
       {
         /* Set all parameters given by GUI */
         bVideo = getCheck(IDC_CHB_VIDEO);
         UseAudio = getCheck(IDC_CHB_AUDIO);
-        
+
         const char *err=errors[convert()];
         if (err[0])
           MessageBox(m_hwnd,err,"Status",MB_ICONINFORMATION|MB_OK);
-      }  
+      }
       SendDlgItemMessage(m_hwnd,IDC_PBR_GO,PBM_SETPOS,0,0);
       cfg2dlg();
-      return TRUE;  
+      return TRUE;
     case IDC_CHB_FORCECSP:
       isForceoutcsp=getCheck(IDC_CHB_FORCECSP);
       cfg2dlg();
@@ -1043,24 +1043,24 @@ INT_PTR CALLBACK dlgProc(HWND m_hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
       }
       break;
     case IDC_ED_AVS:
-      if (HIWORD(wParam)==EN_CHANGE) 
+      if (HIWORD(wParam)==EN_CHANGE)
       {
         GetDlgItemText(m_hwnd,IDC_ED_AVS,avsflnm,MAX_PATH);
         return TRUE;
       }
-      break; 
+      break;
     case IDC_ED_AVI:
-      if (HIWORD(wParam)==EN_CHANGE) 
+      if (HIWORD(wParam)==EN_CHANGE)
       {
         GetDlgItemText(m_hwnd,IDC_ED_AVI,aviflnm,MAX_PATH);
         return TRUE;
       }
-      break; 
+      break;
     case IDC_CHB_AUDIO_RAW:
       rawaudio=getCheck(IDC_CHB_AUDIO_RAW);
-      return TRUE; 
-    } 
-    break; 
+      return TRUE;
+    }
+    break;
   }
   return FALSE;
 }
@@ -1083,14 +1083,14 @@ int parsecl(int argc, char **argv)
 {
   int i;
   bool bHasOut = false, bHasIn = false;
-  
+
   /* Defauls */
   isForceoutcsp = 0;
   isForceIlace = 0;
   rawaudio = false;
   mode = 1;
   verbose = false;
-  
+
   /* Parse */
   try
   {
@@ -1152,7 +1152,7 @@ int main(int argc, char **argv)
     FreeConsole();
   hInstance=GetModuleHandle(NULL);
   Tdll avisynth("avisynth.dll");
-  if (!avisynth.ok) 
+  if (!avisynth.ok)
    {
     fprintf(stderr,"avisynth not installed\n");
     return -100;
@@ -1170,16 +1170,16 @@ int main(int argc, char **argv)
   LOAD(Release_Clip, "avs_release_clip");
   LOAD(Get_Audio, "avs_get_audio");
   LOAD(Get_Clip_Error, "avs_clip_get_error");
-  
+
   avs.env=avs.CreateScriptEnvironment(AVISYNTH_INTERFACE_VERSION);
   if (avisynth.ok && avs.env)
   {
     if (argc==1)
     {
       bUseMMI=true;
-      DialogBox(hInstance,MAKEINTRESOURCE(IDD_MAIN),NULL,(DLGPROC)dlgProc);  
+      DialogBox(hInstance,MAKEINTRESOURCE(IDD_MAIN),NULL,(DLGPROC)dlgProc);
       ret=0;
-    } 
+    }
     else
     {
       bUseMMI=false;
@@ -1200,6 +1200,6 @@ int main(int argc, char **argv)
     if (__argc==1) MessageBox(NULL,"Failed to initialize AviSynth","Error",MB_ICONERROR|MB_OK);
   }
 
-  AVIFileExit();          
+  AVIFileExit();
   return ret;
 }

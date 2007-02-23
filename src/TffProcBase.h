@@ -28,10 +28,10 @@ protected:
  STDMETHODIMP putParam(unsigned int paramID,int val);
  STDMETHODIMP setBasePageSite(IPropertyPage *page);
 public:
- virtual ~TffProcBase(); 
+ virtual ~TffProcBase();
 
  void saveConfig(TregOpIDstreamWrite &t);
- void loadConfig(bool notreg,const unsigned char *buf,size_t len); 
+ void loadConfig(bool notreg,const unsigned char *buf,size_t len);
 };
 
 #endif

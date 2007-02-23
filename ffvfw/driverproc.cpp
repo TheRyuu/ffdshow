@@ -41,7 +41,7 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
  Iffvfw *ffvfw=(Iffvfw*)dwDriverId;
  switch(uMsg)
   {
-   // driver primitives 
+   // driver primitives
    case DRV_LOAD:
     {
      InitCommonControls();
@@ -95,7 +95,7 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
    case DRV_QUERYCONFIGURE:
    case DRV_CONFIGURE:
     return DRV_CANCEL;
-   // info 
+   // info
    case ICM_GETINFO:
     {
      DPRINTF("VFW ICM_GETINFO %i %p",hDriver,ffvfw);
@@ -109,7 +109,7 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
      wcscpy(icinfo->szDescription,FFDSHOWVFW_DESC_L);
      return lParam2; /* size of struct */
     }
-   // state control 
+   // state control
    case ICM_ABOUT:
     DPRINTF("VFW ICM_ABOUT %i %p",hDriver,ffvfw);
     if (lParam1!=-1) ffvfw->aboutDlg((HWND)lParam1);
@@ -123,7 +123,7 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
     DPRINTF("VFW ICM_GETSTATE %i %p",hDriver,ffvfw);
     if ((void*)lParam1==NULL)
      return ffvfw->saveMem(NULL,0);
-    ffvfw->saveMem((void*)lParam1,lParam2); 
+    ffvfw->saveMem((void*)lParam1,lParam2);
     return ICERR_OK;
    case ICM_SETSTATE:
     {
@@ -135,20 +135,20 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
        return 0;
       }
      return ffvfw->loadMem((void*)lParam1,lParam2);
-    } 
-   // not sure the difference, private/public data? 
+    }
+   // not sure the difference, private/public data?
    case ICM_GET:
    case ICM_SET:
     return ICERR_OK;
-    
-   // older-type config 
+
+   // older-type config
    case ICM_GETDEFAULTQUALITY:
    case ICM_GETQUALITY:
    case ICM_SETQUALITY:
    case ICM_GETBUFFERSWANTED:
    case ICM_GETDEFAULTKEYFRAMERATE:
     return ICERR_UNSUPPORTED;
-    
+
    // compressor
    case ICM_COMPRESS_QUERY:
     DPRINTF("VFW ICM_COMPRESS_QUERY %i %p",hDriver,ffvfw);
@@ -172,7 +172,7 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
     //DPRINTF("VFW ICM_COMPRESS %i",ffvfw);
     return ffvfw->coRun((ICCOMPRESS*)lParam1);
 
-   // decompressor 
+   // decompressor
    case ICM_DECOMPRESS_QUERY:
     DPRINTF("VFW ICM_DECOMPRESS_QUERY %i %p",hDriver,ffvfw);
     return ffvfw->decQuery((BITMAPINFO*)lParam1,(BITMAPINFO*)lParam2);
@@ -200,7 +200,7 @@ extern "C" __declspec(dllexport) LRESULT WINAPI DriverProc(DWORD dwDriverId,HDRV
    default:
     if (uMsg<DRV_USER)
      return DefDriverProc(dwDriverId,hDriver,uMsg,lParam1,lParam2);
-    else 
+    else
      return ICERR_UNSUPPORTED;
   }
 }

@@ -30,11 +30,11 @@ TmuxerFile::TmuxerFile(IffdshowBase *Ideci):Tmuxer(Ideci)
    strcpy(flnmmask,storeExtFlnm);
    f=NULL;
   }
- else 
+ else
   {
    f=fopen(storeExtFlnm,_l("wb"));
    flnmmask[0]='\0';
-  } 
+  }
 }
 TmuxerFile::~TmuxerFile()
 {
@@ -52,7 +52,7 @@ size_t TmuxerFile::write(const void *data,size_t len,int framenum)
    fclose(f);
    return len;
   }
- else 
+ else
   return f?fwrite(data,1,len,f):0;
 }
 size_t TmuxerFile::writeHeader(const void *data,size_t len,bool flush,const BITMAPINFOHEADER &bihdr)

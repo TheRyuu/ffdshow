@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "Cout.h"
 #include "TbitrateDlg.h"
@@ -30,7 +30,7 @@ void ToutPage::init(void)
 }
 
 void ToutPage::cfg2dlg(void)
-{ 
+{
  out2dlg();
  stats2dlg();
  fps2dlg();
@@ -94,31 +94,31 @@ INT_PTR ToutPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_ED_STORE_EXTERNAL:
-       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText) 
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
          char_t storeExtFlnm[MAX_PATH];
          GetDlgItemText(m_hwnd,IDC_ED_STORE_EXTERNAL,storeExtFlnm,MAX_PATH);
          cfgSet(IDFF_enc_storeExtFlnm,storeExtFlnm);
-         return TRUE;  
+         return TRUE;
         }
        break;
       case IDC_ED_LAVC_STATS:
-       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText) 
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
          char_t stats_flnm[MAX_PATH];
          GetDlgItemText(m_hwnd,IDC_ED_LAVC_STATS,stats_flnm,MAX_PATH);
          cfgSet(IDFF_enc_ff1_stats_flnm,stats_flnm);
-         return TRUE;  
+         return TRUE;
         }
        break;
       case IDC_ED_ASPECTX:
       case IDC_ED_ASPECTY:
       case IDC_ED_FPS_NUM:
       case IDC_ED_FPS_DEN:
-       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText) 
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
          HWND hed=GetDlgItem(m_hwnd,LOWORD(wParam));
          if (hed!=GetFocus()) return FALSE;
@@ -133,7 +133,7 @@ INT_PTR ToutPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
           }
          return TRUE;
         }
-       break; 
+       break;
      }
     break;
    case WM_CTLCOLOREDIT:
@@ -150,15 +150,15 @@ INT_PTR ToutPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        case IDC_ED_FPS_DEN:
         ok=eval(hwnd,1,200*1000);
         break;
-       default:return FALSE; 
+       default:return FALSE;
       }
      if (!ok)
-      { 
+      {
        HDC dc=HDC(wParam);
        SetBkColor(dc,RGB(255,0,0));
-       return INT_PTR(getRed()); 
+       return INT_PTR(getRed());
       }
-     else return FALSE;  
+     else return FALSE;
     }
   }
  return TconfPageEnc::msgProc(uMsg,wParam,lParam);
@@ -205,7 +205,7 @@ void ToutPage::onAspect(void)
    const Taspect &a=aspects[cmd-100];
    cfgSet(aspectmode==TcoSettings::ASPECT_SAR?IDFF_enc_sarX1000:IDFF_enc_darX1000,int(a.x*1000));
    cfgSet(aspectmode==TcoSettings::ASPECT_SAR?IDFF_enc_sarY1000:IDFF_enc_darY1000,int(a.y*1000));
-   aspect2dlg(); 
+   aspect2dlg();
   }
  DestroyMenu(hmn);
 }
@@ -216,7 +216,7 @@ void ToutPage::onFps(void)
   {
    char_t pomS[30];tsprintf(pomS,_l("%g"),float(TbitrateDlg::mpeg12_frame_rate_tab[i][0])/TbitrateDlg::mpeg12_frame_rate_tab[i][1]);
    mitems.push_back(pomS);
-  } 
+  }
  int idx=selectFromMenu(mitems,IDC_BT_FPS,false,20);
  if (idx>=0)
   {
@@ -228,7 +228,7 @@ void ToutPage::onFps(void)
 void ToutPage::translate(void)
 {
  TconfPageEnc::translate();
- 
+
  cbxTranslate(IDC_CBX_MUXER,Tmuxer::muxers);
  cbxTranslate(IDC_CBX_ASPECT,TcoSettings::aspectModes);
 }
@@ -271,5 +271,5 @@ ToutPage::ToutPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent),parentE(Ipare
    IDC_BT_FPS,&ToutPage::onFps,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
 }

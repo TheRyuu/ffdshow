@@ -8,8 +8,8 @@ enum
  HWOC_HUE       =3,HWOC_HUE_MIN       =-180,HWOC_HUE_MAX       =  180,
  HWOC_SATURATION=4,HWOC_SATURATION_MIN=   0,HWOC_SATURATION_MAX=20000,
  HWOC_SHARPNESS =5,HWOC_SHARPNESS_MIN =   0,HWOC_SHARPNESS_MAX =   10,
- HWOC_GAMMA     =6,HWOC_GAMMA_MIN     =   1,HWOC_GAMMA_MAX     =  500 
-}; 
+ HWOC_GAMMA     =6,HWOC_GAMMA_MIN     =   1,HWOC_GAMMA_MAX     =  500
+};
 
 DECLARE_INTERFACE_(IhwOverlayControl,IUnknown)
 {
@@ -22,7 +22,7 @@ DECLARE_INTERFACE_(IhwOverlayControl,IUnknown)
 
 struct ThwOverlayControlBase :public IhwOverlayControl, public CUnknown
 {
- ThwOverlayControlBase(const char_t *name=NAME("ThwOverlayControlBase")):CUnknown(name,NULL) 
+ ThwOverlayControlBase(const char_t *name=NAME("ThwOverlayControlBase")):CUnknown(name,NULL)
   {
    //AddRef();
   }
@@ -32,7 +32,7 @@ struct ThwOverlayControlBase :public IhwOverlayControl, public CUnknown
  STDMETHODIMP get(int cap,int *val) {return E_NOTIMPL;}
  STDMETHODIMP set(int cap,int val) {return E_NOTIMPL;}
  STDMETHODIMP reset(void) {return E_NOTIMPL;}
- 
+
  STDMETHODIMP getRange(int cap,int *min,int *max)
   {
    if (!min || !max) return E_POINTER;

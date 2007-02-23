@@ -21,7 +21,7 @@ private:
    int pointsize;static const int pointsizeDef=8;
    uint8_t italic;static const uint8_t italicDef=0;
    //int charset;
-  }; 
+  };
  mutable bool initfont;
  struct Tstrs :public std::hash_map<ffstring,ffstring>
   {
@@ -77,21 +77,21 @@ public:
    return strs.translate(s);
   }
  const char_t *translate(int dlgId);
- 
+
  Tfont font;bool isCustomFont(void);
  DLGTEMPLATE *translateDialogTemplate(int dialogId) const;
 
  void newTranslation(int dialogId,int item,const ffstring &newtrans)
   {
-   if (stricmp(curlang,_l("en"))!=0) 
+   if (stricmp(curlang,_l("en"))!=0)
     dlgs[dialogId].newTranslation(dialogId,item,newtrans,curflnm,translateEncoding);
   }
  void newTranslation(const ffstring &oldstring,const ffstring &newstring)
   {
-   if (stricmp(curlang,_l("en"))!=0) 
+   if (stricmp(curlang,_l("en"))!=0)
     strs.newTranslation(oldstring,newstring,curflnm,translateEncoding);
   }
- 
+
  static int lang2int(const char_t *lang)
   {
    int res=0;
@@ -111,7 +111,7 @@ public:
   {
    return stringreplace(stringreplace(s,_l("\n"),_l("\\n"),rfReplaceAll),_l("\r"),_l("\\r"),rfReplaceAll);
   }
- int translateMode; 
+ int translateMode;
 };
 
 #endif

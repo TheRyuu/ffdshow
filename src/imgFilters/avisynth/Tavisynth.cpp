@@ -38,7 +38,7 @@ bool Tavisynth::getVersion(const Tconfig *config,ffstring &vers,ffstring &licens
   {
    IScriptEnvironment *env=dl->CreateScriptEnvironment(AVISYNTH_INTERFACE_VERSION);
    try
-    { 
+    {
      char script[]="VersionString";
      AVSValue eval_args[]={script,"ffdshow_version_avisynth_script"};
      AVSValue val=env->Invoke("Eval",AVSValue(eval_args,2));
@@ -49,7 +49,7 @@ bool Tavisynth::getVersion(const Tconfig *config,ffstring &vers,ffstring &licens
    catch (AvisynthError &err)
     {
      vers=text<char_t>(err.msg);
-    } 
+    }
    delete env;
   }
  else
@@ -57,7 +57,7 @@ bool Tavisynth::getVersion(const Tconfig *config,ffstring &vers,ffstring &licens
    vers=_l("not found");
    license.clear();
   }
- delete dl; 
+ delete dl;
  return res;
 }
 
@@ -67,7 +67,7 @@ const char* Tavisynth::getScriptVideo(size_t hdrsize,const char *extradata,size_
 }
 const char* Tavisynth::getScriptAudio(size_t hdrsize,const char *extradata,size_t extradatasize,size_t d)
 {
- //#define CUSTOM_MAKEAVIS  
+ //#define CUSTOM_MAKEAVIS
  char *script;
  switch (extradata[0]&127)
   {
@@ -77,15 +77,15 @@ const char* Tavisynth::getScriptAudio(size_t hdrsize,const char *extradata,size_
     #ifdef CUSTOM_MAKEAVIS
      #include "../../makeAVIS_custom/customMakeAVIS.h"
      getScript(script,(const unsigned char*)script,extradatasize-(1+d),hdrsize);
-    #endif  
+    #endif
     break;
-   case 2:  
+   case 2:
     {
      char filename[MAX_PATH];memcpy(filename,extradata+1+d,extradatasize-(1+d));
      #ifdef CUSTOM_MAKEAVIS
       #include "../../makeAVIS_custom/customMakeAVIS.h"
       getScript(filename,(const unsigned char*)filename,extradatasize-(1+d),hdrsize);
-     #endif  
+     #endif
      FILE *f=fopen(extradata+1+d,"rb");
      if (!f) return NULL;
      int len=filelength(fileno(f));
@@ -94,7 +94,7 @@ const char* Tavisynth::getScriptAudio(size_t hdrsize,const char *extradata,size_
      script[len]='\0';
      fclose(f);
      break;
-    }  
+    }
    default:
     return NULL;
   }
@@ -117,7 +117,7 @@ bool Tavisynth_c::getVersion(const Tconfig *config,ffstring &vers,ffstring &lice
   {
    IScriptEnvironment *env=dl->CreateScriptEnvironment(AVISYNTH_INTERFACE_VERSION);
    try
-    { 
+    {
      char script[]="VersionString";
      AVSValue eval_args[]={script,"ffdshow_version_avisynth_script"};
      AVSValue val=env->Invoke("Eval",AVSValue(eval_args,2));
@@ -128,7 +128,7 @@ bool Tavisynth_c::getVersion(const Tconfig *config,ffstring &vers,ffstring &lice
    catch (AvisynthError &err)
     {
      vers=text<char_t>(err.msg);
-    } 
+    }
    delete env;
   }
  else
@@ -136,7 +136,7 @@ bool Tavisynth_c::getVersion(const Tconfig *config,ffstring &vers,ffstring &lice
    vers=_l("not found");
    license.clear();
   }
- delete dl; 
+ delete dl;
  return res;
 }
 
@@ -146,7 +146,7 @@ TavisynthAudio::TavisynthAudio(const CMediaType &mt,TsampleFormat &fmt,IffdshowB
  env(NULL),clip(NULL)
 {
  if (ok)
-  {  
+  {
    env=CreateScriptEnvironment(AVISYNTH_INTERFACE_VERSION);
    if (env)
     {
@@ -154,7 +154,7 @@ TavisynthAudio::TavisynthAudio(const CMediaType &mt,TsampleFormat &fmt,IffdshowB
      script=::Tavisynth::getScriptAudio(1+extradata.size+1,(const char*)extradata.data,extradata.size);
      if (!script) {ok=false;return;}
      AVSValue eval_args[]={script,scriptName};
-     try 
+     try
       {
        AVSValue val=env->Invoke("Eval",AVSValue(eval_args,2));
        if (val.IsClip())
@@ -170,16 +170,16 @@ TavisynthAudio::TavisynthAudio(const CMediaType &mt,TsampleFormat &fmt,IffdshowB
            case SAMPLE_FLOAT:fmt.sf=TsampleFormat::SF_FLOAT32;break;
           }
          ok=true;
-        } 
+        }
       }
      catch (AvisynthError &err)
       {
        if (deci) deci->dbgError(text<char_t>(err.msg));
        ok=false;
-      } 
-    } 
+      }
+    }
   }
-}  
+}
 TavisynthAudio::~TavisynthAudio()
 {
  if (clip) delete clip;

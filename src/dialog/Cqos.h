@@ -7,7 +7,7 @@ class TqosPage :public TconfPageDecVideo
 {
 private:
  bool islavc;
-protected: 
+protected:
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 public:
  TqosPage(TffdshowPageDec *Iparent);
@@ -18,4 +18,4 @@ public:
  virtual void translate(void);
 };
 
-#endif 
+#endif

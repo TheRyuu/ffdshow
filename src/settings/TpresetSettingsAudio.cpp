@@ -64,8 +64,8 @@ const char_t* TaudioAutoPresetProps::getFreq(void)
    unsigned int freqI;
    if (deciA->inputSampleFormat(NULL,&freqI)==S_OK)
     freq=freqI;
-  }  
- return _l("freq"); 
+  }
+ return _l("freq");
 }
 bool TaudioAutoPresetProps::freqMatch(const char_t *expr,const char_t *)
 {
@@ -90,7 +90,7 @@ TpresetAudio::TpresetAudio(const char_t *IpresetName,const char_t *Ireg_child):
      _l("noiseShaping"),0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
 
  static const char_t *freqHelp=_l("Enter logical expression with 'freq' variable and comparison and arithmetic operators,\nfor example \"44100<=freq AND 48000<=freq\".");
  static const TautoPresetItemDef autoPresetItems[]=
@@ -111,10 +111,10 @@ TpresetAudio::TpresetAudio(const char_t *IpresetName,const char_t *Ireg_child):
     (TautoPresetItemDef::TgetValFc)&TaudioAutoPresetProps::getFreq,
     NULL,freqHelp
    },
-   0 
+   0
   };
- addAutoPresetItems(autoPresetItems); 
- 
+ addAutoPresetItems(autoPresetItems);
+
  new TdolbyDecoderSettings(options,filters);
  new TvolumeSettings(options,filters);
  new TeqSettings(options,filters);

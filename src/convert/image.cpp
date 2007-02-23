@@ -58,9 +58,9 @@ static packedFuncPtr yv12_to_uyvy;
 static packedFuncPtr yv12_to_yuyvi;
 static packedFuncPtr yv12_to_uyvyi;
 
-typedef void (planarFunc) (uint8_t * y_dst, uint8_t * u_dst, uint8_t * v_dst, 
+typedef void (planarFunc) (uint8_t * y_dst, uint8_t * u_dst, uint8_t * v_dst,
                            stride_t y_dst_stride, stride_t uv_dst_stride,
-                           const uint8_t * y_src, const uint8_t * u_src, const uint8_t * v_src, 
+                           const uint8_t * y_src, const uint8_t * u_src, const uint8_t * v_src,
                            stride_t y_src_stride, stride_t uv_src_stride,
                            int width, int height);
 typedef planarFunc *planarFuncPtr;
@@ -68,9 +68,9 @@ typedef planarFunc *planarFuncPtr;
 static planarFuncPtr yv12_to_yv12;
 
 /* yv12 to yv12 copy function */
-static void yv12_to_yv12_c(uint8_t * y_dst, uint8_t * u_dst, uint8_t * v_dst, 
+static void yv12_to_yv12_c(uint8_t * y_dst, uint8_t * u_dst, uint8_t * v_dst,
 				stride_t y_dst_stride, stride_t uv_dst_stride,
-				const uint8_t * y_src, const uint8_t * u_src, const uint8_t * v_src, 
+				const uint8_t * y_src, const uint8_t * u_src, const uint8_t * v_src,
 				stride_t y_src_stride, stride_t uv_src_stride,
 				int width, int height)
 {
@@ -113,7 +113,7 @@ template<int CCIR> struct YUV_RGB_DATA
  static const double RGB_Y_OUT,B_U_OUT;static const int Y_ADD_OUT;
  static const double G_U_OUT,G_V_OUT;static const int U_ADD_OUT;
  static const double R_V_OUT;static const int V_ADD_OUT;
- 
+
  static const int Y_ADD,U_ADD,V_ADD;
 
  static const __int64 Y_SUB,U_SUB,V_SUB,Y_MUL,UG_MUL,VG_MUL,UB_MUL,VR_MUL,y_mul,u_mul,v_mul;
@@ -125,7 +125,7 @@ template<int CCIR> struct YUV_RGB_DATA
     Video Demystified" (ISBN 1-878707-09-4)
 
     rgb<->yuv _is_ lossy, since most programs do the conversion differently
-        
+
     SCALEBITS/FIX taken from  ffmpeg
 */
 
@@ -173,12 +173,12 @@ template<> const int YUV_RGB_DATA<CCIR>::V_ADD_OUT   =128;
 template<> const __int64 YUV_RGB_DATA<CCIR>::Y_SUB=  MAKE_M64_16_1(Y_ADD);
 template<> const __int64 YUV_RGB_DATA<CCIR>::U_SUB=  MAKE_M64_16_1(U_ADD);
 template<> const __int64 YUV_RGB_DATA<CCIR>::V_SUB=  MAKE_M64_16_1(V_ADD);
-                                                    
+
 template<> const __int64 YUV_RGB_DATA<CCIR>::Y_MUL=  MAKE_M64_16_1(FIX64(RGB_Y_OUT));
-                                                    
+
 template<> const __int64 YUV_RGB_DATA<CCIR>::UG_MUL= MAKE_M64_16_1(FIX64(G_U_OUT));
 template<> const __int64 YUV_RGB_DATA<CCIR>::VG_MUL= MAKE_M64_16_1(FIX64(G_V_OUT));
-                                                    
+
 template<> const __int64 YUV_RGB_DATA<CCIR>::UB_MUL= MAKE_M64_16_1(FIX64(B_U_OUT));
 template<> const __int64 YUV_RGB_DATA<CCIR>::VR_MUL= MAKE_M64_16_1(FIX64(R_V_OUT));
 //                                                                 FIX(Y_B            FIX(Y_G)            FIX(Y_R)
@@ -226,12 +226,12 @@ template<> const int YUV_RGB_DATA<JPEG>::V_ADD_OUT   =128;
 template<> const __int64 YUV_RGB_DATA<JPEG>::Y_SUB=  MAKE_M64_16_1(Y_ADD);
 template<> const __int64 YUV_RGB_DATA<JPEG>::U_SUB=  MAKE_M64_16_1(U_ADD);
 template<> const __int64 YUV_RGB_DATA<JPEG>::V_SUB=  MAKE_M64_16_1(V_ADD);
-                                                    
+
 template<> const __int64 YUV_RGB_DATA<JPEG>::Y_MUL=  MAKE_M64_16_1(FIX64(RGB_Y_OUT));
-                                                    
+
 template<> const __int64 YUV_RGB_DATA<JPEG>::UG_MUL= MAKE_M64_16_1(FIX64(G_U_OUT));
 template<> const __int64 YUV_RGB_DATA<JPEG>::VG_MUL= MAKE_M64_16_1(FIX64(G_V_OUT));
-                                                    
+
 template<> const __int64 YUV_RGB_DATA<JPEG>::UB_MUL= MAKE_M64_16_1(FIX64(B_U_OUT));
 template<> const __int64 YUV_RGB_DATA<JPEG>::VR_MUL= MAKE_M64_16_1(FIX64(R_V_OUT));
 //                                                                 FIX(Y_B     FIX(Y_G)     FIX(Y_R)
@@ -251,7 +251,7 @@ struct RGB555
    return (uint16_t)(((limit_uint8(R) << 7) & 0x7c00) |
                      ((limit_uint8(G) << 2) & 0x03e0) |
                      ((limit_uint8(B) >> 3) & 0x001f));
-  }                   
+  }
  static __forceinline uint32_t B(uint32_t RGB) {return (RGB << 3) & 0xf8;}
  static __forceinline uint32_t G(uint32_t RGB) {return (RGB >> 2) & 0xf8;}
  static __forceinline uint32_t R(uint32_t RGB) {return (RGB >> 7) & 0xf8;}
@@ -264,7 +264,7 @@ struct RGB565
    return (uint16_t)(((limit_uint8(R) << 8) & 0xf800) |
                      ((limit_uint8(G) << 3) & 0x07e0) |
                      ((limit_uint8(B) >> 3) & 0x001f));
-  }                   
+  }
  static __forceinline uint32_t B(uint32_t RGB) {return (RGB << 3) & 0xf8;}
  static __forceinline uint32_t G(uint32_t RGB) {return (RGB >> 3) & 0xfc;}
  static __forceinline uint32_t R(uint32_t RGB) {return (RGB >> 8) & 0xf8;}
@@ -282,91 +282,91 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
                                                          int r[2],int g[2],int b[2],
                                                          const int b_u,const int g_uv,const int r_v)
   {
-   int rgb_y = YUV_RGB_DATA<CCIR>::RGB_Y_tab[ y_ptr[y_stride*(ROW) + 0] ];                                          
-   b[ROW] = (b[ROW] & 0x7) + ((rgb_y + b_u) >> SCALEBITS_OUT);     
-   g[ROW] = (g[ROW] & 0x7) + ((rgb_y - g_uv) >> SCALEBITS_OUT);    
-   r[ROW] = (r[ROW] & 0x7) + ((rgb_y + r_v) >> SCALEBITS_OUT);             
-   *(uint16_t *) (x_ptr+((ROW)*x_stride)+0) = C1::MK(r[ROW], g[ROW], b[ROW]);  
-   rgb_y = YUV_RGB_DATA<CCIR>::RGB_Y_tab[ y_ptr[y_stride*(ROW) + 1] ];                          
-   b[ROW] = (b[ROW] & 0x7) + ((rgb_y + b_u) >> SCALEBITS_OUT);             
-   g[ROW] = (g[ROW] & 0x7) + ((rgb_y - g_uv) >> SCALEBITS_OUT);    
-   r[ROW] = (r[ROW] & 0x7) + ((rgb_y + r_v) >> SCALEBITS_OUT);             
+   int rgb_y = YUV_RGB_DATA<CCIR>::RGB_Y_tab[ y_ptr[y_stride*(ROW) + 0] ];
+   b[ROW] = (b[ROW] & 0x7) + ((rgb_y + b_u) >> SCALEBITS_OUT);
+   g[ROW] = (g[ROW] & 0x7) + ((rgb_y - g_uv) >> SCALEBITS_OUT);
+   r[ROW] = (r[ROW] & 0x7) + ((rgb_y + r_v) >> SCALEBITS_OUT);
+   *(uint16_t *) (x_ptr+((ROW)*x_stride)+0) = C1::MK(r[ROW], g[ROW], b[ROW]);
+   rgb_y = YUV_RGB_DATA<CCIR>::RGB_Y_tab[ y_ptr[y_stride*(ROW) + 1] ];
+   b[ROW] = (b[ROW] & 0x7) + ((rgb_y + b_u) >> SCALEBITS_OUT);
+   g[ROW] = (g[ROW] & 0x7) + ((rgb_y - g_uv) >> SCALEBITS_OUT);
+   r[ROW] = (r[ROW] & 0x7) + ((rgb_y + r_v) >> SCALEBITS_OUT);
    *(uint16_t *) (x_ptr+((ROW)*x_stride)+2) = C1::MK(r[ROW], g[ROW], b[ROW]);
-  } 
- 
+  }
+
  template<int ROW> static __forceinline void READ_RGB16_Y(uint8_t *x_ptr,stride_t x_stride,
                                                           uint8_t *y_ptr,stride_t y_stride,
                                                           uint32_t &r,uint32_t &g,uint32_t &b,uint32_t &r0,uint32_t &g0,uint32_t &b0)
   {
-   uint32_t rgb = *(uint16_t *) (x_ptr + ((ROW)*x_stride) + 0);     
-   b0 += b = C1::B(rgb);                             
-   g0 += g = C1::G(rgb);                             
-   r0 += r = C1::R(rgb);                             
-   y_ptr[(ROW)*y_stride+0] =                               
-           (uint8_t)((uint8_t) ((FIX_IN(YUV_RGB_DATA<CCIR>::Y_R_IN) * r + FIX_IN(YUV_RGB_DATA<CCIR>::Y_G_IN) * g +   
-                                   FIX_IN(YUV_RGB_DATA<CCIR>::Y_B_IN) * b) >> SCALEBITS_IN) + YUV_RGB_DATA<CCIR>::Y_ADD_IN); 
-   rgb = *(uint16_t *) (x_ptr + ((ROW)*x_stride) + 2);     
-   b0 += b = C1::B(rgb);                             
-   g0 += g = C1::G(rgb);                             
-   r0 += r = C1::R(rgb);                             
-   y_ptr[(ROW)*y_stride+1] =                               
-           (uint8_t)((uint8_t) ((FIX_IN(YUV_RGB_DATA<CCIR>::Y_R_IN) * r + FIX_IN(YUV_RGB_DATA<CCIR>::Y_G_IN) * g +                   
+   uint32_t rgb = *(uint16_t *) (x_ptr + ((ROW)*x_stride) + 0);
+   b0 += b = C1::B(rgb);
+   g0 += g = C1::G(rgb);
+   r0 += r = C1::R(rgb);
+   y_ptr[(ROW)*y_stride+0] =
+           (uint8_t)((uint8_t) ((FIX_IN(YUV_RGB_DATA<CCIR>::Y_R_IN) * r + FIX_IN(YUV_RGB_DATA<CCIR>::Y_G_IN) * g +
+                                   FIX_IN(YUV_RGB_DATA<CCIR>::Y_B_IN) * b) >> SCALEBITS_IN) + YUV_RGB_DATA<CCIR>::Y_ADD_IN);
+   rgb = *(uint16_t *) (x_ptr + ((ROW)*x_stride) + 2);
+   b0 += b = C1::B(rgb);
+   g0 += g = C1::G(rgb);
+   r0 += r = C1::R(rgb);
+   y_ptr[(ROW)*y_stride+1] =
+           (uint8_t)((uint8_t) ((FIX_IN(YUV_RGB_DATA<CCIR>::Y_R_IN) * r + FIX_IN(YUV_RGB_DATA<CCIR>::Y_G_IN) * g +
                                    FIX_IN(YUV_RGB_DATA<CCIR>::Y_B_IN) * b) >> SCALEBITS_IN) + YUV_RGB_DATA<CCIR>::Y_ADD_IN);
   }
  template<int ROW,int UV_ROW> static __forceinline void READ_RGB16_UV(uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
                                                            uint32_t &r,uint32_t &g,uint32_t &b,uint32_t &r0,uint32_t &g0,uint32_t &b0)
   {
-   u_ptr[(UV_ROW)*uv_stride] =                                                                                                             
-           (uint8_t)((uint8_t) ((-FIX_IN(YUV_RGB_DATA<CCIR>::U_R_IN) * r0 - FIX_IN(YUV_RGB_DATA<CCIR>::U_G_IN) * g0 +                      
-                                   FIX_IN(YUV_RGB_DATA<CCIR>::U_B_IN) * b0) >> (SCALEBITS_IN + 2)) + YUV_RGB_DATA<CCIR>::U_ADD_IN);     
-   v_ptr[(UV_ROW)*uv_stride] =                                                                                                             
-           (uint8_t)((uint8_t) ((FIX_IN(YUV_RGB_DATA<CCIR>::V_R_IN) * r0 - FIX_IN(YUV_RGB_DATA<CCIR>::V_G_IN) * g0 -                       
+   u_ptr[(UV_ROW)*uv_stride] =
+           (uint8_t)((uint8_t) ((-FIX_IN(YUV_RGB_DATA<CCIR>::U_R_IN) * r0 - FIX_IN(YUV_RGB_DATA<CCIR>::U_G_IN) * g0 +
+                                   FIX_IN(YUV_RGB_DATA<CCIR>::U_B_IN) * b0) >> (SCALEBITS_IN + 2)) + YUV_RGB_DATA<CCIR>::U_ADD_IN);
+   v_ptr[(UV_ROW)*uv_stride] =
+           (uint8_t)((uint8_t) ((FIX_IN(YUV_RGB_DATA<CCIR>::V_R_IN) * r0 - FIX_IN(YUV_RGB_DATA<CCIR>::V_G_IN) * g0 -
                                    FIX_IN(YUV_RGB_DATA<CCIR>::V_B_IN) * b0) >> (SCALEBITS_IN + 2)) + YUV_RGB_DATA<CCIR>::V_ADD_IN);
   }
-  
+
  template<int ROW> static __forceinline void WRITE_RGB(uint8_t *x_ptr,stride_t x_stride,
                                                        uint8_t *y_ptr,stride_t y_stride,
                                                        int r[2],int g[2],int b[2],
                                                        const int b_u,const int g_uv,const int r_v)
   {
-   int rgb_y = YUV_RGB_DATA<CCIR>::RGB_Y_tab[ y_ptr[(ROW)*y_stride + 0] ];                                          
-   x_ptr[(ROW)*x_stride+(C3)] = limit_uint8((rgb_y + b_u) >> SCALEBITS_OUT);     
-   x_ptr[(ROW)*x_stride+(C2)] = limit_uint8((rgb_y - g_uv) >> SCALEBITS_OUT);    
-   x_ptr[(ROW)*x_stride+(C1::value)] = limit_uint8((rgb_y + r_v) >> SCALEBITS_OUT);     
-   if ((SIZE)>3) x_ptr[(ROW)*x_stride+(C4)] = 0;                                                                   
-   rgb_y = YUV_RGB_DATA<CCIR>::RGB_Y_tab[ y_ptr[(ROW)*y_stride + 1] ];                                                                  
-   x_ptr[(ROW)*x_stride+(SIZE)+(C3)] = limit_uint8((rgb_y + b_u) >> SCALEBITS_OUT);      
-   x_ptr[(ROW)*x_stride+(SIZE)+(C2)] = limit_uint8((rgb_y - g_uv) >> SCALEBITS_OUT);     
-   x_ptr[(ROW)*x_stride+(SIZE)+(C1::value)] = limit_uint8((rgb_y + r_v) >> SCALEBITS_OUT);      
+   int rgb_y = YUV_RGB_DATA<CCIR>::RGB_Y_tab[ y_ptr[(ROW)*y_stride + 0] ];
+   x_ptr[(ROW)*x_stride+(C3)] = limit_uint8((rgb_y + b_u) >> SCALEBITS_OUT);
+   x_ptr[(ROW)*x_stride+(C2)] = limit_uint8((rgb_y - g_uv) >> SCALEBITS_OUT);
+   x_ptr[(ROW)*x_stride+(C1::value)] = limit_uint8((rgb_y + r_v) >> SCALEBITS_OUT);
+   if ((SIZE)>3) x_ptr[(ROW)*x_stride+(C4)] = 0;
+   rgb_y = YUV_RGB_DATA<CCIR>::RGB_Y_tab[ y_ptr[(ROW)*y_stride + 1] ];
+   x_ptr[(ROW)*x_stride+(SIZE)+(C3)] = limit_uint8((rgb_y + b_u) >> SCALEBITS_OUT);
+   x_ptr[(ROW)*x_stride+(SIZE)+(C2)] = limit_uint8((rgb_y - g_uv) >> SCALEBITS_OUT);
+   x_ptr[(ROW)*x_stride+(SIZE)+(C1::value)] = limit_uint8((rgb_y + r_v) >> SCALEBITS_OUT);
    if ((SIZE)>3) x_ptr[(ROW)*x_stride+(SIZE)+(C4)] = 0;
-  } 
+  }
 
  template<int ROW> static __forceinline void READ_RGB_Y(uint8_t *x_ptr,stride_t x_stride,
                                                           uint8_t *y_ptr,stride_t y_stride,
                                                           uint32_t &r,uint32_t &g,uint32_t &b,uint32_t &r0,uint32_t &g0,uint32_t &b0)
   {
-   r0 += r = x_ptr[(ROW)*x_stride+(C1::value)];                                              
-   g0 += g = x_ptr[(ROW)*x_stride+(C2)];                                              
-   b0 += b = x_ptr[(ROW)*x_stride+(C3)];                                              
-   y_ptr[(ROW)*y_stride+0] =                                                                       
-           (uint8_t)((uint8_t) ((FIX_IN(YUV_RGB_DATA<CCIR>::Y_R_IN) * r + FIX_IN(YUV_RGB_DATA<CCIR>::Y_G_IN) * g +   
-                                   FIX_IN(YUV_RGB_DATA<CCIR>::Y_B_IN) * b) >> SCALEBITS_IN) + YUV_RGB_DATA<CCIR>::Y_ADD_IN); 
-   r0 += r = x_ptr[(ROW)*x_stride+(SIZE)+(C1::value)];                               
-   g0 += g = x_ptr[(ROW)*x_stride+(SIZE)+(C2)];                               
-   b0 += b = x_ptr[(ROW)*x_stride+(SIZE)+(C3)];                               
-   y_ptr[(ROW)*y_stride+1] =                                                                       
-           (uint8_t)((uint8_t) ((FIX_IN(YUV_RGB_DATA<CCIR>::Y_R_IN) * r + FIX_IN(YUV_RGB_DATA<CCIR>::Y_G_IN) * g +   
+   r0 += r = x_ptr[(ROW)*x_stride+(C1::value)];
+   g0 += g = x_ptr[(ROW)*x_stride+(C2)];
+   b0 += b = x_ptr[(ROW)*x_stride+(C3)];
+   y_ptr[(ROW)*y_stride+0] =
+           (uint8_t)((uint8_t) ((FIX_IN(YUV_RGB_DATA<CCIR>::Y_R_IN) * r + FIX_IN(YUV_RGB_DATA<CCIR>::Y_G_IN) * g +
+                                   FIX_IN(YUV_RGB_DATA<CCIR>::Y_B_IN) * b) >> SCALEBITS_IN) + YUV_RGB_DATA<CCIR>::Y_ADD_IN);
+   r0 += r = x_ptr[(ROW)*x_stride+(SIZE)+(C1::value)];
+   g0 += g = x_ptr[(ROW)*x_stride+(SIZE)+(C2)];
+   b0 += b = x_ptr[(ROW)*x_stride+(SIZE)+(C3)];
+   y_ptr[(ROW)*y_stride+1] =
+           (uint8_t)((uint8_t) ((FIX_IN(YUV_RGB_DATA<CCIR>::Y_R_IN) * r + FIX_IN(YUV_RGB_DATA<CCIR>::Y_G_IN) * g +
                    FIX_IN(YUV_RGB_DATA<CCIR>::Y_B_IN) * b) >> SCALEBITS_IN) + YUV_RGB_DATA<CCIR>::Y_ADD_IN);
-  }                 
-  
+  }
+
  template<int ROW,int UV_ROW> static __forceinline void READ_RGB_UV(uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
                                                            uint32_t &r,uint32_t &g,uint32_t &b,uint32_t &r0,uint32_t &g0,uint32_t &b0)
   {
-        u_ptr[(UV_ROW)*uv_stride] =                                                                                                             
-                (uint8_t)((uint8_t) ((-FIX_IN(YUV_RGB_DATA<CCIR>::U_R_IN) * r0 - FIX_IN(YUV_RGB_DATA<CCIR>::U_G_IN) * g0 +                      
-                                        FIX_IN(YUV_RGB_DATA<CCIR>::U_B_IN) * b0) >> (SCALEBITS_IN + 2)) + YUV_RGB_DATA<CCIR>::U_ADD_IN);     
-        v_ptr[(UV_ROW)*uv_stride] =                                                                                                             
-                (uint8_t)((uint8_t) ((FIX_IN(YUV_RGB_DATA<CCIR>::V_R_IN) * r0 - FIX_IN(YUV_RGB_DATA<CCIR>::V_G_IN) * g0 -                       
+        u_ptr[(UV_ROW)*uv_stride] =
+                (uint8_t)((uint8_t) ((-FIX_IN(YUV_RGB_DATA<CCIR>::U_R_IN) * r0 - FIX_IN(YUV_RGB_DATA<CCIR>::U_G_IN) * g0 +
+                                        FIX_IN(YUV_RGB_DATA<CCIR>::U_B_IN) * b0) >> (SCALEBITS_IN + 2)) + YUV_RGB_DATA<CCIR>::U_ADD_IN);
+        v_ptr[(UV_ROW)*uv_stride] =
+                (uint8_t)((uint8_t) ((FIX_IN(YUV_RGB_DATA<CCIR>::V_R_IN) * r0 - FIX_IN(YUV_RGB_DATA<CCIR>::V_G_IN) * g0 -
                                         FIX_IN(YUV_RGB_DATA<CCIR>::V_B_IN) * b0) >> (SCALEBITS_IN + 2)) + YUV_RGB_DATA<CCIR>::V_ADD_IN);
   }
 
@@ -375,7 +375,7 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
    static __forceinline void ROW(int r[4],int g[4],int b[4])
     {
      r[0] = r[1] = g[0] = g[1] = b[0] = b[1] = 0;
-    } 
+    }
    static __forceinline void PROCESS(uint8_t *x_ptr,stride_t x_stride,
                                      uint8_t *y_ptr,stride_t y_stride,
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
@@ -389,21 +389,21 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
      WRITE_RGB16<1>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u,g_uv,r_v);
     }
   };
- 
+
  struct YV12_TO_RGB16I
   {
    static __forceinline void ROW(int r[4],int g[4],int b[4])
     {
-     r[0] = r[1] = r[2] = r[3] = 0;                  
-     g[0] = g[1] = g[2] = g[3] = 0;                  
+     r[0] = r[1] = r[2] = r[3] = 0;
+     g[0] = g[1] = g[2] = g[3] = 0;
      b[0] = b[1] = b[2] = b[3] = 0;
-    }   
+    }
    static __forceinline void PROCESS(uint8_t *x_ptr,stride_t x_stride,
                                      uint8_t *y_ptr,stride_t y_stride,
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
                                      int r[4],int g[4],int b[4],
                                      bool full=true)
-    {                                 
+    {
      int b_u0 = YUV_RGB_DATA<CCIR>::B_U_tab[ u_ptr[0] ];
      int g_uv0 = YUV_RGB_DATA<CCIR>::G_U_tab[ u_ptr[0] ] + YUV_RGB_DATA<CCIR>::G_V_tab[ v_ptr[0] ];
      int r_v0 = YUV_RGB_DATA<CCIR>::R_V_tab[ v_ptr[0] ];
@@ -420,9 +420,9 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
       }
      else
       WRITE_RGB16<1>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u0,g_uv0,r_v0);
-    } 
+    }
   };
-  
+
  struct YV12_TO_RGB
   {
    static __forceinline void ROW(int r[4],int g[4],int b[4])
@@ -433,13 +433,13 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
                                      int r[4],int g[4],int b[4],
                                      bool full=true)
-     {                                
+     {
       int b_u = YUV_RGB_DATA<CCIR>::B_U_tab[ u_ptr[0] ];
       int g_uv = YUV_RGB_DATA<CCIR>::G_U_tab[ u_ptr[0] ] + YUV_RGB_DATA<CCIR>::G_V_tab[ v_ptr[0] ];
       int r_v= YUV_RGB_DATA<CCIR>::R_V_tab[ v_ptr[0] ];
       WRITE_RGB<0>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u,g_uv,r_v);
       WRITE_RGB<1>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u,g_uv,r_v);
-     } 
+     }
   };
 
  struct YV12_TO_RGBI
@@ -452,7 +452,7 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
                                      int r[4],int g[4],int b[4],
                                      bool full=true)
-    {                                 
+    {
      int b_u0 = YUV_RGB_DATA<CCIR>::B_U_tab[ u_ptr[0] ];
      int g_uv0 = YUV_RGB_DATA<CCIR>::G_U_tab[ u_ptr[0] ] + YUV_RGB_DATA<CCIR>::G_V_tab[ v_ptr[0] ];
      int r_v0= YUV_RGB_DATA<CCIR>::R_V_tab[ v_ptr[0] ];
@@ -468,21 +468,21 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
        WRITE_RGB<2>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u0,g_uv0,r_v0);
        WRITE_RGB<3>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u1,g_uv1,r_v1);
       }
-     else 
+     else
       WRITE_RGB<1>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,b_u0,g_uv0,r_v0);
     }
-  };  
-  
+  };
+
  template<int ROW,int UV_ROW> static __forceinline void WRITE_YUYV(uint8_t *x_ptr,stride_t x_stride,uint8_t *y_ptr,stride_t y_stride,uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride)
   {
    x_ptr[(ROW)*x_stride+(C1::value)] = y_ptr[   (ROW)*y_stride +0];
    x_ptr[(ROW)*x_stride+(C2)] = u_ptr[(UV_ROW)*uv_stride+0];
    x_ptr[(ROW)*x_stride+(C3)] = y_ptr[   (ROW)*y_stride +1];
    x_ptr[(ROW)*x_stride+(C4)] = v_ptr[(UV_ROW)*uv_stride+0];
-  } 
-  
+  }
+
  struct YV12_TO_YUYV
-  { 
+  {
    static __forceinline void ROW(int r[4],int g[4],int b[4])
     {
     }
@@ -491,25 +491,25 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
                                      int r[4],int g[4],int b[4],
                                      bool full=true)
-    {                                 
+    {
      WRITE_YUYV<0, 0>(x_ptr,x_stride,y_ptr,y_stride,u_ptr,v_ptr,uv_stride);
      WRITE_YUYV<1, 0>(x_ptr,x_stride,y_ptr,y_stride,u_ptr,v_ptr,uv_stride);
-    }    
+    }
   };
-   
+
  template<int ROW> static __forceinline void READ_YUYV_Y(uint8_t *y_ptr,stride_t y_stride,uint8_t *x_ptr,stride_t x_stride)
   {
    y_ptr[(ROW)*y_stride+0] = x_ptr[(ROW)*x_stride+(C1::value)];
    y_ptr[(ROW)*y_stride+1] = x_ptr[(ROW)*x_stride+(C3)];
-  } 
+  }
  template<int UV_ROW,int ROW1,int ROW2> static __forceinline void READ_YUYV_UV(uint8_t *x_ptr,stride_t x_stride,uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride)
   {
    u_ptr[(UV_ROW)*uv_stride] = (uint8_t)((x_ptr[(ROW1)*x_stride+(C2)] + x_ptr[(ROW2)*x_stride+(C2)] + 1) / 2);
    v_ptr[(UV_ROW)*uv_stride] = (uint8_t)((x_ptr[(ROW1)*x_stride+(C4)] + x_ptr[(ROW2)*x_stride+(C4)] + 1) / 2);
-  } 
-   
+  }
+
  struct YV12_TO_YUYVI
-  { 
+  {
    static __forceinline void ROW(int r[4],int g[4],int b[4])
     {
     }
@@ -518,12 +518,12 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
                                      int r[4],int g[4],int b[4],
                                      bool full=true)
-    {                                 
+    {
      WRITE_YUYV<0, 0>(x_ptr,x_stride,y_ptr,y_stride,u_ptr,v_ptr,uv_stride);
      WRITE_YUYV<1, 1>(x_ptr,x_stride,y_ptr,y_stride,u_ptr,v_ptr,uv_stride);
      WRITE_YUYV<2, 0>(x_ptr,x_stride,y_ptr,y_stride,u_ptr,v_ptr,uv_stride);
      WRITE_YUYV<3, 1>(x_ptr,x_stride,y_ptr,y_stride,u_ptr,v_ptr,uv_stride);
-    }    
+    }
   };
 
  struct YUYV_TO_YV12
@@ -536,14 +536,14 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
                                      int r[4],int g[4],int b[4],
                                      bool full=true)
-    {                                 
+    {
         READ_YUYV_Y<0>(y_ptr,y_stride,x_ptr,x_stride);
         READ_YUYV_Y<1>(y_ptr,y_stride,x_ptr,x_stride);
         READ_YUYV_UV<0, 0,1>(x_ptr,x_stride,u_ptr,v_ptr,uv_stride);
     }
   };
  struct YUYVI_TO_YV12
-  {   
+  {
    static __forceinline void ROW(int r[4],int g[4],int b[4])
     {
     }
@@ -552,7 +552,7 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
                                      int r[4],int g[4],int b[4],
                                      bool full=true)
-    {                                 
+    {
      READ_YUYV_Y<0>(y_ptr,y_stride,x_ptr,x_stride);
      READ_YUYV_Y<1>(y_ptr,y_stride,x_ptr,x_stride);
      READ_YUYV_Y<2>(y_ptr,y_stride,x_ptr,x_stride);
@@ -561,9 +561,9 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
      READ_YUYV_UV<1, 1,3>(x_ptr,x_stride,u_ptr,v_ptr,uv_stride);
     }
   };
-    
+
  struct RGB16_TO_YV12
-  { 
+  {
    static __forceinline void ROW(int r[4],int g[4],int b[4])
     {
     }
@@ -572,17 +572,17 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
                                      int [4],int [4],int [4],
                                      bool full=true)
-    {                                 
+    {
      uint32_t r, g, b, r0, g0, b0;
      r0 = g0 = b0 = 0;
      READ_RGB16_Y <0>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,r0,g0,b0);
      READ_RGB16_Y <1>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,r0,g0,b0);
      READ_RGB16_UV<0,0>(u_ptr,v_ptr,uv_stride,r,g,b,r0,g0,b0);
-    }    
+    }
   };
- 
+
  struct RGB16I_TO_YV12
-  { 
+  {
    static __forceinline void ROW(int r[4],int g[4],int b[4])
     {
     }
@@ -591,20 +591,20 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
                                      int [4],int [4],int [4],
                                      bool full=true)
-    {                                 
-     uint32_t r, g, b, r0, g0, b0, r1, g1, b1;  
-     r0 = g0 = b0 = r1 = g1 = b1 = 0;        
+    {
+     uint32_t r, g, b, r0, g0, b0, r1, g1, b1;
+     r0 = g0 = b0 = r1 = g1 = b1 = 0;
      READ_RGB16_Y<0>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,r0,g0,b0);
-     READ_RGB16_Y<1>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,r1,g1,b1);   
-     READ_RGB16_Y<2>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,r0,g0,b0);   
-     READ_RGB16_Y<3>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,r1,g1,b1);   
+     READ_RGB16_Y<1>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,r1,g1,b1);
+     READ_RGB16_Y<2>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,r0,g0,b0);
+     READ_RGB16_Y<3>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,r1,g1,b1);
      READ_RGB16_UV<0, 0>(u_ptr,v_ptr,uv_stride,r,g,b,r0,g0,b0);
      READ_RGB16_UV<1, 1>(u_ptr,v_ptr,uv_stride,r,g,b,r0,g0,b0);
     }
   };
-    
+
  struct RGB_TO_YV12
-  { 
+  {
    static __forceinline void ROW(int r[4],int g[4],int b[4])
     {
     }
@@ -613,17 +613,17 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
                                      int [4],int [4],int [4],
                                      bool full=true)
-    {                                 
-     uint32_t r, g, b, r0, g0, b0;           
-     r0 = g0 = b0 = 0;                                       
+    {
+     uint32_t r, g, b, r0, g0, b0;
+     r0 = g0 = b0 = 0;
      READ_RGB_Y<0>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,r0,g0,b0);
      READ_RGB_Y<1>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,r0,g0,b0);
      READ_RGB_UV<0,0>(u_ptr,v_ptr,uv_stride,r,g,b,r0,g0,b0);
     }
   };
- 
+
  struct RGBI_TO_YV12
-  {   
+  {
    static __forceinline void ROW(int r[4],int g[4],int b[4])
     {
     }
@@ -632,9 +632,9 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
                                      uint8_t *u_ptr,uint8_t *v_ptr,stride_t uv_stride,
                                      int [4],int [4],int [4],
                                      bool full=true)
-    {                                 
-     uint32_t r, g, b, r0, g0, b0, r1, g1, b1;       
-     r0 = g0 = b0 = r1 = g1 = b1 = 0;        
+    {
+     uint32_t r, g, b, r0, g0, b0, r1, g1, b1;
+     r0 = g0 = b0 = r1 = g1 = b1 = 0;
      READ_RGB_Y<0>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,r0,g0,b0);
      READ_RGB_Y<1>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,r1,g1,b1);
      READ_RGB_Y<2>(x_ptr,x_stride,y_ptr,y_stride,r,g,b,r0,g0,b0);
@@ -643,31 +643,31 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
      READ_RGB_UV<1, 1>(u_ptr,v_ptr,uv_stride,r,g,b,r0,g0,b0);
     }
   };
-    
- template<class TFUNC> static __forceinline void MAKE_COLORSPACE(uint8_t * x_ptr, stride_t x_stride,  
-                                   uint8_t * y_ptr, uint8_t * u_ptr, uint8_t * v_ptr,     
-                                   stride_t y_stride, stride_t uv_stride,   
-                                   int width, int height,const TFUNC &FUNC) 
-  {       
-        int fixed_width = (width + 1) & ~1;                             
-        stride_t x_dif = x_stride - (SIZE)*fixed_width;              
-        stride_t y_dif = y_stride - fixed_width;                             
-        stride_t uv_dif = uv_stride - (fixed_width / 2);             
-        for (int y = 0; y < height; y+=(VPIXELS)) {                 
+
+ template<class TFUNC> static __forceinline void MAKE_COLORSPACE(uint8_t * x_ptr, stride_t x_stride,
+                                   uint8_t * y_ptr, uint8_t * u_ptr, uint8_t * v_ptr,
+                                   stride_t y_stride, stride_t uv_stride,
+                                   int width, int height,const TFUNC &FUNC)
+  {
+        int fixed_width = (width + 1) & ~1;
+        stride_t x_dif = x_stride - (SIZE)*fixed_width;
+        stride_t y_dif = y_stride - fixed_width;
+        stride_t uv_dif = uv_stride - (fixed_width / 2);
+        for (int y = 0; y < height; y+=(VPIXELS)) {
                 int r[4], g[4], b[4];
                 FUNC.ROW(r,g,b);
-                for (int x = 0; x < fixed_width; x+=(PIXELS)) {     
+                for (int x = 0; x < fixed_width; x+=(PIXELS)) {
                         FUNC.PROCESS(x_ptr,x_stride,y_ptr,y_stride,u_ptr,v_ptr,uv_stride,r,g,b,y+VPIXELS<=height);
-                        x_ptr += (PIXELS)*(SIZE);                               
-                        y_ptr += (PIXELS);                                              
-                        u_ptr += (PIXELS)/2;                                    
-                        v_ptr += (PIXELS)/2;                                    
-                }                                                                                       
-                x_ptr += x_dif + (VPIXELS-1)*x_stride;          
-                y_ptr += y_dif + (VPIXELS-1)*y_stride;          
-                u_ptr += uv_dif + ((VPIXELS/2)-1)*uv_stride;    
-                v_ptr += uv_dif + ((VPIXELS/2)-1)*uv_stride;    
-        }                                                                                               
+                        x_ptr += (PIXELS)*(SIZE);
+                        y_ptr += (PIXELS);
+                        u_ptr += (PIXELS)/2;
+                        v_ptr += (PIXELS)/2;
+                }
+                x_ptr += x_dif + (VPIXELS-1)*x_stride;
+                y_ptr += y_dif + (VPIXELS-1)*y_stride;
+                u_ptr += uv_dif + ((VPIXELS/2)-1)*uv_stride;
+                v_ptr += uv_dif + ((VPIXELS/2)-1)*uv_stride;
+        }
   }
 };
 
@@ -726,9 +726,9 @@ static void uyvyi_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,ui
 }
 
 //============================================ MMX =============================================
-template<class Tsimd> static void yv12_to_yv12_simd(uint8_t * y_dst, uint8_t * u_dst, uint8_t * v_dst, 
+template<class Tsimd> static void yv12_to_yv12_simd(uint8_t * y_dst, uint8_t * u_dst, uint8_t * v_dst,
  				      stride_t y_dst_stride, stride_t uv_dst_stride,
- 				      const uint8_t * y_src, const uint8_t * u_src, const uint8_t * v_src, 
+ 				      const uint8_t * y_src, const uint8_t * u_src, const uint8_t * v_src,
  				      stride_t y_src_stride, stride_t uv_src_stride,
  				      int width, int height)
 {
@@ -754,19 +754,19 @@ loop64_start:
          goto loop16_start;
         ecx= eax;//            ; width64
 loop64:
-        Tsimd::prefetchnta (esi + 64);//  ; non temporal prefetch 
-        Tsimd::prefetchnta (esi + 96); 
+        Tsimd::prefetchnta (esi + 64);//  ; non temporal prefetch
+        Tsimd::prefetchnta (esi + 96);
 
-        movq (mm1, esi);//         ; read from src 
+        movq (mm1, esi);//         ; read from src
         movq (mm2, esi + 8);
-        movq (mm3, esi + 16); 
-        movq (mm4, esi + 24 ); 
-        movq (mm5, esi + 32); 
-        movq (mm6, esi + 40); 
-        movq (mm7, esi + 48); 
-        movq (mm0, esi + 56); 
+        movq (mm3, esi + 16);
+        movq (mm4, esi + 24 );
+        movq (mm5, esi + 32);
+        movq (mm6, esi + 40);
+        movq (mm7, esi + 48);
+        movq (mm0, esi + 56);
 
-        Tsimd::movntq (edi, mm1);//               ; write to y_out 
+        Tsimd::movntq (edi, mm1);//               ; write to y_out
         Tsimd::movntq (edi + 8, mm2 );
         Tsimd::movntq (edi + 16, mm3 );
         Tsimd::movntq (edi + 24, mm4 );
@@ -795,7 +795,7 @@ loop16:
         esi+= 16;
         edi+= 16 ;
         ecx--;
-        if (ecx) 
+        if (ecx)
          goto loop16;
 
 
@@ -874,7 +874,7 @@ template<class Tsimd,int BYTES,int PIXELS,int VPIXELS,int ARG1,int ARG2,int CCIR
                     pand (mm6, mm7);
                     paddw( mm5, mm6);
                     paddw( mm4, mmx_one);          // +1 rounding
-                    paddw( mm5, mmx_one);          // 
+                    paddw( mm5, mmx_one);          //
                     psrlw( mm4, 1);
                     psrlw( mm5, 1);
      }
@@ -1057,7 +1057,7 @@ template<class Tsimd,int BYTES,int PIXELS,int VPIXELS,int ARG1,int ARG2,int CCIR
                   movq (edi+2*edx+8, mm7);
                   //pop edi
                   //pop esi
-      }            
+      }
     }
   };
 
@@ -1192,7 +1192,7 @@ template<class Tsimd,int BYTES,int PIXELS,int VPIXELS,int ARG1,int ARG2,int CCIR
           punpcklbw (mm0, mm7);              // y3y2y1y0 -> mm0
           psubsw (mm0, YUV_RGB_DATA<CCIR>::Y_SUB);              // Y - Y_SUB
           psubsw (mm1, YUV_RGB_DATA<CCIR>::Y_SUB);              // Y - Y_SUB
-          pmullw (mm1, YUV_RGB_DATA<CCIR>::Y_MUL); 
+          pmullw (mm1, YUV_RGB_DATA<CCIR>::Y_MUL);
           pmullw (mm0, YUV_RGB_DATA<CCIR>::Y_MUL);
           movq (TEMP_Y2, mm1);             // y7y6y5y4 -> mm3
           movq (TEMP_Y1, mm0);             // y3y2y1y0 -> mm7
@@ -1208,7 +1208,7 @@ template<class Tsimd,int BYTES,int PIXELS,int VPIXELS,int ARG1,int ARG2,int CCIR
           punpcklbw( mm0, mm7);              // y3y2y1y0 -> mm0
           psubsw (mm0, YUV_RGB_DATA<CCIR>::Y_SUB);              // Y - Y_SUB
           psubsw (mm1, YUV_RGB_DATA<CCIR>::Y_SUB);              // Y - Y_SUB
-          pmullw (mm1, YUV_RGB_DATA<CCIR>::Y_MUL); 
+          pmullw (mm1, YUV_RGB_DATA<CCIR>::Y_MUL);
           pmullw (mm0, YUV_RGB_DATA<CCIR>::Y_MUL);
           movq (mm3, mm1);
           psubsw (mm1, mm2);                 // g7g6g5g4 -> mm1
@@ -1270,13 +1270,13 @@ template<class Tsimd,int BYTES,int PIXELS,int VPIXELS,int ARG1,int ARG2,int CCIR
           punpckhbw (mm5, mm3);              // 0r7g7b70r6g6b6 -> mm5
        if (ARG1 == 3)             // BGR (24-bit)
         {
-          movd (edi, mm2);                 
+          movd (edi, mm2);
           psrlq (mm2, 32);
           movd (edi + 3, mm2);
-          movd (edi + 6, mm4);             
+          movd (edi + 6, mm4);
           psrlq (mm4, 32);
           movd (edi + 9, mm4);
-          movd (edi + 12, mm0);    
+          movd (edi + 12, mm0);
           psrlq (mm0, 32);
           movd (edi + 15, mm0);
           movq (mm2, mm5);
@@ -1322,10 +1322,10 @@ template<class Tsimd,int BYTES,int PIXELS,int VPIXELS,int ARG1,int ARG2,int CCIR
           movq (edi + edx + 16, mm5);
 
         }else{           // BGRA (32-bit)
-          movq (edi, mm2);                 
-          movq (edi + 8, mm4);             
-          movq (edi + 16, mm0);    
-          movq (edi + 24, mm5);    
+          movq (edi, mm2);
+          movq (edi + 8, mm4);
+          movq (edi + 16, mm0);
+          movq (edi + 24, mm5);
           movq (mm0, TEMP_B2);
           movq (mm1, TEMP_G2);
           movq (mm2, mm0);
@@ -1347,7 +1347,7 @@ template<class Tsimd,int BYTES,int PIXELS,int VPIXELS,int ARG1,int ARG2,int CCIR
         }
     }
   };
-  
+
  template<class TFUNC> static __forceinline void MAKE_COLORSPACE(uint8_t * x_ptr,
                                stride_t x_stride,
                                uint8_t * y_ptr,
@@ -1371,7 +1371,7 @@ template<class Tsimd,int BYTES,int PIXELS,int VPIXELS,int ARG1,int ARG2,int CCIR
   // VPIXELS      vpixels (rows) operated on per FUNC call
   // FUNC         conversion macro name// we expect to find FUNC_INIT and FUNC macros
   // ARG1         argument passed to FUNC
-  // 
+  //
   // throughout the FUNC the registers mean:
   // eax          y_stride
   // ebx          u_ptr
@@ -1382,12 +1382,12 @@ template<class Tsimd,int BYTES,int PIXELS,int VPIXELS,int ARG1,int ARG2,int CCIR
   // ebp          width
   //
   //------------------------------------------------------------------------------
-   stride_t x_dif;     
-   stride_t y_dif;     
-   stride_t uv_dif;    
+   stride_t x_dif;
+   stride_t y_dif;
+   stride_t uv_dif;
    stride_t fixed_width;
 
-          
+
    stride_t eax= width;
    eax+=15;
    eax&=~15;
@@ -1404,9 +1404,9 @@ template<class Tsimd,int BYTES,int PIXELS,int VPIXELS,int ARG1,int ARG2,int CCIR
    y_dif= ebx1;                        // y_dif = y_stride - fixed_width
 
    ebx1=uv_stride;
-   stride_t ecx1= eax;                    
+   stride_t ecx1= eax;
    ecx1>>=1;
-   ebx1-= ecx1;                    
+   ebx1-= ecx1;
    uv_dif= ebx1;                       // uv_dif = uv_stride - fixed_width/2
 
    unsigned char *esi= y_ptr;                // $esi$ = y_ptr
@@ -1433,8 +1433,8 @@ template<class Tsimd,int BYTES,int PIXELS,int VPIXELS,int ARG1,int ARG2,int CCIR
                   esi+= PIXELS;                             // y_ptr += PIXELS
                   ebx+= PIXELS/2;                   //u_ptr += PIXELS/2
                   ecx+= PIXELS/2;                   //v_ptr += PIXELS/2
-                  
-      }            
+
+      }
 
                   ebp= tmp_height;
                   edi+= x_dif;                //x_ptr += x_dif + (VPIXELS-1)*x_stride
@@ -1458,44 +1458,44 @@ template<class Tsimd,int BYTES,int PIXELS,int VPIXELS,int ARG1,int ARG2,int CCIR
 };
 
 static void yuyv_to_yv12_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
-{                             
+{
  typedef TMAKE_COLORSPACE_SIMD<Tmmx, 2,8,2, 0,0, CCIR> TMAKE_COLORSPACE_yuyv_to_yv12_mmx;
  TMAKE_COLORSPACE_yuyv_to_yv12_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yuyv_to_yv12_mmx::YUYV_TO_YV12());
 }
 static void yuyv_to_yv12_xmm(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
-{                             
+{
  typedef TMAKE_COLORSPACE_SIMD<Tmmxext, 2,8,2, 0,1, CCIR> TMAKE_COLORSPACE_yuyv_to_yv12_mmxext;
  TMAKE_COLORSPACE_yuyv_to_yv12_mmxext::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yuyv_to_yv12_mmxext::YUYV_TO_YV12());
 }
 static void uyvy_to_yv12_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
-{                             
+{
  typedef TMAKE_COLORSPACE_SIMD<Tmmx, 2,8,2, 1,0, CCIR> TMAKE_COLORSPACE_uyvy_to_yv12_mmx;
  TMAKE_COLORSPACE_uyvy_to_yv12_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_uyvy_to_yv12_mmx::YUYV_TO_YV12());
 }
 static void uyvy_to_yv12_xmm(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
-{                             
+{
  typedef TMAKE_COLORSPACE_SIMD<Tmmxext, 2,8,2, 1,1, CCIR> TMAKE_COLORSPACE_uyvy_to_yv12_mmxext;
  TMAKE_COLORSPACE_uyvy_to_yv12_mmxext::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_uyvy_to_yv12_mmxext::YUYV_TO_YV12());
 }
 
 static void yv12_to_yuyv_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
-{                             
+{
  typedef TMAKE_COLORSPACE_SIMD<Tmmx, 2,8,2, 0,-1, CCIR> TMAKE_COLORSPACE_yv12_to_yuyv_mmx;
  TMAKE_COLORSPACE_yv12_to_yuyv_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yv12_to_yuyv_mmx::YV12_TO_YUYV());
 }
 static void yv12_to_uyvy_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
-{                             
+{
  typedef TMAKE_COLORSPACE_SIMD<Tmmx, 2,8,2, 1,-1, CCIR> TMAKE_COLORSPACE_yv12_to_uyvy_mmx;
  TMAKE_COLORSPACE_yv12_to_uyvy_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yv12_to_uyvy_mmx::YV12_TO_YUYV());
 }
 
 static void yv12_to_yuyvi_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
-{                             
+{
  typedef TMAKE_COLORSPACE_SIMD<Tmmx, 2,8,4, 0,-1, CCIR> TMAKE_COLORSPACE_yv12_to_yuyvi_mmx;
  TMAKE_COLORSPACE_yv12_to_yuyvi_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yv12_to_yuyvi_mmx::YV12_TO_YUYVI());
 }
 static void yv12_to_uyvyi_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
-{                             
+{
  typedef TMAKE_COLORSPACE_SIMD<Tmmx, 2,8,4, 1,-1, CCIR> TMAKE_COLORSPACE_yv12_to_uyvyi_mmx;
  TMAKE_COLORSPACE_yv12_to_uyvyi_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yv12_to_uyvyi_mmx::YV12_TO_YUYVI());
 }
@@ -1533,7 +1533,7 @@ template<int CCIR> struct TpackedFuncPtrRGB
  static packedFuncPtr yv12_to_abgri;
  static packedFuncPtr yv12_to_rgbai;
  static packedFuncPtr yv12_to_argbi;
- 
+
  static void init(void)
   {
    rgb555_to_yv12 = rgb555_to_yv12_c;
@@ -1571,7 +1571,7 @@ template<int CCIR> struct TpackedFuncPtrRGB
    yv12_to_bgr   = yv12_to_bgr_mmx;
    yv12_to_bgra  = yv12_to_bgra_mmx;
   }
- 
+
  //MAKE_COLORSPACE(yv12_to_rgb555_c,  2,2,2, YV12_TO_RGB16,  MK_RGB555, 0,0,0,CCIR)
  static void yv12_to_rgb555_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
  {
@@ -1754,28 +1754,28 @@ template<int CCIR> struct TpackedFuncPtrRGB
   TMAKE_COLORSPACE_argbi_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_argbi_to_yv12_c::RGBI_TO_YV12());
  }
  */
-  
+
  static void bgr_to_yv12_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
- {                             
+ {
   typedef TMAKE_COLORSPACE_SIMD<Tmmx, 3,2,2, 3,-1, CCIR> TMAKE_COLORSPACE_bgr_to_yv12_mmx;
   TMAKE_COLORSPACE_bgr_to_yv12_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_bgr_to_yv12_mmx::BGR_TO_YV12());
  }
  static void bgra_to_yv12_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
- {                             
+ {
   typedef TMAKE_COLORSPACE_SIMD<Tmmx, 4,2,2, 4,-1, CCIR> TMAKE_COLORSPACE_bgra_to_yv12_mmx;
   TMAKE_COLORSPACE_bgra_to_yv12_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_bgra_to_yv12_mmx::BGR_TO_YV12());
  }
 
  static void yv12_to_bgr_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
- {                             
+ {
   typedef TMAKE_COLORSPACE_SIMD<Tmmx, 3,8,2, 3,-1, CCIR> TMAKE_COLORSPACE_yv12_to_bgr_mmx;
   TMAKE_COLORSPACE_yv12_to_bgr_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_bgr_mmx::YV12_TO_BGR());
  }
  static void yv12_to_bgra_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
- {                             
+ {
   typedef TMAKE_COLORSPACE_SIMD<Tmmx, 4,8,2, 4,-1, CCIR> TMAKE_COLORSPACE_yv12_to_bgra_mmx;
   TMAKE_COLORSPACE_yv12_to_bgra_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_bgra_mmx::YV12_TO_BGR());
- } 
+ }
 };
 
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::rgb555_to_yv12=NULL; template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::rgb555_to_yv12=NULL;
@@ -1785,7 +1785,7 @@ template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::bgra_to_yv12=NULL;   template<
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::abgr_to_yv12=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::abgr_to_yv12=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::rgba_to_yv12=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::rgba_to_yv12=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::argb_to_yv12=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::argb_to_yv12=NULL;
-                                                                  
+
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::rgb555i_to_yv12=NULL;template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::rgb555i_to_yv12=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::rgb565i_to_yv12=NULL;template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::rgb565i_to_yv12=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::bgri_to_yv12=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::bgri_to_yv12=NULL;
@@ -1793,7 +1793,7 @@ template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::bgrai_to_yv12=NULL;  template<
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::abgri_to_yv12=NULL;  template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::abgri_to_yv12=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::rgbai_to_yv12=NULL;  template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::rgbai_to_yv12=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::argbi_to_yv12=NULL;  template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::argbi_to_yv12=NULL;
-                                                                  
+
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_rgb555=NULL; template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_rgb555=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_rgb565=NULL; template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_rgb565=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_bgr=NULL;    template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_bgr=NULL;
@@ -1801,7 +1801,7 @@ template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_bgra=NULL;   template<
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_abgr=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_abgr=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_rgba=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_rgba=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_argb=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_argb=NULL;
-                                                                  
+
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_rgb555i=NULL;template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_rgb555i=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_rgb565i=NULL;template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_rgb565i=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_bgri=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_bgri=NULL;
@@ -1830,7 +1830,7 @@ static void safe_packed_conv(uint8_t * x_ptr, stride_t x_stride,
          {
           if (x_stride < size*((width+15)/16)*16)
            width_opt = width & (~15);
-           
+
           if (size==3)//if ((width_opt/size)&3)
            width_opt = std::max(0, width_opt - 16);
           width_c = width - width_opt;
@@ -1863,7 +1863,7 @@ int image_input(IMAGE * image,
         switch (csp & FF_CSPS_MASK) {
         case FF_CSP_RGB15:
                 safe_packed_conv(
-                        (uint8_t*)src, src_stride, image->y, image->u, image->v, 
+                        (uint8_t*)src, src_stride, image->y, image->u, image->v,
                         edged_width, edged_width2, width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgb555i_to_yv12:TpackedFuncPtrRGB<CCIR>::rgb555i_to_yv12)  :(jpeg?TpackedFuncPtrRGB<JPEG>::rgb555_to_yv12:TpackedFuncPtrRGB<CCIR>::rgb555_to_yv12),
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgb555i_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgb555i_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::rgb555_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgb555_to_yv12_c), 2);
@@ -1871,7 +1871,7 @@ int image_input(IMAGE * image,
 
         case FF_CSP_RGB16:
                 safe_packed_conv(
-                        (uint8_t*)src, src_stride, image->y, image->u, image->v, 
+                        (uint8_t*)src, src_stride, image->y, image->u, image->v,
                         edged_width, edged_width2, width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgb565i_to_yv12:TpackedFuncPtrRGB<CCIR>::rgb565i_to_yv12)  :(jpeg?TpackedFuncPtrRGB<JPEG>::rgb565_to_yv12:TpackedFuncPtrRGB<CCIR>::rgb565_to_yv12),
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgb565i_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgb565i_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::rgb565_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgb565_to_yv12_c), 2);
@@ -1880,7 +1880,7 @@ int image_input(IMAGE * image,
 
         case FF_CSP_RGB24:
                 safe_packed_conv(
-                        (uint8_t*)src, src_stride, image->y, image->u, image->v, 
+                        (uint8_t*)src, src_stride, image->y, image->u, image->v,
                         edged_width, edged_width2, width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::bgri_to_yv12:TpackedFuncPtrRGB<CCIR>::bgri_to_yv12)  :(jpeg?TpackedFuncPtrRGB<JPEG>::bgr_to_yv12:TpackedFuncPtrRGB<CCIR>::bgr_to_yv12),
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::bgri_to_yv12_c:TpackedFuncPtrRGB<CCIR>::bgri_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::bgr_to_yv12_c:TpackedFuncPtrRGB<CCIR>::bgr_to_yv12_c), 3);
@@ -1888,7 +1888,7 @@ int image_input(IMAGE * image,
 
         case FF_CSP_RGB32:
                 safe_packed_conv(
-                        (uint8_t*)src, src_stride, image->y, image->u, image->v, 
+                        (uint8_t*)src, src_stride, image->y, image->u, image->v,
                         edged_width, edged_width2, width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::bgrai_to_yv12:TpackedFuncPtrRGB<CCIR>::bgrai_to_yv12)  :(jpeg?TpackedFuncPtrRGB<JPEG>::bgra_to_yv12:TpackedFuncPtrRGB<CCIR>::bgra_to_yv12),
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::bgrai_to_yv12_c:TpackedFuncPtrRGB<CCIR>::bgrai_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::bgra_to_yv12_c:TpackedFuncPtrRGB<CCIR>::bgra_to_yv12_c), 4);
@@ -1896,7 +1896,7 @@ int image_input(IMAGE * image,
 
         case FF_CSP_ABGR :
                 safe_packed_conv(
-                        (uint8_t*)src, src_stride, image->y, image->u, image->v, 
+                        (uint8_t*)src, src_stride, image->y, image->u, image->v,
                         edged_width, edged_width2, width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::abgri_to_yv12:TpackedFuncPtrRGB<CCIR>::abgri_to_yv12)  :(jpeg?TpackedFuncPtrRGB<JPEG>::abgr_to_yv12:TpackedFuncPtrRGB<CCIR>::abgr_to_yv12),
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::abgri_to_yv12_c:TpackedFuncPtrRGB<CCIR>::abgri_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::abgr_to_yv12_c:TpackedFuncPtrRGB<CCIR>::abgr_to_yv12_c), 4);
@@ -1904,7 +1904,7 @@ int image_input(IMAGE * image,
 
         case FF_CSP_RGBA :
                 safe_packed_conv(
-                        (uint8_t*)src, src_stride, image->y, image->u, image->v, 
+                        (uint8_t*)src, src_stride, image->y, image->u, image->v,
                         edged_width, edged_width2, width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgbai_to_yv12:TpackedFuncPtrRGB<CCIR>::rgbai_to_yv12)  :(jpeg?TpackedFuncPtrRGB<JPEG>::rgba_to_yv12:TpackedFuncPtrRGB<CCIR>::rgba_to_yv12),
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgbai_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgbai_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::rgba_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgba_to_yv12_c), 4);
@@ -1912,7 +1912,7 @@ int image_input(IMAGE * image,
 
         case FF_CSP_YUY2:
                 safe_packed_conv(
-                        (uint8_t*)src, src_stride, image->y, image->u, image->v, 
+                        (uint8_t*)src, src_stride, image->y, image->u, image->v,
                         edged_width, edged_width2, width, height,
                         interlacing?yuyvi_to_yv12  :yuyv_to_yv12,
                         interlacing?yuyvi_to_yv12_c:yuyv_to_yv12_c, 2);
@@ -1920,7 +1920,7 @@ int image_input(IMAGE * image,
 
         case FF_CSP_YVYU:               /* u/v swapped */
                 safe_packed_conv(
-                        (uint8_t*)src, src_stride, image->y, image->v, image->u, 
+                        (uint8_t*)src, src_stride, image->y, image->v, image->u,
                         edged_width, edged_width2, width, height,
                         interlacing?yuyvi_to_yv12  :yuyv_to_yv12,
                         interlacing?yuyvi_to_yv12_c:yuyv_to_yv12_c, 2);
@@ -1928,15 +1928,15 @@ int image_input(IMAGE * image,
 
         case FF_CSP_UYVY:
                 safe_packed_conv(
-                        (uint8_t*)src, src_stride, image->y, image->u, image->v, 
+                        (uint8_t*)src, src_stride, image->y, image->u, image->v,
                         edged_width, edged_width2, width, height,
                         interlacing?uyvyi_to_yv12  :uyvy_to_yv12,
                         interlacing?uyvyi_to_yv12_c:uyvy_to_yv12_c, 2);
                 break;
-                
+
         case FF_CSP_VYUY:   /* u/v swapped */
                safe_packed_conv(
-                (uint8_t*)src, src_stride, image->y, image->v, image->u, 
+                (uint8_t*)src, src_stride, image->y, image->v, image->u,
                 edged_width, edged_width2, width, height,
                 interlacing?uyvyi_to_yv12  :uyvy_to_yv12,
                 interlacing?uyvyi_to_yv12_c:uyvy_to_yv12_c, 2);
@@ -2074,11 +2074,11 @@ int image_output(IMAGE * image,
         return 0;
 }
 
-// initialize rgb lookup tables 
+// initialize rgb lookup tables
 template<class CCIR> static void colorspace_init(void)
 {
  #define FIX_OUT(x) ((uint16_t) ((x) * (1L<<SCALEBITS_OUT) + 0.5))
- for (int i = 0; i < 256; i++) 
+ for (int i = 0; i < 256; i++)
   {
    CCIR::RGB_Y_tab[i] = FIX_OUT(CCIR::RGB_Y_OUT) * (i - CCIR::Y_ADD_OUT);
    CCIR::B_U_tab[i] = FIX_OUT(CCIR::B_U_OUT) * (i - CCIR::U_ADD_OUT);
@@ -2086,8 +2086,8 @@ template<class CCIR> static void colorspace_init(void)
    CCIR::G_V_tab[i] = FIX_OUT(CCIR::G_V_OUT) * (i - CCIR::V_ADD_OUT);
    CCIR::R_V_tab[i] = FIX_OUT(CCIR::R_V_OUT) * (i - CCIR::V_ADD_OUT);
   }
- #undef FIX_OUT 
-}  
+ #undef FIX_OUT
+}
 
 void xvid_colorspace_init(void)
 {
@@ -2099,7 +2099,7 @@ void xvid_colorspace_init(void)
  yv12_to_yv12    = yv12_to_yv12_c;
  TpackedFuncPtrRGB<CCIR>::init();
  TpackedFuncPtrRGB<JPEG>::init();
- 
+
  yuyv_to_yv12 = yuyv_to_yv12_c;
  uyvy_to_yv12 = uyvy_to_yv12_c;
 
@@ -2118,10 +2118,10 @@ void xvid_colorspace_init(void)
   {
    // image input xxx_to_yv12 related functions
    yv12_to_yv12  = &yv12_to_yv12_simd<Tmmx>;// yv12_to_yv12_mmx;
-  
+
    TpackedFuncPtrRGB<CCIR>::initMMX();
    TpackedFuncPtrRGB<JPEG>::initMMX();
-   
+
    yuyv_to_yv12 = yuyv_to_yv12_mmx;
    uyvy_to_yv12 = uyvy_to_yv12_mmx;
 
@@ -2133,7 +2133,7 @@ void xvid_colorspace_init(void)
    yv12_to_uyvyi = yv12_to_uyvyi_mmx;
   }
 
- // these 3dnow functions are faster than mmx, but slower than xmm. 
+ // these 3dnow functions are faster than mmx, but slower than xmm.
  /*
  if (Tconfig::cpu_flags & FF_CPU_3DNOW)
   {
@@ -2149,5 +2149,5 @@ void xvid_colorspace_init(void)
    yuyv_to_yv12  = yuyv_to_yv12_xmm;
    uyvy_to_yv12  = uyvy_to_yv12_xmm;
   }
-#endif  
+#endif
 }

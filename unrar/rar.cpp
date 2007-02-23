@@ -46,10 +46,10 @@ int main(int argc, char *argv[])
   bool ShutdownOnClose;
 
 #ifdef ALLOW_EXCEPTIONS
-  try 
+  try
 #endif
   {
-  
+
     CommandData Cmd;
 #ifdef SFX_MODULE
     strcpy(Cmd.Command,"X");
@@ -128,5 +128,8 @@ int main(int argc, char *argv[])
   return(ErrHandler.GetErrorCode());
 }
 #endif
+
+
+
 
 

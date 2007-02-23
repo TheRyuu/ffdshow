@@ -41,7 +41,7 @@ public:
 	virtual ~logic_error() throw();
 	virtual const char * what() const;
 
-};	
+};
 
 class _UCXXEXPORT domain_error : public logic_error {
 public:

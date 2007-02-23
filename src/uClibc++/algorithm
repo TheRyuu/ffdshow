@@ -119,14 +119,14 @@ namespace std{
 				}
 				++temp2;
 			}
-			
+
 		}
 		return last1;
 	}
 
 	template<class ForwardIterator1, class ForwardIterator2, class BinaryPredicate> _UCXXEXPORT
 		ForwardIterator1
-		find_first_of(ForwardIterator1 first1, ForwardIterator1 last1,	
+		find_first_of(ForwardIterator1 first1, ForwardIterator1 last1,
 			ForwardIterator2 first2, ForwardIterator2 last2,
 			BinaryPredicate pred)
 	{
@@ -138,7 +138,7 @@ namespace std{
 				}
 				++temp2;
 			}
-			
+
 		}
 		return last1;
 	}
@@ -203,7 +203,7 @@ namespace std{
 	}
 
 	template<class InputIterator1, class InputIterator2> _UCXXEXPORT
-		pair<InputIterator1, InputIterator2>	
+		pair<InputIterator1, InputIterator2>
 		mismatch(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2)
 	{
 		while(first1 != last1){
@@ -321,7 +321,7 @@ namespace std{
 			}
 			++first;
 		}
-		return first;		
+		return first;
 	}
 
 
@@ -345,7 +345,7 @@ namespace std{
 			}
 			++first;
 		}
-		return first;		
+		return first;
 
 	}
 
@@ -878,14 +878,14 @@ namespace std{
   {
    static Iter MinElement(Iter b,Compare comp)
    {
-    const Iter candidate = 
+    const Iter candidate =
      SelectionSorter<Iter, size - 1,Compare>::MinElement(b + 1,comp);
     return comp(*candidate,*b) ? candidate : b;
 			}
 
    static pair<Iter, Iter> MinMaxElement(Iter b,Compare comp)
    {
-    pair<Iter, Iter> candidate = 
+    pair<Iter, Iter> candidate =
      SelectionSorter<Iter, size - 1,Compare>::MinMaxElement(b + 1, comp);
     if (!(comp(*candidate.first, *b))) candidate.first = b;
     else if (comp(*candidate.second , *b)) candidate.second = b;
@@ -903,7 +903,7 @@ namespace std{
     // Alternate algorithm (proved to be slower in practice)
     const pair<Iter, Iter> i = MinMaxElement(b);
     if (b != i.first) std::iter_swap(b, i.first);
-    std::iter_swap(b + (size - 1), 
+    std::iter_swap(b + (size - 1),
     b == i.second ? i.first : i.second);
     SelectionSorter<Iter, size - 2>::Run(b + 1);
     */
@@ -929,9 +929,9 @@ namespace std{
     const Iter bOld = b;
 
     // Find the first element strictly greater than the pivot, from left
-    while (!(comp(*pivot , *b))) 
+    while (!(comp(*pivot , *b)))
     {
-     if (++b != e) continue; 
+     if (++b != e) continue;
 
      // *pivot is the largest element
      --b;
@@ -966,7 +966,7 @@ namespace std{
      if (b == ++e)
      {
       // hoist the pivot in between b and e
-      if (pivot > b) 
+      if (pivot > b)
       {
        iter_swap(pivot, b);
        return make_pair(b, b + 1);
@@ -1001,10 +1001,10 @@ namespace std{
      ++b;
     }
 
-    if (b == e) 
+    if (b == e)
     {
      assert(comp(*pivot , *b));
-     if (pivot < b) 
+     if (pivot < b)
      {
       iter_swap(pivot, --b);
       return make_pair(b, e);
@@ -1018,10 +1018,10 @@ namespace std{
 
   static inline unsigned short rand2(void)
   {
-   static unsigned int a = 18000;   
+   static unsigned int a = 18000;
    static unsigned int g_PrivateRandom2AlgoSeed = 521288629;
-   return (unsigned short)(g_PrivateRandom2AlgoSeed = 
-    a * (g_PrivateRandom2AlgoSeed & 65535) + 
+   return (unsigned short)(g_PrivateRandom2AlgoSeed =
+    a * (g_PrivateRandom2AlgoSeed & 65535) +
     (g_PrivateRandom2AlgoSeed >> 16));
   }
 
@@ -1029,7 +1029,7 @@ namespace std{
   {
    assert(b < e);
 
-   typedef typename iterator_traits<Iter>::difference_type difference_type; 
+   typedef typename iterator_traits<Iter>::difference_type difference_type;
    const size_t size = size_t(e - b);
 
    assert(size >= 3);
@@ -1096,9 +1096,9 @@ namespace std{
  template <class Iter, class Compare> void unstable_sort(Iter b, Iter e,Compare comp)
  {
   assert(e >= b);
-  // The second branch of Quicksort's recursion is implemented through 
+  // The second branch of Quicksort's recursion is implemented through
   //      iteration, hence the following loop
-  size_t length; 
+  size_t length;
   while ((length = static_cast<size_t>(e - b)) > 1)
   {
    enum { threshold = 8 };
@@ -1263,7 +1263,7 @@ namespace std{
 				first = middle;
 			}
 		}
-	
+
 		if( !comp(*first, value) ){
 			return first;
 		}
@@ -1311,7 +1311,7 @@ namespace std{
 				first = middle;
 			}
 		}
-	
+
 		if( comp(value, *first) ){
 			return first;
 		}
@@ -1371,10 +1371,10 @@ namespace std{
 
 		if( !comp(*first, value) && !comp(value, *first) ){
 			return true;
-		}	
+		}
 		if( !comp(*last, value) && !comp(value, *last) ){
 			return true;
-		}	
+		}
 
 		return false;
 	}
@@ -1588,7 +1588,7 @@ namespace std{
 				while( first2 != last2 && !comp( *temp, *first2) ){
 					++first2;
 				}
-		
+
 			}else{	//They are identical - skip
 				//Elliminate duplicates
 				InputIterator1 temp = first1;
@@ -1643,7 +1643,7 @@ namespace std{
 				while( first2 != last2 && !comp( *temp, *first2) ){
 					++first2;
 				}
-		
+
 			}else{	//They are identical - skip
 				//Elliminate duplicates
 				InputIterator1 temp = first1;
@@ -1917,7 +1917,7 @@ namespace std{
 				return false;
 			}
 		}
-		
+
 
 	}
 
@@ -1927,7 +1927,7 @@ namespace std{
 		less<typename iterator_traits<BidirectionalIterator>::value_type> c;
 		return prev_permutation(first, last, c);
 	}
-	
+
 	template<class BidirectionalIterator, class Compare> _UCXXEXPORT
 		bool prev_permutation(BidirectionalIterator first, BidirectionalIterator last, Compare comp)
 	{
@@ -1975,6 +1975,10 @@ namespace std{
 }
 
 #endif
+
+
+
+
 
 
 

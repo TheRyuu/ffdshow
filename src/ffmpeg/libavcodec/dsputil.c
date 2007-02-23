@@ -4102,12 +4102,12 @@ void dsputil_init(DSPContext* c, AVCodecContext *avctx)
 #endif
 
     c->vorbis_inverse_coupling = vorbis_inverse_coupling;
-    
+
     c->vector_fmul = vector_fmul_c;
     c->vector_fmul_reverse = vector_fmul_reverse_c;
     c->vector_fmul_add_add = ff_vector_fmul_add_add_c;
     c->float_to_int16 = ff_float_to_int16_c;
-    
+
     c->shrink[0]= ff_img_copy_plane;
     c->shrink[1]= ff_shrink22;
     c->shrink[2]= ff_shrink44;
@@ -4177,7 +4177,7 @@ void dsputil_init(DSPContext* c, AVCodecContext *avctx)
 }
 
 // get_current_idct by h.yamagata
-// It's caller's responsibility to check avctx->priv_data is MpegEncContext*. 
+// It's caller's responsibility to check avctx->priv_data is MpegEncContext*.
 const char* avcodec_get_current_idct(AVCodecContext *avctx)
 {
     MpegEncContext *s = avctx->priv_data;

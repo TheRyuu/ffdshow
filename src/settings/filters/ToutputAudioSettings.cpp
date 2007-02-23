@@ -61,7 +61,7 @@ ToutputAudioSettings::ToutputAudioSettings(TintStrColl *Icoll,TfilterIDFFs *filt
 
 void ToutputAudioSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
 {
- queueFilter<TaudioFilterOutput>(filtersorder,filters,queue); 
+ queueFilter<TaudioFilterOutput>(filtersorder,filters,queue);
 }
 
 const int* ToutputAudioSettings::getResets(unsigned int pageId)

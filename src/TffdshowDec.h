@@ -10,8 +10,8 @@ struct TglobalSettingsDec;
 struct TdialogSettingsDec;
 class Tremote;
 class Tfilters;
-class TffdshowDec :public TffdshowBase, 
-                   public interfaces<char_t>::IffdshowDec, 
+class TffdshowDec :public TffdshowBase,
+                   public interfaces<char_t>::IffdshowDec,
                    public CmyTransformFilter,
                    public ISpecifyPropertyPages,
                    public IAMExtendedSeeking,
@@ -20,13 +20,13 @@ class TffdshowDec :public TffdshowBase,
 public:
  TffdshowDec(TintStrColl *Ioptions,const TCHAR *name,LPUNKNOWN punk,REFCLSID clsid,TglobalSettingsDec *IglobalSettings,TdialogSettingsDec *IdialogSettings,Tpresets *Ipresets,Tpreset* &IpresetSettings,CmyTransformFilter *Imfilter,TinputPin* &Iminput,CTransformOutputPin* &Imoutput,IFilterGraph* &Igraph,Tfilters* &Ifilters,const CLSID &Iproppageid,int IcfgDlgCaptionId,int IiconId,DWORD IdefaultMerit);
  virtual ~TffdshowDec();
- 
+
  STDMETHODIMP NonDelegatingQueryInterface(REFIID riid,void **ppv);
  HRESULT BreakConnect(PIN_DIRECTION dir);
 
  STDMETHODIMP JoinFilterGraph(IFilterGraph *pGraph,LPCWSTR pName);
  HRESULT StopStreaming(void);
- 
+
  STDMETHODIMP_(int) getVersion2(void);
  STDMETHODIMP saveKeysSettings(void);
  STDMETHODIMP loadKeysSettings(void);
@@ -40,7 +40,7 @@ public:
  STDMETHODIMP_(int) getCurTime2(void);
  STDMETHODIMP initKeys(void);
  STDMETHODIMP_(int) getKeyParamCount2(void);
- STDMETHODIMP getKeyParamDescr(unsigned int i,const char_t **descr); 
+ STDMETHODIMP getKeyParamDescr(unsigned int i,const char_t **descr);
  STDMETHODIMP_(int) getKeyParamKey2(unsigned int i);
  STDMETHODIMP setKeyParamKey(unsigned int i,int key);
  STDMETHODIMP initPresets(void);
@@ -134,16 +134,16 @@ public:
  STDMETHODIMP GetMarkerName(long MarkerNum, BSTR * pbstrMarkerName);
  STDMETHODIMP put_PlaybackSpeed(double Speed);
  STDMETHODIMP get_PlaybackSpeed(double * pSpeed);
- 
+
  // ISpecifyPropertyPages
  STDMETHODIMP GetPages(CAUUID *pPages);
- 
+
  // CTransformFilter
  HRESULT NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,double dRate);
 protected:
  struct TffdshowDec_char : interfaces<tchar_traits<char_t>::other_char_t>::IffdshowDec, CUnknown
   {
-  protected: 
+  protected:
    typedef tchar_traits<char_t>::other_char_t tchar;
   private:
    IffdshowDecT<char_t> *deciD;
@@ -167,10 +167,10 @@ protected:
    STDMETHODIMP_(int) getCurTime2(void) {return deciD->getCurTime2();}
    STDMETHODIMP initKeys(void) {return deciD->initKeys();}
    STDMETHODIMP_(int) getKeyParamCount2(void) {return deciD->getKeyParamCount2();}
-   STDMETHODIMP getKeyParamDescr(unsigned int i,const tchar* *descr) 
-    { 
+   STDMETHODIMP getKeyParamDescr(unsigned int i,const tchar* *descr)
+    {
      return E_NOTIMPL;
-    } 
+    }
    STDMETHODIMP_(int) getKeyParamKey2(unsigned int i) {return deciD->getKeyParamKey2(i);}
    STDMETHODIMP setKeyParamKey(unsigned int i,int key) {return deciD->setKeyParamKey(i,key);}
    STDMETHODIMP initPresets(void) {return deciD->initPresets();}
@@ -181,36 +181,36 @@ protected:
      HRESULT hr;
      if (SUCCEEDED(hr=deciD->getPresetName(i,buft,buflen)))
       text<tchar>(buft,buf);
-     return hr; 
-    } 
+     return hr;
+    }
    STDMETHODIMP getActivePresetName(tchar *buf,size_t buflen)
     {
      char_t *buft=(char_t*)alloca(buflen*sizeof(char_t));
      HRESULT hr;
      if (SUCCEEDED(hr=deciD->getActivePresetName(buft,buflen)))
       text<tchar>(buft,buf);
-     return hr; 
-    } 
-   STDMETHODIMP setActivePreset(const tchar *name,int create) 
+     return hr;
+    }
+   STDMETHODIMP setActivePreset(const tchar *name,int create)
     {
      return deciD->setActivePreset(text<char_t>(name),create);
     }
    STDMETHODIMP saveActivePreset(const tchar *name)
     {
      return deciD->saveActivePreset(text<char_t>(name));
-    } 
-   STDMETHODIMP saveActivePresetToFile(const tchar *flnm) 
+    }
+   STDMETHODIMP saveActivePresetToFile(const tchar *flnm)
     {
      return deciD->saveActivePresetToFile(text<char_t>(flnm));
-    } 
-   STDMETHODIMP loadActivePresetFromFile(const tchar *flnm) 
+    }
+   STDMETHODIMP loadActivePresetFromFile(const tchar *flnm)
     {
      return deciD->loadActivePresetFromFile(text<char_t>(flnm));
-    } 
+    }
    STDMETHODIMP removePreset(const tchar *name)
     {
      return deciD->removePreset(text<char_t>(name));
-    } 
+    }
    STDMETHODIMP getPresets(Tpresets *presets2)
     {
      return E_NOTIMPL;
@@ -218,28 +218,28 @@ protected:
    STDMETHODIMP setPresets(const Tpresets *presets2)
     {
      return E_NOTIMPL;
-    } 
+    }
    STDMETHODIMP savePresets(void) {return deciD->savePresets();}
    STDMETHODIMP getPresetPtr(Tpreset**preset)
     {
      return E_NOTIMPL;
-    } 
+    }
    STDMETHODIMP setPresetPtr(Tpreset *preset)
     {
      return E_NOTIMPL;
     }
-   STDMETHODIMP renameActivePreset(const tchar *newName) 
+   STDMETHODIMP renameActivePreset(const tchar *newName)
     {
      return deciD->renameActivePreset(text<char_t>(newName));
-    } 
+    }
    STDMETHODIMP isDefaultPreset(const tchar *presetName)
     {
      return deciD->isDefaultPreset(text<char_t>(presetName));
-    } 
+    }
    STDMETHODIMP createTempPreset(const tchar *presetName)
     {
      return deciD->createTempPreset(text<char_t>(presetName));
-    } 
+    }
    STDMETHODIMP_(int) getMinOrder2(void) {return deciD->getMinOrder2();}
    STDMETHODIMP_(int) getMaxOrder2(void) {return deciD->getMaxOrder2();}
    STDMETHODIMP resetFilter(unsigned int filterID) {return deciD->resetFilter(filterID);}
@@ -250,16 +250,16 @@ protected:
      HRESULT hr;
      if (SUCCEEDED(hr=deciD->getFilterTip(filterID,buft,buflen)))
       text<tchar>(buft,buf);
-     return hr; 
-    } 
-   STDMETHODIMP getFilterTipEx(unsigned int filterID,unsigned int filterPageId,tchar *buf,size_t buflen) 
+     return hr;
+    }
+   STDMETHODIMP getFilterTipEx(unsigned int filterID,unsigned int filterPageId,tchar *buf,size_t buflen)
     {
      char_t *buft=(char_t*)alloca(buflen*sizeof(char_t));
      HRESULT hr;
      if (SUCCEEDED(hr=deciD->getFilterTipEx(filterID,filterPageId,buft,buflen)))
       text<tchar>(buft,buf);
-     return hr; 
-    } 
+     return hr;
+    }
    STDMETHODIMP filterHasReset(unsigned int filterID) {return deciD->filterHasReset(filterID);}
    STDMETHODIMP filterHasResetEx(unsigned int filterID,unsigned int filterPageId) {return deciD->filterHasResetEx(filterID,filterPageId);}
    STDMETHODIMP getPresetsPtr(Tpresets* *presetsPtr)
@@ -273,68 +273,68 @@ protected:
    STDMETHODIMP putStringParams(const tchar *params,tchar sep,int loaddef)
     {
      return deciD->putStringParams(text<char_t>(params),(char_t)sep,loaddef);
-    } 
+    }
    STDMETHODIMP_(const TfilterIDFF*) getNextFilterIDFF(void) {return deciD->getNextFilterIDFF();}
    STDMETHODIMP cyclePresets(int step) {return deciD->cyclePresets(step);}
-   STDMETHODIMP exportKeysToGML(const tchar *flnm) 
+   STDMETHODIMP exportKeysToGML(const tchar *flnm)
     {
      return deciD->exportKeysToGML(text<char_t>(flnm));
-    } 
-   STDMETHODIMP getShortDescription(tchar *buf,int buflen) 
+    }
+   STDMETHODIMP getShortDescription(tchar *buf,int buflen)
     {
      char_t *buft=(char_t*)alloca(buflen*sizeof(char_t));
      HRESULT hr;
      if (SUCCEEDED(hr=deciD->getShortDescription(buft,buflen)))
       text<tchar>(buft,buf);
-     return hr; 
-    } 
-   STDMETHODIMP_(const tchar*) getActivePresetName2(void) 
+     return hr;
+    }
+   STDMETHODIMP_(const tchar*) getActivePresetName2(void)
     {
      return NULL;
-    } 
-   STDMETHODIMP createPresetPages(const tchar *presetname,TffdshowPageDec *pages) 
+    }
+   STDMETHODIMP createPresetPages(const tchar *presetname,TffdshowPageDec *pages)
     {
      return E_NOTIMPL;
-    } 
+    }
    STDMETHODIMP getEncoderInfo(tchar *buf,size_t buflen)
     {
      char_t *buft=(char_t*)alloca(buflen*sizeof(char_t));
      HRESULT hr;
      if (SUCCEEDED(hr=deciD->getEncoderInfo(buft,buflen)))
       text<tchar>(buft,buf);
-     return hr; 
+     return hr;
     }
-   STDMETHODIMP_(const tchar*) getDecoderName(void) 
+   STDMETHODIMP_(const tchar*) getDecoderName(void)
     {
      return NULL;
     }
    STDMETHODIMP_(const TfilterIDFF*) getFilterIDFF_notimpl(void) {return deciD->getFilterIDFF_notimpl();}
-   STDMETHODIMP getFilterIDFFs(const tchar *presetname,const TfilterIDFFs* *filters) 
+   STDMETHODIMP getFilterIDFFs(const tchar *presetname,const TfilterIDFFs* *filters)
     {
      return E_NOTIMPL;
-    } 
-   /* 
+    }
+   /*
    STDMETHODIMP getParam(unsigned int paramID,int* value) {return deciD->getParam(paramID,value);}
    STDMETHODIMP putParam(unsigned int paramID,int val) {return deciD->putParam(paramID,val);}
    STDMETHODIMP invParam(unsigned int paramID) {return deciD->invParam(paramID);}
-   STDMETHODIMP getParamStr3(unsigned int paramID,const tchar* *value) 
+   STDMETHODIMP getParamStr3(unsigned int paramID,const tchar* *value)
     {
      return E_NOTIMPL;
-    } 
+    }
    STDMETHODIMP putParamStr(unsigned int paramID,const tchar *buf)
     {
      return deciD->putParamStr(paramID,text<char_t>(buf));
-    } 
+    }
    STDMETHODIMP getParamInfo(unsigned int paramID,TffdshowParamInfo *paramPtr)
     {
      return E_NOTIMPL;
-    } 
+    }
    STDMETHODIMP notifyParam(int id,int val) {return deciD->notifyParam(id,val);}
-   STDMETHODIMP notifyParamStr(int id,const tchar *val) 
+   STDMETHODIMP notifyParamStr(int id,const tchar *val)
     {
      return deciD->notifyParamStr(id,text<char_t>(val));
     }
-   */  
+   */
    STDMETHODIMP initRemote(void) {return deciD->initRemote();}
    STDMETHODIMP saveRemoteSettings(void) {return deciD->saveRemoteSettings();}
    STDMETHODIMP loadRemoteSettings(void) {return deciD->loadRemoteSettings();}
@@ -344,14 +344,14 @@ protected:
    //STDMETHODIMP resetParam(unsigned int paramID) {return deciD->resetParam(paramID);}
    //STDMETHODIMP initMouse(void) {return deciD->initMouse();}
    STDMETHODIMP_(unsigned int) getPresetAutoloadItemsCount2(void) {return deciD->getPresetAutoloadItemsCount2();}
-   STDMETHODIMP getPresetAutoloadItemInfo(unsigned int index,const tchar* *name,const tchar* *hint,int *allowWildcard,int *is,int *isVal,tchar *val,size_t vallen,int *isList,int *isHelp) 
+   STDMETHODIMP getPresetAutoloadItemInfo(unsigned int index,const tchar* *name,const tchar* *hint,int *allowWildcard,int *is,int *isVal,tchar *val,size_t vallen,int *isList,int *isHelp)
     {
      return E_NOTIMPL;
-    } 
+    }
    STDMETHODIMP setPresetAutoloadItem(unsigned int index,int is,const tchar *val)
     {
      return deciD->setPresetAutoloadItem(index,is,text<char_t>(val));
-    } 
+    }
    STDMETHODIMP_(const tchar*) getPresetAutoloadItemList(unsigned int paramIndex,unsigned int listIndex)
     {
      return NULL;
@@ -360,22 +360,22 @@ protected:
     {
      return NULL;
     }
-   STDMETHODIMP_(const Tstrptrs*) getCodecsList(void) 
+   STDMETHODIMP_(const Tstrptrs*) getCodecsList(void)
     {
      return NULL;
-    } 
+    }
    STDMETHODIMP queryFilterInterface(const IID &iid,void **ptr) {return deciD->queryFilterInterface(iid,ptr);}
    STDMETHODIMP setOnNewFiltersMsg(HWND wnd,unsigned int msg) {return deciD->setOnNewFiltersMsg(wnd,msg);}
    STDMETHODIMP sendOnNewFiltersMsg(void) {return deciD->sendOnNewFiltersMsg();}
-   STDMETHODIMP setKeyParamKeyCheck(unsigned int i,int key,int *prev,const tchar* *prevDescr) 
+   STDMETHODIMP setKeyParamKeyCheck(unsigned int i,int key,int *prev,const tchar* *prevDescr)
     {
      return E_NOTIMPL;
-    } 
+    }
    STDMETHODIMP_(int) getInputBitrate2(void)
     {
      return deciD->getInputBitrate2();
     }
-   STDMETHODIMP getPresetAutoloadItemHelp(unsigned int index,const tchar* *helpPtr) 
+   STDMETHODIMP getPresetAutoloadItemHelp(unsigned int index,const tchar* *helpPtr)
     {
      return E_NOTIMPL;
     }
@@ -383,11 +383,11 @@ protected:
    STDMETHODIMP_(const tchar*) getOSDpresetName2(unsigned int i)
     {
      return NULL;
-    } 
-   STDMETHODIMP_(const tchar*) getOSDpresetFormat2(const tchar *presetName) 
+    }
+   STDMETHODIMP_(const tchar*) getOSDpresetFormat2(const tchar *presetName)
     {
      return NULL;
-    } 
+    }
    STDMETHODIMP setOSDpresetFormat(const tchar *presetName,const tchar *format) {return deciD->setOSDpresetFormat(text<char_t>(presetName),text<char_t>(format));}
    STDMETHODIMP setOSDpresetName(unsigned int i,const tchar *name) {return deciD->setOSDpresetName(i,text<char_t>(name));}
    STDMETHODIMP addOSDpreset(const tchar *presetName,const tchar *format) {return deciD->addOSDpreset(text<char_t>(presetName),text<char_t>(format));}
@@ -411,12 +411,12 @@ protected:
  void initPreset(void);
  TglobalSettingsDec *globalSettings;
  TdialogSettingsDec *dialogSettings;
- 
+
  virtual HRESULT onGraphRemove(void);
 
  const CLSID &proppageid;
  virtual HRESULT onInitDialog(void);
- 
+
  Tkeyboard *keys;
  Tmouse *mouse;
  Tremote *remote;

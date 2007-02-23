@@ -60,7 +60,7 @@ class SKL_VIDEO_I : public SKL_DRIVER_I, private SKL_DESTROYABLE
     // yes. i know. This is against OO rules to make subclasses'
     // specific stuff (params) "bubble up" to base class. But
     // compared to the price of having to make public such uninteresting
-    // implementation code as, say, the DDraw video driver... 
+    // implementation code as, say, the DDraw video driver...
     // Or: would you like all X11's stuff to be included just to
     // have a Use_Shm() method handy? Well...
     // So, each sub-implementation will plug its own params needs
@@ -77,7 +77,7 @@ class SKL_VIDEO_I : public SKL_DRIVER_I, private SKL_DESTROYABLE
       VSYNC,
       DITHER,
       REFRESH_RATE,
-      
+
       HIDE_FULLSCREEN,
       SHOW_FULLSCREEN
 
@@ -109,7 +109,7 @@ class SKL_VIDEO_I : public SKL_DRIVER_I, private SKL_DESTROYABLE
     virtual void Hide(SKL_WINDOW &m) { m.Hide(); }
     virtual void Show(SKL_WINDOW &m) { m.Show(); }
 
-    SKL_MEM_I *Get_Mem() const { return _Mem; } 
+    SKL_MEM_I *Get_Mem() const { return _Mem; }
 
     int Set_String_Param(PARAM Opt, SKL_CST_STRING value);
     int Set_Int_Param(PARAM Opt, int value);
@@ -131,7 +131,7 @@ class SKL_VIDEO_I : public SKL_DRIVER_I, private SKL_DESTROYABLE
     SKL_WINDOW *Get_Fullscreen_Mode() const { return _Fullscreen_Mode; }
     SKL_WINDOW *Fullscreen_Mode(int Mode_Nb);
     SKL_WINDOW *Fullscreen_Mode(int Width,
-                                int Height, 
+                                int Height,
                                 SKL_FORMAT Fmt);
     void Close_Fullscreen();
 

@@ -103,7 +103,7 @@ void TresizeAspectPage::aspect2dlg(void)
  tsprintf(pomS,_l("%s "),_(IDC_LBL_HWOVERLAY_ASPECT));
  if (aspectI==0) strcat(pomS,_(IDC_LBL_HWOVERLAY_ASPECT,_l("default")));else strcatf(pomS,_l("%3.2f:1"),float(aspectI/65536.0));
  setDlgItemText(m_hwnd,IDC_LBL_HWOVERLAY_ASPECT,pomS);
-}            
+}
 void TresizeAspectPage::applyResizeXY(void)
 {
  BOOL ok;
@@ -131,7 +131,7 @@ void TresizeAspectPage::applyResizeXY(void)
    cfgSet(IDFF_is_resizeDy_0,1);
   }
  cfgSet(IDFF_resizeDy_real,y);
- parent->setChange(); 
+ parent->setChange();
 }
 bool TresizeAspectPage::sizeXok(HWND hed)
 {
@@ -188,20 +188,20 @@ INT_PTR TresizeAspectPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         aspect2dlg();
         return TRUE;
        }
-     } 
+     }
     break;
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_ED_RESIZEDX:
       case IDC_ED_RESIZEDY:
-       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText) 
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
          HWND hed=GetDlgItem(m_hwnd,LOWORD(wParam));
          if (hed!=GetFocus()) return FALSE;
          repaint(hed);
          applyResizeXY();
-         return TRUE;  
+         return TRUE;
         }
        break;
       case IDC_BT_RESIZE_XCOND:
@@ -211,7 +211,7 @@ INT_PTR TresizeAspectPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          resizeIf2dlg();
          return TRUE;
         }
-       break;  
+       break;
       case IDC_BT_RESIZE_YCOND:
        if (HIWORD(wParam)==BN_CLICKED)
         {
@@ -219,7 +219,7 @@ INT_PTR TresizeAspectPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          resizeIf2dlg();
          return TRUE;
         }
-       break;  
+       break;
       case IDC_BT_RESIZE_XYCOND:
        if (HIWORD(wParam)==BN_CLICKED)
         {
@@ -227,7 +227,7 @@ INT_PTR TresizeAspectPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          resizeIf2dlg();
          return TRUE;
         }
-       break;  
+       break;
       case IDC_BT_RESIZE_PIXCOND:
        if (HIWORD(wParam)==BN_CLICKED)
         {
@@ -235,8 +235,8 @@ INT_PTR TresizeAspectPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          resizeIf2dlg();
          return TRUE;
         }
-       break;  
-     }   
+       break;
+     }
     break;
    case WM_CTLCOLOREDIT:
     {
@@ -251,12 +251,12 @@ INT_PTR TresizeAspectPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        default:goto colorEnd;
       }
      if (!ok)
-      { 
+      {
        HDC dc=HDC(wParam);
        SetBkColor(dc,RGB(255,0,0));
-       return INT_PTR(getRed()); 
+       return INT_PTR(getRed());
       }
-     else return FALSE;  
+     else return FALSE;
      colorEnd:;
      break;
     }
@@ -271,9 +271,9 @@ INT_PTR TresizeAspectPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         DRAWITEMSTRUCT *dis=(LPDRAWITEMSTRUCT)lParam;
         ((TflatButton*)Twidget::getDlgItem(dis->hwndItem))->paint(dis);
         return TRUE;
-       } 
+       }
      }
-    break;   
+    break;
   }
  return TconfPageDecVideo::msgProc(uMsg,wParam,lParam);
 }
@@ -282,7 +282,7 @@ Twidget* TresizeAspectPage::createDlgItem(int id,HWND h)
  if (id==IDC_BT_RESIZE_PIXCOND || id==IDC_BT_RESIZE_XCOND || id==IDC_BT_RESIZE_YCOND || id==IDC_BT_RESIZE_XYCOND)
   return new TflatButton(h,this);
  else
-  return TconfPageDecVideo::createDlgItem(id,h); 
+  return TconfPageDecVideo::createDlgItem(id,h);
 }
 
 void TresizeAspectPage::onResizeSizeMenu(void)
@@ -299,7 +299,7 @@ void TresizeAspectPage::onResizeSizeMenu(void)
  int x,y;
  switch (cmd)
   {
-   case 0:x=320;y=240;break; 
+   case 0:x=320;y=240;break;
    case 1:x=640;y=480;break;
    case 2:x=720;y=480;break;
    case 3:x=720;y=576;break;
@@ -307,7 +307,7 @@ void TresizeAspectPage::onResizeSizeMenu(void)
   }
  cfgSet(IDFF_resizeDx,x);cfgSet(IDFF_resizeDy,y);
  cfgSet(IDFF_resizeDy_real,y);
- resize2dlg(); 
+ resize2dlg();
 }
 void TresizeAspectPage::onResizeMulfOfMenu(void)
 {
@@ -320,7 +320,7 @@ void TresizeAspectPage::onResizeMulfOfMenu(void)
   {
    cfgSet(IDFF_resizeMultOf,atoi(mults[cmd]));
    resize2dlg();
-  } 
+  }
 }
 void TresizeAspectPage::onResizeAspectMenu(void)
 {
@@ -336,14 +336,14 @@ void TresizeAspectPage::onResizeAspectMenu(void)
  int a1,a2;
  switch (cmd)
   {
-   case 0:a1=  4;a2=  3;break; 
-   case 1:a1=  5;a2=  4;break; 
+   case 0:a1=  4;a2=  3;break;
+   case 1:a1=  5;a2=  4;break;
    case 2:a1= 16;a2=  9;break;
    case 3:a1=235;a2=100;break;
    default:return;
   }
  cfgSet(IDFF_resizeA1,a1);cfgSet(IDFF_resizeA2,a2);
- resize2dlg(); 
+ resize2dlg();
 }
 void TresizeAspectPage::onResizePixMenu(void)
 {
@@ -357,12 +357,12 @@ void TresizeAspectPage::onResizePixMenu(void)
  int pix;
  switch (cmd)
   {
-   case 0:pix=320*240;break; 
+   case 0:pix=320*240;break;
    case 1:pix=640*480;break;
    default:return;
   }
  cfgSet(IDFF_resizeIfPixVal,pix);
- resizeIf2dlg(); 
+ resizeIf2dlg();
 }
 
 TresizeAspectPage::TresizeAspectPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecVideo(Iparent,idff,1)
@@ -401,13 +401,13 @@ TresizeAspectPage::TresizeAspectPage(TffdshowPageDec *Iparent,const TfilterIDFF 
    IDC_ED_RESIZE_MOD_16,1,128,IDFF_resizeMultOf,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
  static const TbindEditReal<TresizeAspectPage> edReal[]=
   {
    IDC_ED_RESIZE_MULT,0.001,1000.0,IDFF_resizeMult1000,1000.0,NULL,
    0
   };
- bindEditReals(edReal); 
+ bindEditReals(edReal);
  static const TbindButton<TresizeAspectPage> bt[]=
   {
    IDC_BT_RESIZE_SIZE_MENU,&TresizeAspectPage::onResizeSizeMenu,
@@ -416,5 +416,5 @@ TresizeAspectPage::TresizeAspectPage(TffdshowPageDec *Iparent,const TfilterIDFF 
    IDC_BT_RESIZE_PIX_MENU,&TresizeAspectPage::onResizePixMenu,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
 }

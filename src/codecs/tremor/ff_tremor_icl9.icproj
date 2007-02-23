@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="windows-1250"?>
-<VisualStudioProject 
+<VisualStudioProject
 	ProjectType="Intel C++ Project"
 	Version="9.1"
 	Name="ff_tremor"
@@ -7,18 +7,18 @@
 	VCNestedProjectGUID="{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}"
 	VCNestedProjectFileName="ff_tremor_icl9.vcproj">
 	<Configurations>
-		<Configuration 
+		<Configuration
 			Name="Debug|Win32">
-			<Tool 
+			<Tool
 				Name="GeneralTool"
 				OutputDirectory="debug_icl9"
 				IntermediateDirectory="debug_icl9"
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="0"/>
-			<Tool 
+			<Tool
 				Name="DebugTool"/>
-			<Tool 
+			<Tool
 				Name="CppCmplrTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../xiph/ogg,../../xiph/vorbis,.,../../xiph"
@@ -34,7 +34,7 @@
 				SuppressStartupBanner="1"
 				DebugInformationFormat="4"
 				CompileAs="1"/>
-			<Tool 
+			<Tool
 				Name="LinkerTool"
 				DelayImpLib=""
 				IgnoreImportLibrary="1"
@@ -47,13 +47,13 @@
 				GenerateDebugInformation="1"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"/>
-			<Tool 
+			<Tool
 				Name="LibrarianTool"/>
-			<Tool 
+			<Tool
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1051"/>
-			<Tool 
+			<Tool
 				Name="MidlCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				MkTypLibCompatible="1"
@@ -61,22 +61,22 @@
 				TargetEnvironment="1"
 				TypeLibraryName=".\Debug/ff_tremor.tlb"
 				HeaderFileName=""/>
-			<Tool 
+			<Tool
 				Name="BscMakeTool"/>
-			<Tool 
+			<Tool
 				Name="PreBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="PreLinkEventTool"/>
-			<Tool 
+			<Tool
 				Name="PostBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="CustomTool"/>
-			<Tool 
+			<Tool
 				Name="CustomNodeTool"/>
 		</Configuration>
-		<Configuration 
+		<Configuration
 			Name="Release|Win32">
-			<Tool 
+			<Tool
 				Name="GeneralTool"
 				OutputDirectory="release_icl9"
 				IntermediateDirectory="release_icl9"
@@ -84,9 +84,9 @@
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="0"
 				WholeProgramOptimization="1"/>
-			<Tool 
+			<Tool
 				Name="DebugTool"/>
-			<Tool 
+			<Tool
 				Name="CppCmplrTool"
 				Optimization="1000"
 				GlobalOptimizations="1"
@@ -110,7 +110,7 @@
 				DebugInformationFormat="0"
 				CompileAs="1"
 				AdditionalOptions="/Qip"/>
-			<Tool 
+			<Tool
 				Name="LinkerTool"
 				DelayImpLib=""
 				IgnoreImportLibrary="1"
@@ -126,13 +126,13 @@
 				OptimizeForWindows98="1"
 				ImportLibrary=".\Release/ff_tremor.lib"
 				TargetMachine="1"/>
-			<Tool 
+			<Tool
 				Name="LibrarianTool"/>
-			<Tool 
+			<Tool
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="NDEBUG"
 				Culture="1051"/>
-			<Tool 
+			<Tool
 				Name="MidlCmplrTool"
 				PreprocessorDefinitions="NDEBUG"
 				MkTypLibCompatible="1"
@@ -140,342 +140,346 @@
 				TargetEnvironment="1"
 				TypeLibraryName=".\Release/ff_tremor.tlb"
 				HeaderFileName=""/>
-			<Tool 
+			<Tool
 				Name="BscMakeTool"/>
-			<Tool 
+			<Tool
 				Name="PreBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="PreLinkEventTool"/>
-			<Tool 
+			<Tool
 				Name="PostBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="CustomTool"/>
-			<Tool 
+			<Tool
 				Name="CustomNodeTool"/>
 		</Configuration>
 	</Configurations>
 	<Files>
-		<File 
+		<File
 			RelativePath="..\..\xiph\ogg\bitwise.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\block.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\codebook.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\floor0.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\floor1.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath="..\..\xiph\ogg\framing.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\info.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\mapping0.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\mdct.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\registry.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\res012.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\sharedbook.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\synthesis.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\window.c">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="0"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 					BasicRuntimeChecks="3"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					Optimization="2"
 					AdditionalIncludeDirectories=""
 					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\backends.h"/>
-		<File 
+		<File
 			RelativePath=".\codebook.h"/>
-		<File 
+		<File
 			RelativePath=".\codec_internal.h"/>
-		<File 
+		<File
 			RelativePath=".\config_types.h"/>
-		<File 
+		<File
 			RelativePath="..\..\xiph\vorbis\ivorbiscodec.h"/>
-		<File 
+		<File
 			RelativePath="..\..\xiph\vorbis\ivorbisfile.h"/>
-		<File 
+		<File
 			RelativePath=".\lsp_lookup.h"/>
-		<File 
+		<File
 			RelativePath=".\mdct.h"/>
-		<File 
+		<File
 			RelativePath=".\mdct_lookup.h"/>
-		<File 
+		<File
 			RelativePath=".\misc.h"/>
-		<File 
+		<File
 			RelativePath="..\..\xiph\ogg\ogg.h"/>
-		<File 
+		<File
 			RelativePath=".\os.h"/>
-		<File 
+		<File
 			RelativePath="..\..\xiph\ogg\os_types.h"/>
-		<File 
+		<File
 			RelativePath=".\registry.h"/>
-		<File 
+		<File
 			RelativePath=".\window.h"/>
-		<File 
+		<File
 			RelativePath=".\window_lookup.h"/>
-		<File 
+		<File
 			RelativePath=".\ff_tremor.def">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="GeneralTool"
 					ExcludedFromBuild="1"/>
 			</FileConfiguration>
 		</File>
 	</Files>
 </VisualStudioProject>
+
+
+
+
 

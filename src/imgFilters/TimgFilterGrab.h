@@ -34,14 +34,14 @@ private:
    CodecID codecId;
    bool avctxinited;
   protected:
-   virtual int setQual(int qual)=0; 
+   virtual int setQual(int qual)=0;
   public:
    TimgExportLibavcodec(const Tconfig *config,IffdshowBase *deci,CodecID IcodecId);
    virtual ~TimgExportLibavcodec();
    virtual void init(unsigned int dx,unsigned int dy);
    virtual int compress(const unsigned char *src[4],stride_t stride[4],unsigned char *dst,unsigned int dstlen,int qual);
    virtual void done(void);
-  }; 
+  };
  struct TimgExportJPEG :public TimgExportLibavcodec
   {
   protected:
@@ -75,7 +75,7 @@ private:
    virtual int compress(const unsigned char *src[4],stride_t stride[4],unsigned char *dst,unsigned int dstlen,int qual);
   };
  TimgExport *exp[3];
- unsigned char *dstbuf;unsigned int dstbuflen;                     
+ unsigned char *dstbuf;unsigned int dstbuflen;
  volatile LONG now;
 protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
@@ -86,7 +86,7 @@ public:
  virtual ~TimgFilterGrab();
  virtual void done(void);
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg);
- 
+
  virtual HRESULT queryInterface(const IID &iid,void **ptr) const;
  STDMETHODIMP grabNow(void);
 };

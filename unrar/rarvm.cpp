@@ -505,7 +505,7 @@ void RarVM::Prepare(byte *Code,int CodeSize,VM_PreparedProgram *Prg)
       CurCmd->Op2.Addr=&CurCmd->Op2.Data;
       CodeSize=0;
     }
-#endif  
+#endif
     uint DataFlag=fgetbits();
     faddbits(1);
     if (DataFlag&0x8000)
@@ -816,7 +816,7 @@ void RarVM::ExecuteStandardFilter(VM_StandardFilters FilterType)
               if (((Addr+Offset) & 0x80000000)==0)
                 SET_VALUE(false,Data,Addr+FileSize);
             }
-            else 
+            else
               if (((Addr-FileSize) & 0x80000000)!=0)
                 SET_VALUE(false,Data,Addr-Offset);
 #endif

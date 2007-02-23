@@ -20,10 +20,10 @@ protected:
    Tblur(unsigned int Idx,unsigned int Idy);
    ~Tblur();
    void run(const unsigned char *src,stride_t srcStride,unsigned char *dst,stride_t dstStride,int g_thresh);
-  }; 
+  };
 
  Tblur *blur1;
- virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg); 
+ virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK_YUV_PLANAR;}
  virtual void onSizeChange(void);
 public:
@@ -36,7 +36,7 @@ DECLARE_FILTER(TimgFilterSmootherChroma,public,TimgFilterSmootherLuma)
 private:
  Tblur *blur2;
 protected:
- virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg); 
+ virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
 public:
  TimgFilterSmootherChroma(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual void done(void);

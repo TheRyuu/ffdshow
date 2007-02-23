@@ -1,4 +1,4 @@
-xsharpen 
+xsharpen
 This filter performs a subtle but useful sharpening effect. It operates by running a small window over the frame and each center pixel is either passed through untouched (depending upon a threshold setting), or mapped to either the brightest or dimmest pixel in the window, depending upon which is nearest to the center pixel. If the center pixel is mapped, it is also alpha-blended with the original pixel value using a configurable strength setting. The result is a sharpening effect that not only avoids amplifying noise, but also tends to reduce it.
 
 Unsharp mask

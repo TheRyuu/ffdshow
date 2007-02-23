@@ -42,7 +42,7 @@ void TsubtitlesTextpinVobsub::resetSubtitles(void)
 {
 #ifndef DVDSUB
  if (spu) spu->spudec_reset();
-#endif 
+#endif
  TsubtitlesTextpin::resetSubtitles();
 }
 
@@ -54,5 +54,5 @@ void TsubtitlesTextpinVobsub::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME st
 #else
  Tsubtitle *sub=new TsubtitleDVD(start,data,datalen,this);
  subs->push_back(sub);
-#endif 
+#endif
 }

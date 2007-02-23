@@ -39,9 +39,9 @@ void TfirPage::init(void)
  bmpFIR.bmiHeader.biCompression=BI_RGB;
  bmpFIR.bmiHeader.biXPelsPerMeter=100;
  bmpFIR.bmiHeader.biYPelsPerMeter=100;
- memset(bmpFIR.bmiColors,0,256*sizeof(RGBQUAD));                                                  //0 - fir  
- bmpFIR.bmiColors[1].rgbRed=255;bmpFIR.bmiColors[1].rgbGreen=255;bmpFIR.bmiColors[1].rgbBlue=255; 
- bmpFIR.bmiColors[2].rgbRed=192;bmpFIR.bmiColors[2].rgbGreen=192;bmpFIR.bmiColors[2].rgbBlue=192; //1 - fft  
+ memset(bmpFIR.bmiColors,0,256*sizeof(RGBQUAD));                                                  //0 - fir
+ bmpFIR.bmiColors[1].rgbRed=255;bmpFIR.bmiColors[1].rgbGreen=255;bmpFIR.bmiColors[1].rgbBlue=255;
+ bmpFIR.bmiColors[2].rgbRed=192;bmpFIR.bmiColors[2].rgbGreen=192;bmpFIR.bmiColors[2].rgbBlue=192; //1 - fft
  bmpFFT=bmpFIR;
  isFFT=false;
  if ((filterMode&IDFF_FILTERMODE_PLAYER)==0)
@@ -94,7 +94,7 @@ unsigned int TfirPage::getFirFreq(void)
   {
    int freq=filter?filter->getFFTfreq()/2:0;
    return freq?freq:cfgGet(IDFF_firUserDisplayMaxFreq);
-  } 
+  }
 }
 
 void TfirPage::drawFir(void)
@@ -110,7 +110,7 @@ void TfirPage::drawFir(void)
    freq[1]=(firFreq+firWidth/2)/allfreq;
   }
  else
-  freq[0]=cfgGet(IDFF_firFreq)/allfreq; 
+  freq[0]=cfgGet(IDFF_firFreq)/allfreq;
  TfirFilter::_ftype_t *a=TfirFilter::design_fir(&order,freq,type,window,cfgGet(IDFF_firKaiserBeta)/1000.0f);
  memset(bitsFIR,1,stride*gy);
  if (!a) return;
@@ -119,11 +119,11 @@ void TfirPage::drawFir(void)
  float gMax=-1000000.0f,gMin=100000.0f;
  float sc=10.0f/logf(10.0f);
  float t=float(M_PI)/gx;
- for (unsigned int i=0;i<=gx;i++) 
+ for (unsigned int i=0;i<=gx;i++)
   {
    float theta=i*t;
    float sac=0.0f,sas=0.0f;
-   for (unsigned int k=0;k<order;k++) 
+   for (unsigned int k=0;k<order;k++)
     {
      float c=cosf(k*theta);
      float s=sinf(k*theta);
@@ -192,16 +192,16 @@ void TfirPage::onFrame(void)
        for (int y=gy-1;y>=yy;y--)
         bitsFFT[i+stride*y]=2;
       }
-     if (fir) bitsFFT[i+stride*fir[i]]=0; 
-    } 
-   isFFT=true; 
+     if (fir) bitsFFT[i+stride*fir[i]]=0;
+    }
+   isFFT=true;
    repaint(hg);
   }
  else
   {
    if (isFFT) repaint(hg);
-   isFFT=false; 
-  } 
+   isFFT=false;
+  }
 }
 
 void TfirPage::onUserDisplayMaxFreq(void)
@@ -224,7 +224,7 @@ void TfirPage::onFirWindow(void)
 void TfirPage::translate(void)
 {
  TconfPageDecAudio::translate();
- 
+
  cbxTranslate(IDC_CBX_FIR_TYPE,TfirSettings::types);
  cbxTranslate(IDC_CBX_FIR_WINDOW,TfirSettings::windows);
 }

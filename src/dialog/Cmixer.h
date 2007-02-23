@@ -15,7 +15,7 @@ private:
    int idff;
    TwidgetMixer(HWND h,Twindow *w):TwindowWidget(h,w) {}
   };
- IaudioFilterMixer *filter; 
+ IaudioFilterMixer *filter;
 protected:
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
  virtual Twidget* createDlgItem(int id,HWND h);
@@ -28,4 +28,4 @@ public:
  virtual void onNewFilter(void);
 };
 
-#endif 
+#endif

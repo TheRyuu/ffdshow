@@ -30,7 +30,7 @@ int main(int argc,const char *argv[])
    fprintf(fr,"#define VERSION_BUILD_TIME \"08:00:14UTC\"\n");
    fclose(fr);
    fr=fopen(argv[1],"rt");
-  } 
+  }
  WIN32_FIND_DATA ffd;
  if (FindFirstFile(argv[1],&ffd)==INVALID_HANDLE_VALUE) return -4;
  char flnmO[260];strcpy(flnmO,argv[1]);strcat(flnmO,".verinc");remove(flnmO);
@@ -45,13 +45,13 @@ int main(int argc,const char *argv[])
      SYSTEMTIME st;
      GetSystemTime(&st);
      sprintf(line,"#define VERSION_BUILD_DATE \"%02u/%02u/%02u\"\n", st.wDay, st.wMonth, st.wYear);
-    } 
+    }
    else if (strstr(line,"VERSION_BUILD_TIME "))
     {
      SYSTEMTIME st;
      GetSystemTime(&st);
      sprintf(line,"#define VERSION_BUILD_TIME \"%02u:%02u:%02uUTC\"\n", st.wHour, st.wMinute, st.wSecond);
-    } 
+    }
    fputs(line,fw);
   }
  fclose(fr);fclose(fw);

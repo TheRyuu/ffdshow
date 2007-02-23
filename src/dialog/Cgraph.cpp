@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "Cgraph.h"
 #include "TencStats.h"
@@ -43,9 +43,9 @@ void TgraphPage::init(void)
  graphBmp.bmiColors[4].rgbRed=255;graphBmp.bmiColors[4].rgbGreen=  0;graphBmp.bmiColors[4].rgbBlue=  0; //4 - i-frames
  graphBmp.bmiColors[5].rgbRed=128;graphBmp.bmiColors[5].rgbGreen=128;graphBmp.bmiColors[5].rgbBlue=128; //5 - b-frames
  graphBmp.bmiColors[6].rgbRed=255;graphBmp.bmiColors[6].rgbGreen=255;graphBmp.bmiColors[6].rgbBlue=255; //6 - text
- 
+
  frames=new Tframe[gx];
- shift=0; 
+ shift=0;
  oldframescount=0;t1=0;
  oldmaxframesize=1;
  SetTimer(m_hwnd,IDC_TMR_GRAPH,1000,NULL);
@@ -54,7 +54,7 @@ void TgraphPage::init(void)
 }
 
 void TgraphPage::cfg2dlg(void)
-{ 
+{
  debug2dlg();
  graph2dlg();
  int working=cfgGet(IDFF_enc_working);
@@ -116,15 +116,15 @@ INT_PTR TgraphPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
      }
     break;
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_ED_OUTPUTDEBUGFILE:
-       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText) 
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
          char_t debugfile[MAX_PATH];
          GetDlgItemText(m_hwnd,IDC_ED_OUTPUTDEBUGFILE,debugfile,MAX_PATH);
          cfgSet(IDFF_debugfile,debugfile);
-         return TRUE;  
+         return TRUE;
         }
        break;
      }
@@ -135,11 +135,11 @@ INT_PTR TgraphPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       if (!cfgGet(IDFF_enc_working)) return TRUE;
       TencStats *stats=NULL;
       if (FAILED(deciE->getEncStats(&stats))) return TRUE;
-      //if (oldframescount>stats.count) t1=0; 
+      //if (oldframescount>stats.count) t1=0;
       clock_t t2=clock();
       setText(IDC_LBL_STATS_FPS,_l("%s %5.2f"),_(IDC_LBL_STATS_FPS),(t1==0)?0:float(CLOCKS_PER_SEC*(stats->count-oldframescount)/float(t2-t1)));
       t1=t2;oldframescount=stats->count;
-        
+
       setText(IDC_LBL_STATS_NUMFRAMES,_l("%s %i"),_(IDC_LBL_STATS_NUMFRAMES),stats->count,FALSE);
       setText(IDC_LBL_STATS_AVGQUANT,_l("%s %5.2f"),_(IDC_LBL_STATS_AVGQUANT),stats->count?float(stats->sumQuants)/stats->count:0.0f);
       setText(IDC_LBL_STATS_KBPS,_l("%s %i"),_(IDC_LBL_STATS_KBPS),stats->count?int((8ULL*stats->sumFramesize*cfgGet(IDFF_enc_fpsRate))/(1000ULL*stats->count*cfgGet(IDFF_enc_fpsScale))):0);
@@ -152,14 +152,14 @@ INT_PTR TgraphPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         if (psnrU>0) tsprintf(psnrUs,_l("%6.2f"),psnrU); else strcpy(psnrUs,_(IDC_LBL_STATS_PSNR,_l("exact")));
         if (psnrV>0) tsprintf(psnrVs,_l("%6.2f"),psnrV); else strcpy(psnrVs,_(IDC_LBL_STATS_PSNR,_l("exact")));
         setText(IDC_LBL_STATS_PSNR,_l("%s %s,%s,%s"),_(IDC_LBL_STATS_PSNR),psnrYs,psnrUs,psnrVs);
-       }  
+       }
       else
        setText(IDC_LBL_STATS_PSNR,_l("%s %s"),_(IDC_LBL_STATS_PSNR),_(IDC_LBL_STATS_PSNR,_l("unknown")));
 
       if (cfgGet(IDFF_enc_showGraph)) repaint(hg);
       return TRUE;
-     } 
-    break; 
+     }
+    break;
    case TencStats::MSG_FF_FRAME:
     {
      memmove(frames,frames+1,sizeof(Tframe)*(gx-1));
@@ -170,14 +170,14 @@ INT_PTR TgraphPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        maxframesize=frames[i].size;
      if (oldmaxframesize!=maxframesize)
       {
-       oldmaxframesize=maxframesize;  
+       oldmaxframesize=maxframesize;
        SetDlgItemInt(m_hwnd,IDC_LBL_GRAPH_MAXKB,maxframesize/1024,FALSE);
        for (int i=0;i<gx;i++)
         shiftGraph(frames[i]);
       }
-     else 
+     else
       shiftGraph(frames[gx-1]);
-     return TRUE; 
+     return TRUE;
     }
    case TencStats::MSG_FF_CLEAR:
     t1=0;oldframescount=0;
@@ -193,7 +193,7 @@ void TgraphPage::onDebugoutputfile(void)
   {
    cfgSet(IDFF_debugfile,debugfile);
    debug2dlg();
-  } 
+  }
 }
 
 void TgraphPage::putPixel(int x,int y,unsigned char c)
@@ -214,7 +214,7 @@ void TgraphPage::drawCompleteGraph(void)
 {
  memset(graphBits,0,stride*gy);
  for (int x=0;x<gx;x++)
-  { 
+  {
    shift++;
    if (shift==30)
     {
@@ -228,12 +228,12 @@ void TgraphPage::drawCompleteGraph(void)
 void TgraphPage::shiftLeft(void)
 {
  shift++;
- memmove(graphBits,graphBits+1,stride*gy-1); 
+ memmove(graphBits,graphBits+1,stride*gy-1);
  if (shift==30)
-  { 
-   lineY(gx-1,0,gy-1,1); 
+  {
+   lineY(gx-1,0,gy-1,1);
    shift=0;
-  } 
+  }
  else
   lineY(gx-1,0,gy-1,0);
  for (int y=0;y<gy;y+=30) putPixel(gx-1,y,1);
@@ -272,5 +272,5 @@ TgraphPage::TgraphPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
    IDC_BT_OUTPUTDEBUGFILE,&TgraphPage::onDebugoutputfile,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
 }

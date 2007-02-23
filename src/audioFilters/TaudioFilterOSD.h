@@ -18,7 +18,7 @@ protected:
 public:
  TaudioFilterOSD(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual ~TaudioFilterOSD();
- 
+
  virtual HRESULT process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0);
  virtual void onDisconnect(PIN_DIRECTION dir);
  virtual bool getOutputFmt(TsampleFormat &fmt,const TfilterSettingsAudio *cfg);

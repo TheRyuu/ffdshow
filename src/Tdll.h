@@ -14,11 +14,11 @@ public:
    if (config && !explicitFullPath)
     {
      char_t dllName2[MAX_PATH]; //installdir+filename+ext
-     _makepath(dllName2,NULL,config->pth,name,ext); 
+     _makepath(dllName2,NULL,config->pth,name,ext);
      hdll=LoadLibrary(dllName2);
     }
-   else 
-    hdll=NULL;  
+   else
+    hdll=NULL;
    if (!hdll)
     {
      hdll=LoadLibrary(dllName1);
@@ -29,7 +29,7 @@ public:
          char_t dllName3[MAX_PATH]; //ffdshow.ax_path+filename+ext
          _makepath(dllName3,NULL,config->epth,name,ext);
          hdll=LoadLibrary(dllName3);
-        } 
+        }
        if (!hdll)
         {
          char_t dllName0[MAX_PATH]; //only filename+ext - let Windows find it
@@ -57,7 +57,7 @@ public:
    if (config)
     {
      char_t dllName2[MAX_PATH]; //installdir+filename+ext
-     _makepath(dllName2,NULL,config->pth,name,ext); 
+     _makepath(dllName2,NULL,config->pth,name,ext);
      if (fileexists(dllName2)) return true;
     }
    if (fileexists(dllName1)) return true;

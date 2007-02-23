@@ -9,7 +9,7 @@ private:
  static const TfilterIDFF idffs;
 protected:
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  TgrabSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
 
  char_t path[MAX_PATH],prefix[30];

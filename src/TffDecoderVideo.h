@@ -206,7 +206,7 @@ public:
  STDMETHODIMP compat_tell(int*seconds) {return tell(seconds);}
  STDMETHODIMP compat_getDuration(int*seconds) {return getDuration(seconds);}
  STDMETHODIMP compat_getKeyParamCount2(void) {return getKeyParamCount2();}
- STDMETHODIMP compat_getKeyParamDescr(unsigned int i,const char **descr) {return getDecInterface<IffdshowDecA>()->getKeyParamDescr(i,descr);} 
+ STDMETHODIMP compat_getKeyParamDescr(unsigned int i,const char **descr) {return getDecInterface<IffdshowDecA>()->getKeyParamDescr(i,descr);}
  STDMETHODIMP compat_getKeyParamKey2(unsigned int i) {return getKeyParamKey2(i);}
  STDMETHODIMP compat_setKeyParamKey(unsigned int i,int key) {return setKeyParamKey(i,key);}
  STDMETHODIMP compat_getImgFilters(TimgFilters* *imgFiltersPtr) {return E_NOTIMPL;}
@@ -226,7 +226,7 @@ public:
    return E_NOTIMPL;
   #else
    return (HRESULT)getInstance2();
-  #endif 
+  #endif
   }
  STDMETHODIMP compat_getGraph(IFilterGraph* *graphPtr) {return getGraph(graphPtr);}
  STDMETHODIMP compat_getConfig(Tconfig* *configPtr) {return getConfig((const Tconfig**)configPtr);}
@@ -335,7 +335,7 @@ private:
 
  struct TffdshowDecVideo_char : interfaces<tchar_traits<char_t>::other_char_t>::IffdshowDecVideo, CUnknown
  {
-  protected: 
+  protected:
    typedef tchar_traits<char_t>::other_char_t tchar;
   private:
    IffdshowDecVideoT<char_t> *deciV;
@@ -355,14 +355,14 @@ private:
    STDMETHODIMP getXvidVersion(tchar *buf,size_t len) {return E_NOTIMPL;}
    STDMETHODIMP getMovieSource(const TvideoCodecDec* *moviePtr) {return deciV->getMovieSource(moviePtr);}
    STDMETHODIMP getOutputDimensions(unsigned int *x,unsigned int *y) {return deciV->getOutputDimensions(x,y);}
-   STDMETHODIMP getOutputFourcc(tchar *buf,size_t buflen) 
+   STDMETHODIMP getOutputFourcc(tchar *buf,size_t buflen)
     {
      char_t *buft=(char_t*)alloca(buflen*sizeof(char_t));
      HRESULT hr;
      if (SUCCEEDED(hr=deciV->getOutputFourcc(buft,buflen)))
       text<tchar>(buft,buf);
-     return hr; 
-    } 
+     return hr;
+    }
    STDMETHODIMP_(int) getInputBitrate2(void) {return deciV->getInputBitrate2();}
    STDMETHODIMP getHistogram_(unsigned int dst[256]) {return deciV->getHistogram_(dst);}
    STDMETHODIMP setFilterOrder(unsigned int filterID,unsigned int newOrder) {return deciV->setFilterOrder(filterID,newOrder);}
@@ -391,11 +391,11 @@ private:
    STDMETHODIMP_(const tchar*) getOSDpresetName2(unsigned int i)
     {
      return NULL;
-    } 
-   STDMETHODIMP_(const tchar*) getOSDpresetFormat2(const tchar *presetName) 
+    }
+   STDMETHODIMP_(const tchar*) getOSDpresetFormat2(const tchar *presetName)
     {
      return NULL;
-    } 
+    }
    STDMETHODIMP setOSDpresetFormat(const tchar *presetName,const tchar *format) {return deciV->setOSDpresetFormat(text<char_t>(presetName),text<char_t>(format));}
    STDMETHODIMP setOSDpresetName(unsigned int i,const tchar *name) {return deciV->setOSDpresetName(i,text<char_t>(name));}
    STDMETHODIMP addOSDpreset(const tchar *presetName,const tchar *format) {return deciV->addOSDpreset(text<char_t>(presetName),text<char_t>(format));}
@@ -409,7 +409,7 @@ private:
    STDMETHODIMP getSubtitleLanguageDesc(unsigned int num,const tchar* *descPtr)
     {
      return E_NOTIMPL;
-    } 
+    }
    STDMETHODIMP fillSubtitleLanguages(const tchar **langs)
     {
      return E_NOTIMPL;
@@ -421,7 +421,7 @@ private:
    STDMETHODIMP textPinConnected_(unsigned int num) {return E_NOTIMPL;}
    STDMETHODIMP cycleSubLanguages(int diff) {return deciV->cycleSubLanguages(diff);}
    STDMETHODIMP getLevelsMap(unsigned int map[256]) {return deciV->getLevelsMap(map);}
-   STDMETHODIMP_(const tchar*) findAutoSubflnm3(void) 
+   STDMETHODIMP_(const tchar*) findAutoSubflnm3(void)
     {
      return NULL;
     }
@@ -430,7 +430,7 @@ private:
    STDMETHODIMP getAverageTimePerFrame(int64_t *avg) {return deciV->getAverageTimePerFrame(avg);}
    STDMETHODIMP_(const tchar*) getEmbeddedSubtitleName2_(unsigned int num) {return NULL;}
    STDMETHODIMP putHistogram_(unsigned int Ihistogram[256]) {return deciV->putHistogram_(Ihistogram);}
-   STDMETHODIMP_(const tchar*) getCurrentSubFlnm(void) 
+   STDMETHODIMP_(const tchar*) getCurrentSubFlnm(void)
     {
      return NULL;
     }
@@ -450,10 +450,10 @@ private:
    STDMETHODIMP addClosedCaption(const char* line) {return deciV->addClosedCaption(line);}
    STDMETHODIMP hideClosedCaptions(void) {return deciV->hideClosedCaptions();}
    STDMETHODIMP_(int) getConnectedTextPinCnt(void) {return deciV->getConnectedTextPinCnt();}
-   STDMETHODIMP getConnectedTextPinInfo(int i,const tchar* *name,int *id,int *found) 
+   STDMETHODIMP getConnectedTextPinInfo(int i,const tchar* *name,int *id,int *found)
     {
      return E_NOTIMPL;
-    } 
+    }
    STDMETHODIMP registerOSDprovider(IOSDprovider *provider,const char *name) {return deciV->registerOSDprovider(provider,name);}
    STDMETHODIMP unregisterOSDprovider(IOSDprovider *provider) {return deciV->unregisterOSDprovider(provider);}
    STDMETHODIMP_(int) getOSDtime(void){return deciV->getOSDtime();}
@@ -474,7 +474,7 @@ protected:
  int IsQueueListedApp(const char_t *exe);
  HRESULT Receive(IMediaSample *pSample);
  virtual void getMinMax(int id,int &min,int &max);
- virtual bool isStreamsMenu(void) const; 
+ virtual bool isStreamsMenu(void) const;
  virtual TinfoBase* createInfo(void);
  virtual TimgFilters* createImgFilters(void);
 
@@ -492,7 +492,7 @@ private:
  TdialogSettingsDecVideo *dialogSettings;
  TpresetsVideo *presets;
  int currentq;
- 
+
  virtual void sendOnChange(int paramID,int val);
 
  int subShowEmbedded;//,foundEmbedded;
@@ -519,7 +519,7 @@ private:
    int dstStride;
    LONG dstSize;
   } m_frame;
- Trect oldRect; 
+ Trect oldRect;
  void calcNewSize(TffPictBase &p);
  unsigned int frameCnt;uint64_t bytesCnt;
  REFERENCE_TIME segmentStart;unsigned int segmentFrameCnt;
@@ -531,7 +531,7 @@ private:
  int waitForKeyframe;
  void setSampleSkipped(bool sendSkip);
  REFERENCE_TIME late,lastrtStart;
- 
+
  IVideoWindow *videoWindow;bool wasVideoWindow;
  IBasicVideo *basicVideo;bool wasBasicVideo;
 

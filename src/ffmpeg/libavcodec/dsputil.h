@@ -389,10 +389,10 @@ typedef struct DSPContext {
     void (*vertical_compose97i)(DWTELEM *b0, DWTELEM *b1, DWTELEM *b2, DWTELEM *b3, DWTELEM *b4, DWTELEM *b5, int width);
     void (*horizontal_compose97i)(DWTELEM *b, int width);
     void (*inner_add_yblock)(const uint8_t *obmc, const int obmc_stride, uint8_t * * block, int b_w, int b_h, int src_x, int src_y, int src_stride, slice_buffer * sb, int add, uint8_t * dst8);
-	
+
     void (*prefetch)(void *mem, int stride, int h);
-    
-    void (*shrink[4])(uint8_t *dst, int dst_wrap, const uint8_t *src, int src_wrap, int width, int height);   
+
+    void (*shrink[4])(uint8_t *dst, int dst_wrap, const uint8_t *src, int src_wrap, int width, int height);
 
     /* vc1 functions */
     void (*vc1_inv_trans_8x8)(DCTELEM *b);

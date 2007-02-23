@@ -1,5 +1,5 @@
 /*=============================================================================
-//      
+//
 //  This software has been released under the terms of the GNU Public
 //  license. See http://www.gnu.org/copyleft/gpl.html for details.
 //
@@ -20,12 +20,12 @@
 /* Add new data to circular queue designed to be used with a FIR
    filter. xq is the circular queue, in pointing at the new sample, xi
    current index for xq and n the length of the filter. xq must be n*2
-   long. 
+   long.
 */
 #define updateq(n,xi,xq,in)\
   xq[xi]=(xq)[(xi)+(n)]=*(in);\
   xi=(++(xi))&((n)-1);
-#endif  
+#endif
 
 
 /******************************************************************************
@@ -36,13 +36,13 @@
 
    n number of filter taps, where mod(n,4)==0
    w filter taps
-   x input signal must be a circular buffer which is indexed backwards 
+   x input signal must be a circular buffer which is indexed backwards
 */
 /*
 TfirFilter::_ftype_t TfirFilter::fir(register unsigned int n, _ftype_t* w, _ftype_t* x)
 {
   register _ftype_t y; // Output
-  y = 0.0; 
+  y = 0.0;
   do{
     n--;
     y+=w[n]*x[n];
@@ -68,7 +68,7 @@ void TfirFilter::boxcar(int n, _ftype_t* w)
 /*
 // Triang a.k.a Bartlett
 //
-//               |    (N-1)| 
+//               |    (N-1)|
 //           2 * |k - -----|
 //               |      2  |
 // w = 1.0 - ---------------
@@ -82,7 +82,7 @@ void TfirFilter::triang(int n, _ftype_t* w)
   _ftype_t k2  = 1/((_ftype_t)n + k1);
   int      end = (n + 1) >> 1;
   int      i;
-  
+
   // Calculate window coefficients
   for (i=0 ; i<end ; i++)
     w[i] = w[n-i-1] = _ftype_t((2.0*((_ftype_t)(i+1))-(1.0-k1))*k2);
@@ -101,7 +101,7 @@ void TfirFilter::hanning(int n, _ftype_t* w)
 {
   int      i;
   _ftype_t k = _ftype_t(2*M_PI/((_ftype_t)(n+1))); // 2*pi/(N+1)
-  
+
   // Calculate window coefficients
   for (i=0; i<n; i++)
     *w++ = _ftype_t(0.5*(1.0 - cos(k*(_ftype_t)(i+1))));
@@ -160,22 +160,22 @@ void TfirFilter::flattop(int n,_ftype_t* w)
   int      i;
   _ftype_t k1 = _ftype_t(2*M_PI/((_ftype_t)(n-1))); // 2*pi/(N-1)
   _ftype_t k2 = 2*k1;                   // 4*pi/(N-1)
-  
+
   // Calculate window coefficients
   for (i=0; i<n; i++)
     *w++ = _ftype_t(0.2810638602 - 0.5208971735*cos(k1*(_ftype_t)i) + 0.1980389663*cos(k2*(_ftype_t)i));
 }
 
-/* Computes the 0th order modified Bessel function of the first kind.  
-// (Needed to compute Kaiser window) 
-//   
+/* Computes the 0th order modified Bessel function of the first kind.
+// (Needed to compute Kaiser window)
+//
 // y = sum( (x/(2*n))^2 )
 //      n
 */
 
 TfirFilter::_ftype_t TfirFilter::besselizero(_ftype_t x)
-{ 
-  static const _ftype_t BIZ_EPSILON=_ftype_t(1E-21); // Max error acceptable 
+{
+  static const _ftype_t BIZ_EPSILON=_ftype_t(1E-21); // Max error acceptable
   _ftype_t temp;
   _ftype_t sum   = 1.0f;
   _ftype_t u     = 1.0f;
@@ -204,10 +204,10 @@ TfirFilter::_ftype_t TfirFilter::besselizero(_ftype_t x)
 // Gold (Theory and Application of DSP) under Kaiser windows for more
 // about Beta.  The following table from Rabiner and Gold gives some
 // feel for the effect of Beta:
-// 
+//
 // All ripples in dB, width of transition band = D*N where N = window
 // length
-// 
+//
 // BETA    D       PB RIP   SB RIP
 // 2.120   1.50  +-0.27      -30
 // 3.384   2.23    0.0864    -40
@@ -224,8 +224,8 @@ void TfirFilter::kaiser(int n, _ftype_t* w, _ftype_t b)
   _ftype_t k1  = 1.0f/besselizero(b);
   int      k2  = 1 - (n & 1);
   int      end = (n + 1) >> 1;
-  int      i; 
-  
+  int      i;
+
   // Calculate window coefficients
   for (i=0 ; i<end ; i++){
     tmp = (_ftype_t)(2*i + k2) / ((_ftype_t)n - 1.0f);
@@ -242,13 +242,13 @@ void TfirFilter::kaiser(int n, _ftype_t* w, _ftype_t b)
 
    n     filter length must be odd for HP and BS filters
    w     buffer for the filter taps (must be n long)
-   fc    cutoff frequencies (1 for LP and HP, 2 for BP and BS) 
+   fc    cutoff frequencies (1 for LP and HP, 2 for BP and BS)
          0 < fc < 1 where 1 <=> Fs/2
    flags window and filter type as defined in filter.h
-         variables are ored together: i.e. LP|HAMMING will give a 
-         low pass filter designed using a hamming window  
+         variables are ored together: i.e. LP|HAMMING will give a
+         low pass filter designed using a hamming window
    opt   beta constant used only when designing using kaiser windows
-   
+
    returns 0 if OK, -1 if fail
 */
 TfirFilter::_ftype_t* TfirFilter::design_fir(unsigned int *n, _ftype_t* fc, int type, int window, _ftype_t opt)
@@ -267,10 +267,10 @@ TfirFilter::_ftype_t* TfirFilter::design_fir(unsigned int *n, _ftype_t* fc, int 
   // Sanity check
   if(*n==0) return NULL;
   fc[0]=limit(fc[0],_ftype_t(0.001),_ftype_t(1));
-  
+
   if (!o && (type==TfirSettings::BANDSTOP || type==TfirSettings::HIGHPASS))
    (*n)++;
-  _ftype_t *w=(_ftype_t*)aligned_calloc(sizeof(_ftype_t),*n); 
+  _ftype_t *w=(_ftype_t*)aligned_calloc(sizeof(_ftype_t),*n);
 
   // Get window coefficients
   switch(window){
@@ -291,11 +291,11 @@ TfirFilter::_ftype_t* TfirFilter::design_fir(unsigned int *n, _ftype_t* fc, int 
   default:
    {
     delete []w;
-    return NULL;        
-   } 
+    return NULL;
+   }
   }
 
-  if(type==TfirSettings::LOWPASS || type==TfirSettings::HIGHPASS){ 
+  if(type==TfirSettings::LOWPASS || type==TfirSettings::HIGHPASS){
     fc1=*fc;
     // Cutoff frequency must be < 0.5 where 0.5 <=> Fs/2
     fc1 = ((fc1 <= 1.0) && (fc1 > 0.0)) ? fc1/2 : 0.25f;
@@ -304,7 +304,7 @@ TfirFilter::_ftype_t* TfirFilter::design_fir(unsigned int *n, _ftype_t* fc, int 
     if(type==TfirSettings::LOWPASS){ // Low pass filter
 
       // If the filter length is odd, there is one point which is exactly
-      // in the middle. The value at this point is 2*fCutoff*sin(x)/x, 
+      // in the middle. The value at this point is 2*fCutoff*sin(x)/x,
       // where x is zero. To make sure nothing strange happens, we set this
       // value separately.
       if (o){
@@ -356,9 +356,9 @@ TfirFilter::_ftype_t* TfirFilter::design_fir(unsigned int *n, _ftype_t* fc, int 
         t2 = _ftype_t(sin(k3 * t1)/(M_PI * t1)); // Sinc fc2
         t3 = _ftype_t(sin(k1 * t1)/(M_PI * t1)); // Sinc fc1
         g += w[end-i-1] * (t3 + t2);   // Total gain in filter
-        w[end-i-1] = w[*n-end+i] = w[end-i-1] * (t2 - t3); 
+        w[end-i-1] = w[*n-end+i] = w[end-i-1] * (t2 - t3);
       }
-    }      
+    }
     else{ // Band stop
       //if (!o) // Band stop filters must have odd length
       //  return -1;
@@ -370,7 +370,7 @@ TfirFilter::_ftype_t* TfirFilter::design_fir(unsigned int *n, _ftype_t* fc, int 
         t1 = (_ftype_t)(i+1);
         t2 = _ftype_t(sin(k1 * t1)/(M_PI * t1)); // Sinc fc1
         t3 = _ftype_t(sin(k3 * t1)/(M_PI * t1)); // Sinc fc2
-        w[end-i-1] = w[*n-end+i] = w[end-i-1] * (t2 - t3); 
+        w[end-i-1] = w[*n-end+i] = w[end-i-1] * (t2 - t3);
         g += 2*w[end-i-1]; // Total gain in filter
       }
     }
@@ -378,9 +378,9 @@ TfirFilter::_ftype_t* TfirFilter::design_fir(unsigned int *n, _ftype_t* fc, int 
 
   // Normalize gain
   g=1/g;
-  for (i=0; i<*n; i++) 
+  for (i=0; i<*n; i++)
     w[i] *= g;
-  
+
   return w;
 }
 

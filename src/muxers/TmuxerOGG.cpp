@@ -65,9 +65,9 @@ size_t TmuxerOGG::writeHeader(const void *data,size_t len,bool flush,const BITMA
        int result=ogg_stream_flush(&os,&og);
        if (result==0) break;
        add_ogg_page(&og,0,0);
-      }  
-    } 
-  } 
+      }
+    }
+  }
  return written;
 }
 size_t TmuxerOGG::writeFrame(const void *data,size_t len,const TencFrameParams &frameParams)
@@ -81,6 +81,6 @@ size_t TmuxerOGG::writeFrame(const void *data,size_t len,const TencFrameParams &
    int result=ogg_stream_flush(&os,&og);
    if (result==0) break;
    add_ogg_page(&og,0,0);
-  }  
+  }
  return written;
 }

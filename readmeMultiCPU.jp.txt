@@ -21,7 +21,7 @@ ffdshow: http://cutka.szm.sk/ffdshow/ or http://sourceforge.net/projects/ffdshow
 ffmpeg:  http://ffmpeg.org/
 mplayer: http://www.mplayerhq.hu/
 
-and 
+and
 doom9:   http://forum.doom9.org/showthread.php?t=98600
 
 6. çƒîzïzÇ»Ç«

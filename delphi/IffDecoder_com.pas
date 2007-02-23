@@ -346,7 +346,7 @@ const
   IDFF_overlaySharpness   =2106;
   IDFF_overlayGamma       =2107;
   IDFF_overlayColorEnable =2108;
-  
+
   IDFF_isKeys            =1701;
   IDFF_showKeys          =1706;
   IDFF_keysAlways        =1702;

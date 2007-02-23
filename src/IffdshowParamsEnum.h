@@ -14,7 +14,7 @@ class TffdshowBase;
 struct TffdshowParamInfo
 {
  int id;
- const TCHAR *valnamePtr,*namePtr; 
+ const TCHAR *valnamePtr,*namePtr;
  char *valname,*name;
  int type;
  int min,max; //for integer

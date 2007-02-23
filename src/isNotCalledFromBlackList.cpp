@@ -42,7 +42,7 @@ bool isNotCalledFromBlackList(HINSTANCE hInstance)
     }
   }
  extractfilename(cmdCopy,fileName);
- 
+
  regErr= RegQueryValueEx(hKey, _l("isBlacklist"), NULL, &type, (LPBYTE)&isBlacklist, &cbData);
  if(regErr==ERROR_SUCCESS && isBlacklist)
   {

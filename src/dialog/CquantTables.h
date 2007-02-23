@@ -48,7 +48,7 @@ private:
    virtual int getCodecId(void);
    virtual HRESULT getCustomQuantMatrixes(uint8_t* *intra8,uint8_t* *inter8,uint8_t* *intra4Y,uint8_t* *inter4Y,uint8_t* *intra4C,uint8_t* *inter4C);
    virtual void setChange(void);
-  public: 
+  public:
    IffdshowEnc *deciE;TffdshowPageBase *parent;
    TquantTables(IffdshowBase *Ideci):TquantTablesPageBase(Ideci) {}
   } *base;
@@ -69,11 +69,11 @@ protected:
  struct TquantTables :public TquantTablesPageBase
   {
   protected:
-   uint8_t *inter,*intra,*inter4luma,*inter4chroma,*intra4luma,*intra4chroma; 
+   uint8_t *inter,*intra,*inter4luma,*inter4chroma,*intra4luma,*intra4chroma;
    virtual int getCodecId(void);
    virtual HRESULT getCustomQuantMatrixes(uint8_t* *intra8,uint8_t* *inter8,uint8_t* *intra4Y,uint8_t* *inter4Y,uint8_t* *intra4C,uint8_t* *inter4C);
    virtual void setChange(void) {}
-  public: 
+  public:
    TquantTables(IffdshowBase *Ideci,uint8_t *Iinter,uint8_t *Iintra,uint8_t *inter4luma,uint8_t *inter4chroma,uint8_t *intra4luma,uint8_t *intra4chroma);
    virtual void cfg2dlg(void);
   } *base;
@@ -95,13 +95,13 @@ private:
   protected:
    virtual void setChange(void);
    virtual int getCodecId(void) {return 0;}
-  public: 
+  public:
    TdctQuantTables(IffdshowBase *Ideci,uint8_t *Iinter,uint8_t *Iintra);
    virtual void cfg2dlg(void);
   } *base;
- uint8_t inter[64]; 
+ uint8_t inter[64];
 public:
  TdctQuantDlg(HWND hParent,IffdshowBase *Ideci);
 };
 
-#endif 
+#endif

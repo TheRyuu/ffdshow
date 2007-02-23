@@ -25,7 +25,7 @@ private:
    void reset(void)
     {
      memset(wq,0,sizeof(wq));
-    }  
+    }
    template<class sample_t> void process(sample_t *samples,size_t numsamples,unsigned int nchannels);
   } eq;
  TeqSettings old;

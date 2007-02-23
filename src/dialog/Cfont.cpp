@@ -54,16 +54,16 @@ void TfontPage::init(void)
  tbrSetRange(IDC_TBR_FONT_SHADOW_STRENGTH,0,100,10);
  tbrSetRange(IDC_TBR_FONT_SHADOW_RADIUS,1,100,10);
  tbrSetRange(IDC_TBR_FONT_XSCALE,30,300);
- 
+
  strings sl;
  LOGFONT lf;lf.lfCharSet=DEFAULT_CHARSET;lf.lfPitchAndFamily=0;lf.lfFaceName[0]='\0';
  HDC dc=GetDC(m_hwnd);
- EnumFontFamiliesEx(dc,&lf,EnumFamCallBackFonts,LPARAM(&sl),0); 
+ EnumFontFamiliesEx(dc,&lf,EnumFamCallBackFonts,LPARAM(&sl),0);
  ReleaseDC(m_hwnd,dc);
  for (strings::const_iterator il=sl.begin();il!=sl.end();il++)
   cbxAdd(IDC_CBX_FONT_NAME,il->c_str());
-  
- cbxCharset=GetDlgItem(m_hwnd,IDC_CBX_FONT_CHARSET); 
+
+ cbxCharset=GetDlgItem(m_hwnd,IDC_CBX_FONT_CHARSET);
  boldFont=NULL;
 }
 
@@ -87,14 +87,14 @@ void TfontPage::fillCharsets(void)
 {
  int oldi=cbxGetCurSel(IDC_CBX_FONT_CHARSET);
  int oldii=(oldi!=CB_ERR)?(int)cbxGetItemData(IDC_CBX_FONT_CHARSET,oldi):ANSI_CHARSET;
- 
+
  cbxClear(IDC_CBX_FONT_CHARSET);memset(validCharsets,0,sizeof(validCharsets));
  ints sl;
  LOGFONT lf;
  cfgGet(idff_fontname,lf.lfFaceName,LF_FACESIZE);
  lf.lfCharSet=DEFAULT_CHARSET;lf.lfPitchAndFamily=0;
  HDC dc=GetDC(m_hwnd);
- EnumFontFamiliesEx(dc,&lf,EnumFamCallBackCharsets,LPARAM(&sl),0); 
+ EnumFontFamiliesEx(dc,&lf,EnumFamCallBackCharsets,LPARAM(&sl),0);
  ReleaseDC(m_hwnd,dc);
  for (int i=0;TfontSettings::charsets[i]!=-1;i++)
   {
@@ -102,7 +102,7 @@ void TfontPage::fillCharsets(void)
    if (isIn(sl,data))
     validCharsets[data]=true;
    cbxAdd(IDC_CBX_FONT_CHARSET,_(IDC_CBX_FONT_CHARSET,TfontSettings::getCharset(data)),data);
-  } 
+  }
  selectCharset(oldii);
 }
 
@@ -158,7 +158,7 @@ void TfontPage::size2dlg(void)
    setCheck(IDC_CHB_FONT_AUTOSIZE,aut);
    enable(1,IDC_CHB_FONT_AUTOSIZE);
   }
- else 
+ else
   {
    aut=0;
    enable(0,IDC_CHB_FONT_AUTOSIZE);
@@ -170,11 +170,11 @@ void TfontPage::size2dlg(void)
    enable(1,IDC_CHB_FONT_AUTOSIZE_VIDEOWINDOW);
   }
  else
-  { 
+  {
    tbrSetRange(IDC_TBR_FONT_SIZE,3,127,6);
    tbrSet(IDC_TBR_FONT_SIZE,cfgGet(idff_fontsizep),IDC_LBL_FONT_SIZE);
    enable(0,IDC_CHB_FONT_AUTOSIZE_VIDEOWINDOW);
-  } 
+  }
  setCheck(IDC_CHB_FONT_AUTOSIZE_VIDEOWINDOW,cfgGet(IDFF_fontAutosizeVideoWindow));
 }
 void TfontPage::spacingxscale2dlg(void)
@@ -201,14 +201,14 @@ INT_PTR TfontPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       case IDC_TBR_FONT_SIZE:
        if (cfgGet(idff_fontautosize))
         cfgSet(idff_fontsizea,tbrGet(IDC_TBR_FONT_SIZE));
-       else 
+       else
         cfgSet(idff_fontsizep,tbrGet(IDC_TBR_FONT_SIZE));
        size2dlg();
        return TRUE;
      }
     break;
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CHB_FONT_AUTOSIZE:
        if (idff_fontautosize)
@@ -233,7 +233,7 @@ INT_PTR TfontPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
        break;
      }
-    break; 
+    break;
    case WM_DRAWITEM:
     if (wParam==IDC_IMG_FONT_COLOR)
      {
@@ -273,21 +273,21 @@ INT_PTR TfontPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
           oldFont.lfWeight=FW_BLACK;
           boldFont=CreateFontIndirect(&oldFont);
          }
-        HGDIOBJ oldfont=NULL; 
+        HGDIOBJ oldfont=NULL;
         if (validCharsets[dis->itemData])
-         oldfont=SelectObject(dis->hDC,boldFont); 
+         oldfont=SelectObject(dis->hDC,boldFont);
         DrawText(dis->hDC,text,(int)strlen(text),&r,DT_LEFT|DT_SINGLELINE|DT_VCENTER);
         if (oldfont)
-         SelectObject(dis->hDC,oldfont); 
-       } 
+         SelectObject(dis->hDC,oldfont);
+       }
       SetTextColor(dis->hDC,crOldTextColor);
       SetBkColor(dis->hDC,crOldBkColor);
       DeleteObject(br);
       return TRUE;
      }
-    else 
-     break; 
-  }   
+    else
+     break;
+  }
  return TconfPageDecVideo::msgProc(uMsg,wParam,lParam);
 }
 
@@ -297,10 +297,10 @@ Twidget* TfontPage::createDlgItem(int id,HWND h)
   {
    static const TbindTrackbar<TfontPageSubtitles> htbr={IDC_TBR_FONT_SIZE,IDFF_fontSizeA,NULL};
    return new TwidgetSubclassTbr(h,this,TbindTrackbars(&htbr));
-  } 
- else 
-  return TconfPageDecVideo::createDlgItem(id,h); 
-} 
+  }
+ else
+  return TconfPageDecVideo::createDlgItem(id,h);
+}
 int TfontPage::getTbrIdff(int id,const TbindTrackbars bind)
 {
  return getCheck(IDC_CHB_FONT_AUTOSIZE)?idff_fontsizea:idff_fontsizep;
@@ -327,7 +327,7 @@ bool TfontPage::reset(bool testonly)
 }
 
 void TfontPage::translate(void)
-{ 
+{
  TconfPageBase::translate();
 
  int sel=cbxGetCurSel(IDC_CBX_FONT_WEIGHT);

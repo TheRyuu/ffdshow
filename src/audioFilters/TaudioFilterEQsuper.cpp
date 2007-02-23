@@ -34,7 +34,7 @@ TaudioFilterEQsuper::~TaudioFilterEQsuper()
 HRESULT TaudioFilterEQsuper::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0)
 {
  const TeqSettings *cfg=(const TeqSettings*)cfg0;
- 
+
  if (!eqs[0] || oldnchannels!=fmt.nchannels || !cfg->equal(old))
   {
    old=*cfg;oldnchannels=fmt.nchannels;

@@ -9,7 +9,7 @@ DECLARE_FILTER(TimgFilterLuma,public,TimgFilter)
 private:
  unsigned int gammaTab[256],gammaTab8[256],gammaTab16[256],gammaTab24[256];int oldGamma;
  void processGamma(const unsigned char *srcY,unsigned char *dstY,const TpictPropSettings *cfg);
- void (TimgFilterLuma::*processLumaFc)(const TpictPropSettings *cfg,const unsigned char *srcY,unsigned char *dstY,int ystep); 
+ void (TimgFilterLuma::*processLumaFc)(const TpictPropSettings *cfg,const unsigned char *srcY,unsigned char *dstY,int ystep);
  template<class _mm> void processLuma(const TpictPropSettings *cfg,const unsigned char *srcY,unsigned char *dstY,int ystep);
 protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
@@ -29,7 +29,7 @@ private:
 protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK_YUV_PLANAR|FF_CSP_RGB32;}
-public: 
+public:
  TimgFilterGammaRGB(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
 };

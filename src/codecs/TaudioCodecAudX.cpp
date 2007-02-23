@@ -43,7 +43,7 @@ bool TaudioCodecAudX::init(const CMediaType &mt)
  dll->loadFunction(resetDecoder,"resetDecoder");
  if (!dll->ok)
   return false;
- 
+
  hdrlayer=0;
  Textradata extradata(mt);
  if (extradata.size==sizeof(MPEG1WAVEFORMAT)-sizeof(WAVEFORMATEX))
@@ -89,7 +89,7 @@ HRESULT TaudioCodecAudX::decode(TbyteBuffer &src0)
     }
    bpssum+=(lastbps=hdr.bitrate/1000);numframes++;
    layer=hdr.layer;oldmode=hdr.mode;
-   int framelen=hdr.calc_frame_len(); 
+   int framelen=hdr.calc_frame_len();
    if (srcLength<framelen)
     break;
    int used_bytes=0;
@@ -101,7 +101,7 @@ HRESULT TaudioCodecAudX::decode(TbyteBuffer &src0)
     fmt.setChannels(6);
    if (decoded<0)
     break;
-   else if (decoded>0) 
+   else if (decoded>0)
     {
      used_bytes=framelen;
      if (dstsize)
@@ -109,13 +109,13 @@ HRESULT TaudioCodecAudX::decode(TbyteBuffer &src0)
        HRESULT hr=sinkA->deliverDecodedSample(dst,dstsize/fmt.blockAlign(),fmt,1);
        if (hr!=S_OK)
         return hr;
-      }  
+      }
     }
    src+=used_bytes;srcLength-=used_bytes;
   }
  if (src!=src0.begin())
   src0.erase(src0.begin(),src);
- return S_OK; 
+ return S_OK;
 }
 bool TaudioCodecAudX::onSeek(REFERENCE_TIME segmentStart)
 {
@@ -124,7 +124,7 @@ bool TaudioCodecAudX::onSeek(REFERENCE_TIME segmentStart)
    return true;
   }
  else
-  return false; 
+  return false;
 }
 
 bool TaudioCodecAudX::getVersion(const Tconfig *config,ffstring &vers,ffstring &license)
@@ -133,10 +133,10 @@ bool TaudioCodecAudX::getVersion(const Tconfig *config,ffstring &vers,ffstring &
   {
    vers=_l("present");
    return true;
-  } 
+  }
  else
   {
    vers=_l("not found");
    return false;
-  } 
+  }
 }

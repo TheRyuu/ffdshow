@@ -54,13 +54,13 @@ STDMETHODIMP TffdshowDec::NonDelegatingQueryInterface(REFIID riid,void **ppv)
   return GetInterface<IffdshowDecA>(getDecInterface<IffdshowDecA>(),ppv);
  else if (riid==IID_IffdshowDecW)
   return GetInterface<IffdshowDecW>(getDecInterface<IffdshowDecW>(),ppv);
- else if (riid==IID_ISpecifyPropertyPages) 
+ else if (riid==IID_ISpecifyPropertyPages)
   return GetInterface<ISpecifyPropertyPages>(this,ppv);
  else if (riid==IID_IAMStreamSelect && isStreamsMenu())
   return GetInterface<IAMStreamSelect>(this,ppv);
  else if (riid==IID_IffdshowParamsEnum)
   return GetInterface<IffdshowParamsEnum>(this,ppv);
- else 
+ else
   return CTransformFilter::NonDelegatingQueryInterface(riid,ppv);
 }
 
@@ -88,7 +88,7 @@ TffdshowDec::TffdshowDec(TintStrColl *Ioptions,const TCHAR *name,LPUNKNOWN punk,
    IDFF_movieDuration ,&TffdshowDec::moviesecs,-1,-1,_l(""),0,NULL,0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
 
  keys=NULL;mouse=NULL;
  remote=NULL;
@@ -171,7 +171,7 @@ STDMETHODIMP_(int) TffdshowDec::getKeyParamCount2(void)
 }
 STDMETHODIMP TffdshowDec::getKeyParamDescr(unsigned int i,const char_t **descr)
 {
- if (!keys || i>=keys->keysParams.size()) 
+ if (!keys || i>=keys->keysParams.size())
   {
    *descr=_l("");
    return S_FALSE;
@@ -201,7 +201,7 @@ STDMETHODIMP TffdshowDec::setKeyParamKeyCheck(unsigned int i,int key,int *prev,c
      if (prevDescr) *prevDescr=keys->keysParams[previ].descr;
      return E_INVALIDARG;
     }
- return setKeyParamKey(i,key);   
+ return setKeyParamKey(i,key);
 }
 
 STDMETHODIMP TffdshowDec::resetKeys(void)
@@ -281,7 +281,7 @@ STDMETHODIMP TffdshowDec::setActivePreset(const char_t *name,int create)
    setPresetPtr(preset);
    return S_OK;
   }
- else 
+ else
   return S_FALSE;
 }
 STDMETHODIMP TffdshowDec::saveActivePreset(const char_t *name)
@@ -305,7 +305,7 @@ STDMETHODIMP TffdshowDec::loadActivePresetFromFile(const char_t *flnm)
    presets->storePreset(presetSettings);
    notifyParamsChanged();
    return S_OK;
-  } 
+  }
  else return E_FAIL;
 }
 STDMETHODIMP TffdshowDec::savePresetMem(void *buf,size_t len)
@@ -314,8 +314,8 @@ STDMETHODIMP TffdshowDec::savePresetMem(void *buf,size_t len)
  if (!buf) return E_POINTER;
  TregOpIDstreamWrite t;
  presetSettings->reg_op(t);
- 
- if (len==0) 
+
+ if (len==0)
   *(int*)buf=(int)t.size();
  else
   memcpy(buf,&*t.begin(),std::min(size_t(len),t.size()));
@@ -363,7 +363,7 @@ STDMETHODIMP TffdshowDec::setPresetPtr(Tpreset *preset)
   {
    lock(IDFF_lockPresetPtr);
    presetSettings=preset;
-   presetSettings->options->setSendOnChange(fastdelegate::MakeDelegate(this,&TffdshowDec::sendOnChange)); 
+   presetSettings->options->setSendOnChange(fastdelegate::MakeDelegate(this,&TffdshowDec::sendOnChange));
    notifyParamsChanged();
    sendOnChange(0,0);
    unlock(IDFF_lockPresetPtr);
@@ -380,7 +380,7 @@ void TffdshowDec::getColls(TintStrColls &colls)
 {
  if (presetSettings)
   colls.push_back(presetSettings->options);
- TffdshowBase::getColls(colls); 
+ TffdshowBase::getColls(colls);
 }
 
 STDMETHODIMP TffdshowDec::getParam(unsigned int paramID,int* value)
@@ -390,7 +390,7 @@ STDMETHODIMP TffdshowDec::getParam(unsigned int paramID,int* value)
   return S_OK;
  else
   return TffdshowBase::getParam(paramID,value);
-} 
+}
 STDMETHODIMP TffdshowDec::putParam(unsigned int paramID,int val)
 {
  return presetSettings && presetSettings->options->set(paramID,val)?S_OK:TffdshowBase::putParam(paramID,val);
@@ -414,7 +414,7 @@ STDMETHODIMP TffdshowDec::getParamStr3(unsigned int paramID,const char_t* *value
 }
 STDMETHODIMP TffdshowDec::putParamStr(unsigned int paramID,const char_t *buf)
 {
- if (!buf) return S_FALSE; 
+ if (!buf) return S_FALSE;
  return presetSettings && presetSettings->options->set(paramID,buf)?S_OK:TffdshowBase::putParamStr(paramID,buf);
 }
 STDMETHODIMP TffdshowDec::getParamInfo(unsigned int paramID,TffdshowParamInfo *paramPtr)
@@ -465,13 +465,13 @@ void TffdshowDec::initPreset(void)
  if (presets->empty()) initPresets();
 
  getSourceName();
- 
+
  if (globalSettings->autoPreset)
   if (Tpreset *preset=presets->getAutoPreset(this,!!globalSettings->autoPresetFileFirst))
    {
     setPresetPtr(preset);
     return;
-   } 
+   }
  setActivePreset(globalSettings->defaultPreset,false);
 }
 
@@ -563,7 +563,7 @@ STDMETHODIMP TffdshowDec::newSample(IMediaSample* *samplePtr)
 
 
 STDMETHODIMP TffdshowDec::JoinFilterGraph(IFilterGraph *pGraph,LPCWSTR pName)
-{ 
+{
  return onJoinFilterGraph(pGraph,pName);
 }
 
@@ -613,7 +613,7 @@ STDMETHODIMP TffdshowDec::setFilterOrder(unsigned int filterID,unsigned int newO
  if (!presetSettings) return S_FALSE;
  return presetSettings->setFilterOrder(filterID,newOrder)?S_OK:S_FALSE;
 }
- 
+
 STDMETHODIMP TffdshowDec::get_ExSeekCapabilities(long * pExCapabilities)
 {
  *pExCapabilities=AM_EXSEEK_BUFFERING|AM_EXSEEK_NOSTANDARDREPAINT|AM_EXSEEK_CANSEEK|AM_EXSEEK_CANSCAN;//|AM_EXSEEK_SCANWITHOUTCLOCK;
@@ -644,14 +644,14 @@ STDMETHODIMP TffdshowDec::put_PlaybackSpeed(double Speed)
  if (comptrQ<IMediaSeeking> seek=graph)
   return seek->SetRate(Speed);
  else
-  return E_NOINTERFACE; 
+  return E_NOINTERFACE;
 }
 STDMETHODIMP TffdshowDec::get_PlaybackSpeed(double * pSpeed)
 {
  if (comptrQ<IMediaSeeking> seek=graph)
   return seek->GetRate(pSpeed);
  else
-  return E_NOINTERFACE; 
+  return E_NOINTERFACE;
 }
 
 AM_MEDIA_TYPE* TffdshowDec::getInputMediaType(int lIndex)
@@ -678,7 +678,7 @@ STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
   {
    for (unsigned int i=0;i<presets->size();i++)
     streams.push_back(new TstreamPreset(this,-200+i,0,(*presets)[i]->presetName));
-   const char_t *activepresetname=getActivePresetName2(); 
+   const char_t *activepresetname=getActivePresetName2();
    if (activepresetname)
     {
      const TfilterIDFFs *filters;getFilterIDFFs(activepresetname,&filters);
@@ -779,7 +779,7 @@ STDMETHODIMP TffdshowDec::getShortDescription(char_t *buf,int buflen)
   {
    buf[0]='\0';
    return E_UNEXPECTED;
-  } 
+  }
  int len=tsnprintf(buf,buflen,_l("ffdshow %s: "),FFDSHOW_VER);
  buf+=len;buflen-=len;
  const TfilterIDFFs *filters;getFilterIDFFs(activepresetname,&filters);
@@ -808,7 +808,7 @@ STDMETHODIMP TffdshowDec::createPresetPages(const char_t *presetname,TffdshowPag
    preset->createPages(pages);
    return S_OK;
   }
- else 
+ else
   return S_FALSE;
 }
 
@@ -821,7 +821,7 @@ STDMETHODIMP TffdshowDec::getFilterIDFFs(const char_t *presetname,const TfilterI
    *filters=preset->getFilters();
    return S_OK;
   }
- else 
+ else
   return S_FALSE;
 }
 
@@ -829,7 +829,7 @@ HRESULT TffdshowDec::NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,doubl
 {
  if ((tStop&0xfffffffffffffffLL)==0xfffffffffffffffLL)
   moviesecs=1; //tStop is most probably wrong, but don't risk getDuration
- else 
+ else
   moviesecs=int(tStop/REF_SECOND_MULT);
  if (filters) filters->onSeek();
  return CTransformFilter::NewSegment(tStart,tStop,dRate);
@@ -908,13 +908,13 @@ STDMETHODIMP TffdshowDec::setOnNewFiltersMsg(HWND wnd,unsigned int msg)
 }
 STDMETHODIMP TffdshowDec::sendOnNewFiltersMsg(void)
 {
- if (onNewFiltersMsg) 
+ if (onNewFiltersMsg)
   {
    PostMessage(onNewFiltersWnd,onNewFiltersMsg,0,0);
    return S_OK;
   }
- else 
-  return S_FALSE;  
+ else
+  return S_FALSE;
 }
 
 STDMETHODIMP_(int) TffdshowDec::getOSDpresetCount2(void)

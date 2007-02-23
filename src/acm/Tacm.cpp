@@ -44,7 +44,7 @@ STDMETHODIMP TacmCreator::NonDelegatingQueryInterface(REFIID riid,void **ppv)
  CheckPointer(ppv, E_POINTER);
  if (riid==IID_Iffacm2creator)
   return GetInterface<TacmCreator>(this,ppv);
- else 
+ else
   return CUnknown::NonDelegatingQueryInterface(riid,ppv);
 }
 TacmCreator::TacmCreator(LPUNKNOWN punk,HRESULT *phr):CUnknown(NAME("TacmCreator"),punk,phr)
@@ -93,7 +93,7 @@ LRESULT Tacm::driverDetails(LPACMDRIVERDETAILSW details)
  add.wPid=0;
  add.vdwACM=VERSION_MSACM;
  add.vdwDriver=VERSION_ACM_DRIVER;
- add.fdwSupport=ACMDRIVERDETAILS_SUPPORTF_CODEC; 
+ add.fdwSupport=ACMDRIVERDETAILS_SUPPORTF_CODEC;
  add.cFormatTags=ACM_DRIVER_MAX_FORMAT_TAGS;
  add.cFilterTags=0;
  if (FIELD_OFFSET(ACMDRIVERDETAILS,hicon)<cbStruct)
@@ -180,12 +180,12 @@ LRESULT Tacm::formatSuggest(LPACMDRVFORMATSUGGEST padfs)
       }
      else
       pwfxDst->nSamplesPerSec=pwfxSrc->nSamplesPerSec;
-   
+
      if (fdwSuggest&ACM_FORMATSUGGESTF_WBITSPERSAMPLE)
       {
        if (pwfxDst->wBitsPerSample!=16)
         return ACMERR_NOTPOSSIBLE;
-      }  
+      }
      else
       pwfxDst->wBitsPerSample=16;
 
@@ -195,7 +195,7 @@ LRESULT Tacm::formatSuggest(LPACMDRVFORMATSUGGEST padfs)
      pwfxDst->cbSize         =0;
      return MMSYSERR_NOERROR;
     }
-  } 
+  }
  return ACMERR_NOTPOSSIBLE;
 }
 
@@ -237,7 +237,7 @@ LRESULT Tacm::formatTagDetails(LPACMFORMATTAGDETAILSW padft,DWORD fdwDetails)
     break;
    default:
     return MMSYSERR_NOTSUPPORTED;
-  } 
+  }
 
  switch (uFormatTag)
   {
@@ -282,19 +282,19 @@ LRESULT Tacm::streamOpen(LPACMDRVSTREAMINSTANCE padsi)
    mt.SetFormat((BYTE*)pwfxSrc,sizeof(*pwfxSrc)+pwfxSrc->cbSize);
    TsampleFormat fmt;
    avisynth=new TavisynthAudio(mt,fmt,NULL,"ffdshow_acm_avisynth_script");
-  } 
+  }
  if (avisynth->ok)
-  {  
+  {
    bytesPerSample=avisynth->vi->BytesPerAudioSample();
    fps_denominator=avisynth->vi->fps_denominator;
    fps_numerator=avisynth->vi->fps_numerator;
    return MMSYSERR_NOERROR;
-  } 
- else 
+  }
+ else
   {
    OutputDebugString(_l("ffacm error"));//ffvfw->dbgError(err.msg);
    return ACMERR_NOTPOSSIBLE;
-  } 
+  }
 }
 LRESULT Tacm::streamClose(LPACMDRVSTREAMINSTANCE padsi)
 {
@@ -308,14 +308,14 @@ LRESULT Tacm::streamSize(LPACMDRVSTREAMINSTANCE padsi,LPACMDRVSTREAMSIZE padss)
  switch (ACM_STREAMSIZEF_QUERYMASK&padss->fdwSize)
   {
    case ACM_STREAMSIZEF_SOURCE:
-    padss->cbDstLength=10*DWORD(2*bytesPerSample*pwfxDst->nSamplesPerSec*int64_t(fps_denominator)/fps_numerator); 
+    padss->cbDstLength=10*DWORD(2*bytesPerSample*pwfxDst->nSamplesPerSec*int64_t(fps_denominator)/fps_numerator);
     return MMSYSERR_NOERROR;
    case ACM_STREAMSIZEF_DESTINATION:
     padss->cbSrcLength=16;
     return MMSYSERR_NOERROR;
    default:
     return MMSYSERR_NOTSUPPORTED;
-  }  
+  }
 }
 LRESULT Tacm::convert(LPACMDRVSTREAMINSTANCE padsi,LPACMDRVSTREAMHEADER padsh)
 {

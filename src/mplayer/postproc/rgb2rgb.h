@@ -132,7 +132,7 @@ extern void (*yvu9_to_yuy2)(const uint8_t *src1, const uint8_t *src2, const uint
 			long width, long height,
 			stride_t srcStride1, stride_t srcStride2,
 			stride_t srcStride3, stride_t dstStride);
-        
+
 struct SwsParams;
 void sws_rgb2rgb_init(struct SwsParams *params);
 

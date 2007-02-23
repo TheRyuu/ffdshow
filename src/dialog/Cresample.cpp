@@ -49,7 +49,7 @@ INT_PTR TresamplePage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_ED_RESAMPLE_FREQ:
        if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText && LOWORD(wParam)==IDC_ED_RESAMPLE_FREQ && GetFocus()==hedResample)
@@ -62,7 +62,7 @@ INT_PTR TresamplePage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          if2dlg();
          return TRUE;
         }
-       break;  
+       break;
      }
     break;
    case WM_CTLCOLOREDIT:
@@ -73,15 +73,15 @@ INT_PTR TresamplePage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       {
        case IDC_ED_RESAMPLE_FREQ:
         ok=eval(hwnd,1,192000);break;
-       default:return FALSE; 
+       default:return FALSE;
       }
      if (!ok)
-      { 
+      {
        HDC dc=HDC(wParam);
        SetBkColor(dc,RGB(255,0,0));
-       return INT_PTR(getRed()); 
+       return INT_PTR(getRed());
       }
-     else return FALSE;  
+     else return FALSE;
     }
    case WM_DRAWITEM:
     switch (wParam)
@@ -91,9 +91,9 @@ INT_PTR TresamplePage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         DRAWITEMSTRUCT *dis=(LPDRAWITEMSTRUCT)lParam;
         ((TflatButton*)Twidget::getDlgItem(dis->hwndItem))->paint(dis);
         return TRUE;
-       } 
+       }
      }
-    break;   
+    break;
   }
  return TconfPageDecAudio::msgProc(uMsg,wParam,lParam);
 }
@@ -102,13 +102,13 @@ Twidget* TresamplePage::createDlgItem(int id,HWND h)
  if (id==IDC_BT_RESAMPLE_COND)
   return new TflatButton(h,this);
  else
-  return TconfPageDecAudio::createDlgItem(id,h); 
+  return TconfPageDecAudio::createDlgItem(id,h);
 }
 
 void TresamplePage::onResampleMenu(int idc,int idff)
 {
  static const char_t *freqs[]=
-  { 
+  {
    _l("8000"),
    _l("11025"),
    _l("12000"),
@@ -133,7 +133,7 @@ void TresamplePage::onResampleFreqMenu(void)
 void TresamplePage::onResampleCondMenu(void)
 {
  onResampleMenu(IDC_BT_RESAMPLE_CONDFREQ,IDFF_resampleIfFreq);
- if2dlg();   
+ if2dlg();
 }
 
 void TresamplePage::translate(void)
@@ -174,11 +174,11 @@ TresamplePage::TresamplePage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):T
    IDC_BT_RESAMPLE_CONDFREQ,&TresamplePage::onResampleCondMenu,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
  static const TbindEditInt<TresamplePage> edInt[]=
   {
    IDC_ED_RESAMPLE_CONDFREQ,1,192000,IDFF_resampleIfFreq,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
 }

@@ -111,7 +111,7 @@
  *    Extract one byte from a (32-bit) longword.  A value of 0 for <idx>
  *    indicates the lowest order byte, while 3 indicates the highest order
  *    byte.
- *    
+ *
  */
 
 /* -------------------------------------------------------------------------- **

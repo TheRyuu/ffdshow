@@ -1,7 +1,7 @@
 /*
  * Some code freely inspired from VobSub <URL:http://vobsub.edensrising.com>,
  * with kind permission from Gabest <gabest@freemail.hu>
- * 
+ *
  * to ffdshow imported from mplayer
  */
 #include "stdafx.h"
@@ -26,7 +26,7 @@ Tstream* Tvobsub::rar_open(const char_t *flnm)
    char_t flnmrarsub[MAX_PATH];
    _makepath(flnmrarsub,NULL,NULL,name,ext);
    return new TstreamRAR(flnmrar,flnmrarsub,config);
-  } 
+  }
 }
 
 /**********************************************************************
@@ -213,7 +213,7 @@ int Tvobsub::mpeg_run(mpeg_t *mpeg)
             len = buf[0] << 8 | buf[1];
             if (len > 0 && mpeg->stream->seek(len, SEEK_CUR))
                 return -1;
-                
+
         }
         else {
             DPRINTF(_l("unknown header 0x%02X%02X%02X%02X"),buf[0], buf[1], buf[2], buf[3]);
@@ -284,7 +284,7 @@ int Tvobsub::packet_queue_t::packet_queue_ensure(unsigned int needed_size)
 /* add one more packet */
 int Tvobsub::packet_queue_t::packet_queue_grow(void)
 {
-    if (packet_queue_ensure(packets_size + 1) < 0) 
+    if (packet_queue_ensure(packets_size + 1) < 0)
         return -1;
     (packets + packets_size)->packet_construct();
     ++packets_size;
@@ -446,7 +446,7 @@ Tvobsub::PARSE_RES Tvobsub::vobsub_parse_timestamp(const char *line)
     int ms;
     const char *p=parseTimestamp(line,ms);
     if (!p)
-        return PARSE_ERROR;     
+        return PARSE_ERROR;
     if (*p != ',')
         return PARSE_ERROR;
     line = p + 1;
@@ -481,7 +481,7 @@ Tvobsub::PARSE_RES Tvobsub::idx_parse_one_line(const char *line)
   return vobsub_parse_altid( line + 4);
  else if (strncmp("timestamp:", line, 10) == 0)
   return vobsub_parse_timestamp( line + 10);
- else 
+ else
   return TsubtitleDVDparent::idx_parse_one_line(line);
 }
 
@@ -499,7 +499,7 @@ Tvobsub::Tvobsub(Tstream &fd,const char_t *const name,const char_t *const ifo,co
  delay = 0;
  forced_subs=0;
  buf = (char_t*)malloc((strlen(name) + 5) * sizeof(char_t));
- if (buf) 
+ if (buf)
   {
    idx_parse(fd);
    /* if no palette in .idx then use custom colors */
@@ -535,20 +535,20 @@ Tvobsub::Tvobsub(Tstream &fd,const char_t *const name,const char_t *const ifo,co
           DPRINTF(_l("VobSub: mpeg_run error"));
          break;
         }
-       if (mpg->packet_size) 
+       if (mpg->packet_size)
         {
          if ((mpg->aid & 0xe0) == 0x20)
           {
            unsigned int sid = mpg->aid & 0x1f;
-           if (vobsub_ensure_spu_stream(sid) >= 0) 
+           if (vobsub_ensure_spu_stream(sid) >= 0)
             {
              packet_queue_t *queue = spu_streams + sid;
-             //get the packet to fill 
+             //get the packet to fill
              if (queue->packets_size == 0 && queue->packet_queue_grow()  < 0)
               return;
              while (queue->current_index + 1 < queue->packets_size && queue->packets[queue->current_index + 1].filepos <= pos)
               ++queue->current_index;
-             if (queue->current_index < queue->packets_size) 
+             if (queue->current_index < queue->packets_size)
               {
                packet_t *pkt;
                if (queue->packets[queue->current_index].data)
@@ -564,7 +564,7 @@ Tvobsub::Tvobsub(Tstream &fd,const char_t *const name,const char_t *const ifo,co
                   last_pts_diff = pkt->pts100 - mpg->pts;
                  else
                   pkt->pts100 = mpg->pts;
-                 // FIXME: should not use mpg_sub internal informations, make a copy 
+                 // FIXME: should not use mpg_sub internal informations, make a copy
                  pkt->data = mpg->packet;
                  pkt->size = mpg->packet_size;
                  mpg->packet = NULL;
@@ -583,7 +583,7 @@ Tvobsub::Tvobsub(Tstream &fd,const char_t *const name,const char_t *const ifo,co
     }
    free(buf);
   }
- ok=true;  
+ ok=true;
 }
 
 Tvobsub::~Tvobsub()
@@ -626,7 +626,7 @@ int Tvobsub::vobsub_set_from_lang(const char * lang)
     DPRINTF(_l("No matching VOBSUB language found!"));
     return -1;
 }
-*/    
+*/
 int Tvobsub::vobsub_get_packet(unsigned int pts,void** data, int* timestamp) {
   unsigned int pts100 = (unsigned int)pts;//(90000 * pts);
   if (spu_streams && 0 <= vobsub_id && (unsigned) vobsub_id < spu_streams_size) {

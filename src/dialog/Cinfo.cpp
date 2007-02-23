@@ -59,34 +59,34 @@ void TinfoPageDec::init(void)
   }
  else
   enable(0,idmerits);
- 
+
  edLimitText(IDC_ED_BLACKLIST,128);
  if(tr)
   {
    addHint(IDC_ED_BLACKLIST,tr->translate(IDH_ED_BLACKLIST));
   }
 
- hlv=GetDlgItem(m_hwnd,IDC_LV_INFO); 
+ hlv=GetDlgItem(m_hwnd,IDC_LV_INFO);
  CRect r=getChildRect(IDC_LV_INFO);
  int ncol=0;
  ListView_AddCol(hlv,ncol,r.Width(),_l("Property"),false);
  ListView_SetExtendedListViewStyleEx(hlv,LVS_EX_FULLROWSELECT|LVS_EX_INFOTIP,LVS_EX_FULLROWSELECT|LVS_EX_INFOTIP);
- infoitems.clear(); 
+ infoitems.clear();
  const int *infos=getInfos();
  for (int i=0;;i++)
   {
    Titem it;
    if (!info->getInfo(i,&it.id,&it.name))
     break;
-   for (int j=0;infos[j];j++) 
+   for (int j=0;infos[j];j++)
     if (infos[j]==it.id)
      {
       it.index=j;
       infoitems.push_back(it);
-     } 
+     }
   }
- std::sort(infoitems.begin(),infoitems.end(),TsortItem(infos)); 
- ListView_SetItemCount(hlv,infoitems.size()); 
+ std::sort(infoitems.begin(),infoitems.end(),TsortItem(infos));
+ ListView_SetItemCount(hlv,infoitems.size());
  SendMessage(hlv,LVM_SETBKCOLOR,0,GetSysColor(COLOR_BTNFACE));
  SendMessage(hlv,LVM_SETTEXTBKCOLOR,0,GetSysColor(COLOR_BTNFACE));
 }
@@ -156,7 +156,7 @@ INT_PTR TinfoPageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
      }
     break;
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CHB_ALLOW_MMX:
       case IDC_CHB_ALLOW_MMXEXT:
@@ -183,7 +183,7 @@ INT_PTR TinfoPageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          cfgSet(IDFF_blacklist,blacklist);
         }
        return TRUE;
-     }    
+     }
     break;
    case WM_NOTIFY:
     {
@@ -209,9 +209,9 @@ INT_PTR TinfoPageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
             }
           return TRUE;
          }
-       }  
-     break;  
-    }  
+       }
+     break;
+    }
   }
  return TconfPageDec::msgProc(uMsg,wParam,lParam);
 }
@@ -225,7 +225,7 @@ void TinfoPageDec::onFrame(void)
    i->val=info->getVal(i->id,&wasChange,NULL);
    if (wasChange)
     ListView_Update(hlv,i-infoitems.begin());
-  } 
+  }
 }
 
 void TinfoPageDec::translate(void)
@@ -237,7 +237,7 @@ void TinfoPageDec::translate(void)
  for (int i=0;multipleInstances[i].name;i++)
   cbxAdd(IDC_CBX_MULTIPLE_INSTANCES,_(IDC_CBX_MULTIPLE_INSTANCES,multipleInstances[i].name),multipleInstances[i].id);
  cbxSetCurSel(IDC_CBX_MULTIPLE_INSTANCES,ii);
- 
+
  for (Titems::iterator i=infoitems.begin();i!=infoitems.end();i++)
   i->translatedName=_(IDC_LV_INFO,i->name);
 }

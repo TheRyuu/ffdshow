@@ -40,7 +40,7 @@ TspuImage::TspuImage(const TspuPlane src[3],const CRect &rcclip,const CRect &rec
     {
      if (scaler) delete scaler;
      scaler=Tscaler::create(prefs,rect[i].Width(),rect[i].Height(),dstdx,dstdy);
-    } 
+    }
    scaler->scale(src[i].c+rect[i].top*src[i].stride+rect[i].left,src[i].r+rect[i].top*src[i].stride+rect[i].left,src[i].stride,plane[i].c,plane[i].r,plane[i].stride);
    rect[i]+=CPoint(roundRshift(rcclip.left,prefs.shiftX[i]),roundRshift(rcclip.top,prefs.shiftY[i]));
    rect[i].left=roundDiv(int(prefs.dx*rect[i].left),rectOrig.Width());rect[i].right=rect[i].left+dstdx;
@@ -77,8 +77,8 @@ void TspuImage::TscalerPoint::scale(const unsigned char *srci,const unsigned cha
   {
    TffPict::copy(dsti,dstStride,srci,srcStride,srcdx,srcdy);
    TffPict::copy(dsta,dstStride,srca,srcStride,srcdx,srcdy);
-  } 
- else 
+  }
+ else
   {
    int scalex=0x100*dstdx/srcdx;
    int scaley=0x100*dstdy/srcdy;
@@ -87,14 +87,14 @@ void TspuImage::TscalerPoint::scale(const unsigned char *srci,const unsigned cha
      int unscaled_y=y*0x100/scaley;
      stride_t strides=srcStride*unscaled_y;
      stride_t scaled_strides=dstStride*y;
-     for (int x=0;x<dstdx;x++) 
+     for (int x=0;x<dstdx;x++)
       {
        int unscaled_x=x*0x100/scalex;
        dsti[scaled_strides+x]=srci[strides+unscaled_x];
        dsta[scaled_strides+x]=srca[strides+unscaled_x];
       }
     }
-  }  
+  }
 }
 
 //============================================ TspuImage::TscalerApprox ===========================================
@@ -113,7 +113,7 @@ void TspuImage::TscalerApprox::scale(const unsigned char *srci,const unsigned ch
    if (unscaled_bottom>=height)
     unscaled_bottom=height-1;
    unsigned char *dstiLn=dsti,*dstaLn=dsta;
-   for (int x=0;x<dstdx;x++,dstiLn++,dstaLn++) 
+   for (int x=0;x<dstdx;x++,dstiLn++,dstaLn++)
     {
      const unsigned int unscaled_left=x*0x100/scalex;
      unsigned int unscaled_right=(x+1)*0x100/scalex;
@@ -130,11 +130,11 @@ void TspuImage::TscalerApprox::scale(const unsigned char *srci,const unsigned ch
         unsigned int tmp=srca[base];
         alpha+=tmp;
         color+=tmp*srci[base];
-       } 
+       }
      *dstiLn=(unsigned char)(alpha?color/alpha:0);
      *dstaLn=(unsigned char)(cnt?alpha/cnt:0);
     }
-  }   
+  }
 }
 
 //============================================ TspuImage::TscalerFull =============================================
@@ -153,7 +153,7 @@ void TspuImage::TscalerFull::scale(const unsigned char *srci,const unsigned char
 
     The original rectangular region that the scaled pixel
     represents is cut in 9 rectangular areas like this:
-    
+
     +---+-----------------+---+
     | 1 |        2        | 3 |
     +---+-----------------+---+
@@ -265,7 +265,7 @@ void TspuImage::TscalerFull::scale(const unsigned char *srci,const unsigned char
            alpha += tmp;
            color += tmp * srci[base + walkx];
          }
-       }                 
+       }
      }
      /* 6: center right part */
      if (right > 0.0 && height > 0) {
@@ -362,7 +362,7 @@ void TspuImage::TscalerBilin::scale(const unsigned char *srci,const unsigned cha
      *dstiLn=(unsigned char)((color[0] * scale[0] + color[1] * scale[1] + color[2] * scale[2] + color[3] * scale[3])>>24);
      *dstaLn=(unsigned char)((scale[0] + scale[1] + scale[2] + scale[3]) >> 20);
     }
-  }  
+  }
 }
 
 //============================================== TspuImage::TscalerSw ==============================================
@@ -387,10 +387,10 @@ void TspuImage::TscalerSw::scale(const unsigned char *srci,const unsigned char *
  if (!ctx)
   approx.scale(srci,srca,srcStride,dsti,dsta,dstStride);
  else
-  { 
+  {
    libmplayer->sws_scale_ordered(ctx,&srci,&srcStride,0,srcdy,&dsti,&dstStride);
    libmplayer->sws_scale_ordered(ctx,&srca,&srcStride,0,srcdy,&dsta,&dstStride);
-  } 
+  }
 }
 
 //================================================= TspuImageSimd =================================================
@@ -415,7 +415,7 @@ template<class _mm> void TspuImageSimd<_mm>::print(unsigned int dx[3],unsigned c
      for (;x<int(dx[i]);x++)
       dst[x]=(unsigned char)(dst[x]-((dst[x]-c[x])*r[x]>>4));
     }
-  }  
+  }
  _mm::empty();
 }
 template<class _mm> void TspuImageSimd<_mm>::ownprint(const TrenderedSubtitleLines::TprintPrefs &prefs)
@@ -440,11 +440,11 @@ template<class _mm> void TspuImageSimd<_mm>::ownprint(const TrenderedSubtitleLin
      for (;x<dx;x++)
       dst[x]=(unsigned char)(dst[x]-((dst[x]-c[x])*r[x]>>4));
     }
-  }  
+  }
  _mm::empty();
 }
 
 template struct TspuImageSimd<Tmmx>;
-#ifdef __SSE2__ 
+#ifdef __SSE2__
  template struct TspuImageSimd<Tsse2>;
 #endif

@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "IffdshowBase.h"
 #include "IffdshowDec.h"
@@ -37,9 +37,9 @@ CUnknown* WINAPI TffProcAudio::CreateInstance(LPUNKNOWN punk,HRESULT *phr)
 STDMETHODIMP TffProcAudio::NonDelegatingQueryInterface(REFIID riid,void **ppv)
 {
  CheckPointer(ppv, E_POINTER);
- if (riid==IID_IffProcAudio) 
+ if (riid==IID_IffProcAudio)
   return GetInterface<IffProcAudio>(this,ppv);
- else 
+ else
   return CUnknown::NonDelegatingQueryInterface(riid,ppv);
 }
 
@@ -61,7 +61,7 @@ void TffProcAudio::initAudioFilters(void)
   {
    audioFilters=new TaudioFilters(deci,this);
    deciA->setAudioFilters(audioFilters);
-  } 
+  }
 }
 
 STDMETHODIMP TffProcAudio::begin(const WAVEFORMATEX *wfIn,WAVEFORMATEX *wfOut)
@@ -98,7 +98,7 @@ STDMETHODIMP TffProcAudio::processEx(const WAVEFORMATEXTENSIBLE *wfIn,size_t inn
    *wfOut=sfOut.toWAVEFORMATEXTENSIBLE();
    *outnumsamples=this->outnumsamples;
    *samples0=(void*)outsamples;
-  } 
+  }
  return hr;
 }
 STDMETHODIMP TffProcAudio::deliverProcessedSample(const void *buf,size_t numsamples,const TsampleFormat &outsf)

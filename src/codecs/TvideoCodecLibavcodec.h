@@ -41,7 +41,7 @@ private:
  TccDecoder *ccDecoder;
  bool autoSkipingLoopFilter;
  enum AVDiscard initialSkipLoopFilter;
-protected: 
+protected:
  virtual LRESULT beginCompress(int cfgcomode,int csp,const Trect &r);
  virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);
  virtual HRESULT flushDec(void);

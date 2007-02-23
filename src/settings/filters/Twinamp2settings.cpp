@@ -48,7 +48,7 @@ Twinamp2settings::Twinamp2settings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfi
      _l("orderWinamp2"),0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
  static const TstrOption sopts[]=
   {
    IDFF_winamp2flnm       ,(TstrVal)&Twinamp2settings::flnm      ,MAX_PATH,_l(""),1,
@@ -63,7 +63,7 @@ Twinamp2settings::Twinamp2settings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfi
 void Twinamp2settings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
 {
  idffOnChange(idffs,filters,queue.temporary);
- queueFilter<TaudioFilterWinamp2>(filtersorder,filters,queue); 
+ queueFilter<TaudioFilterWinamp2>(filtersorder,filters,queue);
 }
 void Twinamp2settings::createPages(TffdshowPageDec *parent) const
 {
@@ -78,5 +78,5 @@ bool Twinamp2settings::getTip(unsigned int pageId,char_t *tipS,size_t len)
    return true;
   }
  else
-  return false; 
+  return false;
 }

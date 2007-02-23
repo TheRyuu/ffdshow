@@ -18,7 +18,7 @@ LangString DESC_addons  ${NSH_LANG} "Nainstaluje knižnice pro kompresi/dekompres
 LangString TITLE_plugins ${NSH_LANG} "Zásuvní moduly"
 LangString DESC_plugins ${NSH_LANG} "Zásuvní moduly pro rùzné programy"
 LangString TITLE_pluginAvisynth ${NSH_LANG} "Avisynth"
-LangString DESC_pluginAvisynth ${NSH_LANG} "Umožní používat filtre na spracování obrazu z ffdshow v avs skriptech" 
+LangString DESC_pluginAvisynth ${NSH_LANG} "Umožní používat filtre na spracování obrazu z ffdshow v avs skriptech"
 LangString DLG_AVISYNTH_TITLE ${NSH_LANG} "Avisynth"
 LangString DLG_AVISYNTH_SUBTITLE ${NSH_LANG} "Adresáø se zásuvnými modulmi pro Avisynth"
 LangString DLG_AVISYNTH_LABEL ${NSH_LANG} "Vyberte adresáø se zásuvnými modulmi pro Avisynth"

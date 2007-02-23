@@ -69,7 +69,7 @@ class SKL_SYMBOL_MAPPER
 //////////////////////////////////////////////////////////
 //   User side
 // Public macros to use "SYMBOL" dynamically.
-// "Automagic" Dynamic Loading is switched on when 
+// "Automagic" Dynamic Loading is switched on when
 // SKL_USE_DYN_LOAD is defined.
 // Otherwise, you can use a .dll or a static linkage.
 //////////////////////////////////////////////////////////
@@ -129,8 +129,8 @@ class SKL_SYMBOL_MAPPER
 
 
 //////////////////////////////////////////////////////////
-//  Implementor side:  
-// Factory macros. Must be used once in the module 
+//  Implementor side:
+// Factory macros. Must be used once in the module
 // where 'SYMBOL' is implemented.
 //////////////////////////////////////////////////////////
 
@@ -139,7 +139,7 @@ class SKL_SYMBOL_MAPPER
 extern "C" SKL_EXPORT SKL_ANY SYMBOL ## _Build(); \
 extern "C" SKL_EXPORT SKL_ANY SYMBOL ## _Build()
 
-// -- Default factory 
+// -- Default factory
 #define SKL_DFLT_DYN_FACTORY(SYMBOL) \
 SKL_DYN_FACTORY(SYMBOL) { return (SKL_ANY)::new SYMBOL; }
 

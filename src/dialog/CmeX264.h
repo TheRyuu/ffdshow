@@ -12,7 +12,7 @@ private:
    int id;
    const char_t *name;
   };
- static const Trefinements refinements[];  
+ static const Trefinements refinements[];
  static const char_t *predictions[];
  void method2dlg(void);
 protected:
@@ -24,4 +24,4 @@ public:
  virtual void translate(void);
 };
 
-#endif 
+#endif

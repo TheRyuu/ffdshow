@@ -60,9 +60,9 @@ HRESULT TaudioFilterOSD::process(TfilterQueue::iterator it,TsampleFormat &fmt,vo
      if (searchFilterInterface(graph,getGUID<IffdshowDecVideo>(),(IUnknown**)&deciV))
       if (SUCCEEDED(deciV->registerOSDprovider(this,"Audio track:")))
        registered=deciV;
-    } 
+    }
   }
- oldIs=cfg->is; 
+ oldIs=cfg->is;
  return parent->deliverSamples(++it,fmt,samples,numsamples);
 }
 
@@ -77,9 +77,9 @@ void TaudioFilterOSD::unregister(void)
      if (searchFilterInterface(graph,getGUID<IffdshowDecVideo>(),(IUnknown**)&deciV))
       if (deciV==registered)
        deciV->unregisterOSDprovider(this);
-    } 
-   registered=NULL; 
-  }  
+    }
+   registered=NULL;
+  }
 }
 
 void TaudioFilterOSD::onDisconnect(PIN_DIRECTION dir)
@@ -94,7 +94,7 @@ bool TaudioFilterOSD::getOutputFmt(TsampleFormat &fmt,const TfilterSettingsAudio
  if (outsfs==TsampleFormat::SF_AC3)
   fmt.sf=TsampleFormat::SF_AC3;
  else
-  if ((fmt.sf & outsfs)==0) 
+  if ((fmt.sf & outsfs)==0)
    fmt.sf=TsampleFormat::sf_bestMatch(fmt.sf,outsfs);
- return true;  
+ return true;
 }

@@ -45,10 +45,10 @@ void TvobsubPage::cfg2dlg(void)
      if (desc[0])
       cbxAdd(IDC_CBX_VOBSUB_CURLANG,desc,i);
     }
-   cbxSetDataCurSel(IDC_CBX_VOBSUB_CURLANG,cfgGet(IDFF_subCurLang)); 
+   cbxSetDataCurSel(IDC_CBX_VOBSUB_CURLANG,cfgGet(IDFF_subCurLang));
   }
  else
-  enable(0,idCurlang); 
+  enable(0,idCurlang);
  setCheck(IDC_CHB_VOBSUB_CHANGEPOSITION,cfgGet(IDFF_subVobsubChangePosition));
  scale2dlg();
  gauss2dlg();
@@ -69,7 +69,7 @@ void TvobsubPage::gauss2dlg(void)
 void TvobsubPage::translate(void)
 {
  TconfPageBase::translate();
- 
+
  cbxTranslate(IDC_CBX_VOBSUB_AA,TsubtitlesSettings::vobsubAAs);
 
  int sel1=cbxGetCurSel(IDC_CBX_VOBSUB_DEFLANG),sel2=cbxGetCurSel(IDC_CBX_VOBSUB_DEFLANG2);

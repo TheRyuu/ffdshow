@@ -1,5 +1,5 @@
 CFLAGS+= -I. -I../src -I../src/cygwin
-       
+
 SRCS=ffavisynth.cpp
 
 SLIB=../bin/ffavisynth.dll
@@ -19,7 +19,7 @@ GCCDEF=ffavisynth.def.gcc
 
 .all: $(SLIB)
 
-clean: 
+clean:
 	rm -f *.o *~ $(SLIB)
 
 #

@@ -12,7 +12,7 @@ private:
  comptrQ<ISpecifyPropertyPagesVE> ve;
 protected:
  virtual void onActivate(void);
-public: 
+public:
  static CUnknown* WINAPI CreateInstance(LPUNKNOWN lpunk,HRESULT *phr);
  TffdshowPageDecAudio(LPUNKNOWN pUnk,HRESULT *phr,const wchar_t *ItitleW,const char_t *name,int dialogId,int resstr);
  virtual ~TffdshowPageDecAudio();
@@ -28,4 +28,4 @@ public:
  TffdshowPageDecAudioRaw(LPUNKNOWN pUnk,HRESULT *phr,const wchar_t *ItitleW,const char_t *name,int dialogId,int resstr);
 };
 
-#endif 
+#endif

@@ -28,7 +28,7 @@ void TsubtitlesPage::init(void)
  SendDlgItemMessage(m_hwnd,IDC_CBX_SUB_FLNM,CB_LIMITTEXT,MAX_PATH,0);
  edLimitText(IDC_ED_SUB_SEARCH_DIR,MAX_PATH);
  edLimitText(IDC_ED_SUB_SEARCH_EXT,MAX_PATH);
- 
+
  tbrSetRange(IDC_TBR_SUB_POSX,0,100,10);
  tbrSetRange(IDC_TBR_SUB_POSY,0,100,10);
  tbrSetRange(IDC_TBR_SUB_STEREOSCOPICPAR,-100,100);
@@ -76,7 +76,7 @@ void TsubtitlesPage::sub2dlg(void)
   {
    SendDlgItemMessage(m_hwnd,IDC_CBX_SUB_FLNM,CB_INSERTSTRING,0,LPARAM(subfilename));
    cbxSetCurSel(IDC_CBX_SUB_FLNM,0);
-  } 
+  }
  int autoflnm=cfgGet(IDFF_subAutoFlnm);
  setCheck(IDC_RBT_SUB_SEARCHDIR,autoflnm);
  setCheck(IDC_RBT_SUB_FLNM,!autoflnm);
@@ -104,8 +104,8 @@ void TsubtitlesPage::auto2dlg(void)
  if (a && (filterMode&IDFF_FILTERMODE_PLAYER))
   {
    const char_t *autosubflnm=deciV->findAutoSubflnm3();
-/*   
-   if (autosubfirsttime) 
+/*
+   if (autosubfirsttime)
     {
      autosubfirsttime=false;
      Tsubtitles::findPossibleSubtitles(deci->getSourceName(),autosubfiles);
@@ -113,13 +113,13 @@ void TsubtitlesPage::auto2dlg(void)
    if (!autosubfiles.empty())
     {
      //enable(1,IDC_CBX_SUB_FLNM);
-     //SendDlgItemMessage(m_hwnd,IDC_CBX_SUB_FLNM,CB_RESETCONTENT,0,0); 
+     //SendDlgItemMessage(m_hwnd,IDC_CBX_SUB_FLNM,CB_RESETCONTENT,0,0);
      //for (strings::const_iterator f=autosubfiles.begin();f!=autosubfiles.end();f++)
      // cbxAdd(IDC_CBX_SUB_FLNM,f->c_str());
      */
      setDlgItemText(m_hwnd,IDC_CBX_SUB_FLNM,autosubflnm);
     //}
-  } 
+  }
 }
 void TsubtitlesPage::stereo2dlg(void)
 {
@@ -136,7 +136,7 @@ void TsubtitlesPage::expand2dlg(void)
  static const int idExpand[]={IDC_ED_SUBTITLES_EXPAND_X,IDC_LBL_SUBTITLES_EXPAND2,IDC_ED_SUBTITLES_EXPAND_Y,IDC_BT_SUBTITLES_EXPAND,0};
  enable(isExpand,idExpand);
  int e1,e2;TsubtitlesSettings::getExpand(1,cfgGet(IDFF_subExpand),&e1,&e2);
- if (e1==0 && e2==0) 
+ if (e1==0 && e2==0)
   {
    e1=4;e2=3;
    cfgSet(IDFF_subExpand,1);
@@ -153,12 +153,12 @@ void TsubtitlesPage::applySettings(void)
 void TsubtitlesPage::loadSubtitles(void)
 {
  if (!cfgGet(IDFF_subAutoFlnm))
-  { 
+  {
    char_t subflnm[1024];
    GetDlgItemText(m_hwnd,IDC_CBX_SUB_FLNM,subflnm,1023);
    cfgSet(IDFF_subFilename,subflnm);
-  } 
- sub2dlg(); 
+  }
+ sub2dlg();
 }
 
 INT_PTR TsubtitlesPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -166,7 +166,7 @@ INT_PTR TsubtitlesPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CBX_SUB_FLNM:
        if (HIWORD(wParam)==CBN_SELCHANGE || HIWORD(wParam)==CBN_EDITUPDATE)
@@ -176,9 +176,9 @@ INT_PTR TsubtitlesPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        if (HIWORD(wParam)==BN_CLICKED)
         {
          deciV->resetSubtitleTimes();
-         return TRUE; 
+         return TRUE;
         }
-       break; 
+       break;
       case IDC_ED_SUB_SEARCH_DIR:
        if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
@@ -202,11 +202,11 @@ INT_PTR TsubtitlesPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         {
          deci->notifyParamStr(IDFF_subFilename,_l(""));
          return TRUE;
-        } 
+        }
        break;
       case IDC_ED_SUBTITLES_EXPAND_X:
       case IDC_ED_SUBTITLES_EXPAND_Y:
-       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText) 
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
          HWND hed=GetDlgItem(m_hwnd,LOWORD(wParam));
          if (hed!=GetFocus()) return FALSE;
@@ -216,11 +216,11 @@ INT_PTR TsubtitlesPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
           {
            cfgSet(IDFF_subExpand,MAKELONG(y,x));
            return S_OK;
-          } 
+          }
         }
-       break; 
+       break;
      }
-    break;   
+    break;
    case WM_CTLCOLOREDIT:
     {
      HWND hwnd=HWND(lParam);
@@ -232,15 +232,15 @@ INT_PTR TsubtitlesPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        default:goto endColor;
       }
      if (!ok)
-      { 
+      {
        HDC dc=HDC(wParam);
        SetBkColor(dc,RGB(255,0,0));
        return INT_PTR(getRed());
       }
-     else return FALSE;  
+     else return FALSE;
      endColor:;
     }
-  } 
+  }
  return TconfPageDecVideo::msgProc(uMsg,wParam,lParam);
 }
 void TsubtitlesPage::onLoadfile(void)
@@ -250,7 +250,7 @@ void TsubtitlesPage::onLoadfile(void)
   {
    setDlgItemText(m_hwnd,IDC_CBX_SUB_FLNM,subflnm);
    parent->setChange();
-  } 
+  }
 }
 void TsubtitlesPage::onSearchdir(void)
 {
@@ -280,15 +280,15 @@ void TsubtitlesPage::onExpandClick(void)
    case 1:x=5;y=4;break;
    case 2:x=16;y=9;break;
    default:return;
-  } 
- cfgSet(IDFF_subExpand,MAKELONG(y,x)); 
+  }
+ cfgSet(IDFF_subExpand,MAKELONG(y,x));
  expand2dlg();
 }
 
 void TsubtitlesPage::translate(void)
-{ 
+{
  TconfPageBase::translate();
- 
+
  cbxTranslate(IDC_CBX_SUBTITLES_ALIGN,TsubtitlesSettings::alignments);
 }
 
@@ -330,7 +330,7 @@ TsubtitlesPage::TsubtitlesPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff)
    IDC_ED_SUB_SPEED2,1,INT_MAX/2,IDFF_subSpeed2,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
  static const TbindCombobox<TsubtitlesPage> cbx[]=
   {
    IDC_CBX_SUBTITLES_ALIGN,IDFF_subAlign,BINDCBX_SEL,NULL,
@@ -344,5 +344,5 @@ TsubtitlesPage::TsubtitlesPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff)
    IDC_BT_SUBTITLES_EXPAND,&TsubtitlesPage::onExpandClick,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
 }

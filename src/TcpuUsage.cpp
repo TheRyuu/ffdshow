@@ -240,7 +240,7 @@ void TcpuUsage::CollectCPUData(void)
      RegQueryValueEx( H, _l("KERNEL\\CPUUsage"),NULL, &dwType, (unsigned char *)&_W9xCpuUsage, &dwDataSize );
 
      RegCloseKey(H);
-     
+
      R=RegOpenKeyEx( HKEY_DYN_DATA, _l("PerfStats\\StatData"), 0,KEY_READ, &_W9xCpuKey );
 
      if (R != ERROR_SUCCESS)

@@ -14,7 +14,7 @@ private:
    TcoSettings *co;
    const int *propsIDs;
    bool isIn(int id);
-  public: 
+  public:
    TregOpCategory(TpresetEnc *Ipreset,TcoSettings *Ico,const int *IpropsIDs):preset(Ipreset),co(Ico),propsIDs(IpropsIDs) {}
   };
 public:

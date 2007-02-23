@@ -30,7 +30,7 @@ void TgrabPage::init(void)
   {
    char_t n[]={i+'0',0};
    cbxAdd(IDC_CBX_GRAB_DIGITS,n);
-  } 
+  }
  const Tconfig *config;deci->getConfig(&config);
  Tlibavcodec *lavc;
  deci->getLibavcodec(&lavc);
@@ -39,7 +39,7 @@ void TgrabPage::init(void)
    int codec=TgrabSettings::formats[i].codec;
    if (codec==0 || (codec==IDFF_MOVIE_LAVC && lavc && lavc->ok && !lavc->dec_only) || (codec!=IDFF_MOVIE_LAVC && config->isDecoder[codec]))
     cbxAdd(IDC_CBX_GRAB_FORMAT,TgrabSettings::formats[i].name,i);
-  } 
+  }
  if (lavc) lavc->Release();
  enable(filterMode&IDFF_FILTERMODE_PLAYER,IDC_BT_GRAB_NOW);
  tbrSetRange(IDC_TBR_GRAB_QUAL,0,100,10);
@@ -58,7 +58,7 @@ void TgrabPage::cfg2dlg(void)
    parent->setChange();
    cbxSetCurSel(IDC_CBX_GRAB_FORMAT,0);
   }
- 
+
  int mode=cfgGet(IDFF_grabMode);
  setCheck(IDC_RBT_GRAB_EVERY ,mode==0);
  setCheck(IDC_RBT_GRAB_SINGLE,mode==1);enable(mode==1,IDC_ED_GRAB_FRAMENUM );SetDlgItemInt(m_hwnd,IDC_ED_GRAB_FRAMENUM,cfgGet(IDFF_grabFrameNum ),FALSE);
@@ -77,7 +77,7 @@ INT_PTR TgrabPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_BT_GRAB_PATH:
        if (HIWORD(wParam)==BN_CLICKED)
@@ -85,10 +85,10 @@ INT_PTR TgrabPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          if (changeDir(IDFF_grabPath,_(-IDD_GRAB,_l("Select directory for storing images"))))
           cfg2dlg();
          return TRUE;
-        }  
-       break; 
+        }
+       break;
       case IDC_ED_GRAB_NAME:
-       if (HIWORD(wParam)==EN_UPDATE) 
+       if (HIWORD(wParam)==EN_UPDATE)
         {
          char_t prefix[31];GetDlgItemText(m_hwnd,IDC_ED_GRAB_NAME,prefix,30);
          cfgSet(IDFF_grabPrefix,prefix);
@@ -96,7 +96,7 @@ INT_PTR TgrabPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
        break;
       case IDC_ED_GRAB_PATH:
-       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText) 
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
          char_t path[MAX_PATH];
          GetDlgItemText(m_hwnd,IDC_ED_GRAB_PATH,path,MAX_PATH);
@@ -110,7 +110,7 @@ INT_PTR TgrabPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          deciV->grabNow();
          return TRUE;
         }
-       break;   
+       break;
      }
     break;
   }
@@ -141,7 +141,7 @@ TgrabPage::TgrabPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPage
    IDC_ED_GRAB_STEP,1,1000,IDFF_grabStep,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
  static const TbindCombobox<TgrabPage> cbx[]=
   {
    IDC_CBX_GRAB_DIGITS,IDFF_grabDigits,BINDCBX_SEL,NULL,

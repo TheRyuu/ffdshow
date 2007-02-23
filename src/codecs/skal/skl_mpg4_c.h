@@ -52,14 +52,14 @@ typedef enum {
 
   SKL_CPU_C    = 0,
   SKL_CPU_X86  = 1,
-  SKL_CPU_MMX  = 2, 
-  SKL_CPU_SSE  = 3, 
-  SKL_CPU_SSE2 = 4, 
-  SKL_CPU_REF  = 5, 
-  SKL_CPU_ALT  = 6, 
+  SKL_CPU_MMX  = 2,
+  SKL_CPU_SSE  = 3,
+  SKL_CPU_SSE2 = 4,
+  SKL_CPU_REF  = 5,
+  SKL_CPU_ALT  = 6,
   SKL_CPU_LAST = 7,
 
-  SKL_CPU_DETECT = 7  
+  SKL_CPU_DETECT = 7
 
 } SKL_CPU_FEATURE;
 
@@ -76,19 +76,19 @@ typedef void (*SKL_MP4_SLICER)(const void *Pic, int y, int Height, void *Data);
   /* C-wrapper for C++ API. @see SKL_MP4_DEC, SKL_MP4_ENC */
 struct SKL_MP4_PIC
 {
-  unsigned char *Y;    
-  unsigned char *U;    
-  unsigned char *V;    
+  unsigned char *Y;
+  unsigned char *U;
+  unsigned char *V;
 
-  int Coding;            
-  int Width;             
-  int Height;            
-  int BpS;               
-  SKL_MV   *MV;          
-  double Time;           
-  SKL_UINT64 Time_Ticks; 
-  SKL_MP4_MAP *Map;      
-  void        *Data;     
+  int Coding;
+  int Width;
+  int Height;
+  int BpS;
+  SKL_MV   *MV;
+  double Time;
+  SKL_UINT64 Time_Ticks;
+  SKL_MP4_MAP *Map;
+  void        *Data;
 };
 
     /* proxies */
@@ -152,7 +152,7 @@ typedef void (*SKL_DSP_SWITCH)();
 typedef void (*SKL_TO_RGB_FUNC)(unsigned char *RGB,
                                 const int Dst_BpS,
                                 const unsigned char *Y,
-                                const unsigned char *U, 
+                                const unsigned char *U,
                                 const unsigned char *V,
                                 const int Src_BpS,
                                 const int Width, const int Height);
@@ -173,7 +173,7 @@ struct SKL_YUV_DSP
   SKL_TO_YUV_FUNC RGB24_TO_YUV;
   SKL_TO_RGB_FUNC YUV_TO_RGB24;
   SKL_TO_YUV_FUNC RGB32_TO_YUV;
-  SKL_TO_RGB_FUNC YUV_TO_RGB32;  
+  SKL_TO_RGB_FUNC YUV_TO_RGB32;
 };
 
 #endif

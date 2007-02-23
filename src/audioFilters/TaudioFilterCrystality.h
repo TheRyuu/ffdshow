@@ -13,10 +13,10 @@ private:
   private:
    int bext_sfactor;
    int filter_level;
-   
+
    int prev0, prev1, prev2;
    int amplUp, amplDown;
-   
+
    void pitchShifter(const int &in, int *out);
    static const int SH_BUF_SIZE=10*3;
    int shBuf[SH_BUF_SIZE];
@@ -29,7 +29,7 @@ private:
      int acount;// counter
      int lval;	// value
      int sal;	// sum
-     int al;		
+     int al;
      int a1l;
     } bandext_energy,bandext_amplitude;
    static void interpolate(Interpolation *s, int l);
@@ -39,9 +39,9 @@ private:
    virtual void init(const TcrystalitySettings *cfg);
    virtual void process(int16_t *data, const size_t datasize,unsigned int N);
    virtual void onSeek(void);
-  }; 
+  };
  Tbandext bandext[6];
- 
+
  struct Techo3d
   {
   private:
@@ -49,7 +49,7 @@ private:
    int echo_sfactor;
    int feedback_sfactor;
    int harmonics_sfactor;
-   
+
    int left0p,right0p;
    int lsine[65536];
    int rsine[65536];
@@ -73,7 +73,7 @@ private:
    void process(int16_t *data, size_t datasize);
    void onSeek(void);
   } echo3d;
- 
+
 protected:
  virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_PCM16;}
 public:

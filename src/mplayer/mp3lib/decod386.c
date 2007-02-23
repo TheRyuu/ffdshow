@@ -118,9 +118,9 @@ static int synth_1to1_mono2stereo(mp3lib_ctx *ctx,real *bandPtr,unsigned char *s
 #if defined(CAN_COMPILE_X86_ASM)
 static int synth_1to1_MMX( mp3lib_ctx *ctx,real *bandPtr,int channel,short * samples)
 {
-    synth_1to1_MMX_s(bandPtr, channel, samples, (short *) ctx->buffsMMX, &ctx->bo); 
+    synth_1to1_MMX_s(bandPtr, channel, samples, (short *) ctx->buffsMMX, &ctx->bo);
     return 0;
-} 
+}
 #endif
 
 static int synth_1to1(mp3lib_ctx *ctx,real *bandPtr,int channel,unsigned char *out,int *pnt)

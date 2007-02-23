@@ -66,7 +66,7 @@ bool TimgFilterResize::is(const TffPictBase &pict,const TfilterSettingsVideo *cf
    cfg->calcNewRects(&newRectFull,&newRectClip);
    return pict.rectFull!=newRectFull || pict.rectClip!=pict.rectClip;
   }
- else  
+ else
   return true;
 }
 
@@ -102,7 +102,7 @@ int TimgFilterResize::getSupportedOutputColorspaces(const TfilterSettingsVideo *
       case 2:return FF_CSP_RGB32;
      }
    default:return getSupportedInputColorspaces(cfg);
-  } 
+  }
 }
 
 bool TimgFilterResize::getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *cfg0)
@@ -114,7 +114,7 @@ bool TimgFilterResize::getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo
    return true;
   }
  else
-  return false;   
+  return false;
 }
 
 HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
@@ -134,7 +134,7 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
    deciV->getOutputFourcc(outputfourcc,20);
    if (downstream==TffdshowDecVideo::DVOBSUB && strncmp(outputfourcc,_l("YV12"),4)==0) // vsfilter accepts only multiple of 8 on YV12.
     newpict.rectFull.dx=(newpict.rectFull.dx+7)&~7;
-   if ((pict.rectClip!=newpict.rectClip || pict.rectFull!=newpict.rectFull) 
+   if ((pict.rectClip!=newpict.rectClip || pict.rectFull!=newpict.rectFull)
       &&!(   pict.cspInfo.id==FF_CSP_420P       // I want to avoid resizing here. YV12 odd number lines.
           && pict.rectFull==newpict.rectFull
           && newpict.rectClip.dy==(pict.rectClip.dy&~1)
@@ -157,18 +157,18 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
          }
         if (oldSettings.methodsLocked)
          swsparams->methodChroma=swsparams->methodLuma;
-        else 
+        else
          {
           swsparams->methodChroma.method=TresizeAspectSettings::methodsProps[oldSettings.methodChroma].flags;
           switch (oldSettings.methodChroma)
-           { 
+           {
             case TresizeAspectSettings::METHOD_SWS_BICUBIC:swsparams->methodChroma.param=oldSettings.bicubicChromaParam;break;
             case TresizeAspectSettings::METHOD_SWS_GAUSS:swsparams->methodChroma.param=oldSettings.gaussChromaParam;break;
             case TresizeAspectSettings::METHOD_SWS_LANCZOS:swsparams->methodChroma.param=oldSettings.lanczosChromaParam;break;
            }
-         }  
+         }
         break;
-       case TresizeAspectSettings::LIB_NONE: 
+       case TresizeAspectSettings::LIB_NONE:
         if (pictRect.dy<newpict.rectClip.dy)
          {
           dynone=pictRect.dy;
@@ -193,13 +193,13 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
           xdif1none=0;
           xdif2none=(pictRect.dx-newpict.rectClip.dx)/2;
          }
-        break; 
-      }  
-     parent->dirtyBorder=1; 
+        break;
+      }
+     parent->dirtyBorder=1;
      inited=true;
-    } 
+    }
   }
-  
+
  if (inited)
   {
    bool interlace;
@@ -219,7 +219,7 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
        cspChanged|=getCur(SWS_IN_CSPS,pict,cfg->full,src);
        unsigned char *dst[4];
        cspChanged|=getNext(SWS_OUT_CSPS,pict,newpict.rectClip,dst,&newpict.rectFull);
-       if (cspChanged || !swsc || oldinterlace!=interlace) 
+       if (cspChanged || !swsc || oldinterlace!=interlace)
         {
          if (!libmplayer) deci->getPostproc(&libmplayer);
          if (swsc) libmplayer->sws_freeContext(swsc);swsc=NULL;
@@ -246,8 +246,8 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
            dst[i]+=stride2[i];
           }
          libmplayer->sws_scale_ordered(swsc,src,stride1I,0,pictRect.dy/2,dst,stride2I);
-        } 
-       break; 
+        }
+       break;
       }
      case TresizeAspectSettings::LIB_NONE:
       {
@@ -262,7 +262,7 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
          TffPict::copy(dst0,stride2[i],src0,stride1[i],pict.cspInfo.Bpp*dxnone>>pict.cspInfo.shiftX[i],dynone>>pict.cspInfo.shiftY[i]);
         }
        break;
-      } 
+      }
      case TresizeAspectSettings::LIB_SIMPLE:
       {
        bool warped=oldSettings.methodLuma==TresizeAspectSettings::METHOD_WARPED;
@@ -283,16 +283,16 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
            srcFrame.pitch[i]=stride1[i];
            srcFrame.rowSize[i]=dx1[i]*pict.cspInfo.Bpp;
            srcFrame.height[i]=dy1[i];
-          } 
-         SimpleResize::PVideoFrame dstFrame; 
+          }
+         SimpleResize::PVideoFrame dstFrame;
          getNext(warped?FF_CSP_YUY2:FF_CSP_420P,pict,newpict.rectClip,dstFrame.ptr,&newpict.rectFull);
          for (unsigned int i=0;i<pict.cspInfo.numPlanes;i++)
           {
            dstFrame.pitch[i]=stride2[i];
            dstFrame.rowSize[i]=(newpict.rectClip.dx*pict.cspInfo.Bpp)>>pict.cspInfo.shiftX[i];
            dstFrame.height[i]=newpict.rectClip.dy>>pict.cspInfo.shiftY[i];
-          } 
-         if (!oldinterlace) 
+          }
+         if (!oldinterlace)
           simple->GetFrame(&srcFrame,&dstFrame);
          else
           {
@@ -308,10 +308,10 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
              dstFrame.ptr[i]+=stride2[i];
             }
            simple->GetFrame(&srcFrame,&dstFrame);
-          } 
-        }  
+          }
+        }
        break;
-      } 
+      }
      case TresizeAspectSettings::LIB_SAI:
       switch (TresizeAspectSettings::methodsProps[oldSettings.methodLuma].flags)
        {
@@ -323,7 +323,7 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
           getNext(FF_CSP_RGB32,pict,newpict.rectClip,&dst,NULL,NULL,NULL,&newpict.rectFull);
           T2xSaI::super(src,stride1[0],dst,stride2[0],dx1[0],dy1[0]);
           break;
-         } 
+         }
         case 1:
          {
           const unsigned char *src;
@@ -332,7 +332,7 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
           getNext(FF_CSP_RGB16,pict,newpict.rectClip,&dst,NULL,NULL,NULL,&newpict.rectFull);
           T2xSaI::_2xSaI(src,stride1[0],dst,dx1[0],dy1[0],stride2[0]);
           break;
-         } 
+         }
         case 2:
          {
           const unsigned char *src;
@@ -341,11 +341,11 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
           getNext(FF_CSP_RGB32,pict,newpict.rectClip,&dst,NULL,NULL,NULL,&newpict.rectFull);
           Thq2x::hq2x_32(src,dst,dx1[0],dy1[0],stride1[0],stride2[0]);
           break;
-         } 
+         }
        }
-      break;   
-    }  
+      break;
+    }
    if (!parent->dirtyBorder) parent->dirtyBorder=1;
-  } 
+  }
  return parent->deliverSample(++it,pict);
 }

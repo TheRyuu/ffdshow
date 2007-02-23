@@ -73,7 +73,7 @@ void ThideShowPage::showSelected(void)
 void ThideShowPage::hideAll(void)
 {
  int itCount=lbxGetItemCount(IDC_LBX_HIDESHOW_VISIBLE);
- for (int i=0;i<itCount;i++) 
+ for (int i=0;i<itCount;i++)
   {
    TconfPageBase *page=(TconfPageBase*)lbxGetItemData(IDC_LBX_HIDESHOW_VISIBLE,i);
    page->setShow(0);
@@ -85,7 +85,7 @@ void ThideShowPage::hideAll(void)
 void ThideShowPage::showAll(void)
 {
  int itCount=lbxGetItemCount(IDC_LBX_HIDESHOW_AVAILABLE);
- for (int i=0;i<itCount;i++) 
+ for (int i=0;i<itCount;i++)
   {
    TconfPageBase *page=(TconfPageBase*)lbxGetItemData(IDC_LBX_HIDESHOW_AVAILABLE,i);
    page->setShow(1);
@@ -100,7 +100,7 @@ INT_PTR ThideShowPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_LBX_HIDESHOW_AVAILABLE:
        if (HIWORD(wParam)==LBN_DBLCLK)
@@ -108,14 +108,14 @@ INT_PTR ThideShowPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          showSelected();
          return TRUE;
         }
-       break;  
+       break;
       case IDC_LBX_HIDESHOW_VISIBLE:
        if (HIWORD(wParam)==LBN_DBLCLK)
         {
          hideSelected();
          return TRUE;
         }
-       break;  
+       break;
      }
     break;
   }

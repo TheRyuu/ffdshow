@@ -27,7 +27,7 @@ private:
   public:
    TeqTbr(int Ii,HWND h,TeqPage *Iself,const TbindTrackbar<Twindow> *Ibind):index(Ii),self(Iself),TwidgetSubclassTbr(h,Iself,Ibind) {}
   };
- bool isdb; 
+ bool isdb;
  static bool presetsSort(const TwinampQ1preset &p1,const TwinampQ1preset &p2);
 protected:
  virtual Twidget* createDlgItem(int id,HWND h);
@@ -38,4 +38,4 @@ public:
  virtual void cfg2dlg(void);
 };
 
-#endif 
+#endif

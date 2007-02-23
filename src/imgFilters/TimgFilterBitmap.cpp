@@ -40,11 +40,11 @@ template<class _mm> void TimgFilterBitmap::blend(const TcspInfo &cspInfo,const u
       dst8=_mm::add_pi16(dst8,m128);
       dst8=_mm::srai_pi16(dst8,7);
       _mm::store2(dst[i]+x,_mm::packs_pu16(dst8,m0));
-     } 
+     }
     for (;x<cnt;x++)
      dst[i][x]=uint8_t((invstrength*dst[i][x]+strength*src[i][x]+128)/256);
-   }  
- _mm::empty();  
+   }
+ _mm::empty();
 }
 template<class _mm> void TimgFilterBitmap::darken(const TcspInfo &cspInfo,const unsigned int dx[3],const unsigned int dy[3],unsigned char *dst[3],const stride_t dststride[3],const unsigned char *src[3],const stride_t srcstride[3],int strength,int invstrength)
 {
@@ -69,8 +69,8 @@ template<class _mm> void TimgFilterBitmap::darken(const TcspInfo &cspInfo,const 
    for (;x<cnt;x++)
     if (src[0][x]<dst[0][x])
      dst[0][x]=uint8_t((invstrength*dst[0][x]+strength*src[0][x]+128)/256);
-  }   
- _mm::empty(); 
+  }
+ _mm::empty();
 }
 template<class _mm> void TimgFilterBitmap::lighten(const TcspInfo &cspInfo,const unsigned int dx[3],const unsigned int dy[3],unsigned char *dst[3],const stride_t dststride[3],const unsigned char *src[3],const stride_t srcstride[3],int strength,int invstrength)
 {
@@ -95,8 +95,8 @@ template<class _mm> void TimgFilterBitmap::lighten(const TcspInfo &cspInfo,const
    for (;x<cnt;x++)
     if (src[0][x]>dst[0][x])
      dst[0][x]=uint8_t((invstrength*dst[0][x]+strength*src[0][x]+128)/256);
-  }   
- _mm::empty(); 
+  }
+ _mm::empty();
 }
 template<class _mm> void TimgFilterBitmap::add(const TcspInfo &cspInfo,const unsigned int dx[3],const unsigned int dy[3],unsigned char *dst[3],const stride_t dststride[3],const unsigned char *src[3],const stride_t srcstride[3],int strength,int invstrength)
 {
@@ -120,7 +120,7 @@ template<class _mm> void TimgFilterBitmap::add(const TcspInfo &cspInfo,const uns
       }
      for (;x<cnt;x++)
       dst[i][x]=uint8_t(dst[i][x]+(((127*invstrength)+(strength*src[i][x]))>>8)-127);
-    }  
+    }
  for (unsigned int y=0;y<dy[0];y++,dst[0]+=dststride[0],src[0]+=srcstride[0])
   {
    int x=0,cnt=dx[0];
@@ -137,9 +137,9 @@ template<class _mm> void TimgFilterBitmap::add(const TcspInfo &cspInfo,const uns
      int Y=dst[0][x]+((strength*src[0][x])>>8);
      if (Y>255) Y=255;
      dst[0][x]=uint8_t(Y);
-    } 
-  }  
- _mm::empty(); 
+    }
+  }
+ _mm::empty();
 }
 template<class _mm> void TimgFilterBitmap::softlight(const TcspInfo &cspInfo,const unsigned int dx[3],const unsigned int dy[3],unsigned char *dst[3],const stride_t dststride[3],const unsigned char *src[3],const stride_t srcstride[3],int strength,int invstrength)
 {
@@ -162,9 +162,9 @@ template<class _mm> void TimgFilterBitmap::softlight(const TcspInfo &cspInfo,con
      {
       int Y=limit_uint8(dst[i][x]+src[i][x]-127);
       dst[i][x]=limit_uint8((Y*strength+invstrength*dst[i][x])>>8);
-     } 
-   }  
- _mm::empty(); 
+     }
+   }
+ _mm::empty();
 }
 template<class _mm> void TimgFilterBitmap::exclusion(const TcspInfo &cspInfo,const unsigned int dx[3],const unsigned int dy[3],unsigned char *dst[3],const stride_t dststride[3],const unsigned char *src[3],const stride_t srcstride[3],int strength,int invstrength)
 {
@@ -188,9 +188,9 @@ template<class _mm> void TimgFilterBitmap::exclusion(const TcspInfo &cspInfo,con
      int Y=((int)(dst[i][x]^0xff)*src[i][x] + (int)(src[i][x]^0xff)*dst[i][x])>>8;
      Y=((Y*strength) + (invstrength*dst[i][x]))>>8;
      dst[i][x]=limit_uint8(Y);
-    } 
-  }  
- _mm::empty(); 
+    }
+  }
+ _mm::empty();
 }
 
 template<class _mm> TimgFilterBitmap::Tblendplane TimgFilterBitmap::getBlend(int mode)
@@ -199,13 +199,13 @@ template<class _mm> TimgFilterBitmap::Tblendplane TimgFilterBitmap::getBlend(int
   {
    case TbitmapSettings::MODE_BLEND:
    default:return blend<_mm>;
-   case TbitmapSettings::MODE_DARKEN:return darken<_mm>; 
+   case TbitmapSettings::MODE_DARKEN:return darken<_mm>;
    case TbitmapSettings::MODE_LIGHTEN:return lighten<_mm>;
    case TbitmapSettings::MODE_ADD:return add<_mm>;
    case TbitmapSettings::MODE_SOFTLIGHT:return softlight<_mm>;
    case TbitmapSettings::MODE_EXCLUSION:return exclusion<_mm>;
   }
-}  
+}
 
 void TimgFilterBitmap::TrenderedSubtitleLineBitmap::print(unsigned int dx[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const
 {
@@ -237,7 +237,7 @@ HRESULT TimgFilterBitmap::process(TfilterQueue::iterator it,TffPict &pict,const 
    init(pict,cfg->full,cfg->half);
    unsigned char *dst[4];
    bool cspChanged=getCurNext(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,COPYMODE_DEF,dst);
-   
+
    if (!bitmap || cspChanged || stricmp(oldflnm,cfg->flnm)!=0)
     {
      strcpy(oldflnm,cfg->flnm);
@@ -256,11 +256,11 @@ HRESULT TimgFilterBitmap::process(TfilterQueue::iterator it,TffPict &pict,const 
    if (bitmap->rectFull.dx!=0)
     {
      if (oldmode!=cfg->mode)
-    #ifdef __SSE2__ 
+    #ifdef __SSE2__
       if (Tconfig::cpu_flags&FF_CPU_SSE2)
        w.blend=getBlend<Tsse2>(oldmode=cfg->mode);
-      else 
-    #endif  
+      else
+    #endif
        w.blend=getBlend<Tmmx>(oldmode=cfg->mode);
      TrenderedSubtitleLines::TprintPrefs prefs(deci);
      prefs.dst=dst;
@@ -273,7 +273,7 @@ HRESULT TimgFilterBitmap::process(TfilterQueue::iterator it,TffPict &pict,const 
      w.pict=&pict;
      w.cfg=cfg;
      ls.print(prefs);
-    } 
-  }  
+    }
+  }
  return parent->deliverSample(++it,pict);
 }

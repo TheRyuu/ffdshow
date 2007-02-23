@@ -136,7 +136,7 @@ INT_PTR TpictPropPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_IMG_COLORIZE:
        if (HIWORD(wParam)==STN_CLICKED)
@@ -160,17 +160,17 @@ INT_PTR TpictPropPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       DeleteObject(br);
       return TRUE;
      }
-    else 
-     break; 
-  }   
+    else
+     break;
+  }
  return TconfPageDecVideo::msgProc(uMsg,wParam,lParam);
 }
 
 void TpictPropPage::translate(void)
 {
  TconfPageDecVideo::translate();
- 
- cbxTranslate(IDC_CBX_SCANLINE,scanlines); 
+
+ cbxTranslate(IDC_CBX_SCANLINE,scanlines);
 }
 
 TpictPropPage::TpictPropPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecVideo(Iparent,idff)

@@ -65,7 +65,7 @@ private:
    void init(const TlogoawaySettings *cfg);
    void process(const TlogoawaySettings *cfg);
    void done(void);
-   bool boolean_test() const {return !!bordn;} 
+   bool boolean_test() const {return !!bordn;}
   } plane[3];
 protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);

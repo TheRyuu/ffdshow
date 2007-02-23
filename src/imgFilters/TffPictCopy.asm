@@ -4,9 +4,9 @@
 
 BITS 32
 
-%macro cglobal 1 
+%macro cglobal 1
  %ifdef PREFIX
-  global _%1 
+  global _%1
   %define %1 _%1
  %else
   global %1
@@ -29,24 +29,24 @@ asm_BitBlt_ISSE
  push edi
  push ebx
  push ecx
- 
+
  mov eax,height
  mov edx,row_size
  cmp edx,0
  je near asm_BitBlt_SSE_end
  cmp eax,0
- je near asm_BitBlt_SSE_end 
- 
+ je near asm_BitBlt_SSE_end
+
  dec eax
- 
+
  mov esi,eax
  imul esi,src_pitch
  add esi,srcp
- 
+
  mov edi,eax
  imul edi,dst_pitch
  add edi,dstp
- 
+
  cmp edx,64
  jge asm_BitBlt_SSE_big
 ; ==================== small =====================
@@ -66,8 +66,8 @@ memoptS_byteloop:
  dec   ebx
  jne   memoptS_rowloop
  jmp		asm_BitBlt_SSE_end
- 
-asm_BitBlt_SSE_big: 
+
+asm_BitBlt_SSE_big:
  mov eax,dstp
  or  eax,row_size
  or  eax,src_pitch
@@ -93,7 +93,7 @@ memoptU_prefetchloop:
  cmp   ecx,esi
  jae   memoptU_prefetchloop
 
-;write 
+;write
 
  movq    mm6,[esi]     ;move the first unaligned bytes
  movntq  [edi],mm6
@@ -158,7 +158,7 @@ memoptU_done8:
  emms
  jmp asm_BitBlt_SSE_end
 
-asm_BitBlt_SSE_align: 
+asm_BitBlt_SSE_align:
 ; ==================== aligned =====================
       mov   ebx,height
       align 16

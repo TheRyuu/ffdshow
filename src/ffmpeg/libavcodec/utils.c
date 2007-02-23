@@ -725,7 +725,7 @@ void avcodec_get_context_defaults(AVCodecContext *s){
 
     s->av_class= &av_codec_context_class;
     av_opt_set_defaults(s);
-    
+
     //s->bit_rate= 800*1000;
     s->bit_rate_tolerance= s->bit_rate*10;
     s->rc_eq= "tex^qComp";
@@ -999,8 +999,8 @@ void avcodec_init(void)
     {
     extern void avpicture_init_pixfmtinfo(void);
     avpicture_init_pixfmtinfo();
-   } 
-#endif    
+   }
+#endif
 
     dsputil_static_init();
     init_crcs();

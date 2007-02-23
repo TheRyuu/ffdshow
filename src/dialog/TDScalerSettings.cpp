@@ -73,9 +73,9 @@ void TDScalerSettings::writeops(TregOp &t)
  for (int i=0;i<nSettings;i++)
   {
    if (!pSettings[i].szDisplayName) break;
-   if (pSettings[i].pValue!=bActive) 
+   if (pSettings[i].pValue!=bActive)
     t._REG_OP_N(0,text<char_t>(pSettings[i].szIniEntry),(int&)*pSettings[i].pValue,(int)*pSettings[i].pValue);
-  } 
+  }
 }
 void TDScalerSettings::cfg2str(ffstring &s)
 {
@@ -100,7 +100,7 @@ void TDScalerSettings::str2cfg(const ffstring &s)
     pSettings[i].pfnOnChange(val);
    else
     *pSettings[i].pValue=val;
-  } 
+  }
  deciV->unlock(IDFF_lockDScaler);
 }
 void TDScalerSettings::reset(void)
@@ -114,13 +114,13 @@ void TDScalerSettings::reset(void)
     pSettings[i].pfnOnChange(val);
    else
     *pSettings[i].pValue=val;
-  } 
- deciV->unlock(IDFF_lockDScaler); 
+  }
+ deciV->unlock(IDFF_lockDScaler);
  SendMessage(parent,onChangeMsg,0,0);
 }
 
 BOOL CALLBACK TDScalerSettings::dscalerDlgEnum(HWND hwnd,LPARAM lParam)
-{ 
+{
  TDScalerSettings *self=(TDScalerSettings*)lParam;
  RECT r;GetWindowRect(hwnd,&r);
  if (self->cdy_top==-1) self->cdy_top=r.top;
@@ -179,7 +179,7 @@ INT_PTR CALLBACK TDScalerSettings::dscalerDlgProc(HWND m_hwnd,UINT uMsg,WPARAM w
       {
        self->sbrWidth=0;
        EnumChildWindows(m_hwnd,dscalerDlgEnum,LPARAM(self));
-      } 
+      }
      return TRUE;
     }
    case WM_COMMAND:
@@ -230,13 +230,13 @@ INT_PTR CALLBACK TDScalerSettings::dscalerDlgProc(HWND m_hwnd,UINT uMsg,WPARAM w
      si.fMask = SIF_POS;
      SetScrollInfo(m_hwnd,SB_VERT,&si,TRUE);
      GetScrollInfo(m_hwnd,SB_VERT,&si);
-     
-     // If the position has changed, scroll the window 
+
+     // If the position has changed, scroll the window
      if (si.nPos!=oldpos) ScrollWindow(m_hwnd,0,oldpos-si.nPos,NULL,NULL);
      return TRUE;
     }
   }
- return FALSE;   
+ return FALSE;
 }
 
 HWND TDScalerSettings::createWindow(HINSTANCE hi,const Twindow *Iparent,const RECT &r,LONG IonChangeMsg,long *IbActive)
@@ -246,7 +246,7 @@ HWND TDScalerSettings::createWindow(HINSTANCE hi,const Twindow *Iparent,const RE
  bActive=IbActive;
 
  sets.clear();
- 
+
  WCHAR *p=(WCHAR*)LocalAlloc(LPTR,300000);
  WCHAR *pdlgtemplate=p;
 
@@ -282,7 +282,7 @@ HWND TDScalerSettings::createWindow(HINSTANCE hi,const Twindow *Iparent,const RE
  p++;
  nchar = nCopyAnsiToWideChar(p,Iparent->tr->font.typeface[0]?Iparent->tr->font.typeface:_l("MS Shell Dlg"));  // Face name
  p += nchar;
- 
+
  rdx=r.right-r.left;rdy=r.bottom-r.top;
 
  WORD y=1,id=1;
@@ -381,7 +381,7 @@ HWND TDScalerSettings::createWindow(HINSTANCE hi,const Twindow *Iparent,const RE
      p += nchar;
      *p++ = 0;
      (*nitems)++;
-     
+
      p = lpwAlign (p);
      *p++ = LOWORD (helpId);
      *p++ = HIWORD (helpId);

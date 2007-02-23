@@ -25,13 +25,13 @@ const TresizeSettingsPage::TparamsIDs TresizeSettingsPage::idsLuma=
  IDFF_resizeMethodLuma,
  IDFF_resizeBicubicLumaParam,IDFF_resizeGaussLumaParam,IDFF_resizeLanczosLumaParam,
  IDC_LBL_RESIZE_PARAM_LUMA,IDC_TBR_RESIZE_PARAM_LUMA
-}; 
+};
 const TresizeSettingsPage::TparamsIDs TresizeSettingsPage::idsChroma=
 {
  IDFF_resizeMethodChroma,
  IDFF_resizeBicubicChromaParam,IDFF_resizeGaussChromaParam,IDFF_resizeLanczosChromaParam,
  IDC_LBL_RESIZE_PARAM_CHROMA,IDC_TBR_RESIZE_PARAM_CHROMA
-}; 
+};
 
 void TresizeSettingsPage::init(void)
 {
@@ -64,7 +64,7 @@ void TresizeSettingsPage::blurSharpen2dlg(void)
                           IDC_TBR_RESIZE_GBLUR_LUM,IDC_LBL_RESIZE_GBLUR_LUM,
                           IDC_TBR_RESIZE_GBLUR_CHROM,IDC_LBL_RESIZE_GBLUR_CHROM,0};
  int method=cfgGet(IDFF_resizeMethodLuma);
- enable(TresizeAspectSettings::methodsProps[method].library==TresizeAspectSettings::LIB_SWSCALER,idSh); 
+ enable(TresizeAspectSettings::methodsProps[method].library==TresizeAspectSettings::LIB_SWSCALER,idSh);
 }
 void TresizeSettingsPage::warp2dlg(void)
 {
@@ -131,7 +131,7 @@ void TresizeSettingsPage::param2dlg(const TparamsIDs &ids)
  tbrSetRange(ids.idc_tbr,0,max);
  //SendDlgItemMessage(m_hwnd,ids.idc_tbr,TBM_SETRANGE,TRUE,MAKELPARAM(0,max));
  SendDlgItemMessage(m_hwnd,ids.idc_tbr,TBM_SETLINESIZE,0,step1);
- SendDlgItemMessage(m_hwnd,ids.idc_tbr,TBM_SETPAGESIZE,0,step2); 
+ SendDlgItemMessage(m_hwnd,ids.idc_tbr,TBM_SETPAGESIZE,0,step2);
  tbrSet(ids.idc_tbr,pos);
  if (realPos==0)
   tsprintf(pomS,_l("%s %s"),_(ids.idc_lbl,name),_(ids.idc_lbl,_l("default")));
@@ -167,21 +167,21 @@ INT_PTR TresizeSettingsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       case IDC_TBR_RESIZE_PARAM_CHROMA:
        return setParams(tbrGet(IDC_TBR_RESIZE_PARAM_CHROMA),idsChroma);
      }
-    break; 
+    break;
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CHB_RESIZE_INTERLACED:
        cfgSet(IDFF_resizeInterlaced,getCheck3(IDC_CHB_RESIZE_INTERLACED));
        return TRUE;
-     }   
+     }
     break;
   }
  return TconfPageDecVideo::msgProc(uMsg,wParam,lParam);
 }
 
 void TresizeSettingsPage::translate(void)
-{ 
+{
  TconfPageBase::translate();
 
  int selLuma=cbxGetCurSel(IDC_CBX_RESIZE_METHOD_LUMA),selChroma=cbxGetCurSel(IDC_CBX_RESIZE_METHOD_CHROMA);
@@ -192,7 +192,7 @@ void TresizeSettingsPage::translate(void)
    cbxAdd(IDC_CBX_RESIZE_METHOD_LUMA  ,_(IDC_CBX_RESIZE_METHOD_LUMA,TresizeAspectSettings::methodsProps[method].name),TresizeAspectSettings::methodsProps[method].id);
    if (TresizeAspectSettings::methodsProps[method].library==TresizeAspectSettings::LIB_SWSCALER)
     cbxAdd(IDC_CBX_RESIZE_METHOD_CHROMA,_(IDC_CBX_RESIZE_METHOD_CHROMA,TresizeAspectSettings::methodsProps[method].name),TresizeAspectSettings::methodsProps[method].id);
-  } 
+  }
  cbxSetCurSel(IDC_CBX_RESIZE_METHOD_LUMA,selLuma);cbxSetCurSel(IDC_CBX_RESIZE_METHOD_CHROMA,selChroma);
 }
 

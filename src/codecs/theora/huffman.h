@@ -10,7 +10,7 @@
  *                                                                  *
  ********************************************************************
 
-  function: 
+  function:
 
  ********************************************************************/
 
@@ -52,9 +52,9 @@
 #define DCT_ZRL_TOKEN           8
 
 #define ONE_TOKEN               9       /* Special tokens for -1,1,-2,2 */
-#define MINUS_ONE_TOKEN         10 
-#define TWO_TOKEN               11 
-#define MINUS_TWO_TOKEN         12 
+#define MINUS_ONE_TOKEN         10
+#define TWO_TOKEN               11
+#define MINUS_TWO_TOKEN         12
 
 #define LOW_VAL_TOKENS          (MINUS_TWO_TOKEN + 1)
 #define DCT_VAL_CATEGORY3       (LOW_VAL_TOKENS + 4)
@@ -70,4 +70,4 @@
 #define DCT_RUN_CATEGORY2       (DCT_RUN_CATEGORY1C + 1)
 
 /* 32 */
-#define MAX_ENTROPY_TOKENS      (DCT_RUN_CATEGORY2 + 2)  
+#define MAX_ENTROPY_TOKENS      (DCT_RUN_CATEGORY2 + 2)

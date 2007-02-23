@@ -1,10 +1,10 @@
-/* 
- * Mpeg Layer-1 audio decoder 
+/*
+ * Mpeg Layer-1 audio decoder
  * --------------------------
  * copyright (c) 1995 by Michael Hipp, All rights reserved. See also 'README'
  * near unoptimzed ...
  *
- * may have a few bugs after last optimization ... 
+ * may have a few bugs after last optimization ...
  *
  */
 
@@ -18,7 +18,7 @@ static void I_step_one(mp3lib_ctx *ctx,unsigned int balloc[], unsigned int scale
   if(fr->stereo==2) {
     int i;
     int jsbound = fr->jsbound;
-    for (i=0;i<jsbound;i++) { 
+    for (i=0;i<jsbound;i++) {
       *ba++ = getbits(ctx,4);
       *ba++ = getbits(ctx,4);
     }
@@ -50,7 +50,7 @@ static void I_step_one(mp3lib_ctx *ctx,unsigned int balloc[], unsigned int scale
   }
 }
 
-static void I_step_two(mp3lib_ctx *ctx,real fraction[2][SBLIMIT],unsigned int balloc[2*SBLIMIT], 
+static void I_step_two(mp3lib_ctx *ctx,real fraction[2][SBLIMIT],unsigned int balloc[2*SBLIMIT],
         unsigned int scale_index[2][SBLIMIT],struct frame *fr)
 {
   int i,n;
@@ -70,7 +70,7 @@ static void I_step_two(mp3lib_ctx *ctx,real fraction[2][SBLIMIT],unsigned int ba
       if ((n = *ba++))
         *sample++ = getbits(ctx,n+1);
     }
-    for (i=jsbound;i<SBLIMIT;i++) 
+    for (i=jsbound;i<SBLIMIT;i++)
       if ((n = *ba++))
         *sample++ = getbits(ctx,n+1);
 
@@ -128,7 +128,7 @@ static int do_layer1(mp3lib_ctx *ctx,int single)
 //  printf("do_layer1(0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X )\n",
 //    wordpointer[0],wordpointer[1],wordpointer[2],wordpointer[3],wordpointer[4],wordpointer[5],wordpointer[6],wordpointer[7]);
 
-  fr->jsbound = (fr->mode == MPG_MD_JOINT_STEREO) ? 
+  fr->jsbound = (fr->mode == MPG_MD_JOINT_STEREO) ?
                          (fr->mode_ext<<2)+4 : 32;
 
   if(stereo == 1 || single == 3)
@@ -154,5 +154,9 @@ static int do_layer1(mp3lib_ctx *ctx,int single)
 
   return clip;
 }
+
+
+
+
 
 

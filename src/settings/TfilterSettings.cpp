@@ -38,7 +38,7 @@ void TfilterSettings::idffOnChange(const TfilterIDFF &idffs,Tfilters *filters,bo
    if (idffs.is) setOnChange(idffs.is,filters,&Tfilters::onQueueChange);
    if (idffs.show) setOnChange(idffs.show,filters,&Tfilters::onQueueChange);
    if (idffs.order) setOnChange(idffs.order,filters,&Tfilters::onQueueChange);
-  } 
+  }
 }
 
 bool TfilterSettings::hasReset(unsigned int pageId)

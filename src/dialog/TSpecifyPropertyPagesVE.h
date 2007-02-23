@@ -22,7 +22,7 @@ public:
  STDMETHODIMP_(ISpecifyPropertyPages*) get(const IID &iid);
  STDMETHODIMP setIffdshowBase(const IID &iid,IffdshowBase *Ideci);
  STDMETHODIMP commonOptionChanged(const IID &src,int idff);
- 
+
  static void show2configPages(const IID &iidD,IUnknown *deciD,const IID &iidE,IUnknown *deciE,int idCaption,int icon,int idff_multiplePages);
 };
 

@@ -23,10 +23,10 @@ private:
   protected:
    virtual LRESULT onKeyDown(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
    virtual LRESULT onKeyUp(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
-  public: 
+  public:
    TwidgetTv(HWND h,TffdshowPageDec *Iself):TwindowWidget(h,Iself),self(Iself) {allowOwnProc();}
   };
- void onReset(void),onResetOrder(void); 
+ void onReset(void),onResetOrder(void);
  enum {WM_FFONNEWFILTERS=WM_APP+5};
 protected:
  comptrQ<IffdshowDec> deciD;
@@ -45,7 +45,7 @@ protected:
  ThtiPages filterPages;
  static int CALLBACK orderCompareFunc(LPARAM lParam1, LPARAM lParam2,LPARAM lParamSort);
  void sortOrder(void);
- 
+
  virtual Twidget* createDlgItem(int id,HWND h);
  virtual INT_PTR msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam);
 

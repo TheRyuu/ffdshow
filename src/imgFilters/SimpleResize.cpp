@@ -14,20 +14,20 @@
 //      You should have received a copy of the GNU General Public License
 //      along with this program; if not, write to the Free Software
 //      Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-//  
-//  Also, this program is "Philanthropy-Ware".  That is, if you like it and 
+//
+//  Also, this program is "Philanthropy-Ware".  That is, if you like it and
 //  feel the need to reward or inspire the author then please feel free (but
 //  not obligated) to consider joining or donating to the Electronic Frontier
-//  Foundation. This will help keep cyber space free of barbed wire and bullsh*t.  
+//  Foundation. This will help keep cyber space free of barbed wire and bullsh*t.
 //
 //  See their web page at www.eff.org
 
 // Changes:
-// 
+//
 // Jan 2003 0.3.3.0 Avisynth 2.5 YV12 support, AvisynthPluginit2
 // Feb 2002 0.3.0.0 Added InterlacedResize support
 // Jan 2002 0.2.0.0 Some rather ineffectual P3 SSE optimizations
-// Jan 2002 0.1.0.0 First release 
+// Jan 2002 0.1.0.0 First release
 
 #include "stdafx.h"
 #include "SimpleResize.h"
@@ -54,7 +54,7 @@ SimpleResize::SimpleResize(const VideoInfo &vi,unsigned int _width, unsigned int
                 Interlaced = _Interlaced;
                 SSE2enabled = Tconfig::cpu_flags&FF_CPU_SSE2?true:false;
                 SSEMMXenabled = Tconfig::cpu_flags&FF_CPU_MMXEXT?true:false;
-            
+
                 vOffsetsUV=vWeightsUV=hControl=vWorkY=vWorkUV=vOffsets=vWeights=NULL;
                 if (vi.IsYUY2)
                 {
@@ -83,10 +83,10 @@ SimpleResize::SimpleResize(const VideoInfo &vi,unsigned int _width, unsigned int
 
                 // 2 qwords, 2 offsets, and prefetch slack
             hControl = (unsigned int*) aligned_malloc(newwidth*12+128, 128);   // aligned for P4 cache line
-            vWorkY   = (unsigned int*) aligned_malloc(2*oldwidth+128, 128);   
-            vWorkUV  = (unsigned int*) aligned_malloc(oldwidth+128, 128);   
-            vOffsets = (unsigned int*) aligned_malloc(newheight*4, 128);  
-            vWeights = (unsigned int*) aligned_malloc(newheight*4, 128);  
+            vWorkY   = (unsigned int*) aligned_malloc(2*oldwidth+128, 128);
+            vWorkUV  = (unsigned int*) aligned_malloc(oldwidth+128, 128);
+            vOffsets = (unsigned int*) aligned_malloc(newheight*4, 128);
+            vWeights = (unsigned int*) aligned_malloc(newheight*4, 128);
 
                 if (!hControl || !vWeights)
                 {
@@ -100,7 +100,7 @@ SimpleResize::SimpleResize(const VideoInfo &vi,unsigned int _width, unsigned int
                 {
                         InitTables();
                 }
- ok=true;               
+ ok=true;
 }
 
 SimpleResize::~SimpleResize()
@@ -114,23 +114,23 @@ SimpleResize::~SimpleResize()
  if (vWeights  ) aligned_free(vWeights);
 }
 
-void SimpleResize::GetFrame(const PVideoFrame *src,PVideoFrame *dst) 
+void SimpleResize::GetFrame(const PVideoFrame *src,PVideoFrame *dst)
 {
 
         if (DoYV12)
         {
-                GetFrame_YV12( src, dst, PLANAR_Y); 
-                GetFrame_YV12( src, dst, PLANAR_U); 
-                GetFrame_YV12( src, dst, PLANAR_V); 
+                GetFrame_YV12( src, dst, PLANAR_Y);
+                GetFrame_YV12( src, dst, PLANAR_U);
+                GetFrame_YV12( src, dst, PLANAR_V);
         }
         else
         {
-                GetFrame_YUY2( src, dst, PLANAR_Y); 
+                GetFrame_YUY2( src, dst, PLANAR_Y);
         }
 }
 
 // YV12 Luma
-void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int Planar_Type) 
+void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int Planar_Type)
 {
         int vWeight1[4];
         int vWeight2[4];
@@ -143,7 +143,7 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
         //      BYTE* dstp = dst->GetWritePtr(Planar_Type);
         const stride_t src_pitch = src->pitch[Planar_Type];
         const stride_t dst_pitch = dst->pitch[Planar_Type];
-        const int src_row_size = src->rowSize[Planar_Type];   
+        const int src_row_size = src->rowSize[Planar_Type];
         const int row_size = dst->rowSize[Planar_Type];
         const int height = dst->height[Planar_Type];
 
@@ -151,15 +151,15 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
         const unsigned char* srcp1;
         const unsigned char* srcp2;
         unsigned int* vWorkYW = vWorkY;
-        
+
         unsigned int* vOffsetsW = (Planar_Type == PLANAR_Y)
                 ? vOffsets
-                : vOffsetsUV; 
+                : vOffsetsUV;
 
         unsigned int* vWeightsW = (Planar_Type == PLANAR_Y)
                 ? vWeights
                 : vWeightsUV;
-                
+
         // Just in case things are not aligned right, maybe turn off sse2
         #ifdef __SSE2__
         __m128i xmm0,xmm5,xmm6,xmm7,xmm1,xmm2,xmm3,xmm4;
@@ -168,13 +168,13 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
         for (int y = 0; y < height; y++)
         {
 
-                vWeight1[0] = vWeight1[1] = vWeight1[2] = vWeight1[3] = 
+                vWeight1[0] = vWeight1[1] = vWeight1[2] = vWeight1[3] =
                         (256-vWeightsW[y]) << 16 | (256-vWeightsW[y]);
-                vWeight2[0] = vWeight2[1] = vWeight2[2] = vWeight2[3] = 
+                vWeight2[0] = vWeight2[1] = vWeight2[2] = vWeight2[3] =
                         vWeightsW[y] << 16 | vWeightsW[y];
 
                 srcp1 = srcp + vOffsetsW[y] * src_pitch;
-                
+
                 if (Interlaced)
                 {
                         srcp2 = (y < height-2)
@@ -201,13 +201,13 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
 #ifdef __SSE2__
                         if (SSE2enabled==0)                  // is SSE2 supported?
                          goto vMaybeSSEMMX;                            // n, can't do anyway
-                         
+
                         if (ecx< 2)                                  // we have at least 16 byts, 2 qwords?
                          goto vMaybeSSEMMX;                            // n, don't bother
-                        
+
                         if ((intptr_t(esi)|intptr_t(edx))&0xf)                               // both src rows 16 byte aligned?
                          goto vMaybeSSEMMX;                    // n, don't use sse2
-                        
+
                         ecx>>=1;                                // do 16 bytes at a time instead
                         ecx--;                                  // jigger loop ct
                         //align       16
@@ -217,11 +217,11 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
                         pxor    (xmm7, xmm7);
 
                         //align   16
-        vLoopSSE2_Fetch:        
+        vLoopSSE2_Fetch:
                         prefetcht0 (esi+eax*2+16);
                         prefetcht0 (edx+eax*2+16);
 
-        vLoopSSE2:      
+        vLoopSSE2:
                         movdqu  (xmm1, esi+eax); // top of 2 lines to interpolate
                         movdqu  (xmm3, edx+eax); // 2nd of 2 lines
                         movdqa  (xmm2, xmm1);
@@ -242,10 +242,10 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
 
                         paddusw (xmm1, xmm0);                              // round
                         paddusw (xmm2, xmm0);                              // round
-                        
+
                         psrlw   (xmm1, 8);                                 // right adjust luma
                         psrlw   (xmm2, 8);                                 // right adjust luma
-                                                
+
                         packuswb (xmm1, xmm2);                             // pack words to our 16 byte answer
                         movntdq (edi+eax, xmm1);      // save lumas in our work area
 
@@ -262,7 +262,7 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
                         movq    (mm6, vWeight2);
                         movq    (mm0, FPround1);                   // useful rounding constant
                         ecx>>=3;                                  // 8 bytes at a time, any?
-                        if (ecx==0) goto MoreSpareChange;                 // n, did them all              
+                        if (ecx==0) goto MoreSpareChange;                 // n, did them all
 #endif
 // Let's check here to see if we are on a P2 or Athlon and can use SSEMMX instructions.
 // This first loop is not the performance bottleneck anyway but it is trivial to tune
@@ -271,7 +271,7 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
                         movq    (mm5, vWeight1);
                         movq    (mm6, vWeight2);
                         movq    (mm0, FPround1);                   // useful rounding constant
-                        pxor    (mm7, mm7);                        
+                        pxor    (mm7, mm7);
                         if (SSEMMXenabled==0)                // is SSE supported?
                          goto vLoopMMX;                                // n, can't do anyway
                         ecx--;// jigger loop ctr
@@ -280,7 +280,7 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
         vLoopSSEMMX_Fetch:
                         prefetcht0 (esi+eax+8);
                         prefetcht0 (edx+eax+8);
-        
+
         vLoopSSEMMX:
                         movq    (mm1, esi+eax); // top of 2 lines to interpolate
                         movq    (mm3, edx+eax); // 2nd of 2 lines
@@ -299,13 +299,13 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
 
                         paddw   (mm1, mm3);                                // combine lumas
                         paddw   (mm2, mm4);                                // combine lumas
-                                        
+
                         paddusw (mm1, mm0);                                // round
                         paddusw (mm2, mm0);                                // round
-                                        
+
                         psrlw   (mm1, 8  );                                // right adjust luma
                         psrlw   (mm2, 8  );                                // right adjust luma
-                        
+
                         packuswb (mm1,mm2);                                // pack UV's into low dword
 
                         movntq  (edi+eax, mm1); // save in our work area
@@ -318,7 +318,7 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
                         goto             MoreSpareChange;                 // all done with vertical
 
                     //align       16
-        vLoopMMX:       
+        vLoopMMX:
                         movq    (mm1, esi+eax); // top of 2 lines to interpolate
                         movq    (mm3, edx+eax); // 2nd of 2 lines
                         movq    (mm2, mm1);                                // copy top bytes
@@ -336,23 +336,23 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
 
                         paddw   (mm1, mm3);                                // combine lumas
                         paddw   (mm2, mm4);                                // combine lumas
-                                
+
                         paddusw (mm1, mm0);                                // round
                         paddusw (mm2, mm0);                                // round
-                                
-                        psrlw   (mm1, 8);                                  // right just 
-                        psrlw   (mm2, 8);                                  // right just 
-                        
+
+                        psrlw   (mm1, 8);                                  // right just
+                        psrlw   (mm2, 8);                                  // right just
+
                         packuswb (mm1,mm2);                                // pack UV's into low dword
 
                         movq    (edi+eax, mm1); // save lumas in our work area
-        
+
                         eax= eax+8;
                         ecx--;if (ecx>0) goto vLoopMMX;
 
 // Add a little code here to check if we have more pixels to do and, if so, make one
 // more pass thru vLoopMMX. We were processing in multiples of 8 pixels and alway have
-// an even number so there will never be more than 7 left. 
+// an even number so there will never be more than 7 left.
         MoreSpareChange:
                         if (!(eax< src_row_size))               // did we get them all
                          goto DoHorizontal;// jnl             DoHorizontal                    // yes, else have 2 left
@@ -360,13 +360,13 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
                         eax= src_row_size;
                         eax-=8;                                  // back up to last 8 pixels
                         goto vLoopMMX;
-        
+
 
 // We've taken care of the vertical scaling, now do horizontal
         DoHorizontal:
                         pxor    (mm7, mm7);
                         movq    (mm6, FPround2);           // useful rounding constant, dwords
-                        esi= (const unsigned char*)pControl;           // @ horiz control bytes                        
+                        esi= (const unsigned char*)pControl;           // @ horiz control bytes
                         ecx= row_size;
                         ecx>>=2;                          // 4 bytes a time, 4 pixels
                         edx= (const unsigned char*)vWorkYW;            // our luma data
@@ -378,8 +378,8 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
                         ecx >>=1;                          // 8 bytes a time instead of 4
                         if (ecx==0) goto LessThan8;
                         //align 16
-        hLoopMMXSSE:   
-                        // handle first 2 pixels                        
+        hLoopMMXSSE:
+                        // handle first 2 pixels
                         eax= *(int*)(esi+16);           // get data offset in pixels, 1st pixel pair
                         ebx= *(int*)(esi+20);           // get data offset in pixels, 2nd pixel pair
                         movd    (mm0, edx+eax);          // copy luma pair 0000xxYY
@@ -391,7 +391,7 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
                         paddusw (mm0, mm6);                        // round
                         psrlw   (mm0, 8);                          // right just 4 luma pixel value 0Y0Y0Y0Y
 
-                        // handle 3rd and 4th pixel pairs                       
+                        // handle 3rd and 4th pixel pairs
                         movd    (mm1, edx+eax);          // copy luma pair 0000xxYY
                         punpcklwd (mm1, edx+ebx);    // 2nd luma pair, now xxxxYYYY
                         punpcklbw (mm1, mm7);                  // make words out of bytes, 0Y0Y0Y0Y
@@ -401,7 +401,7 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
                         paddusw (mm1, mm6);                        // round
                         psrlw   (mm1, 8);                          // right just 4 luma pixel value 0Y0Y0Y0Y
 
-                        // handle 5th and 6th pixel pairs                       
+                        // handle 5th and 6th pixel pairs
                         movd    (mm2, edx+eax);          // copy luma pair 0000xxYY
                         punpcklwd (mm2, edx+ebx);    // 2nd luma pair, now xxxxYYYY
                         punpcklbw (mm2, mm7);                  // make words out of bytes, 0Y0Y0Y0Y
@@ -411,7 +411,7 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
                         paddusw (mm2, mm6);                        // round
                         psrlw   (mm2, 8);                          // right just 4 luma pixel value 0Y0Y0Y0Y
 
-                        // handle 7th and 8th pixel pairs                       
+                        // handle 7th and 8th pixel pairs
                         movd    (mm3, edx+eax);          // copy luma pair
                         punpcklwd (mm3, edx+ebx);    // 2nd luma pair
                         punpcklbw (mm3, mm7);                  // make words out of bytes
@@ -422,7 +422,7 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
                         // combine, store, and loop
                         packuswb (mm0,mm1);                        // pack into qword, 0Y0Y0Y0Y
                         packuswb (mm2,mm3);                        // pack into qword, 0Y0Y0Y0Y
-                        packuswb (mm0,mm2);                        // and again into  YYYYYYYY                             
+                        packuswb (mm0,mm2);                        // and again into  YYYYYYYY
                         movntq   (edi,mm0);     // done with 4 pixels
 
                         esi=esi+96;            // bump to next control bytest
@@ -438,8 +438,8 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
                         if (ecx==0) goto LessThan4;
 
                         //align 16
-        hLoopMMX:   
-                        // handle first 2 pixels                        
+        hLoopMMX:
+                        // handle first 2 pixels
                         eax=*(int*)(esi+16);           // get data offset in pixels, 1st pixel pair
                         ebx=*(int*)(esi+20);           // get data offset in pixels, 2nd pixel pair
                         movd    (mm0, edx+eax);          // copy luma pair 0000xxYY
@@ -451,7 +451,7 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
                         paddusw (mm0, mm6);                        // round
                         psrlw   (mm0, 8);                          // right just 4 luma pixel value 0Y0Y0Y0Y
 
-                        // handle 3rd and 4th pixel pairs                       
+                        // handle 3rd and 4th pixel pairs
                         movd    (mm1, edx+eax);          // copy luma pair
                         punpcklwd (mm1, edx+ebx);    // 2nd luma pair
                         punpcklbw (mm1, mm7);                  // make words out of bytes
@@ -461,7 +461,7 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
 
                         // combine, store, and loop
                         packuswb (mm0,mm1);                        // pack all into qword, 0Y0Y0Y0Y
-                        packuswb (mm0,mm7);                        // and again into  0000YYYY                             
+                        packuswb (mm0,mm7);                        // and again into  0000YYYY
                         movd    (edi, mm0);     // done with 4 pixels
                         esi=esi+48;            // bump to next control bytest
                         edi=edi+4;                     // bump to next output pixel addr
@@ -474,7 +474,7 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
                         if (ecx< 2)
                          goto LastOne;                         // none, done
 
-                        // handle 2 more pixels                 
+                        // handle 2 more pixels
                         eax=*(int*)(esi+16);           // get data offset in pixels, 1st pixel pair
                         ebx=*(int*)(esi+20);           // get data offset in pixels, 2nd pixel pair
                         movd    (mm0, edx+eax);          // copy luma pair 0000xxYY
@@ -485,7 +485,7 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
                         paddusw (mm0, mm6);                        // round
                         psrlw   (mm0, 8);                          // right just 2 luma pixel value 000Y,000Y
                         packuswb (mm0,mm7);                        // pack all into qword, 00000Y0Y
-                        packuswb (mm0,mm7);                        // and again into  000000YY             
+                        packuswb (mm0,mm7);                        // and again into  000000YY
                         movd    (edi, mm0);     // store, we are guarrenteed room in buffer (8 byte mult)
                         ecx-= 2;
                         esi=esi+24;           // bump to next control bytest
@@ -495,7 +495,7 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
         LastOne:
                         if (ecx==0)                          // still more?
                          goto AllDone;                         // n, done
-                
+
                         eax=*(int*)(esi+16);           // get data offset in pixels, 1st pixel pair
                         movd    (mm0, edx+eax);          // copy luma pair 0000xxYY
                         punpcklbw (mm0, mm7);                  // make words out of bytes, xxxx0Y0Y
@@ -503,7 +503,7 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
                         pmaddwd (mm0, esi);                      // mult and sum lumas by ctl weights
                         paddusw (mm0, mm6);                        // round
                         psrlw   (mm0, 8);                          // right just 2 luma pixel value xxxx000Y
-                        movd    (eax, mm0);                        
+                        movd    (eax, mm0);
                         *edi=(unsigned char)eax;       // store last one
 
         AllDone:
@@ -515,12 +515,12 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
 
 
 // YUY2
-void SimpleResize::GetFrame_YUY2(const PVideoFrame *src, PVideoFrame *dst, int Planar_Type) 
+void SimpleResize::GetFrame_YUY2(const PVideoFrame *src, PVideoFrame *dst, int Planar_Type)
 {
         int vWeight1[4];
         int vWeight2[4];
 //    unsigned char* dstp = dst->GetWritePtr(PLANAR_Y);
-        
+
         const unsigned char* srcp = src->ptr[Planar_Type];
         BYTE* dstp=dst->ptr[0];
 
@@ -532,23 +532,23 @@ void SimpleResize::GetFrame_YUY2(const PVideoFrame *src, PVideoFrame *dst, int P
         const unsigned int* pControl = &hControl[0];
         const unsigned char* srcp1;
         const unsigned char* srcp2;
-        unsigned int* vWorkYW = vWorkY; 
-        unsigned int* vWorkUVW = vWorkUV; 
+        unsigned int* vWorkYW = vWorkY;
+        unsigned int* vWorkUVW = vWorkUV;
         int EndOffset = src_row_size / 2;
         #ifdef __SSE2__
          __m128i xmm0,xmm5,xmm6,xmm7,xmm1,xmm2,xmm3,xmm4;
-        #endif 
+        #endif
         __m64 mm5,mm6,mm0,mm7,mm1,mm2,mm3,mm4;
         for (int y = 0; y < height; y++)
         {
 
-                vWeight1[0] = vWeight1[1] = vWeight1[2] = vWeight1[3] = 
+                vWeight1[0] = vWeight1[1] = vWeight1[2] = vWeight1[3] =
                         (256-vWeights[y]) << 16 | (256-vWeights[y]);
-                vWeight2[0] = vWeight2[1] = vWeight2[2] = vWeight2[3] = 
+                vWeight2[0] = vWeight2[1] = vWeight2[2] = vWeight2[3] =
                         vWeights[y] << 16 | vWeights[y];
 
                 srcp1 = srcp + vOffsets[y] * src_pitch;
-                
+
                 if (Interlaced)
                 {
                         srcp2 = (y < height-2)
@@ -586,11 +586,11 @@ void SimpleResize::GetFrame_YUY2(const PVideoFrame *src, PVideoFrame *dst, int P
                         movdqu  (xmm6, vWeight2);
                         movdqu  (xmm7, YMask   );
 
-        vLoopSSE2_Fetch:        
+        vLoopSSE2_Fetch:
                         prefetcht0 (esi+eax*2+16);
                         prefetcht0 (edx+eax*2+16);
 
-        vLoopSSE2:      
+        vLoopSSE2:
                         movdqu  (xmm1,esi+eax*2); // top of 2 lines to interpolate
                         movdqu  (xmm2,edx+eax*2); // 2nd of 2 lines
 
@@ -599,25 +599,25 @@ void SimpleResize::GetFrame_YUY2(const PVideoFrame *src, PVideoFrame *dst, int P
                         psrlw   (xmm3, 8   );                              // right just chroma
                         pmullw  (xmm1, xmm5);                              // mult by weighting factor
                         pmullw  (xmm3, xmm5);              // mult by weighting factor
-                                           
+
                         movdqa  (xmm4, xmm2);                              // get chroma bytes
                         pand    (xmm2, xmm7);                              // keep only luma
                         psrlw   (xmm4, 8   );                              // right just chroma
                         pmullw  (xmm2, xmm6);                              // mult by weighting factor
                         pmullw  (xmm4, xmm6);              // mult by weighting factor
-                                           
+
                         paddw   (xmm1, xmm2     );                         // combine lumas
                         paddusw (xmm1, xmm0     );                         // round
                         psrlw   (xmm1, 8        );                         // right adjust luma
                         movntdq (edi+eax*2, xmm1);    // save lumas in our work area
-                                
+
                         paddw   (xmm3, xmm4);                              // combine chromas
                         paddusw (xmm3, xmm0);                              // round
                         psrlw   (xmm3, 8   );                              // right adjust chroma
                         packuswb(xmm3,xmm3 );                             // pack UV's into low dword
                         movdq2q (mm1, xmm3   );                            // save in our work area
                         movntq  (ebx+eax, mm1); // save in our work area
-                                             
+
                         eax= eax+8;
                         ecx--;                                             // don
                         if (ecx>0) goto vLoopSSE2_Fetch;                 // if not on last one loop, prefetch
@@ -632,7 +632,7 @@ void SimpleResize::GetFrame_YUY2(const PVideoFrame *src, PVideoFrame *dst, int P
                         movq    (mm6, vWeight2);
                         movq    (mm0, FPround1);                   // useful rounding constant
                         ecx>>= 3;                                  // 8 bytes at a time, any?
-                        if (ecx==0) goto MoreSpareChange;                 // n, did them all              
+                        if (ecx==0) goto MoreSpareChange;                 // n, did them all
 #endif
 // Let's check here to see if we are on a P2 or Athlon and can use SSEMMX instructions.
 // This first loop is not the performance bottleneck anyway but it is trivial to tune
@@ -650,30 +650,30 @@ void SimpleResize::GetFrame_YUY2(const PVideoFrame *src, PVideoFrame *dst, int P
         vLoopSSEMMX_Fetch:
                         prefetcht0 (esi+eax*2+8);
                         prefetcht0 (edx+eax*2+8);
-        
+
         vLoopSSEMMX:
                         movq    (mm1, esi+eax*2); // top of 2 lines to interpolate
                         movq    (mm2, edx+eax*2); // 2nd of 2 lines
 
                         movq    (mm3, mm1);                                // copy top bytes
-                        pand    (mm1, mm7);                                // keep only luma       
+                        pand    (mm1, mm7);                                // keep only luma
                         pxor    (mm3, mm1);                                // keep only chroma
                         psrlw   (mm3, 8  );                                // right just chroma
                         pmullw  (mm1, mm5);                                // mult by weighting factor
                         pmullw  (mm3, mm5);                                // mult by weighting factor
-                                        
+
                         movq    (mm4, mm2);                                // copy 2nd bytes
-                        pand    (mm2, mm7);                                // keep only luma       
+                        pand    (mm2, mm7);                                // keep only luma
                         pxor    (mm4, mm2);                                // keep only chroma
                         psrlw   (mm4, 8  );                                // right just chroma
                         pmullw  (mm2, mm6);                                // mult by weighting factor
                         pmullw  (mm4, mm6);                                // mult by weighting factor
-                                       
+
                         paddw   (mm1, mm2);                                // combine lumas
                         paddusw (mm1, mm0);                                // round
                         psrlw   (mm1, 8        );                          // right adjust luma
                         movntq  (edi+eax*2, mm1);       // save lumas in our work area
-                                              
+
                         paddw   (mm3, mm4      );                          // combine chromas
                         paddusw (mm3, mm0      );                          // round
                         psrlw   (mm3, 8        );                          // right adjust chroma
@@ -688,19 +688,19 @@ void SimpleResize::GetFrame_YUY2(const PVideoFrame *src, PVideoFrame *dst, int P
                         goto MoreSpareChange;                 // all done with vertical
 
                     //align       16
-        vLoopMMX:       
+        vLoopMMX:
                         movq    (mm1, esi+eax*2); // top of 2 lines to interpolate
                         movq    (mm2, edx+eax*2); // 2nd of 2 lines
-                                              
+
                         movq    (mm3, mm1      );                          // copy top bytes
-                        pand    (mm1, mm7      );                          // keep only luma       
+                        pand    (mm1, mm7      );                          // keep only luma
                         pxor    (mm3, mm1      );                          // keep only chroma
                         psrlw   (mm3, 8        );                          // right just chroma
                         pmullw  (mm1, mm5      );                          // mult by weighting factor
                         pmullw  (mm3, mm5      );                          // mult by weighting factor
-                                              
+
                         movq    (mm4, mm2      );                          // copy 2nd bytes
-                        pand    (mm2, mm7      );                          // keep only luma       
+                        pand    (mm2, mm7      );                          // keep only luma
                         pxor    (mm4, mm2      );                          // keep only chroma
                         psrlw   (mm4, 8        );                          // right just chroma
                         pmullw  (mm2, mm6      );                          // mult by weighting factor
@@ -729,29 +729,29 @@ void SimpleResize::GetFrame_YUY2(const PVideoFrame *src, PVideoFrame *dst, int P
                         ecx= 1;                                  // jigger loop ct
                         eax-= 2;                                  // back up 2 pixels (4 bytes, but eax carried as 1/2)
                         goto vLoopMMX;
-        
+
 
 // We've taken care of the vertical scaling, now do horizontal
         DoHorizontal:
                         movq    (mm7, YMask   );                   // useful 0U0U..  mask constant
                         movq    (mm6, FPround2);                   // useful rounding constant, dwords
-                        esi= (const unsigned char*)pControl;           // @ horiz control bytes                        
+                        esi= (const unsigned char*)pControl;           // @ horiz control bytes
                         ecx= row_size;
                         ecx>>= 2;                          // 4 bytes a time, 2 pixels
                         edx= (const unsigned char*)vWorkYW;            // our luma data, as 0Y0Y 0Y0Y..
                         edi= dstp;                       // the destination line
                         ebx= (unsigned char*)vWorkUVW;           // chroma data, as UVUV UVUV...
                         //align 16
-        hLoopMMX:   
+        hLoopMMX:
                         eax=*(int*)(esi+16);           // get data offset in pixels, 1st pixel pair
                         movd (mm0, edx+eax*2);           // copy luma pair
                         eax>>= 1;                          // div offset by 2
                         movd    (mm1, ebx+eax*2);       // copy UV pair VUVU
-                        psllw   (mm1, 8);                          // shift out V, keep 0000U0U0   
+                        psllw   (mm1, 8);                          // shift out V, keep 0000U0U0
 
 // we need to use both even and odd chroma from same location - trb 9/2002
                         punpckldq (mm1, ebx+eax*2);      // copy UV pair VUVU
-                        psrlw   (mm1, 8);                          // shift out U0, keep 0V0V 0U0U 
+                        psrlw   (mm1, 8);                          // shift out U0, keep 0V0V 0U0U
 //
 
                         eax=*(int*)(esi+20);           // get data offset in pixels, 2nd pixel pair
@@ -759,8 +759,8 @@ void SimpleResize::GetFrame_YUY2(const PVideoFrame *src, PVideoFrame *dst, int P
 /*
                         shr             eax, 1                          // div offset by 2
                         punpckldq mm1, [ebx+eax*2]      // copy UV pair VUVU
-                        psrlw   mm1, 8                          // shift out U0, keep 0V0V 0U0U 
-*/              
+                        psrlw   mm1, 8                          // shift out U0, keep 0V0V 0U0U
+*/
                         pmaddwd (mm0, esi);                      // mult and sum lumas by ctl weights
                         paddusw (mm0, mm6);                        // round
                         psrlw   (mm0, 8  );                        // right just 2 luma pixel value 000Y,000Y
@@ -786,7 +786,7 @@ void SimpleResize::GetFrame_YUY2(const PVideoFrame *src, PVideoFrame *dst, int P
 
 // This function accepts a position from 0 to 1 and warps it, to 0 through 1 based
 // upon the wFact var. The warp equations are designed to:
-// 
+//
 // * Always be rising but yield results from 0 to 1
 //
 // * Have a first derivative that doesn't go to 0 or infinity, at least close
@@ -813,7 +813,7 @@ double SimpleResize::WarpFactor(double position, double wFact)
                 if (x < 0.0)
                 {
                         z = -(1 - w) * x*x*x - w * x;      // -1 < x < 0, wFact < 1
-                        return .5 - .5 * z;                     
+                        return .5 - .5 * z;
                 }
                 else
                 {
@@ -906,7 +906,7 @@ int SimpleResize::InitTables(void)
 
 //                      hControl[i*3+3] = wUV2 << 16 | wUV1; // chroma weights
 // horiz chroma weights should be same as for even pixel - trbarry 09/16/2002
-                        hControl[i*3+3] = hControl[i*3+2]; // chroma weights 
+                        hControl[i*3+3] = hControl[i*3+2]; // chroma weights
 
                 }
         }
@@ -915,7 +915,7 @@ int SimpleResize::InitTables(void)
         hControl[newwidth*3+5] =  2 * (oldwidth-1);             // "
 
         // Next set up vertical table. The offsets are measured in lines and will be mult
-        // by the source pitch later 
+        // by the source pitch later
         for(i=0; i< newheight; ++i)
         {
                 if (vWarp==1)                   // if no warp factor
@@ -939,7 +939,7 @@ int SimpleResize::InitTables(void)
                                 {
                                         k = (((j-256) >> 9) << 1) + 1; // next lowest odd line
                                         vOffsets[i] = k;
-                                        wY2 = j - (k << 8); 
+                                        wY2 = j - (k << 8);
                                         vWeights[i] = wY2 >> 1; // weight to give to 2nd line
                                 }
                         }
@@ -947,7 +947,7 @@ int SimpleResize::InitTables(void)
                         {
                                 k = (j >> 9) << 1;                      // next lower even line
                                 vOffsets[i] = k;
-                                wY2 = j - (k << 8); 
+                                wY2 = j - (k << 8);
                                 vWeights[i] = wY2 >> 1;         // weight to give to 2nd line
                         }
                 }
@@ -955,7 +955,7 @@ int SimpleResize::InitTables(void)
                 {
                         k = j >> 8;
                         vOffsets[i] = k;
-                        wY2 = j - (k << 8); 
+                        wY2 = j - (k << 8);
                         vWeights[i] = wY2;                              // weight to give to 2nd line
                 }
         }
@@ -984,7 +984,7 @@ int SimpleResize::InitTables_YV12(void)
         int wY1;
         int wY2;
 
-        // First set up horizontal table, use for both luma & chroma since 
+        // First set up horizontal table, use for both luma & chroma since
         // it seems to have the same equation.
         // We will generate these values in pairs, mostly because that's the way
         // I wrote it for YUY2 above.
@@ -1052,7 +1052,7 @@ int SimpleResize::InitTables_YV12(void)
 
         // For YV12 we need separate Luma and chroma tables
         // First Luma Table
-        
+
         for(i=0; i< newheight; ++i)
         {
                 if (vWarp==1)                   // if no warp factor
@@ -1076,7 +1076,7 @@ int SimpleResize::InitTables_YV12(void)
                                 {
                                         k = (((j-256) >> 9) << 1) + 1; // next lowest odd line
                                         vOffsets[i] = k;
-                                        wY2 = j - (k << 8); 
+                                        wY2 = j - (k << 8);
                                         vWeights[i] = wY2 >> 1; // weight to give to 2nd line
                                 }
                         }
@@ -1084,7 +1084,7 @@ int SimpleResize::InitTables_YV12(void)
                         {
                                 k = (j >> 9) << 1;                      // next lower even line
                                 vOffsets[i] = k;
-                                wY2 = j - (k << 8); 
+                                wY2 = j - (k << 8);
                                 vWeights[i] = wY2 >> 1;         // weight to give to 2nd line
                         }
                 }
@@ -1092,7 +1092,7 @@ int SimpleResize::InitTables_YV12(void)
                 {
                         k = j >> 8;
                         vOffsets[i] = k;
-                        wY2 = j - (k << 8); 
+                        wY2 = j - (k << 8);
                         vWeights[i] = wY2;                              // weight to give to 2nd line
                 }
         }
@@ -1106,7 +1106,7 @@ int SimpleResize::InitTables_YV12(void)
                 }
                 else                                    // stretch and warp somehow
                 {
-                        j = (int) (256 * WarpFactor( 
+                        j = (int) (256 * WarpFactor(
                                 (i+.25) / (newheight-1.0), vWarp) * (oldheight-1.0)   );
                 }
                 if (Interlaced)                                         // do hard way?
@@ -1122,7 +1122,7 @@ int SimpleResize::InitTables_YV12(void)
                                 {
                                         k = (((j-256) >> 9) << 1) + 1; // next lowest odd line
                                         vOffsetsUV[i] = k;
-                                        wY2 = j - (k << 8); 
+                                        wY2 = j - (k << 8);
                                         vWeightsUV[i] = wY2 >> 1;       // weight to give to 2nd line
                                 }
                         }
@@ -1130,7 +1130,7 @@ int SimpleResize::InitTables_YV12(void)
                         {
                                 k = (j >> 9) << 1;                      // next lower even line
                                 vOffsetsUV[i] = k;
-                                wY2 = j - (k << 8); 
+                                wY2 = j - (k << 8);
                                 vWeightsUV[i] = wY2 >> 1;               // weight to give to 2nd line
                         }
                 }
@@ -1138,7 +1138,7 @@ int SimpleResize::InitTables_YV12(void)
                 {
                         k = j >> 8;
                         vOffsetsUV[i] = k;
-                        wY2 = j - (k << 8); 
+                        wY2 = j - (k << 8);
                         vWeightsUV[i] = wY2;                            // weight to give to 2nd line
                 }
         }

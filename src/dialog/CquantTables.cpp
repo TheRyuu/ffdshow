@@ -76,7 +76,7 @@ TquantTablesPageBase::TquantTablesPageBase(IffdshowBase *Ideci):Twindow(Ideci)
    IDC_BT_QUANT_TABLE_SAVE,&TquantTablesPageBase::onSave,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
  static const TbindCombobox<TquantTablesPageBase> cbx[]=
   {
    IDC_CBX_QUANT_TABLE,0,BINDCBX_NONE,&TquantTablesPageBase::table2dlg,
@@ -129,15 +129,15 @@ void TquantTablesPageBase::table2dlg(void)
      ((TwidgetMatrix*)Twidget::getDlgItem(GetDlgItem(m_hwnd,idIntra[i])))->set(true ,i+1);
     }
    else
-    edReadOnly(idIntra[i],true); 
+    edReadOnly(idIntra[i],true);
    if (inter)
-    {  
+    {
      edLimitText(idInter[i],3);
      SetDlgItemInt(m_hwnd,idInter[i],inter[i],FALSE);
      ((TwidgetMatrix*)Twidget::getDlgItem(GetDlgItem(m_hwnd,idInter[i])))->set(false,i+1);
     }
-   else  
-    edReadOnly(idInter[i],true); 
+   else
+    edReadOnly(idInter[i],true);
   }
  enable(1,cnt==64?idIntra8:idIntra4);
  enable(1,cnt==64?idInter8:idInter4);
@@ -249,28 +249,28 @@ void TquantTablesPageBase::onLoad(void)
         {
          fseek(f,64,SEEK_CUR);
          readed+=64;
-        } 
+        }
        if (qmatrix_inter_custom)
         readed+=fread(qmatrix_inter_custom,1,64,f);
        else
         {
          fseek(f,64,SEEK_CUR);
          readed+=64;
-        } 
+        }
        fclose(f);
        if (readed!=128)
-        error=_l("Error while loading quantization matrices"); 
+        error=_l("Error while loading quantization matrices");
       }
     }
    if (error)
-    err(_(-IDD_QUANT_TABLES,error)); 
+    err(_(-IDD_QUANT_TABLES,error));
    else
     {
      if (readed)
       setChange();
-     cfg2dlg(); 
+     cfg2dlg();
     }
-  }  
+  }
 }
 
 void TquantTablesPageBase::writeMatrix(FILE *f,const char *section,const uint8_t *matrix,unsigned int len)
@@ -283,7 +283,7 @@ void TquantTablesPageBase::writeMatrix(FILE *f,const char *section,const uint8_t
     fprintf(f,"%i%s",int(*matrix++),--len>0?",":"");
    fprintf(f,"\n");
   }
- fprintf(f,"\n");  
+ fprintf(f,"\n");
 }
 
 void TquantTablesPageBase::onSave(void)
@@ -349,10 +349,10 @@ INT_PTR TquantTablesPageBase::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
            }
           (item->intra?intra:inter)[item->id-1]=(uint8_t)valI;
           setChange();
-         } 
-       } 
-      return TRUE; 
-     } 
+         }
+       }
+      return TRUE;
+     }
     break;
    case WM_CTLCOLOREDIT:
     {
@@ -360,12 +360,12 @@ INT_PTR TquantTablesPageBase::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
      if (hwnd==GetDlgItem(m_hwnd,IDC_CBX_QUANT_TABLE)) break;
      bool ok=eval(hwnd,1,255);
      if (!ok)
-      { 
+      {
        HDC dc=HDC(wParam);
        SetBkColor(dc,RGB(255,0,0));
-       return INT_PTR(getRed()); 
+       return INT_PTR(getRed());
       }
-     else return FALSE;  
+     else return FALSE;
     }
   }
  return Twindow::msgProc(uMsg,wParam,lParam);
@@ -378,13 +378,13 @@ Twidget* TquantTablesPageBase::createDlgItem(int id,HWND h)
  if (stricmp(cls,_l("EDIT"))==0)
   return new TwidgetMatrix(h,this);
  else
-  return Twindow::createDlgItem(id,h); 
-} 
+  return Twindow::createDlgItem(id,h);
+}
 
 void TquantTablesPageBase::translate(void)
 {
  Twindow::translate();
- 
+
  int sel=cbxGetCurSel(IDC_CBX_QUANT_TABLE);
  cbxClear(IDC_CBX_QUANT_TABLE);
  for (int i=0;matrices[i];i++)
@@ -427,7 +427,7 @@ void TquantTablesPage::translate(void)
 int TquantTablesPage::TquantTables::getCodecId(void)
 {
  return cfgGet(IDFF_enc_codecId);
-} 
+}
 HRESULT TquantTablesPage::TquantTables::getCustomQuantMatrixes(uint8_t* *intra8,uint8_t* *inter8,uint8_t* *intra4Y,uint8_t* *inter4Y,uint8_t* *intra4C,uint8_t* *inter4C)
 {
  return deciE->getCustomQuantMatrixes(intra8,inter8,intra4Y,inter4Y,intra4C,inter4C);
@@ -443,7 +443,7 @@ TcurrentQuantDlg::TcurrentQuantDlg(HWND IhParent,IffdshowBase *Ideci,uint8_t *Ii
  base(Ibase?Ibase:new TquantTables(Ideci,Iinter,Iintra,inter4luma,inter4chroma,intra4luma,intra4chroma)),
  hParent(IhParent)
 {
-} 
+}
 TcurrentQuantDlg::~TcurrentQuantDlg()
 {
  delete base;
@@ -469,16 +469,16 @@ INT_PTR TcurrentQuantDlg::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDCLOSE:
       case IDCANCEL:
        EndDialog(m_hwnd,LOWORD(wParam));
        return TRUE;
      }
-    break; 
-  }     
- return TdlgWindow::msgProc(uMsg,wParam,lParam); 
+    break;
+  }
+ return TdlgWindow::msgProc(uMsg,wParam,lParam);
 }
 
 TcurrentQuantDlg::TquantTables::TquantTables(IffdshowBase *Ideci,uint8_t *Iinter,uint8_t *Iintra,uint8_t *Iinter4luma,uint8_t *Iinter4chroma,uint8_t *Iintra4luma,uint8_t *Iintra4chroma):
@@ -489,7 +489,7 @@ TcurrentQuantDlg::TquantTables::TquantTables(IffdshowBase *Ideci,uint8_t *Iinter
 int TcurrentQuantDlg::TquantTables::getCodecId(void)
 {
  return deci->getCurrentCodecId2();
-} 
+}
 HRESULT TcurrentQuantDlg::TquantTables::getCustomQuantMatrixes(uint8_t* *intra8,uint8_t* *inter8,uint8_t* *intra4Y,uint8_t* *inter4Y,uint8_t* *intra4C,uint8_t* *inter4C)
 {
  if (intra8) *intra8=intra;

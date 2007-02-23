@@ -88,9 +88,9 @@ BITS 32
         %define GOT_ecx - fakegot + ecx
         %define GOT_edx - fakegot + edx
         %macro picgetgot 1
-            call %%getgot 
-          %%getgot: 
-            pop %1 
+            call %%getgot
+          %%getgot:
+            pop %1
             add %1, $$ - %%getgot
         %endmacro
     %else
@@ -105,10 +105,10 @@ BITS 32
         %define GOT_ecx + ecx wrt ..gotoff
         %define GOT_edx + edx wrt ..gotoff
         %macro picgetgot 1
-            call %%getgot 
-          %%getgot: 
-            pop %1 
-            add %1, GOT + $$ - %%getgot wrt ..gotpc 
+            call %%getgot
+          %%getgot:
+            pop %1
+            add %1, GOT + $$ - %%getgot wrt ..gotpc
         %endmacro
     %endif
     %macro picpush 1
@@ -140,4 +140,7 @@ BITS 32
 %ifidn __OUTPUT_FORMAT__,elf
 SECTION .note.GNU-stack noalloc noexec nowrite progbits
 %endif
+
+
+
 

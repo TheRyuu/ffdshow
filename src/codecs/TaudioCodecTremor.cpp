@@ -31,7 +31,7 @@
 
 const char_t* TaudioCodecTremor::dllname=_l("ff_tremor.dll");
 
-const int TaudioCodecTremor::chmap[MAXCHANNELS][MAXCHANNELS]= 
+const int TaudioCodecTremor::chmap[MAXCHANNELS][MAXCHANNELS]=
 {
  { 0, },                 // mono
  { 0, 1, },              // l, r
@@ -44,7 +44,7 @@ const int TaudioCodecTremor::chmap[MAXCHANNELS][MAXCHANNELS]=
 TaudioCodecTremor::TaudioCodecTremor(IffdshowBase *deci,IdecAudioSink *Isink):
  Tcodec(deci),
  TaudioCodec(deci,Isink)
-{        
+{
  dll=NULL;
  inited=false;
  pbVorbisInfo=NULL;cbVorbisInfo=0;
@@ -76,7 +76,7 @@ bool TaudioCodecTremor::initVorbis(void)
  opCmt.bytes=cbVorbisComment;
  opCmt.b_o_s = 0;
  opCmt.packetno = m_packetno++;
-    
+
  // Build the "Setup Header" packet
  ogg_packet opSetup;memset(&opSetup, 0, sizeof(ogg_packet));
  opSetup.packet=pbVorbisCodebook;
@@ -95,7 +95,7 @@ bool TaudioCodecTremor::initVorbis(void)
     {
      if (sscanf(vorbis_comment_query(&vc,"REPLAYGAIN_TRACK_GAIN",0),"%f dB",&postgain)==1)
       postgain=(float)pow(10.0,postgain/20.0);
-    }                
+    }
    vorbis_synthesis_init(&vd,&vi);
    vorbis_block_init(&vd,&vb);
    return true;
@@ -164,7 +164,7 @@ bool TaudioCodecTremor::init(const CMediaType &mt)
        size_t headers_len=extradata.size;
        uint8_t *header_start[3];
        int header_len[3];
-       if (headers[0]==0 && headers[1]==30) 
+       if (headers[0]==0 && headers[1]==30)
         for (int i=0;i<3;i++)
          {
           header_len[i]=*headers++<<8;
@@ -172,18 +172,18 @@ bool TaudioCodecTremor::init(const CMediaType &mt)
           header_start[i]=headers;
           headers+=header_len[i];
          }
-       else if (headers[0]==2) 
+       else if (headers[0]==2)
         {
          size_t i,j;
-         for (j=1,i=0;i<2;++i, ++j) 
+         for (j=1,i=0;i<2;++i, ++j)
           {
            header_len[i]=0;
-           while (j<headers_len && headers[j]==0xff) 
+           while (j<headers_len && headers[j]==0xff)
             {
              header_len[i]+=0xff;
              ++j;
             }
-           if (j>=headers_len) 
+           if (j>=headers_len)
             return false;
            header_len[i]+=headers[j];
           }
@@ -199,8 +199,8 @@ bool TaudioCodecTremor::init(const CMediaType &mt)
        pbVorbisComment=header_start[1];
        cbVorbisCodebook=header_len[2];
        pbVorbisCodebook=header_start[2];
-      }  
-     
+      }
+
      bool initok=initVorbis();
      pbVorbisInfo=pbVorbisComment=pbVorbisCodebook=NULL;
      if (initok)
@@ -211,7 +211,7 @@ bool TaudioCodecTremor::init(const CMediaType &mt)
       }
     }
    else
-    { 
+    {
      inited=false;
      m_packetno=0;
      oggds=true;
@@ -223,7 +223,7 @@ bool TaudioCodecTremor::init(const CMediaType &mt)
 TaudioCodecTremor::~TaudioCodecTremor()
 {
  clearVorbis(true);
- if (dll) 
+ if (dll)
   delete dll;
 }
 
@@ -303,10 +303,10 @@ HRESULT TaudioCodecTremor::decode(TbyteBuffer &src)
      vorbis_synthesis_read(&vd,samples);
     }
    if (samplessum)
-    { 
+    {
      numframes++;
      bpssum+=(lastbps=roundDiv(8*fmt.freq*(unsigned int)op.bytes,samplessum)/1000);
-    } 
+    }
   }
  src.clear();
  return S_OK;

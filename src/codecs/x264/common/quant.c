@@ -276,7 +276,7 @@ void x264_quant_init( x264_t *h, int cpu, x264_quant_function_t *pf )
         pf->dequant_8x8 = x264_dequant_8x8_mmx;
     }
 #endif  /* HAVE_MMXEXT */
-    
+
 #ifdef ARCH_PPC
     if( cpu&X264_CPU_ALTIVEC ) {
         if( maxQ8 < (1<<16) )

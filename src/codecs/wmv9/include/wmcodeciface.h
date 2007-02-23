@@ -10,8 +10,8 @@
 /* Compiler settings for wmcodec.idl:
     Os, W1, Zp8, env=Win32 (32b run)
     protocol : dce , ms_ext, c_ext
-    error checks: allocation ref bounds_check enum stub_data 
-    VC __declspec() decoration level: 
+    error checks: allocation ref bounds_check enum stub_data
+    VC __declspec() decoration level:
          __declspec(uuid()), __declspec(selectany), __declspec(novtable)
          DECLSPEC_UUID(), MIDL_INTERFACE()
 */
@@ -42,7 +42,7 @@
 #pragma once
 #endif
 
-/* Forward Declarations */ 
+/* Forward Declarations */
 
 #ifndef __IWMVideoDecoderHurryup_FWD_DEFINED__
 #define __IWMVideoDecoderHurryup_FWD_DEFINED__
@@ -91,13 +91,13 @@ typedef interface IWMCodecPrivateData IWMCodecPrivateData;
 
 #ifdef __cplusplus
 extern "C"{
-#endif 
+#endif
 
 void * __RPC_USER MIDL_user_allocate(size_t);
-void __RPC_USER MIDL_user_free( void * ); 
+void __RPC_USER MIDL_user_free( void * );
 
 /* interface __MIDL_itf_wmcodec_0000 */
-/* [local] */ 
+/* [local] */
 
 //=========================================================================
 //
@@ -113,7 +113,7 @@ EXTERN_GUID( IID_IWMCodecLeakyBucket,    0xA81BA647, 0x6227, 0x43b7, 0xB2, 0x31,
 EXTERN_GUID( IID_IWMCodecMetaData,       0xd051ed9f, 0xbc5c, 0x4e83, 0xb1, 0x4e, 0x84, 0x28, 0x48, 0x5c, 0x28, 0x6a);
 EXTERN_GUID( IID_IWMCodecOutputTimestamp,0xB72ADF95, 0x7ADC, 0x4a72, 0xBC, 0x05, 0x57, 0x7D, 0x8E, 0xA6, 0xBF, 0x68);
 EXTERN_GUID( IID_IWMCodecPrivateData,    0x73f0be8e, 0x57f7, 0x4f01, 0xaa, 0x66, 0x9f, 0x57, 0x34, 0xc, 0xfe, 0xe );
-typedef 
+typedef
 
 enum WMT_PROP_DATATYPE
     {	WMT_PROP_TYPE_DWORD	= 0,
@@ -133,50 +133,50 @@ extern RPC_IF_HANDLE __MIDL_itf_wmcodec_0000_v0_0_s_ifspec;
 #define __IWMVideoDecoderHurryup_INTERFACE_DEFINED__
 
 /* interface IWMVideoDecoderHurryup */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMVideoDecoderHurryup;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("352bb3bd-2d4d-4323-9e71-dcdcfbd53ca6")
     IWMVideoDecoderHurryup : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE SetHurryup( 
+        virtual HRESULT STDMETHODCALLTYPE SetHurryup(
             /* [in] */ LONG lHurryup) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetHurryup( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetHurryup(
             /* [out] */ LONG *plHurryup) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMVideoDecoderHurryupVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMVideoDecoderHurryup * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMVideoDecoderHurryup * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMVideoDecoderHurryup * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetHurryup )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetHurryup )(
             IWMVideoDecoderHurryup * This,
             /* [in] */ LONG lHurryup);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetHurryup )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetHurryup )(
             IWMVideoDecoderHurryup * This,
             /* [out] */ LONG *plHurryup);
-        
+
         END_INTERFACE
     } IWMVideoDecoderHurryupVtbl;
 
@@ -185,7 +185,7 @@ EXTERN_C const IID IID_IWMVideoDecoderHurryup;
         CONST_VTBL struct IWMVideoDecoderHurryupVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -213,7 +213,7 @@ EXTERN_C const IID IID_IWMVideoDecoderHurryup;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMVideoDecoderHurryup_SetHurryup_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMVideoDecoderHurryup_SetHurryup_Proxy(
     IWMVideoDecoderHurryup * This,
     /* [in] */ LONG lHurryup);
 
@@ -225,7 +225,7 @@ void __RPC_STUB IWMVideoDecoderHurryup_SetHurryup_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMVideoDecoderHurryup_GetHurryup_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMVideoDecoderHurryup_GetHurryup_Proxy(
     IWMVideoDecoderHurryup * This,
     /* [out] */ LONG *plHurryup);
 
@@ -245,62 +245,62 @@ void __RPC_STUB IWMVideoDecoderHurryup_GetHurryup_Stub(
 #define __IWMCodecStrings_INTERFACE_DEFINED__
 
 /* interface IWMCodecStrings */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMCodecStrings;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("A7B2504B-E58A-47fb-958B-CAC7165A057D")
     IWMCodecStrings : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetName( 
+        virtual HRESULT STDMETHODCALLTYPE GetName(
             /* [in] */ DMO_MEDIA_TYPE *pmt,
             /* [in] */ ULONG cchLength,
             /* [out] */ WCHAR *szName,
             /* [out] */ ULONG *pcchLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetDescription( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetDescription(
             /* [in] */ DMO_MEDIA_TYPE *pmt,
             /* [in] */ ULONG cchLength,
             /* [out] */ WCHAR *szDescription,
             /* [out] */ ULONG *pcchLength) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMCodecStringsVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMCodecStrings * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMCodecStrings * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMCodecStrings * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetName )(
             IWMCodecStrings * This,
             /* [in] */ DMO_MEDIA_TYPE *pmt,
             /* [in] */ ULONG cchLength,
             /* [out] */ WCHAR *szName,
             /* [out] */ ULONG *pcchLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDescription )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetDescription )(
             IWMCodecStrings * This,
             /* [in] */ DMO_MEDIA_TYPE *pmt,
             /* [in] */ ULONG cchLength,
             /* [out] */ WCHAR *szDescription,
             /* [out] */ ULONG *pcchLength);
-        
+
         END_INTERFACE
     } IWMCodecStringsVtbl;
 
@@ -309,7 +309,7 @@ EXTERN_C const IID IID_IWMCodecStrings;
         CONST_VTBL struct IWMCodecStringsVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -337,7 +337,7 @@ EXTERN_C const IID IID_IWMCodecStrings;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecStrings_GetName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecStrings_GetName_Proxy(
     IWMCodecStrings * This,
     /* [in] */ DMO_MEDIA_TYPE *pmt,
     /* [in] */ ULONG cchLength,
@@ -352,7 +352,7 @@ void __RPC_STUB IWMCodecStrings_GetName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecStrings_GetDescription_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecStrings_GetDescription_Proxy(
     IWMCodecStrings * This,
     /* [in] */ DMO_MEDIA_TYPE *pmt,
     /* [in] */ ULONG cchLength,
@@ -375,66 +375,66 @@ void __RPC_STUB IWMCodecStrings_GetDescription_Stub(
 #define __IWMCodecProps_INTERFACE_DEFINED__
 
 /* interface IWMCodecProps */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMCodecProps;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("2573e11a-f01a-4fdd-a98d-63b8e0ba9589")
     IWMCodecProps : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetFormatProp( 
+        virtual HRESULT STDMETHODCALLTYPE GetFormatProp(
             /* [in] */ DMO_MEDIA_TYPE *pmt,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_PROP_DATATYPE *pType,
             /* [out] */ BYTE *pValue,
             /* [out][in] */ DWORD *pdwSize) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetCodecProp( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetCodecProp(
             /* [in] */ DWORD dwFormat,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_PROP_DATATYPE *pType,
             /* [out] */ BYTE *pValue,
             /* [out][in] */ DWORD *pdwSize) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMCodecPropsVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMCodecProps * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMCodecProps * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMCodecProps * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetFormatProp )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetFormatProp )(
             IWMCodecProps * This,
             /* [in] */ DMO_MEDIA_TYPE *pmt,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_PROP_DATATYPE *pType,
             /* [out] */ BYTE *pValue,
             /* [out][in] */ DWORD *pdwSize);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecProp )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecProp )(
             IWMCodecProps * This,
             /* [in] */ DWORD dwFormat,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_PROP_DATATYPE *pType,
             /* [out] */ BYTE *pValue,
             /* [out][in] */ DWORD *pdwSize);
-        
+
         END_INTERFACE
     } IWMCodecPropsVtbl;
 
@@ -443,7 +443,7 @@ EXTERN_C const IID IID_IWMCodecProps;
         CONST_VTBL struct IWMCodecPropsVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -471,7 +471,7 @@ EXTERN_C const IID IID_IWMCodecProps;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecProps_GetFormatProp_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecProps_GetFormatProp_Proxy(
     IWMCodecProps * This,
     /* [in] */ DMO_MEDIA_TYPE *pmt,
     /* [in] */ LPCWSTR pszName,
@@ -487,7 +487,7 @@ void __RPC_STUB IWMCodecProps_GetFormatProp_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecProps_GetCodecProp_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecProps_GetCodecProp_Proxy(
     IWMCodecProps * This,
     /* [in] */ DWORD dwFormat,
     /* [in] */ LPCWSTR pszName,
@@ -511,64 +511,64 @@ void __RPC_STUB IWMCodecProps_GetCodecProp_Stub(
 #define __IWMCodecLeakyBucket_INTERFACE_DEFINED__
 
 /* interface IWMCodecLeakyBucket */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMCodecLeakyBucket;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("A81BA647-6227-43b7-B231-C7B15135DD7D")
     IWMCodecLeakyBucket : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE SetBufferSizeBits( 
+        virtual HRESULT STDMETHODCALLTYPE SetBufferSizeBits(
             /* [in] */ ULONG ulBufferSize) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBufferSizeBits( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetBufferSizeBits(
             /* [out] */ ULONG *pulBufferSize) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBufferFullnessBits( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetBufferFullnessBits(
             /* [in] */ ULONG ulBufferFullness) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBufferFullnessBits( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetBufferFullnessBits(
             /* [out] */ ULONG *pulBufferFullness) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMCodecLeakyBucketVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMCodecLeakyBucket * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMCodecLeakyBucket * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMCodecLeakyBucket * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBufferSizeBits )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetBufferSizeBits )(
             IWMCodecLeakyBucket * This,
             /* [in] */ ULONG ulBufferSize);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBufferSizeBits )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetBufferSizeBits )(
             IWMCodecLeakyBucket * This,
             /* [out] */ ULONG *pulBufferSize);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBufferFullnessBits )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetBufferFullnessBits )(
             IWMCodecLeakyBucket * This,
             /* [in] */ ULONG ulBufferFullness);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBufferFullnessBits )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetBufferFullnessBits )(
             IWMCodecLeakyBucket * This,
             /* [out] */ ULONG *pulBufferFullness);
-        
+
         END_INTERFACE
     } IWMCodecLeakyBucketVtbl;
 
@@ -577,7 +577,7 @@ EXTERN_C const IID IID_IWMCodecLeakyBucket;
         CONST_VTBL struct IWMCodecLeakyBucketVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -611,7 +611,7 @@ EXTERN_C const IID IID_IWMCodecLeakyBucket;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecLeakyBucket_SetBufferSizeBits_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecLeakyBucket_SetBufferSizeBits_Proxy(
     IWMCodecLeakyBucket * This,
     /* [in] */ ULONG ulBufferSize);
 
@@ -623,7 +623,7 @@ void __RPC_STUB IWMCodecLeakyBucket_SetBufferSizeBits_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecLeakyBucket_GetBufferSizeBits_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecLeakyBucket_GetBufferSizeBits_Proxy(
     IWMCodecLeakyBucket * This,
     /* [out] */ ULONG *pulBufferSize);
 
@@ -635,7 +635,7 @@ void __RPC_STUB IWMCodecLeakyBucket_GetBufferSizeBits_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecLeakyBucket_SetBufferFullnessBits_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecLeakyBucket_SetBufferFullnessBits_Proxy(
     IWMCodecLeakyBucket * This,
     /* [in] */ ULONG ulBufferFullness);
 
@@ -647,7 +647,7 @@ void __RPC_STUB IWMCodecLeakyBucket_SetBufferFullnessBits_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecLeakyBucket_GetBufferFullnessBits_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecLeakyBucket_GetBufferFullnessBits_Proxy(
     IWMCodecLeakyBucket * This,
     /* [out] */ ULONG *pulBufferFullness);
 
@@ -667,26 +667,26 @@ void __RPC_STUB IWMCodecLeakyBucket_GetBufferFullnessBits_Stub(
 #define __IWMCodecMetaData_INTERFACE_DEFINED__
 
 /* interface IWMCodecMetaData */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMCodecMetaData;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("D051ED9F-BC5C-4e83-B14E-8428485C286A")
     IWMCodecMetaData : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetNumberOfValues( 
+        virtual HRESULT STDMETHODCALLTYPE GetNumberOfValues(
             /* [out] */ ULONG *pulNumValues) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBufferSizes( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetBufferSizes(
             /* [in] */ ULONG ulValueIndex,
             /* [out] */ ULONG *pcbData,
             /* [out] */ ULONG *pcchName) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetValueAndName( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetValueAndName(
             /* [in] */ ULONG ulValueIndex,
             /* [out] */ BYTE *pbData,
             /* [in] */ ULONG cbData,
@@ -694,37 +694,37 @@ EXTERN_C const IID IID_IWMCodecMetaData;
             /* [out] */ WCHAR *szName,
             /* [in] */ ULONG cchName,
             /* [out] */ ULONG *pcchName) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMCodecMetaDataVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMCodecMetaData * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMCodecMetaData * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMCodecMetaData * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetNumberOfValues )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetNumberOfValues )(
             IWMCodecMetaData * This,
             /* [out] */ ULONG *pulNumValues);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBufferSizes )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetBufferSizes )(
             IWMCodecMetaData * This,
             /* [in] */ ULONG ulValueIndex,
             /* [out] */ ULONG *pcbData,
             /* [out] */ ULONG *pcchName);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetValueAndName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetValueAndName )(
             IWMCodecMetaData * This,
             /* [in] */ ULONG ulValueIndex,
             /* [out] */ BYTE *pbData,
@@ -733,7 +733,7 @@ EXTERN_C const IID IID_IWMCodecMetaData;
             /* [out] */ WCHAR *szName,
             /* [in] */ ULONG cchName,
             /* [out] */ ULONG *pcchName);
-        
+
         END_INTERFACE
     } IWMCodecMetaDataVtbl;
 
@@ -742,7 +742,7 @@ EXTERN_C const IID IID_IWMCodecMetaData;
         CONST_VTBL struct IWMCodecMetaDataVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -773,7 +773,7 @@ EXTERN_C const IID IID_IWMCodecMetaData;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecMetaData_GetNumberOfValues_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecMetaData_GetNumberOfValues_Proxy(
     IWMCodecMetaData * This,
     /* [out] */ ULONG *pulNumValues);
 
@@ -785,7 +785,7 @@ void __RPC_STUB IWMCodecMetaData_GetNumberOfValues_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecMetaData_GetBufferSizes_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecMetaData_GetBufferSizes_Proxy(
     IWMCodecMetaData * This,
     /* [in] */ ULONG ulValueIndex,
     /* [out] */ ULONG *pcbData,
@@ -799,7 +799,7 @@ void __RPC_STUB IWMCodecMetaData_GetBufferSizes_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecMetaData_GetValueAndName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecMetaData_GetValueAndName_Proxy(
     IWMCodecMetaData * This,
     /* [in] */ ULONG ulValueIndex,
     /* [out] */ BYTE *pbData,
@@ -825,43 +825,43 @@ void __RPC_STUB IWMCodecMetaData_GetValueAndName_Stub(
 #define __IWMCodecOutputTimestamp_INTERFACE_DEFINED__
 
 /* interface IWMCodecOutputTimestamp */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMCodecOutputTimestamp;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("B72ADF95-7ADC-4a72-BC05-577D8EA6BF68")
     IWMCodecOutputTimestamp : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetNextOutputTime( 
+        virtual HRESULT STDMETHODCALLTYPE GetNextOutputTime(
             /* [out] */ REFERENCE_TIME *prtTime) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMCodecOutputTimestampVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMCodecOutputTimestamp * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMCodecOutputTimestamp * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMCodecOutputTimestamp * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetNextOutputTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetNextOutputTime )(
             IWMCodecOutputTimestamp * This,
             /* [out] */ REFERENCE_TIME *prtTime);
-        
+
         END_INTERFACE
     } IWMCodecOutputTimestampVtbl;
 
@@ -870,7 +870,7 @@ EXTERN_C const IID IID_IWMCodecOutputTimestamp;
         CONST_VTBL struct IWMCodecOutputTimestampVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -895,7 +895,7 @@ EXTERN_C const IID IID_IWMCodecOutputTimestamp;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecOutputTimestamp_GetNextOutputTime_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecOutputTimestamp_GetNextOutputTime_Proxy(
     IWMCodecOutputTimestamp * This,
     /* [out] */ REFERENCE_TIME *prtTime);
 
@@ -915,52 +915,52 @@ void __RPC_STUB IWMCodecOutputTimestamp_GetNextOutputTime_Stub(
 #define __IWMCodecPrivateData_INTERFACE_DEFINED__
 
 /* interface IWMCodecPrivateData */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMCodecPrivateData;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("73F0BE8E-57F7-4f01-AA66-9F57340CFE0E")
     IWMCodecPrivateData : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE SetPartialOutputType( 
+        virtual HRESULT STDMETHODCALLTYPE SetPartialOutputType(
             /* [in] */ DMO_MEDIA_TYPE *pmt) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetPrivateData( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetPrivateData(
             /* [out] */ BYTE *pbData,
             /* [out][in] */ ULONG *pcbData) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMCodecPrivateDataVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMCodecPrivateData * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMCodecPrivateData * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMCodecPrivateData * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetPartialOutputType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetPartialOutputType )(
             IWMCodecPrivateData * This,
             /* [in] */ DMO_MEDIA_TYPE *pmt);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetPrivateData )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetPrivateData )(
             IWMCodecPrivateData * This,
             /* [out] */ BYTE *pbData,
             /* [out][in] */ ULONG *pcbData);
-        
+
         END_INTERFACE
     } IWMCodecPrivateDataVtbl;
 
@@ -969,7 +969,7 @@ EXTERN_C const IID IID_IWMCodecPrivateData;
         CONST_VTBL struct IWMCodecPrivateDataVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -997,7 +997,7 @@ EXTERN_C const IID IID_IWMCodecPrivateData;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecPrivateData_SetPartialOutputType_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecPrivateData_SetPartialOutputType_Proxy(
     IWMCodecPrivateData * This,
     /* [in] */ DMO_MEDIA_TYPE *pmt);
 
@@ -1009,7 +1009,7 @@ void __RPC_STUB IWMCodecPrivateData_SetPartialOutputType_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecPrivateData_GetPrivateData_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecPrivateData_GetPrivateData_Proxy(
     IWMCodecPrivateData * This,
     /* [out] */ BYTE *pbData,
     /* [out][in] */ ULONG *pcbData);
@@ -1035,5 +1035,9 @@ void __RPC_STUB IWMCodecPrivateData_GetPrivateData_Stub(
 #endif
 
 #endif
+
+
+
+
 
 

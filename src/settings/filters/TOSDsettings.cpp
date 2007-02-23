@@ -35,12 +35,12 @@ TOSDsettings::TOSDsettings(size_t IsizeofthisAll,TintStrColl *Icoll,TfilterIDFFs
    IDFF_OSDstartDuration          ,&TOSDsettings::startDuration ,1,10000,_l(""),0,
      _l("OSDstartDuration"),100,
    IDFF_OSDisSave                 ,&TOSDsettings::isSave        ,0,0,_l(""),0,
-     _l("OSDisSave"),0,  
+     _l("OSDisSave"),0,
    IDFF_OSDsaveOnly               ,&TOSDsettings::saveOnly      ,0,0,_l(""),0,
-     _l("OSDsaveOnly"),0,  
+     _l("OSDsaveOnly"),0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
  static const TstrOption sopts[]=
   {
    IDFF_OSDcurPreset  ,(TstrVal)&TOSDsettings::curPreset  ,40,_l(""),0,
@@ -48,10 +48,10 @@ TOSDsettings::TOSDsettings(size_t IsizeofthisAll,TintStrColl *Icoll,TfilterIDFFs
    IDFF_OSDstartPreset,(TstrVal)&TOSDsettings::startPreset,40,_l(""),0,
      _l("OSDstartPreset"),_l(""),
    IDFF_OSDsaveFlnm   ,(TstrVal)&TOSDsettings::saveFlnm   ,MAX_PATH,_l(""),0,
-     _l("OSDsaveFlnm"),_l(""),  
+     _l("OSDsaveFlnm"),_l(""),
    0
   };
- addOptions(sopts); 
+ addOptions(sopts);
  setOnChange(IDFF_OSDcurPreset,this,&TOSDsettings::onCurPresetChange);
 }
 
@@ -68,7 +68,7 @@ void TOSDsettings::savePresets(const char_t *reg_child)
    t._REG_OP_S(0,regname,(char_t*)presets[i].first.c_str(),40,_l(""));
    tsprintf(regname,_l("OSDpresetFormat%i"),i);
    t._REG_OP_S(0,regname,(char_t*)presets[i].second.c_str(),256,_l(""));
-  } 
+  }
 }
 void TOSDsettings::loadPresets(const char_t *reg_child)
 {
@@ -82,7 +82,7 @@ void TOSDsettings::loadPresets(const char_t *reg_child)
    char_t oldOSDformat[256];
    t._REG_OP_S(0,_l("OSDformat"),oldOSDformat,256,defPreset);
    presets.push_back(std::make_pair((const char_t*)_l("default"),(const char_t*)oldOSDformat));
-  } 
+  }
  else
   for (int i=0;i<size;i++)
    {
@@ -94,16 +94,16 @@ void TOSDsettings::loadPresets(const char_t *reg_child)
     char_t format[256];
     t._REG_OP_S(0,regname,format,256,_l(""));
     presets.push_back(std::make_pair((const char_t*)name,(const char_t*)format));
-   } 
+   }
  if (!getFormat())
   strcpy(curPreset,_l("default"));
- changed=true; 
+ changed=true;
 }
 
 HRESULT TOSDsettings::setPresetName(unsigned int i,const char_t *name)
 {
  if (i>=presets.size()) return E_INVALIDARG;
- changed=true; 
+ changed=true;
  presets[i].first=name;
  return S_OK;
 }
@@ -118,8 +118,8 @@ const char_t* TOSDsettings::getStartupFormat(int *duration) const
  else
   {
    if (duration) *duration=0;
-   return _l(""); 
-  } 
+   return _l("");
+  }
 }
 
 const char_t* TOSDsettings::getFormat(void) const
@@ -128,8 +128,8 @@ const char_t* TOSDsettings::getFormat(void) const
   {
    oldformat=getFormat(curPreset);
    changed=false;
-  } 
- return oldformat; 
+  }
+ return oldformat;
 }
 
 const char_t* TOSDsettings::getFormat(const char_t *presetName) const
@@ -143,7 +143,7 @@ const char_t* TOSDsettings::getFormat(const char_t *presetName) const
 }
 void TOSDsettings::addPreset(const char_t *presetName,const char_t *format)
 {
- changed=true; 
+ changed=true;
  presets.push_back(std::make_pair(presetName,format));
 }
 bool TOSDsettings::setFormat(const char_t *presetName,const char_t *format)
@@ -152,7 +152,7 @@ bool TOSDsettings::setFormat(const char_t *presetName,const char_t *format)
  for (Tpresets::iterator i=presets.begin();i!=presets.end();i++)
   if (i->first==presetName)
    {
-    changed=true; 
+    changed=true;
     i->second=format;
     return true;
    }
@@ -167,11 +167,11 @@ bool TOSDsettings::erase(const char_t *presetName)
     return false;
    else
     {
-     changed=true; 
+     changed=true;
      presets.erase(i);
      return true;
-    } 
- return false;    
+    }
+ return false;
 }
 bool TOSDsettings::cycle(void)
 {
@@ -182,7 +182,7 @@ bool TOSDsettings::cycle(void)
     i++;
     if (i==presets.end()) i=presets.begin();
     strcpy(curPreset,i->first.c_str());
-    changed=true; 
+    changed=true;
     return true;
    }
  return false;
@@ -211,14 +211,14 @@ TOSDsettingsVideo::TOSDsettingsVideo(TintStrColl *Icoll,TfilterIDFFs *filters):
      _l("OSDposY"),0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
 
  static const TstrOption sopts[]=
   {
    IDFF_OSDuser       ,(TstrVal)&TOSDsettingsVideo::user       ,256 ,_l(""),0,NULL,NULL,
    0
   };
- addOptions(sopts); 
+ addOptions(sopts);
 }
 
 void TOSDsettingsVideo::reg_op(TregOp &t)
@@ -235,7 +235,7 @@ void TOSDsettingsVideo::resetLook(void)
 void TOSDsettingsVideo::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
 {
  if (!queue.temporary) setOnChange(IDFF_isOSD,filters,&Tfilters::onQueueChange);
- queueFilter<TimgFilterOSD>(filtersorder,filters,queue); 
+ queueFilter<TimgFilterOSD>(filtersorder,filters,queue);
 }
 
 //====================================== TOSDsettingsAudio =======================================
@@ -247,5 +247,5 @@ TOSDsettingsAudio::TOSDsettingsAudio(TintStrColl *Icoll,TfilterIDFFs *filters):
 void TOSDsettingsAudio::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
 {
  //if (!queue.temporary) setOnChange(IDFF_isOSD,filters,&Tfilters::onQueueChange);
- //queueFilter<TimgFilterOSD>(filtersorder,filters,queue); 
+ //queueFilter<TimgFilterOSD>(filtersorder,filters,queue);
 }

@@ -44,7 +44,7 @@ ThwOverlaySettings::ThwOverlaySettings(TintStrColl *Icoll,TfilterIDFFs *filters)
    IDFF_isOverlayControl   ,&ThwOverlaySettings::is          ,   0,    0,_l(""),1,
      _l("isOverlayControl"),0,
    IDFF_overlayOrder       ,&ThwOverlaySettings::order       ,  -1,   -1,_l(""),0,
-     NULL,0,  
+     NULL,0,
    IDFF_overlayBrightness  ,&ThwOverlaySettings::brightness  ,   0,10000,_l(""),1,
      _l("overlayBrightness"),-1,
    IDFF_overlayContrast    ,&ThwOverlaySettings::contrast    ,   0,20000,_l(""),1,
@@ -61,13 +61,13 @@ ThwOverlaySettings::ThwOverlaySettings(TintStrColl *Icoll,TfilterIDFFs *filters)
      _l("overlayColorEnable"),-1,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
 }
 
 void ThwOverlaySettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
 {
  idffOnChange(idffs,filters,queue.temporary);
- queueFilter<TimgFilterHWoverlay>(filtersorder,filters,queue); 
+ queueFilter<TimgFilterHWoverlay>(filtersorder,filters,queue);
 }
 void ThwOverlaySettings::createPages(TffdshowPageDec *parent) const
 {
@@ -83,5 +83,5 @@ const int* ThwOverlaySettings::getResets(unsigned int pageId)
 bool ThwOverlaySettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
  tipS[0]='\0';
- return true; 
+ return true;
 }

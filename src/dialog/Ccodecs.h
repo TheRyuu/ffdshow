@@ -28,7 +28,7 @@ private:
   };
  struct TwidgetCodecsCbx :TwidgetCodecs
   {
-  protected: 
+  protected:
    virtual LRESULT onKillFocus(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
    virtual LRESULT onGetDlgCode(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
   public:

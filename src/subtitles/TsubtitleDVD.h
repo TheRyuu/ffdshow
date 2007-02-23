@@ -78,7 +78,7 @@ protected:
  virtual bool parse(void);
  AM_DVD_YUV sppal[4];
 public:
- TsubtitleSVCD(REFERENCE_TIME start,const unsigned char *Idata,unsigned int Idatalen,TsubtitleDVDparent *Iparent):TsubtitleDVD(start,Idata,Idatalen,Iparent) 
+ TsubtitleSVCD(REFERENCE_TIME start,const unsigned char *Idata,unsigned int Idatalen,TsubtitleDVDparent *Iparent):TsubtitleDVD(start,Idata,Idatalen,Iparent)
   {
    memset(sppal,0,sizeof(sppal));
   }

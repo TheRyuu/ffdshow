@@ -74,7 +74,7 @@ public:
  void (AVSC_CC *avs_release_video_frame)(AVS_VideoFrame *);
  struct AVS_VideoFrame* (AVSC_CC *avs_get_frame)(AVS_Clip *, int n);
  struct AVS_VideoFrame* (AVSC_CC *avs_new_video_frame_a)(AVS_ScriptEnvironment *, const AVS_VideoInfo * vi, int align);
- int (AVSC_CC *avs_get_audio)(AVS_Clip *, void * buf, INT64 start, INT64 count); 
+ int (AVSC_CC *avs_get_audio)(AVS_Clip *, void * buf, INT64 start, INT64 count);
 
  inline AVS_Value avs_new_value_clip(AVS_Clip * v0) { AVS_Value v; avs_set_to_clip(&v, v0); return v; }
  inline AVS_VideoFrame* avs_new_video_frame(AVS_ScriptEnvironment * env,  const AVS_VideoInfo * vi) {return avs_new_video_frame_a(env,vi,AVS_FRAME_ALIGN);}

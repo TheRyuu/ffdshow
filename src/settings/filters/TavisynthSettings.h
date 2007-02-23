@@ -8,9 +8,9 @@ struct TavisynthSettings :TfilterSettingsVideo
 {
 private:
  static const TfilterIDFF idffs;
-protected: 
+protected:
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  TavisynthSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  char_t script[2048];
  int inYV12,inYUY2,inRGB24,inRGB32;

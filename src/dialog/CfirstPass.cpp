@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "CfirstPass.h"
 
@@ -25,7 +25,7 @@ bool TfirstPassPage::enabled(void)
 }
 
 void TfirstPassPage::cfg2dlg(void)
-{ 
+{
  setDlgItemText(m_hwnd,IDC_ED_STATS1,cfgGetStr(IDFF_enc_stats1flnm));
 }
 
@@ -34,17 +34,17 @@ INT_PTR TfirstPassPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_ED_STATS1:
-       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText) 
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
          char_t flnm[MAX_PATH];
          GetDlgItemText(m_hwnd,IDC_ED_STATS1,flnm,MAX_PATH);
          cfgSet(IDFF_enc_stats1flnm,flnm);
-         return TRUE;  
+         return TRUE;
         }
-       break; 
+       break;
      }
     break;
   }
@@ -71,5 +71,5 @@ TfirstPassPage::TfirstPassPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
    IDC_BT_STATS1,&TfirstPassPage::onStats1,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
 }

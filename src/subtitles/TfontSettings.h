@@ -7,7 +7,7 @@ struct TfontSettings :Toptions
 {
 public:
  TfontSettings(TintStrColl *Icoll=NULL);
- TfontSettings& operator =(const TfontSettings &src) 
+ TfontSettings& operator =(const TfontSettings &src)
   {
    memcpy(((uint8_t*)this)+sizeof(Toptions),((uint8_t*)&src)+sizeof(Toptions),sizeof(*this)-sizeof(Toptions));
    return *this;
@@ -21,7 +21,7 @@ public:
   {
    if (autosize && AVIdx && AVIdy)
     return limit(sizeA*ff_sqrt(AVIdx*AVIdx+AVIdy*AVIdy)/1000,3U,255U);
-   else 
+   else
     return sizeP;
   }
  struct Tweigth

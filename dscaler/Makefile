@@ -1,5 +1,5 @@
 CFLAGS+= -I. -I../src -I/dx/Include -L/dx/MingLib -ldx9
-       
+
 SRCS=FLT_ffdshow.cpp
 
 SLIB=../bin/FLT_ffdshow.dll
@@ -12,7 +12,7 @@ include ../src/makefile_c.inc
 
 .all: $(SLIB)
 
-clean: 
+clean:
 	rm -f *.o *~ $(SLIB)
 
 #

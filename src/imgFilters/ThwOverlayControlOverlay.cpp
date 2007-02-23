@@ -25,7 +25,7 @@ dwSize
 Size of the structure, in bytes. This member must be initialized before the structure can be used.
 
 dwFlags
-The following flags specifying which structure members contain valid data . When the structure is returned by the IDirectDrawColorControl::GetColorControls method, it also indicates which options are supported by the device. 
+The following flags specifying which structure members contain valid data . When the structure is returned by the IDirectDrawColorControl::GetColorControls method, it also indicates which options are supported by the device.
 
   DDCOLOR_BRIGHTNESS  The lBrightness member contains valid data.
   DDCOLOR_COLORENABLE The lColorEnable member contains valid data.
@@ -62,7 +62,7 @@ Reserved.
 
 const int ThwOverlayControlOverlay::caps[]=
 {
- 0, 
+ 0,
  DDCOLOR_BRIGHTNESS,
  DDCOLOR_CONTRAST,
  DDCOLOR_HUE,
@@ -96,7 +96,7 @@ STDMETHODIMP_(bool) ThwOverlayControlOverlay::supported(int cap)
 {
  if (isIn(cap,1,6))
   return !!(ddcc.dwFlags&caps[cap]);
- else 
+ else
   return false;
 }
 STDMETHODIMP ThwOverlayControlOverlay::get(int cap,int *val)

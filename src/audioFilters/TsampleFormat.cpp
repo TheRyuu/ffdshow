@@ -55,11 +55,11 @@ void TsampleFormat::init(const WAVEFORMATEX &wfex,bool wfextcheck,const GUID *su
        if (*subtype==MEDIASUBTYPE_IN32 || *subtype==MEDIASUBTYPE_in32)
         sf=SF_PCM32;
        else if (*subtype==MEDIASUBTYPE_IN24 || *subtype==MEDIASUBTYPE_in24)
-        sf=SF_PCM24; 
+        sf=SF_PCM24;
        else if (*subtype==MEDIASUBTYPE_FL32 || *subtype==MEDIASUBTYPE_fl32)
-        sf=SF_FLOAT32; 
+        sf=SF_FLOAT32;
        else if (*subtype==MEDIASUBTYPE_FL64 || *subtype==MEDIASUBTYPE_fl64)
-        sf=SF_FLOAT64; 
+        sf=SF_FLOAT64;
        Textradata extradata(wfex);
        if (extradata.data)
         {
@@ -67,13 +67,13 @@ void TsampleFormat::init(const WAVEFORMATEX &wfex,bool wfextcheck,const GUID *su
          if (enda && *(uint16_t*)(enda+4)==0)
           pcm_be=true;
         }
-      }  
-     else if (*subtype==MEDIASUBTYPE_twos || *subtype==MEDIASUBTYPE_TWOS) 
+      }
+     else if (*subtype==MEDIASUBTYPE_twos || *subtype==MEDIASUBTYPE_TWOS)
       {
        sf=SF_PCM16;
        pcm_be=true;
-      } 
-    } 
+      }
+    }
    else
     switch (wfex.wBitsPerSample)
      {
@@ -149,7 +149,7 @@ TsampleFormat::TsampleFormat(const AM_MEDIA_TYPE &mt):pcm_be(false)
   init(*(const VORBISFORMATILL*)mt.pbFormat);
  else if (mt.formattype==FORMAT_WaveFormatEx)
   init(*(const WAVEFORMATEX*)mt.pbFormat,true,&mt.subtype);
- else 
+ else
   {
    nchannels=NULL;
    sf=SF_NULL;
@@ -158,7 +158,7 @@ TsampleFormat::TsampleFormat(const AM_MEDIA_TYPE &mt):pcm_be(false)
 
 int TsampleFormat::sf_bestMatch(int sfIn,int wantedSFS)
 {
- const int *bestsfs=NULL; 
+ const int *bestsfs=NULL;
  switch (sfIn)
   {
    case SF_PCM16:
@@ -171,7 +171,7 @@ int TsampleFormat::sf_bestMatch(int sfIn,int wantedSFS)
        SF_NULL
       };
      bestsfs=best;
-     break; 
+     break;
     }
    case SF_PCM24:
     {
@@ -183,7 +183,7 @@ int TsampleFormat::sf_bestMatch(int sfIn,int wantedSFS)
        SF_NULL
       };
      bestsfs=best;
-     break; 
+     break;
     }
    case SF_PCM32:
     {
@@ -195,7 +195,7 @@ int TsampleFormat::sf_bestMatch(int sfIn,int wantedSFS)
        SF_NULL
       };
      bestsfs=best;
-     break; 
+     break;
     }
    case SF_PCM8:
     {
@@ -206,7 +206,7 @@ int TsampleFormat::sf_bestMatch(int sfIn,int wantedSFS)
        SF_NULL
       };
      bestsfs=best;
-     break; 
+     break;
     }
    case SF_FLOAT32:
     {
@@ -218,16 +218,16 @@ int TsampleFormat::sf_bestMatch(int sfIn,int wantedSFS)
        SF_NULL
       };
      bestsfs=best;
-     break; 
+     break;
     }
-   default:return SF_NULL; 
-  } 
+   default:return SF_NULL;
+  }
  while (*bestsfs)
   {
    if (*bestsfs&wantedSFS)
     return *bestsfs;
    bestsfs++;
-  }  
+  }
  return SF_NULL;
 }
 
@@ -249,7 +249,7 @@ DWORD TsampleFormat::getPCMformat(const CMediaType &mtIn,DWORD def)
    case SF_FLOAT32:return WAVE_FORMAT_FLOAT32;
    case SF_FLOAT64:return WAVE_FORMAT_FLOAT64;
   }
- return def;   
+ return def;
 }
 
 WAVEFORMATEXTENSIBLE TsampleFormat::toWAVEFORMATEXTENSIBLE(bool alwayextensible) const
@@ -261,7 +261,7 @@ WAVEFORMATEXTENSIBLE TsampleFormat::toWAVEFORMATEXTENSIBLE(bool alwayextensible)
   wfe->wFormatTag=(WORD)WAVE_FORMAT_IEEE_FLOAT;
  else if (sf==SF_LPCM16)
   wfe->wFormatTag=(WORD)WAVE_FORMAT_UNKNOWN;
- else 
+ else
   wfe->wFormatTag=(WORD)WAVE_FORMAT_PCM;
  wfe->nChannels=WORD(nchannels);
  wfe->nSamplesPerSec=freq;
@@ -273,12 +273,12 @@ WAVEFORMATEXTENSIBLE TsampleFormat::toWAVEFORMATEXTENSIBLE(bool alwayextensible)
  int dwChannelMask;
  if (channelmask==0 && (sf==TsampleFormat::SF_PCM24 || sf==TsampleFormat::SF_PCM32 || nchannels>2))
   dwChannelMask=makeChannelMask2();
- else  
+ else
   dwChannelMask=channelmask;
 
  if (!alwayextensible && dwChannelMask==standardChannelMasks[nchannels-1])
   dwChannelMask=0;
-  
+
  if (dwChannelMask)
   {
    wfex.Format.wFormatTag=WAVE_FORMAT_EXTENSIBLE;
@@ -296,10 +296,10 @@ CMediaType TsampleFormat::toCMediaType(bool alwaysextensible) const
  /*if (sf==SF_LPCM16)
   mt.majortype=MEDIATYPE_MPEG2_PES;
  else*/
-  mt.majortype=MEDIATYPE_Audio; 
+  mt.majortype=MEDIATYPE_Audio;
  if (sf==SF_FLOAT32)
   mt.subtype=MEDIASUBTYPE_IEEE_FLOAT;
- else if (sf==SF_LPCM16) 
+ else if (sf==SF_LPCM16)
   mt.subtype=MEDIASUBTYPE_DVD_LPCM_AUDIO;
  else
   mt.subtype=MEDIASUBTYPE_PCM;

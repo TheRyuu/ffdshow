@@ -350,7 +350,7 @@ HRESULT SetVideoParams( IMediaObject *pDMO, VideoEncParams *pParams )
        break;
       }
      if( FAILED( hr ) ) break;
-     
+
      ::VariantInit(&varg);
      varg.vt      = VT_BSTR;
      varg.bstrVal = bstrIn;
@@ -416,8 +416,8 @@ HRESULT SetVideoParams( IMediaObject *pDMO, VideoEncParams *pParams )
        hr = E_VIDEO_QUALITY_REJECTED;
        break;
       }
-    }  
-   
+    }
+
 #ifdef SUPPORT_INTERLACE
    //
    // set the interlace mode for WMV# only
@@ -588,18 +588,18 @@ HRESULT InitializeVideoEncoder(  AM_MEDIA_TYPE      *pmtInput,
        break;
       }
     }
-  nextclsid:  
+  nextclsid:
    hr = CoCreateInstance( *clsid,
                            NULL,
                            CLSCTX_INPROC_SERVER,
                            IID_IMediaObject,
                            (void**)ppDMO);
-   clsid++;                        
+   clsid++;
 
    if( FAILED( hr ) )
     if (*clsid==CLSID_NULL)
       break;
-    else  
+    else
       goto nextclsid;
 
    hr = SetVideoParams( *ppDMO, pParams );

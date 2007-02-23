@@ -91,7 +91,7 @@ INT_PTR TdeinterlacePage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     panel->storeCfg();
     break;
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CBX_DEINT_METHOD:
        if (HIWORD(wParam)==CBN_SELCHANGE)
@@ -99,7 +99,7 @@ INT_PTR TdeinterlacePage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          int ii=cbxGetCurSel(IDC_CBX_DEINT_METHOD);
          if (dscalerstart && ii>=dscalerstart)
           cfgSet(IDFF_dscalerDIflnm,diflnms[ii-dscalerstart].c_str());
-        } 
+        }
        break;
      }
     break;
@@ -145,7 +145,7 @@ void TdeinterlacePage::fillDeinterlacers(void)
  cbxSetCurSel(IDC_CBX_DEINT_METHOD,ii);
 }
 void TdeinterlacePage::translate(void)
-{ 
+{
  TconfPageDec::translate();
  fillDeinterlacers();
 }

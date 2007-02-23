@@ -27,7 +27,7 @@ EXPORTS
   av_write_trailer
 
   dsputil_init
- 
+
   avcodec_thread_init
   avcodec_thread_free
 

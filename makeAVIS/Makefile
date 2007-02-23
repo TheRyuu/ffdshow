@@ -1,5 +1,5 @@
 CFLAGS+= -I. -I../src -I../src/cygwin
-       
+
 SRCS=makeAVIS.cpp
 RESSRC=makeAVIS.rc
 EXCEPTIONS=1
@@ -13,7 +13,7 @@ include ../src/makefile_c.inc
 
 .all: $(SEXE)
 
-clean: 
+clean:
 	rm -f *.o *~ $(SEXE)
 
 #

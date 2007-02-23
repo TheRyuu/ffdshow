@@ -26,7 +26,7 @@ TregOpStreamRead::TregOpStreamRead(const void *buf,size_t len,char_t sep,bool Il
  for (const char_t *cur=(const char_t*)buf,*end=(const char_t*)buf+len;cur<end;)
   {
    const char_t *s=(const char_t*)memchr(cur,sep,end-cur);
-   if (!s) 
+   if (!s)
     s=end;
    char_t line[256];
    strncpy(line,cur,s-cur);line[s-cur]='\0';
@@ -47,7 +47,7 @@ bool TregOpIDstreamWrite::_REG_OP_N(short int id,const char_t *X,int &Y,const in
   {
    append(id);
    append(Y);
-  } 
+  }
  return true;
 }
 void TregOpIDstreamWrite::_REG_OP_S(short int id,const char_t *X,char_t *Y,size_t buflen,const char_t *Z)
@@ -59,9 +59,9 @@ void TregOpIDstreamWrite::_REG_OP_S(short int id,const char_t *X,char_t *Y,size_
     {
      static const uint8_t marker[]={0xff,0xfe};
      append(marker,2);
-    } 
+    }
    append(Y,(strlen(Y)+1)*sizeof(char_t));
-  } 
+  }
 }
 
 //=============================== TregOpIDstreamRead ================================
@@ -84,20 +84,20 @@ TregOpIDstreamRead::TregOpIDstreamRead(const void *buf,size_t len,const void* *l
        const wchar_t *pw=text<wchar_t>((const wchar_t*)(p+2));
        vals.insert(std::make_pair(-id,Tval(text<char_t>(pw))));
        p=(const char*)(strchr(pw,'\0')+1);
-      } 
+      }
      else
       {
        vals.insert(std::make_pair(-id,Tval(text<char_t>(p))));
        p=strchr(p,'\0')+1;
-      } 
+      }
     }
-   else 
+   else
     {
      p-=2;
      break;
-    } 
+    }
   }
- if (last) *last=p; 
+ if (last) *last=p;
 }
 bool TregOpIDstreamRead::_REG_OP_N(short int id,const char_t *X,int &Y,const int Z)
 {

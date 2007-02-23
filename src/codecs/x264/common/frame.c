@@ -226,7 +226,7 @@ void x264_frame_expand_border( x264_t *h, x264_frame_t *frame, int mb_y, int b_e
 
 void x264_frame_expand_border_filtered( x264_t *h, x264_frame_t *frame, int mb_y, int b_end )
 {
-    /* during filtering, 8 extra pixels were filtered on each edge. 
+    /* during filtering, 8 extra pixels were filtered on each edge.
        we want to expand border from the last filtered pixel */
     int b_start = !mb_y;
     int stride = frame->i_stride[0];
@@ -345,23 +345,23 @@ static inline void deblock_luma_c( uint8_t *pix, int xstride, int ystride, int a
             const int q0 = pix[ 0*xstride];
             const int q1 = pix[ 1*xstride];
             const int q2 = pix[ 2*xstride];
-   
+
             if( abs( p0 - q0 ) < alpha &&
                 abs( p1 - p0 ) < beta &&
                 abs( q1 - q0 ) < beta ) {
-   
+
                 int tc = tc0[i];
                 int delta;
-   
+
                 if( abs( p2 - p0 ) < beta ) {
                     pix[-2*xstride] = p1 + x264_clip3( (( p2 + ((p0 + q0 + 1) >> 1)) >> 1) - p1, -tc0[i], tc0[i] );
-                    tc++; 
+                    tc++;
                 }
                 if( abs( q2 - q0 ) < beta ) {
                     pix[ 1*xstride] = q1 + x264_clip3( (( q2 + ((p0 + q0 + 1) >> 1)) >> 1) - q1, -tc0[i], tc0[i] );
                     tc++;
                 }
-    
+
                 delta = x264_clip3( (((q0 - p0 ) << 2) + (p1 - q1) + 4) >> 3, -tc, tc );
                 pix[-1*xstride] = clip_uint8( p0 + delta );    /* p0' */
                 pix[ 0*xstride] = clip_uint8( q0 - delta );    /* q0' */
@@ -372,7 +372,7 @@ static inline void deblock_luma_c( uint8_t *pix, int xstride, int ystride, int a
 }
 static void deblock_v_luma_c( uint8_t *pix, int stride, int alpha, int beta, int8_t *tc0 )
 {
-    deblock_luma_c( pix, stride, 1, alpha, beta, tc0 ); 
+    deblock_luma_c( pix, stride, 1, alpha, beta, tc0 );
 }
 static void deblock_h_luma_c( uint8_t *pix, int stride, int alpha, int beta, int8_t *tc0 )
 {
@@ -407,11 +407,11 @@ static inline void deblock_chroma_c( uint8_t *pix, int xstride, int ystride, int
     }
 }
 static void deblock_v_chroma_c( uint8_t *pix, int stride, int alpha, int beta, int8_t *tc0 )
-{   
+{
     deblock_chroma_c( pix, stride, 1, alpha, beta, tc0 );
 }
 static void deblock_h_chroma_c( uint8_t *pix, int stride, int alpha, int beta, int8_t *tc0 )
-{   
+{
     deblock_chroma_c( pix, 1, stride, alpha, beta, tc0 );
 }
 
@@ -463,17 +463,17 @@ static inline void deblock_luma_intra_c( uint8_t *pix, int xstride, int ystride,
     }
 }
 static void deblock_v_luma_intra_c( uint8_t *pix, int stride, int alpha, int beta )
-{   
+{
     deblock_luma_intra_c( pix, stride, 1, alpha, beta );
 }
 static void deblock_h_luma_intra_c( uint8_t *pix, int stride, int alpha, int beta )
-{   
+{
     deblock_luma_intra_c( pix, 1, stride, alpha, beta );
 }
 
 static inline void deblock_chroma_intra_c( uint8_t *pix, int xstride, int ystride, int alpha, int beta )
-{   
-    int d; 
+{
+    int d;
     for( d = 0; d < 8; d++ ) {
         const int p1 = pix[-2*xstride];
         const int p0 = pix[-1*xstride];
@@ -492,11 +492,11 @@ static inline void deblock_chroma_intra_c( uint8_t *pix, int xstride, int ystrid
     }
 }
 static void deblock_v_chroma_intra_c( uint8_t *pix, int stride, int alpha, int beta )
-{   
+{
     deblock_chroma_intra_c( pix, stride, 1, alpha, beta );
 }
 static void deblock_h_chroma_intra_c( uint8_t *pix, int stride, int alpha, int beta )
-{   
+{
     deblock_chroma_intra_c( pix, 1, stride, alpha, beta );
 }
 
@@ -509,7 +509,7 @@ static inline void deblock_edge( x264_t *h, uint8_t *pix, int i_stride, int bS[4
     const int beta  = i_beta_table[x264_clip3( i_qp + h->sh.i_beta_offset, 0, 51 )];
 
     if( bS[0] < 4 ) {
-        int8_t tc[4]; 
+        int8_t tc[4];
         for(i=0; i<4; i++)
             tc[i] = (bS[i] ? i_tc0_table[index_a][bS[i] - 1] : -1) + b_chroma;
         pf_inter( pix, i_stride, alpha, beta, tc );
@@ -830,4 +830,7 @@ void x264_frame_sort( x264_frame_t **list, int b_dts )
         }
     } while( !b_ok );
 }
+
+
+
 

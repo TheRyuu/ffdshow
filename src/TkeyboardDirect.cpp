@@ -50,13 +50,13 @@ void TdirectInput::onChange(int id,int newval)
     {
      if (!di)
       hook();
-    }  
-   else 
+    }
+   else
     {
      if (di)
       unhook();
-    }  
-  }  
+    }
+  }
 }
 
 void TdirectInput::load(void)
@@ -92,7 +92,7 @@ void TdirectInput::unhook(void)
 {
  if (!di) return;
  DPRINTF(_l("unhook"));
- if (thr) 
+ if (thr)
   {
    terminate=true;
    while (terminate);
@@ -127,7 +127,7 @@ void TdirectInput::thread(void *self0)
   }
  self->terminate=false;
 }
- 
+
 bool TdirectInput::windowActive(void)
 {
  HWND tw=GetForegroundWindow();
@@ -153,7 +153,7 @@ void Tkeyboard::initKeysParam(void)
 
  keysParams.push_back(TkeyParam(_l("Seek forward") ,VK_RIGHT,idff_forward ));
  keysParams.push_back(TkeyParam(_l("Seek backward"),VK_LEFT ,idff_backward));
- 
+
  keysParams.push_back(TkeyParam(_l("Toggle OSD"),'O',IDFF_isOSD));
  keysParams.push_back(TkeyParam(_l("Toggle visualizations"),'V',IDFF_isVis));
  keysParams.push_back(TkeyParam(_l("Toggle crop/zoom"),'C',IDFF_isCropNzoom));
@@ -171,7 +171,7 @@ void Tkeyboard::initKeysParam(void)
  keysParams.push_back(TkeyParam(_l("Toggle warpsharp"),'W',IDFF_isWarpsharp));
 
  keysParams.push_back(TkeyParam(_l("Grab frame"),'G',idff_grab));
- 
+
  keysParams.push_back(TkeyParam(_l("Subtitles delay/size decrease"),0x6d,idff_subdelaySub));
  keysParams.push_back(TkeyParam(_l("Subtitles delay/size increase"),0x6b,idff_subdelayAdd));
  keysParams.push_back(TkeyParam(_l("Subtitles position decrease"),0x21,idff_subposSub));
@@ -195,7 +195,7 @@ void Tkeyboard::keyProc(int code,bool remote)
  else if (code==DIK_RMENU) code=DIK_LMENU;
 
  DPRINTF(_l("keyProc:%x"),code);
- if ((keysParams[i_key_act1].key && !dkeys[vk2dik[keysParams[i_key_act1].key]]) || 
+ if ((keysParams[i_key_act1].key && !dkeys[vk2dik[keysParams[i_key_act1].key]]) ||
      (keysParams[i_key_act2].key && !dkeys[vk2dik[keysParams[i_key_act2].key]])) return;
  if (!always && !remote && !windowActive())
   return;
@@ -221,11 +221,11 @@ void Tkeyboard::keyProc(int code,bool remote)
              deciV->cycleOSDpresets();
             return;
            }
-          break; 
+          break;
          case IDFF_isSubtitles:
           if (isMod)
            {
-            if (deciV->cycleSubLanguages(+1)==S_OK && shortosd) 
+            if (deciV->cycleSubLanguages(+1)==S_OK && shortosd)
              {
               const char_t *lang;
               deciV->getSubtitleLanguageDesc(deci->getParam2(IDFF_subCurLang),&lang);
@@ -234,12 +234,12 @@ void Tkeyboard::keyProc(int code,bool remote)
                 char_t msg[256];
                 tsprintf(msg,_l("subtitles language: %s"),lang);
                 deciV->shortOSDmessage(msg,30);
-               } 
-             } 
+               }
+             }
             return;
            }
           break;
-        }    
+        }
        deci->invParam(i->idff);
        deci->saveGlobalSettings();
        deciD->saveActivePreset(NULL);
@@ -249,8 +249,8 @@ void Tkeyboard::keyProc(int code,bool remote)
          deciV->shortOSDmessage(msg,30);
         }
        return;
-      } 
-     else 
+      }
+     else
       switch (i->idff)
        {
         case idff_forward:
@@ -276,31 +276,31 @@ void Tkeyboard::keyProc(int code,bool remote)
          }
         case idff_grab:
          deciV->grabNow();
-         return; 
+         return;
         case idff_subdelaySub:
          {
           int idff=isMod?(deci->getParam2(IDFF_fontAutosize)?IDFF_fontSizeA:IDFF_fontSizeP):IDFF_subDelay;
           deci->putParam(idff,deci->getParam2(idff)-(isMod?2:100));
-          if (shortosd) 
+          if (shortosd)
            {
             char_t msg[256];
             tsprintf(msg,_l("subtitles %s: %i"),isMod?_l("size"):_l("delay"),deci->getParam2(idff));
             deciV->shortOSDmessage(msg,30);
-           } 
+           }
           return;
-         } 
+         }
         case idff_subdelayAdd:
          {
           int idff=isMod?(deci->getParam2(IDFF_fontAutosize)?IDFF_fontSizeA:IDFF_fontSizeP):IDFF_subDelay;
           deci->putParam(idff,deci->getParam2(idff)+(isMod?2:100));
-          if (shortosd) 
+          if (shortosd)
            {
             char_t msg[256];
             tsprintf(msg,_l("subtitles %s: %i"),isMod?_l("size"):_l("delay"),deci->getParam2(idff));
             deciV->shortOSDmessage(msg,30);
-           } 
-          return; 
-         } 
+           }
+          return;
+         }
         case idff_subposSub:
          {
           int idff=isMod?IDFF_subPosX:IDFF_subPosY;
@@ -311,8 +311,8 @@ void Tkeyboard::keyProc(int code,bool remote)
             tsprintf(msg,_l("subtitles %s position : %i"),isMod?_l("horizontal"):_l("vertical"),deci->getParam2(idff));
             deciV->shortOSDmessage(msg,30);
            }
-          return; 
-         } 
+          return;
+         }
         case idff_subposAdd:
          {
           int idff=isMod?IDFF_subPosX:IDFF_subPosY;
@@ -323,8 +323,8 @@ void Tkeyboard::keyProc(int code,bool remote)
             tsprintf(msg,_l("subtitles %s position : %i"),isMod?_l("horizontal"):_l("vertical"),deci->getParam2(idff));
             deciV->shortOSDmessage(msg,30);
            }
-          return; 
-         } 
+          return;
+         }
         case idff_videodelayAdd:
         case idff_videodelaySub:
          {
@@ -354,7 +354,7 @@ void Tkeyboard::keyProc(int code,bool remote)
          }
        }
   }
- prevT=prevT0;     
+ prevT=prevT0;
 }
 void Tkeyboard::processState(void)
 {
@@ -383,9 +383,9 @@ Tkeyboard::Tkeyboard(TintStrColl *Icoll,IffdshowBase *Ideci):TdirectInput(Icoll,
      _l("keysSeek2"),60,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
  setOnChange(IDFF_isKeys,this,&Tkeyboard::onChange);
- 
+
  prevT=0;
  initKeysParam();
  load();
@@ -998,7 +998,7 @@ const unsigned char Tkeyboard::vk2dik[256]=
 };
 
 const char_t* Tkeyboard::getKeyName(int key)
-{    
+{
  return keyInfo[key&255].keyname;
 }
 
@@ -1013,9 +1013,9 @@ Tmouse::Tmouse(TintStrColl *Icoll,IffdshowBase *Ideci):TdirectInput(Icoll,_l("mo
      _l("mouseAlways"),0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
  setOnChange(IDFF_isMouse,this,&Tmouse::onChange);
- 
+
  load();
 }
 Tmouse::~Tmouse()

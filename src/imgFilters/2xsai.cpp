@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2005,2006 Milan Cutka
- * uses code from mplayer 2xsai filter 
+ * uses code from mplayer 2xsai filter
  * http://elektron.its.tudelft.nl/~dalikifa/
- * and original 2xSai Copyright (c) Derek Liauw Kie Fa, 1999 
+ * and original 2xSai Copyright (c) Derek Liauw Kie Fa, 1999
  *
  * hq2x filter (C) 2003 MaxSt ( maxst@hiend3d.com )
  *
@@ -24,9 +24,9 @@
 #include "stdafx.h"
 #include "2xsai.h"
 
-void T2xSaI::super(const uint8_t *src, stride_t src_pitch, 
+void T2xSaI::super(const uint8_t *src, stride_t src_pitch,
                    uint8_t *dst, stride_t dst_pitch,
-                   uint32_t width, uint32_t height) 
+                   uint32_t width, uint32_t height)
 {
  unsigned int x, y;
  unsigned long color[16];
@@ -38,9 +38,9 @@ void T2xSaI::super(const uint8_t *src, stride_t src_pitch,
  src_line[1] = src;
  src_line[2] = src + src_pitch;
  src_line[3] = src + src_pitch * 2;
- 
+
  x = 0, y = 0;
- 
+
  unsigned long *lbp;
  lbp = (unsigned long*)src_line[0];
  color[0] = *lbp;       color[1] = color[0];   color[2] = color[0];    color[3] = color[0];
@@ -50,14 +50,14 @@ void T2xSaI::super(const uint8_t *src, stride_t src_pitch,
  lbp = (unsigned long*)src_line[3];
  color[12] = *lbp;    color[13] = color[12];   color[14] = *(lbp + 1); color[15] = *(lbp + 2);
 
- for (y = 0; y < height; y++) 
+ for (y = 0; y < height; y++)
   {
    unsigned char *dst_line[2];
    dst_line[0] = dst + dst_pitch*2*y;
    dst_line[1] = dst + dst_pitch*(2*y+1);
 
    /* Todo: x = width - 2, x = width - 1 */
-   
+
    for (x = 0; x < width; x++)
     {
      unsigned long product1a, product1b, product2a, product2b;
@@ -67,17 +67,17 @@ void T2xSaI::super(const uint8_t *src, stride_t src_pitch,
 //                                         1  2  3  S1    8  9 10 11
 //                                         A0 A1 A2 A3   12 13 14 15
 //--------------------------------------
-     if (color[9] == color[6] && color[5] != color[10]) 
+     if (color[9] == color[6] && color[5] != color[10])
       {
        product2b = color[9];
        product1b = product2b;
       }
-     else if (color[5] == color[10] && color[9] != color[6]) 
+     else if (color[5] == color[10] && color[9] != color[6])
       {
        product2b = color[5];
        product1b = product2b;
       }
-     else if (color[5] == color[10] && color[9] == color[6]) 
+     else if (color[5] == color[10] && color[9] == color[6])
       {
        int r = 0;
 
@@ -92,7 +92,7 @@ void T2xSaI::super(const uint8_t *src, stride_t src_pitch,
                product1b = color[5];
        else
                product1b = INTERPOLATE(color[5], color[6]);
-               
+
        product2b = product1b;
       }
      else
@@ -130,13 +130,13 @@ void T2xSaI::super(const uint8_t *src, stride_t src_pitch,
      *((unsigned long *) (&dst_line[0][x * 8 + 4])) = product1b;
      *((unsigned long *) (&dst_line[1][x * 8])) = product2a;
      *((unsigned long *) (&dst_line[1][x * 8 + 4])) = product2b;
-     
+
      /* Move color matrix forward */
      color[0] = color[1]; color[4] = color[5]; color[8] = color[9];   color[12] = color[13];
      color[1] = color[2]; color[5] = color[6]; color[9] = color[10];  color[13] = color[14];
      color[2] = color[3]; color[6] = color[7]; color[10] = color[11]; color[14] = color[15];
-     
-     if (x < width - 3) 
+
+     if (x < width - 3)
       {
        x += 3;
        color[3] = *(((unsigned long*)src_line[0]) + x);
@@ -150,14 +150,14 @@ void T2xSaI::super(const uint8_t *src, stride_t src_pitch,
    /* We're done with one line, so we shift the source lines up */
    src_line[0] = src_line[1];
    src_line[1] = src_line[2];
-   src_line[2] = src_line[3];              
+   src_line[2] = src_line[3];
 
    /* Read next line */
    if (y + 3 >= height)
     src_line[3] = src_line[2];
    else
     src_line[3] = src_line[2] + src_pitch;
-           
+
    /* Then shift the color matrix up */
    lbp = (unsigned long*)src_line[0];
    color[0] = *lbp;     color[1] = color[0];    color[2] = *(lbp + 1);  color[3] = *(lbp + 2);
@@ -177,19 +177,19 @@ int T2xSaI::GetResult1(uint32 A, uint32 B, uint32 C, uint32 D, uint32 E)
  int r = 0;
  if (A == C) x+=1; else if (B == C) y+=1;
  if (A == D) x+=1; else if (B == D) y+=1;
- if (x <= 1) r+=1; 
+ if (x <= 1) r+=1;
  if (y <= 1) r-=1;
  return r;
 }
 
-int T2xSaI::GetResult2(uint32 A, uint32 B, uint32 C, uint32 D, uint32 E) 
+int T2xSaI::GetResult2(uint32 A, uint32 B, uint32 C, uint32 D, uint32 E)
 {
- int x = 0; 
+ int x = 0;
  int y = 0;
  int r = 0;
  if (A == C) x+=1; else if (B == C) y+=1;
  if (A == D) x+=1; else if (B == D) y+=1;
- if (x <= 1) r-=1; 
+ if (x <= 1) r-=1;
  if (y <= 1) r+=1;
  return r;
 }
@@ -202,7 +202,7 @@ void T2xSaI::_2xSaI(const uint8 *srcPtr, stride_t srcPitch, uint8 *dstBitmap, in
 
  x_offset = 0;//(width*2 - width * 2);
 
- const uint16 *bp[4] = 
+ const uint16 *bp[4] =
   {
    (uint16*)(srcPtr/*-srcPitch*/),
    (uint16*) srcPtr,
@@ -366,7 +366,7 @@ void T2xSaI::_2xSaI(const uint8 *srcPtr, stride_t srcPitch, uint8 *dstBitmap, in
     }//end of for ( finish= width etc..)
    bp[0]=bp[1];bp[1]=bp[2];bp[2]=bp[3];
    if (height>3)
-    bp[3]+=srcPitch/2; 
+    bp[3]+=srcPitch/2;
    line += 2;
    //srcPtr += srcPitch;
   } //endof: for (height; height; height--)
@@ -570,11 +570,11 @@ __forceinline int Thq2x::Diff(unsigned int w5, unsigned int w1)
 void Thq2x::hq2x_32( const unsigned char * src, unsigned char * dst, int dx, int dy, stride_t srcBpL, stride_t dstBpL )
 {
  static bool firsttime=true;
- if (firsttime) 
+ if (firsttime)
   {
    firsttime=false;
    init();
-  } 
+  }
 
   int  i, j, k;
   stride_t  prevline, nextline;
@@ -3293,51 +3293,51 @@ void Thq2x::hq2x_32( const unsigned char * src, unsigned char * dst, int dx, int
  _mm_empty();
 }
 
-#undef PIXEL00_0    
-#undef PIXEL00_10   
-#undef PIXEL00_11   
-#undef PIXEL00_12   
-#undef PIXEL00_20   
-#undef PIXEL00_21   
-#undef PIXEL00_22   
-#undef PIXEL00_60   
-#undef PIXEL00_61   
-#undef PIXEL00_70   
-#undef PIXEL00_90   
-#undef PIXEL00_100  
-#undef PIXEL01_0    
-#undef PIXEL01_10   
-#undef PIXEL01_11   
-#undef PIXEL01_12   
-#undef PIXEL01_20   
-#undef PIXEL01_21   
-#undef PIXEL01_22   
-#undef PIXEL01_60   
-#undef PIXEL01_61   
-#undef PIXEL01_70   
-#undef PIXEL01_90   
-#undef PIXEL01_100  
-#undef PIXEL10_0    
-#undef PIXEL10_10   
-#undef PIXEL10_11   
-#undef PIXEL10_12   
-#undef PIXEL10_20   
-#undef PIXEL10_21   
-#undef PIXEL10_22   
-#undef PIXEL10_60   
-#undef PIXEL10_61   
-#undef PIXEL10_70   
-#undef PIXEL10_90   
-#undef PIXEL10_100  
-#undef PIXEL11_0    
-#undef PIXEL11_10   
-#undef PIXEL11_11   
-#undef PIXEL11_12   
-#undef PIXEL11_20   
-#undef PIXEL11_21   
-#undef PIXEL11_22   
-#undef PIXEL11_60   
-#undef PIXEL11_61   
-#undef PIXEL11_70   
-#undef PIXEL11_90   
+#undef PIXEL00_0
+#undef PIXEL00_10
+#undef PIXEL00_11
+#undef PIXEL00_12
+#undef PIXEL00_20
+#undef PIXEL00_21
+#undef PIXEL00_22
+#undef PIXEL00_60
+#undef PIXEL00_61
+#undef PIXEL00_70
+#undef PIXEL00_90
+#undef PIXEL00_100
+#undef PIXEL01_0
+#undef PIXEL01_10
+#undef PIXEL01_11
+#undef PIXEL01_12
+#undef PIXEL01_20
+#undef PIXEL01_21
+#undef PIXEL01_22
+#undef PIXEL01_60
+#undef PIXEL01_61
+#undef PIXEL01_70
+#undef PIXEL01_90
+#undef PIXEL01_100
+#undef PIXEL10_0
+#undef PIXEL10_10
+#undef PIXEL10_11
+#undef PIXEL10_12
+#undef PIXEL10_20
+#undef PIXEL10_21
+#undef PIXEL10_22
+#undef PIXEL10_60
+#undef PIXEL10_61
+#undef PIXEL10_70
+#undef PIXEL10_90
+#undef PIXEL10_100
+#undef PIXEL11_0
+#undef PIXEL11_10
+#undef PIXEL11_11
+#undef PIXEL11_12
+#undef PIXEL11_20
+#undef PIXEL11_21
+#undef PIXEL11_22
+#undef PIXEL11_60
+#undef PIXEL11_61
+#undef PIXEL11_70
+#undef PIXEL11_90
 #undef PIXEL11_100

@@ -61,14 +61,14 @@ HRESULT TaudioFilters::process(const TsampleFormat &Ifmt,void *samples,size_t nu
   }
 
  deci->lock(IDFF_lockPresetPtr);
- if (queueChanged) 
+ if (queueChanged)
   {
    makeQueue(cfg,queue);
    if (postgainVol) queue.add(postgainVol,postgainCfg);
    InterlockedDecrement((LONG*)&queueChanged);
    deciD->sendOnNewFiltersMsg();
   }
- queue.copyCfg(cfg); 
+ queue.copyCfg(cfg);
  deci->unlock(IDFF_lockPresetPtr);
 
  preferredsfs=cfg->preferredsfs;
@@ -89,7 +89,7 @@ HRESULT TaudioFilters::deliverSamples(TfilterQueue::iterator it,TsampleFormat &f
     return filter->process(it,fmt,samples,numsamples,cfg);
    else
     return filter->flush(it,fmt,cfg);
-  } 
+  }
 }
 
 void TaudioFilters::getOutputFmt(TsampleFormat &fmt,const TpresetAudio *cfg)

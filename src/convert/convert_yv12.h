@@ -48,9 +48,9 @@
  ********************************/
 template<class _mm> struct TconvertYV12
 {
- static void yuy2_to_yv12(const BYTE* src, int src_rowsize, stride_t src_pitch, 
+ static void yuy2_to_yv12(const BYTE* src, int src_rowsize, stride_t src_pitch,
                           BYTE* dstY, BYTE* dstU, BYTE* dstV, stride_t dst_pitchY, stride_t dst_pitchUV,
-                          int height) 
+                          int height)
   {
    if (_mm::align && (intptr_t(src)&15 || intptr_t(dstY)&15 || intptr_t(dstU)&15 || intptr_t(dstV)&15 || src_pitch&15 || dst_pitchY &15 ||dst_pitchUV&15))
     {
@@ -62,7 +62,7 @@ template<class _mm> struct TconvertYV12
 
    stride_t src_pitch2 = src_pitch*2;
    stride_t dst_pitch2 = dst_pitchY*2;
-   
+
    src_rowsize = (src_rowsize+3)/4;
    typename _mm::__m mm7,mm4,mm0,mm1,mm3,mm6,mm2,mm5;
    movq (mm7,mask2);
@@ -73,7 +73,7 @@ template<class _mm> struct TconvertYV12
      for (int edx=0;edx<src_rowsize;edx+=_mm::size/2,esi+=_mm::size*2)
       {
        movq (mm0,esi);        // YUY2 upper line  (4 pixels luma, 2 chroma)
-        movq (mm1,esi+src_pitch);   // YUY2 lower line  
+        movq (mm1,esi+src_pitch);   // YUY2 lower line
        movq (mm6,mm0);
         movq (mm2, esi+_mm::size);    // Load second pair
        movq (mm3, esi+src_pitch+_mm::size);
@@ -85,30 +85,30 @@ template<class _mm> struct TconvertYV12
        pand (mm1,mm4);          // Mask luma
         psrlq (mm6, 8);
        pand (mm2,mm4);          // Mask luma
-        pand (mm3,mm4);         
+        pand (mm3,mm4);
        pand (mm5,mm4);          // Mask chroma
         pand (mm6,mm4);         // Mask chroma
        packuswb (mm0, mm2);     // Pack luma (upper)
         packuswb (mm6, mm5);    // Pack chroma
-       packuswb (mm1, mm3);     // Pack luma (lower)     
+       packuswb (mm1, mm3);     // Pack luma (lower)
         movq (mm5, mm6);        // Chroma copy
        pand (mm5, mm7);         // Mask V
         pand (mm6, mm4);        // Mask U
        psrlq (mm5,8);           // shift down V
-        packuswb (mm5, mm7);    // Pack U 
-       packuswb (mm6, mm7);     // Pack V 
+        packuswb (mm5, mm7);    // Pack U
+       packuswb (mm6, mm7);     // Pack V
        movq (dstY+edx*2,mm0);
         movq (dstY+dst_pitchY+edx*2,mm1);
        movd (dstV+edx, mm5);   // Store V
         movd (dstU+edx, mm6);  // Store U
-      } 
-    }  
+      }
+    }
    _mm::sfence();
    _mm::empty();
   }
- static void yuy2_i_to_yv12(const BYTE* src, int src_rowsize, stride_t src_pitch, 
+ static void yuy2_i_to_yv12(const BYTE* src, int src_rowsize, stride_t src_pitch,
                             BYTE* dstY, BYTE* dstU, BYTE* dstV, stride_t dst_pitchY, stride_t dst_pitchUV,
-                            int height) 
+                            int height)
   {
    if (_mm::align && (intptr_t(src)&15 || intptr_t(dstY)&15 || intptr_t(dstU)&15 || intptr_t(dstV)&15 || src_pitch&15 || dst_pitchY &15 ||dst_pitchUV&15))
     {
@@ -123,7 +123,7 @@ template<class _mm> struct TconvertYV12
    stride_t dst_pitch2 = dst_pitchY*2;
    stride_t src_pitch4 = src_pitch*4;
    stride_t dst_pitch3 = dst_pitchY*3;
-   
+
    src_rowsize = (src_rowsize+3)/4;
    typename _mm::__m mm7,mm4,mm0,mm1,mm3,mm6,mm2,mm5;
    movq (mm7,mask2);
@@ -135,7 +135,7 @@ template<class _mm> struct TconvertYV12
      for (edx=0;edx<src_rowsize;edx+=_mm::size/2,esi+=_mm::size*2)
       {
        movq (mm0,esi);        // YUY2 upper line  (4 pixels luma, 2 chroma)
-        movq (mm1,esi+src_pitch2);   // YUY2 lower line  
+        movq (mm1,esi+src_pitch2);   // YUY2 lower line
        movq (mm6,mm0);
         movq (mm2, esi+_mm::size);    // Load second pair
        movq (mm3, esi+src_pitch2+_mm::size);
@@ -153,23 +153,23 @@ template<class _mm> struct TconvertYV12
        pand (mm1,mm4 );         // Mask luma
         psrlq (mm6, 8);
        pand (mm2,mm4 );         // Mask luma
-        pand (mm3,mm4);         
+        pand (mm3,mm4);
        pand (mm5,mm4 );          // Mask chroma
         pand (mm6,mm4);          // Mask chroma
        packuswb (mm0, mm2 );    // Pack luma (upper)
         packuswb (mm6, mm5);    // Pack chroma
-       packuswb (mm1, mm3 );    // Pack luma (lower)     
+       packuswb (mm1, mm3 );    // Pack luma (lower)
         movq (mm5, mm6);        // Chroma copy
        pand (mm5, mm7 );        // Mask V
         pand (mm6, mm4);        // Mask U
        psrlq (mm5,8);            // shift down V
-        packuswb (mm5, mm7);     // Pack U 
-       packuswb (mm6, mm7 );    // Pack V 
+        packuswb (mm5, mm7);     // Pack U
+       packuswb (mm6, mm7 );    // Pack V
        movq (dstY+edx*2,mm0);
        movq (dstY+dst_pitchY*2+edx*2,mm1);
        movd (dstV+edx, mm5);   // Store V
        movd (dstU+edx, mm6);  // Store U
-      } 
+      }
      dstY+=dst_pitchY;
      dstU+=dst_pitchUV;
      dstV+=dst_pitchUV;
@@ -177,7 +177,7 @@ template<class _mm> struct TconvertYV12
      for (edx=0;edx<src_rowsize;edx+=_mm::size/2,esi+=_mm::size*2)
       {
        movq (mm0,esi);        // YUY2 upper line  (4 pixels luma, 2 chroma)
-        movq (mm1,esi+src_pitch2);   // YUY2 lower line  
+        movq (mm1,esi+src_pitch2);   // YUY2 lower line
        movq (mm6,mm0);
         movq (mm2, esi+_mm::size);    // Load second pair
        movq (mm3, esi+src_pitch2+_mm::size);
@@ -195,36 +195,36 @@ template<class _mm> struct TconvertYV12
        pand (mm1,mm4);          // Mask luma
         psrlq (mm6, 8);
        pand (mm2,mm4);          // Mask luma
-        pand (mm3,mm4);         
+        pand (mm3,mm4);
        pand (mm5,mm4);           // Mask chroma
         pand (mm6,mm4);          // Mask chroma
        packuswb (mm0, mm2);     // Pack luma (upper)
         packuswb (mm6, mm5);    // Pack chroma
-       packuswb (mm1, mm3);     // Pack luma (lower)     
+       packuswb (mm1, mm3);     // Pack luma (lower)
         movq (mm5, mm6);        // Chroma copy
        pand (mm5, mm7);         // Mask V
         pand (mm6, mm4);        // Mask U
        psrlq (mm5,8);            // shift down V
-        packuswb (mm5, mm7);     // Pack U 
-       packuswb (mm6, mm7);     // Pack V 
-       
+        packuswb (mm5, mm7);     // Pack U
+       packuswb (mm6, mm7);     // Pack V
+
        movq (dstY+edx*2,mm0);
        movq (dstY+(dst_pitchY*2)+edx*2,mm1);
        movd (dstV+edx, mm5);   // Store V
        movd (dstU+edx, mm6);  // Store U
-      } 
+      }
      dstY+=dst_pitch3;
      dstU+=dst_pitchUV;
      dstV+=dst_pitchUV;
      src+=src_pitch4;
-    }  
+    }
    _mm::sfence();
    _mm::empty();
   }
-  
- static void yv12_to_yuy2(const BYTE* srcY, const BYTE* srcU, const BYTE* srcV, int src_rowsize, stride_t src_pitch, stride_t src_pitch_uv, 
+
+ static void yv12_to_yuy2(const BYTE* srcY, const BYTE* srcU, const BYTE* srcV, int src_rowsize, stride_t src_pitch, stride_t src_pitch_uv,
                           BYTE* dst, stride_t dst_pitch,
-                          int height) 
+                          int height)
   {
    if (_mm::align && (intptr_t(srcY)&15 || intptr_t(srcU)&15 || intptr_t(srcV)&15 || intptr_t(dst)&15 || src_pitch&15 || src_pitch_uv&15 || dst_pitch&15))
     {
@@ -236,7 +236,7 @@ template<class _mm> struct TconvertYV12
 
    stride_t dst_pitch2=dst_pitch*2;
    stride_t src_pitch2 = src_pitch*2;
-    
+
    /**** Do first and last lines - NO interpolation:   *****/
    // MMX loop relies on C-code to adjust the lines for it.
 
@@ -246,7 +246,7 @@ template<class _mm> struct TconvertYV12
    BYTE* _dst=dst;
    for (int i=0;i<4;i++)
     {
-     switch (i) 
+     switch (i)
       {
        case 1:
         _srcY+=src_pitch;  // Same chroma as in 0
@@ -343,7 +343,7 @@ template<class _mm> struct TconvertYV12
        _mm::pavgb (mm5,mm3 );            // interpolate chroma V  (25/75)
         psubusb (mm4, mm6);         // Better rounding (thanks trbarry!)
        psubusb (mm5, mm6 );
-        _mm::pavgb (mm4,mm2   );         // interpolate chroma U 
+        _mm::pavgb (mm4,mm2   );         // interpolate chroma U
        _mm::pavgb (mm5,mm3    );         // interpolate chroma V
         punpcklbw (mm0,mm7);        // Y low
        punpckhbw (mm1,mm7 );        // Y high*
@@ -366,19 +366,19 @@ template<class _mm> struct TconvertYV12
        movq (edi+_mm::size,mm1);
 
        //Next line
-        
+
         movq (mm6,add_ones);
        movd (mm4,ebx+src_pitch_uv2);        // U next top field
         movd (mm5,ecx+src_pitch_uv2);       // V prev top field
        //mov edx, [src_pitch]
         pxor (mm7,mm7);
        movq (mm0,eax+src_pitch);        // Next U-line
-        _mm::pavgb (mm4,mm2);            // interpolate chroma U 
+        _mm::pavgb (mm4,mm2);            // interpolate chroma U
        movq (mm1,mm0);             // mm1 = Y current line
        _mm::pavgb (mm5,mm3);             // interpolate chroma V
         psubusb (mm4, mm6);         // Better rounding (thanks trbarry!)
        psubusb (mm5, mm6 );
-        _mm::pavgb (mm4,mm2   );         // interpolate chroma U 
+        _mm::pavgb (mm4,mm2   );         // interpolate chroma U
        _mm::pavgb (mm5,mm3    );         // interpolate chroma V
         punpcklbw (mm0,mm7);        // Y low
        punpckhbw (mm1,mm7 );        // Y high*
@@ -400,13 +400,13 @@ template<class _mm> struct TconvertYV12
         movq (edi+dst_pitch,mm0);
        movq (edi+dst_pitch+_mm::size,mm1);
       }
-    }  
+    }
    _mm::sfence();
    _mm::empty();
   }
- static void yv12_i_to_yuy2(const BYTE* srcY, const BYTE* srcU, const BYTE* srcV, int src_rowsize, stride_t src_pitch, stride_t src_pitch_uv, 
+ static void yv12_i_to_yuy2(const BYTE* srcY, const BYTE* srcU, const BYTE* srcV, int src_rowsize, stride_t src_pitch, stride_t src_pitch_uv,
                             BYTE* dst, stride_t dst_pitch,
-                            int height) 
+                            int height)
   {
    if (_mm::align && (intptr_t(srcY)&15 || intptr_t(srcU)&15 || intptr_t(srcV)&15 || intptr_t(dst)&15 || src_pitch&15 || src_pitch_uv&15 || dst_pitch&15))
     {
@@ -423,7 +423,7 @@ template<class _mm> struct TconvertYV12
    stride_t dst_pitch4 = dst_pitch*4;
    stride_t src_pitch4 = src_pitch*4;
 
-   
+
    /**** Do first and last lines - NO interpolation:   *****/
    // MMX loop relies on C-code to adjust the lines for it.
    const BYTE* _srcY=srcY;
@@ -433,7 +433,7 @@ template<class _mm> struct TconvertYV12
   //
    for (int i=0;i<8;i++)
     {
-     switch (i) 
+     switch (i)
       {
        case 1:
         _srcY+=src_pitch2;  // Same chroma as in 0
@@ -449,7 +449,7 @@ template<class _mm> struct TconvertYV12
         _srcY+=src_pitch2;  // Same  chroma as in 2
         _dst+=dst_pitch2;
         break;
-       case 4: // Now we process the bottom four lines of the picture. 
+       case 4: // Now we process the bottom four lines of the picture.
         _srcY=srcY+(src_pitch*(height-4));
         _srcU=srcU+(src_pitch_uv*((height>>1)-2));
         _srcV=srcV+(src_pitch_uv*((height>>1)-2));
@@ -482,7 +482,7 @@ template<class _mm> struct TconvertYV12
        typename _mm::__m mm0,mm1,mm3,mm2,mm4,mm5;
        movq (mm0,eax);    //Y
         movd (mm1,ebx);  //U
-       movq (mm3,mm0);  
+       movq (mm3,mm0);
         movd (mm2,ecx);   //V
        punpcklbw (mm0,mm7);  // Y low
         punpckhbw (mm3,mm7);   // Y high
@@ -535,7 +535,7 @@ template<class _mm> struct TconvertYV12
      const unsigned char *eax=srcp[0];
      const unsigned char *ebx=srcp[1];
      const unsigned char *ecx=srcp[2];
-    yloop: 
+    yloop:
      for (int x=0;x<src_rowsize;x+=_mm::size,edi+=_mm::size*2,eax+=_mm::size,ebx+=_mm::size/2,ecx+=_mm::size/2)
       {
        //mov edx, src_pitch_uv2
@@ -546,13 +546,13 @@ template<class _mm> struct TconvertYV12
         movd (mm3, ecx+src_pitch_uv2);          // mm3 = V top field
        movd (mm4,ebx);            // U prev top field
         movq (mm1,mm0);             // mm1 = Y current line
-       movd (mm5,ecx);            // V prev top field   
-        _mm::pavgb (mm4,mm2);            // interpolate chroma U 
-       _mm::pavgb (mm5,mm3);             // interpolate chroma V    
+       movd (mm5,ecx);            // V prev top field
+        _mm::pavgb (mm4,mm2);            // interpolate chroma U
+       _mm::pavgb (mm5,mm3);             // interpolate chroma V
         psubusb (mm4, mm6);         // Better rounding (thanks trbarry!)
        psubusb (mm5, mm6);
-        _mm::pavgb (mm4,mm2);            // interpolate chroma U 
-       _mm::pavgb (mm5,mm3);             // interpolate chroma V    
+        _mm::pavgb (mm4,mm2);            // interpolate chroma U
+       _mm::pavgb (mm5,mm3);             // interpolate chroma V
        punpcklbw (mm0,mm7);        // Y low
        punpckhbw (mm1,mm7);         // Y high*
         punpcklbw (mm4,mm7);        // U 00uu 00uu 00uu 00uu
@@ -629,8 +629,8 @@ template<class _mm> struct TconvertYV12
        skipnext=1;
        if(y+4<=height)
         goto yloop;
-      }  
-    }  
+      }
+    }
    _mm::sfence();
    _mm::empty();
   }

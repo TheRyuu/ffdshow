@@ -54,7 +54,7 @@ void ToutcspsPage::dv2dlg(void)
  int is=cfgGet(IDFF_outDV);
  if (is && !enabled(IDC_CHB_OUT_DV) && (filterMode&IDFF_FILTERMODE_VFW)==0)
   {
-   cfgSet(IDFF_outDV,is=0);  
+   cfgSet(IDFF_outDV,is=0);
    cfgSet(IDFF_outYV12,1);
   }
  setCheck(IDC_CHB_OUT_DV,is);
@@ -62,7 +62,7 @@ void ToutcspsPage::dv2dlg(void)
  enable(is,dvs);
  static const int raws[]={IDC_CHB_OUT_CLOSESTMATCH,IDC_CHB_HWDEINTERLACE,IDC_CHB_ALLOWOUTCHANGE,IDC_CHB_OUTCHANGECOMPATONLY,0};
  enable(!is,raws);
- cbxSetCurSel(IDC_CBX_OUT_DV_PROFILE,cfgGet(IDFF_outDVnorm)); 
+ cbxSetCurSel(IDC_CBX_OUT_DV_PROFILE,cfgGet(IDFF_outDVnorm));
 }
 void ToutcspsPage::csp2dlg(void)
 {
@@ -107,7 +107,7 @@ INT_PTR ToutcspsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CHB_HWOVERLAY:
        cfgSet(IDFF_hwOverlay,getCheck3(IDC_CHB_HWOVERLAY));
@@ -172,21 +172,21 @@ INT_PTR ToutcspsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          if (!is)
           dv=true;
          else
-          setCheck(IDC_CHB_OUT_DV,0);          
+          setCheck(IDC_CHB_OUT_DV,0);
         if (is || dv)
          {
           for (int i=0;i<countof(idcs);i++)
            cfgSet(idffs[i],ch[i]);
-          cfgSet(IDFF_outDV,dv); 
-         } 
+          cfgSet(IDFF_outDV,dv);
+         }
         else
          setCheck(LOWORD(wParam),!getCheck(LOWORD(wParam)));
         csp2dlg();dv2dlg();overlay2dlg();dfc2dlg();
         return TRUE;
        }
      }
-    break; 
-  }    
+    break;
+  }
  return TconfPageDecVideo::msgProc(uMsg,wParam,lParam);
 }
 
@@ -199,7 +199,7 @@ void ToutcspsPage::getTip(char_t *tipS,size_t len)
 void ToutcspsPage::translate(void)
 {
  TconfPageDecVideo::translate();
- 
+
  cbxTranslate(IDC_CBX_OUT_DV_PROFILE,ToutputVideoSettings::dvNorms);
  cbxTranslate(IDC_CBX_OUT_HWDEINT_METHOD,ToutputVideoSettings::deintMethods);
 }

@@ -14,7 +14,7 @@ public:
 
  TOSDprovider(comptr<IffdshowBase> &Ideci,comptrQ<IffdshowDec> &IdeciD):_deci(Ideci),_deciD(IdeciD),tempcfg(NULL) {}
  STDMETHODIMP_(const char_t*) getInfoItemName(int type);
- STDMETHODIMP getInfoItemValue(int id,const char_t* *value,int *wasChange,int *splitline); 
+ STDMETHODIMP getInfoItemValue(int id,const char_t* *value,int *wasChange,int *splitline);
  STDMETHODIMP_(const char_t*) getStartupFormat(int *duration);
  STDMETHODIMP_(const char_t*) getFormat(void);
  STDMETHODIMP_(bool) isOSD(void);

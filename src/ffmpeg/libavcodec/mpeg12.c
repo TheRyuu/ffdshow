@@ -2496,7 +2496,7 @@ static int mpeg_field_start(MpegEncContext *s){
 
         ff_er_frame_start(s);
         s->current_picture_ptr->rtStart=s->parse_context.rtStart;
-        
+
 
         /* first check if we must repeat the frame */
         s->current_picture_ptr->repeat_pict = 0;
@@ -3313,7 +3313,7 @@ AVCodec mpeg1video_encoder = {
     /*.next=*/ NULL,
     /*.flush=*/ NULL,
     /*.supported_framerates=*/ ff_frame_rate_tab+1
-#if __STDC_VERSION >= 199901L 
+#if __STDC_VERSION >= 199901L
     ,.pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1}
 #endif
 };
@@ -3331,10 +3331,14 @@ AVCodec mpeg2video_encoder = {
     /*.next=*/ NULL,
     /*.flush=*/ NULL,
     /*.supported_framerates=*/ ff_frame_rate_tab+1
-#if __STDC_VERSION >= 199901L 
+#if __STDC_VERSION >= 199901L
     ,.pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_YUV422P, -1}
 #endif
 };
 
 #endif
+
+
+
+
 

@@ -57,8 +57,8 @@ TxvidStats::TxvidStats(const char_t *Iflnm,bool write):flnm(Iflnm)
     }
    fclose(f);
    resetRead();
-  } 
- ok=true; 
+  }
+ ok=true;
 }
 TxvidStats::~TxvidStats()
 {
@@ -79,8 +79,8 @@ bool TxvidStats::readNext(NNSTATS *nns)
    *nns=stats[pos++];
    return true;
   }
- else 
-  return false; 
+ else
+  return false;
 }
 const NNSTATS* TxvidStats::operator [](size_t i) const
 {
@@ -122,11 +122,11 @@ int Txvid_2pass::codec_2pass_init(void)
 			return ICERR_ERROR;
 		}
 		break;
-	
+
 	case DLG_MODE_2PASS_2_INT :
 	case DLG_MODE_2PASS_2_EXT :
 		if (!statsRead) statsRead = ownStatsRead=new TxvidStats(config.stats1flnm,false);
-		if (!statsRead->ok) 
+		if (!statsRead->ok)
 		{
 			DEBUGERR(_l("2pass init error - couldn't open stats1"));
 			return ICERR_ERROR;
@@ -141,7 +141,7 @@ int Txvid_2pass::codec_2pass_init(void)
 		{
 			if (!statsRead2) statsRead2=ownStatsRead2 = new TxvidStats(config.stats2flnm,false);
 
-			if (!statsRead2->ok) 
+			if (!statsRead2->ok)
 			{
 				DEBUGERR(_l("2pass init error - couldn't open stats2"));
 				return ICERR_ERROR;
@@ -317,7 +317,7 @@ int Txvid_2pass::codec_2pass_init(void)
 					switch(config.alt_curve_type)
 					{
 					case 2: // Sine Curve (high aggressiveness)
-						twopass.alt_curve_qual_dev *= 2.0 / (1.0 + 
+						twopass.alt_curve_qual_dev *= 2.0 / (1.0 +
 							sin(DEG2RAD * (twopass.average_pframe * 90.0 / twopass.alt_curve_low_diff)));
 						twopass.alt_curve_mid_qual = 1.0 - twopass.alt_curve_qual_dev *
 							sin(DEG2RAD * (twopass.average_pframe * 90.0 / twopass.alt_curve_low_diff));
@@ -329,7 +329,7 @@ int Txvid_2pass::codec_2pass_init(void)
 							twopass.average_pframe / twopass.alt_curve_low_diff;
 						break;
 					case 0: // Cosine Curve (low aggressiveness)
-						twopass.alt_curve_qual_dev *= 2.0 / (1.0 + 
+						twopass.alt_curve_qual_dev *= 2.0 / (1.0 +
 							(1.0 - cos(DEG2RAD * (twopass.average_pframe * 90.0 / twopass.alt_curve_low_diff))));
 						twopass.alt_curve_mid_qual = 1.0 - twopass.alt_curve_qual_dev *
 							(1.0 - cos(DEG2RAD * (twopass.average_pframe * 90.0 / twopass.alt_curve_low_diff)));
@@ -636,7 +636,7 @@ int Txvid_2pass::codec_2pass_init(void)
 					switch(config.alt_curve_type)
 					{
 					case 2: // Sine Curve (high aggressiveness)
-						twopass.alt_curve_qual_dev *= 2.0 / (1.0 + 
+						twopass.alt_curve_qual_dev *= 2.0 / (1.0 +
 							sin(DEG2RAD * (twopass.average_pframe * 90.0 / twopass.alt_curve_low_diff)));
 						twopass.alt_curve_mid_qual = 1.0 - twopass.alt_curve_qual_dev *
 							sin(DEG2RAD * (twopass.average_pframe * 90.0 / twopass.alt_curve_low_diff));
@@ -648,7 +648,7 @@ int Txvid_2pass::codec_2pass_init(void)
 							twopass.average_pframe / twopass.alt_curve_low_diff;
 						break;
 					case 0: // Cosine Curve (low aggressiveness)
-						twopass.alt_curve_qual_dev *= 2.0 / (1.0 + 
+						twopass.alt_curve_qual_dev *= 2.0 / (1.0 +
 							(1.0 - cos(DEG2RAD * (twopass.average_pframe * 90.0 / twopass.alt_curve_low_diff))));
 						twopass.alt_curve_mid_qual = 1.0 - twopass.alt_curve_qual_dev *
 							(1.0 - cos(DEG2RAD * (twopass.average_pframe * 90.0 / twopass.alt_curve_low_diff)));
@@ -796,7 +796,7 @@ int Txvid_2pass::codec_2pass_init(void)
 			twopass.curve_comp_scale = ((total1 - total2) * (1.0 - (double)config.alt_curve_bonus_bias / 100.0) + total2) / total2;
 
 
-			// special info for alt curve:  bias bonus and quantizer thresholds, 
+			// special info for alt curve:  bias bonus and quantizer thresholds,
 			{
 				double curve_temp, dbytes;
 				char_t s[100];
@@ -960,7 +960,7 @@ int Txvid_2pass::codec_2pass_get_quant(TencFrameParams *frame)
 		frame->frametype = FRAME_TYPE::DELAY;
 		return ICERR_OK;
 	}
-		
+
 	overflow = twopass.overflow / 8;
 
 	// override codec i-frame choice (reenable in credits)
@@ -1036,7 +1036,7 @@ int Txvid_2pass::codec_2pass_get_quant(TencFrameParams *frame)
 				twopass.bytes1 = bytes1;
 				twopass.bytes2 = bytes1;
 				twopass.desired_bytes2 = bytes1;
-				return ICERR_OK;				
+				return ICERR_OK;
 			}
 			else
 				bytes2 = twopass.nns2.bytes;
@@ -1299,7 +1299,7 @@ int Txvid_2pass::codec_2pass_get_quant(TencFrameParams *frame)
 		// Foxer: aid desired quantizer precision by accumulating decision error
 		if (twopass.nns1.dd_v & NNSTATS_BFRAME)
 		{
-			bquant_error[frame->quant] += ((double)((twopass.nns1.quant & ~NNSTATS_KEYFRAME) * 
+			bquant_error[frame->quant] += ((double)((twopass.nns1.quant & ~NNSTATS_KEYFRAME) *
 				bytes1) / bytes2) - frame->quant;
 
 			if (bquant_error[frame->quant] >= 1.0)
@@ -1310,7 +1310,7 @@ int Txvid_2pass::codec_2pass_get_quant(TencFrameParams *frame)
 		}
 		else
 		{
-			pquant_error[frame->quant] += ((double)((twopass.nns1.quant & ~NNSTATS_KEYFRAME) * 
+			pquant_error[frame->quant] += ((double)((twopass.nns1.quant & ~NNSTATS_KEYFRAME) *
 				bytes1) / bytes2) - frame->quant;
 
 			if (pquant_error[frame->quant] >= 1.0)
@@ -1465,9 +1465,9 @@ int Txvid_2pass::codec_2pass_update(const TencFrameParams *frame)
 		if (statsWrite->write(&nns1)!=sizeof(NNSTATS))
 		{
 			DEBUGERR(_l("stats1: WriteFile error"));
-			return ICERR_ERROR;	
+			return ICERR_ERROR;
 		}
-        }		
+        }
 
         if (config.mode==DLG_MODE_2PASS_2_INT || config.mode==DLG_MODE_2PASS_2_EXT)
         {
@@ -1616,7 +1616,7 @@ void T2passSecond::start(void)
  framenum=0;
 
  memset(quant_threshs,0,sizeof(quant_threshs));
- 
+
  codec_2pass_init();
 }
 void T2passSecond::DEBUG2P(const char_t*s)

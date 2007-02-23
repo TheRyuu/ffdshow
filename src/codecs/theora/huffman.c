@@ -10,7 +10,7 @@
  *                                                                  *
  ********************************************************************
 
-  function: 
+  function:
 
  ********************************************************************/
 
@@ -19,26 +19,26 @@
 #include "codec_internal.h"
 #include "hufftables.h"
 
-static void CreateHuffmanList(HUFF_ENTRY ** HuffRoot, 
-			      ogg_uint32_t HIndex, 
+static void CreateHuffmanList(HUFF_ENTRY ** HuffRoot,
+			      ogg_uint32_t HIndex,
                               const ogg_uint32_t *FreqList ) {
   int i;
   HUFF_ENTRY *entry_ptr;
   HUFF_ENTRY *search_ptr;
-  
+
   /* Create a HUFF entry for token zero. */
   HuffRoot[HIndex] = (HUFF_ENTRY *)_ogg_calloc(1,sizeof(*HuffRoot[HIndex]));
-  
+
   HuffRoot[HIndex]->Previous = NULL;
   HuffRoot[HIndex]->Next = NULL;
   HuffRoot[HIndex]->ZeroChild = NULL;
   HuffRoot[HIndex]->OneChild = NULL;
   HuffRoot[HIndex]->Value = 0;
-  HuffRoot[HIndex]->Frequency = FreqList[0];   
-  
+  HuffRoot[HIndex]->Frequency = FreqList[0];
+
   if ( HuffRoot[HIndex]->Frequency == 0 )
-    HuffRoot[HIndex]->Frequency = 1; 
-    
+    HuffRoot[HIndex]->Frequency = 1;
+
   /* Now add entries for all the other possible tokens. */
   for ( i = 1; i < MAX_ENTROPY_TOKENS; i++ ) {
     entry_ptr = (HUFF_ENTRY *)_ogg_calloc(1,sizeof(*entry_ptr));
@@ -47,42 +47,42 @@ static void CreateHuffmanList(HUFF_ENTRY ** HuffRoot,
     entry_ptr->Frequency = FreqList[i];
     entry_ptr->ZeroChild = NULL;
     entry_ptr->OneChild = NULL;
-    
+
     /* Force min value of 1. This prevents the tree getting too deep. */
     if ( entry_ptr->Frequency == 0 )
       entry_ptr->Frequency = 1;
-    
+
     if ( entry_ptr->Frequency <= HuffRoot[HIndex]->Frequency ){
-      entry_ptr->Next = HuffRoot[HIndex];  
+      entry_ptr->Next = HuffRoot[HIndex];
       HuffRoot[HIndex]->Previous = entry_ptr;
-      entry_ptr->Previous = NULL;   
+      entry_ptr->Previous = NULL;
       HuffRoot[HIndex] = entry_ptr;
-    }else{  
+    }else{
       search_ptr = HuffRoot[HIndex];
-      while ( (search_ptr->Next != NULL) && 
+      while ( (search_ptr->Next != NULL) &&
 	      (search_ptr->Frequency < entry_ptr->Frequency) ){
 	search_ptr = (HUFF_ENTRY *)search_ptr->Next;
       }
-            
+
       if ( search_ptr->Frequency < entry_ptr->Frequency ){
 	entry_ptr->Next = NULL;
-	entry_ptr->Previous = search_ptr;   
+	entry_ptr->Previous = search_ptr;
 	search_ptr->Next = entry_ptr;
       }else{
 	entry_ptr->Next = search_ptr;
-	entry_ptr->Previous = search_ptr->Previous; 
+	entry_ptr->Previous = search_ptr->Previous;
 	search_ptr->Previous->Next = entry_ptr;
 	search_ptr->Previous = entry_ptr;
       }
-    }                                       
+    }
   }
 }
 
-static void CreateCodeArray( HUFF_ENTRY * HuffRoot, 
-		      ogg_uint32_t *HuffCodeArray, 
-		      unsigned char *HuffCodeLengthArray, 
-		      ogg_uint32_t CodeValue, 
-		      unsigned char CodeLength ) {    
+static void CreateCodeArray( HUFF_ENTRY * HuffRoot,
+		      ogg_uint32_t *HuffCodeArray,
+		      unsigned char *HuffCodeLengthArray,
+		      ogg_uint32_t CodeValue,
+		      unsigned char CodeLength ) {
 
   /* If we are at a leaf then fill in a code array entry. */
   if ( ( HuffRoot->ZeroChild == NULL ) && ( HuffRoot->OneChild == NULL ) ){
@@ -91,17 +91,17 @@ static void CreateCodeArray( HUFF_ENTRY * HuffRoot,
   }else{
     /* Recursive calls to scan down the tree. */
     CodeLength++;
-    CreateCodeArray(HuffRoot->ZeroChild, HuffCodeArray, HuffCodeLengthArray, 
+    CreateCodeArray(HuffRoot->ZeroChild, HuffCodeArray, HuffCodeLengthArray,
                     ((CodeValue << 1) + 0), CodeLength);
-    CreateCodeArray(HuffRoot->OneChild, HuffCodeArray, HuffCodeLengthArray, 
+    CreateCodeArray(HuffRoot->OneChild, HuffCodeArray, HuffCodeLengthArray,
                     ((CodeValue << 1) + 1), CodeLength);
   }
 }
 
-static void  BuildHuffmanTree( HUFF_ENTRY **HuffRoot, 
-			ogg_uint32_t *HuffCodeArray, 
-			unsigned char *HuffCodeLengthArray, 
-			ogg_uint32_t HIndex, 
+static void  BuildHuffmanTree( HUFF_ENTRY **HuffRoot,
+			ogg_uint32_t *HuffCodeArray,
+			unsigned char *HuffCodeLengthArray,
+			ogg_uint32_t HIndex,
                         const ogg_uint32_t *FreqList ){
 
   HUFF_ENTRY *entry_ptr;
@@ -110,68 +110,68 @@ static void  BuildHuffmanTree( HUFF_ENTRY **HuffRoot,
   /* First create a sorted linked list representing the frequencies of
      each token. */
   CreateHuffmanList( HuffRoot, HIndex, FreqList );
-    
+
   /* Now build the tree from the list. */
-     
-  /* While there are at least two items left in the list. */ 
-  while ( HuffRoot[HIndex]->Next != NULL ){                              
+
+  /* While there are at least two items left in the list. */
+  while ( HuffRoot[HIndex]->Next != NULL ){
     /* Create the new node as the parent of the first two in the list. */
     entry_ptr = (HUFF_ENTRY *)_ogg_calloc(1,sizeof(*entry_ptr));
     entry_ptr->Value = -1;
-    entry_ptr->Frequency = HuffRoot[HIndex]->Frequency + 
+    entry_ptr->Frequency = HuffRoot[HIndex]->Frequency +
       HuffRoot[HIndex]->Next->Frequency ;
     entry_ptr->ZeroChild = HuffRoot[HIndex];
-    entry_ptr->OneChild = HuffRoot[HIndex]->Next;  
-    
+    entry_ptr->OneChild = HuffRoot[HIndex]->Next;
+
     /* If there are still more items in the list then insert the new
        node into the list. */
-    if (entry_ptr->OneChild->Next != NULL ){   
-      /* Set up the provisional 'new root' */ 
+    if (entry_ptr->OneChild->Next != NULL ){
+      /* Set up the provisional 'new root' */
       HuffRoot[HIndex] = entry_ptr->OneChild->Next;
       HuffRoot[HIndex]->Previous = NULL;
-            
+
       /* Now scan through the remaining list to insert the new entry
          at the appropriate point. */
-      if ( entry_ptr->Frequency <= HuffRoot[HIndex]->Frequency ){ 
-	entry_ptr->Next = HuffRoot[HIndex];  
+      if ( entry_ptr->Frequency <= HuffRoot[HIndex]->Frequency ){
+	entry_ptr->Next = HuffRoot[HIndex];
 	HuffRoot[HIndex]->Previous = entry_ptr;
-	entry_ptr->Previous = NULL;   
+	entry_ptr->Previous = NULL;
 	HuffRoot[HIndex] = entry_ptr;
-      }else{  
+      }else{
 	search_ptr = HuffRoot[HIndex];
-	while ( (search_ptr->Next != NULL) && 
+	while ( (search_ptr->Next != NULL) &&
 		(search_ptr->Frequency < entry_ptr->Frequency) ){
 	  search_ptr = search_ptr->Next;
 	}
-	
+
 	if ( search_ptr->Frequency < entry_ptr->Frequency ){
 	  entry_ptr->Next = NULL;
-	  entry_ptr->Previous = search_ptr;   
+	  entry_ptr->Previous = search_ptr;
 	  search_ptr->Next = entry_ptr;
 	}else{
 	  entry_ptr->Next = search_ptr;
-	  entry_ptr->Previous = search_ptr->Previous; 
+	  entry_ptr->Previous = search_ptr->Previous;
 	  search_ptr->Previous->Next = entry_ptr;
 	  search_ptr->Previous = entry_ptr;
 	}
-      }                                     
-    }else{   
-      /* Build has finished. */ 
+      }
+    }else{
+      /* Build has finished. */
       entry_ptr->Next = NULL;
       entry_ptr->Previous = NULL;
       HuffRoot[HIndex] = entry_ptr;
     }
-    
-    /* Delete the Next/Previous properties of the children (PROB NOT NEC). */ 
+
+    /* Delete the Next/Previous properties of the children (PROB NOT NEC). */
     entry_ptr->ZeroChild->Next = NULL;
     entry_ptr->ZeroChild->Previous = NULL;
     entry_ptr->OneChild->Next = NULL;
     entry_ptr->OneChild->Previous = NULL;
-    
-  } 
-    
+
+  }
+
   /* Now build a code array from the tree. */
-  CreateCodeArray( HuffRoot[HIndex], HuffCodeArray, 
+  CreateCodeArray( HuffRoot[HIndex], HuffCodeArray,
 		   HuffCodeLengthArray, 0, 0);
 }
 
@@ -179,25 +179,25 @@ static void  DestroyHuffTree(HUFF_ENTRY *root_ptr){
   if (root_ptr){
     if ( root_ptr->ZeroChild )
       DestroyHuffTree(root_ptr->ZeroChild);
-    
+
     if ( root_ptr->OneChild )
       DestroyHuffTree(root_ptr->OneChild);
-    
+
     _ogg_free(root_ptr);
   }
 }
 
-void ClearHuffmanSet( PB_INSTANCE *pbi ){    
+void ClearHuffmanSet( PB_INSTANCE *pbi ){
   int i;
-  
+
   ClearHuffmanTrees(pbi->HuffRoot_VP3x);
 
     for ( i = 0; i < NUM_HUFF_TABLES; i++ )
-      if (pbi->HuffCodeArray_VP3x[i]) 
+      if (pbi->HuffCodeArray_VP3x[i])
 	_ogg_free (pbi->HuffCodeArray_VP3x[i]);
 
     for ( i = 0; i < NUM_HUFF_TABLES; i++ )
-      if (pbi->HuffCodeLengthArray_VP3x[i]) 
+      if (pbi->HuffCodeLengthArray_VP3x[i])
 	_ogg_free (pbi->HuffCodeLengthArray_VP3x[i]);
 }
 
@@ -207,15 +207,15 @@ void InitHuffmanSet( PB_INSTANCE *pbi ){
   ClearHuffmanSet(pbi);
 
   pbi->ExtraBitLengths_VP3x = ExtraBitLengths_VP31;
-  
+
   for ( i = 0; i < NUM_HUFF_TABLES; i++ ){
-    pbi->HuffCodeArray_VP3x[i] = 
+    pbi->HuffCodeArray_VP3x[i] =
       _ogg_calloc(MAX_ENTROPY_TOKENS,
 		  sizeof(*pbi->HuffCodeArray_VP3x[i]));
-    pbi->HuffCodeLengthArray_VP3x[i] = 
+    pbi->HuffCodeLengthArray_VP3x[i] =
       _ogg_calloc(MAX_ENTROPY_TOKENS,
 		  sizeof(*pbi->HuffCodeLengthArray_VP3x[i]));
-    BuildHuffmanTree( pbi->HuffRoot_VP3x, 
+    BuildHuffmanTree( pbi->HuffRoot_VP3x,
 		      pbi->HuffCodeArray_VP3x[i],
 		      pbi->HuffCodeLengthArray_VP3x[i],
 		      i, FrequencyCounts_VP3[i]);

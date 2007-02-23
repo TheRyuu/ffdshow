@@ -9,7 +9,7 @@ private:
  static const TfilterIDFF idffs;
 protected:
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  TcrystalitySettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  int bext_level,echo_level,stereo_level,filter_level,feedback_level,harmonics_level;
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;

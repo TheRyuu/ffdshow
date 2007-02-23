@@ -22,4 +22,4 @@ public:
  virtual bool reset(bool testonly=false);
 };
 
-#endif 
+#endif

@@ -12,10 +12,10 @@ private:
   private:
    int32_t *pBuffer;
    stride_t nBufferPitch;
-   
+
    int nThreshold;
-   
-   static void gf_prepare_mmx(int32_t *pDst, stride_t nDstPitch, const uint8_t *pSrc, stride_t nSrcPitch, unsigned int nWidth, unsigned int nHeight);   
+
+   static void gf_prepare_mmx(int32_t *pDst, stride_t nDstPitch, const uint8_t *pSrc, stride_t nSrcPitch, unsigned int nWidth, unsigned int nHeight);
    static void gf_render_mmx(uint8_t *pDst, stride_t nDstPitch, const int32_t *pSrc, stride_t nSrcPitch, unsigned int nWidth, unsigned int nHeight, int nThr);
   public:
    bool ok;
@@ -23,8 +23,8 @@ private:
    ~TgradFun();
    int GF_filter(uint8_t *pPlane, stride_t nPitch, unsigned int nWidth, unsigned int nHeight);
   } *gradFun;
- Tbuffer edgebuf; 
-protected:  
+ Tbuffer edgebuf;
+protected:
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK_YUV_PLANAR;}
 public:
  TimgFilterGradfun(IffdshowBase *Ideci,Tfilters *Iparent);

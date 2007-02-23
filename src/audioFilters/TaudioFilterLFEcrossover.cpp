@@ -51,7 +51,7 @@ HRESULT TaudioFilterLFEcrossover::process(TfilterQueue::iterator it,TsampleForma
      else if (fmt.speakers[i]&SPEAKER_FRONT_RIGHT)
       ri=i;
      else if (fmt.speakers[i]&SPEAKER_FRONT_CENTER)
-      li=ri=i; 
+      li=ri=i;
     }
    TfirFilter::_ftype_t f=cfg->freq/TfirFilter::_ftype_t(fmt.freq/2);
    lenLFE=256;
@@ -64,19 +64,19 @@ HRESULT TaudioFilterLFEcrossover::process(TfilterQueue::iterator it,TsampleForma
      outfmt.setChannels(outfmt.nchannels+1,outfmt.makeChannelMask()|SPEAKER_LOW_FREQUENCY);
      for (unsigned int i=0;i<outfmt.nchannels;i++)
       map[i]=oldfmt.findSpeaker(outfmt.speakers[i]);
-    } 
+    }
    lfei=outfmt.findSpeaker(SPEAKER_LOW_FREQUENCY);
    lfe_pos=0;memset(LFE_buf,0,sizeof(LFE_buf));
    lfe_posL=0;memset(LFE_bufL,0,sizeof(LFE_bufL));
    lfe_posR=0;memset(LFE_bufR,0,sizeof(LFE_bufR));
   }
- 
+
  float *in=(float*)init(cfg,fmt,samples0,numsamples);outfmt.sf=fmt.sf;
  float gain=(float)db2value(cfg->gain/100.0f);
  if ((fmt.channelmask&SPEAKER_LOW_FREQUENCY)==0)
   {
    float *out=(float*)(samples0=alloc_buffer(fmt=outfmt,numsamples,buf));
-   for (size_t i=0;i<numsamples;i++) 
+   for (size_t i=0;i<numsamples;i++)
     {
      for (unsigned int ch=0;ch<fmt.nchannels;ch++)
       if (ch==(unsigned int)lfei)
@@ -108,8 +108,8 @@ HRESULT TaudioFilterLFEcrossover::process(TfilterQueue::iterator it,TsampleForma
   }
  else
   {
-   float *out=(float*)(samples0=in); 
-   for (size_t i=0;i<numsamples;i++) 
+   float *out=(float*)(samples0=in);
+   for (size_t i=0;i<numsamples;i++)
     {
      LFE_buf[lfe_pos]=(in[li]+in[ri])/2;
      out[lfei]=gain*TfirFilter::firfilter(LFE_buf,lfe_pos,lenLFE,lenLFE,filter_coefs_lfe);
@@ -128,7 +128,7 @@ HRESULT TaudioFilterLFEcrossover::process(TfilterQueue::iterator it,TsampleForma
      lfe_pos++;if (lfe_pos==lenLFE) lfe_pos=0;
      in+=oldfmt.nchannels;out+=fmt.nchannels;
     }
-  } 
+  }
 
  return parent->deliverSamples(++it,fmt,samples0,numsamples);
 }

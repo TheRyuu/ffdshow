@@ -51,8 +51,8 @@ void TsharpenPage::cfg2dlg(void)
           idff2=IDFF_mplayerSharpChroma;
           idff3=0;
           break;
-  }        
- 
+  }
+
  xsharpen2dlg(sharpenMethod);
  unsharp2dlg(sharpenMethod);
  msharpen2dlg(sharpenMethod);
@@ -141,10 +141,10 @@ INT_PTR TsharpenPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
           case 5:mplayer2dlg(5);break;
          }
         return TRUE;
-       } 
-     }  
-    break; 
-  }    
+       }
+     }
+    break;
+  }
  return TconfPageDecVideo::msgProc(uMsg,wParam,lParam);
 }
 
@@ -152,9 +152,9 @@ Twidget* TsharpenPage::createDlgItem(int id,HWND h)
 {
  if (id==IDC_TBR_SHARPEN1 || id==IDC_TBR_SHARPEN2 || id==IDC_TBR_SHARPEN3)
   return new TwidgetSubclassTbr(h,this,NULL);
- else 
-  return TconfPageDecVideo::createDlgItem(id,h); 
-} 
+ else
+  return TconfPageDecVideo::createDlgItem(id,h);
+}
 
 int TsharpenPage::getTbrIdff(int id,const TbindTrackbars bind)
 {
@@ -164,7 +164,7 @@ int TsharpenPage::getTbrIdff(int id,const TbindTrackbars bind)
    case IDC_TBR_SHARPEN2:return idff2;
    case IDC_TBR_SHARPEN3:return idff3;
    default:return 0;
-  } 
+  }
 }
 
 TsharpenPage::TsharpenPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecVideo(Iparent,idff)

@@ -7,14 +7,14 @@ Brazilian portuguese
 0=Codecs
 1283=Codecs supotados
 1011=XVID
-1017=Usar XviD
+1017=Usar Xvid
 1012=DivX 3
 1013=DivX 4
-1016=Usar XviD
+1016=Usar Xvid
 1014=DivX 5
-1018=Usar XviD
+1018=Usar Xvid
 1050=BLZ0
-1019=Usar XviD
+1019=Usar Xvid
 1024=MP43
 1023=MP42
 1025=MP41
@@ -201,7 +201,7 @@ Brazilian portuguese
 1279=Buscar em...
 1183=Arquivo
 1244=Re-carregar
-1122=Posição Horizontal 
+1122=Posição Horizontal
 1126=Posição Vertical:
 1280=Atraso
 1281=Velocidade
@@ -270,7 +270,7 @@ Brazilian portuguese
 1176=Dobrar taxa de frames
 [173]
 0=Overlay
-1235=Controle de Overlay 
+1235=Controle de Overlay
 1236=Brilho:
 1137=Contraste:
 1138=Cor matriz:
@@ -289,11 +289,11 @@ Brazilian portuguese
 1047=Trabalhando com bugs:
 1307=Autodetectar
 1308=Velho lavc msmpeg4 files
-1309=Velho XviD interlacing bug
+1309=Velho Xvid interlacing bug
 1310=UMP4
 1311=Padding bug
 1312=Illegal VLC
-1313=XviD e DivX qpel bug
+1313=Xvid e DivX qpel bug
 [102]
 0=Sobre
 1251=ffdshow Traduzido por Tire_duvidas_divX Visite #DivXFull@BRasnet

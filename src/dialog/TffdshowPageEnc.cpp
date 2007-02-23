@@ -60,7 +60,7 @@ const char_t* TffdshowPageEnc::encModeNames[]=
  _l("one pass - constant bitrate"),
  _l("one pass - quality"),
  _l("one pass - quantizer"),
- _l("two passes - 1st pass"), 
+ _l("two passes - 1st pass"),
  _l("two passes - 2nd pass ext"),
  _l("two passes - 2nd pass int")
 };
@@ -146,7 +146,7 @@ void TffdshowPageEnc::onActivate(void)
 {
  hcbxE=GetDlgItem(m_hwnd,IDC_CBX_ENCODER);
  cbxSetDroppedWidth(IDC_CBX_ENCODER,280);
- 
+
  TVINSERTSTRUCT tvis;
  tvis.hParent=NULL;
  tvis.hInsertAfter=TVI_LAST;
@@ -162,7 +162,7 @@ void TffdshowPageEnc::onActivate(void)
    addTI(&tvis,new TgraphPage(this));
    enable(false,idPresets);
   }
- else 
+ else
   {
    addTI(&tvis,TconfPages(new TgenericPage(this),
                           new TgenericHuffyuvPage(this),
@@ -210,7 +210,7 @@ void TffdshowPageEnc::onActivate(void)
 /*
  for (TconfPages::const_iterator p=pages.begin();p!=pages.end();p++)
   addPropsIDs((*p)->propsIDs);
-*/  
+*/
  static const int propsIDs[]={IDFF_enc_mode,IDFF_enc_bitrate1000,IDFF_enc_qual,IDFF_enc_desiredSize,IDFF_enc_codecId,IDFF_enc_fourcc,0};
  addPropsIDs(propsIDs);
  allPropsIDs.push_back(0);
@@ -257,7 +257,7 @@ void TffdshowPageEnc::quick2dlg(bool redraw)
  if (ii!=CB_ERR)
   {
    if (redraw || oldmode!=mode)
-    {                
+    {
      oldmode=mode;
      const char_t *text=_l("");
      valMin=0;valMax=0;
@@ -292,7 +292,7 @@ void TffdshowPageEnc::quick2dlg(bool redraw)
      setDlgItemText(m_hwnd,IDC_LBL_QUICK,_(IDC_LBL_QUICK,text));
      tbrSetRange(IDC_TBR_QUICK,valMin,valMax,(valMax-valMin)/10);
     }
-   if (valIdff) 
+   if (valIdff)
     {
      enable(1,idQuick);
      int val=cfgGet(valIdff);
@@ -303,13 +303,13 @@ void TffdshowPageEnc::quick2dlg(bool redraw)
       }
      tbrSet(IDC_TBR_QUICK,val);
      SetDlgItemInt(m_hwnd,IDC_ED_QUICK,val,FALSE);
-    } 
+    }
    else
     {
      enable(0,idQuick);
      tbrSet(IDC_TBR_QUICK,0);
      setDlgItemText(m_hwnd,IDC_ED_QUICK,_l(""));
-    } 
+    }
   }
  else
   enable(0,idQuick);
@@ -343,7 +343,7 @@ void TffdshowPageEnc::codec2dlg(void)
       else
        {
         enable(true,idFourcc);
-        fourcc2dlg(); 
+        fourcc2dlg();
        }
       SendDlgItemMessage(m_hwnd,IDC_CBX_MODES,CB_RESETCONTENT,0,0);
       if (sup_CBR(codecId)) cbxAdd(IDC_CBX_MODES,_(IDC_CBX_MODES,encModeNames[ENC_MODE::CBR]),ENC_MODE::CBR);
@@ -356,7 +356,7 @@ void TffdshowPageEnc::codec2dlg(void)
       enable(cbxGetItemCount(IDC_CBX_MODES)!=0,idModes);
       qmin=TcoSettings::getMinMaxQuant(codecId).first;qmax=TcoSettings::getMinMaxQuant(codecId).second;
       quick2dlg(true);
-     }  
+     }
     return;
    }
 }
@@ -369,7 +369,7 @@ void TffdshowPageEnc::fourcc2dlg(void)
    {
     cbxSetCurSel(IDC_CBX_FOURCC,i);
     return;
-   } 
+   }
  cbxSetCurSel(IDC_CBX_FOURCC,0);
  cfgSet(IDFF_enc_fourcc,(int)cbxGetItemData(IDC_CBX_FOURCC,0));
 }
@@ -381,7 +381,7 @@ INT_PTR TffdshowPageEnc::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
    case WM_HSCROLL:
     if (HWND(lParam)==GetDlgItem(m_hwnd,IDC_TBR_QUICK))
      {
-      if (valIdff) 
+      if (valIdff)
        {
         cfgSet(valIdff,tbrGet(IDC_TBR_QUICK));
         quick2dlg(false);
@@ -394,7 +394,7 @@ INT_PTR TffdshowPageEnc::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
      ve->commonOptionChanged(IID_IffdshowEnc,IDFF_lang);
     break;
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CBX_ENCODER:
        if (HIWORD(wParam)==CBN_SELCHANGE)
@@ -404,8 +404,8 @@ INT_PTR TffdshowPageEnc::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
          HTREEITEM hti=TreeView_GetSelection(htv);
          if (hti) selectPage(hti2page(hti));
          return TRUE;
-        } 
-       break; 
+        }
+       break;
       case IDC_CBX_FOURCC:
        if (HIWORD(wParam)==CBN_SELCHANGE)
         {
@@ -413,17 +413,17 @@ INT_PTR TffdshowPageEnc::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
          fourcc2dlg();
          return TRUE;
         }
-       break; 
+       break;
       case IDC_CBX_MODES:
        if (HIWORD(wParam)==CBN_SELCHANGE)
         {
          cfgSet(IDFF_enc_mode,(int)cbxGetCurItemData(IDC_CBX_MODES));
          quick2dlg(true);
          return TRUE;
-        } 
-       break; 
+        }
+       break;
       case IDC_ED_QUICK:
-       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText) 
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
          HWND hed=GetDlgItem(m_hwnd,LOWORD(wParam));
          if (hed!=GetFocus()) return FALSE;
@@ -435,7 +435,7 @@ INT_PTR TffdshowPageEnc::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
             tbrSet(IDC_TBR_QUICK,cfgGet(valIdff));
             break;
           }
-         return TRUE;  
+         return TRUE;
         }
        break;
       case IDC_BT_PRESET:
@@ -443,8 +443,8 @@ INT_PTR TffdshowPageEnc::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
         {
          showPresets();
          return TRUE;
-        }  
-       break; 
+        }
+       break;
       case IDC_CHB_NOT_REGISTRY:
        cfgSet(IDFF_notreg,getCheck(IDC_CHB_NOT_REGISTRY));
        return TRUE;
@@ -457,15 +457,15 @@ INT_PTR TffdshowPageEnc::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
      switch (getId(hwnd))
       {
        case IDC_ED_QUICK:ok=eval(hwnd,valMin,valMax);break;
-       default:return FALSE; 
-      } 
+       default:return FALSE;
+      }
      if (!ok)
-      { 
+      {
        HDC dc=HDC(wParam);
        SetBkColor(dc,RGB(255,0,0));
-       return INT_PTR(getRed()); 
+       return INT_PTR(getRed());
       }
-     else return FALSE;  
+     else return FALSE;
     }
    case WM_DRAWITEM:
     if (wParam==IDC_CBX_ENCODER)
@@ -496,13 +496,13 @@ INT_PTR TffdshowPageEnc::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
         r.left+=4;
         char_t text[70];SendMessage(hcbxE,CB_GETLBTEXT,dis->itemID,LPARAM(text));
         DrawText(dis->hDC,text,(int)strlen(text),&r,DT_LEFT|DT_SINGLELINE|DT_VCENTER);
-       } 
+       }
       SetTextColor(dis->hDC,crOldTextColor);
       SetBkColor(dis->hDC,crOldBkColor);
       DeleteObject(br);
       return TRUE;
      }
-    break; 
+    break;
   }
  return TffdshowPageBase::msgProc(uMsg,wParam,lParam);
 }
@@ -531,7 +531,7 @@ HMENU TffdshowPageEnc::createPresetsSubmenu(int cmd,bool save)
 
 void TffdshowPageEnc::showPresets(void)
 {
- if (!presets) 
+ if (!presets)
   {
    presets=new TpresetsEnc;
    presets->init();
@@ -555,7 +555,7 @@ void TffdshowPageEnc::showPresets(void)
  insertSubmenu(hm,ord,_(IDC_BT_PRESET,_l("Save page")),hmPresets);enable(hm,4,pageIs && page->propsIDs?true:false);
  insertSeparator(hm,ord);
  insertMenuItem(hm,ord,IDI_MNI_MANAGE,_(IDC_BT_PRESET,_l("Manage presets...")),false);enable(hm,6,presets->size()>=2);
- RECT r;             
+ RECT r;
  GetWindowRect(GetDlgItem(m_hwnd,IDC_BT_PRESET),&r);
  POINT p={0,r.bottom-r.top};
  ClientToScreen(GetDlgItem(m_hwnd,IDC_BT_PRESET),&p);
@@ -601,7 +601,7 @@ void TffdshowPageEnc::showPresets(void)
  DestroyMenu(hm);
 }
 
-// -------------------- configure ---------------------- 
+// -------------------- configure ----------------------
 extern "C" void CALLBACK configureEnc(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine,int nCmdShow);
 void CALLBACK configureEnc(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine,int nCmdShow)
 {
@@ -614,6 +614,6 @@ void CALLBACK configureEnc(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine,int nCmdSh
    if (strstr(lpCmdLine,_l("top"))) deci->putParam(IDFF_alwaysOnTop,1);
    deci->showCfgDlg(NULL);
   }
- deciE->_release(); 
+ deciE->_release();
  CoUninitialize();
 }

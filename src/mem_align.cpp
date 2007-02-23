@@ -34,7 +34,7 @@ void* aligned_malloc(size_t size, size_t alignment)
 void* aligned_realloc(void *ptr,size_t size,size_t alignment)
 {
  if (!ptr)
-  return aligned_malloc(size,alignment);  
+  return aligned_malloc(size,alignment);
  else
   if (size==0)
    {

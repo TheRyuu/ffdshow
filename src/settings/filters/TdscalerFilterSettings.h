@@ -7,7 +7,7 @@ struct TDScalerFilterSettings :TfilterSettingsVideo
 {
 private:
  static const TfilterIDFF idffs;
-public: 
+public:
  TDScalerFilterSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  char_t fltflnm[MAX_PATH];
  char_t cfg[512];

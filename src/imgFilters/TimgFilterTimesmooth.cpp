@@ -104,10 +104,10 @@ HRESULT TimgFilterTimesmooth::process(TfilterQueue::iterator it,TffPict &pict,co
        if (sqerr>16) sqerr=16;
        sqerr=16-sqerr;
        square_table[i]=sqerr;
-      } 
+      }
     }
 
-   if (!accumY) 
+   if (!accumY)
     {
      accumY=(unsigned char*)aligned_malloc(dx1[0]*dy1[0]*KERNEL);
      memset(accumY,0,dx1[0]*dy1[0]*KERNEL);
@@ -115,13 +115,13 @@ HRESULT TimgFilterTimesmooth::process(TfilterQueue::iterator it,TffPict &pict,co
    smooth(srcY,stride1[0],dstY,stride2[0],accumY,dx1[0],dy1[0]);
    if (cfg->tempSmoothColor)
     {
-     if (!accumU) 
+     if (!accumU)
       {
        accumU=(unsigned char*)aligned_malloc(dx1[1]*dy1[1]*KERNEL);
        memset(accumU,128,dx1[1]*dy1[1]*KERNEL);
       }
      smooth(srcU,stride1[1],dstU,stride2[1],accumU,dx1[1],dy1[1]);
-     if (!accumV) 
+     if (!accumV)
       {
        accumV=(unsigned char*)aligned_malloc(dx1[2]*dy1[2]*KERNEL);
        memset(accumV,128,dx1[2]*dy1[2]*KERNEL);
@@ -145,17 +145,17 @@ HRESULT TimgFilterTimesmooth::process(TfilterQueue::iterator it,TffPict &pict,co
       {
        TffPict::copy(dstU,stride2[1],tempU[uint32_t(UVcount-2)%3],dx1[1],dx1[1],dy1[1]);
        TffPict::copy(dstV,stride2[2],tempV[uint32_t(UVcount-2)%3],dx1[1],dx1[2],dy1[2]);
-      } 
+      }
      else
       {
        TffPict::copy(dstU,stride2[1],srcU,stride1[1],dx1[1],dy1[1]);
        TffPict::copy(dstU,stride2[2],srcU,stride1[2],dx1[2],dy1[2]);
       }
-     UVcount++; 
-    }  
-   isFirstFrame=false; 
+     UVcount++;
+    }
+   isFirstFrame=false;
    if (++framecount>=KERNEL) framecount=0;
-  } 
+  }
  return parent->deliverSample(++it,pict);
 }
 void TimgFilterTimesmooth::smooth(const unsigned char *src,stride_t srcStride,unsigned char *dst,stride_t dstStride,unsigned char *Iaccum,unsigned int dx,unsigned int dy)
@@ -163,7 +163,7 @@ void TimgFilterTimesmooth::smooth(const unsigned char *src,stride_t srcStride,un
  int offset1=framecount;
  int offset2=((framecount+KERNEL-(KERNEL/2))%KERNEL);
 
- if (isFirstFrame) 
+ if (isFirstFrame)
   {
    unsigned char *accum=Iaccum;
    /*
@@ -175,7 +175,7 @@ void TimgFilterTimesmooth::smooth(const unsigned char *src,stride_t srcStride,un
      x=w;
      do
       {
-       accum[0]=accum[1]=accum[2]=accum[3]=accum[4]=accum[5]=accum[6]=*srcdst++;             
+       accum[0]=accum[1]=accum[2]=accum[3]=accum[4]=accum[5]=accum[6]=*srcdst++;
       } while(--x);
      srcdst+=stride-dx;
     } while(--y);
@@ -183,10 +183,10 @@ void TimgFilterTimesmooth::smooth(const unsigned char *src,stride_t srcStride,un
    //accum[0]=accum[1]=accum[2]=accum[3]=accum[4]=accum[5]=accum[6]=src[stride*(dy-1)+(dx-1)];
    int w=dx,x;
    int y=dy;
-   do 
+   do
     {
      x=w;
-     do 
+     do
       {
        accum[0] = accum[1] = accum[2] = accum[3] = *src++;
        accum += KERNEL;
@@ -198,7 +198,7 @@ void TimgFilterTimesmooth::smooth(const unsigned char *src,stride_t srcStride,un
  unsigned int w=dx,x;
  unsigned int y=dy;
  unsigned char *accum=Iaccum;
- 
+
  do
   {
    x=w;

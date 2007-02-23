@@ -67,7 +67,7 @@ INT_PTR TresizeBordersPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        cfgSet(IDFF_bordersPixelsY,tbrGet(cfgGet(IDFF_bordersLocked)?IDC_TBR_BORDER_HORIZ_PIXELS:IDC_TBR_BORDER_VERT_PIXELS));
        cfg2dlg();
        return TRUE;
-     } 
+     }
     break;
   }
  return TconfPageDecVideo::msgProc(uMsg,wParam,lParam);
@@ -85,9 +85,9 @@ Twidget* TresizeBordersPage::createDlgItem(int id,HWND h)
 {
  if (id==IDC_TBR_BORDER_HORIZ_PIXELS || id==IDC_TBR_BORDER_HORIZ_PERCENT || id==IDC_TBR_BORDER_VERT_PIXELS || id==IDC_TBR_BORDER_VERT_PERCENT)
   return new TwidgetSubclassTbr(h,this,NULL);
- else 
-  return TconfPageDecVideo::createDlgItem(id,h); 
-} 
+ else
+  return TconfPageDecVideo::createDlgItem(id,h);
+}
 int TresizeBordersPage::getTbrIdff(int id,const TbindTrackbars bind)
 {
  switch (id)
@@ -117,5 +117,5 @@ TresizeBordersPage::TresizeBordersPage(TffdshowPageDec *Iparent,const TfilterIDF
    IDC_CHB_BORDERSLOCKED,&TresizeBordersPage::onLock,
    0,NULL
   };
- bindButtons(bt); 
+ bindButtons(bt);
 }

@@ -1,14 +1,14 @@
 /*
   Mixer
 
-  Mixer and gain control class. Smooth gain control based on ac3 time window, 
+  Mixer and gain control class. Smooth gain control based on ac3 time window,
   so delayed samples are also required for operation.
 
-  Usage. 
-    Create instance of a mixer, set input and output modes, set matrix 
+  Usage.
+    Create instance of a mixer, set input and output modes, set matrix
     directly or call calc_matrix() function, then call mix() function.
 
-    'level' - desired output level. It is guaranteed that Samples will not 
+    'level' - desired output level. It is guaranteed that Samples will not
       exceed it.
     'clev', 'slev', 'lfelev' are params for matrix calculation calc_matrix().
     'master', 'gain', 'dynrng' are used in gain control and matrix-independent.
@@ -17,13 +17,13 @@
       When overflow occur gain is decreased and so on. When 'normalize' = false
       then after overflow gain begins to increase bit by bit until it
       reaches 'master' again or other overflow occur.
-    'auto_gain' - automatic gain control. It will automatically lower gain 
+    'auto_gain' - automatic gain control. It will automatically lower gain
       level on overload and restore it back then.
     'voice_control' - (only when stereo input) enables voice control when
-      stereo input. Amplifies in-phase signal and route it to center 
+      stereo input. Amplifies in-phase signal and route it to center
       speaker if present. Only when auto_matrix = true.
     'expand_stereo' - (only when stereo input) enables surround control when
-      stereo input. Amplifies out-of-phase signal and route it to surround 
+      stereo input. Amplifies out-of-phase signal and route it to surround
       speakers if present. Only when auto_matrix = true.
 
 
@@ -64,7 +64,7 @@ protected:
  static const int NCHANNELS=6;
  // mixing matrix 6-to-6 channels
  TsampleFormat calc_matrix(const TsampleFormat &insf,const TmixerSettings *cfg);
-public: 
+public:
  typedef double mixer_matrix_t[NCHANNELS][NCHANNELS];
  mixer_matrix_t matrix;
 

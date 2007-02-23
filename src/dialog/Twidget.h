@@ -26,18 +26,18 @@ private:
      case WM_GETDLGCODE :return self->onGetDlgCode(hwnd,uMsg,wParam,lParam);
      case WM_CONTEXTMENU:return self->onContextMenu(hwnd,uMsg,wParam,lParam);
      default:return CallWindowProc(self->oldproc,hwnd,uMsg,wParam,lParam);
-    } 
+    }
   }
 protected:
  int id;
  virtual LRESULT onLbuttonDown(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
   {
    return CallWindowProc(oldproc,hwnd,uMsg,wParam,lParam);
-  } 
+  }
  virtual LRESULT onLbuttonUp(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
   {
    return CallWindowProc(oldproc,hwnd,uMsg,wParam,lParam);
-  } 
+  }
  virtual LRESULT onRbuttonDown(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
   {
    return CallWindowProc(oldproc,hwnd,uMsg,wParam,lParam);
@@ -45,43 +45,43 @@ protected:
  virtual LRESULT onMouseMove(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
   {
    return CallWindowProc(oldproc,hwnd,uMsg,wParam,lParam);
-  } 
+  }
  virtual LRESULT onKeyDown(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
   {
    return CallWindowProc(oldproc,hwnd,uMsg,wParam,lParam);
-  } 
+  }
  virtual LRESULT onKeyUp(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
   {
    return CallWindowProc(oldproc,hwnd,uMsg,wParam,lParam);
-  } 
+  }
  virtual LRESULT onChar(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
   {
    return CallWindowProc(oldproc,hwnd,uMsg,wParam,lParam);
-  } 
+  }
  virtual LRESULT onSysKeyDown(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
   {
    return CallWindowProc(oldproc,hwnd,uMsg,wParam,lParam);
-  } 
+  }
  virtual LRESULT onVscroll(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
   {
    return CallWindowProc(oldproc,hwnd,uMsg,wParam,lParam);
-  } 
+  }
  virtual LRESULT onHscroll(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
   {
    return CallWindowProc(oldproc,hwnd,uMsg,wParam,lParam);
-  } 
+  }
  virtual LRESULT onPaint(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
   {
    return CallWindowProc(oldproc,hwnd,uMsg,wParam,lParam);
-  } 
+  }
  virtual LRESULT onKillFocus(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
   {
    return CallWindowProc(oldproc,hwnd,uMsg,wParam,lParam);
-  } 
+  }
  virtual LRESULT onGetDlgCode(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
   {
    return CallWindowProc(oldproc,hwnd,uMsg,wParam,lParam);
-  } 
+  }
  virtual LRESULT onContextMenu(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
   {
    return CallWindowProc(oldproc,hwnd,uMsg,wParam,lParam);
@@ -98,7 +98,7 @@ public:
     {
      ownproc=true;
      oldproc=(WNDPROC)SetWindowLongPtr(h,GWLP_WNDPROC,LONG_PTR(msgProc0));
-    } 
+    }
   }
  void restore(void)
   {

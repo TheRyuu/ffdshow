@@ -29,7 +29,7 @@ typedef int64_t offset_t;
 
 struct URLContext {
     struct URLProtocol *prot;
-    int flags;        
+    int flags;
     int is_streamed;  /* true if streamed (no seek possible), default = false */
     int max_packet_size;  /* if non zero, the stream is packetized with this max packet size */
     void *priv_data;
@@ -152,4 +152,8 @@ extern URLProtocol tcp_protocol;
 extern URLProtocol http_protocol;
 
 #endif
+
+
+
+
 

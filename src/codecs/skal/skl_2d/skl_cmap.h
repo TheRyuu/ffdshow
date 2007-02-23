@@ -25,7 +25,7 @@ class SKL_FORMAT {
     SKL_UINT32 _Bits;
     enum { BGR_ORDER = 0x8000000 };
 
-  public:    
+  public:
 
     enum { DFLT = 0x10000,
            COLORMAPPED=0x10000, ALPHA_FMT=0x18000 };
@@ -71,7 +71,7 @@ class SKL_FORMAT_SHIFT {
   public:
 
     SKL_FORMAT_SHIFT(SKL_FORMAT f) { Store_Mask_And_Shift(f); }
-    int Shift(int i)         const { return _Shift[i]; }    
+    int Shift(int i)         const { return _Shift[i]; }
     SKL_ARGB Mask(int i)     const { return _Mask[i]; }
 
     inline SKL_ARGB Unpack(SKL_UINT32 c) const { // unpack to SKL_COLOR
@@ -121,7 +121,7 @@ class SKL_CMAP_X
 
   public:
 
-    SKL_CMAP_X(int Nb=256) : _Nb(Nb) { SKL_ASSERT(Nb>=0 && Nb<=256); 
+    SKL_CMAP_X(int Nb=256) : _Nb(Nb) { SKL_ASSERT(Nb>=0 && Nb<=256);
                                        SKL_BZERO(_Map, _Nb*sizeof(_Map[0])); }
     SKL_CMAP_X(const SKL_CMAP &);
     SKL_CMAP_X(const SKL_CMAP_X &In);

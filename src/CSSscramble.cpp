@@ -203,7 +203,7 @@ void CSStitlekey(unsigned char *tkey,unsigned char *dkey)
 		tkey[CSStab0[i+1]]=(unsigned char)(k[CSStab0[i+1]]^CSStab1[tkey[CSStab0[i+1]]]^tkey[CSStab0[i]]);
 }
 
-unsigned char g_PlayerKeys[][6] = 
+unsigned char g_PlayerKeys[][6] =
 {
 	// from mplayer:
 	{0x01, 0xaf, 0xe3, 0x12, 0x80},

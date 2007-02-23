@@ -10,7 +10,7 @@
  *                                                                  *
  ********************************************************************
 
-  function: 
+  function:
 
  ********************************************************************/
 
@@ -40,7 +40,7 @@ void ClearTmpBuffers(PB_INSTANCE * pbi){
     _ogg_free(pbi->dequant_InterU_coeffs);
   if(pbi->dequant_InterV_coeffs)
     _ogg_free(pbi->dequant_InterV_coeffs);
-  
+
 
   pbi->ReconDataBuffer=0;
   pbi->DequantBuffer = 0;
@@ -56,32 +56,32 @@ void ClearTmpBuffers(PB_INSTANCE * pbi){
 }
 
 void InitTmpBuffers(PB_INSTANCE * pbi){
-  
+
   /* clear any existing info */
   ClearTmpBuffers(pbi);
-  
+
   /* Adjust the position of all of our temporary */
-  pbi->ReconDataBuffer      = 
+  pbi->ReconDataBuffer      =
     _ogg_malloc(64*sizeof(*pbi->ReconDataBuffer));
-  
-  pbi->DequantBuffer        = 
+
+  pbi->DequantBuffer        =
     _ogg_malloc(64 * sizeof(*pbi->DequantBuffer));
-  
-  pbi->TmpDataBuffer        = 
+
+  pbi->TmpDataBuffer        =
     _ogg_malloc(64 * sizeof(*pbi->TmpDataBuffer));
-  
-  pbi->TmpReconBuffer       = 
+
+  pbi->TmpReconBuffer       =
     _ogg_malloc(64 * sizeof(*pbi->TmpReconBuffer));
-  
-  pbi->dequant_Y_coeffs     = 
+
+  pbi->dequant_Y_coeffs     =
     _ogg_malloc(64 * sizeof(*pbi->dequant_Y_coeffs));
-  
+
   pbi->dequant_U_coeffs    =
     _ogg_malloc(64 * sizeof(*pbi->dequant_U_coeffs));
-  
+
   pbi->dequant_V_coeffs    =
     _ogg_malloc(64 * sizeof(*pbi->dequant_V_coeffs));
-  
+
   pbi->dequant_InterY_coeffs =
     _ogg_malloc(64 * sizeof(*pbi->dequant_InterY_coeffs));
 
@@ -90,7 +90,7 @@ void InitTmpBuffers(PB_INSTANCE * pbi){
 
   pbi->dequant_InterV_coeffs =
     _ogg_malloc(64 * sizeof(*pbi->dequant_InterV_coeffs));
-  
+
 }
 
 void ClearPBInstance(PB_INSTANCE *pbi){
@@ -105,9 +105,9 @@ void ClearPBInstance(PB_INSTANCE *pbi){
 void InitPBInstance(PB_INSTANCE *pbi){
   /* initialize whole structure to 0 */
   memset(pbi, 0, sizeof(*pbi));
-  
+
   InitTmpBuffers(pbi);
-  
+
   /* allocate memory for the oggpack_buffer */
 #ifndef LIBOGG2
   pbi->opb = _ogg_malloc(sizeof(oggpack_buffer));
@@ -116,12 +116,12 @@ void InitPBInstance(PB_INSTANCE *pbi){
 #endif
 
   /* variables needing initialization (not being set to 0) */
-  
+
   pbi->ModifierPointer[0] = &pbi->Modifier[0][255];
   pbi->ModifierPointer[1] = &pbi->Modifier[1][255];
   pbi->ModifierPointer[2] = &pbi->Modifier[2][255];
   pbi->ModifierPointer[3] = &pbi->Modifier[3][255];
-  
+
   pbi->DecoderErrorCode = 0;
   pbi->KeyFrameType = DCT_KEY_FRAME;
   pbi->FramesHaveBeenSkipped = 0;

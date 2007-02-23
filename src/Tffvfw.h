@@ -12,7 +12,7 @@ struct IffdshowEncVFW;
 class Tconvert;
 struct TcspInfo;
 class TffdshowDecVideoVFW;
-class Tffvfw :public Iffvfw, 
+class Tffvfw :public Iffvfw,
               public CUnknown,
               public IdecVideoSink,
               public TfakeMediaSample,
@@ -72,7 +72,7 @@ public:
  STDMETHODIMP_(LRESULT) coBegin(BITMAPINFO*,BITMAPINFO*);
  STDMETHODIMP_(LRESULT) coEnd(void);
  STDMETHODIMP_(LRESULT) coRun(void*);
- 
+
  STDMETHODIMP_(LRESULT) decQuery(BITMAPINFO*,BITMAPINFO*);
  STDMETHODIMP_(LRESULT) decGetFormat(BITMAPINFO*,BITMAPINFO*);
  STDMETHODIMP_(LRESULT) decBegin(BITMAPINFO*,BITMAPINFO*);

@@ -1,14 +1,14 @@
 #ifndef _VORBISFORMAT_H_
 #define _VORBISFORMAT_H_
 
-struct VORBISFORMAT 
+struct VORBISFORMAT
 {
- WORD  nChannels; 
- long  nSamplesPerSec; 
- long  nMinBitsPerSec; 
- long  nAvgBitsPerSec; 
- long  nMaxBitsPerSec; 
- float fQuality; 
+ WORD  nChannels;
+ long  nSamplesPerSec;
+ long  nMinBitsPerSec;
+ long  nAvgBitsPerSec;
+ long  nMaxBitsPerSec;
+ float fQuality;
 };
 
 struct VORBISFORMAT2

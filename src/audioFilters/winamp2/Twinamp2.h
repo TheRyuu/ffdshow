@@ -36,7 +36,7 @@ public:
  Twinamp2dspDll(const ffstring &flnm);
  ~Twinamp2dspDll();
  void addref(void);
- void release(void); 
+ void release(void);
  ffstring descr;
  typedef std::vector<Twinamp2dsp*> Tfilters;
  Tfilters filters;

@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "IffdshowBase.h"
 #include "TffDecoderVideo.h"
@@ -58,7 +58,7 @@ protected:
  TimgFilters* createImgFilters(void)
   {
    return new TimgFiltersProc(this,procVideoSink);
-  } 
+  }
 public:
  TffdshowDecVideoProc(HRESULT *phr,IprocVideoSink* iprocVideoSink):
   TffdshowDecVideo(CLSID_FFDSHOWVFW,NAME("TffdshowDecVideoProc"),CLSID_TFFDSHOWPAGEPROC,IDS_FFDSHOWVIDEOPROC,IDI_FFDSHOW,NULL,phr,IDFF_FILTERMODE_VIDEO|IDFF_FILTERMODE_PROC,MERIT_DO_NOT_USE,new TintStrColl),
@@ -70,7 +70,7 @@ public:
   {
    if (imgFilters) delete imgFilters;
    Release();
-  } 
+  }
 
  HRESULT processPict(TffPict &pict,int outcsp)
   {
@@ -90,9 +90,9 @@ CUnknown* WINAPI TffProcVideo::CreateInstance(LPUNKNOWN punk,HRESULT *phr)
 STDMETHODIMP TffProcVideo::NonDelegatingQueryInterface(REFIID riid,void **ppv)
 {
  CheckPointer(ppv, E_POINTER);
- if (riid==IID_IffProc6 || riid==IID_IffProc7 || riid==IID_IffProc8) 
+ if (riid==IID_IffProc6 || riid==IID_IffProc7 || riid==IID_IffProc8)
   return GetInterface<IffProc>(this,ppv);
- else 
+ else
   return CUnknown::NonDelegatingQueryInterface(riid,ppv);
 }
 
@@ -165,7 +165,7 @@ STDMETHODIMP TffProcVideo::deliverProcessedSample(TffPict &pict)
        dst[i]=pict.data[i];
        dstStride[i]=pict.stride[i];
       }
-    } 
+    }
   }
  else
   if (dst[0])
@@ -176,7 +176,7 @@ STDMETHODIMP TffProcVideo::deliverProcessedSample(TffPict &pict)
     {
      dst[i]=pict.data[i];
      dstStride[i]=pict.stride[i];
-    }  
+    }
  return S_OK;
 }
 

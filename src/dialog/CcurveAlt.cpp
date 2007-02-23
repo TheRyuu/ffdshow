@@ -34,7 +34,7 @@ bool TcurveAltPage::enabled(void)
 }
 
 void TcurveAltPage::cfg2dlg(void)
-{ 
+{
  int is=cfgGet(IDFF_enc_use_alt_curve);
  setCheck(IDC_CHB_USE_ALT_CURVE,is);
  static const int idCurveAlt[]={IDC_LBL_CURVE_TYPE,IDC_CBX_CURVE_TYPE,IDC_LBL_CURVEALT_DISTHIGH,IDC_ED_CURVEALT_DISTHIGH,IDC_LBL_CURVEALT_DISTHIGH_PERCENT,IDC_LBL_CURVEALT_DISTLOW,IDC_ED_CURVEALT_DISTLOW,IDC_LBL_CURVEALT_DISTLOW_PERCENT,IDC_RBT_CURVEALT_USEAUTO,0};
@@ -48,7 +48,7 @@ void TcurveAltPage::cfg2dlg(void)
  static const int idAutoStr[]={IDC_ED_CURVEALT_AUTOSTR,IDC_LBL_CURVEALT_AUTOSTR,0};
  enable(is && cfgGet(IDFF_enc_alt_curve_use_auto),idAutoStr);
  SetDlgItemInt(m_hwnd,IDC_ED_CURVEALT_AUTOSTR,cfgGet(IDFF_enc_alt_curve_auto_str),FALSE);
- 
+
  setCheck(IDC_RBT_CURVEALT_USEMANUAL,!cfgGet(IDFF_enc_alt_curve_use_auto));enable(is,IDC_RBT_CURVEALT_USEMANUAL);
  static const int idManualStr[]={IDC_ED_CURVEALT_MINRELQUAL,IDC_LBL_CURVEALT_MINRELQUAL,0};
  enable(is && !cfgGet(IDFF_enc_alt_curve_use_auto),idManualStr);
@@ -62,7 +62,7 @@ void TcurveAltPage::cfg2dlg(void)
 void TcurveAltPage::translate(void)
 {
  TconfPageEnc::translate();
- 
+
  cbxTranslate(IDC_CBX_CURVE_TYPE,aggressions);
 }
 

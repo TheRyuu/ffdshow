@@ -45,9 +45,9 @@ HRESULT TimgFilterHWoverlay::process(TfilterQueue::iterator it,TffPict &pict,con
     {
      firsttimeOverlay=false;
      deciV->findOverlayControl2(&overlayControl);
-    } 
+    }
    if (overlayControl)
-    { 
+    {
      static const struct {int hwoc;int idff,def;int ThwOverlaySettings::*cfg;} hw[]={{HWOC_BRIGHTNESS,IDFF_overlayBrightness,  -1,&ThwOverlaySettings::brightness},
                                                                                      {HWOC_CONTRAST  ,IDFF_overlayContrast  ,  -1,&ThwOverlaySettings::contrast  },
                                                                                      {HWOC_HUE       ,IDFF_overlayHue       ,  -1,&ThwOverlaySettings::hue       },
@@ -58,13 +58,13 @@ HRESULT TimgFilterHWoverlay::process(TfilterQueue::iterator it,TffPict &pict,con
       {
        firsttimeDDCC=false;
        memset(&ddcc,0,sizeof(ddcc));
-       isddcc=false;                                                       
+       isddcc=false;
        for (int i=0;i<countof(hw);i++)
         {
          ddcc[i].first=overlayControl->supported(hw[i].hwoc);
          if (ddcc[i].first)
           overlayControl->get(hw[i].hwoc,&ddcc[i].second);
-         isddcc|=ddcc[i].first; 
+         isddcc|=ddcc[i].first;
         }
        if (isddcc)
         for (int i=0;i<countof(hw);i++)
@@ -77,11 +77,11 @@ HRESULT TimgFilterHWoverlay::process(TfilterQueue::iterator it,TffPict &pict,con
         for (int i=0;i<6;i++)
          if (old.is!=cfg->is || old.*(hw[i].cfg)!=cfg->*(hw[i].cfg))
           overlayControl->set(hw[i].hwoc,cfg->*(hw[i].cfg));
-       }   
+       }
       else
-       overlayControl->reset();   
-    } 
+       overlayControl->reset();
+    }
    old=*cfg;
-  }  
+  }
  return parent->deliverSample(++it,pict);
 }

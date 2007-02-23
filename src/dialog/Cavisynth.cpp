@@ -32,7 +32,7 @@ void TavisynthPage::init(void)
    IDC_ED_AVISYNTH,TanchorInfo::LEFT|TanchorInfo::RIGHT|TanchorInfo::BOTTOM|TanchorInfo::TOP,
    0,0
   };
- anchors.init(ainfo,*this); 
+ anchors.init(ainfo,*this);
  edLimitText(IDC_ED_AVISYNTH,2048);
 }
 
@@ -61,7 +61,7 @@ INT_PTR TavisynthPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         cfgSet(IDFF_OSDuser,_l(""));
        break;
       case IDC_ED_AVISYNTH:
-       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText) 
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
          parent->setChange();
          return TRUE;

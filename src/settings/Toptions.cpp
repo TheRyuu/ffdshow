@@ -54,8 +54,8 @@ template<class Topt> void Toptions::getInfo(const Topt *self,TffdshowParamInfo *
 {
  info->valnamePtr=self->regname?self->regname:_l("?");if (info->valname) text<char>(info->valnamePtr,info->valname);
  info->namePtr=self->name;if (info->name) text<char>(info->namePtr,info->name);
- info->id=self->id;                         
- info->inPreset=self->inPreset;              
+ info->id=self->id;
+ info->inPreset=self->inPreset;
  info->ptr=(void*)&(this->*(self->val));
 }
 bool Toptions::notifyChange(int id,int val)
@@ -83,15 +83,15 @@ void Toptions::TintOption::set(Toptions *self,int newVal,const TsendOnChange &se
   {min=this->min;max=this->max;}
  if (min==max && min<0) return;
  int oldVal=self->*val;
- if (min!=max)                           
+ if (min!=max)
   newVal=limit(newVal,min,max);
  self->*val=newVal;
  if (oldVal!=newVal)
   {
-   if (!sendOnChange.empty()) sendOnChange(id,newVal); 
+   if (!sendOnChange.empty()) sendOnChange(id,newVal);
    if (!onChangeBind.empty()) onChangeBind(id,newVal);
-  } 
-} 
+  }
+}
 bool Toptions::TintOption::inv(Toptions *self,const TsendOnChange &sendOnChange,const TonChangeBind &onChangeBind) const
 {
  if (min==0 && max==0)
@@ -102,13 +102,13 @@ bool Toptions::TintOption::inv(Toptions *self,const TsendOnChange &sendOnChange,
    return true;
   }
  else
-  return false;  
+  return false;
 }
 
 void Toptions::TintOption::getInfo(Toptions *self,TffdshowParamInfo *info) const
 {
  self->getInfo(this,info);
- info->type=FFDSHOW_PARAM_INT;         
+ info->type=FFDSHOW_PARAM_INT;
  info->min=min;info->max=max;
 }
 void Toptions::TintOption::reg_op(Toptions *self,TregOp &t) const
@@ -140,7 +140,7 @@ void Toptions::TstrOption::set(Toptions *self,const char_t *newval,const TsendOn
  val[buflen-1]='\0';
  if (dif!=0)
   {
-   if (!sendOnChange.empty()) sendOnChange(id,0); 
+   if (!sendOnChange.empty()) sendOnChange(id,0);
    if (!onChangeBind.empty()) onChangeBind(id,newval);
   }
 }
@@ -148,7 +148,7 @@ void Toptions::TstrOption::set(Toptions *self,const char_t *newval,const TsendOn
 void Toptions::TstrOption::getInfo(Toptions *self,TffdshowParamInfo *info) const
 {
  self->getInfo(this,info);
- info->type=FFDSHOW_PARAM_STRING;         
+ info->type=FFDSHOW_PARAM_STRING;
  info->maxlen=(int)buflen;
 }
 
@@ -157,7 +157,7 @@ void Toptions::TstrOption::reg_op(Toptions *self,TregOp &t) const
  if (regname)
   if (def)
    t._REG_OP_S(short(id),regname,&(self->*val),buflen,def);
-  else 
+  else
    {
     char_t *defbuf=(char_t*)_alloca((buflen+1)*sizeof(char_t));defbuf[0]='\0';
     self->getDefaultStr(id,defbuf,buflen);
@@ -168,7 +168,7 @@ void Toptions::TstrOption::reset(Toptions *self) const
 {
  if (def)
   strcpy(&(self->*val),def);
- else 
+ else
   self->getDefaultStr(id,&(self->*val),buflen);
 }
 void Toptions::TstrOption::reset(Toptions *self,const TsendOnChange &sendOnChange,const TonChangeBind &onChangeBind) const
@@ -180,7 +180,7 @@ void Toptions::TstrOption::reset(Toptions *self,const TsendOnChange &sendOnChang
    char_t *defbuf=(char_t*)_alloca((buflen+1)*sizeof(char_t));defbuf[0]='\0';
    self->getDefaultStr(id,defbuf,buflen);
    set(self,defbuf,sendOnChange,onChangeBind);
-  } 
+  }
 }
 
 //===================================== TcollOptions =======================================
@@ -205,7 +205,7 @@ template<class Toption,class Tbase> bool TcollOptions<Toption,Tbase>::notify(int
 {
  typename Tbase::const_iterator o=this->find(id);
  return o!=this->end() && !o->second.onChange.empty()?(o->second.onChange(id,val),true):false;
-} 
+}
 template<class Toption,class Tbase> void TcollOptions<Toption,Tbase>::addOptions(const Toption *opts,Toptions *coll)
 {
  for (;opts && opts->id;opts++)
@@ -215,7 +215,7 @@ template<class Toption,class Tbase> void TcollOptions<Toption,Tbase>::addOptions
     insert(std::make_pair(opts->id,TcollOption<Toption>(coll,opts)));
    else
     o->second=TcollOption<Toption>(coll,opts);
-  } 
+  }
 }
 template<class Toption,class Tbase> void TcollOptions<Toption,Tbase>::removeColl(Toptions *coll)
 {
@@ -224,12 +224,12 @@ template<class Toption,class Tbase> void TcollOptions<Toption,Tbase>::removeColl
   if (i->second.coll==coll)
    ii.push_back(i->first);
  for (ints::iterator i=ii.begin();i!=ii.end();i++)
-  this->erase(*i);  
-/*  
+  this->erase(*i);
+/*
  for (typename Tbase::iterator i=this->begin();i!=this->end();i++)
   if (i->second.coll==coll)
    i=erase(i);
-*/   
+*/
 }
 template<class Toption,class Tbase> void TcollOptions<Toption,Tbase>::setOnChange(int id,const typename Toption::TonChangeBind &bind)
 {

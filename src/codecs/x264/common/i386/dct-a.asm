@@ -131,11 +131,11 @@ ALIGN 16
 x264_mmx_1:        dw  1,  1,  1,  1
 x264_mmx_32:       dw 32, 32, 32, 32
 x264_mmx_PPNN:     dw  1,  1, -1, -1
-x264_mmx_PNPN:     dw  1, -1,  1, -1 
-x264_mmx_PNNP:     dw  1, -1, -1,  1 
-x264_mmx_PPPN:     dw  1,  1,  1, -1 
-x264_mmx_PPNP:     dw  1,  1, -1,  1 
-x264_mmx_2121:     dw  2,  1,  2,  1 
+x264_mmx_PNPN:     dw  1, -1,  1, -1
+x264_mmx_PNNP:     dw  1, -1, -1,  1
+x264_mmx_PPPN:     dw  1,  1,  1, -1
+x264_mmx_PPNP:     dw  1,  1, -1,  1
+x264_mmx_2121:     dw  2,  1,  2,  1
 x264_mmx_p2n2p1p1: dw  2, -2,  1,  1
 
 ;=============================================================================
@@ -163,7 +163,7 @@ x264_dct4x4dc_mmx:
     MMX_SUMSUB_BADC     mm1, mm0, mm3, mm2          ; mm1=s01  mm0=d01  mm3=s23  mm2=d23
     MMX_SUMSUB_BADC     mm3, mm1, mm2, mm0          ; mm3=s01+s23  mm1=s01-s23  mm2=d01+d23  mm0=d01-d23
 
-    MMX_TRANSPOSE       mm3, mm1, mm0, mm2, mm4     ; in: mm3, mm1, mm0, mm2  out: mm3, mm2, mm4, mm0 
+    MMX_TRANSPOSE       mm3, mm1, mm0, mm2, mm4     ; in: mm3, mm1, mm0, mm2  out: mm3, mm2, mm4, mm0
 
     MMX_SUMSUB_BADC     mm2, mm3, mm0, mm4          ; mm2=s01  mm3=d01  mm0=s23  mm4=d23
     MMX_SUMSUB_BADC     mm0, mm2, mm4, mm3          ; mm0=s01+s23  mm2=s01-s23  mm4=d01+d23  mm3=d01-d23
@@ -200,7 +200,7 @@ x264_idct4x4dc_mmx:
     MMX_SUMSUB_BADC     mm1, mm0, mm3, mm2          ; mm1=s01  mm0=d01  mm3=s23  mm2=d23
     MMX_SUMSUB_BADC     mm3, mm1, mm2, mm0          ; mm3=s01+s23 mm1=s01-s23 mm2=d01+d23 mm0=d01-d23
 
-    MMX_TRANSPOSE       mm3, mm1, mm0, mm2, mm4     ; in: mm3, mm1, mm0, mm2  out: mm3, mm2, mm4, mm0 
+    MMX_TRANSPOSE       mm3, mm1, mm0, mm2, mm4     ; in: mm3, mm1, mm0, mm2  out: mm3, mm2, mm4, mm0
 
     MMX_SUMSUB_BADC     mm2, mm3, mm0, mm4          ; mm2=s01  mm3=d01  mm0=s23  mm4=d23
     MMX_SUMSUB_BADC     mm0, mm2, mm4, mm3          ; mm0=s01+s23  mm2=s01-s23  mm4=d01+d23  mm3=d01-d23
@@ -263,7 +263,7 @@ x264_add4x4_idct_mmx:
     movq    mm1, [eax+ 8]
     movq    mm2, [eax+16]
     movq    mm3, [eax+24]
-    
+
     mov     eax, [esp+ 4]   ; p_dst
 
     picpush ebx
@@ -284,7 +284,7 @@ x264_add4x4_idct_mmx:
 
     MMX_ZERO            mm7
     movq                mm6, [x264_mmx_32 GOT_ebx]
-    
+
     MMX_STORE_DIFF_4P   mm2, mm0, mm6, mm7, [eax+0*FDEC_STRIDE]
     MMX_STORE_DIFF_4P   mm4, mm0, mm6, mm7, [eax+1*FDEC_STRIDE]
     MMX_STORE_DIFF_4P   mm1, mm0, mm6, mm7, [eax+2*FDEC_STRIDE]
@@ -314,7 +314,7 @@ x264_add4x4_idct_mmx:
     psubw           %1, %3
     psubw           %2, %4
 %endmacro
- 
+
 %macro MMX_LOADSUMSUB 4     ; returns %1=%3+%4, %2=%3-%4
     movq            %2, %3
     movq            %1, %4
@@ -359,7 +359,7 @@ x264_ydct8_mmx:
 
     %assign disp 0
     %rep 2
-    
+
     MMX_LOADSUMSUB  mm2, mm3, [eax+disp+0*16], [eax+disp+7*16] ; mm2 = s07, mm3 = d07
     MMX_LOADSUMSUB  mm1, mm5, [eax+disp+1*16], [eax+disp+6*16] ; mm1 = s16, mm5 = d16
     MMX_LOADSUMSUB  mm0, mm6, [eax+disp+2*16], [eax+disp+5*16] ; mm0 = s25, mm6 = d25

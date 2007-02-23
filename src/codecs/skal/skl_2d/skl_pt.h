@@ -19,7 +19,7 @@
 //////////////////////////////////////////////////////////
 
 struct SKL_2D_PT {
-  
+
   int x, y;
 
   SKL_2D_PT(int xo=0, int yo=0) : x(xo), y(yo) {}
@@ -44,7 +44,7 @@ struct SKL_2D_RECT {
   SKL_2D_PT BR; // Bottom-Right corner
 
   SKL_2D_RECT() {}
-  SKL_2D_RECT(int xo, int yo, int sx, int sy) 
+  SKL_2D_RECT(int xo, int yo, int sx, int sy)
     : UL(xo,yo), BR(xo+sx, yo+sy) { SKL_ASSERT(sx>=0 && sy>=0); }
   SKL_2D_RECT(const SKL_2D_PT &ul, const SKL_2D_PT &size)
     : UL(ul), BR(ul+size) { SKL_ASSERT(size.x>=0 && size.y>=0); }
@@ -53,7 +53,7 @@ struct SKL_2D_RECT {
   SKL_2D_PT Get_Position() const { return UL; }
   void Set_Size(const SKL_2D_PT &S) { BR = UL+S; }
   void Move(const SKL_2D_PT &T) { SKL_2D_PT Size = Get_Size(); UL += T; BR = UL+Size; }
-  
+
   void operator+=(const SKL_2D_PT &T) { UL+=T; BR+=T; }
   void operator-=(const SKL_2D_PT &T) { UL-=T; BR-=T; }
 

@@ -30,7 +30,7 @@
 #define __HEADER_CHAR_TRAITS 1
 
 namespace std{
-	/* Inlining all wrapped function calls to shrink the amount of code generated*/	
+	/* Inlining all wrapped function calls to shrink the amount of code generated*/
 	//Typedefs to use for stuff
 	typedef signed int char_traits_off_type;
 
@@ -44,7 +44,7 @@ namespace std{
 		typedef char_traits_off_type off_type;
 		typedef char_traits_off_type pos_type;
 		typedef char state_type;
-		
+
 		inline static void assign(char_type & c, const char_type & d) { c = d; }
 
 		inline static bool eq(const char_type& c1, const char_type& c2){
@@ -209,4 +209,8 @@ namespace std{
 }
 
 #endif
+
+
+
+
 

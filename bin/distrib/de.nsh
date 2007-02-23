@@ -18,7 +18,7 @@ LangString DESC_addons  ${NSH_LANG} "Installation zusätzlicher Enkodierung/Dekod
 LangString TITLE_plugins ${NSH_LANG} "Plugins für Anwendungen"
 LangString DESC_plugins ${NSH_LANG} "Plugins für die bessere Zusammenarbeit verschiedener Anwendungen mit ffdsshow"
 LangString TITLE_pluginAvisynth ${NSH_LANG} "Avisynth"
-LangString DESC_pluginAvisynth ${NSH_LANG} "Möglichkeit um die ffdshow Bildfilter via AVS Skript zu nutzen" 
+LangString DESC_pluginAvisynth ${NSH_LANG} "Möglichkeit um die ffdshow Bildfilter via AVS Skript zu nutzen"
 LangString DLG_AVISYNTH_TITLE ${NSH_LANG} "Avisynth"
 LangString DLG_AVISYNTH_SUBTITLE ${NSH_LANG} "Avisynth Plugin Verzeichnis"
 LangString DLG_AVISYNTH_LABEL ${NSH_LANG} "Auswahl des Avisynth Plugin Verzeichnis"

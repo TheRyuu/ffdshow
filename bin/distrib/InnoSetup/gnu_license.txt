@@ -35,7 +35,7 @@ You may charge a fee for the physical act of transferring a copy, and you may at
 
 2. You may modify your copy or copies of the Program or any portion of it, thus forming a work based on the Program, and copy and distribute such modifications or work under the terms of Section 1 above, provided that you also meet all of these conditions:
 
-a) You must cause the modified files to carry prominent notices stating that you changed the files and the date of any change. 
+a) You must cause the modified files to carry prominent notices stating that you changed the files and the date of any change.
 
 b) You must cause any work that you distribute or publish, that in whole or in part contains or is derived from the Program or any part thereof, to be licensed as a whole at no charge to all third parties under the terms of this License.
 

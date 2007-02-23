@@ -18,12 +18,12 @@ private:
   private:
    TkeysPage *keysPage;
   protected:
-   virtual LRESULT onSysKeyDown(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam); 
-   virtual LRESULT onKeyDown(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam); 
-   virtual LRESULT onGetDlgCode(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam); 
+   virtual LRESULT onSysKeyDown(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
+   virtual LRESULT onKeyDown(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
+   virtual LRESULT onGetDlgCode(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
    virtual LRESULT onKeyUp(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
    virtual LRESULT onChar(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
-  public: 
+  public:
    TwidgetKeys(HWND h,TkeysPage *Iself):TwindowWidget(h,Iself),keysPage(Iself) {allowOwnProc();}
   };
 protected:
@@ -37,4 +37,4 @@ public:
  virtual void translate(void);
 };
 
-#endif 
+#endif

@@ -18,7 +18,7 @@ LangString DESC_addons  ${NSH_LANG} "Устанавливает дополнительные библиотеки код
 LangString TITLE_plugins ${NSH_LANG} "Плагины к программам"
 LangString DESC_plugins ${NSH_LANG} "Плагины для улучшенной интеграции ffdshow в различные программы"
 LangString TITLE_pluginAvisynth ${NSH_LANG} "Avisynth"
-LangString DESC_pluginAvisynth ${NSH_LANG} "Позволяет использовать возможности ffdshow непосредственно из скриптов AviSynth" 
+LangString DESC_pluginAvisynth ${NSH_LANG} "Позволяет использовать возможности ffdshow непосредственно из скриптов AviSynth"
 LangString DLG_AVISYNTH_TITLE ${NSH_LANG} "Avisynth"
 LangString DLG_AVISYNTH_SUBTITLE ${NSH_LANG} "Каталог плагинов Avisynth"
 LangString DLG_AVISYNTH_LABEL ${NSH_LANG} "Выберите каталог плагинов Avisynth"

@@ -52,9 +52,9 @@ bool TimgFilterExpand::getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo
    const TexpandSettings *cfg=(const TexpandSettings*)cfg0;
    calcNewRect(cfg->newrect,pict.rectFull,pict.rectClip);
    return true;
-  } 
+  }
  else
-  return false; 
+  return false;
 }
 
 void TimgFilterExpand::expand(TffPict &pict,const TfilterSettingsVideo *cfg,bool diffxy)
@@ -91,14 +91,14 @@ void TimgFilterExpand::expand(TffPict &pict,const TfilterSettingsVideo *cfg,bool
      xdif1none=0;
      xdif2none=diffxy?diffx:(pictRect.dx-newpict.rectClip.dx)/2;
     }
-   parent->dirtyBorder=1; 
+   parent->dirtyBorder=1;
   }
 
  const unsigned char *src[4];
  getCur(newpict.csp,pict,true,src);
  unsigned char *dst[4];
  getNext(newpict.csp,pict,newpict.rectClip,dst,&newpict.rectFull);
- 
+
  for (unsigned int i=0;i<pict.cspInfo.numPlanes;i++)
   {
    const unsigned char *src0=src[i]+(ydif2none>>pict.cspInfo.shiftY[i])*stride1[i]+(xdif2none>>pict.cspInfo.shiftX[i]);

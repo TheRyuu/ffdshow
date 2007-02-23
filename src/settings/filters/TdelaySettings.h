@@ -9,7 +9,7 @@ private:
  static const TfilterIDFF idffs;
 protected:
  virtual const int *getResets(unsigned int pageId);
-public: 
+public:
  TdelaySettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  int l,c,r,sl,sr,lfe;
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;

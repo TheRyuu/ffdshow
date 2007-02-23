@@ -146,7 +146,7 @@ int ff_rate_control_init(MpegEncContext *s)
                 rcc->entry[rcoframe].rcOverrideIndex1=i+1;
                 if (rco->qscale)
                     rcc->entry[rcoframe].rcOverrideQscale=rco->qscale;
-            }    
+            }
         }
 
         if(init_pass2(s) < 0) return -1;
@@ -417,7 +417,7 @@ static double get_diff_limited_q(MpegEncContext *s, RateControlEntry *rce, doubl
  */
 static void get_qminmax(int *qmin_ret, int *qmax_ret, MpegEncContext *s, int pict_type,int frame_num){
     int qmin, qmax;
-    
+
     if (s->flags&CODEC_FLAG_PASS2 && frame_num>=0 && frame_num<s->rc_context.num_entries)
     {
         RateControlEntry *rce=&s->rc_context.entry[frame_num];
@@ -425,16 +425,16 @@ static void get_qminmax(int *qmin_ret, int *qmax_ret, MpegEncContext *s, int pic
         {
             if (rce->rcOverrideQscale)
                 *qmin_ret=*qmax_ret=FF_QP2LAMBDA*rce->rcOverrideQscale;
-            else    
+            else
             {
                 *qmin_ret=FF_QP2LAMBDA*2;
                 *qmax_ret=FF_QP2LAMBDA*31;
-            }    
-            return; 
-        }     
+            }
+            return;
+        }
     }
 
-    qmin= s->avctx->lmin;                                                       
+    qmin= s->avctx->lmin;
     qmax= s->avctx->lmax;
 
     assert(qmin <= qmax);
@@ -443,10 +443,10 @@ static void get_qminmax(int *qmin_ret, int *qmax_ret, MpegEncContext *s, int pic
         if (s->avctx->qmin_b){
             qmin= FF_QP2LAMBDA*s->avctx->qmin_b;
             qmax= FF_QP2LAMBDA*s->avctx->qmax_b;
-        }else{            
+        }else{
             qmin= (int)(qmin*FFABS(s->avctx->b_quant_factor)+s->avctx->b_quant_offset + 0.5);
             qmax= (int)(qmax*FFABS(s->avctx->b_quant_factor)+s->avctx->b_quant_offset + 0.5);
-        }    
+        }
     }else if(pict_type==I_TYPE){
         if (s->avctx->qmin_i){
             qmin= FF_QP2LAMBDA*s->avctx->qmin_i;
@@ -454,7 +454,7 @@ static void get_qminmax(int *qmin_ret, int *qmax_ret, MpegEncContext *s, int pic
         }else{
             qmin= (int)(qmin*FFABS(s->avctx->i_quant_factor)+s->avctx->i_quant_offset + 0.5);
             qmax= (int)(qmax*FFABS(s->avctx->i_quant_factor)+s->avctx->i_quant_offset + 0.5);
-        }    
+        }
     }
 
     qmin= clip(qmin, 1, FF_LAMBDA_MAX);

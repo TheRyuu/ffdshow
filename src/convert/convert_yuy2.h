@@ -42,7 +42,7 @@
 
 template<bool RGB24,bool DUPL> struct Tmmx_ConvertRGBtoYUY2
 {
- /*****************************  
+ /*****************************
   * MMX code by Klaus Post
   * Updated for PC Levels/Rec.709
   *   by Ian Brabham Nov 2004
@@ -61,7 +61,7 @@ template<bool RGB24,bool DUPL> struct Tmmx_ConvertRGBtoYUY2
 
  static void mmx_ConvertRGBtoYUY2(const unsigned char *SRC0,unsigned char *DST,stride_t src_pitch, stride_t dst_pitch,int w, int h, int MATRIX)
   {
-   int lwidth_bytes; 
+   int lwidth_bytes;
    if (RGB24)
     lwidth_bytes = w*3;    // Width in bytes
    else
@@ -109,7 +109,7 @@ template<bool RGB24,bool DUPL> struct Tmmx_ConvertRGBtoYUY2
      for (int RGBOFFSET=0,YUVOFFSET=0;RGBOFFSET<lwidth_bytes;)
       {
        __m64 mm6,mm4,mm3;
-       punpckhbw   (mm2,mm0);             //mm2= 00XX 00R2 00G2 00B2 
+       punpckhbw   (mm2,mm0);             //mm2= 00XX 00R2 00G2 00B2
        psrlw       (mm1,8);               //mm1= 00XX 00R1 00G1 00B1
 
        movq        (mm6,mm1);             //mm6= 00XX 00R1 00G1 00B1
@@ -142,25 +142,25 @@ template<bool RGB24,bool DUPL> struct Tmmx_ConvertRGBtoYUY2
         psllq      ( mm2,16 );             //mm2 Y2 shifted up (to clear fraction) mm2 ready
        pmaddwd     (mm3,mm5 );            //mm3=scaled_y (latency 2 cycles)
         por        ( mm1,mm2);             //mm1 = 0000 0000 00Y2 00Y1
-       punpckldq   (mm3,mm3);             //Move scaled_y to upper dword mm3=SCAL ED_Y SCAL ED_Y 
+       punpckldq   (mm3,mm3);             //Move scaled_y to upper dword mm3=SCAL ED_Y SCAL ED_Y
         movq       ( mm2,fpix_mul+MATRIX);
        psubd       (mm6,mm3);             //mm6 = b_y and r_y
         movq       ( mm4,fpix_add);
-       psrad       (mm6,14);              //Shift down b_y and r_y (>>10 in C-code) 
+       psrad       (mm6,14);              //Shift down b_y and r_y (>>10 in C-code)
         movq       ( mm3,chroma_mask2);
-       pmaddwd     (mm6,mm2);             //Mult b_y and r_y 
+       pmaddwd     (mm6,mm2);             //Mult b_y and r_y
        YUVOFFSET+=4;
-       paddd       (mm6,mm4);             //Add 0x808000 to r_y and b_y 
+       paddd       (mm6,mm4);             //Add 0x808000 to r_y and b_y
        RGBOFFSET+=(RGB24?6:8);
        pand        (mm6,mm3);             //Clear out fractions
         movq       ( mm2,SRC+RGBOFFSET); //mm2= XXR2 G2B2 XXR1 G1B1
        packuswb    (mm6,mm6);             //mm6 = VV00 UU00 VV00 UU00
-       por         (mm6,mm1);             //Or luma and chroma together                   
+       por         (mm6,mm1);             //Or luma and chroma together
         punpcklbw  ( mm1,mm2);             //mm1= XXxx R1xx G1xx B1xx
-       movd        (DST+YUVOFFSET-4,mm6); //Store final pixel                                           
+       movd        (DST+YUVOFFSET-4,mm6); //Store final pixel
        if (RGB24)
         psllq       (mm2,8);               //Compensate for RGB24
-      } 
+      }
     }
    _mm_empty();
   }

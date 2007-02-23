@@ -160,7 +160,7 @@ TcoSettings::TcoSettings(TintStrColl *Icoll):Toptions(Icoll),options(Icoll)
      _l("ffv1_context"),0,
    IDFF_enc_ffv1_csp    ,&TcoSettings::ffv1_csp    ,1, 1,_l(""),1,
      _l("ffv1_csp"),FOURCC_YV12,
-   
+
    IDFF_enc_dv_profile  ,&TcoSettings::dv_profile  ,DV_PROFILE_AUTO,countof(dv_profiles)-1,_l(""),1,
      _l("dv_profile"),DV_PROFILE_AUTO,
 
@@ -244,7 +244,7 @@ TcoSettings::TcoSettings(TintStrColl *Icoll):Toptions(Icoll),options(Icoll)
    IDFF_enc_me_nsse_weight         ,&TcoSettings::me_nsse_weight         ,0,256,_l(""),1,
      _l("me_nsse_weight"),8,
    IDFF_enc_me_iterative           ,&TcoSettings::me_iterative           ,0,0,_l(""),1,
-     _l("me_iterative"),0,   
+     _l("me_iterative"),0,
 
    IDFF_enc_xvid_motion_search       ,&TcoSettings::xvid_motion_search       ,0,6,_l(""),1,
      _l("xvid_motion_search"),5,
@@ -332,7 +332,7 @@ TcoSettings::TcoSettings(TintStrColl *Icoll):Toptions(Icoll),options(Icoll)
      _l("qmatrix_inter_custom14"),0x1b191817,
    IDFF_enc_qmatrix_inter_custom15,&TcoSettings::qmatrix_inter_custom60,1,1,_l(""),1,
      _l("qmatrix_inter_custom15"),0x211f1e1c,
-     
+
    IDFF_enc_qmatrix_intra4x4Y_custom0 ,&TcoSettings::qmatrix_intra4x4Y_custom0 ,1,1,_l(""),1,
      _l("qmatrix_intra4x4Y_custom0") ,0x10101010,
    IDFF_enc_qmatrix_intra4x4Y_custom1 ,&TcoSettings::qmatrix_intra4x4Y_custom4 ,1,1,_l(""),1,
@@ -368,7 +368,7 @@ TcoSettings::TcoSettings(TintStrColl *Icoll):Toptions(Icoll),options(Icoll)
      _l("qmatrix_inter4x4C_custom2") ,0x10101010,
    IDFF_enc_qmatrix_inter4x4C_custom3 ,&TcoSettings::qmatrix_inter4x4C_custom12,1,1,_l(""),1,
      _l("qmatrix_inter4x4C_custom3") ,0x10101010,
-     
+
    IDFF_enc_q_i_min          ,&TcoSettings::q_i_min          ,minQuant,maxQuant,_l(""),1,
      _l("q_i_min"),2,
    IDFF_enc_q_i_max          ,&TcoSettings::q_i_max          ,minQuant,maxQuant,_l(""),1,
@@ -572,17 +572,17 @@ TcoSettings::TcoSettings(TintStrColl *Icoll):Toptions(Icoll),options(Icoll)
    IDFF_enc_x264_me_inter                   ,&TcoSettings::x264_me_inter                   , 1,   1,_l(""),1,
        _l("x264_me_inter2"),X264_ANALYSE_I4x4|X264_ANALYSE_I8x8|X264_ANALYSE_PSUB16x16|X264_ANALYSE_BSUB16x16,
    IDFF_enc_x264_me_intra                   ,&TcoSettings::x264_me_intra                   , 1,   1,_l(""),1,
-       _l("x264_me_intra2"),X264_ANALYSE_I4x4|X264_ANALYSE_I8x8,   
+       _l("x264_me_intra2"),X264_ANALYSE_I4x4|X264_ANALYSE_I8x8,
    IDFF_enc_x264_me_subpelrefine            ,&TcoSettings::x264_me_subpelrefine            , 1,   6,_l(""),1,
        _l("x264_me_subpelrefine"),5,
    IDFF_enc_x264_mv_range                   ,&TcoSettings::x264_mv_range                   , 1,1024,_l(""),1,
        _l("x264_mv_range"),512,
    IDFF_enc_x264_me_method                  ,&TcoSettings::x264_me_method                  , 0,   3,_l(""),1,
-       _l("x264_me_method"),X264_ME_HEX,   
+       _l("x264_me_method"),X264_ME_HEX,
    IDFF_enc_x264_me_range                   ,&TcoSettings::x264_me_range                   , 4,1024,_l(""),1,
        _l("x264_me_range"),16,
    IDFF_enc_x264_i_direct_mv_pred           ,&TcoSettings::x264_i_direct_mv_pred           , 0,   3,_l(""),1,
-       _l("x264_i_direct_mv_pred"),X264_DIRECT_PRED_SPATIAL,   
+       _l("x264_i_direct_mv_pred"),X264_DIRECT_PRED_SPATIAL,
    IDFF_enc_x264_i_deblocking_filter_alphac0,&TcoSettings::x264_i_deblocking_filter_alphac0,-6,   6,_l(""),1,
        _l("x264_i_deblocking_filter_alphac0"),0,
    IDFF_enc_x264_i_deblocking_filter_beta   ,&TcoSettings::x264_i_deblocking_filter_beta   ,-6,   6,_l(""),1,
@@ -604,7 +604,7 @@ TcoSettings::TcoSettings(TintStrColl *Icoll):Toptions(Icoll),options(Icoll)
        _l("x264_f_aq_sensitivity"),15,
    0,
   };
- addOptions(iopts); 
+ addOptions(iopts);
  static const TstrOption sopts[]=
   {
    IDFF_enc_ff1_stats_flnm,(TstrVal)&TcoSettings::ff1_stats_flnm,MAX_PATH,_l(""),1,
@@ -649,7 +649,7 @@ int TcoSettings::isInCredits(int frame) const
   return CREDITS_POS::START;
  else if (isCreditsEnd && frame>=creditsEndBegin && frame<=creditsEndEnd)
   return CREDITS_POS::END;
- else 
+ else
   return CREDITS_POS::NONE;
 }
 int TcoSettings::getQuantType(int quant) const
@@ -659,7 +659,7 @@ int TcoSettings::getQuantType(int quant) const
    case QUANT::MOD:
     return quant<4?QUANT::MPEG:QUANT::H263;
    case QUANT::MOD_NEW:
-    return quant<4?QUANT::H263:QUANT::MPEG; 
+    return quant<4?QUANT::H263:QUANT::MPEG;
    default:
     return quant_type;
   }
@@ -678,7 +678,7 @@ const DVprofile* TcoSettings::getDVprofile(unsigned int dx,unsigned int dy,Pixel
   {
    const DVprofile *profile=dv_profiles+dv_profile;
    return (profile->width==(int)dx && profile->height==(int)dy && profile->pix_fmt==lavc_pix_fmt)?profile:NULL;
-  } 
+  }
 }
 std::vector<const DVprofile*> TcoSettings::getDVprofile(unsigned int dx,unsigned int dy) const
 {
@@ -693,8 +693,8 @@ std::vector<const DVprofile*> TcoSettings::getDVprofile(unsigned int dx,unsigned
   {
    const DVprofile *profile=dv_profiles+dv_profile;
    if (profile->width==(int)dx && profile->height==(int)dy)
-    profiles.push_back(profile); 
-  } 
+    profiles.push_back(profile);
+  }
  return profiles;
 }
 void TcoSettings::onIncspChange(int,int)
@@ -710,7 +710,7 @@ void TcoSettings::fillIncsps(void)
     for (int i=0;i<FF_CSPS_NUM;i++)
      if (csp_inFOURCCmask(1<<i,incspFourcc))
       incsps.push_back(cspInfos+i);
-   }   
+   }
   else
    incsps.push_back(csp_getInfoFcc(incspFourcc));
 }

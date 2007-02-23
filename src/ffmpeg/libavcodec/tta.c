@@ -35,7 +35,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 #include "avcodec.h"
 
 #define ISO_BUFFER_LENGTH       (1024*32)
@@ -75,26 +75,26 @@ typedef struct
 {
  int data_cur;
  int framelen,FRAMELEN;
- 
+
  int frame_crc32;
  unsigned char isobuffers[ISO_BUFFERS_SIZE + 4];
  unsigned char *iso_buffers_end;
- 
+
  unsigned int data_pos;
- 
+
  unsigned int bit_count;
  unsigned int bit_cache;
  unsigned char *bitpos;
- 
+
 #define READ_ERROR      5	// Can't read from file
  int STATE;
 
  decoder tta[MAX_NCH];	// decoder state
  int cache[MAX_NCH];
- 
+
  int maxvalue;		// output data max value
  int pcm_buffer_size;
- 
+
  uint8_t *src;size_t srcsize;size_t readsize;
 } TTAstate;
 
@@ -163,7 +163,7 @@ static int done_buffer_read(TTAstate *s) {
 	memcpy(&crc32, s->bitpos, 4);
 	crc32 = ENDSWAP_INT32(crc32);
 	s->bitpos += sizeof(int);
-    
+
 	if (crc32 != s->frame_crc32)
 	 return -1;
 
@@ -238,7 +238,7 @@ static const unsigned int crc32_table[256] = {
 	0xbad03605, 0xcdd70693, 0x54de5729, 0x23d967bf,
 	0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94,
 	0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
-}; 
+};
 
 static const unsigned int bit_shift[] = {
 	0x00000001, 0x00000002, 0x00000004, 0x00000008,
@@ -394,9 +394,9 @@ static int tta_decode_frame(AVCodecContext *avctx,
     int value, res;
     int *prev = s->cache;
     decoder *dec = s->tta;
-    
+
     s->src=buf;s->srcsize=buf_size;s->readsize=0;
-    
+
 	for (res = 0; p < (uint8_t*)data + s->pcm_buffer_size;) {
 		fltst *fst = &dec->fst;
 		adapt *rice = &dec->rice;
@@ -421,22 +421,22 @@ static int tta_decode_frame(AVCodecContext *avctx,
 
 		// decode Rice unsigned
 		//GET_UNARY(unary);
-	        unary = 0; 
-	        while (!(s->bit_cache ^ bit_mask[s->bit_count])) { 
-		        if (s->bitpos == s->iso_buffers_end) { 
-			        if (!read(s,s->isobuffers, 1, ISO_BUFFERS_SIZE)) { 
-			            s->STATE = READ_ERROR; 
-			            return -1; } 
-			        s->bitpos = s->isobuffers; } 
-		        unary += s->bit_count; 
-		        s->bit_cache = *s->bitpos++; 
-		        UPDATE_CRC32(s->bit_cache, s->frame_crc32); 
-		        s->bit_count = 8; } 
-	        while (s->bit_cache & 1) { 
-		        unary++; 
-		        s->bit_cache >>= 1; 
-		        s->bit_count--; } 
-	        s->bit_cache >>= 1; 
+	        unary = 0;
+	        while (!(s->bit_cache ^ bit_mask[s->bit_count])) {
+		        if (s->bitpos == s->iso_buffers_end) {
+			        if (!read(s,s->isobuffers, 1, ISO_BUFFERS_SIZE)) {
+			            s->STATE = READ_ERROR;
+			            return -1; }
+			        s->bitpos = s->isobuffers; }
+		        unary += s->bit_count;
+		        s->bit_cache = *s->bitpos++;
+		        UPDATE_CRC32(s->bit_cache, s->frame_crc32);
+		        s->bit_count = 8; }
+	        while (s->bit_cache & 1) {
+		        unary++;
+		        s->bit_cache >>= 1;
+		        s->bit_count--; }
+	        s->bit_cache >>= 1;
 	        s->bit_count--;
 
 		switch (unary) {
@@ -448,26 +448,26 @@ static int tta_decode_frame(AVCodecContext *avctx,
 
 		if (k) {
 //			GET_BINARY(binary, k);
-	                while (s->bit_count < k) { 
-		                if (s->bitpos == s->iso_buffers_end) { 
-			                if (!read(s,s->isobuffers, 1, ISO_BUFFERS_SIZE)) { 
-			                    s->STATE = READ_ERROR; 
-			                    return -1; } 
-			                s->bitpos = s->isobuffers; } 
-		                UPDATE_CRC32(*s->bitpos, s->frame_crc32); 
-		                s->bit_cache |= *s->bitpos << s->bit_count; 
-		                s->bit_count += 8; 
-		                s->bitpos++; } 
-	                binary = s->bit_cache & bit_mask[k]; 
-	                s->bit_cache >>= k; 
-	                s->bit_count -= k; 
+	                while (s->bit_count < k) {
+		                if (s->bitpos == s->iso_buffers_end) {
+			                if (!read(s,s->isobuffers, 1, ISO_BUFFERS_SIZE)) {
+			                    s->STATE = READ_ERROR;
+			                    return -1; }
+			                s->bitpos = s->isobuffers; }
+		                UPDATE_CRC32(*s->bitpos, s->frame_crc32);
+		                s->bit_cache |= *s->bitpos << s->bit_count;
+		                s->bit_count += 8;
+		                s->bitpos++; }
+	                binary = s->bit_cache & bit_mask[k];
+	                s->bit_cache >>= k;
+	                s->bit_count -= k;
 	                s->bit_cache &= bit_mask[s->bit_count];
-			
+
 			value = (unary << k) + binary;
 		} else value = unary;
 
 		switch (depth) {
-		case 1: 
+		case 1:
 			rice->sum1 += value - (rice->sum1 >> 4);
 			if (rice->k1 > 0 && rice->sum1 < shift_16[rice->k1])
 				rice->k1--;
@@ -530,15 +530,15 @@ static void tta_flush(AVCodecContext *avctx)
     set_position(s,0);
 }
 
-AVCodec tta_decoder = { 
-    "tta",            
-    CODEC_TYPE_AUDIO,   
-    CODEC_ID_TTA,                 
-    sizeof(TTAstate),  
-    tta_decode_init,	
-    NULL,               
-    NULL,               
-    tta_decode_frame,   
+AVCodec tta_decoder = {
+    "tta",
+    CODEC_TYPE_AUDIO,
+    CODEC_ID_TTA,
+    sizeof(TTAstate),
+    tta_decode_init,
+    NULL,
+    NULL,
+    tta_decode_frame,
     0,
     NULL,
     tta_flush

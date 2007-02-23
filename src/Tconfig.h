@@ -34,7 +34,7 @@ public:
  char_t pth[MAX_PATH],epth[MAX_PATH];
  bool savePth;
  const char_t *getExeflnm(void) const;
- static bool winNT; 
+ static bool winNT;
  static int available_cpu_flags,cpu_flags,lavc_cpu_flags,sws_cpu_flags; //suppose that CPU capabilities won't change per instance
  static void initCPU(int allowedCpuFlags);
  static DWORD getCPUcount(void);
@@ -51,7 +51,7 @@ public:
    BOOL (APIENTRY *getTextExtentPoint32)(IN HDC,IN const tchar*,IN int,OUT LPSIZE);
    BOOL (WINAPI *textOut)(IN HDC, IN int, IN int, IN const tchar*, IN int);
   };
- template<class tchar> const Tgdi<tchar>& getGDI(void) const; 
+ template<class tchar> const Tgdi<tchar>& getGDI(void) const;
  int unicodeOS;
 private:
  Tgdi<char> gdiA;Tgdi<wchar_t> gdiW;

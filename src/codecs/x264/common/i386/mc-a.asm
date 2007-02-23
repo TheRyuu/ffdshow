@@ -100,7 +100,7 @@ x264_pixel_avg_w4_mmxext:
     mov         edx, [esp+40]       ; i_src2_stride
     mov         ebp, [esp+44]       ; i_height
 ALIGN 4
-.height_loop    
+.height_loop
     movd        mm0, [ebx]
     pavgb       mm0, [ecx]
     movd        mm1, [ebx+eax]
@@ -120,7 +120,7 @@ ALIGN 4
     pop         ebp
     ret
 
-                          
+
 
 ALIGN 16
 ;-----------------------------------------------------------------------------
@@ -143,7 +143,7 @@ x264_pixel_avg_w8_mmxext:
     mov         edx, [esp+40]       ; i_src2_stride
     mov         ebp, [esp+44]       ; i_height
 ALIGN 4
-.height_loop    
+.height_loop
     movq        mm0, [ebx]
     pavgb       mm0, [ecx]
     movq        [edi], mm0
@@ -182,7 +182,7 @@ x264_pixel_avg_w16_mmxext:
     mov         edx, [esp+40]       ; i_src2_stride
     mov         ebp, [esp+44]       ; i_height
 ALIGN 4
-.height_loop    
+.height_loop
     movq        mm0, [ebx  ]
     movq        mm1, [ebx+8]
     pavgb       mm0, [ecx  ]
@@ -222,7 +222,7 @@ x264_pixel_avg_w16_sse2:
     mov         edx, [esp+40]       ; i_src2_stride
     mov         ebp, [esp+44]       ; i_height
 ALIGN 4
-.height_loop    
+.height_loop
     movdqu      xmm0, [ebx]
     pavgb       xmm0, [ecx]
     movdqu      [edi], xmm0
@@ -407,7 +407,7 @@ ALIGN 4
     movq    [edi+edx], mm3
     lea     esi, [esi+ebx*2]
     lea     edi, [edi+edx*2]
-    
+
     sub     ecx, byte 4
     jnz     .height_loop
 
@@ -456,7 +456,7 @@ ALIGN 4
     lea     edi, [edi+edx*2]
     sub     ecx, byte 4
     jnz     .height_loop
-    
+
     pop     edi
     pop     esi
     pop     ebx
@@ -489,7 +489,7 @@ ALIGN 4
     lea     esi, [esi+ebx*2]
     lea     edi, [edi+edx*2]
     jnz     .height_loop
-    
+
     pop     edi
     pop     esi
     pop     ebx
@@ -605,7 +605,7 @@ ALIGN 4
 ; TODO add 32 and 128 byte versions for P3/P4
 
 ;-----------------------------------------------------------------------------
-; void x264_prefetch_fenc_mmxext( uint8_t *pix_y, int stride_y, 
+; void x264_prefetch_fenc_mmxext( uint8_t *pix_y, int stride_y,
 ;                                 uint8_t *pix_uv, int stride_uv, int mb_x )
 ;-----------------------------------------------------------------------------
 ALIGN 16

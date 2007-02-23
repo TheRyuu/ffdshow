@@ -53,7 +53,7 @@ void TimgFilterGradfun::TgradFun::gf_prepare_mmx(int32_t *pDst, stride_t nDstPit
 {
    stride_t nDstOffset;
    stride_t nSrcOffset;
-   
+
         unsigned char *esi= (unsigned char*)pSrc;            // esi <-- pSrc + 2 * y * nSrcPitch
         unsigned char *edi= (unsigned char*)pDst;            // edi <-- pDst + y * nDstPitch
 
@@ -70,15 +70,15 @@ void TimgFilterGradfun::TgradFun::gf_prepare_mmx(int32_t *pDst, stride_t nDstPit
    ebx<<=2;
    unsigned char *eax= edi;
    eax-= ebx;                      // eax <-- pDst + (y - 1) * nDstPitch
-   
+
    ebx-= ecx;
    ebx-= ecx;
    nDstOffset= ebx;      // nDstOffset <-- nDstPitch - 2 * nWidth
-        
+
         int ebp= nHeight;
         ebp>>=1;
         ebp--;
-        
+
         esi= esi + ecx;
         edx= edx + ecx;
         edi= edi + 2 * ecx;
@@ -86,18 +86,18 @@ void TimgFilterGradfun::TgradFun::gf_prepare_mmx(int32_t *pDst, stride_t nDstPit
 
   __m64 mm0,mm1,mm2,mm3,mm6,mm7;
         pxor                 (mm0, mm0);
-        
+
 loop_y:
-        
+
         pxor                 (mm7, mm7);
-        
+
         ebx= nSrcOffset;
         edx+= ebx;
         esi+= ebx;
         ebx= nDstOffset;
         eax+= ebx;
         edi+= ebx;
-        
+
         ecx= nWidth;
         ecx>>= 3;                        // ecx <-- nWidth / 8//
 
@@ -143,7 +143,7 @@ loop_x:
         ecx--;
         if (ecx!=0)
          goto loop_x;//	jnz                  .loop_x
-        
+
         ebp--;
         if (ebp!=0)
          goto loop_y;//	jnz                  .loop_y
@@ -154,18 +154,18 @@ loop_x:
 void TimgFilterGradfun::TgradFun::gf_render_mmx(uint8_t *pDst, stride_t nDstPitch, const int32_t *pSrc, stride_t nSrcPitch, unsigned int nWidth, unsigned int nHeight, int nThr)
 {
    int nLoops;
-   
+
    stride_t eax= nDstPitch;
    unsigned char *edi= pDst;
    edi= edi + eax * 8;
    edi= edi + eax * 8 + 16;           // edi <-- pDst + 16 * nDstPitch + 16
-   
+
         eax=nSrcPitch;
         eax<<=2;
         unsigned char *esi=(unsigned char*)pSrc;                  // esi <-- pSrc
         unsigned char *ebx= esi + 8 * eax;
         ebx= ebx + 8 * eax;                // ebx <-- pSrc + 16 * nSrcPitch
-        
+
         int ecx= nWidth;
         ecx-= 32;
         ecx>>=2;
@@ -177,20 +177,20 @@ void TimgFilterGradfun::TgradFun::gf_render_mmx(uint8_t *pDst, stride_t nDstPitc
         movq                 (mm5, GF_WORD_127);
         punpcklwd            (mm6, mm6);
         punpckldq            (mm6, mm6);
-        
+
         pxor                 (mm0, mm0);
         pxor                 (mm7, mm7);
-        
+
         int ebp= nHeight;
         ebp-= 32;
-        
+
 loop_y:
 
         int edx= 0;
         ecx= nLoops;
-                                        
+
 loop_x:
-                
+
    pxor	        (       mm1, mm1);
    paddd	(               mm1, esi + edx * 2);
    psubd	(               mm1, esi + edx * 2 + 64);
@@ -233,22 +233,22 @@ loop_x:
    ecx--;
    if (ecx!=0)
     goto loop_x;// jnz                  .loop_x
-   
+
    edi+= nDstPitch;             // pDst : nextline
-   
+
    if ((ebp&1)==0)
     goto no_src_next;//jz                   .no_src_next
 
    esi+= eax;                            // pSrcs : nextline, half the time
    ebx+= eax;
-   
+
 no_src_next:
 
    ebp--;
-   
+
    if (ebp!=0)
     goto loop_y;// jnz                  .loop_y
-   
+
    _mm_empty();
 }
 
@@ -313,12 +313,12 @@ HRESULT TimgFilterGradfun::process(TfilterQueue::iterator it,TffPict &pict,const
     }
    if (!gradFun)
     gradFun=new TgradFun(dx2[0]+edgeSize*2,dy2[0]+edgeSize*2,cfg->threshold/100.0f); //is the first plane is always largest?
-   bool edge=cfg->full && !cfg->half; 
-   if (edge) 
-    pict.createEdge(edgeSize,edgebuf); 
-   
+   bool edge=cfg->full && !cfg->half;
+   if (edge)
+    pict.createEdge(edgeSize,edgebuf);
+
    for (unsigned int i=0;i<pict.cspInfo.numPlanes;i++)
-    gradFun->GF_filter(edge?pict.edgeData[i]:dst[i],edge?pict.stride[i]:stride2[i],edge?(pict.rectEdge.dx>>pict.cspInfo.shiftX[i])*pict.cspInfo.Bpp:dx2[i],edge?(pict.rectEdge.dy>>pict.cspInfo.shiftY[i]):dy2[i]);  
+    gradFun->GF_filter(edge?pict.edgeData[i]:dst[i],edge?pict.stride[i]:stride2[i],edge?(pict.rectEdge.dx>>pict.cspInfo.shiftX[i])*pict.cspInfo.Bpp:dx2[i],edge?(pict.rectEdge.dy>>pict.cspInfo.shiftY[i]):dy2[i]);
   }
  return parent->deliverSample(++it,pict);
 }

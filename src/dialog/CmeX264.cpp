@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "CmeX264.h"
 #include "x264/x264.h"
@@ -40,7 +40,7 @@ const char_t* TmeX264page::predictions[]=
 };
 
 void TmeX264page::cfg2dlg(void)
-{ 
+{
  int intra=cfgGet(IDFF_enc_x264_me_intra);
  setCheck(IDC_CHB_X264_ME_INTRA_I4x4     ,intra&X264_ANALYSE_I4x4     );
  setCheck(IDC_CHB_X264_ME_INTRA_I8x8     ,intra&X264_ANALYSE_I8x8     );
@@ -76,7 +76,7 @@ INT_PTR TmeX264page::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_CHB_X264_ME_INTRA_I4x4:
       case IDC_CHB_X264_ME_INTRA_I8x8:
@@ -117,7 +117,7 @@ INT_PTR TmeX264page::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 void TmeX264page::translate(void)
 {
  TconfPageEnc::translate();
- 
+
  int sel=cbxGetCurSel(IDC_CBX_X264_ME_SUBPELREFINEMENT);
  cbxClear(IDC_CBX_X264_ME_SUBPELREFINEMENT);
  for (int i=0;refinements[i].name;i++)
@@ -146,7 +146,7 @@ TmeX264page::TmeX264page(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
    IDC_ED_X264_ME_RANGE,1,1024,IDFF_enc_x264_me_range,NULL,
    0,NULL,NULL
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
  static const TbindCombobox<TmeX264page> cbx[]=
   {
    IDC_CBX_X264_ME_SUBPELREFINEMENT,IDFF_enc_x264_me_subpelrefine,BINDCBX_DATA,NULL,

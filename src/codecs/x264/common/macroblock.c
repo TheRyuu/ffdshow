@@ -247,9 +247,9 @@ static int x264_mb_predict_mv_direct16x16_temporal( x264_t *h )
     int i8, i4;
     int b8x8;
     const int type_col = h->fref1[0]->mb_type[ h->mb.i_mb_xy ];
-    
+
     x264_macroblock_cache_ref( h, 0, 0, 4, 4, 1, 0 );
-    
+
     if( IS_INTRA( type_col ) )
     {
         x264_macroblock_cache_ref( h, 0, 0, 4, 4, 0, 0 );
@@ -364,11 +364,11 @@ static int x264_mb_predict_mv_direct16x16_spatial( x264_t *h )
 
     if( ref[0] < 0 && ref[1] < 0 )
     {
-        ref[0] = 
+        ref[0] =
         ref[1] = 0;
-        mv[0][0] = 
-        mv[0][1] = 
-        mv[1][0] = 
+        mv[0][0] =
+        mv[0][1] =
+        mv[1][0] =
         mv[1][1] = 0;
     }
     else
@@ -1037,7 +1037,7 @@ void x264_macroblock_cache_load( x264_t *h, int i_mb_x, int i_mb_y )
     else
     {
         h->mb.i_mb_type_top = -1;
-        
+
         /* load intra4x4 */
         h->mb.cache.intra4x4_pred_mode[x264_scan8[0] - 8] =
         h->mb.cache.intra4x4_pred_mode[x264_scan8[1] - 8] =

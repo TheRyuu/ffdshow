@@ -10,7 +10,7 @@
  *                                                                  *
  ********************************************************************
 
-  function: 
+  function:
 
  ********************************************************************/
 
@@ -26,17 +26,17 @@
 #define PL 1
 #define HIGHBITDUPPED(X) (((ogg_int16_t) X)  >> 15)
 
-static ogg_uint32_t QuadCodeComponent ( CP_INSTANCE *cpi, 
-				 ogg_uint32_t FirstSB, 
-				 ogg_uint32_t SBRows, 
-				 ogg_uint32_t SBCols, 
+static ogg_uint32_t QuadCodeComponent ( CP_INSTANCE *cpi,
+				 ogg_uint32_t FirstSB,
+				 ogg_uint32_t SBRows,
+				 ogg_uint32_t SBCols,
 				 ogg_uint32_t PixelsPerLine ){
 
   ogg_int32_t	FragIndex;      /* Fragment number */
   ogg_uint32_t	MB, B;	        /* Macro-Block, Block indices */
   ogg_uint32_t	SBrow;          /* Super-Block row number */
   ogg_uint32_t	SBcol;          /* Super-Block row number */
-  ogg_uint32_t	SB=FirstSB;     /* Super-Block index, initialised to first 
+  ogg_uint32_t	SB=FirstSB;     /* Super-Block index, initialised to first
 			           of this component */
   ogg_uint32_t	coded_pixels=0;	/* Number of pixels coded */
   int           MBCodedFlag;
@@ -49,15 +49,15 @@ static ogg_uint32_t QuadCodeComponent ( CP_INSTANCE *cpi,
     for ( SBcol=0; SBcol<SBCols; SBcol++ ) {
       /* Check its four Macro-Blocks  */
       for ( MB=0; MB<4; MB++ ) {
-                
+
 	if ( QuadMapToMBTopLeft(cpi->pb.BlockMap,SB,MB) >= 0 ) {
-                    
+
 	  MBCodedFlag = 0;
-	  
+
 	  /*  Now actually code the blocks */
 	  for ( B=0; B<4; B++ ) {
 	    FragIndex = QuadMapToIndex1( cpi->pb.BlockMap, SB, MB, B );
-                        
+
 	    /* Does Block lie in frame: */
 	    if ( FragIndex >= 0 ) {
 	      /* In Frame: Is it coded: */
@@ -65,7 +65,7 @@ static ogg_uint32_t QuadCodeComponent ( CP_INSTANCE *cpi,
 
                 /* transform and quantize block */
 		TransformQuantizeBlock( cpi, FragIndex, PixelsPerLine );
-		
+
                 /* Has the block got struck off (no MV and no data
 		   generated after DCT) If not then mark it and the
 		   assosciated MB as coded. */
@@ -73,14 +73,14 @@ static ogg_uint32_t QuadCodeComponent ( CP_INSTANCE *cpi,
 		  /* Create linear list of coded block indices */
 		  cpi->pb.CodedBlockList[cpi->pb.CodedBlockIndex] = FragIndex;
 		  cpi->pb.CodedBlockIndex++;
-                                    
+
 		  /* MB is still coded */
 		  MBCodedFlag = 1;
 		  cpi->MBCodingMode = cpi->pb.FragCodingMethod[FragIndex];
-		  
+
 		}
 	      }
-	    }				
+	    }
 	  }
 	  /* If the MB is marked as coded and we are in the Y plane then */
           /* the mode list needs to be updated. */
@@ -88,13 +88,13 @@ static ogg_uint32_t QuadCodeComponent ( CP_INSTANCE *cpi,
 	    /* Make a note of the selected mode in the mode list */
 	    cpi->ModeList[cpi->ModeListCount] = cpi->MBCodingMode;
 	    cpi->ModeListCount++;
-	  } 
+	  }
 	}
       }
 
       SB++;
 
-    } 
+    }
   }
 
   /* Return number of pixels coded */
@@ -106,11 +106,11 @@ static void EncodeDcTokenList (CP_INSTANCE *cpi) {
   ogg_uint32_t  Token;
   ogg_uint32_t  ExtraBitsToken;
   ogg_uint32_t  HuffIndex;
-  
+
   ogg_uint32_t  BestDcBits;
   ogg_uint32_t  DcHuffChoice[2];
   ogg_uint32_t  EntropyTableBits[2][DC_HUFF_CHOICES];
-  
+
   oggpack_buffer *opb=cpi->oggbuffer;
 
   /* Clear table data structure */
@@ -121,11 +121,11 @@ static void EncodeDcTokenList (CP_INSTANCE *cpi) {
     /* Count number of bits for each table option */
     Token = (ogg_uint32_t)cpi->OptimisedTokenList[i];
     for ( j = 0; j < DC_HUFF_CHOICES; j++ ){
-      EntropyTableBits[cpi->OptimisedTokenListPl[i]][j] += 
+      EntropyTableBits[cpi->OptimisedTokenListPl[i]][j] +=
 	cpi->pb.HuffCodeLengthArray_VP3x[DC_HUFF_OFFSET + j][Token];
     }
   }
-  
+
   /* Work out which table option is best for Y */
   BestDcBits = EntropyTableBits[0][0];
   DcHuffChoice[0] = 0;
@@ -138,7 +138,7 @@ static void EncodeDcTokenList (CP_INSTANCE *cpi) {
 
   /* Add the DC huffman table choice to the bitstream */
   oggpackB_write( opb, DcHuffChoice[0], DC_HUFF_CHOICE_BITS );
-  
+
   /* Work out which table option is best for UV */
   BestDcBits = EntropyTableBits[1][0];
   DcHuffChoice[1] = 0;
@@ -148,7 +148,7 @@ static void EncodeDcTokenList (CP_INSTANCE *cpi) {
       DcHuffChoice[1] = j;
     }
   }
-  
+
   /* Add the DC huffman table choice to the bitstream */
   oggpackB_write( opb, DcHuffChoice[1], DC_HUFF_CHOICE_BITS );
 
@@ -158,16 +158,16 @@ static void EncodeDcTokenList (CP_INSTANCE *cpi) {
     /* Get the token and extra bits */
     Token = (ogg_uint32_t)cpi->OptimisedTokenList[i];
     ExtraBitsToken = (ogg_uint32_t)cpi->OptimisedTokenListEb[i];
-    
+
     /* Select the huffman table */
     if ( cpi->OptimisedTokenListPl[i] == 0)
       HuffIndex = (ogg_uint32_t)DC_HUFF_OFFSET + (ogg_uint32_t)DcHuffChoice[0];
     else
       HuffIndex = (ogg_uint32_t)DC_HUFF_OFFSET + (ogg_uint32_t)DcHuffChoice[1];
-    
+
     /* Add the bits to the encode holding buffer. */
     cpi->FrameBitCount += cpi->pb.HuffCodeLengthArray_VP3x[HuffIndex][Token];
-    oggpackB_write( opb, cpi->pb.HuffCodeArray_VP3x[HuffIndex][Token], 
+    oggpackB_write( opb, cpi->pb.HuffCodeArray_VP3x[HuffIndex][Token],
 		     (ogg_uint32_t)cpi->
 		     pb.HuffCodeLengthArray_VP3x[HuffIndex][Token] );
 
@@ -175,11 +175,11 @@ static void EncodeDcTokenList (CP_INSTANCE *cpi) {
     if ( cpi->pb.ExtraBitLengths_VP3x[Token] > 0 ) {
       /* Add the bits to the encode holding buffer.  */
       cpi->FrameBitCount += cpi->pb.ExtraBitLengths_VP3x[Token];
-      oggpackB_write( opb, ExtraBitsToken, 
+      oggpackB_write( opb, ExtraBitsToken,
 		       (ogg_uint32_t)cpi->pb.ExtraBitLengths_VP3x[Token] );
     }
   }
-  
+
   /* Reset the count of second order optimised tokens */
   cpi->OptimisedTokenCount = 0;
 }
@@ -189,7 +189,7 @@ static void EncodeAcTokenList (CP_INSTANCE *cpi) {
   ogg_uint32_t  Token;
   ogg_uint32_t  ExtraBitsToken;
   ogg_uint32_t  HuffIndex;
-  
+
   ogg_uint32_t  BestAcBits;
   ogg_uint32_t  AcHuffChoice[2];
   ogg_uint32_t  EntropyTableBits[2][AC_HUFF_CHOICES];
@@ -197,14 +197,14 @@ static void EncodeAcTokenList (CP_INSTANCE *cpi) {
   oggpack_buffer *opb=cpi->oggbuffer;
 
   memset ( EntropyTableBits, 0, sizeof(ogg_uint32_t)*AC_HUFF_CHOICES*2 );
-  
+
   /* Analyse token list to see which is the best entropy table to use */
   for ( i = 0; i < cpi->OptimisedTokenCount; i++ ) {
     /* Count number of bits for each table option */
     Token = (ogg_uint32_t)cpi->OptimisedTokenList[i];
     HuffIndex = cpi->OptimisedTokenListHi[i];
     for ( j = 0; j < AC_HUFF_CHOICES; j++ ) {
-      EntropyTableBits[cpi->OptimisedTokenListPl[i]][j] += 
+      EntropyTableBits[cpi->OptimisedTokenListPl[i]][j] +=
 	cpi->pb.HuffCodeLengthArray_VP3x[HuffIndex + j][Token];
     }
   }
@@ -221,7 +221,7 @@ static void EncodeAcTokenList (CP_INSTANCE *cpi) {
 
   /* Add the AC-Y huffman table choice to the bitstream */
   oggpackB_write( opb, AcHuffChoice[0], AC_HUFF_CHOICE_BITS );
-  
+
   /* Select the best set of AC tables for UV */
   BestAcBits = EntropyTableBits[1][0];
   AcHuffChoice[1] = 0;
@@ -231,23 +231,23 @@ static void EncodeAcTokenList (CP_INSTANCE *cpi) {
       AcHuffChoice[1] = j;
     }
   }
-  
+
   /* Add the AC-UV huffman table choice to the bitstream */
   oggpackB_write( opb, AcHuffChoice[1], AC_HUFF_CHOICE_BITS );
-  
+
   /* Encode the token list */
   for ( i = 0; i < cpi->OptimisedTokenCount; i++ ) {
     /* Get the token and extra bits */
     Token = (ogg_uint32_t)cpi->OptimisedTokenList[i];
     ExtraBitsToken = (ogg_uint32_t)cpi->OptimisedTokenListEb[i];
-    
+
     /* Select the huffman table */
-    HuffIndex = (ogg_uint32_t)cpi->OptimisedTokenListHi[i] + 
+    HuffIndex = (ogg_uint32_t)cpi->OptimisedTokenListHi[i] +
       AcHuffChoice[cpi->OptimisedTokenListPl[i]];
 
     /* Add the bits to the encode holding buffer. */
     cpi->FrameBitCount += cpi->pb.HuffCodeLengthArray_VP3x[HuffIndex][Token];
-    oggpackB_write( opb, cpi->pb.HuffCodeArray_VP3x[HuffIndex][Token], 
+    oggpackB_write( opb, cpi->pb.HuffCodeArray_VP3x[HuffIndex][Token],
 		     (ogg_uint32_t)cpi->
 		     pb.HuffCodeLengthArray_VP3x[HuffIndex][Token] );
 
@@ -255,11 +255,11 @@ static void EncodeAcTokenList (CP_INSTANCE *cpi) {
     if ( cpi->pb.ExtraBitLengths_VP3x[Token] > 0 ) {
       /* Add the bits to the encode holding buffer. */
       cpi->FrameBitCount += cpi->pb.ExtraBitLengths_VP3x[Token];
-      oggpackB_write( opb, ExtraBitsToken, 
+      oggpackB_write( opb, ExtraBitsToken,
 		       (ogg_uint32_t)cpi->pb.ExtraBitLengths_VP3x[Token] );
     }
   }
-  
+
   /* Reset the count of second order optimised tokens */
   cpi->OptimisedTokenCount = 0;
 }
@@ -268,12 +268,12 @@ static void PackModes (CP_INSTANCE *cpi) {
   ogg_uint32_t  i,j;
   unsigned char   ModeIndex;
   unsigned char  *SchemeList;
-  
+
   unsigned char   BestModeSchemes[MAX_MODES];
   ogg_int32_t   ModeCount[MAX_MODES];
   ogg_int32_t     TmpFreq = -1;
   ogg_int32_t     TmpIndex = -1;
-  
+
   ogg_uint32_t    BestScheme;
   ogg_uint32_t  BestSchemeScore;
   ogg_uint32_t  SchemeScore;
@@ -282,7 +282,7 @@ static void PackModes (CP_INSTANCE *cpi) {
 
   /* Build a frequency map for the modes in this frame */
   memset( ModeCount, 0, MAX_MODES*sizeof(ogg_int32_t) );
-  for ( i = 0; i < cpi->ModeListCount; i++ ) 
+  for ( i = 0; i < cpi->ModeListCount; i++ )
     ModeCount[cpi->ModeList[i]] ++;
 
   /* Order the modes from most to least frequent.  Store result as
@@ -320,9 +320,9 @@ static void PackModes (CP_INSTANCE *cpi) {
       SchemeScore = 0;
       SchemeList = ModeSchemes[j-1];
     }
-    
+
     /* Find the total bits to code using each avaialable scheme */
-    for ( i = 0; i < cpi->ModeListCount; i++ ) 
+    for ( i = 0; i < cpi->ModeListCount; i++ )
       SchemeScore += ModeBitLengths[SchemeList[cpi->ModeList[i]]];
 
     /* Is this the best scheme so far ??? */
@@ -353,7 +353,7 @@ static void PackModes (CP_INSTANCE *cpi) {
     for ( i = 0; i < cpi->ModeListCount; i++ ) {
       /* Add the appropriate mode entropy token. */
       ModeIndex = SchemeList[cpi->ModeList[i]];
-      oggpackB_write( opb, ModeBitPatterns[ModeIndex], 
+      oggpackB_write( opb, ModeBitPatterns[ModeIndex],
 		       (ogg_uint32_t)ModeBitLengths[ModeIndex] );
     }
   }else{
@@ -367,16 +367,16 @@ static void PackModes (CP_INSTANCE *cpi) {
 
 static void PackMotionVectors (CP_INSTANCE *cpi) {
   ogg_int32_t  i;
-  ogg_uint32_t MethodBits[2] = {0,0};  
+  ogg_uint32_t MethodBits[2] = {0,0};
   ogg_uint32_t * MvBitsPtr;
-  ogg_uint32_t * MvPatternPtr;  
+  ogg_uint32_t * MvPatternPtr;
 
   oggpack_buffer *opb=cpi->oggbuffer;
 
   /* Choose the coding method */
   MvBitsPtr = &MvBits[MAX_MV_EXTENT];
   for ( i = 0; i < (ogg_int32_t)cpi->MvListCount; i++ ) {
-    MethodBits[0] += MvBitsPtr[cpi->MVList[i].x]; 
+    MethodBits[0] += MvBitsPtr[cpi->MVList[i].x];
     MethodBits[0] += MvBitsPtr[cpi->MVList[i].y];
     MethodBits[1] += 12; /* Simple six bits per mv component fallback
                              mechanism */
@@ -395,9 +395,9 @@ static void PackMotionVectors (CP_INSTANCE *cpi) {
 
   /* Pack and encode the motion vectors */
   for ( i = 0; i < (ogg_int32_t)cpi->MvListCount; i++ ) {
-    oggpackB_write( opb, MvPatternPtr[cpi->MVList[i].x], 
+    oggpackB_write( opb, MvPatternPtr[cpi->MVList[i].x],
 		     (ogg_uint32_t)MvBitsPtr[cpi->MVList[i].x] );
-    oggpackB_write( opb, MvPatternPtr[cpi->MVList[i].y], 
+    oggpackB_write( opb, MvPatternPtr[cpi->MVList[i].y],
 		     (ogg_uint32_t)MvBitsPtr[cpi->MVList[i].y] );
   }
 }
@@ -411,13 +411,13 @@ static void PackEOBRun( CP_INSTANCE *cpi) {
      the first token in the run */
 
   /* Mark out which plane the block belonged to */
-  cpi->OptimisedTokenListPl[cpi->OptimisedTokenCount] = 
+  cpi->OptimisedTokenListPl[cpi->OptimisedTokenCount] =
     (unsigned char)cpi->RunPlaneIndex;
-    
+
   /* Note the huffman index to be used */
-  cpi->OptimisedTokenListHi[cpi->OptimisedTokenCount] = 
+  cpi->OptimisedTokenListHi[cpi->OptimisedTokenCount] =
     (unsigned char)cpi->RunHuffIndex;
-    
+
   if ( cpi->RunLength <= 3 ) {
     if ( cpi->RunLength == 1 ) {
       cpi->OptimisedTokenList[cpi->OptimisedTokenCount] = DCT_EOB_TOKEN;
@@ -426,50 +426,50 @@ static void PackEOBRun( CP_INSTANCE *cpi) {
     } else {
       cpi->OptimisedTokenList[cpi->OptimisedTokenCount] = DCT_EOB_TRIPLE_TOKEN;
     }
-    
+
     cpi->RunLength = 0;
 
   } else {
 
     /* Choose a token appropriate to the run length. */
     if ( cpi->RunLength < 8 ) {
-      cpi->OptimisedTokenList[cpi->OptimisedTokenCount] = 
+      cpi->OptimisedTokenList[cpi->OptimisedTokenCount] =
 	DCT_REPEAT_RUN_TOKEN;
-      cpi->OptimisedTokenListEb[cpi->OptimisedTokenCount] = 
+      cpi->OptimisedTokenListEb[cpi->OptimisedTokenCount] =
 	cpi->RunLength - 4;
       cpi->RunLength = 0;
     } else if ( cpi->RunLength < 16 ) {
-      cpi->OptimisedTokenList[cpi->OptimisedTokenCount] = 
+      cpi->OptimisedTokenList[cpi->OptimisedTokenCount] =
 	DCT_REPEAT_RUN2_TOKEN;
-      cpi->OptimisedTokenListEb[cpi->OptimisedTokenCount] = 
+      cpi->OptimisedTokenListEb[cpi->OptimisedTokenCount] =
 	cpi->RunLength - 8;
       cpi->RunLength = 0;
     } else if ( cpi->RunLength < 32 ) {
-      cpi->OptimisedTokenList[cpi->OptimisedTokenCount] = 
+      cpi->OptimisedTokenList[cpi->OptimisedTokenCount] =
 	DCT_REPEAT_RUN3_TOKEN;
-      cpi->OptimisedTokenListEb[cpi->OptimisedTokenCount] = 
+      cpi->OptimisedTokenListEb[cpi->OptimisedTokenCount] =
 	cpi->RunLength - 16;
       cpi->RunLength = 0;
     } else if ( cpi->RunLength < 4096) {
-      cpi->OptimisedTokenList[cpi->OptimisedTokenCount] = 
+      cpi->OptimisedTokenList[cpi->OptimisedTokenCount] =
 	DCT_REPEAT_RUN4_TOKEN;
-      cpi->OptimisedTokenListEb[cpi->OptimisedTokenCount] = 
+      cpi->OptimisedTokenListEb[cpi->OptimisedTokenCount] =
 	cpi->RunLength;
       cpi->RunLength = 0;
-    } 
-    
+    }
+
   }
-  
+
   cpi->OptimisedTokenCount++;
   /* Reset run EOB length */
   cpi->RunLength = 0;
 }
 
-static void PackToken ( CP_INSTANCE *cpi, ogg_int32_t FragmentNumber, 
+static void PackToken ( CP_INSTANCE *cpi, ogg_int32_t FragmentNumber,
 		 ogg_uint32_t HuffIndex ) {
-  ogg_uint32_t Token = 
+  ogg_uint32_t Token =
     cpi->pb.TokenList[FragmentNumber][cpi->FragTokens[FragmentNumber]];
-  ogg_uint32_t ExtraBitsToken = 
+  ogg_uint32_t ExtraBitsToken =
     cpi->pb.TokenList[FragmentNumber][cpi->FragTokens[FragmentNumber] + 1];
   ogg_uint32_t OneOrTwo;
   ogg_uint32_t OneOrZero;
@@ -480,32 +480,32 @@ static void PackToken ( CP_INSTANCE *cpi, ogg_int32_t FragmentNumber,
   if ( Token == DCT_EOB_TOKEN )
     cpi->pb.FragCoeffs[FragmentNumber] = BLOCK_SIZE;
   else
-    ExpandToken( cpi->pb.QFragData[FragmentNumber], 
-		 &cpi->pb.FragCoeffs[FragmentNumber], 
+    ExpandToken( cpi->pb.QFragData[FragmentNumber],
+		 &cpi->pb.FragCoeffs[FragmentNumber],
 		 Token, ExtraBitsToken );
-  
+
   /* Update record of tokens coded and where we are in this fragment. */
   /* Is there an extra bits token */
-  OneOrTwo= 1 + ( cpi->pb.ExtraBitLengths_VP3x[Token] > 0 ); 
+  OneOrTwo= 1 + ( cpi->pb.ExtraBitLengths_VP3x[Token] > 0 );
   /* Advance to the next real token. */
   cpi->FragTokens[FragmentNumber] += (unsigned char)OneOrTwo;
-	
+
   /* Update the counts of tokens coded */
   cpi->TokensCoded += OneOrTwo;
   cpi->TokensToBeCoded -= OneOrTwo;
-  
+
   OneOrZero = ( FragmentNumber < (ogg_int32_t)cpi->pb.YPlaneFragments );
-  
+
   if ( Token == DCT_EOB_TOKEN ) {
     if ( cpi->RunLength == 0 ) {
       cpi->RunHuffIndex = HuffIndex;
       cpi->RunPlaneIndex = 1 -  OneOrZero;
     }
     cpi->RunLength++;
-    
+
     /* we have exceeded our longest run length  xmit an eob run token; */
     if ( cpi->RunLength == 4095 ) PackEOBRun(cpi);
-  
+
   }else{
 
     /* If we have an EOB run then code it up first */
@@ -514,31 +514,31 @@ static void PackToken ( CP_INSTANCE *cpi, ogg_int32_t FragmentNumber,
     /* Mark out which plane the block belonged to */
     cpi->OptimisedTokenListPl[cpi->OptimisedTokenCount] =
       (unsigned char)(1 - OneOrZero);
-    
+
     /* Note the token, extra bits and hufman table in the optimised
        token list */
-    cpi->OptimisedTokenList[cpi->OptimisedTokenCount] = 
+    cpi->OptimisedTokenList[cpi->OptimisedTokenCount] =
       (unsigned char)Token;
-    cpi->OptimisedTokenListEb[cpi->OptimisedTokenCount] = 
+    cpi->OptimisedTokenListEb[cpi->OptimisedTokenCount] =
       ExtraBitsToken;
-    cpi->OptimisedTokenListHi[cpi->OptimisedTokenCount] = 
+    cpi->OptimisedTokenListHi[cpi->OptimisedTokenCount] =
       (unsigned char)HuffIndex;
-    
+
     cpi->OptimisedTokenCount++;
   }
 }
 
-static ogg_uint32_t GetBlockReconErrorSlow( CP_INSTANCE *cpi, 
+static ogg_uint32_t GetBlockReconErrorSlow( CP_INSTANCE *cpi,
 				     ogg_int32_t BlockIndex ) {
   ogg_uint32_t  ErrorVal;
-  
-  unsigned char * SrcDataPtr = 
+
+  unsigned char * SrcDataPtr =
     &cpi->ConvDestBuffer[cpi->pb.pixel_index_table[BlockIndex]];
-  unsigned char * RecDataPtr = 
+  unsigned char * RecDataPtr =
     &cpi->pb.LastFrameRecon[cpi->pb.recon_pixel_index_table[BlockIndex]];
   ogg_int32_t   SrcStride;
   ogg_int32_t   RecStride;
-  
+
   /* Is the block a Y block or a UV block. */
   if ( BlockIndex < (ogg_int32_t)cpi->pb.YPlaneFragments ) {
     SrcStride = cpi->pb.info.width;
@@ -547,9 +547,9 @@ static ogg_uint32_t GetBlockReconErrorSlow( CP_INSTANCE *cpi,
     SrcStride = cpi->pb.info.width >> 1;
     RecStride = cpi->pb.UVStride;
   }
-    
+
   ErrorVal = dsp_static_sad8x8 (SrcDataPtr, SrcStride, RecDataPtr, RecStride);
-  
+
   return ErrorVal;
 }
 
@@ -561,27 +561,27 @@ static void PackCodedVideo (CP_INSTANCE *cpi) {
 
   /* Reset the count of second order optimised tokens */
   cpi->OptimisedTokenCount = 0;
-  
+
   cpi->TokensToBeCoded = cpi->TotTokenCount;
   cpi->TokensCoded = 0;
-  
+
   /* Calculate the bit rate at which this frame should be capped. */
   cpi->MaxBitTarget = (ogg_uint32_t)((double)(cpi->ThisFrameTargetBytes * 8) *
-				     cpi->BitRateCapFactor);  
-  
+				     cpi->BitRateCapFactor);
+
   /* Blank the various fragment data structures before we start. */
   memset(cpi->pb.FragCoeffs, 0, cpi->pb.UnitFragments);
   memset(cpi->FragTokens, 0, cpi->pb.UnitFragments);
 
   /* Clear down the QFragData structure for all coded blocks. */
   ClearDownQFragData(&cpi->pb);
-    
+
   /* The tree is not needed (implicit) for key frames */
   if ( GetFrameType(&cpi->pb) != KEY_FRAME ){
     /* Pack the quad tree fragment mapping. */
     PackAndWriteDFArray( cpi );
   }
-  
+
   /* Note the number of bits used to code the tree itself. */
   cpi->FrameBitCount = oggpackB_bytes(cpi->oggbuffer) << 3;
 
@@ -592,28 +592,28 @@ static void PackCodedVideo (CP_INSTANCE *cpi) {
     /* Pack the motion vectors */
     PackMotionVectors (cpi);
   }
-  
+
   cpi->FrameBitCount = oggpackB_bytes(cpi->oggbuffer) << 3;
-  
+
   /* Optimise the DC tokens */
   for ( i = 0; i < cpi->pb.CodedBlockIndex; i++ ) {
     /* Get the linear index for the current fragment. */
     FragIndex = cpi->pb.CodedBlockList[i];
-    
+
     cpi->pb.FragCoefEOB[FragIndex]=(unsigned char)EncodedCoeffs;
     PackToken(cpi, FragIndex, DC_HUFF_OFFSET );
-    
+
   }
 
   /* Pack any outstanding EOB tokens */
   PackEOBRun(cpi);
-  
+
   /* Now output the optimised DC token list using the appropriate
      entropy tables. */
   EncodeDcTokenList(cpi);
 
   /* Work out the number of DC bits coded */
-  
+
   /* Optimise the AC tokens */
   while ( EncodedCoeffs < 64 ) {
     /* Huffman table adjustment based upon coefficient number. */
@@ -625,12 +625,12 @@ static void PackCodedVideo (CP_INSTANCE *cpi) {
       HuffIndex = AC_HUFF_OFFSET + (AC_HUFF_CHOICES * 2);
     else
       HuffIndex = AC_HUFF_OFFSET + (AC_HUFF_CHOICES * 3);
-    
+
     /* Repeatedly scan through the list of blocks. */
     for ( i = 0; i < cpi->pb.CodedBlockIndex; i++ ) {
       /* Get the linear index for the current fragment. */
       FragIndex = cpi->pb.CodedBlockList[i];
-      
+
       /* Should we code a token for this block on this pass. */
       if ( cpi->FragTokens[FragIndex] < cpi->FragTokenCounts[FragIndex]
 	   && cpi->pb.FragCoeffs[FragIndex] <= EncodedCoeffs ) {
@@ -639,17 +639,17 @@ static void PackCodedVideo (CP_INSTANCE *cpi) {
 	PackToken( cpi, FragIndex, HuffIndex );
       }
     }
-    
+
     EncodedCoeffs ++;
   }
-  
+
   /* Pack any outstanding EOB tokens */
   PackEOBRun(cpi);
-  
+
   /* Now output the optimised AC token list using the appropriate
      entropy tables. */
   EncodeAcTokenList(cpi);
-  
+
 }
 
 static ogg_uint32_t QuadCodeDisplayFragments (CP_INSTANCE *cpi) {
@@ -662,7 +662,7 @@ static ogg_uint32_t QuadCodeDisplayFragments (CP_INSTANCE *cpi) {
      Entries are packed in the order L, UL, U, UR, with missing entries
       moved to the end (before the shift parameters). */
   static const ogg_int16_t pc[16][6]={
-    {0,0,0,0,0,0},	
+    {0,0,0,0,0,0},
     {1,0,0,0,0,0},      /* PL */
     {1,0,0,0,0,0},      /* PUL */
     {1,0,0,0,0,0},      /* PUL|PL */
@@ -703,26 +703,26 @@ static ogg_uint32_t QuadCodeDisplayFragments (CP_INSTANCE *cpi) {
   /* value left value up-left, value up, value up-right, missing
       values skipped. */
   int v[4];
-  
+
   /* fragment number left, up-left, up, up-right */
   int fn[4];
 
   /* predictor count. */
   int pcount;
-  
+
   /*which predictor constants to use */
   ogg_int16_t wpc;
-  
+
   /* last used inter predictor (Raster Order) */
   ogg_int16_t Last[3];	/* last value used for given frame */
-  
-  int FragsAcross=cpi->pb.HFragments;	
+
+  int FragsAcross=cpi->pb.HFragments;
   int FragsDown = cpi->pb.VFragments;
   int FromFragment,ToFragment;
   ogg_int32_t	FragIndex;
   int WhichFrame;
   int WhichCase;
-  
+
   static const ogg_int16_t Mode2Frame[] = {
     1,	/* CODE_INTER_NO_MV	0 => Encoded diff from same MB last frame  */
     0,	/* CODE_INTRA		1 => DCT Encoded Block */
@@ -740,29 +740,29 @@ static ogg_uint32_t QuadCodeDisplayFragments (CP_INSTANCE *cpi) {
      subsequent linear access to the quad tree ordered list of coded
      blocks */
   cpi->pb.CodedBlockIndex = 0;
-  
+
   /* Set the inter/intra descision control variables. */
   QIndex = Q_TABLE_SIZE - 1;
   while ( QIndex >= 0 ) {
-    if ( (QIndex == 0) || 
+    if ( (QIndex == 0) ||
 	 ( cpi->pb.QThreshTable[QIndex] >= cpi->pb.ThisFrameQualityValue) )
       break;
     QIndex --;
   }
-  
+
 
   /* Encode and tokenise the Y, U and V components */
-  coded_pixels = QuadCodeComponent(cpi, 0, cpi->pb.YSBRows, cpi->pb.YSBCols, 
+  coded_pixels = QuadCodeComponent(cpi, 0, cpi->pb.YSBRows, cpi->pb.YSBCols,
 				   cpi->pb.info.width );
-  coded_pixels += QuadCodeComponent(cpi, cpi->pb.YSuperBlocks, 
-				    cpi->pb.UVSBRows, 
-				    cpi->pb.UVSBCols, 
+  coded_pixels += QuadCodeComponent(cpi, cpi->pb.YSuperBlocks,
+				    cpi->pb.UVSBRows,
+				    cpi->pb.UVSBCols,
 				    cpi->pb.info.width>>1 );
-  coded_pixels += QuadCodeComponent(cpi, 
+  coded_pixels += QuadCodeComponent(cpi,
 				    cpi->pb.YSuperBlocks+cpi->pb.UVSuperBlocks,
-				    cpi->pb.UVSBRows, cpi->pb.UVSBCols, 
+				    cpi->pb.UVSBRows, cpi->pb.UVSBCols,
 				    cpi->pb.info.width>>1 );
-    
+
   /* for y,u,v */
   for ( j = 0; j < 3 ; j++) {
     /* pick which fragments based on Y, U, V */
@@ -799,19 +799,19 @@ static ogg_uint32_t QuadCodeDisplayFragments (CP_INSTANCE *cpi) {
 
 	/* only do 2 prediction if fragment coded and on non intra or
            if all fragments are intra */
-	if( cpi->pb.display_fragments[i] || 
+	if( cpi->pb.display_fragments[i] ||
             (GetFrameType(&cpi->pb) == KEY_FRAME) ) {
 	  /* Type of Fragment */
 	  WhichFrame = Mode2Frame[cpi->pb.FragCodingMethod[i]];
 
 	  /* Check Borderline Cases */
 	  WhichCase = (n==0) + ((m==0) << 1) + ((n+1 == FragsAcross) << 2);
-	  
+
           fn[0]=i-1;
           fn[1]=i-FragsAcross-1;
           fn[2]=i-FragsAcross;
           fn[3]=i-FragsAcross+1;
-	    
+
 	    /* fragment valid for prediction use if coded and it comes
                from same frame as the one we are predicting */
           for(k=pcount=wpc=0; k<4; k++) {
@@ -825,20 +825,20 @@ static ogg_uint32_t QuadCodeDisplayFragments (CP_INSTANCE *cpi) {
               pcount++;
             }
 	  }
-	  
+
 	  if(wpc==0) {
-						
+
             /* fall back to the last coded fragment */
             cpi->pb.QFragData[i][0] -= Last[WhichFrame];
-	   
-	  } else {						
-	    
+
+	  } else {
+
 	    /* don't do divide if divisor is 1 or 0 */
             PredictedDC = pc[wpc][0]*v[0];
             for(k=1; k<pcount; k++){
               PredictedDC += pc[wpc][k]*v[k];
             }
-	    
+
 	    /* if we need to do a shift */
 	    if(pc[wpc][4] != 0 ) {
 
@@ -848,7 +848,7 @@ static ogg_uint32_t QuadCodeDisplayFragments (CP_INSTANCE *cpi) {
 	      PredictedDC >>= pc[wpc][4];
 
 	    }
-						
+
 	    /* check for outranging on the two predictors that can outrange */
             if((wpc&(PU|PUL|PL)) == (PU|PUL|PL)){
               if( abs(PredictedDC - v[2]) > 128) {
@@ -859,18 +859,18 @@ static ogg_uint32_t QuadCodeDisplayFragments (CP_INSTANCE *cpi) {
                 PredictedDC = v[1];
               }
 	    }
-	    
+
 	    cpi->pb.QFragData[i][0] -= PredictedDC;
 	  }
-	  
+
 	  /* Save the last fragment coded for whatever frame we are
              predicting from */
-	  
+
 	  Last[WhichFrame] = cpi->OriginalDC[i];
-	  
+
 	}
-      } 
-    } 
+      }
+    }
   }
 
   /* Pack DC tokens and adjust the ones we couldn't predict 2d */
@@ -878,7 +878,7 @@ static ogg_uint32_t QuadCodeDisplayFragments (CP_INSTANCE *cpi) {
     /* Get the linear index for the current coded fragment. */
     FragIndex = cpi->pb.CodedBlockList[i];
     coded_pixels += DPCMTokenizeBlock ( cpi, FragIndex);
-    
+
   }
 
 
@@ -892,16 +892,16 @@ static ogg_uint32_t QuadCodeDisplayFragments (CP_INSTANCE *cpi) {
   ReconRefFrames(&cpi->pb);
 
   UpdateFragQIndex(&cpi->pb);
-  
+
   /* Measure the inter reconstruction error for all the blocks that
      were coded */
   /* for use as part of the recovery monitoring process in subsequent frames. */
   for ( i = 0; i < cpi->pb.CodedBlockIndex; i++ ) {
-    cpi->LastCodedErrorScore[ cpi->pb.CodedBlockList[i] ] = 
+    cpi->LastCodedErrorScore[ cpi->pb.CodedBlockList[i] ] =
       GetBlockReconErrorSlow( cpi, cpi->pb.CodedBlockList[i] );
-    
+
   }
-	
+
   /* Return total number of coded pixels */
   return coded_pixels;
 }
@@ -921,7 +921,7 @@ ogg_uint32_t EncodeData(CP_INSTANCE *cpi){
     dsp_static_save_fpu ();
 
     /* Encode any fragments coded using DCT. */
-    coded_pixels += QuadCodeDisplayFragments (cpi);           
+    coded_pixels += QuadCodeDisplayFragments (cpi);
 
     dsp_static_restore_fpu ();
 
@@ -929,15 +929,15 @@ ogg_uint32_t EncodeData(CP_INSTANCE *cpi){
 
 }
 
-ogg_uint32_t PickIntra( CP_INSTANCE *cpi, 
-			ogg_uint32_t SBRows, 
+ogg_uint32_t PickIntra( CP_INSTANCE *cpi,
+			ogg_uint32_t SBRows,
 			ogg_uint32_t SBCols){
 
   ogg_int32_t	FragIndex;  /* Fragment number */
   ogg_uint32_t	MB, B;	    /* Macro-Block, Block indices */
   ogg_uint32_t	SBrow;	    /* Super-Block row number */
   ogg_uint32_t	SBcol;	    /* Super-Block row number */
-  ogg_uint32_t	SB=0;	    /* Super-Block index, initialised to first of 
+  ogg_uint32_t	SB=0;	    /* Super-Block index, initialised to first of
 			       this component */
 
   ogg_uint32_t UVRow;
@@ -955,27 +955,27 @@ ogg_uint32_t PickIntra( CP_INSTANCE *cpi,
 	if ( QuadMapToMBTopLeft(cpi->pb.BlockMap,SB,MB) >= 0 ) {
 
 	  cpi->MBCodingMode = CODE_INTRA;
-	  
+
 	  /* Now actually code the blocks. */
 	  for ( B=0; B<4; B++ ) {
 	    FragIndex = QuadMapToIndex1( cpi->pb.BlockMap, SB, MB, B );
 	    cpi->pb.FragCodingMethod[FragIndex] = cpi->MBCodingMode;
 	  }
-                    
+
 	  /* Matching fragments in the U and V planes */
 	  UVRow = (FragIndex / (cpi->pb.HFragments * 2));
 	  UVColumn = (FragIndex % cpi->pb.HFragments) / 2;
 	  UVFragOffset = (UVRow * (cpi->pb.HFragments / 2)) + UVColumn;
-                    
-	  cpi->pb.FragCodingMethod[cpi->pb.YPlaneFragments + UVFragOffset] = 
+
+	  cpi->pb.FragCodingMethod[cpi->pb.YPlaneFragments + UVFragOffset] =
 	    cpi->MBCodingMode;
-	  cpi->pb.FragCodingMethod[cpi->pb.YPlaneFragments + 
-				  cpi->pb.UVPlaneFragments + UVFragOffset] = 
+	  cpi->pb.FragCodingMethod[cpi->pb.YPlaneFragments +
+				  cpi->pb.UVPlaneFragments + UVFragOffset] =
 	    cpi->MBCodingMode;
-                            
+
 	}
       }
-            
+
       /* Next Super-Block */
       SB++;
     }
@@ -983,23 +983,23 @@ ogg_uint32_t PickIntra( CP_INSTANCE *cpi,
   return 0;
 }
 
-static void AddMotionVector(CP_INSTANCE *cpi,     
+static void AddMotionVector(CP_INSTANCE *cpi,
 		     MOTION_VECTOR *ThisMotionVector) {
   cpi->MVList[cpi->MvListCount].x = ThisMotionVector->x;
   cpi->MVList[cpi->MvListCount].y = ThisMotionVector->y;
   cpi->MvListCount++;
 }
 
-static void SetFragMotionVectorAndMode(CP_INSTANCE *cpi,     
+static void SetFragMotionVectorAndMode(CP_INSTANCE *cpi,
 				ogg_int32_t FragIndex,
 				MOTION_VECTOR *ThisMotionVector){
   /* Note the coding mode and vector for each block */
   cpi->pb.FragMVect[FragIndex].x = ThisMotionVector->x;
   cpi->pb.FragMVect[FragIndex].y = ThisMotionVector->y;
-  cpi->pb.FragCodingMethod[FragIndex] = cpi->MBCodingMode; 
+  cpi->pb.FragCodingMethod[FragIndex] = cpi->MBCodingMode;
 }
 
-static void SetMBMotionVectorsAndMode(CP_INSTANCE *cpi,     
+static void SetMBMotionVectorsAndMode(CP_INSTANCE *cpi,
 			       ogg_int32_t YFragIndex,
 			       ogg_int32_t UFragIndex,
 			       ogg_int32_t VFragIndex,
@@ -1008,15 +1008,15 @@ static void SetMBMotionVectorsAndMode(CP_INSTANCE *cpi,
   SetFragMotionVectorAndMode(cpi, YFragIndex + 1, ThisMotionVector);
   SetFragMotionVectorAndMode(cpi, YFragIndex + cpi->pb.HFragments,
 			     ThisMotionVector);
-  SetFragMotionVectorAndMode(cpi, YFragIndex + cpi->pb.HFragments + 1, 
+  SetFragMotionVectorAndMode(cpi, YFragIndex + cpi->pb.HFragments + 1,
 			     ThisMotionVector);
   SetFragMotionVectorAndMode(cpi, UFragIndex, ThisMotionVector);
   SetFragMotionVectorAndMode(cpi, VFragIndex, ThisMotionVector);
 }
 
-ogg_uint32_t PickModes(CP_INSTANCE *cpi, 
-		       ogg_uint32_t SBRows, ogg_uint32_t SBCols, 
-		       ogg_uint32_t PixelsPerLine, 
+ogg_uint32_t PickModes(CP_INSTANCE *cpi,
+		       ogg_uint32_t SBRows, ogg_uint32_t SBCols,
+		       ogg_uint32_t PixelsPerLine,
 		       ogg_uint32_t *InterError, ogg_uint32_t *IntraError) {
   ogg_int32_t	YFragIndex;
   ogg_int32_t	UFragIndex;
@@ -1043,7 +1043,7 @@ ogg_uint32_t PickModes(CP_INSTANCE *cpi,
                                            motion vectors per macro
                                            block */
   ogg_uint32_t  BestError;              /* Best error so far. */
-  
+
   MOTION_VECTOR FourMVect[6];     /* storage for last used vectors (one
 				     entry for each block in MB) */
   MOTION_VECTOR LastInterMVect;   /* storage for last used Inter frame
@@ -1058,18 +1058,18 @@ ogg_uint32_t PickModes(CP_INSTANCE *cpi,
                                      from exhaustive search */
   MOTION_VECTOR GFMVect;          /* storage for motion vector */
   MOTION_VECTOR ZeroVect;
-  
+
   ogg_uint32_t UVRow;
   ogg_uint32_t UVColumn;
   ogg_uint32_t UVFragOffset;
-  
+
   int          MBCodedFlag;
   unsigned char QIndex;
-  
+
   /* initialize error scores */
   *InterError = 0;
   *IntraError = 0;
-  
+
   /* clear down the default motion vector. */
   cpi->MvListCount = 0;
   FourMVect[0].x = 0;
@@ -1094,20 +1094,20 @@ ogg_uint32_t PickModes(CP_INSTANCE *cpi,
   InterMVect.y = 0;
   GFMVect.x = 0;
   GFMVect.y = 0;
-  
+
   ZeroVect.x = 0;
   ZeroVect.y = 0;
-  
+
   QIndex = (unsigned char)cpi->pb.FrameQIndex;
 
 
 
   /* change the quatization matrix to the one at best Q to compute the
      new error score */
-  cpi->MinImprovementForNewMV = (MvThreshTable[QIndex] << 12); 
+  cpi->MinImprovementForNewMV = (MvThreshTable[QIndex] << 12);
   cpi->InterTripOutThresh = (5000<<12);
   cpi->MVChangeFactor = MVChangeFactorTable[QIndex]; /* 0.9 */
-  
+
   if ( cpi->pb.info.quick_p ) {
     cpi->ExhaustiveSearchThresh = (1000<<12);
     cpi->FourMVThreshold = (2500<<12);
@@ -1115,13 +1115,13 @@ ogg_uint32_t PickModes(CP_INSTANCE *cpi,
     cpi->ExhaustiveSearchThresh = (250<<12);
     cpi->FourMVThreshold = (500<<12);
   }
-  cpi->MinImprovementForFourMV = cpi->MinImprovementForNewMV * 4;     
-  
+  cpi->MinImprovementForFourMV = cpi->MinImprovementForNewMV * 4;
+
   if(cpi->MinImprovementForFourMV < (40<<12))
     cpi->MinImprovementForFourMV = (40<<12);
-  
+
   cpi->FourMvChangeFactor = 8; /* cpi->MVChangeFactor - 0.05;  */
-  
+
   /* decide what block type and motion vectors to use on all of the frames */
   for ( SBrow=0; SBrow<SBRows; SBrow++ ) {
     for ( SBcol=0; SBcol<SBCols; SBcol++ ) {
@@ -1131,12 +1131,12 @@ ogg_uint32_t PickModes(CP_INSTANCE *cpi,
 	   ignored. For these MB's Top left block will have a negative
 	   Fragment Index. */
 	if ( QuadMapToMBTopLeft(cpi->pb.BlockMap,SB,MB) < 0 ) continue;
-                
+
 	/* Is the current macro block coded (in part or in whole) */
 	MBCodedFlag = 0;
 	for ( B=0; B<4; B++ ) {
 	  YFragIndex = QuadMapToIndex1( cpi->pb.BlockMap, SB, MB, B );
-                   
+
 	  /* Does Block lie in frame: */
 	  if ( YFragIndex >= 0 ) {
 	    /* In Frame: Is it coded: */
@@ -1147,7 +1147,7 @@ ogg_uint32_t PickModes(CP_INSTANCE *cpi,
 	  } else
 	    MBCodedFlag = 0;
 	}
-                
+
 	/* This one isn't coded go to the next one */
 	if(!MBCodedFlag) continue;
 
@@ -1157,12 +1157,12 @@ ogg_uint32_t PickModes(CP_INSTANCE *cpi,
 	UVColumn = (YFragIndex % cpi->pb.HFragments) / 2;
 	UVFragOffset = (UVRow * (cpi->pb.HFragments / 2)) + UVColumn;
 	UFragIndex = cpi->pb.YPlaneFragments + UVFragOffset;
-	VFragIndex = cpi->pb.YPlaneFragments + cpi->pb.UVPlaneFragments + 
+	VFragIndex = cpi->pb.YPlaneFragments + cpi->pb.UVPlaneFragments +
 	  UVFragOffset;
-	
-	
+
+
 	/**************************************************************
-	 Find the block choice with the lowest error 
+	 Find the block choice with the lowest error
 
 	 NOTE THAT if U or V is coded but no Y from a macro block then
 	 the mode will be CODE_INTER_NO_MV as this is the default
@@ -1170,93 +1170,93 @@ ogg_uint32_t PickModes(CP_INSTANCE *cpi,
 	 encoder and decoder at the start of each frame. */
 
 	BestError = HUGE_ERROR;
-	
+
 
 	/* Look at the intra coding error. */
 	MBIntraError = GetMBIntraError( cpi, YFragIndex, PixelsPerLine );
 	BestError = (BestError > MBIntraError) ? MBIntraError : BestError;
-                
+
 	/* Get the golden frame error */
-	MBGFError = GetMBInterError( cpi, cpi->ConvDestBuffer, 
-				     cpi->pb.GoldenFrame, YFragIndex, 
+	MBGFError = GetMBInterError( cpi, cpi->ConvDestBuffer,
+				     cpi->pb.GoldenFrame, YFragIndex,
 				     0, 0, PixelsPerLine );
 	BestError = (BestError > MBGFError) ? MBGFError : BestError;
-	
+
 	/* Calculate the 0,0 case. */
-	MBInterError = GetMBInterError( cpi, cpi->ConvDestBuffer, 
-					cpi->pb.LastFrameRecon, 
+	MBInterError = GetMBInterError( cpi, cpi->ConvDestBuffer,
+					cpi->pb.LastFrameRecon,
 					YFragIndex, 0, 0, PixelsPerLine );
 	BestError = (BestError > MBInterError) ? MBInterError : BestError;
-                
+
 	/* Measure error for last MV */
-	MBLastInterError =  GetMBInterError( cpi, cpi->ConvDestBuffer, 
-					     cpi->pb.LastFrameRecon, 
-					     YFragIndex, LastInterMVect.x, 
+	MBLastInterError =  GetMBInterError( cpi, cpi->ConvDestBuffer,
+					     cpi->pb.LastFrameRecon,
+					     YFragIndex, LastInterMVect.x,
 					     LastInterMVect.y, PixelsPerLine );
-	BestError = (BestError > MBLastInterError) ? 
+	BestError = (BestError > MBLastInterError) ?
 	  MBLastInterError : BestError;
-                
+
 	/* Measure error for prior last MV */
-	MBPriorLastInterError =  GetMBInterError( cpi, cpi->ConvDestBuffer, 
-						  cpi->pb.LastFrameRecon, 
-						  YFragIndex, 
-						  PriorLastInterMVect.x, 
-						  PriorLastInterMVect.y, 
+	MBPriorLastInterError =  GetMBInterError( cpi, cpi->ConvDestBuffer,
+						  cpi->pb.LastFrameRecon,
+						  YFragIndex,
+						  PriorLastInterMVect.x,
+						  PriorLastInterMVect.y,
 						  PixelsPerLine );
-	BestError = (BestError > MBPriorLastInterError) ? 
+	BestError = (BestError > MBPriorLastInterError) ?
 	  MBPriorLastInterError : BestError;
 
 	/* Temporarily force usage of no motionvector blocks */
 	MBInterMVError = HUGE_ERROR;
 	InterMVect.x = 0;  /* Set 0,0 motion vector */
 	InterMVect.y = 0;
-                
+
 	/* If the best error is above the required threshold search
            for a new inter MV */
 	if ( BestError > cpi->MinImprovementForNewMV ) {
 	  /* Use a mix of heirachical and exhaustive searches for
              quick mode. */
 	  if ( cpi->pb.info.quick_p ) {
-	    MBInterMVError = GetMBMVInterError( cpi, cpi->pb.LastFrameRecon, 
-						YFragIndex, PixelsPerLine, 
-						cpi->MVPixelOffsetY, 
+	    MBInterMVError = GetMBMVInterError( cpi, cpi->pb.LastFrameRecon,
+						YFragIndex, PixelsPerLine,
+						cpi->MVPixelOffsetY,
 						&InterMVect );
-	    
+
 	    /* If we still do not have a good match try an exhaustive
                MBMV search */
-	    if ( (MBInterMVError > cpi->ExhaustiveSearchThresh) && 
+	    if ( (MBInterMVError > cpi->ExhaustiveSearchThresh) &&
 		 (BestError > cpi->ExhaustiveSearchThresh) ) {
 
-	      MBInterMVExError = 
-		GetMBMVExhaustiveSearch( cpi, cpi->pb.LastFrameRecon, 
-					 YFragIndex, PixelsPerLine, 
+	      MBInterMVExError =
+		GetMBMVExhaustiveSearch( cpi, cpi->pb.LastFrameRecon,
+					 YFragIndex, PixelsPerLine,
 					 &InterMVectEx );
-                            
+
 	      /* Is the Variance measure for the EX search
                  better... If so then use it. */
 	      if ( MBInterMVExError < MBInterMVError ) {
-		MBInterMVError = MBInterMVExError;   
+		MBInterMVError = MBInterMVExError;
 		InterMVect.x = InterMVectEx.x;
 		InterMVect.y = InterMVectEx.y;
 	      }
 	    }
 	  }else{
 	    /* Use an exhaustive search */
-	    MBInterMVError = 
-	      GetMBMVExhaustiveSearch( cpi, cpi->pb.LastFrameRecon, 
-				       YFragIndex, PixelsPerLine, 
+	    MBInterMVError =
+	      GetMBMVExhaustiveSearch( cpi, cpi->pb.LastFrameRecon,
+				       YFragIndex, PixelsPerLine,
 				       &InterMVect );
 	  }
-                    
-	  
+
+
 	  /* Is the improvement, if any, good enough to justify a new MV */
-	  if ( (16 * MBInterMVError < (BestError * cpi->MVChangeFactor)) && 
+	  if ( (16 * MBInterMVError < (BestError * cpi->MVChangeFactor)) &&
 	       ((MBInterMVError + cpi->MinImprovementForNewMV) < BestError) ){
 	    BestError = MBInterMVError;
 	  }
-	  
+
 	}
-                
+
 	/* If the best error is still above the required threshold
            search for a golden frame MV */
 	MBGF_MVError = HUGE_ERROR;
@@ -1264,16 +1264,16 @@ ogg_uint32_t PickModes(CP_INSTANCE *cpi,
 	GFMVect.y = 0;
 	if ( BestError > cpi->MinImprovementForNewMV ) {
 	  /* Do an MV search in the golden reference frame */
-	  MBGF_MVError = GetMBMVInterError( cpi, cpi->pb.GoldenFrame, 
-					    YFragIndex, PixelsPerLine, 
+	  MBGF_MVError = GetMBMVInterError( cpi, cpi->pb.GoldenFrame,
+					    YFragIndex, PixelsPerLine,
 					    cpi->MVPixelOffsetY, &GFMVect );
-                    
+
 	  /* Measure error for last GFMV */
-	  LastMBGF_MVError =  GetMBInterError( cpi, cpi->ConvDestBuffer, 
-					       cpi->pb.GoldenFrame, 
-					       YFragIndex, LastGFMVect.x, 
+	  LastMBGF_MVError =  GetMBInterError( cpi, cpi->ConvDestBuffer,
+					       cpi->pb.GoldenFrame,
+					       YFragIndex, LastGFMVect.x,
 					       LastGFMVect.y, PixelsPerLine );
-                    
+
 	  /* Check against last GF motion vector and reset if the
              search has thrown a worse result. */
 	  if ( LastMBGF_MVError < MBGF_MVError ) {
@@ -1284,9 +1284,9 @@ ogg_uint32_t PickModes(CP_INSTANCE *cpi,
 	    LastGFMVect.x = GFMVect.x;
 	    LastGFMVect.y = GFMVect.y;
 	  }
-	  
+
 	  /* Is the improvement, if any, good enough to justify a new MV */
-	  if ( (16 * MBGF_MVError < (BestError * cpi->MVChangeFactor)) && 
+	  if ( (16 * MBGF_MVError < (BestError * cpi->MVChangeFactor)) &&
 	       ((MBGF_MVError + cpi->MinImprovementForNewMV) < BestError) ) {
 	    BestError = MBGF_MVError;
 	  }
@@ -1298,27 +1298,27 @@ ogg_uint32_t PickModes(CP_INSTANCE *cpi,
 	if ( BestError > cpi->FourMVThreshold ) {
 	  /* Get the 4MV error. */
 	  MBInterFOURMVError =
-	    GetFOURMVExhaustiveSearch( cpi, cpi->pb.LastFrameRecon, 
+	    GetFOURMVExhaustiveSearch( cpi, cpi->pb.LastFrameRecon,
 				       YFragIndex, PixelsPerLine, FourMVect );
-                    
+
 	  /* If the improvement is great enough then use the four MV mode */
-	  if ( ((MBInterFOURMVError + cpi->MinImprovementForFourMV) < 
-		BestError) && (16 * MBInterFOURMVError < 
+	  if ( ((MBInterFOURMVError + cpi->MinImprovementForFourMV) <
+		BestError) && (16 * MBInterFOURMVError <
 			       (BestError * cpi->FourMvChangeFactor))) {
 	    BestError = MBInterFOURMVError;
 	  }
 	}
-        
+
         /********************************************************
-	 end finding the best error 
+	 end finding the best error
 	 *******************************************************
-	
+
          Figure out what to do with the block we chose
-	
+
 	 Over-ride and force intra if error high and Intra error similar
 	 Now choose a mode based on lowest error (with bias towards no MV) */
 
-	if ( (BestError > cpi->InterTripOutThresh) && 
+	if ( (BestError > cpi->InterTripOutThresh) &&
 	     (10 * BestError > MBIntraError * 7 ) ) {
 	  cpi->MBCodingMode = CODE_INTRA;
 	  SetMBMotionVectorsAndMode(cpi,YFragIndex,UFragIndex,
@@ -1339,7 +1339,7 @@ ogg_uint32_t PickModes(CP_INSTANCE *cpi,
 	  cpi->MBCodingMode = CODE_INTER_PRIOR_LAST;
 	  SetMBMotionVectorsAndMode(cpi,YFragIndex,UFragIndex,
 				    VFragIndex,&PriorLastInterMVect);
-	  
+
 	  /* Swap the prior and last MV cases over */
 	  TmpMVect.x = PriorLastInterMVect.x;
 	  TmpMVect.y = PriorLastInterMVect.y;
@@ -1353,15 +1353,15 @@ ogg_uint32_t PickModes(CP_INSTANCE *cpi,
 	  cpi->MBCodingMode = CODE_INTER_PLUS_MV;
 	  SetMBMotionVectorsAndMode(cpi,YFragIndex,UFragIndex,
 				    VFragIndex,&InterMVect);
-	  
+
 	  /* Update Prior last mv with last mv */
 	  PriorLastInterMVect.x = LastInterMVect.x;
 	  PriorLastInterMVect.y = LastInterMVect.y;
-	  
+
 	  /* Note last inter MV for future use */
 	  LastInterMVect.x = InterMVect.x;
 	  LastInterMVect.y = InterMVect.y;
-	  
+
 	  AddMotionVector( cpi, &InterMVect);
 
 	} else if ( BestError == MBGF_MVError ) {
@@ -1369,75 +1369,75 @@ ogg_uint32_t PickModes(CP_INSTANCE *cpi,
 	  cpi->MBCodingMode = CODE_GOLDEN_MV;
 	  SetMBMotionVectorsAndMode(cpi,YFragIndex,UFragIndex,
 				    VFragIndex,&GFMVect);
-	  
+
 	  /* Note last inter GF MV for future use */
 	  LastGFMVect.x = GFMVect.x;
 	  LastGFMVect.y = GFMVect.y;
-                    
+
 	  AddMotionVector( cpi, &GFMVect);
 	} else if ( BestError == MBInterFOURMVError ) {
 	  cpi->MBCodingMode = CODE_INTER_FOURMV;
-	  
+
 	  /* Calculate the UV vectors as the average of the Y plane ones. */
 	  /* First .x component */
-	  FourMVect[4].x = FourMVect[0].x + FourMVect[1].x + 
+	  FourMVect[4].x = FourMVect[0].x + FourMVect[1].x +
 	    FourMVect[2].x + FourMVect[3].x;
 	  if ( FourMVect[4].x >= 0 )
 	    FourMVect[4].x = (FourMVect[4].x + 2) / 4;
 	  else
 	    FourMVect[4].x = (FourMVect[4].x - 2) / 4;
 	  FourMVect[5].x = FourMVect[4].x;
-	  
+
 	  /* Then .y component */
-	  FourMVect[4].y = FourMVect[0].y + FourMVect[1].y + 
+	  FourMVect[4].y = FourMVect[0].y + FourMVect[1].y +
 	    FourMVect[2].y + FourMVect[3].y;
 	  if ( FourMVect[4].y >= 0 )
 	    FourMVect[4].y = (FourMVect[4].y + 2) / 4;
 	  else
 	    FourMVect[4].y = (FourMVect[4].y - 2) / 4;
 	  FourMVect[5].y = FourMVect[4].y;
-	  
+
 	  SetFragMotionVectorAndMode(cpi, YFragIndex, &FourMVect[0]);
 	  SetFragMotionVectorAndMode(cpi, YFragIndex + 1, &FourMVect[1]);
-	  SetFragMotionVectorAndMode(cpi, YFragIndex + cpi->pb.HFragments, 
+	  SetFragMotionVectorAndMode(cpi, YFragIndex + cpi->pb.HFragments,
 				     &FourMVect[2]);
 	  SetFragMotionVectorAndMode(cpi, YFragIndex + cpi->pb.HFragments + 1,
 				     &FourMVect[3]);
 	  SetFragMotionVectorAndMode(cpi, UFragIndex, &FourMVect[4]);
 	  SetFragMotionVectorAndMode(cpi, VFragIndex, &FourMVect[5]);
-	  
+
 	  /* Note the four MVs values for current macro-block. */
 	  AddMotionVector( cpi, &FourMVect[0]);
 	  AddMotionVector( cpi, &FourMVect[1]);
 	  AddMotionVector( cpi, &FourMVect[2]);
 	  AddMotionVector( cpi, &FourMVect[3]);
-	  
+
 	  /* Update Prior last mv with last mv */
 	  PriorLastInterMVect.x = LastInterMVect.x;
 	  PriorLastInterMVect.y = LastInterMVect.y;
-	  
+
 	  /* Note last inter MV for future use */
 	  LastInterMVect.x = FourMVect[3].x;
 	  LastInterMVect.y = FourMVect[3].y;
-	  
+
 	} else {
 
 	  cpi->MBCodingMode = CODE_INTRA;
 	  SetMBMotionVectorsAndMode(cpi,YFragIndex,UFragIndex,
 				    VFragIndex,&ZeroVect);
 	}
-	
+
 
 	/* setting up mode specific block types
            *******************************************************/
-                
+
 	*InterError += (BestError>>8);
 	*IntraError += (MBIntraError>>8);
-	
-	
+
+
       }
       SB++;
-      
+
     }
   }
 
@@ -1451,7 +1451,7 @@ void WriteFrameHeader( CP_INSTANCE *cpi) {
 
   /* Output the frame type (base/key frame or inter frame) */
   oggpackB_write( opb, cpi->pb.FrameType, 1 );
-  
+
   /* Write out details of the current value of Q... variable resolution. */
   for ( i = 0; i < Q_TABLE_SIZE; i++ ) {
     if ( cpi->pb.ThisFrameQualityValue == cpi->pb.QThreshTable[i] ) {
@@ -1459,13 +1459,13 @@ void WriteFrameHeader( CP_INSTANCE *cpi) {
       break;
     }
   }
-   
+
   if ( i == Q_TABLE_SIZE ) {
     /* An invalid DCT value was specified.  */
     /*IssueWarning( "Invalid Q Multiplier" );*/
     oggpackB_write( opb, 31, 6 );
   }
-  
+
   /* we only support one Q index per frame */
   oggpackB_write( opb, 0, 1 );
 
@@ -1473,9 +1473,13 @@ void WriteFrameHeader( CP_INSTANCE *cpi) {
   if ( cpi->pb.FrameType == KEY_FRAME ) {
     /* Key frame type / method */
     oggpackB_write( opb, cpi->pb.KeyFrameType, 1 );
-    
+
     /* Spare configuration bits */
-    oggpackB_write( opb, 0, 2 );        
+    oggpackB_write( opb, 0, 2 );
   }
 }
+
+
+
+
 

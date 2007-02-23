@@ -32,5 +32,5 @@ TdolbyDecoderPage::TdolbyDecoderPage(TffdshowPageDec *Iparent,const TfilterIDFF 
    IDC_ED_DOLBYDECODER_DELAY,0,1000,IDFF_dolbyDecoderDelay,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
 }

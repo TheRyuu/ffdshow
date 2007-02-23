@@ -773,7 +773,7 @@ static inline void MC_avg4_16 (int height, uint8_t * dest, const uint8_t * ref,
     __m64 mask_one = _mm_set1_pi8(1);
     do {
             __m64 mm0,mm1,mm2,mm3,mm6,mm7;
- 
+
 	movq_m2r (*ref, mm0);
 	movq_m2r (*(ref+stride+1), mm1);
 	movq_r2r (mm0, mm7);

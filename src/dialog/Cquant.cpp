@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-              
+
 #include "stdafx.h"
 #include "Cquant.h"
 
@@ -44,9 +44,9 @@ bool TquantPage::enabled(void)
 }
 
 void TquantPage::cfg2dlg(void)
-{ 
+{
  type2dlg();
- 
+
  int is=deciE->isQuantControlActive();
 
  SetDlgItemInt(m_hwnd,IDC_ED_Q_I_MIN,cfgGet(IDFF_enc_q_i_min),FALSE);
@@ -68,7 +68,7 @@ void TquantPage::cfg2dlg(void)
   }
  static const int idIoffset[]={IDC_LBL_I_QUANTFACTOR,IDC_LBL_I_QUANTOFFSET,IDC_ED_I_QUANTFACTOR,IDC_ED_I_QUANTOFFSET,0};
  enable(lavc_codec(codecId) && codecId!=CODEC_ID_MJPEG,idIoffset);
- 
+
  SetDlgItemInt(m_hwnd,IDC_ED_Q_P_MIN,cfgGet(IDFF_enc_q_p_min),FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_Q_P_MAX,cfgGet(IDFF_enc_q_p_max),FALSE);
  static const int idPquants[]={IDC_LBL_Q_P,IDC_ED_Q_P_MIN,IDC_ED_Q_P_MAX,0};
@@ -84,7 +84,7 @@ void TquantPage::cfg2dlg(void)
  setText(IDC_ED_B_QUANTOFFSET,_l("%.2f"),float(cfgGet(IDFF_enc_b_quant_offset)/100.0));
  enable(is && isB,idBoffset);
  enable(is && isB,IDC_LBL_Q_B);
- 
+
  SetDlgItemInt(m_hwnd,IDC_ED_Q_MB_MIN,cfgGet(IDFF_enc_q_mb_min),FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_Q_MB_MAX,cfgGet(IDFF_enc_q_mb_max),FALSE);
  static const int idMBquants[]={IDC_LBL_Q_MB,IDC_ED_Q_MB_MIN,IDC_ED_Q_MB_MAX,0};
@@ -94,7 +94,7 @@ void TquantPage::cfg2dlg(void)
 
  setCheck(IDC_CHB_TRELLIS_QUANT,cfgGet(IDFF_enc_trellisquant));
  enable(sup_trellisQuant(codecId),IDC_CHB_TRELLIS_QUANT);
- 
+
  static const int idDCT[]={IDC_LBL_DCT_ALGO,IDC_CBX_DCT_ALGO,0};
  cbxSetCurSel(IDC_CBX_DCT_ALGO,cfgGet(IDFF_enc_dct_algo));
  enable(sup_lavcQuant(codecId),idDCT);
@@ -153,7 +153,7 @@ INT_PTR TquantPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_ED_Q_I_MIN:
       case IDC_ED_Q_I_MAX:
@@ -163,7 +163,7 @@ INT_PTR TquantPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       case IDC_ED_Q_B_MAX:
       case IDC_ED_Q_MB_MIN:
       case IDC_ED_Q_MB_MAX:
-       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText) 
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
         {
          HWND hed=GetDlgItem(m_hwnd,LOWORD(wParam));
          if (hed!=GetFocus()) return FALSE;
@@ -179,7 +179,7 @@ INT_PTR TquantPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
            case IDC_ED_Q_MB_MIN:eval(hed,parent->qmin,parent->qmax,IDFF_enc_q_mb_min);break;
            case IDC_ED_Q_MB_MAX:eval(hed,parent->qmin,parent->qmax,IDFF_enc_q_mb_max);break;
           }
-         return TRUE;  
+         return TRUE;
         }
        break;
      }
@@ -199,15 +199,15 @@ INT_PTR TquantPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        case IDC_ED_Q_MB_MIN:
        case IDC_ED_Q_MB_MAX:
         ok=eval(hwnd,parent->qmin,parent->qmax);break;
-       default:goto colorEnd; 
+       default:goto colorEnd;
       }
      if (!ok)
-      { 
+      {
        HDC dc=HDC(wParam);
        SetBkColor(dc,RGB(255,0,0));
-       return INT_PTR(getRed()); 
+       return INT_PTR(getRed());
       }
-     else return FALSE;  
+     else return FALSE;
      colorEnd:;
     }
   }
@@ -217,7 +217,7 @@ INT_PTR TquantPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 void TquantPage::translate(void)
 {
  TconfPageEnc::translate();
- 
+
  cbxTranslate(IDC_CBX_DCT_ALGO,dct_algos);
  cbxTranslate(IDC_CBX_QNS,qnss);
  cbxTranslate(IDC_CBX_QUANT_DCPRECISION,dcPrecisions);
@@ -243,7 +243,7 @@ TquantPage::TquantPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
    IDC_ED_QUANT_INTRA_BIAS,-512,512,IDFF_enc_intraQuantBias,NULL,
    0
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
  static const TbindEditReal<TquantPage> edReal[]=
   {
    IDC_ED_I_QUANTFACTOR,-31.0,31.0,IDFF_enc_i_quant_factor,100.0,NULL,
@@ -252,7 +252,7 @@ TquantPage::TquantPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
    IDC_ED_B_QUANTOFFSET,-31.0,31.0,IDFF_enc_b_quant_offset,100.0,NULL,
    0
   };
- bindEditReals(edReal); 
+ bindEditReals(edReal);
  static const TbindCombobox<TquantPage> cbx[]=
   {
    IDC_CBX_QUANT_TYPE,IDFF_enc_quant_type,BINDCBX_DATA,NULL,

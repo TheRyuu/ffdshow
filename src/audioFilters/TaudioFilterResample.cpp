@@ -40,9 +40,9 @@ bool TaudioFilterResampleBase::getOutputFmt(TsampleFormat &fmt,const TfilterSett
    const TresampleSettings *cfg=(const TresampleSettings*)cfg0;
    fmt.freq=cfg->freq;
    return true;
-  } 
+  }
  else
-  return false; 
+  return false;
 }
 
 //===================================== TaudioFilterResampleLavc =====================================
@@ -66,7 +66,7 @@ void TaudioFilterResampleLavc::done(void)
      delete ctxsFloat[i];
      ctxsFloat[i]=NULL;
     }
-  }  
+  }
 }
 
 template<class sample_t,class Tctx> void TaudioFilterResampleLavc::resample(TsampleFormat &fmt,sample_t* &samples,size_t &numsamples,const TresampleSettings *cfg,Tctx ctxs[])
@@ -78,7 +78,7 @@ template<class sample_t,class Tctx> void TaudioFilterResampleLavc::resample(Tsam
  sample_t *samples2=(sample_t*)alloc_buffer(fmt,lenout,buf);
 
  if (numsamples>0)
-  { 
+  {
    buffIn.alloc(sizeof(sample_t)*numsamples);
    buffOut.alloc(sizeof(sample_t)*lenout);
    int ret=0;
@@ -92,7 +92,7 @@ template<class sample_t,class Tctx> void TaudioFilterResampleLavc::resample(Tsam
       samples2[j*fmt.nchannels+ch]=((sample_t*)buffOut)[j];
     }
    numsamples=ret;
-  }  
+  }
  samples=samples2;
 }
 HRESULT TaudioFilterResampleLavc::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0)
@@ -117,7 +117,7 @@ HRESULT TaudioFilterResampleLavc::process(TfilterQueue::iterator it,TsampleForma
          case TresampleSettings::RESAMPLE_LAVC_HIGH   :ctxsInt[i]=new TreSampleContext<int16_t>(1,cfg->freq,fmt.freq,16         ,10,1,1.0,22);break;
          case TresampleSettings::RESAMPLE_LAVC_HIGHEST:ctxsInt[i]=new TreSampleContext<int16_t>(1,cfg->freq,fmt.freq,int(16*2.2),10,1,1.0,22);break;
         }
-     else   
+     else
       for (unsigned int i=0;i<fmt.nchannels;i++)
        switch (mode)
         {
@@ -130,7 +130,7 @@ HRESULT TaudioFilterResampleLavc::process(TfilterQueue::iterator it,TsampleForma
    if (ctxsInt[0])
     resample(fmt,(int16_t*&)samples,numsamples,cfg,ctxsInt);
    else
-    resample(fmt,(float*&)samples,numsamples,cfg,ctxsFloat);  
+    resample(fmt,(float*&)samples,numsamples,cfg,ctxsFloat);
   }
  return parent->deliverSamples(++it,fmt,samples,numsamples);
 }
@@ -157,7 +157,7 @@ TaudioFilterResampleSRC::~TaudioFilterResampleSRC()
 }
 void TaudioFilterResampleSRC::done(void)
 {
- if (dll->ok && state) src_delete(state);state=NULL; 
+ if (dll->ok && state) src_delete(state);state=NULL;
 }
 
 bool TaudioFilterResampleSRC::is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg)
@@ -195,19 +195,19 @@ HRESULT TaudioFilterResampleSRC::process(TfilterQueue::iterator it,TsampleFormat
        src.src_ratio=(double)cfg->freq/srcfreq;
        src.end_of_input=0;
        numsamples=0;
-       do 
+       do
         {
          int error=src_process(state,&src);
          if (error) break;
          numsamples+=src.output_frames_gen;
          if (src.end_of_input) break;
          src.data_in+=src.input_frames_used*fmt.nchannels;
-         src.input_frames-=src.input_frames_used; 
+         src.input_frames-=src.input_frames_used;
          src.data_out+=src.output_frames_gen*fmt.nchannels;
-        } while (src.input_frames>0); 
+        } while (src.input_frames>0);
       }
      samples=samples2;
-    } 
+    }
   }
  return parent->deliverSamples(++it,fmt,samples,numsamples);
 }

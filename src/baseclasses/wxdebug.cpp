@@ -2,7 +2,7 @@
 // File: WXDebug.cpp
 //
 // Desc: DirectShow base classes - implements ActiveX system debugging
-//       facilities.    
+//       facilities.
 //
 // Copyright (c) 1992-2002 Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------------------------
@@ -395,7 +395,7 @@ DWORD WINAPI MsgBoxThread(
         pmsg->szTitle,
         pmsg->szMessage,
         pmsg->dwFlags);
-    
+
     return 0;
 }
 
@@ -513,15 +513,15 @@ void WINAPI DbgBreakPoint(const TCHAR *pCondition,const TCHAR *pFileName,INT iLi
 
 void WINAPI DbgBreakPoint(const TCHAR *pFileName,INT iLine,const TCHAR* szFormatString,...)
 {
-    // A debug break point message can have at most 2000 characters if 
+    // A debug break point message can have at most 2000 characters if
     // ANSI or UNICODE characters are being used.  A debug break point message
-    // can have between 1000 and 2000 double byte characters in it.  If a 
+    // can have between 1000 and 2000 double byte characters in it.  If a
     // particular message needs more characters, then the value of this constant
     // should be increased.
     const DWORD MAX_BREAK_POINT_MESSAGE_SIZE = 2000;
 
     TCHAR szBreakPointMessage[MAX_BREAK_POINT_MESSAGE_SIZE];
-    
+
     const DWORD MAX_CHARS_IN_BREAK_POINT_MESSAGE = sizeof(szBreakPointMessage) / sizeof(TCHAR);
 
     va_list va;
@@ -530,7 +530,7 @@ void WINAPI DbgBreakPoint(const TCHAR *pFileName,INT iLine,const TCHAR* szFormat
     int nReturnValue = _vsntprintf( szBreakPointMessage, MAX_CHARS_IN_BREAK_POINT_MESSAGE, szFormatString, va );
 
     va_end(va);
-    
+
     // _vsnprintf() returns -1 if an error occurs.
     if( -1 == nReturnValue ) {
         DbgBreak( "ERROR in DbgBreakPoint().  The variable length debug message could not be displayed because _vsnprintf() failed." );
@@ -581,7 +581,7 @@ BOOL WINAPI DbgCheckModuleLevel(DWORD Type,DWORD Level)
 	// speed up unconditional output.
 	if (0==Level)
 	    return(TRUE);
-	
+
         for (LONG lKeyPos = 0;lKeyPos < iMAXLEVELS;lKeyPos++) {
             if (Type & Mask) {
                 if (Level <= (m_Levels[lKeyPos] & ~LOG_FORCIBLY_SET)) {
@@ -617,10 +617,10 @@ void WINAPI DbgSetAutoRefreshLevels(bool fAuto)
 }
 
 #ifdef UNICODE
-// 
+//
 // warning -- this function is implemented twice for ansi applications
 // linking to the unicode library
-// 
+//
 void WINAPI DbgLogInfo(DWORD Type,DWORD Level,const CHAR *pFormat,...)
 {
     /* Check the current level for this type combination */
@@ -744,13 +744,13 @@ void WINAPI DbgKernelAssert(const CHAR *pCondition,const CHAR *pFileName,INT iLi
    have their own copy of this code. It therefore helps if the module name is
    included on the output so that the offending code can be easily found */
 
-// 
+//
 // warning -- this function is implemented twice for ansi applications
 // linking to the unicode library
-// 
+//
 void WINAPI DbgLogInfo(DWORD Type,DWORD Level,const TCHAR *pFormat,...)
 {
-    
+
     /* Check the current level for this type combination */
 
     BOOL bAccept = DbgCheckModuleLevel(Type,Level);
@@ -977,4 +977,8 @@ void WINAPI DbgSetWaitTimeout(DWORD dwTimeout)
 #endif /* DEBUG */
 
 /*  CDisp class - display our data types */
+
+
+
+
 

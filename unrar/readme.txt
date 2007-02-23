@@ -18,7 +18,7 @@
    It is important to provide 1 byte alignment for structures
    in model.hpp. Now it contains '#pragma pack(1)' directive,
    but your compiler may require something else. Though Unrar
-   should work with other model.hpp alignments, its memory 
+   should work with other model.hpp alignments, its memory
    requirements may increase significantly. Alignment in other
    modules is not important.
 

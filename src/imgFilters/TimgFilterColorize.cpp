@@ -24,11 +24,11 @@
 
 TimgFilterColorize::TimgFilterColorize(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
-#ifdef __SSE2__ 
+#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
-  colorizeFc=&TimgFilterColorize::colorize<Tsse2>; 
- else 
-#endif 
+  colorizeFc=&TimgFilterColorize::colorize<Tsse2>;
+ else
+#endif
   colorizeFc=&TimgFilterColorize::colorize<Tmmx>;
 }
 
@@ -41,7 +41,7 @@ bool TimgFilterColorize::is(const TffPictBase &pict,const TfilterSettingsVideo *
 template<class _mm> void TimgFilterColorize::colorize(TffPict &pict,const TpictPropSettings *cfg,const YUVcolor &c0,const int c[3])
 {
  unsigned char *dst[4];
- typename _mm::__m m0=_mm::setzero_si64(); 
+ typename _mm::__m m0=_mm::setzero_si64();
  if (!cfg->colorizeChromaonly)
   {
    getCurNext(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,COPYMODE_DEF,&dst[0],NULL,NULL,NULL);
@@ -59,7 +59,7 @@ template<class _mm> void TimgFilterColorize::colorize(TffPict &pict,const TpictP
      for (;x<(int)dx2[0];x++)
       dst[0][x]=uint8_t(((255-strenght)*dst[0][x]+strenght*c[0])/256);
     }
-  }   
+  }
  getCurNext(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,COPYMODE_DEF,NULL,&dst[1],&dst[2],NULL);
  int strenght=std::min(cfg->colorizeStrength,253);
  typename _mm::__m strenght64_255=_mm::set1_pi16((short)(255-strenght));
@@ -76,7 +76,7 @@ template<class _mm> void TimgFilterColorize::colorize(TffPict &pict,const TpictP
      for (;x<(int)dx2[i];x++)
       dst[i][x]=uint8_t(((255-strenght)*(dst[i][x]-127)+strenght*c[i])/256+127);
     }
-  }   
+  }
  _mm::empty();
 }
 
@@ -88,6 +88,6 @@ HRESULT TimgFilterColorize::process(TfilterQueue::iterator it,TffPict &pict,cons
    init(pict,cfg->full,cfg->half);
    YUVcolor c0=cfg->colorizeColor;int c[3]={c0.Y,c0.U*2,c0.V*2};
    (this->*colorizeFc)(pict,cfg,c0,c);
-  } 
+  }
  return parent->deliverSample(++it,pict);
 }

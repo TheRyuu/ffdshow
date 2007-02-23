@@ -31,7 +31,7 @@ private:
  Trect rd;
  int codecIndex;
  mutable char_t codecName[100];
-protected: 
+protected:
  virtual LRESULT beginCompress(int cfgcomode,int csp,const Trect &r);
  virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);
 public:
@@ -39,7 +39,7 @@ public:
  virtual const char_t* getName(void) const;
 
  virtual void getCompressColorspaces(Tcsps &csps,unsigned int outDx,unsigned int outDy);
- virtual bool supExtradata(void) {return true;} 
+ virtual bool supExtradata(void) {return true;}
  virtual bool getExtradata(const void* *ptr,size_t *len);
  virtual HRESULT compress(const TffPict &pict,TencFrameParams &params);
  virtual void end(void);

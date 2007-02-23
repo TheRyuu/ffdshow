@@ -42,7 +42,7 @@ TdeinterlacePageKernel::TdeinterlacePageKernel(Twindow *parent):TdeinterlacePane
    IDC_TBR_KERNELDEINT_THRESHOLD,IDFF_kernelDeintThreshold,&TdeinterlacePageKernel::cfg2dlg,
    0
   };
- bindHtracks(htbr); 
+ bindHtracks(htbr);
  createDialog(dialogId,parent->m_hwnd);
 }
 TdeinterlacePageKernel::~TdeinterlacePageKernel()

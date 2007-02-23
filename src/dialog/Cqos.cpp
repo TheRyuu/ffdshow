@@ -26,7 +26,7 @@ void TqosPage::init(void)
  const TvideoCodecDec *movie;deciV->getMovieSource(&movie);
  int source=movie?movie->getType():0;
  islavc=((filterMode&IDFF_FILTERMODE_PLAYER) && source==IDFF_MOVIE_LAVC) || (filterMode&(IDFF_FILTERMODE_CONFIG|IDFF_FILTERMODE_VFW));
- static const int idLavc[]={IDC_CHB_H264_SKIP_ON_DELAY,IDC_ED_H264SKIP_ON_DELAY_TIME,IDC_CMB_H264_SKIP_METHOD,0}; 
+ static const int idLavc[]={IDC_CHB_H264_SKIP_ON_DELAY,IDC_ED_H264SKIP_ON_DELAY_TIME,IDC_CMB_H264_SKIP_METHOD,0};
  enable(islavc,idLavc);
 }
 
@@ -34,11 +34,11 @@ void TmiscPage::cfg2dlg(void)
 {
  if (islavc)
   {
-   setCheck(IDC_CHB_H264_SKIP_ON_DELAY,cfgGet(IDFF_h264skipOnDelay)); 
+   setCheck(IDC_CHB_H264_SKIP_ON_DELAY,cfgGet(IDFF_h264skipOnDelay));
    SetDlgItemInt(m_hwnd,IDC_ED_H264SKIP_ON_DELAY_TIME,cfgGet(IDFF_h264skipOnDelayTime),FALSE);
    cbxSetCurSel(IDC_CMB_H264_SKIP_METHOD,cfgGet(IDFF_fastH264));
   }
- setCheck(IDC_CHB_DROP_ON_DELAY,cfgGet(IDFF_dropOnDelay)); 
+ setCheck(IDC_CHB_DROP_ON_DELAY,cfgGet(IDFF_dropOnDelay));
  SetDlgItemInt(m_hwnd,IDC_ED_DROP_ON_DELAY_TIME,cfgGet(IDFF_dropOnDelayTime),FALSE);
 }
 
@@ -60,12 +60,12 @@ bool TmiscPage::reset(bool testonly)
    deci->resetParam(IDFF_h264skipOnDelay);
    deci->resetParam(IDFF_h264skipOnDelayTime);
    deci->resetParam(IDFF_fastH264);
-  } 
+  }
  return true;
 }
 
 void TmiscPage::translate(void)
-{ 
+{
  TconfPageBase::translate();
 }
 
@@ -95,7 +95,7 @@ TqosPage::TqosPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
    IDC_ED_H264SKIP_ON_DELAY_TIME,0,20000,IDFF_h264skipOnDelayTime,NULL,
    0,NULL,NULL
   };
- bindEditInts(edInt); 
+ bindEditInts(edInt);
  static const TbindCombobox<TmiscPage> cbx[]=
   {
    IDC_CMB_H264_SKIP_METHOD,IDFF_fastH264,BINDCBX_SEL,NULL,

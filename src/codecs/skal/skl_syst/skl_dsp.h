@@ -41,7 +41,7 @@ struct SKL_YUV_DSP
   SKL_TO_YUV_FUNC RGB24_TO_YUV;
   SKL_TO_RGB_FUNC YUV_TO_RGB24;
   SKL_TO_YUV_FUNC RGB32_TO_YUV;
-  SKL_TO_RGB_FUNC YUV_TO_RGB32;  
+  SKL_TO_RGB_FUNC YUV_TO_RGB32;
 };
 
 extern SKL_EXPORT int Skl_Init_YUV_DSP(SKL_YUV_DSP *Dsp, SKL_CPU_FEATURE Cpu = SKL_CPU_DETECT );
@@ -158,7 +158,7 @@ struct SKL_QUANT_DSP
 };
 
 extern int Skl_Init_Quant_DSP(SKL_QUANT_DSP *Dsp,
-                              SKL_CPU_FEATURE Cpu = SKL_CPU_DETECT, 
+                              SKL_CPU_FEATURE Cpu = SKL_CPU_DETECT,
                               int Quant_Type=1  /* 0=H263, 1=MPEG4, 2=MPEG2 */ );
 
 //////////////////////////////////////////////////////////
@@ -250,7 +250,7 @@ struct SKL_MB_DSP
   const SKL_MB_FUNCS *Copy[2]; // index = rounding (0/1)
   const SKL_MB_FUNCS  *Add;    // Rounding is always 0 for addition (B-frames)
 
-  SKL_UINT32 (*SAD_16x7_Frame)(const SKL_INT16 *Src); // self SAD on DCT coeffs    
+  SKL_UINT32 (*SAD_16x7_Frame)(const SKL_INT16 *Src); // self SAD on DCT coeffs
   SKL_UINT32 (*SAD_16x7_Field)(const SKL_INT16 *Src); // Src[4*64]
   void (*Reorder_Frame_16x16)(SKL_INT16 *Src);        // frame to field
 
@@ -278,7 +278,7 @@ struct SKL_GMC_DSP
   const char *Name;
   SKL_DSP_SWITCH Switch_Off;
   void (*Predict_16x16)(const SKL_GMC_DSP * const This,
-                        SKL_BYTE *Dst, const SKL_BYTE *Src, int BpS, 
+                        SKL_BYTE *Dst, const SKL_BYTE *Src, int BpS,
                         int x, int y, int Rounder);
   void (*Predict_8x8)(const SKL_GMC_DSP * const This,
                       SKL_BYTE *uDst, const SKL_BYTE *uSrc, SKL_SAFE_INT uv_Coloc,
@@ -294,7 +294,7 @@ struct SKL_GMC_DSP
   int Uo, Vo, Uco, Vco;
 
   void Setup(int Width, int Height, const int MVs[][2], int Nb, int Accuracy);
-  void Get_Average_MV(int MV[2], int x, int y, int QPel) const;  
+  void Get_Average_MV(int MV[2], int x, int y, int QPel) const;
 };
 
 extern int Skl_Init_GMC_DSP(SKL_GMC_DSP *Dsp, SKL_CPU_FEATURE Cpu = SKL_CPU_DETECT);

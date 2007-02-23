@@ -7,7 +7,7 @@ struct Twinamp2settings :TfilterSettingsAudio
 {
 private:
  static const TfilterIDFF idffs;
-public: 
+public:
  Twinamp2settings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  char_t flnm[MAX_PATH];
  char_t modulename[256];

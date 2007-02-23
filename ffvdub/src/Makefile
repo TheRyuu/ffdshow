@@ -1,5 +1,5 @@
 CFLAGS+= -I. -I../src -I../include
-       
+
 SRCS=combase.cpp ffvdub.cpp Tffvdub.cpp TpropertyPageSite.cpp base64.cpp
 
 SRCS_C=bzip2/blocksort.c bzip2/bzlib.c  bzip2/compress.c bzip2/crctable.c \
@@ -17,7 +17,7 @@ include ../../src/makefile_c.inc
 
 .all: $(SLIB)
 
-clean: 
+clean:
 	rm -f *.o *~ $(SLIB) bzip2/*.o
 
 #

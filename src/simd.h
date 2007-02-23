@@ -12,7 +12,7 @@
  static __forceinline void instruction(__m64 &dst,const __m64   &src) {dst=function(dst,          src);} \
  static __forceinline void instruction(__m64 &dst,const void    *src) {dst=function(dst,*(__m64*) src);} \
  static __forceinline void instruction(__m64 &dst,const __int64 &src) {dst=function(dst,*(__m64*)&src);}
- 
+
 #define SSE2I_INSTRUCTION(instruction,function) \
  static __forceinline void instruction(__m128i &dst,const __m128i &src) {dst=function(dst,           src);} \
  static __forceinline void instruction(__m128i &dst,const void    *src) {dst=function(dst,*(__m128i*)src);}
@@ -84,7 +84,7 @@ static __forceinline void movdqa(__m128i &dst,const void * src) {dst=_mm_load_si
 static __forceinline void movdqa(void *dst,const __m128i &src) {_mm_store_si128((__m128i*)dst,src);}
 static __forceinline void movntdq(void *dst,const __m128i &src) {_mm_stream_si128((__m128i*)dst,src);}
 static __forceinline void movdq2q(__m64 &dst,const __m128i &src) {dst=_mm_movepi64_pi64(src);}
- 
+
 static __forceinline void psrlw(__m128i &dst,int i) {dst=_mm_srli_epi16(dst,i);}
 static __forceinline void psrlq(__m128i &dst,int i) {dst=_mm_srli_epi64(dst,i);}
 static __forceinline void psrad(__m128i &dst,int i) {dst=_mm_srai_epi32(dst,i);}
@@ -116,9 +116,9 @@ static __forceinline void movhpd(void *dst,const __m128d &src) {_mm_storeh_pd((d
  static __forceinline void movlps(void *dst,const __m128i &src) {_mm_storel_pi((__m64*)dst,_mm_castsi128_ps(src));}
  static __forceinline void movhps(__m128i &dst,const void *src) {dst=_mm_castps_si128(_mm_loadh_pi(_mm_castsi128_ps(dst),(const __m64*)src));}
  static __forceinline void movhps(void *dst,const __m128i &src) {_mm_storeh_pi((__m64*)dst,_mm_castsi128_ps(src));}
- 
+
  static __forceinline void movlhps(__m128i &dst,const __m128i &src) {dst=_mm_castps_si128(_mm_movelh_ps(_mm_castsi128_ps(dst),_mm_castsi128_ps(src)));}
-#else 
+#else
  static __forceinline __m128i _mm_castps_si128(__m128 &src) {return (__m128i&)src;}
  static __forceinline void movlpd(__m128i &dst,const void *src) {(__m128d&)dst=_mm_loadl_pd((__m128d&)dst,(double*)src);}
  static __forceinline void movhpd(__m128i &dst,const void *src) {(__m128d&)dst=_mm_loadh_pd((__m128d&)dst,(double*)src);}
@@ -129,9 +129,9 @@ static __forceinline void movhpd(void *dst,const __m128d &src) {_mm_storeh_pd((d
  static __forceinline void movlps(void *dst,const __m128i &src) {_mm_storel_pi((__m64*)dst,(const __m128&)src);}
  static __forceinline void movhps(__m128i &dst,const void *src) {(__m128&)dst=_mm_loadh_pi((__m128&)dst,(const __m64*)src);}
  static __forceinline void movhps(void *dst,const __m128i &src) {_mm_storeh_pi((__m64*)dst,(const __m128&)src);}
- 
+
  static __forceinline void movlhps(__m128i &dst,const __m128i &src) {(__m128&)dst=_mm_movelh_ps((__m128&)dst,(const __m128&)src);}
-#endif 
+#endif
 
 #endif //__SSE2__
 
@@ -248,7 +248,7 @@ struct Tmmx
   }
  static __forceinline void sfence(void)
   {
-  } 
+  }
  static __forceinline void movntq(void *dst,const __m64 &src)
   {
    movq(dst,src);
@@ -283,7 +283,7 @@ struct Tmmx
   {
    __m64 mm2;
    static const __int64 qwLowWord=0x000000000000FFFF;
-   pand    (mm3, qwLowWord);          // mm3 = same limited to low word 
+   pand    (mm3, qwLowWord);          // mm3 = same limited to low word
    movq    (mm2, mm3);              // mm2 = same
    psllq   (mm3, 16 );              // mm3 = moved to second word
    por     (mm2, mm3);              // mm2 = copied to first and second words
@@ -291,7 +291,7 @@ struct Tmmx
    psllq   (mm3, 32 );              // mm3 = moved to third and fourth words
    por     (mm2, mm3);              // mm2 = low word copied to all four words
    return mm2;
-  } 
+  }
  static __forceinline __m64 _mm_shuffle_pi16_1(const __m64 &src)
   {
    static const __int64 const1=0x00000000FFFF0000LL;
@@ -299,7 +299,7 @@ struct Tmmx
    __m64 w0=_mm_srli_si64(_mm_and_si64(src,*(__m64*)&const1),16);
    __m64 w1=_mm_and_si64(src,*(__m64*)&const2);
    return _mm_or_si64(_mm_or_si64(_mm_or_si64(_mm_slli_si64(w1,48),_mm_slli_si64(w1,32)),_mm_slli_si64(w1,16)),w0);
-  } 
+  }
  static __forceinline __m64 _mm_shuffle_pi16_14(const __m64 &src)
   {
    static const __int64 const1=0x000000000000FFFFLL;
@@ -307,7 +307,7 @@ struct Tmmx
    __m64 w34=_mm_and_si64(src,*(__m64*)&const1);
    __m64 w12=_mm_srli_si64(_mm_and_si64(src,*(__m64*)&const2),32);
    return _mm_or_si64(w12,_mm_or_si64(_mm_slli_si64(w34,32),_mm_slli_si64(w34,48)));
-  } 
+  }
  static __forceinline __m64 _mm_shuffle_pi16_x50(const __m64 &src)
   {
    static const __int64 const1=0x00000000ffff0000LL;
@@ -315,7 +315,7 @@ struct Tmmx
    __m64 w3=_mm_and_si64(src,*(__m64*)&const1);
    __m64 w4=_mm_and_si64(src,*(__m64*)&const2);
    return _mm_or_si64( _mm_or_si64(_mm_slli_si64(w3,32),_mm_slli_si64(w3,16)) , _mm_or_si64(_mm_slli_si64(w4,16),w4));
-  } 
+  }
  static __forceinline void psadbw(__m64 &mm0,const __m64 &SourceMM)
   {
    __m64 mm1;
@@ -362,7 +362,7 @@ struct Tmmx
    pmaxsw(mm0,mm2);
    return mm0;
   }
- MMX_INSTRUCTIONS 
+ MMX_INSTRUCTIONS
 };
 
 //===================================== MMXEXT =====================================
@@ -413,7 +413,7 @@ struct Tmmxext
  static __forceinline void sfence(void)
   {
    _mm_sfence();
-  } 
+  }
  static __forceinline void movntq(void *dst,const __m64 &src)
   {
    _mm_stream_pi((__m64*)dst,src);
@@ -440,20 +440,20 @@ struct Tmmxext
   }
  static __forceinline __m64 _mm_shuffle_pi16_0(const __m64 &src)
   {
-   return _mm_shuffle_pi16(src,0); 
-  } 
+   return _mm_shuffle_pi16(src,0);
+  }
  static __forceinline __m64 _mm_shuffle_pi16_1(const __m64 &src)
   {
-   return _mm_shuffle_pi16(src,1); 
-  } 
+   return _mm_shuffle_pi16(src,1);
+  }
  static __forceinline __m64 _mm_shuffle_pi16_14(const __m64 &src)
   {
-   return _mm_shuffle_pi16(src,(3 << 2) + 2); 
-  } 
+   return _mm_shuffle_pi16(src,(3 << 2) + 2);
+  }
  static __forceinline __m64 _mm_shuffle_pi16_x50(const __m64 &src)
   {
-   return _mm_shuffle_pi16(src,0x50); 
-  } 
+   return _mm_shuffle_pi16(src,0x50);
+  }
  static __forceinline void psadbw(__m64 &mm3,const __m64 &mm2)
   {
    mm3=_mm_sad_pu8(mm3,mm2);
@@ -478,8 +478,8 @@ struct Tmmxext
   {
    dst=_mm_max_pi16(dst,src);
   }
- 
- MMX_INSTRUCTIONS 
+
+ MMX_INSTRUCTIONS
 };
 
 static __forceinline __m64 _mm_absdif_u8(__m64 mm1,__m64 mm2)
@@ -545,16 +545,16 @@ struct Tsse2
  static __forceinline void storeU(void *ptr,const __m &m) { _mm_storeu_si128((__m*)ptr,m);}
  static __forceinline __m loadU(const void *ptr) {return _mm_loadu_si128((const __m*)ptr);}
  static __forceinline void empty(void) {/*_mm_empty();*/}
- 
+
  static __forceinline void psadbw(__m &mm3,const __m &mm2) {mm3=_mm_sad_epu8(mm3,mm2);}
  static __forceinline void prefetchnta(const void *ptr) {_mm_prefetch((const char*)ptr,_MM_HINT_NTA);}
- static __forceinline __m shuffle_pi16_0(const __m &mm0) {return _mm_shufflehi_epi16(_mm_shufflelo_epi16(mm0,0),0);} 
+ static __forceinline __m shuffle_pi16_0(const __m &mm0) {return _mm_shufflehi_epi16(_mm_shufflelo_epi16(mm0,0),0);}
  static __forceinline void pmaxub(__m &mmr1,const __m &mmr2) {mmr1=_mm_max_epu8(mmr1,mmr2);}
  static __forceinline void pmulhuw(__m &mmr1,const __m &mmr2) {mmr1=_mm_mulhi_epu16(mmr1,mmr2);}
  static __forceinline void movntq(void *dst,const __m &src) {_mm_stream_si128((__m128i*)dst,src);}
  static __forceinline void pavgb(__m &mmr1,const __m &mmr2) {mmr1=_mm_avg_epu8(mmr1,mmr2);}
  static __forceinline void pavgb(__m &mmr1,const void *mmr2) {mmr1=_mm_avg_epu8(mmr1,*(__m*)mmr2);}
- static __forceinline void sfence(void) {_mm_sfence();} 
+ static __forceinline void sfence(void) {_mm_sfence();}
 };
 #endif //__SSE2__
 

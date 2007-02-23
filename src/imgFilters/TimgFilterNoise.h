@@ -51,11 +51,11 @@ private:
      MAX_NOISE=4096,
      MAX_SHIFT=1024,
      MAX_RES=MAX_NOISE-MAX_SHIFT
-    }; 
+    };
    static int RAND_N(int range)
     {
      return int((double)range*rand()/(RAND_MAX+1.0));
-    } 
+    }
    int8_t *noise;
    int8_t *prev_shift[MAX_RES][3];
    int nonTempRandShift[MAX_RES];
@@ -79,7 +79,7 @@ private:
    bool boolean_test(void) const {return !!noise;}
   } y,uv;
  TnoiseSettings oldnoise;
- int oldcsp;void doneChroma(void); 
+ int oldcsp;void doneChroma(void);
 protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK_YUV_PLANAR;}

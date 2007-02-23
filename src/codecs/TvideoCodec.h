@@ -21,7 +21,7 @@ public:
  TvideoCodec(IffdshowBase *Ideci);
  virtual ~TvideoCodec();
  bool ok;
- 
+
  struct CAPS
   {
    enum
@@ -56,10 +56,10 @@ public:
 
  unsigned int quantsDx,quantsStride,quantsDy,quantBytes,quantType;
  void *quants;
- struct 
+ struct
   {
    int deblocking_filter,slice_alpha_c0_offset,slice_beta_offset;
-  } h264; 
+  } h264;
  uint16_t *intra_matrix,*inter_matrix,*intra_matrix_luma,*intra_matrix_chroma,*inter_matrix_luma,*inter_matrix_chroma;
 
  float calcMeanQuant(void);
@@ -114,7 +114,7 @@ public:
    BYTE *ptr;
    return sample && sample->GetPointer(&ptr)==S_OK?ptr:NULL;
   }
- long size(void) {return sample?sample->GetSize():0;} 
+ long size(void) {return sample?sample->GetSize():0;}
 };
 
 DECLARE_INTERFACE(IencVideoSink)

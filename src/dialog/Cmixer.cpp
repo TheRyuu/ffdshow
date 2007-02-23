@@ -47,10 +47,10 @@ void TmixerPage::init(void)
  onNewFilter();
  for (int i=0;i<6*6;i++)
   ((TwidgetMixer*)Twidget::getDlgItem(GetDlgItem(m_hwnd,idcs[i])))->idff=idffs[i];
- tbrSetRange(IDC_TBR_HEADPHONE_DIM,0,100); 
- tbrSetRange(IDC_TBR_MIXER_CLEV  ,0,300); 
- tbrSetRange(IDC_TBR_MIXER_SLEV  ,0,300); 
- tbrSetRange(IDC_TBR_MIXER_LFELEV,0,300); 
+ tbrSetRange(IDC_TBR_HEADPHONE_DIM,0,100);
+ tbrSetRange(IDC_TBR_MIXER_CLEV  ,0,300);
+ tbrSetRange(IDC_TBR_MIXER_SLEV  ,0,300);
+ tbrSetRange(IDC_TBR_MIXER_LFELEV,0,300);
  cbxSetDroppedWidth(IDC_CBX_MIXER_OUT,200);
 }
 
@@ -64,12 +64,12 @@ void TmixerPage::cfg2dlg(void)
    cbxSetDataCurSel(IDC_CBX_MIXER_OUT,lfe?nameIndex:out);
    setCheck(IDC_CHB_MIXER_LFE,lfe);
    enable(true,IDC_CHB_MIXER_LFE);
-  } 
+  }
  else
   {
    cbxSetDataCurSel(IDC_CBX_MIXER_OUT,out);
    enable(false,IDC_CHB_MIXER_LFE,false);
-  } 
+  }
  static const int mixer[]={IDC_CHB_MIXER_CUSTOM,IDC_CHB_MIXER_NORMALIZE_MATRIX,IDC_CHB_MIXER_VOICE_CONTROL,IDC_CHB_MIXER_EXPAND_STEREO,IDC_LBL_MIXERMATRIX_L,IDC_LBL_MIXERMATRIX_R,IDC_LBL_MIXERMATRIX_C,IDC_LBL_MIXERMATRIX_SL,IDC_LBL_MIXERMATRIX_SR,IDC_LBL_MIXERMATRIX_LFE,IDC_LBL_MIXERMATRIX_L1,IDC_LBL_MIXERMATRIX_R1,IDC_LBL_MIXERMATRIX_C1,IDC_LBL_MIXERMATRIX_SL1,IDC_LBL_MIXERMATRIX_SR1,IDC_LBL_MIXERMATRIX_LFE1,IDC_LBL_MIXER_CLEV,IDC_TBR_MIXER_CLEV,IDC_LBL_MIXER_SLEV,IDC_TBR_MIXER_SLEV,IDC_LBL_MIXER_LFELEV,IDC_TBR_MIXER_LFELEV,IDC_LBL_MIXER_CLEV2,IDC_LBL_MIXER_SLEV2,IDC_LBL_MIXER_LFELEV2,0};
  static const int headphone[]={IDC_LBL_HEADPHONE_DIM,IDC_TBR_HEADPHONE_DIM,0};
  bool head=out==17 || out==18;
@@ -79,12 +79,12 @@ void TmixerPage::cfg2dlg(void)
   {
    if (out==17)
     tbrSet(IDC_TBR_HEADPHONE_DIM,cfgGet(IDFF_headphone_dim));
-  } 
- else 
-  { 
+  }
+ else
+  {
    setCheck(IDC_CHB_MIXER_NORMALIZE_MATRIX,cfgGet(IDFF_normalizeMatrix));
    matrix2dlg();
-  } 
+  }
 }
 void TmixerPage::matrix2dlg(void)
 {
@@ -130,7 +130,7 @@ bool TmixerPage::isEdit(int idc)
  for (int i=0;i<6*6;i++)
   if (idc==idcs[i])
    return true;
- return false;  
+ return false;
 }
 
 void TmixerPage::onNewFilter(void)
@@ -175,10 +175,10 @@ INT_PTR TmixerPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         int valI;
         eval(hed,-4.0f,4.0f,&valI,100000.0f);
         cfgSet(idff,valI);
-       } 
-      return TRUE; 
+       }
+      return TRUE;
      }
-    else 
+    else
      switch (LOWORD(wParam))
       {
        case IDC_CHB_MIXER_LFE:
@@ -199,12 +199,12 @@ INT_PTR TmixerPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
      if (!isEdit(getId(hwnd))) break;
      bool ok=eval(hwnd,-4.0f,4.0f);
      if (!ok)
-      { 
+      {
        HDC dc=HDC(wParam);
        SetBkColor(dc,RGB(255,0,0));
-       return INT_PTR(getRed()); 
+       return INT_PTR(getRed());
       }
-     else return FALSE;  
+     else return FALSE;
     }
   }
  return TconfPageDecAudio::msgProc(uMsg,wParam,lParam);
@@ -216,11 +216,11 @@ Twidget* TmixerPage::createDlgItem(int id,HWND h)
  if (stricmp(cls,_l("EDIT"))==0)
   return new TwidgetMixer(h,this);
  else
-  return TconfPageDecAudio::createDlgItem(id,h); 
-} 
+  return TconfPageDecAudio::createDlgItem(id,h);
+}
 
 void TmixerPage::translate(void)
-{ 
+{
  TconfPageDecAudio::translate();
 
  static const int order[]={0,1,2,3,4,5,6, 7, 8, 9,10,11,12,13,14,15,19,20,16,17,18};

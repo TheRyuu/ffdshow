@@ -39,9 +39,9 @@ ThtiPage::~ThtiPage()
   {
    if ((*page)->m_hwnd) DestroyWindow((*page)->m_hwnd);
    delete *page;
-  } 
+  }
 }
-                                                                 
+
 //================================= TffdshowPageBase ===============================
 TffdshowPageBase::TffdshowPageBase(LPUNKNOWN pUnk,HRESULT *phr,const wchar_t *ItitleW,const char_t *name,int IdialogId,int Iresstr):
  CUnknown(name,pUnk),
@@ -88,7 +88,7 @@ STDMETHODIMP TffdshowPageBase::GetPageInfo(LPPROPPAGEINFO pPageInfo)
   {
    pPageInfo->size.cx=340;
    pPageInfo->size.cy=150;
-  } 
+  }
  return S_OK;
 }
 
@@ -96,7 +96,7 @@ void TffdshowPageBase::selectPage(TconfPageBase *Ipage)
 {
  if (!Ipage->m_hwnd) Ipage->createWindow();
  bool pageChanged=page!=Ipage;
- if (page && pageChanged) 
+ if (page && pageChanged)
   if (Tconfig::winNT)
    ShowWindow(page->m_hwnd,SW_HIDE);
   else
@@ -125,12 +125,12 @@ ThtiPage* TffdshowPageBase::addTI(TVINSERTSTRUCT *tvis,TconfPageBase *page)
    HTREEITEM hti=TreeView_InsertItem(htv,tvis);
    page->hti=hti;
    htiPage->hti=hti;
-  } 
+  }
  else
   {
    page->hti=NULL;
    htiPage->hti=NULL;
-  }  
+  }
  return htiPage;
 }
 ThtiPage* TffdshowPageBase::addTI(TVINSERTSTRUCT *tvis,const TconfPages &pages,int *Iid)
@@ -143,12 +143,12 @@ ThtiPage* TffdshowPageBase::addTI(TVINSERTSTRUCT *tvis,const TconfPages &pages,i
    tvis->item.pszText=LPTSTR(pages[0]->dialogName());
    tvis->item.iImage=tvis->item.iSelectedImage=0;
    hti=TreeView_InsertItem(htv,tvis);
-  } 
+  }
  else
-  hti=NULL; 
+  hti=NULL;
  for (TconfPages::iterator i=htiPage->begin();i!=htiPage->end();i++)
   (*i)->hti=hti;
- htiPage->hti=hti; 
+ htiPage->hti=hti;
  return htiPage;
 }
 
@@ -176,7 +176,7 @@ HWND TffdshowPageBase::findParentDlg(void)
 void TffdshowPageBase::translate(void)
 {
  Twindow::translate();
- for (ThtiPages::const_iterator hp=htiPages.begin();hp!=htiPages.end();hp++) 
+ for (ThtiPages::const_iterator hp=htiPages.begin();hp!=htiPages.end();hp++)
   for (TconfPages::const_iterator i=(*hp)->begin();i!=(*hp)->end();i++)
    {
     if ((*i)->m_hwnd) (*i)->translate();
@@ -186,12 +186,12 @@ void TffdshowPageBase::translate(void)
     ti.pszText=LPTSTR((*i)->dialogName());
     TreeView_SetItem(htv,&ti);
     if ((*i)->m_hwnd) (*i)->cfg2dlg();
-   } 
+   }
  if (comptrQ<IPropertyPageSiteFF> siteFF=pageSite)
   siteFF->onTranslate();
 }
 bool TffdshowPageBase::translateTV()
-{         
+{
  if (page && tr->translateMode)
   {
    HTREEITEM hti=TreeView_GetDropHilight(htv);
@@ -215,13 +215,13 @@ bool TffdshowPageBase::translateTV()
    translate();
    return true;
   }
- return false; 
-}  
+ return false;
+}
 
 void TffdshowPageBase::enableHints(bool is)
 {
  cfgSet(IDFF_showHints,is);
- for (ThtiPages::const_iterator hp=htiPages.begin();hp!=htiPages.end();hp++) 
+ for (ThtiPages::const_iterator hp=htiPages.begin();hp!=htiPages.end();hp++)
   for (TconfPages::const_iterator i=(*hp)->begin();i!=(*hp)->end();i++)
    (*i)->enableHints(is);
 }
@@ -243,7 +243,7 @@ void TffdshowPageBase::onHelp(void)
 
 STDMETHODIMP TffdshowPageBase::SetPageSite(LPPROPERTYPAGESITE IpageSite)
 {
- if (IpageSite) 
+ if (IpageSite)
   {
    if (pageSite)
     return E_UNEXPECTED;
@@ -309,7 +309,7 @@ STDMETHODIMP TffdshowPageBase::Activate(HWND hwndParent,LPCRECT rect,BOOL fModal
 
  Move(rect);
  Show(SW_SHOWNORMAL);
- 
+
  //LOGFONT lf={-13L,-13L,0L,0L,FW_NORMAL,0,0,0,SYMBOL_CHARSET,OUT_STROKE_PRECIS,CLIP_STROKE_PRECIS,DRAFT_QUALITY,FF_ROMAN+VARIABLE_PITCH,"Webdings"};
  LOGFONT lf={18L,0L,0L,0L,FW_NORMAL,0,0,0,SYMBOL_CHARSET,OUT_DEFAULT_PRECIS,CLIP_DEFAULT_PRECIS,DEFAULT_QUALITY,FF_DONTCARE+DEFAULT_PITCH,_l("Webdings")};
  arrowsFont=CreateFontIndirect(&lf);
@@ -348,7 +348,7 @@ STDMETHODIMP TffdshowPageBase::Activate(HWND hwndParent,LPCRECT rect,BOOL fModal
    IDC_PLACE_PAGE,TanchorInfo::LEFT|TanchorInfo::RIGHT|TanchorInfo::TOP|TanchorInfo::BOTTOM,
    0,0
   };
- anchors.add(ainfo,*this); 
+ anchors.add(ainfo,*this);
  TreeView_SetIndent(htv,24);
  //TreeView_SetItemHeight(htv,26);
 
@@ -377,7 +377,7 @@ void TffdshowPageBase::treeSelectItem(int uniqueId,int prevVisId)
         TconfPageBase *pagevis=hti2page(htivis);
         if (pagevis->uniqueID()==prevVisId)
          TreeView_EnsureVisible(htv,htivis);
-       }  
+       }
      return;
     }
   }
@@ -400,7 +400,7 @@ STDMETHODIMP TffdshowPageBase::Deactivate(void)
 {
  deci->setOnChangeMsg(NULL,0);
  deci->setOnFrameMsg(NULL,0);
- 
+
  if (m_hwnd==NULL) return E_UNEXPECTED;
 
  // Remove WS_EX_CONTROLPARENT before DestroyWindow call
@@ -436,9 +436,9 @@ STDMETHODIMP TffdshowPageBase::Apply(void)
 HRESULT TffdshowPageBase::OnApplyChanges(void)
 {
  cfgSet(IDFF_applying,1);
- for (ThtiPages::const_iterator hp=htiPages.begin();hp!=htiPages.end();hp++) 
+ for (ThtiPages::const_iterator hp=htiPages.begin();hp!=htiPages.end();hp++)
   for (TconfPages::const_iterator i=(*hp)->begin();i!=(*hp)->end();i++)
-   if ((*i)->m_hwnd) 
+   if ((*i)->m_hwnd)
     (*i)->applySettings();
  deci->saveGlobalSettings();
  onApplyChanges();
@@ -451,8 +451,8 @@ HRESULT TffdshowPageBase::OnApplyChanges(void)
      char_t *text=(char_t*)_alloca((len+2)*sizeof(char_t));
      GetWindowText(hed,text,len+1);
      tr->newTranslation(page->dialogId,IDC_ED_HELP,text);
-    } 
-  } 
+    }
+  }
  deci->putParam(IDFF_applying,0);
  return S_OK;
 }
@@ -477,7 +477,7 @@ INT_PTR TffdshowPageBase::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
     {
      for (ThtiPages::const_iterator htiPage=htiPages.begin();htiPage!=htiPages.end();htiPage++)
       delete *htiPage;
-     htiPages.clear();      
+     htiPages.clear();
      page=NULL;
      if (arrowsFont) DeleteObject(arrowsFont);arrowsFont=NULL;
      if (hil) ImageList_Destroy(hil);hil=NULL;
@@ -497,14 +497,14 @@ INT_PTR TffdshowPageBase::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
     return TRUE;
    case WM_FFONFRAME:
     {
-     for (ThtiPages::const_iterator hp=htiPages.begin();hp!=htiPages.end();hp++) 
+     for (ThtiPages::const_iterator hp=htiPages.begin();hp!=htiPages.end();hp++)
       for (TconfPages::const_iterator i=(*hp)->begin();i!=(*hp)->end();i++)
-       if ((*i)->m_hwnd) 
+       if ((*i)->m_hwnd)
         (*i)->onFrame();
      return TRUE;
     }
    case WM_COMMAND:
-    switch (LOWORD(wParam))  
+    switch (LOWORD(wParam))
      {
       case IDC_BT_HELP:
        if (HIWORD(wParam)==BN_CLICKED)
@@ -512,11 +512,11 @@ INT_PTR TffdshowPageBase::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
          onHelp();
          return TRUE;
         }
-       break; 
+       break;
      }
     break;
    case WM_CONTEXTMENU:
-    if (translateTV()) 
+    if (translateTV())
      return TRUE;
     break;
    case WM_NOTIFY:
@@ -541,11 +541,11 @@ INT_PTR TffdshowPageBase::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
           if (nmtv->action==TVE_COLLAPSE) setDlgResult(TRUE);
           return TRUE;
          }
-       }  
-     break;  
+       }
+     break;
     }
   }
- return Twindow::msgProc(uMsg,wParam,lParam); 
+ return Twindow::msgProc(uMsg,wParam,lParam);
 }
 INT_PTR TffdshowPageBase::defMsgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
@@ -559,7 +559,7 @@ INT_PTR TffdshowPageBase::defMsgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
  switch (uMsg)
   {
    case WM_STYLECHANGING:
-    if (wParam==GWL_EXSTYLE) 
+    if (wParam==GWL_EXSTYLE)
      {
       LPSTYLESTRUCT lpss=(LPSTYLESTRUCT)lParam;
       lpss->styleNew|=WS_EX_CONTROLPARENT;
@@ -573,7 +573,7 @@ INT_PTR TffdshowPageBase::defMsgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
 STDMETHODIMP TffdshowPageBase::NonDelegatingQueryInterface(REFIID riid,void **ppv)
 {
  CheckPointer(ppv,E_POINTER);
- if (riid==IID_IPropertyPageFF) 
+ if (riid==IID_IPropertyPageFF)
   return GetInterface<IPropertyPageFF>(this,ppv);
  else if (riid==IID_IPropertyPage)
   return GetInterface<IPropertyPage>(this,ppv);
@@ -591,7 +591,7 @@ STDMETHODIMP_(ULONG) TffdshowPageBase::NonDelegatingAddRef(void)
 STDMETHODIMP_(ULONG) TffdshowPageBase::NonDelegatingRelease(void)
 {
  // If the reference count drops to zero delete ourselves
- if (InterlockedDecrement((LONG*)&m_cRef) == 0) 
+ if (InterlockedDecrement((LONG*)&m_cRef) == 0)
   {
    m_cRef++;
    SetPageSite(NULL);
@@ -599,7 +599,7 @@ STDMETHODIMP_(ULONG) TffdshowPageBase::NonDelegatingRelease(void)
    delete this;
    return ULONG(0);
   }
- else 
+ else
   return std::max(ULONG(m_cRef),1ul);
 }
 
@@ -634,7 +634,7 @@ HRESULT STDMETHODCALLTYPE TffdshowPageBase::Move(LPCRECT pRect)
 {
  CheckPointer(pRect,E_POINTER);
  if (m_hwnd==NULL) return E_UNEXPECTED;
- MoveWindow(m_hwnd,pRect->left,pRect->top,pRect->right-pRect->left,pRect->bottom-pRect->top,TRUE);        
+ MoveWindow(m_hwnd,pRect->left,pRect->top,pRect->right-pRect->left,pRect->bottom-pRect->top,TRUE);
  return S_OK;
 }
 HRESULT STDMETHODCALLTYPE TffdshowPageBase::Show(UINT nCmdShow)

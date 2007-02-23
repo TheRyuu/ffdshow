@@ -16,11 +16,11 @@ private:
  TffPict newpict;
 
  bool oldinterlace,oldWarped;
- 
+
  Tlibmplayer *libmplayer;SwsContext *swsc;SwsFilter *swsf;SwsParams *swsparams;
- 
+
  SimpleResize *simple;
- 
+
  unsigned int dxnone,xdif1none,xdif2none;
  unsigned int dynone,ydif1none,ydif2none;
 protected:

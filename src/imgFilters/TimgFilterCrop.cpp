@@ -39,13 +39,13 @@ Trect TimgFilterCrop::calcCrop(const Trect &pictRect,const TcropSettings *cfg)
      rcy =(pictRect.dy-rcdy)/2;
      break;
     }
-   case 1:  
+   case 1:
     rcdx=pictRect.dx-(cfg->cropLeft+cfg->cropRight );
     rcdy=pictRect.dy-(cfg->cropTop +cfg->cropBottom);
     rcx=cfg->cropLeft;rcy=cfg->cropTop;
     break;
    default:
-    return pictRect; 
+    return pictRect;
   }
  rcdx&=~7;rcdy&=~7;if (rcdx<=0) rcdx=8;if (rcdy<=0) rcdy=8;
  if (rcx+rcdx>=(int)pictRect.dx) rcx=pictRect.dx-rcdx;if (rcy+rcdy>=(int)pictRect.dy) rcy=pictRect.dy-rcdy;
@@ -67,7 +67,7 @@ bool TimgFilterCrop::getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *
    return true;
   }
  else
-  return false;  
+  return false;
 }
 
 HRESULT TimgFilterCrop::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
@@ -79,7 +79,7 @@ HRESULT TimgFilterCrop::process(TfilterQueue::iterator it,TffPict &pict,const Tf
    oldSettings=*cfg;
    rectCrop=calcCrop(pict.rectClip,cfg);
   }
- csp_yuv_adj_to_plane(pict.csp,&pict.cspInfo,pict.rectFull.dy,pict.data,pict.stride); 
+ csp_yuv_adj_to_plane(pict.csp,&pict.cspInfo,pict.rectFull.dy,pict.data,pict.stride);
  pict.rectClip=Trect(rectCrop,pict.rectClip.sar);pict.calcDiff();
  return parent->deliverSample(++it,pict);
 }
@@ -96,9 +96,9 @@ bool TimgFilterCropExpand::is(const TffPictBase &pict,const TfilterSettingsVideo
    const TcropSettings *cfg=(const TcropSettings*)cfg0;
    Trect newrect=TimgFilterCrop::calcCrop(pict.rectFull,cfg);
    return pict.rectFull.dx!=newrect.dx || pict.rectFull.dy!=newrect.dy;
-  } 
+  }
  else
-  return false;  
+  return false;
 }
 
 bool TimgFilterCropExpand::getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *cfg0)
@@ -108,9 +108,9 @@ bool TimgFilterCropExpand::getOutputFmt(TffPictBase &pict,const TfilterSettingsV
    const TcropSettings *cfg=(const TcropSettings*)cfg0;
    calcNewRect(TimgFilterCrop::calcCrop(pict.rectClip,cfg),pict.rectFull,pict.rectClip);
    return true;
-  } 
+  }
  else
-  return false; 
+  return false;
 }
 
 void TimgFilterCropExpand::getDiffXY(const TffPict &pict,const TfilterSettingsVideo *cfg,int &diffx,int &diffy)
@@ -119,7 +119,7 @@ void TimgFilterCropExpand::getDiffXY(const TffPict &pict,const TfilterSettingsVi
   {
    Trect newrect=TimgFilterCrop::calcCrop(pict.rectClip,(TcropSettings*)cfg);
    diffx=newrect.x;diffy=newrect.y;
-  } 
+  }
 }
 
 HRESULT TimgFilterCropExpand::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
@@ -133,6 +133,6 @@ HRESULT TimgFilterCropExpand::process(TfilterQueue::iterator it,TffPict &pict,co
      onSizeChange();
     }
    expand(pict,cfg,true);
-  } 
+  }
  return parent->deliverSample(++it,pict);
 }

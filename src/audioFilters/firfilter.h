@@ -1,5 +1,5 @@
 /*=============================================================================
-//      
+//
 //  This software has been released under the terms of the GNU Public
 //  license. See http://www.gnu.org/copyleft/gpl.html for details.
 //
@@ -13,7 +13,7 @@
 
 #include "Tconfig.h"
 
-// Design and implementation of different types of digital filters 
+// Design and implementation of different types of digital filters
 class TfirFilter
 {
 public:
@@ -57,7 +57,7 @@ public:
      pos -= count;
      count1 = count; count2 = 0;
     }
-   else 
+   else
     {
      count2 = pos;
      count1 = count - pos;
@@ -85,14 +85,14 @@ template<> inline TfirFilter::_ftype_t TfirFilter::dotproduct<float,float>(int c
 {
  if (Tconfig::cpu_flags&FF_CPU_SSE)
   return vec_inner_prod_sse(buf,coefficients,count);
- #ifndef WIN64 
+ #ifndef WIN64
  else if (Tconfig::cpu_flags&FF_CPU_3DNOW)
   {
    float sum[2]={0,0};
    vec_inner_prod_3dnow(buf,coefficients,count,sum);
    return sum[0];
-  } 
- #endif 
+  }
+ #endif
  else
   {
    float sum0=0,sum1=0,sum2=0,sum3=0;

@@ -3,14 +3,14 @@ libtheora 1.0alpha4 (2004 December 15)
  * first draft of the Theora I Format Specification
  * API documentation generated from theora.h with Doxygen
  * fix a double-update bug in the motion analysis
- * apply the loop filter before filling motion vector border 
+ * apply the loop filter before filling motion vector border
    in the reference frame
  * new utility functions:
    - theora_packet_isheader(),
    - theora_packet_iskeyframe()
    - theora_granule_frame()
  * optional support for building without floating point
- * optional support for building without encode support 
+ * optional support for building without encode support
  * various build and packaging fixes
  * pkg-config support
  * SymbianOS build support
@@ -46,7 +46,7 @@ libtheora 1.0alpha2 (2003 June 9)
    - add a field for marking the colorspace to the info header
    - add crop parameters for non-multiple-of-16 frame sizes
    - add a second vorbiscomment-style metadata header
- * API changes to handle multiple headers with a single 
+ * API changes to handle multiple headers with a single
    theora_decode_header() call, like libvorbis
  * code cleanup and minor fixes
  * new dump_video code example/utility
@@ -57,5 +57,9 @@ libtheora 1.0alpha1 (2002 September 25)
  * First release of the theora reference implementation
  * Port of the newly opened VP3 code to the Ogg container
  * Rewrite of the code for portability and to use the libogg bitpacker
+
+
+
+
 
 

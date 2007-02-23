@@ -42,7 +42,7 @@ void TsubtitlesTextpinDVD::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop,
    data+=4;
    datalen-=4;
   }
- 
+
  if (start==-1 && stop==-1)
   if (subs->size()>0)
    subs->back()->append(data,datalen);
@@ -136,7 +136,7 @@ const Tsubtitle* TsubtitlesTextpinDVD::getSubtitle(const TsubtitlesSettings *cfg
    {
     delete *s0;
     s0=subs->erase(s0);
-   } 
+   }
   else
    s0++;
 

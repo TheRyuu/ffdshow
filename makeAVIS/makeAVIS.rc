@@ -27,7 +27,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 //
 
 IDD_MAIN DIALOGEX 0, 0, 266, 212
-STYLE DS_SETFONT | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | 
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION |
     WS_SYSMENU
 CAPTION "makeAVIS"
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
@@ -44,7 +44,7 @@ BEGIN
     CONTROL         "WAV",IDC_RBT_OUTPUTFORMAT_WAV,"Button",
                     BS_AUTORADIOBUTTON,124,41,64,10
     GROUPBOX        "",IDC_GRP_VIDEO,7,53,126,115
-    CONTROL         "Video",IDC_CHB_VIDEO,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Video",IDC_CHB_VIDEO,"Button",BS_AUTOCHECKBOX |
                     WS_GROUP | WS_TABSTOP,12,53,33,10
     LTEXT           "Resolution",IDC_LBL_VIDEO_RES,13,63,113,8
     LTEXT           "Colorspace",IDC_LBL_VIDEO_CSP,13,73,112,8
@@ -53,21 +53,21 @@ BEGIN
     LTEXT           "Time",IDC_LBL_VIDEO_TIME,13,103,113,8
     CONTROL         "Force output colorspace",IDC_CHB_FORCECSP,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,13,113,108,11
-    COMBOBOX        IDC_CBX_FORCECSP,24,124,103,118,CBS_DROPDOWNLIST | 
+    COMBOBOX        IDC_CBX_FORCECSP,24,124,103,118,CBS_DROPDOWNLIST |
                     WS_VSCROLL | WS_TABSTOP
     CONTROL         "Force interlacing",IDC_CHB_FORCEILACE,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,13,139,90,11
-    COMBOBOX        IDC_CBX_FORCEILACE,24,150,104,118,CBS_DROPDOWNLIST | 
+    COMBOBOX        IDC_CBX_FORCEILACE,24,150,104,118,CBS_DROPDOWNLIST |
                     WS_VSCROLL | WS_TABSTOP
     GROUPBOX        "",IDC_GRP_AUDIO,135,53,125,115
-    CONTROL         "Audio",IDC_CHB_AUDIO,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Audio",IDC_CHB_AUDIO,"Button",BS_AUTOCHECKBOX |
                     WS_TABSTOP,139,53,34,10
     LTEXT           "Sample rate",IDC_LBL_AUDIO_SAMPLERATE,141,63,110,8
     LTEXT           "Channels",IDC_LBL_AUDIO_CHANNELS,141,73,113,8
     LTEXT           "Bits per sample",IDC_LBL_AUDIO_BITSPERSAMPLE,141,83,111,
                     8
     CONTROL         "Store script file name in output file",
-                    IDC_RBT_STORE_FILENAME,"Button",BS_AUTORADIOBUTTON | 
+                    IDC_RBT_STORE_FILENAME,"Button",BS_AUTORADIOBUTTON |
                     WS_TABSTOP,8,170,205,10
     CONTROL         "Store script in output file",IDC_RBT_STORE_SCRIPT,
                     "Button",BS_AUTORADIOBUTTON | WS_TABSTOP,8,180,186,10
@@ -87,7 +87,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_MAIN, DIALOG
     BEGIN
@@ -127,18 +127,18 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
     "#include ""afxres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
     "\r\n"
     "\0"
@@ -160,4 +160,7 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
+
+
+
 

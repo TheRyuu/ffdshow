@@ -203,7 +203,7 @@ typedef enum {
 
 void * mpeg2_malloc (size_t size, mpeg2_alloc_t reason);
 void mpeg2_free (void * buf);
-			 
-extern "C" void mpeg2_set_rtStart(mpeg2dec_t *mpeg2dec,int64_t rtStart);			 
+
+extern "C" void mpeg2_set_rtStart(mpeg2dec_t *mpeg2dec,int64_t rtStart);
 
 #endif /* MPEG2_H */

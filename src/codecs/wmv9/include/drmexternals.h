@@ -7,8 +7,8 @@
 /* Compiler settings for drmexternals.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
     protocol : dce , ms_ext, c_ext, robust
-    error checks: allocation ref bounds_check enum stub_data 
-    VC __declspec() decoration level: 
+    error checks: allocation ref bounds_check enum stub_data
+    VC __declspec() decoration level:
          __declspec(uuid()), __declspec(selectany), __declspec(novtable)
          DECLSPEC_UUID(), MIDL_INTERFACE()
 */
@@ -37,20 +37,20 @@
 #pragma once
 #endif
 
-/* Forward Declarations */ 
+/* Forward Declarations */
 
 /* header files for imported files */
 #include "oaidl.h"
 
 #ifdef __cplusplus
 extern "C"{
-#endif 
+#endif
 
 void * __RPC_USER MIDL_user_allocate(size_t);
-void __RPC_USER MIDL_user_free( void * ); 
+void __RPC_USER MIDL_user_free( void * );
 
 /* interface __MIDL_itf_drmexternals_0000 */
-/* [local] */ 
+/* [local] */
 
 //=========================================================================
 //
@@ -99,7 +99,7 @@ static const WCHAR *g_wszWMDRM_SAPLEVEL                          = L"SAPLEVEL";
 */
 EXTERN_GUID( WMDRM_PROTECTION_SCHEME_ACP,        0xC3FD11C6, 0xF8B7, 0x4d20, 0xB0, 0x08, 0x1d, 0xb1, 0x7d, 0x61, 0xf2, 0xda );
 //static const WCHAR *g_wszWMDRMNET_Revocation                     = L"WMDRMNET_REVOCATION";
-typedef 
+typedef
 enum DRM_LICENSE_STATE_CATEGORY
     {	WM_DRM_LICENSE_STATE_NORIGHT	= 0,
 	WM_DRM_LICENSE_STATE_UNLIM	= WM_DRM_LICENSE_STATE_NORIGHT + 1,
@@ -127,7 +127,7 @@ typedef struct _DRM_LICENSE_STATE_DATA
     DWORD dwVague;
     } 	DRM_LICENSE_STATE_DATA;
 
-typedef 
+typedef
 enum DRM_HTTP_STATUS
     {	HTTP_NOTINITIATED	= 0,
 	HTTP_CONNECTING	= HTTP_NOTINITIATED + 1,
@@ -136,7 +136,7 @@ enum DRM_HTTP_STATUS
 	HTTP_COMPLETED	= HTTP_RECEIVING + 1
     } 	DRM_HTTP_STATUS;
 
-typedef 
+typedef
 enum DRM_INDIVIDUALIZATION_STATUS
     {	INDI_UNDEFINED	= 0,
 	INDI_BEGIN	= 0x1,
@@ -228,5 +228,9 @@ extern RPC_IF_HANDLE __MIDL_itf_drmexternals_0000_v0_0_s_ifspec;
 #endif
 
 #endif
+
+
+
+
 
 

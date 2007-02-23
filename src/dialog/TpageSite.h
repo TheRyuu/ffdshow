@@ -24,7 +24,7 @@ private:
  void resize(CRect &newrect);
  HWND htab;
  HICON hicon;
-protected: 
+protected:
  virtual INT_PTR msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam);
 public:
  TpageSite(int Iidff_multiplePages=0);
@@ -37,7 +37,7 @@ public:
  virtual HRESULT STDMETHODCALLTYPE TranslateAccelerator(MSG *pMsg);
 
  STDMETHODIMP onTranslate(void);
- 
+
  INT_PTR show(IffdshowBase *deci,HWND parent,int Iidcaption=0,int Iicon=0);
  INT_PTR show(IffdshowBase *deci,HWND parent,int Iidcaption,int Iicon,CAUUID &pages,IUnknown *unk);
 };

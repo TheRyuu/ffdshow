@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="windows-1250"?>
-<VisualStudioProject 
+<VisualStudioProject
 	ProjectType="Intel C++ Project"
 	Version="9.1"
 	Name="ff_theora"
@@ -7,18 +7,18 @@
 	VCNestedProjectGUID="{924512C3-75C6-45BE-B7A3-A747BFFD79A1}"
 	VCNestedProjectFileName="ff_theora_icl9.vcproj">
 	<Configurations>
-		<Configuration 
+		<Configuration
 			Name="Debug|Win32">
-			<Tool 
+			<Tool
 				Name="GeneralTool"
 				OutputDirectory="debug_icl9"
 				IntermediateDirectory="debug_icl9"
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="0"/>
-			<Tool 
+			<Tool
 				Name="DebugTool"/>
-			<Tool 
+			<Tool
 				Name="CppCmplrTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../xiph;.;../.."
@@ -35,7 +35,7 @@
 				SuppressStartupBanner="1"
 				DebugInformationFormat="4"
 				AdditionalOptions=""/>
-			<Tool 
+			<Tool
 				Name="LinkerTool"
 				DelayImpLib=""
 				IgnoreImportLibrary="1"
@@ -49,35 +49,35 @@
 				SubSystem="2"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				AdditionalOptions="/MACHINE:I386"/>
-			<Tool 
+			<Tool
 				Name="LibrarianTool"/>
-			<Tool 
+			<Tool
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1051"/>
-			<Tool 
+			<Tool
 				Name="MidlCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				MkTypLibCompatible="1"
 				SuppressStartupBanner="1"
 				TargetEnvironment="1"
 				TypeLibraryName=".\Debug/ff_theora.tlb"/>
-			<Tool 
+			<Tool
 				Name="BscMakeTool"/>
-			<Tool 
+			<Tool
 				Name="PreBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="PreLinkEventTool"/>
-			<Tool 
+			<Tool
 				Name="PostBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="CustomTool"/>
-			<Tool 
+			<Tool
 				Name="CustomNodeTool"/>
 		</Configuration>
-		<Configuration 
+		<Configuration
 			Name="Release|Win32">
-			<Tool 
+			<Tool
 				Name="GeneralTool"
 				OutputDirectory="release_icl9"
 				IntermediateDirectory="release_icl9"
@@ -85,9 +85,9 @@
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="0"
 				WholeProgramOptimization="1"/>
-			<Tool 
+			<Tool
 				Name="DebugTool"/>
-			<Tool 
+			<Tool
 				Name="CppCmplrTool"
 				Optimization="1000"
 				GlobalOptimizations="1"
@@ -111,7 +111,7 @@
 				DebugInformationFormat="0"
 				CompileAs="0"
 				AdditionalOptions="/Qip"/>
-			<Tool 
+			<Tool
 				Name="LinkerTool"
 				DelayImpLib=""
 				IgnoreImportLibrary="1"
@@ -128,168 +128,172 @@
 				EnableCOMDATFolding="2"
 				ImportLibrary=".\Release/ff_theora.lib"
 				AdditionalOptions="/MACHINE:I386"/>
-			<Tool 
+			<Tool
 				Name="LibrarianTool"/>
-			<Tool 
+			<Tool
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="NDEBUG"
 				Culture="1051"/>
-			<Tool 
+			<Tool
 				Name="MidlCmplrTool"
 				PreprocessorDefinitions="NDEBUG"
 				MkTypLibCompatible="1"
 				SuppressStartupBanner="1"
 				TargetEnvironment="1"
 				TypeLibraryName=".\Release/ff_theora.tlb"/>
-			<Tool 
+			<Tool
 				Name="BscMakeTool"/>
-			<Tool 
+			<Tool
 				Name="PreBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="PreLinkEventTool"/>
-			<Tool 
+			<Tool
 				Name="PostBuildEventTool"/>
-			<Tool 
+			<Tool
 				Name="CustomTool"/>
-			<Tool 
+			<Tool
 				Name="CustomNodeTool"/>
 		</Configuration>
 	</Configurations>
 	<Files>
-		<File 
+		<File
 			RelativePath=".\blockmap.c"/>
-		<File 
+		<File
 			RelativePath=".\comment.c"/>
-		<File 
+		<File
 			RelativePath=".\cpu.c"/>
-		<File 
+		<File
 			RelativePath=".\dct.c"/>
-		<File 
+		<File
 			RelativePath=".\dct_decode.c"/>
-		<File 
+		<File
 			RelativePath=".\dct_encode.c"/>
-		<File 
+		<File
 			RelativePath=".\decode.c"/>
-		<File 
+		<File
 			RelativePath=".\dsp.c"/>
-		<File 
+		<File
 			RelativePath=".\encode.c"/>
-		<File 
+		<File
 			RelativePath=".\encoder_toplevel.c"/>
-		<File 
+		<File
 			RelativePath=".\frarray.c"/>
-		<File 
+		<File
 			RelativePath=".\frinit.c"/>
-		<File 
+		<File
 			RelativePath=".\huffman.c"/>
-		<File 
+		<File
 			RelativePath=".\idct.c"/>
-		<File 
+		<File
 			RelativePath=".\mcomp.c"/>
-		<File 
+		<File
 			RelativePath=".\misc_common.c"/>
-		<File 
+		<File
 			RelativePath=".\pb.c"/>
-		<File 
+		<File
 			RelativePath=".\pp.c"/>
-		<File 
+		<File
 			RelativePath=".\quant.c"/>
-		<File 
+		<File
 			RelativePath=".\reconstruct.c"/>
-		<File 
+		<File
 			RelativePath=".\scan.c"/>
-		<File 
+		<File
 			RelativePath=".\toplevel.c"/>
-		<File 
+		<File
 			RelativePath=".\block_inline.h"/>
-		<File 
+		<File
 			RelativePath=".\codec_internal.h"/>
-		<File 
+		<File
 			RelativePath=".\cpu.h"/>
-		<File 
+		<File
 			RelativePath=".\dsp.h"/>
-		<File 
+		<File
 			RelativePath=".\encoder_lookup.h"/>
-		<File 
+		<File
 			RelativePath=".\huffman.h"/>
-		<File 
+		<File
 			RelativePath=".\hufftables.h"/>
-		<File 
+		<File
 			RelativePath=".\pp.h"/>
-		<File 
+		<File
 			RelativePath=".\quant_lookup.h"/>
-		<File 
+		<File
 			RelativePath=".\toplevel.h"/>
-		<File 
+		<File
 			RelativePath=".\toplevel_lookup.h"/>
-		<File 
+		<File
 			RelativePath="..\..\xiph\ogg\bitwise.c"/>
-		<File 
+		<File
 			RelativePath="..\..\xiph\ogg\framing.c"/>
-		<File 
+		<File
 			RelativePath="..\..\xiph\ogg\ogg.h"/>
-		<File 
+		<File
 			RelativePath="..\..\xiph\ogg\os_types.h"/>
-		<File 
+		<File
 			RelativePath="..\..\xiph\theora\theora.h"/>
-		<File 
+		<File
 			RelativePath="..\..\csimd.h"/>
-		<File 
+		<File
 			RelativePath=".\i386\DeblockOpt.cpp">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					AssemblerOutput="4"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\i386\DeRingOpt.cpp"/>
-		<File 
+		<File
 			RelativePath=".\i386\dsp_mmx.cpp"/>
-		<File 
+		<File
 			RelativePath=".\i386\dsp_mmxext.cpp"/>
-		<File 
+		<File
 			RelativePath=".\i386\fdct_mmx.cpp"/>
-		<File 
+		<File
 			RelativePath=".\i386\loopf_asm.cpp">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					AssemblerOutput="4"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\i386\mmxIdct.cpp">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="CppCmplrTool"
 					AssemblerOutput="4"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\i386\recon_mmx.cpp"/>
-		<File 
+		<File
 			RelativePath="..\..\simd.h"/>
-		<File 
+		<File
 			RelativePath=".\i386\vp3dsp_sse2.cpp">
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Debug|Win32">
-				<Tool 
+				<Tool
 					Name="GeneralTool"
 					ExcludedFromBuild="1"/>
 			</FileConfiguration>
-			<FileConfiguration 
+			<FileConfiguration
 				Name="Release|Win32">
-				<Tool 
+				<Tool
 					Name="GeneralTool"
 					ExcludedFromBuild="1"/>
 			</FileConfiguration>
 		</File>
-		<File 
+		<File
 			RelativePath=".\ff_theora.def"/>
 	</Files>
 </VisualStudioProject>
+
+
+
+
 

@@ -10,7 +10,7 @@ private:
  static const TfilterIDFF idffs;
 protected:
  const int* getResets(unsigned int pageId);
-public: 
+public:
  ToutputVideoSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
 
  int i420,yv12,yuy2,yvyu,uyvy,nv12,rgb32,rgb24,rgb555,rgb565;
@@ -18,7 +18,7 @@ public:
  int dv,dvNorm;void getDVsize(unsigned int *dx,unsigned int *dy) const;
  static const char_t *dvNorms[];
  static const char_t *deintMethods[];
-  
+
  struct ToutputColorspace
   {
    ToutputColorspace(DWORD IbiCompression,const GUID *Ig,WORD IbiBitCount,WORD IbiPlanes):biCompression(IbiCompression),g(Ig),biBitCount(IbiBitCount),biPlanes(IbiPlanes) {}
@@ -34,7 +34,7 @@ public:
  int flip;
 
  void reg_op_outcsps(TregOp &t);
- 
+
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const {}
  virtual void createPages(TffdshowPageDec *parent) const {}
 };

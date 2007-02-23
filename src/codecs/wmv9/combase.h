@@ -9,97 +9,97 @@
 
 
 /*
- 
+
 a. Derive your COM object from CUnknown
- 
+
 b. Make a static CreateInstance function that takes an LPUNKNOWN, an HRESULT *
    and a TCHAR *. The LPUNKNOWN defines the object to delegate IUnknown calls
    to. The HRESULT * allows error codes to be passed around constructors and
    the TCHAR * is a descriptive name that can be printed on the debugger.
- 
+
    It is important that constructors only change the HRESULT * if they have
    to set an ERROR code, if it was successful then leave it alone or you may
    overwrite an error code from an object previously created.
- 
+
    When you call a constructor the descriptive name should be in static store
    as we do not copy the string. To stop large amounts of memory being used
    in retail builds by all these static strings use the NAME macro,
- 
+
    CMyFilter = new CImplFilter(NAME("My filter"),pUnknown,phr);
    if (FAILED(hr)) {
        return hr;
    }
- 
+
    In retail builds NAME(_x_) compiles to NULL, the base CBaseObject class
    knows not to do anything with objects that don't have a name.
- 
+
 c. Have a constructor for your object that passes the LPUNKNOWN, HRESULT * and
    TCHAR * to the CUnknown constructor. You can set the HRESULT if you have an
    error, or just simply pass it through to the constructor.
- 
+
    The object creation will fail in the class factory if the HRESULT indicates
    an error (ie FAILED(HRESULT) == TRUE)
- 
+
 d. Create a FactoryTemplate with your object's class id and CreateInstance
    function.
- 
+
 Then (for each interface) either
- 
+
 Multiple inheritance
- 
+
 1. Also derive it from ISomeInterface
 2. Include DECLARE_IUNKNOWN in your class definition to declare
    implementations of QueryInterface, AddRef and Release that
    call the outer unknown
 3. Override NonDelegatingQueryInterface to expose ISomeInterface by
    code something like
- 
+
      if (riid == IID_ISomeInterface) {
          return GetInterface((ISomeInterface *) this, ppv);
      } else {
          return CUnknown::NonDelegatingQueryInterface(riid, ppv);
      }
- 
+
 4. Declare and implement the member functions of ISomeInterface.
- 
+
 or: Nested interfaces
- 
+
 1. Declare a class derived from CUnknown
 2. Include DECLARE_IUNKNOWN in your class definition
 3. Override NonDelegatingQueryInterface to expose ISomeInterface by
    code something like
- 
+
      if (riid == IID_ISomeInterface) {
          return GetInterface((ISomeInterface *) this, ppv);
      } else {
          return CUnknown::NonDelegatingQueryInterface(riid, ppv);
      }
- 
+
 4. Implement the member functions of ISomeInterface. Use GetOwner() to
    access the COM object class.
- 
+
 And in your COM object class:
- 
+
 5. Make the nested class a friend of the COM object class, and declare
    an instance of the nested class as a member of the COM object class.
- 
+
    NOTE that because you must always pass the outer unknown and an hResult
    to the CUnknown constructor you cannot use a default constructor, in
    other words you will have to make the member variable a pointer to the
    class and make a NEW call in your constructor to actually create it.
- 
+
 6. override the NonDelegatingQueryInterface with code like this:
- 
+
      if (riid == IID_ISomeInterface) {
          return m_pImplFilter->
             NonDelegatingQueryInterface(IID_ISomeInterface, ppv);
      } else {
          return CUnknown::NonDelegatingQueryInterface(riid, ppv);
      }
- 
+
 You can have mixed classes which support some interfaces via multiple
 inheritance and some via nested classes
- 
+
 */
 
 #ifndef __COMBASE__
@@ -216,7 +216,7 @@ typedef CUnknown *(CALLBACK *LPFNNewCOMObject)(LPUNKNOWN pUnkOuter, HRESULT *phr
 
 /*  A function (can be NULL) which is called from the DLL entrypoint
     routine for each factory template:
- 
+
     bLoading - TRUE on DLL load, FALSE on DLL unload
     rclsid   - the m_ClsID of the entry
 */

@@ -177,7 +177,7 @@ void x264_mb_encode_i8x8( x264_t *h, int idx, int i_qscale )
 
     if( h->mb.b_trellis )
         x264_quant_8x8_trellis( h, dct8x8, CQM_8IY, i_qscale, 1 );
-    else 
+    else
         quant_8x8( h, dct8x8, h->quant8_mf[CQM_8IY], i_qscale, 1 );
 
     h->zigzagf.scan_8x8( h->dct.luma8x8[idx], dct8x8 );
@@ -268,7 +268,7 @@ void x264_mb_encode_8x8_chroma( x264_t *h, int b_inter, int i_qscale )
             }
             continue;
         }
-            
+
         h->dctf.sub8x8_dct( dct4x4, p_src, p_dst );
         /* calculate dct coeffs */
         for( i = 0; i < 4; i++ )
@@ -540,7 +540,7 @@ void x264_macroblock_encode( x264_t *h )
                         quant_4x4( h, dct4x4[idx], h->quant4_mf[CQM_4PY], i_qp, 0 );
 
                     h->zigzagf.scan_4x4( h->dct.block[idx].luma4x4, dct4x4[idx] );
-                    
+
                     if( b_decimate )
                         i_decimate_8x8 += x264_mb_decimate_score( h->dct.block[idx].luma4x4, 16 );
                 }

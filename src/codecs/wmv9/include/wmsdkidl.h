@@ -1,5 +1,3 @@
-
-
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
@@ -7,8 +5,8 @@
 /* Compiler settings for wmsdkidl.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
     protocol : dce , ms_ext, c_ext, robust
-    error checks: allocation ref bounds_check enum stub_data 
-    VC __declspec() decoration level: 
+    error checks: allocation ref bounds_check enum stub_data
+    VC __declspec() decoration level:
          __declspec(uuid()), __declspec(selectany), __declspec(novtable)
          DECLSPEC_UUID(), MIDL_INTERFACE()
 */
@@ -41,7 +39,7 @@
 #pragma once
 #endif
 
-/* Forward Declarations */ 
+/* Forward Declarations */
 
 #ifndef __IWMMediaProps_FWD_DEFINED__
 #define __IWMMediaProps_FWD_DEFINED__
@@ -566,13 +564,13 @@ typedef interface IWMLicenseRevocationAgent IWMLicenseRevocationAgent;
 
 #ifdef __cplusplus
 extern "C"{
-#endif 
+#endif
 
 void * __RPC_USER MIDL_user_allocate(size_t);
-void __RPC_USER MIDL_user_free( void * ); 
+void __RPC_USER MIDL_user_free( void * );
 
 /* interface __MIDL_itf_wmsdkidl_0000 */
-/* [local] */ 
+/* [local] */
 
 //=========================================================================
 //
@@ -650,7 +648,7 @@ static const WCHAR *g_wszVBRBufferWindowMax =L"_BMAX";
 
 ////////////////////////////////////////////////////////////////
 //
-// These are the special case attributes that give information 
+// These are the special case attributes that give information
 // about the Windows Media file.
 //
 static const DWORD g_dwWMSpecialAttributes = 20;
@@ -731,7 +729,7 @@ static const WCHAR g_wszWMAlbumArtist[] =L"WM/AlbumArtist";
 
 ////////////////////////////////////////////////////////////////
 //
-// These optional attributes may be used to give information 
+// These optional attributes may be used to give information
 // about the branding of the content.
 //
 static const WCHAR g_wszWMBannerImageType[] =L"BannerImageType";
@@ -740,14 +738,14 @@ static const WCHAR g_wszWMBannerImageURL[] =L"BannerImageURL";
 static const WCHAR g_wszWMCopyrightURL[] =L"CopyrightURL";
 ////////////////////////////////////////////////////////////////
 //
-// Optional attributes, used to give information 
+// Optional attributes, used to give information
 // about video stream properties.
 //
 static const WCHAR g_wszWMAspectRatioX[] =L"AspectRatioX";
 static const WCHAR g_wszWMAspectRatioY[] =L"AspectRatioY";
 ////////////////////////////////////////////////////////////////
 //
-// Optional attributes, used to give information 
+// Optional attributes, used to give information
 // about the overall streaming properties of VBR files.
 // This attribute takes the format:
 //  WORD wReserved (must be 0)
@@ -926,7 +924,7 @@ static const WCHAR g_wszBufferAverage[] = L"Buffer Average";
 // Codec encoding complexity settings
 //
 // g_wszComplexity should be used to set desired encoding complexity on the
-// stream's IWMPropertyVault (see above for definition) 
+// stream's IWMPropertyVault (see above for definition)
 // The below settings can be queried from IWMCodecInfo3::GetCodecProp()
 //
 static const WCHAR g_wszComplexityOffline[] =L"_COMPLEXITYEXOFFLINE";
@@ -1004,7 +1002,7 @@ enum __MIDL___MIDL_itf_wmsdkidl_0000_0003
     {	WM_SFEX_NOTASYNCPOINT	= 0x2,
 	WM_SFEX_DATALOSS	= 0x4
     } ;
-typedef 
+typedef
 enum WMT_STATUS
     {	WMT_ERROR	= 0,
 	WMT_OPENED	= 1,
@@ -1060,7 +1058,7 @@ enum WMT_STATUS
 	WMT_PROXIMITY_COMPLETED	= 50
     } 	WMT_STATUS;
 
-typedef 
+typedef
 enum WMT_RIGHTS
     {	WMT_RIGHT_PLAYBACK	= 0x1,
 	WMT_RIGHT_COPY_TO_NON_SDMI_DEVICE	= 0x2,
@@ -1074,14 +1072,14 @@ enum WMT_RIGHTS
 	WMT_RIGHT_SDMI_NOMORECOPIES	= 0x20000
     } 	WMT_RIGHTS;
 
-typedef 
+typedef
 enum WMT_STREAM_SELECTION
     {	WMT_OFF	= 0,
 	WMT_CLEANPOINT_ONLY	= 1,
 	WMT_ON	= 2
     } 	WMT_STREAM_SELECTION;
 
-typedef 
+typedef
 enum WMT_IMAGE_TYPE
     {	WMT_IT_NONE	= 0,
 	WMT_IT_BITMAP	= 1,
@@ -1089,7 +1087,7 @@ enum WMT_IMAGE_TYPE
 	WMT_IT_GIF	= 3
     } 	WMT_IMAGE_TYPE;
 
-typedef 
+typedef
 enum WMT_ATTR_DATATYPE
     {	WMT_TYPE_DWORD	= 0,
 	WMT_TYPE_STRING	= 1,
@@ -1100,14 +1098,14 @@ enum WMT_ATTR_DATATYPE
 	WMT_TYPE_GUID	= 6
     } 	WMT_ATTR_DATATYPE;
 
-typedef 
+typedef
 enum WMT_ATTR_IMAGETYPE
     {	WMT_IMAGETYPE_BITMAP	= 1,
 	WMT_IMAGETYPE_JPEG	= 2,
 	WMT_IMAGETYPE_GIF	= 3
     } 	WMT_ATTR_IMAGETYPE;
 
-typedef 
+typedef
 enum WMT_VERSION
     {	WMT_VER_4_0	= 0x40000,
 	WMT_VER_7_0	= 0x70000,
@@ -1115,31 +1113,31 @@ enum WMT_VERSION
 	WMT_VER_9_0	= 0x90000
     } 	WMT_VERSION;
 
-typedef 
+typedef
 enum tagWMT_STORAGE_FORMAT
     {	WMT_Storage_Format_MP3	= 0,
 	WMT_Storage_Format_V1	= WMT_Storage_Format_MP3 + 1
     } 	WMT_STORAGE_FORMAT;
 
-typedef 
+typedef
 enum tagWMT_DRMLA_TRUST
     {	WMT_DRMLA_UNTRUSTED	= 0,
 	WMT_DRMLA_TRUSTED	= WMT_DRMLA_UNTRUSTED + 1,
 	WMT_DRMLA_TAMPERED	= WMT_DRMLA_TRUSTED + 1
     } 	WMT_DRMLA_TRUST;
 
-typedef 
+typedef
 enum tagWMT_TRANSPORT_TYPE
     {	WMT_Transport_Type_Unreliable	= 0,
 	WMT_Transport_Type_Reliable	= WMT_Transport_Type_Unreliable + 1
     } 	WMT_TRANSPORT_TYPE;
 
-typedef 
+typedef
 enum WMT_NET_PROTOCOL
     {	WMT_PROTOCOL_HTTP	= 0
     } 	WMT_NET_PROTOCOL;
 
-typedef 
+typedef
 enum WMT_PLAY_MODE
     {	WMT_PLAY_MODE_AUTOSELECT	= 0,
 	WMT_PLAY_MODE_LOCAL	= 1,
@@ -1147,7 +1145,7 @@ enum WMT_PLAY_MODE
 	WMT_PLAY_MODE_STREAMING	= 3
     } 	WMT_PLAY_MODE;
 
-typedef 
+typedef
 enum WMT_PROXY_SETTINGS
     {	WMT_PROXY_SETTING_NONE	= 0,
 	WMT_PROXY_SETTING_MANUAL	= 1,
@@ -1156,7 +1154,7 @@ enum WMT_PROXY_SETTINGS
 	WMT_PROXY_SETTING_MAX	= WMT_PROXY_SETTING_BROWSER + 1
     } 	WMT_PROXY_SETTINGS;
 
-typedef 
+typedef
 enum WMT_CODEC_INFO_TYPE
     {	WMT_CODECINFO_AUDIO	= 0,
 	WMT_CODECINFO_VIDEO	= 1,
@@ -1186,7 +1184,7 @@ enum __MIDL___MIDL_itf_wmsdkidl_0000_0005
 	WM_DM_IT_FIRST_FRAME_IN_CLIP_IS_CD_BOTTOM	= 9,
 	WM_DM_IT_FIRST_FRAME_IN_CLIP_IS_DD_BOTTOM	= 10
     } ;
-typedef 
+typedef
 enum tagWMT_OFFSET_FORMAT
     {	WMT_OFFSET_FORMAT_100NS	= 0,
 	WMT_OFFSET_FORMAT_FRAME_NUMBERS	= WMT_OFFSET_FORMAT_100NS + 1,
@@ -1195,35 +1193,35 @@ enum tagWMT_OFFSET_FORMAT
 	WMT_OFFSET_FORMAT_100NS_APPROXIMATE	= WMT_OFFSET_FORMAT_TIMECODE + 1
     } 	WMT_OFFSET_FORMAT;
 
-typedef 
+typedef
 enum tagWMT_INDEXER_TYPE
     {	WMT_IT_PRESENTATION_TIME	= 0,
 	WMT_IT_FRAME_NUMBERS	= WMT_IT_PRESENTATION_TIME + 1,
 	WMT_IT_TIMECODE	= WMT_IT_FRAME_NUMBERS + 1
     } 	WMT_INDEXER_TYPE;
 
-typedef 
+typedef
 enum tagWMT_INDEX_TYPE
     {	WMT_IT_NEAREST_DATA_UNIT	= 1,
 	WMT_IT_NEAREST_OBJECT	= WMT_IT_NEAREST_DATA_UNIT + 1,
 	WMT_IT_NEAREST_CLEAN_POINT	= WMT_IT_NEAREST_OBJECT + 1
     } 	WMT_INDEX_TYPE;
 
-typedef 
+typedef
 enum tagWMT_FILESINK_MODE
     {	WMT_FM_SINGLE_BUFFERS	= 0x1,
 	WMT_FM_FILESINK_DATA_UNITS	= 0x2,
 	WMT_FM_FILESINK_UNBUFFERED	= 0x4
     } 	WMT_FILESINK_MODE;
 
-typedef 
+typedef
 enum tagWMT_MUSICSPEECH_CLASS_MODE
     {	WMT_MS_CLASS_MUSIC	= 0,
 	WMT_MS_CLASS_SPEECH	= 1,
 	WMT_MS_CLASS_MIXED	= 2
     } 	WMT_MUSICSPEECH_CLASS_MODE;
 
-typedef 
+typedef
 enum tagWMT_WATERMARK_ENTRY_TYPE
     {	WMT_WMETYPE_AUDIO	= 1,
 	WMT_WMETYPE_VIDEO	= 2
@@ -1242,7 +1240,7 @@ enum __MIDL___MIDL_itf_wmsdkidl_0000_0007
 	WMT_TIMECODE_FRAMERATE_25	= WMT_TIMECODE_FRAMERATE_30DROP + 1,
 	WMT_TIMECODE_FRAMERATE_24	= WMT_TIMECODE_FRAMERATE_25 + 1
     } ;
-typedef 
+typedef
 enum WMT_CREDENTIAL_FLAGS
     {	WMT_CREDENTIAL_SAVE	= 0x1,
 	WMT_CREDENTIAL_DONT_CACHE	= 0x2,
@@ -1251,7 +1249,7 @@ enum WMT_CREDENTIAL_FLAGS
 	WMT_CREDENTIAL_ENCRYPT	= 0x10
     } 	WMT_CREDENTIAL_FLAGS;
 
-typedef 
+typedef
 enum WM_AETYPE
     {	WM_AETYPE_INCLUDE	= 0x69,
 	WM_AETYPE_EXCLUDE	= 0x65
@@ -1445,17 +1443,17 @@ typedef struct __WMT_WATERMARK_ENTRY
     LPWSTR pwszDisplayName;
     } 	WMT_WATERMARK_ENTRY;
 
-#define WMT_VIDEOIMAGE_SAMPLE_INPUT_FRAME      1 // sample has input frame 
-#define WMT_VIDEOIMAGE_SAMPLE_OUTPUT_FRAME     2 // sample produces output frame 
-#define WMT_VIDEOIMAGE_SAMPLE_USES_CURRENT_INPUT_FRAME  4 
-#define WMT_VIDEOIMAGE_SAMPLE_USES_PREVIOUS_INPUT_FRAME 8 
-#define WMT_VIDEOIMAGE_SAMPLE_MOTION       1 // acef used (includes resizing) 
-#define WMT_VIDEOIMAGE_SAMPLE_ROTATION     2 // bd also used (not valid without acef) 
-#define WMT_VIDEOIMAGE_SAMPLE_BLENDING     4 // BlendCoef1 used 
-#define WMT_VIDEOIMAGE_SAMPLE_ADV_BLENDING 8 // BlendCoef2 also used (not valid without BlendCoef1) 
-#define WMT_VIDEOIMAGE_INTEGER_DENOMINATOR 65536L 
-#define WMT_VIDEOIMAGE_MAGIC_NUMBER 0x1d4a45f2 
-#define WMT_VIDEOIMAGE_MAGIC_NUMBER_2 0x1d4a45f3 
+#define WMT_VIDEOIMAGE_SAMPLE_INPUT_FRAME      1 // sample has input frame
+#define WMT_VIDEOIMAGE_SAMPLE_OUTPUT_FRAME     2 // sample produces output frame
+#define WMT_VIDEOIMAGE_SAMPLE_USES_CURRENT_INPUT_FRAME  4
+#define WMT_VIDEOIMAGE_SAMPLE_USES_PREVIOUS_INPUT_FRAME 8
+#define WMT_VIDEOIMAGE_SAMPLE_MOTION       1 // acef used (includes resizing)
+#define WMT_VIDEOIMAGE_SAMPLE_ROTATION     2 // bd also used (not valid without acef)
+#define WMT_VIDEOIMAGE_SAMPLE_BLENDING     4 // BlendCoef1 used
+#define WMT_VIDEOIMAGE_SAMPLE_ADV_BLENDING 8 // BlendCoef2 also used (not valid without BlendCoef1)
+#define WMT_VIDEOIMAGE_INTEGER_DENOMINATOR 65536L
+#define WMT_VIDEOIMAGE_MAGIC_NUMBER 0x1d4a45f2
+#define WMT_VIDEOIMAGE_MAGIC_NUMBER_2 0x1d4a45f3
 typedef struct __WMT_VIDEOIMAGE_SAMPLE
     {
     DWORD dwMagic;
@@ -1670,167 +1668,167 @@ typedef struct tagWMMPEG2VIDEOINFO
 } WMMPEG2VIDEOINFO;
 typedef struct tagWMSCRIPTFORMAT
 {
-    GUID    scriptType; 
+    GUID    scriptType;
 } WMSCRIPTFORMAT;
-// 00000000-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_Base 
-EXTERN_GUID(WMMEDIASUBTYPE_Base, 
-0x00000000, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// 73646976-0000-0010-8000-00AA00389B71  'vids' == WMMEDIATYPE_Video 
-EXTERN_GUID(WMMEDIATYPE_Video, 
-0x73646976, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71); 
-// e436eb78-524f-11ce-9f53-0020af0ba770            MEDIASUBTYPE_RGB1 
-EXTERN_GUID(WMMEDIASUBTYPE_RGB1, 
-0xe436eb78, 0x524f, 0x11ce, 0x9f, 0x53, 0x00, 0x20, 0xaf, 0x0b, 0xa7, 0x70); 
-// e436eb79-524f-11ce-9f53-0020af0ba770            MEDIASUBTYPE_RGB4 
-EXTERN_GUID(WMMEDIASUBTYPE_RGB4, 
-0xe436eb79, 0x524f, 0x11ce, 0x9f, 0x53, 0x00, 0x20, 0xaf, 0x0b, 0xa7, 0x70); 
-// e436eb7a-524f-11ce-9f53-0020af0ba770            MEDIASUBTYPE_RGB8 
-EXTERN_GUID(WMMEDIASUBTYPE_RGB8, 
-0xe436eb7a, 0x524f, 0x11ce, 0x9f, 0x53, 0x00, 0x20, 0xaf, 0x0b, 0xa7, 0x70); 
-// e436eb7b-524f-11ce-9f53-0020af0ba770            MEDIASUBTYPE_RGB565 
-EXTERN_GUID(WMMEDIASUBTYPE_RGB565, 
-0xe436eb7b, 0x524f, 0x11ce, 0x9f, 0x53, 0x00, 0x20, 0xaf, 0x0b, 0xa7, 0x70); 
-// e436eb7c-524f-11ce-9f53-0020af0ba770            MEDIASUBTYPE_RGB555 
-EXTERN_GUID(WMMEDIASUBTYPE_RGB555, 
-0xe436eb7c, 0x524f, 0x11ce, 0x9f, 0x53, 0x00, 0x20, 0xaf, 0x0b, 0xa7, 0x70); 
-// e436eb7d-524f-11ce-9f53-0020af0ba770            MEDIASUBTYPE_RGB24 
-EXTERN_GUID(WMMEDIASUBTYPE_RGB24, 
-0xe436eb7d, 0x524f, 0x11ce, 0x9f, 0x53, 0x00, 0x20, 0xaf, 0x0b, 0xa7, 0x70); 
-// e436eb7e-524f-11ce-9f53-0020af0ba770            MEDIASUBTYPE_RGB32 
-EXTERN_GUID(WMMEDIASUBTYPE_RGB32, 
-0xe436eb7e, 0x524f, 0x11ce, 0x9f, 0x53, 0x00, 0x20, 0xaf, 0x0b, 0xa7, 0x70); 
-// 30323449-0000-0010-8000-00AA00389B71  'YV12' ==  MEDIASUBTYPE_I420 
-EXTERN_GUID(WMMEDIASUBTYPE_I420, 
-0x30323449, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71); 
-// 56555949-0000-0010-8000-00AA00389B71  'YV12' ==  MEDIASUBTYPE_IYUV 
-EXTERN_GUID(WMMEDIASUBTYPE_IYUV, 
-0x56555949, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71); 
-// 31313259-0000-0010-8000-00AA00389B71  'YV12' ==  MEDIASUBTYPE_YV12 
-EXTERN_GUID(WMMEDIASUBTYPE_YV12, 
-0x32315659, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71); 
-// 32595559-0000-0010-8000-00AA00389B71  'YUY2' == MEDIASUBTYPE_YUY2 
-EXTERN_GUID(WMMEDIASUBTYPE_YUY2, 
-0x32595559, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71); 
-// 32323450-0000-0010-8000-00AA00389B71  'P422' == MEDIASUBTYPE_P422 
-EXTERN_GUID(WMMEDIASUBTYPE_P422, 
-0x32323450, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71); 
-// 59565955-0000-0010-8000-00AA00389B71  'UYVY' ==  MEDIASUBTYPE_UYVY 
-EXTERN_GUID(WMMEDIASUBTYPE_UYVY, 
-0x59565955, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71); 
-// 55595659-0000-0010-8000-00AA00389B71  'YVYU' == MEDIASUBTYPE_YVYU 
-EXTERN_GUID(WMMEDIASUBTYPE_YVYU, 
-0x55595659, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71); 
-// 39555659-0000-0010-8000-00AA00389B71  'YVU9' == MEDIASUBTYPE_YVU9 
-EXTERN_GUID(WMMEDIASUBTYPE_YVU9, 
-0x39555659, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71); 
-// 1d4a45f2-e5f6-4b44-8388-f0ae5c0e0c37            MEDIASUBTYPE_VIDEOIMAGE 
-EXTERN_GUID(WMMEDIASUBTYPE_VIDEOIMAGE,  
-0x1d4a45f2, 0xe5f6, 0x4b44, 0x83, 0x88, 0xf0, 0xae, 0x5c, 0x0e, 0x0c, 0x37); 
-// 3334504D-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_MP43 
-EXTERN_GUID(WMMEDIASUBTYPE_MP43, 
-0x3334504D, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// 5334504D-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_MP4S 
-EXTERN_GUID(WMMEDIASUBTYPE_MP4S, 
-0x5334504D, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// 3253344D-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_M4S2 
-EXTERN_GUID(WMMEDIASUBTYPE_M4S2, 
-0x3253344D, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// 31564D57-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WMV1 
-EXTERN_GUID(WMMEDIASUBTYPE_WMV1, 
-0x31564D57, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// 32564D57-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WMV2 
-EXTERN_GUID(WMMEDIASUBTYPE_WMV2, 
-0x32564D57, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// 3153534D-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_MSS1 
-EXTERN_GUID(WMMEDIASUBTYPE_MSS1, 
-0x3153534D, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// e06d8026-db46-11cf-b4d1-00805f6cbbea            WMMEDIASUBTYPE_MPEG2_VIDEO 
-EXTERN_GUID(WMMEDIASUBTYPE_MPEG2_VIDEO, 
-0xe06d8026, 0xdb46, 0x11cf, 0xb4, 0xd1, 0x00, 0x80, 0x5f, 0x6c, 0xbb, 0xea); 
-// 73647561-0000-0010-8000-00AA00389B71  'auds' == WMMEDIATYPE_Audio 
-EXTERN_GUID(WMMEDIATYPE_Audio, 
-0x73647561, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71); 
-// 00000001-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_PCM 
-EXTERN_GUID(WMMEDIASUBTYPE_PCM, 
-0x00000001, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// 00000009-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_DRM 
-EXTERN_GUID(WMMEDIASUBTYPE_DRM, 
-0x00000009, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// 00000162-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WMAudioV9 
-EXTERN_GUID(WMMEDIASUBTYPE_WMAudioV9, 
-0x00000162, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// 00000163-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WMAudio_Lossless 
-EXTERN_GUID(WMMEDIASUBTYPE_WMAudio_Lossless, 
-0x00000163, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// 3253534D-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_MSS2 
-EXTERN_GUID(WMMEDIASUBTYPE_MSS2, 
-0x3253534D, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// 0000000A-0000-0010-8000-00AA00389B71        WMMEDIASUBTYPE_WMSP1 
-EXTERN_GUID( WMMEDIASUBTYPE_WMSP1, 
-0x0000000A,0x0000,0x0010,0x80,0x00,0x00,0xAA,0x00,0x38,0x9B,0x71); 
-// 33564D57-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WMV3 
-EXTERN_GUID(WMMEDIASUBTYPE_WMV3, 
-0x33564D57, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// 50564D57-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WMVP 
-EXTERN_GUID(WMMEDIASUBTYPE_WMVP, 
-0x50564D57, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// 32505657-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WVP2 
-EXTERN_GUID(WMMEDIASUBTYPE_WVP2, 
-0x32505657, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// 41564D57-0000-0010-8000-00AA00389B71				WMMEDIASUBTYPE_WMVA 
-EXTERN_GUID(WMMEDIASUBTYPE_WMVA, 
-0x41564D57, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
+// 00000000-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_Base
+EXTERN_GUID(WMMEDIASUBTYPE_Base,
+0x00000000, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// 73646976-0000-0010-8000-00AA00389B71  'vids' == WMMEDIATYPE_Video
+EXTERN_GUID(WMMEDIATYPE_Video,
+0x73646976, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+// e436eb78-524f-11ce-9f53-0020af0ba770            MEDIASUBTYPE_RGB1
+EXTERN_GUID(WMMEDIASUBTYPE_RGB1,
+0xe436eb78, 0x524f, 0x11ce, 0x9f, 0x53, 0x00, 0x20, 0xaf, 0x0b, 0xa7, 0x70);
+// e436eb79-524f-11ce-9f53-0020af0ba770            MEDIASUBTYPE_RGB4
+EXTERN_GUID(WMMEDIASUBTYPE_RGB4,
+0xe436eb79, 0x524f, 0x11ce, 0x9f, 0x53, 0x00, 0x20, 0xaf, 0x0b, 0xa7, 0x70);
+// e436eb7a-524f-11ce-9f53-0020af0ba770            MEDIASUBTYPE_RGB8
+EXTERN_GUID(WMMEDIASUBTYPE_RGB8,
+0xe436eb7a, 0x524f, 0x11ce, 0x9f, 0x53, 0x00, 0x20, 0xaf, 0x0b, 0xa7, 0x70);
+// e436eb7b-524f-11ce-9f53-0020af0ba770            MEDIASUBTYPE_RGB565
+EXTERN_GUID(WMMEDIASUBTYPE_RGB565,
+0xe436eb7b, 0x524f, 0x11ce, 0x9f, 0x53, 0x00, 0x20, 0xaf, 0x0b, 0xa7, 0x70);
+// e436eb7c-524f-11ce-9f53-0020af0ba770            MEDIASUBTYPE_RGB555
+EXTERN_GUID(WMMEDIASUBTYPE_RGB555,
+0xe436eb7c, 0x524f, 0x11ce, 0x9f, 0x53, 0x00, 0x20, 0xaf, 0x0b, 0xa7, 0x70);
+// e436eb7d-524f-11ce-9f53-0020af0ba770            MEDIASUBTYPE_RGB24
+EXTERN_GUID(WMMEDIASUBTYPE_RGB24,
+0xe436eb7d, 0x524f, 0x11ce, 0x9f, 0x53, 0x00, 0x20, 0xaf, 0x0b, 0xa7, 0x70);
+// e436eb7e-524f-11ce-9f53-0020af0ba770            MEDIASUBTYPE_RGB32
+EXTERN_GUID(WMMEDIASUBTYPE_RGB32,
+0xe436eb7e, 0x524f, 0x11ce, 0x9f, 0x53, 0x00, 0x20, 0xaf, 0x0b, 0xa7, 0x70);
+// 30323449-0000-0010-8000-00AA00389B71  'YV12' ==  MEDIASUBTYPE_I420
+EXTERN_GUID(WMMEDIASUBTYPE_I420,
+0x30323449, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+// 56555949-0000-0010-8000-00AA00389B71  'YV12' ==  MEDIASUBTYPE_IYUV
+EXTERN_GUID(WMMEDIASUBTYPE_IYUV,
+0x56555949, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+// 31313259-0000-0010-8000-00AA00389B71  'YV12' ==  MEDIASUBTYPE_YV12
+EXTERN_GUID(WMMEDIASUBTYPE_YV12,
+0x32315659, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+// 32595559-0000-0010-8000-00AA00389B71  'YUY2' == MEDIASUBTYPE_YUY2
+EXTERN_GUID(WMMEDIASUBTYPE_YUY2,
+0x32595559, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+// 32323450-0000-0010-8000-00AA00389B71  'P422' == MEDIASUBTYPE_P422
+EXTERN_GUID(WMMEDIASUBTYPE_P422,
+0x32323450, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+// 59565955-0000-0010-8000-00AA00389B71  'UYVY' ==  MEDIASUBTYPE_UYVY
+EXTERN_GUID(WMMEDIASUBTYPE_UYVY,
+0x59565955, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+// 55595659-0000-0010-8000-00AA00389B71  'YVYU' == MEDIASUBTYPE_YVYU
+EXTERN_GUID(WMMEDIASUBTYPE_YVYU,
+0x55595659, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+// 39555659-0000-0010-8000-00AA00389B71  'YVU9' == MEDIASUBTYPE_YVU9
+EXTERN_GUID(WMMEDIASUBTYPE_YVU9,
+0x39555659, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+// 1d4a45f2-e5f6-4b44-8388-f0ae5c0e0c37            MEDIASUBTYPE_VIDEOIMAGE
+EXTERN_GUID(WMMEDIASUBTYPE_VIDEOIMAGE,
+0x1d4a45f2, 0xe5f6, 0x4b44, 0x83, 0x88, 0xf0, 0xae, 0x5c, 0x0e, 0x0c, 0x37);
+// 3334504D-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_MP43
+EXTERN_GUID(WMMEDIASUBTYPE_MP43,
+0x3334504D, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// 5334504D-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_MP4S
+EXTERN_GUID(WMMEDIASUBTYPE_MP4S,
+0x5334504D, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// 3253344D-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_M4S2
+EXTERN_GUID(WMMEDIASUBTYPE_M4S2,
+0x3253344D, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// 31564D57-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WMV1
+EXTERN_GUID(WMMEDIASUBTYPE_WMV1,
+0x31564D57, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// 32564D57-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WMV2
+EXTERN_GUID(WMMEDIASUBTYPE_WMV2,
+0x32564D57, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// 3153534D-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_MSS1
+EXTERN_GUID(WMMEDIASUBTYPE_MSS1,
+0x3153534D, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// e06d8026-db46-11cf-b4d1-00805f6cbbea            WMMEDIASUBTYPE_MPEG2_VIDEO
+EXTERN_GUID(WMMEDIASUBTYPE_MPEG2_VIDEO,
+0xe06d8026, 0xdb46, 0x11cf, 0xb4, 0xd1, 0x00, 0x80, 0x5f, 0x6c, 0xbb, 0xea);
+// 73647561-0000-0010-8000-00AA00389B71  'auds' == WMMEDIATYPE_Audio
+EXTERN_GUID(WMMEDIATYPE_Audio,
+0x73647561, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+// 00000001-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_PCM
+EXTERN_GUID(WMMEDIASUBTYPE_PCM,
+0x00000001, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// 00000009-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_DRM
+EXTERN_GUID(WMMEDIASUBTYPE_DRM,
+0x00000009, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// 00000162-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WMAudioV9
+EXTERN_GUID(WMMEDIASUBTYPE_WMAudioV9,
+0x00000162, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// 00000163-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WMAudio_Lossless
+EXTERN_GUID(WMMEDIASUBTYPE_WMAudio_Lossless,
+0x00000163, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// 3253534D-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_MSS2
+EXTERN_GUID(WMMEDIASUBTYPE_MSS2,
+0x3253534D, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// 0000000A-0000-0010-8000-00AA00389B71        WMMEDIASUBTYPE_WMSP1
+EXTERN_GUID( WMMEDIASUBTYPE_WMSP1,
+0x0000000A,0x0000,0x0010,0x80,0x00,0x00,0xAA,0x00,0x38,0x9B,0x71);
+// 33564D57-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WMV3
+EXTERN_GUID(WMMEDIASUBTYPE_WMV3,
+0x33564D57, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// 50564D57-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WMVP
+EXTERN_GUID(WMMEDIASUBTYPE_WMVP,
+0x50564D57, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// 32505657-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WVP2
+EXTERN_GUID(WMMEDIASUBTYPE_WVP2,
+0x32505657, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// 41564D57-0000-0010-8000-00AA00389B71				WMMEDIASUBTYPE_WMVA
+EXTERN_GUID(WMMEDIASUBTYPE_WMVA,
+0x41564D57, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
 // 31435657-0000-0010-8000-00AA00389B71				WMMEDIASUBTYPE_WVC1
-EXTERN_GUID(WMMEDIASUBTYPE_WVC1, 
+EXTERN_GUID(WMMEDIASUBTYPE_WVC1,
 0x31435657, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
-// 00000161-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WMAudioV8 
-EXTERN_GUID(WMMEDIASUBTYPE_WMAudioV8, 
-0x00000161, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// 00000161-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WMAudioV7 
-EXTERN_GUID(WMMEDIASUBTYPE_WMAudioV7, 
-0x00000161, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// 00000161-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WMAudioV2 
-EXTERN_GUID(WMMEDIASUBTYPE_WMAudioV2, 
-0x00000161, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// 00000130-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_ACELPnet 
-EXTERN_GUID(WMMEDIASUBTYPE_ACELPnet, 
-0x00000130, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// 00000055-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_MP3 
-EXTERN_GUID(WMMEDIASUBTYPE_MP3, 
-0x00000055, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71); 
-// 776257d4-c627-41cb-8f81-7ac7ff1c40cc            WMMEDIASUBTYPE_WebStream 
-EXTERN_GUID(WMMEDIASUBTYPE_WebStream, 
-0x776257d4, 0xc627, 0x41cb, 0x8f, 0x81, 0x7a, 0xc7, 0xff, 0x1c, 0x40, 0xcc); 
-// 73636d64-0000-0010-8000-00AA00389B71  'scmd' == WMMEDIATYPE_Script 
-EXTERN_GUID(WMMEDIATYPE_Script, 
-0x73636d64, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71); 
-// 34A50FD8-8AA5-4386-81FE-A0EFE0488E31  'imag' == WMMEDIATYPE_Image 
-EXTERN_GUID(WMMEDIATYPE_Image, 
-0x34a50fd8, 0x8aa5, 0x4386, 0x81, 0xfe, 0xa0, 0xef, 0xe0, 0x48, 0x8e, 0x31); 
-// D9E47579-930E-4427-ADFC-AD80F290E470  'fxfr' == WMMEDIATYPE_FileTransfer 
-EXTERN_GUID(WMMEDIATYPE_FileTransfer, 
-0xd9e47579, 0x930e, 0x4427, 0xad, 0xfc, 0xad, 0x80, 0xf2, 0x90, 0xe4, 0x70); 
-// 9BBA1EA7-5AB2-4829-BA57-0940209BCF3E      'text' == WMMEDIATYPE_Text 
-EXTERN_GUID(WMMEDIATYPE_Text, 
-0x9bba1ea7, 0x5ab2, 0x4829, 0xba, 0x57, 0x9, 0x40, 0x20, 0x9b, 0xcf, 0x3e); 
-// 05589f80-c356-11ce-bf01-00aa0055595a        WMFORMAT_VideoInfo 
-EXTERN_GUID(WMFORMAT_VideoInfo, 
-0x05589f80, 0xc356, 0x11ce, 0xbf, 0x01, 0x00, 0xaa, 0x00, 0x55, 0x59, 0x5a); 
-// e06d80e3-db46-11cf-b4d1-00805f6cbbea        WMFORMAT_MPEG2Video 
-EXTERN_GUID(WMFORMAT_MPEG2Video, 
-0xe06d80e3, 0xdb46, 0x11cf, 0xb4, 0xd1, 0x00, 0x80, 0x05f, 0x6c, 0xbb, 0xea); 
-// 05589f81-c356-11ce-bf01-00aa0055595a        WMFORMAT_WaveFormatEx 
-EXTERN_GUID(WMFORMAT_WaveFormatEx, 
-0x05589f81, 0xc356, 0x11ce, 0xbf, 0x01, 0x00, 0xaa, 0x00, 0x55, 0x59, 0x5a); 
-// 5C8510F2-DEBE-4ca7-BBA5-F07A104F8DFF        WMFORMAT_Script 
-EXTERN_GUID(WMFORMAT_Script, 
-0x5c8510f2, 0xdebe, 0x4ca7, 0xbb, 0xa5, 0xf0, 0x7a, 0x10, 0x4f, 0x8d, 0xff); 
-// da1e6b13-8359-4050-b398-388e965bf00c        WMFORMAT_WebStream 
-EXTERN_GUID(WMFORMAT_WebStream, 
-0xda1e6b13, 0x8359, 0x4050, 0xb3, 0x98, 0x38, 0x8e, 0x96, 0x5b, 0xf0, 0x0c); 
-// 82f38a70-c29f-11d1-97ad-00a0c95ea850        WMSCRIPTTYPE_TwoStrings 
-EXTERN_GUID( WMSCRIPTTYPE_TwoStrings, 
-0x82f38a70,0xc29f,0x11d1,0x97,0xad,0x00,0xa0,0xc9,0x5e,0xa8,0x50); 
+// 00000161-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WMAudioV8
+EXTERN_GUID(WMMEDIASUBTYPE_WMAudioV8,
+0x00000161, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// 00000161-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WMAudioV7
+EXTERN_GUID(WMMEDIASUBTYPE_WMAudioV7,
+0x00000161, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// 00000161-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_WMAudioV2
+EXTERN_GUID(WMMEDIASUBTYPE_WMAudioV2,
+0x00000161, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// 00000130-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_ACELPnet
+EXTERN_GUID(WMMEDIASUBTYPE_ACELPnet,
+0x00000130, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// 00000055-0000-0010-8000-00AA00389B71            WMMEDIASUBTYPE_MP3
+EXTERN_GUID(WMMEDIASUBTYPE_MP3,
+0x00000055, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71);
+// 776257d4-c627-41cb-8f81-7ac7ff1c40cc            WMMEDIASUBTYPE_WebStream
+EXTERN_GUID(WMMEDIASUBTYPE_WebStream,
+0x776257d4, 0xc627, 0x41cb, 0x8f, 0x81, 0x7a, 0xc7, 0xff, 0x1c, 0x40, 0xcc);
+// 73636d64-0000-0010-8000-00AA00389B71  'scmd' == WMMEDIATYPE_Script
+EXTERN_GUID(WMMEDIATYPE_Script,
+0x73636d64, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+// 34A50FD8-8AA5-4386-81FE-A0EFE0488E31  'imag' == WMMEDIATYPE_Image
+EXTERN_GUID(WMMEDIATYPE_Image,
+0x34a50fd8, 0x8aa5, 0x4386, 0x81, 0xfe, 0xa0, 0xef, 0xe0, 0x48, 0x8e, 0x31);
+// D9E47579-930E-4427-ADFC-AD80F290E470  'fxfr' == WMMEDIATYPE_FileTransfer
+EXTERN_GUID(WMMEDIATYPE_FileTransfer,
+0xd9e47579, 0x930e, 0x4427, 0xad, 0xfc, 0xad, 0x80, 0xf2, 0x90, 0xe4, 0x70);
+// 9BBA1EA7-5AB2-4829-BA57-0940209BCF3E      'text' == WMMEDIATYPE_Text
+EXTERN_GUID(WMMEDIATYPE_Text,
+0x9bba1ea7, 0x5ab2, 0x4829, 0xba, 0x57, 0x9, 0x40, 0x20, 0x9b, 0xcf, 0x3e);
+// 05589f80-c356-11ce-bf01-00aa0055595a        WMFORMAT_VideoInfo
+EXTERN_GUID(WMFORMAT_VideoInfo,
+0x05589f80, 0xc356, 0x11ce, 0xbf, 0x01, 0x00, 0xaa, 0x00, 0x55, 0x59, 0x5a);
+// e06d80e3-db46-11cf-b4d1-00805f6cbbea        WMFORMAT_MPEG2Video
+EXTERN_GUID(WMFORMAT_MPEG2Video,
+0xe06d80e3, 0xdb46, 0x11cf, 0xb4, 0xd1, 0x00, 0x80, 0x05f, 0x6c, 0xbb, 0xea);
+// 05589f81-c356-11ce-bf01-00aa0055595a        WMFORMAT_WaveFormatEx
+EXTERN_GUID(WMFORMAT_WaveFormatEx,
+0x05589f81, 0xc356, 0x11ce, 0xbf, 0x01, 0x00, 0xaa, 0x00, 0x55, 0x59, 0x5a);
+// 5C8510F2-DEBE-4ca7-BBA5-F07A104F8DFF        WMFORMAT_Script
+EXTERN_GUID(WMFORMAT_Script,
+0x5c8510f2, 0xdebe, 0x4ca7, 0xbb, 0xa5, 0xf0, 0x7a, 0x10, 0x4f, 0x8d, 0xff);
+// da1e6b13-8359-4050-b398-388e965bf00c        WMFORMAT_WebStream
+EXTERN_GUID(WMFORMAT_WebStream,
+0xda1e6b13, 0x8359, 0x4050, 0xb3, 0x98, 0x38, 0x8e, 0x96, 0x5b, 0xf0, 0x0c);
+// 82f38a70-c29f-11d1-97ad-00a0c95ea850        WMSCRIPTTYPE_TwoStrings
+EXTERN_GUID( WMSCRIPTTYPE_TwoStrings,
+0x82f38a70,0xc29f,0x11d1,0x97,0xad,0x00,0xa0,0xc9,0x5e,0xa8,0x50);
 EXTERN_GUID( WM_SampleExtensionGUID_OutputCleanPoint, 0xf72a3c6f, 0x6eb4, 0x4ebc, 0xb1, 0x92, 0x9, 0xad, 0x97, 0x59, 0xe8, 0x28 );
 EXTERN_GUID( WM_SampleExtensionGUID_Timecode, 0x399595ec, 0x8667, 0x4e2d, 0x8f, 0xdb, 0x98, 0x81, 0x4c, 0xe7, 0x6c, 0x1e);
 EXTERN_GUID( WM_SampleExtensionGUID_ChromaLocation, 0x4c5acca0, 0x9276, 0x4b2c, 0x9e, 0x4c, 0xa0, 0xed, 0xef, 0xdd, 0x21, 0x7e);
@@ -1925,7 +1923,7 @@ EXTERN_GUID( IID_IWMWriterFileSink2,    0x14282ba7,0x4aef,0x4205,0x8c,0xe5,0xc2,
 EXTERN_GUID( IID_IWMWriterFileSink3,    0x3fea4feb,0x2945,0x47a7,0xa1,0xdd,0xc5,0x3a,0x8f,0xc4,0xc4,0x5c );
 EXTERN_GUID( IID_IWMWriterNetworkSink,  0x96406be7,0x2b2b,0x11d3,0xb3,0x6b,0x00,0xc0,0x4f,0x61,0x08,0xff );
 EXTERN_GUID( IID_IWMClientConnections,  0x73c66010,0xa299,0x41df,0xb1,0xf0,0xcc,0xf0,0x3b,0x09,0xc1,0xc6 );
-EXTERN_GUID( IID_IWMClientConnections2, 0x4091571e,0x4701,0x4593,0xbb,0x3d,0xd5,0xf5,0xf0,0xc7,0x42,0x46 ); 
+EXTERN_GUID( IID_IWMClientConnections2, 0x4091571e,0x4701,0x4593,0xbb,0x3d,0xd5,0xf5,0xf0,0xc7,0x42,0x46 );
 EXTERN_GUID( IID_IWMReaderAdvanced,     0x96406bea,0x2b2b,0x11d3,0xb3,0x6b,0x00,0xc0,0x4f,0x61,0x08,0xff );
 EXTERN_GUID( IID_IWMReaderAdvanced2,    0xae14a945,0xb90c,0x4d0d,0x91,0x27,0x80,0xd6,0x65,0xf7,0xd7,0x3e );
 EXTERN_GUID( IID_IWMReaderAdvanced3,    0x5dc0674b,0xf04b,0x4a4e,0x9f,0x2a,0xb1,0xaf,0xde,0x2c,0x81,0x00 );
@@ -2006,59 +2004,59 @@ extern RPC_IF_HANDLE __MIDL_itf_wmsdkidl_0000_v0_0_s_ifspec;
 #define __IWMMediaProps_INTERFACE_DEFINED__
 
 /* interface IWMMediaProps */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMMediaProps;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BCE-2B2B-11d3-B36B-00C04F6108FF")
     IWMMediaProps : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetType( 
+        virtual HRESULT STDMETHODCALLTYPE GetType(
             /* [out] */ GUID *pguidType) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMediaType( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetMediaType(
             /* [out] */ WM_MEDIA_TYPE *pType,
             /* [out][in] */ DWORD *pcbType) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetMediaType( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetMediaType(
             /* [in] */ WM_MEDIA_TYPE *pType) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMMediaPropsVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMMediaProps * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMMediaProps * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMMediaProps * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetType )(
             IWMMediaProps * This,
             /* [out] */ GUID *pguidType);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMediaType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMediaType )(
             IWMMediaProps * This,
             /* [out] */ WM_MEDIA_TYPE *pType,
             /* [out][in] */ DWORD *pcbType);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetMediaType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetMediaType )(
             IWMMediaProps * This,
             /* [in] */ WM_MEDIA_TYPE *pType);
-        
+
         END_INTERFACE
     } IWMMediaPropsVtbl;
 
@@ -2067,7 +2065,7 @@ EXTERN_C const IID IID_IWMMediaProps;
         CONST_VTBL struct IWMMediaPropsVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -2098,7 +2096,7 @@ EXTERN_C const IID IID_IWMMediaProps;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMMediaProps_GetType_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMMediaProps_GetType_Proxy(
     IWMMediaProps * This,
     /* [out] */ GUID *pguidType);
 
@@ -2110,7 +2108,7 @@ void __RPC_STUB IWMMediaProps_GetType_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMMediaProps_GetMediaType_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMMediaProps_GetMediaType_Proxy(
     IWMMediaProps * This,
     /* [out] */ WM_MEDIA_TYPE *pType,
     /* [out][in] */ DWORD *pcbType);
@@ -2123,7 +2121,7 @@ void __RPC_STUB IWMMediaProps_GetMediaType_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMMediaProps_SetMediaType_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMMediaProps_SetMediaType_Proxy(
     IWMMediaProps * This,
     /* [in] */ WM_MEDIA_TYPE *pType);
 
@@ -2143,77 +2141,77 @@ void __RPC_STUB IWMMediaProps_SetMediaType_Stub(
 #define __IWMVideoMediaProps_INTERFACE_DEFINED__
 
 /* interface IWMVideoMediaProps */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMVideoMediaProps;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BCF-2B2B-11d3-B36B-00C04F6108FF")
     IWMVideoMediaProps : public IWMMediaProps
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetMaxKeyFrameSpacing( 
+        virtual HRESULT STDMETHODCALLTYPE GetMaxKeyFrameSpacing(
             /* [out] */ LONGLONG *pllTime) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetMaxKeyFrameSpacing( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetMaxKeyFrameSpacing(
             /* [in] */ LONGLONG llTime) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetQuality( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetQuality(
             /* [out] */ DWORD *pdwQuality) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetQuality( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetQuality(
             /* [in] */ DWORD dwQuality) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMVideoMediaPropsVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMVideoMediaProps * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMVideoMediaProps * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMVideoMediaProps * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetType )(
             IWMVideoMediaProps * This,
             /* [out] */ GUID *pguidType);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMediaType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMediaType )(
             IWMVideoMediaProps * This,
             /* [out] */ WM_MEDIA_TYPE *pType,
             /* [out][in] */ DWORD *pcbType);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetMediaType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetMediaType )(
             IWMVideoMediaProps * This,
             /* [in] */ WM_MEDIA_TYPE *pType);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaxKeyFrameSpacing )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMaxKeyFrameSpacing )(
             IWMVideoMediaProps * This,
             /* [out] */ LONGLONG *pllTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetMaxKeyFrameSpacing )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetMaxKeyFrameSpacing )(
             IWMVideoMediaProps * This,
             /* [in] */ LONGLONG llTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetQuality )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetQuality )(
             IWMVideoMediaProps * This,
             /* [out] */ DWORD *pdwQuality);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetQuality )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetQuality )(
             IWMVideoMediaProps * This,
             /* [in] */ DWORD dwQuality);
-        
+
         END_INTERFACE
     } IWMVideoMediaPropsVtbl;
 
@@ -2222,7 +2220,7 @@ EXTERN_C const IID IID_IWMVideoMediaProps;
         CONST_VTBL struct IWMVideoMediaPropsVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -2266,7 +2264,7 @@ EXTERN_C const IID IID_IWMVideoMediaProps;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMVideoMediaProps_GetMaxKeyFrameSpacing_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMVideoMediaProps_GetMaxKeyFrameSpacing_Proxy(
     IWMVideoMediaProps * This,
     /* [out] */ LONGLONG *pllTime);
 
@@ -2278,7 +2276,7 @@ void __RPC_STUB IWMVideoMediaProps_GetMaxKeyFrameSpacing_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMVideoMediaProps_SetMaxKeyFrameSpacing_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMVideoMediaProps_SetMaxKeyFrameSpacing_Proxy(
     IWMVideoMediaProps * This,
     /* [in] */ LONGLONG llTime);
 
@@ -2290,7 +2288,7 @@ void __RPC_STUB IWMVideoMediaProps_SetMaxKeyFrameSpacing_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMVideoMediaProps_GetQuality_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMVideoMediaProps_GetQuality_Proxy(
     IWMVideoMediaProps * This,
     /* [out] */ DWORD *pdwQuality);
 
@@ -2302,7 +2300,7 @@ void __RPC_STUB IWMVideoMediaProps_GetQuality_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMVideoMediaProps_SetQuality_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMVideoMediaProps_SetQuality_Proxy(
     IWMVideoMediaProps * This,
     /* [in] */ DWORD dwQuality);
 
@@ -2322,139 +2320,139 @@ void __RPC_STUB IWMVideoMediaProps_SetQuality_Stub(
 #define __IWMWriter_INTERFACE_DEFINED__
 
 /* interface IWMWriter */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMWriter;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BD4-2B2B-11d3-B36B-00C04F6108FF")
     IWMWriter : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE SetProfileByID( 
+        virtual HRESULT STDMETHODCALLTYPE SetProfileByID(
             /* [in] */ REFGUID guidProfile) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetProfile( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetProfile(
             /* [in] */ IWMProfile *pProfile) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetOutputFilename( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetOutputFilename(
             /* [in] */ const WCHAR *pwszFilename) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetInputCount( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetInputCount(
             /* [out] */ DWORD *pcInputs) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetInputProps( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetInputProps(
             /* [in] */ DWORD dwInputNum,
             /* [out] */ IWMInputMediaProps **ppInput) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetInputProps( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetInputProps(
             /* [in] */ DWORD dwInputNum,
             /* [in] */ IWMInputMediaProps *pInput) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetInputFormatCount( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetInputFormatCount(
             /* [in] */ DWORD dwInputNumber,
             /* [out] */ DWORD *pcFormats) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetInputFormat( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetInputFormat(
             /* [in] */ DWORD dwInputNumber,
             /* [in] */ DWORD dwFormatNumber,
             /* [out] */ IWMInputMediaProps **pProps) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE BeginWriting( void) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE EndWriting( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AllocateSample( 
+
+        virtual HRESULT STDMETHODCALLTYPE AllocateSample(
             /* [in] */ DWORD dwSampleSize,
             /* [out] */ INSSBuffer **ppSample) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE WriteSample( 
+
+        virtual HRESULT STDMETHODCALLTYPE WriteSample(
             /* [in] */ DWORD dwInputNum,
             /* [in] */ QWORD cnsSampleTime,
             /* [in] */ DWORD dwFlags,
             /* [in] */ INSSBuffer *pSample) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE Flush( void) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMWriterVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMWriter * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMWriter * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMWriter * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetProfileByID )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetProfileByID )(
             IWMWriter * This,
             /* [in] */ REFGUID guidProfile);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetProfile )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetProfile )(
             IWMWriter * This,
             /* [in] */ IWMProfile *pProfile);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetOutputFilename )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetOutputFilename )(
             IWMWriter * This,
             /* [in] */ const WCHAR *pwszFilename);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetInputCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetInputCount )(
             IWMWriter * This,
             /* [out] */ DWORD *pcInputs);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetInputProps )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetInputProps )(
             IWMWriter * This,
             /* [in] */ DWORD dwInputNum,
             /* [out] */ IWMInputMediaProps **ppInput);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetInputProps )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetInputProps )(
             IWMWriter * This,
             /* [in] */ DWORD dwInputNum,
             /* [in] */ IWMInputMediaProps *pInput);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetInputFormatCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetInputFormatCount )(
             IWMWriter * This,
             /* [in] */ DWORD dwInputNumber,
             /* [out] */ DWORD *pcFormats);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetInputFormat )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetInputFormat )(
             IWMWriter * This,
             /* [in] */ DWORD dwInputNumber,
             /* [in] */ DWORD dwFormatNumber,
             /* [out] */ IWMInputMediaProps **pProps);
-        
-        HRESULT ( STDMETHODCALLTYPE *BeginWriting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *BeginWriting )(
             IWMWriter * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *EndWriting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *EndWriting )(
             IWMWriter * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *AllocateSample )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AllocateSample )(
             IWMWriter * This,
             /* [in] */ DWORD dwSampleSize,
             /* [out] */ INSSBuffer **ppSample);
-        
-        HRESULT ( STDMETHODCALLTYPE *WriteSample )( 
+
+        HRESULT ( STDMETHODCALLTYPE *WriteSample )(
             IWMWriter * This,
             /* [in] */ DWORD dwInputNum,
             /* [in] */ QWORD cnsSampleTime,
             /* [in] */ DWORD dwFlags,
             /* [in] */ INSSBuffer *pSample);
-        
-        HRESULT ( STDMETHODCALLTYPE *Flush )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Flush )(
             IWMWriter * This);
-        
+
         END_INTERFACE
     } IWMWriterVtbl;
 
@@ -2463,7 +2461,7 @@ EXTERN_C const IID IID_IWMWriter;
         CONST_VTBL struct IWMWriterVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -2524,7 +2522,7 @@ EXTERN_C const IID IID_IWMWriter;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMWriter_SetProfileByID_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriter_SetProfileByID_Proxy(
     IWMWriter * This,
     /* [in] */ REFGUID guidProfile);
 
@@ -2536,7 +2534,7 @@ void __RPC_STUB IWMWriter_SetProfileByID_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriter_SetProfile_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriter_SetProfile_Proxy(
     IWMWriter * This,
     /* [in] */ IWMProfile *pProfile);
 
@@ -2548,7 +2546,7 @@ void __RPC_STUB IWMWriter_SetProfile_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriter_SetOutputFilename_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriter_SetOutputFilename_Proxy(
     IWMWriter * This,
     /* [in] */ const WCHAR *pwszFilename);
 
@@ -2560,7 +2558,7 @@ void __RPC_STUB IWMWriter_SetOutputFilename_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriter_GetInputCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriter_GetInputCount_Proxy(
     IWMWriter * This,
     /* [out] */ DWORD *pcInputs);
 
@@ -2572,7 +2570,7 @@ void __RPC_STUB IWMWriter_GetInputCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriter_GetInputProps_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriter_GetInputProps_Proxy(
     IWMWriter * This,
     /* [in] */ DWORD dwInputNum,
     /* [out] */ IWMInputMediaProps **ppInput);
@@ -2585,7 +2583,7 @@ void __RPC_STUB IWMWriter_GetInputProps_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriter_SetInputProps_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriter_SetInputProps_Proxy(
     IWMWriter * This,
     /* [in] */ DWORD dwInputNum,
     /* [in] */ IWMInputMediaProps *pInput);
@@ -2598,7 +2596,7 @@ void __RPC_STUB IWMWriter_SetInputProps_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriter_GetInputFormatCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriter_GetInputFormatCount_Proxy(
     IWMWriter * This,
     /* [in] */ DWORD dwInputNumber,
     /* [out] */ DWORD *pcFormats);
@@ -2611,7 +2609,7 @@ void __RPC_STUB IWMWriter_GetInputFormatCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriter_GetInputFormat_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriter_GetInputFormat_Proxy(
     IWMWriter * This,
     /* [in] */ DWORD dwInputNumber,
     /* [in] */ DWORD dwFormatNumber,
@@ -2625,7 +2623,7 @@ void __RPC_STUB IWMWriter_GetInputFormat_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriter_BeginWriting_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriter_BeginWriting_Proxy(
     IWMWriter * This);
 
 
@@ -2636,7 +2634,7 @@ void __RPC_STUB IWMWriter_BeginWriting_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriter_EndWriting_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriter_EndWriting_Proxy(
     IWMWriter * This);
 
 
@@ -2647,7 +2645,7 @@ void __RPC_STUB IWMWriter_EndWriting_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriter_AllocateSample_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriter_AllocateSample_Proxy(
     IWMWriter * This,
     /* [in] */ DWORD dwSampleSize,
     /* [out] */ INSSBuffer **ppSample);
@@ -2660,7 +2658,7 @@ void __RPC_STUB IWMWriter_AllocateSample_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriter_WriteSample_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriter_WriteSample_Proxy(
     IWMWriter * This,
     /* [in] */ DWORD dwInputNum,
     /* [in] */ QWORD cnsSampleTime,
@@ -2675,7 +2673,7 @@ void __RPC_STUB IWMWriter_WriteSample_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriter_Flush_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriter_Flush_Proxy(
     IWMWriter * This);
 
 
@@ -2694,82 +2692,82 @@ void __RPC_STUB IWMWriter_Flush_Stub(
 #define __IWMDRMWriter_INTERFACE_DEFINED__
 
 /* interface IWMDRMWriter */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMDRMWriter;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("d6ea5dd0-12a0-43f4-90ab-a3fd451e6a07")
     IWMDRMWriter : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GenerateKeySeed( 
+        virtual HRESULT STDMETHODCALLTYPE GenerateKeySeed(
             /* [size_is][out] */ WCHAR *pwszKeySeed,
             /* [out][in] */ DWORD *pcwchLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GenerateKeyID( 
+
+        virtual HRESULT STDMETHODCALLTYPE GenerateKeyID(
             /* [size_is][out] */ WCHAR *pwszKeyID,
             /* [out][in] */ DWORD *pcwchLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GenerateSigningKeyPair( 
+
+        virtual HRESULT STDMETHODCALLTYPE GenerateSigningKeyPair(
             /* [size_is][out] */ WCHAR *pwszPrivKey,
             /* [out][in] */ DWORD *pcwchPrivKeyLength,
             /* [size_is][out] */ WCHAR *pwszPubKey,
             /* [out][in] */ DWORD *pcwchPubKeyLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetDRMAttribute( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetDRMAttribute(
             /* [in] */ WORD wStreamNum,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMDRMWriterVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMDRMWriter * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMDRMWriter * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMDRMWriter * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GenerateKeySeed )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GenerateKeySeed )(
             IWMDRMWriter * This,
             /* [size_is][out] */ WCHAR *pwszKeySeed,
             /* [out][in] */ DWORD *pcwchLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GenerateKeyID )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GenerateKeyID )(
             IWMDRMWriter * This,
             /* [size_is][out] */ WCHAR *pwszKeyID,
             /* [out][in] */ DWORD *pcwchLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GenerateSigningKeyPair )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GenerateSigningKeyPair )(
             IWMDRMWriter * This,
             /* [size_is][out] */ WCHAR *pwszPrivKey,
             /* [out][in] */ DWORD *pcwchPrivKeyLength,
             /* [size_is][out] */ WCHAR *pwszPubKey,
             /* [out][in] */ DWORD *pcwchPubKeyLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetDRMAttribute )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetDRMAttribute )(
             IWMDRMWriter * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength);
-        
+
         END_INTERFACE
     } IWMDRMWriterVtbl;
 
@@ -2778,7 +2776,7 @@ EXTERN_C const IID IID_IWMDRMWriter;
         CONST_VTBL struct IWMDRMWriterVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -2812,7 +2810,7 @@ EXTERN_C const IID IID_IWMDRMWriter;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMWriter_GenerateKeySeed_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMWriter_GenerateKeySeed_Proxy(
     IWMDRMWriter * This,
     /* [size_is][out] */ WCHAR *pwszKeySeed,
     /* [out][in] */ DWORD *pcwchLength);
@@ -2825,7 +2823,7 @@ void __RPC_STUB IWMDRMWriter_GenerateKeySeed_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMWriter_GenerateKeyID_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMWriter_GenerateKeyID_Proxy(
     IWMDRMWriter * This,
     /* [size_is][out] */ WCHAR *pwszKeyID,
     /* [out][in] */ DWORD *pcwchLength);
@@ -2838,7 +2836,7 @@ void __RPC_STUB IWMDRMWriter_GenerateKeyID_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMWriter_GenerateSigningKeyPair_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMWriter_GenerateSigningKeyPair_Proxy(
     IWMDRMWriter * This,
     /* [size_is][out] */ WCHAR *pwszPrivKey,
     /* [out][in] */ DWORD *pcwchPrivKeyLength,
@@ -2853,7 +2851,7 @@ void __RPC_STUB IWMDRMWriter_GenerateSigningKeyPair_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMWriter_SetDRMAttribute_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMWriter_SetDRMAttribute_Proxy(
     IWMDRMWriter * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ LPCWSTR pszName,
@@ -2877,72 +2875,72 @@ void __RPC_STUB IWMDRMWriter_SetDRMAttribute_Stub(
 #define __IWMDRMWriter2_INTERFACE_DEFINED__
 
 /* interface IWMDRMWriter2 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMDRMWriter2;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("38ee7a94-40e2-4e10-aa3f-33fd3210ed5b")
     IWMDRMWriter2 : public IWMDRMWriter
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE SetWMDRMNetEncryption( 
+        virtual HRESULT STDMETHODCALLTYPE SetWMDRMNetEncryption(
             /* [in] */ BOOL fSamplesEncrypted,
             /* [in] */ BYTE *pbKeyID,
             /* [in] */ DWORD cbKeyID) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMDRMWriter2Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMDRMWriter2 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMDRMWriter2 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMDRMWriter2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GenerateKeySeed )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GenerateKeySeed )(
             IWMDRMWriter2 * This,
             /* [size_is][out] */ WCHAR *pwszKeySeed,
             /* [out][in] */ DWORD *pcwchLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GenerateKeyID )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GenerateKeyID )(
             IWMDRMWriter2 * This,
             /* [size_is][out] */ WCHAR *pwszKeyID,
             /* [out][in] */ DWORD *pcwchLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GenerateSigningKeyPair )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GenerateSigningKeyPair )(
             IWMDRMWriter2 * This,
             /* [size_is][out] */ WCHAR *pwszPrivKey,
             /* [out][in] */ DWORD *pcwchPrivKeyLength,
             /* [size_is][out] */ WCHAR *pwszPubKey,
             /* [out][in] */ DWORD *pcwchPubKeyLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetDRMAttribute )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetDRMAttribute )(
             IWMDRMWriter2 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetWMDRMNetEncryption )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetWMDRMNetEncryption )(
             IWMDRMWriter2 * This,
             /* [in] */ BOOL fSamplesEncrypted,
             /* [in] */ BYTE *pbKeyID,
             /* [in] */ DWORD cbKeyID);
-        
+
         END_INTERFACE
     } IWMDRMWriter2Vtbl;
 
@@ -2951,7 +2949,7 @@ EXTERN_C const IID IID_IWMDRMWriter2;
         CONST_VTBL struct IWMDRMWriter2Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -2989,7 +2987,7 @@ EXTERN_C const IID IID_IWMDRMWriter2;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMWriter2_SetWMDRMNetEncryption_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMWriter2_SetWMDRMNetEncryption_Proxy(
     IWMDRMWriter2 * This,
     /* [in] */ BOOL fSamplesEncrypted,
     /* [in] */ BYTE *pbKeyID,
@@ -3011,67 +3009,67 @@ void __RPC_STUB IWMDRMWriter2_SetWMDRMNetEncryption_Stub(
 #define __IWMInputMediaProps_INTERFACE_DEFINED__
 
 /* interface IWMInputMediaProps */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMInputMediaProps;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BD5-2B2B-11d3-B36B-00C04F6108FF")
     IWMInputMediaProps : public IWMMediaProps
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetConnectionName( 
+        virtual HRESULT STDMETHODCALLTYPE GetConnectionName(
             /* [size_is][out] */ WCHAR *pwszName,
             /* [out][in] */ WORD *pcchName) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetGroupName( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetGroupName(
             /* [size_is][out] */ WCHAR *pwszName,
             /* [out][in] */ WORD *pcchName) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMInputMediaPropsVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMInputMediaProps * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMInputMediaProps * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMInputMediaProps * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetType )(
             IWMInputMediaProps * This,
             /* [out] */ GUID *pguidType);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMediaType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMediaType )(
             IWMInputMediaProps * This,
             /* [out] */ WM_MEDIA_TYPE *pType,
             /* [out][in] */ DWORD *pcbType);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetMediaType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetMediaType )(
             IWMInputMediaProps * This,
             /* [in] */ WM_MEDIA_TYPE *pType);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetConnectionName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetConnectionName )(
             IWMInputMediaProps * This,
             /* [size_is][out] */ WCHAR *pwszName,
             /* [out][in] */ WORD *pcchName);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetGroupName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetGroupName )(
             IWMInputMediaProps * This,
             /* [size_is][out] */ WCHAR *pwszName,
             /* [out][in] */ WORD *pcchName);
-        
+
         END_INTERFACE
     } IWMInputMediaPropsVtbl;
 
@@ -3080,7 +3078,7 @@ EXTERN_C const IID IID_IWMInputMediaProps;
         CONST_VTBL struct IWMInputMediaPropsVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -3118,7 +3116,7 @@ EXTERN_C const IID IID_IWMInputMediaProps;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMInputMediaProps_GetConnectionName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMInputMediaProps_GetConnectionName_Proxy(
     IWMInputMediaProps * This,
     /* [size_is][out] */ WCHAR *pwszName,
     /* [out][in] */ WORD *pcchName);
@@ -3131,7 +3129,7 @@ void __RPC_STUB IWMInputMediaProps_GetConnectionName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMInputMediaProps_GetGroupName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMInputMediaProps_GetGroupName_Proxy(
     IWMInputMediaProps * This,
     /* [size_is][out] */ WCHAR *pwszName,
     /* [out][in] */ WORD *pcchName);
@@ -3152,83 +3150,83 @@ void __RPC_STUB IWMInputMediaProps_GetGroupName_Stub(
 #define __IWMPropertyVault_INTERFACE_DEFINED__
 
 /* interface IWMPropertyVault */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMPropertyVault;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("72995A79-5090-42a4-9C8C-D9D0B6D34BE5")
     IWMPropertyVault : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetPropertyCount( 
+        virtual HRESULT STDMETHODCALLTYPE GetPropertyCount(
             /* [in] */ DWORD *pdwCount) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetPropertyByName( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetPropertyByName(
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ DWORD *pdwSize) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetProperty( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetProperty(
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE pType,
             /* [in] */ BYTE *pValue,
             /* [in] */ DWORD dwSize) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetPropertyByIndex( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetPropertyByIndex(
             /* [in] */ DWORD dwIndex,
             /* [size_is][out] */ LPWSTR pszName,
             /* [out][in] */ DWORD *pdwNameLen,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ DWORD *pdwSize) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE CopyPropertiesFrom( 
+
+        virtual HRESULT STDMETHODCALLTYPE CopyPropertiesFrom(
             /* [in] */ IWMPropertyVault *pIWMPropertyVault) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE Clear( void) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMPropertyVaultVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMPropertyVault * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMPropertyVault * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMPropertyVault * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetPropertyCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetPropertyCount )(
             IWMPropertyVault * This,
             /* [in] */ DWORD *pdwCount);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetPropertyByName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetPropertyByName )(
             IWMPropertyVault * This,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ DWORD *pdwSize);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetProperty )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetProperty )(
             IWMPropertyVault * This,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE pType,
             /* [in] */ BYTE *pValue,
             /* [in] */ DWORD dwSize);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetPropertyByIndex )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetPropertyByIndex )(
             IWMPropertyVault * This,
             /* [in] */ DWORD dwIndex,
             /* [size_is][out] */ LPWSTR pszName,
@@ -3236,14 +3234,14 @@ EXTERN_C const IID IID_IWMPropertyVault;
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ DWORD *pdwSize);
-        
-        HRESULT ( STDMETHODCALLTYPE *CopyPropertiesFrom )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CopyPropertiesFrom )(
             IWMPropertyVault * This,
             /* [in] */ IWMPropertyVault *pIWMPropertyVault);
-        
-        HRESULT ( STDMETHODCALLTYPE *Clear )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Clear )(
             IWMPropertyVault * This);
-        
+
         END_INTERFACE
     } IWMPropertyVaultVtbl;
 
@@ -3252,7 +3250,7 @@ EXTERN_C const IID IID_IWMPropertyVault;
         CONST_VTBL struct IWMPropertyVaultVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -3292,7 +3290,7 @@ EXTERN_C const IID IID_IWMPropertyVault;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMPropertyVault_GetPropertyCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMPropertyVault_GetPropertyCount_Proxy(
     IWMPropertyVault * This,
     /* [in] */ DWORD *pdwCount);
 
@@ -3304,7 +3302,7 @@ void __RPC_STUB IWMPropertyVault_GetPropertyCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMPropertyVault_GetPropertyByName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMPropertyVault_GetPropertyByName_Proxy(
     IWMPropertyVault * This,
     /* [in] */ LPCWSTR pszName,
     /* [out] */ WMT_ATTR_DATATYPE *pType,
@@ -3319,7 +3317,7 @@ void __RPC_STUB IWMPropertyVault_GetPropertyByName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMPropertyVault_SetProperty_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMPropertyVault_SetProperty_Proxy(
     IWMPropertyVault * This,
     /* [in] */ LPCWSTR pszName,
     /* [in] */ WMT_ATTR_DATATYPE pType,
@@ -3334,7 +3332,7 @@ void __RPC_STUB IWMPropertyVault_SetProperty_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMPropertyVault_GetPropertyByIndex_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMPropertyVault_GetPropertyByIndex_Proxy(
     IWMPropertyVault * This,
     /* [in] */ DWORD dwIndex,
     /* [size_is][out] */ LPWSTR pszName,
@@ -3351,7 +3349,7 @@ void __RPC_STUB IWMPropertyVault_GetPropertyByIndex_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMPropertyVault_CopyPropertiesFrom_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMPropertyVault_CopyPropertiesFrom_Proxy(
     IWMPropertyVault * This,
     /* [in] */ IWMPropertyVault *pIWMPropertyVault);
 
@@ -3363,7 +3361,7 @@ void __RPC_STUB IWMPropertyVault_CopyPropertiesFrom_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMPropertyVault_Clear_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMPropertyVault_Clear_Proxy(
     IWMPropertyVault * This);
 
 
@@ -3382,49 +3380,49 @@ void __RPC_STUB IWMPropertyVault_Clear_Stub(
 #define __IWMIStreamProps_INTERFACE_DEFINED__
 
 /* interface IWMIStreamProps */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMIStreamProps;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("6816dad3-2b4b-4c8e-8149-874c3483a753")
     IWMIStreamProps : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetProperty( 
+        virtual HRESULT STDMETHODCALLTYPE GetProperty(
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ DWORD *pdwSize) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMIStreamPropsVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMIStreamProps * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMIStreamProps * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMIStreamProps * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetProperty )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetProperty )(
             IWMIStreamProps * This,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ DWORD *pdwSize);
-        
+
         END_INTERFACE
     } IWMIStreamPropsVtbl;
 
@@ -3433,7 +3431,7 @@ EXTERN_C const IID IID_IWMIStreamProps;
         CONST_VTBL struct IWMIStreamPropsVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -3458,7 +3456,7 @@ EXTERN_C const IID IID_IWMIStreamProps;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMIStreamProps_GetProperty_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMIStreamProps_GetProperty_Proxy(
     IWMIStreamProps * This,
     /* [in] */ LPCWSTR pszName,
     /* [out] */ WMT_ATTR_DATATYPE *pType,
@@ -3481,125 +3479,125 @@ void __RPC_STUB IWMIStreamProps_GetProperty_Stub(
 #define __IWMReader_INTERFACE_DEFINED__
 
 /* interface IWMReader */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMReader;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BD6-2B2B-11d3-B36B-00C04F6108FF")
     IWMReader : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE Open( 
+        virtual HRESULT STDMETHODCALLTYPE Open(
             /* [in] */ const WCHAR *pwszURL,
             /* [in] */ IWMReaderCallback *pCallback,
             /* [in] */ void *pvContext) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE Close( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetOutputCount( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetOutputCount(
             /* [out] */ DWORD *pcOutputs) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetOutputProps( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetOutputProps(
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ IWMOutputMediaProps **ppOutput) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetOutputProps( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetOutputProps(
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ IWMOutputMediaProps *pOutput) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetOutputFormatCount( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetOutputFormatCount(
             /* [in] */ DWORD dwOutputNumber,
             /* [out] */ DWORD *pcFormats) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetOutputFormat( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetOutputFormat(
             /* [in] */ DWORD dwOutputNumber,
             /* [in] */ DWORD dwFormatNumber,
             /* [out] */ IWMOutputMediaProps **ppProps) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE Start( 
+
+        virtual HRESULT STDMETHODCALLTYPE Start(
             /* [in] */ QWORD cnsStart,
             /* [in] */ QWORD cnsDuration,
             /* [in] */ float fRate,
             /* [in] */ void *pvContext) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE Stop( void) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE Pause( void) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE Resume( void) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMReaderVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMReader * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMReader * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMReader * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Open )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Open )(
             IWMReader * This,
             /* [in] */ const WCHAR *pwszURL,
             /* [in] */ IWMReaderCallback *pCallback,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *Close )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Close )(
             IWMReader * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetOutputCount )(
             IWMReader * This,
             /* [out] */ DWORD *pcOutputs);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputProps )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetOutputProps )(
             IWMReader * This,
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ IWMOutputMediaProps **ppOutput);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetOutputProps )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetOutputProps )(
             IWMReader * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ IWMOutputMediaProps *pOutput);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputFormatCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetOutputFormatCount )(
             IWMReader * This,
             /* [in] */ DWORD dwOutputNumber,
             /* [out] */ DWORD *pcFormats);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputFormat )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetOutputFormat )(
             IWMReader * This,
             /* [in] */ DWORD dwOutputNumber,
             /* [in] */ DWORD dwFormatNumber,
             /* [out] */ IWMOutputMediaProps **ppProps);
-        
-        HRESULT ( STDMETHODCALLTYPE *Start )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Start )(
             IWMReader * This,
             /* [in] */ QWORD cnsStart,
             /* [in] */ QWORD cnsDuration,
             /* [in] */ float fRate,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *Stop )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Stop )(
             IWMReader * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Pause )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Pause )(
             IWMReader * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Resume )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Resume )(
             IWMReader * This);
-        
+
         END_INTERFACE
     } IWMReaderVtbl;
 
@@ -3608,7 +3606,7 @@ EXTERN_C const IID IID_IWMReader;
         CONST_VTBL struct IWMReaderVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -3663,7 +3661,7 @@ EXTERN_C const IID IID_IWMReader;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMReader_Open_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReader_Open_Proxy(
     IWMReader * This,
     /* [in] */ const WCHAR *pwszURL,
     /* [in] */ IWMReaderCallback *pCallback,
@@ -3677,7 +3675,7 @@ void __RPC_STUB IWMReader_Open_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReader_Close_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReader_Close_Proxy(
     IWMReader * This);
 
 
@@ -3688,7 +3686,7 @@ void __RPC_STUB IWMReader_Close_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReader_GetOutputCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReader_GetOutputCount_Proxy(
     IWMReader * This,
     /* [out] */ DWORD *pcOutputs);
 
@@ -3700,7 +3698,7 @@ void __RPC_STUB IWMReader_GetOutputCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReader_GetOutputProps_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReader_GetOutputProps_Proxy(
     IWMReader * This,
     /* [in] */ DWORD dwOutputNum,
     /* [out] */ IWMOutputMediaProps **ppOutput);
@@ -3713,7 +3711,7 @@ void __RPC_STUB IWMReader_GetOutputProps_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReader_SetOutputProps_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReader_SetOutputProps_Proxy(
     IWMReader * This,
     /* [in] */ DWORD dwOutputNum,
     /* [in] */ IWMOutputMediaProps *pOutput);
@@ -3726,7 +3724,7 @@ void __RPC_STUB IWMReader_SetOutputProps_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReader_GetOutputFormatCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReader_GetOutputFormatCount_Proxy(
     IWMReader * This,
     /* [in] */ DWORD dwOutputNumber,
     /* [out] */ DWORD *pcFormats);
@@ -3739,7 +3737,7 @@ void __RPC_STUB IWMReader_GetOutputFormatCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReader_GetOutputFormat_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReader_GetOutputFormat_Proxy(
     IWMReader * This,
     /* [in] */ DWORD dwOutputNumber,
     /* [in] */ DWORD dwFormatNumber,
@@ -3753,7 +3751,7 @@ void __RPC_STUB IWMReader_GetOutputFormat_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReader_Start_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReader_Start_Proxy(
     IWMReader * This,
     /* [in] */ QWORD cnsStart,
     /* [in] */ QWORD cnsDuration,
@@ -3768,7 +3766,7 @@ void __RPC_STUB IWMReader_Start_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReader_Stop_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReader_Stop_Proxy(
     IWMReader * This);
 
 
@@ -3779,7 +3777,7 @@ void __RPC_STUB IWMReader_Stop_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReader_Pause_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReader_Pause_Proxy(
     IWMReader * This);
 
 
@@ -3790,7 +3788,7 @@ void __RPC_STUB IWMReader_Pause_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReader_Resume_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReader_Resume_Proxy(
     IWMReader * This);
 
 
@@ -3809,32 +3807,32 @@ void __RPC_STUB IWMReader_Resume_Stub(
 #define __IWMSyncReader_INTERFACE_DEFINED__
 
 /* interface IWMSyncReader */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMSyncReader;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("9397F121-7705-4dc9-B049-98B698188414")
     IWMSyncReader : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE Open( 
+        virtual HRESULT STDMETHODCALLTYPE Open(
             /* [in] */ const WCHAR *pwszFilename) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE Close( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetRange( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetRange(
             /* [in] */ QWORD cnsStartTime,
             /* [in] */ LONGLONG cnsDuration) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetRangeByFrame( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetRangeByFrame(
             /* [in] */ WORD wStreamNum,
             /* [in] */ QWORD qwFrameNumber,
             /* [in] */ LONGLONG cFramesToRead) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetNextSample( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetNextSample(
             /* [in] */ WORD wStreamNum,
             /* [out] */ INSSBuffer **ppSample,
             /* [out] */ QWORD *pcnsSampleTime,
@@ -3842,115 +3840,115 @@ EXTERN_C const IID IID_IWMSyncReader;
             /* [out] */ DWORD *pdwFlags,
             /* [out] */ DWORD *pdwOutputNum,
             /* [out] */ WORD *pwStreamNum) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetStreamsSelected( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetStreamsSelected(
             /* [in] */ WORD cStreamCount,
             /* [in] */ WORD *pwStreamNumbers,
             /* [in] */ WMT_STREAM_SELECTION *pSelections) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetStreamSelected( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetStreamSelected(
             /* [in] */ WORD wStreamNum,
             /* [out] */ WMT_STREAM_SELECTION *pSelection) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetReadStreamSamples( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetReadStreamSamples(
             /* [in] */ WORD wStreamNum,
             /* [in] */ BOOL fCompressed) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetReadStreamSamples( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetReadStreamSamples(
             /* [in] */ WORD wStreamNum,
             /* [out] */ BOOL *pfCompressed) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetOutputSetting( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetOutputSetting(
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetOutputSetting( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetOutputSetting(
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetOutputCount( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetOutputCount(
             /* [out] */ DWORD *pcOutputs) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetOutputProps( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetOutputProps(
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ IWMOutputMediaProps **ppOutput) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetOutputProps( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetOutputProps(
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ IWMOutputMediaProps *pOutput) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetOutputFormatCount( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetOutputFormatCount(
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ DWORD *pcFormats) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetOutputFormat( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetOutputFormat(
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ DWORD dwFormatNum,
             /* [out] */ IWMOutputMediaProps **ppProps) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetOutputNumberForStream( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetOutputNumberForStream(
             /* [in] */ WORD wStreamNum,
             /* [out] */ DWORD *pdwOutputNum) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetStreamNumberForOutput( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetStreamNumberForOutput(
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ WORD *pwStreamNum) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMaxOutputSampleSize( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetMaxOutputSampleSize(
             /* [in] */ DWORD dwOutput,
             /* [out] */ DWORD *pcbMax) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMaxStreamSampleSize( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetMaxStreamSampleSize(
             /* [in] */ WORD wStream,
             /* [out] */ DWORD *pcbMax) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE OpenStream( 
+
+        virtual HRESULT STDMETHODCALLTYPE OpenStream(
             /* [in] */ IStream *pStream) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMSyncReaderVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMSyncReader * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMSyncReader * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMSyncReader * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Open )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Open )(
             IWMSyncReader * This,
             /* [in] */ const WCHAR *pwszFilename);
-        
-        HRESULT ( STDMETHODCALLTYPE *Close )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Close )(
             IWMSyncReader * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetRange )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetRange )(
             IWMSyncReader * This,
             /* [in] */ QWORD cnsStartTime,
             /* [in] */ LONGLONG cnsDuration);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetRangeByFrame )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetRangeByFrame )(
             IWMSyncReader * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ QWORD qwFrameNumber,
             /* [in] */ LONGLONG cFramesToRead);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetNextSample )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetNextSample )(
             IWMSyncReader * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ INSSBuffer **ppSample,
@@ -3959,93 +3957,93 @@ EXTERN_C const IID IID_IWMSyncReader;
             /* [out] */ DWORD *pdwFlags,
             /* [out] */ DWORD *pdwOutputNum,
             /* [out] */ WORD *pwStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetStreamsSelected )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetStreamsSelected )(
             IWMSyncReader * This,
             /* [in] */ WORD cStreamCount,
             /* [in] */ WORD *pwStreamNumbers,
             /* [in] */ WMT_STREAM_SELECTION *pSelections);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamSelected )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamSelected )(
             IWMSyncReader * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ WMT_STREAM_SELECTION *pSelection);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetReadStreamSamples )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetReadStreamSamples )(
             IWMSyncReader * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ BOOL fCompressed);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetReadStreamSamples )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetReadStreamSamples )(
             IWMSyncReader * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ BOOL *pfCompressed);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputSetting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetOutputSetting )(
             IWMSyncReader * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetOutputSetting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetOutputSetting )(
             IWMSyncReader * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetOutputCount )(
             IWMSyncReader * This,
             /* [out] */ DWORD *pcOutputs);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputProps )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetOutputProps )(
             IWMSyncReader * This,
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ IWMOutputMediaProps **ppOutput);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetOutputProps )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetOutputProps )(
             IWMSyncReader * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ IWMOutputMediaProps *pOutput);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputFormatCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetOutputFormatCount )(
             IWMSyncReader * This,
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ DWORD *pcFormats);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputFormat )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetOutputFormat )(
             IWMSyncReader * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ DWORD dwFormatNum,
             /* [out] */ IWMOutputMediaProps **ppProps);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputNumberForStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetOutputNumberForStream )(
             IWMSyncReader * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ DWORD *pdwOutputNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamNumberForOutput )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamNumberForOutput )(
             IWMSyncReader * This,
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ WORD *pwStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaxOutputSampleSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMaxOutputSampleSize )(
             IWMSyncReader * This,
             /* [in] */ DWORD dwOutput,
             /* [out] */ DWORD *pcbMax);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaxStreamSampleSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMaxStreamSampleSize )(
             IWMSyncReader * This,
             /* [in] */ WORD wStream,
             /* [out] */ DWORD *pcbMax);
-        
-        HRESULT ( STDMETHODCALLTYPE *OpenStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OpenStream )(
             IWMSyncReader * This,
             /* [in] */ IStream *pStream);
-        
+
         END_INTERFACE
     } IWMSyncReaderVtbl;
 
@@ -4054,7 +4052,7 @@ EXTERN_C const IID IID_IWMSyncReader;
         CONST_VTBL struct IWMSyncReaderVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -4139,7 +4137,7 @@ EXTERN_C const IID IID_IWMSyncReader;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_Open_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_Open_Proxy(
     IWMSyncReader * This,
     /* [in] */ const WCHAR *pwszFilename);
 
@@ -4151,7 +4149,7 @@ void __RPC_STUB IWMSyncReader_Open_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_Close_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_Close_Proxy(
     IWMSyncReader * This);
 
 
@@ -4162,7 +4160,7 @@ void __RPC_STUB IWMSyncReader_Close_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_SetRange_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_SetRange_Proxy(
     IWMSyncReader * This,
     /* [in] */ QWORD cnsStartTime,
     /* [in] */ LONGLONG cnsDuration);
@@ -4175,7 +4173,7 @@ void __RPC_STUB IWMSyncReader_SetRange_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_SetRangeByFrame_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_SetRangeByFrame_Proxy(
     IWMSyncReader * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ QWORD qwFrameNumber,
@@ -4189,7 +4187,7 @@ void __RPC_STUB IWMSyncReader_SetRangeByFrame_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_GetNextSample_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_GetNextSample_Proxy(
     IWMSyncReader * This,
     /* [in] */ WORD wStreamNum,
     /* [out] */ INSSBuffer **ppSample,
@@ -4207,7 +4205,7 @@ void __RPC_STUB IWMSyncReader_GetNextSample_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_SetStreamsSelected_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_SetStreamsSelected_Proxy(
     IWMSyncReader * This,
     /* [in] */ WORD cStreamCount,
     /* [in] */ WORD *pwStreamNumbers,
@@ -4221,7 +4219,7 @@ void __RPC_STUB IWMSyncReader_SetStreamsSelected_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_GetStreamSelected_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_GetStreamSelected_Proxy(
     IWMSyncReader * This,
     /* [in] */ WORD wStreamNum,
     /* [out] */ WMT_STREAM_SELECTION *pSelection);
@@ -4234,7 +4232,7 @@ void __RPC_STUB IWMSyncReader_GetStreamSelected_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_SetReadStreamSamples_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_SetReadStreamSamples_Proxy(
     IWMSyncReader * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ BOOL fCompressed);
@@ -4247,7 +4245,7 @@ void __RPC_STUB IWMSyncReader_SetReadStreamSamples_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_GetReadStreamSamples_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_GetReadStreamSamples_Proxy(
     IWMSyncReader * This,
     /* [in] */ WORD wStreamNum,
     /* [out] */ BOOL *pfCompressed);
@@ -4260,7 +4258,7 @@ void __RPC_STUB IWMSyncReader_GetReadStreamSamples_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_GetOutputSetting_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_GetOutputSetting_Proxy(
     IWMSyncReader * This,
     /* [in] */ DWORD dwOutputNum,
     /* [in] */ LPCWSTR pszName,
@@ -4276,7 +4274,7 @@ void __RPC_STUB IWMSyncReader_GetOutputSetting_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_SetOutputSetting_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_SetOutputSetting_Proxy(
     IWMSyncReader * This,
     /* [in] */ DWORD dwOutputNum,
     /* [in] */ LPCWSTR pszName,
@@ -4292,7 +4290,7 @@ void __RPC_STUB IWMSyncReader_SetOutputSetting_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_GetOutputCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_GetOutputCount_Proxy(
     IWMSyncReader * This,
     /* [out] */ DWORD *pcOutputs);
 
@@ -4304,7 +4302,7 @@ void __RPC_STUB IWMSyncReader_GetOutputCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_GetOutputProps_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_GetOutputProps_Proxy(
     IWMSyncReader * This,
     /* [in] */ DWORD dwOutputNum,
     /* [out] */ IWMOutputMediaProps **ppOutput);
@@ -4317,7 +4315,7 @@ void __RPC_STUB IWMSyncReader_GetOutputProps_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_SetOutputProps_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_SetOutputProps_Proxy(
     IWMSyncReader * This,
     /* [in] */ DWORD dwOutputNum,
     /* [in] */ IWMOutputMediaProps *pOutput);
@@ -4330,7 +4328,7 @@ void __RPC_STUB IWMSyncReader_SetOutputProps_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_GetOutputFormatCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_GetOutputFormatCount_Proxy(
     IWMSyncReader * This,
     /* [in] */ DWORD dwOutputNum,
     /* [out] */ DWORD *pcFormats);
@@ -4343,7 +4341,7 @@ void __RPC_STUB IWMSyncReader_GetOutputFormatCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_GetOutputFormat_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_GetOutputFormat_Proxy(
     IWMSyncReader * This,
     /* [in] */ DWORD dwOutputNum,
     /* [in] */ DWORD dwFormatNum,
@@ -4357,7 +4355,7 @@ void __RPC_STUB IWMSyncReader_GetOutputFormat_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_GetOutputNumberForStream_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_GetOutputNumberForStream_Proxy(
     IWMSyncReader * This,
     /* [in] */ WORD wStreamNum,
     /* [out] */ DWORD *pdwOutputNum);
@@ -4370,7 +4368,7 @@ void __RPC_STUB IWMSyncReader_GetOutputNumberForStream_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_GetStreamNumberForOutput_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_GetStreamNumberForOutput_Proxy(
     IWMSyncReader * This,
     /* [in] */ DWORD dwOutputNum,
     /* [out] */ WORD *pwStreamNum);
@@ -4383,7 +4381,7 @@ void __RPC_STUB IWMSyncReader_GetStreamNumberForOutput_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_GetMaxOutputSampleSize_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_GetMaxOutputSampleSize_Proxy(
     IWMSyncReader * This,
     /* [in] */ DWORD dwOutput,
     /* [out] */ DWORD *pcbMax);
@@ -4396,7 +4394,7 @@ void __RPC_STUB IWMSyncReader_GetMaxOutputSampleSize_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_GetMaxStreamSampleSize_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_GetMaxStreamSampleSize_Proxy(
     IWMSyncReader * This,
     /* [in] */ WORD wStream,
     /* [out] */ DWORD *pcbMax);
@@ -4409,7 +4407,7 @@ void __RPC_STUB IWMSyncReader_GetMaxStreamSampleSize_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader_OpenStream_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader_OpenStream_Proxy(
     IWMSyncReader * This,
     /* [in] */ IStream *pStream);
 
@@ -4429,82 +4427,82 @@ void __RPC_STUB IWMSyncReader_OpenStream_Stub(
 #define __IWMSyncReader2_INTERFACE_DEFINED__
 
 /* interface IWMSyncReader2 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMSyncReader2;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("faed3d21-1b6b-4af7-8cb6-3e189bbc187b")
     IWMSyncReader2 : public IWMSyncReader
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE SetRangeByTimecode( 
+        virtual HRESULT STDMETHODCALLTYPE SetRangeByTimecode(
             /* [in] */ WORD wStreamNum,
             /* [in] */ WMT_TIMECODE_EXTENSION_DATA *pStart,
             /* [in] */ WMT_TIMECODE_EXTENSION_DATA *pEnd) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetRangeByFrameEx( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetRangeByFrameEx(
             /* [in] */ WORD wStreamNum,
             /* [in] */ QWORD qwFrameNumber,
             /* [in] */ LONGLONG cFramesToRead,
             /* [out] */ QWORD *pcnsStartTime) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetAllocateForOutput( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetAllocateForOutput(
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ IWMReaderAllocatorEx *pAllocator) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAllocateForOutput( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetAllocateForOutput(
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ IWMReaderAllocatorEx **ppAllocator) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetAllocateForStream( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetAllocateForStream(
             /* [in] */ WORD wStreamNum,
             /* [in] */ IWMReaderAllocatorEx *pAllocator) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAllocateForStream( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetAllocateForStream(
             /* [in] */ WORD dwSreamNum,
             /* [out] */ IWMReaderAllocatorEx **ppAllocator) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMSyncReader2Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMSyncReader2 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMSyncReader2 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMSyncReader2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Open )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Open )(
             IWMSyncReader2 * This,
             /* [in] */ const WCHAR *pwszFilename);
-        
-        HRESULT ( STDMETHODCALLTYPE *Close )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Close )(
             IWMSyncReader2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetRange )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetRange )(
             IWMSyncReader2 * This,
             /* [in] */ QWORD cnsStartTime,
             /* [in] */ LONGLONG cnsDuration);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetRangeByFrame )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetRangeByFrame )(
             IWMSyncReader2 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ QWORD qwFrameNumber,
             /* [in] */ LONGLONG cFramesToRead);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetNextSample )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetNextSample )(
             IWMSyncReader2 * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ INSSBuffer **ppSample,
@@ -4513,126 +4511,126 @@ EXTERN_C const IID IID_IWMSyncReader2;
             /* [out] */ DWORD *pdwFlags,
             /* [out] */ DWORD *pdwOutputNum,
             /* [out] */ WORD *pwStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetStreamsSelected )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetStreamsSelected )(
             IWMSyncReader2 * This,
             /* [in] */ WORD cStreamCount,
             /* [in] */ WORD *pwStreamNumbers,
             /* [in] */ WMT_STREAM_SELECTION *pSelections);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamSelected )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamSelected )(
             IWMSyncReader2 * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ WMT_STREAM_SELECTION *pSelection);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetReadStreamSamples )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetReadStreamSamples )(
             IWMSyncReader2 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ BOOL fCompressed);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetReadStreamSamples )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetReadStreamSamples )(
             IWMSyncReader2 * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ BOOL *pfCompressed);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputSetting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetOutputSetting )(
             IWMSyncReader2 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetOutputSetting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetOutputSetting )(
             IWMSyncReader2 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetOutputCount )(
             IWMSyncReader2 * This,
             /* [out] */ DWORD *pcOutputs);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputProps )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetOutputProps )(
             IWMSyncReader2 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ IWMOutputMediaProps **ppOutput);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetOutputProps )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetOutputProps )(
             IWMSyncReader2 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ IWMOutputMediaProps *pOutput);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputFormatCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetOutputFormatCount )(
             IWMSyncReader2 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ DWORD *pcFormats);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputFormat )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetOutputFormat )(
             IWMSyncReader2 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ DWORD dwFormatNum,
             /* [out] */ IWMOutputMediaProps **ppProps);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputNumberForStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetOutputNumberForStream )(
             IWMSyncReader2 * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ DWORD *pdwOutputNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamNumberForOutput )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamNumberForOutput )(
             IWMSyncReader2 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ WORD *pwStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaxOutputSampleSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMaxOutputSampleSize )(
             IWMSyncReader2 * This,
             /* [in] */ DWORD dwOutput,
             /* [out] */ DWORD *pcbMax);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaxStreamSampleSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMaxStreamSampleSize )(
             IWMSyncReader2 * This,
             /* [in] */ WORD wStream,
             /* [out] */ DWORD *pcbMax);
-        
-        HRESULT ( STDMETHODCALLTYPE *OpenStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OpenStream )(
             IWMSyncReader2 * This,
             /* [in] */ IStream *pStream);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetRangeByTimecode )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetRangeByTimecode )(
             IWMSyncReader2 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ WMT_TIMECODE_EXTENSION_DATA *pStart,
             /* [in] */ WMT_TIMECODE_EXTENSION_DATA *pEnd);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetRangeByFrameEx )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetRangeByFrameEx )(
             IWMSyncReader2 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ QWORD qwFrameNumber,
             /* [in] */ LONGLONG cFramesToRead,
             /* [out] */ QWORD *pcnsStartTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAllocateForOutput )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetAllocateForOutput )(
             IWMSyncReader2 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ IWMReaderAllocatorEx *pAllocator);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAllocateForOutput )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAllocateForOutput )(
             IWMSyncReader2 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ IWMReaderAllocatorEx **ppAllocator);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAllocateForStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetAllocateForStream )(
             IWMSyncReader2 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ IWMReaderAllocatorEx *pAllocator);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAllocateForStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAllocateForStream )(
             IWMSyncReader2 * This,
             /* [in] */ WORD dwSreamNum,
             /* [out] */ IWMReaderAllocatorEx **ppAllocator);
-        
+
         END_INTERFACE
     } IWMSyncReader2Vtbl;
 
@@ -4641,7 +4639,7 @@ EXTERN_C const IID IID_IWMSyncReader2;
         CONST_VTBL struct IWMSyncReader2Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -4745,7 +4743,7 @@ EXTERN_C const IID IID_IWMSyncReader2;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader2_SetRangeByTimecode_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader2_SetRangeByTimecode_Proxy(
     IWMSyncReader2 * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ WMT_TIMECODE_EXTENSION_DATA *pStart,
@@ -4759,7 +4757,7 @@ void __RPC_STUB IWMSyncReader2_SetRangeByTimecode_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader2_SetRangeByFrameEx_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader2_SetRangeByFrameEx_Proxy(
     IWMSyncReader2 * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ QWORD qwFrameNumber,
@@ -4774,7 +4772,7 @@ void __RPC_STUB IWMSyncReader2_SetRangeByFrameEx_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader2_SetAllocateForOutput_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader2_SetAllocateForOutput_Proxy(
     IWMSyncReader2 * This,
     /* [in] */ DWORD dwOutputNum,
     /* [in] */ IWMReaderAllocatorEx *pAllocator);
@@ -4787,7 +4785,7 @@ void __RPC_STUB IWMSyncReader2_SetAllocateForOutput_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader2_GetAllocateForOutput_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader2_GetAllocateForOutput_Proxy(
     IWMSyncReader2 * This,
     /* [in] */ DWORD dwOutputNum,
     /* [out] */ IWMReaderAllocatorEx **ppAllocator);
@@ -4800,7 +4798,7 @@ void __RPC_STUB IWMSyncReader2_GetAllocateForOutput_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader2_SetAllocateForStream_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader2_SetAllocateForStream_Proxy(
     IWMSyncReader2 * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ IWMReaderAllocatorEx *pAllocator);
@@ -4813,7 +4811,7 @@ void __RPC_STUB IWMSyncReader2_SetAllocateForStream_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMSyncReader2_GetAllocateForStream_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMSyncReader2_GetAllocateForStream_Proxy(
     IWMSyncReader2 * This,
     /* [in] */ WORD dwSreamNum,
     /* [out] */ IWMReaderAllocatorEx **ppAllocator);
@@ -4834,67 +4832,67 @@ void __RPC_STUB IWMSyncReader2_GetAllocateForStream_Stub(
 #define __IWMOutputMediaProps_INTERFACE_DEFINED__
 
 /* interface IWMOutputMediaProps */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMOutputMediaProps;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BD7-2B2B-11d3-B36B-00C04F6108FF")
     IWMOutputMediaProps : public IWMMediaProps
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetStreamGroupName( 
+        virtual HRESULT STDMETHODCALLTYPE GetStreamGroupName(
             /* [size_is][out] */ WCHAR *pwszName,
             /* [out][in] */ WORD *pcchName) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetConnectionName( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetConnectionName(
             /* [size_is][out] */ WCHAR *pwszName,
             /* [out][in] */ WORD *pcchName) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMOutputMediaPropsVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMOutputMediaProps * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMOutputMediaProps * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMOutputMediaProps * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetType )(
             IWMOutputMediaProps * This,
             /* [out] */ GUID *pguidType);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMediaType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMediaType )(
             IWMOutputMediaProps * This,
             /* [out] */ WM_MEDIA_TYPE *pType,
             /* [out][in] */ DWORD *pcbType);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetMediaType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetMediaType )(
             IWMOutputMediaProps * This,
             /* [in] */ WM_MEDIA_TYPE *pType);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamGroupName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamGroupName )(
             IWMOutputMediaProps * This,
             /* [size_is][out] */ WCHAR *pwszName,
             /* [out][in] */ WORD *pcchName);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetConnectionName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetConnectionName )(
             IWMOutputMediaProps * This,
             /* [size_is][out] */ WCHAR *pwszName,
             /* [out][in] */ WORD *pcchName);
-        
+
         END_INTERFACE
     } IWMOutputMediaPropsVtbl;
 
@@ -4903,7 +4901,7 @@ EXTERN_C const IID IID_IWMOutputMediaProps;
         CONST_VTBL struct IWMOutputMediaPropsVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -4941,7 +4939,7 @@ EXTERN_C const IID IID_IWMOutputMediaProps;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMOutputMediaProps_GetStreamGroupName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMOutputMediaProps_GetStreamGroupName_Proxy(
     IWMOutputMediaProps * This,
     /* [size_is][out] */ WCHAR *pwszName,
     /* [out][in] */ WORD *pcchName);
@@ -4954,7 +4952,7 @@ void __RPC_STUB IWMOutputMediaProps_GetStreamGroupName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMOutputMediaProps_GetConnectionName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMOutputMediaProps_GetConnectionName_Proxy(
     IWMOutputMediaProps * This,
     /* [size_is][out] */ WCHAR *pwszName,
     /* [out][in] */ WORD *pcchName);
@@ -4975,51 +4973,51 @@ void __RPC_STUB IWMOutputMediaProps_GetConnectionName_Stub(
 #define __IWMStatusCallback_INTERFACE_DEFINED__
 
 /* interface IWMStatusCallback */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMStatusCallback;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("6d7cdc70-9888-11d3-8edc-00c04f6109cf")
     IWMStatusCallback : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE OnStatus( 
+        virtual HRESULT STDMETHODCALLTYPE OnStatus(
             /* [in] */ WMT_STATUS Status,
             /* [in] */ HRESULT hr,
             /* [in] */ WMT_ATTR_DATATYPE dwType,
             /* [in] */ BYTE *pValue,
             /* [in] */ void *pvContext) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMStatusCallbackVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMStatusCallback * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMStatusCallback * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMStatusCallback * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnStatus )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnStatus )(
             IWMStatusCallback * This,
             /* [in] */ WMT_STATUS Status,
             /* [in] */ HRESULT hr,
             /* [in] */ WMT_ATTR_DATATYPE dwType,
             /* [in] */ BYTE *pValue,
             /* [in] */ void *pvContext);
-        
+
         END_INTERFACE
     } IWMStatusCallbackVtbl;
 
@@ -5028,7 +5026,7 @@ EXTERN_C const IID IID_IWMStatusCallback;
         CONST_VTBL struct IWMStatusCallbackVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -5053,7 +5051,7 @@ EXTERN_C const IID IID_IWMStatusCallback;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMStatusCallback_OnStatus_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStatusCallback_OnStatus_Proxy(
     IWMStatusCallback * This,
     /* [in] */ WMT_STATUS Status,
     /* [in] */ HRESULT hr,
@@ -5077,53 +5075,53 @@ void __RPC_STUB IWMStatusCallback_OnStatus_Stub(
 #define __IWMReaderCallback_INTERFACE_DEFINED__
 
 /* interface IWMReaderCallback */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMReaderCallback;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BD8-2B2B-11d3-B36B-00C04F6108FF")
     IWMReaderCallback : public IWMStatusCallback
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE OnSample( 
+        virtual HRESULT STDMETHODCALLTYPE OnSample(
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ QWORD cnsSampleTime,
             /* [in] */ QWORD cnsSampleDuration,
             /* [in] */ DWORD dwFlags,
             /* [in] */ INSSBuffer *pSample,
             /* [in] */ void *pvContext) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMReaderCallbackVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMReaderCallback * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMReaderCallback * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMReaderCallback * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnStatus )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnStatus )(
             IWMReaderCallback * This,
             /* [in] */ WMT_STATUS Status,
             /* [in] */ HRESULT hr,
             /* [in] */ WMT_ATTR_DATATYPE dwType,
             /* [in] */ BYTE *pValue,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnSample )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnSample )(
             IWMReaderCallback * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ QWORD cnsSampleTime,
@@ -5131,7 +5129,7 @@ EXTERN_C const IID IID_IWMReaderCallback;
             /* [in] */ DWORD dwFlags,
             /* [in] */ INSSBuffer *pSample,
             /* [in] */ void *pvContext);
-        
+
         END_INTERFACE
     } IWMReaderCallbackVtbl;
 
@@ -5140,7 +5138,7 @@ EXTERN_C const IID IID_IWMReaderCallback;
         CONST_VTBL struct IWMReaderCallbackVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -5169,7 +5167,7 @@ EXTERN_C const IID IID_IWMReaderCallback;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderCallback_OnSample_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderCallback_OnSample_Proxy(
     IWMReaderCallback * This,
     /* [in] */ DWORD dwOutputNum,
     /* [in] */ QWORD cnsSampleTime,
@@ -5194,18 +5192,18 @@ void __RPC_STUB IWMReaderCallback_OnSample_Stub(
 #define __IWMCredentialCallback_INTERFACE_DEFINED__
 
 /* interface IWMCredentialCallback */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMCredentialCallback;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("342e0eb7-e651-450c-975b-2ace2c90c48e")
     IWMCredentialCallback : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE AcquireCredentials( 
+        virtual HRESULT STDMETHODCALLTYPE AcquireCredentials(
             /* [in] */ WCHAR *pwszRealm,
             /* [in] */ WCHAR *pwszSite,
             /* [size_is][out] */ WCHAR *pwszUser,
@@ -5214,27 +5212,27 @@ EXTERN_C const IID IID_IWMCredentialCallback;
             /* [in] */ DWORD cchPassword,
             /* [in] */ HRESULT hrStatus,
             /* [out] */ DWORD *pdwFlags) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMCredentialCallbackVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMCredentialCallback * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMCredentialCallback * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMCredentialCallback * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *AcquireCredentials )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AcquireCredentials )(
             IWMCredentialCallback * This,
             /* [in] */ WCHAR *pwszRealm,
             /* [in] */ WCHAR *pwszSite,
@@ -5244,7 +5242,7 @@ EXTERN_C const IID IID_IWMCredentialCallback;
             /* [in] */ DWORD cchPassword,
             /* [in] */ HRESULT hrStatus,
             /* [out] */ DWORD *pdwFlags);
-        
+
         END_INTERFACE
     } IWMCredentialCallbackVtbl;
 
@@ -5253,7 +5251,7 @@ EXTERN_C const IID IID_IWMCredentialCallback;
         CONST_VTBL struct IWMCredentialCallbackVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -5278,7 +5276,7 @@ EXTERN_C const IID IID_IWMCredentialCallback;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMCredentialCallback_AcquireCredentials_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCredentialCallback_AcquireCredentials_Proxy(
     IWMCredentialCallback * This,
     /* [in] */ WCHAR *pwszRealm,
     /* [in] */ WCHAR *pwszSite,
@@ -5305,53 +5303,53 @@ void __RPC_STUB IWMCredentialCallback_AcquireCredentials_Stub(
 #define __IWMMetadataEditor_INTERFACE_DEFINED__
 
 /* interface IWMMetadataEditor */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMMetadataEditor;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BD9-2B2B-11d3-B36B-00C04F6108FF")
     IWMMetadataEditor : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE Open( 
+        virtual HRESULT STDMETHODCALLTYPE Open(
             /* [in] */ const WCHAR *pwszFilename) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE Close( void) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE Flush( void) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMMetadataEditorVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMMetadataEditor * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMMetadataEditor * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMMetadataEditor * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Open )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Open )(
             IWMMetadataEditor * This,
             /* [in] */ const WCHAR *pwszFilename);
-        
-        HRESULT ( STDMETHODCALLTYPE *Close )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Close )(
             IWMMetadataEditor * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Flush )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Flush )(
             IWMMetadataEditor * This);
-        
+
         END_INTERFACE
     } IWMMetadataEditorVtbl;
 
@@ -5360,7 +5358,7 @@ EXTERN_C const IID IID_IWMMetadataEditor;
         CONST_VTBL struct IWMMetadataEditorVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -5391,7 +5389,7 @@ EXTERN_C const IID IID_IWMMetadataEditor;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMMetadataEditor_Open_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMMetadataEditor_Open_Proxy(
     IWMMetadataEditor * This,
     /* [in] */ const WCHAR *pwszFilename);
 
@@ -5403,7 +5401,7 @@ void __RPC_STUB IWMMetadataEditor_Open_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMMetadataEditor_Close_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMMetadataEditor_Close_Proxy(
     IWMMetadataEditor * This);
 
 
@@ -5414,7 +5412,7 @@ void __RPC_STUB IWMMetadataEditor_Close_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMMetadataEditor_Flush_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMMetadataEditor_Flush_Proxy(
     IWMMetadataEditor * This);
 
 
@@ -5433,57 +5431,57 @@ void __RPC_STUB IWMMetadataEditor_Flush_Stub(
 #define __IWMMetadataEditor2_INTERFACE_DEFINED__
 
 /* interface IWMMetadataEditor2 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMMetadataEditor2;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("203CFFE3-2E18-4fdf-B59D-6E71530534CF")
     IWMMetadataEditor2 : public IWMMetadataEditor
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE OpenEx( 
+        virtual HRESULT STDMETHODCALLTYPE OpenEx(
             /* [in] */ const WCHAR *pwszFilename,
             /* [in] */ DWORD dwDesiredAccess,
             /* [in] */ DWORD dwShareMode) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMMetadataEditor2Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMMetadataEditor2 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMMetadataEditor2 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMMetadataEditor2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Open )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Open )(
             IWMMetadataEditor2 * This,
             /* [in] */ const WCHAR *pwszFilename);
-        
-        HRESULT ( STDMETHODCALLTYPE *Close )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Close )(
             IWMMetadataEditor2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Flush )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Flush )(
             IWMMetadataEditor2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *OpenEx )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OpenEx )(
             IWMMetadataEditor2 * This,
             /* [in] */ const WCHAR *pwszFilename,
             /* [in] */ DWORD dwDesiredAccess,
             /* [in] */ DWORD dwShareMode);
-        
+
         END_INTERFACE
     } IWMMetadataEditor2Vtbl;
 
@@ -5492,7 +5490,7 @@ EXTERN_C const IID IID_IWMMetadataEditor2;
         CONST_VTBL struct IWMMetadataEditor2Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -5527,7 +5525,7 @@ EXTERN_C const IID IID_IWMMetadataEditor2;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMMetadataEditor2_OpenEx_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMMetadataEditor2_OpenEx_Proxy(
     IWMMetadataEditor2 * This,
     /* [in] */ const WCHAR *pwszFilename,
     /* [in] */ DWORD dwDesiredAccess,
@@ -5549,49 +5547,49 @@ void __RPC_STUB IWMMetadataEditor2_OpenEx_Stub(
 #define __IWMDRMEditor_INTERFACE_DEFINED__
 
 /* interface IWMDRMEditor */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMDRMEditor;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("FF130EBC-A6C3-42A6-B401-C3382C3E08B3")
     IWMDRMEditor : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetDRMProperty( 
+        virtual HRESULT STDMETHODCALLTYPE GetDRMProperty(
             /* [in] */ LPCWSTR pwstrName,
             /* [out] */ WMT_ATTR_DATATYPE *pdwType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMDRMEditorVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMDRMEditor * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMDRMEditor * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMDRMEditor * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDRMProperty )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetDRMProperty )(
             IWMDRMEditor * This,
             /* [in] */ LPCWSTR pwstrName,
             /* [out] */ WMT_ATTR_DATATYPE *pdwType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength);
-        
+
         END_INTERFACE
     } IWMDRMEditorVtbl;
 
@@ -5600,7 +5598,7 @@ EXTERN_C const IID IID_IWMDRMEditor;
         CONST_VTBL struct IWMDRMEditorVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -5625,7 +5623,7 @@ EXTERN_C const IID IID_IWMDRMEditor;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMEditor_GetDRMProperty_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMEditor_GetDRMProperty_Proxy(
     IWMDRMEditor * This,
     /* [in] */ LPCWSTR pwstrName,
     /* [out] */ WMT_ATTR_DATATYPE *pdwType,
@@ -5648,22 +5646,22 @@ void __RPC_STUB IWMDRMEditor_GetDRMProperty_Stub(
 #define __IWMHeaderInfo_INTERFACE_DEFINED__
 
 /* interface IWMHeaderInfo */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMHeaderInfo;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BDA-2B2B-11d3-B36B-00C04F6108FF")
     IWMHeaderInfo : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetAttributeCount( 
+        virtual HRESULT STDMETHODCALLTYPE GetAttributeCount(
             /* [in] */ WORD wStreamNum,
             /* [out] */ WORD *pcAttributes) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAttributeByIndex( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetAttributeByIndex(
             /* [in] */ WORD wIndex,
             /* [out][in] */ WORD *pwStreamNum,
             /* [size_is][out] */ WCHAR *pwszName,
@@ -5671,81 +5669,81 @@ EXTERN_C const IID IID_IWMHeaderInfo;
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAttributeByName( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetAttributeByName(
             /* [out][in] */ WORD *pwStreamNum,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetAttribute( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetAttribute(
             /* [in] */ WORD wStreamNum,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMarkerCount( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetMarkerCount(
             /* [out] */ WORD *pcMarkers) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMarker( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetMarker(
             /* [in] */ WORD wIndex,
             /* [size_is][out] */ WCHAR *pwszMarkerName,
             /* [out][in] */ WORD *pcchMarkerNameLen,
             /* [out] */ QWORD *pcnsMarkerTime) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AddMarker( 
+
+        virtual HRESULT STDMETHODCALLTYPE AddMarker(
             /* [in] */ WCHAR *pwszMarkerName,
             /* [in] */ QWORD cnsMarkerTime) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RemoveMarker( 
+
+        virtual HRESULT STDMETHODCALLTYPE RemoveMarker(
             /* [in] */ WORD wIndex) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetScriptCount( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetScriptCount(
             /* [out] */ WORD *pcScripts) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetScript( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetScript(
             /* [in] */ WORD wIndex,
             /* [size_is][out] */ WCHAR *pwszType,
             /* [out][in] */ WORD *pcchTypeLen,
             /* [size_is][out] */ WCHAR *pwszCommand,
             /* [out][in] */ WORD *pcchCommandLen,
             /* [out] */ QWORD *pcnsScriptTime) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AddScript( 
+
+        virtual HRESULT STDMETHODCALLTYPE AddScript(
             /* [in] */ WCHAR *pwszType,
             /* [in] */ WCHAR *pwszCommand,
             /* [in] */ QWORD cnsScriptTime) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RemoveScript( 
+
+        virtual HRESULT STDMETHODCALLTYPE RemoveScript(
             /* [in] */ WORD wIndex) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMHeaderInfoVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMHeaderInfo * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMHeaderInfo * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMHeaderInfo * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAttributeCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAttributeCount )(
             IWMHeaderInfo * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ WORD *pcAttributes);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAttributeByIndex )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAttributeByIndex )(
             IWMHeaderInfo * This,
             /* [in] */ WORD wIndex,
             /* [out][in] */ WORD *pwStreamNum,
@@ -5754,48 +5752,48 @@ EXTERN_C const IID IID_IWMHeaderInfo;
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAttributeByName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAttributeByName )(
             IWMHeaderInfo * This,
             /* [out][in] */ WORD *pwStreamNum,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAttribute )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetAttribute )(
             IWMHeaderInfo * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMarkerCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMarkerCount )(
             IWMHeaderInfo * This,
             /* [out] */ WORD *pcMarkers);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMarker )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMarker )(
             IWMHeaderInfo * This,
             /* [in] */ WORD wIndex,
             /* [size_is][out] */ WCHAR *pwszMarkerName,
             /* [out][in] */ WORD *pcchMarkerNameLen,
             /* [out] */ QWORD *pcnsMarkerTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddMarker )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddMarker )(
             IWMHeaderInfo * This,
             /* [in] */ WCHAR *pwszMarkerName,
             /* [in] */ QWORD cnsMarkerTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveMarker )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveMarker )(
             IWMHeaderInfo * This,
             /* [in] */ WORD wIndex);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetScriptCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetScriptCount )(
             IWMHeaderInfo * This,
             /* [out] */ WORD *pcScripts);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetScript )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetScript )(
             IWMHeaderInfo * This,
             /* [in] */ WORD wIndex,
             /* [size_is][out] */ WCHAR *pwszType,
@@ -5803,17 +5801,17 @@ EXTERN_C const IID IID_IWMHeaderInfo;
             /* [size_is][out] */ WCHAR *pwszCommand,
             /* [out][in] */ WORD *pcchCommandLen,
             /* [out] */ QWORD *pcnsScriptTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddScript )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddScript )(
             IWMHeaderInfo * This,
             /* [in] */ WCHAR *pwszType,
             /* [in] */ WCHAR *pwszCommand,
             /* [in] */ QWORD cnsScriptTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveScript )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveScript )(
             IWMHeaderInfo * This,
             /* [in] */ WORD wIndex);
-        
+
         END_INTERFACE
     } IWMHeaderInfoVtbl;
 
@@ -5822,7 +5820,7 @@ EXTERN_C const IID IID_IWMHeaderInfo;
         CONST_VTBL struct IWMHeaderInfoVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -5880,7 +5878,7 @@ EXTERN_C const IID IID_IWMHeaderInfo;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo_GetAttributeCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo_GetAttributeCount_Proxy(
     IWMHeaderInfo * This,
     /* [in] */ WORD wStreamNum,
     /* [out] */ WORD *pcAttributes);
@@ -5893,7 +5891,7 @@ void __RPC_STUB IWMHeaderInfo_GetAttributeCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo_GetAttributeByIndex_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo_GetAttributeByIndex_Proxy(
     IWMHeaderInfo * This,
     /* [in] */ WORD wIndex,
     /* [out][in] */ WORD *pwStreamNum,
@@ -5911,7 +5909,7 @@ void __RPC_STUB IWMHeaderInfo_GetAttributeByIndex_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo_GetAttributeByName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo_GetAttributeByName_Proxy(
     IWMHeaderInfo * This,
     /* [out][in] */ WORD *pwStreamNum,
     /* [in] */ LPCWSTR pszName,
@@ -5927,7 +5925,7 @@ void __RPC_STUB IWMHeaderInfo_GetAttributeByName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo_SetAttribute_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo_SetAttribute_Proxy(
     IWMHeaderInfo * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ LPCWSTR pszName,
@@ -5943,7 +5941,7 @@ void __RPC_STUB IWMHeaderInfo_SetAttribute_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo_GetMarkerCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo_GetMarkerCount_Proxy(
     IWMHeaderInfo * This,
     /* [out] */ WORD *pcMarkers);
 
@@ -5955,7 +5953,7 @@ void __RPC_STUB IWMHeaderInfo_GetMarkerCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo_GetMarker_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo_GetMarker_Proxy(
     IWMHeaderInfo * This,
     /* [in] */ WORD wIndex,
     /* [size_is][out] */ WCHAR *pwszMarkerName,
@@ -5970,7 +5968,7 @@ void __RPC_STUB IWMHeaderInfo_GetMarker_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo_AddMarker_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo_AddMarker_Proxy(
     IWMHeaderInfo * This,
     /* [in] */ WCHAR *pwszMarkerName,
     /* [in] */ QWORD cnsMarkerTime);
@@ -5983,7 +5981,7 @@ void __RPC_STUB IWMHeaderInfo_AddMarker_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo_RemoveMarker_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo_RemoveMarker_Proxy(
     IWMHeaderInfo * This,
     /* [in] */ WORD wIndex);
 
@@ -5995,7 +5993,7 @@ void __RPC_STUB IWMHeaderInfo_RemoveMarker_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo_GetScriptCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo_GetScriptCount_Proxy(
     IWMHeaderInfo * This,
     /* [out] */ WORD *pcScripts);
 
@@ -6007,7 +6005,7 @@ void __RPC_STUB IWMHeaderInfo_GetScriptCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo_GetScript_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo_GetScript_Proxy(
     IWMHeaderInfo * This,
     /* [in] */ WORD wIndex,
     /* [size_is][out] */ WCHAR *pwszType,
@@ -6024,7 +6022,7 @@ void __RPC_STUB IWMHeaderInfo_GetScript_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo_AddScript_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo_AddScript_Proxy(
     IWMHeaderInfo * This,
     /* [in] */ WCHAR *pwszType,
     /* [in] */ WCHAR *pwszCommand,
@@ -6038,7 +6036,7 @@ void __RPC_STUB IWMHeaderInfo_AddScript_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo_RemoveScript_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo_RemoveScript_Proxy(
     IWMHeaderInfo * This,
     /* [in] */ WORD wIndex);
 
@@ -6058,21 +6056,21 @@ void __RPC_STUB IWMHeaderInfo_RemoveScript_Stub(
 #define __IWMHeaderInfo2_INTERFACE_DEFINED__
 
 /* interface IWMHeaderInfo2 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMHeaderInfo2;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("15CF9781-454E-482e-B393-85FAE487A810")
     IWMHeaderInfo2 : public IWMHeaderInfo
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetCodecInfoCount( 
+        virtual HRESULT STDMETHODCALLTYPE GetCodecInfoCount(
             /* [out] */ DWORD *pcCodecInfos) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetCodecInfo( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetCodecInfo(
             /* [in] */ DWORD wIndex,
             /* [out][in] */ WORD *pcchName,
             /* [size_is][out] */ WCHAR *pwszName,
@@ -6081,32 +6079,32 @@ EXTERN_C const IID IID_IWMHeaderInfo2;
             /* [out] */ WMT_CODEC_INFO_TYPE *pCodecType,
             /* [out][in] */ WORD *pcbCodecInfo,
             /* [size_is][out] */ BYTE *pbCodecInfo) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMHeaderInfo2Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMHeaderInfo2 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMHeaderInfo2 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMHeaderInfo2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAttributeCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAttributeCount )(
             IWMHeaderInfo2 * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ WORD *pcAttributes);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAttributeByIndex )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAttributeByIndex )(
             IWMHeaderInfo2 * This,
             /* [in] */ WORD wIndex,
             /* [out][in] */ WORD *pwStreamNum,
@@ -6115,48 +6113,48 @@ EXTERN_C const IID IID_IWMHeaderInfo2;
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAttributeByName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAttributeByName )(
             IWMHeaderInfo2 * This,
             /* [out][in] */ WORD *pwStreamNum,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAttribute )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetAttribute )(
             IWMHeaderInfo2 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMarkerCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMarkerCount )(
             IWMHeaderInfo2 * This,
             /* [out] */ WORD *pcMarkers);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMarker )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMarker )(
             IWMHeaderInfo2 * This,
             /* [in] */ WORD wIndex,
             /* [size_is][out] */ WCHAR *pwszMarkerName,
             /* [out][in] */ WORD *pcchMarkerNameLen,
             /* [out] */ QWORD *pcnsMarkerTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddMarker )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddMarker )(
             IWMHeaderInfo2 * This,
             /* [in] */ WCHAR *pwszMarkerName,
             /* [in] */ QWORD cnsMarkerTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveMarker )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveMarker )(
             IWMHeaderInfo2 * This,
             /* [in] */ WORD wIndex);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetScriptCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetScriptCount )(
             IWMHeaderInfo2 * This,
             /* [out] */ WORD *pcScripts);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetScript )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetScript )(
             IWMHeaderInfo2 * This,
             /* [in] */ WORD wIndex,
             /* [size_is][out] */ WCHAR *pwszType,
@@ -6164,22 +6162,22 @@ EXTERN_C const IID IID_IWMHeaderInfo2;
             /* [size_is][out] */ WCHAR *pwszCommand,
             /* [out][in] */ WORD *pcchCommandLen,
             /* [out] */ QWORD *pcnsScriptTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddScript )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddScript )(
             IWMHeaderInfo2 * This,
             /* [in] */ WCHAR *pwszType,
             /* [in] */ WCHAR *pwszCommand,
             /* [in] */ QWORD cnsScriptTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveScript )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveScript )(
             IWMHeaderInfo2 * This,
             /* [in] */ WORD wIndex);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecInfoCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecInfoCount )(
             IWMHeaderInfo2 * This,
             /* [out] */ DWORD *pcCodecInfos);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecInfo )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecInfo )(
             IWMHeaderInfo2 * This,
             /* [in] */ DWORD wIndex,
             /* [out][in] */ WORD *pcchName,
@@ -6189,7 +6187,7 @@ EXTERN_C const IID IID_IWMHeaderInfo2;
             /* [out] */ WMT_CODEC_INFO_TYPE *pCodecType,
             /* [out][in] */ WORD *pcbCodecInfo,
             /* [size_is][out] */ BYTE *pbCodecInfo);
-        
+
         END_INTERFACE
     } IWMHeaderInfo2Vtbl;
 
@@ -6198,7 +6196,7 @@ EXTERN_C const IID IID_IWMHeaderInfo2;
         CONST_VTBL struct IWMHeaderInfo2Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -6263,7 +6261,7 @@ EXTERN_C const IID IID_IWMHeaderInfo2;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo2_GetCodecInfoCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo2_GetCodecInfoCount_Proxy(
     IWMHeaderInfo2 * This,
     /* [out] */ DWORD *pcCodecInfos);
 
@@ -6275,7 +6273,7 @@ void __RPC_STUB IWMHeaderInfo2_GetCodecInfoCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo2_GetCodecInfo_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo2_GetCodecInfo_Proxy(
     IWMHeaderInfo2 * This,
     /* [in] */ DWORD wIndex,
     /* [out][in] */ WORD *pcchName,
@@ -6302,29 +6300,29 @@ void __RPC_STUB IWMHeaderInfo2_GetCodecInfo_Stub(
 #define __IWMHeaderInfo3_INTERFACE_DEFINED__
 
 /* interface IWMHeaderInfo3 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMHeaderInfo3;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("15CC68E3-27CC-4ecd-B222-3F5D02D80BD5")
     IWMHeaderInfo3 : public IWMHeaderInfo2
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetAttributeCountEx( 
+        virtual HRESULT STDMETHODCALLTYPE GetAttributeCountEx(
             /* [in] */ WORD wStreamNum,
             /* [out] */ WORD *pcAttributes) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAttributeIndices( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetAttributeIndices(
             /* [in] */ WORD wStreamNum,
             /* [in] */ LPCWSTR pwszName,
             /* [in] */ WORD *pwLangIndex,
             /* [size_is][out] */ WORD *pwIndices,
             /* [out][in] */ WORD *pwCount) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAttributeByIndexEx( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetAttributeByIndexEx(
             /* [in] */ WORD wStreamNum,
             /* [in] */ WORD wIndex,
             /* [size_is][out] */ LPWSTR pwszName,
@@ -6333,16 +6331,16 @@ EXTERN_C const IID IID_IWMHeaderInfo3;
             /* [out] */ WORD *pwLangIndex,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ DWORD *pdwDataLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE ModifyAttribute( 
+
+        virtual HRESULT STDMETHODCALLTYPE ModifyAttribute(
             /* [in] */ WORD wStreamNum,
             /* [in] */ WORD wIndex,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [in] */ WORD wLangIndex,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ DWORD dwLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AddAttribute( 
+
+        virtual HRESULT STDMETHODCALLTYPE AddAttribute(
             /* [in] */ WORD wStreamNum,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WORD *pwIndex,
@@ -6350,43 +6348,43 @@ EXTERN_C const IID IID_IWMHeaderInfo3;
             /* [in] */ WORD wLangIndex,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ DWORD dwLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE DeleteAttribute( 
+
+        virtual HRESULT STDMETHODCALLTYPE DeleteAttribute(
             /* [in] */ WORD wStreamNum,
             /* [in] */ WORD wIndex) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AddCodecInfo( 
+
+        virtual HRESULT STDMETHODCALLTYPE AddCodecInfo(
             /* [in] */ WCHAR *pwszName,
             /* [in] */ WCHAR *pwszDescription,
             /* [in] */ WMT_CODEC_INFO_TYPE codecType,
             /* [in] */ WORD cbCodecInfo,
             /* [size_is][in] */ BYTE *pbCodecInfo) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMHeaderInfo3Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMHeaderInfo3 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMHeaderInfo3 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMHeaderInfo3 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAttributeCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAttributeCount )(
             IWMHeaderInfo3 * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ WORD *pcAttributes);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAttributeByIndex )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAttributeByIndex )(
             IWMHeaderInfo3 * This,
             /* [in] */ WORD wIndex,
             /* [out][in] */ WORD *pwStreamNum,
@@ -6395,48 +6393,48 @@ EXTERN_C const IID IID_IWMHeaderInfo3;
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAttributeByName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAttributeByName )(
             IWMHeaderInfo3 * This,
             /* [out][in] */ WORD *pwStreamNum,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAttribute )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetAttribute )(
             IWMHeaderInfo3 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMarkerCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMarkerCount )(
             IWMHeaderInfo3 * This,
             /* [out] */ WORD *pcMarkers);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMarker )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMarker )(
             IWMHeaderInfo3 * This,
             /* [in] */ WORD wIndex,
             /* [size_is][out] */ WCHAR *pwszMarkerName,
             /* [out][in] */ WORD *pcchMarkerNameLen,
             /* [out] */ QWORD *pcnsMarkerTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddMarker )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddMarker )(
             IWMHeaderInfo3 * This,
             /* [in] */ WCHAR *pwszMarkerName,
             /* [in] */ QWORD cnsMarkerTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveMarker )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveMarker )(
             IWMHeaderInfo3 * This,
             /* [in] */ WORD wIndex);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetScriptCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetScriptCount )(
             IWMHeaderInfo3 * This,
             /* [out] */ WORD *pcScripts);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetScript )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetScript )(
             IWMHeaderInfo3 * This,
             /* [in] */ WORD wIndex,
             /* [size_is][out] */ WCHAR *pwszType,
@@ -6444,22 +6442,22 @@ EXTERN_C const IID IID_IWMHeaderInfo3;
             /* [size_is][out] */ WCHAR *pwszCommand,
             /* [out][in] */ WORD *pcchCommandLen,
             /* [out] */ QWORD *pcnsScriptTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddScript )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddScript )(
             IWMHeaderInfo3 * This,
             /* [in] */ WCHAR *pwszType,
             /* [in] */ WCHAR *pwszCommand,
             /* [in] */ QWORD cnsScriptTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveScript )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveScript )(
             IWMHeaderInfo3 * This,
             /* [in] */ WORD wIndex);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecInfoCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecInfoCount )(
             IWMHeaderInfo3 * This,
             /* [out] */ DWORD *pcCodecInfos);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecInfo )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecInfo )(
             IWMHeaderInfo3 * This,
             /* [in] */ DWORD wIndex,
             /* [out][in] */ WORD *pcchName,
@@ -6469,21 +6467,21 @@ EXTERN_C const IID IID_IWMHeaderInfo3;
             /* [out] */ WMT_CODEC_INFO_TYPE *pCodecType,
             /* [out][in] */ WORD *pcbCodecInfo,
             /* [size_is][out] */ BYTE *pbCodecInfo);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAttributeCountEx )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAttributeCountEx )(
             IWMHeaderInfo3 * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ WORD *pcAttributes);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAttributeIndices )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAttributeIndices )(
             IWMHeaderInfo3 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ LPCWSTR pwszName,
             /* [in] */ WORD *pwLangIndex,
             /* [size_is][out] */ WORD *pwIndices,
             /* [out][in] */ WORD *pwCount);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAttributeByIndexEx )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAttributeByIndexEx )(
             IWMHeaderInfo3 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ WORD wIndex,
@@ -6493,8 +6491,8 @@ EXTERN_C const IID IID_IWMHeaderInfo3;
             /* [out] */ WORD *pwLangIndex,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ DWORD *pdwDataLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *ModifyAttribute )( 
+
+        HRESULT ( STDMETHODCALLTYPE *ModifyAttribute )(
             IWMHeaderInfo3 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ WORD wIndex,
@@ -6502,8 +6500,8 @@ EXTERN_C const IID IID_IWMHeaderInfo3;
             /* [in] */ WORD wLangIndex,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ DWORD dwLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddAttribute )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddAttribute )(
             IWMHeaderInfo3 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ LPCWSTR pszName,
@@ -6512,20 +6510,20 @@ EXTERN_C const IID IID_IWMHeaderInfo3;
             /* [in] */ WORD wLangIndex,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ DWORD dwLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *DeleteAttribute )( 
+
+        HRESULT ( STDMETHODCALLTYPE *DeleteAttribute )(
             IWMHeaderInfo3 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ WORD wIndex);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddCodecInfo )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddCodecInfo )(
             IWMHeaderInfo3 * This,
             /* [in] */ WCHAR *pwszName,
             /* [in] */ WCHAR *pwszDescription,
             /* [in] */ WMT_CODEC_INFO_TYPE codecType,
             /* [in] */ WORD cbCodecInfo,
             /* [size_is][in] */ BYTE *pbCodecInfo);
-        
+
         END_INTERFACE
     } IWMHeaderInfo3Vtbl;
 
@@ -6534,7 +6532,7 @@ EXTERN_C const IID IID_IWMHeaderInfo3;
         CONST_VTBL struct IWMHeaderInfo3Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -6621,7 +6619,7 @@ EXTERN_C const IID IID_IWMHeaderInfo3;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo3_GetAttributeCountEx_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo3_GetAttributeCountEx_Proxy(
     IWMHeaderInfo3 * This,
     /* [in] */ WORD wStreamNum,
     /* [out] */ WORD *pcAttributes);
@@ -6634,7 +6632,7 @@ void __RPC_STUB IWMHeaderInfo3_GetAttributeCountEx_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo3_GetAttributeIndices_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo3_GetAttributeIndices_Proxy(
     IWMHeaderInfo3 * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ LPCWSTR pwszName,
@@ -6650,7 +6648,7 @@ void __RPC_STUB IWMHeaderInfo3_GetAttributeIndices_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo3_GetAttributeByIndexEx_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo3_GetAttributeByIndexEx_Proxy(
     IWMHeaderInfo3 * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ WORD wIndex,
@@ -6669,7 +6667,7 @@ void __RPC_STUB IWMHeaderInfo3_GetAttributeByIndexEx_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo3_ModifyAttribute_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo3_ModifyAttribute_Proxy(
     IWMHeaderInfo3 * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ WORD wIndex,
@@ -6686,7 +6684,7 @@ void __RPC_STUB IWMHeaderInfo3_ModifyAttribute_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo3_AddAttribute_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo3_AddAttribute_Proxy(
     IWMHeaderInfo3 * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ LPCWSTR pszName,
@@ -6704,7 +6702,7 @@ void __RPC_STUB IWMHeaderInfo3_AddAttribute_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo3_DeleteAttribute_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo3_DeleteAttribute_Proxy(
     IWMHeaderInfo3 * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ WORD wIndex);
@@ -6717,7 +6715,7 @@ void __RPC_STUB IWMHeaderInfo3_DeleteAttribute_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMHeaderInfo3_AddCodecInfo_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMHeaderInfo3_AddCodecInfo_Proxy(
     IWMHeaderInfo3 * This,
     /* [in] */ WCHAR *pwszName,
     /* [in] */ WCHAR *pwszDescription,
@@ -6741,90 +6739,90 @@ void __RPC_STUB IWMHeaderInfo3_AddCodecInfo_Stub(
 #define __IWMProfileManager_INTERFACE_DEFINED__
 
 /* interface IWMProfileManager */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMProfileManager;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("d16679f2-6ca0-472d-8d31-2f5d55aee155")
     IWMProfileManager : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE CreateEmptyProfile( 
+        virtual HRESULT STDMETHODCALLTYPE CreateEmptyProfile(
             /* [in] */ WMT_VERSION dwVersion,
             /* [out] */ IWMProfile **ppProfile) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE LoadProfileByID( 
+
+        virtual HRESULT STDMETHODCALLTYPE LoadProfileByID(
             /* [in] */ REFGUID guidProfile,
             /* [out] */ IWMProfile **ppProfile) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE LoadProfileByData( 
+
+        virtual HRESULT STDMETHODCALLTYPE LoadProfileByData(
             /* [in] */ const WCHAR *pwszProfile,
             /* [out] */ IWMProfile **ppProfile) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SaveProfile( 
+
+        virtual HRESULT STDMETHODCALLTYPE SaveProfile(
             /* [in] */ IWMProfile *pIWMProfile,
             /* [in] */ WCHAR *pwszProfile,
             /* [out][in] */ DWORD *pdwLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetSystemProfileCount( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetSystemProfileCount(
             /* [out] */ DWORD *pcProfiles) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE LoadSystemProfile( 
+
+        virtual HRESULT STDMETHODCALLTYPE LoadSystemProfile(
             /* [in] */ DWORD dwProfileIndex,
             /* [out] */ IWMProfile **ppProfile) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMProfileManagerVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMProfileManager * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMProfileManager * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMProfileManager * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *CreateEmptyProfile )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CreateEmptyProfile )(
             IWMProfileManager * This,
             /* [in] */ WMT_VERSION dwVersion,
             /* [out] */ IWMProfile **ppProfile);
-        
-        HRESULT ( STDMETHODCALLTYPE *LoadProfileByID )( 
+
+        HRESULT ( STDMETHODCALLTYPE *LoadProfileByID )(
             IWMProfileManager * This,
             /* [in] */ REFGUID guidProfile,
             /* [out] */ IWMProfile **ppProfile);
-        
-        HRESULT ( STDMETHODCALLTYPE *LoadProfileByData )( 
+
+        HRESULT ( STDMETHODCALLTYPE *LoadProfileByData )(
             IWMProfileManager * This,
             /* [in] */ const WCHAR *pwszProfile,
             /* [out] */ IWMProfile **ppProfile);
-        
-        HRESULT ( STDMETHODCALLTYPE *SaveProfile )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SaveProfile )(
             IWMProfileManager * This,
             /* [in] */ IWMProfile *pIWMProfile,
             /* [in] */ WCHAR *pwszProfile,
             /* [out][in] */ DWORD *pdwLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSystemProfileCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetSystemProfileCount )(
             IWMProfileManager * This,
             /* [out] */ DWORD *pcProfiles);
-        
-        HRESULT ( STDMETHODCALLTYPE *LoadSystemProfile )( 
+
+        HRESULT ( STDMETHODCALLTYPE *LoadSystemProfile )(
             IWMProfileManager * This,
             /* [in] */ DWORD dwProfileIndex,
             /* [out] */ IWMProfile **ppProfile);
-        
+
         END_INTERFACE
     } IWMProfileManagerVtbl;
 
@@ -6833,7 +6831,7 @@ EXTERN_C const IID IID_IWMProfileManager;
         CONST_VTBL struct IWMProfileManagerVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -6873,7 +6871,7 @@ EXTERN_C const IID IID_IWMProfileManager;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMProfileManager_CreateEmptyProfile_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfileManager_CreateEmptyProfile_Proxy(
     IWMProfileManager * This,
     /* [in] */ WMT_VERSION dwVersion,
     /* [out] */ IWMProfile **ppProfile);
@@ -6886,7 +6884,7 @@ void __RPC_STUB IWMProfileManager_CreateEmptyProfile_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfileManager_LoadProfileByID_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfileManager_LoadProfileByID_Proxy(
     IWMProfileManager * This,
     /* [in] */ REFGUID guidProfile,
     /* [out] */ IWMProfile **ppProfile);
@@ -6899,7 +6897,7 @@ void __RPC_STUB IWMProfileManager_LoadProfileByID_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfileManager_LoadProfileByData_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfileManager_LoadProfileByData_Proxy(
     IWMProfileManager * This,
     /* [in] */ const WCHAR *pwszProfile,
     /* [out] */ IWMProfile **ppProfile);
@@ -6912,7 +6910,7 @@ void __RPC_STUB IWMProfileManager_LoadProfileByData_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfileManager_SaveProfile_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfileManager_SaveProfile_Proxy(
     IWMProfileManager * This,
     /* [in] */ IWMProfile *pIWMProfile,
     /* [in] */ WCHAR *pwszProfile,
@@ -6926,7 +6924,7 @@ void __RPC_STUB IWMProfileManager_SaveProfile_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfileManager_GetSystemProfileCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfileManager_GetSystemProfileCount_Proxy(
     IWMProfileManager * This,
     /* [out] */ DWORD *pcProfiles);
 
@@ -6938,7 +6936,7 @@ void __RPC_STUB IWMProfileManager_GetSystemProfileCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfileManager_LoadSystemProfile_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfileManager_LoadSystemProfile_Proxy(
     IWMProfileManager * This,
     /* [in] */ DWORD dwProfileIndex,
     /* [out] */ IWMProfile **ppProfile);
@@ -6959,80 +6957,80 @@ void __RPC_STUB IWMProfileManager_LoadSystemProfile_Stub(
 #define __IWMProfileManager2_INTERFACE_DEFINED__
 
 /* interface IWMProfileManager2 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMProfileManager2;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("7A924E51-73C1-494d-8019-23D37ED9B89A")
     IWMProfileManager2 : public IWMProfileManager
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetSystemProfileVersion( 
+        virtual HRESULT STDMETHODCALLTYPE GetSystemProfileVersion(
             WMT_VERSION *pdwVersion) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetSystemProfileVersion( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetSystemProfileVersion(
             WMT_VERSION dwVersion) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMProfileManager2Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMProfileManager2 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMProfileManager2 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMProfileManager2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *CreateEmptyProfile )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CreateEmptyProfile )(
             IWMProfileManager2 * This,
             /* [in] */ WMT_VERSION dwVersion,
             /* [out] */ IWMProfile **ppProfile);
-        
-        HRESULT ( STDMETHODCALLTYPE *LoadProfileByID )( 
+
+        HRESULT ( STDMETHODCALLTYPE *LoadProfileByID )(
             IWMProfileManager2 * This,
             /* [in] */ REFGUID guidProfile,
             /* [out] */ IWMProfile **ppProfile);
-        
-        HRESULT ( STDMETHODCALLTYPE *LoadProfileByData )( 
+
+        HRESULT ( STDMETHODCALLTYPE *LoadProfileByData )(
             IWMProfileManager2 * This,
             /* [in] */ const WCHAR *pwszProfile,
             /* [out] */ IWMProfile **ppProfile);
-        
-        HRESULT ( STDMETHODCALLTYPE *SaveProfile )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SaveProfile )(
             IWMProfileManager2 * This,
             /* [in] */ IWMProfile *pIWMProfile,
             /* [in] */ WCHAR *pwszProfile,
             /* [out][in] */ DWORD *pdwLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSystemProfileCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetSystemProfileCount )(
             IWMProfileManager2 * This,
             /* [out] */ DWORD *pcProfiles);
-        
-        HRESULT ( STDMETHODCALLTYPE *LoadSystemProfile )( 
+
+        HRESULT ( STDMETHODCALLTYPE *LoadSystemProfile )(
             IWMProfileManager2 * This,
             /* [in] */ DWORD dwProfileIndex,
             /* [out] */ IWMProfile **ppProfile);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSystemProfileVersion )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetSystemProfileVersion )(
             IWMProfileManager2 * This,
             WMT_VERSION *pdwVersion);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetSystemProfileVersion )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetSystemProfileVersion )(
             IWMProfileManager2 * This,
             WMT_VERSION dwVersion);
-        
+
         END_INTERFACE
     } IWMProfileManager2Vtbl;
 
@@ -7041,7 +7039,7 @@ EXTERN_C const IID IID_IWMProfileManager2;
         CONST_VTBL struct IWMProfileManager2Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -7088,7 +7086,7 @@ EXTERN_C const IID IID_IWMProfileManager2;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMProfileManager2_GetSystemProfileVersion_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfileManager2_GetSystemProfileVersion_Proxy(
     IWMProfileManager2 * This,
     WMT_VERSION *pdwVersion);
 
@@ -7100,7 +7098,7 @@ void __RPC_STUB IWMProfileManager2_GetSystemProfileVersion_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfileManager2_SetSystemProfileVersion_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfileManager2_SetSystemProfileVersion_Proxy(
     IWMProfileManager2 * This,
     WMT_VERSION dwVersion);
 
@@ -7120,50 +7118,50 @@ void __RPC_STUB IWMProfileManager2_SetSystemProfileVersion_Stub(
 #define __IWMProfileManagerLanguage_INTERFACE_DEFINED__
 
 /* interface IWMProfileManagerLanguage */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMProfileManagerLanguage;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("BA4DCC78-7EE0-4ab8-B27A-DBCE8BC51454")
     IWMProfileManagerLanguage : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetUserLanguageID( 
+        virtual HRESULT STDMETHODCALLTYPE GetUserLanguageID(
             WORD *wLangID) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetUserLanguageID( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetUserLanguageID(
             WORD wLangID) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMProfileManagerLanguageVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMProfileManagerLanguage * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMProfileManagerLanguage * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMProfileManagerLanguage * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetUserLanguageID )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetUserLanguageID )(
             IWMProfileManagerLanguage * This,
             WORD *wLangID);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetUserLanguageID )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetUserLanguageID )(
             IWMProfileManagerLanguage * This,
             WORD wLangID);
-        
+
         END_INTERFACE
     } IWMProfileManagerLanguageVtbl;
 
@@ -7172,7 +7170,7 @@ EXTERN_C const IID IID_IWMProfileManagerLanguage;
         CONST_VTBL struct IWMProfileManagerLanguageVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -7200,7 +7198,7 @@ EXTERN_C const IID IID_IWMProfileManagerLanguage;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMProfileManagerLanguage_GetUserLanguageID_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfileManagerLanguage_GetUserLanguageID_Proxy(
     IWMProfileManagerLanguage * This,
     WORD *wLangID);
 
@@ -7212,7 +7210,7 @@ void __RPC_STUB IWMProfileManagerLanguage_GetUserLanguageID_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfileManagerLanguage_SetUserLanguageID_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfileManagerLanguage_SetUserLanguageID_Proxy(
     IWMProfileManagerLanguage * This,
     WORD wLangID);
 
@@ -7232,174 +7230,174 @@ void __RPC_STUB IWMProfileManagerLanguage_SetUserLanguageID_Stub(
 #define __IWMProfile_INTERFACE_DEFINED__
 
 /* interface IWMProfile */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMProfile;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BDB-2B2B-11d3-B36B-00C04F6108FF")
     IWMProfile : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetVersion( 
+        virtual HRESULT STDMETHODCALLTYPE GetVersion(
             /* [out] */ WMT_VERSION *pdwVersion) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetName( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetName(
             /* [size_is][out] */ WCHAR *pwszName,
             /* [out][in] */ DWORD *pcchName) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetName( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetName(
             /* [in] */ const WCHAR *pwszName) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetDescription( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetDescription(
             /* [size_is][out] */ WCHAR *pwszDescription,
             /* [out][in] */ DWORD *pcchDescription) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetDescription( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetDescription(
             /* [in] */ const WCHAR *pwszDescription) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetStreamCount( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetStreamCount(
             /* [out] */ DWORD *pcStreams) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetStream( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetStream(
             /* [in] */ DWORD dwStreamIndex,
             /* [out] */ IWMStreamConfig **ppConfig) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetStreamByNumber( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetStreamByNumber(
             /* [in] */ WORD wStreamNum,
             /* [out] */ IWMStreamConfig **ppConfig) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RemoveStream( 
+
+        virtual HRESULT STDMETHODCALLTYPE RemoveStream(
             /* [in] */ IWMStreamConfig *pConfig) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RemoveStreamByNumber( 
+
+        virtual HRESULT STDMETHODCALLTYPE RemoveStreamByNumber(
             /* [in] */ WORD wStreamNum) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AddStream( 
+
+        virtual HRESULT STDMETHODCALLTYPE AddStream(
             /* [in] */ IWMStreamConfig *pConfig) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE ReconfigStream( 
+
+        virtual HRESULT STDMETHODCALLTYPE ReconfigStream(
             /* [in] */ IWMStreamConfig *pConfig) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE CreateNewStream( 
+
+        virtual HRESULT STDMETHODCALLTYPE CreateNewStream(
             /* [in] */ REFGUID guidStreamType,
             /* [out] */ IWMStreamConfig **ppConfig) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMutualExclusionCount( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetMutualExclusionCount(
             /* [out] */ DWORD *pcME) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMutualExclusion( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetMutualExclusion(
             /* [in] */ DWORD dwMEIndex,
             /* [out] */ IWMMutualExclusion **ppME) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RemoveMutualExclusion( 
+
+        virtual HRESULT STDMETHODCALLTYPE RemoveMutualExclusion(
             /* [in] */ IWMMutualExclusion *pME) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AddMutualExclusion( 
+
+        virtual HRESULT STDMETHODCALLTYPE AddMutualExclusion(
             /* [in] */ IWMMutualExclusion *pME) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE CreateNewMutualExclusion( 
+
+        virtual HRESULT STDMETHODCALLTYPE CreateNewMutualExclusion(
             /* [out] */ IWMMutualExclusion **ppME) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMProfileVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMProfile * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMProfile * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMProfile * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetVersion )(
             IWMProfile * This,
             /* [out] */ WMT_VERSION *pdwVersion);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetName )(
             IWMProfile * This,
             /* [size_is][out] */ WCHAR *pwszName,
             /* [out][in] */ DWORD *pcchName);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetName )(
             IWMProfile * This,
             /* [in] */ const WCHAR *pwszName);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDescription )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetDescription )(
             IWMProfile * This,
             /* [size_is][out] */ WCHAR *pwszDescription,
             /* [out][in] */ DWORD *pcchDescription);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetDescription )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetDescription )(
             IWMProfile * This,
             /* [in] */ const WCHAR *pwszDescription);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamCount )(
             IWMProfile * This,
             /* [out] */ DWORD *pcStreams);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStream )(
             IWMProfile * This,
             /* [in] */ DWORD dwStreamIndex,
             /* [out] */ IWMStreamConfig **ppConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamByNumber )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamByNumber )(
             IWMProfile * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ IWMStreamConfig **ppConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveStream )(
             IWMProfile * This,
             /* [in] */ IWMStreamConfig *pConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveStreamByNumber )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveStreamByNumber )(
             IWMProfile * This,
             /* [in] */ WORD wStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddStream )(
             IWMProfile * This,
             /* [in] */ IWMStreamConfig *pConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *ReconfigStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *ReconfigStream )(
             IWMProfile * This,
             /* [in] */ IWMStreamConfig *pConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *CreateNewStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CreateNewStream )(
             IWMProfile * This,
             /* [in] */ REFGUID guidStreamType,
             /* [out] */ IWMStreamConfig **ppConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMutualExclusionCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMutualExclusionCount )(
             IWMProfile * This,
             /* [out] */ DWORD *pcME);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMutualExclusion )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMutualExclusion )(
             IWMProfile * This,
             /* [in] */ DWORD dwMEIndex,
             /* [out] */ IWMMutualExclusion **ppME);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveMutualExclusion )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveMutualExclusion )(
             IWMProfile * This,
             /* [in] */ IWMMutualExclusion *pME);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddMutualExclusion )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddMutualExclusion )(
             IWMProfile * This,
             /* [in] */ IWMMutualExclusion *pME);
-        
-        HRESULT ( STDMETHODCALLTYPE *CreateNewMutualExclusion )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CreateNewMutualExclusion )(
             IWMProfile * This,
             /* [out] */ IWMMutualExclusion **ppME);
-        
+
         END_INTERFACE
     } IWMProfileVtbl;
 
@@ -7408,7 +7406,7 @@ EXTERN_C const IID IID_IWMProfile;
         CONST_VTBL struct IWMProfileVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -7484,7 +7482,7 @@ EXTERN_C const IID IID_IWMProfile;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile_GetVersion_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile_GetVersion_Proxy(
     IWMProfile * This,
     /* [out] */ WMT_VERSION *pdwVersion);
 
@@ -7496,7 +7494,7 @@ void __RPC_STUB IWMProfile_GetVersion_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile_GetName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile_GetName_Proxy(
     IWMProfile * This,
     /* [size_is][out] */ WCHAR *pwszName,
     /* [out][in] */ DWORD *pcchName);
@@ -7509,7 +7507,7 @@ void __RPC_STUB IWMProfile_GetName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile_SetName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile_SetName_Proxy(
     IWMProfile * This,
     /* [in] */ const WCHAR *pwszName);
 
@@ -7521,7 +7519,7 @@ void __RPC_STUB IWMProfile_SetName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile_GetDescription_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile_GetDescription_Proxy(
     IWMProfile * This,
     /* [size_is][out] */ WCHAR *pwszDescription,
     /* [out][in] */ DWORD *pcchDescription);
@@ -7534,7 +7532,7 @@ void __RPC_STUB IWMProfile_GetDescription_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile_SetDescription_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile_SetDescription_Proxy(
     IWMProfile * This,
     /* [in] */ const WCHAR *pwszDescription);
 
@@ -7546,7 +7544,7 @@ void __RPC_STUB IWMProfile_SetDescription_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile_GetStreamCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile_GetStreamCount_Proxy(
     IWMProfile * This,
     /* [out] */ DWORD *pcStreams);
 
@@ -7558,7 +7556,7 @@ void __RPC_STUB IWMProfile_GetStreamCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile_GetStream_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile_GetStream_Proxy(
     IWMProfile * This,
     /* [in] */ DWORD dwStreamIndex,
     /* [out] */ IWMStreamConfig **ppConfig);
@@ -7571,7 +7569,7 @@ void __RPC_STUB IWMProfile_GetStream_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile_GetStreamByNumber_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile_GetStreamByNumber_Proxy(
     IWMProfile * This,
     /* [in] */ WORD wStreamNum,
     /* [out] */ IWMStreamConfig **ppConfig);
@@ -7584,7 +7582,7 @@ void __RPC_STUB IWMProfile_GetStreamByNumber_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile_RemoveStream_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile_RemoveStream_Proxy(
     IWMProfile * This,
     /* [in] */ IWMStreamConfig *pConfig);
 
@@ -7596,7 +7594,7 @@ void __RPC_STUB IWMProfile_RemoveStream_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile_RemoveStreamByNumber_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile_RemoveStreamByNumber_Proxy(
     IWMProfile * This,
     /* [in] */ WORD wStreamNum);
 
@@ -7608,7 +7606,7 @@ void __RPC_STUB IWMProfile_RemoveStreamByNumber_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile_AddStream_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile_AddStream_Proxy(
     IWMProfile * This,
     /* [in] */ IWMStreamConfig *pConfig);
 
@@ -7620,7 +7618,7 @@ void __RPC_STUB IWMProfile_AddStream_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile_ReconfigStream_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile_ReconfigStream_Proxy(
     IWMProfile * This,
     /* [in] */ IWMStreamConfig *pConfig);
 
@@ -7632,7 +7630,7 @@ void __RPC_STUB IWMProfile_ReconfigStream_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile_CreateNewStream_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile_CreateNewStream_Proxy(
     IWMProfile * This,
     /* [in] */ REFGUID guidStreamType,
     /* [out] */ IWMStreamConfig **ppConfig);
@@ -7645,7 +7643,7 @@ void __RPC_STUB IWMProfile_CreateNewStream_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile_GetMutualExclusionCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile_GetMutualExclusionCount_Proxy(
     IWMProfile * This,
     /* [out] */ DWORD *pcME);
 
@@ -7657,7 +7655,7 @@ void __RPC_STUB IWMProfile_GetMutualExclusionCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile_GetMutualExclusion_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile_GetMutualExclusion_Proxy(
     IWMProfile * This,
     /* [in] */ DWORD dwMEIndex,
     /* [out] */ IWMMutualExclusion **ppME);
@@ -7670,7 +7668,7 @@ void __RPC_STUB IWMProfile_GetMutualExclusion_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile_RemoveMutualExclusion_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile_RemoveMutualExclusion_Proxy(
     IWMProfile * This,
     /* [in] */ IWMMutualExclusion *pME);
 
@@ -7682,7 +7680,7 @@ void __RPC_STUB IWMProfile_RemoveMutualExclusion_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile_AddMutualExclusion_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile_AddMutualExclusion_Proxy(
     IWMProfile * This,
     /* [in] */ IWMMutualExclusion *pME);
 
@@ -7694,7 +7692,7 @@ void __RPC_STUB IWMProfile_AddMutualExclusion_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile_CreateNewMutualExclusion_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile_CreateNewMutualExclusion_Proxy(
     IWMProfile * This,
     /* [out] */ IWMMutualExclusion **ppME);
 
@@ -7714,121 +7712,121 @@ void __RPC_STUB IWMProfile_CreateNewMutualExclusion_Stub(
 #define __IWMProfile2_INTERFACE_DEFINED__
 
 /* interface IWMProfile2 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMProfile2;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("07E72D33-D94E-4be7-8843-60AE5FF7E5F5")
     IWMProfile2 : public IWMProfile
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetProfileID( 
+        virtual HRESULT STDMETHODCALLTYPE GetProfileID(
             /* [out] */ GUID *pguidID) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMProfile2Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMProfile2 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMProfile2 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMProfile2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetVersion )(
             IWMProfile2 * This,
             /* [out] */ WMT_VERSION *pdwVersion);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetName )(
             IWMProfile2 * This,
             /* [size_is][out] */ WCHAR *pwszName,
             /* [out][in] */ DWORD *pcchName);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetName )(
             IWMProfile2 * This,
             /* [in] */ const WCHAR *pwszName);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDescription )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetDescription )(
             IWMProfile2 * This,
             /* [size_is][out] */ WCHAR *pwszDescription,
             /* [out][in] */ DWORD *pcchDescription);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetDescription )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetDescription )(
             IWMProfile2 * This,
             /* [in] */ const WCHAR *pwszDescription);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamCount )(
             IWMProfile2 * This,
             /* [out] */ DWORD *pcStreams);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStream )(
             IWMProfile2 * This,
             /* [in] */ DWORD dwStreamIndex,
             /* [out] */ IWMStreamConfig **ppConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamByNumber )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamByNumber )(
             IWMProfile2 * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ IWMStreamConfig **ppConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveStream )(
             IWMProfile2 * This,
             /* [in] */ IWMStreamConfig *pConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveStreamByNumber )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveStreamByNumber )(
             IWMProfile2 * This,
             /* [in] */ WORD wStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddStream )(
             IWMProfile2 * This,
             /* [in] */ IWMStreamConfig *pConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *ReconfigStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *ReconfigStream )(
             IWMProfile2 * This,
             /* [in] */ IWMStreamConfig *pConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *CreateNewStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CreateNewStream )(
             IWMProfile2 * This,
             /* [in] */ REFGUID guidStreamType,
             /* [out] */ IWMStreamConfig **ppConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMutualExclusionCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMutualExclusionCount )(
             IWMProfile2 * This,
             /* [out] */ DWORD *pcME);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMutualExclusion )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMutualExclusion )(
             IWMProfile2 * This,
             /* [in] */ DWORD dwMEIndex,
             /* [out] */ IWMMutualExclusion **ppME);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveMutualExclusion )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveMutualExclusion )(
             IWMProfile2 * This,
             /* [in] */ IWMMutualExclusion *pME);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddMutualExclusion )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddMutualExclusion )(
             IWMProfile2 * This,
             /* [in] */ IWMMutualExclusion *pME);
-        
-        HRESULT ( STDMETHODCALLTYPE *CreateNewMutualExclusion )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CreateNewMutualExclusion )(
             IWMProfile2 * This,
             /* [out] */ IWMMutualExclusion **ppME);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetProfileID )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetProfileID )(
             IWMProfile2 * This,
             /* [out] */ GUID *pguidID);
-        
+
         END_INTERFACE
     } IWMProfile2Vtbl;
 
@@ -7837,7 +7835,7 @@ EXTERN_C const IID IID_IWMProfile2;
         CONST_VTBL struct IWMProfile2Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -7917,7 +7915,7 @@ EXTERN_C const IID IID_IWMProfile2;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile2_GetProfileID_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile2_GetProfileID_Proxy(
     IWMProfile2 * This,
     /* [out] */ GUID *pguidID);
 
@@ -7937,204 +7935,204 @@ void __RPC_STUB IWMProfile2_GetProfileID_Stub(
 #define __IWMProfile3_INTERFACE_DEFINED__
 
 /* interface IWMProfile3 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMProfile3;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("00EF96CC-A461-4546-8BCD-C9A28F0E06F5")
     IWMProfile3 : public IWMProfile2
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetStorageFormat( 
+        virtual HRESULT STDMETHODCALLTYPE GetStorageFormat(
             /* [out] */ WMT_STORAGE_FORMAT *pnStorageFormat) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetStorageFormat( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetStorageFormat(
             /* [in] */ WMT_STORAGE_FORMAT nStorageFormat) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBandwidthSharingCount( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetBandwidthSharingCount(
             /* [out] */ DWORD *pcBS) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBandwidthSharing( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetBandwidthSharing(
             /* [in] */ DWORD dwBSIndex,
             /* [out] */ IWMBandwidthSharing **ppBS) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RemoveBandwidthSharing( 
+
+        virtual HRESULT STDMETHODCALLTYPE RemoveBandwidthSharing(
             /* [in] */ IWMBandwidthSharing *pBS) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AddBandwidthSharing( 
+
+        virtual HRESULT STDMETHODCALLTYPE AddBandwidthSharing(
             /* [in] */ IWMBandwidthSharing *pBS) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE CreateNewBandwidthSharing( 
+
+        virtual HRESULT STDMETHODCALLTYPE CreateNewBandwidthSharing(
             /* [out] */ IWMBandwidthSharing **ppBS) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetStreamPrioritization( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetStreamPrioritization(
             /* [out] */ IWMStreamPrioritization **ppSP) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetStreamPrioritization( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetStreamPrioritization(
             /* [in] */ IWMStreamPrioritization *pSP) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE RemoveStreamPrioritization( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE CreateNewStreamPrioritization( 
+
+        virtual HRESULT STDMETHODCALLTYPE CreateNewStreamPrioritization(
             /* [out] */ IWMStreamPrioritization **ppSP) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetExpectedPacketCount( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetExpectedPacketCount(
             /* [in] */ QWORD msDuration,
             /* [out] */ QWORD *pcPackets) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMProfile3Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMProfile3 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMProfile3 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMProfile3 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetVersion )(
             IWMProfile3 * This,
             /* [out] */ WMT_VERSION *pdwVersion);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetName )(
             IWMProfile3 * This,
             /* [size_is][out] */ WCHAR *pwszName,
             /* [out][in] */ DWORD *pcchName);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetName )(
             IWMProfile3 * This,
             /* [in] */ const WCHAR *pwszName);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDescription )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetDescription )(
             IWMProfile3 * This,
             /* [size_is][out] */ WCHAR *pwszDescription,
             /* [out][in] */ DWORD *pcchDescription);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetDescription )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetDescription )(
             IWMProfile3 * This,
             /* [in] */ const WCHAR *pwszDescription);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamCount )(
             IWMProfile3 * This,
             /* [out] */ DWORD *pcStreams);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStream )(
             IWMProfile3 * This,
             /* [in] */ DWORD dwStreamIndex,
             /* [out] */ IWMStreamConfig **ppConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamByNumber )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamByNumber )(
             IWMProfile3 * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ IWMStreamConfig **ppConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveStream )(
             IWMProfile3 * This,
             /* [in] */ IWMStreamConfig *pConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveStreamByNumber )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveStreamByNumber )(
             IWMProfile3 * This,
             /* [in] */ WORD wStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddStream )(
             IWMProfile3 * This,
             /* [in] */ IWMStreamConfig *pConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *ReconfigStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *ReconfigStream )(
             IWMProfile3 * This,
             /* [in] */ IWMStreamConfig *pConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *CreateNewStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CreateNewStream )(
             IWMProfile3 * This,
             /* [in] */ REFGUID guidStreamType,
             /* [out] */ IWMStreamConfig **ppConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMutualExclusionCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMutualExclusionCount )(
             IWMProfile3 * This,
             /* [out] */ DWORD *pcME);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMutualExclusion )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMutualExclusion )(
             IWMProfile3 * This,
             /* [in] */ DWORD dwMEIndex,
             /* [out] */ IWMMutualExclusion **ppME);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveMutualExclusion )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveMutualExclusion )(
             IWMProfile3 * This,
             /* [in] */ IWMMutualExclusion *pME);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddMutualExclusion )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddMutualExclusion )(
             IWMProfile3 * This,
             /* [in] */ IWMMutualExclusion *pME);
-        
-        HRESULT ( STDMETHODCALLTYPE *CreateNewMutualExclusion )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CreateNewMutualExclusion )(
             IWMProfile3 * This,
             /* [out] */ IWMMutualExclusion **ppME);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetProfileID )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetProfileID )(
             IWMProfile3 * This,
             /* [out] */ GUID *pguidID);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStorageFormat )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStorageFormat )(
             IWMProfile3 * This,
             /* [out] */ WMT_STORAGE_FORMAT *pnStorageFormat);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetStorageFormat )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetStorageFormat )(
             IWMProfile3 * This,
             /* [in] */ WMT_STORAGE_FORMAT nStorageFormat);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBandwidthSharingCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetBandwidthSharingCount )(
             IWMProfile3 * This,
             /* [out] */ DWORD *pcBS);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBandwidthSharing )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetBandwidthSharing )(
             IWMProfile3 * This,
             /* [in] */ DWORD dwBSIndex,
             /* [out] */ IWMBandwidthSharing **ppBS);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveBandwidthSharing )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveBandwidthSharing )(
             IWMProfile3 * This,
             /* [in] */ IWMBandwidthSharing *pBS);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddBandwidthSharing )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddBandwidthSharing )(
             IWMProfile3 * This,
             /* [in] */ IWMBandwidthSharing *pBS);
-        
-        HRESULT ( STDMETHODCALLTYPE *CreateNewBandwidthSharing )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CreateNewBandwidthSharing )(
             IWMProfile3 * This,
             /* [out] */ IWMBandwidthSharing **ppBS);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamPrioritization )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamPrioritization )(
             IWMProfile3 * This,
             /* [out] */ IWMStreamPrioritization **ppSP);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetStreamPrioritization )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetStreamPrioritization )(
             IWMProfile3 * This,
             /* [in] */ IWMStreamPrioritization *pSP);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveStreamPrioritization )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveStreamPrioritization )(
             IWMProfile3 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *CreateNewStreamPrioritization )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CreateNewStreamPrioritization )(
             IWMProfile3 * This,
             /* [out] */ IWMStreamPrioritization **ppSP);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetExpectedPacketCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetExpectedPacketCount )(
             IWMProfile3 * This,
             /* [in] */ QWORD msDuration,
             /* [out] */ QWORD *pcPackets);
-        
+
         END_INTERFACE
     } IWMProfile3Vtbl;
 
@@ -8143,7 +8141,7 @@ EXTERN_C const IID IID_IWMProfile3;
         CONST_VTBL struct IWMProfile3Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -8260,7 +8258,7 @@ EXTERN_C const IID IID_IWMProfile3;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile3_GetStorageFormat_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile3_GetStorageFormat_Proxy(
     IWMProfile3 * This,
     /* [out] */ WMT_STORAGE_FORMAT *pnStorageFormat);
 
@@ -8272,7 +8270,7 @@ void __RPC_STUB IWMProfile3_GetStorageFormat_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile3_SetStorageFormat_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile3_SetStorageFormat_Proxy(
     IWMProfile3 * This,
     /* [in] */ WMT_STORAGE_FORMAT nStorageFormat);
 
@@ -8284,7 +8282,7 @@ void __RPC_STUB IWMProfile3_SetStorageFormat_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile3_GetBandwidthSharingCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile3_GetBandwidthSharingCount_Proxy(
     IWMProfile3 * This,
     /* [out] */ DWORD *pcBS);
 
@@ -8296,7 +8294,7 @@ void __RPC_STUB IWMProfile3_GetBandwidthSharingCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile3_GetBandwidthSharing_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile3_GetBandwidthSharing_Proxy(
     IWMProfile3 * This,
     /* [in] */ DWORD dwBSIndex,
     /* [out] */ IWMBandwidthSharing **ppBS);
@@ -8309,7 +8307,7 @@ void __RPC_STUB IWMProfile3_GetBandwidthSharing_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile3_RemoveBandwidthSharing_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile3_RemoveBandwidthSharing_Proxy(
     IWMProfile3 * This,
     /* [in] */ IWMBandwidthSharing *pBS);
 
@@ -8321,7 +8319,7 @@ void __RPC_STUB IWMProfile3_RemoveBandwidthSharing_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile3_AddBandwidthSharing_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile3_AddBandwidthSharing_Proxy(
     IWMProfile3 * This,
     /* [in] */ IWMBandwidthSharing *pBS);
 
@@ -8333,7 +8331,7 @@ void __RPC_STUB IWMProfile3_AddBandwidthSharing_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile3_CreateNewBandwidthSharing_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile3_CreateNewBandwidthSharing_Proxy(
     IWMProfile3 * This,
     /* [out] */ IWMBandwidthSharing **ppBS);
 
@@ -8345,7 +8343,7 @@ void __RPC_STUB IWMProfile3_CreateNewBandwidthSharing_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile3_GetStreamPrioritization_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile3_GetStreamPrioritization_Proxy(
     IWMProfile3 * This,
     /* [out] */ IWMStreamPrioritization **ppSP);
 
@@ -8357,7 +8355,7 @@ void __RPC_STUB IWMProfile3_GetStreamPrioritization_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile3_SetStreamPrioritization_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile3_SetStreamPrioritization_Proxy(
     IWMProfile3 * This,
     /* [in] */ IWMStreamPrioritization *pSP);
 
@@ -8369,7 +8367,7 @@ void __RPC_STUB IWMProfile3_SetStreamPrioritization_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile3_RemoveStreamPrioritization_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile3_RemoveStreamPrioritization_Proxy(
     IWMProfile3 * This);
 
 
@@ -8380,7 +8378,7 @@ void __RPC_STUB IWMProfile3_RemoveStreamPrioritization_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile3_CreateNewStreamPrioritization_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile3_CreateNewStreamPrioritization_Proxy(
     IWMProfile3 * This,
     /* [out] */ IWMStreamPrioritization **ppSP);
 
@@ -8392,7 +8390,7 @@ void __RPC_STUB IWMProfile3_CreateNewStreamPrioritization_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMProfile3_GetExpectedPacketCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProfile3_GetExpectedPacketCount_Proxy(
     IWMProfile3 * This,
     /* [in] */ QWORD msDuration,
     /* [out] */ QWORD *pcPackets);
@@ -8413,117 +8411,117 @@ void __RPC_STUB IWMProfile3_GetExpectedPacketCount_Stub(
 #define __IWMStreamConfig_INTERFACE_DEFINED__
 
 /* interface IWMStreamConfig */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMStreamConfig;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BDC-2B2B-11d3-B36B-00C04F6108FF")
     IWMStreamConfig : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetStreamType( 
+        virtual HRESULT STDMETHODCALLTYPE GetStreamType(
             /* [out] */ GUID *pguidStreamType) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetStreamNumber( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetStreamNumber(
             /* [out] */ WORD *pwStreamNum) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetStreamNumber( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetStreamNumber(
             /* [in] */ WORD wStreamNum) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetStreamName( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetStreamName(
             /* [size_is][out] */ WCHAR *pwszStreamName,
             /* [out][in] */ WORD *pcchStreamName) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetStreamName( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetStreamName(
             /* [in] */ WCHAR *pwszStreamName) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetConnectionName( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetConnectionName(
             /* [size_is][out] */ WCHAR *pwszInputName,
             /* [out][in] */ WORD *pcchInputName) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetConnectionName( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetConnectionName(
             /* [in] */ WCHAR *pwszInputName) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBitrate( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetBitrate(
             /* [out] */ DWORD *pdwBitrate) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBitrate( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetBitrate(
             /* [in] */ DWORD pdwBitrate) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBufferWindow( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetBufferWindow(
             /* [out] */ DWORD *pmsBufferWindow) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBufferWindow( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetBufferWindow(
             /* [in] */ DWORD msBufferWindow) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMStreamConfigVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMStreamConfig * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMStreamConfig * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMStreamConfig * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamType )(
             IWMStreamConfig * This,
             /* [out] */ GUID *pguidStreamType);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamNumber )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamNumber )(
             IWMStreamConfig * This,
             /* [out] */ WORD *pwStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetStreamNumber )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetStreamNumber )(
             IWMStreamConfig * This,
             /* [in] */ WORD wStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamName )(
             IWMStreamConfig * This,
             /* [size_is][out] */ WCHAR *pwszStreamName,
             /* [out][in] */ WORD *pcchStreamName);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetStreamName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetStreamName )(
             IWMStreamConfig * This,
             /* [in] */ WCHAR *pwszStreamName);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetConnectionName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetConnectionName )(
             IWMStreamConfig * This,
             /* [size_is][out] */ WCHAR *pwszInputName,
             /* [out][in] */ WORD *pcchInputName);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetConnectionName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetConnectionName )(
             IWMStreamConfig * This,
             /* [in] */ WCHAR *pwszInputName);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBitrate )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetBitrate )(
             IWMStreamConfig * This,
             /* [out] */ DWORD *pdwBitrate);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBitrate )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetBitrate )(
             IWMStreamConfig * This,
             /* [in] */ DWORD pdwBitrate);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBufferWindow )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetBufferWindow )(
             IWMStreamConfig * This,
             /* [out] */ DWORD *pmsBufferWindow);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBufferWindow )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetBufferWindow )(
             IWMStreamConfig * This,
             /* [in] */ DWORD msBufferWindow);
-        
+
         END_INTERFACE
     } IWMStreamConfigVtbl;
 
@@ -8532,7 +8530,7 @@ EXTERN_C const IID IID_IWMStreamConfig;
         CONST_VTBL struct IWMStreamConfigVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -8587,7 +8585,7 @@ EXTERN_C const IID IID_IWMStreamConfig;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamConfig_GetStreamType_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamConfig_GetStreamType_Proxy(
     IWMStreamConfig * This,
     /* [out] */ GUID *pguidStreamType);
 
@@ -8599,7 +8597,7 @@ void __RPC_STUB IWMStreamConfig_GetStreamType_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamConfig_GetStreamNumber_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamConfig_GetStreamNumber_Proxy(
     IWMStreamConfig * This,
     /* [out] */ WORD *pwStreamNum);
 
@@ -8611,7 +8609,7 @@ void __RPC_STUB IWMStreamConfig_GetStreamNumber_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamConfig_SetStreamNumber_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamConfig_SetStreamNumber_Proxy(
     IWMStreamConfig * This,
     /* [in] */ WORD wStreamNum);
 
@@ -8623,7 +8621,7 @@ void __RPC_STUB IWMStreamConfig_SetStreamNumber_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamConfig_GetStreamName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamConfig_GetStreamName_Proxy(
     IWMStreamConfig * This,
     /* [size_is][out] */ WCHAR *pwszStreamName,
     /* [out][in] */ WORD *pcchStreamName);
@@ -8636,7 +8634,7 @@ void __RPC_STUB IWMStreamConfig_GetStreamName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamConfig_SetStreamName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamConfig_SetStreamName_Proxy(
     IWMStreamConfig * This,
     /* [in] */ WCHAR *pwszStreamName);
 
@@ -8648,7 +8646,7 @@ void __RPC_STUB IWMStreamConfig_SetStreamName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamConfig_GetConnectionName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamConfig_GetConnectionName_Proxy(
     IWMStreamConfig * This,
     /* [size_is][out] */ WCHAR *pwszInputName,
     /* [out][in] */ WORD *pcchInputName);
@@ -8661,7 +8659,7 @@ void __RPC_STUB IWMStreamConfig_GetConnectionName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamConfig_SetConnectionName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamConfig_SetConnectionName_Proxy(
     IWMStreamConfig * This,
     /* [in] */ WCHAR *pwszInputName);
 
@@ -8673,7 +8671,7 @@ void __RPC_STUB IWMStreamConfig_SetConnectionName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamConfig_GetBitrate_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamConfig_GetBitrate_Proxy(
     IWMStreamConfig * This,
     /* [out] */ DWORD *pdwBitrate);
 
@@ -8685,7 +8683,7 @@ void __RPC_STUB IWMStreamConfig_GetBitrate_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamConfig_SetBitrate_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamConfig_SetBitrate_Proxy(
     IWMStreamConfig * This,
     /* [in] */ DWORD pdwBitrate);
 
@@ -8697,7 +8695,7 @@ void __RPC_STUB IWMStreamConfig_SetBitrate_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamConfig_GetBufferWindow_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamConfig_GetBufferWindow_Proxy(
     IWMStreamConfig * This,
     /* [out] */ DWORD *pmsBufferWindow);
 
@@ -8709,7 +8707,7 @@ void __RPC_STUB IWMStreamConfig_GetBufferWindow_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamConfig_SetBufferWindow_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamConfig_SetBufferWindow_Proxy(
     IWMStreamConfig * This,
     /* [in] */ DWORD msBufferWindow);
 
@@ -8729,136 +8727,136 @@ void __RPC_STUB IWMStreamConfig_SetBufferWindow_Stub(
 #define __IWMStreamConfig2_INTERFACE_DEFINED__
 
 /* interface IWMStreamConfig2 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMStreamConfig2;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("7688D8CB-FC0D-43BD-9459-5A8DEC200CFA")
     IWMStreamConfig2 : public IWMStreamConfig
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetTransportType( 
+        virtual HRESULT STDMETHODCALLTYPE GetTransportType(
             /* [out] */ WMT_TRANSPORT_TYPE *pnTransportType) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetTransportType( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetTransportType(
             /* [in] */ WMT_TRANSPORT_TYPE nTransportType) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AddDataUnitExtension( 
+
+        virtual HRESULT STDMETHODCALLTYPE AddDataUnitExtension(
             /* [in] */ GUID guidExtensionSystemID,
             /* [in] */ WORD cbExtensionDataSize,
             /* [size_is][in] */ BYTE *pbExtensionSystemInfo,
             /* [in] */ DWORD cbExtensionSystemInfo) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetDataUnitExtensionCount( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetDataUnitExtensionCount(
             /* [out] */ WORD *pcDataUnitExtensions) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetDataUnitExtension( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetDataUnitExtension(
             /* [in] */ WORD wDataUnitExtensionNumber,
             /* [out] */ GUID *pguidExtensionSystemID,
             /* [out] */ WORD *pcbExtensionDataSize,
             /* [size_is][out] */ BYTE *pbExtensionSystemInfo,
             /* [out][in] */ DWORD *pcbExtensionSystemInfo) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE RemoveAllDataUnitExtensions( void) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMStreamConfig2Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMStreamConfig2 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMStreamConfig2 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMStreamConfig2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamType )(
             IWMStreamConfig2 * This,
             /* [out] */ GUID *pguidStreamType);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamNumber )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamNumber )(
             IWMStreamConfig2 * This,
             /* [out] */ WORD *pwStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetStreamNumber )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetStreamNumber )(
             IWMStreamConfig2 * This,
             /* [in] */ WORD wStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamName )(
             IWMStreamConfig2 * This,
             /* [size_is][out] */ WCHAR *pwszStreamName,
             /* [out][in] */ WORD *pcchStreamName);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetStreamName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetStreamName )(
             IWMStreamConfig2 * This,
             /* [in] */ WCHAR *pwszStreamName);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetConnectionName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetConnectionName )(
             IWMStreamConfig2 * This,
             /* [size_is][out] */ WCHAR *pwszInputName,
             /* [out][in] */ WORD *pcchInputName);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetConnectionName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetConnectionName )(
             IWMStreamConfig2 * This,
             /* [in] */ WCHAR *pwszInputName);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBitrate )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetBitrate )(
             IWMStreamConfig2 * This,
             /* [out] */ DWORD *pdwBitrate);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBitrate )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetBitrate )(
             IWMStreamConfig2 * This,
             /* [in] */ DWORD pdwBitrate);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBufferWindow )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetBufferWindow )(
             IWMStreamConfig2 * This,
             /* [out] */ DWORD *pmsBufferWindow);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBufferWindow )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetBufferWindow )(
             IWMStreamConfig2 * This,
             /* [in] */ DWORD msBufferWindow);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetTransportType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetTransportType )(
             IWMStreamConfig2 * This,
             /* [out] */ WMT_TRANSPORT_TYPE *pnTransportType);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetTransportType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetTransportType )(
             IWMStreamConfig2 * This,
             /* [in] */ WMT_TRANSPORT_TYPE nTransportType);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddDataUnitExtension )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddDataUnitExtension )(
             IWMStreamConfig2 * This,
             /* [in] */ GUID guidExtensionSystemID,
             /* [in] */ WORD cbExtensionDataSize,
             /* [size_is][in] */ BYTE *pbExtensionSystemInfo,
             /* [in] */ DWORD cbExtensionSystemInfo);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDataUnitExtensionCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetDataUnitExtensionCount )(
             IWMStreamConfig2 * This,
             /* [out] */ WORD *pcDataUnitExtensions);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDataUnitExtension )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetDataUnitExtension )(
             IWMStreamConfig2 * This,
             /* [in] */ WORD wDataUnitExtensionNumber,
             /* [out] */ GUID *pguidExtensionSystemID,
             /* [out] */ WORD *pcbExtensionDataSize,
             /* [size_is][out] */ BYTE *pbExtensionSystemInfo,
             /* [out][in] */ DWORD *pcbExtensionSystemInfo);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveAllDataUnitExtensions )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveAllDataUnitExtensions )(
             IWMStreamConfig2 * This);
-        
+
         END_INTERFACE
     } IWMStreamConfig2Vtbl;
 
@@ -8867,7 +8865,7 @@ EXTERN_C const IID IID_IWMStreamConfig2;
         CONST_VTBL struct IWMStreamConfig2Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -8941,7 +8939,7 @@ EXTERN_C const IID IID_IWMStreamConfig2;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamConfig2_GetTransportType_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamConfig2_GetTransportType_Proxy(
     IWMStreamConfig2 * This,
     /* [out] */ WMT_TRANSPORT_TYPE *pnTransportType);
 
@@ -8953,7 +8951,7 @@ void __RPC_STUB IWMStreamConfig2_GetTransportType_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamConfig2_SetTransportType_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamConfig2_SetTransportType_Proxy(
     IWMStreamConfig2 * This,
     /* [in] */ WMT_TRANSPORT_TYPE nTransportType);
 
@@ -8965,7 +8963,7 @@ void __RPC_STUB IWMStreamConfig2_SetTransportType_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamConfig2_AddDataUnitExtension_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamConfig2_AddDataUnitExtension_Proxy(
     IWMStreamConfig2 * This,
     /* [in] */ GUID guidExtensionSystemID,
     /* [in] */ WORD cbExtensionDataSize,
@@ -8980,7 +8978,7 @@ void __RPC_STUB IWMStreamConfig2_AddDataUnitExtension_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamConfig2_GetDataUnitExtensionCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamConfig2_GetDataUnitExtensionCount_Proxy(
     IWMStreamConfig2 * This,
     /* [out] */ WORD *pcDataUnitExtensions);
 
@@ -8992,7 +8990,7 @@ void __RPC_STUB IWMStreamConfig2_GetDataUnitExtensionCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamConfig2_GetDataUnitExtension_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamConfig2_GetDataUnitExtension_Proxy(
     IWMStreamConfig2 * This,
     /* [in] */ WORD wDataUnitExtensionNumber,
     /* [out] */ GUID *pguidExtensionSystemID,
@@ -9008,7 +9006,7 @@ void __RPC_STUB IWMStreamConfig2_GetDataUnitExtension_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamConfig2_RemoveAllDataUnitExtensions_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamConfig2_RemoveAllDataUnitExtensions_Proxy(
     IWMStreamConfig2 * This);
 
 
@@ -9027,128 +9025,128 @@ void __RPC_STUB IWMStreamConfig2_RemoveAllDataUnitExtensions_Stub(
 #define __IWMStreamConfig3_INTERFACE_DEFINED__
 
 /* interface IWMStreamConfig3 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMStreamConfig3;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("CB164104-3AA9-45a7-9AC9-4DAEE131D6E1")
     IWMStreamConfig3 : public IWMStreamConfig2
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetLanguage( 
+        virtual HRESULT STDMETHODCALLTYPE GetLanguage(
             /* [size_is][out] */ WCHAR *pwszLanguageString,
             /* [out][in] */ WORD *pcchLanguageStringLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetLanguage( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetLanguage(
             /* [in] */ LPWSTR pwszLanguageString) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMStreamConfig3Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMStreamConfig3 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMStreamConfig3 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMStreamConfig3 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamType )(
             IWMStreamConfig3 * This,
             /* [out] */ GUID *pguidStreamType);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamNumber )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamNumber )(
             IWMStreamConfig3 * This,
             /* [out] */ WORD *pwStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetStreamNumber )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetStreamNumber )(
             IWMStreamConfig3 * This,
             /* [in] */ WORD wStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamName )(
             IWMStreamConfig3 * This,
             /* [size_is][out] */ WCHAR *pwszStreamName,
             /* [out][in] */ WORD *pcchStreamName);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetStreamName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetStreamName )(
             IWMStreamConfig3 * This,
             /* [in] */ WCHAR *pwszStreamName);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetConnectionName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetConnectionName )(
             IWMStreamConfig3 * This,
             /* [size_is][out] */ WCHAR *pwszInputName,
             /* [out][in] */ WORD *pcchInputName);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetConnectionName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetConnectionName )(
             IWMStreamConfig3 * This,
             /* [in] */ WCHAR *pwszInputName);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBitrate )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetBitrate )(
             IWMStreamConfig3 * This,
             /* [out] */ DWORD *pdwBitrate);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBitrate )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetBitrate )(
             IWMStreamConfig3 * This,
             /* [in] */ DWORD pdwBitrate);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBufferWindow )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetBufferWindow )(
             IWMStreamConfig3 * This,
             /* [out] */ DWORD *pmsBufferWindow);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBufferWindow )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetBufferWindow )(
             IWMStreamConfig3 * This,
             /* [in] */ DWORD msBufferWindow);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetTransportType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetTransportType )(
             IWMStreamConfig3 * This,
             /* [out] */ WMT_TRANSPORT_TYPE *pnTransportType);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetTransportType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetTransportType )(
             IWMStreamConfig3 * This,
             /* [in] */ WMT_TRANSPORT_TYPE nTransportType);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddDataUnitExtension )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddDataUnitExtension )(
             IWMStreamConfig3 * This,
             /* [in] */ GUID guidExtensionSystemID,
             /* [in] */ WORD cbExtensionDataSize,
             /* [size_is][in] */ BYTE *pbExtensionSystemInfo,
             /* [in] */ DWORD cbExtensionSystemInfo);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDataUnitExtensionCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetDataUnitExtensionCount )(
             IWMStreamConfig3 * This,
             /* [out] */ WORD *pcDataUnitExtensions);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDataUnitExtension )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetDataUnitExtension )(
             IWMStreamConfig3 * This,
             /* [in] */ WORD wDataUnitExtensionNumber,
             /* [out] */ GUID *pguidExtensionSystemID,
             /* [out] */ WORD *pcbExtensionDataSize,
             /* [size_is][out] */ BYTE *pbExtensionSystemInfo,
             /* [out][in] */ DWORD *pcbExtensionSystemInfo);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveAllDataUnitExtensions )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveAllDataUnitExtensions )(
             IWMStreamConfig3 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetLanguage )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetLanguage )(
             IWMStreamConfig3 * This,
             /* [size_is][out] */ WCHAR *pwszLanguageString,
             /* [out][in] */ WORD *pcchLanguageStringLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetLanguage )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetLanguage )(
             IWMStreamConfig3 * This,
             /* [in] */ LPWSTR pwszLanguageString);
-        
+
         END_INTERFACE
     } IWMStreamConfig3Vtbl;
 
@@ -9157,7 +9155,7 @@ EXTERN_C const IID IID_IWMStreamConfig3;
         CONST_VTBL struct IWMStreamConfig3Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -9238,7 +9236,7 @@ EXTERN_C const IID IID_IWMStreamConfig3;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamConfig3_GetLanguage_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamConfig3_GetLanguage_Proxy(
     IWMStreamConfig3 * This,
     /* [size_is][out] */ WCHAR *pwszLanguageString,
     /* [out][in] */ WORD *pcchLanguageStringLength);
@@ -9251,7 +9249,7 @@ void __RPC_STUB IWMStreamConfig3_GetLanguage_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamConfig3_SetLanguage_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamConfig3_SetLanguage_Proxy(
     IWMStreamConfig3 * This,
     /* [in] */ LPWSTR pwszLanguageString);
 
@@ -9271,50 +9269,50 @@ void __RPC_STUB IWMStreamConfig3_SetLanguage_Stub(
 #define __IWMPacketSize_INTERFACE_DEFINED__
 
 /* interface IWMPacketSize */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMPacketSize;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("CDFB97AB-188F-40b3-B643-5B7903975C59")
     IWMPacketSize : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetMaxPacketSize( 
+        virtual HRESULT STDMETHODCALLTYPE GetMaxPacketSize(
             /* [out] */ DWORD *pdwMaxPacketSize) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetMaxPacketSize( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetMaxPacketSize(
             /* [in] */ DWORD dwMaxPacketSize) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMPacketSizeVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMPacketSize * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMPacketSize * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMPacketSize * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaxPacketSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMaxPacketSize )(
             IWMPacketSize * This,
             /* [out] */ DWORD *pdwMaxPacketSize);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetMaxPacketSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetMaxPacketSize )(
             IWMPacketSize * This,
             /* [in] */ DWORD dwMaxPacketSize);
-        
+
         END_INTERFACE
     } IWMPacketSizeVtbl;
 
@@ -9323,7 +9321,7 @@ EXTERN_C const IID IID_IWMPacketSize;
         CONST_VTBL struct IWMPacketSizeVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -9351,7 +9349,7 @@ EXTERN_C const IID IID_IWMPacketSize;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMPacketSize_GetMaxPacketSize_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMPacketSize_GetMaxPacketSize_Proxy(
     IWMPacketSize * This,
     /* [out] */ DWORD *pdwMaxPacketSize);
 
@@ -9363,7 +9361,7 @@ void __RPC_STUB IWMPacketSize_GetMaxPacketSize_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMPacketSize_SetMaxPacketSize_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMPacketSize_SetMaxPacketSize_Proxy(
     IWMPacketSize * This,
     /* [in] */ DWORD dwMaxPacketSize);
 
@@ -9383,58 +9381,58 @@ void __RPC_STUB IWMPacketSize_SetMaxPacketSize_Stub(
 #define __IWMPacketSize2_INTERFACE_DEFINED__
 
 /* interface IWMPacketSize2 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMPacketSize2;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("8BFC2B9E-B646-4233-A877-1C6A079669DC")
     IWMPacketSize2 : public IWMPacketSize
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetMinPacketSize( 
+        virtual HRESULT STDMETHODCALLTYPE GetMinPacketSize(
             /* [out] */ DWORD *pdwMinPacketSize) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetMinPacketSize( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetMinPacketSize(
             /* [in] */ DWORD dwMinPacketSize) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMPacketSize2Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMPacketSize2 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMPacketSize2 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMPacketSize2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaxPacketSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMaxPacketSize )(
             IWMPacketSize2 * This,
             /* [out] */ DWORD *pdwMaxPacketSize);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetMaxPacketSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetMaxPacketSize )(
             IWMPacketSize2 * This,
             /* [in] */ DWORD dwMaxPacketSize);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMinPacketSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMinPacketSize )(
             IWMPacketSize2 * This,
             /* [out] */ DWORD *pdwMinPacketSize);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetMinPacketSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetMinPacketSize )(
             IWMPacketSize2 * This,
             /* [in] */ DWORD dwMinPacketSize);
-        
+
         END_INTERFACE
     } IWMPacketSize2Vtbl;
 
@@ -9443,7 +9441,7 @@ EXTERN_C const IID IID_IWMPacketSize2;
         CONST_VTBL struct IWMPacketSize2Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -9478,7 +9476,7 @@ EXTERN_C const IID IID_IWMPacketSize2;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMPacketSize2_GetMinPacketSize_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMPacketSize2_GetMinPacketSize_Proxy(
     IWMPacketSize2 * This,
     /* [out] */ DWORD *pdwMinPacketSize);
 
@@ -9490,7 +9488,7 @@ void __RPC_STUB IWMPacketSize2_GetMinPacketSize_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMPacketSize2_SetMinPacketSize_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMPacketSize2_SetMinPacketSize_Proxy(
     IWMPacketSize2 * This,
     /* [in] */ DWORD dwMinPacketSize);
 
@@ -9510,59 +9508,59 @@ void __RPC_STUB IWMPacketSize2_SetMinPacketSize_Stub(
 #define __IWMStreamList_INTERFACE_DEFINED__
 
 /* interface IWMStreamList */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMStreamList;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BDD-2B2B-11d3-B36B-00C04F6108FF")
     IWMStreamList : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetStreams( 
+        virtual HRESULT STDMETHODCALLTYPE GetStreams(
             /* [size_is][out] */ WORD *pwStreamNumArray,
             /* [out][in] */ WORD *pcStreams) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AddStream( 
+
+        virtual HRESULT STDMETHODCALLTYPE AddStream(
             /* [in] */ WORD wStreamNum) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RemoveStream( 
+
+        virtual HRESULT STDMETHODCALLTYPE RemoveStream(
             /* [in] */ WORD wStreamNum) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMStreamListVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMStreamList * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMStreamList * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMStreamList * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreams )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreams )(
             IWMStreamList * This,
             /* [size_is][out] */ WORD *pwStreamNumArray,
             /* [out][in] */ WORD *pcStreams);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddStream )(
             IWMStreamList * This,
             /* [in] */ WORD wStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveStream )(
             IWMStreamList * This,
             /* [in] */ WORD wStreamNum);
-        
+
         END_INTERFACE
     } IWMStreamListVtbl;
 
@@ -9571,7 +9569,7 @@ EXTERN_C const IID IID_IWMStreamList;
         CONST_VTBL struct IWMStreamListVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -9602,7 +9600,7 @@ EXTERN_C const IID IID_IWMStreamList;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamList_GetStreams_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamList_GetStreams_Proxy(
     IWMStreamList * This,
     /* [size_is][out] */ WORD *pwStreamNumArray,
     /* [out][in] */ WORD *pcStreams);
@@ -9615,7 +9613,7 @@ void __RPC_STUB IWMStreamList_GetStreams_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamList_AddStream_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamList_AddStream_Proxy(
     IWMStreamList * This,
     /* [in] */ WORD wStreamNum);
 
@@ -9627,7 +9625,7 @@ void __RPC_STUB IWMStreamList_AddStream_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamList_RemoveStream_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamList_RemoveStream_Proxy(
     IWMStreamList * This,
     /* [in] */ WORD wStreamNum);
 
@@ -9647,63 +9645,63 @@ void __RPC_STUB IWMStreamList_RemoveStream_Stub(
 #define __IWMMutualExclusion_INTERFACE_DEFINED__
 
 /* interface IWMMutualExclusion */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMMutualExclusion;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BDE-2B2B-11d3-B36B-00C04F6108FF")
     IWMMutualExclusion : public IWMStreamList
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetType( 
+        virtual HRESULT STDMETHODCALLTYPE GetType(
             /* [out] */ GUID *pguidType) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetType( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetType(
             /* [in] */ REFGUID guidType) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMMutualExclusionVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMMutualExclusion * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMMutualExclusion * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMMutualExclusion * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreams )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreams )(
             IWMMutualExclusion * This,
             /* [size_is][out] */ WORD *pwStreamNumArray,
             /* [out][in] */ WORD *pcStreams);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddStream )(
             IWMMutualExclusion * This,
             /* [in] */ WORD wStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveStream )(
             IWMMutualExclusion * This,
             /* [in] */ WORD wStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetType )(
             IWMMutualExclusion * This,
             /* [out] */ GUID *pguidType);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetType )(
             IWMMutualExclusion * This,
             /* [in] */ REFGUID guidType);
-        
+
         END_INTERFACE
     } IWMMutualExclusionVtbl;
 
@@ -9712,7 +9710,7 @@ EXTERN_C const IID IID_IWMMutualExclusion;
         CONST_VTBL struct IWMMutualExclusionVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -9750,7 +9748,7 @@ EXTERN_C const IID IID_IWMMutualExclusion;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMMutualExclusion_GetType_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMMutualExclusion_GetType_Proxy(
     IWMMutualExclusion * This,
     /* [out] */ GUID *pguidType);
 
@@ -9762,7 +9760,7 @@ void __RPC_STUB IWMMutualExclusion_GetType_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMMutualExclusion_SetType_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMMutualExclusion_SetType_Proxy(
     IWMMutualExclusion * This,
     /* [in] */ REFGUID guidType);
 
@@ -9782,141 +9780,141 @@ void __RPC_STUB IWMMutualExclusion_SetType_Stub(
 #define __IWMMutualExclusion2_INTERFACE_DEFINED__
 
 /* interface IWMMutualExclusion2 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMMutualExclusion2;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("0302B57D-89D1-4ba2-85C9-166F2C53EB91")
     IWMMutualExclusion2 : public IWMMutualExclusion
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetName( 
+        virtual HRESULT STDMETHODCALLTYPE GetName(
             /* [size_is][out] */ WCHAR *pwszName,
             /* [out][in] */ WORD *pcchName) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetName( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetName(
             /* [in] */ WCHAR *pwszName) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetRecordCount( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetRecordCount(
             /* [out] */ WORD *pwRecordCount) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE AddRecord( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RemoveRecord( 
+
+        virtual HRESULT STDMETHODCALLTYPE RemoveRecord(
             /* [in] */ WORD wRecordNumber) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetRecordName( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetRecordName(
             /* [in] */ WORD wRecordNumber,
             /* [size_is][out] */ WCHAR *pwszRecordName,
             /* [out][in] */ WORD *pcchRecordName) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetRecordName( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetRecordName(
             /* [in] */ WORD wRecordNumber,
             /* [in] */ WCHAR *pwszRecordName) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetStreamsForRecord( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetStreamsForRecord(
             /* [in] */ WORD wRecordNumber,
             /* [size_is][out] */ WORD *pwStreamNumArray,
             /* [out][in] */ WORD *pcStreams) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AddStreamForRecord( 
+
+        virtual HRESULT STDMETHODCALLTYPE AddStreamForRecord(
             /* [in] */ WORD wRecordNumber,
             /* [in] */ WORD wStreamNumber) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RemoveStreamForRecord( 
+
+        virtual HRESULT STDMETHODCALLTYPE RemoveStreamForRecord(
             /* [in] */ WORD wRecordNumber,
             /* [in] */ WORD wStreamNumber) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMMutualExclusion2Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMMutualExclusion2 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMMutualExclusion2 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMMutualExclusion2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreams )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreams )(
             IWMMutualExclusion2 * This,
             /* [size_is][out] */ WORD *pwStreamNumArray,
             /* [out][in] */ WORD *pcStreams);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddStream )(
             IWMMutualExclusion2 * This,
             /* [in] */ WORD wStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveStream )(
             IWMMutualExclusion2 * This,
             /* [in] */ WORD wStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetType )(
             IWMMutualExclusion2 * This,
             /* [out] */ GUID *pguidType);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetType )(
             IWMMutualExclusion2 * This,
             /* [in] */ REFGUID guidType);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetName )(
             IWMMutualExclusion2 * This,
             /* [size_is][out] */ WCHAR *pwszName,
             /* [out][in] */ WORD *pcchName);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetName )(
             IWMMutualExclusion2 * This,
             /* [in] */ WCHAR *pwszName);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetRecordCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetRecordCount )(
             IWMMutualExclusion2 * This,
             /* [out] */ WORD *pwRecordCount);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddRecord )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddRecord )(
             IWMMutualExclusion2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveRecord )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveRecord )(
             IWMMutualExclusion2 * This,
             /* [in] */ WORD wRecordNumber);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetRecordName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetRecordName )(
             IWMMutualExclusion2 * This,
             /* [in] */ WORD wRecordNumber,
             /* [size_is][out] */ WCHAR *pwszRecordName,
             /* [out][in] */ WORD *pcchRecordName);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetRecordName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetRecordName )(
             IWMMutualExclusion2 * This,
             /* [in] */ WORD wRecordNumber,
             /* [in] */ WCHAR *pwszRecordName);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamsForRecord )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamsForRecord )(
             IWMMutualExclusion2 * This,
             /* [in] */ WORD wRecordNumber,
             /* [size_is][out] */ WORD *pwStreamNumArray,
             /* [out][in] */ WORD *pcStreams);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddStreamForRecord )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddStreamForRecord )(
             IWMMutualExclusion2 * This,
             /* [in] */ WORD wRecordNumber,
             /* [in] */ WORD wStreamNumber);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveStreamForRecord )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveStreamForRecord )(
             IWMMutualExclusion2 * This,
             /* [in] */ WORD wRecordNumber,
             /* [in] */ WORD wStreamNumber);
-        
+
         END_INTERFACE
     } IWMMutualExclusion2Vtbl;
 
@@ -9925,7 +9923,7 @@ EXTERN_C const IID IID_IWMMutualExclusion2;
         CONST_VTBL struct IWMMutualExclusion2Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -9994,7 +9992,7 @@ EXTERN_C const IID IID_IWMMutualExclusion2;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_GetName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_GetName_Proxy(
     IWMMutualExclusion2 * This,
     /* [size_is][out] */ WCHAR *pwszName,
     /* [out][in] */ WORD *pcchName);
@@ -10007,7 +10005,7 @@ void __RPC_STUB IWMMutualExclusion2_GetName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_SetName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_SetName_Proxy(
     IWMMutualExclusion2 * This,
     /* [in] */ WCHAR *pwszName);
 
@@ -10019,7 +10017,7 @@ void __RPC_STUB IWMMutualExclusion2_SetName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_GetRecordCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_GetRecordCount_Proxy(
     IWMMutualExclusion2 * This,
     /* [out] */ WORD *pwRecordCount);
 
@@ -10031,7 +10029,7 @@ void __RPC_STUB IWMMutualExclusion2_GetRecordCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_AddRecord_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_AddRecord_Proxy(
     IWMMutualExclusion2 * This);
 
 
@@ -10042,7 +10040,7 @@ void __RPC_STUB IWMMutualExclusion2_AddRecord_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_RemoveRecord_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_RemoveRecord_Proxy(
     IWMMutualExclusion2 * This,
     /* [in] */ WORD wRecordNumber);
 
@@ -10054,7 +10052,7 @@ void __RPC_STUB IWMMutualExclusion2_RemoveRecord_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_GetRecordName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_GetRecordName_Proxy(
     IWMMutualExclusion2 * This,
     /* [in] */ WORD wRecordNumber,
     /* [size_is][out] */ WCHAR *pwszRecordName,
@@ -10068,7 +10066,7 @@ void __RPC_STUB IWMMutualExclusion2_GetRecordName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_SetRecordName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_SetRecordName_Proxy(
     IWMMutualExclusion2 * This,
     /* [in] */ WORD wRecordNumber,
     /* [in] */ WCHAR *pwszRecordName);
@@ -10081,7 +10079,7 @@ void __RPC_STUB IWMMutualExclusion2_SetRecordName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_GetStreamsForRecord_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_GetStreamsForRecord_Proxy(
     IWMMutualExclusion2 * This,
     /* [in] */ WORD wRecordNumber,
     /* [size_is][out] */ WORD *pwStreamNumArray,
@@ -10095,7 +10093,7 @@ void __RPC_STUB IWMMutualExclusion2_GetStreamsForRecord_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_AddStreamForRecord_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_AddStreamForRecord_Proxy(
     IWMMutualExclusion2 * This,
     /* [in] */ WORD wRecordNumber,
     /* [in] */ WORD wStreamNumber);
@@ -10108,7 +10106,7 @@ void __RPC_STUB IWMMutualExclusion2_AddStreamForRecord_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_RemoveStreamForRecord_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMMutualExclusion2_RemoveStreamForRecord_Proxy(
     IWMMutualExclusion2 * This,
     /* [in] */ WORD wRecordNumber,
     /* [in] */ WORD wStreamNumber);
@@ -10129,81 +10127,81 @@ void __RPC_STUB IWMMutualExclusion2_RemoveStreamForRecord_Stub(
 #define __IWMBandwidthSharing_INTERFACE_DEFINED__
 
 /* interface IWMBandwidthSharing */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMBandwidthSharing;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("AD694AF1-F8D9-42F8-BC47-70311B0C4F9E")
     IWMBandwidthSharing : public IWMStreamList
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetType( 
+        virtual HRESULT STDMETHODCALLTYPE GetType(
             /* [out] */ GUID *pguidType) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetType( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetType(
             /* [in] */ REFGUID guidType) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBandwidth( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetBandwidth(
             /* [out] */ DWORD *pdwBitrate,
             /* [out] */ DWORD *pmsBufferWindow) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBandwidth( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetBandwidth(
             /* [in] */ DWORD dwBitrate,
             /* [in] */ DWORD msBufferWindow) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMBandwidthSharingVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMBandwidthSharing * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMBandwidthSharing * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMBandwidthSharing * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreams )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreams )(
             IWMBandwidthSharing * This,
             /* [size_is][out] */ WORD *pwStreamNumArray,
             /* [out][in] */ WORD *pcStreams);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddStream )(
             IWMBandwidthSharing * This,
             /* [in] */ WORD wStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveStream )(
             IWMBandwidthSharing * This,
             /* [in] */ WORD wStreamNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetType )(
             IWMBandwidthSharing * This,
             /* [out] */ GUID *pguidType);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetType )(
             IWMBandwidthSharing * This,
             /* [in] */ REFGUID guidType);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBandwidth )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetBandwidth )(
             IWMBandwidthSharing * This,
             /* [out] */ DWORD *pdwBitrate,
             /* [out] */ DWORD *pmsBufferWindow);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBandwidth )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetBandwidth )(
             IWMBandwidthSharing * This,
             /* [in] */ DWORD dwBitrate,
             /* [in] */ DWORD msBufferWindow);
-        
+
         END_INTERFACE
     } IWMBandwidthSharingVtbl;
 
@@ -10212,7 +10210,7 @@ EXTERN_C const IID IID_IWMBandwidthSharing;
         CONST_VTBL struct IWMBandwidthSharingVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -10256,7 +10254,7 @@ EXTERN_C const IID IID_IWMBandwidthSharing;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMBandwidthSharing_GetType_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMBandwidthSharing_GetType_Proxy(
     IWMBandwidthSharing * This,
     /* [out] */ GUID *pguidType);
 
@@ -10268,7 +10266,7 @@ void __RPC_STUB IWMBandwidthSharing_GetType_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMBandwidthSharing_SetType_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMBandwidthSharing_SetType_Proxy(
     IWMBandwidthSharing * This,
     /* [in] */ REFGUID guidType);
 
@@ -10280,7 +10278,7 @@ void __RPC_STUB IWMBandwidthSharing_SetType_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMBandwidthSharing_GetBandwidth_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMBandwidthSharing_GetBandwidth_Proxy(
     IWMBandwidthSharing * This,
     /* [out] */ DWORD *pdwBitrate,
     /* [out] */ DWORD *pmsBufferWindow);
@@ -10293,7 +10291,7 @@ void __RPC_STUB IWMBandwidthSharing_GetBandwidth_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMBandwidthSharing_SetBandwidth_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMBandwidthSharing_SetBandwidth_Proxy(
     IWMBandwidthSharing * This,
     /* [in] */ DWORD dwBitrate,
     /* [in] */ DWORD msBufferWindow);
@@ -10314,54 +10312,54 @@ void __RPC_STUB IWMBandwidthSharing_SetBandwidth_Stub(
 #define __IWMStreamPrioritization_INTERFACE_DEFINED__
 
 /* interface IWMStreamPrioritization */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMStreamPrioritization;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("8C1C6090-F9A8-4748-8EC3-DD1108BA1E77")
     IWMStreamPrioritization : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetPriorityRecords( 
+        virtual HRESULT STDMETHODCALLTYPE GetPriorityRecords(
             /* [size_is][out] */ WM_STREAM_PRIORITY_RECORD *pRecordArray,
             /* [out][in] */ WORD *pcRecords) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetPriorityRecords( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetPriorityRecords(
             /* [in] */ WM_STREAM_PRIORITY_RECORD *pRecordArray,
             /* [in] */ WORD cRecords) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMStreamPrioritizationVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMStreamPrioritization * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMStreamPrioritization * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMStreamPrioritization * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetPriorityRecords )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetPriorityRecords )(
             IWMStreamPrioritization * This,
             /* [size_is][out] */ WM_STREAM_PRIORITY_RECORD *pRecordArray,
             /* [out][in] */ WORD *pcRecords);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetPriorityRecords )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetPriorityRecords )(
             IWMStreamPrioritization * This,
             /* [in] */ WM_STREAM_PRIORITY_RECORD *pRecordArray,
             /* [in] */ WORD cRecords);
-        
+
         END_INTERFACE
     } IWMStreamPrioritizationVtbl;
 
@@ -10370,7 +10368,7 @@ EXTERN_C const IID IID_IWMStreamPrioritization;
         CONST_VTBL struct IWMStreamPrioritizationVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -10398,7 +10396,7 @@ EXTERN_C const IID IID_IWMStreamPrioritization;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamPrioritization_GetPriorityRecords_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamPrioritization_GetPriorityRecords_Proxy(
     IWMStreamPrioritization * This,
     /* [size_is][out] */ WM_STREAM_PRIORITY_RECORD *pRecordArray,
     /* [out][in] */ WORD *pcRecords);
@@ -10411,7 +10409,7 @@ void __RPC_STUB IWMStreamPrioritization_GetPriorityRecords_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMStreamPrioritization_SetPriorityRecords_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMStreamPrioritization_SetPriorityRecords_Proxy(
     IWMStreamPrioritization * This,
     /* [in] */ WM_STREAM_PRIORITY_RECORD *pRecordArray,
     /* [in] */ WORD cRecords);
@@ -10432,94 +10430,94 @@ void __RPC_STUB IWMStreamPrioritization_SetPriorityRecords_Stub(
 #define __IWMWriterAdvanced_INTERFACE_DEFINED__
 
 /* interface IWMWriterAdvanced */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMWriterAdvanced;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BE3-2B2B-11d3-B36B-00C04F6108FF")
     IWMWriterAdvanced : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetSinkCount( 
+        virtual HRESULT STDMETHODCALLTYPE GetSinkCount(
             /* [out] */ DWORD *pcSinks) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetSink( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetSink(
             /* [in] */ DWORD dwSinkNum,
             /* [out] */ IWMWriterSink **ppSink) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AddSink( 
+
+        virtual HRESULT STDMETHODCALLTYPE AddSink(
             /* [in] */ IWMWriterSink *pSink) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RemoveSink( 
+
+        virtual HRESULT STDMETHODCALLTYPE RemoveSink(
             /* [in] */ IWMWriterSink *pSink) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE WriteStreamSample( 
+
+        virtual HRESULT STDMETHODCALLTYPE WriteStreamSample(
             /* [in] */ WORD wStreamNum,
             /* [in] */ QWORD cnsSampleTime,
             /* [in] */ DWORD msSampleSendTime,
             /* [in] */ QWORD cnsSampleDuration,
             /* [in] */ DWORD dwFlags,
             /* [in] */ INSSBuffer *pSample) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetLiveSource( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetLiveSource(
             BOOL fIsLiveSource) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE IsRealTime( 
+
+        virtual HRESULT STDMETHODCALLTYPE IsRealTime(
             /* [out] */ BOOL *pfRealTime) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetWriterTime( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetWriterTime(
             /* [out] */ QWORD *pcnsCurrentTime) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetStatistics( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetStatistics(
             /* [in] */ WORD wStreamNum,
             /* [out] */ WM_WRITER_STATISTICS *pStats) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetSyncTolerance( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetSyncTolerance(
             /* [in] */ DWORD msWindow) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetSyncTolerance( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetSyncTolerance(
             /* [out] */ DWORD *pmsWindow) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMWriterAdvancedVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMWriterAdvanced * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMWriterAdvanced * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMWriterAdvanced * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSinkCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetSinkCount )(
             IWMWriterAdvanced * This,
             /* [out] */ DWORD *pcSinks);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSink )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetSink )(
             IWMWriterAdvanced * This,
             /* [in] */ DWORD dwSinkNum,
             /* [out] */ IWMWriterSink **ppSink);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddSink )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddSink )(
             IWMWriterAdvanced * This,
             /* [in] */ IWMWriterSink *pSink);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveSink )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveSink )(
             IWMWriterAdvanced * This,
             /* [in] */ IWMWriterSink *pSink);
-        
-        HRESULT ( STDMETHODCALLTYPE *WriteStreamSample )( 
+
+        HRESULT ( STDMETHODCALLTYPE *WriteStreamSample )(
             IWMWriterAdvanced * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ QWORD cnsSampleTime,
@@ -10527,32 +10525,32 @@ EXTERN_C const IID IID_IWMWriterAdvanced;
             /* [in] */ QWORD cnsSampleDuration,
             /* [in] */ DWORD dwFlags,
             /* [in] */ INSSBuffer *pSample);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetLiveSource )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetLiveSource )(
             IWMWriterAdvanced * This,
             BOOL fIsLiveSource);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsRealTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *IsRealTime )(
             IWMWriterAdvanced * This,
             /* [out] */ BOOL *pfRealTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetWriterTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetWriterTime )(
             IWMWriterAdvanced * This,
             /* [out] */ QWORD *pcnsCurrentTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStatistics )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStatistics )(
             IWMWriterAdvanced * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ WM_WRITER_STATISTICS *pStats);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetSyncTolerance )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetSyncTolerance )(
             IWMWriterAdvanced * This,
             /* [in] */ DWORD msWindow);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSyncTolerance )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetSyncTolerance )(
             IWMWriterAdvanced * This,
             /* [out] */ DWORD *pmsWindow);
-        
+
         END_INTERFACE
     } IWMWriterAdvancedVtbl;
 
@@ -10561,7 +10559,7 @@ EXTERN_C const IID IID_IWMWriterAdvanced;
         CONST_VTBL struct IWMWriterAdvancedVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -10616,7 +10614,7 @@ EXTERN_C const IID IID_IWMWriterAdvanced;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_GetSinkCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_GetSinkCount_Proxy(
     IWMWriterAdvanced * This,
     /* [out] */ DWORD *pcSinks);
 
@@ -10628,7 +10626,7 @@ void __RPC_STUB IWMWriterAdvanced_GetSinkCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_GetSink_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_GetSink_Proxy(
     IWMWriterAdvanced * This,
     /* [in] */ DWORD dwSinkNum,
     /* [out] */ IWMWriterSink **ppSink);
@@ -10641,7 +10639,7 @@ void __RPC_STUB IWMWriterAdvanced_GetSink_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_AddSink_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_AddSink_Proxy(
     IWMWriterAdvanced * This,
     /* [in] */ IWMWriterSink *pSink);
 
@@ -10653,7 +10651,7 @@ void __RPC_STUB IWMWriterAdvanced_AddSink_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_RemoveSink_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_RemoveSink_Proxy(
     IWMWriterAdvanced * This,
     /* [in] */ IWMWriterSink *pSink);
 
@@ -10665,7 +10663,7 @@ void __RPC_STUB IWMWriterAdvanced_RemoveSink_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_WriteStreamSample_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_WriteStreamSample_Proxy(
     IWMWriterAdvanced * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ QWORD cnsSampleTime,
@@ -10682,7 +10680,7 @@ void __RPC_STUB IWMWriterAdvanced_WriteStreamSample_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_SetLiveSource_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_SetLiveSource_Proxy(
     IWMWriterAdvanced * This,
     BOOL fIsLiveSource);
 
@@ -10694,7 +10692,7 @@ void __RPC_STUB IWMWriterAdvanced_SetLiveSource_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_IsRealTime_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_IsRealTime_Proxy(
     IWMWriterAdvanced * This,
     /* [out] */ BOOL *pfRealTime);
 
@@ -10706,7 +10704,7 @@ void __RPC_STUB IWMWriterAdvanced_IsRealTime_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_GetWriterTime_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_GetWriterTime_Proxy(
     IWMWriterAdvanced * This,
     /* [out] */ QWORD *pcnsCurrentTime);
 
@@ -10718,7 +10716,7 @@ void __RPC_STUB IWMWriterAdvanced_GetWriterTime_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_GetStatistics_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_GetStatistics_Proxy(
     IWMWriterAdvanced * This,
     /* [in] */ WORD wStreamNum,
     /* [out] */ WM_WRITER_STATISTICS *pStats);
@@ -10731,7 +10729,7 @@ void __RPC_STUB IWMWriterAdvanced_GetStatistics_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_SetSyncTolerance_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_SetSyncTolerance_Proxy(
     IWMWriterAdvanced * This,
     /* [in] */ DWORD msWindow);
 
@@ -10743,7 +10741,7 @@ void __RPC_STUB IWMWriterAdvanced_SetSyncTolerance_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_GetSyncTolerance_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterAdvanced_GetSyncTolerance_Proxy(
     IWMWriterAdvanced * This,
     /* [out] */ DWORD *pmsWindow);
 
@@ -10763,68 +10761,68 @@ void __RPC_STUB IWMWriterAdvanced_GetSyncTolerance_Stub(
 #define __IWMWriterAdvanced2_INTERFACE_DEFINED__
 
 /* interface IWMWriterAdvanced2 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMWriterAdvanced2;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("962dc1ec-c046-4db8-9cc7-26ceae500817")
     IWMWriterAdvanced2 : public IWMWriterAdvanced
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetInputSetting( 
+        virtual HRESULT STDMETHODCALLTYPE GetInputSetting(
             /* [in] */ DWORD dwInputNum,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetInputSetting( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetInputSetting(
             /* [in] */ DWORD dwInputNum,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMWriterAdvanced2Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMWriterAdvanced2 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMWriterAdvanced2 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMWriterAdvanced2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSinkCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetSinkCount )(
             IWMWriterAdvanced2 * This,
             /* [out] */ DWORD *pcSinks);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSink )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetSink )(
             IWMWriterAdvanced2 * This,
             /* [in] */ DWORD dwSinkNum,
             /* [out] */ IWMWriterSink **ppSink);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddSink )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddSink )(
             IWMWriterAdvanced2 * This,
             /* [in] */ IWMWriterSink *pSink);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveSink )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveSink )(
             IWMWriterAdvanced2 * This,
             /* [in] */ IWMWriterSink *pSink);
-        
-        HRESULT ( STDMETHODCALLTYPE *WriteStreamSample )( 
+
+        HRESULT ( STDMETHODCALLTYPE *WriteStreamSample )(
             IWMWriterAdvanced2 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ QWORD cnsSampleTime,
@@ -10832,48 +10830,48 @@ EXTERN_C const IID IID_IWMWriterAdvanced2;
             /* [in] */ QWORD cnsSampleDuration,
             /* [in] */ DWORD dwFlags,
             /* [in] */ INSSBuffer *pSample);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetLiveSource )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetLiveSource )(
             IWMWriterAdvanced2 * This,
             BOOL fIsLiveSource);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsRealTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *IsRealTime )(
             IWMWriterAdvanced2 * This,
             /* [out] */ BOOL *pfRealTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetWriterTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetWriterTime )(
             IWMWriterAdvanced2 * This,
             /* [out] */ QWORD *pcnsCurrentTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStatistics )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStatistics )(
             IWMWriterAdvanced2 * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ WM_WRITER_STATISTICS *pStats);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetSyncTolerance )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetSyncTolerance )(
             IWMWriterAdvanced2 * This,
             /* [in] */ DWORD msWindow);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSyncTolerance )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetSyncTolerance )(
             IWMWriterAdvanced2 * This,
             /* [out] */ DWORD *pmsWindow);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetInputSetting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetInputSetting )(
             IWMWriterAdvanced2 * This,
             /* [in] */ DWORD dwInputNum,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetInputSetting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetInputSetting )(
             IWMWriterAdvanced2 * This,
             /* [in] */ DWORD dwInputNum,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength);
-        
+
         END_INTERFACE
     } IWMWriterAdvanced2Vtbl;
 
@@ -10882,7 +10880,7 @@ EXTERN_C const IID IID_IWMWriterAdvanced2;
         CONST_VTBL struct IWMWriterAdvanced2Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -10944,7 +10942,7 @@ EXTERN_C const IID IID_IWMWriterAdvanced2;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterAdvanced2_GetInputSetting_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterAdvanced2_GetInputSetting_Proxy(
     IWMWriterAdvanced2 * This,
     /* [in] */ DWORD dwInputNum,
     /* [in] */ LPCWSTR pszName,
@@ -10960,7 +10958,7 @@ void __RPC_STUB IWMWriterAdvanced2_GetInputSetting_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterAdvanced2_SetInputSetting_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterAdvanced2_SetInputSetting_Proxy(
     IWMWriterAdvanced2 * This,
     /* [in] */ DWORD dwInputNum,
     /* [in] */ LPCWSTR pszName,
@@ -10984,60 +10982,60 @@ void __RPC_STUB IWMWriterAdvanced2_SetInputSetting_Stub(
 #define __IWMWriterAdvanced3_INTERFACE_DEFINED__
 
 /* interface IWMWriterAdvanced3 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMWriterAdvanced3;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("2cd6492d-7c37-4e76-9d3b-59261183a22e")
     IWMWriterAdvanced3 : public IWMWriterAdvanced2
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetStatisticsEx( 
+        virtual HRESULT STDMETHODCALLTYPE GetStatisticsEx(
             /* [in] */ WORD wStreamNum,
             /* [out] */ WM_WRITER_STATISTICS_EX *pStats) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE SetNonBlocking( void) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMWriterAdvanced3Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMWriterAdvanced3 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMWriterAdvanced3 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMWriterAdvanced3 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSinkCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetSinkCount )(
             IWMWriterAdvanced3 * This,
             /* [out] */ DWORD *pcSinks);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSink )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetSink )(
             IWMWriterAdvanced3 * This,
             /* [in] */ DWORD dwSinkNum,
             /* [out] */ IWMWriterSink **ppSink);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddSink )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddSink )(
             IWMWriterAdvanced3 * This,
             /* [in] */ IWMWriterSink *pSink);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveSink )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveSink )(
             IWMWriterAdvanced3 * This,
             /* [in] */ IWMWriterSink *pSink);
-        
-        HRESULT ( STDMETHODCALLTYPE *WriteStreamSample )( 
+
+        HRESULT ( STDMETHODCALLTYPE *WriteStreamSample )(
             IWMWriterAdvanced3 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ QWORD cnsSampleTime,
@@ -11045,56 +11043,56 @@ EXTERN_C const IID IID_IWMWriterAdvanced3;
             /* [in] */ QWORD cnsSampleDuration,
             /* [in] */ DWORD dwFlags,
             /* [in] */ INSSBuffer *pSample);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetLiveSource )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetLiveSource )(
             IWMWriterAdvanced3 * This,
             BOOL fIsLiveSource);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsRealTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *IsRealTime )(
             IWMWriterAdvanced3 * This,
             /* [out] */ BOOL *pfRealTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetWriterTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetWriterTime )(
             IWMWriterAdvanced3 * This,
             /* [out] */ QWORD *pcnsCurrentTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStatistics )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStatistics )(
             IWMWriterAdvanced3 * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ WM_WRITER_STATISTICS *pStats);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetSyncTolerance )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetSyncTolerance )(
             IWMWriterAdvanced3 * This,
             /* [in] */ DWORD msWindow);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSyncTolerance )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetSyncTolerance )(
             IWMWriterAdvanced3 * This,
             /* [out] */ DWORD *pmsWindow);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetInputSetting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetInputSetting )(
             IWMWriterAdvanced3 * This,
             /* [in] */ DWORD dwInputNum,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetInputSetting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetInputSetting )(
             IWMWriterAdvanced3 * This,
             /* [in] */ DWORD dwInputNum,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStatisticsEx )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStatisticsEx )(
             IWMWriterAdvanced3 * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ WM_WRITER_STATISTICS_EX *pStats);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetNonBlocking )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetNonBlocking )(
             IWMWriterAdvanced3 * This);
-        
+
         END_INTERFACE
     } IWMWriterAdvanced3Vtbl;
 
@@ -11103,7 +11101,7 @@ EXTERN_C const IID IID_IWMWriterAdvanced3;
         CONST_VTBL struct IWMWriterAdvanced3Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -11172,7 +11170,7 @@ EXTERN_C const IID IID_IWMWriterAdvanced3;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterAdvanced3_GetStatisticsEx_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterAdvanced3_GetStatisticsEx_Proxy(
     IWMWriterAdvanced3 * This,
     /* [in] */ WORD wStreamNum,
     /* [out] */ WM_WRITER_STATISTICS_EX *pStats);
@@ -11185,7 +11183,7 @@ void __RPC_STUB IWMWriterAdvanced3_GetStatisticsEx_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterAdvanced3_SetNonBlocking_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterAdvanced3_SetNonBlocking_Proxy(
     IWMWriterAdvanced3 * This);
 
 
@@ -11204,89 +11202,89 @@ void __RPC_STUB IWMWriterAdvanced3_SetNonBlocking_Stub(
 #define __IWMWriterPreprocess_INTERFACE_DEFINED__
 
 /* interface IWMWriterPreprocess */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMWriterPreprocess;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("fc54a285-38c4-45b5-aa23-85b9f7cb424b")
     IWMWriterPreprocess : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetMaxPreprocessingPasses( 
+        virtual HRESULT STDMETHODCALLTYPE GetMaxPreprocessingPasses(
             /* [in] */ DWORD dwInputNum,
             /* [in] */ DWORD dwFlags,
             /* [out] */ DWORD *pdwMaxNumPasses) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetNumPreprocessingPasses( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetNumPreprocessingPasses(
             /* [in] */ DWORD dwInputNum,
             /* [in] */ DWORD dwFlags,
             /* [in] */ DWORD dwNumPasses) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE BeginPreprocessingPass( 
+
+        virtual HRESULT STDMETHODCALLTYPE BeginPreprocessingPass(
             /* [in] */ DWORD dwInputNum,
             /* [in] */ DWORD dwFlags) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE PreprocessSample( 
+
+        virtual HRESULT STDMETHODCALLTYPE PreprocessSample(
             /* [in] */ DWORD dwInputNum,
             /* [in] */ QWORD cnsSampleTime,
             /* [in] */ DWORD dwFlags,
             /* [in] */ INSSBuffer *pSample) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE EndPreprocessingPass( 
+
+        virtual HRESULT STDMETHODCALLTYPE EndPreprocessingPass(
             /* [in] */ DWORD dwInputNum,
             /* [in] */ DWORD dwFlags) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMWriterPreprocessVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMWriterPreprocess * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMWriterPreprocess * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMWriterPreprocess * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaxPreprocessingPasses )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMaxPreprocessingPasses )(
             IWMWriterPreprocess * This,
             /* [in] */ DWORD dwInputNum,
             /* [in] */ DWORD dwFlags,
             /* [out] */ DWORD *pdwMaxNumPasses);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetNumPreprocessingPasses )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetNumPreprocessingPasses )(
             IWMWriterPreprocess * This,
             /* [in] */ DWORD dwInputNum,
             /* [in] */ DWORD dwFlags,
             /* [in] */ DWORD dwNumPasses);
-        
-        HRESULT ( STDMETHODCALLTYPE *BeginPreprocessingPass )( 
+
+        HRESULT ( STDMETHODCALLTYPE *BeginPreprocessingPass )(
             IWMWriterPreprocess * This,
             /* [in] */ DWORD dwInputNum,
             /* [in] */ DWORD dwFlags);
-        
-        HRESULT ( STDMETHODCALLTYPE *PreprocessSample )( 
+
+        HRESULT ( STDMETHODCALLTYPE *PreprocessSample )(
             IWMWriterPreprocess * This,
             /* [in] */ DWORD dwInputNum,
             /* [in] */ QWORD cnsSampleTime,
             /* [in] */ DWORD dwFlags,
             /* [in] */ INSSBuffer *pSample);
-        
-        HRESULT ( STDMETHODCALLTYPE *EndPreprocessingPass )( 
+
+        HRESULT ( STDMETHODCALLTYPE *EndPreprocessingPass )(
             IWMWriterPreprocess * This,
             /* [in] */ DWORD dwInputNum,
             /* [in] */ DWORD dwFlags);
-        
+
         END_INTERFACE
     } IWMWriterPreprocessVtbl;
 
@@ -11295,7 +11293,7 @@ EXTERN_C const IID IID_IWMWriterPreprocess;
         CONST_VTBL struct IWMWriterPreprocessVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -11332,7 +11330,7 @@ EXTERN_C const IID IID_IWMWriterPreprocess;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterPreprocess_GetMaxPreprocessingPasses_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterPreprocess_GetMaxPreprocessingPasses_Proxy(
     IWMWriterPreprocess * This,
     /* [in] */ DWORD dwInputNum,
     /* [in] */ DWORD dwFlags,
@@ -11346,7 +11344,7 @@ void __RPC_STUB IWMWriterPreprocess_GetMaxPreprocessingPasses_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterPreprocess_SetNumPreprocessingPasses_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterPreprocess_SetNumPreprocessingPasses_Proxy(
     IWMWriterPreprocess * This,
     /* [in] */ DWORD dwInputNum,
     /* [in] */ DWORD dwFlags,
@@ -11360,7 +11358,7 @@ void __RPC_STUB IWMWriterPreprocess_SetNumPreprocessingPasses_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterPreprocess_BeginPreprocessingPass_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterPreprocess_BeginPreprocessingPass_Proxy(
     IWMWriterPreprocess * This,
     /* [in] */ DWORD dwInputNum,
     /* [in] */ DWORD dwFlags);
@@ -11373,7 +11371,7 @@ void __RPC_STUB IWMWriterPreprocess_BeginPreprocessingPass_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterPreprocess_PreprocessSample_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterPreprocess_PreprocessSample_Proxy(
     IWMWriterPreprocess * This,
     /* [in] */ DWORD dwInputNum,
     /* [in] */ QWORD cnsSampleTime,
@@ -11388,7 +11386,7 @@ void __RPC_STUB IWMWriterPreprocess_PreprocessSample_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterPreprocess_EndPreprocessingPass_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterPreprocess_EndPreprocessingPass_Proxy(
     IWMWriterPreprocess * This,
     /* [in] */ DWORD dwInputNum,
     /* [in] */ DWORD dwFlags);
@@ -11409,59 +11407,59 @@ void __RPC_STUB IWMWriterPreprocess_EndPreprocessingPass_Stub(
 #define __IWMWriterPostViewCallback_INTERFACE_DEFINED__
 
 /* interface IWMWriterPostViewCallback */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMWriterPostViewCallback;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("D9D6549D-A193-4f24-B308-03123D9B7F8D")
     IWMWriterPostViewCallback : public IWMStatusCallback
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE OnPostViewSample( 
+        virtual HRESULT STDMETHODCALLTYPE OnPostViewSample(
             /* [in] */ WORD wStreamNumber,
             /* [in] */ QWORD cnsSampleTime,
             /* [in] */ QWORD cnsSampleDuration,
             /* [in] */ DWORD dwFlags,
             /* [in] */ INSSBuffer *pSample,
             /* [in] */ void *pvContext) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AllocateForPostView( 
+
+        virtual HRESULT STDMETHODCALLTYPE AllocateForPostView(
             /* [in] */ WORD wStreamNum,
             /* [in] */ DWORD cbBuffer,
             /* [out] */ INSSBuffer **ppBuffer,
             /* [in] */ void *pvContext) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMWriterPostViewCallbackVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMWriterPostViewCallback * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMWriterPostViewCallback * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMWriterPostViewCallback * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnStatus )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnStatus )(
             IWMWriterPostViewCallback * This,
             /* [in] */ WMT_STATUS Status,
             /* [in] */ HRESULT hr,
             /* [in] */ WMT_ATTR_DATATYPE dwType,
             /* [in] */ BYTE *pValue,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnPostViewSample )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnPostViewSample )(
             IWMWriterPostViewCallback * This,
             /* [in] */ WORD wStreamNumber,
             /* [in] */ QWORD cnsSampleTime,
@@ -11469,14 +11467,14 @@ EXTERN_C const IID IID_IWMWriterPostViewCallback;
             /* [in] */ DWORD dwFlags,
             /* [in] */ INSSBuffer *pSample,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *AllocateForPostView )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AllocateForPostView )(
             IWMWriterPostViewCallback * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ DWORD cbBuffer,
             /* [out] */ INSSBuffer **ppBuffer,
             /* [in] */ void *pvContext);
-        
+
         END_INTERFACE
     } IWMWriterPostViewCallbackVtbl;
 
@@ -11485,7 +11483,7 @@ EXTERN_C const IID IID_IWMWriterPostViewCallback;
         CONST_VTBL struct IWMWriterPostViewCallbackVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -11517,7 +11515,7 @@ EXTERN_C const IID IID_IWMWriterPostViewCallback;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterPostViewCallback_OnPostViewSample_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterPostViewCallback_OnPostViewSample_Proxy(
     IWMWriterPostViewCallback * This,
     /* [in] */ WORD wStreamNumber,
     /* [in] */ QWORD cnsSampleTime,
@@ -11534,7 +11532,7 @@ void __RPC_STUB IWMWriterPostViewCallback_OnPostViewSample_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterPostViewCallback_AllocateForPostView_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterPostViewCallback_AllocateForPostView_Proxy(
     IWMWriterPostViewCallback * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ DWORD cbBuffer,
@@ -11557,119 +11555,119 @@ void __RPC_STUB IWMWriterPostViewCallback_AllocateForPostView_Stub(
 #define __IWMWriterPostView_INTERFACE_DEFINED__
 
 /* interface IWMWriterPostView */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMWriterPostView;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("81E20CE4-75EF-491a-8004-FC53C45BDC3E")
     IWMWriterPostView : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE SetPostViewCallback( 
+        virtual HRESULT STDMETHODCALLTYPE SetPostViewCallback(
             IWMWriterPostViewCallback *pCallback,
             void *pvContext) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetReceivePostViewSamples( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetReceivePostViewSamples(
             /* [in] */ WORD wStreamNum,
             /* [in] */ BOOL fReceivePostViewSamples) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetReceivePostViewSamples( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetReceivePostViewSamples(
             /* [in] */ WORD wStreamNum,
             /* [out] */ BOOL *pfReceivePostViewSamples) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetPostViewProps( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetPostViewProps(
             /* [in] */ WORD wStreamNumber,
             /* [out] */ IWMMediaProps **ppOutput) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetPostViewProps( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetPostViewProps(
             /* [in] */ WORD wStreamNumber,
             /* [in] */ IWMMediaProps *pOutput) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetPostViewFormatCount( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetPostViewFormatCount(
             /* [in] */ WORD wStreamNumber,
             /* [out] */ DWORD *pcFormats) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetPostViewFormat( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetPostViewFormat(
             /* [in] */ WORD wStreamNumber,
             /* [in] */ DWORD dwFormatNumber,
             /* [out] */ IWMMediaProps **ppProps) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetAllocateForPostView( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetAllocateForPostView(
             /* [in] */ WORD wStreamNumber,
             /* [in] */ BOOL fAllocate) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAllocateForPostView( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetAllocateForPostView(
             /* [in] */ WORD wStreamNumber,
             /* [out] */ BOOL *pfAllocate) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMWriterPostViewVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMWriterPostView * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMWriterPostView * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMWriterPostView * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetPostViewCallback )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetPostViewCallback )(
             IWMWriterPostView * This,
             IWMWriterPostViewCallback *pCallback,
             void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetReceivePostViewSamples )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetReceivePostViewSamples )(
             IWMWriterPostView * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ BOOL fReceivePostViewSamples);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetReceivePostViewSamples )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetReceivePostViewSamples )(
             IWMWriterPostView * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ BOOL *pfReceivePostViewSamples);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetPostViewProps )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetPostViewProps )(
             IWMWriterPostView * This,
             /* [in] */ WORD wStreamNumber,
             /* [out] */ IWMMediaProps **ppOutput);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetPostViewProps )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetPostViewProps )(
             IWMWriterPostView * This,
             /* [in] */ WORD wStreamNumber,
             /* [in] */ IWMMediaProps *pOutput);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetPostViewFormatCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetPostViewFormatCount )(
             IWMWriterPostView * This,
             /* [in] */ WORD wStreamNumber,
             /* [out] */ DWORD *pcFormats);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetPostViewFormat )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetPostViewFormat )(
             IWMWriterPostView * This,
             /* [in] */ WORD wStreamNumber,
             /* [in] */ DWORD dwFormatNumber,
             /* [out] */ IWMMediaProps **ppProps);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAllocateForPostView )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetAllocateForPostView )(
             IWMWriterPostView * This,
             /* [in] */ WORD wStreamNumber,
             /* [in] */ BOOL fAllocate);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAllocateForPostView )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAllocateForPostView )(
             IWMWriterPostView * This,
             /* [in] */ WORD wStreamNumber,
             /* [out] */ BOOL *pfAllocate);
-        
+
         END_INTERFACE
     } IWMWriterPostViewVtbl;
 
@@ -11678,7 +11676,7 @@ EXTERN_C const IID IID_IWMWriterPostView;
         CONST_VTBL struct IWMWriterPostViewVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -11727,7 +11725,7 @@ EXTERN_C const IID IID_IWMWriterPostView;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterPostView_SetPostViewCallback_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterPostView_SetPostViewCallback_Proxy(
     IWMWriterPostView * This,
     IWMWriterPostViewCallback *pCallback,
     void *pvContext);
@@ -11740,7 +11738,7 @@ void __RPC_STUB IWMWriterPostView_SetPostViewCallback_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterPostView_SetReceivePostViewSamples_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterPostView_SetReceivePostViewSamples_Proxy(
     IWMWriterPostView * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ BOOL fReceivePostViewSamples);
@@ -11753,7 +11751,7 @@ void __RPC_STUB IWMWriterPostView_SetReceivePostViewSamples_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterPostView_GetReceivePostViewSamples_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterPostView_GetReceivePostViewSamples_Proxy(
     IWMWriterPostView * This,
     /* [in] */ WORD wStreamNum,
     /* [out] */ BOOL *pfReceivePostViewSamples);
@@ -11766,7 +11764,7 @@ void __RPC_STUB IWMWriterPostView_GetReceivePostViewSamples_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterPostView_GetPostViewProps_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterPostView_GetPostViewProps_Proxy(
     IWMWriterPostView * This,
     /* [in] */ WORD wStreamNumber,
     /* [out] */ IWMMediaProps **ppOutput);
@@ -11779,7 +11777,7 @@ void __RPC_STUB IWMWriterPostView_GetPostViewProps_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterPostView_SetPostViewProps_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterPostView_SetPostViewProps_Proxy(
     IWMWriterPostView * This,
     /* [in] */ WORD wStreamNumber,
     /* [in] */ IWMMediaProps *pOutput);
@@ -11792,7 +11790,7 @@ void __RPC_STUB IWMWriterPostView_SetPostViewProps_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterPostView_GetPostViewFormatCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterPostView_GetPostViewFormatCount_Proxy(
     IWMWriterPostView * This,
     /* [in] */ WORD wStreamNumber,
     /* [out] */ DWORD *pcFormats);
@@ -11805,7 +11803,7 @@ void __RPC_STUB IWMWriterPostView_GetPostViewFormatCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterPostView_GetPostViewFormat_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterPostView_GetPostViewFormat_Proxy(
     IWMWriterPostView * This,
     /* [in] */ WORD wStreamNumber,
     /* [in] */ DWORD dwFormatNumber,
@@ -11819,7 +11817,7 @@ void __RPC_STUB IWMWriterPostView_GetPostViewFormat_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterPostView_SetAllocateForPostView_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterPostView_SetAllocateForPostView_Proxy(
     IWMWriterPostView * This,
     /* [in] */ WORD wStreamNumber,
     /* [in] */ BOOL fAllocate);
@@ -11832,7 +11830,7 @@ void __RPC_STUB IWMWriterPostView_SetAllocateForPostView_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterPostView_GetAllocateForPostView_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterPostView_GetAllocateForPostView_Proxy(
     IWMWriterPostView * This,
     /* [in] */ WORD wStreamNumber,
     /* [out] */ BOOL *pfAllocate);
@@ -11853,71 +11851,71 @@ void __RPC_STUB IWMWriterPostView_GetAllocateForPostView_Stub(
 #define __IWMWriterSink_INTERFACE_DEFINED__
 
 /* interface IWMWriterSink */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMWriterSink;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BE4-2B2B-11d3-B36B-00C04F6108FF")
     IWMWriterSink : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE OnHeader( 
+        virtual HRESULT STDMETHODCALLTYPE OnHeader(
             /* [in] */ INSSBuffer *pHeader) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE IsRealTime( 
+
+        virtual HRESULT STDMETHODCALLTYPE IsRealTime(
             /* [out] */ BOOL *pfRealTime) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AllocateDataUnit( 
+
+        virtual HRESULT STDMETHODCALLTYPE AllocateDataUnit(
             /* [in] */ DWORD cbDataUnit,
             /* [out] */ INSSBuffer **ppDataUnit) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE OnDataUnit( 
+
+        virtual HRESULT STDMETHODCALLTYPE OnDataUnit(
             /* [in] */ INSSBuffer *pDataUnit) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE OnEndWriting( void) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMWriterSinkVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMWriterSink * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMWriterSink * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMWriterSink * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnHeader )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnHeader )(
             IWMWriterSink * This,
             /* [in] */ INSSBuffer *pHeader);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsRealTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *IsRealTime )(
             IWMWriterSink * This,
             /* [out] */ BOOL *pfRealTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *AllocateDataUnit )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AllocateDataUnit )(
             IWMWriterSink * This,
             /* [in] */ DWORD cbDataUnit,
             /* [out] */ INSSBuffer **ppDataUnit);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnDataUnit )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnDataUnit )(
             IWMWriterSink * This,
             /* [in] */ INSSBuffer *pDataUnit);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnEndWriting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnEndWriting )(
             IWMWriterSink * This);
-        
+
         END_INTERFACE
     } IWMWriterSinkVtbl;
 
@@ -11926,7 +11924,7 @@ EXTERN_C const IID IID_IWMWriterSink;
         CONST_VTBL struct IWMWriterSinkVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -11963,7 +11961,7 @@ EXTERN_C const IID IID_IWMWriterSink;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterSink_OnHeader_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterSink_OnHeader_Proxy(
     IWMWriterSink * This,
     /* [in] */ INSSBuffer *pHeader);
 
@@ -11975,7 +11973,7 @@ void __RPC_STUB IWMWriterSink_OnHeader_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterSink_IsRealTime_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterSink_IsRealTime_Proxy(
     IWMWriterSink * This,
     /* [out] */ BOOL *pfRealTime);
 
@@ -11987,7 +11985,7 @@ void __RPC_STUB IWMWriterSink_IsRealTime_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterSink_AllocateDataUnit_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterSink_AllocateDataUnit_Proxy(
     IWMWriterSink * This,
     /* [in] */ DWORD cbDataUnit,
     /* [out] */ INSSBuffer **ppDataUnit);
@@ -12000,7 +11998,7 @@ void __RPC_STUB IWMWriterSink_AllocateDataUnit_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterSink_OnDataUnit_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterSink_OnDataUnit_Proxy(
     IWMWriterSink * This,
     /* [in] */ INSSBuffer *pDataUnit);
 
@@ -12012,7 +12010,7 @@ void __RPC_STUB IWMWriterSink_OnDataUnit_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterSink_OnEndWriting_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterSink_OnEndWriting_Proxy(
     IWMWriterSink * This);
 
 
@@ -12031,54 +12029,54 @@ void __RPC_STUB IWMWriterSink_OnEndWriting_Stub(
 #define __IWMRegisterCallback_INTERFACE_DEFINED__
 
 /* interface IWMRegisterCallback */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMRegisterCallback;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("CF4B1F99-4DE2-4e49-A363-252740D99BC1")
     IWMRegisterCallback : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE Advise( 
+        virtual HRESULT STDMETHODCALLTYPE Advise(
             /* [in] */ IWMStatusCallback *pCallback,
             /* [in] */ void *pvContext) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE Unadvise( 
+
+        virtual HRESULT STDMETHODCALLTYPE Unadvise(
             /* [in] */ IWMStatusCallback *pCallback,
             /* [in] */ void *pvContext) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMRegisterCallbackVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMRegisterCallback * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMRegisterCallback * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMRegisterCallback * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Advise )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Advise )(
             IWMRegisterCallback * This,
             /* [in] */ IWMStatusCallback *pCallback,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *Unadvise )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Unadvise )(
             IWMRegisterCallback * This,
             /* [in] */ IWMStatusCallback *pCallback,
             /* [in] */ void *pvContext);
-        
+
         END_INTERFACE
     } IWMRegisterCallbackVtbl;
 
@@ -12087,7 +12085,7 @@ EXTERN_C const IID IID_IWMRegisterCallback;
         CONST_VTBL struct IWMRegisterCallbackVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -12115,7 +12113,7 @@ EXTERN_C const IID IID_IWMRegisterCallback;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMRegisterCallback_Advise_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMRegisterCallback_Advise_Proxy(
     IWMRegisterCallback * This,
     /* [in] */ IWMStatusCallback *pCallback,
     /* [in] */ void *pvContext);
@@ -12128,7 +12126,7 @@ void __RPC_STUB IWMRegisterCallback_Advise_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMRegisterCallback_Unadvise_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMRegisterCallback_Unadvise_Proxy(
     IWMRegisterCallback * This,
     /* [in] */ IWMStatusCallback *pCallback,
     /* [in] */ void *pvContext);
@@ -12149,63 +12147,63 @@ void __RPC_STUB IWMRegisterCallback_Unadvise_Stub(
 #define __IWMWriterFileSink_INTERFACE_DEFINED__
 
 /* interface IWMWriterFileSink */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMWriterFileSink;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BE5-2B2B-11d3-B36B-00C04F6108FF")
     IWMWriterFileSink : public IWMWriterSink
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE Open( 
+        virtual HRESULT STDMETHODCALLTYPE Open(
             /* [in] */ const WCHAR *pwszFilename) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMWriterFileSinkVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMWriterFileSink * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMWriterFileSink * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMWriterFileSink * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnHeader )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnHeader )(
             IWMWriterFileSink * This,
             /* [in] */ INSSBuffer *pHeader);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsRealTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *IsRealTime )(
             IWMWriterFileSink * This,
             /* [out] */ BOOL *pfRealTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *AllocateDataUnit )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AllocateDataUnit )(
             IWMWriterFileSink * This,
             /* [in] */ DWORD cbDataUnit,
             /* [out] */ INSSBuffer **ppDataUnit);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnDataUnit )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnDataUnit )(
             IWMWriterFileSink * This,
             /* [in] */ INSSBuffer *pDataUnit);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnEndWriting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnEndWriting )(
             IWMWriterFileSink * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Open )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Open )(
             IWMWriterFileSink * This,
             /* [in] */ const WCHAR *pwszFilename);
-        
+
         END_INTERFACE
     } IWMWriterFileSinkVtbl;
 
@@ -12214,7 +12212,7 @@ EXTERN_C const IID IID_IWMWriterFileSink;
         CONST_VTBL struct IWMWriterFileSinkVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -12255,7 +12253,7 @@ EXTERN_C const IID IID_IWMWriterFileSink;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterFileSink_Open_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterFileSink_Open_Proxy(
     IWMWriterFileSink * This,
     /* [in] */ const WCHAR *pwszFilename);
 
@@ -12275,107 +12273,107 @@ void __RPC_STUB IWMWriterFileSink_Open_Stub(
 #define __IWMWriterFileSink2_INTERFACE_DEFINED__
 
 /* interface IWMWriterFileSink2 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMWriterFileSink2;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("14282BA7-4AEF-4205-8CE5-C229035A05BC")
     IWMWriterFileSink2 : public IWMWriterFileSink
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE Start( 
+        virtual HRESULT STDMETHODCALLTYPE Start(
             /* [in] */ QWORD cnsStartTime) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE Stop( 
+
+        virtual HRESULT STDMETHODCALLTYPE Stop(
             /* [in] */ QWORD cnsStopTime) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE IsStopped( 
+
+        virtual HRESULT STDMETHODCALLTYPE IsStopped(
             /* [out] */ BOOL *pfStopped) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetFileDuration( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetFileDuration(
             /* [out] */ QWORD *pcnsDuration) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetFileSize( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetFileSize(
             /* [out] */ QWORD *pcbFile) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE Close( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE IsClosed( 
+
+        virtual HRESULT STDMETHODCALLTYPE IsClosed(
             /* [out] */ BOOL *pfClosed) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMWriterFileSink2Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMWriterFileSink2 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMWriterFileSink2 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMWriterFileSink2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnHeader )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnHeader )(
             IWMWriterFileSink2 * This,
             /* [in] */ INSSBuffer *pHeader);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsRealTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *IsRealTime )(
             IWMWriterFileSink2 * This,
             /* [out] */ BOOL *pfRealTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *AllocateDataUnit )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AllocateDataUnit )(
             IWMWriterFileSink2 * This,
             /* [in] */ DWORD cbDataUnit,
             /* [out] */ INSSBuffer **ppDataUnit);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnDataUnit )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnDataUnit )(
             IWMWriterFileSink2 * This,
             /* [in] */ INSSBuffer *pDataUnit);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnEndWriting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnEndWriting )(
             IWMWriterFileSink2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Open )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Open )(
             IWMWriterFileSink2 * This,
             /* [in] */ const WCHAR *pwszFilename);
-        
-        HRESULT ( STDMETHODCALLTYPE *Start )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Start )(
             IWMWriterFileSink2 * This,
             /* [in] */ QWORD cnsStartTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *Stop )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Stop )(
             IWMWriterFileSink2 * This,
             /* [in] */ QWORD cnsStopTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsStopped )( 
+
+        HRESULT ( STDMETHODCALLTYPE *IsStopped )(
             IWMWriterFileSink2 * This,
             /* [out] */ BOOL *pfStopped);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetFileDuration )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetFileDuration )(
             IWMWriterFileSink2 * This,
             /* [out] */ QWORD *pcnsDuration);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetFileSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetFileSize )(
             IWMWriterFileSink2 * This,
             /* [out] */ QWORD *pcbFile);
-        
-        HRESULT ( STDMETHODCALLTYPE *Close )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Close )(
             IWMWriterFileSink2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsClosed )( 
+
+        HRESULT ( STDMETHODCALLTYPE *IsClosed )(
             IWMWriterFileSink2 * This,
             /* [out] */ BOOL *pfClosed);
-        
+
         END_INTERFACE
     } IWMWriterFileSink2Vtbl;
 
@@ -12384,7 +12382,7 @@ EXTERN_C const IID IID_IWMWriterFileSink2;
         CONST_VTBL struct IWMWriterFileSink2Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -12447,7 +12445,7 @@ EXTERN_C const IID IID_IWMWriterFileSink2;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterFileSink2_Start_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterFileSink2_Start_Proxy(
     IWMWriterFileSink2 * This,
     /* [in] */ QWORD cnsStartTime);
 
@@ -12459,7 +12457,7 @@ void __RPC_STUB IWMWriterFileSink2_Start_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterFileSink2_Stop_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterFileSink2_Stop_Proxy(
     IWMWriterFileSink2 * This,
     /* [in] */ QWORD cnsStopTime);
 
@@ -12471,7 +12469,7 @@ void __RPC_STUB IWMWriterFileSink2_Stop_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterFileSink2_IsStopped_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterFileSink2_IsStopped_Proxy(
     IWMWriterFileSink2 * This,
     /* [out] */ BOOL *pfStopped);
 
@@ -12483,7 +12481,7 @@ void __RPC_STUB IWMWriterFileSink2_IsStopped_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterFileSink2_GetFileDuration_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterFileSink2_GetFileDuration_Proxy(
     IWMWriterFileSink2 * This,
     /* [out] */ QWORD *pcnsDuration);
 
@@ -12495,7 +12493,7 @@ void __RPC_STUB IWMWriterFileSink2_GetFileDuration_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterFileSink2_GetFileSize_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterFileSink2_GetFileSize_Proxy(
     IWMWriterFileSink2 * This,
     /* [out] */ QWORD *pcbFile);
 
@@ -12507,7 +12505,7 @@ void __RPC_STUB IWMWriterFileSink2_GetFileSize_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterFileSink2_Close_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterFileSink2_Close_Proxy(
     IWMWriterFileSink2 * This);
 
 
@@ -12518,7 +12516,7 @@ void __RPC_STUB IWMWriterFileSink2_Close_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterFileSink2_IsClosed_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterFileSink2_IsClosed_Proxy(
     IWMWriterFileSink2 * This,
     /* [out] */ BOOL *pfClosed);
 
@@ -12538,145 +12536,145 @@ void __RPC_STUB IWMWriterFileSink2_IsClosed_Stub(
 #define __IWMWriterFileSink3_INTERFACE_DEFINED__
 
 /* interface IWMWriterFileSink3 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMWriterFileSink3;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("3FEA4FEB-2945-47A7-A1DD-C53A8FC4C45C")
     IWMWriterFileSink3 : public IWMWriterFileSink2
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE SetAutoIndexing( 
+        virtual HRESULT STDMETHODCALLTYPE SetAutoIndexing(
             /* [in] */ BOOL fDoAutoIndexing) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAutoIndexing( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetAutoIndexing(
             /* [out] */ BOOL *pfAutoIndexing) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetControlStream( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetControlStream(
             /* [in] */ WORD wStreamNumber,
             /* [in] */ BOOL fShouldControlStartAndStop) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMode( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetMode(
             /* [out] */ DWORD *pdwFileSinkMode) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE OnDataUnitEx( 
+
+        virtual HRESULT STDMETHODCALLTYPE OnDataUnitEx(
             /* [in] */ WMT_FILESINK_DATA_UNIT *pFileSinkDataUnit) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetUnbufferedIO( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetUnbufferedIO(
             /* [in] */ BOOL fUnbufferedIO,
             /* [in] */ BOOL fRestrictMemUsage) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetUnbufferedIO( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetUnbufferedIO(
             /* [out] */ BOOL *pfUnbufferedIO) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE CompleteOperations( void) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMWriterFileSink3Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMWriterFileSink3 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMWriterFileSink3 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMWriterFileSink3 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnHeader )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnHeader )(
             IWMWriterFileSink3 * This,
             /* [in] */ INSSBuffer *pHeader);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsRealTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *IsRealTime )(
             IWMWriterFileSink3 * This,
             /* [out] */ BOOL *pfRealTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *AllocateDataUnit )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AllocateDataUnit )(
             IWMWriterFileSink3 * This,
             /* [in] */ DWORD cbDataUnit,
             /* [out] */ INSSBuffer **ppDataUnit);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnDataUnit )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnDataUnit )(
             IWMWriterFileSink3 * This,
             /* [in] */ INSSBuffer *pDataUnit);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnEndWriting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnEndWriting )(
             IWMWriterFileSink3 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Open )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Open )(
             IWMWriterFileSink3 * This,
             /* [in] */ const WCHAR *pwszFilename);
-        
-        HRESULT ( STDMETHODCALLTYPE *Start )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Start )(
             IWMWriterFileSink3 * This,
             /* [in] */ QWORD cnsStartTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *Stop )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Stop )(
             IWMWriterFileSink3 * This,
             /* [in] */ QWORD cnsStopTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsStopped )( 
+
+        HRESULT ( STDMETHODCALLTYPE *IsStopped )(
             IWMWriterFileSink3 * This,
             /* [out] */ BOOL *pfStopped);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetFileDuration )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetFileDuration )(
             IWMWriterFileSink3 * This,
             /* [out] */ QWORD *pcnsDuration);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetFileSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetFileSize )(
             IWMWriterFileSink3 * This,
             /* [out] */ QWORD *pcbFile);
-        
-        HRESULT ( STDMETHODCALLTYPE *Close )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Close )(
             IWMWriterFileSink3 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsClosed )( 
+
+        HRESULT ( STDMETHODCALLTYPE *IsClosed )(
             IWMWriterFileSink3 * This,
             /* [out] */ BOOL *pfClosed);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAutoIndexing )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetAutoIndexing )(
             IWMWriterFileSink3 * This,
             /* [in] */ BOOL fDoAutoIndexing);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAutoIndexing )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAutoIndexing )(
             IWMWriterFileSink3 * This,
             /* [out] */ BOOL *pfAutoIndexing);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetControlStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetControlStream )(
             IWMWriterFileSink3 * This,
             /* [in] */ WORD wStreamNumber,
             /* [in] */ BOOL fShouldControlStartAndStop);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMode )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMode )(
             IWMWriterFileSink3 * This,
             /* [out] */ DWORD *pdwFileSinkMode);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnDataUnitEx )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnDataUnitEx )(
             IWMWriterFileSink3 * This,
             /* [in] */ WMT_FILESINK_DATA_UNIT *pFileSinkDataUnit);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetUnbufferedIO )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetUnbufferedIO )(
             IWMWriterFileSink3 * This,
             /* [in] */ BOOL fUnbufferedIO,
             /* [in] */ BOOL fRestrictMemUsage);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetUnbufferedIO )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetUnbufferedIO )(
             IWMWriterFileSink3 * This,
             /* [out] */ BOOL *pfUnbufferedIO);
-        
-        HRESULT ( STDMETHODCALLTYPE *CompleteOperations )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CompleteOperations )(
             IWMWriterFileSink3 * This);
-        
+
         END_INTERFACE
     } IWMWriterFileSink3Vtbl;
 
@@ -12685,7 +12683,7 @@ EXTERN_C const IID IID_IWMWriterFileSink3;
         CONST_VTBL struct IWMWriterFileSink3Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -12773,7 +12771,7 @@ EXTERN_C const IID IID_IWMWriterFileSink3;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterFileSink3_SetAutoIndexing_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterFileSink3_SetAutoIndexing_Proxy(
     IWMWriterFileSink3 * This,
     /* [in] */ BOOL fDoAutoIndexing);
 
@@ -12785,7 +12783,7 @@ void __RPC_STUB IWMWriterFileSink3_SetAutoIndexing_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterFileSink3_GetAutoIndexing_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterFileSink3_GetAutoIndexing_Proxy(
     IWMWriterFileSink3 * This,
     /* [out] */ BOOL *pfAutoIndexing);
 
@@ -12797,7 +12795,7 @@ void __RPC_STUB IWMWriterFileSink3_GetAutoIndexing_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterFileSink3_SetControlStream_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterFileSink3_SetControlStream_Proxy(
     IWMWriterFileSink3 * This,
     /* [in] */ WORD wStreamNumber,
     /* [in] */ BOOL fShouldControlStartAndStop);
@@ -12810,7 +12808,7 @@ void __RPC_STUB IWMWriterFileSink3_SetControlStream_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterFileSink3_GetMode_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterFileSink3_GetMode_Proxy(
     IWMWriterFileSink3 * This,
     /* [out] */ DWORD *pdwFileSinkMode);
 
@@ -12822,7 +12820,7 @@ void __RPC_STUB IWMWriterFileSink3_GetMode_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterFileSink3_OnDataUnitEx_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterFileSink3_OnDataUnitEx_Proxy(
     IWMWriterFileSink3 * This,
     /* [in] */ WMT_FILESINK_DATA_UNIT *pFileSinkDataUnit);
 
@@ -12834,7 +12832,7 @@ void __RPC_STUB IWMWriterFileSink3_OnDataUnitEx_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterFileSink3_SetUnbufferedIO_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterFileSink3_SetUnbufferedIO_Proxy(
     IWMWriterFileSink3 * This,
     /* [in] */ BOOL fUnbufferedIO,
     /* [in] */ BOOL fRestrictMemUsage);
@@ -12847,7 +12845,7 @@ void __RPC_STUB IWMWriterFileSink3_SetUnbufferedIO_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterFileSink3_GetUnbufferedIO_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterFileSink3_GetUnbufferedIO_Proxy(
     IWMWriterFileSink3 * This,
     /* [out] */ BOOL *pfUnbufferedIO);
 
@@ -12859,7 +12857,7 @@ void __RPC_STUB IWMWriterFileSink3_GetUnbufferedIO_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterFileSink3_CompleteOperations_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterFileSink3_CompleteOperations_Proxy(
     IWMWriterFileSink3 * This);
 
 
@@ -12878,110 +12876,110 @@ void __RPC_STUB IWMWriterFileSink3_CompleteOperations_Stub(
 #define __IWMWriterNetworkSink_INTERFACE_DEFINED__
 
 /* interface IWMWriterNetworkSink */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMWriterNetworkSink;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BE7-2B2B-11d3-B36B-00C04F6108FF")
     IWMWriterNetworkSink : public IWMWriterSink
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE SetMaximumClients( 
+        virtual HRESULT STDMETHODCALLTYPE SetMaximumClients(
             /* [in] */ DWORD dwMaxClients) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMaximumClients( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetMaximumClients(
             /* [out] */ DWORD *pdwMaxClients) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetNetworkProtocol( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetNetworkProtocol(
             /* [in] */ WMT_NET_PROTOCOL protocol) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetNetworkProtocol( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetNetworkProtocol(
             /* [out] */ WMT_NET_PROTOCOL *pProtocol) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetHostURL( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetHostURL(
             /* [out] */ WCHAR *pwszURL,
             /* [out][in] */ DWORD *pcchURL) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE Open( 
+
+        virtual HRESULT STDMETHODCALLTYPE Open(
             /* [out][in] */ DWORD *pdwPortNum) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE Disconnect( void) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE Close( void) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMWriterNetworkSinkVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMWriterNetworkSink * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMWriterNetworkSink * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMWriterNetworkSink * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnHeader )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnHeader )(
             IWMWriterNetworkSink * This,
             /* [in] */ INSSBuffer *pHeader);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsRealTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *IsRealTime )(
             IWMWriterNetworkSink * This,
             /* [out] */ BOOL *pfRealTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *AllocateDataUnit )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AllocateDataUnit )(
             IWMWriterNetworkSink * This,
             /* [in] */ DWORD cbDataUnit,
             /* [out] */ INSSBuffer **ppDataUnit);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnDataUnit )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnDataUnit )(
             IWMWriterNetworkSink * This,
             /* [in] */ INSSBuffer *pDataUnit);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnEndWriting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnEndWriting )(
             IWMWriterNetworkSink * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetMaximumClients )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetMaximumClients )(
             IWMWriterNetworkSink * This,
             /* [in] */ DWORD dwMaxClients);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaximumClients )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMaximumClients )(
             IWMWriterNetworkSink * This,
             /* [out] */ DWORD *pdwMaxClients);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetNetworkProtocol )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetNetworkProtocol )(
             IWMWriterNetworkSink * This,
             /* [in] */ WMT_NET_PROTOCOL protocol);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetNetworkProtocol )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetNetworkProtocol )(
             IWMWriterNetworkSink * This,
             /* [out] */ WMT_NET_PROTOCOL *pProtocol);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetHostURL )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetHostURL )(
             IWMWriterNetworkSink * This,
             /* [out] */ WCHAR *pwszURL,
             /* [out][in] */ DWORD *pcchURL);
-        
-        HRESULT ( STDMETHODCALLTYPE *Open )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Open )(
             IWMWriterNetworkSink * This,
             /* [out][in] */ DWORD *pdwPortNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *Disconnect )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Disconnect )(
             IWMWriterNetworkSink * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Close )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Close )(
             IWMWriterNetworkSink * This);
-        
+
         END_INTERFACE
     } IWMWriterNetworkSinkVtbl;
 
@@ -12990,7 +12988,7 @@ EXTERN_C const IID IID_IWMWriterNetworkSink;
         CONST_VTBL struct IWMWriterNetworkSinkVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -13052,7 +13050,7 @@ EXTERN_C const IID IID_IWMWriterNetworkSink;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterNetworkSink_SetMaximumClients_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterNetworkSink_SetMaximumClients_Proxy(
     IWMWriterNetworkSink * This,
     /* [in] */ DWORD dwMaxClients);
 
@@ -13064,7 +13062,7 @@ void __RPC_STUB IWMWriterNetworkSink_SetMaximumClients_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterNetworkSink_GetMaximumClients_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterNetworkSink_GetMaximumClients_Proxy(
     IWMWriterNetworkSink * This,
     /* [out] */ DWORD *pdwMaxClients);
 
@@ -13076,7 +13074,7 @@ void __RPC_STUB IWMWriterNetworkSink_GetMaximumClients_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterNetworkSink_SetNetworkProtocol_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterNetworkSink_SetNetworkProtocol_Proxy(
     IWMWriterNetworkSink * This,
     /* [in] */ WMT_NET_PROTOCOL protocol);
 
@@ -13088,7 +13086,7 @@ void __RPC_STUB IWMWriterNetworkSink_SetNetworkProtocol_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterNetworkSink_GetNetworkProtocol_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterNetworkSink_GetNetworkProtocol_Proxy(
     IWMWriterNetworkSink * This,
     /* [out] */ WMT_NET_PROTOCOL *pProtocol);
 
@@ -13100,7 +13098,7 @@ void __RPC_STUB IWMWriterNetworkSink_GetNetworkProtocol_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterNetworkSink_GetHostURL_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterNetworkSink_GetHostURL_Proxy(
     IWMWriterNetworkSink * This,
     /* [out] */ WCHAR *pwszURL,
     /* [out][in] */ DWORD *pcchURL);
@@ -13113,7 +13111,7 @@ void __RPC_STUB IWMWriterNetworkSink_GetHostURL_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterNetworkSink_Open_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterNetworkSink_Open_Proxy(
     IWMWriterNetworkSink * This,
     /* [out][in] */ DWORD *pdwPortNum);
 
@@ -13125,7 +13123,7 @@ void __RPC_STUB IWMWriterNetworkSink_Open_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterNetworkSink_Disconnect_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterNetworkSink_Disconnect_Proxy(
     IWMWriterNetworkSink * This);
 
 
@@ -13136,7 +13134,7 @@ void __RPC_STUB IWMWriterNetworkSink_Disconnect_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterNetworkSink_Close_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterNetworkSink_Close_Proxy(
     IWMWriterNetworkSink * This);
 
 
@@ -13155,52 +13153,52 @@ void __RPC_STUB IWMWriterNetworkSink_Close_Stub(
 #define __IWMClientConnections_INTERFACE_DEFINED__
 
 /* interface IWMClientConnections */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMClientConnections;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("73C66010-A299-41df-B1F0-CCF03B09C1C6")
     IWMClientConnections : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetClientCount( 
+        virtual HRESULT STDMETHODCALLTYPE GetClientCount(
             /* [out] */ DWORD *pcClients) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetClientProperties( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetClientProperties(
             /* [in] */ DWORD dwClientNum,
             /* [out] */ WM_CLIENT_PROPERTIES *pClientProperties) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMClientConnectionsVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMClientConnections * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMClientConnections * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMClientConnections * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetClientCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetClientCount )(
             IWMClientConnections * This,
             /* [out] */ DWORD *pcClients);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetClientProperties )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetClientProperties )(
             IWMClientConnections * This,
             /* [in] */ DWORD dwClientNum,
             /* [out] */ WM_CLIENT_PROPERTIES *pClientProperties);
-        
+
         END_INTERFACE
     } IWMClientConnectionsVtbl;
 
@@ -13209,7 +13207,7 @@ EXTERN_C const IID IID_IWMClientConnections;
         CONST_VTBL struct IWMClientConnectionsVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -13237,7 +13235,7 @@ EXTERN_C const IID IID_IWMClientConnections;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMClientConnections_GetClientCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMClientConnections_GetClientCount_Proxy(
     IWMClientConnections * This,
     /* [out] */ DWORD *pcClients);
 
@@ -13249,7 +13247,7 @@ void __RPC_STUB IWMClientConnections_GetClientCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMClientConnections_GetClientProperties_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMClientConnections_GetClientProperties_Proxy(
     IWMClientConnections * This,
     /* [in] */ DWORD dwClientNum,
     /* [out] */ WM_CLIENT_PROPERTIES *pClientProperties);
@@ -13270,18 +13268,18 @@ void __RPC_STUB IWMClientConnections_GetClientProperties_Stub(
 #define __IWMClientConnections2_INTERFACE_DEFINED__
 
 /* interface IWMClientConnections2 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMClientConnections2;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("4091571e-4701-4593-bb3d-d5f5f0c74246")
     IWMClientConnections2 : public IWMClientConnections
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetClientInfo( 
+        virtual HRESULT STDMETHODCALLTYPE GetClientInfo(
             /* [in] */ DWORD dwClientNum,
             /* [size_is][out] */ WCHAR *pwszNetworkAddress,
             /* [out][in] */ DWORD *pcchNetworkAddress,
@@ -13289,36 +13287,36 @@ EXTERN_C const IID IID_IWMClientConnections2;
             /* [out][in] */ DWORD *pcchPort,
             /* [size_is][out] */ WCHAR *pwszDNSName,
             /* [out][in] */ DWORD *pcchDNSName) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMClientConnections2Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMClientConnections2 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMClientConnections2 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMClientConnections2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetClientCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetClientCount )(
             IWMClientConnections2 * This,
             /* [out] */ DWORD *pcClients);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetClientProperties )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetClientProperties )(
             IWMClientConnections2 * This,
             /* [in] */ DWORD dwClientNum,
             /* [out] */ WM_CLIENT_PROPERTIES *pClientProperties);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetClientInfo )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetClientInfo )(
             IWMClientConnections2 * This,
             /* [in] */ DWORD dwClientNum,
             /* [size_is][out] */ WCHAR *pwszNetworkAddress,
@@ -13327,7 +13325,7 @@ EXTERN_C const IID IID_IWMClientConnections2;
             /* [out][in] */ DWORD *pcchPort,
             /* [size_is][out] */ WCHAR *pwszDNSName,
             /* [out][in] */ DWORD *pcchDNSName);
-        
+
         END_INTERFACE
     } IWMClientConnections2Vtbl;
 
@@ -13336,7 +13334,7 @@ EXTERN_C const IID IID_IWMClientConnections2;
         CONST_VTBL struct IWMClientConnections2Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -13368,7 +13366,7 @@ EXTERN_C const IID IID_IWMClientConnections2;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMClientConnections2_GetClientInfo_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMClientConnections2_GetClientInfo_Proxy(
     IWMClientConnections2 * This,
     /* [in] */ DWORD dwClientNum,
     /* [size_is][out] */ WCHAR *pwszNetworkAddress,
@@ -13394,198 +13392,198 @@ void __RPC_STUB IWMClientConnections2_GetClientInfo_Stub(
 #define __IWMReaderAdvanced_INTERFACE_DEFINED__
 
 /* interface IWMReaderAdvanced */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMReaderAdvanced;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BEA-2B2B-11d3-B36B-00C04F6108FF")
     IWMReaderAdvanced : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE SetUserProvidedClock( 
+        virtual HRESULT STDMETHODCALLTYPE SetUserProvidedClock(
             /* [in] */ BOOL fUserClock) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetUserProvidedClock( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetUserProvidedClock(
             /* [out] */ BOOL *pfUserClock) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE DeliverTime( 
+
+        virtual HRESULT STDMETHODCALLTYPE DeliverTime(
             /* [in] */ QWORD cnsTime) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetManualStreamSelection( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetManualStreamSelection(
             /* [in] */ BOOL fSelection) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetManualStreamSelection( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetManualStreamSelection(
             /* [out] */ BOOL *pfSelection) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetStreamsSelected( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetStreamsSelected(
             /* [in] */ WORD cStreamCount,
             /* [in] */ WORD *pwStreamNumbers,
             /* [in] */ WMT_STREAM_SELECTION *pSelections) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetStreamSelected( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetStreamSelected(
             /* [in] */ WORD wStreamNum,
             /* [out] */ WMT_STREAM_SELECTION *pSelection) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetReceiveSelectionCallbacks( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetReceiveSelectionCallbacks(
             /* [in] */ BOOL fGetCallbacks) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetReceiveSelectionCallbacks( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetReceiveSelectionCallbacks(
             /* [out] */ BOOL *pfGetCallbacks) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetReceiveStreamSamples( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetReceiveStreamSamples(
             /* [in] */ WORD wStreamNum,
             /* [in] */ BOOL fReceiveStreamSamples) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetReceiveStreamSamples( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetReceiveStreamSamples(
             /* [in] */ WORD wStreamNum,
             /* [out] */ BOOL *pfReceiveStreamSamples) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetAllocateForOutput( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetAllocateForOutput(
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ BOOL fAllocate) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAllocateForOutput( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetAllocateForOutput(
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ BOOL *pfAllocate) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetAllocateForStream( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetAllocateForStream(
             /* [in] */ WORD wStreamNum,
             /* [in] */ BOOL fAllocate) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAllocateForStream( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetAllocateForStream(
             /* [in] */ WORD dwSreamNum,
             /* [out] */ BOOL *pfAllocate) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetStatistics( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetStatistics(
             /* [out][in] */ WM_READER_STATISTICS *pStatistics) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetClientInfo( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetClientInfo(
             /* [in] */ WM_READER_CLIENTINFO *pClientInfo) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMaxOutputSampleSize( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetMaxOutputSampleSize(
             /* [in] */ DWORD dwOutput,
             /* [out] */ DWORD *pcbMax) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMaxStreamSampleSize( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetMaxStreamSampleSize(
             /* [in] */ WORD wStream,
             /* [out] */ DWORD *pcbMax) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE NotifyLateDelivery( 
+
+        virtual HRESULT STDMETHODCALLTYPE NotifyLateDelivery(
             QWORD cnsLateness) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMReaderAdvancedVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMReaderAdvanced * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMReaderAdvanced * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMReaderAdvanced * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetUserProvidedClock )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetUserProvidedClock )(
             IWMReaderAdvanced * This,
             /* [in] */ BOOL fUserClock);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetUserProvidedClock )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetUserProvidedClock )(
             IWMReaderAdvanced * This,
             /* [out] */ BOOL *pfUserClock);
-        
-        HRESULT ( STDMETHODCALLTYPE *DeliverTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *DeliverTime )(
             IWMReaderAdvanced * This,
             /* [in] */ QWORD cnsTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetManualStreamSelection )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetManualStreamSelection )(
             IWMReaderAdvanced * This,
             /* [in] */ BOOL fSelection);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetManualStreamSelection )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetManualStreamSelection )(
             IWMReaderAdvanced * This,
             /* [out] */ BOOL *pfSelection);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetStreamsSelected )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetStreamsSelected )(
             IWMReaderAdvanced * This,
             /* [in] */ WORD cStreamCount,
             /* [in] */ WORD *pwStreamNumbers,
             /* [in] */ WMT_STREAM_SELECTION *pSelections);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamSelected )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamSelected )(
             IWMReaderAdvanced * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ WMT_STREAM_SELECTION *pSelection);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetReceiveSelectionCallbacks )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetReceiveSelectionCallbacks )(
             IWMReaderAdvanced * This,
             /* [in] */ BOOL fGetCallbacks);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetReceiveSelectionCallbacks )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetReceiveSelectionCallbacks )(
             IWMReaderAdvanced * This,
             /* [out] */ BOOL *pfGetCallbacks);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetReceiveStreamSamples )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetReceiveStreamSamples )(
             IWMReaderAdvanced * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ BOOL fReceiveStreamSamples);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetReceiveStreamSamples )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetReceiveStreamSamples )(
             IWMReaderAdvanced * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ BOOL *pfReceiveStreamSamples);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAllocateForOutput )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetAllocateForOutput )(
             IWMReaderAdvanced * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ BOOL fAllocate);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAllocateForOutput )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAllocateForOutput )(
             IWMReaderAdvanced * This,
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ BOOL *pfAllocate);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAllocateForStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetAllocateForStream )(
             IWMReaderAdvanced * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ BOOL fAllocate);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAllocateForStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAllocateForStream )(
             IWMReaderAdvanced * This,
             /* [in] */ WORD dwSreamNum,
             /* [out] */ BOOL *pfAllocate);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStatistics )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStatistics )(
             IWMReaderAdvanced * This,
             /* [out][in] */ WM_READER_STATISTICS *pStatistics);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetClientInfo )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetClientInfo )(
             IWMReaderAdvanced * This,
             /* [in] */ WM_READER_CLIENTINFO *pClientInfo);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaxOutputSampleSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMaxOutputSampleSize )(
             IWMReaderAdvanced * This,
             /* [in] */ DWORD dwOutput,
             /* [out] */ DWORD *pcbMax);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaxStreamSampleSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMaxStreamSampleSize )(
             IWMReaderAdvanced * This,
             /* [in] */ WORD wStream,
             /* [out] */ DWORD *pcbMax);
-        
-        HRESULT ( STDMETHODCALLTYPE *NotifyLateDelivery )( 
+
+        HRESULT ( STDMETHODCALLTYPE *NotifyLateDelivery )(
             IWMReaderAdvanced * This,
             QWORD cnsLateness);
-        
+
         END_INTERFACE
     } IWMReaderAdvancedVtbl;
 
@@ -13594,7 +13592,7 @@ EXTERN_C const IID IID_IWMReaderAdvanced;
         CONST_VTBL struct IWMReaderAdvancedVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -13676,7 +13674,7 @@ EXTERN_C const IID IID_IWMReaderAdvanced;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_SetUserProvidedClock_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_SetUserProvidedClock_Proxy(
     IWMReaderAdvanced * This,
     /* [in] */ BOOL fUserClock);
 
@@ -13688,7 +13686,7 @@ void __RPC_STUB IWMReaderAdvanced_SetUserProvidedClock_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetUserProvidedClock_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetUserProvidedClock_Proxy(
     IWMReaderAdvanced * This,
     /* [out] */ BOOL *pfUserClock);
 
@@ -13700,7 +13698,7 @@ void __RPC_STUB IWMReaderAdvanced_GetUserProvidedClock_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_DeliverTime_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_DeliverTime_Proxy(
     IWMReaderAdvanced * This,
     /* [in] */ QWORD cnsTime);
 
@@ -13712,7 +13710,7 @@ void __RPC_STUB IWMReaderAdvanced_DeliverTime_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_SetManualStreamSelection_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_SetManualStreamSelection_Proxy(
     IWMReaderAdvanced * This,
     /* [in] */ BOOL fSelection);
 
@@ -13724,7 +13722,7 @@ void __RPC_STUB IWMReaderAdvanced_SetManualStreamSelection_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetManualStreamSelection_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetManualStreamSelection_Proxy(
     IWMReaderAdvanced * This,
     /* [out] */ BOOL *pfSelection);
 
@@ -13736,7 +13734,7 @@ void __RPC_STUB IWMReaderAdvanced_GetManualStreamSelection_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_SetStreamsSelected_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_SetStreamsSelected_Proxy(
     IWMReaderAdvanced * This,
     /* [in] */ WORD cStreamCount,
     /* [in] */ WORD *pwStreamNumbers,
@@ -13750,7 +13748,7 @@ void __RPC_STUB IWMReaderAdvanced_SetStreamsSelected_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetStreamSelected_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetStreamSelected_Proxy(
     IWMReaderAdvanced * This,
     /* [in] */ WORD wStreamNum,
     /* [out] */ WMT_STREAM_SELECTION *pSelection);
@@ -13763,7 +13761,7 @@ void __RPC_STUB IWMReaderAdvanced_GetStreamSelected_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_SetReceiveSelectionCallbacks_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_SetReceiveSelectionCallbacks_Proxy(
     IWMReaderAdvanced * This,
     /* [in] */ BOOL fGetCallbacks);
 
@@ -13775,7 +13773,7 @@ void __RPC_STUB IWMReaderAdvanced_SetReceiveSelectionCallbacks_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetReceiveSelectionCallbacks_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetReceiveSelectionCallbacks_Proxy(
     IWMReaderAdvanced * This,
     /* [out] */ BOOL *pfGetCallbacks);
 
@@ -13787,7 +13785,7 @@ void __RPC_STUB IWMReaderAdvanced_GetReceiveSelectionCallbacks_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_SetReceiveStreamSamples_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_SetReceiveStreamSamples_Proxy(
     IWMReaderAdvanced * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ BOOL fReceiveStreamSamples);
@@ -13800,7 +13798,7 @@ void __RPC_STUB IWMReaderAdvanced_SetReceiveStreamSamples_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetReceiveStreamSamples_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetReceiveStreamSamples_Proxy(
     IWMReaderAdvanced * This,
     /* [in] */ WORD wStreamNum,
     /* [out] */ BOOL *pfReceiveStreamSamples);
@@ -13813,7 +13811,7 @@ void __RPC_STUB IWMReaderAdvanced_GetReceiveStreamSamples_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_SetAllocateForOutput_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_SetAllocateForOutput_Proxy(
     IWMReaderAdvanced * This,
     /* [in] */ DWORD dwOutputNum,
     /* [in] */ BOOL fAllocate);
@@ -13826,7 +13824,7 @@ void __RPC_STUB IWMReaderAdvanced_SetAllocateForOutput_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetAllocateForOutput_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetAllocateForOutput_Proxy(
     IWMReaderAdvanced * This,
     /* [in] */ DWORD dwOutputNum,
     /* [out] */ BOOL *pfAllocate);
@@ -13839,7 +13837,7 @@ void __RPC_STUB IWMReaderAdvanced_GetAllocateForOutput_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_SetAllocateForStream_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_SetAllocateForStream_Proxy(
     IWMReaderAdvanced * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ BOOL fAllocate);
@@ -13852,7 +13850,7 @@ void __RPC_STUB IWMReaderAdvanced_SetAllocateForStream_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetAllocateForStream_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetAllocateForStream_Proxy(
     IWMReaderAdvanced * This,
     /* [in] */ WORD dwSreamNum,
     /* [out] */ BOOL *pfAllocate);
@@ -13865,7 +13863,7 @@ void __RPC_STUB IWMReaderAdvanced_GetAllocateForStream_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetStatistics_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetStatistics_Proxy(
     IWMReaderAdvanced * This,
     /* [out][in] */ WM_READER_STATISTICS *pStatistics);
 
@@ -13877,7 +13875,7 @@ void __RPC_STUB IWMReaderAdvanced_GetStatistics_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_SetClientInfo_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_SetClientInfo_Proxy(
     IWMReaderAdvanced * This,
     /* [in] */ WM_READER_CLIENTINFO *pClientInfo);
 
@@ -13889,7 +13887,7 @@ void __RPC_STUB IWMReaderAdvanced_SetClientInfo_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetMaxOutputSampleSize_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetMaxOutputSampleSize_Proxy(
     IWMReaderAdvanced * This,
     /* [in] */ DWORD dwOutput,
     /* [out] */ DWORD *pcbMax);
@@ -13902,7 +13900,7 @@ void __RPC_STUB IWMReaderAdvanced_GetMaxOutputSampleSize_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetMaxStreamSampleSize_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_GetMaxStreamSampleSize_Proxy(
     IWMReaderAdvanced * This,
     /* [in] */ WORD wStream,
     /* [out] */ DWORD *pcbMax);
@@ -13915,7 +13913,7 @@ void __RPC_STUB IWMReaderAdvanced_GetMaxStreamSampleSize_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_NotifyLateDelivery_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced_NotifyLateDelivery_Proxy(
     IWMReaderAdvanced * This,
     QWORD cnsLateness);
 
@@ -13935,268 +13933,268 @@ void __RPC_STUB IWMReaderAdvanced_NotifyLateDelivery_Stub(
 #define __IWMReaderAdvanced2_INTERFACE_DEFINED__
 
 /* interface IWMReaderAdvanced2 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMReaderAdvanced2;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("ae14a945-b90c-4d0d-9127-80d665f7d73e")
     IWMReaderAdvanced2 : public IWMReaderAdvanced
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE SetPlayMode( 
+        virtual HRESULT STDMETHODCALLTYPE SetPlayMode(
             /* [in] */ WMT_PLAY_MODE Mode) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetPlayMode( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetPlayMode(
             /* [out] */ WMT_PLAY_MODE *pMode) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBufferProgress( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetBufferProgress(
             /* [out] */ DWORD *pdwPercent,
             /* [out] */ QWORD *pcnsBuffering) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetDownloadProgress( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetDownloadProgress(
             /* [out] */ DWORD *pdwPercent,
             /* [out] */ QWORD *pqwBytesDownloaded,
             /* [out] */ QWORD *pcnsDownload) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetSaveAsProgress( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetSaveAsProgress(
             /* [out] */ DWORD *pdwPercent) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SaveFileAs( 
+
+        virtual HRESULT STDMETHODCALLTYPE SaveFileAs(
             /* [in] */ const WCHAR *pwszFilename) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetProtocolName( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetProtocolName(
             /* [size_is][out] */ WCHAR *pwszProtocol,
             /* [out][in] */ DWORD *pcchProtocol) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE StartAtMarker( 
+
+        virtual HRESULT STDMETHODCALLTYPE StartAtMarker(
             /* [in] */ WORD wMarkerIndex,
             /* [in] */ QWORD cnsDuration,
             /* [in] */ float fRate,
             /* [in] */ void *pvContext) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetOutputSetting( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetOutputSetting(
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetOutputSetting( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetOutputSetting(
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE Preroll( 
+
+        virtual HRESULT STDMETHODCALLTYPE Preroll(
             /* [in] */ QWORD cnsStart,
             /* [in] */ QWORD cnsDuration,
             /* [in] */ float fRate) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetLogClientID( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetLogClientID(
             /* [in] */ BOOL fLogClientID) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetLogClientID( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetLogClientID(
             /* [out] */ BOOL *pfLogClientID) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE StopBuffering( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE OpenStream( 
+
+        virtual HRESULT STDMETHODCALLTYPE OpenStream(
             /* [in] */ IStream *pStream,
             /* [in] */ IWMReaderCallback *pCallback,
             /* [in] */ void *pvContext) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMReaderAdvanced2Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMReaderAdvanced2 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMReaderAdvanced2 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMReaderAdvanced2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetUserProvidedClock )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetUserProvidedClock )(
             IWMReaderAdvanced2 * This,
             /* [in] */ BOOL fUserClock);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetUserProvidedClock )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetUserProvidedClock )(
             IWMReaderAdvanced2 * This,
             /* [out] */ BOOL *pfUserClock);
-        
-        HRESULT ( STDMETHODCALLTYPE *DeliverTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *DeliverTime )(
             IWMReaderAdvanced2 * This,
             /* [in] */ QWORD cnsTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetManualStreamSelection )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetManualStreamSelection )(
             IWMReaderAdvanced2 * This,
             /* [in] */ BOOL fSelection);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetManualStreamSelection )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetManualStreamSelection )(
             IWMReaderAdvanced2 * This,
             /* [out] */ BOOL *pfSelection);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetStreamsSelected )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetStreamsSelected )(
             IWMReaderAdvanced2 * This,
             /* [in] */ WORD cStreamCount,
             /* [in] */ WORD *pwStreamNumbers,
             /* [in] */ WMT_STREAM_SELECTION *pSelections);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamSelected )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamSelected )(
             IWMReaderAdvanced2 * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ WMT_STREAM_SELECTION *pSelection);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetReceiveSelectionCallbacks )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetReceiveSelectionCallbacks )(
             IWMReaderAdvanced2 * This,
             /* [in] */ BOOL fGetCallbacks);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetReceiveSelectionCallbacks )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetReceiveSelectionCallbacks )(
             IWMReaderAdvanced2 * This,
             /* [out] */ BOOL *pfGetCallbacks);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetReceiveStreamSamples )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetReceiveStreamSamples )(
             IWMReaderAdvanced2 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ BOOL fReceiveStreamSamples);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetReceiveStreamSamples )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetReceiveStreamSamples )(
             IWMReaderAdvanced2 * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ BOOL *pfReceiveStreamSamples);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAllocateForOutput )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetAllocateForOutput )(
             IWMReaderAdvanced2 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ BOOL fAllocate);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAllocateForOutput )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAllocateForOutput )(
             IWMReaderAdvanced2 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ BOOL *pfAllocate);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAllocateForStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetAllocateForStream )(
             IWMReaderAdvanced2 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ BOOL fAllocate);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAllocateForStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAllocateForStream )(
             IWMReaderAdvanced2 * This,
             /* [in] */ WORD dwSreamNum,
             /* [out] */ BOOL *pfAllocate);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStatistics )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStatistics )(
             IWMReaderAdvanced2 * This,
             /* [out][in] */ WM_READER_STATISTICS *pStatistics);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetClientInfo )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetClientInfo )(
             IWMReaderAdvanced2 * This,
             /* [in] */ WM_READER_CLIENTINFO *pClientInfo);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaxOutputSampleSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMaxOutputSampleSize )(
             IWMReaderAdvanced2 * This,
             /* [in] */ DWORD dwOutput,
             /* [out] */ DWORD *pcbMax);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaxStreamSampleSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMaxStreamSampleSize )(
             IWMReaderAdvanced2 * This,
             /* [in] */ WORD wStream,
             /* [out] */ DWORD *pcbMax);
-        
-        HRESULT ( STDMETHODCALLTYPE *NotifyLateDelivery )( 
+
+        HRESULT ( STDMETHODCALLTYPE *NotifyLateDelivery )(
             IWMReaderAdvanced2 * This,
             QWORD cnsLateness);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetPlayMode )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetPlayMode )(
             IWMReaderAdvanced2 * This,
             /* [in] */ WMT_PLAY_MODE Mode);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetPlayMode )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetPlayMode )(
             IWMReaderAdvanced2 * This,
             /* [out] */ WMT_PLAY_MODE *pMode);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBufferProgress )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetBufferProgress )(
             IWMReaderAdvanced2 * This,
             /* [out] */ DWORD *pdwPercent,
             /* [out] */ QWORD *pcnsBuffering);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDownloadProgress )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetDownloadProgress )(
             IWMReaderAdvanced2 * This,
             /* [out] */ DWORD *pdwPercent,
             /* [out] */ QWORD *pqwBytesDownloaded,
             /* [out] */ QWORD *pcnsDownload);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSaveAsProgress )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetSaveAsProgress )(
             IWMReaderAdvanced2 * This,
             /* [out] */ DWORD *pdwPercent);
-        
-        HRESULT ( STDMETHODCALLTYPE *SaveFileAs )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SaveFileAs )(
             IWMReaderAdvanced2 * This,
             /* [in] */ const WCHAR *pwszFilename);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetProtocolName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetProtocolName )(
             IWMReaderAdvanced2 * This,
             /* [size_is][out] */ WCHAR *pwszProtocol,
             /* [out][in] */ DWORD *pcchProtocol);
-        
-        HRESULT ( STDMETHODCALLTYPE *StartAtMarker )( 
+
+        HRESULT ( STDMETHODCALLTYPE *StartAtMarker )(
             IWMReaderAdvanced2 * This,
             /* [in] */ WORD wMarkerIndex,
             /* [in] */ QWORD cnsDuration,
             /* [in] */ float fRate,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputSetting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetOutputSetting )(
             IWMReaderAdvanced2 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetOutputSetting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetOutputSetting )(
             IWMReaderAdvanced2 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *Preroll )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Preroll )(
             IWMReaderAdvanced2 * This,
             /* [in] */ QWORD cnsStart,
             /* [in] */ QWORD cnsDuration,
             /* [in] */ float fRate);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetLogClientID )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetLogClientID )(
             IWMReaderAdvanced2 * This,
             /* [in] */ BOOL fLogClientID);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetLogClientID )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetLogClientID )(
             IWMReaderAdvanced2 * This,
             /* [out] */ BOOL *pfLogClientID);
-        
-        HRESULT ( STDMETHODCALLTYPE *StopBuffering )( 
+
+        HRESULT ( STDMETHODCALLTYPE *StopBuffering )(
             IWMReaderAdvanced2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *OpenStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OpenStream )(
             IWMReaderAdvanced2 * This,
             /* [in] */ IStream *pStream,
             /* [in] */ IWMReaderCallback *pCallback,
             /* [in] */ void *pvContext);
-        
+
         END_INTERFACE
     } IWMReaderAdvanced2Vtbl;
 
@@ -14205,7 +14203,7 @@ EXTERN_C const IID IID_IWMReaderAdvanced2;
         CONST_VTBL struct IWMReaderAdvanced2Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -14333,7 +14331,7 @@ EXTERN_C const IID IID_IWMReaderAdvanced2;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_SetPlayMode_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_SetPlayMode_Proxy(
     IWMReaderAdvanced2 * This,
     /* [in] */ WMT_PLAY_MODE Mode);
 
@@ -14345,7 +14343,7 @@ void __RPC_STUB IWMReaderAdvanced2_SetPlayMode_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_GetPlayMode_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_GetPlayMode_Proxy(
     IWMReaderAdvanced2 * This,
     /* [out] */ WMT_PLAY_MODE *pMode);
 
@@ -14357,7 +14355,7 @@ void __RPC_STUB IWMReaderAdvanced2_GetPlayMode_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_GetBufferProgress_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_GetBufferProgress_Proxy(
     IWMReaderAdvanced2 * This,
     /* [out] */ DWORD *pdwPercent,
     /* [out] */ QWORD *pcnsBuffering);
@@ -14370,7 +14368,7 @@ void __RPC_STUB IWMReaderAdvanced2_GetBufferProgress_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_GetDownloadProgress_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_GetDownloadProgress_Proxy(
     IWMReaderAdvanced2 * This,
     /* [out] */ DWORD *pdwPercent,
     /* [out] */ QWORD *pqwBytesDownloaded,
@@ -14384,7 +14382,7 @@ void __RPC_STUB IWMReaderAdvanced2_GetDownloadProgress_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_GetSaveAsProgress_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_GetSaveAsProgress_Proxy(
     IWMReaderAdvanced2 * This,
     /* [out] */ DWORD *pdwPercent);
 
@@ -14396,7 +14394,7 @@ void __RPC_STUB IWMReaderAdvanced2_GetSaveAsProgress_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_SaveFileAs_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_SaveFileAs_Proxy(
     IWMReaderAdvanced2 * This,
     /* [in] */ const WCHAR *pwszFilename);
 
@@ -14408,7 +14406,7 @@ void __RPC_STUB IWMReaderAdvanced2_SaveFileAs_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_GetProtocolName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_GetProtocolName_Proxy(
     IWMReaderAdvanced2 * This,
     /* [size_is][out] */ WCHAR *pwszProtocol,
     /* [out][in] */ DWORD *pcchProtocol);
@@ -14421,7 +14419,7 @@ void __RPC_STUB IWMReaderAdvanced2_GetProtocolName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_StartAtMarker_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_StartAtMarker_Proxy(
     IWMReaderAdvanced2 * This,
     /* [in] */ WORD wMarkerIndex,
     /* [in] */ QWORD cnsDuration,
@@ -14436,7 +14434,7 @@ void __RPC_STUB IWMReaderAdvanced2_StartAtMarker_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_GetOutputSetting_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_GetOutputSetting_Proxy(
     IWMReaderAdvanced2 * This,
     /* [in] */ DWORD dwOutputNum,
     /* [in] */ LPCWSTR pszName,
@@ -14452,7 +14450,7 @@ void __RPC_STUB IWMReaderAdvanced2_GetOutputSetting_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_SetOutputSetting_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_SetOutputSetting_Proxy(
     IWMReaderAdvanced2 * This,
     /* [in] */ DWORD dwOutputNum,
     /* [in] */ LPCWSTR pszName,
@@ -14468,7 +14466,7 @@ void __RPC_STUB IWMReaderAdvanced2_SetOutputSetting_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_Preroll_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_Preroll_Proxy(
     IWMReaderAdvanced2 * This,
     /* [in] */ QWORD cnsStart,
     /* [in] */ QWORD cnsDuration,
@@ -14482,7 +14480,7 @@ void __RPC_STUB IWMReaderAdvanced2_Preroll_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_SetLogClientID_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_SetLogClientID_Proxy(
     IWMReaderAdvanced2 * This,
     /* [in] */ BOOL fLogClientID);
 
@@ -14494,7 +14492,7 @@ void __RPC_STUB IWMReaderAdvanced2_SetLogClientID_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_GetLogClientID_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_GetLogClientID_Proxy(
     IWMReaderAdvanced2 * This,
     /* [out] */ BOOL *pfLogClientID);
 
@@ -14506,7 +14504,7 @@ void __RPC_STUB IWMReaderAdvanced2_GetLogClientID_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_StopBuffering_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_StopBuffering_Proxy(
     IWMReaderAdvanced2 * This);
 
 
@@ -14517,7 +14515,7 @@ void __RPC_STUB IWMReaderAdvanced2_StopBuffering_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_OpenStream_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced2_OpenStream_Proxy(
     IWMReaderAdvanced2 * This,
     /* [in] */ IStream *pStream,
     /* [in] */ IWMReaderCallback *pCallback,
@@ -14539,219 +14537,219 @@ void __RPC_STUB IWMReaderAdvanced2_OpenStream_Stub(
 #define __IWMReaderAdvanced3_INTERFACE_DEFINED__
 
 /* interface IWMReaderAdvanced3 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMReaderAdvanced3;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("5DC0674B-F04B-4a4e-9F2A-B1AFDE2C8100")
     IWMReaderAdvanced3 : public IWMReaderAdvanced2
     {
     public:
         virtual HRESULT STDMETHODCALLTYPE StopNetStreaming( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE StartAtPosition( 
+
+        virtual HRESULT STDMETHODCALLTYPE StartAtPosition(
             /* [in] */ WORD wStreamNum,
             /* [in] */ void *pvOffsetStart,
             /* [in] */ void *pvDuration,
             /* [in] */ WMT_OFFSET_FORMAT dwOffsetFormat,
             /* [in] */ float fRate,
             /* [in] */ void *pvContext) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMReaderAdvanced3Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMReaderAdvanced3 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMReaderAdvanced3 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMReaderAdvanced3 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetUserProvidedClock )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetUserProvidedClock )(
             IWMReaderAdvanced3 * This,
             /* [in] */ BOOL fUserClock);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetUserProvidedClock )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetUserProvidedClock )(
             IWMReaderAdvanced3 * This,
             /* [out] */ BOOL *pfUserClock);
-        
-        HRESULT ( STDMETHODCALLTYPE *DeliverTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *DeliverTime )(
             IWMReaderAdvanced3 * This,
             /* [in] */ QWORD cnsTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetManualStreamSelection )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetManualStreamSelection )(
             IWMReaderAdvanced3 * This,
             /* [in] */ BOOL fSelection);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetManualStreamSelection )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetManualStreamSelection )(
             IWMReaderAdvanced3 * This,
             /* [out] */ BOOL *pfSelection);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetStreamsSelected )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetStreamsSelected )(
             IWMReaderAdvanced3 * This,
             /* [in] */ WORD cStreamCount,
             /* [in] */ WORD *pwStreamNumbers,
             /* [in] */ WMT_STREAM_SELECTION *pSelections);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamSelected )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamSelected )(
             IWMReaderAdvanced3 * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ WMT_STREAM_SELECTION *pSelection);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetReceiveSelectionCallbacks )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetReceiveSelectionCallbacks )(
             IWMReaderAdvanced3 * This,
             /* [in] */ BOOL fGetCallbacks);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetReceiveSelectionCallbacks )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetReceiveSelectionCallbacks )(
             IWMReaderAdvanced3 * This,
             /* [out] */ BOOL *pfGetCallbacks);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetReceiveStreamSamples )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetReceiveStreamSamples )(
             IWMReaderAdvanced3 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ BOOL fReceiveStreamSamples);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetReceiveStreamSamples )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetReceiveStreamSamples )(
             IWMReaderAdvanced3 * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ BOOL *pfReceiveStreamSamples);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAllocateForOutput )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetAllocateForOutput )(
             IWMReaderAdvanced3 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ BOOL fAllocate);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAllocateForOutput )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAllocateForOutput )(
             IWMReaderAdvanced3 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ BOOL *pfAllocate);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAllocateForStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetAllocateForStream )(
             IWMReaderAdvanced3 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ BOOL fAllocate);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAllocateForStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAllocateForStream )(
             IWMReaderAdvanced3 * This,
             /* [in] */ WORD dwSreamNum,
             /* [out] */ BOOL *pfAllocate);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStatistics )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStatistics )(
             IWMReaderAdvanced3 * This,
             /* [out][in] */ WM_READER_STATISTICS *pStatistics);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetClientInfo )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetClientInfo )(
             IWMReaderAdvanced3 * This,
             /* [in] */ WM_READER_CLIENTINFO *pClientInfo);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaxOutputSampleSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMaxOutputSampleSize )(
             IWMReaderAdvanced3 * This,
             /* [in] */ DWORD dwOutput,
             /* [out] */ DWORD *pcbMax);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaxStreamSampleSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMaxStreamSampleSize )(
             IWMReaderAdvanced3 * This,
             /* [in] */ WORD wStream,
             /* [out] */ DWORD *pcbMax);
-        
-        HRESULT ( STDMETHODCALLTYPE *NotifyLateDelivery )( 
+
+        HRESULT ( STDMETHODCALLTYPE *NotifyLateDelivery )(
             IWMReaderAdvanced3 * This,
             QWORD cnsLateness);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetPlayMode )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetPlayMode )(
             IWMReaderAdvanced3 * This,
             /* [in] */ WMT_PLAY_MODE Mode);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetPlayMode )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetPlayMode )(
             IWMReaderAdvanced3 * This,
             /* [out] */ WMT_PLAY_MODE *pMode);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBufferProgress )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetBufferProgress )(
             IWMReaderAdvanced3 * This,
             /* [out] */ DWORD *pdwPercent,
             /* [out] */ QWORD *pcnsBuffering);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDownloadProgress )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetDownloadProgress )(
             IWMReaderAdvanced3 * This,
             /* [out] */ DWORD *pdwPercent,
             /* [out] */ QWORD *pqwBytesDownloaded,
             /* [out] */ QWORD *pcnsDownload);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSaveAsProgress )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetSaveAsProgress )(
             IWMReaderAdvanced3 * This,
             /* [out] */ DWORD *pdwPercent);
-        
-        HRESULT ( STDMETHODCALLTYPE *SaveFileAs )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SaveFileAs )(
             IWMReaderAdvanced3 * This,
             /* [in] */ const WCHAR *pwszFilename);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetProtocolName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetProtocolName )(
             IWMReaderAdvanced3 * This,
             /* [size_is][out] */ WCHAR *pwszProtocol,
             /* [out][in] */ DWORD *pcchProtocol);
-        
-        HRESULT ( STDMETHODCALLTYPE *StartAtMarker )( 
+
+        HRESULT ( STDMETHODCALLTYPE *StartAtMarker )(
             IWMReaderAdvanced3 * This,
             /* [in] */ WORD wMarkerIndex,
             /* [in] */ QWORD cnsDuration,
             /* [in] */ float fRate,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputSetting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetOutputSetting )(
             IWMReaderAdvanced3 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetOutputSetting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetOutputSetting )(
             IWMReaderAdvanced3 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *Preroll )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Preroll )(
             IWMReaderAdvanced3 * This,
             /* [in] */ QWORD cnsStart,
             /* [in] */ QWORD cnsDuration,
             /* [in] */ float fRate);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetLogClientID )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetLogClientID )(
             IWMReaderAdvanced3 * This,
             /* [in] */ BOOL fLogClientID);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetLogClientID )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetLogClientID )(
             IWMReaderAdvanced3 * This,
             /* [out] */ BOOL *pfLogClientID);
-        
-        HRESULT ( STDMETHODCALLTYPE *StopBuffering )( 
+
+        HRESULT ( STDMETHODCALLTYPE *StopBuffering )(
             IWMReaderAdvanced3 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *OpenStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OpenStream )(
             IWMReaderAdvanced3 * This,
             /* [in] */ IStream *pStream,
             /* [in] */ IWMReaderCallback *pCallback,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *StopNetStreaming )( 
+
+        HRESULT ( STDMETHODCALLTYPE *StopNetStreaming )(
             IWMReaderAdvanced3 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *StartAtPosition )( 
+
+        HRESULT ( STDMETHODCALLTYPE *StartAtPosition )(
             IWMReaderAdvanced3 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ void *pvOffsetStart,
@@ -14759,7 +14757,7 @@ EXTERN_C const IID IID_IWMReaderAdvanced3;
             /* [in] */ WMT_OFFSET_FORMAT dwOffsetFormat,
             /* [in] */ float fRate,
             /* [in] */ void *pvContext);
-        
+
         END_INTERFACE
     } IWMReaderAdvanced3Vtbl;
 
@@ -14768,7 +14766,7 @@ EXTERN_C const IID IID_IWMReaderAdvanced3;
         CONST_VTBL struct IWMReaderAdvanced3Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -14903,7 +14901,7 @@ EXTERN_C const IID IID_IWMReaderAdvanced3;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced3_StopNetStreaming_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced3_StopNetStreaming_Proxy(
     IWMReaderAdvanced3 * This);
 
 
@@ -14914,7 +14912,7 @@ void __RPC_STUB IWMReaderAdvanced3_StopNetStreaming_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced3_StartAtPosition_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced3_StartAtPosition_Proxy(
     IWMReaderAdvanced3 * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ void *pvOffsetStart,
@@ -14939,241 +14937,241 @@ void __RPC_STUB IWMReaderAdvanced3_StartAtPosition_Stub(
 #define __IWMReaderAdvanced4_INTERFACE_DEFINED__
 
 /* interface IWMReaderAdvanced4 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMReaderAdvanced4;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("945A76A2-12AE-4d48-BD3C-CD1D90399B85")
     IWMReaderAdvanced4 : public IWMReaderAdvanced3
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetLanguageCount( 
+        virtual HRESULT STDMETHODCALLTYPE GetLanguageCount(
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ WORD *pwLanguageCount) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetLanguage( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetLanguage(
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ WORD wLanguage,
             /* [size_is][out] */ WCHAR *pwszLanguageString,
             /* [out][in] */ WORD *pcchLanguageStringLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMaxSpeedFactor( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetMaxSpeedFactor(
             /* [out] */ double *pdblFactor) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE IsUsingFastCache( 
+
+        virtual HRESULT STDMETHODCALLTYPE IsUsingFastCache(
             /* [out] */ BOOL *pfUsingFastCache) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AddLogParam( 
+
+        virtual HRESULT STDMETHODCALLTYPE AddLogParam(
             /* [in] */ LPCWSTR wszNameSpace,
             /* [in] */ LPCWSTR wszName,
             /* [in] */ LPCWSTR wszValue) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE SendLogParams( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE CanSaveFileAs( 
+
+        virtual HRESULT STDMETHODCALLTYPE CanSaveFileAs(
             /* [out] */ BOOL *pfCanSave) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE CancelSaveFileAs( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetURL( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetURL(
             /* [size_is][out] */ WCHAR *pwszURL,
             /* [out][in] */ DWORD *pcchURL) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMReaderAdvanced4Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMReaderAdvanced4 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMReaderAdvanced4 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMReaderAdvanced4 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetUserProvidedClock )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetUserProvidedClock )(
             IWMReaderAdvanced4 * This,
             /* [in] */ BOOL fUserClock);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetUserProvidedClock )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetUserProvidedClock )(
             IWMReaderAdvanced4 * This,
             /* [out] */ BOOL *pfUserClock);
-        
-        HRESULT ( STDMETHODCALLTYPE *DeliverTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *DeliverTime )(
             IWMReaderAdvanced4 * This,
             /* [in] */ QWORD cnsTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetManualStreamSelection )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetManualStreamSelection )(
             IWMReaderAdvanced4 * This,
             /* [in] */ BOOL fSelection);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetManualStreamSelection )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetManualStreamSelection )(
             IWMReaderAdvanced4 * This,
             /* [out] */ BOOL *pfSelection);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetStreamsSelected )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetStreamsSelected )(
             IWMReaderAdvanced4 * This,
             /* [in] */ WORD cStreamCount,
             /* [in] */ WORD *pwStreamNumbers,
             /* [in] */ WMT_STREAM_SELECTION *pSelections);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStreamSelected )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStreamSelected )(
             IWMReaderAdvanced4 * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ WMT_STREAM_SELECTION *pSelection);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetReceiveSelectionCallbacks )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetReceiveSelectionCallbacks )(
             IWMReaderAdvanced4 * This,
             /* [in] */ BOOL fGetCallbacks);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetReceiveSelectionCallbacks )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetReceiveSelectionCallbacks )(
             IWMReaderAdvanced4 * This,
             /* [out] */ BOOL *pfGetCallbacks);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetReceiveStreamSamples )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetReceiveStreamSamples )(
             IWMReaderAdvanced4 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ BOOL fReceiveStreamSamples);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetReceiveStreamSamples )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetReceiveStreamSamples )(
             IWMReaderAdvanced4 * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ BOOL *pfReceiveStreamSamples);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAllocateForOutput )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetAllocateForOutput )(
             IWMReaderAdvanced4 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ BOOL fAllocate);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAllocateForOutput )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAllocateForOutput )(
             IWMReaderAdvanced4 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ BOOL *pfAllocate);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAllocateForStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetAllocateForStream )(
             IWMReaderAdvanced4 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ BOOL fAllocate);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAllocateForStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAllocateForStream )(
             IWMReaderAdvanced4 * This,
             /* [in] */ WORD dwSreamNum,
             /* [out] */ BOOL *pfAllocate);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetStatistics )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetStatistics )(
             IWMReaderAdvanced4 * This,
             /* [out][in] */ WM_READER_STATISTICS *pStatistics);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetClientInfo )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetClientInfo )(
             IWMReaderAdvanced4 * This,
             /* [in] */ WM_READER_CLIENTINFO *pClientInfo);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaxOutputSampleSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMaxOutputSampleSize )(
             IWMReaderAdvanced4 * This,
             /* [in] */ DWORD dwOutput,
             /* [out] */ DWORD *pcbMax);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaxStreamSampleSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMaxStreamSampleSize )(
             IWMReaderAdvanced4 * This,
             /* [in] */ WORD wStream,
             /* [out] */ DWORD *pcbMax);
-        
-        HRESULT ( STDMETHODCALLTYPE *NotifyLateDelivery )( 
+
+        HRESULT ( STDMETHODCALLTYPE *NotifyLateDelivery )(
             IWMReaderAdvanced4 * This,
             QWORD cnsLateness);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetPlayMode )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetPlayMode )(
             IWMReaderAdvanced4 * This,
             /* [in] */ WMT_PLAY_MODE Mode);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetPlayMode )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetPlayMode )(
             IWMReaderAdvanced4 * This,
             /* [out] */ WMT_PLAY_MODE *pMode);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBufferProgress )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetBufferProgress )(
             IWMReaderAdvanced4 * This,
             /* [out] */ DWORD *pdwPercent,
             /* [out] */ QWORD *pcnsBuffering);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDownloadProgress )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetDownloadProgress )(
             IWMReaderAdvanced4 * This,
             /* [out] */ DWORD *pdwPercent,
             /* [out] */ QWORD *pqwBytesDownloaded,
             /* [out] */ QWORD *pcnsDownload);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSaveAsProgress )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetSaveAsProgress )(
             IWMReaderAdvanced4 * This,
             /* [out] */ DWORD *pdwPercent);
-        
-        HRESULT ( STDMETHODCALLTYPE *SaveFileAs )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SaveFileAs )(
             IWMReaderAdvanced4 * This,
             /* [in] */ const WCHAR *pwszFilename);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetProtocolName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetProtocolName )(
             IWMReaderAdvanced4 * This,
             /* [size_is][out] */ WCHAR *pwszProtocol,
             /* [out][in] */ DWORD *pcchProtocol);
-        
-        HRESULT ( STDMETHODCALLTYPE *StartAtMarker )( 
+
+        HRESULT ( STDMETHODCALLTYPE *StartAtMarker )(
             IWMReaderAdvanced4 * This,
             /* [in] */ WORD wMarkerIndex,
             /* [in] */ QWORD cnsDuration,
             /* [in] */ float fRate,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetOutputSetting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetOutputSetting )(
             IWMReaderAdvanced4 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetOutputSetting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetOutputSetting )(
             IWMReaderAdvanced4 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *Preroll )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Preroll )(
             IWMReaderAdvanced4 * This,
             /* [in] */ QWORD cnsStart,
             /* [in] */ QWORD cnsDuration,
             /* [in] */ float fRate);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetLogClientID )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetLogClientID )(
             IWMReaderAdvanced4 * This,
             /* [in] */ BOOL fLogClientID);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetLogClientID )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetLogClientID )(
             IWMReaderAdvanced4 * This,
             /* [out] */ BOOL *pfLogClientID);
-        
-        HRESULT ( STDMETHODCALLTYPE *StopBuffering )( 
+
+        HRESULT ( STDMETHODCALLTYPE *StopBuffering )(
             IWMReaderAdvanced4 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *OpenStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OpenStream )(
             IWMReaderAdvanced4 * This,
             /* [in] */ IStream *pStream,
             /* [in] */ IWMReaderCallback *pCallback,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *StopNetStreaming )( 
+
+        HRESULT ( STDMETHODCALLTYPE *StopNetStreaming )(
             IWMReaderAdvanced4 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *StartAtPosition )( 
+
+        HRESULT ( STDMETHODCALLTYPE *StartAtPosition )(
             IWMReaderAdvanced4 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ void *pvOffsetStart,
@@ -15181,48 +15179,48 @@ EXTERN_C const IID IID_IWMReaderAdvanced4;
             /* [in] */ WMT_OFFSET_FORMAT dwOffsetFormat,
             /* [in] */ float fRate,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetLanguageCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetLanguageCount )(
             IWMReaderAdvanced4 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [out] */ WORD *pwLanguageCount);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetLanguage )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetLanguage )(
             IWMReaderAdvanced4 * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ WORD wLanguage,
             /* [size_is][out] */ WCHAR *pwszLanguageString,
             /* [out][in] */ WORD *pcchLanguageStringLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaxSpeedFactor )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMaxSpeedFactor )(
             IWMReaderAdvanced4 * This,
             /* [out] */ double *pdblFactor);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsUsingFastCache )( 
+
+        HRESULT ( STDMETHODCALLTYPE *IsUsingFastCache )(
             IWMReaderAdvanced4 * This,
             /* [out] */ BOOL *pfUsingFastCache);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddLogParam )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddLogParam )(
             IWMReaderAdvanced4 * This,
             /* [in] */ LPCWSTR wszNameSpace,
             /* [in] */ LPCWSTR wszName,
             /* [in] */ LPCWSTR wszValue);
-        
-        HRESULT ( STDMETHODCALLTYPE *SendLogParams )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SendLogParams )(
             IWMReaderAdvanced4 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *CanSaveFileAs )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CanSaveFileAs )(
             IWMReaderAdvanced4 * This,
             /* [out] */ BOOL *pfCanSave);
-        
-        HRESULT ( STDMETHODCALLTYPE *CancelSaveFileAs )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CancelSaveFileAs )(
             IWMReaderAdvanced4 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetURL )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetURL )(
             IWMReaderAdvanced4 * This,
             /* [size_is][out] */ WCHAR *pwszURL,
             /* [out][in] */ DWORD *pcchURL);
-        
+
         END_INTERFACE
     } IWMReaderAdvanced4Vtbl;
 
@@ -15231,7 +15229,7 @@ EXTERN_C const IID IID_IWMReaderAdvanced4;
         CONST_VTBL struct IWMReaderAdvanced4Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -15394,7 +15392,7 @@ EXTERN_C const IID IID_IWMReaderAdvanced4;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced4_GetLanguageCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced4_GetLanguageCount_Proxy(
     IWMReaderAdvanced4 * This,
     /* [in] */ DWORD dwOutputNum,
     /* [out] */ WORD *pwLanguageCount);
@@ -15407,7 +15405,7 @@ void __RPC_STUB IWMReaderAdvanced4_GetLanguageCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced4_GetLanguage_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced4_GetLanguage_Proxy(
     IWMReaderAdvanced4 * This,
     /* [in] */ DWORD dwOutputNum,
     /* [in] */ WORD wLanguage,
@@ -15422,7 +15420,7 @@ void __RPC_STUB IWMReaderAdvanced4_GetLanguage_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced4_GetMaxSpeedFactor_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced4_GetMaxSpeedFactor_Proxy(
     IWMReaderAdvanced4 * This,
     /* [out] */ double *pdblFactor);
 
@@ -15434,7 +15432,7 @@ void __RPC_STUB IWMReaderAdvanced4_GetMaxSpeedFactor_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced4_IsUsingFastCache_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced4_IsUsingFastCache_Proxy(
     IWMReaderAdvanced4 * This,
     /* [out] */ BOOL *pfUsingFastCache);
 
@@ -15446,7 +15444,7 @@ void __RPC_STUB IWMReaderAdvanced4_IsUsingFastCache_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced4_AddLogParam_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced4_AddLogParam_Proxy(
     IWMReaderAdvanced4 * This,
     /* [in] */ LPCWSTR wszNameSpace,
     /* [in] */ LPCWSTR wszName,
@@ -15460,7 +15458,7 @@ void __RPC_STUB IWMReaderAdvanced4_AddLogParam_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced4_SendLogParams_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced4_SendLogParams_Proxy(
     IWMReaderAdvanced4 * This);
 
 
@@ -15471,7 +15469,7 @@ void __RPC_STUB IWMReaderAdvanced4_SendLogParams_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced4_CanSaveFileAs_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced4_CanSaveFileAs_Proxy(
     IWMReaderAdvanced4 * This,
     /* [out] */ BOOL *pfCanSave);
 
@@ -15483,7 +15481,7 @@ void __RPC_STUB IWMReaderAdvanced4_CanSaveFileAs_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced4_CancelSaveFileAs_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced4_CancelSaveFileAs_Proxy(
     IWMReaderAdvanced4 * This);
 
 
@@ -15494,7 +15492,7 @@ void __RPC_STUB IWMReaderAdvanced4_CancelSaveFileAs_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAdvanced4_GetURL_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAdvanced4_GetURL_Proxy(
     IWMReaderAdvanced4 * This,
     /* [size_is][out] */ WCHAR *pwszURL,
     /* [out][in] */ DWORD *pcchURL);
@@ -15515,18 +15513,18 @@ void __RPC_STUB IWMReaderAdvanced4_GetURL_Stub(
 #define __IWMReaderAllocatorEx_INTERFACE_DEFINED__
 
 /* interface IWMReaderAllocatorEx */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMReaderAllocatorEx;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("9F762FA7-A22E-428d-93C9-AC82F3AAFE5A")
     IWMReaderAllocatorEx : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE AllocateForStreamEx( 
+        virtual HRESULT STDMETHODCALLTYPE AllocateForStreamEx(
             /* [in] */ WORD wStreamNum,
             /* [in] */ DWORD cbBuffer,
             /* [out] */ INSSBuffer **ppBuffer,
@@ -15534,8 +15532,8 @@ EXTERN_C const IID IID_IWMReaderAllocatorEx;
             /* [in] */ QWORD cnsSampleTime,
             /* [in] */ QWORD cnsSampleDuration,
             /* [in] */ void *pvContext) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AllocateForOutputEx( 
+
+        virtual HRESULT STDMETHODCALLTYPE AllocateForOutputEx(
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ DWORD cbBuffer,
             /* [out] */ INSSBuffer **ppBuffer,
@@ -15543,27 +15541,27 @@ EXTERN_C const IID IID_IWMReaderAllocatorEx;
             /* [in] */ QWORD cnsSampleTime,
             /* [in] */ QWORD cnsSampleDuration,
             /* [in] */ void *pvContext) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMReaderAllocatorExVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMReaderAllocatorEx * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMReaderAllocatorEx * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMReaderAllocatorEx * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *AllocateForStreamEx )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AllocateForStreamEx )(
             IWMReaderAllocatorEx * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ DWORD cbBuffer,
@@ -15572,8 +15570,8 @@ EXTERN_C const IID IID_IWMReaderAllocatorEx;
             /* [in] */ QWORD cnsSampleTime,
             /* [in] */ QWORD cnsSampleDuration,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *AllocateForOutputEx )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AllocateForOutputEx )(
             IWMReaderAllocatorEx * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ DWORD cbBuffer,
@@ -15582,7 +15580,7 @@ EXTERN_C const IID IID_IWMReaderAllocatorEx;
             /* [in] */ QWORD cnsSampleTime,
             /* [in] */ QWORD cnsSampleDuration,
             /* [in] */ void *pvContext);
-        
+
         END_INTERFACE
     } IWMReaderAllocatorExVtbl;
 
@@ -15591,7 +15589,7 @@ EXTERN_C const IID IID_IWMReaderAllocatorEx;
         CONST_VTBL struct IWMReaderAllocatorExVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -15619,7 +15617,7 @@ EXTERN_C const IID IID_IWMReaderAllocatorEx;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAllocatorEx_AllocateForStreamEx_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAllocatorEx_AllocateForStreamEx_Proxy(
     IWMReaderAllocatorEx * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ DWORD cbBuffer,
@@ -15637,7 +15635,7 @@ void __RPC_STUB IWMReaderAllocatorEx_AllocateForStreamEx_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAllocatorEx_AllocateForOutputEx_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAllocatorEx_AllocateForOutputEx_Proxy(
     IWMReaderAllocatorEx * This,
     /* [in] */ DWORD dwOutputNum,
     /* [in] */ DWORD cbBuffer,
@@ -15663,45 +15661,45 @@ void __RPC_STUB IWMReaderAllocatorEx_AllocateForOutputEx_Stub(
 #define __IWMReaderTypeNegotiation_INTERFACE_DEFINED__
 
 /* interface IWMReaderTypeNegotiation */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMReaderTypeNegotiation;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("FDBE5592-81A1-41ea-93BD-735CAD1ADC05")
     IWMReaderTypeNegotiation : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE TryOutputProps( 
+        virtual HRESULT STDMETHODCALLTYPE TryOutputProps(
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ IWMOutputMediaProps *pOutput) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMReaderTypeNegotiationVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMReaderTypeNegotiation * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMReaderTypeNegotiation * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMReaderTypeNegotiation * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *TryOutputProps )( 
+
+        HRESULT ( STDMETHODCALLTYPE *TryOutputProps )(
             IWMReaderTypeNegotiation * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ IWMOutputMediaProps *pOutput);
-        
+
         END_INTERFACE
     } IWMReaderTypeNegotiationVtbl;
 
@@ -15710,7 +15708,7 @@ EXTERN_C const IID IID_IWMReaderTypeNegotiation;
         CONST_VTBL struct IWMReaderTypeNegotiationVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -15735,7 +15733,7 @@ EXTERN_C const IID IID_IWMReaderTypeNegotiation;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderTypeNegotiation_TryOutputProps_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderTypeNegotiation_TryOutputProps_Proxy(
     IWMReaderTypeNegotiation * This,
     /* [in] */ DWORD dwOutputNum,
     /* [in] */ IWMOutputMediaProps *pOutput);
@@ -15756,72 +15754,72 @@ void __RPC_STUB IWMReaderTypeNegotiation_TryOutputProps_Stub(
 #define __IWMReaderCallbackAdvanced_INTERFACE_DEFINED__
 
 /* interface IWMReaderCallbackAdvanced */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMReaderCallbackAdvanced;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BEB-2B2B-11d3-B36B-00C04F6108FF")
     IWMReaderCallbackAdvanced : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE OnStreamSample( 
+        virtual HRESULT STDMETHODCALLTYPE OnStreamSample(
             /* [in] */ WORD wStreamNum,
             /* [in] */ QWORD cnsSampleTime,
             /* [in] */ QWORD cnsSampleDuration,
             /* [in] */ DWORD dwFlags,
             /* [in] */ INSSBuffer *pSample,
             /* [in] */ void *pvContext) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE OnTime( 
+
+        virtual HRESULT STDMETHODCALLTYPE OnTime(
             /* [in] */ QWORD cnsCurrentTime,
             /* [in] */ void *pvContext) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE OnStreamSelection( 
+
+        virtual HRESULT STDMETHODCALLTYPE OnStreamSelection(
             /* [in] */ WORD wStreamCount,
             /* [in] */ WORD *pStreamNumbers,
             /* [in] */ WMT_STREAM_SELECTION *pSelections,
             /* [in] */ void *pvContext) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE OnOutputPropsChanged( 
+
+        virtual HRESULT STDMETHODCALLTYPE OnOutputPropsChanged(
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ WM_MEDIA_TYPE *pMediaType,
             /* [in] */ void *pvContext) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AllocateForStream( 
+
+        virtual HRESULT STDMETHODCALLTYPE AllocateForStream(
             /* [in] */ WORD wStreamNum,
             /* [in] */ DWORD cbBuffer,
             /* [out] */ INSSBuffer **ppBuffer,
             /* [in] */ void *pvContext) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AllocateForOutput( 
+
+        virtual HRESULT STDMETHODCALLTYPE AllocateForOutput(
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ DWORD cbBuffer,
             /* [out] */ INSSBuffer **ppBuffer,
             /* [in] */ void *pvContext) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMReaderCallbackAdvancedVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMReaderCallbackAdvanced * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMReaderCallbackAdvanced * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMReaderCallbackAdvanced * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnStreamSample )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnStreamSample )(
             IWMReaderCallbackAdvanced * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ QWORD cnsSampleTime,
@@ -15829,39 +15827,39 @@ EXTERN_C const IID IID_IWMReaderCallbackAdvanced;
             /* [in] */ DWORD dwFlags,
             /* [in] */ INSSBuffer *pSample,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnTime )(
             IWMReaderCallbackAdvanced * This,
             /* [in] */ QWORD cnsCurrentTime,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnStreamSelection )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnStreamSelection )(
             IWMReaderCallbackAdvanced * This,
             /* [in] */ WORD wStreamCount,
             /* [in] */ WORD *pStreamNumbers,
             /* [in] */ WMT_STREAM_SELECTION *pSelections,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnOutputPropsChanged )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnOutputPropsChanged )(
             IWMReaderCallbackAdvanced * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ WM_MEDIA_TYPE *pMediaType,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *AllocateForStream )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AllocateForStream )(
             IWMReaderCallbackAdvanced * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ DWORD cbBuffer,
             /* [out] */ INSSBuffer **ppBuffer,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *AllocateForOutput )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AllocateForOutput )(
             IWMReaderCallbackAdvanced * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ DWORD cbBuffer,
             /* [out] */ INSSBuffer **ppBuffer,
             /* [in] */ void *pvContext);
-        
+
         END_INTERFACE
     } IWMReaderCallbackAdvancedVtbl;
 
@@ -15870,7 +15868,7 @@ EXTERN_C const IID IID_IWMReaderCallbackAdvanced;
         CONST_VTBL struct IWMReaderCallbackAdvancedVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -15910,7 +15908,7 @@ EXTERN_C const IID IID_IWMReaderCallbackAdvanced;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderCallbackAdvanced_OnStreamSample_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderCallbackAdvanced_OnStreamSample_Proxy(
     IWMReaderCallbackAdvanced * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ QWORD cnsSampleTime,
@@ -15927,7 +15925,7 @@ void __RPC_STUB IWMReaderCallbackAdvanced_OnStreamSample_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderCallbackAdvanced_OnTime_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderCallbackAdvanced_OnTime_Proxy(
     IWMReaderCallbackAdvanced * This,
     /* [in] */ QWORD cnsCurrentTime,
     /* [in] */ void *pvContext);
@@ -15940,7 +15938,7 @@ void __RPC_STUB IWMReaderCallbackAdvanced_OnTime_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderCallbackAdvanced_OnStreamSelection_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderCallbackAdvanced_OnStreamSelection_Proxy(
     IWMReaderCallbackAdvanced * This,
     /* [in] */ WORD wStreamCount,
     /* [in] */ WORD *pStreamNumbers,
@@ -15955,7 +15953,7 @@ void __RPC_STUB IWMReaderCallbackAdvanced_OnStreamSelection_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderCallbackAdvanced_OnOutputPropsChanged_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderCallbackAdvanced_OnOutputPropsChanged_Proxy(
     IWMReaderCallbackAdvanced * This,
     /* [in] */ DWORD dwOutputNum,
     /* [in] */ WM_MEDIA_TYPE *pMediaType,
@@ -15969,7 +15967,7 @@ void __RPC_STUB IWMReaderCallbackAdvanced_OnOutputPropsChanged_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderCallbackAdvanced_AllocateForStream_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderCallbackAdvanced_AllocateForStream_Proxy(
     IWMReaderCallbackAdvanced * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ DWORD cbBuffer,
@@ -15984,7 +15982,7 @@ void __RPC_STUB IWMReaderCallbackAdvanced_AllocateForStream_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderCallbackAdvanced_AllocateForOutput_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderCallbackAdvanced_AllocateForOutput_Proxy(
     IWMReaderCallbackAdvanced * This,
     /* [in] */ DWORD dwOutputNum,
     /* [in] */ DWORD cbBuffer,
@@ -16007,96 +16005,96 @@ void __RPC_STUB IWMReaderCallbackAdvanced_AllocateForOutput_Stub(
 #define __IWMDRMReader_INTERFACE_DEFINED__
 
 /* interface IWMDRMReader */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMDRMReader;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("D2827540-3EE7-432c-B14C-DC17F085D3B3")
     IWMDRMReader : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE AcquireLicense( 
+        virtual HRESULT STDMETHODCALLTYPE AcquireLicense(
             /* [in] */ DWORD dwFlags) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE CancelLicenseAcquisition( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE Individualize( 
+
+        virtual HRESULT STDMETHODCALLTYPE Individualize(
             /* [in] */ DWORD dwFlags) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE CancelIndividualization( void) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE MonitorLicenseAcquisition( void) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE CancelMonitorLicenseAcquisition( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetDRMProperty( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetDRMProperty(
             /* [in] */ LPCWSTR pwstrName,
             /* [in] */ WMT_ATTR_DATATYPE dwType,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetDRMProperty( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetDRMProperty(
             /* [in] */ LPCWSTR pwstrName,
             /* [out] */ WMT_ATTR_DATATYPE *pdwType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMDRMReaderVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMDRMReader * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMDRMReader * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMDRMReader * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *AcquireLicense )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AcquireLicense )(
             IWMDRMReader * This,
             /* [in] */ DWORD dwFlags);
-        
-        HRESULT ( STDMETHODCALLTYPE *CancelLicenseAcquisition )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CancelLicenseAcquisition )(
             IWMDRMReader * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Individualize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Individualize )(
             IWMDRMReader * This,
             /* [in] */ DWORD dwFlags);
-        
-        HRESULT ( STDMETHODCALLTYPE *CancelIndividualization )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CancelIndividualization )(
             IWMDRMReader * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *MonitorLicenseAcquisition )( 
+
+        HRESULT ( STDMETHODCALLTYPE *MonitorLicenseAcquisition )(
             IWMDRMReader * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *CancelMonitorLicenseAcquisition )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CancelMonitorLicenseAcquisition )(
             IWMDRMReader * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetDRMProperty )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetDRMProperty )(
             IWMDRMReader * This,
             /* [in] */ LPCWSTR pwstrName,
             /* [in] */ WMT_ATTR_DATATYPE dwType,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDRMProperty )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetDRMProperty )(
             IWMDRMReader * This,
             /* [in] */ LPCWSTR pwstrName,
             /* [out] */ WMT_ATTR_DATATYPE *pdwType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength);
-        
+
         END_INTERFACE
     } IWMDRMReaderVtbl;
 
@@ -16105,7 +16103,7 @@ EXTERN_C const IID IID_IWMDRMReader;
         CONST_VTBL struct IWMDRMReaderVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -16151,7 +16149,7 @@ EXTERN_C const IID IID_IWMDRMReader;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMReader_AcquireLicense_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMReader_AcquireLicense_Proxy(
     IWMDRMReader * This,
     /* [in] */ DWORD dwFlags);
 
@@ -16163,7 +16161,7 @@ void __RPC_STUB IWMDRMReader_AcquireLicense_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMReader_CancelLicenseAcquisition_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMReader_CancelLicenseAcquisition_Proxy(
     IWMDRMReader * This);
 
 
@@ -16174,7 +16172,7 @@ void __RPC_STUB IWMDRMReader_CancelLicenseAcquisition_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMReader_Individualize_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMReader_Individualize_Proxy(
     IWMDRMReader * This,
     /* [in] */ DWORD dwFlags);
 
@@ -16186,7 +16184,7 @@ void __RPC_STUB IWMDRMReader_Individualize_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMReader_CancelIndividualization_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMReader_CancelIndividualization_Proxy(
     IWMDRMReader * This);
 
 
@@ -16197,7 +16195,7 @@ void __RPC_STUB IWMDRMReader_CancelIndividualization_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMReader_MonitorLicenseAcquisition_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMReader_MonitorLicenseAcquisition_Proxy(
     IWMDRMReader * This);
 
 
@@ -16208,7 +16206,7 @@ void __RPC_STUB IWMDRMReader_MonitorLicenseAcquisition_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMReader_CancelMonitorLicenseAcquisition_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMReader_CancelMonitorLicenseAcquisition_Proxy(
     IWMDRMReader * This);
 
 
@@ -16219,7 +16217,7 @@ void __RPC_STUB IWMDRMReader_CancelMonitorLicenseAcquisition_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMReader_SetDRMProperty_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMReader_SetDRMProperty_Proxy(
     IWMDRMReader * This,
     /* [in] */ LPCWSTR pwstrName,
     /* [in] */ WMT_ATTR_DATATYPE dwType,
@@ -16234,7 +16232,7 @@ void __RPC_STUB IWMDRMReader_SetDRMProperty_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMReader_GetDRMProperty_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMReader_GetDRMProperty_Proxy(
     IWMDRMReader * This,
     /* [in] */ LPCWSTR pwstrName,
     /* [out] */ WMT_ATTR_DATATYPE *pdwType,
@@ -16257,104 +16255,104 @@ void __RPC_STUB IWMDRMReader_GetDRMProperty_Stub(
 #define __IWMDRMReader2_INTERFACE_DEFINED__
 
 /* interface IWMDRMReader2 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMDRMReader2;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("befe7a75-9f1d-4075-b9d9-a3c37bda49a0")
     IWMDRMReader2 : public IWMDRMReader
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE SetEvaluateOutputLevelLicenses( 
+        virtual HRESULT STDMETHODCALLTYPE SetEvaluateOutputLevelLicenses(
             /* [in] */ BOOL fEvaluate) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetPlayOutputLevels( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetPlayOutputLevels(
             /* [size_is][out] */ DRM_PLAY_OPL *pPlayOPL,
             /* [out][in] */ DWORD *pcbLength,
             /* [out] */ DWORD *pdwMinAppComplianceLevel) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetCopyOutputLevels( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetCopyOutputLevels(
             /* [size_is][out] */ DRM_COPY_OPL *pCopyOPL,
             /* [out][in] */ DWORD *pcbLength,
             /* [out] */ DWORD *pdwMinAppComplianceLevel) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE TryNextLicense( void) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMDRMReader2Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMDRMReader2 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMDRMReader2 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMDRMReader2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *AcquireLicense )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AcquireLicense )(
             IWMDRMReader2 * This,
             /* [in] */ DWORD dwFlags);
-        
-        HRESULT ( STDMETHODCALLTYPE *CancelLicenseAcquisition )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CancelLicenseAcquisition )(
             IWMDRMReader2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Individualize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Individualize )(
             IWMDRMReader2 * This,
             /* [in] */ DWORD dwFlags);
-        
-        HRESULT ( STDMETHODCALLTYPE *CancelIndividualization )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CancelIndividualization )(
             IWMDRMReader2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *MonitorLicenseAcquisition )( 
+
+        HRESULT ( STDMETHODCALLTYPE *MonitorLicenseAcquisition )(
             IWMDRMReader2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *CancelMonitorLicenseAcquisition )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CancelMonitorLicenseAcquisition )(
             IWMDRMReader2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetDRMProperty )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetDRMProperty )(
             IWMDRMReader2 * This,
             /* [in] */ LPCWSTR pwstrName,
             /* [in] */ WMT_ATTR_DATATYPE dwType,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDRMProperty )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetDRMProperty )(
             IWMDRMReader2 * This,
             /* [in] */ LPCWSTR pwstrName,
             /* [out] */ WMT_ATTR_DATATYPE *pdwType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetEvaluateOutputLevelLicenses )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetEvaluateOutputLevelLicenses )(
             IWMDRMReader2 * This,
             /* [in] */ BOOL fEvaluate);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetPlayOutputLevels )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetPlayOutputLevels )(
             IWMDRMReader2 * This,
             /* [size_is][out] */ DRM_PLAY_OPL *pPlayOPL,
             /* [out][in] */ DWORD *pcbLength,
             /* [out] */ DWORD *pdwMinAppComplianceLevel);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCopyOutputLevels )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCopyOutputLevels )(
             IWMDRMReader2 * This,
             /* [size_is][out] */ DRM_COPY_OPL *pCopyOPL,
             /* [out][in] */ DWORD *pcbLength,
             /* [out] */ DWORD *pdwMinAppComplianceLevel);
-        
-        HRESULT ( STDMETHODCALLTYPE *TryNextLicense )( 
+
+        HRESULT ( STDMETHODCALLTYPE *TryNextLicense )(
             IWMDRMReader2 * This);
-        
+
         END_INTERFACE
     } IWMDRMReader2Vtbl;
 
@@ -16363,7 +16361,7 @@ EXTERN_C const IID IID_IWMDRMReader2;
         CONST_VTBL struct IWMDRMReader2Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -16422,7 +16420,7 @@ EXTERN_C const IID IID_IWMDRMReader2;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMReader2_SetEvaluateOutputLevelLicenses_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMReader2_SetEvaluateOutputLevelLicenses_Proxy(
     IWMDRMReader2 * This,
     /* [in] */ BOOL fEvaluate);
 
@@ -16434,7 +16432,7 @@ void __RPC_STUB IWMDRMReader2_SetEvaluateOutputLevelLicenses_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMReader2_GetPlayOutputLevels_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMReader2_GetPlayOutputLevels_Proxy(
     IWMDRMReader2 * This,
     /* [size_is][out] */ DRM_PLAY_OPL *pPlayOPL,
     /* [out][in] */ DWORD *pcbLength,
@@ -16448,7 +16446,7 @@ void __RPC_STUB IWMDRMReader2_GetPlayOutputLevels_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMReader2_GetCopyOutputLevels_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMReader2_GetCopyOutputLevels_Proxy(
     IWMDRMReader2 * This,
     /* [size_is][out] */ DRM_COPY_OPL *pCopyOPL,
     /* [out][in] */ DWORD *pcbLength,
@@ -16462,7 +16460,7 @@ void __RPC_STUB IWMDRMReader2_GetCopyOutputLevels_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMReader2_TryNextLicense_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMReader2_TryNextLicense_Proxy(
     IWMDRMReader2 * This);
 
 
@@ -16481,70 +16479,70 @@ void __RPC_STUB IWMDRMReader2_TryNextLicense_Stub(
 #define __IWMReaderPlaylistBurn_INTERFACE_DEFINED__
 
 /* interface IWMReaderPlaylistBurn */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMReaderPlaylistBurn;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("f28c0300-9baa-4477-a846-1744d9cbf533")
     IWMReaderPlaylistBurn : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE InitPlaylistBurn( 
+        virtual HRESULT STDMETHODCALLTYPE InitPlaylistBurn(
             /* [in] */ DWORD cFiles,
             /* [in] */ WCHAR **pwszFilenames,
             /* [in] */ IWMStatusCallback *pCallback,
             /* [in] */ void *pvContext) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetInitResults( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetInitResults(
             /* [in] */ DWORD cFiles,
             /* [out] */ HRESULT *phrStati) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE Cancel( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE EndPlaylistBurn( 
+
+        virtual HRESULT STDMETHODCALLTYPE EndPlaylistBurn(
             /* [in] */ HRESULT hrBurnResult) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMReaderPlaylistBurnVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMReaderPlaylistBurn * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMReaderPlaylistBurn * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMReaderPlaylistBurn * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *InitPlaylistBurn )( 
+
+        HRESULT ( STDMETHODCALLTYPE *InitPlaylistBurn )(
             IWMReaderPlaylistBurn * This,
             /* [in] */ DWORD cFiles,
             /* [in] */ WCHAR **pwszFilenames,
             /* [in] */ IWMStatusCallback *pCallback,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetInitResults )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetInitResults )(
             IWMReaderPlaylistBurn * This,
             /* [in] */ DWORD cFiles,
             /* [out] */ HRESULT *phrStati);
-        
-        HRESULT ( STDMETHODCALLTYPE *Cancel )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Cancel )(
             IWMReaderPlaylistBurn * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *EndPlaylistBurn )( 
+
+        HRESULT ( STDMETHODCALLTYPE *EndPlaylistBurn )(
             IWMReaderPlaylistBurn * This,
             /* [in] */ HRESULT hrBurnResult);
-        
+
         END_INTERFACE
     } IWMReaderPlaylistBurnVtbl;
 
@@ -16553,7 +16551,7 @@ EXTERN_C const IID IID_IWMReaderPlaylistBurn;
         CONST_VTBL struct IWMReaderPlaylistBurnVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -16587,7 +16585,7 @@ EXTERN_C const IID IID_IWMReaderPlaylistBurn;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderPlaylistBurn_InitPlaylistBurn_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderPlaylistBurn_InitPlaylistBurn_Proxy(
     IWMReaderPlaylistBurn * This,
     /* [in] */ DWORD cFiles,
     /* [in] */ WCHAR **pwszFilenames,
@@ -16602,7 +16600,7 @@ void __RPC_STUB IWMReaderPlaylistBurn_InitPlaylistBurn_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderPlaylistBurn_GetInitResults_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderPlaylistBurn_GetInitResults_Proxy(
     IWMReaderPlaylistBurn * This,
     /* [in] */ DWORD cFiles,
     /* [out] */ HRESULT *phrStati);
@@ -16615,7 +16613,7 @@ void __RPC_STUB IWMReaderPlaylistBurn_GetInitResults_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderPlaylistBurn_Cancel_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderPlaylistBurn_Cancel_Proxy(
     IWMReaderPlaylistBurn * This);
 
 
@@ -16626,7 +16624,7 @@ void __RPC_STUB IWMReaderPlaylistBurn_Cancel_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderPlaylistBurn_EndPlaylistBurn_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderPlaylistBurn_EndPlaylistBurn_Proxy(
     IWMReaderPlaylistBurn * This,
     /* [in] */ HRESULT hrBurnResult);
 
@@ -16646,299 +16644,299 @@ void __RPC_STUB IWMReaderPlaylistBurn_EndPlaylistBurn_Stub(
 #define __IWMReaderNetworkConfig_INTERFACE_DEFINED__
 
 /* interface IWMReaderNetworkConfig */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMReaderNetworkConfig;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BEC-2B2B-11d3-B36B-00C04F6108FF")
     IWMReaderNetworkConfig : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetBufferingTime( 
+        virtual HRESULT STDMETHODCALLTYPE GetBufferingTime(
             /* [out] */ QWORD *pcnsBufferingTime) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBufferingTime( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetBufferingTime(
             /* [in] */ QWORD cnsBufferingTime) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetUDPPortRanges( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetUDPPortRanges(
             /* [size_is][out] */ WM_PORT_NUMBER_RANGE *pRangeArray,
             /* [out][in] */ DWORD *pcRanges) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetUDPPortRanges( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetUDPPortRanges(
             /* [size_is][in] */ WM_PORT_NUMBER_RANGE *pRangeArray,
             /* [in] */ DWORD cRanges) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetProxySettings( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetProxySettings(
             /* [in] */ LPCWSTR pwszProtocol,
             /* [out] */ WMT_PROXY_SETTINGS *pProxySetting) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetProxySettings( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetProxySettings(
             /* [in] */ LPCWSTR pwszProtocol,
             /* [in] */ WMT_PROXY_SETTINGS ProxySetting) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetProxyHostName( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetProxyHostName(
             /* [in] */ LPCWSTR pwszProtocol,
             /* [size_is][out] */ WCHAR *pwszHostName,
             /* [out][in] */ DWORD *pcchHostName) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetProxyHostName( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetProxyHostName(
             /* [in] */ LPCWSTR pwszProtocol,
             /* [in] */ LPCWSTR pwszHostName) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetProxyPort( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetProxyPort(
             /* [in] */ LPCWSTR pwszProtocol,
             /* [out] */ DWORD *pdwPort) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetProxyPort( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetProxyPort(
             /* [in] */ LPCWSTR pwszProtocol,
             /* [in] */ DWORD dwPort) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetProxyExceptionList( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetProxyExceptionList(
             /* [in] */ LPCWSTR pwszProtocol,
             /* [size_is][out] */ WCHAR *pwszExceptionList,
             /* [out][in] */ DWORD *pcchExceptionList) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetProxyExceptionList( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetProxyExceptionList(
             /* [in] */ LPCWSTR pwszProtocol,
             /* [in] */ LPCWSTR pwszExceptionList) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetProxyBypassForLocal( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetProxyBypassForLocal(
             /* [in] */ LPCWSTR pwszProtocol,
             /* [out] */ BOOL *pfBypassForLocal) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetProxyBypassForLocal( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetProxyBypassForLocal(
             /* [in] */ LPCWSTR pwszProtocol,
             /* [in] */ BOOL fBypassForLocal) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetForceRerunAutoProxyDetection( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetForceRerunAutoProxyDetection(
             /* [out] */ BOOL *pfForceRerunDetection) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetForceRerunAutoProxyDetection( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetForceRerunAutoProxyDetection(
             /* [in] */ BOOL fForceRerunDetection) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetEnableMulticast( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetEnableMulticast(
             /* [out] */ BOOL *pfEnableMulticast) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetEnableMulticast( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetEnableMulticast(
             /* [in] */ BOOL fEnableMulticast) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetEnableHTTP( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetEnableHTTP(
             /* [out] */ BOOL *pfEnableHTTP) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetEnableHTTP( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetEnableHTTP(
             /* [in] */ BOOL fEnableHTTP) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetEnableUDP( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetEnableUDP(
             /* [out] */ BOOL *pfEnableUDP) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetEnableUDP( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetEnableUDP(
             /* [in] */ BOOL fEnableUDP) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetEnableTCP( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetEnableTCP(
             /* [out] */ BOOL *pfEnableTCP) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetEnableTCP( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetEnableTCP(
             /* [in] */ BOOL fEnableTCP) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE ResetProtocolRollover( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetConnectionBandwidth( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetConnectionBandwidth(
             /* [out] */ DWORD *pdwConnectionBandwidth) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetConnectionBandwidth( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetConnectionBandwidth(
             /* [in] */ DWORD dwConnectionBandwidth) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetNumProtocolsSupported( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetNumProtocolsSupported(
             /* [out] */ DWORD *pcProtocols) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetSupportedProtocolName( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetSupportedProtocolName(
             /* [in] */ DWORD dwProtocolNum,
             /* [size_is][out] */ WCHAR *pwszProtocolName,
             /* [out][in] */ DWORD *pcchProtocolName) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AddLoggingUrl( 
+
+        virtual HRESULT STDMETHODCALLTYPE AddLoggingUrl(
             /* [in] */ LPCWSTR pwszUrl) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetLoggingUrl( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetLoggingUrl(
             /* [in] */ DWORD dwIndex,
             /* [size_is][out] */ LPWSTR pwszUrl,
             /* [out][in] */ DWORD *pcchUrl) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetLoggingUrlCount( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetLoggingUrlCount(
             /* [out] */ DWORD *pdwUrlCount) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE ResetLoggingUrlList( void) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMReaderNetworkConfigVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMReaderNetworkConfig * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMReaderNetworkConfig * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMReaderNetworkConfig * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBufferingTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetBufferingTime )(
             IWMReaderNetworkConfig * This,
             /* [out] */ QWORD *pcnsBufferingTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBufferingTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetBufferingTime )(
             IWMReaderNetworkConfig * This,
             /* [in] */ QWORD cnsBufferingTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetUDPPortRanges )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetUDPPortRanges )(
             IWMReaderNetworkConfig * This,
             /* [size_is][out] */ WM_PORT_NUMBER_RANGE *pRangeArray,
             /* [out][in] */ DWORD *pcRanges);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetUDPPortRanges )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetUDPPortRanges )(
             IWMReaderNetworkConfig * This,
             /* [size_is][in] */ WM_PORT_NUMBER_RANGE *pRangeArray,
             /* [in] */ DWORD cRanges);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetProxySettings )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetProxySettings )(
             IWMReaderNetworkConfig * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [out] */ WMT_PROXY_SETTINGS *pProxySetting);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetProxySettings )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetProxySettings )(
             IWMReaderNetworkConfig * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [in] */ WMT_PROXY_SETTINGS ProxySetting);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetProxyHostName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetProxyHostName )(
             IWMReaderNetworkConfig * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [size_is][out] */ WCHAR *pwszHostName,
             /* [out][in] */ DWORD *pcchHostName);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetProxyHostName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetProxyHostName )(
             IWMReaderNetworkConfig * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [in] */ LPCWSTR pwszHostName);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetProxyPort )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetProxyPort )(
             IWMReaderNetworkConfig * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [out] */ DWORD *pdwPort);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetProxyPort )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetProxyPort )(
             IWMReaderNetworkConfig * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [in] */ DWORD dwPort);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetProxyExceptionList )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetProxyExceptionList )(
             IWMReaderNetworkConfig * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [size_is][out] */ WCHAR *pwszExceptionList,
             /* [out][in] */ DWORD *pcchExceptionList);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetProxyExceptionList )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetProxyExceptionList )(
             IWMReaderNetworkConfig * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [in] */ LPCWSTR pwszExceptionList);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetProxyBypassForLocal )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetProxyBypassForLocal )(
             IWMReaderNetworkConfig * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [out] */ BOOL *pfBypassForLocal);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetProxyBypassForLocal )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetProxyBypassForLocal )(
             IWMReaderNetworkConfig * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [in] */ BOOL fBypassForLocal);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetForceRerunAutoProxyDetection )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetForceRerunAutoProxyDetection )(
             IWMReaderNetworkConfig * This,
             /* [out] */ BOOL *pfForceRerunDetection);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetForceRerunAutoProxyDetection )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetForceRerunAutoProxyDetection )(
             IWMReaderNetworkConfig * This,
             /* [in] */ BOOL fForceRerunDetection);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetEnableMulticast )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetEnableMulticast )(
             IWMReaderNetworkConfig * This,
             /* [out] */ BOOL *pfEnableMulticast);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetEnableMulticast )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetEnableMulticast )(
             IWMReaderNetworkConfig * This,
             /* [in] */ BOOL fEnableMulticast);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetEnableHTTP )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetEnableHTTP )(
             IWMReaderNetworkConfig * This,
             /* [out] */ BOOL *pfEnableHTTP);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetEnableHTTP )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetEnableHTTP )(
             IWMReaderNetworkConfig * This,
             /* [in] */ BOOL fEnableHTTP);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetEnableUDP )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetEnableUDP )(
             IWMReaderNetworkConfig * This,
             /* [out] */ BOOL *pfEnableUDP);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetEnableUDP )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetEnableUDP )(
             IWMReaderNetworkConfig * This,
             /* [in] */ BOOL fEnableUDP);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetEnableTCP )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetEnableTCP )(
             IWMReaderNetworkConfig * This,
             /* [out] */ BOOL *pfEnableTCP);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetEnableTCP )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetEnableTCP )(
             IWMReaderNetworkConfig * This,
             /* [in] */ BOOL fEnableTCP);
-        
-        HRESULT ( STDMETHODCALLTYPE *ResetProtocolRollover )( 
+
+        HRESULT ( STDMETHODCALLTYPE *ResetProtocolRollover )(
             IWMReaderNetworkConfig * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetConnectionBandwidth )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetConnectionBandwidth )(
             IWMReaderNetworkConfig * This,
             /* [out] */ DWORD *pdwConnectionBandwidth);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetConnectionBandwidth )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetConnectionBandwidth )(
             IWMReaderNetworkConfig * This,
             /* [in] */ DWORD dwConnectionBandwidth);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetNumProtocolsSupported )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetNumProtocolsSupported )(
             IWMReaderNetworkConfig * This,
             /* [out] */ DWORD *pcProtocols);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSupportedProtocolName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetSupportedProtocolName )(
             IWMReaderNetworkConfig * This,
             /* [in] */ DWORD dwProtocolNum,
             /* [size_is][out] */ WCHAR *pwszProtocolName,
             /* [out][in] */ DWORD *pcchProtocolName);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddLoggingUrl )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddLoggingUrl )(
             IWMReaderNetworkConfig * This,
             /* [in] */ LPCWSTR pwszUrl);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetLoggingUrl )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetLoggingUrl )(
             IWMReaderNetworkConfig * This,
             /* [in] */ DWORD dwIndex,
             /* [size_is][out] */ LPWSTR pwszUrl,
             /* [out][in] */ DWORD *pcchUrl);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetLoggingUrlCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetLoggingUrlCount )(
             IWMReaderNetworkConfig * This,
             /* [out] */ DWORD *pdwUrlCount);
-        
-        HRESULT ( STDMETHODCALLTYPE *ResetLoggingUrlList )( 
+
+        HRESULT ( STDMETHODCALLTYPE *ResetLoggingUrlList )(
             IWMReaderNetworkConfig * This);
-        
+
         END_INTERFACE
     } IWMReaderNetworkConfigVtbl;
 
@@ -16947,7 +16945,7 @@ EXTERN_C const IID IID_IWMReaderNetworkConfig;
         CONST_VTBL struct IWMReaderNetworkConfigVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -17068,7 +17066,7 @@ EXTERN_C const IID IID_IWMReaderNetworkConfig;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetBufferingTime_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetBufferingTime_Proxy(
     IWMReaderNetworkConfig * This,
     /* [out] */ QWORD *pcnsBufferingTime);
 
@@ -17080,7 +17078,7 @@ void __RPC_STUB IWMReaderNetworkConfig_GetBufferingTime_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetBufferingTime_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetBufferingTime_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ QWORD cnsBufferingTime);
 
@@ -17092,7 +17090,7 @@ void __RPC_STUB IWMReaderNetworkConfig_SetBufferingTime_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetUDPPortRanges_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetUDPPortRanges_Proxy(
     IWMReaderNetworkConfig * This,
     /* [size_is][out] */ WM_PORT_NUMBER_RANGE *pRangeArray,
     /* [out][in] */ DWORD *pcRanges);
@@ -17105,7 +17103,7 @@ void __RPC_STUB IWMReaderNetworkConfig_GetUDPPortRanges_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetUDPPortRanges_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetUDPPortRanges_Proxy(
     IWMReaderNetworkConfig * This,
     /* [size_is][in] */ WM_PORT_NUMBER_RANGE *pRangeArray,
     /* [in] */ DWORD cRanges);
@@ -17118,7 +17116,7 @@ void __RPC_STUB IWMReaderNetworkConfig_SetUDPPortRanges_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetProxySettings_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetProxySettings_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ LPCWSTR pwszProtocol,
     /* [out] */ WMT_PROXY_SETTINGS *pProxySetting);
@@ -17131,7 +17129,7 @@ void __RPC_STUB IWMReaderNetworkConfig_GetProxySettings_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetProxySettings_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetProxySettings_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ LPCWSTR pwszProtocol,
     /* [in] */ WMT_PROXY_SETTINGS ProxySetting);
@@ -17144,7 +17142,7 @@ void __RPC_STUB IWMReaderNetworkConfig_SetProxySettings_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetProxyHostName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetProxyHostName_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ LPCWSTR pwszProtocol,
     /* [size_is][out] */ WCHAR *pwszHostName,
@@ -17158,7 +17156,7 @@ void __RPC_STUB IWMReaderNetworkConfig_GetProxyHostName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetProxyHostName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetProxyHostName_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ LPCWSTR pwszProtocol,
     /* [in] */ LPCWSTR pwszHostName);
@@ -17171,7 +17169,7 @@ void __RPC_STUB IWMReaderNetworkConfig_SetProxyHostName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetProxyPort_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetProxyPort_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ LPCWSTR pwszProtocol,
     /* [out] */ DWORD *pdwPort);
@@ -17184,7 +17182,7 @@ void __RPC_STUB IWMReaderNetworkConfig_GetProxyPort_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetProxyPort_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetProxyPort_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ LPCWSTR pwszProtocol,
     /* [in] */ DWORD dwPort);
@@ -17197,7 +17195,7 @@ void __RPC_STUB IWMReaderNetworkConfig_SetProxyPort_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetProxyExceptionList_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetProxyExceptionList_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ LPCWSTR pwszProtocol,
     /* [size_is][out] */ WCHAR *pwszExceptionList,
@@ -17211,7 +17209,7 @@ void __RPC_STUB IWMReaderNetworkConfig_GetProxyExceptionList_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetProxyExceptionList_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetProxyExceptionList_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ LPCWSTR pwszProtocol,
     /* [in] */ LPCWSTR pwszExceptionList);
@@ -17224,7 +17222,7 @@ void __RPC_STUB IWMReaderNetworkConfig_SetProxyExceptionList_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetProxyBypassForLocal_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetProxyBypassForLocal_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ LPCWSTR pwszProtocol,
     /* [out] */ BOOL *pfBypassForLocal);
@@ -17237,7 +17235,7 @@ void __RPC_STUB IWMReaderNetworkConfig_GetProxyBypassForLocal_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetProxyBypassForLocal_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetProxyBypassForLocal_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ LPCWSTR pwszProtocol,
     /* [in] */ BOOL fBypassForLocal);
@@ -17250,7 +17248,7 @@ void __RPC_STUB IWMReaderNetworkConfig_SetProxyBypassForLocal_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetForceRerunAutoProxyDetection_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetForceRerunAutoProxyDetection_Proxy(
     IWMReaderNetworkConfig * This,
     /* [out] */ BOOL *pfForceRerunDetection);
 
@@ -17262,7 +17260,7 @@ void __RPC_STUB IWMReaderNetworkConfig_GetForceRerunAutoProxyDetection_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetForceRerunAutoProxyDetection_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetForceRerunAutoProxyDetection_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ BOOL fForceRerunDetection);
 
@@ -17274,7 +17272,7 @@ void __RPC_STUB IWMReaderNetworkConfig_SetForceRerunAutoProxyDetection_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetEnableMulticast_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetEnableMulticast_Proxy(
     IWMReaderNetworkConfig * This,
     /* [out] */ BOOL *pfEnableMulticast);
 
@@ -17286,7 +17284,7 @@ void __RPC_STUB IWMReaderNetworkConfig_GetEnableMulticast_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetEnableMulticast_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetEnableMulticast_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ BOOL fEnableMulticast);
 
@@ -17298,7 +17296,7 @@ void __RPC_STUB IWMReaderNetworkConfig_SetEnableMulticast_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetEnableHTTP_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetEnableHTTP_Proxy(
     IWMReaderNetworkConfig * This,
     /* [out] */ BOOL *pfEnableHTTP);
 
@@ -17310,7 +17308,7 @@ void __RPC_STUB IWMReaderNetworkConfig_GetEnableHTTP_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetEnableHTTP_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetEnableHTTP_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ BOOL fEnableHTTP);
 
@@ -17322,7 +17320,7 @@ void __RPC_STUB IWMReaderNetworkConfig_SetEnableHTTP_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetEnableUDP_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetEnableUDP_Proxy(
     IWMReaderNetworkConfig * This,
     /* [out] */ BOOL *pfEnableUDP);
 
@@ -17334,7 +17332,7 @@ void __RPC_STUB IWMReaderNetworkConfig_GetEnableUDP_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetEnableUDP_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetEnableUDP_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ BOOL fEnableUDP);
 
@@ -17346,7 +17344,7 @@ void __RPC_STUB IWMReaderNetworkConfig_SetEnableUDP_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetEnableTCP_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetEnableTCP_Proxy(
     IWMReaderNetworkConfig * This,
     /* [out] */ BOOL *pfEnableTCP);
 
@@ -17358,7 +17356,7 @@ void __RPC_STUB IWMReaderNetworkConfig_GetEnableTCP_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetEnableTCP_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetEnableTCP_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ BOOL fEnableTCP);
 
@@ -17370,7 +17368,7 @@ void __RPC_STUB IWMReaderNetworkConfig_SetEnableTCP_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_ResetProtocolRollover_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_ResetProtocolRollover_Proxy(
     IWMReaderNetworkConfig * This);
 
 
@@ -17381,7 +17379,7 @@ void __RPC_STUB IWMReaderNetworkConfig_ResetProtocolRollover_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetConnectionBandwidth_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetConnectionBandwidth_Proxy(
     IWMReaderNetworkConfig * This,
     /* [out] */ DWORD *pdwConnectionBandwidth);
 
@@ -17393,7 +17391,7 @@ void __RPC_STUB IWMReaderNetworkConfig_GetConnectionBandwidth_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetConnectionBandwidth_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_SetConnectionBandwidth_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ DWORD dwConnectionBandwidth);
 
@@ -17405,7 +17403,7 @@ void __RPC_STUB IWMReaderNetworkConfig_SetConnectionBandwidth_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetNumProtocolsSupported_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetNumProtocolsSupported_Proxy(
     IWMReaderNetworkConfig * This,
     /* [out] */ DWORD *pcProtocols);
 
@@ -17417,7 +17415,7 @@ void __RPC_STUB IWMReaderNetworkConfig_GetNumProtocolsSupported_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetSupportedProtocolName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetSupportedProtocolName_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ DWORD dwProtocolNum,
     /* [size_is][out] */ WCHAR *pwszProtocolName,
@@ -17431,7 +17429,7 @@ void __RPC_STUB IWMReaderNetworkConfig_GetSupportedProtocolName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_AddLoggingUrl_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_AddLoggingUrl_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ LPCWSTR pwszUrl);
 
@@ -17443,7 +17441,7 @@ void __RPC_STUB IWMReaderNetworkConfig_AddLoggingUrl_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetLoggingUrl_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetLoggingUrl_Proxy(
     IWMReaderNetworkConfig * This,
     /* [in] */ DWORD dwIndex,
     /* [size_is][out] */ LPWSTR pwszUrl,
@@ -17457,7 +17455,7 @@ void __RPC_STUB IWMReaderNetworkConfig_GetLoggingUrl_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetLoggingUrlCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_GetLoggingUrlCount_Proxy(
     IWMReaderNetworkConfig * This,
     /* [out] */ DWORD *pdwUrlCount);
 
@@ -17469,7 +17467,7 @@ void __RPC_STUB IWMReaderNetworkConfig_GetLoggingUrlCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_ResetLoggingUrlList_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig_ResetLoggingUrlList_Proxy(
     IWMReaderNetworkConfig * This);
 
 
@@ -17488,275 +17486,275 @@ void __RPC_STUB IWMReaderNetworkConfig_ResetLoggingUrlList_Stub(
 #define __IWMReaderNetworkConfig2_INTERFACE_DEFINED__
 
 /* interface IWMReaderNetworkConfig2 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMReaderNetworkConfig2;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("d979a853-042b-4050-8387-c939db22013f")
     IWMReaderNetworkConfig2 : public IWMReaderNetworkConfig
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetEnableContentCaching( 
+        virtual HRESULT STDMETHODCALLTYPE GetEnableContentCaching(
             /* [out] */ BOOL *pfEnableContentCaching) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetEnableContentCaching( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetEnableContentCaching(
             /* [in] */ BOOL fEnableContentCaching) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetEnableFastCache( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetEnableFastCache(
             /* [out] */ BOOL *pfEnableFastCache) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetEnableFastCache( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetEnableFastCache(
             /* [in] */ BOOL fEnableFastCache) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAcceleratedStreamingDuration( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetAcceleratedStreamingDuration(
             /* [out] */ QWORD *pcnsAccelDuration) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetAcceleratedStreamingDuration( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetAcceleratedStreamingDuration(
             /* [in] */ QWORD cnsAccelDuration) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAutoReconnectLimit( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetAutoReconnectLimit(
             /* [out] */ DWORD *pdwAutoReconnectLimit) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetAutoReconnectLimit( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetAutoReconnectLimit(
             /* [in] */ DWORD dwAutoReconnectLimit) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetEnableResends( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetEnableResends(
             /* [out] */ BOOL *pfEnableResends) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetEnableResends( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetEnableResends(
             /* [in] */ BOOL fEnableResends) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetEnableThinning( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetEnableThinning(
             /* [out] */ BOOL *pfEnableThinning) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetEnableThinning( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetEnableThinning(
             /* [in] */ BOOL fEnableThinning) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMaxNetPacketSize( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetMaxNetPacketSize(
             /* [out] */ DWORD *pdwMaxNetPacketSize) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMReaderNetworkConfig2Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMReaderNetworkConfig2 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMReaderNetworkConfig2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBufferingTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetBufferingTime )(
             IWMReaderNetworkConfig2 * This,
             /* [out] */ QWORD *pcnsBufferingTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBufferingTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetBufferingTime )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ QWORD cnsBufferingTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetUDPPortRanges )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetUDPPortRanges )(
             IWMReaderNetworkConfig2 * This,
             /* [size_is][out] */ WM_PORT_NUMBER_RANGE *pRangeArray,
             /* [out][in] */ DWORD *pcRanges);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetUDPPortRanges )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetUDPPortRanges )(
             IWMReaderNetworkConfig2 * This,
             /* [size_is][in] */ WM_PORT_NUMBER_RANGE *pRangeArray,
             /* [in] */ DWORD cRanges);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetProxySettings )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetProxySettings )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [out] */ WMT_PROXY_SETTINGS *pProxySetting);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetProxySettings )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetProxySettings )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [in] */ WMT_PROXY_SETTINGS ProxySetting);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetProxyHostName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetProxyHostName )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [size_is][out] */ WCHAR *pwszHostName,
             /* [out][in] */ DWORD *pcchHostName);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetProxyHostName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetProxyHostName )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [in] */ LPCWSTR pwszHostName);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetProxyPort )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetProxyPort )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [out] */ DWORD *pdwPort);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetProxyPort )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetProxyPort )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [in] */ DWORD dwPort);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetProxyExceptionList )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetProxyExceptionList )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [size_is][out] */ WCHAR *pwszExceptionList,
             /* [out][in] */ DWORD *pcchExceptionList);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetProxyExceptionList )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetProxyExceptionList )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [in] */ LPCWSTR pwszExceptionList);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetProxyBypassForLocal )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetProxyBypassForLocal )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [out] */ BOOL *pfBypassForLocal);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetProxyBypassForLocal )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetProxyBypassForLocal )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ LPCWSTR pwszProtocol,
             /* [in] */ BOOL fBypassForLocal);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetForceRerunAutoProxyDetection )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetForceRerunAutoProxyDetection )(
             IWMReaderNetworkConfig2 * This,
             /* [out] */ BOOL *pfForceRerunDetection);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetForceRerunAutoProxyDetection )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetForceRerunAutoProxyDetection )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ BOOL fForceRerunDetection);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetEnableMulticast )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetEnableMulticast )(
             IWMReaderNetworkConfig2 * This,
             /* [out] */ BOOL *pfEnableMulticast);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetEnableMulticast )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetEnableMulticast )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ BOOL fEnableMulticast);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetEnableHTTP )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetEnableHTTP )(
             IWMReaderNetworkConfig2 * This,
             /* [out] */ BOOL *pfEnableHTTP);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetEnableHTTP )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetEnableHTTP )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ BOOL fEnableHTTP);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetEnableUDP )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetEnableUDP )(
             IWMReaderNetworkConfig2 * This,
             /* [out] */ BOOL *pfEnableUDP);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetEnableUDP )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetEnableUDP )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ BOOL fEnableUDP);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetEnableTCP )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetEnableTCP )(
             IWMReaderNetworkConfig2 * This,
             /* [out] */ BOOL *pfEnableTCP);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetEnableTCP )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetEnableTCP )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ BOOL fEnableTCP);
-        
-        HRESULT ( STDMETHODCALLTYPE *ResetProtocolRollover )( 
+
+        HRESULT ( STDMETHODCALLTYPE *ResetProtocolRollover )(
             IWMReaderNetworkConfig2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetConnectionBandwidth )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetConnectionBandwidth )(
             IWMReaderNetworkConfig2 * This,
             /* [out] */ DWORD *pdwConnectionBandwidth);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetConnectionBandwidth )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetConnectionBandwidth )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ DWORD dwConnectionBandwidth);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetNumProtocolsSupported )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetNumProtocolsSupported )(
             IWMReaderNetworkConfig2 * This,
             /* [out] */ DWORD *pcProtocols);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSupportedProtocolName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetSupportedProtocolName )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ DWORD dwProtocolNum,
             /* [size_is][out] */ WCHAR *pwszProtocolName,
             /* [out][in] */ DWORD *pcchProtocolName);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddLoggingUrl )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddLoggingUrl )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ LPCWSTR pwszUrl);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetLoggingUrl )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetLoggingUrl )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ DWORD dwIndex,
             /* [size_is][out] */ LPWSTR pwszUrl,
             /* [out][in] */ DWORD *pcchUrl);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetLoggingUrlCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetLoggingUrlCount )(
             IWMReaderNetworkConfig2 * This,
             /* [out] */ DWORD *pdwUrlCount);
-        
-        HRESULT ( STDMETHODCALLTYPE *ResetLoggingUrlList )( 
+
+        HRESULT ( STDMETHODCALLTYPE *ResetLoggingUrlList )(
             IWMReaderNetworkConfig2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetEnableContentCaching )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetEnableContentCaching )(
             IWMReaderNetworkConfig2 * This,
             /* [out] */ BOOL *pfEnableContentCaching);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetEnableContentCaching )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetEnableContentCaching )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ BOOL fEnableContentCaching);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetEnableFastCache )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetEnableFastCache )(
             IWMReaderNetworkConfig2 * This,
             /* [out] */ BOOL *pfEnableFastCache);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetEnableFastCache )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetEnableFastCache )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ BOOL fEnableFastCache);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAcceleratedStreamingDuration )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAcceleratedStreamingDuration )(
             IWMReaderNetworkConfig2 * This,
             /* [out] */ QWORD *pcnsAccelDuration);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAcceleratedStreamingDuration )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetAcceleratedStreamingDuration )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ QWORD cnsAccelDuration);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAutoReconnectLimit )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAutoReconnectLimit )(
             IWMReaderNetworkConfig2 * This,
             /* [out] */ DWORD *pdwAutoReconnectLimit);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAutoReconnectLimit )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetAutoReconnectLimit )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ DWORD dwAutoReconnectLimit);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetEnableResends )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetEnableResends )(
             IWMReaderNetworkConfig2 * This,
             /* [out] */ BOOL *pfEnableResends);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetEnableResends )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetEnableResends )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ BOOL fEnableResends);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetEnableThinning )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetEnableThinning )(
             IWMReaderNetworkConfig2 * This,
             /* [out] */ BOOL *pfEnableThinning);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetEnableThinning )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetEnableThinning )(
             IWMReaderNetworkConfig2 * This,
             /* [in] */ BOOL fEnableThinning);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaxNetPacketSize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetMaxNetPacketSize )(
             IWMReaderNetworkConfig2 * This,
             /* [out] */ DWORD *pdwMaxNetPacketSize);
-        
+
         END_INTERFACE
     } IWMReaderNetworkConfig2Vtbl;
 
@@ -17765,7 +17763,7 @@ EXTERN_C const IID IID_IWMReaderNetworkConfig2;
         CONST_VTBL struct IWMReaderNetworkConfig2Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -17926,7 +17924,7 @@ EXTERN_C const IID IID_IWMReaderNetworkConfig2;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_GetEnableContentCaching_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_GetEnableContentCaching_Proxy(
     IWMReaderNetworkConfig2 * This,
     /* [out] */ BOOL *pfEnableContentCaching);
 
@@ -17938,7 +17936,7 @@ void __RPC_STUB IWMReaderNetworkConfig2_GetEnableContentCaching_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_SetEnableContentCaching_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_SetEnableContentCaching_Proxy(
     IWMReaderNetworkConfig2 * This,
     /* [in] */ BOOL fEnableContentCaching);
 
@@ -17950,7 +17948,7 @@ void __RPC_STUB IWMReaderNetworkConfig2_SetEnableContentCaching_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_GetEnableFastCache_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_GetEnableFastCache_Proxy(
     IWMReaderNetworkConfig2 * This,
     /* [out] */ BOOL *pfEnableFastCache);
 
@@ -17962,7 +17960,7 @@ void __RPC_STUB IWMReaderNetworkConfig2_GetEnableFastCache_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_SetEnableFastCache_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_SetEnableFastCache_Proxy(
     IWMReaderNetworkConfig2 * This,
     /* [in] */ BOOL fEnableFastCache);
 
@@ -17974,7 +17972,7 @@ void __RPC_STUB IWMReaderNetworkConfig2_SetEnableFastCache_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_GetAcceleratedStreamingDuration_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_GetAcceleratedStreamingDuration_Proxy(
     IWMReaderNetworkConfig2 * This,
     /* [out] */ QWORD *pcnsAccelDuration);
 
@@ -17986,7 +17984,7 @@ void __RPC_STUB IWMReaderNetworkConfig2_GetAcceleratedStreamingDuration_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_SetAcceleratedStreamingDuration_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_SetAcceleratedStreamingDuration_Proxy(
     IWMReaderNetworkConfig2 * This,
     /* [in] */ QWORD cnsAccelDuration);
 
@@ -17998,7 +17996,7 @@ void __RPC_STUB IWMReaderNetworkConfig2_SetAcceleratedStreamingDuration_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_GetAutoReconnectLimit_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_GetAutoReconnectLimit_Proxy(
     IWMReaderNetworkConfig2 * This,
     /* [out] */ DWORD *pdwAutoReconnectLimit);
 
@@ -18010,7 +18008,7 @@ void __RPC_STUB IWMReaderNetworkConfig2_GetAutoReconnectLimit_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_SetAutoReconnectLimit_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_SetAutoReconnectLimit_Proxy(
     IWMReaderNetworkConfig2 * This,
     /* [in] */ DWORD dwAutoReconnectLimit);
 
@@ -18022,7 +18020,7 @@ void __RPC_STUB IWMReaderNetworkConfig2_SetAutoReconnectLimit_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_GetEnableResends_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_GetEnableResends_Proxy(
     IWMReaderNetworkConfig2 * This,
     /* [out] */ BOOL *pfEnableResends);
 
@@ -18034,7 +18032,7 @@ void __RPC_STUB IWMReaderNetworkConfig2_GetEnableResends_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_SetEnableResends_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_SetEnableResends_Proxy(
     IWMReaderNetworkConfig2 * This,
     /* [in] */ BOOL fEnableResends);
 
@@ -18046,7 +18044,7 @@ void __RPC_STUB IWMReaderNetworkConfig2_SetEnableResends_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_GetEnableThinning_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_GetEnableThinning_Proxy(
     IWMReaderNetworkConfig2 * This,
     /* [out] */ BOOL *pfEnableThinning);
 
@@ -18058,7 +18056,7 @@ void __RPC_STUB IWMReaderNetworkConfig2_GetEnableThinning_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_SetEnableThinning_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_SetEnableThinning_Proxy(
     IWMReaderNetworkConfig2 * This,
     /* [in] */ BOOL fEnableThinning);
 
@@ -18070,7 +18068,7 @@ void __RPC_STUB IWMReaderNetworkConfig2_SetEnableThinning_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_GetMaxNetPacketSize_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderNetworkConfig2_GetMaxNetPacketSize_Proxy(
     IWMReaderNetworkConfig2 * This,
     /* [out] */ DWORD *pdwMaxNetPacketSize);
 
@@ -18090,61 +18088,61 @@ void __RPC_STUB IWMReaderNetworkConfig2_GetMaxNetPacketSize_Stub(
 #define __IWMReaderStreamClock_INTERFACE_DEFINED__
 
 /* interface IWMReaderStreamClock */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMReaderStreamClock;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("96406BED-2B2B-11d3-B36B-00C04F6108FF")
     IWMReaderStreamClock : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetTime( 
+        virtual HRESULT STDMETHODCALLTYPE GetTime(
             /* [in] */ QWORD *pcnsNow) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetTimer( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetTimer(
             /* [in] */ QWORD cnsWhen,
             /* [in] */ void *pvParam,
             /* [out] */ DWORD *pdwTimerId) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE KillTimer( 
+
+        virtual HRESULT STDMETHODCALLTYPE KillTimer(
             /* [in] */ DWORD dwTimerId) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMReaderStreamClockVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMReaderStreamClock * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMReaderStreamClock * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMReaderStreamClock * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetTime )(
             IWMReaderStreamClock * This,
             /* [in] */ QWORD *pcnsNow);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetTimer )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetTimer )(
             IWMReaderStreamClock * This,
             /* [in] */ QWORD cnsWhen,
             /* [in] */ void *pvParam,
             /* [out] */ DWORD *pdwTimerId);
-        
-        HRESULT ( STDMETHODCALLTYPE *KillTimer )( 
+
+        HRESULT ( STDMETHODCALLTYPE *KillTimer )(
             IWMReaderStreamClock * This,
             /* [in] */ DWORD dwTimerId);
-        
+
         END_INTERFACE
     } IWMReaderStreamClockVtbl;
 
@@ -18153,7 +18151,7 @@ EXTERN_C const IID IID_IWMReaderStreamClock;
         CONST_VTBL struct IWMReaderStreamClockVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -18184,7 +18182,7 @@ EXTERN_C const IID IID_IWMReaderStreamClock;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderStreamClock_GetTime_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderStreamClock_GetTime_Proxy(
     IWMReaderStreamClock * This,
     /* [in] */ QWORD *pcnsNow);
 
@@ -18196,7 +18194,7 @@ void __RPC_STUB IWMReaderStreamClock_GetTime_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderStreamClock_SetTimer_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderStreamClock_SetTimer_Proxy(
     IWMReaderStreamClock * This,
     /* [in] */ QWORD cnsWhen,
     /* [in] */ void *pvParam,
@@ -18210,7 +18208,7 @@ void __RPC_STUB IWMReaderStreamClock_SetTimer_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderStreamClock_KillTimer_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderStreamClock_KillTimer_Proxy(
     IWMReaderStreamClock * This,
     /* [in] */ DWORD dwTimerId);
 
@@ -18230,52 +18228,52 @@ void __RPC_STUB IWMReaderStreamClock_KillTimer_Stub(
 #define __IWMIndexer_INTERFACE_DEFINED__
 
 /* interface IWMIndexer */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMIndexer;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("6d7cdc71-9888-11d3-8edc-00c04f6109cf")
     IWMIndexer : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE StartIndexing( 
+        virtual HRESULT STDMETHODCALLTYPE StartIndexing(
             /* [in] */ const WCHAR *pwszURL,
             /* [in] */ IWMStatusCallback *pCallback,
             /* [in] */ void *pvContext) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE Cancel( void) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMIndexerVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMIndexer * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMIndexer * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMIndexer * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *StartIndexing )( 
+
+        HRESULT ( STDMETHODCALLTYPE *StartIndexing )(
             IWMIndexer * This,
             /* [in] */ const WCHAR *pwszURL,
             /* [in] */ IWMStatusCallback *pCallback,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *Cancel )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Cancel )(
             IWMIndexer * This);
-        
+
         END_INTERFACE
     } IWMIndexerVtbl;
 
@@ -18284,7 +18282,7 @@ EXTERN_C const IID IID_IWMIndexer;
         CONST_VTBL struct IWMIndexerVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -18312,7 +18310,7 @@ EXTERN_C const IID IID_IWMIndexer;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMIndexer_StartIndexing_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMIndexer_StartIndexing_Proxy(
     IWMIndexer * This,
     /* [in] */ const WCHAR *pwszURL,
     /* [in] */ IWMStatusCallback *pCallback,
@@ -18326,7 +18324,7 @@ void __RPC_STUB IWMIndexer_StartIndexing_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMIndexer_Cancel_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMIndexer_Cancel_Proxy(
     IWMIndexer * This);
 
 
@@ -18345,58 +18343,58 @@ void __RPC_STUB IWMIndexer_Cancel_Stub(
 #define __IWMIndexer2_INTERFACE_DEFINED__
 
 /* interface IWMIndexer2 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMIndexer2;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("B70F1E42-6255-4df0-A6B9-02B212D9E2BB")
     IWMIndexer2 : public IWMIndexer
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE Configure( 
+        virtual HRESULT STDMETHODCALLTYPE Configure(
             /* [in] */ WORD wStreamNum,
             /* [in] */ WMT_INDEXER_TYPE nIndexerType,
             /* [in] */ void *pvInterval,
             /* [in] */ void *pvIndexType) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMIndexer2Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMIndexer2 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMIndexer2 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMIndexer2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *StartIndexing )( 
+
+        HRESULT ( STDMETHODCALLTYPE *StartIndexing )(
             IWMIndexer2 * This,
             /* [in] */ const WCHAR *pwszURL,
             /* [in] */ IWMStatusCallback *pCallback,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *Cancel )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Cancel )(
             IWMIndexer2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Configure )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Configure )(
             IWMIndexer2 * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ WMT_INDEXER_TYPE nIndexerType,
             /* [in] */ void *pvInterval,
             /* [in] */ void *pvIndexType);
-        
+
         END_INTERFACE
     } IWMIndexer2Vtbl;
 
@@ -18405,7 +18403,7 @@ EXTERN_C const IID IID_IWMIndexer2;
         CONST_VTBL struct IWMIndexer2Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -18437,7 +18435,7 @@ EXTERN_C const IID IID_IWMIndexer2;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMIndexer2_Configure_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMIndexer2_Configure_Proxy(
     IWMIndexer2 * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ WMT_INDEXER_TYPE nIndexerType,
@@ -18460,50 +18458,50 @@ void __RPC_STUB IWMIndexer2_Configure_Stub(
 #define __IWMLicenseBackup_INTERFACE_DEFINED__
 
 /* interface IWMLicenseBackup */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMLicenseBackup;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("05E5AC9F-3FB6-4508-BB43-A4067BA1EBE8")
     IWMLicenseBackup : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE BackupLicenses( 
+        virtual HRESULT STDMETHODCALLTYPE BackupLicenses(
             /* [in] */ DWORD dwFlags,
             /* [in] */ IWMStatusCallback *pCallback) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE CancelLicenseBackup( void) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMLicenseBackupVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMLicenseBackup * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMLicenseBackup * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMLicenseBackup * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *BackupLicenses )( 
+
+        HRESULT ( STDMETHODCALLTYPE *BackupLicenses )(
             IWMLicenseBackup * This,
             /* [in] */ DWORD dwFlags,
             /* [in] */ IWMStatusCallback *pCallback);
-        
-        HRESULT ( STDMETHODCALLTYPE *CancelLicenseBackup )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CancelLicenseBackup )(
             IWMLicenseBackup * This);
-        
+
         END_INTERFACE
     } IWMLicenseBackupVtbl;
 
@@ -18512,7 +18510,7 @@ EXTERN_C const IID IID_IWMLicenseBackup;
         CONST_VTBL struct IWMLicenseBackupVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -18540,7 +18538,7 @@ EXTERN_C const IID IID_IWMLicenseBackup;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMLicenseBackup_BackupLicenses_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMLicenseBackup_BackupLicenses_Proxy(
     IWMLicenseBackup * This,
     /* [in] */ DWORD dwFlags,
     /* [in] */ IWMStatusCallback *pCallback);
@@ -18553,7 +18551,7 @@ void __RPC_STUB IWMLicenseBackup_BackupLicenses_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMLicenseBackup_CancelLicenseBackup_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMLicenseBackup_CancelLicenseBackup_Proxy(
     IWMLicenseBackup * This);
 
 
@@ -18572,50 +18570,50 @@ void __RPC_STUB IWMLicenseBackup_CancelLicenseBackup_Stub(
 #define __IWMLicenseRestore_INTERFACE_DEFINED__
 
 /* interface IWMLicenseRestore */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMLicenseRestore;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("C70B6334-A22E-4efb-A245-15E65A004A13")
     IWMLicenseRestore : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE RestoreLicenses( 
+        virtual HRESULT STDMETHODCALLTYPE RestoreLicenses(
             /* [in] */ DWORD dwFlags,
             /* [in] */ IWMStatusCallback *pCallback) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE CancelLicenseRestore( void) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMLicenseRestoreVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMLicenseRestore * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMLicenseRestore * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMLicenseRestore * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *RestoreLicenses )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RestoreLicenses )(
             IWMLicenseRestore * This,
             /* [in] */ DWORD dwFlags,
             /* [in] */ IWMStatusCallback *pCallback);
-        
-        HRESULT ( STDMETHODCALLTYPE *CancelLicenseRestore )( 
+
+        HRESULT ( STDMETHODCALLTYPE *CancelLicenseRestore )(
             IWMLicenseRestore * This);
-        
+
         END_INTERFACE
     } IWMLicenseRestoreVtbl;
 
@@ -18624,7 +18622,7 @@ EXTERN_C const IID IID_IWMLicenseRestore;
         CONST_VTBL struct IWMLicenseRestoreVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -18652,7 +18650,7 @@ EXTERN_C const IID IID_IWMLicenseRestore;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMLicenseRestore_RestoreLicenses_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMLicenseRestore_RestoreLicenses_Proxy(
     IWMLicenseRestore * This,
     /* [in] */ DWORD dwFlags,
     /* [in] */ IWMStatusCallback *pCallback);
@@ -18665,7 +18663,7 @@ void __RPC_STUB IWMLicenseRestore_RestoreLicenses_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMLicenseRestore_CancelLicenseRestore_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMLicenseRestore_CancelLicenseRestore_Proxy(
     IWMLicenseRestore * This);
 
 
@@ -18684,69 +18682,69 @@ void __RPC_STUB IWMLicenseRestore_CancelLicenseRestore_Stub(
 #define __IWMBackupRestoreProps_INTERFACE_DEFINED__
 
 /* interface IWMBackupRestoreProps */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMBackupRestoreProps;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("3C8E0DA6-996F-4ff3-A1AF-4838F9377E2E")
     IWMBackupRestoreProps : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetPropCount( 
+        virtual HRESULT STDMETHODCALLTYPE GetPropCount(
             /* [out] */ WORD *pcProps) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetPropByIndex( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetPropByIndex(
             /* [in] */ WORD wIndex,
             /* [size_is][out] */ WCHAR *pwszName,
             /* [out][in] */ WORD *pcchNameLen,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetPropByName( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetPropByName(
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetProp( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetProp(
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RemoveProp( 
+
+        virtual HRESULT STDMETHODCALLTYPE RemoveProp(
             /* [in] */ LPCWSTR pcwszName) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE RemoveAllProps( void) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMBackupRestorePropsVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMBackupRestoreProps * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMBackupRestoreProps * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMBackupRestoreProps * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetPropCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetPropCount )(
             IWMBackupRestoreProps * This,
             /* [out] */ WORD *pcProps);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetPropByIndex )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetPropByIndex )(
             IWMBackupRestoreProps * This,
             /* [in] */ WORD wIndex,
             /* [size_is][out] */ WCHAR *pwszName,
@@ -18754,28 +18752,28 @@ EXTERN_C const IID IID_IWMBackupRestoreProps;
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetPropByName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetPropByName )(
             IWMBackupRestoreProps * This,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ WORD *pcbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetProp )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetProp )(
             IWMBackupRestoreProps * This,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ WORD cbLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveProp )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveProp )(
             IWMBackupRestoreProps * This,
             /* [in] */ LPCWSTR pcwszName);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveAllProps )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveAllProps )(
             IWMBackupRestoreProps * This);
-        
+
         END_INTERFACE
     } IWMBackupRestorePropsVtbl;
 
@@ -18784,7 +18782,7 @@ EXTERN_C const IID IID_IWMBackupRestoreProps;
         CONST_VTBL struct IWMBackupRestorePropsVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -18824,7 +18822,7 @@ EXTERN_C const IID IID_IWMBackupRestoreProps;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMBackupRestoreProps_GetPropCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMBackupRestoreProps_GetPropCount_Proxy(
     IWMBackupRestoreProps * This,
     /* [out] */ WORD *pcProps);
 
@@ -18836,7 +18834,7 @@ void __RPC_STUB IWMBackupRestoreProps_GetPropCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMBackupRestoreProps_GetPropByIndex_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMBackupRestoreProps_GetPropByIndex_Proxy(
     IWMBackupRestoreProps * This,
     /* [in] */ WORD wIndex,
     /* [size_is][out] */ WCHAR *pwszName,
@@ -18853,7 +18851,7 @@ void __RPC_STUB IWMBackupRestoreProps_GetPropByIndex_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMBackupRestoreProps_GetPropByName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMBackupRestoreProps_GetPropByName_Proxy(
     IWMBackupRestoreProps * This,
     /* [in] */ LPCWSTR pszName,
     /* [out] */ WMT_ATTR_DATATYPE *pType,
@@ -18868,7 +18866,7 @@ void __RPC_STUB IWMBackupRestoreProps_GetPropByName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMBackupRestoreProps_SetProp_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMBackupRestoreProps_SetProp_Proxy(
     IWMBackupRestoreProps * This,
     /* [in] */ LPCWSTR pszName,
     /* [in] */ WMT_ATTR_DATATYPE Type,
@@ -18883,7 +18881,7 @@ void __RPC_STUB IWMBackupRestoreProps_SetProp_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMBackupRestoreProps_RemoveProp_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMBackupRestoreProps_RemoveProp_Proxy(
     IWMBackupRestoreProps * This,
     /* [in] */ LPCWSTR pcwszName);
 
@@ -18895,7 +18893,7 @@ void __RPC_STUB IWMBackupRestoreProps_RemoveProp_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMBackupRestoreProps_RemoveAllProps_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMBackupRestoreProps_RemoveAllProps_Proxy(
     IWMBackupRestoreProps * This);
 
 
@@ -18914,69 +18912,69 @@ void __RPC_STUB IWMBackupRestoreProps_RemoveAllProps_Stub(
 #define __IWMCodecInfo_INTERFACE_DEFINED__
 
 /* interface IWMCodecInfo */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMCodecInfo;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("A970F41E-34DE-4a98-B3BA-E4B3CA7528F0")
     IWMCodecInfo : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetCodecInfoCount( 
+        virtual HRESULT STDMETHODCALLTYPE GetCodecInfoCount(
             /* [in] */ REFGUID guidType,
             /* [out] */ DWORD *pcCodecs) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetCodecFormatCount( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetCodecFormatCount(
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
             /* [out] */ DWORD *pcFormat) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetCodecFormat( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetCodecFormat(
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
             /* [in] */ DWORD dwFormatIndex,
             /* [out] */ IWMStreamConfig **ppIStreamConfig) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMCodecInfoVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMCodecInfo * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMCodecInfo * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMCodecInfo * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecInfoCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecInfoCount )(
             IWMCodecInfo * This,
             /* [in] */ REFGUID guidType,
             /* [out] */ DWORD *pcCodecs);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecFormatCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecFormatCount )(
             IWMCodecInfo * This,
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
             /* [out] */ DWORD *pcFormat);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecFormat )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecFormat )(
             IWMCodecInfo * This,
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
             /* [in] */ DWORD dwFormatIndex,
             /* [out] */ IWMStreamConfig **ppIStreamConfig);
-        
+
         END_INTERFACE
     } IWMCodecInfoVtbl;
 
@@ -18985,7 +18983,7 @@ EXTERN_C const IID IID_IWMCodecInfo;
         CONST_VTBL struct IWMCodecInfoVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -19016,7 +19014,7 @@ EXTERN_C const IID IID_IWMCodecInfo;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecInfo_GetCodecInfoCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecInfo_GetCodecInfoCount_Proxy(
     IWMCodecInfo * This,
     /* [in] */ REFGUID guidType,
     /* [out] */ DWORD *pcCodecs);
@@ -19029,7 +19027,7 @@ void __RPC_STUB IWMCodecInfo_GetCodecInfoCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecInfo_GetCodecFormatCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecInfo_GetCodecFormatCount_Proxy(
     IWMCodecInfo * This,
     /* [in] */ REFGUID guidType,
     /* [in] */ DWORD dwCodecIndex,
@@ -19043,7 +19041,7 @@ void __RPC_STUB IWMCodecInfo_GetCodecFormatCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecInfo_GetCodecFormat_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecInfo_GetCodecFormat_Proxy(
     IWMCodecInfo * This,
     /* [in] */ REFGUID guidType,
     /* [in] */ DWORD dwCodecIndex,
@@ -19066,76 +19064,76 @@ void __RPC_STUB IWMCodecInfo_GetCodecFormat_Stub(
 #define __IWMCodecInfo2_INTERFACE_DEFINED__
 
 /* interface IWMCodecInfo2 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMCodecInfo2;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("AA65E273-B686-4056-91EC-DD768D4DF710")
     IWMCodecInfo2 : public IWMCodecInfo
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetCodecName( 
+        virtual HRESULT STDMETHODCALLTYPE GetCodecName(
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
             /* [size_is][out] */ WCHAR *wszName,
             /* [out][in] */ DWORD *pcchName) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetCodecFormatDesc( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetCodecFormatDesc(
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
             /* [in] */ DWORD dwFormatIndex,
             /* [out] */ IWMStreamConfig **ppIStreamConfig,
             /* [size_is][out] */ WCHAR *wszDesc,
             /* [out][in] */ DWORD *pcchDesc) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMCodecInfo2Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMCodecInfo2 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMCodecInfo2 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMCodecInfo2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecInfoCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecInfoCount )(
             IWMCodecInfo2 * This,
             /* [in] */ REFGUID guidType,
             /* [out] */ DWORD *pcCodecs);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecFormatCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecFormatCount )(
             IWMCodecInfo2 * This,
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
             /* [out] */ DWORD *pcFormat);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecFormat )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecFormat )(
             IWMCodecInfo2 * This,
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
             /* [in] */ DWORD dwFormatIndex,
             /* [out] */ IWMStreamConfig **ppIStreamConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecName )(
             IWMCodecInfo2 * This,
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
             /* [size_is][out] */ WCHAR *wszName,
             /* [out][in] */ DWORD *pcchName);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecFormatDesc )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecFormatDesc )(
             IWMCodecInfo2 * This,
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
@@ -19143,7 +19141,7 @@ EXTERN_C const IID IID_IWMCodecInfo2;
             /* [out] */ IWMStreamConfig **ppIStreamConfig,
             /* [size_is][out] */ WCHAR *wszDesc,
             /* [out][in] */ DWORD *pcchDesc);
-        
+
         END_INTERFACE
     } IWMCodecInfo2Vtbl;
 
@@ -19152,7 +19150,7 @@ EXTERN_C const IID IID_IWMCodecInfo2;
         CONST_VTBL struct IWMCodecInfo2Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -19190,7 +19188,7 @@ EXTERN_C const IID IID_IWMCodecInfo2;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecInfo2_GetCodecName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecInfo2_GetCodecName_Proxy(
     IWMCodecInfo2 * This,
     /* [in] */ REFGUID guidType,
     /* [in] */ DWORD dwCodecIndex,
@@ -19205,7 +19203,7 @@ void __RPC_STUB IWMCodecInfo2_GetCodecName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecInfo2_GetCodecFormatDesc_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecInfo2_GetCodecFormatDesc_Proxy(
     IWMCodecInfo2 * This,
     /* [in] */ REFGUID guidType,
     /* [in] */ DWORD dwCodecIndex,
@@ -19230,18 +19228,18 @@ void __RPC_STUB IWMCodecInfo2_GetCodecFormatDesc_Stub(
 #define __IWMCodecInfo3_INTERFACE_DEFINED__
 
 /* interface IWMCodecInfo3 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMCodecInfo3;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("7e51f487-4d93-4f98-8ab4-27d0565adc51")
     IWMCodecInfo3 : public IWMCodecInfo2
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetCodecFormatProp( 
+        virtual HRESULT STDMETHODCALLTYPE GetCodecFormatProp(
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
             /* [in] */ DWORD dwFormatIndex,
@@ -19249,76 +19247,76 @@ EXTERN_C const IID IID_IWMCodecInfo3;
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ DWORD *pdwSize) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetCodecProp( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetCodecProp(
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ DWORD *pdwSize) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetCodecEnumerationSetting( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetCodecEnumerationSetting(
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
             /* [in] */ LPCWSTR pszName,
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ DWORD dwSize) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetCodecEnumerationSetting( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetCodecEnumerationSetting(
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
             /* [in] */ LPCWSTR pszName,
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ DWORD *pdwSize) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMCodecInfo3Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMCodecInfo3 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMCodecInfo3 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMCodecInfo3 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecInfoCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecInfoCount )(
             IWMCodecInfo3 * This,
             /* [in] */ REFGUID guidType,
             /* [out] */ DWORD *pcCodecs);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecFormatCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecFormatCount )(
             IWMCodecInfo3 * This,
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
             /* [out] */ DWORD *pcFormat);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecFormat )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecFormat )(
             IWMCodecInfo3 * This,
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
             /* [in] */ DWORD dwFormatIndex,
             /* [out] */ IWMStreamConfig **ppIStreamConfig);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecName )(
             IWMCodecInfo3 * This,
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
             /* [size_is][out] */ WCHAR *wszName,
             /* [out][in] */ DWORD *pcchName);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecFormatDesc )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecFormatDesc )(
             IWMCodecInfo3 * This,
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
@@ -19326,8 +19324,8 @@ EXTERN_C const IID IID_IWMCodecInfo3;
             /* [out] */ IWMStreamConfig **ppIStreamConfig,
             /* [size_is][out] */ WCHAR *wszDesc,
             /* [out][in] */ DWORD *pcchDesc);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecFormatProp )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecFormatProp )(
             IWMCodecInfo3 * This,
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
@@ -19336,8 +19334,8 @@ EXTERN_C const IID IID_IWMCodecInfo3;
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ DWORD *pdwSize);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecProp )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecProp )(
             IWMCodecInfo3 * This,
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
@@ -19345,8 +19343,8 @@ EXTERN_C const IID IID_IWMCodecInfo3;
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ DWORD *pdwSize);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetCodecEnumerationSetting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetCodecEnumerationSetting )(
             IWMCodecInfo3 * This,
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
@@ -19354,8 +19352,8 @@ EXTERN_C const IID IID_IWMCodecInfo3;
             /* [in] */ WMT_ATTR_DATATYPE Type,
             /* [size_is][in] */ const BYTE *pValue,
             /* [in] */ DWORD dwSize);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecEnumerationSetting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecEnumerationSetting )(
             IWMCodecInfo3 * This,
             /* [in] */ REFGUID guidType,
             /* [in] */ DWORD dwCodecIndex,
@@ -19363,7 +19361,7 @@ EXTERN_C const IID IID_IWMCodecInfo3;
             /* [out] */ WMT_ATTR_DATATYPE *pType,
             /* [size_is][out] */ BYTE *pValue,
             /* [out][in] */ DWORD *pdwSize);
-        
+
         END_INTERFACE
     } IWMCodecInfo3Vtbl;
 
@@ -19372,7 +19370,7 @@ EXTERN_C const IID IID_IWMCodecInfo3;
         CONST_VTBL struct IWMCodecInfo3Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -19423,7 +19421,7 @@ EXTERN_C const IID IID_IWMCodecInfo3;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecInfo3_GetCodecFormatProp_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecInfo3_GetCodecFormatProp_Proxy(
     IWMCodecInfo3 * This,
     /* [in] */ REFGUID guidType,
     /* [in] */ DWORD dwCodecIndex,
@@ -19441,7 +19439,7 @@ void __RPC_STUB IWMCodecInfo3_GetCodecFormatProp_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecInfo3_GetCodecProp_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecInfo3_GetCodecProp_Proxy(
     IWMCodecInfo3 * This,
     /* [in] */ REFGUID guidType,
     /* [in] */ DWORD dwCodecIndex,
@@ -19458,7 +19456,7 @@ void __RPC_STUB IWMCodecInfo3_GetCodecProp_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecInfo3_SetCodecEnumerationSetting_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecInfo3_SetCodecEnumerationSetting_Proxy(
     IWMCodecInfo3 * This,
     /* [in] */ REFGUID guidType,
     /* [in] */ DWORD dwCodecIndex,
@@ -19475,7 +19473,7 @@ void __RPC_STUB IWMCodecInfo3_SetCodecEnumerationSetting_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMCodecInfo3_GetCodecEnumerationSetting_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMCodecInfo3_GetCodecEnumerationSetting_Proxy(
     IWMCodecInfo3 * This,
     /* [in] */ REFGUID guidType,
     /* [in] */ DWORD dwCodecIndex,
@@ -19500,63 +19498,63 @@ void __RPC_STUB IWMCodecInfo3_GetCodecEnumerationSetting_Stub(
 #define __IWMLanguageList_INTERFACE_DEFINED__
 
 /* interface IWMLanguageList */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMLanguageList;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("DF683F00-2D49-4d8e-92B7-FB19F6A0DC57")
     IWMLanguageList : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetLanguageCount( 
+        virtual HRESULT STDMETHODCALLTYPE GetLanguageCount(
             /* [out] */ WORD *pwCount) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetLanguageDetails( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetLanguageDetails(
             /* [in] */ WORD wIndex,
             /* [size_is][out] */ WCHAR *pwszLanguageString,
             /* [out][in] */ WORD *pcchLanguageStringLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AddLanguageByRFC1766String( 
+
+        virtual HRESULT STDMETHODCALLTYPE AddLanguageByRFC1766String(
             /* [in] */ LPWSTR pwszLanguageString,
             /* [out] */ WORD *pwIndex) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMLanguageListVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMLanguageList * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMLanguageList * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMLanguageList * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetLanguageCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetLanguageCount )(
             IWMLanguageList * This,
             /* [out] */ WORD *pwCount);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetLanguageDetails )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetLanguageDetails )(
             IWMLanguageList * This,
             /* [in] */ WORD wIndex,
             /* [size_is][out] */ WCHAR *pwszLanguageString,
             /* [out][in] */ WORD *pcchLanguageStringLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddLanguageByRFC1766String )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddLanguageByRFC1766String )(
             IWMLanguageList * This,
             /* [in] */ LPWSTR pwszLanguageString,
             /* [out] */ WORD *pwIndex);
-        
+
         END_INTERFACE
     } IWMLanguageListVtbl;
 
@@ -19565,7 +19563,7 @@ EXTERN_C const IID IID_IWMLanguageList;
         CONST_VTBL struct IWMLanguageListVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -19596,7 +19594,7 @@ EXTERN_C const IID IID_IWMLanguageList;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMLanguageList_GetLanguageCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMLanguageList_GetLanguageCount_Proxy(
     IWMLanguageList * This,
     /* [out] */ WORD *pwCount);
 
@@ -19608,7 +19606,7 @@ void __RPC_STUB IWMLanguageList_GetLanguageCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMLanguageList_GetLanguageDetails_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMLanguageList_GetLanguageDetails_Proxy(
     IWMLanguageList * This,
     /* [in] */ WORD wIndex,
     /* [size_is][out] */ WCHAR *pwszLanguageString,
@@ -19622,7 +19620,7 @@ void __RPC_STUB IWMLanguageList_GetLanguageDetails_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMLanguageList_AddLanguageByRFC1766String_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMLanguageList_AddLanguageByRFC1766String_Proxy(
     IWMLanguageList * This,
     /* [in] */ LPWSTR pwszLanguageString,
     /* [out] */ WORD *pwIndex);
@@ -19643,77 +19641,77 @@ void __RPC_STUB IWMLanguageList_AddLanguageByRFC1766String_Stub(
 #define __IWMWriterPushSink_INTERFACE_DEFINED__
 
 /* interface IWMWriterPushSink */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMWriterPushSink;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("dc10e6a5-072c-467d-bf57-6330a9dde12a")
     IWMWriterPushSink : public IWMWriterSink
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE Connect( 
+        virtual HRESULT STDMETHODCALLTYPE Connect(
             /* [in] */ LPCWSTR pwszURL,
             /* [in] */ LPCWSTR pwszTemplateURL,
             /* [in] */ BOOL fAutoDestroy) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE Disconnect( void) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE EndSession( void) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMWriterPushSinkVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMWriterPushSink * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMWriterPushSink * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMWriterPushSink * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnHeader )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnHeader )(
             IWMWriterPushSink * This,
             /* [in] */ INSSBuffer *pHeader);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsRealTime )( 
+
+        HRESULT ( STDMETHODCALLTYPE *IsRealTime )(
             IWMWriterPushSink * This,
             /* [out] */ BOOL *pfRealTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *AllocateDataUnit )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AllocateDataUnit )(
             IWMWriterPushSink * This,
             /* [in] */ DWORD cbDataUnit,
             /* [out] */ INSSBuffer **ppDataUnit);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnDataUnit )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnDataUnit )(
             IWMWriterPushSink * This,
             /* [in] */ INSSBuffer *pDataUnit);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnEndWriting )( 
+
+        HRESULT ( STDMETHODCALLTYPE *OnEndWriting )(
             IWMWriterPushSink * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Connect )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Connect )(
             IWMWriterPushSink * This,
             /* [in] */ LPCWSTR pwszURL,
             /* [in] */ LPCWSTR pwszTemplateURL,
             /* [in] */ BOOL fAutoDestroy);
-        
-        HRESULT ( STDMETHODCALLTYPE *Disconnect )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Disconnect )(
             IWMWriterPushSink * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *EndSession )( 
+
+        HRESULT ( STDMETHODCALLTYPE *EndSession )(
             IWMWriterPushSink * This);
-        
+
         END_INTERFACE
     } IWMWriterPushSinkVtbl;
 
@@ -19722,7 +19720,7 @@ EXTERN_C const IID IID_IWMWriterPushSink;
         CONST_VTBL struct IWMWriterPushSinkVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -19769,7 +19767,7 @@ EXTERN_C const IID IID_IWMWriterPushSink;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterPushSink_Connect_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterPushSink_Connect_Proxy(
     IWMWriterPushSink * This,
     /* [in] */ LPCWSTR pwszURL,
     /* [in] */ LPCWSTR pwszTemplateURL,
@@ -19783,7 +19781,7 @@ void __RPC_STUB IWMWriterPushSink_Connect_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterPushSink_Disconnect_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterPushSink_Disconnect_Proxy(
     IWMWriterPushSink * This);
 
 
@@ -19794,7 +19792,7 @@ void __RPC_STUB IWMWriterPushSink_Disconnect_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWriterPushSink_EndSession_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWriterPushSink_EndSession_Proxy(
     IWMWriterPushSink * This);
 
 
@@ -19813,104 +19811,104 @@ void __RPC_STUB IWMWriterPushSink_EndSession_Stub(
 #define __IWMDeviceRegistration_INTERFACE_DEFINED__
 
 /* interface IWMDeviceRegistration */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMDeviceRegistration;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("f6211f03-8d21-4e94-93e6-8510805f2d99")
     IWMDeviceRegistration : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE RegisterDevice( 
+        virtual HRESULT STDMETHODCALLTYPE RegisterDevice(
             /* [in] */ DWORD dwRegisterType,
             /* [size_is][in] */ BYTE *pbCertificate,
             /* [in] */ DWORD cbCertificate,
             /* [in] */ DRM_VAL16 SerialNumber,
             /* [out] */ IWMRegisteredDevice **ppDevice) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE UnregisterDevice( 
+
+        virtual HRESULT STDMETHODCALLTYPE UnregisterDevice(
             /* [in] */ DWORD dwRegisterType,
             /* [size_is][in] */ BYTE *pbCertificate,
             /* [in] */ DWORD cbCertificate,
             /* [in] */ DRM_VAL16 SerialNumber) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetRegistrationStats( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetRegistrationStats(
             /* [in] */ DWORD dwRegisterType,
             /* [out] */ DWORD *pcRegisteredDevices) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetFirstRegisteredDevice( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetFirstRegisteredDevice(
             /* [in] */ DWORD dwRegisterType,
             /* [out] */ IWMRegisteredDevice **ppDevice) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetNextRegisteredDevice( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetNextRegisteredDevice(
             /* [out] */ IWMRegisteredDevice **ppDevice) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetRegisteredDeviceByID( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetRegisteredDeviceByID(
             /* [in] */ DWORD dwRegisterType,
             /* [size_is][in] */ BYTE *pbCertificate,
             /* [in] */ DWORD cbCertificate,
             /* [in] */ DRM_VAL16 SerialNumber,
             /* [out] */ IWMRegisteredDevice **ppDevice) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMDeviceRegistrationVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMDeviceRegistration * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMDeviceRegistration * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMDeviceRegistration * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *RegisterDevice )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RegisterDevice )(
             IWMDeviceRegistration * This,
             /* [in] */ DWORD dwRegisterType,
             /* [size_is][in] */ BYTE *pbCertificate,
             /* [in] */ DWORD cbCertificate,
             /* [in] */ DRM_VAL16 SerialNumber,
             /* [out] */ IWMRegisteredDevice **ppDevice);
-        
-        HRESULT ( STDMETHODCALLTYPE *UnregisterDevice )( 
+
+        HRESULT ( STDMETHODCALLTYPE *UnregisterDevice )(
             IWMDeviceRegistration * This,
             /* [in] */ DWORD dwRegisterType,
             /* [size_is][in] */ BYTE *pbCertificate,
             /* [in] */ DWORD cbCertificate,
             /* [in] */ DRM_VAL16 SerialNumber);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetRegistrationStats )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetRegistrationStats )(
             IWMDeviceRegistration * This,
             /* [in] */ DWORD dwRegisterType,
             /* [out] */ DWORD *pcRegisteredDevices);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetFirstRegisteredDevice )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetFirstRegisteredDevice )(
             IWMDeviceRegistration * This,
             /* [in] */ DWORD dwRegisterType,
             /* [out] */ IWMRegisteredDevice **ppDevice);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetNextRegisteredDevice )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetNextRegisteredDevice )(
             IWMDeviceRegistration * This,
             /* [out] */ IWMRegisteredDevice **ppDevice);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetRegisteredDeviceByID )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetRegisteredDeviceByID )(
             IWMDeviceRegistration * This,
             /* [in] */ DWORD dwRegisterType,
             /* [size_is][in] */ BYTE *pbCertificate,
             /* [in] */ DWORD cbCertificate,
             /* [in] */ DRM_VAL16 SerialNumber,
             /* [out] */ IWMRegisteredDevice **ppDevice);
-        
+
         END_INTERFACE
     } IWMDeviceRegistrationVtbl;
 
@@ -19919,7 +19917,7 @@ EXTERN_C const IID IID_IWMDeviceRegistration;
         CONST_VTBL struct IWMDeviceRegistrationVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -19959,7 +19957,7 @@ EXTERN_C const IID IID_IWMDeviceRegistration;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMDeviceRegistration_RegisterDevice_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDeviceRegistration_RegisterDevice_Proxy(
     IWMDeviceRegistration * This,
     /* [in] */ DWORD dwRegisterType,
     /* [size_is][in] */ BYTE *pbCertificate,
@@ -19975,7 +19973,7 @@ void __RPC_STUB IWMDeviceRegistration_RegisterDevice_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDeviceRegistration_UnregisterDevice_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDeviceRegistration_UnregisterDevice_Proxy(
     IWMDeviceRegistration * This,
     /* [in] */ DWORD dwRegisterType,
     /* [size_is][in] */ BYTE *pbCertificate,
@@ -19990,7 +19988,7 @@ void __RPC_STUB IWMDeviceRegistration_UnregisterDevice_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDeviceRegistration_GetRegistrationStats_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDeviceRegistration_GetRegistrationStats_Proxy(
     IWMDeviceRegistration * This,
     /* [in] */ DWORD dwRegisterType,
     /* [out] */ DWORD *pcRegisteredDevices);
@@ -20003,7 +20001,7 @@ void __RPC_STUB IWMDeviceRegistration_GetRegistrationStats_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDeviceRegistration_GetFirstRegisteredDevice_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDeviceRegistration_GetFirstRegisteredDevice_Proxy(
     IWMDeviceRegistration * This,
     /* [in] */ DWORD dwRegisterType,
     /* [out] */ IWMRegisteredDevice **ppDevice);
@@ -20016,7 +20014,7 @@ void __RPC_STUB IWMDeviceRegistration_GetFirstRegisteredDevice_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDeviceRegistration_GetNextRegisteredDevice_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDeviceRegistration_GetNextRegisteredDevice_Proxy(
     IWMDeviceRegistration * This,
     /* [out] */ IWMRegisteredDevice **ppDevice);
 
@@ -20028,7 +20026,7 @@ void __RPC_STUB IWMDeviceRegistration_GetNextRegisteredDevice_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDeviceRegistration_GetRegisteredDeviceByID_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDeviceRegistration_GetRegisteredDeviceByID_Proxy(
     IWMDeviceRegistration * This,
     /* [in] */ DWORD dwRegisterType,
     /* [size_is][in] */ BYTE *pbCertificate,
@@ -20052,138 +20050,138 @@ void __RPC_STUB IWMDeviceRegistration_GetRegisteredDeviceByID_Stub(
 #define __IWMRegisteredDevice_INTERFACE_DEFINED__
 
 /* interface IWMRegisteredDevice */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMRegisteredDevice;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("a4503bec-5508-4148-97ac-bfa75760a70d")
     IWMRegisteredDevice : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetDeviceSerialNumber( 
+        virtual HRESULT STDMETHODCALLTYPE GetDeviceSerialNumber(
             /* [out] */ DRM_VAL16 *pSerialNumber) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetDeviceCertificate( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetDeviceCertificate(
             /* [out] */ INSSBuffer **ppCertificate) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetDeviceType( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetDeviceType(
             /* [out] */ DWORD *pdwType) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAttributeCount( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetAttributeCount(
             /* [out] */ DWORD *pcAttributes) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAttributeByIndex( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetAttributeByIndex(
             /* [in] */ DWORD dwIndex,
             /* [out] */ BSTR *pbstrName,
             /* [out] */ BSTR *pbstrValue) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAttributeByName( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetAttributeByName(
             /* [in] */ BSTR bstrName,
             /* [out] */ BSTR *pbstrValue) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetAttributeByName( 
+
+        virtual HRESULT STDMETHODCALLTYPE SetAttributeByName(
             /* [in] */ BSTR bstrName,
             /* [in] */ BSTR bstrValue) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE Approve( 
+
+        virtual HRESULT STDMETHODCALLTYPE Approve(
             /* [in] */ BOOL fApprove) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE IsValid( 
+
+        virtual HRESULT STDMETHODCALLTYPE IsValid(
             /* [out] */ BOOL *pfValid) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE IsApproved( 
+
+        virtual HRESULT STDMETHODCALLTYPE IsApproved(
             /* [out] */ BOOL *pfApproved) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE IsWmdrmCompliant( 
+
+        virtual HRESULT STDMETHODCALLTYPE IsWmdrmCompliant(
             /* [out] */ BOOL *pfCompliant) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE IsOpened( 
+
+        virtual HRESULT STDMETHODCALLTYPE IsOpened(
             /* [out] */ BOOL *pfOpened) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE Open( void) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE Close( void) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMRegisteredDeviceVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMRegisteredDevice * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMRegisteredDevice * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMRegisteredDevice * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDeviceSerialNumber )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetDeviceSerialNumber )(
             IWMRegisteredDevice * This,
             /* [out] */ DRM_VAL16 *pSerialNumber);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDeviceCertificate )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetDeviceCertificate )(
             IWMRegisteredDevice * This,
             /* [out] */ INSSBuffer **ppCertificate);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetDeviceType )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetDeviceType )(
             IWMRegisteredDevice * This,
             /* [out] */ DWORD *pdwType);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAttributeCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAttributeCount )(
             IWMRegisteredDevice * This,
             /* [out] */ DWORD *pcAttributes);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAttributeByIndex )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAttributeByIndex )(
             IWMRegisteredDevice * This,
             /* [in] */ DWORD dwIndex,
             /* [out] */ BSTR *pbstrName,
             /* [out] */ BSTR *pbstrValue);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAttributeByName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAttributeByName )(
             IWMRegisteredDevice * This,
             /* [in] */ BSTR bstrName,
             /* [out] */ BSTR *pbstrValue);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetAttributeByName )( 
+
+        HRESULT ( STDMETHODCALLTYPE *SetAttributeByName )(
             IWMRegisteredDevice * This,
             /* [in] */ BSTR bstrName,
             /* [in] */ BSTR bstrValue);
-        
-        HRESULT ( STDMETHODCALLTYPE *Approve )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Approve )(
             IWMRegisteredDevice * This,
             /* [in] */ BOOL fApprove);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsValid )( 
+
+        HRESULT ( STDMETHODCALLTYPE *IsValid )(
             IWMRegisteredDevice * This,
             /* [out] */ BOOL *pfValid);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsApproved )( 
+
+        HRESULT ( STDMETHODCALLTYPE *IsApproved )(
             IWMRegisteredDevice * This,
             /* [out] */ BOOL *pfApproved);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsWmdrmCompliant )( 
+
+        HRESULT ( STDMETHODCALLTYPE *IsWmdrmCompliant )(
             IWMRegisteredDevice * This,
             /* [out] */ BOOL *pfCompliant);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsOpened )( 
+
+        HRESULT ( STDMETHODCALLTYPE *IsOpened )(
             IWMRegisteredDevice * This,
             /* [out] */ BOOL *pfOpened);
-        
-        HRESULT ( STDMETHODCALLTYPE *Open )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Open )(
             IWMRegisteredDevice * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Close )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Close )(
             IWMRegisteredDevice * This);
-        
+
         END_INTERFACE
     } IWMRegisteredDeviceVtbl;
 
@@ -20192,7 +20190,7 @@ EXTERN_C const IID IID_IWMRegisteredDevice;
         CONST_VTBL struct IWMRegisteredDeviceVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -20256,7 +20254,7 @@ EXTERN_C const IID IID_IWMRegisteredDevice;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_GetDeviceSerialNumber_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_GetDeviceSerialNumber_Proxy(
     IWMRegisteredDevice * This,
     /* [out] */ DRM_VAL16 *pSerialNumber);
 
@@ -20268,7 +20266,7 @@ void __RPC_STUB IWMRegisteredDevice_GetDeviceSerialNumber_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_GetDeviceCertificate_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_GetDeviceCertificate_Proxy(
     IWMRegisteredDevice * This,
     /* [out] */ INSSBuffer **ppCertificate);
 
@@ -20280,7 +20278,7 @@ void __RPC_STUB IWMRegisteredDevice_GetDeviceCertificate_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_GetDeviceType_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_GetDeviceType_Proxy(
     IWMRegisteredDevice * This,
     /* [out] */ DWORD *pdwType);
 
@@ -20292,7 +20290,7 @@ void __RPC_STUB IWMRegisteredDevice_GetDeviceType_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_GetAttributeCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_GetAttributeCount_Proxy(
     IWMRegisteredDevice * This,
     /* [out] */ DWORD *pcAttributes);
 
@@ -20304,7 +20302,7 @@ void __RPC_STUB IWMRegisteredDevice_GetAttributeCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_GetAttributeByIndex_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_GetAttributeByIndex_Proxy(
     IWMRegisteredDevice * This,
     /* [in] */ DWORD dwIndex,
     /* [out] */ BSTR *pbstrName,
@@ -20318,7 +20316,7 @@ void __RPC_STUB IWMRegisteredDevice_GetAttributeByIndex_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_GetAttributeByName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_GetAttributeByName_Proxy(
     IWMRegisteredDevice * This,
     /* [in] */ BSTR bstrName,
     /* [out] */ BSTR *pbstrValue);
@@ -20331,7 +20329,7 @@ void __RPC_STUB IWMRegisteredDevice_GetAttributeByName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_SetAttributeByName_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_SetAttributeByName_Proxy(
     IWMRegisteredDevice * This,
     /* [in] */ BSTR bstrName,
     /* [in] */ BSTR bstrValue);
@@ -20344,7 +20342,7 @@ void __RPC_STUB IWMRegisteredDevice_SetAttributeByName_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_Approve_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_Approve_Proxy(
     IWMRegisteredDevice * This,
     /* [in] */ BOOL fApprove);
 
@@ -20356,7 +20354,7 @@ void __RPC_STUB IWMRegisteredDevice_Approve_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_IsValid_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_IsValid_Proxy(
     IWMRegisteredDevice * This,
     /* [out] */ BOOL *pfValid);
 
@@ -20368,7 +20366,7 @@ void __RPC_STUB IWMRegisteredDevice_IsValid_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_IsApproved_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_IsApproved_Proxy(
     IWMRegisteredDevice * This,
     /* [out] */ BOOL *pfApproved);
 
@@ -20380,7 +20378,7 @@ void __RPC_STUB IWMRegisteredDevice_IsApproved_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_IsWmdrmCompliant_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_IsWmdrmCompliant_Proxy(
     IWMRegisteredDevice * This,
     /* [out] */ BOOL *pfCompliant);
 
@@ -20392,7 +20390,7 @@ void __RPC_STUB IWMRegisteredDevice_IsWmdrmCompliant_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_IsOpened_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_IsOpened_Proxy(
     IWMRegisteredDevice * This,
     /* [out] */ BOOL *pfOpened);
 
@@ -20404,7 +20402,7 @@ void __RPC_STUB IWMRegisteredDevice_IsOpened_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_Open_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_Open_Proxy(
     IWMRegisteredDevice * This);
 
 
@@ -20415,7 +20413,7 @@ void __RPC_STUB IWMRegisteredDevice_Open_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_Close_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMRegisteredDevice_Close_Proxy(
     IWMRegisteredDevice * This);
 
 
@@ -20434,18 +20432,18 @@ void __RPC_STUB IWMRegisteredDevice_Close_Stub(
 #define __IWMProximityDetection_INTERFACE_DEFINED__
 
 /* interface IWMProximityDetection */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMProximityDetection;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("6A9FD8EE-B651-4bf0-B849-7D4ECE79A2B1")
     IWMProximityDetection : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE StartDetection( 
+        virtual HRESULT STDMETHODCALLTYPE StartDetection(
             /* [size_is][in] */ BYTE *pbRegistrationMsg,
             /* [in] */ DWORD cbRegistrationMsg,
             /* [size_is][in] */ BYTE *pbLocalAddress,
@@ -20454,27 +20452,27 @@ EXTERN_C const IID IID_IWMProximityDetection;
             /* [out] */ INSSBuffer **ppRegistrationResponseMsg,
             /* [in] */ IWMStatusCallback *pCallback,
             /* [in] */ void *pvContext) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMProximityDetectionVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMProximityDetection * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMProximityDetection * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMProximityDetection * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *StartDetection )( 
+
+        HRESULT ( STDMETHODCALLTYPE *StartDetection )(
             IWMProximityDetection * This,
             /* [size_is][in] */ BYTE *pbRegistrationMsg,
             /* [in] */ DWORD cbRegistrationMsg,
@@ -20484,7 +20482,7 @@ EXTERN_C const IID IID_IWMProximityDetection;
             /* [out] */ INSSBuffer **ppRegistrationResponseMsg,
             /* [in] */ IWMStatusCallback *pCallback,
             /* [in] */ void *pvContext);
-        
+
         END_INTERFACE
     } IWMProximityDetectionVtbl;
 
@@ -20493,7 +20491,7 @@ EXTERN_C const IID IID_IWMProximityDetection;
         CONST_VTBL struct IWMProximityDetectionVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -20518,7 +20516,7 @@ EXTERN_C const IID IID_IWMProximityDetection;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMProximityDetection_StartDetection_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMProximityDetection_StartDetection_Proxy(
     IWMProximityDetection * This,
     /* [size_is][in] */ BYTE *pbRegistrationMsg,
     /* [in] */ DWORD cbRegistrationMsg,
@@ -20545,64 +20543,64 @@ void __RPC_STUB IWMProximityDetection_StartDetection_Stub(
 #define __IWMDRMMessageParser_INTERFACE_DEFINED__
 
 /* interface IWMDRMMessageParser */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMDRMMessageParser;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("A73A0072-25A0-4c99-B4A5-EDE8101A6C39")
     IWMDRMMessageParser : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE ParseRegistrationReqMsg( 
+        virtual HRESULT STDMETHODCALLTYPE ParseRegistrationReqMsg(
             /* [size_is][in] */ BYTE *pbRegistrationReqMsg,
             /* [in] */ DWORD cbRegistrationReqMsg,
             /* [out] */ INSSBuffer **ppDeviceCert,
             /* [out] */ DRM_VAL16 *pDeviceSerialNumber) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE ParseLicenseRequestMsg( 
+
+        virtual HRESULT STDMETHODCALLTYPE ParseLicenseRequestMsg(
             /* [size_is][in] */ BYTE *pbLicenseRequestMsg,
             /* [in] */ DWORD cbLicenseRequestMsg,
             /* [out] */ INSSBuffer **ppDeviceCert,
             /* [out] */ DRM_VAL16 *pDeviceSerialNumber,
             /* [out] */ BSTR *pbstrAction) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMDRMMessageParserVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMDRMMessageParser * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMDRMMessageParser * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMDRMMessageParser * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *ParseRegistrationReqMsg )( 
+
+        HRESULT ( STDMETHODCALLTYPE *ParseRegistrationReqMsg )(
             IWMDRMMessageParser * This,
             /* [size_is][in] */ BYTE *pbRegistrationReqMsg,
             /* [in] */ DWORD cbRegistrationReqMsg,
             /* [out] */ INSSBuffer **ppDeviceCert,
             /* [out] */ DRM_VAL16 *pDeviceSerialNumber);
-        
-        HRESULT ( STDMETHODCALLTYPE *ParseLicenseRequestMsg )( 
+
+        HRESULT ( STDMETHODCALLTYPE *ParseLicenseRequestMsg )(
             IWMDRMMessageParser * This,
             /* [size_is][in] */ BYTE *pbLicenseRequestMsg,
             /* [in] */ DWORD cbLicenseRequestMsg,
             /* [out] */ INSSBuffer **ppDeviceCert,
             /* [out] */ DRM_VAL16 *pDeviceSerialNumber,
             /* [out] */ BSTR *pbstrAction);
-        
+
         END_INTERFACE
     } IWMDRMMessageParserVtbl;
 
@@ -20611,7 +20609,7 @@ EXTERN_C const IID IID_IWMDRMMessageParser;
         CONST_VTBL struct IWMDRMMessageParserVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -20639,7 +20637,7 @@ EXTERN_C const IID IID_IWMDRMMessageParser;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMMessageParser_ParseRegistrationReqMsg_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMMessageParser_ParseRegistrationReqMsg_Proxy(
     IWMDRMMessageParser * This,
     /* [size_is][in] */ BYTE *pbRegistrationReqMsg,
     /* [in] */ DWORD cbRegistrationReqMsg,
@@ -20654,7 +20652,7 @@ void __RPC_STUB IWMDRMMessageParser_ParseRegistrationReqMsg_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMMessageParser_ParseLicenseRequestMsg_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMMessageParser_ParseLicenseRequestMsg_Proxy(
     IWMDRMMessageParser * This,
     /* [size_is][in] */ BYTE *pbLicenseRequestMsg,
     /* [in] */ DWORD cbLicenseRequestMsg,
@@ -20678,54 +20676,54 @@ void __RPC_STUB IWMDRMMessageParser_ParseLicenseRequestMsg_Stub(
 #define __IWMDRMTranscryptor_INTERFACE_DEFINED__
 
 /* interface IWMDRMTranscryptor */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMDRMTranscryptor;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("69059850-6E6F-4bb2-806F-71863DDFC471")
     IWMDRMTranscryptor : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE Initialize( 
+        virtual HRESULT STDMETHODCALLTYPE Initialize(
             /* [in] */ BSTR bstrFileName,
             /* [size_is][in] */ BYTE *pbLicenseRequestMsg,
             /* [in] */ DWORD cbLicenseRequestMsg,
             /* [out] */ INSSBuffer **ppLicenseResponseMsg,
             /* [in] */ IWMStatusCallback *pCallback,
             /* [in] */ void *pvContext) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE Seek( 
+
+        virtual HRESULT STDMETHODCALLTYPE Seek(
             /* [in] */ QWORD hnsTime) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE Read( 
+
+        virtual HRESULT STDMETHODCALLTYPE Read(
             /* [in] */ BYTE *pbData,
             /* [in] */ DWORD *pcbData) = 0;
-        
+
         virtual HRESULT STDMETHODCALLTYPE Close( void) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMDRMTranscryptorVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMDRMTranscryptor * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMDRMTranscryptor * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMDRMTranscryptor * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Initialize )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Initialize )(
             IWMDRMTranscryptor * This,
             /* [in] */ BSTR bstrFileName,
             /* [size_is][in] */ BYTE *pbLicenseRequestMsg,
@@ -20733,19 +20731,19 @@ EXTERN_C const IID IID_IWMDRMTranscryptor;
             /* [out] */ INSSBuffer **ppLicenseResponseMsg,
             /* [in] */ IWMStatusCallback *pCallback,
             /* [in] */ void *pvContext);
-        
-        HRESULT ( STDMETHODCALLTYPE *Seek )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Seek )(
             IWMDRMTranscryptor * This,
             /* [in] */ QWORD hnsTime);
-        
-        HRESULT ( STDMETHODCALLTYPE *Read )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Read )(
             IWMDRMTranscryptor * This,
             /* [in] */ BYTE *pbData,
             /* [in] */ DWORD *pcbData);
-        
-        HRESULT ( STDMETHODCALLTYPE *Close )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Close )(
             IWMDRMTranscryptor * This);
-        
+
         END_INTERFACE
     } IWMDRMTranscryptorVtbl;
 
@@ -20754,7 +20752,7 @@ EXTERN_C const IID IID_IWMDRMTranscryptor;
         CONST_VTBL struct IWMDRMTranscryptorVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -20788,7 +20786,7 @@ EXTERN_C const IID IID_IWMDRMTranscryptor;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMTranscryptor_Initialize_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMTranscryptor_Initialize_Proxy(
     IWMDRMTranscryptor * This,
     /* [in] */ BSTR bstrFileName,
     /* [size_is][in] */ BYTE *pbLicenseRequestMsg,
@@ -20805,7 +20803,7 @@ void __RPC_STUB IWMDRMTranscryptor_Initialize_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMTranscryptor_Seek_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMTranscryptor_Seek_Proxy(
     IWMDRMTranscryptor * This,
     /* [in] */ QWORD hnsTime);
 
@@ -20817,7 +20815,7 @@ void __RPC_STUB IWMDRMTranscryptor_Seek_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMTranscryptor_Read_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMTranscryptor_Read_Proxy(
     IWMDRMTranscryptor * This,
     /* [in] */ BYTE *pbData,
     /* [in] */ DWORD *pcbData);
@@ -20830,7 +20828,7 @@ void __RPC_STUB IWMDRMTranscryptor_Read_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMDRMTranscryptor_Close_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMDRMTranscryptor_Close_Proxy(
     IWMDRMTranscryptor * This);
 
 
@@ -20849,56 +20847,56 @@ void __RPC_STUB IWMDRMTranscryptor_Close_Stub(
 #define __IWMWatermarkInfo_INTERFACE_DEFINED__
 
 /* interface IWMWatermarkInfo */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMWatermarkInfo;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("6f497062-f2e2-4624-8ea7-9dd40d81fc8d")
     IWMWatermarkInfo : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetWatermarkEntryCount( 
+        virtual HRESULT STDMETHODCALLTYPE GetWatermarkEntryCount(
             /* [in] */ WMT_WATERMARK_ENTRY_TYPE wmetType,
             /* [out] */ DWORD *pdwCount) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetWatermarkEntry( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetWatermarkEntry(
             /* [in] */ WMT_WATERMARK_ENTRY_TYPE wmetType,
             /* [in] */ DWORD dwEntryNum,
             /* [out] */ WMT_WATERMARK_ENTRY *pEntry) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMWatermarkInfoVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMWatermarkInfo * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMWatermarkInfo * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMWatermarkInfo * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetWatermarkEntryCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetWatermarkEntryCount )(
             IWMWatermarkInfo * This,
             /* [in] */ WMT_WATERMARK_ENTRY_TYPE wmetType,
             /* [out] */ DWORD *pdwCount);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetWatermarkEntry )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetWatermarkEntry )(
             IWMWatermarkInfo * This,
             /* [in] */ WMT_WATERMARK_ENTRY_TYPE wmetType,
             /* [in] */ DWORD dwEntryNum,
             /* [out] */ WMT_WATERMARK_ENTRY *pEntry);
-        
+
         END_INTERFACE
     } IWMWatermarkInfoVtbl;
 
@@ -20907,7 +20905,7 @@ EXTERN_C const IID IID_IWMWatermarkInfo;
         CONST_VTBL struct IWMWatermarkInfoVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -20935,7 +20933,7 @@ EXTERN_C const IID IID_IWMWatermarkInfo;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMWatermarkInfo_GetWatermarkEntryCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWatermarkInfo_GetWatermarkEntryCount_Proxy(
     IWMWatermarkInfo * This,
     /* [in] */ WMT_WATERMARK_ENTRY_TYPE wmetType,
     /* [out] */ DWORD *pdwCount);
@@ -20948,7 +20946,7 @@ void __RPC_STUB IWMWatermarkInfo_GetWatermarkEntryCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMWatermarkInfo_GetWatermarkEntry_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMWatermarkInfo_GetWatermarkEntry_Proxy(
     IWMWatermarkInfo * This,
     /* [in] */ WMT_WATERMARK_ENTRY_TYPE wmetType,
     /* [in] */ DWORD dwEntryNum,
@@ -20970,56 +20968,56 @@ void __RPC_STUB IWMWatermarkInfo_GetWatermarkEntry_Stub(
 #define __IWMReaderAccelerator_INTERFACE_DEFINED__
 
 /* interface IWMReaderAccelerator */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMReaderAccelerator;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("BDDC4D08-944D-4d52-A612-46C3FDA07DD4")
     IWMReaderAccelerator : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetCodecInterface( 
+        virtual HRESULT STDMETHODCALLTYPE GetCodecInterface(
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ REFIID riid,
             /* [out] */ void **ppvCodecInterface) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE Notify( 
+
+        virtual HRESULT STDMETHODCALLTYPE Notify(
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ WM_MEDIA_TYPE *pSubtype) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMReaderAcceleratorVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMReaderAccelerator * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMReaderAccelerator * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMReaderAccelerator * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCodecInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetCodecInterface )(
             IWMReaderAccelerator * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ REFIID riid,
             /* [out] */ void **ppvCodecInterface);
-        
-        HRESULT ( STDMETHODCALLTYPE *Notify )( 
+
+        HRESULT ( STDMETHODCALLTYPE *Notify )(
             IWMReaderAccelerator * This,
             /* [in] */ DWORD dwOutputNum,
             /* [in] */ WM_MEDIA_TYPE *pSubtype);
-        
+
         END_INTERFACE
     } IWMReaderAcceleratorVtbl;
 
@@ -21028,7 +21026,7 @@ EXTERN_C const IID IID_IWMReaderAccelerator;
         CONST_VTBL struct IWMReaderAcceleratorVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -21056,7 +21054,7 @@ EXTERN_C const IID IID_IWMReaderAccelerator;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAccelerator_GetCodecInterface_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAccelerator_GetCodecInterface_Proxy(
     IWMReaderAccelerator * This,
     /* [in] */ DWORD dwOutputNum,
     /* [in] */ REFIID riid,
@@ -21070,7 +21068,7 @@ void __RPC_STUB IWMReaderAccelerator_GetCodecInterface_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderAccelerator_Notify_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderAccelerator_Notify_Proxy(
     IWMReaderAccelerator * This,
     /* [in] */ DWORD dwOutputNum,
     /* [in] */ WM_MEDIA_TYPE *pSubtype);
@@ -21091,58 +21089,58 @@ void __RPC_STUB IWMReaderAccelerator_Notify_Stub(
 #define __IWMReaderTimecode_INTERFACE_DEFINED__
 
 /* interface IWMReaderTimecode */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMReaderTimecode;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("f369e2f0-e081-4fe6-8450-b810b2f410d1")
     IWMReaderTimecode : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetTimecodeRangeCount( 
+        virtual HRESULT STDMETHODCALLTYPE GetTimecodeRangeCount(
             /* [in] */ WORD wStreamNum,
             /* [out] */ WORD *pwRangeCount) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetTimecodeRangeBounds( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetTimecodeRangeBounds(
             /* [in] */ WORD wStreamNum,
             /* [in] */ WORD wRangeNum,
             /* [out] */ DWORD *pStartTimecode,
             /* [out] */ DWORD *pEndTimecode) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMReaderTimecodeVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMReaderTimecode * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMReaderTimecode * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMReaderTimecode * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetTimecodeRangeCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetTimecodeRangeCount )(
             IWMReaderTimecode * This,
             /* [in] */ WORD wStreamNum,
             /* [out] */ WORD *pwRangeCount);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetTimecodeRangeBounds )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetTimecodeRangeBounds )(
             IWMReaderTimecode * This,
             /* [in] */ WORD wStreamNum,
             /* [in] */ WORD wRangeNum,
             /* [out] */ DWORD *pStartTimecode,
             /* [out] */ DWORD *pEndTimecode);
-        
+
         END_INTERFACE
     } IWMReaderTimecodeVtbl;
 
@@ -21151,7 +21149,7 @@ EXTERN_C const IID IID_IWMReaderTimecode;
         CONST_VTBL struct IWMReaderTimecodeVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -21179,7 +21177,7 @@ EXTERN_C const IID IID_IWMReaderTimecode;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderTimecode_GetTimecodeRangeCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderTimecode_GetTimecodeRangeCount_Proxy(
     IWMReaderTimecode * This,
     /* [in] */ WORD wStreamNum,
     /* [out] */ WORD *pwRangeCount);
@@ -21192,7 +21190,7 @@ void __RPC_STUB IWMReaderTimecode_GetTimecodeRangeCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMReaderTimecode_GetTimecodeRangeBounds_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMReaderTimecode_GetTimecodeRangeBounds_Proxy(
     IWMReaderTimecode * This,
     /* [in] */ WORD wStreamNum,
     /* [in] */ WORD wRangeNum,
@@ -21215,74 +21213,74 @@ void __RPC_STUB IWMReaderTimecode_GetTimecodeRangeBounds_Stub(
 #define __IWMAddressAccess_INTERFACE_DEFINED__
 
 /* interface IWMAddressAccess */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMAddressAccess;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("BB3C6389-1633-4e92-AF14-9F3173BA39D0")
     IWMAddressAccess : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetAccessEntryCount( 
+        virtual HRESULT STDMETHODCALLTYPE GetAccessEntryCount(
             /* [in] */ WM_AETYPE aeType,
             /* [out] */ DWORD *pcEntries) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetAccessEntry( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetAccessEntry(
             /* [in] */ WM_AETYPE aeType,
             /* [in] */ DWORD dwEntryNum,
             /* [out] */ WM_ADDRESS_ACCESSENTRY *pAddrAccessEntry) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AddAccessEntry( 
+
+        virtual HRESULT STDMETHODCALLTYPE AddAccessEntry(
             /* [in] */ WM_AETYPE aeType,
             /* [in] */ WM_ADDRESS_ACCESSENTRY *pAddrAccessEntry) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RemoveAccessEntry( 
+
+        virtual HRESULT STDMETHODCALLTYPE RemoveAccessEntry(
             /* [in] */ WM_AETYPE aeType,
             /* [in] */ DWORD dwEntryNum) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMAddressAccessVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMAddressAccess * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMAddressAccess * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMAddressAccess * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAccessEntryCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAccessEntryCount )(
             IWMAddressAccess * This,
             /* [in] */ WM_AETYPE aeType,
             /* [out] */ DWORD *pcEntries);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAccessEntry )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAccessEntry )(
             IWMAddressAccess * This,
             /* [in] */ WM_AETYPE aeType,
             /* [in] */ DWORD dwEntryNum,
             /* [out] */ WM_ADDRESS_ACCESSENTRY *pAddrAccessEntry);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddAccessEntry )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddAccessEntry )(
             IWMAddressAccess * This,
             /* [in] */ WM_AETYPE aeType,
             /* [in] */ WM_ADDRESS_ACCESSENTRY *pAddrAccessEntry);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveAccessEntry )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveAccessEntry )(
             IWMAddressAccess * This,
             /* [in] */ WM_AETYPE aeType,
             /* [in] */ DWORD dwEntryNum);
-        
+
         END_INTERFACE
     } IWMAddressAccessVtbl;
 
@@ -21291,7 +21289,7 @@ EXTERN_C const IID IID_IWMAddressAccess;
         CONST_VTBL struct IWMAddressAccessVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -21325,7 +21323,7 @@ EXTERN_C const IID IID_IWMAddressAccess;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMAddressAccess_GetAccessEntryCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMAddressAccess_GetAccessEntryCount_Proxy(
     IWMAddressAccess * This,
     /* [in] */ WM_AETYPE aeType,
     /* [out] */ DWORD *pcEntries);
@@ -21338,7 +21336,7 @@ void __RPC_STUB IWMAddressAccess_GetAccessEntryCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMAddressAccess_GetAccessEntry_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMAddressAccess_GetAccessEntry_Proxy(
     IWMAddressAccess * This,
     /* [in] */ WM_AETYPE aeType,
     /* [in] */ DWORD dwEntryNum,
@@ -21352,7 +21350,7 @@ void __RPC_STUB IWMAddressAccess_GetAccessEntry_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMAddressAccess_AddAccessEntry_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMAddressAccess_AddAccessEntry_Proxy(
     IWMAddressAccess * This,
     /* [in] */ WM_AETYPE aeType,
     /* [in] */ WM_ADDRESS_ACCESSENTRY *pAddrAccessEntry);
@@ -21365,7 +21363,7 @@ void __RPC_STUB IWMAddressAccess_AddAccessEntry_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMAddressAccess_RemoveAccessEntry_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMAddressAccess_RemoveAccessEntry_Proxy(
     IWMAddressAccess * This,
     /* [in] */ WM_AETYPE aeType,
     /* [in] */ DWORD dwEntryNum);
@@ -21386,81 +21384,81 @@ void __RPC_STUB IWMAddressAccess_RemoveAccessEntry_Stub(
 #define __IWMAddressAccess2_INTERFACE_DEFINED__
 
 /* interface IWMAddressAccess2 */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMAddressAccess2;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("65a83fc2-3e98-4d4d-81b5-2a742886b33d")
     IWMAddressAccess2 : public IWMAddressAccess
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetAccessEntryEx( 
+        virtual HRESULT STDMETHODCALLTYPE GetAccessEntryEx(
             /* [in] */ WM_AETYPE aeType,
             /* [in] */ DWORD dwEntryNum,
             /* [out] */ BSTR *pbstrAddress,
             /* [out] */ BSTR *pbstrMask) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AddAccessEntryEx( 
+
+        virtual HRESULT STDMETHODCALLTYPE AddAccessEntryEx(
             /* [in] */ WM_AETYPE aeType,
             /* [in] */ BSTR bstrAddress,
             /* [in] */ BSTR bstrMask) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMAddressAccess2Vtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMAddressAccess2 * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMAddressAccess2 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMAddressAccess2 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAccessEntryCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAccessEntryCount )(
             IWMAddressAccess2 * This,
             /* [in] */ WM_AETYPE aeType,
             /* [out] */ DWORD *pcEntries);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAccessEntry )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAccessEntry )(
             IWMAddressAccess2 * This,
             /* [in] */ WM_AETYPE aeType,
             /* [in] */ DWORD dwEntryNum,
             /* [out] */ WM_ADDRESS_ACCESSENTRY *pAddrAccessEntry);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddAccessEntry )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddAccessEntry )(
             IWMAddressAccess2 * This,
             /* [in] */ WM_AETYPE aeType,
             /* [in] */ WM_ADDRESS_ACCESSENTRY *pAddrAccessEntry);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveAccessEntry )( 
+
+        HRESULT ( STDMETHODCALLTYPE *RemoveAccessEntry )(
             IWMAddressAccess2 * This,
             /* [in] */ WM_AETYPE aeType,
             /* [in] */ DWORD dwEntryNum);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetAccessEntryEx )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetAccessEntryEx )(
             IWMAddressAccess2 * This,
             /* [in] */ WM_AETYPE aeType,
             /* [in] */ DWORD dwEntryNum,
             /* [out] */ BSTR *pbstrAddress,
             /* [out] */ BSTR *pbstrMask);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddAccessEntryEx )( 
+
+        HRESULT ( STDMETHODCALLTYPE *AddAccessEntryEx )(
             IWMAddressAccess2 * This,
             /* [in] */ WM_AETYPE aeType,
             /* [in] */ BSTR bstrAddress,
             /* [in] */ BSTR bstrMask);
-        
+
         END_INTERFACE
     } IWMAddressAccess2Vtbl;
 
@@ -21469,7 +21467,7 @@ EXTERN_C const IID IID_IWMAddressAccess2;
         CONST_VTBL struct IWMAddressAccess2Vtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -21510,7 +21508,7 @@ EXTERN_C const IID IID_IWMAddressAccess2;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMAddressAccess2_GetAccessEntryEx_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMAddressAccess2_GetAccessEntryEx_Proxy(
     IWMAddressAccess2 * This,
     /* [in] */ WM_AETYPE aeType,
     /* [in] */ DWORD dwEntryNum,
@@ -21525,7 +21523,7 @@ void __RPC_STUB IWMAddressAccess2_GetAccessEntryEx_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMAddressAccess2_AddAccessEntryEx_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMAddressAccess2_AddAccessEntryEx_Proxy(
     IWMAddressAccess2 * This,
     /* [in] */ WM_AETYPE aeType,
     /* [in] */ BSTR bstrAddress,
@@ -21547,21 +21545,21 @@ void __RPC_STUB IWMAddressAccess2_AddAccessEntryEx_Stub(
 #define __IWMImageInfo_INTERFACE_DEFINED__
 
 /* interface IWMImageInfo */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMImageInfo;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("9F0AA3B6-7267-4d89-88F2-BA915AA5C4C6")
     IWMImageInfo : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetImageCount( 
+        virtual HRESULT STDMETHODCALLTYPE GetImageCount(
             /* [out] */ DWORD *pcImages) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetImage( 
+
+        virtual HRESULT STDMETHODCALLTYPE GetImage(
             /* [in] */ DWORD wIndex,
             /* [out][in] */ WORD *pcchMIMEType,
             /* [size_is][out] */ WCHAR *pwszMIMEType,
@@ -21570,31 +21568,31 @@ EXTERN_C const IID IID_IWMImageInfo;
             /* [out] */ WORD *pImageType,
             /* [out][in] */ DWORD *pcbImageData,
             /* [size_is][out] */ BYTE *pbImageData) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMImageInfoVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMImageInfo * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMImageInfo * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMImageInfo * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetImageCount )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetImageCount )(
             IWMImageInfo * This,
             /* [out] */ DWORD *pcImages);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetImage )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetImage )(
             IWMImageInfo * This,
             /* [in] */ DWORD wIndex,
             /* [out][in] */ WORD *pcchMIMEType,
@@ -21604,7 +21602,7 @@ EXTERN_C const IID IID_IWMImageInfo;
             /* [out] */ WORD *pImageType,
             /* [out][in] */ DWORD *pcbImageData,
             /* [size_is][out] */ BYTE *pbImageData);
-        
+
         END_INTERFACE
     } IWMImageInfoVtbl;
 
@@ -21613,7 +21611,7 @@ EXTERN_C const IID IID_IWMImageInfo;
         CONST_VTBL struct IWMImageInfoVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -21641,7 +21639,7 @@ EXTERN_C const IID IID_IWMImageInfo;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMImageInfo_GetImageCount_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMImageInfo_GetImageCount_Proxy(
     IWMImageInfo * This,
     /* [out] */ DWORD *pcImages);
 
@@ -21653,7 +21651,7 @@ void __RPC_STUB IWMImageInfo_GetImageCount_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMImageInfo_GetImage_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMImageInfo_GetImage_Proxy(
     IWMImageInfo * This,
     /* [in] */ DWORD wIndex,
     /* [out][in] */ WORD *pcchMIMEType,
@@ -21680,51 +21678,51 @@ void __RPC_STUB IWMImageInfo_GetImage_Stub(
 #define __IWMLicenseRevocationAgent_INTERFACE_DEFINED__
 
 /* interface IWMLicenseRevocationAgent */
-/* [local][unique][helpstring][uuid][object] */ 
+/* [local][unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IWMLicenseRevocationAgent;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("6967F2C9-4E26-4b57-8894-799880F7AC7B")
     IWMLicenseRevocationAgent : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE GetLRBChallenge( 
+        virtual HRESULT STDMETHODCALLTYPE GetLRBChallenge(
             /* [in] */ BYTE *pMachineID,
             /* [in] */ DWORD dwMachineIDLength,
             /* [in] */ BYTE *pChallenge,
             /* [in] */ DWORD dwChallengeLength,
             /* [out] */ BYTE *pChallengeOutput,
             /* [out] */ DWORD *pdwChallengeOutputLength) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE ProcessLRB( 
+
+        virtual HRESULT STDMETHODCALLTYPE ProcessLRB(
             /* [in] */ BYTE *pSignedLRB,
             /* [in] */ DWORD dwSignedLRBLength,
             /* [out] */ BYTE *pSignedACK,
             /* [out] */ DWORD *pdwSignedACKLength) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IWMLicenseRevocationAgentVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IWMLicenseRevocationAgent * This,
             /* [in] */ REFIID riid,
             /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IWMLicenseRevocationAgent * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IWMLicenseRevocationAgent * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetLRBChallenge )( 
+
+        HRESULT ( STDMETHODCALLTYPE *GetLRBChallenge )(
             IWMLicenseRevocationAgent * This,
             /* [in] */ BYTE *pMachineID,
             /* [in] */ DWORD dwMachineIDLength,
@@ -21732,14 +21730,14 @@ EXTERN_C const IID IID_IWMLicenseRevocationAgent;
             /* [in] */ DWORD dwChallengeLength,
             /* [out] */ BYTE *pChallengeOutput,
             /* [out] */ DWORD *pdwChallengeOutputLength);
-        
-        HRESULT ( STDMETHODCALLTYPE *ProcessLRB )( 
+
+        HRESULT ( STDMETHODCALLTYPE *ProcessLRB )(
             IWMLicenseRevocationAgent * This,
             /* [in] */ BYTE *pSignedLRB,
             /* [in] */ DWORD dwSignedLRBLength,
             /* [out] */ BYTE *pSignedACK,
             /* [out] */ DWORD *pdwSignedACKLength);
-        
+
         END_INTERFACE
     } IWMLicenseRevocationAgentVtbl;
 
@@ -21748,7 +21746,7 @@ EXTERN_C const IID IID_IWMLicenseRevocationAgent;
         CONST_VTBL struct IWMLicenseRevocationAgentVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
@@ -21776,7 +21774,7 @@ EXTERN_C const IID IID_IWMLicenseRevocationAgent;
 
 
 
-HRESULT STDMETHODCALLTYPE IWMLicenseRevocationAgent_GetLRBChallenge_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMLicenseRevocationAgent_GetLRBChallenge_Proxy(
     IWMLicenseRevocationAgent * This,
     /* [in] */ BYTE *pMachineID,
     /* [in] */ DWORD dwMachineIDLength,
@@ -21793,7 +21791,7 @@ void __RPC_STUB IWMLicenseRevocationAgent_GetLRBChallenge_Stub(
     DWORD *_pdwStubPhase);
 
 
-HRESULT STDMETHODCALLTYPE IWMLicenseRevocationAgent_ProcessLRB_Proxy( 
+HRESULT STDMETHODCALLTYPE IWMLicenseRevocationAgent_ProcessLRB_Proxy(
     IWMLicenseRevocationAgent * This,
     /* [in] */ BYTE *pSignedLRB,
     /* [in] */ DWORD dwSignedLRBLength,
@@ -21825,5 +21823,9 @@ EXTERN_GUID( WM_SampleExtension_ContentType, 0xd590dc20, 0x07bc, 0x436c, 0x9c, 0
 #endif
 
 #endif
+
+
+
+
 
 

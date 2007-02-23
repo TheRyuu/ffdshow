@@ -70,20 +70,20 @@ namespace std{
                 typedef std::reverse_iterator<iterator> reverse_iterator;
                 typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
-                explicit _UCXXEXPORT vector(): data(0), //defaultValue(T()), 
+                explicit _UCXXEXPORT vector(): data(0), //defaultValue(T()),
                         data_size(__UCLIBCXX_STL_BUFFER_SIZE__), elements(0), a(Allocator())
                 {
                         data = a.allocate(data_size);
                 }
 
-                explicit _UCXXEXPORT vector(const Allocator& al): data(0), //defaultValue(T()), 
+                explicit _UCXXEXPORT vector(const Allocator& al): data(0), //defaultValue(T()),
                         data_size(__UCLIBCXX_STL_BUFFER_SIZE__), elements(0), a(al)
                 {
                         data = a.allocate(data_size);
                 }
 
-                explicit _UCXXEXPORT vector(size_type n, const T& value = T(), const Allocator& al= Allocator()) : 
-                        data(0), 
+                explicit _UCXXEXPORT vector(size_type n, const T& value = T(), const Allocator& al= Allocator()) :
+                        data(0),
                         data_size(0), elements(0), a(al)
                 {
                         data_size = n + __UCLIBCXX_STL_BUFFER_SIZE__;
@@ -92,7 +92,7 @@ namespace std{
                                 resize(n, value);
                 }
 
-                template <class InputIterator> _UCXXEXPORT 
+                template <class InputIterator> _UCXXEXPORT
                         vector(InputIterator first, InputIterator last, const Allocator& al = Allocator()):
                         data(0), data_size(__UCLIBCXX_STL_BUFFER_SIZE__), elements(0), a(al)
                 {
@@ -274,8 +274,8 @@ namespace std{
                         if (ispod){
                           if (elements-1>index)
                             memmove(data+index+1,data+(index+1)-1,((elements-1)-index)*sizeof(T));
-                        }    
-                        else  
+                        }
+                        else
                           for(size_type i = elements - 1; i > index; --i){
                                  data[i] = data[i-1];
                           }
@@ -295,7 +295,7 @@ namespace std{
                         }
                 }
 
-                template <class InputIterator> _UCXXEXPORT 
+                template <class InputIterator> _UCXXEXPORT
                         void _insert_from_iterator(iterator position, InputIterator first, InputIterator last)
                 {
                         if (ispod && position==end()){
@@ -310,7 +310,7 @@ namespace std{
                                   ++position;
                                   ++first;
                           }
-                        }  
+                        }
                 }
 
                 template <class InputIterator>
@@ -339,8 +339,8 @@ namespace std{
                         if (ispod){
                           if (index<elements-1)
                             memmove(data+index,data+index+1,((elements-1)-index)*sizeof(T));
-                        }    
-                        else  
+                        }
+                        else
                           for(size_type i = index; i < (elements - 1); ++i){
                                   data[i] = data[i+1];
                           }
@@ -354,7 +354,7 @@ namespace std{
                         if (ispod){
                           if (index<elements-width)
                             memmove(data+index,data+index+width,((elements-width)-index)*sizeof(T));
-                        }  
+                        }
                         else
                           for(size_type i = index; i < (elements - width) ;++i){
                                   data[i] = data[i+width];
@@ -433,7 +433,7 @@ namespace std{
                 }
                }
               else
-                data_size = n;  
+                data_size = n;
         }
 
         template<class T, class Allocator> _UCXXEXPORT void vector<T, Allocator>::resize(size_type sz, const T & c){
@@ -471,7 +471,7 @@ namespace std{
         template<> _UCXXEXPORT vector<unsigned char, allocator<unsigned char> >::~vector();
 
 #endif //__UCLIBCXX_EXPAND_CONSTRUCTORS_DESTRUCTORS__
-                
+
         template<> _UCXXEXPORT void vector<char, allocator<char> >::reserve(size_type n);
         template<> _UCXXEXPORT void vector<unsigned char, allocator<unsigned char> >::reserve(size_type n);
         template<> _UCXXEXPORT void vector<short int, allocator<short int> >::reserve(size_type n);
@@ -570,4 +570,8 @@ namespace std{
 #pragma warning(pop)
 
 #endif
+
+
+
+
 

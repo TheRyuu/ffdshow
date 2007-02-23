@@ -262,8 +262,6 @@ typo
 
 ------------------------------------------------------------------------
 r721 | Wed Dec 27 14:47:28 2006 UTC | h_yamagata
-Revision 721 - Directory Listing
-Modified  (2 weeks ago) by 
 
 exclude YSO_WIN.exe (Y's origin)
 
@@ -275,7 +273,7 @@ Updated msvc71 binaries.
 ------------------------------------------------------------------------
 r719 | Wed Dec 27 11:11:33 2006 UTC | h_yamagata
 
-New version of queue. 
+New version of queue.
 As a result, queue becomes effective with Zoom player and MPC + VMR9.
 
 Another fix includes,
@@ -315,8 +313,6 @@ Remove useless spaces.
 
 ------------------------------------------------------------------------
 r714 | Tue Dec 26 13:53:04 2006 UTC | clsid2
-Revision 714 - Directory Listing
-Modified  (2 weeks, 1 day ago) by 
 
 Inno Setup tasks fix.
 
@@ -402,7 +398,7 @@ used currently IIRC.
 (ffmpeg 7343) Skip motion estimation and encoding of non direct-0,0 MBs
 if the next MB is skiped. (MPEG4 doesn't allow such MBs and in the past
 we did ME and encoding until at the end we droped them, so this should
-be faster though i didn't benchmark it, benchmark welcome.) 
+be faster though i didn't benchmark it, benchmark welcome.)
 
 (ffmpeg 7344) I think this if() is useless let's abuse our users to
 test this. ;)
@@ -429,7 +425,7 @@ Small Inno Setup update.
 ------------------------------------------------------------------------
 r701 | Mon Dec 18 16:54:33 2006 UTC | eragon4ever
 
-Updated changelog & small update to German Inno Setup translation. 
+Updated changelog & small update to German Inno Setup translation.
 
 ------------------------------------------------------------------------
 r700 | Mon Dec 18 16:08:51 2006 UTC | drevil_xxl
@@ -868,7 +864,7 @@ header file for usage in other code.
 (ffmpeg 7229) fix crash when decoding a truncated H.264 slice
 patch by Alexander Chemeris <ipse.ffmpeg at gmail dot com>
 Original thread:
-date: Dec 5, 2006 7:26 PM	 
+date: Dec 5, 2006 7:26 PM
 subject: [Ffmpeg-devel] [PATCH] Fix crush when truncated slice passed
 to H.264 decoder
 
@@ -999,7 +995,7 @@ r614 | Sat Dec 2 12:10:43 2006 UTC | clsid2
 This has pretty much no quality or speed effect except very small
 random changes.
 
-(ffmpeg 7204) hexagon search 
+(ffmpeg 7204) hexagon search
 	dia_size=512 + hexagon size (513 is the normal one used in h264)
 large to small diamond search
         dia_size=256 + diamond size
@@ -1129,7 +1125,7 @@ r595 | Mon Nov 27 14:48:55 2006 UTC | clsid2
 patch by Bill O'Shaughnessy <bill.oshaughnessy at gmail dot com>
 + reg tests update gruntwork by me
 Original thread:
-date: Nov 21, 2006 11:36 PM	 
+date: Nov 21, 2006 11:36 PM
 subject: [FFmpeg-devel] Simpler Patch to bring AC3 encoder output up to
 input level
 
@@ -1846,7 +1842,7 @@ r479 | Tue Oct 31 13:36:43 2006 UTC | h_yamagata
 
 video decoder configuration - Output dialog
  Now we can uncheck "DV"
- Automatic enable/disable Planar YUV on HW deinterlacing 
+ Automatic enable/disable Planar YUV on HW deinterlacing
 
 ------------------------------------------------------------------------
 r478 | Tue Oct 31 12:15:22 2006 UTC | clsid2
@@ -1864,7 +1860,7 @@ Updated Japanese translations.
 ------------------------------------------------------------------------
 r476 | Tue Oct 31 10:40:15 2006 UTC | drevil_xxl
 
-Fixed AC3 output. 
+Fixed AC3 output.
 
 ------------------------------------------------------------------------
 r475 | Tue Oct 31 09:28:44 2006 UTC | h_yamagata
@@ -1991,7 +1987,7 @@ Added detection of DScaler dir to Inno Setup script.
 ------------------------------------------------------------------------
 r456 | Fri Oct 27 13:24:36 2006 UTC | drevil_xxl
 
-Removed error message. 
+Removed error message.
 
 ------------------------------------------------------------------------
 r455 | Fri Oct 27 12:39:16 2006 UTC | h_yamagata
@@ -2188,7 +2184,7 @@ updated cabac
 r421 | Fri Oct 20 11:48:58 2006 UTC | clsid2
 
 (ffmpeg 6744) move memory reading ByteIOContext init from mov.c to
-avobuf.c 
+avobuf.c
 
 ------------------------------------------------------------------------
 r420 | Thu Oct 19 22:31:35 2006 UTC | clsid2
@@ -2488,7 +2484,7 @@ forgot some quotes
 ------------------------------------------------------------------------
 r369 | Tue Oct 10 12:42:46 2006 UTC | drevil_xxl
 
-Removed VC6 support.  
+Removed VC6 support.
 
 ------------------------------------------------------------------------
 r368 | Tue Oct 10 11:29:17 2006 UTC | clsid2
@@ -2595,7 +2591,7 @@ r353 | Mon Oct 9 07:07:41 2006 UTC | h_yamagata
 
 Bug fix: WMA crashes.
 DECLARE_ALIGNED_16 or __attribute__ ((aligned (16))) is not fully
-supported by GCC 4.0.3. 
+supported by GCC 4.0.3.
 I used av_malloc, which may be slower.
 
 ------------------------------------------------------------------------
@@ -2868,7 +2864,7 @@ Compilation fix for MSVC8. Incomplete, snow.c is excluded.
 ------------------------------------------------------------------------
 r308 | Sun Oct 1 12:04:51 2006 UTC | clsid2
 
-added broken/incomplete comments to VMnc and RV10 
+added broken/incomplete comments to VMnc and RV10
 
 ------------------------------------------------------------------------
 r307 | Sun Oct 1 11:39:27 2006 UTC | clsid2
@@ -2943,8 +2939,6 @@ information to decode SVQ3.
 
 ------------------------------------------------------------------------
 r295 | Sat Sep 30 03:20:35 2006 UTC | h_yamagata
-Revision 295 - Directory Listing
-Modified  (3 weeks, 1 day ago) by 
 
 Reverted svq3.c
 
@@ -3442,7 +3436,7 @@ Remove stereoscopic subtitle, because it crashes and nobody can tell how
 to use.
 
 4) ffdshow crashes when enabling stereoscopic option on subtitles page.
-(reported by drevil_xxl) 
+(reported by drevil_xxl)
 
 ------------------------------------------------------------------------
 r206 | Wed Sep 20 09:27:16 2006 UTC | clsid2
@@ -3476,7 +3470,7 @@ these aren't missing anywhere, if so another solution must be found.
 ------------------------------------------------------------------------
 r201 | Tue Sep 19 11:10:34 2006 UTC | h_yamagata
 
-Bug fix: 6) revision 173 broke presets 
+Bug fix: 6) revision 173 broke presets
 Automatic preset loading has been broken since 20060601.patch
 
 ------------------------------------------------------------------------
@@ -3509,7 +3503,7 @@ revert the change of rev 150
 r196 | Mon Sep 18 01:50:07 2006 UTC | h_yamagata
 
 Bug fix: 9) If ffdshow gets uncompressed input, then the decoding
-options page is disabled. However the H.264 quality controls are not 
+options page is disabled. However the H.264 quality controls are not
 isabled. (reported by Egh)
 
 Rename many misc to Decoderoptions
@@ -3557,7 +3551,7 @@ r188 | Fri Sep 15 13:44:42 2006 UTC | drevil_xxl
 Removed -m3dnow & -msse switches.
 These switches enabled or disabled the use of built-in functions that
 allow direct access to the MMX, SSE, SSE2, SSE3 and 3Dnow extensions of
-the instruction set. 
+the instruction set.
 
 ------------------------------------------------------------------------
 r187 | Fri Sep 15 12:02:23 2006 UTC | clsid2
@@ -4632,7 +4626,7 @@ r10 | Thu Aug 3 10:57:46 2006 UTC | videomixer9
 
 multithread patch by haruhiko_yamagata 060625
 
-"Bug fix: 
+"Bug fix:
  fixed crash of huffyuv. Related to multithreading of swscaler.
 
 Refuse loading from blacklist:

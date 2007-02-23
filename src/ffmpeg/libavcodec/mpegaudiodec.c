@@ -405,7 +405,7 @@ static int decode_init(AVCodecContext * avctx)
         for(i=0; i<512*16; i++){
             int exponent= (i>>4);
             double f= pow(i&15, 4.0 / 3.0) * pow(2, (exponent-400)*0.25 + FRAC_BITS + 5);
-            expval_table[exponent][i&15]= 
+            expval_table[exponent][i&15]=
 #if __STDC_VERSION >= 199901L
                 llrint(f);
 #else

@@ -38,7 +38,7 @@ TgradFunSettings::TgradFunSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfi
 {
  static const TintOptionT<TgradFunSettings> iopts[]=
   {
-   IDFF_isGradFun       ,&TgradFunSettings::is       ,0,0,_l(""),1, 
+   IDFF_isGradFun       ,&TgradFunSettings::is       ,0,0,_l(""),1,
      _l("isGradFun"),0,
    IDFF_showGradFun     ,&TgradFunSettings::show     ,0,0,_l(""),1,
      _l("showGradFun"),1,
@@ -49,10 +49,10 @@ TgradFunSettings::TgradFunSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfi
    IDFF_halfGradFun     ,&TgradFunSettings::half     ,0,0,_l(""),1,
      _l("halfGradFun"),0,
    IDFF_gradFunThreshold,&TgradFunSettings::threshold,101,2000,_l(""),1,
-     _l("gradFunThreshold"),120,  
-     
+     _l("gradFunThreshold"),120,
+
    0
-  }; 
+  };
  addOptions(iopts);
 }
 
@@ -60,7 +60,7 @@ void TgradFunSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfilt
 {
  idffOnChange(idffs,filters,queue.temporary);
  if (is && show)
-  queueFilter<TimgFilterGradfun>(filtersorder,filters,queue); 
+  queueFilter<TimgFilterGradfun>(filtersorder,filters,queue);
 }
 void TgradFunSettings::createPages(TffdshowPageDec *parent) const
 {

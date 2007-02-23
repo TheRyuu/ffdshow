@@ -32,7 +32,7 @@ TvideoCodecSkal::TvideoCodecSkal(IffdshowBase *Ideci,IencVideoSink *IsinkE):
  TvideoCodec(Ideci),
  TvideoCodecEnc(Ideci,IsinkE)
 {
- ok=false; 
+ ok=false;
  dll=new Tdll(dllname,config);
  dll->loadFunction(Skl_MP4_New_Encoder             ,"Skl_MP4_New_Encoder");
  dll->loadFunction(Skl_MP4_Delete_Encoder          ,"Skl_MP4_Delete_Encoder");
@@ -58,7 +58,7 @@ TvideoCodecSkal::TvideoCodecSkal(IffdshowBase *Ideci,IencVideoSink *IsinkE):
  ok=dll->ok;
  if (ok)
   encoders.push_back(new Tencoder(_l("Skal's MPEG 4"),CODEC_ID_SKAL));
- Enc=NULL; 
+ Enc=NULL;
 }
 TvideoCodecSkal::~TvideoCodecSkal()
 {
@@ -70,7 +70,7 @@ bool TvideoCodecSkal::getVersion(const Tconfig *config,ffstring &vers,ffstring &
 {
  Tdll *dl=new Tdll(dllname,config);
  bool res=false;
- if (dl->ok) 
+ if (dl->ok)
   {
    res=true;
    vers=_l("unknown");
@@ -81,7 +81,7 @@ bool TvideoCodecSkal::getVersion(const Tconfig *config,ffstring &vers,ffstring &
    vers=_l("not found");
    license.clear();
   }
- delete dl;  
+ delete dl;
  return res;
 }
 LRESULT TvideoCodecSkal::beginCompress(int cfgcomode,int csp,const Trect &r)
@@ -101,7 +101,7 @@ LRESULT TvideoCodecSkal::beginCompress(int cfgcomode,int csp,const Trect &r)
    case ENC_MODE::CBR:
     Skl_MP4_Enc_Set_Analyzer_Param_I(Enc,"bitrate",coCfg->bitrate1000);
     Skl_MP4_Enc_Set_Analyzer_Param_I(Enc,"quant",0);
-    break;  
+    break;
    case ENC_MODE::VBR_QUANT:
    case ENC_MODE::PASS2_1:
    case ENC_MODE::PASS2_2_EXT:
@@ -110,7 +110,7 @@ LRESULT TvideoCodecSkal::beginCompress(int cfgcomode,int csp,const Trect &r)
     break;
    case ENC_MODE::UNKNOWN:
     break;
-   default:return ICERR_ERROR; 
+   default:return ICERR_ERROR;
   }
 
  Skl_MP4_Enc_Set_Analyzer_Param_I(Enc,"intra-max-delay",coCfg->max_key_interval);
@@ -119,7 +119,7 @@ LRESULT TvideoCodecSkal::beginCompress(int cfgcomode,int csp,const Trect &r)
    Skl_MP4_Enc_Set_Analyzer_Param_I(Enc,"interlace-dct",2);   //TODO: 1 - decide
    Skl_MP4_Enc_Set_Analyzer_Param_I(Enc,"interlace-field",2);
    Skl_MP4_Enc_Set_Analyzer_Param_I(Enc,"field-pred-probing",40);
-  } 
+  }
  if (coCfg->trellisquant) Skl_MP4_Enc_Set_Analyzer_Param_I(Enc,"use-trellis",1);
  if (coCfg->isSkalMasking) Skl_MP4_Enc_Set_Analyzer_Param_F(Enc,"dquant-amp",coCfg->skalMaskingAmp/100.0f);
  if (coCfg->quant_type==QUANT::MPEG)
@@ -129,25 +129,25 @@ LRESULT TvideoCodecSkal::beginCompress(int cfgcomode,int csp,const Trect &r)
    Skl_MP4_Enc_Set_Analyzer_Param_I(Enc,"quant-type",1);
    Skl_MP4_Enc_Set_Custom_Matrix(Enc,0,(const uint8_t*)&coCfg->qmatrix_inter_custom0);
    Skl_MP4_Enc_Set_Custom_Matrix(Enc,1,(const uint8_t*)&coCfg->qmatrix_intra_custom0);
-  } 
-  
+  }
+
  if (coCfg->me_4mv) Skl_MP4_Enc_Set_Analyzer_Param_I(Enc,"4v-probing",80);
 
  if (coCfg->me_qpel)
   Skl_MP4_Enc_Set_Analyzer_Param_I(Enc,"subpixel",2);
- else 
+ else
   Skl_MP4_Enc_Set_Analyzer_Param_I(Enc,"subpixel",1);
- 
+
  if (coCfg->me_gmc)
   {
    Skl_MP4_Enc_Set_Analyzer_Param_I(Enc,"gmc-mode",1);
    Skl_MP4_Enc_Set_Analyzer_Param_I(Enc,"gmc-pts",3);
    Skl_MP4_Enc_Set_Analyzer_Param_I(Enc,"gmc-accuracy",3);  //TODO: config
-  } 
-  
+  }
+
  Skl_MP4_Enc_Set_Analyzer_Param_I(Enc,"search-metric",coCfg->skalSearchMetric); // 0 - sad, 1 - ssd, 2 - hammard
- 
-/* 
+
+/*
  Skl_MP4_Enc_Set_Analyzer_Param_I( "base-quant", Global_Q );
  Skl_MP4_Enc_Set_Analyzer_Param_I( "bframe", Use_BFrame );
  Skl_MP4_Enc_Set_Analyzer_Param_I( "reduced-frame", Use_Reduced );
@@ -162,13 +162,13 @@ LRESULT TvideoCodecSkal::beginCompress(int cfgcomode,int csp,const Trect &r)
  Skl_MP4_Enc_Set_Analyzer_Param_I( "intra-limit", Intra_Limit );
  Skl_MP4_Enc_Set_Analyzer_Param_I( "inter-threshold", Inter_Thresh );
  Skl_MP4_Enc_Set_Analyzer_Param_I( "buffer-size", Enc_Buf_Size );
-*/ 
+*/
 
  Skl_MP4_Enc_Set_Analyzer_Param_I(Enc,"hi-mem",1);
- 
+
  if (deci->getParam2(IDFF_enc_psnr))
   Skl_MP4_Enc_Set_Slicer(Enc,SKL_MP4_SLICER(Sliced_PSNR),&PSNR_Infos);
- 
+
  return ICERR_OK;
 }
 
@@ -180,7 +180,7 @@ HRESULT TvideoCodecSkal::compress(const TffPict &pict,TencFrameParams &params)
  TffPict::copy(Pic->V,Pic->BpS,pict.data[2],pict.stride[2],pict.rectFull.dx/2,pict.rectFull.dy/2);
  if (params.quant!=-1)
   Skl_MP4_Enc_Set_Analyzer_Param_I(Enc,"quant",coCfg->limitq(params.quant));
- PSNR_Infos.setParams(&params); 
+ PSNR_Infos.setParams(&params);
  if (Skl_MP4_Enc_Encode(Enc))
   {
    TmediaSample sample;
@@ -199,9 +199,9 @@ HRESULT TvideoCodecSkal::compress(const TffPict &pict,TencFrameParams &params)
      case 4:params.frametype=FRAME_TYPE::UNKNOWN;break;
     }
    Skl_MP4_Enc_Get_Analyzer_Param_I(Enc,"quant",&params.quant);
-   return sinkE->deliverEncodedSample(sample,params);   
+   return sinkE->deliverEncodedSample(sample,params);
   }
- else     
+ else
   return sinkE->deliverError();
 }
 void TvideoCodecSkal::end(void)
@@ -221,23 +221,23 @@ void TvideoCodecSkal::end(void)
     Dst += (BPS);                              \
   }                                            \
   return Sum
-  
+
 uint32_t TvideoCodecSkal::PSNR_INFOS::SSD_16x16(const uint8_t *Dst, const uint8_t *Src, int32_t BpS) { SSD(16,16,BpS); }
 uint32_t TvideoCodecSkal::PSNR_INFOS::SSD_8x8(const uint8_t *Dst, const uint8_t *Src, int32_t BpS)   { SSD(8,8,BpS); }
 
 #undef SSD
 
-void TvideoCodecSkal::PSNR_INFOS::Store(uint8_t *Dst, const uint8_t *Src, int W, int H, int BpS) 
+void TvideoCodecSkal::PSNR_INFOS::Store(uint8_t *Dst, const uint8_t *Src, int W, int H, int BpS)
 {
  W = (W+7) & ~7;
  for(int y=0; y<H; ++y, Src+=BpS, Dst+=BpS)
   memcpy(Dst, Src, W);
 }
-uint32_t TvideoCodecSkal::PSNR_INFOS::Get_SSE(uint8_t *Ref, const uint8_t *Src, int W, int H, int BpS) 
+uint32_t TvideoCodecSkal::PSNR_INFOS::Get_SSE(uint8_t *Ref, const uint8_t *Src, int W, int H, int BpS)
 {
  uint32_t SSE = 0;
  int x,y;
- for(y=0; (y+16)<=H; y+=16) 
+ for(y=0; (y+16)<=H; y+=16)
   {
    for(x=0; (x+16)<=W; x+=16) SSE += SSD_16x16(Ref+x,Src+x,BpS);
    if ((x+8)<=W) SSE += SSD_8x8(Ref+x,Src+x,BpS);
@@ -248,10 +248,10 @@ uint32_t TvideoCodecSkal::PSNR_INFOS::Get_SSE(uint8_t *Ref, const uint8_t *Src, 
   for(x=0; x<W; x+=8) SSE += SSD_8x8(Ref+x,Src+x,BpS);
    return SSE;
 }
-void TvideoCodecSkal::PSNR_INFOS::Check(int W, int H, int BpS) 
+void TvideoCodecSkal::PSNR_INFOS::Check(int W, int H, int BpS)
 {
  const size_t Needed = BpS*H + 2*(BpS/2)*(H/2);
- if (Y==0 || Size!=Needed) 
+ if (Y==0 || Size!=Needed)
   {
    Clear();
    Y = (uint8_t*)aligned_malloc(Needed);
@@ -263,19 +263,19 @@ void TvideoCodecSkal::PSNR_INFOS::Check(int W, int H, int BpS)
 void TvideoCodecSkal::PSNR_INFOS::Clear(void)
 {
  if (Y!=0)
-  { 
-   aligned_free( Y ); Y=0; Size=0; 
+  {
+   aligned_free( Y ); Y=0; Size=0;
   }
-}  
+}
 
 TvideoCodecSkal::PSNR_INFOS::PSNR_INFOS(void)
-{ 
- Size = 0; 
+{
+ Size = 0;
  Y=U=V=NULL;
 }
 TvideoCodecSkal::PSNR_INFOS::~PSNR_INFOS()
 {
- Clear(); 
+ Clear();
 }
 
 void TvideoCodecSkal::Sliced_PSNR(const SKL_MP4_PIC *Pic, int yo, int Height, void* Data)
@@ -291,7 +291,7 @@ void TvideoCodecSkal::Sliced_PSNR(const SKL_MP4_PIC *Pic, int yo, int Height, vo
      I->Store(I->U, Pic->U, Pic->Width/2, Pic->Height/2, Pic->BpS);
      I->Store(I->V, Pic->V, Pic->Width/2, Pic->Height/2, Pic->BpS);
     }
-   else 
+   else
     {            // end of scan
      I->params->psnrY = I->Get_SSE(I->Y, Pic->Y, Pic->Width,   Pic->Height,   Pic->BpS);
      I->params->psnrU = I->Get_SSE(I->U, Pic->U, Pic->Width/2, Pic->Height/2, Pic->BpS);

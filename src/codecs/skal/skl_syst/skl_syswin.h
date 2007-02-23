@@ -52,7 +52,7 @@ class SKL_WIN_SYSTEM
     SKL_WIN_SYSTEM();
     ~SKL_WIN_SYSTEM();
     void Kill();
-   
+
     HWND Get_Win() const { return _Win; }
     int Is_Shown() const { return (_Win_Shown!=0); }
 

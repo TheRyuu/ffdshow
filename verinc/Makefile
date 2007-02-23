@@ -1,5 +1,5 @@
 CFLAGS+=-I.
-       
+
 SRCS=verinc.cpp
 
 SEXE=../bin/verinc.exe
@@ -12,7 +12,7 @@ include ../src/makefile_c.inc
 
 .all: $(SEXE)
 
-clean: 
+clean:
 	rm -f *.o *~ $(SEXE)
 
 #

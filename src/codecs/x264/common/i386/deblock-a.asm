@@ -332,7 +332,7 @@ x264_deblock_h_luma_mmxext:
     add    dword [esp+16], 2 ; tc0+2
     call   x264_deblock_v8_luma_mmxext
     add    esp, 20
-    
+
     ; transpose 16x4 -> original space  (only the middle 4 rows were changed by the filter)
     mov    eax, [esp+108] ; pix
     sub    eax, 2
@@ -512,4 +512,7 @@ x264_deblock_h_chroma_intra_mmxext:
     picpop ebx
     pop  ebp ; needed because of CHROMA_H_START
     CHROMA_END
+
+
+
 

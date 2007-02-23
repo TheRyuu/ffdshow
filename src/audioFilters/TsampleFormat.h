@@ -31,7 +31,7 @@ public:
  TsampleFormat(int Isf,int Ifreq,int Inumchannels,int Ichannelmask=0):sf(Isf),freq(Ifreq)
   {
    setChannels(Inumchannels,Ichannelmask);
-  } 
+  }
  void reset(void)
   {
    channelmask=0;
@@ -39,17 +39,17 @@ public:
    freq=0;
    sf=0;
    dolby=DOLBY_NO;
-  } 
+  }
  CMediaType toCMediaType(bool alwaysextensible=true) const;
  static CMediaType createMediaTypeSPDIF(void);
  WAVEFORMATEXTENSIBLE toWAVEFORMATEXTENSIBLE(bool alwaysextensible=true) const;
-  
+
  enum
   {
    SF_NULL   =0,
-   SF_PCM16  =1, 
-   SF_PCM24  =2, 
-   SF_PCM32  =4, 
+   SF_PCM16  =1,
+   SF_PCM24  =2,
+   SF_PCM32  =4,
    SF_FLOAT32=8,
 
    SF_ALL     =SF_PCM16|SF_PCM24|SF_PCM32|SF_FLOAT32,
@@ -61,7 +61,7 @@ public:
    SF_LPCM16  =64,
    SF_LPCM20  =128,
    SF_FLOAT64 =65536,
-   
+
    SF_ALLFLOAT=SF_FLOAT32|SF_FLOAT64
   };
 
@@ -97,7 +97,7 @@ public:
        SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_FRONT_CENTER,SPEAKER_BACK_LEFT,SPEAKER_BACK_RIGHT,0,
        SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_FRONT_CENTER,SPEAKER_LOW_FREQUENCY,SPEAKER_BACK_LEFT,SPEAKER_BACK_RIGHT
       };
-     memcpy(speakers,speakersPresets[nchannels-1],sizeof(int)*6); 
+     memcpy(speakers,speakersPresets[nchannels-1],sizeof(int)*6);
     }
    else
     {
@@ -112,14 +112,14 @@ public:
    for (unsigned int i=0;i<nchannels;i++)
     if (speakers[i]==spk)
      return i;
-   return -1;  
-  } 
+   return -1;
+  }
  int makeChannelMask(void) const
   {
    int mask=0;
    for (unsigned int i=0;i<nchannels;i++)
     mask|=speakers[i];
-   return mask; 
+   return mask;
   }
  static const int standardChannelMasks[];
  int makeChannelMask2(void) const
@@ -137,7 +137,7 @@ public:
   {
    return countbits(makeChannelMask2()&(SPEAKER_BACK_LEFT|SPEAKER_BACK_CENTER|SPEAKER_BACK_RIGHT));
   }
-  
+
  unsigned int bitsPerSample(void) const
   {
    switch (sf)
@@ -159,8 +159,8 @@ public:
  unsigned int blockAlign(void) const
   {
    return nchannels*bitsPerSample()/8;
-  }  
- 
+  }
+
  bool operator !(void) const
   {
    return !nchannels;
@@ -205,11 +205,11 @@ public:
    if (freq==0)
     strncpy(buf,_l("none"),buflen);
    else
-    { 
+    {
      char_t *buf2=(char_t*)_alloca(buflen*sizeof(char_t));
      description(buf2,buflen);
      tsnprintf(buf,buflen,_l("%s %s"),buf2,descriptionPCM());
-    } 
+    }
    buf[buflen-1]='\0';
   }
  static const char_t *getSpeakerName(int speaker,bool shrt=false);
@@ -217,7 +217,7 @@ public:
 
  static int sf_bestMatch(int sfIn,int wantedSFS);
  static DWORD getPCMformat(const CMediaType &mtIn,DWORD def=0);
- 
+
  bool operator !=(const TsampleFormat &sf2) const
   {
     return memcmp(this,&sf2,sizeof(*this)+sizeof(bool)-sizeof(int))!=0;
@@ -244,7 +244,7 @@ public:
  int24_t(int64_t x)
   {
    init(int32_t(x));
-  } 
+  }
  int24_t(float x)
   {
    init(int32_t(x));
@@ -261,7 +261,7 @@ public:
 } __attribute__((packed));
 #pragma pack(pop)
 
-template<class Tdst,class Tsrc> inline Tdst convertSample(const Tsrc src) 
+template<class Tdst,class Tsrc> inline Tdst convertSample(const Tsrc src)
 {
  return Tdst(src);
 }
@@ -292,7 +292,7 @@ template<> struct TsampleFormatInfo<int16_t>
  static inline int sf(void) {return TsampleFormat::SF_PCM16;}
  template<class Tv> static inline int16_t limit(Tv v)
   {
-   if (v<min()) 
+   if (v<min())
     return min();
    else if (v>max())
     return max();
@@ -317,7 +317,7 @@ template<> struct TsampleFormatInfo<int24_t>
  static inline int sf(void) {return TsampleFormat::SF_PCM24;}
  template<class Tv> static inline int24_t limit(Tv v)
   {
-   if (v<min()) 
+   if (v<min())
     return min();
    else if (v>max())
     return max();
@@ -334,7 +334,7 @@ template<> struct TsampleFormatInfo<int32_t>
  static inline int sf(void) {return TsampleFormat::SF_PCM32;}
  template<class Tv> static inline int32_t limit(Tv v)
   {
-   if (v<min()) 
+   if (v<min())
     return min();
    else if (v>max())
     return max();
@@ -359,7 +359,7 @@ template<> struct TsampleFormatInfo<float>
  static inline int sf(void) {return TsampleFormat::SF_FLOAT32;}
  template<class Tv> static inline float limit(Tv v)
   {
-   if (v<min()) 
+   if (v<min())
     return min();
    else if (v>max())
     return max();
@@ -376,8 +376,8 @@ private:
  MMCKINFO chunkDATA,chunkRIFF;
  template<class Tin> bool read(unsigned int nsamples)
   {
-   typename TsampleFormatInfo<Tout>::helper_t min=TsampleFormatInfo<Tout>::max(),max=TsampleFormatInfo<Tout>::min(); 
-   for (unsigned int sample=0;sample<nsamples;sample++) 
+   typename TsampleFormatInfo<Tout>::helper_t min=TsampleFormatInfo<Tout>::max(),max=TsampleFormatInfo<Tout>::min();
+   for (unsigned int sample=0;sample<nsamples;sample++)
     for (unsigned int ch=0;ch<nchannels;ch++)
      {
       Tin in;
@@ -391,14 +391,14 @@ private:
    typename TsampleFormatInfo<Tout>::helper_t range=TsampleFormatInfo<Tout>::max()-TsampleFormatInfo<Tout>::min();
    adjust=range/(max-min);
    return true;
-  } 
+  }
  Tout adjust;
 public:
  TwavReader(unsigned int Ifreq,unsigned int Inchannels,size_t Isize,const Tout &val):Tbase(Inchannels),TsampleFormat(TsampleFormatInfo<Tout>::sf(),Ifreq,Inchannels)
   {
    for (typename Tbase::iterator ch=this->begin();ch!=this->end();ch++)
     ch->resize(Isize,val);
-   adjust=1; 
+   adjust=1;
   }
  TwavReader(const char_t *flnm,bool parseOnly=false)
   {
@@ -428,7 +428,7 @@ public:
                this->resize(nchannels);
                for (unsigned int i=0;i<nchannels;i++)
                 this->at(i).resize(nsamples);
-               if (!parseOnly) 
+               if (!parseOnly)
                 {
                  bool ret=false;
                  switch (sf)
@@ -437,11 +437,11 @@ public:
                    case TsampleFormat::SF_PCM32:ret=read<int32_t>(nsamples);break;
                    case TsampleFormat::SF_FLOAT32:ret=read<float>(nsamples);break;
                   }
-                 if (!ret) this->clear(); 
+                 if (!ret) this->clear();
                 }
-              }  
+              }
             }
-          } 
+          }
          free(wfmt);
         }
       }

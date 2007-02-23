@@ -23,7 +23,7 @@ private:
    unsigned int num;
    float *data;unsigned int datalen;
   } storedfft;
- CCritSec csFFT; 
+ CCritSec csFFT;
 protected:
  virtual bool is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg);
  virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_FLOAT32;}
@@ -32,7 +32,7 @@ public:
  virtual void done(void);
  virtual HRESULT process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0);
  virtual void onSeek(void);
- 
+
  virtual HRESULT queryInterface(const IID &iid,void **ptr) const;
  STDMETHODIMP_(int) getFFTdataNum(void);
  STDMETHODIMP getFFTdata(float *fft);

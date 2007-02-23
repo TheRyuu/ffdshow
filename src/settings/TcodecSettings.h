@@ -106,12 +106,12 @@ public:
   {
    return getMinMaxQuant(codecId);
   }
- static const int minQuant=1,maxQuant=51; //global 
+ static const int minQuant=1,maxQuant=51; //global
 
  int limitq(int q) const
   {
    return limit(q,getMinMaxQuant().first,getMinMaxQuant().second);
-  } 
+  }
 
  //one pass with libavcodec
  int ff1_vratetol;
@@ -125,7 +125,7 @@ public:
  char_t ff1_stats_flnm[MAX_PATH];
 
  int isCreditsStart,isCreditsEnd;
- int creditsStartBegin,creditsStartEnd,creditsEndBegin,creditsEndEnd;  
+ int creditsStartBegin,creditsStartEnd,creditsEndBegin,creditsEndEnd;
  int credits_mode;
  int credits_percent,credits_quant_i,credits_quant_p;
  int credits_size_start,credits_size_end;

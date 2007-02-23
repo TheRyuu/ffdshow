@@ -28,12 +28,12 @@ globl Skl_IDct16_Put_SSE2
 ; (see also Intel's Application Note 922:
 ;  http://developer.intel.com/vtune/cbts/strmsimd/922down.htm
 ;  Copyright (C) 1999 Intel Corporation)
-;  
+;
 ; Notes:
 ;  * tan(3pi/16) is greater than 0.5, and would use the
 ;    sign bit when turned into 16b fixed-point precision. So,
 ;    we use the trick: x*tan3 = x*(tan3-1)+x
-; 
+;
 ;  * There's only one SSE-specific instruction (pshufw).
 ;
 ;  * There's still 1 or 2 ticks to save in fLLM_PASS, but
@@ -58,7 +58,7 @@ globl Skl_IDct16_Put_SSE2
 ;   0.025 0.024 0.022 0.022 0.022 0.022 0.023 0.023    [0.023]
 ;   0.026 0.028 0.025 0.028 0.030 0.025 0.026 0.027    [0.027]
 ;   0.021 0.020 0.020 0.022 0.020 0.022 0.017 0.019    [0.020]
-;  
+;
 ;  == Abs Mean errors ==
 ;   0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000    [0.000]
 ;   0.020 0.001 0.003 0.003 0.000 0.004 0.002 0.003    [0.002]
@@ -96,7 +96,7 @@ globl Skl_IDct16_Put_SSE2
 ;   0.008 0.007 0.006 0.008 0.007 0.008 0.009 0.009    [0.008]
 ;   0.008 0.006 0.010 0.008 0.008 0.008 0.007 0.007    [0.008]
 ;   0.007 0.006 0.006 0.007 0.007 0.006 0.006 0.007    [0.006]
-;  
+;
 ;  == Abs Mean errors ==
 ;   0.001 0.000 0.000 0.001 0.001 0.000 0.000 0.000    [0.000]
 ;   0.000 0.002 0.002 0.000 0.001 0.001 0.000 0.002    [0.000]
@@ -288,7 +288,7 @@ TEXT
   movdqu    xmm0, [%2]
   movdqu    xmm4, [%4]
   punpcklbw xmm0, xmm0
-  psrlw     xmm0, 8   ; will zero the high words  
+  psrlw     xmm0, 8   ; will zero the high words
   punpcklbw xmm4, xmm4
   psrlw     xmm4, 8
   paddsw    xmm0, %1

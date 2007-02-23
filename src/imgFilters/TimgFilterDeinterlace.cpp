@@ -56,10 +56,10 @@ TimgFilterFramerateDoubler::TimgFilterFramerateDoubler(IffdshowBase *Ideci,Tfilt
    interpolateMotion=Tinterpolate<Tmmx>::interpolateMotion;
    pictInterpolate=Tinterpolate<Tmmx>::pictInterpolate;
   }
-#ifdef __SSE2__ 
+#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   pictInterpolate=Tinterpolate<Tsse2>::pictInterpolate;
-#endif  
+#endif
 }
 void TimgFilterFramerateDoubler::done(void)
 {
@@ -82,29 +82,29 @@ template<class Tsimd> void TimgFilterFramerateDoubler::Tinterpolate<Tsimd>::pict
      movq(dest1,src1+x);movq(dest2,src1+x+Tsimd::size);
      Tsimd::pavgb(dest1,src2+x);Tsimd::pavgb(dest2,src2+x+Tsimd::size);
      movq(dst+x,dest1);movq(dst+x+Tsimd::size,dest2);
-    } 
+    }
    for (;x<int(dx);x++)
     dst[x]=uint8_t((src1[x]+src2[x]+1)/2);
   }
-}  
+}
 
 template<class Tsimd> inline void TimgFilterFramerateDoubler::Tinterpolate<Tsimd>::bestInterp(__m64 &mm5,__m64 &mm6,const __m64 *paddr1,const __m64 *paddr2)
 {
  __m64 m0=_mm_setzero_si64();
  __m64 mm0=*paddr1; // our 4 pixels
  __m64 mm1=*paddr2; // our pixel2 value
- 
+
  __m64 mm2=mm0;     // another copy of our pixel1 value
- 
+
  Tsimd::pminub(mm0,mm1);// mm0=_mm_min_pu8(mm0,mm1); // minimum value of the 2
  Tsimd::pmaxub(mm1,mm2);// mm1=_mm_max_pu8(mm1,mm2); // maximum value of the 2
  mm2=_mm_subs_pu8(mm1,mm0);// the diff
  Tsimd::pavgb(mm0,mm1);// mm0=_mm_avg_pu8(mm0,mm1); // just keep avg
  __m64 mm3=_mm_subs_pu8(mm2,mm5); // nonzero where old weights lower, else 0
  mm3=_mm_cmpeq_pi8(mm3,m0); // now ff where new better, else 00
- mm0=_mm_and_si64(mm0,mm3); // keep only better new avg pixels 
+ mm0=_mm_and_si64(mm0,mm3); // keep only better new avg pixels
  mm2=_mm_and_si64(mm2,mm3); // and weights
- mm3=_mm_cmpeq_pi8(mm3,m0); // here ff where old better, else 00 
+ mm3=_mm_cmpeq_pi8(mm3,m0); // here ff where old better, else 00
  mm5=_mm_and_si64(mm5,mm3); // keep only better old weights
  mm6=_mm_and_si64(mm6,mm3); // keep only better old avg pixels
  mm5=_mm_or_si64(mm5,mm2);  // merge new & old weights
@@ -115,7 +115,7 @@ template<class Tsimd> void TimgFilterFramerateDoubler::Tinterpolate<Tsimd>::inte
  stride_t src_pit, stride_t dst_pit, stride_t prev_pit,
  unsigned int rowsize, const BYTE* srcp, BYTE* dstp, const BYTE* _pPrev,
  int FldHeight, // go H expand lines into even output lines
- int Search_Effort,int thresh) 
+ int Search_Effort,int thresh)
 {
  const BYTE* pPrev = _pPrev;
  const BYTE* pSrc = srcp;
@@ -164,7 +164,7 @@ template<class Tsimd> void TimgFilterFramerateDoubler::Tinterpolate<Tsimd>::inte
       Tsimd::movntq(pDest+x,mm6);
      }
    }
- else 
+ else
   for (int y=1;y<=FldHeight-2;y++,pSrc+=src_pit,pPrev+=prev_pit,pDest+=dst_pit)
    {
     *(__m64*)(pDest+0)=*(__m64*)(pSrc+0);
@@ -186,7 +186,7 @@ HRESULT TimgFilterFramerateDoubler::process(TfilterQueue::iterator it,TffPict &p
  bool cspChanged=getCur(FF_CSPS_MASK_YUV_PLANAR,pict,true,src);
  if (cspChanged) done();
  if (old)
-  { 
+  {
    TffPict p1=pict;
    p1.setRO(true);
    //interpolate image
@@ -195,7 +195,7 @@ HRESULT TimgFilterFramerateDoubler::process(TfilterQueue::iterator it,TffPict &p
    for (unsigned int i=0;i<pict.cspInfo.numPlanes;i++)
     if (cfg->frameRateDoublerSE==0)
      pictInterpolate(dst[i],stride2[i],old->data[i],old->stride[i],src[i],stride1[i],dx1[i],dy1[i]);
-    else 
+    else
      interpolateMotion(stride1[i],stride2[i],old->stride[i],pict.cspInfo.Bpp*(dx1[i]),src[i],dst[i],old->data[i],dy1[i],cfg->frameRateDoublerSE,cfg->frameRateDoublerThreshold);
    _mm_empty();
    TfilterQueue::iterator it1=it;
@@ -205,7 +205,7 @@ HRESULT TimgFilterFramerateDoubler::process(TfilterQueue::iterator it,TffPict &p
    if (FAILED(hr)) return hr;
    pict.rtStart+=dur;
   }
- else 
+ else
   old=new TffPict;
  old->copyFrom(pict,oldbuf);
  return parent->deliverSample(++it,pict);
@@ -240,12 +240,12 @@ HRESULT TimgFilterMplayerDeinterlace::process(TfilterQueue::iterator it,TffPict 
  unsigned char *tempPict2[4];
  cspChanged|=getNext(csp1,pict,cfg->full,tempPict2);
  if (cspChanged) done();
- 
- if (!pp_ctx) 
+
+ if (!pp_ctx)
   {
    if (!libmplayer) deci->getPostproc(&libmplayer);
    pp_ctx=libmplayer->pp_get_context(dx1[0],dy1[0],Tlibmplayer::ppCpuCaps(csp1));
-  } 
+  }
  const TdeinterlaceSettings::TmethodProps &methodProps=TdeinterlaceSettings::getMethod(cfg->cfgId);
  pp_mode.lumMode=pp_mode.chromMode=methodProps.id;
  libmplayer->pp_postprocess(tempPict1,stride1,

@@ -724,7 +724,7 @@ static void predict_8x8_ddr( uint8_t *src, uint8_t edge[33] )
     SRC(5,0)=SRC(6,1)=SRC(7,2)= (t3 + 2*t4 + t5 + 2) >> 2;
     SRC(6,0)=SRC(7,1)= (t4 + 2*t5 + t6 + 2) >> 2;
     SRC(7,0)= (t5 + 2*t6 + t7 + 2) >> 2;
-  
+
 }
 static void predict_8x8_vr( uint8_t *src, uint8_t edge[33] )
 {
@@ -922,4 +922,7 @@ void x264_predict_4x4_init( int cpu, x264_predict_t pf[12] )
     }
 #endif
 }
+
+
+
 

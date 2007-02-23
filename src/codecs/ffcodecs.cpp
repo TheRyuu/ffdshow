@@ -40,22 +40,22 @@ const FOURCC* getCodecFOURCCs(CodecID codecId)
     {
      static const FOURCC fccs[]={FOURCC_MP42,FOURCC_DIV2,0};
      return fccs;
-    } 
+    }
    case CODEC_ID_MSMPEG4V1:
     {
      static const FOURCC fccs[]={FOURCC_MP41,FOURCC_DIV1,0};
      return fccs;
-    } 
+    }
    case CODEC_ID_MPEG1VIDEO:
     {
      static const FOURCC fccs[]={FOURCC_MPEG,FOURCC_MPG1,0};
      return fccs;
-    } 
+    }
    case CODEC_ID_MPEG2VIDEO:
     {
      static const FOURCC fccs[]={FOURCC_MPEG,FOURCC_MPG2,0};
      return fccs;
-    } 
+    }
    case CODEC_ID_H263:
    case CODEC_ID_H263P:
    case CODEC_ID_H263I:

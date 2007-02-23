@@ -30,14 +30,14 @@ private:
  static int me_hq(int rd3),me_(int me3);
  Textradata *extradata;
  REFERENCE_TIME rtStart,rtStop;
-protected: 
+protected:
  virtual LRESULT beginCompress(int cfgcomode,int csp,const Trect &r);
  virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);
  virtual HRESULT flushDec(void);
 public:
  virtual int getType(void) const {return IDFF_MOVIE_XVID4;}
  virtual int caps(void) const {return CAPS::VIS_QUANTS;}
- 
+
  virtual HRESULT compress(const TffPict &pict,TencFrameParams &params);
  virtual HRESULT flushEnc(const TffPict &pict,TencFrameParams &params) {return compress(pict,params);}
  virtual void end(void);

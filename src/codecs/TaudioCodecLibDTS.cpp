@@ -28,7 +28,7 @@ const char_t* TaudioCodecLibDTS::dllname=_l("ff_libdts.dll");
 
 // dshow: left, right, center, LFE, left surround, right surround
 // dts: center, left, right, left surround, right surround, LFE
-const TaudioCodecLibDTS::Tscmap TaudioCodecLibDTS::scmaps[2*10]= 
+const TaudioCodecLibDTS::Tscmap TaudioCodecLibDTS::scmaps[2*10]=
 {
  {1, {0,-1,-1,-1,-1,-1}, 0}, // DTS_MONO
  {2, {0, 1,-1,-1,-1,-1}, 0}, // DTS_CHANNEL
@@ -57,7 +57,7 @@ const TaudioCodecLibDTS::Tscmap TaudioCodecLibDTS::scmaps[2*10]=
 TaudioCodecLibDTS::TaudioCodecLibDTS(IffdshowBase *deci,IdecAudioSink *Isink):
  Tcodec(deci),
  TaudioCodec(deci,Isink)
-{        
+{
  dll=NULL;state=NULL;
  inited=false;
 }
@@ -81,16 +81,16 @@ bool TaudioCodecLibDTS::init(const CMediaType &mt)
    inited=true;
    return true;
   }
- else 
+ else
   return false;
 }
 TaudioCodecLibDTS::~TaudioCodecLibDTS()
 {
- if (dll) 
+ if (dll)
   {
    if (state) dts_free(state);
    delete dll;
-  } 
+  }
 }
 
 void TaudioCodecLibDTS::getInputDescr1(char_t *buf,size_t buflen) const
@@ -126,9 +126,9 @@ HRESULT TaudioCodecLibDTS::decode(TbyteBuffer &src)
          HRESULT hr=deciA->deliverSampleSPDIF(p,size,bit_rate,type,true);
          if (hr!=S_OK)
           return hr;
-        } 
+        }
        else
-        { 
+        {
          flags|=DTS_ADJUST_LEVEL;
          libdts::sample_t level=1,bias=0;
          if (dts_frame(state,p,&flags,&level,bias)==0)
@@ -158,20 +158,20 @@ HRESULT TaudioCodecLibDTS::decode(TbyteBuffer &src)
               return hr;
             }
           }
-        }  
-       p+=size; 
-      } 
+        }
+       p+=size;
+      }
      memmove(base,p,end-p);
      end=base+(end-p);
      p=base;
      if (!enoughData)
       break;
-    }  
+    }
    else
     p++;
   }
  src.resize(end-p);
- return S_OK; 
+ return S_OK;
 }
 bool TaudioCodecLibDTS::onSeek(REFERENCE_TIME segmentStart)
 {

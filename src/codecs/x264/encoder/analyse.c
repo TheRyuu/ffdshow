@@ -479,7 +479,7 @@ static void x264_mb_analyse_intra_chroma( x264_t *h, x264_mb_analysis_t *a )
             h->pixf.mbcmp[PIXEL_8x8]( p_dstc[0], FDEC_STRIDE, p_srcc[0], FENC_STRIDE );
         satdv[I_PRED_CHROMA_P] =
             h->pixf.mbcmp[PIXEL_8x8]( p_dstc[1], FDEC_STRIDE, p_srcc[1], FENC_STRIDE );
-        
+
         for( i=0; i<i_max; i++ )
         {
             int i_mode = predict_mode[i];
@@ -1496,7 +1496,7 @@ static void x264_mb_analyse_inter_b16x16( x264_t *h, x264_mb_analysis_t *a )
                         a->l1.me16x16.mv[0], a->l1.me16x16.mv[1],
                         16, 16 );
         weight = 64 - weight;
-    } 
+    }
     else
     {
         /* if l0 was qpel, we'll use get_ref on l1 instead */
@@ -2721,4 +2721,7 @@ static void x264_analyse_update_cache( x264_t *h, x264_mb_analysis_t *a  )
 }
 
 #include "slicetype.c"
+
+
+
 

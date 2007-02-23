@@ -21,4 +21,4 @@ public:
  virtual void onFrame(void);
 };
 
-#endif 
+#endif

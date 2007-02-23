@@ -1,6 +1,6 @@
 //
 //	aWarpSharp (version 1.0) - WarpSharping filter
-//	
+//
 //	aWarpSharp ffdshow api.
 //
 //	Copyright (C) 2003 Marc Fauconneau

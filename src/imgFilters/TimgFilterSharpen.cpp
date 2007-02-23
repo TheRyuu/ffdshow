@@ -63,8 +63,8 @@ HRESULT TimgFilterAsharp::process(TfilterQueue::iterator it,TffPict &pict,const 
      asharpCfgD=(int)(d*(4<<7));
      asharpCfgD=limit(asharpCfgD,0,int(16*(4<<7)));
 
-     if (oldAsharpB==0) 
-      asharpCfgB=asharpCfgB2=256; 
+     if (oldAsharpB==0)
+      asharpCfgB=asharpCfgB2=256;
      else
       {
        double b=oldAsharpB/100.0;
@@ -73,7 +73,7 @@ HRESULT TimgFilterAsharp::process(TfilterQueue::iterator it,TffPict &pict,const 
        asharpCfgB2=(int)(256-b*48);
        asharpCfgB2=limit(asharpCfgB2,0,256);
       }
-    }  
+    }
 
    init(pict,cfg->full,cfg->half);
    if (!aline) aline=(unsigned char*)aligned_malloc(pictRect.dx*2);
@@ -82,28 +82,28 @@ HRESULT TimgFilterAsharp::process(TfilterQueue::iterator it,TffPict &pict,const 
 
    unsigned char *lastX2,*lastX1;
    if (oldAsharpHQBF)
-    {  
+    {
      lastX2=(unsigned char*)_alloca(dy1[0]);lastX1=(unsigned char*)_alloca(dy1[0]);
-     for (unsigned int y=0;y<dy1[0];y++) 
+     for (unsigned int y=0;y<dy1[0];y++)
       {
        lastX2[y]=dst[y*stride2[0]+dx1[0]-2];
        lastX1[y]=dst[y*stride2[0]+dx1[0]-1];
-      } 
-    }  
+      }
+    }
    else
-    lastX2=lastX1=NULL; 
+    lastX2=lastX1=NULL;
 
    asharp_run(dst,(int)stride2[0],dy1[0],dx1[0],asharpCfgT,asharpCfgD,asharpCfgB,asharpCfgB2,oldAsharpHQBF,aline);
    _mm_empty();
 
    if (oldAsharpHQBF)
-    for (unsigned int y=0;y<dy1[0];y++) 
+    for (unsigned int y=0;y<dy1[0];y++)
      {
       dst[y*stride2[0]+dx1[0]-2]=lastX2[y];
       dst[y*stride2[0]+dx1[0]-1]=lastX1[y];
-     } 
-  }   
- return parent->deliverSample(++it,pict); 
+     }
+  }
+ return parent->deliverSample(++it,pict);
 }
 
 //==================================== TimgFilterMplayerSharp ====================================
@@ -139,32 +139,32 @@ HRESULT TimgFilterMplayerSharp::process(TfilterQueue::iterator it,TffPict &pict,
    unsigned char *dst[4];
    cspChanged|=getNext(SWS_OUT_CSPS,pict,cfg->full,dst);
    if (cspChanged) done();
-   
+
    if (!swsc || oldmplayersharpenluma!=cfg->mplayerLuma || oldmplayersharpenchroma!=cfg->mplayerChroma)
     {
      oldmplayersharpenluma=cfg->mplayerLuma;oldmplayersharpenchroma=cfg->mplayerChroma;
-     if (!libmplayer) deci->getPostproc(&libmplayer); 
+     if (!libmplayer) deci->getPostproc(&libmplayer);
      done();
      swsf=libmplayer->sws_getDefaultFilter(0,0,oldmplayersharpenluma/100.0f,oldmplayersharpenchroma/100.0f,0,0,0);
      SwsParams params;Tlibmplayer::swsInitParams(&params,0);
      swsc=libmplayer->sws_getContext(dx1[0],dy1[0],csp_ffdshow2mplayer(csp1),dx1[0],dy1[0],csp_ffdshow2mplayer(csp2),&params,swsf,NULL);
     }
-    
+
    if (swsc)
     libmplayer->sws_scale_ordered(swsc,src,stride1,0,dy1[0],dst,stride2);
   }
- return parent->deliverSample(++it,pict);  
+ return parent->deliverSample(++it,pict);
 }
 
 //==================================== TimgFilterUnsharp ====================================
 TimgFilterUnsharp::TimgFilterUnsharp(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
  Ysum=NULL;
-#ifdef __SSE2__ 
+#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   unsharpFc=&TimgFilterUnsharp::unsharp<Tsse2>;
- else 
-#endif 
+ else
+#endif
   unsharpFc=&TimgFilterUnsharp::unsharp<Tmmx>;
 }
 void TimgFilterUnsharp::done(void)
@@ -201,7 +201,7 @@ template<class _mm> void TimgFilterUnsharp::unsharp(const TsharpenSettings *cfg,
      diff=_mm::adds_pi16(_mm::srai_pi16(_mm::mullo_pi16(diff,C64),5),y_sum);
      _mm::store2(dst+x,_mm::packs_pu16(diff,m0));
     }
-  }   
+  }
  _mm::empty();
 }
 
@@ -225,12 +225,12 @@ HRESULT TimgFilterUnsharp::process(TfilterQueue::iterator it,TffPict &pict,const
    unsigned char *dst=dst_;
 
    unsigned short *sum=Ysum;
-   for (unsigned int x=1;x<dx1[0]-1;x++) 
+   for (unsigned int x=1;x<dx1[0]-1;x++)
     {
      sum[x          ]=(unsigned short)(src[x-1           ]+src[x           ]+src[x+1           ]);
      sum[x+minStride]=(unsigned short)(src[x-1+stride1[0]]+src[x+stride1[0]]+src[x+1+stride1[0]]);
-    } 
-   (this->*unsharpFc)(cfg,src,dst,sum); 
+    }
+   (this->*unsharpFc)(cfg,src,dst,sum);
    const unsigned char *srcL=src_+stride1[0],*srcR=srcL+dx1[0]-1;unsigned char *dstL=dst_+stride2[0],*dstR=dstL+dx1[0]-1;
    for (unsigned int y=1;y<dy1[0]-1;srcL+=stride1[0],srcR+=stride1[0],dstL+=stride2[0],dstR+=stride2[0],y++)
     {
@@ -241,21 +241,21 @@ HRESULT TimgFilterUnsharp::process(TfilterQueue::iterator it,TffPict &pict,const
    memcpy(dst_+stride2[0]*(dy1[0]-2),src_+stride1[0]*(dy1[0]-2),dx1[0]);
    memcpy(dst_+stride2[0]*(dy1[0]-1),src_+stride1[0]*(dy1[0]-1),dx1[0]);
   }
- return parent->deliverSample(++it,pict); 
-}                             
+ return parent->deliverSample(++it,pict);
+}
 
 //==================================== TimgFilterXsharp =====================================
 TimgFilterXsharp::TimgFilterXsharp(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
  Ymin=Ymax=NULL;
-#ifdef __SSE2__ 
+#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   xsharpenFc=&TimgFilterXsharp::xsharpen<Tsse2>;
- else 
-#endif 
+ else
+#endif
  if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
   xsharpenFc=&TimgFilterXsharp::xsharpen<Tmmxext>;
- else 
+ else
   xsharpenFc=&TimgFilterXsharp::xsharpen<Tmmx>;
 }
 void TimgFilterXsharp::done(void)
@@ -332,7 +332,7 @@ HRESULT TimgFilterXsharp::process(TfilterQueue::iterator it,TffPict &pict,const 
      Ymin=(unsigned char*)aligned_malloc(minStride*pictRect.dy*2);
      Ymax=(unsigned char*)aligned_malloc(minStride*pictRect.dy);
     }
-    
+
    const unsigned char *src;
    unsigned char *dst;
    getCur(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,&src,NULL,NULL,NULL);
@@ -340,7 +340,7 @@ HRESULT TimgFilterXsharp::process(TfilterQueue::iterator it,TffPict &pict,const 
 
    (this->*xsharpenFc)(dx1[0],dy1[0],cfg,src,stride1[0],dst,stride2[0]);
   }
- return parent->deliverSample(++it,pict); 
+ return parent->deliverSample(++it,pict);
 }
 
 //==================================== TimgFilterMsharp =====================================
@@ -364,26 +364,26 @@ bool TimgFilterMsharp::is(const TffPictBase &pict,const TfilterSettingsVideo *cf
 HRESULT TimgFilterMsharp::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  if (is(pict,cfg0))
-  {  
+  {
    const TsharpenSettings *cfg=(const TsharpenSettings*)cfg0;
    init(pict,cfg->full,cfg->half);
    const unsigned char *src_;
    unsigned char *dst_;
    getCur(FF_CSPS_MASK_YUV_PLANAR,pict,cfg->full,&src_,NULL,NULL,NULL);
    getNext(csp1,pict,cfg->full,&dst_,NULL,NULL,NULL);
-   
+
    const unsigned char *src=src_;unsigned char *dst=dst_;
    int strength=cfg->msharpStrength*2,invstrength=255-strength;
    const unsigned char *srcp=src;
    const unsigned char *srcp_saved=srcp;
 
    if (!blur3x3) blur3x3=new T3x3blurSWS(deci,dx1[0],dy1[0]);
-   if (!blur) 
+   if (!blur)
     {
      stride=(dx1[0]/16+2)*16;
      blur=(unsigned char*)aligned_malloc(stride*dy1[0]);
      work=(unsigned char*)aligned_malloc(stride*dy1[0]);
-    } 
+    }
    unsigned char *blurp=blur;
    const unsigned char *blurpn;
    unsigned char *workp=work;
@@ -392,16 +392,16 @@ HRESULT TimgFilterMsharp::process(TfilterQueue::iterator it,TffPict &pict,const 
    int b1,b2,b4;
 
    blur3x3->process(src,stride1[0],blur,stride);
-   
+
    blurp=blur;
    blurpn=blurp+stride;
    dstp=dst;
-   // Diagonal detail detection. 
+   // Diagonal detail detection.
   /*
    int b3;
    b1=blurp[0];
    b3=blurpn[0];
-   for (y=0;y<dy1[0]-1;dstp+=stride2[0],blurp+=m.stride,blurpn+=m.stride,y++) 
+   for (y=0;y<dy1[0]-1;dstp+=stride2[0],blurp+=m.stride,blurpn+=m.stride,y++)
     for (x=0;x<dx1[0]-1;x++)
      {
       b2=blurp[x+1];
@@ -444,7 +444,7 @@ HRESULT TimgFilterMsharp::process(TfilterQueue::iterator it,TffPict &pict,const 
          b1=b2;
         }
       }
-   
+
      // Horizontal detail detection
      blurp=blur;
      dstp=dst;
@@ -459,7 +459,7 @@ HRESULT TimgFilterMsharp::process(TfilterQueue::iterator it,TffPict &pict,const 
          b1=b2;
         }
       }
-    } 
+    }
 
    // Fix up detail map borders
    dstp=dst;
@@ -496,29 +496,29 @@ HRESULT TimgFilterMsharp::process(TfilterQueue::iterator it,TffPict &pict,const 
       {
        for (unsigned int x=1;x<dx1[0]-1;)
         {
-         if (*(int*)(dstp+x)==0) 
+         if (*(int*)(dstp+x)==0)
           {
            *(int*)(dstp+x)=*(int*)(srcp+x);
            x+=4;
            continue;
           }
          if (dstp[x])
-          {                                     
+          {
            b4=4*int(srcp[x])-3*int(blurp[x]);
            if (b4<0) b4=0; else if (b4>255) b4=255;
            dstp[x]=(unsigned char)((strength*b4+invstrength*srcp[x])>>8);
           }
          else
           dstp[x]=srcp[x];
-         x++; 
-        }  
+         x++;
+        }
        dstp[0]=srcp[0];
-       dstp[dx1[0]-1]=srcp[dx1[0]-1]; 
-      } 
+       dstp[dx1[0]-1]=srcp[dx1[0]-1];
+      }
      memcpy(dst,src,dx1[0]);
      memcpy(dst+(dy1[0]-1)*stride2[0],src+(dy1[0]-1)*stride1[0],dx1[0]);
     }
    _mm_empty();
   }
- return parent->deliverSample(++it,pict); 
+ return parent->deliverSample(++it,pict);
 }

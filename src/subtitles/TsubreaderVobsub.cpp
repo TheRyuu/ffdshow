@@ -47,15 +47,15 @@ TsubreaderVobsub::TsubreaderVobsub(Tstream &f,const char_t *flnm,IffdshowBase *I
     langs[i]=vobsub->spu_streams[i].altid?vobsub->spu_streams[i].altid:(vobsub->spu_streams[i].id?TsubtitlesSettings::getLangDescr(vobsub->spu_streams[i].id):_l(""));
    deciV->fillSubtitleLanguages(langs);
    free(langs);
-  } 
+  }
 }
 TsubreaderVobsub::~TsubreaderVobsub()
 {
- if (deciV) 
+ if (deciV)
   {
    static const char_t *langs[]={NULL};
    deciV->fillSubtitleLanguages(langs);
-  } 
+  }
  delete vobsub;
  if (spu) delete spu;
 }

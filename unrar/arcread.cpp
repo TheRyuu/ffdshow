@@ -143,7 +143,7 @@ int Archive::ReadHeader()
           Raw.Get(hd->HighPackSize);
           Raw.Get(hd->HighUnpSize);
         }
-        else 
+        else
           hd->HighPackSize=hd->HighUnpSize=0;
         hd->FullPackSize=int32to64(hd->HighPackSize,hd->PackSize);
         hd->FullUnpSize=int32to64(hd->HighUnpSize,hd->UnpSize);

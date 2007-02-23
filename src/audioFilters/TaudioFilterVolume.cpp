@@ -60,20 +60,20 @@ template<class sample_t> void TaudioFilterVolume::volume(sample_t* const samples
         &Tmultiply<6>::processVol
        };
       processVol[fmt.nchannels](samples,numsamples,volumes);
-     } 
+     }
    }
   else
    {
     if (!mem)
      {
       mem=new Tmem[nSamples=oldcfg.nSamples];
-      for (int i=0;i<nSamples;i++) 
+      for (int i=0;i<nSamples;i++)
        {
         mem[i].len=0;
         mem[i].avg=0;
        }
      }
-  
+
     size_t len=numsamples*fmt.nchannels;
 
     // Evaluate current samples average level
@@ -94,10 +94,10 @@ template<class sample_t> void TaudioFilterVolume::volume(sample_t* const samples
       totallen+=mem[i].len;
      }
 
-    if (totallen>MIN_SAMPLE_SIZE) 
+    if (totallen>MIN_SAMPLE_SIZE)
      {
       avg/=(float)totallen;
-      if (avg>=TsampleFormatInfo<sample_t>::max()*SIL_S16) 
+      if (avg>=TsampleFormatInfo<sample_t>::max()*SIL_S16)
        mul=limit((float)(TsampleFormatInfo<sample_t>::max()*MID_S16)/avg,MUL_MIN,cfg->normalizeMax/100.0f);
      }
 
@@ -113,7 +113,7 @@ template<class sample_t> void TaudioFilterVolume::volume(sample_t* const samples
       &Tmultiply<5>::processMul,
       &Tmultiply<6>::processMul
      };
-    processMul[fmt.nchannels](samples,numsamples,volumes,mul); 
+    processMul[fmt.nchannels](samples,numsamples,volumes,mul);
 
     // Evaluation of newavg (not 100% accurate because of values clamping)
     float newavg=mul*curavg;
@@ -128,11 +128,11 @@ template<class sample_t> void TaudioFilterVolume::volume(sample_t* const samples
    for (size_t i=0;i<numsamples*fmt.nchannels;)
     for (unsigned int ch=0;ch<fmt.nchannels;ch++,i++)
      sum[ch]+=int64_t((int64_t)65536*ff_abs(samples[i]));
-   CAutoLock lock(&csVolumes);  
+   CAutoLock lock(&csVolumes);
    for (unsigned int i=0;i<fmt.nchannels;i++)
     storedvolumes.volumes[i]=int((sum[i]/numsamples)/int64_t(TsampleFormatInfo<sample_t>::max()));
-   storedvolumes.have=true; 
-  }  
+   storedvolumes.have=true;
+  }
 }
 
 TaudioFilterVolume::TaudioFilterVolume(IffdshowBase *Ideci,Tfilters *Iparent):TaudioFilter(Ideci,Iparent)
@@ -182,12 +182,12 @@ HRESULT TaudioFilterVolume::process(TfilterQueue::iterator it,TsampleFormat &fmt
        {
         v=cfg->*cfgmutes[ii]!=1 && (solo==0 || (fmt.speakers[i]&solo))?cfg->*cfgvols[ii]:0;
         break;
-       } 
-     volumes[i]=v*cfg->vol/39; 
+       }
+     volumes[i]=v*cfg->vol/39;
      if (volumes[i]!=256) isVol=true;
     }
   }
- if (is(fmt,cfg)) 
+ if (is(fmt,cfg))
   samples=init(cfg,fmt,samples,numsamples);
  if (numsamples>0)
   {

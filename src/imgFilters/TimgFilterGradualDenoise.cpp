@@ -53,7 +53,7 @@ template<class _mm> void TimgFilterGradualDenoise::denoise(int gradualStrength,u
     mm2=_mm::srli_si64(mm2,16);
     mm3=_mm::or_si64(mm3,mm2);
     mm2=_mm::shuffle_pi16_0(mm3); //mm2=_mm::shuffle_pi16(mm3,0);
-     
+
     __m mm4;
     mm4=_mm::subs_pu8(mm1,mm0);
     mm0=_mm::subs_pu8(mm0,mm1);
@@ -93,15 +93,15 @@ template<class _mm> void TimgFilterGradualDenoise::denoise(int gradualStrength,u
 TimgFilterGradualDenoise::TimgFilterGradualDenoise(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
  prevImg=NULL;
-#ifdef __SSE2__ 
+#ifdef __SSE2__
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
-  denoiseFc=&TimgFilterGradualDenoise::denoise<Tsse2>; 
- else 
-#endif 
- if (Tconfig::cpu_flags&FF_CPU_MMXEXT) 
-  denoiseFc=&TimgFilterGradualDenoise::denoise<Tmmxext>; 
- else 
-  denoiseFc=&TimgFilterGradualDenoise::denoise<Tmmx>; 
+  denoiseFc=&TimgFilterGradualDenoise::denoise<Tsse2>;
+ else
+#endif
+ if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
+  denoiseFc=&TimgFilterGradualDenoise::denoise<Tmmxext>;
+ else
+  denoiseFc=&TimgFilterGradualDenoise::denoise<Tmmx>;
 }
 void TimgFilterGradualDenoise::done(void)
 {
@@ -129,11 +129,11 @@ HRESULT TimgFilterGradualDenoise::process(TfilterQueue::iterator it,TffPict &pic
    unsigned char *dstY;
    getCurNext(csp1,pict,cfg->full,COPYMODE_NO,&dstY,NULL,NULL,NULL);
 
-   if (!prevImg) 
+   if (!prevImg)
     prevImg=(unsigned char*)aligned_calloc(prevStride=(dx1[0]/16+2)*16,dy1[0]);
-   
+
    (this->*denoiseFc)(cfg->gradualStrength,dx1[0],dy1[0],srcY,stride1[0],dstY,stride2[0]);
-  }  
+  }
  return parent->deliverSample(++it,pict);
 }
 

@@ -16,7 +16,7 @@
 // SKL_MEM_TRC_I -- tracing memory allocator
 //////////////////////////////////////////////////////////
 
-class SKL_MEM_TRC_I : public SKL_MEM_I 
+class SKL_MEM_TRC_I : public SKL_MEM_I
 {
   private:
     enum { MAX_SLOT = 1000 };

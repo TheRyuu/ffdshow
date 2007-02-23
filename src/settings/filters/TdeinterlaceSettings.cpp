@@ -84,7 +84,7 @@ TdeinterlaceSettings::TdeinterlaceSettings(TintStrColl *Icoll,TfilterIDFFs *filt
  half=0;
  static const TintOptionT<TdeinterlaceSettings> iopts[]=
   {
-   IDFF_isDeinterlace            ,&TdeinterlaceSettings::is                       ,0,0,_l(""),1, 
+   IDFF_isDeinterlace            ,&TdeinterlaceSettings::is                       ,0,0,_l(""),1,
      _l("isDeinterlace"),0,
    IDFF_showDeinterlace          ,&TdeinterlaceSettings::show                     ,0,0,_l(""),1,
      _l("showDeinterlace"),1,
@@ -122,7 +122,7 @@ TdeinterlaceSettings::TdeinterlaceSettings(TintStrColl *Icoll,TfilterIDFFs *filt
      _l("dgbobAP"),0,
    0
   };
- addOptions(iopts); 
+ addOptions(iopts);
  static const TstrOption sopts[]=
   {
    IDFF_dscalerDIflnm,(TstrVal)&TdeinterlaceSettings::dscalerFlnm,MAX_PATH,_l(""),1,
@@ -132,10 +132,10 @@ TdeinterlaceSettings::TdeinterlaceSettings(TintStrColl *Icoll,TfilterIDFFs *filt
    0
   };
  addOptions(sopts);
- 
+
  static const TcreateParamList2<TmethodProps> listMethod(methodProps,&TmethodProps::name);setParamList(IDFF_deinterlaceMethod,&listMethod);
  static const TcreateParamList2<TframerateDoublerSEs> listSE(frameRateDoublerSEs,&TframerateDoublerSEs::name);setParamList(IDFF_frameRateDoublerSE,&listSE);
- static const TcreateParamList1 listDGbobMode(dgbobModes);setParamList(IDFF_dgbobMode,&listDGbobMode); 
+ static const TcreateParamList1 listDGbobMode(dgbobModes);setParamList(IDFF_dgbobMode,&listDGbobMode);
 }
 
 void TdeinterlaceSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
@@ -144,7 +144,7 @@ void TdeinterlaceSettings::createFilters(size_t filtersorder,Tfilters *filters,T
  if (is && show)
   {
    if (!queue.temporary) setOnChange(IDFF_deinterlaceMethod,filters,&Tfilters::onQueueChange);
-   queueFilter<TimgFilterDeinterlace>(filtersorder,filters,queue); 
+   queueFilter<TimgFilterDeinterlace>(filtersorder,filters,queue);
    switch (getMethod(cfgId).id)
     {
      case BYPASS:break;
@@ -156,7 +156,7 @@ void TdeinterlaceSettings::createFilters(size_t filtersorder,Tfilters *filters,T
      case KERNELBOB:queueFilter<TimgFilterKernelBob>(filtersorder,filters,queue); return;
      default:queueFilter<TimgFilterMplayerDeinterlace>(filtersorder,filters,queue); return; //mplayer deinterlacers
     }
-  }  
+  }
 }
 void TdeinterlaceSettings::createPages(TffdshowPageDec *parent) const
 {

@@ -69,9 +69,9 @@ bool TaudioFilterOutput::getOutputFmt(TsampleFormat &fmt,const TfilterSettingsAu
  if (cfg->outsfs==TsampleFormat::SF_AC3)
   fmt.sf=TsampleFormat::SF_AC3;
  else
-  if ((fmt.sf&cfg->outsfs)==0) 
+  if ((fmt.sf&cfg->outsfs)==0)
    fmt.sf=TsampleFormat::sf_bestMatch(fmt.sf,cfg->outsfs);
- return true;  
+ return true;
 }
 
 HRESULT TaudioFilterOutput::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0)
@@ -84,7 +84,7 @@ HRESULT TaudioFilterOutput::process(TfilterQueue::iterator it,TsampleFormat &fmt
    int16_t *samples16=(int16_t*)samples;
    for (size_t i=0;i<numsamples*fmt.nchannels;i++)
     bswap(samples16[i]);
-  } 
+  }
  else if (cfg->outsfs==TsampleFormat::SF_AC3 && parent->config->isDecoder[IDFF_MOVIE_LAVC])
   {
    if (!libavcodec) deci->getLibavcodec(&libavcodec);
@@ -101,7 +101,7 @@ HRESULT TaudioFilterOutput::process(TfilterQueue::iterator it,TsampleFormat &fmt
       };
      static const Tac3channels ac3channels[]=
       {
-       A52_MONO   ,SPEAKER_FRONT_CENTER,0                   ,0                  ,0                  ,0                 ,0,SPEAKER_FRONT_CENTER, 
+       A52_MONO   ,SPEAKER_FRONT_CENTER,0                   ,0                  ,0                  ,0                 ,0,SPEAKER_FRONT_CENTER,
        A52_STEREO ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT ,0                  ,0                  ,0                 ,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT,
        A52_3F     ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER,SPEAKER_FRONT_RIGHT,0                  ,0                 ,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER,
        A52_2F1R   ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT ,SPEAKER_BACK_CENTER,0                  ,0                 ,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_BACK_CENTER,
@@ -109,7 +109,7 @@ HRESULT TaudioFilterOutput::process(TfilterQueue::iterator it,TsampleFormat &fmt
        A52_2F2R   ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT ,SPEAKER_BACK_LEFT  ,SPEAKER_BACK_RIGHT ,0                 ,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT,
        A52_3F2R   ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER,SPEAKER_FRONT_RIGHT,SPEAKER_BACK_LEFT  ,SPEAKER_BACK_RIGHT,0,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT,
 
-       A52_MONO  |A52_LFE ,SPEAKER_FRONT_CENTER,SPEAKER_LOW_FREQUENCY,0                    ,0                    ,0                    ,0                    ,SPEAKER_FRONT_CENTER|SPEAKER_LOW_FREQUENCY, 
+       A52_MONO  |A52_LFE ,SPEAKER_FRONT_CENTER,SPEAKER_LOW_FREQUENCY,0                    ,0                    ,0                    ,0                    ,SPEAKER_FRONT_CENTER|SPEAKER_LOW_FREQUENCY,
        A52_STEREO|A52_LFE ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT  ,SPEAKER_LOW_FREQUENCY,0                    ,0                    ,0                    ,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_LOW_FREQUENCY,
        A52_3F    |A52_LFE ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_CENTER ,SPEAKER_FRONT_RIGHT  ,SPEAKER_LOW_FREQUENCY,0                    ,0                    ,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_LOW_FREQUENCY,
        A52_2F1R  |A52_LFE ,SPEAKER_FRONT_LEFT  ,SPEAKER_FRONT_RIGHT  ,SPEAKER_BACK_CENTER  ,SPEAKER_LOW_FREQUENCY,0                    ,0                    ,SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_BACK_CENTER|SPEAKER_LOW_FREQUENCY,

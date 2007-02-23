@@ -203,7 +203,7 @@ int64_t Tdither::dither_output(int dithering, long i, double Sum, int k)
 }
 
 template<class Tout,int conv> Tout* Tdither::ditherSamples(const float *bufIn,Tout * const bufOut,unsigned int nchannels,size_t numsamples,int dithering)
-{     
+{
  for (unsigned int k=0;k<nchannels;k++)
   {
    const float *bufInF=bufIn+k;
@@ -211,7 +211,7 @@ template<class Tout,int conv> Tout* Tdither::ditherSamples(const float *bufIn,To
    long i=0;
    for (size_t j=0;j<numsamples;j++,i++,bufInF+=nchannels,bufOutF+=nchannels)
     {
-     if (i>31) i=0;                                
+     if (i>31) i=0;
      int64_t val=dither_output(dithering,i,*bufInF*INT32_MAX,k)>>conv;
      *bufOutF=TsampleFormatInfo<Tout>::limit(val);
     }

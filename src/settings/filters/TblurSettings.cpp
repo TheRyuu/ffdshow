@@ -42,7 +42,7 @@ TblurSettings::TblurSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSe
 {
  static const TintOptionT<TblurSettings> iopts[]=
   {
-   IDFF_isBlur                 ,&TblurSettings::is                      ,0,0,_l(""),1, 
+   IDFF_isBlur                 ,&TblurSettings::is                      ,0,0,_l(""),1,
      _l("isBlur"),0,
    IDFF_showBlur               ,&TblurSettings::show                    ,0,0,_l(""),1,
      _l("showBlur"),1,
@@ -130,19 +130,19 @@ void TblurSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQ
      setOnChange(IDFF_blurIsMplayer,filters,&Tfilters::onQueueChange);
      setOnChange(IDFF_blurIsDenoise3d,filters,&Tfilters::onQueueChange);
      setOnChange(IDFF_denoise3Dhq,filters,&Tfilters::onQueueChange);
-    } 
-   if (isSoften) queueFilter<TimgFilterBlur>(filtersorder,filters,queue); 
-   if (isSmoothLuma) queueFilter<TimgFilterSmootherLuma>(filtersorder,filters,queue); 
-   if (isSmoothChroma) queueFilter<TimgFilterSmootherChroma>(filtersorder,filters,queue); 
-   if (isTempSmooth) queueFilter<TimgFilterTimesmooth>(filtersorder,filters,queue); 
-   if (isGradual) queueFilter<TimgFilterGradualDenoise>(filtersorder,filters,queue); 
-   if (isMplayerTNR) queueFilter<TimgFilterMplayerTNR>(filtersorder,filters,queue); 
-   if (isMplayerBlur) queueFilter<TimgFilterMplayerBlur>(filtersorder,filters,queue); 
+    }
+   if (isSoften) queueFilter<TimgFilterBlur>(filtersorder,filters,queue);
+   if (isSmoothLuma) queueFilter<TimgFilterSmootherLuma>(filtersorder,filters,queue);
+   if (isSmoothChroma) queueFilter<TimgFilterSmootherChroma>(filtersorder,filters,queue);
+   if (isTempSmooth) queueFilter<TimgFilterTimesmooth>(filtersorder,filters,queue);
+   if (isGradual) queueFilter<TimgFilterGradualDenoise>(filtersorder,filters,queue);
+   if (isMplayerTNR) queueFilter<TimgFilterMplayerTNR>(filtersorder,filters,queue);
+   if (isMplayerBlur) queueFilter<TimgFilterMplayerBlur>(filtersorder,filters,queue);
    if (isDenoise3d)
     if (denoise3Dhq)
-     queueFilter<TimgFilterDenoise3dHQ>(filtersorder,filters,queue); 
-    else 
-     queueFilter<TimgFilterDenoise3dNormal>(filtersorder,filters,queue); 
+     queueFilter<TimgFilterDenoise3dHQ>(filtersorder,filters,queue);
+    else
+     queueFilter<TimgFilterDenoise3dNormal>(filtersorder,filters,queue);
   }
 }
 void TblurSettings::createPages(TffdshowPageDec *parent) const

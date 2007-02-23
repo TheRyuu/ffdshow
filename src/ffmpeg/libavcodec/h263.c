@@ -151,7 +151,7 @@ static void aspect_to_info(MpegEncContext * s, AVRational aspect){
     int i;
 
     if(aspect.num==0) aspect.num=aspect.den=1;//= (AVRational){1,1};
-    
+
     for(i=1; i<6; i++){
         if(av_cmp_q(pixel_aspect[i], aspect) == 0){
             s->aspect_ratio_info=i;
@@ -5648,8 +5648,8 @@ static int decode_vol_header(MpegEncContext *s, GetBitContext *gb){
 //                    printf("width/height: %d %d\n", width, height);
                 }
             }
-            
-        s->progressive_sequence= 
+
+        s->progressive_sequence=
         s->progressive_frame= get_bits1(gb)^1;
         s->interlaced_dct=0;
         if(!get_bits1(gb) && (s->avctx->debug & FF_DEBUG_PICT_INFO))
@@ -5699,7 +5699,7 @@ static int decode_vol_header(MpegEncContext *s, GetBitContext *gb){
                     s->avctx->intra_matrix[i]=v;
                     s->intra_matrix[j]= v;
                     s->chroma_intra_matrix[j]= v;
-                    
+
                     v= ff_mpeg4_default_non_intra_matrix[i];
                     s->avctx->inter_matrix[i]=v;
                     s->inter_matrix[j]= v;
@@ -5865,7 +5865,7 @@ static int decode_user_data(MpegEncContext *s, GetBitContext *gb){
         if(e==4){
             s->lavc_build= build;
         }
-    
+
     /* xvid detection */
     e=sscanf(buf, "XviD%d", &build);
     if(e==1){

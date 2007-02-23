@@ -13,7 +13,7 @@
  */
 
 // to ffdshow imported from mplayer
- 
+
 #include "stdafx.h"
 #include "ffImgfmt.h"
 #include "spudec.h"
@@ -39,7 +39,7 @@ Tspudec::Tspudec(IffdshowBase *Ideci):deci(Ideci)
  spu_gaussvar = 1.0;
  sub_pos=0;
  firsttime=1;
- 
+
 }
 */
 void Tspudec::spudec_queue_packet( packet_t *packet)
@@ -130,7 +130,7 @@ void Tspudec::spudec_cut_image(void)
           this->image_size = 0;
           return;
   }
-  
+
 //  printf("new h %d new start %d (sz %d st %d)---\n", this->height, this->start_row, this->image_size, this->stride);
 
   image = (unsigned char*)malloc(2 * this->stride * this->height);
@@ -522,7 +522,7 @@ void Tspudec::spudec_reset(void)  // called after seek
 }
 
 void Tspudec::spudec_heartbeat(unsigned int pts100)
-{ 
+{
   now_pts = pts100;
 
   while (queue_head != NULL && pts100 >= queue_head->start_pts) {
@@ -670,7 +670,7 @@ void Tspudec::sws_spu_image(unsigned char *d1, unsigned char *d2, int dw, int dh
    libmplayer->sws_normalizeVec(filter.lumH, 1.0);
    oldgauss = prefs.vobaagauss;
   }
- 
+
  SwsParams params;Tlibmplayer::swsInitParams(&params,SWS_GAUSS);
  SwsContext *ctx=libmplayer->sws_getContext(sw, sh, IMGFMT_Y800, dw, dh, IMGFMT_Y800, &params, &filter, NULL);
  libmplayer->sws_scale_ordered(ctx,(const uint8_t**)&s1,&ss,0,sh,&d1,&ds);
@@ -687,8 +687,8 @@ void Tspudec::spudec_draw_scaled(unsigned int dxs, unsigned int dys, TdrawAlpha 
 
   if (start_pts <= now_pts && now_pts < end_pts) {
 
-    // check if only forced subtitles are requested 
-    if( (forced_subs_only) && !(is_forced_sub) ){ 
+    // check if only forced subtitles are requested
+    if( (forced_subs_only) && !(is_forced_sub) ){
         return;
     }
 /*
@@ -736,7 +736,7 @@ void Tspudec::spudec_draw_scaled(unsigned int dxs, unsigned int dys, TdrawAlpha 
           //unsigned int x, y;
           /* Kludge: draw_alpha needs width multiple of 8. */
           if (scaled_width < scaled_strideY)
-           for (unsigned int y = 0; y < scaled_height; ++y) 
+           for (unsigned int y = 0; y < scaled_height; ++y)
             {
              memset(scaled_aimageY + y * scaled_strideY + scaled_width, 0, scaled_strideY - scaled_width);
              /* FIXME: Why is self one needed? */
@@ -744,7 +744,7 @@ void Tspudec::spudec_draw_scaled(unsigned int dxs, unsigned int dys, TdrawAlpha 
             }
           /*
           if (scaled_width/2 < scaled_strideUV)
-           for (unsigned int y = 0; y < scaled_height/2; ++y) 
+           for (unsigned int y = 0; y < scaled_height/2; ++y)
             {
              memset(scaled_aimageUV + y * scaled_strideUV + scaled_width/2, 128, scaled_strideUV - scaled_width/2);
              memset(scaled_imageUV + y * scaled_strideUV + scaled_width/2, 128, scaled_strideUV - scaled_width/2);
@@ -828,7 +828,7 @@ void Tspudec::spudec_draw_scaled(unsigned int dxs, unsigned int dys, TdrawAlpha 
 
                The original rectangular region that the scaled pixel
                represents is cut in 9 rectangular areas like this:
-               
+
                +---+-----------------+---+
                | 1 |        2        | 3 |
                +---+-----------------+---+
@@ -937,7 +937,7 @@ void Tspudec::spudec_draw_scaled(unsigned int dxs, unsigned int dys, TdrawAlpha 
                       alpha += tmp;
                       color += tmp * image[base + walkx];
                     }
-                  }                 
+                  }
                 }
                 /* 6: center right part */
                 if (right > 0.0 && height > 0) {
@@ -1012,7 +1012,7 @@ nothing_to_do:
           } else {
 	    if (y1 + scaled_height > dys)
 	      scaled_start_row = dys - scaled_height;
-	    else 
+	    else
 	      scaled_start_row = y1;
           }
           break;

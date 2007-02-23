@@ -127,7 +127,7 @@ LOCAL int stream_head_read(mp3lib_ctx *ctx,unsigned char *hbuf,unsigned long *ne
    * we may not be able to address unaligned 32-bit data on non-x86 cpus.
    * Fall back to some portable code.
    */
-  *newhead = 
+  *newhead =
       hbuf[0] << 24 |
       hbuf[1] << 16 |
       hbuf[2] <<  8 |
@@ -151,7 +151,7 @@ LOCAL int stream_head_shift(mp3lib_ctx *ctx,unsigned char *hbuf,unsigned long *h
 LOCAL int decode_header(mp3lib_ctx *ctx,struct frame *fr,unsigned long newhead){
 
     // head_check:
-    if( (newhead & 0xffe00000) != 0xffe00000 ||  
+    if( (newhead & 0xffe00000) != 0xffe00000 ||
         (newhead & 0x0000fc00) == 0x0000fc00) return FALSE;
 
     fr->lay = 4-((newhead>>17)&3);
@@ -434,7 +434,7 @@ int MP3_DecodeFrame(mp3lib_ctx *ctx,const unsigned char *Isrc,unsigned int Isrcl
    if(ctx->fr.error_protection)
     {
      ctx->fr.crc_target=getbits(ctx,16); /* skip crc */
-    } 
+    }
    ctx->fr.single=single;
    switch(ctx->fr.lay){
      case 2: do_layer2(ctx,single);break;

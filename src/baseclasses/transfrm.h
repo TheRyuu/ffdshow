@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // File: Transfrm.h
 //
-// Desc: DirectShow base classes - defines classes from which simple 
+// Desc: DirectShow base classes - defines classes from which simple
 //       transform codecs may be derived.
 //
 // Copyright (c) 1992-2002 Microsoft Corporation.  All rights reserved.
@@ -307,13 +307,17 @@ class CmyTransformFilter : public CTransformFilter
 {
 protected:
  CmyTransformFilter(const TCHAR *name, LPUNKNOWN punk, REFCLSID clsid):CTransformFilter(name,punk,clsid) {}
-public: 
- STDMETHODIMP TransformJoinFilterGraph(IFilterGraph *pGraph,LPCWSTR pName) 
+public:
+ STDMETHODIMP TransformJoinFilterGraph(IFilterGraph *pGraph,LPCWSTR pName)
   {
    return CTransformFilter::JoinFilterGraph(pGraph,pName);
   }
 };
 
 #endif /* __TRANSFRM__ */
+
+
+
+
 
 

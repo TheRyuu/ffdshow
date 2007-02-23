@@ -35,7 +35,7 @@ TvideoCodecWmv9::TvideoCodecWmv9(IffdshowBase *Ideci,IdecVideoSink *IsinkD):
  TvideoCodecEnc(Ideci,NULL)
 {
  create();
-} 
+}
 TvideoCodecWmv9::TvideoCodecWmv9(IffdshowBase *Ideci,IencVideoSink *IsinkE):
  Tcodec(Ideci),TcodecDec(Ideci,NULL),
  TvideoCodec(Ideci),
@@ -56,11 +56,11 @@ TvideoCodecWmv9::TvideoCodecWmv9(IffdshowBase *Ideci,IencVideoSink *IsinkE):
      encoders.push_back(new TencoderWmv9(info->name,CodecID(CODEC_ID_WMV9_LIB+info->index),Tfourccs(info->fcc,0),info->cmplxMax));
     }
   }
-} 
- 
+}
+
 void TvideoCodecWmv9::create(void)
 {
- ok=false; 
+ ok=false;
  wmv9=NULL;infos=NULL;
  dll=new Tdll(dllname,config);
  dll->loadFunction(createWmv9,"createWmv9");
@@ -79,7 +79,7 @@ TvideoCodecWmv9::~TvideoCodecWmv9()
    if (wmv9) destroyWmv9(wmv9);
    delete dll;
   }
- if (infos) delete []infos; 
+ if (infos) delete []infos;
 }
 
 const char_t* TvideoCodecWmv9::getName(void) const
@@ -147,8 +147,8 @@ HRESULT TvideoCodecWmv9::compress(const TffPict &pict,TencFrameParams &params)
    params.frametype=FRAME_TYPE::I;
    params.keyframe=true;
   }
- else 
-  params.frametype=FRAME_TYPE::P;  
+ else
+  params.frametype=FRAME_TYPE::P;
  params.quant=1;
  params.length=abs(len);
  return sinkE->deliverEncodedSample(sample,params);
@@ -169,7 +169,7 @@ bool TvideoCodecWmv9::testMediaType(FOURCC fcc,const CMediaType &mt)
    return !!codec;
   }
  else
-  return CODEC_ID_NONE;  
+  return CODEC_ID_NONE;
 }
 
 bool TvideoCodecWmv9::beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags)
@@ -177,7 +177,7 @@ bool TvideoCodecWmv9::beginDecompress(TffPictBase &pict,FOURCC infcc,const CMedi
  Textradata extradata(mt);
  rd=pict.rectFull;
  if (wmv9->decStart(infcc,deciV->getAVIfps1000_2()/1000.0,pict.rectFull.dx,pict.rectFull.dy,extradata.data,extradata.size,&csp))
-  { 
+  {
    pict.csp=csp;
    return true;
   }

@@ -26,7 +26,7 @@ private:
  TpresetsEnc *presets;
  HMENU createPresetsSubmenu(int cmd,bool save);
  void showPresets(void);
- ints allPropsIDs; 
+ ints allPropsIDs;
  void addPropsIDs(const int *propsIDs);
  HWND hcbxE;
 protected:
@@ -43,8 +43,8 @@ public:
  virtual HRESULT OnConnect(IUnknown *pUnk);
  virtual HRESULT OnDisconnect(void);
  STDMETHODIMP Deactivate(void);
- 
- void quick2dlg(bool redraw); 
+
+ void quick2dlg(bool redraw);
  virtual void translate(void);
 
  int qmin,qmax;
