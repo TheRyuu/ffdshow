@@ -263,6 +263,8 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
    wFormatTag=TsampleFormat::getPCMformat(mt,wFormatTag);
   }
  CodecID codecId=globalSettings->getCodecId(wFormatTag,NULL);
+ if (codecId==CODEC_ID_MP3LIB && _strnicmp(_l("vix.exe"),getExeflnm(),8)==0)
+  return CODEC_ID_NONE;
  DPRINTF(_l("TffdshowDecAudio::getCodecId: codecId=%i"),codecId);
  return codecId;
 }
