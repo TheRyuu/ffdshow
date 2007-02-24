@@ -198,6 +198,7 @@ private:
  bool isTmpgEnc;
  REFERENCE_TIME ft1,ft2;
  float prevpostgain;
+ REFERENCE_TIME priorFrameMsgTime;
 };
 
 class TffdshowDecAudioRaw : public TffdshowDecAudio

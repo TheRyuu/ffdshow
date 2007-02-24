@@ -107,7 +107,8 @@ TffdshowDecAudio::TffdshowDecAudio(CLSID Iclsid,const char_t *className,const CL
   defaultMerit),
   decAudio_char(punk,this),
   isTmpgEnc(false),
-  prevpostgain(1)
+  prevpostgain(1),
+  priorFrameMsgTime(0)
 {
  setThreadName(DWORD(-1),"decAudio");
 
@@ -495,7 +496,19 @@ HRESULT TffdshowDecAudio::flushDecodedSamples(const TffdshowDecAudioInputPin *pi
 
 STDMETHODIMP TffdshowDecAudio::deliverProcessedSample(const void *buf,size_t numsamples,const TsampleFormat &outsf0)
 {
- sendOnFrameMsg();
+ if (m_pClock)
+  {
+   REFERENCE_TIME currentTime,diff;
+   m_pClock->GetTime(&currentTime);
+   diff=currentTime - priorFrameMsgTime;
+   if (diff>5000000 || diff<0) // 500ms
+    {
+     priorFrameMsgTime=currentTime;
+     sendOnFrameMsg();
+    }
+  }
+ else
+  sendOnFrameMsg();
  if (numsamples==0) return S_OK;
  currentOutsf=outsf0;
 
