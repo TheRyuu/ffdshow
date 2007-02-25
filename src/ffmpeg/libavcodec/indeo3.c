@@ -2,18 +2,20 @@
  * Intel Indeo 3 (IV31, IV32, etc.) video decoder for ffmpeg
  * written, produced, and directed by Alan Smithee
  *
- * This library is free software; you can redistribute it and/or
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -70,13 +72,13 @@ static void build_modpred(Indeo3DecodeContext *s)
   for (i=0; i < 128; ++i) {
     s->ModPred[i+0*128] = (i > 126) ? 254 : 2*((i + 1) - ((i + 1) % 2));
     s->ModPred[i+1*128] = (i == 7)  ?  20 : ((i == 119 || i == 120)
-				 ? 236 : 2*((i + 2) - ((i + 1) % 3)));
+                                 ? 236 : 2*((i + 2) - ((i + 1) % 3)));
     s->ModPred[i+2*128] = (i > 125) ? 248 : 2*((i + 2) - ((i + 2) % 4));
-    s->ModPred[i+3*128] =			 2*((i + 1) - ((i - 3) % 5));
+    s->ModPred[i+3*128] =                        2*((i + 1) - ((i - 3) % 5));
     s->ModPred[i+4*128] = (i == 8)  ?  20 : 2*((i + 1) - ((i - 3) % 6));
-    s->ModPred[i+5*128] =			 2*((i + 4) - ((i + 3) % 7));
+    s->ModPred[i+5*128] =                        2*((i + 4) - ((i + 3) % 7));
     s->ModPred[i+6*128] = (i > 123) ? 240 : 2*((i + 4) - ((i + 4) % 8));
-    s->ModPred[i+7*128] =			 2*((i + 5) - ((i + 4) % 9));
+    s->ModPred[i+7*128] =                        2*((i + 5) - ((i + 4) % 9));
   }
 
   s->corrector_type = (unsigned short *) av_malloc (24 * 256 * sizeof(unsigned short));
@@ -84,8 +86,8 @@ static void build_modpred(Indeo3DecodeContext *s)
   for (i=0; i < 24; ++i) {
     for (j=0; j < 256; ++j) {
       s->corrector_type[i*256+j] = (j < corrector_type_0[i])
-				? 1 : ((j < 248 || (i == 16 && j == 248))
-				       ? 0 : corrector_type_2[j - 248]);
+                                ? 1 : ((j < 248 || (i == 16 && j == 248))
+                                       ? 0 : corrector_type_2[j - 248]);
     }
   }
 }
@@ -94,10 +96,6 @@ static void iv_Decode_Chunk(Indeo3DecodeContext *s, unsigned char *cur,
   unsigned char *ref, int width, int height, unsigned char *buf1,
   long fflags2, unsigned char *hdr,
   unsigned char *buf2, int min_width_160);
-
-#ifndef min
-#define min(a,b) ((a) < (b) ? (a) : (b))
-#endif
 
 /* ---------------------------------------------------------------------- */
 static void iv_alloc_frames(Indeo3DecodeContext *s)
@@ -228,7 +226,7 @@ static unsigned long iv_decode_frame(Indeo3DecodeContext *s,
 
   iv_Decode_Chunk(s, s->cur_frame->Ybuf, s->ref_frame->Ybuf, hdr_width,
     hdr_height, buf_pos + offs * 2, fflags2, hdr_pos, buf_pos,
-    min(hdr_width, 160));
+    FFMIN(hdr_width, 160));
 
   if (!(s->avctx->flags & CODEC_FLAG_GRAY))
   {
@@ -239,7 +237,7 @@ static unsigned long iv_decode_frame(Indeo3DecodeContext *s,
 
   iv_Decode_Chunk(s, s->cur_frame->Vbuf, s->ref_frame->Vbuf, chroma_width,
     chroma_height, buf_pos + offs * 2, fflags2, hdr_pos, buf_pos,
-    min(chroma_width, 40));
+    FFMIN(chroma_width, 40));
 
   buf_pos = buf + 16 + offs3;
   offs = le2me_32(*(uint32_t *)buf_pos);
@@ -247,7 +245,7 @@ static unsigned long iv_decode_frame(Indeo3DecodeContext *s,
 
   iv_Decode_Chunk(s, s->cur_frame->Ubuf, s->ref_frame->Ubuf, chroma_width,
     chroma_height, buf_pos + offs * 2, fflags2, hdr_pos, buf_pos,
-    min(chroma_width, 40));
+    FFMIN(chroma_width, 40));
 
   }
 

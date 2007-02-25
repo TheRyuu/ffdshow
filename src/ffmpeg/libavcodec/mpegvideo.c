@@ -188,7 +188,7 @@ static void convert_matrix(DSPContext *dsp, int (*qmat)[64], uint16_t (*qmat16)[
 
 static inline void update_qscale(MpegEncContext *s){
     s->qscale= (s->lambda*139 + FF_LAMBDA_SCALE*64) >> (FF_LAMBDA_SHIFT + 7);
-    s->qscale= clip(s->qscale, s->avctx->qmin, s->avctx->qmax);
+    s->qscale= av_clip(s->qscale, s->avctx->qmin, s->avctx->qmax);
 
     s->lambda2= (s->lambda*s->lambda + FF_LAMBDA_SCALE/2) >> FF_LAMBDA_SHIFT;
 }
@@ -2329,10 +2329,10 @@ static inline void gmc1_motion(MpegEncContext *s,
     src_y = s->mb_y * 16 + (motion_y >> (s->sprite_warping_accuracy+1));
     motion_x<<=(3-s->sprite_warping_accuracy);
     motion_y<<=(3-s->sprite_warping_accuracy);
-    src_x = clip(src_x, -16, s->width);
+    src_x = av_clip(src_x, -16, s->width);
     if (src_x == s->width)
         motion_x =0;
-    src_y = clip(src_y, -16, s->height);
+    src_y = av_clip(src_y, -16, s->height);
     if (src_y == s->height)
         motion_y =0;
 
@@ -2371,10 +2371,10 @@ static inline void gmc1_motion(MpegEncContext *s,
     src_y = s->mb_y * 8 + (motion_y >> (s->sprite_warping_accuracy+1));
     motion_x<<=(3-s->sprite_warping_accuracy);
     motion_y<<=(3-s->sprite_warping_accuracy);
-    src_x = clip(src_x, -8, s->width>>1);
+    src_x = av_clip(src_x, -8, s->width>>1);
     if (src_x == s->width>>1)
         motion_x =0;
-    src_y = clip(src_y, -8, s->height>>1);
+    src_y = av_clip(src_y, -8, s->height>>1);
     if (src_y == s->height>>1)
         motion_y =0;
 
@@ -2544,10 +2544,10 @@ static inline int hpel_motion(MpegEncContext *s,
     src_y += motion_y >> 1;
 
     /* WARNING: do no forget half pels */
-    src_x = clip(src_x, -16, width); //FIXME unneeded for emu?
+    src_x = av_clip(src_x, -16, width); //FIXME unneeded for emu?
     if (src_x == width)
         dxy &= ~1;
-    src_y = clip(src_y, -16, height);
+    src_y = av_clip(src_y, -16, height);
     if (src_y == height)
         dxy &= ~2;
     src += src_y * stride + src_x;
@@ -3021,10 +3021,10 @@ static inline void chroma_4mv_motion(MpegEncContext *s,
 
     src_x = s->mb_x * 8 + mx;
     src_y = s->mb_y * 8 + my;
-    src_x = clip(src_x, -8, s->width/2);
+    src_x = av_clip(src_x, -8, s->width/2);
     if (src_x == s->width/2)
         dxy &= ~1;
-    src_y = clip(src_y, -8, s->height/2);
+    src_y = av_clip(src_y, -8, s->height/2);
     if (src_y == s->height/2)
         dxy &= ~2;
 
@@ -3237,10 +3237,10 @@ static inline void MPV_motion(MpegEncContext *s,
                 src_y = mb_y * 16 + (motion_y >> 2) + (i >>1) * 8;
 
                 /* WARNING: do no forget half pels */
-                src_x = clip(src_x, -16, s->width);
+                src_x = av_clip(src_x, -16, s->width);
                 if (src_x == s->width)
                     dxy &= ~3;
-                src_y = clip(src_y, -16, s->height);
+                src_y = av_clip(src_y, -16, s->height);
                 if (src_y == s->height)
                     dxy &= ~12;
 
@@ -4006,7 +4006,7 @@ static av_always_inline void encode_mb_internal(MpegEncContext *s, int motion_x,
             s->dquant= s->qscale - last_qp;
 
             if(s->out_format==FMT_H263){
-                s->dquant= clip(s->dquant, -2, 2);
+                s->dquant= av_clip(s->dquant, -2, 2);
 
                 if(s->codec_id==CODEC_ID_MPEG4){
                     if(!s->mb_intra){
@@ -5420,7 +5420,7 @@ static int encode_picture(MpegEncContext *s, int picture_number)
         for(i=1;i<64;i++){
             int j= s->dsp.idct_permutation[i];
 
-            s->intra_matrix[j] = clip_uint8((ff_mpeg1_default_intra_matrix[i] * s->qscale) >> 3);
+            s->intra_matrix[j] = av_clip_uint8((ff_mpeg1_default_intra_matrix[i] * s->qscale) >> 3);
         }
         convert_matrix(&s->dsp, s->q_intra_matrix, s->q_intra_matrix16,
                        s->intra_matrix, s->intra_quant_bias, 8, 8, 1);

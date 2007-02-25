@@ -292,7 +292,7 @@ static inline short adpcm_yamaha_expand_nibble(ADPCMChannelStatus *c, unsigned c
     c->predictor += (c->step * yamaha_difflookup[nibble]) / 8;
     CLAMP_TO_SHORT(c->predictor);
     c->step = (c->step * yamaha_indexscale[nibble]) >> 8;
-    c->step = clip(c->step, 127, 24567);
+    c->step = av_clip(c->step, 127, 24567);
     return c->predictor;
 }
 
@@ -532,10 +532,10 @@ static int adpcm_decode_frame(AVCodecContext *avctx,
         n = buf_size - 7 * avctx->channels;
         if (n < 0)
             return -1;
-        block_predictor[0] = clip(*src++, 0, 7);
+        block_predictor[0] = av_clip(*src++, 0, 7);
         block_predictor[1] = 0;
         if (st)
-            block_predictor[1] = clip(*src++, 0, 7);
+            block_predictor[1] = av_clip(*src++, 0, 7);
         c->status[0].idelta = (int16_t)((*src & 0xFF) | ((src[1] << 8) & 0xFF00));
         src+=2;
         if (st){
@@ -857,8 +857,8 @@ return -1;
 
                 c->status[i].step_index += table[delta & (~signmask)];
 
-                c->status[i].step_index = clip(c->status[i].step_index, 0, 88);
-                c->status[i].predictor = clip(c->status[i].predictor, -32768, 32767);
+                c->status[i].step_index = av_clip(c->status[i].step_index, 0, 88);
+                c->status[i].predictor = av_clip(c->status[i].predictor, -32768, 32767);
 
                 *samples++ = c->status[i].predictor;
             }

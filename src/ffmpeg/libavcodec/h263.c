@@ -78,9 +78,7 @@ static inline int mpeg4_decode_dc(MpegEncContext * s, int n, int *dir_ptr);
 static inline int mpeg4_decode_block(MpegEncContext * s, DCTELEM * block,
                               int n, int coded, int intra, int rvlc);
 #ifdef CONFIG_ENCODERS
-
 static int h263_pred_dc(MpegEncContext * s, int n, int16_t **dc_val_ptr);
-
 static void mpeg4_encode_visual_object_header(MpegEncContext * s);
 static void mpeg4_encode_vol_header(MpegEncContext * s, int vo_number, int vol_number);
 #endif //CONFIG_ENCODERS
@@ -219,7 +217,7 @@ void h263_encode_picture_header(MpegEncContext * s, int picture_number)
         for(i=0; i<2; i++){
             int div, error;
             div= (s->avctx->time_base.num*1800000LL + 500LL*s->avctx->time_base.den) / ((1000LL+i)*s->avctx->time_base.den);
-            div= clip(1, div, 127);
+            div= av_clip(1, div, 127);
             error= FFABS(s->avctx->time_base.num*1800000LL - (1000LL+i)*s->avctx->time_base.den*div);
             if(error < best_error){
                 best_error= error;
@@ -504,7 +502,7 @@ static void ff_init_qscale_tab(MpegEncContext *s){
     for(i=0; i<s->mb_num; i++){
         unsigned int lam= s->lambda_table[ s->mb_index2xy[i] ];
         int qp= (lam*139 + FF_LAMBDA_SCALE*64) >> (FF_LAMBDA_SHIFT + 7);
-        qscale_table[ s->mb_index2xy[i] ]= clip(qp, s->avctx->qmin, s->avctx->qmax);
+        qscale_table[ s->mb_index2xy[i] ]= av_clip(qp, s->avctx->qmin, s->avctx->qmax);
     }
 }
 
@@ -2527,7 +2525,7 @@ void mpeg4_encode_picture_header(MpegEncContext * s, int picture_number)
 #endif //CONFIG_ENCODERS
 
 /**
- * set qscale and update qscale dependant variables.
+ * set qscale and update qscale dependent variables.
  */
 void ff_set_qscale(MpegEncContext * s, int qscale)
 {
@@ -3785,6 +3783,8 @@ static int mpeg4_decode_partitioned_mb(MpegEncContext *s, DCTELEM block[6][64])
     mb_type= s->current_picture.mb_type[xy];
     cbp = s->cbp_table[xy];
 
+    s->use_intra_dc_vlc= s->qscale < s->intra_dc_threshold;
+
     if(s->current_picture.qscale_table[xy] != s->qscale){
         ff_set_qscale(s, s->current_picture.qscale_table[xy] );
     }
@@ -4521,6 +4521,9 @@ intra:
             return -1;
         }
         cbp = (cbpc & 3) | (cbpy << 2);
+
+        s->use_intra_dc_vlc= s->qscale < s->intra_dc_threshold;
+
         if (dquant) {
             ff_set_qscale(s, s->qscale + quant_tab[get_bits(&s->gb, 2)]);
         }
@@ -4715,7 +4718,6 @@ retry:
                     }
                 }
             }
-
         } else {
             run = rl->table_run[code];
             level = rl->table_level[code];
@@ -4815,7 +4817,7 @@ static inline int mpeg4_decode_block(MpegEncContext * s, DCTELEM * block,
     //Note intra & rvlc should be optimized away if this is inlined
 
     if(intra) {
-        if(s->qscale < s->intra_dc_threshold){
+      if(s->use_intra_dc_vlc){
         /* DC coef */
         if(s->partitioned_frame){
             level = s->dc_val[0][ s->block_index[n] ];
@@ -4882,7 +4884,6 @@ static inline int mpeg4_decode_block(MpegEncContext * s, DCTELEM * block,
             }
         }
     }
-
   {
     OPEN_READER(re, &s->gb);
     for(;;) {
@@ -4974,7 +4975,6 @@ static inline int mpeg4_decode_block(MpegEncContext * s, DCTELEM * block,
                             }
                         }
                     }
-
 #endif
                     if (level>0) level= level * qmul + qadd;
                     else         level= level * qmul - qadd;
@@ -5041,7 +5041,7 @@ static inline int mpeg4_decode_block(MpegEncContext * s, DCTELEM * block,
   }
  not_coded:
     if (intra) {
-        if(s->qscale >= s->intra_dc_threshold){
+        if(!s->use_intra_dc_vlc){
             block[0] = ff_mpeg4_pred_dc(s, n, block[0], &dc_pred_dir, 0);
 
             i -= i>>31; //if(i == -1) i=0;
@@ -5643,11 +5643,11 @@ static int decode_vol_header(MpegEncContext *s, GetBitContext *gb){
             height = get_bits(gb, 13);
             skip_bits1(gb);   /* marker */
             if(width && height && !(s->width && s->codec_tag == ff_get_fourcc("MP4S"))){ /* they should be non zero but who knows ... */
-                    s->width = width;
-                    s->height = height;
-//                    printf("width/height: %d %d\n", width, height);
-                }
+                s->width = width;
+                s->height = height;
+//                printf("width/height: %d %d\n", width, height);
             }
+        }
 
         s->progressive_sequence=
         s->progressive_frame= get_bits1(gb)^1;
@@ -5858,13 +5858,13 @@ static int decode_user_data(MpegEncContext *s, GetBitContext *gb){
             build= (ver<<16) + (ver2<<8) + ver3;
     }
     if(e!=4){
-            if(strcmp(buf, "ffmpeg")==0){
-                s->lavc_build= 4600;
-            }
+        if(strcmp(buf, "ffmpeg")==0){
+            s->lavc_build= 4600;
         }
-        if(e==4){
-            s->lavc_build= build;
-        }
+    }
+    if(e==4){
+        s->lavc_build= build;
+    }
 
     /* xvid detection */
     e=sscanf(buf, "XviD%d", &build);

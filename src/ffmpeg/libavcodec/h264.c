@@ -1322,13 +1322,13 @@ static inline void direct_dist_scale_factor(H264Context * const h){
     int i;
     for(i=0; i<h->ref_count[0]; i++){
         int poc0 = h->ref_list[0][i].poc;
-        int td = clip(poc1 - poc0, -128, 127);
+        int td = av_clip(poc1 - poc0, -128, 127);
         if(td == 0 /* FIXME || pic0 is a long-term ref */){
             h->dist_scale_factor[i] = 256;
         }else{
-            int tb = clip(poc - poc0, -128, 127);
+            int tb = av_clip(poc - poc0, -128, 127);
             int tx = (16384 + (FFABS(td) >> 1)) / td;
-            h->dist_scale_factor[i] = clip((tb*tx + 32) >> 6, -1024, 1023);
+            h->dist_scale_factor[i] = av_clip((tb*tx + 32) >> 6, -1024, 1023);
         }
     }
     if(FRAME_MBAFF){
@@ -1885,7 +1885,7 @@ static void chroma_dc_dequant_idct_c(DCTELEM *block, int qp, int qmul){
  */
 static inline int get_chroma_qp(int chroma_qp_index_offset, int qscale){
 
-    return chroma_qp[clip(qscale + chroma_qp_index_offset, 0, 51)];
+    return chroma_qp[av_clip(qscale + chroma_qp_index_offset, 0, 51)];
 }
 
 //FIXME need to check that this doesnt overflow signed 32 bit for low qp, i am not sure, it's very close
@@ -4059,11 +4059,11 @@ static void implicit_weight_table(H264Context *h){
         int poc0 = h->ref_list[0][ref0].poc;
         for(ref1=0; ref1 < h->ref_count[1]; ref1++){
             int poc1 = h->ref_list[1][ref1].poc;
-            int td = clip(poc1 - poc0, -128, 127);
+            int td = av_clip(poc1 - poc0, -128, 127);
             if(td){
-                int tb = clip(cur_poc - poc0, -128, 127);
+                int tb = av_clip(cur_poc - poc0, -128, 127);
                 int tx = (16384 + (FFABS(td) >> 1)) / td;
-                int dist_scale_factor = clip((tb*tx + 32) >> 6, -1024, 1023) >> 2;
+                int dist_scale_factor = av_clip((tb*tx + 32) >> 6, -1024, 1023) >> 2;
                 if(dist_scale_factor < -64 || dist_scale_factor > 128)
                     h->implicit_weight[ref0][ref1] = 32;
                 else
@@ -6753,17 +6753,17 @@ static void filter_mb_mbaff_edgev( H264Context *h, uint8_t *pix, int stride, int
                 int i_delta;
 
                 if( FFABS( p2 - p0 ) < beta ) {
-                    pix[-2] = p1 + clip( ( p2 + ( ( p0 + q0 + 1 ) >> 1 ) - ( p1 << 1 ) ) >> 1, -tc0, tc0 );
+                    pix[-2] = p1 + av_clip( ( p2 + ( ( p0 + q0 + 1 ) >> 1 ) - ( p1 << 1 ) ) >> 1, -tc0, tc0 );
                     tc++;
                 }
                 if( FFABS( q2 - q0 ) < beta ) {
-                    pix[1] = q1 + clip( ( q2 + ( ( p0 + q0 + 1 ) >> 1 ) - ( q1 << 1 ) ) >> 1, -tc0, tc0 );
+                    pix[1] = q1 + av_clip( ( q2 + ( ( p0 + q0 + 1 ) >> 1 ) - ( q1 << 1 ) ) >> 1, -tc0, tc0 );
                     tc++;
                 }
 
-                i_delta = clip( (((q0 - p0 ) << 2) + (p1 - q1) + 4) >> 3, -tc, tc );
-                pix[-1] = clip_uint8( p0 + i_delta );    /* p0' */
-                pix[0]  = clip_uint8( q0 - i_delta );    /* q0' */
+                i_delta = av_clip( (((q0 - p0 ) << 2) + (p1 - q1) + 4) >> 3, -tc, tc );
+                pix[-1] = av_clip_uint8( p0 + i_delta );    /* p0' */
+                pix[0]  = av_clip_uint8( q0 - i_delta );    /* q0' */
                 tprintf("filter_mb_mbaff_edgev i:%d, qp:%d, indexA:%d, alpha:%d, beta:%d, tc:%d\n# bS:%d -> [%02x, %02x, %02x, %02x, %02x, %02x] =>[%02x, %02x, %02x, %02x]\n", i, qp[qp_index], index_a, alpha, beta, tc, bS[bS_index], pix[-3], p1, p0, q0, q1, pix[2], p1, pix[-1], pix[0], q1);
             }
         }else{
@@ -6841,10 +6841,10 @@ static void filter_mb_mbaff_edgecv( H264Context *h, uint8_t *pix, int stride, in
             if( FFABS( p0 - q0 ) < alpha &&
                 FFABS( p1 - p0 ) < beta &&
                 FFABS( q1 - q0 ) < beta ) {
-                const int i_delta = clip( (((q0 - p0 ) << 2) + (p1 - q1) + 4) >> 3, -tc, tc );
+                const int i_delta = av_clip( (((q0 - p0 ) << 2) + (p1 - q1) + 4) >> 3, -tc, tc );
 
-                pix[-1] = clip_uint8( p0 + i_delta );    /* p0' */
-                pix[0]  = clip_uint8( q0 - i_delta );    /* q0' */
+                pix[-1] = av_clip_uint8( p0 + i_delta );    /* p0' */
+                pix[0]  = av_clip_uint8( q0 - i_delta );    /* q0' */
                 tprintf("filter_mb_mbaff_edgecv i:%d, qp:%d, indexA:%d, alpha:%d, beta:%d, tc:%d\n# bS:%d -> [%02x, %02x, %02x, %02x, %02x, %02x] =>[%02x, %02x, %02x, %02x]\n", i, qp[qp_index], index_a, alpha, beta, tc, bS[bS_index], pix[-3], p1, p0, q0, q1, pix[2], p1, pix[-1], pix[0], q1);
             }
         }else{
@@ -7326,9 +7326,9 @@ static int decode_slice(H264Context *h){
         for( i= 0; i < 460; i++ ) {
             int pre;
             if( h->slice_type == I_TYPE )
-                pre = clip( ((cabac_context_init_I[i][0] * s->qscale) >>4 ) + cabac_context_init_I[i][1], 1, 126 );
+                pre = av_clip( ((cabac_context_init_I[i][0] * s->qscale) >>4 ) + cabac_context_init_I[i][1], 1, 126 );
             else
-                pre = clip( ((cabac_context_init_PB[h->cabac_init_idc][i][0] * s->qscale) >>4 ) + cabac_context_init_PB[h->cabac_init_idc][i][1], 1, 126 );
+                pre = av_clip( ((cabac_context_init_PB[h->cabac_init_idc][i][0] * s->qscale) >>4 ) + cabac_context_init_PB[h->cabac_init_idc][i][1], 1, 126 );
 
             if( pre <= 63 )
                 h->cabac_state[i] = 2 * ( 63 - pre ) + 0;
@@ -7927,36 +7927,45 @@ static int find_frame_end(H264Context *h, const uint8_t *buf, int buf_size){
 //printf("first %02X%02X%02X%02X\n", buf[0], buf[1],buf[2],buf[3]);
 //    mb_addr= pc->mb_addr - 1;
     state= pc->state;
-    for(i=0; i<=buf_size; i++){
-        if((state&0xFFFFFF1F) == 0x101 || (state&0xFFFFFF1F) == 0x102 || (state&0xFFFFFF1F) == 0x105){
-            tprintf("find_frame_end new startcode = %08x, frame_start_found = %d, pos = %d\n", state, pc->frame_start_found, i);
-            if(pc->frame_start_found){
-                // If there isn't one more byte in the buffer
-                // the test on first_mb_in_slice cannot be done yet
-                // do it at next call.
-                if (i >= buf_size) break;
-                if (buf[i] & 0x80) {
-                    // first_mb_in_slice is 0, probably the first nal of a new
-                    // slice
-                    tprintf("find_frame_end frame_end_found, state = %08x, pos = %d\n", state, i);
-                    pc->state=-1;
-                    pc->frame_start_found= 0;
-                    return i-4;
+    if(state>13)
+        state= 7;
+
+    for(i=0; i<buf_size; i++){
+        if(state==7){
+            for(; i<buf_size; i++){
+                if(!buf[i]){
+                    state=2;
+                    break;
                 }
             }
-            pc->frame_start_found = 1;
+        }else if(state<=2){
+            if(buf[i]==1)   state^= 5; //2->7, 1->4, 0->5
+            else if(buf[i]) state = 7;
+            else            state>>=1; //2->1, 1->0, 0->0
+        }else if(state<=5){
+            int v= buf[i] & 0x1F;
+            if(v==7 || v==8 || v==9){
+                if(pc->frame_start_found){
+                    i++;
+found:
+                    pc->state=7;
+                    pc->frame_start_found= 0;
+                    return i-(state&5);
+                }
+            }else if(v==1 || v==2 || v==5){
+                if(pc->frame_start_found){
+                    state+=8;
+                    continue;
+                }else
+                    pc->frame_start_found = 1;
+            }
+            state= 7;
+        }else{
+            if(buf[i] & 0x80)
+                goto found;
+            state= 7;
         }
-        if((state&0xFFFFFF1F) == 0x107 || (state&0xFFFFFF1F) == 0x108 || (state&0xFFFFFF1F) == 0x109){
-           if(pc->frame_start_found){
-                pc->state=-1;
-                pc->frame_start_found= 0;
-                return i-4;
-           }
-        }
-        if (i<buf_size)
-            state= (state<<8) | buf[i];
     }
-
     pc->state= state;
     return END_NOT_FOUND;
 }

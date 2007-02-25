@@ -27,11 +27,9 @@
 
 #include "avcodec.h"
 #include "dsputil.h"
-#include "eval.h"
 #include "ratecontrol.h"
 #include "mpegvideo.h"
-
-#ifdef CONFIG_ENCODERS
+#include "eval.h"
 
 #undef NDEBUG // allways check asserts, the speed effect is far too small to disable them
 #include <assert.h>
@@ -48,6 +46,20 @@ void ff_write_pass1_stats(MpegEncContext *s){
             s->current_picture_ptr->display_picture_number, s->current_picture_ptr->coded_picture_number, s->pict_type,
             s->current_picture.quality, s->i_tex_bits, s->p_tex_bits, s->mv_bits, s->misc_bits,
             s->f_code, s->b_code, s->current_picture.mc_mb_var_sum, s->current_picture.mb_var_sum, s->i_count, s->skip_count, s->header_bits);
+}
+
+static inline double qp2bits(RateControlEntry *rce, double qp){
+    if(qp<=0.0){
+        av_log(NULL, AV_LOG_ERROR, "qp<=0.0\n");
+    }
+    return rce->qscale * (double)(rce->i_tex_bits + rce->p_tex_bits+1)/ qp;
+}
+
+static inline double bits2qp(RateControlEntry *rce, double bits){
+    if(bits<0.9){
+        av_log(NULL, AV_LOG_ERROR, "bits<0.9\n");
+    }
+    return rce->qscale * (double)(rce->i_tex_bits + rce->p_tex_bits+1)/ bits;
 }
 
 int ff_rate_control_init(MpegEncContext *s)
@@ -220,20 +232,6 @@ void ff_rate_control_uninit(MpegEncContext *s)
 #endif
 }
 
-static inline double qp2bits(RateControlEntry *rce, double qp){
-    if(qp<=0.0){
-        av_log(NULL, AV_LOG_ERROR, "qp<=0.0\n");
-    }
-    return rce->qscale * (double)(rce->i_tex_bits + rce->p_tex_bits+1)/ qp;
-}
-
-static inline double bits2qp(RateControlEntry *rce, double bits){
-    if(bits<0.9){
-        av_log(NULL, AV_LOG_ERROR, "bits<0.9\n");
-    }
-    return rce->qscale * (double)(rce->i_tex_bits + rce->p_tex_bits+1)/ bits;
-}
-
 int ff_vbv_update(MpegEncContext *s, int frame_size){
     RateControlContext *rcc= &s->rc_context;
     const double fps= 1/av_q2d(s->avctx->time_base);
@@ -252,7 +250,7 @@ int ff_vbv_update(MpegEncContext *s, int frame_size){
         }
 
         left= buffer_size - rcc->buffer_index - 1;
-        rcc->buffer_index += clip(left, min_rate, max_rate);
+        rcc->buffer_index += av_clip(left, min_rate, max_rate);
 
         if(rcc->buffer_index > buffer_size){
             int stuffing= ceil((rcc->buffer_index - buffer_size)/8);
@@ -457,8 +455,8 @@ static void get_qminmax(int *qmin_ret, int *qmax_ret, MpegEncContext *s, int pic
         }
     }
 
-    qmin= clip(qmin, 1, FF_LAMBDA_MAX);
-    qmax= clip(qmax, 1, FF_LAMBDA_MAX);
+    qmin= av_clip(qmin, 1, FF_LAMBDA_MAX);
+    qmax= av_clip(qmax, 1, FF_LAMBDA_MAX);
 
     if(qmax<qmin) qmax= qmin;
 
@@ -797,7 +795,7 @@ float ff_rate_estimate_qscale(MpegEncContext *s, int dry_run)
 //printf("%f ", q);
         //assert(q>0.0);
 
-        if(pict_type==P_TYPE || s->intra_only){ //FIXME type dependant blur like in 2-pass
+        if(pict_type==P_TYPE || s->intra_only){ //FIXME type dependent blur like in 2-pass
             rcc->short_term_qsum*=a->qblur;
             rcc->short_term_qcount*=a->qblur;
 
@@ -885,7 +883,7 @@ static int init_pass2(MpegEncContext *s)
     all_const_bits= const_bits[I_TYPE] + const_bits[P_TYPE] + const_bits[B_TYPE];
 
     if(all_available_bits < all_const_bits){
-        av_log(s->avctx, AV_LOG_ERROR, "requested bitrate is to low\n");
+        av_log(s->avctx, AV_LOG_ERROR, "requested bitrate is too low\n");
         return -1;
     }
 
@@ -982,5 +980,3 @@ static int init_pass2(MpegEncContext *s)
 
     return 0;
 }
-
-#endif
