@@ -25,6 +25,7 @@
 #include "TffdshowPageDec.h"
 #include "Tinfo.h"
 #include "Ttranslate.h"
+#include "TcompatibilityList.h"
 
 //=================================== TinfoPageDec =======================================
 void TinfoPageDec::init(void)
@@ -59,36 +60,38 @@ void TinfoPageDec::init(void)
   }
  else
   enable(0,idmerits);
-
- edLimitText(IDC_ED_BLACKLIST,128);
+ 
+ edLimitText(IDC_ED_BLACKLIST,MAX_COMPATIBILITYLIST_LENGTH);
+ edLimitText(IDC_ED_COMPATIBILITYLIST,MAX_COMPATIBILITYLIST_LENGTH);
  if(tr)
   {
    addHint(IDC_ED_BLACKLIST,tr->translate(IDH_ED_BLACKLIST));
   }
 
- hlv=GetDlgItem(m_hwnd,IDC_LV_INFO);
+ hlv=GetDlgItem(m_hwnd,IDC_LV_INFO); 
  CRect r=getChildRect(IDC_LV_INFO);
  int ncol=0;
  ListView_AddCol(hlv,ncol,r.Width(),_l("Property"),false);
  ListView_SetExtendedListViewStyleEx(hlv,LVS_EX_FULLROWSELECT|LVS_EX_INFOTIP,LVS_EX_FULLROWSELECT|LVS_EX_INFOTIP);
- infoitems.clear();
+ infoitems.clear(); 
  const int *infos=getInfos();
  for (int i=0;;i++)
   {
    Titem it;
    if (!info->getInfo(i,&it.id,&it.name))
     break;
-   for (int j=0;infos[j];j++)
+   for (int j=0;infos[j];j++) 
     if (infos[j]==it.id)
      {
       it.index=j;
       infoitems.push_back(it);
-     }
+     } 
   }
- std::sort(infoitems.begin(),infoitems.end(),TsortItem(infos));
- ListView_SetItemCount(hlv,infoitems.size());
+ std::sort(infoitems.begin(),infoitems.end(),TsortItem(infos)); 
+ ListView_SetItemCount(hlv,infoitems.size()); 
  SendMessage(hlv,LVM_SETBKCOLOR,0,GetSysColor(COLOR_BTNFACE));
  SendMessage(hlv,LVM_SETTEXTBKCOLOR,0,GetSysColor(COLOR_BTNFACE));
+ blacklist2dlg();
 }
 
 void TinfoPageDec::cfg2dlg(void)
@@ -132,14 +135,32 @@ void TinfoPageDec::blacklist2dlg(void)
 {
  int is=cfgGet(IDFF_isBlacklist);
  setCheck(IDC_CHB_BLACKLIST,is);
- SetDlgItemText(m_hwnd,IDC_ED_BLACKLIST,cfgGetStr(IDFF_blacklist));
+ const char_t *blacklist0=cfgGetStr(IDFF_blacklist);
+ ffstring blacklistResult;
+ convertDelimit(blacklist0,_l(";"),blacklistResult,_l(";"));
+ SetDlgItemText(m_hwnd,IDC_ED_BLACKLIST,blacklistResult.c_str());
  enable(is,IDC_ED_BLACKLIST);
+ enable(is,IDC_BT_BLACKLIST);
+
+ is=cfgGet(IDFF_isCompatibilityList);
+ setCheck(IDC_CHB_COMPATIBILITYLIST,is);
+ const char_t *complist0=cfgGetStr(IDFF_compatibilityList);
+ ffstring complistResult;
+ convertDelimit(complist0,_l("\r\n"),complistResult,_l(";"));
+ SetDlgItemText(m_hwnd,IDC_ED_COMPATIBILITYLIST,complistResult.c_str());
+ enable(is,IDC_ED_COMPATIBILITYLIST);
+ enable(is,IDC_BT_COMPATIBILITYLIST);
 }
 
 void TinfoPageDec::applySettings(void)
 {
  if (isMerit && meritset)
   deci->setMerit(merits[tbrGet(IDC_TBR_MERIT)].first);
+}
+
+bool TinfoPageDec::strCaseCmp(const ffstring &s1,const ffstring &s2)
+{
+ return DwStrcasecmp(s1,s2)==-1;
 }
 
 INT_PTR TinfoPageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -156,7 +177,7 @@ INT_PTR TinfoPageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
      }
     break;
    case WM_COMMAND:
-    switch (LOWORD(wParam))
+    switch (LOWORD(wParam))  
      {
       case IDC_CHB_ALLOW_MMX:
       case IDC_CHB_ALLOW_MMXEXT:
@@ -177,13 +198,13 @@ INT_PTR TinfoPageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        }
       case IDC_ED_BLACKLIST:
        if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
-        {
-         char_t blacklist[128];
-         GetDlgItemText(m_hwnd,IDC_ED_BLACKLIST,blacklist,128);
-         cfgSet(IDFF_blacklist,blacklist);
-        }
+        comp_dlg2cfg(IDC_ED_BLACKLIST,IDFF_blacklist,_l(";"));
        return TRUE;
-     }
+      case IDC_ED_COMPATIBILITYLIST:
+       if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
+        comp_dlg2cfg(IDC_ED_COMPATIBILITYLIST,IDFF_compatibilityList,_l("\r\n"));
+       return TRUE;
+     }    
     break;
    case WM_NOTIFY:
     {
@@ -209,11 +230,34 @@ INT_PTR TinfoPageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
             }
           return TRUE;
          }
-       }
-     break;
-    }
+       }  
+     break;  
+    }  
   }
  return TconfPageDec::msgProc(uMsg,wParam,lParam);
+}
+void TinfoPageDec::comp_dlg2cfg(int IDC_ED_target,int IDFF_target,const char_t *delimitResult)
+{
+ char_t complist0[MAX_COMPATIBILITYLIST_LENGTH];
+ GetDlgItemText(m_hwnd,IDC_ED_target,complist0,MAX_COMPATIBILITYLIST_LENGTH);
+ ffstring complistResult;
+ convertDelimit(complist0,_l(";"),complistResult,delimitResult);
+ cfgSet(IDFF_target,complistResult.c_str());
+}
+
+void TinfoPageDec::convertDelimit(const char_t* instr,const char_t *inDelimit,ffstring &outstr,const char_t *outDelimit,const char_t *newFileName)
+{
+ strings complist;
+ strtok(instr,inDelimit,complist);
+
+ std::list<ffstring> complistList;
+ complistList.insert(complistList.begin(),complist.begin(),complist.end());
+ if (newFileName)
+  complistList.push_back(newFileName);
+ complistList.sort(strCaseCmp);
+
+ for (std::list<ffstring>::iterator i=complistList.begin();i!=complistList.end();i++)
+  outstr+=*i+outDelimit;
 }
 
 void TinfoPageDec::onFrame(void)
@@ -225,7 +269,7 @@ void TinfoPageDec::onFrame(void)
    i->val=info->getVal(i->id,&wasChange,NULL);
    if (wasChange)
     ListView_Update(hlv,i-infoitems.begin());
-  }
+  } 
 }
 
 void TinfoPageDec::translate(void)
@@ -237,7 +281,7 @@ void TinfoPageDec::translate(void)
  for (int i=0;multipleInstances[i].name;i++)
   cbxAdd(IDC_CBX_MULTIPLE_INSTANCES,_(IDC_CBX_MULTIPLE_INSTANCES,multipleInstances[i].name),multipleInstances[i].id);
  cbxSetCurSel(IDC_CBX_MULTIPLE_INSTANCES,ii);
-
+ 
  for (Titems::iterator i=infoitems.begin();i!=infoitems.end();i++)
   i->translatedName=_(IDC_LV_INFO,i->name);
 }
@@ -250,6 +294,7 @@ TinfoPageDec::TinfoPageDec(TffdshowPageDec *Iparent,TinfoBase *Iinfo):TconfPageD
   {
    IDC_CHB_ADDTOROT,IDFF_addToROT,NULL,
    IDC_CHB_BLACKLIST,IDFF_isBlacklist,&TinfoPageDec::blacklist2dlg,
+   IDC_CHB_COMPATIBILITYLIST,IDFF_isCompatibilityList,&TinfoPageDec::blacklist2dlg,
    0,NULL,NULL
   };
  bindCheckboxes(chb);
@@ -259,12 +304,36 @@ TinfoPageDec::TinfoPageDec(TffdshowPageDec *Iparent,TinfoBase *Iinfo):TconfPageD
    0
   };
  bindComboboxes(cbx);
+ static const TbindButton<TinfoPageDec> bt[]=
+  {
+   IDC_BT_COMPATIBILITYLIST,&TinfoPageDec::onEditCompatibilitylist,
+   IDC_BT_BLACKLIST,&TinfoPageDec::onEditBlacklist,
+   0,NULL
+  };
+ bindButtons(bt); 
 }
 TinfoPageDec::~TinfoPageDec()
 {
  delete info;
 }
-
+void TinfoPageDec::onEditCompatibilitylist(void)
+{
+ onEditCompI(IDFF_compatibilityList);
+}
+void TinfoPageDec::onEditBlacklist(void)
+{
+ onEditCompI(IDFF_blacklist);
+}
+void TinfoPageDec::onEditCompI(int IDFF_target)
+{
+ TcompatibilityList *dlg=new TcompatibilityList(deci,m_hwnd,10,10,IDFF_target);
+ if (dlg->show())
+  {
+   blacklist2dlg();
+   parent->setChange();
+  }
+ delete dlg;
+}
 //================================= TinfoPageDecVideo ====================================
 TinfoPageDecVideo::TinfoPageDecVideo(TffdshowPageDec *Iparent):TinfoPageDec(Iparent,new TinfoDecVideo(Iparent->deci))
 {

@@ -46,6 +46,8 @@ STDMETHODIMP TffdshowDec::NonDelegatingQueryInterface(REFIID riid,void **ppv)
 {
  if (globalSettings->isBlacklist && (riid==IID_IBaseFilter || riid==IID_IMediaFilter) && globalSettings->inBlacklist(getExeflnm()))
   return E_NOINTERFACE;
+ if (globalSettings->isUseonlyin && (riid==IID_IBaseFilter || riid==IID_IMediaFilter) && !globalSettings->inUseonlyin(getExeflnm()))
+  return E_NOINTERFACE;
  if (riid==IID_IffdshowBaseA)
   return GetInterface<IffdshowBaseA>(getBaseInterface<IffdshowBaseA>(),ppv);
  if (riid==IID_IffdshowBaseW)

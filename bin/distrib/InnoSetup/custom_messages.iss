@@ -77,6 +77,15 @@ en.spk_sameasinput=same as input
 en.spk_HRTF=Head-related transfer function (HRTF)
 en.spk_ExpandStereo=Expand stereo (surround)
 en.spk_VoiceControl=Voice control (volume)
+en.comp_SetupLabelV1=Management of compatibility issue (VIDEO)
+en.comp_SetupLabelV2=Because a few games crash or freeze with ffdshow installed,%nwe recommend you to select "Use ffdshow only in".
+en.comp_SetupLabelV3=List the name of executable file which is compatible with ffdshow video deocoder, one for each line.
+en.comp_SetupLabelA1=Management of compatibility issue (AUDIO)
+en.comp_SetupLabelA2=This time, AUDIO decoder configuration. Please configure as well.%nYou can change it using "Info & debug" settings after installation.
+en.comp_SetupLabelA3=List the name of executable file which is compatible with ffdshow audio deocoder, one for each line.
+en.comp_donotlimit=Do not limit.
+en.comp_useonlyin=Use ffdshow only in the following applications.
+en.dontaskmeagain=Don't ask me again.
 
 #if localize
 ; Japanese
@@ -103,7 +112,7 @@ jp.SelectPluginDirLabel1=%1 プラグインインストール先の指定
 jp.SelectPluginDirLabel2=%1のインストール先を指定してください。
 jp.SelectPluginDirLabel3=%1 プラグインをインストールするフォルダを指定して、「次へ」をクリックしてください。
 jp.speakersetup=スピーカーの設定
-jp.SpeakerSetupLabel2=現在のコンピュータ構成に最も近いスピーカーの種類を選んでください。%nインストール後に「ミキサーの設定」から変更することも出来ます。
+jp.SpeakerSetupLabel2=現在のコンピュータ構成に最も近いスピーカーの種類を選んでください。%nインストール後に「ミキサー」の設定から変更することも出来ます。
 jp.SpeakerSetupLabel3=スピーカーの種類
 
 jp.spk_headphone=ヘッドフォン
@@ -122,6 +131,15 @@ jp.spk_sameasinput=入力と同じ
 jp.spk_HRTF=頭部伝達関数 (HRTF)
 jp.spk_ExpandStereo=ステレオを拡張する（サラウンド）
 jp.spk_VoiceControl=ボイスコントロール （ボリューム）
+jp.comp_SetupLabelV1=互換性問題の管理（ビデオ）
+jp.comp_SetupLabelV2=ゲームなどでffdshowがインストールされているとクラッシュしたりフリーズすることがあるため「以下でのみffdshowを使用する」を選択することをお勧めします。
+jp.comp_SetupLabelV3=ffdshowビデオデコーダと互換性のあるアプリケーションを1行に1つずつ列挙してください。
+jp.comp_SetupLabelA1=互換性問題の管理（オーディオ）
+jp.comp_SetupLabelA2=今度はオーディオデコーダの設定です。同様に設定してください。%nインストール後に「情報とデバッグ」の設定から変更することも出来ます。
+jp.comp_SetupLabelA3=ffdshowオーディオデコーダと互換性のあるアプリケーションを1行に1つずつ列挙してください。
+jp.comp_donotlimit=制限しない。
+jp.comp_useonlyin=以下のアプリケーションでのみffdshowを使用する。
+jp.dontaskmeagain=今後表示しない
 
 ; German
 de.langid=1031

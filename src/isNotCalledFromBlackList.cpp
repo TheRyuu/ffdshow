@@ -20,12 +20,13 @@ bool isNotCalledFromBlackList(HINSTANCE hInstance)
   return true;
  DWORD type;
  DWORD isBlacklist;
+ DWORD isUseonlyin;
  DWORD cbData=sizeof(isBlacklist);
- char_t blacklist[MAX_PATH+2];
+ char_t blacklist[MAX_COMPATIBILITYLIST_LENGTH];
  char_t fileName[MAX_PATH+2];
  char_t cmdBuf[MAX_PATH+3];
  char_t* cmdCopy=cmdBuf;
- LPTSTR cmd;
+ char_t* cmd;
  char_t* endOfCmd;
 
  cmd= GetCommandLine();
@@ -48,15 +49,18 @@ bool isNotCalledFromBlackList(HINSTANCE hInstance)
   {
    cbData= sizeof(blacklist);
    regErr= RegQueryValueEx(hKey, _l("blacklist"), NULL, &type, (LPBYTE)blacklist, &cbData);
-   strings blacklistList;
-   strtok(blacklist,_l(";"),blacklistList);
-
-   for (strings::const_iterator b=blacklistList.begin();b!=blacklistList.end();b++)
+   if (regErr==ERROR_SUCCESS)
     {
-     if (DwStrcasecmp(*b,_l("explorer.exe"))==0)
+     strings blacklistList;
+     strtok(blacklist,_l(";"),blacklistList);
+
+     for (strings::const_iterator b=blacklistList.begin();b!=blacklistList.end();b++)
       {
-       blacklistList2.push_back(_l("explorer.exe"));
-       break;
+       if (DwStrcasecmp(*b,_l("explorer.exe"))==0)
+        {
+         blacklistList2.push_back(_l("explorer.exe"));
+         break;
+        }
       }
     }
   }
@@ -69,6 +73,30 @@ bool isNotCalledFromBlackList(HINSTANCE hInstance)
     {
      result= false;
      break;
+    }
+  }
+ if (result && stricmp(fileName,_l("explorer.exe"))==0)
+  {
+   regErr= RegQueryValueEx(hKey, _l("isUseonlyin"), NULL, &type, (LPBYTE)&isUseonlyin, &cbData);
+   if(regErr==ERROR_SUCCESS && isUseonlyin)
+    {
+     result=false;
+     cbData= sizeof(blacklist);
+     regErr= RegQueryValueEx(hKey, _l("useonlyin"), NULL, &type, (LPBYTE)blacklist, &cbData);
+     if (regErr==ERROR_SUCCESS)
+      {
+       strings useonlyinList;
+       strtok(blacklist,_l("\r\n"),useonlyinList);
+
+       for (strings::const_iterator b=useonlyinList.begin();b!=useonlyinList.end();b++)
+        {
+         if (DwStrcasecmp(*b,_l("explorer.exe"))==0)
+          {
+           result=true;
+           break;
+          }
+        }
+      }
     }
   }
  if(hKey)

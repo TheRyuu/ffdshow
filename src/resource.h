@@ -93,6 +93,7 @@
 #define IDD_BITRATE                     221
 #define IDD_OUT                         222
 #define IDD_QUANT                       223
+#define IDD_COMPATIBILITY               224
 #define IDD_QUANT_TABLES_BASE           225
 #define IDD_SECONDPASS                  226
 #define IDD_PERFECT                     227
@@ -1706,7 +1707,14 @@
 #define IDC_TXT_OUT_DEINT_METHOD        1966
 #define IDC_ED_SUB_SEARCH_EXT           1967
 #define IDC_TXT_SERCH_ORDER             1968
-#define IDH_ED_SUB_SEARCH_EXT            1969
+#define IDH_ED_SUB_SEARCH_EXT           1969
+#define IDC_CHB_COMPATIBILITYLIST       1970
+#define IDC_ED_COMPATIBILITYLIST        1971
+#define IDC_TXT_COMPATIBILITYLIST       1972
+#define IDC_BT_BLACKLIST                1973
+#define IDC_BT_COMPATIBILITYLIST        1974
+#define IDC_BT_ADDCOMPATIBLEFILE        1975
+#define IDC_BT_COMP_RESET               1976
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -1717,13 +1725,13 @@
 #define IDC_GRP_WINAMP2                 65535
 
 // Next default values for new objects
-//
+// 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        218
+#define _APS_NEXT_RESOURCE_VALUE        225
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         1970
+#define _APS_NEXT_CONTROL_VALUE         1977
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

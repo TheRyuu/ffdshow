@@ -50,6 +50,8 @@ TglobalSettingsBase::TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const 
      _l("multipleInstances"),TintOption::DEF_DYN,
    IDFF_isBlacklist      ,&TglobalSettingsBase::isBlacklist      ,0,0,_l(""),0,
      _l("isBlacklist"),1,
+   IDFF_isCompatibilityList      ,&TglobalSettingsBase::isUseonlyin      ,0,0,_l(""),0,
+     _l("isUseonlyin"),1,   
    IDFF_addToROT         ,&TglobalSettingsBase::addToROT         ,0,0,_l(""),0,
      _l("addToROT"),0,
    IDFF_allowedCpuFlags  ,&TglobalSettingsBase::allowedCPUflags  ,1,1,_l(""),0,
@@ -63,8 +65,10 @@ TglobalSettingsBase::TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const 
      _l("debugfile"),_l("\\ffdebug.log"),
    IDFF_dscalerPath,(TstrVal)&TglobalSettingsBase::dscalerPth,MAX_PATH,_l(""),0,
      NULL,NULL,
-   IDFF_blacklist  ,(TstrVal)&TglobalSettingsBase::blacklist ,128,_l(""),0,
-     _l("blacklist"),_l("explorer.exe;oblivion.exe;morrowind.exe"),
+   IDFF_blacklist  ,(TstrVal)&TglobalSettingsBase::blacklist ,MAX_COMPATIBILITYLIST_LENGTH,_l(""),0,
+     _l("blacklist"),BLACKLIST_EXE_FILENAME,
+   IDFF_compatibilityList  ,(TstrVal)&TglobalSettingsBase::useonlyin ,MAX_COMPATIBILITYLIST_LENGTH,_l(""),0,
+     _l("useonlyin"),COMPATIBLE_EXE_FILENAME,
    0
   };
  addOptions(sopts);
@@ -82,7 +86,7 @@ void TglobalSettingsBase::load(void)
  tDScaler._REG_OP_S(IDFF_dscalerPath,_l("dscalerPth"),dscalerPth,MAX_PATH,_l(""));
  TregOpRegRead tCPU(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
  tCPU._REG_OP_N(IDFF_allowedCpuFlags,_l("allowedCPUflags"),allowedCPUflags,255);
- firstBlacklist=true;
+ firstBlacklist=firstUseonlyin=true;
 }
 void TglobalSettingsBase::save(void)
 {
@@ -142,6 +146,19 @@ bool TglobalSettingsBase::inBlacklist(const char_t *exe)
    return true;
  return false;
 }
+
+bool TglobalSettingsBase::inUseonlyin(const char_t *exe)
+{
+ if (firstUseonlyin)
+  {
+   firstUseonlyin=false;
+   strtok(useonlyin,_l("\r\n"),useonlyinList);
+  }
+ for (strings::const_iterator b=useonlyinList.begin();b!=useonlyinList.end();b++)
+  if (DwStrcasecmp(*b,exe)==0)
+   return true;
+ return false;
+} 
 //===================================== TglobalSettingsDec ======================================
 TglobalSettingsDec::TglobalSettingsDec(const Tconfig *Iconfig,int Imode,const char_t *Ireg_child,TintStrColl *Icoll,TOSDsettings *Iosd):TglobalSettingsBase(Iconfig,Imode,Ireg_child,Icoll),osd(Iosd)
 {
@@ -803,11 +820,6 @@ CodecID TglobalSettingsDecVideo::getCodecId(DWORD fourCC,FOURCC *AVIfourCC) cons
  if (codecId && AVIfourCC)
   *AVIfourCC=fourCC;
  return codecId;
-}
-
-bool TglobalSettingsDecVideo::inBlacklist(const char_t *exe)
-{
- return TglobalSettingsBase::inBlacklist(exe);
 }
 
 //======================== TglobalSettingsDecVideo::TsubtitlesSettings ==========================

@@ -481,6 +481,15 @@ Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: isB
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: blacklist; ValueData: "explorer.exe;oblivion.exe;morrowind.exe"; Flags: createvalueifdoesntexist; OnlyBelowVersion: 0,6; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: blacklist; ValueData: "oblivion.exe;morrowind.exe"; Flags: createvalueifdoesntexist; MinVersion: 0,6; Components: ffdshow
 
+; Compatibility list
+Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: isUseonlyin; ValueData: {code:Get_isUseonlyinVideo}; Check: IsCompVValid; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: String; ValueName: useonlyin;   ValueData: {code:Get_useonlyinVideo};   Check: IsCompVValid; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: isUseonlyin; ValueData: {code:Get_isUseonlyinAudio}; Check: IsCompAValid; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: useonlyin;   ValueData: {code:Get_useonlyinAudio};   Check: IsCompAValid; Components: ffdshow
+
+Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: dontaskComp; ValueData: {code:Get_isCompVdontask};   Check: IsCompVValid; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: dontaskComp; ValueData: {code:Get_isCompAdontask};   Check: IsCompAValid; Components: ffdshow
+
 ; Registry keys for the audio/video formats:
 #include "reg_formats.iss"
 
@@ -505,10 +514,22 @@ Description: {cm:runvfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,c
 var
   reg_mixerOut: Cardinal;
   reg_ismixer: Cardinal;
+
+  ComplistVideoPage: TInputOptionWizardPage;
+  edtCompVideo: TMemo;
+  chbDontAsk_compVideo: TCheckBox;
+  ComplistAudioPage: TInputOptionWizardPage;
+  edtCompAudio: TMemo;
+  chbDontAsk_compAudio: TCheckBox;
+  isCompVideoSkipped: Boolean;
+  isCompAudioSkipped: Boolean;
+
   SpeakerPage: TInputOptionWizardPage;
   chbVoicecontrol: TCheckBox;
   chbExpandStereo: TCheckBox;
   is8DisableMixer: Boolean;
+
+  priorPageID: Integer;
 
 function CheckTaskVideo(name: String; value: Integer; showbydefault: Boolean): Boolean;
 var
@@ -664,6 +685,17 @@ begin
       msgbox('You must select at least one component.', mbInformation, MB_OK);
       Result := False;
     end
+  end
+  if CurPageID = ComplistVideoPage.ID then begin
+    chbDontAsk_compAudio.Checked := chbDontAsk_compVideo.Checked;
+  end
+end;
+
+function BackButtonClick(CurPageID: Integer): Boolean;
+begin
+  Result := True;
+  if CurPageID = ComplistAudioPage.ID then begin
+    chbDontAsk_compVideo.Checked := chbDontAsk_compAudio.Checked;
   end
 end;
 
@@ -865,12 +897,96 @@ begin
     Result := '1';
 end;
 
+function Get_isUseonlyinVideo(dummy: String): String;
+begin
+  Result := '1';
+  if ComplistVideoPage.Values[0] then
+    Result := '0';
+end;
+
+function Get_useonlyinVideo(dummy: String): String;
+begin
+  Result := edtCompVideo.Text;
+end;
+
+function Get_isUseonlyinAudio(dummy: String): String;
+begin
+  Result := '1';
+  if ComplistAudioPage.Values[0] then
+    Result := '0';
+end;
+
+function Get_useonlyinAudio(dummy: String): String;
+begin
+  Result := edtCompAudio.Text;
+end;
+
+function isCompVValid(): Boolean;
+begin
+  Result := not isCompVideoSkipped;
+end;
+
+function isCompAValid(): Boolean;
+begin
+  Result := not isCompAudioSkipped;
+end;
+
+function Get_isCompVdontask(dummy: String): String;
+begin
+  Result := '0';
+  if chbDontAsk_compVideo.Checked then
+    Result := '1';
+end;
+
+function Get_isCompAdontask(dummy: String): String;
+begin
+  Result := '0';
+  if chbDontAsk_compAudio.Checked then
+    Result := '1';
+end;
+
 function ffRegReadDWordHKCU(regKeyName: String; regValName: String; defaultValue: Cardinal): Cardinal;
 var
   regval: Cardinal;
 begin
   if NOT RegQueryDwordValue(HKCU, regKeyName, regValName, Result) then
     Result :=defaultValue;
+end;
+
+procedure initComplist(var page: TInputOptionWizardPage; var edtTarget: TMemo; var chbTarget: TCheckBox; regKeyName: String);
+var
+  regstr: String;
+begin
+  page.Add(ExpandConstant('{cm:comp_donotlimit}'));
+  page.Add(ExpandConstant('{cm:comp_useonlyin}'));
+  if ffRegReadDWordHKCU(regKeyName, 'isUseonlyin', 1)=1 then
+    page.Values[1] := True
+  else
+    page.Values[0] := True;
+
+  // Edit control
+  edtTarget := TMemo.Create(page);
+  edtTarget.Top := ScaleY(78);
+  edtTarget.Width := page.SurfaceWidth;
+  edtTarget.Height := ScaleY(135);
+  edtTarget.Parent := page.Surface;
+  edtTarget.MaxLength := 4000;
+  edtTarget.ScrollBars := ssVertical;
+  if RegQueryStringValue(HKCU, regKeyName, 'useonlyin', regstr) then
+    edtTarget.Text := regstr
+  else
+    edtTarget.Text := 'aegisub.exe'#13#10'ALLPlayer.exe'#13#10'ALShow.exe'#13#10'ass_help3r.exe'#13#10'avipreview.exe'#13#10'aviutl.exe'#13#10'bsplay.exe'#13#10'bsplayer.exe'#13#10'CorePlayer.exe'#13#10'coreplayer.exe'#13#10'crystalfree.exe'#13#10'DScaler.exe'#13#10'dv.exe'#13#10'DVDMaker.exe'#13#10'ehshell.exe'#13#10'firefox.exe'#13#10'gom.exe'#13#10'graphedt.exe'#13#10'gspot.exe'#13#10'iexplore.exe'#13#10'JetAudio.exe'#13#10'kmplayer.exe'#13#10'LA.exe'#13#10'makeAVIS.exe'#13#10'Media Center 12.exe'#13#10'Media Jukebox.exe'#13#10'MovieMk.exe'#13#10'mplayer2.exe'#13#10'mplayerc.exe'#13#10'Muzikbrowzer.exe'#13#10'Mv2PlayerPlus.exe'#13#10'powerdvd.exe'#13#10'progdvb.exe'#13#10'realplay.exe'#13#10'rlkernel.exe'#13#10'timecodec.exe'#13#10'ViPlay3.exe'#13#10'virtualdub.exe'#13#10'virtualdubmod.exe'#13#10'winamp.exe'#13#10'windvd.exe'#13#10'wmenc.exe'#13#10'wmplayer.exe'#13#10'zplayer.exe';
+
+
+  // Check box
+  chbTarget := TCheckBox.Create(page);
+  chbTarget.Top := ScaleY(220);
+  chbTarget.Left := ScaleX(0);
+  chbTarget.Width := ScaleX(170);
+  chbTarget.Height := ScaleY(16);
+  chbTarget.Caption := ExpandConstant('{cm:dontaskmeagain}');
+  chbTarget.Parent := page.Surface;
+  chbTarget.Checked := False;
 end;
 
 procedure InitializeWizard;
@@ -883,10 +999,28 @@ begin
 
   { Create the pages }
 
+// Compatibility list
+  isCompVideoSkipped := False;
+  isCompAudioSkipped := False;
+
+  ComplistVideoPage := CreateInputOptionPage(wpSelectTasks,
+    ExpandConstant('{cm:comp_SetupLabelV1}'),
+    ExpandConstant('{cm:comp_SetupLabelV2}'),
+    ExpandConstant('{cm:comp_SetupLabelV3}'),
+    True, False);
+  initComplist(ComplistVideoPage, edtCompVideo, chbDontAsk_compVideo ,'Software\GNU\ffdshow');
+
+  ComplistAudioPage := CreateInputOptionPage(ComplistVideoPage.ID,
+    ExpandConstant('{cm:comp_SetupLabelA1}'),
+    ExpandConstant('{cm:comp_SetupLabelA2}'),
+    ExpandConstant('{cm:comp_SetupLabelA3}'),
+    True, False);
+  initComplist(ComplistAudioPage, edtCompAudio, chbDontAsk_compAudio ,'Software\GNU\ffdshow_audio');
+
 // Speaker setup
 
   is8DisableMixer := False;
-  SpeakerPage := CreateInputOptionPage(wpSelectTasks,
+  SpeakerPage := CreateInputOptionPage(ComplistAudioPage.ID,
     ExpandConstant('{cm:speakersetup}'),
     ExpandConstant('{cm:SpeakerSetupLabel2}'),
     ExpandConstant('{cm:SpeakerSetupLabel3}'),
@@ -1023,17 +1157,17 @@ begin
 #endif
 end;
 
-#if include_app_plugins
 function ShouldSkipPage(PageID: Integer): Boolean;
 var
   regval: String;
 begin
   Result := False;
+#if include_app_plugins
   if PageID = VdubDirPage.ID then begin
     if IsComponentSelected('ffdshow\plugins\virtualdub') then begin
       if VdubDirPage.Values[0] = '' then begin
         if RegQueryStringValue(HKLM, 'Software\GNU\ffdshow', 'pthVirtualDub', regval)
-        and not (regval = ExpandConstant('{app}')) then
+        and not (regval = ExpandConstant('{app}')) and not (regval = '') then
           VdubDirPage.Values[0] := regval
         else if FileOrDirExists(ExpandConstant('{pf}\virtualDub\plugins')) then
             VdubDirPage.Values[0] := ExpandConstant('{pf}\virtualDub\plugins')
@@ -1047,5 +1181,19 @@ begin
       Result := True;
     end
   end
-end;
 #endif
+
+  if PageID = ComplistVideoPage.ID then begin
+    if ffRegReadDWordHKCU('Software\GNU\ffdshow','dontaskComp',0) = 1 then begin
+      Result := True;
+      isCompVideoSkipped := True;
+    end
+  end
+  if PageID = ComplistAudioPage.ID then begin
+    if ffRegReadDWordHKCU('Software\GNU\ffdshow_audio','dontaskComp',0) = 1 then begin
+      Result := True;
+      isCompAudioSkipped := True;
+    end
+  end
+  priorPageID := PageID;
+end;

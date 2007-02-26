@@ -5,6 +5,9 @@
 #include "ffcodecs.h"
 #include "Toptions.h"
 
+#define COMPATIBLE_EXE_FILENAME _l("aegisub.exe\r\nALLPlayer.exe\r\nALShow.exe\r\nass_help3r.exe\r\navipreview.exe\r\naviutl.exe\r\nbsplay.exe\r\nbsplayer.exe\r\nCorePlayer.exe\r\ncoreplayer.exe\r\ncrystalfree.exe\r\nDScaler.exe\r\ndv.exe\r\nDVDMaker.exe\r\nehshell.exe\r\nfirefox.exe\r\ngom.exe\r\ngraphedt.exe\r\ngspot.exe\r\niexplore.exe\r\nJetAudio.exe\r\nkmplayer.exe\r\nLA.exe\r\nmakeAVIS.exe\r\nMedia Center 12.exe\r\nMedia Jukebox.exe\r\nMovieMk.exe\r\nmplayer2.exe\r\nmplayerc.exe\r\nMuzikbrowzer.exe\r\nMv2PlayerPlus.exe\r\npowerdvd.exe\r\nprogdvb.exe\r\nrealplay.exe\r\nrlkernel.exe\r\ntimecodec.exe\r\nViPlay3.exe\r\nvirtualdub.exe\r\nvirtualdubmod.exe\r\nwinamp.exe\r\nwindvd.exe\r\nwmenc.exe\r\nwmplayer.exe\r\nzplayer.exe")
+#define BLACKLIST_EXE_FILENAME _l("explorer.exe;oblivion.exe;morrowind.exe")
+
 struct TregOp;
 struct Tconfig;
 struct TglobalSettingsBase :public Toptions
@@ -14,15 +17,16 @@ protected:
  const char_t *reg_child;
  virtual void reg_op_codec(TregOp &t,TregOp *t2) {}
  void _reg_op_codec(short id,TregOp &tHKCU,TregOp *tHKLM,const char_t *name,int &val,int def);
- strings blacklistList;bool firstBlacklist;
+ strings blacklistList,useonlyinList;bool firstBlacklist,firstUseonlyin;
 public:
  TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const char_t *Ireg_child,TintStrColl *Icoll);
  virtual ~TglobalSettingsBase() {}
  bool exportReg(bool all,const char_t *regflnm,bool unicode);
  int filtermode;
  int multipleInstances;
- int isBlacklist;char_t blacklist[128];
+ int isBlacklist,isUseonlyin;char_t blacklist[MAX_COMPATIBILITYLIST_LENGTH],useonlyin[MAX_COMPATIBILITYLIST_LENGTH];
  virtual bool inBlacklist(const char_t *exe);
+ virtual bool inUseonlyin(const char_t *exe);
  int addToROT;
  int allowedCPUflags;
 
@@ -101,7 +105,6 @@ public:
  virtual CodecID getCodecId(DWORD fourCC,FOURCC *AVIfourCC) const;
  virtual const char_t** getFOURCClist(void) const;
  virtual void getCodecsList(Tstrptrs &codecs) const;
- virtual bool inBlacklist(const char_t *exe);
 };
 
 struct TglobalSettingsDecAudio :public TglobalSettingsDec

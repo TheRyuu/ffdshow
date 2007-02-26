@@ -459,6 +459,9 @@ No=なし
 Use with care - can cause ffdshow to not unload after closing the movie.=使用には注意してください - 動画を閉じたあとでffdshowがアンロードしなくなる可能性があります。
 Set all stable formats to libavcodec=安定な形式すべてをlibavcodecに設定する
 Set all supported formats to XviD=サポートされた形式すべてをXviDに設定する
+List the name of executable file which is incompatible with ffdshow or which you don't want to use ffdshow, one for each line.=1行に1つずつ、ffdshowと相性の悪い、またはffdshowを使用したくない実行ファイル名を列挙してください。
+Add compatible executable file=ffdshowと互換性のある実行ファイルを追加する
+Add incompatible executable file=ffdshowと互換性のない実行ファイルを追加する
 [101]
 1=OK
 2=キャンセル
@@ -547,6 +550,7 @@ Set all supported formats to XviD=サポートされた形式すべてをXviDに設定する
 1738=DirectShowのグラフをGraphEditで利用可能にする
 1832=以下のSIMD命令を使用する (CPUがサポートしている場合):
 1935=以下ではffdshowを使用しない:
+1970=以下でのみffdshowを使用する:
 [118]
 0=デコーダーオプション
 1016=映像を反転する
@@ -1538,6 +1542,10 @@ Use \n for line breaks.=改行には\nを使用します。
 [270]
 1940=バンディングノイズ除去
 1941=しきい値:
+[224]
+1972=1行に1つずつ、ffdshowと互換性のある実行ファイル名を列挙してください。
+1975=追加 ...
+1976=リセット
 [271]
 0=オフ
 [272]

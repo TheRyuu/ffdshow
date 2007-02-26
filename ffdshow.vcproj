@@ -3232,6 +3232,12 @@
 				RelativePath=".\src\dialog\TbitrateDlg.h">
 			</File>
 			<File
+				RelativePath=".\src\dialog\TcompatibilityList.cpp">
+			</File>
+			<File
+				RelativePath=".\src\dialog\TcompatibilityList.h">
+			</File>
+			<File
 				RelativePath=".\src\dialog\TconfPageBase.cpp">
 			</File>
 			<File
