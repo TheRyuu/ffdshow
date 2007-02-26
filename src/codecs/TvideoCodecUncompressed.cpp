@@ -107,7 +107,7 @@ HRESULT TvideoCodecUncompressed::decompress(const unsigned char *src,size_t srcL
   stride[0]=srcLen/dy;
 */
  unsigned char *data[4]={(unsigned char*)src,NULL,NULL,NULL};
- TffPict pict(csp,data,stride,rd,true,pIn,Tpalette(palette,palcolors),deciV->getIsInterlacedRawVideo());
+ TffPict pict(csp,data,stride,rd,true,pIn,Tpalette(palette,palcolors),isInterlacedRawVideo);
  pict.frametype=FRAME_TYPE::I;
  return sinkD->deliverDecodedSample(pict);
 }

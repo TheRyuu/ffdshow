@@ -35,7 +35,8 @@ TffdshowVideoInputPin::TffdshowVideoInputPin(TCHAR *objectName,TffdshowVideo *If
   allocator(Ifv->filter,phr),
   fv(Ifv),
   video(NULL),
-  isInterlacedRawVideo(false)
+  isInterlacedRawVideo(false),
+  isMPC_matroska(false)
 {
  usingOwnAllocator=false;
  supdvddec=fv->deci->getParam2(IDFF_supDVDdec) && fv->deci->getParam2(IDFF_mpg2);
@@ -100,6 +101,9 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
 STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM_MEDIA_TYPE* pmt)
 {
  CAutoLock cObjectLock(m_pLock);
+ const CLSID &ref=GetCLSID(pConnector);
+ if (ref == CLSID_MPC_matroska)
+  isMPC_matroska=true;
 #if 0
  PIN_INFO pininfo;
  FILTER_INFO filterinfo;
@@ -112,6 +116,7 @@ STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM
     filterinfo.pGraph->Release();
    pininfo.pFilter->Release();
   }
+ DPRINTF(_l("CLSID 0x%x,0x%x,0x%x"),ref.Data1,ref.Data2,ref.Data3);for(int i=0;i<8;i++) {DPRINTF(_l(",0x%2x"),ref.Data4[i]);}
 #endif
 
  if (m_Connected)
@@ -286,6 +291,9 @@ again:
      static const GUID CLSID_NeroDigitalParser={0xE206E4DE,0xA7EE,0x4A62,0xB3,0xE9,0x4F,0xBC,0x8F,0xE8,0x4C,0x73};
      static const GUID CLSID_HalliMatroskaFile={0x55DA30FC,0xF16B,0x49FC,0xBA,0xA5,0xAE,0x59,0xFC,0x65,0xF8,0x2D};
      //neroavc=biIn.bmiHeader.biCompression==FOURCC_AVC1 && (searchPreviousFilter(this,CLSID_NeroDigitalParser) || searchPreviousFilter(this,CLSID_HalliMatroskaFile));
+     video->isMPC_matroska=isMPC_matroska;
+     video->isInterlacedRawVideo=isInterlacedRawVideo;
+     video->containerSar=pictIn.rectFull.sar;
      if (!video->beginDecompress(pictIn,biIn.bmiHeader.biCompression,mt,(neroavc?TvideoCodecDec::SOURCE_NEROAVC:0)|(truncated?TvideoCodecDec::SOURCE_TRUNCATED:0)))
       {
        delete video;codec=video=NULL;

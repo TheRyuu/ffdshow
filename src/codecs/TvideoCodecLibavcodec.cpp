@@ -416,12 +416,13 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
      int csp=csp_lavc2ffdshow(avctx->pix_fmt);
      if ((avctx->flags&CODEC_FLAG_GRAY) && csp_isYUVplanar(csp)) // workaround for green picture when decoding mpeg with CODEC_FLAG_GRAY, the problem is probably somewhere else
       {
-       DPRINTF(_l("TvideoCodecLibavcodec::decompress Black and white."));
        if (frame->data[1][0]!=128) memset(frame->data[1],128,frame->linesize[1]*avctx->height/2);
        if (frame->data[2][0]!=128) memset(frame->data[2],128,frame->linesize[2]*avctx->height/2);
       }
      Trect r(0,0,avctx->width,avctx->height);
-     if (avctx->sample_aspect_ratio.num)
+     if (avctx->sample_aspect_ratio.num &&
+         !(isMPC_matroska && avctx->sample_aspect_ratio.num==1 && avctx->sample_aspect_ratio.den==1)
+        )  // With MPC's internal matroska splitter, AR is not reliable.
       r.sar=avctx->sample_aspect_ratio;
      else
       r.sar=containerSar;

@@ -21,6 +21,9 @@ public:
  TvideoCodec(IffdshowBase *Ideci);
  virtual ~TvideoCodec();
  bool ok;
+ bool isMPC_matroska;
+ bool isInterlacedRawVideo;
+ Rational containerSar;
 
  struct CAPS
   {

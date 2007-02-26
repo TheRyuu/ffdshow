@@ -30,7 +30,6 @@ private:
    unsigned int srcSize;
   } b[2];int posB;
  Textradata *extradata;bool sendextradata;
- Rational containerSar;
  TffPict oldpict;
  unsigned int mb_width,mb_height,mb_count;
  static void line(unsigned char *dst,unsigned int _x0,unsigned int _y0,unsigned int _x1,unsigned int _y1,stride_t strideY);

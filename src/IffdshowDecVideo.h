@@ -99,7 +99,6 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
  STDMETHOD_(int,get_time_on_ffdshow)(void) PURE;
  STDMETHOD_(int,get_time_on_ffdshow_percent)(void) PURE;
  STDMETHOD_(bool,shouldSkipH264loopFilter)(void) PURE;
- STDMETHOD_(bool,getIsInterlacedRawVideo)(void) PURE;
  STDMETHOD_(int,get_downstreamID)(void) PURE;
 };
 

@@ -222,6 +222,8 @@ repeat:
    pict.alloc(stats.data.vol.width,stats.data.vol.height,FF_CSP_420P,pictbuf);
    if (stats.data.vol.par==XVID_PAR_EXT)
     pict.rectFull.sar=pict.rectClip.sar=Rational(stats.data.vol.par_width,stats.data.vol.par_height);
+   else if (isMPC_matroska && stats.data.vol.par==XVID_PAR_11_VGA) // With MPC's internal matroska splitter, AR is not reliable.
+    pict.rectFull.sar=containerSar;
    else
     {
      static const int pars[][2]=
