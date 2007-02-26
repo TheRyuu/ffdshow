@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="windows-1250"?>
-<VisualStudioProject
+<VisualStudioProject 
 	ProjectType="Intel C++ Project"
 	Version="9.1"
 	Name="ffdshow"
@@ -7,9 +7,9 @@
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
 	VCNestedProjectFileName="ffdshow_icl9.vcproj">
 	<Configurations>
-		<Configuration
+		<Configuration 
 			Name="Debug|Win32">
-			<Tool
+			<Tool 
 				Name="GeneralTool"
 				OutputDirectory="debug_icl9"
 				IntermediateDirectory="debug_icl9"
@@ -19,7 +19,7 @@
 				ATLMinimizesCRunTimeLibraryUsage="FALSE"
 				CharacterSet="0"
 				WholeProgramOptimization="FALSE"/>
-			<Tool
+			<Tool 
 				Name="CppCmplrTool"
 				AdditionalOptions=""
 				Optimization="0"
@@ -41,9 +41,9 @@
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="4"
 				DisableSpecificWarnings="4250"/>
-			<Tool
+			<Tool 
 				Name="CustomTool"/>
-			<Tool
+			<Tool 
 				Name="LinkerTool"
 				RegisterOutput="FALSE"
 				IgnoreImportLibrary="TRUE"
@@ -57,42 +57,42 @@
 				GenerateDebugInformation="TRUE"
 				EntryPointSymbol=""
 				ImportLibrary="$(OutDir)/ffdshow.lib"/>
-			<Tool
+			<Tool 
 				Name="MidlCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
 				TypeLibraryName=".\Debug_icl9/ffdshow.tlb"/>
-			<Tool
+			<Tool 
 				Name="PostBuildEventTool"
 				Description="Registering output..."
 				CommandLine="bin/register.bat"/>
-			<Tool
+			<Tool 
 				Name="PreBuildEventTool"/>
-			<Tool
+			<Tool 
 				Name="PreLinkEventTool"
 				Description="Increasing build version..."
 				CommandLine="&quot;bin/verinc.exe&quot; src/version.ver"/>
-			<Tool
+			<Tool 
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="_DEBUG"/>
-			<Tool
+			<Tool 
 				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="VCXMLDataGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="VCWebDeploymentTool"/>
-			<Tool
+			<Tool 
 				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="DebugTool"/>
 		</Configuration>
-		<Configuration
+		<Configuration 
 			Name="Release|Win32">
-			<Tool
+			<Tool 
 				Name="GeneralTool"
 				OutputDirectory="release_icl9"
 				IntermediateDirectory="release_icl9"
@@ -101,7 +101,7 @@
 				ATLMinimizesCRunTimeLibraryUsage="FALSE"
 				CharacterSet="0"
 				WholeProgramOptimization="FALSE"/>
-			<Tool
+			<Tool 
 				Name="CppCmplrTool"
 				AdditionalOptions="/Oa /Qip /Qunroll0"
 				Optimization="1000"
@@ -132,9 +132,9 @@
 				DebugInformationFormat="0"
 				CompileAs="0"
 				DisableSpecificWarnings="4250;4799;"/>
-			<Tool
+			<Tool 
 				Name="CustomTool"/>
-			<Tool
+			<Tool 
 				Name="LinkerTool"
 				RegisterOutput="FALSE"
 				IgnoreImportLibrary="TRUE"
@@ -150,42 +150,42 @@
 				EnableCOMDATFolding="2"
 				EntryPointSymbol=""
 				ImportLibrary="$(OutDir)/ffdshow.lib"/>
-			<Tool
+			<Tool 
 				Name="MidlCmplrTool"
 				PreprocessorDefinitions="NDEBUG"
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
 				TypeLibraryName=".\Release_icl9/ffdshow.tlb"/>
-			<Tool
+			<Tool 
 				Name="PostBuildEventTool"
 				Description="Registering output..."
 				CommandLine="bin/register.bat"/>
-			<Tool
+			<Tool 
 				Name="PreBuildEventTool"/>
-			<Tool
+			<Tool 
 				Name="PreLinkEventTool"
 				Description="Increasing build version..."
 				CommandLine="&quot;bin/verinc.exe&quot; src/version.ver"/>
-			<Tool
+			<Tool 
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="NDEBUG"/>
-			<Tool
+			<Tool 
 				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="VCXMLDataGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="VCWebDeploymentTool"/>
-			<Tool
+			<Tool 
 				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="DebugTool"/>
 		</Configuration>
-		<Configuration
+		<Configuration 
 			Name="Debug Unicode|Win32">
-			<Tool
+			<Tool 
 				Name="GeneralTool"
 				OutputDirectory="debug_unicode_icl9"
 				IntermediateDirectory="debug_unicode_icl9"
@@ -195,7 +195,7 @@
 				ATLMinimizesCRunTimeLibraryUsage="FALSE"
 				CharacterSet="1"
 				WholeProgramOptimization="FALSE"/>
-			<Tool
+			<Tool 
 				Name="CppCmplrTool"
 				AdditionalOptions=""
 				Optimization="0"
@@ -217,9 +217,9 @@
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="4"
 				DisableSpecificWarnings="4250"/>
-			<Tool
+			<Tool 
 				Name="CustomTool"/>
-			<Tool
+			<Tool 
 				Name="LinkerTool"
 				RegisterOutput="FALSE"
 				IgnoreImportLibrary="TRUE"
@@ -233,42 +233,42 @@
 				GenerateDebugInformation="TRUE"
 				EntryPointSymbol=""
 				ImportLibrary="$(OutDir)/ffdshow.lib"/>
-			<Tool
+			<Tool 
 				Name="MidlCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
 				TypeLibraryName=".\Debug_icl9/ffdshow.tlb"/>
-			<Tool
+			<Tool 
 				Name="PostBuildEventTool"
 				Description="Registering output..."
 				CommandLine="bin/register.bat"/>
-			<Tool
+			<Tool 
 				Name="PreBuildEventTool"/>
-			<Tool
+			<Tool 
 				Name="PreLinkEventTool"
 				Description="Increasing build version..."
 				CommandLine="&quot;bin/verinc.exe&quot; src/version.ver"/>
-			<Tool
+			<Tool 
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="_DEBUG"/>
-			<Tool
+			<Tool 
 				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="VCXMLDataGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="VCWebDeploymentTool"/>
-			<Tool
+			<Tool 
 				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="DebugTool"/>
 		</Configuration>
-		<Configuration
+		<Configuration 
 			Name="Release Unicode|Win32">
-			<Tool
+			<Tool 
 				Name="GeneralTool"
 				OutputDirectory="release_unicode_icl9"
 				IntermediateDirectory="release_unicode_icl9"
@@ -277,7 +277,7 @@
 				ATLMinimizesCRunTimeLibraryUsage="FALSE"
 				CharacterSet="1"
 				WholeProgramOptimization="FALSE"/>
-			<Tool
+			<Tool 
 				Name="CppCmplrTool"
 				AdditionalOptions="/Oa /Qip /Qunroll0"
 				Optimization="1000"
@@ -308,9 +308,9 @@
 				DebugInformationFormat="0"
 				CompileAs="0"
 				DisableSpecificWarnings="4250"/>
-			<Tool
+			<Tool 
 				Name="CustomTool"/>
-			<Tool
+			<Tool 
 				Name="LinkerTool"
 				RegisterOutput="FALSE"
 				IgnoreImportLibrary="TRUE"
@@ -326,4382 +326,4385 @@
 				EnableCOMDATFolding="2"
 				EntryPointSymbol=""
 				ImportLibrary="$(IntDir)/ffdshow.lib"/>
-			<Tool
+			<Tool 
 				Name="MidlCmplrTool"
 				PreprocessorDefinitions="NDEBUG"
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
 				TypeLibraryName=".\Release_icl9/ffdshow.tlb"/>
-			<Tool
+			<Tool 
 				Name="PostBuildEventTool"
 				Description="Registering output..."
 				CommandLine="bin/register.bat"/>
-			<Tool
+			<Tool 
 				Name="PreBuildEventTool"/>
-			<Tool
+			<Tool 
 				Name="PreLinkEventTool"
 				Description="Increasing build version..."
 				CommandLine="&quot;bin/verinc.exe&quot; src/version.ver"/>
-			<Tool
+			<Tool 
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="NDEBUG"/>
-			<Tool
+			<Tool 
 				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="VCXMLDataGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="VCWebDeploymentTool"/>
-			<Tool
+			<Tool 
 				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="DebugTool"/>
 		</Configuration>
 	</Configurations>
 	<Files>
-		<Filter
+		<Filter 
 			Name="doc"
 			Filter="">
-			<File
+			<File 
 				RelativePath=".\authors.txt">
 			</File>
-			<File
+			<File 
 				RelativePath="copying.txt">
 			</File>
-			<File
+			<File 
 				RelativePath=".\readme.txt">
 			</File>
-			<File
+			<File 
 				RelativePath=".\readmeAudio.txt">
 			</File>
-			<File
+			<File 
 				RelativePath=".\readmeEnc.txt">
 			</File>
-			<File
+			<File 
 				RelativePath=".\readmeMultiCPU.jp.txt">
 			</File>
-			<File
+			<File 
 				RelativePath=".\readmeMultiCPU.txt">
 			</File>
-			<File
+			<File 
 				RelativePath=".\todo.txt">
 			</File>
-			<Filter
+			<Filter 
 				Name="hints"
 				Filter="">
-				<File
+				<File 
 					RelativePath=".\src\helpChannelSwap.txt">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\helpCredits.txt">
 				</File>
-				<File
+				<File 
 					RelativePath="src\helpCrop.txt">
 				</File>
-				<File
+				<File 
 					RelativePath="src\helpDCT.txt">
 				</File>
-				<File
+				<File 
 					RelativePath="src\helpDecoderoptions.txt">
 				</File>
-				<File
+				<File 
 					RelativePath="src\helpDeinterlace.txt">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\helpFF1.txt">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\helpFIR.txt">
 				</File>
-				<File
+				<File 
 					RelativePath="src\helpFont.txt">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\helpGeneric_FFV1.txt">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\helpGeneric_THEO.txt">
 				</File>
-				<File
+				<File 
 					RelativePath="src\helpLevels.txt">
 				</File>
-				<File
+				<File 
 					RelativePath="src\helpOffset.txt">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\helpOut.txt">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\helpOutsfs.txt">
 				</File>
-				<File
+				<File 
 					RelativePath="src\helpOverlay.txt">
 				</File>
-				<File
+				<File 
 					RelativePath="src\helpPerspective.txt">
 				</File>
-				<File
+				<File 
 					RelativePath="src\helpPictprop.txt">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\helpResample.txt">
 				</File>
-				<File
+				<File 
 					RelativePath="src\helpResizeAspect.txt">
 				</File>
-				<File
+				<File 
 					RelativePath="src\helpResizeSettings.txt">
 				</File>
-				<File
+				<File 
 					RelativePath="src\helpSharpen.txt">
 				</File>
-				<File
+				<File 
 					RelativePath="src\helpShowMV.txt">
 				</File>
-				<File
+				<File 
 					RelativePath="src\helpTray.txt">
 				</File>
-				<File
+				<File 
 					RelativePath="src\helpWarpsharp.txt">
 				</File>
 			</Filter>
-			<Filter
+			<Filter 
 				Name="installer"
 				Filter="">
-				<File
+				<File 
 					RelativePath=".\bin\distrib\codecaudio.ini">
 				</File>
-				<File
+				<File 
 					RelativePath=".\bin\distrib\codecvideo.ini">
 				</File>
-				<File
+				<File 
 					RelativePath=".\bin\distrib\ffdshow.nsi">
 				</File>
-				<File
+				<File 
 					RelativePath=".\bin\distrib\filtersaudio.ini">
 				</File>
-				<File
+				<File 
 					RelativePath=".\bin\distrib\filtersvideo.ini">
 				</File>
-				<File
+				<File 
 					RelativePath=".\bin\distrib\iodir.ini">
 				</File>
-				<File
+				<File 
 					RelativePath=".\bin\distrib\simple.ini">
 				</File>
 			</Filter>
 		</Filter>
-		<Filter
+		<Filter 
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
-			<File
+			<File 
 				RelativePath=".\src\cpuid.asm">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dsutil.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dwstring.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\ffdebug.c">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						UsePrecompiledHeader="0"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						UsePrecompiledHeader="0"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						UsePrecompiledHeader="0"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						UsePrecompiledHeader="0"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\ffdshowRemoteAPI.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\ffglobals.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\ffmpeg\libavcodec\golomb.c">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						UsePrecompiledHeader="0"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						UsePrecompiledHeader="0"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						UsePrecompiledHeader="0"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						UsePrecompiledHeader="0"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\inifiles.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\isNotCalledFromBlackList.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\mem_align.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\memcpy.asm">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\stdafx.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\TcpuUsage.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\Teval.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\TffDecoder.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						GeneratePreprocessedFile="0"
 						ForceConformanceInForLoopScope="TRUE"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						GeneratePreprocessedFile="0"
 						ForceConformanceInForLoopScope="TRUE"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\TffDecoder_com.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\TffDecoder_reg.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TffdshowBase.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TffdshowDec.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TffdshowDecAudio.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TffdshowDecAudioInputPin.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TffdshowDecVideoAllocator.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\TffdshowDecVideoOutputPin.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\TffdshowVideoInputPin.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TffOutputQ.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TffProcBase.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\Tinfo.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TinputPin.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\TkeyboardDirect.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TListEmptyIMediaSamples.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\TtextInputPin.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\Ttranslate.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\TtrayIcon.cpp">
 			</File>
 		</Filter>
-		<Filter
+		<Filter 
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
-			<File
+			<File 
 				RelativePath=".\src\array_allocator.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\autoptr.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\char_t.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\circular_buffer.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\comptr.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\csimd.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dsutil.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dwstring.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\FastDelegate.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\ffdebug.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\ffdshow_constants.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\ffdshow_mediaguids.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\ffdshowRemoteAPI.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\ffdshowRemoteAPIimpl.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\ffglobals.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\ffmpeg\libavcodec\golomb.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\IffDecoder.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\IffdshowBase.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\IffdshowDec.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\IffdshowDecAudio.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\IffdshowDecVideo.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\IffdshowParamsEnum.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\inifiles.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\interfaces.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\inttypes.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\isNotCalledFromBlackList.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\IVMRffdshow9.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\line.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\mem_align.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\PODtypes.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\rational.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\safe_bool.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\simd.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\simd_common.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\simd_instructions.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\stdafx.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\TcpuUsage.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\Tdll.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\Teval.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TfakeImediaSample.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TffDecoderVideo.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TffdshowBase.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TffdshowDec.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TffdshowDecAudio.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TffdshowDecAudioInputPin.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TffdshowDecVideoAllocator.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\TffdshowDecVideoOutputPin.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TffdshowVideo.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\TffdshowVideoInputPin.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TffOutputQ.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TffProcBase.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\Tinfo.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TinputPin.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\TkeyboardDirect.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TListEmptyIMediaSamples.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\TtextInputPin.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\Ttimer.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\Ttranslate.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\TtrayIcon.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\tuple.h">
 			</File>
-			<Filter
+			<Filter 
 				Name="uClibc++"
 				Filter="">
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\algorithm">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\basic_definitions">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\char_traits">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\cstddef">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\cstdio">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\cstdlib">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\deque">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\exception">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\func_exception">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\functional">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\hash_fun.h">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\hash_map">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\hashtable.h">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\iterator">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\iterator_base">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\limits">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\list">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\map">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\memory">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\new">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\stdexcept">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\system_configuration.h">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\type_traits">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\utility">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\uClibc++\vector">
 				</File>
 			</Filter>
 		</Filter>
-		<Filter
+		<Filter 
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
-			<File
+			<File 
 				RelativePath="src\arrows.bmp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\arrows_mask_d.bmp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\arrows_mask_u.bmp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\arrows_mask_ud.bmp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\checked.bmp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\empty.bmp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\ffdshow.ico">
 			</File>
-			<File
+			<File 
 				RelativePath="src\ffdshow.rc">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\ffdshow.rc2">
 			</File>
-			<File
+			<File 
 				RelativePath="src\ffdshowAudio.ico">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\ffvfw.ico">
 			</File>
-			<File
+			<File 
 				RelativePath="src\gradient.bmp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\mask.bmp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\resource.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\version.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\version.ver">
 			</File>
 		</Filter>
-		<Filter
+		<Filter 
 			Name="subtitles"
 			Filter="">
-			<File
+			<File 
 				RelativePath=".\src\subtitles\cc_decoder.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\cc_decoder.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\distance.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\distance.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\matroskaSubs.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\spudec.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\spudec.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\subtitles\Tfont.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\subtitles\Tfont.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TfontManager.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TfontSettings.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\subtitles\TfontSettings.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\ThtmlColors.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\ThtmlColors.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TspuImage.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TspuImage.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\Tstream.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\Tstream.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\subtitles\Tsubreader.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\subtitles\Tsubreader.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\subtitles\TsubreaderMplayer.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\subtitles\TsubreaderMplayer.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubreaderUSF.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubreaderUSF.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubreaderVobsub.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubreaderVobsub.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\Tsubtitle.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitleDVD.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitleDVD.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitleProps.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitleProps.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\subtitles\Tsubtitles.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\subtitles\Tsubtitles.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitlesFile.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitlesFile.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitlesTextpin.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitlesTextpin.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitlesTextpinDVD.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitlesTextpinDVD.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitlesTextpinText.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitlesTextpinText.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitlesTextPinUSF.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitlesTextPinUSF.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitlesTextpinVobSub.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitlesTextpinVobSub.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitleText.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitleText.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitleUSF.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitleUSF.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitleVobsub.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\TsubtitleVobsub.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\vobsub.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\subtitles\vobsub.h">
 			</File>
 		</Filter>
-		<Filter
+		<Filter 
 			Name="imgFilters"
 			Filter="">
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\2xsai.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\2xsai.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\IhwOverlayControl.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\IimgFilterGrab.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\IimgFilterLevels.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\md5sum.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\md5sum.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\simple_idct_mmx.asm">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\SimpleResize.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\SimpleResize.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\ffmpeg\libavcodec\i386\skl_dct_sse.asm">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\ffmpeg\libavcodec\i386\skl_fdct_mmx.asm">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\T3x3blur.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\T3x3blur.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TcubicTable.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TcubicTable.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TffPict.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TffPict.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\TffPictCopy.asm">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TffRect.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\ThwOverlayControlOverlay.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\ThwOverlayControlOverlay.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\ThwOverlayControlVMR9.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\ThwOverlayControlVMR9.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilter.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilter.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\avisynth\TimgFilterAvisynth.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\avisynth\TimgFilterAvisynth.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\TimgFilterBitmap.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\TimgFilterBitmap.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterBlur.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterBlur.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterChroma.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterChroma.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\TimgFilterColorize.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\TimgFilterColorize.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterCrop.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterCrop.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterDCT.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterDCT.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterDeinterlace.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterDeinterlace.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterDenoise3d.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterDenoise3d.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\TimgFilterDGbob.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\TimgFilterDGbob.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterDScaler.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterDScaler.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterDScalerDeinterlace.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterDScalerDeinterlace.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterExpand.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterExpand.h">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterGrab.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterGrab.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\TimgFilterGradfun.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\TimgFilterGradfun.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterGradualDenoise.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterGradualDenoise.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\TimgFilterHWoverlay.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\TimgFilterHWoverlay.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\TimgFilterKernelDeint.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\TimgFilterKernelDeint.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterLevels.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterLevels.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\TimgFilterLogoaway.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\TimgFilterLogoaway.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterLuma.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterLuma.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterNoise.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterNoise.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterOffset.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="0"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="0"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterOffset.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterOSD.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterOSD.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\TimgFilterOutput.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\imgFilters\TimgFilterOutput.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterPerspective.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterPerspective.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterPostproc.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterPostproc.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterResize.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterResize.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilters.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilters.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterSharpen.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterSharpen.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterShowMV.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterShowMV.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterSmoother.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterSmoother.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterSubtitles.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterSubtitles.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterTimesmooth.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterTimesmooth.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterTomsMoComp.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterTomsMoComp.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterWarpsharp.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\TimgFilterWarpsharp.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\mplayer\Tlibmplayer.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\mplayer\Tlibmplayer.h">
 			</File>
-			<Filter
+			<Filter 
 				Name="com"
 				Filter="">
-				<File
+				<File 
 					RelativePath="src\imgFilters\IffProc.h">
 				</File>
-				<File
+				<File 
 					RelativePath="src\imgFilters\TffProc.cpp">
 				</File>
-				<File
+				<File 
 					RelativePath="src\imgFilters\TffProc.h">
 				</File>
 			</Filter>
-			<Filter
+			<Filter 
 				Name="nic"
 				Filter="">
-				<File
+				<File 
 					RelativePath="src\imgFilters\nic\nic_postProcess.cpp">
-					<FileConfiguration
+					<FileConfiguration 
 						Name="Release|Win32">
-						<Tool
+						<Tool 
 							Name="CppCmplrTool"
 							AssemblerOutput="4"/>
 					</FileConfiguration>
-					<FileConfiguration
+					<FileConfiguration 
 						Name="Release Unicode|Win32">
-						<Tool
+						<Tool 
 							Name="CppCmplrTool"
 							AssemblerOutput="4"/>
 					</FileConfiguration>
 				</File>
-				<File
+				<File 
 					RelativePath="src\imgFilters\nic\nic_postProcess.h">
 				</File>
 			</Filter>
-			<Filter
+			<Filter 
 				Name="dscaler"
 				Filter="">
-				<File
+				<File 
 					RelativePath="src\imgFilters\DScaler\DS_ApiCommon.h">
 				</File>
-				<File
+				<File 
 					RelativePath="src\imgFilters\DScaler\DS_Deinterlace.h">
 				</File>
-				<File
+				<File 
 					RelativePath="src\imgFilters\DScaler\DS_Filter.h">
 				</File>
 			</Filter>
-			<Filter
+			<Filter 
 				Name="asharp"
 				Filter="">
-				<File
+				<File 
 					RelativePath="src\imgFilters\asharp\asharp.cpp">
-					<FileConfiguration
+					<FileConfiguration 
 						Name="Release|Win32">
-						<Tool
+						<Tool 
 							Name="CppCmplrTool"
 							AssemblerOutput="4"/>
 					</FileConfiguration>
-					<FileConfiguration
+					<FileConfiguration 
 						Name="Release Unicode|Win32">
-						<Tool
+						<Tool 
 							Name="CppCmplrTool"
 							AssemblerOutput="4"/>
 					</FileConfiguration>
 				</File>
-				<File
+				<File 
 					RelativePath="src\imgFilters\asharp\asharp.h">
 				</File>
 			</Filter>
-			<Filter
+			<Filter 
 				Name="avisynth"
 				Filter="">
-				<File
+				<File 
 					RelativePath="src\imgFilters\avisynth\avisynth.h">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\imgFilters\avisynth\Tavisynth.cpp">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\imgFilters\avisynth\Tavisynth.h">
 				</File>
 			</Filter>
-			<Filter
+			<Filter 
 				Name="awarpsharp"
 				Filter="">
-				<File
+				<File 
 					RelativePath="src\imgFilters\awarpsharp\aws.obj">
 				</File>
-				<File
+				<File 
 					RelativePath="src\imgFilters\awarpsharp\aws_api.h">
 				</File>
 			</Filter>
 		</Filter>
-		<Filter
+		<Filter 
 			Name="dialog"
 			Filter="">
-			<File
+			<File 
 				RelativePath="src\dialog\Cabout.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cabout.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CaudioDenoise.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CaudioDenoise.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CaudioSwitcher.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CaudioSwitcher.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cavisynth.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cavisynth.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cbitmap.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cbitmap.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cblur.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cblur.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CchannelSwap.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CchannelSwap.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Ccodecs.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Ccodecs.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cconvolver.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cconvolver.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Ccredits.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Ccredits.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Ccrop.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Ccrop.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Ccrystality.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Ccrystality.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CcurveAlt.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CcurveAlt.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CcurveNormal.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CcurveNormal.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cdct.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cdct.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\CdecoderOptions.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\CdecoderOptions.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cdeinterlace.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cdeinterlace.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CdeinterlaceDGBob.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CdeinterlaceDGBob.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CdeinterlaceDScaler.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CdeinterlaceDScaler.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CdeinterlaceFramedoubler.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CdeinterlaceFramedoubler.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CdeinterlaceKernel.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CdeinterlaceKernel.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CdeinterlacePanel.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CdeinterlaceTomsMoComp.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CdeinterlaceTomsMoComp.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cdelay.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cdelay.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CdolbyDecoder.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CdolbyDecoder.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\CDScaler.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\CDScaler.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Ceq.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Ceq.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cfir.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cfir.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CfirstPass.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CfirstPass.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cfont.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cfont.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cfreeverb.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cfreeverb.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cgeneric.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cgeneric.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CgenericDV.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CgenericDV.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CgenericFFV1.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CgenericFFV1.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CgenericHuffyuv.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CgenericHuffyuv.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CgenericLJPEG.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CgenericLJPEG.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CgenericRAW.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CgenericRAW.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CgenericTHEO.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CgenericTHEO.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CgenericWmv9.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CgenericWmv9.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cgrab.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cgrab.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CgradFun.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CgradFun.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cgraph.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cgraph.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\ChideShow.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\ChideShow.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cin.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cin.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cinfo.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cinfo.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Ckeys.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Ckeys.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Clevels.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Clevels.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\ClfeCrossover.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\ClfeCrossover.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Clogoaway.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Clogoaway.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cmasking.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cmasking.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CmaskingSKAL.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CmaskingSKAL.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CmaskingTHEO.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CmaskingTHEO.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CmaskingX264.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CmaskingX264.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CmaskingXVID.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CmaskingXVID.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cme.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cme.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CmeSkal.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CmeSkal.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CmeX264.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CmeX264.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CmeXvid.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CmeXvid.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cmixer.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cmixer.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cnoise.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cnoise.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Coffset.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Coffset.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Conepass.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Conepass.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\ConepassXvid.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\ConepassXvid.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\COSD.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\COSD.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cout.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cout.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Coutcsps.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Coutcsps.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Coutsfs.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Coutsfs.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Coverlay.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Coverlay.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cperspective.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cperspective.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\CpictProp.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\CpictProp.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\CpostProc.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\CpostProc.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cpresets.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cpresets.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cprocsfs.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cprocsfs.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cquant.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cquant.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CquantTables.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CquantTables.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cqueue.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cqueue.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cresample.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cresample.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\CresizeAspect.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\CresizeAspect.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CresizeBorders.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CresizeBorders.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\CresizeSettings.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\CresizeSettings.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CsecondPass.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CsecondPass.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Csharpen.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Csharpen.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\CshowMV.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\CshowMV.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Csubtitles.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Csubtitles.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CsubtitlesText.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\CsubtitlesText.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Ctray.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Ctray.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cvobsub.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Cvobsub.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cvolume.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cvolume.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cwarpsharp.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cwarpsharp.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cwinamp2.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Cwinamp2.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\IPropertyPageFF.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\ISpecifyPropertyPagesVE.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TbitrateDlg.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TbitrateDlg.h">
 			</File>
-			<File
+			<File 
+				RelativePath=".\src\dialog\TcompatibilityList.cpp">
+			</File>
+			<File 
+				RelativePath=".\src\dialog\TcompatibilityList.h">
+			</File>
+			<File 
 				RelativePath=".\src\dialog\TconfPageBase.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TconfPageBase.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TconfPageDec.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TconfPageDec.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TconfPageDecAudio.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TconfPageDecVideo.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TconfPageEnc.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\TDScalerSettings.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\TDScalerSettings.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TffdshowPageBase.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TffdshowPageBase.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TffdshowPageDec.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TffdshowPageDec.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TffdshowPageDecAudio.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TffdshowPageDecAudio.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TffdshowPageDecVideo.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TffdshowPageDecVideo.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TffdshowPageEnc.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TffdshowPageEnc.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TflatButtons.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TflatButtons.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TpageSite.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TpageSite.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TperfectDlg.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TperfectDlg.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\TpresetAutoload.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\TpresetAutoload.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TpresetsEncDlg.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TpresetsEncDlg.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TSpecifyPropertyPagesVE.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TSpecifyPropertyPagesVE.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TversionsDlg.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\TversionsDlg.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Twidget.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\dialog\Twidget.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Twindow.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\dialog\Twindow.h">
 			</File>
 		</Filter>
-		<Filter
+		<Filter 
 			Name="settings"
 			Filter="">
-			<File
+			<File 
 				RelativePath="src\settings\reg.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\settings\reg.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\settings\TcodecSettings.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\settings\TcodecSettings.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\Tconfig.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\Tconfig.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\settings\TdialogSettings.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\settings\TdialogSettings.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\settings\TglobalSettings.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\settings\TglobalSettings.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\settings\Toptions.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\settings\Toptions.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\settings\TpresetEnc.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\settings\TpresetEnc.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\settings\Tpresets.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\settings\Tpresets.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\settings\TpresetSettings.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\settings\TpresetSettings.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\settings\TpresetSettingsAudio.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\settings\TpresetSettingsAudio.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\settings\TpresetSettingsVideo.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\settings\TpresetSettingsVideo.h">
 			</File>
-			<Filter
+			<Filter 
 				Name="filters"
 				Filter="">
-				<File
+				<File 
 					RelativePath=".\src\settings\TfilterSettings.cpp">
 				</File>
-				<File
+				<File 
 					RelativePath="src\settings\TfilterSettings.h">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\settings\filters\TOSDsettings.cpp">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\settings\filters\TOSDsettings.h">
 				</File>
-				<Filter
+				<Filter 
 					Name="video"
 					Filter="">
-					<File
+					<File 
 						RelativePath="src\settings\filters\TavisynthSettings.cpp">
-						<FileConfiguration
+						<FileConfiguration 
 							Name="Release|Win32">
-							<Tool
+							<Tool 
 								Name="CppCmplrTool"
 								AssemblerOutput="4"/>
 						</FileConfiguration>
-						<FileConfiguration
+						<FileConfiguration 
 							Name="Release Unicode|Win32">
-							<Tool
+							<Tool 
 								Name="CppCmplrTool"
 								AssemblerOutput="4"/>
 						</FileConfiguration>
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TavisynthSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TbitmapSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TbitmapSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TblurSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TblurSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TcropSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TcropSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TdctSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TdctSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TdeinterlaceSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TdeinterlaceSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TdscalerFilterSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TdscalerFilterSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TexpandSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TexpandSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TgrabSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TgrabSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TgradFunSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TgradFunSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\ThwOverlaySettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\ThwOverlaySettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TlevelsSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TlevelsSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TlogoawaySettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TlogoawaySettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TnoiseSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TnoiseSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\ToffsetSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\ToffsetSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\ToutputVideoSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\ToutputVideoSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TperspectiveSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TperspectiveSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TpictPropSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TpictPropSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TpostprocSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TpostprocSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TresizeAspectSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TresizeAspectSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TsharpenSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TsharpenSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TsubtitlesSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TsubtitlesSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TvisSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TvisSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TwarpsharpSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TwarpsharpSettings.h">
 					</File>
 				</Filter>
-				<Filter
+				<Filter 
 					Name="audio"
 					Filter="">
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TaudioDenoiseSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TaudioDenoiseSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TchannelSwapSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TchannelSwapSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TconvolverSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TconvolverSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TcrystalitySettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TcrystalitySettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TdelaySettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TdelaySettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TdolbyDecoderSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TdolbyDecoderSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TeqSettings.cpp">
-						<FileConfiguration
+						<FileConfiguration 
 							Name="Release|Win32">
-							<Tool
+							<Tool 
 								Name="CppCmplrTool"
 								AssemblerOutput="4"/>
 						</FileConfiguration>
-						<FileConfiguration
+						<FileConfiguration 
 							Name="Release Unicode|Win32">
-							<Tool
+							<Tool 
 								Name="CppCmplrTool"
 								AssemblerOutput="4"/>
 						</FileConfiguration>
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TeqSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TfirSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TfirSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TfreeverbSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TfreeverbSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TlfeCrossoverSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TlfeCrossoverSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TmixerSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TmixerSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\ToutputAudioSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\ToutputAudioSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TresampleSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath=".\src\settings\filters\TresampleSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TvolumeSettings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\TvolumeSettings.h">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\Twinamp2settings.cpp">
 					</File>
-					<File
+					<File 
 						RelativePath="src\settings\filters\Twinamp2settings.h">
 					</File>
 				</Filter>
 			</Filter>
-			<Filter
+			<Filter 
 				Name="lzo"
 				Filter="">
-				<File
+				<File 
 					RelativePath=".\src\settings\lzo\lzoconf.h">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\settings\lzo\lzodefs.h">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\settings\lzo\minilzo.c">
-					<FileConfiguration
+					<FileConfiguration 
 						Name="Debug|Win32">
-						<Tool
+						<Tool 
 							Name="CppCmplrTool"
 							ExceptionHandling="FALSE"
 							UsePrecompiledHeader="0"
 							CompileAs="1"/>
 					</FileConfiguration>
-					<FileConfiguration
+					<FileConfiguration 
 						Name="Release|Win32">
-						<Tool
+						<Tool 
 							Name="CppCmplrTool"
 							ExceptionHandling="FALSE"
 							UsePrecompiledHeader="0"
 							CompileAs="1"/>
 					</FileConfiguration>
-					<FileConfiguration
+					<FileConfiguration 
 						Name="Debug Unicode|Win32">
-						<Tool
+						<Tool 
 							Name="CppCmplrTool"
 							ExceptionHandling="FALSE"
 							UsePrecompiledHeader="0"
 							CompileAs="1"/>
 					</FileConfiguration>
-					<FileConfiguration
+					<FileConfiguration 
 						Name="Release Unicode|Win32">
-						<Tool
+						<Tool 
 							Name="CppCmplrTool"
 							ExceptionHandling="FALSE"
 							UsePrecompiledHeader="0"
 							CompileAs="1"/>
 					</FileConfiguration>
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\settings\lzo\minilzo.h">
 				</File>
 			</Filter>
 		</Filter>
-		<Filter
+		<Filter 
 			Name="codecs"
 			Filter="">
-			<File
+			<File 
 				RelativePath=".\src\codecs\AudXlib.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\ffcodecs.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\ffcodecs.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\mp3header.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\mp3header.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\qtpalette.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TaudioCodec.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TaudioCodec.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TaudioCodecAudX.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TaudioCodecAudX.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TaudioCodecAvisynth.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TaudioCodecAvisynth.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TaudioCodecLiba52.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TaudioCodecLiba52.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TaudioCodecLibavcodec.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TaudioCodecLibavcodec.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TaudioCodecLibDTS.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TaudioCodecLibDTS.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TaudioCodecLibFAAD.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TaudioCodecLibFAAD.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TaudioCodecLibMAD.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TaudioCodecLibMAD.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TaudioCodecMplayer.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TaudioCodecMplayer.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TaudioCodecRealaac.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TaudioCodecRealaac.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TaudioCodecTremor.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TaudioCodecTremor.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TaudioCodecUncompressed.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TaudioCodecUncompressed.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\Tcodec.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\Tcodec.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TvideoCodec.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TvideoCodec.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TvideoCodecAvisynth.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TvideoCodecAvisynth.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TvideoCodecLibavcodec.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TvideoCodecLibavcodec.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TvideoCodecLibmpeg2.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TvideoCodecLibmpeg2.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TvideoCodecSkal.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TvideoCodecSkal.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TvideoCodecTheora.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TvideoCodecTheora.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TvideoCodecUncompressed.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\codecs\TvideoCodecUncompressed.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TvideoCodecWmv9.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TvideoCodecWmv9.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TvideoCodecX264.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TvideoCodecX264.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TvideoCodecXviD4.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TvideoCodecXviD4.h">
 			</File>
-			<Filter
+			<Filter 
 				Name="libavcodec"
 				Filter="">
-				<File
+				<File 
 					RelativePath="src\ffmpeg\libavcodec\avcodec.h">
 				</File>
-				<File
+				<File 
 					RelativePath="src\ffmpeg\Tlibavcodec.cpp">
 				</File>
-				<File
+				<File 
 					RelativePath="src\ffmpeg\Tlibavcodec.h">
 				</File>
 			</Filter>
-			<Filter
+			<Filter 
 				Name="libmpeg2"
 				Filter="">
-				<File
+				<File 
 					RelativePath="src\codecs\libmpeg2\include\mpeg2.h">
 				</File>
 			</Filter>
-			<Filter
+			<Filter 
 				Name="xvid"
 				Filter="">
-				<File
+				<File 
 					RelativePath=".\src\codecs\xvid4.h">
 				</File>
 			</Filter>
 		</Filter>
-		<Filter
+		<Filter 
 			Name="convert"
 			Filter="">
-			<File
+			<File 
 				RelativePath=".\src\convert\convert_yuy2.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\convert\convert_yv12.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\ffImgfmt.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AdditionalOptions=""/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\imgFilters\ffImgfmt.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\convert\IffColorspaceConvert.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\convert\image.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\convert\image.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\convert\Tconvert.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\convert\Tconvert.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\convert\Tswscale.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\convert\Tswscale.h">
 			</File>
 		</Filter>
-		<Filter
+		<Filter 
 			Name="audioFilters"
 			Filter="">
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\dither.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\dither.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\dotproduct.asm">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\fftsg.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\fftsg.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\firfilter.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\firfilter.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\IaudioFilterFIR.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\IaudioFilterMixer.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\IaudioFilterVolume.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\audioFilters\mixer.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\audioFilters\mixer.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\supereq.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\audioFilters\TaudioFilter.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\audioFilters\TaudioFilter.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterChannelSwap.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterChannelSwap.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterConvert.asm">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
 						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterConvolver.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterConvolver.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterCrystality.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterCrystality.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterDelay.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterDelay.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterDenoise.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterDenoise.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterDolbyDecoder.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterDolbyDecoder.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\audioFilters\TaudioFilterEQ.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\audioFilters\TaudioFilterEQ.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterEQsuper.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterEQsuper.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterFIR.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterFIR.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterFreeverb.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterFreeverb.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterHeadphone.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterHeadphone.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterLFEcrossover.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterLFEcrossover.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\audioFilters\TaudioFilterMixer.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\audioFilters\TaudioFilterMixer.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterOSD.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterOSD.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterOutput.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterOutput.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterResample.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TaudioFilterResample.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\audioFilters\TaudioFilters.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\audioFilters\TaudioFilters.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\audioFilters\TaudioFilterVolume.cpp">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						AssemblerOutput="4"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="src\audioFilters\TaudioFilterVolume.h">
 			</File>
-			<File
+			<File 
 				RelativePath="src\audioFilters\TaudioFilterWinamp2.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath="src\audioFilters\TaudioFilterWinamp2.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TsampleFormat.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\audioFilters\TsampleFormat.h">
 			</File>
-			<Filter
+			<Filter 
 				Name="winamp2"
 				Filter="">
-				<File
+				<File 
 					RelativePath="src\audioFilters\winamp2\DSP.H">
 				</File>
-				<File
+				<File 
 					RelativePath="src\audioFilters\winamp2\Twinamp2.cpp">
 				</File>
-				<File
+				<File 
 					RelativePath="src\audioFilters\winamp2\Twinamp2.h">
 				</File>
 			</Filter>
-			<Filter
+			<Filter 
 				Name="freeverb"
 				Filter="">
-				<File
+				<File 
 					RelativePath=".\src\audioFilters\freeverb\allpass.h">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\audioFilters\freeverb\comb.h">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\audioFilters\freeverb\denormals.h">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\audioFilters\freeverb\revmodel.cpp">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\audioFilters\freeverb\revmodel.h">
 				</File>
 			</Filter>
-			<Filter
+			<Filter 
 				Name="resample"
 				Filter="">
-				<File
+				<File 
 					RelativePath=".\src\audioFilters\resample\resample2.cpp">
-					<FileConfiguration
+					<FileConfiguration 
 						Name="Release|Win32">
-						<Tool
+						<Tool 
 							Name="CppCmplrTool"
 							AssemblerOutput="4"/>
 					</FileConfiguration>
-					<FileConfiguration
+					<FileConfiguration 
 						Name="Release Unicode|Win32">
-						<Tool
+						<Tool 
 							Name="CppCmplrTool"
 							AssemblerOutput="4"/>
 					</FileConfiguration>
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\audioFilters\resample\resample2.h">
 				</File>
 			</Filter>
-			<Filter
+			<Filter 
 				Name="com"
 				Filter="">
-				<File
+				<File 
 					RelativePath=".\src\audioFilters\IffProcAudio.h">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\audioFilters\TffProcAudio.cpp">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\audioFilters\TffProcAudio.h">
 				</File>
 			</Filter>
 		</Filter>
-		<Filter
+		<Filter 
 			Name="ffvfw"
 			Filter="">
-			<File
+			<File 
 				RelativePath=".\src\2pass.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\2pass.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\IffdshowEnc.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TencStats.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\codecs\TencStats.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TffdshowEnc.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\TffdshowEnc.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\Tffvfw.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\Tffvfw.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\Tperfect.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\Tperfect.h">
 			</File>
-			<Filter
+			<Filter 
 				Name="muxers"
 				Filter="">
-				<File
+				<File 
 					RelativePath=".\src\muxers\Tmuxer.cpp">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\muxers\Tmuxer.h">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\muxers\TmuxerFile.cpp">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\muxers\TmuxerFile.h">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\muxers\TmuxerOGG.cpp">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\muxers\TmuxerOGG.h">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\muxers\TmuxerOGM.cpp">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\muxers\TmuxerOGM.h">
 				</File>
 			</Filter>
-			<Filter
+			<Filter 
 				Name="acm"
 				Filter="">
-				<File
+				<File 
 					RelativePath=".\src\Iffacm.h">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\acm\msacmdrv.h">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\acm\Tacm.cpp">
 				</File>
-				<File
+				<File 
 					RelativePath=".\src\acm\Tacm.h">
 				</File>
 			</Filter>
 		</Filter>
-		<Filter
+		<Filter 
 			Name="decss"
 			Filter="">
-			<File
+			<File 
 				RelativePath=".\src\CSSauth.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\CSSauth.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\CSSscramble.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\CSSscramble.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\DeCSSInputPin.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\DeCSSInputPin.h">
 			</File>
 		</Filter>
-		<Filter
+		<Filter 
 			Name="xiph"
 			Filter="">
-			<File
+			<File 
 				RelativePath=".\src\xiph\ogg\bitwise.c">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						UsePrecompiledHeader="0"
 						WarningLevel="0"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						UsePrecompiledHeader="0"
 						WarningLevel="0"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						UsePrecompiledHeader="0"
 						WarningLevel="0"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						UsePrecompiledHeader="0"
 						WarningLevel="0"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\xiph\ogg\framing.c">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						UsePrecompiledHeader="0"
 						WarningLevel="0"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						UsePrecompiledHeader="0"
 						WarningLevel="0"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						UsePrecompiledHeader="0"
 						WarningLevel="0"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release Unicode|Win32">
-					<Tool
+					<Tool 
 						Name="CppCmplrTool"
 						UsePrecompiledHeader="0"
 						WarningLevel="0"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\xiph\vorbis\ivorbiscodec.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\xiph\ogg\ogg.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\xiph\ogm\ogmstreams.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\xiph\ogg\os_types.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\xiph\theora\theora.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\xiph\vorbis\vorbisformat.h">
 			</File>
 		</Filter>
-		<Filter
+		<Filter 
 			Name="filters"
 			Filter="">
-			<File
+			<File 
 				RelativePath=".\src\filters\IOSDprovider.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\filters\Tfilter.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\filters\Tfilter.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\filters\Tfilters.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\filters\Tfilters.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\filters\TOSDprovider.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\filters\TOSDprovider.h">
 			</File>
 		</Filter>
-		<Filter
+		<Filter 
 			Name="baseclasses"
 			Filter="">
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\amfilter.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\amfilter.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\combase.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\combase.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\dllentry.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\dllsetup.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\dllsetup.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\fourcc.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\mtype.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\mtype.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\outputq.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\outputq.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\pstream.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\pstream.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\reftime.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\streams.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\strmiids.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\transfrm.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\transfrm.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\vmr9.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\wxdebug.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\wxdebug.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\wxlist.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\wxlist.h">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\wxutil.cpp">
 			</File>
-			<File
+			<File 
 				RelativePath=".\src\baseclasses\wxutil.h">
 			</File>
 		</Filter>
-		<File
+		<File 
 			RelativePath="src\ffdshow.def">
 		</File>
 	</Files>
 </VisualStudioProject>
-
-
-
 
