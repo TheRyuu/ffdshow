@@ -75,42 +75,26 @@ int av_reduce(int *dst_nom, int *dst_den, int64_t nom, int64_t den, int64_t max)
     return den==0;
 }
 
-/**
- * returns b*c.
- */
 AVRational av_mul_q(AVRational b, AVRational c){
     av_reduce(&b.num, &b.den, b.num * (int64_t)c.num, b.den * (int64_t)c.den, INT_MAX);
     return b;
 }
 
-/**
- * returns b/c.
- */
 AVRational av_div_q(AVRational b, AVRational c){
     AVRational d = {c.den, c.num};
     return av_mul_q(b, d);
 }
 
-/**
- * returns b+c.
- */
 AVRational av_add_q(AVRational b, AVRational c){
     av_reduce(&b.num, &b.den, b.num * (int64_t)c.den + c.num * (int64_t)b.den, b.den * (int64_t)c.den, INT_MAX);
     return b;
 }
 
-/**
- * returns b-c.
- */
 AVRational av_sub_q(AVRational b, AVRational c){
     AVRational d = {-c.num, c.den};
     return av_add_q(b, d);
 }
 
-/**
- * Converts a double precission floating point number to a AVRational.
- * @param max the maximum allowed numerator and denominator
- */
 AVRational av_d2q(double d, int max){
     AVRational a;
 #define LOG2  0.69314718055994530941723212145817656807550013436025
