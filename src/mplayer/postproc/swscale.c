@@ -1528,7 +1528,7 @@ static int PlanarToNV12Wrapper(SwsContext *c, uint8_t* src[], stride_t srcStride
 			dstPtr+= dstStride[0];
 		}
 	}
-	dst = dstParam[0] + dstStride[0]*c->srcH;
+	dst = dstParam[1]; //dstParam[0] + dstStride[0]*c->srcH;
 	if (c->dstFormat == IMGFMT_NV12)
 		interleaveBytes( src[1],src[2],dst,c->srcW/2,srcSliceH/2,srcStride[1],srcStride[2],dstStride[0] );
 	else

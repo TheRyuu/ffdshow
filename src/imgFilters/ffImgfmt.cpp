@@ -232,8 +232,8 @@ const TcspInfo cspInfos[]=
  {
   FF_CSP_NV12,_l("NV12"),
   1,12, //Bpp
-  3, //numplanes
-  {0,1,1,0}, //shiftX
+  2, //numplanes
+  {0,0,0,0}, //shiftX
   {0,1,1,0}, //shiftY
   {0,128,128,0}, //black
   FOURCC_NV12, FOURCC_NV12, &MEDIASUBTYPE_NV12
@@ -256,8 +256,8 @@ TcspInfo cspInfoNV21=
 {
  FF_CSP_NV12,_l("NV21"),
  1,12, //Bpp
- 3, //numplanes
- {0,1,1,0}, //shiftX
+ 2, //numplanes
+ {0,0,0,0}, //shiftX
  {0,1,1,0}, //shiftY
  {0,128,128,0}, //black
  FOURCC_NV21, FOURCC_NV21, &MEDIASUBTYPE_NV21

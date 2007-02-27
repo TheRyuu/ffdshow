@@ -70,11 +70,21 @@ HRESULT TimgFilterOutput::process(const TffPict &pict,int dstcsp,unsigned char *
   }
  stride_t cspstride[4];unsigned char *cspdst[4];
  if (!dv)
-  for (int i=0;i<4;i++)
-   {
-    cspstride[i]=dstStride[i];
-    cspdst[i]=dst[i];
-   }
+  {
+   const TcspInfo *outcspInfo=csp_getInfo(dstcsp);
+   for (int i=0;i<4;i++)
+    {
+     cspstride[i]=dstStride[0]>>outcspInfo->shiftX[i];
+     if (i==0)
+      {
+       cspdst[i]=dst[i];
+      }
+     else
+      {
+       cspdst[i]=cspdst[i-1]+cspstride[i-1]*(pict.rectFull.dy>>outcspInfo->shiftY[i-1]);
+      }
+    }
+  }
  const TffPict *dvp;
  if (!dv || pict.csp!=dvcsp)
   {
