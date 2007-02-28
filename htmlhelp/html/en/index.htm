@@ -14,18 +14,18 @@
   <a href="http://ffdshow-tryout.sourceforge.net/phpBB2/">
     <img src="../images/logo_phpBB.png" title="ffdshow tryouts" alt="ffdshow tryouts" width="200" height="91" />
   </a>
-
+  
   <div style="text-align:right" class="smallest_caption">
-    Translation available in:
+    Translation available in: 
     <a class="nav" href="../jp/index.htm"><img src="../images/japan.png" title="Japanese changelog" alt="Japanese changelog" width="27" height="17" />&nbsp;Japanese</a>
-  </div>
+  </div>       
 
-  <p>
+  <p>   
     <span class="big_caption">
       <a name="top" id="top">Changelog</a>
     </span>
   </p>
-
+    
   <span class="normal">This list is based on the latest revision of the original project except the multithreading patch.<br />
     Navigate to:
   </span>
@@ -35,7 +35,7 @@
     <li><a class="nav" href="#download">Download</a></li>
     <li><a class="nav" href="faq.htm">FAQ</a></li>
   </ul>
-
+    
   <!-- old table navigation version -->
   <!--
   <table class="normal" summary="Links to different sections of changelog">
@@ -43,9 +43,9 @@
     <tr><td></td><td><a class="nav" href="#features">New features</a></td></tr>
     <tr><td></td><td><a class="nav" href="#download">Download</a></td></tr>
     <tr><td></td><td><a class="nav" href="faq.htm">FAQ</a></td></tr>
-  </table>
-  -->
-
+  </table> 
+  -->   
+  
   <p>
     <a name="fixes" id="fixes">
       <span class="medium_caption">Bug fixes</span>
@@ -58,8 +58,18 @@
   </p>
 
   <ul class="fixed">
+    <li>Flipped NV12 caused either crash or corrupt image.</li>
+    <li>With Media Player Classic's internal matroska splitter, the aspect ratio was always 1.</li>
+    <li>When you opened audio configuration dialog during playback, the CPU usage was abnormally high and it sometimes freezed especially on ADPCM.</li>
+    <li>When ffdshow connects to DVobSub(VSfilter), ffdshow tried to use YV12 plus width of non-multiple of 8 and ended in crash.</li>
+    <li>When you configured "Resize & aspect"-"Borders"-"Inside"-100%, ffdshow ended in crash.</li>
+    <li>Reconnecting to VMR9 (after resizing), sometimes failed.</li>
+    <li>PowerDVD7 had black screen because of a bug in DirectShow filters connecting code (Please remove PowerDVD.exe from "Info & debug"-"Don't use ffdshow in:").</li>
+    <li>When subtitle had too many lines to show in the specified space, lines are droped.</li>
+    <li>In italic subtitle, right edges get chipped. If fast rendering was enabled, what should be italic was sometimes non-italic, or the opposite.</li>
+    <li>Some SVQ3 video caused freeze.</li>
     <li>Changing MKV subtitles channel ended in crash.</li>
-    <li>wmv9lib encoder dialog showed wrong encoding settings.</li>
+    <li>wmv9lib encoder dialog showed wrong encoding settings.</li>    
     <li>Multi-byte characters in Matroska-embedded subtitles were garbled.</li>
     <li>If noise and resize filters were applied, chroma would become green.</li>
     <li>Explorer.exe crashed on Windows Vista when accessing a folder that contains AVI files.</li>
@@ -124,11 +134,17 @@
   </p>
 
   <ul class="added">
-    <li>x264 encoder re-added and updated.</li>
+    <li>Management of compatibility issues, "Use ffdshow only in:".</li>
+    <li>Hardware deinterlacing support for raw video (Send interlacing related information which was inputed as raw video to downstream filters).</li>
+    <li>New OSD item "IDCT(libavcodec). Displays which IDCT method is selected.</li>
+    <li>In "Subtitles"-"Search in", extensions priority can be specified.</li>
+    <li>VC-1 Advanced Profile support (libavcodec can work without external codecs).</li>
+    <li>Various WMV and VC-1 can be played using Microsoft's codec (VC-1 needs external codec or WMP11 installed).</li>
+    <li>x264 encoder re-added and updated.</li>    
     <li>H.264 MBAFF hardware deinterlacing support.</li>
     <li>Corrections and new features of the Remote API: presets, subtitles, fast forward/rewind etc.</li>
     <li>Polish translation</li>
-    <li>Queue: ffdshow now uses VMR9's internal queue.</li>
+    <li>Queue: ffdshow now uses VMR9's internal queue.</li>    
   </ul>
 
   <p>
@@ -164,8 +180,8 @@
     <span class="normal">
       <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
     </span>
-  </div>
-
+  </div>    
+  
   <div style="padding-top:20px">
     <a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" /></a>
   </div>

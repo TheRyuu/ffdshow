@@ -462,6 +462,8 @@ Set all supported formats to XviD=サポートされた形式すべてをXviDに設定する
 List the name of executable file which is incompatible with ffdshow or which you don't want to use ffdshow, one for each line.=1行に1つずつ、ffdshowと相性の悪い、またはffdshowを使用したくない実行ファイル名を列挙してください。
 Add compatible executable file=ffdshowと互換性のある実行ファイルを追加する
 Add incompatible executable file=ffdshowと互換性のない実行ファイルを追加する
+Load default settings=デフォルトの設定をロード
+Are you sure?=よろしいですか？
 [101]
 1=OK
 2=キャンセル
