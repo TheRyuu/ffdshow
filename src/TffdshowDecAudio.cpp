@@ -501,7 +501,7 @@ STDMETHODIMP TffdshowDecAudio::deliverProcessedSample(const void *buf,size_t num
    REFERENCE_TIME currentTime,diff;
    m_pClock->GetTime(&currentTime);
    diff=currentTime - priorFrameMsgTime;
-   if (diff>5000000 || diff<0) // 500ms
+   if (diff>500000 || diff<0) // 50ms
     {
      priorFrameMsgTime=currentTime;
      sendOnFrameMsg();

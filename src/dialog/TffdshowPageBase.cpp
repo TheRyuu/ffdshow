@@ -497,6 +497,9 @@ INT_PTR TffdshowPageBase::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
     return TRUE;
    case WM_FFONFRAME:
     {
+     MSG msg;
+     if (PeekMessage(&msg,m_hwnd,WM_FFONFRAME,WM_FFONFRAME,PM_NOREMOVE))
+      return TRUE; // drop msg when next WM_FFONFRAME is already in the message queue.
      for (ThtiPages::const_iterator hp=htiPages.begin();hp!=htiPages.end();hp++)
       for (TconfPages::const_iterator i=(*hp)->begin();i!=(*hp)->end();i++)
        if ((*i)->m_hwnd)
