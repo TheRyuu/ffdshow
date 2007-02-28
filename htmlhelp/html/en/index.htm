@@ -59,14 +59,14 @@
 
   <ul class="fixed">
     <li>Flipped NV12 caused either crash or corrupt image.</li>
-    <li>With Media Player Classic's internal matroska splitter, the aspect ratio was always 1.</li>
-    <li>When you opened audio configuration dialog during playback, the CPU usage was abnormally high and it sometimes freezed especially on ADPCM.</li>
-    <li>When ffdshow connects to DVobSub(VSfilter), ffdshow tried to use YV12 plus width of non-multiple of 8 and ended in crash.</li>
+    <li>With Media Player Classic's internal Matroska splitter, the aspect ratio was always 1.</li>
+    <li>When you opened audio configuration dialog during playback, the CPU usage was abnormally high and it sometimes freezed especially on ADPCM audio.</li>
+    <li>When ffdshow connected to DVobSub (VSFilter), ffdshow tried to use YV12 plus width of non-multiple of 8 and ended in crash.</li>
     <li>When you configured "Resize & aspect"-"Borders"-"Inside"-100%, ffdshow ended in crash.</li>
-    <li>Reconnecting to VMR9 (after resizing), sometimes failed.</li>
-    <li>PowerDVD7 had black screen because of a bug in DirectShow filters connecting code (Please remove PowerDVD.exe from "Info & debug"-"Don't use ffdshow in:").</li>
-    <li>When subtitle had too many lines to show in the specified space, lines are droped.</li>
-    <li>In italic subtitle, right edges get chipped. If fast rendering was enabled, what should be italic was sometimes non-italic, or the opposite.</li>
+    <li>Reconnecting to VMR9 (after resizing) sometimes failed.</li>
+    <li>PowerDVD7 produced a black screen because of a bug in DirectShow filter's connecting code (please remove PowerDVD.exe from "Info & debug"-"Don't use ffdshow in:").</li>
+    <li>When a subtitle unit contained too many lines for the specified space, lines were being dropped.</li>
+    <li>The right edges of italic subtitles were cut off. If "fast rendering" was enabled, italic text was sometimes shown as non-italic and vice versa.</li>
     <li>Some SVQ3 video caused freeze.</li>
     <li>Changing MKV subtitles channel ended in crash.</li>
     <li>wmv9lib encoder dialog showed wrong encoding settings.</li>    
@@ -134,12 +134,12 @@
   </p>
 
   <ul class="added">
-    <li>Management of compatibility issues, "Use ffdshow only in:".</li>
-    <li>Hardware deinterlacing support for raw video (Send interlacing related information which was inputed as raw video to downstream filters).</li>
-    <li>New OSD item "IDCT(libavcodec). Displays which IDCT method is selected.</li>
+    <li>Management of compatibility issues: "Use ffdshow only in:" option ensures that ffdshow only runs in supported applications.</li>
+    <li>Hardware deinterlacing support for raw video (interlacing related information which was inputed as raw video is being sent to downstream filters).</li>
+    <li>New OSD item "IDCT(libavcodec)" displays which IDCT method is selected.</li>
     <li>In "Subtitles"-"Search in", extensions priority can be specified.</li>
     <li>VC-1 Advanced Profile support (libavcodec can work without external codecs).</li>
-    <li>Various WMV and VC-1 can be played using Microsoft's codec (VC-1 needs external codec or WMP11 installed).</li>
+    <li>Various WMV and VC-1 content can be played using Microsoft's codec (VC-1 needs external codec or WMP11 installed).</li>
     <li>x264 encoder re-added and updated.</li>    
     <li>H.264 MBAFF hardware deinterlacing support.</li>
     <li>Corrections and new features of the Remote API: presets, subtitles, fast forward/rewind etc.</li>
