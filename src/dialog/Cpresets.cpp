@@ -279,9 +279,9 @@ void TpresetsPage::onRemove(void)
   {
    char_t presetName[1024];
    ListView_GetItemText(hlv,i,0,presetName,1023);
-   parent->localPresets->removePreset(presetName);
    if (deciD->isDefaultPreset(presetName))
-    cfgSet(IDFF_defaultPreset,(*parent->localPresets)[0]->presetName);
+    cfgSet(IDFF_defaultPreset,(*parent->localPresets)[0]->presetName); // [0] is protected(Remove bottun is inactivated, thus cannot be removed), it's safe to assume default preset is not [0].
+   parent->localPresets->removePreset(presetName);
    ListView_SetItemCountEx(hlv,parent->localPresets->size(),0);
    ListView_GetItemText(hlv,0,0,presetName,1023);
    parent->selectPreset(presetName);
