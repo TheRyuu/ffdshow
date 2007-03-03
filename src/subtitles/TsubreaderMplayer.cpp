@@ -279,6 +279,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSubviewer<tchar>::parse(Tstream 
     tchar *p=NULL;
     int len;
     TsubtitleTextBase<tchar> current(this->format);
+    textformat.resetProps();
     while (!current.size()) {
         if (flags&this->PARSETIME)
          {

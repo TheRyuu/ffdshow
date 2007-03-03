@@ -34,8 +34,9 @@ private:
  Tsubreader *subreader;
  const TsubtitlesSettings *cfg;
  const Tconfig *ffcfg;
- TtextFix<tchar> textfix;TsubtitleFormat textformat;
+ TtextFix<tchar> textfix;
 protected:
+ TsubtitleFormat textformat;
  typedef typename tchar_traits<tchar>::ffstring ffstring;
  typedef typename tchar_traits<tchar>::strings strings;
  TsubtitleParser(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader);

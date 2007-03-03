@@ -91,6 +91,7 @@ public:
  template<class tchar> Twords processSSA(const TsubtitleLine<tchar> &line,TsubtitleTextBase<tchar> &parent);
  template<class tchar> void processMicroDVD(TsubtitleTextBase<tchar> &parent,typename std::vector< TsubtitleLine<tchar> >::iterator it);
  template<class tchar> void processMPL2(TsubtitleLine<tchar> &line);
+ void resetProps(void){props.reset();}
 };
 
 template<class tchar> struct TsubtitleWord
