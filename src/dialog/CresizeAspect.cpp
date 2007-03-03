@@ -91,10 +91,9 @@ void TresizeAspectPage::aspect2dlg(void)
  setCheck(IDC_RBT_ASPECT_KEEP,ra==1);
  setCheck(IDC_RBT_ASPECT_USER,ra==2);
  char_t pomS[256];
- unsigned int dx,dy;
- deciV->getAVIdimensions(&dx,&dy);
- if (dx!=0 && dy!=0)
-  setText(IDC_RBT_ASPECT_KEEP,_l("%s %3.2f:1"),_(IDC_RBT_ASPECT_KEEP),float(dx)/dy);
+ unsigned int a1,a2;
+ if (deciV->getInputDAR(&a1,&a2)==S_OK)
+  setText(IDC_RBT_ASPECT_KEEP,_l("%s %3.2f:1"),_(IDC_RBT_ASPECT_KEEP),float(a1)/a2);
  int aspectI=cfgGet(IDFF_aspectRatio);
  setText(IDC_RBT_ASPECT_USER,_l("%s %3.2f:1"),_(IDC_RBT_ASPECT_USER),float(aspectI/65536.0));
  tbrSet(IDC_TBR_ASPECT_USER,aspectI/256);
