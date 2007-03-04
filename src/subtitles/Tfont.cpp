@@ -241,9 +241,9 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
  }
 
 
-   unsigned int shadowSize = 10;
-   unsigned int shadowAlpha = 180;
-   unsigned int shadowMode = 1; // 0: glowing, 1:classic with gradient, 2: classic with no gradient
+   unsigned int shadowSize = prefs.shadowSize;
+   unsigned int shadowAlpha = prefs.shadowAlpha;
+   unsigned int shadowMode = prefs.shadowMode; // 0: glowing, 1:classic with gradient, 2: classic with no gradient
    if (shadowSize > 0)
    if (shadowMode == 0) //Gradient glowing shadow (most complex)
    {
