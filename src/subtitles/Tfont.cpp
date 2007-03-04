@@ -109,6 +109,8 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
  GetDIBits(hdc,hbmp,0,dy[0],bmp16,&bmi,DIB_RGB_COLORS);
  SelectObject(hdc,old);
  DeleteObject(hbmp);
+
+
  unsigned int _dx,_dy;
  _dx=(xscale*dx[0]/100)/4+4;_dy=dy[0]/4+4;
  dxCharY=xscale*sz.cx/400;dyCharY=sz.cy/4;
@@ -136,7 +138,8 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
  else
   {
    memcpy(msk[0],bmp[0],dx[0]*dy[0]);
-   #define MAKE_SHADOW(x,y)                                   \
+
+	#define MAKE_SHADOW(x,y)                                   \
     {                                                         \
      unsigned int s=0,cnt=0;                                  \
      for (int yy=-2;yy<=+2;yy++)                              \
@@ -169,6 +172,9 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
      MAKE_SHADOW(dxY2,y0);
      MAKE_SHADOW(dxY1,y0);
     }
+
+
+
    __m64 matrix8_0=*(__m64*)matrix[0],matrix8_1=*(__m64*)matrix[1],matrix8_2=*(__m64*)matrix[2];
    const int matrix4[3]={matrix[0][4],matrix[1][4],matrix[2][4]};
    const unsigned char *bmpYsrc_2=bmp[0],*bmpYsrc_1=bmp[0]+1*dx[0],*bmpYsrc=bmp[0]+2*dx[0],*bmpYsrc1=bmp[0]+3*dx[0],*bmpYsrc2=bmp[0]+4*dx[0];
@@ -230,7 +236,102 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
    *(int*)(bmp[0]+i)=_mm_cvtsi64_si32(_mm_packs_pu16(bmp8,m0));
   }
  for (;i<cnt;i++)
+ {
   bmp[0][i]=(unsigned char)((bmp[0][i]*yuv.Y)>>8);
+ }
+
+
+   unsigned int shadowSize = 10;
+   unsigned int shadowAlpha = 180;
+   unsigned int shadowMode = 1; // 0: glowing, 1:classic with gradient, 2: classic with no gradient
+   if (shadowSize > 0)
+   if (shadowMode == 0) //Gradient glowing shadow (most complex)
+   {
+	   for (unsigned int y=0; y<dy[0];y++)
+	   {
+		   for (unsigned int x=0; x<dx[0];x++)
+		   {
+			   unsigned int pos = dx[0]*y+x;
+			   if (bmp[0][pos] == 0) continue;
+
+			   unsigned int shadowAlphaGradient = shadowAlpha;
+			   for (unsigned int circleSize=1; circleSize<=shadowSize; circleSize++)
+			   {
+				   for (unsigned int i=0; i<circleSize; i++)
+				   {
+						unsigned int yy = (unsigned int)sqrt((double)(circleSize*circleSize) - (double)(i*i));
+						if (x - i > 0)
+						{
+							
+							if (y+yy < dy[0] && 
+								bmp[0][dx[0]*(y+yy)+x-i]==0 && msk[0][dx[0]*(y+yy)+x-i] <shadowAlphaGradient)
+							{
+								msk[0][dx[0]*(y+yy)+x-i] = shadowAlphaGradient;
+							}
+							if (y-yy > 0 && 
+								bmp[0][dx[0]*(y-yy)+x-i]==0 && msk[0][dx[0]*(y-yy)+x-i] <shadowAlphaGradient)
+							{
+								msk[0][dx[0]*(y-yy)+x-i] = shadowAlphaGradient;
+							}
+						}
+						if (x + i < dx[0])
+						{
+							if (y+yy < dy[0] && 
+								bmp[0][dx[0]*(y+yy)+x+i]==0 && msk[0][dx[0]*(y+yy)+x+i] <shadowAlphaGradient)
+							{
+								msk[0][dx[0]*(y+yy)+x+i] = shadowAlphaGradient;
+							}
+							if (y-yy > 0 && 
+								bmp[0][dx[0]*(y-yy)+x+i]==0 && msk[0][dx[0]*(y-yy)+x+i] <shadowAlphaGradient)
+							{
+								msk[0][dx[0]*(y-yy)+x+i] = shadowAlphaGradient;
+							}
+						}
+				   }
+				   shadowAlphaGradient -= shadowAlpha/shadowSize;
+			   }
+		   }
+	   }
+   }
+   else if (shadowMode == 1) //Gradient classic shadow
+   {
+	   for (unsigned int y=0; y<dy[0];y++)
+	   {
+		   for (unsigned int x=0; x<dx[0];x++)
+		   {
+			   unsigned int pos = dx[0]*y+x;
+			   if (bmp[0][pos] == 0) continue;
+
+			   unsigned int shadowAlphaGradient = shadowAlpha;
+			   for (unsigned int circleSize=1; circleSize<=shadowSize; circleSize++)
+			   {
+					unsigned int xx = (unsigned int)((double)circleSize/sqrt((double)2));
+					if (x + xx < dx[0])
+					{
+						if (y+xx < dy[0] && 
+							bmp[0][dx[0]*(y+xx)+x+xx]==0 && msk[0][dx[0]*(y+xx)+x+xx] <shadowAlphaGradient)
+						{
+							msk[0][dx[0]*(y+xx)+x+xx] = shadowAlphaGradient;
+						}
+					}
+				   shadowAlphaGradient -= shadowAlpha/shadowSize;
+			   }
+		   }
+	   }
+   }
+   else if (shadowMode == 2) //Classic shadow
+   {
+		for (unsigned int y=dy[0]-1; y>=shadowSize;y--)
+		{
+			for (unsigned int x=dx[0]-1; x>=shadowSize;x--)
+			{
+				unsigned int pos = dx[0]*y+x;
+				if (bmp[0][dx[0]*(y-shadowSize)+x-shadowSize] != 0 && bmp[0][pos] == 0)
+					msk[0][pos] = shadowAlpha;
+			}
+		}
+   }
+
  bmpmskstride[0]=dx[0];bmpmskstride[1]=dx[1];bmpmskstride[2]=dx[2];
  _mm_empty();
 }
