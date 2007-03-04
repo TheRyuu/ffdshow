@@ -196,6 +196,7 @@ public:
 
  int ffv1_coder;
  int ffv1_context;
+ int ffv1_key_interval;
  int ffv1_csp;
  static const TcspFcc ffv1csps[];
  static const char_t *ffv1coders[];

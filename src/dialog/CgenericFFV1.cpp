@@ -40,18 +40,18 @@ void TgenericFFV1page::cfg2dlg(void)
  cbxSetCurSel(IDC_CBX_FFV1_CODER,cfgGet(IDFF_enc_ffv1_coder));
  cbxSetCurSel(IDC_CBX_FFV1_CONTEXT,cfgGet(IDFF_enc_ffv1_context));
  //SetDlgItemInt(m_hwnd,IDC_ED_FFV1_CONTEXT,cfgGet(IDFF_enc_ffv1_context),FALSE);
- SetDlgItemInt(m_hwnd,IDC_ED_MAXKEYINTERVAL,cfgGet(IDFF_enc_max_key_interval),FALSE);
+ SetDlgItemInt(m_hwnd,IDC_ED_MAXKEYINTERVAL,cfgGet(IDFF_enc_ffv1_key_interval),FALSE);
 }
 
 TgenericFFV1page::TgenericFFV1page(TffdshowPageEnc *Iparent) :TconfPageEnc(Iparent)
 {
  dialogId=IDD_GENERIC_FFV1;
- static const int props[]={IDFF_enc_ffv1_csp,IDFF_enc_ffv1_coder,IDFF_enc_ffv1_context,IDFF_enc_max_key_interval,0};
+ static const int props[]={IDFF_enc_ffv1_csp,IDFF_enc_ffv1_coder,IDFF_enc_ffv1_context,IDFF_enc_ffv1_key_interval,0};
  propsIDs=props;
  static const TbindEditInt<TgenericFFV1page> edInt[]=
   {
    //IDC_ED_FFV1_CONTEXT  ,0,10 ,IDFF_enc_ffv1_context    ,NULL,
-   IDC_ED_MAXKEYINTERVAL,1,500,IDFF_enc_max_key_interval,NULL,
+   IDC_ED_MAXKEYINTERVAL,1,500,IDFF_enc_ffv1_key_interval,NULL,
    0
   };
  bindEditInts(edInt);

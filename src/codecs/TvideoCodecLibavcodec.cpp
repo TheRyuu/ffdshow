@@ -704,7 +704,10 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
  mb_count=mb_width*mb_height;
  avctx->time_base.den=deci->getParam2(IDFF_enc_fpsRate);
  avctx->time_base.num=deci->getParam2(IDFF_enc_fpsScale);
- avctx->gop_size=coCfg->max_key_interval;
+ if (coCfg->codecId==CODEC_ID_FFV1)
+  avctx->gop_size=coCfg->ffv1_key_interval;
+ else
+  avctx->gop_size=coCfg->max_key_interval;
 
  avctx->codec_tag=coCfg->fourcc;
  if (sup_interlace(coCfg->codecId) && coCfg->interlacing) avctx->flags|=CODEC_FLAG_INTERLACED_DCT|CODEC_FLAG_INTERLACED_ME;

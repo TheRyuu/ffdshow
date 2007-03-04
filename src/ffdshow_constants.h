@@ -1133,6 +1133,7 @@
 #define IDFF_enc_ffv1_coder   3023
 #define IDFF_enc_ffv1_context 3024
 #define IDFF_enc_ffv1_csp     3025
+#define IDFF_enc_ffv1_key_interval 3373
 
 #define IDFF_enc_wmv9_kfsecs 3026
 #define IDFF_enc_wmv9_ivtc   3027
@@ -1381,6 +1382,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3372
+//max:3373
 
 #endif

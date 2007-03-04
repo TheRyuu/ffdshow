@@ -158,6 +158,8 @@ TcoSettings::TcoSettings(TintStrColl *Icoll):Toptions(Icoll),options(Icoll)
      _l("ffv1_coder"),0,
    IDFF_enc_ffv1_context,&TcoSettings::ffv1_context,0,10,_l(""),1,
      _l("ffv1_context"),0,
+   IDFF_enc_ffv1_key_interval,&TcoSettings::ffv1_key_interval,1,500,_l(""),1,
+     _l("ffv1_key_interval"),10,
    IDFF_enc_ffv1_csp    ,&TcoSettings::ffv1_csp    ,1, 1,_l(""),1,
      _l("ffv1_csp"),FOURCC_YV12,
 
