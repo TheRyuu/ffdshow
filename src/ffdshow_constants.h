@@ -458,6 +458,9 @@
 #define IDFF_subOpacity              853
 #define IDFF_subSplitBorder          855
 #define IDFF_subCC                   860
+#define IDFF_subShadowMode           3374 // 0 - Glowing, 1 - classic gradient, 2 - classic
+#define IDFF_subShadowSize           3375
+#define IDFF_subShadowAlpha          3376
 
 #define IDFF_fontName                820
 #define IDFF_fontCharset             802
@@ -1382,6 +1385,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3373
+//max:3376
 
 #endif
