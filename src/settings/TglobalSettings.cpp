@@ -87,6 +87,14 @@ void TglobalSettingsBase::load(void)
  TregOpRegRead tCPU(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
  tCPU._REG_OP_N(IDFF_allowedCpuFlags,_l("allowedCPUflags"),allowedCPUflags,255);
  firstBlacklist=firstUseonlyin=true;
+ // fix 'SinkuHadouken.exe'#1310 -> 'SinkuHadouken.exe'#13#10 (rev 976 bug)
+ char_t sinkuhadouken[19]={'S','i','n','k','u','H','a','d','o','u','k','e','n','.','e','x','e',0x1e,'\0'};
+ ffstring complist(useonlyin);
+ size_t pos=complist.find(sinkuhadouken);
+ if (pos!=complist.npos)
+  complist.replace(pos+17,1,_l("\r\n"));
+ strncpy(useonlyin,complist.c_str(),countof(useonlyin));
+ useonlyin[countof(useonlyin)-1]=0;
 }
 void TglobalSettingsBase::save(void)
 {
