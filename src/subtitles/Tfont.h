@@ -38,6 +38,7 @@ public:
    bool dvd;
    IffdshowBase *deci;
    const Tconfig *config;
+   int shadowSize, shadowAlpha, shadowMode; // Subtitles shadow
   };
  TrenderedSubtitleLines(void) {}
  TrenderedSubtitleLines(TrenderedSubtitleLine *ln) {push_back(ln);}

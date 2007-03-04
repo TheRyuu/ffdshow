@@ -48,6 +48,10 @@ TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(unsigned char *Idst[4],strid
  deci=Ideci;
  config=Iconfig;
  dvd=Idvd;
+ // Copy subtitles shadow vars
+ shadowSize = cfg->shadowSize;
+ shadowAlpha = cfg->shadowAlpha;
+ shadowMode = cfg->shadowMode;
 }
 
 TimgFilterSubtitles::TimgFilterSubtitles(IffdshowBase *Ideci,Tfilters *Iparent):
