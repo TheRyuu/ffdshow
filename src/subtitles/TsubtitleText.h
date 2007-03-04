@@ -78,6 +78,7 @@ private:
    //void fontSize(const tchar *start,const tchar *end);
    template<int TSubtitleProps::*offset,int min,int max> void intProp(const tchar *start,const tchar *end);
    template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void intProp2(const tchar *start,const tchar *end);
+   template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void pos(const tchar *start,const tchar *end);
    template<bool TSubtitleProps::*offset> void boolProp(const tchar *start,const tchar *end);
    void color(const tchar *start,const tchar *end);
    void reset(const tchar *start,const tchar *end);

@@ -22,8 +22,9 @@ struct TSubtitleProps
  // Alignment. This sets how text is "justified" within the Left/Right onscreen margins,
  // and also the vertical placing. Values may be 1=Left, 2=Centered, 3=Right.
  // Add 4 to the value for a "Toptitle". Add 8 to the value for a "Midtitle".
- // eg. 5 = left-justified toptitle
- int alignment;  // -1 = default(center)
+ // eg. 5 = left-justified toptitle]
+ // -1 = default(center)
+ int alignment;
 
  int marginR,marginL,marginV,marginTop,marginBottom; // -1 = default
  unsigned int get_marginR(unsigned int screenWidth) const;

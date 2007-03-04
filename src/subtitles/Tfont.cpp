@@ -541,6 +541,7 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
  if (y<0) y=0;
 
  int old_alignment=-1;
+ int old_marginTop=-1,old_marginL=-1;
 
  for (const_iterator i=begin();i!=end();y+=prefs.linespacing*(*i)->height()/100-2,i++)
   {
@@ -549,16 +550,19 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
    unsigned int marginTop=(*i)->props.get_marginTop(prefsdy);
    unsigned int marginBottom=(*i)->props.get_marginBottom(prefsdy);
 
-   if ((*i)->props.alignment>0 && (*i)->props.alignment!=old_alignment)
+   // When the alignment or marginTop or marginL changes, it's a new paragraph.
+   if ((*i)->props.alignment>0 && ((*i)->props.alignment!=old_alignment || old_marginTop!=(*i)->props.marginTop || old_marginL!=(*i)->props.marginL))
     {
      old_alignment=(*i)->props.alignment;
+     old_marginTop=(*i)->props.marginTop;
+     old_marginL=(*i)->props.marginL;
      // calculate the height of the paragraph
      unsigned int hParagraph=0;
      for (const_iterator pi=i;pi!=end();pi++)
       {
-       if ((*pi)->props.alignment!=old_alignment)
+       if ((*pi)->props.alignment!=old_alignment || (*pi)->props.marginTop!=old_marginTop || (*pi)->props.marginL!=old_marginL)
         break;
-       if (pi+1!=end() && (*(pi+1))->props.alignment==old_alignment)
+       if (pi+1!=end() && (*(pi+1))->props.alignment==old_alignment && (*(pi+1))->props.marginTop==old_marginTop && (*(pi+1))->props.marginL==old_marginL)
         hParagraph+=prefs.linespacing*(*pi)->height()/100;
        else
         hParagraph+=(*pi)->height();

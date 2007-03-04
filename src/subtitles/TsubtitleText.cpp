@@ -743,6 +743,11 @@ template<class tchar> template<int TSubtitleProps::*offset,int min,int max> void
  else
   props.*offset=defprops.*offset;
 }
+template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void TsubtitleFormat::Tssa<tchar>::pos(const tchar *start,const tchar *end)
+{
+ props.alignment=5;
+ intProp2<offset1,offset2,min,max>(start,end);
+}
 template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void TsubtitleFormat::Tssa<tchar>::intProp2(const tchar *start,const tchar *end)
 {
 // (x,y) is expected.
@@ -844,7 +849,7 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::processTokens(const tch
        !processToken(l3,_L("\\clip"),NULL) &&
        !processToken(l3,_L("\\an"),NULL) &&
        !processToken(l3,_L("\\c"),&Tssa<tchar>::color) &&
-       !processToken(l3,_L("\\pos"),&Tssa<tchar>::template intProp2<&TSubtitleProps::marginL,&TSubtitleProps::marginTop,0,4096>) &&
+       !processToken(l3,_L("\\pos"),&Tssa<tchar>::template pos<&TSubtitleProps::marginL,&TSubtitleProps::marginTop,0,4096>) &&
        !processToken(l3,_L("\\1c"),NULL) && !processToken(l3,_L("\\1a"),NULL) &&
        !processToken(l3,_L("\\2c"),NULL) && !processToken(l3,_L("\\2a"),NULL) &&
        !processToken(l3,_L("\\3c"),NULL) && !processToken(l3,_L("\\3a"),NULL) &&
