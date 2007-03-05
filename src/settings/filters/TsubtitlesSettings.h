@@ -53,7 +53,6 @@ public:
  virtual void createPages(TffdshowPageDec *parent) const;
  virtual bool getTip(unsigned int pageId,char_t *buf,size_t buflen);
  virtual void reg_op(TregOp &t);
- int shadowSize, shadowAlpha, shadowMode; // Subtitles shadow
 };
 
 #endif

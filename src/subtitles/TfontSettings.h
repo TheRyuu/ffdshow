@@ -42,6 +42,8 @@ public:
  int split;
  int fast;
  virtual void reg_op(TregOp &t);
+ int shadowSize, shadowAlpha, shadowMode; // Subtitles shadow
+ static const char_t *shadowModes[];
 };
 
 struct TfontSettingsOSD :TfontSettings

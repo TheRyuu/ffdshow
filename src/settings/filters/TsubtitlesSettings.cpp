@@ -678,15 +678,8 @@ TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters)
      _l("subOpacity"),256,
    IDFF_subSplitBorder         ,&TsubtitlesSettings::splitBorder             ,0,4096,_l(""),1,
      _l("subSplitBorder"),0,
-
    IDFF_subCC                  ,&TsubtitlesSettings::cc                      ,0,0,_l(""),1,
      _l("subCC"),1,
-   IDFF_subShadowMode          ,&TsubtitlesSettings::shadowMode              ,0,2,_l(""),1,
-     _l("subShadowMode"), 1,
-   IDFF_subShadowAlpha         ,&TsubtitlesSettings::shadowAlpha             ,0,255,_l(""),1,
-     _l("subShadowAlpha"), 180,
-   IDFF_subShadowSize          ,&TsubtitlesSettings::shadowSize              ,0,50,_l(""),1,
-     _l("subShadowSize"), 8,
    0
   };
  addOptions(iopts);

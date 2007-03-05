@@ -36,6 +36,14 @@ const TfontSettings::Tweigth TfontSettings::weights[]=
  NULL
 };
 
+const char_t* TfontSettings::shadowModes[]=
+{
+ _l("Glowing shadow"),
+ _l("Gradient shadow"),
+ _l("Classic shadow"), 
+ NULL
+};
+
 const int TfontSettings::charsets[]=
 {
  ANSI_CHARSET,DEFAULT_CHARSET,SYMBOL_CHARSET,SHIFTJIS_CHARSET,HANGUL_CHARSET,GB2312_CHARSET,CHINESEBIG5_CHARSET,OEM_CHARSET,JOHAB_CHARSET,HEBREW_CHARSET,ARABIC_CHARSET,GREEK_CHARSET,TURKISH_CHARSET,VIETNAMESE_CHARSET,THAI_CHARSET,EASTEUROPE_CHARSET,RUSSIAN_CHARSET,MAC_CHARSET,BALTIC_CHARSET,-1
@@ -189,6 +197,12 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
      _l("fontXscale"), 100,
    IDFF_fontFast               ,&TfontSettings::fast               ,0,0,_l(""),1,
      _l("fontFast"), 0,
+   IDFF_fontShadowMode         ,&TfontSettings::shadowMode         ,0,2,_l(""),1,
+     _l("fontShadowMode"), 1,
+   IDFF_fontShadowAlpha        ,&TfontSettings::shadowAlpha        ,0,255,_l(""),1,
+     _l("fontShadowAlpha"), 180,
+   IDFF_fontShadowSize          ,&TfontSettings::shadowSize         ,0,50,_l(""),1,
+     _l("fontShadowSize"), 8,
    0
   };
  addOptions(iopts);

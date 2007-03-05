@@ -458,9 +458,6 @@
 #define IDFF_subOpacity              853
 #define IDFF_subSplitBorder          855
 #define IDFF_subCC                   860
-#define IDFF_subShadowMode           3374 // 0 - Glowing, 1 - classic gradient, 2 - classic
-#define IDFF_subShadowSize           3375
-#define IDFF_subShadowAlpha          3376
 
 #define IDFF_fontName                820
 #define IDFF_fontCharset             802
@@ -477,6 +474,9 @@
 #define IDFF_fontSplitting           831
 #define IDFF_fontXscale              832 // *100, multiplier of character width
 #define IDFF_fontFast                854
+#define IDFF_fontShadowMode          3374 // 0 - Glowing, 1 - classic gradient, 2 - classic
+#define IDFF_fontShadowSize          3375
+#define IDFF_fontShadowAlpha         3376
 
 #define IDFF_filterBlur              900
 #define IDFF_isBlur                  901

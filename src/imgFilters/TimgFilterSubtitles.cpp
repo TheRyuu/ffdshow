@@ -49,9 +49,9 @@ TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(unsigned char *Idst[4],strid
  config=Iconfig;
  dvd=Idvd;
  // Copy subtitles shadow vars
- shadowSize = cfg->shadowSize;
- shadowAlpha = cfg->shadowAlpha;
- shadowMode = cfg->shadowMode;
+ deci->getParam(IDFF_fontShadowMode, &shadowMode);
+ deci->getParam(IDFF_fontShadowSize, &shadowSize);
+ deci->getParam(IDFF_fontShadowAlpha, &shadowAlpha);
 }
 
 TimgFilterSubtitles::TimgFilterSubtitles(IffdshowBase *Ideci,Tfilters *Iparent):
