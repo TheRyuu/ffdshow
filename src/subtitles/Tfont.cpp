@@ -239,7 +239,8 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
  {
   bmp[0][i]=(unsigned char)((bmp[0][i]*yuv.Y)>>8);
  }
-
+ bmpmskstride[0]=dx[0];bmpmskstride[1]=dx[1];bmpmskstride[2]=dx[2];
+ _mm_empty();
 
    unsigned int shadowSize = prefs.shadowSize;
    unsigned int shadowAlpha = prefs.shadowAlpha;
@@ -331,9 +332,6 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
 			}
 		}
    }
-
- bmpmskstride[0]=dx[0];bmpmskstride[1]=dx[1];bmpmskstride[2]=dx[2];
- _mm_empty();
 }
 
 // fast rendering
