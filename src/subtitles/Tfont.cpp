@@ -125,9 +125,12 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
     {
      unsigned int sum=0;
      for (const unsigned char *bmp16src=bmp16+((y-2)*dx[0]+((x>>16)-2))*4,*bmp16srcEnd=bmp16src+5*dx[0]*4;bmp16src!=bmp16srcEnd;bmp16src+=dx[0]*4)
+	 {
       for (int i=0;i<=12;i+=4)
        sum+=bmp16src[i];
+	 }
      sum/=25;
+	 if (sum >= 128) sum = 255; // Fixed the gray issue
      *dstBmpY=(unsigned char)sum;
     }
   }
@@ -244,7 +247,7 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
 
    unsigned int shadowSize = prefs.shadowSize;
    unsigned int shadowAlpha = prefs.shadowAlpha;
-   unsigned int shadowMode = prefs.shadowMode; // 0: glowing, 1:classic with gradient, 2: classic with no gradient
+   unsigned int shadowMode = prefs.shadowMode; // 0: glowing, 1:classic with gradient, 2: classic with no gradient, >=3: no shadow
    if (shadowSize > 0)
    if (shadowMode == 0) //Gradient glowing shadow (most complex)
    {
@@ -302,6 +305,8 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
 		   {
 			   unsigned int pos = dx[0]*y+x;
 			   if (bmp[0][pos] == 0) continue;
+			   /*else
+				bmp[0][pos] = 255;*/
 
 			   unsigned int shadowAlphaGradient = shadowAlpha;
 			   for (unsigned int circleSize=1; circleSize<=shadowSize; circleSize++)
@@ -459,6 +464,15 @@ void TrenderedSubtitleWord::print(unsigned int sdx[3],unsigned char *dstLn[3],co
      dstLn[2][x]=c;//(unsigned char)limit(c,0,255);
     }
   }
+
+/* for (int x=0;x<dx[0];x++)
+	 for (int y=0;y<dy[0];y++)
+	 {
+		 if (bmp[0][dy[0]*y+x] !=0)
+		 {
+			 dstLn[0][x]=c
+		 }
+	 }*/
  _mm_empty();
 }
 
