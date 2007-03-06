@@ -762,6 +762,11 @@ Cyrillic=cyrillique
 Easteurope=Europe de l'Est
 Hangul=hangul
 
+Glowing shadow=Ombre de contour
+Gradient shadow=Ombre graduée
+Classic shadow=Ombre classique
+Disabled=Désactivé
+
 English (may work with other languages)=anglais (peut fonctionner pour d'autres langues)
 Abkhazian=abkhaze
 (Afan) Oromo=(afan) oromo
@@ -1254,14 +1259,17 @@ brown=brun
 1110=Taille :
 1114=Jeu :
 1116=Espacement :
-1118=Opacité de l'ombre :
+1118=Opacité du contour :
 1120=Largeur :
 1124=Couleur
-1130=Portée de l'ombre :
+1130=Portée du contour :
 1143=Espacement : distance entre les caractères.\r\nOpacité de l'ombre : régler à 100 pour aucune transparence.\r\nÉpaisseur : la plupart des polices ne prennent en charge qu'une petite partie des styles énumérés.
 1259=Police
 1335=Autodimensionnement
 1827=Rendu rapide
+1978=Mode d'ombrage
+1980=Taille de l'ombre
+1981=Opacité de l'ombre
 
 [133]
 0=Redimensionnement & Proportions
