@@ -130,7 +130,8 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
        sum+=bmp16src[i];
 	 }
      sum/=25;
-	 if (sum >= 180) sum = 255; // Fixed the gray issue. 180 seems fine. Lower : more blur but more gray. Higher : sharper and lighter
+	 // Fix the gray issue. 180 seems fine. Higher : more blurry but more gray. Lower : sharper and lighter
+	 if (sum >= 180) sum = 255;
      *dstBmpY=(unsigned char)sum;
     }
   }
