@@ -40,7 +40,8 @@ const char_t* TfontSettings::shadowModes[]=
 {
  _l("Glowing shadow"),
  _l("Gradient shadow"),
- _l("Classic shadow"), 
+ _l("Classic shadow"),
+ _l("Disabled"),
  NULL
 };
 
