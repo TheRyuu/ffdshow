@@ -198,7 +198,7 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
      _l("fontXscale"), 100,
    IDFF_fontFast               ,&TfontSettings::fast               ,0,0,_l(""),1,
      _l("fontFast"), 0,
-   IDFF_fontShadowMode         ,&TfontSettings::shadowMode         ,0,2,_l(""),1,
+   IDFF_fontShadowMode         ,&TfontSettings::shadowMode         ,0,3,_l(""),1,
      _l("fontShadowMode"), 1,
    IDFF_fontShadowAlpha        ,&TfontSettings::shadowAlpha        ,0,255,_l(""),1,
      _l("fontShadowAlpha"), 180,
