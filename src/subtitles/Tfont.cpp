@@ -273,7 +273,7 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
 							{
 								msk[0][dx[0]*(y+yy)+x-i] = shadowAlphaGradient;
 							}
-							if (y-yy > 0 && 
+							if (y>yy && 
 								bmp[0][dx[0]*(y-yy)+x-i]==0 && msk[0][dx[0]*(y-yy)+x-i] <shadowAlphaGradient)
 							{
 								msk[0][dx[0]*(y-yy)+x-i] = shadowAlphaGradient;
@@ -286,7 +286,7 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
 							{
 								msk[0][dx[0]*(y+yy)+x+i] = shadowAlphaGradient;
 							}
-							if (y-yy > 0 && 
+							if (y>yy && 
 								bmp[0][dx[0]*(y-yy)+x+i]==0 && msk[0][dx[0]*(y-yy)+x+i] <shadowAlphaGradient)
 							{
 								msk[0][dx[0]*(y-yy)+x+i] = shadowAlphaGradient;
