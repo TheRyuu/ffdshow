@@ -291,6 +291,11 @@ HRESULT TffdshowDecAudio::CheckConnect(PIN_DIRECTION dir,IPin *pPin)
      {
       if (presetSettings->output->connectToOnlySpdif)
        {
+		   // If AC3 output is selected, then multichannel streams should not be downconverted
+		   if (inpin->audio->codecId == CODEC_ID_LIBA52)
+			   inpin->audio->codecId = CODEC_ID_SPDIF_AC3;
+			if (inpin->audio->codecId == CODEC_ID_LIBDTS)
+			   inpin->audio->codecId = CODEC_ID_SPDIF_DTS;
         TsampleFormat outsf=getOutsf();
         if (outsf.sf!=TsampleFormat::SF_AC3)
          {

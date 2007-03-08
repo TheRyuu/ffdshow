@@ -12,7 +12,6 @@ private:
  bool searchdts;
  CCritSec m_csReceive;
  TbyteBuffer buf;
- TaudioCodec *audio;
  int jitter;
  float prevpostgain;
 protected:
@@ -21,6 +20,7 @@ protected:
 public:
  TffdshowDecAudioInputPin(const char_t* pObjectName, TffdshowDecAudio* pFilter, HRESULT* phr, LPWSTR pName,int Inumber);
  virtual ~TffdshowDecAudioInputPin();
+ TaudioCodec *audio;
  void block(bool is);
  int number;
  bool getsf(TsampleFormat &sf); //true if S/PDIF
