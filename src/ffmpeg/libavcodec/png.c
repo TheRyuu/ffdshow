@@ -131,16 +131,7 @@ static const uint8_t png_pass_mask[NB_PASSES] = {
 static const uint8_t png_pass_dsp_mask[NB_PASSES] = {
     0xff, 0x0f, 0xff, 0x33, 0xff, 0x55, 0xff
 };
-#if 0
-static int png_probe(AVProbeData *pd)
-{
-    if (pd->buf_size >= 8 &&
-        memcmp(pd->buf, pngsig, 8) == 0)
-        return AVPROBE_SCORE_MAX;
-    else
-        return 0;
-}
-#endif
+
 static void *png_zalloc(void *opaque, unsigned int items, unsigned int size)
 {
     if(items >= UINT_MAX / size)

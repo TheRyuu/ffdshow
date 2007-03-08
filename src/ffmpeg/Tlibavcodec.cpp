@@ -88,15 +88,6 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(avcodec_flush_buffers,"avcodec_flush_buffers");
  dll->loadFunction(avcodec_close0,"avcodec_close");
  //dll->loadFunction(av_free_static,"av_free_static");
- dll->loadFunction(av_register_all,"av_register_all");
- dll->loadFunction(guess_format,"guess_format");
- dll->loadFunction(url_fopen,"url_fopen");
- dll->loadFunction(url_fclose,"url_fopen");
- dll->loadFunction(av_set_parameters,"av_set_parameters");
- dll->loadFunction(av_new_packet,"av_new_packet");
- dll->loadFunction(av_write_header,"av_write_header");
- dll->loadFunction(av_write_frame,"av_write_frame");
- dll->loadFunction(av_write_trailer,"av_write_trailer");
  dll->loadFunction(av_log_set_callback,"av_log_set_callback");
  dll->loadFunction(avcodec_thread_init,"avcodec_thread_init");
  dll->loadFunction(avcodec_thread_free,"avcodec_thread_free");
@@ -125,7 +116,6 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
   {
    avcodec_init();
    avcodec_register_all();
-   av_register_all();
    av_log_set_callback(avlog);
   }
 }

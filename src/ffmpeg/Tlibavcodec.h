@@ -58,16 +58,6 @@ public:
  int  avcodec_close(AVCodecContext *avctx);
  //void (*av_free_static)(void);
 
- void (*av_register_all)(void);
- AVOutputFormat* (*guess_format)(const char *short_name, const char *filename, const char *mime_type);
- int (*url_fopen)(ByteIOContext *s, const char *filename, int flags);
- int (*url_fclose)(ByteIOContext *s);
- int (*av_set_parameters)(AVFormatContext *s, AVFormatParameters *ap);
- int (*av_new_packet)(AVPacket *pkt, int size);
- int (*av_write_header)(AVFormatContext *s);
- int (*av_write_frame)(AVFormatContext *s, AVPacket *pkt);
- int (*av_write_trailer)(AVFormatContext *s);
-
  void (*av_log_set_callback)(void (*)(AVCodecContext*, int, const char*, va_list));
 
  int (*avcodec_thread_init)(AVCodecContext *s, int thread_count);

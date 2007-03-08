@@ -18,41 +18,52 @@
  * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
- /*
-    This code implements amr-nb and amr-wb audio encoder/decoder through external reference
-    code from www.3gpp.org. The licence of the code from 3gpp is unclear so you
-    have to download the code separately. Two versions exists: One fixed-point
-    and one with floats. For some reason the float-encoder is significant faster
-    atleast on a P4 1.5GHz (0.9s instead of 9.9s on a 30s audio clip at MR102).
-    Both float and fixed point is supported for amr-nb, but only float for
-    amr-wb.
 
-    --AMR-NB--
-    The fixed-point (TS26.073) can be downloaded from:
-    http://www.3gpp.org/ftp/Specs/archive/26_series/26.073/26073-510.zip
-    Extract the soure into ffmpeg/libavcodec/amr
-    To use the fixed version run "./configure" with "--enable-amr_nb-fixed"
-
-    The float version (default) can be downloaded from:
-    http://www.3gpp.org/ftp/Specs/archive/26_series/26.104/26104-510.zip
-    Extract the soure into ffmpeg/libavcodec/amr_float
-
-    The specification for amr-nb can be found in TS 26.071
-    (http://www.3gpp.org/ftp/Specs/html-info/26071.htm) and some other
-    info at http://www.3gpp.org/ftp/Specs/html-info/26-series.htm
-
-    --AMR-WB--
-    The reference code can be downloaded from:
-    http://www.3gpp.org/ftp/Specs/archive/26_series/26.204/26204-510.zip
-    It should be extracted to "libavcodec/amrwb_float". Enable it with
-    "--enable-amr_wb".
-
-    The specification for amr-wb can be downloaded from:
-    http://www.3gpp.org/ftp/Specs/archive/26_series/26.171/26171-500.zip
-
-    If someone want to use the fixed point version it can be downloaded
-    from: http://www.3gpp.org/ftp/Specs/archive/26_series/26.173/26173-571.zip
-
+ /** @file
+ * Adaptive Multi-Rate (AMR) Audio decoder stub.
+ *
+ * This code implements both an AMR-NarrowBand (AMR-NB) and an AMR-WideBand
+ * (AMR-WB) audio encoder/decoder through external reference code from
+ * http://www.3gpp.org/. The license of the code from 3gpp is unclear so you
+ * have to download the code separately. Two versions exists: One fixed-point
+ * and one with floats. For some reason the float-encoder is significant faster
+ * at least on a P4 1.5GHz (0.9s instead of 9.9s on a 30s audio clip at MR102).
+ * Both float and fixed point are supported for AMR-NB, but only float for
+ * AMR-WB.
+ *
+ * \section AMR-NB
+ *
+ * \subsection Float
+ * The float version (default) can be downloaded from:
+ * http://www.3gpp.org/ftp/Specs/archive/26_series/26.104/26104-510.zip
+ * Extract the source into \c "ffmpeg/libavcodec/amr_float".
+ *
+ * \subsection Fixed-point
+ * The fixed-point (TS26.073) can be downloaded from:
+ * http://www.3gpp.org/ftp/Specs/archive/26_series/26.073/26073-510.zip.
+ * Extract the source into \c "ffmpeg/libavcodec/amr".
+ * To use the fixed version run \c "./configure" with \c "--enable-amr_nb-fixed".
+ *
+ * \subsection Specification
+ * The specification for AMR-NB can be found in TS 26.071
+ * (http://www.3gpp.org/ftp/Specs/html-info/26071.htm) and some other
+ * info at http://www.3gpp.org/ftp/Specs/html-info/26-series.htm.
+ *
+ * \section AMR-WB
+ * \subsection Float
+ * The reference code can be downloaded from:
+ * http://www.3gpp.org/ftp/Specs/archive/26_series/26.204/26204-510.zip
+ * It should be extracted to \c "ffmpeg/libavcodec/amrwb_float". Enable it with
+ * \c "--enable-amr_wb".
+ *
+ * \subsection Fixed-point
+ * If someone wants to use the fixed point version it can be downloaded from:
+ * http://www.3gpp.org/ftp/Specs/archive/26_series/26.173/26173-571.zip.
+ *
+ * \subsection Specification
+ * The specification for AMR-WB can be downloaded from:
+ * http://www.3gpp.org/ftp/Specs/archive/26_series/26.171/26171-500.zip.
+ *
  */
 
 #include "avcodec.h"
@@ -79,7 +90,6 @@ typedef struct AMR_bitrates
     int startrate;
     int stoprate;
     enum Mode mode;
-
 } AMR_bitrates;
 
 /* Match desired bitrate with closest one*/
@@ -95,9 +105,9 @@ static enum Mode getBitrateMode(int bitrate)
                            {7950,9999,MR795},//9
                            {10000,11999,MR102},//10
                            {12000,64000,MR122},//12
-
                          };
     int i;
+
     for(i=0;i<8;i++)
     {
         if(rates[i].startrate<=bitrate && rates[i].stoprate>=bitrate)
@@ -144,13 +154,12 @@ typedef struct AMRContext {
     Speech_Encode_FrameState *enstate;
     sid_syncState *sidstate;
     enum TXFrameType tx_frametype;
-
-
 } AMRContext;
 
 static int amr_nb_decode_init(AVCodecContext * avctx)
 {
     AMRContext *s = avctx->priv_data;
+
     s->frameCount=0;
     s->speech_decoder_state=NULL;
     s->rx_type = (enum RXFrameType)0;
@@ -178,6 +187,7 @@ static int amr_nb_decode_init(AVCodecContext * avctx)
 static int amr_nb_decode_close(AVCodecContext * avctx)
 {
     AMRContext *s = avctx->priv_data;
+
     Speech_Decode_Frame_exit(&s->speech_decoder_state);
     return 0;
 }
@@ -187,16 +197,12 @@ static int amr_nb_decode_frame(AVCodecContext * avctx,
             uint8_t * buf, int buf_size)
 {
     AMRContext *s = avctx->priv_data;
-
     uint8_t*amrData=buf;
     int offset=0;
-
     UWord8 toc, q, ft;
-
     Word16 serial[SERIAL_FRAMESIZE];   /* coded bits */
     Word16 *synth;
     UWord8 *packed_bits;
-
     static Word16 packed_size[16] = {12, 13, 15, 17, 19, 20, 26, 31, 5, 0, 0, 0, 0, 0, 0, 0};
     int i;
 
@@ -287,6 +293,7 @@ typedef struct AMRContext {
 static int amr_nb_decode_init(AVCodecContext * avctx)
 {
     AMRContext *s = avctx->priv_data;
+
     s->frameCount=0;
     s->decState=Decoder_Interface_init();
     if(!s->decState)
@@ -309,6 +316,7 @@ static int amr_nb_decode_init(AVCodecContext * avctx)
 static int amr_nb_decode_close(AVCodecContext * avctx)
 {
     AMRContext *s = avctx->priv_data;
+
     Decoder_Interface_exit(s->decState);
     return 0;
 }
@@ -317,8 +325,7 @@ static int amr_nb_decode_frame(AVCodecContext * avctx,
             void *data, int *data_size,
             uint8_t * buf, int buf_size)
 {
-    AMRContext *s = (AMRContext*)avctx->priv_data;
-
+    AMRContext *s = avctx->priv_data;
     uint8_t*amrData=buf;
     static short block_size[16]={ 12, 13, 15, 17, 19, 20, 26, 31, 5, 0, 0, 0, 0, 0, 0, 0 };
     enum Mode dec_mode;

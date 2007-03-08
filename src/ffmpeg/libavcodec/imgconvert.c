@@ -542,7 +542,6 @@ void avcodec_get_chroma_sub_sample(int pix_fmt, int *h_shift, int *v_shift)
     *v_shift = pix_fmt_info[pix_fmt].y_chroma_shift;
 }
 
-/* Picture field are filled with 'ptr' addresses. Also return size */
 int avpicture_fill(AVPicture *picture, uint8_t *ptr,
                    int pix_fmt, int width, int height)
 {
@@ -680,7 +679,7 @@ void ff_img_copy_plane(uint8_t *dst, int dst_wrap,
     }
 }
 
-void img_copy(AVPicture *dst, const AVPicture *src,
+void av_picture_copy(AVPicture *dst, const AVPicture *src,
               int pix_fmt, int width, int height)
 {
     int bwidth, bits, i;

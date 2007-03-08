@@ -75,7 +75,6 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/msmpeg4.c \
       $(LAVC_DIR)/msrle.c \
       $(LAVC_DIR)/msvideo1.c \
-      $(LAVC_DIR)/opt.c \
       $(LAVC_DIR)/parser.c \
       $(LAVC_DIR)/pcm.c \
       $(LAVC_DIR)/png.c \
@@ -119,12 +118,7 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/xl.c \
       $(LAVC_DIR)/zmbv.c \
 	\
-      $(LAVF_DIR)/allformats.c \
-      $(LAVF_DIR)/avio.c \
-      $(LAVF_DIR)/aviobuf.c \
       $(LAVF_DIR)/cutils.c \
-      $(LAVF_DIR)/file.c \
-      $(LAVF_DIR)/utils.c \
 	\
       $(LAVU_DIR)/crc.c \
       $(LAVU_DIR)/fifo.c \

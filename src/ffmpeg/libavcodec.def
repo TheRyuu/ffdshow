@@ -16,16 +16,6 @@ EXPORTS
   av_free_static
   av_free
 
-  av_register_all
-  guess_format
-  url_fopen
-  url_fclose
-  av_set_parameters
-  av_new_packet
-  av_write_header
-  av_write_frame
-  av_write_trailer
-
   dsputil_init
 
   avcodec_thread_init

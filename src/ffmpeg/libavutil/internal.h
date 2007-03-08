@@ -39,7 +39,7 @@
 #endif
 
 #ifndef attribute_unused
-#if defined(__GNUC__) && (__GNUC__ > 3 || __GNUC__ == 3 && __GNUC_MINOR__ > 0)
+#if defined(__GNUC__)
 #    define attribute_unused __attribute__((unused))
 #else
 #    define attribute_unused
@@ -48,34 +48,6 @@
 
 #ifndef M_PI
 #define M_PI    3.14159265358979323846
-#endif
-
-#ifndef PRId64
-#define PRId64 "lld"
-#endif
-
-#ifndef PRIu64
-#define PRIu64 "llu"
-#endif
-
-#ifndef PRIx64
-#define PRIx64 "llx"
-#endif
-
-#ifndef PRIX64
-#define PRIX64 "llX"
-#endif
-
-#ifndef PRId32
-#define PRId32 "d"
-#endif
-
-#ifndef PRIdFAST16
-#define PRIdFAST16 PRId32
-#endif
-
-#ifndef PRIdFAST32
-#define PRIdFAST32 PRId32
 #endif
 
 #ifndef INT16_MIN
@@ -122,16 +94,12 @@
 #    define PIC
 #endif
 
-#    ifndef ENODATA
-#        define ENODATA  61
-#    endif
-
 #include "intreadwrite.h"
 #include "bswap.h"
 
 #include <stddef.h>
 #ifndef offsetof
-# define offsetof(T,F) ((unsigned int)((char *)&((T *)0)->F))
+#    define offsetof(T,F) ((unsigned int)((char *)&((T *)0)->F))
 #endif
 
 #    define snprintf _snprintf
@@ -154,7 +122,7 @@
 #elif defined (CONFIG_OS2)
 /* OS/2 EMX */
 
-#include <float.h>
+#    include <float.h>
 
 #endif /* !__MINGW32__ && CONFIG_OS2 */
 
@@ -163,29 +131,29 @@
 #    endif
 
 // Use rip-relative addressing if compiling PIC code on x86-64.
-#    if defined(__MINGW32__) || defined(__CYGWIN__) || \
-        defined(__OS2__) || (defined (__OpenBSD__) && !defined(__ELF__))
-#        if defined(ARCH_X86_64) && defined(PIC)
-#            define MANGLE(a) "_" #a"(%%rip)"
-#        else
-#            define MANGLE(a) "_" #a
-#        endif
+#if defined(__MINGW32__) || defined(__CYGWIN__) || \
+    defined(__OS2__) || (defined (__OpenBSD__) && !defined(__ELF__))
+#    if defined(ARCH_X86_64) && defined(PIC)
+#        define MANGLE(a) "_" #a"(%%rip)"
 #    else
-#        if defined(ARCH_X86_64) && defined(PIC)
-#            define MANGLE(a) #a"(%%rip)"
-#        elif defined(CONFIG_DARWIN)
-#            define MANGLE(a) "_" #a
-#        else
-#            define MANGLE(a) #a
-#        endif
+#        define MANGLE(a) "_" #a
 #    endif
+#else
+#    if defined(ARCH_X86_64) && defined(PIC)
+#        define MANGLE(a) #a"(%%rip)"
+#    elif defined(CONFIG_DARWIN)
+#        define MANGLE(a) "_" #a
+#    else
+#        define MANGLE(a) #a
+#    endif
+#endif
 
 /* debug stuff */
 
-#    if !defined(DEBUG) && !defined(NDEBUG)
-#        define NDEBUG
-#    endif
-#    include <assert.h>
+#if !defined(DEBUG) && !defined(NDEBUG)
+#    define NDEBUG
+#endif
+#include <assert.h>
 
 /* dprintf macros */
 #    if defined(__GNUC__)

@@ -745,10 +745,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\opt.c"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\parser.c"
 				>
 			</File>
@@ -1130,10 +1126,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\opt.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\parser.h"
 				>
 			</File>
@@ -1242,72 +1234,12 @@
 			Name="libavformat"
 			>
 			<File
-				RelativePath=".\libavformat\allformats.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavformat\allformats.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libavformat\avformat.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavformat\avio.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavformat\avio.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavformat\aviobuf.c"
 				>
 			</File>
 			<File
 				RelativePath=".\libavformat\cutils.c"
 				>
-			</File>
-			<File
-				RelativePath=".\libavformat\file.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavformat\utils.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
