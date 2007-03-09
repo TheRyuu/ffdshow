@@ -13,7 +13,10 @@ private:
  HWND cbxCharset;
  HFONT boldFont;int validCharsets[256];
 protected:
- void font2dlg(void),spacingxscale2dlg(void),shadow2dlg(void);void shadowSize2dlg(void);void shadowAlpha2dlg(void);
+ void font2dlg(void),spacingxscale2dlg(void);
+ virtual void shadow2dlg(void) PURE;
+ virtual void shadowSize2dlg(void) {}; 
+ virtual void shadowAlpha2dlg(void) {};
  void fillCharsets(void);
  TfontPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff=NULL,int IfilterPageId=0);
  virtual Twidget* createDlgItem(int id,HWND h);
@@ -30,12 +33,18 @@ public:
 
 class TfontPageSubtitles :public TfontPage
 {
+protected:
+ virtual void shadow2dlg(void);
+ virtual void shadowSize2dlg(void); 
+ virtual void shadowAlpha2dlg(void);
 public:
  TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
 };
 
 class TfontPageOSD :public TfontPage
 {
+protected:
+ virtual void shadow2dlg(void);
 public:
  TfontPageOSD(TffdshowPageDec *Iparent);
 };

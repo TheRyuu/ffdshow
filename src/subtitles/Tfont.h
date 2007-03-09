@@ -81,7 +81,8 @@ class TrenderedSubtitleWord : public TrenderedSubtitleWordBase
 {
 private:
  bool shiftChroma;
- void drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16,HGDIOBJ old,int xscale,const SIZE &sz,const TrenderedSubtitleLines::TprintPrefs &prefs,const short (*matrix)[5],const YUVcolor &yuv);
+ void drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16,HGDIOBJ old,int xscale,const SIZE &sz,const TrenderedSubtitleLines::TprintPrefs &prefs,const short (*matrix)[5],const YUVcolor &yuv,unsigned int shadowSize);
+ unsigned int getShadowSize(const TrenderedSubtitleLines::TprintPrefs &prefs,LONG fontHeight);
 public:
  template<class tchar> TrenderedSubtitleWord(HDC hdc,const tchar *s,size_t strlens,const short (*matrix)[5],const YUVcolor &yuv,const TrenderedSubtitleLines::TprintPrefs &prefs,int xscale);
  template<class tchar> TrenderedSubtitleWord(TcharsChache *chars,const tchar *s,size_t strlens,const TrenderedSubtitleLines::TprintPrefs &prefs);

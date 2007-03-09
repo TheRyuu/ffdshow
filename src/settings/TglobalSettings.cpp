@@ -157,6 +157,7 @@ bool TglobalSettingsBase::inBlacklist(const char_t *exe)
 
 bool TglobalSettingsBase::inUseonlyin(const char_t *exe)
 {
+ // MessageBox(NULL,exe,_l("ffdshow inUseonlyin"),MB_OK);
  if (firstUseonlyin)
   {
    firstUseonlyin=false;

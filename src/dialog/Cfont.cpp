@@ -54,7 +54,7 @@ void TfontPage::init(void)
  tbrSetRange(IDC_TBR_FONT_SHADOW_STRENGTH,0,100,10);
  tbrSetRange(IDC_TBR_FONT_SHADOW_RADIUS,1,100,10);
  tbrSetRange(IDC_TBR_FONT_XSCALE,30,300);
- tbrSetRange(IDC_TBR_FONT_SUBSHADOW_SIZE,0,30, 1);
+ tbrSetRange(IDC_TBR_FONT_SUBSHADOW_SIZE,0,12, 1);
  tbrSetRange(IDC_TBR_FONT_SUBSHADOW_ALPHA,0,255, 10);
 
  strings sl;
@@ -122,7 +122,6 @@ void TfontPage::font2dlg(void)
  shadowAlpha2dlg();
  
  cbxSetDataCurSel(IDC_CBX_FONT_WEIGHT,cfgGet(idff_fontweight));
- cbxSetCurSel(IDC_CBX_FONT_SUBSHADOW_MODE,cfgGet(idff_subshadowmode));
  SendDlgItemMessage(m_hwnd,IDC_CBX_FONT_NAME,CB_SELECTSTRING,WPARAM(-1),LPARAM(cfgGetStr(idff_fontname)));
  fillCharsets();
 #ifdef UNICODE
@@ -148,11 +147,6 @@ void TfontPage::font2dlg(void)
 #endif
  setCheck(IDC_CHB_FONT_FAST,cfgGet(idff_fontfast));
  repaint(GetDlgItem(m_hwnd,IDC_IMG_FONT_COLOR));
-}
-void TfontPage::shadow2dlg(void)
-{
- tbrSet(IDC_TBR_FONT_SHADOW_STRENGTH,cfgGet(idff_fontshadowstrength),IDC_LBL_FONT_SHADOW_STRENGTH);
- tbrSet(IDC_TBR_FONT_SHADOW_RADIUS,cfgGet(idff_fontshadowradius),IDC_LBL_FONT_SHADOW_RADIUS);
 }
 void TfontPage::size2dlg(void)
 {
@@ -191,36 +185,6 @@ void TfontPage::spacingxscale2dlg(void)
    setText(IDC_LBL_FONT_XSCALE,_l("%s %i%%"),_(IDC_LBL_FONT_XSCALE),xscale);
   }
  tbrSet(IDC_TBR_FONT_SPACING,cfgGet(idff_fontspacing),IDC_LBL_FONT_SPACING);
-}
-
-void TfontPage::shadowSize2dlg(void)
-{
- if (idff_subshadowsize)
-  {
-   int subshadowsize=cfgGet(idff_subshadowsize);
-   tbrSet(IDC_TBR_FONT_SUBSHADOW_SIZE,cfgGet(idff_subshadowsize));
-   if (subshadowsize == 0)
-	setText(IDC_LBL_FONT_SUBSHADOW_SIZE,_l("%s disabled"),_(IDC_LBL_FONT_SUBSHADOW_SIZE),subshadowsize);
-   else
-	setText(IDC_LBL_FONT_SUBSHADOW_SIZE,_l("%s %i"),_(IDC_LBL_FONT_SUBSHADOW_SIZE),subshadowsize);
-  }
-}
-
-void TfontPage::shadowAlpha2dlg(void)
-{
-  if (idff_subshadowalpha)
-  {
-   int subshadowalpha=cfgGet(idff_subshadowalpha);
-   int displayValue = (int)subshadowalpha*100/255;
-   tbrSet(IDC_TBR_FONT_SUBSHADOW_ALPHA,cfgGet(idff_subshadowalpha));
-   if (displayValue == 0)
-	   setText(IDC_LBL_FONT_SUBSHADOW_ALPHA,_l("%s transparent"),_(IDC_LBL_FONT_SUBSHADOW_ALPHA));
-   else if (displayValue == 100)
-	   setText(IDC_LBL_FONT_SUBSHADOW_ALPHA,_l("%s opaque"),_(IDC_LBL_FONT_SUBSHADOW_ALPHA));
-   else
-	   setText(IDC_LBL_FONT_SUBSHADOW_ALPHA,_l("%s %i%%"),_(IDC_LBL_FONT_SUBSHADOW_ALPHA), displayValue);
-
-  }
 }
 
 INT_PTR TfontPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -423,10 +387,50 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
    IDC_CBX_FONT_CHARSET,IDFF_fontCharset,BINDCBX_DATA,NULL,
    IDC_CBX_FONT_WEIGHT,IDFF_fontWeight,BINDCBX_DATA,NULL,
    IDC_CBX_FONT_NAME,IDFF_fontName,BINDCBX_TEXT,&TfontPageSubtitles::fillCharsets,
-   IDC_CBX_FONT_SUBSHADOW_MODE,IDFF_fontShadowMode,BINDCBX_SEL,NULL,
+   IDC_CBX_FONT_SUBSHADOW_MODE,IDFF_fontShadowMode,BINDCBX_SEL,&TfontPageSubtitles::font2dlg,
    0
   };
  bindComboboxes(cbx);
+}
+
+void TfontPageSubtitles::shadow2dlg(void)
+{
+ tbrSet(IDC_TBR_FONT_SHADOW_STRENGTH,cfgGet(idff_fontshadowstrength),IDC_LBL_FONT_SHADOW_STRENGTH);
+ tbrSet(IDC_TBR_FONT_SHADOW_RADIUS,cfgGet(idff_fontshadowradius),IDC_LBL_FONT_SHADOW_RADIUS);
+ int shadowmode=cfgGet(idff_subshadowmode);
+ cbxSetCurSel(IDC_CBX_FONT_SUBSHADOW_MODE,shadowmode);
+ static const int idShadows[]={IDC_LBL_FONT_SUBSHADOW_ALPHA,IDC_TBR_FONT_SUBSHADOW_ALPHA,IDC_LBL_FONT_SUBSHADOW_SIZE,IDC_TBR_FONT_SUBSHADOW_SIZE,0};
+ enable(shadowmode!=3,idShadows);
+}
+
+void TfontPageSubtitles::shadowSize2dlg(void)
+{
+ if (idff_subshadowsize)
+  {
+   int subshadowsize=cfgGet(idff_subshadowsize);
+   tbrSet(IDC_TBR_FONT_SUBSHADOW_SIZE,cfgGet(idff_subshadowsize));
+   if (subshadowsize == 0)
+	setText(IDC_LBL_FONT_SUBSHADOW_SIZE,_l("%s disabled"),_(IDC_LBL_FONT_SUBSHADOW_SIZE),subshadowsize);
+   else
+	setText(IDC_LBL_FONT_SUBSHADOW_SIZE,_l("%s %i"),_(IDC_LBL_FONT_SUBSHADOW_SIZE),subshadowsize);
+  }
+}
+
+void TfontPageSubtitles::shadowAlpha2dlg(void)
+{
+  if (idff_subshadowalpha)
+  {
+   int subshadowalpha=cfgGet(idff_subshadowalpha);
+   int displayValue = (int)subshadowalpha*100/255;
+   tbrSet(IDC_TBR_FONT_SUBSHADOW_ALPHA,cfgGet(idff_subshadowalpha));
+   if (displayValue == 0)
+	   setText(IDC_LBL_FONT_SUBSHADOW_ALPHA,_l("%s transparent"),_(IDC_LBL_FONT_SUBSHADOW_ALPHA));
+   else if (displayValue == 100)
+	   setText(IDC_LBL_FONT_SUBSHADOW_ALPHA,_l("%s opaque"),_(IDC_LBL_FONT_SUBSHADOW_ALPHA));
+   else
+	   setText(IDC_LBL_FONT_SUBSHADOW_ALPHA,_l("%s %i%%"),_(IDC_LBL_FONT_SUBSHADOW_ALPHA), displayValue);
+
+  }
 }
 
 //========================================= TfontPageOSD ========================================
@@ -468,4 +472,10 @@ TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent):TfontPage(Iparent)
    0
   };
  bindComboboxes(cbx);
+}
+
+void TfontPageOSD::shadow2dlg(void)
+{
+ static const int idShadows[]={IDC_LBL_FONT_SUBSHADOW_MODE,IDC_CBX_FONT_SUBSHADOW_MODE,IDC_LBL_FONT_SUBSHADOW_ALPHA,IDC_TBR_FONT_SUBSHADOW_ALPHA,IDC_LBL_FONT_SUBSHADOW_SIZE,IDC_TBR_FONT_SUBSHADOW_SIZE,0};
+ enable(0,idShadows);
 }

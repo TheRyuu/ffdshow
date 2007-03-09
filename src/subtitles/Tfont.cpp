@@ -68,6 +68,7 @@ template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(HDC hdc,const
   }
  OUTLINETEXTMETRIC otm;
  GetOutlineTextMetrics(hdc,sizeof(otm),&otm);
+ unsigned int shadowSize = getShadowSize(prefs,otm.otmTextMetrics.tmHeight);
  if (otm.otmItalicAngle)
   sz.cx-=LONG(sz.cy*sin(otm.otmItalicAngle*M_PI/1800));
  else
@@ -90,9 +91,9 @@ template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(HDC hdc,const
    prefs.config->getGDI<tchar>().textOut(hdc,x,2,s->c_str(),sz/*(int)s->size()*/);
    x+=*cx;
   }
- drawShadow(hdc,hbmp,bmp16,old,xscale,sz,prefs,matrix,yuv);
+ drawShadow(hdc,hbmp,bmp16,old,xscale,sz,prefs,matrix,yuv,shadowSize);
 }
-void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16,HGDIOBJ old,int xscale,const SIZE &sz,const TrenderedSubtitleLines::TprintPrefs &prefs,const short (*matrix)[5],const YUVcolor &yuv)
+void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16,HGDIOBJ old,int xscale,const SIZE &sz,const TrenderedSubtitleLines::TprintPrefs &prefs,const short (*matrix)[5],const YUVcolor &yuv,unsigned int shadowSize)
 {
  BITMAPINFO bmi;
  bmi.bmiHeader.biSize=sizeof(bmi.bmiHeader);
@@ -112,7 +113,8 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
 
 
  unsigned int _dx,_dy;
- _dx=(xscale*dx[0]/100)/4+4;_dy=dy[0]/4+4;
+ _dx=(xscale*dx[0]/100)/4+4+shadowSize;
+ _dy=dy[0]/4+4+shadowSize;
  dxCharY=xscale*sz.cx/400;dyCharY=sz.cy/4;
  _dx=(_dx/8+1)*8;
  bmp[0]=(unsigned char*)aligned_calloc(_dx,_dy);
@@ -245,7 +247,6 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
  bmpmskstride[0]=dx[0];bmpmskstride[1]=dx[1];bmpmskstride[2]=dx[2];
  _mm_empty();
 
-   unsigned int shadowSize = prefs.shadowSize;
    unsigned int shadowAlpha = prefs.shadowAlpha;
    unsigned int shadowMode = prefs.shadowMode; // 0: glowing, 1:classic with gradient, 2: classic with no gradient, >=3: no shadow
    if (shadowSize > 0)
@@ -299,8 +300,7 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
    }
    else if (shadowMode == 1) //Gradient classic shadow
    {
-	   unsigned int circleSize = shadowSize/1.4142; // 1.4142 = sqrt(2.0)
-	   unsigned int shadowStep = shadowAlpha/shadowSize*1.4142;
+	   unsigned int shadowStep = shadowAlpha/shadowSize;
 	   for (unsigned int y=0; y<dy[0];y++)
 	   {
 		   for (unsigned int x=0; x<dx[0];x++)
@@ -311,7 +311,7 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
 				bmp[0][pos] = 255;*/
 
 			   unsigned int shadowAlphaGradient = shadowAlpha;
-			   for (unsigned int xx=1; xx<=circleSize; xx++)
+			   for (unsigned int xx=1; xx<=shadowSize; xx++)
 			   {
 					unsigned int shadow = bmp[0][pos]*shadowAlphaGradient>>8;
 					if (x + xx < dx[0])
@@ -329,7 +329,6 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
    }
    else if (shadowMode == 2) //Classic shadow
    {
-		shadowSize*=0.4;
 		shadowAlpha*=0.53;
 		unsigned int lookup085[256],lookupAlpha[256];
 		for (int i=0;i<256;i++)
@@ -349,6 +348,19 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
 			}
 		}
    }
+}
+
+unsigned int TrenderedSubtitleWord::getShadowSize(const TrenderedSubtitleLines::TprintPrefs &prefs,LONG fontHeight)
+{
+ unsigned int shadowSize = prefs.shadowSize*fontHeight/144;
+ if (prefs.shadowMode==1)
+  shadowSize/=1.4142;  // 1.4142 = sqrt(2.0)
+ else if (prefs.shadowMode==2)
+  shadowSize*=0.4;
+
+ if (prefs.shadowSize>0 && shadowSize==0)
+  shadowSize = 1;
+ return shadowSize;
 }
 
 // fast rendering
