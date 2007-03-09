@@ -352,14 +352,18 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
 
 unsigned int TrenderedSubtitleWord::getShadowSize(const TrenderedSubtitleLines::TprintPrefs &prefs,LONG fontHeight)
 {
+ if (prefs.shadowSize==0)
+  return 0;
  unsigned int shadowSize = prefs.shadowSize*fontHeight/180.0+2.6;
  if (prefs.shadowMode==1)
   shadowSize/=1.4142;  // 1.4142 = sqrt(2.0)
  else if (prefs.shadowMode==2)
   shadowSize*=0.4;
 
- if (prefs.shadowSize>0 && shadowSize==0)
+ if (shadowSize==0)
   shadowSize = 1;
+ if (shadowSize>16)
+  shadowSize = 16;
  return shadowSize;
 }
 
@@ -781,7 +785,7 @@ template<class tchar> TrenderedSubtitleWord* Tfont::newWord(const tchar *s,size_
  OUTLINETEXTMETRIC otm;
  GetOutlineTextMetrics(hdc,sizeof(otm),&otm);
 
- if (!w->props.isColor && fontSettings->fast && !otm.otmItalicAngle && !otm.otmTextMetrics.tmItalic)
+ if (!w->props.isColor && fontSettings->fast && !otm.otmItalicAngle && !otm.otmTextMetrics.tmItalic && !(prefs.shadowSize!=0 && prefs.shadowMode!=3))
   return new TrenderedSubtitleWord(charsCache,s,slen,prefs);
  else
   return new TrenderedSubtitleWord(hdc,s,slen,fontSettings->shadowStrength==100?NULL:matrix,w->props.isColor?w->props.color:yuvcolor,prefs,w->props.scaleX!=-1?w->props.scaleX:fontSettings->xscale);

@@ -54,7 +54,7 @@ void TfontPage::init(void)
  tbrSetRange(IDC_TBR_FONT_SHADOW_STRENGTH,0,100,10);
  tbrSetRange(IDC_TBR_FONT_SHADOW_RADIUS,1,100,10);
  tbrSetRange(IDC_TBR_FONT_XSCALE,30,300);
- tbrSetRange(IDC_TBR_FONT_SUBSHADOW_SIZE,0,12, 1);
+ tbrSetRange(IDC_TBR_FONT_SUBSHADOW_SIZE,0,20, 1);
  tbrSetRange(IDC_TBR_FONT_SUBSHADOW_ALPHA,0,255, 10);
 
  strings sl;
