@@ -106,7 +106,7 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
  bmi.bmiHeader.biYPelsPerMeter=75;
  bmi.bmiHeader.biClrUsed=0;
  bmi.bmiHeader.biClrImportant=0;
- GetDIBits(hdc,hbmp,0,dy[0],bmp16,&bmi,DIB_RGB_COLORS);
+ GetDIBits(hdc,hbmp,0,dy[0],bmp16,&bmi,DIB_RGB_COLORS);  // copy bitmap, get it in bmp16
  SelectObject(hdc,old);
  DeleteObject(hbmp);
 
@@ -141,7 +141,7 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
   {
    memcpy(msk[0],bmp[0],dx[0]*dy[0]);
 
-	#define MAKE_SHADOW(x,y)                                   \
+	#define MAKE_SHADOW(x,y)                                  \
     {                                                         \
      unsigned int s=0,cnt=0;                                  \
      for (int yy=-2;yy<=+2;yy++)                              \
@@ -158,6 +158,7 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
      if (s>255) s=255;                                        \
      msk[0][dx[0]*y+x]=(unsigned char)s;                      \
     }
+
    int dyY1=dy[0]-1,dyY2=dy[0]-2;
    for (unsigned int x=0;x<dx[0];x++)
     {
@@ -298,6 +299,8 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
    }
    else if (shadowMode == 1) //Gradient classic shadow
    {
+	   unsigned int circleSize = shadowSize/1.4142; // 1.4142 = sqrt(2.0)
+	   unsigned int shadowStep = shadowAlpha/shadowSize*1.4142;
 	   for (unsigned int y=0; y<dy[0];y++)
 	   {
 		   for (unsigned int x=0; x<dx[0];x++)
@@ -308,31 +311,41 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
 				bmp[0][pos] = 255;*/
 
 			   unsigned int shadowAlphaGradient = shadowAlpha;
-			   for (unsigned int circleSize=1; circleSize<=shadowSize; circleSize++)
+			   for (unsigned int xx=1; xx<=circleSize; xx++)
 			   {
-					unsigned int xx = (unsigned int)((double)circleSize/sqrt((double)2));
+					unsigned int shadow = bmp[0][pos]*shadowAlphaGradient>>8;
 					if (x + xx < dx[0])
 					{
 						if (y+xx < dy[0] && 
-							bmp[0][dx[0]*(y+xx)+x+xx]==0 && msk[0][dx[0]*(y+xx)+x+xx] <shadowAlphaGradient)
+							bmp[0][dx[0]*(y+xx)+x+xx]==0 && msk[0][dx[0]*(y+xx)+x+xx] <shadow)
 						{
-							msk[0][dx[0]*(y+xx)+x+xx] = shadowAlphaGradient;
+							msk[0][dx[0]*(y+xx)+x+xx] = shadow;
 						}
 					}
-				   shadowAlphaGradient -= shadowAlpha/shadowSize;
+				   shadowAlphaGradient -= shadowStep;
 			   }
 		   }
 	   }
    }
    else if (shadowMode == 2) //Classic shadow
    {
+		shadowSize*=0.4;
+		shadowAlpha*=0.53;
+		unsigned int lookup085[256],lookupAlpha[256];
+		for (int i=0;i<256;i++)
+		{
+			lookup085[i]=i*0.85;
+			lookupAlpha[i]=i*shadowAlpha>>8;
+		}
 		for (unsigned int y=dy[0]-1; y>=shadowSize;y--)
 		{
 			for (unsigned int x=dx[0]-1; x>=shadowSize;x--)
 			{
-				unsigned int pos = dx[0]*y+x;
-				if (bmp[0][dx[0]*(y-shadowSize)+x-shadowSize] != 0 && bmp[0][pos] == 0)
-					msk[0][pos] = shadowAlpha;
+				unsigned int srcpos = dx[0]*(y-shadowSize)+x-shadowSize;
+				unsigned int dstpos = dx[0]*y+x;
+				unsigned char srcPixel = (unsigned char)std::max<unsigned int>(bmp[0][srcpos],lookup085[msk[0][srcpos]]); // lookup085[msk[0][srcpos]] = shadow of outline.
+				if (srcPixel != 0 && bmp[0][dstpos] == 0)
+					msk[0][dstpos] = (unsigned char)std::max<unsigned int>(msk[0][dstpos],lookupAlpha[srcPixel]);
 			}
 		}
    }
