@@ -171,6 +171,9 @@
 				RelativePath=".\libavcodec\aasc.c">
 			</File>
 			<File
+				RelativePath=".\libavcodec\ac3.c">
+			</File>
+			<File
 				RelativePath=".\libavcodec\ac3enc.c">
 			</File>
 			<File

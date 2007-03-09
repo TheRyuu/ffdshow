@@ -20,6 +20,7 @@ endif
 SRCS_C=DllEntry.c \
       $(LAVC_DIR)/8bps.c \
       $(LAVC_DIR)/aasc.c \
+      $(LAVC_DIR)/ac3.c \
       $(LAVC_DIR)/ac3enc.c \
       $(LAVC_DIR)/adpcm.c \
       $(LAVC_DIR)/allcodecs.c \
