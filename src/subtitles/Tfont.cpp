@@ -352,7 +352,7 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
 
 unsigned int TrenderedSubtitleWord::getShadowSize(const TrenderedSubtitleLines::TprintPrefs &prefs,LONG fontHeight)
 {
- unsigned int shadowSize = prefs.shadowSize*fontHeight/144;
+ unsigned int shadowSize = prefs.shadowSize*fontHeight/180.0+2.6;
  if (prefs.shadowMode==1)
   shadowSize/=1.4142;  // 1.4142 = sqrt(2.0)
  else if (prefs.shadowMode==2)
