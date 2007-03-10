@@ -450,7 +450,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 					string_size += 2048;
 					char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
 					strcpy(tmpStr, filesList);
-					free(filesList); filesList = tmpStr;
+					filesList = tmpStr;
 				}
 				strcat(filesList, fileName);
 				if (i != files.size() - 1)
