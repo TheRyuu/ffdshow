@@ -395,24 +395,28 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
 
 void TfontPageSubtitles::shadow2dlg(void)
 {
- tbrSet(IDC_TBR_FONT_SHADOW_STRENGTH,cfgGet(idff_fontshadowstrength),IDC_LBL_FONT_SHADOW_STRENGTH);
- tbrSet(IDC_TBR_FONT_SHADOW_RADIUS,cfgGet(idff_fontshadowradius),IDC_LBL_FONT_SHADOW_RADIUS);
  int shadowmode=cfgGet(idff_subshadowmode);
+ int subshadowsize=cfgGet(idff_fontshadowradius);
+ tbrSet(IDC_TBR_FONT_SHADOW_STRENGTH,cfgGet(idff_fontshadowstrength),IDC_LBL_FONT_SHADOW_STRENGTH);
+ tbrSet(IDC_TBR_FONT_SHADOW_RADIUS,subshadowsize,IDC_LBL_FONT_SHADOW_RADIUS);
  cbxSetCurSel(IDC_CBX_FONT_SUBSHADOW_MODE,shadowmode);
  static const int idShadows[]={IDC_LBL_FONT_SUBSHADOW_ALPHA,IDC_TBR_FONT_SUBSHADOW_ALPHA,IDC_LBL_FONT_SUBSHADOW_SIZE,IDC_TBR_FONT_SUBSHADOW_SIZE,0};
  enable(shadowmode!=3,idShadows);
+ enable(shadowmode==3 || subshadowsize==0,IDC_CHB_FONT_FAST);
 }
 
 void TfontPageSubtitles::shadowSize2dlg(void)
 {
  if (idff_subshadowsize)
   {
+   int shadowmode=cfgGet(idff_subshadowmode);
    int subshadowsize=cfgGet(idff_subshadowsize);
    tbrSet(IDC_TBR_FONT_SUBSHADOW_SIZE,cfgGet(idff_subshadowsize));
    if (subshadowsize == 0)
 	setText(IDC_LBL_FONT_SUBSHADOW_SIZE,_l("%s disabled"),_(IDC_LBL_FONT_SUBSHADOW_SIZE),subshadowsize);
    else
 	setText(IDC_LBL_FONT_SUBSHADOW_SIZE,_l("%s %i"),_(IDC_LBL_FONT_SUBSHADOW_SIZE),subshadowsize);
+   enable(shadowmode==3 || subshadowsize==0,IDC_CHB_FONT_FAST);
   }
 }
 
