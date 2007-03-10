@@ -252,50 +252,50 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
    if (shadowSize > 0)
    if (shadowMode == 0) //Gradient glowing shadow (most complex)
    {
+	   if (dx[0]<shadowSize) shadowSize=dx[0];
+	   if (dy[0]<shadowSize) shadowSize=dy[0];
+	   unsigned int circle[1089]; // 1089=(16*2+1)^2
+	   if (shadowSize>16) shadowSize=16;
+	   int circleSize=shadowSize*2+1;
+	   for (int y=0;y<circleSize;y++)
+	   {
+			for (int x=0;x<circleSize;x++)
+			{
+				unsigned int rx=ff_abs(x-(int)shadowSize);
+				unsigned int ry=ff_abs(y-(int)shadowSize);
+				unsigned int r=(unsigned int)sqrt((double)(rx*rx+ry*ry));
+				if (r>shadowSize)
+					circle[circleSize*y+x] = 0;
+				else
+					circle[circleSize*y+x] = shadowAlpha*(shadowSize+1-r)/(shadowSize+1);
+			}
+		}
 	   for (unsigned int y=0; y<dy[0];y++)
 	   {
-		   for (unsigned int x=0; x<dx[0];x++)
-		   {
-			   unsigned int pos = dx[0]*y+x;
-			   if (bmp[0][pos] == 0) continue;
+			int starty = y>=shadowSize ? 0 : shadowSize-y;
+			int endy = y+shadowSize<dy[0] ? circleSize : dy[0]-y+shadowSize;
+			for (unsigned int x=0; x<dx[0];x++)
+			{
+				unsigned int pos = dx[0]*y+x;
+				int startx = x>=shadowSize ? 0 : shadowSize-x;
+				int endx = x+shadowSize<dx[0] ? circleSize : dx[0]-x+shadowSize;
+				if (bmp[0][pos] == 0) continue;
+				for (int ry=starty; ry<endy;ry++)
+				{
+					for (int rx=startx; rx<endx;rx++)
+					{
+						unsigned int alpha = circle[circleSize*ry+rx];
+						if (alpha)
+						{
+							unsigned int dstpos = dx[0]*(y+ry-shadowSize)+x+rx-shadowSize;
+							unsigned int shadow = bmp[0][pos] * alpha >> 8;
+							if (msk[0][dstpos]<shadow)
+								msk[0][dstpos] = (unsigned char)shadow;
+						}
+					}
+				}
 
-			   unsigned int shadowAlphaGradient = shadowAlpha;
-			   for (unsigned int circleSize=1; circleSize<=shadowSize; circleSize++)
-			   {
-				   for (unsigned int i=0; i<circleSize; i++)
-				   {
-						unsigned int yy = (unsigned int)sqrt((double)(circleSize*circleSize) - (double)(i*i));
-						if (x - i > 0)
-						{
-							
-							if (y+yy < dy[0] && 
-								bmp[0][dx[0]*(y+yy)+x-i]==0 && msk[0][dx[0]*(y+yy)+x-i] <shadowAlphaGradient)
-							{
-								msk[0][dx[0]*(y+yy)+x-i] = shadowAlphaGradient;
-							}
-							if (y>yy && 
-								bmp[0][dx[0]*(y-yy)+x-i]==0 && msk[0][dx[0]*(y-yy)+x-i] <shadowAlphaGradient)
-							{
-								msk[0][dx[0]*(y-yy)+x-i] = shadowAlphaGradient;
-							}
-						}
-						if (x + i < dx[0])
-						{
-							if (y+yy < dy[0] && 
-								bmp[0][dx[0]*(y+yy)+x+i]==0 && msk[0][dx[0]*(y+yy)+x+i] <shadowAlphaGradient)
-							{
-								msk[0][dx[0]*(y+yy)+x+i] = shadowAlphaGradient;
-							}
-							if (y>yy && 
-								bmp[0][dx[0]*(y-yy)+x+i]==0 && msk[0][dx[0]*(y-yy)+x+i] <shadowAlphaGradient)
-							{
-								msk[0][dx[0]*(y-yy)+x+i] = shadowAlphaGradient;
-							}
-						}
-				   }
-				   shadowAlphaGradient -= shadowAlpha/shadowSize;
-			   }
-		   }
+			}
 	   }
    }
    else if (shadowMode == 1) //Gradient classic shadow
@@ -355,7 +355,9 @@ unsigned int TrenderedSubtitleWord::getShadowSize(const TrenderedSubtitleLines::
  if (prefs.shadowSize==0)
   return 0;
  unsigned int shadowSize = prefs.shadowSize*fontHeight/180.0+2.6;
- if (prefs.shadowMode==1)
+ if (prefs.shadowMode==0)
+  shadowSize*=0.6;
+ else if (prefs.shadowMode==1)
   shadowSize/=1.4142;  // 1.4142 = sqrt(2.0)
  else if (prefs.shadowMode==2)
   shadowSize*=0.4;
