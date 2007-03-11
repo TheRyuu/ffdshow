@@ -1026,6 +1026,21 @@ TsubreaderMplayer::TsubreaderMplayer(Tstream &fd,int sub_format,double fps,const
 
 void Tsubreader::processOverlap(int sub_format)
 {
+ int sub_format1=sub_format&Tsubreader::SUB_FORMATMASK;
+ if (!(sub_format1==Tsubreader::SUB_MICRODVD
+    || sub_format1==Tsubreader::SUB_SUBRIP
+    || sub_format1==Tsubreader::SUB_SUBVIEWER
+    || sub_format1==Tsubreader::SUB_SAMI
+    || sub_format1==Tsubreader::SUB_VPLAYER
+    || sub_format1==Tsubreader::SUB_RT
+    || sub_format1==Tsubreader::SUB_SSA
+    || sub_format1==Tsubreader::SUB_DUNNOWHAT
+    || sub_format1==Tsubreader::SUB_MPSUB
+    || sub_format1==Tsubreader::SUB_AQTITLE
+    || sub_format1==Tsubreader::SUB_SUBVIEWER2
+    || sub_format1==Tsubreader::SUB_SUBRIP09
+    || sub_format1==Tsubreader::SUB_MPL2))
+  return;
  static const int SUB_MAX_TEXT=INT_MAX/2;
  int sub_orig = size();
  int n_first = size();

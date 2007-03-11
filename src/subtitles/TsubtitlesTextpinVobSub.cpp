@@ -27,6 +27,7 @@
 
 TsubtitlesTextpinVobsub::TsubtitlesTextpinVobsub(int Itype,IffdshowBase *Ideci,const unsigned char *data,unsigned int datalen):TsubtitlesTextpin(Itype,Ideci)
 {
+ sub_format=Tsubreader::SUB_VOBSUB;
  TstreamMem fs(data,datalen);
 #ifndef DVDSUB
  spu=NULL;

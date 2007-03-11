@@ -25,6 +25,7 @@
 
 TsubtitlesTextpinDVD::TsubtitlesTextpinDVD(int Itype,IffdshowBase *Ideci):TsubtitlesTextpin(Itype,Ideci)
 {
+ sub_format=Tsubreader::SUB_DVD;
  subs=new Tsubreader;
 }
 

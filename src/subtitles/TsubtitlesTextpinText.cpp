@@ -32,6 +32,7 @@ TsubtitlesTextpinText::TsubtitlesTextpinText(int Itype,IffdshowBase *Ideci,const
  if ((type&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SSA && extradata && extradatalen)
   memcpy(initdata,extradata,extradatalen);
  parser=NULL;
+ sub_format=type;
 }
 
 TsubtitlesTextpinText::~TsubtitlesTextpinText()
