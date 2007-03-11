@@ -157,11 +157,19 @@ unsigned int __stdcall Tremote::ffwdThreadProc(void *self0)
 	int seconds = self->fSeconds;
 	int mode = self->fMode;
 	seconds *= mode;
-	seconds /= 2;
+	seconds /= 5;
+	if (seconds == 0)
+		seconds = 1;
 	int pos;
 	int duration = self->deci->getParam2(IDFF_movieDuration);
 	int hh, mm, ss;
 	char_t msg[100];
+	char_t duration_str[30];
+	hh = duration/3600;
+	mm = (duration - hh*3600)/60;
+	ss = duration - hh*3600 - mm*60;
+	tsprintf(duration_str,_l("%02i:%02i:%02i"), hh, mm, ss);
+
 	self->deci->tell(&pos);
 	DWORD currentTime, elapsedTime;
 	if (pos!=-1 && duration >0)
@@ -176,14 +184,17 @@ unsigned int __stdcall Tremote::ffwdThreadProc(void *self0)
 		hh = pos/3600;
 		mm = (pos - hh*3600)/60;
 		ss = pos - hh*3600 - mm*60;
-		tsprintf(msg,_l("Fast %s %02i:%02i:%02i"),mode<0?_l("backward"):_l("forward"), hh, mm, ss);
-        self->deciV->shortOSDmessage(msg,30);
+		tsprintf(msg,_l("%s %02i:%02i:%02i / %s"),mode<0?_l("<<"):_l(">>"), hh, mm, ss, duration_str);
+		self->deciV->resetOSD();
+		self->deciV->drawOSD(0, 0, msg);
+		//self->deciV->shortOSDmessage(msg,30);
 		elapsedTime = GetTickCount() - currentTime;
-		if (elapsedTime < 500 && elapsedTime > 0)
-			Sleep(500 - elapsedTime);
+		if (elapsedTime < 200 && elapsedTime > 0)
+			Sleep(200 - elapsedTime);
 		else
 			Sleep(100);
 	 }
+	 self->deciV->drawOSD(0, 0, _l(""));
  }
 
  self->fThread=NULL;
@@ -288,6 +299,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			CloseHandle(fEvent);
 			CloseHandle(fThread);
 			fThread = NULL; fEvent = NULL;
+			deciV->drawOSD(0, 0, _l(""));
 		}
 		if (fSeconds != 0)
 		{
@@ -400,7 +412,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 				string_size += 2048;
 				char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
 				strcpy(tmpStr, presetList);
-				free(presetList); presetList = tmpStr;
+				presetList = tmpStr;
 			}
 			strcat(presetList, presetName);
 			if (i != presetsNum - 1)
