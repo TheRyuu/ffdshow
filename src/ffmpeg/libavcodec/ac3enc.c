@@ -612,6 +612,8 @@ static int AC3_encode_init(AVCodecContext *avctx)
 #endif
     avctx->frame_size = AC3_FRAME_SIZE;
 
+    ac3_common_init();
+
     /* number of channels */
     if (channels < 1 || channels > 6)
 		return -1;
@@ -645,7 +647,7 @@ static int AC3_encode_init(AVCodecContext *avctx)
         return -1;
     s->bit_rate = bitrate;
     s->frmsizecod = i << 1;
-    s->frame_size_min = (bitrate * 1000 * AC3_FRAME_SIZE) / (freq * 16);
+    s->frame_size_min = ff_ac3_frame_sizes[s->frmsizecod][s->fscod];
     s->bits_written = 0;
     s->samples_written = 0;
     s->frame_size = s->frame_size_min;
@@ -663,8 +665,6 @@ static int AC3_encode_init(AVCodecContext *avctx)
     }
     /* initial snr offset */
     s->csnroffst = 40;
-
-    ac3_common_init();
 
     /* mdct init */
     fft_init(MDCT_NBITS - 2);
