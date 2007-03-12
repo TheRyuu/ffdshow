@@ -52,6 +52,7 @@ bool TimgFilterPostprocBase::pp_codec(int CodecID)
 	switch (CodecID) {
 		case CODEC_ID_MPEG1VIDEO:
 		case CODEC_ID_MPEG2VIDEO:
+		case CODEC_ID_LIBMPEG2:
 		case CODEC_ID_MPEG4:
 		case CODEC_ID_MSMPEG4V1:
 		case CODEC_ID_MSMPEG4V2:
