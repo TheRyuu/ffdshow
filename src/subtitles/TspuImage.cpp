@@ -396,7 +396,7 @@ void TspuImage::TscalerSw::scale(const unsigned char *srci,const unsigned char *
 //================================================= TspuImageSimd =================================================
 template<class _mm> void TspuImageSimd<_mm>::print(unsigned int dx[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const
 {
- if (!plane[0].stride) return;
+ if (!plane[0].stride || !plane[0].c || !plane[0].r) return;
  typename _mm::__m m0=_mm::setzero_si64();
  for (int i=0;i<3;i++)
   {
