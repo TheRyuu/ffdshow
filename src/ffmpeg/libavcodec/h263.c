@@ -41,10 +41,6 @@
 #include "h263data.h"
 #include "mpeg4data.h"
 
-//#ifdef CONFIG_WIN32
-#include <windows.h>
-//#endif
-
 //#undef NDEBUG
 //#include <assert.h>
 
@@ -115,8 +111,6 @@ max level: 53/16
 max run: 29/41
 */
 #endif
-
-extern CRITICAL_SECTION g_csStaticDataLock;
 
 #if 0 //3IV1 is quite rare and it slows things down a tiny bit
 #define IS_3IV1 s->codec_tag == ff_get_fourcc("3IV1")
@@ -2985,7 +2979,6 @@ void h263_decode_init_vlc(MpegEncContext *s)
 {
     static int done = 0;
 
-    EnterCriticalSection( &g_csStaticDataLock );
     if (!done) {
         done = 1;
 
@@ -3030,7 +3023,6 @@ void h263_decode_init_vlc(MpegEncContext *s)
                  &cbpc_b_tab[0][1], 2, 1,
                  &cbpc_b_tab[0][0], 2, 1, 1);
     }
-	LeaveCriticalSection( &g_csStaticDataLock );
 }
 
 /**
@@ -5147,7 +5139,7 @@ int h263_decode_picture_header(MpegEncContext *s)
         if (ufep == 1) {
             /* OPPTYPE */
             format = get_bits(&s->gb, 3);
-            dprintf("ufep=1, format: %d\n", format);
+            dprintf(s->avctx, "ufep=1, format: %d\n", format);
             s->custom_pcf= get_bits1(&s->gb);
             s->umvplus = get_bits(&s->gb, 1); /* Unrestricted Motion Vector */
             if (get_bits1(&s->gb) != 0) {
@@ -5197,7 +5189,7 @@ int h263_decode_picture_header(MpegEncContext *s)
             if (format == 6) {
                 /* Custom Picture Format (CPFMT) */
                 s->aspect_ratio_info = get_bits(&s->gb, 4);
-                dprintf("aspect: %d\n", s->aspect_ratio_info);
+                dprintf(s->avctx, "aspect: %d\n", s->aspect_ratio_info);
                 /* aspect ratios:
                 0 - forbidden
                 1 - 1:1
@@ -5210,7 +5202,7 @@ int h263_decode_picture_header(MpegEncContext *s)
                 width = (get_bits(&s->gb, 9) + 1) * 4;
                 skip_bits1(&s->gb);
                 height = get_bits(&s->gb, 9) * 4;
-                dprintf("\nH.263+ Custom picture: %dx%d\n",width,height);
+                dprintf(s->avctx, "\nH.263+ Custom picture: %dx%d\n",width,height);
                 if (s->aspect_ratio_info == FF_ASPECT_EXTENDED) {
                     /* aspected dimensions */
                     s->avctx->sample_aspect_ratio.num= get_bits(&s->gb, 8);
@@ -5695,16 +5687,16 @@ static int decode_vol_header(MpegEncContext *s, GetBitContext *gb){
             /* load default matrixes */
             for(i=0; i<64; i++){
                 int j= s->dsp.idct_permutation[i];
-                    v= ff_mpeg4_default_intra_matrix[i];
-                    s->avctx->intra_matrix[i]=v;
-                    s->intra_matrix[j]= v;
-                    s->chroma_intra_matrix[j]= v;
+                v= ff_mpeg4_default_intra_matrix[i];
+                s->avctx->intra_matrix[i]=v;
+                s->intra_matrix[j]= v;
+                s->chroma_intra_matrix[j]= v;
 
-                    v= ff_mpeg4_default_non_intra_matrix[i];
-                    s->avctx->inter_matrix[i]=v;
-                    s->inter_matrix[j]= v;
-                    s->chroma_inter_matrix[j]= v;
-                }
+                v= ff_mpeg4_default_non_intra_matrix[i];
+                s->avctx->inter_matrix[i]=v;
+                s->inter_matrix[j]= v;
+                s->chroma_inter_matrix[j]= v;
+            }
 
             /* load custom intra matrix */
             if(get_bits1(gb)){
@@ -5716,14 +5708,14 @@ static int decode_vol_header(MpegEncContext *s, GetBitContext *gb){
 
                     last= v;
                     j= s->dsp.idct_permutation[ ff_zigzag_direct[i] ];
-                        s->avctx->intra_matrix[ff_zigzag_direct[i]]=v;
-                        s->intra_matrix[j]= v;
-                        s->chroma_intra_matrix[j]= v;
-                    }
+                    s->avctx->intra_matrix[ff_zigzag_direct[i]]=v;
+                    s->intra_matrix[j]= v;
+                    s->chroma_intra_matrix[j]= v;
+                }
 
-                    /* replicate last value */
-                    for(; i<64; i++){
-		    int j= s->dsp.idct_permutation[ ff_zigzag_direct[i] ];
+                /* replicate last value */
+                for(; i<64; i++){
+					int j= s->dsp.idct_permutation[ ff_zigzag_direct[i] ];
                     s->avctx->intra_matrix[ff_zigzag_direct[i]]=last;
                     s->intra_matrix[j]= last;
                     s->chroma_intra_matrix[j]= last;
@@ -5738,21 +5730,21 @@ static int decode_vol_header(MpegEncContext *s, GetBitContext *gb){
                     v= get_bits(gb, 8);
                     if(v==0) break;
 
-                        last= v;
+                    last= v;
                     j= s->dsp.idct_permutation[ ff_zigzag_direct[i] ];
-                        s->avctx->inter_matrix[ff_zigzag_direct[i]]=v;
-                        s->inter_matrix[j]= v;
-                        s->chroma_inter_matrix[j]= v;
-                    }
-
-                    /* replicate last value */
-                    for(; i<64; i++){
-		    int j= s->dsp.idct_permutation[ ff_zigzag_direct[i] ];
-                        s->avctx->inter_matrix[ff_zigzag_direct[i]]=last;
-                        s->inter_matrix[j]= last;
-                        s->chroma_inter_matrix[j]= last;
-                    }
+                    s->avctx->inter_matrix[ff_zigzag_direct[i]]=v;
+                    s->inter_matrix[j]= v;
+                    s->chroma_inter_matrix[j]= v;
                 }
+
+                /* replicate last value */
+                for(; i<64; i++){
+					int j= s->dsp.idct_permutation[ ff_zigzag_direct[i] ];
+                    s->avctx->inter_matrix[ff_zigzag_direct[i]]=last;
+                    s->inter_matrix[j]= last;
+                    s->chroma_inter_matrix[j]= last;
+                }
+            }
 
             // FIXME a bunch of grayscale shape things
         }

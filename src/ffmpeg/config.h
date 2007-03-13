@@ -45,10 +45,3 @@
 /* CPU related stuff */
 //#define HAVE_CMOV
 //#define HAVE_FAST_CMOV
-
-
-/* disabled stuff */
-//#define CONFIG_MP3ADU_DECODER 1
-//#define CONFIG_MP3ON4_DECODER 1
-//#define CONFIG_MP2_DECODER 1
-//#define CONFIG_MP3_DECODER 1

@@ -156,15 +156,11 @@
 #include <assert.h>
 
 /* dprintf macros */
-#    if defined(__GNUC__)
-#        ifdef DEBUG
-#            define dprintf(fmt,...) av_log(NULL, AV_LOG_DEBUG, fmt, __VA_ARGS__)
-#        else
-#            define dprintf(fmt,...)
-#        endif
-#    else
-#        define dprintf(fmt)
-#    endif
+#ifdef DEBUG
+#    define dprintf(pctx, ...) av_log(pctx, AV_LOG_DEBUG, __VA_ARGS__)
+#else
+#    define dprintf(pctx, ...)
+#endif
 
 #define av_abort()      do { av_log(NULL, AV_LOG_ERROR, "Abort at %s:%d\n", __FILE__, __LINE__); abort(); } while (0)
 

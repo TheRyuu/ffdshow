@@ -1118,10 +1118,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\mpegaudiotab.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\mpegvideo.h"
 				>
 			</File>

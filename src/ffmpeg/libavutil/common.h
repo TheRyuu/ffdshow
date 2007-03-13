@@ -67,6 +67,7 @@
 #ifndef restrict
 #    define restrict
 #endif
+
 /* custom code */
 #ifndef EMULATE_INTTYPES
 #   include <inttypes.h>
@@ -94,7 +95,7 @@ typedef uint64_t uint_fast64_t;
 #define UINT64_C(c)    (c ## ULL)
 #endif
 
-#ifdef HAVE_AV_CONFIG_H
+#include "mem.h"
 
 //rounded divison & shift
 #define RSHIFT(a,b) ((a) > 0 ? ((a) + ((1<<(b))>>1))>>(b) : ((a) + ((1<<(b))>>1)-1)>>(b))
@@ -290,21 +291,7 @@ static inline int ff_get_fourcc(const char *s){
         }\
     }
 
-#if defined(_MSC_VER)
-static inline long long read_time(void)
-{
-        long long l;
-		  __asm {
-		rdtsc
-		mov DWORD PTR [l], eax
-		mov DWORD PTR [l+4], edx
-		  }
-        return l;
-}
-#define START_TIMER
-#define STOP_TIMER(id) {}
-
-#elif defined(ARCH_X86)
+#if defined(ARCH_X86) || defined(ARCH_POWERPC)
 #if defined(ARCH_X86_64)
 static inline uint64_t read_time(void)
 {
@@ -322,6 +309,25 @@ static inline long long read_time(void)
                 : "=A" (l)
         );
         return l;
+}
+#else //FIXME check ppc64
+static inline uint64_t read_time(void)
+{
+    uint32_t tbu, tbl, temp;
+
+     /* from section 2.2.1 of the 32-bit PowerPC PEM */
+     __asm__ __volatile__(
+         "1:\n"
+         "mftbu  %2\n"
+         "mftb   %0\n"
+         "mftbu  %1\n"
+         "cmpw   %2,%1\n"
+         "bne    1b\n"
+     : "=r"(tbl), "=r"(tbu), "=r"(temp)
+     :
+     : "cc");
+
+     return (((uint64_t)tbu)<<32) | (uint64_t)tbl;
 }
 #endif
 
@@ -347,25 +353,6 @@ tend= read_time();\
 #else
 #define START_TIMER
 #define STOP_TIMER(id) {}
-#endif
-
-/* memory */
-
-#ifdef __GNUC__
-  #define DECLARE_ALIGNED(n,t,v)       t v __attribute__ ((aligned (n)))
-#else
-  #define DECLARE_ALIGNED(n,t,v)      __declspec(align(n)) t v
-#endif
-
-/* memory */
-void *av_malloc(unsigned int size);
-void *av_realloc(void *ptr, unsigned int size);
-void av_free(void *ptr);
-
-void *av_mallocz(unsigned int size);
-char *av_strdup(const char *s);
-void av_freep(void *ptr);
-
 #endif
 
 #endif /* COMMON_H */
