@@ -161,11 +161,10 @@ __asm __volatile(
         "psrad $13,%%mm0\n\t"
         "packssdw %%mm0,%%mm0\n\t"
         "movd %%mm0,%%eax\n\t"
-	"movw %%ax, (%%edi)\n\t"
+        "movw %%ax, (%%edi)\n\t"
         "leal 32(%%esi),%%esi\n\t"
         "leal 64(%%edx),%%edx\n\t"
         "leal 4(%%edi),%%edi\n\t"
-
 ".next_loop:\n\t"
         "subl $64,%%esi\n\t"
         "movl $7,%%ecx\n\t"
@@ -244,5 +243,5 @@ __asm __volatile(
 	"emms\n\t"
         :
 	:"m"(bandPtr),"m"(channel),"m"(samples),"m"(buffs),"m"(bo), "m"(temp)
-	:"memory","%edi","%esi","%ebx","%esp");
+	:"memory","%edi","%esi","%eax","%ebx","%ecx","%edx","%esp");
 }
