@@ -95,6 +95,8 @@ typedef uint64_t uint_fast64_t;
 #define UINT64_C(c)    (c ## ULL)
 #endif
 
+#ifdef HAVE_AV_CONFIG_H
+
 #include "mem.h"
 
 //rounded divison & shift
@@ -353,6 +355,8 @@ tend= read_time();\
 #else
 #define START_TIMER
 #define STOP_TIMER(id) {}
+#endif
+
 #endif
 
 #endif /* COMMON_H */
