@@ -525,9 +525,6 @@
 				RelativePath=".\libavcodec\vcr1.c">
 			</File>
 			<File
-				RelativePath=".\libavcodec\vmnc.c">
-			</File>
-			<File
 				RelativePath=".\libavcodec\vorbis.c">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -556,9 +553,6 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\w32thread.c">
-			</File>
-			<File
-				RelativePath=".\libavcodec\wavpack.c">
 			</File>
 			<File
 				RelativePath="libavcodec\wmadec.c">

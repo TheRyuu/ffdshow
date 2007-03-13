@@ -93,7 +93,6 @@ DEFINE_GUID(CLSID_DWSTRINGW, 0xa0606860, 0x51be, 0x4cf6, 0x99, 0xc0, 0x7c, 0xe5,
 #define FOURCC_vixl mmioFOURCC('v','i','x','l')
 #define FOURCC_wmvp mmioFOURCC('w','m','v','p')
 #define FOURCC_wvp2 mmioFOURCC('w','v','p','2')
-//#define FOURCC_vmnc mmioFOURCC('v','m','n','c')
 
 DEFINE_GUID_FOURCC(XVID)
 DEFINE_GUID_FOURCC(xvid)
@@ -191,10 +190,6 @@ DEFINE_GUID_FOURCC(WMVP)
 DEFINE_GUID_FOURCC(wmvp)
 DEFINE_GUID_FOURCC(WVP2)
 DEFINE_GUID_FOURCC(wvp2)
-/*
-DEFINE_GUID_FOURCC(VMNC)
-DEFINE_GUID_FOURCC(vmnc)
-*/
 
 const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]=
 {
@@ -287,10 +282,7 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]=
  { &MEDIATYPE_Video, &MEDIASUBTYPE_wmvp   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_WVP2   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_wvp2   },
-/*
- { &MEDIATYPE_Video, &MEDIASUBTYPE_VMNC   },
- { &MEDIATYPE_Video, &MEDIASUBTYPE_vmnc   },
-*/
+
  // MJPEG Video MediaSubType & FourCCs
  { &MEDIATYPE_Video, &MEDIASUBTYPE_MJPG   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_mjpg   },
@@ -404,7 +396,6 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecAudio::inputMediaTypes[]=
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_fl64       },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_FL64       },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_DSPGROUP_TRUESPEECH },
- { &MEDIATYPE_Audio , &MEDIASUBTYPE_WV         },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_14_4       },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_28_8       },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_IMC        },

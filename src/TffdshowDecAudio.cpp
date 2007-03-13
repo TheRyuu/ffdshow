@@ -236,8 +236,6 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
     wFormatTag=WAVE_FORMAT_MAC3;
    else if (mt.subtype==MEDIASUBTYPE_MAC6)
     wFormatTag=WAVE_FORMAT_MAC6;
-   else if (mt.subtype==MEDIASUBTYPE_WV)
-    wFormatTag=WAVE_FORMAT_WV;
    else if (mt.subtype==MEDIASUBTYPE_14_4)
     wFormatTag=WAVE_FORMAT_14_4;
    else if (mt.subtype==MEDIASUBTYPE_28_8)

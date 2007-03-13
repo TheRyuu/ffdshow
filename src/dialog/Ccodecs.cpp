@@ -470,7 +470,6 @@ void TcodecsPageVideo::fillCodecs(void)
    formats.push_back(Tformat(_l("Truemotion 1,2"),IDFF_duck,IDFF_MOVIE_LAVC,_l("doesn't support 24 bit compression.")));
    formats.push_back(Tformat(_l("Ultimotion")    ,IDFF_ulti,IDFF_MOVIE_LAVC,_l("IBM Ultimotion Video (ULTI)")));
    formats.push_back(Tformat(_l("Winnov V1")     ,IDFF_wnv1,IDFF_MOVIE_LAVC,_l("Winnov WNV1 Video (WNV1)")));
-   //formats.push_back(Tformat(_l("Vmware Video"),IDFF_vmnc,IDFF_MOVIE_LAVC,_l("broken!")));
    formats.push_back(Tformat(_l("Snow")          ,IDFF_snow,IDFF_MOVIE_LAVC,_l("experimental")));
    formats.push_back(Tformat(_l("Avisynth")      ,IDFF_avisV,IDFF_MOVIE_AVIS,_l("AVIS (Avisynth AVI files)")));
    for (Tformats::iterator f=formats.begin();f!=formats.end();f++)
@@ -538,7 +537,6 @@ void TcodecsPageAudio::fillCodecs(void)
    formats.push_back(Tformat(_l("TrueSpeech")  ,IDFF_truespeech ,IDFF_MOVIE_LAVC,_l("DSP Group TrueSpeech compatible decoder")));
    formats.push_back(Tformat(_l("QDM2")        ,IDFF_qdm2       ,IDFF_MOVIE_LAVC,_l("QDM2 compatible decoder (incomplete)")));
    formats.push_back(Tformat(_l("MACE3,MACE6") ,IDFF_mace       ,IDFF_MOVIE_LAVC,_l("Macintosh Audio Compression/Expansion")));
-   formats.push_back(Tformat(_l("WavPack")     ,IDFF_wavpack    ,IDFF_MOVIE_LAVC,_l("WavPack Lossless Audio;Lossy and hybrid are not supported.To play .wv files you also need a source filter.")));
    formats.push_back(Tformat(_l("Real Audio")  ,IDFF_ra         ,IDFF_MOVIE_LAVC,_l("Real Audio 1.0 (14.4K) & RealAudio 2.0 (28.8K)")));
    formats.push_back(Tformat(_l("IMC")         ,IDFF_imc        ,IDFF_MOVIE_LAVC,_l("IMC compatible decoder")));
    formats.push_back(Tformat(_l("AVIS")        ,IDFF_avisA      ,IDFF_MOVIE_AVIS,_l("AVIS (Avisynth AVI files)")));

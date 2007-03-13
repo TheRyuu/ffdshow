@@ -149,9 +149,7 @@ void avcodec_register_all(void)
     register_avcodec(&rpza_decoder);
     register_avcodec(&truespeech_decoder);
     register_avcodec(&tta_decoder);
-    register_avcodec(&vmnc_decoder);
     register_avcodec(&vorbis_decoder);
-    register_avcodec(&wavpack_decoder);
     register_avcodec(&xl_decoder);
     register_avcodec(&qtrle_decoder);
     /* pcm codecs */

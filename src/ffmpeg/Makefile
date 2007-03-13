@@ -103,7 +103,6 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/vc1.c \
       $(LAVC_DIR)/vc1dsp.c \
       $(LAVC_DIR)/vcr1.c \
-      $(LAVC_DIR)/vmnc.c \
       $(LAVC_DIR)/vorbis.c \
       $(LAVC_DIR)/vp3.c \
       $(LAVC_DIR)/vp3dsp.c \
@@ -112,7 +111,6 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/vp56data.c \
       $(LAVC_DIR)/vp6.c \
       $(LAVC_DIR)/w32thread.c \
-      $(LAVC_DIR)/wavpack.c \
       $(LAVC_DIR)/wma.c \
       $(LAVC_DIR)/wmadec.c \
       $(LAVC_DIR)/wnv1.c \

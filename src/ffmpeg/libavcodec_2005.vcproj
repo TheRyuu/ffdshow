@@ -929,10 +929,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\vmnc.c"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\vorbis.c"
 				>
 			</File>
@@ -962,10 +958,6 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\w32thread.c"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\wavpack.c"
 				>
 			</File>
 			<File

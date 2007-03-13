@@ -69,15 +69,14 @@
  CODEC_OP(CODEC_ID_MSRLE             ,57,"msrle") \
  CODEC_OP(CODEC_ID_ASV1              ,58,"asv1") \
  CODEC_OP(CODEC_ID_ASV2              ,59,"asv2") \
- CODEC_OP(CODEC_ID_VMNC              ,60,"wmnc") \
- CODEC_OP(CODEC_ID_VIXL              ,61,"vixl") \
- CODEC_OP(CODEC_ID_WNV1              ,62,"wnv1") \
- CODEC_OP(CODEC_ID_FRAPS             ,63,"fraps") \
- CODEC_OP(CODEC_ID_MPEG2TS           ,64,"mpeg2ts") \
- CODEC_OP(CODEC_ID_AASC              ,65,"aasc") \
- CODEC_OP(CODEC_ID_ULTI              ,66,"ulti") \
- CODEC_OP(CODEC_ID_CAVS              ,67,"cavs") \
- CODEC_OP(CODEC_ID_SNOW              ,68,"snow") \
+ CODEC_OP(CODEC_ID_VIXL              ,60,"vixl") \
+ CODEC_OP(CODEC_ID_WNV1              ,61,"wnv1") \
+ CODEC_OP(CODEC_ID_FRAPS             ,62,"fraps") \
+ CODEC_OP(CODEC_ID_MPEG2TS           ,63,"mpeg2ts") \
+ CODEC_OP(CODEC_ID_AASC              ,64,"aasc") \
+ CODEC_OP(CODEC_ID_ULTI              ,65,"ulti") \
+ CODEC_OP(CODEC_ID_CAVS              ,66,"cavs") \
+ CODEC_OP(CODEC_ID_SNOW              ,67,"snow") \
  \
  /* Well-known audio codecs */ \
  CODEC_OP(CODEC_ID_MP2               ,100,"") \
@@ -88,7 +87,7 @@
  CODEC_OP(CODEC_ID_WMAV2             ,105,"wmav2") \
  CODEC_OP(CODEC_ID_AAC               ,106,"") \
  CODEC_OP(CODEC_ID_DTS               ,107,"") \
- CODEC_OP(CODEC_ID_WAVPACK           ,108,"wavpack") \
+ CODEC_OP(CODEC_ID_IMC               ,108,"imc") \
  CODEC_OP(CODEC_ID_PCM_U16LE         ,109,"") \
  CODEC_OP(CODEC_ID_PCM_U16BE         ,110,"") \
  CODEC_OP(CODEC_ID_PCM_S8            ,111,"") \
@@ -126,7 +125,6 @@
  CODEC_OP(CODEC_ID_TRUESPEECH        ,143,"truespeech") \
  CODEC_OP(CODEC_ID_RA_144            ,144,"14_4") \
  CODEC_OP(CODEC_ID_RA_288            ,145,"28_8") \
- CODEC_OP(CODEC_ID_IMC               ,146,"imc") \
 \
  /* Raw formats */ \
  CODEC_OP(CODEC_ID_RAW           ,300,"raw") \

@@ -279,7 +279,6 @@ TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imod
    IDFF_vp6            ,&TglobalSettingsDecVideo::vp6            ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_vp6f           ,&TglobalSettingsDecVideo::vp6f           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_cavs           ,&TglobalSettingsDecVideo::cavs           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   //IDFF_vmnc           ,&TglobalSettingsDecVideo::vmnc           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_mjpg           ,&TglobalSettingsDecVideo::mjpg           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_avrn           ,&TglobalSettingsDecVideo::avrn           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_dvsd           ,&TglobalSettingsDecVideo::dvsd           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
@@ -375,7 +374,6 @@ void TglobalSettingsDecVideo::reg_op_codec(TregOp &t,TregOp *t2)
  _reg_op_codec(IDFF_vp6 ,t,t2,_l("vp6") ,vp6,0);
  _reg_op_codec(IDFF_vp6f,t,t2,_l("vp6f"),vp6f,0);
  _reg_op_codec(IDFF_cavs,t,t2,_l("cavs"),cavs,0);
- //_reg_op_codec(IDFF_vmnc,t,t2,_l("vmnc"),vmnc,0);
  _reg_op_codec(IDFF_rawv,t,t2,filtermode&IDFF_FILTERMODE_VIDEORAW?_l("raw_rawv"):_l("rawv"),rawv,filtermode&IDFF_FILTERMODE_VIDEORAW?IDFF_MOVIE_RAW:0);
  _reg_op_codec(IDFF_mpg1,t,t2,_l("mpg1"),mpg1,0);
  _reg_op_codec(IDFF_mpg2,t,t2,_l("mpg2"),mpg2,0);
@@ -464,7 +462,6 @@ void TglobalSettingsDecVideo::load(void)
  fixMissing(vp6 ,IDFF_MOVIE_LAVC);
  fixMissing(vp6f,IDFF_MOVIE_LAVC);
  fixMissing(cavs,IDFF_MOVIE_LAVC);
- //fixMissing(vmnc,IDFF_MOVIE_LAVC);
  fixMissing(avrn,IDFF_MOVIE_LAVC);
  fixMissing(mjpg,IDFF_MOVIE_LAVC);
  fixMissing(dvsd,IDFF_MOVIE_LAVC);
@@ -550,7 +547,6 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(VP6F,vp6f & rawmask,CODEC_ID_VP6F) \
  FF_FOURCC1_OP(FLV4,vp6f & rawmask,CODEC_ID_VP6F) \
  FF_FOURCC1_OP(CAVS,cavs & rawmask,CODEC_ID_CAVS) \
- /*FF_FOURCC1_OP(VMNC,vmnc & rawmask,CODEC_ID_VMNC)*/ \
  FF_FOURCC_OP (MPG1,mpg1 & rawmask,c_mpeg1) \
  FF_FOURCC_OP (MPG2,mpg2 & rawmask,c_mpeg2) \
  FF_FOURCC_OP (EM2V,em2v & rawmask,c_mpeg2) \
@@ -892,7 +888,6 @@ TglobalSettingsDecAudio::TglobalSettingsDecAudio(const Tconfig *Iconfig,int Imod
    IDFF_mace                   ,&TglobalSettingsDecAudio::mace                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_truespeech             ,&TglobalSettingsDecAudio::truespeech             ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_vorbis                 ,&TglobalSettingsDecAudio::vorbis                 ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   IDFF_wavpack                ,&TglobalSettingsDecAudio::wavpack                ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_ra                     ,&TglobalSettingsDecAudio::ra                     ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_imc                    ,&TglobalSettingsDecAudio::imc                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_avisA                  ,&TglobalSettingsDecAudio::avis                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
@@ -971,7 +966,6 @@ void TglobalSettingsDecAudio::reg_op_codec(TregOp &t,TregOp *t2)
  _reg_op_codec(IDFF_mace      ,t,t2,_l("mace")      ,mace      ,0);
  _reg_op_codec(IDFF_truespeech,t,t2,_l("truespeech"),truespeech,0);
  _reg_op_codec(IDFF_vorbis    ,t,t2,_l("vorbis")    ,vorbis    ,0);
- _reg_op_codec(IDFF_wavpack   ,t,t2,_l("wavpack")   ,wavpack   ,0);
  _reg_op_codec(IDFF_ra        ,t,t2,_l("ra")        ,ra        ,0);
  _reg_op_codec(IDFF_imc       ,t,t2,_l("imc")       ,imc       ,0);
  _reg_op_codec(IDFF_avisA     ,t,t2,_l("avis")      ,avis      ,IDFF_MOVIE_AVIS);
@@ -1003,7 +997,6 @@ void TglobalSettingsDecAudio::load(void)
  fixMissing(mace      ,IDFF_MOVIE_LAVC);
  fixMissing(truespeech,IDFF_MOVIE_LAVC);
  fixMissing(vorbis    ,IDFF_MOVIE_LAVC,IDFF_MOVIE_TREMOR);
- fixMissing(wavpack   ,IDFF_MOVIE_LAVC);
  fixMissing(ra        ,IDFF_MOVIE_LAVC);
  fixMissing(imc       ,IDFF_MOVIE_LAVC);
 }
@@ -1061,7 +1054,6 @@ void TglobalSettingsDecAudio::load(void)
  /*FF_WAVE_FORMAT1_OP(VORBIS1P,vorbis& rawmask,CODEC_ID_TREMOR)*/ \
  /*FF_WAVE_FORMAT1_OP(VORBIS2P,vorbis& rawmask,CODEC_ID_TREMOR)*/ \
  /*FF_WAVE_FORMAT1_OP(VORBIS3P,vorbis& rawmask,CODEC_ID_TREMOR)*/ \
- FF_WAVE_FORMAT1_OP(WV   ,wavpack   & rawmask,CODEC_ID_WAVPACK) \
  FF_WAVE_FORMAT1_OP(LPCM   ,lpcm   & rawmask,CODEC_ID_LPCM) \
  FF_WAVE_FORMAT1_OP(AVIS   ,avis   & rawmask,CODEC_ID_AVISYNTH) \
  FF_WAVE_FORMAT1_OP(PCM8   ,rawa==IDFF_MOVIE_RAW || rawa==(TsampleFormat::SF_ALLINT<<8) || rawa==(TsampleFormat::SF_PCM8 <<8),CODEC_ID_PCM) \

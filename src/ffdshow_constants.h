@@ -734,7 +734,6 @@
 #define IDFF_wmv3               1042
 #define IDFF_wvc1                1090
 #define IDFF_cavs                1091
-#define IDFF_vmnc                1092
 #define IDFF_vp5                1093
 #define IDFF_vp6                1094
 #define IDFF_vp6f                1095
@@ -799,7 +798,6 @@
 #define IDFF_truespeech         1071
 #define IDFF_vorbis             1058
 #define IDFF_lpcm               1056
-#define IDFF_wavpack            1076
 #define IDFF_fps1               1077
 #define IDFF_snow               1078
 #define IDFF_ra                 1079
