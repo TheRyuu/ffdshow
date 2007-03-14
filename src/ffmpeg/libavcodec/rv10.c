@@ -702,7 +702,9 @@ static int rv10_decode_frame(AVCodecContext *avctx,
 
         if(s->last_picture_ptr || s->low_delay){
             *data_size = sizeof(AVFrame);
+            #ifdef DEBUG
             ff_print_debug_info(s, pict);
+            #endif
         }
         s->current_picture_ptr= NULL; //so we can detect if frame_end wasnt called (find some nicer solution...)
     }

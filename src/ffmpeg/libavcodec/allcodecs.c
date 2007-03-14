@@ -151,12 +151,12 @@ void avcodec_register_all(void)
     register_avcodec(&tta_decoder);
     register_avcodec(&vorbis_decoder);
     register_avcodec(&xl_decoder);
-    register_avcodec(&qtrle_decoder);
-    /* pcm codecs */
+    register_avcodec(&qtrle_decoder);  
 
 #define PCM_CODEC(id, name) \
     register_avcodec(& name ## _decoder);
 
+	/* pcm codecs */
     PCM_CODEC(CODEC_ID_PCM_ALAW, pcm_alaw);
     PCM_CODEC(CODEC_ID_PCM_MULAW, pcm_mulaw);
 

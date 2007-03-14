@@ -2093,24 +2093,8 @@ extern AVCodec name ## _encoder
 
 PCM_CODEC(CODEC_ID_PCM_ALAW,    pcm_alaw);
 PCM_CODEC(CODEC_ID_PCM_MULAW,   pcm_mulaw);
-PCM_CODEC(CODEC_ID_PCM_S8,      pcm_s8);
-PCM_CODEC(CODEC_ID_PCM_S16BE,   pcm_s16be);
-PCM_CODEC(CODEC_ID_PCM_S16LE,   pcm_s16le);
-PCM_CODEC(CODEC_ID_PCM_S24BE,   pcm_s24be);
-PCM_CODEC(CODEC_ID_PCM_S24DAUD, pcm_s24daud);
-PCM_CODEC(CODEC_ID_PCM_S24LE,   pcm_s24le);
-PCM_CODEC(CODEC_ID_PCM_S32BE,   pcm_s32be);
-PCM_CODEC(CODEC_ID_PCM_S32LE,   pcm_s32le);
-PCM_CODEC(CODEC_ID_PCM_U8,      pcm_u8);
-PCM_CODEC(CODEC_ID_PCM_U16BE,   pcm_u16be);
-PCM_CODEC(CODEC_ID_PCM_U16LE,   pcm_u16le);
-PCM_CODEC(CODEC_ID_PCM_U24BE,   pcm_u24be);
-PCM_CODEC(CODEC_ID_PCM_U24LE,   pcm_u24le);
-PCM_CODEC(CODEC_ID_PCM_U32BE,   pcm_u32be);
-PCM_CODEC(CODEC_ID_PCM_U32LE,   pcm_u32le);
 
 /* adpcm codecs */
-
 PCM_CODEC(CODEC_ID_ADPCM_4XM,     adpcm_4xm);
 PCM_CODEC(CODEC_ID_ADPCM_ADX,     adpcm_adx);
 PCM_CODEC(CODEC_ID_ADPCM_CT,      adpcm_ct);
@@ -2589,7 +2573,7 @@ void *av_fast_realloc(void *ptr, unsigned int *size, unsigned int min_size);
  * Frees all static arrays and reset their pointers to 0.
  * Call this function to release all statically allocated tables.
  */
-void av_free_static(void);
+attribute_deprecated void av_free_static(void);
 
 /**
  * Allocation of static arrays.
@@ -2599,7 +2583,7 @@ void av_free_static(void);
  * @param[in] size The amount of memory you need in bytes.
  * @return Block of memory of the requested size.
  */
-void *av_mallocz_static(unsigned int size);
+attribute_deprecated void *av_mallocz_static(unsigned int size);
 
 /* FOXFIX: Not in lavc */
 /* add by bero : in adx.c */
