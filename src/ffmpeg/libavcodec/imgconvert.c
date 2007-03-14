@@ -65,9 +65,8 @@ typedef struct PixFmtInfo {
 } PixFmtInfo;
 
 /* this table gives more information about formats */
-static const PixFmtInfo pix_fmt_info[PIX_FMT_NB]
 #if __STDC_VERSION__ >= 199901L
-= {
+static const PixFmtInfo pix_fmt_info[PIX_FMT_NB] = {
     /* YUV formats */
     [PIX_FMT_YUV420P] = {
         .name = "yuv420p",
@@ -361,7 +360,8 @@ static const PixFmtInfo pix_fmt_info[PIX_FMT_NB]
 };
 
 #else
-;
+static PixFmtInfo pix_fmt_info[PIX_FMT_NB];
+
 void avpicture_init_pixfmtinfo(void)
 {
  pix_fmt_info[PIX_FMT_YUV420P].name = "yuv420p";
@@ -388,13 +388,13 @@ void avpicture_init_pixfmtinfo(void)
  pix_fmt_info[PIX_FMT_YUV444P].x_chroma_shift = 0;
  pix_fmt_info[PIX_FMT_YUV444P].y_chroma_shift = 0;
 
- pix_fmt_info[PIX_FMT_YUV422].name = "yuv422";
- pix_fmt_info[PIX_FMT_YUV422].nb_channels = 1;
- pix_fmt_info[PIX_FMT_YUV422].color_type = FF_COLOR_YUV;
- pix_fmt_info[PIX_FMT_YUV422].pixel_type = FF_PIXEL_PACKED;
- pix_fmt_info[PIX_FMT_YUV422].depth = 8;
- pix_fmt_info[PIX_FMT_YUV422].x_chroma_shift = 1;
- pix_fmt_info[PIX_FMT_YUV422].y_chroma_shift = 0;
+ pix_fmt_info[PIX_FMT_YUYV422].name = "yuyv422";
+ pix_fmt_info[PIX_FMT_YUYV422].nb_channels = 1;
+ pix_fmt_info[PIX_FMT_YUYV422].color_type = FF_COLOR_YUV;
+ pix_fmt_info[PIX_FMT_YUYV422].pixel_type = FF_PIXEL_PACKED;
+ pix_fmt_info[PIX_FMT_YUYV422].depth = 8;
+ pix_fmt_info[PIX_FMT_YUYV422].x_chroma_shift = 1;
+ pix_fmt_info[PIX_FMT_YUYV422].y_chroma_shift = 0;
 
  pix_fmt_info[PIX_FMT_UYVY422].name = "uyvy422";
  pix_fmt_info[PIX_FMT_UYVY422].nb_channels = 1;
@@ -462,14 +462,14 @@ void avpicture_init_pixfmtinfo(void)
  pix_fmt_info[PIX_FMT_BGR24].x_chroma_shift = 0;
  pix_fmt_info[PIX_FMT_BGR24].y_chroma_shift = 0;
 
- pix_fmt_info[PIX_FMT_RGBA32].name = "rgba32";
- pix_fmt_info[PIX_FMT_RGBA32].nb_channels = 4;
- pix_fmt_info[PIX_FMT_RGBA32].is_alpha = 1;
- pix_fmt_info[PIX_FMT_RGBA32].color_type = FF_COLOR_RGB;
- pix_fmt_info[PIX_FMT_RGBA32].pixel_type = FF_PIXEL_PACKED;
- pix_fmt_info[PIX_FMT_RGBA32].depth = 8;
- pix_fmt_info[PIX_FMT_RGBA32].x_chroma_shift = 0;
- pix_fmt_info[PIX_FMT_RGBA32].y_chroma_shift = 0;
+ pix_fmt_info[PIX_FMT_RGB32].name = "rgb32";
+ pix_fmt_info[PIX_FMT_RGB32].nb_channels = 4;
+ pix_fmt_info[PIX_FMT_RGB32].is_alpha = 1;
+ pix_fmt_info[PIX_FMT_RGB32].color_type = FF_COLOR_RGB;
+ pix_fmt_info[PIX_FMT_RGB32].pixel_type = FF_PIXEL_PACKED;
+ pix_fmt_info[PIX_FMT_RGB32].depth = 8;
+ pix_fmt_info[PIX_FMT_RGB32].x_chroma_shift = 0;
+ pix_fmt_info[PIX_FMT_RGB32].y_chroma_shift = 0;
 
  pix_fmt_info[PIX_FMT_RGB565].name = "rgb565";
  pix_fmt_info[PIX_FMT_RGB565].nb_channels = 3;
@@ -526,13 +526,124 @@ void avpicture_init_pixfmtinfo(void)
  pix_fmt_info[PIX_FMT_PAL8].pixel_type = FF_PIXEL_PALETTE;
  pix_fmt_info[PIX_FMT_PAL8].depth = 8;
 
- pix_fmt_info[PIX_FMT_UYVY411].name = "uyvy411";
- pix_fmt_info[PIX_FMT_UYVY411].nb_channels = 1;
- pix_fmt_info[PIX_FMT_UYVY411].color_type = FF_COLOR_YUV;
- pix_fmt_info[PIX_FMT_UYVY411].pixel_type = FF_PIXEL_PACKED;
- pix_fmt_info[PIX_FMT_UYVY411].depth = 8;
- pix_fmt_info[PIX_FMT_UYVY411].x_chroma_shift = 2;
- pix_fmt_info[PIX_FMT_UYVY411].y_chroma_shift = 0;
+ pix_fmt_info[PIX_FMT_XVMC_MPEG2_MC].name = "xvmcmc";
+
+ pix_fmt_info[PIX_FMT_XVMC_MPEG2_IDCT].name = "xvmcidct";
+
+ pix_fmt_info[PIX_FMT_UYYVYY411].name = "uyyvyy411";
+ pix_fmt_info[PIX_FMT_UYYVYY411].nb_channels = 1;
+ pix_fmt_info[PIX_FMT_UYYVYY411].color_type = FF_COLOR_YUV;
+ pix_fmt_info[PIX_FMT_UYYVYY411].pixel_type = FF_PIXEL_PACKED;
+ pix_fmt_info[PIX_FMT_UYYVYY411].depth = 8;
+ pix_fmt_info[PIX_FMT_UYYVYY411].x_chroma_shift = 2;
+ pix_fmt_info[PIX_FMT_UYYVYY411].y_chroma_shift = 0;
+
+ pix_fmt_info[PIX_FMT_BGR32].name = "bgr32";
+ pix_fmt_info[PIX_FMT_BGR32].nb_channels = 4;
+ pix_fmt_info[PIX_FMT_BGR32].is_alpha = 1;
+ pix_fmt_info[PIX_FMT_BGR32].color_type = FF_COLOR_RGB;
+ pix_fmt_info[PIX_FMT_BGR32].pixel_type = FF_PIXEL_PACKED;
+ pix_fmt_info[PIX_FMT_BGR32].depth = 8;
+ pix_fmt_info[PIX_FMT_BGR32].x_chroma_shift = 0;
+ pix_fmt_info[PIX_FMT_BGR32].y_chroma_shift = 0;
+
+ pix_fmt_info[PIX_FMT_BGR565].name = "bgr565";
+ pix_fmt_info[PIX_FMT_BGR565].nb_channels = 3;
+ pix_fmt_info[PIX_FMT_BGR565].color_type = FF_COLOR_RGB;
+ pix_fmt_info[PIX_FMT_BGR565].pixel_type = FF_PIXEL_PACKED;
+ pix_fmt_info[PIX_FMT_BGR565].depth = 5;
+ pix_fmt_info[PIX_FMT_BGR565].x_chroma_shift = 0;
+ pix_fmt_info[PIX_FMT_BGR565].y_chroma_shift = 0;
+
+ pix_fmt_info[PIX_FMT_BGR555].name = "bgr555";
+ pix_fmt_info[PIX_FMT_BGR555].nb_channels = 3;
+ pix_fmt_info[PIX_FMT_BGR555].color_type = FF_COLOR_RGB;
+ pix_fmt_info[PIX_FMT_BGR555].pixel_type = FF_PIXEL_PACKED;
+ pix_fmt_info[PIX_FMT_BGR555].depth = 5;
+ pix_fmt_info[PIX_FMT_BGR555].x_chroma_shift = 0;
+ pix_fmt_info[PIX_FMT_BGR555].y_chroma_shift = 0;
+
+ pix_fmt_info[PIX_FMT_RGB8].name = "rgb8";
+ pix_fmt_info[PIX_FMT_RGB8].nb_channels = 1;
+ pix_fmt_info[PIX_FMT_RGB8].color_type = FF_COLOR_RGB;
+ pix_fmt_info[PIX_FMT_RGB8].pixel_type = FF_PIXEL_PACKED;
+ pix_fmt_info[PIX_FMT_RGB8].depth = 8;
+ pix_fmt_info[PIX_FMT_RGB8].x_chroma_shift = 0;
+ pix_fmt_info[PIX_FMT_RGB8].y_chroma_shift = 0;
+
+ pix_fmt_info[PIX_FMT_RGB4].name = "rgb4";
+ pix_fmt_info[PIX_FMT_RGB4].nb_channels = 1;
+ pix_fmt_info[PIX_FMT_RGB4].color_type = FF_COLOR_RGB;
+ pix_fmt_info[PIX_FMT_RGB4].pixel_type = FF_PIXEL_PACKED;
+ pix_fmt_info[PIX_FMT_RGB4].depth = 4;
+ pix_fmt_info[PIX_FMT_RGB4].x_chroma_shift = 0;
+ pix_fmt_info[PIX_FMT_RGB4].y_chroma_shift = 0;
+
+ pix_fmt_info[PIX_FMT_RGB4_BYTE].name = "rgb4_byte";
+ pix_fmt_info[PIX_FMT_RGB4_BYTE].nb_channels = 1;
+ pix_fmt_info[PIX_FMT_RGB4_BYTE].color_type = FF_COLOR_RGB;
+ pix_fmt_info[PIX_FMT_RGB4_BYTE].pixel_type = FF_PIXEL_PACKED;
+ pix_fmt_info[PIX_FMT_RGB4_BYTE].depth = 8;
+ pix_fmt_info[PIX_FMT_RGB4_BYTE].x_chroma_shift = 0;
+ pix_fmt_info[PIX_FMT_RGB4_BYTE].y_chroma_shift = 0;
+
+ pix_fmt_info[PIX_FMT_BGR8].name = "bgr8";
+ pix_fmt_info[PIX_FMT_BGR8].nb_channels = 1;
+ pix_fmt_info[PIX_FMT_BGR8].color_type = FF_COLOR_RGB;
+ pix_fmt_info[PIX_FMT_BGR8].pixel_type = FF_PIXEL_PACKED;
+ pix_fmt_info[PIX_FMT_BGR8].depth = 8;
+ pix_fmt_info[PIX_FMT_BGR8].x_chroma_shift = 0;
+ pix_fmt_info[PIX_FMT_BGR8].y_chroma_shift = 0;
+
+ pix_fmt_info[PIX_FMT_BGR4].name = "bgr4";
+ pix_fmt_info[PIX_FMT_BGR4].nb_channels = 1;
+ pix_fmt_info[PIX_FMT_BGR4].color_type = FF_COLOR_RGB;
+ pix_fmt_info[PIX_FMT_BGR4].pixel_type = FF_PIXEL_PACKED;
+ pix_fmt_info[PIX_FMT_BGR4].depth = 4;
+ pix_fmt_info[PIX_FMT_BGR4].x_chroma_shift = 0;
+ pix_fmt_info[PIX_FMT_BGR4].y_chroma_shift = 0;
+
+ pix_fmt_info[PIX_FMT_BGR4_BYTE].name = "bgr4_byte";
+ pix_fmt_info[PIX_FMT_BGR4_BYTE].nb_channels = 1;
+ pix_fmt_info[PIX_FMT_BGR4_BYTE].color_type = FF_COLOR_RGB;
+ pix_fmt_info[PIX_FMT_BGR4_BYTE].pixel_type = FF_PIXEL_PACKED;
+ pix_fmt_info[PIX_FMT_BGR4_BYTE].depth = 8;
+ pix_fmt_info[PIX_FMT_BGR4_BYTE].x_chroma_shift = 0;
+ pix_fmt_info[PIX_FMT_BGR4_BYTE].y_chroma_shift = 0;
+
+ pix_fmt_info[PIX_FMT_NV12].name = "nv12";
+ pix_fmt_info[PIX_FMT_NV12].nb_channels = 2;
+ pix_fmt_info[PIX_FMT_NV12].color_type = FF_COLOR_YUV;
+ pix_fmt_info[PIX_FMT_NV12].pixel_type = FF_PIXEL_PLANAR;
+ pix_fmt_info[PIX_FMT_NV12].depth = 8;
+ pix_fmt_info[PIX_FMT_NV12].x_chroma_shift = 1;
+ pix_fmt_info[PIX_FMT_NV12].y_chroma_shift = 1;
+
+ pix_fmt_info[PIX_FMT_NV21].name = "nv12";
+ pix_fmt_info[PIX_FMT_NV21].nb_channels = 2;
+ pix_fmt_info[PIX_FMT_NV21].color_type = FF_COLOR_YUV;
+ pix_fmt_info[PIX_FMT_NV21].pixel_type = FF_PIXEL_PLANAR;
+ pix_fmt_info[PIX_FMT_NV21].depth = 8;
+ pix_fmt_info[PIX_FMT_NV21].x_chroma_shift = 1;
+ pix_fmt_info[PIX_FMT_NV21].y_chroma_shift = 1;
+
+ pix_fmt_info[PIX_FMT_BGR32_1].name = "bgr32_1";
+ pix_fmt_info[PIX_FMT_BGR32_1].nb_channels = 4;
+ pix_fmt_info[PIX_FMT_BGR32_1].is_alpha = 1;
+ pix_fmt_info[PIX_FMT_BGR32_1].color_type = FF_COLOR_RGB;
+ pix_fmt_info[PIX_FMT_BGR32_1].pixel_type = FF_PIXEL_PACKED;
+ pix_fmt_info[PIX_FMT_BGR32_1].depth = 8;
+ pix_fmt_info[PIX_FMT_BGR32_1].x_chroma_shift = 0;
+ pix_fmt_info[PIX_FMT_BGR32_1].y_chroma_shift = 0;
+
+ pix_fmt_info[PIX_FMT_RGB32_1].name = "rgb32_1";
+ pix_fmt_info[PIX_FMT_RGB32_1].nb_channels = 4;
+ pix_fmt_info[PIX_FMT_RGB32_1].is_alpha = 1;
+ pix_fmt_info[PIX_FMT_RGB32_1].color_type = FF_COLOR_RGB;
+ pix_fmt_info[PIX_FMT_RGB32_1].pixel_type = FF_PIXEL_PACKED;
+ pix_fmt_info[PIX_FMT_RGB32_1].depth = 8;
+ pix_fmt_info[PIX_FMT_RGB32_1].x_chroma_shift = 0;
+ pix_fmt_info[PIX_FMT_RGB32_1].y_chroma_shift = 0;
 }
 #endif
 

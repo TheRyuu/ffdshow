@@ -26,8 +26,7 @@
 #ifndef BITSTREAM_H
 #define BITSTREAM_H
 
-// #include "log.h"
-
+#include "libavutil/log.h"
 #include "libavutil/bswap.h"
 
 #if defined(ALT_BITSTREAM_READER_LE) && !defined(ALT_BITSTREAM_READER)
@@ -210,9 +209,6 @@ static inline void put_bits(PutBitContext *s, int n, unsigned int value)
     unsigned int bit_buf;
     int bit_left;
 
-#ifdef STATS
-    st_out_bit_counts[st_current_index] += n;
-#endif
     //    printf("put_bits=%d %x\n", n, value);
     assert(n == 32 || value < (1U << n));
 
@@ -225,7 +221,7 @@ static inline void put_bits(PutBitContext *s, int n, unsigned int value)
         bit_buf = (bit_buf<<n) | value;
         bit_left-=n;
     } else {
-	bit_buf<<=bit_left;
+        bit_buf<<=bit_left;
         bit_buf |= value >> (n - bit_left);
 #ifdef UNALIGNED_STORES_ARE_BAD
         if (3 & (intptr_t) s->buf_ptr) {
@@ -238,7 +234,7 @@ static inline void put_bits(PutBitContext *s, int n, unsigned int value)
         *(uint32_t *)s->buf_ptr = be2me_32(bit_buf);
         //printf("bitbuf = %08x\n", bit_buf);
         s->buf_ptr+=4;
-	bit_left+=32 - n;
+        bit_left+=32 - n;
         bit_buf = value;
     }
 
@@ -254,21 +250,21 @@ static inline void put_bits(PutBitContext *s, int n, unsigned int value)
 #    ifdef ALIGNED_BITSTREAM_WRITER
 #        if defined(ARCH_X86)
     asm volatile(
-	"movl %0, %%ecx			\n\t"
-	"xorl %%eax, %%eax		\n\t"
-	"shrdl %%cl, %1, %%eax		\n\t"
-	"shrl %%cl, %1			\n\t"
-	"movl %0, %%ecx			\n\t"
-	"shrl $3, %%ecx			\n\t"
-	"andl $0xFFFFFFFC, %%ecx	\n\t"
-	"bswapl %1			\n\t"
-	"orl %1, (%2, %%ecx)		\n\t"
-	"bswapl %%eax			\n\t"
-	"addl %3, %0			\n\t"
-	"movl %%eax, 4(%2, %%ecx)	\n\t"
-	: "=&r" (s->index), "=&r" (value)
-	: "r" (s->buf), "r" (n), "0" (s->index), "1" (value<<(-n))
-	: "%eax", "%ecx"
+        "movl %0, %%ecx                 \n\t"
+        "xorl %%eax, %%eax              \n\t"
+        "shrdl %%cl, %1, %%eax          \n\t"
+        "shrl %%cl, %1                  \n\t"
+        "movl %0, %%ecx                 \n\t"
+        "shrl $3, %%ecx                 \n\t"
+        "andl $0xFFFFFFFC, %%ecx        \n\t"
+        "bswapl %1                      \n\t"
+        "orl %1, (%2, %%ecx)            \n\t"
+        "bswapl %%eax                   \n\t"
+        "addl %3, %0                    \n\t"
+        "movl %%eax, 4(%2, %%ecx)       \n\t"
+        : "=&r" (s->index), "=&r" (value)
+        : "r" (s->buf), "r" (n), "0" (s->index), "1" (value<<(-n))
+        : "%eax", "%ecx"
     );
 #        else
     int index= s->index;
@@ -285,20 +281,20 @@ static inline void put_bits(PutBitContext *s, int n, unsigned int value)
 #    else //ALIGNED_BITSTREAM_WRITER
 #        if defined(ARCH_X86)
     asm volatile(
-	"movl $7, %%ecx			\n\t"
-	"andl %0, %%ecx			\n\t"
-	"addl %3, %%ecx			\n\t"
-	"negl %%ecx			\n\t"
-	"shll %%cl, %1			\n\t"
-	"bswapl %1			\n\t"
-	"movl %0, %%ecx			\n\t"
-	"shrl $3, %%ecx			\n\t"
-	"orl %1, (%%ecx, %2)		\n\t"
-	"addl %3, %0			\n\t"
-	"movl $0, 4(%%ecx, %2)		\n\t"
-	: "=&r" (s->index), "=&r" (value)
-	: "r" (s->buf), "r" (n), "0" (s->index), "1" (value)
-	: "%ecx"
+        "movl $7, %%ecx                 \n\t"
+        "andl %0, %%ecx                 \n\t"
+        "addl %3, %%ecx                 \n\t"
+        "negl %%ecx                     \n\t"
+        "shll %%cl, %1                  \n\t"
+        "bswapl %1                      \n\t"
+        "movl %0, %%ecx                 \n\t"
+        "shrl $3, %%ecx                 \n\t"
+        "orl %1, (%%ecx, %2)            \n\t"
+        "addl %3, %0                    \n\t"
+        "movl $0, 4(%%ecx, %2)          \n\t"
+        : "=&r" (s->index), "=&r" (value)
+        : "r" (s->buf), "r" (n), "0" (s->index), "1" (value)
+        : "%ecx"
     );
 #        else
     int index= s->index;
@@ -318,9 +314,9 @@ static inline void put_bits(PutBitContext *s, int n, unsigned int value)
 static inline uint8_t* pbBufPtr(PutBitContext *s)
 {
 #ifdef ALT_BITSTREAM_WRITER
-	return s->buf + (s->index>>3);
+        return s->buf + (s->index>>3);
 #else
-	return s->buf_ptr;
+        return s->buf_ptr;
 #endif
 }
 
@@ -332,10 +328,10 @@ static inline void skip_put_bytes(PutBitContext *s, int n){
         assert((put_bits_count(s)&7)==0);
 #ifdef ALT_BITSTREAM_WRITER
         FIXME may need some cleaning of the buffer
-	s->index += n<<3;
+        s->index += n<<3;
 #else
         assert(s->bit_left==32);
-	s->buf_ptr += n;
+        s->buf_ptr += n;
 #endif
 }
 
@@ -408,10 +404,10 @@ for examples see get_bits, show_bits, skip_bits, get_vlc
 static inline int unaligned32_be(const void *v)
 {
 #ifdef CONFIG_ALIGN
-	const uint8_t *p=v;
-	return (((p[0]<<8) | p[1])<<16) | (p[2]<<8) | (p[3]);
+        const uint8_t *p=v;
+        return (((p[0]<<8) | p[1])<<16) | (p[2]<<8) | (p[3]);
 #else
-	return be2me_32( unaligned32(v)); //original
+        return be2me_32( unaligned32(v)); //original
 #endif
 }
 
@@ -467,7 +463,7 @@ static inline int unaligned32_le(const void *v)
         ((name##_cache) & (NEG_USR32(0xffffffff,num)))
 
 #   define SHOW_SBITS(name, gb, num)\
-		NEG_SSR32((name##_cache)<<(32-(num)), num)
+        NEG_SSR32((name##_cache)<<(32-(num)), num)
 # else
 #   define SHOW_UBITS(name, gb, num)\
         NEG_USR32(name##_cache, num)
@@ -588,8 +584,8 @@ static inline void skip_bits_long(GetBitContext *s, int n){
 #if defined(ARCH_X86)
 #   define SKIP_CACHE(name, gb, num)\
         asm(\
-            "shldl %2, %1, %0		\n\t"\
-            "shll %2, %1		\n\t"\
+            "shldl %2, %1, %0          \n\t"\
+            "shll %2, %1               \n\t"\
             : "+r" (name##_cache0), "+r" (name##_cache1)\
             : "Ic" ((uint8_t)(num))\
            );
@@ -631,7 +627,7 @@ static inline void skip_bits_long(GetBitContext *s, int n){
     re_buffer_ptr += re_bit_count>>5;
     re_bit_count &= 31;
     re_cache0 = be2me_32( re_buffer_ptr[-1] ) << re_bit_count;
-    re_cache1= 0;
+    re_cache1 = 0;
     UPDATE_CACHE(re, s)
     CLOSE_READER(re, s)
 }
@@ -667,7 +663,7 @@ static inline int get_sbits(GetBitContext *s, int n){
 }
 
 /**
- * reads 0-17 bits.
+ * reads 1-17 bits.
  * Note, the alt bitstream reader can read up to 25 bits, but the libmpeg2 reader can't
  */
 static inline unsigned int get_bits(GetBitContext *s, int n){
@@ -681,7 +677,7 @@ static inline unsigned int get_bits(GetBitContext *s, int n){
 }
 
 /**
- * shows 0-17 bits.
+ * shows 1-17 bits.
  * Note, the alt bitstream reader can read up to 25 bits, but the libmpeg2 reader can't
  */
 static inline unsigned int show_bits(GetBitContext *s, int n){
@@ -735,13 +731,13 @@ static inline void skip_bits1(GetBitContext *s){
 static inline unsigned int get_bits_long(GetBitContext *s, int n){
     if(n<=17) return get_bits(s, n);
     else{
-    #ifdef ALT_BITSTREAM_READER_LE
+#ifdef ALT_BITSTREAM_READER_LE
         int ret= get_bits(s, 16);
         return ret | (get_bits(s, n-16) << 16);
-    #else
+#else
         int ret= get_bits(s, 16) << (n-16);
         return ret | get_bits(s, n-16);
-    #endif
+#endif
     }
 }
 
@@ -761,8 +757,8 @@ static inline unsigned int show_bits_long(GetBitContext *s, int n){
 static inline int check_marker(GetBitContext *s, const char *msg)
 {
     int bit= get_bits1(s);
-//    if(!bit)
-//        av_log(NULL, AV_LOG_INFO, "Marker bit missing %s\n", msg);
+    if(!bit)
+        av_log(NULL, AV_LOG_INFO, "Marker bit missing %s\n", msg);
 
     return bit;
 }
@@ -860,7 +856,7 @@ void free_vlc(VLC *vlc);
     if(max_depth > 1 && n < 0){\
         SKIP_BITS(name, gb, bits)\
         if(need_update){\
-        UPDATE_CACHE(name, gb)\
+            UPDATE_CACHE(name, gb)\
         }\
 \
         nb_bits = -n;\
@@ -943,13 +939,13 @@ static inline int get_xbits_trace(GetBitContext *s, int n, char *file, const cha
 #define get_vlc(s, vlc)            get_vlc_trace(s, (vlc)->table, (vlc)->bits, 3, __FILE__, __PRETTY_FUNCTION__, __LINE__)
 #define get_vlc2(s, tab, bits, max) get_vlc_trace(s, tab, bits, max, __FILE__, __PRETTY_FUNCTION__, __LINE__)
 
-#define tprintf(...) av_log(NULL, AV_LOG_DEBUG, __VA_ARGS__)
+#define tprintf(p, ...) av_log(p, AV_LOG_DEBUG, __VA_ARGS__)
 
 #else //TRACE
  #ifdef __GNUC__
-  #define tprintf(...) {}
+  #define tprintf(p, ...) {}
  #else
-  #define tprintf(x) {}
+  #define tprintf(p) {}
  #endif
 #endif
 

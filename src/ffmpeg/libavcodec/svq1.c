@@ -894,7 +894,8 @@ AVCodec svq1_decoder = {
     svq1_decode_end,
     svq1_decode_frame,
     CODEC_CAP_DR1,
-    NULL,
-	 ff_mpeg_flush,
-    //.pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV410P, -1},
+	ff_mpeg_flush,
+#if __STDC_VERSION >= 199901L	 
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV410P, -1},
+#endif
 };

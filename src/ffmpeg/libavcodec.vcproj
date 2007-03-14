@@ -195,9 +195,6 @@
 				RelativePath=".\libavcodec\bitstream.c">
 			</File>
 			<File
-				RelativePath=".\libavcodec\bitstream_filter.c">
-			</File>
-			<File
 				RelativePath=".\libavcodec\cabac.c">
 			</File>
 			<File
@@ -280,9 +277,6 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\h264dsp.c">
-			</File>
-			<File
-				RelativePath=".\libavcodec\h264enc.c">
 			</File>
 			<File
 				RelativePath=".\libavcodec\h264idct.c">
@@ -444,9 +438,6 @@
 				RelativePath=".\libavcodec\ratecontrol.c">
 			</File>
 			<File
-				RelativePath=".\libavcodec\raw.c">
-			</File>
-			<File
 				RelativePath=".\libavcodec\rpza.c">
 			</File>
 			<File
@@ -553,6 +544,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\w32thread.c">
+			</File>
+			<File
+				RelativePath="libavcodec\wma.c">
 			</File>
 			<File
 				RelativePath="libavcodec\wmadec.c">
@@ -749,6 +743,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\vp6data.h">
+			</File>
+			<File
+				RelativePath=".\libavcodec\wma.h">
 			</File>
 			<File
 				RelativePath=".\libavcodec\wmadata.h">

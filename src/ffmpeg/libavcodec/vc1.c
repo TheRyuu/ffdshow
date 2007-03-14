@@ -1313,7 +1313,7 @@ static int decode_sequence_header_adv(VC1Context *v, GetBitContext *gb)
         }else if(ar == 15){
             w = get_bits(gb, 8);
             h = get_bits(gb, 8);
-            v->s.avctx->sample_aspect_ratio = (AVRational){w, h};
+            v->s.avctx->sample_aspect_ratio.num = w; v->s.avctx->sample_aspect_ratio.den = h;
         }
 
         if(get_bits1(gb)){ //framerate stuff
