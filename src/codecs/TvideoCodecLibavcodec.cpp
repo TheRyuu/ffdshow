@@ -308,7 +308,7 @@ HRESULT TvideoCodecLibavcodec::flushDec(void)
 }
 HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen0,IMediaSample *pIn)
 {
- if (codecId==CODEC_ID_H264) // libavcodec can crash or loop infinitely when first frame after seeking is not keyframe
+ if (codecId==CODEC_ID_H264 || codecId==CODEC_ID_FFV1) // libavcodec can crash or loop infinitely when first frame after seeking is not keyframe
   if (!wasKey)
    if (pIn && pIn->IsSyncPoint()==S_OK)
     wasKey=true;
