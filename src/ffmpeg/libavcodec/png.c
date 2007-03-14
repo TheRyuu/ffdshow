@@ -412,7 +412,7 @@ static void png_handle_row(PNGContext *s)
                 got_line = 1;
             }
             if ((png_pass_dsp_ymask[s->pass] << (s->y & 7)) & 0x80) {
-                /* NOTE: rgb32 is handled directly in png_put_interlaced_row */
+                /* NOTE: RGB32 is handled directly in png_put_interlaced_row */
                 png_put_interlaced_row(ptr, s->width, s->bits_per_pixel, s->pass,
                                        s->color_type, s->last_row);
             }
@@ -941,5 +941,8 @@ AVCodec png_encoder = {
     common_init,
     encode_frame,
     NULL, //encode_end,
+#if __STDC_VERSION >= 199901L
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_RGB24, PIX_FMT_RGB32, PIX_FMT_PAL8, PIX_FMT_GRAY8, PIX_FMT_MONOBLACK, -1},
+#endif
 };
 #endif

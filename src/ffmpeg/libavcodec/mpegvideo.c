@@ -6857,7 +6857,7 @@ AVCodec mpeg4_encoder = {
     MPV_encode_init,
     MPV_encode_picture,
     MPV_encode_end,
-    /*.decode*/NULL,
+    /*.decode=*/NULL,
     /*.capabilities=*/ CODEC_CAP_DELAY,
 };
 
