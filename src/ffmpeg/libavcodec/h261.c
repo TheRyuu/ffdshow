@@ -3,18 +3,20 @@
  * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
  * Copyright (c) 2004 Maarten Daniels
  *
- * This library is free software; you can redistribute it and/or
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
@@ -55,6 +57,8 @@ typedef struct H261Context{
     int gob_number;
     int gob_start_code_skipped; // 1 if gob start code is already read before gob header is read
 }H261Context;
+
+static uint8_t static_rl_table_store[2][2*MAX_RUN + MAX_LEVEL + 3];
 
 void ff_h261_loop_filter(MpegEncContext *s){
     H261Context * h= (H261Context*)s;
@@ -264,6 +268,7 @@ void ff_h261_encode_mb(MpegEncContext * s,
     h->previous_mba = h->current_mba;
 
     if(HAS_CBP(h->mtype)){
+        assert(cbp>0);
         put_bits(&s->pb,h261_cbp_tab[cbp-1][1],h261_cbp_tab[cbp-1][0]);
     }
     for(i=0; i<6; i++) {
@@ -282,7 +287,7 @@ void ff_h261_encode_init(MpegEncContext *s){
 
     if (!done) {
         done = 1;
-        init_rl(&h261_rl_tcoeff, 1);
+        init_rl(&h261_rl_tcoeff, static_rl_table_store);
     }
 
     s->min_qcoeff= -127;
@@ -389,7 +394,7 @@ static void h261_decode_init_vlc(H261Context *h){
         init_vlc(&h261_cbp_vlc, H261_CBP_VLC_BITS, 63,
                  &h261_cbp_tab[0][1], 2, 1,
                  &h261_cbp_tab[0][0], 2, 1, 1);
-        init_rl(&h261_rl_tcoeff, 1);
+        init_rl(&h261_rl_tcoeff, static_rl_table_store);
         init_vlc_rl(&h261_rl_tcoeff, 1);
     }
 }
@@ -778,7 +783,14 @@ static int h261_decode_picture_header(H261Context *h){
     }
 
     /* temporal reference */
-    s->picture_number = get_bits(&s->gb, 5); /* picture timestamp */
+    i= get_bits(&s->gb, 5); /* picture timestamp */
+    if(i < (s->picture_number&31))
+        i += 32;
+    s->picture_number = (s->picture_number&~31) + i;
+
+    s->avctx->time_base.num = 1001; s->avctx->time_base.den = 30000;
+    s->current_picture.pts= s->picture_number;
+
 
     /* PTYPE starts here */
     skip_bits1(&s->gb); /* split screen off */
@@ -844,51 +856,16 @@ static int h261_decode_gob(H261Context *h){
     return -1;
 }
 
-static int h261_find_frame_end(ParseContext *pc, AVCodecContext* avctx, const uint8_t *buf, int buf_size){
-    int vop_found, i, j;
-    uint32_t state;
-
-    vop_found= pc->frame_start_found;
-    state= pc->state;
-
-    for(i=0; i<buf_size && !vop_found; i++){
-            state= (state<<8) | buf[i];
-            for(j=0; j<8; j++){
-            if(((state>>j)&0xFFFFF) == 0x00010){
-                    i++;
-                    vop_found=1;
-                    break;
-                }
-            }
-    }
-    if(vop_found){
-        for(; i<buf_size; i++){
-                state= (state<<8) | buf[i];
-            for(j=0; j<8; j++){
-                if(((state>>j)&0xFFFFF) == 0x00010){
-                    pc->frame_start_found=0;
-                    pc->state= state>>(2*8);
-                    return i-1;
-                }
-            }
-        }
-    }
-
-    pc->frame_start_found= vop_found;
-    pc->state= state;
-    return END_NOT_FOUND;
-}
-
 /**
  * returns the number of bytes consumed for building the current frame
  */
 static int get_consumed_bytes(MpegEncContext *s, int buf_size){
-        int pos= get_bits_count(&s->gb)>>3;
-        if(pos==0) pos=1; //avoid infinite loops (i doubt thats needed but ...)
-        if(pos+10>buf_size) pos=buf_size; // oops ;)
+    int pos= get_bits_count(&s->gb)>>3;
+    if(pos==0) pos=1; //avoid infinite loops (i doubt thats needed but ...)
+    if(pos+10>buf_size) pos=buf_size; // oops ;)
 
-        return pos;
-    }
+    return pos;
+}
 
 static int h261_decode_frame(AVCodecContext *avctx,
                              void *data, int *data_size,
@@ -977,10 +954,6 @@ assert(s->current_picture.pict_type == s->pict_type);
     ff_print_debug_info(s, pict);
 #endif
 
-    /* Return the Picture timestamp as the frame number */
-    /* we substract 1 because it is added on utils.c    */
-    avctx->frame_number = s->picture_number - 1;
-
     *data_size = sizeof(AVFrame);
 
     return get_consumed_bytes(s, buf_size);
@@ -1003,9 +976,9 @@ AVCodec h261_encoder = {
     sizeof(H261Context),
     MPV_encode_init,
     MPV_encode_picture,
-    MPV_encode_end
+    MPV_encode_end,
 #if __STDC_VERSION >= 199901L
-    ,.pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
 #endif
 };
 #endif

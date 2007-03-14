@@ -107,6 +107,8 @@ static uint8_t mpeg1_index_run[2][64];
 static int8_t mpeg1_max_level[2][64];
 #endif //CONFIG_ENCODERS
 
+static uint8_t static_rl_table_store[2][2][2*MAX_RUN + MAX_LEVEL + 3];
+
 static void init_2d_vlc_rl(RLTable *rl, int use_static)
 {
     int i;
@@ -824,9 +826,8 @@ void ff_mpeg1_encode_init(MpegEncContext *s)
         int i;
 
         done=1;
-        init_rl(&rl_mpeg1, 1);
-        if(s->intra_vlc_format)
-            init_rl(&rl_mpeg2, 1);
+        init_rl(&rl_mpeg1, static_rl_table_store[0]);
+        init_rl(&rl_mpeg2, static_rl_table_store[1]);
 
         for(i=0; i<64; i++)
         {
@@ -1074,8 +1075,8 @@ static void init_vlcs(void)
         init_vlc(&mb_btype_vlc, MB_BTYPE_VLC_BITS, 11,
                  &table_mb_btype[0][1], 2, 1,
                  &table_mb_btype[0][0], 2, 1, 1);
-        init_rl(&rl_mpeg1, 1);
-        init_rl(&rl_mpeg2, 1);
+        init_rl(&rl_mpeg1, static_rl_table_store[0]);
+        init_rl(&rl_mpeg2, static_rl_table_store[1]);
 
         init_2d_vlc_rl(&rl_mpeg1, 1);
         init_2d_vlc_rl(&rl_mpeg2, 1);

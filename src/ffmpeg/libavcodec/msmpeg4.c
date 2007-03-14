@@ -3,18 +3,20 @@
  * Copyright (c) 2001 Fabrice Bellard.
  * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
  *
- * This library is free software; you can redistribute it and/or
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  * msmpeg4v1 & v2 stuff by Michael Niedermayer <michaelni@gmx.at>
@@ -89,6 +91,8 @@ int frame_count = 0;
 static uint8_t rl_length[NB_RL_TABLES][MAX_LEVEL+1][MAX_RUN+1][2];
 #endif //CONFIG_ENCODERS
 
+static uint8_t static_rl_table_store[NB_RL_TABLES][2][2*MAX_RUN + MAX_LEVEL + 3];
+
 static void common_init(MpegEncContext * s)
 {
     static int inited=0;
@@ -113,12 +117,10 @@ static void common_init(MpegEncContext * s)
         s->y_dc_scale_table= wmv1_y_dc_scale_table;
         s->c_dc_scale_table= wmv1_c_dc_scale_table;
         break;
-//#if defined(CONFIG_WMV3_DECODER)||defined(CONFIG_VC1_DECODER)
     case 6:
         s->y_dc_scale_table= wmv3_dc_scale_table;
         s->c_dc_scale_table= wmv3_dc_scale_table;
         break;
-//#endif
 
     }
 
@@ -184,7 +186,7 @@ void ff_msmpeg4_encode_init(MpegEncContext *s)
         init_mv_table(&mv_tables[0]);
         init_mv_table(&mv_tables[1]);
         for(i=0;i<NB_RL_TABLES;i++)
-            init_rl(&rl_table[i], 1);
+            init_rl(&rl_table[i], static_rl_table_store[i]);
 
         for(i=0; i<NB_RL_TABLES; i++){
             int level;
@@ -416,6 +418,7 @@ static inline int coded_block_pred(MpegEncContext * s, int n, uint8_t **coded_bl
 }
 
 #ifdef CONFIG_ENCODERS
+
 static void msmpeg4_encode_motion(MpegEncContext * s,
                                   int mx, int my)
 {
@@ -1048,7 +1051,7 @@ int ff_msmpeg4_decode_init(MpegEncContext *s)
         done = 1;
 
         for(i=0;i<NB_RL_TABLES;i++) {
-            init_rl(&rl_table[i], 1);
+            init_rl(&rl_table[i], static_rl_table_store[i]);
             init_vlc_rl(&rl_table[i], 1);
         }
         for(i=0;i<2;i++) {

@@ -21,10 +21,10 @@
 #include "common.h"
 #include "crc.h"
 
-AVCRC *av_crcEDB88320;
-AVCRC *av_crc04C11DB7;
-AVCRC *av_crc8005    ;
-AVCRC *av_crc07      ;
+AVCRC av_crcEDB88320[257];
+AVCRC av_crc04C11DB7[257];
+AVCRC av_crc8005    [257];
+AVCRC av_crc07      [257];
 
 /**
  * Inits a crc table.

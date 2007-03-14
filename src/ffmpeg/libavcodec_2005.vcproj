@@ -1142,6 +1142,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\rl.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\rtjpeg.h"
 				>
 			</File>
