@@ -36,6 +36,10 @@
 #  define LEGACY_REGS "=q"
 #endif
 
+#ifndef av_always_inline
+#define av_always_inline always_inline
+#endif
+
 #if defined(ARCH_X86)
 static av_always_inline uint16_t bswap_16(uint16_t x)
 {
