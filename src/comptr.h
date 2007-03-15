@@ -83,5 +83,7 @@ template<> inline const GUID& getGUID<IMediaControl>(void) {return IID_IMediaCon
 template<> inline const GUID& getGUID<IMediaSeeking>(void) {return IID_IMediaSeeking;}
 template<> inline const GUID& getGUID<IMediaSample2>(void) {return IID_IMediaSample2;}
 template<> inline const GUID& getGUID<ISpecifyPropertyPages>(void) {return IID_ISpecifyPropertyPages;}
+template<> inline const GUID& getGUID<IMixerPinConfig>(void) {return IID_IMixerPinConfig;}
+template<> inline const GUID& getGUID<IMediaEventSink>(void) {return IID_IMediaEventSink;}
 
 #endif

@@ -99,7 +99,8 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  isQueue(-1),
  m_IsYV12andVMR9(false),
  m_IsQueueListedApp(-1),
- reconnectFirstError(true)
+ reconnectFirstError(true),
+ m_NeedToAttachFormat(false)
 {
  DPRINTF(_l("TffdshowDecVideo::Constructor"));
 #ifdef OSDTIMETABALE
@@ -949,6 +950,26 @@ if (!outdv && hwDeinterlace)
     return hr;
   }
 
+ if (m_NeedToAttachFormat) // code imported from DScaler. Copyright (c) 2004 John Adcock
+  {
+   m_NeedToAttachFormat = false;
+   AM_MEDIA_TYPE omt = m_pOutput->CurrentMediaType();
+   if (omt.formattype==FORMAT_VideoInfo2)
+    {
+     VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)omt.pbFormat;
+     BITMAPINFOHEADER *bmi=&vih->bmiHeader;
+     vih->dwPictAspectRatioX = pict.rectFull.sar.num;
+     vih->dwPictAspectRatioY = pict.rectFull.sar.den;
+     SetRect(&vih->rcTarget, 0, 0, 0, 0);
+     bmi->biXPelsPerMeter = pict.rectFull.dx * vih->dwPictAspectRatioX;
+     bmi->biYPelsPerMeter = pict.rectFull.dy * vih->dwPictAspectRatioY;
+     pOut->SetMediaType(&omt);
+     comptrQ<IMediaEventSink> pMES=graph;
+     if (pMES)
+      pMES->Notify(EC_VIDEO_SIZE_CHANGED, MAKELPARAM(pict.rectFull.dx, pict.rectFull.dy), 0);
+    }
+  }
+
  int sync=(pict.frametype&FRAME_TYPE::typemask)==FRAME_TYPE::I?TRUE:FALSE;
  pOut->SetSyncPoint(sync);
  if (outOverlayMixer)
@@ -1207,6 +1228,12 @@ STDMETHODIMP TffdshowDecVideo::FindPin(LPCWSTR Id,IPin **ppPin)
 HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
 {
  HRESULT hr=S_OK;
+ if (newpict.rectFull==oldRect && newpict.rectFull.sar!=oldRect.sar)
+  {
+   m_NeedToAttachFormat = true;
+   oldRect=newpict.rectFull;
+   return S_OK;
+  }
  if (newpict.rectFull!=oldRect || newpict.rectFull.sar!=oldRect.sar)
   {
    DPRINTF(_l("TffdshowDecVideo::reconnectOutput"));
@@ -1267,7 +1294,8 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
      iVmrSC9->GetStreamActiveState(&isVMR9Active);
      iVmrSC9->Release();
     }
-   if (downstreamID!=OVERLAY_MIXER)
+   bool overlayYUY2=downstreamID==OVERLAY_MIXER && m_frame.dstColorspace==FF_CSP_YUY2;
+   if (!overlayYUY2)
     {
      hr= m_pOutput->GetConnected()->QueryAccept(&mt);
      if (SUCCEEDED(hr))
@@ -1281,7 +1309,7 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
     }
 
    int isDynamicTried=false;
-   if (downstreamID==OVERLAY_MIXER || (FAILED(hr) && isQueue))  // try dynamic reconnect to re-negotiate cBuffers.
+   if (overlayYUY2 || (FAILED(hr) && isQueue))  // try dynamic reconnect to re-negotiate cBuffers.
     {
      DPRINTF(_l("try dynamic reconnect."));
      if (ipinConnection && igraphConfig)
@@ -1335,6 +1363,13 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
     }
 
 #if 0
+   comptrQ<IMixerPinConfig> imixer=m_pOutput->GetConnected();
+   AM_ASPECT_RATIO_MODE arMode;
+   if (imixer)
+    {
+     HRESULT hr1=imixer->GetAspectRatioMode(&arMode);
+    }
+
    if (downstreamID==OVERLAY_MIXER)
     {
      IBasicVideo2 *ibv=NULL;

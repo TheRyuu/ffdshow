@@ -504,6 +504,7 @@ private:
  bool m_IsOldVMR9RenderlessAndRGB;
  bool m_IsYV12andVMR9;
  bool reconnectFirstError;
+ bool m_NeedToAttachFormat;
  HANDLE hReconnectEvent;
  ALLOCATOR_PROPERTIES ppropActual;
 
