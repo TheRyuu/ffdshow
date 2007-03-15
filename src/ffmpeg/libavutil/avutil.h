@@ -26,6 +26,7 @@
  * external api header.
  */
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -39,11 +40,9 @@ extern "C" {
 
 #define LIBAVUTIL_IDENT         "Lavu" AV_STRINGIFY(LIBAVUTIL_VERSION)
 
+
 #include "common.h"
-#include "mathematics.h"
 #include "rational.h"
-#include "integer.h"
-#include "intfloat_readwrite.h"
 #include "log.h"
 
 /**

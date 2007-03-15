@@ -120,10 +120,6 @@ SRCS_C=DllEntry.c \
       $(LAVF_DIR)/cutils.c \
 	\
       $(LAVU_DIR)/crc.c \
-      $(LAVU_DIR)/fifo.c \
-      $(LAVU_DIR)/integer.c \
-      $(LAVU_DIR)/intfloat_readwrite.c \
-      $(LAVU_DIR)/lls.c \
       $(LAVU_DIR)/log.c \
       $(LAVU_DIR)/lzo.c \
       $(LAVU_DIR)/mathematics.c \
@@ -194,7 +190,7 @@ include ../makefile_c.inc
 .all: $(SLIB)
 
 clean: 
-	rm -f *.o $(LAVC_DIR)/*.o *~ $(SLIB) $(LAVC_DIR)/i386/*.o $(LAVC_DIR)/i386/*~ $(LAVC_DIR)/liba52/*.o $(LAVC_DIR)/amr_float/*.o $(LAVF_DIR)/*.o $(ZLIB_DIR)/*.o $(PNG_DIR)/*.o $(LAVU_DIR)/*.o
+	rm -f -r *.o *.d *~ $(SLIB) $(ZLIB_DIR)/*.o $(PNG_DIR)/*.o
 
 #
 # include dependency files if they exist

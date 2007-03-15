@@ -28,7 +28,6 @@
 #include "avcodec.h"
 #include "dsputil.h"
 #include "mpegvideo.h"
-#include "integer.h"
 #include "crc.h"
 #include <stdarg.h>
 #include <limits.h>

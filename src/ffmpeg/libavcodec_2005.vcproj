@@ -1366,32 +1366,6 @@
 			Name="libavutil"
 			>
 			<File
-				RelativePath=".\libavutil\adler32.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\libavutil\adler32.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libavutil\avutil.h"
 				>
 			</File>
@@ -1412,59 +1386,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavutil\fifo.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavutil\fifo.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavutil\integer.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavutil\integer.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libavutil\internal.h"
 				>
 			</File>
 			<File
-				RelativePath=".\libavutil\intfloat_readwrite.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\libavutil\intfloat_readwrite.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libavutil\intreadwrite.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavutil\lls.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavutil\lls.h"
 				>
 			</File>
 			<File
@@ -1485,18 +1411,6 @@
 			</File>
 			<File
 				RelativePath=".\libavutil\mathematics.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavutil\mathematics.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavutil\md5.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavutil\md5.h"
 				>
 			</File>
 			<File

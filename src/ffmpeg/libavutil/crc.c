@@ -81,24 +81,3 @@ uint32_t av_crc(const AVCRC *ctx, uint32_t crc, const uint8_t *buffer, size_t le
 
     return crc;
 }
-
-#ifdef TEST
-#undef printf
-main(){
-    uint8_t buf[1999];
-    int i;
-    int p[4][4]={{1, 32, 0xedb88320L, 0x3D5CDD04},
-                 {0, 32, 0x04c11db7L, 0xC0F5BAE0},
-                 {0, 16, 0x8005     , 0x1FBB    },
-                 {0,  8, 0x07       , 0xE3      },};
-    AVCRC ctx[1 ? 1024:257];
-
-    for(i=0; i<sizeof(buf); i++)
-        buf[i]= i+i*i;
-
-    for(i=0; i<4; i++){
-        av_crc_init(ctx, p[i][0], p[i][1], p[i][2], sizeof(ctx));
-        printf("crc %08X =%X\n", p[i][2], av_crc(ctx, 0, buf, sizeof(buf)));
-    }
-}
-#endif

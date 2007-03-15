@@ -30,7 +30,6 @@
 #include <limits.h>
 
 #include "common.h"
-#include "mathematics.h"
 #include "rational.h"
 
 int av_reduce(int *dst_nom, int *dst_den, int64_t nom, int64_t den, int64_t max){
@@ -83,16 +82,6 @@ AVRational av_mul_q(AVRational b, AVRational c){
 AVRational av_div_q(AVRational b, AVRational c){
     AVRational d = {c.den, c.num};
     return av_mul_q(b, d);
-}
-
-AVRational av_add_q(AVRational b, AVRational c){
-    av_reduce(&b.num, &b.den, b.num * (int64_t)c.den + c.num * (int64_t)b.den, b.den * (int64_t)c.den, INT_MAX);
-    return b;
-}
-
-AVRational av_sub_q(AVRational b, AVRational c){
-    AVRational d = {-c.num, c.den};
-    return av_add_q(b, d);
 }
 
 AVRational av_d2q(double d, int max){

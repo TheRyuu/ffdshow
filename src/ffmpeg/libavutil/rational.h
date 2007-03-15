@@ -88,22 +88,6 @@ AVRational av_mul_q(AVRational b, AVRational c);
 AVRational av_div_q(AVRational b, AVRational c);
 
 /**
- * Adds two rationals.
- * @param b first rational.
- * @param c second rational.
- * @return b+c.
- */
-AVRational av_add_q(AVRational b, AVRational c);
-
-/**
- * Subtracts one rational from another.
- * @param b first rational.
- * @param c second rational.
- * returns b-c.
- */
-AVRational av_sub_q(AVRational b, AVRational c);
-
-/**
  * Converts a double precision floating point number to a rational.
  * @param d double to convert
  * @param max the maximum allowed numerator and denominator
