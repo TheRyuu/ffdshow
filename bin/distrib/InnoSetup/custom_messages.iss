@@ -255,6 +255,17 @@ ru.spk_dolby1=Dolby Surround/ProLogic
 ru.spk_dolby2=Dolby ProLogic II
 ru.spk_sameasinput=совпадает со входом
 ru.spk_HRTF=Head-related transfer function (HRTF)
+ru.spk_ExpandStereo=расширенное стерео
+ru.spk_VoiceControl=контроль средних
+ru.comp_SetupLabelV1=Управление совместимостью (Видео)
+ru.comp_SetupLabelV2=Так как некоторые игры падают или зависают при установленном ffdshow,%nмы рекомендуем включить "Использовать ffdshow только с".
+ru.comp_SetupLabelV3=Список выполняемых файлов, которые совместимы с видеодекодером ffdshow, по одному на строку.
+ru.comp_SetupLabelA1=Управление совместимостью (Звук)
+ru.comp_SetupLabelA2=Теперь настройка совместимости аудиодекодера. Вы можете изменить%nнастройки после установки, используя меню "Информация".
+ru.comp_SetupLabelA3=Список выполняемых файлов, которые совместимы с аудиодекодером ffdshow, по одному на строку.
+ru.comp_donotlimit=Без ограничений.
+ru.comp_useonlyin=Использовать ffdshow только со следующими программами:
+ru.dontaskmeagain=Больше не спрашивать.
 
 ; Polish
 pl.langid=1045
