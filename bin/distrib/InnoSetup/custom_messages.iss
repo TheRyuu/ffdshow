@@ -27,8 +27,8 @@ ru.FinishedRestartLabel=Äëÿ çàâåðøåíèÿ óñòàíîâêè [name] òðåáóåòñÿ ïåðåçàãðóçèòü 
 pl.WelcomeLabel2=Instalator zainstaluje [name] na twoim komputerze.%n%nZaleca siê zamkniêcie wszystkich innych aplikacji przed kontynuowaniem procesu instalacji.
 pl.FileAbortRetryIgnore=Zamknij aplikacjê u¿ywaj¹c¹ ffdshow i wciœnij Ponów. Jeœli problem nie ustêpuje, wciœnij Przerwij, zrestartuj komputer i ponownie uruchom instalacjê.
 pl.FinishedRestartLabel=By zakoñczyæ instalacjê [name], instalator musi zrestartowaæ twój komputer. Czy chcia³byœ zrestartowaæ go teraz?%n%nPodpowiedŸ: By unikn¹æ restartowania komputera nastêpnym razem, zaznacz w zak³adce "Informacje" - "Nie u¿ywaj ffdshow w:" - "explorer.exe" w konfiguracji dekodera wideo.
-; Add other languages here
 
+; Add other languages here
 #endif
 
 [CustomMessages]
@@ -80,13 +80,13 @@ en.spk_HRTF=Head-related transfer function (HRTF)
 en.spk_ExpandStereo=Expand stereo (surround)
 en.spk_VoiceControl=Voice control (volume)
 en.comp_SetupLabelV1=Management of compatibility issues (VIDEO)
-en.comp_SetupLabelV2=Because a few games crash or freeze with ffdshow installed,%nwe recommend you to select "Use ffdshow only in".
+en.comp_SetupLabelV2=Because a few games crash or freeze with ffdshow installed,%nwe recommend you to select 'Use ffdshow only in'.
 en.comp_SetupLabelV3=List the name of executable file which is compatible with ffdshow video deocoder, one for each line.
 en.comp_SetupLabelA1=Management of compatibility issues (AUDIO)
-en.comp_SetupLabelA2=This time, AUDIO decoder configuration. Please configure as well.%nYou can change it using "Info & debug" settings after installation.
+en.comp_SetupLabelA2=This time, AUDIO decoder configuration. Please configure as well.%nYou can change it using 'Info & debug' settings after installation.
 en.comp_SetupLabelA3=List the name of executable file which is compatible with ffdshow audio deocoder, one for each line.
 en.comp_donotlimit=Do not limit.
-en.comp_useonlyin=Use ffdshow only in the following applications.
+en.comp_useonlyin=Use ffdshow only in the following applications:
 en.dontaskmeagain=Don't ask me again.
 
 #if localize
@@ -172,7 +172,7 @@ de.SelectPluginDirLabel2=Wohin soll das %1plugin installiert werden?
 de.SelectPluginDirLabel3=Bitte wählen Sie den Ordner, in den das %1plugin insalliert werden soll. Klicken sie anschließend auf "Weiter".
 
 de.speakersetup=Lautsprechteraufbau
-de.SpeakerSetupLabel2=Wählen sie unten den Lautsprecheraufbau, der am ehesten Ihrer Konfiguration entspricht. Diese Einstellung kann nach der Installation unter "Mixer" geändert werden.
+de.SpeakerSetupLabel2=Wählen sie unten den Lautsprecheraufbau, der am ehesten Ihrer Konfiguration entspricht. Es kann nach der Installation unter "Mixer" wieder geändert werden.
 de.SpeakerSetupLabel3=Lautsprechteraufbau:
 de.spk_headphone=Kopfhöhrer
 de.spk_mono=Mono
@@ -187,7 +187,18 @@ de.spk_Subwoofer=Subwoofer
 de.spk_dolby1=Dolby Surround/ProLogic
 de.spk_dolby2=Dolby ProLogic II
 de.spk_sameasinput=identisch mit Eingangskanälen
-de.spk_HRTF=Head-related transfer function(HRTF)
+de.spk_HRTF=Kopfbezogene Übertragungsfunktion(HRTF)
+de.spk_ExpandStereo=Stereo erweitern (Surround)
+de.spk_VoiceControl=Sprachsteuerung (Lautstärke)
+de.comp_SetupLabelV1=Verwaltung von Kompatibilitätsproblemen (VIDEO)
+de.comp_SetupLabelV2=Da einige wenige Spiele abstürzen, wenn ffdshow installiert ist, wird empfohlen "ffdshow nur in folgenden Anwendungen verwenden" auszuwählen.
+de.comp_SetupLabelV3=Listen Sie den Namen der ausführbaren Datei, die kompatibel mit ffdshow-Videodekoder ist - eine pro Zeile.
+de.comp_SetupLabelA1=Verwaltung von Kompatibilitätsproblemen (AUDIO)
+de.comp_SetupLabelA2=Dieses Mal AUDIO-Dekoderkonfiguration. Bitte konfigurieren Sie auch diese.%nSie können es nach der Installation unter "Info & Fehlerbehebung" wider ändern.
+de.comp_SetupLabelA3=Listen Sie den Namen der ausführbaren Datei, die kompatibel mit ffdshow-Audiodekoder ist - eine pro Zeile.
+de.comp_donotlimit=Nicht begrenzen.
+de.comp_useonlyin=ffdshow nur in folgenden Anwendungen verwenden:
+de.dontaskmeagain=Nicht wieder fragen.
 
 ; French
 fr.langid=1036
@@ -221,6 +232,7 @@ fr.speakersetup=Configuration des haut-parleurs :
 fr.SpeakerSetupLabel2=Sélectionner parmis les options la configuration qui correspond le plus à celle de vos Hauts-parleurs. Vous pouvez la changer ultérieurement à partir du "Mixer".
 fr.SpeakerSetupLabel3=Configuration des Hauts-parleurs:
 fr.spk_headphone=Casque
+fr.spk_mono=Mono
 fr.spk_stereo=Stereo
 fr.spk_quadro=Quadro
 fr.spk_5ch=3 canaux avant + 2 canaux arrière
@@ -229,7 +241,6 @@ fr.spk_front_3ch=3 canaux avant
 fr.spk_front_2ch=2 canaux avant
 fr.spk_Surround=Surround
 fr.spk_Subwoofer=Subwoofer
-fr.spk_mono=Mono
 fr.spk_dolby1=Dolby Surround/ProLogic
 fr.spk_dolby2=Dolby ProLogic II
 fr.spk_sameasinput=Pareil à l'entrée
@@ -243,7 +254,7 @@ fr.comp_SetupLabelA1=Administration des problemes de compatibilité (AUDIO)
 fr.comp_SetupLabelA2=Maintenant, la configuration du décodeur AUDIO . SVP configurer le également.%nVous pouvez changer les paramêtres ultérieurement depuis "Info & debug" dans la configuration.
 fr.comp_SetupLabelA3=Lister le nom d'exécutables qui sont compatibles avec le décodeur audio ffdshow, un pour chaque ligne.
 fr.comp_donotlimit=Ne pas limiter.
-fr.comp_useonlyin=Utiliser ffdshow seulement dans ces appliquations.
+fr.comp_useonlyin=Utiliser ffdshow seulement dans ces appliquations :
 fr.dontaskmeagain=Ne plus me demander.
 
 ; Russian
@@ -350,8 +361,8 @@ pl.spk_sameasinput=takie same jak na wejœciu audio
 pl.spk_HRTF=Head-related transfer function (HRTF)
 pl.spk_ExpandStereo=Rozszerz sygna³ stereo (przestrzennie)
 pl.spk_VoiceControl=Kontrola g³osu (g³oœnoœæ)
-; Add other languages here
 
+; Add other languages here
 ba.langid=1069
 br.langid=1046
 ca.langid=1027
