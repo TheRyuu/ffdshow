@@ -405,7 +405,6 @@ void avcodec_get_context_defaults(AVCodecContext *s){
     s->qmax= 31;
     s->mb_lmin= FF_QP2LAMBDA * 2;
     s->mb_lmax= FF_QP2LAMBDA * 31;
-    s->rc_eq= "tex^qComp";
     s->cqp = -1;
     s->refs = 1;
     s->directpred = 2;
@@ -421,26 +420,29 @@ void avcodec_get_context_defaults(AVCodecContext *s){
     s->error_concealment= 3;
     s->error_resilience= 1;
     s->workaround_bugs= FF_BUG_AUTODETECT;
-    s->time_base.num=0;s->time_base.den=1;// (AVRational){0,1};
     s->gop_size= 50;
     s->me_method= ME_EPZS;
+    s->rc_eq= "tex^qComp";
+    s->time_base.num=0;s->time_base.den=1;// (AVRational){0,1};
     s->get_buffer= avcodec_default_get_buffer;
     s->release_buffer= avcodec_default_release_buffer;
     s->get_format= avcodec_default_get_format;
     s->execute= avcodec_default_execute;
+    s->sample_aspect_ratio.num=0; s->sample_aspect_ratio.den=1;
+    s->pix_fmt= PIX_FMT_NONE;
+    s->sample_fmt= SAMPLE_FMT_S16; // FIXME: set to NONE
+    s->palctrl = NULL;
+    s->reget_buffer= avcodec_default_reget_buffer;
     s->thread_count=1;
     s->me_subpel_quality=8;
     s->lmin= FF_QP2LAMBDA * s->qmin;
-    s->lmax= FF_QP2LAMBDA * s->qmax;
-    s->sample_aspect_ratio.num=0; s->sample_aspect_ratio.den=1;
+    s->lmax= FF_QP2LAMBDA * s->qmax;    
     s->ildct_cmp= FF_CMP_VSAD;
     s->profile= FF_PROFILE_UNKNOWN;
     s->level= FF_LEVEL_UNKNOWN;
-    s->me_penalty_compensation= 256;
-    s->pix_fmt= PIX_FMT_NONE;
+    s->me_penalty_compensation= 256;    
     s->frame_skip_cmp= FF_CMP_DCTMAX;
-    s->nsse_weight= 8;
-    s->sample_fmt= SAMPLE_FMT_S16; // FIXME: set to NONE
+    s->nsse_weight= 8;    
     s->mv0_threshold= 256;
     s->b_sensitivity= 40;
     s->compression_level = FF_COMPRESSION_DEFAULT;
@@ -450,11 +452,8 @@ void avcodec_get_context_defaults(AVCodecContext *s){
     s->prediction_order_method = -1;
     s->min_partition_order = -1;
     s->max_partition_order = -1;
-
     s->intra_quant_bias= FF_DEFAULT_QUANT_BIAS;
-    s->inter_quant_bias= FF_DEFAULT_QUANT_BIAS;
-    s->palctrl = NULL;
-    s->reget_buffer= avcodec_default_reget_buffer;
+    s->inter_quant_bias= FF_DEFAULT_QUANT_BIAS;    
 }
 
 AVCodecContext *avcodec_alloc_context(void){

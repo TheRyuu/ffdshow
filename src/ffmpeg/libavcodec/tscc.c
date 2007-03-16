@@ -346,4 +346,3 @@ AVCodec tscc_decoder = {
         CODEC_CAP_DR1,
 };
 
-
