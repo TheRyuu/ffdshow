@@ -24,10 +24,7 @@ void TgenericHuffyuvPage::init(void)
 {
  for (int i=0;TcoSettings::huffYUVcsps[i];i++)
   cbxAdd(IDC_CBX_HUFFYUV_CSP,TcoSettings::huffYUVcsps[i]);
- if(tr)
-  {
-   addHint(IDC_CHB_HUFFYUV_CTX,tr->translate(IDH_CHB_HUFFYUV_CTX));
-  }
+ addHint(IDC_CHB_HUFFYUV_CTX,_l("Better compression, incompatible with original HuffYUV codec"));
 }
 
 bool TgenericHuffyuvPage::enabled(void)

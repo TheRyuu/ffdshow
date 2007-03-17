@@ -3075,45 +3075,16 @@ BEGIN
     IDD_CHANNELSWAP         "Swap channels"
     IDD_SUBTITLESTEXT       "Text"
     IDD_BITMAP              "Bitmap overlay"
-END
-
-STRINGTABLE 
-BEGIN
     IDS_FFDSHOWDECAUDIORAW  "ffdshow audio processor"
     IDS_FFDSHOWDEC          "ffdshow decoder"
     IDS_FFDSHOWVIDEOPROC    "ffdshow video processor"
-END
-
-STRINGTABLE 
-BEGIN
     IDD_QUEUEMSG_2          "off: old video renderer does not support queue"
     IDD_QUEUEMSG_3          "off: the application is not listed in 'Use queue only in:'"
     IDD_QUEUEMSG_4          "off: Update MPC. http://ffdshow.faireal.net/"
     IDD_QUEUEMSG_5          "off: The video renderer in use is not supported."
-    IDH_HWDEINT             "Bob for video source\nWeave for film source\nIn most cases, Weave is the same as unchecked HW deinterlacing."
-    IDH_HWOVERLAY           "indeterminate state - first try overlay, then use fallback format"
-    IDH_ALLOWOUTCHANGE      "indeterminate state - connect to any filter, allows output format changes only if connected to supported filter"
-    IDH_OUTCHANGECOMPATONLY "Filters known to support dynamic format change:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  ffdshow"
-    IDH_ED_RESIZEDY         "Enter 0 for Auto"
-    IDH_RBT_RESIZE_MODE_SIZE "Set vertical size 0 for Auto"
-    IDH_ED_NUMTHREADS       "mpeg1/2 decoder only"
-    IDH_CHB_HUFFYUV_CTX     "Better compression, incompatible with original HuffYUV codec"
-    IDH_ED_BLACKLIST        "List of applications for which ffdshow should not load, separated by semicolons"
-    IDH_CHB_ALWAYEXTENSIBLE """not needed"": no custom channel mapping"
-    IDH_CHB_ALLOWOUTSTREAM  "Useful for directly storing encoded ac3 to a file in graphedt with File Writer filter"
-    IDH_CHB_SUBTEXTPIN      "Very incomplete and experimental.\nSend me samples which don't work."
-END
-
-STRINGTABLE 
-BEGIN
     IDD_QUEUEMSG_6          "off: In Windows Media Player, queueing is not suported."
     IDD_QUEUEMSG_7          "off: Because some video driver can't work with YV12 + VMR9 + queue."
     IDD_QUEUEMSG_8          "VMR9's internal queue."
-END
-
-STRINGTABLE 
-BEGIN
-    IDH_ED_SUB_SEARCH_EXT   "ffdshow searches subtitle files in the folders which are configured in the edit box above.\nFor video.avi, ffdshow searches video.utf, video.idx, video.sub,... and use the file which is found at the first time.\nEnumerate extensions in the order you like and separate them by semicolons.\n\nutf;idx;sub;srt;smi;rt;txt;ssa;aqt;mpl;usf is the default settings."
 END
 
 #endif    // Neutral resources

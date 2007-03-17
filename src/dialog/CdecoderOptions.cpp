@@ -47,10 +47,7 @@ void TmiscPage::init(void)
   enable(islavc,workarounds[i].idc_chb);
  static const int idLavc[]={IDC_LBL_IDCT,IDC_CBX_IDCT,IDC_CHB_GRAY,IDC_LBL_BUGS,IDC_LBL_ERROR_CONCEALMENT,IDC_CBX_ERROR_CONCEALMENT,IDC_LBL_ERROR_RESILIENCE,IDC_CBX_ERROR_RESILIENCE,IDC_BT_QUANTMATRIX_EXPORT,IDC_ED_NUMTHREADS,IDC_CHB_H264_SKIP_ON_DELAY,IDC_ED_H264SKIP_ON_DELAY_TIME,0};
  enable(islavc,idLavc);
- if(tr)
-  {
-   addHint(IDC_ED_NUMTHREADS,tr->translate(IDH_ED_NUMTHREADS));
-  }
+ addHint(IDC_ED_NUMTHREADS,_l("mpeg1/2 decoder only"));
 }
 
 void TmiscPage::cfg2dlg(void)

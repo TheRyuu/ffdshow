@@ -1001,7 +1001,8 @@ INT_PTR TdlgPropsEdit::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
             {
              case 0:
               {
-               strcpy(nmdi->item.pszText,((i&1)==0)?props[i/2].first.c_str():props[i/2].second.c_str());
+               //strcpy(nmdi->item.pszText,((i&1)==0)?props[i/2].first.c_str():props[i/2].second.c_str());
+               nmdi->item.pszText=(LPTSTR)((i&1)==0?props[i/2].first.c_str():props[i/2].second.c_str());
                break;
               }
             }

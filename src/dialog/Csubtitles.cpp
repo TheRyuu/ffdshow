@@ -34,11 +34,8 @@ void TsubtitlesPage::init(void)
  tbrSetRange(IDC_TBR_SUB_STEREOSCOPICPAR,-100,100);
 
  autosubfirsttime=true;
- if(tr)
-  {
-   addHint(IDC_CHB_SUBTEXTPIN,tr->translate(IDH_CHB_SUBTEXTPIN));
-   addHint(IDC_ED_SUB_SEARCH_EXT,tr->translate(IDH_ED_SUB_SEARCH_EXT));
-  }
+ addHint(IDC_CHB_SUBTEXTPIN,_l("Very incomplete and experimental.\nSend me samples which don't work."));
+ addHint(IDC_ED_SUB_SEARCH_EXT,_l("ffdshow searches subtitle files in the folders which are configured in the edit box above.\nFor video.avi, ffdshow searches video.utf, video.idx, video.sub,... and use the file which is found at the first time.\nEnumerate extensions in the order you like and separate them by semicolons.\n\nutf;idx;sub;srt;smi;rt;txt;ssa;aqt;mpl;usf is the default settings."));
  setFont(IDC_BT_SUBTITLES_EXPAND,parent->arrowsFont);
 }
 

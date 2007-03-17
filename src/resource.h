@@ -144,18 +144,6 @@
 #define IDD_QUEUEMSG_3                  273
 #define IDD_QUEUEMSG_4                  274
 #define IDD_QUEUEMSG_5                  275
-#define IDH_HWDEINT                     276
-#define IDH_HWOVERLAY                   277
-#define IDH_ALLOWOUTCHANGE              278
-#define IDH_OUTCHANGECOMPATONLY         279
-#define IDH_ED_RESIZEDY                 280
-#define IDH_RBT_RESIZE_MODE_SIZE        281
-#define IDH_ED_NUMTHREADS               282
-#define IDH_CHB_HUFFYUV_CTX             283
-#define IDH_ED_BLACKLIST                284
-#define IDH_CHB_ALWAYEXTENSIBLE         285
-#define IDH_CHB_ALLOWOUTSTREAM          286
-#define IDH_CHB_SUBTEXTPIN              287
 #define IDD_README_VIDEO                288
 #define IDD_README_AUDIO                289
 #define IDD_README_ENC                  290
@@ -1708,7 +1696,6 @@
 #define IDC_TXT_OUT_DEINT_METHOD        1966
 #define IDC_ED_SUB_SEARCH_EXT           1967
 #define IDC_TXT_SERCH_ORDER             1968
-#define IDH_ED_SUB_SEARCH_EXT           1969
 #define IDC_CHB_COMPATIBILITYLIST       1970
 #define IDC_ED_COMPATIBILITYLIST        1971
 #define IDC_TXT_COMPATIBILITYLIST       1972

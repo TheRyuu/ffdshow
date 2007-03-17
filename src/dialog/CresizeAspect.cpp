@@ -64,11 +64,8 @@ void TresizeAspectPage::resize2dlg(void)
                            IDC_RBT_RESIZE_MODE_MULT,IDC_ED_RESIZE_MULT,
                            0};
  enable(TresizeAspectSettings::methodsProps[cfgGet(IDFF_resizeMethodLuma)].library!=TresizeAspectSettings::LIB_SAI,idSai);
- if(tr)
-  {
-   addHint(IDC_ED_RESIZEDY,tr->translate(IDH_ED_RESIZEDY));
-   addHint(IDC_RBT_RESIZE_MODE_SIZE,tr->translate(IDH_RBT_RESIZE_MODE_SIZE));
-  }
+ addHint(IDC_ED_RESIZEDY,_l("Enter 0 for Auto"));
+ addHint(IDC_RBT_RESIZE_MODE_SIZE,_l("Set vertical size 0 for Auto"));
 }
 void TresizeAspectPage::resizeIf2dlg(void)
 {

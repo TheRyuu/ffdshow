@@ -63,10 +63,7 @@ void TinfoPageDec::init(void)
  
  edLimitText(IDC_ED_BLACKLIST,MAX_COMPATIBILITYLIST_LENGTH);
  edLimitText(IDC_ED_COMPATIBILITYLIST,MAX_COMPATIBILITYLIST_LENGTH);
- if(tr)
-  {
-   addHint(IDC_ED_BLACKLIST,tr->translate(IDH_ED_BLACKLIST));
-  }
+ addHint(IDC_ED_BLACKLIST,_l("List of applications for which ffdshow should not load, separated by semicolons"));
 
  hlv=GetDlgItem(m_hwnd,IDC_LV_INFO); 
  CRect r=getChildRect(IDC_LV_INFO);
