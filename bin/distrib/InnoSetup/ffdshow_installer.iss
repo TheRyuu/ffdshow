@@ -2,10 +2,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 994
+#define tryout_revision = 1040
 #define buildyear = 2007
 #define buildmonth = '03'
-#define buildday = '04'
+#define buildday = '16'
 
 ; Build specific options
 #define unicode_required = True
@@ -1240,7 +1240,11 @@ var
 begin
                 //'revsvr64' for x64 build?
   RetExec := Exec('regsvr32', ExpandConstant('/S "{app}\ffdshow.ax"'), ExpandConstant('{app}'), SW_SHOW, ewWaitUntilTerminated, ResultCode);
-  if RetExec = False or not(ResultCode = 0) then
+  //if RetExec = False then
+  //  MsgBox('regsvr32 failed. ResultCode='+IntToStr(ResultCode),mbInformation, MB_OK);
+  //if RetExec = True then
+  //  MsgBox('regsvr32 succeded. ResultCode='+IntToStr(ResultCode),mbInformation, MB_OK);
+  if RetExec = False then
     RegisterServer(False, ExpandConstant('{app}\ffdshow.ax'), False);  // retry using inno's function. But we should not be here.
                 //(True,  Expand... fix for x64 build
 end;
