@@ -96,6 +96,7 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(avcodec_default_release_buffer,"avcodec_default_release_buffer");
  dll->loadFunction(avcodec_default_reget_buffer,"avcodec_default_reget_buffer");
  dll->loadFunction(avcodec_get_current_idct,"avcodec_get_current_idct");
+ dll->loadFunction(avcodec_get_encoder_info,"avcodec_get_encoder_info");
 
  if (!dec_only)
   {

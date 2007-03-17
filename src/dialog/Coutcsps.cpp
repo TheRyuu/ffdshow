@@ -32,13 +32,10 @@ void ToutcspsPage::init(void)
  static const int dvs[]={IDC_CHB_OUT_DV,IDC_LBL_OUT_DV_PROFILE,IDC_CBX_OUT_DV_PROFILE,0};
  enable(lavc && lavc->ok && !lavc->dec_only && (filterMode&IDFF_FILTERMODE_VFW)==0,dvs);
  if (lavc) lavc->Release();
- if(tr)
-  {
-   addHint(IDC_CHB_HWOVERLAY,_l("indeterminate state - first try overlay, then use fallback format"));
-   addHint(IDC_CHB_ALLOWOUTCHANGE,_l("indeterminate state - connect to any filter, allows output format changes only if connected to supported filter"));
-   addHint(IDC_CHB_OUTCHANGECOMPATONLY,_l("Filters known to support dynamic format change:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  ffdshow"));
-   addHint(IDC_CBX_OUT_HWDEINT_METHOD,_l("Bob for video source\nWeave for film source\nIn most cases, Weave is the same as unchecked HW deinterlacing."));
-  }
+ addHint(IDC_CHB_HWOVERLAY,_l("indeterminate state - first try overlay, then use fallback format"));
+ addHint(IDC_CHB_ALLOWOUTCHANGE,_l("indeterminate state - connect to any filter, allows output format changes only if connected to supported filter"));
+ addHint(IDC_CHB_OUTCHANGECOMPATONLY,_l("Filters known to support dynamic format change:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  ffdshow"));
+ addHint(IDC_CBX_OUT_HWDEINT_METHOD,_l("Bob for video source\nWeave for film source\nIn most cases, Weave is the same as unchecked HW deinterlacing."));
 }
 void ToutcspsPage::cfg2dlg(void)
 {

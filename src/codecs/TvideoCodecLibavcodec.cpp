@@ -499,15 +499,19 @@ const char_t* TvideoCodecLibavcodec::getName(void) const
 }
 void TvideoCodecLibavcodec::getEncoderInfo(char_t *buf,size_t buflen) const
 {
- if (avctx)
-  if (avctx->xvid_build)
-   tsnprintf(buf,buflen,_l("XviD build %i"),avctx->xvid_build);
-  else if (avctx->lavc_build)
-   tsnprintf(buf,buflen,_l("libavcodec build %i"),avctx->lavc_build);
-  else if (avctx->divx_version || avctx->divx_build)
-   tsnprintf(buf,buflen,_l("DivX version %i.%02i, build %i"),avctx->divx_version/100,avctx->divx_version%100,avctx->divx_build);
-  else
-   strncpy(buf,_l("unknown"),buflen);
+ int xvid_build,divx_version,divx_build,lavc_build;
+ if (avctx && (mpeg12_codec(codecId) || mpeg4_codec(codecId) || x264_codec(codecId) || codecId==CODEC_ID_FLV1))
+  {
+   libavcodec->avcodec_get_encoder_info(avctx,&xvid_build,&divx_version,&divx_build,&lavc_build);
+   if (xvid_build)
+    tsnprintf(buf,buflen,_l("XviD build %i"),xvid_build);
+   else if (lavc_build)
+    tsnprintf(buf,buflen,_l("libavcodec build %i"),lavc_build);
+   else if (divx_version || divx_build)
+    tsnprintf(buf,buflen,_l("DivX version %i.%02i, build %i"),divx_version/100,divx_version%100,divx_build);
+   else
+    strncpy(buf,_l("unknown"),buflen);
+  }
  else
   strncpy(buf,_l("unknown"),buflen);
  buf[buflen-1]='\0';

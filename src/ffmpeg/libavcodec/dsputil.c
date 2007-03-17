@@ -4176,7 +4176,7 @@ void dsputil_init(DSPContext* c, AVCodecContext *avctx)
     }
 }
 
-// get_current_idct by h.yamagata
+// avcodec_get_current_idct,avcodec_get_encoder_info by h.yamagata
 // It's caller's responsibility to check avctx->priv_data is MpegEncContext*.
 const char* avcodec_get_current_idct(AVCodecContext *avctx)
 {
@@ -4202,4 +4202,14 @@ const char* avcodec_get_current_idct(AVCodecContext *avctx)
 #if defined(HAVE_MMX)
     return avcodec_get_current_idct_mmx(avctx,c);
 #endif
+}
+
+// It's caller's responsibility to check avctx->priv_data is MpegEncContext*.
+void avcodec_get_encoder_info(AVCodecContext *avctx,int *xvid_build,int *divx_version,int *divx_build,int *lavc_build)
+{
+    MpegEncContext *s = avctx->priv_data;
+    *xvid_build = s->xvid_build;
+    *divx_version = s->divx_version;
+    *divx_build = s->divx_build;
+    *lavc_build = s->lavc_build;
 }
