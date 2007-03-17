@@ -718,9 +718,6 @@ typedef struct AVCodecContext {
 
     void *priv_data;
 
-    /* unused, FIXME remove*/
-    int rtp_mode;
-
     int rtp_payload_size;   /* The size of the RTP payload: the coder will  */
                             /* do it's best to deliver a chunk with size    */
                             /* below rtp_payload_size, the chunk will start */
@@ -2095,6 +2092,7 @@ PCM_CODEC(CODEC_ID_PCM_ALAW,    pcm_alaw);
 PCM_CODEC(CODEC_ID_PCM_MULAW,   pcm_mulaw);
 
 /* adpcm codecs */
+
 PCM_CODEC(CODEC_ID_ADPCM_4XM,     adpcm_4xm);
 PCM_CODEC(CODEC_ID_ADPCM_ADX,     adpcm_adx);
 PCM_CODEC(CODEC_ID_ADPCM_CT,      adpcm_ct);
@@ -2115,27 +2113,6 @@ PCM_CODEC(CODEC_ID_ADPCM_XA,      adpcm_xa);
 PCM_CODEC(CODEC_ID_ADPCM_YAMAHA,  adpcm_yamaha);
 
 #undef PCM_CODEC
-
-/* dummy raw video codec */
-extern AVCodec rawvideo_encoder;
-extern AVCodec rawvideo_decoder;
-
-/* resample.c */
-
-struct ReSampleContext;
-struct AVResampleContext;
-
-typedef struct ReSampleContext ReSampleContext;
-
-ReSampleContext *audio_resample_init(int output_channels, int input_channels,
-                                     int output_rate, int input_rate);
-int audio_resample(ReSampleContext *s, short *output, short *input, int nb_samples);
-void audio_resample_close(ReSampleContext *s);
-
-struct AVResampleContext *av_resample_init(int out_rate, int in_rate, int filter_length, int log2_phase_count, int linear, double cutoff);
-int av_resample(struct AVResampleContext *c, short *dst, short *src, int *consumed, int src_size, int dst_size, int update_ctx);
-void av_resample_compensate(struct AVResampleContext *c, int sample_delta, int compensation_distance);
-void av_resample_close(struct AVResampleContext *c);
 
 /**
  * Allocate memory for a picture.  Call avpicture_free to free it.
@@ -2395,17 +2372,49 @@ const char* avcodec_get_current_idct(AVCodecContext *avctx);
 int avcodec_open(AVCodecContext *avctx, AVCodec *codec);
 
 /**
- * Decode an audio frame.
- *
- * @param avctx the codec context.
- * @param samples output buffer, 16 byte aligned
- * @param frame_size_ptr the output buffer size in bytes, zero if no frame could be compressed
- * @param buf input buffer, 16 byte aligned
- * @param buf_size the input buffer size
- * @return 0 if successful, -1 if not.
+ * @deprecated Use avcodec_decode_audio2() instead.
  */
+attribute_deprecated int avcodec_decode_audio(AVCodecContext *avctx, int16_t *samples,
+                         int *frame_size_ptr,
+                         uint8_t *buf, int buf_size);
 
-int avcodec_decode_audio(AVCodecContext *avctx, int16_t *samples,
+/**
+ * Decodes an audio frame from \p buf into \p samples.
+ * The avcodec_decode_audio2() function decodes a frame of audio from the input
+ * buffer \p buf of size \p buf_size. To decode it, it makes use of the
+ * audiocodec which was coupled with \p avctx using avcodec_open(). The
+ * resulting decoded frame is stored in output buffer \p samples.  If no frame
+ * could be decompressed, \p frame_size_ptr is zero. Otherwise, it is the
+ * decompressed frame size in \e bytes.
+ *
+ * @warning You \e must set \p frame_size_ptr to the allocated size of the
+ * output buffer before calling avcodec_decode_audio2().
+ *
+ * @warning The input buffer must be \c FF_INPUT_BUFFER_PADDING_SIZE larger than
+ * the actual read bytes because some optimized bitstream readers read 32 or 64
+ * bits at once and could read over the end.
+ *
+ * @warning The end of the input buffer \p buf should be set to 0 to ensure that
+ * no overreading happens for damaged MPEG streams.
+ *
+ * @note You might have to align the input buffer \p buf and output buffer \p
+ * samples. The alignment requirements depend on the CPU: on some CPUs it isn't
+ * necessary at all, on others it won't work at all if not aligned and on others
+ * it will work but it will have an impact on performance. In practice, the
+ * bitstream should have 4 byte alignment at minimum and all sample data should
+ * be 16 byte aligned unless the CPU doesn't need it (AltiVec and SSE do). If
+ * the linesize is not a multiple of 16 then there's no sense in aligning the
+ * start of the buffer to 16.
+ *
+ * @param avctx The codec context.
+ * @param[out] samples The output buffer.
+ * @param[in,out] frame_size_ptr The output buffer size in bytes.
+ * @param[in] buf The input buffer.
+ * @param[in] buf_size The input buffer size in bytes.
+ * @return On error a negative value is returned, otherwise the number of bytes
+ * used or zero if no frame could be decompressed.
+ */
+int avcodec_decode_audio2(AVCodecContext *avctx, int16_t *samples,
                          int *frame_size_ptr,
                          uint8_t *buf, int buf_size);
 
@@ -2555,8 +2564,6 @@ typedef struct AVCodecParser {
 
 /* memory */
 /* FOXFIX: Not in lavc */
-void *av_malloc(unsigned int size);
-void *av_realloc(void *ptr, unsigned int size);
 void av_free(void *ptr);
 
 /**
