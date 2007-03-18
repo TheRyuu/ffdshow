@@ -821,10 +821,17 @@ static void vc1_mc_1mv(VC1Context *v, int dir)
     uvsrc_x = s->mb_x * 8 + (uvmx >> 2);
     uvsrc_y = s->mb_y * 8 + (uvmy >> 2);
 
-    src_x   = av_clip(  src_x, -16, s->mb_width  * 16);
-    src_y   = av_clip(  src_y, -16, s->mb_height * 16);
-    uvsrc_x = av_clip(uvsrc_x,  -8, s->mb_width  *  8);
-    uvsrc_y = av_clip(uvsrc_y,  -8, s->mb_height *  8);
+    if(v->profile != PROFILE_ADVANCED){
+        src_x   = av_clip(  src_x, -16, s->mb_width  * 16);
+        src_y   = av_clip(  src_y, -16, s->mb_height * 16);
+        uvsrc_x = av_clip(uvsrc_x,  -8, s->mb_width  *  8);
+        uvsrc_y = av_clip(uvsrc_y,  -8, s->mb_height *  8);
+    }else{
+        src_x   = av_clip(  src_x, -17, s->avctx->coded_width);
+        src_y   = av_clip(  src_y, -18, s->avctx->coded_height + 1);
+        uvsrc_x = av_clip(uvsrc_x,  -8, s->avctx->coded_width  >> 1);
+        uvsrc_y = av_clip(uvsrc_y,  -8, s->avctx->coded_height >> 1);
+    }
 
     srcY += src_y * s->linesize + src_x;
     srcU += uvsrc_y * s->uvlinesize + uvsrc_x;
@@ -944,8 +951,13 @@ static void vc1_mc_4mv_luma(VC1Context *v, int n)
     src_x = s->mb_x * 16 + (n&1) * 8 + (mx >> 2);
     src_y = s->mb_y * 16 + (n&2) * 4 + (my >> 2);
 
-    src_x   = av_clip(  src_x, -16, s->mb_width  * 16);
-    src_y   = av_clip(  src_y, -16, s->mb_height * 16);
+    if(v->profile != PROFILE_ADVANCED){
+        src_x   = av_clip(  src_x, -16, s->mb_width  * 16);
+        src_y   = av_clip(  src_y, -16, s->mb_height * 16);
+    }else{
+        src_x   = av_clip(  src_x, -17, s->avctx->coded_width);
+        src_y   = av_clip(  src_y, -18, s->avctx->coded_height + 1);
+    }
 
     srcY += src_y * s->linesize + src_x;
 
@@ -1056,8 +1068,11 @@ static void vc1_mc_4mv_chroma(VC1Context *v)
         for(i= t1+1; i<4; i++)if(!intra[i]) {t2 = i; break;}
         tx = (mvx[t1] + mvx[t2]) / 2;
         ty = (mvy[t1] + mvy[t2]) / 2;
-    } else
+    } else {
+        s->current_picture.motion_val[1][s->block_index[0]][0] = 0;
+        s->current_picture.motion_val[1][s->block_index[0]][1] = 0;
         return; //no need to do MC for inter blocks
+    }
 
     s->current_picture.motion_val[1][s->block_index[0]][0] = tx;
     s->current_picture.motion_val[1][s->block_index[0]][1] = ty;
@@ -1071,8 +1086,14 @@ static void vc1_mc_4mv_chroma(VC1Context *v)
     uvsrc_x = s->mb_x * 8 + (uvmx >> 2);
     uvsrc_y = s->mb_y * 8 + (uvmy >> 2);
 
-    uvsrc_x = av_clip(uvsrc_x,  -8, s->mb_width  *  8);
-    uvsrc_y = av_clip(uvsrc_y,  -8, s->mb_height *  8);
+    if(v->profile != PROFILE_ADVANCED){
+        uvsrc_x = av_clip(uvsrc_x,  -8, s->mb_width  *  8);
+        uvsrc_y = av_clip(uvsrc_y,  -8, s->mb_height *  8);
+    }else{
+        uvsrc_x = av_clip(uvsrc_x,  -8, s->avctx->coded_width  >> 1);
+        uvsrc_y = av_clip(uvsrc_y,  -8, s->avctx->coded_height >> 1);
+    }
+
     srcU = s->last_picture.data[1] + uvsrc_y * s->uvlinesize + uvsrc_x;
     srcV = s->last_picture.data[2] + uvsrc_y * s->uvlinesize + uvsrc_x;
     if(v->rangeredfrm || (v->mv_mode == MV_PMODE_INTENSITY_COMP)
@@ -1284,6 +1305,9 @@ static int decode_sequence_header_adv(VC1Context *v, GetBitContext *gb)
     v->tfcntrflag = get_bits1(gb);
     v->finterpflag = get_bits1(gb);
     get_bits1(gb); // reserved
+
+    v->s.h_edge_pos = v->s.avctx->coded_width;
+    v->s.v_edge_pos = v->s.avctx->coded_height;
 
     av_log(v->s.avctx, AV_LOG_DEBUG,
                "Advanced Profile level %i:\nfrmrtq_postproc=%i, bitrtq_postproc=%i\n"
@@ -1983,6 +2007,8 @@ static inline void vc1_pred_mv(MpegEncContext *s, int n, int dmv_x, int dmv_y, i
     if(s->mb_intra){
         s->mv[0][n][0] = s->current_picture.motion_val[0][xy][0] = 0;
         s->mv[0][n][1] = s->current_picture.motion_val[0][xy][1] = 0;
+        s->current_picture.motion_val[1][xy][0] = 0;
+        s->current_picture.motion_val[1][xy][1] = 0;
         if(mv1) { /* duplicate motion data for 1-MV block */
             s->current_picture.motion_val[0][xy + 1][0] = 0;
             s->current_picture.motion_val[0][xy + 1][1] = 0;
@@ -1990,6 +2016,12 @@ static inline void vc1_pred_mv(MpegEncContext *s, int n, int dmv_x, int dmv_y, i
             s->current_picture.motion_val[0][xy + wrap][1] = 0;
             s->current_picture.motion_val[0][xy + wrap + 1][0] = 0;
             s->current_picture.motion_val[0][xy + wrap + 1][1] = 0;
+            s->current_picture.motion_val[1][xy + 1][0] = 0;
+            s->current_picture.motion_val[1][xy + 1][1] = 0;
+            s->current_picture.motion_val[1][xy + wrap][0] = 0;
+            s->current_picture.motion_val[1][xy + wrap][1] = 0;
+            s->current_picture.motion_val[1][xy + wrap + 1][0] = 0;
+            s->current_picture.motion_val[1][xy + wrap + 1][1] = 0;
         }
         return;
     }
@@ -2118,10 +2150,17 @@ static void vc1_interp_mc(VC1Context *v)
     uvsrc_x = s->mb_x * 8 + (uvmx >> 2);
     uvsrc_y = s->mb_y * 8 + (uvmy >> 2);
 
-    src_x   = av_clip(  src_x, -16, s->mb_width  * 16);
-    src_y   = av_clip(  src_y, -16, s->mb_height * 16);
-    uvsrc_x = av_clip(uvsrc_x,  -8, s->mb_width  *  8);
-    uvsrc_y = av_clip(uvsrc_y,  -8, s->mb_height *  8);
+    if(v->profile != PROFILE_ADVANCED){
+        src_x   = av_clip(  src_x, -16, s->mb_width  * 16);
+        src_y   = av_clip(  src_y, -16, s->mb_height * 16);
+        uvsrc_x = av_clip(uvsrc_x,  -8, s->mb_width  *  8);
+        uvsrc_y = av_clip(uvsrc_y,  -8, s->mb_height *  8);
+    }else{
+        src_x   = av_clip(  src_x, -17, s->avctx->coded_width);
+        src_y   = av_clip(  src_y, -18, s->avctx->coded_height + 1);
+        uvsrc_x = av_clip(uvsrc_x,  -8, s->avctx->coded_width  >> 1);
+        uvsrc_y = av_clip(uvsrc_y,  -8, s->avctx->coded_height >> 1);
+    }
 
     srcY += src_y * s->linesize + src_x;
     srcU += uvsrc_y * s->uvlinesize + uvsrc_x;

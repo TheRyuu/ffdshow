@@ -45,7 +45,7 @@ typedef struct AC3BitAllocParameters {
     int cplfleak, cplsleak;
 } AC3BitAllocParameters;
 
-extern uint16_t ff_ac3_frame_sizes[38][3];
+extern const uint16_t ff_ac3_frame_sizes[38][3];
 extern const uint8_t ff_ac3_channels[8];
 extern const uint16_t ff_ac3_freqs[3];
 extern const uint16_t ff_ac3_bitratetab[19];
