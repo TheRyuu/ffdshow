@@ -2,10 +2,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1040
+#define tryout_revision = 1049
 #define buildyear = 2007
 #define buildmonth = '03'
-#define buildday = '16'
+#define buildday = '18'
 
 ; Build specific options
 #define unicode_required = True
@@ -293,14 +293,12 @@ Source: ..\..\libmpeg2_ff.dll; DestDir: {app}; Flags: ignoreversion restartrepla
 
 ; Single build:
 #if !PREF_CLSID
-Source: ..\..\ffdshow.ax;                               DestDir: {app}; Flags: ignoreversion restartreplace regserver uninsrestartdelete; Check:     shouldInnoRegisterAx;                                            Components: ffdshow
-Source: ..\..\ffdshow.ax;                               DestDir: {app}; Flags: ignoreversion                          uninsrestartdelete; Check: not shouldInnoRegisterAx; Afterinstall: RegisterAx                 ; Components: ffdshow
+Source: ..\..\ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; Components: ffdshow
 #endif
 ; ANSI + Unicode:
 #if PREF_CLSID
-Source: ..\..\ffdshow_ansi.ax;    DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete;                                                            MinVersion: 4,0; Components: ffdshow
-Source: ..\..\ffdshow_unicode.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check:     shouldInnoRegisterAx;                           MinVersion: 0,4; Components: ffdshow
-Source: ..\..\ffdshow_unicode.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion                          uninsrestartdelete; Check: not shouldInnoRegisterAx; Afterinstall: RegisterAx; MinVersion: 0,4; Components: ffdshow
+Source: ..\..\ffdshow_ansi.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; MinVersion: 4,0; Components: ffdshow
+Source: ..\..\ffdshow_unicode.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; MinVersion: 0,4; Components: ffdshow
 #endif
 ; Multi build example (requires cpu detection to be enabled):
 ;Source: ..\..\ffdshow_generic.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_MMX_Supported AND NOT Is_SSE_Supported; Components: ffdshow
@@ -514,8 +512,6 @@ Description: {cm:runvfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,c
 [Code]
 // Global vars
 var
-  isRestartRequired: Boolean;
-
   reg_mixerOut: Cardinal;
   reg_ismixer: Cardinal;
 
@@ -1000,7 +996,6 @@ begin
 
   { Create the pages }
 
-  isRestartRequired := False
 // Compatibility list
   isCompVideoSkipped := False;
   isCompAudioSkipped := False;
@@ -1198,58 +1193,4 @@ begin
     end
   end
   priorPageID := PageID;
-end;
-
-function DeleteLockedFile(filename: String): Boolean;
-var
-  unique: String;
-begin
-  Result := True;
-  if FileExists(ExpandConstant('{app}\')+filename) then begin
-    if not DeleteFile(ExpandConstant('{app}\')+filename) then begin
-      unique := GenerateUniqueName(ExpandConstant('{app}'),ExtractFileExt(filename));
-      if RenameFile(ExpandConstant('{app}\')+filename,unique) then begin
-        // delete old file on next boot up.
-        RestartReplace(unique,'');
-        // The file will be replaced successfully, but it doesn't mean it is stable.
-        // Old ffdshow.ax is still in memory and it is not binarily compatible with libavcodec/libmplayer.
-        isRestartRequired := True;
-      end else begin
-        Result := False;
-      end
-    end
-  end
-end;
-
-// if ax can't be deleted, ax is locked, need restart-replace, inno should handle it.
-// If ffdshow.ax is not locked, let regsvr32 register ffdshow.ax.
-// If ffdshow.ax does not exist, let regsvr32 register ffdshow.ax.
-function shouldInnoRegisterAx(): Boolean;
-begin
-  Result := True;
-  if UsingWinNT() then begin   // for win 9x, always let inno register.
-    if DeleteLockedFile('ffdshow.ax') then
-      Result := False;
-  end
-end;
-
-procedure registerAx();
-var
-  ResultCode: Integer;
-  RetExec: Boolean;
-begin
-                //'revsvr64' for x64 build?
-  RetExec := Exec('regsvr32', ExpandConstant('/S "{app}\ffdshow.ax"'), ExpandConstant('{app}'), SW_SHOW, ewWaitUntilTerminated, ResultCode);
-  //if RetExec = False then
-  //  MsgBox('regsvr32 failed. ResultCode='+IntToStr(ResultCode),mbInformation, MB_OK);
-  //if RetExec = True then
-  //  MsgBox('regsvr32 succeded. ResultCode='+IntToStr(ResultCode),mbInformation, MB_OK);
-  if RetExec = False then
-    RegisterServer(False, ExpandConstant('{app}\ffdshow.ax'), False);  // retry using inno's function. But we should not be here.
-                //(True,  Expand... fix for x64 build
-end;
-
-function NeedRestart(): Boolean;
-begin
-  Result := isRestartRequired;
 end;
