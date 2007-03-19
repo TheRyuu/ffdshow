@@ -58,6 +58,12 @@
   </p>
 
   <ul class="fixed">
+    <li>After changing aspect ratio, the height of the picture got half, if you used overlay mixer and YUY2. It was common on DVD playback.</li>
+    <li>FFV1 decoder crashed on seek or delay.</li>
+    <li>FFV1 encoder: default key frame distance was 250, which was too far and could not be configured independently. New default is 10.</li>
+    <li>When NV12 was the only available output color space for DirectShow decoder and "Raw video" was enabled for vfw decoder, Windows Media Player11 thumbnailer crashed.</li>
+    <li>Subtitle was gray, even if you specified white.</li>
+    <li>Deleting the active and default preset settings caused a crash.</li>
     <li>Flipped NV12 caused either crash or corrupt image.</li>
     <li>With Media Player Classic's internal Matroska splitter, the aspect ratio was always 1.</li>
     <li>When you opened audio configuration dialog during playback, the CPU usage was abnormally high and it sometimes freezed especially on ADPCM audio.</li>
@@ -134,6 +140,7 @@
   </p>
 
   <ul class="added">
+    <li>Improved subtitle shadow. 3 mode is available.</li>
     <li>Management of compatibility issues: "Use ffdshow only in:" option ensures that ffdshow only runs in supported applications.</li>
     <li>Hardware deinterlacing support for raw video (interlacing related information which was inputed as raw video is being sent to downstream filters).</li>
     <li>New OSD item "IDCT(libavcodec)" displays which IDCT method is selected.</li>
