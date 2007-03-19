@@ -58,19 +58,19 @@
   </p>
 
   <ul class="fixed">
-    <li>After changing aspect ratio, the height of the picture got half, if you used overlay mixer and YUY2. It was common on DVD playback.</li>
+    <li>After changing aspect ratio, the height of the picture halved, if you used overlay mixer and YUY2. It was common on DVD playback.</li>
     <li>FFV1 decoder crashed on seek or delay.</li>
-    <li>FFV1 encoder: default key frame distance was 250, which was too far and could not be configured independently. New default is 10.</li>
-    <li>When NV12 was the only available output color space for DirectShow decoder and "Raw video" was enabled for vfw decoder, Windows Media Player11 thumbnailer crashed.</li>
-    <li>Subtitle was gray, even if you specified white.</li>
+    <li>FFV1 encoder: default key frame distance value was 250, which was too high and could not be configured independently. New default is 10.</li>
+    <li>When NV12 was the only available output color space for DirectShow decoder and "Raw video" was enabled for VfW decoder, Windows Media Player 11 thumbnailer crashed.</li>
+    <li>Subtitle was gray, even if you selected white.</li>
     <li>Deleting the active and default preset settings caused a crash.</li>
     <li>Flipped NV12 caused either crash or corrupt image.</li>
     <li>With Media Player Classic's internal Matroska splitter, the aspect ratio was always 1.</li>
     <li>When you opened audio configuration dialog during playback, the CPU usage was abnormally high and it sometimes freezed especially on ADPCM audio.</li>
     <li>When ffdshow connected to DVobSub (VSFilter), ffdshow tried to use YV12 plus width of non-multiple of 8 and ended in crash.</li>
-    <li>When you configured "Resize & aspect"-"Borders"-"Inside"-100%, ffdshow ended in crash.</li>
+    <li>When you configured "Resize & aspect"->"Borders"->"Inside"->100%, ffdshow ended in crash.</li>
     <li>Reconnecting to VMR9 (after resizing) sometimes failed.</li>
-    <li>PowerDVD7 produced a black screen because of a bug in DirectShow filter's connecting code (please remove PowerDVD.exe from "Info & debug"-"Don't use ffdshow in:").</li>
+    <li>PowerDVD7 produced a black screen because of a bug in DirectShow filter's connecting code (please remove PowerDVD.exe from "Info & debug"->"Don't use ffdshow in:").</li>
     <li>When a subtitle unit contained too many lines for the specified space, lines were being dropped.</li>
     <li>The right edges of italic subtitles were cut off. If "fast rendering" was enabled, italic text was sometimes shown as non-italic and vice versa.</li>
     <li>Some SVQ3 video caused freeze.</li>
@@ -85,7 +85,7 @@
     <li>When you played a video which width was over 1024, it crashed when using RGB to YUY2 conversion.</li>
     <li>When you played a video which height was an odd number and YV12 was enabled, the video became distorted.</li>
     <li>If ffdshow was connected to Haali's video renderer, seeking sometimes failed.</li>
-    <li>The next internal filter of Kernel deinterlace was skipped on every other frame. If the next internal filter was 'resize', the video size changed on every frame.</li>
+    <li>The next internal filter of Kernel deinterlace was skipped on every other frame. If the next internal filter was "Resize", the video size changed on every frame.</li>
   </ul>
 
   <p>
@@ -99,7 +99,7 @@
     <li>When you played a video which height was an odd number, it often freezed.</li>
     <li>If Mixer-headphone virtual spatialization was enabled, it crashed on playback of mono sources.</li>
     <li>When you played an Xvid stream with many consecutive N-VOPs, subtitles were not shown when no new frames were actually being displayed. If there were long consecutive N-VOPs at the end of the file, it closed too early.</li>
-    <li>'Video decoder configuration'-'Output'-'DV' couldn't be unchecked.</li>
+    <li>"Video decoder configuration"->"Output"->"DV" couldn't be unchecked.</li>
     <li>If one of the files that needed updating was locked, the installer stopped with an error message.</li>
     <li>Didee's YlevelsG/S/C was not implemented correctly. It was the bright parts of the pictures that saw the most effect of the gamma.</li>
     <li>ffdshow could not connect to Uncompressed audio input.</li>
@@ -112,10 +112,10 @@
     <li>If ffdshow was inputing DVD decoder's output as raw video, and if subtitle-file was valid and MPEG2 was disabled, subtitles that were not related to the DVD were shown.</li>
     <li>If subtitles including video image such as IDX+SUB (vobsub) format were enabled, it crashed where the height of the subtitles was an odd number.</li>
     <li>Convolver, one of the audio filters, crashed when you tried to load impulse file.</li>
-    <li>When you used resize, horizontal lines were sometimes seen ('Resize'-'Settings'-'Accurate rounding').</li>
+    <li>When you used resize, horizontal lines were sometimes seen ("Resize"->"Settings"->"Accurate rounding").</li>
     <li>If you used resize after xsharpen, the video was green.</li>
     <li>Stereoscopic subtitle crashed.</li>
-    <li>OSD 'CPU Load' did not show correct value in multiprocessor system.</li>
+    <li>OSD "CPU Load" did not show correct value in multiprocessor system.</li>
     <li>Postprocessing automatic quality control did not work in multiprocessor systems.</li>
     <li>Volume normalization did not work properly.</li>
     <li>DScaler: Video (TomsMoComp) crashed depending on the compiler used for building.</li>
@@ -124,9 +124,9 @@
     <li>On Windows Vista, codec configuration dialog was broken.</li>
     <li>If there's an error in avisynth script in ffdshow, the error message was displayed on top of video. The error message still remains after the whole avisynth page was unchecked.</li>
     <li>The dialog was garbled, if Japanese (UNICODE) was selected for "Tray, dialog &amp; paths" setting (ANSI builds). The problem was that the installer set it by default for Japanese version of Windows.</li>
-    <li>ANSI/MBCS was not processed properly. For example, OSD 'Source file' couldn't show last few characters if MBCS was used in the path. It was a security concern.</li>
+    <li>ANSI/MBCS was not processed properly. For example, OSD "Source file" couldn't show last few characters if MBCS was used in the path. It was a security concern.</li>
     <li>If you used translation of the dialog, content of the dialog was scaled about 130% but the size of the window was not. As a result, you couldn't see the right, hidden part of the dialog (depending on the way to launch the dialog).</li>
-    <li>Subtitles were garbled if 'Subtitles'-'Font'-'Fast rendering' was enabled, if you used MBCS on ANSI builds.</li>
+    <li>Subtitles were garbled if "Subtitles"->"Font"->"Fast rendering" was enabled, if you used MBCS on ANSI builds.</li>
   </ul>
 
   <p>
@@ -140,11 +140,11 @@
   </p>
 
   <ul class="added">
-    <li>Improved subtitle shadow. 3 mode is available.</li>
+    <li>Improved subtitle shadow. 3 shadow modes are available: classic, glowing and gradient.</li>
     <li>Management of compatibility issues: "Use ffdshow only in:" option ensures that ffdshow only runs in supported applications.</li>
     <li>Hardware deinterlacing support for raw video (interlacing related information which was inputed as raw video is being sent to downstream filters).</li>
     <li>New OSD item "IDCT(libavcodec)" displays which IDCT method is selected.</li>
-    <li>In "Subtitles"-"Search in", extensions priority can be specified.</li>
+    <li>In "Subtitles"->"Search in", extensions priority can be specified.</li>
     <li>VC-1 Advanced Profile support (libavcodec can work without external codecs).</li>
     <li>Various WMV and VC-1 content can be played using Microsoft's codec (VC-1 needs external codec or WMP11 installed).</li>
     <li>x264 encoder re-added and updated.</li>    
@@ -165,9 +165,9 @@
     <li>The installer can set speaker configuration. It loads the setting of the OS (control panel) as default.</li>
     <li>Queue: Accelerator. It deposits the time when CPU has finished work early and uses the time when delayed.</li>
     <li>Multithreaded resize: Faster resize on dual-core CPU.</li>
-    <li>Calculate the vertical size automatically when you enter 0 for vertical size ('Resize'-'Specify size'-'New size').</li>
+    <li>Calculate the vertical size automatically when you enter 0 for vertical size ("Resize"->"Specify size"->"New size").</li>
     <li>Vorbis: High accuracy mode is enabled for tremor.</li>
-    <li>Quality control is now configurable ('Decoder options'-'Quality control')</li>
+    <li>Quality control is now configurable ("Decoder options"->"Quality control")</li>
     <li>Show error message if the splitter failed to provide necessary information to decode SVQ3.</li>
     <li>Improved translations.</li>
   </ul>
