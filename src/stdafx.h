@@ -78,6 +78,8 @@
 #include <d3d9.h>
 #include <vmr9.h>
 #include "msacmdrv.h"
+#include <functiondiscoverykeys.h>
+#include <Mmdeviceapi.h>
 // ffdshow
 #include "inttypes.h"
 #include "dwstring.h"

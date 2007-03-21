@@ -838,6 +838,8 @@
 
 #define IDFF_aoutConnectTo          1315
 #define IDFF_aoutConnectToOnlySpdif 1316
+#define IDFF_aoutMultichannelDevice 3377
+#define IDFF_aoutMultichannelDeviceId 3378
 
 #define IDFF_dithering          1311
 #define IDFF_noiseShaping       1312
@@ -1383,6 +1385,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3376
+//max:3378
 
 #endif

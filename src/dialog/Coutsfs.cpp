@@ -41,9 +41,38 @@ void ToutsfsPage::init(void)
  static const int ac3s[]={IDC_CHB_OUT_AC3,IDC_LBL_OUT_AC3,IDC_CBX_OUT_AC3,0};
  enable(lavc && lavc->ok && !lavc->dec_only,ac3s);
  if (lavc) lavc->Release();
+<<<<<<< .mine
+ if(tr)
+  {
+    addHint(IDC_CHB_ALWAYEXTENSIBLE,_l("\"not needed\": no custom channel mapping"));
+    addHint(IDC_CHB_ALLOWOUTSTREAM,_l("Useful for directly storing encoded ac3 to a file in graphedt with File Writer filter"));
+  }
+=======
  addHint(IDC_CHB_ALWAYEXTENSIBLE,_l("\"not needed\": no custom channel mapping"));
  addHint(IDC_CHB_ALLOWOUTSTREAM,_l("Useful for directly storing encoded ac3 to a file in graphedt with File Writer filter"));
+>>>>>>> .r1058
+ 
+ devicesList = &ToutputAudioSettings::devicesList;
+ char_t deviceId[255] = _l("");
+ cfgGet(IDFF_aoutMultichannelDeviceId, deviceId, 254);
+ int selection = 0;
+ for (TdevicesList::iterator i=devicesList->begin();i!=devicesList->end();i++)
+ {
+	 cbxAdd(IDC_CBX_AOUT_MULTICHANNEL_DEVICE, i->first.c_str());
+	 if (!strcmp(deviceId, i->second.c_str()))
+		 cbxSetCurSel(IDC_CBX_AOUT_MULTICHANNEL_DEVICE, selection);
+	 selection ++;
+ }
 }
+
+void ToutsfsPage::multichanneldevice2dlg(void)
+{
+	const char_t *deviceName = cbxGetCurText(IDC_CBX_AOUT_MULTICHANNEL_DEVICE);
+	TdevicesList::iterator selectedDevice = devicesList->find(deviceName);
+	if (selectedDevice != devicesList->end())
+		cfgSet(IDFF_aoutMultichannelDeviceId, selectedDevice->second.c_str());
+}
+
 void ToutsfsPage::cfg2dlg(void)
 {
  int outsfs=cfgGet(IDFF_outsfs);
@@ -56,6 +85,7 @@ void ToutsfsPage::cfg2dlg(void)
 
  setCheck(IDC_CHB_ALWAYEXTENSIBLE,!cfgGet(IDFF_alwaysextensible));
  setCheck(IDC_CHB_ALLOWOUTSTREAM,cfgGet(IDFF_allowOutStream));
+ 
 
  connect2dlg();
 }
@@ -74,6 +104,7 @@ void ToutsfsPage::connect2dlg(void)
  int connect=cfgGet(IDFF_aoutConnectTo);
  cbxSetCurSel(IDC_CBX_AOUT_CONNECTTO,connect);
  enable(connect>0,IDC_CHB_AOUT_CONNECTTO_SPDIF);setCheck(IDC_CHB_AOUT_CONNECTTO_SPDIF,cfgGet(IDFF_aoutConnectToOnlySpdif));
+ 
 }
 
 INT_PTR ToutsfsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -173,6 +204,7 @@ ToutsfsPage::ToutsfsPage(TffdshowPageDec *Iparent):TconfPageDecAudio(Iparent)
   {
    IDC_CBX_OUT_AC3,IDFF_outAC3bitrate,BINDCBX_DATA,NULL,
    IDC_CBX_AOUT_CONNECTTO,IDFF_aoutConnectTo,BINDCBX_SEL,&ToutsfsPage::connect2dlg,
+   IDC_CBX_AOUT_MULTICHANNEL_DEVICE,IDFF_aoutMultichannelDevice,BINDCBX_TEXT,&ToutsfsPage::multichanneldevice2dlg,
    0
   };
  bindComboboxes(cbx);
