@@ -394,6 +394,41 @@ HRESULT TffdshowDecVideo::SetMediaType(PIN_DIRECTION direction, const CMediaType
 HRESULT TffdshowDecVideo::CheckTransform(const CMediaType *mtIn, const CMediaType *mtOut)
 {
  DPRINTF(_l("TffdshowDecVideo::CheckTransform"));
+#if 0
+ BITMAPINFOHEADER *bmi=NULL;
+ if (mtOut && mtOut->formattype==FORMAT_VideoInfo2
+   && mtOut->pbFormat
+   && mtOut->cbFormat>=sizeof(VIDEOINFOHEADER2))
+  {
+   VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)mtOut->pbFormat;
+   bmi=&vih->bmiHeader;
+  }
+ if (mtOut && mtOut->formattype==FORMAT_VideoInfo
+   && mtOut->pbFormat
+   && mtOut->cbFormat>=sizeof(VIDEOINFOHEADER))
+  {
+   VIDEOINFOHEADER* vih = (VIDEOINFOHEADER*)mtOut->pbFormat;
+   bmi=&vih->bmiHeader;
+  }
+ if (bmi && bmi->biCompression && !outdv)
+  {
+   TcspInfos ocsps;
+   size_t osize;
+   presetSettings->output->getOutputColorspaces(ocsps);
+   osize=ocsps.size();
+   bool outOk=false;
+   for (size_t i=0;i<osize;i++)
+    {
+     if (ocsps[i]->fcc==bmi->biCompression)
+      {
+       outOk=true;
+       break;
+      }
+    }
+   if (!outOk)
+    return VFW_E_TYPE_NOT_ACCEPTED;   
+  }
+#endif
  if (!outOldRenderer)
   return S_OK;
  else
@@ -961,6 +996,7 @@ if (!outdv && hwDeinterlace)
      vih->dwPictAspectRatioX = pict.rectFull.sar.num;
      vih->dwPictAspectRatioY = pict.rectFull.sar.den;
      SetRect(&vih->rcTarget, 0, 0, 0, 0);
+     SetRect(&vih->rcSource, 0, 0, pict.rectFull.dx, pict.rectFull.dy);
      bmi->biXPelsPerMeter = pict.rectFull.dx * vih->dwPictAspectRatioX;
      bmi->biYPelsPerMeter = pict.rectFull.dy * vih->dwPictAspectRatioY;
      pOut->SetMediaType(&omt);
@@ -1228,7 +1264,10 @@ STDMETHODIMP TffdshowDecVideo::FindPin(LPCWSTR Id,IPin **ppPin)
 HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
 {
  HRESULT hr=S_OK;
- if (newpict.rectFull==oldRect && newpict.rectFull.sar!=oldRect.sar)
+ if ((newpict.rectFull==oldRect && newpict.rectFull.sar!=oldRect.sar)
+      && _strnicmp(_l("wmplayer.exe"),getExeflnm(),13)!=0
+      && downstreamID!=VMR7
+      && downstreamID!=VMR9)
   {
    m_NeedToAttachFormat = true;
    oldRect=newpict.rectFull;
