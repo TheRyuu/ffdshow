@@ -1,3 +1,16 @@
+#define __RPC__in           
+#define __RPC__out     
+
+#ifndef PROPERTYKEY_DEFINED
+#define PROPERTYKEY_DEFINED
+typedef struct _tagpropertykey
+    {
+    GUID fmtid;
+    DWORD pid;
+    } 	PROPERTYKEY;
+
+#endif
+
 #ifndef REFPROPERTYKEY
 #ifdef __cplusplus
 #define REFPROPERTYKEY const PROPERTYKEY &
