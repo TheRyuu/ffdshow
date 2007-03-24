@@ -914,7 +914,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
      if (statsfile)
       {
        avctx->flags|=CODEC_FLAG_PASS2;
-       int statslen=filelength(fileno(statsfile));
+       int statslen=_filelength(fileno(statsfile));
        avctx->stats_in=(char*)malloc(statslen+1);
        avctx->stats_in[statslen]='\0';
        fread(avctx->stats_in,1,statslen,statsfile);

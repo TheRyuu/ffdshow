@@ -94,7 +94,7 @@ public:
   }
  virtual long length(void) const
   {
-   return f?filelength(fileno(f)):0;
+   return f?_filelength(fileno(f)):0;
   }
  bool boolean_test() const {return f!=NULL;}
  virtual int fputs(const char *buf);

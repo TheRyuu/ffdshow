@@ -168,7 +168,7 @@ void TffPict::readLibavcodec(int Icsp,const char_t *flnm,const char_t *ext,Tbuff
  if (libavcodec->avcodec_open(avctx,avcodec)>=0)
   {
    FILE *f=fopen(flnm,_l("rb"));if (!f) return;
-   int srclen=filelength(fileno(f));
+   int srclen=_filelength(fileno(f));
    uint8_t *src=(uint8_t*)calloc(srclen,2);
    fread(src,1,srclen,f);
    fclose(f);

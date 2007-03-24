@@ -88,7 +88,7 @@ const char* Tavisynth::getScriptAudio(size_t hdrsize,const char *extradata,size_
      #endif
      FILE *f=fopen(extradata+1+d,"rb");
      if (!f) return NULL;
-     int len=filelength(fileno(f));
+     int len=_filelength(fileno(f));
      script=(char*)malloc(len+1);
      fread(script,1,len,f);
      script[len]='\0';

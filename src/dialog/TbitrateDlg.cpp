@@ -51,7 +51,7 @@ void TbitrateDlg::init(void)
    numframes=0;
    return;
   }
- int statslen=filelength(fileno(statsfile));
+ int statslen=_filelength(fileno(statsfile));
  char* stats_in=(char*)malloc(statslen+1);
  stats_in[statslen]='\0';
  fread(stats_in,1,statslen,statsfile);
