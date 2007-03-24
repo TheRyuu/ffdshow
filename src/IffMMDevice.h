@@ -11,6 +11,18 @@ typedef struct _tagpropertykey
 
 #endif
 
+// This is the standard C layout of the PROPVARIANT.
+typedef struct tagPROPVARIANT * LPPROPVARIANT;
+
+#ifndef _REFPROPVARIANT_DEFINED
+#define _REFPROPVARIANT_DEFINED
+#ifdef __cplusplus
+#define REFPROPVARIANT const PROPVARIANT &
+#else
+#define REFPROPVARIANT const PROPVARIANT * __MIDL_CONST
+#endif
+#endif
+
 #ifndef REFPROPERTYKEY
 #ifdef __cplusplus
 #define REFPROPERTYKEY const PROPERTYKEY &
