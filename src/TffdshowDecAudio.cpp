@@ -343,7 +343,7 @@ HRESULT TffdshowDecAudio::getMediaType(CMediaType *mtOut)
   */
  if (!audioDeviceChanged
 	 && presetSettings != NULL && presetSettings->output != NULL
-	 && strcmp(presetSettings->output->multichannelDeviceId, _l(""))
+	 && strcmp(presetSettings->output->multichannelDeviceId, L"")
 	 && ((WAVEFORMATEX*)mtOut->pbFormat)->wFormatTag==WAVE_FORMAT_DOLBY_AC3_SPDIF)
  {
 	 TsampleFormat outsf=getOutsf();
@@ -445,7 +445,7 @@ HRESULT TffdshowDecAudio::StartStreaming(void)
 {
  DPRINTF(_l("TffdshowDecAudio::StartStreaming"));
     // If a device is configured for multichannel streams then change it (if the transformed stream is multichannel)
-	if (!audioDeviceChanged && strcmp(presetSettings->output->multichannelDeviceId, _l("")))
+	if (!audioDeviceChanged && strcmp(presetSettings->output->multichannelDeviceId, L""))
 	{
 		TsampleFormat outsf=getOutsf();
 
@@ -528,7 +528,7 @@ HRESULT TffdshowDecAudio::StartStreaming(void)
 										   CLSCTX_ALL, &var,
 										   (void**)&audioRenderer);
 
-					hr = graph->AddFilter(audioRenderer, _l("New direct sound device"));
+					hr = graph->AddFilter(audioRenderer, L"New direct sound device");
 					if (FAILED(hr))
 					{
 						graph->Reconnect(filterPin); // Reconnect automatically if replacement failed

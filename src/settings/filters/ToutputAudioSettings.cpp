@@ -84,7 +84,7 @@ const int* ToutputAudioSettings::getResets(unsigned int pageId)
 TdevicesList ToutputAudioSettings::getDevices(void)
 {
   TdevicesList devicesList;
-  devicesList[_l("Use default device")] = _l("");
+  devicesList[L"Use default device"] = L"";
   IMMDeviceEnumerator *deviceEnumerator = NULL;
   // Enumerate audio devices
   HRESULT hr = CoCreateInstance(
@@ -104,8 +104,8 @@ TdevicesList ToutputAudioSettings::getDevices(void)
   {
 	  return devicesList;
   }
-  char_t *default_deviceIdp = NULL;
-  char_t default_deviceId[255] = _l("");
+  WCHAR *default_deviceIdp = NULL;
+  WCHAR default_deviceId[255] = L"";
   hr = defaultRenderer->GetId(&default_deviceIdp);
   if (FAILED(hr))
   {
@@ -139,8 +139,8 @@ TdevicesList ToutputAudioSettings::getDevices(void)
 		  device->Release();
 		  continue;
 	  }
-	  char_t *deviceIdp = NULL;
-	  char_t deviceId[255] = _l("");
+	  WCHAR *deviceIdp = NULL;
+	  WCHAR deviceId[255] = L"";
 	  hr = device->GetId(&deviceIdp);
 	  strncpy(deviceId, deviceIdp, 254);
 
@@ -150,23 +150,23 @@ TdevicesList ToutputAudioSettings::getDevices(void)
 	  PROPVARIANT value;
 	  PropVariantInit(&value);
 	  hr = deviceProperties->GetValue(PKEY_Device_FriendlyName, &value);
-	  char_t deviceName[255] = _l("");
+	  WCHAR deviceName[255] = L"";
 	  if (!strcmp(deviceId, default_deviceId))
 	  {
 		  if (value.pwszVal != NULL)
 		  {
 			strncpy(deviceName, value.pwszVal, 240);
-			strcat(deviceName, _l(" (default)"));
+			strcat(deviceName, L" (default)");
 		  }
 		  else
-			tsprintf(deviceName, _l("Device %d (default)"), i);
+			wsprintfW(deviceName, L"Device %d (default)", i);
 	  }
 	  else
 	  {
 		  if (value.pwszVal != NULL)
 			strncpy(deviceName, value.pwszVal, 254);
 		  else
-			tsprintf(deviceName, _l("Device %d"), i);
+			wsprintfW(deviceName, L"Device %d", i);
 	  }
 	// Get the DirectSound or DirectSoundCapture device GUID
     // (in WCHAR string format) for the endpoint device.

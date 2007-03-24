@@ -78,8 +78,7 @@
 #include <d3d9.h>
 #include <vmr9.h>
 #include "msacmdrv.h"
-#include <functiondiscoverykeys.h>
-#include <Mmdeviceapi.h>
+#include <IffMmdevice.h> // Vista header import (MMDeviceAPI.h)
 // ffdshow
 #include "inttypes.h"
 #include "dwstring.h"
