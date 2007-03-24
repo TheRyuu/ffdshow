@@ -78,7 +78,14 @@
 #include <d3d9.h>
 #include <vmr9.h>
 #include "msacmdrv.h"
+#ifdef __GNUC__
+#undef VISTA_SPDIF
+#endif
+
+#ifdef VISTA_SPDIF
 #include <IffMmdevice.h> // Vista header import (MMDeviceAPI.h)
+#endif
+
 // ffdshow
 #include "inttypes.h"
 #include "dwstring.h"
