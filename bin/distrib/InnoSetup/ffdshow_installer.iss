@@ -2,10 +2,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1049
+#define tryout_revision = 1072
 #define buildyear = 2007
 #define buildmonth = '03'
-#define buildday = '18'
+#define buildday = '25'
 
 ; Build specific options
 #define unicode_required = True
@@ -18,6 +18,8 @@
 #define ext3dnow_required = False
 
 #define MSVC80 = True
+
+#define is64bit = False
 
 #define localize = True
 
@@ -35,6 +37,7 @@
 #define PREF_CLSID = False
 #define PREF_YAMAGATA = False
 #define PREF_XXL = False
+#define PREF_X64 = False
 
 #if PREF_CLSID
   #define MSVC80 = False
@@ -61,6 +64,15 @@
   #define sse2_required = False
   #define filename_prefix = '_xxl'
 #endif
+#if PREF_X64
+  #define is64bit = True
+  #define unicode_required = True
+  #define include_cpu_detection = False
+  #define include_audx = False
+  #define include_app_plugins = False
+  #define include_makeavis = False
+  #define filename_prefix = '_x64'
+#endif
 
 [Setup]
 AllowCancelDuringInstall=no
@@ -70,6 +82,10 @@ AppId=ffdshow
 AppName=ffdshow
 AppVerName=ffdshow [rev {#= tryout_revision}] [{#= buildyear}-{#= buildmonth}-{#= buildday}]
 AppVersion=1.0
+#if is64bit
+ArchitecturesAllowed=x64
+ArchitecturesInstallIn64BitMode=x64
+#endif
 Compression=lzma/ultra
 InternalCompressLevel=ultra
 SolidCompression=true
@@ -154,7 +170,7 @@ Name: ffdshow\plugins\dscaler; Description: DScaler
 #endif
 
 ; CPU detection code
-#if include_cpu_detection
+#if include_cpu_detection && !is64bit
 #include "innosetup_cpu_detection.iss"
 #endif
 
@@ -265,14 +281,22 @@ Name: {group}\{cm:uninstall}; Filename: {uninstallexe}
 Source: msvc71\ffSpkCfg.dll; Flags: dontcopy
 
 ; MSVC71 runtimes are required for ffdshow components that are placed outside the ffdshow installation directory.
-Source: msvcp71.dll; DestDir: {sys}; Flags: onlyifdoesntexist
-Source: msvcr71.dll; DestDir: {sys}; Flags: onlyifdoesntexist
+#if !is64bit
+Source: Runtimes\msvcr71\msvcp71.dll; DestDir: {sys}; Flags: onlyifdoesntexist
+Source: Runtimes\msvcr71\msvcr71.dll; DestDir: {sys}; Flags: onlyifdoesntexist
+#endif
+
 #if MSVC80
+  #if is64bit
+Source: Runtimes\msvcr80_x64\msvcr80.dll; DestDir: {app}; MinVersion: 0,5.02; Flags: ignoreversion restartreplace uninsrestartdelete
+Source: Runtimes\msvcr80_x64\microsoft.vc80.crt.manifest; DestDir: {app}; MinVersion: 0,5.02; Flags: ignoreversion restartreplace uninsrestartdelete
+  #else
 ; Install MSVC80 runtime as private assembly (can only be used by components that are in the same directory).
-Source: ..\msvcr80.dll; DestDir: {app}; MinVersion: 4.1,5; Flags: ignoreversion restartreplace uninsrestartdelete
-Source: ..\NT4.0\msvcr80.dll; DestDir: {app}; MinVersion: 0,4; OnlyBelowVersion: 0,5; Flags: ignoreversion restartreplace uninsrestartdelete
-Source: ..\microsoft.vc80.crt.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete
+Source: Runtimes\msvcr80\msvcr80.dll; DestDir: {app}; MinVersion: 4.1,5; Flags: ignoreversion restartreplace uninsrestartdelete
+Source: Runtimes\msvcr80\nt4\msvcr80.dll; DestDir: {app}; MinVersion: 0,4; OnlyBelowVersion: 0,5; Flags: ignoreversion restartreplace uninsrestartdelete
+Source: Runtimes\msvcr80\microsoft.vc80.crt.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete
 Source: msvc80\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
+  #endif
 #endif
 
 Source: ..\..\libavcodec.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
@@ -287,8 +311,13 @@ Source: ..\..\ff_unrar.dll; DestDir: {app}; Flags: ignoreversion; Components: ff
 Source: ..\..\ff_samplerate.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 Source: ..\..\ff_theora.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 Source: ..\..\ff_x264.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+#if is64bit
+Source: ..\..\ff_kernelDeint.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: ..\..\TomsMoComp_ff.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+#else
 Source: icl9\ff_kernelDeint.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 Source: icl9\TomsMoComp_ff.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+#endif
 Source: ..\..\libmpeg2_ff.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow
 
 ; Single build:
@@ -322,6 +351,7 @@ Source: ..\..\ff_wmv9_unicode.dll; DestName: ff_wmv9.dll; DestDir: {app}; Flags:
 ; If you want to use MSVC8 for ffdshow.ax, ff_vfw.dll should be compiled by GCC. Both MSVC7.1 and MSVC8 does not work in some environment such as Windows XP SP2 without shared assembly of MSVCR80.
 Source: ..\..\ff_vfw.dll; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
 Source: ..\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
+; ToDo: what about 64-bit builds???
 
 #if include_audx
 Source: audxlib.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow
