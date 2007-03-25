@@ -91,6 +91,9 @@ void ToutsfsPage::ac32dlg(int &outsfs)
   }
  else
   cfgSet(IDFF_outsfs,outsfs=TsampleFormat::SF_PCM16);
+
+ enable(getCheck(IDC_CHB_OUT_AC3), IDC_CHB_AOUT_AC3ENCODE_MODE, FALSE);
+ setCheck(IDC_CHB_AOUT_AC3ENCODE_MODE, (cfgGet(IDFF_aoutAC3EncodeMode) == 1));
 }
 void ToutsfsPage::connect2dlg(void)
 {
@@ -138,6 +141,7 @@ INT_PTR ToutsfsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          cfgSet(IDFF_outsfs,outsfs);
         else
          setCheck(LOWORD(wParam),!getCheck(LOWORD(wParam)));
+		enable(getCheck(IDC_CHB_OUT_AC3), IDC_CHB_AOUT_AC3ENCODE_MODE, FALSE);
         return TRUE;
        }
      }
@@ -190,6 +194,7 @@ ToutsfsPage::ToutsfsPage(TffdshowPageDec *Iparent):TconfPageDecAudio(Iparent)
    IDC_CHB_ALWAYEXTENSIBLE,-IDFF_alwaysextensible,NULL,
    IDC_CHB_ALLOWOUTSTREAM,IDFF_allowOutStream,NULL,
    IDC_CHB_AOUT_CONNECTTO_SPDIF,IDFF_aoutConnectToOnlySpdif,NULL,
+   IDC_CHB_AOUT_AC3ENCODE_MODE,IDFF_aoutAC3EncodeMode,NULL,
    0,NULL,NULL
   };
  bindCheckboxes(chb);

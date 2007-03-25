@@ -2036,7 +2036,7 @@ BEGIN
     CONTROL         "AC3",IDC_CHB_OUT_AC3,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,121,11,30,10
     RTEXT           "Bitrate:",IDC_LBL_OUT_AC3,152,12,47,9
     COMBOBOX        IDC_CBX_OUT_AC3,200,10,56,64,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    CONTROL         "LPCM",IDC_CHB_OUT_LPCM,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,121,24,100,10
+    CONTROL         "LPCM",IDC_CHB_OUT_LPCM,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,121,47,100,10
     GROUPBOX        "",IDC_GRP_AOUT_OTHER,0,60,266,84
     LTEXT           "Connect to:",IDC_CHB_AOUT_CONNECTTO,4,70,75,8
     COMBOBOX        IDC_CBX_AOUT_CONNECTTO,83,68,165,72,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
@@ -2049,6 +2049,8 @@ BEGIN
     EDITTEXT        IDC_ED_HELP,0,148,266,33,ES_MULTILINE | ES_READONLY | NOT WS_BORDER | WS_VSCROLL
     LTEXT           "Multichannel device:",IDC_LBL_AOUT_MULTICHANNEL_DEVICE,4,99,75,8
     COMBOBOX        IDC_CBX_AOUT_MULTICHANNEL_DEVICE,84,97,165,72,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Encode only multichannel streams",IDC_CHB_AOUT_AC3ENCODE_MODE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,131,26,123,10
 END
 
 IDD_DOLBYDECODER DIALOGEX 0, 0, 267, 195
@@ -3077,13 +3079,25 @@ BEGIN
     IDD_CHANNELSWAP         "Swap channels"
     IDD_SUBTITLESTEXT       "Text"
     IDD_BITMAP              "Bitmap overlay"
+END
+
+STRINGTABLE 
+BEGIN
     IDS_FFDSHOWDECAUDIORAW  "ffdshow audio processor"
     IDS_FFDSHOWDEC          "ffdshow decoder"
     IDS_FFDSHOWVIDEOPROC    "ffdshow video processor"
+END
+
+STRINGTABLE 
+BEGIN
     IDD_QUEUEMSG_2          "off: old video renderer does not support queue"
     IDD_QUEUEMSG_3          "off: the application is not listed in 'Use queue only in:'"
     IDD_QUEUEMSG_4          "off: Update MPC. http://ffdshow.faireal.net/"
     IDD_QUEUEMSG_5          "off: The video renderer in use is not supported."
+END
+
+STRINGTABLE 
+BEGIN
     IDD_QUEUEMSG_6          "off: In Windows Media Player, queueing is not suported."
     IDD_QUEUEMSG_7          "off: Because some video driver can't work with YV12 + VMR9 + queue."
     IDD_QUEUEMSG_8          "VMR9's internal queue."

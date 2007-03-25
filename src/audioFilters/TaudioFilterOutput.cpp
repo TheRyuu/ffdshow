@@ -78,7 +78,9 @@ HRESULT TaudioFilterOutput::process(TfilterQueue::iterator it,TsampleFormat &fmt
 {
  const ToutputAudioSettings *cfg=(ToutputAudioSettings*)cfg0;
  samples=init(cfg,fmt,samples,numsamples);
- if (cfg->outsfs==TsampleFormat::SF_LPCM16)
+ if (cfg->outsfs==TsampleFormat::SF_LPCM16 
+	 // Change to PCM format if AC3 encode is requested only for multichannel streams
+	 || (cfg->outAC3EncodeMode == 1 && cfg->outsfs == TsampleFormat::SF_AC3 && fmt.nchannels <= 5))
   {
    fmt.sf=TsampleFormat::SF_LPCM16;
    int16_t *samples16=(int16_t*)samples;

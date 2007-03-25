@@ -336,7 +336,17 @@ HRESULT TffdshowDecAudio::getMediaType(CMediaType *mtOut)
    outsf.descriptionPCM(descS,256);
    DPRINTF(_l("TffdshowDecAudio::getMediaType:%s"),descS);
   }
-
+ /* Change AC3 output format to PCM if checkbox checked and output format is not multichannel */
+  if (presetSettings != NULL && presetSettings->output != NULL 
+	  && presetSettings->output->outAC3EncodeMode == 1)
+  {
+	 TsampleFormat outsf=getOutsf();
+	 if (outsf.sf==TsampleFormat::SF_AC3 && outsf.nchannels <= 5)
+	 {
+		outsf.sf = TsampleFormat::SF_LPCM16;
+		*mtOut=outsf.toCMediaType(alwaysextensible);
+	 }
+  }
 #ifdef VISTA_SPDIF
  /* Change spdif format to analog in order to be able to change of audio device
   Explanation : output format = multichannel <=> analog directsound device  => Connection rejected, ffdshow audio will be unloaded

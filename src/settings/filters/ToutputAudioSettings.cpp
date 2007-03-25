@@ -54,6 +54,8 @@ ToutputAudioSettings::ToutputAudioSettings(TintStrColl *Icoll,TfilterIDFFs *filt
      _l("connectTo"),0,
    IDFF_aoutConnectToOnlySpdif ,&ToutputAudioSettings::connectToOnlySpdif ,0,0,_l(""),1,
      _l("connectToOnlySpdif"),1,
+   IDFF_aoutAC3EncodeMode ,&ToutputAudioSettings::outAC3EncodeMode ,0,1,_l(""),1,
+     _l("outAC3EncodeMode"),0,
    0
   };
  addOptions(iopts);

@@ -20,6 +20,7 @@ public:
  WCHAR multichannelDevice[255]; WCHAR multichannelDeviceId[255];
  static TdevicesList devicesList;
  static const char_t *connetTos[];
+ int outAC3EncodeMode;
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;
  virtual void createPages(TffdshowPageDec *parent) const {}
 };
