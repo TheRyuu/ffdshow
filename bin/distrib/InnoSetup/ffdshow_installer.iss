@@ -2,7 +2,7 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1072
+#define tryout_revision = 1074
 #define buildyear = 2007
 #define buildmonth = '03'
 #define buildday = '25'
@@ -282,19 +282,19 @@ Source: msvc71\ffSpkCfg.dll; Flags: dontcopy
 
 ; MSVC71 runtimes are required for ffdshow components that are placed outside the ffdshow installation directory.
 #if !is64bit
-Source: Runtimes\msvcr71\msvcp71.dll; DestDir: {sys}; Flags: onlyifdoesntexist
-Source: Runtimes\msvcr71\msvcr71.dll; DestDir: {sys}; Flags: onlyifdoesntexist
+Source: Runtimes\msvc71\msvcp71.dll; DestDir: {sys}; Flags: onlyifdoesntexist
+Source: Runtimes\msvc71\msvcr71.dll; DestDir: {sys}; Flags: onlyifdoesntexist
 #endif
 
 #if MSVC80
   #if is64bit
-Source: Runtimes\msvcr80_x64\msvcr80.dll; DestDir: {app}; MinVersion: 0,5.02; Flags: ignoreversion restartreplace uninsrestartdelete
-Source: Runtimes\msvcr80_x64\microsoft.vc80.crt.manifest; DestDir: {app}; MinVersion: 0,5.02; Flags: ignoreversion restartreplace uninsrestartdelete
+Source: Runtimes\msvc80_x64\msvcr80.dll; DestDir: {app}; MinVersion: 0,5.02; Flags: ignoreversion restartreplace uninsrestartdelete
+Source: Runtimes\msvc80_x64\microsoft.vc80.crt.manifest; DestDir: {app}; MinVersion: 0,5.02; Flags: ignoreversion restartreplace uninsrestartdelete
   #else
 ; Install MSVC80 runtime as private assembly (can only be used by components that are in the same directory).
-Source: Runtimes\msvcr80\msvcr80.dll; DestDir: {app}; MinVersion: 4.1,5; Flags: ignoreversion restartreplace uninsrestartdelete
-Source: Runtimes\msvcr80\nt4\msvcr80.dll; DestDir: {app}; MinVersion: 0,4; OnlyBelowVersion: 0,5; Flags: ignoreversion restartreplace uninsrestartdelete
-Source: Runtimes\msvcr80\microsoft.vc80.crt.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete
+Source: Runtimes\msvc80\msvcr80.dll; DestDir: {app}; MinVersion: 4.1,5; Flags: ignoreversion restartreplace uninsrestartdelete
+Source: Runtimes\msvc80\nt4\msvcr80.dll; DestDir: {app}; MinVersion: 0,4; OnlyBelowVersion: 0,5; Flags: ignoreversion restartreplace uninsrestartdelete
+Source: Runtimes\msvc80\microsoft.vc80.crt.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete
 Source: msvc80\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
   #endif
 #endif
