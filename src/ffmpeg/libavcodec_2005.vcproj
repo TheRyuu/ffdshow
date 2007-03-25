@@ -1415,25 +1415,19 @@
 			</File>
 			<File
 				RelativePath=".\libavutil\mem.c"
+				>		
+			</File>
+			<File
+				RelativePath=".\libavutil\mem.h"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\libavutil\random.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\random.h"
+				>
 			</File>
 			<File
 				RelativePath=".\libavutil\rational.c"

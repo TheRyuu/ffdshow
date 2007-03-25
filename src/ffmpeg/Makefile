@@ -124,6 +124,7 @@ SRCS_C=DllEntry.c \
       $(LAVU_DIR)/lzo.c \
       $(LAVU_DIR)/mathematics.c \
       $(LAVU_DIR)/mem.c \
+      $(LAVU_DIR)/random.c \
       $(LAVU_DIR)/rational.c \
 	\
       $(ZLIB_DIR)/adler32.c \

@@ -42,8 +42,8 @@ extern "C" {
 #define AV_STRINGIFY(s)         AV_TOSTRING(s)
 #define AV_TOSTRING(s) #s
 
-#define LIBAVCODEC_VERSION_INT  ((51<<16)+(39<<8)+0)
-#define LIBAVCODEC_VERSION      51.39.0
+#define LIBAVCODEC_VERSION_INT  ((51<<16)+(40<<8)+0)
+#define LIBAVCODEC_VERSION      51.40.0
 #define LIBAVCODEC_BUILD        LIBAVCODEC_VERSION_INT
 
 #define LIBAVCODEC_IDENT        "Lavc" AV_STRINGIFY(LIBAVCODEC_VERSION)
@@ -544,7 +544,10 @@ typedef struct AVCodecContext {
 
     /**
      * some codecs needs additionnal format info. It is stored here
-     * - encoding: set by user.
+     * if any muxer uses this then ALL demuxers/parsers AND encoders for the specific codec MUST set it correctly
+     * too otherwise stream copy breaks
+     * in general use of this field by muxers is not recommanded
+     * - encoding: set by lavc.
      * - decoding: set by lavc. (FIXME is this ok?)
      */
     int sub_id;
@@ -765,6 +768,13 @@ typedef struct AVCodecContext {
     /**
      * fourcc (LSB first, so "ABCD" -> ('D'<<24) + ('C'<<16) + ('B'<<8) + 'A').
      * this is used to workaround some encoder bugs
+     * a demuxer should set this to what is stored in the field used to identify the codec
+     * if there are mutiple such fields in a container then the demuxer should choose the one
+     * which maximizes the information about the used codec
+     * if the codec tag field in a container is larger then 32bit then the demxuer should
+     * remap the longer id to 32bit with a table or other structure alternatively a new
+     * extra_codec_tag + size could be added but for this a clear advantage must be demonstrated
+     * first
      * - encoding: set by user, if not then the default based on codec_id will be used
      * - decoding: set by user, will be converted to upper case by lavc during init
      */

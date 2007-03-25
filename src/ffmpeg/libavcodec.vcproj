@@ -907,18 +907,15 @@
 			</File>
 			<File
 				RelativePath=".\libavutil\mem.c">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\libavutil\mem.h">
+			</File>
+			<File
+				RelativePath=".\libavutil\random.c">
+			</File>
+			<File
+				RelativePath=".\libavutil\random.h">
 			</File>
 			<File
 				RelativePath=".\libavutil\rational.c">
