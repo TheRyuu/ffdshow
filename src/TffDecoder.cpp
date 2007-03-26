@@ -1266,8 +1266,7 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
  HRESULT hr=S_OK;
  if ((newpict.rectFull==oldRect && newpict.rectFull.sar!=oldRect.sar)
       && _strnicmp(_l("wmplayer.exe"),getExeflnm(),13)!=0
-      && downstreamID!=VMR7
-      && downstreamID!=VMR9)
+      && downstreamID==OVERLAY_MIXER)
   {
    m_NeedToAttachFormat = true;
    oldRect=newpict.rectFull;
