@@ -1261,6 +1261,8 @@ static int decode_sequence_header(AVCodecContext *avctx, GetBitContext *gb)
                "Old WMV3 version detected, only I-frames will be decoded\n");
         //return -1;
     }
+    //TODO: figure out what they mean (always 0x402F)
+    if(!v->res_fasttx) skip_bits(gb, 16);
     av_log(avctx, AV_LOG_DEBUG,
                "Profile %i:\nfrmrtq_postproc=%i, bitrtq_postproc=%i\n"
                "LoopFilter=%i, MultiRes=%i, FastUVMC=%i, Extended MV=%i\n"
@@ -3849,6 +3851,7 @@ static void vc1_decode_i_blocks(VC1Context *v)
                 vc1_decode_i_block(v, s->block[k], k, val, (k<4)? v->codingset : v->codingset2);
 
                 s->dsp.vc1_inv_trans_8x8(s->block[k]);
+                if(!v->res_fasttx && !v->res_x8) for(j = 0; j < 64; j++) s->block[k][j] -= 16;
                 if(v->pq >= 9 && v->overlap) {
                     for(j = 0; j < 64; j++) s->block[k][j] += 128;
                 }
