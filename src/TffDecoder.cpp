@@ -192,6 +192,7 @@ HRESULT TffdshowDecVideo::CheckConnect(PIN_DIRECTION dir,IPin *pPin)
                      clsid==CLSID_VideoMixingRenderer9 ||
                      clsid==CLSID_DirectVobSubFilter ||
                      clsid==CLSID_DirectVobSubFilter2 ||
+                     clsid==CLSID_HaaliVideoRenderer ||
                      clsid==CLSID_FFDSHOW || clsid==CLSID_FFDSHOWRAW;
        allowOutChange=dvdproc ||
                       presetSettings->output->allowOutChange3==1 ||
