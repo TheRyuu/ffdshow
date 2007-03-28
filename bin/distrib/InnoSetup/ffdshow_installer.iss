@@ -2,10 +2,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1074
+#define tryout_revision = 1081
 #define buildyear = 2007
 #define buildmonth = '03'
-#define buildday = '25'
+#define buildday = '28'
 
 ; Build specific options
 #define unicode_required = True
@@ -100,9 +100,9 @@ LicenseFile=gnu_license.txt
 #endif
 #if MSVC80
   #if unicode_required
-MinVersion=0,5.0.1381
+MinVersion=0,5.0
   #else
-MinVersion=4.1,5.0.1381
+MinVersion=4.1,5.0
   #endif
 #else
   #if unicode_required
