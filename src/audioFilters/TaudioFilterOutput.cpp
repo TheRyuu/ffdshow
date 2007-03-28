@@ -25,6 +25,7 @@
 #include "Tlibavcodec.h"
 #include "libavcodec/ac3.h"
 #include "liba52/a52.h"
+#include "TffdshowDecAudioInputPin.h"
 
 TaudioFilterOutput::TaudioFilterOutput(IffdshowBase *Ideci,Tfilters *Iparent):TaudioFilter(Ideci,Iparent)
 {
@@ -78,9 +79,22 @@ HRESULT TaudioFilterOutput::process(TfilterQueue::iterator it,TsampleFormat &fmt
 {
  const ToutputAudioSettings *cfg=(ToutputAudioSettings*)cfg0;
  samples=init(cfg,fmt,samples,numsamples);
- if (cfg->outsfs==TsampleFormat::SF_LPCM16 
-	 // Change to PCM format if AC3 encode is requested only for multichannel streams
-	 || (cfg->outAC3EncodeMode == 1 && cfg->outsfs == TsampleFormat::SF_AC3 && fmt.nchannels <= 5))
+ 
+ // Change to PCM format if AC3 encode is requested only for multichannel streams and codec is not AC3/DTS
+ bool changeFormat = false;
+ const TffdshowDecAudioInputPin *pin =  deciA->GetCurrentPin();
+ if (pin != NULL)
+ {
+	 if (pin->audio->codecId != CODEC_ID_LIBA52
+	  && pin->audio->codecId != CODEC_ID_SPDIF_AC3
+	  && pin->audio->codecId != CODEC_ID_LIBDTS
+	  && pin->audio->codecId != CODEC_ID_SPDIF_DTS)
+	 {
+		if (cfg->outAC3EncodeMode == 1 && cfg->outsfs == TsampleFormat::SF_AC3 && fmt.nchannels <= 5)
+			changeFormat = true;
+	 }
+ }
+ if (cfg->outsfs==TsampleFormat::SF_LPCM16 || changeFormat == true)
   {
    fmt.sf=TsampleFormat::SF_LPCM16;
    int16_t *samples16=(int16_t*)samples;

@@ -77,7 +77,7 @@ public:
  STDMETHODIMP Enable(long lIndex, DWORD dwFlags);
  STDMETHODIMP Count(DWORD *pcStreams);
  STDMETHODIMP Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlags, LCID* plcid, DWORD* pdwGroup, WCHAR** ppszName, IUnknown** ppObject, IUnknown** ppUnk);
-
+ STDMETHODIMP_(TffdshowDecAudioInputPin *) GetCurrentPin(void);
 
  static const AMOVIESETUP_MEDIATYPE inputMediaTypes[],outputMediaTypes[];
  static const AMOVIESETUP_PIN pins[];
@@ -128,6 +128,10 @@ private:
     }
    STDMETHODIMP_(unsigned int) getCurrentStream2(void) {return deciA->getCurrentStream2();}
    STDMETHODIMP setCurrentStream(unsigned int i) {return deciA->setCurrentStream(i);}
+   STDMETHODIMP_(TffdshowDecAudioInputPin *) GetCurrentPin(void)
+	 {
+		 return deciA->GetCurrentPin();
+	 }
    STDMETHODIMP setAudioFilters(TaudioFilters *audioFiltersPtr)
     {
      return E_NOTIMPL;

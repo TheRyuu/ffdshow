@@ -8,6 +8,7 @@ class TaudioCodec;
 class Twinamp2;
 struct TsampleFormat;
 class TaudioFilters;
+class TffdshowDecAudioInputPin;
 template<class tchar> DECLARE_INTERFACE_(IffdshowDecAudioT,IUnknown)
 {
  STDMETHOD_(int,getVersion2)(void) PURE;
@@ -32,6 +33,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecAudioT,IUnknown)
  STDMETHOD (getOutSpeakersDescr)(tchar *buf,size_t buflen,int shortcuts) PURE;
  STDMETHOD (currentSampleFormat)(unsigned int *nchannels,unsigned int *freq,int *sampleFormat) PURE;
  STDMETHOD_(int,getJitter)(void) PURE;
+ STDMETHOD_(TffdshowDecAudioInputPin *, GetCurrentPin)(void) PURE;
 };
 
 struct IffdshowDecAudioA :IffdshowDecAudioT<char> {};

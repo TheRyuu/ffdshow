@@ -173,6 +173,7 @@ CBasePin* TffdshowDecAudio::GetPin(int n)
    return ipin;
   }
 }
+
 STDMETHODIMP TffdshowDecAudio::FindPin(LPCWSTR Id, IPin **ppPin)
 {
  if (!ppPin) return E_POINTER;
@@ -336,7 +337,13 @@ HRESULT TffdshowDecAudio::getMediaType(CMediaType *mtOut)
    outsf.descriptionPCM(descS,256);
    DPRINTF(_l("TffdshowDecAudio::getMediaType:%s"),descS);
   }
+
  /* Change AC3 output format to PCM if checkbox checked and output format is not multichannel */
+  if (inpin != NULL 
+	  && inpin->audio->codecId != CODEC_ID_LIBA52
+	  && inpin->audio->codecId != CODEC_ID_SPDIF_AC3
+	  && inpin->audio->codecId != CODEC_ID_LIBDTS
+	  && inpin->audio->codecId != CODEC_ID_SPDIF_DTS)
   if (presetSettings != NULL && presetSettings->output != NULL 
 	  && presetSettings->output->outAC3EncodeMode == 1)
   {
@@ -1001,6 +1008,12 @@ STDMETHODIMP TffdshowDecAudio::setCurrentStream2(TffdshowDecAudioInputPin *newip
   _pMC->Run();
  return _hr;
 }
+
+STDMETHODIMP_(TffdshowDecAudioInputPin *) TffdshowDecAudio::GetCurrentPin(void)
+{
+	return inpin;
+}
+
 
 AM_MEDIA_TYPE* TffdshowDecAudio::getInputMediaType(int lIndex)
 {
