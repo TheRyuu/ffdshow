@@ -100,9 +100,9 @@ LicenseFile=gnu_license.txt
 #endif
 #if MSVC80
   #if unicode_required
-MinVersion=0,4.0.1381
+MinVersion=0,5.0.1381
   #else
-MinVersion=4.1,4.0.1381
+MinVersion=4.1,5.0.1381
   #endif
 #else
   #if unicode_required
@@ -292,8 +292,7 @@ Source: Runtimes\msvc80_x64\msvcr80.dll; DestDir: {app}; MinVersion: 0,5.02; Fla
 Source: Runtimes\msvc80_x64\microsoft.vc80.crt.manifest; DestDir: {app}; MinVersion: 0,5.02; Flags: ignoreversion restartreplace uninsrestartdelete
   #else
 ; Install MSVC80 runtime as private assembly (can only be used by components that are in the same directory).
-Source: Runtimes\msvc80\msvcr80.dll; DestDir: {app}; MinVersion: 4.1,5; Flags: ignoreversion restartreplace uninsrestartdelete
-Source: Runtimes\msvc80\nt4\msvcr80.dll; DestDir: {app}; MinVersion: 0,4; OnlyBelowVersion: 0,5; Flags: ignoreversion restartreplace uninsrestartdelete
+Source: Runtimes\msvc80\msvcr80.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete
 Source: Runtimes\msvc80\microsoft.vc80.crt.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete
 Source: msvc80\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
   #endif
@@ -513,9 +512,9 @@ Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: bl
 
 ; Compatibility list
 Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: isUseonlyin; ValueData: {code:Get_isUseonlyinVideo}; Check: IsCompVValid; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: String; ValueName: useonlyin;   ValueData: {code:Get_useonlyinVideo};   Check: IsCompVValid; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: String; ValueName: useonlyin;   ValueData: {code:Get_useonlyinVideo};                        Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: isUseonlyin; ValueData: {code:Get_isUseonlyinAudio}; Check: IsCompAValid; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: useonlyin;   ValueData: {code:Get_useonlyinAudio};   Check: IsCompAValid; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: useonlyin;   ValueData: {code:Get_useonlyinAudio};                        Components: ffdshow
 
 Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: dontaskComp; ValueData: {code:Get_isCompVdontask};   Check: IsCompVValid; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: dontaskComp; ValueData: {code:Get_isCompAdontask};   Check: IsCompAValid; Components: ffdshow
@@ -540,19 +539,29 @@ Description: {cm:runvfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,c
 #include "custom_messages.iss"
 
 [Code]
+const NUMBER_OF_COMPATIBLEAPPLICATIONS=50;
+type
+  TCompApp = record
+    rev: Integer;  // The application (name) have been added to the compatibility list at this rev.
+    name: String;
+  end;
+
+  TcomplistPage = record
+    page: TInputOptionWizardPage;
+    edt: TMemo;
+    chbDontAsk: TCheckBox;
+    skipped: Boolean;
+    countAdded: Integer;
+  end;
+
 // Global vars
 var
   reg_mixerOut: Cardinal;
   reg_ismixer: Cardinal;
 
-  ComplistVideoPage: TInputOptionWizardPage;
-  edtCompVideo: TMemo;
-  chbDontAsk_compVideo: TCheckBox;
-  ComplistAudioPage: TInputOptionWizardPage;
-  edtCompAudio: TMemo;
-  chbDontAsk_compAudio: TCheckBox;
-  isCompVideoSkipped: Boolean;
-  isCompAudioSkipped: Boolean;
+  ComplistVideo: TcomplistPage;
+  ComplistAudio: TcomplistPage;
+  Complist_isMsgAddedShown: Boolean;
 
   SpeakerPage: TInputOptionWizardPage;
   chbVoicecontrol: TCheckBox;
@@ -560,6 +569,7 @@ var
   is8DisableMixer: Boolean;
 
   priorPageID: Integer;  // to be used "Don't ask me again" in compatibility list, so that audio and video config can link.
+  compApps : array[1..NUMBER_OF_COMPATIBLEAPPLICATIONS] of TCompApp;
 
 function CheckTaskVideo(name: String; value: Integer; showbydefault: Boolean): Boolean;
 var
@@ -714,16 +724,16 @@ begin
       Result := False;
     end
   end
-  if CurPageID = ComplistVideoPage.ID then begin
-    chbDontAsk_compAudio.Checked := chbDontAsk_compVideo.Checked;
+  if CurPageID = ComplistVideo.page.ID then begin
+    ComplistAudio.chbDontAsk.Checked := ComplistVideo.chbDontAsk.Checked;
   end
 end;
 
 function BackButtonClick(CurPageID: Integer): Boolean;
 begin
   Result := True;
-  if CurPageID = ComplistAudioPage.ID then begin
-    chbDontAsk_compVideo.Checked := chbDontAsk_compAudio.Checked;
+  if CurPageID = ComplistAudio.page.ID then begin
+    ComplistVideo.chbDontAsk.Checked := ComplistAudio.chbDontAsk.Checked;
   end
 end;
 
@@ -927,48 +937,48 @@ end;
 function Get_isUseonlyinVideo(dummy: String): String;
 begin
   Result := '1';
-  if ComplistVideoPage.Values[0] then
+  if ComplistVideo.page.Values[0] then
     Result := '0';
 end;
 
 function Get_useonlyinVideo(dummy: String): String;
 begin
-  Result := edtCompVideo.Text;
+  Result := ComplistVideo.edt.Text;
 end;
 
 function Get_isUseonlyinAudio(dummy: String): String;
 begin
   Result := '1';
-  if ComplistAudioPage.Values[0] then
+  if ComplistAudio.page.Values[0] then
     Result := '0';
 end;
 
 function Get_useonlyinAudio(dummy: String): String;
 begin
-  Result := edtCompAudio.Text;
+  Result := ComplistAudio.edt.Text;
 end;
 
 function isCompVValid(): Boolean;
 begin
-  Result := not isCompVideoSkipped;
+  Result := not ComplistVideo.skipped;
 end;
 
 function isCompAValid(): Boolean;
 begin
-  Result := not isCompAudioSkipped;
+  Result := not ComplistAudio.skipped;
 end;
 
 function Get_isCompVdontask(dummy: String): String;
 begin
   Result := '0';
-  if chbDontAsk_compVideo.Checked then
+  if ComplistVideo.chbDontAsk.Checked then
     Result := '1';
 end;
 
 function Get_isCompAdontask(dummy: String): String;
 begin
   Result := '0';
-  if chbDontAsk_compAudio.Checked then
+  if ComplistAudio.chbDontAsk.Checked then
     Result := '1';
 end;
 
@@ -980,40 +990,58 @@ begin
     Result :=defaultValue;
 end;
 
-procedure initComplist(var page: TInputOptionWizardPage; var edtTarget: TMemo; var chbTarget: TCheckBox; regKeyName: String);
+procedure initComplist(var complist: TcomplistPage; regKeyName: String);
 var
   regstr: String;
+  regstrUpper: String;
+  i: Integer;
+  revision: Cardinal;
 begin
-  page.Add(ExpandConstant('{cm:comp_donotlimit}'));
-  page.Add(ExpandConstant('{cm:comp_useonlyin}'));
+  complist.countAdded := 0;
+  complist.page.Add(ExpandConstant('{cm:comp_donotlimit}'));
+  complist.page.Add(ExpandConstant('{cm:comp_useonlyin}'));
   if ffRegReadDWordHKCU(regKeyName, 'isUseonlyin', 1)=1 then
-    page.Values[1] := True
+    complist.page.Values[1] := True
   else
-    page.Values[0] := True;
+    complist.page.Values[0] := True;
 
   // Edit control
-  edtTarget := TMemo.Create(page);
-  edtTarget.Top := ScaleY(78);
-  edtTarget.Width := page.SurfaceWidth;
-  edtTarget.Height := ScaleY(135);
-  edtTarget.Parent := page.Surface;
-  edtTarget.MaxLength := 4000;
-  edtTarget.ScrollBars := ssVertical;
-  if RegQueryStringValue(HKCU, regKeyName, 'useonlyin', regstr) then
-    edtTarget.Text := regstr
-  else
-    edtTarget.Text := 'aegisub.exe'#13#10'ALLPlayer.exe'#13#10'ALShow.exe'#13#10'ass_help3r.exe'#13#10'avipreview.exe'#13#10'aviutl.exe'#13#10'bsplay.exe'#13#10'bsplayer.exe'#13#10'CorePlayer.exe'#13#10'coreplayer.exe'#13#10'crystalfree.exe'#13#10'DScaler.exe'#13#10'dv.exe'#13#10'DVDMaker.exe'#13#10'ehshell.exe'#13#10'firefox.exe'#13#10'gom.exe'#13#10'graphedt.exe'#13#10'gspot.exe'#13#10'iexplore.exe'#13#10'JetAudio.exe'#13#10'kmplayer.exe'#13#10'LA.exe'#13#10'Lilith.exe'#13#10'makeAVIS.exe'#13#10'Media Center 12.exe'#13#10'Media Jukebox.exe'#13#10'megui.exe'#13#10'MovieMk.exe'#13#10'mplayer2.exe'#13#10'mplayerc.exe'#13#10'Munite.exe'#13#10'Muzikbrowzer.exe'#13#10'Mv2PlayerPlus.exe'#13#10'nvplayer.exe'#13#10'powerdvd.exe'#13#10'progdvb.exe'#13#10'Qonoha.exe'#13#10'realplay.exe'#13#10'rlkernel.exe'#13#10'SinkuHadouken.exe'#13#10'timecodec.exe'#13#10'ViPlay3.exe'#13#10'virtualdub.exe'#13#10'virtualdubmod.exe'#13#10'winamp.exe'#13#10'windvd.exe'#13#10'wmenc.exe'#13#10'wmplayer.exe'#13#10'zplayer.exe';
+  complist.edt := TMemo.Create(complist.page);
+  complist.edt.Top := ScaleY(78);
+  complist.edt.Width := complist.page.SurfaceWidth;
+  complist.edt.Height := ScaleY(135);
+  complist.edt.Parent := complist.page.Surface;
+  complist.edt.MaxLength := 4000;
+  complist.edt.ScrollBars := ssVertical;
+  if RegQueryStringValue(HKCU, regKeyName, 'useonlyin', regstr) then begin
+    if RegQueryDwordValue(HKLM, 'Software\GNU\ffdshow', 'revision', revision) then begin
+      regstrUpper := AnsiUppercase(regstr);
+      for i:= 1 to NUMBER_OF_COMPATIBLEAPPLICATIONS do
+      begin
+        if compApps[i].rev = 0 then Break;
+        if compApps[i].rev > revision then begin
+          if Pos(AnsiUppercase(compApps[i].name),regstrUpper) = 0 then begin
+            regstr := compApps[i].name + #13#10 + regstr;
+            complist.countAdded := complist.countAdded + 1;
+          end
+        end
+      end
+    end
+    complist.edt.text := regstr;
+  end else begin
+    complist.edt.Text := 'aegisub.exe'#13#10'ALLPlayer.exe'#13#10'ALShow.exe'#13#10'ass_help3r.exe'#13#10'avipreview.exe'#13#10'aviutl.exe'#13#10'bsplay.exe'#13#10'bsplayer.exe'#13#10'CorePlayer.exe'#13#10'coreplayer.exe'#13#10'crystalfree.exe'#13#10'DScaler.exe'#13#10'dv.exe'#13#10'DVDMaker.exe'#13#10'ehshell.exe'#13#10'firefox.exe'#13#10'gom.exe'#13#10'graphedt.exe'#13#10'gspot.exe'#13#10'iexplore.exe'#13#10'JetAudio.exe'#13#10'kmplayer.exe'#13#10'LA.exe'#13#10'Lilith.exe'#13#10'makeAVIS.exe'#13#10'Media Center 12.exe'#13#10'Media Jukebox.exe'#13#10'megui.exe'#13#10'MovieMk.exe'#13#10'mplayer2.exe'#13#10'mplayerc.exe'#13#10'Munite.exe'#13#10'Muzikbrowzer.exe'#13#10'Mv2PlayerPlus.exe'#13#10'nvplayer.exe'#13#10'powerdvd.exe'#13#10'progdvb.exe'#13#10'Qonoha.exe'#13#10'realplay.exe'#13#10'rlkernel.exe'#13#10'SinkuHadouken.exe'#13#10'timecodec.exe'#13#10'ViPlay3.exe'#13#10'virtualdub.exe'#13#10'virtualdubmod.exe'#13#10'winamp.exe'#13#10'windvd.exe'#13#10'wmenc.exe'#13#10'wmplayer.exe'#13#10'zplayer.exe';
+  end
 
 
   // Check box
-  chbTarget := TCheckBox.Create(page);
-  chbTarget.Top := ScaleY(220);
-  chbTarget.Left := ScaleX(0);
-  chbTarget.Width := ScaleX(170);
-  chbTarget.Height := ScaleY(16);
-  chbTarget.Caption := ExpandConstant('{cm:dontaskmeagain}');
-  chbTarget.Parent := page.Surface;
-  chbTarget.Checked := False;
+  complist.chbDontAsk := TCheckBox.Create(complist.page);
+  complist.chbDontAsk.Top := ScaleY(220);
+  complist.chbDontAsk.Left := ScaleX(0);
+  complist.chbDontAsk.Width := ScaleX(170);
+  complist.chbDontAsk.Height := ScaleY(16);
+  complist.chbDontAsk.Caption := ExpandConstant('{cm:dontaskmeagain}');
+  complist.chbDontAsk.Parent := complist.page.Surface;
+  complist.chbDontAsk.Checked := False;
 end;
 
 procedure InitializeWizard;
@@ -1023,31 +1051,47 @@ var
   isMajorType: Boolean;
   ii: Cardinal;
 begin
-
   { Create the pages }
 
-// Compatibility list
-  isCompVideoSkipped := False;
-  isCompAudioSkipped := False;
+// new compatible applications should be written both here and edtTarget.Text := 'aegisub...
+// FIXME more smart way of initializing compApps.
+  compApps[1].rev := 1077; //975;
+  compApps[1].name := 'Munite.exe';
+  compApps[2].rev := 1077; //975;
+  compApps[2].name := 'nvplayer.exe';
+  compApps[3].rev := 1077; //975;
+  compApps[3].name := 'Qonoha.exe';
+  compApps[3].rev := 1077; //976;
+  compApps[3].name := 'SinkuHadouken.exe';
+  compApps[4].rev := 1077; //985;
+  compApps[4].name := 'Lilith.exe';
+  compApps[5].rev := 1077; //1048;
+  compApps[5].name := 'megui.exe';
+  compApps[6].rev := 0;
 
-  ComplistVideoPage := CreateInputOptionPage(wpSelectTasks,
+// Compatibility list
+  ComplistVideo.skipped := False;
+  ComplistAudio.skipped := False;
+  Complist_isMsgAddedShown := False;
+
+  ComplistVideo.page := CreateInputOptionPage(wpSelectTasks,
     ExpandConstant('{cm:comp_SetupLabelV1}'),
     ExpandConstant('{cm:comp_SetupLabelV2}'),
     ExpandConstant('{cm:comp_SetupLabelV3}'),
     True, False);
-  initComplist(ComplistVideoPage, edtCompVideo, chbDontAsk_compVideo ,'Software\GNU\ffdshow');
+  initComplist(ComplistVideo ,'Software\GNU\ffdshow');
 
-  ComplistAudioPage := CreateInputOptionPage(ComplistVideoPage.ID,
+  ComplistAudio.page := CreateInputOptionPage(ComplistVideo.page.ID,
     ExpandConstant('{cm:comp_SetupLabelA1}'),
     ExpandConstant('{cm:comp_SetupLabelA2}'),
     ExpandConstant('{cm:comp_SetupLabelA3}'),
     True, False);
-  initComplist(ComplistAudioPage, edtCompAudio, chbDontAsk_compAudio ,'Software\GNU\ffdshow_audio');
+  initComplist(ComplistAudio,'Software\GNU\ffdshow_audio');
 
 // Speaker setup
 
   is8DisableMixer := False;
-  SpeakerPage := CreateInputOptionPage(ComplistAudioPage.ID,
+  SpeakerPage := CreateInputOptionPage(ComplistAudio.page.ID,
     ExpandConstant('{cm:speakersetup}'),
     ExpandConstant('{cm:SpeakerSetupLabel2}'),
     ExpandConstant('{cm:SpeakerSetupLabel3}'),
@@ -1210,17 +1254,38 @@ begin
   end
 #endif
 
-  if PageID = ComplistVideoPage.ID then begin
+  if PageID = ComplistVideo.page.ID then begin
     if ffRegReadDWordHKCU('Software\GNU\ffdshow','dontaskComp',0) = 1 then begin
       Result := True;
-      isCompVideoSkipped := True;
+      ComplistVideo.skipped := True;
     end
   end
-  if PageID = ComplistAudioPage.ID then begin
+  if PageID = ComplistAudio.page.ID then begin
     if ffRegReadDWordHKCU('Software\GNU\ffdshow_audio','dontaskComp',0) = 1 then begin
       Result := True;
-      isCompAudioSkipped := True;
+      ComplistAudio.Skipped := True;
     end
   end
   priorPageID := PageID;
 end;
+
+procedure showMsgAdded(PageID: Integer; complist: TcomplistPage);
+begin
+  if (PageID = complist.page.ID) and (Complist_isMsgAddedShown = False) then begin
+    if complist.countAdded = 1 then begin
+      MsgBox(ExpandConstant('{cm:comp_oneCompAppAdded}'), mbInformation, MB_OK);
+      Complist_isMsgAddedShown := True;
+    end
+    if complist.countAdded > 1 then begin
+      MsgBox(ExpandConstant('{cm:comp_multiCompAppAdded}'), mbInformation, MB_OK);
+      Complist_isMsgAddedShown := True;
+    end
+  end
+end;
+
+procedure CurPageChanged(CurPageID: Integer);
+begin
+  showMsgAdded(CurPageID, ComplistVideo);
+  showMsgAdded(CurPageID, ComplistAudio);
+end;
+

@@ -87,6 +87,8 @@ en.comp_SetupLabelA2=This time, AUDIO decoder configuration. Please configure as
 en.comp_SetupLabelA3=List the name of executable file which is compatible with ffdshow audio deocoder, one for each line.
 en.comp_donotlimit=Do not limit.
 en.comp_useonlyin=Use ffdshow only in the following applications:
+en.comp_oneCompAppAdded=A compatible application has been added to the top of compatibility list. Please check.
+en.comp_multiCompAppAdded=A few compatible applications have been added to the top of compatibility list. Please check.
 en.dontaskmeagain=Don't ask me again.
 
 #if localize
@@ -141,6 +143,8 @@ jp.comp_SetupLabelA2=¡“x‚ÍƒI[ƒfƒBƒIƒfƒR[ƒ_‚Ìİ’è‚Å‚·B“¯—l‚Éİ’è‚µ‚Ä‚­‚¾‚³‚¢
 jp.comp_SetupLabelA3=ffdshowƒI[ƒfƒBƒIƒfƒR[ƒ_‚ÆŒİŠ·«‚Ì‚ ‚éƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğ1s‚É1‚Â‚¸‚Â—ñ‹“‚µ‚Ä‚­‚¾‚³‚¢B
 jp.comp_donotlimit=§ŒÀ‚µ‚È‚¢B
 jp.comp_useonlyin=ˆÈ‰º‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Å‚Ì‚İffdshow‚ğg—p‚·‚éB
+jp.comp_oneCompAppAdded=ŒİŠ·ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğƒŠƒXƒg‚Ìæ“ª‚É’Ç‰Á‚µ‚Ü‚µ‚½BŒäŠm”F‚­‚¾‚³‚¢B
+jp.comp_multiCompAppAdded=ŒİŠ·ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğƒŠƒXƒg‚Ìæ“ª‚É’Ç‰Á‚µ‚Ü‚µ‚½BŒäŠm”F‚­‚¾‚³‚¢B
 jp.dontaskmeagain=¡Œã•\¦‚µ‚È‚¢
 
 ; German
