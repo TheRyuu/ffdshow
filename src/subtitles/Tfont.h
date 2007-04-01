@@ -58,8 +58,9 @@ private:
  const short (*matrix)[5];
  const YUVcolor &yuv;
  int xscale;
+ IffdshowBase *deci;
 public:
- TcharsChache(HDC Ihdc,const short (*Imatrix)[5],const YUVcolor &Iyuv,int Ixscale);
+ TcharsChache(HDC Ihdc,const short (*Imatrix)[5],const YUVcolor &Iyuv,int Ixscale,IffdshowBase *Ideci);
  template<class tchar> const TrenderedSubtitleWord *getChar(tchar *s,const TrenderedSubtitleLines::TprintPrefs &prefs);
  ~TcharsChache();
 };
@@ -83,10 +84,11 @@ private:
  bool shiftChroma;
  void drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16,HGDIOBJ old,int xscale,const SIZE &sz,const TrenderedSubtitleLines::TprintPrefs &prefs,const short (*matrix)[5],const YUVcolor &yuv,unsigned int shadowSize);
  unsigned int getShadowSize(const TrenderedSubtitleLines::TprintPrefs &prefs,LONG fontHeight);
+ IffdshowBase *deci;
 public:
- template<class tchar> TrenderedSubtitleWord(HDC hdc,const tchar *s,size_t strlens,const short (*matrix)[5],const YUVcolor &yuv,const TrenderedSubtitleLines::TprintPrefs &prefs,int xscale);
- template<class tchar> TrenderedSubtitleWord(TcharsChache *chars,const tchar *s,size_t strlens,const TrenderedSubtitleLines::TprintPrefs &prefs);
- TrenderedSubtitleWord(bool IshiftChroma=true):shiftChroma(IshiftChroma),TrenderedSubtitleWordBase(false) {}
+ template<class tchar> TrenderedSubtitleWord(HDC hdc,const tchar *s,size_t strlens,const short (*matrix)[5],const YUVcolor &yuv,const TrenderedSubtitleLines::TprintPrefs &prefs,int xscale,IffdshowBase *Ideci);
+ template<class tchar> TrenderedSubtitleWord(TcharsChache *chars,const tchar *s,size_t strlens,const TrenderedSubtitleLines::TprintPrefs &prefs,IffdshowBase *Ideci);
+ TrenderedSubtitleWord(bool IshiftChroma=true):shiftChroma(IshiftChroma),TrenderedSubtitleWordBase(false),deci(NULL) {}
  virtual void print(unsigned int dx[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const;
 };
 

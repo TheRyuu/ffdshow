@@ -356,8 +356,8 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
  idff_fontsizep=IDFF_fontSizeP;
  idff_fontsizea=IDFF_fontSizeA;
  idff_fontspacing=IDFF_fontSpacing;
- idff_fontoutlinestrength=IDFF_fontShadowStrength;
- idff_fontoutlineradius=IDFF_fontShadowRadius;
+ idff_fontoutlinestrength=IDFF_fontOutlineStrength;
+ idff_fontoutlineradius=IDFF_fontOutlineRadius;
  idff_fontweight=IDFF_fontWeight;
  idff_fontcolor=IDFF_fontColor;
  idff_fontxscale=IDFF_fontXscale;
@@ -374,8 +374,8 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
  static const TbindTrackbar<TfontPageSubtitles> htbr[]=
   {
    IDC_TBR_FONT_SPACING,IDFF_fontSpacing,&TfontPageSubtitles::spacingxscale2dlg,
-   IDC_TBR_FONT_OUTLINE_STRENGTH,IDFF_fontShadowStrength,&TfontPageSubtitles::shadow2dlg,
-   IDC_TBR_FONT_OUTLINE_RADIUS,IDFF_fontShadowRadius,&TfontPageSubtitles::shadow2dlg,
+   IDC_TBR_FONT_OUTLINE_STRENGTH,IDFF_fontOutlineStrength,&TfontPageSubtitles::shadow2dlg,
+   IDC_TBR_FONT_OUTLINE_RADIUS,IDFF_fontOutlineRadius,&TfontPageSubtitles::shadow2dlg,
    IDC_TBR_FONT_XSCALE,IDFF_fontXscale,&TfontPageSubtitles::spacingxscale2dlg,
    IDC_TBR_FONT_SUBSHADOW_SIZE,IDFF_fontShadowSize,&TfontPageSubtitles::shadowSize2dlg,
    IDC_TBR_FONT_SUBSHADOW_ALPHA,IDFF_fontShadowAlpha,&TfontPageSubtitles::shadowAlpha2dlg,

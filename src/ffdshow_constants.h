@@ -467,8 +467,8 @@
 //#define IDFF_fontSize            803
 #define IDFF_fontSizeA               824
 #define IDFF_fontWeight              804
-#define IDFF_fontShadowStrength      805 //outline strength (0..100) 100 - subtitles aren't transparent
-#define IDFF_fontShadowRadius        806 //outline radius
+#define IDFF_fontOutlineStrength     805 //outline strength (0..100) 100 - subtitles aren't transparent
+#define IDFF_fontOutlineRadius       806 //outline radius
 #define IDFF_fontSpacing             808
 #define IDFF_fontColor               809
 #define IDFF_fontSplitting           831
