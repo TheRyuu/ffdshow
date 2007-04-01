@@ -309,6 +309,21 @@ STDMETHODIMP TffdshowDecVideoOutputPin::Connect(
     filterinfo.pGraph->Release();
    pininfo.pFilter->Release();
   }
+ BITMAPINFOHEADER *bmi=NULL;
+ if (pmt && pmt->formattype==FORMAT_VideoInfo2
+   && pmt->pbFormat
+   && pmt->cbFormat>=sizeof(VIDEOINFOHEADER2))
+  {
+   VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)pmt->pbFormat;
+   bmi=&vih->bmiHeader;
+  }
+ if (pmt && pmt->formattype==FORMAT_VideoInfo
+   && pmt->pbFormat
+   && pmt->cbFormat>=sizeof(VIDEOINFOHEADER))
+  {
+   VIDEOINFOHEADER* vih = (VIDEOINFOHEADER*)pmt->pbFormat;
+   bmi=&vih->bmiHeader;
+  }
 #endif
  fdv->set_downstreamID(pReceivePin);
  const CMediaType * ptype = (CMediaType*)pmt;

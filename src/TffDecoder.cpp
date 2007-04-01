@@ -790,8 +790,8 @@ STDMETHODIMP TffdshowDecVideo::deliverPreroll(int frametype)
  if (waitForKeyframe && (frametype&FRAME_TYPE::typemask)==FRAME_TYPE::I)
   waitForKeyframe=FALSE;
  // if so, then we don't want to pass this on to the renderer
- if (waitForKeyframe)
-  DPRINTF(_l("still waiting for a keyframe"));
+ //if (waitForKeyframe)
+ // DPRINTF(_l("still waiting for a keyframe"));
  return S_FALSE;
 }
 
@@ -809,7 +809,7 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
  // if so, then we don't want to pass this on to the renderer
  if (waitForKeyframe)
   {
-   DPRINTF(_l("still waiting for a keyframe"));
+   //DPRINTF(_l("still waiting for a keyframe"));
    return S_FALSE;
   }
 
@@ -1486,7 +1486,7 @@ HRESULT TffdshowDecVideo::initializeOutputSample(IMediaSample **ppOutSample)
 
 void TffdshowDecVideo::setSampleSkipped(bool sendSkip)
 {
- DPRINTF(_l("dropframe"));
+ //DPRINTF(_l("dropframe"));
  m_bSampleSkipped=TRUE;
  if (sendSkip && inpin) inpin->setSampleSkipped();
 }

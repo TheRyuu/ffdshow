@@ -324,11 +324,11 @@ private:
  bool isOSD_time_on_ffdshow;
  bool OSD_time_on_ffdshowFirstRun;
 
-#ifdef DEBUG
-#define DPRINTF_SAMPLE_TIME(x) DPRINTF_SampleTime(x)
-#else
+//#ifdef DEBUG
+//#define DPRINTF_SAMPLE_TIME(x) DPRINTF_SampleTime(x)
+//#else
 #define DPRINTF_SAMPLE_TIME(x)
-#endif
+//#endif
 
  void DPRINTF_SampleTime(IMediaSample* pSample);
 
