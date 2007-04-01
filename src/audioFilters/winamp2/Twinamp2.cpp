@@ -60,7 +60,6 @@ Twinamp2dsp* Twinamp2::getFilter(const Twinamp2settings *cfg)
  for (Twinamp2dspDll::Tfilters::iterator f=d->filters.begin();f!=d->filters.end();f++)
   if (strcmp((*f)->descr.c_str(),cfg->modulename)==0)
    {
-    d->addref();
     return *f;
    }
  return NULL;
@@ -69,8 +68,15 @@ Twinamp2dsp* Twinamp2::getFilter(const Twinamp2settings *cfg)
 //=========================== Twinamp2dspDll =================================
 Twinamp2dspDll::Twinamp2dspDll(const ffstring &flnm):refcount(1)
 {
+ dll=NULL;
  winampDSPGetHeaderType=NULL;
  hdr=NULL;
+ char_t filename[MAX_PATH],name[MAX_PATH],ext[MAX_PATH];
+ _splitpath(flnm.c_str(),NULL,NULL,name,ext);
+ _makepath(filename,NULL,NULL,name,ext);
+ // DSP stacker is not compatible with ffdshow currently. Maybe ffdshow's bug, but I can't help...
+ if (_strnicmp(_l("dsp_stacker.dll"),filename,16)==0)
+  return;
  dll=new Tdll(flnm.c_str(),NULL);
  dll->loadFunction(winampDSPGetHeaderType,"winampDSPGetHeader2");
  if (dll->ok)
@@ -120,10 +126,15 @@ Twinamp2dsp::Twinamp2dsp(Twinamp2dspDll *Idll,winampDSPModule *Imod):mod(Imod),d
  descr=mod->description;
  inited=0;
 }
+Twinamp2dsp::~Twinamp2dsp()
+{
+ mod->Quit(mod);
+}
 int Twinamp2dsp::init(void)
 {
  if (!inited++ && mod->Init)
   {
+   addref();
    unsigned threadID;
    hThread=(HANDLE)_beginthreadex(NULL,65536,threadProc,this,NULL,&threadID);
    while (!h) Sleep(20);
@@ -144,11 +155,18 @@ void Twinamp2dsp::done(void)
 {
  if (!inited) return;
  inited--;
- if (inited==0 && h)
+ if (inited==0 && h && hThread)
   {
    SendMessage(h,WM_CLOSE,0,0);
    WaitForSingleObject(hThread,INFINITE);
+   hThread = NULL;
+   h = NULL;
+   release();
   }
+}
+void Twinamp2dsp::addref(void)
+{
+ dll->addref();
 }
 void Twinamp2dsp::release(void)
 {
@@ -195,7 +213,6 @@ unsigned int __stdcall Twinamp2dsp::threadProc(void *self0)
        DispatchMessage(&msg);
       }
     }
-   self->mod->Quit(self->mod);
   }
  else
   {

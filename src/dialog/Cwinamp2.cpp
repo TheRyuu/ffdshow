@@ -35,6 +35,10 @@ void Twinamp2page::init(void)
  anchors.init(ainfo,*this);
  winamp2=NULL;
  currentdsp=NULL;
+ if (cfgGet(IDFF_filterMode) & IDFF_FILTERMODE_CONFIG)
+  addHint(IDC_BT_WINAMP2_DIR,_l("Winamp2 application directory, not plugin directory."));
+ else
+  addHint(IDC_BT_WINAMP2_DIR,_l("Winamp2 directory can not be changed during playback."));
 }
 
 void Twinamp2page::cfg2dlg(void)
@@ -123,6 +127,7 @@ INT_PTR Twinamp2page::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 void Twinamp2page::onDir(void)
 {
+ if (currentdsp) currentdsp->done();
  char_t dir[MAX_PATH];cfgGet(IDFF_winamp2dir,dir,MAX_PATH);
  if (dlgGetDir(m_hwnd,dir,_(-IDD_WINAMP2,_l("Select Winamp 2 directory (not the plugins directory!)"))))
   {
@@ -150,11 +155,20 @@ void Twinamp2page::onConfig(void)
 Twinamp2page::Twinamp2page(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecAudio(Iparent,idff)
 {
  resInter=IDC_CHB_WINAMP2;
- static const TbindButton<Twinamp2page> bt[]=
+ static const TbindButton<Twinamp2page> bt1[]=
   {
-   IDC_BT_WINAMP2_DIR,&Twinamp2page::onDir,
    IDC_BT_WINAMP2_CONFIG,&Twinamp2page::onConfig,
    0,NULL
   };
- bindButtons(bt);
+ static const TbindButton<Twinamp2page> bt2[]=
+  {
+   IDC_BT_WINAMP2_CONFIG,&Twinamp2page::onConfig,
+   IDC_BT_WINAMP2_DIR,&Twinamp2page::onDir,
+   0,NULL
+  };
+ // Winamp dir cannot be changed during playback. It's hard to code.
+ if (cfgGet(IDFF_filterMode) & IDFF_FILTERMODE_CONFIG)
+  bindButtons(bt2);
+ else
+  bindButtons(bt1);
 }

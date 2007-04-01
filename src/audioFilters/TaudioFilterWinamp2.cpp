@@ -31,7 +31,6 @@ void TaudioFilterWinamp2::done(void)
  if (filter)
   {
    filter->done();
-   filter->release();
    filter=NULL;
   }
 }

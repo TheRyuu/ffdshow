@@ -15,6 +15,8 @@ private:
  static LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM lprm);
 public:
  Twinamp2dsp(Twinamp2dspDll *Idll,winampDSPModule *Imod);
+ ~Twinamp2dsp();
+ void addref(void);
  void release(void);
  ffstring descr;
  int init(void);

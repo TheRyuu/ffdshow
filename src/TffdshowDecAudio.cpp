@@ -834,7 +834,15 @@ STDMETHODIMP TffdshowDecAudio::getWinamp2(Twinamp2* *winamp2ptr)
 }
 void TffdshowDecAudio::onWinamp2dirChange(int paramID,const char_t *valname)
 {
- if (winamp2) delete winamp2;winamp2=NULL;
+ // This is called when the dialog is opened during playback, even if winamp2 dir is not changed.
+ // If we delete winamp2 during playback, ffdshow crashes.
+ // Winamp dir cannot be changed during playback.
+ // It's hard to code. I drop it.
+ if (globalSettings->filtermode & IDFF_FILTERMODE_CONFIG)
+  {
+   if (winamp2) delete winamp2;
+   winamp2=NULL;
+  }
 }
 
 STDMETHODIMP TffdshowDecAudio::getEncoderInfo(char_t *buf,size_t buflen)
