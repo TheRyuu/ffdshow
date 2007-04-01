@@ -557,8 +557,8 @@
 #define IDFF_OSDfontCharset        1502
 #define IDFF_OSDfontSize           1503
 #define IDFF_OSDfontWeight         1504
-#define IDFF_OSDfontShadowStrength 1505
-#define IDFF_OSDfontShadowRadius   1506
+#define IDFF_OSDfontOutlineStrength 1505
+#define IDFF_OSDfontOutlineRadius  1506
 #define IDFF_OSDfontSpacing        1507
 #define IDFF_OSDfontColor          1508
 #define IDFF_OSDfontXscale         1532

@@ -51,8 +51,8 @@ int CALLBACK TfontPage::EnumFamCallBackFonts(CONST LOGFONT *lpelf,CONST TEXTMETR
 void TfontPage::init(void)
 {
  tbrSetRange(IDC_TBR_FONT_SPACING,-10,10,2);
- tbrSetRange(IDC_TBR_FONT_SHADOW_STRENGTH,0,100,10);
- tbrSetRange(IDC_TBR_FONT_SHADOW_RADIUS,1,100,10);
+ tbrSetRange(IDC_TBR_FONT_OUTLINE_STRENGTH,0,100,10);
+ tbrSetRange(IDC_TBR_FONT_OUTLINE_RADIUS,1,100,10);
  tbrSetRange(IDC_TBR_FONT_XSCALE,30,300);
  tbrSetRange(IDC_TBR_FONT_SUBSHADOW_SIZE,0,20, 1);
  tbrSetRange(IDC_TBR_FONT_SUBSHADOW_ALPHA,0,255, 10);
@@ -316,8 +316,8 @@ bool TfontPage::reset(bool testonly)
    deci->resetParam(idff_fontsizea);
    deci->resetParam(idff_fontweight);
    deci->resetParam(idff_fontcolor);
-   deci->resetParam(idff_fontshadowstrength);
-   deci->resetParam(idff_fontshadowradius);
+   deci->resetParam(idff_fontoutlinestrength);
+   deci->resetParam(idff_fontoutlineradius);
    deci->resetParam(idff_fontspacing);
    deci->resetParam(idff_fontxscale);
    deci->resetParam(idff_fontfast);
@@ -356,8 +356,8 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
  idff_fontsizep=IDFF_fontSizeP;
  idff_fontsizea=IDFF_fontSizeA;
  idff_fontspacing=IDFF_fontSpacing;
- idff_fontshadowstrength=IDFF_fontShadowStrength;
- idff_fontshadowradius=IDFF_fontShadowRadius;
+ idff_fontoutlinestrength=IDFF_fontShadowStrength;
+ idff_fontoutlineradius=IDFF_fontShadowRadius;
  idff_fontweight=IDFF_fontWeight;
  idff_fontcolor=IDFF_fontColor;
  idff_fontxscale=IDFF_fontXscale;
@@ -374,8 +374,8 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
  static const TbindTrackbar<TfontPageSubtitles> htbr[]=
   {
    IDC_TBR_FONT_SPACING,IDFF_fontSpacing,&TfontPageSubtitles::spacingxscale2dlg,
-   IDC_TBR_FONT_SHADOW_STRENGTH,IDFF_fontShadowStrength,&TfontPageSubtitles::shadow2dlg,
-   IDC_TBR_FONT_SHADOW_RADIUS,IDFF_fontShadowRadius,&TfontPageSubtitles::shadow2dlg,
+   IDC_TBR_FONT_OUTLINE_STRENGTH,IDFF_fontShadowStrength,&TfontPageSubtitles::shadow2dlg,
+   IDC_TBR_FONT_OUTLINE_RADIUS,IDFF_fontShadowRadius,&TfontPageSubtitles::shadow2dlg,
    IDC_TBR_FONT_XSCALE,IDFF_fontXscale,&TfontPageSubtitles::spacingxscale2dlg,
    IDC_TBR_FONT_SUBSHADOW_SIZE,IDFF_fontShadowSize,&TfontPageSubtitles::shadowSize2dlg,
    IDC_TBR_FONT_SUBSHADOW_ALPHA,IDFF_fontShadowAlpha,&TfontPageSubtitles::shadowAlpha2dlg,
@@ -396,13 +396,13 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
 void TfontPageSubtitles::shadow2dlg(void)
 {
  int shadowmode=cfgGet(idff_subshadowmode);
- int subshadowsize=cfgGet(idff_fontshadowradius);
- tbrSet(IDC_TBR_FONT_SHADOW_STRENGTH,cfgGet(idff_fontshadowstrength),IDC_LBL_FONT_SHADOW_STRENGTH);
- tbrSet(IDC_TBR_FONT_SHADOW_RADIUS,subshadowsize,IDC_LBL_FONT_SHADOW_RADIUS);
+ int outlineradius=cfgGet(idff_fontoutlineradius);
+ tbrSet(IDC_TBR_FONT_OUTLINE_STRENGTH,cfgGet(idff_fontoutlinestrength),IDC_LBL_FONT_OUTLINE_STRENGTH);
+ tbrSet(IDC_TBR_FONT_OUTLINE_RADIUS,outlineradius,IDC_LBL_FONT_OUTLINE_RADIUS);
  cbxSetCurSel(IDC_CBX_FONT_SUBSHADOW_MODE,shadowmode);
  static const int idShadows[]={IDC_LBL_FONT_SUBSHADOW_ALPHA,IDC_TBR_FONT_SUBSHADOW_ALPHA,IDC_LBL_FONT_SUBSHADOW_SIZE,IDC_TBR_FONT_SUBSHADOW_SIZE,0};
  enable(shadowmode!=3,idShadows);
- enable(shadowmode==3 || subshadowsize==0,IDC_CHB_FONT_FAST);
+ enable(shadowmode==3 || outlineradius==0,IDC_CHB_FONT_FAST);
 }
 
 void TfontPageSubtitles::shadowSize2dlg(void)
@@ -447,8 +447,8 @@ TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent):TfontPage(Iparent)
  idff_fontsizep=IDFF_OSDfontSize;
  idff_fontsizea=0;
  idff_fontspacing=IDFF_OSDfontSpacing;
- idff_fontshadowstrength=IDFF_OSDfontShadowStrength;
- idff_fontshadowradius=IDFF_OSDfontShadowRadius;
+ idff_fontoutlinestrength=IDFF_OSDfontOutlineStrength;
+ idff_fontoutlineradius=IDFF_OSDfontOutlineRadius;
  idff_fontweight=IDFF_OSDfontWeight;
  idff_fontcolor=IDFF_OSDfontColor;
  idff_fontxscale=IDFF_OSDfontXscale;
@@ -462,8 +462,8 @@ TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent):TfontPage(Iparent)
  static const TbindTrackbar<TfontPageOSD> htbr[]=
   {
    IDC_TBR_FONT_SPACING,IDFF_OSDfontSpacing,&TfontPageOSD::spacingxscale2dlg,
-   IDC_TBR_FONT_SHADOW_STRENGTH,IDFF_OSDfontShadowStrength,&TfontPageOSD::shadow2dlg,
-   IDC_TBR_FONT_SHADOW_RADIUS,IDFF_OSDfontShadowRadius,&TfontPageOSD::shadow2dlg,
+   IDC_TBR_FONT_OUTLINE_STRENGTH,IDFF_OSDfontOutlineStrength,&TfontPageOSD::shadow2dlg,
+   IDC_TBR_FONT_OUTLINE_RADIUS,IDFF_OSDfontOutlineRadius,&TfontPageOSD::shadow2dlg,
    IDC_TBR_FONT_XSCALE,IDFF_OSDfontXscale,&TfontPageOSD::spacingxscale2dlg,
    0,0,NULL
   };
@@ -480,6 +480,9 @@ TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent):TfontPage(Iparent)
 
 void TfontPageOSD::shadow2dlg(void)
 {
+ int outlineradius=cfgGet(idff_fontoutlineradius);
+ tbrSet(IDC_TBR_FONT_OUTLINE_STRENGTH,cfgGet(idff_fontoutlinestrength),IDC_LBL_FONT_OUTLINE_STRENGTH);
+ tbrSet(IDC_TBR_FONT_OUTLINE_RADIUS,outlineradius,IDC_LBL_FONT_OUTLINE_RADIUS);
  static const int idShadows[]={IDC_LBL_FONT_SUBSHADOW_MODE,IDC_CBX_FONT_SUBSHADOW_MODE,IDC_LBL_FONT_SUBSHADOW_ALPHA,IDC_TBR_FONT_SUBSHADOW_ALPHA,IDC_LBL_FONT_SUBSHADOW_SIZE,IDC_TBR_FONT_SUBSHADOW_SIZE,0};
  enable(0,idShadows);
 }

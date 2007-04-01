@@ -35,10 +35,10 @@ public:
  static int getCharset(const char_t *name);
  bool getTip(char_t *buf,size_t len)
   {
-   tsnprintf(buf,len,_l("Font: %s, %s charset, %ssize:%i, %s, spacing:%i\nShadow intensity: %i, shadow radius:%i"),name,getCharset(charset),autosize?_l("auto"):_l(""),autosize?sizeA:sizeP,weights[weight/100-1].name,spacing,shadowStrength,shadowRadius);
+   tsnprintf(buf,len,_l("Font: %s, %s charset, %ssize:%i, %s, spacing:%i\nShadow intensity: %i, shadow radius:%i"),name,getCharset(charset),autosize?_l("auto"):_l(""),autosize?sizeA:sizeP,weights[weight/100-1].name,spacing,outlineStrength,outlineRadius);
    return true;
   }
- int spacing,weight,color,shadowStrength,shadowRadius;
+ int spacing,weight,color,outlineStrength,outlineRadius;
  int split;
  int fast;
  virtual void reg_op(TregOp &t);

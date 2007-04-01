@@ -320,8 +320,8 @@
 #define IDC_CBX_FONT_NAME2              1115
 #define IDC_LBL_FONT_SPACING            1116
 #define IDC_TBR_FONT_SPACING            1117
-#define IDC_LBL_FONT_SHADOW_STRENGTH    1118
-#define IDC_TBR_FONT_SHADOW_STRENGTH    1119
+#define IDC_LBL_FONT_OUTLINE_STRENGTH    1118
+#define IDC_TBR_FONT_OUTLINE_STRENGTH   1119
 #define IDC_BT_SUB_LOADFILE             1120
 #define IDC_LBL_OFFSETUV_Y              1120
 #define IDC_LBL_FONT_XSCALE             1120
@@ -337,9 +337,9 @@
 #define IDC_TBR_SUB_POSY                1127
 #define IDC_ED_SUB_DELAY                1128
 #define IDC_ED_SUB_SPEED                1129
-#define IDC_LBL_FONT_SHADOW_RADIUS      1130
+#define IDC_LBL_FONT_OUTLINE_RADIUS      1130
 #define IDC_ED_SUB_SPEED2               1130
-#define IDC_TBR_FONT_SHADOW_RADIUS      1131
+#define IDC_TBR_FONT_OUTLINE_RADIUS     1131
 #define IDC_TBR_SUB_STEREOSCOPICPAR     1131
 #define IDC_TBR_SUB_LINESPACING         1132
 #define IDC_CHB_BLUR                    1134
