@@ -40,6 +40,8 @@
 #endif
 
 #ifdef _MSC_VER
+#define inline __inline
+#define strncasecmp(s1, s2, n) strnicmp(s1, s2, n)
 #define snprintf _snprintf
 #define X264_VERSION "" // no configure script for msvc
 #endif
@@ -49,6 +51,12 @@
 #define x264_alloca(x) (void*)(((intptr_t)_alloca((x)+15)+15)&~15)
 #else
 #define x264_alloca(x) (void*)(((intptr_t) alloca((x)+15)+15)&~15)
+#endif
+
+#ifdef _MSC_VER
+#define DECLARE_ALIGNED( type, var, n ) __declspec(align(n)) type var
+#else
+#define DECLARE_ALIGNED( type, var, n ) type var __attribute__((aligned(n)))
 #endif
 
 /* threads */
