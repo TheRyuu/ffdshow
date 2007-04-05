@@ -27,6 +27,8 @@ struct TSubtitleProps
  int alignment;
 
  int marginR,marginL,marginV,marginTop,marginBottom; // -1 = default
+ int borderStyle; // -1 = default
+ double outlineWidth,shadowDepth; // -1 = default
  unsigned int get_marginR(unsigned int screenWidth) const;
  unsigned int get_marginL(unsigned int screenWidth) const;
  unsigned int get_marginTop(unsigned int screenHeight) const;

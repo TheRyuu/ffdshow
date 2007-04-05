@@ -33,6 +33,7 @@ void TSubtitleProps::reset(void)
  scaleX=scaleY=-1;
  alignment=-1;
  marginR=marginL=marginV=marginTop=marginBottom=-1;
+ borderStyle=outlineWidth=shadowDepth=-1;
 }
 
 void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy) const

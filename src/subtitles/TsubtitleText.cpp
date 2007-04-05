@@ -743,6 +743,17 @@ template<class tchar> template<int TSubtitleProps::*offset,int min,int max> void
  else
   props.*offset=defprops.*offset;
 }
+template<class tchar> template<double TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa<tchar>::doubleProp(const tchar *start,const tchar *end)
+{
+ tchar *buf=(tchar*)_alloca((end-start+1)*sizeof(tchar));memset(buf,0,(end-start+1)*sizeof(tchar));
+ memcpy(buf,start,(end-start)*sizeof(tchar));
+ tchar *bufend;
+ double enc=strtod(buf,&bufend);
+ if (buf!=bufend && *bufend=='\0' && isIn(enc,(double)min,(double)max))
+  props.*offset=enc;
+ else
+  props.*offset=defprops.*offset;
+}
 template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void TsubtitleFormat::Tssa<tchar>::pos(const tchar *start,const tchar *end)
 {
  props.alignment=5;
@@ -844,6 +855,7 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::processTokens(const tch
        !processToken(l3,_L("\\be"),&Tssa<tchar>::template boolProp<&TSubtitleProps::bluredges>) &&
        !processToken(l3,_L("\\b"),&Tssa<tchar>::template boolProp<&TSubtitleProps::bold>) &&
        !processToken(l3,_L("\\u"),&Tssa<tchar>::template boolProp<&TSubtitleProps::underline>) &&
+       !processToken(l3,_L("\\shad"),&Tssa<tchar>::template doubleProp<&TSubtitleProps::shadowDepth,0,4>) &&
        !processToken(l3,_L("\\s"),&Tssa<tchar>::template boolProp<&TSubtitleProps::strikeout>) &&
        !processToken(l3,_L("\\r"),&Tssa<tchar>::reset) &&
        !processToken(l3,_L("\\clip"),NULL) &&

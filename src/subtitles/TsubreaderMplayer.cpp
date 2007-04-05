@@ -470,6 +470,16 @@ template<class tchar> void TsubtitleParserSSA<tchar>::strToInt(const ffstring &s
   }
 }
 
+template<class tchar> void TsubtitleParserSSA<tchar>::strToDouble(const ffstring &str,double *d)
+{
+ if (!str.empty())
+  {
+   tchar *end;
+   double val=strtod(str.c_str(),&end);
+   if (*end=='\0' && val>=0) *d=val;
+  }
+}
+
 template<class tchar> void TsubtitleParserSSA<tchar>::Tstyle::toProps(void)
 {
  if (fontname)
@@ -505,6 +515,9 @@ template<class tchar> void TsubtitleParserSSA<tchar>::Tstyle::toProps(void)
  strToInt(marginV,&props.marginV);
  strToInt(marginTop,&props.marginTop);
  strToInt(marginBottom,&props.marginBottom);
+ strToInt(borderStyle,&props.borderStyle);
+ strToDouble(outlineWidth,&props.outlineWidth);
+ strToDouble(shadowDepth,&props.shadowDepth);
  if (alignment && this->version != SSA)
   {
    switch (props.alignment)
@@ -636,6 +649,12 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
         styleFormat.push_back(&Tstyle::marginRight);
        else if (strnicmp(f->first,_L("marginv"),7)==0)
         styleFormat.push_back(&Tstyle::marginV);
+       else if (strnicmp(f->first,_L("borderstyle"),11)==0)
+        styleFormat.push_back(&Tstyle::borderStyle);
+       else if (strnicmp(f->first,_L("outline"),7)==0)
+        styleFormat.push_back(&Tstyle::outlineWidth);
+       else if (strnicmp(f->first,_L("shadow"),6)==0)
+        styleFormat.push_back(&Tstyle::shadowDepth);
        else
         styleFormat.push_back(NULL);
       }
@@ -681,8 +700,8 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
      strtok(line+7,_L(","),fields);
      Tstyle style(playResX,playResY,version);
      for (size_t i=0;i<fields.size() && i<styleFormat.size();i++)
-      if (styleFormat[i])
-       style.*(styleFormat[i])=fields[i];
+       if (styleFormat[i])
+        style.*(styleFormat[i])=fields[i];
      styles.add(style);
     }
    else if (inEvents==2 && strnicmp(line,_L("Format:"),7)==0)
