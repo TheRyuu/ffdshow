@@ -2,10 +2,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1081
+#define tryout_revision = 1089
 #define buildyear = 2007
-#define buildmonth = '03'
-#define buildday = '28'
+#define buildmonth = '04'
+#define buildday = '05'
 
 ; Build specific options
 #define unicode_required = True
@@ -270,7 +270,11 @@ Name: tweaks\skipinloop; Description: {cm:skipinloop}; Check: NOT IsUpdate; Flag
 [Icons]
 Name: {group}\{cm:audioconfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 1; Components: ffdshow
 Name: {group}\{cm:videoconfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configure; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 0; Components: ffdshow
+#if is64bit
+Name: {group}\{cm:vfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 2; Components: ffdshow\vfw
+#else
 Name: {group}\{cm:vfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW; IconFilename: {app}\ffdshow.ax; IconIndex: 2; Components: ffdshow\vfw
+#endif
 #if include_makeavis
 Name: {group}\makeAVIS; Filename: {app}\makeAVIS.exe; Components: ffdshow\makeavis
 #endif
@@ -347,10 +351,13 @@ Source: ..\..\ff_wmv9_ansi.dll; DestName: ff_wmv9.dll; DestDir: {app}; Flags: ig
 Source: ..\..\ff_wmv9_unicode.dll; DestName: ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; MinVersion: 0,4; Components: ffdshow\vfw
 #endif
 
-; If you want to use MSVC8 for ffdshow.ax, ff_vfw.dll should be compiled by GCC. Both MSVC7.1 and MSVC8 does not work in some environment such as Windows XP SP2 without shared assembly of MSVCR80.
+#if is64bit
+Source: ..\..\ff_vfw.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
+#else
+; If you use MSVC8 for ffdshow.ax, ff_vfw.dll should be compiled by GCC. Both MSVC7.1 and MSVC8 does not work in some environment such as Windows XP SP2 without shared assembly of MSVCR80.
 Source: ..\..\ff_vfw.dll; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
 Source: ..\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
-; ToDo: what about 64-bit builds???
+#endif
 
 #if include_audx
 Source: audxlib.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow
@@ -446,12 +453,22 @@ Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: string; ValueName: lang; Va
 #endif
 
 ; Register VFW interface
+#if is64bit
+Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc; ValueType: string; ValueName: {app}\ff_vfw.dll; ValueData: ffdshow video encoder; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
+Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32; ValueType: string; ValueName: VIDC.FFDS; ValueData: {code:GetVFWLocation|}; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; Flags: uninsdeletekey; Components: ffdshow\vfw
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Description; ValueData: ffdshow video encoder; Components: ffdshow\vfw
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Driver; ValueData: {code:GetVFWLocation|}; Components: ffdshow\vfw
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: FriendlyName; ValueData: ffdshow video encoder; Components: ffdshow\vfw
+#else
 Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc; ValueType: string; ValueName: ff_vfw.dll; ValueData: ffdshow video encoder; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
 Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32; ValueType: string; ValueName: VIDC.FFDS; ValueData: ff_vfw.dll; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
 Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; Flags: uninsdeletekey; Components: ffdshow\vfw
 Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Description; ValueData: ffdshow video encoder; Components: ffdshow\vfw
 Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Driver; ValueData: ff_vfw.dll; Components: ffdshow\vfw
 Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: FriendlyName; ValueData: ffdshow video encoder; Components: ffdshow\vfw
+#endif
+
 #if include_makeavis
 Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc; ValueType: string; ValueName: ff_acm.acm; ValueData: ffdshow ACM codec; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\makeavis
 Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32; ValueType: string; ValueName: msacm.avis; ValueData: ff_acm.acm; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\makeavis
@@ -459,11 +476,6 @@ Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.av
 Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: Description; ValueData: ffdshow ACM codec; Components: ffdshow\makeavis
 Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: Driver; ValueData: ff_acm.acm; Components: ffdshow\makeavis
 Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: FriendlyName; ValueData: ffdshow ACM codec; Components: ffdshow\makeavis
-;Root: HKLM; SubKey: SOFTWARE\Microsoft\AudioCompressionManager\DriverCache\msacm.avis; Flags: uninsdeletekey; Components: ffdshow\makeavis
-;Root: HKLM; SubKey: SOFTWARE\Microsoft\AudioCompressionManager\DriverCache\msacm.avis; ValueType: binary; ValueName: aFormatTagCache; ValueData: 01 00 00 00 10 00 00 00 13 33 00 00 12 00 00 00; Components: ffdshow\makeavis
-;Root: HKLM; SubKey: SOFTWARE\Microsoft\AudioCompressionManager\DriverCache\msacm.avis; ValueType: dword; ValueName: cFilterTags; ValueData: 0; Components: ffdshow\makeavis
-;Root: HKLM; SubKey: SOFTWARE\Microsoft\AudioCompressionManager\DriverCache\msacm.avis; ValueType: dword; ValueName: cFormatTags; ValueData: 2; Components: ffdshow\makeavis
-;Root: HKLM; SubKey: SOFTWARE\Microsoft\AudioCompressionManager\DriverCache\msacm.avis; ValueType: dword; ValueName: fdwSupport; ValueData: 1; Components: ffdshow\makeavis
 #endif
 
 ; Recommended settings
@@ -533,7 +545,11 @@ Filename: {win}\system.ini; Section: drivers32; Key: msacm.avis; String: ff_acm.
 [Run]
 Description: {cm:runaudioconfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; Flags: postinstall nowait unchecked; Components: ffdshow
 Description: {cm:runvideoconfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configure; WorkingDir: {app}; Flags: postinstall nowait unchecked; Components: ffdshow
+#if is64bit
 Description: {cm:runvfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW; WorkingDir: {app}; Flags: postinstall nowait unchecked; Components: ffdshow\vfw
+#else
+Description: {cm:runvfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW; Flags: postinstall nowait unchecked; Components: ffdshow\vfw
+#endif
 
 ; All custom strings in the installer:
 #include "custom_messages.iss"
@@ -654,6 +670,13 @@ begin
     if CheckTaskAudioInpreset('volNormalize', 1, False) then
      Result := True;
 end;
+
+#if is64bit
+function GetVFWLocation(dummy: String): String;
+begin
+  Result := GetShortName(ExpandConstant('{app}\ff_vfw.dll'));
+end;
+#endif
 
 #if include_app_plugins
 // Global vars
@@ -1229,8 +1252,10 @@ begin
 end;
 
 function ShouldSkipPage(PageID: Integer): Boolean;
+#if include_app_plugins
 var
   regval: String;
+#endif
 begin
   Result := False;
 #if include_app_plugins
