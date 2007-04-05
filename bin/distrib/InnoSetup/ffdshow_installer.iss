@@ -2,7 +2,7 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1089
+#define tryout_revision = 1090
 #define buildyear = 2007
 #define buildmonth = '04'
 #define buildday = '05'
@@ -35,6 +35,7 @@
 
 ; Custom builder preferences
 #define PREF_CLSID = False
+#define PREF_CLSID_ICL9 = False
 #define PREF_YAMAGATA = False
 #define PREF_XXL = False
 #define PREF_X64 = False
@@ -44,6 +45,15 @@
   #define unicode_required = False
   #define include_audx = True
   #define filename_prefix = '_clsid'
+  #define outputdir = '..\..\..\..\'
+#endif
+#if PREF_CLSID_ICL9
+  #define MSVC80 = False
+  #define unicode_required = True
+  #define include_cpu_detection = True
+  #define sse_required = True
+  #define include_audx = True
+  #define filename_prefix = '_clsid_sse_icl9'
   #define outputdir = '..\..\..\..\'
 #endif
 #if PREF_YAMAGATA
@@ -324,13 +334,16 @@ Source: icl9\TomsMoComp_ff.dll; DestDir: {app}; Flags: ignoreversion; Components
 Source: ..\..\libmpeg2_ff.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow
 
 ; Single build:
-#if !PREF_CLSID
+#if !PREF_CLSID && !PREF_CLSID_ICL9
 Source: ..\..\ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; Components: ffdshow
 #endif
 ; ANSI + Unicode:
 #if PREF_CLSID
 Source: ..\..\ffdshow_ansi.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; MinVersion: 4,0; Components: ffdshow
 Source: ..\..\ffdshow_unicode.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; MinVersion: 0,4; Components: ffdshow
+#endif
+#if PREF_CLSID_ICL9
+Source: ..\..\ffdshow_icl9.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; MinVersion: 0,4; Components: ffdshow
 #endif
 ; Multi build example (requires cpu detection to be enabled):
 ;Source: ..\..\ffdshow_generic.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_MMX_Supported AND NOT Is_SSE_Supported; Components: ffdshow
