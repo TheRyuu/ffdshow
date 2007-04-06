@@ -973,6 +973,7 @@ static int mjpeg_decode_init(AVCodecContext *avctx)
             av_log(avctx, AV_LOG_DEBUG, "mjpeg bottom field first\n");
         }
     }
+
     return 0;
 }
 

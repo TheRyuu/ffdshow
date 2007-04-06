@@ -103,6 +103,9 @@ static int get_flags(MotionEstContext *c, int direct, int chroma){
            + (chroma ? FLAG_CHROMA : 0);
 }
 
+/*! \brief compares a block (either a full macroblock or a partition thereof)
+    against a proposed motion-compensated prediction of that block
+ */
 static av_always_inline int cmp(MpegEncContext *s, const int x, const int y, const int subx, const int suby,
                       const int size, const int h, int ref_index, int src_index,
                       me_cmp_func cmp_func, me_cmp_func chroma_cmp_func, const int flags){
@@ -1822,8 +1825,8 @@ static inline int direct_search(MpegEncContext * s, int mb_x, int mb_y)
 
     get_limits(s, 16*mb_x, 16*mb_y); //restore c->?min/max, maybe not needed
 
-    s->b_direct_mv_table[mot_xy][0]= mx;
-    s->b_direct_mv_table[mot_xy][1]= my;
+    mv_table[mot_xy][0]= mx;
+    mv_table[mot_xy][1]= my;
     c->flags     &= ~FLAG_DIRECT;
     c->sub_flags &= ~FLAG_DIRECT;
 

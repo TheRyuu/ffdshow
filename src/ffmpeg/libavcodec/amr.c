@@ -35,14 +35,15 @@
  *
  * \subsection Float
  * The float version (default) can be downloaded from:
- * http://www.3gpp.org/ftp/Specs/archive/26_series/26.104/26104-510.zip
+ * http://www.3gpp.org/ftp/Specs/archive/26_series/26.104/26104-610.zip
  * Extract the source into \c "ffmpeg/libavcodec/amr_float".
+ * Enable it by passing \c "--enable-amr-nb" to \c "./configure".
  *
  * \subsection Fixed-point
  * The fixed-point (TS26.073) can be downloaded from:
  * http://www.3gpp.org/ftp/Specs/archive/26_series/26.073/26073-510.zip.
  * Extract the source into \c "ffmpeg/libavcodec/amr".
- * To use the fixed version run \c "./configure" with \c "--enable-amr_nb-fixed".
+ * Enable it by passing \c "--enable-amr-nb-fixed" to \c "./configure".
  *
  * \subsection Specification
  * The specification for AMR-NB can be found in TS 26.071
@@ -52,17 +53,18 @@
  * \section AMR-WB
  * \subsection Float
  * The reference code can be downloaded from:
- * http://www.3gpp.org/ftp/Specs/archive/26_series/26.204/26204-510.zip
- * It should be extracted to \c "ffmpeg/libavcodec/amrwb_float". Enable it with
- * \c "--enable-amr_wb".
+ * http://www.3gpp.org/ftp/Specs/archive/26_series/26.204/26204-600.zip
+ * It should be extracted to \c "ffmpeg/libavcodec/amrwb_float".
+ * Enable it by passing \c "--enable-amr-wb" to \c "./configure".
  *
  * \subsection Fixed-point
  * If someone wants to use the fixed point version it can be downloaded from:
  * http://www.3gpp.org/ftp/Specs/archive/26_series/26.173/26173-571.zip.
  *
  * \subsection Specification
- * The specification for AMR-WB can be downloaded from:
- * http://www.3gpp.org/ftp/Specs/archive/26_series/26.171/26171-500.zip.
+ * The specification for AMR-WB can be found in TS 26.171
+ * (http://www.3gpp.org/ftp/Specs/html-info/26171.htm) and some other
+ * info at http://www.3gpp.org/ftp/Specs/html-info/26-series.htm.
  *
  */
 
@@ -87,36 +89,34 @@
 /* Common code for fixed and float version*/
 typedef struct AMR_bitrates
 {
-    int startrate;
-    int stoprate;
+    int rate;
     enum Mode mode;
 } AMR_bitrates;
 
-/* Match desired bitrate with closest one*/
-static enum Mode getBitrateMode(int bitrate)
+/* Match desired bitrate */
+static int getBitrateMode(int bitrate)
 {
-    /* Adjusted so that all bitrates can be used from commandline where
-       only a multiple of 1000 can be specified*/
-    AMR_bitrates rates[]={ {0,4999,MR475}, //4
-                           {5000,5899,MR515},//5
-                           {5900,6699,MR59},//6
-                           {6700,7000,MR67},//7
-                           {7001,7949,MR74},//8
-                           {7950,9999,MR795},//9
-                           {10000,11999,MR102},//10
-                           {12000,64000,MR122},//12
+    /* make the correspondance between bitrate and mode */
+    AMR_bitrates rates[]={ {4750,MR475},
+                           {5150,MR515},
+                           {5900,MR59},
+                           {6700,MR67},
+                           {7400,MR74},
+                           {7950,MR795},
+                           {10200,MR102},
+                           {12200,MR122},
                          };
     int i;
 
     for(i=0;i<8;i++)
     {
-        if(rates[i].startrate<=bitrate && rates[i].stoprate>=bitrate)
+        if(rates[i].rate==bitrate)
         {
             return(rates[i].mode);
         }
     }
-    /*Return highest possible*/
-    return(MR122);
+    /* no bitrate matching, return an error */
+    return -1;
 }
 
 static void amr_decode_fix_avctx(AVCodecContext * avctx)
@@ -150,7 +150,7 @@ typedef struct AMRContext {
     Word16 reset_flag;
     Word16 reset_flag_old;
 
-    enum Mode enc_bitrate;
+    int enc_bitrate;
     Speech_Encode_FrameState *enstate;
     sid_syncState *sidstate;
     enum TXFrameType tx_frametype;
@@ -210,73 +210,69 @@ static int amr_nb_decode_frame(AVCodecContext * avctx,
 
     synth=data;
 
-//    while(offset<buf_size)
+    toc=amrData[offset];
+    /* read rest of the frame based on ToC byte */
+    q  = (toc >> 2) & 0x01;
+    ft = (toc >> 3) & 0x0F;
+
+    //printf("offset=%d, packet_size=%d amrData= 0x%X %X %X %X\n",offset,packed_size[ft],amrData[offset],amrData[offset+1],amrData[offset+2],amrData[offset+3]);
+
+    offset++;
+
+    packed_bits=amrData+offset;
+
+    offset+=packed_size[ft];
+
+    //Unsort and unpack bits
+    s->rx_type = UnpackBits(q, ft, packed_bits, &s->mode, &serial[1]);
+
+    //We have a new frame
+    s->frameCount++;
+
+    if (s->rx_type == RX_NO_DATA)
     {
-        toc=amrData[offset];
-        /* read rest of the frame based on ToC byte */
-        q  = (toc >> 2) & 0x01;
-        ft = (toc >> 3) & 0x0F;
-
-        //printf("offset=%d, packet_size=%d amrData= 0x%X %X %X %X\n",offset,packed_size[ft],amrData[offset],amrData[offset+1],amrData[offset+2],amrData[offset+3]);
-
-        offset++;
-
-        packed_bits=amrData+offset;
-
-        offset+=packed_size[ft];
-
-        //Unsort and unpack bits
-        s->rx_type = UnpackBits(q, ft, packed_bits, &s->mode, &serial[1]);
-
-        //We have a new frame
-        s->frameCount++;
-
-        if (s->rx_type == RX_NO_DATA)
-        {
-            s->mode = s->speech_decoder_state->prev_mode;
-        }
-        else {
-            s->speech_decoder_state->prev_mode = s->mode;
-        }
-
-        /* if homed: check if this frame is another homing frame */
-        if (s->reset_flag_old == 1)
-        {
-            /* only check until end of first subframe */
-            s->reset_flag = decoder_homing_frame_test_first(&serial[1], s->mode);
-        }
-        /* produce encoder homing frame if homed & input=decoder homing frame */
-        if ((s->reset_flag != 0) && (s->reset_flag_old != 0))
-        {
-            for (i = 0; i < L_FRAME; i++)
-            {
-                synth[i] = EHF_MASK;
-            }
-        }
-        else
-        {
-            /* decode frame */
-            Speech_Decode_Frame(s->speech_decoder_state, s->mode, &serial[1], s->rx_type, synth);
-        }
-
-        //Each AMR-frame results in 160 16-bit samples
-        *data_size+=160*2;
-        synth+=160;
-
-        /* if not homed: check whether current frame is a homing frame */
-        if (s->reset_flag_old == 0)
-        {
-            /* check whole frame */
-            s->reset_flag = decoder_homing_frame_test(&serial[1], s->mode);
-        }
-        /* reset decoder if current frame is a homing frame */
-        if (s->reset_flag != 0)
-        {
-            Speech_Decode_Frame_reset(s->speech_decoder_state);
-        }
-        s->reset_flag_old = s->reset_flag;
-
+        s->mode = s->speech_decoder_state->prev_mode;
     }
+    else {
+        s->speech_decoder_state->prev_mode = s->mode;
+    }
+
+    /* if homed: check if this frame is another homing frame */
+    if (s->reset_flag_old == 1)
+    {
+        /* only check until end of first subframe */
+        s->reset_flag = decoder_homing_frame_test_first(&serial[1], s->mode);
+    }
+    /* produce encoder homing frame if homed & input=decoder homing frame */
+    if ((s->reset_flag != 0) && (s->reset_flag_old != 0))
+    {
+        for (i = 0; i < L_FRAME; i++)
+        {
+            synth[i] = EHF_MASK;
+        }
+    }
+    else
+    {
+        /* decode frame */
+        Speech_Decode_Frame(s->speech_decoder_state, s->mode, &serial[1], s->rx_type, synth);
+    }
+
+    //Each AMR-frame results in 160 16-bit samples
+    *data_size=160*2;
+
+    /* if not homed: check whether current frame is a homing frame */
+    if (s->reset_flag_old == 0)
+    {
+        /* check whole frame */
+        s->reset_flag = decoder_homing_frame_test(&serial[1], s->mode);
+    }
+    /* reset decoder if current frame is a homing frame */
+    if (s->reset_flag != 0)
+    {
+        Speech_Decode_Frame_reset(s->speech_decoder_state);
+    }
+    s->reset_flag_old = s->reset_flag;
+
     return offset;
 }
 
@@ -287,7 +283,7 @@ typedef struct AMRContext {
     int frameCount;
     void * decState;
     int *enstate;
-    enum Mode enc_bitrate;
+    int enc_bitrate;
 } AMRContext;
 
 static int amr_nb_decode_init(AVCodecContext * avctx)

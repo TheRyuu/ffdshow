@@ -2966,7 +2966,7 @@ static void hl_motion(H264Context *h, uint8_t *dest_y, uint8_t *dest_cb, uint8_t
     prefetch_motion(h, 1);
 }
 
-static void decode_init_vlc(){
+static void decode_init_vlc(void){
     static int done = 0;
 
     if (!done) {
@@ -8278,7 +8278,7 @@ static int decode_frame(AVCodecContext *avctx,
 
         MPV_frame_end(s);
 
-//FIXME do something with unavailable reference frames
+    //FIXME do something with unavailable reference frames
 
 #if 0 //decode order
         *data_size = sizeof(AVFrame);
