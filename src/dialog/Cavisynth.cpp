@@ -100,7 +100,9 @@ void TavisynthPage::onSave(void)
      int linescnt=(int)SendDlgItemMessage(m_hwnd,IDC_ED_AVISYNTH,EM_GETLINECOUNT,0,0);
      for (int i=0;i<linescnt;i++)
       {
-       char_t line[2048];line[0]=LOBYTE(2048);line[1]=HIBYTE(2048);
+       char_t line[2048];
+       WORD *lparam=(WORD*)line;
+       *lparam=2048;
        LRESULT len=SendDlgItemMessage(m_hwnd,IDC_ED_AVISYNTH,EM_GETLINE,i,LPARAM(line));
        line[len]='\0';
        if (i>0) fputs("\n",f);
