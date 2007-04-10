@@ -2,18 +2,20 @@
  * LCL (LossLess Codec Library) Codec
  * Copyright (c) 2002-2004 Roberto Togni
  *
- * This library is free software; you can redistribute it and/or
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * FFmpeg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  */
@@ -81,8 +83,8 @@
  */
 typedef struct LclContext {
 
-	AVCodecContext *avctx;
-	AVFrame pic;
+        AVCodecContext *avctx;
+        AVFrame pic;
     PutBitContext pb;
 
     // Image type
@@ -190,7 +192,7 @@ static unsigned int mszh_decomp(unsigned char * srcptr, int srclen, unsigned cha
 
 
 
-
+#ifdef CONFIG_DECODERS
 /*
  *
  * Decode a frame
@@ -198,8 +200,8 @@ static unsigned int mszh_decomp(unsigned char * srcptr, int srclen, unsigned cha
  */
 static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, uint8_t *buf, int buf_size)
 {
-	LclContext * const c = (LclContext *)avctx->priv_data;
-	unsigned char *encoded = (unsigned char *)buf;
+        LclContext * const c = avctx->priv_data;
+        unsigned char *encoded = (unsigned char *)buf;
     unsigned int pixel_ptr;
     int row, col;
     unsigned char *outptr;
@@ -214,15 +216,15 @@ static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, uint8
 #endif
     unsigned int len = buf_size;
 
-	if(c->pic.data[0])
-		avctx->release_buffer(avctx, &c->pic);
+        if(c->pic.data[0])
+                avctx->release_buffer(avctx, &c->pic);
 
-	c->pic.reference = 0;
-	c->pic.buffer_hints = FF_BUFFER_HINTS_VALID;
-	if(avctx->get_buffer(avctx, &c->pic) < 0){
-		av_log(avctx, AV_LOG_ERROR, "get_buffer() failed\n");
-		return -1;
-	}
+        c->pic.reference = 0;
+        c->pic.buffer_hints = FF_BUFFER_HINTS_VALID;
+        if(avctx->get_buffer(avctx, &c->pic) < 0){
+                av_log(avctx, AV_LOG_ERROR, "get_buffer() failed\n");
+                return -1;
+        }
 
     outptr = c->pic.data[0]; // Output image pointer
 
@@ -358,7 +360,7 @@ static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, uint8
                     pixel_ptr = row * width * 3;
                     yq = encoded[pixel_ptr++];
                     uqvq = encoded[pixel_ptr++];
-              	  uqvq+=(encoded[pixel_ptr++] << 8);
+                    uqvq+=(encoded[pixel_ptr++] << 8);
                     for (col = 1; col < width; col++) {
                         encoded[pixel_ptr] = yq -= encoded[pixel_ptr];
                         uqvq -= (encoded[pixel_ptr+1] | (encoded[pixel_ptr+2]<<8));
@@ -544,7 +546,9 @@ static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, uint8
     /* always report that the buffer was completely consumed */
     return buf_size;
 }
+#endif
 
+#ifdef CONFIG_DECODERS
 /*
  *
  * Init lcl decoder
@@ -552,14 +556,13 @@ static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, uint8
  */
 static int decode_init(AVCodecContext *avctx)
 {
-    LclContext * const c = (LclContext *)avctx->priv_data;
+    LclContext * const c = avctx->priv_data;
     unsigned int basesize = avctx->width * avctx->height;
     unsigned int max_basesize = ((avctx->width + 3) & ~3) * ((avctx->height + 3) & ~3);
     unsigned int max_decomp_size;
     int zret; // Zlib return code
 
     c->avctx = avctx;
-    avctx->has_b_frames = 0;
 
     c->pic.data[0] = NULL;
 
@@ -651,7 +654,7 @@ static int decode_init(AVCodecContext *avctx)
                     break;
                 default:
                     if ((c->compression < Z_NO_COMPRESSION) || (c->compression > Z_BEST_COMPRESSION)) {
-                	    av_log(avctx, AV_LOG_ERROR, "Unsupported compression level for ZLIB: (%d).\n", c->compression);
+                            av_log(avctx, AV_LOG_ERROR, "Unsupported compression level for ZLIB: (%d).\n", c->compression);
                         return 1;
                     }
                     av_log(avctx, AV_LOG_INFO, "Compression level for ZLIB: (%d).\n", c->compression);
@@ -702,13 +705,13 @@ static int decode_init(AVCodecContext *avctx)
 #endif
     }
 
-    avctx->pix_fmt = PIX_FMT_RGB24;
+    avctx->pix_fmt = PIX_FMT_BGR24;
 
     return 0;
 }
+#endif /* CONFIG_DECODERS */
 
-
-
+#ifdef CONFIG_DECODERS
 /*
  *
  * Uninit lcl decoder
@@ -716,27 +719,28 @@ static int decode_init(AVCodecContext *avctx)
  */
 static int decode_end(AVCodecContext *avctx)
 {
-	LclContext * const c = (LclContext *)avctx->priv_data;
+        LclContext * const c = avctx->priv_data;
 
-	if (c->pic.data[0])
-		avctx->release_buffer(avctx, &c->pic);
+        if (c->pic.data[0])
+                avctx->release_buffer(avctx, &c->pic);
 #ifdef CONFIG_ZLIB
     inflateEnd(&(c->zstream));
 #endif
 
-	return 0;
+        return 0;
 }
+#endif
 
 AVCodec mszh_decoder = {
-	"mszh",
-	CODEC_TYPE_VIDEO,
-	CODEC_ID_MSZH,
-	sizeof(LclContext),
-	decode_init,
-	NULL,
-	decode_end,
-	decode_frame,
-	CODEC_CAP_DR1,
+        "mszh",
+        CODEC_TYPE_VIDEO,
+        CODEC_ID_MSZH,
+        sizeof(LclContext),
+        decode_init,
+        NULL,
+        decode_end,
+        decode_frame,
+        CODEC_CAP_DR1,
 };
 
 

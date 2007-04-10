@@ -8014,7 +8014,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
       } else {
         // start code prefix search
         for(; buf_index + 3 < buf_size; buf_index++){
-            // this should allways succeed in the first iteration
+            // This should always succeed in the first iteration.
             if(buf[buf_index] == 0 && buf[buf_index+1] == 0 && buf[buf_index+2] == 1)
                 break;
         }
@@ -8025,12 +8025,12 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
       }
 
         ptr= decode_nal(h, buf + buf_index, &dst_length, &consumed, h->is_avc ? nalsize : buf_size - buf_index);
-        if (ptr==NULL || dst_length <= 0){
+        if (ptr==NULL || dst_length < 0){
             return -1;
         }
-        while(ptr[dst_length - 1] == 0 && dst_length > 1)
+        while(ptr[dst_length - 1] == 0 && dst_length > 0)
             dst_length--;
-        bit_length= 8*dst_length - decode_rbsp_trailing(h, ptr + dst_length - 1);
+        bit_length= !dst_length ? 0 : (8*dst_length - decode_rbsp_trailing(h, ptr + dst_length - 1));
 
         if(s->avctx->debug&FF_DEBUG_STARTCODE){
             av_log(h->s.avctx, AV_LOG_DEBUG, "NAL %d at %d/%d length %d\n", h->nal_unit_type, buf_index, buf_size, dst_length);

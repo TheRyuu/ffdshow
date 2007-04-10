@@ -465,7 +465,7 @@ static int truemotion1_decode_header(TrueMotion1Context *s)
 
 static int truemotion1_decode_init(AVCodecContext *avctx)
 {
-    TrueMotion1Context *s = (TrueMotion1Context *)avctx->priv_data;
+    TrueMotion1Context *s = avctx->priv_data;
 
     s->avctx = avctx;
 
@@ -475,7 +475,6 @@ static int truemotion1_decode_init(AVCodecContext *avctx)
 //    else
 //        avctx->pix_fmt = PIX_FMT_RGB555;
 
-    avctx->has_b_frames = 0;
     s->frame.data[0] = s->prev_frame.data[0] = NULL;
 
     /* there is a vertical predictor for each pixel in a line; each vertical
@@ -864,7 +863,7 @@ static int truemotion1_decode_frame(AVCodecContext *avctx,
                                     void *data, int *data_size,
                                     uint8_t *buf, int buf_size)
 {
-    TrueMotion1Context *s = (TrueMotion1Context *)avctx->priv_data;
+    TrueMotion1Context *s = avctx->priv_data;
 
     s->buf = buf;
     s->size = buf_size;
@@ -904,7 +903,7 @@ static int truemotion1_decode_frame(AVCodecContext *avctx,
 
 static int truemotion1_decode_end(AVCodecContext *avctx)
 {
-    TrueMotion1Context *s = (TrueMotion1Context *)avctx->priv_data;
+    TrueMotion1Context *s = avctx->priv_data;
 
     /* release the last frame */
     if (s->prev_frame.data[0])

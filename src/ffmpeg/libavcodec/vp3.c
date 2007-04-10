@@ -2243,8 +2243,8 @@ static int vp3_decode_frame(AVCodecContext *avctx,
 	    skip_bits1(&gb);
 
     if (s->avctx->debug & FF_DEBUG_PICT_INFO)
-	av_log(s->avctx, AV_LOG_INFO, " VP3 %sframe #%d: Q index = %d\n",
-	s->keyframe?"key":"", counter, s->quality_index);
+        av_log(s->avctx, AV_LOG_INFO, " VP3 %sframe #%d: Q index = %d\n",
+            s->keyframe?"key":"", counter, s->quality_index);
     counter++;
 
     if (s->quality_index != s->last_quality_index) {
@@ -2253,23 +2253,23 @@ static int vp3_decode_frame(AVCodecContext *avctx,
     }
 
     if (s->keyframe) {
-	if (!s->theora)
-	{
-	    skip_bits(&gb, 4); /* width code */
-	    skip_bits(&gb, 4); /* height code */
-	    if (s->version)
-	    {
-		s->version = get_bits(&gb, 5);
-		if (counter == 1)
-		    av_log(s->avctx, AV_LOG_DEBUG, "VP version: %d\n", s->version);
-	    }
-	}
-	if (s->version || s->theora)
-	{
-    	    if (get_bits1(&gb))
-    	        av_log(s->avctx, AV_LOG_ERROR, "Warning, unsupported keyframe coding type?!\n");
-	    skip_bits(&gb, 2); /* reserved? */
-	}
+        if (!s->theora)
+        {
+            skip_bits(&gb, 4); /* width code */
+            skip_bits(&gb, 4); /* height code */
+            if (s->version)
+            {
+                s->version = get_bits(&gb, 5);
+                if (counter == 1)
+                    av_log(s->avctx, AV_LOG_DEBUG, "VP version: %d\n", s->version);
+            }
+        }
+        if (s->version || s->theora)
+        {
+                if (get_bits1(&gb))
+                    av_log(s->avctx, AV_LOG_ERROR, "Warning, unsupported keyframe coding type?!\n");
+            skip_bits(&gb, 2); /* reserved? */
+        }
 
         if (s->last_frame.data[0] == s->golden_frame.data[0]) {
             if (s->golden_frame.data[0])
@@ -2293,13 +2293,13 @@ static int vp3_decode_frame(AVCodecContext *avctx,
 
         /* time to figure out pixel addresses? */
         if (!s->pixel_addresses_inited)
-	{
-	    if (!s->flipped_image)
-            vp3_calculate_pixel_addresses(s);
-	    else
-		theora_calculate_pixel_addresses(s);
+        {
+            if (!s->flipped_image)
+                vp3_calculate_pixel_addresses(s);
+            else
+                theora_calculate_pixel_addresses(s);
             s->pixel_addresses_inited = 1;
-	}
+        }
     } else {
         /* allocate a new current frame */
         s->current_frame.reference = 3;
@@ -2503,25 +2503,25 @@ static int theora_decode_header(AVCodecContext *avctx, GetBitContext *gb)
 
     if (s->theora >= 0x030400)
     {
-	skip_bits(gb, 32); /* total number of superblocks in a frame */
-	// fixme, the next field is 36bits long
-	skip_bits(gb, 32); /* total number of blocks in a frame */
-	skip_bits(gb, 4); /* total number of blocks in a frame */
-	skip_bits(gb, 32); /* total number of macroblocks in a frame */
+        skip_bits(gb, 32); /* total number of superblocks in a frame */
+        // fixme, the next field is 36bits long
+        skip_bits(gb, 32); /* total number of blocks in a frame */
+        skip_bits(gb, 4); /* total number of blocks in a frame */
+        skip_bits(gb, 32); /* total number of macroblocks in a frame */
 
-    skip_bits(gb, 24); /* frame width */
-    skip_bits(gb, 24); /* frame height */
+        skip_bits(gb, 24); /* frame width */
+        skip_bits(gb, 24); /* frame height */
     }
     else
     {
-	skip_bits(gb, 24); /* frame width */
-	skip_bits(gb, 24); /* frame height */
+        skip_bits(gb, 24); /* frame width */
+        skip_bits(gb, 24); /* frame height */
     }
 
-    if (s->theora >= 0x030200) {
+  if (s->theora >= 0x030200) {
     skip_bits(gb, 8); /* offset x */
     skip_bits(gb, 8); /* offset y */
-    }
+  }
 
     s->fps_numerator=get_bits(gb, 32); /* fps numerator */
     s->fps_denumerator=get_bits(gb, 32); /* fps denumerator */
@@ -2532,7 +2532,7 @@ static int theora_decode_header(AVCodecContext *avctx, GetBitContext *gb)
     s->keyframe_frequency_force=1<<get_bits(gb, 5); /* keyframe frequency force */
     skip_bits(gb, 8); /* colorspace */
     if (s->theora >= 0x030400)
-	skip_bits(gb, 2); /* pixel format: 420,res,422,444 */
+        skip_bits(gb, 2); /* pixel format: 420,res,422,444 */
     skip_bits(gb, 24); /* bitrate */
 
     skip_bits(gb, 6); /* quality hint */
@@ -2710,13 +2710,13 @@ static int theora_decode_init(AVCodecContext *avctx)
     ptype = get_bits(&gb, 8);
     debug_vp3("Theora headerpacket type: %x\n", ptype);
 
-    if (!(ptype & 0x80))
+     if (!(ptype & 0x80))
      {
         av_log(avctx, AV_LOG_ERROR, "Invalid extradata!\n");
 //        return -1;
      }
 
-    // FIXME: check for this aswell
+    // FIXME: Check for this as well.
     skip_bits(&gb, 6*8); /* "theora" */
 
     switch(ptype)

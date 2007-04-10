@@ -491,7 +491,7 @@ static void qtrle_decode_32bpp(QtrleContext *s)
 
 static int qtrle_decode_init(AVCodecContext *avctx)
 {
-    QtrleContext *s = (QtrleContext *)avctx->priv_data;
+    QtrleContext *s = avctx->priv_data;
 
     s->avctx = avctx;
     switch (avctx->bits_per_sample) {
@@ -523,7 +523,6 @@ static int qtrle_decode_init(AVCodecContext *avctx)
             avctx->bits_per_sample);
         break;
     }
-    avctx->has_b_frames = 0;
     dsputil_init(&s->dsp, avctx);
 
     s->frame.data[0] = NULL;
@@ -535,7 +534,7 @@ static int qtrle_decode_frame(AVCodecContext *avctx,
                               void *data, int *data_size,
                               uint8_t *buf, int buf_size)
 {
-    QtrleContext *s = (QtrleContext *)avctx->priv_data;
+    QtrleContext *s = avctx->priv_data;
 
     s->buf = buf;
     s->size = buf_size;
@@ -608,7 +607,7 @@ static int qtrle_decode_frame(AVCodecContext *avctx,
 
 static int qtrle_decode_end(AVCodecContext *avctx)
 {
-    QtrleContext *s = (QtrleContext *)avctx->priv_data;
+    QtrleContext *s = avctx->priv_data;
 
     if (s->frame.data[0])
         avctx->release_buffer(avctx, &s->frame);
