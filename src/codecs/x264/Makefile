@@ -15,7 +15,7 @@ SRCS_C=common/mc.c common/predict.c common/pixel.c common/macroblock.c \
 ifneq ($(CC),icl)
 SRCS_C+=common/i386/mc-c.c common/i386/predict-c.c
 
-SRCS_NASM=common/i386/dct-a.asm common/i386/pixel-a.asm \
+SRCS_NASM=common/i386/cpu-a.asm common/i386/dct-a.asm common/i386/pixel-a.asm \
           common/i386/mc-a.asm common/i386/mc-a2.asm common/i386/predict-a.asm \
           common/i386/pixel-sse2.asm common/i386/quant-a.asm \
           common/i386/deblock-a.asm

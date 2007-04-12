@@ -749,6 +749,10 @@
 				Name="i386"
 				>
 				<File
+					RelativePath=".\common\i386\cpu-a.asm"
+					>
+				</File>
+				<File
 					RelativePath=".\common\i386\dct-a.asm"
 					>
 					<FileConfiguration

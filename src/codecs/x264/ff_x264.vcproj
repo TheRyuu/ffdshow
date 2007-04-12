@@ -302,6 +302,25 @@
 			Name="i386"
 			Filter="">
 			<File
+				RelativePath=".\common\i386\cpu-a.asm">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Assembling $(InputPath)"
+						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)"
+						Outputs="$(IntDir)\$(InputName).obj"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Assembling $(InputPath)"
+						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)"
+						Outputs="$(IntDir)\$(InputName).obj"/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\common\i386\dct-a.asm">
 				<FileConfiguration
 					Name="Debug|Win32">
