@@ -8028,9 +8028,9 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
         if (ptr==NULL || dst_length < 0){
             return -1;
         }
-        while(ptr[dst_length - 1] == 0 && dst_length > 0)
+        while(dst_length > 0 && ptr[dst_length - 1] == 0)
             dst_length--;
-        bit_length= !dst_length ? 0 : (8*dst_length - decode_rbsp_trailing(h, ptr + dst_length - 1));
+        bit_length= (dst_length <= 0) ? 0 : (8*dst_length - decode_rbsp_trailing(h, ptr + dst_length - 1));
 
         if(s->avctx->debug&FF_DEBUG_STARTCODE){
             av_log(h->s.avctx, AV_LOG_DEBUG, "NAL %d at %d/%d length %d\n", h->nal_unit_type, buf_index, buf_size, dst_length);
