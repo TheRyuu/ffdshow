@@ -54,7 +54,7 @@ void TimgFilter::init(const TffPict &pict,int full,int half)
 {
  pictHalf=half;
  Trect newRect=pict.getRect(full,half);
- if (newRect!=pictRect)
+ if (newRect!=pictRect || newRect.sar!=pictRect.sar)
   {
    onSizeChange();
    free();
