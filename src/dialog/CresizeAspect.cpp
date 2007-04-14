@@ -41,18 +41,31 @@ void TresizeAspectPage::cfg2dlg(void)
  aspect2dlg();
 }
 
-void TresizeAspectPage::resize2dlg(void)
+void TresizeAspectPage::onModeChange(void)
 {
- setCheck(IDC_CHB_RESIZE,cfgGet(IDFF_isResize));
+ resizeMode2dlg();
+ SetDlgItemInt(m_hwnd,IDC_ED_RESIZEDY, cfgGet(IDFF_resizeDy) ,FALSE);
+}
+
+void TresizeAspectPage::resizeMode2dlg(void)
+{
  int rm=cfgGet(IDFF_resizeMode);
  setCheck(IDC_RBT_RESIZE_MODE_SIZE  ,rm==0);
  setCheck(IDC_RBT_RESIZE_MODE_ASPECT,rm==1);
  setCheck(IDC_RBT_RESIZE_MOD_16     ,rm==2);
  setCheck(IDC_RBT_RESIZE_MODE_MULT  ,rm==3);
+ setCheck(IDC_RBT_RESIZE_MODE_SIZE_H,rm==4);
+ cfgSet(IDFF_is_resizeDy_0,rm==4);
+ enable(rm!=4,IDC_ED_RESIZEDY);
+}
+
+void TresizeAspectPage::resize2dlg(void)
+{
+ setCheck(IDC_CHB_RESIZE,cfgGet(IDFF_isResize));
  SetDlgItemInt(m_hwnd,IDC_ED_RESIZEDX,cfgGet(IDFF_resizeDx),FALSE);
  int y=cfgGet(IDFF_resizeDy);
  int isy0=cfgGet(IDFF_is_resizeDy_0);
- if(isy0) y=0;
+ //if(isy0) y=0;
  SetDlgItemInt(m_hwnd,IDC_ED_RESIZEDY, y ,FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_RESIZE_MOD_16,cfgGet(IDFF_resizeMultOf),FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_RESIZEA1,cfgGet(IDFF_resizeA1),FALSE);
@@ -64,8 +77,7 @@ void TresizeAspectPage::resize2dlg(void)
                            IDC_RBT_RESIZE_MODE_MULT,IDC_ED_RESIZE_MULT,
                            0};
  enable(TresizeAspectSettings::methodsProps[cfgGet(IDFF_resizeMethodLuma)].library!=TresizeAspectSettings::LIB_SAI,idSai);
- addHint(IDC_ED_RESIZEDY,_l("Enter 0 for Auto"));
- addHint(IDC_RBT_RESIZE_MODE_SIZE,_l("Set vertical size 0 for Auto"));
+ resizeMode2dlg();
 }
 void TresizeAspectPage::resizeIf2dlg(void)
 {
@@ -117,15 +129,21 @@ void TresizeAspectPage::applyResizeXY(void)
   }
  if (!ok || (y<24 && y!=0) || y>16384 || (y&1)) return;
  cfgSet(IDFF_resizeDx,x);
+ int rm=cfgGet(IDFF_resizeMode);
  if(y)
   {
    cfgSet(IDFF_resizeDy,y);
    cfgSet(IDFF_is_resizeDy_0,0);
+   if (rm==4) rm=0;
   }
  else
   {
    cfgSet(IDFF_is_resizeDy_0,1);
+   if (rm==0) rm=4;
   }
+ cfgSet(IDFF_resizeMode,rm);
+ resizeMode2dlg();
+
  cfgSet(IDFF_resizeDy_real,y);
  parent->setChange();
 }
@@ -374,10 +392,11 @@ TresizeAspectPage::TresizeAspectPage(TffdshowPageDec *Iparent,const TfilterIDFF 
  bindHtracks(htbr);
  static const TbindRadiobutton<TresizeAspectPage> rbt[]=
   {
-   IDC_RBT_RESIZE_MODE_SIZE,IDFF_resizeMode,0,NULL,
-   IDC_RBT_RESIZE_MODE_ASPECT,IDFF_resizeMode,1,NULL,
-   IDC_RBT_RESIZE_MOD_16,IDFF_resizeMode,2,NULL,
-   IDC_RBT_RESIZE_MODE_MULT,IDFF_resizeMode,3,NULL,
+   IDC_RBT_RESIZE_MODE_SIZE,IDFF_resizeMode,0,&TresizeAspectPage::onModeChange,
+   IDC_RBT_RESIZE_MODE_ASPECT,IDFF_resizeMode,1,&TresizeAspectPage::onModeChange,
+   IDC_RBT_RESIZE_MOD_16,IDFF_resizeMode,2,&TresizeAspectPage::onModeChange,
+   IDC_RBT_RESIZE_MODE_MULT,IDFF_resizeMode,3,&TresizeAspectPage::onModeChange,
+   IDC_RBT_RESIZE_MODE_SIZE_H,IDFF_resizeMode,4,&TresizeAspectPage::onModeChange,
    IDC_RBT_ASPECT_NO,IDFF_isAspect,0,NULL,
    IDC_RBT_ASPECT_KEEP,IDFF_isAspect,1,NULL,
    IDC_RBT_ASPECT_USER,IDFF_isAspect,2,NULL,

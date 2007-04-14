@@ -743,7 +743,6 @@ indeterminate state - first try overlay, then use fallback format=ビデオレンダラ
 1100=アスペクト比率を修正しない
 1101=オリジナルのアスペクト比率を維持する
 1102=アスペクト比率を手動で設定する:
-1185=サイズを指定する
 1186=アスペクト比率を指定する
 1187=以下の倍数に拡大する
 1188=常にリサイズする
@@ -766,6 +765,8 @@ indeterminate state - first try overlay, then use fallback format=ビデオレンダラ
 1321=x
 1322=:
 1540=倍数を指定する
+1986=横幅と高さを指定する
+1987=横幅を指定する
 
 [134]
 0=切り出し

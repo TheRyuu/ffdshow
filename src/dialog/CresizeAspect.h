@@ -7,6 +7,7 @@ class TresizeAspectPage :public TconfPageDecVideo
 {
 private:
  void resize2dlg(void),onResizeMulfOfMenu(void),aspect2dlg(void),resizeIf2dlg(void);
+ void resizeMode2dlg(void),onModeChange(void);
  void applyResizeXY(void);
  bool sizeXok(HWND hed),sizeYok(HWND hed);
  void onResizeSizeMenu(void),onResizeAspectMenu(void),onResizePixMenu(void);

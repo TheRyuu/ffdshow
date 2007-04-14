@@ -93,12 +93,12 @@ TresizeAspectSettings::TresizeAspectSettings(TintStrColl *Icoll,TfilterIDFFs *fi
      _l("orderResize"),0,
    IDFF_fullResize         ,&TresizeAspectSettings::full           ,0,0,_l(""),1,
      _l("fullResize"),0,
-   IDFF_resizeMode         ,&TresizeAspectSettings::mode           ,0,3,_l(""),1,
+   IDFF_resizeMode         ,&TresizeAspectSettings::mode           ,0,4,_l(""),1,
      _l("resizeMode"),0,
    IDFF_resizeDx           ,(TintVal)&TresizeAspectSettings::dx    ,64,16384,_l(""),1,
      _l("resizeDx"),640,
    IDFF_is_resizeDy_0       ,(TintVal)&TresizeAspectSettings::isResizeDy0 ,0,1,_l(""),1,
-     _l("resizeIsDy0"),0,  // if(resizeDy/*registry*/==0) older version crashes. When isResizeDy9==0, dy is set 0 and Vertical size is calculated automatically.
+     _l("resizeIsDy0"),0,  // if(resizeDy/*registry*/==0) older version crashes. When isResizeDy0==1, Vertical size is calculated automatically.
    IDFF_resizeDy           ,(TintVal)&TresizeAspectSettings::dyReg ,0,16384,_l(""),1,
      _l("resizeDy"),480,
    IDFF_resizeDy_real      ,(TintVal)&TresizeAspectSettings::dy    ,0,16384,_l(""),1,
@@ -321,6 +321,9 @@ bool TresizeAspectSettings::getTip(unsigned int pageId,char_t *buf,size_t len)
      case 3:
       strcatf(tipS,_l("by %g"),mult1000/1000.0f);
       break;
+     case 4:
+      strcatf(tipS,_l("to holizontal size %i,vertical size=auto"),dx);
+      break;
     }
    strcat(tipS,_l("\nAspect ratio: "));
    switch (isAspect)
@@ -452,19 +455,15 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
        rectFull->dx=mult1000*inRect.dx/1000;
        rectFull->dy=mult1000*inRect.dy/1000;
        break;
+      case 4:
+       rectFull->dx=dx;
+       rectFull->dy=dx*inRect.dy/inRect.dx*inRect.sar.den/inRect.sar.num;
+       rectFull->sar.num=1;rectFull->sar.den=1;
+       break;
       case 0:
       default:
-       if(dy)
-        {
-         rectFull->dx=dx;
-         rectFull->dy=dy;
-        }
-       else
-        {
-         rectFull->dx=dx;
-         rectFull->dy=dx*inRect.dy/inRect.dx*inRect.sar.den/inRect.sar.num;
-         rectFull->sar.num=1;rectFull->sar.den=1;
-        }
+       rectFull->dx=dx;
+       rectFull->dy=dy;
        break;
      }
     rectFull->dx&=~1;rectFull->dy&=~1;
@@ -486,7 +485,7 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
     int ax,ay;
     if (isAspect==1)
      {
-      if(dy || !is)
+      if(!isResizeDy0 || !is)
        {
         ax=inRect.dx;
         ay=inRect.dy;
@@ -506,6 +505,7 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
     if (ax==0) ax=1;if (ay==0) ay=1;
     rectClip->dx=rectFull->dx;
     rectClip->dy=rectFull->dx*ay/ax;
+    if (mode==4) rectFull->dy=rectClip->dy;
     if (rectClip->dy>rectFull->dy)
      {
       rectClip->dx=rectFull->dy*ax/ay;
@@ -550,14 +550,23 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
     if (rectClip->dy>rectFull->dy) rectClip->dy=rectFull->dy;
     rectClip->x=((rectFull->dx-rectClip->dx)/2)&~1;
     rectClip->y=((rectFull->dy-rectClip->dy)/2)&~1;
+    rectClip->dx=rectClip->dx&~1;
+    rectClip->dy=rectClip->dy&~1;
+    rectFull->dx=rectFull->dx&~1;
+    rectFull->dy=rectFull->dy&~1;
    }
 }
 
 void TresizeAspectSettings::reg_op(TregOp &t)
 {
+ if (isResizeDy0 && mode==4) // for downgrade compatibility. (before save. This is executed before load too. No problem)
+  mode=0;
  TfilterSettingsVideo::reg_op(t);
  dy=dyReg;
- if(isResizeDy0) dy=0;
+ if (isResizeDy0 && mode==0) // after load (Of course, this is executed after save. Can be igrored.)
+  mode=4;
+ else
+  if (mode==4) mode=0;
  if (methodLuma==METHOD_SWS_BICUBLIN)
   {
    methodLuma=METHOD_SWS_BICUBIC,
