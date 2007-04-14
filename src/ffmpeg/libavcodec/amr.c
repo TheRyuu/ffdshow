@@ -38,11 +38,15 @@
  * http://www.3gpp.org/ftp/Specs/archive/26_series/26.104/26104-610.zip
  * Extract the source into \c "ffmpeg/libavcodec/amr_float".
  * Enable it by passing \c "--enable-amr-nb" to \c "./configure".
+ * If you try this on Alpha, you may need to change \c "Word32" to
+ * \c "int" in \c "amr/typedef.h".
  *
  * \subsection Fixed-point
  * The fixed-point (TS26.073) can be downloaded from:
- * http://www.3gpp.org/ftp/Specs/archive/26_series/26.073/26073-510.zip.
- * Extract the source into \c "ffmpeg/libavcodec/amr".
+ * http://www.3gpp.org/ftp/Specs/archive/26_series/26.073/26073-600.zip
+ * Extract the source into \c "ffmpeg/libavcodec/amr" and add \c "-DMMS_IO" to
+ * \c "CFLAGS" in \c "libavcodec/amr/makefile", i.e.
+ * \c "CFLAGS = -Wall -pedantic-errors -I. $(CFLAGS_$(MODE)) -D$(VAD) -DMMS_IO".
  * Enable it by passing \c "--enable-amr-nb-fixed" to \c "./configure".
  *
  * \subsection Specification
@@ -85,6 +89,11 @@
 #include "amr_float/interf_dec.h"
 #include "amr_float/interf_enc.h"
 #endif
+
+static const char *nb_bitrate_unsupported =
+    "bitrate not supported: use one of 4.75k, 5.15k, 5.9k, 6.7k, 7.4k, 7.95k, 10.2k or 12.2k\n";
+static const char *wb_bitrate_unsupported =
+    "bitrate not supported: use one of 6.6k, 8.85k, 12.65k, 14.25k, 15.85k, 18.25k, 19.85k, 23.05k, or 23.85k\n";
 
 /* Common code for fixed and float version*/
 typedef struct AMR_bitrates

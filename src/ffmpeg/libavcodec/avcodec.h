@@ -2121,6 +2121,7 @@ PCM_CODEC(CODEC_ID_ADPCM_SMJPEG,  adpcm_ima_smjpeg);
 PCM_CODEC(CODEC_ID_ADPCM_SWF,     adpcm_swf);
 PCM_CODEC(CODEC_ID_ADPCM_XA,      adpcm_xa);
 PCM_CODEC(CODEC_ID_ADPCM_YAMAHA,  adpcm_yamaha);
+PCM_CODEC(CODEC_ID_ADPCM_THP,     adpcm_thp);
 
 #undef PCM_CODEC
 

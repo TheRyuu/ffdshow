@@ -112,19 +112,20 @@
  CODEC_OP(CODEC_ID_ADPCM_SBPRO_2     ,130,"") \
  CODEC_OP(CODEC_ID_ADPCM_SBPRO_3     ,131,"") \
  CODEC_OP(CODEC_ID_ADPCM_SBPRO_4     ,132,"") \
- CODEC_OP(CODEC_ID_FLAC              ,133,"flac") \
- CODEC_OP(CODEC_ID_AMR_NB            ,134,"amr nb") \
- CODEC_OP(CODEC_ID_GSM_MS            ,135,"gsm ms") \
- CODEC_OP(CODEC_ID_TTA               ,136,"tta") \
- CODEC_OP(CODEC_ID_MACE3             ,137,"mace3") \
- CODEC_OP(CODEC_ID_MACE6             ,138,"mace6") \
- CODEC_OP(CODEC_ID_QDM2              ,139,"qdm2") \
- CODEC_OP(CODEC_ID_MP3ADU            ,140,"") \
- CODEC_OP(CODEC_ID_MP3ON4            ,141,"mp3on4") \
- CODEC_OP(CODEC_ID_COOK              ,142,"cook") \
- CODEC_OP(CODEC_ID_TRUESPEECH        ,143,"truespeech") \
- CODEC_OP(CODEC_ID_RA_144            ,144,"14_4") \
- CODEC_OP(CODEC_ID_RA_288            ,145,"28_8") \
+ CODEC_OP(CODEC_ID_ADPCM_THP         ,133,"adpcm thp") \
+ CODEC_OP(CODEC_ID_FLAC              ,134,"flac") \
+ CODEC_OP(CODEC_ID_AMR_NB            ,135,"amr nb") \
+ CODEC_OP(CODEC_ID_GSM_MS            ,136,"gsm ms") \
+ CODEC_OP(CODEC_ID_TTA               ,137,"tta") \
+ CODEC_OP(CODEC_ID_MACE3             ,138,"mace3") \
+ CODEC_OP(CODEC_ID_MACE6             ,139,"mace6") \
+ CODEC_OP(CODEC_ID_QDM2              ,140,"qdm2") \
+ CODEC_OP(CODEC_ID_MP3ADU            ,141,"mp3adu") \
+ CODEC_OP(CODEC_ID_MP3ON4            ,142,"mp3on4") \
+ CODEC_OP(CODEC_ID_COOK              ,143,"cook") \
+ CODEC_OP(CODEC_ID_TRUESPEECH        ,144,"truespeech") \
+ CODEC_OP(CODEC_ID_RA_144            ,145,"14_4") \
+ CODEC_OP(CODEC_ID_RA_288            ,146,"28_8") \
 \
  /* Raw formats */ \
  CODEC_OP(CODEC_ID_RAW           ,300,"raw") \
