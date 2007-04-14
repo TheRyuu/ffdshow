@@ -15,5 +15,5 @@ Interlaced:
   grayed - decide by input frame type (use when processing MPEG2 video)
 
 Accurate rounding:
-  unchecked - sometimes holizontal lines are seen
+  unchecked - sometimes horizontal lines are seen
   checked - high quality, slower in some cases

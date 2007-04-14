@@ -322,7 +322,7 @@ bool TresizeAspectSettings::getTip(unsigned int pageId,char_t *buf,size_t len)
       strcatf(tipS,_l("by %g"),mult1000/1000.0f);
       break;
      case 4:
-      strcatf(tipS,_l("to holizontal size %i,vertical size=auto"),dx);
+      strcatf(tipS,_l("to horizontal size %i,vertical size=auto"),dx);
       break;
     }
    strcat(tipS,_l("\nAspect ratio: "));

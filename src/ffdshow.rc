@@ -496,9 +496,9 @@ FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     GROUPBOX        "",IDC_STATIC,0,0,266,137
     CONTROL         "Resize",IDC_CHB_RESIZE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,0,37,10,WS_EX_ACCEPTFILES
-    CONTROL         "Specify holizontal and vertical size",IDC_RBT_RESIZE_MODE_SIZE,
+    CONTROL         "Specify horizontal and vertical size",IDC_RBT_RESIZE_MODE_SIZE,
                     "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,4,12,126,10
-    CONTROL         "Specify holizontal size",IDC_RBT_RESIZE_MODE_SIZE_H,
+    CONTROL         "Specify horizontal size",IDC_RBT_RESIZE_MODE_SIZE_H,
                     "Button",BS_AUTORADIOBUTTON | WS_TABSTOP,4,25,126,10
     CTEXT           "New size",IDC_LBL_NEW_SIZE,8,39,38,8,NOT WS_GROUP
     EDITTEXT        IDC_ED_RESIZEDX,45,37,31,13,ES_AUTOHSCROLL | ES_NUMBER,WS_EX_RIGHT
