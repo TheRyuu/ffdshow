@@ -115,7 +115,7 @@ void TresizeAspectPage::applyResizeXY(void)
      y=0;
     }
   }
- if (!ok || (y<8 && y!=0) || y>16384 || (y&1)) return;
+ if (!ok || (y<24 && y!=0) || y>16384 || (y&1)) return;
  cfgSet(IDFF_resizeDx,x);
  if(y)
   {
@@ -160,7 +160,7 @@ bool TresizeAspectPage::sizeYok(HWND hed)
   {
    y=strtoul(pomS,&stop,10);
   }
- if (*stop || (y<8 && y!=0) || y>16384 || (y&1)) return false;
+ if (*stop || (y<24 && y!=0) || y>16384 || (y&1)) return false;
  return true;
 }
 INT_PTR TresizeAspectPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
