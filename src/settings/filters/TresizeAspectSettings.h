@@ -14,10 +14,11 @@ protected:
 public:
  TresizeAspectSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  int mode;
- unsigned int dx,dy,isResizeDy0,dyReg;
+ unsigned int dx,dy,specifyHolizontalSizeOnly,dyReg;
  int multOf;
  int a1,a2;
  int mult1000;
+ int SARinternally;
  void calcNewRects(Trect *rectFull,Trect *rectClip) const;
  int _if;
  int xcond;unsigned int xval;

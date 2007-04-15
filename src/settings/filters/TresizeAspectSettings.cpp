@@ -97,8 +97,8 @@ TresizeAspectSettings::TresizeAspectSettings(TintStrColl *Icoll,TfilterIDFFs *fi
      _l("resizeMode"),0,
    IDFF_resizeDx           ,(TintVal)&TresizeAspectSettings::dx    ,64,16384,_l(""),1,
      _l("resizeDx"),640,
-   IDFF_is_resizeDy_0       ,(TintVal)&TresizeAspectSettings::isResizeDy0 ,0,1,_l(""),1,
-     _l("resizeIsDy0"),0,  // if(resizeDy/*registry*/==0) older version crashes. When isResizeDy0==1, Vertical size is calculated automatically.
+   IDFF_resizeSpecifyHolizontalSizeOnly,(TintVal)&TresizeAspectSettings::specifyHolizontalSizeOnly ,0,1,_l(""),1,
+     _l("resizeIsDy0"),0,  // if(resizeDy/*registry*/==0) older version crashes. When specifyHolizontalSizeOnly==1, Vertical size is calculated automatically.
    IDFF_resizeDy           ,(TintVal)&TresizeAspectSettings::dyReg ,0,16384,_l(""),1,
      _l("resizeDy"),480,
    IDFF_resizeDy_real      ,(TintVal)&TresizeAspectSettings::dy    ,0,16384,_l(""),1,
@@ -111,6 +111,8 @@ TresizeAspectSettings::TresizeAspectSettings(TintStrColl *Icoll,TfilterIDFFs *fi
      _l("resizeA2"),3,
    IDFF_resizeMult1000     ,&TresizeAspectSettings::mult1000       ,1,1000*1000,_l(""),1,
      _l("resizeMult1000"),2000,
+   IDFF_resizeSARinternally,&TresizeAspectSettings::SARinternally  ,0,0,_l(""),1,
+     _l("resizeSARinternally"),1,
    IDFF_resizeIf           ,&TresizeAspectSettings::_if            ,0,2,_l(""),1,
      _l("resizeIf"),0,
    IDFF_resizeIfXcond      ,&TresizeAspectSettings::xcond          ,-1,1,_l(""),1,
@@ -431,7 +433,7 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
 { //TODO: fix this mess!
  const Trect inRect=*(full?rectFull:rectClip);
 
- //resize
+/*****************  resize  *****************/
  if (is && ifResize(inRect.dx,inRect.dy))
   if (methodsProps[methodLuma].library==LIB_SAI)
    {
@@ -442,25 +444,32 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
    }
   else
    {
+    if (SARinternally)
+     {
+      rectFull->sar.num=1;
+      rectFull->sar.den=1;
+     }
     switch (mode)
      {
-      case 1:
+      case 1: // Specify aspect ratio
        Trect::calcNewSizeAspect(inRect,a1,a2,*rectFull);
        break;
-      case 2:
+      case 2: // Expand to next multiply of
        rectFull->dx=(1+(inRect.dx-1)/multOf)*multOf;
        rectFull->dy=(1+(inRect.dy-1)/multOf)*multOf;
        break;
-      case 3:
+      case 3: // Multiply by
        rectFull->dx=mult1000*inRect.dx/1000;
        rectFull->dy=mult1000*inRect.dy/1000;
        break;
-      case 4:
+      case 4: // Specify horizontal size
        rectFull->dx=dx;
-       rectFull->dy=dx*inRect.dy/inRect.dx*inRect.sar.den/inRect.sar.num;
-       rectFull->sar.num=1;rectFull->sar.den=1;
+       if (SARinternally)
+        rectFull->dy=dx*inRect.dy/inRect.dx*inRect.sar.den/inRect.sar.num;
+       else
+        rectFull->dy=dx*inRect.dy/inRect.dx;
        break;
-      case 0:
+      case 0: // Specify horizontal and vertical size
       default:
        rectFull->dx=dx;
        rectFull->dy=dy;
@@ -469,7 +478,8 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
     rectFull->dx&=~1;rectFull->dy&=~1;
    }
 
- //aspect
+/*****************  aspect  *****************/
+ int ax=1,ay=1;
  if (methodsProps[methodLuma].library==LIB_NONE)
   {
    rectClip->dx=std::min(inRect.dx,rectFull->dx);
@@ -478,26 +488,25 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
    rectClip->y=std::max(0,int(rectFull->dy-rectClip->dy)/2)&~1;
   }
  else
-  if (isAspect==0 || methodsProps[methodLuma].library==LIB_SAI)
+  if (isAspect==0 || methodsProps[methodLuma].library==LIB_SAI) // No aspect ratio correction
    *rectClip=*rectFull;
   else
    {
-    int ax,ay;
-    if (isAspect==1)
+    if (isAspect==1) // keep original aspect ratio
      {
-      if(!isResizeDy0 || !is)
-       {
-        ax=inRect.dx;
-        ay=inRect.dy;
-       }
-      else
+      if(SARinternally && is)
        {
         ax=inRect.dx;
         ay=inRect.dy*inRect.sar.den/inRect.sar.num;
         rectClip->sar.num=1;rectClip->sar.den=1;
        }
+      else
+       {
+        ax=inRect.dx;
+        ay=inRect.dy;
+       }
      }
-    else
+    else // Manual: x.xx:1
      {
       ax=aspectRatio;
       ay=1<<16;
@@ -506,7 +515,7 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
     rectClip->dx=rectFull->dx;
     rectClip->dy=rectFull->dx*ay/ax;
     if (mode==4) rectFull->dy=rectClip->dy;
-    if (rectClip->dy>rectFull->dy)
+    if (rectClip->dy>rectFull->dy) // have to shrink horizontally
      {
       rectClip->dx=rectFull->dy*ax/ay;
       rectClip->dy=rectFull->dy;
@@ -518,52 +527,73 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
     rectClip->y=((rectFull->dy-rectClip->dy)/2)&mask;
    }
 
-  //borders
+/*****************  borders  *****************/
   unsigned int borderX=0,borderY=0;
-  if (bordersUnits==0)
+  if (bordersUnits==0) // Percent
    {
-    borderX=std::max(8U,(bordersInside?rectClip:rectFull)->dx*(100+(bordersInside?-1:1)*bordersPercentX)/100);
-    borderY=std::max(8U,(bordersInside?rectClip:rectFull)->dy*(100+(bordersInside?-1:1)*bordersPercentY)/100);
+    borderX=std::max(64U,(bordersInside?rectClip:rectFull)->dx*(100+(bordersInside?-1:1)*bordersPercentX)/100);
+    borderY=std::max(24U,(bordersInside?rectClip:rectFull)->dy*(100+(bordersInside?-1:1)*bordersPercentY)/100);
    }
-  else if (bordersUnits==1)
+  else if (bordersUnits==1) // Pixels
    {
-    borderX=std::max(8,int(rectClip->dx+(bordersInside?-2:2)*bordersPixelsX));
-    borderY=std::max(8,int(rectClip->dy+(bordersInside?-2:2)*(bordersLocked?rectClip->dy*bordersPixelsY/rectClip->dx:bordersPixelsY)));
+    borderX=std::max(64,int(rectClip->dx+(bordersInside?-2:2)*bordersPixelsX));
+    borderY=std::max(24,int(rectClip->dy+(bordersInside?-2:2)*(bordersLocked?rectClip->dy*bordersPixelsY/rectClip->dx:bordersPixelsY)));
    }
   if (borderX || borderY)
    {
     if (bordersInside)
      {
-      rectClip->dx=borderX&~1;
-      rectClip->dy=borderY&~1;
+      if (isAspect>=1)
+       {
+        unsigned int bdy=borderX*ay/ax;
+        if (bdy<=borderY)
+         {
+          rectClip->dx=borderX&~1;
+          rectClip->dy=bdy&~1;
+         }
+        else
+         {
+          rectClip->dx=borderY*ax/ay;
+          rectClip->dy=borderY&~1;
+         }
+       }
+      else
+       {
+        rectClip->dx=borderX&~1;
+        rectClip->dy=borderY&~1;
+       }
      }
     else
      {
       rectFull->dx=borderX&~1;
       rectFull->dy=borderY&~1;
      }
-    if (rectClip->dx<64) rectClip->dx=64;
-    if (rectClip->dy<24) rectClip->dy=24;
-    if (rectFull->dx<64) rectFull->dx=64;
-    if (rectFull->dy<24) rectFull->dy=24;
     if (rectClip->dx>rectFull->dx) rectClip->dx=rectFull->dx;
     if (rectClip->dy>rectFull->dy) rectClip->dy=rectFull->dy;
     rectClip->x=((rectFull->dx-rectClip->dx)/2)&~1;
     rectClip->y=((rectFull->dy-rectClip->dy)/2)&~1;
-    rectClip->dx=rectClip->dx&~1;
-    rectClip->dy=rectClip->dy&~1;
-    rectFull->dx=rectFull->dx&~1;
-    rectFull->dy=rectFull->dy&~1;
    }
+
+/*****************  finish  *****************/
+  if (rectClip->dx>rectFull->dx) rectClip->dx=rectFull->dx;
+  if (rectClip->dy>rectFull->dy) rectClip->dy=rectFull->dy;
+  if (rectClip->dx<64) rectClip->dx=64;
+  if (rectClip->dy<24) rectClip->dy=24;
+  if (rectFull->dx<64) rectFull->dx=64;
+  if (rectFull->dy<24) rectFull->dy=24;
+  rectClip->dx=rectClip->dx&~1;
+  rectClip->dy=rectClip->dy&~1;
+  rectFull->dx=rectFull->dx&~1;
+  rectFull->dy=rectFull->dy&~1;
 }
 
 void TresizeAspectSettings::reg_op(TregOp &t)
 {
- if (isResizeDy0 && mode==4) // for downgrade compatibility. (before save. This is executed before load too. No problem)
+ if (specifyHolizontalSizeOnly && mode==4) // for downgrade compatibility. (before save. This is executed before load too. No problem)
   mode=0;
  TfilterSettingsVideo::reg_op(t);
  dy=dyReg;
- if (isResizeDy0 && mode==0) // after load (Of course, this is executed after save. Can be igrored.)
+ if (specifyHolizontalSizeOnly && mode==0) // after load (Of course, this is executed after save. Can be igrored.)
   mode=4;
  else
   if (mode==4) mode=0;

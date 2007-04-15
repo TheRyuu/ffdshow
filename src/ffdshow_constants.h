@@ -350,13 +350,15 @@
 #define IDFF_fullResize          723
 #define IDFF_resizeMode          728 //0 - exact size, 1 - aspect ratio , 2 - multiply of , 3 - multiply
 #define IDFF_resizeDx            702 //new width
-#define IDFF_is_resizeDy_0       703 //dummy for backward compatibility
+#define IDFF_resizeSpecifyHolizontalSizeOnly 703
+#define IDFF_is_resizeDy_0       703 //deprecated. same as IDFF_resizeSpecifyHolizontalSizeOnly
 #define IDFF_resizeDy            705 //new height
 #define IDFF_resizeDy_real       766
 #define IDFF_resizeMultOf        764
 #define IDFF_resizeA1            729
 #define IDFF_resizeA2            730
 #define IDFF_resizeMult1000      753
+#define IDFF_resizeSARinternally 3380
 #define IDFF_resizeIf            733 //0 - always, 1 - size, 2 - number of pixels
 #define IDFF_resizeIfXcond       734 //-1 - less, 1 - more
 #define IDFF_resizeIfXval        735 //width to be compared to
@@ -1386,6 +1388,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3379
+//max:3380
 
 #endif
