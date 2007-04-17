@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>ffdshow tryouts リサイズ　アスペクト</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS" />
+    <meta name="description" content="ffdshow tryouts リサイズ、アスペクト" />
+    <link rel="stylesheet" href="../styles/style.css" type="text/css" />
+</head>
+
+<body>
+  <a href="http://ffdshow-tryout.sourceforge.net/phpBB2/">
+    <img src="../images/logo_phpBB.png" title="ffdshow tryouts" alt="ffdshow tryouts" width="200" height="91" />
+  </a>  
+  
+  <div style="text-align:right" class="smallest_caption">
+    Translation available in:
+    <a class="nav" href="../en/resize.htm"><img src="../images/england.png" title="English resize doc" alt="English resize doc" width="27" height="17" />&nbsp;English</a>
+  </div> 
+
+  <p>
+    <span class="big_caption">
+     <a name="top" id="top">リサイズ、アスペクト</a>
+    </span>
+  </p>
+
+  <img src="images/resize.png" title="resize dialog" alt="resize dialog" width="649" height="383" />
+
+  <p>
+    <span class="normal">
+      このドキュメントは rev 1103以降に対応しています。beta2aとは仕様が異なります。
+    </span>
+  </p>
+
+  <p>
+    <span class="small_caption">
+      <img src="../images/combo.png" title="" alt="" width="13" height="13" />
+      横幅と高さを指定する
+    </span>
+  </p>
+
+  <ul class="normal">
+    <li>「アスペクト比率を修正しない」を選択すると、指定したサイズに拡大または縮小されます。</li>
+    <li>「オリジナルのアスペクト比率を維持する」を選択すると、横幅×高さで指定した枠に<b>オリジナルのアスペクト比率で</b>横幅か高さのいずれかが接するまで引き伸ばされ、必要な場合は上下または左右に黒い縁が付加されます。</li>
+    <li>「アスペクト比率を手動で設定する」を選択すると、横幅×高さで指定した枠内に<b>指定したアスペクト比率で</b>横幅か高さのいずれかが接するまで引き伸ばされ、必要な場合は上下または左右に黒い縁が付加されます。</li>
+  </ul>
+
+  <p>
+    <span class="small_caption">
+      <img src="../images/combo.png" title="" alt="" width="13" height="13" />
+      横幅を指定する
+    </span>
+  </p>
+
+  <ul class="normal">
+    高さは適切なアスペクト比率になるように自動的に計算されます。
+    <li>「アスペクト比率を修正しない」と「オリジナルのアスペクト比率を維持する」は同じ結果になります。</li>
+    <li>「アスペクト比率を手動で設定する」ことも出来ます。 </li>
+  </ul>
+
+  <p>
+    <span class="small_caption">
+      <img src="../images/combo.png" title="" alt="" width="13" height="13" />
+      アスペクト比率を指定する
+    </span>
+  </p>
+
+  <ul class="normal">
+    横幅を基に指定された比率により高さを決定します（仮にこれを枠と呼びます）。
+    <li>「アスペクト比率を修正しない」を選択すると、枠いっぱいに引き伸ばされます。</li>
+    <li>「オリジナルのアスペクト比率を維持する」を選択すると、枠に<strong>オリジナルのアスペクト比率で</strong>横幅か高さのいずれかが接するまで引き伸ばされ、必要な場合は上下または左右に黒い縁が付加されます。
+		</li>
+    <li>「アスペクト比率を手動で設定する」を選択すると、枠内に横幅か高さのいずれかが接するまで<strong>指定したアスペクト比率で</strong>引き伸ばされ、必要な場合は上下または左右に黒い縁が付加されます。
+		</li>
+  </ul>
+
+  <p>
+    <span class="small_caption">
+      <img src="../images/combo.png" title="" alt="" width="13" height="13" />
+      以下の倍数に拡大する
+    </span>
+  </p>
+
+  <ul class="normal">
+    <li>横幅、高さとも指定された数値の倍数になるまで切り上げられます。例えば100を指定すると320×160のサンプルは400×200に拡大されます。16の倍数にリサイズしないと不具合を生じるフィルタと接続する場合などに用います。</li>
+    <li>「オリジナルのアスペクト比率を維持する」、「アスペクト比率を手動で設定する」はこのモードでも使用できます。</li>
+  </ul>
+
+  <p>
+    <span class="small_caption">
+      <img src="../images/combo.png" title="" alt="" width="13" height="13" />
+      倍数を指定する
+    </span>
+  </p>
+
+  <ul class="normal">
+    <li>縦横ともに指定された拡大率で引き伸ばされます。</li>
+  </ul>
+
+  <p>
+    <span class="small_caption">
+      <img src="../images/check.png" title="" alt="" width="13" height="13" />
+      ピクセルのアスペクト比率（SAR）を内部的に処理する
+    </span>
+  </p>
+
+    <ul class="normal">
+      <li>ピクセルのアスペクト比率（SAR）を考慮したサイズにリサイズし出力画像のSARを1：1の正方形に固定します。</li>
+      <li>チェックを外すと出力画像のSARは入力画像と同じになり、その処理をビデオレンダラ（など下流に接続されているフィルタ）に一任します。</li>
+    </ul>
+
+  <p>
+    <span class="small_caption">
+      設定例
+    </span>
+  </p>
+
+  <span class="normal">
+    1280×720ピクセルのプロジェクターを持っていて、途中でピクセルのアスペクト比率（SAR）が切り替わるＤＶＤを再生したい場合。
+  </span>
+
+  <ul class="normal">
+    <li>「横幅と高さを指定する」　1280 x 720</li>
+    <li>「オリジナルのアスペクト比率を維持する」を選択する。</li>
+    <li>「ピクセルのアスペクト比率（SAR）を内部的に処理する」をチェックする。</li>
+  </ul>
+
+  <div>
+    <span class="normal">
+      <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
+    </span>
+  </div>
+
+  <div style="padding-top:20px">
+    <a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" /></a>
+  </div>
+</body>
+</html>

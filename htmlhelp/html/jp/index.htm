@@ -43,7 +43,19 @@
       </p>
 
     <p>
-      <span class="small_caption">beta1以降の修正</span>
+      <span class="small_caption">beta2以降の修正</span>
+    </p>
+
+    <ul class="fixed">
+      <li>Winampプラグイン安定性の改善。</li>
+      <li>再生中にリサイズのダイアログで高さに（800の最初の一文字として）8を入力するとクラッシュしていた（メソッドによる、lanczosならタップが4以上のとき）。</li>
+      <li>リサイズ使用中にビデオのピクセルのアスペクト比率（SAR）のみが変わると無視されていた。</li>
+      <li>リサイズで内側の境界線（縁）が0より大きい数字に設定されている場合、「オリジナルのアスペクト比率を維持する」が機能していなかった。</li>
+      <li>AviSynthのスクリプトが保存出来なかった（Unicode版のみ）。</li>
+　　</ul>
+
+    <p>
+      <span class="small_caption">beta2以前の修正</span>
     </p>
 
     <ul class="fixed">
@@ -125,7 +137,17 @@
     </p>
 
     <p>
-      <span class="small_caption">beta1以降の追加</span>
+      <span class="small_caption">beta2以降の追加</span>
+    </p>
+
+    <ul class="added">
+      <li>リサイズの設定で「ピクセルのアスペクト比率（SAR）を内部的に処理する」機能を追加。</li>
+      <li>リサイズのGUIに「横幅を指定する」を追加（今まで高さに0を入力するGUIだったもの）。 </li>
+      <li>オーディオデコーダーの出力形式としてマルチチャンネルストリームのみをAC3エンコードする機能を追加（直接SPDIF出力できないマルチチャンネル・オーディオを一旦AC3にエンコードしてAVアンプへ出力することを意図したもの）。</li>
+    </ul>
+
+    <p>
+      <span class="small_caption">beta2以前の追加</span>
     </p>
 
     <ul class="added">
@@ -154,7 +176,6 @@
       <li>インストーラーでスピーカー構成を設定できるようにした。OS（コントロールパネル）の設定をデフォルトとして使用します。</li>
       <li>キュー：ビデオのタイムスタンプ待ちによるCPU時間の無駄を活用することにより高速化。</li>
       <li>リサイズのマルチスレッド化：デュアルコアCPU等でリサイズを高速化。</li>
-      <li>リサイズのダイアログ-サイズを指定する-新しいサイズの高さのところに0を入れると高さを自動で計算する。</li>
       <li>Vorbis高音質モードを有効にした。</li>
       <li>画質と処理速度、同期との兼ね合いを設定できるようにした。</li>
       <li>SVQ3のデコード時にスプリッタから十分な情報が得られなかった際エラーメッセージを表示するようにした。</li>
@@ -167,7 +188,7 @@
     </p>
 
     <ul class="download">
-        <li><a class="nav" href="http://downloads.sourceforge.net/ffdshow-tryout/ffdshow_beta1_20061211_clsid.exe">ダウンロード　beta1(安定版)</a></li>
+        <li><a class="nav" href="http://downloads.sourceforge.net/ffdshow-tryout/ffdshow_beta2a_20070322_clsid.exe">ダウンロード　beta2a(安定版)</a></li>
         <li><a class="nav" href="http://sourceforge.net/project/showfiles.php?group_id=173941">ダウンロード　Nightly builds(最新版)</a></li>
     </ul>
 
