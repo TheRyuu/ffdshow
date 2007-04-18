@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>ffdshow tryouts resize & aspect</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS" />
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <meta name="description" content="ffdshow tryouts resize & aspect" />
     <link rel="stylesheet" href="../styles/style.css" type="text/css" />
 </head>
@@ -24,11 +24,11 @@
     </span>
   </p>
 
-  <img src="../images/resize.png" title="resize dialog" alt="resize dialog" width="558" height="412" id="IMG1" />
+  <img src="../images/resize.png" title="resize dialog" alt="resize dialog" width="558" height="412" />
 
   <p>
     <span class="normal">
-      This document is based on rev 1103 or later. beta2a has different specification.
+      This document is based on rev 1103 or later. Beta2a has different specification.
     </span>
   </p>
 
@@ -40,9 +40,9 @@
   </p>
 
   <ul class="normal">
-    <li>No aspect ratio correction : Stretched or shrinked to the specified size.</li>
-    <li>Keep original aspect ratio : Stretched or shrinked untill either width or height touch the specified size <em>using the original aspect ratio</em>. Black borders are added, if necessary.</li>
-    <li>Manual : Stretched or shrinked untill either width or height touch the specified size <em>using the specified aspect ratio</em>. Black borders are added, if necessary.</li>
+    <li>"No aspect ratio correction" selected: Stretched or shrinked to the specified size.</li>
+    <li>"Keep original aspect ratio" selected: Stretched or shrinked until either width or height touch the specified size <em>using the original aspect ratio</em>. Black borders are added, if necessary.</li>
+    <li>Manually configured: Stretched or shrinked until either width or height touch the specified size <em>using the specified aspect ratio</em>. Black borders are added, if necessary.</li>
   </ul>
 
   <p>
@@ -51,11 +51,11 @@
       Specify horizontal size
     </span>
   </p>
-
+  
   <ul class="normal">
-    Height is calculated automatically to keep original aspect ratio.
+    <li style="list-style-type:none; position:relative; left:-20px">Height is calculated automatically to keep original aspect ratio.</li>
     <li>"No aspect ratio correction" and "Keep original aspect ratio" give the same result.</li>
-    <li>Manual : You can specify aspect ratio manually.</li>
+    <li>Manually configured: You can specify aspect ratio manually.</li>
   </ul>
 
   <p>
@@ -63,13 +63,13 @@
       <img src="../images/combo.png" title="" alt="" width="13" height="13" />
       Specify aspect ratio
     </span>
-  </p>
-
+  </p> 
+  
   <ul class="normal">
-    Height is calculated based on width. (Here, let's call it the box.)
-    <li>No aspect ratio correction : Stretched to fill the box.</li>
-    <li>Keep original aspect ratio : Stretched or shrinked untill either width or height touch the box <em>using the original aspect ratio</em>. Black borders are added, if necessary.</li>
-    <li>Manual : Stretched or shrinked untill either width or height touch the box <em>using the specified aspect ratio</em>. Black borders are added, if necessary.</li>
+    <li style="list-style-type:none; position:relative; left:-20px">Height is calculated based on width. (Let's call it a <em>box</em> here.)</li>
+    <li>"No aspect ratio correction" selected: Stretched to fill the box.</li>
+    <li>"Keep original aspect ratio" selected: Stretched or shrinked until either width or height touch the box <em>using the original aspect ratio</em>. Black borders are added, if necessary.</li>
+    <li>Manually configured: Stretched or shrinked until either width or height touch the box <em>using the specified aspect ratio</em>. Black borders are added, if necessary.</li>
   </ul>
 
   <p>
@@ -80,7 +80,7 @@
   </p>
 
   <ul class="normal">
-    <li>Both width and height are expanded to next multiply of the specified value. For example, if you specify 100, 320x160 becomes 400x200. You may want to use this mode when ffdshow connects to a filter which does not work with width or height of none-multiple of 16.</li>
+    <li>Both width and height are expanded to the next multiple of the specified value. For example, if you specify 100, 320x160 becomes 400x200. You may want to use this mode when ffdshow connects to a filter which does not work with width or height of non-multiple of 16.</li>
     <li>"Keep original aspect ratio" and "Manual" work in this mode too.</li>
   </ul>
 
@@ -103,8 +103,8 @@
   </p>
 
   <ul class="normal">
-    <li>Resize to the size taking into account pixel aspect ratio (SAR), and fix output SAR 1:1.</li>
-    <li>Without check, output SAR equals input SAR and the video renderer (or any downstream filter) handles it.</li>
+    <li>If checked (by default), resize to the size taking into account pixel aspect ratio (SAR), and fix output SAR 1:1.</li>
+    <li>If unchecked, output SAR equals input SAR and the video renderer (or any downstream filter) handles it.</li>
   </ul>
 
   <p>
@@ -114,13 +114,14 @@
   </p>
 
   <span class="normal">
-    A case you have a projector with 1280x720 resolution and you want to play DVD which pixel aspect ratio (SAR) changes during playback.
+    Following situation: You have a projector with 1280x720 resolution and you want to play a DVD whose pixel aspect ratio (SAR) changes during playback.<br />
+    How to configure ffdshow's resize options properly?
   </span>
 
-  <ul class="normal">
-    <li>"Specify horizontal and vertical size" 1280 x 720</li>
-    <li>Select "Keep original aspect ratio". </li>
-    <li>Check "Process pixel aspect ratio internally". </li>
+  <ul class="normal" style="list-style-type:circle">
+    <li>"Specify horizontal and vertical size"->1280x720.</li>
+    <li>Select "Keep original aspect ratio".</li>
+    <li>Make sure "Process pixel aspect ratio internally" is checked.</li>
   </ul>
 
   <div>

@@ -59,10 +59,10 @@
 
   <ul class="fixed">
     <li>Improved stability of Winamp plugin handling.</li>
-    <li>On the fly resize. If you enter 8 (as a first letter of 800) for the vertical size, it crashes depending on the method (lanczos tap>=4, spline, etc).</li>
-    <li>If resize was being used, the changes of the pixel aspect ratio (SAR) of the video was ignored.</li>
-    <li>If inside border (of resize) was used, "Keep original aspect ratio" calculated wrong size.</li>
-    <li>AviSynth script could not be saved. (Unicode builds only)</li>
+    <li>On the fly resize: If you entered 8 (as a first letter of 800) for the vertical size, it crashed depending on the method (lanczos tap>=4, spline, etc).</li>
+    <li>If resize was being used, changes to the pixel aspect ratio (SAR) of the video were ignored.</li>
+    <li>If "Resize & aspect"->"Borders"->"Inside" was used, "Keep original aspect ratio" calculated wrong size.</li>
+    <li>AviSynth script could not be saved (Unicode builds only).</li>
   </ul>
 
   <p>
@@ -151,9 +151,9 @@
   </p>
 
   <ul class="added">
-    <li>In resize & aspect dialog, a new check box "Process pixel aspect ratio internally" has been added.</li>
+    <li>In "Resize & aspect" dialog, a new check box "Process pixel aspect ratio internally" has been added.</li>
     <li>Resize GUI: "Specify horizontal size" instead of "Specify vertical size 0 for auto".</li>
-    <li>Audio decoder AC3 output: a new check box "Encode only multichannel streams". By using this feature, you can send multichannel audio (which otherwise cannot be digitally sent) to AV-amp in AC3-SPDIF.</li>
+    <li>Audio decoder AC3 output: a new check box "Encode only multichannel streams" allows sending multichannel audio (which otherwise cannot be digitally sent) to AV-amp in AC3-SPDIF.</li>
   </ul>
 
   <p>
