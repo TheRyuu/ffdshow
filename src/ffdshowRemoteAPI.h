@@ -63,4 +63,6 @@
 #define COPY_GET_SOURCEFILE		15 //Get the filename currently played
 #define COPY_CURRENT_SUBTITLES	16 //Get the subtitle filename currently read
 #define COPY_GET_SUBTITLEFILESLIST 17 //Get the list of available subtitle files
+#define COPY_SET_SHORTOSD_MSG 18 //Display a short OSD message
+#define COPY_SET_OSD_MSG 19 //Display a short OSD message
 #endif

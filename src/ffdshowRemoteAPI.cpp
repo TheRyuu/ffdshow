@@ -476,6 +476,11 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			return TRUE;
         }
 	  }
+	  case COPY_SET_SHORTOSD_MSG:
+		  return SUCCEEDED(deciV->shortOSDmessage(text<char_t>((const char*)cds->lpData), 25))?TRUE:FALSE;
+	  case COPY_SET_OSD_MSG:
+		  deciV->resetOSD();
+		  return SUCCEEDED(deciV->drawOSD(0, 0, text<char_t>((const char*)cds->lpData)))?TRUE:FALSE;
     }
   }
  return DefWindowProc(hwnd,msg,wprm,lprm);
