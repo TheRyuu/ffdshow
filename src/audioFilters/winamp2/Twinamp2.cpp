@@ -74,8 +74,9 @@ Twinamp2dspDll::Twinamp2dspDll(const ffstring &flnm):refcount(1)
  char_t filename[MAX_PATH],name[MAX_PATH],ext[MAX_PATH];
  _splitpath(flnm.c_str(),NULL,NULL,name,ext);
  _makepath(filename,NULL,NULL,name,ext);
- // DSP stacker is not compatible with ffdshow currently. Maybe ffdshow's bug, but I can't help...
- if (_strnicmp(_l("dsp_stacker.dll"),filename,16)==0)
+ // DSP stacker and Adapt-X are not compatible with ffdshow currently. Maybe ffdshow's bug, but I can't help...
+ if (_strnicmp(_l("dsp_stacker.dll"),filename,16)==0
+  || _strnicmp(_l("dsp_adaptx.dll"),filename,15)==0)
   return;
  dll=new Tdll(flnm.c_str(),NULL);
  dll->loadFunction(winampDSPGetHeaderType,"winampDSPGetHeader2");
