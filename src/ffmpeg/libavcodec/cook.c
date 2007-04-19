@@ -320,9 +320,7 @@ static void decode_gain_info(GetBitContext *gb, int *gaininfo)
 
 static void decode_envelope(COOKContext *q, int* quant_index_table) {
     int i,j, vlc_index;
-    int bitbias;
 
-    bitbias = get_bits_count(&q->gb);
     quant_index_table[0]= get_bits(&q->gb,6) - 6;       //This is used later in categorize
 
     for (i=1 ; i < q->total_subbands ; i++){
@@ -382,12 +380,7 @@ static void categorize(COOKContext *q, int* quant_index_table,
         num_bits = 0;
         index = 0;
         for (j=q->total_subbands ; j>0 ; j--){
-            exp_idx = (i - quant_index_table[index] + bias) / 2;
-            if (exp_idx<0){
-                exp_idx=0;
-            } else if(exp_idx >7) {
-                exp_idx=7;
-            }
+            exp_idx = av_clip((i - quant_index_table[index] + bias) / 2, 0, 7);
             index++;
             num_bits+=expbits_tab[exp_idx];
         }
@@ -399,12 +392,7 @@ static void categorize(COOKContext *q, int* quant_index_table,
     /* Calculate total number of bits. */
     num_bits=0;
     for (i=0 ; i<q->total_subbands ; i++) {
-        exp_idx = (bias - quant_index_table[i]) / 2;
-        if (exp_idx<0) {
-            exp_idx=0;
-        } else if(exp_idx >7) {
-            exp_idx=7;
-        }
+        exp_idx = av_clip((bias - quant_index_table[i]) / 2, 0, 7);
         num_bits += expbits_tab[exp_idx];
         exp_index1[i] = exp_idx;
         exp_index2[i] = exp_idx;
@@ -525,15 +513,11 @@ static int unpack_SQVH(COOKContext *q, int category, int* subband_coef_index,
                        int* subband_coef_sign) {
     int i,j;
     int vlc, vd ,tmp, result;
-    int ub;
-    int cb;
 
     vd = vd_tab[category];
     result = 0;
     for(i=0 ; i<vpr_tab[category] ; i++){
-        ub = get_bits_count(&q->gb);
         vlc = get_vlc2(&q->gb, q->sqvh[category].table, q->sqvh[category].bits, 3);
-        cb = get_bits_count(&q->gb);
         if (q->bits_per_subpacket < get_bits_count(&q->gb)){
             vlc = 0;
             result = 1;
@@ -608,8 +592,7 @@ static void decode_vectors(COOKContext* q, int* category,
  * function for decoding mono data
  *
  * @param q                 pointer to the COOKContext
- * @param mlt_buffer1       pointer to left channel mlt coefficients
- * @param mlt_buffer2       pointer to right channel mlt coefficients
+ * @param mlt_buffer        pointer to mlt coefficients
  */
 
 static void mono_decode(COOKContext *q, float* mlt_buffer) {
