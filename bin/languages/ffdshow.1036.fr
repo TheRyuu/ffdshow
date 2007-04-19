@@ -1297,6 +1297,9 @@ brown=brun
 1290=Bords
 1322=:
 1540=Multiplier par
+1986=Spécifier les tailles vert et horiz
+1987=Spécifier la taille horizontale
+1988=Traiter l'aspect ratio en interne
 
 [134]
 0=Recadrage
@@ -1671,6 +1674,9 @@ brown=brun
 1743=Débit :
 1845=Connecter à :
 1846=Appliquer uniquement à la sortie S/PDIF
+1984=Périphér. multichaîne:
+1985=Encoder que les flux multichaînes
+
 
 [244]
 0=Décodeur Dolby
