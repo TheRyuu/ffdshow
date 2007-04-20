@@ -28,7 +28,7 @@ public:
  virtual const Tsubtitle* getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME time,bool *forceChange=NULL);
  void setModified(void) {subs->IsProcessOverlapDone=false;};
  bool IsProcessOverlapDone(void) {return subs->IsProcessOverlapDone;};
- void processOverlap(void) {subs->processOverlap(sub_format);};
+ void processOverlap(void);
 };
 
 #endif

@@ -1048,7 +1048,6 @@ void Tsubreader::processOverlap(int sub_format)
  int sub_format1=sub_format&Tsubreader::SUB_FORMATMASK;
  if (!(sub_format1==Tsubreader::SUB_MICRODVD
     || sub_format1==Tsubreader::SUB_SUBRIP
-    || sub_format1==Tsubreader::SUB_SUBVIEWER
     || sub_format1==Tsubreader::SUB_SAMI
     || sub_format1==Tsubreader::SUB_VPLAYER
     || sub_format1==Tsubreader::SUB_RT
