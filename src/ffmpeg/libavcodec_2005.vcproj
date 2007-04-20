@@ -473,6 +473,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\atrac3.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\avs.c"
 				>
 			</File>
@@ -1002,6 +1006,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\atrac3data.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\avcodec.h"
 				>
 			</File>
@@ -1415,7 +1423,7 @@
 			</File>
 			<File
 				RelativePath=".\libavutil\mem.c"
-				>		
+				>
 			</File>
 			<File
 				RelativePath=".\libavutil\mem.h"

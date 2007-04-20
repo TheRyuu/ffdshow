@@ -136,6 +136,7 @@ void avcodec_register_all(void)
     register_avcodec(&ra_144_decoder);
     register_avcodec(&ra_288_decoder);
 #endif
+    register_avcodec(&atrac3_decoder);
     register_avcodec(&aasc_decoder);
     register_avcodec(&amr_nb_decoder);
     register_avcodec(&avs_decoder);

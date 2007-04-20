@@ -189,6 +189,9 @@
 				RelativePath="libavcodec\asv1.c">
 			</File>
 			<File
+				RelativePath=".\libavcodec\atrac3.c">
+			</File>
+			<File
 				RelativePath=".\libavcodec\avs.c">
 			</File>
 			<File
@@ -584,6 +587,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\ac3tab.h">
+			</File>
+			<File
+				RelativePath=".\libavcodec\atrac3data.h">
 			</File>
 			<File
 				RelativePath=".\libavcodec\avcodec.h">

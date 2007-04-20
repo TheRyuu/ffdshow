@@ -27,6 +27,7 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/amr.c \
       $(LAVC_DIR)/amr_float/interf_dec.c \
       $(LAVC_DIR)/amr_float/sp_dec.c \
+      $(LAVC_DIR)/atrac3.c \
       $(LAVC_DIR)/asv1.c \
       $(LAVC_DIR)/avs.c \
       $(LAVC_DIR)/bitstream.c \

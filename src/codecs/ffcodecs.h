@@ -126,6 +126,7 @@
  CODEC_OP(CODEC_ID_TRUESPEECH        ,144,"truespeech") \
  CODEC_OP(CODEC_ID_RA_144            ,145,"14_4") \
  CODEC_OP(CODEC_ID_RA_288            ,146,"28_8") \
+ CODEC_OP(CODEC_ID_ATRAC3            ,147,"atrac 3") \
 \
  /* Raw formats */ \
  CODEC_OP(CODEC_ID_RAW           ,300,"raw") \

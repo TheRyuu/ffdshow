@@ -2012,6 +2012,7 @@ extern AVCodec aasc_decoder;
 extern AVCodec alac_decoder;
 extern AVCodec amr_nb_decoder;
 extern AVCodec amr_wb_decoder;
+extern AVCodec atrac3_decoder;
 extern AVCodec asv1_decoder;
 extern AVCodec asv2_decoder;
 extern AVCodec avs_decoder;
