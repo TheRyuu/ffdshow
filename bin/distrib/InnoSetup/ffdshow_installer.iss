@@ -2,10 +2,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1116
+#define tryout_revision = 1121
 #define buildyear = 2007
 #define buildmonth = '04'
-#define buildday = '22'
+#define buildday = '23'
 
 ; Build specific options
 #define unicode_required = True
@@ -25,6 +25,7 @@
 
 #define include_app_plugins = True
 #define include_makeavis = True
+#define include_x264 = True
 #define include_audx = False
 #define include_info_before = False
 #define include_gnu_license = True
@@ -81,6 +82,7 @@
   #define include_audx = False
   #define include_app_plugins = False
   #define include_makeavis = False
+  #define include_x264 = False
   #define filename_prefix = '_x64'
 #endif
 
@@ -296,8 +298,8 @@ Source: msvc71\ffSpkCfg.dll; Flags: dontcopy
 
 ; MSVC71 runtimes are required for ffdshow components that are placed outside the ffdshow installation directory.
 #if !is64bit
-Source: Runtimes\msvc71\msvcp71.dll; DestDir: {sys}; Flags: onlyifdoesntexist
-Source: Runtimes\msvc71\msvcr71.dll; DestDir: {sys}; Flags: onlyifdoesntexist
+Source: Runtimes\msvc71\msvcp71.dll; DestDir: {sys}; Flags: onlyifdoesntexist sharedfile uninsnosharedfileprompt
+Source: Runtimes\msvc71\msvcr71.dll; DestDir: {sys}; Flags: onlyifdoesntexist sharedfile uninsnosharedfileprompt
 #endif
 
 #if MSVC80
@@ -323,7 +325,10 @@ Source: ..\..\ff_tremor.dll; DestDir: {app}; Flags: ignoreversion; Components: f
 Source: ..\..\ff_unrar.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 Source: ..\..\ff_samplerate.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 Source: ..\..\ff_theora.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: ..\..\ff_x264.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+#if include_x264
+Source: ..\..\ff_x264.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow\vfw
+Source: Runtimes\pthreadGC2.dll; DestDir: {sys}; Flags: sharedfile uninsnosharedfileprompt; Components: ffdshow\vfw
+#endif
 #if is64bit
 Source: ..\..\ff_kernelDeint.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 Source: ..\..\TomsMoComp_ff.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
@@ -356,12 +361,12 @@ Source: ..\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartrepl
 
 ; Single build:
 #if !PREF_CLSID
-Source: ..\..\ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow\vfw
+Source: ..\..\ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 #endif
 ; ANSI + Unicode:
 #if PREF_CLSID
-Source: ..\..\ff_wmv9_ansi.dll; DestName: ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; MinVersion: 4,0; Components: ffdshow\vfw
-Source: ..\..\ff_wmv9_unicode.dll; DestName: ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; MinVersion: 0,4; Components: ffdshow\vfw
+Source: ..\..\ff_wmv9_ansi.dll; DestName: ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; MinVersion: 4,0; Components: ffdshow
+Source: ..\..\ff_wmv9_unicode.dll; DestName: ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; MinVersion: 0,4; Components: ffdshow
 #endif
 
 #if is64bit
