@@ -629,7 +629,7 @@ static int decode_init(AVCodecContext *avctx)
     av_log(avctx, AV_LOG_ERROR, "Zlib support not compiled.\n");
     return 1;
 #endif
-    avctx->pix_fmt = PIX_FMT_RGB24;
+    avctx->pix_fmt = PIX_FMT_BGR24;
     c->decomp_size = (avctx->width + 255) * 4 * (avctx->height + 64);
 
     /* Allocate decompression buffer */
