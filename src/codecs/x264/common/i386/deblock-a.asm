@@ -30,12 +30,6 @@ pb_03: times 8 db 0x03
 pb_a1: times 8 db 0xa1
 
 SECTION .text
-cglobal x264_deblock_v8_luma_mmxext
-cglobal x264_deblock_h_luma_mmxext
-cglobal x264_deblock_v_chroma_mmxext
-cglobal x264_deblock_h_chroma_mmxext
-cglobal x264_deblock_v_chroma_intra_mmxext
-cglobal x264_deblock_h_chroma_intra_mmxext
 
 ; expands to [base],...,[base+7*stride]
 %define PASS8ROWS(base, base3, stride, stride3) \
@@ -231,11 +225,10 @@ cglobal x264_deblock_h_chroma_intra_mmxext
 
 SECTION .text
 
-ALIGN 16
 ;-----------------------------------------------------------------------------
 ;   void x264_deblock_v8_luma_mmxext( uint8_t *pix, int stride, int alpha, int beta, int8_t *tc0 )
 ;-----------------------------------------------------------------------------
-x264_deblock_v8_luma_mmxext:
+cglobal x264_deblock_v8_luma_mmxext
     picpush ebx
     picgetgot ebx
     push    edi
@@ -298,11 +291,10 @@ x264_deblock_v8_luma_mmxext:
     ret
 
 
-ALIGN 16
 ;-----------------------------------------------------------------------------
 ;   void x264_deblock_h_luma_mmxext( uint8_t *pix, int stride, int alpha, int beta, int8_t *tc0 )
 ;-----------------------------------------------------------------------------
-x264_deblock_h_luma_mmxext:
+cglobal x264_deblock_h_luma_mmxext
     push   ebx
     push   ebp
     mov    eax, [esp+12] ; pix
@@ -332,7 +324,7 @@ x264_deblock_h_luma_mmxext:
     add    dword [esp+16], 2 ; tc0+2
     call   x264_deblock_v8_luma_mmxext
     add    esp, 20
-
+    
     ; transpose 16x4 -> original space  (only the middle 4 rows were changed by the filter)
     mov    eax, [esp+108] ; pix
     sub    eax, 2
@@ -396,11 +388,10 @@ x264_deblock_h_luma_mmxext:
     ret
 %endmacro
 
-ALIGN 16
 ;-----------------------------------------------------------------------------
 ;   void x264_deblock_v_chroma_mmxext( uint8_t *pix, int stride, int alpha, int beta, int8_t *tc0 )
 ;-----------------------------------------------------------------------------
-x264_deblock_v_chroma_mmxext:
+cglobal x264_deblock_v_chroma_mmxext
     CHROMA_V_START
     push  ebx
     mov   ebx, [esp+32] ; tc0
@@ -424,11 +415,10 @@ x264_deblock_v_chroma_mmxext:
     CHROMA_END
 
 
-ALIGN 16
 ;-----------------------------------------------------------------------------
 ;   void x264_deblock_h_chroma_mmxext( uint8_t *pix, int stride, int alpha, int beta, int8_t *tc0 )
 ;-----------------------------------------------------------------------------
-x264_deblock_h_chroma_mmxext:
+cglobal x264_deblock_h_chroma_mmxext
     CHROMA_H_START
     push  ebx
     mov   ebx, [esp+36] ; tc0
@@ -480,11 +470,10 @@ x264_deblock_h_chroma_mmxext:
     paddb  mm2, mm6
 %endmacro
 
-ALIGN 16
 ;-----------------------------------------------------------------------------
 ;   void x264_deblock_v_chroma_intra_mmxext( uint8_t *pix, int stride, int alpha, int beta )
 ;-----------------------------------------------------------------------------
-x264_deblock_v_chroma_intra_mmxext:
+cglobal x264_deblock_v_chroma_intra_mmxext
     CHROMA_V_START
     picpush ebx
     picgetgot ebx
@@ -498,11 +487,10 @@ x264_deblock_v_chroma_intra_mmxext:
     picpop ebx
     CHROMA_END
 
-ALIGN 16
 ;-----------------------------------------------------------------------------
 ;   void x264_deblock_h_chroma_intra_mmxext( uint8_t *pix, int stride, int alpha, int beta )
 ;-----------------------------------------------------------------------------
-x264_deblock_h_chroma_intra_mmxext:
+cglobal x264_deblock_h_chroma_intra_mmxext
     CHROMA_H_START
     picpush ebx
     picgetgot ebx
@@ -512,7 +500,4 @@ x264_deblock_h_chroma_intra_mmxext:
     picpop ebx
     pop  ebp ; needed because of CHROMA_H_START
     CHROMA_END
-
-
-
 

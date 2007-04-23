@@ -60,14 +60,9 @@
 #endif
 
 /* threads */
-#ifdef __WIN32__
-#include <windows.h>
-#define pthread_t               HANDLE
-#define pthread_create(t,u,f,d) *(t)=CreateThread(NULL,0,f,d,0,NULL)
-#define pthread_join(t,s)       { WaitForSingleObject(t,INFINITE); \
-                                  CloseHandle(t); }
-#define usleep(t)               Sleep((t+999)/1000);
-#define HAVE_PTHREAD 1
+#if defined(__WIN32__) && defined(HAVE_PTHREAD)
+#include <pthread.h>
+#define USE_CONDITION_VAR
 
 #elif defined(SYS_BEOS)
 #include <kernel/OS.h>
@@ -83,10 +78,24 @@
 
 #elif defined(HAVE_PTHREAD)
 #include <pthread.h>
+#define USE_CONDITION_VAR
 #else
 #define pthread_t               int
 #define pthread_create(t,u,f,d)
 #define pthread_join(t,s)
+#endif //SYS_*
+
+#ifndef USE_CONDITION_VAR
+#define pthread_mutex_t         int
+#define pthread_mutex_init(m,f)
+#define pthread_mutex_destroy(m)
+#define pthread_mutex_lock(m)
+#define pthread_mutex_unlock(m)
+#define pthread_cond_t          int
+#define pthread_cond_init(c,f)
+#define pthread_cond_destroy(c)
+#define pthread_cond_broadcast(c)
+#define pthread_cond_wait(c,m)  usleep(100)
 #endif
 
 /****************************************************************************
@@ -343,10 +352,12 @@ struct x264_t
 
     int             (*dequant4_mf[4])[4][4]; /* [4][6][4][4] */
     int             (*dequant8_mf[2])[8][8]; /* [2][6][8][8] */
-    int             (*quant4_mf[4])[4][4];   /* [4][6][4][4] */
-    int             (*quant8_mf[2])[8][8];   /* [2][6][8][8] */
     int             (*unquant4_mf[4])[16];   /* [4][52][16] */
     int             (*unquant8_mf[2])[64];   /* [2][52][64] */
+    uint16_t        (*quant4_mf[4])[16];     /* [4][52][16] */
+    uint16_t        (*quant8_mf[2])[64];     /* [2][52][64] */
+    uint16_t        (*quant4_bias[4])[16];   /* [4][52][16] */
+    uint16_t        (*quant8_bias[2])[64];   /* [2][52][64] */
 
     uint32_t        nr_residual_sum[2][64];
     uint32_t        nr_offset[2][64];
@@ -428,7 +439,7 @@ struct x264_t
         int     i_mb_xy;
         int     i_b8_xy;
         int     i_b4_xy;
-
+        
         /* Search parameters */
         int     i_me_method;
         int     i_subpel_refine;
@@ -437,9 +448,6 @@ struct x264_t
         int     b_noise_reduction;
 
         int     b_interlaced;
-
-        /* Inverted luma quantization deadzone */
-        int     i_luma_deadzone[2]; // {inter, intra}
 
         /* Allowed qpel MV range to stay within the picture + emulated edge pixels */
         int     mv_min[2];
@@ -456,10 +464,10 @@ struct x264_t
         unsigned int i_neighbour;
         unsigned int i_neighbour8[4];       /* neighbours of each 8x8 or 4x4 block that are available */
         unsigned int i_neighbour4[16];      /* at the time the block is coded */
-        int     i_mb_type_top;
-        int     i_mb_type_left;
-        int     i_mb_type_topleft;
-        int     i_mb_type_topright;
+        int     i_mb_type_top; 
+        int     i_mb_type_left; 
+        int     i_mb_type_topleft; 
+        int     i_mb_type_topright; 
         int     i_mb_prev_xy;
         int     i_mb_top_xy;
 
@@ -477,6 +485,7 @@ struct x264_t
         int8_t  *skipbp;                    /* block pattern for SKIP or DIRECT (sub)mbs. B-frames + cabac only */
         int8_t  *mb_transform_size;         /* transform_size_8x8_flag of each mb */
         uint8_t *intra_border_backup[2][3]; /* bottom pixels of the previous mb row, used for intra prediction after the framebuffer has been deblocked */
+
         /* current value */
         int     i_type;
         int     i_partition;
@@ -646,7 +655,4 @@ struct x264_t
 #include "macroblock.h"
 
 #endif
-
-
-
 

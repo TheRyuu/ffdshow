@@ -247,10 +247,7 @@ static void x264_mb_analyse_init( x264_t *h, x264_mb_analysis_t *a, int i_qp )
                     int i_ref = i ? h->i_ref1 : h->i_ref0;
                     for( j=0; j<i_ref; j++ )
                     {
-                        // could use a condition variable or the like, but
-                        // this way is faster at least on LinuxThreads.
-                        while( fref[j]->i_lines_completed < thresh )
-                            usleep(100);
+                        x264_frame_cond_wait( fref[j], thresh );
                         thread_mvy_range = X264_MIN( thread_mvy_range, fref[j]->i_lines_completed - pix_y );
                     }
                 }
@@ -479,7 +476,7 @@ static void x264_mb_analyse_intra_chroma( x264_t *h, x264_mb_analysis_t *a )
             h->pixf.mbcmp[PIXEL_8x8]( p_dstc[0], FDEC_STRIDE, p_srcc[0], FENC_STRIDE );
         satdv[I_PRED_CHROMA_P] =
             h->pixf.mbcmp[PIXEL_8x8]( p_dstc[1], FDEC_STRIDE, p_srcc[1], FENC_STRIDE );
-
+        
         for( i=0; i<i_max; i++ )
         {
             int i_mode = predict_mode[i];
@@ -1496,7 +1493,7 @@ static void x264_mb_analyse_inter_b16x16( x264_t *h, x264_mb_analysis_t *a )
                         a->l1.me16x16.mv[0], a->l1.me16x16.mv[1],
                         16, 16 );
         weight = 64 - weight;
-    }
+    } 
     else
     {
         /* if l0 was qpel, we'll use get_ref on l1 instead */
@@ -2721,7 +2718,4 @@ static void x264_analyse_update_cache( x264_t *h, x264_mb_analysis_t *a  )
 }
 
 #include "slicetype.c"
-
-
-
 

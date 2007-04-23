@@ -1,7 +1,7 @@
 CFLAGS+= -I. -I../.. -DHAVE_PTHREAD -D__WIN32__ -D__X264__
 
 ifneq ($(CC),icl)
-CFLAGS+=-DARCH_X86 -DHAVE_MMXEXT -DHAVE_SSE2 
+CFLAGS+=-DARCH_X86 -DHAVE_MMX -DHAVE_SSE2 
 endif
        
 SRCS_C=common/mc.c common/predict.c common/pixel.c common/macroblock.c \

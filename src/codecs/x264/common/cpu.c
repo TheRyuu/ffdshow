@@ -20,23 +20,23 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA.
  *****************************************************************************/
 
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
-#else
-#include <inttypes.h>
+#if defined(HAVE_PTHREAD) && defined(SYS_LINUX)
+#define _GNU_SOURCE
+#include <sched.h>
 #endif
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
 
+#include "common.h"
 #include "x264.h"
 #include "cpu.h"
 #include <mmintrin.h>
 
 void     x264_cpu_restore( uint32_t cpu )
 {
- #if (defined(HAVE_MMXEXT) || defined(HAVE_SSE2)) && (defined(ARCH_X86) || defined(ARCH_X86_64))
-    if( cpu&(X264_CPU_MMX|X264_CPU_MMXEXT|X264_CPU_3DNOW|X264_CPU_3DNOWEXT) )
+ #if (defined(HAVE_MMX) || defined(HAVE_SSE2)) && (defined(ARCH_X86) || defined(ARCH_X86_64))
+    if( cpu&(X264_CPU_MMX|X264_CPU_MMX|X264_CPU_3DNOW|X264_CPU_3DNOWEXT) )
     {
      #ifdef WIN64
         x264_emms();

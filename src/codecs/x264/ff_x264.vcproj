@@ -19,8 +19,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../..;.;pthread"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__X264__;ARCH_X86;HAVE_MMXEXT;HAVE_SSE2;HAVE_PTHREAD;__WIN32__"
+				AdditionalIncludeDirectories="../..;.;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__X264__;ARCH_X86;HAVE_MMX;HAVE_SSE2;__WIN32__"
 				MinimalRebuild="TRUE"
 				ExceptionHandling="FALSE"
 				BasicRuntimeChecks="3"
@@ -35,9 +35,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="TRUE"
-				AdditionalDependencies="kernel32.lib msvcrtd.lib oldnames.lib ws2_32.lib  $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib msvcrtd.lib oldnames.lib ws2_32.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_x264.dll"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories=""
 				IgnoreAllDefaultLibraries="TRUE"
 				ModuleDefinitionFile="ff_x264.def"
 				GenerateDebugInformation="TRUE"
@@ -79,8 +80,8 @@
 				EnableIntrinsicFunctions="TRUE"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories="../..;.;pthread"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__X264__;ARCH_X86;HAVE_MMXEXT;HAVE_SSE2;HAVE_PTHREAD;__WIN32__"
+				AdditionalIncludeDirectories="../..;.;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__X264__;ARCH_X86;HAVE_MMX;HAVE_SSE2;__WIN32__"
 				StringPooling="TRUE"
 				ExceptionHandling="FALSE"
 				RuntimeLibrary="2"
@@ -90,7 +91,7 @@
 				WarningLevel="3"
 				DebugInformationFormat="0"
 				CompileAs="1"
-				DisableSpecificWarnings="4002;4244;"/>
+				DisableSpecificWarnings="4002;4244;4005;"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -99,6 +100,7 @@
 				AdditionalDependencies="kernel32.lib msvcrt.lib oldnames.lib ws2_32.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_x264.dll"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories=""
 				IgnoreAllDefaultLibraries="TRUE"
 				ModuleDefinitionFile="ff_x264.def"
 				SubSystem="2"
@@ -308,7 +310,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)"
+						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)
+"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -316,7 +319,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)"
+						CommandLine="nasmw -f win32 -DPREFIX -o $(IntDir)\$(InputName).obj $(InputPath)
+"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>

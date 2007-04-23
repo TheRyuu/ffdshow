@@ -84,7 +84,6 @@ void    x264_param_default( x264_param_t *param )
     param->i_cabac_init_idc = 0;
 
     param->rc.i_rc_method = X264_RC_CQP;
-
     param->rc.i_bitrate = 0;
     param->rc.f_rate_tolerance = 1.0;
     param->rc.i_vbv_max_bitrate = 0;
@@ -171,12 +170,12 @@ static int parse_cqm( const char *str, uint8_t *cqm, int length )
 
 static int x264_atobool( const char *str, int *b_error )
 {
-    if( !strcmp(str, "1") ||
-        !strcmp(str, "true") ||
+    if( !strcmp(str, "1") || 
+        !strcmp(str, "true") || 
         !strcmp(str, "yes") )
         return 1;
-    if( !strcmp(str, "0") ||
-        !strcmp(str, "false") ||
+    if( !strcmp(str, "0") || 
+        !strcmp(str, "false") || 
         !strcmp(str, "no") )
         return 0;
     *b_error = 1;
@@ -942,7 +941,4 @@ char *x264_param2string( x264_param_t *p, int b_res )
 
     return buf;
 }
-
-
-
 

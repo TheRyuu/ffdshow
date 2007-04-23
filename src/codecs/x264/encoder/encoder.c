@@ -265,7 +265,7 @@ static void x264_slice_header_write( bs_t *s, x264_slice_header_t *sh, int i_nal
             {
                 bs_write_ue( s, sh->ref_pic_list_order[0][i].idc );
                 bs_write_ue( s, sh->ref_pic_list_order[0][i].arg );
-
+                        
             }
             bs_write_ue( s, 3 );
         }
@@ -409,10 +409,18 @@ static int x264_validate_parameters( x264_t *h )
         h->param.analyse.i_noise_reduction = 0;
         h->param.analyse.i_subpel_refine = x264_clip3( h->param.analyse.i_subpel_refine, 1, 6 );
     }
+    if( h->param.rc.i_rc_method == X264_RC_CQP )
+    {
+        float qp_p = h->param.rc.i_qp_constant;
+        float qp_i = qp_p - 6*log(h->param.rc.f_ip_factor)/log(2);
+        float qp_b = qp_p + 6*log(h->param.rc.f_pb_factor)/log(2);
+        h->param.rc.i_qp_min = x264_clip3( (int)(X264_MIN3( qp_p, qp_i, qp_b )), 0, 51 );
+        h->param.rc.i_qp_max = x264_clip3( (int)(X264_MAX3( qp_p, qp_i, qp_b ) + .999), 0, 51 );
+    }
 
     if( ( h->param.i_width % 16 || h->param.i_height % 16 ) && !h->mb.b_lossless )
     {
-        x264_log( h, X264_LOG_WARNING,
+        x264_log( h, X264_LOG_WARNING, 
                   "width or height not divisible by 16 (%dx%d), compression will suffer.\n",
                   h->param.i_width, h->param.i_height );
     }
@@ -437,8 +445,6 @@ static int x264_validate_parameters( x264_t *h )
     h->param.i_deblocking_filter_beta    = x264_clip3( h->param.i_deblocking_filter_beta, -6, 6 );
     h->param.analyse.i_luma_deadzone[0] = x264_clip3( h->param.analyse.i_luma_deadzone[0], 0, 32 );
     h->param.analyse.i_luma_deadzone[1] = x264_clip3( h->param.analyse.i_luma_deadzone[1], 0, 32 );
-    h->mb.i_luma_deadzone[0] = 32 - h->param.analyse.i_luma_deadzone[0];
-    h->mb.i_luma_deadzone[1] = 32 - h->param.analyse.i_luma_deadzone[1];
 
     h->param.i_cabac_init_idc = x264_clip3( h->param.i_cabac_init_idc, 0, 2 );
 
@@ -624,8 +630,12 @@ x264_t *x264_encoder_open   ( x264_param_t *param )
 
     x264_validate_levels( h );
 
-    x264_cqm_init( h );
-
+    if( x264_cqm_init( h ) < 0 )
+    {
+        x264_free( h );
+        return NULL;
+    }
+    
     h->mb.i_mb_count = h->sps->i_mb_width * h->sps->i_mb_height;
 
     /* Init frames. */
@@ -670,6 +680,7 @@ x264_t *x264_encoder_open   ( x264_param_t *param )
              param->cpu&X264_CPU_MMXEXT ? "MMXEXT " : "",
              param->cpu&X264_CPU_SSE ? "SSE " : "",
              param->cpu&X264_CPU_SSE2 ? "SSE2 " : "",
+             param->cpu&X264_CPU_SSSE3 ? "SSSE3 " : "",
              param->cpu&X264_CPU_3DNOW ? "3DNow! " : "",
              param->cpu&X264_CPU_ALTIVEC ? "Altivec " : "" );
 
@@ -923,10 +934,9 @@ static void x264_fdec_filter_row( x264_t *h, int mb_y )
         x264_frame_expand_border_filtered( h, h->fdec, min_y, b_end );
     }
 
-    if( h->param.i_threads > 1 )
+    if( h->param.i_threads > 1 && h->fdec->b_kept_as_ref )
     {
-        /* this must be an atomic store. a 32bit int should be so on sane architectures. */
-        h->fdec->i_lines_completed = mb_y*16 + (b_end ? 10000 : -(X264_THREAD_HEIGHT << h->sh.b_mbaff));
+        x264_frame_cond_broadcast( h->fdec, mb_y*16 + (b_end ? 10000 : -(X264_THREAD_HEIGHT << h->sh.b_mbaff)) );
     }
 }
 
@@ -1033,7 +1043,7 @@ static void x264_slice_write( x264_t *h )
 
         /* init cabac */
         x264_cabac_context_init( &h->cabac, h->sh.i_type, h->sh.i_qp, h->sh.i_cabac_init_idc );
-        x264_cabac_encode_init ( &h->cabac, &h->out.bs );
+        x264_cabac_encode_init ( &h->cabac, h->out.bs.p, h->out.bs.p_end );
     }
     h->mb.i_last_qp = h->sh.i_qp;
     h->mb.i_last_dqp = 0;
@@ -1156,7 +1166,7 @@ static void x264_slice_write( x264_t *h )
     if( h->param.b_cabac )
     {
         x264_cabac_encode_flush( &h->cabac );
-
+        h->out.bs.p = h->cabac.p;
     }
     else
     {
@@ -1210,8 +1220,7 @@ static int x264_slices_write( x264_t *h )
         x264_visualize_init( h );
 #endif
 
-    x264_slice_write( h );//FIXME
-    //x264_stack_align( x264_slice_write, h );
+    x264_stack_align( x264_slice_write, h );
     i_frame_size = h->out.nal[h->out.i_nal-1].i_payload;
     x264_fdec_filter_row( h, h->sps->i_mb_height );
 
@@ -1481,7 +1490,7 @@ do_encode:
     /* restore CPU state (before using float again) */
     x264_cpu_restore( h->param.cpu );
 
-    if( h->sh.i_type == SLICE_TYPE_P && !h->param.rc.b_stat_read
+    if( h->sh.i_type == SLICE_TYPE_P && !h->param.rc.b_stat_read 
         && h->param.i_scenecut_threshold >= 0
         && !h->param.b_pre_scenecut )
     {
@@ -1542,7 +1551,7 @@ do_encode:
                 /* If using B-frames, force GOP to be closed.
                  * Even if this frame is going to be I and not IDR, forcing a
                  * P-frame before the scenecut will probably help compression.
-                 *
+                 * 
                  * We don't yet know exactly which frame is the scene cut, so
                  * we can't assign an I-frame. Instead, change the previous
                  * B-frame to P, and rearrange coding order. */
@@ -1709,7 +1718,7 @@ static void x264_encoder_frame_end( x264_t *h, x264_t *thread_current,
                   " SSIM Y:%.5f", ssim_y );
     }
     psz_message[79] = '\0';
-
+    
     x264_log( h, X264_LOG_DEBUG,
                   "frame=%4d QP=%i NAL=%d Slice:%c Poc:%-3d I:%-4d P:%-4d SKIP:%-4d size=%d bytes%s\n",
               h->i_frame,

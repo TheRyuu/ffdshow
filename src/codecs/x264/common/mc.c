@@ -27,7 +27,7 @@
 #include "common.h"
 #include "clip1.h"
 
-#ifdef HAVE_MMXEXT
+#ifdef HAVE_MMX
 #include "i386/mc.h"
 #endif
 #ifdef ARCH_PPC
@@ -350,7 +350,7 @@ void x264_mc_init( int cpu, x264_mc_functions_t *pf )
     pf->avg[PIXEL_4x2]  = pixel_avg_4x2;
     pf->avg[PIXEL_2x4]  = pixel_avg_2x4;
     pf->avg[PIXEL_2x2]  = pixel_avg_2x2;
-
+    
     pf->avg_weight[PIXEL_16x16]= pixel_avg_weight_16x16;
     pf->avg_weight[PIXEL_16x8] = pixel_avg_weight_16x8;
     pf->avg_weight[PIXEL_8x16] = pixel_avg_weight_8x16;
@@ -371,7 +371,7 @@ void x264_mc_init( int cpu, x264_mc_functions_t *pf )
     pf->prefetch_fenc = prefetch_fenc_null;
     pf->prefetch_ref  = prefetch_ref_null;
 
-#ifdef HAVE_MMXEXT
+#ifdef HAVE_MMX
     if( cpu&X264_CPU_MMXEXT ) {
         x264_mc_mmxext_init( pf );
         pf->mc_chroma = x264_mc_chroma_mmxext;
@@ -402,7 +402,7 @@ void x264_frame_filter( int cpu, x264_frame_t *frame, int b_interlaced, int mb_y
         return;
     mb_y >>= b_interlaced;
 
-#ifdef HAVE_MMXEXT
+#ifdef HAVE_MMX
     if ( cpu & X264_CPU_MMXEXT )
     {
         // buffer = 4 for deblock + 3 for 6tap, rounded to 8
@@ -504,7 +504,4 @@ void x264_frame_init_lowres( int cpu, x264_frame_t *frame )
 
     x264_frame_expand_border_lowres( frame );
 }
-
-
-
 

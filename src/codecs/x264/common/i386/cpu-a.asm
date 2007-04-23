@@ -43,7 +43,7 @@ cglobal x264_emms
     ret
 
 ;-----------------------------------------------------------------------------
-; void x264_stack_align( void (*func)(void*), void *arg )
+; void x264_stack_align( void (*func)(void*), void *arg );
 ;-----------------------------------------------------------------------------
 cglobal x264_stack_align
     push ebp

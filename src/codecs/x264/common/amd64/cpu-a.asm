@@ -27,7 +27,7 @@ BITS 64
 ; Macros and other preprocessor constants
 ;=============================================================================
 
-%include "amd64inc.asm"
+%include "common/amd64/amd64inc.asm"
 
 ;=============================================================================
 ; Code
@@ -35,15 +35,10 @@ BITS 64
 
 SECTION .text
 
-cglobal x264_cpu_cpuid_test
-cglobal x264_cpu_cpuid
-cglobal x264_emms
-
-ALIGN 16
 ;-----------------------------------------------------------------------------
 ;   int x264_cpu_cpuid_test( void ) return 0 if unsupported
 ;-----------------------------------------------------------------------------
-x264_cpu_cpuid_test:
+cglobal x264_cpu_cpuid_test
     firstpush rbx
     pushreg  rbx
     push     rbp
@@ -57,34 +52,33 @@ x264_cpu_cpuid_test:
     mov     ebx, eax
     xor     eax, 0x200000
     push    rax
-
+    
     popfq
     pushfq
     pop     rax
     xor     eax, ebx
-
+    
     lea     rsp, [rbp]
     pop     rbp
     pop     rbx
     ret
     endfunc
 
-ALIGN 16
 ;-----------------------------------------------------------------------------
 ;   int x264_cpu_cpuid( int op, int *eax, int *ebx, int *ecx, int *edx )
 ;-----------------------------------------------------------------------------
-x264_cpu_cpuid:
+cglobal x264_cpu_cpuid
     firstpush rbx
     pushreg   rbx
     endprolog
-
+    
     mov     r10,   parm4q
     mov     r11,   parm3q
     mov     r9,    parm2q
 %ifdef WIN64
     mov     r8,    [rsp+40+8]
-%endif
-
+%endif    
+    
     mov     eax,   parm1d
     cpuid
 
@@ -97,14 +91,10 @@ x264_cpu_cpuid:
     ret
     endfunc
 
-ALIGN 16
 ;-----------------------------------------------------------------------------
 ;   void x264_emms( void )
 ;-----------------------------------------------------------------------------
-x264_emms:
+cglobal x264_emms
     emms
     ret
-
-
-
 

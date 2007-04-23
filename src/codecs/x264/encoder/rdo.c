@@ -26,6 +26,9 @@
 
 #define RDO_SKIP_BS
 
+static int cabac_prefix_transition[15][128];
+static int cabac_prefix_size[15][128];
+
 /* CAVLC: produces exactly the same bit count as a normal encode */
 /* this probably still leaves some unnecessary computations */
 #define bs_write1(s,v)     ((s)->i_bits_encoded += 1)
@@ -213,8 +216,6 @@ int x264_rd_cost_i8x8_chroma( x264_t *h, int i_lambda2, int i_mode, int b_dct )
 #define LAMBDA_BITS 4
 
 /* precalculate the cost of coding abs_level_m1 */
-static int cabac_prefix_transition[15][128];
-static int cabac_prefix_size[15][128];
 void x264_rdo_init( )
 {
     int i_prefix;
@@ -252,7 +253,30 @@ static const int coeff_abs_level_transition[2][8] = {
     { 4, 4, 4, 4, 5, 6, 7, 7 }
 };
 
-static const int lambda2_tab[6] = { 1024, 1290, 1625, 2048, 2580, 3251 };
+// should the intra and inter lambdas be different?
+// I'm just matching the behaviour of deadzone quant.
+static const int lambda2_tab[2][52] = {
+    // inter lambda = .85 * .85 * 2**(qp/3. + 10 - LAMBDA_BITS)
+    {    46,      58,      73,      92,     117,     147, 
+        185,     233,     294,     370,     466,     587, 
+        740,     932,    1174,    1480,    1864,    2349, 
+       2959,    3728,    4697,    5918,    7457,    9395, 
+      11837,   14914,   18790,   23674,   29828,   37581, 
+      47349,   59656,   75163,   94699,  119313,  150326, 
+     189399,  238627,  300652,  378798,  477255,  601304, 
+     757596,  954511, 1202608, 1515192, 1909022, 2405217, 
+    3030384, 3818045, 4810435, 6060769 },
+    // intra lambda = .65 * .65 * 2**(qp/3. + 10 - LAMBDA_BITS)
+    {    27,      34,      43,      54,      68,      86, 
+        108,     136,     172,     216,     273,     343, 
+        433,     545,     687,     865,    1090,    1374, 
+       1731,    2180,    2747,    3461,    4361,    5494, 
+       6922,    8721,   10988,   13844,   17442,   21976, 
+      27688,   34885,   43953,   55377,   69771,   87906, 
+     110755,  139543,  175813,  221511,  279087,  351627, 
+     443023,  558174,  703255,  886046, 1116348, 1406511, 
+    1772093, 2232697, 2813022, 3544186 }
+};
 
 typedef struct {
     uint64_t score;
@@ -282,9 +306,9 @@ typedef struct {
 // and uses the dct scaling factors, not the idct ones.
 
 static void quant_trellis_cabac( x264_t *h, int16_t *dct,
-                                 const int *quant_mf, const int *unquant_mf,
+                                 const uint16_t *quant_mf, const int *unquant_mf,
                                  const int *coef_weight, const int *zigzag,
-                                 int i_ctxBlockCat, int i_qbits, int i_lambda2, int b_ac, int i_coefs )
+                                 int i_ctxBlockCat, int i_lambda2, int b_ac, int i_coefs )
 {
     int abs_coefs[64], signs[64];
     trellis_node_t nodes[2][8];
@@ -294,8 +318,8 @@ static void quant_trellis_cabac( x264_t *h, int16_t *dct,
     uint8_t cabac_state_sig[64];
     uint8_t cabac_state_last[64];
     const int b_interlaced = h->mb.b_interlaced;
-    const int f = 1 << (i_qbits-1); // no deadzone
-    int i_last_nnz = -1;
+    const int f = 1 << 15; // no deadzone
+    int i_last_nnz;
     int i, j;
 
     // (# of coefs) * (# of ctx) * (# of levels tried) = 1024
@@ -308,19 +332,23 @@ static void quant_trellis_cabac( x264_t *h, int16_t *dct,
     int i_levels_used = 1;
 
     /* init coefs */
-    for( i = b_ac; i < i_coefs; i++ )
+    for( i = i_coefs-1; i >= b_ac; i-- )
+        if( (unsigned)(dct[zigzag[i]] * quant_mf[zigzag[i]] + f-1) >= 2*f )
+            break;
+
+    if( i < b_ac )
+    {
+        memset( dct, 0, i_coefs * sizeof(*dct) );
+        return;
+    }
+
+    i_last_nnz = i;
+
+    for( ; i >= b_ac; i-- )
     {
         int coef = dct[zigzag[i]];
         abs_coefs[i] = abs(coef);
         signs[i] = coef < 0 ? -1 : 1;
-        if( f <= abs_coefs[i] * quant_mf[zigzag[i]] )
-            i_last_nnz = i;
-    }
-
-    if( i_last_nnz == -1 )
-    {
-        memset( dct, 0, i_coefs * sizeof(*dct) );
-        return;
     }
 
     /* init trellis */
@@ -359,7 +387,7 @@ static void quant_trellis_cabac( x264_t *h, int16_t *dct,
     for( i = i_last_nnz; i >= b_ac; i-- )
     {
         int i_coef = abs_coefs[i];
-        int q = ( f + i_coef * quant_mf[zigzag[i]] ) >> i_qbits;
+        int q = ( f + i_coef * quant_mf[zigzag[i]] ) >> 16;
         int abs_level;
         int cost_sig[2], cost_last[2];
         trellis_node_t n;
@@ -479,35 +507,22 @@ static void quant_trellis_cabac( x264_t *h, int16_t *dct,
 void x264_quant_4x4_trellis( x264_t *h, int16_t dct[4][4], int i_quant_cat,
                              int i_qp, int i_ctxBlockCat, int b_intra )
 {
-    const int i_qbits = i_qp / 6;
-    const int i_mf = i_qp % 6;
-    const int b_ac = (i_ctxBlockCat == DCT_LUMA_AC);
-    /* should the lambdas be different? I'm just matching the behaviour of deadzone quant. */
-    const int i_lambda_mult = b_intra ? 65 : 85;
-    const int i_lambda2 = ((lambda2_tab[i_mf] * i_lambda_mult*i_lambda_mult / 10000)
-                          << (2*i_qbits)) >> LAMBDA_BITS;
-
+    int b_ac = (i_ctxBlockCat == DCT_LUMA_AC);
     quant_trellis_cabac( h, (int16_t*)dct,
-        (int*)h->quant4_mf[i_quant_cat][i_mf], h->unquant4_mf[i_quant_cat][i_qp],
+        h->quant4_mf[i_quant_cat][i_qp], h->unquant4_mf[i_quant_cat][i_qp],
         x264_dct4_weight2_zigzag[h->mb.b_interlaced],
         x264_zigzag_scan4[h->mb.b_interlaced],
-        i_ctxBlockCat, 15+i_qbits, i_lambda2, b_ac, 16 );
+        i_ctxBlockCat, lambda2_tab[b_intra][i_qp], b_ac, 16 );
 }
 
 
 void x264_quant_8x8_trellis( x264_t *h, int16_t dct[8][8], int i_quant_cat,
                              int i_qp, int b_intra )
 {
-    const int i_qbits = i_qp / 6;
-    const int i_mf = i_qp % 6;
-    const int i_lambda_mult = b_intra ? 65 : 85;
-    const int i_lambda2 = ((lambda2_tab[i_mf] * i_lambda_mult*i_lambda_mult / 10000)
-                          << (2*i_qbits)) >> LAMBDA_BITS;
-
     quant_trellis_cabac( h, (int16_t*)dct,
-        (int*)h->quant8_mf[i_quant_cat][i_mf], h->unquant8_mf[i_quant_cat][i_qp],
+        h->quant8_mf[i_quant_cat][i_qp], h->unquant8_mf[i_quant_cat][i_qp],
         x264_dct8_weight2_zigzag[h->mb.b_interlaced],
         x264_zigzag_scan8[h->mb.b_interlaced],
-        DCT_LUMA_8x8, 16+i_qbits, i_lambda2, 0, 64 );
+        DCT_LUMA_8x8, lambda2_tab[b_intra][i_qp], 0, 64 );
 }
 

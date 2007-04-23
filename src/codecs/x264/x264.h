@@ -43,6 +43,8 @@ typedef struct x264_t x264_t;
 #define X264_CPU_3DNOW      0x000010    /* 3dnow! */
 #define X264_CPU_3DNOWEXT   0x000020    /* 3dnow! ext */
 #define X264_CPU_ALTIVEC    0x000040    /* altivec */
+#define X264_CPU_SSE3       0x000080    /* sse 3 */
+#define X264_CPU_SSSE3      0x000100    /* ssse 3 */
 
 /* Analyse flags
  */
@@ -75,6 +77,7 @@ static const char * const x264_fullrange_names[] = { "off", "on", 0 };
 static const char * const x264_colorprim_names[] = { "", "bt709", "undef", "", "bt470m", "bt470bg", "smpte170m", "smpte240m", "film", 0 };
 static const char * const x264_transfer_names[] = { "", "bt709", "undef", "", "bt470m", "bt470bg", "smpte170m", "smpte240m", "linear", "log100", "log316", 0 };
 static const char * const x264_colmatrix_names[] = { "GBR", "bt709", "undef", "", "fcc", "bt470bg", "smpte170m", "smpte240m", "YCgCo", 0 };
+
 /* Colorspace type
  */
 #define X264_CSP_MASK           0x00ff  /* */
@@ -128,7 +131,7 @@ typedef struct x264_param_t
     int         i_width;
     int         i_height;
     int         i_csp;  /* CSP of encoded bitstream, only i420 supported */
-    int         i_level_idc;
+    int         i_level_idc; 
     int         i_frame_total; /* number of frames to encode if known, else 0 */
 
     struct
@@ -138,7 +141,7 @@ typedef struct x264_param_t
         int         i_sar_width;
 
         int         i_overscan;    /* 0=undef, 1=no overscan, 2=overscan */
-
+        
         /* see h264 annex E for the values of the following */
         int         i_vidformat;
         int         b_fullrange;
@@ -213,7 +216,7 @@ typedef struct x264_param_t
         int          i_noise_reduction; /* adaptive pseudo-deadzone */
 
         /* the deadzone size that will be used in luma quantization */
-        int          i_luma_deadzone[2]; // {inter, intra}
+        int          i_luma_deadzone[2]; /* {inter, intra} */
 
         int          b_psnr;    /* compute and print PSNR stats */
         int          b_ssim;    /* compute and print SSIM stats */
@@ -230,13 +233,14 @@ typedef struct x264_param_t
         int         i_qp_step;      /* max QP step between frames */
 
         int         i_bitrate;
+        float       f_rf_constant;  /* 1pass VBR, nominal QP */
         float       f_rate_tolerance;
         int         i_vbv_max_bitrate;
         int         i_vbv_buffer_size;
         float       f_vbv_buffer_init;
         float       f_ip_factor;
         float       f_pb_factor;
-        float       f_rf_constant;
+
         /* 2pass */
         int         b_stat_write;   /* Enable stat writing in psz_stat_out */
         char        *psz_stat_out;
@@ -252,6 +256,7 @@ typedef struct x264_param_t
         int         i_zones;        /* number of zone_t's */
         char        *psz_zones;     /* alternate method of specifying zones */
     } rc;
+
     /* Muxing parameters */
     int b_aud;                  /* generate access unit delimiters */
     int b_repeat_headers;       /* put SPS/PPS before each keyframe */
@@ -260,17 +265,17 @@ typedef struct x264_param_t
 
 typedef struct {
     int level_idc;
-    int mbps;        // max macroblock processing rate (macroblocks/sec)
-    int frame_size;  // max frame size (macroblocks)
-    int dpb;         // max decoded picture buffer (bytes)
-    int bitrate;     // max bitrate (kbit/sec)
-    int cpb;         // max vbv buffer (kbit)
-    int mv_range;    // max vertical mv component range (pixels)
-    int mvs_per_2mb; // max mvs per 2 consecutive mbs.
-    int slice_rate;  // ??
-    int bipred8x8;   // limit bipred to >=8x8
-    int direct8x8;   // limit b_direct to >=8x8
-    int frame_only;  // forbid interlacing
+    int mbps;        /* max macroblock processing rate (macroblocks/sec) */
+    int frame_size;  /* max frame size (macroblocks) */
+    int dpb;         /* max decoded picture buffer (bytes) */
+    int bitrate;     /* max bitrate (kbit/sec) */
+    int cpb;         /* max vbv buffer (kbit) */
+    int mv_range;    /* max vertical mv component range (pixels) */
+    int mvs_per_2mb; /* max mvs per 2 consecutive mbs. */
+    int slice_rate;  /* ?? */
+    int bipred8x8;   /* limit bipred to >=8x8 */
+    int direct8x8;   /* limit b_direct to >=8x8 */
+    int frame_only;  /* forbid interlacing */
 } x264_level_t;
 
 /* all of the levels defined in the standard, terminated by .level_idc=0 */
@@ -281,7 +286,7 @@ extern const x264_level_t x264_levels[];
 void    x264_param_default( x264_param_t * );
 
 /* x264_param_parse:
-  *  set one parameter by name.
+ *  set one parameter by name.
  *  returns 0 on success, or returns one of the following errors.
  *  note: BAD_VALUE occurs only if it can't even parse the value,
  *  numerical range is not checked until x264_encoder_open() or
@@ -398,9 +403,5 @@ int     x264_encoder_encode ( x264_t *, x264_nal_t **, int *, x264_fill_picture_
 /* x264_encoder_close:
  *      close an encoder handler */
 void    x264_encoder_close  ( x264_t * );
-
-/****************************************************************************
- * Private stuff for internal usage:
- ****************************************************************************/
 
 #endif
