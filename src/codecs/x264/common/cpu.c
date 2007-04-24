@@ -24,6 +24,11 @@
 #define _GNU_SOURCE
 #include <sched.h>
 #endif
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#else
+#include <inttypes.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
@@ -36,7 +41,7 @@
 void     x264_cpu_restore( uint32_t cpu )
 {
  #if (defined(HAVE_MMX) || defined(HAVE_SSE2)) && (defined(ARCH_X86) || defined(ARCH_X86_64))
-    if( cpu&(X264_CPU_MMX|X264_CPU_MMX|X264_CPU_3DNOW|X264_CPU_3DNOWEXT) )
+    if( cpu&(X264_CPU_MMX|X264_CPU_MMXEXT|X264_CPU_3DNOW|X264_CPU_3DNOWEXT) )
     {
      #ifdef WIN64
         x264_emms();

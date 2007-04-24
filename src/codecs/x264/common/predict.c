@@ -34,9 +34,7 @@
 #ifdef HAVE_MMX
 #   include "i386/predict.h"
 #endif
-#ifdef HAVE_SSE2
-#   include "i386/predict.h"
-#endif
+
 /****************************************************************************
  * 16x16 prediction for intra luma block
  ****************************************************************************/

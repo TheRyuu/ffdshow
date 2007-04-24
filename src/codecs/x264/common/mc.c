@@ -376,8 +376,6 @@ void x264_mc_init( int cpu, x264_mc_functions_t *pf )
         x264_mc_mmxext_init( pf );
         pf->mc_chroma = x264_mc_chroma_mmxext;
     }
-#endif
-#ifdef HAVE_SSE2
     if( cpu&X264_CPU_SSE2 )
         x264_mc_sse2_init( pf );
 #endif

@@ -501,9 +501,7 @@ void x264_pixel_init( int cpu, x264_pixel_function_t *pixf )
         pixf->intra_satd_x3_8x8c  = x264_intra_satd_x3_8x8c_mmxext;
         pixf->intra_satd_x3_4x4   = x264_intra_satd_x3_4x4_mmxext;
     }
-#endif
 
-#ifdef HAVE_SSE2
     // disable on AMD processors since it is slower
     if( (cpu&X264_CPU_SSE2) && !(cpu&X264_CPU_3DNOW) )
     {
