@@ -121,7 +121,7 @@ else
 $(SLIB): $(OBJS) $(DEF)
 	$(FFDSHOW_PREFIX)dllwrap -mno-cygwin --target=i386-mingw32 \
              -Wl,--enable-stdcall-fixup,--strip-all \
-             --def $(GCCDEF) $(GCCDLLENTRY) -o $@ $(OBJS)-lpthread $(GCCLIBS)
+             --def $(GCCDEF) $(GCCDLLENTRY) -o $@ $(OBJS) -lpthread $(GCCLIBS)
 endif
 endif
 
