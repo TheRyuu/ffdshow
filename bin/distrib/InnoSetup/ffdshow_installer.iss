@@ -2,10 +2,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1121
+#define tryout_revision = 1125
 #define buildyear = 2007
 #define buildmonth = '04'
-#define buildday = '23'
+#define buildday = '27'
 
 ; Build specific options
 #define unicode_required = True
@@ -1070,7 +1070,8 @@ begin
     end
     complist.edt.text := regstr;
   end else begin
-    complist.edt.Text := 'aegisub.exe'#13#10'ALLPlayer.exe'#13#10'ALShow.exe'#13#10'ass_help3r.exe'#13#10'avipreview.exe'#13#10'aviutl.exe'#13#10'bsplay.exe'#13#10'bsplayer.exe'#13#10'CorePlayer.exe'#13#10'coreplayer.exe'#13#10'crystalfree.exe'#13#10'DScaler.exe'#13#10'dv.exe'#13#10'DVDMaker.exe'#13#10'ehshell.exe'#13#10'firefox.exe'#13#10'gom.exe'#13#10'graphedt.exe'#13#10'gspot.exe'#13#10'iexplore.exe'#13#10'JetAudio.exe'#13#10'kmplayer.exe'#13#10'LA.exe'#13#10'Lilith.exe'#13#10'makeAVIS.exe'#13#10'Media Center 12.exe'#13#10'Media Jukebox.exe'#13#10'megui.exe'#13#10'MovieMk.exe'#13#10'mplayer2.exe'#13#10'mplayerc.exe'#13#10'Munite.exe'#13#10'Muzikbrowzer.exe'#13#10'Mv2PlayerPlus.exe'#13#10'nvplayer.exe'#13#10'powerdvd.exe'#13#10'progdvb.exe'#13#10'Qonoha.exe'#13#10'realplay.exe'#13#10'rlkernel.exe'#13#10'SinkuHadouken.exe'#13#10'TheaterTek DVD.exe'#13#10'timecodec.exe'#13#10'ViPlay3.exe'#13#10'virtualdub.exe'#13#10'virtualdubmod.exe'#13#10'winamp.exe'#13#10'windvd.exe'#13#10'wmenc.exe'#13#10'wmplayer.exe'#13#10'zplayer.exe';
+    complist.edt.Text := 'aegisub.exe'#13#10'ALLPlayer.exe'#13#10'ALShow.exe'#13#10'ass_help3r.exe'#13#10'avipreview.exe'#13#10'aviutl.exe'#13#10'bsplay.exe'#13#10'bsplayer.exe'#13#10'CorePlayer.exe'#13#10'coreplayer.exe'#13#10'crystalfree.exe'#13#10'DScaler.exe'#13#10'dv.exe'#13#10'DVDMaker.exe'#13#10'ehshell.exe'#13#10'firefox.exe'#13#10'gom.exe'#13#10'graphedit.exe'#13#10'graphedt.exe'#13#10'gspot.exe'#13#10'iexplore.exe'#13#10'JetAudio.exe'#13#10'kmplayer.exe'#13#10'LA.exe'#13#10'Lilith.exe'#13#10'makeAVIS.exe'#13#10'Media Center 12.exe'#13#10'Media Jukebox.exe'#13#10'megui.exe'#13#10'MovieMk.exe'#13#10'mplayer2.exe'#13#10'mplayerc.exe'#13#10'Munite.exe'#13#10'Muzikbrowzer.exe'#13#10'Mv2PlayerPlus.exe'#13#10'nvplayer.exe'#13#10'powerdvd.exe'#13#10'progdvb.exe'#13#10'Qonoha.exe'#13#10'realplay.exe'#13#10'rlkernel.exe'#13#10'SinkuHadouken.exe'#13#10'TheaterTek DVD.exe'#13#10'timecodec.exe'#13#10'ViPlay3.exe'#13#10'virtualdub.exe'#13#10'virtualdubmod.exe'#13#10'winamp.exe'#13#10'windvd.exe'#13#10' \
+      wmenc.exe'#13#10'wmplayer.exe'#13#10'zplayer.exe';
   end
 
 
@@ -1110,7 +1111,9 @@ begin
   compApps[5].name := 'megui.exe';
   compApps[6].rev := 1116;
   compApps[6].name := 'TheaterTek DVD.exe';
-  compApps[7].rev := 0;
+  compApps[7].rev := 1125;
+  compApps[7].name := 'graphedit.exe';
+  compApps[8].rev := 0;
 
 // Compatibility list
   ComplistVideo.skipped := False;
