@@ -51,6 +51,8 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowBaseT,IUnknown)
  STDMETHOD (cpuSupportsMMXEXT)(void) PURE;
  STDMETHOD (cpuSupportsSSE)(void) PURE;
  STDMETHOD (cpuSupportsSSE2)(void) PURE;
+ STDMETHOD (cpuSupportsSSE3)(void) PURE;
+ STDMETHOD (cpuSupportsSSSE3)(void) PURE;
  STDMETHOD (cpuSupports3DNOW)(void) PURE;
  STDMETHOD (cpuSupports3DNOWEXT)(void) PURE;
  STDMETHOD (dbgInit)(void) PURE;

@@ -39,7 +39,7 @@ BITS 32
 ; Macros and other preprocessor constants
 ;=============================================================================
 
-%include "common/i386/i386inc.asm"
+%include "i386inc.asm"
 
 %macro MMX_ZERO 1
     pxor    %1, %1

@@ -2,9 +2,9 @@ all:.all
 
 #if FFDSHOW_PREFIX is set, assume cross-compilation
 ifeq ($(FFDSHOW_PREFIX),)
-  NASM=nasmw.exe
+  NASM=yasm.exe
 else
-  NASM=nasm
+  NASM=yasm
 endif
 
 ifeq ($(CC),icl)
@@ -87,7 +87,7 @@ endif
 	$(FFDSHOW_PREFIX)$(CC) -c $(CFLAGS) $(CPPFLAGS) $(OPTFLAGS) $(OUTPUTFLAG)$@ $<
 
 %.o: %.asm
-	$(NASM) -f win32 -DPREFIX $(NASMFLAGS) -I$(<D)/ -o $@  $<
+	$(NASM) -f win32 -DWIN32 -DPREFIX -DUSE32 -Dalloc -Dexec $(NASMFLAGS) -I$(<D)/ -o $@  $<
 
 ifeq ($(CC),icl)
 %.res.o: %.rc
@@ -121,7 +121,7 @@ else
 $(SLIB): $(OBJS) $(DEF)
 	$(FFDSHOW_PREFIX)dllwrap -mno-cygwin --target=i386-mingw32 \
              -Wl,--enable-stdcall-fixup,--strip-all \
-             --def $(GCCDEF) $(GCCDLLENTRY) -o $@ $(OBJS) -lpthread $(GCCLIBS)
+             --def $(GCCDEF) $(GCCDLLENTRY) -o $@ $(OBJS) $(GCCLIBS)
 endif
 endif
 

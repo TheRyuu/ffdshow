@@ -24,7 +24,7 @@ BITS 32
 ; Macros and other preprocessor constants
 ;=============================================================================
 
-%include "common/i386/i386inc.asm"
+%include "i386inc.asm"
 
 ;=============================================================================
 ; Read only data

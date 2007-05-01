@@ -66,6 +66,8 @@ DECLARE_INTERFACE_(IffDecoder, IUnknown)
  STDMETHOD (compat_cpuSupportsMMXEXT)(void) PURE;
  STDMETHOD (compat_cpuSupportsSSE)(void) PURE;
  STDMETHOD (compat_cpuSupportsSSE2)(void) PURE;
+ STDMETHOD (compat_cpuSupportsSSE3)(void) PURE;
+ STDMETHOD (compat_cpuSupportsSSSE3)(void) PURE;
  STDMETHOD (compat_cpuSupports3DNOW)(void) PURE;
  STDMETHOD (compat_cpuSupports3DNOWEXT)(void) PURE;
  STDMETHOD (compat_getAVIfps1000_2)(void) PURE;

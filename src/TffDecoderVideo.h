@@ -193,6 +193,8 @@ public:
  STDMETHODIMP compat_cpuSupportsMMXEXT(void) {return cpuSupportsMMXEXT();}
  STDMETHODIMP compat_cpuSupportsSSE(void) {return cpuSupportsSSE();}
  STDMETHODIMP compat_cpuSupportsSSE2(void) {return cpuSupportsSSE2();}
+ STDMETHODIMP compat_cpuSupportsSSE3(void) {return cpuSupportsSSE3();}
+ STDMETHODIMP compat_cpuSupportsSSSE3(void) {return cpuSupportsSSSE3();}
  STDMETHODIMP compat_cpuSupports3DNOW(void)    {return cpuSupports3DNOW();}
  STDMETHODIMP compat_cpuSupports3DNOWEXT(void) {return cpuSupports3DNOWEXT();}
  STDMETHODIMP compat_getAVIfps1000_2(void) {return getAVIfps1000_2();}

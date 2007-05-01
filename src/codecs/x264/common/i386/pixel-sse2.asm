@@ -27,7 +27,7 @@ BITS 32
 ; Macros and other preprocessor constants
 ;=============================================================================
 
-%include "common/i386/i386inc.asm"
+%include "i386inc.asm"
 
 SECTION_RODATA
 
@@ -595,10 +595,10 @@ cglobal x264_pixel_satd_8x4_%1
 
 %define SUM8x4 SUM8x4_SSE2
 SATDS sse2
-%ifdef HAVE_SSE3
+;%ifdef HAVE_SSE3
 %define SUM8x4 SUM8x4_SSSE3
 SATDS ssse3
-%endif
+;%endif
 
 
 

@@ -34,6 +34,8 @@ void TinfoPageDec::init(void)
  setCheck(IDC_CHB_MMXEXT  ,Tconfig::cpu_flags&FF_CPU_MMXEXT  );
  setCheck(IDC_CHB_SSE     ,Tconfig::cpu_flags&FF_CPU_SSE     );
  setCheck(IDC_CHB_SSE2    ,Tconfig::cpu_flags&FF_CPU_SSE2    );
+ setCheck(IDC_CHB_SSE3    ,Tconfig::cpu_flags&FF_CPU_SSE3    );
+ setCheck(IDC_CHB_SSSE3   ,Tconfig::cpu_flags&FF_CPU_SSSE3   );
  setCheck(IDC_CHB_3DNOW   ,Tconfig::cpu_flags&FF_CPU_3DNOW   );
  setCheck(IDC_CHB_3DNOWEXT,Tconfig::cpu_flags&FF_CPU_3DNOWEXT);
  addHint(IDC_CHB_ADDTOROT,_l("Use with care - can cause ffdshow to not unload after closing the movie."));
@@ -99,6 +101,8 @@ void TinfoPageDec::cfg2dlg(void)
  setCheck(IDC_CHB_ALLOW_MMXEXT  ,allow&FF_CPU_MMXEXT  );
  setCheck(IDC_CHB_ALLOW_SSE     ,allow&FF_CPU_SSE     );
  setCheck(IDC_CHB_ALLOW_SSE2    ,allow&FF_CPU_SSE2    );
+ setCheck(IDC_CHB_ALLOW_SSE3    ,allow&FF_CPU_SSE3    );
+ setCheck(IDC_CHB_ALLOW_SSSE3   ,allow&FF_CPU_SSSE3   );
  setCheck(IDC_CHB_ALLOW_3DNOW   ,allow&FF_CPU_3DNOW   );
  setCheck(IDC_CHB_ALLOW_3DNOWEXT,allow&FF_CPU_3DNOWEXT);
  cbxSetDataCurSel(IDC_CBX_MULTIPLE_INSTANCES,cfgGet(IDFF_multipleInstances));
@@ -180,6 +184,8 @@ INT_PTR TinfoPageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       case IDC_CHB_ALLOW_MMXEXT:
       case IDC_CHB_ALLOW_SSE:
       case IDC_CHB_ALLOW_SSE2:
+      case IDC_CHB_ALLOW_SSE3:
+      case IDC_CHB_ALLOW_SSSE3:
       case IDC_CHB_ALLOW_3DNOW:
       case IDC_CHB_ALLOW_3DNOWEXT:
        {
@@ -188,6 +194,8 @@ INT_PTR TinfoPageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         if (getCheck(IDC_CHB_ALLOW_MMXEXT  )) allow|=FF_CPU_MMXEXT;
         if (getCheck(IDC_CHB_ALLOW_SSE     )) allow|=FF_CPU_SSE;
         if (getCheck(IDC_CHB_ALLOW_SSE2    )) allow|=FF_CPU_SSE2;
+        if (getCheck(IDC_CHB_ALLOW_SSE3    )) allow|=FF_CPU_SSE3;
+        if (getCheck(IDC_CHB_ALLOW_SSSE3   )) allow|=FF_CPU_SSSE3;
         if (getCheck(IDC_CHB_ALLOW_3DNOW   )) allow|=FF_CPU_3DNOW;
         if (getCheck(IDC_CHB_ALLOW_3DNOWEXT)) allow|=FF_CPU_3DNOWEXT;
         cfgSet(IDFF_allowedCpuFlags,allow);

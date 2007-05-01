@@ -22,7 +22,7 @@
 
 BITS 32
 
-%include "common/i386/i386inc.asm"
+%include "i386inc.asm"
 
 SECTION_RODATA
 pb_01: times 8 db 0x01

@@ -26,7 +26,7 @@ BITS 32
 ; Macros and other preprocessor constants
 ;=============================================================================
 
-%include "common/i386/i386inc.asm"
+%include "i386inc.asm"
 
 %macro STORE8x8 2
     movq        [edx + 0*FDEC_STRIDE], %1

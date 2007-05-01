@@ -160,7 +160,7 @@ SRCS_C+=$(LAVC_DIR)/i386/cputest.c \
 SRCS_NASM=$(LAVC_DIR)/i386/skl_dct_sse.asm \
           $(LAVC_DIR)/i386/skl_dct_sse2.asm
 
-NASMFLAGS=-DPREFIX -DWIN32
+#NASMFLAGS=-DPREFIX -DWIN32
 endif
 endif
 

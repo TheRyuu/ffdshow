@@ -7,9 +7,9 @@
 		<CustomBuildRule
 			Name="yasm"
 			DisplayName="yasm"
-			CommandLine="yasm -w -f win64 -m amd64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath) "
+			CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DUSE32 -Dalloc -Dexec -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 			Outputs="$(IntDir)\$(InputName).obj"
-			FileExtensions="*.yasm"
+			FileExtensions="*.asm"
 			ExecutionDescription="yasm assembling $(InputPath)"
 			>
 			<Properties>

@@ -64,6 +64,8 @@ extern "C"
  extern int check_cpu_features(void);
  extern void sse_os_trigger(void);
  extern void sse2_os_trigger(void);
+ extern void sse3_os_trigger(void);
+ extern void ssse3_os_trigger(void);
 }
 #endif
 
@@ -212,18 +214,28 @@ void Tconfig::initCPU(int allowed_cpu_flags)
  if (available_cpu_flags==0)
   {
    #ifndef WIN64
+   #ifndef __GNUC__
    available_cpu_flags=check_cpu_features();
    if ((available_cpu_flags&FF_CPU_SSE) && sigill_check(sse_os_trigger))
     available_cpu_flags&=~FF_CPU_SSE;
    if ((available_cpu_flags&FF_CPU_SSE2) && sigill_check(sse2_os_trigger))
     available_cpu_flags&=~FF_CPU_SSE2;
+   if ((available_cpu_flags&FF_CPU_SSE3) && sigill_check(sse3_os_trigger))
+    available_cpu_flags&=~FF_CPU_SSE3;
+   if ((available_cpu_flags&FF_CPU_SSSE3) && sigill_check(ssse3_os_trigger))
+    available_cpu_flags&=~FF_CPU_SSSE3;
    #else
    available_cpu_flags=(IsProcessorFeaturePresent(PF_MMX_INSTRUCTIONS_AVAILABLE)?FF_CPU_MMX|FF_CPU_MMXEXT:0)|
                        (IsProcessorFeaturePresent(PF_3DNOW_INSTRUCTIONS_AVAILABLE)?FF_CPU_3DNOW|FF_CPU_3DNOWEXT:0)|
                        (IsProcessorFeaturePresent(PF_XMMI_INSTRUCTIONS_AVAILABLE)?FF_CPU_SSE:0)|
                        (IsProcessorFeaturePresent(PF_XMMI64_INSTRUCTIONS_AVAILABLE)?FF_CPU_SSE2:0);
+   /*Vista only        (IsProcessorFeaturePresent(PF_SSE3_INSTRUCTIONS_AVAILABLE)?FF_CPU_SSE3:0);*/
+   /*TODO: Add cpuid for x64*/
+   /*For MinGW GCC 4.0.x compiled version of ffdshow.ax*/
+   /*available_cpu_flags|=FF_CPU_MMX|FF_CPU_MMXEXT|FF_CPU_SSE;*/
    #ifdef __INTEL_COMPILER
    available_cpu_flags|=FF_CPU_MMX|FF_CPU_MMXEXT;
+   #endif
    #endif
    #endif
    cpu_flags=available_cpu_flags&allowed_cpu_flags;

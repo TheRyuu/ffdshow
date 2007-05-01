@@ -406,6 +406,14 @@ STDMETHODIMP TffdshowBase::cpuSupportsSSE2(void)
 {
  return (Tconfig::cpu_flags&FF_CPU_SSE2)?1:0;
 }
+STDMETHODIMP TffdshowBase::cpuSupportsSSE3(void)
+{
+ return (Tconfig::cpu_flags&FF_CPU_SSE3)?1:0;
+}
+STDMETHODIMP TffdshowBase::cpuSupportsSSSE3(void)
+{
+ return (Tconfig::cpu_flags&FF_CPU_SSSE3)?1:0;
+}
 STDMETHODIMP TffdshowBase::cpuSupports3DNOW(void)
 {
  return (Tconfig::cpu_flags&FF_CPU_3DNOW)?1:0;

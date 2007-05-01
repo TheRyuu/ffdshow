@@ -56,6 +56,8 @@ public:
  STDMETHODIMP cpuSupportsMMXEXT(void);
  STDMETHODIMP cpuSupportsSSE(void);
  STDMETHODIMP cpuSupportsSSE2(void);
+ STDMETHODIMP cpuSupportsSSE3(void);
+ STDMETHODIMP cpuSupportsSSSE3(void);
  STDMETHODIMP cpuSupports3DNOW(void);
  STDMETHODIMP cpuSupports3DNOWEXT(void);
  STDMETHODIMP dbgInit(void);
@@ -182,6 +184,8 @@ protected:
    STDMETHODIMP cpuSupportsMMXEXT(void) {return deci->cpuSupportsMMXEXT();}
    STDMETHODIMP cpuSupportsSSE(void) {return deci->cpuSupportsSSE();}
    STDMETHODIMP cpuSupportsSSE2(void) {return deci->cpuSupportsSSE2();}
+   STDMETHODIMP cpuSupportsSSE3(void) {return deci->cpuSupportsSSE3();}
+   STDMETHODIMP cpuSupportsSSSE3(void) {return deci->cpuSupportsSSSE3();}
    STDMETHODIMP cpuSupports3DNOW(void) {return deci->cpuSupports3DNOW();}
    STDMETHODIMP cpuSupports3DNOWEXT(void) {return deci->cpuSupports3DNOWEXT();}
    STDMETHODIMP dbgInit(void) {return deci->dbgInit();}

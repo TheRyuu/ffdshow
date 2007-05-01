@@ -242,8 +242,8 @@ $(LIBSONAME):../bin/verinc.exe $(OBJS) $(LIBS) $(RESSRC:.rc=.res.o) ffdshow.def.
 	$(FFDSHOW_PREFIX)dllwrap -mno-cygwin --target=i386-mingw32 \
                 -o $(LIBSONAME) -def ffdshow.def.gcc \
                 -Wl,--strip-all,--enable-stdcall-fixup \
-  		$(OBJS) $(LIBS) ffdshow.res.o \
-  		-lmsvcrt -lstdc++ -lsupc++ \
+    $(OBJS) $(LIBS) ffdshow.res.o \
+                -lmsvcrt -lstdc++ -lsupc++ \
                 -lgdi32 -lcomdlg32 -lwinmm -lcomctl32 -luuid -lole32 -loleaut32 \
                 -ldinput -ldxguid -lshlwapi
 	$(DO_REBASE)

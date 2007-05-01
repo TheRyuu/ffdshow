@@ -2,9 +2,9 @@ all:.all
 
 #if FFDSHOW_PREFIX is set, assume cross-compilation
 ifeq ($(FFDSHOW_PREFIX),)
-  NASM=nasmw.exe
+  NASM=yasm.exe
 else
-  NASM=nasm
+  NASM=yasm
 endif
 
 ifeq ($(CC),icl)
@@ -62,7 +62,7 @@ OBJS=$(SRCS:.cpp=.o) $(SRCS_C:.c=.o) $(SRCS_NASM:.asm=.o) $(RESSRC:.rc:.res.o)
 	$(FFDSHOW_PREFIX)$(CC) -c $(CFLAGS) $(OPTFLAGS) $(OUTPUTFLAG)$@ $<
 
 %.o: %.asm
-	$(NASM) -f win32 -DWIN32 -DPREFIX $(NASMFLAGS) -I$(<D)/ -o $@ $<
+	$(NASM) -f win32 -DWIN32 -DPREFIX -DUSE32 -Dalloc -Dexec $(NASMFLAGS) -I$(<D)/ -o $@ $<
 
 ifeq ($(CC),icl)
 %.res.o: %.rc
