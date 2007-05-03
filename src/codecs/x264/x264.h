@@ -64,7 +64,7 @@ typedef struct x264_t x264_t;
 #define X264_CQM_FLAT                0
 #define X264_CQM_JVT                 1
 #define X264_CQM_CUSTOM              2
-
+#define X264_RC_NONE                 -1
 #define X264_RC_CQP                  0
 #define X264_RC_CRF                  1
 #define X264_RC_ABR                  2
