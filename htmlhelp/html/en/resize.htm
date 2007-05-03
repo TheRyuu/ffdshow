@@ -11,32 +11,26 @@
 <body>
   <a href="http://ffdshow-tryout.sourceforge.net/phpBB2/">
     <img src="../images/logo_phpBB.png" title="ffdshow tryouts" alt="ffdshow tryouts" width="200" height="91" />
-  </a>  
-  
+  </a>
+
   <div style="text-align:right" class="smallest_caption">
     Translation available in:
     <a class="nav" href="../jp/resize.htm"><img src="../images/japan.png" title="Japanese resize doc" alt="Japanese resize doc" width="27" height="17" />&nbsp;Japanese</a>
-  </div> 
+  </div>
 
-  <p>
-    <span class="big_caption">
-     <a name="top" id="top">Resize & aspect</a>
-    </span>
+  <p class="big_caption">
+    <a name="top" id="top">Resize & aspect</a>
   </p>
 
   <img src="../images/resize.png" title="resize dialog" alt="resize dialog" width="558" height="412" />
 
-  <p>
-    <span class="normal">
-      This document is based on rev 1103 or later. Beta2a has different specification.
-    </span>
+  <p class="normal">
+    This document is based on rev 1103 or later. Beta2a has different specification.
   </p>
 
-  <p>
-    <span class="small_caption">
-      <img src="../images/combo.png" title="" alt="" width="13" height="13" />
-      Specify horizontal and vertical size
-    </span>
+  <p class="small_caption">
+    <img src="../images/combo.png" title="" alt="" width="13" height="13" />
+    Specify horizontal and vertical size
   </p>
 
   <ul class="normal">
@@ -45,26 +39,22 @@
     <li>Manually configured: Stretched or shrinked until either width or height touch the specified size <em>using the specified aspect ratio</em>. Black borders are added, if necessary.</li>
   </ul>
 
-  <p>
-    <span class="small_caption">
-      <img src="../images/combo.png" title="" alt="" width="13" height="13" />
-      Specify horizontal size
-    </span>
+  <p class="small_caption">
+    <img src="../images/combo.png" title="" alt="" width="13" height="13" />
+    Specify horizontal size
   </p>
-  
+
   <ul class="normal">
     <li style="list-style-type:none; position:relative; left:-20px">Height is calculated automatically to keep original aspect ratio.</li>
     <li>"No aspect ratio correction" and "Keep original aspect ratio" give the same result.</li>
     <li>Manually configured: You can specify aspect ratio manually.</li>
   </ul>
 
-  <p>
-    <span class="small_caption">
-      <img src="../images/combo.png" title="" alt="" width="13" height="13" />
-      Specify aspect ratio
-    </span>
-  </p> 
-  
+  <p class="small_caption">
+    <img src="../images/combo.png" title="" alt="" width="13" height="13" />
+    Specify aspect ratio
+  </p>
+
   <ul class="normal">
     <li style="list-style-type:none; position:relative; left:-20px">Height is calculated based on width. (Let's call it a <em>box</em> here.)</li>
     <li>"No aspect ratio correction" selected: Stretched to fill the box.</li>
@@ -72,11 +62,9 @@
     <li>Manually configured: Stretched or shrinked until either width or height touch the box <em>using the specified aspect ratio</em>. Black borders are added, if necessary.</li>
   </ul>
 
-  <p>
-    <span class="small_caption">
-      <img src="../images/combo.png" title="" alt="" width="13" height="13" />
-      Expand to next multiply of
-    </span>
+  <p class="small_caption">
+    <img src="../images/combo.png" title="" alt="" width="13" height="13" />
+    Expand to next multiply of
   </p>
 
   <ul class="normal">
@@ -84,22 +72,18 @@
     <li>"Keep original aspect ratio" and "Manual" work in this mode too.</li>
   </ul>
 
-  <p>
-    <span class="small_caption">
-      <img src="../images/combo.png" title="" alt="" width="13" height="13" />
-      Multiply by
-    </span>
+  <p class="small_caption">
+    <img src="../images/combo.png" title="" alt="" width="13" height="13" />
+    Multiply by
   </p>
 
   <ul class="normal">
     <li>Both horizontal and vertical sizes are stretched using the specified magnification ratio.</li>
   </ul>
 
-  <p>
-    <span class="small_caption">
-      <img src="../images/check.png" title="" alt="" width="13" height="13" />
-      Process pixel aspect ratio internally
-    </span>
+  <p class="small_caption">
+    <img src="../images/check.png" title="" alt="" width="13" height="13" />
+    Process pixel aspect ratio internally
   </p>
 
   <ul class="normal">
@@ -107,16 +91,14 @@
     <li>If unchecked, output SAR equals input SAR and the video renderer (or any downstream filter) handles it.</li>
   </ul>
 
-  <p>
-    <span class="small_caption">
-      Example
-    </span>
+  <p class="small_caption">
+    Example
   </p>
 
-  <span class="normal">
+  <p class="normal">
     Following situation: You have a projector with 1280x720 resolution and you want to play a DVD whose pixel aspect ratio (SAR) changes during playback.<br />
     How to configure ffdshow's resize options properly?
-  </span>
+  </p>
 
   <ul class="normal" style="list-style-type:circle">
     <li>"Specify horizontal and vertical size"->1280x720.</li>
@@ -124,10 +106,8 @@
     <li>Make sure "Process pixel aspect ratio internally" is checked.</li>
   </ul>
 
-  <div>
-    <span class="normal">
-      <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
-    </span>
+  <div class="normal">
+    <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
   </div>
 
   <div style="padding-top:20px">

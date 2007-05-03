@@ -21,10 +21,8 @@
     &nbsp;<a class="nav" href="../jp/faq.htm"><img src="../images/japan.png" title="Japanese FAQ" alt="Japanese FAQ" width="27" height="17" />&nbsp;Japanese</a>
   </div>
 
-  <p>
-    <span class="big_caption">
-      <a name="top" id="top">FAQ</a>
-    </span>
+  <p class="big_caption">
+    <a name="top" id="top">FAQ</a>
   </p>
 
   <ul class="links">
@@ -35,16 +33,13 @@
     <li><a class="nav" href="#multithreaded">Ist ffdshow Multicore-optimiert?</a></li>
   </ul>
 
-  <p>
-    <span class="small_caption">
-      <a name="difference" id="difference">Was ist der Unterschied zwischen generischen und SSE/SSE2-Builds?</a>
-    </span>
+  <p class="small_caption">
+    <a name="difference" id="difference">Was ist der Unterschied zwischen generischen und SSE/SSE2-Builds?</a>
   </p>
 
-  <p>
-    <span class="normal">Der Hauptunterschied ist der Compiler, der zum Kompilieren von <em>ffdshow.ax</em> verwendet wird. Es werden vier verschiedene Compiler verwendet: <em>MSVC71</em>, <em>MSVC80</em>, <em>GCC</em> und <em>ICL9</em>.<br />
-      The CPU-Anforderungen f&uuml;r die Builds sind wie folgt:
-    </span>
+  <p class="normal">
+    Der Hauptunterschied ist der Compiler, der zum Kompilieren von <em>ffdshow.ax</em> verwendet wird. Es werden vier verschiedene Compiler verwendet: <em>MSVC71</em>, <em>MSVC80</em>, <em>GCC</em> und <em>ICL9</em>.<br />
+    The CPU-Anforderungen f&uuml;r die Builds sind wie folgt:
   </p>
 
   <ul class="normal">
@@ -53,27 +48,21 @@
     <li>SSE2-Builds ben&ouml;tigen einen Pentium 4/Athlon 64 oder neuer.</li>
   </ul>
 
-  <p>
-    <span class="small_caption">
-      <a name="performance" id="performance">Welches Build hat die beste Dekodierleistung?</a>
-    </span>
+  <p class="small_caption">
+    <a name="performance" id="performance">Welches Build hat die beste Dekodierleistung?</a>
   </p>
 
-  <p>
-    <span class="normal">Alle Builder verwenden den GCC-Compiler um <em>libavcodec</em>, welches ffdshows Hauptbibliothek zum Dekodieren ist, zu erstellen. Diese Bibliothek enth&auml;lt eine Menge handoptimierten Assembler-Code (welcher automatisch die von der CPU unterst&uuml;tzten Eigenschaften und Befehlss&auml;tze erkennt). Die Verwendung zus&auml;tzlicher Compileroptimierungen oder erweiterter Befehlss&auml;tze (wie SSE/SSE2) resultiert in keinem signifikanten oder sp&uuml;rbaren Geschwindigkeitszuwachs. Wenn also die reine Dekodiergeschwindigkeit verglichen wird, gibt es nahezu <strong>keinen Unterschied</strong> zwischen den Builds.
-    </span>
+  <p class="normal">
+    Alle Builder verwenden den GCC-Compiler um <em>libavcodec</em>, welches ffdshows Hauptbibliothek zum Dekodieren ist, zu erstellen. Diese Bibliothek enth&auml;lt eine Menge handoptimierten Assembler-Code (welcher automatisch die von der CPU unterst&uuml;tzten Eigenschaften und Befehlss&auml;tze erkennt). Die Verwendung zus&auml;tzlicher Compileroptimierungen oder erweiterter Befehlss&auml;tze (wie SSE/SSE2) resultiert in keinem signifikanten oder sp&uuml;rbaren Geschwindigkeitszuwachs. Wenn also die reine Dekodiergeschwindigkeit verglichen wird, gibt es nahezu <strong>keinen Unterschied</strong> zwischen den Builds.
   </p>
 
-  <p>
-    <span class="small_caption">
-      <a name="perf_filters" id="perf_filters">Welches Build hat die beste Dekodierleistung, wenn Filter verwendet werden?</a>
-    </span>
+  <p class="small_caption">
+    <a name="perf_filters" id="perf_filters">Welches Build hat die beste Dekodierleistung, wenn Filter verwendet werden?</a>
   </p>
 
-  <p>
-    <span class="normal">Optimierte Builds von <em>ffdshow.ax</em> haben Auswirkungen auf die Geschwindigkeit, wenn bestimmte Filter in ffdshow verwendet werden.<br />
-      Unterhalb befindet sich eine Liste von - bis jetzt getesteten - Filtern, die von Optimierungen profitieren:
-    </span>
+  <p class="normal">
+    Optimierte Builds von <em>ffdshow.ax</em> haben Auswirkungen auf die Geschwindigkeit, wenn bestimmte Filter in ffdshow verwendet werden.<br />
+    Unterhalb befindet sich eine Liste von - bis jetzt getesteten - Filtern, die von Optimierungen profitieren:
   </p>
 
   <ul class="normal">
@@ -81,18 +70,17 @@
     <li>denoise3d</li>
   </ul>
 
-  <p>
-    <span class="normal">Das folgende Diagramm stellt die m&ouml;glichen Zuw&auml;chse in der Dekodiergeschwindigkeit, wenn optimierte Builds <strong>und</strong> Filter verwendet werden, dar:<br /><br />
-      <img src="images/benchmark.png" width="498" height="600" title="ffdshow-Build-802-Test" alt="ffdshow-Build-802-Test" /><br />
-    </span>
+  <p class="normal">
+    Das folgende Diagramm stellt die m&ouml;glichen Zuw&auml;chse in der Dekodiergeschwindigkeit, wenn optimierte Builds <strong>und</strong> Filter verwendet werden, dar:<br /><br />
+    <img src="images/benchmark.png" width="498" height="600" title="ffdshow-Build-802-Test" alt="ffdshow-Build-802-Test" /><br />
     <span class="small">
       Testsystem: Pentium 4 2.8GHz (Northwood), Windows XP SP2, Null Renderer verwendet<br />
       Testbeispiel: <a href="http://trailers.divx.com/Dreamworks/Madagascar_HD.zip">Madagascar.avi</a> (DX50)
     </span>
   </p>
 
-  <p>
-    <span class="normal">Zusammenfassend:</span>
+  <p class="normal">
+    Zusammenfassend:
   </p>
 
   <ul class="normal">
@@ -104,25 +92,20 @@
       Zu Testzwecken wird Haalis <a class="links" href="http://haali.cs.msu.ru/mkv/timeCodec.exe">timeCodec.exe</a> [96KB] ben&ouml;tigt. Damit <em>timeCodec.exe</em> funktioniert, ist <a href="http://haali.cs.msu.ru/mkv/">Haali Media Splitter</a> Voraussetzung.</li>
   </ul>
 
-  <p>
-    <span class="small_caption">
-      <a name="stable" id="stable">Welches Build ist das Stabilste?</a>
-    </span>
+  <p class="small_caption">
+    <a name="stable" id="stable">Welches Build ist das Stabilste?</a>
   </p>
 
-  <p>
-    <span class="normal">MSVC-Builds von <em>ffdshow.ax</em> sind vermutlich die Stabilsten, allerdings sind auch keine Fehler in GCC-Builds bekannt. In ICL-Builds existiert nur ein bekannter Fehler: Sie st&uuml;rzen bei Dateien, die mit einer sehr alten und fehlerhaften Version von x264 erstellt wurden, ab. Allerdings ist es unwahrscheinlich solchen Dateien wirklich einmal zu begegnen. Von der Stabilit&auml;t betrachtet, spielt das Build also keine Rolle.
-    </span>
+  <p class="normal">
+    MSVC-Builds von <em>ffdshow.ax</em> sind vermutlich die Stabilsten, allerdings sind auch keine Fehler in GCC-Builds bekannt. In ICL-Builds existiert nur ein bekannter Fehler: Sie st&uuml;rzen bei Dateien, die mit einer sehr alten und fehlerhaften Version von x264 erstellt wurden, ab. Allerdings ist es unwahrscheinlich solchen Dateien wirklich einmal zu begegnen. Von der Stabilit&auml;t betrachtet, spielt das Build also keine Rolle.
   </p>
 
-  <p>
-    <span class="small_caption">
-      <a name="multithreaded" id="multithreaded">Ist ffdshow Multicore-optimiert?</a>
-    </span>
+  <p class="small_caption">
+    <a name="multithreaded" id="multithreaded">Ist ffdshow Multicore-optimiert?</a>
   </p>
-  <p>
-    <span class="normal">Die folgende Liste gibt eine &Uuml;bersicht der Teile ffdshows, die Multicore-optimiert sind und somit Verbesserungen zeigen, wenn sie auf einem Multicore-System ausgef&uuml;hrt werden:
-    </span>
+
+  <p class="normal">
+    Die folgende Liste gibt eine &Uuml;bersicht der Teile ffdshows, die Multicore-optimiert sind und somit Verbesserungen zeigen, wenn sie auf einem Multicore-System ausgef&uuml;hrt werden:
   </p>
 
   <ul class="normal">
@@ -132,10 +115,8 @@
     <li>libavcodecs MPEG4/MPEG2/MPEG1-Encoder sind Multicore-optimiert.</li>
   </ul>
 
-  <div>
-    <span class="normal">
-      <a class="nav" href="#top">Zum Anfang&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
-    </span>
+  <div class="normal">
+    <a class="nav" href="#top">Zum Anfang&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
   </div>
 
   <div style="padding-top:20px">
