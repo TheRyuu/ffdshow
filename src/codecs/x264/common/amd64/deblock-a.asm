@@ -22,7 +22,7 @@
 
 BITS 64
 
-%include "common/amd64/amd64inc.asm"
+%include "amd64inc.asm"
 
 SECTION .rodata align=16
 pb_01: times 16 db 0x01

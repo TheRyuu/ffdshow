@@ -1,7 +1,7 @@
 CFLAGS+= -I. -I../.. -DHAVE_PTHREAD -D__WIN32__ -D__X264__
 
 ifneq ($(CC),icl)
-CFLAGS+=-DARCH_X86 -DHAVE_MMX -DHAVE_SSE3 
+CFLAGS+=-DARCH_X86 -DHAVE_MMX -DHAVE_SSE3
 endif
        
 SRCS_C=common/mc.c common/predict.c common/pixel.c common/macroblock.c \
@@ -20,6 +20,8 @@ SRCS_NASM=common/i386/cpu-a.asm common/i386/dct-a.asm common/i386/pixel-a.asm \
           common/i386/pixel-sse2.asm common/i386/quant-a.asm \
           common/i386/deblock-a.asm
 endif
+
+NASMFLAGS+=-DHAVE_SSE3
 
 GCCLIBS=-lpthread
 

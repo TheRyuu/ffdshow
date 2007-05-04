@@ -22,7 +22,7 @@
 
 BITS 64
 
-%include "common/amd64/amd64inc.asm"
+%include "amd64inc.asm"
 
 SECTION .rodata
 pd_1:  times 2 dd 1

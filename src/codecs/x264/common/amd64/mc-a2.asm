@@ -24,7 +24,7 @@ BITS 64
 ; Macros and other preprocessor constants
 ;=============================================================================
 
-%include "common/amd64/amd64inc.asm"
+%include "amd64inc.asm"
 
 ;=============================================================================
 ; Read only data

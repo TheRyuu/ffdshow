@@ -87,7 +87,7 @@ endif
 	$(FFDSHOW_PREFIX)$(CC) -c $(CFLAGS) $(CPPFLAGS) $(OPTFLAGS) $(OUTPUTFLAG)$@ $<
 
 %.o: %.asm
-	$(NASM) -f win32 -DWIN32 -DPREFIX -DUSE32 -Dalloc -Dexec $(NASMFLAGS) -I$(<D)/ -o $@  $<
+	$(NASM) -f win32 -DWIN32 -DPREFIX $(NASMFLAGS) -I$(<D)/ -o $@  $<
 
 ifeq ($(CC),icl)
 %.res.o: %.rc

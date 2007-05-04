@@ -310,7 +310,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DHAVE_SSE3 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
 "
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
@@ -319,7 +319,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DHAVE_SSE3 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
 "
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
@@ -331,7 +331,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DHAVE_SSE3 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
 "
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
@@ -340,7 +340,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DHAVE_SSE3 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
 "
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
@@ -355,7 +355,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DHAVE_SSE3 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
 "
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
@@ -364,7 +364,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DHAVE_SSE3 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
 "
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
@@ -376,7 +376,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DHAVE_SSE3 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
 "
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
@@ -385,7 +385,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DHAVE_SSE3 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
 "
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
@@ -397,7 +397,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DHAVE_SSE3 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
 "
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
@@ -406,7 +406,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DHAVE_SSE3 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
 "
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
@@ -424,7 +424,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DHAVE_SSE3 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
 "
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
@@ -433,7 +433,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DHAVE_SSE3 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
 "
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
@@ -445,7 +445,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DHAVE_SSE3 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
 "
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
@@ -454,7 +454,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DHAVE_SSE3 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
 "
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
@@ -469,7 +469,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DHAVE_SSE3 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
 "
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
@@ -478,7 +478,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DHAVE_SSE3 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
 "
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
@@ -496,7 +496,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DHAVE_SSE3 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
 "
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
@@ -505,7 +505,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DHAVE_SSE3 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
 "
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>

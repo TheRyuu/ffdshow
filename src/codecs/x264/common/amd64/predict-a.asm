@@ -26,7 +26,7 @@ BITS 64
 ; Macros and other preprocessor constants
 ;=============================================================================
 
-%include "common/amd64/amd64inc.asm"
+%include "amd64inc.asm"
 
 %macro STORE8x8 2
     movq        [parm1q + 0*FDEC_STRIDE], %1

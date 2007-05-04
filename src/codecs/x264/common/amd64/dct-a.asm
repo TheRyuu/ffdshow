@@ -37,7 +37,7 @@ BITS 64
 ; Macros and other preprocessor constants
 ;=============================================================================
 
-%include "common/amd64/amd64inc.asm"
+%include "amd64inc.asm"
 
 %macro MMX_ZERO 1
     pxor    %1, %1

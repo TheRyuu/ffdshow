@@ -169,10 +169,10 @@ cglobal x264_quant_8x8_%1
 
 %define QUANT_1x8 SSE2_QUANT_1x8
 QUANT_SSE sse2
-;%ifdef HAVE_SSE3
+%ifdef HAVE_SSE3
 %define QUANT_1x8 SSSE3_QUANT_1x8
 QUANT_SSE ssse3
-;%endif
+%endif
 
 
 ;=============================================================================
