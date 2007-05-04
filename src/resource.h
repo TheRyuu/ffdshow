@@ -411,22 +411,6 @@
 #define IDC_BT_RESIZE_ASPECT_MENU       1195
 #define IDC_BT_RESIZE_SIZE_MENU         1196
 #define IDC_BT_RESIZE_PIX_MENU          1197
-#define IDC_CHB_MMX                     2000
-#define IDC_CHB_MMXEXT                  2001
-#define IDC_CHB_SSE                     2002
-#define IDC_CHB_SSE2                    2003
-#define IDC_CHB_SSE3                    2004
-#define IDC_CHB_SSSE3                   2005
-#define IDC_CHB_3DNOW                   2006
-#define IDC_CHB_3DNOWEXT                2007
-#define IDC_CHB_ALLOW_MMX               2008
-#define IDC_CHB_ALLOW_MMXEXT            2009
-#define IDC_CHB_ALLOW_SSE               2010
-#define IDC_CHB_ALLOW_SSE2              2011
-#define IDC_CHB_ALLOW_SSE3              2012
-#define IDC_CHB_ALLOW_SSSE3             2013
-#define IDC_CHB_ALLOW_3DNOW             2014
-#define IDC_CHB_ALLOW_3DNOWEXT          2015
 #define IDC_BT_RESIZE_MOD_16            1198
 #define IDC_CHB_BORDERSLOCKED           1199
 #define IDC_CHB_KEYS                    1202
@@ -1719,6 +1703,23 @@
 #define IDC_RBT_RESIZE_MODE_SIZE        1986
 #define IDC_RBT_RESIZE_MODE_SIZE_H      1987
 #define IDC_CHB_SAR_INTERNALLY          1988
+#define IDC_CHB_WINAMP_MULTICHANNEL     1989
+#define IDC_CHB_MMX                     2000
+#define IDC_CHB_MMXEXT                  2001
+#define IDC_CHB_SSE                     2002
+#define IDC_CHB_SSE2                    2003
+#define IDC_CHB_SSE3                    2004
+#define IDC_CHB_SSSE3                   2005
+#define IDC_CHB_3DNOW                   2006
+#define IDC_CHB_3DNOWEXT                2007
+#define IDC_CHB_ALLOW_MMX               2008
+#define IDC_CHB_ALLOW_MMXEXT            2009
+#define IDC_CHB_ALLOW_SSE               2010
+#define IDC_CHB_ALLOW_SSE2              2011
+#define IDC_CHB_ALLOW_SSE3              2012
+#define IDC_CHB_ALLOW_SSSE3             2013
+#define IDC_CHB_ALLOW_3DNOW             2014
+#define IDC_CHB_ALLOW_3DNOWEXT          2015
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -1735,7 +1736,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        225
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         1989
+#define _APS_NEXT_CONTROL_VALUE         2016
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

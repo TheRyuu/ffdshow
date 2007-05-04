@@ -1000,6 +1000,7 @@ indeterminate state - first try overlay, then use fallback format=ビデオレンダラ
 1400=Winamp 2 DSP
 1401=クリックしてWinamp 2のディレクトリを選択してください...
 1404=設定
+1989=マルチチャンネル・オーディオの処理を許可する
 
 [191]
 0=ミキサー

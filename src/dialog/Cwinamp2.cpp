@@ -76,6 +76,7 @@ void Twinamp2page::filter2dlg(void)
  const Twinamp2dspDll *dsp=winamp2->getFilter(cfgGetStr(IDFF_winamp2flnm));
  if (dsp)
   {
+   setCheck(IDC_CHB_WINAMP_MULTICHANNEL,dsp->isMultichannelAllowed(cfgGetStr(IDFF_winamp2allowMultichannelOnlyIn)));
    const char_t *filtername=cfgGetStr(IDFF_winamp2filtername);
    for (Twinamp2dspDll::Tfilters::const_iterator f=dsp->filters.begin();f!=dsp->filters.end();f++)
     {
@@ -151,6 +152,37 @@ void Twinamp2page::onConfig(void)
    currentdsp->config(m_hwnd);
   }
 }
+void Twinamp2page::onChbMultichannel(void)
+{
+ const Twinamp2dspDll *dsp=winamp2->getFilter(cfgGetStr(IDFF_winamp2flnm));
+ if (!dsp)
+  return;
+ int multi=getCheck(IDC_CHB_WINAMP_MULTICHANNEL);
+ ffstring compList=cfgGetStr(IDFF_winamp2allowMultichannelOnlyIn);
+ if (multi && !dsp->isMultichannelAllowed(compList.c_str())) // add one filename
+  {
+   if (!compList.empty())
+    compList+=_l(";");
+   compList+=dsp->dllFileName;
+   if (compList.size()<MAX_COMPATIBILITYLIST_LENGTH)
+    cfgSet(IDFF_winamp2allowMultichannelOnlyIn,compList.c_str());
+  }
+ if (!multi) // remove one filename
+  {
+   strings compListOrg;
+   ffstring compListResult;
+   strtok(compList.c_str(),_l(";"),compListOrg);
+   for (strings::const_iterator b=compListOrg.begin();b!=compListOrg.end();b++)
+    if (DwStrcasecmp(*b,dsp->dllFileName)!=0)
+     {
+      if(!compListResult.empty())
+       compListResult+=_l(";");
+      compListResult+=*b;
+     }
+   cfgSet(IDFF_winamp2allowMultichannelOnlyIn,compListResult.c_str());
+  }
+ filter2dlg();
+}
 
 Twinamp2page::Twinamp2page(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecAudio(Iparent,idff)
 {
@@ -171,4 +203,10 @@ Twinamp2page::Twinamp2page(TffdshowPageDec *Iparent,const TfilterIDFF *idff):Tco
   bindButtons(bt2);
  else
   bindButtons(bt1);
+ static const TbindCheckbox<Twinamp2page> chb[]=
+  {
+   IDC_CHB_WINAMP_MULTICHANNEL,NULL,&Twinamp2page::onChbMultichannel,
+   0,NULL,NULL
+  };
+ bindCheckboxes(chb);
 }

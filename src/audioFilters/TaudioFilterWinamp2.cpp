@@ -37,7 +37,7 @@ void TaudioFilterWinamp2::done(void)
 
 bool TaudioFilterWinamp2::is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg)
 {
- return super::is(fmt,cfg) && fmt.nchannels<=2;
+ return super::is(fmt,cfg);
 }
 
 HRESULT TaudioFilterWinamp2::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples0,size_t numsamples,const TfilterSettingsAudio *cfg0)
@@ -58,7 +58,7 @@ HRESULT TaudioFilterWinamp2::process(TfilterQueue::iterator it,TsampleFormat &fm
    done();
    old=*cfg;
    deciA->getWinamp2(&winamp2);
-   filter=winamp2->getFilter(cfg);
+   filter=winamp2->getFilter(cfg,fmt.nchannels);
    if (filter) filter->init();
   }
 

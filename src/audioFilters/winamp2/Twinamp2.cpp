@@ -53,10 +53,12 @@ Twinamp2dspDll* Twinamp2::getFilter(const char_t *flnm)
  return NULL;
 }
 
-Twinamp2dsp* Twinamp2::getFilter(const Twinamp2settings *cfg)
+Twinamp2dsp* Twinamp2::getFilter(const Twinamp2settings *cfg, int nchannels)
 {
  Twinamp2dspDll *d=getFilter(cfg->flnm);
  if (!d) return NULL;
+ if (nchannels>2 && !d->isMultichannelAllowed(cfg->allowMultichannelOnlyIn))
+   return NULL;
  for (Twinamp2dspDll::Tfilters::iterator f=d->filters.begin();f!=d->filters.end();f++)
   if (strcmp((*f)->descr.c_str(),cfg->modulename)==0)
    {
@@ -89,6 +91,7 @@ Twinamp2dspDll::Twinamp2dspDll(const ffstring &flnm):refcount(1)
      return;
     }
    descr=hdr->description;
+   dllFileName=filename;
   }
  if (hdr)
   for (int i=0;;i++)
@@ -121,6 +124,15 @@ void Twinamp2dspDll::release(void)
   }
 }
 
+bool Twinamp2dspDll::isMultichannelAllowed(const char_t *compList) const
+{
+ strings multichannelDlls;
+ strtok(compList,_l(";"),multichannelDlls);
+ for (strings::const_iterator b=multichannelDlls.begin();b!=multichannelDlls.end();b++)
+  if (DwStrcasecmp(*b,dllFileName)==0)
+   return true;
+ return false;
+}
 //============================= Twinamp2dsp ==================================
 Twinamp2dsp::Twinamp2dsp(Twinamp2dspDll *Idll,winampDSPModule *Imod):mod(Imod),dll(Idll),h(NULL),hThread(NULL)
 {

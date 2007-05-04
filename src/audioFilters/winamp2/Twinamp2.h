@@ -36,10 +36,12 @@ private:
  winampDSPHeader* (*winampDSPGetHeaderType)(void);
 public:
  Twinamp2dspDll(const ffstring &flnm);
+ bool isMultichannelAllowed(const char_t *compList) const;
  ~Twinamp2dspDll();
  void addref(void);
  void release(void);
  ffstring descr;
+ ffstring dllFileName;
  typedef std::vector<Twinamp2dsp*> Tfilters;
  Tfilters filters;
 };
@@ -54,7 +56,7 @@ public:
  typedef std::vector<Twinamp2dspDll*> Twinamp2dspDlls;
  Twinamp2dspDlls dsps;
  Twinamp2dspDll* getFilter(const char_t *flnm);
- Twinamp2dsp* getFilter(const Twinamp2settings *cfg);
+ Twinamp2dsp* getFilter(const Twinamp2settings *cfg,int nchannels);
 };
 
 #endif

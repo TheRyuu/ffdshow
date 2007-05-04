@@ -55,6 +55,8 @@ Twinamp2settings::Twinamp2settings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfi
      _l("winamp2flnm"),_l(""),
    IDFF_winamp2filtername ,(TstrVal)&Twinamp2settings::modulename,256     ,_l(""),1,
      _l("winamp2filtername"),_l(""),
+   IDFF_winamp2allowMultichannelOnlyIn,(TstrVal)&Twinamp2settings::allowMultichannelOnlyIn,MAX_COMPATIBILITYLIST_LENGTH,_l(""),1,
+     _l("allowMultichannelOnlyIn"),_l("dsp_dfx.dll"),
    0
   };
  addOptions(sopts);
