@@ -1,0 +1,27 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "xvidcore", "xvidcore_icl9.icproj", "{CC0E5A80-985F-46D8-A27C-E315836F8948}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{CC0E5A80-985F-46D8-A27C-E315836F8948}.Debug.ActiveCfg = Debug|Win32
+		{CC0E5A80-985F-46D8-A27C-E315836F8948}.Debug.Build.0 = Debug|Win32
+		{CC0E5A80-985F-46D8-A27C-E315836F8948}.Release.ActiveCfg = Release|Win32
+		{CC0E5A80-985F-46D8-A27C-E315836F8948}.Release.Build.0 = Release|Win32
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Release.Build.0 = Release|Win32
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Release.ActiveCfg = Release|Win32
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Debug.Build.0 = Debug|Win32
+		{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}.Debug.ActiveCfg = Debug|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
