@@ -1,11 +1,10 @@
-; Written by CLSID
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1125
+#define tryout_revision = 1133
 #define buildyear = 2007
-#define buildmonth = '04'
-#define buildday = '27'
+#define buildmonth = '05'
+#define buildday = '04'
 
 ; Build specific options
 #define unicode_required = True
@@ -26,6 +25,7 @@
 #define include_app_plugins = True
 #define include_makeavis = True
 #define include_x264 = True
+#define include_xvidcore = True
 #define include_audx = False
 #define include_info_before = False
 #define include_gnu_license = True
@@ -83,6 +83,7 @@
   #define include_app_plugins = False
   #define include_makeavis = False
   #define include_x264 = False
+  #define include_xvidcore = False
   #define filename_prefix = '_x64'
 #endif
 
@@ -328,6 +329,9 @@ Source: ..\..\ff_theora.dll; DestDir: {app}; Flags: ignoreversion; Components: f
 #if include_x264
 Source: ..\..\ff_x264.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow\vfw
 Source: Runtimes\pthreadGC2.dll; DestDir: {sys}; Flags: sharedfile uninsnosharedfileprompt; Components: ffdshow\vfw
+#endif
+#if include_xvidcore
+Source: ..\..\xvidcore.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 #endif
 #if is64bit
 Source: ..\..\ff_kernelDeint.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
