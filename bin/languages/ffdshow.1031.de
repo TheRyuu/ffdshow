@@ -361,6 +361,7 @@ Custom=Benutzerdefiniert
 1503=Merit:
 1832=Folgende SIMD-Instruktionen verwenden (wenn vom Prozessor unterstützt):
 1935=ffdshow nicht verwenden in:
+1970=ffdshow nur verwenden in:
 
 [141]
 0=OSD
@@ -587,6 +588,8 @@ Custom=Benutzerdefiniert
 1199=Einrasten
 1234=Seitenverhältnis des Overlays:
 1540=Multiplizieren mit:
+1988=Pixelseitenverhältnis intern verarbeiten
+1987=Horizontale Größe definieren
 
 [138]
 0=Einstellungen
@@ -793,6 +796,7 @@ Custom=Benutzerdefiniert
 1576=32-bit ganzzahlig
 1577=32-bit fließend
 1846=Nur auf S/PDIF-Ausgabe zugreiifen
+1985=Nur Mehrkanal-Streams kodieren
 
 [188]
 0=Lautstärke

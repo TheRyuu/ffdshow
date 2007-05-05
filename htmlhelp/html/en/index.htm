@@ -14,16 +14,16 @@
   <a href="http://ffdshow-tryout.sourceforge.net/phpBB2/">
     <img src="../images/logo_phpBB.png" title="ffdshow tryouts" alt="ffdshow tryouts" width="200" height="91" />
   </a>
-  
-  <div style="text-align:right" class="smallest_caption">
-    Translation available in: 
-    <a class="nav" href="../jp/index.htm"><img src="../images/japan.png" title="Japanese changelog" alt="Japanese changelog" width="27" height="17" />&nbsp;Japanese</a>
-  </div>       
 
-  <p class="big_caption">   
-    <a name="top" id="top">Changelog</a>    
+  <div style="text-align:right" class="smallest_caption">
+    Translation available in:
+    <a class="nav" href="../jp/index.htm"><img src="../images/japan.png" title="Japanese changelog" alt="Japanese changelog" width="27" height="17" />&nbsp;Japanese</a>
+  </div>
+
+  <p class="big_caption">
+    <a name="top" id="top">Changelog</a>
   </p>
-    
+
   <span class="normal">This list is based on the latest revision of the original project except the multithreading patch.<br />
     Navigate to:
   </span>
@@ -33,7 +33,7 @@
     <li><a class="nav" href="#download">Download</a></li>
     <li><a class="nav" href="faq.htm">FAQ</a></li>
   </ul>
-    
+
   <!-- old table navigation version -->
   <!--
   <table class="normal" summary="Links to different sections of changelog">
@@ -41,9 +41,9 @@
     <tr><td></td><td><a class="nav" href="#features">New features</a></td></tr>
     <tr><td></td><td><a class="nav" href="#download">Download</a></td></tr>
     <tr><td></td><td><a class="nav" href="faq.htm">FAQ</a></td></tr>
-  </table> 
-  -->   
-  
+  </table>
+  -->
+
   <p>
     <span class="medium_caption">
       <a name="fixes" id="fixes">Bug fixes</a><br />
@@ -57,9 +57,9 @@
 
   <ul class="fixed">
     <li>Improved stability of Winamp plugin handling.</li>
-    <li>On the fly resize: If you entered 8 (as a first letter of 800) for the vertical size, it crashed depending on the method (lanczos tap>=4, spline, etc).</li>
+    <li>On the fly resize: If you entered 8 (as the first digit of 800) for the vertical size, it crashed depending on the used method (lanczos tap>=4, spline, etc).</li>
     <li>If resize was being used, changes to the pixel aspect ratio (SAR) of the video were ignored.</li>
-    <li>If "Resize & aspect"->"Borders"->"Inside" was used, "Keep original aspect ratio" calculated wrong size.</li>
+    <li>If "Resize & aspect" -> "Borders" -> "Inside" was used, "Keep original aspect ratio" calculated wrong size.</li>
     <li>AviSynth script could not be saved (Unicode builds only).</li>
   </ul>
 
@@ -75,18 +75,18 @@
     <li>Subtitle was gray, even if you selected white.</li>
     <li>Deleting the active and default preset settings caused a crash.</li>
     <li>Flipped NV12 caused either crash or corrupt image.</li>
-    <li>With Media Player Classic's internal Matroska splitter, the aspect ratio was always 1.</li>
+    <li>Using Media Player Classic's internal Matroska splitter, the aspect ratio was always 1.</li>
     <li>When you opened audio configuration dialog during playback, the CPU usage was abnormally high and it sometimes freezed especially on ADPCM audio.</li>
-    <li>When ffdshow connected to DVobSub (VSFilter), ffdshow tried to use YV12 plus width of non-multiple of 8 and ended in crash.</li>
-    <li>When you configured "Resize & aspect"->"Borders"->"Inside"->100%, ffdshow ended in crash.</li>
+    <li>When ffdshow connected to VobSub (VSFilter), ffdshow tried to use YV12 plus width of non-multiple of 8 and ended in crash.</li>
+    <li>When you configured "Resize & aspect" -> "Borders" -> "Inside" -> "100%", ffdshow ended in crash.</li>
     <li>Reconnecting to VMR9 (after resizing) sometimes failed.</li>
-    <li>PowerDVD7 produced a black screen because of a bug in DirectShow filter's connecting code (please remove PowerDVD.exe from "Info & debug"->"Don't use ffdshow in:").</li>
-    <li>When a subtitle unit contained too many lines for the specified space, lines were being dropped.</li>
+    <li>PowerDVD7 produced a black screen because of a bug in DirectShow filter's connecting code (please remove PowerDVD.exe from "Info & debug" -> "Don't use ffdshow in:").</li>
+    <li>If a subtitle unit contained too many lines for the specified space, lines were being dropped.</li>
     <li>The right edges of italic subtitles were cut off. If "fast rendering" was enabled, italic text was sometimes shown as non-italic and vice versa.</li>
-    <li>Some SVQ3 video caused freeze.</li>
-    <li>Changing MKV subtitles channel ended in crash.</li>        
-    <li>Multi-byte characters in Matroska-embedded subtitles were garbled.</li>
-    <li>If noise and resize filters were applied, chroma would become green.</li>
+    <li>Some SVQ3 videos caused freeze.</li>
+    <li>Changing Matroska subtitles track ended in a crash.</li>
+    <li>Multibyte characters in Matroska-embedded subtitles were garbled.</li>
+    <li>If noise and resize filters were applied, chroma became green.</li>
     <li>Explorer.exe crashed on Windows Vista when accessing a folder that contains AVI files.</li>
     <li>Playing or seeking in MPEG1/2 videos using libmpeg2, sometimes produced ugly green artifacts or ended with a crash (libmpeg2).</li>
     <li>Fixed OGG &amp; OGM muxers. Removed FLV &amp; MPEG muxers.</li>
@@ -104,38 +104,38 @@
   <ul class="fixed">
     <li>When you tried to re-encode using Windows Media Encoder, ffdshow audio decoder would cause WME to crash.</li>
     <li>Hardware deinterlacing did not work, when using libmpeg2.</li>
-    <li>AAC was played back too fast that it was not audible. A/V synch was lost.</li>
+    <li>AAC was played back too fast so that it was not audible. A/V synch was lost.</li>
     <li>When you played a video which height was an odd number, it often freezed.</li>
-    <li>If Mixer-headphone virtual spatialization was enabled, it crashed on playback of mono sources.</li>
+    <li>If "Mixer" -> "headphone virtual spatialization" was enabled, it crashed on playback of mono sources.</li>
     <li>When you played an Xvid stream with many consecutive N-VOPs, subtitles were not shown when no new frames were actually being displayed. If there were long consecutive N-VOPs at the end of the file, it closed too early.</li>
-    <li>"Video decoder configuration"->"Output"->"DV" couldn't be unchecked.</li>
+    <li>"Video decoder configuration" -> "Output" -> "DV" couldn't be unchecked.</li>
     <li>If one of the files that needed updating was locked, the installer stopped with an error message.</li>
     <li>Didee's YlevelsG/S/C was not implemented correctly. It was the bright parts of the pictures that saw the most effect of the gamma.</li>
-    <li>ffdshow could not connect to Uncompressed audio input.</li>
+    <li>ffdshow could not connect to uncompressed audio input.</li>
     <li>LPCM output was broken.</li>
     <li>AC3 output was broken.</li>
     <li>DTS was broken with large noise.</li>
     <li>Perspective correction with cubic interpolation crashed if the width of the video was over 768.</li>
     <li>5.1ch Vorbis (libavcodec) was broken.</li>
     <li>When you tried to use ffdshow directshow decoder in PowerDVD, the video was black.</li>
-    <li>If ffdshow was inputing DVD decoder's output as raw video, and if subtitle-file was valid and MPEG2 was disabled, subtitles that were not related to the DVD were shown.</li>
-    <li>If subtitles including video image such as IDX+SUB (vobsub) format were enabled, it crashed where the height of the subtitles was an odd number.</li>
+    <li>If ffdshow got DVD decoder's output inputed as RAW video, the subtitle file was valid and MPEG2 was disabled, subtitles that were not related to the DVD were shown.</li>
+    <li>If subtitles including video image such as IDX+SUB (VOBsub) format were enabled, it crashed where the height of the subtitles was an odd number.</li>
     <li>Convolver, one of the audio filters, crashed when you tried to load impulse file.</li>
-    <li>When you used resize, horizontal lines were sometimes seen ("Resize"->"Settings"->"Accurate rounding").</li>
+    <li>When you used resize, horizontal lines were sometimes seen ("Resize" -> "Settings" -> "Accurate rounding").</li>
     <li>If you used resize after xsharpen, the video was green.</li>
     <li>Stereoscopic subtitle crashed.</li>
-    <li>OSD "CPU Load" did not show correct value in multiprocessor system.</li>
+    <li>OSD item "CPU Load" did not show correct value in multiprocessor system.</li>
     <li>Postprocessing automatic quality control did not work in multiprocessor systems.</li>
     <li>Volume normalization did not work properly.</li>
     <li>DScaler: Video (TomsMoComp) crashed depending on the compiler used for building.</li>
     <li>Overlay control could not load initial value properly.</li>
-    <li>Oblivion, Morrowind (both are games) crashed.</li>
+    <li>Oblivion and Morrowind (both are games) crashed.</li>
     <li>On Windows Vista, codec configuration dialog was broken.</li>
-    <li>If there's an error in avisynth script in ffdshow, the error message was displayed on top of video. The error message still remains after the whole avisynth page was unchecked.</li>
-    <li>The dialog was garbled, if Japanese (UNICODE) was selected for "Tray, dialog &amp; paths" setting (ANSI builds). The problem was that the installer set it by default for Japanese version of Windows.</li>
-    <li>ANSI/MBCS was not processed properly. For example, OSD "Source file" couldn't show last few characters if MBCS was used in the path. It was a security concern.</li>
+    <li>If there was an error in AviSynth script in ffdshow, the error message was displayed on top of video. The error message still remained after the whole AviSynth page was unchecked.</li>
+    <li>The dialog was garbled, if "Tray, dialog &amp; paths" -> "Japanese (Unicode)" was selected (ANSI builds). The problem was that the installer set it by default for Japanese version of Windows.</li>
+    <li>ANSI/MBCS was not processed properly. For example, OSD item "Source file" couldn't show last few characters if MBCS was used in the path. It was a security concern.</li>
     <li>If you used translation of the dialog, content of the dialog was scaled about 130% but the size of the window was not. As a result, you couldn't see the right, hidden part of the dialog (depending on the way to launch the dialog).</li>
-    <li>Subtitles were garbled if "Subtitles"->"Font"->"Fast rendering" was enabled, if you used MBCS on ANSI builds.</li>
+    <li>Subtitles were garbled if "Subtitles" -> "Font" -> "Fast rendering" was enabled and you used MBCS on ANSI builds.</li>
   </ul>
 
   <p class="medium_caption">
@@ -149,7 +149,7 @@
   <ul class="added">
     <li>In "Resize & aspect" dialog, a new check box "Process pixel aspect ratio internally" has been added.</li>
     <li>Resize GUI: "Specify horizontal size" instead of "Specify vertical size 0 for auto".</li>
-    <li>Audio decoder AC3 output: a new check box "Encode only multichannel streams" allows sending multichannel audio (which otherwise cannot be digitally sent) to AV-amp in AC3-SPDIF.</li>
+    <li>Audio decoder AC3 output: the new check box "Encode only multichannel streams" allows sending multichannel audio (which otherwise cannot be digitally sent) to AV-amp in AC3-SPDIF.</li>
   </ul>
 
   <p class="small_caption">
@@ -159,16 +159,16 @@
   <ul class="added">
     <li>Improved subtitle shadow. 3 shadow modes are available: classic, glowing and gradient.</li>
     <li>Management of compatibility issues: "Use ffdshow only in:" option ensures that ffdshow only runs in supported applications.</li>
-    <li>Hardware deinterlacing support for raw video (interlacing related information which was inputed as raw video is being sent to downstream filters).</li>
-    <li>New OSD item "IDCT(libavcodec)" displays which IDCT method is selected.</li>
-    <li>In "Subtitles"->"Search in", extensions priority can be specified.</li>
+    <li>Hardware deinterlacing support for RAW video (interlacing related information which was inputed as RAW video is being sent to downstream filters).</li>
+    <li>New OSD item "IDCT(libavcodec)" displays which IDCT method is used.</li>
+    <li>In "Subtitles" -> "Search in", extensions priority can be specified.</li>
     <li>VC-1 Advanced Profile support (libavcodec can work without external codecs).</li>
     <li>Various WMV and VC-1 content can be played using Microsoft's codec (VC-1 needs external codec or WMP11 installed).</li>
-    <li>x264 encoder re-added and updated.</li>    
+    <li>x264 encoder re-added and updated.</li>
     <li>H.264 MBAFF hardware deinterlacing support.</li>
-    <li>Corrections and new features of the Remote API: presets, subtitles, fast forward/rewind etc.</li>
-    <li>Polish translation</li>
-    <li>Queue: ffdshow now uses VMR9's internal queue.</li>    
+    <li>Corrections and new features of the Remote API: presets, subtitles, fast forward/backward etc.</li>
+    <li>Polish Inno Setup translation</li>
+    <li>Queue: ffdshow now uses VMR9's internal queue.</li>
   </ul>
 
   <p class="small_caption">
@@ -177,14 +177,14 @@
 
   <ul class="added">
     <li>H.264 MBAFF (interlaced format) support.</li>
-    <li>VP6, WavPack (lossless) and several codecs have been added.</li>
+    <li>VP6, WavPack (lossless) and several other codecs have been added.</li>
     <li>VC-1 Advanced Profile support for wmv9lib. You need WMP11 or Microsoft's VC-1 codec.</li>
     <li>The installer can set speaker configuration. It loads the setting of the OS (control panel) as default.</li>
     <li>Queue: Accelerator. It deposits the time when CPU has finished work early and uses the time when delayed.</li>
-    <li>Multithreaded resize: Faster resize on dual-core CPU.</li>
-    <li>Calculate the vertical size automatically when you enter 0 for vertical size ("Resize"->"Specify size"->"New size").</li>
+    <li>Multithreaded resize: Faster resize on multi-core CPUs.</li>
+    <li>Calculates the vertical size automatically when you enter 0 for vertical size ("Resize" -> "Specify size" -> "New size").</li>
     <li>Vorbis: High accuracy mode is enabled for tremor.</li>
-    <li>Quality control is now configurable ("Decoder options"->"Quality control")</li>
+    <li>Quality control is now configurable ("Decoder options" -> "Quality control").</li>
     <li>Show error message if the splitter failed to provide necessary information to decode SVQ3.</li>
     <li>Improved translations.</li>
   </ul>
@@ -200,9 +200,9 @@
   </ul>
 
   <div class="normal">
-    <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>    
-  </div>    
-  
+    <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
+  </div>
+
   <div style="padding-top:20px">
     <a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" /></a>
   </div>

@@ -30,7 +30,7 @@
     <li><a class="nav" href="#performance">Welches Build hat die beste Dekodierleistung?</a></li>
     <li><a class="nav" href="#perf_filters">Welches Build hat die beste Dekodierleistung, wenn Filter verwendet werden?</a></li>
     <li><a class="nav" href="#stable">Welches Build ist das Stabilste?</a></li>
-    <li><a class="nav" href="#multithreaded">Ist ffdshow Multicore-optimiert?</a></li>
+    <li><a class="nav" href="#multithreaded">Ist ffdshow multithreaded?</a></li>
   </ul>
 
   <p class="small_caption">
@@ -101,18 +101,18 @@
   </p>
 
   <p class="small_caption">
-    <a name="multithreaded" id="multithreaded">Ist ffdshow Multicore-optimiert?</a>
+    <a name="multithreaded" id="multithreaded">Ist ffdshow multithreaded?</a>
   </p>
 
   <p class="normal">
-    Die folgende Liste gibt eine &Uuml;bersicht der Teile ffdshows, die Multicore-optimiert sind und somit Verbesserungen zeigen, wenn sie auf einem Multicore-System ausgef&uuml;hrt werden:
+    Die folgende Liste gibt eine &Uuml;bersicht der Teile ffdshows, die multithreaded sind und somit Verbesserungen zeigen, wenn sie auf einem Multicore-System ausgef&uuml;hrt werden:
   </p>
 
   <ul class="normal">
-    <li>Der <em>resize</em>-Filter ist vollst&auml;ndig Multicore-optimiert. Er ist auf Mulicore-Systemen schneller (auf Pentium 4 HT-CPUs ineffektiv) und ben&ouml;tigt hierf&uuml;r keinerlei Konfiguration.</li>
+    <li>Der <em>resize</em>-Filter ist vollst&auml;ndig multithreaded. Er ist auf Mulicore-Systemen schneller (auf Pentium 4 HT-CPUs ineffektiv) und ben&ouml;tigt hierf&uuml;r keinerlei Konfiguration.</li>
     <li>Ist "Queue &amp; misc"-"Queue output samples" markiert, wird Beschleunigung durch Multicoreunterst&uuml;tzung aktiviert, von dessen positivem Effekt man unter Umst&auml;nden selbst auf einem Singlecore CPU profitieren kann.</li>
-    <li>libavcodecs MPEG1/2-Dekoder sind Multicore-optimiert. Es wird effektiv, wenn "Decoder options"-"Number of decoding threads" auf die Zahl der vorhandenen Prozessorkerne gesetzt wird. Diese Einstellung hat keinen Effekt auf Pentium 4 HT-CPUs.</li>
-    <li>libavcodecs MPEG4/MPEG2/MPEG1-Encoder sind Multicore-optimiert.</li>
+    <li>libavcodecs MPEG1/2-Dekoder sind multithreaded. Es wird effektiv, wenn "Decoder options"-"Number of decoding threads" auf die Zahl der vorhandenen Prozessorkerne gesetzt wird. Diese Einstellung hat keinen Effekt auf Pentium 4 HT-CPUs.</li>
+    <li>libavcodecs MPEG4/MPEG2/MPEG1-Encoder sind multithreaded.</li>
   </ul>
 
   <div class="normal">
