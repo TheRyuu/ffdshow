@@ -55,6 +55,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
+				OpenMP="true"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\"
@@ -454,6 +455,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\ac3enc.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\ac3tab.c"
 				>
 			</File>
 			<File
@@ -1187,6 +1192,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\ulti_cb.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\vc1.h"
 				>
 			</File>
 			<File

@@ -131,7 +131,7 @@ void avcodec_register_all(void)
 #ifdef CONFIG_AC3
     register_avcodec(&ac3_decoder);
 #endif
-#ifdef __GNUC__ || __INTEL_COMPILER
+#ifdef __GNUC__
     register_avcodec(&imc_decoder);
     register_avcodec(&ra_144_decoder);
     register_avcodec(&ra_288_decoder);

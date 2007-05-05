@@ -36,7 +36,8 @@
 				WarningLevel="0"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="4"
-				CompileAs="0"/>
+				CompileAs="0"
+				DisableSpecificWarnings="4244;"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -111,7 +112,8 @@
 				ProgramDataBaseFileName=".\Release/"
 				WarningLevel="1"
 				SuppressStartupBanner="TRUE"
-				CompileAs="1"/>
+				CompileAs="1"
+				DisableSpecificWarnings="4244;4005;4002;"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -175,6 +177,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\ac3enc.c">
+			</File>
+			<File
+				RelativePath=".\libavcodec\ac3tab.c">
 			</File>
 			<File
 				RelativePath=".\libavcodec\adpcm.c">
@@ -725,6 +730,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\ulti_cb.h">
+			</File>
+			<File
+				RelativePath=".\libavcodec\vc1.h">
 			</File>
 			<File
 				RelativePath=".\libavcodec\vc1acdata.h">

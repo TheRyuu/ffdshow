@@ -895,13 +895,13 @@ static int atrac3_decode_frame(AVCodecContext *avctx,
     if (q->channels == 1) {
         /* mono */
         for (i = 0; i<1024; i++)
-            samples[i] = av_clip(round(q->outSamples[i]), -32768, 32767);
+            samples[i] = av_clip((int)(q->outSamples[i] + 0.5), -32768, 32767);
         *data_size = 1024 * sizeof(int16_t);
     } else {
         /* stereo */
         for (i = 0; i < 1024; i++) {
-            samples[i*2] = av_clip(round(q->outSamples[i]), -32768, 32767);
-            samples[i*2+1] = av_clip(round(q->outSamples[1024+i]), -32768, 32767);
+            samples[i*2] = av_clip((int)(q->outSamples[i] + 0.5), -32768, 32767);
+            samples[i*2+1] = av_clip((int)(q->outSamples[1024+i] + 0.5), -32768, 32767);
         }
         *data_size = 2048 * sizeof(int16_t);
     }
@@ -1022,14 +1022,20 @@ static int atrac3_decode_init(AVCodecContext *avctx)
     /* Generate the scale factors. */
     for (i=0 ; i<64 ; i++)
         SFTable[i] = pow(2.0, (i - 15) / 3.0);
-
+    #ifdef __GNUC__
     /* Generate gain tables. */
     for (i=0 ; i<16 ; i++)
-        gain_tab1[i] = powf (2.0, (4 - i));
+        gain_tab1[i] = powf(2.0, (4 - i));
 
     for (i=-15 ; i<16 ; i++)
-        gain_tab2[i+15] = powf (2.0, i * -0.125);
+        gain_tab2[i+15] = powf(2.0, i * -0.125);
+    #else
+    for (i=0 ; i<16 ; i++)
+        gain_tab1[i] = pow(2.0, (4 - i));
 
+    for (i=-15 ; i<16 ; i++)
+        gain_tab2[i+15] = pow(2.0, i * -0.125);
+    #endif
     /* init the joint-stereo decoding data */
     q->weighting_delay[0] = 0;
     q->weighting_delay[1] = 7;
@@ -1054,11 +1060,12 @@ static int atrac3_decode_init(AVCodecContext *avctx)
 
 AVCodec atrac3_decoder =
 {
-    .name = "atrac 3",
-    .type = CODEC_TYPE_AUDIO,
-    .id = CODEC_ID_ATRAC3,
-    .priv_data_size = sizeof(ATRAC3Context),
-    .init = atrac3_decode_init,
-    .close = atrac3_decode_close,
-    .decode = atrac3_decode_frame,
+    /*.name =*/ "atrac 3",
+    /*.type =*/ CODEC_TYPE_AUDIO,
+    /*.id =*/ CODEC_ID_ATRAC3,
+    /*.priv_data_size =*/ sizeof(ATRAC3Context),
+    /*.init =*/ atrac3_decode_init,
+    NULL,
+    /*.close =*/ atrac3_decode_close,
+    /*.decode =*/ atrac3_decode_frame,
 };
