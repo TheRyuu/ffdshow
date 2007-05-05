@@ -895,13 +895,13 @@ static int atrac3_decode_frame(AVCodecContext *avctx,
     if (q->channels == 1) {
         /* mono */
         for (i = 0; i<1024; i++)
-            samples[i] = av_clip((int)(q->outSamples[i] + 0.5), -32768, 32767);
+            samples[i] = av_clip(round(q->outSamples[i]), -32768, 32767);
         *data_size = 1024 * sizeof(int16_t);
     } else {
         /* stereo */
         for (i = 0; i < 1024; i++) {
-            samples[i*2] = av_clip((int)(q->outSamples[i] + 0.5), -32768, 32767);
-            samples[i*2+1] = av_clip((int)(q->outSamples[1024+i] + 0.5), -32768, 32767);
+            samples[i*2] = av_clip(round(q->outSamples[i]), -32768, 32767);
+            samples[i*2+1] = av_clip(round(q->outSamples[1024+i]), -32768, 32767);
         }
         *data_size = 2048 * sizeof(int16_t);
     }
@@ -1054,12 +1054,11 @@ static int atrac3_decode_init(AVCodecContext *avctx)
 
 AVCodec atrac3_decoder =
 {
-    /*.name =*/ "atrac 3",
-    /*.type =*/ CODEC_TYPE_AUDIO,
-    /*.id =*/ CODEC_ID_ATRAC3,
-    /*.priv_data_size =*/ sizeof(ATRAC3Context),
-    /*.init =*/ atrac3_decode_init,
-	 NULL,
-    /*.close =*/ atrac3_decode_close,
-    /*.decode =*/ atrac3_decode_frame,
+    .name = "atrac 3",
+    .type = CODEC_TYPE_AUDIO,
+    .id = CODEC_ID_ATRAC3,
+    .priv_data_size = sizeof(ATRAC3Context),
+    .init = atrac3_decode_init,
+    .close = atrac3_decode_close,
+    .decode = atrac3_decode_frame,
 };

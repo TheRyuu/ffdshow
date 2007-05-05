@@ -1,7 +1,7 @@
 CFLAGS+= -I. -I../..
 
 ifneq ($(CC),icl)
-CFLAGS+=-DWIN32 -DARCH_IS_IA32 -DARCH_IS_32BIT
+CFLAGS+=-DARCH_IS_IA32 -DARCH_IS_32BIT
 endif
        
 SRCS_C=decoder.c \

@@ -24,6 +24,8 @@
  * Common code between AC3 encoder and decoder.
  */
 
+#include "ac3tab.h"
+
 #define AC3_MAX_CODED_FRAME_SIZE 3840 /* in bytes */
 #define AC3_MAX_CHANNELS 6 /* including LFE channel */
 
@@ -45,17 +47,38 @@ typedef struct AC3BitAllocParameters {
     int cplfleak, cplsleak;
 } AC3BitAllocParameters;
 
-extern const uint16_t ff_ac3_frame_sizes[38][3];
-extern const uint8_t ff_ac3_channels[8];
-extern const uint16_t ff_ac3_freqs[3];
-extern const uint16_t ff_ac3_bitratetab[19];
-extern const int16_t ff_ac3_window[256];
-extern const uint8_t ff_sdecaytab[4];
-extern const uint8_t ff_fdecaytab[4];
-extern const uint16_t ff_sgaintab[4];
-extern const uint16_t ff_dbkneetab[4];
-extern const int16_t ff_floortab[8];
-extern const uint16_t ff_fgaintab[8];
+/**
+ * @struct AC3HeaderInfo
+ * Coded AC-3 header values up to the lfeon element, plus derived values.
+ */
+typedef struct {
+    /** @defgroup coded Coded elements
+     * @{
+     */
+    uint16_t sync_word;
+    uint16_t crc1;
+    uint8_t fscod;
+    uint8_t frmsizecod;
+    uint8_t bsid;
+    uint8_t bsmod;
+    uint8_t acmod;
+    uint8_t cmixlev;
+    uint8_t surmixlev;
+    uint8_t dsurmod;
+    uint8_t lfeon;
+    /** @} */
+
+    /** @defgroup derived Derived values
+     * @{
+     */
+    uint8_t halfratecod;
+    uint16_t sample_rate;
+    uint32_t bit_rate;
+    uint8_t channels;
+    uint16_t frame_size;
+    /** @} */
+} AC3HeaderInfo;
+
 
 void ac3_common_init(void);
 

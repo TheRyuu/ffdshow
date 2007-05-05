@@ -994,8 +994,3 @@ AVCodec h261_decoder = {
     h261_decode_frame,
     CODEC_CAP_DR1,
 };
-
-
-
-
-

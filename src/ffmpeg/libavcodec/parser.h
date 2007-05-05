@@ -32,7 +32,7 @@ typedef struct ParseContext{
     uint32_t state;             ///< contains the last few bytes in MSB order
     int frame_start_found;
     int overread;               ///< the number of bytes which where irreversibly read from the next frame
-    int overread_index;         ///< the index into ParseContext.buffer of the overreaded bytes
+    int overread_index;         ///< the index into ParseContext.buffer of the overread bytes
     int64_t rtStart;
 } ParseContext;
 

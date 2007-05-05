@@ -378,7 +378,7 @@ static int av_always_inline get_cabac_inline(CABACContext *c, uint8_t * const st
 #define FFBYTE        "16"
 #define BYTEEND     "20"
 #endif
-#if defined(ARCH_X86) && !(defined(PIC) && defined(__GNUC__))
+#if defined(__GNUC__) && defined(ARCH_X86) && !defined(PIC) && defined(CONFIG_7REGS) && defined(HAVE_EBX_AVAILABLE) && !defined(BROKEN_RELOCATIONS)
     int bit;
 
 #ifndef BRANCHLESS_CABAC_DECODER
@@ -534,7 +534,7 @@ static int av_always_inline get_cabac_inline(CABACContext *c, uint8_t * const st
     );
     bit&=1;
 #endif /* BRANCHLESS_CABAC_DECODER */
-#else /* defined(ARCH_X86) && !(defined(PIC) && defined(__GNUC__)) */
+#else /* defined(__GNUC__) && defined(ARCH_X86) && !defined(PIC)&& defined(CONFIG_7REGS) && defined(HAVE_EBX_AVAILABLE) && !defined(BROKEN_RELOCATIONS) */
     int s = *state;
     int RangeLPS= ff_h264_lps_range[2*(c->range&0xC0) + s];
     int bit, lps_mask attribute_unused;
@@ -573,7 +573,7 @@ static int av_always_inline get_cabac_inline(CABACContext *c, uint8_t * const st
     if(!(c->low & CABAC_MASK))
         refill2(c);
 #endif /* BRANCHLESS_CABAC_DECODER */
-#endif /* defined(ARCH_X86) && !(defined(PIC) && defined(__GNUC__)) */
+#endif /* defined(__GNUC__) && defined(ARCH_X86) && !defined(PIC)&& defined(CONFIG_7REGS) && defined(HAVE_EBX_AVAILABLE) && !defined(BROKEN_RELOCATIONS) */
     return bit;
 }
 
@@ -638,7 +638,7 @@ static int get_cabac_bypass(CABACContext *c){
 
 
 static av_always_inline int get_cabac_bypass_sign(CABACContext *c, int val){
-#if defined(ARCH_X86) && !(defined(PIC) && defined(__GNUC__))
+#if defined(__GNUC__) && defined(ARCH_X86) && !defined(PIC)
     asm volatile(
         "movl "RANGE    "(%1), %%ebx            \n\t"
         "movl "LOW      "(%1), %%eax            \n\t"
@@ -686,7 +686,7 @@ static av_always_inline int get_cabac_bypass_sign(CABACContext *c, int val){
 
 //FIXME the x86 code from this file should be moved into i386/h264 or cabac something.c/h (note ill kill you if you move my code away from under my fingers before iam finished with it!)
 //FIXME use some macros to avoid duplicatin get_cabac (cant be done yet as that would make optimization work hard)
-#if defined(ARCH_X86) && !(defined(PIC) && defined(__GNUC__))
+#if defined(__GNUC__) && defined(ARCH_X86) && !defined(PIC) && defined(CONFIG_7REGS) && defined(HAVE_EBX_AVAILABLE) && !defined(BROKEN_RELOCATIONS)
 static int decode_significance_x86(CABACContext *c, int max_coeff, uint8_t *significant_coeff_ctx_base, int *index){
     void *end= significant_coeff_ctx_base + max_coeff - 1;
     int minusstart= -(int)significant_coeff_ctx_base;
@@ -792,7 +792,7 @@ static int decode_significance_8x8_x86(CABACContext *c, uint8_t *significant_coe
     );
     return coeff_count;
 }
-#endif /* defined(ARCH_X86) && !(defined(PIC) && defined(__GNUC__)) */
+#endif /* defined(__GNUC__) && defined(ARCH_X86) && !defined(PIC)&& defined(CONFIG_7REGS) && defined(HAVE_EBX_AVAILABLE) && !defined(BROKEN_RELOCATIONS) */
 
 /**
  *

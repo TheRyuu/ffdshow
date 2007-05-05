@@ -65,7 +65,7 @@
 
 #include "avcodec.h"
 
-#ifdef AMR_NB_FIXED
+#ifdef CONFIG_LIBAMR_NB_FIXED
 
 #define MMS_IO
 
@@ -137,7 +137,7 @@ static void amr_decode_fix_avctx(AVCodecContext * avctx)
     avctx->frame_size = 160 * is_amr_wb;
 }
 
-#ifdef AMR_NB_FIXED
+#ifdef CONFIG_LIBAMR_NB_FIXED
 /* fixed point version*/
 /* frame size in serial bitstream file (frame type + serial stream + flags) */
 #define SERIAL_FRAMESIZE (1+MAX_SERIAL_SIZE+5)

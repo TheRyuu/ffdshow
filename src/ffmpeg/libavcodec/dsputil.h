@@ -200,6 +200,8 @@ typedef struct DSPContext {
     me_cmp_func ildct_cmp[5]; //only width 16 used
     me_cmp_func frame_skip_cmp[5]; //only width 8 used
 
+    int (*ssd_int8_vs_int16)(int8_t *pix1, int16_t *pix2, int size);
+
     /**
      * Halfpel motion compensation with rounding (a+b+1)>>1.
      * this is an array[4][4] of motion compensation functions for 4
@@ -474,6 +476,10 @@ int mm_support(void);
   #define DECLARE_ALIGNED_16(t,v)      __declspec(align(16)) t v
 #endif
 
+#if defined(HAVE_MMX)
+
+#undef emms_c
+
 #define MM_MMX    0x0001 /* standard MMX */
 #define MM_3DNOW  0x0004 /* AMD 3DNOW */
 #define MM_MMXEXT 0x0002 /* SSE integer functions or AMD MMX ext */
@@ -482,10 +488,6 @@ int mm_support(void);
 #define MM_3DNOWEXT  0x0020 /* AMD 3DNowExt */
 #define MM_SSE3   0x0040 /* Prescott SSE3 functions */
 #define MM_SSSE3  0x0080 /* Conroe SSSE3 functions */
-
-#if defined(HAVE_MMX)
-
-#undef emms_c
 
 extern int mm_flags;
 
@@ -586,6 +588,13 @@ void dsputil_init_mmi(DSPContext* c, AVCodecContext *avctx);
 
 void dsputil_init_sh4(DSPContext* c, AVCodecContext *avctx);
 
+#elif defined(ARCH_BFIN)
+
+#define DECLARE_ALIGNED_8(t,v)    t v __attribute__ ((aligned (8)))
+#define STRIDE_ALIGN 8
+
+void dsputil_init_bfin(DSPContext* c, AVCodecContext *avctx);
+
 #else
 
 #define DECLARE_ALIGNED_8(t,v)    t v __attribute__ ((aligned (8)))
@@ -648,11 +657,11 @@ typedef struct MDCTContext {
 
 int ff_mdct_init(MDCTContext *s, int nbits, int inverse);
 void ff_imdct_calc(MDCTContext *s, FFTSample *output,
-               const FFTSample *input, FFTSample *tmp);
+                const FFTSample *input, FFTSample *tmp);
 void ff_imdct_calc_3dn2(MDCTContext *s, FFTSample *output,
-               const FFTSample *input, FFTSample *tmp);
+                        const FFTSample *input, FFTSample *tmp);
 void ff_imdct_calc_sse(MDCTContext *s, FFTSample *output,
-               const FFTSample *input, FFTSample *tmp);
+                       const FFTSample *input, FFTSample *tmp);
 void ff_mdct_calc(MDCTContext *s, FFTSample *out,
                const FFTSample *input, FFTSample *tmp);
 void ff_mdct_end(MDCTContext *s);

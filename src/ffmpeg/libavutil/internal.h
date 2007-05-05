@@ -113,11 +113,6 @@
 #    define snprintf _snprintf
 #    define vsnprintf _vsnprintf
 
-#    ifdef CONFIG_WINCE
-#        define perror(a)
-#        define abort()
-#    endif
-
 /* __MINGW32__ end */
 #elif defined (CONFIG_OS2)
 /* OS/2 EMX */
@@ -183,6 +178,17 @@ extern const uint32_t ff_inverse[256];
             );\
         ret;\
     })
+#elif defined(ARCH_ARMV4L)
+#    define FASTDIV(a,b) \
+    ({\
+        int ret,dmy;\
+        asm volatile(\
+            "umull %1, %0, %2, %3"\
+            :"=&r"(ret),"=&r"(dmy)\
+            :"r"(a),"r"(ff_inverse[b])\
+            );\
+        ret;\
+    })
 #elif defined(CONFIG_FASTDIV)
 #    define FASTDIV(a,b)   ((uint32_t)((((uint64_t)a)*ff_inverse[b])>>32))
 #else
@@ -194,16 +200,16 @@ extern const uint8_t ff_sqrt_tab[128];
 static inline int ff_sqrt(int a)
 {
     int ret=0;
-    int s;
-    int ret_sq=0;
+    int s, b;
 
     if(a<128) return ff_sqrt_tab[a];
 
-    for(s=15; s>=0; s--){
-        int b= ret_sq + (1<<(s*2)) + (ret<<s)*2;
+    for(s=30; s>=0; s-=2){
+        ret+=ret;
+        b= (1+2*ret)<<s;
         if(b<=a){
-            ret_sq=b;
-            ret+= 1<<s;
+            a-=b;
+            ret++;
         }
     }
     return ret;
@@ -251,6 +257,7 @@ if((y)<(x)){\
 #define srand srand_is_forbidden_due_to_state_trashing
 #define sprintf sprintf_is_forbidden_due_to_security_issues_use_snprintf
 #define strcat strcat_is_forbidden_due_to_security_issues_use_pstrcat
+#define exit exit_is_forbidden
 #if !(defined(LIBAVFORMAT_BUILD) || defined(_FRAMEHOOK_H))
 #define printf please_use_av_log
 #define fprintf please_use_av_log
