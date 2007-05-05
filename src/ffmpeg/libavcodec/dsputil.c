@@ -3695,14 +3695,6 @@ static int vsse16_c(/*MpegEncContext*/ void *c, uint8_t *s1, uint8_t *s2, int st
     return score;
 }
 
-static int ssd_int8_vs_int16_c(int8_t *pix1, int16_t *pix2, int size){
-    int score=0;
-    int i;
-    for(i=0; i<size; i++)
-        score += (pix1[i]-pix2[i])*(pix1[i]-pix2[i]);
-    return score;
-}
-
 WARPER8_16_SQ(hadamard8_diff8x8_c, hadamard8_diff16_c)
 WARPER8_16_SQ(hadamard8_intra8x8_c, hadamard8_intra16_c)
 WARPER8_16_SQ(dct_sad8x8_c, dct_sad16_c)
@@ -4082,9 +4074,7 @@ void dsputil_init(DSPContext* c, AVCodecContext *avctx)
     c->w97[0]= w97_16_c;
     c->w97[1]= w97_8_c;
 
-    c->ssd_int8_vs_int16 = ssd_int8_vs_int16_c;
-
-    c->add_bytes= add_bytes_c;
+	c->add_bytes= add_bytes_c;
     c->diff_bytes= diff_bytes_c;
     c->sub_hfyu_median_prediction= sub_hfyu_median_prediction_c;
     c->bswap_buf= bswap_buf;

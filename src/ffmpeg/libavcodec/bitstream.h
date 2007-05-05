@@ -36,13 +36,9 @@
 //#define ALT_BITSTREAM_WRITER
 //#define ALIGNED_BITSTREAM_WRITER
 #if !defined(LIBMPEG2_BITSTREAM_READER) && !defined(A32_BITSTREAM_READER) && !defined(ALT_BITSTREAM_READER)
-#   ifdef ARCH_ARMV4L
-#       define A32_BITSTREAM_READER
-#   else
 #define ALT_BITSTREAM_READER
 //#define LIBMPEG2_BITSTREAM_READER
 //#define A32_BITSTREAM_READER
-#   endif
 #endif
 #define LIBMPEG2_BITSTREAM_READER_HACK //add BERO
 
@@ -166,10 +162,6 @@ typedef struct RL_VLC_ELEM {
     int8_t len;
     uint8_t run;
 } RL_VLC_ELEM;
-
-#if defined(ARCH_SPARC) || defined(ARCH_ARMV4L) || defined(ARCH_MIPS) || defined(ARCH_BFIN)
-#define UNALIGNED_STORES_ARE_BAD
-#endif
 
 /* used to avoid missaligned exceptions on some archs (alpha, ...) */
 #if defined(ARCH_X86)

@@ -178,17 +178,6 @@ extern const uint32_t ff_inverse[256];
             );\
         ret;\
     })
-#elif defined(ARCH_ARMV4L)
-#    define FASTDIV(a,b) \
-    ({\
-        int ret,dmy;\
-        asm volatile(\
-            "umull %1, %0, %2, %3"\
-            :"=&r"(ret),"=&r"(dmy)\
-            :"r"(a),"r"(ff_inverse[b])\
-            );\
-        ret;\
-    })
 #elif defined(CONFIG_FASTDIV)
 #    define FASTDIV(a,b)   ((uint32_t)((((uint64_t)a)*ff_inverse[b])>>32))
 #else
