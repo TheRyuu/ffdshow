@@ -16,17 +16,19 @@
   </a>
 
   <div style="text-align:right" class="smallest_caption">
-    Translation available in:
-    <a class="nav" href="../jp/index.htm"><img src="../images/japan.png" title="Japanese changelog" alt="Japanese changelog" width="27" height="17" />&nbsp;Japanese</a>
+    Translations available in:
+    &nbsp;<a class="nav" href="../en/index.htm"><img src="../images/england.png" title="English changelog" alt="English changelog" width="27" height="17" />&nbsp;English</a>
+    &nbsp;<a class="nav" href="../jp/index.htm"><img src="../images/japan.png" title="Japanese changelog" alt="Japanese changelog" width="27" height="17" />&nbsp;Japanese</a>
   </div>
 
   <p class="big_caption">
     <a name="top" id="top">Changelog</a>
   </p>
 
-  <span class="normal">Diese Liste basiert - mit Ausnahme des Multithreading-Patches - auf der neuesten Revision des originalen Projekts.<br />
+  <p class="normal">Diese Liste basiert - mit Ausnahme des Multithreading-Patches - auf der neuesten Revision des originalen Projekts.<br />
     Navigieren nach:
-  </span>
+  </p>
+  
   <ul class="links">
     <li><a class="nav" href="#fixes">Fehlerkorrekturen</a></li>
     <li><a class="nav" href="#features">Neue Features</a></li>
@@ -71,7 +73,7 @@
     <li>Falls Overlaymixer und YUY2 verwandt wurden, wurde nach einer &Auml;nderung des Seitenverh&auml;ltnisses die H&ouml;he des Bildes halbiert. Dies war h&auml;ufig bei Wiedergabe von DVDs der Fall.</li>
     <li>FFV1-Dekoder st&uuml;rzte bei Verz&ouml;gerung oder Spulen ab.</li>
     <li>FFV1-Enkoder: Die Standardentfernung zwischen Keyframes betrug 250, was zu hoch war und nicht unabh&auml;ngig konfiguriert werden konnte. Neuer Standard ist 10.</li>
-    <li>Wenn NV12 der einzig verf&uuml;gbare Ausgabefarbraum f&uuml;r DirectShow-Dekoder war und "Unkomprimierte Videodaten" f&uuml;r den VfW-Dekoder aktiviert war, st&uuml;rzte der Thumbnailer des Windows Media Player 11 ab.<li>
+    <li>Wenn NV12 der einzig verf&uuml;gbare Ausgabefarbraum f&uuml;r DirectShow-Dekoder war und "Unkomprimierte Videodaten" f&uuml;r den VfW-Dekoder aktiviert war, st&uuml;rzte der Thumbnailer des Windows Media Player 11 ab.</li>
     <li>Untertitel waren grau, selbst wenn wei&szlig; ausgew&auml;hlt war.</li>
     <li>L&ouml;schen der Standardvoreinstellung w&auml;hrend sie aktiv war, l&ouml;ste einen Absturz aus.</li>
     <li>Umgedrehtes NV12 verursachte entweder einen Absturz oder ein defektes Bild.</li>
@@ -79,7 +81,7 @@
     <li>Wenn der Audiokonfigurationsdialog w&auml;hrend der Wiedergabe ge&ouml;ffnet wurde, war die Prozessorauslastung ungew&ouml;hnlich hoch und er ist manchmal - besonders bei ADPCM-Wiedergabe - eingefroren.</li>
     <li>Wenn sich ffdshow mit VobSub (VSFilter) verband, versuchte es YV12 mit einer Breite, die kein Vielfaches von 8 war, zu verwenden und st&uuml;rzte ab.</li>
     <li>Wenn "Gr&ouml;&szlig;e & Seitenverh&auml;ltnis" -> "R&auml;nder" -> "Innen" -> "100%" konfiguriert wurde, st&uuml;rzte ffdshow ab.</li>
-    <li>Widerverbinden zu VMR9 (nach Resizing) schlug manchmal fehl.</li>
+    <li>Wiederverbinden zu VMR9 (nach Resizing) schlug manchmal fehl.</li>
     <li>PowerDVD7 verursachte einen schwarzen Bildschirm, wegen eines Fehlers im Verbindungscode des DirectShow-Filters (bitte entfernen Sie PowerDVD.exe aus "Info & Fehlerbehebung" -> "ffdshow nicht verwenden in:").</li>
     <li>Falls eine Untertiteleinheit zu viele Zeilen f&uuml;r den angegebenen Platz enthielt, wurden Zeilen nicht dargestellt.</li>
     <li>Die rechten Ecken von kursiven Untertiteln waren abgeschnitten. Falls "schnelles Rendering" aktiviert war, wurde kursiver Text manchmal als nicht-kursiv dargestellt und umgekehrt.</li>
@@ -134,7 +136,7 @@
     <li>War ein Fehler im AviSynth-Skript in ffdshow, wurde die Fehlermeldung auf dem Video angezeigt. Sie verblieb dort selbst nachdem die komplette AviSynth-Seite deaktiviert worden war.</li>
     <li>Der Dialog war entstellt, falls "Benachrichtungs- & Dialogeinstellungen" -> "Japanese (Unicode)" ausgew&auml;hlt war (ANSI-Builds). Das Problem war, dass der Installer die Option standardm&auml;&szlig;ig f&uuml;r die japanische Windowsversion setzte.</li>
     <li>ANSI/MBCS wurde nicht korrekt verarbeitet. Das OSD-Element "Quelldatei", zum Beispiel, konnte die letzten paar Zeichen nicht anzeigen, falls MBCS im Pfad verwandt wurde. Es war eine Sicherheitsangelegenheit.</li>
-    <li>If you used translation of the dialog, content of the dialog was scaled about 130% but the size of the window was not. As a result, you couldn't see the right, hidden part of the dialog (depending on the way to launch the dialog).</li>
+    <li>Falls eine lokalisierte Fassung des ffdshow Dialogs verwendet wurde, skalierte der Inhalt des Dialogs auf ca. 130%, aber die Fenstergr&ouml;ße &auml;nderte sich dabei nicht. Infolgedessen waren Teile der rechten Dialogseite nicht mehr sichtbar (abh&auml;ngig davon wie der Dialog ge&ouml;ffnet wurde).</li>
     <li>Untertitel waren entstellt falls "Untertitel" -> "Schriftart" -> "Schnelles Rendering" aktiviert war und MBCS in ANSI-Builds verwandt wurde.</li>
   </ul>
 
