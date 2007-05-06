@@ -299,11 +299,6 @@ static void vp6_parse_coeff(vp56_context_t *s)
         for (coeff_idx=0; coeff_idx<64; ) {
             if ((coeff_idx>1 && ct==0) || vp56_rac_get_prob(c, model2[0])) {
                 /* parse a coeff */
-                if (coeff_idx == 0) {
-                    s->left_block[vp56_b6to4[b]].not_null_dc = 1;
-                    s->above_blocks[s->above_block_idx[b]].not_null_dc = 1;
-                }
-
                 if (vp56_rac_get_prob(c, model2[2])) {
                     if (vp56_rac_get_prob(c, model2[3])) {
                         idx = vp56_rac_get_tree(c, vp56_pc_tree, model);
@@ -331,10 +326,7 @@ static void vp6_parse_coeff(vp56_context_t *s)
             } else {
                 /* parse a run */
                 ct = 0;
-                if (coeff_idx == 0) {
-                    s->left_block[vp56_b6to4[b]].not_null_dc = 0;
-                    s->above_blocks[s->above_block_idx[b]].not_null_dc = 0;
-                } else {
+                if (coeff_idx > 0) {
                     if (!vp56_rac_get_prob(c, model2[1]))
                         break;
 
@@ -349,6 +341,9 @@ static void vp6_parse_coeff(vp56_context_t *s)
             cg = vp6_coeff_groups[coeff_idx+=run];
             model = model2 = s->coeff_model_ract[pt][ct][cg];
         }
+
+        s->left_block[vp56_b6to4[b]].not_null_dc =
+        s->above_blocks[s->above_block_idx[b]].not_null_dc = !!s->block_coeff[b][0];
     }
 }
 
@@ -380,14 +375,6 @@ static int vp6_block_variance(uint8_t *src, int stride)
     return (16*square_sum - sum*sum) >> 8;
 }
 
-static void vp6_filter_hv2(vp56_context_t *s, uint8_t *dst, uint8_t *src,
-                           int stride, int delta, int16_t weight)
-{
-    s->dsp.put_pixels_tab[1][0](dst, src, stride, 8);
-    s->dsp.biweight_h264_pixels_tab[3](dst, src+delta, stride, 2,
-                                       8-weight, weight, 0);
-}
-
 static void vp6_filter_hv4(uint8_t *dst, uint8_t *src, int stride,
                            int delta, const int16_t *weights)
 {
@@ -409,18 +396,8 @@ static void vp6_filter_diag2(vp56_context_t *s, uint8_t *dst, uint8_t *src,
                              int stride, int h_weight, int v_weight)
 {
     uint8_t *tmp = s->edge_emu_buffer+16;
-    int x, xmax;
-
-    s->dsp.put_pixels_tab[1][0](tmp, src, stride, 8);
-    s->dsp.biweight_h264_pixels_tab[3](tmp, src+1, stride, 2,
-                                       8-h_weight, h_weight, 0);
-    /* we need a 8x9 block to do vertical filter, so compute one more line */
-    for (x=8*stride, xmax=x+8; x<xmax; x++)
-        tmp[x] = (src[x]*(8-h_weight) + src[x+1]*h_weight + 4) >> 3;
-
-    s->dsp.put_pixels_tab[1][0](dst, tmp, stride, 8);
-    s->dsp.biweight_h264_pixels_tab[3](dst, tmp+stride, stride, 2,
-                                       8-v_weight, v_weight, 0);
+    s->dsp.put_h264_chroma_pixels_tab[0](tmp, src, stride, 9, h_weight, 0);
+    s->dsp.put_h264_chroma_pixels_tab[0](dst, tmp, stride, 8, 0, v_weight);
 }
 
 static void vp6_filter_diag4(uint8_t *dst, uint8_t *src, int stride,
@@ -492,24 +469,16 @@ static void vp6_filter(vp56_context_t *s, uint8_t *dst, uint8_t *src,
         } else if (!x8) {               /* above or below combine */
             vp6_filter_hv4(dst, src+offset1, stride, stride,
                            vp6_block_copy_filter[select][y8]);
-        } else if ((mv.x^mv.y) >> 31) { /* lower-left or upper-right combine */
-            vp6_filter_diag4(dst, src+offset1-1, stride,
-                             vp6_block_copy_filter[select][x8],
-                             vp6_block_copy_filter[select][y8]);
-        } else {                        /* lower-right or upper-left combine */
-            vp6_filter_diag4(dst, src+offset1, stride,
+        } else {
+            vp6_filter_diag4(dst, src+offset1 + ((mv.x^mv.y)>>31), stride,
                              vp6_block_copy_filter[select][x8],
                              vp6_block_copy_filter[select][y8]);
         }
     } else {
-        if (!y8) {                      /* left or right combine */
-            vp6_filter_hv2(s, dst, src+offset1, stride, 1, x8);
-        } else if (!x8) {               /* above or below combine */
-            vp6_filter_hv2(s, dst, src+offset1, stride, stride, y8);
-        } else if ((mv.x^mv.y) >> 31) { /* lower-left or upper-right combine */
-            vp6_filter_diag2(s, dst, src+offset1-1, stride, x8, y8);
-        } else {                        /* lower-right or upper-left combine */
-            vp6_filter_diag2(s, dst, src+offset1, stride, x8, y8);
+        if (!x8 || !y8) {
+            s->dsp.put_h264_chroma_pixels_tab[0](dst, src+offset1, stride, 8, x8, y8);
+        } else {
+            vp6_filter_diag2(s, dst, src+offset1 + ((mv.x^mv.y)>>31), stride, x8, y8);
         }
     }
 }
@@ -541,6 +510,7 @@ AVCodec vp6_decoder = {
     NULL,
     vp56_free,
     vp56_decode_frame,
+    CODEC_CAP_DR1,
 };
 
 /* flash version, not flipped upside-down */
@@ -553,4 +523,5 @@ AVCodec vp6f_decoder = {
     NULL,
     vp56_free,
     vp56_decode_frame,
+    CODEC_CAP_DR1,
 };

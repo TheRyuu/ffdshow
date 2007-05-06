@@ -25,8 +25,6 @@
  * @author Stefan Gehrer <stefan.gehrer@gmx.de>
  */
 
-#define CONFIG_CAVSVIDEO_PARSER
-
 #include "avcodec.h"
 #include "bitstream.h"
 #include "golomb.h"
@@ -1293,7 +1291,6 @@ static void init_top_lines(AVSContext *h) {
 
 static int decode_seq_header(AVSContext *h) {
     MpegEncContext *s = &h->s;
-    extern const AVRational ff_frame_rate_tab[];
     int frame_rate_code;
 
     h->profile =         get_bits(&s->gb,8);
@@ -1353,7 +1350,7 @@ static int cavs_decode_frame(AVCodecContext * avctx,void *data, int *data_size,
             return FFMAX(0, buf_ptr - buf - s->parse_context.last_index);
         input_size = (buf_end - buf_ptr)*8;
         switch(stc) {
-        case SEQ_START_CODE:
+        case CAVS_START_CODE:
             init_get_bits(&s->gb, buf_ptr, input_size);
             decode_seq_header(h);
             break;

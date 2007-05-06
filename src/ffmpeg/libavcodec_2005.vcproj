@@ -918,6 +918,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\vc1data.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\vc1dsp.c"
 				>
 			</File>

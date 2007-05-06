@@ -36,16 +36,6 @@
 //#include <assert.h>
 
 
-/* Start codes. */
-#define SEQ_END_CODE            0x000001b7
-#define SEQ_START_CODE          0x000001b3
-#define GOP_START_CODE          0x000001b8
-#define PICTURE_START_CODE      0x00000100
-#define SLICE_MIN_START_CODE    0x00000101
-#define SLICE_MAX_START_CODE    0x000001af
-#define EXT_START_CODE          0x000001b5
-#define USER_START_CODE         0x000001b2
-
 #define DC_VLC_BITS 9
 #define MV_VLC_BITS 9
 #define MBINCR_VLC_BITS 9
@@ -3053,7 +3043,7 @@ static void mpeg_decode_gop(AVCodecContext *avctx,
  * finds the end of the current frame in the bitstream.
  * @return the position of the first byte of the next frame, or -1
  */
-static int mpeg1_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size,int64_t *rtStart)
+int ff_mpeg1_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size, int64_t *rtStart)
 {
     int i;
     uint32_t state= pc->state;
@@ -3116,7 +3106,7 @@ static int mpeg_decode_frame(AVCodecContext *avctx,
     }
 
     if(s2->flags&CODEC_FLAG_TRUNCATED){
-        int next = mpeg1_find_frame_end(&s2->parse_context, buf, buf_size, avctx->parserRtStart);
+        int next = ff_mpeg1_find_frame_end(&s2->parse_context, buf, buf_size, avctx->parserRtStart);
 
         if( ff_combine_frame(&s2->parse_context, next, &buf, &buf_size) < 0 )
             return buf_size;

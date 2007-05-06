@@ -3434,7 +3434,7 @@ b= t;
     }
 }
 
-static void av_always_inline hl_decode_mb_internal(H264Context *h, int simple){
+static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple){
     MpegEncContext * const s = &h->s;
     const int mb_x= s->mb_x;
     const int mb_y= s->mb_y;
@@ -5913,7 +5913,7 @@ static int decode_cabac_mb_mvd( H264Context *h, int list, int n, int l ) {
     return get_cabac_bypass_sign( &h->cabac, -mvd );
 }
 
-static int inline get_cabac_cbf_ctx( H264Context *h, int cat, int idx ) {
+static inline int get_cabac_cbf_ctx( H264Context *h, int cat, int idx ) {
     int nza, nzb;
     int ctx = 0;
 
@@ -6050,7 +6050,7 @@ static int decode_cabac_residual( H264Context *h, DCTELEM *block, int cat, int n
             index[coeff_count++] = last;\
         }
         const uint8_t *sig_off = significant_coeff_flag_offset_8x8[MB_FIELD];
-#if defined(ARCH_X86) && !defined(PIC) && defined(CONFIG_7REGS) && defined(HAVE_EBX_AVAILABLE) && !defined(BROKEN_RELOCATIONS)
+#if defined(ARCH_X86) && defined(CONFIG_7REGS) && defined(HAVE_EBX_AVAILABLE) && !defined(BROKEN_RELOCATIONS)
         coeff_count= decode_significance_8x8_x86(CC, significant_coeff_ctx_base, index, sig_off);
     } else {
         coeff_count= decode_significance_x86(CC, max_coeff, significant_coeff_ctx_base, index);
@@ -6126,7 +6126,7 @@ static int decode_cabac_residual( H264Context *h, DCTELEM *block, int cat, int n
     return 0;
 }
 
-static void inline compute_mb_neighbors(H264Context *h)
+static inline void compute_mb_neighbors(H264Context *h)
 {
     MpegEncContext * const s = &h->s;
     const int mb_xy  = s->mb_x + s->mb_y*s->mb_stride;
