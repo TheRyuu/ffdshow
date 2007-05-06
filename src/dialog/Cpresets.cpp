@@ -398,7 +398,3 @@ TpresetsPageAudio::TpresetsPageAudio(TffdshowPageDec *Iparent):TpresetsPage(Ipar
 {
  autoDlgCreate=TpresetAutoloadDlgAudio::create;
 }
-const char_t* TpresetsPageAudio::dialogName(void)
-{
- return _(-IDD_PRESETS,_l("Audio settings"));
-}

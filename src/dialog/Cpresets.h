@@ -41,7 +41,6 @@ class TpresetsPageAudio :public TpresetsPage
 {
 public:
  TpresetsPageAudio(TffdshowPageDec *Iparent);
- virtual const char_t* dialogName(void);
 };
 
 #endif

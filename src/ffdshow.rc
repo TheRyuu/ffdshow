@@ -2992,7 +2992,7 @@ BEGIN
     IDD_CODECS              "Codecs"
     IDD_INFO                "Info & debug"
     IDD_DECODEROPTIONS      "Decoder options"
-    IDD_PRESETS             "Image settings"
+    IDD_PRESETS             "Preset settings"
     IDD_POSTPROC            "Postprocessing"
     IDD_QUEUE               "Queue & misc"
     IDD_PICTPROP            "Picture properties"
