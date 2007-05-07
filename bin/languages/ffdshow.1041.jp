@@ -604,7 +604,7 @@ indeterminate state - first try overlay, then use fallback format=ビデオレンダラ
 1952=ミリ秒
 
 [119]
-0=画像の設定
+0=プロファイル / プリセット設定
 1016=新規
 1044=削除
 1045=リネーム
@@ -1688,7 +1688,6 @@ Use \n for line breaks.=改行には\nを使用します。
 
 [275]
 0=効果なし：使用中のビデオレンダラはキューをサポートしていません。
-
 
 [288]
 0=1. ffdshow video decoderについて\r\n\r\nffdshowはDivX動画を展開するためのDirectShowデコーディングフィルターです。\r\nffmpegプロジェクトのlibavcodecや、映像展開に(XviDコーデックがインストールされていればxvid.dllも使用します)、および低ビットレートの動画のビジュアルクオリティを高めるためにmplayerのポストプロセッシングコードを使用します。\r\nGPLのMPEG4エンコーダーの非営利的な実装である、XviDオリジナルのDirectShowフィルターに基づいています。\r\n\r\n2. 特徴\r\n\r\n- 最適化されたMMX、SSEや3DNow!コードを使用する高速な映像展開\r\n- さまざまなコーデックのサポート : XviDや全てのバージョンのDivX\r\n- MSMPEG4 V1、MSMPEG4 V2、MSMPEG4 V3やH.263の付加的サポート\r\n- MPEG1やMPEG2のような他のデコーダーの包括的なポストプロセッシングフィルターとしての機能\r\n- より高い再生クオリティのための画像のポストプロセッシング\r\n- 自動クオリティコントロール : CPU負荷が高い場合はポストプロセッシングレベルを自動的に減らします\r\n- 色あい、色の濃さや輝度の補正(MMXに最適化されています)\r\n- 2つのシャープ化フィルター : xsharpenとunsharp mask\r\n- ぼかしと時間軸スムーザー\r\n- メニューつきのトレイアイコンと設定ダイアログへのクイックアクセス\r\n- 選択可能な2つのアルゴリズムによるノイズ\r\n- リサイズとアスペクト比率の変更\r\n- 字幕\r\n- 完全にフリーのソフトウェア : ffdshowはGPLに基づいて配布されます\r\n\r\n3. 設定\r\n\r\nそのうち記される予定です。\r\n\r\n4. ウェブリンク\r\n\r\nffdshow\r\n  http://cutka.szm.sk/ffdshow/ あるいは \r\n  http://sourceforge.net/projects/ffdshow/\r\nXviD\r\n  http://www.xvid.org/\r\nffmpeg\r\n  http://ffmpeg.org/\r\nlibmpeg2\r\n  http://libmpeg2.sourceforge.net/\r\nmplayer\r\n  http://www.mplayerhq.hu/\r\nDVD2AVI\r\n  http://arbor.ee.ntu.edu.tw/~jackei/dvd2avi/\r\nxsharpen、unsharp mask、msharpen、色あいや色の濃さに関するコード\r\n  http://sauron.mordor.net/dgraft/index.html\r\n\r\nそして\r\nDoom9\r\n  http://www.doom9.org/\r\n\r\n5. コピー\r\n\r\n使用された全てのソース(使用CPUの検出ルーティンを除く)とffdshowはGPLに基づいて配布されます。\r\ncopying.txtを参照してください。\r\n\r\n\r\nMilan Cutka (milan_cutka@yahoo.com)
