@@ -318,7 +318,7 @@ STDMETHODIMP_(LRESULT) Tffvfw::decRun(void *icd0)
    if ((colorspace=getBMPcolorspace(icd->lpbiOutput,autoforcedcolorspaces.decGetForcedCsp(decVFW)))==FF_CSP_NULL)
     return ICERR_UNSUPPORTED;
    if (colorspace&FF_CSP_RGB16) colorspace=(colorspace&~FF_CSP_RGB16)|FF_CSP_RGB15;
-   if (sign(icd->lpbiInput->biHeight)!=sign(icd->lpbiOutput->biHeight))
+   if (sign(icd->lpbiInput->biHeight)!=sign(icd->lpbiOutput->biHeight) && !csp_isYUVpacked(colorspace))
     colorspace^=FF_CSP_FLAGS_VFLIP;
   }
  else
