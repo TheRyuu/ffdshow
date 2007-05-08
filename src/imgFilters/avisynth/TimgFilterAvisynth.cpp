@@ -189,6 +189,8 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TffPict &pi
   }
  pict.rtStart=fpsscaleNum*pict.rtStart/fpsscaleDen;
  pict.rtStop=fpsscaleNum*pict.rtStop/fpsscaleDen;
+ if (csp_isRGB_RGB(pict.csp))
+  pict.csp^=FF_CSP_FLAGS_VFLIP;
 }
 
 //===================================== TimgFilterAvisynth =====================================
