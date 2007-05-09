@@ -29,6 +29,7 @@
 #include "bitstream.h"
 #include "golomb.h"
 #include "mpegvideo.h"
+#include "cavs.h"
 #include "cavsdata.h"
 
 typedef struct {

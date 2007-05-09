@@ -19,7 +19,7 @@
  * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
-#include "avcodec.h"
+
 #include "parser.h"
 
 /*****************************************************/
@@ -28,7 +28,7 @@
  * combines the (truncated) bitstream to a complete frame
  * @returns -1 if no complete frame could be created
  */
-int ff_combine_frame(ParseContext *pc, int next, uint8_t **buf, int *buf_size)
+int ff_combine_frame(ParseContext *pc, int next, const uint8_t **buf, int *buf_size)
 {
 #if 0
     if(pc->overread){

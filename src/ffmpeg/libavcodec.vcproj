@@ -278,6 +278,9 @@
 				RelativePath=".\libavcodec\h263.c">
 			</File>
 			<File
+				RelativePath=".\libavcodec\h263_parser.c">
+			</File>
+			<File
 				RelativePath=".\libavcodec\h263dec.c">
 			</File>
 			<File
@@ -643,6 +646,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\h261data.h">
+			</File>
+			<File
+				RelativePath=".\libavcodec\h263_parser.h">
 			</File>
 			<File
 				RelativePath=".\libavcodec\h263data.h">
