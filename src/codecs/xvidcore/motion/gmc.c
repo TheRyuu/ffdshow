@@ -48,7 +48,7 @@ static uint32_t __inline
 log2bin(uint32_t value)
 {
 /* Changed by Chenm001 */
-#if !defined(_MSC_VER)
+#if !defined(_MSC_VER) || defined(WIN64)
   int n = 0;
 
   while (value) {
