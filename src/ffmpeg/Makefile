@@ -120,6 +120,7 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/wnv1.c \
       $(LAVC_DIR)/xl.c \
       $(LAVC_DIR)/zmbv.c \
+      $(LAVC_DIR)/xiph.c \
 	\
       $(LAVF_DIR)/cutils.c \
 	\

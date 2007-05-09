@@ -589,6 +589,9 @@
 			<File
 				RelativePath=".\libavcodec\zmbv.c">
 			</File>
+			<File
+				RelativePath=".\libavcodec\xiph.c">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -772,6 +775,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\wmadata.h">
+			</File>
+			<File
+				RelativePath=".\libavcodec\xiph.h">
 			</File>
 		</Filter>
 		<Filter
