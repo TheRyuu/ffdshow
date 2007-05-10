@@ -671,8 +671,6 @@ HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
    lastTime=clock();
    m_IsOldVideoRenderer= IsOldRenderer();
    isQueue=isQueue && !m_IsOldVideoRenderer;
-
-   assignThreadToProcessor();
   }
 
  long srcLength;
@@ -1489,35 +1487,6 @@ void TffdshowDecVideo::setSampleSkipped(bool sendSkip)
  //DPRINTF(_l("dropframe"));
  m_bSampleSkipped=TRUE;
  if (sendSkip && inpin) inpin->setSampleSkipped();
-}
-
-void TffdshowDecVideo::assignThreadToProcessor(void)
-{
- if(CPUcount()==1)
-  {
-   SetThreadPriority(m_pOutputDecVideo->queue->GetWorkerThread(), THREAD_PRIORITY_ABOVE_NORMAL);
-   return;
-  }
-
- OSVERSIONINFO osvi;
- osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
- GetVersionEx (&osvi);
- if(osvi.dwPlatformId != VER_PLATFORM_WIN32_NT || osvi.dwMajorVersion < 4) // Only Windows NT 4.0 or later NT series can SetThreadIdealProcessor
-  return;
-
- DWORD currentProcessor;
- DWORD anotherProcessor;
-
- currentProcessor= SetThreadIdealProcessor(GetCurrentThread(), MAXIMUM_PROCESSORS); // see if it is assigned
- if(currentProcessor==MAXIMUM_PROCESSORS)  // not assigned yet
-  {
-   currentProcessor= 0;
-   DWORD result= SetThreadIdealProcessor(GetCurrentThread(), currentProcessor);
-  }
- anotherProcessor= currentProcessor+1;
- if(anotherProcessor>=CPUcount())
-  anotherProcessor= 0;
- SetThreadIdealProcessor(m_pOutputDecVideo->queue->GetWorkerThread(), anotherProcessor);
 }
 
 int TffdshowDecVideo::IsQueueListedApp(const char_t *exe)

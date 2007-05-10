@@ -470,7 +470,6 @@ private:
  template<class Tinterface> Tinterface* getDecVideoInterface(void);
 protected:
  TffdshowDecVideoOutputPin *m_pOutputDecVideo;
- void assignThreadToProcessor(void);
  int IsQueueListedApp(const char_t *exe);
  HRESULT Receive(IMediaSample *pSample);
  virtual void getMinMax(int id,int &min,int &max);
