@@ -57,7 +57,6 @@ int Tconfig::cpu_flags=0,Tconfig::available_cpu_flags=0,Tconfig::lavc_cpu_flags=
 int Tconfig::cache_line=32;
 Tconfig::Tfastmemcpy* Tconfig::fastmemcpy=memcpy;
 
-#ifndef WIN64
 extern "C"
 {
  // cpu_flag detection helper functions
@@ -67,7 +66,6 @@ extern "C"
  extern void sse3_os_trigger(void);
  extern void ssse3_os_trigger(void);
 }
-#endif
 
 Tconfig::Tconfig(TintStrColl *Icoll):Toptions(Icoll),htmlcolors(NULL)
 {
@@ -169,7 +167,6 @@ void Tconfig::save(void)
   }
 }
 
-#ifndef WIN64
  #ifdef __GNUC__
   #include <signal.h>
   #include <setjmp.h>
@@ -207,13 +204,11 @@ void Tconfig::save(void)
     return 0;
    }
  #endif
-#endif
 
 void Tconfig::initCPU(int allowed_cpu_flags)
 {
  if (available_cpu_flags==0)
   {
-   #ifndef WIN64
    #ifndef __GNUC__
    available_cpu_flags=check_cpu_features();
    if ((available_cpu_flags&FF_CPU_SSE) && sigill_check(sse_os_trigger))
@@ -230,12 +225,9 @@ void Tconfig::initCPU(int allowed_cpu_flags)
                        (IsProcessorFeaturePresent(PF_XMMI_INSTRUCTIONS_AVAILABLE)?FF_CPU_SSE:0)|
                        (IsProcessorFeaturePresent(PF_XMMI64_INSTRUCTIONS_AVAILABLE)?FF_CPU_SSE2:0);
    /*Vista only        (IsProcessorFeaturePresent(PF_SSE3_INSTRUCTIONS_AVAILABLE)?FF_CPU_SSE3:0);*/
-   /*TODO: Add cpuid for x64*/
    /*For MinGW GCC 4.0.x compiled version of ffdshow.ax*/
-   /*available_cpu_flags|=FF_CPU_MMX|FF_CPU_MMXEXT|FF_CPU_SSE;*/
    #ifdef __INTEL_COMPILER
    available_cpu_flags|=FF_CPU_MMX|FF_CPU_MMXEXT;
-   #endif
    #endif
    #endif
    cpu_flags=available_cpu_flags&allowed_cpu_flags;

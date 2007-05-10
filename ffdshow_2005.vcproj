@@ -57,7 +57,7 @@
 				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="DEBUG,_DEBUG;WIN32;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;UCLIBCPP;_WIN32_WINNT=0x0400"
+				PreprocessorDefinitions="DEBUG,_DEBUG;WIN32;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;UCLIBCPP"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="false"
@@ -289,7 +289,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;_WIN32_WINNT=0x0400"
+				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP"
 				StringPooling="true"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -522,7 +522,7 @@
 				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="DEBUG,_DEBUG;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;_WIN32_WINNT=0x0400"
+				PreprocessorDefinitions="DEBUG,_DEBUG;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="false"
@@ -636,7 +636,7 @@
 				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="DEBUG,_DEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP"
+				PreprocessorDefinitions="DEBUG;_DEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="false"
@@ -756,7 +756,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;_WIN32_WINNT=0x0400"
+				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP"
 				StringPooling="true"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -1113,13 +1113,6 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="yasm"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release|x64"
 					ExcludedFromBuild="true"
 					>
@@ -1141,6 +1134,82 @@
 					>
 					<Tool
 						Name="yasm"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\src\cpuid64.asm"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="yasm"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="yasm assembling $(InputPath)"
+						CommandLine="yasm -f win64 -DPREFIX -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						Outputs="$(IntDir)\$(InputName).obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="yasm"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="yasm assembling $(InputPath)"
+						CommandLine="yasm -f win64 -DPREFIX -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						Outputs="$(IntDir)\$(InputName).obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug Unicode|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="yasm"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug Unicode|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="yasm assembling $(InputPath)"
+						CommandLine="yasm -f win64 -DPREFIX -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						Outputs="$(IntDir)\$(InputName).obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release Unicode|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="yasm"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release Unicode|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="yasm assembling $(InputPath)"
+						CommandLine="yasm -f win64 -DPREFIX -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
 			</File>
@@ -1314,13 +1383,6 @@
 				<FileConfiguration
 					Name="Debug|x64"
 					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="yasm"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
 					>
 					<Tool
 						Name="yasm"
@@ -2429,13 +2491,6 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="yasm"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release|x64"
 					ExcludedFromBuild="true"
 					>
@@ -2512,13 +2567,6 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="yasm"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release|x64"
 					ExcludedFromBuild="true"
 					>
@@ -2549,13 +2597,6 @@
 				<FileConfiguration
 					Name="Debug|x64"
 					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="yasm"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
 					>
 					<Tool
 						Name="yasm"
@@ -2680,13 +2721,6 @@
 				<FileConfiguration
 					Name="Debug|x64"
 					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="yasm"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
 					>
 					<Tool
 						Name="yasm"
@@ -7141,13 +7175,6 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="yasm"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release|x64"
 					ExcludedFromBuild="true"
 					>
@@ -7254,13 +7281,6 @@
 				<FileConfiguration
 					Name="Debug|x64"
 					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="yasm"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
 					>
 					<Tool
 						Name="yasm"

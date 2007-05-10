@@ -438,8 +438,11 @@ class VideoFrame {
 
   VideoFrame(VideoFrameBuffer* _vfb, int _offset, int _pitch, int _row_size, int _height, int pixel_type);
   VideoFrame(VideoFrameBuffer* _vfb, int _offset, int _pitch, int _row_size, int _height, int _offsetU, int _offsetV, int _pitchUV, int _row_sizeUV, int _heightUV, int pixel_type);
-
+#ifndef WIN64
   void* operator new(unsigned size);
+#else
+  void* operator new(size_t size);
+#endif
 // TESTME: OFFSET U/V may be switched to what could be expected from AVI standard!
 public:
   int GetPitch() const { return pitch; }

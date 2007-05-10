@@ -162,6 +162,7 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
 
    deci->lock(IDFF_lockDScaler);
    // DI_TomsMoComp changes ebx
+#ifndef WIN64
 #ifdef __GNUC__
     asm volatile("push %ebx");
 #else
@@ -169,13 +170,16 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
     push ebx
    }
 #endif
+#endif
    flt->fm->pfnAlgorithm(&di);
+#ifndef WIN64
 #ifdef __GNUC__
     asm volatile("pop %ebx");
 #else
    _asm{
     pop ebx
    }
+#endif
 #endif
    deci->unlock(IDFF_lockDScaler);
    di.PictureHistory[0]->IsFirstInSeries=0;
