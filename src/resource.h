@@ -97,15 +97,23 @@
 #define IDD_QUANT_TABLES_BASE           225
 #define IDD_SECONDPASS                  226
 #define IDD_PERFECT                     227
+#define IDB_MODERN_ICON_XP              227
 #define IDD_GENERIC_WMV9                228
 #define IDD_PRESETSENC                  230
+#define IDB_CLASSIC_ICON_XP             230
 #define IDD_OUTCSPS                     231
+#define IDI_MODERN_ICON_V               231
 #define IDD_GENERIC_LJPEG               232
+#define IDI_MODERN_ICON_A               232
 #define IDD_HIDESHOW                    233
+#define IDI_MODERN_ICON_E               233
 #define IDD_MASKING_SKAL                234
 #define IDD_ME_SKAL                     235
+#define IDI_MODERN_4BIT_ICON_V          235
 #define IDD_FREEVERB                    236
+#define IDI_MODERN_4BIT_ICON_A          236
 #define IDD_RESAMPLE                    237
+#define IDI_MODERN_4BIT_ICON_E          237
 #define IDD_ME_X264                     238
 #define IDD_DEINTERLACE_TOMSMOCOMP      239
 #define IDD_DEINTERLACE_FRAMEDBL        240
@@ -1720,6 +1728,10 @@
 #define IDC_CHB_ALLOW_SSSE3             2013
 #define IDC_CHB_ALLOW_3DNOW             2014
 #define IDC_CHB_ALLOW_3DNOWEXT          2015
+#define IDC_RBT_ICON_NONE               2016
+#define IDC_RBT_ICON_MODERN             2017
+#define IDC_RBT_ICON_CLASSIC            2018
+#define IDC_TXT_TRAYICON                2019
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -1734,9 +1746,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        225
+#define _APS_NEXT_RESOURCE_VALUE        238
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2016
+#define _APS_NEXT_CONTROL_VALUE         2020
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

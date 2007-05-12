@@ -1073,3 +1073,15 @@ TinfoBase* TffdshowDecAudio::createInfo(void)
 {
  return new TinfoDecAudio(this);
 }
+
+int TffdshowDecAudio::get_trayIconType(void)
+{
+ switch (globalSettings->trayIconType)
+  {
+   case 2: return IDI_FFDSHOWAUDIO;
+   case 0:
+   case 1:
+   default:
+   return IDI_MODERN_ICON_A;
+  }
+}

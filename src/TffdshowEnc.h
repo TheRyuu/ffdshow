@@ -149,6 +149,7 @@ protected:
  TffdshowVideoInputPin *inpin;
  REFERENCE_TIME ft1,ft2;
  bool fileout;
+ STDMETHODIMP_(int) get_trayIconType(void);
 public:
  static const AMOVIESETUP_MEDIATYPE inputMediaTypes[],outputMediaTypes[];
  static const AMOVIESETUP_PIN pins[];

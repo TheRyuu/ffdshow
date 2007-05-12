@@ -225,7 +225,7 @@ void TtrayIconBase::init(void)
  nid.hWnd=h;
  nid.uID=TRAYICON;
  nid.uFlags=NIF_ICON|NIF_TIP|NIF_MESSAGE;//|(nid.cbSize==sizeof(nid)?NIF_INFO:0);
- nid.hIcon=LoadIcon(hi,MAKEINTRESOURCE(icon));
+ nid.hIcon=(HICON)LoadImage(hi,MAKEINTRESOURCE(icon),IMAGE_ICON,16,16,LR_DEFAULTCOLOR);
  nid.uCallbackMessage=MSG_TRAYICON;
  strcpy(nid.szTip,tip);
 }
@@ -415,7 +415,12 @@ TtrayIconDecVideo::TtrayIconDecVideo(IffdshowBase *Ideci):TtrayIconDec(Ideci),de
 {
  tsprintf(classname,mode&IDFF_FILTERMODE_VIDEORAW?_l("ffdshowraw_tray_%i"):_l("ffdshow_tray_%i"),rand()%1000);
  tip=mode&IDFF_FILTERMODE_VIDEORAW?_l("ffdshow video decoder raw"):_l("ffdshow video decoder");
- icon=IDI_FFDSHOW;
+ icon=IDI_MODERN_ICON_V;
+ if (cfgGet(IDFF_trayIconType)==2)
+  icon=IDI_FFDSHOW;
+ else
+  if (!Tconfig::get_trayIconFullColorOS())
+   icon=IDI_MODERN_4BIT_ICON_V;
  setThreadName(DWORD(-1),"trayDecVideo");
 }
 
@@ -517,7 +522,12 @@ TtrayIconDecAudio::TtrayIconDecAudio(IffdshowBase *Ideci):TtrayIconDec(Ideci),de
 {
  tsprintf(classname,mode&IDFF_FILTERMODE_AUDIORAW?_l("ffdshowaudioraw_tray_%i"):_l("ffdshowaudio_tray_%i"),rand()%1000);
  tip=mode&IDFF_FILTERMODE_AUDIORAW?_l("ffdshow raw audio decoder"):_l("ffdshow audio decoder");
- icon=IDI_FFDSHOWAUDIO;
+ icon=IDI_MODERN_ICON_A;
+ if (cfgGet(IDFF_trayIconType)==2)
+  icon=IDI_FFDSHOWAUDIO;
+ else
+  if (!Tconfig::get_trayIconFullColorOS())
+   icon=IDI_MODERN_4BIT_ICON_A;
  setThreadName(DWORD(-1),"trayDecAudio");
 }
 HMENU TtrayIconDecAudio::createMenu(int &ord)
@@ -562,7 +572,12 @@ TtrayIconEnc::TtrayIconEnc(IffdshowBase *Ideci):TtrayIconBase(Ideci),deciE(Ideci
 {
  tsprintf(classname,_l("ffdshowEnc_tray_%i"),rand()%1000);
  tip=_l("ffdshow video encoder");
- icon=IDI_FFVFW;
+ icon=IDI_MODERN_ICON_E;
+ if (cfgGet(IDFF_trayIconType)==2)
+  icon=IDI_FFVFW;
+ else
+  if (!Tconfig::get_trayIconFullColorOS())
+   icon=IDI_MODERN_4BIT_ICON_E;
  setThreadName(DWORD(-1),"trayEnc");
 }
 LRESULT TtrayIconEnc::processTrayMsg(HWND hwnd,WPARAM wprm,LPARAM lprm)

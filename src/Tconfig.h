@@ -41,6 +41,7 @@ public:
  static int available_cpu_flags,cpu_flags,lavc_cpu_flags,sws_cpu_flags; //suppose that CPU capabilities won't change per instance
  static void initCPU(int allowedCpuFlags);
  static DWORD getCPUcount(void);
+ static int get_trayIconFullColorOS(void);
  typedef void* (__cdecl Tfastmemcpy)(void * to, const void * from, size_t len);
  static Tfastmemcpy *fastmemcpy;
  static int cache_line;

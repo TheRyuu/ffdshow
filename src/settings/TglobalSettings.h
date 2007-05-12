@@ -32,7 +32,7 @@ public:
 
  virtual void load(void);
  virtual void save(void);
- int trayIcon,trayIconExt;
+ int trayIcon,trayIconType,trayIconExt,trayIconChanged;
 
  int outputdebug;
  int outputdebugfile;char_t debugfile[MAX_PATH];

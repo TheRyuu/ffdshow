@@ -540,6 +540,7 @@ private:
  int dvdproc;bool allowOutChange;
  bool outOverlayMixer,outOldRenderer,outdv;
  int hwDeinterlace;
+ STDMETHODIMP_(int) get_trayIconType(void);
 public:
  enum DOWNSTREAM_FILTER_TYPE
   {

@@ -584,24 +584,29 @@ STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | DS_CENTER | WS_CHILD
 EXSTYLE WS_EX_CONTROLPARENT
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "Tray icon",IDC_GRP_TRAYICON,0,0,266,39
-    CONTROL         "Show tray icon",IDC_CHB_TRAYICON,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,11,125,8
-    CONTROL         "Extended info",IDC_CHB_TRAYICONEXT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,133,11,115,8
+    GROUPBOX        "Tray icon",IDC_GRP_TRAYICON,0,0,266,55
+    CONTROL         "Extended info",IDC_CHB_TRAYICONEXT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,30,115,8
     CONTROL         "Add tray icon menu to player's stream/languages menu",IDC_CHB_STREAMSMENU,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,24,242,8
-    GROUPBOX        "Configuration dialog",IDC_GRP_CFGDLG,0,40,266,44
-    CONTROL         "Restore position",IDC_CHB_DLG_RESTOREPOS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,52,125,8
-    CONTROL         "Show hints",IDC_CHB_DLG_SHOWHINTS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,133,52,115,8
-    LTEXT           "Language:",IDC_LBL_LANG,5,67,35,8
-    COMBOBOX        IDC_CBX_LANG,52,65,205,135,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    GROUPBOX        "Paths",IDC_GRP_PATHS,0,85,266,42
-    LTEXT           "ffdshow:",IDC_LBL_PATH_FFDSHOW,5,96,37,8
-    EDITTEXT        IDC_ED_PATH_FFDSHOW,42,94,202,13,ES_AUTOHSCROLL | ES_READONLY
-    PUSHBUTTON      "...",IDC_BT_PATH_FFDSHOW,246,94,18,12
-    LTEXT           "DScaler:",IDC_LBL_PATH_DSCALER,5,111,37,8
-    EDITTEXT        IDC_ED_PATH_DSCALER,42,109,202,13,ES_AUTOHSCROLL | ES_READONLY
-    PUSHBUTTON      "...",IDC_BT_PATH_DSCALER,246,109,18,12,WS_DISABLED
-    EDITTEXT        IDC_ED_HELP,0,130,266,64,ES_MULTILINE | ES_READONLY | NOT WS_BORDER | WS_VSCROLL
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,43,242,8
+    GROUPBOX        "Configuration dialog",IDC_GRP_CFGDLG,0,56,266,44
+    CONTROL         "Restore position",IDC_CHB_DLG_RESTOREPOS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,68,125,8
+    CONTROL         "Show hints",IDC_CHB_DLG_SHOWHINTS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,133,68,115,8
+    LTEXT           "Language:",IDC_LBL_LANG,5,83,35,8
+    COMBOBOX        IDC_CBX_LANG,52,81,205,135,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Paths",IDC_GRP_PATHS,0,101,266,42
+    LTEXT           "ffdshow:",IDC_LBL_PATH_FFDSHOW,5,112,37,8
+    EDITTEXT        IDC_ED_PATH_FFDSHOW,42,110,202,13,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "...",IDC_BT_PATH_FFDSHOW,246,110,18,12
+    LTEXT           "DScaler:",IDC_LBL_PATH_DSCALER,5,127,37,8
+    EDITTEXT        IDC_ED_PATH_DSCALER,42,125,202,13,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "...",IDC_BT_PATH_DSCALER,246,125,18,12,WS_DISABLED
+    EDITTEXT        IDC_ED_HELP,0,145,266,49,ES_MULTILINE | ES_READONLY | NOT WS_BORDER | WS_VSCROLL
+    CONTROL         230,IDC_STATIC,"Static",SS_BITMAP | SS_REALSIZEIMAGE,222,9,40,14
+    CONTROL         227,IDC_STATIC,"Static",SS_BITMAP,135,9,40,14
+    LTEXT           "Tray icon",IDC_TXT_TRAYICON,5,11,45,8
+    CONTROL         "None",IDC_RBT_ICON_NONE,"Button",BS_AUTORADIOBUTTON,53,11,33,10
+    CONTROL         "Modern",IDC_RBT_ICON_MODERN,"Button",BS_AUTORADIOBUTTON,91,11,40,10
+    CONTROL         "Classic",IDC_RBT_ICON_CLASSIC,"Button",BS_AUTORADIOBUTTON,179,11,37,10
 END
 
 IDD_OFFSETFLIP DIALOGEX 0, 0, 267, 195
@@ -2684,6 +2689,12 @@ END
 IDI_FFDSHOW             ICON                    "ffdshow.ico"
 IDI_FFDSHOWAUDIO        ICON                    "ffdshowAudio.ico"
 IDI_FFVFW               ICON                    "ffvfw.ico"
+IDI_MODERN_ICON_V       ICON                    "FFv.ico"
+IDI_MODERN_ICON_A       ICON                    "FFa.ico"
+IDI_MODERN_ICON_E       ICON                    "FFe.ico"
+IDI_MODERN_4BIT_ICON_V  ICON                    "FFv4bit.ico"
+IDI_MODERN_4BIT_ICON_A  ICON                    "FFa4bit.ico"
+IDI_MODERN_4BIT_ICON_E  ICON                    "FFe4bit.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2734,6 +2745,8 @@ IDB_ARROWS_MASK_UD      BITMAP                  "arrows_mask_ud.bmp"
 IDB_ARROWS_MASK_U       BITMAP                  "arrows_mask_u.bmp"
 IDB_ARROWS_MASK_D       BITMAP                  "arrows_mask_d.bmp"
 IDB_GRADIENT            BITMAP                  "gradient.bmp"
+IDB_MODERN_ICON_XP      BITMAP                  "modern_icon_xp.bmp"
+IDB_CLASSIC_ICON_XP     BITMAP                  "classic_icon_xp.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2807,12 +2820,6 @@ BEGIN
     IDD_RESIZEASPECT, DIALOG
     BEGIN
         RIGHTMARGIN, 266
-    END
-
-    IDD_DLGMISC, DIALOG
-    BEGIN
-        VERTGUIDE, 42
-        VERTGUIDE, 244
     END
 
     IDD_PRESET_AUTOLOAD, DIALOG

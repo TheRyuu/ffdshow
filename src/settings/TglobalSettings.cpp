@@ -38,6 +38,10 @@ TglobalSettingsBase::TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const 
      NULL,0,
    IDFF_trayIcon         ,&TglobalSettingsBase::trayIcon         ,0,0,_l(""),0,
      _l("trayIcon"),TintOption::DEF_DYN,
+   IDFF_trayIconType     ,&TglobalSettingsBase::trayIconType     ,0,2,_l(""),0,
+     NULL,1,
+   IDFF_trayIconChanged  ,&TglobalSettingsBase::trayIconChanged  ,0,0,_l(""),0,
+     NULL,0,
    IDFF_trayIconExt      ,&TglobalSettingsBase::trayIconExt      ,0,0,_l(""),0,
      _l("trayIconExt"),0,
    IDFF_outputdebug      ,&TglobalSettingsBase::outputdebug      ,0,0,_l(""),0,
@@ -77,7 +81,8 @@ TglobalSettingsBase::TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const 
 }
 void TglobalSettingsBase::load(void)
 {
- char_t rkey[MAX_PATH];tsprintf(rkey,FFDSHOW_REG_PARENT _l("\\%s"),reg_child);
+ char_t rkey[MAX_PATH];
+ tsprintf(rkey,FFDSHOW_REG_PARENT _l("\\%s"),reg_child);
  TregOpRegRead tHKCU(HKEY_CURRENT_USER,rkey);
  reg_op(tHKCU);
  TregOpRegRead tHKLM(HKEY_LOCAL_MACHINE,rkey);
@@ -87,6 +92,11 @@ void TglobalSettingsBase::load(void)
  TregOpRegRead tCPU(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
  tCPU._REG_OP_N(IDFF_allowedCpuFlags,_l("allowedCPUflags"),allowedCPUflags,255);
  firstBlacklist=firstUseonlyin=true;
+
+ // Load Icon type : common through video, audio and vfw.
+ TregOpRegRead tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\ffdshow"));
+ tHKCU_global._REG_OP_N(IDFF_trayIconType,_l("trayIconType"),trayIconType,1);
+
  // fix 'SinkuHadouken.exe'#1310 -> 'SinkuHadouken.exe'#13#10 (rev 976 bug)
  char_t sinkuhadouken[19]={'S','i','n','k','u','H','a','d','o','u','k','e','n','.','e','x','e',0x1e,'\0'};
  ffstring complist(useonlyin);
@@ -106,6 +116,13 @@ void TglobalSettingsBase::save(void)
  tDScaler._REG_OP_S(IDFF_dscalerPath,_l("dscalerPth"),dscalerPth,MAX_PATH,_l(""));
  TregOpRegWrite tCPU(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
  tCPU._REG_OP_N(IDFF_allowedCpuFlags,_l("allowedCPUflags"),allowedCPUflags,255);
+
+ // Save Icon type : common through video, audio and vfw.
+ if (trayIconChanged)
+  {
+   TregOpRegWrite tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\ffdshow"));
+   tHKCU_global._REG_OP_N(IDFF_trayIconType,_l("trayIconType"),trayIconType,0);
+  }
 }
 bool TglobalSettingsBase::exportReg(bool all,const char_t *regflnm,bool unicode)
 {
@@ -168,6 +185,7 @@ bool TglobalSettingsBase::inUseonlyin(const char_t *exe)
    return true;
  return false;
 } 
+
 //===================================== TglobalSettingsDec ======================================
 TglobalSettingsDec::TglobalSettingsDec(const Tconfig *Iconfig,int Imode,const char_t *Ireg_child,TintStrColl *Icoll,TOSDsettings *Iosd):TglobalSettingsBase(Iconfig,Imode,Ireg_child,Icoll),osd(Iosd)
 {

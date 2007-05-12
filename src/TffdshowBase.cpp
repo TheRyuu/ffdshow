@@ -355,7 +355,7 @@ STDMETHODIMP TffdshowBase::showCfgDlg(HWND owner)
  if (cfgDlgHwnd) return S_FALSE;
  CoInitialize(NULL);
  TpageSite site;
- site.show(this,owner,cfgDlgCaptionId,iconId);
+ site.show(this,owner,cfgDlgCaptionId,get_trayIconType());
  CoUninitialize();
  return S_OK;
 }

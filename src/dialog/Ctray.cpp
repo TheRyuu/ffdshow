@@ -52,7 +52,16 @@ void TdlgMiscPage::cfg2dlg(void)
 void TdlgMiscPage::tray2dlg(void)
 {
  int tray=cfgGet(IDFF_trayIcon);
- setCheck(IDC_CHB_TRAYICON,tray);
+ if (tray)
+  {
+   int trayType=cfgGet(IDFF_trayIconType);
+   setCheck(IDC_RBT_ICON_MODERN,trayType==1);
+   setCheck(IDC_RBT_ICON_CLASSIC,trayType==2);
+  }
+ else
+  {
+   setCheck(IDC_RBT_ICON_NONE,1);
+  }
  setCheck(IDC_CHB_TRAYICONEXT,cfgGet(IDFF_trayIconExt));enable(tray,IDC_CHB_TRAYICONEXT);
  setCheck(IDC_CHB_STREAMSMENU,cfgGet(IDFF_streamsOptionsMenu));enable((filterMode&(IDFF_FILTERMODE_ENC|IDFF_FILTERMODE_VFW))==0,IDC_CHB_STREAMSMENU);
 }
@@ -113,6 +122,20 @@ INT_PTR TdlgMiscPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  return TconfPageBase::msgProc(uMsg,wParam,lParam);
 }
 
+void TdlgMiscPage::onIconTypeChange(void)
+{
+ int it=cfgGet(IDFF_trayIconType);
+ if (it==0)
+  {
+   cfgSet(IDFF_trayIcon,0);
+  }
+ else
+  {
+   cfgSet(IDFF_trayIconChanged,1);
+   cfgSet(IDFF_trayIcon,1);
+  }
+}
+
 TdlgMiscPage::TdlgMiscPage(TffdshowPageBase *Iparent):TconfPageBase(Iparent)
 {
  dialogId=IDD_DLGMISC;
@@ -125,4 +148,12 @@ TdlgMiscPage::TdlgMiscPage(TffdshowPageBase *Iparent):TconfPageBase(Iparent)
    0,NULL,NULL
   };
  bindCheckboxes(chb);
+ static const TbindRadiobutton<TdlgMiscPage> rbt[]=
+  {
+   IDC_RBT_ICON_NONE,IDFF_trayIconType,0,&TdlgMiscPage::onIconTypeChange,
+   IDC_RBT_ICON_MODERN,IDFF_trayIconType,1,&TdlgMiscPage::onIconTypeChange,
+   IDC_RBT_ICON_CLASSIC,IDFF_trayIconType,2,&TdlgMiscPage::onIconTypeChange,
+   0,0,0,NULL
+  };
+ bindRadioButtons(rbt);
 }

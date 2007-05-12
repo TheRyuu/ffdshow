@@ -7,6 +7,8 @@
 
 #define IDFF_autoPreset            1  //automatic preset loading enabled
 #define IDFF_trayIcon              3  //is tray icon visible
+#define IDFF_trayIconType       3381
+#define IDFF_trayIconChanged    3382
 #define IDFF_trayIconExt          69  //show extended tray icon tip
 //#define IDFF_trayHwnd             34
 //#define IDFF_cfgDlgHwnd            4  //handle of configuration dialog
@@ -1390,6 +1392,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3381
+//max:3383
 
 #endif

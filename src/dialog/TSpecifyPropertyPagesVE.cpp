@@ -95,6 +95,10 @@ void TSpecifyPropertyPagesVE::show2configPages(const IID &iidD,IUnknown *deciD,c
  CAUUID pagesE;
  isppE->GetPages(&pagesE);
 
+ comptrQ<IffdshowBase> deci=deciD;
+ if (deci)
+  icon=deci->get_trayIconType();
+
  HRESULT hr;
  TSpecifyPropertyPagesVE *isppVE=new TSpecifyPropertyPagesVE(NULL,&hr);isppVE->AddRef();
  isppVE->set(TpropertyPagesPair(iidD,isppD),TpropertyPagesPair(iidE,isppE));

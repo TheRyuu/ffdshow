@@ -256,6 +256,20 @@ DWORD Tconfig::getCPUcount(void)
  return si.dwNumberOfProcessors;
 }
 
+int Tconfig::get_trayIconFullColorOS(void)
+{
+ int trayIconFullColorOS=false;
+ OSVERSIONINFO vi;
+ vi.dwOSVersionInfoSize=sizeof(vi);
+ if (GetVersionEx(&vi))
+  {
+   if (vi.dwMajorVersion>5) trayIconFullColorOS=true; // Vista or later.
+   if (vi.dwMajorVersion==5 && vi.dwMinorVersion>=1) trayIconFullColorOS=true; // Xp, Server 2003
+   // Windows 2000 does not support full color icon for task tray. Microsoft's document may be wrong.
+  }
+ return trayIconFullColorOS;
+}
+
 const char_t* Tconfig::getExeflnm(void) const
 {
  if (exeflnm[0]=='\0')

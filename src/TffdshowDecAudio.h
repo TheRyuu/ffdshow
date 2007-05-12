@@ -165,6 +165,7 @@ protected:
    virtual bool action(void);
   };
  virtual bool isStreamsMenu(void) const;
+ STDMETHODIMP_(int) get_trayIconType(void);
 private:
  static const int VERSION=15;
  friend class TffdshowDecAudioInputPin;

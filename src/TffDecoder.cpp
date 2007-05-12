@@ -1532,6 +1532,18 @@ void TffdshowDecVideo::set_downstreamID(IPin *downstream_input_pin)
  if (ref==CLSID_DirectVobSubFilter || ref==CLSID_DirectVobSubFilter2) downstreamID=DVOBSUB;
 }
 
+int TffdshowDecVideo::get_trayIconType(void)
+{
+ switch (globalSettings->trayIconType)
+  {
+   case 2: return IDI_FFDSHOW;
+   case 0:
+   case 1:
+   default:
+   return IDI_MODERN_ICON_V;
+  }
+}
+
 #ifdef OSDTIMETABALE
 /* Usage
  *

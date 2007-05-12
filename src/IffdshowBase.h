@@ -103,6 +103,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowBaseT,IUnknown)
  STDMETHOD_(const tchar*,getInfoItemShortcut)(int id) PURE;
  STDMETHOD_(int,getInfoShortcutItem)(const tchar *s,int *toklen) PURE;
  STDMETHOD_(DWORD,CPUcount)(void) PURE;
+ STDMETHOD_(int,get_trayIconType)(void) PURE;
 };
 
 struct IffdshowBaseA :IffdshowBaseT<char> {};

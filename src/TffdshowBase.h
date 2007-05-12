@@ -104,6 +104,7 @@ public:
  STDMETHODIMP_(const char_t*) getInfoItemShortcut(int id);
  STDMETHODIMP_(int) getInfoShortcutItem(const char_t *s,int *toklen);
  STDMETHODIMP_(DWORD) CPUcount(void);
+ STDMETHODIMP_(int) get_trayIconType(void) PURE;
 
 
  //IffdshowParamsEnum
@@ -279,6 +280,7 @@ protected:
      return deci->getInfoShortcutItem(text<char_t>(s),toklen);
     }
    STDMETHODIMP_(DWORD) CPUcount(void) {return deci->CPUcount();}
+   STDMETHODIMP_(int) get_trayIconType(void) {return deci->get_trayIconType();}
   } base_char;
  template<class Tinterface> Tinterface* getBaseInterface(void);
 private:

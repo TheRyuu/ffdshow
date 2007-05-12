@@ -942,6 +942,18 @@ STDMETHODIMP TffdshowEnc::getOutCodecString(char_t *buf,size_t buflen)
  return S_OK;
 }
 
+int TffdshowEnc::get_trayIconType(void)
+{
+ switch (globalSettings->trayIconType)
+  {
+   case 2: return IDI_FFVFW;
+   case 0:
+   case 1:
+   default:
+   return IDI_MODERN_ICON_E;
+  }
+}
+
 //================================== DirectShow ====================================
 STDMETHODIMP_(LRESULT) TffdshowEncDshow::begin(const BITMAPINFOHEADER *inhdr)
 {

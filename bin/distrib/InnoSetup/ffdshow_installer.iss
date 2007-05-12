@@ -281,12 +281,16 @@ Name: tweaks\skipinloop; Description: {cm:skipinloop}; Check: NOT IsUpdate; Flag
 #endif
 
 [Icons]
-Name: {group}\{cm:audioconfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 1; Components: ffdshow
-Name: {group}\{cm:videoconfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configure; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 0; Components: ffdshow
+Name: {group}\{cm:audioconfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check: NOT CheckModernIcon ; IconIndex: 1; Components: ffdshow
+Name: {group}\{cm:audioconfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check:     CheckModernIcon ; IconIndex: 4; Components: ffdshow
+Name: {group}\{cm:videoconfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check: NOT CheckModernIcon ; IconIndex: 0; Components: ffdshow
+Name: {group}\{cm:videoconfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check:     CheckModernIcon ; IconIndex: 3; Components: ffdshow
 #if is64bit
-Name: {group}\{cm:vfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 2; Components: ffdshow\vfw
+Name: {group}\{cm:vfwconfig}; Filename: rundll32.exe;   Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check: NOT CheckModernIcon ; IconIndex: 2; Components: ffdshow\vfw
+Name: {group}\{cm:vfwconfig}; Filename: rundll32.exe;   Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check:     CheckModernIcon ; IconIndex: 5; Components: ffdshow\vfw
 #else
-Name: {group}\{cm:vfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW; IconFilename: {app}\ffdshow.ax; IconIndex: 2; Components: ffdshow\vfw
+Name: {group}\{cm:vfwconfig}; Filename: rundll32.exe;   Parameters: ff_vfw.dll,configureVFW;                      IconFilename: {app}\ffdshow.ax; Check: NOT CheckModernIcon ; IconIndex: 2; Components: ffdshow\vfw
+Name: {group}\{cm:vfwconfig}; Filename: rundll32.exe;   Parameters: ff_vfw.dll,configureVFW;                      IconFilename: {app}\ffdshow.ax; Check:     CheckModernIcon ; IconIndex: 5; Components: ffdshow\vfw
 #endif
 #if include_makeavis
 Name: {group}\makeAVIS; Filename: {app}\makeAVIS.exe; Components: ffdshow\makeavis
@@ -683,6 +687,18 @@ begin
     Result := (regval = value)
   else
     Result := showbydefault;
+end;
+
+function CheckModernIcon(): Boolean;
+var
+  Version: TWindowsVersion;
+  add: Integer;
+  regVal: Cardinal;
+begin
+  Result := True;
+  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow', 'trayIconType', regVal) AND (regVal = 2) then begin
+    Result := False;
+  end
 end;
 
 function GetTaskVolNormalize(): Boolean;
