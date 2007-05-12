@@ -35,7 +35,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "common.h"
 #include "avcodec.h"
 
 
@@ -61,7 +60,7 @@ typedef struct EightBpsContext {
  */
 static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, uint8_t *buf, int buf_size)
 {
-        EightBpsContext * const c = (EightBpsContext *)avctx->priv_data;
+        EightBpsContext * const c = avctx->priv_data;
         unsigned char *encoded = (unsigned char *)buf;
         unsigned char *pixptr, *pixptr_end;
         unsigned int height = avctx->height; // Real image height

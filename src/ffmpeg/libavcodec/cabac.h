@@ -25,6 +25,10 @@
  * Context Adaptive Binary Arithmetic Coder.
  */
 
+#ifndef CABAC_H
+#define CABAC_H
+
+#include "bitstream.h"
 
 //#undef NDEBUG
 #include <assert.h>
@@ -863,3 +867,5 @@ static int get_cabac_ueg(CABACContext *c, uint8_t * state, int max, int is_signe
     }else
         return i;
 }
+
+#endif /* CABAC_H */

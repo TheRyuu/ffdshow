@@ -287,6 +287,9 @@
 				RelativePath="libavcodec\h264.c">
 			</File>
 			<File
+				RelativePath="libavcodec\h264_parser.c">
+			</File>
+			<File
 				RelativePath=".\libavcodec\h264dsp.c">
 			</File>
 			<File
@@ -387,6 +390,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\msmpeg4.c">
+			</File>
+			<File
+				RelativePath=".\libavcodec\msmpeg4data.c">
 			</File>
 			<File
 				RelativePath=".\libavcodec\msrle.c">
@@ -657,6 +663,9 @@
 				RelativePath=".\libavcodec\h263data.h">
 			</File>
 			<File
+				RelativePath="libavcodec\h264_parser.h">
+			</File>
+			<File
 				RelativePath="libavcodec\h264data.h">
 			</File>
 			<File
@@ -688,6 +697,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\msmpeg4data.h">
+			</File>
+			<File
+				RelativePath=".\libavcodec\msmpeg4tab.h">
 			</File>
 			<File
 				RelativePath=".\libavcodec\parser.h">

@@ -37,7 +37,13 @@
 #endif
 
 #ifndef av_always_inline
-#define av_always_inline always_inline
+#if defined(__GNUC__) && (__GNUC__ > 3 || __GNUC__ == 3 && __GNUC_MINOR__ > 0)
+#    define av_always_inline __attribute__((always_inline)) inline
+#    define av_noinline __attribute__((noinline))
+#else
+#    define av_always_inline inline
+#    define av_noinline
+#endif
 #endif
 
 static av_always_inline uint16_t bswap_16(uint16_t x)

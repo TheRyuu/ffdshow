@@ -1,7 +1,6 @@
 /*
- * MSMPEG4 backend for ffmpeg encoder and decoder
- * copyright (c) 2001 Fabrice Bellard
- * copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
+ * H.26L/H.264/AVC/JVT/14496-10/... parser
+ * Copyright (c) 2003 Michael Niedermayer <michaelni@gmx.at>
  *
  * This file is part of FFmpeg.
  *
@@ -19,25 +18,23 @@
  * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
- * msmpeg4v1 & v2 stuff by Michael Niedermayer <michaelni@gmx.at>
  */
 
 /**
- * @file msmpeg4data.h
- * MSMPEG4 data tables.
+ * @file h264_parser.h
+ * H.264 / AVC / MPEG4 part10 parser.
+ * @author Michael Niedermayer <michaelni@gmx.at>
  */
 
-#ifndef MSMPEG4DATA_H
-#define MSMPEG4DATA_H
+#ifndef H264_PARSER_H
+#define H264_PARSER_H
 
-#include "common.h"
-#include "bitstream.h"
+#include "h264.h"
 
-extern VLC ff_msmp4_mb_i_vlc;
-extern VLC ff_msmp4_dc_luma_vlc[2];
-extern VLC ff_msmp4_dc_chroma_vlc[2];
+/**
+ * finds the end of the current frame in the bitstream.
+ * @return the position of the first byte of the next frame, or -1
+ */
+int ff_h264_find_frame_end(H264Context *h, const uint8_t *buf, int buf_size);
 
-/* intra picture macro block coded block pattern */
-extern const uint16_t ff_msmp4_mb_i_table[64][2];
-
-#endif /* MSMPEG4DATA_H */
+#endif /* H264_PARSER_H */

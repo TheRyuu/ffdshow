@@ -50,7 +50,6 @@
 #include "avcodec.h"
 #include "bitstream.h"
 #include "dsputil.h"
-#include "common.h"
 #include "bytestream.h"
 #include "random.h"
 
@@ -162,19 +161,19 @@ static int init_cook_vlc_tables(COOKContext *q) {
 
     result = 0;
     for (i=0 ; i<13 ; i++) {
-        result &= init_vlc (&q->envelope_quant_index[i], 9, 24,
+        result |= init_vlc (&q->envelope_quant_index[i], 9, 24,
             envelope_quant_index_huffbits[i], 1, 1,
             envelope_quant_index_huffcodes[i], 2, 2, 0);
     }
     av_log(NULL,AV_LOG_DEBUG,"sqvh VLC init\n");
     for (i=0 ; i<7 ; i++) {
-        result &= init_vlc (&q->sqvh[i], vhvlcsize_tab[i], vhsize_tab[i],
+        result |= init_vlc (&q->sqvh[i], vhvlcsize_tab[i], vhsize_tab[i],
             cvh_huffbits[i], 1, 1,
             cvh_huffcodes[i], 2, 2, 0);
     }
 
     if (q->nb_channels==2 && q->joint_stereo==1){
-        result &= init_vlc (&q->ccpl, 6, (1<<q->js_vlc_bits)-1,
+        result |= init_vlc (&q->ccpl, 6, (1<<q->js_vlc_bits)-1,
             ccpl_huffbits[q->js_vlc_bits-2], 1, 1,
             ccpl_huffcodes[q->js_vlc_bits-2], 2, 2, 0);
         av_log(NULL,AV_LOG_DEBUG,"Joint-stereo VLC used.\n");
@@ -350,15 +349,13 @@ static void decode_envelope(COOKContext *q, int* quant_index_table) {
 
 static void categorize(COOKContext *q, int* quant_index_table,
                        int* category, int* category_index){
-    int exp_idx, bias, tmpbias, bits_left, num_bits, index, v, i, j;
+    int exp_idx, bias, tmpbias1, tmpbias2, bits_left, num_bits, index, v, i, j;
     int exp_index2[102];
     int exp_index1[102];
 
-    int tmp_categorize_array1[128];
-    int tmp_categorize_array1_idx=0;
-    int tmp_categorize_array2[128];
-    int tmp_categorize_array2_idx=0;
-    int category_index_size=0;
+    int tmp_categorize_array[128*2];
+    int tmp_categorize_array1_idx=q->numvector_size;
+    int tmp_categorize_array2_idx=q->numvector_size;
 
     bits_left =  q->bits_per_subpacket - get_bits_count(&q->gb);
 
@@ -370,8 +367,7 @@ static void categorize(COOKContext *q, int* quant_index_table,
 
     memset(&exp_index1,0,102*sizeof(int));
     memset(&exp_index2,0,102*sizeof(int));
-    memset(&tmp_categorize_array1,0,128*sizeof(int));
-    memset(&tmp_categorize_array2,0,128*sizeof(int));
+    memset(&tmp_categorize_array,0,128*2*sizeof(int));
 
     bias=-32;
 
@@ -397,15 +393,15 @@ static void categorize(COOKContext *q, int* quant_index_table,
         exp_index1[i] = exp_idx;
         exp_index2[i] = exp_idx;
     }
-    tmpbias = bias = num_bits;
+    tmpbias1 = tmpbias2 = num_bits;
 
     for (j = 1 ; j < q->numvector_size ; j++) {
-        if (tmpbias + bias > 2*bits_left) {  /* ---> */
+        if (tmpbias1 + tmpbias2 > 2*bits_left) {  /* ---> */
             int max = -999999;
             index=-1;
             for (i=0 ; i<q->total_subbands ; i++){
                 if (exp_index1[i] < 7) {
-                    v = (-2*exp_index1[i]) - quant_index_table[i] - 32;
+                    v = (-2*exp_index1[i]) - quant_index_table[i] + bias;
                     if ( v >= max) {
                         max = v;
                         index = i;
@@ -413,16 +409,16 @@ static void categorize(COOKContext *q, int* quant_index_table,
                 }
             }
             if(index==-1)break;
-            tmp_categorize_array1[tmp_categorize_array1_idx++] = index;
-            tmpbias -= expbits_tab[exp_index1[index]] -
-                       expbits_tab[exp_index1[index]+1];
+            tmp_categorize_array[tmp_categorize_array1_idx++] = index;
+            tmpbias1 -= expbits_tab[exp_index1[index]] -
+                        expbits_tab[exp_index1[index]+1];
             ++exp_index1[index];
         } else {  /* <--- */
             int min = 999999;
             index=-1;
             for (i=0 ; i<q->total_subbands ; i++){
                 if(exp_index2[i] > 0){
-                    v = (-2*exp_index2[i])-quant_index_table[i];
+                    v = (-2*exp_index2[i])-quant_index_table[i]+bias;
                     if ( v < min) {
                         min = v;
                         index = i;
@@ -430,9 +426,9 @@ static void categorize(COOKContext *q, int* quant_index_table,
                 }
             }
             if(index == -1)break;
-            tmp_categorize_array2[tmp_categorize_array2_idx++] = index;
-            tmpbias -= expbits_tab[exp_index2[index]] -
-                       expbits_tab[exp_index2[index]-1];
+            tmp_categorize_array[--tmp_categorize_array2_idx] = index;
+            tmpbias2 -= expbits_tab[exp_index2[index]] -
+                        expbits_tab[exp_index2[index]-1];
             --exp_index2[index];
         }
     }
@@ -440,17 +436,8 @@ static void categorize(COOKContext *q, int* quant_index_table,
     for(i=0 ; i<q->total_subbands ; i++)
         category[i] = exp_index2[i];
 
-    /* Concatenate the two arrays. */
-    for(i=tmp_categorize_array2_idx-1 ; i >= 0; i--)
-        category_index[category_index_size++] =  tmp_categorize_array2[i];
-
-    for(i=0;i<tmp_categorize_array1_idx;i++)
-        category_index[category_index_size++ ] =  tmp_categorize_array1[i];
-
-    /* FIXME: mc_sich_ra8_20.rm triggers this, not sure with what we
-       should fill the remaining bytes. */
-    for(i=category_index_size;i<q->numvector_size;i++)
-        category_index[i]=0;
+    for(i=0 ; i<q->numvector_size-1 ; i++)
+        category_index[i] = tmp_categorize_array[tmp_categorize_array2_idx++];
 
 }
 

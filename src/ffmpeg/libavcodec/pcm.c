@@ -25,7 +25,6 @@
  */
 
 #include "avcodec.h"
-#include "bitstream.h" // for ff_reverse
 
 /* from g711.c by SUN microsystems (unrestricted use) */
 
@@ -123,8 +122,7 @@ static int pcm_decode_frame(AVCodecContext *avctx,
     case CODEC_ID_PCM_MULAW:
         n = buf_size;
         for(;n>0;n--) {
-            *samples++ = s->table[src[0]];
-            src++;
+            *samples++ = s->table[*src++];
         }
         break;
     default:

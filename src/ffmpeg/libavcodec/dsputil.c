@@ -593,6 +593,14 @@ static void add_pixels4_c(uint8_t *restrict pixels, DCTELEM *block, int line_siz
     }
 }
 
+static int sum_abs_dctelem_c(DCTELEM *block)
+{
+    int sum=0, i;
+    for(i=0; i<64; i++)
+        sum+= FFABS(block[i]);
+    return sum;
+}
+
 #if 0
 
 #define PIXOP2(OPNAME, OP) \
@@ -3382,19 +3390,14 @@ static int hadamard8_intra8x8_c(/*MpegEncContext*/ void *s, uint8_t *src, uint8_
 
 static int dct_sad8x8_c(/*MpegEncContext*/ void *c, uint8_t *src1, uint8_t *src2, int stride, int h){
     MpegEncContext * const s= (MpegEncContext *)c;
-    DECLARE_ALIGNED_8(uint64_t, aligned_temp[sizeof(DCTELEM)*64/8]);
+    DECLARE_ALIGNED_16(uint64_t, aligned_temp[sizeof(DCTELEM)*64/8]);
     DCTELEM * const temp= (DCTELEM*)aligned_temp;
-    int sum=0, i;
 
     assert(h==8);
 
     s->dsp.diff_pixels(temp, src1, src2, stride);
     s->dsp.fdct(temp);
-
-    for(i=0; i<64; i++)
-        sum+= FFABS(temp[i]);
-
-    return sum;
+    return s->dsp.sum_abs_dctelem(temp);
 }
 
 //#ifdef CONFIG_GPL
@@ -3903,6 +3906,7 @@ void dsputil_init(DSPContext* c, AVCodecContext *avctx)
     c->add_pixels_clamped = add_pixels_clamped_c;
     c->add_pixels8 = add_pixels8_c;
     c->add_pixels4 = add_pixels4_c;
+    c->sum_abs_dctelem = sum_abs_dctelem_c;
     c->gmc1 = gmc1_c;
     c->gmc = ff_gmc_c;
     c->clear_blocks = clear_blocks_c;
@@ -4074,7 +4078,7 @@ void dsputil_init(DSPContext* c, AVCodecContext *avctx)
     c->w97[0]= w97_16_c;
     c->w97[1]= w97_8_c;
 
-	c->add_bytes= add_bytes_c;
+    c->add_bytes= add_bytes_c;
     c->diff_bytes= diff_bytes_c;
     c->sub_hfyu_median_prediction= sub_hfyu_median_prediction_c;
     c->bswap_buf= bswap_buf;

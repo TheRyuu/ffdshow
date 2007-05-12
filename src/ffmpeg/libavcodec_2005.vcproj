@@ -746,6 +746,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\msmpeg4data.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\msrle.c"
 				>
 			</File>
@@ -1095,6 +1099,10 @@
 				>
 			</File>
 			<File
+				RelativePath="libavcodec\h264_parser.h"
+				>
+			</File>
+			<File
 				RelativePath="libavcodec\h264data.h"
 				>
 			</File>
@@ -1136,6 +1144,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\msmpeg4data.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\msmpeg4tab.h"
 				>
 			</File>
 			<File

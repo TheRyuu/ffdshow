@@ -57,6 +57,7 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/h263_parser.c \
       $(LAVC_DIR)/h263dec.c \
       $(LAVC_DIR)/h264.c \
+      $(LAVC_DIR)/h264_parser.c \
       $(LAVC_DIR)/h264dsp.c \
       $(LAVC_DIR)/h264idct.c \
       $(LAVC_DIR)/huffyuv.c \
@@ -77,6 +78,7 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/mpegaudiodec.c \
       $(LAVC_DIR)/mpegvideo.c \
       $(LAVC_DIR)/msmpeg4.c \
+      $(LAVC_DIR)/msmpeg4data.c \
       $(LAVC_DIR)/msrle.c \
       $(LAVC_DIR)/msvideo1.c \
       $(LAVC_DIR)/parser.c \
