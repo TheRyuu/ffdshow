@@ -1095,7 +1095,19 @@
 				RelativePath="src\checked.bmp">
 			</File>
 			<File
+				RelativePath=".\src\classic_icon_xp.bmp">
+			</File>
+			<File
+				RelativePath="src\down.ico">
+			</File>
+			<File
 				RelativePath="src\empty.bmp">
+			</File>
+			<File
+				RelativePath=".\src\FFa.ico">
+			</File>
+			<File
+				RelativePath=".\src\FFa4bit.ico">
 			</File>
 			<File
 				RelativePath="src\ffdshow.ico">
@@ -1110,6 +1122,18 @@
 				RelativePath="src\ffdshowAudio.ico">
 			</File>
 			<File
+				RelativePath=".\src\FFe.ico">
+			</File>
+			<File
+				RelativePath=".\src\FFe4bit.ico">
+			</File>
+			<File
+				RelativePath=".\src\FFv.ico">
+			</File>
+			<File
+				RelativePath=".\src\FFv4bit.ico">
+			</File>
+			<File
 				RelativePath=".\src\ffvfw.ico">
 			</File>
 			<File
@@ -1117,6 +1141,9 @@
 			</File>
 			<File
 				RelativePath="src\mask.bmp">
+			</File>
+			<File
+				RelativePath=".\src\modern_icon_xp.bmp">
 			</File>
 			<File
 				RelativePath=".\src\resource.h">
