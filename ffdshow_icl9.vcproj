@@ -26,8 +26,9 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions=""
 				Optimization="0"
+				WholeProgramOptimization="FALSE"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="DEBUG,_DEBUG;WIN32;_WINDOWS;UCLIBCPP;_WIN32_WINNT=0x0400"
+				PreprocessorDefinitions="DEBUG,_DEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF"
 				ExceptionHandling="TRUE"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="FALSE"
@@ -111,7 +112,7 @@
 				OmitFramePointers="TRUE"
 				WholeProgramOptimization="FALSE"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;UCLIBCPP;_WIN32_WINNT=0x0400"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF"
 				StringPooling="TRUE"
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
@@ -130,7 +131,7 @@
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="0"
 				CompileAs="0"
-				DisableSpecificWarnings="4250;4799;"/>
+				DisableSpecificWarnings="4250;4799"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -194,8 +195,9 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions=""
 				Optimization="0"
+				WholeProgramOptimization="FALSE"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="DEBUG,_DEBUG;WIN32;_WINDOWS;UCLIBCPP;_WIN32_WINNT=0x0400"
+				PreprocessorDefinitions="DEBUG,_DEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF"
 				ExceptionHandling="TRUE"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="FALSE"
@@ -279,7 +281,7 @@
 				OmitFramePointers="TRUE"
 				WholeProgramOptimization="FALSE"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;UCLIBCPP;_WIN32_WINNT=0x0400"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF"
 				StringPooling="TRUE"
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
