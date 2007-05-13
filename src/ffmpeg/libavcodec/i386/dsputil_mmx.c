@@ -1798,13 +1798,13 @@ HADAMARD8_DIFF_SSE2(sse2)
 #undef MMABS_SUM_8x8
 #undef HSUM
 
-#ifdef HAVE_SSSE3
+//#ifdef HAVE_SSSE3
 #define MMABS(a,z)         MMABS_SSSE3(a,z)
 #define MMABS_SUM_8x8      MMABS_SUM_8x8_NOSPILL
 HADAMARD8_DIFF_SSE2(ssse3)
 #undef MMABS
 #undef MMABS_SUM_8x8
-#endif
+//#endif
 
 #define DCT_SAD4(m,mm,o)\
     "mov"#m" "#o"+ 0(%1), "#mm"2      \n\t"\
@@ -1863,11 +1863,11 @@ DCT_SAD_FUNC(mmx2)
 DCT_SAD_FUNC(sse2)
 #undef MMABS
 
-#ifdef HAVE_SSSE3
+//#ifdef HAVE_SSSE3
 #define MMABS(a,z)    MMABS_SSSE3(a,z)
 DCT_SAD_FUNC(ssse3)
 #undef MMABS
-#endif
+//#endif
 #undef HSUM
 #undef DCT_SAD
 
@@ -3649,13 +3649,13 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->hadamard8_diff[1]= hadamard8_diff_sse2;
         }
 
-#ifdef HAVE_SSSE3
+//#ifdef HAVE_SSSE3
         if(mm_flags & MM_SSSE3){
             c->sum_abs_dctelem= sum_abs_dctelem_ssse3;
             c->hadamard8_diff[0]= hadamard8_diff16_ssse3;
             c->hadamard8_diff[1]= hadamard8_diff_ssse3;
         }
-#endif
+//#endif
 
         if(mm_flags & MM_SSE2){
             c->horizontal_compose97i = ff_snow_horizontal_compose97i_sse2;
