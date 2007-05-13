@@ -163,7 +163,7 @@ namespace std{
 			return (x && y);
 		}
 	};
-
+	
 	template <class T> struct _UCXXEXPORT logical_or : binary_function<T,T,bool> {
 		bool operator()(const T& x, const T& y) const{
 			return (x || y);
@@ -177,8 +177,8 @@ namespace std{
 	};
 
 	template <class Predicate> struct _UCXXEXPORT unary_negate
-                : public unary_function<typename Predicate::argument_type,bool>
-        {
+		: public unary_function<typename Predicate::argument_type,bool>
+	{
 	public:
 		explicit unary_negate(const Predicate& pred) : p(pred) {  }
 		bool operator()(const typename Predicate::argument_type& x) const{
@@ -229,7 +229,7 @@ namespace std{
 		}
 	};
 
-
+	
 	template <class Operation, class T> _UCXXEXPORT binder1st<Operation> bind1st(const Operation& op, const T& x){
 		return binder1st<Operation>(op, typename Operation::first_argument_type(x));
 	}
@@ -255,6 +255,7 @@ namespace std{
 	{
 		return binder2nd<Operation>(op, typename Operation::second_argument_type(x));
 	}
+	
 
 
 	template <class Arg, class Result> class _UCXXEXPORT
@@ -269,7 +270,7 @@ namespace std{
 		}
 	};
 
-
+	
 	template <class Arg, class Result> _UCXXEXPORT pointer_to_unary_function<Arg, Result> ptr_fun(Result (*f)(Arg)){
 		return pointer_to_unary_function<Arg, Result>(f);
 	}
@@ -293,7 +294,7 @@ namespace std{
 		return pointer_to_binary_function<Arg1,Arg2,Result>(f);
 	}
 
-
+	
 	template <class S, class T> class _UCXXEXPORT mem_fun_t
 		: public unary_function<T*, S>
 	{
@@ -363,7 +364,7 @@ namespace std{
 	private:
 		S (T::*mf)();
 	};
-
+	
 	template <class S, class T, class A> class _UCXXEXPORT mem_fun1_ref_t
 		: public binary_function<T, A, S>
 	{
@@ -431,10 +432,6 @@ compose2(const Op1 & fn1, const Op2 & fn2, const Op3 & fn3){
 
 
 #endif
-
-
-
-
 
 
 

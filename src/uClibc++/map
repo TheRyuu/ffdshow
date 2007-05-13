@@ -445,16 +445,12 @@ protected:
 
 
 
-
-
 /* This is the implementation for the map container.  As noted above, it deviates
  * from ISO spec by deriving from a base class in order to reduce code redundancy.
  * More code could be reduced by convirting to virtual functions (thus allowing
  * much of the erase and insert code to be duplicated), but that would deviate from
  * the specifications too much to be worth the risk.
  */
-
-
 
 
 
@@ -1136,7 +1132,6 @@ protected:
 		(multimap<Key,T,Compare,Allocator>& x, multimap<Key,T,Compare,Allocator>& y);
 
 }
-
 
 #endif
 

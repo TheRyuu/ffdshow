@@ -1918,7 +1918,6 @@ namespace std{
 			}
 		}
 
-
 	}
 
 	template<class BidirectionalIterator> _UCXXEXPORT
@@ -1975,10 +1974,6 @@ namespace std{
 }
 
 #endif
-
-
-
-
 
 
 

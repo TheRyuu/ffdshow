@@ -45,7 +45,7 @@ public:
 	typedef T value_type;
 	typedef size_t size_type;
 	typedef ptrdiff_t difference_type;
-
+	
 	typedef T* pointer;
 	typedef const T* const_pointer;
 
@@ -54,7 +54,7 @@ public:
 
 	pointer address(reference r) const { return &r; }
 	const_pointer address(const_reference r) const { return &r; }
-
+	
 	allocator() throw(){}
 	template <class U> allocator(const allocator<U>& ) throw() {}
 	~allocator() throw(){}
@@ -114,64 +114,64 @@ template <class T> _UCXXEXPORT void return_temporary_buffer(T* p){
 }
 
 
-	template <class T> class _UCXXEXPORT auto_ptr{
+template <class T> class _UCXXEXPORT auto_ptr{
 
-	private:
-		T * object;
+private:
+	T * object;
 	template <class Y> struct auto_ptr_ref{
 		Y * p;
 	};
 
-	public:
+public:
 
-		typedef T element_type;
+	typedef T element_type;
 
-		explicit auto_ptr(T* p =0) throw() : object(p){  }
+	explicit auto_ptr(T* p =0) throw() : object(p){  }
 	auto_ptr(auto_ptr& p) throw() : object(p.release()){ }
 	auto_ptr(auto_ptr_ref<T> r) throw() : object(r.p){
 		r.p = 0;
 	}
 	template<class Y> auto_ptr(auto_ptr<Y>& p) throw() : object(p.release()){ }
 	auto_ptr& operator=(auto_ptr& p) throw(){
-			if(&p == this){
-				return *this;
-			}
-		delete object;
-			object = p.release();
+		if(&p == this){
 			return *this;
 		}
+		delete object;
+		object = p.release();
+		return *this;
+	}
 	template<class Y> auto_ptr& operator=(auto_ptr<Y>& p) throw(){
-			if(&p == this){
-				return *this;
-			}
-		delete object;
-			object = p.release();
+		if(&p == this){
 			return *this;
-}
-		~auto_ptr(){
+		}
 		delete object;
-		}
+		object = p.release();
+		return *this;
+	}
+	~auto_ptr(){
+		delete object;
+	}
 
-		T& operator*() const throw(){
+	T& operator*() const throw(){
 		return *object;
-		}
-		T* operator->() const throw(){
+	}
+	T* operator->() const throw(){
 		return object;
-		}
-		T* get() const throw(){
-			return object;
-		}
+	}
+	T* get() const throw(){
+		return object;
+	}
 	T* release() throw(){
-			T * temp(object);
-			object = 0;
-			return temp;
+		T * temp(object);
+		object = 0;
+		return temp;
+	}
+	void reset(T * p=0) throw(){
+		if(p != object){
+			delete object;
+			object = p;
 		}
-		void reset(T * p=0) throw(){
-			if(p != object){
-				delete object;
-				object = p;
-			}
-		}
+	}
 	template<class Y> operator auto_ptr_ref<Y>() throw(){
 		auto_ptr_ref<Y> retval;
 		retval.p = object;
@@ -183,14 +183,10 @@ template <class T> _UCXXEXPORT void return_temporary_buffer(T* p){
 		object = 0;
 		return retval;
 	}
-
-	};
+	
+};
 
 }	//namespace std
 
 #endif
-
-
-
-
 

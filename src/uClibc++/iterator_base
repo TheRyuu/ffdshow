@@ -71,7 +71,7 @@ namespace std{
 	template <class Container> class insert_iterator;
 	template <class Container, class Iterator>
 		insert_iterator<Container> inserter(Container& x, Iterator i);
-
+	
 	//Actual Template definitions
 
 	template<class Iterator> struct _UCXXEXPORT iterator_traits {
@@ -299,9 +299,5 @@ namespace std{
 
 
 #endif
-
-
-
-
 
 

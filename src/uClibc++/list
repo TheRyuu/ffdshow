@@ -288,10 +288,6 @@ namespace std{
 
 
 	template<class T, class Allocator> void list<T, Allocator>::swap_nodes(node * x, node * y){
-		if(x == y){
-			return;
-		}
-
 		T * v = x->val;
 		x->val = y->val;
 		y->val = v;
@@ -303,14 +299,14 @@ namespace std{
 		return iterator(list_start);
 	}
 
-
+	
 	template<class T, class Allocator> typename list<T, Allocator>::const_iterator
 		list<T, Allocator>::begin() const
 	{
 		return const_iterator(list_start);
 	}
 
-
+	
 	template<class T, class Allocator> typename list<T, Allocator>::iterator
 		list<T, Allocator>::end()
 	{
@@ -478,7 +474,7 @@ namespace std{
 		if(position != end() ){
 			node * temp = position.link_struct();
 			if(temp == list_start){
-				position = end();
+				++position;
 				temp->next->previous = 0;
 				list_start = temp->next;
 			}else{
@@ -553,12 +549,12 @@ namespace std{
 		//Link everything we need
 		x.list_start->previous = position.link_struct()->previous;
 		position.link_struct()->previous->next = x.list_start;
-
+	
 		position.link_struct()->previous = x.list_end->previous;
 		x.list_end->previous->next = position.link_struct();
 
 		//Clean up the other list
-
+		
 		x.list_start = x.list_end;
 		x.list_end->previous=0;
 
@@ -604,7 +600,7 @@ namespace std{
 			i.link_struct()->next->previous = 0;
 			x.list_start = i.link_struct()->next;
 		}
-
+		
 		i.link_struct()->previous = position.link_struct()->previous;
 		position.link_struct()->previous->next = i.link_struct();
 
@@ -628,7 +624,7 @@ namespace std{
 			temp = first;
 			++first;
 			splice(position, x, temp);
-	}
+		}
 	}
 
 
@@ -636,9 +632,10 @@ namespace std{
 		iterator temp = begin();
 		while( temp != end() ){
 			if(*temp == value){
-				erase(temp);
+				temp = erase(temp);
+			}else{
+				++temp;
 			}
-			++temp;
 		}
 	}
 
@@ -647,9 +644,10 @@ namespace std{
 		iterator temp = begin();
 		while( temp != end() ){
 			if( pred(*temp) ){
-				erase(temp);
+				temp = erase(temp);
+			}else{
+				++temp;
 			}
-			++temp;
 		}
 	}
 
@@ -897,9 +895,5 @@ namespace std{
 
 
 #endif
-
-
-
-
 
 

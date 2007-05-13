@@ -42,15 +42,6 @@ namespace std{
         template <class T, class Allocator> bool operator<=(const vector<T,Allocator>& x, const vector<T,Allocator>& y);
         template <class T, class Allocator> void swap(vector<T,Allocator>& x, vector<T,Allocator>& y);
 
-//      template <class Allocator> bool operator==(const vector<bool,Allocator>& x, const vector<bool,Allocator>& y);
-//      template <class Allocator> bool operator< (const vector<bool,Allocator>& x, const vector<bool,Allocator>& y);
-//      template <class Allocator> bool operator!=(const vector<bool,Allocator>& x, const vector<bool,Allocator>& y);
-//      template <class Allocator> bool operator> (const vector<bool,Allocator>& x, const vector<bool,Allocator>& y);
-//      template <class Allocator> bool operator>=(const vector<bool,Allocator>& x, const vector<bool,Allocator>& y);
-//      template <class Allocator> bool operator<=(const vector<bool,Allocator>& x, const vector<bool,Allocator>& y);
-//      template <class Allocator> void swap(vector<bool,Allocator>& x, vector<bool,Allocator>& y);
-
-
         template <class T, class Allocator> class _UCXXEXPORT vector {
         private:
                 enum {ispod=isPOD<T>::is};
@@ -159,7 +150,6 @@ namespace std{
                 }
 
                 template <class Size, class U> _UCXXEXPORT void assign(Size n, const U& u = U()){
-//              void assign(size_type n, const T& u ){
                         clear();
                         resize(n, u);
                 }
@@ -264,7 +254,6 @@ namespace std{
                 }
 
                 inline void pop_back(){
-//                      resize(size() - 1, defaultValue);
                         downsize(size() - 1);
                 }
 
@@ -387,7 +376,7 @@ namespace std{
                 }
 
                 _UCXXEXPORT void clear(){
-                        elements = 0;
+                        downsize(0);
                 }
 
         protected:
@@ -406,9 +395,6 @@ namespace std{
                         a.destroy(data + i);
                 }
                 a.deallocate(data, data_size);
-                data = 0;
-                elements = 0;
-                data_size=0;
         }
 
 
@@ -570,8 +556,4 @@ namespace std{
 #pragma warning(pop)
 
 #endif
-
-
-
-
 
