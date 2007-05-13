@@ -6880,7 +6880,7 @@ AVCodec msmpeg4v2_encoder = {
     MPV_encode_picture,
     MPV_encode_end,
 #if __STDC_VERSION >= 199901L
-    ,.pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1}
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
 #endif
 };
 
