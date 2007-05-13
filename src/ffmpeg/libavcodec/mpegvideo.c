@@ -6879,7 +6879,9 @@ AVCodec msmpeg4v2_encoder = {
     MPV_encode_init,
     MPV_encode_picture,
     MPV_encode_end,
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
+#if __STDC_VERSION >= 199901L
+    ,.pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1}
+#endif
 };
 
 AVCodec msmpeg4v3_encoder = {
@@ -6890,7 +6892,9 @@ AVCodec msmpeg4v3_encoder = {
     MPV_encode_init,
     MPV_encode_picture,
     MPV_encode_end,
+#if __STDC_VERSION >= 199901L
     .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
+#endif
 };
 
 AVCodec wmv1_encoder = {
@@ -6901,7 +6905,9 @@ AVCodec wmv1_encoder = {
     MPV_encode_init,
     MPV_encode_picture,
     MPV_encode_end,
+#if __STDC_VERSION >= 199901L
     .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
+#endif
 };
 
 AVCodec mjpeg_encoder = {
@@ -6912,7 +6918,9 @@ AVCodec mjpeg_encoder = {
     MPV_encode_init,
     MPV_encode_picture,
     MPV_encode_end,
+#if __STDC_VERSION >= 199901L
     .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUVJ420P, PIX_FMT_YUVJ422P, -1},
+#endif
 };
 
 #endif //CONFIG_ENCODERS

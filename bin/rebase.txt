@@ -15,4 +15,5 @@ ff_liba52.dll
 ff_libdts.dll
 libavcodec.dll
 libmplayer.dll
+xvidcore.dll
 ffdshow.ax
