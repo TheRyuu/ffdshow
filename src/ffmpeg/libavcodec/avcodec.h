@@ -1102,6 +1102,8 @@ typedef struct AVCodecContext {
 #define FF_MM_SSE      0x0008 /* SSE functions */
 #define FF_MM_SSE2     0x0010 /* PIV SSE2 functions */
 #define FF_MM_3DNOWEXT 0x0020 /* AMD 3DNowExt */
+#define FF_MM_SSE3     0x0040 /* AMD64 & PIV SSE3 functions*/
+#define FF_MM_SSSE3    0x0080 /* PIV Core 2 SSSE3 functions*/
 //#endif /* HAVE_MMX */
 #ifdef HAVE_IWMMXT
 #define FF_MM_IWMMXT   0x0100 /* XScale IWMMXT */

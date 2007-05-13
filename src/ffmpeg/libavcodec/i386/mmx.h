@@ -1,6 +1,22 @@
 /*
  * mmx.h
  * Copyright (C) 1997-2001 H. Dietz and R. Fisher
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 #ifndef AVCODEC_I386MMX_H
 #define AVCODEC_I386MMX_H
@@ -184,16 +200,16 @@ typedef        union {
 #define         mmx_m2ri(op,mem,reg,imm) \
         __asm__ __volatile__ (#op " %1, %0, %%" #reg \
                               : /* nothing */ \
-                              : "X" (mem), "X" (imm))
+                              : "m" (mem), "i" (imm))
 #define         mmx_r2ri(op,regs,regd,imm) \
         __asm__ __volatile__ (#op " %0, %%" #regs ", %%" #regd \
                               : /* nothing */ \
-                              : "X" (imm) )
+                              : "i" (imm) )
 
 #define         mmx_fetch(mem,hint) \
         __asm__ __volatile__ ("prefetch" #hint " %0" \
                               : /* nothing */ \
-                              : "X" (mem))
+                              : "m" (mem))
 
 
 #define         maskmovq(regs,maskreg)      mmx_r2ri (maskmovq, regs, maskreg)

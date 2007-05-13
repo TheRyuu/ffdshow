@@ -3263,7 +3263,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
                 c->idct_add= ff_simple_idct_add_mmx;
                 c->idct    = ff_simple_idct_mmx;
                 c->idct_permutation_type= FF_SIMPLE_IDCT_PERM;
-	    }else if(idct_algo==FF_IDCT_SKAL){
+        }else if(idct_algo==FF_IDCT_SKAL){
                 if(mm_flags & MM_SSE2){
                     c->idct_put= Skl_IDct16_Put_SSE2;
                     c->idct_add= Skl_IDct16_Add_SSE2;
@@ -3642,6 +3642,20 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->avg_h264_chroma_pixels_tab[0]= avg_h264_chroma_mc8_3dnow;
             c->avg_h264_chroma_pixels_tab[1]= avg_h264_chroma_mc4_3dnow;
         }
+
+        if(mm_flags & MM_SSE2){
+            c->sum_abs_dctelem= sum_abs_dctelem_sse2;
+            c->hadamard8_diff[0]= hadamard8_diff16_sse2;
+            c->hadamard8_diff[1]= hadamard8_diff_sse2;
+        }
+
+#ifdef HAVE_SSSE3
+        if(mm_flags & MM_SSSE3){
+            c->sum_abs_dctelem= sum_abs_dctelem_ssse3;
+            c->hadamard8_diff[0]= hadamard8_diff16_ssse3;
+            c->hadamard8_diff[1]= hadamard8_diff_ssse3;
+        }
+#endif
 
         if(mm_flags & MM_SSE2){
             c->horizontal_compose97i = ff_snow_horizontal_compose97i_sse2;

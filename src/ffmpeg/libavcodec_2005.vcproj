@@ -1002,15 +1002,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\xiph.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\xl.c"
 				>
 			</File>
 			<File
 				RelativePath=".\libavcodec\zmbv.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\xiph.c"
 				>
 			</File>
 		</Filter>
@@ -1096,6 +1096,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\h263data.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\h264.h"
 				>
 			</File>
 			<File

@@ -134,6 +134,8 @@ int Tlibavcodec::lavcCpuFlags(void)
  if (Tconfig::cpu_flags&FF_CPU_SSE)    lavc_cpu_flags|=FF_MM_SSE;
  if (Tconfig::cpu_flags&FF_CPU_SSE2)   lavc_cpu_flags|=FF_MM_SSE2;
  if (Tconfig::cpu_flags&FF_CPU_3DNOW)  lavc_cpu_flags|=FF_MM_3DNOW;
+ if (Tconfig::cpu_flags&FF_CPU_SSE3)   lavc_cpu_flags|=FF_MM_SSE3;
+ if (Tconfig::cpu_flags&FF_CPU_SSSE3)  lavc_cpu_flags|=FF_MM_SSSE3;
  return lavc_cpu_flags;
 }
 
