@@ -58,13 +58,11 @@ int ff_fft_init(FFTContext *s, int nbits, int inverse)
     s->exptab1 = NULL;
 
     /* compute constant table for HAVE_SSE version */
-#if defined(HAVE_MMX) \
-    || (defined(HAVE_ALTIVEC) && !defined(ALTIVEC_USE_REFERENCE_C_CODE))
-    {
+#if defined(HAVE_MMX) 
+		{
         int has_vectors = mm_support();
 
         if (has_vectors) {
-#if defined(HAVE_MMX)
             if (has_vectors & MM_3DNOWEXT) {
                 /* 3DNowEx for K7/K8 */
                 s->imdct_calc = ff_imdct_calc_3dn2;
@@ -77,10 +75,6 @@ int ff_fft_init(FFTContext *s, int nbits, int inverse)
                 s->imdct_calc = ff_imdct_calc_sse;
                 s->fft_calc = ff_fft_calc_sse;
             }
-#else /* HAVE_MMX */
-            if (has_vectors & MM_ALTIVEC)
-                s->fft_calc = ff_fft_calc_altivec;
-#endif
         }
         if (s->fft_calc != ff_fft_calc_c) {
             int np, nblocks, np2, l;
