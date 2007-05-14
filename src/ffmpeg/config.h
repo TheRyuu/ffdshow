@@ -1,10 +1,16 @@
-#if defined(__GNUC__) || defined(__INTEL_COMPILER)
- #ifndef __INTEL_COMPILER
+#if defined(__GNUC__)
   #define ARCH_X86 1
   #ifndef ARCH_X86_64
   	#define ARCH_X86_32 1
   #endif
- #endif
+  
+  // GCC >= 4.0.4
+  #if (__GNUC__ >4 || (__GNUC__ == 4 && (__GNU_MINOR__ > 0 || __GNUC_PATCHLEVEL__ >=4)))
+    #define HAVE_SSSE3
+  #endif
+#endif
+
+#if defined(__GNUC__) || defined(__INTEL_COMPILER)
  #ifndef WIN64
   #define HAVE_MMX 1
  #endif
@@ -40,8 +46,3 @@
  #define lrintf(x) (int)(x)
  #define EMULATE_FAST_INT
 #endif
-
-
-/* CPU related stuff */
-//#define HAVE_CMOV
-//#define HAVE_FAST_CMOV

@@ -673,9 +673,9 @@ static void  denoise_dct_sse2(MpegEncContext *s, DCTELEM *block){
     );
 }
 
-//#ifdef HAVE_SSSE3
-//#define HAVE_SSSE3_BAK
-//#endif
+#ifdef HAVE_SSSE3
+#define HAVE_SSSE3_BAK
+#endif
 #undef HAVE_SSSE3
 
 #undef HAVE_SSE2
@@ -698,14 +698,14 @@ static void  denoise_dct_sse2(MpegEncContext *s, DCTELEM *block){
 #define RENAMEl(a) a ## _sse2
 #include "mpegvideo_mmx_template.c"
 
-//#ifdef HAVE_SSSE3_BAK
+#ifdef HAVE_SSSE3_BAK
 #define HAVE_SSSE3
 #undef RENAME
 #undef RENAMEl
 #define RENAME(a) a ## _SSSE3
 #define RENAMEl(a) a ## _sse2
 #include "mpegvideo_mmx_template.c"
-//#endif
+#endif
 
 void MPV_common_init_mmx(MpegEncContext *s)
 {
@@ -729,11 +729,11 @@ void MPV_common_init_mmx(MpegEncContext *s)
         }
 
         if(dct_algo==FF_DCT_AUTO || dct_algo==FF_DCT_MMX){
-//#ifdef HAVE_SSSE3
+#ifdef HAVE_SSSE3
             if(mm_flags & MM_SSSE3){
                 s->dct_quantize= dct_quantize_SSSE3;
             } else
-//#endif
+#endif
             if(mm_flags & MM_SSE2){
                 s->dct_quantize= dct_quantize_SSE2;
             } else if(mm_flags & MM_MMXEXT){
