@@ -646,24 +646,12 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\jpeg_ls.c"
+				RelativePath=".\libavcodec\jpegls.c"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\libavcodec\jpeglsdec.c"
+				>
 			</File>
 			<File
 				RelativePath=".\libavcodec\jrevdct.c"
@@ -687,6 +675,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mjpeg.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\mjpeg_parser.c"
 				>
 			</File>
 			<File
@@ -1123,7 +1115,19 @@
 				>
 			</File>
 			<File
+				RelativePath="libavcodec\jpegls.h"
+				>
+			</File>
+			<File
+				RelativePath="libavcodec\jpeglsdec.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\mathops.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\mjpeg.h"
 				>
 			</File>
 			<File

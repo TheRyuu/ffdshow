@@ -329,19 +329,10 @@
 				RelativePath=".\libavcodec\jfdctint.c">
 			</File>
 			<File
-				RelativePath=".\libavcodec\jpeg_ls.c">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
+				RelativePath=".\libavcodec\jpegls.c">
+			</File>
+			<File
+				RelativePath=".\libavcodec\jpeglsdec.c">
 			</File>
 			<File
 				RelativePath=".\libavcodec\jrevdct.c">
@@ -360,6 +351,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mjpeg.c">
+			</File>
+			<File
+				RelativePath=".\libavcodec\mjpeg_parser.c">
 			</File>
 			<File
 				RelativePath=".\libavcodec\motion_est.c">
@@ -681,7 +675,16 @@
 				RelativePath="libavcodec\indeo3data.h">
 			</File>
 			<File
+				RelativePath="libavcodec\jpegls.h">
+			</File>
+			<File
+				RelativePath="libavcodec\jpeglsdec.h">
+			</File>
+			<File
 				RelativePath=".\libavcodec\mathops.h">
+			</File>
+			<File
+				RelativePath=".\libavcodec\mjpeg.h">
 			</File>
 			<File
 				RelativePath=".\libavcodec\mpeg12data.h">

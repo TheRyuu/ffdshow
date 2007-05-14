@@ -2535,7 +2535,7 @@ static const uint8_t dv_audio_shuffle625[12][9] = {
   {  31,  67, 103,  21,  57,  93,  11,  47,  83},
 };
 
-static const __attribute__((unused)) int dv_audio_frequency[3] = {
+static const attribute_unused int dv_audio_frequency[3] = {
     48000, 44100, 32000,
 };
 
@@ -2673,7 +2673,7 @@ static inline const DVprofile* dv_frame_profile(uint8_t* frame)
             return &dv_profiles[3]; /* NTSC 50Mbps */
         } else { /* 4:1:1 sampling */
             return &dv_profiles[0]; /* NTSC 25Mbps */
-    }
+        }
     } else {
         /* it's a PAL format */
         if ((frame[80*5 + 48 + 3] & 0x4)) { /* 4:2:2 sampling */
@@ -2696,8 +2696,8 @@ static inline const DVprofile* dv_codec_profile(AVCodecContext* codec)
        if (codec->height == dv_profiles[i].height && codec->pix_fmt == dv_profiles[i].pix_fmt)
            return &dv_profiles[i];
 
-        return NULL;
-    }
+    return NULL;
+}
 
 static inline int dv_write_dif_id(enum dv_section_type t, uint8_t chan_num, uint8_t seq_num,
                                   uint8_t dif_num, uint8_t* buf)

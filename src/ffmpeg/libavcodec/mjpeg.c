@@ -37,6 +37,8 @@
 #include "dsputil.h"
 #include "mpegvideo.h"
 #include "bytestream.h"
+#include "mjpeg.h"
+#include "jpeglsdec.h"
 
 /* use two quantizer tables (one for luminance and one for chrominance) */
 /* not yet working */
@@ -53,88 +55,6 @@ typedef struct MJpegContext {
     uint8_t huff_size_ac_chrominance[256];
     uint16_t huff_code_ac_chrominance[256];
 } MJpegContext;
-
-/* JPEG marker codes */
-typedef enum {
-    /* start of frame */
-    SOF0  = 0xc0,       /* baseline */
-    SOF1  = 0xc1,       /* extended sequential, huffman */
-    SOF2  = 0xc2,       /* progressive, huffman */
-    SOF3  = 0xc3,       /* lossless, huffman */
-
-    SOF5  = 0xc5,       /* differential sequential, huffman */
-    SOF6  = 0xc6,       /* differential progressive, huffman */
-    SOF7  = 0xc7,       /* differential lossless, huffman */
-    JPG   = 0xc8,       /* reserved for JPEG extension */
-    SOF9  = 0xc9,       /* extended sequential, arithmetic */
-    SOF10 = 0xca,       /* progressive, arithmetic */
-    SOF11 = 0xcb,       /* lossless, arithmetic */
-
-    SOF13 = 0xcd,       /* differential sequential, arithmetic */
-    SOF14 = 0xce,       /* differential progressive, arithmetic */
-    SOF15 = 0xcf,       /* differential lossless, arithmetic */
-
-    DHT   = 0xc4,       /* define huffman tables */
-
-    DAC   = 0xcc,       /* define arithmetic-coding conditioning */
-
-    /* restart with modulo 8 count "m" */
-    RST0  = 0xd0,
-    RST1  = 0xd1,
-    RST2  = 0xd2,
-    RST3  = 0xd3,
-    RST4  = 0xd4,
-    RST5  = 0xd5,
-    RST6  = 0xd6,
-    RST7  = 0xd7,
-
-    SOI   = 0xd8,       /* start of image */
-    EOI   = 0xd9,       /* end of image */
-    SOS   = 0xda,       /* start of scan */
-    DQT   = 0xdb,       /* define quantization tables */
-    DNL   = 0xdc,       /* define number of lines */
-    DRI   = 0xdd,       /* define restart interval */
-    DHP   = 0xde,       /* define hierarchical progression */
-    EXP   = 0xdf,       /* expand reference components */
-
-    APP0  = 0xe0,
-    APP1  = 0xe1,
-    APP2  = 0xe2,
-    APP3  = 0xe3,
-    APP4  = 0xe4,
-    APP5  = 0xe5,
-    APP6  = 0xe6,
-    APP7  = 0xe7,
-    APP8  = 0xe8,
-    APP9  = 0xe9,
-    APP10 = 0xea,
-    APP11 = 0xeb,
-    APP12 = 0xec,
-    APP13 = 0xed,
-    APP14 = 0xee,
-    APP15 = 0xef,
-
-    JPG0  = 0xf0,
-    JPG1  = 0xf1,
-    JPG2  = 0xf2,
-    JPG3  = 0xf3,
-    JPG4  = 0xf4,
-    JPG5  = 0xf5,
-    JPG6  = 0xf6,
-    SOF48 = 0xf7,       ///< JPEG-LS
-    LSE   = 0xf8,       ///< JPEG-LS extension parameters
-    JPG9  = 0xf9,
-    JPG10 = 0xfa,
-    JPG11 = 0xfb,
-    JPG12 = 0xfc,
-    JPG13 = 0xfd,
-
-    COM   = 0xfe,       /* comment */
-
-    TEM   = 0x01,       /* temporary private use for arithmetic coding */
-
-    /* 0x02 -> 0xbf reserved */
-} JPEG_MARKER;
 
 #if 0
 /* These are the sample quantization tables given in JPEG spec section K.1.
@@ -301,12 +221,6 @@ void mjpeg_close(MpegEncContext *s)
     }
 
 #ifdef CONFIG_ENCODERS
-static inline void put_marker(PutBitContext *p, int code)
-{
-    put_bits(p, 8, 0xff);
-    put_bits(p, 8, code);
-}
-
 /* table_class: 0 = DC coef, 1 = AC coefs */
 static int put_huffman_table(MpegEncContext *s, int table_class, int table_id,
                              const uint8_t *bits_table, const uint8_t *value_table)
@@ -421,22 +335,16 @@ static void jpeg_put_comments(MpegEncContext *s)
 void mjpeg_picture_header(MpegEncContext *s)
 {
     const int lossless= s->avctx->codec_id != CODEC_ID_MJPEG;
-    const int ls      = s->avctx->codec_id == CODEC_ID_JPEGLS;
-
-    assert(!(ls && s->mjpeg_write_tables));
 
     put_marker(&s->pb, SOI);
 
-    if (!s->mjpeg_data_only_frames)
-    {
     jpeg_put_comments(s);
 
-    if (s->mjpeg_write_tables) jpeg_table_header(s);
+    jpeg_table_header(s);
 
     switch(s->avctx->codec_id){
     case CODEC_ID_MJPEG:  put_marker(&s->pb, SOF0 ); break;
     case CODEC_ID_LJPEG:  put_marker(&s->pb, SOF3 ); break;
-    case CODEC_ID_JPEGLS: put_marker(&s->pb, SOF48); break;
     default: assert(0);
     }
 
@@ -474,7 +382,6 @@ void mjpeg_picture_header(MpegEncContext *s)
 #else
     put_bits(&s->pb, 8, 0); /* select matrix */
 #endif
-    }
 
     /* scan header */
     put_marker(&s->pb, SOS);
@@ -496,18 +403,15 @@ void mjpeg_picture_header(MpegEncContext *s)
     put_bits(&s->pb, 4, 1); /* DC huffman table index */
     put_bits(&s->pb, 4, lossless ? 0 : 1); /* AC huffman table index */
 
-    put_bits(&s->pb, 8, (lossless && !ls) ? s->avctx->prediction_method+1 : 0); /* Ss (not used) */
+    put_bits(&s->pb, 8, lossless ? s->avctx->prediction_method+1 : 0); /* Ss (not used) */
 
     switch(s->avctx->codec_id){
     case CODEC_ID_MJPEG:  put_bits(&s->pb, 8, 63); break; /* Se (not used) */
     case CODEC_ID_LJPEG:  put_bits(&s->pb, 8,  0); break; /* not used */
-    case CODEC_ID_JPEGLS: put_bits(&s->pb, 8,  1); break; /* ILV = line interleaved */
     default: assert(0);
     }
 
     put_bits(&s->pb, 8, 0); /* Ah/Al (not used) */
-
-    //FIXME DC/AC entropy table selectors stuff in jpegls
 }
 
 static void escape_FF(MpegEncContext *s, int start)
@@ -834,74 +738,6 @@ static int encode_picture_lossless(AVCodecContext *avctx, unsigned char *buf, in
 /******************************************/
 /* decoding */
 
-#define MAX_COMPONENTS 4
-
-typedef struct MJpegDecodeContext {
-    AVCodecContext *avctx;
-    GetBitContext gb;
-
-    int start_code; /* current start code */
-    int buffer_size;
-    uint8_t *buffer;
-
-    int16_t quant_matrixes[4][64];
-    VLC vlcs[2][4];
-    int qscale[4];      ///< quantizer scale calculated from quant_matrixes
-
-    int org_height;  /* size given at codec init */
-    int first_picture;    /* true if decoding first picture */
-    int interlaced;     /* true if interlaced */
-    int bottom_field;   /* true if bottom field */
-    int lossless;
-    int ls;
-    int progressive;
-    int rgb;
-    int rct;            /* standard rct */
-    int pegasus_rct;    /* pegasus reversible colorspace transform */
-    int bits;           /* bits per component */
-
-    int maxval;
-    int near;         ///< near lossless bound (si 0 for lossless)
-    int t1,t2,t3;
-    int reset;        ///< context halfing intervall ?rename
-
-    int width, height;
-    int mb_width, mb_height;
-    int nb_components;
-    int component_id[MAX_COMPONENTS];
-    int h_count[MAX_COMPONENTS]; /* horizontal and vertical count for each component */
-    int v_count[MAX_COMPONENTS];
-    int comp_index[MAX_COMPONENTS];
-    int dc_index[MAX_COMPONENTS];
-    int ac_index[MAX_COMPONENTS];
-    int nb_blocks[MAX_COMPONENTS];
-    int h_scount[MAX_COMPONENTS];
-    int v_scount[MAX_COMPONENTS];
-    int h_max, v_max; /* maximum h and v counts */
-    int quant_index[4];   /* quant table index for each component */
-    int last_dc[MAX_COMPONENTS]; /* last DEQUANTIZED dc (XXX: am I right to do that ?) */
-    AVFrame picture; /* picture structure */
-    int linesize[MAX_COMPONENTS];                   ///< linesize << interlaced
-    int8_t *qscale_table;
-    DECLARE_ALIGNED_8(DCTELEM, block[64]);
-    ScanTable scantable;
-    DSPContext dsp;
-
-    int restart_interval;
-    int restart_count;
-
-    int buggy_avid;
-    int cs_itu601;
-    int interlace_polarity;
-
-    int mjpb_skiptosod;
-
-    uint16_t RGBbuffer[32768][4];
-    int cur_scan; /* current scan, used by JPEG-LS */
-} MJpegDecodeContext;
-
-#include "jpeg_ls.c" //FIXME make jpeg-ls more independent
-
 static int mjpeg_decode_dht(MJpegDecodeContext *s);
 
 static int build_vlc(VLC *vlc, const uint8_t *bits_table, const uint8_t *val_table,
@@ -962,47 +798,6 @@ static int mjpeg_decode_init(AVCodecContext *avctx)
     return 0;
 }
 
-
-/**
- * finds the end of the current frame in the bitstream.
- * @return the position of the first byte of the next frame, or -1
- */
-static int find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size){
-    int vop_found, i;
-    uint16_t state;
-
-    vop_found= pc->frame_start_found;
-    state= pc->state;
-
-    i=0;
-    if(!vop_found){
-        for(i=0; i<buf_size; i++){
-            state= (state<<8) | buf[i];
-            if(state == 0xFFD8){
-                i++;
-                vop_found=1;
-                break;
-            }
-        }
-    }
-
-    if(vop_found){
-        /* EOF considered as end of frame */
-        if (buf_size == 0)
-            return 0;
-        for(; i<buf_size; i++){
-            state= (state<<8) | buf[i];
-            if(state == 0xFFD8){
-                pc->frame_start_found=0;
-                pc->state=0;
-                return i-1;
-            }
-        }
-    }
-    pc->frame_start_found= vop_found;
-    pc->state= state;
-    return END_NOT_FOUND;
-}
 
 /* quantize tables */
 static int mjpeg_decode_dqt(MJpegDecodeContext *s)
@@ -1706,7 +1501,7 @@ static int mjpeg_decode_sos(MJpegDecodeContext *s)
 //            for(){
 //            reset_ls_coding_parameters(s, 0);
 
-            ls_decode_picture(s, predictor, point_transform, ilv);
+            ff_jpegls_decode_picture(s, predictor, point_transform, ilv);
         }else{
             if(s->rgb){
                 if(ljpeg_decode_rgb_scan(s, predictor, point_transform) < 0)
@@ -2135,7 +1930,7 @@ static int mjpeg_decode_frame(AVCodecContext *avctx,
                         return -1;
                     break;
                 case LSE:
-                    if (decode_lse(s) < 0)
+                    if (ff_jpegls_decode_lse(s) < 0)
                         return -1;
                     break;
                 case EOI:
