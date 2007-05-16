@@ -21,12 +21,8 @@
 #ifndef AVFORMAT_H
 #define AVFORMAT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#define LIBAVFORMAT_VERSION_INT ((51<<16)+(10<<8)+0)
-#define LIBAVFORMAT_VERSION     51.10.0
+#define LIBAVFORMAT_VERSION_INT ((51<<16)+(12<<8)+1)
+#define LIBAVFORMAT_VERSION     51.12.1
 #define LIBAVFORMAT_BUILD       LIBAVFORMAT_VERSION_INT
 
 #define LIBAVFORMAT_IDENT       "Lavf" AV_STRINGIFY(LIBAVFORMAT_VERSION)
@@ -42,13 +38,4 @@ char *pstrcat(char *buf, int buf_size, const char *s);
 
 #endif /* HAVE_AV_CONFIG_H */
 
-#ifdef __cplusplus
-}
-#endif
-
 #endif /* AVFORMAT_H */
-
-
-
-
-

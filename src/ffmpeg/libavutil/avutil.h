@@ -27,10 +27,6 @@
  */
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define AV_STRINGIFY(s)         AV_TOSTRING(s)
 #define AV_TOSTRING(s) #s
 
@@ -71,10 +67,5 @@ extern "C" {
 #define PIX_FMT_ARGB PIX_FMT_BGR32_1
 #define PIX_FMT_ABGR PIX_FMT_RGB32_1
 #define PIX_FMT_GRAY16 PIX_FMT_GRAY16LE
-
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* AVUTIL_H */

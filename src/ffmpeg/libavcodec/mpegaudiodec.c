@@ -43,7 +43,7 @@
 
 /****************/
 
-static MPA_INT window[512] __attribute__((aligned(16)));
+static DECLARE_ALIGNED_16(MPA_INT, window[512]);
 
 /* tab[i][j] = 1.0 / (2.0 * cos(pi*(2*k+1) / 2^(6 - j))) */
 
