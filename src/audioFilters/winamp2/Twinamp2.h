@@ -2,7 +2,29 @@
 #define _TWINAMP2_H_
 
 struct winampDSPModule;
-class Twinamp2dspDll;
+class Twinamp2dsp;
+class Tdll;
+struct winampDSPHeader;
+
+class Twinamp2dspDll
+{
+private:
+ unsigned int refcount;
+ Tdll *dll;
+ winampDSPHeader *hdr;
+ winampDSPHeader* (*winampDSPGetHeaderType)(void);
+public:
+ Twinamp2dspDll(const ffstring &flnm);
+ bool isMultichannelAllowed(const char_t *compList) const;
+ ~Twinamp2dspDll();
+ void addref(void);
+ void release(void);
+ ffstring descr;
+ ffstring dllFileName;
+ typedef std::vector<Twinamp2dsp*> Tfilters;
+ Tfilters filters;
+};
+
 class Twinamp2dsp
 {
 private:
@@ -23,27 +45,7 @@ public:
  void config(HWND parent);
  size_t process(int16_t *samples,size_t numsamples,int bps,int nch,int srate);
  void done(void);
-};
-
-class Tdll;
-struct winampDSPHeader;
-class Twinamp2dspDll
-{
-private:
- unsigned int refcount;
- Tdll *dll;
- winampDSPHeader *hdr;
- winampDSPHeader* (*winampDSPGetHeaderType)(void);
-public:
- Twinamp2dspDll(const ffstring &flnm);
- bool isMultichannelAllowed(const char_t *compList) const;
- ~Twinamp2dspDll();
- void addref(void);
- void release(void);
- ffstring descr;
- ffstring dllFileName;
- typedef std::vector<Twinamp2dsp*> Tfilters;
- Tfilters filters;
+ bool isMultichannelAllowed(const char_t *compList) const {return dll?dll->isMultichannelAllowed(compList):false;}
 };
 
 struct Twinamp2settings;

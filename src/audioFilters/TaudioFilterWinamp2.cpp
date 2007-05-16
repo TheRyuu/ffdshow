@@ -25,6 +25,7 @@ TaudioFilterWinamp2::TaudioFilterWinamp2(IffdshowBase *Ideci,Tfilters *Iparent):
 {
  old.flnm[0]=old.modulename[0]='\0';
  winamp2=NULL;filter=NULL;
+ old_nchannels=0;
 }
 void TaudioFilterWinamp2::done(void)
 {
@@ -60,6 +61,19 @@ HRESULT TaudioFilterWinamp2::process(TfilterQueue::iterator it,TsampleFormat &fm
    deciA->getWinamp2(&winamp2);
    filter=winamp2->getFilter(cfg,fmt.nchannels);
    if (filter) filter->init();
+  }
+
+ if (old_nchannels!=fmt.nchannels)
+  {
+   old_nchannels=fmt.nchannels;
+   if (filter && fmt.nchannels>2 && !filter->isMultichannelAllowed(cfg->allowMultichannelOnlyIn))
+    done();
+   if (!filter)
+    {
+     deciA->getWinamp2(&winamp2);
+     filter=winamp2->getFilter(cfg,fmt.nchannels);
+     if (filter) filter->init();
+    }
   }
 
  if (filter)
