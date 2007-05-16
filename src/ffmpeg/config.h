@@ -4,10 +4,7 @@
   	#define ARCH_X86_32 1
   #endif
   
-  // GCC >= 4.0.4
-  #if (__GNUC__ >4 || (__GNUC__ == 4 && (__GNU_MINOR__ > 0 || __GNUC_PATCHLEVEL__ >=4)))
-    #define HAVE_SSSE3
-  #endif
+  #define HAVE_SSSE3
 #endif
 
 #if defined(__GNUC__) || defined(__INTEL_COMPILER)
