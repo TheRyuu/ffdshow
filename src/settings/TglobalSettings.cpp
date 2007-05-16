@@ -103,6 +103,13 @@ void TglobalSettingsBase::load(void)
  size_t pos=complist.find(sinkuhadouken);
  if (pos!=complist.npos)
   complist.replace(pos+17,1,_l("\r\n"));
+
+ // fix ' wmenc.exe'#13#10 -> 'wmenc.exe'#13#10 (rev 1125 bug)
+ char_t wmenc[13]={' ','w','m','e','n','c','.','e','x','e',13,10,'\0'};
+ pos=complist.find(wmenc);
+ if (pos!=complist.npos)
+  complist.erase(pos,1);
+
  strncpy(useonlyin,complist.c_str(),countof(useonlyin));
  useonlyin[countof(useonlyin)-1]=0;
 }
