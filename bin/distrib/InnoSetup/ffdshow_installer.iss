@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1133
+#define tryout_revision = 1177
 #define buildyear = 2007
 #define buildmonth = '05'
-#define buildday = '04'
+#define buildday = '17'
 
 ; Build specific options
 #define unicode_required = True
@@ -691,8 +691,6 @@ end;
 
 function CheckModernIcon(): Boolean;
 var
-  Version: TWindowsVersion;
-  add: Integer;
   regVal: Cardinal;
 begin
   Result := True;
@@ -1044,11 +1042,9 @@ begin
 end;
 
 function ffRegReadDWordHKCU(regKeyName: String; regValName: String; defaultValue: Cardinal): Cardinal;
-var
-  regval: Cardinal;
 begin
   if NOT RegQueryDwordValue(HKCU, regKeyName, regValName, Result) then
-    Result :=defaultValue;
+    Result := defaultValue;
 end;
 
 procedure initComplist(var complist: TcomplistPage; regKeyName: String);
