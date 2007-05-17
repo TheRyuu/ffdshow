@@ -28,6 +28,8 @@
 #include "x86_cpu.h"
 #include "mmx.h"
 #include "../skl_dct.h"
+#include "vp3dsp_mmx.h"
+#include "vp3dsp_sse2.h"
 
 //#undef NDEBUG
 //#include <assert.h>
@@ -2872,10 +2874,6 @@ void ff_avg_cavs_qpel16_mc00_mmx2(uint8_t *dst, uint8_t *src, int stride) {
 void ff_mmx_idct(DCTELEM *block);
 void ff_mmxext_idct(DCTELEM *block);
 
-void ff_vp3_idct_sse2(int16_t *input_data);
-void ff_vp3_idct_mmx(int16_t *data);
-void ff_vp3_dsp_init_mmx(void);
-
 /* XXX: those functions should be suppressed ASAP when all IDCTs are
    converted */
 static void ff_libmpeg2mmx_idct_put(uint8_t *dest, int line_size, DCTELEM *block)
@@ -2898,26 +2896,7 @@ static void ff_libmpeg2mmx2_idct_add(uint8_t *dest, int line_size, DCTELEM *bloc
     ff_mmxext_idct (block);
     add_pixels_clamped_mmx(block, dest, line_size);
 }
-static void ff_vp3_idct_put_sse2(uint8_t *dest, int line_size, DCTELEM *block)
-{
-    ff_vp3_idct_sse2(block);
-    put_signed_pixels_clamped_mmx(block, dest, line_size);
-}
-static void ff_vp3_idct_add_sse2(uint8_t *dest, int line_size, DCTELEM *block)
-{
-    ff_vp3_idct_sse2(block);
-    add_pixels_clamped_mmx(block, dest, line_size);
-}
-static void ff_vp3_idct_put_mmx(uint8_t *dest, int line_size, DCTELEM *block)
-{
-    ff_vp3_idct_mmx(block);
-    put_signed_pixels_clamped_mmx(block, dest, line_size);
-}
-static void ff_vp3_idct_add_mmx(uint8_t *dest, int line_size, DCTELEM *block)
-{
-    ff_vp3_idct_mmx(block);
-    add_pixels_clamped_mmx(block, dest, line_size);
-}
+
 static void ff_idct_xvid_mmx_put(uint8_t *dest, int line_size, DCTELEM *block)
 {
     ff_idct_xvid_mmx (block);

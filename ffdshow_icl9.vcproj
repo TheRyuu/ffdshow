@@ -28,7 +28,7 @@
 				Optimization="0"
 				WholeProgramOptimization="FALSE"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="DEBUG,_DEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF"
+				PreprocessorDefinitions="DEBUG;_DEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX"
 				ExceptionHandling="TRUE"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="FALSE"
@@ -131,7 +131,7 @@
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="0"
 				CompileAs="0"
-				DisableSpecificWarnings="4250;4799"/>
+				DisableSpecificWarnings="4250;4799;"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -2796,6 +2796,12 @@
 				RelativePath=".\src\dialog\Cdelay.h">
 			</File>
 			<File
+				RelativePath="src\dialog\Cdirectshowcontrol.cpp">
+			</File>
+			<File
+				RelativePath="src\dialog\Cdirectshowcontrol.h">
+			</File>
+			<File
 				RelativePath=".\src\dialog\CdolbyDecoder.cpp">
 			</File>
 			<File
@@ -2916,10 +2922,10 @@
 				RelativePath=".\src\dialog\Cin.h">
 			</File>
 			<File
-				RelativePath="src\dialog\Cinfo.cpp">
+				RelativePath="src\dialog\Cinfosimd.cpp">
 			</File>
 			<File
-				RelativePath="src\dialog\Cinfo.h">
+				RelativePath="src\dialog\Cinfosimd.h">
 			</File>
 			<File
 				RelativePath="src\dialog\Ckeys.cpp">
