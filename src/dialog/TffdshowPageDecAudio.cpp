@@ -25,7 +25,8 @@
 #include "Ctray.h"
 #include "Ckeys.h"
 #include "Cabout.h"
-#include "Cinfo.h"
+#include "Cdirectshowcontrol.h"
+#include "Cinfosimd.h"
 #include "Cpresets.h"
 #include "ChideShow.h"
 #include "Cprocsfs.h"
@@ -87,6 +88,7 @@ void TffdshowPageDecAudio::onActivate(void)
  tvis.hInsertAfter=TVI_LAST;
  tvis.item.mask=TVIF_PARAM|TVIF_TEXT;
  addTI(&tvis,new TcodecsPageAudio(this));
+ addTI(&tvis,new TdirectshowControlPageDec(this))->hti;
  HTREEITEM htiInfo=addTI(&tvis,new TinfoPageDecAudio(this))->hti;
  tvis.hParent=htiInfo;
  addTI(&tvis,new TOSDpageAudio(this));

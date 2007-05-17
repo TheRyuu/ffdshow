@@ -547,7 +547,7 @@ indeterminate state - first try overlay, then use fallback format=ビデオレンダラ
 1838=フォーマットのオプション
 
 [116]
-0=情報とデバッグ
+0=DirectShowのコントロール
 1050=再生中:
 1054=解像度:
 1059=現在のフレーム:
@@ -569,7 +569,7 @@ indeterminate state - first try overlay, then use fallback format=ビデオレンダラ
 1265=FPS:
 1266=デコーダーのFPS:
 1284=情報
-1285=デバッグ
+1285=DirectShowのコントロール
 1502=ffdshowの複数起動:
 1503=メリット値:
 1738=DirectShowのグラフをGraphEditで利用可能にする
@@ -1705,3 +1705,8 @@ Use \n for line breaks.=改行には\nを使用します。
 
 [293]
 0=YV12 + VMR9ではキューを使用できません。
+
+[2020]
+0=情報とデバッグ
+1284=情報
+65535=以下のSIMD命令を使用する

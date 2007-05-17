@@ -27,7 +27,7 @@
 				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="DEBUG,_DEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF"
+				PreprocessorDefinitions="DEBUG;_DEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX"
 				ExceptionHandling="TRUE"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="FALSE"
@@ -1453,7 +1453,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DUSE32 -Dalloc -Dexec -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DUSE32 -Dalloc -Dexec -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1461,7 +1462,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DUSE32 -Dalloc -Dexec -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DUSE32 -Dalloc -Dexec -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1469,7 +1471,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DUSE32 -Dalloc -Dexec -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DUSE32 -Dalloc -Dexec -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1477,7 +1480,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DUSE32 -Dalloc -Dexec -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DUSE32 -Dalloc -Dexec -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
+"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
@@ -2787,6 +2791,12 @@
 				RelativePath=".\src\dialog\Cdelay.h">
 			</File>
 			<File
+				RelativePath="src\dialog\Cdirectshowcontrol.cpp">
+			</File>
+			<File
+				RelativePath="src\dialog\Cdirectshowcontrol.h">
+			</File>
+			<File
 				RelativePath=".\src\dialog\CdolbyDecoder.cpp">
 			</File>
 			<File
@@ -2907,10 +2917,10 @@
 				RelativePath=".\src\dialog\Cin.h">
 			</File>
 			<File
-				RelativePath="src\dialog\Cinfo.cpp">
+				RelativePath="src\dialog\Cinfosimd.cpp">
 			</File>
 			<File
-				RelativePath="src\dialog\Cinfo.h">
+				RelativePath="src\dialog\Cinfosimd.h">
 			</File>
 			<File
 				RelativePath="src\dialog\Ckeys.cpp">

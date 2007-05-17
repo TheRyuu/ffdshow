@@ -1,5 +1,5 @@
-#ifndef _CINFOPAGE_H_
-#define _CINFOPAGE_H_
+#ifndef _CINFOSIMD_H_
+#define _CINFOSIMD_H_
 
 #include "TconfPageDec.h"
 
@@ -26,29 +26,15 @@ private:
   };
  typedef std::vector<Titem> Titems;
  Titems infoitems;
- typedef std::pair<DWORD,const char_t*> Tmerit;
- typedef std::vector<Tmerit> Tmerits;
- Tmerits merits;
- static bool sortMerits(const Tmerit &m1,const Tmerit &m2);
- void merit2dlg(void);
- bool isMerit,meritset;
- void blacklist2dlg(void);
- void comp_dlg2cfg(int IDC_ED_target,int IDFF_target,const char_t *delimitResult);
- void onEditCompatibilitylist(void);
- void onEditBlacklist(void);
- void onEditCompI(int IDFF_target);
 protected:
  virtual const int* getInfos(void)=0;
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
  virtual void onFrame(void);
 public:
- static void convertDelimit(const char_t* instr,const char_t *inDelimit,ffstring &outstr,const char_t *outDelimit,const char_t *newFileName=NULL);
- static bool strCaseCmp(const ffstring &s1,const ffstring &s2);
  TinfoPageDec(TffdshowPageDec *Iparent,TinfoBase *Iinfo);
  virtual ~TinfoPageDec();
  virtual void cfg2dlg(void);
  virtual void init(void);
- virtual void applySettings(void);
  virtual void translate(void);
 };
 

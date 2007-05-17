@@ -23,7 +23,7 @@
 #include "ffdshow_constants.h"
 #include "Ttranslate.h"
 #include "TflatButtons.h"
-#include "Cinfo.h"
+#include "Cdirectshowcontrol.h"
 #include "Tconfig.h"
 #include "TglobalSettings.h"
 
@@ -46,12 +46,12 @@ void TcompatibilityList::init(void)
  const char_t *capt,*exp;
  if (IDFF_target==IDFF_compatibilityList)
   {
-   capt=tr->translate(m_hwnd,IDD_INFO,IDC_CHB_COMPATIBILITYLIST,NULL);
+   capt=tr->translate(m_hwnd,IDD_DIRECTSHOWCONTROL,IDC_CHB_COMPATIBILITYLIST,NULL);
    exp= tr->translate(m_hwnd,dialogId,IDC_TXT_COMPATIBILITYLIST,NULL);
   }
  else
   {
-   capt=tr->translate(m_hwnd,IDD_INFO,IDC_CHB_BLACKLIST,NULL);
+   capt=tr->translate(m_hwnd,IDD_DIRECTSHOWCONTROL,IDC_CHB_BLACKLIST,NULL);
    exp= _(-IDD_COMPATIBILITY,_l("List the name of executable file which is incompatible with ffdshow or which you don't want to use ffdshow, one for each line."));
   }
  if (capt && capt[0]) setWindowText(m_hwnd,capt);
@@ -77,7 +77,7 @@ void TcompatibilityList::dlg2dlg(const char_t *newFileName)
 void TcompatibilityList::cfg2dlgI(const char_t *complist0,const char_t *newFileName,const char_t *delimit)
 {
  ffstring complistResult;
- TinfoPageDec::convertDelimit(complist0,delimit,complistResult,_l("\r\n"),newFileName);
+ TdirectshowControlPageDec::convertDelimit(complist0,delimit,complistResult,_l("\r\n"),newFileName);
  SetDlgItemText(m_hwnd,IDC_ED_COMPATIBILITYLIST,complistResult.c_str());
 }
 void TcompatibilityList::dlg2cfg(void)
@@ -86,7 +86,7 @@ void TcompatibilityList::dlg2cfg(void)
  GetDlgItemText(m_hwnd,IDC_ED_COMPATIBILITYLIST,complist0,MAX_COMPATIBILITYLIST_LENGTH);
  ffstring complistResult;
 
- TinfoPageDec::convertDelimit(complist0,_l("\r\n"),complistResult,getDelimit());
+ TdirectshowControlPageDec::convertDelimit(complist0,_l("\r\n"),complistResult,getDelimit());
  cfgSet(IDFF_target,complistResult.c_str());
 }
 const char_t* TcompatibilityList::getDelimit(void)
@@ -161,7 +161,7 @@ void TcompatibilityList::onReset(void)
    if (IDFF_target==IDFF_blacklist)
     {
      ffstring complistResult;
-     TinfoPageDec::convertDelimit(BLACKLIST_EXE_FILENAME,_l(";"),complistResult,_l("\r\n"));
+     TdirectshowControlPageDec::convertDelimit(BLACKLIST_EXE_FILENAME,_l(";"),complistResult,_l("\r\n"));
      SetDlgItemText(m_hwnd,IDC_ED_COMPATIBILITYLIST,complistResult.c_str());
     }
   }

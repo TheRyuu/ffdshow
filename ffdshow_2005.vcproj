@@ -5336,11 +5336,19 @@
 				>
 			</File>
 			<File
-				RelativePath="src\dialog\Cinfo.cpp"
+				RelativePath="src\dialog\Cdirectshowcontrol.cpp"
 				>
 			</File>
 			<File
-				RelativePath="src\dialog\Cinfo.h"
+				RelativePath="src\dialog\Cdirectshowcontrol.h"
+				>
+			</File>
+			<File
+				RelativePath="src\dialog\Cinfosimd.cpp"
+				>
+			</File>
+			<File
+				RelativePath="src\dialog\Cinfosimd.h"
 				>
 			</File>
 			<File

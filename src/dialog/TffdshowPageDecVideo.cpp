@@ -23,7 +23,8 @@
 #include "TffdshowPageDecVideo.h"
 #include "Ttranslate.h"
 #include "Ccodecs.h"
-#include "Cinfo.h"
+#include "Cdirectshowcontrol.h"
+#include "Cinfosimd.h"
 #include "Ctray.h"
 #include "Cpresets.h"
 #include "Cfont.h"
@@ -94,6 +95,7 @@ void TffdshowPageDecVideo::onActivate(void)
    addTI(&tvis,new TcodecsPageVideo(this));
    if ((filterMode&IDFF_FILTERMODE_VFW)==0)
     {
+     addTI(&tvis,new TdirectshowControlPageDec(this))->hti;
      HTREEITEM htiInfo=addTI(&tvis,new TinfoPageDecVideo(this))->hti;
      tvis.hParent=htiInfo;
      HTREEITEM htiOSD=addTI(&tvis,new TOSDpageVideo(this))->hti;

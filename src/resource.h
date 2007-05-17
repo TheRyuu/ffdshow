@@ -19,7 +19,8 @@
 #define IDI_FFDSHOW                     112
 #define IDD_SUBTITLES                   113
 #define IDD_CODECS                      115
-#define IDD_INFO                        116
+#define IDD_DIRECTSHOWCONTROL           116
+#define IDD_INFOSIMD                    2020
 #define IDD_DECODEROPTIONS              118
 #define IDD_PRESETS                     119
 #define IDD_POSTPROC                    120
@@ -1748,7 +1749,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        238
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2020
+#define _APS_NEXT_CONTROL_VALUE         2021
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif
