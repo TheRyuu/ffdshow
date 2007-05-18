@@ -4,7 +4,7 @@
   	#define ARCH_X86_32 1
   #endif
   
-  #define HAVE_SSSE3
+  #define HAVE_SSSE3 1
 #endif
 
 #if defined(__GNUC__) || defined(__INTEL_COMPILER)
@@ -15,7 +15,6 @@
  #define __CPU__ 586
 #endif
 
-
 #define HAVE_MALLOC_H 1
 #define HAVE_LRINTF 1
 #define SIMPLE_IDCT 1
@@ -23,7 +22,7 @@
 #define HAVE_W32THREADS 1
 #define HAVE_THREADS 1
 #define HAVE_MEMALIGN 1
-
+#define ASMALIGN(ZEROBITS) ".align 1<<" #ZEROBITS "\n\t"
 
 #ifndef DECODERS_ONLY
  /* encoding stuff */

@@ -67,7 +67,7 @@ asm volatile(
                 "packssdw %%mm5, %%mm5          \n\t"
                 "psubw %%mm5, %%mm7             \n\t"
                 "pxor %%mm4, %%mm4              \n\t"
-                ".balign 16                     \n\t"
+                ASMALIGN(4)
                 "1:                             \n\t"
                 "movq (%0, %3), %%mm0           \n\t"
                 "movq 8(%0, %3), %%mm1          \n\t"
@@ -130,7 +130,7 @@ asm volatile(
                 "packssdw %%mm5, %%mm5          \n\t"
                 "psubw %%mm5, %%mm7             \n\t"
                 "pxor %%mm4, %%mm4              \n\t"
-                ".balign 16                     \n\t"
+                ASMALIGN(4)
                 "1:                             \n\t"
                 "movq (%0, %3), %%mm0           \n\t"
                 "movq 8(%0, %3), %%mm1          \n\t"
@@ -223,7 +223,7 @@ asm volatile(
                 "packssdw %%mm6, %%mm6          \n\t"
                 "packssdw %%mm6, %%mm6          \n\t"
                 "mov %3, %%"REG_a"              \n\t"
-                ".balign 16                     \n\t"
+                ASMALIGN(4)
                 "1:                             \n\t"
                 "movq (%0, %%"REG_a"), %%mm0    \n\t"
                 "movq 8(%0, %%"REG_a"), %%mm1   \n\t"
@@ -286,7 +286,7 @@ asm volatile(
                 "packssdw %%mm6, %%mm6          \n\t"
                 "packssdw %%mm6, %%mm6          \n\t"
                 "mov %3, %%"REG_a"              \n\t"
-                ".balign 16                     \n\t"
+                ASMALIGN(4)
                 "1:                             \n\t"
                 "movq (%0, %%"REG_a"), %%mm0    \n\t"
                 "movq 8(%0, %%"REG_a"), %%mm1   \n\t"
@@ -358,7 +358,7 @@ asm volatile(
                 "packssdw %%mm6, %%mm6          \n\t"
                 "packssdw %%mm6, %%mm6          \n\t"
                 "mov %3, %%"REG_a"              \n\t"
-                ".balign 16                     \n\t"
+                ASMALIGN(4)
                 "1:                             \n\t"
                 "movq (%0, %%"REG_a"), %%mm0    \n\t"
                 "movq 8(%0, %%"REG_a"), %%mm1   \n\t"
@@ -419,7 +419,7 @@ asm volatile(
                 "packssdw %%mm6, %%mm6          \n\t"
                 "packssdw %%mm6, %%mm6          \n\t"
                 "mov %3, %%"REG_a"              \n\t"
-                ".balign 16                     \n\t"
+                ASMALIGN(4)
                 "1:                             \n\t"
                 "movq (%0, %%"REG_a"), %%mm0    \n\t"
                 "movq 8(%0, %%"REG_a"), %%mm1   \n\t"

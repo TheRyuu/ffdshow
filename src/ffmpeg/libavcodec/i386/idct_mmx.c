@@ -1,7 +1,4 @@
 /*
- * Note: For libavcodec, this code can also be used under the LGPL license
- */
-/*
  * idct_mmx.c
  * Copyright (C) 1999-2001 Aaron Holtzman <aholtzma@ess.engr.uvic.ca>
  *
@@ -18,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
+ * along with mpeg2dec; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 

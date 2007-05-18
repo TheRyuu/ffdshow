@@ -36,7 +36,7 @@ static inline void sad8_1_mmx(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 {
     long len= -(stride*h);
     asm volatile(
-        ".balign 16                     \n\t"
+        ASMALIGN(4)
         "1:                             \n\t"
         "movq (%1, %%"REG_a"), %%mm0    \n\t"
         "movq (%2, %%"REG_a"), %%mm2    \n\t"
@@ -71,7 +71,7 @@ static inline void sad8_1_mmx(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 static inline void sad8_1_mmx2(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 {
     asm volatile(
-        ".balign 16                     \n\t"
+        ASMALIGN(4)
         "1:                             \n\t"
         "movq (%1), %%mm0               \n\t"
         "movq (%1, %3), %%mm1           \n\t"
@@ -93,7 +93,7 @@ static int sad16_sse2(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)
     int ret;
     asm volatile(
         "pxor %%xmm6, %%xmm6            \n\t"
-        ".balign 16                     \n\t"
+        ASMALIGN(4)
         "1:                             \n\t"
         "movdqu (%1), %%xmm0            \n\t"
         "movdqu (%1, %3), %%xmm1        \n\t"
@@ -120,7 +120,7 @@ static int sad16_sse2(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)
 static inline void sad8_x2a_mmx2(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 {
     asm volatile(
-        ".balign 16                     \n\t"
+        ASMALIGN(4)
         "1:                             \n\t"
         "movq (%1), %%mm0               \n\t"
         "movq (%1, %3), %%mm1           \n\t"
@@ -144,7 +144,7 @@ static inline void sad8_y2a_mmx2(uint8_t *blk1, uint8_t *blk2, int stride, int h
     asm volatile(
         "movq (%1), %%mm0               \n\t"
         "add %3, %1                     \n\t"
-        ".balign 16                     \n\t"
+        ASMALIGN(4)
         "1:                             \n\t"
         "movq (%1), %%mm1               \n\t"
         "movq (%1, %3), %%mm2           \n\t"
@@ -171,7 +171,7 @@ static inline void sad8_4_mmx2(uint8_t *blk1, uint8_t *blk2, int stride, int h)
         "movq (%1), %%mm0               \n\t"
         "pavgb 1(%1), %%mm0             \n\t"
         "add %3, %1                     \n\t"
-        ".balign 16                     \n\t"
+        ASMALIGN(4)
         "1:                             \n\t"
         "movq (%1), %%mm1               \n\t"
         "movq (%1,%3), %%mm2            \n\t"
@@ -198,7 +198,7 @@ static inline void sad8_2_mmx(uint8_t *blk1a, uint8_t *blk1b, uint8_t *blk2, int
 {
     long len= -(stride*h);
     asm volatile(
-        ".balign 16                     \n\t"
+        ASMALIGN(4)
         "1:                             \n\t"
         "movq (%1, %%"REG_a"), %%mm0    \n\t"
         "movq (%2, %%"REG_a"), %%mm1    \n\t"
@@ -246,7 +246,7 @@ static inline void sad8_4_mmx(uint8_t *blk1, uint8_t *blk2, int stride, int h)
         "punpckhbw %%mm7, %%mm3         \n\t"
         "paddw %%mm2, %%mm0             \n\t"
         "paddw %%mm3, %%mm1             \n\t"
-        ".balign 16                     \n\t"
+        ASMALIGN(4)
         "1:                             \n\t"
         "movq (%2, %%"REG_a"), %%mm2    \n\t"
         "movq 1(%2, %%"REG_a"), %%mm4   \n\t"

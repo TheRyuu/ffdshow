@@ -65,7 +65,7 @@ static const uint64_t ff_pb_A1 attribute_used __attribute__ ((aligned(8))) = 0xA
 static const uint64_t ff_pb_5F attribute_used __attribute__ ((aligned(8))) = 0x5F5F5F5F5F5F5F5FULL;
 static const uint64_t ff_pb_FC attribute_used __attribute__ ((aligned(8))) = 0xFCFCFCFCFCFCFCFCULL;
 
-#define JUMPALIGN() __asm __volatile (".balign 8"::)
+#define JUMPALIGN() __asm __volatile (ASMALIGN(3)::)
 #define MOVQ_ZERO(regd)  __asm __volatile ("pxor %%" #regd ", %%" #regd ::)
 
 #define MOVQ_WONE(regd) \
@@ -219,7 +219,7 @@ static void get_pixels_mmx(DCTELEM *block, const uint8_t *pixels, int line_size)
     asm volatile(
         "mov $-128, %%"REG_a"           \n\t"
         "pxor %%mm7, %%mm7              \n\t"
-        ".balign 16                     \n\t"
+        ASMALIGN(4)
         "1:                             \n\t"
         "movq (%0), %%mm0               \n\t"
         "movq (%0, %2), %%mm2           \n\t"
@@ -247,7 +247,7 @@ static inline void diff_pixels_mmx(DCTELEM *block, const uint8_t *s1, const uint
     asm volatile(
         "pxor %%mm7, %%mm7              \n\t"
         "mov $-128, %%"REG_a"           \n\t"
-        ".balign 16                     \n\t"
+        ASMALIGN(4)
         "1:                             \n\t"
         "movq (%0), %%mm0               \n\t"
         "movq (%1), %%mm2               \n\t"
@@ -390,7 +390,7 @@ static void put_pixels4_mmx(uint8_t *block, const uint8_t *pixels, int line_size
 {
     __asm __volatile(
          "lea (%3, %3), %%"REG_a"       \n\t"
-         ".balign 8                     \n\t"
+         ASMALIGN(3)
          "1:                            \n\t"
          "movd (%1), %%mm0              \n\t"
          "movd (%1, %3), %%mm1          \n\t"
@@ -416,7 +416,7 @@ static void put_pixels8_mmx(uint8_t *block, const uint8_t *pixels, int line_size
 {
     __asm __volatile(
          "lea (%3, %3), %%"REG_a"       \n\t"
-         ".balign 8                     \n\t"
+         ASMALIGN(3)
          "1:                            \n\t"
          "movq (%1), %%mm0              \n\t"
          "movq (%1, %3), %%mm1          \n\t"
@@ -442,7 +442,7 @@ static void put_pixels16_mmx(uint8_t *block, const uint8_t *pixels, int line_siz
 {
     __asm __volatile(
          "lea (%3, %3), %%"REG_a"       \n\t"
-         ".balign 8                     \n\t"
+         ASMALIGN(3)
          "1:                            \n\t"
          "movq (%1), %%mm0              \n\t"
          "movq 8(%1), %%mm4             \n\t"
@@ -2753,91 +2753,69 @@ static void gmc_mmx(uint8_t *dst, uint8_t *src, int stride, int h, int ox, int o
 }
 
 #ifdef CONFIG_ENCODERS
-static int try_8x8basis_mmx(int16_t rem[64], int16_t weight[64], int16_t basis[64], int scale){
-    long i=0;
 
-    assert(FFABS(scale) < 256);
-    scale<<= 16 + 1 - BASIS_SHIFT + RECON_SHIFT;
+#define PHADDD(a, t)\
+    "movq "#a", "#t"                  \n\t"\
+    "psrlq $32, "#a"                  \n\t"\
+    "paddd "#t", "#a"                 \n\t"
+/*
+   pmulhw: dst[0-15]=(src[0-15]*dst[0-15])[16-31]
+   pmulhrw: dst[0-15]=(src[0-15]*dst[0-15] + 0x8000)[16-31]
+   pmulhrsw: dst[0-15]=(src[0-15]*dst[0-15] + 0x4000)[15-30]
+ */
+#define PMULHRW(x, y, s, o)\
+    "pmulhw " #s ", "#x "            \n\t"\
+    "pmulhw " #s ", "#y "            \n\t"\
+    "paddw " #o ", "#x "             \n\t"\
+    "paddw " #o ", "#y "             \n\t"\
+    "psraw $1, "#x "                 \n\t"\
+    "psraw $1, "#y "                 \n\t"
+#define DEF(x) x ## _mmx
+#define SET_RND MOVQ_WONE
+#define SCALE_OFFSET 1
 
-    asm volatile(
-        "pcmpeqw %%mm6, %%mm6           \n\t" // -1w
-        "psrlw $15, %%mm6               \n\t" //  1w
-        "pxor %%mm7, %%mm7              \n\t"
-        "movd  %4, %%mm5                \n\t"
-        "punpcklwd %%mm5, %%mm5         \n\t"
-        "punpcklwd %%mm5, %%mm5         \n\t"
-        "1:                             \n\t"
-        "movq  (%1, %0), %%mm0          \n\t"
-        "movq  8(%1, %0), %%mm1         \n\t"
-        "pmulhw %%mm5, %%mm0            \n\t"
-        "pmulhw %%mm5, %%mm1            \n\t"
-        "paddw %%mm6, %%mm0             \n\t"
-        "paddw %%mm6, %%mm1             \n\t"
-        "psraw $1, %%mm0                \n\t"
-        "psraw $1, %%mm1                \n\t"
-        "paddw (%2, %0), %%mm0          \n\t"
-        "paddw 8(%2, %0), %%mm1         \n\t"
-        "psraw $6, %%mm0                \n\t"
-        "psraw $6, %%mm1                \n\t"
-        "pmullw (%3, %0), %%mm0         \n\t"
-        "pmullw 8(%3, %0), %%mm1        \n\t"
-        "pmaddwd %%mm0, %%mm0           \n\t"
-        "pmaddwd %%mm1, %%mm1           \n\t"
-        "paddd %%mm1, %%mm0             \n\t"
-        "psrld $4, %%mm0                \n\t"
-        "paddd %%mm0, %%mm7             \n\t"
-        "add $16, %0                    \n\t"
-        "cmp $128, %0                   \n\t" //FIXME optimize & bench
-        " jb 1b                         \n\t"
-        "movq %%mm7, %%mm6              \n\t"
-        "psrlq $32, %%mm7               \n\t"
-        "paddd %%mm6, %%mm7             \n\t"
-        "psrld $2, %%mm7                \n\t"
-        "movd %%mm7, %0                 \n\t"
+#include "dsputil_mmx_qns.h"
 
-        : "+r" (i)
-        : "r"(basis), "r"(rem), "r"(weight), "g"(scale)
-    );
-    return i;
-}
+#undef DEF
+#undef SET_RND
+#undef SCALE_OFFSET
+#undef PMULHRW
 
-static void add_8x8basis_mmx(int16_t rem[64], int16_t basis[64], int scale){
-    long i=0;
+#define DEF(x) x ## _3dnow
+#define SET_RND(x)
+#define SCALE_OFFSET 0
+#define PMULHRW(x, y, s, o)\
+    "pmulhrw " #s ", "#x "           \n\t"\
+    "pmulhrw " #s ", "#y "           \n\t"
 
-    if(FFABS(scale) < 256){
-        scale<<= 16 + 1 - BASIS_SHIFT + RECON_SHIFT;
-        asm volatile(
-                "pcmpeqw %%mm6, %%mm6   \n\t" // -1w
-                "psrlw $15, %%mm6       \n\t" //  1w
-                "movd  %3, %%mm5        \n\t"
-                "punpcklwd %%mm5, %%mm5 \n\t"
-                "punpcklwd %%mm5, %%mm5 \n\t"
-                "1:                     \n\t"
-                "movq  (%1, %0), %%mm0  \n\t"
-                "movq  8(%1, %0), %%mm1 \n\t"
-                "pmulhw %%mm5, %%mm0    \n\t"
-                "pmulhw %%mm5, %%mm1    \n\t"
-                "paddw %%mm6, %%mm0     \n\t"
-                "paddw %%mm6, %%mm1     \n\t"
-                "psraw $1, %%mm0        \n\t"
-                "psraw $1, %%mm1        \n\t"
-                "paddw (%2, %0), %%mm0  \n\t"
-                "paddw 8(%2, %0), %%mm1 \n\t"
-                "movq %%mm0, (%2, %0)   \n\t"
-                "movq %%mm1, 8(%2, %0)  \n\t"
-                "add $16, %0            \n\t"
-                "cmp $128, %0           \n\t" //FIXME optimize & bench
-                " jb 1b                 \n\t"
+#include "dsputil_mmx_qns.h"
 
-                : "+r" (i)
-                : "r"(basis), "r"(rem), "g"(scale)
-        );
-    }else{
-        for(i=0; i<8*8; i++){
-            rem[i] += (basis[i]*scale + (1<<(BASIS_SHIFT - RECON_SHIFT-1)))>>(BASIS_SHIFT - RECON_SHIFT);
-        }
-    }
-}
+#undef DEF
+#undef SET_RND
+#undef SCALE_OFFSET
+#undef PMULHRW
+
+#ifdef HAVE_SSSE3
+#undef PHADDD
+#define DEF(x) x ## _ssse3
+#define SET_RND(x)
+#define SCALE_OFFSET -1
+#define PHADDD(a, t)\
+    "pshufw $0x0E, "#a", "#t"         \n\t"\
+    "paddd "#t", "#a"                 \n\t" /* faster than phaddd on core2 */
+#define PMULHRW(x, y, s, o)\
+    "pmulhrsw " #s ", "#x "          \n\t"\
+    "pmulhrsw " #s ", "#y "          \n\t"
+
+#include "dsputil_mmx_qns.h"
+
+#undef DEF
+#undef SET_RND
+#undef SCALE_OFFSET
+#undef PMULHRW
+#undef PHADDD
+#endif //HAVE_SSSE3
+
 #endif /* CONFIG_ENCODERS */
 
 #define PREFETCH(name, op) \
@@ -3622,6 +3600,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->avg_h264_chroma_pixels_tab[1]= avg_h264_chroma_mc4_3dnow;
         }
 
+#ifdef CONFIG_ENCODERS
         if(mm_flags & MM_SSE2){
             c->sum_abs_dctelem= sum_abs_dctelem_sse2;
             c->hadamard8_diff[0]= hadamard8_diff16_sse2;
@@ -3630,10 +3609,15 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 
 #ifdef HAVE_SSSE3
         if(mm_flags & MM_SSSE3){
+            if(!(avctx->flags & CODEC_FLAG_BITEXACT)){
+                c->try_8x8basis= try_8x8basis_ssse3;
+            }
+            c->add_8x8basis= add_8x8basis_ssse3;
             c->sum_abs_dctelem= sum_abs_dctelem_ssse3;
             c->hadamard8_diff[0]= hadamard8_diff16_ssse3;
             c->hadamard8_diff[1]= hadamard8_diff_ssse3;
         }
+#endif
 #endif
 
         if(mm_flags & MM_SSE2){
@@ -3648,6 +3632,12 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         }
 
         if(mm_flags & MM_3DNOW){
+#ifdef CONFIG_ENCODERS
+            if(!(avctx->flags & CODEC_FLAG_BITEXACT)){
+                c->try_8x8basis= try_8x8basis_3dnow;
+            }
+            c->add_8x8basis= add_8x8basis_3dnow;
+#endif //CONFIG_ENCODERS
             c->vorbis_inverse_coupling = vorbis_inverse_coupling_3dnow;
             c->vector_fmul = vector_fmul_3dnow;
             if(!(avctx->flags & CODEC_FLAG_BITEXACT))
