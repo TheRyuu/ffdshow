@@ -27,7 +27,7 @@
 				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="DEBUG;_DEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX"
+				PreprocessorDefinitions="DEBUG;_DEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF"
 				ExceptionHandling="TRUE"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="FALSE"
