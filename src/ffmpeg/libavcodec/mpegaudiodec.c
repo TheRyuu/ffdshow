@@ -36,12 +36,14 @@
 #endif
 
 #include "mpegaudio.h"
-#include "mpegaudiodectab.h"
+
 #include "mathops.h"
 
 #define FIXHR(a) ((int)((a) * (1LL<<32) + 0.5))
 
 /****************/
+
+#include "mpegaudiodata.h"
 
 static DECLARE_ALIGNED_16(MPA_INT, window[512]);
 
@@ -357,7 +359,7 @@ void ff_mpa_synth_init(MPA_INT *window)
     /* max = 18760, max sum over all 16 coefs : 44736 */
     for(i=0;i<257;i++) {
         int v;
-        v = mpa_enwindow[i];
+        v = ff_mpa_enwindow[i];
 #if WFRAC_BITS < 16
         v = (v + (1 << (16 - WFRAC_BITS - 1))) >> (16 - WFRAC_BITS);
 #endif

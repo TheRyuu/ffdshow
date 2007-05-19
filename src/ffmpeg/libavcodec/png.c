@@ -924,12 +924,13 @@ AVCodec png_decoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_PNG,
     sizeof(PNGContext),
-    common_init,
-    NULL,
-    NULL, //decode_end,
-    decode_frame,
-    0 /*CODEC_CAP_DR1*/ /*| CODEC_CAP_DRAW_HORIZ_BAND*/,
-    NULL
+    /*.init=*/common_init,
+    /*.encode=*/NULL,
+    /*.close=*/NULL, //decode_end
+    /*.decode=*/decode_frame,
+    /*.capabilities=*/0, //CODEC_CAP_DR1 | CODEC_CAP_DRAW_HORIZ_BAND
+    /*.next=*/NULL,
+    /*.flush=*/NULL,
 };
 
 #ifdef CONFIG_ENCODERS
@@ -938,9 +939,14 @@ AVCodec png_encoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_PNG,
     sizeof(PNGContext),
-    common_init,
-    encode_frame,
-    NULL, //encode_end,
+    /*.init=*/common_init,
+    /*.encode=*/encode_frame,
+    /*.close=*/NULL, //encode_end
+    /*.decode=*/NULL,
+    /*.capabilities=*/0,
+    /*.next=*/NULL,
+    /*.flush=*/NULL,
+    /*.supported_framerates=*/NULL,
 #if __STDC_VERSION >= 199901L
     .pix_fmts= (enum PixelFormat[]){PIX_FMT_RGB24, PIX_FMT_RGB32, PIX_FMT_PAL8, PIX_FMT_GRAY8, PIX_FMT_MONOBLACK, -1},
 #endif

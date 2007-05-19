@@ -1268,105 +1268,13 @@ static int AC3_encode_close(AVCodecContext *avctx)
     return 0;
 }
 
-#if 0
-/*************************************************************************/
-/* TEST */
-
-#define FN (N/4)
-
-void fft_test(void)
-{
-    IComplex in[FN], in1[FN];
-    int k, n, i;
-    float sum_re, sum_im, a;
-
-    /* FFT test */
-
-    for(i=0;i<FN;i++) {
-        in[i].re = random() % 65535 - 32767;
-        in[i].im = random() % 65535 - 32767;
-        in1[i] = in[i];
-    }
-    fft(in, 7);
-
-    /* do it by hand */
-    for(k=0;k<FN;k++) {
-        sum_re = 0;
-        sum_im = 0;
-        for(n=0;n<FN;n++) {
-            a = -2 * M_PI * (n * k) / FN;
-            sum_re += in1[n].re * cos(a) - in1[n].im * sin(a);
-            sum_im += in1[n].re * sin(a) + in1[n].im * cos(a);
-        }
-        printf("%3d: %6d,%6d %6.0f,%6.0f\n",
-               k, in[k].re, in[k].im, sum_re / FN, sum_im / FN);
-    }
-}
-
-void mdct_test(void)
-{
-    int16_t input[N];
-    int32_t output[N/2];
-    float input1[N];
-    float output1[N/2];
-    float s, a, err, e, emax;
-    int i, k, n;
-
-    for(i=0;i<N;i++) {
-        input[i] = (random() % 65535 - 32767) * 9 / 10;
-        input1[i] = input[i];
-    }
-
-    mdct512(output, input);
-
-    /* do it by hand */
-    for(k=0;k<N/2;k++) {
-        s = 0;
-        for(n=0;n<N;n++) {
-            a = (2*M_PI*(2*n+1+N/2)*(2*k+1) / (4 * N));
-            s += input1[n] * cos(a);
-        }
-        output1[k] = -2 * s / N;
-    }
-
-    err = 0;
-    emax = 0;
-    for(i=0;i<N/2;i++) {
-        printf("%3d: %7d %7.0f\n", i, output[i], output1[i]);
-        e = output[i] - output1[i];
-        if (e > emax)
-            emax = e;
-        err += e * e;
-    }
-    printf("err2=%f emax=%f\n", err / (N/2), emax);
-}
-
-void test_ac3(void)
-{
-    AC3EncodeContext ctx;
-    unsigned char frame[AC3_MAX_CODED_FRAME_SIZE];
-    short samples[AC3_FRAME_SIZE];
-    int ret, i;
-
-    AC3_encode_init(&ctx, 44100, 64000, 1);
-
-    fft_test();
-    mdct_test();
-
-    for(i=0;i<AC3_FRAME_SIZE;i++)
-        samples[i] = (int)(sin(2*M_PI*i*1000.0/44100) * 10000);
-    ret = AC3_encode_frame(&ctx, frame, samples);
-    printf("ret=%d\n", ret);
-}
-#endif
-
 AVCodec ac3_encoder = {
     "ac3",
     CODEC_TYPE_AUDIO,
     CODEC_ID_AC3,
     sizeof(AC3EncodeContext),
-    AC3_encode_init,
-    AC3_encode_frame,
-    AC3_encode_close,
-    NULL,
+    /*.init=*/AC3_encode_init,
+    /*.encode=*/AC3_encode_frame,
+    /*.close=*/AC3_encode_close,
+    /*.decode=*/NULL,
 };

@@ -64,5 +64,3 @@ void ff_mpa_synth_filter(MPA_INT *synth_buf_ptr, int *synth_buf_offset,
                          MPA_INT *window, int *dither_state,
                          OUT_INT *samples, int incr,
                          int32_t sb_samples[SBLIMIT]);
-
-extern const int32_t mpa_enwindow[257];

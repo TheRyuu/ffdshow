@@ -3267,13 +3267,13 @@ AVCodec mpeg1video_decoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_MPEG1VIDEO,
     sizeof(Mpeg1Context),
-    mpeg_decode_init,
-    NULL,
-    mpeg_decode_end,
-    mpeg_decode_frame,
-    CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
-    NULL, //next
-    /*.flush=*/ ff_mpeg_flush,
+    /*.init=*/mpeg_decode_init,
+    /*.encode=*/NULL,
+    /*.close=*/mpeg_decode_end,
+    /*.decode=*/mpeg_decode_frame,
+    /*.capabilities=*/CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
+    /*.next=*/NULL,
+    /*.flush=*/ff_mpeg_flush,
 };
 
 AVCodec mpeg2video_decoder = {
@@ -3281,13 +3281,13 @@ AVCodec mpeg2video_decoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_MPEG2VIDEO,
     sizeof(Mpeg1Context),
-    mpeg_decode_init,
-    NULL,
-    mpeg_decode_end,
-    mpeg_decode_frame,
-    CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
-    NULL,
-    /*.flush=*/ ff_mpeg_flush,
+    /*.init=*/mpeg_decode_init,
+    /*.encode=*/NULL,
+    /*.close=*/mpeg_decode_end,
+    /*.decode=*/mpeg_decode_frame,
+    /*.capabilities=*/CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
+    /*.next=*/NULL,
+    /*.flush=*/ff_mpeg_flush,
 };
 
 //legacy decoder
@@ -3296,13 +3296,13 @@ AVCodec mpegvideo_decoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_MPEG2VIDEO,
     sizeof(Mpeg1Context),
-    mpeg_decode_init,
-    NULL,
-    mpeg_decode_end,
-    mpeg_decode_frame,
-    CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
-    NULL,
-    /*.flush=*/ ff_mpeg_flush,
+    /*.init=*/mpeg_decode_init,
+    /*.encode=*/NULL,
+    /*.close=*/mpeg_decode_end,
+    /*.decode=*/mpeg_decode_frame,
+    /*.capabilities=*/CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
+    /*.next=*/NULL,
+    /*.flush=*/ff_mpeg_flush,
 };
 
 #ifdef CONFIG_ENCODERS
@@ -3312,16 +3312,16 @@ AVCodec mpeg1video_encoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_MPEG1VIDEO,
     sizeof(MpegEncContext),
-    encode_init,
-    MPV_encode_picture,
-    MPV_encode_end,
-    NULL,
-    /*.capabilities=*/ CODEC_CAP_DELAY,
-    /*.next=*/ NULL,
-    /*.flush=*/ NULL,
-    /*.supported_framerates=*/ ff_frame_rate_tab+1
+    /*.init=*/encode_init,
+    /*.encode=*/MPV_encode_picture,
+    /*.close=*/MPV_encode_end,
+    /*.decode=*/NULL,
+    /*.capabilities=*/CODEC_CAP_DELAY,
+    /*.next=*/NULL,
+    /*.flush=*/NULL,
+    /*.supported_framerates=*/ff_frame_rate_tab+1,
 #if __STDC_VERSION >= 199901L
-    ,.pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1}
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
 #endif
 };
 
@@ -3330,16 +3330,16 @@ AVCodec mpeg2video_encoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_MPEG2VIDEO,
     sizeof(MpegEncContext),
-    encode_init,
-    MPV_encode_picture,
-    MPV_encode_end,
-    NULL,
-    /*.capabilities=*/ CODEC_CAP_DELAY,
-    /*.next=*/ NULL,
-    /*.flush=*/ NULL,
-    /*.supported_framerates=*/ ff_frame_rate_tab+1
+    /*.init=*/encode_init,
+    /*.encode=*/MPV_encode_picture,
+    /*.close=*/MPV_encode_end,
+    /*.decode=*/NULL,
+    /*.capabilities=*/CODEC_CAP_DELAY,
+    /*.next=*/NULL,
+    /*.flush=*/NULL,
+    /*.supported_framerates=*/ff_frame_rate_tab+1,
 #if __STDC_VERSION >= 199901L
-    ,.pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_YUV422P, -1}
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_YUV422P, -1},
 #endif
 };
 

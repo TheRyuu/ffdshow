@@ -662,6 +662,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\ljpegenc.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\loco.c"
 				>
 			</File>
@@ -675,6 +679,14 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mjpeg.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\mjpegdec.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\mjpegenc.c"
 				>
 			</File>
 			<File
@@ -723,6 +735,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mpeg12.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\mpegaudiodata.c"
 				>
 			</File>
 			<File
@@ -1131,6 +1147,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\mjpegenc.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\mpeg12data.h"
 				>
 			</File>
@@ -1143,7 +1163,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\mpegaudiodectab.h"
+				RelativePath=".\libavcodec\mpegaudiodata.h"
 				>
 			</File>
 			<File

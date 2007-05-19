@@ -1,5 +1,5 @@
 /*
- * MPEG Audio decoder
+ * MPEG Audio common tables
  * copyright (c) 2002 Fabrice Bellard
  *
  * This file is part of FFmpeg.
@@ -20,12 +20,15 @@
  */
 
 /**
- * @file mpegaudiodectab.h
- * mpeg audio layer decoder tables.
+ * @file mpegaudiodata.c
+ * mpeg audio layer common tables.
  */
 
+#include "mpegaudiodata.h"
+
+
 /* half mpeg encoding window (full precision) */
-const int32_t mpa_enwindow[257] = {
+const int32_t ff_mpa_enwindow[257] = {
      0,    -1,    -1,    -1,    -1,    -1,    -1,    -2,
     -2,    -2,    -2,    -3,    -3,    -4,    -4,    -5,
     -5,    -6,    -7,    -7,    -8,    -9,   -10,   -11,

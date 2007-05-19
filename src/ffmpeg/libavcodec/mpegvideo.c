@@ -30,6 +30,7 @@
 #include "avcodec.h"
 #include "dsputil.h"
 #include "mpegvideo.h"
+#include "mjpegenc.h"
 #include "faandct.h"
 #include <limits.h>
 
@@ -1201,7 +1202,7 @@ int MPV_encode_init(AVCodecContext *avctx)
         s->mjpeg_hsample[0] = 2;
         s->mjpeg_hsample[1] = 2>>chroma_h_shift;
         s->mjpeg_hsample[2] = 2>>chroma_h_shift;
-        if (mjpeg_init(s) < 0)
+        if (ff_mjpeg_encode_init(s) < 0)
             return -1;
         avctx->delay=0;
         s->low_delay=1;
@@ -1381,7 +1382,7 @@ int MPV_encode_end(AVCodecContext *avctx)
 
     MPV_common_end(s);
     if (s->out_format == FMT_MJPEG)
-        mjpeg_close(s);
+        ff_mjpeg_encode_close(s);
 
     av_freep(&avctx->extradata);
 
@@ -2533,7 +2534,7 @@ vbv_retry:
         MPV_frame_end(s);
 
         if (s->out_format == FMT_MJPEG)
-            mjpeg_picture_trailer(s);
+            ff_mjpeg_encode_picture_trailer(s);
 
         if(avctx->rc_buffer_size){
             RateControlContext *rcc= &s->rc_context;
@@ -4576,7 +4577,7 @@ static av_always_inline void encode_mb_internal(MpegEncContext *s, int motion_x,
     case CODEC_ID_FLV1:
         h263_encode_mb(s, s->block, motion_x, motion_y); break;
     case CODEC_ID_MJPEG:
-        mjpeg_encode_mb(s, s->block); break;
+        ff_mjpeg_encode_mb(s, s->block);
     default:
         assert(0);
     }
@@ -4877,7 +4878,7 @@ static void write_slice_end(MpegEncContext *s){
 
         ff_mpeg4_stuffing(&s->pb);
     }else if(s->out_format == FMT_MJPEG){
-        ff_mjpeg_stuffing(&s->pb);
+        ff_mjpeg_encode_stuffing(&s->pb);
     }
 
     align_put_bits(&s->pb);
@@ -5762,7 +5763,7 @@ static int encode_picture(MpegEncContext *s, int picture_number)
     s->last_bits= put_bits_count(&s->pb);
     switch(s->out_format) {
     case FMT_MJPEG:
-        mjpeg_picture_header(s);
+        ff_mjpeg_encode_picture_header(s);
         break;
 #ifdef CONFIG_H261_ENCODER
     case FMT_H261:
@@ -6819,9 +6820,17 @@ AVCodec h263_encoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_H263,
     sizeof(MpegEncContext),
-    MPV_encode_init,
-    MPV_encode_picture,
-    MPV_encode_end,
+    /*.init=*/MPV_encode_init,
+    /*.encode=*/MPV_encode_picture,
+    /*.close=*/MPV_encode_end,
+    /*.decode=*/NULL,
+    /*.capabilities=*/0,
+    /*.next=*/NULL,
+    /*.flush=*/NULL,
+    /*.supported_framerates=*/NULL,
+#if __STDC_VERSION >= 199901L
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
+#endif
 };
 
 AVCodec h263p_encoder = {
@@ -6829,9 +6838,17 @@ AVCodec h263p_encoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_H263P,
     sizeof(MpegEncContext),
-    MPV_encode_init,
-    MPV_encode_picture,
-    MPV_encode_end,
+    /*.init=*/MPV_encode_init,
+    /*.encode=*/MPV_encode_picture,
+    /*.close=*/MPV_encode_end,
+    /*.decode=*/NULL,
+    /*.capabilities=*/0,
+    /*.next=*/NULL,
+    /*.flush=*/NULL,
+    /*.supported_framerates=*/NULL,
+#if __STDC_VERSION >= 199901L
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
+#endif
 };
 
 AVCodec flv_encoder = {
@@ -6839,9 +6856,17 @@ AVCodec flv_encoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_FLV1,
     sizeof(MpegEncContext),
-    MPV_encode_init,
-    MPV_encode_picture,
-    MPV_encode_end,
+    /*.init=*/MPV_encode_init,
+    /*.encode=*/MPV_encode_picture,
+    /*.close=*/MPV_encode_end,
+    /*.decode=*/NULL,
+    /*.capabilities=*/0,
+    /*.next=*/NULL,
+    /*.flush=*/NULL,
+    /*.supported_framerates=*/NULL,
+#if __STDC_VERSION >= 199901L
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
+#endif
 };
 
 AVCodec mpeg4_encoder = {
@@ -6849,11 +6874,17 @@ AVCodec mpeg4_encoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_MPEG4,
     sizeof(MpegEncContext),
-    MPV_encode_init,
-    MPV_encode_picture,
-    MPV_encode_end,
+    /*.init=*/MPV_encode_init,
+    /*.encode=*/MPV_encode_picture,
+    /*.close=*/MPV_encode_end,
     /*.decode=*/NULL,
-    /*.capabilities=*/ CODEC_CAP_DELAY,
+    /*.capabilities=*/CODEC_CAP_DELAY,
+    /*.next=*/NULL,
+    /*.flush=*/NULL,
+    /*.supported_framerates=*/NULL,
+#if __STDC_VERSION >= 199901L
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
+#endif
 };
 
 AVCodec msmpeg4v1_encoder = {
@@ -6861,9 +6892,17 @@ AVCodec msmpeg4v1_encoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_MSMPEG4V1,
     sizeof(MpegEncContext),
-    MPV_encode_init,
-    MPV_encode_picture,
-    MPV_encode_end,
+    /*.init=*/MPV_encode_init,
+    /*.encode=*/MPV_encode_picture,
+    /*.close=*/MPV_encode_end,
+    /*.decode=*/NULL,
+    /*.capabilities=*/0,
+    /*.next=*/NULL,
+    /*.flush=*/NULL,
+    /*.supported_framerates=*/NULL,
+#if __STDC_VERSION >= 199901L
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
+#endif
 };
 
 AVCodec msmpeg4v2_encoder = {
@@ -6871,9 +6910,14 @@ AVCodec msmpeg4v2_encoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_MSMPEG4V2,
     sizeof(MpegEncContext),
-    MPV_encode_init,
-    MPV_encode_picture,
-    MPV_encode_end,
+    /*.init=*/MPV_encode_init,
+    /*.encode=*/MPV_encode_picture,
+    /*.close=*/MPV_encode_end,
+    /*.decode=*/NULL,
+    /*.capabilities=*/0,
+    /*.next=*/NULL,
+    /*.flush=*/NULL,
+    /*.supported_framerates=*/NULL,
 #if __STDC_VERSION >= 199901L
     .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
 #endif
@@ -6884,9 +6928,14 @@ AVCodec msmpeg4v3_encoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_MSMPEG4V3,
     sizeof(MpegEncContext),
-    MPV_encode_init,
-    MPV_encode_picture,
-    MPV_encode_end,
+    /*.init=*/MPV_encode_init,
+    /*.encode=*/MPV_encode_picture,
+    /*.close=*/MPV_encode_end,
+    /*.decode=*/NULL,
+    /*.capabilities=*/0,
+    /*.next=*/NULL,
+    /*.flush=*/NULL,
+    /*.supported_framerates=*/NULL,
 #if __STDC_VERSION >= 199901L
     .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
 #endif
@@ -6897,24 +6946,16 @@ AVCodec wmv1_encoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_WMV1,
     sizeof(MpegEncContext),
-    MPV_encode_init,
-    MPV_encode_picture,
-    MPV_encode_end,
+    /*.init=*/MPV_encode_init,
+    /*.encode=*/MPV_encode_picture,
+    /*.close=*/MPV_encode_end,
+    /*.decode=*/NULL,
+    /*.capabilities=*/0,
+    /*.next=*/NULL,
+    /*.flush=*/NULL,
+    /*.supported_framerates=*/NULL,
 #if __STDC_VERSION >= 199901L
     .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
-#endif
-};
-
-AVCodec mjpeg_encoder = {
-    "mjpeg",
-    CODEC_TYPE_VIDEO,
-    CODEC_ID_MJPEG,
-    sizeof(MpegEncContext),
-    MPV_encode_init,
-    MPV_encode_picture,
-    MPV_encode_end,
-#if __STDC_VERSION >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUVJ420P, PIX_FMT_YUVJ422P, -1},
 #endif
 };
 
