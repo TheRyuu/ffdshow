@@ -171,7 +171,7 @@
 				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="DEBUG,_DEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP"
+				PreprocessorDefinitions="DEBUG;_DEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="false"
@@ -408,7 +408,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="NDEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP"
+				PreprocessorDefinitions="NDEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX"
 				StringPooling="true"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -636,7 +636,7 @@
 				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="DEBUG;_DEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP"
+				PreprocessorDefinitions="DEBUG;_DEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="false"
@@ -876,7 +876,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="NDEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP"
+				PreprocessorDefinitions="NDEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX"
 				StringPooling="true"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -1154,7 +1154,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -f win64 -DPREFIX -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1172,7 +1172,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -f win64 -DPREFIX -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1190,7 +1190,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -f win64 -DPREFIX -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -1208,7 +1208,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -f win64 -DPREFIX -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+						CommandLine="yasm -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
 						Outputs="$(IntDir)\$(InputName).obj"
 					/>
 				</FileConfiguration>
@@ -5176,6 +5176,14 @@
 				>
 			</File>
 			<File
+				RelativePath="src\dialog\Cdirectshowcontrol.cpp"
+				>
+			</File>
+			<File
+				RelativePath="src\dialog\Cdirectshowcontrol.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\dialog\CdolbyDecoder.cpp"
 				>
 			</File>
@@ -5333,14 +5341,6 @@
 			</File>
 			<File
 				RelativePath=".\src\dialog\Cin.h"
-				>
-			</File>
-			<File
-				RelativePath="src\dialog\Cdirectshowcontrol.cpp"
-				>
-			</File>
-			<File
-				RelativePath="src\dialog\Cdirectshowcontrol.h"
 				>
 			</File>
 			<File
