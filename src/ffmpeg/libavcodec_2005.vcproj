@@ -594,6 +594,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\h264_parser.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\h264dsp.c"
 				>
 			</File>
