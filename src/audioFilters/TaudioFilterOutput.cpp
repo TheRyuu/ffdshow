@@ -83,7 +83,7 @@ HRESULT TaudioFilterOutput::process(TfilterQueue::iterator it,TsampleFormat &fmt
  // Change to PCM format if AC3 encode is requested only for multichannel streams and codec is not AC3/DTS
  bool changeFormat = false;
  const TffdshowDecAudioInputPin *pin =  deciA->GetCurrentPin();
- if (pin != NULL)
+ if (pin  && pin->audio)
  {
 	 if (pin->audio->codecId != CODEC_ID_LIBA52
 	  && pin->audio->codecId != CODEC_ID_SPDIF_AC3
