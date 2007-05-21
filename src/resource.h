@@ -1511,7 +1511,7 @@
 #define IDC_ED_QUANT_TABLE_INTRA3       1831
 #define IDC_CHB_PICTPROP_LEVELFIX_LUMA_FULL 1831
 #define IDC_ED_QUANT_TABLE_INTRA4       1832
-#define IDC_LBL_ALLOW_SIMD              1832
+#define IDC_GRP_ALLOW_SIMD              1832
 #define IDC_ED_QUANT_TABLE_INTRA5       1833
 #define IDC_ED_QUANT_TABLE_INTRA6       1834
 #define IDC_LV_PROPS                    1834
@@ -1743,7 +1743,7 @@
 #define IDC_GRP_WINAMP2                 65535
 
 // Next default values for new objects
-// 
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1

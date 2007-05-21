@@ -354,14 +354,17 @@ Custom=Benutzerdefiniert
 1838=Formatoptionen
 
 [116]
-0=Info & Fehlerbehebung
-1284=Info
-1285=Fehlerbehebung
+0=DirectShow-Optionen
+1285=Einstellungen
 1502=Multiple ffdshow-Instanzen:
 1503=Merit:
-1832=Folgende SIMD-Instruktionen verwenden (wenn vom Prozessor unterstützt):
 1935=ffdshow nicht verwenden in:
 1970=ffdshow nur verwenden in:
+
+[2020]
+0=Info & Prozessor
+1284=Info
+1832=Folgende SIMD-Instruktionen verwenden (wenn vom Prozessor unterstützt):
 
 [141]
 0=OSD
