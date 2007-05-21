@@ -264,12 +264,24 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
    #pragma pack(push, 1)
    struct rvinfo
     {
-     DWORD dwSize, fcc1, fcc2;
+/*     DWORD dwSize, fcc1, fcc2;
      WORD w, h, bpp;
-     DWORD unk1, fps, type1, type2;
+     DWORD unk1, fps, type1, type2;*/
+     DWORD type1, type2;
      BYTE w2, h2, w3, h3;
     } __attribute__((packed));
    #pragma pack(pop)
+
+   const uint8_t *src=(const uint8_t*)avctx->extradata;
+   size_t dstsize=extradata->size - 26;
+   uint8_t *dst=(uint8_t*)malloc(dstsize);
+   memcpy(dst,src+26,dstsize);
+   extradata->clear();
+   extradata->set(dst,dstsize,0,true);
+   free(dst);
+   avctx->extradata=extradata->data;
+   avctx->extradata_size=(int)extradata->size;
+
    rvinfo *info=(rvinfo*)extradata->data;
    avctx->sub_id=info->type2;bswap(avctx->sub_id);
   }

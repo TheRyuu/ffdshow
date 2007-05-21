@@ -459,10 +459,8 @@ static int rv10_decode_init(AVCodecContext *avctx)
     s->width = avctx->width;
     s->height = avctx->height;
 
-    //s->h263_long_vectors= ((uint8_t*)avctx->extradata)[3] & 1;
-    //avctx->sub_id= AV_RB32((uint8_t*)avctx->extradata + 4);
-    s->h263_long_vectors= ((uint8_t*)avctx->extradata)[29] & 1; 
-    avctx->sub_id= AV_RB32((uint8_t*)avctx->extradata + 30);
+    s->h263_long_vectors= ((uint8_t*)avctx->extradata)[3] & 1;
+    avctx->sub_id= AV_RB32((uint8_t*)avctx->extradata + 4);
 
     switch(avctx->sub_id){
     case 0x10000000:
