@@ -720,6 +720,11 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
  mb_count=mb_width*mb_height;
  avctx->time_base.den=deci->getParam2(IDFF_enc_fpsRate);
  avctx->time_base.num=deci->getParam2(IDFF_enc_fpsScale);
+ if (avctx->time_base.den>(1<<16)-1)
+  {
+   avctx->time_base.num=(int)(0.5+(double)avctx->time_base.num/avctx->time_base.den*((1<<16)-1));
+   avctx->time_base.den=(1<<16)-1;
+  }
  if (coCfg->codecId==CODEC_ID_FFV1)
   avctx->gop_size=coCfg->ffv1_key_interval;
  else

@@ -186,11 +186,6 @@ STDMETHODIMP_(LRESULT) Tffvfw::coFramesInfo(ICCOMPRESSFRAMES *icf)
 {
  if (initCo())
   {
-   if (icf->dwRate>(1<<16)-1)
-    {
-     icf->dwScale=(int)(0.5+(double)icf->dwScale/icf->dwRate*((1<<16)-1));
-     icf->dwRate=(1<<16)-1;
-    }
    deciEB->putParam(IDFF_enc_fpsRate ,icf->dwRate );
    deciEB->putParam(IDFF_enc_fpsScale,icf->dwScale);
    return ICERR_OK;
