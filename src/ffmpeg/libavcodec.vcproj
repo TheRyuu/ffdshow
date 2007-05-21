@@ -191,7 +191,7 @@
 				RelativePath=".\libavcodec\amr.c">
 			</File>
 			<File
-				RelativePath="libavcodec\asv1.c">
+				RelativePath=".\libavcodec\asv1.c">
 			</File>
 			<File
 				RelativePath=".\libavcodec\atrac3.c">
@@ -212,7 +212,7 @@
 				RelativePath=".\libavcodec\cavsdsp.c">
 			</File>
 			<File
-				RelativePath="libavcodec\cinepak.c">
+				RelativePath=".\libavcodec\cinepak.c">
 			</File>
 			<File
 				RelativePath=".\libavcodec\cook.c">
@@ -224,7 +224,7 @@
 				RelativePath=".\libavcodec\cscd.c">
 			</File>
 			<File
-				RelativePath="libavcodec\cyuv.c">
+				RelativePath=".\libavcodec\cyuv.c">
 			</File>
 			<File
 				RelativePath=".\DllEntry.c">
@@ -245,7 +245,7 @@
 				RelativePath=".\libavcodec\faandct.c">
 			</File>
 			<File
-				RelativePath="libavcodec\fft.c">
+				RelativePath=".\libavcodec\fft.c">
 			</File>
 			<File
 				RelativePath=".\libavcodec\ffv1.c">
@@ -258,12 +258,6 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\g726.c">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						WarningLevel="4"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="libavcodec\golomb.c">
@@ -354,6 +348,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mjpeg.c">
+			</File>
+			<File
+				RelativePath=".\libavcodec\mjpegbdec.c">
 			</File>
 			<File
 				RelativePath=".\libavcodec\mjpegdec.c">
@@ -489,6 +486,9 @@
 					<Tool
 						Name="VCCLCompilerTool"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\libavcodec\sp5xdec.c">
 			</File>
 			<File
 				RelativePath="libavcodec\svq1.c">
@@ -697,6 +697,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mjpeg.h">
+			</File>
+			<File
+				RelativePath=".\libavcodec\mjpegdec.h">
 			</File>
 			<File
 				RelativePath=".\libavcodec\mjpegenc.h">

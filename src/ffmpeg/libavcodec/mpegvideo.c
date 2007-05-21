@@ -1016,12 +1016,22 @@ int MPV_encode_init(AVCodecContext *avctx)
     }
 
     if(avctx->rc_min_rate && avctx->rc_min_rate > avctx->bit_rate){
-        av_log(avctx, AV_LOG_INFO, "bitrate below min bitrate\n");
+        av_log(avctx, AV_LOG_ERROR, "bitrate below min bitrate\n");
         return -1;
     }
 
     if(avctx->rc_max_rate && avctx->rc_max_rate < avctx->bit_rate){
         av_log(avctx, AV_LOG_INFO, "bitrate above max bitrate\n");
+        return -1;
+    }
+
+    if(avctx->rc_buffer_size && avctx->bit_rate*av_q2d(avctx->time_base) > avctx->rc_buffer_size){
+        av_log(avctx, AV_LOG_ERROR, "VBV buffer too small for bitrate\n");
+        return -1;
+    }
+
+    if(avctx->bit_rate*av_q2d(avctx->time_base) > avctx->bit_rate_tolerance){
+        av_log(avctx, AV_LOG_ERROR, "bitrate tolerance too small for bitrate\n");
         return -1;
     }
 

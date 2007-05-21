@@ -33,6 +33,9 @@
 #define CONFIG_DECODERS 1
 
 
+#define CONFIG_MPEGAUDIO_HP 1
+
+
 #ifdef __GNUC__
  #include <stdint.h>
 #else

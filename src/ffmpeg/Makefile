@@ -76,6 +76,7 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/mace.c \
       $(LAVC_DIR)/mdct.c \
       $(LAVC_DIR)/mjpeg.c \
+      $(LAVC_DIR)/mjpegbdec.c \
       $(LAVC_DIR)/mjpegdec.c \
       $(LAVC_DIR)/mjpegenc.c \
       $(LAVC_DIR)/mjpeg_parser.c \
@@ -104,6 +105,7 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/simple_idct.c \
       $(LAVC_DIR)/skl_dct_c.c \
       $(LAVC_DIR)/snow.c \
+      $(LAVC_DIR)/sp5xdec.c \
       $(LAVC_DIR)/svq1.c \
       $(LAVC_DIR)/truemotion1.c \
       $(LAVC_DIR)/truemotion2.c \

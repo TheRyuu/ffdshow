@@ -36,10 +36,9 @@
 #include "avcodec.h"
 #include "dsputil.h"
 #include "mjpeg.h"
+#include "mjpegdec.h"
 #include "jpeglsdec.h"
 
-
-static int mjpeg_decode_dht(MJpegDecodeContext *s);
 
 static int build_vlc(VLC *vlc, const uint8_t *bits_table, const uint8_t *val_table,
                       int nb_codes, int use_static, int is_ac)
@@ -63,7 +62,7 @@ static int build_vlc(VLC *vlc, const uint8_t *bits_table, const uint8_t *val_tab
     return init_vlc(vlc, 9, nb_codes, huff_size, 1, 1, huff_code, 2, 2, use_static);
 }
 
-static int mjpeg_decode_init(AVCodecContext *avctx)
+int ff_mjpeg_decode_init(AVCodecContext *avctx)
 {
     MJpegDecodeContext *s = avctx->priv_data;
 
@@ -89,7 +88,7 @@ static int mjpeg_decode_init(AVCodecContext *avctx)
     {
         av_log(avctx, AV_LOG_INFO, "mjpeg: using external huffman table\n");
         init_get_bits(&s->gb, avctx->extradata, avctx->extradata_size*8);
-        mjpeg_decode_dht(s);
+        ff_mjpeg_decode_dht(s);
         /* should check for error - but dunno */
     }
     if (avctx->extradata_size > 9 &&
@@ -105,7 +104,7 @@ static int mjpeg_decode_init(AVCodecContext *avctx)
 
 
 /* quantize tables */
-static int mjpeg_decode_dqt(MJpegDecodeContext *s)
+int ff_mjpeg_decode_dqt(MJpegDecodeContext *s)
 {
     int len, index, i, j;
 
@@ -140,7 +139,7 @@ static int mjpeg_decode_dqt(MJpegDecodeContext *s)
 }
 
 /* decode huffman tables and build VLC decoders */
-static int mjpeg_decode_dht(MJpegDecodeContext *s)
+int ff_mjpeg_decode_dht(MJpegDecodeContext *s)
 {
     int len, index, i, class, n, v, code_max;
     uint8_t bits_table[17];
@@ -186,7 +185,7 @@ static int mjpeg_decode_dht(MJpegDecodeContext *s)
     return 0;
 }
 
-static int mjpeg_decode_sof(MJpegDecodeContext *s)
+int ff_mjpeg_decode_sof(MJpegDecodeContext *s)
 {
     int len, nb_components, i, width, height, pix_fmt_id;
 
@@ -707,7 +706,7 @@ static int mjpeg_decode_scan(MJpegDecodeContext *s, int nb_components, int ss, i
     return 0;
 }
 
-static int mjpeg_decode_sos(MJpegDecodeContext *s)
+int ff_mjpeg_decode_sos(MJpegDecodeContext *s)
 {
     int len, nb_components, i, h, v, predictor, point_transform;
     int vmax, hmax, index, id;
@@ -1004,7 +1003,7 @@ found:
     return val;
 }
 
-static int mjpeg_decode_frame(AVCodecContext *avctx,
+int ff_mjpeg_decode_frame(AVCodecContext *avctx,
                               void *data, int *data_size,
                               uint8_t *buf, int buf_size)
 {
@@ -1129,10 +1128,10 @@ static int mjpeg_decode_frame(AVCodecContext *avctx,
                     /* nothing to do on SOI */
                     break;
                 case DQT:
-                    mjpeg_decode_dqt(s);
+                    ff_mjpeg_decode_dqt(s);
                     break;
                 case DHT:
-                    if(mjpeg_decode_dht(s) < 0){
+                    if(ff_mjpeg_decode_dht(s) < 0){
                         av_log(avctx, AV_LOG_ERROR, "huffman table decode error\n");
                         return -1;
                     }
@@ -1141,28 +1140,28 @@ static int mjpeg_decode_frame(AVCodecContext *avctx,
                     s->lossless=0;
                     s->ls=0;
                     s->progressive=0;
-                    if (mjpeg_decode_sof(s) < 0)
+                    if (ff_mjpeg_decode_sof(s) < 0)
                         return -1;
                     break;
                 case SOF2:
                     s->lossless=0;
                     s->ls=0;
                     s->progressive=1;
-                    if (mjpeg_decode_sof(s) < 0)
+                    if (ff_mjpeg_decode_sof(s) < 0)
                         return -1;
                     break;
                 case SOF3:
                     s->lossless=1;
                     s->ls=0;
                     s->progressive=0;
-                    if (mjpeg_decode_sof(s) < 0)
+                    if (ff_mjpeg_decode_sof(s) < 0)
                         return -1;
                     break;
                 case SOF48:
                     s->lossless=1;
                     s->ls=1;
                     s->progressive=0;
-                    if (mjpeg_decode_sof(s) < 0)
+                    if (ff_mjpeg_decode_sof(s) < 0)
                         return -1;
                     break;
                 case LSE:
@@ -1198,7 +1197,7 @@ eoi_parser:
                     }
                     break;
                 case SOS:
-                    mjpeg_decode_sos(s);
+                    ff_mjpeg_decode_sos(s);
                     /* buggy avid puts EOI every 10-20th frame */
                     /* if restart period is over process EOI */
                     if ((s->buggy_avid && !s->interlaced) || s->restart_interval)
@@ -1239,269 +1238,7 @@ the_end:
     return buf_ptr - buf;
 }
 
-static int mjpegb_decode_frame(AVCodecContext *avctx,
-                              void *data, int *data_size,
-                              uint8_t *buf, int buf_size)
-{
-    MJpegDecodeContext *s = avctx->priv_data;
-    uint8_t *buf_end, *buf_ptr;
-    AVFrame *picture = data;
-    GetBitContext hgb; /* for the header */
-    uint32_t dqt_offs, dht_offs, sof_offs, sos_offs, second_field_offs;
-    uint32_t field_size, sod_offs;
-
-    buf_ptr = buf;
-    buf_end = buf + buf_size;
-
-read_header:
-    /* reset on every SOI */
-    s->restart_interval = 0;
-    s->restart_count = 0;
-    s->mjpb_skiptosod = 0;
-
-    init_get_bits(&hgb, buf_ptr, /*buf_size*/(buf_end - buf_ptr)*8);
-
-    skip_bits(&hgb, 32); /* reserved zeros */
-
-    if (get_bits_long(&hgb, 32) != MKBETAG('m','j','p','g'))
-    {
-        av_log(avctx, AV_LOG_WARNING, "not mjpeg-b (bad fourcc)\n");
-        return 0;
-    }
-
-    field_size = get_bits_long(&hgb, 32); /* field size */
-    av_log(avctx, AV_LOG_DEBUG, "field size: 0x%x\n", field_size);
-    skip_bits(&hgb, 32); /* padded field size */
-    second_field_offs = get_bits_long(&hgb, 32);
-    av_log(avctx, AV_LOG_DEBUG, "second field offs: 0x%x\n", second_field_offs);
-
-    dqt_offs = get_bits_long(&hgb, 32);
-    av_log(avctx, AV_LOG_DEBUG, "dqt offs: 0x%x\n", dqt_offs);
-    if (dqt_offs)
-    {
-        init_get_bits(&s->gb, buf+dqt_offs, (buf_end - (buf+dqt_offs))*8);
-        s->start_code = DQT;
-        mjpeg_decode_dqt(s);
-    }
-
-    dht_offs = get_bits_long(&hgb, 32);
-    av_log(avctx, AV_LOG_DEBUG, "dht offs: 0x%x\n", dht_offs);
-    if (dht_offs)
-    {
-        init_get_bits(&s->gb, buf+dht_offs, (buf_end - (buf+dht_offs))*8);
-        s->start_code = DHT;
-        mjpeg_decode_dht(s);
-    }
-
-    sof_offs = get_bits_long(&hgb, 32);
-    av_log(avctx, AV_LOG_DEBUG, "sof offs: 0x%x\n", sof_offs);
-    if (sof_offs)
-    {
-        init_get_bits(&s->gb, buf+sof_offs, (buf_end - (buf+sof_offs))*8);
-        s->start_code = SOF0;
-        if (mjpeg_decode_sof(s) < 0)
-            return -1;
-    }
-
-    sos_offs = get_bits_long(&hgb, 32);
-    av_log(avctx, AV_LOG_DEBUG, "sos offs: 0x%x\n", sos_offs);
-    sod_offs = get_bits_long(&hgb, 32);
-    av_log(avctx, AV_LOG_DEBUG, "sod offs: 0x%x\n", sod_offs);
-    if (sos_offs)
-    {
-//        init_get_bits(&s->gb, buf+sos_offs, (buf_end - (buf+sos_offs))*8);
-        init_get_bits(&s->gb, buf+sos_offs, field_size*8);
-        s->mjpb_skiptosod = (sod_offs - sos_offs - show_bits(&s->gb, 16));
-        s->start_code = SOS;
-        mjpeg_decode_sos(s);
-    }
-
-    if (s->interlaced) {
-        s->bottom_field ^= 1;
-        /* if not bottom field, do not output image yet */
-        if (s->bottom_field && second_field_offs)
-        {
-            buf_ptr = buf + second_field_offs;
-            second_field_offs = 0;
-            goto read_header;
-            }
-    }
-
-    //XXX FIXME factorize, this looks very similar to the EOI code
-
-    *picture= s->picture;
-    *data_size = sizeof(AVFrame);
-
-    if(!s->lossless){
-        picture->quality= FFMAX(FFMAX(s->qscale[0], s->qscale[1]), s->qscale[2]);
-        picture->qstride= 0;
-        picture->qscale_table= s->qscale_table;
-        memset(picture->qscale_table, picture->quality, (s->width+15)/16);
-        if(avctx->debug & FF_DEBUG_QP)
-            av_log(avctx, AV_LOG_DEBUG, "QP: %d\n", picture->quality);
-        picture->quality*= FF_QP2LAMBDA;
-    }
-
-    return buf_ptr - buf;
-}
-
-#include "sp5x.h"
-
-static int sp5x_decode_frame(AVCodecContext *avctx,
-                              void *data, int *data_size,
-                              uint8_t *buf, int buf_size)
-{
-#if 0
-    MJpegDecodeContext *s = avctx->priv_data;
-#endif
-    const int qscale = 5;
-    uint8_t *buf_ptr, *buf_end, *recoded;
-    int i = 0, j = 0;
-
-    if (!avctx->width || !avctx->height)
-        return -1;
-
-    buf_ptr = buf;
-    buf_end = buf + buf_size;
-
-#if 1
-    recoded = av_mallocz(buf_size + 1024);
-    if (!recoded)
-        return -1;
-
-    /* SOI */
-    recoded[j++] = 0xFF;
-    recoded[j++] = 0xD8;
-
-    memcpy(recoded+j, &sp5x_data_dqt[0], sizeof(sp5x_data_dqt));
-    memcpy(recoded+j+5, &sp5x_quant_table[qscale * 2], 64);
-    memcpy(recoded+j+70, &sp5x_quant_table[(qscale * 2) + 1], 64);
-    j += sizeof(sp5x_data_dqt);
-
-    memcpy(recoded+j, &sp5x_data_dht[0], sizeof(sp5x_data_dht));
-    j += sizeof(sp5x_data_dht);
-
-    memcpy(recoded+j, &sp5x_data_sof[0], sizeof(sp5x_data_sof));
-    recoded[j+5] = (avctx->coded_height >> 8) & 0xFF;
-    recoded[j+6] = avctx->coded_height & 0xFF;
-    recoded[j+7] = (avctx->coded_width >> 8) & 0xFF;
-    recoded[j+8] = avctx->coded_width & 0xFF;
-    j += sizeof(sp5x_data_sof);
-
-    memcpy(recoded+j, &sp5x_data_sos[0], sizeof(sp5x_data_sos));
-    j += sizeof(sp5x_data_sos);
-
-    for (i = 14; i < buf_size && j < buf_size+1024-2; i++)
-    {
-        recoded[j++] = buf[i];
-        if (buf[i] == 0xff)
-            recoded[j++] = 0;
-    }
-
-    /* EOI */
-    recoded[j++] = 0xFF;
-    recoded[j++] = 0xD9;
-
-    i = mjpeg_decode_frame(avctx, data, data_size, recoded, j);
-
-    av_free(recoded);
-
-#else
-    /* SOF */
-    s->bits = 8;
-    s->width  = avctx->coded_width;
-    s->height = avctx->coded_height;
-    s->nb_components = 3;
-    s->component_id[0] = 0;
-    s->h_count[0] = 2;
-    s->v_count[0] = 2;
-    s->quant_index[0] = 0;
-    s->component_id[1] = 1;
-    s->h_count[1] = 1;
-    s->v_count[1] = 1;
-    s->quant_index[1] = 1;
-    s->component_id[2] = 2;
-    s->h_count[2] = 1;
-    s->v_count[2] = 1;
-    s->quant_index[2] = 1;
-    s->h_max = 2;
-    s->v_max = 2;
-
-    s->qscale_table = av_mallocz((s->width+15)/16);
-    avctx->pix_fmt = s->cs_itu601 ? PIX_FMT_YUV420P : PIX_FMT_YUVJ420;
-    s->interlaced = 0;
-
-    s->picture.reference = 0;
-    if (avctx->get_buffer(avctx, &s->picture) < 0)
-    {
-        av_log(avctx, AV_LOG_ERROR, "get_buffer() failed\n");
-        return -1;
-    }
-
-    s->picture.pict_type = I_TYPE;
-    s->picture.key_frame = 1;
-
-    for (i = 0; i < 3; i++)
-        s->linesize[i] = s->picture.linesize[i] << s->interlaced;
-
-    /* DQT */
-    for (i = 0; i < 64; i++)
-    {
-        j = s->scantable.permutated[i];
-        s->quant_matrixes[0][j] = sp5x_quant_table[(qscale * 2) + i];
-    }
-    s->qscale[0] = FFMAX(
-        s->quant_matrixes[0][s->scantable.permutated[1]],
-        s->quant_matrixes[0][s->scantable.permutated[8]]) >> 1;
-
-    for (i = 0; i < 64; i++)
-    {
-        j = s->scantable.permutated[i];
-        s->quant_matrixes[1][j] = sp5x_quant_table[(qscale * 2) + 1 + i];
-    }
-    s->qscale[1] = FFMAX(
-        s->quant_matrixes[1][s->scantable.permutated[1]],
-        s->quant_matrixes[1][s->scantable.permutated[8]]) >> 1;
-
-    /* DHT */
-
-    /* SOS */
-    s->comp_index[0] = 0;
-    s->nb_blocks[0] = s->h_count[0] * s->v_count[0];
-    s->h_scount[0] = s->h_count[0];
-    s->v_scount[0] = s->v_count[0];
-    s->dc_index[0] = 0;
-    s->ac_index[0] = 0;
-
-    s->comp_index[1] = 1;
-    s->nb_blocks[1] = s->h_count[1] * s->v_count[1];
-    s->h_scount[1] = s->h_count[1];
-    s->v_scount[1] = s->v_count[1];
-    s->dc_index[1] = 1;
-    s->ac_index[1] = 1;
-
-    s->comp_index[2] = 2;
-    s->nb_blocks[2] = s->h_count[2] * s->v_count[2];
-    s->h_scount[2] = s->h_count[2];
-    s->v_scount[2] = s->v_count[2];
-    s->dc_index[2] = 1;
-    s->ac_index[2] = 1;
-
-    for (i = 0; i < 3; i++)
-        s->last_dc[i] = 1024;
-
-    s->mb_width = (s->width * s->h_max * 8 -1) / (s->h_max * 8);
-    s->mb_height = (s->height * s->v_max * 8 -1) / (s->v_max * 8);
-
-    init_get_bits(&s->gb, buf+14, (buf_size-14)*8);
-
-    return mjpeg_decode_scan(s);
-#endif
-
-    return i;
-}
-
-static int mjpeg_decode_end(AVCodecContext *avctx)
+int ff_mjpeg_decode_end(AVCodecContext *avctx)
 {
     MJpegDecodeContext *s = avctx->priv_data;
     int i, j;
@@ -1521,36 +1258,11 @@ AVCodec mjpeg_decoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_MJPEG,
     sizeof(MJpegDecodeContext),
-    mjpeg_decode_init,
-    NULL,
-    mjpeg_decode_end,
-    mjpeg_decode_frame,
-    CODEC_CAP_DR1,
-    NULL
-};
-
-AVCodec mjpegb_decoder = {
-    "mjpegb",
-    CODEC_TYPE_VIDEO,
-    CODEC_ID_MJPEGB,
-    sizeof(MJpegDecodeContext),
-    mjpeg_decode_init,
-    NULL,
-    mjpeg_decode_end,
-    mjpegb_decode_frame,
-    CODEC_CAP_DR1,
-    NULL
-};
-
-AVCodec sp5x_decoder = {
-    "sp5x",
-    CODEC_TYPE_VIDEO,
-    CODEC_ID_SP5X,
-    sizeof(MJpegDecodeContext),
-    mjpeg_decode_init,
-    NULL,
-    mjpeg_decode_end,
-    sp5x_decode_frame,
-    CODEC_CAP_DR1,
-    NULL
+    /*.init=*/ff_mjpeg_decode_init,
+    /*.encode=*/NULL,
+    /*.close=*/ff_mjpeg_decode_end,
+    /*.decode=*/ff_mjpeg_decode_frame,
+    /*.capabilities=*/CODEC_CAP_DR1,
+    /*.next=*/NULL,
+    /*.flush=*/NULL,
 };

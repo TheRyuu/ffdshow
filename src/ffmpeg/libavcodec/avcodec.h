@@ -2046,6 +2046,7 @@ extern AVCodec idcin_decoder;
 extern AVCodec imc_decoder;
 extern AVCodec indeo2_decoder;
 extern AVCodec indeo3_decoder;
+extern AVCodec jpegls_decoder;
 extern AVCodec loco_decoder;
 extern AVCodec mace3_decoder;
 extern AVCodec mace6_decoder;

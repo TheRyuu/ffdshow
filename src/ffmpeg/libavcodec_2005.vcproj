@@ -686,6 +686,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\mjpegbdec.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\mjpegdec.c"
 				>
 			</File>
@@ -880,6 +884,10 @@
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\libavcodec\sp5xdec.c"
+				>				
 			</File>
 			<File
 				RelativePath="libavcodec\svq1.c"
@@ -1148,6 +1156,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mjpeg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\mjpegdec.h"
 				>
 			</File>
 			<File

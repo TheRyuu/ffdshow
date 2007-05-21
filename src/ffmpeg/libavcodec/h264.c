@@ -31,6 +31,7 @@
 #include "mpegvideo.h"
 #include "h264.h"
 #include "h264data.h"
+#include "h264_parser.h"
 #include "golomb.h"
 
 #include "cabac.h"
@@ -7967,13 +7968,13 @@ AVCodec h264_decoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_H264,
     sizeof(H264Context),
-    decode_init,
-    NULL,
-    decode_end,
-    decode_frame,
-    /*CODEC_CAP_DRAW_HORIZ_BAND |*/ CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
-    NULL, //next
-    /*.flush=*/ flush_dpb
+    /*.init=*/decode_init,
+    /*.encode=*/NULL,
+    /*.close=*/decode_end,
+    /*.decode=*/decode_frame,
+    /*.capabilities=*//*CODEC_CAP_DRAW_HORIZ_BAND |*/ CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
+    /*.next=*/NULL,
+    /*.flush=*/flush_dpb
 };
 
 #include "svq3.c"
