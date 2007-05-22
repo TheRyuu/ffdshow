@@ -186,8 +186,42 @@ STDMETHODIMP_(LRESULT) Tffvfw::coFramesInfo(ICCOMPRESSFRAMES *icf)
 {
  if (initCo())
   {
-   deciEB->putParam(IDFF_enc_fpsRate ,icf->dwRate );
-   deciEB->putParam(IDFF_enc_fpsScale,icf->dwScale);
+   int r=icf->dwRate;
+   int s=icf->dwScale;
+   if (r==1000000)
+    {
+     switch (s)
+      {
+       case 41708: // 23.976 fps
+        r=24000;s=1001;
+        break;
+       case 33367: // 29.97 fps
+        r=30000;s=1001;
+        break;
+       case 41667: // 24 fps
+        r=24;s=1;
+        break;
+       case 33333: // 30 fps
+        r=30;s=1;
+        break;
+       case 16683: // 59.941 fps
+        r=60000;s=1001;
+        break;
+       case 16667: // 60 fps
+        r=60;s=1;
+        break;
+       case 66667: // 15 fps
+        r=15;s=1;
+        break;
+       case 83333: // 12 fps
+        r=12;s=1;
+        break;
+      }
+    }
+   deciEB->putParam(IDFF_enc_fpsRate ,r);
+   deciEB->putParam(IDFF_enc_fpsScale,s);
+   icf->dwRate=r;
+   icf->dwScale=s;
    return ICERR_OK;
   }
  else
