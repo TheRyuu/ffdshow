@@ -78,8 +78,13 @@
 #include <d3d9.h>
 #include <vmr9.h>
 #include "msacmdrv.h"
+
 #ifdef __GNUC__
-#undef VISTA_SPDIF
+ #undef VISTA_SPDIF
+#else
+ #if defined(WINVER) && WINVER<0x0600
+  #undef VISTA_SPDIF
+ #endif
 #endif
 
 #ifdef VISTA_SPDIF
