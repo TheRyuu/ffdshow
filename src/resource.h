@@ -560,8 +560,6 @@
 #define IDC_CHB_AVISYNTH                1330
 #define IDC_CHB_KEYS_SHORTOSD           1330
 #define IDC_ED_AVISYNTH                 1331
-#define IDC_BT_AVS_LOAD                 1333
-#define IDC_BT_AVS_SAVE                 1334
 #define IDC_ED_DCT4                     1335
 #define IDC_CHB_FONT_AUTOSIZE           1335
 #define IDC_ED_DCT5                     1336
@@ -578,12 +576,6 @@
 #define IDC_TBR_GAMMAR                  1345
 #define IDC_TBR_GAMMAG                  1346
 #define IDC_TBR_GAMMAB                  1347
-#define IDC_CHB_AVISYNTH_YV12           1348
-#define IDC_CHB_AVISYNTH_YUY2           1349
-#define IDC_CHB_AVISYNTH_RGB24          1350
-#define IDC_CHB_AVISYNTH_RGB32          1351
-#define IDC_LBL_AVISYNTH_CSPIN          1352
-#define IDC_CHB_AVISYNTH_FFDSHOW        1353
 #define IDC_LV_INCODECS                 1354
 #define IDC_CBX_INCODECS                1355
 #define IDC_CHB_VIS_GRAPH               1357
@@ -1733,6 +1725,21 @@
 #define IDC_RBT_ICON_MODERN             2017
 #define IDC_RBT_ICON_CLASSIC            2018
 #define IDC_TXT_TRAYICON                2019
+#define IDC_CHB_AVISYNTH_FFDSHOW        2021
+#define IDC_CBX_AVISYNTH_PULLDOWN       2022
+#define IDC_LBL_AVISYNTH_PULLDOWN       2023
+#define IDC_LBL_AVISYNTH_CSPIN          2024
+#define IDC_CHB_AVISYNTH_YV12           2025
+#define IDC_CHB_AVISYNTH_YUY2           2026
+#define IDC_CHB_AVISYNTH_RGB24          2027
+#define IDC_CHB_AVISYNTH_RGB32          2028
+#define IDC_CHB_AVISYNTH_BUFFER         2029
+#define IDC_ED_AVISYNTH_BUF_BACK        2030
+#define IDC_ED_AVISYNTH_BUF_AHEAD       2031
+#define IDC_BT_AVISYNTH_USECURRENT      2032
+#define IDC_BT_AVISYNTH_LOAD            2033
+#define IDC_BT_AVISYNTH_SAVE            2034
+
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -1749,7 +1756,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        238
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2021
+#define _APS_NEXT_CONTROL_VALUE         2035
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

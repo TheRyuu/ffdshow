@@ -44,7 +44,10 @@ protected:
    AVSValue(const AVSValue* a, int size) { type = 'a'; d.array = a; array_size = (short)size; }
    //~AVSValue() {avs_release_value(*this);}
    const char* AsString() const {return avs_as_string(*this);}
+   int AsInt() const {return avs_as_int(*this);}
    int IsClip() const {return avs_is_clip(*this);}
+
+   void Release() {avs_release_value(*this);}
   };
 
  struct IScriptEnvironment
@@ -69,6 +72,9 @@ protected:
      self->loadFunction(avs_new_video_frame_a,"avs_new_video_frame_a");
      self->loadFunction(avs_set_to_clip,"avs_set_to_clip");
      self->loadFunction(avs_copy_video_frame,"avs_copy_video_frame");
+     self->loadFunction(avs_get_var,"avs_get_var");
+     self->loadFunction(avs_set_var,"avs_set_var");
+     self->loadFunction(avs_set_global_var,"avs_set_global_var");
     }
    ~IScriptEnvironment()
     {
@@ -79,13 +85,27 @@ protected:
       };
      delete ((Ta*)env)->env;
     }
+
    AVS_Value Invoke(const char* name, const AVS_Value args, const char** arg_names=0)
     {
      AVS_Value val=avs_invoke(env,name,args,arg_names);
+
      if (avs_is_error(val))
       throw AvisynthError(avs_as_error(val));
+
      return val;
     }
+
+   int SetGlobalVar(const char* name, const AVS_Value arg)
+    {
+     return avs_set_global_var(env,name,arg);
+    }
+
+   AVSValue GetGlobalVar(const char* name)
+    {
+     return AVSValue(avs_get_var(env,name));
+    }
+
    IScriptEnvironment* operator ->() {return this;}
    operator AVS_ScriptEnvironment*() {return env;}
 
@@ -103,6 +123,10 @@ protected:
    void (AVSC_CC *avs_set_to_clip)(AVS_Value *, AVS_Clip *);
    AVS_VideoFrame* (AVSC_CC *avs_new_video_frame_a)(AVS_ScriptEnvironment *, const AVS_VideoInfo * vi, int align);
    AVS_VideoFrame* (AVSC_CC *avs_copy_video_frame)(AVS_VideoFrame *);
+
+   struct AVS_Value (AVSC_CC *avs_get_var)(AVS_ScriptEnvironment *, const char* name);
+   int (AVSC_CC *avs_set_var)(AVS_ScriptEnvironment *, const char* name, AVS_Value val);
+   int (AVSC_CC *avs_set_global_var)(AVS_ScriptEnvironment *, const char* name, const AVS_Value val);
 
    int AddFunction(const char* name, const char* params, AVS_ApplyFunc apply, void* user_data) {return avs_add_function(env,name,params,apply,user_data);}
   };

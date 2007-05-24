@@ -29,6 +29,7 @@ public:
  HRESULT CheckMediaType(const CMediaType* mtIn);
  STDMETHODIMP Receive(IMediaSample* pSample);
  STDMETHODIMP NewSegment(REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate);
+ STDMETHODIMP BeginFlush(void);
 
  STDMETHODIMP GetAllocator(IMemAllocator** ppAllocator);
  STDMETHODIMP NotifyAllocator(IMemAllocator *pAllocator,BOOL bReadOnly);

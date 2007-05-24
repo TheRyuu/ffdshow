@@ -25,6 +25,7 @@ private:
  mpeg2dec_t *mpeg2dec;
  const mpeg2_info_t *info;
  bool wait4Iframe;
+ int sequenceFlag;
  REFERENCE_TIME avgTimePerFrame;
  TffPict oldpict;
  Textradata *extradata;

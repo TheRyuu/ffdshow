@@ -420,7 +420,7 @@ template<class _mm> void TspuImageSimd<_mm>::print(unsigned int dx[3],unsigned c
 }
 template<class _mm> void TspuImageSimd<_mm>::ownprint(const TrenderedSubtitleLines::TprintPrefs &prefs)
 {
-if (!plane[0].stride || !plane[0].c || !plane[0].r) return;
+ if (!plane[0].stride || !plane[0].c || !plane[0].r) return;
  typename _mm::__m m0=_mm::setzero_si64();
  unsigned int sizeDx=prefs.sizeDx?prefs.sizeDx:prefs.dx;
  for (int i=0;i<3;i++)

@@ -64,6 +64,7 @@ void TvideoCodecLibmpeg2::init(void)
  mpeg2dec=mpeg2_init();
  info=mpeg2_info(mpeg2dec);
  wait4Iframe=true;
+ sequenceFlag=FIELD_TYPE::SEQ_START;
 }
 bool TvideoCodecLibmpeg2::beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags)
 {
@@ -133,6 +134,8 @@ HRESULT TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,
       break;
      case STATE_SEQUENCE:
       {
+       sequenceFlag=FIELD_TYPE::SEQ_START;
+
        avgTimePerFrame=10LL*info->sequence->frame_period/27;
        deciV->setAverageTimePerFrame(&avgTimePerFrame,true);
        break;
@@ -145,8 +148,10 @@ HRESULT TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,
       mpeg2_set_rtStart(mpeg2dec,rtStart);
       rtStart=REFTIME_INVALID;
       break;
-     case STATE_SLICE:
      case STATE_END:
+      sequenceFlag=FIELD_TYPE::SEQ_END;
+
+     case STATE_SLICE:
       //if (info->display_fbuf && (!wait4Iframe || (info->display_picture->flags&PIC_MASK_CODING_TYPE)==PIC_FLAG_CODING_TYPE_I))
       if (info->display_picture && info->discard_fbuf && !(info->display_picture->flags&PIC_FLAG_SKIP))
        {
@@ -168,6 +173,13 @@ HRESULT TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,
          fieldtype = FIELD_TYPE::INT_TFF;
         else
          fieldtype = FIELD_TYPE::INT_BFF;
+
+        if (sequenceFlag != FIELD_TYPE::SEQ_START || frametype == FRAME_TYPE::I)
+         {
+          fieldtype|=sequenceFlag;
+
+          sequenceFlag=0;
+         }
 
         unsigned char *data[4]={info->display_fbuf->buf[0],info->display_fbuf->buf[1],info->display_fbuf->buf[2],NULL};
         stride_t stride[4]={info->sequence->width,info->sequence->chroma_width,info->sequence->chroma_width,0};

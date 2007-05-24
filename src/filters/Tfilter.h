@@ -14,6 +14,7 @@ public:
  virtual void done(void) {}
  virtual void onSeek(void) {}
  virtual void onStop(void) {}
+ virtual void onFlush(void) {}
  virtual void onDisconnect(PIN_DIRECTION dir) {}
 };
 

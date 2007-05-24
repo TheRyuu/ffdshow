@@ -51,6 +51,12 @@ void Tfilters::onSeek(void)
   f->second->onSeek();
 }
 
+void Tfilters::onFlush(void)
+{
+ for (iterator f=begin();f!=end();f++)
+  f->second->onFlush();
+}
+
 void Tfilters::onStop(void)
 {
  for (iterator f=begin();f!=end();f++)

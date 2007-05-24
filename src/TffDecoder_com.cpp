@@ -36,6 +36,7 @@
 #include "Tinfo.h"
 #include "TlevelsSettings.h"
 #include "ToutputVideoSettings.h"
+#include "imgFilters/avisynth/TimgFilterAvisynth.h"
 
 const TfilterIDFF TffdshowDecVideo::nextFilters[]=
 {
@@ -562,6 +563,21 @@ STDMETHODIMP_(int) TffdshowDecVideo::getQueuedCount(void)
   return -1*IDD_QUEUEMSG_8;
  if(!isQueue)
   return -1*IDD_QUEUEMSG_5;
+ return 0;
+}
+
+STDMETHODIMP_(const char*) TffdshowDecVideo::getAviSynthInfo(void)
+{
+ Tfilters* filters=0;
+
+ if (this->getImgFilters_((void**)&filters) == S_OK && filters)
+  {
+   TimgFilterAvisynth* avisynth=filters->getFilter<TimgFilterAvisynth>();
+
+   if (avisynth)
+    return avisynth->getInfoBuffer();
+  }
+
  return 0;
 }
 

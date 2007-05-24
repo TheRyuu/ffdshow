@@ -73,7 +73,7 @@ public:
  STDMETHODIMP buildHistogram_(const TffPict *pict,int full) {return E_NOTIMPL;}
  STDMETHODIMP_(int) getAVIfps1000_2(void);
  STDMETHODIMP getCurrentFrameTime(unsigned int *sec) {return getFrameTime(currentFrame,sec);}
- STDMETHODIMP getImgFilters_(void* *imgFiltersPtr) {return E_NOTIMPL;}
+ STDMETHODIMP getImgFilters_(void* *imgFiltersPtr) {*imgFiltersPtr=(void*)imgFilters; return S_OK;}
  STDMETHODIMP getQuant(int* *quantPtr) {return E_NOTIMPL;}
  STDMETHODIMP calcNewSize(unsigned int inDx,unsigned int inDy,unsigned int *outDx,unsigned int *outDy);
  STDMETHODIMP calcNewSize(Trect inRect,unsigned int *outDx,unsigned int *outDy);
@@ -300,6 +300,7 @@ public:
  STDMETHODIMP_(int) get_time_on_ffdshow_percent(void);
  STDMETHODIMP_(bool) shouldSkipH264loopFilter(void);
  STDMETHODIMP_(int) get_downstreamID(void);
+ STDMETHODIMP_(const char*) getAviSynthInfo(void);
 #ifdef OSDTIMETABALE
  STDMETHODIMP_(int) getOSDtime(void){return (int)OSDtime3;}
 #else
@@ -466,6 +467,7 @@ private:
    STDMETHODIMP_(bool) shouldSkipH264loopFilter(void){return deciV->shouldSkipH264loopFilter();}
    STDMETHODIMP findOverlayControl2(IhwOverlayControl* *overlayPtr) {return deciV->findOverlayControl2(overlayPtr);}
    STDMETHODIMP_(int) get_downstreamID(void) {return deciV->get_downstreamID();}
+   STDMETHODIMP_(const char*)getAviSynthInfo(void){return deciV->getAviSynthInfo();}
  } decVideo_char;
  template<class Tinterface> Tinterface* getDecVideoInterface(void);
 protected:

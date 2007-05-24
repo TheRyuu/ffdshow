@@ -40,24 +40,32 @@ TavisynthSettings::TavisynthSettings(TintStrColl *Icoll,TfilterIDFFs *filters):T
  memset(script,0,sizeof(script));
  static const TintOptionT<TavisynthSettings> iopts[]=
   {
-   IDFF_isAvisynth               ,&TavisynthSettings::is           ,0,0,_l(""),1,
+   IDFF_isAvisynth               ,&TavisynthSettings::is              ,0,0,_l(""),1,
      _l("isAvisynth"),0,
-   IDFF_showAvisynth             ,&TavisynthSettings::show         ,0,0,_l(""),1,
+   IDFF_showAvisynth             ,&TavisynthSettings::show            ,0,0,_l(""),1,
      _l("showAvisynth"),1,
-   IDFF_orderAvisynth            ,&TavisynthSettings::order        ,1,1,_l(""),1,
+   IDFF_orderAvisynth            ,&TavisynthSettings::order           ,1,1,_l(""),1,
      _l("orderAvisynth"),0,
-   IDFF_fullAvisynth             ,&TavisynthSettings::full         ,0,0,_l(""),1,
+   IDFF_fullAvisynth             ,&TavisynthSettings::full            ,0,0,_l(""),1,
      _l("fullAvisynth"),0,
-   IDFF_avisynthInYV12           ,&TavisynthSettings::inYV12       ,0,0,_l(""),1,
-     _l("avisynthInYV12"),1,
-   IDFF_avisynthInYUY2           ,&TavisynthSettings::inYUY2       ,0,0,_l(""),1,
-     _l("avisynthInYUY2"),1,
-   IDFF_avisynthInRGB24          ,&TavisynthSettings::inRGB24      ,0,0,_l(""),1,
-     _l("avisynthInRGB24"),1,
-   IDFF_avisynthInRGB32          ,&TavisynthSettings::inRGB32      ,0,0,_l(""),1,
-     _l("avisynthInRGB32"),1,
-   IDFF_avisynthFfdshowSource    ,&TavisynthSettings::ffdshowSource,0,0,_l(""),1,
+   IDFF_avisynthFfdshowSource    ,&TavisynthSettings::ffdshowSource   ,0,0,_l(""),1,
      _l("avisynthFfdshowSource"),1,
+   IDFF_avisynthApplyPulldown    ,&TavisynthSettings::applyPulldown   ,0,2,_l(""),1,
+     _l("avisynthApplyPulldown"),0,
+   IDFF_avisynthInYV12           ,&TavisynthSettings::inYV12          ,0,0,_l(""),1,
+     _l("avisynthInYV12"),1,
+   IDFF_avisynthInYUY2           ,&TavisynthSettings::inYUY2          ,0,0,_l(""),1,
+     _l("avisynthInYUY2"),1,
+   IDFF_avisynthInRGB24          ,&TavisynthSettings::inRGB24         ,0,0,_l(""),1,
+     _l("avisynthInRGB24"),1,
+   IDFF_avisynthInRGB32          ,&TavisynthSettings::inRGB32         ,0,0,_l(""),1,
+     _l("avisynthInRGB32"),1,
+   IDFF_avisynthEnableBuffering  ,&TavisynthSettings::enableBuffering ,0,0,_l(""),1,
+     _l("avisynthEnableBuffering"),0,
+   IDFF_avisynthBufferAhead      ,&TavisynthSettings::bufferAhead     ,0,99,_l(""),1,
+     _l("avisynthBufferAhead"),10,
+   IDFF_avisynthBufferBack       ,&TavisynthSettings::bufferBack      ,0,99,_l(""),1,
+     _l("avisynthBufferBack"),10,
    0
   };
  addOptions(iopts);
@@ -75,7 +83,18 @@ void TavisynthSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfil
  idffOnChange(idffs,filters,queue.temporary);
  if (is && show)
   queueFilter<TimgFilterAvisynth>(filtersorder,filters,queue);
+ else
+  {
+   TimgFilterAvisynth* avisynth=filters->getFilter<TimgFilterAvisynth>();
+
+   if (avisynth)
+    {
+     avisynth->onStop();
+     avisynth->reset();
+    }
+  }
 }
+
 void TavisynthSettings::createPages(TffdshowPageDec *parent) const
 {
  parent->addFilterPage<TavisynthPage>(&idffs);
@@ -83,6 +102,6 @@ void TavisynthSettings::createPages(TffdshowPageDec *parent) const
 
 const int* TavisynthSettings::getResets(unsigned int pageId)
 {
- static const int idResets[]={IDFF_avisynthInYV12,IDFF_avisynthInYUY2,IDFF_avisynthInRGB24,IDFF_avisynthInRGB32,IDFF_avisynthFfdshowSource,0};
+ static const int idResets[]={IDFF_avisynthInYV12,IDFF_avisynthInYUY2,IDFF_avisynthInRGB24,IDFF_avisynthInRGB32,IDFF_avisynthFfdshowSource,IDFF_avisynthBufferAhead,IDFF_avisynthBufferBack,IDFF_avisynthApplyPulldown,IDFF_avisynthEnableBuffering,0};
  return idResets;
 }

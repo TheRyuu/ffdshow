@@ -72,6 +72,11 @@ public:
    Release();
   }
 
+ void onStop()
+  {
+   if (imgFilters) imgFilters->onStop();
+  }
+
  HRESULT processPict(TffPict &pict,int outcsp)
   {
    if (!imgFilters) imgFilters=createImgFilters();
@@ -123,6 +128,7 @@ STDMETHODIMP TffProcVideo::begin(unsigned int srcDx,unsigned int srcDy,int IfpsN
 }
 STDMETHODIMP TffProcVideo::end(void)
 {
+ if (proc) proc->onStop();
  if (convert) delete convert;convert=NULL;
  dstbuf.clear();
  return S_OK;

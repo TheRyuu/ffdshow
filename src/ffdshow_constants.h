@@ -544,17 +544,21 @@
 #define IDFF_visQuants          1204
 #define IDFF_visGraph           1205
 
-#define IDFF_filterAvisynth        1250
-#define IDFF_isAvisynth            1251
-#define IDFF_showAvisynth          1260
-#define IDFF_orderAvisynth         1252
-#define IDFF_fullAvisynth          1253
-#define IDFF_avisynthScript        1254
-#define IDFF_avisynthInYV12        1255
-#define IDFF_avisynthInYUY2        1256
-#define IDFF_avisynthInRGB24       1257
-#define IDFF_avisynthInRGB32       1258
-#define IDFF_avisynthFfdshowSource 1259
+#define IDFF_filterAvisynth          1250
+#define IDFF_isAvisynth              1251
+#define IDFF_showAvisynth            1260
+#define IDFF_orderAvisynth           1252
+#define IDFF_fullAvisynth            1253
+#define IDFF_avisynthFfdshowSource   1259
+#define IDFF_avisynthApplyPulldown   1261
+#define IDFF_avisynthInYV12          1255
+#define IDFF_avisynthInYUY2          1256
+#define IDFF_avisynthInRGB24         1257
+#define IDFF_avisynthInRGB32         1258
+#define IDFF_avisynthEnableBuffering 1262
+#define IDFF_avisynthBufferAhead     1263
+#define IDFF_avisynthBufferBack      1264
+#define IDFF_avisynthScript          1254
 
 #define IDFF_isOSD                 1501
 #define IDFF_OSDfontName           1509
@@ -631,6 +635,7 @@
   #endif
   #define IDFF_OSDtype_QueueCount        1563
   #define IDFF_OSDtype_Late              1564
+  #define IDFF_OSDtype_AviSynth_Info     1566
 #define IDFF_OSDuser               1511 //don't use these, use drawOSD() instead
 #define IDFF_OSDuserPx             1512
 #define IDFF_OSDuserPy             1513

@@ -349,6 +349,31 @@ STDMETHODIMP TffdshowVideoInputPin::NewSegment(REFERENCE_TIME tStart, REFERENCE_
  return hr;
 }
 
+#ifdef UNICODE
+#define IID_IffdshowDecVideo IID_IffdshowDecVideoW
+#else
+#define IID_IffdshowDecVideo IID_IffdshowDecVideoA
+#endif
+
+STDMETHODIMP TffdshowVideoInputPin::BeginFlush(void)
+{
+ if (fv && fv->deci)
+  {
+   IffdshowDecVideo* dec=0;
+   TimgFilters* filters;
+
+   if (fv->deci->QueryInterface(IID_IffdshowDecVideo,(void**)&dec) == S_OK)
+    {
+     if (dec && dec->getImgFilters_((void**)&filters) == S_OK && filters)
+      filters->onFlush();
+
+     dec->Release();
+    }
+  }
+
+ return CTransformInputPin::BeginFlush();
+}
+
 STDMETHODIMP TffdshowVideoInputPin::Receive(IMediaSample* pSample)
 {
  AM_MEDIA_TYPE *pmt=NULL;

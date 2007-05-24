@@ -311,6 +311,9 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
      pictOut.rectFull.sar.den= 1;//pictOut.rectFull.dy;
     }
    setVIH2aspect(vih2,pictOut.rectFull,presetSettings->output->hwOverlayAspect);
+
+   //DPRINTF(_l("AR getMediaType: %i:%i"),vih2->dwPictAspectRatioX,vih2->dwPictAspectRatioY);
+
    vih2->rcSource.left=0;vih2->rcSource.right=bih.biWidth;vih2->rcSource.top=0;vih2->rcSource.bottom=bih.biHeight;
    vih2->rcTarget=vih2->rcSource;
    vih2->AvgTimePerFrame=inpin->avgTimePerFrame;
@@ -1271,9 +1274,11 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
    oldRect=newpict.rectFull;
    return S_OK;
   }
+
  if (newpict.rectFull!=oldRect || newpict.rectFull.sar!=oldRect.sar)
   {
    DPRINTF(_l("TffdshowDecVideo::reconnectOutput"));
+
    if (!m_pOutput->IsConnected())
     return VFW_E_NOT_CONNECTED;
 
@@ -1294,15 +1299,22 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
    else if (mt.formattype==FORMAT_VideoInfo2)
     {
      VIDEOINFOHEADER2* vih=(VIDEOINFOHEADER2*)mt.Format();
+     //DPRINTF(_l("AR in: %i:%i"),vih->dwPictAspectRatioX,vih->dwPictAspectRatioY);
+
      SetRect(&vih->rcSource,0,0,newpict.rectFull.dx,newdy);
      SetRect(&vih->rcTarget,0,0,newpict.rectFull.dx,newdy);
      bmi=&vih->bmiHeader;
+
+     //DPRINTF(_l("AR pict: %i:%i"),newpict.rectFull.dar().num,newpict.rectFull.dar().den);
+
      setVIH2aspect(vih,newpict.rectFull,presetSettings->output->hwOverlayAspect);
      if(presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0)
       {
        vih->dwPictAspectRatioX= newpict.rectFull.dx;
        vih->dwPictAspectRatioY= newpict.rectFull.dy;
       }
+
+     //DPRINTF(_l("AR set: %i:%i"),vih->dwPictAspectRatioX,vih->dwPictAspectRatioY);
     }
 
    bmi->biWidth=newpict.rectFull.dx;
@@ -1389,6 +1401,10 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
      if (SUCCEEDED(pOut->GetMediaType(&opmt)) && opmt)
       {
        CMediaType omt=*opmt;
+
+       //VIDEOINFOHEADER2* vih=(VIDEOINFOHEADER2*)omt.Format();
+       //DPRINTF(_l("AR out: %i:%i"),vih->dwPictAspectRatioX,vih->dwPictAspectRatioY);
+
        m_pOutput->SetMediaType(&omt);
        DeleteMediaType(opmt);
       }
