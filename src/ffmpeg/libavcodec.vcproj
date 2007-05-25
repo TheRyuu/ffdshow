@@ -269,6 +269,12 @@
 				RelativePath=".\libavcodec\h261.c">
 			</File>
 			<File
+				RelativePath=".\libavcodec\h261dec.c">
+			</File>
+			<File
+				RelativePath=".\libavcodec\h261enc.c">
+			</File>
+			<File
 				RelativePath=".\libavcodec\h263.c">
 			</File>
 			<File
@@ -658,6 +664,9 @@
 			</File>
 			<File
 				RelativePath="libavcodec\golomb.h">
+			</File>
+			<File
+				RelativePath=".\libavcodec\h261.h">
 			</File>
 			<File
 				RelativePath=".\libavcodec\h261data.h">

@@ -1869,7 +1869,7 @@ void ff_pred16x16_dc_c(uint8_t *src, int stride){
     }
 }
 
-static void pred16x16_left_dc_c(uint8_t *src, int stride){
+void ff_pred16x16_left_dc_c(uint8_t *src, int stride){
     int i, dc=0;
 
     for(i=0;i<16; i++){
@@ -1886,7 +1886,7 @@ static void pred16x16_left_dc_c(uint8_t *src, int stride){
     }
 }
 
-static void pred16x16_top_dc_c(uint8_t *src, int stride){
+void ff_pred16x16_top_dc_c(uint8_t *src, int stride){
     int i, dc=0;
 
     for(i=0;i<16; i++){
@@ -1986,7 +1986,7 @@ void ff_pred8x8_128_dc_c(uint8_t *src, int stride){
     }
 }
 
-static void pred8x8_left_dc_c(uint8_t *src, int stride){
+void ff_pred8x8_left_dc_c(uint8_t *src, int stride){
     int i;
     int dc0, dc2;
 
@@ -2008,7 +2008,7 @@ static void pred8x8_left_dc_c(uint8_t *src, int stride){
     }
 }
 
-static void pred8x8_top_dc_c(uint8_t *src, int stride){
+void ff_pred8x8_top_dc_c(uint8_t *src, int stride){
     int i;
     int dc0, dc1;
 
@@ -2689,16 +2689,16 @@ static void init_pred_ptrs(H264Context *h){
     h->pred8x8[VERT_PRED8x8   ]= ff_pred8x8_vertical_c;
     h->pred8x8[HOR_PRED8x8    ]= ff_pred8x8_horizontal_c;
     h->pred8x8[PLANE_PRED8x8  ]= ff_pred8x8_plane_c;
-    h->pred8x8[LEFT_DC_PRED8x8]= pred8x8_left_dc_c;
-    h->pred8x8[TOP_DC_PRED8x8 ]= pred8x8_top_dc_c;
+    h->pred8x8[LEFT_DC_PRED8x8]= ff_pred8x8_left_dc_c;
+    h->pred8x8[TOP_DC_PRED8x8 ]= ff_pred8x8_top_dc_c;
     h->pred8x8[DC_128_PRED8x8 ]= ff_pred8x8_128_dc_c;
 
     h->pred16x16[DC_PRED8x8     ]= ff_pred16x16_dc_c;
     h->pred16x16[VERT_PRED8x8   ]= ff_pred16x16_vertical_c;
     h->pred16x16[HOR_PRED8x8    ]= ff_pred16x16_horizontal_c;
     h->pred16x16[PLANE_PRED8x8  ]= ff_pred16x16_plane_c;
-    h->pred16x16[LEFT_DC_PRED8x8]= pred16x16_left_dc_c;
-    h->pred16x16[TOP_DC_PRED8x8 ]= pred16x16_top_dc_c;
+    h->pred16x16[LEFT_DC_PRED8x8]= ff_pred16x16_left_dc_c;
+    h->pred16x16[TOP_DC_PRED8x8 ]= ff_pred16x16_top_dc_c;
     h->pred16x16[DC_128_PRED8x8 ]= ff_pred16x16_128_dc_c;
 }
 
