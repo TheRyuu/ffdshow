@@ -509,15 +509,15 @@ HRESULT TffdshowDecAudio::StartStreaming(void)
 							filterPin->ConnectionMediaType(&connectedPinMediaType);
 							filterGraph->Stop();
 							hr = filterPin->Disconnect();
-							//CoTaskMemFree(filterPin);
 							break;
 						}
-						CoTaskMemFree(filterPin);
+						filterPin->Release();
 					}
+					enumPins->Release();
 
 					if (connectedPin == NULL)
 					{
-						//CoTaskMemFree(filterGraph);
+						filterGraph->Release();
 						break;
 					}
 
@@ -555,8 +555,10 @@ HRESULT TffdshowDecAudio::StartStreaming(void)
 					{
 						graph->Reconnect(filterPin); // Reconnect automatically if replacement failed
 						filterGraph->Run(0);
+						filterPin->Release();
 						break;
 					}
+					filterPin->Release();
 
 					// Connect the input pin of the multichannel device to the disconnected output pin
 					audioRenderer->EnumPins(&enumPins);
@@ -577,22 +579,28 @@ HRESULT TffdshowDecAudio::StartStreaming(void)
 							hr = filterPin->Connect(connectedPin, &connectedPinMediaType);
 							hr = pinInfo.pFilter->Run(0);
 							hr = audioRenderer->Run(0);
-							//CoTaskMemFree(filterPin);
 							if (FAILED(hr))
 							{
 								graph->Reconnect(filterPin); // Reconnect automatically if replacement failed
 								filterGraph->Run(0);
 							}
+							if (pinInfo.pFilter != NULL)
+							{
+								pinInfo.pFilter->Release();
+							}
+							filterPin->Release();
 							break;
 						}
+						filterPin->Release();
 					}
-					CoTaskMemFree(filterGraph);
-					/*if (connectedPin != NULL)
-						CoTaskMemFree(connectedPin);*/
+					enumPins->Release();
+					if (connectedPin != NULL)
+						connectedPin->Release();
 					break;
 				}
-				//CoTaskMemFree(filterGraph);
+				filterGraph->Release();
 			}
+			filtersEnum->Release();
 		}
 		audioDeviceChanged=true;
 	}
