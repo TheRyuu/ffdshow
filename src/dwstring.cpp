@@ -413,7 +413,8 @@ template<class tchar> DwString<tchar>::DwString(tchar* aBuf, size_t aSize, size_
 template<class tchar> DwString<tchar>::~DwString()
 {
     assert(mRep != 0);
-    delete_rep_safely(mRep);
+    if (mRep != sEmptyRep)
+        delete_rep_safely(mRep);
     DEV_STMT(mRep = 0)
 }
 
