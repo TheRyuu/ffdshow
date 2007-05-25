@@ -759,9 +759,9 @@ BEGIN
     CONTROL         "Show OSD message after keypress",IDC_CHB_KEYS_SHORTOSD,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,121,241,10
     LTEXT           "Seek distance in secs:",IDC_LBL_KEYS_SEEK1,4,135,72,8
-    EDITTEXT        IDC_ED_KEYS_SEEK1,78,133,34,12,ES_RIGHT | ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           ", with modifier:",IDC_LBL_KEYS_SEEK2,118,135,49,8
-    EDITTEXT        IDC_ED_KEYS_SEEK2,170,133,34,12,ES_RIGHT | ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_ED_KEYS_SEEK1,77,133,34,12,ES_RIGHT | ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Seek distance (second function):",IDC_LBL_KEYS_SEEK2,116,135,106,8
+    EDITTEXT        IDC_ED_KEYS_SEEK2,223,133,34,12,ES_RIGHT | ES_AUTOHSCROLL | ES_NUMBER
     GROUPBOX        "",IDC_GRP_REMOTE,0,152,266,42
     CONTROL         "Remote control API",IDC_CHB_REMOTE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,152,111,10,WS_EX_ACCEPTFILES
     CONTROL         """ffdshow_remote_message""",IDC_RBT_REMOTE_FFDSHOW,
@@ -2766,7 +2766,7 @@ IDB_CLASSIC_ICON_XP     BITMAP                  "classic_icon_xp.bmp"
 // Menu
 //
 
-IDR_MENU_PRESET MENU
+IDR_MENU_PRESET MENU 
 BEGIN
     POPUP "New"
     BEGIN
@@ -2782,7 +2782,7 @@ BEGIN
     END
 END
 
-IDR_MENU_TRANSLATE MENU
+IDR_MENU_TRANSLATE MENU 
 BEGIN
     POPUP "Translate"
     BEGIN
@@ -2798,7 +2798,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO
+GUIDELINES DESIGNINFO 
 BEGIN
     IDD_FFDSHOW, DIALOG
     BEGIN
@@ -2969,7 +2969,7 @@ END
 // String Table
 //
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_FFDSHOWDECVIDEO     "ffdshow video decoder"
     IDS_FFDSHOWDECAUDIO     "ffdshow audio decoder"
@@ -2980,12 +2980,12 @@ BEGIN
     IDS_FFDSHOWDECVIDEORAW  "ffdshow raw video decoder"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDD_ABOUT               "About"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDD_BLUR                "Blur & NR"
     IDD_FONT                "Font"
@@ -3001,7 +3001,7 @@ BEGIN
     IDD_KEYS                "Keys & remote"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDD_SUBTITLES           "Subtitles"
     IDD_CODECS              "Codecs"
@@ -3016,13 +3016,13 @@ BEGIN
     IDD_INFOSIMD            "Info & CPU"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDD_GRAB                "Grab"
     IDD_OVERLAY             "Overlay"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDD_DSCALER             "DScaler filter"
     IDD_PERSPECTIVE         "Perspective corr."
@@ -3037,7 +3037,7 @@ BEGIN
     IDD_MIXER               "Mixer"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDD_GENERIC             "Generic"
     IDD_CREDITS             "Credits"
@@ -3047,7 +3047,7 @@ BEGIN
     IDD_GENERIC_FFV1        "Generic"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDD_GENERIC_RAW         "Generic"
     IDD_GENERIC_THEO        "Generic"
@@ -3064,7 +3064,7 @@ BEGIN
     IDD_QUANT               "Quantization"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDD_GENERIC_X264        "Generic"
     IDD_MASKING_THEO        "Masking"
@@ -3077,7 +3077,7 @@ BEGIN
     IDD_QUEUEMSG_1          "off"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDD_SECONDPASS          "Two passes - 2nd pass"
     IDD_GENERIC_WMV9        "Generic"
@@ -3091,7 +3091,7 @@ BEGIN
     IDD_ME_X264             "Motion estimation"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDD_LOGOAWAY            "Logoaway"
     IDD_OUTSFS              "Output"
@@ -3108,14 +3108,14 @@ BEGIN
     IDD_BITMAP              "Bitmap overlay"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_FFDSHOWDECAUDIORAW  "ffdshow audio processor"
     IDS_FFDSHOWDEC          "ffdshow decoder"
     IDS_FFDSHOWVIDEOPROC    "ffdshow video processor"
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDD_QUEUEMSG_2          "off: old video renderer does not support queue"
     IDD_QUEUEMSG_3          "off: the application is not listed in 'Use queue only in:'"
@@ -3123,7 +3123,7 @@ BEGIN
     IDD_QUEUEMSG_5          "off: The video renderer in use is not supported."
 END
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDD_QUEUEMSG_6          "off: In Windows Media Player, queueing is not suported."
     IDD_QUEUEMSG_7          "off: Because some video driver can't work with YV12 + VMR9 + queue."
