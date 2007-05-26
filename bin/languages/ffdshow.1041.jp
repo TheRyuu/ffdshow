@@ -482,6 +482,12 @@ Unchecked: Use classic connection method.\nChecked: Use an advanced connection m
 Send interlacing related information obtained from the input stream or ffdshow's internal decoders to the next filter. Some filters (like video renderers) will use this information to deinterlace the video if neccessary.\nThis is just for informing the downstream filters - the actual result will depend purely on the implementation of these filters.\n\n(formerly called "HW deinterlacing")=入力ストリームやffdshow内部のデコーダから得られたインターレース関連情報を次のフィルタに伝えます。ビデオレンダラなどフィルタによっては必要に応じてこの情報を使ってインターレース解除を行います。\nあくまで次のフィルタに情報を伝えるだけで、実際の動作は下流側フィルタの実装に依存します。\n\n（以前「ハードウェアインターレース解除」と呼ばれていた項目です）
 indeterminate state - connect to any filter, allows output format changes only if connected to supported filter.\n\nFilters known to support dynamic format change:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  ffdshow=中間状態：どんなフィルターにも接続しますが、可能な場合（接続先のフィルターによる）のみ再生中の出力形式の変更を試みます。\n\n再生中の出力形式の変更が可能なフィルター：\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's video renderer\n  ffdshow"
 Connect only to:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  ffdshow=以下のフィルタにのみ接続します\n\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's video renderer\n  ffdshow
+AviSynth info=AviSynthの情報
+Number of frames to buffer ahead=前方のフレームを何枚先までバッファーするか
+Number of used frames to keep in buffer=後方のフレームを何枚バッファーするか
+Ignore pulldown=プルダウンを行わない
+Apply pulldown=プルダウンを適用する
+Smooth timestamps=タイムスタンプを平滑化する
 
 [101]
 1=OK
@@ -957,8 +963,11 @@ Connect only to:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Rend
 1349=YUY2
 1350=RGB24
 1351=RGB32
-1352=入力の色空間:
-1353=ffdshowにビデオソースを追加する
+2021=ffdshowのビデオソースを追加する
+2024=入力色空間
+2029=バッファー 後方/前方:
+2023=3:2 プルダウン
+2032=現在の値を使う
 
 [181]
 0=ワープシャープ
