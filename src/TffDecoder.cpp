@@ -231,7 +231,10 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
 
  if (!presetSettings) initPreset();
 
- int hwOverlay=presetSettings->output->hwOverlay;
+ int hwOverlay0,hwOverlay;
+ hwOverlay0=hwOverlay=presetSettings->output->hwOverlay;
+ if (hwOverlay==0 && presetSettings->output->hwDeinterlace)
+  hwOverlay=2;
  if (hwOverlay==2 && m_pOutput->IsConnected())
   {
    const CLSID &ref=GetCLSID(m_pOutput->GetConnected());
@@ -305,7 +308,7 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
    VIDEOINFOHEADER2 *vih2=(VIDEOINFOHEADER2*)mtOut->ReallocFormatBuffer(sizeof(VIDEOINFOHEADER2));
    if (!vih2) return E_OUTOFMEMORY;
    ZeroMemory(vih2,sizeof(VIDEOINFOHEADER2));
-   if(presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0)
+   if((presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0) || hwOverlay0==0)
     {
      pictOut.rectFull.sar.num= 1;//pictOut.rectFull.dx; // VMR9 behaves better when this is set to 1(SAR). But in reconnectOutput, it is different(DAR) in my system.
      pictOut.rectFull.sar.den= 1;//pictOut.rectFull.dy;
@@ -995,8 +998,8 @@ if (!outdv && hwDeinterlace)
     {
      VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)omt.pbFormat;
      BITMAPINFOHEADER *bmi=&vih->bmiHeader;
-     vih->dwPictAspectRatioX = pict.rectFull.sar.num;
-     vih->dwPictAspectRatioY = pict.rectFull.sar.den;
+       vih->dwPictAspectRatioX = pict.rectFull.sar.num;
+       vih->dwPictAspectRatioY = pict.rectFull.sar.den;
      SetRect(&vih->rcTarget, 0, 0, 0, 0);
      SetRect(&vih->rcSource, 0, 0, pict.rectFull.dx, pict.rectFull.dy);
      bmi->biXPelsPerMeter = pict.rectFull.dx * vih->dwPictAspectRatioX;
@@ -1270,7 +1273,8 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
       && _strnicmp(_l("wmplayer.exe"),getExeflnm(),13)!=0
       && downstreamID==OVERLAY_MIXER)
   {
-   m_NeedToAttachFormat = true;
+   if (presetSettings->output->hwOverlay)
+    m_NeedToAttachFormat = true;
    oldRect=newpict.rectFull;
    return S_OK;
   }
@@ -1308,6 +1312,12 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
      //DPRINTF(_l("AR pict: %i:%i"),newpict.rectFull.dar().num,newpict.rectFull.dar().den);
 
      setVIH2aspect(vih,newpict.rectFull,presetSettings->output->hwOverlayAspect);
+     if (presetSettings->output->hwOverlay==0)
+      {
+       vih->dwPictAspectRatioX=newpict.rectFull.dx;
+       vih->dwPictAspectRatioY=newdy;
+       vih->dwControlFlags=0;
+      }
      if(presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0)
       {
        vih->dwPictAspectRatioX= newpict.rectFull.dx;

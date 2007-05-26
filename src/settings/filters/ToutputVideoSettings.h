@@ -10,6 +10,7 @@ private:
  static const TfilterIDFF idffs;
 protected:
  const int* getResets(unsigned int pageId);
+ virtual int getDefault(int id);
 public:
  ToutputVideoSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
 
@@ -28,6 +29,7 @@ public:
   };
  void getOutputColorspaces(ints &ocsps),getOutputColorspaces(TcspInfos &ocsps);
  int hwOverlay,hwOverlayAspect;
+ int hwOverlayOld,hwDeinterlaceOld;
  int allowOutChange3,outChangeCompatOnly;
  int hwDeinterlace,hwDeintMethod;
  int avisynthYV12_RGB;

@@ -20,7 +20,6 @@
 #define IDD_SUBTITLES                   113
 #define IDD_CODECS                      115
 #define IDD_DIRECTSHOWCONTROL           116
-#define IDD_INFOSIMD                    2020
 #define IDD_DECODEROPTIONS              118
 #define IDD_PRESETS                     119
 #define IDD_POSTPROC                    120
@@ -1725,6 +1724,7 @@
 #define IDC_RBT_ICON_MODERN             2017
 #define IDC_RBT_ICON_CLASSIC            2018
 #define IDC_TXT_TRAYICON                2019
+#define IDD_INFOSIMD                    2020
 #define IDC_CHB_AVISYNTH_FFDSHOW        2021
 #define IDC_CBX_AVISYNTH_PULLDOWN       2022
 #define IDC_LBL_AVISYNTH_PULLDOWN       2023
@@ -1750,13 +1750,13 @@
 #define IDC_GRP_WINAMP2                 65535
 
 // Next default values for new objects
-//
+// 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        238
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2035
+#define _APS_NEXT_CONTROL_VALUE         2060
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

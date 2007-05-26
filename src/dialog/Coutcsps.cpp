@@ -25,6 +25,8 @@
 const int ToutcspsPage::idcs []={IDC_CHB_OUT_I420,IDC_CHB_OUT_YV12,IDC_CHB_OUT_YUY2,IDC_CHB_OUT_YVYU,IDC_CHB_OUT_UYVY,IDC_CHB_OUT_NV12,IDC_CHB_OUT_RGB32,IDC_CHB_OUT_RGB24,IDC_CHB_OUT_RGB15,IDC_CHB_OUT_RGB16,0};
 const int ToutcspsPage::idffs[]={IDFF_outI420    ,IDFF_outYV12    ,IDFF_outYUY2    ,IDFF_outYVYU    ,IDFF_outUYVY    ,IDFF_outNV12    ,IDFF_outRGB32    ,IDFF_outRGB24    ,IDFF_outRGB555   ,IDFF_outRGB565   };
 
+#define TOUTCSPSPAGE_RECONNECTABLE_FILTERS _l("  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  ffdshow")
+
 void ToutcspsPage::init(void)
 {
  Tlibavcodec *lavc;
@@ -32,10 +34,27 @@ void ToutcspsPage::init(void)
  static const int dvs[]={IDC_CHB_OUT_DV,IDC_LBL_OUT_DV_PROFILE,IDC_CBX_OUT_DV_PROFILE,0};
  enable(lavc && lavc->ok && !lavc->dec_only && (filterMode&IDFF_FILTERMODE_VFW)==0,dvs);
  if (lavc) lavc->Release();
- addHint(IDC_CHB_HWOVERLAY,_l("indeterminate state - first try overlay, then use fallback format"));
- addHint(IDC_CHB_ALLOWOUTCHANGE,_l("indeterminate state - connect to any filter, allows output format changes only if connected to supported filter"));
- addHint(IDC_CHB_OUTCHANGECOMPATONLY,_l("Filters known to support dynamic format change:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  ffdshow"));
- addHint(IDC_CBX_OUT_HWDEINT_METHOD,_l("Bob for video source\nWeave for film source\nIn most cases, Weave is the same as unchecked HW deinterlacing."));
+ addHint(IDC_CHB_HWOVERLAY,          _l("Unchecked: Use classic connection method.\n")
+                                     _l("Checked: Use an advanced connection method that includes pixel aspect ratio (SAR) and interlacing information when connecting with the next filter (usually a video renderer).\n")
+                                     _l("Indeterminate/grayed: Try advanced connection method first and fall back to classic connection method if it fails.\n")
+                                     _l("\n")
+                                     _l("(formerly called \"Use overlay mixer\")"));
+
+ addHint(IDC_CHB_HWDEINTERLACE,      _l("Send interlacing related information obtained from the input stream or ffdshow's internal decoders to the next filter. ")
+                                     _l("Some filters (like video renderers) will use this information to deinterlace the video if neccessary.\n")
+                                     _l("This is just for informing the downstream filters - the actual result will depend purely on the implementation of these filters.\n")
+                                     _l("\n")
+                                     _l("(formerly called \"HW deinterlacing\")"));
+
+ addHint(IDC_CHB_ALLOWOUTCHANGE,     _l("indeterminate state - connect to any filter, allows output format changes only if connected to supported filter.\n\n")
+                                     _l("Filters known to support dynamic format change:\n")
+                                     TOUTCSPSPAGE_RECONNECTABLE_FILTERS);
+
+ addHint(IDC_CHB_OUTCHANGECOMPATONLY,_l("Connect only to:\n")
+                                     TOUTCSPSPAGE_RECONNECTABLE_FILTERS);
+
+ addHint(IDC_CBX_OUT_HWDEINT_METHOD,_l("Bob for video source\nWeave for film source\n")
+                                    _l("In most cases, Weave is the same as unchecked HW deinterlacing."));
 }
 void ToutcspsPage::cfg2dlg(void)
 {
@@ -62,7 +81,7 @@ void ToutcspsPage::dv2dlg(void)
 }
 void ToutcspsPage::csp2dlg(void)
 {
- int hwdeint=cfgGet(IDFF_hwOverlay)!=0 && cfgGet(IDFF_hwDeinterlace);
+ int hwdeint=cfgGet(IDFF_setDeintInOutSample);
  setCheck(IDC_CHB_OUT_I420 ,cfgGet(IDFF_outI420  ));enable(!hwdeint,IDC_CHB_OUT_I420);
  setCheck(IDC_CHB_OUT_YV12 ,cfgGet(IDFF_outYV12  ));enable(!hwdeint,IDC_CHB_OUT_YV12);
  setCheck(IDC_CHB_OUT_YUY2 ,cfgGet(IDFF_outYUY2  ));
@@ -78,16 +97,16 @@ void ToutcspsPage::csp2dlg(void)
 }
 void ToutcspsPage::overlay2dlg(void)
 {
- int isHW=cfgGet(IDFF_hwOverlay);
+ int isHW=cfgGet(IDFF_setSARinOutSample);
  int enabledHW=(filterMode&IDFF_FILTERMODE_VFW)==0;
  int dv=cfgGet(IDFF_outDV);
  setCheck3(IDC_CHB_HWOVERLAY,isHW);
  enable(enabledHW && !dv,IDC_CHB_HWOVERLAY);
- int hwdeint=cfgGet(IDFF_hwDeinterlace);
+ int hwdeint=cfgGet(IDFF_setDeintInOutSample);
  setCheck(IDC_CHB_HWDEINTERLACE,hwdeint);
- enable(!dv && isHW && enabledHW,IDC_CHB_HWDEINTERLACE);
+ enable(enabledHW && !dv,IDC_CHB_HWDEINTERLACE);
  cbxSetCurSel(IDC_CBX_OUT_HWDEINT_METHOD,cfgGet(IDFF_hwDeintMethod));
- enable(!dv && isHW && enabledHW && hwdeint,IDC_CBX_OUT_HWDEINT_METHOD);
+ enable(!dv && enabledHW && hwdeint,IDC_CBX_OUT_HWDEINT_METHOD);
 }
 void ToutcspsPage::dfc2dlg(void)
 {
@@ -106,12 +125,12 @@ INT_PTR ToutcspsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     switch (LOWORD(wParam))
      {
       case IDC_CHB_HWOVERLAY:
-       cfgSet(IDFF_hwOverlay,getCheck3(IDC_CHB_HWOVERLAY));
+       cfgSet(IDFF_setSARinOutSample,getCheck3(IDC_CHB_HWOVERLAY));
        overlay2dlg();
        csp2dlg();
        return TRUE;
       case IDC_CHB_HWDEINTERLACE:
-       cfgSet(IDFF_hwDeinterlace,getCheck(IDC_CHB_HWDEINTERLACE));
+       cfgSet(IDFF_setDeintInOutSample,getCheck(IDC_CHB_HWDEINTERLACE));
        overlay2dlg();
        csp2dlg();
        return TRUE;
@@ -212,7 +231,7 @@ ToutcspsPage::ToutcspsPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
   {
    IDC_CHB_FLIP,IDFF_flip,NULL,
    IDC_CHB_OUTCHANGECOMPATONLY,IDFF_outChangeCompatOnly,NULL,
-   IDC_CHB_HWDEINTERLACE,IDFF_hwDeinterlace,&ToutcspsPage::csp2dlg,
+   IDC_CHB_HWDEINTERLACE,IDFF_setDeintInOutSample,&ToutcspsPage::csp2dlg,
    IDC_CHB_AVISYNTH_YV12_RGB,IDFF_avisynthYV12_RGB,NULL,
    IDC_CHB_OUT_CLOSESTMATCH,IDFF_outClosest,NULL,
    0,NULL,NULL
