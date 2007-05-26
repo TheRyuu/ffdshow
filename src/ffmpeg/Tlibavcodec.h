@@ -11,7 +11,6 @@ struct Tlibavcodec
 {
 private:
  Tdll *dll;
- static void avlog(AVCodecContext*,int,const char*,va_list);
  Tlibavcodec(const Tconfig *config);
  Tlibavcodec(const Tlibavcodec &) {}
  ~Tlibavcodec();
@@ -20,6 +19,8 @@ private:
  static int get_buffer(AVCodecContext *c, AVFrame *pic);
  CCritSec csOpenClose;
 public:
+ static void avlog(AVCodecContext*,int,const char*,va_list);
+ static void avlogMsgBox(AVCodecContext*,int,const char*,va_list);
  void AddRef(void)
   {
    refcount++;
@@ -59,6 +60,7 @@ public:
  //void (*av_free_static)(void);
 
  void (*av_log_set_callback)(void (*)(AVCodecContext*, int, const char*, va_list));
+ void* (*av_log_get_callback)(void);
 
  int (*avcodec_thread_init)(AVCodecContext *s, int thread_count);
  void (*avcodec_thread_free)(AVCodecContext *s);

@@ -49,7 +49,7 @@ TglobalSettingsBase::TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const 
    IDFF_outputdebugfile  ,&TglobalSettingsBase::outputdebugfile  ,0,0,_l(""),0,
      _l("outputdebugfile"),0,
    IDFF_errorbox         ,&TglobalSettingsBase::errorbox         ,0,0,_l(""),0,
-     _l("errorbox"),0,
+     _l("errorbox1"),1,
    IDFF_multipleInstances,&TglobalSettingsBase::multipleInstances,0,4,_l(""),0,
      _l("multipleInstances"),TintOption::DEF_DYN,
    IDFF_isBlacklist      ,&TglobalSettingsBase::isBlacklist      ,0,0,_l(""),0,

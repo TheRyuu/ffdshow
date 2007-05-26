@@ -59,3 +59,8 @@ void av_log_set_callback(void (*callback)(void*, int, const char*, va_list))
 {
     av_vlog = callback;
 }
+
+void* av_log_get_callback(void)
+{
+    return av_vlog;
+}

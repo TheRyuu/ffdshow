@@ -854,7 +854,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
      PixelFormat lavc_csp=csp_ffdshow2lavc(csp);
      if (!coCfg->getDVprofile(avctx->width,avctx->height,lavc_csp))
       {
-       deci->dbgError(_l("Can't find matching DV profile"));
+       deci->dbgError(_l("Can't find matching DV profile\r\nDV supports 720x480 and 720x576."));
        return ICERR_ERROR;
       }
      else
@@ -866,7 +866,13 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
      if ((avctx->width==176 && avctx->height==144) || (avctx->width==352 && avctx->height==288))
       break;
      else
-      return ICERR_ERROR;
+      {
+       int errorbox;
+       deci->getParam(IDFF_errorbox,&errorbox);
+       if (errorbox)
+        MessageBox(NULL,_l("h.261 supports 176x144 and 352x288"),_l("ffdshow libavcodec encoder error"),MB_ICONERROR|MB_OK);
+       return ICERR_ERROR;
+      }
     }
    case CODEC_ID_SVQ1:
     avctx->pix_fmt=PIX_FMT_YUV410P;break;
@@ -1015,7 +1021,23 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
   }
  if ((avctx->rc_override_count=rcescount)!=0)
   avctx->rc_override=rces;
- if (libavcodec->avcodec_open(avctx,avcodec)<0)
+
+ // save av_log_callback and set custom av_log that shows message box.
+ void (*avlogOldFunc)(AVCodecContext*, int, const char*, va_list);
+ int errorbox;
+ deci->getParam(IDFF_errorbox,&errorbox);
+ if (errorbox)
+  {
+   avlogOldFunc=(void (*)(AVCodecContext*, int, const char*, va_list))(libavcodec->av_log_get_callback());
+   libavcodec->av_log_set_callback(Tlibavcodec::avlogMsgBox);
+  }
+
+ int err=libavcodec->avcodec_open(avctx,avcodec);
+
+ // restore av_log_callback
+ if (errorbox)
+  libavcodec->av_log_set_callback(avlogOldFunc);
+ if (err<0)
   {
    avctx->codec=NULL;
    return ICERR_ERROR;

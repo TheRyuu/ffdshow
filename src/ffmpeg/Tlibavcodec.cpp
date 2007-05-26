@@ -89,6 +89,7 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(avcodec_close0,"avcodec_close");
  //dll->loadFunction(av_free_static,"av_free_static");
  dll->loadFunction(av_log_set_callback,"av_log_set_callback");
+ dll->loadFunction(av_log_get_callback,"av_log_get_callback");
  dll->loadFunction(avcodec_thread_init,"avcodec_thread_init");
  dll->loadFunction(avcodec_thread_free,"avcodec_thread_free");
  dll->loadFunction(av_free,"av_free");
@@ -197,6 +198,24 @@ bool Tlibavcodec::check(const Tconfig *config)
 void Tlibavcodec::avlog(AVCodecContext *avctx,int level,const char *fmt,va_list valist)
 {
  DPRINTFvaA(fmt,valist);
+}
+
+void Tlibavcodec::avlogMsgBox(AVCodecContext *avctx,int level,const char *fmt,va_list valist)
+{
+ if (level > AV_LOG_ERROR)
+  {
+   DPRINTFvaA(fmt,valist);
+  }
+ else
+  {
+   char buf[1024];
+   int len=_vsnprintf(buf,1023,fmt,valist);
+   if (len>0)
+    {
+     buf[len]='\0';
+     MessageBoxA(NULL,buf,"ffdshow libavcodec encoder error",MB_ICONERROR|MB_OK);
+    }
+  }
 }
 
 //=================================== TlibavcodecExt ===================================

@@ -26,6 +26,8 @@ else
   OUTPUTFLAG=-MMD -o\
 
   CFLAGS+=-mno-cygwin -mdll -fno-rtti -mthreads -pipe -D_WINGDI_ -DUCLIBCPP -D_GLIBCPP_HAVE_MBSTATE_T -D_WIN32_IE=0x0500
+  CFLAGS+=-DARCH_IS_IA32 -DARCH_IS_32BIT
+  CFLAGS+=-DHAVE_MMX
   CFLAGS+=-mmmx
   ifeq ($(SSE),yes)
     CFLAGS+=-msse -mfpmath=sse

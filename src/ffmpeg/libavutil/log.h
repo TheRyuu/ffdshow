@@ -97,5 +97,6 @@ extern void av_log(void*, int level, const char *fmt, ...);
 extern void (*av_vlog)(void*, int, const char*, va_list);
 
 extern void av_log_set_callback(void (*)(void*, int, const char*, va_list));
+extern void* av_log_get_callback(void);
 
 #endif /* LOG_H */

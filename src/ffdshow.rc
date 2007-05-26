@@ -1393,7 +1393,7 @@ BEGIN
     CONTROL         "Write info to debugger",IDC_CHB_OUTPUTDEBUG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,2,160,10
     CONTROL         "Write info to file",IDC_CHB_OUTPUTDEBUGFILE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,14,144,10
     EDITTEXT        IDC_ED_OUTPUTDEBUGFILE,17,26,210,12,ES_AUTOHSCROLL
-    CONTROL         "Show message box on error",IDC_CHB_ERRORBOX,"Button",BS_AUTOCHECKBOX | NOT WS_VISIBLE | WS_TABSTOP,152,13,102,10
+    CONTROL         "Show message box on error",IDC_CHB_ERRORBOX,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,152,13,102,10
     PUSHBUTTON      "...",IDC_BT_OUTPUTDEBUGFILE,227,26,21,12
     CONTROL         "Make DirectShow graph available to graphedt",IDC_CHB_ADDTOROT,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,3,42,241,10
