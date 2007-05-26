@@ -1270,11 +1270,17 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
 {
  HRESULT hr=S_OK;
  if ((newpict.rectFull==oldRect && newpict.rectFull.sar!=oldRect.sar)
+      && presetSettings->output->hwOverlay==0)
+  {
+   // Only aspect ratio is different and "Set pixel aspect ratio in output media type" is unchecked.
+   oldRect=newpict.rectFull;
+   return S_OK;
+  }
+ if ((newpict.rectFull==oldRect && newpict.rectFull.sar!=oldRect.sar)
       && _strnicmp(_l("wmplayer.exe"),getExeflnm(),13)!=0
       && downstreamID==OVERLAY_MIXER)
   {
-   if (presetSettings->output->hwOverlay)
-    m_NeedToAttachFormat = true;
+   m_NeedToAttachFormat = true;
    oldRect=newpict.rectFull;
    return S_OK;
   }
