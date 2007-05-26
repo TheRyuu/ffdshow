@@ -28,9 +28,12 @@ void TqueuePage::init(void)
 
 void TqueuePage::cfg2dlg(void)
 {
+ int enableQueue=(filterMode&IDFF_FILTERMODE_VFW)==0;
  setCheck(IDC_CHB_MULTITHREAD,cfgGet(IDFF_multiThreadDec));
  setCheck(IDC_CHB_USE_QUEUE_ONLY_IN,cfgGet(IDFF_useQueueOnlyIn));
  SetDlgItemText(m_hwnd,IDC_ED_USE_QUEUE_ONLY_IN_LIST,cfgGetStr(IDFF_useQueueOnlyInList));
+ static const int eq[]={IDC_CHB_MULTITHREAD,IDC_CHB_USE_QUEUE_ONLY_IN,IDC_ED_USE_QUEUE_ONLY_IN_LIST};
+ enable(enableQueue,eq);
  delay2dlg();
  interlaced2dlg();
 }
