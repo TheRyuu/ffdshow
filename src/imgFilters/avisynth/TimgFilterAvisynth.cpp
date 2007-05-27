@@ -61,13 +61,11 @@ TimgFilterAvisynth::Tffdshow_source::Tffdshow_source(Tinput *Iinput,VideoInfo &I
  vi.fps_numerator=input->fpsnum;
  vi.fps_denominator=input->fpsden;
  vi.num_frames=NUM_FRAMES;
- switch (input->csp&FF_CSPS_MASK)
-  {
-   case FF_CSP_420P :vi.pixel_type=AVS_CS_YV12 ;break;
-   case FF_CSP_YUY2 :vi.pixel_type=AVS_CS_YUY2 ;break;
-   case FF_CSP_RGB32:vi.pixel_type=AVS_CS_BGR32;break;
-   case FF_CSP_RGB24:vi.pixel_type=AVS_CS_BGR24;break;
-  }
+
+ if      (input->csp & FF_CSP_420P)  vi.pixel_type=AVS_CS_YV12;
+ else if (input->csp & FF_CSP_YUY2)  vi.pixel_type=AVS_CS_YUY2;
+ else if (input->csp & FF_CSP_RGB32) vi.pixel_type=AVS_CS_BGR32;
+ else if (input->csp & FF_CSP_RGB24) vi.pixel_type=AVS_CS_BGR24;
 }
 
 int TimgFilterAvisynth::findBuffer(TframeBuffer* buffers, int numBuffers, int n)

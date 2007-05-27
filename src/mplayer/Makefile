@@ -1,5 +1,5 @@
 CFLAGS+=-I. -I.. -I../imgFilters -Ilibvo -w
- 
+
 SRCS_C=postproc/rgb2rgb.c postproc/yuv2rgb.c postproc/swscale.c mplayer.c \
        postproc/postprocess.c libvo/aclib.c  postproc/w32thread.c \
        mp3lib/sr1.c ../ffmpeg/libavutil/mem.c 
@@ -28,7 +28,7 @@ include ../makefile_c.inc
 .all: $(SLIB)
 
 clean: 
-	rm -f *.o postproc/*.o libvo/*.o mp3lib/*.o $(SLIB) *~
+	rm -f *.[od] postproc/*.o libvo/*.o mp3lib/*.o $(SLIB) *~
 
 #
 # include dependency files if they exist
