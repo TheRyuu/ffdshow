@@ -3817,7 +3817,7 @@ int ff_check_alignment(void){
     if((int)&aligned & 15){
         if(!did_fail){
 #if defined(HAVE_MMX) || defined(HAVE_ALTIVEC)
-            av_log(NULL, AV_LOG_ERROR,
+            av_log(NULL, AV_LOG_WARNING,
                 "Compiler did not align stack variables. Libavcodec has been miscompiled\n"
                 "and may be very slow or crash. This is not a bug in libavcodec,\n"
                 "but in the compiler. Do not report crashes to FFmpeg developers.\n");
