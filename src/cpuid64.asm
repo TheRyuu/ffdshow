@@ -26,15 +26,6 @@
 
 BITS 64
 
-%macro cglobal 1
-    %ifdef PREFIX
-        global _%1
-        %define %1 _%1
-    %else
-        global %1
-    %endif
-%endmacro
-
 ;=============================================================================
 ; Constants
 ;=============================================================================
@@ -100,7 +91,7 @@ SECTION .text align=16
 ; it will be necessary to check if 3dnow can be used or not...
 ; so better use cpuid, even if it's mostly ignored for now.
 
-cglobal check_cpu_features
+global check_cpu_features
 check_cpu_features:
 
   push rbx
@@ -184,28 +175,28 @@ check_cpu_features:
 ; sse/sse2/sse3/ssse3 operating support detection routines
 ; these will trigger an invalid instruction signal if not supported.
 ALIGN 16
-cglobal sse_os_trigger
+global sse_os_trigger
 sse_os_trigger:
   xorps xmm0, xmm0
   ret
 .endfunc
 
 ALIGN 16
-cglobal sse2_os_trigger
+global sse2_os_trigger
 sse2_os_trigger:
   xorpd xmm0, xmm0
   ret
 .endfunc
 
 ALIGN 16
-cglobal sse3_os_trigger
+global sse3_os_trigger
 sse3_os_trigger:
   haddps xmm0, xmm0
   ret
 .endfunc
 
 ALIGN 16
-cglobal ssse3_os_trigger
+global ssse3_os_trigger
 ssse3_os_trigger:
   pabsw xmm0, xmm0
   ret
@@ -213,7 +204,7 @@ ssse3_os_trigger:
 
 ; enter/exit mmx state
 ALIGN 16
-cglobal emms_mmx
+global emms_mmx
 emms_mmx:
   emms
   ret
@@ -221,7 +212,7 @@ emms_mmx:
 
 ; faster enter/exit mmx state
 ALIGN 16
-cglobal emms_3dn
+global emms_3dn
 emms_3dn:
   femms
   ret

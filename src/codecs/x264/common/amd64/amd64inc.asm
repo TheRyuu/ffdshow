@@ -28,12 +28,7 @@ BITS 64
 ; but is not guaranteed by the ABI.
 
 %macro cglobal 1
-    %ifdef PREFIX
-        global _%1
-        %define %1 _%1
-    %else
-        global %1
-    %endif
+    global %1
 %ifdef WIN64
     %define %1 pad %1
 %endif
@@ -43,9 +38,6 @@ BITS 64
 
 %macro pad 1
     %undef %1
-    %ifdef PREFIX
-        %define %1 _%1
-    %endif
     %ifdef WIN64
         times 6 nop
         align 16
