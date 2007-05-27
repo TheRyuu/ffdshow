@@ -26,8 +26,7 @@ int IsCPUID(void)
         : "+a" (result)
         :: "%ecx","%edx"
     );
-#else
-#ifdef _WINDOWS // MSVC
+#elif defined(__WIN32__)
     _asm{
         push    ecx
         pushfd
@@ -45,9 +44,8 @@ CPUIDok:
         pop     ecx
     }
 #else  // _WINDOWS
-    result= false;
+    result= 0;
 #endif // _WINDOWS
-#endif
     return result;
 }
 
@@ -103,7 +101,7 @@ int isP4HT (void)
         : "=m" (dwMax), "=m" (Ident.s.dw0), "=m" (Ident.s.dw1), "=m" (Ident.s.dw2), "=m" (dwStandard), "=m" (dwBrandIndex), "=m" (dwFeature)
         :: "%eax","%ebx","%ecx","%edx"
     );
-#else           // MSVC
+#elif defined(__WIN32__)
     _asm {
         push ebx
         push ecx
@@ -128,6 +126,8 @@ int isP4HT (void)
         pop ebx
         pop edx
     }
+#else
+    return 0;
 #endif
 
     family = (dwStandard >> 8) & 0xF; // retrieve family

@@ -165,20 +165,24 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
 #ifndef WIN64
 #ifdef __GNUC__
     asm volatile("push %ebx");
-#else
+#elif defined(__WIN32__)
    _asm{
     push ebx
    }
+#else
+// TODO: I'm assuming it'll clobber registers in x64 too
 #endif
 #endif
    flt->fm->pfnAlgorithm(&di);
 #ifndef WIN64
 #ifdef __GNUC__
     asm volatile("pop %ebx");
-#else
+#elif defined(__WIN32__)
    _asm{
     pop ebx
    }
+#else
+// TODO: I'm assuming it'll clobber registers in x64 too
 #endif
 #endif
    deci->unlock(IDFF_lockDScaler);
