@@ -32,14 +32,14 @@ private:
  double minslope;
  double hWarp;
  double vWarp;
- unsigned int* hControl;         // weighting masks, alternating dwords for Y & UV
+ int* hControl;         // weighting masks, alternating dwords for Y & UV
                                                          // 1 qword for mask, 1 dword for src offset, 1 unused dword
- unsigned int* vOffsets;         // Vertical offsets of the source lines we will use
- unsigned int* vWeights;         // weighting masks, alternating dwords for Y & UV
- unsigned int* vOffsetsUV;               // Vertical offsets of the source lines we will use
- unsigned int* vWeightsUV;               // weighting masks, alternating dwords for Y & UV
- unsigned int* vWorkY;           // weighting masks 0Y0Y 0Y0Y...
- unsigned int* vWorkUV;          // weighting masks UVUV UVUV...
+ int* vOffsets;         // Vertical offsets of the source lines we will use
+ int* vWeights;         // weighting masks, alternating dwords for Y & UV
+ int* vOffsetsUV;               // Vertical offsets of the source lines we will use
+ int* vWeightsUV;               // weighting masks, alternating dwords for Y & UV
+ int* vWorkY;           // weighting masks 0Y0Y 0Y0Y...
+ int* vWorkUV;          // weighting masks UVUV UVUV...
  bool SSE2enabled;
  bool SSEMMXenabled;
  bool Interlaced;
