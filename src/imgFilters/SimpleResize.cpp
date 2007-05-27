@@ -67,8 +67,8 @@ SimpleResize::SimpleResize(const VideoInfo &vi,unsigned int _width, unsigned int
                                 ;//env->ThrowError("InterlacedResize: Interlace not supported for YV12 yet");
                         }
                         DoYV12 = true;
-                        vOffsetsUV = (unsigned int*) aligned_malloc(newheight*4,128);
-                        vWeightsUV = (unsigned int*) aligned_malloc(newheight*4,128);
+                        vOffsetsUV = (int*) aligned_malloc(newheight*4,128);
+                        vWeightsUV = (int*) aligned_malloc(newheight*4,128);
 
                         if (!vOffsetsUV || !vWeightsUV)
                         {
@@ -82,11 +82,11 @@ SimpleResize::SimpleResize(const VideoInfo &vi,unsigned int _width, unsigned int
                 }
 
                 // 2 qwords, 2 offsets, and prefetch slack
-            hControl = (unsigned int*) aligned_malloc(newwidth*12+128, 128);   // aligned for P4 cache line
-            vWorkY   = (unsigned int*) aligned_malloc(2*oldwidth+128, 128);
-            vWorkUV  = (unsigned int*) aligned_malloc(oldwidth+128, 128);
-            vOffsets = (unsigned int*) aligned_malloc(newheight*4, 128);
-            vWeights = (unsigned int*) aligned_malloc(newheight*4, 128);
+            hControl = (int*) aligned_malloc(newwidth*12+128, 128);   // aligned for P4 cache line
+            vWorkY   = (int*) aligned_malloc(2*oldwidth+128, 128);
+            vWorkUV  = (int*) aligned_malloc(oldwidth+128, 128);
+            vOffsets = (int*) aligned_malloc(newheight*4, 128);
+            vWeights = (int*) aligned_malloc(newheight*4, 128);
 
                 if (!hControl || !vWeights)
                 {
@@ -147,16 +147,16 @@ void SimpleResize::GetFrame_YV12(const PVideoFrame *src, PVideoFrame *dst, int P
         const int row_size = dst->rowSize[Planar_Type];
         const int height = dst->height[Planar_Type];
 
-        const unsigned int* pControl = &hControl[0];
+        const int* pControl = &hControl[0];
         const unsigned char* srcp1;
         const unsigned char* srcp2;
-        unsigned int* vWorkYW = vWorkY;
+        int* vWorkYW = vWorkY;
 
-        unsigned int* vOffsetsW = (Planar_Type == PLANAR_Y)
+        int* vOffsetsW = (Planar_Type == PLANAR_Y)
                 ? vOffsets
                 : vOffsetsUV;
 
-        unsigned int* vWeightsW = (Planar_Type == PLANAR_Y)
+        int* vWeightsW = (Planar_Type == PLANAR_Y)
                 ? vWeights
                 : vWeightsUV;
 
@@ -529,11 +529,11 @@ void SimpleResize::GetFrame_YUY2(const PVideoFrame *src, PVideoFrame *dst, int P
         const int src_row_size = src->rowSize[0];
         const int row_size = dst->rowSize[0];
         const int height = dst->height[0];
-        const unsigned int* pControl = &hControl[0];
+        const int* pControl = &hControl[0];
         const unsigned char* srcp1;
         const unsigned char* srcp2;
-        unsigned int* vWorkYW = vWorkY;
-        unsigned int* vWorkUVW = vWorkUV;
+        int* vWorkYW = vWorkY;
+        int* vWorkUVW = vWorkUV;
         int EndOffset = src_row_size / 2;
         #ifdef __SSE2__
          __m128i xmm0,xmm5,xmm6,xmm7,xmm1,xmm2,xmm3,xmm4;
