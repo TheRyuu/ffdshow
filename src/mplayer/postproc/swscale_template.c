@@ -2905,8 +2905,8 @@ FUNNY_UV_CODE
    }
 }
 
-static int RENAME(swScaleI)(SwsContext *c, uint8_t* src[], int srcStride[], int srcSliceY,
-             int srcSliceH, uint8_t* dst[], int dstStride[], int dstYstart, int dstYend){
+static int RENAME(swScaleI)(SwsContext *c, uint8_t* src[], stride_t srcStride[], int srcSliceY,
+             int srcSliceH, uint8_t* dst[], stride_t dstStride[], int dstYstart, int dstYend){
 
 	/* load a few things into local vars to make the code more readable? and faster */
 	const int srcW= c->srcW;
@@ -3262,8 +3262,8 @@ int RENAME(sws_thread_work)(SwsContext *c)		// Thread func
 			stp->srcSliceH, stp->dst, stp->dstStride, stp->dstYstart, stp->dstYend);
 }
 
-static int RENAME(swScale)(SwsContext *c, uint8_t* src[], int srcStride[], int srcSliceY,
-             int srcSliceH, uint8_t* dst[], int dstStride[])
+static int RENAME(swScale)(SwsContext *c, uint8_t* src[], stride_t srcStride[], int srcSliceY,
+             int srcSliceH, uint8_t* dst[], stride_t dstStride[])
 {
 	int dstLines;
 	int i;
