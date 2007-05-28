@@ -494,6 +494,8 @@ static void zero (sample_t * samples)
 void dts_downmix (sample_t * samples, int acmod, int output, sample_t bias,
 		  level_t clev, level_t slev)
 {
+    (void)clev;
+
     switch (CONVERT (acmod, output & DTS_CHANNEL_MASK)) {
 
     case CONVERT (DTS_CHANNEL, DTS_MONO):

@@ -72,6 +72,7 @@ dts_state_t * dts_init (uint32_t mm_accel)
     dts_state_t * state;
     int i;
 
+    (void)mm_accel;
     state = (dts_state_t *) malloc (sizeof (dts_state_t));
     if (state == NULL)
         return NULL;
@@ -130,13 +131,13 @@ static int syncinfo (dts_state_t * state, int * flags,
         return 0;
 
     *sample_rate = bitstream_get (state, 4);
-    if (*sample_rate >= sizeof (dts_sample_rates) / sizeof (int))
+    if ((size_t)*sample_rate >= sizeof (dts_sample_rates) / sizeof (int))
         return 0;
     *sample_rate = dts_sample_rates[ *sample_rate ];
     if (!*sample_rate) return 0;
 
     *bit_rate = bitstream_get (state, 5);
-    if (*bit_rate >= sizeof (dts_bit_rates) / sizeof (int))
+    if ((size_t)*bit_rate >= sizeof (dts_bit_rates) / sizeof (int))
         return 0;
     *bit_rate = dts_bit_rates[ *bit_rate ];
     if (!*bit_rate) return 0;
