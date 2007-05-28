@@ -770,7 +770,7 @@ typedef struct {
 #define XVID_KEYFRAME (1<<1)
 
 /* The structure */
-typedef struct {
+typedef struct xvid_enc_frame_t {
 	int version;
 
 	/* VOL related stuff
@@ -806,5 +806,44 @@ typedef struct {
 #ifdef __cplusplus
 }
 #endif
+
+#ifdef __cplusplus
+
+struct XVID_ME
+{
+ enum
+  {
+   ADVANCEDDIAMOND16=0x00008000,
+   HALFPELREFINE16  =0x00020000,
+   EXTSEARCH16      =0x00080000,
+   USESQUARES16     =0x00800000,
+   ADVANCEDDIAMOND8 =0x00004000,
+   HALFPELREFINE8   =0x02000000,
+   EXTSEARCH8       =0x08000000,
+   USESQUARES8      =0x80000000
+  };
+};
+
+struct XVID_ME_RD
+{
+ enum
+  {
+   HALFPELREFINE16   =0x00000100,
+   HALFPELREFINE8    =0x00000200,
+   QUARTERPELREFINE16=0x00000400,
+   QUARTERPELREFINE8 =0x00000800,
+   EXTSEARCH         =0x00001000,
+   CHECKPREDICTION   =0x00002000
+  };
+};
+
+struct TmeXviDpreset
+{
+ const char_t *name;
+ int preset;
+};
+extern const TmeXviDpreset meXviDpresets[],vhqXviDpresets[];
+
+#endif // __cplusplus
 
 #endif

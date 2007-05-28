@@ -27,7 +27,7 @@
 				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="DEBUG;_DEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF"
+				PreprocessorDefinitions="DEBUG;_DEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
 				ExceptionHandling="TRUE"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="FALSE"
@@ -110,7 +110,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
 				StringPooling="TRUE"
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
@@ -193,7 +193,7 @@
 				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="DEBUG,_DEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF"
+				PreprocessorDefinitions="DEBUG;_DEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
 				ExceptionHandling="TRUE"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="FALSE"
@@ -276,7 +276,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
 				StringPooling="TRUE"
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"
@@ -4001,7 +4001,7 @@
 				Name="xvid"
 				Filter="">
 				<File
-					RelativePath=".\src\codecs\xvid4.h">
+					RelativePath=".\src\codecs\xvidcore\xvid.h">
 				</File>
 			</Filter>
 		</Filter>

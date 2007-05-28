@@ -18,7 +18,8 @@
 
 #include "stdafx.h"
 #include "TvideoCodecXviD4.h"
-#include "xvid4.h"
+#include "xvidcore\xvid.h"
+#include "xvidcore\decoder.h"
 #include "Tdll.h"
 #include "TcodecSettings.h"
 #include "IffdshowBase.h"
@@ -190,6 +191,7 @@ HRESULT TvideoCodecXviD4::decompress(const unsigned char *src0,size_t srcLen0,IM
  //TODO: XVID_DISCONTINUITY
 
  xframe.output.csp=XVID4_CSP_PLANAR;
+ xframe.brightness=0;
  const unsigned char *src;size_t srcLen;TbyteBuffer buf;
  if (extradata && extradata->size)
   {
