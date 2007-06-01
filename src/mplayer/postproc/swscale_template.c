@@ -3158,7 +3158,7 @@ i--;
 			RENAME(yuv2nv12X)(c,
 				vLumFilter+dstY*vLumFilterSize   , lumSrcPtr, vLumFilterSize,
 				vChrFilter+chrDstY*vChrFilterSize, chrSrcPtr, vChrFilterSize,
-				dest, /*uDest*/dstY&chrSkipMask?NULL:dst[0]+dstStride[0]*dstYend+dstStride[0]*chrDstY, dstW, chrDstW, dstFormat);
+				dest, /*uDest*/dstY&chrSkipMask?NULL:dst[1]+dstStride[1]*chrDstY, dstW, chrDstW, dstFormat);
 		}
 		else if(isPlanarYUV(dstFormat) || isGray(dstFormat)) //YV12 like
 		{
@@ -3218,7 +3218,7 @@ i--;
 			yuv2nv12XinC(
 				vLumFilter+dstY*vLumFilterSize   , lumSrcPtr, vLumFilterSize,
 				vChrFilter+chrDstY*vChrFilterSize, chrSrcPtr, vChrFilterSize,
-				dest, /*uDest*/dstY&chrSkipMask?NULL:dst[0]+dstStride[0]*dstYend+dstStride[0]*chrDstY, dstW, chrDstW, dstFormat);
+				dest, /*uDest*/dstY&chrSkipMask?NULL:dst[1]+dstStride[1]*chrDstY, dstW, chrDstW, dstFormat);
 		}
 		else if(isPlanarYUV(dstFormat) || isGray(dstFormat)) //YV12
 		{
