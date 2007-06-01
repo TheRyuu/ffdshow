@@ -178,7 +178,7 @@ unsigned int GetBitsNoAdvance(BitStreamInfo *bsi, int nBits)
 		while (lowBits > 0) {
 			iCache <<= 8;
 			if (buf < bsi->bytePtr + bsi->nBytes)
-			iCache |= (unsigned int)*buf++;
+				iCache |= (unsigned int)*buf++;
 			lowBits -= 8;
 		}
 		lowBits = -lowBits;

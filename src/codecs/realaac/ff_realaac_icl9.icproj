@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="windows-1250"?>
-<VisualStudioProject
+<VisualStudioProject 
 	ProjectType="Intel C++ Project"
 	Version="9.1"
 	Name="ff_realaac"
@@ -8,20 +8,20 @@
 	VCNestedProjectFileName="ff_realaac_icl9.vcproj"
 	Keyword="Win32Proj">
 	<Configurations>
-		<Configuration
+		<Configuration 
 			Name="Debug|Win32">
-			<Tool
+			<Tool 
 				Name="GeneralTool"
 				OutputDirectory="debug_icl9"
 				IntermediateDirectory="debug_icl9"
 				ConfigurationType="2"
 				CharacterSet="0"/>
-			<Tool
+			<Tool 
 				Name="DebugTool"/>
-			<Tool
+			<Tool 
 				Name="CppCmplrTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;USE_DEFAULT_STDLIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;USE_DEFAULT_STDLIB;HELIX_FEATURE_AUDIO_CODEC_AAC_SBR"
 				MinimalRebuild="1"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
@@ -32,7 +32,7 @@
 				Detect64BitPortabilityProblems="1"
 				DebugInformationFormat="4"
 				CompileAs="1"/>
-			<Tool
+			<Tool 
 				Name="LinkerTool"
 				DelayImpLib=""
 				IgnoreImportLibrary="1"
@@ -45,37 +45,37 @@
 				SubSystem="2"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"/>
-			<Tool
+			<Tool 
 				Name="LibrarianTool"/>
-			<Tool
+			<Tool 
 				Name="ResCmplrTool"/>
-			<Tool
+			<Tool 
 				Name="MidlCmplrTool"/>
-			<Tool
+			<Tool 
 				Name="BscMakeTool"/>
-			<Tool
+			<Tool 
 				Name="PreBuildEventTool"/>
-			<Tool
+			<Tool 
 				Name="PreLinkEventTool"/>
-			<Tool
+			<Tool 
 				Name="PostBuildEventTool"/>
-			<Tool
+			<Tool 
 				Name="CustomTool"/>
-			<Tool
+			<Tool 
 				Name="CustomNodeTool"/>
 		</Configuration>
-		<Configuration
+		<Configuration 
 			Name="Release|Win32">
-			<Tool
+			<Tool 
 				Name="GeneralTool"
 				OutputDirectory="release_icl9"
 				IntermediateDirectory="release_icl9"
 				ConfigurationType="2"
 				CharacterSet="0"
 				WholeProgramOptimization="1"/>
-			<Tool
+			<Tool 
 				Name="DebugTool"/>
-			<Tool
+			<Tool 
 				Name="CppCmplrTool"
 				Optimization="1000"
 				GlobalOptimizations="1"
@@ -83,7 +83,7 @@
 				EnableIntrinsicFunctions="1"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="1"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;USE_DEFAULT_STDLIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;USE_DEFAULT_STDLIB;HELIX_FEATURE_AUDIO_CODEC_AAC_SBR"
 				StringPooling="1"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
@@ -94,7 +94,7 @@
 				DebugInformationFormat="0"
 				CompileAs="1"
 				AdditionalOptions="/Qip"/>
-			<Tool
+			<Tool 
 				Name="LinkerTool"
 				DelayImpLib=""
 				IgnoreImportLibrary="1"
@@ -110,103 +110,99 @@
 				OptimizeForWindows98="1"
 				ImportLibrary="$(OutDir)/ff_realaac.lib"
 				TargetMachine="1"/>
-			<Tool
+			<Tool 
 				Name="LibrarianTool"/>
-			<Tool
+			<Tool 
 				Name="ResCmplrTool"/>
-			<Tool
+			<Tool 
 				Name="MidlCmplrTool"/>
-			<Tool
+			<Tool 
 				Name="BscMakeTool"/>
-			<Tool
+			<Tool 
 				Name="PreBuildEventTool"/>
-			<Tool
+			<Tool 
 				Name="PreLinkEventTool"/>
-			<Tool
+			<Tool 
 				Name="PostBuildEventTool"/>
-			<Tool
+			<Tool 
 				Name="CustomTool"/>
-			<Tool
+			<Tool 
 				Name="CustomNodeTool"/>
 		</Configuration>
 	</Configurations>
 	<Files>
-		<File
+		<File 
 			RelativePath=".\aacdec.c"/>
-		<File
+		<File 
 			RelativePath=".\aactabs.c"/>
-		<File
+		<File 
 			RelativePath=".\bitstream.c"/>
-		<File
+		<File 
 			RelativePath=".\buffers.c"/>
-		<File
+		<File 
 			RelativePath=".\dct4.c"/>
-		<File
+		<File 
 			RelativePath=".\decelmnt.c"/>
-		<File
+		<File 
 			RelativePath=".\dequant.c"/>
-		<File
+		<File 
 			RelativePath=".\fft.c"/>
-		<File
+		<File 
 			RelativePath=".\filefmt.c"/>
-		<File
+		<File 
 			RelativePath=".\huffman.c"/>
-		<File
+		<File 
 			RelativePath=".\hufftabs.c"/>
-		<File
+		<File 
 			RelativePath=".\imdct.c"/>
-		<File
+		<File 
 			RelativePath=".\noiseless.c"/>
-		<File
+		<File 
 			RelativePath=".\pns.c"/>
-		<File
+		<File 
 			RelativePath=".\sbr.c"/>
-		<File
+		<File 
 			RelativePath=".\sbrfft.c"/>
-		<File
+		<File 
 			RelativePath=".\sbrfreq.c"/>
-		<File
+		<File 
 			RelativePath=".\sbrhfadj.c"/>
-		<File
+		<File 
 			RelativePath=".\sbrhfgen.c"/>
-		<File
+		<File 
 			RelativePath=".\sbrhuff.c"/>
-		<File
+		<File 
 			RelativePath=".\sbrimdct.c"/>
-		<File
+		<File 
 			RelativePath=".\sbrmath.c"/>
-		<File
+		<File 
 			RelativePath=".\sbrqmf.c"/>
-		<File
+		<File 
 			RelativePath=".\sbrside.c"/>
-		<File
+		<File 
 			RelativePath=".\sbrtabs.c"/>
-		<File
+		<File 
 			RelativePath=".\stproc.c"/>
-		<File
+		<File 
 			RelativePath=".\tns.c"/>
-		<File
+		<File 
 			RelativePath=".\trigtabs.c"/>
-		<File
+		<File 
 			RelativePath=".\aaccommon.h"/>
-		<File
+		<File 
 			RelativePath=".\aacdec.h"/>
-		<File
+		<File 
 			RelativePath=".\assembly.h"/>
-		<File
+		<File 
 			RelativePath=".\bitstream.h"/>
-		<File
+		<File 
 			RelativePath=".\coder.h"/>
-		<File
+		<File 
 			RelativePath=".\sbr.h"/>
-		<File
+		<File 
 			RelativePath=".\statname.h"/>
-		<File
+		<File 
 			RelativePath=".\ff_realaac.def"/>
 	</Files>
 </VisualStudioProject>
-
-
-
-
 

@@ -1,4 +1,4 @@
-CFLAGS+= -I. -I../.. -D__i386__ -DUSE_DEFAULT_STDLIB
+CFLAGS+= -I. -I../.. -D__i386__ -DUSE_DEFAULT_STDLIB -DHELIX_FEATURE_AUDIO_CODEC_AAC_SBR
        
 SRCS_C=aacdec.c aactabs.c bitstream.c buffers.c dct4.c decelmnt.c dequant.c \
        fft.c filefmt.c huffman.c hufftabs.c imdct.c noiseless.c pns.c sbr.c \

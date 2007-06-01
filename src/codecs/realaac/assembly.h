@@ -41,13 +41,13 @@
  *
  * assembly.h - inline assembly language functions and prototypes
  *
- * MULSHIFT32(x, y) 		signed multiply of two 32-bit integers (x and y),
+ * MULSHIFT32(x, y)             signed multiply of two 32-bit integers (x and y),
  *                            returns top 32-bits of 64-bit result
- * CLIPTOSHORT(x)			convert 32-bit integer to 16-bit short,
+ * CLIPTOSHORT(x)                       convert 32-bit integer to 16-bit short,
  *                            clipping to [-32768, 32767]
  * FASTABS(x)               branchless absolute value of signed integer x
  * CLZ(x)                   count leading zeros on signed integer x
- * MADD64(sum64, x, y)		64-bit multiply accumulate: sum64 += (x*y)
+ * MADD64(sum64, x, y)          64-bit multiply accumulate: sum64 += (x*y)
  **************************************************************************************/
 
 #ifndef _ASSEMBLY_H
@@ -58,7 +58,7 @@
  */
 #if (defined (_WIN32) && !defined (_WIN32_WCE) && !defined(__GNUC__)) || (defined (__WINS__) && defined (_SYMBIAN)) || (defined (WINCE_EMULATOR)) || (defined (_OPENWAVE_SIMULATOR))
 
-#pragma warning( disable : 4035 )	/* complains about inline asm not returning a value */
+#pragma warning( disable : 4035 )       /* complains about inline asm not returning a value */
 
 static __inline int MULSHIFT32(int x, int y)
 {
@@ -66,53 +66,53 @@ static __inline int MULSHIFT32(int x, int y)
    return (int)(((__int64)x*(__int64)y)>>32);
 #else
     __asm {
-		mov		eax, x
-	    imul	y
-	    mov		eax, edx
-	    }
+                mov             eax, x
+            imul        y
+            mov         eax, edx
+            }
 #endif
 }
 
 static __inline short CLIPTOSHORT(int x)
 {
-	int sign;
+        int sign;
 
-	/* clip to [-32768, 32767] */
-	sign = x >> 31;
-	if (sign != (x >> 15))
-		x = sign ^ ((1 << 15) - 1);
+        /* clip to [-32768, 32767] */
+        sign = x >> 31;
+        if (sign != (x >> 15))
+                x = sign ^ ((1 << 15) - 1);
 
-	return (short)x;
+        return (short)x;
 }
 
 static __inline int FASTABS(int x)
 {
-	int sign;
+        int sign;
 
-	sign = x >> (sizeof(int) * 8 - 1);
-	x ^= sign;
-	x -= sign;
+        sign = x >> (sizeof(int) * 8 - 1);
+        x ^= sign;
+        x -= sign;
 
-	return x;
+        return x;
 }
 
 static __inline int CLZ(int x)
 {
-	int numZeros;
+        int numZeros;
 
-	if (!x)
-		return 32;
+        if (!x)
+                return 32;
 
-	/* count leading zeros with binary search */
-	numZeros = 1;
-	if (!((unsigned int)x >> 16))	{ numZeros += 16; x <<= 16; }
-	if (!((unsigned int)x >> 24))	{ numZeros +=  8; x <<=  8; }
-	if (!((unsigned int)x >> 28))	{ numZeros +=  4; x <<=  4; }
-	if (!((unsigned int)x >> 30))	{ numZeros +=  2; x <<=  2; }
+        /* count leading zeros with binary search */
+        numZeros = 1;
+        if (!((unsigned int)x >> 16))   { numZeros += 16; x <<= 16; }
+        if (!((unsigned int)x >> 24))   { numZeros +=  8; x <<=  8; }
+        if (!((unsigned int)x >> 28))   { numZeros +=  4; x <<=  4; }
+        if (!((unsigned int)x >> 30))   { numZeros +=  2; x <<=  2; }
 
-	numZeros -= ((unsigned int)x >> 31);
+        numZeros -= ((unsigned int)x >> 31);
 
-	return numZeros;
+        return numZeros;
 }
 
 #ifdef __CW32__
@@ -122,12 +122,12 @@ typedef __int64 Word64;
 #endif
 
 typedef union _U64 {
-	Word64 w64;
-	struct {
-		/* x86 = little endian */
-		unsigned int lo32;
-		signed int   hi32;
-	} r;
+        Word64 w64;
+        struct {
+                /* x86 = little endian */
+                unsigned int lo32;
+                signed int   hi32;
+        } r;
 } U64;
 
 /* returns 64-bit value in [edx:eax] */
@@ -143,10 +143,10 @@ static __inline Word64 MADD64(Word64 sum64, int x, int y)
         adc     dword ptr sum64 + 4, edx
     }
 #else
-	sum64 += (Word64)x * (Word64)y;
+    sum64 += (Word64)x * (Word64)y;
 #endif
 
-	return sum64;
+    return sum64;
 }
 
 /* toolchain:           MSFT Embedded Visual C++
@@ -156,44 +156,44 @@ static __inline Word64 MADD64(Word64 sum64, int x, int y)
 
 static __inline short CLIPTOSHORT(int x)
 {
-	int sign;
+        int sign;
 
-	/* clip to [-32768, 32767] */
-	sign = x >> 31;
-	if (sign != (x >> 15))
-		x = sign ^ ((1 << 15) - 1);
+        /* clip to [-32768, 32767] */
+        sign = x >> 31;
+        if (sign != (x >> 15))
+                x = sign ^ ((1 << 15) - 1);
 
-	return (short)x;
+        return (short)x;
 }
 
 static __inline int FASTABS(int x)
 {
-	int sign;
+        int sign;
 
-	sign = x >> (sizeof(int) * 8 - 1);
-	x ^= sign;
-	x -= sign;
+        sign = x >> (sizeof(int) * 8 - 1);
+        x ^= sign;
+        x -= sign;
 
-	return x;
+        return x;
 }
 
 static __inline int CLZ(int x)
 {
-	int numZeros;
+        int numZeros;
 
-	if (!x)
-		return 32;
+        if (!x)
+                return 32;
 
-	/* count leading zeros with binary search (function should be 17 ARM instructions total) */
-	numZeros = 1;
-	if (!((unsigned int)x >> 16))	{ numZeros += 16; x <<= 16; }
-	if (!((unsigned int)x >> 24))	{ numZeros +=  8; x <<=  8; }
-	if (!((unsigned int)x >> 28))	{ numZeros +=  4; x <<=  4; }
-	if (!((unsigned int)x >> 30))	{ numZeros +=  2; x <<=  2; }
+        /* count leading zeros with binary search (function should be 17 ARM instructions total) */
+        numZeros = 1;
+        if (!((unsigned int)x >> 16))   { numZeros += 16; x <<= 16; }
+        if (!((unsigned int)x >> 24))   { numZeros +=  8; x <<=  8; }
+        if (!((unsigned int)x >> 28))   { numZeros +=  4; x <<=  4; }
+        if (!((unsigned int)x >> 30))   { numZeros +=  2; x <<=  2; }
 
-	numZeros -= ((unsigned int)x >> 31);
+        numZeros -= ((unsigned int)x >> 31);
 
-	return numZeros;
+        return numZeros;
 }
 
 /* implemented in asmfunc.s */
@@ -204,17 +204,17 @@ extern "C" {
 typedef __int64 Word64;
 
 typedef union _U64 {
-	Word64 w64;
-	struct {
-		/* ARM WinCE = little endian */
-		unsigned int lo32;
-		signed int   hi32;
-	} r;
+        Word64 w64;
+        struct {
+                /* ARM WinCE = little endian */
+                unsigned int lo32;
+                signed int   hi32;
+        } r;
 } U64;
 
 /* manual name mangling for just this platform (must match labels in .s file) */
-#define MULSHIFT32	raac_MULSHIFT32
-#define MADD64		raac_MADD64
+#define MULSHIFT32      raac_MULSHIFT32
+#define MADD64          raac_MADD64
 
 int MULSHIFT32(int x, int y);
 Word64 MADD64(Word64 sum64, int x, int y);
@@ -226,7 +226,7 @@ Word64 MADD64(Word64 sum64, int x, int y);
 /* toolchain:           ARM ADS or RealView
  * target architecture: ARM v.4 and above (requires 'M' type processor for 32x32->64 multiplier)
  */
-#elif defined (__arm) && defined (__ARMCC_VERSION)
+#elif (defined (__arm) && defined (__ARMCC_VERSION)) || (defined(HELIX_CONFIG_SYMBIAN_GENERATE_MMP) && !defined(__GCCE__))
 
 static __inline int MULSHIFT32(int x, int y)
 {
@@ -237,103 +237,103 @@ static __inline int MULSHIFT32(int x, int y)
      */
     int zlow;
     __asm {
-    	smull zlow,y,x,y
-   	}
+        smull zlow,y,x,y
+        }
 
     return y;
 }
 
 static __inline short CLIPTOSHORT(int x)
 {
-	int sign;
+        int sign;
 
-	/* clip to [-32768, 32767] */
-	sign = x >> 31;
-	if (sign != (x >> 15))
-		x = sign ^ ((1 << 15) - 1);
+        /* clip to [-32768, 32767] */
+        sign = x >> 31;
+        if (sign != (x >> 15))
+                x = sign ^ ((1 << 15) - 1);
 
-	return (short)x;
+        return (short)x;
 }
 
 static __inline int FASTABS(int x)
 {
-	int sign;
+        int sign;
 
-	sign = x >> (sizeof(int) * 8 - 1);
-	x ^= sign;
-	x -= sign;
+        sign = x >> (sizeof(int) * 8 - 1);
+        x ^= sign;
+        x -= sign;
 
-	return x;
+        return x;
 }
 
 static __inline int CLZ(int x)
 {
-	int numZeros;
+        int numZeros;
 
-	if (!x)
-		return 32;
+        if (!x)
+                return 32;
 
-	/* count leading zeros with binary search (function should be 17 ARM instructions total) */
-	numZeros = 1;
-	if (!((unsigned int)x >> 16))	{ numZeros += 16; x <<= 16; }
-	if (!((unsigned int)x >> 24))	{ numZeros +=  8; x <<=  8; }
-	if (!((unsigned int)x >> 28))	{ numZeros +=  4; x <<=  4; }
-	if (!((unsigned int)x >> 30))	{ numZeros +=  2; x <<=  2; }
+        /* count leading zeros with binary search (function should be 17 ARM instructions total) */
+        numZeros = 1;
+        if (!((unsigned int)x >> 16))   { numZeros += 16; x <<= 16; }
+        if (!((unsigned int)x >> 24))   { numZeros +=  8; x <<=  8; }
+        if (!((unsigned int)x >> 28))   { numZeros +=  4; x <<=  4; }
+        if (!((unsigned int)x >> 30))   { numZeros +=  2; x <<=  2; }
 
-	numZeros -= ((unsigned int)x >> 31);
+        numZeros -= ((unsigned int)x >> 31);
 
-	return numZeros;
+        return numZeros;
 
 /* ARM code would look like this, but do NOT use inline asm in ADS for this,
    because you can't safely use the status register flags intermixed with C code
 
-	__asm {
-	    mov		numZeros, #1
-		tst		x, 0xffff0000
-		addeq	numZeros, numZeros, #16
-		moveq	x, x, lsl #16
-		tst		x, 0xff000000
-		addeq	numZeros, numZeros, #8
-		moveq	x, x, lsl #8
-		tst		x, 0xf0000000
-		addeq	numZeros, numZeros, #4
-		moveq	x, x, lsl #4
-		tst		x, 0xc0000000
-		addeq	numZeros, numZeros, #2
-		moveq	x, x, lsl #2
-		sub		numZeros, numZeros, x, lsr #31
-	}
+        __asm {
+            mov         numZeros, #1
+                tst             x, 0xffff0000
+                addeq   numZeros, numZeros, #16
+                moveq   x, x, lsl #16
+                tst             x, 0xff000000
+                addeq   numZeros, numZeros, #8
+                moveq   x, x, lsl #8
+                tst             x, 0xf0000000
+                addeq   numZeros, numZeros, #4
+                moveq   x, x, lsl #4
+                tst             x, 0xc0000000
+                addeq   numZeros, numZeros, #2
+                moveq   x, x, lsl #2
+                sub             numZeros, numZeros, x, lsr #31
+        }
 */
 /* reference:
-	numZeros = 0;
-	while (!(x & 0x80000000)) {
-		numZeros++;
-		x <<= 1;
-	}
+        numZeros = 0;
+        while (!(x & 0x80000000)) {
+                numZeros++;
+                x <<= 1;
+        }
 */
 }
 
 typedef __int64 Word64;
 
 typedef union _U64 {
-	Word64 w64;
-	struct {
-		/* ARM ADS = little endian */
-		unsigned int lo32;
-		signed int   hi32;
-	} r;
+        Word64 w64;
+        struct {
+                /* ARM ADS = little endian */
+                unsigned int lo32;
+                signed int   hi32;
+        } r;
 } U64;
 
 static __inline Word64 MADD64(Word64 sum64, int x, int y)
 {
-	U64 u;
-	u.w64 = sum64;
+        U64 u;
+        u.w64 = sum64;
+        
+        __asm {
+        smlal u.r.lo32, u.r.hi32, x, y
+        }
 
-	__asm {
-    	smlal u.r.lo32, u.r.hi32, x, y
-	}
-
-	return u.w64;
+        return u.w64;
 }
 
 /* toolchain:           ARM gcc
@@ -350,68 +350,68 @@ static __inline__ int MULSHIFT32(int x, int y)
 
 static __inline short CLIPTOSHORT(int x)
 {
-	int sign;
+        int sign;
 
-	/* clip to [-32768, 32767] */
-	sign = x >> 31;
-	if (sign != (x >> 15))
-		x = sign ^ ((1 << 15) - 1);
+        /* clip to [-32768, 32767] */
+        sign = x >> 31;
+        if (sign != (x >> 15))
+                x = sign ^ ((1 << 15) - 1);
 
-	return (short)x;
+        return (short)x;
 }
 
 static __inline int FASTABS(int x)
 {
-	int sign;
+        int sign;
 
-	sign = x >> (sizeof(int) * 8 - 1);
-	x ^= sign;
-	x -= sign;
+        sign = x >> (sizeof(int) * 8 - 1);
+        x ^= sign;
+        x -= sign;
 
-	return x;
+        return x;
 }
 
 static __inline int CLZ(int x)
 {
-	int numZeros;
+        int numZeros;
 
-	if (!x)
-		return (sizeof(int) * 8);
+        if (!x)
+                return (sizeof(int) * 8);
 
-	numZeros = 0;
-	while (!(x & 0x80000000)) {
-		numZeros++;
-		x <<= 1;
-	}
+        numZeros = 0;
+        while (!(x & 0x80000000)) {
+                numZeros++;
+                x <<= 1;
+        }
 
-	return numZeros;
+        return numZeros;
 }
 
 typedef long long Word64;
 
 typedef union _U64 {
-	Word64 w64;
-	struct {
-		/* ARM ADS = little endian */
-		unsigned int lo32;
-		signed int   hi32;
-	} r;
+        Word64 w64;
+        struct {
+                /* ARM ADS = little endian */
+                unsigned int lo32;
+                signed int   hi32;
+        } r;
 } U64;
 
 static __inline Word64 MADD64(Word64 sum64, int x, int y)
 {
-	U64 u;
-	u.w64 = sum64;
-
-	__asm__ volatile ("smlal %0,%1,%2,%3" : "+&r" (u.r.lo32), "+&r" (u.r.hi32) : "r" (x), "r" (y) : "cc");
-
-	return u.w64;
+        U64 u;
+        u.w64 = sum64;
+        
+        __asm__ volatile ("smlal %0,%1,%2,%3" : "+&r" (u.r.lo32), "+&r" (u.r.hi32) : "r" (x), "r" (y) : "cc");
+        
+        return u.w64;
 }
 
 /* toolchain:           x86 gcc
  * target architecture: x86
  */
-#elif defined(__GNUC__) && defined(__i386__)
+#elif defined(__GNUC__) && (defined(__i386__) || defined(__amd64__)) || (defined (_SOLARIS) && !defined (__GNUC__) && defined(_SOLARISX86))
 
 typedef long long Word64;
 
@@ -421,71 +421,71 @@ static __inline__ int MULSHIFT32(int x, int y)
 
     z = (Word64)x * (Word64)y >> 32;
 
-	return z;
+        return z;
 }
 
 static __inline short CLIPTOSHORT(int x)
 {
-	int sign;
+        int sign;
 
-	/* clip to [-32768, 32767] */
-	sign = x >> 31;
-	if (sign != (x >> 15))
-		x = sign ^ ((1 << 15) - 1);
+        /* clip to [-32768, 32767] */
+        sign = x >> 31;
+        if (sign != (x >> 15))
+                x = sign ^ ((1 << 15) - 1);
 
-	return (short)x;
+        return (short)x;
 }
 
 static __inline int FASTABS(int x)
 {
-	int sign;
+        int sign;
 
-	sign = x >> (sizeof(int) * 8 - 1);
-	x ^= sign;
-	x -= sign;
+        sign = x >> (sizeof(int) * 8 - 1);
+        x ^= sign;
+        x -= sign;
 
-	return x;
+        return x;
 }
 
 static __inline int CLZ(int x)
 {
-	int numZeros;
+        int numZeros;
 
-	if (!x)
-		return 32;
+        if (!x)
+                return 32;
 
-	/* count leading zeros with binary search (function should be 17 ARM instructions total) */
-	numZeros = 1;
-	if (!((unsigned int)x >> 16))	{ numZeros += 16; x <<= 16; }
-	if (!((unsigned int)x >> 24))	{ numZeros +=  8; x <<=  8; }
-	if (!((unsigned int)x >> 28))	{ numZeros +=  4; x <<=  4; }
-	if (!((unsigned int)x >> 30))	{ numZeros +=  2; x <<=  2; }
+        /* count leading zeros with binary search (function should be 17 ARM instructions total) */
+        numZeros = 1;
+        if (!((unsigned int)x >> 16))   { numZeros += 16; x <<= 16; }
+        if (!((unsigned int)x >> 24))   { numZeros +=  8; x <<=  8; }
+        if (!((unsigned int)x >> 28))   { numZeros +=  4; x <<=  4; }
+        if (!((unsigned int)x >> 30))   { numZeros +=  2; x <<=  2; }
 
-	numZeros -= ((unsigned int)x >> 31);
+        numZeros -= ((unsigned int)x >> 31);
 
-	return numZeros;
+        return numZeros;
 }
 
 typedef union _U64 {
-	Word64 w64;
-	struct {
-		/* x86 = little endian */
-		unsigned int lo32;
-		signed int   hi32;
-	} r;
+        Word64 w64;
+        struct {
+                /* x86 = little endian */
+                unsigned int lo32;
+                signed int   hi32;
+        } r;
 } U64;
 
 static __inline Word64 MADD64(Word64 sum64, int x, int y)
 {
-	sum64 += (Word64)x * (Word64)y;
+        sum64 += (Word64)x * (Word64)y;
 
-	return sum64;
+        return sum64;
 }
 
 #else
 
 #error Unsupported platform in assembly.h
 
-#endif	/* platforms */
+#endif  /* platforms */
 
 #endif /* _ASSEMBLY_H */

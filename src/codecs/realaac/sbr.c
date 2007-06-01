@@ -194,7 +194,6 @@ int DecodeSBRBitstream(AACDecInfo *aacDecInfo, int chBase)
 			psi->sbrChan[chBase+1].reset = psi->sbrChan[chBase+0].reset;
 	}
 
-
 	/* if no header has been received, upsample only */
 	if (psi->sbrHdr[chBase].count == 0)
 		return ERR_AAC_NONE;

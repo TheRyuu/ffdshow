@@ -612,7 +612,3 @@ void GenerateHighFreq(PSInfoSBR *psi, SBRGrid *sbrGrid, SBRFreq *sbrFreq, SBRCha
 }
 
 
-
-
-
-

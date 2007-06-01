@@ -53,13 +53,21 @@
 #
 #elif defined (__arm) && defined (__ARMCC_VERSION)
 #
+#elif defined(HELIX_CONFIG_SYMBIAN_GENERATE_MMP)
+#
 #elif defined(_SYMBIAN) && defined(__WINS__)
 #
 #elif defined(__GNUC__) && defined(__arm__)
 #
 #elif defined(__GNUC__) && defined(__i386__)
 #
+#elif defined(__GNUC__) && defined(__amd64__)
+#
+#elif defined(__GNUC__) && (defined(__powerpc__) || defined(__POWERPC__))
+#
 #elif defined(_OPENWAVE_SIMULATOR) || defined(_OPENWAVE_ARMULATOR)
+#
+#elif defined(_SOLARIS) && !defined(__GNUC__)
 #
 #else
 #error No platform defined. See valid options in aacdec.h
@@ -75,62 +83,64 @@ extern "C" {
  *   12288 bits = 1536 bytes per CPE
  *       0 bits =    0 bytes per CCE-D (uses bits from the SCE/CPE/CCE-I it is coupled to)
  */
-#ifndef AAC_MAX_NCHANS				/* if max channels isn't set in makefile, */
-#define AAC_MAX_NCHANS		6		/* set to default max number of channels  */
+#ifndef AAC_MAX_NCHANS                          /* if max channels isn't set in makefile, */
+#define AAC_MAX_NCHANS          6               /* set to default max number of channels  */
 #endif
-#define AAC_MAX_NSAMPS		1024
-#define AAC_MAINBUF_SIZE	(768 * AAC_MAX_NCHANS)
+#define AAC_MAX_NSAMPS          1024
+#define AAC_MAINBUF_SIZE        (768 * AAC_MAX_NCHANS)
 
-#define AAC_NUM_PROFILES	3
-#define AAC_PROFILE_MP		0
-#define AAC_PROFILE_LC		1
-#define AAC_PROFILE_SSR		2
+#define AAC_NUM_PROFILES        3
+#define AAC_PROFILE_MP          0
+#define AAC_PROFILE_LC          1
+#define AAC_PROFILE_SSR         2
 
 /* define these to enable decoder features */
+#if defined(HELIX_FEATURE_AUDIO_CODEC_AAC_SBR)
 #define AAC_ENABLE_SBR
+#endif //  HELIX_FEATURE_AUDIO_CODEC_AAC_SBR.
 #define AAC_ENABLE_MPEG4
 
 enum {
-	ERR_AAC_NONE                          =   0,
-	ERR_AAC_INDATA_UNDERFLOW              =  -1,
-	ERR_AAC_NULL_POINTER                  =  -2,
-	ERR_AAC_INVALID_ADTS_HEADER           =  -3,
-	ERR_AAC_INVALID_ADIF_HEADER           =  -4,
-	ERR_AAC_INVALID_FRAME                 =  -5,
-	ERR_AAC_MPEG4_UNSUPPORTED             =  -6,
-	ERR_AAC_CHANNEL_MAP                   =  -7,
-	ERR_AAC_SYNTAX_ELEMENT                =  -8,
+        ERR_AAC_NONE                          =   0,
+        ERR_AAC_INDATA_UNDERFLOW              =  -1,
+        ERR_AAC_NULL_POINTER                  =  -2,
+        ERR_AAC_INVALID_ADTS_HEADER           =  -3,
+        ERR_AAC_INVALID_ADIF_HEADER           =  -4,
+        ERR_AAC_INVALID_FRAME                 =  -5,
+        ERR_AAC_MPEG4_UNSUPPORTED             =  -6,
+        ERR_AAC_CHANNEL_MAP                   =  -7,
+        ERR_AAC_SYNTAX_ELEMENT                =  -8,
 
-	ERR_AAC_DEQUANT                       =  -9,
-	ERR_AAC_STEREO_PROCESS                = -10,
-	ERR_AAC_PNS                           = -11,
-	ERR_AAC_SHORT_BLOCK_DEINT             = -12,
-	ERR_AAC_TNS                           = -13,
-	ERR_AAC_IMDCT                         = -14,
-	ERR_AAC_NCHANS_TOO_HIGH               = -15,
+        ERR_AAC_DEQUANT                       =  -9,
+        ERR_AAC_STEREO_PROCESS                = -10,
+        ERR_AAC_PNS                           = -11,
+        ERR_AAC_SHORT_BLOCK_DEINT             = -12,
+        ERR_AAC_TNS                           = -13,
+        ERR_AAC_IMDCT                         = -14,
+        ERR_AAC_NCHANS_TOO_HIGH               = -15,
 
-	ERR_AAC_SBR_INIT                      = -16,
-	ERR_AAC_SBR_BITSTREAM                 = -17,
-	ERR_AAC_SBR_DATA                      = -18,
-	ERR_AAC_SBR_PCM_FORMAT                = -19,
-	ERR_AAC_SBR_NCHANS_TOO_HIGH           = -20,
-	ERR_AAC_SBR_SINGLERATE_UNSUPPORTED    = -21,
+        ERR_AAC_SBR_INIT                      = -16,
+        ERR_AAC_SBR_BITSTREAM                 = -17,
+        ERR_AAC_SBR_DATA                      = -18,
+        ERR_AAC_SBR_PCM_FORMAT                = -19,
+        ERR_AAC_SBR_NCHANS_TOO_HIGH           = -20,
+        ERR_AAC_SBR_SINGLERATE_UNSUPPORTED    = -21,
 
-	ERR_AAC_RAWBLOCK_PARAMS               = -22,
+        ERR_AAC_RAWBLOCK_PARAMS               = -22,
 
-	ERR_UNKNOWN               = -9999
+        ERR_UNKNOWN               = -9999
 };
 
 typedef struct _AACFrameInfo {
-	int bitRate;
-	int nChans;
-	int sampRateCore;
-	int sampRateOut;
-	int bitsPerSample;
-	int outputSamps;
-	int profile;
-	int tnsUsed;
-	int pnsUsed;
+        int bitRate;
+        int nChans;
+        int sampRateCore;
+        int sampRateOut;
+        int bitsPerSample;
+        int outputSamps;
+        int profile;
+        int tnsUsed;
+        int pnsUsed;
 } AACFrameInfo;
 
 typedef void *HAACDecoder;
@@ -149,4 +159,4 @@ int AACFlushCodec(HAACDecoder hAACDecoder);
 }
 #endif
 
-#endif	/* _AACDEC_H */
+#endif  /* _AACDEC_H */

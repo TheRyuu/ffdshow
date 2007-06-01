@@ -136,7 +136,7 @@ static void StereoProcessGroup(int *coefL, int *coefR, const short *sfbTab,
 					cl = cl - (cr >> 1);	CLIP_2N(cl, 30);	cl <<= 1;
 				} else {
 					/* usual case */
-				sf = cl + cr;
+					sf = cl + cr;
 					cl -= cr;
 				}
 

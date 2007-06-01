@@ -174,7 +174,3 @@ const signed short huffTabScaleFact[121] = {
 	 -45,  -44,  -42,  -40,  -43,  -49,  -48,  -46,  -47,
 };
 
-
-
-
-

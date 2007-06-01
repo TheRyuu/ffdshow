@@ -198,15 +198,15 @@ static int GetSMapped(SBRGrid *sbrGrid, SBRFreq *sbrFreq, SBRChan *sbrChan, int 
 		/* low resolution (see CalcFreqLow() for mapping) */
 		oddFlag = sbrFreq->nHigh & 0x01;
 		bandStart = (band > 0 ? 2*band - oddFlag : 0);		/* starting index for freqLow[band] */
-		bandEnd = 2*(band+1) - oddFlag;		/* ending index for freqLow[band+1] */
+		bandEnd = 2*(band+1) - oddFlag;						/* ending index for freqLow[band+1] */
 	}
 
 	/* sMapped = 1 if sIndexMapped == 1 for any frequency in this band */
-		for (band = bandStart; band < bandEnd; band++) {
+	for (band = bandStart; band < bandEnd; band++) {
 		if (sbrChan->addHarmonic[1][band]) {
 			r = ((sbrFreq->freqHigh[band+1] + sbrFreq->freqHigh[band]) >> 1);
 			if (env >= la || sbrChan->addHarmonic[0][r] == 1)
-					return 1;
+				return 1;
 		}
 	}
 	return 0;
@@ -230,7 +230,7 @@ static const int limGainTab[4] = {0x20138ca7, 0x40000000, 0x7fb27dce, 0x80000000
  *              index of current channel (0 for SCE, 0 or 1 for CPE)
  *              index of current envelope
  *              index of current limiter band
- *              number of fraction bits in dequantized envelope
+ *              number of fraction bits in dequantized envelope 
  *                (max = Q(FBITS_OUT_DQ_ENV - 6) = Q23, can go negative)
  *
  * Outputs:     updated gainMax, gainMaxFBits, and sumEOrigMapped in PSInfoSBR struct
@@ -586,7 +586,7 @@ static void ApplyBoost(PSInfoSBR *psi, SBRFreq *sbrFreq, int lim, int fbitsDQ)
 /**************************************************************************************
  * Function:    CalcGain
  *
- * Description: calculate and apply proper gain to HF components in one envelope
+ * Description: calculate and apply proper gain to HF components in one envelope 
  *                (4.6.18.7.5)
  *
  * Inputs:      initialized PSInfoSBR struct

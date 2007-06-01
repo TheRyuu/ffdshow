@@ -422,7 +422,3 @@ int DecodeNextElement(AACDecInfo *aacDecInfo, unsigned char **buf, int *bitOffse
 	return ERR_AAC_NONE;
 }
 
-
-
-
-
