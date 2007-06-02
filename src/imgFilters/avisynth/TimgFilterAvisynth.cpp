@@ -1151,7 +1151,7 @@ bool TimgFilterAvisynth::getOutputFmt(TffPictBase &pict,const TfilterSettingsVid
      input.dy=r.dy;
      lavc_reduce(&input.fpsnum,&input.fpsden,deciV->getAVIfps1000_2(),1000,65000);
      input.csp=getWantedCsp(cfg);
-     input.cspBpp=csp_getInfo(input.csp)->Bpp;
+     input.cspBpp=(input.csp ? csp_getInfo(input.csp)->Bpp : 0);
      input.src[0]=NULL;
      if (!avisynth) avisynth=new Tavisynth;
      avisynth->setOutFmt(cfg,&input,pict);
