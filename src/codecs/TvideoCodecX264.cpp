@@ -143,7 +143,7 @@ LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
   {
    if (coCfg->mode==ENC_MODE::CBR || coCfg->mode==ENC_MODE::VBR_QUAL)
     {
-     param.rc.i_rc_method=2;
+     param.rc.i_rc_method=X264_RC_ABR;
      param.rc.i_bitrate=coCfg->bitrate1000;
      param.rc.i_qp_min=coCfg->limitq(coCfg->q_p_min);
      param.rc.i_qp_max=coCfg->limitq(coCfg->q_p_max);
@@ -151,6 +151,7 @@ LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
      param.rc.f_qblur=(coCfg->ff1_stats_mode&FFSTATS::WRITE?coCfg->ff1_vqblur2:coCfg->ff1_vqblur1)/100.0f;
      param.rc.i_qp_constant=0;
      if (coCfg->mode==ENC_MODE::VBR_QUAL)
+      param.rc.i_rc_method=X264_RC_CRF;
       param.rc.f_rf_constant=50*(100-coCfg->qual)/100+1;
      //param.analyse.b_aq=coCfg->x264_is_aq;
      //param.analyse.f_aq_strength=coCfg->x264_aq_strength100/100.0f;
@@ -158,6 +159,7 @@ LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
     }
    else
     {
+     param.rc.i_rc_method=X264_RC_CQP;
      param.rc.i_qp_constant=coCfg->limitq(coCfg->quant);
      param.rc.f_ip_factor=1.0f;
      param.rc.f_pb_factor=1.0f;
