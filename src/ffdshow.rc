@@ -2697,12 +2697,12 @@ END
 
 IDD_COMPATIBILITY_MANAGER DIALOGEX 100, 50, 312, 191
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
-CAPTION "ffdshow compatiblity manager"
+CAPTION "ffdshow compatibility manager"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,234,170,71,14
     LTEXT           "The application """,IDC_TXT_COMP_1,7,7,298,36
-    LTEXT           """ has made an attempt to load ffdshow.\r\nThis dialog is shown because this application is not listed on the ffdshow whitelist or blacklist.\r\nYour choice will be applied to both audio and video, if both are used.",IDC_TXT_COMP_2,7,18,290,25,NOT WS_VISIBLE
+    LTEXT           """ has made an attempt to load ffdshow.\r\nThis dialog is shown because this application is not listed in the ffdshow whitelist or blacklist.\r\nYour choice will be applied to both audio and video, if both are used.",IDC_TXT_COMP_2,7,18,290,25,NOT WS_VISIBLE
     CONTROL         "Don't use ffdshow. (just this once)",IDC_RBT_COMP_1,
                     "Button",BS_AUTORADIOBUTTON | WS_GROUP,7,48,237,10
     CONTROL         "Don't use ffdshow. (always)",IDC_RBT_COMP_2,"Button",BS_AUTORADIOBUTTON,7,64,237,10
