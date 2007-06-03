@@ -27,6 +27,8 @@ bool debugPrint=false;
 int maxBufferAhead=0;
 int maxBufferBack=0;
 
+void* expectedInput=0;
+
 //========================== TimgFilterAvisynth::Tffdshow_source ===============================
 AVS_Value AVSC_CC TimgFilterAvisynth::Tffdshow_source::Create(AVS_ScriptEnvironment *env, AVS_Value args, void *user_data)
 {
@@ -108,24 +110,29 @@ AVS_VideoFrame* AVSC_CC TimgFilterAvisynth::Tffdshow_source::get_frame(AVS_Filte
 
  // Calculate request statistics for currently produced frame
 
- int curFrameDistance=(n >= filter->input->backLimit ? n : filter->input->backLimit)-filter->input->curFrame;
+ Tinput* input=(expectedInput ? (Tinput*)expectedInput : filter->input);
 
- if (filter->input->numAccessedFrames < 100)
-  filter->input->accessedFrames[filter->input->numAccessedFrames]=curFrameDistance;
+ if (expectedInput && expectedInput != filter->input)
+  DPRINTF(_l("Bogus input pointer 0x%08x, expected 0x%08x"),filter->input,expectedInput);
 
- if (filter->input->minAccessedFrame > curFrameDistance)
-  filter->input->minAccessedFrame=curFrameDistance;
+ int curFrameDistance=(n >= input->backLimit ? n : input->backLimit)-input->curFrame;
 
- if (filter->input->maxAccessedFrame < curFrameDistance)
-  filter->input->maxAccessedFrame=curFrameDistance;
+ if (input->numAccessedFrames < 100)
+  input->accessedFrames[input->numAccessedFrames]=curFrameDistance;
 
- filter->input->numAccessedFrames++;
+ if (input->minAccessedFrame > curFrameDistance)
+  input->minAccessedFrame=curFrameDistance;
+
+ if (input->maxAccessedFrame < curFrameDistance)
+  input->maxAccessedFrame=curFrameDistance;
+
+ input->numAccessedFrames++;
 
  // Find the buffered frame that's closest to n and return it
 
- if (filter->input->numBuffers > 0)
+ if (input->numBuffers > 0)
   {
-   TframeBuffer& buffer=filter->input->buffers[findBuffer(filter->input->buffers,filter->input->numBuffers,n)];
+   TframeBuffer& buffer=input->buffers[findBuffer(input->buffers,input->numBuffers,n)];
 
    if (debugPrint)
     DPRINTF(_l("TimgFilterAvisynth: Looked up frame %i, using frame %i"),n,buffer.frameNo);
@@ -867,6 +874,8 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
 
      if (debugPrint)
       DPRINTF(_l("TimgFilterAvisynth: Requesting frame %i from Avisynth"),requestedFrame);
+
+     expectedInput=&(self->input);
 
      // Request frame from AviSynth script
      PVideoFrame frame=(*clip)->GetFrame(requestedFrame);
