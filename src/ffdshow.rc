@@ -269,7 +269,7 @@ STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | DS_CENTER | WS_CHILD
 EXSTYLE WS_EX_CONTROLPARENT
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "DirectShow control",IDC_GRP_DEBUG,0,0,266,112
+    GROUPBOX        "DirectShow control",IDC_GRP_DEBUG,0,0,267,112
     LTEXT           "Merit:",IDC_LBL_MERIT,5,15,97,8
     CONTROL         "",IDC_TBR_MERIT,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,104,12,158,12
     LTEXT           "Multiple ffdshow instances:",IDC_LBL_MULTIPLE_INSTANCES,5,36,96,8

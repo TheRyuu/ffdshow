@@ -1,81 +1,180 @@
 Deutsch
 
 [-1]
-Output size=Ausgangsauflösung
+Set all stable formats to libavcodec=Alle stabilen Formate auf libavcodec setzen
+Set all supported formats to Xvid=Alle unterstützen Formate auf Xvid setzen
+Decoder=Dekoder
+Supported FOURCCs/remarks=Unterstützte FOURCCs/Anmerkungen
+skip deblocking when safe=Deblocking, wenn sicher, überspringen
+skip deblocking always=Deblocking immer überspringen
+H264, X264, VSSH (incomplete), DAVC, AVC1=H264, X264, VSSH (unvollständing), DAVC, AVC1
+Other MPEG4=Anderes MPEG4
+ffdshow and ffvfw internal FOURCCs=ffdshows und ffvfws interne FOURCCs
+H263, L263, M263, U263, X263, S263 (in 3gp files)=H263, L263, M263, U263, X263, S263 (in 3gp-Dateien)
+Flash Video (FLV1)=Flashvideo (FLV1)
+Internal postprocessing=Interne Nachbearbeitung
+Theora Video (THEO)=Theoravideo (THEO)
+VP3 Video (VP31)=VP3-Video (VP31)
+VP5 Video (VP50)=VP5-Video (VP50)
+VP6 Video (VP60, VP61, VP62)=VP6-Video (VP60, VP61, VP62)
+VP6F Video (VP6F, FLV4)=VP6F-Video (VP6F, FLV4
+use speedup tricks=Beschleunigungstricks verwenden
+MPEG1 codec=MPEG1-Codec
+DVD decoding (not working yet)=DVD-Dekodierung (funktioniert noch nicht)
+MPEG2 codec=MPEG2-Codec
+Other MPEG2=Anderes MPEG2
+Windows Media Video 9 Simple & Main Profiles (WMV3)=Windows Media Video 9 einfache & Hauptprofile (WMV3)
+Windows Media Video 9 Advanced Profile (WVC1)=Windows Media Video 9 erweitertes Profil (WVC1)
+Windows Media Video 9 Image (WMVP, WVP2)=Windows Media Video 9 Bild (WMVP, WVP2)
+Windows Screen Codecs (MSS1, MSS2)=Windows Bildschirmcodecs (MSS1, MSS2)
+Huffyuv codec for libavcodec (HFYU, FFVH)=Huffyuv-Codec für libavcodec (HFYU, FFVH)
+MJPG, LJPG (lossless)=MJPG, LJPG (verlustfrei)
+Other MJPEG=Anderes MJPEG
+Sorenson Video (SVQ1)=Sorensonvideo (SVQ1)
+Sorenson Video (SVQ3)=Sorensonvideo (SVQ3)
+Quicktime Planar RGB Video (8BPS)=Reines Quicktime-RGB-Video (8BPS)
+Quicktime Animation Video (QTRLE)=Quicktime-Animationsvideo (QTRLE)
+Quicktime Video Video (QRPZA)=Quicktime-Videovideo (QRPZA)
+FFV1 codec for libavcodec (FFV1)=FFV1-Codec für libavcodec (FFV1)
+Other DV=Anderes DV
+CamStudio Video (CSCD)=CamStudio-Video (CSCD)
+LOCO Video (LOCO)=LOCO-Video (LOCO)
+LCL LossLess Codec Library (MSZH)=LCL verlustfreie Codecbibliothek (MSZH)
+ZLIB LossLess Codec Library (ZLIB)=ZLIB verlustfreie Codecbibliothek (ZLIB)
+Chinese AVS=Chinesisches AVS
+Chinese AVS video (AVS1-P2, JiZhun profile)=Chinesisches AVS-Video (AVS1-P2, JiZhun-Profil)
+Creative YUV Video (CYUV)=Creative-YUV-Video (CYUV)
+Real Video (RV10, RV20, incomplete)=Real-Video (RV10, RV20, unvollständig)
+MS RLE Video (MRLE)=MS RLE-Video (MRLE)
+Doesn't support 24-bit compression.=Unterstützt keine 24-bit Kompression.
+IBM Ultimotion Video (ULTI)=IBM Ultimotionvideo (ULTI)
+Winnov WNV1 Video (WNV1)=Winnov-WNV1-Video (WNV1)
+experimental=experimentell
+AVIS (AviSynth AVI files)=AVIS (AviSynth-AVI-Dateien)
+disabled=deaktiviert
+Raw video=Unkomprimiertes Video
+all supported=alle unterstützen
+all YUV=alle YUV
+all RGB=alle RGB
+8-bit palletized=8-bit palletiert
+Dynamic range compression=Dynamikkompression
+ATSC A-52 stream decoder=ATSC-A-52-Streamdekoder
+Check for DTS in WAV=Auf DTS in WAV prüfen
+DTS Coherent Acoustics stream decoder=DTS-Coherent-Acoustics-Streamdekoder
+High accuracy mode is enabled for tremor.=Hockakkurater Modus ist für tremor aktiviert.
+Adaptive Multi-Rate in 3gp files (AMR)=Adaptive Multi-Rate in 3gp-Dateien (AMR)
+enabled=aktiviert
+Windows Media Audio compatible decoder=Windows Media Audio-kompatibler Dekoder
+not WMA9 pro, voice or lossless=nicht WMA9 pro, Stimme oder verlustfrei
+MS Adaptive DPCM=MS adaptives DPCM
+IMA Adaptive DPCM=IMA adaptives DPCM
+Other ADPCM=Anderes ADPCM
+MS GSM Audio=MS GSM-Audio
+FLAC (Free Lossless Audio Codec);To play .flac files you also need a source filter.=FLAC (Free Lossless Audio Codec); Um .flac-Dateien abzuspielen wird ein zusätzlicher Quellfilter benötigt.
+TTA (Lossless Audio Codec);To play .tta files you also need a source filter.=TTA (verlustfreier Audiocodec); Um .tta-Dateien abzuspielen wird ein zusätzlicher Quellfilter benötigt.
+DSP Group TrueSpeech compatible decoder=DSP-Group-TrueSpeech-kompatibler Dekoder
+QDM2 compatible decoder (incomplete)=QDM2-kompatibler Dekoder (unvollständig)
+Macintosh Audio Compression/Expansion=Macintosh Audiokompression/Erweiterung
+IMC compatible decoder=IMC-kompatibler Dekoder
+ATRAC3 compatible decoder=ATRAC3-kompatibler Dekoder
+all integer=alle Ganzzahligen
+all float=alle fließkomma
+8-bit integer=8-bit ganzzahlig
+16-bit integer=16-bit ganzzahlig
+24-bit integer=24-bit ganzzahlig
+32-bit integer=32-bit ganzzahlig
+32-bit float=32-bit fließkomma
+64-bit float=64-bit fließkomma
+Uncompressed=Unkompriemiert
+do not use=nicht verwenden
+unlikely=unwahrscheinlich
+preferred=bevorzugt
+ffdshow default=Standard
+very high=sehr hoch
+no limitations=keine Begrenzung
+only one - check previous filter only=nur eine - nur voheringen Filter überprüfen
+only one - check all previous filters=nur eine - alle voheringen Filter überprüfen
+only one - check all filters in graph=nur eine - alle Filter im Graf überprüfen
+none - disabled=keine - deaktiviert
+Add compatible executable file=Kompadible Anwendung hinzufügen
+Add incompatible executable file=Inkompadible Anwendung hinzufügen
+Are you sure?=Sind Sie sicher?
+Load default settings=Standardeinstellungen laden
+List the names of executable files which are incompatible with ffdshow or which you don't want to use ffdshow, one for each line.=Listen Sie die Namen ausführbarer Dateien, welche inkompatibel zu ffdshow sind oder welche ffdshow nicht verwenden sollen - pro Zeile einen.
+(This dailog will close in=(Dieser Dialog schließt sich in
+seconds.)=Sek.)
+ffdshow will behave as if it were not installed.=ffdshow wird sich verhalten, als wäre es es nicht installiert.
+ffdshow will behave as if it were not installed.\r\nThe application will be added to "DirectShow control"->"Don't use ffdshow in".=ffdshow wird sich verhalten, als wäre es es nicht installiert.\r\nDie Anwendung wird zu "DirectShow-Optionen"->"ffdshow nicht verwenden in" hinzugefügt werden.
+ffdshow will be used if it is set to decode a format.=ffdshow wird verwandt werden, falls es eingestellt wurde ein Format zu dekodieren.
+ffdshow will be used if it is set to decode a format.\r\nThe application will be added to "DirectShow control"->"Use ffdshow only in".=ffdshow wird verwandt werden, falls es eingestellt wurde ein Format zu dekodieren.\r\nDie Anwendung wird zu "DirectShow-Optionen"->"ffdshow nur verwenden in" hinzugefügt werden.
+ffdshow won't be used in unknown applications.\r\nTo enable this dialog again, check "DirectShow control"->"Show dialog when an unknown application tries to load ffdshow".=ffdshow wird nicht in unbekannten Anwendungen verwandt werden.\r\nUm diesen Dialog erneut zu aktivieren, kreuzen Sie "DirectShow-Optionen"->"Dialog anzeigen, wenn eine unbekannte Anwendung versucht ffdshow zu laden" an.
+Thank you. We are gathering the list of compatible applications. Please send us the exe file name of this application and help us improving ffdshow.=Vielen Dank. Wir erarbeiten eine Liste kompatibler Anwendungen. Bitte senden Sie uns den Dateinamen dieser Anwendung und helfen Sie uns ffdshow zu verbessern.
 Source file=Quelldatei
-Input size=Eingangsauflösung
-Input FOURCC=Eingangs-FourCC
-Movie FPS=Bildrate des Films
+Input size and aspect ratio=Eingangsauflösung und Seitenverhältnis
+Input FOURCC=Eingangs-FOURCC
+Movie FPS=Filmbildfrequenz
 Input bitrate=Eingangsbitrate
 Output colorspace=Ausgangsfarbraum
 Current frame=Aktuelles Bild
-Input description=Eingangsbeschreibung
-Output description=Ausgangsbeschreibung
-Input colorspace=Eingangsfarbraum
-Coded frame size=Codierte Größe des Bildes
-Subtitles delay=Untertitelverzögerung
-Host application=Ausführender Prozess
-Frame duration=Anzeigelänge eines Bildes
-Frame type=Bildtyp
-Accurate deblocking=Präzieses Entblocken
-Video delay=Videoverzögerung
-Source file name=Quelldateiname
-Output aspect ratio=Ausgangsseitenverhältnis
-Input aspect ratio=Eingangsseitenverhältnis
-MD5 sum=MD5-Summe
-Current playing time=Momentane Abspielzeit
-CPU load=Prozessorauslastung
-System time=Systemzeit
-Short configuration description=Kurze Konfigurationsbeschreibung
-Encoder info=Encoderinfo
-Movie length=Länge des Films
-Remaining time=Verbleibende Zeit
-Show on startup=Bei Start anzeigen
-Delete preset=Voreinstellung löschen
-Rename preset...=Voreinstellung umbenennen
 New=Neu
 Save as...=Speichern unter...
-enabled=aktiviert
-disabled=deaktiviert
-no limitations=unbegrenzt
-only one - check previous filter only=nur eine - nur vorherigen Filter überprüfen
-only one - check all previous filters=nur eine - alle vorherigen Filter überprüfen
-only one - check all filters in graph=nur eine - alle vorherigen Filter im Graph überprüfen
-none - disabled=keine - deaktiviert
+New preset...=Neue Voreinstellung...
+Save preset to...=Voreinstellung speichern unter...
+Rename preset...=Voreinstellung umbenennen...
+Delete preset=Voreinstellung löschen
+CPU load=Prozessorauslastung
+Input size=Eingangsauflösung
+Output size=Ausgangsauflösung
+Frame timestamps=Zeitstempel des Bildes
+Frame duration=Anzeigedauer eines Bildes
+Decoder FPS=Dekoderbildfrequenz
+Input description=Eingangsbeschreibung
+Output description=Ausgangsbeschreibung
+MD5 sum=MD5-Summe
+Input aspect ratio=Eingangsseitenverhältnis
+Output aspect ratio=Ausgangsseitenverhältnis
+Host application=Ausführende Anwendung
+Source file name=Quelldateiname
+Queued samples=Gepufferte Bilder
+Video delay=Videoverzögerung
+Time on ffdshow=Zeit von ffdshow
+Accurate deblocking=Präzises Deblocking
+Frame type=Bildtyp
+Subtitles delay=Untertitelverzögerung
+Coded frame size=Kodierte Bildgröße
+Input colorspace=Eingangsfarbraum
+System time=Systemzeit
+Current playing time=Aktuelle Spielzeit
+Remaining time=Verbleibende Zeit
+Movie lenght=Filmlänge
+Encoder info=Enkoderinformationen
+Short configuration descrprion=Kurze Konfigurationsbeschreibung
+
+
+
+
+
+
+
+
+Movie length=Länge des Films
+Show on startup=Bei Start anzeigen
 Channel=Kanal
 File=Datei
 Output speakers=Ausgabelautsprecher
 Current input bitrate=Aktuelle Eingangsbitrate
-Input size and aspect ratio=Eingangsgröße und -seitenverhältnis
-Supported FOURCCs/remarks=Unterstützte FOURCCs/Anmerkungen
-use speedup tricks=Beschleunigungstricks verwenden
-skip deblocking always=Deblocking immer überspringen
-skip deblocking when safe=Deblocking, wenn sicher, überspringen
 Support DVD decoding=DVD-Dekodierung unterstützen
-DVD decoding (not working yet)=DVD-Dekodierung (funktioniert noch nicht)
-Dynamic range compression=Dynamikkompression
-Check for DTS in WAV=Auf DTS in WAV überprüfen
-Internal postprocessing=Interne Nachbearbeitung
 broken!=defekt!
 incomplete!=unvollständig!
 may not work without special mpeg splitter=arbeitet unter Umständen nicht ohne einen speziellen Splitter
-AVIS (Avisynth AVI files)=AVIS (AviSynth-AVI-Dateien)
 currently broken=zur Zeit defekt
-ffdshow and ffvfw internal FOURCCs=ffdshows und ffvfws interne FOURCCs
 H263, S263 (in 3gp files)=H263, S263 (in 3GP-Dateien)
 AVC1, H264, X264, S264, VSSH (incomplete), DAVC=AVC1, H264, X264, S264, VSSH (unvollständig), DAVC
 H264, X264, VSSH - incomplete, DAVC, AVC1=H264, X264, VSSH (unvollsändig), DAVC, AVC1
 incomplete=unvollständig
-MJPG, LJPG (lossless)=MJPG, LJPG (verlustfrei)
 in 3gp files=in 3GP-Dateien
 low accuracy enabled, inform me if you'd notice distortions=Geringe Genauigkeit aktiviert, informieren sie mich, wenn sie Verzerrungen bemerken.
 low accuracy mode enabled for tremor=Geringer Genauigkeitsmodus für Tremor-Dekoder aktiviert
-doesn't support 24 bit compression=unterstützt keine 24-bit Kompression
-do not use=nicht verwenden
-unlikely=unwahrscheinlich
-normal=normal
-preferred=bevorzugt
-very high=sehr hoch
 thin=hauchdünn
 extralight=sehr dünn
 light=dünn
@@ -133,7 +232,6 @@ Cubic=Kubisch
 line=Zeile
 subtitle=Untertitel
 don't expand=nicht erweitern
-ffdshow default=Standard
 blend=Blend
 darken=Verdunkeln
 lighten=Erhellen
@@ -203,7 +301,6 @@ Generic MPEG1=gewöhnliches MPEG-1
 never=niemals
 after I frames=nach I-Frames
 always=immer
-experimental=experimentell
 automatic=Automatisch
 Fastint=FastInt
 disable=deaktivieren
@@ -232,15 +329,6 @@ bottom=unten
 original=Original
 Ansi=ANSI
 Shiftjis=ShiftJIS
-all supported=alle unterstützten
-all RGB=alle RGB
-all YUV=alle YUV
-all integer=alle ganzzahligen
-8-bit integer=8-bit ganzzahlig
-16-bit integer=16-bit ganzzahlig
-24-bit integer=24-bit ganzzahlig
-32-bit integer=32-bit ganzzahlig
-32-bit float=32-bit fließend
 tab=Tab
 enter=Enter
 shift=Shift
@@ -311,8 +399,6 @@ Italian=Italienisch
 Polish=Polnisch
 Enter 0 for Auto=0 für Auto eingeben:
 Set vertical size 0 for Auto=Setze Vertikale Größe für Auto auf:
-Set all stable formats to libavcodec=Alle stabilen Formate auf libavcodec setzen
-Set all supported formats to XviD=Alle unterstützten Formate auf Xvid setzten
 press key=Taste drücken
 Blur:=Unschärfe:
 Opposite=Entgegengesetzt
@@ -323,7 +409,6 @@ fast 1-pass=schnell, ein Durchgang
 high quality 3-pass=hohe Quallität, drei Durchgänge
 fast 3-pass=schnell, drei Durchgänge
 swscaler gaussian=Gaußischer swscaler
-all float=alle fließenden
 64-bit float=64-bit fließend
 Sample frequency=Frequenz des Sampels
 Number of channels=Anzahl der Kanäle
@@ -341,38 +426,87 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 11 bits=11-bits
 Custom=Benutzerdefiniert
 
+
+
+
+
+
+
+
+
+
 [111]
+1164=Gesamtes Bild bearbeiten
+1167=Nur rechte Hälfte
 1162=Zurücksetzen
 1163=Hilfe
-1164=Ganzes Bild verarbeiten
-1167=Nur rechte Hälfte
-1723=Reihenfolge zurücksetzten
+1723=Reihenfolge zurücksetzen
+
+[101]
+1836=Spenden
+1835=Alle Enstellungen exportieren
+2=Abbrechen
+3=Übernehmen
+
+[116]
+0=DirectShow-Optionen
+1285=DirectShow-Optionen
+1502=Mehrere ffdshow-Instanzen:
+1935=ffdshow nicht verwenden in:
+1970=ffdshow nur verwenden in:
+1974=Bearbeiten...
+1973=Bearbeiten...
+2051=Dialog anzeigen, wenn eine unbekannte Anwendung versucht ffdshow zu laden.
+
+[224]
+1972=Listen Sie die Namen ausführbarer Dateien, welche kompatibel zu ffdshow sind - pro Zeile einen.
+1975=Hinzufügen...
+1976=Zurücksetzen
+2=Abbrechen
+
+[295]
+0=ffdshow-Kompatibilitätsmanager
+2041=Die Anwendung "
+2042=" hat den Versuch unternommen ffdshow zu laden.\r\nDieser Dialog wird gezeigt, da die Anwendung weder in ffdshows Whitelist, noch seiner Blacklist aufgeführt ist. Ihre Wahl wird sowohl für Audio as auch für Video angewandt werden, falls beide verwandt werden.
+2045=ffdshow nicht verwenden. (Nur dieses Mal)
+2046=ffdshow nicht verwenden. (Immer)
+2047=ffdshow verwenden. (Nur dieses Mal)
+2048=ffdshow verwenden. (Immer)
+2049=Erläuterung
+2043=Nicht wieder fragen.
+2044=Diese EXE-Datei anonym via Internet melden.
+
+[2020]
+0=Info & Prozessor
+1284=Informationen
+1832=Folgende SIMD-Instruktionen verwenden (wenn vom Prozessor unterstützt):
+
+[141]
+1774=Horizontale Position:
+1776=Vertikale Position:
+1493=Speichern unter:
+1491=Benutzer:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 [115]
 0=Codecs
 1837=Formatoptionen
 1838=Formatoptionen
-
-[116]
-0=DirectShow-Optionen
-1285=Einstellungen
-1502=Multiple ffdshow-Instanzen:
-1503=Merit:
-1935=ffdshow nicht verwenden in:
-1970=ffdshow nur verwenden in:
-
-[2020]
-0=Info & Prozessor
-1284=Info
-1832=Folgende SIMD-Instruktionen verwenden (wenn vom Prozessor unterstützt):
-
-[141]
-0=OSD
-1182=OSD
-1493=Speichen unter:
-1774=Horizontale Position:
-1776=Vertikale Position:
-1491=Benutzer:
 
 [132]
 0=Schriftart
@@ -684,12 +818,6 @@ Custom=Benutzerdefiniert
 1473=Verfügbare Filter
 1474=Sichtbare Filter
 
-[101]
-1835=Alle Einstellungen exportieren
-1836=Spenden
-2=Abbrechen
-3=Übernehmen
-
 [242]
 0=Logoentfernung
 1552=Logoentfernung
@@ -790,7 +918,7 @@ Custom=Benutzerdefiniert
 
 [243]
 0=Ausgabe
-1845=Verbinde zu:
+1845=Verbinde mit:
 1811=WAVEFORMATEXTENSIBLE-Header nur wenn nötig verwenden
 1813=Erlaube Ausgabe direkt in eine Datei
 1574=16-bit ganzzahlig

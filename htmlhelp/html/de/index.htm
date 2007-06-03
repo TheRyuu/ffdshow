@@ -3,7 +3,11 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 
-<!-- In sync with revision 1158. -->
+<!-- Please update the revision number when changes to the markup code 
+have been made, which were ported to this translation (even if nothing 
+was changed here). This is to know which revisions are not ported yet.-->
+
+<!-- In sync with revision 1238. -->
 
 <head>
   <title>ffdshow tryouts: Changelog</title>
@@ -31,7 +35,7 @@
   <p class="normal">Diese Liste basiert - mit Ausnahme des Multithreading-Patches - auf der neuesten Revision des originalen Projekts.<br />
     Navigieren nach:
   </p>
-  
+
   <ul class="links">
     <li><a class="nav" href="#fixes">Fehlerkorrekturen</a></li>
     <li><a class="nav" href="#features">Neue Features</a></li>
@@ -61,6 +65,11 @@
   </p>
 
   <ul class="fixed">
+    <li>libavcodec-Enkoder akzeptierten keine Bildfrequenzen au&szlig;er 25fps. Andere Enkoder hatten manchmal falsche Bildfrequenzen.</li>
+    <li>Falls ffdshowaudio() im AviSynth-Skript verwandt wurde, trat ein Fehler auf.</li>
+    <li>Falls eine Unicode-Untertiteldatei 0x1a enthielt, schlug das Rendering fehl.</li>
+    <li>Das Bild wurde gespiegelt, falls der AviSynthfilter im RGB-Farbraum ausgab.</li>
+    <li>Falls "RAW video" -> "YV12" im VFW-Dekoder aktiviert war, wurde das Bild gespiegelt, wenn der VFW-Codec via DirectShow verwandt wurde.</li>
     <li>Verbesserte Stabilit&auml;t der Handhabung von Winamp-Plugins.</li>
     <li>Resizing w&auml;hrend des Abspielens: Wurde 8 (als erste Ziffer von 800) f&uuml;r die vertikale Gr&ouml;&szlig;e eingegeben, gab es je nach angewandter Methode einen Absturz (Lanczos tap>=4, spline, usw.).</li>
     <li>Falls Resize angewandt wurde, wurden &Auml;nderungen des Pixelseitenverh&auml;ltnisses (SAR) ignoriert.</li>
@@ -74,7 +83,7 @@
 
   <ul class="fixed">
     <li>Falls Overlaymixer und YUY2 verwandt wurden, wurde nach einer &Auml;nderung des Seitenverh&auml;ltnisses die H&ouml;he des Bildes halbiert. Dies war h&auml;ufig bei Wiedergabe von DVDs der Fall.</li>
-    <li>FFV1-Dekoder st&uuml;rzte bei Verz&ouml;gerung oder Spulen ab.</li>
+    <li>FFV1-Dekoder st&uuml;rzte beim Spulen oder bei Verz&ouml;gerung ab.</li>
     <li>FFV1-Enkoder: Die Standardentfernung zwischen Keyframes betrug 250, was zu hoch war und nicht unabh&auml;ngig konfiguriert werden konnte. Neuer Standard ist 10.</li>
     <li>Wenn NV12 der einzig verf&uuml;gbare Ausgabefarbraum f&uuml;r DirectShow-Dekoder war und "Unkomprimierte Videodaten" f&uuml;r den VfW-Dekoder aktiviert war, st&uuml;rzte der Thumbnailer des Windows Media Player 11 ab.</li>
     <li>Untertitel waren grau, selbst wenn wei&szlig; ausgew&auml;hlt war.</li>
@@ -139,7 +148,7 @@
     <li>War ein Fehler im AviSynth-Skript in ffdshow, wurde die Fehlermeldung auf dem Video angezeigt. Sie verblieb dort selbst nachdem die komplette AviSynth-Seite deaktiviert worden war.</li>
     <li>Der Dialog war entstellt, falls "Benachrichtungs- & Dialogeinstellungen" -> "Japanese (Unicode)" ausgew&auml;hlt war (ANSI-Builds). Das Problem war, dass der Installer die Option standardm&auml;&szlig;ig f&uuml;r die japanische Windowsversion setzte.</li>
     <li>ANSI/MBCS wurde nicht korrekt verarbeitet. Das OSD-Element "Quelldatei", zum Beispiel, konnte die letzten paar Zeichen nicht anzeigen, falls MBCS im Pfad verwandt wurde. Es war eine Sicherheitsangelegenheit.</li>
-    <li>Falls eine lokalisierte Fassung des ffdshow-Dialogs verwandt wurde, skalierte der Inhalt des Dialogs auf ca. 130%, die Fenstergr&ouml;ße &auml;nderte sich jedoch nicht. Infolgedessen waren Teile der rechten Dialogseite nicht mehr sichtbar (abh&auml;ngig davon wie der Dialog ge&ouml;ffnet wurde).</li>
+    <li>Falls eine lokalisierte Fassung des ffdshow-Dialogs verwandt wurde, skalierte der Inhalt des Dialogs auf ca. 130%, die Fenstergr&ouml;&szlig;e &auml;nderte sich jedoch nicht. Infolgedessen waren Teile der rechten Dialogseite nicht mehr sichtbar (abh&auml;ngig davon wie der Dialog ge&ouml;ffnet wurde).</li>
     <li>Untertitel waren entstellt falls "Untertitel" -> "Schriftart" -> "Schnelles Rendering" aktiviert war und MBCS in ANSI-Builds verwandt wurde.</li>
   </ul>
 
@@ -152,6 +161,13 @@
   </p>
 
   <ul class="added">
+    <li>libavcodec-Enkoder lie&szlig;en Fehlermeldungen erscheinen.</li>
+    <li>Im AviSynthfilter, ist nun nicht nur das aktuelle Bild sondern auch voherige und zuk&uuml;nftige Bilder verf&uuml;gbar. "3:2 pulldown", hochentwickeltes IVTC sowie Deinterlacing werden unterst&uuml;tzt.</li>
+    <li>Symbole wurden aktuallisiert ( <img style="vertical-align:middle" src="../images/modern_icon_xp.png" alt="Neue ffdshow-Symbole" width="60" height="23" /> ). Klassische Symbole stehen weiterhin zur Verf&uuml;gung.</li>
+    <li>ATRAC3 (Adaptive TRansform Acoustic Coding, komprimieres Audioformat) wurde hinzugef&uuml;gt.</li>
+    <li>Xvid-Enkoder wurde multithreaded.</li>
+    <li>Unterst&uuml;tzung f&uuml;r SPDIF unter Windows Vista wurde hinzugef&uuml;gt ("Audiodekoder-Konfiguration" -> "Ausgabe" -> "Verbinde mit:").</li>
+    <li>Mehrkanalaudio-Verarbeitung durch Winamp-Plugins wurde hinzugef&uuml;gt.</li>
     <li>Unter "Gr&ouml;&szlig;e & Seitenverh&auml;ltnis" wurde eine neue Checkbox "Pixelseitenverh&auml;ltnis intern verarbeiten" hinzugef&uuml;gt.</li>
     <li>Resize-GUI: "Horizontale Gr&ouml;&szlig;e definieren" statt "Vertikale Gr&ouml;&szlig;e 0 f&uuml;r Automatik definieren".</li>
     <li>Audiodekoder-AC3-Output: Die neue Checkbox "Nur Mehrkanal-Streams kodieren" erlaubt senden von Mehrkanalaudio (welches andernfalls nicht digital gesendet werden kann) &uuml;ber AC3-SPDIF zum AV-Verst&auml;rker.</li>

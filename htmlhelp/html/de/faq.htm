@@ -3,7 +3,11 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 
-<!-- In sync with revision 1158. -->
+<!-- Please update the revision number when changes to the markup code 
+have been made, which were ported to this translation (even if nothing 
+was changed here). This is to know which revisions are not ported yet.-->
+
+<!-- In sync with revision 1226. -->
 
 <head>
   <title>ffdshow tryouts: FAQ</title>
@@ -46,8 +50,8 @@
   </p>
 
   <ul class="normal">
-    <li>Generische (MSVC &amp; ICL) Builds ben&ouml;tigen einen Pentium-MMX/AMD K6 oder neuer.</li>
-    <li>SSE-Builds ben&ouml;tigen einen Pentium III/Athlon XP oder neuer.</li>
+    <li>Generische Builds ben&ouml;tigen einen Pentium-MMX/AMD K6 oder neuer.</li>
+    <li>SSE-Builds (MSVC &amp; ICL) ben&ouml;tigen einen Pentium III/Athlon XP oder neuer.</li>
     <li>SSE2-Builds ben&ouml;tigen einen Pentium 4/Athlon 64 oder neuer.</li>
   </ul>
 
@@ -56,7 +60,7 @@
   </p>
 
   <p class="normal">
-    Alle Builder verwenden den GCC-Compiler um <em>libavcodec</em>, welches ffdshows Hauptbibliothek zum Dekodieren ist, zu erstellen. Diese Bibliothek enth&auml;lt eine Menge handoptimierten Assembler-Code (welcher automatisch die von der CPU unterst&uuml;tzten Eigenschaften und Befehlss&auml;tze erkennt). Die Verwendung zus&auml;tzlicher Compileroptimierungen oder erweiterter Befehlss&auml;tze (wie SSE/SSE2) resultiert in keinem signifikanten oder sp&uuml;rbaren Geschwindigkeitszuwachs. Wenn also die reine Dekodiergeschwindigkeit verglichen wird, gibt es nahezu <strong>keinen Unterschied</strong> zwischen den Builds.
+    Alle Builder verwenden den GCC-Compiler um <em>libavcodec</em>, welches ffdshows Hauptbibliothek zum Dekodieren ist, zu erstellen. Diese Bibliothek enth&auml;lt eine Menge handoptimierten Assembler-Codes, welcher automatisch die von der CPU unterst&uuml;tzten Eigenschaften und Befehlss&auml;tze erkennt. Die Verwendung zus&auml;tzlicher Compileroptimierungen oder erweiterter Befehlss&auml;tze (wie SSE/SSE2) resultiert in keinem signifikanten oder sp&uuml;rbaren Geschwindigkeitszuwachs. Wenn also die reine Dekodiergeschwindigkeit verglichen wird, gibt es nahezu <strong>keinen Unterschied</strong> zwischen den Builds.
   </p>
 
   <p class="small_caption">
@@ -88,10 +92,10 @@
 
   <ul class="normal">
     <li>Wird ohne Filter anzuwenden dekodiert, sind die Ergebnisse <strong>nicht zu unterscheiden</strong>. Alle Builds bewegen sich innerhalb von 2%.</li>
-    <li>Das ICL9 (SSE)-Build zeigte sich als das Schnellste, wenn der <em>xsharpen</em>-Filter verwendet wird. Die Dekodierleistung liegt 88% &uuml;ber den generischen MSVC-Builds.</li>
+    <li>Das ICL9-(SSE)-Build zeigte sich als das Schnellste, wenn der <em>xsharpen</em>-Filter verwendet wird. Die Dekodierleistung liegt 88% &uuml;ber den generischen MSVC-Builds.</li>
     <li>SSE2-optimierte Builds zeigten keinerlei Verbesserung gegen&uuml;ber SSE-Builds.</li>
-    <li>GCC SSE-Builds (nicht im Diagramm dargestellt) geben ebenfalls einen ansehnlichen Geschwindigkeitszuwachs.</li>
-    <li>Von System zu System unterscheiden sich die Zuw&auml;chse gegen&uuml;ber den generischen Builds allerdings. Es wird empfohlen die Builds auf seinem eigenen System zu testen.<br />
+    <li>GCC-SSE-Builds (nicht im Diagramm dargestellt) geben ebenfalls einen ansehnlichen Geschwindigkeitszuwachs.</li>
+    <li>Allerdings unterscheiden sich die Zuw&auml;chse gegen&uuml;ber den generischen Builds von System zu System. Es wird empfohlen die Builds auf dem eigenen System zu testen.<br />
       Zu Testzwecken wird Haalis <a class="links" href="http://haali.cs.msu.ru/mkv/timeCodec.exe">timeCodec.exe</a> [96KB] ben&ouml;tigt. Damit <em>timeCodec.exe</em> funktioniert, ist <a href="http://haali.cs.msu.ru/mkv/">Haali Media Splitter</a> Voraussetzung.</li>
   </ul>
 
@@ -112,9 +116,11 @@
   </p>
 
   <ul class="normal">
-    <li>Der <em>resize</em>-Filter ist vollst&auml;ndig multithreaded. Er ist auf Mulicore-Systemen schneller (auf Pentium 4 HT-CPUs ineffektiv) und ben&ouml;tigt hierf&uuml;r keinerlei Konfiguration.</li>
-    <li>Ist "Queue &amp; misc"-"Queue output samples" markiert, wird Beschleunigung durch Multicoreunterst&uuml;tzung aktiviert, von dessen positivem Effekt man unter Umst&auml;nden selbst auf einem Singlecore CPU profitieren kann.</li>
-    <li>libavcodecs MPEG1/2-Dekoder sind multithreaded. Es wird effektiv, wenn "Decoder options"-"Number of decoding threads" auf die Zahl der vorhandenen Prozessorkerne gesetzt wird. Diese Einstellung hat keinen Effekt auf Pentium 4 HT-CPUs.</li>
+    <li>Der <em>resize</em>-Filter ist vollst&auml;ndig multithreaded. Er ist auf Dualcore-Systemen schneller (auf Pentium 4 HT-CPUs ineffektiv) und ben&ouml;tigt hierf&uuml;r keinerlei Konfiguration.</li>
+	<li>Der Xvid-Enkoder ist multithreaded.</li>
+	<li>Der x264-Enkoder ist multithreaded.</li>
+    <li>Ist "Queue &amp; misc" -> "Queue output samples" markiert, wird Beschleunigung durch Multicoreunterst&uuml;tzung aktiviert, von dessen positivem Effekt man unter Umst&auml;nden selbst auf einem Singlecore-CPU profitieren kann.</li>
+    <li>libavcodecs MPEG1/2-Dekoder sind multithreaded. Es wird effektiv, wenn "Decoder options" -> "Number of decoding threads" auf die Zahl der vorhandenen Prozessorkerne gesetzt wird. Diese Einstellung hat keinen Effekt auf Pentium-4-HT-CPUs.</li>
     <li>libavcodecs MPEG4/MPEG2/MPEG1-Encoder sind multithreaded.</li>
   </ul>
 

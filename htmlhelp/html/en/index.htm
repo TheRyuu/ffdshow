@@ -29,7 +29,7 @@
   <p class="normal">This list is based on the latest revision of the original project except the multithreading patch.<br />
     Navigate to:
   </p>
-  
+
   <ul class="links">
     <li><a class="nav" href="#fixes">Bug fixes</a></li>
     <li><a class="nav" href="#features">New features</a></li>
@@ -63,7 +63,7 @@
     <li>If ffdshowaudio() was used in AviSynth script, an error occurred.</li>
     <li>If a Unicode subtitle file contained 0x1a, the rendering failed.</li>
     <li>The image got mirrored if AviSynth filter output in RGB color space.</li>
-    <li>If RAW video-YV12 in VFW-Decoder was enabled, the image got mirrored when VFW codec was used via DirectShow.</li>
+    <li>If "RAW video" -> "YV12" in VFW decoder was enabled, the image got mirrored when VFW codec was used via DirectShow.</li>
     <li>Improved stability of Winamp plugin handling.</li>
     <li>On the fly resize: If you entered 8 (as the first digit of 800) for the vertical size, it crashed depending on the used method (lanczos tap>=4, spline, etc).</li>
     <li>If resize was being used, changes to the pixel aspect ratio (SAR) of the video were ignored.</li>
@@ -157,7 +157,7 @@
   <ul class="added">
     <li>libavcodec encoders pop up error messages.</li>
     <li>In AviSynth filter, not only current frame but also backward and forward referencing has become possible. "3:2 pulldown", advanced IVTC as well as deinterlacing are supported.</li>
-    <li>Updated icons ( <img style="vertical-align:middle" src="../images/modern_icon_xp.png" alt="New ffdshow icons" width="60" height="23" /> ). Classic icons are available too.</li>
+    <li>Updated icons ( <img style="vertical-align:middle" src="../images/modern_icon_xp.png" alt="New ffdshow icons" width="60" height="23" /> ). Classic icons are still available.</li>
     <li>ATRAC3 (Adaptive TRansform Acoustic Coding, compressed audio format) has been added.</li>
     <li>Xvid encoder has been multithreaded.</li>
     <li>Support for SPDIF on Windows Vista has been added ("Audio decoder configuration" -> "Output" -> "Connect to:").</li>
