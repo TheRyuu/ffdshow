@@ -60,10 +60,10 @@
 
   <ul class="fixed">
     <li>libavcodec encoders did not accept frame rates except 25fps. Other encoders sometimes had inaccurate frame rates.</li>
-    <li>If ffdshowaudio() were used in AviSynth script, an error occurred.</li>
-    <li>If 0x1a was contained in the UNICODE subtitle file, the subtitle broke off.</li>
+    <li>If ffdshowaudio() was used in AviSynth script, an error occurred.</li>
+    <li>If a Unicode subtitle file contained 0x1a, the rendering failed.</li>
     <li>The image got mirrored if AviSynth filter output in RGB color space.</li>
-    <li>If raw video-YV12 in VFW-decoder was enabled, the image got mirrored when VFW codec was used via DirectShow.</li>
+    <li>If RAW video-YV12 in VFW-Decoder was enabled, the image got mirrored when VFW codec was used via DirectShow.</li>
     <li>Improved stability of Winamp plugin handling.</li>
     <li>On the fly resize: If you entered 8 (as the first digit of 800) for the vertical size, it crashed depending on the used method (lanczos tap>=4, spline, etc).</li>
     <li>If resize was being used, changes to the pixel aspect ratio (SAR) of the video were ignored.</li>
@@ -156,11 +156,11 @@
 
   <ul class="added">
     <li>libavcodec encoders pop up error messages.</li>
-    <li>In AviSynth filter, not only current frame but also backward and forward referencing has become possible. Together with "3:2 pulldown", advanced IVTC and deinterlacing is supported.</li>
-    <li>Updated icons ( <img src="..\images\modern_icon_xp.bmp" alt="new icons" align="absmiddle"/> ). Classic icons are available too.</li>
+    <li>In AviSynth filter, not only current frame but also backward and forward referencing has become possible. "3:2 pulldown", advanced IVTC as well as deinterlacing are supported.</li>
+    <li>Updated icons ( <img style="vertical-align:middle" src="../images/modern_icon_xp.png" alt="New ffdshow icons" width="60" height="23" /> ). Classic icons are available too.</li>
     <li>ATRAC3 (Adaptive TRansform Acoustic Coding, compressed audio format) has been added.</li>
     <li>Xvid encoder has been multithreaded.</li>
-    <li>Support for SPDIF on Windows Vista has been added (audio decoder configuration->Output->Connect to:).</li>
+    <li>Support for SPDIF on Windows Vista has been added ("Audio decoder configuration" -> "Output" -> "Connect to:").</li>
     <li>Multichannel audio processing by Winamp plugins has been added.</li>
     <li>In "Resize & aspect" dialog, a new check box "Process pixel aspect ratio internally" has been added.</li>
     <li>Resize GUI: "Specify horizontal size" instead of "Specify vertical size 0 for auto".</li>
@@ -174,7 +174,7 @@
   <ul class="added">
     <li>Improved subtitle shadow. 3 shadow modes are available: classic, glowing and gradient.</li>
     <li>Management of compatibility issues: "Use ffdshow only in:" option ensures that ffdshow only runs in supported applications.</li>
-    <li>Hardware deinterlacing support for RAW video (interlacing related information which was input as RAW video is being sent to downstream filters).</li>
+    <li>Hardware deinterlacing support for RAW video (interlacing-related information which was input as RAW video is being sent to downstream filters).</li>
     <li>New OSD item "IDCT(libavcodec)" displays which IDCT method is used.</li>
     <li>In "Subtitles" -> "Search in", extensions priority can be specified.</li>
     <li>VC-1 Advanced Profile support (libavcodec can work without external codecs).</li>
