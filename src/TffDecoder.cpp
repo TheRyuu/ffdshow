@@ -1297,11 +1297,12 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
    if (!m_pOutput->IsConnected())
     return VFW_E_NOT_CONNECTED;
 
-   reconnectRect=newpict;
    inReconnect=true;
    int newdy=newpict.rectFull.dy;
    if (newpict.cspInfo.id==FF_CSP_420P)
     newdy=ODD2EVEN(newdy);
+   reconnectRect=newpict;
+   reconnectRect.rectFull.dy=newdy;
    CMediaType &mt=m_pOutput->CurrentMediaType();
    BITMAPINFOHEADER *bmi=NULL;
    if (mt.formattype==FORMAT_VideoInfo)
