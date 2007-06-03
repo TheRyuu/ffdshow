@@ -3271,13 +3271,12 @@
 				RelativePath=".\src\dialog\TcompatibilityList.h">
 			</File>
 			<File
-				RelativePath=".\src\dialog\TcompatibilityManager.cpp"
-				>
+				RelativePath=".\src\dialog\TcompatibilityManager.cpp">
 			</File>
 			<File
-				RelativePath=".\src\dialog\TcompatibilityManager.h"
-				>
-			</File>			<File
+				RelativePath=".\src\dialog\TcompatibilityManager.h">
+			</File>
+			<File
 				RelativePath=".\src\dialog\TconfPageBase.cpp">
 			</File>
 			<File
