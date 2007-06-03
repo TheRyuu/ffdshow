@@ -100,7 +100,8 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  m_IsYV12andVMR9(false),
  m_IsQueueListedApp(-1),
  reconnectFirstError(true),
- m_NeedToAttachFormat(false)
+ m_NeedToAttachFormat(false),
+ inReconnect(false)
 {
  DPRINTF(_l("TffdshowDecVideo::Constructor"));
 #ifdef OSDTIMETABALE
@@ -256,7 +257,11 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
   }
  if ((size_t)iPosition>=osize) return VFW_S_NO_MORE_ITEMS;
 
- TffPictBase pictOut=inpin->pictIn;
+ TffPictBase pictOut;
+ if (inReconnect)
+  pictOut=reconnectRect;
+ else
+  pictOut=inpin->pictIn;
  calcNewSize(pictOut);
  if (presetSettings->output->closest && !outdv) ocsps.sort(pictOut.csp);
 
@@ -1292,6 +1297,8 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
    if (!m_pOutput->IsConnected())
     return VFW_E_NOT_CONNECTED;
 
+   reconnectRect=newpict;
+   inReconnect=true;
    int newdy=newpict.rectFull.dy;
    if (newpict.cspInfo.id==FF_CSP_420P)
     newdy=ODD2EVEN(newdy);
@@ -1407,6 +1414,7 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
        MessageBox(NULL,_l("Reconnect failed.\nPlease restart the video application."),_l("ffdshow error"),MB_ICONERROR|MB_OK);
        reconnectFirstError=false;
       }
+     inReconnect=false;
      return hr;
     }
 
@@ -1464,6 +1472,7 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
    // some renderers don't send this
    NotifyEvent(EC_VIDEO_SIZE_CHANGED,MAKELPARAM(newpict.rectFull.dx,newdy),0);
    oldRect=newpict.rectFull;
+   inReconnect=false;
    return S_OK;
   }
  return S_FALSE;

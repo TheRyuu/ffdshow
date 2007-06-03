@@ -522,6 +522,8 @@ private:
    LONG dstSize;
   } m_frame;
  Trect oldRect;
+ TffPictBase reconnectRect;
+ bool inReconnect;
  void calcNewSize(TffPictBase &p);
  unsigned int frameCnt;uint64_t bytesCnt;
  REFERENCE_TIME segmentStart;unsigned int segmentFrameCnt;
