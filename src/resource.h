@@ -158,6 +158,7 @@
 #define IDD_QUEUEMSG_6                  292
 #define IDD_QUEUEMSG_7                  293
 #define IDD_QUEUEMSG_8                  294
+#define IDD_COMPATIBILITY_MANAGER       295
 #define IDC_TBR_ASPECT_USER             1002
 #define IDC_TBR_PPQUAL                  1002
 #define IDC_TBR_LUMGAIN                 1003
@@ -1739,7 +1740,17 @@
 #define IDC_BT_AVISYNTH_USECURRENT      2032
 #define IDC_BT_AVISYNTH_LOAD            2033
 #define IDC_BT_AVISYNTH_SAVE            2034
-
+#define IDC_TXT_COMP_1                  2041
+#define IDC_TXT_COMP_2                  2042
+#define IDC_CHB_COMP_DONTASK            2043
+#define IDC_CHB_COMP_SEND               2044
+#define IDC_RBT_COMP_1                  2045
+#define IDC_RBT_COMP_2                  2046
+#define IDC_RBT_COMP_3                  2047
+#define IDC_RBT_COMP_4                  2048
+#define IDC_GRP_COMP_1                  2049
+#define IDC_EDT_COMP_1                  2050
+#define IDC_CHB_IS_COMPMGR              2051
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -1754,9 +1765,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        238
+#define _APS_NEXT_RESOURCE_VALUE        296
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2060
+#define _APS_NEXT_CONTROL_VALUE         2052
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

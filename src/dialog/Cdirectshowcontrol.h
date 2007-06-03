@@ -35,6 +35,7 @@ private:
  void onEditCompatibilitylist(void);
  void onEditBlacklist(void);
  void onEditCompI(int IDFF_target);
+ void onChbIsCompMgr(void);
 protected:
  //virtual const int* getInfos(void)=0;
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

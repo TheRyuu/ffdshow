@@ -12,6 +12,8 @@ struct TregOp;
 struct Tconfig;
 struct TglobalSettingsBase :public Toptions
 {
+private:
+ void addToCompatiblityList(char_t *list, const char_t *exe, const char_t *delimit);
 protected:
  const Tconfig *config;
  const char_t *reg_child;
@@ -26,13 +28,15 @@ public:
  int multipleInstances;
  int isBlacklist,isUseonlyin;char_t blacklist[MAX_COMPATIBILITYLIST_LENGTH],useonlyin[MAX_COMPATIBILITYLIST_LENGTH];
  virtual bool inBlacklist(const char_t *exe);
- virtual bool inUseonlyin(const char_t *exe);
+ virtual bool inUseonlyin(const char_t *exe,IffdshowBase *Ideci);
  int addToROT;
  int allowedCPUflags;
+ int compOnLoadMode;
 
  virtual void load(void);
  virtual void save(void);
  int trayIcon,trayIconType,trayIconExt,trayIconChanged;
+ int isCompMgr,isCompMgrChanged;
 
  int outputdebug;
  int outputdebugfile;char_t debugfile[MAX_PATH];

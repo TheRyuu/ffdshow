@@ -28,6 +28,7 @@
 #include "TpresetSettings.h"
 #include "ffdebug.h"
 #include "Tstream.h"
+#include "TcompatibilityManager.h"
 
 //===================================== TglobalSettingsBase ======================================
 TglobalSettingsBase::TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const char_t *Ireg_child,TintStrColl *Icoll):filtermode(Imode),config(Iconfig),reg_child(Ireg_child),Toptions(Icoll)
@@ -56,6 +57,12 @@ TglobalSettingsBase::TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const 
      _l("isBlacklist"),1,
    IDFF_isCompatibilityList      ,&TglobalSettingsBase::isUseonlyin      ,0,0,_l(""),0,
      _l("isUseonlyin"),1,   
+   IDFF_compManagerMode  ,&TglobalSettingsBase::compOnLoadMode   ,1,4,_l(""),0,
+     NULL,1,
+   IDFF_isCompMgr        ,&TglobalSettingsBase::isCompMgr        ,0,0,_l(""),0,
+     NULL,1,
+   IDFF_isCompMgrChanged ,&TglobalSettingsBase::isCompMgrChanged ,0,0,_l(""),0,
+     NULL,0,
    IDFF_addToROT         ,&TglobalSettingsBase::addToROT         ,0,0,_l(""),0,
      _l("addToROT"),0,
    IDFF_allowedCpuFlags  ,&TglobalSettingsBase::allowedCPUflags  ,1,1,_l(""),0,
@@ -97,6 +104,9 @@ void TglobalSettingsBase::load(void)
  TregOpRegRead tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\ffdshow"));
  tHKCU_global._REG_OP_N(IDFF_trayIconType,_l("trayIconType"),trayIconType,1);
 
+ // Load compatibility manager::dontask : shared by video and audio.
+ tHKCU_global._REG_OP_N(IDFF_isCompMgr,_l("isCompMgr"),isCompMgr,1);
+
  // fix 'SinkuHadouken.exe'#1310 -> 'SinkuHadouken.exe'#13#10 (rev 976 bug)
  char_t sinkuhadouken[19]={'S','i','n','k','u','H','a','d','o','u','k','e','n','.','e','x','e',0x1e,'\0'};
  ffstring complist(useonlyin);
@@ -129,6 +139,14 @@ void TglobalSettingsBase::save(void)
   {
    TregOpRegWrite tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\ffdshow"));
    tHKCU_global._REG_OP_N(IDFF_trayIconType,_l("trayIconType"),trayIconType,0);
+   trayIconChanged=0;
+  }
+ // Save compatibility manager::dontask : common through video and audio decoders.
+ if (isCompMgrChanged)
+  {
+   TregOpRegWrite tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\ffdshow"));
+   tHKCU_global._REG_OP_N(IDFF_isCompMgr,_l("isCompMgr"),isCompMgr,0);
+   isCompMgrChanged=0;
   }
 }
 bool TglobalSettingsBase::exportReg(bool all,const char_t *regflnm,bool unicode)
@@ -179,9 +197,10 @@ bool TglobalSettingsBase::inBlacklist(const char_t *exe)
  return false;
 }
 
-bool TglobalSettingsBase::inUseonlyin(const char_t *exe)
+bool TglobalSettingsBase::inUseonlyin(const char_t *exe,IffdshowBase *Ideci)
 {
  // MessageBox(NULL,exe,_l("ffdshow inUseonlyin"),MB_OK);
+ bool old_firstUseonlyin=firstUseonlyin;
  if (firstUseonlyin)
   {
    firstUseonlyin=false;
@@ -190,8 +209,49 @@ bool TglobalSettingsBase::inUseonlyin(const char_t *exe)
  for (strings::const_iterator b=useonlyinList.begin();b!=useonlyinList.end();b++)
   if (DwStrcasecmp(*b,exe)==0)
    return true;
- return false;
+ if (!isCompMgr)
+  return false;
+ if (TcompatibilityManager::s_mode==0)
+  {
+   TcompatibilityManager *dlg=new TcompatibilityManager(Ideci,NULL,exe);
+   dlg->show();
+   delete dlg;
+  }
+ bool result=false;
+ switch (TcompatibilityManager::s_mode)
+  {
+   case 0:
+   case 1:
+    result=false;
+    break;
+   case 2:
+    if (old_firstUseonlyin) addToCompatiblityList(blacklist,exe,_l(";"));
+    result=false;
+    break;
+   case 3:
+    result=true;
+    break;
+   case 4:
+    if (old_firstUseonlyin) addToCompatiblityList(useonlyin,exe,_l("\r\n"));
+    result=true;
+    break;
+  }
+ if (isCompMgrChanged)
+  save();
+ return result;
 } 
+
+void TglobalSettingsBase::addToCompatiblityList(char_t *list, const char_t *exe, const char_t *delimit)
+{
+ strings listList;
+ strtok(list,delimit,listList);
+ listList.push_back(exe);
+ ffstring result;
+ for (strings::const_iterator b=listList.begin();b!=listList.end();b++)
+  result+=*b+delimit;
+ strncpy(list,result.c_str(),std::min<size_t>(MAX_COMPATIBILITYLIST_LENGTH,result.size()+1));
+ save();
+}
 
 //===================================== TglobalSettingsDec ======================================
 TglobalSettingsDec::TglobalSettingsDec(const Tconfig *Iconfig,int Imode,const char_t *Ireg_child,TintStrColl *Icoll,TOSDsettings *Iosd):TglobalSettingsBase(Iconfig,Imode,Ireg_child,Icoll),osd(Iosd)

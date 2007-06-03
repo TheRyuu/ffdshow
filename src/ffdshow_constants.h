@@ -49,6 +49,9 @@
 #define IDFF_multipleInstances    66 // 0 - allow multiple instances of ffdshow in graph to be connected to each other, 1 - only check previous filter, 2 - check all filters in graph
 #define IDFF_isBlacklist          93
 #define IDFF_isCompatibilityList 3372
+#define IDFF_compManagerMode     3383
+#define IDFF_isCompMgr           3384
+#define IDFF_isCompMgrChanged    3385
 #define IDFF_blacklist            94
 #define IDFF_compatibilityList  3371
 //#define IDFF_xvidInited           68
@@ -1401,6 +1404,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3383
+//max:3386
 
 #endif

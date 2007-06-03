@@ -488,6 +488,14 @@ Number of used frames to keep in buffer=後方のフレームを何枚バッファーするか
 Ignore pulldown=プルダウンを行わない
 Apply pulldown=プルダウンを適用する
 Smooth timestamps=タイムスタンプを平滑化する
+ffdshow will behave as if it were not installed.=ffdshowはインストールされていないかのように振舞います。
+ffdshow will behave as if it were not installed.\r\nThe application will be added to "DirectShow control"->"Don't use ffdshow in".=ffdshowはインストールされていないかのように振舞います。\r\nこのアプリケーションは「DirectShowのコントロール」->「以下ではffdshowを使用しない」に追加されます。
+ffdshow will be used if it is set to decode a format.=ffdshowが要求されたフォーマットをデコードできればffdshowが使用されます。
+ffdshow will be used if it is set to decode a format.\r\nThe application will be added to "DirectShow control"->"Use ffdshow only in".=ffdshowが要求されたフォーマットをデコードできればffdshowが使用されます。\r\nこのアプリケーションは「DirectShowのコントロール」->「以下でのみffdshowを使用する」に追加されます。
+ffdshow won't be used in unknown applications.\r\nTo enable this dialog again, check "DirectShow control"->"Show dialog when an unknown application tries to load ffdshow".=ffdshowは今後未知のアプリケーションでは使用されません。\r\nこのダイアログを再び有効にするには「DirectShowのコントロール」->「未知のアプリケーションがffdshowをロードしようとした時ダイアログを表示する」をチェックしてください。
+(This dailog will close in=（このダイアログは
+seconds.)=秒後に閉じます）
+Thank you. We are gathering the list of compatible applications. Please send us the exe file name of this application and help us improving ffdshow.=ありがとうございます。ffdshowと互換性のあるアプリケーションのリストを収集しています。このアプリケーションの実行ファイル名をお送りいただき開発を支援してください。
 
 [101]
 1=OK
@@ -555,27 +563,6 @@ Smooth timestamps=タイムスタンプを平滑化する
 
 [116]
 0=DirectShowのコントロール
-1050=再生中:
-1054=解像度:
-1059=現在のフレーム:
-1060=ビットレート:
-1191=MMX
-1192=MMXEXT
-1193=SSE
-1194=SSE2
-1195=3DNow!
-1196=3DNow! Ext
-1197=MMX
-1198=MMXEXT
-1199=SSE
-1200=SSE2
-1201=3DNow!
-1202=3DNow! Ext
-1260=コーデック:
-1264=出力:
-1265=FPS:
-1266=デコーダーのFPS:
-1284=情報
 1285=DirectShowのコントロール
 1502=ffdshowの複数起動:
 1503=メリット値:
@@ -583,6 +570,7 @@ Smooth timestamps=タイムスタンプを平滑化する
 1832=以下のSIMD命令を使用する (CPUがサポートしている場合):
 1935=以下ではffdshowを使用しない:
 1970=以下でのみffdshowを使用する:
+2051=未知のアプリケーションがffdshowをロードしようとした時ダイアログを表示する
 
 [118]
 0=デコーダーオプション
@@ -1720,3 +1708,15 @@ Use \n for line breaks.=改行には\nを使用します。
 0=情報とデバッグ
 1284=情報
 1832=以下のSIMD命令を使用する（使用可能な場合）
+
+[295]
+0=ffdshow互換性管理プログラム
+2041=アプリケーション"
+2042="がffdshowをロードしようとしました。\r\nこのダイアログはアプリケーションが「DirectShowのコントロール」->「以下でのみffdshowを使用する」に挙げられていないため表示されました。\r\n以下の選択はオーディオとビデオの両方に適用されます（両方とも使用された場合）。
+2045=ffdshowを使用しない（今回のみ）。
+2046=ffdshowを使用しない（記憶する）。
+2047=ffdshowを使用する（今回のみ）。
+2048=ffdshowを使用する（記憶する）。
+2049=説明
+2043=今後表示しない
+2044=この実行ファイル名をインターネット経由で匿名で報告する。

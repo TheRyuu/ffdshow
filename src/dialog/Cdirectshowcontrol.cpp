@@ -109,8 +109,10 @@ void TdirectshowControlPageDec::blacklist2dlg(void)
  ffstring complistResult;
  convertDelimit(complist0,_l("\r\n"),complistResult,_l(";"));
  SetDlgItemText(m_hwnd,IDC_ED_COMPATIBILITYLIST,complistResult.c_str());
+ setCheck(IDC_CHB_IS_COMPMGR,cfgGet(IDFF_isCompMgr));
  enable(is,IDC_ED_COMPATIBILITYLIST);
  enable(is,IDC_BT_COMPATIBILITYLIST);
+ enable(is,IDC_CHB_IS_COMPMGR);
 }
 
 void TdirectshowControlPageDec::applySettings(void)
@@ -188,6 +190,11 @@ void TdirectshowControlPageDec::translate(void)
  cbxSetCurSel(IDC_CBX_MULTIPLE_INSTANCES,ii);
 }
 
+void TdirectshowControlPageDec::onChbIsCompMgr(void)
+{
+ cfgSet(IDFF_isCompMgrChanged,1);
+}
+
 TdirectshowControlPageDec::TdirectshowControlPageDec(TffdshowPageDec *Iparent):TconfPageDec(Iparent,NULL,0)
 {
  dialogId=IDD_DIRECTSHOWCONTROL;
@@ -197,6 +204,7 @@ TdirectshowControlPageDec::TdirectshowControlPageDec(TffdshowPageDec *Iparent):T
    IDC_CHB_ADDTOROT,IDFF_addToROT,NULL,
    IDC_CHB_BLACKLIST,IDFF_isBlacklist,&TdirectshowControlPageDec::blacklist2dlg,
    IDC_CHB_COMPATIBILITYLIST,IDFF_isCompatibilityList,&TdirectshowControlPageDec::blacklist2dlg,
+   IDC_CHB_IS_COMPMGR,IDFF_isCompMgr,&TdirectshowControlPageDec::onChbIsCompMgr,
    0,NULL,NULL
   };
  bindCheckboxes(chb);

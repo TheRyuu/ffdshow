@@ -264,12 +264,12 @@ BEGIN
     CONTROL         "Soft threshold",IDC_CHB_POSTPROC_SPP_SOFT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,67,158,83,10
 END
 
-IDD_DIRECTSHOWCONTROL DIALOGEX 0, 0, 267, 194
+IDD_DIRECTSHOWCONTROL DIALOGEX 0, 0, 267, 195
 STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | DS_CENTER | WS_CHILD
 EXSTYLE WS_EX_CONTROLPARENT
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "DirectShow control",IDC_GRP_DEBUG,0,0,266,104
+    GROUPBOX        "DirectShow control",IDC_GRP_DEBUG,0,0,266,112
     LTEXT           "Merit:",IDC_LBL_MERIT,5,15,97,8
     CONTROL         "",IDC_TBR_MERIT,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,104,12,158,12
     LTEXT           "Multiple ffdshow instances:",IDC_LBL_MULTIPLE_INSTANCES,5,36,96,8
@@ -282,6 +282,8 @@ BEGIN
     EDITTEXT        IDC_ED_COMPATIBILITYLIST,104,80,130,13,ES_AUTOHSCROLL
     PUSHBUTTON      "edit...",IDC_BT_COMPATIBILITYLIST,235,80,27,13
     PUSHBUTTON      "edit...",IDC_BT_BLACKLIST,235,58,27,13
+    CONTROL         "Show dialog when an unknown application tries to load ffdshow.",IDC_CHB_IS_COMPMGR,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,20,96,242,10
 END
 
 IDD_INFOSIMD DIALOGEX 0, 0, 267, 195
@@ -311,7 +313,7 @@ BEGIN
 END
 
 IDD_COMPATIBILITY DIALOGEX 0, 0, 207, 290
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
 EXSTYLE WS_EX_LEFTSCROLLBAR
 CAPTION "Compatibility list"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
@@ -2693,6 +2695,26 @@ BEGIN
     RTEXT           "on delay:",IDC_LBL_DELAY_DROP,102,13,37,8
 END
 
+IDD_COMPATIBILITY_MANAGER DIALOGEX 100, 50, 312, 191
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
+CAPTION "ffdshow compatiblity manager"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,234,170,71,14
+    LTEXT           "The application """,IDC_TXT_COMP_1,7,7,298,36
+    LTEXT           """ has made an attempt to load ffdshow.\r\nThis dialog is shown because this application is not listed on the ffdshow whitelist or blacklist.\r\nYour choice will be applied to both audio and video, if both are used.",IDC_TXT_COMP_2,7,18,290,25,NOT WS_VISIBLE
+    CONTROL         "Don't use ffdshow. (just this once)",IDC_RBT_COMP_1,
+                    "Button",BS_AUTORADIOBUTTON | WS_GROUP,7,48,237,10
+    CONTROL         "Don't use ffdshow. (always)",IDC_RBT_COMP_2,"Button",BS_AUTORADIOBUTTON,7,64,237,10
+    CONTROL         "Use ffdshow. (just this once)",IDC_RBT_COMP_3,"Button",BS_AUTORADIOBUTTON,7,81,237,10
+    CONTROL         "Use ffdshow. (always)",IDC_RBT_COMP_4,"Button",BS_AUTORADIOBUTTON,7,97,237,10
+    GROUPBOX        "Explanation",IDC_GRP_COMP_1,7,126,298,43
+    EDITTEXT        IDC_EDT_COMP_1,13,137,286,28,ES_MULTILINE | ES_READONLY | NOT WS_BORDER
+    CONTROL         "Don't ask me again.",IDC_CHB_COMP_DONTASK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,173,177,10
+    CONTROL         "Report this exe file name via internet anonymously.",IDC_CHB_COMP_SEND,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,20,113,285,10
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2961,6 +2983,14 @@ BEGIN
     BEGIN
         RIGHTMARGIN, 264
         VERTGUIDE, 99
+    END
+
+    IDD_COMPATIBILITY_MANAGER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 305
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 184
     END
 END
 #endif    // APSTUDIO_INVOKED

@@ -3,6 +3,7 @@
 #include "Tconfig.h"
 #include "TglobalSettings.h"
 #include "isNotCalledFromBlackList.h"
+#include "TcompatibilityManager.h"
 
 // Explorer.exe loads ffdshow.ax and never releases.
 // That causes annoying error on re-install that one have to log off.
@@ -10,6 +11,7 @@
 // if the caller is included in BlackList("Don't use ffdshow in:").
 bool isNotCalledFromBlackList(HINSTANCE hInstance)
 {
+ TcompatibilityManager::s_mode=0;
  bool result= true;
  strings blacklistList2;
  HKEY hKey= NULL;

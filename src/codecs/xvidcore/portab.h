@@ -132,7 +132,7 @@ static __inline void DPRINTF(int level, char *fmt, ...)
 		va_start(args, fmt);
 		vsprintf(buf, fmt, args);
 		va_end(args);
-		OutputDebugString(buf);
+		OutputDebugStringA(buf);
 		fprintf(stderr, "%s", buf);
 	}
 }

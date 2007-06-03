@@ -418,6 +418,7 @@ Source: ..\..\ff_acm.acm; DestDir: {sys}; Flags: ignoreversion restartreplace un
 #endif
 Source: ..\..\languages\*.*; DestDir: {app}\languages; Flags: ignoreversion; Components: ffdshow
 Source: ..\..\custom matrices\*.*; DestDir: {app}\custom matrices; Flags: ignoreversion; Components: ffdshow\vfw
+Source: ..\..\openIE.js; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 
 [InstallDelete]
 #if MSVC80
