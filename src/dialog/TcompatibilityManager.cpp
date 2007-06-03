@@ -176,7 +176,7 @@ INT_PTR TcompatibilityManager::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
           ffstring instpath(cfgGetStr(IDFF_installPath));
           if (instpath.size() && instpath[instpath.size()-1]!='\\')
            instpath=instpath+_l("\\");
-          tsprintf(param, _l("%sopenIE.js %s %d"),instpath.c_str(),filename.c_str(),revision);
+          tsprintf(param, _l("%sopenIE.js \"%s\" %d"),instpath.c_str(),filename.c_str(),revision);
           if ((int)ShellExecute(NULL, _l("open"),_l("wscript.exe") ,param , NULL, SW_SHOWDEFAULT)<=32)
            {
             char_t url[MAX_PATH+80];
