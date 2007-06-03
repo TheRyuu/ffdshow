@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2002-2006 Milan Cutka
- * based on CXvidDecoder.cpp from XviD DirectShow filter
+ * based on CXvidDecoder.cpp from Xvid DirectShow filter
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

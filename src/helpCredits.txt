@@ -4,4 +4,4 @@ The % rate value means % of the bitrate spent on the movie. So if the movie has 
 If you choose to encode the credits with a fixed quantizer, make sure you set that on first pass as well! Else your desired size won't be achieved!
 If you want a fixed size for your credits, the codec will try to do it's best to achieve that size.
 
-Description by Koepi (de_koepi@lycos.de) from his help file for the XviD codec.
+Description by Koepi (de_koepi@lycos.de) from his help file for the Xvid codec.

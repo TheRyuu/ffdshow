@@ -52,7 +52,7 @@ void TcompatibilityList::init(void)
  else
   {
    capt=tr->translate(m_hwnd,IDD_DIRECTSHOWCONTROL,IDC_CHB_BLACKLIST,NULL);
-   exp= _(-IDD_COMPATIBILITY,_l("List the name of executable file which is incompatible with ffdshow or which you don't want to use ffdshow, one for each line."));
+   exp= _(-IDD_COMPATIBILITY,_l("List the names of executable files which are incompatible with ffdshow or which you don't want to use ffdshow, one for each line."));
   }
  if (capt && capt[0]) setWindowText(m_hwnd,capt);
  if (exp && exp[0]) setText(IDC_TXT_COMPATIBILITYLIST,exp);

@@ -61,7 +61,7 @@ void TaboutPage::exportReg(Twindow *w,char_t *regflnm)
  DWORD filterIndex=sizeof(char)==sizeof(char_t)?1:2;;
  if (dlgGetFile(true,w->m_hwnd,w->_(-IDD_ABOUT,_l("Export ffdshow settings")),_l("Win9x/NT4 Registration Files\0*.reg\0Unicode Registration files\0*.reg\0"),_l("reg"),regflnm,_l("."),0,&filterIndex))
   if (w->deci->exportRegSettings(true,regflnm,filterIndex==2?1:0)==S_OK)
-   w->msg(w->_(-IDD_ABOUT,_l("Settings has been succefully exported")));
+   w->msg(w->_(-IDD_ABOUT,_l("Settings have been succefully exported")));
   else
    w->err(w->_(-IDD_ABOUT,_l("Settings export has failed")));
 }

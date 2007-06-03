@@ -72,8 +72,8 @@ Internal postprocessing=内部のポストプロセッシング
 broken!=工事中立ち入り禁止！
 incomplete!=不完全です
 may not work without special mpeg splitter=特別なMPEGスプリッターがないと機能しません
-AVIS (Avisynth AVI files)=AVIS (AviSynthのAVIファイル)
-doesn't support 24 bit compression.=24ビットの圧縮はサポートされていません。
+AVIS (AviSynth AVI files)=AVIS (AviSynthのAVIファイル)
+Doesn't support 24-bit compression.=24ビットの圧縮はサポートされていません。
 Real Video (RV10, RV20, incomplete)=Real Video (RV10, RV20, 不完全です)
 currently broken=現在は壊れています
 ffdshow and ffvfw internal FOURCCs=ffdshowとffvfw内部のFourCC
@@ -391,7 +391,7 @@ all float=全浮動小数点型
 32-bit integer=32ビット整数
 32-bit float=32ビット浮動小数点
 64-bit float=64ビット浮動小数点
-8-bit palettized=8ビットパレット化
+8-bit palletized=8ビットパレット化
 tab=Tab
 enter=Enter
 shift=Shift
@@ -462,8 +462,8 @@ closest=最も近いもの
 No=なし
 Use with care - can cause ffdshow to not unload after closing the movie.=使用には注意してください - 動画を閉じたあとでffdshowがアンロードしなくなる可能性があります。
 Set all stable formats to libavcodec=安定な形式すべてをlibavcodecに設定する
-Set all supported formats to XviD=サポートされた形式すべてをXviDに設定する
-List the name of executable file which is incompatible with ffdshow or which you don't want to use ffdshow, one for each line.=1行に1つずつ、ffdshowと相性の悪い、またはffdshowを使用したくない実行ファイル名を列挙してください。
+Set all supported formats to Xvid=サポートされた形式すべてをXvidに設定する
+List the names of executable files which are incompatible with ffdshow or which you don't want to use ffdshow, one for each line.=1行に1つずつ、ffdshowと相性の悪い、またはffdshowを使用したくない実行ファイル名を列挙してください。
 Add compatible executable file=ffdshowと互換性のある実行ファイルを追加する
 Add incompatible executable file=ffdshowと互換性のない実行ファイルを追加する
 Load default settings=デフォルトの設定をロード
@@ -474,7 +474,8 @@ Enter 0 for Auto=0を入力すると自動
 Set vertical size 0 for Auto=垂直方向のサイズに0を入力すると自動で適正な縦横比になります。
 "not needed": no custom channel mapping=「必要でない場合」とはチャンネルの入れ替えをしていない場合です。
 Useful for directly storing encoded ac3 to a file in graphedt with File Writer filter=graphedit.exeとFile writerフィルタを使って拡張子.ac3ファイルにac3にエンコードされたデータ（AC3出力を使用）を直接書き出す時に役に立ちます。
-List of applications for which ffdshow should not load, separated by semicolons=ffdshowの使用を禁止するアプリケーションのリストです。セミコロン ; で区切ります。
+List of applications which are compatible with ffdshow, separated by semicolons.=ffdshowと互換性のあるアプリケーションのリストです。セミコロンで区切って記載するか、右の編集ボタンを押してください。
+List of applications for which ffdshow should not load, separated by semicolons=ffdshowの使用を禁止するアプリケーションのリストです。セミコロンで区切って記載するか、右の編集ボタンを押してください。
 Better compression, incompatible with original HuffYUV codec=高圧縮率ですが、オリジナルのHuffYUVコーデックとは互換性がありません。
 mpeg1/2 decoder only=MPEG1/2デコーダーのみ
 Bob for video source\nWeave for film source\nIn most cases, Weave is the same as unchecked HW deinterlacing.=Bob:ビデオソース\nWeave:フィルムソース\nWeaveは多くの場合ハードウェアインターレース解除にチェックなしと同じです。
@@ -571,6 +572,8 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 1935=以下ではffdshowを使用しない:
 1970=以下でのみffdshowを使用する:
 2051=未知のアプリケーションがffdshowをロードしようとした時ダイアログを表示する
+1973=編集...
+1974=編集...
 
 [118]
 0=デコーダーオプション
@@ -580,10 +583,10 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 1294=間引きの比率:
 1307=自動検出
 1308=旧式lavcによるMS-MPEG4ファイル
-1309=旧式XviDのインターレースバグ
+1309=旧式Xvidのインターレースバグ
 1310=UMP4
 1311=バグのパディング
-1313=XviDとDivXのクオーターピクセルバグ
+1313=XvidとDivXのクオーターピクセルバグ
 1314=グレイスケールデコーディング
 1315=エッジ
 1316=DivXのインターレース化彩度動き補償のバグ
@@ -1066,7 +1069,7 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 1480=開始:
 1482=終了:
 1484=グレイスケールのクレジット
-1143=動画において最高の画質を必要としないと思われるところにクレジットがある場合は、「動画開始のクレジット」にチェックをして、開始クレジットの編集フィールドにそって最初と最後のフレームを入力してください。\r\n終了クレジットにも同じことが言えます。終了クレジットにビットをあまり必要としないと思われる場合は - メインの動画とその画質をよくしたい場合は - 「動画終了のクレジット」をチェックして、低い画質にしたい部分の最初と最後のフレームを入力してください。\r\nパーセンテージレートの値はビットレートのうち、その値が動画に使われることを意味します。したがって動画が平均800kbpsの場合、10%に設定されるとクレジットは80kbpsになります。\r\n固定された量子化でクレジットをエンコードする場合、1次パスにもそれを設定しているか確かめてください。そうしないと指定されたサイズは得られません。\r\nクレジットを固定したサイズにしたい場合は、コーデックはそのサイズを得るために最善を尽くすよう試みます。\r\n\r\n説明はKoepi(de_koepi@lycos.de)のXviDコーデックのヘルプファイルから引用しました。
+1143=動画において最高の画質を必要としないと思われるところにクレジットがある場合は、「動画開始のクレジット」にチェックをして、開始クレジットの編集フィールドにそって最初と最後のフレームを入力してください。\r\n終了クレジットにも同じことが言えます。終了クレジットにビットをあまり必要としないと思われる場合は - メインの動画とその画質をよくしたい場合は - 「動画終了のクレジット」をチェックして、低い画質にしたい部分の最初と最後のフレームを入力してください。\r\nパーセンテージレートの値はビットレートのうち、その値が動画に使われることを意味します。したがって動画が平均800kbpsの場合、10%に設定されるとクレジットは80kbpsになります。\r\n固定された量子化でクレジットをエンコードする場合、1次パスにもそれを設定しているか確かめてください。そうしないと指定されたサイズは得られません。\r\nクレジットを固定したサイズにしたい場合は、コーデックはそのサイズを得るために最善を尽くすよう試みます。\r\n\r\n説明はKoepi(de_koepi@lycos.de)のXvidコーデックのヘルプファイルから引用しました。
 
 [204]
 0=代替圧縮
@@ -1690,13 +1693,13 @@ Use \n for line breaks.=改行には\nを使用します。
 0=効果なし：使用中のビデオレンダラはキューをサポートしていません。
 
 [288]
-0=1. ffdshow video decoderについて\r\n\r\nffdshowはDivX動画を展開するためのDirectShowデコーディングフィルターです。\r\nffmpegプロジェクトのlibavcodecや、映像展開に(XviDコーデックがインストールされていればxvid.dllも使用します)、および低ビットレートの動画のビジュアルクオリティを高めるためにmplayerのポストプロセッシングコードを使用します。\r\nGPLのMPEG4エンコーダーの非営利的な実装である、XviDオリジナルのDirectShowフィルターに基づいています。\r\n\r\n2. 特徴\r\n\r\n- 最適化されたMMX、SSEや3DNow!コードを使用する高速な映像展開\r\n- さまざまなコーデックのサポート : XviDや全てのバージョンのDivX\r\n- MSMPEG4 V1、MSMPEG4 V2、MSMPEG4 V3やH.263の付加的サポート\r\n- MPEG1やMPEG2のような他のデコーダーの包括的なポストプロセッシングフィルターとしての機能\r\n- より高い再生クオリティのための画像のポストプロセッシング\r\n- 自動クオリティコントロール : CPU負荷が高い場合はポストプロセッシングレベルを自動的に減らします\r\n- 色あい、色の濃さや輝度の補正(MMXに最適化されています)\r\n- 2つのシャープ化フィルター : xsharpenとunsharp mask\r\n- ぼかしと時間軸スムーザー\r\n- メニューつきのトレイアイコンと設定ダイアログへのクイックアクセス\r\n- 選択可能な2つのアルゴリズムによるノイズ\r\n- リサイズとアスペクト比率の変更\r\n- 字幕\r\n- 完全にフリーのソフトウェア : ffdshowはGPLに基づいて配布されます\r\n\r\n3. 設定\r\n\r\nそのうち記される予定です。\r\n\r\n4. ウェブリンク\r\n\r\nffdshow\r\n  http://cutka.szm.sk/ffdshow/ あるいは \r\n  http://sourceforge.net/projects/ffdshow/\r\nXviD\r\n  http://www.xvid.org/\r\nffmpeg\r\n  http://ffmpeg.org/\r\nlibmpeg2\r\n  http://libmpeg2.sourceforge.net/\r\nmplayer\r\n  http://www.mplayerhq.hu/\r\nDVD2AVI\r\n  http://arbor.ee.ntu.edu.tw/~jackei/dvd2avi/\r\nxsharpen、unsharp mask、msharpen、色あいや色の濃さに関するコード\r\n  http://sauron.mordor.net/dgraft/index.html\r\n\r\nそして\r\nDoom9\r\n  http://www.doom9.org/\r\n\r\n5. コピー\r\n\r\n使用された全てのソース(使用CPUの検出ルーティンを除く)とffdshowはGPLに基づいて配布されます。\r\ncopying.txtを参照してください。\r\n\r\n\r\nMilan Cutka (milan_cutka@yahoo.com)
+0=1. ffdshow video decoderについて\r\n\r\nffdshowはDivX動画を展開するためのDirectShowデコーディングフィルターです。\r\nffmpegプロジェクトのlibavcodecや、映像展開に(Xvidコーデックがインストールされていればxvid.dllも使用します)、および低ビットレートの動画のビジュアルクオリティを高めるためにmplayerのポストプロセッシングコードを使用します。\r\nGPLのMPEG4エンコーダーの非営利的な実装である、XvidオリジナルのDirectShowフィルターに基づいています。\r\n\r\n2. 特徴\r\n\r\n- 最適化されたMMX、SSEや3DNow!コードを使用する高速な映像展開\r\n- さまざまなコーデックのサポート : Xvidや全てのバージョンのDivX\r\n- MSMPEG4 V1、MSMPEG4 V2、MSMPEG4 V3やH.263の付加的サポート\r\n- MPEG1やMPEG2のような他のデコーダーの包括的なポストプロセッシングフィルターとしての機能\r\n- より高い再生クオリティのための画像のポストプロセッシング\r\n- 自動クオリティコントロール : CPU負荷が高い場合はポストプロセッシングレベルを自動的に減らします\r\n- 色あい、色の濃さや輝度の補正(MMXに最適化されています)\r\n- 2つのシャープ化フィルター : xsharpenとunsharp mask\r\n- ぼかしと時間軸スムーザー\r\n- メニューつきのトレイアイコンと設定ダイアログへのクイックアクセス\r\n- 選択可能な2つのアルゴリズムによるノイズ\r\n- リサイズとアスペクト比率の変更\r\n- 字幕\r\n- 完全にフリーのソフトウェア : ffdshowはGPLに基づいて配布されます\r\n\r\n3. 設定\r\n\r\nそのうち記される予定です。\r\n\r\n4. ウェブリンク\r\n\r\nffdshow\r\n  http://cutka.szm.sk/ffdshow/ あるいは \r\n  http://sourceforge.net/projects/ffdshow/\r\nXvid\r\n  http://www.xvid.org/\r\nffmpeg\r\n  http://ffmpeg.org/\r\nlibmpeg2\r\n  http://libmpeg2.sourceforge.net/\r\nmplayer\r\n  http://www.mplayerhq.hu/\r\nDVD2AVI\r\n  http://arbor.ee.ntu.edu.tw/~jackei/dvd2avi/\r\nxsharpen、unsharp mask、msharpen、色あいや色の濃さに関するコード\r\n  http://sauron.mordor.net/dgraft/index.html\r\n\r\nそして\r\nDoom9\r\n  http://www.doom9.org/\r\n\r\n5. コピー\r\n\r\n使用された全てのソース(使用CPUの検出ルーティンを除く)とffdshowはGPLに基づいて配布されます。\r\ncopying.txtを参照してください。\r\n\r\n\r\nMilan Cutka (milan_cutka@yahoo.com)
 
 [289]
 0=1. ffdshow audio decoderについて\r\n\r\n\r\n2. 特徴\r\n\r\n\r\n3. 設定\r\n\r\nそのうち記される予定です。\r\n\r\n4. ウェブリンク\r\n\r\nffdshow\r\n  http://cutka.szm.sk/ffdshow/ あるいは\r\n  http://sourceforge.net/projects/ffdshow/\r\nffmpeg\r\n  http://ffmpeg.org/\r\nmplayer\r\n  http://www.mplayerhq.hu/\r\n\r\nそして\r\nDoom9\r\n  http://www.doom9.org/\r\n\r\n5. コピー\r\n\r\n使用された全てのソースとffdshowはGPLに基づいて配布されます。\r\ncopying.txtを参照してください。\r\n\r\n\r\nMilan Cutka (milan_cutka@yahoo.com)
 
 [290]
-0=ffdshowについて\r\n\r\nXviDプロジェクトのVFWコードに基づき、そしてffmpegプロジェクトのlibavcodecライブラリーを使用する、圧縮のためのVideo for WindowsとDirectShowコーデックです。他の圧縮ライブラリーもある程度サポートしています。\r\n\r\n\r\n特徴\r\n\r\n- 多様な圧縮方法 :\r\n  libavcodecやXviDを使用することによるMPEG-4との互換性(XviD、DivX 4、DivX 5) \r\n  DivX 3、MSMPEG4v2、MSMPEG4v1との互換性\r\n  WMV1/7、WMV2/8\r\n  H263、H263+\r\n  YV12色空間のHuffYUV\r\n  MJPEG\r\n  MPEG-1\r\n  Theora(標準的使用ではないので、フォーマットはまだ安定していません)\r\n  MJPEGtoolsプロジェクトのmpeg2encコードを使用することによるMPEG-2\r\n  ASF/WMVやAVIへの出力を伴う、Windows Media Video 9をサポートする全てのエンコーダー\r\n- 全てに共通のエンコードモード : 固定ビットレート、固定量子化、固定品質、2パスエンコーディング(コンプレッサーの特徴に依存します)\r\n- libavcodecやXviDへの動き予測手法の詳細な選択\r\n- Iフレームの最小と最大の間隔\r\n- libavcodecへの、量子化の最小と最大の範囲、量子化のタイプと格子状量子化選択\r\n- libavcodecとXviDへの順応的量子化(マスキング)、単一係数消去法\r\n- 開始と終了のクレジットの選択可能な圧縮\r\n- 2パスエンコーディングの2次パスへの二曲線圧縮アルゴリズム - XviD開発者の厚意による\r\n- 2次パスシミュレーション : とても精確ではありませんが、曲線圧縮の詳細なパラメーターの微調整に役立ちます\r\n- libavcodecの内部2パスコードを使用できます\r\n- ffdshowイメージフィルターによるイメージの前処理(最新のバージョンのffdshowがインストールされていなければなりません)\r\n- エンコーディング中のグラフ : エンコードプログラムがグラフを持っていない場合\r\n- Bフレームのサポート : 1から8までの連続したBフレーム\r\n- MPEG-4のクオーターピクセルと全体的動き補償のサポート\r\n- 選択可能なインターレース化エンコーディング\r\n- 圧縮展開\r\n\r\n\r\nウェブリンク\r\n\r\nffdshow\r\n  http://cutka.szm.sk/ffdshow/ あるいは\r\n  http://sourceforge.net/projects/ffdshow/\r\nXviD\r\n  http://www.xvid.org/\r\nffmpeg\r\n  http://ffmpeg.org/\r\nmplayer\r\n  http://www.mplayerhq.hu/\r\nMJPEGtools\r\n  http://mjpeg.sourceforge.net/\r\n\r\nそして\r\nDoom9\r\n  http://www.doom9.org/\r\n\r\n\r\nコピー\r\n\r\nffdshowはGPLに基づいています。copying.txtを参照してください。\r\n\r\n\r\nMilan Cutka (milan_cutka@yahoo.com)
+0=ffdshowについて\r\n\r\nXvidプロジェクトのVFWコードに基づき、そしてffmpegプロジェクトのlibavcodecライブラリーを使用する、圧縮のためのVideo for WindowsとDirectShowコーデックです。他の圧縮ライブラリーもある程度サポートしています。\r\n\r\n\r\n特徴\r\n\r\n- 多様な圧縮方法 :\r\n  libavcodecやXvidを使用することによるMPEG-4との互換性(Xvid、DivX 4、DivX 5) \r\n  DivX 3、MSMPEG4v2、MSMPEG4v1との互換性\r\n  WMV1/7、WMV2/8\r\n  H263、H263+\r\n  YV12色空間のHuffYUV\r\n  MJPEG\r\n  MPEG-1\r\n  Theora(標準的使用ではないので、フォーマットはまだ安定していません)\r\n  MJPEGtoolsプロジェクトのmpeg2encコードを使用することによるMPEG-2\r\n  ASF/WMVやAVIへの出力を伴う、Windows Media Video 9をサポートする全てのエンコーダー\r\n- 全てに共通のエンコードモード : 固定ビットレート、固定量子化、固定品質、2パスエンコーディング(コンプレッサーの特徴に依存します)\r\n- libavcodecやXvidへの動き予測手法の詳細な選択\r\n- Iフレームの最小と最大の間隔\r\n- libavcodecへの、量子化の最小と最大の範囲、量子化のタイプと格子状量子化選択\r\n- libavcodecとXvidへの順応的量子化(マスキング)、単一係数消去法\r\n- 開始と終了のクレジットの選択可能な圧縮\r\n- 2パスエンコーディングの2次パスへの二曲線圧縮アルゴリズム - Xvid開発者の厚意による\r\n- 2次パスシミュレーション : とても精確ではありませんが、曲線圧縮の詳細なパラメーターの微調整に役立ちます\r\n- libavcodecの内部2パスコードを使用できます\r\n- ffdshowイメージフィルターによるイメージの前処理(最新のバージョンのffdshowがインストールされていなければなりません)\r\n- エンコーディング中のグラフ : エンコードプログラムがグラフを持っていない場合\r\n- Bフレームのサポート : 1から8までの連続したBフレーム\r\n- MPEG-4のクオーターピクセルと全体的動き補償のサポート\r\n- 選択可能なインターレース化エンコーディング\r\n- 圧縮展開\r\n\r\n\r\nウェブリンク\r\n\r\nffdshow\r\n  http://cutka.szm.sk/ffdshow/ あるいは\r\n  http://sourceforge.net/projects/ffdshow/\r\nXvid\r\n  http://www.xvid.org/\r\nffmpeg\r\n  http://ffmpeg.org/\r\nmplayer\r\n  http://www.mplayerhq.hu/\r\nMJPEGtools\r\n  http://mjpeg.sourceforge.net/\r\n\r\nそして\r\nDoom9\r\n  http://www.doom9.org/\r\n\r\n\r\nコピー\r\n\r\nffdshowはGPLに基づいています。copying.txtを参照してください。\r\n\r\n\r\nMilan Cutka (milan_cutka@yahoo.com)
 
 [292]
 0=Windows Media Playerではキューを使用できません。

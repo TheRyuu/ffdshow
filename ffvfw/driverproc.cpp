@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2002-2004 Milan Cutka
- * based on driverproc.c from XviD VFW
+ * based on driverproc.c from Xvid VFW
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

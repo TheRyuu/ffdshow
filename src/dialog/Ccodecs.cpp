@@ -137,7 +137,7 @@ LRESULT TcodecsPage::TwidgetCodecsLv::onRbuttonDown(HWND hwnd,UINT uMsg,WPARAM w
  static const char_t *items[]=
   {
    _l("Set all stable formats to libavcodec"),
-   _l("Set all supported formats to XviD"),
+   _l("Set all supported formats to Xvid"),
    NULL
   };
  int cmd=codecsPage->selectFromMenu(items,0);
@@ -467,11 +467,11 @@ void TcodecsPageVideo::fillCodecs(void)
    formats.push_back(Tformat(_l("MS RLE")        ,IDFF_rle ,IDFF_MOVIE_LAVC,_l("MS RLE Video (MRLE)")));
    formats.push_back(Tformat(_l("Q-Team QPEG")   ,IDFF_qpeg,IDFF_MOVIE_LAVC,_l("Q-Team (QPEG, Q1.0, Q1.1)")));
    formats.push_back(Tformat(_l("Real Video")    ,IDFF_rv10,IDFF_MOVIE_LAVC,_l("Real Video (RV10, RV20, incomplete)")));
-   formats.push_back(Tformat(_l("Truemotion 1,2"),IDFF_duck,IDFF_MOVIE_LAVC,_l("doesn't support 24 bit compression.")));
+   formats.push_back(Tformat(_l("Truemotion 1,2"),IDFF_duck,IDFF_MOVIE_LAVC,_l("Doesn't support 24-bit compression.")));
    formats.push_back(Tformat(_l("Ultimotion")    ,IDFF_ulti,IDFF_MOVIE_LAVC,_l("IBM Ultimotion Video (ULTI)")));
    formats.push_back(Tformat(_l("Winnov V1")     ,IDFF_wnv1,IDFF_MOVIE_LAVC,_l("Winnov WNV1 Video (WNV1)")));
    formats.push_back(Tformat(_l("Snow")          ,IDFF_snow,IDFF_MOVIE_LAVC,_l("experimental")));
-   formats.push_back(Tformat(_l("Avisynth")      ,IDFF_avisV,IDFF_MOVIE_AVIS,_l("AVIS (Avisynth AVI files)")));
+   formats.push_back(Tformat(_l("AviSynth")      ,IDFF_avisV,IDFF_MOVIE_AVIS,_l("AVIS (AviSynth AVI files)")));
    for (Tformats::iterator f=formats.begin();f!=formats.end();f++)
     {
      f->decoderCheck(config);
@@ -485,7 +485,7 @@ void TcodecsPageVideo::fillCodecs(void)
    {_l("all supported")   ,FOURCC_MASK_ALL},
    {_l("all YUV")         ,FOURCC_MASK_YUV},
    {_l("all RGB")         ,FOURCC_MASK_RGB},
-   {_l("8-bit palettized"),FOURCC_MASK_PAL},
+   {_l("8-bit palletized"),FOURCC_MASK_PAL},
    NULL,0
   };
  for (int i=0;rawincsps[i].name;i++)
@@ -540,7 +540,7 @@ void TcodecsPageAudio::fillCodecs(void)
    formats.push_back(Tformat(_l("Real Audio")  ,IDFF_ra         ,IDFF_MOVIE_LAVC,_l("Real Audio 1.0 (14.4K) & RealAudio 2.0 (28.8K)")));
    formats.push_back(Tformat(_l("IMC")         ,IDFF_imc        ,IDFF_MOVIE_LAVC,_l("IMC compatible decoder")));
    formats.push_back(Tformat(_l("ATRAC3")      ,IDFF_atrac3     ,IDFF_MOVIE_LAVC,_l("ATRAC3 compatible decoder")));
-   formats.push_back(Tformat(_l("AVIS")        ,IDFF_avisA      ,IDFF_MOVIE_AVIS,_l("AVIS (Avisynth AVI files)")));
+   formats.push_back(Tformat(_l("AVIS")        ,IDFF_avisA      ,IDFF_MOVIE_AVIS,_l("AVIS (AviSynth AVI files)")));
   }
  //Tformat::Tdecoder movie_raw[]={{"any",IDFF_MOVIE_RAW},{NULL,0)};
  for (Tformats::iterator f=formats.begin();f!=formats.end();f++)

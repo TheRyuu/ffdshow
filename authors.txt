@@ -34,7 +34,7 @@ cinepak decoder by
 
 colorspaces conversion from
 
-  XviD
+  Xvid
   mplayer
   AviSynth
 
