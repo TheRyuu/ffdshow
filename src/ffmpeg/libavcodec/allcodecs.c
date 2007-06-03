@@ -163,7 +163,6 @@ void avcodec_register_all(void)
 
     /* adpcm codecs */
     PCM_CODEC(CODEC_ID_ADPCM_4XM, adpcm_4xm);
-    PCM_CODEC(CODEC_ID_ADPCM_ADX, adpcm_adx);
     PCM_CODEC(CODEC_ID_ADPCM_CT, adpcm_ct);
     PCM_CODEC(CODEC_ID_ADPCM_EA, adpcm_ea);
     PCM_CODEC(CODEC_ID_ADPCM_G726, adpcm_g726);
@@ -180,7 +179,6 @@ void avcodec_register_all(void)
     PCM_CODEC(CODEC_ID_ADPCM_SWF, adpcm_swf);
     PCM_CODEC(CODEC_ID_ADPCM_XA, adpcm_xa);
     PCM_CODEC(CODEC_ID_ADPCM_YAMAHA, adpcm_yamaha);
-    PCM_CODEC(CODEC_ID_ADPCM_THP, adpcm_thp);
 
 #undef PCM_CODEC
 

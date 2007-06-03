@@ -63,6 +63,14 @@
 #endif
 #endif
 
+#ifndef av_unused
+#if defined(__GNUC__)
+#    define av_unused __attribute__((unused))
+#else
+#    define av_unused
+#endif
+#endif
+
 /* Suppress restrict if it was not defined in config.h.  */
 #ifndef restrict
 #    define restrict

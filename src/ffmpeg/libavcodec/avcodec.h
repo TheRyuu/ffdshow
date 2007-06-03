@@ -2111,7 +2111,6 @@ PCM_CODEC(CODEC_ID_PCM_MULAW,   pcm_mulaw);
 /* ADPCM codecs */
 
 PCM_CODEC(CODEC_ID_ADPCM_4XM,     adpcm_4xm);
-PCM_CODEC(CODEC_ID_ADPCM_ADX,     adpcm_adx);
 PCM_CODEC(CODEC_ID_ADPCM_CT,      adpcm_ct);
 PCM_CODEC(CODEC_ID_ADPCM_EA,      adpcm_ea);
 PCM_CODEC(CODEC_ID_ADPCM_G726,    adpcm_g726);
@@ -2126,7 +2125,6 @@ PCM_CODEC(CODEC_ID_ADPCM_SBPRO_3, adpcm_sbpro_3);
 PCM_CODEC(CODEC_ID_ADPCM_SBPRO_4, adpcm_sbpro_4);
 PCM_CODEC(CODEC_ID_ADPCM_SMJPEG,  adpcm_ima_smjpeg);
 PCM_CODEC(CODEC_ID_ADPCM_SWF,     adpcm_swf);
-PCM_CODEC(CODEC_ID_ADPCM_THP,     adpcm_thp);
 PCM_CODEC(CODEC_ID_ADPCM_XA,      adpcm_xa);
 PCM_CODEC(CODEC_ID_ADPCM_YAMAHA,  adpcm_yamaha);
 
@@ -2616,10 +2614,6 @@ attribute_deprecated void av_free_static(void);
  * and should correctly use static arrays
  */
 attribute_deprecated void *av_mallocz_static(unsigned int size);
-
-/* FOXFIX: Not in lavc */
-/* add by bero : in adx.c */
-int is_adx(const unsigned char *buf,size_t bufsize);
 
 /**
  * Copy image 'src' to 'dst'.

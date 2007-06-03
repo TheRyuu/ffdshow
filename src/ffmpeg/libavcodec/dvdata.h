@@ -30,15 +30,6 @@
  * 525/60 and 625/50, but the plans are to use it for various
  * DV specs as well (e.g. SMPTE314M vs. IEC 61834).
  */
-
-#ifndef attribute_unused
-#if defined(__GNUC__)
-#    define attribute_unused __attribute__((unused))
-#else
-#    define attribute_unused
-#endif
-#endif
-
 typedef struct DVprofile {
     int              dsf;                 /* value of the dsf in the DV header */
     int              frame_size;          /* total size of one frame in bytes */
@@ -2544,7 +2535,7 @@ static const uint8_t dv_audio_shuffle625[12][9] = {
   {  31,  67, 103,  21,  57,  93,  11,  47,  83},
 };
 
-static const attribute_unused int dv_audio_frequency[3] = {
+static const av_unused int dv_audio_frequency[3] = {
     48000, 44100, 32000,
 };
 

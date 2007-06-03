@@ -66,6 +66,13 @@ static inline void renorm_encoder(RangeCoder *c){
     }
 }
 
+static inline int get_rac_count(RangeCoder *c){
+    int x= c->bytestream - c->bytestream_start + c->outstanding_count;
+    if(c->outstanding_byte >= 0)
+        x++;
+    return 8*x - av_log2(c->range);
+}
+
 static inline void put_rac(RangeCoder *c, uint8_t * const state, int bit){
     int range1= (c->range * (*state)) >> 8;
 
@@ -96,7 +103,7 @@ static inline void refill(RangeCoder *c){
 
 static inline int get_rac(RangeCoder *c, uint8_t * const state){
     int range1= (c->range * (*state)) >> 8;
-    int attribute_unused one_mask;
+    int av_unused one_mask;
 
     c->range -= range1;
 #if 1

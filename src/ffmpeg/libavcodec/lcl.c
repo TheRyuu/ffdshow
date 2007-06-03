@@ -41,6 +41,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "avcodec.h"
 #include "bitstream.h"
 
@@ -357,13 +358,12 @@ static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, uint8
                 for (row = 0; row < height; row++) {
                     pixel_ptr = row * width * 3;
                     yq = encoded[pixel_ptr++];
-                    uqvq = encoded[pixel_ptr++];
-                    uqvq+=(encoded[pixel_ptr++] << 8);
+                    uqvq = AV_RL16(encoded+pixel_ptr);
+                    pixel_ptr += 2;
                     for (col = 1; col < width; col++) {
                         encoded[pixel_ptr] = yq -= encoded[pixel_ptr];
-                        uqvq -= (encoded[pixel_ptr+1] | (encoded[pixel_ptr+2]<<8));
-                        encoded[pixel_ptr+1] = (uqvq) & 0xff;
-                        encoded[pixel_ptr+2] = ((uqvq)>>8) & 0xff;
+                        uqvq -= AV_RL16(encoded+pixel_ptr+1);
+                        AV_WL16(encoded+pixel_ptr+1, uqvq);
                         pixel_ptr += 3;
                     }
                 }
@@ -747,9 +747,9 @@ AVCodec zlib_decoder = {
 	CODEC_TYPE_VIDEO,
 	CODEC_ID_ZLIB,
 	sizeof(LclContext),
-	decode_init,
-	NULL,
-	decode_end,
-	decode_frame,
-	CODEC_CAP_DR1,
+	/*.init=*/decode_init,
+	/*.encode=*/NULL,
+	/*.close=*/decode_end,
+	/*.decode=*/decode_frame,
+	/*.capabilities=*/CODEC_CAP_DR1,
 };
