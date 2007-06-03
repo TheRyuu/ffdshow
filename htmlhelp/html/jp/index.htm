@@ -20,15 +20,13 @@
       &nbsp;<a class="nav" href="../de/index.htm"><img src="../images/germany.png" title="German changelog" alt="German changelog" width="27" height="17" />&nbsp;German</a>
     </div>
 
-    <p>
-      <span class="big_caption">
-       <a name="top" id="top">更新履歴</a>
-      </span>
+    <p class="big_caption">
+      <a name="top" id="top">更新履歴</a>
     </p>
 
-    <span class="normal">オリジナルのffdshow projectの最新バージョンからマルチスレッドパッチを取り除いた状態を基準としています。<br />
+    <p class="normal">オリジナルのffdshow projectの最新バージョンからマルチスレッドパッチを取り除いた状態を基準としています。<br />
       Navigate to:
-    </span>
+    </p>
     <ul class="links">
       <li><a class="nav" href="#fixes">不具合の修正</a></li>
       <li><a class="nav" href="#features">新機能</a></li>
@@ -42,13 +40,18 @@
         <span class="medium_caption">不具合の修正</span>
       </a><br />
         <span class="normal">tryoutsで新たに加わり修正された不具合は含みません。</span>
-      </p>
+    </p>
 
-    <p>
-      <span class="small_caption">beta2以降の修正</span>
+    <p class="small_caption">
+      beta2以降の修正
     </p>
 
     <ul class="fixed">
+      <li>libavcodecのエンコーダが25fps以外のフレームレートを受け付けなかった。他のエンコーダでも微妙にフレームレートがずれるなどの不具合があった。</li>
+      <li>AviSynthのスクリプトでffdshowaudio()を使うとエラーが発生していた。</li>
+      <li>UNICODEの字幕に0x1aが含まれていると字幕が途中で切れてしまっていた。</li>
+      <li>AviSynthのフィルタがRBG色空間で出力すると画像が上下反転していた。</li>
+      <li>VFWデコーダのRaw video-YV12が有効になっている時にDirectShow経由でVFW codecが使用されると画像が上下反転していた。</li>
       <li>Winampプラグイン安定性の改善。</li>
       <li>再生中にリサイズのダイアログで高さに（800の最初の一文字として）8を入力するとクラッシュしていた（メソッドによる、lanczosならタップが4以上のとき）。</li>
       <li>リサイズ使用中にビデオのピクセルのアスペクト比率（SAR）のみが変わると無視されていた。</li>
@@ -56,8 +59,8 @@
       <li>AviSynthのスクリプトが保存出来なかった（Unicode版のみ）。</li>
 　　</ul>
 
-    <p>
-      <span class="small_caption">beta2以前の修正</span>
+    <p class="small_caption">
+      beta2以前の修正
     </p>
 
     <ul class="fixed">
@@ -92,8 +95,8 @@
       <li>Kernel deinterlaceの次の内部フィルターが１フレームおきにスキップされていた。次の内部フィルターがリサイズであった場合フレーム毎にビデオサイズが変化していた。</li>
     </ul>
 
-    <p>
-      <span class="small_caption">beta1までの修正</span>
+    <p class="small_caption">
+      beta1までの修正
     </p>
 
     <ul class="fixed">
@@ -104,7 +107,7 @@
       <li>奇数ラインの動画再生時にフリーズした。</li>
       <li>ミキサー・ヘッドフォンの仮想空間化が有効になっているとモノラルの再生時にクラッシュした。</li>
       <li>オンスクリーンディスプレーで全角文字を含むファイル名を表示させると途中で切れるなど日本語文字列処理に問題があった（主としてセキュリティ上の問題）。</li>
-      <li>XVIDのN-VOPフレームに字幕などが重なると表示できなかった。ファイルの終わりに長いN-VOPフレームの連続があると早期終了してしまった。</li>
+      <li>XvidのN-VOPフレームに字幕などが重なると表示できなかった。ファイルの終わりに長いN-VOPフレームの連続があると早期終了してしまった。</li>
       <li>日本語ダイアログの右側が３０％程度切れていた（ダイアログの起動方法による）。</li>
       <li>「ビデオデコーダーの設定」-「出力」にある"DV"のチェックが外せなかった。</li>
       <li>インストール時に更新が必要なファイルがロックされているとインストール出来なかった。</li>
@@ -129,27 +132,34 @@
       <li>オーバーレイ・コントロールで初期値が正しくロードされなかった。</li>
       <li>oblivion, morrowind（いずれもゲーム）でクラッシュしていた。</li>
       <li>Windows Vistaのダイアログでコーデックの選択枝が上のほうに表示されていた。</li>
-      <li>AvisynthのスクリプトにエラーがあるとOSD表示されるが、そのエラーメッセージがAvisynthを無効にしても消えなかった。</li>
+      <li>AviSynthのスクリプトにエラーがあるとOSD表示されるが、そのエラーメッセージがAviSynthを無効にしても消えなかった。</li>
     </ul>
 
-    <p>
+    <p class="medium_caption">
       <a name="features" id="features">
-        <span class="medium_caption">新機能</span>
+        新機能
       </a>
     </p>
 
-    <p>
-      <span class="small_caption">beta2以降の追加</span>
+    <p class="small_caption">
+      beta2以降の追加
     </p>
 
     <ul class="added">
+      <li>libavcodecのエンコーダ・エラーの原因を表示するようにした。</li>
+      <li>AviSynthフィルタのスクリプト内で現在のフレームだけでなく前後のフレームへの参照を可能にする「バッファー後方/前方」を追加。「3:2プルダウン」のオプションとあわせて高度な逆テレシネ変換やインターレース解除をサポート。</li>
+      <li>アイコンを更新（ <img src="..\images\modern_icon_xp.bmp" alt="new icons" align="absmiddle"/> ）。旧アイコンも選択できます。</li>
+      <li>オーディオの圧縮フォーマット、ATRAC3（アトラック、Adaptive TRansform Acoustic Coding）に対応</li>
+      <li>Xvidエンコーダのマルチスレッド対応</li>
+      <li>Windows VistaのSPDIF問題に対応（オーディオデコーダーの設定->出力->接続先）。</li>
+      <li>Winampプラグインでマルチチャンネルオーディオを扱えるようになった。</li>
       <li>リサイズの設定で「ピクセルのアスペクト比率（SAR）を内部的に処理する」機能を追加。</li>
       <li>リサイズのGUIに「横幅を指定する」を追加（今まで高さに0を入力するGUIだったもの）。 </li>
       <li>オーディオデコーダーの出力形式としてマルチチャンネルストリームのみをAC3エンコードする機能を追加（直接SPDIF出力できないマルチチャンネル・オーディオを一旦AC3にエンコードしてAVアンプへ出力することを意図したもの）。</li>
     </ul>
 
-    <p>
-      <span class="small_caption">beta2以前の追加</span>
+    <p class="small_caption">
+      beta2以前の追加
     </p>
 
     <ul class="added">
@@ -167,8 +177,8 @@
       <li>キュー：VMR9に内蔵されているキューを利用できるようにした。</li>
     </ul>
 
-    <p>
-      <span class="small_caption">beta1までの追加</span>
+    <p class="small_caption">
+      beta1までの追加
     </p>
 
     <ul class="added">
@@ -183,9 +193,9 @@
       <li>SVQ3のデコード時にスプリッタから十分な情報が得られなかった際エラーメッセージを表示するようにした。</li>
     </ul>
 
-    <p>
+    <p class="big_caption">
       <a name="download" id="download">
-        <span class="big_caption">ダウンロード</span>
+        ダウンロード
       </a>
     </p>
 
@@ -194,10 +204,8 @@
         <li><a class="nav" href="http://sourceforge.net/project/showfiles.php?group_id=173941">ダウンロード　Nightly builds(最新版)</a></li>
     </ul>
 
-    <div>
-      <span class="normal">
-        <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
-      </span>
+    <div class="normal">
+      <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
     </div>
 
     <div style="padding-top:20px">

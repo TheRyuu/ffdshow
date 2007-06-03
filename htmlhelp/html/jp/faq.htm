@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -13,7 +13,7 @@
 
 <body>
   <a href="http://ffdshow-tryout.sourceforge.net/phpBB2/">
-      <img src="../images/logo_phpBB.png" title="ffdshow tryouts" alt="ffdshow tryouts" width="200" height="91" />
+    <img src="../images/logo_phpBB.png" title="ffdshow tryouts" alt="ffdshow tryouts" width="200" height="91" />
   </a>
 
   <div style="text-align:right" class="smallest_caption">
@@ -22,10 +22,8 @@
     &nbsp;<a class="nav" href="../de/faq.htm"><img src="../images/germany.png" title="German FAQ" alt="German FAQ" width="27" height="17" />&nbsp;German</a>
   </div>
 
-  <p>
-    <span class="big_caption">
-      <a name="top" id="top">FAQ</a>
-    </span>
+  <p class="big_caption">
+    <a name="top" id="top">FAQ</a>
   </p>
 
   <ul class="links">
@@ -36,47 +34,36 @@
     <li><a class="nav" href="#multithreaded">ffdshowはマルチスレッドに対応していますか？</a></li>
   </ul>
 
-  <p>
-    <span class="small_caption">
-      <a name="difference" id="difference">generic buildsとSSE builds、generic builds(ICL 9.1)の違いは？</a>
-    </span>
+  <p class="small_caption">
+    <a name="difference" id="difference">generic buildsとSSE builds、generic builds(ICL 9.1)の違いは？</a>
   </p>
 
-  <p>
-    <span class="normal">主な違いは<em>ffdshow.ax</em> をコンパイルするのに使用されたコンパイラです。現在4つのコンパイラが使用されています。<em>MSVC71(Microsoft Visual C++ 7.1)</em>, <em>MSVC80</em>, <em>GCC</em> と <em>ICL9</em>です。<br />
-      それぞれに対して必要なCPUは以下のとおりです｡
-    </span>
+  <p class="normal">
+    主な違いは<em>ffdshow.ax</em> をコンパイルするのに使用されたコンパイラです。現在4つのコンパイラが使用されています。<em>MSVC71(Microsoft Visual C++ 7.1)</em>, <em>MSVC80</em>, <em>GCC</em> と <em>ICL9</em>です。<br />
+    それぞれに対して必要なCPUは以下のとおりです｡
   </p>
-
 
   <ul class="normal">
     <li>generic buildsはPentium-mmx/AMD K6以降で使用可能です。</li>
-    <li>generic builds(ICL 9.1)はPentium-mmx/AMD K6以降で使用可能です。</li>
-    <li>SSE buildsはPentium3/Athlon Xp以降のCPUが必要です。</li>
+    <li>SSE builds (ICL &amp; GCC) はPentium3/Athlon Xp以降のCPUが必要です。</li>
     <li>SSE2 buildsはPentium4/Athlon64以降のCPUが必要です。</li>
   </ul>
 
-  <p>
-    <span class="small_caption">
-      <a name="performance" id="performance">デコーダが一番早いビルドはどれですか？</a>
-    </span>
+  <p class="small_caption">
+    <a name="performance" id="performance">デコーダが一番早いビルドはどれですか？</a>
   </p>
 
-  <p>
-    <span class="normal">どのビルダーもffdshowの主力デコーダである<em>libavcodec</em> はGCCを使ってコンパイルしています。<em>libavcodec</em> はCPUのサポートする命令セット(SSE/SSE2など)を自動検出し利用できるアセンブラで書かれたコードをたくさん持っています｡コンパイラによる最適化の余地はほとんどないと言えます｡したがって純粋なデコーダとしての性能を比較した場合ビルドによる<strong>違いはありません</strong>。
-    </span>
+  <p class="normal">
+    どのビルダーもffdshowの主力デコーダである<em>libavcodec</em> はGCCを使ってコンパイルしています。<em>libavcodec</em> はCPUのサポートする命令セット(SSE/SSE2など)を自動検出し利用できるアセンブラで書かれたコードをたくさん持っています｡コンパイラによる最適化の余地はほとんどないと言えます｡したがって純粋なデコーダとしての性能を比較した場合ビルドによる<strong>違いはありません</strong>。
   </p>
 
-  <p>
-    <span class="small_caption">
-      <a name="perf_filters" id="perf_filters">画像処理フィルタを使用したときに一番早いビルドはどれですか？</a>
-    </span>
+  <p class="small_caption">
+    <a name="perf_filters" id="perf_filters">画像処理フィルタを使用したときに一番早いビルドはどれですか？</a>
   </p>
 
-  <p>
-    <span class="normal"><em>ffdshow.ax</em> を最適化したビルドはある種のフィルタを使用する場合パフォーマンスに違いが見られます。<br />
-      下のリストは最適化によってメリットが得られるフィルタです。
-    </span>
+  <p class="normal">
+    <em>ffdshow.ax</em> を最適化したビルドはある種のフィルタを使用する場合パフォーマンスに違いが見られます。<br />
+    下のリストは最適化によってメリットが得られるフィルタです。
   </p>
 
   <ul class="normal">
@@ -84,18 +71,17 @@
     <li>denoise3d</li>
   </ul>
 
-  <p>
-    <span class="normal">次のグラフは画像処理フィルタを使用したときに最適化されたビルドでパフォーマンスの改善が見られることを示します｡<br /><br />
-      <img src="images/benchmark.png" width="498" height="600" title="ffdshow build 802 benchmark" alt="ffdshow build 802 benchmark" /><br />
-    </span>
+  <p class="normal">
+    次のグラフは画像処理フィルタを使用したときに最適化されたビルドでパフォーマンスの改善が見られることを示します｡<br /><br />
+    <img src="images/benchmark.png" width="498" height="600" title="ffdshow build 802 benchmark" alt="ffdshow build 802 benchmark" /><br />
     <span class="small">
       Test setup: Pentium 4 2.8GHz (Northwood), Windows XP SP2, null renderer使用<br />
       Test sample: <a href="http://trailers.divx.com/Dreamworks/Madagascar_HD.zip">Madagascar.avi</a> (DX50)
     </span>
   </p>
 
-  <p>
-    <span class="normal"><strong>まとめ</strong></span>
+  <p class="normal">
+    <strong>まとめ</strong>
   </p>
 
   <ul class="normal">
@@ -107,34 +93,29 @@
       ベンチマークにはHaaliの<a  class="links" href="http://haali.cs.msu.ru/mkv/timeCodec.exe">timeCodec.exe</a>[96KB] を使用します。timeCodec.exeが動作するためには <a href="http://haali.cs.msu.ru/mkv/">Haali Media Splitter</a> が必要です。</li>
   </ul>
 
-  <p>
-    <span class="small_caption">
-      <a name="stable" id="stable">どのビルドが一番安定していますか？</a>
-    </span>
+  <p class="small_caption">
+    <a name="stable" id="stable">どのビルドが一番安定していますか？</a>
   </p>
 
-  <p>
-    <span class="normal">多分generic buildsが最も安定しています｡しかしGCCによるビルドに既知の問題はありません。ICLビルドは唯一古いx264エンコーダによって作られたファイルでクラッシュするという問題があるのみで、通常実使用の場面でそういったファイルに遭遇することはないでしょう。したがって安定性の面ではどのビルドを使ってもよいと言えるでしょう｡
-    </span>
+  <p class="normal">
+    多分generic buildsが最も安定しています｡しかしGCCによるビルドに既知の問題はありません。ICLビルドは唯一古いx264エンコーダによって作られたファイルでクラッシュするという問題があるのみで、通常実使用の場面でそういったファイルに遭遇することはないでしょう。したがって安定性の面ではどのビルドを使ってもよいと言えるでしょう｡
   </p>
 
-  <p>
-    <span class="small_caption">
-      <a name="multithreaded" id="multithreaded">ffdshowはマルチスレッドに対応していますか？</a>
-    </span>
+  <p class="small_caption">
+    <a name="multithreaded" id="multithreaded">ffdshowはマルチスレッドに対応していますか？</a>
   </p>
 
   <ul class="normal">
     <li>リサイズは完全にマルチスレッド化されておりデュアルコアCPUなどでより高速に処理されます（設定不要）。ただしPentium4 HTでは効果がありません。</li>
+    <li>xvidエンコーダはマルチスレッドに対応しています。</li>
+    <li>x264エンコーダはマルチスレッドに対応しています。</li>
     <li>「キュー、その他」の「出力サンプルをキューに入れる」をチェックするとマルチスレッド処理を使った高速化がなされます。シングルCPUでも効果が得られる場合があります。</li>
     <li>libavcodecのmpeg1/2デコーダはマルチスレッド対応しており、「デコーダーオプション」のスレッド数を設定することで高速化されます。Pentium4 HTでは効果が見られません。</li>
-    <li>libavcodecのMPEG4/MPEG2/MPEG1エンコーダはマルチスレッドに対応しています</li>
+    <li>libavcodecのMPEG4/MPEG2/MPEG1エンコーダはマルチスレッドに対応しています 。</li>
   </ul>
 
-  <div>
-    <span class="normal">
-      <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
-    </span>
+  <div class="normal">
+    <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
   </div>
 
   <div style="padding-top:20px">
