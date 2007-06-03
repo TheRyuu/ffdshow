@@ -259,6 +259,8 @@ repeat:
    quantsStride=stats.data.vop.qscale_stride;
    quantType=1;
    TffPict p1=pict;
+   DECODER *dec=(DECODER *)dechandle;
+   p1.fieldtype=dec->interlacing?(dec->top_field_first?FIELD_TYPE::INT_TFF:FIELD_TYPE::INT_BFF):FIELD_TYPE::PROGRESSIVE_FRAME;
    if (pIn)
     {
      p1.rtStart=rtStart;
