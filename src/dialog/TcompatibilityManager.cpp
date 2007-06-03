@@ -177,7 +177,12 @@ INT_PTR TcompatibilityManager::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
           if (instpath.size() && instpath[instpath.size()-1]!='\\')
            instpath=instpath+_l("\\");
           tsprintf(param, _l("%sopenIE.js %s %d"),instpath.c_str(),filename.c_str(),revision);
-          ShellExecute(NULL, _l("open"),_l("wscript.exe") ,param , NULL, SW_SHOWDEFAULT);
+          if ((int)ShellExecute(NULL, _l("open"),_l("wscript.exe") ,param , NULL, SW_SHOWDEFAULT)<=32)
+           {
+            char_t url[MAX_PATH+80];
+            tsprintf(url,_l("http://ffdshow-tryout.sourceforge.net/compmgr.php?app=%s&rev=%d"),filename.c_str(),revision);
+            ShellExecute(NULL, _l("open"),url , NULL, NULL, SW_HIDE);
+           }
          }
         EndDialog(m_hwnd,true);
         return TRUE;
