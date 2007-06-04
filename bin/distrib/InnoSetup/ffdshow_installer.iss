@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1177
+#define tryout_revision = 1245
 #define buildyear = 2007
-#define buildmonth = '05'
-#define buildday = '17'
+#define buildmonth = '06'
+#define buildday = '04'
 
 ; Build specific options
 #define unicode_required = True
@@ -1088,7 +1088,7 @@ begin
     complist.edt.text := regstr;
   end else begin
     complist.edt.Text := 'aegisub.exe'#13#10'ALLPlayer.exe'#13#10'ALShow.exe'#13#10'ass_help3r.exe'#13#10'avipreview.exe'#13#10
-                         'aviutl.exe'#13#10'BePipe.exe'#13#10'bsplay.exe'#13#10'bsplayer.exe'#13#10'CorePlayer.exe'#13#10'coreplayer.exe'#13#10
+                         'aviutl.exe'#13#10'BePipe.exe'#13#10'bsplay.exe'#13#10'bsplayer.exe'#13#10'christv.exe'#13#10'CorePlayer.exe'#13#10'coreplayer.exe'#13#10
                          'crystalfree.exe'#13#10'DScaler.exe'#13#10'dv.exe'#13#10'DVDMaker.exe'#13#10'ehshell.exe'#13#10
                          'firefox.exe'#13#10'gom.exe'#13#10'graphedit.exe'#13#10'graphedt.exe'#13#10'gspot.exe'#13#10
                          'iexplore.exe'#13#10'JetAudio.exe'#13#10'kmplayer.exe'#13#10'LA.exe'#13#10'Lilith.exe'#13#10
@@ -1141,7 +1141,9 @@ begin
   compApps[7].name := 'graphedit.exe';
   compApps[8].rev := 1241;
   compApps[8].name := 'BePipe.exe';
-  compApps[9].rev := 0;
+  compApps[9].rev := 1245;
+  compApps[9].name := 'christv.exe';
+  compApps[10].rev := 0;
 
 // Compatibility list
   ComplistVideo.skipped := False;
