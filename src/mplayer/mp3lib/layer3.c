@@ -318,7 +318,7 @@ static void init_layer3(int down_sample_sblimit)
  * read additional side information (for MPEG 1 and MPEG 2)
  */
 static int III_get_side_info(mp3lib_ctx *ctx,struct III_sideinfo *si,int stereo,
- int ms_stereo,long sfreq,int single,int lsf)
+ int ms_stereo,int sfreq,int single,int lsf)
 {
    int ch, gr;
    int powdiff = (single == 3) ? 4 : 0;
@@ -1255,7 +1255,7 @@ static int do_layer3(mp3lib_ctx *ctx,int single){
   for (gr=0;gr<granules;gr++){
 
     { struct gr_info_s *gr_info = &(sideinfo.ch[0].gr[gr]);
-      long part2bits;
+      int part2bits;
       if(fr->lsf)
         part2bits = III_get_scale_factors_2(ctx,scalefacs[0],gr_info,0);
       else
@@ -1267,7 +1267,7 @@ static int do_layer3(mp3lib_ctx *ctx,int single){
     if(stereo == 2) {
       struct gr_info_s *gr_info = &(sideinfo.ch[1].gr[gr]);
 
-      long part2bits;
+      int part2bits;
       if(fr->lsf)
         part2bits = III_get_scale_factors_2(ctx,scalefacs[1],gr_info,i_stereo);
       else

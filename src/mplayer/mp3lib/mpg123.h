@@ -50,7 +50,7 @@ struct frame {
     int lay;
     int error_protection,crc_target;
     int bitrate_index;
-    long sampling_frequency;
+    int sampling_frequency;
     int padding;
     int extension;
     int mode;
@@ -58,7 +58,7 @@ struct frame {
     int copyright;
     int original;
     int emphasis;
-    long framesize; /* computed framesize */
+    int framesize; /* computed framesize */
 };
 
 
@@ -93,7 +93,6 @@ struct III_sideinfo
 };
 
 extern int synth_1to1_pent( struct mp3lib_ctx *,real *,int,short * );
-extern void make_decode_tables_MMX(long scaleval);
 //extern int synth_1to1_MMX( struct mp3lib_ctx*,real *,int,short * );
 extern int synth_1to1_MMX_s(real *, int, short *, short *, int *);
 
