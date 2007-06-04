@@ -146,9 +146,11 @@
     </p>
 
     <ul class="added">
+      <li>Xvidデコーダ(Xvidcore)のインターレース解除をサポート（インターレース関連フラグを設定）。</li>
+      <li>互換アプリケーションリストに挙げられていないアプリケーションがffdshowをロードしようとした時、ダイアログを表示するようにした。</li>
       <li>libavcodecのエンコーダ・エラーの原因を表示するようにした。</li>
-      <li>AviSynthフィルタのスクリプト内で現在のフレームだけでなく前後のフレームへの参照を可能にする「バッファー後方/前方」を追加。「3:2プルダウン」のオプションとあわせて高度な逆テレシネ変換やインターレース解除をサポート。</li>
-      <li>アイコンを更新（ <img style="vertical-align:middle" src="../images/modern_icon_xp.png" alt="New ffdshow icons" width="60" height="23" /> ）。旧アイコンも選択できます。</li>
+      <li>AviSynthフィルタのスクリプト内で現在のフレームだけでなく前後のフレームへの参照を可能にする「バッファー後方/前方」を追加。新たに追加された「3:2プルダウン」オプションとあわせてAviSynth用の高度な逆テレシネ変換やインターレース解除、時間軸(temporal)フィルタがffdshowできちんと作動するようになった。</li>
+      <li>アイコンを更新（ <img style="vertical-align:middle" src="../images/modern_icon_xp.png" alt="New ffdshow icons" width="60" height="23" /> ）。旧アイコンも選択可能。</li>
       <li>オーディオの圧縮フォーマット、ATRAC3（アトラック、Adaptive TRansform Acoustic Coding）に対応</li>
       <li>Xvidエンコーダのマルチスレッド対応</li>
       <li>Windows VistaのSPDIF問題に対応（オーディオデコーダーの設定->出力->接続先）。</li>
@@ -171,7 +173,7 @@
       <li>VC-1 Advanced Profileのサポートを追加（libavcodecは外部コーデックなしで動作可能）</li>
       <li>各種WMV、VC-1をMicrosoft製コーデックを使用して再生できるようにした(VC-1はコーデックまたはWMP11のインストールが必要）。</li>
       <li>x264エンコーダーを更新して復活させた(tryoutsで一旦削除したもの)。</li>
-      <li>H.264 MBAFFのハードウエア・デインターレーシングをサポート</li>
+      <li>H.264 MBAFFのインターレース解除をサポート（インターレース関連フラグを設定）。</li>
       <li>外部プログラムに使用されるAPIの修正と新機能追加（プリセット、字幕、早送り・巻き戻しなど）</li>
       <li>ポーランド語対応</li>
       <li>キュー：VMR9に内蔵されているキューを利用できるようにした。</li>

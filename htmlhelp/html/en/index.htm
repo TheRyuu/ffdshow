@@ -155,8 +155,10 @@
   </p>
 
   <ul class="added">
+    <li>Deinterlacing support (set interlace flag) for Xvid (Xvidcore) decoders.</li>
+    <li>A dialog has been added to show message when an unknown application (that is not listed in the whitelist) tries to load ffdshow.</li>
     <li>libavcodec encoders pop up error messages.</li>
-    <li>In AviSynth filter, not only current frame but also backward and forward referencing has become possible. "3:2 pulldown", advanced IVTC as well as deinterlacing are supported.</li>
+    <li>The AviSynth filter was updated to give scripts access to more frames than just the current one. Together with the added "3:2 pulldown" settings this allows many of the IVTC, deinterlacing and temporal filters for AviSynth to work properly in ffdshow.</li>
     <li>Updated icons ( <img style="vertical-align:middle" src="../images/modern_icon_xp.png" alt="New ffdshow icons" width="60" height="23" /> ). Classic icons are still available.</li>
     <li>ATRAC3 (Adaptive TRansform Acoustic Coding, compressed audio format) has been added.</li>
     <li>Xvid encoder has been multithreaded.</li>
@@ -180,7 +182,7 @@
     <li>VC-1 Advanced Profile support (libavcodec can work without external codecs).</li>
     <li>Various WMV and VC-1 content can be played using Microsoft's codec (VC-1 needs external codec or WMP11 installed).</li>
     <li>x264 encoder re-added and updated.</li>
-    <li>H.264 MBAFF hardware deinterlacing support.</li>
+    <li>Deinterlacing support (set interlace flag) for H.264 MBAFF.</li>
     <li>Corrections and new features of the Remote API: presets, subtitles, fast forward/backward etc.</li>
     <li>Polish Inno Setup translation</li>
     <li>Queue: ffdshow now uses VMR9's internal queue.</li>
