@@ -88,6 +88,7 @@
 #define FOURCC_AP41 mmioFOURCC('A','P','4','1')
 #define FOURCC_MPG3 mmioFOURCC('M','P','G','3')
 #define FOURCC_MP4S mmioFOURCC('M','P','4','S')
+#define FOURCC_SEDG mmioFOURCC('S','E','D','G')
 #define FOURCC_MP4V mmioFOURCC('M','P','4','V')
 #define FOURCC_M4S2 mmioFOURCC('M','4','S','2')
 #define FOURCC_COL1 mmioFOURCC('C','O','L','1')

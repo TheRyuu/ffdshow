@@ -741,6 +741,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(RGB16MPLAYER,rawv==1 || rawv==3 || rawv==FOURCC_RGB6,CODEC_ID_BGR6) \
  /* exotic */ \
  FF_FOURCC_OP (MP4S,mp4v & rawmask,c_mpeg4) \
+ FF_FOURCC_OP (SEDG,mp4v & rawmask,c_mpeg4) \
  FF_FOURCC_OP (M4S2,mp4v & rawmask,c_mpeg4) \
  FF_FOURCC1_OP(COL1,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
  FF_FOURCC_OP (BLZ0,dx50 & rawmask,c_mpeg4) \
