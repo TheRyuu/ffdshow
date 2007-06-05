@@ -1087,15 +1087,15 @@ begin
     end
     complist.edt.text := regstr;
   end else begin
-    complist.edt.Text := 'aegisub.exe'#13#10'ALLPlayer.exe'#13#10'ALShow.exe'#13#10'ass_help3r.exe'#13#10'avipreview.exe'#13#10
+    complist.edt.Text := 'aegisub.exe'#13#10'ALLPlayer.exe'#13#10'ALShow.exe'#13#10'ass_help3r.exe'#13#10'avi2mpg.exe'#13#10'avipreview.exe'#13#10
                          'aviutl.exe'#13#10'BePipe.exe'#13#10'bsplay.exe'#13#10'bsplayer.exe'#13#10'christv.exe'#13#10'CorePlayer.exe'#13#10'coreplayer.exe'#13#10
-                         'crystalfree.exe'#13#10'DScaler.exe'#13#10'dv.exe'#13#10'DVDMaker.exe'#13#10'ehshell.exe'#13#10
+                         'crystalfree.exe'#13#10'cut_assistant.exe'#13#10'DScaler.exe'#13#10'dv.exe'#13#10'DVDMaker.exe'#13#10'ehshell.exe'#13#10
                          'firefox.exe'#13#10'gom.exe'#13#10'graphedit.exe'#13#10'graphedt.exe'#13#10'gspot.exe'#13#10
                          'iexplore.exe'#13#10'JetAudio.exe'#13#10'kmplayer.exe'#13#10'LA.exe'#13#10'Lilith.exe'#13#10
                          'makeAVIS.exe'#13#10'Media Center 12.exe'#13#10'Media Jukebox.exe'#13#10'megui.exe'#13#10
                          'MovieMk.exe'#13#10'mplayer2.exe'#13#10'mplayerc.exe'#13#10'Munite.exe'#13#10'Muzikbrowzer.exe'#13#10
                          'Mv2PlayerPlus.exe'#13#10'nvplayer.exe'#13#10'powerdvd.exe'#13#10'progdvb.exe'#13#10'Qonoha.exe'#13#10
-                         'realplay.exe'#13#10'rlkernel.exe'#13#10'SinkuHadouken.exe'#13#10'TheaterTek DVD.exe'#13#10
+                         'realplay.exe'#13#10'rlkernel.exe'#13#10'SinkuHadouken.exe'#13#10'SplitCam.exe'#13#10'TheaterTek DVD.exe'#13#10
                          'timecodec.exe'#13#10'ViPlay3.exe'#13#10'virtualdub.exe'#13#10'virtualdubmod.exe'#13#10
                          'winamp.exe'#13#10'windvd.exe'#13#10'wmenc.exe'#13#10'wmplayer.exe'#13#10'zplayer.exe';
   end
@@ -1123,27 +1123,33 @@ begin
 
 // new compatible applications should be written both here and edtTarget.Text := 'aegisub...
 // FIXME more smart way of initializing compApps.
-  compApps[1].rev := 1077; //975;
-  compApps[1].name := 'Munite.exe';
-  compApps[2].rev := 1077; //975;
-  compApps[2].name := 'nvplayer.exe';
-  compApps[3].rev := 1077; //975;
-  compApps[3].name := 'Qonoha.exe';
-  compApps[3].rev := 1077; //976;
-  compApps[3].name := 'SinkuHadouken.exe';
-  compApps[4].rev := 1077; //985;
-  compApps[4].name := 'Lilith.exe';
-  compApps[5].rev := 1077; //1048;
-  compApps[5].name := 'megui.exe';
-  compApps[6].rev := 1116;
-  compApps[6].name := 'TheaterTek DVD.exe';
-  compApps[7].rev := 1125;
-  compApps[7].name := 'graphedit.exe';
-  compApps[8].rev := 1241;
-  compApps[8].name := 'BePipe.exe';
-  compApps[9].rev := 1245;
-  compApps[9].name := 'christv.exe';
-  compApps[10].rev := 0;
+  compApps[1].rev   := 1077; //975;
+  compApps[1].name  := 'Munite.exe';
+  compApps[2].rev   := 1077; //975;
+  compApps[2].name  := 'nvplayer.exe';
+  compApps[3].rev   := 1077; //975;
+  compApps[3].name  := 'Qonoha.exe';
+  compApps[3].rev   := 1077; //976;
+  compApps[3].name  := 'SinkuHadouken.exe';
+  compApps[4].rev   := 1077; //985;
+  compApps[4].name  := 'Lilith.exe';
+  compApps[5].rev   := 1077; //1048;
+  compApps[5].name  := 'megui.exe';
+  compApps[6].rev   := 1116;
+  compApps[6].name  := 'TheaterTek DVD.exe';
+  compApps[7].rev   := 1125;
+  compApps[7].name  := 'graphedit.exe';
+  compApps[8].rev   := 1241;
+  compApps[8].name  := 'BePipe.exe';
+  compApps[9].rev   := 1245;
+  compApps[9].name  := 'christv.exe';
+  compApps[10].rev  := 1247;
+  compApps[10].name := 'avi2mpg.exe';
+  compApps[11].rev  := 1247;
+  compApps[11].name := 'cut_assistant.exe';
+  compApps[12].rev  := 1247;
+  compApps[12].name := 'SplitCam.exe';
+  compApps[13].rev  := 0;
 
 // Compatibility list
   ComplistVideo.skipped := False;
