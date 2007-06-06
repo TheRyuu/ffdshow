@@ -1,12 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-  <title>ffdshow tryouts output video</title>
+  <title>ffdshow tryouts | Output video configuration</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="description" content="ffdshow tryouts output video" />
+  <meta name="description" content="ffdshow tryouts output video configuration" />
   <link rel="stylesheet" href="../styles/style.css" type="text/css" />
   <link rel="shortcut icon" type="image/x-icon" href="../images/favicon.ico" />
 </head>
@@ -17,7 +16,7 @@
   </a>
 
   <p class="big_caption">
-    <a name="top" id="top">Output</a>
+    <a name="top" id="top">Output video configuration</a>
   </p>
 
   <img src="../images/outputV.png" title="Output video dialog" alt="Output video dialog" width="558" height="413" />
@@ -36,11 +35,11 @@
   <ul>
     <li class="smaller_caption">YUV Colorspace</li>
     <li style="list-style-type:none" class="normal">
-      The default output colorspace. Read more about YUV on <a href="http://en.wikipedia.org/wiki/YUV">this</a> and <a href="http://en.wikipedia.org/wiki/Chroma_subsampling">this</a> wikipedia article. As the YUV colorspace (and YV12 in particular) is the colorspace of choice for video compression, setting ffdshow to output YV12 saves it from having to do any colorspace conversion on the decoded image, speeding up decoding.<br />
+      The default output colorspace. Read more about YUV on <a class="links" href="http://en.wikipedia.org/wiki/YUV">this</a> and <a class="links" href="http://en.wikipedia.org/wiki/Chroma_subsampling">this</a> wikipedia article. As the YUV colorspace (and YV12 in particular) is the colorspace of choice for video compression, setting ffdshow to output YV12 saves it from having to do any colorspace conversion on the decoded image, speeding up decoding.<br />
       There are a number of different YUV output formats supported by ffdshow:
       <ul style="list-style-type:circle">
         <li><em>I420/IYUV</em>: Similar to YV12 described below, but less hardware support. Not recommended, even if it's supported by your video card, as YV12 is faster. Uses 12 bits per pixel (bpp).</li>
-        <li><em>YV12</em>: Almost always the fastest output mode (video codecs usually use YV12 for storage). The recommended output for most system setups, although some older/onboard video cards do not support it - if this is the case for you, try YUY2. Windows media player sometimes has trouble with YV12 output. Uses 12bpp.</li>
+        <li><em>YV12</em>: Almost always the fastest output mode (video codecs usually use YV12 for storage). The recommended output for most system setups. Although some older/onboard video cards do not support it - if this is the case for you, try YUY2. Windows Media Player sometimes has trouble with YV12 output. Uses 12bpp.</li>
         <li><em>YUY2</em>: Used by MJPEG and some MPEG2 video streams, and has slightly more color definition than YV12. Slightly slower to output than YV12, but generally not by much. If your input video is YUY2, or your video card doesn't support YV12, this is the recommended output. Uses 16bpp.</li>
         <li><em>YVYU & UYVY</em>: Rare and unused, avoid. Uses 12bpp.</li>
         <li><em>NV12</em>: Another rare output format, not even supported by many cards. Uses 12bpp.</li>
@@ -51,12 +50,12 @@
   <ul>
     <li class="smaller_caption">RGB Colorspace</li>
     <li style="list-style-type:none" class="normal">
-      These modes use the more traditional and familiar color format of RGB. Read about RGB on <a href="http://en.wikipedia.org/wiki/RGB">wikipedia</a> (again). RGB output is slower, but possibly more accurate than YUV output - the difference will be minimal in any case.<br />
+      These modes use the more traditional and familiar color format of RGB. Read about RGB on <a class="links" href="http://en.wikipedia.org/wiki/RGB">wikipedia</a> (again). RGB output is slower, but possibly more accurate than YUV output - the difference will be minimal in any case.<br />
       The following RGB formats are supported:
       <ul style="list-style-type:circle">
         <li><em>RGB32 & RGB24</em>: These modes will give you the same picture output, the only difference is that RGB32 is packed to 32bits which is usually faster to manipulate. These modes use 32 or 24bpp respectively.</li>
         <li><em>RGB16 & RGB15</em>: Same as bove, but only 16/15bit. RGB15 is a bad idea unless you know it's a good idea. These use 16 or 15bpp respectively.</li>
-        <li><em>High Quality YUV to RGB Conversion</em>: Because (almost) all video files are compressed in a YUV format (usually YV12), ffdshow must convert from the YUV color system to the RGB color system when outputting RGB modes. This checkbox will instruct it to use a slower, but higher quality conversion method. If you are planning on taking screenshots, or really <em>really</em> need every last drop of faithful quality reproduction, enable this.</li>
+        <li><em>High Quality YUV to RGB Conversion</em>: Because (almost) all video files are compressed in a YUV format (usually YV12), ffdshow must convert from the YUV color system to the RGB color system when outputting RGB modes. This checkbox will instruct it to use a slower, but higher quality conversion method. If you are planning on taking screenshots, or <em>really</em> need every last drop of faithful quality reproduction, enable this.</li>
       </ul>
     </li>
   </ul>
@@ -90,7 +89,7 @@
   </p>
   <ul class="normal">
     <li>Send interlacing related information obtained from the input stream or ffdshow's internal decoders to the next filter.</li>
-    <li>Some filters (like video renderers) will use this information to deinterlace the video if neccessary.</li>
+    <li>Some filters (like video renderers) will use this information to deinterlace the video if necessary.</li>
     <li>This is just for informing the downstream filters - the actual result will depend purely on the implementation of these filters.</li>
     <li>Unchecked by default. DVDs are flagged as interlaced, but in most cases they are originally film (progressive) and just telecined. For such video, it is recommended to keep it unchecked.</li>
   </ul>
@@ -98,15 +97,22 @@
   <p class="smaller_caption">
     Tips & Tricks
   </p>
+  
   <ul class="normal" style="list-style-type:square">
     <li>You can select more than one output format, ffdshow will try to use the closest output format to the input. Generally this means YV12, but not always.</li>
-    <li>The other settings on the page shouldn't be touched unless you know what they are. The author recommends using the settings in the image to the right (although with YV12 enabled). Flip video is occasionally useful for broken or old streams.</li>
+    <li>The other settings on the page shouldn't be touched unless you know what they are. The author recommends using the default settings (see screenshot above). Flip video is occasionally useful for broken or old streams.</li>
   </ul>
   
-  <div class="small">This page was kindly provided by <em>checkers</em> from the <a href="http://mewiki.project357.com/wiki/Main_Page">MeGUI wiki</a>.</div>
+  <div class="small">This page was kindly provided by <em>checkers</em> from the <a class="links" href="http://mewiki.project357.com/wiki/Main_Page">MeGUI wiki</a>.</div>
+  
+  <div class="normal" style="padding-top:20px">
+    <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="Top" /></a>
+  </div>
   
   <div style="padding-top:20px">
-    <a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" /></a>
+    <a href="http://sourceforge.net">
+      <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
+    </a>
   </div>
 </body>
 </html>

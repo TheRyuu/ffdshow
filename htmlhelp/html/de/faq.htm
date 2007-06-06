@@ -1,18 +1,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <!-- Please update the revision number when changes to the markup code 
 have been made, which were ported to this translation (even if nothing 
 was changed here). This is to know which revisions are not ported yet.-->
 
-<!-- In sync with revision 1226. -->
+<!-- In sync with revision 1251. -->
 
 <head>
-  <title>ffdshow tryouts: FAQ</title>
+  <title>ffdshow tryouts | FAQ</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="description" content="ffdshow tryouts: FAQ" />
+  <meta name="description" content="ffdshow tryouts FAQ" />
   <link rel="stylesheet" href="../styles/style.css" type="text/css" />
   <link rel="shortcut icon" type="image/x-icon" href="../images/favicon.ico" />
 </head>
@@ -22,10 +21,10 @@ was changed here). This is to know which revisions are not ported yet.-->
     <img src="../images/logo_phpBB.png" width="200" height="91" title="ffdshow tryouts" alt="ffdshow tryouts" />
   </a>
 
-  <div style="text-align:right" class="smallest_caption">
+  <div class="translation">
     Translations available in:
-    &nbsp;<a class="nav" href="../en/faq.htm"><img src="../images/england.png" title="English FAQ" alt="English FAQ" width="27" height="17" />&nbsp;English</a>
-    &nbsp;<a class="nav" href="../jp/faq.htm"><img src="../images/japan.png" title="Japanese FAQ" alt="Japanese FAQ" width="27" height="17" />&nbsp;Japanese</a>
+    &nbsp;<a class="links" href="../en/faq.htm"><img src="../images/england.png" title="English FAQ" alt="English FAQ" width="27" height="17" />&nbsp;English</a>
+    &nbsp;<a class="links" href="../jp/faq.htm"><img src="../images/japan.png" title="Japanese FAQ" alt="Japanese FAQ" width="27" height="17" />&nbsp;Japanese</a>
   </div>
 
   <p class="big_caption">
@@ -82,7 +81,7 @@ was changed here). This is to know which revisions are not ported yet.-->
     <img src="images/benchmark.png" width="498" height="600" title="ffdshow-Build-802-Test" alt="ffdshow-Build-802-Test" /><br />
     <span class="small">
       Testsystem: Pentium 4 2.8GHz (Northwood), Windows XP SP2, Null Renderer verwendet<br />
-      Testbeispiel: <a href="http://trailers.divx.com/Dreamworks/Madagascar_HD.zip">Madagascar.avi</a> (DX50)
+      Testbeispiel: <a class="links" href="http://trailers.divx.com/Dreamworks/Madagascar_HD.zip">Madagascar.avi</a> (DX50)
     </span>
   </p>
 
@@ -96,7 +95,7 @@ was changed here). This is to know which revisions are not ported yet.-->
     <li>SSE2-optimierte Builds zeigten keinerlei Verbesserung gegen&uuml;ber SSE-Builds.</li>
     <li>GCC-SSE-Builds (nicht im Diagramm dargestellt) geben ebenfalls einen ansehnlichen Geschwindigkeitszuwachs.</li>
     <li>Allerdings unterscheiden sich die Zuw&auml;chse gegen&uuml;ber den generischen Builds von System zu System. Es wird empfohlen die Builds auf dem eigenen System zu testen.<br />
-      Zu Testzwecken wird Haalis <a class="links" href="http://haali.cs.msu.ru/mkv/timeCodec.exe">timeCodec.exe</a> [96KB] ben&ouml;tigt. Damit <em>timeCodec.exe</em> funktioniert, ist <a href="http://haali.cs.msu.ru/mkv/">Haali Media Splitter</a> Voraussetzung.</li>
+      Zu Testzwecken wird Haalis <a class="links" href="http://haali.cs.msu.ru/mkv/timeCodec.exe">timeCodec.exe</a> [96KB] ben&ouml;tigt. Damit <em>timeCodec.exe</em> funktioniert, ist <a class="links" href="http://haali.cs.msu.ru/mkv/">Haali Media Splitter</a> Voraussetzung.</li>
   </ul>
 
   <p class="small_caption">
@@ -117,15 +116,15 @@ was changed here). This is to know which revisions are not ported yet.-->
 
   <ul class="normal">
     <li>Der <em>resize</em>-Filter ist vollst&auml;ndig multithreaded. Er ist auf Dualcore-Systemen schneller (auf Pentium 4 HT-CPUs ineffektiv) und ben&ouml;tigt hierf&uuml;r keinerlei Konfiguration.</li>
-	<li>Der Xvid-Enkoder ist multithreaded.</li>
-	<li>Der x264-Enkoder ist multithreaded.</li>
+	  <li>Der Xvid-Enkoder ist multithreaded.</li>
+	  <li>Der x264-Enkoder ist multithreaded.</li>
     <li>Ist "Queue &amp; misc" -> "Queue output samples" markiert, wird Beschleunigung durch Multicoreunterst&uuml;tzung aktiviert, von dessen positivem Effekt man unter Umst&auml;nden selbst auf einem Singlecore-CPU profitieren kann.</li>
     <li>libavcodecs MPEG1/2-Dekoder sind multithreaded. Es wird effektiv, wenn "Decoder options" -> "Number of decoding threads" auf die Zahl der vorhandenen Prozessorkerne gesetzt wird. Diese Einstellung hat keinen Effekt auf Pentium-4-HT-CPUs.</li>
     <li>libavcodecs MPEG4/MPEG2/MPEG1-Encoder sind multithreaded.</li>
   </ul>
 
   <div class="normal">
-    <a class="nav" href="#top">Zum Anfang&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
+    <a class="nav" href="#top">Zum Anfang&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="Top" /></a>
   </div>
 
   <div style="padding-top:20px">

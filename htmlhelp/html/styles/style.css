@@ -13,6 +13,9 @@ img {
 div {
 	text-align: center
 }
+div.translation {
+	text-align: right; font-size: 75%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold
+}
 table {
   width: 100%
 }
@@ -43,21 +46,23 @@ ul.download {
 ul.links {
   list-style-image: url(../images/arrow.png); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 90%
 }
+/* For navigation and download links inside <ul> elements as well as "Top" anchor */
 a.nav:link {
 	color: rgb(0,0,0); text-decoration: none; font-weight: bold
 }
 a.nav:visited {
-	color: rgb(150,150,150); text-decoration: none; font-weight: bold
+	color: rgb(100,100,100); text-decoration: none; font-weight: bold
 }
 a.nav:hover {
-	color: rgb(77,77,77); text-decoration: underline; font-weight: bold
+	color: rgb(75,75,75); text-decoration: underline; font-weight: bold
 }
+/* For external and internal links (between ffdshow pages) */
 a.links:link {
-	color: rgb(0,0,255); text-decoration: underline;
+	color: rgb(40,40,40); text-decoration: none;	border-bottom: solid 1px rgb(40,40,40)
 }
 a.links:visited {
-	color: rgb(128,0,128); text-decoration: underline;
+	color: rgb(120,120,120); text-decoration: none; border-bottom: solid 1px rgb(120,120,120)
 }
 a.links:hover {
-	color: rgb(0,0,255); text-decoration: underline;
+	color: rgb(80,80,80); text-decoration: none; border-bottom: dotted 1px rgb(80,80,80)
 }
