@@ -157,7 +157,11 @@ void TcompatibilityList::onReset(void)
       MB_ICONQUESTION|MB_OKCANCEL)==IDOK)
   {
    if (IDFF_target==IDFF_compatibilityList)
-    SetDlgItemText(m_hwnd,IDC_ED_COMPATIBILITYLIST,COMPATIBLE_EXE_FILENAME);
+    {
+     ffstring complistResult;
+     TdirectshowControlPageDec::convertDelimit(COMPATIBLE_EXE_FILENAME,_l("\r\n"),complistResult,_l("\r\n")); // to sort
+     SetDlgItemText(m_hwnd,IDC_ED_COMPATIBILITYLIST,complistResult.c_str());
+    }
    if (IDFF_target==IDFF_blacklist)
     {
      ffstring complistResult;

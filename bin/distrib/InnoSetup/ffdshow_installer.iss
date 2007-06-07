@@ -1087,17 +1087,78 @@ begin
     end
     complist.edt.text := regstr;
   end else begin
-    complist.edt.Text := 'aegisub.exe'#13#10'ALLPlayer.exe'#13#10'ALShow.exe'#13#10'ass_help3r.exe'#13#10'avi2mpg.exe'#13#10'avipreview.exe'#13#10
-                         'aviutl.exe'#13#10'BePipe.exe'#13#10'bsplay.exe'#13#10'bsplayer.exe'#13#10'christv.exe'#13#10'CorePlayer.exe'#13#10'coreplayer.exe'#13#10
-                         'crystalfree.exe'#13#10'cut_assistant.exe'#13#10'DScaler.exe'#13#10'dv.exe'#13#10'DVDMaker.exe'#13#10'ehshell.exe'#13#10
-                         'firefox.exe'#13#10'gom.exe'#13#10'graphedit.exe'#13#10'graphedt.exe'#13#10'gspot.exe'#13#10
-                         'iexplore.exe'#13#10'JetAudio.exe'#13#10'kmplayer.exe'#13#10'LA.exe'#13#10'Lilith.exe'#13#10
-                         'makeAVIS.exe'#13#10'Media Center 12.exe'#13#10'Media Jukebox.exe'#13#10'megui.exe'#13#10
-                         'MovieMk.exe'#13#10'mplayer2.exe'#13#10'mplayerc.exe'#13#10'Munite.exe'#13#10'Muzikbrowzer.exe'#13#10
-                         'Mv2PlayerPlus.exe'#13#10'nvplayer.exe'#13#10'powerdvd.exe'#13#10'progdvb.exe'#13#10'Qonoha.exe'#13#10
-                         'realplay.exe'#13#10'rlkernel.exe'#13#10'SinkuHadouken.exe'#13#10'SplitCam.exe'#13#10'TheaterTek DVD.exe'#13#10
-                         'timecodec.exe'#13#10'ViPlay3.exe'#13#10'virtualdub.exe'#13#10'virtualdubmod.exe'#13#10
-                         'winamp.exe'#13#10'windvd.exe'#13#10'wmenc.exe'#13#10'wmplayer.exe'#13#10'zplayer.exe';
+    complist.edt.Text :=
+    'aegisub.exe'#13#10
+    'ALLPlayer.exe'#13#10
+    'ALShow.exe'#13#10
+    'ass_help3r.exe'#13#10
+    'avi2mpg.exe'#13#10
+    'avipreview.exe'#13#10
+    'aviutl.exe'#13#10
+    'BePipe.exe'#13#10
+    'bsplay.exe'#13#10
+    'bsplayer.exe'#13#10
+    'carom.exe'#13#10
+    'christv.exe'#13#10
+    'CorePlayer.exe'#13#10
+    'coreplayer.exe'#13#10
+    'crystalfree.exe'#13#10
+    'cut_assistant.exe'#13#10
+    'DScaler.exe'#13#10
+    'dv.exe'#13#10
+    'DVDMaker.exe'#13#10
+    'DVD Shrink 3.2.exe'#13#10
+    'ehshell.exe'#13#10
+    'fenglei.exe'#13#10
+    'firefox.exe'#13#10
+    'gom.exe'#13#10
+    'GoogleDesktop.exe'#13#10
+    'graphedit.exe'#13#10
+    'graphedt.exe'#13#10
+    'gspot.exe'#13#10
+    'honestechTV.exe'#13#10
+    'iexplore.exe'#13#10
+    'JetAudio.exe'#13#10
+    'kmplayer.exe'#13#10
+    'LA.exe'#13#10
+    'Lilith.exe'#13#10
+    'makeAVIS.exe'#13#10
+    'MDirect.exe'#13#10
+    'Media Center 12.exe'#13#10
+    'Media Jukebox.exe'#13#10
+    'MediaPortal.exe'#13#10
+    'MediaServer.exe'#13#10
+    'megui.exe'#13#10
+    'MovieMk.exe'#13#10
+    'mplayer2.exe'#13#10
+    'mplayerc.exe'#13#10
+    'Munite.exe'#13#10
+    'Muzikbrowzer.exe'#13#10
+    'Mv2PlayerPlus.exe'#13#10
+    'nvplayer.exe'#13#10
+    'powerdvd.exe'#13#10
+    'ppmate.exe'#13#10
+    'progdvb.exe'#13#10
+    'Qonoha.exe'#13#10
+    'realplay.exe'#13#10
+    'rlkernel.exe'#13#10
+    'sherlock2.exe'#13#10
+    'SinkuHadouken.exe'#13#10
+    'Sleipnir.exe'#13#10
+    'SubtitleEdit.exe'#13#10
+    'SplitCam.exe'#13#10
+    'stillcap.exe'#13#10
+    'TheaterTek DVD.exe'#13#10
+    'timecodec.exe'#13#10
+    'ViPlay3.exe'#13#10
+    'virtualdub.exe'#13#10
+    'virtualdubmod.exe'#13#10
+    'WCreator.exe'#13#10
+    'winamp.exe'#13#10
+    'windvd.exe'#13#10
+    'wmenc.exe'#13#10
+    'wmplayer.exe'#13#10
+    'zplayer.exe'#13#10;
   end
 
 
@@ -1149,7 +1210,35 @@ begin
   compApps[11].name := 'cut_assistant.exe';
   compApps[12].rev  := 1247;
   compApps[12].name := 'SplitCam.exe';
-  compApps[13].rev  := 0;
+  compApps[13].rev  := 1253;
+  compApps[13].name := 'Sleipnir.exe';
+  compApps[14].rev  := 1253;
+  compApps[14].name := 'fenglei.exe';
+  compApps[15].rev  := 1253;
+  compApps[15].name := 'MDirect.exe';
+  compApps[16].rev  := 1253;
+  compApps[16].name := 'SubtitleEdit.exe';
+  compApps[17].rev  := 1253;
+  compApps[17].name := 'sherlock2.exe';
+  compApps[18].rev  := 1253;
+  compApps[18].name := 'GoogleDesktop.exe';
+  compApps[19].rev  := 1253;
+  compApps[19].name := 'MediaServer.exe';
+  compApps[20].rev  := 1253;
+  compApps[20].name := 'MediaPortal.exe';
+  compApps[21].rev  := 1253;
+  compApps[21].name := 'honestechTV.exe';
+  compApps[22].rev  := 1253;
+  compApps[22].name := 'DVD Shrink 3.2.exe';
+  compApps[23].rev  := 1253;
+  compApps[23].name := 'stillcap.exe';
+  compApps[24].rev  := 1253;
+  compApps[24].name := 'carom.exe';
+  compApps[25].rev  := 1253;
+  compApps[25].name := 'WCreator.exe';
+  compApps[26].rev  := 1253;
+  compApps[26].name := 'ppmate.exe';
+  compApps[27].rev  := 0;
 
 // Compatibility list
   ComplistVideo.skipped := False;
