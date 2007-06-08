@@ -21,11 +21,12 @@
     &nbsp;<a class="links" href="../jp/index.htm" title="Japanese changelog"><img src="../images/japan.png" alt="Japanese changelog" width="27" height="17" />&nbsp;Japanese</a>
   </div>
 
-  <p class="big_caption">
+  <h1>
     <a name="top" id="top">Changelog</a>
-  </p>
+  </h1>
 
-  <p class="normal">This list is based on the latest revision of the original project except the multithreading patch.<br />
+  <p>
+    This list is based on the latest revision of the original project except the multithreading patch.<br />
     Navigate to:
   </p>
 
@@ -38,7 +39,7 @@
 
   <!-- old table navigation version -->
   <!--
-  <table class="normal" summary="Links to different sections of changelog">
+  <table summary="Links to different sections of changelog">
     <tr><td>Navigate to:</td><td><a class="nav" href="#fixes">Bug fixes</a></td></tr>
     <tr><td></td><td><a class="nav" href="#features">New features</a></td></tr>
     <tr><td></td><td><a class="nav" href="#download">Download</a></td></tr>
@@ -46,16 +47,15 @@
   </table>
   -->
 
+  <h2>
+    <a name="fixes" id="fixes">Bug fixes</a><br />
+  </h2>
+  
   <p>
-    <span class="medium_caption">
-      <a name="fixes" id="fixes">Bug fixes</a><br />
-    </span>
-    <span class="normal">Note: Bugs that have been added and fixed during the tryouts development have not been included.</span>
-  </p>
+    Note: Bugs that have been added and fixed during the tryouts development have not been included.
+  </p>  
 
-  <p class="small_caption">
-    Fixed after beta2
-  </p>
+  <h3>Fixed after beta2</h3>
 
   <ul class="fixed">
     <li>libavcodec encoders did not accept frame rates except 25fps. Other encoders sometimes had inaccurate frame rates.</li>
@@ -70,9 +70,7 @@
     <li>AviSynth script could not be saved (Unicode builds only).</li>
   </ul>
 
-  <p class="small_caption">
-    Fixed before beta2
-  </p>
+  <h3>Fixed before beta2</h3>
 
   <ul class="fixed">
     <li>After changing aspect ratio, the height of the picture halved, if you used overlay mixer and YUY2. It was common on DVD playback.</li>
@@ -104,9 +102,7 @@
     <li>The next internal filter of Kernel deinterlace was skipped on every other frame. If the next internal filter was "Resize", the video size changed on every frame.</li>
   </ul>
 
-  <p class="small_caption">
-    Fixed before beta1
-  </p>
+  <h3>Fixed before beta1</h3>
 
   <ul class="fixed">
     <li>When you tried to re-encode using Windows Media Encoder, ffdshow audio decoder would cause WME to crash.</li>
@@ -145,13 +141,11 @@
     <li>Subtitles were garbled if "Subtitles" -> "Font" -> "Fast rendering" was enabled and you used MBCS on ANSI builds.</li>
   </ul>
 
-  <p class="medium_caption">
+  <h2>
     <a name="features" id="features">New features</a>
-  </p>
+  </h2>
 
-  <p class="small_caption">
-    Added after beta2
-  </p>
+  <h3>Added after beta2</h3>
 
   <ul class="added">
     <li>Deinterlacing support (set interlace flag) for MPEG4-ASP through Xvidcore decoder.</li>
@@ -168,9 +162,7 @@
     <li>Audio decoder AC3 output: the new check box "Encode only multichannel streams" allows sending multichannel audio (which otherwise cannot be digitally sent) to AV-amp in AC3-SPDIF.</li>
   </ul>
 
-  <p class="small_caption">
-    Added before beta2
-  </p>
+  <h3>Added before beta2</h3>
 
   <ul class="added">
     <li>Improved subtitle shadow. 3 shadow modes are available: classic, glowing and gradient.</li>
@@ -187,9 +179,7 @@
     <li>Queue: ffdshow now uses VMR9's internal queue.</li>
   </ul>
 
-  <p class="small_caption">
-    Added before beta1
-  </p>
+  <h3>Added before beta1</h3>
 
   <ul class="added">
     <li>H.264 MBAFF (interlaced format) support.</li>
@@ -205,9 +195,9 @@
     <li>Improved translations.</li>
   </ul>
 
-  <p class="big_caption">
+  <h2>
     <a name="download" id="download">Download</a>
-  </p>
+  </h2>
 
   <ul class="download">
     <li><a class="nav" href="http://downloads.sourceforge.net/ffdshow-tryout/ffdshow_beta2a_20070322_clsid.exe">Download beta2 (stable)</a></li>
@@ -215,14 +205,21 @@
     <li><a class="nav" href="http://sourceforge.net/project/showfiles.php?group_id=173941">Download nightly builds (latest)</a></li>
   </ul>
 
-  <div class="normal">
-    <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
-  </div>
-
-  <div style="padding-top:20px">
-    <a href="http://sourceforge.net">
-      <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
-    </a>
+  <div class="footer">    
+    <table>
+      <tr>
+        <td>
+          <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a href="http://sourceforge.net">
+            <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
+          </a>
+        </td>
+      </tr>
+    </table>    
   </div>
 </body>
 </html>

@@ -14,18 +14,18 @@
     <img src="../images/logo_phpBB.png" title="ffdshow tryouts" alt="ffdshow tryouts" width="200" height="91" />
   </a>
 
-  <p class="big_caption">
+  <h1>
     <a name="top" id="top">DirectShow入門</a>
-  </p>
+  </h1>
 
-  <p class="normal">
+  <p>
     DirectShowとはマルチメディアの再生、記録を行うための仕組みで、Microsoftが策定しWindowsに同梱されています｡<br /><br />
     ここでLionSleepTonight.flvというファイルを例にとって、このファイルが再生される仕組みをみてみましょう。
   </p>
 
   <img src="../images/filtergraph.png" title="Filter graph sample" alt="Filter graph sample" width="764" height="218" />
 
-  <ul class="normal">
+  <ul>
     <li>ファイルをHDDから読み取ったら次の仕事はそれを動画と音声に分離することです｡この仕事を行うプログラムを<b>「スプリッタ」</b>と呼びます｡スプリッタは圧縮された動画と音声を各々次のプログラムに渡します｡</li>
     <li>圧縮を解除するプログラムを<b>「デコーダ」</b>と呼びます｡ffdshowは主にこの部分を担当するプログラムです。</li>
     <li>圧縮を解除したら次は動画や音声をハードウエアを使って出力します｡この仕事を担当するプログラムを<b>「レンダラ」</b>と呼びます｡</li>
@@ -33,45 +33,52 @@
     <li>DirectShow対応アプリケーションではコンピュータに登録されている数多くのフィルタの中からファイルの再生に必要なフィルタを上手に組み合わせて<b>「フィルタグラフ」</b>を作ります。上の図はgraphedt.exeというアプリケーションが作成したフィルタグラフです。</li>
   </ul>
 
-  <p class="small_caption">
+  <h2>
     <a name="configCodec" id="configCodec">ffdshowの設定</a>
-  </p>
+  </h2>
 
-  <p class="normal">
+  <p>
     LionSleepTonight.flvの動画はflv1というコーデックで圧縮されています｡ffdshowでflv1をデコードするには設定画面を表示（スタート→プログラム→ffdshow→ビデオデコーダーの設定）し、左ペインの「コーデック」を選択、右ペインのFLV1を「libavcodec」に設定します｡
   </p>
 
   <img src="images/codec_config.png" title="Codec configuration" alt="Codec configuration" width="651" height="385" />
 
-  <p class="small_caption">
+  <h2>
     <a name="splitter" id="splitter">スプリッタの入手</a>
-  </p>
+  </h2>
 
-  <p class="normal">
+  <p>
     LionSleepTonight.flvは
     <a class="links" href="http://sourceforge.net/project/showfiles.php?group_id=82303&amp;package_id=183318&amp;release_id=403108" target="_blank">FLVSplitter</a>
     というスプリッタによって動画と音声に分離されます｡FLVSplitterはffdshowと同様にユーザーがシステムにインストールする必要があります｡<br />
     ただしMedia Player Classicを使っている場合は内蔵FLV splitterを有効にしておく（View→options Internal Filters→Source Filters→FLV）だけで再生できます。
   </p>
 
-  <p class="small_caption">
+  <h2>
     <a name="merit" id="merit">メリット値</a>
-  </p>
+  </h2>
 
-  <p class="normal">
+  <p>
     例えばflv1をデコードするフィルタがシステムに複数存在した場合はどうなるのでしょう。この場合「メリット値」が高いフィルタが優先的に使用されます。ffdshowのメリット値については下図を参考に設定してください｡
   </p>
 
   <img src="images/merit.png" title="Merit configuration" alt="Merit configuration" width="650" height="383" />
 
-  <div class="normal" style="padding-top:20px">
-    <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
-  </div>
-
-  <div style="padding-top:20px">
-    <a href="http://sourceforge.net">
-      <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
-    </a>
+  <div class="footer">    
+    <table>
+      <tr>
+        <td>
+          <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a href="http://sourceforge.net">
+            <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
+          </a>
+        </td>
+      </tr>
+    </table>    
   </div>
 </body>
 </html>

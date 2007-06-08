@@ -7,7 +7,7 @@ have been made, which were ported to this translation (even if nothing
 was changed here). This is to know which revisions are not ported yet.
 If you skip to port a revision please note that revision for later porting. -->
 
-<!-- In sync with revision 1257 exept for revision(s) -none-. -->
+<!-- In sync with revision 1258 except for revision(s) -none-. -->
 
 <head>
   <title>ffdshow tryouts | Changelog</title>
@@ -28,11 +28,12 @@ If you skip to port a revision please note that revision for later porting. -->
     &nbsp;<a class="links" href="../jp/index.htm" title="Japanese changelog"><img src="../images/japan.png" alt="Japanese changelog" width="27" height="17" />&nbsp;Japanese</a>
   </div>
 
-  <p class="big_caption">
+  <h1>
     <a name="top" id="top">Changelog</a>
-  </p>
+  </h1>
 
-  <p class="normal">Diese Liste basiert - mit Ausnahme des Multithreading-Patches - auf der neuesten Revision des originalen Projekts.<br />
+  <p>
+    Diese Liste basiert - mit Ausnahme des Multithreading-Patches - auf der neuesten Revision des originalen Projekts.<br />
     Navigieren nach:
   </p>
 
@@ -45,7 +46,7 @@ If you skip to port a revision please note that revision for later porting. -->
 
   <!-- old table navigation version -->
   <!--
-  <table class="normal" summary="Links to different sections of changelog">
+  <table summary="Links to different sections of changelog">
     <tr><td>Navigate to:</td><td><a class="nav" href="#fixes">Bug fixes</a></td></tr>
     <tr><td></td><td><a class="nav" href="#features">New features</a></td></tr>
     <tr><td></td><td><a class="nav" href="#download">Download</a></td></tr>
@@ -53,16 +54,14 @@ If you skip to port a revision please note that revision for later porting. -->
   </table>
   -->
 
+  <h2>
+    <a name="fixes" id="fixes">Fehlerkorrekturen</a><br />
+  </h2>
   <p>
-    <span class="medium_caption">
-      <a name="fixes" id="fixes">Fehlerkorrekturen</a><br />
-    </span>
-    <span class="normal">Anmerkung: Fehler, die w&auml;hrend der tryouts-Entwicklung eingef&uuml;gt und auch korrigiert wurden, werden nicht gelistet.</span>
+    Anmerkung: Fehler, die w&auml;hrend der tryouts-Entwicklung eingef&uuml;gt und auch korrigiert wurden, werden nicht gelistet.
   </p>
 
-  <p class="small_caption">
-    Nach Beta2 korrigiert
-  </p>
+  <h3>Nach Beta2 korrigiert</h3>
 
   <ul class="fixed">
     <li>libavcodec-Enkoder akzeptierten keine Bildfrequenzen au&szlig;er 25fps. Andere Enkoder hatten manchmal falsche Bildfrequenzen.</li>
@@ -77,9 +76,7 @@ If you skip to port a revision please note that revision for later porting. -->
     <li>AviSynth-Skript konnte nicht gespeichert werden (nur Unicode-Builds).</li>
   </ul>
 
-  <p class="small_caption">
-    Vor Beta2 korrigiert
-  </p>
+  <h3>Vor Beta2 korrigiert</h3>
 
   <ul class="fixed">
     <li>Falls Overlaymixer und YUY2 verwandt wurden, wurde nach einer &Auml;nderung des Seitenverh&auml;ltnisses die H&ouml;he des Bildes halbiert. Dies war h&auml;ufig bei Wiedergabe von DVDs der Fall.</li>
@@ -111,9 +108,7 @@ If you skip to port a revision please note that revision for later porting. -->
     <li>Der n&auml;chste interne Filter nach Kernel deinterlace wurde nur auf jedes zweite Bild angewandt. Falls dieser Filter "Resize" war, wechselte die Bildgr&ouml;&szlig;e bei jedem Bild.</li>
   </ul>
 
-  <p class="small_caption">
-    Vor Beta1 korrigiert
-  </p>
+  <h3>Vor Beta1 korrigiert</h3>
 
   <ul class="fixed">
     <li>Wurde versucht mittels Windows Media Encoder zu rekodieren, l&ouml;ste der ffdshow-Audiodekoder einen Absturz des WME aus.</li>
@@ -152,13 +147,11 @@ If you skip to port a revision please note that revision for later porting. -->
     <li>Untertitel waren entstellt falls "Untertitel" -> "Schriftart" -> "Schnelles Rendering" aktiviert war und MBCS in ANSI-Builds verwandt wurde.</li>
   </ul>
 
-  <p class="medium_caption">
+  <h2>
     <a name="features" id="features"> Neue Features</a>
-  </p>
+  </h2>
 
-  <p class="small_caption">
-    Nach Beta2 hinzugef&uuml;gt
-  </p>
+  <h3>Nach Beta2 hinzugef&uuml;gt</h3>
 
   <ul class="added">
     <li>Deinterlacing-Unterst&uuml;tzung (setzten des Interlace-Flags) f&uuml;r MPEG4-ASP durch den Xvidcore-Dekoder.</li>
@@ -175,9 +168,7 @@ If you skip to port a revision please note that revision for later porting. -->
     <li>Audiodekoder-AC3-Output: Die neue Checkbox "Nur Mehrkanal-Streams kodieren" erlaubt Senden von Mehrkanalaudio (welches andernfalls nicht digital gesendet werden kann) &uuml;ber AC3-SPDIF zum AV-Verst&auml;rker.</li>
   </ul>
 
-  <p class="small_caption">
-    Vor Beta2 hinzugef&uuml;gt
-  </p>
+  <h3>Vor Beta2 hinzugef&uuml;gt</h3>
 
   <ul class="added">
     <li>Verbesserte Untertitelschatten. 3 Schattenmodi sind verf&uuml;gbar: klassisch, glimmend und geneigt.</li>
@@ -194,9 +185,7 @@ If you skip to port a revision please note that revision for later porting. -->
     <li>Queue: ffdshow verwendet nun VMR9s internen Queue.</li>
   </ul>
 
-  <p class="small_caption">
-    Vor Beta1 hinzugef&uuml;gt
-  </p>
+  <h3>Vor Beta1 hinzugef&uuml;gt</h3>
 
   <ul class="added">
     <li>Unterst&uuml;tzung f&uuml;r H.264 MBAFF (interlactes Format).</li>
@@ -207,14 +196,14 @@ If you skip to port a revision please note that revision for later porting. -->
     <li>Multithreaded Resizing: Schnelleres Resizing auf Multicore-CPUs.</li>
     <li>Kalkuliert die vertikale H&ouml;he automatisch, wenn 0 als vertikale H&ouml;he eingegeben wird ("Gr&ouml;&szlig;e" -> "Gr&ouml;&szlig;e angeben" -> "Neue Gr&ouml;&szlig;e").</li>
     <li>Vorbis: Hochakkurater Modus wurde f&uuml;r tremor aktiviert.</li>
-    <li>Qualit&auml;tskontrolle ist nun konfigurierbar ("Dekoderoptionen" -> "Qualit&auml;tskontrolle').</li>
+    <li>Qualit&auml;tskontrolle ist nun konfigurierbar ("Dekoderoptionen" -> "Qualit&auml;tskontrolle").</li>
     <li>Eine Fehlermeldung wird angezeigt, falls der Splitter keine zur Dekodierung von SVQ3 ben&ouml;tigten Informationen liefern konnte.</li>
     <li>&Uuml;bersetzungen wurden verbessert.</li>
   </ul>
 
-  <p class="big_caption">
+  <h2>
     <a name="download" id="download">Download</a>
-  </p>
+  </h2>
 
   <ul class="download">
     <li><a class="nav" href="http://downloads.sourceforge.net/ffdshow-tryout/ffdshow_beta2a_20070322_clsid.exe">Download von Beta2 (stabil)</a></li>
@@ -222,14 +211,21 @@ If you skip to port a revision please note that revision for later porting. -->
     <li><a class="nav" href="http://sourceforge.net/project/showfiles.php?group_id=173941">Download von nightly Builds (neueste)</a></li>
   </ul>
 
-  <div class="normal">
-    <a class="nav" href="#top">Zum Anfang&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
-  </div>
-
-  <div style="padding-top:20px">
-    <a href="http://sourceforge.net">
-      <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
-    </a>
+  <div class="footer">    
+    <table>
+      <tr>
+        <td>
+          <a class="nav" href="#top">Zum Anfang&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a href="http://sourceforge.net">
+            <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
+          </a>
+        </td>
+      </tr>
+    </table>    
   </div>
 </body>
 </html>

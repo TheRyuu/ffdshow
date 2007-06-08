@@ -21,9 +21,9 @@
     &nbsp;<a class="links" href="../de/faq.htm" title="German FAQ"><img src="../images/germany.png" alt="German FAQ" width="27" height="17" />&nbsp;German</a>
   </div>
 
-  <p class="big_caption">
+  <h1>
     <a name="top" id="top">FAQ</a>
-  </p>
+  </h1>
 
   <ul class="links">
     <li><a class="nav" href="#difference">generic buildsとSSE builds、generic builds(ICL 9.1)の違いは？</a></li>
@@ -33,57 +33,57 @@
     <li><a class="nav" href="#multithreaded">ffdshowはマルチスレッドに対応していますか？</a></li>
   </ul>
 
-  <p class="small_caption">
+  <h2>
     <a name="difference" id="difference">generic buildsとSSE builds、generic builds(ICL 9.1)の違いは？</a>
-  </p>
+  </h2>
 
-  <p class="normal">
+  <p>
     主な違いは<em>ffdshow.ax</em> をコンパイルするのに使用されたコンパイラです。現在4つのコンパイラが使用されています。<em>MSVC71(Microsoft Visual C++ 7.1)</em>, <em>MSVC80</em>, <em>GCC</em> と <em>ICL9</em>です。<br />
     それぞれに対して必要なCPUは以下のとおりです｡
   </p>
 
-  <ul class="normal">
+  <ul>
     <li>generic buildsはPentium-mmx/AMD K6以降で使用可能です。</li>
     <li>SSE builds (ICL &amp; GCC) はPentium3/Athlon Xp以降のCPUが必要です。</li>
     <li>SSE2 buildsはPentium4/Athlon64以降のCPUが必要です。</li>
   </ul>
 
-  <p class="small_caption">
+  <h2>
     <a name="performance" id="performance">デコーダが一番早いビルドはどれですか？</a>
-  </p>
+  </h2>
 
-  <p class="normal">
+  <p>
     どのビルダーもffdshowの主力デコーダである<em>libavcodec</em> はGCCを使ってコンパイルしています。<em>libavcodec</em> はCPUのサポートする命令セット(SSE/SSE2など)を自動検出し利用できるアセンブラで書かれたコードをたくさん持っています｡コンパイラによる最適化の余地はほとんどないと言えます｡したがって純粋なデコーダとしての性能を比較した場合ビルドによる<strong>違いはありません</strong>。
   </p>
 
-  <p class="small_caption">
+  <h2>
     <a name="perf_filters" id="perf_filters">画像処理フィルタを使用したときに一番早いビルドはどれですか？</a>
-  </p>
+  </h2>
 
-  <p class="normal">
+  <p>
     <em>ffdshow.ax</em> を最適化したビルドはある種のフィルタを使用する場合パフォーマンスに違いが見られます。<br />
     下のリストは最適化によってメリットが得られるフィルタです。
   </p>
 
-  <ul class="normal">
+  <ul>
     <li>xsharpen</li>
     <li>denoise3d</li>
   </ul>
 
-  <p class="normal">
+  <p>
     次のグラフは画像処理フィルタを使用したときに最適化されたビルドでパフォーマンスの改善が見られることを示します｡<br /><br />
     <img src="images/benchmark.png" width="498" height="600" title="ffdshow build 802 benchmark" alt="ffdshow build 802 benchmark" /><br />
-    <span class="small">
+    <span style="font-size:0.8em">
       Test setup: Pentium 4 2.8GHz (Northwood), Windows XP SP2, null renderer使用<br />
       Test sample: <a class="links" href="http://trailers.divx.com/Dreamworks/Madagascar_HD.zip">Madagascar.avi</a> (DX50)
     </span>
   </p>
 
-  <p class="normal">
+  <p>
     <strong>まとめ</strong>
   </p>
 
-  <ul class="normal">
+  <ul>
     <li>画像処理フィルタを使用しない場合、ほとんど<strong>差がありません</strong>｡</li>
     <li>ICL9 (SSE) ビルドは<em>xsharpen</em>使用時には最速であることが証明されました｡MSVCビルドと比較して88％の高速化がなされています。</li>
     <li>SSE2ビルドはSSEビルドに対する優位性を証明できませんでした｡</li>
@@ -92,19 +92,19 @@
       ベンチマークにはHaaliの<a class="links" href="http://haali.cs.msu.ru/mkv/timeCodec.exe">timeCodec.exe</a>[96KB] を使用します。timeCodec.exeが動作するためには <a class="links" href="http://haali.cs.msu.ru/mkv/">Haali Media Splitter</a> が必要です。</li>
   </ul>
 
-  <p class="small_caption">
+  <h2>
     <a name="stable" id="stable">どのビルドが一番安定していますか？</a>
-  </p>
+  </h2>
 
-  <p class="normal">
+  <p>
     多分generic buildsが最も安定しています｡しかしGCCによるビルドに既知の問題はありません。ICLビルドは唯一古いx264エンコーダによって作られたファイルでクラッシュするという問題があるのみで、通常実使用の場面でそういったファイルに遭遇することはないでしょう。したがって安定性の面ではどのビルドを使ってもよいと言えるでしょう｡
   </p>
 
-  <p class="small_caption">
+  <h2>
     <a name="multithreaded" id="multithreaded">ffdshowはマルチスレッドに対応していますか？</a>
-  </p>
+  </h2>
 
-  <ul class="normal">
+  <ul>
     <li>リサイズは完全にマルチスレッド化されておりデュアルコアCPUなどでより高速に処理されます（設定不要）。ただしPentium4 HTでは効果がありません。</li>
     <li>xvidエンコーダはマルチスレッドに対応しています。</li>
     <li>x264エンコーダはマルチスレッドに対応しています。</li>
@@ -113,14 +113,21 @@
     <li>libavcodecのMPEG4/MPEG2/MPEG1エンコーダはマルチスレッドに対応しています 。</li>
   </ul>
 
-  <div class="normal">
-    <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
-  </div>
-
-  <div style="padding-top:20px">
-    <a href="http://sourceforge.net">
-      <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
-    </a>
+  <div class="footer">    
+    <table>
+      <tr>
+        <td>
+          <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a href="http://sourceforge.net">
+            <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
+          </a>
+        </td>
+      </tr>
+    </table>    
   </div>
 </body>
 </html>

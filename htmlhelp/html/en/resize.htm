@@ -20,102 +20,107 @@
     &nbsp;<a class="links" href="../jp/resize.htm" title="Japanese resize documentation"><img src="../images/japan.png" alt="Japanese resize documentation" width="27" height="17" />&nbsp;Japanese</a>
   </div>
 
-  <p class="big_caption">
+  <h1>
     <a name="top" id="top">Resize &amp; aspect</a>
-  </p>
+  </h1>
 
   <img src="images/resize.png" title="Resize dialog" alt="Resize dialog" width="558" height="412" />
 
-  <p class="normal">
+  <p>
     This document is based on rev 1103 or later. Beta2a has different specification.
   </p>
 
-  <p class="small_caption">
+  <h2>
     <img src="../images/combo.png" title="" alt="" width="13" height="13" />
     Specify horizontal and vertical size
-  </p>
+  </h2>
 
-  <ul class="normal">
+  <ul>
     <li>"No aspect ratio correction" selected: Stretched or shrinked to the specified size.</li>
     <li>"Keep original aspect ratio" selected: Stretched or shrinked until either width or height touch the specified size <em>using the original aspect ratio</em>. Black borders are added, if necessary.</li>
     <li>Manually configured: Stretched or shrinked until either width or height touch the specified size <em>using the specified aspect ratio</em>. Black borders are added, if necessary.</li>
   </ul>
 
-  <p class="small_caption">
+  <h2>
     <img src="../images/combo.png" title="" alt="" width="13" height="13" />
     Specify horizontal size
-  </p>
+  </h2>
 
-  <ul class="normal">
+  <ul>
     <li style="list-style-type:none; position:relative; left:-20px">Height is calculated automatically to keep original aspect ratio.</li>    
     <li>"No aspect ratio correction" and "Keep original aspect ratio" give the same result.</li>
     <li>Manually configured: You can specify aspect ratio manually.</li>
   </ul>
 
-  <p class="small_caption">
+  <h2>
     <img src="../images/combo.png" title="" alt="" width="13" height="13" />
     Specify aspect ratio
-  </p>
+  </h2>
 
-  <ul class="normal">
+  <ul>
     <li style="list-style-type:none; position:relative; left:-20px">Height is calculated based on width. (Let's call it a <em>box</em> here.)</li>
     <li>"No aspect ratio correction" selected: Stretched to fill the box.</li>
     <li>"Keep original aspect ratio" selected: Stretched or shrinked until either width or height touch the box <em>using the original aspect ratio</em>. Black borders are added, if necessary.</li>
     <li>Manually configured: Stretched or shrinked until either width or height touch the box <em>using the specified aspect ratio</em>. Black borders are added, if necessary.</li>
   </ul>
 
-  <p class="small_caption">
+  <h2>
     <img src="../images/combo.png" title="" alt="" width="13" height="13" />
     Expand to next multiply of
-  </p>
+  </h2>
 
-  <ul class="normal">
+  <ul>
     <li>Both width and height are expanded to the next multiple of the specified value. For example, if you specify 100, 320x160 becomes 400x200. You may want to use this mode when ffdshow connects to a filter which does not work with width or height of non-multiple of 16.</li>
     <li>"Keep original aspect ratio" and "Manual" work in this mode too.</li>
   </ul>
 
-  <p class="small_caption">
+  <h2>
     <img src="../images/combo.png" title="" alt="" width="13" height="13" />
     Multiply by
-  </p>
+  </h2>
 
-  <ul class="normal">
+  <ul>
     <li>Both horizontal and vertical sizes are stretched using the specified magnification ratio.</li>
   </ul>
 
-  <p class="small_caption">
+  <h2>
     <img src="../images/check.png" title="" alt="" width="13" height="13" />
     Process pixel aspect ratio internally
-  </p>
+  </h2>
 
-  <ul class="normal">
+  <ul>
     <li>If checked (by default), resize to the size taking into account pixel aspect ratio (SAR), and fix output SAR 1:1.</li>
     <li>If unchecked, output SAR equals input SAR and the video renderer (or any downstream filter) handles it.</li>
   </ul>
 
-  <p class="small_caption">
-    Example
-  </p>
+  <h2>Example</h2>
 
-  <p class="normal">
+  <p>
     Following situation: You have a projector with 1280x720 resolution and you want to play a DVD whose pixel aspect ratio (SAR) changes during playback.<br />
     How to configure ffdshow's resize options properly?
   </p>
 
-  <ul class="normal" style="list-style-type:circle">
+  <ul style="list-style-type:circle">
     <li>"Specify horizontal and vertical size" -> "1280x720".</li>
     <li>Select "Keep original aspect ratio".</li>
     <li>Make sure "Process pixel aspect ratio internally" is checked.</li>
   </ul>
 
-  <div class="normal">
-    <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
-  </div>
-
-  <div style="padding-top:20px">
-    <a href="http://sourceforge.net">
-      <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
-    </a>
+  <div class="footer">    
+    <table>
+      <tr>
+        <td>
+          <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a href="http://sourceforge.net">
+            <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
+          </a>
+        </td>
+      </tr>
+    </table>    
   </div>
 </body>
 </html>

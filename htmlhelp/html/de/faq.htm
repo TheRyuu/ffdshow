@@ -7,7 +7,7 @@ have been made, which were ported to this translation (even if nothing
 was changed here). This is to know which revisions are not ported yet.
 If you skip to port a revision please note that revision for later porting. -->
 
-<!-- In sync with revision 1255 exept for revision(s) -none-. -->
+<!-- In sync with revision 1258 except for revision(s) -none-. -->
 
 <head>
   <title>ffdshow tryouts | FAQ</title>
@@ -28,9 +28,9 @@ If you skip to port a revision please note that revision for later porting. -->
     &nbsp;<a class="links" href="../jp/faq.htm" title="Japanese FAQ"><img src="../images/japan.png" alt="Japanese FAQ" width="27" height="17" />&nbsp;Japanese</a>
   </div>
 
-  <p class="big_caption">
+  <h1>
     <a name="top" id="top">FAQ</a>
-  </p>
+  </h1>
 
   <ul class="links">
     <li><a class="nav" href="#difference">Was ist der Unterschied zwischen generischen und SSE/SSE2-Builds?</a></li>
@@ -40,57 +40,57 @@ If you skip to port a revision please note that revision for later porting. -->
     <li><a class="nav" href="#multithreaded">Ist ffdshow multithreaded?</a></li>
   </ul>
 
-  <p class="small_caption">
+  <h2>
     <a name="difference" id="difference">Was ist der Unterschied zwischen generischen und SSE/SSE2-Builds?</a>
-  </p>
+  </h2>
 
-  <p class="normal">
+  <p>
     Der Hauptunterschied ist der Compiler, der zum Kompilieren von <em>ffdshow.ax</em> verwendet wird. Es werden vier verschiedene Compiler verwendet: <em>MSVC71</em>, <em>MSVC80</em>, <em>GCC</em> und <em>ICL9</em>.<br />
     The CPU-Anforderungen f&uuml;r die Builds sind wie folgt:
   </p>
 
-  <ul class="normal">
+  <ul>
     <li>Generische Builds ben&ouml;tigen einen Pentium-MMX/AMD K6 oder neuer.</li>
     <li>SSE-Builds (MSVC &amp; ICL) ben&ouml;tigen einen Pentium III/Athlon XP oder neuer.</li>
     <li>SSE2-Builds ben&ouml;tigen einen Pentium 4/Athlon 64 oder neuer.</li>
   </ul>
 
-  <p class="small_caption">
+  <h2>
     <a name="performance" id="performance">Welches Build hat die beste Dekodierleistung?</a>
-  </p>
+  </h2>
 
-  <p class="normal">
+  <p>
     Alle Builder verwenden den GCC-Compiler um <em>libavcodec</em>, welches ffdshows Hauptbibliothek zum Dekodieren ist, zu erstellen. Diese Bibliothek enth&auml;lt eine Menge handoptimierten Assembler-Codes, welcher automatisch die von der CPU unterst&uuml;tzten Eigenschaften und Befehlss&auml;tze erkennt. Die Verwendung zus&auml;tzlicher Compileroptimierungen oder erweiterter Befehlss&auml;tze (wie SSE/SSE2) resultiert in keinem signifikanten oder sp&uuml;rbaren Geschwindigkeitszuwachs. Wenn also die reine Dekodiergeschwindigkeit verglichen wird, gibt es nahezu <strong>keinen Unterschied</strong> zwischen den Builds.
   </p>
 
-  <p class="small_caption">
+  <h2>
     <a name="perf_filters" id="perf_filters">Welches Build hat die beste Dekodierleistung, wenn Filter verwendet werden?</a>
-  </p>
+  </h2>
 
-  <p class="normal">
+  <p>
     Optimierte Builds von <em>ffdshow.ax</em> haben Auswirkungen auf die Geschwindigkeit, wenn bestimmte Filter in ffdshow verwendet werden.<br />
     Unterhalb befindet sich eine Liste von - bis jetzt getesteten - Filtern, die von Optimierungen profitieren:
   </p>
 
-  <ul class="normal">
+  <ul>
     <li>xsharpen</li>
     <li>denoise3d</li>
   </ul>
 
-  <p class="normal">
+  <p>
     Das folgende Diagramm stellt die m&ouml;glichen Zuw&auml;chse in der Dekodiergeschwindigkeit, wenn optimierte Builds <strong>und</strong> Filter verwendet werden, dar:<br /><br />
     <img src="images/benchmark.png" width="498" height="600" title="ffdshow-Build-802-Test" alt="ffdshow-Build-802-Test" /><br />
-    <span class="small">
+    <span style="font-size:0.8em">
       Testsystem: Pentium 4 2.8GHz (Northwood), Windows XP SP2, Null Renderer verwendet<br />
       Testbeispiel: <a class="links" href="http://trailers.divx.com/Dreamworks/Madagascar_HD.zip">Madagascar.avi</a> (DX50)
     </span>
   </p>
 
-  <p class="normal">
+  <p>
     Zusammenfassend:
   </p>
 
-  <ul class="normal">
+  <ul>
     <li>Wird ohne Filter anzuwenden dekodiert, sind die Ergebnisse <strong>nicht zu unterscheiden</strong>. Alle Builds bewegen sich innerhalb von 2%.</li>
     <li>Das ICL9-(SSE)-Build zeigte sich als das Schnellste, wenn der <em>xsharpen</em>-Filter verwendet wird. Die Dekodierleistung liegt 88% &uuml;ber den generischen MSVC-Builds.</li>
     <li>SSE2-optimierte Builds zeigten keinerlei Verbesserung gegen&uuml;ber SSE-Builds.</li>
@@ -99,23 +99,23 @@ If you skip to port a revision please note that revision for later porting. -->
       Zu Testzwecken wird Haalis <a class="links" href="http://haali.cs.msu.ru/mkv/timeCodec.exe">timeCodec.exe</a> [96KB] ben&ouml;tigt. Damit <em>timeCodec.exe</em> funktioniert, ist <a class="links" href="http://haali.cs.msu.ru/mkv/">Haali Media Splitter</a> Voraussetzung.</li>
   </ul>
 
-  <p class="small_caption">
+  <h2>
     <a name="stable" id="stable">Welches Build ist das Stabilste?</a>
-  </p>
+  </h2>
 
-  <p class="normal">
+  <p>
     MSVC-Builds von <em>ffdshow.ax</em> sind vermutlich die Stabilsten, allerdings sind auch keine Fehler in GCC-Builds bekannt. In ICL-Builds existiert nur ein bekannter Fehler: Sie st&uuml;rzen bei Dateien, die mit einer sehr alten und fehlerhaften Version von x264 erstellt wurden, ab. Allerdings ist es unwahrscheinlich solchen Dateien wirklich einmal zu begegnen. Von der Stabilit&auml;t betrachtet, spielt das Build also keine Rolle.
   </p>
 
-  <p class="small_caption">
+  <h2>
     <a name="multithreaded" id="multithreaded">Ist ffdshow multithreaded?</a>
-  </p>
+  </h2>
 
-  <p class="normal">
+  <p>
     Die folgende Liste gibt eine &Uuml;bersicht der Teile ffdshows, die multithreaded sind und somit Verbesserungen zeigen, wenn sie auf einem Multicore-System ausgef&uuml;hrt werden:
   </p>
 
-  <ul class="normal">
+  <ul>
     <li>Der <em>resize</em>-Filter ist vollst&auml;ndig multithreaded. Er ist auf Dualcore-Systemen schneller (auf Pentium 4 HT-CPUs ineffektiv) und ben&ouml;tigt hierf&uuml;r keinerlei Konfiguration.</li>
 	  <li>Der Xvid-Enkoder ist multithreaded.</li>
 	  <li>Der x264-Enkoder ist multithreaded.</li>
@@ -124,14 +124,21 @@ If you skip to port a revision please note that revision for later porting. -->
     <li>libavcodecs MPEG4/MPEG2/MPEG1-Encoder sind multithreaded.</li>
   </ul>
 
-  <div class="normal">
-    <a class="nav" href="#top">Zum Anfang&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
-  </div>
-
-  <div style="padding-top:20px">
-    <a href="http://sourceforge.net">
-      <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
-    </a>
+  <div class="footer">    
+    <table>
+      <tr>
+        <td>
+          <a class="nav" href="#top">Zum Anfang&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a href="http://sourceforge.net">
+            <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
+          </a>
+        </td>
+      </tr>
+    </table>    
   </div>
 </body>
 </html>

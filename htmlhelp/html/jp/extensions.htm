@@ -15,48 +15,55 @@
     <img src="../images/logo_phpBB.png" title="ffdshow tryouts" alt="ffdshow tryouts" width="200" height="91" />
   </a>
 
-  <p class="big_caption">
+  <h1>
     <a name="top" id="top">拡張子とffdshow</a>
-  </p>
+  </h1>
 
-  <p class="small_caption">
+  <h2>
     <a name="container" id="container">コンテナ</a>
-  </p>
+  </h2>
 
-  <p class="normal">
+  <p>
     DirectShowの世界で拡張子(AVI, MKV, MOVなど)が表すものはコンテナです。コンテナとは入れ物のことです。
     コンテナには動画、音声、字幕などが格納されています（参考：<a href="dshow.htm" class="links">DirectShow入門</a>）。
     そしてコンテナから動画や音声を取り出すには<b>スプリッタ</b>が必要になります。ffdshowにはこのスプリッタは含まれていません。
     つまり本来ffdshowとは別の話ですが、「ffdshowを使って動画を見る」という視点から避けて通れない話題です。
   </p>
 
-  <p class="small_caption">
+  <h2>
     <a name="FLV" id="FLV">FLV</a>
-  </p>
+  </h2>
 
-  <p class="normal">
+  <p>
     FLV(Flash Video)はアドビシステムズ（旧マクロメディア）が開発したコンテナでYouTubeなどでのストリーミング配信に多く用いられています。<br />
     flvファイルを再生するには<a class="links" href="http://sourceforge.net/project/showfiles.php?group_id=82303&amp;package_id=183318&amp;release_id=403108" target="_blank">FLVSplitter</a>をインストールします。左のリンクからダウンロードしたファイルは<a href="http://sourceforge.net/project/showfiles.php?group_id=14481" class="links" target="_blank">7z</a>というアーカイバで圧縮されていますのでまずこれを解凍します（7zをインストール後ファイルを右クリックして7-Zip→解凍）。
-    Windows NT/2000/Xpでは"Release Unicode"を、Windows 95/98/Meでは"Release"を開きます。"&yenProgram
-    Files&yenguliverkli"というフォルダを作成しFLVSplitter.axをコピーします。<br />
+    Windows NT/2000/Xpでは"Release Unicode"を、Windows 95/98/Meでは"Release"を開きます。"&yen;Program
+    Files&yen;guliverkli"というフォルダを作成しFLVSplitter.axをコピーします。<br />
     スタートメニューから「ファイル名を指定して実行」を選択、次のように入力します。
   </p>
 
   <img src="images/regsvr.png" alt="regsvr32 ”￥Program Files￥guliverkli￥FLVSplitter.ax" title="regsvr32" width="403" height="175" />
 
-  <p class="normal">
-    「&yenProgram Files&yenguliverkli&yenFLVSplitter.ax の DllRegisterServerは成功しました。」と表示されればインストールは完了です。<br />
+  <p>
+    「&yen;Program Files&yen;guliverkli&yen;FLVSplitter.ax の DllRegisterServerは成功しました。」と表示されればインストールは完了です。<br />
     FLVコンテナの中身の動画はFLV1かVP6Fです。ffdshowの<a href="dshow.htm#configCodec" class="links">コーデック設定</a>でlibavcodecに設定しておいて下さい。
   </p>
 
-  <div class="normal">
-    <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
-  </div>
-
-  <div style="padding-top:20px">
-    <a href="http://sourceforge.net">
-      <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
-    </a>
+  <div class="footer">    
+    <table>
+      <tr>
+        <td>
+          <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a href="http://sourceforge.net">
+            <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
+          </a>
+        </td>
+      </tr>
+    </table>    
   </div>
 </body>
 </html>

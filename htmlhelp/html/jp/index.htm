@@ -21,11 +21,11 @@
       &nbsp;<a class="links" href="../de/index.htm" title="German changelog"><img src="../images/germany.png" alt="German changelog" width="27" height="17" />&nbsp;German</a>
     </div>
 
-    <p class="big_caption">
+    <h1>
       <a name="top" id="top">更新履歴</a>
-    </p>
+    </h1>
 
-    <p class="normal">オリジナルのffdshow projectの最新バージョンからマルチスレッドパッチを取り除いた状態を基準としています。<br />
+    <p>オリジナルのffdshow projectの最新バージョンからマルチスレッドパッチを取り除いた状態を基準としています。<br />
       Navigate to:
     </p>
     <ul class="links">
@@ -35,17 +35,19 @@
       <li><a class="nav" href="faq.htm">FAQ</a></li>
     </ul>
 
-
-    <p>
+    <h2>
       <a name="fixes" id="fixes">
-        <span class="medium_caption">不具合の修正</span>
-      </a><br />
-        <span class="normal">tryoutsで新たに加わり修正された不具合は含みません。</span>
+        不具合の修正
+      </a>
+    </h2>
+    
+    <p>
+      tryoutsで新たに加わり修正された不具合は含みません。
     </p>
 
-    <p class="small_caption">
+    <h3>
       beta2以降の修正
-    </p>
+    </h3>
 
     <ul class="fixed">
       <li>libavcodecのエンコーダが25fps以外のフレームレートを受け付けなかった。他のエンコーダでも微妙にフレームレートがずれるなどの不具合があった。</li>
@@ -60,9 +62,9 @@
       <li>AviSynthのスクリプトが保存出来なかった（Unicode版のみ）。</li>
     </ul>
 
-    <p class="small_caption">
+    <h3>
       beta2以前の修正
-    </p>
+    </h3>
 
     <ul class="fixed">
       <li>DVDなどでアスペクト比が変更された後、画像の高さが半分になっていた（オーバーレイミキサとYUY2使用時）。</li>
@@ -96,9 +98,9 @@
       <li>Kernel deinterlaceの次の内部フィルターが１フレームおきにスキップされていた。次の内部フィルターがリサイズであった場合フレーム毎にビデオサイズが変化していた。</li>
     </ul>
 
-    <p class="small_caption">
+    <h3>
       beta1までの修正
-    </p>
+    </h3>
 
     <ul class="fixed">
       <li>Windows Media Encoderでファイルの変換を行う時にffdshowがオーディオデコーダとして使用されクラッシュしていた。</li>
@@ -136,15 +138,15 @@
       <li>AviSynthのスクリプトにエラーがあるとOSD表示されるが、そのエラーメッセージがAviSynthを無効にしても消えなかった。</li>
     </ul>
 
-    <p class="medium_caption">
+    <h2>
       <a name="features" id="features">
         新機能
       </a>
-    </p>
+    </h2>
 
-    <p class="small_caption">
+    <h3>
       beta2以降の追加
-    </p>
+    </h3>
 
     <ul class="added">
       <li>Xvidデコーダ(Xvidcore)のインターレース解除をサポート（インターレース関連フラグを設定）。</li>
@@ -161,9 +163,9 @@
       <li>オーディオデコーダーの出力形式としてマルチチャンネルストリームのみをAC3エンコードする機能を追加（直接SPDIF出力できないマルチチャンネル・オーディオを一旦AC3にエンコードしてAVアンプへ出力することを意図したもの）。</li>
     </ul>
 
-    <p class="small_caption">
+    <h3>
       beta2以前の追加
-    </p>
+    </h3>
 
     <ul class="added">
       <li>字幕の影の改善。3つのモードの新しい陰影が使用できます。</li>
@@ -180,9 +182,9 @@
       <li>キュー：VMR9に内蔵されているキューを利用できるようにした。</li>
     </ul>
 
-    <p class="small_caption">
+    <h3>
       beta1までの追加
-    </p>
+    </h3>
 
     <ul class="added">
       <li>H.264 MBAFF（インターレース）のサポート</li>
@@ -196,25 +198,32 @@
       <li>SVQ3のデコード時にスプリッタから十分な情報が得られなかった際エラーメッセージを表示するようにした。</li>
     </ul>
 
-    <p class="big_caption">
+    <h2>
       <a name="download" id="download">
         ダウンロード
       </a>
-    </p>
+    </h2>
 
     <ul class="download">
       <li><a class="nav" href="http://downloads.sourceforge.net/ffdshow-tryout/ffdshow_beta2a_20070322_clsid.exe">ダウンロード　beta2a(安定版)</a></li>
       <li><a class="nav" href="http://sourceforge.net/project/showfiles.php?group_id=173941">ダウンロード　Nightly builds(最新版)</a></li>
     </ul>
 
-    <div class="normal">
-      <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
-    </div>
-
-    <div style="padding-top:20px">
-      <a href="http://sourceforge.net">
-        <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
-      </a>
-    </div>
+    <div class="footer">    
+    <table>
+      <tr>
+        <td>
+          <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a href="http://sourceforge.net">
+            <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
+          </a>
+        </td>
+      </tr>
+    </table>    
+  </div>
 </body>
 </html>

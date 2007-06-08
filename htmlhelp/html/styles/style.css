@@ -1,50 +1,46 @@
 body {
-	background-color: rgb(255,255,255)
-}
-.normal {
-	color: rgb(0,0,0); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 90%
-}
-.small {
-	color: rgb(0,0,0); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 75%
+	color: rgb(0,0,0); background-color: rgb(255,255,255); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 82% 
 }
 img {
 	border: none
 }
-div {
-	text-align: center
-}
 div.translation {
-	text-align: right; font-size: 75%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold
+	text-align: right; font-size: 0.9em; font-weight: bold
+}
+div.footer {
+  text-align: center
+}
+div.footer td {
+  padding-top: 12px
 }
 table {
   width: 100%
 }
-.big_caption {
-	font-size: 145%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold
+h1 {
+  font-size: 1.8em
 }
-.medium_caption {
-	font-size: 115%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold
+h2 {
+  font-size: 1.5em
 }
-.small_caption {
-	font-size: 105%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold
+h3 {
+  font-size: 1.3em
 }
-.smaller_caption {
-	font-size: 90%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold
+h4 {
+  font-size: 1.1em
 }
-.smallest_caption {
-	font-size: 75%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold
-}
+/* For lists in the FAQ */
 ul.added {
-  color: rgb(0,0,128); list-style-type: disc; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 90%
+  color: rgb(0,0,128); list-style-type: disc
 }
 ul.fixed {
-  color: rgb(128,0,0); list-style-type: circle; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 90%
+  color: rgb(128,0,0); list-style-type: circle
 }
 ul.download {
-  list-style-type: square; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 90%
+  list-style-type: square
 }
+/* For list of links */
 ul.links {
-  list-style-image: url(../images/arrow.png); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 90%
+  list-style-image: url(../images/arrow.png)
 }
 /* For navigation and download links inside <ul> elements as well as "Top" anchor */
 a.nav:link {

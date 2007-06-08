@@ -21,9 +21,9 @@
     &nbsp;<a class="links" href="../jp/faq.htm" title="Japanese FAQ"><img src="../images/japan.png" alt="Japanese FAQ" width="27" height="17" />&nbsp;Japanese</a>
   </div>
 
-  <p class="big_caption">
+  <h1>
     <a name="top" id="top">FAQ</a>
-  </p>
+  </h1>
 
   <ul class="links">
     <li><a class="nav" href="#difference">What is the difference between generic and SSE/SSE2 builds?</a></li>
@@ -33,57 +33,57 @@
     <li><a class="nav" href="#multithreaded">Is ffdshow multithreaded?</a></li>
   </ul>
 
-  <p class="small_caption">
+  <h2>
     <a name="difference" id="difference">What is the difference between generic and SSE/SSE2 builds?</a>
-  </p>
+  </h2>
 
-  <p class="normal">
+  <p>
     The main difference is the compiler that is used for compiling <em>ffdshow.ax</em>. There are four different compilers being used: <em>MSVC71</em>, <em>MSVC80</em>, <em>GCC</em> and <em>ICL9</em>.<br />
     The CPU requirements for the builds are as follows:
   </p>
 
-  <ul class="normal">
+  <ul>
     <li>Generic builds work on Pentium-MMX/AMD K6 or later.</li>
     <li>SSE (ICL &amp; GCC) builds work on Pentium III/Athlon XP or later.</li>
     <li>SSE2 builds work on Pentium 4/Athlon 64 or later.</li>
   </ul>
 
-  <p class="small_caption">
+  <h2>
     <a name="performance" id="performance">Which build has the best decoding performance?</a>
-  </p>
+  </h2>
 
-  <p class="normal">
+  <p>
     All builders use the GCC compiler to build <em>libavcodec</em>, which is ffdshow's main library for decoding. This library contains a lot of hand-optimized assembly code (which auto-detects the CPU's supported feature and instruction sets). Using additional compiler optimizations or advanced instruction sets (such as SSE/SSE2) doesn't result in any significant or noticeable performance increases. So when comparing pure decoding performance, there is almost <strong>no difference</strong> between the builds.
   </p>
 
-  <p class="small_caption">
+  <h2>
     <a name="perf_filters" id="perf_filters">Which build has the best decoding performance when using filters?</a>
-  </p>
+  </h2>
 
-  <p class="normal">
+  <p>
     Optimized builds of <em>ffdshow.ax</em> have an impact on performance when certain filters are used in ffdshow.<br />
     Below is a list of - so far tested - filters that benefit from optimizations:
   </p>
 
-  <ul class="normal">
+  <ul>
     <li>xsharpen</li>
     <li>denoise3d</li>
   </ul>
 
-  <p class="normal">
+  <p>
     The following chart illustrates the possible increase in decoding performance when using optimized builds <strong>and</strong> filters:<br /><br />
     <img src="images/benchmark.png" width="498" height="600" title="ffdshow build 802 benchmark" alt="ffdshow build 802 benchmark" /><br />
-    <span class="small">
+    <span style="font-size:0.8em">
       Test setup: Pentium 4 2.8GHz (Northwood), Windows XP SP2, using null renderer<br />
       Test sample: <a class="links" href="http://trailers.divx.com/Dreamworks/Madagascar_HD.zip">Madagascar.avi</a> (DX50)
     </span>
   </p>
 
-  <p class="normal">
+  <p>
     To sum it up:
   </p>
 
-  <ul class="normal">
+  <ul>
     <li>The results when decoding without any filters applied are <strong>indistinguishable</strong>. All builds perform within 2% of each other.</li>
     <li>The ICL9 (SSE) build proved to be the fastest when using the <em>xsharpen</em> filter. The decoding speed increased by 88% over generic MSVC builds.</li>
     <li>SSE2-optimized builds showed no improvement over SSE builds.</li>
@@ -92,23 +92,23 @@
       For benchmarking purposes, you will need Haali's <a class="links" href="http://haali.cs.msu.ru/mkv/timeCodec.exe">timeCodec.exe</a> [96KB]. For <em>timeCodec.exe</em> to work, <a class="links" href="http://haali.cs.msu.ru/mkv/">Haali Media Splitter</a> is needed.</li>
   </ul>
 
-  <p class="small_caption">
+  <h2>
     <a name="stable" id="stable">Which build is the most stable?</a>
-  </p>
+  </h2>
 
-  <p class="normal">
+  <p>
     MSVC builds of <em>ffdshow.ax</em> are probably the most stable. However, there are no known issues with GCC builds either. For ICL builds there is only one known issue: it crashes on files created with a very old and buggy build of x264, but you'll probably never encounter those files in real life. So from a stability point of view, the build doesn't matter.
   </p>
 
-  <p class="small_caption">
+  <h2>
     <a name="multithreaded" id="multithreaded">Is ffdshow multithreaded?</a>
-  </p>
+  </h2>
 
-  <p class="normal">
+  <p>
     The following list gives an overview of parts in ffdshow that are multithreaded and thus show an improvement when run on a multi-core CPU:
   </p>
 
-  <ul class="normal">
+  <ul>
     <li>The <em>resize</em> filter is fully multithreaded. It is faster on a dual-core CPU. No configuration is needed. It is not effective on Pentium 4 HT CPUs.</li>
     <li>Xvid encoder is multithreaded.</li>
     <li>x264 encoder is multithreaded.</li>
@@ -117,14 +117,21 @@
     <li>libavcodec's MPEG4/MPEG2/MPEG1 encoders are multithreaded.</li>
   </ul>
 
-  <div class="normal">
-    <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
-  </div>
-
-  <div style="padding-top:20px">
-    <a href="http://sourceforge.net">
-      <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
-    </a>
+  <div class="footer">    
+    <table>
+      <tr>
+        <td>
+          <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a href="http://sourceforge.net">
+            <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
+          </a>
+        </td>
+      </tr>
+    </table>    
   </div>
 </body>
 </html>
