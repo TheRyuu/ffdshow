@@ -66,7 +66,7 @@
     <li>Improved stability of Winamp plugin handling.</li>
     <li>On the fly resize: If you entered 8 (as the first digit of 800) for the vertical size, it crashed depending on the used method (lanczos tap>=4, spline, etc).</li>
     <li>If resize was being used, changes to the pixel aspect ratio (SAR) of the video were ignored.</li>
-    <li>If "Resize & aspect" -> "Borders" -> "Inside" was used, "Keep original aspect ratio" calculated wrong size.</li>
+    <li>If "Resize &amp; aspect" -> "Borders" -> "Inside" was used, "Keep original aspect ratio" calculated wrong size.</li>
     <li>AviSynth script could not be saved (Unicode builds only).</li>
   </ul>
 
@@ -85,9 +85,9 @@
     <li>Using Media Player Classic's internal Matroska splitter, the aspect ratio was always 1.</li>
     <li>When you opened audio configuration dialog during playback, the CPU usage was abnormally high and it sometimes freezed especially on ADPCM audio.</li>
     <li>When ffdshow connected to VobSub (VSFilter), ffdshow tried to use YV12 plus width of non-multiple of 8 and ended in crash.</li>
-    <li>When you configured "Resize & aspect" -> "Borders" -> "Inside" -> "100%", ffdshow ended in crash.</li>
+    <li>When you configured "Resize &amp; aspect" -> "Borders" -> "Inside" -> "100%", ffdshow ended in crash.</li>
     <li>Reconnecting to VMR9 (after resizing) sometimes failed.</li>
-    <li>PowerDVD7 produced a black screen because of a bug in DirectShow filter's connecting code (please remove PowerDVD.exe from "Info & debug" -> "Don't use ffdshow in:").</li>
+    <li>PowerDVD7 produced a black screen because of a bug in DirectShow filter's connecting code (please remove PowerDVD.exe from "Info &amp; debug" -> "Don't use ffdshow in:").</li>
     <li>If a subtitle unit contained too many lines for the specified space, lines were being dropped.</li>
     <li>The right edges of italic subtitles were cut off. If "fast rendering" was enabled, italic text was sometimes shown as non-italic and vice versa.</li>
     <li>Some SVQ3 videos caused freeze.</li>
@@ -158,12 +158,12 @@
     <li>A dialog has been added to show a message when an unknown application (that is not listed in the whitelist) tries to load ffdshow.</li>
     <li>libavcodec encoders pop up error messages.</li>
     <li>The AviSynth filter was updated to give scripts access to more frames than just the current one. Together with the added "3:2 pulldown" settings this allows many of the IVTC, deinterlacing and temporal filters for AviSynth to work properly in ffdshow.</li>
-    <li>Updated icons ( <img style="vertical-align:middle" src="../images/modern_icon_xp.png" alt="New ffdshow icons" width="60" height="23" /> ). Classic icons are still available.</li>
+    <li>Updated icons ( <img style="vertical-align:middle" src="../images/modern_icon_xp.png" width="60" height="23" title="New ffdshow icons" alt="New ffdshow icons" /> ). Classic icons are still available.</li>
     <li>ATRAC3 (Adaptive TRansform Acoustic Coding, compressed audio format) has been added.</li>
     <li>Xvid encoder has been multithreaded.</li>
     <li>Support for SPDIF on Windows Vista has been added ("Audio decoder configuration" -> "Output" -> "Connect to:").</li>
     <li>Multichannel audio processing by Winamp plugins has been added.</li>
-    <li>In "Resize & aspect" dialog, a new check box "Process pixel aspect ratio internally" has been added.</li>
+    <li>In "Resize &amp; aspect" dialog, a new check box "Process pixel aspect ratio internally" has been added.</li>
     <li>Resize GUI: "Specify horizontal size" instead of "Specify vertical size 0 for auto".</li>
     <li>Audio decoder AC3 output: the new check box "Encode only multichannel streams" allows sending multichannel audio (which otherwise cannot be digitally sent) to AV-amp in AC3-SPDIF.</li>
   </ul>

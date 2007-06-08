@@ -42,7 +42,7 @@
         <li><em>I420/IYUV</em>: Similar to YV12 described below, but less hardware support. Not recommended, even if it's supported by your video card, as YV12 is faster. Uses 12 bits per pixel (bpp).</li>
         <li><em>YV12</em>: Almost always the fastest output mode (video codecs usually use YV12 for storage). The recommended output for most system setups. Although some older/onboard video cards do not support it - if this is the case for you, try YUY2. Windows Media Player sometimes has trouble with YV12 output. Uses 12bpp.</li>
         <li><em>YUY2</em>: Used by MJPEG and some MPEG2 video streams, and has slightly more color definition than YV12. Slightly slower to output than YV12, but generally not by much. If your input video is YUY2, or your video card doesn't support YV12, this is the recommended output. Uses 16bpp.</li>
-        <li><em>YVYU & UYVY</em>: Rare and unused, avoid. Uses 12bpp.</li>
+        <li><em>YVYU &amp; UYVY</em>: Rare and unused, avoid. Uses 12bpp.</li>
         <li><em>NV12</em>: Another rare output format, not even supported by many cards. Uses 12bpp.</li>
       </ul>    
     </li>
@@ -54,8 +54,8 @@
       These modes use the more traditional and familiar color format of RGB. Read about RGB on <a class="links" href="http://en.wikipedia.org/wiki/RGB">wikipedia</a> (again). RGB output is slower, but possibly more accurate than YUV output - the difference will be minimal in any case.<br />
       The following RGB formats are supported:
       <ul style="list-style-type:circle">
-        <li><em>RGB32 & RGB24</em>: These modes will give you the same picture output, the only difference is that RGB32 is packed to 32bits which is usually faster to manipulate. These modes use 32 or 24bpp respectively.</li>
-        <li><em>RGB16 & RGB15</em>: Same as bove, but only 16/15bit. RGB15 is a bad idea unless you know it's a good idea. These use 16 or 15bpp respectively.</li>
+        <li><em>RGB32 &amp; RGB24</em>: These modes will give you the same picture output, the only difference is that RGB32 is packed to 32bits which is usually faster to manipulate. These modes use 32 or 24bpp respectively.</li>
+        <li><em>RGB16 &amp; RGB15</em>: Same as bove, but only 16/15bit. RGB15 is a bad idea unless you know it's a good idea. These use 16 or 15bpp respectively.</li>
         <li><em>High Quality YUV to RGB Conversion</em>: Because (almost) all video files are compressed in a YUV format (usually YV12), ffdshow must convert from the YUV color system to the RGB color system when outputting RGB modes. This checkbox will instruct it to use a slower, but higher quality conversion method. If you are planning on taking screenshots, or <em>really</em> need every last drop of faithful quality reproduction, enable this.</li>
       </ul>
     </li>
@@ -96,7 +96,7 @@
   </ul>
   
   <p class="smaller_caption">
-    Tips & Tricks
+    Tips &amp; Tricks
   </p>
   
   <ul class="normal" style="list-style-type:square">
