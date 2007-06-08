@@ -2,11 +2,12 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
-<!-- Please update the revision number when changes to the markup code 
-have been made, which were ported to this translation (even if nothing 
-was changed here). This is to know which revisions are not ported yet.-->
+<!-- Please update the revision number when changes to the markup code
+have been made, which were ported to this translation (even if nothing
+was changed here). This is to know which revisions are not ported yet.
+If you skip to port a revision please note that revision for later porting. -->
 
-<!-- In sync with revision 1256. -->
+<!-- In sync with revision 1257 exept for revision(s) -none-. -->
 
 <head>
   <title>ffdshow tryouts | Changelog</title>
@@ -93,7 +94,7 @@ was changed here). This is to know which revisions are not ported yet.-->
     <li>Wenn sich ffdshow mit VobSub (VSFilter) verband, versuchte es YV12 mit einer Breite, die kein Vielfaches von 8 war, zu verwenden und st&uuml;rzte ab.</li>
     <li>Wenn "Gr&ouml;&szlig;e &amp; Seitenverh&auml;ltnis" -> "R&auml;nder" -> "Innen" -> "100%" konfiguriert wurde, st&uuml;rzte ffdshow ab.</li>
     <li>Wiederverbinden zu VMR9 (nach Resizing) schlug manchmal fehl.</li>
-    <li>PowerDVD7 verursachte einen schwarzen Bildschirm, wegen eines Fehlers im Verbindungscode des DirectShow-Filters (bitte entfernen Sie PowerDVD.exe aus "Info &amp; Fehlerbehebung" -> "ffdshow nicht verwenden in:").</li>
+    <li>PowerDVD7 verursachte einen schwarzen Bildschirm, wegen eines Fehlers im Verbindungscode des DirectShow-Filters (bitte entfernen Sie PowerDVD.exe aus "DirectShow-Optionen" -> "ffdshow nicht verwenden in:").</li>
     <li>Falls eine Untertiteleinheit zu viele Zeilen f&uuml;r den angegebenen Platz enthielt, wurden Zeilen nicht dargestellt.</li>
     <li>Die rechten Ecken von kursiven Untertiteln waren abgeschnitten. Falls "schnelles Rendering" aktiviert war, wurde kursiver Text manchmal als nicht-kursiv dargestellt und umgekehrt.</li>
     <li>Einig SVQ3-Videos verursachten ein Einfrieren.</li>
@@ -160,9 +161,11 @@ was changed here). This is to know which revisions are not ported yet.-->
   </p>
 
   <ul class="added">
+    <li>Deinterlacing-Unterst&uuml;tzung (setzten des Interlace-Flags) f&uuml;r MPEG4-ASP durch den Xvidcore-Dekoder.</li>
+    <li>Ein Dialog wird gezeigt, wenn eine unbekannte Anwendung (welche weder in der Black- noch in der Whitelist gef&uuml;hrt ist) versucht ffdshow zu laden.</li>
     <li>libavcodec-Enkoder lie&szlig;en Fehlermeldungen erscheinen.</li>
-    <li>Im AviSynthfilter, ist nun nicht nur das aktuelle Bild sondern auch voherige und zuk&uuml;nftige Bilder verf&uuml;gbar. "3:2 pulldown", hochentwickeltes IVTC sowie Deinterlacing werden unterst&uuml;tzt.</li>
-    <li>Symbole wurden aktualisiert ( <img style="vertical-align:middle" src="../images/modern_icon_xp.png" alt="Neue ffdshow-Symbole" width="60" height="23" /> ). Klassische Symbole stehen weiterhin zur Verf&uuml;gung.</li>
+    <li>Der AviSynthfilter wurde aktualisiert, um Skripten Zugang zu mehr Bildern als nur dem aktuallen zu geben. Zusammen mit den hinzugef&uuml;gten "3:2 pulldown"-Einstellungen erlaubt dies vielen der IVTC-, Deinterlacing- und temporalen Filtern f&uuml;r AviSynth korrekt in ffdshow zu arbeiten.</li>
+    <li>Symbole wurden aktualisiert ( <img style="vertical-align:middle" src="../images/modern_icon_xp.png" width="60" height="23" title="Neue ffdshow-Symbole" alt="Neue ffdshow-Symbole" /> ). Klassische Symbole stehen weiterhin zur Verf&uuml;gung.</li>
     <li>ATRAC3 (Adaptive TRansform Acoustic Coding, komprimieres Audioformat) wurde hinzugef&uuml;gt.</li>
     <li>Xvid-Enkoder wurde multithreaded.</li>
     <li>Unterst&uuml;tzung f&uuml;r SPDIF unter Windows Vista wurde hinzugef&uuml;gt ("Audiodekoder-Konfiguration" -> "Ausgabe" -> "Verbinde mit:").</li>
@@ -185,7 +188,7 @@ was changed here). This is to know which revisions are not ported yet.-->
     <li>Unterst&uuml;tzung f&uuml;r das erweiterte Profil von VC-1 (libavcodec funktioniert ohne externe Codecs).</li>
     <li>Verschiedene WMV und VC-1 Inhalte k&ouml;nnen mit Hilfe des Microsoft Codecs abgespielt werden (VC-1 ben&ouml;tigt einen installierten WMP11 oder externen Codec).</li>
     <li>x264-Enkoder wieder hinzugef&uuml;gt und aktualisiert.</li>
-    <li>Unterst&uuml;tzung f&uuml;r Hardware-Deinterlacing von H.264 MBAFF.</li>
+    <li>Deinterlacing-Unterst&uuml;tzung (setzen des Interlace-Flags) von H.264 MBAFF.</li>
     <li>Korrekturen und einige neue Features f&uuml;r die Remote-API: Voreinstellungen, Untertitel, schnelles vor/zur&uuml;ck etc.</li>
     <li>Polnische Inno-Setup-&Uuml;bersetzung.</li>
     <li>Queue: ffdshow verwendet nun VMR9s internen Queue.</li>

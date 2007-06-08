@@ -87,7 +87,7 @@
     <li>When ffdshow connected to VobSub (VSFilter), ffdshow tried to use YV12 plus width of non-multiple of 8 and ended in crash.</li>
     <li>When you configured "Resize &amp; aspect" -> "Borders" -> "Inside" -> "100%", ffdshow ended in crash.</li>
     <li>Reconnecting to VMR9 (after resizing) sometimes failed.</li>
-    <li>PowerDVD7 produced a black screen because of a bug in DirectShow filter's connecting code (please remove PowerDVD.exe from "Info &amp; debug" -> "Don't use ffdshow in:").</li>
+    <li>PowerDVD7 produced a black screen because of a bug in DirectShow filter's connecting code (please remove PowerDVD.exe from "DirectShow control" -> "Don't use ffdshow in:").</li>
     <li>If a subtitle unit contained too many lines for the specified space, lines were being dropped.</li>
     <li>The right edges of italic subtitles were cut off. If "fast rendering" was enabled, italic text was sometimes shown as non-italic and vice versa.</li>
     <li>Some SVQ3 videos caused freeze.</li>
@@ -154,8 +154,8 @@
   </p>
 
   <ul class="added">
-    <li>Deinterlacing support (set interlace flag) for Xvid (Xvidcore) decoders.</li>
-    <li>A dialog has been added to show a message when an unknown application (that is not listed in the whitelist) tries to load ffdshow.</li>
+    <li>Deinterlacing support (set interlace flag) for MPEG4-ASP through Xvidcore decoder.</li>
+    <li>A dialog is shown when an unknown application (which is neither listed in the blacklist nor in the whitelist) tries to load ffdshow.</li>
     <li>libavcodec encoders pop up error messages.</li>
     <li>The AviSynth filter was updated to give scripts access to more frames than just the current one. Together with the added "3:2 pulldown" settings this allows many of the IVTC, deinterlacing and temporal filters for AviSynth to work properly in ffdshow.</li>
     <li>Updated icons ( <img style="vertical-align:middle" src="../images/modern_icon_xp.png" width="60" height="23" title="New ffdshow icons" alt="New ffdshow icons" /> ). Classic icons are still available.</li>
