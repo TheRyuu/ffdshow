@@ -7964,9 +7964,8 @@ static int decode_frame(AVCodecContext *avctx,
     }
 
     assert(pict->data[0] || !*data_size);
-#ifdef DEBUG
+
     ff_print_debug_info(s, pict);
-#endif
 
     pict->interlaced_frame=MB_MBAFF;
     pict->top_field_first=1;

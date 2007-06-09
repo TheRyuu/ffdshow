@@ -734,9 +734,8 @@ assert(s->current_picture.pict_type == s->pict_type);
 
     if(s->last_picture_ptr || s->low_delay){
         *data_size = sizeof(AVFrame);
-        #ifdef DEBUG
+
         ff_print_debug_info(s, pict);
-        #endif
     }
 
     /* Return the Picture timestamp as the frame number */
