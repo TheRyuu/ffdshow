@@ -128,7 +128,8 @@
 #endif /* !__MINGW32__ && CONFIG_OS2 */
 
 #    ifdef USE_FASTMEMCPY
-#        include "fastmemcpy.h"
+#       include "fastmemcpy.h"
+#    	define memcpy(a,b,c) fast_memcpy(a,b,c)
 #    endif
 
 // Use rip-relative addressing if compiling PIC code on x86-64.
