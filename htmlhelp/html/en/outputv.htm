@@ -15,6 +15,11 @@
     <img src="../images/logo_phpBB.png" title="ffdshow tryouts" alt="ffdshow tryouts" width="200" height="91" />
   </a>
 
+  <div class="translation">
+    Translation available in:
+    &nbsp;<a class="links" href="../jp/outputv.htm" title="Japanese output video documentation"><img src="../images/japan.png" alt="Japanese output video documentation" width="27" height="17" />&nbsp;Japanese</a>
+  </div>
+
   <h1>
     <a name="top" id="top">Output video configuration</a>
   </h1>
@@ -54,7 +59,7 @@
   <ul style="list-style-type:circle">
     <li><em>RGB32 &amp; RGB24</em>: These modes will give you the same picture output, the only difference is that RGB32 is packed to 32bits which is usually faster to manipulate. These modes use 32 or 24bpp respectively.</li>
     <li><em>RGB16 &amp; RGB15</em>: Same as bove, but only 16/15bit. RGB15 is a bad idea unless you know it's a good idea. These use 16 or 15bpp respectively.</li>
-    <li><em>High Quality YUV to RGB Conversion</em>: Because (almost) all video files are compressed in a YUV format (usually YV12), ffdshow must convert from the YUV color system to the RGB color system when outputting RGB modes. This checkbox will instruct it to use a slower, but higher quality conversion method. If you are planning on taking screenshots, or <em>really</em> need every last drop of faithful quality reproduction, enable this.</li>
+    <li><em>High Quality YV12 to RGB Conversion</em>: Because (almost) all video files are compressed in a YUV format (usually YV12), ffdshow must convert from the YUV color system to the RGB color system when outputting RGB modes. This checkbox will instruct it to use a slower, but higher quality conversion method. If you are planning on taking screenshots, or <em>really</em> need every last drop of faithful quality reproduction, enable this.</li>
   </ul>
      
   <h3>

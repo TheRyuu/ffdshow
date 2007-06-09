@@ -1111,13 +1111,16 @@ begin
     'ehshell.exe'#13#10
     'fenglei.exe'#13#10
     'firefox.exe'#13#10
+    'FMRadio.exe'#13#10
     'gom.exe'#13#10
     'GoogleDesktop.exe'#13#10
     'graphedit.exe'#13#10
     'graphedt.exe'#13#10
     'gspot.exe'#13#10
     'honestechTV.exe'#13#10
+    'HPWUCli.exe'#13#10
     'iexplore.exe'#13#10
+    'infotv.exe'#13#10
     'JetAudio.exe'#13#10
     'kmplayer.exe'#13#10
     'LA.exe'#13#10
@@ -1130,26 +1133,33 @@ begin
     'MediaServer.exe'#13#10
     'megui.exe'#13#10
     'MovieMk.exe'#13#10
+    'MpegVideoWizard.exe'#13#10
     'mplayer2.exe'#13#10
     'mplayerc.exe'#13#10
     'Munite.exe'#13#10
     'Muzikbrowzer.exe'#13#10
     'Mv2PlayerPlus.exe'#13#10
     'nvplayer.exe'#13#10
+    'PowerDirector.exe'#13#10
     'powerdvd.exe'#13#10
     'ppmate.exe'#13#10
     'progdvb.exe'#13#10
     'Qonoha.exe'#13#10
     'realplay.exe'#13#10
     'rlkernel.exe'#13#10
+    'rundll32.exe'#13#10
     'sherlock2.exe'#13#10
+    'ShowTime.exe'#13#10
     'SinkuHadouken.exe'#13#10
     'Sleipnir.exe'#13#10
+    'smartmovie.exe'#13#10
     'SubtitleEdit.exe'#13#10
     'SplitCam.exe'#13#10
     'stillcap.exe'#13#10
+    'SWFConverter.exe'#13#10
     'TheaterTek DVD.exe'#13#10
     'timecodec.exe'#13#10
+    'TMPGEnc.exe'#13#10
     'ViPlay3.exe'#13#10
     'virtualdub.exe'#13#10
     'virtualdubmod.exe'#13#10
@@ -1158,6 +1168,7 @@ begin
     'windvd.exe'#13#10
     'wmenc.exe'#13#10
     'wmplayer.exe'#13#10
+    'YahooWidgetEngine.exe'#13#10
     'zplayer.exe'#13#10;
   end
 
@@ -1238,7 +1249,29 @@ begin
   compApps[25].name := 'WCreator.exe';
   compApps[26].rev  := 1253;
   compApps[26].name := 'ppmate.exe';
-  compApps[27].rev  := 0;
+  compApps[27].rev  := 1259;
+  compApps[27].name := 'ShowTime.exe';
+  compApps[28].rev  := 1259;
+  compApps[28].name := 'YahooWidgetEngine.exe';
+  compApps[29].rev  := 1259;
+  compApps[29].name := 'PowerDirector.exe';
+  compApps[30].rev  := 1259;
+  compApps[30].name := 'infotv.exe';
+  compApps[31].rev  := 1259;
+  compApps[31].name := 'rundll32.exe';
+  compApps[32].rev  := 1259;
+  compApps[32].name := 'smartmovie.exe';
+  compApps[33].rev  := 1259;
+  compApps[33].name := 'MpegVideoWizard.exe';
+  compApps[34].rev  := 1259;
+  compApps[34].name := 'SWFConverter.exe';
+  compApps[35].rev  := 1259;
+  compApps[35].name := 'FMRadio.exe';
+  compApps[36].rev  := 1259;
+  compApps[36].name := 'TMPGEnc.exe';
+  compApps[37].rev  := 1259;
+  compApps[37].name := 'HPWUCli.exe';
+  compApps[38].rev  := 0;
 
 // Compatibility list
   ComplistVideo.skipped := False;

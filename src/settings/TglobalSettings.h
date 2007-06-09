@@ -19,7 +19,19 @@
           _l("stillcap.exe\r\n")\
           _l("carom.exe\r\n")\
           _l("WCreator.exe\r\n")\
-          _l("ppmate.exe\r\n")
+          _l("ppmate.exe\r\n")\
+          _l("ShowTime.exe\r\n")\
+          _l("YahooWidgetEngine.exe\r\n")\
+          _l("PowerDirector.exe\r\n")\
+          _l("infotv.exe\r\n")\
+          _l("rundll32.exe\r\n")\
+          _l("smartmovie.exe\r\n")\
+          _l("MpegVideoWizard.exe\r\n")\
+          _l("SWFConverter.exe\r\n")\
+          _l("FMRadio.exe\r\n")\
+          _l("TMPGEnc.exe\r\n")\
+          _l("HPWUCli.exe\r\n")
+
 #define BLACKLIST_EXE_FILENAME _l("explorer.exe;oblivion.exe;morrowind.exe")
 
 struct TregOp;

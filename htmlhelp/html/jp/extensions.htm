@@ -26,18 +26,19 @@
   <p>
     DirectShowの世界で拡張子(AVI, MKV, MOVなど)が表すものはコンテナです。コンテナとは入れ物のことです。
     コンテナには動画、音声、字幕などが格納されています（参考：<a href="dshow.htm" class="links">DirectShow入門</a>）。
-    そしてコンテナから動画や音声を取り出すには<b>スプリッタ</b>が必要になります。ffdshowにはこのスプリッタは含まれていません。
+    そしてコンテナから動画や音声を取り出すには<b>スプリッタ</b>が必要になります。ffdshowにはこのスプリッタは含まれていないため、既にインストールされている場合を除いて別途インストールする必要があります｡
     つまり本来ffdshowとは別の話ですが、「ffdshowを使って動画を見る」という視点から避けて通れない話題です。
   </p>
 
   <h2>
-    <a name="FLV" id="FLV">FLV</a>
+    <a name="FLV" id="FLV" class="links" href="http://ja.wikipedia.org/wiki/Flv">FLV</a>
   </h2>
 
   <p>
+    一例としてFLVについて解説します｡<a class="links" href="http://sourceforge.net/project/showfiles.php?group_id=82303" target="_blank">guliverkli</a>ではこのFLVスプリッタのほか数多くのスプリッタを開発・配布しています｡ほかのスプリッタも同様の方法でインストールできます｡<br />
     FLV(Flash Video)はアドビシステムズ（旧マクロメディア）が開発したコンテナでYouTubeなどでのストリーミング配信に多く用いられています。<br />
     flvファイルを再生するには<a class="links" href="http://sourceforge.net/project/showfiles.php?group_id=82303&amp;package_id=183318&amp;release_id=403108" target="_blank">FLVSplitter</a>をインストールします。左のリンクからダウンロードしたファイルは<a href="http://sourceforge.net/project/showfiles.php?group_id=14481" class="links" target="_blank">7z</a>というアーカイバで圧縮されていますのでまずこれを解凍します（7zをインストール後ファイルを右クリックして7-Zip→解凍）。
-    Windows NT/2000/Xpでは"Release Unicode"を、Windows 95/98/Meでは"Release"を開きます。"&yen;Program
+    Windows NT/2000/Xp/Vistaでは"Release Unicode"を、Windows 95/98/Meでは"Release"を開きます。"&yen;Program
     Files&yen;guliverkli"というフォルダを作成しFLVSplitter.axをコピーします。<br />
     スタートメニューから「ファイル名を指定して実行」を選択、次のように入力します。
   </p>
@@ -47,6 +48,51 @@
   <p>
     「&yen;Program Files&yen;guliverkli&yen;FLVSplitter.ax の DllRegisterServerは成功しました。」と表示されればインストールは完了です。<br />
     FLVコンテナの中身の動画はFLV1かVP6Fです。ffdshowの<a href="dshow.htm#configCodec" class="links">コーデック設定</a>でlibavcodecに設定しておいて下さい。
+  </p>
+
+  <p class="normal">
+    その他のコンテナについては主なものについてWikipediaへのリンクを示すのみにします｡
+  </p>
+
+  <p class="small_caption">
+    <a name="AVI" id="AVI" class="links" href="http://ja.wikipedia.org/wiki/Audio_Video_Interleave">AVI</a>
+  </p>
+
+  <p class="small_caption">
+    <a name="MKV" id="MKV" class="links" href="http://ja.wikipedia.org/wiki/Matroska">MKV / MKA / MKS</a>
+  </p>
+
+  <ul>
+    <li><a href="http://haali.cs.msu.ru/mkv/" target="blanck">Haali media splitter</a></li>
+    <li><a href="http://www.matroska.org/index.html" target="blanck">matroska 公式サイト</a></li>
+  </ul>
+
+  <p class="small_caption">
+    <a name="MOV" id="MOV" class="links" href="http://ja.wikipedia.org/wiki/QuickTime">MOV / QuickTime</a>
+  </p>
+
+  <p class="small_caption">
+    <a name="MP4" id="MP4" class="links" href="http://ja.wikipedia.org/wiki/MP4">MP4</a>
+  </p>
+
+  <p class="small_caption">
+    <a name="MPG" id="MPG" class="links" href="http://ja.wikipedia.org/wiki/MPEG-2%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0">MPG / TS</a>
+  </p>
+
+  <p class="small_caption">
+    <a name="OGG" id="OGG" class="links" href="http://ja.wikipedia.org/wiki/Ogg_Vorbis">OGG</a>
+  </p>
+
+  <p class="small_caption">
+    <a name="OGM" id="OGM" class="links" href="http://ja.wikipedia.org/wiki/Ogg_Media">OGM</a>
+  </p>
+
+  <p class="small_caption">
+    <a name="RM" id="RM" class="links" href="http://ja.wikipedia.org/wiki/RealMedia">RM / RMVB</a>
+  </p>
+
+  <p class="small_caption">
+    <a name="WMV" id="WMV" class="links" href="http://ja.wikipedia.org/wiki/Advanced_Systems_Format">WMV / WAX / WMA / WMX / WVX / ASF / ASX</a>
   </p>
 
   <div class="footer">    
