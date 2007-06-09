@@ -25,6 +25,7 @@
 #include "matroskaSubs.h"
 #include "Tsubreader.h"
 #include "TsubtitlesSettings.h"
+#include "dsutil.h"
 
 TtextInputPin::TtextInputPin(TffdshowDecVideo* pFilter,HRESULT* phr,const wchar_t *pinname,int Iid):
  CDeCSSInputPin(NAME("TtextInputPin"),pFilter,phr,pinname),
@@ -103,7 +104,10 @@ HRESULT TtextInputPin::SetMediaType(const CMediaType* mtIn)
    else if (mtIn->subtype==MEDIASUBTYPE_VOBSUB)
     type=Tsubreader::SUB_VOBSUB;
    else if (mtIn->subtype==MEDIASUBTYPE_SSA || mtIn->subtype==MEDIASUBTYPE_ASS || mtIn->subtype==MEDIASUBTYPE_ASS2)
-    type=Tsubreader::SUB_SSA;
+    {
+     type=Tsubreader::SUB_SSA;
+     if (ismatroska) utf8=true;
+    }
    else if (mtIn->subtype==MEDIASUBTYPE_USF)
     type=Tsubreader::SUB_USF;
   }
@@ -124,6 +128,28 @@ HRESULT TtextInputPin::SetMediaType(const CMediaType* mtIn)
  if (filter->getParam2(IDFF_subShowEmbedded)==0)
   filter->putParam(IDFF_subShowEmbedded,id);
  return S_OK;
+}
+STDMETHODIMP TtextInputPin::ReceiveConnection(IPin* pConnector, const AM_MEDIA_TYPE* pmt)
+{
+ const CLSID &ref=GetCLSID(pConnector);
+ if (ref==CLSID_HaaliMediaSplitter)
+  ismatroska=true;
+#if 1
+ PIN_INFO pininfo;
+ FILTER_INFO filterinfo;
+ pConnector->QueryPinInfo(&pininfo);
+ if (pininfo.pFilter)
+  {
+   pininfo.pFilter->QueryFilterInfo(&filterinfo);
+   DPRINTF (_l("TtextInputPin::CompleteConnect filter=%s pin=%s"),filterinfo.achName,pininfo.achName);
+   if (filterinfo.pGraph)
+    filterinfo.pGraph->Release();
+   pininfo.pFilter->Release();
+  }
+ DPRINTF(_l("CLSID 0x%x,0x%x,0x%x"),ref.Data1,ref.Data2,ref.Data3);for(int i=0;i<8;i++) {DPRINTF(_l(",0x%2x"),ref.Data4[i]);}
+#endif
+
+ return CDeCSSInputPin::ReceiveConnection(pConnector,pmt);
 }
 HRESULT TtextInputPin::CompleteConnect(IPin *pReceivePin)
 {

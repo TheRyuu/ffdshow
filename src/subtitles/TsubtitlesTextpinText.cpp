@@ -89,7 +89,7 @@ void TsubtitlesTextpinText::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop
      parser=TsubtitleParserBase::getParser(type,fps1000/1000.0,cfg,ffcfg,subs,utf8,true);
      if (initdata.size())
       {
-       TstreamMem fs(initdata,initdata.size());
+       TstreamMem fs(initdata,initdata.size(),utf8 ? Tstream::ENCODING::ENC_UTF8 : Tstream::ENCODING::ENC_ASCII);
        parser->parse(fs,0);
       }
     }

@@ -15,10 +15,12 @@ private:
  REFERENCE_TIME segmentStart;
  unsigned char *extradata;unsigned int extradatasize;
  bool utf8;
+ bool ismatroska;
 protected:
  virtual HRESULT CheckMediaType(const CMediaType *mtIn);
  virtual HRESULT SetMediaType(const CMediaType* mtIn);
  virtual HRESULT CompleteConnect(IPin *pReceivePin);
+ STDMETHODIMP ReceiveConnection(IPin* pConnector, const AM_MEDIA_TYPE* pmt);
  STDMETHODIMP QuerySupported(REFGUID PropSet,ULONG Id,ULONG *pTypeSupport);
  STDMETHODIMP Set(REFGUID PropSet,ULONG Id,LPVOID pInstanceData,ULONG InstanceLength,LPVOID pPropertyData,ULONG DataLength);
  STDMETHODIMP EndOfStream(void);

@@ -619,6 +619,11 @@ HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
  // This means that any decision to drop the frame must be taken before
  // calling GetDeliveryBuffer.
  ASSERT(pSample);
+#if 0
+ AM_SAMPLE2_PROPERTIES inProp2;
+ if (comptrQ<IMediaSample2> pIn2=pSample)
+  pIn2->GetProperties(sizeof(AM_SAMPLE2_PROPERTIES),(PBYTE)&inProp2);
+#endif
  // If no output pin to deliver to then no point sending us data
  ASSERT(m_pOutput!=NULL);
  AM_MEDIA_TYPE *pmt;

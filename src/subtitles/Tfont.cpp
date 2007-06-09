@@ -897,6 +897,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
              break;
             }
 
+           if (nfit==0) nfit=1;
            for (int j=nfit;j>0;j--)
             if (tchar_traits<tchar>::isspace((typename tchar_traits<tchar>::uchar_t)p[j]))
              {

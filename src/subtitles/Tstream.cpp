@@ -67,64 +67,59 @@ char* Tstream::ugets(char *buf0,int len) const
 
      // read a line
      int count=0;
-     char b;
-     while (read(&b,1,sizeof(b))==sizeof(b))
+     char u1,u2,u3,u4;
+     while (count<=MAX_SUBTITLE_LENGTH-3 && read(&u1,1,sizeof(u1))==sizeof(u1))
       {
        eof=false;
-       if (count>MAX_SUBTITLE_LENGTH*2-1) break;
-       if(!(b&0x80)) // 0xxxxxxx
-        srcBuf[count++]=b;
-       else if ((b&0xe0)==0xc0) // 110xxxxx 10xxxxxx
+       if(!(u1&0x80)) // 0xxxxxxx
+        srcBuf[count++]=u1;
+       else if ((u1&0xe0)==0xc0) // 110xxxxx 10xxxxxx
         {
-         srcBuf[count++]=b;
-         if (read(&b,1,sizeof(b))==sizeof(b))
-          {
-           if (count>MAX_SUBTITLE_LENGTH*2-1) break;
-           srcBuf[count++]=b;
-          }
+         srcBuf[count++]=u1;
+         if (read(&u2,1,sizeof(u2))==sizeof(u2))
+          srcBuf[count++]=u2;
          else
           break;
         }
-       else if ((b&0xf0)==0xe0) // 1110xxxx 10xxxxxx 10xxxxxx
+       else if ((u1&0xf0)==0xe0) // 1110xxxx 10xxxxxx 10xxxxxx
         {
-         srcBuf[count++]=b;
-         if (read(&b,1,sizeof(b))==sizeof(b))
-          {
-           if (count>MAX_SUBTITLE_LENGTH*2-1) break;
-           srcBuf[count++]=b;
-          }
+         srcBuf[count++]=u1;
+         if (read(&u2,1,sizeof(u2))==sizeof(u2))
+          srcBuf[count++]=u2;
          else
           break;
-         if (read(&b,1,sizeof(b))==sizeof(b))
-          {
-           if (count>MAX_SUBTITLE_LENGTH*2-1) break;
-           srcBuf[count++]=b;
-          }
+         if (read(&u3,1,sizeof(u3))==sizeof(u3))
+          srcBuf[count++]=u3;
          else
           break;
         }
-       if (b=='\r')
+       else if ((u1&0xf8)==0xf0) // 1111xxxx 10xxxxxx 10xxxxxx 10xxxxxx
         {
-         if (crln)
-          {
-           if (count>MAX_SUBTITLE_LENGTH*2-1) break;
-           srcBuf[count++]=b;
-          }
+         srcBuf[count++]=u1;
+         if (read(&u2,1,sizeof(u2))==sizeof(u2))
+          srcBuf[count++]=u2;
+         else
+          break;
+         if (read(&u3,1,sizeof(u3))==sizeof(u3))
+          srcBuf[count++]=u3;
+         else
+          break;
+         if (read(&u4,1,sizeof(u4))==sizeof(u4))
+          srcBuf[count++]=u4;
+         else
+          break;
+        }
+       if (u1=='\r')
+        {
+         if (!crln)
+          count--;
          wasr=true;
          continue;
         }
-       if (b=='\n')
+       if (u1=='\n')
         {
          if (utod &&!wasr)
-          {
-           if (count>MAX_SUBTITLE_LENGTH*2-1) break;
-           srcBuf[count++]='\r';
-          }
-         if (crln)
-          {
-           if (count>MAX_SUBTITLE_LENGTH*2-1) break;
-           srcBuf[count++]=b;
-          }
+          srcBuf[--count]='\r';
          break;
         }
       }
@@ -232,64 +227,59 @@ wchar_t* Tstream::fgets(wchar_t *buf0,int len) const
 
      // read a line
      int count=0;
-     char b;
-     while (read(&b,1,sizeof(b))==sizeof(b))
+     char u1,u2,u3,u4;
+     while (count<=MAX_SUBTITLE_LENGTH-3 && read(&u1,1,sizeof(u1))==sizeof(u1))
       {
        eof=false;
-       if (count>MAX_SUBTITLE_LENGTH-1) break;
-       if(!(b&0x80)) // 0xxxxxxx
-        srcBuf[count++]=b;
-       else if ((b&0xe0)==0xc0) // 110xxxxx 10xxxxxx
+       if(!(u1&0x80)) // 0xxxxxxx
+        srcBuf[count++]=u1;
+       else if ((u1&0xe0)==0xc0) // 110xxxxx 10xxxxxx
         {
-         srcBuf[count++]=b;
-         if (read(&b,1,sizeof(b))==sizeof(b))
-          {
-           if (count>MAX_SUBTITLE_LENGTH-1) break;
-           srcBuf[count++]=b;
-          }
+         srcBuf[count++]=u1;
+         if (read(&u2,1,sizeof(u2))==sizeof(u2))
+          srcBuf[count++]=u2;
          else
           break;
         }
-       else if ((b&0xf0)==0xe0) // 1110xxxx 10xxxxxx 10xxxxxx
+       else if ((u1&0xf0)==0xe0) // 1110xxxx 10xxxxxx 10xxxxxx
         {
-         srcBuf[count++]=b;
-         if (read(&b,1,sizeof(b))==sizeof(b))
-          {
-           if (count>MAX_SUBTITLE_LENGTH-1) break;
-           srcBuf[count++]=b;
-          }
+         srcBuf[count++]=u1;
+         if (read(&u2,1,sizeof(u2))==sizeof(u2))
+          srcBuf[count++]=u2;
          else
           break;
-         if (read(&b,1,sizeof(b))==sizeof(b))
-          {
-           if (count>MAX_SUBTITLE_LENGTH-1) break;
-           srcBuf[count++]=b;
-          }
+         if (read(&u3,1,sizeof(u3))==sizeof(u3))
+          srcBuf[count++]=u3;
          else
           break;
         }
-       if (b=='\r')
+       else if ((u1&0xf8)==0xf0) // 1111xxxx 10xxxxxx 10xxxxxx 10xxxxxx
         {
-         if (crln)
-          {
-           if (count>MAX_SUBTITLE_LENGTH-1) break;
-           srcBuf[count++]=b;
-          }
+         srcBuf[count++]=u1;
+         if (read(&u2,1,sizeof(u2))==sizeof(u2))
+          srcBuf[count++]=u2;
+         else
+          break;
+         if (read(&u3,1,sizeof(u3))==sizeof(u3))
+          srcBuf[count++]=u3;
+         else
+          break;
+         if (read(&u4,1,sizeof(u4))==sizeof(u4))
+          srcBuf[count++]=u4;
+         else
+          break;
+        }
+       if (u1=='\r')
+        {
+         if (!crln)
+          count--;
          wasr=true;
          continue;
         }
-       if (b=='\n')
+       if (u1=='\n')
         {
          if (utod &&!wasr)
-          {
-           if (count>MAX_SUBTITLE_LENGTH-1) break;
-           srcBuf[count++]='\r';
-          }
-         if (crln)
-          {
-           if (count>MAX_SUBTITLE_LENGTH-1) break;
-           srcBuf[count++]=b;
-          }
+          srcBuf[--count]='\r';
          break;
         }
       }
