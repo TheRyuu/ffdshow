@@ -5,7 +5,7 @@ include ../makefile.inc
 .all: $(OBJS)
 
 clean:	
-	$(RM) $(TEMPFILES)
+	$(RM) $(TEMPFILES) *.d
 
 #
 # include dependency files if they exist

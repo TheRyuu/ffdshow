@@ -16,7 +16,7 @@ CFLAGS+=-w
 .all: $(SLIB)
 
 clean: 
-	rm -f *.o include/*.o *~ $(SLIB)
+	rm -f *.o include/*.o *~ $(SLIB) *.d include/*.d
 
 #
 # include dependency files if they exist

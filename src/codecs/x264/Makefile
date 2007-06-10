@@ -33,7 +33,7 @@ include ../../makefile_c.inc
 .all: $(SLIB)
 
 clean: 
-	rm -f *.o encoder/*.o common/*.o common/i386/*.o *~ $(SLIB)
+	rm -f *.o encoder/*.o common/*.o common/i386/*.o *~ $(SLIB) *.d encoder/*.d common/*.d common/i386/*.d
 
 #
 # include dependency files if they exist

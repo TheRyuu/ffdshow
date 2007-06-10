@@ -94,7 +94,7 @@ include ../../makefile_c.inc
 .all: $(SLIB)
 
 clean: 
-	rm -f *.o bitstream/*.o dct/*.o image/*.o motion/*.o plugins/*.o prediction/*.o quant/*.o utils/*.o *~ $(SLIB)
+	rm -f *.o bitstream/*.o dct/*.o image/*.o motion/*.o plugins/*.o prediction/*.o quant/*.o utils/*.o *~ $(SLIB) *.d bitstream/*.d dct/*.d image/*.d motion/*.d plugins/*.d prediction/*.d quant/*.d utils/*.d
 
 #
 # include dependency files if they exist

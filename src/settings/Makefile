@@ -10,7 +10,7 @@ include ../makefile.inc
 .all: $(OBJS)
 
 clean:	
-	$(RM) $(TEMPFILES) filters/*.o lzo/minilzo.o
+	$(RM) $(TEMPFILES) filters/*.o lzo/minilzo.o filters/*.d lzo/minilzo.d
 
 #
 # include dependency files if they exist

@@ -28,7 +28,7 @@ include ../makefile_c.inc
 .all: $(SLIB)
 
 clean: 
-	rm -f *.[od] postproc/*.o libvo/*.o mp3lib/*.o $(SLIB) *~
+	rm -f *.[od] postproc/*.o libvo/*.o mp3lib/*.o $(SLIB) *~ *.d postproc/*.d libvo/*.d mp3lib/*.d
 
 #
 # include dependency files if they exist

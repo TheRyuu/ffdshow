@@ -257,7 +257,7 @@ endif
 endif
 
 clean:	
-	$(RM) $(TEMPFILES) $(LIBSONAME) mplayer/Tlibmplayer.o ffmpeg/Tlibavcodec.o xiph/ogg/bitwise.o xiph/ogg/framing.o
+	$(RM) $(TEMPFILES) $(LIBSONAME) mplayer/Tlibmplayer.o ffmpeg/Tlibavcodec.o xiph/ogg/bitwise.o xiph/ogg/framing.o xiph/ogg/bitwise.d xiph/ogg/framing.d
 	$(MAKE) -C baseclasses clean
 	$(MAKE) -C acm clean
 	$(MAKE) -C audioFilters clean
@@ -299,7 +299,7 @@ endif
 	$(MAKE) -C ../verinc clean
 
 distclean:
-	$(RM) $(TEMPFILES) $(LIBSONAME) mplayer/Tlibmplayer.o ffmpeg/Tlibavcodec.o xiph/ogg/bitwise.o xiph/ogg/framing.o
+	$(RM) $(TEMPFILES) $(LIBSONAME) mplayer/Tlibmplayer.o ffmpeg/Tlibavcodec.o xiph/ogg/bitwise.o xiph/ogg/framing.o xiph/ogg/bitwise.d xiph/ogg/framing.d
 	$(MAKE) -C baseclasses distclean
 	$(MAKE) -C acm distclean
 	$(MAKE) -C audioFilters distclean

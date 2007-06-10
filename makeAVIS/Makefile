@@ -14,7 +14,7 @@ include ../src/makefile_c.inc
 .all: $(SEXE)
 
 clean:
-	rm -f *.o *~ $(SEXE)
+	rm -f *.o *~ $(SEXE) *.d
 
 #
 # include dependency files if they exist

@@ -20,7 +20,7 @@ include ../../makefile_c.inc
 .all: $(SLIB)
 
 clean: 
-	rm -f *.o libmpeg2/*.o *~ $(SLIB)
+	rm -f *.o libmpeg2/*.o *~ $(SLIB) *.d libmpeg2/*.d
 
 #
 # include dependency files if they exist

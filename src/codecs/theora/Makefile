@@ -20,7 +20,7 @@ include ../../makefile_c.inc
 .all: $(SLIB)
 
 clean: 
-	rm -f *.o *~ $(SLIB) i386/*.o
+	rm -f *.o *~ $(SLIB) i386/*.o *.d i386/*.d
 
 #
 # include dependency files if they exist

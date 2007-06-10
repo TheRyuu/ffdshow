@@ -19,7 +19,7 @@ CFLAGS+=-UUNICODE -U_UNICODE
 .all: $(SLIB)
 
 clean:
-	rm -f *.o *~ $(SLIB)
+	rm -f *.o *~ $(SLIB) *.d
 
 #
 # include dependency files if they exist

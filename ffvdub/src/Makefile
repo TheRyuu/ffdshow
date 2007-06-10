@@ -18,7 +18,7 @@ include ../../src/makefile_c.inc
 .all: $(SLIB)
 
 clean:
-	rm -f *.o *~ $(SLIB) bzip2/*.o
+	rm -f *.o *~ $(SLIB) bzip2/*.o *.d bzip2/*.d
 
 #
 # include dependency files if they exist
