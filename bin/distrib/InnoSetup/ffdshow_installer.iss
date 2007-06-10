@@ -582,7 +582,7 @@ Description: {cm:runvfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,c
 #include "custom_messages.iss"
 
 [Code]
-const NUMBER_OF_COMPATIBLEAPPLICATIONS=50;
+const NUMBER_OF_COMPATIBLEAPPLICATIONS=100;
 type
   TCompApp = record
     rev: Integer;  // The application (name) have been added to the compatibility list at this rev.
@@ -1088,9 +1088,11 @@ begin
     complist.edt.text := regstr;
   end else begin
     complist.edt.Text :=
+    'Adobe Premiere Pro.exe'#13#10
     'aegisub.exe'#13#10
     'ALLPlayer.exe'#13#10
     'ALShow.exe'#13#10
+    'amcap.exe'#13#10
     'ass_help3r.exe'#13#10
     'avi2mpg.exe'#13#10
     'avipreview.exe'#13#10
@@ -1106,6 +1108,7 @@ begin
     'cut_assistant.exe'#13#10
     'DScaler.exe'#13#10
     'dv.exe'#13#10
+    'dvdplay.exe'#13#10
     'DVDMaker.exe'#13#10
     'DVD Shrink 3.2.exe'#13#10
     'ehshell.exe'#13#10
@@ -1114,12 +1117,15 @@ begin
     'FMRadio.exe'#13#10
     'gom.exe'#13#10
     'GoogleDesktop.exe'#13#10
+    'GoogleDesktopCrawl.exe'#13#10
     'graphedit.exe'#13#10
     'graphedt.exe'#13#10
     'gspot.exe'#13#10
     'honestechTV.exe'#13#10
     'HPWUCli.exe'#13#10
+    'ICQLite.exe'#13#10
     'iexplore.exe'#13#10
+    'IHT.exe'#13#10
     'infotv.exe'#13#10
     'JetAudio.exe'#13#10
     'kmplayer.exe'#13#10
@@ -1129,9 +1135,11 @@ begin
     'MDirect.exe'#13#10
     'Media Center 12.exe'#13#10
     'Media Jukebox.exe'#13#10
+    'Media Player Classic.exe'#13#10
     'MediaPortal.exe'#13#10
     'MediaServer.exe'#13#10
     'megui.exe'#13#10
+    'mencoder.exe'#13#10
     'MovieMk.exe'#13#10
     'MpegVideoWizard.exe'#13#10
     'mplayer2.exe'#13#10
@@ -1139,7 +1147,11 @@ begin
     'Munite.exe'#13#10
     'Muzikbrowzer.exe'#13#10
     'Mv2PlayerPlus.exe'#13#10
+    'NeroVision.exe'#13#10
     'nvplayer.exe'#13#10
+    'Opera.exe'#13#10
+    'PaintDotNet.exe'#13#10
+    'pcwmp.exe'#13#10
     'PowerDirector.exe'#13#10
     'powerdvd.exe'#13#10
     'ppmate.exe'#13#10
@@ -1153,18 +1165,22 @@ begin
     'SinkuHadouken.exe'#13#10
     'Sleipnir.exe'#13#10
     'smartmovie.exe'#13#10
+    'START.EXE'#13#10
     'SubtitleEdit.exe'#13#10
+    'SubtitleWorkshop.exe'#13#10
     'SplitCam.exe'#13#10
     'stillcap.exe'#13#10
     'SWFConverter.exe'#13#10
     'TheaterTek DVD.exe'#13#10
     'timecodec.exe'#13#10
     'TMPGEnc.exe'#13#10
+    'TVersity.exe'#13#10
     'ViPlay3.exe'#13#10
     'virtualdub.exe'#13#10
     'virtualdubmod.exe'#13#10
     'WCreator.exe'#13#10
     'winamp.exe'#13#10
+    'WinAVI.exe'#13#10
     'windvd.exe'#13#10
     'wmenc.exe'#13#10
     'wmplayer.exe'#13#10
@@ -1271,7 +1287,39 @@ begin
   compApps[36].name := 'TMPGEnc.exe';
   compApps[37].rev  := 1259;
   compApps[37].name := 'HPWUCli.exe';
-  compApps[38].rev  := 0;
+  compApps[38].rev  := 1267;
+  compApps[38].name := 'pcwmp.exe';
+  compApps[39].rev  := 1267;
+  compApps[39].name := 'NeroVision.exe';
+  compApps[40].rev  := 1267;
+  compApps[40].name := 'ICQLite.exe';
+  compApps[41].rev  := 1267;
+  compApps[41].name := 'SubtitleWorkshop.exe';
+  compApps[42].rev  := 1267;
+  compApps[42].name := 'Adobe Premiere Pro.exe';
+  compApps[43].rev  := 1267;
+  compApps[43].name := 'Media Player Classic.exe';
+  compApps[44].rev  := 1267;
+  compApps[44].name := 'Opera.exe';
+  compApps[45].rev  := 1267;
+  compApps[45].name := 'amcap.exe';
+  compApps[46].rev  := 1267;
+  compApps[46].name := 'PaintDotNet.exe';
+  compApps[47].rev  := 1267;
+  compApps[47].name := 'GoogleDesktopCrawl.exe';
+  compApps[48].rev  := 1267;
+  compApps[48].name := 'WinAVI.exe';
+  compApps[49].rev  := 1267;
+  compApps[49].name := 'TVersity.exe';
+  compApps[50].rev  := 1267;
+  compApps[50].name := 'IHT.exe';
+  compApps[51].rev  := 1267;
+  compApps[51].name := 'START.EXE';
+  compApps[52].rev  := 1267;
+  compApps[52].name := 'mencoder.exe';
+  compApps[53].rev  := 1267;
+  compApps[53].name := 'dvdplay.exe';
+  compApps[54].rev  := 0;
 
 // Compatibility list
   ComplistVideo.skipped := False;

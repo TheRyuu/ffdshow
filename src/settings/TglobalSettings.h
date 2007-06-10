@@ -30,7 +30,23 @@
           _l("SWFConverter.exe\r\n")\
           _l("FMRadio.exe\r\n")\
           _l("TMPGEnc.exe\r\n")\
-          _l("HPWUCli.exe\r\n")
+          _l("HPWUCli.exe\r\n")\
+          _l("pcwmp.exe\r\n")\
+          _l("NeroVision.exe\r\n")\
+          _l("ICQLite.exe\r\n")\
+          _l("SubtitleWorkshop.exe\r\n")\
+          _l("Adobe Premiere Pro.exe\r\n")\
+          _l("Media Player Classic.exe\r\n")\
+          _l("Opera.exe\r\n")\
+          _l("amcap.exe\r\n")\
+          _l("PaintDotNet.exe\r\n")\
+          _l("GoogleDesktopCrawl.exe\r\n")\
+          _l("WinAVI.exe\r\n")\
+          _l("TVersity.exe\r\n")\
+          _l("IHT.exe\r\n")\
+          _l("START.EXE\r\n")\
+          _l("mencoder.exe\r\n")\
+          _l("dvdplay.exe\r\n")
 
 #define BLACKLIST_EXE_FILENAME _l("explorer.exe;oblivion.exe;morrowind.exe")
 
