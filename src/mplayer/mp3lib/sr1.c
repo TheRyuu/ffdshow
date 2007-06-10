@@ -9,12 +9,12 @@
 #define LOCAL static __inline
 #endif
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <signal.h>
-#include <math.h>
-#include "../ffmpeg/libavutil/mem.h"
+#include        <stdlib.h>
+#include        <stdio.h>
+#include        <string.h>
+#include        <signal.h>
+#include        <math.h>
+
 #include "mpg123.h"
 #include "huffman.h"
 #include "inttypes.h"
