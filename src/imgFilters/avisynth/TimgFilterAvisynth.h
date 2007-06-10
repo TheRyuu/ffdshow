@@ -26,62 +26,68 @@ public:
    int height[4];
   };
 
+ struct Tinput : Tavisynth_c
+  {
+   unsigned int dx,dy;
+   int fpsnum,fpsden;
+   int csp,cspBpp;
+   const unsigned char *src[4];
+   stride_t *stride1;
+
+   IScriptEnvironment* env;
+   PClip* clip;
+
+   int numBuffers;
+   TframeBuffer* buffers;
+
+   int curFrame;
+   int minAccessedFrame;
+   int maxAccessedFrame;
+   int numAccessedFrames;
+   int accessedFrames[100]; // relative to curFrame
+   int backLimit;
+
+   Tinput() : env(0),clip(0), buffers(0) {}
+
+   ~Tinput()
+    {
+     if (clip) delete clip;
+     if (env) delete env;
+    }
+  };
+
 private:
  class Tffdshow_source : Tavisynth_c
   {
-  public:
-   struct Tinput
-    {
-     unsigned int dx,dy;
-     int fpsnum,fpsden;
-     int csp,cspBpp;
-     const unsigned char *src[4];
-     stride_t *stride1;
-
-     int numBuffers;
-     TframeBuffer* buffers;
-
-     int curFrame;
-     int minAccessedFrame;
-     int maxAccessedFrame;
-     int numAccessedFrames;
-     int accessedFrames[100]; // relative to curFrame
-     int backLimit;
-    };
-
   private:
-   IScriptEnvironment *env;
    VideoInfo &vi;
    Tinput *input;
-   Tffdshow_source(Tinput *Iinput,VideoInfo &Ivi,IScriptEnvironment *Ienv);
+   Tffdshow_source(Tinput *Iinput,VideoInfo &Ivi);
    static AVS_VideoFrame* AVSC_CC get_frame(AVS_FilterInfo *, int n);
    static int AVSC_CC get_parity(AVS_FilterInfo *, int n) {return 0;}
    static int AVSC_CC set_cache_hints(AVS_FilterInfo *, int cachehints, int frame_range) {return 0;}
    static void AVSC_CC free_filter(AVS_FilterInfo *);
 
   public:
-   typedef std::pair<IScriptEnvironment*,Tffdshow_source::Tinput*> Tc_createStruct;
    static AVS_Value AVSC_CC Create(AVS_ScriptEnvironment *, AVS_Value args, void * user_data);
   };
 
  struct Tavisynth : public Tavisynth_c
   {
   public:
-   Tavisynth():env(NULL),clip(NULL),restart(true),passFirstThrough(true),bufferData(NULL),buffers(NULL),frameScaleDen(1),frameScaleNum(1) {}
+   Tavisynth(): restart(true),passFirstThrough(true),bufferData(NULL),buffers(NULL),frameScaleDen(1),frameScaleNum(1) {}
    ~Tavisynth() {done();}
    void skipAhead(bool passFirstThrough, bool clearLastOutStopTime);
    void done(void);
-   PClip* createClip(const TavisynthSettings *cfg,Tffdshow_source::Tinput *input,TffPictBase& pict);
+   bool createClip(const TavisynthSettings *cfg,Tinput *input,TffPictBase& pict);
    typedef Tavisynth_c::PClip PClip;
-   void setOutFmt(const TavisynthSettings *cfg,Tffdshow_source::Tinput *input,TffPictBase &pict);
-   void init(const TavisynthSettings &oldcfg,Tffdshow_source::Tinput &input,int *outcsp,TffPictBase &pict);
+   void setOutFmt(const TavisynthSettings *cfg,Tinput *input,TffPictBase &pict);
+   void init(const TavisynthSettings &oldcfg,Tinput *input,int *outcsp,TffPictBase &pict);
    void process(TimgFilterAvisynth *self,TfilterQueue::iterator& it,TffPict &pict,const TavisynthSettings *cfg);
-   PClip *clip;
    char infoBuf[1000];
 
   private:
    Trect outrect;
-   IScriptEnvironment *env;
 
    int minAccessedFrame;
    int maxAccessedFrame;
@@ -128,7 +134,8 @@ private:
 
  int getWantedCsp(const TavisynthSettings *cfg) const;
  static const int NUM_FRAMES=10810800; // Divisible by everything up to 18, and by every even number up to 30, and then some.
- Tffdshow_source::Tinput input;
+ Tinput* input;
+ Tinput* outFmtInput;
  static int findBuffer(TframeBuffer* buffers, int numBuffers, int n);
  int outcsp;
 
