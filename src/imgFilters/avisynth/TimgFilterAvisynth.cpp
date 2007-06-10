@@ -205,10 +205,11 @@ TimgFilterAvisynth::Tavisynth::PClip* TimgFilterAvisynth::Tavisynth::createClip(
   }
 
  Tffdshow_source::Tc_createStruct cs(env,input);
+ Rational dar=pict.rectClip.dar();
 
  env->AddFunction("ffdshow_source","",Tffdshow_source::Create,(void*)&cs);
- env->SetGlobalVar("ffdshow_dar_x",AVSValue(pict.rectFull.dar().num));
- env->SetGlobalVar("ffdshow_dar_y",AVSValue(pict.rectFull.dar().den));
+ env->SetGlobalVar("ffdshow_dar_x",AVSValue(dar.num));
+ env->SetGlobalVar("ffdshow_dar_y",AVSValue(dar.den));
 
  char script[2048];
 
@@ -272,12 +273,12 @@ TimgFilterAvisynth::Tavisynth::PClip* TimgFilterAvisynth::Tavisynth::createClip(
 
 void TimgFilterAvisynth::Tavisynth::setOutFmt(const TavisynthSettings *cfg,Tffdshow_source::Tinput *input,TffPictBase &pict)
 {
- if ((pict.rectFull == inputRect) && !(pict.rectFull.dar() != inputDar)) // No operator== in Rational... o_O;
+ if ((pict.rectClip == inputRect) && !(pict.rectClip.dar() != inputDar)) // No operator== in Rational... o_O;
   pict.rectFull=pict.rectClip=outputRect;
  else if (PClip *clip=createClip(cfg,input,pict))
   {
-   inputRect=pict.rectFull;
-   inputDar=pict.rectFull.dar();
+   inputRect=pict.rectClip;
+   inputDar=pict.rectClip.dar();
 
    const VideoInfo &vi=(*clip)->GetVideoInfo();
 
@@ -372,8 +373,8 @@ void TimgFilterAvisynth::Tavisynth::init(const TavisynthSettings &oldcfg, Tffdsh
    frameScaleNum/=frameScaleGCD;
    frameScaleDen/=frameScaleGCD;
 
-   inputDar=pict.rectFull.dar();
-   inputRect=pict.rectFull;
+   inputDar=pict.rectClip.dar();
+   inputRect=pict.rectClip;
 
    outputDar=Rational(env->GetGlobalVar("ffdshow_dar_x").AsInt(),env->GetGlobalVar("ffdshow_dar_y").AsInt());
    pict.rectFull=pict.rectClip=outputRect=Trect(0,0,vi.width,vi.height,Rational((vi.height*outputDar.num)/double(vi.width*outputDar.den),32768));
@@ -1145,10 +1146,12 @@ bool TimgFilterAvisynth::getOutputFmt(TffPictBase &pict,const TfilterSettingsVid
  if (is(pict,cfg0))
   {
    const TavisynthSettings *cfg=(const TavisynthSettings*)cfg0;
+
    try
     {
      Trect r=pict.getRect(cfg->full,cfg->half);
      Tffdshow_source::Tinput input;
+
      input.numBuffers=0;
      input.buffers=0;
      input.numAccessedFrames=0;
@@ -1158,17 +1161,21 @@ bool TimgFilterAvisynth::getOutputFmt(TffPictBase &pict,const TfilterSettingsVid
      input.backLimit=0;
      input.dx=r.dx;
      input.dy=r.dy;
-     lavc_reduce(&input.fpsnum,&input.fpsden,deciV->getAVIfps1000_2(),1000,65000);
      input.csp=getWantedCsp(cfg);
      input.cspBpp=(input.csp ? csp_getInfo(input.csp)->Bpp : 0);
      input.src[0]=NULL;
+
+     lavc_reduce(&input.fpsnum,&input.fpsden,deciV->getAVIfps1000_2(),1000,65000);
+
      if (!avisynth) avisynth=new Tavisynth;
+
      avisynth->setOutFmt(cfg,&input,pict);
     }
    catch (Tavisynth::AvisynthError &err)
     {
      DPRINTFA("%s",err.msg);
     }
+
    return true;
   }
  else
@@ -1188,17 +1195,23 @@ HRESULT TimgFilterAvisynth::process(TfilterQueue::iterator it,TffPict &pict,cons
  if (is(pict,cfg0))
   {
    const TavisynthSettings *cfg=(const TavisynthSettings*)cfg0;
+
    init(pict,cfg->full,cfg->half);
+
    int wantedcsp=getWantedCsp(cfg);
+
    if (wantedcsp!=0)
     {
      getCur(wantedcsp,pict,cfg->full,input.src);
 
      input.stride1=stride1;
+
      if (!cfg->equal(oldcfg))
       {
        done();
+
        oldcfg=*cfg;
+
        try
         {
          debugPrint=(strnicmp(cfg->script,_l("#DEBUG"),6) == 0);
@@ -1211,9 +1224,13 @@ HRESULT TimgFilterAvisynth::process(TfilterQueue::iterator it,TffPict &pict,cons
          input.backLimit=0;
          input.dx=dx1[0];input.dy=dy1[0];
          input.csp=csp1;input.cspBpp=csp_getInfo(csp1)->Bpp;
+
          lavc_reduce(&input.fpsnum,&input.fpsden,deciV->getAVIfps1000_2(),1000,65000);
+
          if (!avisynth) avisynth=new Tavisynth;
+
          avisynth->init(oldcfg,input,&outcsp,pict);
+
          deciV->drawOSD(0,50,_l(""));
         }
        catch (Tavisynth::AvisynthError &err)
