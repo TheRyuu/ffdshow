@@ -22,7 +22,7 @@
 #define FOURCC_H261 mmioFOURCC('H','2','6','1')
 #define FOURCC_M261 mmioFOURCC('M','2','6','1')
 #define FOURCC_H263 mmioFOURCC('H','2','6','3')
-#define FOURCC_I263 mmioFOURCC('I','2','6','3')
+//#define FOURCC_I263 mmioFOURCC('I','2','6','3')
 #define FOURCC_S263 mmioFOURCC('S','2','6','3')
 #define FOURCC_L263 mmioFOURCC('L','2','6','3')
 #define FOURCC_M263 mmioFOURCC('M','2','6','3')
