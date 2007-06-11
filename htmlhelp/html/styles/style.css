@@ -7,14 +7,11 @@ img {
 div.translation {
 	text-align: right; font-size: 0.9em; font-weight: bold
 }
-div.footer {
-  text-align: center
+div.footer table {
+  margin-left: auto; margin-right: auto
 }
 div.footer td {
-  padding-top: 12px
-}
-table {
-  width: 100%
+  padding-top: 12px; text-align: center
 }
 h1 {
   font-size: 1.8em
