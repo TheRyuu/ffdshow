@@ -46,7 +46,44 @@
           _l("IHT.exe\r\n")\
           _l("START.EXE\r\n")\
           _l("mencoder.exe\r\n")\
-          _l("dvdplay.exe\r\n")
+          _l("dvdplay.exe\r\n")\
+          _l("ehExtHost.exe\r\n")\
+          _l("aim6.exe\r\n")\
+          _l("CrystalPro.exe\r\n")\
+          _l("PPStream.exe\r\n")\
+          _l("Crystal.exe\r\n")\
+          _l("TMPGEnc4XP.exe\r\n")\
+          _l("subedit.exe\r\n")\
+          _l("emule_TK4.exe\r\n")\
+          _l("BTVD3DShell.exe\r\n")\
+          _l("Xvid4PSP.exe\r\n")\
+          _l("dashboard.exe\r\n")\
+          _l("drdivx.exe\r\n")\
+          _l("NMSTranscoder.exe\r\n")\
+          _l("Fortius.exe\r\n")\
+          _l("VideoSnapshot.exe\r\n")\
+          _l("RadLight.exe\r\n")\
+          _l("Procoder2.exe\r\n")\
+          _l("DivX Player.exe\r\n")\
+          _l("i_view32.exe\r\n")\
+          _l("Recode.exe\r\n")\
+          _l("Encode360.exe\r\n")\
+          _l("ACDSee5.exe\r\n")\
+          _l("filtermanager.exe\r\n")\
+          _l("avicodec.exe\r\n")\
+          _l("x264.exe\r\n")\
+          _l("MediaLife.exe\r\n")\
+          _l("cscript.exe\r\n")\
+          _l("wscript.exe\r\n")\
+          _l("SopCast.exe\r\n")\
+          _l("DreamMaker.exe\r\n")\
+          _l("Maxthon.exe\r\n")\
+          _l("InfoTool.exe\r\n")\
+          _l("Ultra EDIT.exe\r\n")\
+          _l("moviethumb.exe\r\n")\
+          _l("GDivX Player.exe\r\n")\
+          _l("TOTALCMD.EXE\r\n")\
+          _l("CodecInstaller.exe\r\n")
 
 #define BLACKLIST_EXE_FILENAME _l("explorer.exe;oblivion.exe;morrowind.exe")
 

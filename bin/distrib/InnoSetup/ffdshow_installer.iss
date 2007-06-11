@@ -1088,33 +1088,51 @@ begin
     complist.edt.text := regstr;
   end else begin
     complist.edt.Text :=
+    'ACDSee5.exe'#13#10
     'Adobe Premiere Pro.exe'#13#10
     'aegisub.exe'#13#10
+    'aim6.exe'#13#10
     'ALLPlayer.exe'#13#10
     'ALShow.exe'#13#10
     'amcap.exe'#13#10
     'ass_help3r.exe'#13#10
     'avi2mpg.exe'#13#10
+    'avicodec.exe'#13#10
     'avipreview.exe'#13#10
     'aviutl.exe'#13#10
     'BePipe.exe'#13#10
     'bsplay.exe'#13#10
     'bsplayer.exe'#13#10
+    'BTVD3DShell.exe'#13#10
     'carom.exe'#13#10
     'christv.exe'#13#10
+    'CodecInstaller.exe'#13#10
     'CorePlayer.exe'#13#10
     'coreplayer.exe'#13#10
+    'Crystal.exe'#13#10
     'crystalfree.exe'#13#10
+    'CrystalPro.exe'#13#10
     'cut_assistant.exe'#13#10
+    'cscript.exe'#13#10
+    'dashboard.exe'#13#10
+    'DivX Player.exe'#13#10
+    'drdivx.exe'#13#10
+    'DreamMaker.exe'#13#10
     'DScaler.exe'#13#10
     'dv.exe'#13#10
     'dvdplay.exe'#13#10
     'DVDMaker.exe'#13#10
     'DVD Shrink 3.2.exe'#13#10
+    'ehExtHost.exe'#13#10
     'ehshell.exe'#13#10
+    'emule_TK4.exe'#13#10
+    'Encode360.exe'#13#10
     'fenglei.exe'#13#10
+    'filtermanager.exe'#13#10
     'firefox.exe'#13#10
     'FMRadio.exe'#13#10
+    'Fortius.exe'#13#10
+    'GDivX Player.exe'#13#10
     'gom.exe'#13#10
     'GoogleDesktop.exe'#13#10
     'GoogleDesktopCrawl.exe'#13#10
@@ -1126,21 +1144,26 @@ begin
     'ICQLite.exe'#13#10
     'iexplore.exe'#13#10
     'IHT.exe'#13#10
+    'InfoTool.exe'#13#10
     'infotv.exe'#13#10
+    'i_view32.exe'#13#10
     'JetAudio.exe'#13#10
     'kmplayer.exe'#13#10
     'LA.exe'#13#10
     'Lilith.exe'#13#10
     'makeAVIS.exe'#13#10
+    'Maxthon.exe'#13#10
     'MDirect.exe'#13#10
     'Media Center 12.exe'#13#10
     'Media Jukebox.exe'#13#10
     'Media Player Classic.exe'#13#10
+    'MediaLife.exe'#13#10
     'MediaPortal.exe'#13#10
     'MediaServer.exe'#13#10
     'megui.exe'#13#10
     'mencoder.exe'#13#10
     'MovieMk.exe'#13#10
+    'moviethumb.exe'#13#10
     'MpegVideoWizard.exe'#13#10
     'mplayer2.exe'#13#10
     'mplayerc.exe'#13#10
@@ -1148,6 +1171,7 @@ begin
     'Muzikbrowzer.exe'#13#10
     'Mv2PlayerPlus.exe'#13#10
     'NeroVision.exe'#13#10
+    'NMSTranscoder.exe'#13#10
     'nvplayer.exe'#13#10
     'Opera.exe'#13#10
     'PaintDotNet.exe'#13#10
@@ -1155,9 +1179,13 @@ begin
     'PowerDirector.exe'#13#10
     'powerdvd.exe'#13#10
     'ppmate.exe'#13#10
+    'PPStream.exe'#13#10
+    'Procoder2.exe'#13#10
     'progdvb.exe'#13#10
     'Qonoha.exe'#13#10
+    'RadLight.exe'#13#10
     'realplay.exe'#13#10
+    'Recode.exe'#13#10
     'rlkernel.exe'#13#10
     'rundll32.exe'#13#10
     'sherlock2.exe'#13#10
@@ -1165,16 +1193,22 @@ begin
     'SinkuHadouken.exe'#13#10
     'Sleipnir.exe'#13#10
     'smartmovie.exe'#13#10
+    'SopCast.exe'#13#10
     'START.EXE'#13#10
     'SubtitleEdit.exe'#13#10
     'SubtitleWorkshop.exe'#13#10
     'SplitCam.exe'#13#10
     'stillcap.exe'#13#10
+    'subedit.exe'#13#10
     'SWFConverter.exe'#13#10
     'TheaterTek DVD.exe'#13#10
     'timecodec.exe'#13#10
     'TMPGEnc.exe'#13#10
+    'TMPGEnc4XP.exe'#13#10
+    'TOTALCMD.EXE'#13#10
     'TVersity.exe'#13#10
+    'Ultra EDIT.exe'#13#10
+    'VideoSnapshot.exe'#13#10
     'ViPlay3.exe'#13#10
     'virtualdub.exe'#13#10
     'virtualdubmod.exe'#13#10
@@ -1184,6 +1218,9 @@ begin
     'windvd.exe'#13#10
     'wmenc.exe'#13#10
     'wmplayer.exe'#13#10
+    'wscript.exe'#13#10
+    'x264.exe'#13#10
+    'Xvid4PSP.exe'#13#10
     'YahooWidgetEngine.exe'#13#10
     'zplayer.exe'#13#10;
   end
@@ -1319,7 +1356,81 @@ begin
   compApps[52].name := 'mencoder.exe';
   compApps[53].rev  := 1267;
   compApps[53].name := 'dvdplay.exe';
-  compApps[54].rev  := 0;
+  compApps[54].rev  := 1273;
+  compApps[54].name := 'ehExtHost.exe';
+  compApps[55].rev  := 1273;
+  compApps[55].name := 'aim6.exe';
+  compApps[56].rev  := 1273;
+  compApps[56].name := 'CrystalPro.exe';
+  compApps[57].rev  := 1273;
+  compApps[57].name := 'PPStream.exe';
+  compApps[58].rev  := 1273;
+  compApps[58].name := 'Crystal.exe';
+  compApps[59].rev  := 1273;
+  compApps[59].name := 'TMPGEnc4XP.exe';
+  compApps[60].rev  := 1273;
+  compApps[60].name := 'subedit.exe';
+  compApps[61].rev  := 1273;
+  compApps[61].name := 'emule_TK4.exe';
+  compApps[62].rev  := 1273;
+  compApps[62].name := 'BTVD3DShell.exe';
+  compApps[63].rev  := 1273;
+  compApps[63].name := 'Xvid4PSP.exe';
+  compApps[64].rev  := 1273;
+  compApps[64].name := 'dashboard.exe';
+  compApps[65].rev  := 1273;
+  compApps[65].name := 'drdivx.exe';
+  compApps[66].rev  := 1273;
+  compApps[66].name := 'NMSTranscoder.exe';
+  compApps[67].rev  := 1273;
+  compApps[67].name := 'Fortius.exe';
+  compApps[68].rev  := 1273;
+  compApps[68].name := 'VideoSnapshot.exe';
+  compApps[69].rev  := 1273;
+  compApps[69].name := 'RadLight.exe';
+  compApps[70].rev  := 1273;
+  compApps[70].name := 'Procoder2.exe';
+  compApps[71].rev  := 1273;
+  compApps[71].name := 'DivX Player.exe';
+  compApps[72].rev  := 1273;
+  compApps[72].name := 'i_view32.exe';
+  compApps[73].rev  := 1273;
+  compApps[73].name := 'Recode.exe';
+  compApps[74].rev  := 1273;
+  compApps[74].name := 'Encode360.exe';
+  compApps[75].rev  := 1273;
+  compApps[75].name := 'ACDSee5.exe';
+  compApps[76].rev  := 1273;
+  compApps[76].name := 'filtermanager.exe';
+  compApps[77].rev  := 1273;
+  compApps[77].name := 'avicodec.exe';
+  compApps[78].rev  := 1273;
+  compApps[78].name := 'x264.exe';
+  compApps[79].rev  := 1273;
+  compApps[79].name := 'MediaLife.exe';
+  compApps[80].rev  := 1273;
+  compApps[80].name := 'cscript.exe';
+  compApps[81].rev  := 1273;
+  compApps[81].name := 'wscript.exe';
+  compApps[82].rev  := 1273;
+  compApps[82].name := 'SopCast.exe';
+  compApps[83].rev  := 1273;
+  compApps[83].name := 'DreamMaker.exe';
+  compApps[84].rev  := 1273;
+  compApps[84].name := 'Maxthon.exe';
+  compApps[85].rev  := 1273;
+  compApps[85].name := 'InfoTool.exe';
+  compApps[86].rev  := 1273;
+  compApps[86].name := 'Ultra EDIT.exe';
+  compApps[87].rev  := 1273;
+  compApps[87].name := 'moviethumb.exe';
+  compApps[88].rev  := 1273;
+  compApps[88].name := 'GDivX Player.exe';
+  compApps[89].rev  := 1273;
+  compApps[89].name := 'TOTALCMD.EXE';
+  compApps[90].rev  := 1273;
+  compApps[90].name := 'CodecInstaller.exe';
+  compApps[91].rev  := 0;
 
 // Compatibility list
   ComplistVideo.skipped := False;

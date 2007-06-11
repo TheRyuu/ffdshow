@@ -213,6 +213,7 @@ bool TglobalSettingsBase::inUseonlyin(const char_t *exe,IffdshowBase *Ideci)
   return false;
  if (TcompatibilityManager::s_mode==0)
   {
+   TcompatibilityManager::s_mode=-1;
    TcompatibilityManager *dlg=new TcompatibilityManager(Ideci,NULL,exe);
    dlg->show();
    delete dlg;
@@ -220,6 +221,7 @@ bool TglobalSettingsBase::inUseonlyin(const char_t *exe,IffdshowBase *Ideci)
  bool result=false;
  switch (TcompatibilityManager::s_mode)
   {
+   case -1:
    case 0:
    case 1:
     result=false;
