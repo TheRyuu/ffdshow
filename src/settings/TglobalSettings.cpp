@@ -28,6 +28,7 @@
 #include "TpresetSettings.h"
 #include "ffdebug.h"
 #include "Tstream.h"
+#include "IffdshowDec.h"
 #include "TcompatibilityManager.h"
 
 //===================================== TglobalSettingsBase ======================================

@@ -17,7 +17,6 @@
  */
 
 #include "stdafx.h"
-#include "TcompatibilityManager.h"
 #include "IffdshowBase.h"
 #include "IffdshowDec.h"
 #include "ffdshow_constants.h"
@@ -26,6 +25,7 @@
 #include "Cdirectshowcontrol.h"
 #include "Tconfig.h"
 #include "TglobalSettings.h"
+#include "TcompatibilityManager.h"
 
 //================================= TcompatibilityManager ==================================
 int TcompatibilityManager::s_mode;

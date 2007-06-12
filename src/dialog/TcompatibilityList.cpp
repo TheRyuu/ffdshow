@@ -17,7 +17,6 @@
  */
 
 #include "stdafx.h"
-#include "TcompatibilityList.h"
 #include "IffdshowBase.h"
 #include "IffdshowDec.h"
 #include "ffdshow_constants.h"
@@ -26,6 +25,7 @@
 #include "Cdirectshowcontrol.h"
 #include "Tconfig.h"
 #include "TglobalSettings.h"
+#include "TcompatibilityList.h"
 
 //================================= TcompatibilityList ==================================
 TcompatibilityList::TcompatibilityList(IffdshowBase *Ideci,HWND Iparent,int x,int y,int target):TdlgWindow(IDD_COMPATIBILITY,Ideci),parent(Iparent),deciD(Ideci)
