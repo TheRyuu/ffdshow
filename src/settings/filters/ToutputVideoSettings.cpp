@@ -131,7 +131,7 @@ void ToutputVideoSettings::reg_op_outcsps(TregOp &t)
  t._REG_OP_N(IDFF_outRGB555,_l("outRGB555"),rgb555,1);
  t._REG_OP_N(IDFF_outRGB565,_l("outRGB565"),rgb565,1);
  t._REG_OP_N(IDFF_outClosest,_l("outClosest"),closest,1);
- t._REG_OP_N(IDFF_setSARinOutSample,_l("setSARinOutSample"),hwOverlay,0);
+ t._REG_OP_N(IDFF_setSARinOutSample,_l("setSARinOutSample"),hwOverlay,2);
  t._REG_OP_N(IDFF_hwOverlayAspect,_l("hwOverlayAspect"),hwOverlayAspect,0);
 }
 
