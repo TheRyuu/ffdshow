@@ -69,6 +69,7 @@ DEFINE_GUID(CLSID_DWSTRINGW, 0xa0606860, 0x51be, 0x4cf6, 0x99, 0xc0, 0x7c, 0xe5,
 #define FOURCC_vp6f mmioFOURCC('v','p','6','f')
 #define FOURCC_flv4 mmioFOURCC('f','l','v','4')
 #define FOURCC_hfyu mmioFOURCC('h','f','y','u')
+#define FOURCC_3iv1 mmioFOURCC('3','i','v','1')
 #define FOURCC_3iv2 mmioFOURCC('3','i','v','2')
 #define FOURCC_3ivx mmioFOURCC('3','i','v','x')
 #define FOURCC_mpg2 mmioFOURCC('m','p','g','2')
@@ -140,6 +141,8 @@ DEFINE_GUID_FOURCC(FLV4)
 DEFINE_GUID_FOURCC(flv4)
 DEFINE_GUID_FOURCC(HFYU)
 DEFINE_GUID_FOURCC(hfyu)
+DEFINE_GUID_FOURCC(3IV1)
+DEFINE_GUID_FOURCC(3iv1)
 DEFINE_GUID_FOURCC(3IV2)
 DEFINE_GUID_FOURCC(3iv2)
 DEFINE_GUID_FOURCC(3IVX)
@@ -187,12 +190,12 @@ DEFINE_GUID_FOURCC(wvp2)
 
 const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]=
 {
- { &MEDIATYPE_Video, &MEDIASUBTYPE_NULL   },
+ { &MEDIATYPE_Video,              &MEDIASUBTYPE_NULL   },
  { &MEDIATYPE_DVD_ENCRYPTED_PACK, &MEDIASUBTYPE_NULL   },
  { &MEDIATYPE_DVD_ENCRYPTED_PACK, &MEDIASUBTYPE_MPEG2_VIDEO   },
  { &MEDIATYPE_DVD_ENCRYPTED_PACK, &MEDIASUBTYPE_AVC1   },
  { &MEDIATYPE_DVD_ENCRYPTED_PACK, &MEDIASUBTYPE_WVC1   },
- // Few most used FourCCs
+// Few most used FourCCs
  { &MEDIATYPE_Video, &MEDIASUBTYPE_XVID   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_xvid   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_DIVX   },
@@ -245,18 +248,18 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]=
  { &MEDIATYPE_Video, &MEDIASUBTYPE_3iv2   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_3IVX   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_3ivx   },
- // MPEG1 & 2 Video MediaSubType & FourCCs
+// MPEG1 & 2 Video MediaSubType & FourCCs
  { &MEDIATYPE_Video, &MEDIASUBTYPE_MPEG1Packet   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_MPEG1Payload   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_MPEG2_VIDEO   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_MPG2   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_mpg2   },
- // Other MPEG2
+// Other MPEG2
  { &MEDIATYPE_Video, &MEDIASUBTYPE_EM2V   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_em2v   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_MMES   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_mmes   },
- // Some less common FourCCs
+// Some less common FourCCs
  { &MEDIATYPE_Video, &MEDIASUBTYPE_VP31   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_vp31   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_TSCC   },
@@ -271,13 +274,12 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]=
  { &MEDIATYPE_Video, &MEDIASUBTYPE_wmvp   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_WVP2   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_wvp2   },
-
- // MJPEG Video MediaSubType & FourCCs
+// MJPEG Video MediaSubType & FourCCs
  { &MEDIATYPE_Video, &MEDIASUBTYPE_MJPG   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_mjpg   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_MJPA   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_mjpa   },
- // DVSD Video MediaSubType & FourCCs
+// DVSD Video MediaSubType & FourCCs
  { &MEDIATYPE_Video, &MEDIASUBTYPE_DVSD   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_dvsd   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_DV25   },
@@ -292,7 +294,7 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]=
  { &MEDIATYPE_Video, &MEDIASUBTYPE_dvis   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_PDVC   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_pdvc   },
- // explicitly register for raw video types for easier enumeration
+// explicitly register for raw video types for easier enumeration
  { &MEDIATYPE_Video, &MEDIASUBTYPE_YV12   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_IYUV   },
  { &MEDIATYPE_Video, &MEDIASUBTYPE_YUY2   },
@@ -320,24 +322,20 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecAudio::inputMediaTypes[]=
  { &MEDIATYPE_MPEG2_PACK         , &MEDIASUBTYPE_MPEG2_AUDIO       },
  { &MEDIATYPE_MPEG2_PES          , &MEDIASUBTYPE_MPEG2_AUDIO       },
  { &MEDIATYPE_DVD_ENCRYPTED_PACK , &MEDIASUBTYPE_MPEG2_AUDIO       },
-
  { &MEDIATYPE_Audio              , &MEDIASUBTYPE_AC3_W     },
  { &MEDIATYPE_MPEG2_PES          , &MEDIASUBTYPE_DOLBY_AC3 },
  { &MEDIATYPE_MPEG2_PACK         , &MEDIASUBTYPE_DOLBY_AC3 },
  { &MEDIATYPE_Audio              , &MEDIASUBTYPE_DOLBY_AC3 },
  { &MEDIATYPE_DVD_ENCRYPTED_PACK , &MEDIASUBTYPE_DOLBY_AC3 },
-
  { &MEDIATYPE_Audio              , &MEDIASUBTYPE_DTS_W },
  { &MEDIATYPE_MPEG2_PES          , &MEDIASUBTYPE_DTS   },
  { &MEDIATYPE_MPEG2_PACK         , &MEDIASUBTYPE_DTS   },
  { &MEDIATYPE_Audio              , &MEDIASUBTYPE_DTS   },
  { &MEDIATYPE_DVD_ENCRYPTED_PACK , &MEDIASUBTYPE_DTS   },
-
  { &MEDIATYPE_MPEG2_PACK         , &MEDIASUBTYPE_DVD_LPCM_AUDIO },
  { &MEDIATYPE_MPEG2_PES          , &MEDIASUBTYPE_DVD_LPCM_AUDIO },
  { &MEDIATYPE_Audio              , &MEDIASUBTYPE_DVD_LPCM_AUDIO },
  { &MEDIATYPE_DVD_ENCRYPTED_PACK , &MEDIASUBTYPE_DVD_LPCM_AUDIO },
-
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_AAC1       },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_AAC2       },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_AAC3       },
@@ -389,10 +387,9 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecAudio::inputMediaTypes[]=
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_28_8       },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_IMC        },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_ATRAC3     },
- { &MEDIATYPE_Audio , &MEDIASUBTYPE_Vorbis    },
- { &MEDIATYPE_Audio , &MEDIASUBTYPE_Vorbis2   },
- { &MEDIATYPE_Audio , &MEDIASUBTYPE_VorbisIll },
-
+ { &MEDIATYPE_Audio , &MEDIASUBTYPE_Vorbis     },
+ { &MEDIATYPE_Audio , &MEDIASUBTYPE_Vorbis2    },
+ { &MEDIATYPE_Audio , &MEDIASUBTYPE_VorbisIll  },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_PCM        },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_RAW        },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_IEEE_FLOAT }

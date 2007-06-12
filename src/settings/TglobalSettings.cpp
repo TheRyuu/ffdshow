@@ -651,6 +651,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(X264,h264 & rawmask,CODEC_ID_H264) \
  FF_FOURCC1_OP(VSSH,h264 & rawmask,CODEC_ID_H264) \
  FF_FOURCC1_OP(DAVC,h264 & rawmask,CODEC_ID_H264) \
+ FF_FOURCC1_OP(PAVC,h264 & rawmask,CODEC_ID_H264) \
  FF_FOURCC1_OP(AVC1,h264 & rawmask,CODEC_ID_H264) \
  /*FF_FOURCC1_OP(SVM2,h264 & rawmask,CODEC_ID_H264)*/ \
  FF_FOURCC1_OP(MJPG,mjpg & rawmask,CODEC_ID_MJPEG) \
@@ -697,7 +698,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(DUCK,duck & rawmask,CODEC_ID_TRUEMOTION1) \
  FF_FOURCC1_OP(TM20,duck & rawmask,CODEC_ID_TRUEMOTION2) \
  FF_FOURCC1_OP(TSCC,tscc & rawmask,CODEC_ID_TSCC) \
- FF_FOURCC1_OP(SNOW,snow && rawmask,CODEC_ID_SNOW) \
+ FF_FOURCC1_OP(SNOW,snow & rawmask,CODEC_ID_SNOW) \
  FF_FOURCC1_OP(QPEG,qpeg & rawmask,CODEC_ID_QPEG) \
  FF_FOURCC1_OP(Q1_0,qpeg & rawmask,CODEC_ID_QPEG) \
  FF_FOURCC1_OP(Q1_1,qpeg & rawmask,CODEC_ID_QPEG) \
@@ -746,10 +747,8 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC_OP (MP4S,mp4v & rawmask,c_mpeg4) \
  FF_FOURCC_OP (SEDG,mp4v & rawmask,c_mpeg4) \
  FF_FOURCC_OP (M4S2,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC1_OP(COL1,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
  FF_FOURCC_OP (BLZ0,dx50 & rawmask,c_mpeg4) \
  FF_FOURCC_OP (DXGM,dx50 & rawmask,c_mpeg4) \
- FF_FOURCC_OP (3IV2,mp4v & rawmask,c_mpeg4) \
  FF_FOURCC_OP (LMP4,mp4v & rawmask,c_mpeg4) \
  FF_FOURCC_OP (RMP4,mp4v & rawmask,c_mpeg4) \
  FF_FOURCC_OP (DM4V,mp4v & rawmask,c_mpeg4) \
@@ -757,6 +756,9 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC_OP (UMP4,mp4v & rawmask,c_mpeg4) \
  FF_FOURCC_OP (NDIG,mp4v & rawmask,c_mpeg4) \
  FF_FOURCC_OP (XVIX,xvid & rawmask,c_mpeg4) \
+ FF_FOURCC_OP (3IV1,mp4v & rawmask,c_mpeg4) \
+ FF_FOURCC_OP (3IV2,mp4v & rawmask,c_mpeg4) \
+ FF_FOURCC1_OP(COL1,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
  FF_FOURCC1_OP(DIV4,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
  FF_FOURCC1_OP(DIV5,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
  FF_FOURCC1_OP(DIV6,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
