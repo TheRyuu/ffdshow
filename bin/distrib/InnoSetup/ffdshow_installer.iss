@@ -582,7 +582,7 @@ Description: {cm:runvfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,c
 #include "custom_messages.iss"
 
 [Code]
-const NUMBER_OF_COMPATIBLEAPPLICATIONS=100;
+const NUMBER_OF_COMPATIBLEAPPLICATIONS=150;
 type
   TCompApp = record
     rev: Integer;  // The application (name) have been added to the compatibility list at this rev.
@@ -1089,18 +1089,23 @@ begin
   end else begin
     complist.edt.Text :=
     'ACDSee5.exe'#13#10
+    'Adobe Premiere Elements.exe'#13#10
     'Adobe Premiere Pro.exe'#13#10
     'aegisub.exe'#13#10
     'aim6.exe'#13#10
     'ALLPlayer.exe'#13#10
     'ALShow.exe'#13#10
+    'ALSong.exe'#13#10
     'amcap.exe'#13#10
+    'Apollo DivX to DVD Creator.exe'#13#10
     'ass_help3r.exe'#13#10
+    'Avi2Dvd.exe'#13#10
     'avi2mpg.exe'#13#10
     'avicodec.exe'#13#10
     'avipreview.exe'#13#10
     'aviutl.exe'#13#10
     'BePipe.exe'#13#10
+    'bplay.exe'#13#10
     'bsplay.exe'#13#10
     'bsplayer.exe'#13#10
     'BTVD3DShell.exe'#13#10
@@ -1120,9 +1125,12 @@ begin
     'DreamMaker.exe'#13#10
     'DScaler.exe'#13#10
     'dv.exe'#13#10
+    'dvbviewer.exe'#13#10
+    'DVDMF.exe'#13#10
     'dvdplay.exe'#13#10
     'DVDMaker.exe'#13#10
     'DVD Shrink 3.2.exe'#13#10
+    'Easy RealMedia Tools.exe'#13#10
     'ehExtHost.exe'#13#10
     'ehshell.exe'#13#10
     'emule_TK4.exe'#13#10
@@ -1130,8 +1138,10 @@ begin
     'fenglei.exe'#13#10
     'filtermanager.exe'#13#10
     'firefox.exe'#13#10
+    'Flash.exe'#13#10
     'FMRadio.exe'#13#10
     'Fortius.exe'#13#10
+    'FSViewer.exe'#13#10
     'GDivX Player.exe'#13#10
     'gom.exe'#13#10
     'GoogleDesktop.exe'#13#10
@@ -1139,13 +1149,17 @@ begin
     'graphedit.exe'#13#10
     'graphedt.exe'#13#10
     'gspot.exe'#13#10
+    'HBP.exe'#13#10
+    'HDVSplit.exe'#13#10
     'honestechTV.exe'#13#10
     'HPWUCli.exe'#13#10
+    'ICQ.exe'#13#10
     'ICQLite.exe'#13#10
     'iexplore.exe'#13#10
     'IHT.exe'#13#10
     'InfoTool.exe'#13#10
     'infotv.exe'#13#10
+    'iPlayer.exe'#13#10
     'i_view32.exe'#13#10
     'JetAudio.exe'#13#10
     'kmplayer.exe'#13#10
@@ -1170,18 +1184,26 @@ begin
     'Munite.exe'#13#10
     'Muzikbrowzer.exe'#13#10
     'Mv2PlayerPlus.exe'#13#10
+    'myplayer.exe'#13#10
+    'nero.exe'#13#10
+    'NeroHome.exe'#13#10
     'NeroVision.exe'#13#10
     'NMSTranscoder.exe'#13#10
     'nvplayer.exe'#13#10
     'Opera.exe'#13#10
+    'OUTLOOK.EXE'#13#10
     'PaintDotNet.exe'#13#10
     'pcwmp.exe'#13#10
+    'Photoshop.exe'#13#10
+    'playwnd.exe'#13#10
     'PowerDirector.exe'#13#10
     'powerdvd.exe'#13#10
+    'POWERPNT.EXE'#13#10
     'ppmate.exe'#13#10
     'PPStream.exe'#13#10
     'Procoder2.exe'#13#10
     'progdvb.exe'#13#10
+    'PVCR.exe'#13#10
     'Qonoha.exe'#13#10
     'RadLight.exe'#13#10
     'realplay.exe'#13#10
@@ -1199,16 +1221,20 @@ begin
     'SubtitleWorkshop.exe'#13#10
     'SplitCam.exe'#13#10
     'stillcap.exe'#13#10
+    'Studio.exe'#13#10
     'subedit.exe'#13#10
     'SWFConverter.exe'#13#10
     'TheaterTek DVD.exe'#13#10
+    'time_adjuster.exe'#13#10
     'timecodec.exe'#13#10
     'TMPGEnc.exe'#13#10
     'TMPGEnc4XP.exe'#13#10
     'TOTALCMD.EXE'#13#10
     'TVersity.exe'#13#10
     'Ultra EDIT.exe'#13#10
+    'VCD_PLAY.EXE'#13#10
     'VideoSnapshot.exe'#13#10
+    'VideoSplitter.exe'#13#10
     'ViPlay3.exe'#13#10
     'virtualdub.exe'#13#10
     'virtualdubmod.exe'#13#10
@@ -1216,10 +1242,13 @@ begin
     'winamp.exe'#13#10
     'WinAVI.exe'#13#10
     'windvd.exe'#13#10
+    'WinMPGVideoConvert.exe'#13#10
+    'WINWORD.EXE'#13#10
     'wmenc.exe'#13#10
     'wmplayer.exe'#13#10
     'wscript.exe'#13#10
     'x264.exe'#13#10
+    'XNVIEW.EXE'#13#10
     'Xvid4PSP.exe'#13#10
     'YahooWidgetEngine.exe'#13#10
     'zplayer.exe'#13#10;
@@ -1430,7 +1459,65 @@ begin
   compApps[89].name := 'TOTALCMD.EXE';
   compApps[90].rev  := 1273;
   compApps[90].name := 'CodecInstaller.exe';
-  compApps[91].rev  := 0;
+  compApps[91].rev  := 1283;
+  compApps[91].name := 'OUTLOOK.EXE';
+  compApps[92].rev  := 1283;
+  compApps[92].name := 'NeroHome.exe';
+  compApps[93].rev  := 1283;
+  compApps[93].name := 'ALSong.exe';
+  compApps[94].rev  := 1283;
+  compApps[94].name := 'HBP.exe';
+  compApps[95].rev  := 1283;
+  compApps[95].name := 'Easy RealMedia Tools.exe';
+  compApps[96].rev  := 1283;
+  compApps[96].name := 'myplayer.exe';
+  compApps[97].rev  := 1283;
+  compApps[97].name := 'bplay.exe';
+  compApps[98].rev  := 1283;
+  compApps[98].name := 'nero.exe';
+  compApps[99].rev  := 1283;
+  compApps[99].name := 'ICQ.exe';
+  compApps[100].rev  := 1283;
+  compApps[100].name := 'XNVIEW.EXE';
+  compApps[101].rev  := 1283;
+  compApps[101].name := 'WINWORD.EXE';
+  compApps[102].rev  := 1283;
+  compApps[102].name := 'POWERPNT.EXE';
+  compApps[103].rev  := 1283;
+  compApps[103].name := 'Studio.exe';
+  compApps[104].rev  := 1283;
+  compApps[104].name := 'iPlayer.exe';
+  compApps[105].rev  := 1283;
+  compApps[105].name := 'Adobe Premiere Elements.exe';
+  compApps[106].rev  := 1283;
+  compApps[106].name := 'Photoshop.exe';
+  compApps[107].rev  := 1283;
+  compApps[107].name := 'VideoSplitter.exe';
+  compApps[108].rev  := 1283;
+  compApps[108].name := 'dvbviewer.exe';
+  compApps[109].rev  := 1283;
+  compApps[109].name := 'FSViewer.exe';
+  compApps[110].rev  := 1283;
+  compApps[110].name := 'DVDMF.exe';
+  compApps[111].rev  := 1283;
+  compApps[111].name := 'Flash.exe';
+  compApps[112].rev  := 1283;
+  compApps[112].name := 'VCD_PLAY.EXE';
+  compApps[113].rev  := 1283;
+  compApps[113].name := 'WinMPGVideoConvert.exe';
+  compApps[114].rev  := 1283;
+  compApps[114].name := 'Apollo DivX to DVD Creator.exe';
+  compApps[115].rev  := 1283;
+  compApps[115].name := 'Avi2Dvd.exe';
+  compApps[116].rev  := 1283;
+  compApps[116].name := 'PVCR.exe';
+  compApps[117].rev  := 1283;
+  compApps[117].name := 'HDVSplit.exe';
+  compApps[118].rev  := 1283;
+  compApps[118].name := 'time_adjuster.exe';
+  compApps[119].rev  := 1283;
+  compApps[119].name := 'playwnd.exe';
+  compApps[120].rev  := 0;
 
 // Compatibility list
   ComplistVideo.skipped := False;

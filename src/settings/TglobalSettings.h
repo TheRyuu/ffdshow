@@ -83,7 +83,36 @@
           _l("moviethumb.exe\r\n")\
           _l("GDivX Player.exe\r\n")\
           _l("TOTALCMD.EXE\r\n")\
-          _l("CodecInstaller.exe\r\n")
+          _l("CodecInstaller.exe\r\n")\
+          _l("OUTLOOK.EXE\r\n")\
+          _l("NeroHome.exe\r\n")\
+          _l("ALSong.exe\r\n")\
+          _l("HBP.exe\r\n")\
+          _l("Easy RealMedia Tools.exe\r\n")\
+          _l("myplayer.exe\r\n")\
+          _l("bplay.exe\r\n")\
+          _l("nero.exe\r\n")\
+          _l("ICQ.exe\r\n")\
+          _l("XNVIEW.EXE\r\n")\
+          _l("WINWORD.EXE\r\n")\
+          _l("POWERPNT.EXE\r\n")\
+          _l("Studio.exe\r\n")\
+          _l("iPlayer.exe\r\n")\
+          _l("Adobe Premiere Elements.exe\r\n")\
+          _l("Photoshop.exe\r\n")\
+          _l("VideoSplitter.exe\r\n")\
+          _l("dvbviewer.exe\r\n")\
+          _l("FSViewer.exe\r\n")\
+          _l("DVDMF.exe\r\n")\
+          _l("Flash.exe\r\n")\
+          _l("VCD_PLAY.EXE\r\n")\
+          _l("WinMPGVideoConvert.exe\r\n")\
+          _l("Apollo DivX to DVD Creator.exe\r\n")\
+          _l("Avi2Dvd.exe\r\n")\
+          _l("PVCR.exe\r\n")\
+          _l("HDVSplit.exe\r\n")\
+          _l("time_adjuster.exe\r\n")\
+          _l("playwnd.exe\r\n")
 
 #define BLACKLIST_EXE_FILENAME _l("explorer.exe;oblivion.exe;morrowind.exe")
 
