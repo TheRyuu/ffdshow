@@ -60,7 +60,7 @@ static int dct_quantize_c(MpegEncContext *s, DCTELEM *block, int n, int qscale, 
 static int dct_quantize_trellis_c(MpegEncContext *s, DCTELEM *block, int n, int qscale, int *overflow);
 static int dct_quantize_refine(MpegEncContext *s, DCTELEM *block, int16_t *weight, DCTELEM *orig, int n, int qscale);
 static int sse_mb(MpegEncContext *s);
-static void  denoise_dct_c(MpegEncContext *s, DCTELEM *block);
+static void denoise_dct_c(MpegEncContext *s, DCTELEM *block);
 #endif //CONFIG_ENCODERS
 
 #ifdef HAVE_XVMC

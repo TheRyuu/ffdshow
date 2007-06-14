@@ -1190,7 +1190,7 @@ static void dv_format_frame(DVVideoContext* c, uint8_t* buf)
 
 
 #ifdef CONFIG_ENCODERS
-static int dvvideo_encode_frame(AVCodecContext *c, uint8_t *buf, int buf_size,
+static int attribute_align_arg dvvideo_encode_frame(AVCodecContext *c, uint8_t *buf, int buf_size,
                                 void *data)
 {
     DVVideoContext *s = c->priv_data;
