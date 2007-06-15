@@ -207,6 +207,8 @@ public:
   }
  ~TkernelDeint()
   {
+   for (int i=0;i<NFIELDS;i++)
+    if (fields[i]) delete fields[i];
    delete fullsizeMask;
    if (halfsizeMask) delete halfsizeMask;
    aligned_free(scratch);
