@@ -167,9 +167,9 @@ HRESULT TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,
         if (pIn->IsPreroll()==S_OK)
          return sinkD->deliverPreroll(frametype);
         int fieldtype;
-        if(/*info->display_picture->flags&PIC_FLAG_PROGRESSIVE_FRAME*/info->sequence->flags&SEQ_FLAG_PROGRESSIVE_SEQUENCE)
+        if(info->sequence->flags&SEQ_FLAG_PROGRESSIVE_SEQUENCE)
          fieldtype = FIELD_TYPE::PROGRESSIVE_FRAME;
-        else if(info->display_picture->flags&PIC_FLAG_TOP_FIELD_FIRST)
+        else if(info->sequence->flags&PIC_FLAG_TOP_FIELD_FIRST)
          fieldtype = FIELD_TYPE::INT_TFF;
         else
          fieldtype = FIELD_TYPE::INT_BFF;
