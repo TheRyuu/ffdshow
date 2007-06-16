@@ -7,7 +7,8 @@ struct TSubtitleProps
  TSubtitleProps(void) {reset();}
  TSubtitleProps(unsigned int IrefResX,unsigned int IrefResY) {reset();refResX=IrefResX;refResY=IrefResY;}
  TSubtitleProps(bool Ibold,bool Iitalic, bool Iunderline) {reset();bold=Ibold;italic=Iitalic;underline=Iunderline;}
- bool bold,italic,underline,strikeout,bluredges;
+ int bold;
+ bool italic,underline,strikeout,bluredges;
  bool isColor;COLORREF color;
  bool isPos;int posx,posy;
  unsigned int refResX,refResY;

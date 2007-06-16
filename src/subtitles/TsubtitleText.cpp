@@ -853,7 +853,7 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::processTokens(const tch
        !processToken(l3,_L("\\a"),&Tssa<tchar>::template intProp<&TSubtitleProps::alignment,0,11>) &&
        !processToken(l3,_L("\\i"),&Tssa<tchar>::template boolProp<&TSubtitleProps::italic>) &&
        !processToken(l3,_L("\\be"),&Tssa<tchar>::template boolProp<&TSubtitleProps::bluredges>) &&
-       !processToken(l3,_L("\\b"),&Tssa<tchar>::template boolProp<&TSubtitleProps::bold>) &&
+       !processToken(l3,_L("\\b"),&Tssa<tchar>::template intProp<&TSubtitleProps::bold,0,1>) &&
        !processToken(l3,_L("\\u"),&Tssa<tchar>::template boolProp<&TSubtitleProps::underline>) &&
        !processToken(l3,_L("\\shad"),&Tssa<tchar>::template doubleProp<&TSubtitleProps::shadowDepth,0,4>) &&
        !processToken(l3,_L("\\s"),&Tssa<tchar>::template boolProp<&TSubtitleProps::strikeout>) &&
@@ -907,7 +907,7 @@ template<class tchar> void TsubtitleFormat::processMicroDVD(TsubtitleTextBase<tc
     if (end==NULL) break;
     bool all=!!tchar_traits<tchar>::isupper(line[1]);
     if (std::find_if(line+3,end,Tncasecmp<tchar,'i'>())!=end) parent.propagateProps(all?parent.begin():it,&TSubtitleProps::italic   ,true,all?parent.end():it+1);
-    if (std::find_if(line+3,end,Tncasecmp<tchar,'b'>())!=end) parent.propagateProps(all?parent.begin():it,&TSubtitleProps::bold     ,true,all?parent.end():it+1);
+    if (std::find_if(line+3,end,Tncasecmp<tchar,'b'>())!=end) parent.propagateProps(all?parent.begin():it,&TSubtitleProps::bold     ,1,all?parent.end():it+1);
     if (std::find_if(line+3,end,Tncasecmp<tchar,'u'>())!=end) parent.propagateProps(all?parent.begin():it,&TSubtitleProps::underline,true,all?parent.end():it+1);
     if (std::find_if(line+3,end,Tncasecmp<tchar,'s'>())!=end) parent.propagateProps(all?parent.begin():it,&TSubtitleProps::strikeout,true,all?parent.end():it+1);
     line=end+1;

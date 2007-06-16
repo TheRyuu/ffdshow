@@ -24,7 +24,8 @@
 void TSubtitleProps::reset(void)
 {
  refResX=refResY=0;
- bold=italic=underline=strikeout=false;
+ bold=-1;
+ italic=underline=strikeout=false;
  isColor=false;
  isPos=false;
  size=0;
@@ -45,7 +46,12 @@ void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,uns
  if (refResY && dy)
   lf.lfHeight=dy*lf.lfHeight/refResY;
  lf.lfWidth=0;
- lf.lfWeight=fontSettings.weight+(bold?400:0);
+ if (bold==-1)
+  lf.lfWeight=fontSettings.weight;
+ else if (bold==0)
+  lf.lfWeight=0;
+ else
+  lf.lfWeight=700;
  lf.lfItalic=italic;
  lf.lfUnderline=underline;
  lf.lfStrikeOut=strikeout;

@@ -131,10 +131,11 @@ HRESULT TtextInputPin::SetMediaType(const CMediaType* mtIn)
 }
 STDMETHODIMP TtextInputPin::ReceiveConnection(IPin* pConnector, const AM_MEDIA_TYPE* pmt)
 {
+ utf8=false;
  const CLSID &ref=GetCLSID(pConnector);
  if (ref==CLSID_HaaliMediaSplitter)
   ismatroska=true;
-#if 1
+#if 0
  PIN_INFO pininfo;
  FILTER_INFO filterinfo;
  pConnector->QueryPinInfo(&pininfo);

@@ -470,6 +470,16 @@ template<class tchar> void TsubtitleParserSSA<tchar>::strToInt(const ffstring &s
   }
 }
 
+template<class tchar> void TsubtitleParserSSA<tchar>::strToIntMargin(const ffstring &str,int *i)
+{
+ if (!str.empty() /*str.size()==4 && str.compare(_L("0000"))!=0*/)
+  {
+   tchar *end;
+   int val=strtol(str.c_str(),&end,10);
+   if (*end=='\0' && val>0) *i=val;
+  }
+}
+
 template<class tchar> void TsubtitleParserSSA<tchar>::strToDouble(const ffstring &str,double *d)
 {
  if (!str.empty())
@@ -564,7 +574,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
  tchar *line=line0;
  while (fd.fgets(line,this->LINE_LEN))
   {
-#if 0
+#if 1
    text<char_t> lineD0(line);
    const char_t* lineD1=(const char_t*)lineD0;
    DPRINTF(_l("%s"),lineD1);
@@ -793,11 +803,11 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
         {
          const TSubtitleProps *props=styles.getProps(event.style);
          TsubtitleTextBase<tchar> current(this->format,props?*props:defprops);
-         if (event.marginL && event.marginL.compare(_l("0000"))!=0) strToInt(event.marginL,&current.defProps.marginL);
-         if (event.marginR && event.marginR.compare(_l("0000"))!=0) strToInt(event.marginL,&current.defProps.marginR);
-         if (event.marginV && event.marginV.compare(_l("0000"))!=0) strToInt(event.marginV,&current.defProps.marginV);
-         if (event.marginT && event.marginT.compare(_l("0000"))!=0) strToInt(event.marginL,&current.defProps.marginTop);
-         if (event.marginB && event.marginB.compare(_l("0000"))!=0) strToInt(event.marginL,&current.defProps.marginBottom);
+         strToIntMargin(event.marginL,&current.defProps.marginL);
+         strToIntMargin(event.marginL,&current.defProps.marginR);
+         strToIntMargin(event.marginV,&current.defProps.marginV);
+         strToIntMargin(event.marginL,&current.defProps.marginTop);
+         strToIntMargin(event.marginL,&current.defProps.marginBottom);
          if (flags&this->PARSETIME)
           {
            current.start=timer.den*this->hmsToTime(hour1,min1,sec1,hunsec1)/timer.num;

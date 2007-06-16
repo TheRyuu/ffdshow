@@ -103,6 +103,7 @@ private:
  typedef typename tchar_traits<tchar>::ffstring ffstring;
  typedef typename tchar_traits<tchar>::strings strings;
  static void strToInt(const ffstring &str,int *i);
+ static void strToIntMargin(const ffstring &str,int *i);
  static void strToDouble(const ffstring &str,double *d);
  struct Tstyle
   {
