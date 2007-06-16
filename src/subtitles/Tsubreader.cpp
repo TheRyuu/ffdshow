@@ -30,7 +30,10 @@ Tsubreader::~Tsubreader()
 void Tsubreader::clear(void)
 {
  for (iterator s=begin();s!=end();s++)
-  delete *s;
+  {
+   delete *s;
+   *s=NULL;
+  }
  std::vector<value_type>::clear();
 }
 

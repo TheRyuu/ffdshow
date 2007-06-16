@@ -243,7 +243,6 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
        sub=e->second->getSubtitle(cfg,frameStart,&forceChange);
       }
     }
-   csEmbedded.Unlock();
    if (!useembedded)
     sub=subs.getSubtitle(cfg,frameStart,&forceChange);
    if (sub)
@@ -311,6 +310,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
       }
      wasDiscontinuity=false;
     }
+   csEmbedded.Unlock();
   }
 
  if (cfg->cc)

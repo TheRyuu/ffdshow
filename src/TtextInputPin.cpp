@@ -85,7 +85,11 @@ HRESULT TtextInputPin::SetMediaType(const CMediaType* mtIn)
    char_t trackname[512];
    text<char_t>(psi->TrackName, (int)countof(psi->TrackName), trackname, countof(trackname));
    tsnprintf(name,256,_l("%s%s%s"),trackname,trackname[0]?_l(" "):_l(""),isoname);
-   if (extradata) free(extradata);
+   if (extradata)
+    {
+     free(extradata);
+     extradata=NULL;
+    }
    extradatasize=mtIn->cbFormat-psi->dwOffset;
    if (extradatasize)
     {
