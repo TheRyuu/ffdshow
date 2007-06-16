@@ -24,7 +24,7 @@
  * Utils for libavcodec.
  */
 
-#include "avcodec.h"
+#include "allcodecs.h"
 
 /* If you do not call this function, then you can select exactly which
    formats you want to support */

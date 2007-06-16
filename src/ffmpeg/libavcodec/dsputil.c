@@ -2021,7 +2021,7 @@ QPEL_MC(0, avg_       , _       , op_avg)
 
 #if 1
 #define H264_LOWPASS(OPNAME, OP, OP2) \
-static void OPNAME ## h264_qpel2_h_lowpass(uint8_t *dst, uint8_t *src, int dstStride, int srcStride){\
+static av_unused void OPNAME ## h264_qpel2_h_lowpass(uint8_t *dst, uint8_t *src, int dstStride, int srcStride){\
     const int h=2;\
     uint8_t *cm = ff_cropTbl + MAX_NEG_CROP;\
     int i;\
@@ -2034,7 +2034,7 @@ static void OPNAME ## h264_qpel2_h_lowpass(uint8_t *dst, uint8_t *src, int dstSt
     }\
 }\
 \
-static void OPNAME ## h264_qpel2_v_lowpass(uint8_t *dst, uint8_t *src, int dstStride, int srcStride){\
+static av_unused void OPNAME ## h264_qpel2_v_lowpass(uint8_t *dst, uint8_t *src, int dstStride, int srcStride){\
     const int w=2;\
     uint8_t *cm = ff_cropTbl + MAX_NEG_CROP;\
     int i;\
@@ -2054,7 +2054,7 @@ static void OPNAME ## h264_qpel2_v_lowpass(uint8_t *dst, uint8_t *src, int dstSt
     }\
 }\
 \
-static void OPNAME ## h264_qpel2_hv_lowpass(uint8_t *dst, int16_t *tmp, uint8_t *src, int dstStride, int tmpStride, int srcStride){\
+static av_unused void OPNAME ## h264_qpel2_hv_lowpass(uint8_t *dst, int16_t *tmp, uint8_t *src, int dstStride, int tmpStride, int srcStride){\
     const int h=2;\
     const int w=2;\
     uint8_t *cm = ff_cropTbl + MAX_NEG_CROP;\
@@ -3136,7 +3136,7 @@ void ff_block_permute(DCTELEM *block, uint8_t *permutation, const uint8_t *scant
     DCTELEM temp[64];
 
     if(last<=0) return;
-    //if(permutation[1]==1) return; //FIXME its ok but not clean and might fail for some perms
+    //if(permutation[1]==1) return; //FIXME it is ok but not clean and might fail for some permutations
 
     for(i=0; i<=last; i++){
         const int j= scantable[i];
@@ -3790,7 +3790,7 @@ static void ff_jref_idct1_add(uint8_t *dest, int line_size, DCTELEM *block)
     dest[0] = cm[dest[0] + ((block[0] + 4)>>3)];
 }
 
-static void just_return() { return; }
+static void just_return(void *mem av_unused, int stride av_unused, int h av_unused) { return; }
 
 /* init static data */
 void dsputil_static_init(void)
@@ -3814,7 +3814,7 @@ int ff_check_alignment(void){
     static int did_fail=0;
     DECLARE_ALIGNED_16(int, aligned);
 
-    if((int)&aligned & 15){
+    if((long)&aligned & 15){
         if(!did_fail){
 #if defined(HAVE_MMX) || defined(HAVE_ALTIVEC)
             av_log(NULL, AV_LOG_WARNING,
@@ -4122,9 +4122,7 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
     memset(c->put_2tap_qpel_pixels_tab, 0, sizeof(c->put_2tap_qpel_pixels_tab));
     memset(c->avg_2tap_qpel_pixels_tab, 0, sizeof(c->avg_2tap_qpel_pixels_tab));
 
-#ifdef HAVE_MMX
-    dsputil_init_mmx(c, avctx);
-#endif
+	dsputil_init_mmx   (c, avctx);
 
     for(i=0; i<64; i++){
         if(!c->put_2tap_qpel_pixels_tab[0][i])

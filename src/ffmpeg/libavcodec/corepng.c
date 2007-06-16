@@ -16,6 +16,7 @@
 
 
 #include "avcodec.h"
+#include "allcodecs.h"
 #include "common.h"
 #include "dsputil.h"
 

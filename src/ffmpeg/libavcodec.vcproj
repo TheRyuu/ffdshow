@@ -624,6 +624,9 @@
 				RelativePath=".\libavcodec\atrac3data.h">
 			</File>
 			<File
+				RelativePath=".\libavcodec\allcodecs.h">
+			</File>
+			<File
 				RelativePath=".\libavcodec\avcodec.h">
 			</File>
 			<File

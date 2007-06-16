@@ -4012,7 +4012,8 @@ static int vc1_decode_frame(AVCodecContext *avctx,
         return 0;
     }
 
-    //we need to set current_picture_ptr before reading the header, otherwise we cant store anyting im there
+    /* We need to set current_picture_ptr before reading the header,
+     * otherwise we cannot store anything in there. */
     if(s->current_picture_ptr==NULL || s->current_picture_ptr->data[0]){
         int i= ff_find_unused_picture(s, 0);
         s->current_picture_ptr= &s->picture[i];
@@ -4139,7 +4140,6 @@ assert(s->current_picture.pict_type == s->pict_type);
 
     if(s->last_picture_ptr || s->low_delay){
         *data_size = sizeof(AVFrame);
-
         ff_print_debug_info(s, pict);
     }
 
