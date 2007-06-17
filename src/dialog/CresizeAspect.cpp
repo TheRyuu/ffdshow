@@ -116,36 +116,38 @@ void TresizeAspectPage::aspect2dlg(void)
 void TresizeAspectPage::applyResizeXY(void)
 {
  BOOL ok;
+ int rm=cfgGet(IDFF_resizeMode);
  int x=GetDlgItemInt(m_hwnd,IDC_ED_RESIZEDX,&ok,FALSE);
  if (!ok || x<64 || x>16384 || (x&1)) return;
- int y=GetDlgItemInt(m_hwnd,IDC_ED_RESIZEDY,&ok,FALSE);
- if(!ok)
-  {
-   DWORD lasterr=GetLastError();
-   if(lasterr==0)
-    {
-     ok=true;
-     y=0;
-    }
-  }
- if (!ok || (y<24 && y!=0) || y>16384 || (y&1)) return;
  cfgSet(IDFF_resizeDx,x);
- int rm=cfgGet(IDFF_resizeMode);
- if(y)
+ if (rm!=4)
   {
-   cfgSet(IDFF_resizeDy,y);
-   cfgSet(IDFF_resizeSpecifyHolizontalSizeOnly,0);
-   if (rm==4) rm=0;
-  }
- else
-  {
-   cfgSet(IDFF_resizeSpecifyHolizontalSizeOnly,1);
-   if (rm==0) rm=4;
+   int y=GetDlgItemInt(m_hwnd,IDC_ED_RESIZEDY,&ok,FALSE);
+   if(!ok)
+    {
+     DWORD lasterr=GetLastError();
+     if(lasterr==0)
+      {
+       ok=true;
+       y=0;
+      }
+    }
+   if (!ok || (y<24 && y!=0) || y>16384 || (y&1)) return;
+   if(y)
+    {
+     cfgSet(IDFF_resizeDy,y);
+     cfgSet(IDFF_resizeSpecifyHolizontalSizeOnly,0);
+    }
+   else
+    {
+     cfgSet(IDFF_resizeSpecifyHolizontalSizeOnly,1);
+     if (rm==0) rm=4;
+    }
+   cfgSet(IDFF_resizeDy_real,y);
   }
  cfgSet(IDFF_resizeMode,rm);
  resizeMode2dlg();
 
- cfgSet(IDFF_resizeDy_real,y);
  parent->setChange();
 }
 bool TresizeAspectPage::sizeXok(HWND hed)
