@@ -11,7 +11,7 @@
 
    - fast video decompression using optimized MMX, SSE and 3DNow! code
    - support for different codecs: Xvid and all DIVX versions
-   - support for H.264 and H.264/AVC (Advanced Video Coding)
+   - support for H.264/AVC (Advanced Video Coding)
    - additional support for MSMPEG4v1, MSMPEG4v2, MSMPEG4v3 and H.263
    - can act as generic postprocessing filter for other decoders like MPEG1 or
      MPEG2

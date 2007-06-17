@@ -39,7 +39,7 @@ compression. Few other compression libraries are supported too.
    - B frames support: from one to eight consecutive B frames
    - support for MPEG 4 quarterpel and GMC
    - selectable interlaced encoding
-   - libavcodec's MPEG4/MPEG2/MPEG1 and x264 encoders are multithreaded
+   - libavcodec's MPEG4/MPEG2/MPEG1, xvidcore 1.2 and x264 encoders are multithreaded
    - decompression
 
 3. Web links
