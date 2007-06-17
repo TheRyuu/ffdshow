@@ -112,7 +112,20 @@
           _l("PVCR.exe\r\n")\
           _l("HDVSplit.exe\r\n")\
           _l("time_adjuster.exe\r\n")\
-          _l("playwnd.exe\r\n")
+          _l("playwnd.exe\r\n")\
+          _l("OrbStreamerClient.exe\r\n")\
+          _l("SelfMV.exe\r\n")\
+          _l("TVUPlayer.exe\r\n")\
+          _l("amvtransform.exe\r\n")\
+          _l("Badak.exe\r\n")\
+          _l("CTCMSU.exe\r\n")\
+          _l("CTWave.exe\r\n")\
+          _l("IncMail.exe\r\n")\
+          _l("MMPlayer.exe\r\n")\
+          _l("mpcstar.exe\r\n")\
+          _l("PhotoScreensaver.scr\r\n")\
+          _l("QQPlayerSvr.exe\r\n")\
+          _l("Shareaza.exe\r\n")
 
 #define BLACKLIST_EXE_FILENAME _l("explorer.exe;oblivion.exe;morrowind.exe")
 
