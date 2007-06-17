@@ -9,6 +9,7 @@ Italian
 
 [115]
 1283=Codec supportati
+0=Codec supportati
 
 [116]
 1284=Info
@@ -25,6 +26,12 @@ Italian
 1738=Rendi grafico DirectShow disponibile per graphedit
 1832=Usa le seguenti istruzioni SIMD (se supportate dalla CPU):
 1143=Questa sezione mostra informazioni elementari sul filmato in riproduzione.\r\nIn riproduzione - nome del file in riproduzione se può essere determinato.\r\nCodec - identificazione dei dati in entrata: nella maggior parte dei casi FOURCC, ma può anche essere YUY2 o RGB2, cioè un flusso video non compresso.\r\nDimensioni - larghezza e altezza del filmato.\r\nFPS - numero di frame al secondo (frames per second), non sempre può essere determinato.
+1935=Non usare ffdshow con:
+1970=Usa ffdshow solo con:
+1974=...
+1973=...
+0=Controllo DirectShow
+1285=Controllo DirectShow
 
 [141]
 0=OSD
@@ -36,9 +43,10 @@ Italian
 1124=Colore
 1118=Intensità ombreggiatura:
 1130=Raggio ombreggiatura:
-1774=Posiz. orizzontale:
+1774=Posizione orizzontale:
 1776=Posizione verticale:
 1491=Utente:
+1493=Salva in:
 
 [136]
 0=Area di notifica (tray)
@@ -52,6 +60,10 @@ Italian
 1073=Aggiungi menu icona tray al menu lingue/flussi del player
 1259=Percorsi
 1143=Icona nell'area di notifica (icona tray) - Inserisce l'icona di ffdshow nell'area di notifica vicino all'orologio (tray). Un doppio click sull'icona mostrerà la finestra di configurazione, mentre un click col tasto destro del mouse è possibile visualizzare un menu con alcune delle funzioni principali di ffdshow.\r\n\r\nRicorda la posizione corrente - ricorda la posizione della finestra di configurazione di ffdshow (non funziona con graphedit).
+2017=Moderno
+2018=Classico
+2016=Nessuna
+2019=Stile icone
 
 [143]
 1202=Controllo tastiera
@@ -60,13 +72,13 @@ Italian
 1416=Seek distance in sec:
 1418=, modificatore:
 1472=API controllo remoto
-0=Combinazioni tasti & controllo remoto
+0=Definizione tasti & controllo remoto
 1829=Esporta comandi Girder
 1537=Definito dall'utente:
 1539=Accetta messaggi da tastiera
 
 [119]
-0=Impostazioni immagine
+0=Impostazioni
 1278=Impostazioni predefinite
 1016=Nuovo
 1156=Leggi da file...
@@ -137,7 +149,7 @@ Italian
 1272=Deblock (H)
 1273=Deblock (V)
 1274=Dering
-1158=Intensità di processing:
+1158=Livello processing:
 1160=Metodo:
 1238=mplayer
 1239=Nic
@@ -152,6 +164,7 @@ Italian
 1459=Soft threshold
 1534=Deblocking accurato
 1899=Deblocking H.264:
+1457=Deblocking veloce SPP
 
 [125]
 0=Immagine video
@@ -167,6 +180,7 @@ Italian
 1787=Solo crominanza
 1830=Aggiusta livello luminanza
 1831=Completo
+1932=Effetto "Scanline"
 
 [142]
 0=Livelli
@@ -179,6 +193,7 @@ Italian
 1181=Correzione Gamma:
 1707=Modo:
 1189=Posterizzazione:
+1909=Automatico
 
 [126]
 0=Disturbo
@@ -276,13 +291,15 @@ Italian
 1289=Aspetto
 1100=Nessuna modifica
 1101=Mantieni proporzioni originali
-1102=Imposta proporzioni personalizzate:
+1102=Imposta proporz. personalizzate:
 1290=Bande nere
 1201=Orizzontali
 1200=Verticali
 1199=Blocca
 1234=Proporzioni Overlay:
 1540=Multiplo di
+1986=Specifica dimens. orizz. e verticale
+1988=Elabora aspetto formato pixel internamente
 
 [138]
 0=Ridimensionamento
@@ -300,12 +317,13 @@ Italian
 1892=Blocca
 1023=Parametro:
 1286=Metodo Croma:
+1953=Smussam. accurato
 
 [139]
 0=Vettori movimento
 1337=Attiva
 1074=Mostra vettori movimento
-1075=Quantizers
+1075=Quantizzatori
 1357=Grafico
 1143=Da provare, divertente
 
@@ -329,6 +347,10 @@ Italian
 1324=DCT
 1325=Coefficienti
 1143=DctFilter è un filtro sperimentale che, per ogni blocco 8x8, esegue una Trasformata Coseno Discreta (DCT, Discrete Cosine Transform), riduce i valori di frequenza selezionati e inverte il processo con una Trasformata Coseno Inversa (IDCT, Inverse Discrete Cosine Transform).
+1919=Quantizzazione H.263
+1922=Quantizzazione MPEG
+1917=Matrice quantizzazione
+1920=Quantizzatore:
 
 [180]
 1330=Attiva
@@ -340,6 +362,12 @@ Italian
 1349=YUY2
 1350=RGB24
 1351=RGB32
+2024=Spazio colore input:
+2032=Usa corrente
+2033=Carica
+2034=Salva
+2029=Buffer:
+2021=Aggiungi sorgente video ffdshow
 
 [113]
 0=Sottotitoli
@@ -364,6 +392,9 @@ Italian
 1787=Accetta sottotitoli incorporati
 1683=Stereoscopia
 1722=Parallasse:
+1789=Accetta sottotitoli formato SSA, ASS and ASS2 (sperimentale)
+1968=Priorità estensioni
+1788=Decodifica sottotitoli criptati
 
 [132]
 0=Carattere
@@ -375,10 +406,13 @@ Italian
 1124=Colore
 1118=Intensità ombreggiatura:
 1130=Raggio ombreggiatura:
-1335=Dimens.automatica
+1335=Dimens. automatica
 1120=Larghezza:
 1827=Render. veloce
 1143=Spaziatura - distanza tra i caratteri.\r\nIntensità ombreggiatura - a 100 la trasparenza è disabilitata.\r\nStile - la maggior parte dei tipi di caratteri supporta soltanto alcuni tra gli stili in lista.
+1981=Trasparenza ombra:
+1978=Modalità ombra:
+1980=Dimensione ombra:
 
 [173]
 0=Overlay
@@ -393,7 +427,7 @@ Italian
 
 [118]
 0=Libavcodec
-1283=Libavcodec options
+1283=Opzioni libavcodec
 1045=IDCT
 1356=Autoselect
 1314=Scala di grigi
@@ -415,6 +449,11 @@ Italian
 1544=Occultamento errori:
 1765=inizio
 1764=fine
+1946=Controllo qualità
+1943=Salta frame se in ritardo di
+1916=Matrici di quantizzazione correnti
+1572=Numero di thread decodifica
+1947=Salta deblocking H264 se in ritardo di
 
 [102]
 0=Informazioni
@@ -455,6 +494,8 @@ Italian
 1701=Voce:
 1588=Controllo voce
 1586=Normalizza matrice
+1685=Distanza cuffie:
+1637=Espandi stereo
 
 [188]
 1377=Attiva
@@ -463,6 +504,9 @@ Italian
 1637=Amplificazione max:
 1641=Corrente:
 1683=Mostra livelli volume corrente
+1957=Reset in ricerca
+1956=Dim. Buffer:
+1937=Scala Decibel
 
 [189]
 0=Equalizzatore
@@ -492,8 +536,8 @@ Italian
 1484=Attiva
 1485=Ampiezza della stanza:
 1487=Smorzamento:
-1490=Wet level:
-1019=Dry level:
+1490=Livello suono effetto:
+1019=Livello suono originale:
 1038=Ampiezza:
 
 [202]
@@ -504,6 +548,339 @@ Italian
 1459=Impostazioni predefinite
 1460=Non salvare impostazioni nel registro
 1453=Qualità
+
+[207]
+1425=Colorspace:
+1426=Tipo codifica:
+1427=Context:
+1420=Distanza keyframes:
+0=Impostazioni generiche
+
+[209]
+1529=Spazio colore:
+0=Impostazioni generiche
+
+[210]
+1420=Intervallo massimo I frame:
+1422=Intervallo minimo I frame:
+1530=Alta qualità
+0=Impostazioni generiche
+
+[208]
+1430=Formato predefinito:
+1515=Frame rate:
+1517=Dimensione GOP:
+1425=max. b frames consecutivi:
+1427=dinamici
+1523=Closed GOPs
+1524=Interlacciam.:
+1526=Ordine campi:
+0=Generiche
+
+[228]
+1866=Output frames direttamente al file ASF
+1420=Secondi tra keyframes:
+1868=Complessità:
+1870=Nitidezza:
+1872=Deinterlaccia
+1873=IVTC
+0=Impostazioni generiche
+
+[212]
+1428=Spazio colore:
+1429=Predictor:
+1314=Scala di grigi
+0=Impostazioni generiche
+
+[200]
+1420=Massimo intervallo I frame:
+1422=Minimo intervallo I frame:
+1424=b frames
+1425=max. b frames consecutivi:
+1427=dinamici
+1428=Packed bitstream
+1429=Closed GOP
+1494=Altre opzioni
+0=Impostazioni generiche
+
+[235]
+1578=4 MV
+1601=Qpel
+1613=GMC
+1481=Search metric:
+0=Stima movimento
+
+[217]
+1606=Search radius:
+1608=4x4 reduction:
+1610=2x2 reduction:
+0=Stima movimento
+
+[218]
+1601=Qpel
+1613=GMC
+1614=Chroma ME
+1615=Preset motion search precision:
+1617=ADVANCEDDIAMOND8
+1618=ADVANCEDDIAMOND16
+1619=HALFPELREFINE8
+1620=HALFPELREFINE16
+1621=EXTSEARCH8
+1622=EXTSEARCH16
+1623=USESQUARES8
+1624=USESQUARES16
+1625=INTER4V
+1626=Preset VHQ mode:
+1628=MODEDECISION
+1629=HALFPELREFINE8
+1630=HALFPELREFINE16
+1631=QUARTERPELREFINE8
+1632=QUARTERPELREFINE16
+1633=EXTSEARCH
+1634=CHECKPREDICTION
+0=Stima movimento
+
+[216]
+1604=Macroblock decision mode:
+1578=4 MV
+1606=Always try no motion
+1607=RD optimization for CBP
+1581=ME compare function:
+1583=Chroma
+1584=Subpixel ME compare function:
+1586=Chroma
+1587=Macroblock compare function:
+1589=Chroma
+1590=EPZS diamond size:
+1592=Last predictor count:
+1594=ME pre-pass:
+1596=Prepass compare function:
+1598=Chroma
+1599=Prepass diamond size:
+1601=Qpel
+1602=Refinement quality:
+0=Stima movimento
+
+[224]
+1703=High frequencies:
+1705=Quantization reduction:
+1707=MPEG2 DC precision:
+
+[223]
+1441=Tipo quantizzaz.:
+1675=I frames
+1676=P frames
+1677=B frames
+1678=Macroblocks
+1442=Min quantizer
+1443=Max quantizer
+1687=I multiplier
+1689=I offset
+1691=B multiplier
+1693=B offset
+1695=Inter quantizer bias override:
+1697=Intra quantizer bias override:
+1699=Trellis searched quant.
+1700=DCT algorithm:
+1703=Quantizer noise shaping
+0=Quantizzazione
+
+[225]
+1840=Intra matrix:
+1763=Inter matrix:
+1828=Apri matrice...
+1829=Salva matrice...
+0=Matrici personalizzate
+
+[234]
+1478=Luminance masking
+1479=Amplitude
+0=Mascheratura
+
+[215]
+1576=Luminance masking
+1577=Chroma optimization pre-filter
+0=Mascheratura
+
+[214]
+1556=Maschera di luminanza:
+1558=Maschera complessità temporanea:
+1560=Maschera complessità spaziale:
+1562=P block masking:
+1564=Maschera di oscuramento:
+1566=Normalize adaptive quantization
+1567=Eliminazione coefficiente singolo
+1568=Luminanza
+1569=soglia
+1571=anche DC
+1572=Crominanza
+1573=soglia
+1575=anche DC
+0=Mascheratura
+
+[220]
+1435=Reaction delay factior:
+1436=Averaging period:
+1437=Smoother:
+
+[219]
+1635=Tolleranza dimensione file:
+1431=KB
+1637=Compressione quantizer:
+1432=%
+1639=Sfocatura quantizzatore (1/1a passata):
+1433=%
+1641=Sfocatura quantizzatore (2a passata):
+1434=%
+1643=Massima differenza quantizzatore:
+1645=Use continous function to limit quantizers within qmin/qmax
+1143=Compressione Quantizer\r\nSe il valore è impostato a 100%, il quantizer si manterrà quasi costante (ne risulta un netto peggioramento delle scene molto movimentate). Se è impostato a 0%, il quantizer verrà cambiato per far sì che tutti i frame abbiano approssimativamente uguale dimensione (ne risulta un netto peggioramento delle scene meno movimentate).\r\n\r\nMax differenza quantizer\r\nLimits the maximum quantizer difference between frames.\r\n\r\nMinimum/Maximum bitrate\r\nUnlimited if set to zero.\r\n\r\nDecoder bitstream buffer size\r\nFor MPEG1/2 this also sets the vbv buffer size.\r\n\r\nDescriptions by Michael Niedermayer
+1646=Bitrate minimo:
+1648=Bitrate massimo:
+1650=Dimens. buffer flusso bit del decoder:
+
+[203]
+1461=Credits ad inizio filmato
+1462=Inizio al frame
+1464=Fine al frame
+1466=Credits a fine filmato
+1467=Inizio al frame
+1469=Fine al frame
+1471=Livello di riduzione dei credits
+1472=%:
+1474=Quantizer
+1475=I:
+1477=P:
+1479=Dimens. (KB)
+1480=Inizio:
+1482=Fine:
+1484=Credits in scala di grigi
+
+[206]
+1424=Nome file statistiche
+1508=...
+0=2 passate - 1a passata
+
+[226]
+1424=File statistiche prima passata
+1842=Sovrascrivi con le nuove statistiche
+1508=...
+1844=File statistiche seconda passata
+1846=...
+1847=Simulazione
+1444=Bitrate massimo:
+1445=kbits/s
+1446=Max overflow improvement:
+1447=%
+1448=Max overflow degradation:
+1449=%
+1462=I-frames
+1450=Boost by
+1451=%
+1452=Below I-frame distance of
+1453=frames...
+1454=...reduce I-frames bitrate by
+1455=%
+0=2 passate - 2a passata
+
+[205]
+1463=High bitrate scenes:
+1464=%
+1420=Low bitrate scenes:
+1421=%
+1422=Bitrate payback delay:
+1423=frames
+1505=Payback with bias
+1506=Payback proportionally
+0=Curva compressione
+
+[204]
+1485=Usa curva di compress. alternativa
+1486=Aggressività curva:
+1488=High distance from average:
+1490=%
+1491=Low distance from average:
+1493=%
+1494=Intensità automatica della qualità relativa minima
+1496=%
+1497=Intensità manuale della qualità relativa minima
+1499=%
+1500=Manual bonus bias:
+0=Curva altern. compressione
+
+[213]
+1548=Force input colorspace
+1550=Assume interlaced if height >
+1552=pixels
+1016=Flip picture
+1554=Enable image processing
+1555=Configure
+1556=Libavcodec's noise reduction
+1460=Noise reduction strength:
+
+[222]
+1438=Output
+1654=Invia i frame al file AVI
+1655=Salva i frames in un file esterno
+1658=...
+1659=Statistiche ibavcodec/x264:
+1660=Non utilizz.
+1661=Write
+1662=Use
+1663=Use&&write
+1664=Bitrate
+1666=...
+1667=Imposta FPS
+1669=Set aspect ratio
+1671=:
+1143=Puoi salvare ogni frame in un file singolo (utile per l'encoder MJPEG): scegli di salvare i frame in formato Raw e specifica %i (o una maschera di formattazione simile) nel campo nome.\r\n
+
+[211]
+1531=Scrivi informazioni nel debugger
+1532=Show message box on error
+1533=Scrivi informazioni in un file
+1535=...
+1537=Mostra grafico
+1538=Calcola PSNR
+1541=Frame codificati:
+1542=kbps:
+1543=FPS:
+1544=PSNR medio:
+1545=Quantizer medio:
+0=Statistiche
+1738=Rendi il grafico DirectShow disponibile per graphedit
+
+[171]
+1210=on movie file name match
+1211=se le dimensioni del filmato sono
+1276=<= largh. <=
+1277=<= altezza <=
+1213=on movie file name match (use wildcards)
+1344=Separate multiple extensions by ;
+1215=on application exe file name match
+1346=Separate multiple file names by ;
+8=Chiudi
+1212=Carica impostazioni '%s'...
+1888=Separa voci multiple con il simbolo ";"
+
+[230]
+1467=Preset:
+1045=Rename
+1044=Remove
+1468=Data:
+1=Close
+
+[221]
+1649=Number of frames:
+1418=FPS:
+1651=Time:
+1419=Desired size (video only) in KB:
+1653=Video bitrate:
+1=OK
+2=Cancel
+
+[227]
+1854=Analyze
 
 [242]
 1552=Attiva
@@ -747,7 +1124,7 @@ Direct=Diretto
 Opposite=Opposto
 Interpolation=Interpolazione
 original=originale
-ffdshow video decoder=decoder video ffdshow
+ffdshow video decoder=ffdshow - decoder video
 Thank you!=Grazie!
 start=inizio
 MJPG, LJPG (lossless)=MJPG, LJPG (senza perdita di dati)
@@ -806,6 +1183,91 @@ Input bitrate=Bitrate
 Output colorspace=Spazio colore
 Current frame=Frame corrente
 H.264 deblocking disables all other deblocking methods=Il deblocking H.264 disabilita tutti gli altri metodi di deblocking
+Set all stable formats to libavcodec=Imposta libavcodec per tutti i formati stabili
+Set all supported formats to XviD=Imposta su XviD tutti i formati supportati
+Input size and aspect ratio=Dimensioni e proporzioni
+Use with care - can cause ffdshow to not unload after closing the movie.=Da utilizzare con attenzione,\npuò impedire a ffdshow di chiudersi correttamente dopo la riproduzione.
+List of applications for which ffdshow should not load, separated by semicolons=Lista delle applicazioni con le quali ffdshow non deve caricarsi,\nseparate da punto e virgola.
+Preset '%s' will be autoloaded ...=Le impostazioni '%s' saranno caricate automaticamente...
+or=oppure
+and=e
+on movie file name match=se il nome del filmato è uguale a
+on movie file name match (with wildcards)=se il nome del filmato è (usa wildcards)
+on application exe file name match=se il nome dell'eseguibile del player è
+on volume name match=se il nome dell'unità è
+on volume serial match=se il numero seriale dell'unità è
+Format: XXXX-YYYY=Formato: XXXX-YYYY
+on decoder match=se il decoder è
+on a DirectShow filter presence=se è presente il filtro DirectShow
+Names of DirectShow filters, wildcard allowed=Nomi di filtri DirectShow, si possono usare le wildcard
+on FOURCC match=se il FOURCC è
+on pixel aspect ratio match=se il rapporto formato pixel è
+on picture aspect ratio match=se il rapporto formato immagine è
+on frame rate match=se il frame rate (n° frame al secondo) è
+closest=Più simile
+indeterminate state - first try overlay, then use fallback format=stato non determinato - prima usa l'overlay, poi usa formato standard
+indeterminate state - connect to any filter, allows output format changes only if connected to supported filter=stato non determinato - connetti a qualsiasi filtro, permetti cambiamenti output solo se connessi al filtro supportato
+Filters known to support dynamic format change:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  ffdshow=Filtri che supportanto il cambiamento dinamico del formato:\n  Mixer Overlay\n  VMR\n  VMR9\n  VobSub\n  ffdshow
+Bob for video source\nWeave for film source\nIn most cases, Weave is the same as unchecked HW deinterlacing.=Bob per fonte video\nWeave per fonte film\nNella maggior parte dei casi il metodo Weave ha lo stesso effetto\ndi un deinterlacciamento hardware.
+Windows Media Audio compatible decoder=Decoder compatibile Windows Media Audio
+Input description=Descrizione Input
+Output description=Descrizione Output
+Output speakers=Output altoparlanti
+Current input bitrate=Bitrate Input corrente
+Host application=Applicazione host
+Source file name=Nome file sorgente
+Sample frequency=Frequenza campionamento
+Number of channels=Numero di canali
+Sample format=Formato campionamento
+CPU load=Carico CPU
+System time=Ora del sistema
+Movie length=Durata filmato
+Encoder info=Informazioni Codifica
+Short configuration description=Descrizione configurazione breve
+higher than=maggiore di
+lower than=minore di
+MD5 sum=Somma MD5
+Input aspect ratio=Proporzioni input
+Output aspect ratio=Proporzioni output
+Frame timestamps=Timestamps frame
+Frame duration=Durata frame
+Accurate deblocking=Deblocking accurato
+Frame type=Tipo frame
+Subtitles delay=Ritardo sottotitoli
+Coded frame size=Dimensione frame codificato
+Input colorspace=Spazio colore input
+Frame mean quantizer=Quantizzatore medio frame
+Current playing time=Tempo riproduzione corrente
+Remaining time=Tempo restante
+Default=Predefinito
+Vietnamese=Vietnamita
+Easteurope=Europa orientale
+Baltic=Baltico
+Glowing shadow=Alone
+Gradient shadow=Gradiente
+Classic shadow=Classica
+Disabled=Disattivata
+lowpass=passa-basso
+highpass=passa-alto
+bandpass=passa-banda
+bandstop=ferma-banda
+invalid=non valido
+Select impulse file=Seleziona file impulso
+Channel=Canale
+ffdshow searches subtitle files in the folders which are configured in the edit box above.\nFor video.avi, ffdshow searches video.utf, video.idx, video.sub,... and use the file which is found at the first time.\nEnumerate extensions in the order you like and separate them by semicolons.\n\nutf;idx;sub;srt;smi;rt;txt;ssa;aqt;mpl;usf is the default settings.=ffdshow cerca i file sottotitoli nelle cartelle inserite nella stringa qui sopra.\nPer un file "video.avi", ffdshow cercherà "video.utf", "video.idx", "video.sub", ecc.\ne userà il file trovato per primo.\nInserire le estensioni nell'ordine preferito.
+Very incomplete and experimental.\nSend me samples which don't work.=Incompleto e sperimentale.\nInviare all'autore campioni di file non funzionanti.
+Number of frames to buffer ahead=Numero di frame memorizzati in anticipo
+Number of used frames to keep in buffer=Numero di frame mantenuti in memoria
+Load Avisynth script=Carica script Avisynth
+Save Avisynth script=Salva script Avisynth
+Select directory for storing images=Seleziona cartella in cui salvare le immagini
+not WMA9 pro, voice or lossless=non WMA9 pro, voce o senza perdita di qualità
+FLAC (Free Lossless Audio Codec);To play .flac files you also need a source filter.=FLAC (Codec audio lossless freeware);Per riprodurre i file .flac è necessario anche un filtro sorgente.
+TTA (Lossless Audio Codec);To play .tta files you also need a source filter.=TTA (Codec audio lossless);Per riprodurre i file .tta è necessario anche un filtro sorgente.
+DSP Group TrueSpeech compatible decoder=Decoder compatibile con DSP Group TrueSpeech
+QDM2 compatible decoder (incomplete)=Decoder compatibile QDM2 (incompleto)
+IMC compatible decoder=Decoder compatibile IMC
+ATRAC3 compatible decoder=Decoder compatibile ATRAC3
 
 [254]
 1571=Spezza sottotitoli troppo lunghi
@@ -824,6 +1286,7 @@ H.264 deblocking disables all other deblocking methods=Il deblocking H.264 disab
 1793=Gestione testo dei sottotitoli
 0=Testo
 1775=pixel(s)
+1798=Rimuovi i sottotitoli per non udenti
 
 [250]
 1726=Lingue preferite:
@@ -843,13 +1306,16 @@ H.264 deblocking disables all other deblocking methods=Il deblocking H.264 disab
 1803=Posizione verticale:
 
 [231]
-1284=Output spazio colore supportati
+1284=Spazio colore supportati per l'output
 1031=Usa mixer overlay
-1033=Deinterlacciamento hardware
+1033=Deinterlacciam. hardware
 1016=Rovescia video
 1017=Permetti cambiamenti formato output durante la riproduzione
 1034=Connetti soltanto a filtri compatibili
 1052=Alta qualita conversione YV12 > RGB
+1910=Profilo:
+1966=Metodo:
+1036=Seleziona lo spazio colore più adatto
 
 [248]
 1683=Attiva
@@ -863,13 +1329,14 @@ H.264 deblocking disables all other deblocking methods=Il deblocking H.264 disab
 [246]
 1686=Attiva
 0=Filtro FIR
-1690=Tipo:
+1690=Tipo di filtro:
 1698=Ampiezza:
 1696=Frequenza:
 1692=Finestra:
 1683=Mostra spettro
 1143=Parzialmente implementato, dunque le opzioni della finestra di dialogo e le funzionalità possono essere sbagliate.
-1700=Freq. max display
+1700=Frequenza massima
+1688=Numero di taps:
 
 [247]
 0=Riduzione disturbo
@@ -882,6 +1349,9 @@ H.264 deblocking disables all other deblocking methods=Il deblocking H.264 disab
 1498=Ricampiona a
 1499=Metodo:
 1143=Premi "Applica" o "OK" per cambiare la frequenza di ricampionamento.
+1875=Ricampiona sempre
+1876=Ricampiona se il campionamento è...
+1877=maggiore di
 
 [245]
 0=Ritardo
@@ -920,13 +1390,17 @@ H.264 deblocking disables all other deblocking methods=Il deblocking H.264 disab
 1574=16 bit intero
 1811=Non usare l'header WAVEFORMATEXTENSIBLE se non è necessario
 1813=Permetti l'output diretto al file
-1578=Conversione da virgola mobile a intero
+1578=Conv. virgola m. -> intero
 1143=Per una performance migliore su computer più lenti e/o nel caso di incompatibilità dei driver si consiglia di deselezionare tutto eccetto\r\nincompatibility uncheck everything except for 16 bit integer.
 1583=Dithering
 1582=Intensità disturbo:
 1580=16 bit intero
 1585=32 bit intero
 1586=32 bit virgola mobile
+0=Output
+1985=Codifica solo flussi multicanali
+1846=Applica soltanto a uscita S/PDIF
+1984=Dispositivo multicanale:
 
 [249]
 1711=Attiva
@@ -935,6 +1409,8 @@ H.264 deblocking disables all other deblocking methods=Il deblocking H.264 disab
 1718=Volume eco:
 1720=Feedback eco:
 1722=Extra stereo:
+1712=Estensore ampiezza di banda:
+1714=Filtro passa-alto dell'estensore:
 
 [256]
 0=Generiche
@@ -958,3 +1434,58 @@ H.264 deblocking disables all other deblocking methods=Il deblocking H.264 disab
 1860=Interni
 1857=Bordi
 1859=Pixel
+
+[171]
+1888=Separa valori multipli con ;
+1212=Le impostazioni '%s' saranno caricate automaticamente se coincidono...
+1211=con le dimensioni del filmato
+1915=e
+1276=<= largh. <=
+1277=<= altezza <=
+
+[270]
+1941=Livello:
+
+[121]
+0=Coda & Varie
+1944=Attiva coda
+1958=Usa coda solo con:
+1365=Altri controlli
+1268=Ritardo video:
+1550=Il video è sempre interlacciato se l'altezza è >
+1764=fine
+1143=Coda\r\nL'obiettivo della coda è di ridurre la perdita di frame visualizzati.\r\nL'effetto è visibile quando il carico della CPU è alto e il flusso video tende a perdere pochi frame/sec.\r\nLa coda immagazzina il tempo in cui la CPU finisce il suo lavoro prima del dovuto e lo utilizza quando il carico di lavoro impone un ritardo.\r\nIl rendering video viene eseguito su un altro thread, dunque l'effetto è migliore se si possiede un Pentium4HT o CPU dual core.\r\n\r\nAttenzione:\r\n  Queue is disabled by default because of stability problem.\r\n  If you dare try it, uncheck or add the execute file name of the video\r\n  applications, separated by semicolons.\r\n\r\nOther controls\r\n video delay:\r\n  If your speaker is far from listening point, you may want to try this.\r\n
+
+[232]
+0=Impostazioni generiche
+
+[269]
+0=Impostazioni generiche
+
+[258]
+0=Mascheratura
+
+[2020]
+0=Informazioni & debug
+1284=Informazioni
+
+[259]
+1579=Formati campionamento permessi per l'elaborazione audio
+0=Elaborazione audio
+1580=16 bit intero
+1585=32 bit intero
+1586=32 bit virgola mobile
+1578=Conversione da virgola mobile a intero
+1582=Forma rumore:
+
+[262]
+0=Convolutore
+1880=Attiva
+1881=File impulso:
+1897=Statico
+1905=Mappatura canale manuale:
+1902=Seleziona file
+1903=Cancella
+1893=Regolazione livello:
+1891=Regolazione automatica
+1889=Livello missaggio:
