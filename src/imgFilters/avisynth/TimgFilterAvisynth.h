@@ -41,10 +41,10 @@ public:
    TframeBuffer* buffers;
 
    int curFrame;
-   int minAccessedFrame;
-   int maxAccessedFrame;
-   int numAccessedFrames;
-   int accessedFrames[100]; // relative to curFrame
+   volatile int minAccessedFrame;
+   volatile int maxAccessedFrame;
+   volatile int numAccessedFrames;
+   volatile int accessedFrames[100]; // relative to curFrame
    int backLimit;
 
    Tinput() : env(0),clip(0), buffers(0) {}
