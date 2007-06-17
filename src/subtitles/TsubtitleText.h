@@ -77,6 +77,7 @@ private:
    void fontName(const tchar *start,const tchar *end);
    //void fontSize(const tchar *start,const tchar *end);
    template<int TSubtitleProps::*offset,int min,int max> void intProp(const tchar *start,const tchar *end);
+   template<int TSubtitleProps::*offset,int min,int max> void intPropAn(const tchar *start,const tchar *end);
    template<double TSubtitleProps::*offset,int min,int max> void doubleProp(const tchar *start,const tchar *end);
    template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void intProp2(const tchar *start,const tchar *end);
    template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void pos(const tchar *start,const tchar *end);
@@ -221,6 +222,11 @@ public:
  virtual bool copyLine(Tsubtitle *dst,size_t linenum)
   {
    ((TsubtitleTextBase<tchar>*)dst)->push_back(this->at(linenum));
+   return true;
+  }
+ virtual bool copyProps(Tsubtitle *dst)
+  {
+   ((TsubtitleTextBase<tchar>*)dst)->defProps=this->defProps;
    return true;
   }
 

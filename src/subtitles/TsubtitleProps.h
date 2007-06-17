@@ -34,6 +34,7 @@ struct TSubtitleProps
  unsigned int get_marginL(unsigned int screenWidth) const;
  unsigned int get_marginTop(unsigned int screenHeight) const;
  unsigned int get_marginBottom(unsigned int screenHeight) const;
+ static int alignASS2SSA(int align);
 };
 
 #endif

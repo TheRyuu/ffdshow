@@ -116,3 +116,22 @@ unsigned int TSubtitleProps::get_marginBottom(unsigned int screenHeight) const
   return result;
 }
 
+int TSubtitleProps::alignASS2SSA(int align)
+{
+ switch (align)
+  {
+   case 1:
+   case 2:
+   case 3:
+    return align;
+   case 4:
+   case 5:
+   case 6:
+    return align+5;
+   case 7:
+   case 8:
+   case 9:
+    return align-2;
+  }
+ return align;
+}

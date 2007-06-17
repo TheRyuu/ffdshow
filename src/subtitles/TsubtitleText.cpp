@@ -743,6 +743,17 @@ template<class tchar> template<int TSubtitleProps::*offset,int min,int max> void
  else
   props.*offset=defprops.*offset;
 }
+template<class tchar> template<int TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa<tchar>::intPropAn(const tchar *start,const tchar *end)
+{
+ tchar *buf=(tchar*)_alloca((end-start+1)*sizeof(tchar));memset(buf,0,(end-start+1)*sizeof(tchar));
+ memcpy(buf,start,(end-start)*sizeof(tchar));
+ tchar *bufend;
+ int enc=strtol(buf,&bufend,10);
+ if (buf!=bufend && *bufend=='\0' && isIn(enc,min,max))
+  props.*offset=TSubtitleProps::alignASS2SSA(enc);
+ else
+  props.*offset=defprops.*offset;
+}
 template<class tchar> template<double TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa<tchar>::doubleProp(const tchar *start,const tchar *end)
 {
  tchar *buf=(tchar*)_alloca((end-start+1)*sizeof(tchar));memset(buf,0,(end-start+1)*sizeof(tchar));
@@ -850,7 +861,8 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::processTokens(const tch
        !processToken(l3,_L("\\fsp"),&Tssa<tchar>::template intProp<&TSubtitleProps::spacing,0,INT_MAX>) &&
        !processToken(l3,_L("\\fs"),&Tssa<tchar>::template intProp<&TSubtitleProps::size,1,INT_MAX>) &&
        !processToken(l3,_L("\\fe"),&Tssa<tchar>::template intProp<&TSubtitleProps::encoding,0,255>) &&
-       !processToken(l3,_L("\\a"),&Tssa<tchar>::template intProp<&TSubtitleProps::alignment,0,11>) &&
+       !processToken(l3,_L("\\an"),&Tssa<tchar>::template intPropAn<&TSubtitleProps::alignment,1,9>) &&
+       !processToken(l3,_L("\\a"),&Tssa<tchar>::template intProp<&TSubtitleProps::alignment,1,11>) &&
        !processToken(l3,_L("\\i"),&Tssa<tchar>::template boolProp<&TSubtitleProps::italic>) &&
        !processToken(l3,_L("\\be"),&Tssa<tchar>::template boolProp<&TSubtitleProps::bluredges>) &&
        !processToken(l3,_L("\\b"),&Tssa<tchar>::template intProp<&TSubtitleProps::bold,0,1>) &&
@@ -859,7 +871,6 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::processTokens(const tch
        !processToken(l3,_L("\\s"),&Tssa<tchar>::template boolProp<&TSubtitleProps::strikeout>) &&
        !processToken(l3,_L("\\r"),&Tssa<tchar>::reset) &&
        !processToken(l3,_L("\\clip"),NULL) &&
-       !processToken(l3,_L("\\an"),NULL) &&
        !processToken(l3,_L("\\c"),&Tssa<tchar>::color) &&
        !processToken(l3,_L("\\pos"),&Tssa<tchar>::template pos<&TSubtitleProps::marginL,&TSubtitleProps::marginTop,0,4096>) &&
        !processToken(l3,_L("\\1c"),NULL) && !processToken(l3,_L("\\1a"),NULL) &&

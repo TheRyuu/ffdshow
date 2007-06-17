@@ -529,25 +529,7 @@ template<class tchar> void TsubtitleParserSSA<tchar>::Tstyle::toProps(void)
  strToDouble(outlineWidth,&props.outlineWidth);
  strToDouble(shadowDepth,&props.shadowDepth);
  if (alignment && this->version != SSA)
-  {
-   switch (props.alignment)
-    {
-     case 1:
-     case 2:
-     case 3:
-      break;
-     case 4:
-     case 5:
-     case 6:
-      props.alignment+=5;
-      break;
-     case 7:
-     case 8:
-     case 9:
-      props.alignment-=2;
-      break;
-    }
-  }
+  props.alignment=TSubtitleProps::alignASS2SSA(props.alignment);
 }
 template<class tchar> void TsubtitleParserSSA<tchar>::Tstyles::add(Tstyle &s)
 {
@@ -1205,6 +1187,7 @@ void Tsubreader::processOverlap(int sub_format)
      for (int i = 0, j = 0; j < lines_to_add ; ++j)
       if (placeholder[counter][j] != -1)
        {
+        at(placeholder[counter][j])->copyProps(second);
         int lines = at(placeholder[counter][j])->numlines();
         for (int ls = 0; ls < lines; ++ls)
          //second[sub_num].text[i++] = strdup(first[placeholder[counter][j]].text[ls]);

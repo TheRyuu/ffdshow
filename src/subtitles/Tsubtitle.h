@@ -13,6 +13,7 @@ struct Tsubtitle
  virtual Tsubtitle* create(void)=0;
  virtual Tsubtitle* copy(void)=0;
  virtual bool copyLine(Tsubtitle *dst,size_t linenum) {return false;}
+ virtual bool copyProps(Tsubtitle *dst) {return false;}
  virtual void append(const unsigned char *data,unsigned int datalen) {}
  virtual void addEmpty(void) {}
 };
