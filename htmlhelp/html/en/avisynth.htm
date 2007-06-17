@@ -2,7 +2,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
-<!-- In sync with revision 1194. -->
+<!-- In sync with revision 1297. -->
 
 <head>
   <title>ffdshow tryouts | AviSynth filter</title>
@@ -29,7 +29,7 @@
   <img src="images/avisynth.png" width="558" height="406" title="AviSynth filter dialog" alt="AviSynth filter dialog" />
 
   <p>
-    This document is based on rev 1194 or later.
+    This document is based on rev. 1297 or later.
   </p>
 
   <h2>
@@ -151,9 +151,16 @@
   <h4>Aspect ratio variables</h4>
 
   <p>
-    The global variables ffdshow_dar_x and ffdshow_dar_y are set to the input video's display aspect ratio (i.e. 4 and 3 for 4:3 material) and can be assigned to to set a new aspect ratio for the output video. Note that some players like Media Player Classic will disregard the video's aspect ratio and ask the DVD navigator for the aspect ratio when playing DVDs, so setting an aspect ratio might yield strange results.
+    The global variables ffdshow_dar_x and ffdshow_dar_y are set to the input video's display aspect ratio (i.e. 4 and 3 for 4:3 material). You can set a new display aspect ratio for the output video by using the ffdshow_setDAR(x,y) function. Note that some players like Media Player Classic will disregard the video's aspect ratio and ask the DVD navigator for the aspect ratio when playing DVDs, so setting an aspect ratio might yield strange results.
   </p>
 
+  <p>
+    (Similar variables and a similar function exist for the size aspect ratio that is used internally by ffdshow, but it's probably not very useful. A video of size 720x480 with square pixels would have a SAR of 3:2, for example.)
+  </p>
+
+  <p>
+    Note: any "virtual" borders that were added to your video by the Resize & Aspect filter will be removed when you resize the video in your script or when you set a new aspect ratio.
+  </p>
   <h4>Examples</h4>
 
   <p>
@@ -183,7 +190,7 @@ TDecimate(mode=1,hybrid=1,conCycle=1,chroma=false)</pre>
     The above script extended to resize 4:3 or 16:9 images into an 800x600 area, with 16:9 images being cropped a bit left and right:
   </p>
 
-  <pre style="border: 1px solid Gray; margin-left: 2ex; padding-left: 0.5ex;">  
+  <pre style="border: 1px solid Gray; margin-left: 2ex; padding-left: 0.5ex;">
 function Resize_16_9(v)
 {
   return v.LanczosResize(800,480,22,0,676,480).AddBorders(0,60,0,60)
@@ -205,7 +212,7 @@ abs(abs(diff)-0.2222) > 0.05 ? last : \
 ? last.Resize_16_9 \
 : last.Resize_4_3)
 
-ffdshow_dar_x=4 ffdshow_dar_Y=3</pre>
+ffdshow_setDAR(4,3)</pre>
 
   <h2>
     <a name="Compatibility">Compatibility</a>
@@ -223,7 +230,7 @@ ffdshow_dar_x=4 ffdshow_dar_Y=3</pre>
     You can also disable buffering and set "3:2 pulldown" to "Ignore pulldown" to get the old behaviour of earlier ffdshow versions back, which might be a bit more performant since it avoids copying frames to an intermediate buffer - but that will of course not work right with scripts that need more than just the current frame, like the TIVTC example above.
   </p>
 
-  <div class="footer">    
+  <div class="footer">
     <table>
       <tr>
         <td>
@@ -237,7 +244,7 @@ ffdshow_dar_x=4 ffdshow_dar_Y=3</pre>
           </a>
         </td>
       </tr>
-    </table>    
+    </table>
   </div>
 </body>
 </html>

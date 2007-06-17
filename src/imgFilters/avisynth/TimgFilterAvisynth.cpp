@@ -190,6 +190,30 @@ AVS_VideoFrame* AVSC_CC TimgFilterAvisynth::Tffdshow_source::get_frame(AVS_Filte
  return frame;
 }
 
+//============================= TimgFilterAvisynth::Tffdshow_setAR =============================
+
+AVS_Value AVSC_CC TimgFilterAvisynth::Tffdshow_setAR::Create_SetSAR(AVS_ScriptEnvironment *env, AVS_Value args, void * user_data)
+{
+ return Create(env,args,user_data,false);
+}
+
+AVS_Value AVSC_CC TimgFilterAvisynth::Tffdshow_setAR::Create_SetDAR(AVS_ScriptEnvironment *env, AVS_Value args, void * user_data)
+{
+ return Create(env,args,user_data,true);
+}
+
+AVS_Value AVSC_CC TimgFilterAvisynth::Tffdshow_setAR::Create(AVS_ScriptEnvironment *env, AVS_Value args, void * user_data, bool setDAR)
+{
+ Tinput* input=(Tinput*)user_data;
+ int x=avs_as_int(avs_array_elt(args,0));
+ int y=avs_as_int(avs_array_elt(args,1));
+
+ input->outputSar=( setDAR ? Rational(0,0) : Rational(x,y));
+ input->outputDar=(!setDAR ? Rational(0,0) : Rational(x,y));
+
+ return avs_void;
+}
+
 //================================ TimgFilterAvisynth::Tavisynth ===============================
 bool TimgFilterAvisynth::Tavisynth::createClip(const TavisynthSettings *cfg,Tinput *input,TffPictBase& pict)
 {
@@ -200,13 +224,32 @@ bool TimgFilterAvisynth::Tavisynth::createClip(const TavisynthSettings *cfg,Tinp
    if (!input->env)
     return false;
 
-   input->env->AddFunction("ffdshow_source","",Tffdshow_source::Create,(void*)input);
+   input->env->AddFunction(
+    "ffdshow_source",
+    "",
+    TimgFilterAvisynth::Tffdshow_source::Create,
+    (void*)input);
+
+   input->env->AddFunction(
+    "ffdshow_setSAR",
+    "[x]i[y]i",
+    TimgFilterAvisynth::Tffdshow_setAR::Create_SetSAR,
+    (void*)input);
+
+   input->env->AddFunction(
+    "ffdshow_setDAR",
+    "[x]i[y]i",
+    TimgFilterAvisynth::Tffdshow_setAR::Create_SetDAR,
+    (void*)input);
   }
 
  IScriptEnvironment* env=input->env;
 
+ Rational sar=pict.rectClip.sar;
  Rational dar=pict.rectClip.dar();
 
+ env->SetGlobalVar("ffdshow_sar_x",AVSValue(sar.num));
+ env->SetGlobalVar("ffdshow_sar_y",AVSValue(sar.den));
  env->SetGlobalVar("ffdshow_dar_x",AVSValue(dar.num));
  env->SetGlobalVar("ffdshow_dar_y",AVSValue(dar.den));
 
@@ -281,18 +324,31 @@ bool TimgFilterAvisynth::Tavisynth::createClip(const TavisynthSettings *cfg,Tinp
 void TimgFilterAvisynth::Tavisynth::setOutFmt(const TavisynthSettings *cfg,Tinput *input,TffPictBase &pict)
 {
  if ((pict.rectClip == inputRect) && !(pict.rectClip.dar() != inputDar)) // No operator== in Rational... o_O;
-  pict.rectFull=pict.rectClip=outputRect;
+  {
+   if (outputRect != inputRect)
+    pict.rectFull=pict.rectClip=outputRect;
+  }
  else if (createClip(cfg,input,pict))
   {
    IScriptEnvironment* env=input->env;
 
    inputRect=pict.rectClip;
+   inputSar=pict.rectClip.sar;
    inputDar=pict.rectClip.dar();
 
    const VideoInfo &vi=(*input->clip)->GetVideoInfo();
 
-   outputDar=Rational(env->GetGlobalVar("ffdshow_dar_x").AsInt(),env->GetGlobalVar("ffdshow_dar_y").AsInt());
-   pict.rectFull=pict.rectClip=outputRect=Trect(0,0,vi.width,vi.height,Rational((vi.height*outputDar.num)/double(vi.width*outputDar.den),32768));
+   if (input->outputDar)
+    pict.rectFull=pict.rectClip=outputRect=
+     Trect(
+      0,0,vi.width,vi.height,
+      Rational((vi.height*input->outputDar.num)/double(vi.width*input->outputDar.den),32768));
+   else if (input->outputSar)
+    pict.rectFull=pict.rectClip=outputRect=Trect(0,0,vi.width,vi.height,input->outputSar);
+   else if ((unsigned int)vi.width != inputRect.dx || (unsigned int)vi.height != inputRect.dy)
+    pict.rectFull=pict.rectClip=outputRect=Trect(0,0,vi.width,vi.height,inputSar);
+   else
+    outputRect=inputRect;
 
    delete input->clip; input->clip=0;
   }
@@ -346,7 +402,6 @@ void TimgFilterAvisynth::Tavisynth::init(const TavisynthSettings &oldcfg, Tinput
    else if (vi.IsYUY2())  *outcsp=FF_CSP_YUY2;
    else if (vi.IsYV12())  *outcsp=FF_CSP_420P;
    else                   *outcsp=FF_CSP_NULL;
-   outrect=Trect(0,0,vi.width,vi.height);
 
    applyPulldown=oldcfg.applyPulldown;
 
@@ -379,11 +434,21 @@ void TimgFilterAvisynth::Tavisynth::init(const TavisynthSettings &oldcfg, Tinput
    frameScaleNum/=frameScaleGCD;
    frameScaleDen/=frameScaleGCD;
 
-   inputDar=pict.rectClip.dar();
    inputRect=pict.rectClip;
+   inputSar=pict.rectClip.sar;
+   inputDar=pict.rectClip.dar();
 
-   outputDar=Rational(input->env->GetGlobalVar("ffdshow_dar_x").AsInt(),input->env->GetGlobalVar("ffdshow_dar_y").AsInt());
-   pict.rectFull=pict.rectClip=outputRect=Trect(0,0,vi.width,vi.height,Rational((vi.height*outputDar.num)/double(vi.width*outputDar.den),32768));
+   if (input->outputDar)
+    pict.rectFull=pict.rectClip=outputRect=
+     Trect(
+      0,0,vi.width,vi.height,
+      Rational((vi.height*input->outputDar.num)/double(vi.width*input->outputDar.den),32768));
+   else if (input->outputSar)
+    pict.rectFull=pict.rectClip=outputRect=Trect(0,0,vi.width,vi.height,input->outputSar);
+   else if ((unsigned int)vi.width != inputRect.dx || (unsigned int)vi.height != inputRect.dy)
+    pict.rectFull=pict.rectClip=outputRect=Trect(0,0,vi.width,vi.height,inputSar);
+   else
+    outputRect=inputRect;
 
    restart=true;
    deleteBuffers=true;
@@ -931,16 +996,16 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
      if (debugPrint)
       DPRINTFA("TimgFilterAvisynth: %s", infoBuf);
 
-     if (pict.diff[0] || outrect!=self->pictRect)
+     if (pict.diff[0] || outputRect!=self->pictRect)
       {
        // Copy resulting frame into current TffPict
 
        unsigned char *data[4];
 
-       if (outrect==self->pictRect)
+       if (outputRect==self->pictRect)
         self->getNext(self->outcsp,pict,cfg->full,data);
        else
-        self->getNext(self->outcsp,pict,cfg->full,data,&outrect);
+        self->getNext(self->outcsp,pict,cfg->full,data,&outputRect);
 
        if (isYV12)
         {
@@ -1019,7 +1084,10 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
        if (debugPrint)
         DPRINTF(_l("TimgFilterAvisynth: Delivering frame %i; %10.6f - %10.6f = %10.6f"),curOutFrameNo,pict.rtStart/10000.0,pict.rtStop/10000.0,(pict.rtStop-pict.rtStart)/10000.0);
 
-       pict.setDar(outputDar);
+       if (input->outputDar)
+        pict.setDar(input->outputDar);
+       else if (input->outputSar)
+        pict.setSar(input->outputSar);
 
        if (csp_isRGB_RGB(pict.csp))
         pict.csp^=FF_CSP_FLAGS_VFLIP;

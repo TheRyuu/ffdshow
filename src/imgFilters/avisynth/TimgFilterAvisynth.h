@@ -47,6 +47,9 @@ public:
    volatile int accessedFrames[100]; // relative to curFrame
    int backLimit;
 
+   Rational outputDar;
+   Rational outputSar;
+
    Tinput() : env(0),clip(0), buffers(0) {}
 
    ~Tinput()
@@ -62,33 +65,54 @@ private:
   private:
    VideoInfo &vi;
    Tinput *input;
+
    Tffdshow_source(Tinput *Iinput,VideoInfo &Ivi);
+
    static AVS_VideoFrame* AVSC_CC get_frame(AVS_FilterInfo *, int n);
    static int AVSC_CC get_parity(AVS_FilterInfo *, int n) {return 0;}
    static int AVSC_CC set_cache_hints(AVS_FilterInfo *, int cachehints, int frame_range) {return 0;}
    static void AVSC_CC free_filter(AVS_FilterInfo *);
 
   public:
-   static AVS_Value AVSC_CC Create(AVS_ScriptEnvironment *, AVS_Value args, void * user_data);
+   static AVS_Value AVSC_CC Create(AVS_ScriptEnvironment *env, AVS_Value args, void * user_data);
+  };
+
+ class Tffdshow_setAR : Tavisynth_c
+  {
+  private:
+   Tinput *input;
+   bool setDAR;
+
+   static AVS_Value AVSC_CC Create(AVS_ScriptEnvironment *env, AVS_Value args, void * user_data, bool setDAR);
+
+  public:
+   static AVS_Value AVSC_CC Create_SetSAR(AVS_ScriptEnvironment *env, AVS_Value args, void * user_data);
+   static AVS_Value AVSC_CC Create_SetDAR(AVS_ScriptEnvironment *env, AVS_Value args, void * user_data);
   };
 
  struct Tavisynth : public Tavisynth_c
   {
   public:
-   Tavisynth(): restart(true),passFirstThrough(true),bufferData(NULL),buffers(NULL),frameScaleDen(1),frameScaleNum(1) {}
+   Tavisynth(): 
+    restart(true),
+    passFirstThrough(true),
+    bufferData(NULL),
+    buffers(NULL),
+    frameScaleDen(1),
+    frameScaleNum(1)
+    {}
+
    ~Tavisynth() {done();}
+
    void skipAhead(bool passFirstThrough, bool clearLastOutStopTime);
    void done(void);
    bool createClip(const TavisynthSettings *cfg,Tinput *input,TffPictBase& pict);
-   typedef Tavisynth_c::PClip PClip;
    void setOutFmt(const TavisynthSettings *cfg,Tinput *input,TffPictBase &pict);
    void init(const TavisynthSettings &oldcfg,Tinput *input,int *outcsp,TffPictBase &pict);
    void process(TimgFilterAvisynth *self,TfilterQueue::iterator& it,TffPict &pict,const TavisynthSettings *cfg);
    char infoBuf[1000];
 
   private:
-   Trect outrect;
-
    int minAccessedFrame;
    int maxAccessedFrame;
 
@@ -103,9 +127,9 @@ private:
 
    Trect inputRect;
    Rational inputDar;
+   Rational inputSar;
 
    Trect outputRect;
-   Rational outputDar;
 
    bool enableBuffering;
    int bufferAhead;
@@ -152,6 +176,7 @@ protected:
 public:
  TimgFilterAvisynth(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual ~TimgFilterAvisynth();
+
  virtual void done(void);
  virtual bool getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *cfg0);
  const char* getInfoBuffer(void);
