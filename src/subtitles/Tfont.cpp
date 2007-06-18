@@ -637,8 +637,8 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
  const_reverse_iterator ri=rbegin();
  unsigned int h1 = h - prefs.linespacing*(*ri)->charHeight()/100 + (*ri)->height();
 
- double y=(prefs.ypos<0) ? -prefs.ypos : (prefs.ypos*prefsdy)/100-h/2;
- if (y+h1 >= prefsdy) y=prefsdy-h1-1;
+ double y=(prefs.ypos<0) ? -(double)prefs.ypos : ((double)prefs.ypos*prefsdy)/100-h/2;
+ if (y+h1 >= (double)prefsdy) y=(double)prefsdy-h1-1;
  if (y<0) y=0;
 
  int old_alignment=-1;
@@ -690,12 +690,12 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
         break;
       }
 
-     if (y+hParagraph>=prefsdy)
-      y=prefsdy-hParagraph-1;
+     if (y+hParagraph>=(double)prefsdy)
+      y=(double)prefsdy-hParagraph-1;
      if (y<0) y=0;
     }
 
-   if (y+(*i)->height()>=prefsdy) break;
+   if (y+(*i)->height()>=(double)prefsdy) break;
    //TODO: cleanup
    int x;
    unsigned int cdx=(*i)->width();
