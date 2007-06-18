@@ -25,6 +25,9 @@
  * Atrac 3 AKA RealAudio 8 compatible decoder data
  */
 
+#ifndef AVCODEC_ATRAC3DATA_H
+#define AVCODEC_ATRAC3DATA_H
+
 /* VLC tables */
 
 static const uint8_t huffcode1[9] = {
@@ -131,3 +134,5 @@ static const float qmf_48tap_half[24] = {
 
 /* joint stereo related tables */
 static const float matrixCoeffs[8] = {0.0, 2.0, 2.0, 2.0, 0.0, 0.0, 1.0, 1.0};
+
+#endif // AVCODEC_ATRAC3DATA_H

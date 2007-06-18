@@ -24,6 +24,11 @@
  * Various WMA tables.
  */
 
+#ifndef AVCODEC_WMADATA_H
+#define AVCODEC_WMADATA_H
+
+#include "wma.h"
+
 static const uint16_t wma_critical_freqs[25] = {
     100,   200,  300, 400,   510,  630,  770,    920,
     1080, 1270, 1480, 1720, 2000, 2320, 2700,   3150,
@@ -1431,3 +1436,5 @@ static const CoefVLCTable coef_vlcs[6] = {
         sizeof(coef5_huffbits), sizeof(levels5)/2, coef5_huffcodes, coef5_huffbits, levels5,
     },
 };
+
+#endif // AVCODEC_WMADATA_H

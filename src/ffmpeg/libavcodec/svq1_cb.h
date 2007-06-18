@@ -29,6 +29,9 @@
  * svq1 code books.
  */
 
+#ifndef AVCODEC_SVQ1_CB_H
+#define AVCODEC_SVQ1_CB_H
+
 /* 6x16-entry codebook for inter-coded 4x2 vectors */
 static const int8_t svq1_inter_codebook_4x2[768] = {
     7,  2, -6, -7,  7,  3, -3, -4, -7, -2,  7,  8, -8, -4,  3,  4,
@@ -1578,3 +1581,5 @@ static const int8_t svq1_intra_codebook_sum[4][16*6] = {
  -1,  5, -2, -2, -3,  2, -3, -1,  3, -3,  0,  4,  3,  0,  1, -2,
  }
 };
+
+#endif // AVCODEC_SVQ1_CB_H

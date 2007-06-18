@@ -26,9 +26,14 @@
  * @author Michael Niedermayer <michaelni@gmx.at> and Alex Beregszaszi
  */
 
+#ifndef AVCODEC_GOLOMB_H
+#define AVCODEC_GOLOMB_H
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include "bitstream.h"
 
 #define INVALID_VLC           0x80000000
 
@@ -486,3 +491,5 @@ static inline void set_sr_golomb_flac(PutBitContext *pb, int i, int k, int limit
 #ifdef __cplusplus
 }
 #endif
+
+#endif // AVCODEC_GOLOMB_H

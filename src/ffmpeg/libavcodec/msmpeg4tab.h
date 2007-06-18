@@ -27,6 +27,13 @@
  * MSMPEG4 data tables.
  */
 
+#ifndef AVCODEC_MSMPEG4TAB_H
+#define AVCODEC_MSMPEG4TAB_H
+
+#include <stdint.h>
+#include "bitstream.h"
+#include "rl.h"
+
 /* non intra picture macro block coded block pattern + mb type */
 static const uint32_t table_mb_non_intra[128][2] = {
 { 0x40, 7 },{ 0x13c9, 13 },{ 0x9fd, 12 },{ 0x1fc, 15 },
@@ -2012,3 +2019,5 @@ static const uint8_t wmv2_scantableB[64]={
 0x38, 0x29, 0x22, 0x03, 0x31, 0x39, 0x0B, 0x2A,
 0x13, 0x32, 0x1B, 0x3A, 0x23, 0x2B, 0x33, 0x3B,
 };
+
+#endif // AVCODEC_MSMPEG4TAB_H

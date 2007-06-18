@@ -1446,7 +1446,7 @@ static uint8_t *decode_nal(H264Context *h, uint8_t *src, int *dst_length, int *c
 
     *dst_length= di;
     *consumed= si + 1;//+1 for the header
-//FIXME store exact number of bits in the getbitcontext (its needed for decoding)
+//FIXME store exact number of bits in the getbitcontext (it is needed for decoding)
     return dst;
 }
 
@@ -1539,7 +1539,7 @@ static inline int get_chroma_qp(int chroma_qp_index_offset, int qscale){
     return chroma_qp[av_clip(qscale + chroma_qp_index_offset, 0, 51)];
 }
 
-//FIXME need to check that this doesnt overflow signed 32 bit for low qp, i am not sure, it's very close
+//FIXME need to check that this does not overflow signed 32 bit for low qp, i am not sure, it's very close
 //FIXME check that gcc inlines this (and optimizes intra & separate_dc stuff away)
 static inline int quantize_c(DCTELEM *block, uint8_t *scantable, int qscale, int intra, int separate_dc){
     int i;
@@ -4090,6 +4090,55 @@ static int init_poc(H264Context *h){
     return 0;
 }
 
+
+/**
+ * initialize scan tables
+ */
+static void init_scan_tables(H264Context *h){
+    MpegEncContext * const s = &h->s;
+    int i;
+    if(s->dsp.h264_idct_add == ff_h264_idct_add_c){ //FIXME little ugly
+        memcpy(h->zigzag_scan, zigzag_scan, 16*sizeof(uint8_t));
+        memcpy(h-> field_scan,  field_scan, 16*sizeof(uint8_t));
+    }else{
+        for(i=0; i<16; i++){
+#define T(x) (x>>2) | ((x<<2) & 0xF)
+            h->zigzag_scan[i] = T(zigzag_scan[i]);
+            h-> field_scan[i] = T( field_scan[i]);
+#undef T
+        }
+    }
+    if(s->dsp.h264_idct8_add == ff_h264_idct8_add_c){
+        memcpy(h->zigzag_scan8x8,       zigzag_scan8x8,       64*sizeof(uint8_t));
+        memcpy(h->zigzag_scan8x8_cavlc, zigzag_scan8x8_cavlc, 64*sizeof(uint8_t));
+        memcpy(h->field_scan8x8,        field_scan8x8,        64*sizeof(uint8_t));
+        memcpy(h->field_scan8x8_cavlc,  field_scan8x8_cavlc,  64*sizeof(uint8_t));
+    }else{
+        for(i=0; i<64; i++){
+#define T(x) (x>>3) | ((x&7)<<3)
+            h->zigzag_scan8x8[i]       = T(zigzag_scan8x8[i]);
+            h->zigzag_scan8x8_cavlc[i] = T(zigzag_scan8x8_cavlc[i]);
+            h->field_scan8x8[i]        = T(field_scan8x8[i]);
+            h->field_scan8x8_cavlc[i]  = T(field_scan8x8_cavlc[i]);
+#undef T
+        }
+    }
+    if(h->sps.transform_bypass){ //FIXME same ugly
+        h->zigzag_scan_q0          = zigzag_scan;
+        h->zigzag_scan8x8_q0       = zigzag_scan8x8;
+        h->zigzag_scan8x8_cavlc_q0 = zigzag_scan8x8_cavlc;
+        h->field_scan_q0           = field_scan;
+        h->field_scan8x8_q0        = field_scan8x8;
+        h->field_scan8x8_cavlc_q0  = field_scan8x8_cavlc;
+    }else{
+        h->zigzag_scan_q0          = h->zigzag_scan;
+        h->zigzag_scan8x8_q0       = h->zigzag_scan8x8;
+        h->zigzag_scan8x8_cavlc_q0 = h->zigzag_scan8x8_cavlc;
+        h->field_scan_q0           = h->field_scan;
+        h->field_scan8x8_q0        = h->field_scan8x8;
+        h->field_scan8x8_cavlc_q0  = h->field_scan8x8_cavlc;
+    }
+}
 /**
  * decodes a slice header.
  * this will allso call MPV_common_init() and frame_start() as needed
@@ -4176,50 +4225,7 @@ static int decode_slice_header(H264Context *h){
         if (MPV_common_init(s) < 0)
             return -1;
 
-        if(s->dsp.h264_idct_add == ff_h264_idct_add_c){ //FIXME little ugly
-            memcpy(h->zigzag_scan, zigzag_scan, 16*sizeof(uint8_t));
-            memcpy(h-> field_scan,  field_scan, 16*sizeof(uint8_t));
-        }else{
-            int i;
-            for(i=0; i<16; i++){
-#define T(x) (x>>2) | ((x<<2) & 0xF)
-                h->zigzag_scan[i] = T(zigzag_scan[i]);
-                h-> field_scan[i] = T( field_scan[i]);
-#undef T
-            }
-        }
-        if(s->dsp.h264_idct8_add == ff_h264_idct8_add_c){
-            memcpy(h->zigzag_scan8x8,       zigzag_scan8x8,       64*sizeof(uint8_t));
-            memcpy(h->zigzag_scan8x8_cavlc, zigzag_scan8x8_cavlc, 64*sizeof(uint8_t));
-            memcpy(h->field_scan8x8,        field_scan8x8,        64*sizeof(uint8_t));
-            memcpy(h->field_scan8x8_cavlc,  field_scan8x8_cavlc,  64*sizeof(uint8_t));
-        }else{
-            int i;
-            for(i=0; i<64; i++){
-#define T(x) (x>>3) | ((x&7)<<3)
-                h->zigzag_scan8x8[i]       = T(zigzag_scan8x8[i]);
-                h->zigzag_scan8x8_cavlc[i] = T(zigzag_scan8x8_cavlc[i]);
-                h->field_scan8x8[i]        = T(field_scan8x8[i]);
-                h->field_scan8x8_cavlc[i]  = T(field_scan8x8_cavlc[i]);
-#undef T
-            }
-        }
-        if(h->sps.transform_bypass){ //FIXME same ugly
-            h->zigzag_scan_q0          = zigzag_scan;
-            h->zigzag_scan8x8_q0       = zigzag_scan8x8;
-            h->zigzag_scan8x8_cavlc_q0 = zigzag_scan8x8_cavlc;
-            h->field_scan_q0           = field_scan;
-            h->field_scan8x8_q0        = field_scan8x8;
-            h->field_scan8x8_cavlc_q0  = field_scan8x8_cavlc;
-        }else{
-            h->zigzag_scan_q0          = h->zigzag_scan;
-            h->zigzag_scan8x8_q0       = h->zigzag_scan8x8;
-            h->zigzag_scan8x8_cavlc_q0 = h->zigzag_scan8x8_cavlc;
-            h->field_scan_q0           = h->field_scan;
-            h->field_scan8x8_q0        = h->field_scan8x8;
-            h->field_scan8x8_cavlc_q0  = h->field_scan8x8_cavlc;
-        }
-
+        init_scan_tables(h);
         alloc_tables(h);
 
         s->avctx->width = s->width;
@@ -4753,7 +4759,7 @@ decode_intra_mb:
     if(IS_INTRA_PCM(mb_type)){
         unsigned int x, y;
 
-        // we assume these blocks are very rare so we dont optimize it
+        // We assume these blocks are very rare so we do not optimize it.
         align_get_bits(&s->gb);
 
         // The pixels are stored in the same order as levels in h->mb array.
@@ -5894,7 +5900,7 @@ decode_intra_mb:
         const uint8_t *ptr;
         unsigned int x, y;
 
-        // We assume these blocks are very rare so we dont optimize it.
+        // We assume these blocks are very rare so we do not optimize it.
         // FIXME The two following lines get the bitstream position in the cabac
         // decode, I think it should be done by a function in cabac.h (or cabac.c).
         ptr= h->cabac.bytestream;
@@ -7010,7 +7016,7 @@ static int decode_slice(H264Context *h){
             eos = get_cabac_terminate( &h->cabac );
 
             if( ret < 0 || h->cabac.bytestream > h->cabac.bytestream_end + 2) {
-                av_log(h->s.avctx, AV_LOG_ERROR, "error while decoding MB %d %d, bytestream (%d)\n", s->mb_x, s->mb_y, h->cabac.bytestream_end - h->cabac.bytestream);
+                av_log(h->s.avctx, AV_LOG_ERROR, "error while decoding MB %d %d, bytestream (%td)\n", s->mb_x, s->mb_y, h->cabac.bytestream_end - h->cabac.bytestream);
                 ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x, s->mb_y, (AC_ERROR|DC_ERROR|MV_ERROR)&part_mask);
                 return -1;
             }
@@ -7610,32 +7616,32 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
         const uint8_t *ptr;
         int i, nalsize = 0;
 
-      if(h->is_avc) {
-        if(buf_index >= buf_size) break;
-        nalsize = 0;
-        for(i = 0; i < h->nal_length_size; i++)
-            nalsize = (nalsize << 8) | buf[buf_index++];
-        if(nalsize <= 1 || (nalsize+buf_index > buf_size)){
-            if(nalsize == 1){
-                buf_index++;
-                continue;
-            }else{
-                av_log(h->s.avctx, AV_LOG_ERROR, "AVC: nal size %d\n", nalsize);
-                break;
+        if(h->is_avc) {
+            if(buf_index >= buf_size) break;
+            nalsize = 0;
+            for(i = 0; i < h->nal_length_size; i++)
+                nalsize = (nalsize << 8) | buf[buf_index++];
+            if(nalsize <= 1 || (nalsize+buf_index > buf_size)){
+                if(nalsize == 1){
+                    buf_index++;
+                    continue;
+                }else{
+                    av_log(h->s.avctx, AV_LOG_ERROR, "AVC: nal size %d\n", nalsize);
+                    break;
+                }
             }
-        }
-      } else {
-        // start code prefix search
-        for(; buf_index + 3 < buf_size; buf_index++){
-            // This should always succeed in the first iteration.
-            if(buf[buf_index] == 0 && buf[buf_index+1] == 0 && buf[buf_index+2] == 1)
-                break;
-        }
+        } else {
+            // start code prefix search
+            for(; buf_index + 3 < buf_size; buf_index++){
+                // This should always succeed in the first iteration.
+                if(buf[buf_index] == 0 && buf[buf_index+1] == 0 && buf[buf_index+2] == 1)
+                    break;
+            }
 
-        if(buf_index+3 >= buf_size) break;
+            if(buf_index+3 >= buf_size) break;
 
-        buf_index+=3;
-      }
+            buf_index+=3;
+        }
 
         ptr= decode_nal(h, buf + buf_index, &dst_length, &consumed, h->is_avc ? nalsize : buf_size - buf_index);
         if (ptr==NULL || dst_length < 0){
@@ -7654,7 +7660,7 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
 
         buf_index += consumed;
 
-        if(  (s->hurry_up == 1 && h->nal_ref_idc  == 0) //FIXME dont discard SEI id
+        if(  (s->hurry_up == 1 && h->nal_ref_idc  == 0) //FIXME do not discard SEI id
            ||(avctx->skip_frame >= AVDISCARD_NONREF && h->nal_ref_idc  == 0))
             continue;
 
@@ -7751,7 +7757,7 @@ static int get_consumed_bytes(MpegEncContext *s, int pos, int buf_size){
 
         return pos;
     }else{
-        if(pos==0) pos=1; //avoid infinite loops (i doubt thats needed but ...)
+        if(pos==0) pos=1; //avoid infinite loops (i doubt that is needed but ...)
         if(pos+10>buf_size) pos=buf_size; // oops ;)
 
         return pos;

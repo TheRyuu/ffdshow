@@ -25,6 +25,9 @@
  * h261codec.
  */
 
+#ifndef AVCODEC_H261_H
+#define AVCODEC_H261_H
+
 #include "mpegvideo.h"
 
 /**
@@ -43,3 +46,6 @@ typedef struct H261Context{
     int gob_start_code_skipped; // 1 if gob start code is already read before gob header is read
 }H261Context;
 
+#define MB_TYPE_H261_FIL 0x800000
+
+#endif AVCODEC_H261_H

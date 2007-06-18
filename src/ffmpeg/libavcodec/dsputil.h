@@ -468,8 +468,6 @@ static inline int get_penalty_factor(int lambda, int lambda2, int type){
    one or more MultiMedia extension */
 int mm_support(void);
 
-void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx);
-
 #define DECLARE_ALIGNED_16(t, v) DECLARE_ALIGNED(16, t, v)
 
 #if defined(HAVE_MMX)
@@ -511,6 +509,7 @@ static inline void emms(void)
 
 #define STRIDE_ALIGN 8
 
+void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx);
 void dsputil_init_pix_mmx(DSPContext* c, AVCodecContext *avctx);
 
 #else

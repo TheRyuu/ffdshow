@@ -25,6 +25,11 @@
  * Range coder.
  */
 
+#ifndef AVCODEC_RANGECODER_H
+#define AVCODEC_RANGECODER_H
+
+#include "common.h"
+
 typedef struct RangeCoder{
     int low;
     int range;
@@ -132,3 +137,4 @@ static inline int get_rac(RangeCoder *c, uint8_t * const state){
 #endif
 }
 
+#endif // AVCODEC_RANGECODER_H

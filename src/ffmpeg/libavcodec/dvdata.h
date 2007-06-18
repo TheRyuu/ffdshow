@@ -24,6 +24,12 @@
  * Constants for DV codec.
  */
 
+#ifndef AVCODEC_DVDATA_H
+#define AVCODEC_DVDATA_H
+
+#include "avcodec.h"
+//#include "rational.h"
+
 /*
  * DVprofile is used to express the differences between various
  * DV flavors. For now it's primarily used for differentiating
@@ -2732,3 +2738,5 @@ static inline int dv_write_ssyb_id(uint8_t syb_num, uint8_t fr, uint8_t* buf)
     buf[2] = 0xff;             /* reserved -- always 1 */
     return 3;
 }
+
+#endif // AVCODEC_DVDATA_H
