@@ -38,6 +38,10 @@ HRESULT TimgFilterDeinterlace::process(TfilterQueue::iterator it,TffPict &pict,c
    pict.fieldtype=(pict.fieldtype&~FIELD_TYPE::INT_TFF)|FIELD_TYPE::INT_BFF;
   else if (pict.fieldtype&FIELD_TYPE::INT_BFF)
    pict.fieldtype=(pict.fieldtype&~FIELD_TYPE::INT_BFF)|FIELD_TYPE::INT_TFF;
+
+ if (pict.rectClip != pict.rectFull)
+  parent->dirtyBorder=1;
+
  return parent->deliverSample(++it,pict);
 }
 
@@ -208,6 +212,10 @@ HRESULT TimgFilterFramerateDoubler::process(TfilterQueue::iterator it,TffPict &p
  else
   old=new TffPict;
  old->copyFrom(pict,oldbuf);
+
+ if (pict.rectClip != pict.rectFull)
+  parent->dirtyBorder=1;
+
  return parent->deliverSample(++it,pict);
 }
 
@@ -254,5 +262,9 @@ HRESULT TimgFilterMplayerDeinterlace::process(TfilterQueue::iterator it,TffPict 
                             NULL,0,
                             &pp_mode,pp_ctx,pict.frametype&FRAME_TYPE::typemask);
  pict.fieldtype=FIELD_TYPE::PROGRESSIVE_FRAME;
+
+ if (pict.rectClip != pict.rectFull)
+  parent->dirtyBorder=1;
+
  return parent->deliverSample(++it,pict);
 }

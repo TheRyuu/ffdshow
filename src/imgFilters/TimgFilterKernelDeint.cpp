@@ -295,6 +295,10 @@ HRESULT TimgFilterKernelDeint2::process(TfilterQueue::iterator it,TffPict &pict,
     }
    kernel->getFrame(src,stride1,dst,stride2,bob?1:0);
   }
+
+ if (pict.rectClip != pict.rectFull)
+  parent->dirtyBorder=1;
+
  return parent->deliverSample(++it,pict);
 }
 

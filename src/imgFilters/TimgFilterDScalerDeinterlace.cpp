@@ -195,6 +195,10 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
     }
    pict.fieldtype=FIELD_TYPE::PROGRESSIVE_FRAME;
    pict.rtStart=rtStart;pict.rtStop=pict.rtStart+rtDuration;rtStart+=rtDuration;
+
+   if (pict.rectClip != pict.rectFull)
+    parent->dirtyBorder=1;
+
    HRESULT hr=parent->deliverSample(++it,pict);
    if (FAILED(hr))
     return hr;

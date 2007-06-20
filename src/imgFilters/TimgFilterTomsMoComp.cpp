@@ -107,6 +107,10 @@ HRESULT TimgFilterTomsMoComp::process(TfilterQueue::iterator it,TffPict &pict,co
      frameNum++;
     }
   }
+
+ if (pict.rectClip != pict.rectFull)
+  parent->dirtyBorder=1;
+
  return parent->deliverSample(++it,pict);
 }
 void TimgFilterTomsMoComp::onSeek(void)

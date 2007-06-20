@@ -1007,6 +1007,9 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
        else
         self->getNext(self->outcsp,pict,cfg->full,data,&outputRect);
 
+       if (outputRect != pict.rectFull)
+        self->parent->dirtyBorder=1;
+
        if (isYV12)
         {
          TffPict::copy(data[0],self->stride2[0],frame->GetReadPtr(PLANAR_Y),frame->GetPitch(PLANAR_Y),frame->GetRowSize(PLANAR_Y),frame->GetHeight(PLANAR_Y));
