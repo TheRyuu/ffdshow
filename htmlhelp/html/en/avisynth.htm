@@ -37,11 +37,11 @@
   </h2>
 
   <p>
-    Basically, AviSynth is a scripting language for building a chain of video filters, similar to what ffdshow's filter configuration allows. It is even more powerful (since it's meant for non-linear video editing), but it doesn't come with a GUI, and by itself it is not really suited to be used for filtering videos while watching them in a media player.
+    Basically, AviSynth is a scripting language for building a chain of video filters, similar to what ffdshow's filter configuration allows. It is even more powerful than ffdshow (since it's made for non-linear video editing), but it doesn't come with a GUI, and by itself it is not really suited to be used for filtering videos while watching them in a media player.
   </p>
 
   <p>
-    ffdshow's AviSynth filter enables you to use most of AviSynth and it's filters in real-time when playing a video, but of course there are some limitations that will be described further down this page (see "<a class="links" href="#Compatibility">Compatibility</a>").
+    ffdshow's AviSynth filter enables you to use most of AviSynth and it's filters in real-time when playing a video, but of course there are some limitations which will be described further down this page (see "<a class="links" href="#Compatibility">Compatibility</a>").
   </p>
 
   <h2>
@@ -53,7 +53,7 @@
   </p>
 
   <p>
-    You'll probably also want to install some of the filters and scripts that are available - take a look into the documentation that gets installed with AviSynth, as it contains a comprehensive (but of course not complete) list and description of both internal and external filters and plugins. Another source of filters, scripts and general information on AviSynth is <a class="links" href="http://forum.doom9.org/forumdisplay.php?f=33">Doom9.org's AviSynth usage forum</a> as well as <a class="links" href="http://forum.doom9.org/forumdisplay.php?f=69">Doom9.org's AviSynth development forum</a>.
+    You'll probably also want to install some of the filters and scripts that are available - take a look into the documentation that gets installed with AviSynth, as it contains a comprehensive (but of course not complete) list and description of both internal filters and external plugins. Another source of filters, scripts and general information on AviSynth is <a class="links" href="http://forum.doom9.org/forumdisplay.php?f=33">Doom9.org's AviSynth usage forum</a> as well as <a class="links" href="http://forum.doom9.org/forumdisplay.php?f=69">Doom9.org's AviSynth development forum</a>.
   </p>
 
   <h2>
@@ -61,7 +61,7 @@
   </h2>
 
   <p>
-    The configuration page for ffdshow's AviSynth filter mainly consists of one big textbox that is used to specify an AviSynth script that is applied to the video, and a few additional controls:
+    The configuration page for ffdshow's AviSynth filter mainly consists of a big textbox that is used to specify an AviSynth script that is applied to the video, and a few additional controls:
   </p>
 
   <h3>
@@ -77,13 +77,13 @@
   <h4>General info</h4>
 
   <p>
-    Video that's meant to be watched on NTSC TVs (like DVDs) must run at 30 frames per second (FPS). But with theatrical movies, you normally only have 24 frames per second, so something needs to be done to get to 30 frames per second. The usual method for this is called "3:2 pulldown" or "telecine", which essentially adds a frame (or, to be more precise, two "half-frames" called fields) to every consecutive group of 4 frames, making up new frames by combining and duplicating fields of the original frames. When watched like that on a PC monitor, this usually leads to comb artifacts, but on a TV it just leads to a slight stutter (also known as judder).
+    Video that's meant to be watched on NTSC TVs (like NTSC DVDs) must run at (almost) 30 frames per second (FPS). Theatrical movies usually are filmed at 24 frames per second, so something needs to be done to get them to 30 frames per second. The method usually used for this is called "3:2 pulldown" or "telecine" and essentially adds a frame (or, to be more precise, two "half-frames" known as fields) to every consecutive group of 4 frames by combining and duplicating fields of the original frames. When watched like that on a PC monitor, this leads to the well-known comb artifacts, but on a TV that's made for displaying interlaced material it will just lead to a slight stutter, which is also known as judder.
   </p>
 
   <h4>Ignore pulldown</h4>
 
   <p>
-    This setting will ignore any and all interlace/field repeat flags on the video. Use this option if you want to keep the original timestamps and interlace flags; mainly when you don't add/drop frames in your AviSynth script or have 100% progressive material.
+    This mode will ignore any and all interlace/field repeat flags on the video. Use it if you want to keep the original timestamps and interlace flags; mainly when you don't add/drop frames in your AviSynth script or already have 100% progressive material.
   </p>
 
   <p>
@@ -93,17 +93,17 @@
   <h4>Apply pulldown</h4>
 
   <p>
-    If you want to process 24 FPS material with a script that adds or drops frames you need to use this option to recreate the 3:2 pulldown according to the video's interlace/field repeat flags. This will make sure AviSynth gets passed 30 frames per second with equally spaced timestamps (just like a TV would), as AviSynth doesn't support video with a variable or changing framerate. You'll probably want to use either a deinterlacing filter or (even better) an "inverse telecine" (IVTC) filter like TIVTC or Decomb to get back the original 24 frames per second.
+    If you want to process hybrid 24/30 FPS video with a script that adds or drops frames you can use this mode to recreate the 3:2 pulldown according to the video's interlace/field repeat flags. This will make sure that AviSynth, which doesn't support variable framerate video, gets passed constant 30 frames per second with equally spaced timestamps (just like a TV would) by recreating the 3:2 pulldown. You can then use a deinterlacing/bob filter or an "inverse telecine" (IVTC) filter like TIVTC or Decomb to take care of combing.
   </p>
 
   <p>
-    This will also help fix DVDs where the flags are bogus so that simply watching them on a PC without filtering is not an option due to excessive combing or jerky movement, and works best for hybrid (i.e. mixed) 24/30 FPS material. As this option only does something in the presence of interlace/field repeat flags you can keep it checked for material without such flags.
+    This mode in conjunction with IVTC will also fix NTSC DVDs where the interlace/field repeat flags are wrong so that simply watching the DVD on a PC without filtering results in combing or jerky movement, and allows the filtering/display of hybrid (i.e. mixed 24/30 FPS) material. As this mode only does something in the presence of interlace/field repeat flags you can leave it set for progressive material.
   </p>
 
   <h4>Smooth timestamps</h4>
 
   <p>
-    This option will smooth alternating frame durations (i.e. switching between 33 and 50ms with each frame for 24 FPS material from a DVD) by adjusting the duration of the current frame to the average duration of the current and last frame. This allows adding/dropping frames on hybrid material (with a bob filter, for instance) without the timestamps going crazy as the timestamp interpolation used by this filter needs evenly spaced timestamps. (Material that already has a constant frame duration will keep it, of course.)
+    This mode will smooth frame durations that alternate between two values every other frame by setting the duration of the current frame to the average duration of the current and last frame. This allows adding/dropping frames on 24FPS NTSC video (with a bob filter, for example) where timestamps that are alternating between 33 and 50ms will be replaced with a constant duration of 41.7ms. Video that already has constant frame durations will keep them, of course.
   </p>
 
   <h3>
@@ -111,7 +111,11 @@
   </h3>
 
   <p>
-    Since not all AviSynth filters used in a script might accept video in all of the listed colorspaces you can uncheck those colorspaces to tell ffdshow to make sure the video gets converted to one of the checked ones if neccessary. Of course, you can also just leave all four checked and do the conversion inside your script. It's best to keep colorspace conversions to a minimum, since they take some time and cost a bit of image quality.
+    Since not all AviSynth filters that are used in a script might not accept video in some of the listed colorspaces you can uncheck those colorspaces to tell ffdshow to make sure that the video gets converted to one of the checked ones if neccessary. Or you can keep all four checked and do the neccessary conversion inside your script instead.
+  </p>
+
+  <p>
+  	Note: it's always best to keep the number of colorspace conversions used to a minimum since they take some time and will cost a bit of image quality.
   </p>
 
   <h3>
@@ -127,11 +131,11 @@
   </p>
 
   <p>
-    If you notice problems, most likely the number of buffers has to be adjusted. Turn on ffdshow's On-Screen Display (OSD) and check the "AviSynth info" OSD item to see the values that are currently needed, or click on the "Use Current" button to copy the neccessary values directly into the 2 number boxes.
+    If you notice problems with a script it's most likely that the number of buffers has to be adjusted. Turn on ffdshow's On-Screen Display (OSD) and check the "AviSynth info" OSD item to see the values that are currently needed, or click on the "Use Current" button to copy the neccessary values directly into the 2 number boxes.
   </p>
 
   <p>
-    If, on the other hand, you want to disable buffering completely you can either set ahead and back to zero or simply uncheck the "Buffer back/ahead" checkbox.
+    If you want to disable buffering completely you can uncheck the "Buffer back/ahead" checkbox or set both ahead and back to zero.
   </p>
 
   <p>
@@ -141,37 +145,38 @@
   <h3>The script area</h3>
 
   <p>
-    Below all the above controls is a big textbox that you need to fill with an AviSynth script, which you can load from or save to disc with the two buttons above it. To find out more about AviSynth scripts please consult the resources listed under <a class="links" href="#Prerequisites">Prerequisites</a>.
+    The bottom of the configuration page contains a big textbox that you need to fill with an AviSynth script. Use the "Load" and "Save" buttons above the script area to read your script from a file or write it into one. To find out more about AviSynth scripts please consult the resources listed under <a class="links" href="#Prerequisites">Prerequisites</a>.
   </p>
 
   <p>
-    Since writing longer scripts in the config dialog isn't very comfortable you can also write your script as a function, put it into an AVSI file (or import it by hand using Import()) and just call that function in ffdshow.
+    As writing longer scripts in the config dialog isn't very comfortable you can also write your script as a function, put it into an AVSI file (or import it by hand using AviSynth's Import() function) and just call that function in ffdshow.
   </p>
 
-  <h4>Aspect ratio variables</h4>
+  <h4>Aspect ratio</h4>
 
   <p>
-    The global variables ffdshow_dar_x and ffdshow_dar_y are set to the input video's display aspect ratio (i.e. 4 and 3 for 4:3 material). You can set a new display aspect ratio for the output video by using the ffdshow_setDAR(x,y) function. Note that some players like Media Player Classic will disregard the video's aspect ratio and ask the DVD navigator for the aspect ratio when playing DVDs, so setting an aspect ratio might yield strange results.
+    Since AviSynth itself has no concept of aspect ratios two global integer variables named ffdshow_dar_x and ffdshow_dar_y are used to pass the input video's display aspect ratio (i.e. 4 and 3 for 4:3 material) to your script. You can then set a new display aspect ratio for the resulting video by calling the ffdshow_setDAR(x,y) function in your script. Note that some players like Media Player Classic will ask the DVD navigator for the current aspect ratio when playing DVDs and use that instead so the aspect ratio used will be wrong.
   </p>
 
   <p>
-    (Similar variables and a similar function exist for the size aspect ratio that is used internally by ffdshow, but it's probably not very useful. A video of size 720x480 with square pixels would have a SAR of 3:2, for example.)
+    Two more variables ffdshow_sar_x and ffdshow_sar_y and a function ffdshow_setSAR(x,y) allow you to get or set the sample (pixel) aspect ratio that is used internally by ffdshow, but it's probably not as useful as the display aspect ratio.
   </p>
 
   <p>
     Note: any "virtual" borders that were added to your video by the Resize & Aspect filter will be removed when you resize the video in your script or when you set a new aspect ratio.
   </p>
-  <h4>Examples</h4>
+
+  <h4>Script Examples</h4>
 
   <p>
-    A very simple AviSynth script to test if AviSynth is properly installed would simply be:
+    A very simple AviSynth script to test if AviSynth is installed properly:
   </p>
 
   <pre style="border: 1px solid Gray; margin-left: 2ex; padding-left: 0.5ex;">
 Info()</pre>
 
   <p>
-    which overlays some basic data about the current frame on the video.
+    This will overlay some basic data about the current frame on the video.
   </p>
 
   <p>
@@ -183,21 +188,23 @@ TFM(order=1,chroma=false)
 TDecimate(mode=1,hybrid=1,conCycle=1,chroma=false)</pre>
 
   <p>
-    (Be sure to check "Apply pulldown" and set the back and ahead buffers to 0 and 12, respectively - and make sure you have extracted TIVTC into AviSynth's plugins folder)
+    Be sure to check "Apply pulldown" and set the back and ahead buffers to 0 and 12, respectively. Also make sure you have extracted TIVTC into AviSynth's plugins folder.
   </p>
 
   <p>
-    The above script extended to resize 4:3 or 16:9 images into an 800x600 area, with 16:9 images being cropped a bit left and right:
+    An extension to the above script to resize 4:3 or 16:9 NTSC DVD images into an 800x600 area, with the 16:9 images being cropped a bit left and right:
   </p>
 
   <pre style="border: 1px solid Gray; margin-left: 2ex; padding-left: 0.5ex;">
 function Resize_16_9(v)
 {
+  ffdshow_setDAR(4,3)
   return v.LanczosResize(800,480,22,0,676,480).AddBorders(0,60,0,60)
 }
 
 function Resize_4_3(v)
 {
+  ffdshow_setDAR(4,3)
   return v.LanczosResize(800,600)
 }
 
@@ -210,9 +217,7 @@ diff=ar-1.5555
 abs(abs(diff)-0.2222) > 0.05 ? last : \
 (diff >= 0 \
 ? last.Resize_16_9 \
-: last.Resize_4_3)
-
-ffdshow_setDAR(4,3)</pre>
+: last.Resize_4_3)</pre>
 
   <h2>
     <a name="Compatibility">Compatibility</a>
@@ -223,7 +228,7 @@ ffdshow_setDAR(4,3)</pre>
   </p>
 
   <p>
-    If you accidentally change the number of frames the script returns only slightly (like adding a single frame at the end with FadeIn()) you'll probably get weird results when seeking, since instead of skipping ahead a bit the filter will always restart requesting frames at zero from AviSynth. To fix this, make sure you add/remove frames at "normal" ratios (with low numerator and denominator), like 5:4 or 1:2.
+    If you accidentally change the number of frames the script returns only slightly (like by adding a single frame at the end with FadeIn()) you'll probably get weird results when seeking, since instead of skipping ahead a bit the filter will always restart requesting frames at zero from AviSynth. To fix this, make sure you add/remove frames at small "normal" ratios (with low numerator and denominator), like 5:4 or 1:2.
   </p>
 
   <p>
