@@ -78,9 +78,7 @@ void (*draw_edges)(uint8_t *buf, int wrap, int width, int height, int w)= draw_e
 //#define DEBUG
 
 
-/* for jpeg fast DCT */
-#define CONST_BITS 14
-
+#ifdef CONFIG_ENCODERS
 static const uint16_t aanscales[64] = {
     /* precomputed values scaled up by 14 bits */
     16384, 22725, 21407, 19266, 16384, 12873,  8867,  4520,
@@ -92,6 +90,7 @@ static const uint16_t aanscales[64] = {
     8867 , 12299, 11585, 10426,  8867,  6967,  4799,  2446,
     4520 ,  6270,  5906,  5315,  4520,  3552,  2446,  1247
 };
+#endif //CONFIG_ENCODERS
 
 static const uint8_t h263_chroma_roundtab[16] = {
 //  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
@@ -268,31 +267,15 @@ int DCT_common_init(MpegEncContext *s)
         s->dct_unquantize_mpeg2_intra = dct_unquantize_mpeg2_intra_bitexact;
     s->dct_unquantize_mpeg2_inter = dct_unquantize_mpeg2_inter_c;
 
-#ifdef CONFIG_ENCODERS
-    s->dct_quantize= dct_quantize_c;
-    s->denoise_dct= denoise_dct_c;
-#endif //CONFIG_ENCODERS
-
 #ifdef HAVE_MMX
     MPV_common_init_mmx(s);
 #endif
-#ifdef ARCH_ALPHA
-    MPV_common_init_axp(s);
-#endif
-#ifdef HAVE_MLIB
-    MPV_common_init_mlib(s);
-#endif
-#ifdef HAVE_MMI
-    MPV_common_init_mmi(s);
-#endif
-#ifdef ARCH_ARMV4L
-    MPV_common_init_armv4l(s);
-#endif
-#ifdef ARCH_POWERPC
-    MPV_common_init_ppc(s);
-#endif
 
 #ifdef CONFIG_ENCODERS
+    if(!s->dct_quantize)
+        s->dct_quantize= dct_quantize_c;
+    if(!s->denoise_dct)
+        s->denoise_dct= denoise_dct_c;
     s->fast_dct_quantize= s->dct_quantize;
 
     if(s->flags&CODEC_FLAG_TRELLIS_QUANT){
@@ -368,7 +351,7 @@ static void copy_picture_attributes(MpegEncContext *s, AVFrame *dst, AVFrame *sr
  * The pixels are allocated/set by calling get_buffer() if shared=0
  */
 static int alloc_picture(MpegEncContext *s, Picture *pic, int shared){
-    const int big_mb_num= s->mb_stride*(s->mb_height+1) + 1; //the +1 is needed so memset(,,stride*height) doesnt sig11
+    const int big_mb_num= s->mb_stride*(s->mb_height+1) + 1; //the +1 is needed so memset(,,stride*height) does not sig11
     const int mb_array_size= s->mb_stride*s->mb_height;
     const int b8_array_size= s->b8_stride*s->mb_height*2;
     const int b4_array_size= s->b4_stride*s->mb_height*4;
@@ -437,11 +420,12 @@ static int alloc_picture(MpegEncContext *s, Picture *pic, int shared){
         CHECKED_ALLOCZ(pic->pan_scan , 1 * sizeof(AVPanScan))
     }
 
-    //it might be nicer if the application would keep track of these but it would require a API change
+    /* It might be nicer if the application would keep track of these
+     * but it would require an API change. */
     memmove(s->prev_pict_types+1, s->prev_pict_types, PREV_PICT_TYPES_BUFFER_SIZE-1);
     s->prev_pict_types[0]= s->pict_type;
     if(pic->age < PREV_PICT_TYPES_BUFFER_SIZE && s->prev_pict_types[pic->age] == B_TYPE)
-        pic->age= INT_MAX; // skipped MBs in b frames are quite rare in mpeg1/2 and its a bit tricky to skip them anyway
+        pic->age= INT_MAX; // Skipped MBs in B-frames are quite rare in MPEG-1/2 and it is a bit tricky to skip them anyway.
 
     return 0;
 fail: //for the CHECKED_ALLOCZ macro
@@ -488,7 +472,7 @@ static int init_duplicate_context(MpegEncContext *s, MpegEncContext *base){
     CHECKED_ALLOCZ(s->allocated_edge_emu_buffer, (s->width+64)*2*21*2); //(width + edge + align)*interlaced*MBsize*tolerance
     s->edge_emu_buffer= s->allocated_edge_emu_buffer + (s->width+64)*2*21;
 
-     //FIXME should be linesize instead of s->width*2 but that isnt known before get_buffer()
+     //FIXME should be linesize instead of s->width*2 but that is not known before get_buffer()
     CHECKED_ALLOCZ(s->me.scratchpad,  (s->width+64)*4*16*2*sizeof(uint8_t))
     s->rd_scratchpad=   s->me.scratchpad;
     s->b_scratchpad=    s->me.scratchpad;
@@ -1616,7 +1600,7 @@ alloc:
     s->error_resilience= avctx->error_resilience;
 
     /* set dequantizer, we can't do it during init as it might change for mpeg4
-       and we can't do it in the header decode as init isnt called for mpeg4 there yet */
+       and we can't do it in the header decode as init is not called for mpeg4 there yet */
     if(s->mpeg_quant || s->codec_id == CODEC_ID_MPEG2VIDEO){
         s->dct_unquantize_intra = s->dct_unquantize_mpeg2_intra;
         s->dct_unquantize_inter = s->dct_unquantize_mpeg2_inter;

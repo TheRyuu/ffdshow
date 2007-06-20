@@ -34,7 +34,7 @@
 #include "mpegvideo.h"
 
 #define interlaced_dct interlaced_dct_is_a_bad_name
-#define mb_intra mb_intra_isnt_initalized_see_mb_type
+#define mb_intra mb_intra_is_not_initialized_see_mb_type
 
 #define LUMA_DC_BLOCK_INDEX   25
 #define CHROMA_DC_BLOCK_INDEX 26
@@ -160,8 +160,8 @@ typedef struct H264Context{
     MpegEncContext s;
     int nal_ref_idc;
     int nal_unit_type;
-    uint8_t *rbsp_buffer;
-    unsigned int rbsp_buffer_size;
+    uint8_t *rbsp_buffer[2];
+    unsigned int rbsp_buffer_size[2];
 
     /**
       * Used to parse AVC variant of h264
