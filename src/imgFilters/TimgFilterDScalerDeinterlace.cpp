@@ -165,7 +165,7 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
 #ifndef WIN64
 #ifdef __GNUC__
     asm volatile("push %ebx");
-#elif defined(__WIN32__)
+#elif defined(WIN32)
    _asm{
     push ebx
    }
@@ -177,7 +177,7 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
 #ifndef WIN64
 #ifdef __GNUC__
     asm volatile("pop %ebx");
-#elif defined(__WIN32__)
+#elif defined(WIN32)
    _asm{
     pop ebx
    }
