@@ -106,7 +106,7 @@ only one - check previous filter only=nur eine - nur voheringen Filter überprüfe
 only one - check all previous filters=nur eine - alle voheringen Filter überprüfen
 only one - check all filters in graph=nur eine - alle Filter im Graf überprüfen
 none - disabled=keine - deaktiviert
-List of applications for which ffdshow should not load, separated by semicolons.=Liste von Anwendungen für die ffdshow nicht laden sollte, getrennt durch Semikola.
+List of applications for which ffdshow should not load, separated by semicolons=Liste von Anwendungen für die ffdshow nicht laden sollte, getrennt durch Semikola.
 List of applications which are compatible with ffdshow, separated by semicolons.=Liste von Anwendungen die kompatibel zu ffdshow sind, getrennt durch Semikola.
 
 Add compatible executable file=Kompadible Anwendung hinzufügen
