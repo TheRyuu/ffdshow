@@ -53,12 +53,12 @@ const char_t* TfontSettings::getCharset(int i)
 {
  switch (i)
   {
-   case ANSI_CHARSET       :return _l("Ansi");
+   case ANSI_CHARSET       :return _l("ANSI");
    case DEFAULT_CHARSET    :return _l("Default");
    case SYMBOL_CHARSET     :return _l("Symbol");
-   case SHIFTJIS_CHARSET   :return _l("Shiftjis");
+   case SHIFTJIS_CHARSET   :return _l("ShiftJIS");
    case HANGUL_CHARSET     :return _l("Hangul");
-   case GB2312_CHARSET     :return _l("Gb2312");
+   case GB2312_CHARSET     :return _l("GB2312");
    case CHINESEBIG5_CHARSET:return _l("Chinese");
    case OEM_CHARSET        :return _l("OEM");
    case JOHAB_CHARSET      :return _l("Johab");

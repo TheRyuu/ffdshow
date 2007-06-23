@@ -1,13 +1,22 @@
-Deutsch
+German
+
+[Font]
+typeface9x=Times New Roman
+typefaceNT=Times New Roman
+pointsize9x=9
+pointsizeNT=9
 
 [-1]
+ffdshow video decoder configuration=ffdshow-Videodekoder-Konfiguration
+Thank you!=Danke!
+
 Set all stable formats to libavcodec=Alle stabilen Formate auf libavcodec setzen
 Set all supported formats to Xvid=Alle unterstützen Formate auf Xvid setzen
 Decoder=Dekoder
 Supported FOURCCs/remarks=Unterstützte FOURCCs/Anmerkungen
 skip deblocking when safe=Deblocking, wenn sicher, überspringen
 skip deblocking always=Deblocking immer überspringen
-H264, X264, VSSH (incomplete), DAVC, AVC1=H264, X264, VSSH (unvollständing), DAVC, AVC1
+H264, X264, VSSH (incomplete), DAVC, PAVC, AVC1=H264, X264, VSSH (unvollständing), DAVC, PAVC, AVC1
 Other MPEG4=Anderes MPEG4
 ffdshow and ffvfw internal FOURCCs=ffdshows und ffvfws interne FOURCCs
 H263, L263, M263, U263, X263, S263 (in 3gp files)=H263, L263, M263, U263, X263, S263 (in 3gp-Dateien)
@@ -86,29 +95,34 @@ all float=alle fließkomma
 32-bit float=32-bit fließkomma
 64-bit float=64-bit fließkomma
 Uncompressed=Unkompriemiert
+
 do not use=nicht verwenden
 unlikely=unwahrscheinlich
 preferred=bevorzugt
-ffdshow default=Standard
+ffdshow default=ffdshow-Standard
 very high=sehr hoch
 no limitations=keine Begrenzung
 only one - check previous filter only=nur eine - nur voheringen Filter überprüfen
 only one - check all previous filters=nur eine - alle voheringen Filter überprüfen
 only one - check all filters in graph=nur eine - alle Filter im Graf überprüfen
 none - disabled=keine - deaktiviert
+List of applications for which ffdshow should not load, separated by semicolons.=Liste von Anwendungen für die ffdshow nicht laden sollte, getrennt durch Semikola.
+List of applications which are compatible with ffdshow, separated by semicolons.=Liste von Anwendungen die kompatibel zu ffdshow sind, getrennt durch Semikola.
+
 Add compatible executable file=Kompadible Anwendung hinzufügen
 Add incompatible executable file=Inkompadible Anwendung hinzufügen
 Are you sure?=Sind Sie sicher?
 Load default settings=Standardeinstellungen laden
 List the names of executable files which are incompatible with ffdshow or which you don't want to use ffdshow, one for each line.=Listen Sie die Namen ausführbarer Dateien, welche inkompatibel zu ffdshow sind oder welche ffdshow nicht verwenden sollen - pro Zeile einen.
-(This dailog will close in=(Dieser Dialog schließt sich in
-seconds.)=Sek.)
+(This dailog will close in=(Dieser Dialog wird sich in
+seconds.)=Sekunden schließen.)
 ffdshow will behave as if it were not installed.=ffdshow wird sich verhalten, als wäre es es nicht installiert.
 ffdshow will behave as if it were not installed.\r\nThe application will be added to "DirectShow control"->"Don't use ffdshow in".=ffdshow wird sich verhalten, als wäre es es nicht installiert.\r\nDie Anwendung wird zu "DirectShow-Optionen"->"ffdshow nicht verwenden in" hinzugefügt werden.
 ffdshow will be used if it is set to decode a format.=ffdshow wird verwandt werden, falls es eingestellt wurde ein Format zu dekodieren.
 ffdshow will be used if it is set to decode a format.\r\nThe application will be added to "DirectShow control"->"Use ffdshow only in".=ffdshow wird verwandt werden, falls es eingestellt wurde ein Format zu dekodieren.\r\nDie Anwendung wird zu "DirectShow-Optionen"->"ffdshow nur verwenden in" hinzugefügt werden.
 ffdshow won't be used in unknown applications.\r\nTo enable this dialog again, check "DirectShow control"->"Show dialog when an unknown application tries to load ffdshow".=ffdshow wird nicht in unbekannten Anwendungen verwandt werden.\r\nUm diesen Dialog erneut zu aktivieren, kreuzen Sie "DirectShow-Optionen"->"Dialog anzeigen, wenn eine unbekannte Anwendung versucht ffdshow zu laden" an.
 Thank you. We are gathering the list of compatible applications. Please send us the exe file name of this application and help us improving ffdshow.=Vielen Dank. Wir erarbeiten eine Liste kompatibler Anwendungen. Bitte senden Sie uns den Dateinamen dieser Anwendung und helfen Sie uns ffdshow zu verbessern.
+
 Source file=Quelldatei
 Input size and aspect ratio=Eingangsauflösung und Seitenverhältnis
 Input FOURCC=Eingangs-FOURCC
@@ -116,12 +130,24 @@ Movie FPS=Filmbildfrequenz
 Input bitrate=Eingangsbitrate
 Output colorspace=Ausgangsfarbraum
 Current frame=Aktuelles Bild
+
+left=links
+center=mittig
+right=rechts
+top=oben
+bottom=unten
 New=Neu
 Save as...=Speichern unter...
-New preset...=Neue Voreinstellung...
-Save preset to...=Voreinstellung speichern unter...
-Rename preset...=Voreinstellung umbenennen...
+Rename preset...=Voreinstellung umbennenen...
 Delete preset=Voreinstellung löschen
+Show on startup=Beim Start anzeigen
+Don't display, only save data to file=Nicht anzeigen, nur Daten nach Datei speichern
+New preset name=Neuer Voreinstellungsname
+Enter new preset name=Geben Sie einen neuen Namen für die Voreinstellung ein
+Startup OSD preset=Start-OSD-Voreinstellung
+Number of frames to show preset=Bildanzahl, für die das OSD angezeigt werden soll
+Preset already exists=Voreinstellung existiert bereits
+Do you really want to delete current OSD preset?=Wollen Sie die aktuelle Voreinstellung wirklich löschen?
 CPU load=Prozessorauslastung
 Input size=Eingangsauflösung
 Output size=Ausgangsauflösung
@@ -146,35 +172,13 @@ Input colorspace=Eingangsfarbraum
 System time=Systemzeit
 Current playing time=Aktuelle Spielzeit
 Remaining time=Verbleibende Zeit
-Movie lenght=Filmlänge
+Movie length=Filmlänge
 Encoder info=Enkoderinformationen
-Short configuration descrprion=Kurze Konfigurationsbeschreibung
+Short configuration description=Kurze Konfigurationsbeschreibung
+AviSynth info=AviSynth-Informationen
+Frame mean quantizer=Mittlerer Bildquantizer
+File where to write statistics=Datei, in die die Statistiken geschrieben werten sollen
 
-
-
-
-
-
-
-
-Movie length=Länge des Films
-Show on startup=Bei Start anzeigen
-Channel=Kanal
-File=Datei
-Output speakers=Ausgabelautsprecher
-Current input bitrate=Aktuelle Eingangsbitrate
-Support DVD decoding=DVD-Dekodierung unterstützen
-broken!=defekt!
-incomplete!=unvollständig!
-may not work without special mpeg splitter=arbeitet unter Umständen nicht ohne einen speziellen Splitter
-currently broken=zur Zeit defekt
-H263, S263 (in 3gp files)=H263, S263 (in 3GP-Dateien)
-AVC1, H264, X264, S264, VSSH (incomplete), DAVC=AVC1, H264, X264, S264, VSSH (unvollständig), DAVC
-H264, X264, VSSH - incomplete, DAVC, AVC1=H264, X264, VSSH (unvollsändig), DAVC, AVC1
-incomplete=unvollständig
-in 3gp files=in 3GP-Dateien
-low accuracy enabled, inform me if you'd notice distortions=Geringe Genauigkeit aktiviert, informieren sie mich, wenn sie Verzerrungen bemerken.
-low accuracy mode enabled for tremor=Geringer Genauigkeitsmodus für Tremor-Dekoder aktiviert
 thin=hauchdünn
 extralight=sehr dünn
 light=dünn
@@ -184,11 +188,38 @@ semibold=etwas dick
 bold=dick
 extrabold=extradick
 heavy=sehr dick
-Action=Aktion
-Key=Taste
-Activation key 1=Aktivierungsschlüssel 1
-Activation key 2=Aktivierungsschlüssel 2
-Second function=Zweite Funktion
+Arabic=Arabisch
+Baltic=Baltisch
+Chinese=Chinesisch
+Cyrillic=Kyrillisch
+Default=Standard
+Easteurope=Osteuropäisch
+Greek=Griechisch
+Hebrew=Hebräisch
+Turkish=Türkisch
+Vietnamese=Vietnamesisch
+Glowing shadow=Glimmender Schatten
+Gradient shadow=Geneigter Schatten
+Classic shadow=Klassischer Schatten
+Disabled=Deaktiviert
+
+and=und
+or=oder
+less than=kleiner als
+greater than=größer als
+
+
+
+
+
+
+
+
+
+
+Output speakers=Ausgabelautsprecher
+low accuracy enabled, inform me if you'd notice distortions=Geringe Genauigkeit aktiviert, informieren sie mich, wenn sie Verzerrungen bemerken.
+low accuracy mode enabled for tremor=Geringer Genauigkeitsmodus für Tremor-Dekoder aktiviert
 Seek forward=Vorwärts spulen
 Seek backward=Rückwärts spulen
 Grab frame=Bild greifen
@@ -199,46 +230,23 @@ Subtitles position increase=Untertitleposition erhöhen
 Decrease video delay=Videoverzögerung verringern
 Increase video delay=Videoverzögerung erhöhen
 Previous preset=voherige Voreinstellung
-Next preset=nächste Voreinstellung
-Preset name=Name der Voreinstellung
 Linear interpolation=Lineare Interpolation
 Linear blending=Lineares Blending
 Cubic interpolation=kubische Interpolation
 Cubic blending=kubische Blending
-Median=Mittel
 Framerate doubler=Bildratenverdoppler
 ffmpeg deinterlacer=ffmpeg-Deinterlacer
 DScaler plugin=DScalerplugin
 Solid fill=sollide Füllung
-Direct=Direkt
 off=aus
 radius:=Radius:
 time:=Zeit:
-independant=independent
 frequency=Frequenz
-color=Farbe
-white=weiß
-black=schwarz
-gray=grau
-size=Größe
-greater than=größer als
-less than=kleiner als
-and=und
-or=oder
-none=keiner
-None=Keine
-Linear=Linear
-Cubic=Kubisch
-line=Zeile
 subtitle=Untertitel
 don't expand=nicht erweitern
-blend=Blend
 darken=Verdunkeln
 lighten=Erhellen
-add=Hinzufügen
-softlight=Softlight
 exclusion=Ausschluss
-auto=Auto
 simple=einfach
 simple MMX=einfaches MMX
 integer=ganzzahlig
@@ -247,10 +255,7 @@ careful=vorsichtig
 compliant=compliant
 aggressive=aggressiv
 very aggressive=sehr aggressiv
-deblock=entblocken
-guess MVS + deblock=guess MVS + entblocken
 constant=konstant
-start=Start
 Preset '%s' will be autoloaded ...=Voreistellung '%s' wird automatisch geladen...
 Audio settings=Audioenstellungen
 3/0 - 3 front=3/0 - 3 vorne
@@ -260,18 +265,6 @@ Audio settings=Audioenstellungen
 same as input=genauso wie Input
 lowpass=Lowpass
 highpass=Highpass
-bandpass=Bandpass
-bandstop=Bandstop
-box=Box
-triangle=Triangle
-hamming=Hamming
-hanning=Hanning
-blackman=Blackman
-flattop=Flattop
-kaiser=Kaiser
-front left=Vorne links
-front center=Mitte vorne
-front right=Vorne rechts
 back left=Hinten links
 back center=Mitte hinten
 back right=Hinte rechts
@@ -281,31 +274,16 @@ one pass - quantizer=1 Durchgang - Quantizer
 two passes - 1st pass=2 Durchgänge - erster Durchgang
 Quality=Quallität
 Quantizer=Quantizer:
-Size (Kbytes)=Größe (Kbytes):
 No settings=Keine Einstellungen
 Greyscale=Graustufen
 Unlimited motion vector=Unbegrentzter Bewegungsvektor
 Sliced structure=aufgeschnittene Strucktur
-Cabac=CABAC
-Left=Links
 interlaced, bottom-field first=interlaced, bottom-field zuerst
 interlaced, top-field first=interlaced, top-field zuerst
 non-interlaced, progressive frame=nicht interlaced, progressives Bild
-DVD=DVD
-User SVCD=User SVCD
-Standard SVCD=Standard-SVCD
-Generic MPEG2=gewöhnliches MPEG-2
-VCD=VCD
-Standard VCD=Standard-VCD
-Generic MPEG1=gewöhnliches MPEG-1
-never=niemals
 after I frames=nach I-Frames
-always=immer
 automatic=Automatisch
-Fastint=FastInt
-disable=deaktivieren
 keep=behalten
-default=Standard
 bilinear (fast and not too bad)=Bilinear (schnell und nich allzu schlecht)
 full (slowest)=Komplett (langsamste)
 approximate=Annähernd
@@ -313,98 +291,21 @@ none (fastest, most ugly)=Keine (schnellste, meistens hässlich)
 Pixel aspect ratio=Pixelseitenverhältnis
 Sample aspect ratio=Sampleseitenverhältnis
 Display aspect ratio=Darstellungsseitenverhältnis
-Use following SIMD instructions (if available):=Folgende SIMD-Instruktionen verwenden (wenn verfügbar):
 libavcodec normal quality=libavcodec - normale Quallität
 libavcodec high quality=libavcodec - hohe Quallität
 libavcodec highest quality=libavcodec - höchste Quallität
-any filter=jedem Filter
 high detail=hohe Details
 smooth=weich
-temporal=zeitlich
-left=links
-center=Mitte
-right=rechts
-top=oben
-bottom=unten
-original=Original
-Ansi=ANSI
-Shiftjis=ShiftJIS
-tab=Tab
-enter=Enter
-shift=Shift
-ctrl=Ctrl
-alt=Alt
-caps lock=Caps Lock
-esc=Esc
-space=Space
-page up=Seite hoch
-page down=Seite runter
-end=Ende
-home=Home
-left arrow=linker Pfeil
-up arrow=Pfeil nach oben
-right arrow=rechter Pfeil
-down arrow=Pfeil nach unten
-insert=Insert
-delete=löschen
-left win=Left Win
-right win=Right Win
-menu key=Menu Key
-numpad 0=Numpad 0
-numpad 1=Numpad 1
-numpad 2=Numpad 2
-numpad 3=Numpad 3
-numpad 4=Numpad 4
-numpad 5=Numpad 5
-numpad 6=Numpad 6
-numpad 7=Numpad 7
-numpad 8=Numpad 8
-numpad 9=Numpad 9
-numpad *=Numpad *
-numpad +=Numpad +
-numpad -=Numpad -
-numlock=Numlock
-Version=Version
-Library=Laufzeitbibliothek
-English (may work with other languages)=English (funktioniert u.U. nicht mit \nanderen Sprachen)
-Rename=Umbenennen
 Interlaced encoding=Interlactes Encoding
 Top field first (for intelaced encoding only)=Top-field zuerst (nur für interlactes Encoding)
 Top field first (for interlaced encoding only)=Top-field zuerst (nur für interlactes Encoding)
-Reset=Zurücksetzten
-Edit=Bearbeiten
-curve=Curve
 when decoding H.264 video=wenn H.264 dekodiert wird
 when decoding H.264 video and decoder deblocking is off=wenn H.264 dekodiert wird und Decoderentblockung deaktiviert ist
-H.264 deblocking disables all other deblocking methods=H.264-Entblockung deaktivier alle anderen Entblockungsmethoden.
-closest=Ähnlichstes
-Deutsch
-ffdshow video decoder=ffdshow-Videodecoder
-ffdshow video decoder configuration=ffdshow-Videodecoder-Konfiguration
-Thank you!=Danke!
-Default=Standard
-Chinese=Chinesisch
-Hebrew=Hebreisch
-Arabic=Arabisch
-Greek=Griechisch
-Turkish=Türkisch
-Vietnamese=Vietnamesisch
-Thai=Thaiwanesisch
-Easteurope=Osteuropäisch
-Cyrillic=Cyrillisch
-Baltic=Baltisch
-French=Französisch
-Czech=Chechisch
-Italian=Italienisch
-Polish=Polnisch
-Enter 0 for Auto=0 für Auto eingeben:
+H.264 deblocking disables all other deblocking methods=H.264-Entblockung deaktivier alle anderen Entblockungsmethoden.Enter 0 for Auto=0 für Auto eingeben:
 Set vertical size 0 for Auto=Setze Vertikale Größe für Auto auf:
 press key=Taste drücken
-Blur:=Unschärfe:
 Opposite=Entgegengesetzt
 No=keiner
-luma:=Luminanz:
-chroma:=Chroma:
 fast 1-pass=schnell, ein Durchgang
 high quality 3-pass=hohe Quallität, drei Durchgänge
 fast 3-pass=schnell, drei Durchgänge
@@ -413,18 +314,8 @@ swscaler gaussian=Gaußischer swscaler
 Sample frequency=Frequenz des Sampels
 Number of channels=Anzahl der Kanäle
 Sample format=Format des Sampels
-From default=Vom Standard
-From selected=Von Markiertem
-From file...=Von Datei...
-ffdshow audio decoder=ffdshow-Audiodecoder
-ffdshow video encoder=ffdshow-Videoencoder
 Raw frames=Rohbilder
 OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
-8 bits=8-bits
-9 bits=9-bits
-10 bits=10-bits
-11 bits=11-bits
-Custom=Benutzerdefiniert
 
 
 
@@ -444,7 +335,7 @@ Custom=Benutzerdefiniert
 
 [101]
 1836=Spenden
-1835=Alle Enstellungen exportieren
+1835=Alle Einstellungen exportieren
 2=Abbrechen
 3=Übernehmen
 
@@ -467,7 +358,7 @@ Custom=Benutzerdefiniert
 [295]
 0=ffdshow-Kompatibilitätsmanager
 2041=Die Anwendung "
-2042=" hat den Versuch unternommen ffdshow zu laden.\r\nDieser Dialog wird gezeigt, da die Anwendung weder in ffdshows Whitelist, noch seiner Blacklist aufgeführt ist. Ihre Wahl wird sowohl für Audio as auch für Video angewandt werden, falls beide verwandt werden.
+2042=" hat den Versuch unternommen ffdshow zu laden.\r\nDieser Dialog wird gezeigt, da die Anwendung weder in ffdshows Whitelist, noch seiner Blacklist aufgeführt ist.\r\nIhre Wahl wird sowohl für Audio as auch für Video angewandt werden, falls beide verwandt werden.
 2045=ffdshow nicht verwenden. (Nur dieses Mal)
 2046=ffdshow nicht verwenden. (Immer)
 2047=ffdshow verwenden. (Nur dieses Mal)
@@ -487,40 +378,77 @@ Custom=Benutzerdefiniert
 1493=Speichern unter:
 1491=Benutzer:
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-[115]
-0=Codecs
-1837=Formatoptionen
-1838=Formatoptionen
-
 [132]
 0=Schriftart
 1259=Schriftart
+1108=Dicke:
+1124=Farbe:
+1827=Schnelles Rendern
+1335=Größe automatisch anpassen
 1110=Größe:
 1116=Abstand:
-1114=Zeichensatz
-1108=Schnitt
-1124=Farbe
-1118=Schattenstärke:
-1130=Schattenabstand:
-1335=Größe automatisch anpasssen
-1120=Breite:
-1143=Abstand - Abstand zwischen Zeichen\r\nSchattenstärke - Zeichen sind undurchsichtig, wenn auf 100 gesetzt\r\nBreite - die meisten Schriftarten unterstützen nur eine geringe Menge notierter Breiten
+1120=Schriftbreite:
+1114=Zeichensatz:
+1118=Umrandungsstärke:
+1130=Umrandungsradius:
+1978=Schattenmodus:
+1981=Schattentransparenz:
+1980=Schattengröße:
+1143=Abstand - Abstand zwischen Zeichen\r\nUmrandungsstärke - Wenn auf 100 gesetzt, ist der Zeichenhintergrund nicht transparent.\r\nDicke - Die meisten Schriftarten unterstützen nur einen kleinen Teil der gelisteten Dicken.
+
+[136]
+0=Tray, Dialog & Pfade
+1257=Traysymbole
+2019=Traysymbole:
+2016=Keine
+2017=Moderne
+2018=Klassische
+1074=Erweiterte Informationen
+1073=Traysymbol-Menü zum Stream-/Sprachmenü des Players hinzufügen
+1258=Dialog konfigurieren
+1071=Position wierderherstellen
+1072=Hinweise anzeigen
+1293=Sprache:
+1259=Pfade:
+1143=Traysymbol\r\n Zeigt Symbol im Systemtray an\r\n Doppelklick zeigt Konfigurationsdialog\r\n Rechtsklick zeigt Menü mit Basiseinstellungen\r\n
+
+[133]
+0=Größe & Seitenverhältnis
+1083=Größenänderung
+1986=Horizontale und vertikale Größe angeben
+1987=Horizontale Größe angeben
+1285=Neue Größe
+1186=Seitenverhältnis angeben
+1286=Verhältnis
+1187=Erweitern auf nächstes Vielfaches von
+1540=Multipizieren mit
+1189=Größe ändern, falls...
+1191=Größe ändern, falls Pixelanzahl...
+1188=Größe immer ändern
+1988=Pixelseitenverhältnis intern verarbeiten
+1289=Seitenverhältnis
+1100=Keine Korrektur des Seitenverhältnisses
+1101=Ursprüngliches Seitenverhältnis beibehalten
+1102=Manuell:
+1234=Seitenverhältnis des Overlays:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 [136]
 0=Benachrichtungs- & Dialogeinstellungen
@@ -699,34 +627,6 @@ Custom=Benutzerdefiniert
 1126=Vertikale Position:
 1280=Verzögerung:
 1281=Geschwindigkeit:
-
-[133]
-0=Größe & Seitenverhältnis
-1083=Größenanpassung
-1185=Größe angeben
-1285=Neue Größe
-1186=Seitenverhältnis angeben
-1286=Seitenverhältnis
-1187=Auf Vielfaches von 16 erweitern
-1189=Anpassen, wenn...
-1287=x
-1190=und
-1288=y
-1191=Anpassen, wenn Anzahl der Pixel...
-1192=größer als
-1188=Immer anpassen
-1289=Seitenverhältnis
-1100=Keine SV-Korrektur
-1101=Benutze SV des Originals
-1102=SV manuell einstellen:
-1290=Schwarze Ränder
-1201=Horizontal
-1200=Vertikal
-1199=Einrasten
-1234=Seitenverhältnis des Overlays:
-1540=Multiplizieren mit:
-1988=Pixelseitenverhältnis intern verarbeiten
-1987=Horizontale Größe definieren
 
 [138]
 0=Einstellungen

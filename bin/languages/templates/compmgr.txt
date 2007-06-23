@@ -1,4 +1,5 @@
 ;Translation template for compatibilitiy manager
+
 [-1]
 ffdshow will behave as if it were not installed.=
 ffdshow will behave as if it were not installed.\r\nThe application will be added to "DirectShow control"->"Don't use ffdshow in".=
@@ -18,5 +19,5 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 2045=Don't use ffdshow. (just this once)
 2046=Don't use ffdshow. (always)
 2047=Use ffdshow. (just this once)
-2048=Use ffdshow. (always)ÅB
+2048=Use ffdshow. (always)
 2049=Explanation

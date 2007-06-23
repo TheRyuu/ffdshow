@@ -30,8 +30,6 @@
 //=================================== TdirectshowControlPageDec =======================================
 void TdirectshowControlPageDec::init(void)
 {
- addHint(IDC_CHB_ADDTOROT,_l("Use with care - can cause ffdshow to not unload after closing the movie."));
-
  static const int insts[]={IDC_LBL_MULTIPLE_INSTANCES,IDC_CBX_MULTIPLE_INSTANCES,0};
  enable((filterMode&IDFF_FILTERMODE_VFW)==0,insts);
 
