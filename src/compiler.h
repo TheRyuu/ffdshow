@@ -7,7 +7,9 @@
 #endif
 
 #if defined(__INTEL_COMPILER)
-  #if __INTEL_COMPILER  >= 900
+  #if __INTEL_COMPILER  >= 1000
+    #define COMPILER "icl 10"
+  #elif __INTEL_COMPILER  >= 900
     #define COMPILER "icl 9"
   #elif __INTEL_COMPILER  >= 800
     #define COMPILER "icl 8"
