@@ -1145,6 +1145,7 @@ void TimgFilterAvisynth::done(void)
 {
  if (avisynth) delete avisynth; avisynth=0;
  if (input) delete input; input=0;
+ if (outFmtInput) delete outFmtInput; outFmtInput=0;
 }
 
 void TimgFilterAvisynth::onSizeChange(void)
