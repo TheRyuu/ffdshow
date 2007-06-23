@@ -1006,6 +1006,8 @@ TglobalSettingsDecAudio::TglobalSettingsDecAudio(const Tconfig *Iconfig,int Imod
      _l("dtsinwav"),1,
    IDFF_vorbisgain             ,&TglobalSettingsDecAudio::vorbisgain             ,0,0             ,_l(""),0,
      _l("vorbisgain"),0,
+   IDFF_ac3SPDIF               ,&TglobalSettingsDecAudio::ac3SPDIF               ,0,0             ,_l(""),0,
+     _l("ac3SPDIF"),0,
    0
   };
  addOptions(iopts);

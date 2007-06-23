@@ -61,6 +61,7 @@
 #define IDFF_streamsOptionsMenu   75
 #define IDFF_dvdproc              76
 #define IDFF_ac3drc               79
+#define IDFF_ac3SPDIF             3386
 #define IDFF_dtsdrc               80
 #define IDFF_supDVDdec            81
 //#define IDFF_neroavc              82
@@ -1404,6 +1405,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3386
+//max:3387
 
 #endif
