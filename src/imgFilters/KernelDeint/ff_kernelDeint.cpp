@@ -217,6 +217,10 @@ public:
   {
    delete this;
   }
+ STDMETHODIMP_(void) setOrder(int order)
+  {
+   this->order=order;
+  }
 private:
  enum {PLANAR_Y=0,PLANAR_U=1,PLANAR_V=2};
  int framenum;

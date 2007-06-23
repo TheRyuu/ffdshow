@@ -272,26 +272,29 @@ HRESULT TimgFilterKernelDeint2::process(TfilterQueue::iterator it,TffPict &pict,
    else
     cspChanged|=getNext(csp1,pict,cfg->full,dst);
    int order=pict.fieldtype&FIELD_TYPE::INT_BFF?0:1;if (cfg->swapfields) order=1-order;
-   if (cspChanged || oldOrder!=order)
+
+   if (cspChanged)
     done();
 
    if (!kernel)
-    {
-     oldOrder=order;
-     kernel=createI(csp1&FF_CSP_420P,dx1[0],dy1[0],dx1[0]*pict.cspInfo.Bpp,order,cfg->kernelThreshold,!!cfg->kernelSharp,!!cfg->kernelTwoway,!!cfg->kernelLinked,!!cfg->kernelMap,bob,parent->config->cpu_flags,TffPict::copy);
-    }
+    kernel=createI(csp1&FF_CSP_420P,dx1[0],dy1[0],dx1[0]*pict.cspInfo.Bpp,order,cfg->kernelThreshold,!!cfg->kernelSharp,!!cfg->kernelTwoway,!!cfg->kernelLinked,!!cfg->kernelMap,bob,parent->config->cpu_flags,TffPict::copy);
+   else if (oldOrder != order)
+    kernel->setOrder(order);
+
+   oldOrder=order;
+
    pict.fieldtype=FIELD_TYPE::PROGRESSIVE_FRAME;
    if (bob)
     {
      kernel->getFrame(src,stride1,dst,stride2,0);
      TffPict pict0=pict;
      REFERENCE_TIME rtDur=pict.rtStop-pict.rtStart;
-     pict0.rtStop=pict.rtStart+rtDur-1;
+     pict0.rtStop=pict.rtStart+rtDur/2;
 
      parent->deliverSample(++it,pict0);
      --it;
      getNext(csp1,pict,cfg->full,dst);
-     pict.rtStart=pict.rtStart+rtDur;
+     pict.rtStart=pict.rtStart+rtDur/2;
     }
    kernel->getFrame(src,stride1,dst,stride2,bob?1:0);
   }
