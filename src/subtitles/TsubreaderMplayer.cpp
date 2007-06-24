@@ -511,7 +511,10 @@ template<class tchar> void TsubtitleParserSSA<tchar>::Tstyle::toProps(void)
    props.color=color;
    props.isColor=true;
   }
- if (bold==_L("-1")) props.bold=true;
+ if (bold==_L("-1"))
+  props.bold=true;
+ else
+  props.bold=false;
  if (italic==_L("-1")) props.italic=true;
  if (underline==_L("-1")) props.underline=true;
  if (strikeout==_L("-1")) props.strikeout=true;
@@ -556,7 +559,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
  tchar *line=line0;
  while (fd.fgets(line,this->LINE_LEN))
   {
-#if 1
+#if 0
    text<char_t> lineD0(line);
    const char_t* lineD1=(const char_t*)lineD0;
    DPRINTF(_l("%s"),lineD1);
