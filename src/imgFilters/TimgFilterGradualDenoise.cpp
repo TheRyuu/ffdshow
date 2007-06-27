@@ -31,6 +31,8 @@ template<class _mm> void TimgFilterGradualDenoise::denoise(int gradualStrength,u
    denoise<typename _mm::T64>(gradualStrength,dx1,dy1,srcY,stride1,dstY,stride2);
    return;
   }
+ const unsigned char *srcY0=srcY;
+ unsigned char *dstY0=dstY;
  unsigned int cycles=dx1&~(_mm::size-1);
  __int64 noiseMultiplier64=(0x10000+(gradualStrength/2))/gradualStrength;
  __align16(__int64,noiseMultiplier_2[2])={noiseMultiplier64,noiseMultiplier64};
@@ -87,7 +89,7 @@ template<class _mm> void TimgFilterGradualDenoise::denoise(int gradualStrength,u
    }
  _mm::empty();
  if (dx1&(_mm::size-1))
-  TffPict::copy(dstY+cycles,stride2,srcY+cycles,stride1,dx1&7,dy1);
+  TffPict::copy(dstY0+cycles,stride2,srcY0+cycles,stride1,dx1&(_mm::size-1),dy1);
 }
 
 TimgFilterGradualDenoise::TimgFilterGradualDenoise(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
