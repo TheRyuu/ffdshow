@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1296
+#define tryout_revision = 1322
 #define buildyear = 2007
 #define buildmonth = '06'
-#define buildday = '17'
+#define buildday = '27'
 
 ; Build specific options
 #define unicode_required = True
@@ -1093,9 +1093,11 @@ begin
   end else begin
     complist.edt.Text :=
     'ACDSee5.exe'#13#10
+    'ACDSee9.exe'#13#10
     'Adobe Premiere Elements.exe'#13#10
     'Adobe Premiere Pro.exe'#13#10
     'aegisub.exe'#13#10
+    'afreecaplayer.exe'#13#10
     'aim6.exe'#13#10
     'ALLPlayer.exe'#13#10
     'ALShow.exe'#13#10
@@ -1111,6 +1113,7 @@ begin
     'aviutl.exe'#13#10
     'Badak.exe'#13#10
     'BePipe.exe'#13#10
+    'BitComet.exe'#13#10
     'bplay.exe'#13#10
     'bsplay.exe'#13#10
     'bsplayer.exe'#13#10
@@ -1118,6 +1121,7 @@ begin
     'carom.exe'#13#10
     'christv.exe'#13#10
     'CodecInstaller.exe'#13#10
+    'coolpro2.exe'#13#10
     'CorePlayer.exe'#13#10
     'coreplayer.exe'#13#10
     'Crystal.exe'#13#10
@@ -1134,6 +1138,7 @@ begin
     'DScaler.exe'#13#10
     'dv.exe'#13#10
     'dvbviewer.exe'#13#10
+    'DVDAuthor.exe'#13#10
     'DVDMF.exe'#13#10
     'dvdplay.exe'#13#10
     'DVDMaker.exe'#13#10
@@ -1171,6 +1176,7 @@ begin
     'iPlayer.exe'#13#10
     'i_view32.exe'#13#10
     'JetAudio.exe'#13#10
+    'jwBrowser.exe'#13#10
     'kmplayer.exe'#13#10
     'LA.exe'#13#10
     'Lilith.exe'#13#10
@@ -1208,10 +1214,12 @@ begin
     'pcwmp.exe'#13#10
     'PhotoScreensaver.scr'#13#10
     'Photoshop.exe'#13#10
+    'Picasa2.exe'#13#10
     'playwnd.exe'#13#10
     'PowerDirector.exe'#13#10
     'powerdvd.exe'#13#10
     'POWERPNT.EXE'#13#10
+    'PPLive.exe'#13#10
     'ppmate.exe'#13#10
     'PPStream.exe'#13#10
     'Procoder2.exe'#13#10
@@ -1250,12 +1258,14 @@ begin
     'TVUPlayer.exe'#13#10
     'Ultra EDIT.exe'#13#10
     'VCD_PLAY.EXE'#13#10
+    'VeohClient.exe'#13#10
     'VideoSnapshot.exe'#13#10
     'VideoSplitter.exe'#13#10
     'ViPlay3.exe'#13#10
     'virtualdub.exe'#13#10
     'virtualdubmod.exe'#13#10
     'WCreator.exe'#13#10
+    'WFTV.exe'#13#10
     'winamp.exe'#13#10
     'WinAVI.exe'#13#10
     'windvd.exe'#13#10
@@ -1464,7 +1474,19 @@ begin
   compApps[138].name := 'QQPlayerSvr.exe';
   compApps[139].name := 'Shareaza.exe';
 
-  compApps[140].rev  := 0;
+  compApps[140].rev  := 1322;
+  compApps[140].name := 'afreecaplayer.exe';
+  compApps[141].name := 'WFTV.exe';
+  compApps[142].name := 'coolpro2.exe';
+  compApps[143].name := 'PPLive.exe';
+  compApps[144].name := 'Picasa2.exe';
+  compApps[145].name := 'VeohClient.exe';
+  compApps[146].name := 'ACDSee9.exe';
+  compApps[147].name := 'BitComet.exe';
+  compApps[148].name := 'jwBrowser.exe';
+  compApps[149].name := 'DVDAuthor.exe';
+
+  compApps[150].rev := 0;
 
 // Compatibility list
   ComplistVideo.skipped := False;

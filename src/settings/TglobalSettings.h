@@ -125,7 +125,17 @@
           _l("mpcstar.exe\r\n")\
           _l("PhotoScreensaver.scr\r\n")\
           _l("QQPlayerSvr.exe\r\n")\
-          _l("Shareaza.exe\r\n")
+          _l("Shareaza.exe\r\n")\
+          _l("afreecaplayer.exe\r\n")\
+          _l("WFTV.exe\r\n")\
+          _l("coolpro2.exe\r\n")\
+          _l("PPLive.exe\r\n")\
+          _l("Picasa2.exe\r\n")\
+          _l("VeohClient.exe\r\n")\
+          _l("ACDSee9.exe\r\n")\
+          _l("BitComet.exe\r\n")\
+          _l("jwBrowser.exe\r\n")\
+          _l("DVDAuthor.exe\r\n")
 
 #define BLACKLIST_EXE_FILENAME _l("explorer.exe;oblivion.exe;morrowind.exe")
 
