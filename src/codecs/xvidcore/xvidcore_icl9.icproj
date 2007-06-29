@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject 
 	ProjectType="Intel C++ Project"
-	Version="9.1"
+	Version="10.0"
 	Name="xvidcore_icl9"
 	ProjectGUID="{CC0E5A80-985F-46D8-A27C-E315836F8948}"
 	VCNestedProjectGUID="{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}"
+	VCNestedProjectCRC32="2169373928"
 	VCNestedProjectFileName="xvidcore_icl9.vcproj"
 	Keyword="Win32Proj">
 	<Configurations>
@@ -16,8 +17,6 @@
 				IntermediateDirectory="debug_icl9"
 				ConfigurationType="2"
 				CharacterSet="0"/>
-			<Tool 
-				Name="DebugTool"/>
 			<Tool 
 				Name="CppCmplrTool"
 				Optimization="0"
@@ -75,8 +74,6 @@
 				CharacterSet="0"
 				WholeProgramOptimization="0"/>
 			<Tool 
-				Name="DebugTool"/>
-			<Tool 
 				Name="CppCmplrTool"
 				GlobalOptimizations="1"
 				InlineFunctionExpansion="2"
@@ -96,7 +93,7 @@
 				CompileAs="1"
 				DisableSpecificWarnings="4002;4244;4005"
 				AdditionalOptions="/QaxKWNPB"
-				Parallelization="1"/>
+				Parallelization="0"/>
 			<Tool 
 				Name="LinkerTool"
 				DelayImpLib=""

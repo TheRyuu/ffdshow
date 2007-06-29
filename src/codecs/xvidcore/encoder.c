@@ -49,7 +49,7 @@
 #include "quant/quant_matrix.h"
 #include "utils/mem_align.h"
 
-#include "motion/motion_smp.h"
+# include "motion/motion_smp.h"
 
 
 /*****************************************************************************
