@@ -71,7 +71,7 @@ void TcompatibilityManager::setcaption(void)
  ffstring caption(capt);
  if (time>=0)
   {
-   const char_t *time_msg1=_(-IDD_COMPATIBILITY_MANAGER,_l("(This dailog will close in"));
+   const char_t *time_msg1=_(-IDD_COMPATIBILITY_MANAGER,_l("(This dialog will close in"));
    const char_t *time_msg2=_(-IDD_COMPATIBILITY_MANAGER,_l("seconds.)"));
    char_t time_num[20];
    tsprintf(time_num,_l(" %d "),(TCOMPATIBILITYMANAGER_TIMEOUT-time)/10);

@@ -513,6 +513,11 @@ public:
  virtual void init(void) {}
  virtual void cfg2dlg(void) {}
 
+ bool resized;
+ void resizeDialog();
+ void resizeDialog(HWND hwnd);
+ static void resizeDialog(HWND hwnd, bool relative,int scale);
+
  bool wndEnabled;
  bool enable(void)
   {

@@ -1,28 +1,28 @@
 German
 
 [Font]
-typeface9x=Times New Roman
-typefaceNT=Times New Roman
-pointsize9x=9
-pointsizeNT=9
+;typeface9x=Times New Roman
+;typefaceNT=Times New Roman
+;pointsize9x=9
+;pointsizeNT=9
+horizontalScale9x=125
+horizontalScaleNT=125
 
 [-1]
-ffdshow video decoder configuration=ffdshow-Videodekoder-Konfiguration
+ffdshow video decoder configuration=ffdshow-Videodecoder-Konfiguration
 Thank you!=Danke!
-
 Set all stable formats to libavcodec=Alle stabilen Formate auf libavcodec setzen
 Set all supported formats to Xvid=Alle unterstützen Formate auf Xvid setzen
-Decoder=Dekoder
 Supported FOURCCs/remarks=Unterstützte FOURCCs/Anmerkungen
-skip deblocking when safe=Deblocking, wenn sicher, überspringen
+skip deblocking when safe=Deblocking wenn möglich überspringen
 skip deblocking always=Deblocking immer überspringen
 H264, X264, VSSH (incomplete), DAVC, PAVC, AVC1=H264, X264, VSSH (unvollständing), DAVC, PAVC, AVC1
 Other MPEG4=Anderes MPEG4
 ffdshow and ffvfw internal FOURCCs=ffdshows und ffvfws interne FOURCCs
 H263, L263, M263, U263, X263, S263 (in 3gp files)=H263, L263, M263, U263, X263, S263 (in 3gp-Dateien)
-Flash Video (FLV1)=Flashvideo (FLV1)
+Flash Video (FLV1)=Flash-Video (FLV1)
 Internal postprocessing=Interne Nachbearbeitung
-Theora Video (THEO)=Theoravideo (THEO)
+Theora Video (THEO)=Theora-Video (THEO)
 VP3 Video (VP31)=VP3-Video (VP31)
 VP5 Video (VP50)=VP5-Video (VP50)
 VP6 Video (VP60, VP61, VP62)=VP6-Video (VP60, VP61, VP62)
@@ -32,18 +32,18 @@ MPEG1 codec=MPEG1-Codec
 DVD decoding (not working yet)=DVD-Dekodierung (funktioniert noch nicht)
 MPEG2 codec=MPEG2-Codec
 Other MPEG2=Anderes MPEG2
-Windows Media Video 9 Simple & Main Profiles (WMV3)=Windows Media Video 9 einfache & Hauptprofile (WMV3)
+Windows Media Video 9 Simple & Main Profiles (WMV3)=Windows Media Video 9 einfaches & Haupt-Profil (WMV3)
 Windows Media Video 9 Advanced Profile (WVC1)=Windows Media Video 9 erweitertes Profil (WVC1)
 Windows Media Video 9 Image (WMVP, WVP2)=Windows Media Video 9 Bild (WMVP, WVP2)
 Windows Screen Codecs (MSS1, MSS2)=Windows Bildschirmcodecs (MSS1, MSS2)
 Huffyuv codec for libavcodec (HFYU, FFVH)=Huffyuv-Codec für libavcodec (HFYU, FFVH)
 MJPG, LJPG (lossless)=MJPG, LJPG (verlustfrei)
 Other MJPEG=Anderes MJPEG
-Sorenson Video (SVQ1)=Sorensonvideo (SVQ1)
-Sorenson Video (SVQ3)=Sorensonvideo (SVQ3)
-Quicktime Planar RGB Video (8BPS)=Reines Quicktime-RGB-Video (8BPS)
+Sorenson Video (SVQ1)=Sorenson-Video (SVQ1)
+Sorenson Video (SVQ3)=Sorenson-Video (SVQ3)
+Quicktime Planar RGB Video (8BPS)=Reines Quicktime RGB-Video (8BPS)
 Quicktime Animation Video (QTRLE)=Quicktime-Animationsvideo (QTRLE)
-Quicktime Video Video (QRPZA)=Quicktime-Videovideo (QRPZA)
+Quicktime Video Video (QRPZA)=Quicktime Video-Video (QRPZA)
 FFV1 codec for libavcodec (FFV1)=FFV1-Codec für libavcodec (FFV1)
 Other DV=Anderes DV
 CamStudio Video (CSCD)=CamStudio-Video (CSCD)
@@ -52,41 +52,41 @@ LCL LossLess Codec Library (MSZH)=LCL verlustfreie Codecbibliothek (MSZH)
 ZLIB LossLess Codec Library (ZLIB)=ZLIB verlustfreie Codecbibliothek (ZLIB)
 Chinese AVS=Chinesisches AVS
 Chinese AVS video (AVS1-P2, JiZhun profile)=Chinesisches AVS-Video (AVS1-P2, JiZhun-Profil)
-Creative YUV Video (CYUV)=Creative-YUV-Video (CYUV)
+Creative YUV Video (CYUV)=Creative YUV-Video (CYUV)
 Real Video (RV10, RV20, incomplete)=Real-Video (RV10, RV20, unvollständig)
 MS RLE Video (MRLE)=MS RLE-Video (MRLE)
 Doesn't support 24-bit compression.=Unterstützt keine 24-bit Kompression.
-IBM Ultimotion Video (ULTI)=IBM Ultimotionvideo (ULTI)
-Winnov WNV1 Video (WNV1)=Winnov-WNV1-Video (WNV1)
+IBM Ultimotion Video (ULTI)=IBM Ultimotion-Video (ULTI)
+Winnov WNV1 Video (WNV1)=Winnov WNV1-Video (WNV1)
 experimental=experimentell
-AVIS (AviSynth AVI files)=AVIS (AviSynth-AVI-Dateien)
+AVIS (AviSynth AVI files)=AVIS (AviSynth AVI-Dateien)
 disabled=deaktiviert
 Raw video=Unkomprimiertes Video
-all supported=alle unterstützen
+all supported=alle unterstützten
 all YUV=alle YUV
 all RGB=alle RGB
-8-bit palletized=8-bit palletiert
+8-bit palletized=8-bit Farbpalette
 Dynamic range compression=Dynamikkompression
-ATSC A-52 stream decoder=ATSC-A-52-Streamdekoder
+ATSC A-52 stream decoder=ATSC A/52-Streamdecoder
 Check for DTS in WAV=Auf DTS in WAV prüfen
-DTS Coherent Acoustics stream decoder=DTS-Coherent-Acoustics-Streamdekoder
-High accuracy mode is enabled for tremor.=Hockakkurater Modus ist für tremor aktiviert.
+DTS Coherent Acoustics stream decoder=DTS Coherent Acoustics-Streamdecoder
+High accuracy mode is enabled for tremor.=Hockakkurater Modus ist für Tremor aktiviert.
 Adaptive Multi-Rate in 3gp files (AMR)=Adaptive Multi-Rate in 3gp-Dateien (AMR)
 enabled=aktiviert
-Windows Media Audio compatible decoder=Windows Media Audio-kompatibler Dekoder
-not WMA9 pro, voice or lossless=nicht WMA9 pro, Stimme oder verlustfrei
+Windows Media Audio compatible decoder=Windows Media Audio-kompatibler Decoder
+not WMA9 pro, voice or lossless=Nicht WMA9 pro, Stimme oder verlustfrei
 MS Adaptive DPCM=MS adaptives DPCM
 IMA Adaptive DPCM=IMA adaptives DPCM
 Other ADPCM=Anderes ADPCM
 MS GSM Audio=MS GSM-Audio
 FLAC (Free Lossless Audio Codec);To play .flac files you also need a source filter.=FLAC (Free Lossless Audio Codec); Um .flac-Dateien abzuspielen wird ein zusätzlicher Quellfilter benötigt.
 TTA (Lossless Audio Codec);To play .tta files you also need a source filter.=TTA (verlustfreier Audiocodec); Um .tta-Dateien abzuspielen wird ein zusätzlicher Quellfilter benötigt.
-DSP Group TrueSpeech compatible decoder=DSP-Group-TrueSpeech-kompatibler Dekoder
-QDM2 compatible decoder (incomplete)=QDM2-kompatibler Dekoder (unvollständig)
+DSP Group TrueSpeech compatible decoder=DSP Group TrueSpeech-kompatibler Decoder
+QDM2 compatible decoder (incomplete)=QDM2-kompatibler Decoder (unvollständig)
 Macintosh Audio Compression/Expansion=Macintosh Audiokompression/Erweiterung
-IMC compatible decoder=IMC-kompatibler Dekoder
-ATRAC3 compatible decoder=ATRAC3-kompatibler Dekoder
-all integer=alle Ganzzahligen
+IMC compatible decoder=IMC-kompatibler Decoder
+ATRAC3 compatible decoder=ATRAC3-kompatibler Decoder
+all integer=alle ganzzahligen
 all float=alle fließkomma
 8-bit integer=8-bit ganzzahlig
 16-bit integer=16-bit ganzzahlig
@@ -94,43 +94,39 @@ all float=alle fließkomma
 32-bit integer=32-bit ganzzahlig
 32-bit float=32-bit fließkomma
 64-bit float=64-bit fließkomma
-Uncompressed=Unkompriemiert
-
+Uncompressed=Unkomprimiert
 do not use=nicht verwenden
 unlikely=unwahrscheinlich
 preferred=bevorzugt
 ffdshow default=ffdshow-Standard
 very high=sehr hoch
 no limitations=keine Begrenzung
-only one - check previous filter only=nur eine - nur voheringen Filter überprüfen
-only one - check all previous filters=nur eine - alle voheringen Filter überprüfen
-only one - check all filters in graph=nur eine - alle Filter im Graf überprüfen
+only one - check previous filter only=nur eine - nur vorherigen Filter überprüfen
+only one - check all previous filters=nur eine - alle vorherigen Filter überprüfen
+only one - check all filters in graph=nur eine - alle Filter im Graphen überprüfen
 none - disabled=keine - deaktiviert
-List of applications for which ffdshow should not load, separated by semicolons=Liste von Anwendungen für die ffdshow nicht laden sollte, getrennt durch Semikola.
+List of applications for which ffdshow should not load, separated by semicolons.=Liste von Anwendungen die ffdshow nicht laden sollen, getrennt durch Semikola.
 List of applications which are compatible with ffdshow, separated by semicolons.=Liste von Anwendungen die kompatibel zu ffdshow sind, getrennt durch Semikola.
-
-Add compatible executable file=Kompadible Anwendung hinzufügen
-Add incompatible executable file=Inkompadible Anwendung hinzufügen
+Add compatible executable file=Kompatible Anwendung hinzufügen
+Add incompatible executable file=Inkompatible Anwendung hinzufügen
 Are you sure?=Sind Sie sicher?
 Load default settings=Standardeinstellungen laden
 List the names of executable files which are incompatible with ffdshow or which you don't want to use ffdshow, one for each line.=Listen Sie die Namen ausführbarer Dateien, welche inkompatibel zu ffdshow sind oder welche ffdshow nicht verwenden sollen - pro Zeile einen.
-(This dailog will close in=(Dieser Dialog wird sich in
-seconds.)=Sekunden schließen.)
+(This dialog will close in=(schließt in
+seconds.)=Sekunden von selbst)
 ffdshow will behave as if it were not installed.=ffdshow wird sich verhalten, als wäre es es nicht installiert.
 ffdshow will behave as if it were not installed.\r\nThe application will be added to "DirectShow control"->"Don't use ffdshow in".=ffdshow wird sich verhalten, als wäre es es nicht installiert.\r\nDie Anwendung wird zu "DirectShow-Optionen"->"ffdshow nicht verwenden in" hinzugefügt werden.
-ffdshow will be used if it is set to decode a format.=ffdshow wird verwandt werden, falls es eingestellt wurde ein Format zu dekodieren.
-ffdshow will be used if it is set to decode a format.\r\nThe application will be added to "DirectShow control"->"Use ffdshow only in".=ffdshow wird verwandt werden, falls es eingestellt wurde ein Format zu dekodieren.\r\nDie Anwendung wird zu "DirectShow-Optionen"->"ffdshow nur verwenden in" hinzugefügt werden.
-ffdshow won't be used in unknown applications.\r\nTo enable this dialog again, check "DirectShow control"->"Show dialog when an unknown application tries to load ffdshow".=ffdshow wird nicht in unbekannten Anwendungen verwandt werden.\r\nUm diesen Dialog erneut zu aktivieren, kreuzen Sie "DirectShow-Optionen"->"Dialog anzeigen, wenn eine unbekannte Anwendung versucht ffdshow zu laden" an.
-Thank you. We are gathering the list of compatible applications. Please send us the exe file name of this application and help us improving ffdshow.=Vielen Dank. Wir erarbeiten eine Liste kompatibler Anwendungen. Bitte senden Sie uns den Dateinamen dieser Anwendung und helfen Sie uns ffdshow zu verbessern.
-
+ffdshow will be used if it is set to decode a format.=ffdshow wird verwendet werden falls es als Decoder für ein Format gewählt wurde.
+ffdshow will be used if it is set to decode a format.\r\nThe application will be added to "DirectShow control"->"Use ffdshow only in".=ffdshow wird verwendet werden falls es als Decoder für ein Format gewählt wurde.\r\nDie Anwendung wird zu "DirectShow-Optionen"->"ffdshow nur verwenden in" hinzugefügt werden.
+ffdshow won't be used in unknown applications.\r\nTo enable this dialog again, check "DirectShow control"->"Show dialog when an unknown application tries to load ffdshow".=ffdshow wird nicht in unbekannten Anwendungen verwendet werden.\r\nUm diesen Dialog erneut zu aktivieren, kreuzen Sie "DirectShow-Optionen"->"Dialog anzeigen, wenn eine unbekannte Anwendung versucht ffdshow zu laden" an.
+Thank you. We are gathering the list of compatible applications. Please send us the exe file name of this application and help us improving ffdshow.=Vielen Dank. Wir erstellen eine Liste kompatibler Anwendungen. Bitte senden Sie uns den Dateinamen dieser Anwendung und helfen Sie uns ffdshow zu verbessern.
 Source file=Quelldatei
 Input size and aspect ratio=Eingangsauflösung und Seitenverhältnis
 Input FOURCC=Eingangs-FOURCC
-Movie FPS=Filmbildfrequenz
+Movie FPS=Filmbildrate
 Input bitrate=Eingangsbitrate
 Output colorspace=Ausgangsfarbraum
 Current frame=Aktuelles Bild
-
 left=links
 center=mittig
 right=rechts
@@ -141,10 +137,10 @@ Save as...=Speichern unter...
 Rename preset...=Voreinstellung umbennenen...
 Delete preset=Voreinstellung löschen
 Show on startup=Beim Start anzeigen
-Don't display, only save data to file=Nicht anzeigen, nur Daten nach Datei speichern
+Don't display, only save data to file=Nicht anzeigen, nur Daten in Datei speichern
 New preset name=Neuer Voreinstellungsname
 Enter new preset name=Geben Sie einen neuen Namen für die Voreinstellung ein
-Startup OSD preset=Start-OSD-Voreinstellung
+Startup OSD preset=Standard OSD-Voreinstellung
 Number of frames to show preset=Bildanzahl, für die das OSD angezeigt werden soll
 Preset already exists=Voreinstellung existiert bereits
 Do you really want to delete current OSD preset?=Wollen Sie die aktuelle Voreinstellung wirklich löschen?
@@ -152,8 +148,8 @@ CPU load=Prozessorauslastung
 Input size=Eingangsauflösung
 Output size=Ausgangsauflösung
 Frame timestamps=Zeitstempel des Bildes
-Frame duration=Anzeigedauer eines Bildes
-Decoder FPS=Dekoderbildfrequenz
+Frame duration=Anzeigedauer des Bildes
+Decoder FPS=Decoderbildrate
 Input description=Eingangsbeschreibung
 Output description=Ausgangsbeschreibung
 MD5 sum=MD5-Summe
@@ -170,24 +166,22 @@ Subtitles delay=Untertitelverzögerung
 Coded frame size=Kodierte Bildgröße
 Input colorspace=Eingangsfarbraum
 System time=Systemzeit
-Current playing time=Aktuelle Spielzeit
-Remaining time=Verbleibende Zeit
+Current playing time=Bisherige Spielzeit
+Remaining time=Verbleibende Spielzeit
 Movie length=Filmlänge
-Encoder info=Enkoderinformationen
+Encoder info=Encoderinformationen
 Short configuration description=Kurze Konfigurationsbeschreibung
 AviSynth info=AviSynth-Informationen
 Frame mean quantizer=Mittlerer Bildquantizer
-File where to write statistics=Datei, in die die Statistiken geschrieben werten sollen
-
+File where to write statistics=Name der Statistikdatei
 thin=hauchdünn
-extralight=sehr dünn
-light=dünn
-normal=normal
+extralight=sehr leicht
+light=leicht
 medium=mittel
-semibold=etwas dick
+semibold=halbdick
 bold=dick
 extrabold=extradick
-heavy=sehr dick
+heavy=stark
 Arabic=Arabisch
 Baltic=Baltisch
 Chinese=Chinesisch
@@ -202,42 +196,32 @@ Glowing shadow=Glimmender Schatten
 Gradient shadow=Geneigter Schatten
 Classic shadow=Klassischer Schatten
 Disabled=Deaktiviert
-
 and=und
 or=oder
 less than=kleiner als
 greater than=größer als
-
-
-
-
-
-
-
-
-
-
 Output speakers=Ausgabelautsprecher
-low accuracy enabled, inform me if you'd notice distortions=Geringe Genauigkeit aktiviert, informieren sie mich, wenn sie Verzerrungen bemerken.
-low accuracy mode enabled for tremor=Geringer Genauigkeitsmodus für Tremor-Dekoder aktiviert
-Seek forward=Vorwärts spulen
-Seek backward=Rückwärts spulen
-Grab frame=Bild greifen
+low accuracy enabled, inform me if you'd notice distortions=Geringe Genauigkeit aktiviert; informieren sie uns, wenn sie Verzerrungen bemerken.
+low accuracy mode enabled for tremor=Geringer Genauigkeitsmodus für Tremor-Decoder aktiviert
+Seek forward=Vorspulen
+Seek backward=Zurückspulen
+Grab frame=Bild-Schnappschuß
 Subtitles delay/size decrease=Untertitelverzögerung/-größe verringern
-Subtitles delay/size increase=Untertitel Verzögerung/-größe erhöhen
-Subtitles position decrease=Untertitelposition senken
-Subtitles position increase=Untertitleposition erhöhen
+Subtitles delay/size increase=Untertitelverzögerung/-größe erhöhen
+Subtitles position decrease=Untertitelposition verringern
+Subtitles position increase=Untertitelposition erhöhen
 Decrease video delay=Videoverzögerung verringern
 Increase video delay=Videoverzögerung erhöhen
-Previous preset=voherige Voreinstellung
+Next preset=Nächste Voreinstellung
+Previous preset=Vorherige Voreinstellung
 Linear interpolation=Lineare Interpolation
 Linear blending=Lineares Blending
-Cubic interpolation=kubische Interpolation
-Cubic blending=kubische Blending
+Cubic interpolation=Kubische Interpolation
+Cubic blending=Kubisches Blending
 Framerate doubler=Bildratenverdoppler
 ffmpeg deinterlacer=ffmpeg-Deinterlacer
-DScaler plugin=DScalerplugin
-Solid fill=sollide Füllung
+DScaler plugin=DScaler-Plugin
+Solid fill=solide Füllung
 off=aus
 radius:=Radius:
 time:=Zeit:
@@ -252,79 +236,202 @@ simple MMX=einfaches MMX
 integer=ganzzahlig
 reference=Referenz
 careful=vorsichtig
-compliant=compliant
+compliant=standardkonform
 aggressive=aggressiv
 very aggressive=sehr aggressiv
 constant=konstant
-Preset '%s' will be autoloaded ...=Voreistellung '%s' wird automatisch geladen...
-Audio settings=Audioenstellungen
-3/0 - 3 front=3/0 - 3 vorne
+start=Start
+Preset '%s' will be autoloaded ...=Voreinstellung '%s' wird automatisch geladen...
+Audio settings=Audioeinstellungen
+3/0 - 3 front=3/0 - 3 Vorne
 3/2 - 5 channels=3/2 - 5 Kanäle
 3/0+LFE 3.1 front=3/0+LFE 3.1 vorne
 3/2+LFE 5.1 channels=3/2+LFE 5.1 Kanäle
-same as input=genauso wie Input
-lowpass=Lowpass
-highpass=Highpass
+same as input=Passend zu Audiodaten
+lowpass=Tiefpass
+highpass=Hochpass
 back left=Hinten links
-back center=Mitte hinten
-back right=Hinte rechts
+back center=Hinten mitte
+back right=Hinten rechts
 one pass - constant bitrate=1 Duchgang - konstante Bitrate
-one pass - quality=1 Duchgang - Quallität
+one pass - quality=1 Durchgang - Qualität
 one pass - quantizer=1 Durchgang - Quantizer
-two passes - 1st pass=2 Durchgänge - erster Durchgang
-Quality=Quallität
-Quantizer=Quantizer:
-No settings=Keine Einstellungen
+two passes - 1st pass=2 Durchgänge - 1. Durchgang
+Quality=Qualität
+No settings=Unbenutzt
 Greyscale=Graustufen
-Unlimited motion vector=Unbegrentzter Bewegungsvektor
-Sliced structure=aufgeschnittene Strucktur
-interlaced, bottom-field first=interlaced, bottom-field zuerst
-interlaced, top-field first=interlaced, top-field zuerst
-non-interlaced, progressive frame=nicht interlaced, progressives Bild
+Unlimited motion vector=Unbegrenzter Bewegungsvektor
+Sliced structure=Slice-Struktur
+interlaced, bottom-field first=Interlaced, Bottom-Field zuerst
+interlaced, top-field first=Interlaced, Top-Field zuerst
+non-interlaced, progressive frame=Nicht interlaced, progressives Bild
 after I frames=nach I-Frames
 automatic=Automatisch
 keep=behalten
-bilinear (fast and not too bad)=Bilinear (schnell und nich allzu schlecht)
+bilinear (fast and not too bad)=Bilinear (schnell und nicht allzu schlecht)
 full (slowest)=Komplett (langsamste)
 approximate=Annähernd
 none (fastest, most ugly)=Keine (schnellste, meistens hässlich)
 Pixel aspect ratio=Pixelseitenverhältnis
 Sample aspect ratio=Sampleseitenverhältnis
 Display aspect ratio=Darstellungsseitenverhältnis
-libavcodec normal quality=libavcodec - normale Quallität
-libavcodec high quality=libavcodec - hohe Quallität
-libavcodec highest quality=libavcodec - höchste Quallität
+libavcodec normal quality=libavcodec - normale Qualität
+libavcodec high quality=libavcodec - hohe Qualität
+libavcodec highest quality=libavcodec - höchste Qualität
 high detail=hohe Details
 smooth=weich
-Interlaced encoding=Interlactes Encoding
-Top field first (for intelaced encoding only)=Top-field zuerst (nur für interlactes Encoding)
-Top field first (for interlaced encoding only)=Top-field zuerst (nur für interlactes Encoding)
+Interlaced encoding=Interlaced-Encoding
+Top field first (for intelaced encoding only)=Top-Field zuerst (nur für Interlaced-Encoding)
+Top field first (for interlaced encoding only)=Top-field zuerst (nur für Interlace-Encoding)
 when decoding H.264 video=wenn H.264 dekodiert wird
 when decoding H.264 video and decoder deblocking is off=wenn H.264 dekodiert wird und Decoderentblockung deaktiviert ist
-H.264 deblocking disables all other deblocking methods=H.264-Entblockung deaktivier alle anderen Entblockungsmethoden.Enter 0 for Auto=0 für Auto eingeben:
-Set vertical size 0 for Auto=Setze Vertikale Größe für Auto auf:
+H.264 deblocking disables all other deblocking methods=H.264-Entblockung deaktiviert alle anderen Entblockungsmethoden.
 press key=Taste drücken
 Opposite=Entgegengesetzt
 No=keiner
 fast 1-pass=schnell, ein Durchgang
-high quality 3-pass=hohe Quallität, drei Durchgänge
+high quality 3-pass=hohe Qualität, drei Durchgänge
 fast 3-pass=schnell, drei Durchgänge
-swscaler gaussian=Gaußischer swscaler
-64-bit float=64-bit fließend
-Sample frequency=Frequenz des Sampels
-Number of channels=Anzahl der Kanäle
-Sample format=Format des Sampels
-Raw frames=Rohbilder
+swscaler gaussian=Gaußscher swscaler
+64-bit float=64-bit fließkomma
+Sample frequency=Samplefrequenz
+Number of channels=Kanalanzahl
+Sample format=Sampleformat
+Raw frames=Ohne Containerformat
 OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
-
-
-
-
-
-
-
-
-
+Preset name=Voreinstellung
+Action=Funktion
+Key=Taste
+Activation key 1=Aktivierungstaste 1
+Activation key 2=Aktivierungstaste 2
+Second function=Alternativfunktion
+Toggle OSD="OSD" (de-)aktivieren
+Toggle visualizations="Visualisierungen" (de-)aktivieren
+Toggle crop/zoom="Beschneidung" (de-)aktivieren
+Toggle deinterlace="Deinterlacing" (de-)aktivieren
+Toggle levels="Grenzwerte" (de-)aktivieren
+Toggle noise="Rauschen" (de-)aktivieren
+Toggle picture properties="Bildeigenschaften" (de-)aktivieren
+Toggle postprocessing="Nachbearbeitung" (de-)aktivieren
+Toggle blur="Unschärfe" (de-)aktivieren
+Toggle resize="Größe & Seitenverhältnis" (de-)aktivieren
+Toggle subtitles=Untertitel (de-)aktivieren
+Toggle sharpen="Schärfen" (de-)aktivieren
+Toggle flip=Spiegelung (de-)aktivieren
+Toggle avisynth="AviSynth" (de-)aktivieren
+Toggle warpsharp="WarpSharp" (de-)aktivieren
+default=Standard
+Fast bilinear=Schnell Bilinear
+Bicubic=Bikubisch
+Point=Punkt
+Area=Flächenmittel
+Gauss=Gauß
+Simple resize=Einfach
+Warped resize=Verformung
+None=Keine
+Number of taps:=Tap-Anzahl:
+Ignore pulldown=Pulldown ignorieren
+Apply pulldown=Pulldown hinzufügen
+Smooth timestamps=Zeitstempel glätten
+Bypass=Übergehen
+5-tap lowpass=5-Tap Lowpass
+Kernel deinterlacer=Kernel-Deinterlacer
+Kernel bob=Kernel-Bob
+equal number of frames, equal framerate=Gleiche Bild-Anzahl, gleiche Bildrate
+double number of frames, double framerate=Doppelte Bild-Anzahl, doppelte Bildrate
+double number of frames, equal framerate=Doppelte Bild-Anzahl, gleiche Bildrate
+Blur:=Unschärfe:
+Over video=Über dem Video
+Over top letterbox=Über oberem Letterbox-Rahmen
+Over top & left letterbox=Über oberem und linkem Letterbox-Rahmen
+Over top & right letterbox=Über oberem und rechtem Letterbox-Rahmen
+Over bottom letterbox=Über unterem Letterbox-Rahmen
+Over bottom & left letterbox=Über unterem und linkem Letterbox-Rahmen
+Over bottom & right letterbox=Über unterem und rechtem Letterbox-Rahmen
+Over left letterbox=Über linkem Letterbox-Rahmen
+Over right letterbox=Über rechtem Letterbox-Rahmen
+Direct=Direkt
+NE=NO
+SE=SO
+amplitude=Amplitude
+gray=Grau
+color=Farbe
+opacity=Deckkraft
+duration=Dauer
+size=Größe
+original=Original
+curve=Kurve
+Cubic=Kubisch
+luma:=Luminanz:
+chroma:=Chroma:
+luma blur:=Luminanz:
+chroma blur:=Chroma:
+blend=Überblenden
+add=Addieren
+softlight=Weiches Licht
+none=ohne
+guess MVS=Bewegungsvektoren abschätzen
+deblock=Deblocken
+guess MVS + deblock=beides
+closest=am besten passendes
+Current input bitrate=Aktuelle Eingangsbitrate
+bandpass=Bandpass
+bandstop=Bandstop
+box=Rechteck
+triangle=Dreieck
+hamming=Hamming
+hanning=Hanning
+blackman=Blackman
+flattop=Flattop
+kaiser=Kaiser
+Channel=Kanal
+File=Datei
+front left=Vorne links
+front right=Vorne rechts
+front center=Vorne mitte
+libsamplerate sinc high quality=libsamplerate sinc - hohe Qualität
+libsamplerate sinc medium quality=libsamplerate sinc - mittlere Qualität
+libsamplerate sinc fastest=libsamplerate sinc - schnellstmöglich
+higher than=über
+lower than=unter
+1/0 - mono=1/0 - Mono
+2/0 - stereo=2/0 - Stereo
+2/1 - surround=2/1 - Surround
+3/1 - surround=3/1 - Surround
+2/2 - quadro=2/2 - Quadrophonie
+headphone virtual spatialization=Virtuelle Kopfhörer-Spatialisierung
+Head-related transfer function (HRTF)=Kopfbezogene Übertragungsfunktion (HRTF)
+any filter=jedem Filter
+two passes - 2nd pass int=2 Durchgänge - 2. Durchgang extern
+two passes - 2nd pass ext=2 Durchgänge - 2. Durchgang intern
+Load all=Alle laden
+Load page=Seite laden
+Save all=Alle speichern
+Save page=Seite speichern
+Manage presets...=Voreinstellungen verwalten...
+Low - cosine curve=Niedrig - Cosinus-Kurve
+Medium - linear=Mittel - Linear
+High - sine curve=Hoch - Sinus-Kurve
+Property=Einstellung
+Value=Wert
+Square=Quadratisch
+Modulated=Moduliert
+Modulated new=Moduliert (neu)
+Custom=Festgelegte Matrizen
+P frames=P-Frames
+8 bits=8 Bits
+9 bits=9 Bits
+10 bits=10 Bits
+11 bits=11 Bits
+Size (Kbytes)=Größe (Kbytes)
+From default=Aus Standard-Voreinstellung
+From selected=Aus gewählter Voreinstellung
+From file...=Aus Datei...
+Rename=Umbenennen
+Insert file name=Dateiname einfügen
+Insert exe file name=Programmdateiname einfügen
+Use default device=Standard-Gerät verwenden
+disable=Deaktiviert
 
 [111]
 1164=Gesamtes Bild bearbeiten
@@ -335,7 +442,7 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 
 [101]
 1836=Spenden
-1835=Alle Einstellungen exportieren
+1835=Einstellungen exportieren
 2=Abbrechen
 3=Übernehmen
 
@@ -347,7 +454,7 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1970=ffdshow nur verwenden in:
 1974=Bearbeiten...
 1973=Bearbeiten...
-2051=Dialog anzeigen, wenn eine unbekannte Anwendung versucht ffdshow zu laden.
+2051=Dialog anzeigen, wenn eine unbekannte Anwendung ffdshow laden will
 
 [224]
 1972=Listen Sie die Namen ausführbarer Dateien, welche kompatibel zu ffdshow sind - pro Zeile einen.
@@ -358,14 +465,14 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 [295]
 0=ffdshow-Kompatibilitätsmanager
 2041=Die Anwendung "
-2042=" hat den Versuch unternommen ffdshow zu laden.\r\nDieser Dialog wird gezeigt, da die Anwendung weder in ffdshows Whitelist, noch seiner Blacklist aufgeführt ist.\r\nIhre Wahl wird sowohl für Audio as auch für Video angewandt werden, falls beide verwandt werden.
+2042=" hat versucht ffdshow zu laden.\r\nDieser Dialog wird gezeigt, da die Anwendung weder in ffdshows Positivliste noch in seiner Negativliste aufgeführt ist. Ihre Wahl wird sowohl für Audio als auch für Video angewandt werden, falls beide verwendet werden.
 2045=ffdshow nicht verwenden. (Nur dieses Mal)
 2046=ffdshow nicht verwenden. (Immer)
 2047=ffdshow verwenden. (Nur dieses Mal)
 2048=ffdshow verwenden. (Immer)
 2049=Erläuterung
 2043=Nicht wieder fragen.
-2044=Diese EXE-Datei anonym via Internet melden.
+2044=Diesen Dateinamen anonym via Internet melden.
 
 [2020]
 0=Info & Prozessor
@@ -376,7 +483,7 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1774=Horizontale Position:
 1776=Vertikale Position:
 1493=Speichern unter:
-1491=Benutzer:
+1491=OSD nach Text:
 
 [132]
 0=Schriftart
@@ -394,7 +501,7 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1978=Schattenmodus:
 1981=Schattentransparenz:
 1980=Schattengröße:
-1143=Abstand - Abstand zwischen Zeichen\r\nUmrandungsstärke - Wenn auf 100 gesetzt, ist der Zeichenhintergrund nicht transparent.\r\nDicke - Die meisten Schriftarten unterstützen nur einen kleinen Teil der gelisteten Dicken.
+1143=Abstand: Abstand zwischen den Zeichen\r\nUmrandungsstärke: 100 für undurchsichtigen Zeichenhintergrund\r\nDicke: die meisten Schriftarten unterstützen nur einen kleinen Teil der gelisteten Dicken
 
 [136]
 0=Tray, Dialog & Pfade
@@ -406,7 +513,7 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1074=Erweiterte Informationen
 1073=Traysymbol-Menü zum Stream-/Sprachmenü des Players hinzufügen
 1258=Dialog konfigurieren
-1071=Position wierderherstellen
+1071=Position wiederherstellen
 1072=Hinweise anzeigen
 1293=Sprache:
 1259=Pfade:
@@ -432,43 +539,20 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1102=Manuell:
 1234=Seitenverhältnis des Overlays:
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-[136]
-0=Benachrichtungs- & Dialogeinstellungen
-1257=Benachrichtungssymbol
-1070=Benachrichtungssymbol anzeigen
-1258=Konfigurationsdialog
-1071=Position wiederherstellen
-1072=Hinweise anzeigen
-1293=Sprache:
-1259=Pfade
-1073=Trayicon zum Stream-/Sprachenmenü des Benutzters hinzufügen
-1074=Erweiterte Informationen
-1143=Trayicon\r\n  zeigt ein Icon im Systemtray an \r\n  Doppelklick darauf zeigt Konfigurationsdialog\r\n  Rechtsklick zeigt Menü mit Basisoptionen\r\nFensterposition wiederherstellen\r\n  merkt sich Position des Configurationsfensters  (funktioniert nicht in GrapEdit)
-
 [143]
-0=Tastaturkontrolle
+0=Tastenkürzel
 1202=Aktiviert
+1329=Tastenkürzel funktionieren auch ohne Fokus
+1330=OSD-Meldung nach Tastendruck anzeigen
+1416=Spuldistanz in Sekunden:
+1418=Spuldistanz (Alternativfunktion):
+1472=Fernsteuerungs-API
+1539=Tastatur-Messages annehmen
+1829=Girder-Kommandos exportieren
+1537=Benutzerdefiniert:
 
 [119]
-0=Bildeinstellungen
+0=Profile / Voreinstellungen
 1278=Voreinstellungen
 1016=Neu
 1156=Aus Datei lesen...
@@ -487,21 +571,21 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1028=Benutzerdefiniert
 1270=Luminanz
 1271=Chroma
-1272=Deblock (H)
-1273=Deblock (V)
-1274=Dering
-1158=Verarbeitungsstärke:
-1160=Verarbeitungsmethode:
+1272=Deblocking (H)
+1273=Deblocking (V)
+1274=Deringing
+1158=Bearbeitungsstärke:
+1160=Bearbeitungsmethode:
 1238=mplayer
 1239=Nics
 1037=Zeitlicher Rauschfilter
 1275=Grenzwertkorrektur
 1035=Luminanz
-1038=Voller Luminanz-Bereich
+1038=Voller Bereich
 1036=Chroma (nicht implementiert)
 1242=X-Schwellwert:
 1243=Y-Schwellwert:
-1328=Nic's first
+1328=Nics zuerst
 1534=Präzises Deblocking
 1457=Schnelles SPP-Deblocking
 1456=SPP-Deblocking
@@ -511,27 +595,31 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 0=Bildeigenschaften
 1072=Bildeigenschaften
 1017=Luminanzverstärkung:
-1018=Luminanzgrundwert:
+1018=Luminanzabstand:
 1037=Gammakorrektur:
 1025=Farbwinkel:
 1026=Sättigung:
-1038=RGB Gammakorrektur:
+1038=RGB-Gammakorrektur:
 1787=Nur Chroma
 1782=Stärke:
 1830=Luminanzlevel-Korrektur
-1831=Gesamte Reichweite
-1932="Scannlinien"-Effekt
+1831=Voller Bereich
+1932="Scanlinien"-Effekt
+1781=Einfärben:
 
 [142]
 0=Grenzwerte
 1170=Grenzwerte
-1179=Verändere nur Luminanz
+1179=Nur Luminanz verändern
 1184=Histogramm anzeigen
 1185=Voller Bereich
 1291=Eingabe
 1267=Ausgabe
 1181=Gammakorrektur:
 1909=Automatisch
+1933=Kurve laden...
+1189=Posterisierung:
+1707=Modus:
 
 [126]
 0=Rauschen
@@ -542,9 +630,12 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1232=Durchschnittsberechnung
 1039=Gleichförmiges Rauschen
 1231=Muster
-1041=Luminaz-Rauschstärke:
+1041=Luminanz-Rauschstärke:
 1049=Chroma-Rauschstärke:
-1052=Vertikale Zeile:
+1052=Vertikale Linien:
+1050=Flackern:
+1051=Zittern:
+1054=Staub && Kratzer:
 
 [176]
 0=DScaler-Filter
@@ -561,27 +652,28 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 0=Schärfen
 1065=Schärfen
 1063=xsharpen
-1064=Unschärfemaske
+1064=Unscharf maskieren
 1066=msharpen
 1216=Hohe Qualität
 1215=Nur Maske
 1067=warpsharp
 1019=Stärke:
 1021=Schwellenwert:
-1217=Hochquallitäts Blockfilterung
+1217=Blockfilterung mit hoher Qualität
 1023=Adaptive Blockschärfung:
 
 [128]
 0=Unschärfe & Rauschunterdrückung
-1134=Unschärfe/Rauschunterdrückung
+1134=Unschärfe && Rauschunterdrückung
 1136=Weichzeichnen:
 1137=Zeitliches Weichzeichnen:
-1232=Verarbeitungfarbe
+1232=Farbe bearbeiten
 1138=Luminanzweichzeichnung:
 1139=Chromaweichzeichnung:
-1140=Schrittweises Entrauschung:
-1141=mPlayers temporärer Rauschfilter:
-1878=Denoise3d
+1140=Schrittweise Entrauschung:
+1141=mPlayers zeitlicher Rauschfilter:
+1878=Denoise3D
+1142=swscaler Gaußscher Weichzeichner
 
 [137]
 0=Verschiebung
@@ -598,6 +690,7 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1074=Bewegungsvektoren anzeigen
 1337=Visualisierungen
 1143=Versuchen sie es, es sieht gut aus. ;-)
+1075=Quantizer anzeigen
 
 [172]
 0=Aufzeichnung
@@ -608,12 +701,12 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1228=Jetzt aufnehmen
 1183=Pfad
 1218=...
-1261=Namens-Prefix:
-1263=Bildnummer:
+1261=Namenspräfix:
+1263=Stellen der Bildnummer:
 1262=Bildformat:
 1230=Qualität:
-1740=Jedes
-1741=Bild aufnehmen
+1740=Alle
+1741=Bilder ein Bild aufnehmen
 1232=Pfad
 
 [113]
@@ -626,27 +719,41 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1122=Horizontale Position:
 1126=Vertikale Position:
 1280=Verzögerung:
-1281=Geschwindigkeit:
+1281=Tempo:
+1837=heuristische Suche
+1968=Dateiendungs-Priorität
+1414=Datei auf Änderungen prüfen
+1787=Eingebettete Untertitel verarbeiten
+1789=SSA, ASS und ASS2-Untertitel verarbeiten (experimentell)
+1788=Closed Captions dekodieren
+1683=stereoskopisch
+1722=Parallaxe:
+1360=Position:
 
 [138]
 0=Einstellungen
 1282=Größeneinstellungen
 1285=Methode:
-1098=Luminanz-Gaussunschärfe:
-1099=Chroma-Gaussunschärfe:
+1098=Luminanz-Gaußunschärfe:
+1099=Chroma-Gaußunschärfe:
 1021=Parameter:
 1019=Luminanzschärfe:
 1020=Chromaschärfe:
 1286=Chromamethode:
+1892=Fixieren
+1100=Horizontale Verformung:
+1022=Vertikale Verformung:
+1953=Genaues Runden
+1143=Skalierungsmethoden:\r\n  Schnell Bilinear - schnelle Skalierung mit akzeptabler Qualität\r\n  Bilinear - etwas langsamer als die vorangegangene, aber mit etwas besserer Qualität\r\n  Bikubisch - hohe Qualität, langsamer\r\n  Punkt - schnellste, aber auch häßlichste Methode\r\n  Flächenmittel - Flächenmittel-Skalierung\r\n  Keine -fügt nur schwarze Ränder hinzu oder beschneidet das Bild\r\n\r\nLuminanz-/Chroma-Gaußunschärfe:\r\n  verunschärft das Bild während des Skalierens\r\n  (unabhängig vom "Unschärfe & Rauschunterdrückung"-Filter)\r\n\r\nLuminanz-/Chromaschärfe:\r\n  schärft das Bild während des Skalierens (unabhängig vom "Schärfen"-Filter)\r\n\r\nInterlaced:\r\n  unmarkiert: Bilder werden als Vollbilder behandelt\r\n  angekreuzt: Bilder werden als zwei verschachtelte Halbbilder behandelt\r\n  ausgegraut: Eingabebildtyp auswerten (z.B. in Verbindung mit MPEG2-Video)\r\n\r\nGenaues Runden:\r\n  unmarkiert: führt manchmal zu horizontalen Linien\r\n  angekreuzt: hohe Qualität, aber in manchen Fällen langsamer
 
 [134]
-0=Beschneiden
-1137=Beschneiden & Vergrößern
+0=Beschneiden/Vergrößern
+1137=Beschneiden/Vergrößern
 1138=Vergrößern
 1139=Beschneiden
 1105=Horizontale Vergrößerung:
 1107=Vertikale Vergrößerung:
-1140=Einrasten
+1140=Fixieren
 1252=Oben
 1254=Links
 1255=Rechts
@@ -680,11 +787,11 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1139=Sättigung:
 1140=Schärfe:
 1141=Gamma:
-1143=Arbeitet nur, wenn"Owerlaymixer verwenden" auf der Ausgabeseite aktiviert ist und die Hardware es unterstützt.\r\n\r\nUnterstützt Overlaymixer und VMR9 renderer im Fenstermodus.
+1143=Arbeitet nur, wenn "Pixelseitenverhältnis in Ausgabe-Medientyp setzen" auf der "Ausgabe"-Seite aktiviert ist und die Hardware es unterstützt.\r\n\r\nUnterstützt den Overlaymixer und den VMR9 Renderer im Fenstermodus.
 
 [118]
-0=Dekoderoptionen
-1283=Libavcodec-Einstellungen
+0=Decoder-Optionen
+1283=libavcodec-Einstellungen
 1016=Video spiegeln
 1314=Graustufen-Decodierung
 1045=IDCT
@@ -699,10 +806,14 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1311=Padding-Fehler
 1312=Illegaler VLC
 1313=Xvid- und DivX-qpel-Fehler
-1943=Bild bei Verzögerung von überspringen:
-1946=Quallitätskontrolle
-1947=Überspringe H.264-Entblockung bei Verzögerung von:
-1316=DivX' Interlaced-Chroma-Fehler
+1943=Bilder überspringen bei Rückstand von
+1946=Qualitätskontrolle
+1947=Kein H.264-Deblocken bei Rückstand von
+1316=DivX Interlaced-Chroma-Fehler
+1542=Fehlerwiderstandsfähigkeit:
+1544=Fehlerunterdrückung:
+1916=Aktuelle Quantisierungsmatrizen
+1572=Anzahl der Dekodierungsthreads:
 
 [102]
 0=Über
@@ -714,7 +825,7 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1849=Lizenz
 
 [233]
-0=Filter anzeigen/verstecken
+0=Filter anzeigen/verbergen
 1473=Verfügbare Filter
 1474=Sichtbare Filter
 
@@ -727,38 +838,43 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1544=Oben:
 1546=Breite:
 1548=Höhe:
-1555=X-Y Gewichtung:
+1555=X/Y Gewichtung:
 1553=Unschärfe:
 1562=Erweitert:
+1854=Logo-Bilddatei:
+1559=Ränder-Voreinstellung laden:
 
 [231]
 0=Ausgabe
 1016=Video drehen
-1031=Overlaymixer verwenden
-1052=Hochquallitative YV12 nach RGB Konvertierung
+1031=Pixelseitenverhältnis in Ausgabe-Medientyp setzen
+1052=Hochqualitative YV12 nach RGB Konvertierung
 1284=Unterstützte Ausgangsfarbräume
 1017=Ausgabeformat-Wechsel wärend Wiedergabe erlauben
 1034=Nur zu kompatiblen Filtern verbinden
 1910=Profil:
 1036=Passendsten Farbraum auswählen
+1033=Interlacing-Flag im Ausgabe-Medientyp setzen
+1966=Methode:
 
 [121]
+0=Warteschlange/Diverses
 1365=Andere Kontrollen
 1268=Videoverzögerung:
-1958=Verwendene Warteschlange nur in:
-1944=Ausgabesamples in Warteschlange
+1958=Warteschlange nur in:
+1944=Ausgabesamples in Warteschlange stellen
 1765=Start
 1764=Ende
-1550=Interlaced Input annehmen, wenn Höhe >
+1550=Interlaced-Eingabe annehmen, wenn Bildhöhe größer als
 
 [250]
 1725=Aktivieren
 1726=Bevorzugte Sprache:
 1728=Aktuelle Sprache:
 1727=Weichzeichnungsmethode:
-1730=Gauß'sche Unschärfe:
+1730=Gaußscher Weichzeichner:
 1729=Skalierung:
-1796=Positionseinstellungen der Untertitelsseite verwenden
+1796=Positionseinstellungen der Untertitelseite verwenden
 
 [255]
 1799=Dateiname:
@@ -775,19 +891,35 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1333=Laden
 1334=Speichern
 1352=Eingangsfarbräume:
+2021=ffdshow-Videoquelle hinzufügen
+2023=3:2 Pulldown
+2024=Eingangsfarbräume
+2029=Puffer Zurück/Vorwärts:
+2032=Werte aus OSD
+2033=Laden
+2034=Speichern
 
 [254]
-1788=Versuchen I und l zu korrigieren
+1788="I"/"l"-Fehler korrigieren
 1787=Doppeltes ' durch "  und "" durch " ersetzen
 1792=Ungewollte Leerstellen zwischen Zahlen entfernen
 1571=Lange Untertitelzeilen umbrechen
 1794=Korrekturen:
 1775=Pixel
+1836=Linker/rechter Rand:
+1790=Punktuationskorrektur (?. -> ? ; !. -> ! etc.)
+1795=Rechtschreibkorrektur
+1723=Zeilenabstand:
+1791=Großbuchstabenkorrektur
+1798=Untertitel für Gehörlose entfernen
+1572=Untertitel mit gleichem Zeitstempel überlappen
+1767=Mininum
+1772=Dauer:
 
 [181]
-1339=Original ffdshow-Warpsharp
+1339=Ursprünglicher ffdshow-Warpsharp
 1341=Chromamodus:
-1343=Blurmodus:
+1343=Weichzeichnungsmodus:
 1021=Schwellenwert:
 1019=Tiefe:
 1023=Weichzeichnung:
@@ -796,12 +928,15 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1941=Schwellenwert:
 
 [179]
-1325=Coeffizienten
+1325=Koeffizienten
+1919=H.263-Quantisierung
+1922=MPEG-Quantisierung
+1917=Quantisierungsmatrix
 
 [248]
 1683=Aktivieren
-0=Streamwechsler
-1709=Streamwechsler
+0=Streamauswahl
+1709=Streamauswahl
 1710=Streams:
 
 [182]
@@ -809,12 +944,12 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1162=Zurücksetzen
 
 [259]
-1579=Erlaubte Sampelformate für Audioverarbeitung
+1579=Erlaubte Sampleformate für Audioverarbeitung
 1580=16-bit ganzzahlig
 1585=32-bit ganzzahlig
-1586=32-bit fließend
+1586=32-bit fließkomma
 0=Verarbeitung
-1578="fliesend zu ganzzahlig"-Konvertierung
+1578=Fließkomma nach Ganzzahl-Konvertierung
 
 [243]
 0=Ausgabe
@@ -822,12 +957,13 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1811=WAVEFORMATEXTENSIBLE-Header nur wenn nötig verwenden
 1813=Erlaube Ausgabe direkt in eine Datei
 1574=16-bit ganzzahlig
-1573=Unterstützte Ausgabe-Sampelformate
+1573=Unterstützte Ausgabe-Sampleformate
 1575=24-bit ganzzahlig
 1576=32-bit ganzzahlig
-1577=32-bit fließend
+1577=32-bit fließkomma
 1846=Nur auf S/PDIF-Ausgabe zugreiifen
 1985=Nur Mehrkanal-Streams kodieren
+1984=Mehrkanal-Gerät:
 
 [188]
 0=Lautstärke
@@ -835,14 +971,23 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1457=Normalisieren
 1957=Beim Spulen zurücksetzen
 1956=Puffergröße:
-1641=Aktuell:
+1641=Derzeitige Verstärkung:
+1375=Master-Lautstärke:
+1937=in Dezibel
+1637=Maximale Verstärkung:
+1683=Aktuelle Schallpegel anzeigen
+1648=VL
+1649=VM
+1650=VR
+1651=HL
+1652=HR
 
 [253]
 1749=Vorne links
 1747=Vorne rechts
-1748=Mitte vorne
+1748=Vorne mitte
 1746=Hinten links
-1670=Mitte hinten
+1670=Hinten mitte
 1745=Hinten rechts
 0=Kanäle tauschen
 1763=Kanäle tauschen
@@ -850,25 +995,39 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 [245]
 0=Verzögerung
 1676=Verzögerung
-1658=Verzögerung des linke Kanals:
-1663=Verzögerung des mittleren Kanals:
-1666=Verzögerung des rechten Kanals
+1658=Verzögerung linker vorderer Kanal:
+1663=Verzögerung mittlerer vorderer Kanal:
+1666=Verzögerung rechter vorderer Kanal:
+1669=Verzögerung hinterer linker Kanal:
+1672=Verzögerung hinterer rechter Kanal:
+1675=Verzögerung LFE-Kanal:
 
 [237]
 1499=Modus:
+0=Sampleratenkonvertierung
+1497=Sampleratenkonvertierung
+1498=Konverieren nach
+1875=Immer konvertieren
+1876=Konvertieren wenn Samplerate...
+1877=über
 
 [202]
 1450=Modus:
 1460=Einstellungen nicht in der Registry speichern
 1448=FourCC:
 1163=Hilfe
+1459=Voreinstellungen
 
 [200]
-1420=Maximaler Vollbildintervall:
-1422=Minimaler Vollbildintervall:
+1420=Maximales I-Frame-Intervall:
+1422=Minimales I-Frame-Intervall:
 1427=dynamisch
 1494=Andere Optionen
 0=Allgemein
+1424=B-Frames
+1425=Max. aufeinander folgende B-Frames
+1431=verfeinern
+1572=Anzahl der Kodierungsthreads:
 
 [212]
 0=Allgemein
@@ -899,58 +1058,280 @@ OGG (works with Theora only)=OGG (funktioniert nur mit Theora)
 1533=Schreibe Informationen nach:
 1537=Graph zeigen
 1538=PSNR berechnen
-1544=Durchschnittlicher PSNR:
+1544=Durchschnittliches PSNR:
 1541=Encodierte Bilder:
 1545=Durchschnittlicher Quantizer:
 1738=DirectShow-Graph für GraphEdit verfügbar machen
+1531=Informationen an Debugger senden
+1532=Fehler in Dialogbox anzeigen
 
 [222]
-0=Eingabe
+0=Ausgabe
 1438=Ausgabe
-1660=Nicht benutzen
+1660=Ohne
 1661=Schreiben
-1662=Benutzen
-1663=Benutzen und schreiben
+1662=Lesen
+1663=Lesen/Schreiben
+1654=Frames in AVI-Datei speichern
+1655=Frames in externe Datei speichern
+1659=Libavcodec/x264 Statistiken:
+1667=Bildrate festlegen
 
 [206]
-0=Zwei Durchgänge - erster Durchgang
+0=Zwei Durchgänge - 1. Durchgang
 1424=Name der Statikstikdatei:
 
 [226]
-0=Zwei Durchgänge - zweiter Durchgang
+0=Zwei Durchgänge - 2. Durchgang
 1842=Mit neuen Statistiken überschreiben
-1424=Statistikdatei des ersten Durchgangs:
-1844=Statistikdatei des zweiten Durschgangs:
+1424=Statistikdatei für ersten Durchgang:
+1844=Statistikdatei für zweiten Durchgang:
 1462=Vollbilder
 1847=Simulation
+1444=Maximale Bitrate:
+1446=Maximale Überlauf-Verbesserung:
+1448=Maximale Überlauf-Verschlechterung:
+1450=Verstärken um
+1452=Bei einem I-Frame-Abstand kleiner als
+1453=Frames...
+1454=...reduziere die I-Frame-Bitrate um
+1455=%
 
 [203]
-1461=Credits am Filmende
-1466=Credits am Filmanfang
+1461=Abspann
+1466=Vorspann
 1462=Beginne bei Bild:
 1464=Stoppe bei Bild:
 1467=Beginne bei Bild:
 1469=Stoppe bei Bild:
 1479=Größe (KBytes)
-1484=Credits in Graustufen
+1484=Vor-/Abspann in Graustufen
+1471=Vor-/Abspann-Bitratenreduktion
+1480=Vorspann:
+1482=Abspann:
+0=Vor-/Abspann
 
 [225]
 1828=Matrix laden...
 1829=Matrix speichern...
+1840=Intra-Matrix:
+1763=Inter-Matrix:
 
 [223]
-1442=Min Quantizer
-1443=Max Quantizer
-1700=DCT-Algorytmus:
+1442=Min. Quantizer
+1443=Max. Quantizer
+1700=DCT-Algorithmus:
 1678=Makroblöcke
-1441=Quantizationstyp:
-1675=Vollbilder
+1441=Quantisierungstyp:
+1675=I-Frames
+1699=Trellis-Quantisierungssuche
+1676=P-Frames
+1677=B-Frames
+1687=I-Multiplikator
+1689=I-Abstand
+1691=B-Multiplikator
+1693=B-Abstand
+1695=Inter-Quantizer Tendenz-Spielraum:
+1697=Intra-Quantizer Tendenz-Spielraum:
+0=Quantisierung
+1703=Quantizer Noise-Shaping
+1707=MPEG2 DC Präzision:
 
 [213]
 1548=Eingabefarbraum erzwingen:
 1016=Bild drehen
 1460=Stärke der Rauschunterdrückung:
-1556=Libavcodecs/x264s Rauschunterdrückung
+1556=libavcodec/x264 Rauschunterdrückung
 1555=Konfigurieren
-1550=Interlaced annehmen von Höhe >
-1554=Blidverarbeitung aktivieren
+1550=Interlaced-Eingabe annehmen wenn Höhe größer als
+1554=Bildverarbeitung aktivieren
+1552=Pixel
+0=Eingabe
+
+[261]
+0=Ränder
+1860=Rand innen
+1861=Rand außen
+1858=Prozent
+1859=Pixel
+1863=Vertikal
+1862=Horizontal
+1199=Fixieren
+1857=Ränder
+
+[241]
+1526=Schwellwert:
+1528=Schärfer
+1529=Zweiweg-Interpolation
+1531=Luminanz- und Chroma-Bewegungsmasken verbinden
+1530=Maske anzeigen
+
+[251]
+1730=Schwellwert:
+1728=Modus:
+1727=Darstellungsfehler-Unterdrückung
+
+[239]
+1207=Suchaufwand:
+1210=Vertikale Filterung
+
+[244]
+1656=Verzögerung hinterer Kanal:
+
+[189]
+1814=Winamp-Voreinstellung laden
+
+[246]
+1688=Anzahl der Taps:
+1700=Anzeige-Frequenzlimit
+1696=Frequenz:
+1690=Typ:
+1692=Analysefenster:
+1698=Breite:
+1683=Spektrum anzeigen
+0=FIR-Filter
+1686=FIR-Filter
+
+[262]
+1880=Impulsfaltung
+0=Impulsfaltung
+1881=Impuls-Datei:
+1905=Manuelle Kanalzuordnung:
+1902=Datei auswählen
+1903=Zurücksetzen
+1893=Pegeljustierung:
+1891=Automatisch justieren
+1889=Mischungs-Stärke:
+
+[247]
+1706=Rauschunterdrückung
+1704=Schwellwert:
+0=Rauschunterdrückung
+
+[190]
+1400=Winamp DSP
+0=Winamp 2
+1401=Winamp 2 Verzeichnis festlegen...
+1989=Mehrkanal-Audioverarbeitung zulassen
+1404=Konfigurieren
+
+[236]
+1485=Raumgröße:
+1487=Dämpfung:
+1490=Effekt-Pegel:
+1019=Original-Pegel:
+1038=Breite:
+
+[249]
+1712=Bandbreiten-Extender:
+1714=Anzahl der vom Extender verwendeten Hochpassfilter:
+1716=Oberton-Verstärkung:
+1718=Echo-Pegel:
+1720=Echo-Rückkoppelung:
+1722=Stereo-Verbreiterung:
+
+[252]
+0=LFE-Auskreuzung
+1733=LFE-Auskreuzung
+1734=Tiefpass-Frequenz:
+1736=Verstärkung:
+1741=Zum LFE-Kanal hinzugefügte Frequenzen aus linkem und rechtem Kanal entfernen
+
+[191]
+1406=Lautsprecherkonfiguration:
+1636=Matrix eingeben
+1586=Matrix normalisieren
+1588=Stimm-Steuerung
+1637=Stereobasis-Verbreiterung
+1701=Vorne:
+1685=Kopfhörer-Abstand:
+1595=VM
+1631=VM
+1594=VL
+1596=VR
+1597=HL
+1598=HR
+1630=VL
+1635=VR
+1632=HL
+1633=HR
+1702=Hinten:
+
+[215]
+1576=Luminanz-Maskierung
+1577=Chroma zur Optimierung vorfiltern
+0=Maskierung
+
+[220]
+1435=Reaktionsverzögerungsfaktor:
+1436=Mittelberechnungs-Abstand:
+1437=Glättung:
+0=Bitratensteuerung
+
+[205]
+1463=Szenen mit hoher Bitrate:
+1420=Szenen mit niedriger Bitrate:
+1422=Bitraten-Rückgabe-Verzögerung:
+1505=Rückgabe mit Spielraum
+1506=Rückgabe proportional
+1423=Frames
+0=Kurvenkompression
+
+[204]
+1485=Alternative Kurven-Kompression verwenden
+1486=Kurvenaggression:
+1488=Oberer Abstand vom Mittel:
+1491=Unterer Abstand vom Mittel:
+1494=Minimale relative Qualitätsstärke automatisch bestimmen:
+1497=Minimale relative Qualitätsstärke händisch festlegen:
+1500=Zusätzlicher Spielraum:
+0=Alternative Kurvenkomp.
+
+[230]
+1045=Umbenennen
+1044=Entfernen
+1467=Voreinstellung:
+1468=Daten:
+1=Schließen
+
+[216]
+0=Bewegungsbestimmung
+
+[218]
+0=Bewegungsbestimmung
+1615=Bewegungsbestimmungspräzision:
+1626=VHQ-Modus:
+1614=Chroma verwenden
+
+[235]
+0=Bewegungsbestimmung
+
+[238]
+0=Bewegungsbestimmung
+
+[266]
+0=Matrizen festlegen
+
+[214]
+0=Maskierung
+
+[234]
+0=Maskierung
+
+[258]
+0=Maskierung
+
+[219]
+0=Bitratensteuerung
+
+[193]
+2=Schließen
+
+[227]
+1854=Analysieren
+1855=Simulieren
+1439=Quantizer Prozentanteil
+1440=Quantizer Anzahl
+1862=Anzahl der Frames:
+1864=Durchschnittsframegröße:
+1865=Durchschnittsquantizer:

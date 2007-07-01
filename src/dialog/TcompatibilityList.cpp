@@ -42,6 +42,7 @@ TcompatibilityList::TcompatibilityList(IffdshowBase *Ideci,HWND Iparent,int x,in
 }
 void TcompatibilityList::init(void)
 {
+ resizeDialog();
  translate();
  const char_t *capt,*exp;
  if (IDFF_target==IDFF_compatibilityList)

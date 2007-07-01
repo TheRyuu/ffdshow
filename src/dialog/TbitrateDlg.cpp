@@ -92,6 +92,7 @@ INT_PTR TbitrateDlg::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
   {
    case WM_INITDIALOG:
     {
+     //resizeDialog();
      translate();
      const char_t *capt=tr->translate(m_hwnd,dialogId,0,NULL);
      if (capt && capt[0]) setWindowText(m_hwnd,capt);

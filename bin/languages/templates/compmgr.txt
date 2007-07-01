@@ -1,4 +1,4 @@
-;Translation template for compatibilitiy manager
+;Translation template for compatibility manager
 
 [-1]
 ffdshow will behave as if it were not installed.=
@@ -6,7 +6,7 @@ ffdshow will behave as if it were not installed.\r\nThe application will be adde
 ffdshow will be used if it is set to decode a format.=
 ffdshow will be used if it is set to decode a format.\r\nThe application will be added to "DirectShow control"->"Use ffdshow only in".=
 ffdshow won't be used in unknown applications.\r\nTo enable this dialog again, check "DirectShow control"->"Show dialog when an unknown application tries to load ffdshow".=
-(This dailog will close in=
+(This dialog will close in=
 seconds.)=
 Thank you. We are gathering the list of compatible applications. Please send us the exe file name of this application and help us improving ffdshow.=
 

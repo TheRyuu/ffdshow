@@ -329,6 +329,7 @@ INT_PTR TperfectDlg::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  switch (uMsg)
   {
    case WM_INITDIALOG:
+    resizeDialog();
     init();
     if (cfgGet(IDFF_dlgPerfectDlgX)!=-1)
      SetWindowPos(m_hwnd,NULL,cfgGet(IDFF_dlgPerfectDlgX),cfgGet(IDFF_dlgPerfectDlgY),0,0,SWP_NOSIZE|SWP_NOREPOSITION);

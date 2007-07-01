@@ -35,7 +35,8 @@ Twindow::Twindow(IffdshowBase *Ideci):
  isSetWindowText(false),
  bindsCheckbox(NULL),bindsHtrack(NULL),bindsVtrack(NULL),bindsRadiobutton(NULL),bindsEditInt(NULL),bindsEditReal(NULL),bindsCombobox(NULL),bindsButton(NULL),
  red(NULL),
- filterMode(NULL)
+ filterMode(NULL),
+ resized(false)
 {
  if (Ideci)
   setDeci(Ideci);
@@ -618,6 +619,8 @@ void Twindow::Tanchors::resize(const Twindow &parent,const CRect &newrect)
 
 template<class Tret,class TcreateFunc1,class TcreateFunc2> Tret Twindow::createDlg_Box(int dlgId,HWND hWndParent,LPARAM lparam,TcreateFunc1 createFunc1,TcreateFunc2 createFunc2)
 {
+ resized=false;
+
  if (bindsHtrack)
   for (int i=0;i<bindsHtrack[i].idc;i++)
    bindTrackbarsMap.insert(std::make_pair(bindsHtrack[i].idc,bindsHtrack+i));
@@ -648,21 +651,127 @@ template<class Tret,class TcreateFunc1,class TcreateFunc2> Tret Twindow::createD
    return ret;
   }
 }
+
+void Twindow::resizeDialog()
+{
+ resizeDialog(m_hwnd);
+}
+
+void Twindow::resizeDialog(HWND hwnd)
+{
+ if(!hwnd || resized || !tr)
+  return;
+
+ int scale=tr->font.horizontalScale;
+
+ if (scale == 100)
+  return;
+
+ resizeDialog(hwnd,false,scale);
+
+ THWNDs wnds;
+
+ getChildWindows(hwnd,wnds);
+
+ for (THWNDs::const_iterator wnd=wnds.begin();wnd!=wnds.end();wnd++)
+  if (*wnd)
+   resizeDialog(*wnd,true,scale);
+
+ resized=true;
+}
+
+void Twindow::resizeDialog(HWND hwnd, bool relative, int scale)
+{
+ RECT dlgRect;
+
+ if(!GetWindowRect(hwnd,&dlgRect))
+  return;
+
+ HWND parentHwnd=GetParent(hwnd);
+
+ if (relative)
+  {
+   ScreenToClient(parentHwnd,(LPPOINT)&dlgRect.left);
+   ScreenToClient(parentHwnd,(LPPOINT)&dlgRect.right);
+  }
+
+ int dlgWidth=(dlgRect.right-dlgRect.left);
+ int dlgHeight=(dlgRect.bottom-dlgRect.top);
+
+ if (relative)
+  dlgRect.left=dlgRect.left*scale/100;
+ else
+  dlgRect.left-=dlgWidth*(scale-100)/200;
+
+ int id=GetWindowID(hwnd);
+
+ char_t className[32];
+
+ GetClassName(hwnd,className,32);
+
+ if (stricmp(className,_l("EDIT")) == 0 &&
+     parentHwnd)
+  {
+   // Don't resize edit controls that have a combobox as their parent -
+   // those have already been resized when the combobox was resized
+
+   char_t parentClassName[32];
+
+   GetClassName(parentHwnd,parentClassName,32);
+
+   if (stricmp(parentClassName,_l("COMBOBOX")) == 0)
+    return;
+  }
+
+ bool isStatic=(stricmp(className,_l("STATIC")) == 0);
+
+ if (isStatic && id == IDC_BMP_LEVELS_CURVES)
+  // Curves diagram looks bad when stretched
+  ;
+ else if (isStatic && 
+          (id == IDC_STATIC &&
+           SendMessage(hwnd,STM_GETIMAGE,IMAGE_BITMAP,0)))
+  // Center static bitmaps without scaling
+  dlgRect.left+=dlgWidth*(scale-100)/200;
+ else
+  dlgWidth=dlgWidth*scale/100;
+
+ SetWindowPos(
+  hwnd,
+  0,
+  dlgRect.left,
+  dlgRect.top,
+  dlgWidth,
+  dlgHeight,
+  SWP_NOZORDER);
+}
+
 HWND Twindow::createDialog(int dlgId,HWND hWndParent)
 {
- return createDlg_Box<HWND>(dlgId,hWndParent,(LPARAM)new TwindowWidget(NULL,this),CreateDialogParam,CreateDialogIndirectParam);
+ return createDialog(dlgId,hWndParent,(LPARAM)new TwindowWidget(NULL,this));
 }
+
 HWND Twindow::createDialog(int dlgId,HWND hWndParent,LPARAM lparam)
 {
- return createDlg_Box<HWND>(dlgId,hWndParent,lparam,CreateDialogParam,CreateDialogIndirectParam);
+ HWND hwnd=createDlg_Box<HWND>(dlgId,hWndParent,lparam,CreateDialogParam,CreateDialogIndirectParam);
+
+ resizeDialog(hwnd);
+
+ return hwnd;
 }
+
 INT_PTR Twindow::dialogBox(int dlgId,HWND hWndParent)
 {
- return createDlg_Box<INT_PTR>(dlgId,hWndParent,(LPARAM)new TwindowWidget(NULL,this),DialogBoxParam,DialogBoxIndirectParam);
+ return dialogBox(dlgId,hWndParent,(LPARAM)new TwindowWidget(NULL,this));
 }
+
 INT_PTR Twindow::dialogBox(int dlgId,HWND hWndParent,LPARAM lparam)
 {
- return createDlg_Box<INT_PTR>(dlgId,hWndParent,lparam,DialogBoxParam,DialogBoxIndirectParam);
+ INT_PTR ptr=createDlg_Box<INT_PTR>(dlgId,hWndParent,lparam,DialogBoxParam,DialogBoxIndirectParam);
+
+ resizeDialog();
+
+ return ptr;
 }
 
 bool Twindow::onTrack(TbindTrackbars bindsTrack,LPARAM lParam)
@@ -710,6 +819,7 @@ INT_PTR Twindow::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
  switch (uMsg)
   {
    case WM_INITDIALOG:
+    resizeDialog();
     init();
     //subClass();
     break;

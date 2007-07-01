@@ -20,6 +20,7 @@ private:
    char_t typeface[256];
    int pointsize;static const int pointsizeDef=8;
    uint8_t italic;static const uint8_t italicDef=0;
+   int horizontalScale;static const int horizontalScaleDef=100;
    //int charset;
   };
  mutable bool initfont;

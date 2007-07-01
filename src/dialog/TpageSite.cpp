@@ -95,6 +95,10 @@ INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
   {
    case WM_INITDIALOG:
     {
+     WINDOWPLACEMENT wpl; wpl.length=sizeof(WINDOWPLACEMENT);
+
+     GetWindowPlacement(m_hwnd,&wpl);
+
      if (idcaption)
       {
        LoadString(hi,idcaption,caption,256);
@@ -173,6 +177,18 @@ INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
        setActivePage(propertypages[pg]);
       }
      addHint(IDC_BT_DONATE,_l("Thank you!"));
+
+     // Re-center the %&#@*! pagesite dialog
+
+     int xDiff=((wpl.rcNormalPosition.right-wpl.rcNormalPosition.left)-pagerect.Width())/2;
+
+     GetWindowPlacement(m_hwnd,&wpl);
+
+     wpl.rcNormalPosition.left+=xDiff;
+     wpl.rcNormalPosition.right+=xDiff;
+
+     SetWindowPlacement(m_hwnd,&wpl);
+
      return TRUE;
     }
    case WM_SIZE:
