@@ -46,10 +46,12 @@
     </p>
 
     <h3>
-      beta2以降の修正
+      beta3以前の修正
     </h3>
 
     <ul class="fixed">
+      <li>漸進的ノイズ低減(Gradual denoise)を横幅が16の倍数以外のビデオで使用すると、クラッシュするか右端にグレーの帯が見えていた。</li>
+      <li>カーネルインターレース解除のメモリ・リークを修正</li>
       <li>libavcodecのエンコーダが25fps以外のフレームレートを受け付けなかった。他のエンコーダでも微妙にフレームレートがずれるなどの不具合があった。</li>
       <li>AviSynthのスクリプトでffdshowaudio()を使うとエラーが発生していた。</li>
       <li>UNICODEの字幕に0x1aが含まれていると字幕が途中で切れてしまっていた。</li>
@@ -205,7 +207,7 @@
     </h2>
 
     <ul class="download">
-      <li><a class="nav" href="http://downloads.sourceforge.net/ffdshow-tryout/ffdshow_beta2a_20070322_clsid.exe">ダウンロード　beta2a(安定版)</a></li>
+      <li><a class="nav" href="http://downloads.sourceforge.net/ffdshow-tryout/ffdshow_beta3_rev1324_20070701_clsid.exe">ダウンロード　beta3 (安定版)</a></li>
       <li><a class="nav" href="http://sourceforge.net/project/showfiles.php?group_id=173941">ダウンロード　Nightly builds(最新版)</a></li>
     </ul>
 
