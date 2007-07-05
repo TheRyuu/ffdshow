@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1322
+#define tryout_revision = 1328
 #define buildyear = 2007
-#define buildmonth = '06'
-#define buildday = '27'
+#define buildmonth = '07'
+#define buildday = '05'
 
 ; Build specific options
 #define unicode_required = True
@@ -44,7 +44,6 @@
 #if PREF_CLSID
   #define MSVC80 = False
   #define unicode_required = False
-  #define include_audx = True
   #define filename_prefix = '_clsid'
   #define outputdir = '..\..\..\..\'
 #endif
@@ -53,7 +52,6 @@
   #define unicode_required = True
   #define include_cpu_detection = True
   #define sse_required = True
-  #define include_audx = True
   #define filename_prefix = '_clsid_sse_icl9'
   #define outputdir = '..\..\..\..\'
 #endif
@@ -770,9 +768,12 @@ begin
   end
 end;
 
+var
+  is_update: Boolean;
+
 function IsUpdate(): Boolean;
 begin
-  Result := FileExists(GetDefaultInstallDir('') + '\libavcodec.dll');
+  Result := is_update;
 end;
 
 function NextButtonClick(CurPageID: Integer): Boolean;
@@ -904,6 +905,8 @@ begin
     end
     #endif
   #endif
+  
+  is_update := RegKeyExists(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow_is1');
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
