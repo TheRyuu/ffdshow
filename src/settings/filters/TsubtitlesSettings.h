@@ -16,7 +16,7 @@ public:
  TsubtitlesSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  virtual void copy(const TfilterSettings *src);
 
- char_t flnm[MAX_PATH];
+ char_t flnm[MAX_PATH],tempflnm[MAX_PATH];
  int autoFlnm;
  int posX,posY;
  int align;

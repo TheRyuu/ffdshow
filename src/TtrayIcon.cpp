@@ -493,8 +493,7 @@ void TtrayIconDecVideo::processCmd(HMENU hm,int cmd)
   {
    char_t subflnm[MAX_PATH];
    GetMenuString(hm,cmd,subflnm,MAX_PATH,MF_BYCOMMAND);
-   deci->putParamStr(IDFF_subFilename,subflnm);
-   deci->putParam(IDFF_subAutoFlnm,0);
+   deci->putParamStr(IDFF_subTempFilename,subflnm);
    deci->putParam(IDFF_isSubtitles,1);
    deci->putParam(IDFF_subShowEmbedded,0);
   }

@@ -685,13 +685,16 @@ TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters)
  addOptions(iopts);
  static const TstrOption sopts[]=
   {
-   IDFF_subFilename ,(TstrVal)&TsubtitlesSettings::flnm    ,MAX_PATH ,_l(""),1,
+   IDFF_subFilename     ,(TstrVal)&TsubtitlesSettings::flnm    ,MAX_PATH ,_l(""),1,
      _l("subFlnm"),_l(""),
-   IDFF_subFixDict  ,(TstrVal)&TsubtitlesSettings::fixDict ,60       ,_l(""),1,
+   IDFF_subTempFilename ,(TstrVal)&TsubtitlesSettings::tempflnm,MAX_PATH ,_l(""),1,
+     NULL,_l(""),
+   IDFF_subFixDict      ,(TstrVal)&TsubtitlesSettings::fixDict ,60       ,_l(""),1,
      _l("subFixDict"),_l(""),
    0
   };
  addOptions(sopts);
+ tempflnm[0]=0;
 
  static const TcreateParamList2<Tlang> listLang(langs,&Tlang::desc);setParamList(IDFF_subDefLang,&listLang);setParamList(IDFF_subDefLang2,&listLang);
  static const TcreateParamList1 listVobsubAA(vobsubAAs);setParamList(IDFF_subVobsubAA,&listVobsubAA);
@@ -741,6 +744,7 @@ void TsubtitlesSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfi
      setOnChange(IDFF_subFixLang,sub,&TimgFilterSubtitles::onSubFlnmChange);
      setOnChange(IDFF_subFilename,sub,&TimgFilterSubtitles::onSubFlnmChangeStr);
      setOnChange(IDFF_subFixDict,sub,&TimgFilterSubtitles::onSubFlnmChangeStr);
+     setOnChange(IDFF_subTempFilename,sub,&TimgFilterSubtitles::onSubFlnmChangeStr);
     }
   }
 }

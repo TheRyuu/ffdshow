@@ -427,6 +427,7 @@
 #define IDFF_orderSubtitles          815
 #define IDFF_fullSubtitles           817
 #define IDFF_subFilename             821
+#define IDFF_subTempFilename        3402
 #define IDFF_subPosX                 810
 #define IDFF_subPosY                 811
 #define IDFF_subAlign                827 //0 - old ffdshow mode, 1 - left, 2 - center, 3 - right
@@ -1416,6 +1417,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3402
+//max:3403
 
 #endif

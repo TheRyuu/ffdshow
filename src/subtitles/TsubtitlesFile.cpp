@@ -42,7 +42,7 @@ const char_t* TsubtitlesFile::exts[]=
  _l("usf"),
  NULL
 };
-const char_t* TsubtitlesFile::mask=_l("Subtitles (*.utf;*.sub;*.srt;*.smi;*.rt;*.txt;*.ssa;*.aqt;*.mpl;*.idx)\0*.utf;*.sub;*.srt;*.smi;*.rt;*.txt;*.ssa;*.aqt;*.mpl;*.usf;*.idx\0All files (*.*)\0*.*\0");
+const char_t* TsubtitlesFile::mask=_l("Subtitles (*.utf;*.sub;*.srt;*.smi;*.rt;*.txt;*.ssa;*.ass;*.aqt;*.mpl;*.idx)\0*.utf;*.sub;*.srt;*.smi;*.rt;*.txt;*.ssa;*.ass;*.aqt;*.mpl;*.usf;*.idx\0All files (*.*)\0*.*\0");
 
 bool TsubtitlesFile::extMatch(const char_t *flnm)
 {
