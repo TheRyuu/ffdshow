@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VisualStudioToolFile
+	Name="Yasm64"
+	Version="8.00"
+	>
+	<Rules>
+		<CustomBuildRule
+			Name="yasm64"
+			DisplayName="yasm64"
+			CommandLine="yasm -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+			Outputs="$(IntDir)\$(InputName).obj"
+			FileExtensions="*.asm"
+			ExecutionDescription="yasm assembling $(InputPath)"
+			>
+			<Properties>
+			</Properties>
+		</CustomBuildRule>
+	</Rules>
+</VisualStudioToolFile>
