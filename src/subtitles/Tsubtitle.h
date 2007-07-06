@@ -7,7 +7,7 @@ struct Tsubtitle
 {
  virtual ~Tsubtitle() {}
  REFERENCE_TIME start,stop;
- virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs) const =0;
+ virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const =0;
  virtual size_t numlines(void) const {return 1;}
  virtual size_t numchars(void) const {return 1;}
  virtual Tsubtitle* create(void)=0;

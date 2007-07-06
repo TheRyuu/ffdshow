@@ -39,10 +39,10 @@ strings TtextFixBase::getDicts(const Tconfig *cfg)
 
 //============================= TtextFix ==========================
 template<class tchar> TtextFix<tchar>::TtextFix(const TsubtitlesSettings *scfg,const Tconfig *ffcfg):
- cfg(scfg),
  EndOfPrevSentence(true),
  inHearing(false)
 {
+ memcpy(&cfg,scfg,sizeof(TsubtitlesSettings));
  if (scfg->fix&fixOrtography)
   {
    char_t dictflnm[MAX_PATH];_makepath(dictflnm,NULL,ffcfg->pth,(::ffstring(_l("dict\\"))+scfg->fixDict).c_str(),_l("dic"));
@@ -70,11 +70,11 @@ template<class tchar> TtextFix<tchar>::TtextFix(const TsubtitlesSettings *scfg,c
 
 template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fixed)
 {
- if (cfg->fix==0) return false;
+ if (cfg.fix==0) return false;
  int W1;
  passtring<tchar> S1=text;
 
- if (cfg->fix&fixAP) //AP
+ if (cfg.fix&fixAP) //AP
   {
    S1=stringreplace(S1,_L("`")   , _L("'") ,rfReplaceAll);
    S1=stringreplace(S1,_L("\264"), _L("'") ,rfReplaceAll);
@@ -82,7 +82,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
    S1=stringreplace(S1,_L("\"\""), _L("\""),rfReplaceAll);
   }
 
- if (cfg->fix&fixIl) // Il
+ if (cfg.fix&fixIl) // Il
   {
    #define TrChar(n) St1[W1+(n)]
    bool TakeI=false,Takel=false;
@@ -154,7 +154,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
        if ((in(TrChar(-1),_L(" #"))) && (TrChar(+1) == 't') && (TrChar(+2) == 'a'))
         TakeI = true;
        //only for international abnormalities
-       switch (cfg->fixLang)
+       switch (cfg.fixLang)
         {
          case 0:// StCorrectIl_En;
           if (St1[W1] == 'l')
@@ -251,23 +251,23 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
           //All, English, German; 'w' - Iwao (Japan name), 'v' - Ivan
           _L("ABCDEFGHIJKLMNOPQRSTUVWXYZ\304\326\334 bcdghklmnoprstvwz\'.,!?"))) || //',' prevents PRCl, PRCl, PRCICKY
           //+East Europe - Czech, Slovak, Polish
-          ((cfg->font.charset== EASTEUROPE_CHARSET) &&
+          ((cfg.font.charset== EASTEUROPE_CHARSET) &&
           (in(TrChar(+1),_L("\301\311\314\315\323\332\331\335\310\317\322\330\212\215\216\324\305\274\243\217\257\323\245\312\214\306\321")))) ||
           //+Scandinavian
-          ((cfg->font.charset== ANSI_CHARSET) &&
+          ((cfg.font.charset== ANSI_CHARSET) &&
           in(TrChar(+1),_L("\xc6\xd8\xc5"))
           ) ||
           //+Italian: _Ieri_
           ((in(TrChar(-1),_L(" #"))) && (TrChar(+1) == 'e') &&
-          (TrChar(+2) == 'r') && (cfg->fixLang == 4)
+          (TrChar(+2) == 'r') && (cfg.fixLang == 4)
           )))
          Takel = true;
        //+East Europe - Czech, Slovak, Polish
-       if ((cfg->font.charset== EASTEUROPE_CHARSET) &&
+       if ((cfg.font.charset== EASTEUROPE_CHARSET) &&
            (in(TrChar(-1),_L("\341\350\357\351\354\355\362\363\370\232\235\372\371\375\236\364\345\276\237\277\363\263\271\352\234\346\361"))))
         Takel = true;
        //+Scandinavian
-       if ((cfg->font.charset== ANSI_CHARSET) &&
+       if ((cfg.font.charset== ANSI_CHARSET) &&
            (in(TrChar(-1),_L("\xe6\xf8\xe5"))))
         Takel = true;
        //_AIways AIden BIb BIouznit CIaire »IovÅE PIn˝ SIoûit UItra ZIost
@@ -372,7 +372,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
    S1=St1.copy(1 + 2, St1.size() - 4);
   }
 
- if (cfg->fix&fixPunctuation) //punctuation
+ if (cfg.fix&fixPunctuation) //punctuation
   {
    static const tchar *punctinations[]=
     {
@@ -546,7 +546,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
    S1 = stringreplace(S1, _L("<><>"), _L("..."), rfReplaceAll);
   }
 
- if (cfg->fix&fixOrtography)
+ if (cfg.fix&fixOrtography)
   for (typename strings::const_iterator s=odict.begin();s!=odict.end();)
    {
     const ffstring &oldstr=*s;s++;
@@ -554,9 +554,9 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
     S1=stringreplace(S1,oldstr,newstr,rfReplaceAll);
    }
 
- if (cfg->fix&fixCapital)
+ if (cfg.fix&fixCapital)
   {
-   if (cfg->fix&fixCapital2) S1.ConvertToLowerCase();
+   if (cfg.fix&fixCapital2) S1.ConvertToLowerCase();
 
    //Change "..." to "<><>"
    S1 = stringreplace(S1, _L("..."), _L("<><>"), rfReplaceAll);
@@ -624,7 +624,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
     }
   }
 
- if (cfg->fix&fixNumbers) //1 993 --> 1993 etc.
+ if (cfg.fix&fixNumbers) //1 993 --> 1993 etc.
   for (int I=1;I<=S1.size()-2;I++)
    if ((S1.size() >= I + 2) /*Delete!*/ &&
        (S1[I]=='0' || S1[I]=='1' || S1[I]=='2' || S1[I]=='3' || S1[I]=='4' || S1[I]=='5' || S1[I]=='6' || S1[I]=='7' || S1[I]=='8' || S1[I]=='9' || S1[I]=='/') &&
@@ -636,7 +636,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
          (S1[I + 3]=='0' || S1[I + 3]=='1' || S1[I + 3]=='2' || S1[I + 3]=='3' || S1[I + 3]=='4' || S1[I + 3]=='5' || S1[I + 3]=='6' || S1[I + 3]=='7' || S1[I + 3]=='8' || S1[I + 3]=='9')))
      S1.erase(I + 1, 1);
 
- if (cfg->fix&fixHearingImpaired)
+ if (cfg.fix&fixHearingImpaired)
   for (int I=1;I<=S1.size();I++)
    if (inHearing)
     {
@@ -892,8 +892,8 @@ template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processSSA(const 
  Tssa<tchar> ssa(props,defprops,words);
  while (*l2)
   {
-   if (l2[0]=='{' && l2[1]=='\\')
-    if (const tchar *end=strchr(l2+2,'}'))
+   if (l2[0]=='{' /*&& l2[1]=='\\'*/)
+    if (const tchar *end=strchr(l2+1,'}'))
      {
       ssa.processTokens(l,l1 ,l2,end);
       l2=end+1;
@@ -1021,8 +1021,10 @@ template<class tchar> void TsubtitleTextBase<tchar>::fix(TtextFix<tchar> &fix)
   l->fix(fix);
 }
 
-template<class tchar> void TsubtitleTextBase<tchar>::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs) const
+template<class tchar> void TsubtitleTextBase<tchar>::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const
 {
+ if (subformat==Tsubreader::SUB_SSA)
+  prefs.linespacing=103;
  f.print(this,forceChange,prefs);
 }
 template<class tchar> Tsubtitle* TsubtitleTextBase<tchar>::copy(void)

@@ -416,7 +416,7 @@ void TsubtitleDVD::linesprint(const TrenderedSubtitleLines::TprintPrefs &prefs) 
   lines.print(prefs);
 }
 
-void TsubtitleDVD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs) const
+void TsubtitleDVD::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const
 {
  if (this->offset[0]==DWORD(-1))
   return;

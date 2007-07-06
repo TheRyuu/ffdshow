@@ -490,31 +490,69 @@ template<class tchar> void TsubtitleParserSSA<tchar>::strToDouble(const ffstring
   }
 }
 
-template<class tchar> void TsubtitleParserSSA<tchar>::Tstyle::toProps(void)
+template<class tchar> bool TsubtitleParserSSA<tchar>::Tstyle::toCOLORREF(const ffstring& colourStr,COLORREF &colour,int &alpha)
+{
+ if (colourStr.empty()) return false;
+ int radix;
+ ffstring s1,s2;
+ s1=colourStr;
+ s1.ConvertToUpperCase();
+ if (s1.compare(0,2,_L("&H")))//strnicmp(colorS,_L("&h"),2)==0)
+  {
+   s1.erase(0,2);
+   radix=16;
+  }
+ else
+  radix=10;
+ s2=s1;
+ if (s1.size()>6)
+  {
+   s1.erase(2,s1.size()-2);
+   s2.erase(0,s2.size()-6);
+  }
+ else
+  s1.clear();
+
+ if (!s1.empty())
+  {
+   const tchar *alphaS=s1.c_str();
+   tchar *endalpha;
+   long a=strtol(alphaS,&endalpha,radix);
+   if (*endalpha=='\0')
+    alpha=256-a;
+   if (a=1) a=0;
+  }
+ if (s2.empty()) return false;
+ const tchar *colorS=s2.c_str();
+ tchar *endcolor;
+ COLORREF c=strtol(colorS,&endcolor,radix);
+ if (*endcolor=='\0')
+  {
+   colour=c;
+   return true;
+  }
+ return false;
+}
+
+template<class tchar> void TsubtitleParserSSA<tchar>::Tstyle::toProps(int version)
 {
  if (fontname)
   text<char_t>(fontname.c_str(), -1, props.fontname, countof(props.fontname));
  if (int size=atoi(fontsize.c_str()))
   props.size=size;
- const tchar *colorS=primaryColour.c_str();
- int radix;
- if (strnicmp(colorS,_L("&h"),2)==0)
-  {
-   colorS+=2;radix=16;
-  }
+ bool isColor=toCOLORREF(primaryColour,props.color,props.colorA);
+ isColor|=toCOLORREF(secondaryColour,props.SecondaryColour,props.SecondaryColourA);
+ isColor|=toCOLORREF(tertiaryColour,props.TertiaryColour,props.TertiaryColourA);
+ isColor|=toCOLORREF(outlineColour,props.OutlineColour,props.OutlineColourA);
+ if (version==TsubtitleParserSSA::SSA)
+  isColor|=toCOLORREF(backgroundColour,props.OutlineColour,props.OutlineColourA);
  else
-  radix=10;
- tchar *endcolor;
- COLORREF color=strtol(colorS,&endcolor,radix);
- if (*endcolor=='\0')
-  {
-   props.color=color;
-   props.isColor=true;
-  }
+  isColor|=toCOLORREF(backgroundColour,props.ShadowColour,props.ShadowColourA);
+ props.isColor=isColor;
  if (bold==_L("-1"))
-  props.bold=true;
+  props.bold=1;
  else
-  props.bold=false;
+  props.bold=0;
  if (italic==_L("-1")) props.italic=true;
  if (underline==_L("-1")) props.underline=true;
  if (strikeout==_L("-1")) props.strikeout=true;
@@ -534,9 +572,9 @@ template<class tchar> void TsubtitleParserSSA<tchar>::Tstyle::toProps(void)
  if (alignment && this->version != SSA)
   props.alignment=TSubtitleProps::alignASS2SSA(props.alignment);
 }
-template<class tchar> void TsubtitleParserSSA<tchar>::Tstyles::add(Tstyle &s)
+template<class tchar> void TsubtitleParserSSA<tchar>::Tstyles::add(Tstyle &s,int version)
 {
- s.toProps();
+ s.toProps(version);
  insert(std::make_pair(s.name,s));
 }
 template<class tchar> const TSubtitleProps* TsubtitleParserSSA<tchar>::Tstyles::getProps(const ffstring &style)
@@ -630,6 +668,14 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
         styleFormat.push_back(&Tstyle::fontsize);
        else if (strnicmp(f->first,_L("primaryColour"),13)==0)
         styleFormat.push_back(&Tstyle::primaryColour);
+       else if (strnicmp(f->first,_L("SecondaryColour"),15)==0)
+        styleFormat.push_back(&Tstyle::secondaryColour);
+       else if (strnicmp(f->first,_L("TertiaryColour"),14)==0)
+        styleFormat.push_back(&Tstyle::tertiaryColour);
+       else if (strnicmp(f->first,_L("OutlineColour"),13)==0)
+        styleFormat.push_back(&Tstyle::outlineColour);
+       else if (strnicmp(f->first,_L("BackColour"),10)==0)
+        styleFormat.push_back(&Tstyle::backgroundColour);
        else if (strnicmp(f->first,_L("bold"),4)==0)
         styleFormat.push_back(&Tstyle::bold);
        else if (strnicmp(f->first,_L("italic"),6)==0)
@@ -697,7 +743,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
      for (size_t i=0;i<fields.size() && i<styleFormat.size();i++)
        if (styleFormat[i])
         style.*(styleFormat[i])=fields[i];
-     styles.add(style);
+     styles.add(style,version);
     }
    else if (inEvents==2 && strnicmp(line,_L("Format:"),7)==0)
     {

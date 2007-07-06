@@ -9,7 +9,8 @@ struct TSubtitleProps
  TSubtitleProps(bool Ibold,bool Iitalic, bool Iunderline) {reset();bold=Ibold;italic=Iitalic;underline=Iunderline;}
  int bold;
  bool italic,underline,strikeout,bluredges;
- bool isColor;COLORREF color;
+ bool isColor;COLORREF color,SecondaryColour, TertiaryColour, OutlineColour, ShadowColour;
+ int colorA,SecondaryColourA, TertiaryColourA, OutlineColourA, ShadowColourA;
  bool isPos;int posx,posy;
  unsigned int refResX,refResY;
  int size;

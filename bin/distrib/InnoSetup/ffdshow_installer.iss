@@ -421,7 +421,9 @@ Source: ..\..\openIE.js; DestDir: {app}; Flags: ignoreversion; Components: ffdsh
 [InstallDelete]
 #if MSVC80
 Type: files; Name: {app}\ffdshow.ax.manifest; Components: ffdshow
+#if include_makeavis
 Type: files; Name: {app}\makeAVIS.exe.manifest; Components: ffdshow\makeavis
+#endif
 #endif
 #if localize
 ; Localized shortcuts
@@ -1712,4 +1714,6 @@ begin
   showMsgAdded(CurPageID, ComplistVideo);
   showMsgAdded(CurPageID, ComplistAudio);
 end;
+
+
 

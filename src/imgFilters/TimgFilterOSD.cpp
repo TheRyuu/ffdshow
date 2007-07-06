@@ -243,8 +243,7 @@ void TimgFilterOSD::TosdLine::print(IffdshowBase *deci,const TffPict &pict,unsig
      printprefs.linespacing=linespace;
      printprefs.deci=deci;
      printprefs.config=config;
-     printprefs.shadowMode=3;
-     printprefs.shadowSize=0;
+     printprefs.shadowMode=-1;
      if (splitline)
       {
        printprefs.fontchangesplit=1;

@@ -14,16 +14,18 @@ private:
  HFONT boldFont;int validCharsets[256];
 protected:
  void font2dlg(void),spacingxscale2dlg(void);
- virtual void shadow2dlg(void) PURE;
- virtual void shadowSize2dlg(void) {}; 
- virtual void shadowAlpha2dlg(void) {};
+ virtual void shadow2dlg(void);
+ virtual void shadowSize2dlg(void); 
+ virtual void shadowAlpha2dlg(void);
  void fillCharsets(void);
  TfontPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff=NULL,int IfilterPageId=0);
  virtual Twidget* createDlgItem(int id,HWND h);
  virtual int getTbrIdff(int id,const TbindTrackbars bind);
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
- int idff_fontcharset,idff_fontname,idff_fontautosize,idff_fontautosizevideowindow,idff_fontsizep,idff_fontsizea,idff_fontspacing,idff_fontoutlinestrength,idff_fontoutlineradius,idff_fontweight,idff_fontcolor,idff_fontxscale,idff_fontfast;
- int idff_subshadowmode, idff_subshadowalpha, idff_subshadowsize;
+ int idff_fontcharset,idff_fontname,idff_fontautosize,idff_fontautosizevideowindow,idff_fontsizep,idff_fontsizea,idff_fontspacing,idff_fontoutlinewidth,idff_fontweight,idff_fontcolor,idff_fontxscale,idff_fontfast;
+ int idff_fontoutlinecolor,idff_fontshadowcolor,idff_fontbodyalpha,idff_fontoutlinealpha;
+ int idff_fontshadowalpha,idff_fontshadowsize,idff_fontshadowmode;
+ int idff_fontopaquebox;
 public:
  virtual void init(void);
  virtual void cfg2dlg(void);
@@ -34,9 +36,6 @@ public:
 class TfontPageSubtitles :public TfontPage
 {
 protected:
- virtual void shadow2dlg(void);
- virtual void shadowSize2dlg(void); 
- virtual void shadowAlpha2dlg(void);
 public:
  TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDFF *idff);
 };
@@ -44,7 +43,6 @@ public:
 class TfontPageOSD :public TfontPage
 {
 protected:
- virtual void shadow2dlg(void);
 public:
  TfontPageOSD(TffdshowPageDec *Iparent);
 };

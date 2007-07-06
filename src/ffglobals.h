@@ -374,10 +374,19 @@ public:
 
 struct YUVcolor
 {
+ unsigned int r,g,b;
  unsigned char Y;
  char U,V;
- YUVcolor(void) {Y=U=V=0;}
+ YUVcolor(void) {Y=U=V=0;r=g=b=0;}
  YUVcolor(COLORREF rgb,bool vob=false);
+};
+
+struct YUVcolorA
+{
+ unsigned int Y,U,V,A;
+ YUVcolorA(void) {Y=0;U=V=128;A=256;};
+ YUVcolorA(YUVcolor yuv,unsigned int alpha=256);
+ YUVcolorA(COLORREF rgb,unsigned int alpha=256);
 };
 
 enum

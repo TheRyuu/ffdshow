@@ -16,6 +16,9 @@
 	</Platforms>
 	<ToolFiles>
 		<ToolFile
+			RelativePath=".\yasm64.rules"
+		/>
+		<ToolFile
 			RelativePath=".\yasm.rules"
 		/>
 	</ToolFiles>
@@ -31,6 +34,9 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="yasm64"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -147,6 +153,9 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
+				Name="yasm64"
+			/>
+			<Tool
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
@@ -171,7 +180,7 @@
 				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="DEBUG;_DEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX"
+				PreprocessorDefinitions="DEBUG;_DEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX;ARCH_IS_64BIT;ARCH_IS_GENERIC"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="false"
@@ -259,6 +268,9 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="yasm64"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -380,6 +392,9 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
+				Name="yasm64"
+			/>
+			<Tool
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
@@ -408,7 +423,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="NDEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX"
+				PreprocessorDefinitions="NDEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX;ARCH_IS_64BIT;ARCH_IS_GENERIC"
 				StringPooling="true"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -496,6 +511,9 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="yasm64"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -612,6 +630,9 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
+				Name="yasm64"
+			/>
+			<Tool
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
@@ -636,7 +657,7 @@
 				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="DEBUG;_DEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX"
+				PreprocessorDefinitions="DEBUG;_DEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX;ARCH_IS_64BIT;ARCH_IS_GENERIC"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="false"
@@ -726,6 +747,9 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="yasm64"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -848,6 +872,9 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
+				Name="yasm64"
+			/>
+			<Tool
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
@@ -876,7 +903,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/xiph;src/filters"
-				PreprocessorDefinitions="NDEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX"
+				PreprocessorDefinitions="NDEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX;ARCH_IS_64BIT;ARCH_IS_GENERIC"
 				StringPooling="true"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -1109,7 +1136,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1117,7 +1144,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1125,7 +1152,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1133,7 +1160,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 			</File>
@@ -1152,10 +1179,7 @@
 					Name="Debug|x64"
 					>
 					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1170,10 +1194,7 @@
 					Name="Release|x64"
 					>
 					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1188,10 +1209,7 @@
 					Name="Debug Unicode|x64"
 					>
 					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1206,10 +1224,7 @@
 					Name="Release Unicode|x64"
 					>
 					<Tool
-						Name="VCCustomBuildTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-						Outputs="$(IntDir)\$(InputName).obj"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 			</File>
@@ -1385,7 +1400,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1393,7 +1408,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1401,7 +1416,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1409,7 +1424,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 			</File>
@@ -2199,6 +2214,37 @@
 				RelativePath=".\src\subtitles\distance.h"
 				>
 			</File>
+			<File
+				RelativePath=".\src\subtitles\fontRenderer.asm"
+				>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="yasm64"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="yasm64"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug Unicode|x64"
+					>
+					<Tool
+						Name="yasm64"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release Unicode|x64"
+					>
+					<Tool
+						Name="yasm64"
+					/>
+				</FileConfiguration>			</File>
 			<File
 				RelativePath=".\src\subtitles\spudec.cpp"
 				>

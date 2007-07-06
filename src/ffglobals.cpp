@@ -1127,7 +1127,7 @@ const Taspect sampleAspects[]=
 //======================== YUVcolor ==========================
 YUVcolor::YUVcolor(COLORREF rgb,bool vob)
 {
- unsigned int r=GetRValue(rgb),g=GetGValue(rgb),b=GetBValue(rgb);
+ r=GetRValue(rgb),g=GetGValue(rgb),b=GetBValue(rgb);
  if (!vob)
   {
    Y=(uint8_t)((((uint16_t) ((0.299)   * (1L << 8) + 0.5)) * r +
@@ -1154,6 +1154,22 @@ YUVcolor::YUVcolor(COLORREF rgb,bool vob)
   }
 }
 
+YUVcolorA::YUVcolorA(YUVcolor yuv,unsigned int alpha)
+{
+ A=alpha;
+ Y=(unsigned int)(0.257*yuv.r+0.504*yuv.g+0.098*yuv.b+16.0);
+ U=(unsigned int)(-0.148*yuv.r-0.291*yuv.g+0.439*yuv.b+128.0);
+ V=(unsigned int)(0.439*yuv.r-0.368*yuv.g-0.071*yuv.b+128.0);
+}
+
+YUVcolorA::YUVcolorA(COLORREF rgb,unsigned int alpha)
+{
+ unsigned int r=GetRValue(rgb),g=GetGValue(rgb),b=GetBValue(rgb);
+ Y=(unsigned int)(0.257*r+0.504*g+0.098*b+16.0);
+ U=(unsigned int)(-0.148*r-0.291*g+0.439*b+128.0);
+ V=(unsigned int)(0.439*r-0.368*g-0.071*b+128.0);
+ A=alpha;
+}
 // Copyright (C) 1995,1998,1999 DJ Delorie
 static bool isslash(char_t c) {return c=='\\' || c=='/';}
 static const char_t *find_slash(const char_t *s)

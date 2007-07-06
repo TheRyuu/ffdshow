@@ -62,7 +62,7 @@ void TsubtitleVobsub::drawalpha(int x0,int y0, unsigned int w,unsigned int h, co
  else
   lines.print(prefs);
 }
-void TsubtitleVobsub::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs) const
+void TsubtitleVobsub::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const
 {
  int timer=(int)(90*time/(REF_SECOND_MULT/1000));
  if (wasseek)

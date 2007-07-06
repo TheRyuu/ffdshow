@@ -3,6 +3,7 @@
 
 #include "Tsubtitle.h"
 #include "TsubtitleProps.h"
+#include "TsubtitlesSettings.h"
 
 struct TsubtitlesSettings;
 struct Tconfig;
@@ -27,7 +28,7 @@ template<class tchar> class TtextFix : public TtextFixBase
 private:
  typedef typename tchar_traits<tchar>::ffstring ffstring;
  typedef typename tchar_traits<tchar>::strings strings;
- const TsubtitlesSettings *cfg;
+ TsubtitlesSettings cfg;
  bool EndOfPrevSentence,inHearing;
  strings odict;
  static inline bool in(tchar x,const tchar *s) {return strchr(s,x)!=NULL;}
@@ -216,7 +217,7 @@ public:
    propagateProps(this->begin(),offset,val,this->end());
   }
  void fix(TtextFix<tchar> &fix);
- virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs) const;
+ virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const;
  virtual Tsubtitle* copy(void);
  virtual Tsubtitle* create(void) {return new TsubtitleTextBase<tchar>(subformat);}
  virtual bool copyLine(Tsubtitle *dst,size_t linenum)

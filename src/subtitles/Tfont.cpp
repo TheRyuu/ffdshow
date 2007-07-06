@@ -32,6 +32,39 @@
 #include <mbstring.h>
 #pragma warning(disable:4244)
 
+//============================ The matrix for outline =============================
+static const short matrix0[]={
+ 000,000,000,000,000,
+ 000,100,200,100,000, 
+ 000,200,800,200,000,
+ 000,100,200,100,000, 
+ 000,000,000,000,000
+};
+
+static const short matrix1[]={
+ 000,000,000,000,000,
+ 000,200,500,200,000, 
+ 000,500,800,500,000,
+ 000,200,500,200,000, 
+ 000,000,000,000,000
+};
+
+static const short matrix2[]={
+ 000,200,300,200,000,
+ 200,400,500,400,200,
+ 300,500,800,500,300,
+ 200,400,500,400,200,
+ 000,200,300,200,000
+};
+
+static const short matrix3[]={
+ 800,800,800,800,800,
+ 800,800,800,800,800,
+ 800,800,800,800,800,
+ 800,800,800,800,800,
+ 800,800,800,800,800
+};
+
 //============================ TrenderedSubtitleWordBase =============================
 TrenderedSubtitleWordBase::~TrenderedSubtitleWordBase()
 {
@@ -40,13 +73,26 @@ TrenderedSubtitleWordBase::~TrenderedSubtitleWordBase()
    {
     aligned_free(bmp[i]);
     aligned_free(msk[i]);
+    aligned_free(outline[i]);
+    aligned_free(shadow[i]);
    }
 }
 
 //============================== TrenderedSubtitleWord ===============================
 
 // full rendering
-template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(HDC hdc,const tchar *s0,size_t strlens,const short (*matrix)[5],const YUVcolor &yuv,const TrenderedSubtitleLines::TprintPrefs &prefs,int xscale,int alignment):TrenderedSubtitleWordBase(true),shiftChroma(true)
+template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(
+                       HDC hdc,
+                       const tchar *s0,
+                       size_t strlens,
+                       const short (*matrix)[5],
+                       const YUVcolorA &YUV,
+                       const YUVcolorA &outlineYUV,
+                       const YUVcolorA &shadowYUV,
+                       const TrenderedSubtitleLines::TprintPrefs &prefs,
+                       int xscale):
+ TrenderedSubtitleWordBase(true),
+ shiftChroma(true)
 {
  typedef typename tchar_traits<tchar>::ffstring ffstring;
  typedef typename tchar_traits<tchar>::strings strings;
@@ -71,12 +117,13 @@ template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(HDC hdc,const
  OUTLINETEXTMETRIC otm;
  GetOutlineTextMetrics(hdc,sizeof(otm),&otm);
  unsigned int shadowSize = getShadowSize(prefs,otm.otmTextMetrics.tmHeight);
+ SIZE sz1=sz;
  if (otm.otmItalicAngle)
-  sz.cx-=LONG(sz.cy*sin(otm.otmItalicAngle*M_PI/1800));
+  sz1.cx-=LONG(sz1.cy*sin(otm.otmItalicAngle*M_PI/1800));
  else
   if (otm.otmTextMetrics.tmItalic)
-   sz.cx+=sz.cy*0.35;
- dx[0]=(sz.cx/4+2)*4;dy[0]=sz.cy+4;
+   sz1.cx+=sz1.cy*0.35;
+ dx[0]=(sz1.cx/4+2)*4;dy[0]=sz1.cy+4;
  unsigned char *bmp16=(unsigned char*)calloc(dx[0]*4,dy[0]);
  HBITMAP hbmp=CreateCompatibleBitmap(hdc,dx[0],dy[0]);
  HGDIOBJ old=SelectObject(hdc,hbmp);
@@ -89,14 +136,30 @@ template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(HDC hdc,const
  for (typename strings::const_iterator s=s1.begin();s!=s1.end();s++,cx++)
   {
    const char *t=(const char *)s->c_str();
-   int sz=s->size();
+   int sz=(int)s->size();
    prefs.config->getGDI<tchar>().textOut(hdc,x,2,s->c_str(),sz/*(int)s->size()*/);
    x+=*cx;
   }
- drawShadow(hdc,hbmp,bmp16,old,xscale,sz,prefs,matrix,yuv,shadowSize,alignment);
+ drawShadow(hdc,hbmp,bmp16,old,xscale,sz,prefs,matrix,YUV,outlineYUV,shadowYUV,shadowSize);
 }
-void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16,HGDIOBJ old,int xscale,const SIZE &sz,const TrenderedSubtitleLines::TprintPrefs &prefs,const short (*matrix)[5],const YUVcolor &yuv,unsigned int shadowSize,int alignment)
+extern "C"  DWORD maskffff;
+void TrenderedSubtitleWord::drawShadow(
+      HDC hdc,
+      HBITMAP hbmp,
+      unsigned char *bmp16,
+      HGDIOBJ old,
+      int xscale,
+      const SIZE &sz,
+      const TrenderedSubtitleLines::TprintPrefs &prefs,
+      const short (*matrix)[5],
+      const YUVcolorA &yuv,
+      const YUVcolorA &outlineYUV,
+      const YUVcolorA &shadowYUV,
+      unsigned int shadowSize)
 {
+ m_bodyYUV=yuv;
+ m_outlineYUV=outlineYUV;
+ m_shadowYUV=shadowYUV;
  BITMAPINFO bmi;
  bmi.bmiHeader.biSize=sizeof(bmi.bmiHeader);
  bmi.bmiHeader.biWidth=dx[0];
@@ -113,16 +176,41 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
  SelectObject(hdc,old);
  DeleteObject(hbmp);
 
-
+ if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
+  {
+   YV12_lum2chr_min=YV12_lum2chr_min_mmx2;
+   YV12_lum2chr_max=YV12_lum2chr_max_mmx2;
+  }
+ else
+  {
+   YV12_lum2chr_min=YV12_lum2chr_min_mmx;
+   YV12_lum2chr_max=YV12_lum2chr_max_mmx;
+  }
+#ifndef WIN64
+ if (Tconfig::cpu_flags&FF_CPU_SSE2)
+  {
+#endif
+   alignXsize=16;
+   TrenderedSubtitleWord_printY=TrenderedSubtitleWord_printY_sse2;
+   TrenderedSubtitleWord_printUV=TrenderedSubtitleWord_printUV_sse2;
+#ifndef WIN64
+  }
+ else
+  {
+   alignXsize=8;
+   TrenderedSubtitleWord_printY=TrenderedSubtitleWord_printY_mmx;
+   TrenderedSubtitleWord_printUV=TrenderedSubtitleWord_printUV_mmx;
+  }
+#endif
  unsigned int _dx,_dy;
  _dx=(xscale*dx[0]/100)/4+4+shadowSize;
  _dy=dy[0]/4+4+shadowSize;
  dxCharY=xscale*sz.cx/400;dyCharY=sz.cy/4;
- _dx=(_dx/8+1)*8;
- bmp[0]=(unsigned char*)aligned_calloc(_dx,_dy);
- msk[0]=(unsigned char*)aligned_calloc(_dx,_dy);
+ _dx=(_dx/alignXsize+1)*alignXsize;
+ bmp[0]=(unsigned char*)aligned_calloc(_dx,_dy,16);
+ msk[0]=(unsigned char*)aligned_calloc(_dx,_dy,16);
  int dxCharYstart;
- switch (alignment)
+ switch (prefs.alignSSA)
   {
    case 1: // left(SSA)
    case 5:
@@ -146,45 +234,46 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
   }
  if (dxCharYstart<0) dxCharYstart=0;
  for (unsigned int y=2;y<dy[0]-2;y+=4)
-  {
+    {
    unsigned char *dstBmpY=bmp[0]+(y/4+2)*_dx+2+dxCharYstart;
    for (unsigned int xstep=xscale==100?4*65536:400*65536/xscale,x=(2<<16)+xstep;x<((dx[0]-2)<<16);x+=xstep,dstBmpY++)
     {
      unsigned int sum=0;
      for (const unsigned char *bmp16src=bmp16+((y-2)*dx[0]+((x>>16)-2))*4,*bmp16srcEnd=bmp16src+5*dx[0]*4;bmp16src!=bmp16srcEnd;bmp16src+=dx[0]*4)
-	 {
-      for (int i=0;i<=12;i+=4)
-       sum+=bmp16src[i];
-	 }
+      {
+       for (int i=0;i<=12;i+=4)
+         sum+=bmp16src[i];
+      }
      sum/=20; // average of 5x4=20pixels
      *dstBmpY=(unsigned char)sum;
     }
   }
  free(bmp16);
 
-#if 0
- // This code works. Blur characters. Edge gets more smooth, outline gets thicker.
- // This code is better adapted to bigger characters.
- if (prefs.deci)
+ if (prefs.blur || (prefs.shadowMode==0 && shadowSize>0))
   {
-   unsigned char *blured_bmp=(unsigned char*)aligned_calloc(_dx,_dy);
-   Tlibmplayer *libmplayer;
-   SwsFilter filter;
-   SwsParams params;
-   prefs.deci->getPostproc(&libmplayer);
-   filter.lumH = filter.lumV = filter.chrH = filter.chrV = libmplayer->sws_getGaussianVec(0.7, 3.0);
-   libmplayer->sws_normalizeVec(filter.lumH, 1.0);
+   // Blur characters. Edge gets more smooth, outline gets thicker.
+   // This code is better adapted to bigger characters.
+   if (prefs.deci)
+    {
+     unsigned char *blured_bmp=(unsigned char*)aligned_calloc(_dx,_dy,16);
+     Tlibmplayer *libmplayer;
+     SwsFilter filter;
+     SwsParams params;
+     prefs.deci->getPostproc(&libmplayer);
+     filter.lumH = filter.lumV = filter.chrH = filter.chrV = libmplayer->sws_getGaussianVec(0.6, 3.0);
+     libmplayer->sws_normalizeVec(filter.lumH, 1.0);
 
-   Tlibmplayer::swsInitParams(&params,SWS_GAUSS);
-   SwsContext *ctx=libmplayer->sws_getContext(_dx, _dy, IMGFMT_Y800, _dx, _dy, IMGFMT_Y800, &params, &filter, NULL);
-   libmplayer->sws_scale_ordered(ctx,(const uint8_t**)&bmp[0],(const stride_t *)&_dx,0,_dy,(uint8_t**)&blured_bmp,(stride_t *)&_dx);
-   libmplayer->sws_freeContext(ctx);
-   libmplayer->sws_freeVec(filter.lumH);
-   libmplayer->Release();
-   aligned_free(bmp[0]);
-   bmp[0]=blured_bmp;
+     Tlibmplayer::swsInitParams(&params,SWS_GAUSS);
+     SwsContext *ctx=libmplayer->sws_getContext(_dx, _dy, IMGFMT_Y800, _dx, _dy, IMGFMT_Y800, &params, &filter, NULL);
+     libmplayer->sws_scale_ordered(ctx,(const uint8_t**)&bmp[0],(const stride_t *)&_dx,0,_dy,(uint8_t**)&blured_bmp,(stride_t *)&_dx);
+     libmplayer->sws_freeContext(ctx);
+     libmplayer->sws_freeVec(filter.lumH);
+     libmplayer->Release();
+     aligned_free(bmp[0]);
+     bmp[0]=blured_bmp;
+    }
   }
-#endif
 
  dx[0]=_dx;dy[0]=_dy;
  if (!matrix)
@@ -193,7 +282,7 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
   {
    memcpy(msk[0],bmp[0],dx[0]*dy[0]);
 
-	#define MAKE_SHADOW(x,y)                                  \
+    #define MAKE_SHADOW(x,y)                                  \
     {                                                         \
      unsigned int s=0,cnt=0;                                  \
      for (int yy=-2;yy<=+2;yy++)                              \
@@ -228,8 +317,6 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
      MAKE_SHADOW(dxY1,y0);
     }
 
-
-
    __m64 matrix8_0=*(__m64*)matrix[0],matrix8_1=*(__m64*)matrix[1],matrix8_2=*(__m64*)matrix[2];
    const int matrix4[3]={matrix[0][4],matrix[1][4],matrix[2][4]};
    const unsigned char *bmpYsrc_2=bmp[0],*bmpYsrc_1=bmp[0]+1*dx[0],*bmpYsrc=bmp[0]+2*dx[0],*bmpYsrc1=bmp[0]+3*dx[0],*bmpYsrc2=bmp[0]+4*dx[0];
@@ -253,156 +340,196 @@ void TrenderedSubtitleWord::drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16
       mskYdst[x]=limit_uint8((_mm_cvtsi64_si32(r)+s)/(25*32));
      }
   }
- dx[1]=dx[0]>>prefs.shiftX[1];dx[2]=dx[0]>>prefs.shiftX[2];
- dy[1]=dy[0]>>prefs.shiftY[1];dy[2]=dy[0]>>prefs.shiftY[2];
- unsigned int _dxUV=dx[1];
- dx[1]=(dx[1]/8+1)*8;
- bmp[1]=(unsigned char*)aligned_calloc(dx[1],dy[1]);msk[1]=(unsigned char*)aligned_calloc(dx[1],dy[1]);
- dx[2]=(dx[2]/8+1)*8;
- bmp[2]=(unsigned char*)aligned_calloc(dx[2],dy[2]);msk[2]=(unsigned char*)aligned_calloc(dx[2],dy[2]);
- unsigned char *bmpptr[3]={NULL,bmp[1],bmp[2]};
- unsigned char *mskptr[3]={NULL,msk[1],msk[2]};
- for (unsigned int y=0;y<dy[1];y++,bmpptr[1]+=dx[1],bmpptr[2]+=dx[2],mskptr[1]+=dx[1],mskptr[2]+=dx[2])
+ outline[0]=(unsigned char*)aligned_calloc(_dx,_dy,16);
+ unsigned int count=_dx*_dy;
+ for (unsigned int c=0;c<count;c++)
   {
-   const unsigned char *bmpYptr=bmp[0]+dx[0]*(y*2),*mskYptr=msk[0]+dx[0]*(y*2);
-   for (unsigned int x=0;x<_dxUV;x++,bmpYptr+=2,mskYptr+=2)
+   int b=bmp[0][c];
+   int o=msk[0][c]-b;
+   outline[0][c]=o*(255-b)>>8;
+  }
+
+ dx[1]=dx[0]>>prefs.shiftX[1];
+ dy[1]=dy[0]>>prefs.shiftY[1];
+ unsigned int _dxUV=dx[1];
+ dx[1]=(dx[1]/alignXsize+1)*alignXsize;
+ bmp[1]=(unsigned char*)aligned_calloc(dx[1],dy[1],16);
+ outline[1]=(unsigned char*)aligned_calloc(dx[1],dy[1],16);
+ shadow[1]=(unsigned char*)aligned_calloc(dx[1],dy[1],16);
+
+ dx[2]=dx[0]>>prefs.shiftX[2];
+ dy[2]=dy[0]>>prefs.shiftY[2];
+ dx[2]=(dx[2]/alignXsize+1)*alignXsize;
+
+ bmpmskstride[0]=dx[0];bmpmskstride[1]=dx[1];bmpmskstride[2]=dx[2];
+
+    shadow[0]=(unsigned char*)aligned_calloc(_dx,_dy,16);
+    unsigned int shadowAlpha = 255; //prefs.shadowAlpha;
+    unsigned int shadowMode = prefs.shadowMode; // 0: glowing, 1:classic with gradient, 2: classic with no gradient, >=3: no shadow
+    if (shadowSize > 0)
+    if (shadowMode == 0) //Gradient glowing shadow (most complex)
     {
-     unsigned int s;
-     s =bmpYptr[0];
-     s+=bmpYptr[1];
-     s+=bmpYptr[dx[0]];
-     s+=bmpYptr[dx[0]+1];
-     bmpptr[1][x]=(unsigned char)((yuv.U*s)>>9);
-     bmpptr[2][x]=(unsigned char)((yuv.V*s)>>9);
-     s =mskYptr[0];
-     s+=mskYptr[1];
-     s+=mskYptr[dx[0]];
-     s+=mskYptr[dx[0]+1];
-     mskptr[1][x]=
-     mskptr[2][x]=(unsigned char)(s/8);
+        _mm_empty();
+        if (_dx<shadowSize) shadowSize=_dx;
+        if (_dy<shadowSize) shadowSize=_dy;
+        unsigned int circle[1089]; // 1089=(16*2+1)^2
+        if (shadowSize>16) shadowSize=16;
+        int circleSize=shadowSize*2+1;
+        for (int y=0;y<circleSize;y++)
+        {
+            for (int x=0;x<circleSize;x++)
+            {
+                unsigned int rx=ff_abs(x-(int)shadowSize);
+                unsigned int ry=ff_abs(y-(int)shadowSize);
+                unsigned int r=(unsigned int)sqrt((double)(rx*rx+ry*ry));
+                if (r>shadowSize)
+                    circle[circleSize*y+x] = 0;
+                else
+                    circle[circleSize*y+x] = shadowAlpha*(shadowSize+1-r)/(shadowSize+1);
+            }
+        }
+        for (unsigned int y=0; y<_dy;y++)
+        {
+            int starty = y>=shadowSize ? 0 : shadowSize-y;
+            int endy = y+shadowSize<_dy ? circleSize : _dy-y+shadowSize;
+            for (unsigned int x=0; x<_dx;x++)
+            {
+                unsigned int pos = _dx*y+x;
+                int startx = x>=shadowSize ? 0 : shadowSize-x;
+                int endx = x+shadowSize<_dx ? circleSize : _dx-x+shadowSize;
+                if (msk[0][pos] == 0) continue;
+                for (int ry=starty; ry<endy;ry++)
+                {
+                    for (int rx=startx; rx<endx;rx++)
+                    {
+                        unsigned int alpha = circle[circleSize*ry+rx];
+                        if (alpha)
+                        {
+                            unsigned int dstpos = _dx*(y+ry-shadowSize)+x+rx-shadowSize;
+                            unsigned int s = msk[0][pos] * alpha >> 8;
+                            if (shadow[0][dstpos]<s)
+                                shadow[0][dstpos] = (unsigned char)s;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else if (shadowMode == 1) //Gradient classic shadow
+    {
+        unsigned int shadowStep = shadowAlpha/shadowSize;
+        for (unsigned int y=0; y<_dy;y++)
+        {
+            for (unsigned int x=0; x<_dx;x++)
+            {
+                unsigned int pos = _dx*y+x;
+                if (msk[0][pos] == 0) continue;
+
+                unsigned int shadowAlphaGradient = shadowAlpha;
+                for (unsigned int xx=1; xx<=shadowSize; xx++)
+                {
+                    unsigned int s = msk[0][pos]*shadowAlphaGradient>>8;
+                    if (x + xx < _dx)
+                    {
+                        if (y+xx < _dy && 
+                            shadow[0][_dx*(y+xx)+x+xx] <s)
+                        {
+                            shadow[0][_dx*(y+xx)+x+xx] = s;
+                        }
+                    }
+                    shadowAlphaGradient -= shadowStep;
+                }
+            }
+        }
+    }
+    else if (shadowMode == 2) //Classic shadow
+    {
+        for (unsigned int y=shadowSize; y<_dy;y++)
+            memcpy(shadow[0]+_dx*y+shadowSize,msk[0]+_dx*(y-shadowSize),_dx-shadowSize);
+    }
+
+ const DWORD *fontmaskconstants=&fontMaskConstants;
+ int isColorOutline=(outlineYUV.U!=128 || outlineYUV.V!=128);
+ if (Tconfig::cpu_flags&FF_CPU_MMX)
+  {
+   unsigned int e_dx0=_dx & ~0xf;
+   unsigned int e_dx1=e_dx0/2;
+   for (unsigned int y=0;y<dy[1];y++)
+    for (unsigned int x=0;x<e_dx1;x+=8)
+     {
+      unsigned int lum0=2*y*_dx+x*2;
+      unsigned int lum1=(2*y+1)*_dx+x*2;
+      unsigned int chr=y*dx[1]+x;
+      YV12_lum2chr_max(&bmp[0][lum0],&bmp[0][lum1],&bmp[1][chr]);
+      if (isColorOutline)
+       YV12_lum2chr_max(&outline[0][lum0],&outline[0][lum1],&outline[1][chr]);
+      else
+       YV12_lum2chr_min(&outline[0][lum0],&outline[0][lum1],&outline[1][chr]);
+      YV12_lum2chr_min(&shadow[0][lum0],&shadow [0][lum1],&shadow [1][chr]);
+     }
+   unsigned int e_dx2=_dx/2;
+   if (e_dx2>e_dx1)
+    {
+     if (_dx>=16)
+      {
+       unsigned int ldx=_dx-16;
+       unsigned int cdx=ldx/2;
+       for (unsigned int y=0;y<dy[1];y++)
+        {
+         unsigned int lum0=2*y*_dx+ldx;
+         unsigned int lum1=(2*y+1)*_dx+ldx;
+         unsigned int chr=y*dx[1]+cdx;
+         YV12_lum2chr_max(&bmp[0][lum0],&bmp[0][lum1],&bmp[1][chr]);
+         if (isColorOutline)
+          YV12_lum2chr_max(&outline[0][lum0],&outline[0][lum1],&outline[1][chr]);
+         else
+          YV12_lum2chr_min(&outline[0][lum0],&outline[0][lum1],&outline[1][chr]);
+         YV12_lum2chr_min(&shadow[0][lum0],&shadow[0][lum1],&shadow[1][chr]);
+        }
+      }
+     else
+      {
+        for (unsigned int y=0;y<dy[1];y++)
+         for (unsigned int x=e_dx1;x<e_dx2;x++)
+          {
+           unsigned int lum0=2*y*_dx+x*2;
+           unsigned int lum1=(2*y+1)*_dx+x*2;
+           unsigned int chr=y*dx[1]+x;
+           bmp[1][chr]=std::max(std::max(std::max(bmp[0][lum0],bmp[0][lum0+1]),bmp[0][lum1]),bmp[0][lum1+1]);
+           if (isColorOutline)
+            outline[1][chr]=std::max(std::max(std::max(outline[0][lum0],outline[0][lum0+1]),outline[0][lum1]),outline[0][lum1+1]);
+           else
+            outline[1][chr]=std::min(std::min(std::min(outline[0][lum0],outline[0][lum0+1]),outline[0][lum1]),outline[0][lum1+1]);
+           shadow[1][chr]=std::min(std::min(std::min(shadow[0][lum0],shadow[0][lum0+1]),shadow[0][lum1]),shadow[0][lum1+1]);
+          }
+      }
     }
   }
- unsigned int cnt=dx[0]*dy[0],i=0;
- __m64 m0=_mm_setzero_si64(),yuvY=_mm_set1_pi16(yuv.Y);
- for (;i<cnt-3;i+=4)
+ else
   {
-   __m64 bmp8=_mm_unpacklo_pi8(_mm_cvtsi32_si64(*(int*)(bmp[0]+i)),m0);
-   bmp8=_mm_srli_pi16(_mm_mullo_pi16(bmp8,yuvY),8);
-   *(int*)(bmp[0]+i)=_mm_cvtsi64_si32(_mm_packs_pu16(bmp8,m0));
+   unsigned int _dx1=_dx/2;
+   for (unsigned int y=0;y<dy[1];y++)
+    for (unsigned int x=0;x<_dx1;x++)
+     {
+      unsigned int lum0=2*y*_dx+x*2;
+      unsigned int lum1=(2*y+1)*_dx+x*2;
+      unsigned int chr=y*dx[1]+x;
+      bmp[1][chr]=std::max(std::max(std::max(bmp[0][lum0],bmp[0][lum0+1]),bmp[0][lum1]),bmp[0][lum1+1]);
+      if (isColorOutline)
+       outline[1][chr]=std::max(std::max(std::max(outline[0][lum0],outline[0][lum0+1]),outline[0][lum1]),outline[0][lum1+1]);
+      else
+       outline[1][chr]=std::min(std::min(std::min(outline[0][lum0],outline[0][lum0+1]),outline[0][lum1]),outline[0][lum1+1]);
+      shadow[1][chr]=std::min(std::min(std::min(shadow[0][lum0],shadow[0][lum0+1]),shadow[0][lum1]),shadow[0][lum1+1]);
+     }
   }
- for (;i<cnt;i++)
- {
-  bmp[0][i]=(unsigned char)((bmp[0][i]*yuv.Y)>>8);
- }
- bmpmskstride[0]=dx[0];bmpmskstride[1]=dx[1];bmpmskstride[2]=dx[2];
  _mm_empty();
-
-   unsigned int shadowAlpha = prefs.shadowAlpha;
-   unsigned int shadowMode = prefs.shadowMode; // 0: glowing, 1:classic with gradient, 2: classic with no gradient, >=3: no shadow
-   if (shadowSize > 0)
-   if (shadowMode == 0) //Gradient glowing shadow (most complex)
-   {
-	   if (dx[0]<shadowSize) shadowSize=dx[0];
-	   if (dy[0]<shadowSize) shadowSize=dy[0];
-	   unsigned int circle[1089]; // 1089=(16*2+1)^2
-	   if (shadowSize>16) shadowSize=16;
-	   int circleSize=shadowSize*2+1;
-	   for (int y=0;y<circleSize;y++)
-	   {
-			for (int x=0;x<circleSize;x++)
-			{
-				unsigned int rx=ff_abs(x-(int)shadowSize);
-				unsigned int ry=ff_abs(y-(int)shadowSize);
-				unsigned int r=(unsigned int)sqrt((double)(rx*rx+ry*ry));
-				if (r>shadowSize)
-					circle[circleSize*y+x] = 0;
-				else
-					circle[circleSize*y+x] = shadowAlpha*(shadowSize+1-r)/(shadowSize+1);
-			}
-		}
-	   for (unsigned int y=0; y<_dy;y++)
-	   {
-			int starty = y>=shadowSize ? 0 : shadowSize-y;
-			int endy = y+shadowSize<_dy ? circleSize : _dy-y+shadowSize;
-			for (unsigned int x=0; x<_dx;x++)
-			{
-				unsigned int pos = _dx*y+x;
-				int startx = x>=shadowSize ? 0 : shadowSize-x;
-				int endx = x+shadowSize<_dx ? circleSize : _dx-x+shadowSize;
-				if (bmp[0][pos] == 0) continue;
-				for (int ry=starty; ry<endy;ry++)
-				{
-					for (int rx=startx; rx<endx;rx++)
-					{
-						unsigned int alpha = circle[circleSize*ry+rx];
-						if (alpha)
-						{
-							unsigned int dstpos = _dx*(y+ry-shadowSize)+x+rx-shadowSize;
-							unsigned int shadow = bmp[0][pos] * alpha >> 8;
-							if (msk[0][dstpos]<shadow)
-								msk[0][dstpos] = (unsigned char)shadow;
-						}
-					}
-				}
-
-			}
-	   }
-   }
-   else if (shadowMode == 1) //Gradient classic shadow
-   {
-	   unsigned int shadowStep = shadowAlpha/shadowSize;
-	   for (unsigned int y=0; y<_dy;y++)
-	   {
-		   for (unsigned int x=0; x<_dx;x++)
-		   {
-			   unsigned int pos = _dx*y+x;
-			   if (bmp[0][pos] == 0) continue;
-			   /*else
-				bmp[0][pos] = 255;*/
-
-			   unsigned int shadowAlphaGradient = shadowAlpha;
-			   for (unsigned int xx=1; xx<=shadowSize; xx++)
-			   {
-					unsigned int shadow = bmp[0][pos]*shadowAlphaGradient>>8;
-					if (x + xx < _dx)
-					{
-						if (y+xx < _dy && 
-							msk[0][_dx*(y+xx)+x+xx] <shadow)
-						{
-							msk[0][_dx*(y+xx)+x+xx] = shadow;
-						}
-					}
-				   shadowAlphaGradient -= shadowStep;
-			   }
-		   }
-	   }
-   }
-   else if (shadowMode == 2) //Classic shadow
-   {
-		shadowAlpha*=0.53;
-		unsigned int lookup085[256],lookupAlpha[256];
-		for (int i=0;i<256;i++)
-		{
-			lookup085[i]=i*0.85;
-			lookupAlpha[i]=i*shadowAlpha>>8;
-		}
-		for (unsigned int y=_dy-1; y>=shadowSize;y--)
-		{
-			for (unsigned int x=_dx-1; x>=shadowSize;x--)
-			{
-				unsigned int srcpos = _dx*(y-shadowSize)+x-shadowSize;
-				unsigned int dstpos = _dx*y+x;
-				unsigned char srcPixel = (unsigned char)std::max<unsigned int>(bmp[0][srcpos],lookup085[msk[0][srcpos]]); // lookup085[msk[0][srcpos]] = shadow of outline.
-				if (srcPixel != 0)
-					msk[0][dstpos] = (unsigned char)std::max<unsigned int>(msk[0][dstpos],lookupAlpha[srcPixel]);
-			}
-		}
-   }
+ aligned_free(msk[0]);
+ msk[0]=NULL;
 }
 
 unsigned int TrenderedSubtitleWord::getShadowSize(const TrenderedSubtitleLines::TprintPrefs &prefs,LONG fontHeight)
 {
- if (prefs.shadowSize==0)
+ if (prefs.shadowSize==0 || prefs.shadowMode==3)
   return 0;
  if (prefs.shadowSize < 0) // SSA/ASS/ASS2
  return -1 * prefs.shadowSize;
@@ -424,6 +551,9 @@ unsigned int TrenderedSubtitleWord::getShadowSize(const TrenderedSubtitleLines::
 // fast rendering
 template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(TcharsChache *charsChache,const tchar *s,size_t strlens,const TrenderedSubtitleLines::TprintPrefs &prefs):TrenderedSubtitleWordBase(true),shiftChroma(true)
 {
+ m_bodyYUV=(charsChache->getBodyYUV());
+ m_outlineYUV=(charsChache->getOutlineYUV());
+ m_shadowYUV=(charsChache->getShadowYUV());
  const TrenderedSubtitleWord **chars=(const TrenderedSubtitleWord**)_alloca(strlens*sizeof(TrenderedSubtitleLine*));
  for (int i=0;i<3;i++)
   dx[i]=dy[i]=0;
@@ -442,13 +572,17 @@ template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(TcharsChache 
     if(_mbclen((const unsigned char *)&s[i])==2)
      i++;
   }
- dx[0]=(dx[0]/8+2)*8;dx[1]=dx[2]=(dx[0]/16+1)*8;
+ alignXsize=chars[0]->alignXsize;
+ TrenderedSubtitleWord_printY=chars[0]->TrenderedSubtitleWord_printY;
+ TrenderedSubtitleWord_printUV=chars[0]->TrenderedSubtitleWord_printUV;
+ dx[0]=(dx[0]/alignXsize+2)*alignXsize;dx[1]=dx[2]=(dx[0]/alignXsize/2+1)*alignXsize;
  dxCharY=dx[0];
  dyCharY=chars[0]->dyCharY;
- for (int i=0;i<3;i++)
+ for (int i=0;i<2;i++)
   {
-   bmp[i]=(unsigned char*)aligned_calloc(dx[i],dy[i]);//bmp[1]=(unsigned char*)aligned_calloc(dxUV,dyUV);bmp[2]=(unsigned char*)aligned_calloc(dxUV,dyUV);
-   msk[i]=(unsigned char*)aligned_calloc(dx[i],dy[i]);//msk[1]=(unsigned char*)aligned_calloc(dxUV,dyUV);msk[2]=(unsigned char*)aligned_calloc(dxUV,dyUV);
+   bmp[i]=(unsigned char*)aligned_calloc(dx[i],dy[i],16);
+   shadow[i]=(unsigned char*)aligned_calloc(dx[i],dy[i],16);
+   outline[i]=(unsigned char*)aligned_calloc(dx[i],dy[i],16);
    bmpmskstride[i]=dx[i];
   }
  unsigned int x=0;
@@ -459,14 +593,21 @@ template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(TcharsChache 
      int tabsize=prefs.tabsize*std::max(chars[0]->dyCharY,1U);
      x=(x/tabsize+1)*tabsize;
     }
-   for (unsigned int p=0;p<3;p++)
+   for (unsigned int p=0;p<2;p++)
     {
-     const unsigned char *charbmpptr=chars[i]->bmp[p],*charmskptr=chars[i]->msk[p];
-     unsigned char *bmpptr=bmp[p]+roundRshift(x,prefs.shiftX[p]),*mskptr=msk[p]+roundRshift(x,prefs.shiftX[p]);
-     for (unsigned int y=0;y<chars[i]->dy[p];y++,bmpptr+=bmpmskstride[p],mskptr+=bmpmskstride[p],charbmpptr+=chars[i]->bmpmskstride[p],charmskptr+=chars[i]->bmpmskstride[p])
+     const unsigned char *charbmpptr=chars[i]->bmp[p];
+     const unsigned char *charshadowptr=chars[i]->shadow[p],*charoutlineptr=chars[i]->outline[p];
+     unsigned char *bmpptr=bmp[p]+roundRshift(x,prefs.shiftX[p]);
+     unsigned char *shadowptr=shadow[p]+roundRshift(x,prefs.shiftX[p]),*outlineptr=outline[p]+roundRshift(x,prefs.shiftX[p]);
+     for (unsigned int y=0;y<chars[i]->dy[p];y++,
+       bmpptr+=bmpmskstride[p],
+       shadowptr+=bmpmskstride[p],outlineptr+=bmpmskstride[p],
+       charbmpptr+=chars[i]->bmpmskstride[p],
+       charshadowptr+=chars[i]->bmpmskstride[p],charoutlineptr+=chars[i]->bmpmskstride[p])
       {
        memadd(bmpptr,charbmpptr,chars[i]->dx[p]);
-       memadd(mskptr,charmskptr,chars[i]->dx[p]);
+       memadd(shadowptr,charshadowptr,chars[i]->dx[p]);
+       memadd(outlineptr,charoutlineptr,chars[i]->dx[p]);
       }
     }
    x+=chars[i]->dxCharY;
@@ -476,85 +617,171 @@ template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(TcharsChache 
   }
  _mm_empty();
 }
-
 void TrenderedSubtitleWord::print(unsigned int sdx[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const
 {
- int sdx15=sdx[0]-15;
- for (unsigned int y=0;y<dy[0];y++,dstLn[0]+=stride[0],msk[0]+=bmpmskstride[0],bmp[0]+=bmpmskstride[0])
+ if (shadow[0])
   {
-   int x=0;
-   for (;x<sdx15;x+=16)
+#ifdef WIN64
+   if (Tconfig::cpu_flags&FF_CPU_SSE2)
     {
-     __m64 mm0=*(__m64*)(dstLn[0]+x),mm1=*(__m64*)(dstLn[0]+x+8);
-     mm0=_mm_subs_pu8(mm0,*(__m64*)(msk[0]+x));mm1=_mm_subs_pu8(mm1,*(__m64*)(msk[0]+x+8));
-     mm0=_mm_adds_pu8(mm0,*(__m64*)(bmp[0]+x));mm1=_mm_adds_pu8(mm1,*(__m64*)(bmp[0]+x+8));
-     *(__m64*)(dstLn[0]+x)=mm0;*(__m64*)(dstLn[0]+x+8)=mm1;
+     unsigned char xmmregs[16*16];
+     storeXmmRegs(xmmregs);
+#else
+   if (Tconfig::cpu_flags&(FF_CPU_SSE2|FF_CPU_MMX))
+    {
+#endif
+     const DWORD *fontmaskconstants=&fontMaskConstants;
+     unsigned int halfAlingXsize=alignXsize>>1;
+     unsigned short* colortbl=(unsigned short *)aligned_malloc(192,16);
+     for (unsigned int i=0;i<halfAlingXsize;i++)
+      {
+       colortbl[i]   =(short)m_bodyYUV.Y;
+       colortbl[i+8] =(short)m_bodyYUV.U;
+       colortbl[i+16]=(short)m_bodyYUV.V;
+       colortbl[i+24]=(short)m_bodyYUV.A;
+       colortbl[i+32]=(short)m_outlineYUV.Y;
+       colortbl[i+40]=(short)m_outlineYUV.U;
+       colortbl[i+48]=(short)m_outlineYUV.V;
+       colortbl[i+56]=(short)m_outlineYUV.A;
+       colortbl[i+64]=(short)m_shadowYUV.Y;
+       colortbl[i+72]=(short)m_shadowYUV.U;
+       colortbl[i+80]=(short)m_shadowYUV.V;
+       colortbl[i+88]=(short)m_shadowYUV.A;
+      }
+     // Y
+     for (unsigned int y=0;y<dy[0];y++)
+      for (unsigned int x=0;x<sdx[0];x+=alignXsize)
+       {
+        int srcPos=y*dx[0]+x;
+        int dstPos=y*stride[0]+x;
+        TrenderedSubtitleWord_printY(&bmp[0][srcPos],&outline[0][srcPos],&shadow[0][srcPos],colortbl,&dstLn[0][dstPos],fontmaskconstants);
+       }
+     // UV
+     for (unsigned int y=0;y<dy[1];y++)
+      for (unsigned int x=0;x<sdx[1];x+=alignXsize)
+       {
+        int srcPos=y*dx[1]+x;
+        int dstPos=y*stride[1]+x;
+        TrenderedSubtitleWord_printUV(&bmp[1][srcPos],&outline[1][srcPos],&shadow[1][srcPos],colortbl,&dstLn[1][dstPos],&dstLn[2][dstPos],fontmaskconstants);
+       }
+     aligned_free(colortbl);
+#ifdef WIN64
+     restoreXmmRegs(xmmregs);
+#endif
     }
-   for (;x<int(sdx[0]);x++)
+   else
     {
-     int c=dstLn[0][x];
-     c-=msk[0][x];if (c<0) c=0;
-     c+=bmp[0][x];if (c>255) c=255;
-     dstLn[0][x]=(unsigned char)c;
+     // Y
+     for (unsigned int y=0;y<dy[0];y++)
+      for (unsigned int x=0;x<sdx[0];x++)
+       {
+        int srcPos=y*dx[0]+x;
+        int dstPos=y*stride[0]+x;
+        int s=m_shadowYUV.A *shadow [0][srcPos]>>8;
+        int d=((256-s)*dstLn[0][dstPos]>>8)+(s*m_shadowYUV.Y>>8);
+        int b=m_bodyYUV.A   *bmp    [0][srcPos]>>8;
+            d=((256-b)*d>>8)+(b*m_bodyYUV.Y>>8);
+        int o=m_outlineYUV.A*outline[0][srcPos]>>8;
+            dstLn[0][dstPos]=((256-o)*d>>8)+(o*m_outlineYUV.Y>>8);
+       }
+     for (unsigned int y=0;y<dy[1];y++)
+      for (unsigned int x=0;x<sdx[1];x++)
+       {
+        int srcPos=y*dx[1]+x;
+        int dstPos=y*stride[1]+x;
+        // U
+        int s=m_shadowYUV.A *shadow [1][srcPos]>>8;
+        int d=((256-s)*dstLn[1][dstPos]>>8)+(s*m_shadowYUV.U>>8);
+        int b=m_bodyYUV.A   *bmp    [1][srcPos]>>8;
+            d=((256-b)*d>>8)+(b*m_bodyYUV.U>>8);
+        int o=m_outlineYUV.A*outline[1][srcPos]>>8;
+            dstLn[1][dstPos]=((256-o)*d>>8)+(o*m_outlineYUV.U>>8);
+        // V
+            d=((256-s)*dstLn[2][dstPos]>>8)+(s*m_shadowYUV.V>>8);
+            d=((256-b)*d>>8)+(b*m_bodyYUV.V>>8);
+            dstLn[2][dstPos]=((256-o)*d>>8)+(o*m_outlineYUV.V>>8);
+       }
     }
   }
- __m64 m128=_mm_set1_pi8((char)128),m0=_mm_setzero_si64(),mAdd=shiftChroma?m128:m0;
- int add=shiftChroma?128:0;
- int sdx7=sdx[1]-7;
- for (unsigned int y=0;y<dy[1];y++,dstLn[1]+=stride[1],dstLn[2]+=stride[2],msk[1]+=bmpmskstride[1],bmp[1]+=bmpmskstride[1],bmp[2]+=bmpmskstride[2])
+ else
   {
-   int x=0;
-   for (;x<sdx7;x+=8)
+   int sdx15=sdx[0]-15;
+   for (unsigned int y=0;y<dy[0];y++,dstLn[0]+=stride[0],msk[0]+=bmpmskstride[0],bmp[0]+=bmpmskstride[0])
     {
-     __m64 mm0=*(__m64*)(dstLn[1]+x);
-     __m64 mm1=*(__m64*)(dstLn[2]+x);
-
-     psubb(mm0,m128);
-     psubb(mm1,m128);
-
-     const __m64 msk8=*(const __m64*)(msk[1]+x);
-
-     __m64 mskU=_mm_cmpgt_pi8(m0,mm0); //what to be negated
-     mm0=_mm_or_si64(_mm_and_si64(mskU,_mm_adds_pu8(mm0,msk8)),_mm_andnot_si64(mskU,_mm_subs_pu8(mm0,msk8)));
-
-     __m64 mskV=_mm_cmpgt_pi8(m0,mm1);
-     mm1=_mm_or_si64(_mm_and_si64(mskV,_mm_adds_pu8(mm1,msk8)),_mm_andnot_si64(mskV,_mm_subs_pu8(mm1,msk8)));
-
-     mm0=_mm_add_pi8(_mm_add_pi8(mm0,*(__m64*)(bmp[1]+x)),mAdd);
-     mm1=_mm_add_pi8(_mm_add_pi8(mm1,*(__m64*)(bmp[2]+x)),mAdd);
-
-     *(__m64*)(dstLn[1]+x)=mm0;
-     *(__m64*)(dstLn[2]+x)=mm1;
+     int x=0;
+     for (;x<sdx15;x+=16)
+      {
+       __m64 mm0=*(__m64*)(dstLn[0]+x),mm1=*(__m64*)(dstLn[0]+x+8);
+       mm0=_mm_subs_pu8(mm0,*(__m64*)(msk[0]+x));mm1=_mm_subs_pu8(mm1,*(__m64*)(msk[0]+x+8));
+       mm0=_mm_adds_pu8(mm0,*(__m64*)(bmp[0]+x));mm1=_mm_adds_pu8(mm1,*(__m64*)(bmp[0]+x+8));
+       *(__m64*)(dstLn[0]+x)=mm0;*(__m64*)(dstLn[0]+x+8)=mm1;
+      }
+     for (;x<int(sdx[0]);x++)
+      {
+       int c=dstLn[0][x];
+       c-=msk[0][x];if (c<0) c=0;
+       c+=bmp[0][x];if (c>255) c=255;
+       dstLn[0][x]=(unsigned char)c;
+      }
     }
-   for (;x<int(sdx[1]);x++)
+   __m64 m128=_mm_set1_pi8((char)128),m0=_mm_setzero_si64(),mAdd=shiftChroma?m128:m0;
+   int add=shiftChroma?128:0;
+   int sdx7=sdx[1]-7;
+   for (unsigned int y=0;y<dy[1];y++,dstLn[1]+=stride[1],dstLn[2]+=stride[2],msk[1]+=bmpmskstride[1],bmp[1]+=bmpmskstride[1],bmp[2]+=bmpmskstride[2])
     {
-     int m=msk[1][x],c;
-     c=dstLn[1][x];
-     c-=128;
-     if (c<0) {c+=m;if (c>0) c=0;}
-     else     {c-=m;if (c<0) c=0;}
-     c+=bmp[1][x];
-     c+=add;
-     dstLn[1][x]=c;//(unsigned char)limit(c,0,255);
+     int x=0;
+     for (;x<sdx7;x+=8)
+      {
+       __m64 mm0=*(__m64*)(dstLn[1]+x);
+       __m64 mm1=*(__m64*)(dstLn[2]+x);
 
-     c=dstLn[2][x];
-     c-=128;
-     if (c<0) {c+=m;if (c>0) c=0;}
-     else     {c-=m;if (c<0) c=0;};
-     c+=bmp[2][x];
-     c+=add;
-     dstLn[2][x]=c;//(unsigned char)limit(c,0,255);
+       psubb(mm0,m128);
+       psubb(mm1,m128);
+
+       const __m64 msk8=*(const __m64*)(msk[1]+x);
+
+       __m64 mskU=_mm_cmpgt_pi8(m0,mm0); //what to be negated
+       mm0=_mm_or_si64(_mm_and_si64(mskU,_mm_adds_pu8(mm0,msk8)),_mm_andnot_si64(mskU,_mm_subs_pu8(mm0,msk8)));
+
+       __m64 mskV=_mm_cmpgt_pi8(m0,mm1);
+       mm1=_mm_or_si64(_mm_and_si64(mskV,_mm_adds_pu8(mm1,msk8)),_mm_andnot_si64(mskV,_mm_subs_pu8(mm1,msk8)));
+
+       mm0=_mm_add_pi8(_mm_add_pi8(mm0,*(__m64*)(bmp[1]+x)),mAdd);
+       mm1=_mm_add_pi8(_mm_add_pi8(mm1,*(__m64*)(bmp[2]+x)),mAdd);
+
+       *(__m64*)(dstLn[1]+x)=mm0;
+       *(__m64*)(dstLn[2]+x)=mm1;
+      }
+     for (;x<int(sdx[1]);x++)
+      {
+       int m=msk[1][x],c;
+       c=dstLn[1][x];
+       c-=128;
+       if (c<0) {c+=m;if (c>0) c=0;}
+       else     {c-=m;if (c<0) c=0;}
+       c+=bmp[1][x];
+       c+=add;
+       dstLn[1][x]=c;//(unsigned char)limit(c,0,255);
+
+       c=dstLn[2][x];
+       c-=128;
+       if (c<0) {c+=m;if (c>0) c=0;}
+       else     {c-=m;if (c<0) c=0;};
+       c+=bmp[2][x];
+       c+=add;
+       dstLn[2][x]=c;//(unsigned char)limit(c,0,255);
+      }
     }
   }
 
 /* for (int x=0;x<dx[0];x++)
-	 for (int y=0;y<dy[0];y++)
-	 {
-		 if (bmp[0][dy[0]*y+x] !=0)
-		 {
-			 dstLn[0][x]=c
-		 }
-	 }*/
+     for (int y=0;y<dy[0];y++)
+     {
+         if (bmp[0][dy[0]*y+x] !=0)
+         {
+             dstLn[0][x]=c
+         }
+     }*/
  _mm_empty();
 }
 
@@ -658,28 +885,29 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
      old_marginTop=(*i)->props.marginTop;
      old_marginL=(*i)->props.marginL;
      // calculate the height of the paragraph
-     double hParagraph=0;
+     double paragraphHeight=0,h1=0;
      for (const_iterator pi=i;pi!=end();pi++)
       {
+       double h2;
        if ((*pi)->props.alignment!=old_alignment || (*pi)->props.marginTop!=old_marginTop || (*pi)->props.marginL!=old_marginL)
         break;
-       if (pi+1!=end() && (*(pi+1))->props.alignment==old_alignment && (*(pi+1))->props.marginTop==old_marginTop && (*(pi+1))->props.marginL==old_marginL)
-        hParagraph+=(double)prefs.linespacing*(*pi)->charHeight()/100;
-       else
-        hParagraph+=(*pi)->height();
+       h2=h1+(*pi)->height();
+       h1+=(double)prefs.linespacing*(*pi)->charHeight()/100;
+       if (h2>paragraphHeight) paragraphHeight=h2;
       }
+     h1+=2.0; // FIXME: should plus the outline width of the top line + that of the botom line.
 
      switch ((*i)->props.alignment)
       {
        case 1: // SSA bottom
        case 2:
        case 3:
-        y=prefsdy-hParagraph-marginBottom;
+        y=(double)prefsdy-h1-marginBottom;
         break;
        case 9: // SSA mid
        case 10:
        case 11:
-        y=(prefsdy-hParagraph)/2;
+        y=((double)prefsdy-h1)/2.0;
         break;
        case 5: // SSA top
        case 6:
@@ -690,8 +918,8 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
         break;
       }
 
-     if (y+hParagraph>=(double)prefsdy)
-      y=(double)prefsdy-hParagraph-1;
+     if (y+paragraphHeight>=(double)prefsdy)
+      y=(double)prefsdy-paragraphHeight-1;
      if (y<0) y=0;
     }
 
@@ -719,7 +947,7 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
        case 3: // right(SSA)
        case 7:
        case 11:
-        x=prefsdx-cdx-(*i)->props.get_marginR(prefsdx);
+        x=prefsdx-cdx-(*i)->props.get_marginR(prefsdx)+2;
         break;
        default: // -1 (non SSA)
         x=(prefs.xpos*prefsdx)/100+prefs.posXpix;
@@ -733,7 +961,7 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
         break;
       }
     }
-   // if (x+cdx>prefsdx) x=prefsdx-cdx-1;
+   if (x+cdx>=prefsdx) x=prefsdx-cdx-1;
    if (x<0) x=0;
    (*i)->print(x,y,prefs,prefsdx,prefsdy); // print a line (=print words).
   }
@@ -755,7 +983,14 @@ void TrenderedSubtitleLines::clear(void)
 }
 
 //================================= TcharsChache =================================
-TcharsChache::TcharsChache(HDC Ihdc,const short (*Imatrix)[5],const YUVcolor &Iyuv,int Ixscale,IffdshowBase *Ideci):hdc(Ihdc),matrix(Imatrix),yuv(Iyuv),xscale(Ixscale),deci(Ideci)
+TcharsChache::TcharsChache(HDC Ihdc,const short (*Imatrix)[5],const YUVcolorA &Iyuv,const YUVcolorA &Ioutline,const YUVcolorA &Ishadow,int Ixscale,IffdshowBase *Ideci):
+ hdc(Ihdc),
+ matrix(Imatrix),
+ yuv(Iyuv),
+ outlineYUV(Ioutline),
+ shadowYUV(Ishadow),
+ xscale(Ixscale),
+ deci(Ideci)
 {
 }
 TcharsChache::~TcharsChache()
@@ -768,7 +1003,7 @@ template<> const TrenderedSubtitleWord* TcharsChache::getChar(const wchar_t *s,c
  int key=(int)*s;
  Tchars::iterator l=chars.find(key);
  if (l!=chars.end()) return l->second;
- TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,matrix,yuv,prefs,xscale);
+ TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,matrix,yuv,outlineYUV,shadowYUV,prefs,xscale);
  chars[key]=ln;
  return ln;
 }
@@ -780,7 +1015,7 @@ template<> const TrenderedSubtitleWord* TcharsChache::getChar(const char *s,cons
    int key=(int)*s;
    Tchars::iterator l=chars.find(key);
    if (l!=chars.end()) return l->second;
-   TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,matrix,yuv,prefs,xscale);
+   TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,matrix,yuv,outlineYUV,shadowYUV,prefs,xscale);
    chars[key]=ln;
    return ln;
   }
@@ -790,7 +1025,7 @@ template<> const TrenderedSubtitleWord* TcharsChache::getChar(const char *s,cons
    int key=(int)*mbcs;
    Tchars::iterator l=chars.find(key);
    if (l!=chars.end()) return l->second;
-   TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,2,matrix,yuv,prefs,xscale);
+   TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,2,matrix,yuv,outlineYUV,shadowYUV,prefs,xscale);
    chars[key]=ln;
    return ln;
   }
@@ -818,16 +1053,34 @@ void Tfont::init(const TfontSettings *IfontSettings)
  memcpy(fontSettings,IfontSettings,sizeof(TfontSettings));
  hdc=CreateCompatibleDC(NULL);
  if (!hdc) return;
- yuvcolor=YUVcolor(fontSettings->color);
- if (fontSettings->outlineStrength<100)
-  for (int y=-2;y<=2;y++)
-   for (int x=-2;x<=2;x++)
-    {
-     double d=8-(x*x+y*y);
-     matrix[y+2][x+2]=short(3.57*fontSettings->outlineStrength*pow(d/8,2-fontSettings->outlineRadius/50.0)+0.5);
-    }
+ yuvcolor=YUVcolorA(fontSettings->color,fontSettings->bodyAlpha);
+ outlineYUV=YUVcolorA(fontSettings->outlineColor,fontSettings->outlineAlpha);
+ shadowYUV=YUVcolorA(fontSettings->shadowColor,fontSettings->shadowAlpha);
+ //if (fontSettings->outlineStrength<100)
+ // for (int y=-2;y<=2;y++)
+ //  for (int x=-2;x<=2;x++)
+ //   {
+ //    double d=8-(x*x+y*y);
+ //    matrix[y+2][x+2]=short(3.57*fontSettings->outlineStrength*pow(d/8,2-fontSettings->outlineRadius/50.0)+0.5);
+ //   }
+ switch (fontSettings->outlineWidth)
+  {
+   case 0:
+    memcpy(matrix,matrix0,50);
+    break;
+   case 1:
+    memcpy(matrix,matrix1,50);
+    break;
+   case 2:
+    memcpy(matrix,matrix2,50);
+    break;
+   case 3:
+    memcpy(matrix,matrix3,50);
+    break;
+  }
+
  if (fontSettings->fast)
-  charsCache=new TcharsChache(hdc,fontSettings->outlineStrength==100?NULL:matrix,yuvcolor,fontSettings->xscale,deci);
+  charsCache=new TcharsChache(hdc,fontSettings->opaqueBox?NULL:matrix,yuvcolor,outlineYUV,shadowYUV,fontSettings->xscale,deci);
 }
 void Tfont::done(void)
 {
@@ -867,15 +1120,54 @@ template<class tchar> TrenderedSubtitleWord* Tfont::newWord(const tchar *s,size_
     }
   }
 
+ prefs.alignSSA=w->props.alignment;
+
+ short (*mat)[5];
+ if (w->props.outlineWidth==0)
+  mat=(short (*)[5])matrix0;
+ else if (w->props.outlineWidth==1)
+  mat=(short (*)[5])matrix1;
+ else if (w->props.outlineWidth==2)
+  mat=(short (*)[5])matrix2;
+ else if (w->props.outlineWidth>=3)
+  {
+   mat=(short (*)[5])matrix3;
+   prefs.blur=true;
+  }
+ else
+  {
+   mat=fontSettings->opaqueBox?NULL:matrix;
+   if (fontSettings->outlineWidth==3)
+    prefs.blur=true;
+  }
+
+ if (prefs.shadowMode==-1) // OSD
+  {
+   prefs.shadowMode=fontSettings->shadowMode;
+   prefs.shadowSize=fontSettings->shadowSize;
+  }
+
+ YUVcolorA shadowYUV1;
+ if (!w->props.isColor)
+  {
+   shadowYUV1=shadowYUV;
+   if (prefs.shadowMode<=1)
+    shadowYUV1.A=256*sqrt((double)shadowYUV1.A/256.0);
+  }
+
  if (!w->props.isColor && fontSettings->fast && !otm.otmItalicAngle && !otm.otmTextMetrics.tmItalic && !(prefs.shadowSize!=0 && prefs.shadowMode!=3))
   return new TrenderedSubtitleWord(charsCache,s1.c_str(),slen,prefs); // fast rendering
  else
   return new TrenderedSubtitleWord(hdc,                      // full rendering
                                    s1.c_str(),
                                    slen,
-                                   fontSettings->outlineStrength==100?NULL:matrix,w->props.isColor?w->props.color:yuvcolor,prefs,
-                                   w->props.scaleX!=-1?w->props.scaleX:fontSettings->xscale,
-                                   w->props.alignment);
+                                   mat,
+                                   w->props.isColor ? YUVcolorA(w->props.color,w->props.colorA) : yuvcolor,
+                                   w->props.isColor ? YUVcolorA(w->props.OutlineColour,w->props.OutlineColourA) : outlineYUV,
+                                   w->props.isColor ? YUVcolorA(w->props.ShadowColour,w->props.ShadowColourA) : shadowYUV1,
+                                   prefs,
+                                   w->props.scaleX!=-1?w->props.scaleX:fontSettings->xscale
+                                   );
 }
 
 template<class tchar> int Tfont::get_splitdx1(const TsubtitleWord<tchar> &w,int splitdx,int dx) const

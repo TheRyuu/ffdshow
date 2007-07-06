@@ -63,7 +63,7 @@ public:
 
  TsubtitleDVD(REFERENCE_TIME start,const unsigned char *Idata,unsigned int Idatalen,TsubtitleDVDparent *Iparent);
  virtual ~TsubtitleDVD();
- virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs) const;
+ virtual void print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const;
  virtual Tsubtitle* copy(void) {return new TsubtitleDVD(*this);}
  virtual Tsubtitle* create(void) {return new TsubtitleDVD(0,NULL,0,parent);}
  virtual void append(const unsigned char *data,unsigned int datalen);

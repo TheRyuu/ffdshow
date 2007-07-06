@@ -5,7 +5,7 @@ SRCS=ffdshow_all.cpp TffDecoder_reg.cpp
 SRCS_C=ffdebug.c
 
 ifneq ($(CC),icl)
-SRCS_NASM=cpuid.asm memcpy.asm
+SRCS_NASM=cpuid.asm memcpy.asm subtitles/fontRenderer.asm
 endif
 
 include makefile.inc

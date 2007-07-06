@@ -112,15 +112,16 @@ private:
   public:
    Tstyle(int playResX,int playResY,int version):props(playResX,playResY) {this->version=version;}
    ffstring name,fontname,fontsize,primaryColour,bold,italic,underline,strikeout,encoding,spacing,fontScaleX,fontScaleY;
-   ffstring secondaryColour,tertiaryColour,backgroundColour,alignment;
+   ffstring secondaryColour,tertiaryColour,outlineColour,backgroundColour,alignment;
    ffstring angleZ,borderStyle,outlineWidth,shadowDepth,marginLeft,marginRight,marginV,marginTop,marginBottom,alpha,relativeTo;
    TSubtitleProps props;
-   void toProps(void);
+   void toProps(int version);
+   bool toCOLORREF(const ffstring &colourStr,COLORREF &colour,int &alpha);
   };
  struct Tstyles : std::map<ffstring,Tstyle,ffstring_iless>
   {
    const TSubtitleProps* getProps(const ffstring &style);
-   void add(Tstyle &style);
+   void add(Tstyle &style,int version);
   };
  Tstyles styles;
  typedef std::vector<ffstring Tstyle::*> TstyleFormat;

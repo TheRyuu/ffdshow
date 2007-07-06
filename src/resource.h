@@ -346,9 +346,7 @@
 #define IDC_TBR_SUB_POSY                1127
 #define IDC_ED_SUB_DELAY                1128
 #define IDC_ED_SUB_SPEED                1129
-#define IDC_LBL_FONT_OUTLINE_RADIUS     1130
 #define IDC_ED_SUB_SPEED2               1130
-#define IDC_TBR_FONT_OUTLINE_RADIUS     1131
 #define IDC_TBR_SUB_STEREOSCOPICPAR     1131
 #define IDC_TBR_SUB_LINESPACING         1132
 #define IDC_CHB_BLUR                    1134
@@ -1695,7 +1693,6 @@
 #define IDC_CBX_FONT_SUBSHADOW_MODE     1977
 #define IDC_LBL_FONT_SUBSHADOW_MODE     1978
 #define IDC_TBR_FONT_SUBSHADOW_SIZE     1979
-#define IDC_LBL_FONT_SUBSHADOW_SIZE     1980
 #define IDC_LBL_FONT_SUBSHADOW_ALPHA    1981
 #define IDC_TBR_FONT_SUBSHADOW_ALPHA    1982
 #define IDC_CBX_AOUT_MULTICHANNEL_DEVICE 1983
@@ -1751,6 +1748,18 @@
 #define IDC_GRP_COMP_1                  2049
 #define IDC_EDT_COMP_1                  2050
 #define IDC_CHB_IS_COMPMGR              2051
+#define IDC_TXT_FONT_BODY               2052
+#define IDC_TXT_FONT_OUTLINE            2053
+#define IDC_TXT_SHADOW                  2054
+#define IDC_TXT_FONT_SHADOW             2054
+#define IDC_TBR_FONT_BODY_ALPHA         2056
+#define IDC_TBR_FONT_OUTLINE_ALPHA      2059
+#define IDC_FONT_OPAQUE_BOX             2060
+#define IDC_IMG_FONT_COLOR_OUTLINE      2061
+#define IDC_IMG_FONT_COLOR_SHADOW       2062
+#define IDC_LBL_FONT_OUTLINE_WIDTH      2063
+#define IDC_TBR_FONT_OUTLINE_WIDTH      2064
+#define IDC_GRP_FONT_COLOR              2065
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -1767,7 +1776,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        296
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2052
+#define _APS_NEXT_CONTROL_VALUE         2066
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

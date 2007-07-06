@@ -32,7 +32,7 @@ TsubtitleUSF2::TsubtitleUSF2(TsubreaderUSF2 *Isubs,int Iidx,REFERENCE_TIME Istar
  start=Istart;
  stop=Istop;
 }
-void TsubtitleUSF2::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs) const
+void TsubtitleUSF2::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const
 {
  if (first || subs->dx!=prefs.dx || subs->dy!=prefs.dy)
   {

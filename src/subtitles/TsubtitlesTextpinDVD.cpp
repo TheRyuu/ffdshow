@@ -152,7 +152,7 @@ const Tsubtitle* TsubtitlesTextpinDVD::getSubtitle(const TsubtitlesSettings *cfg
  return subtitles.empty()?NULL:(subtitles.start=start,subtitles.stop=stop,&subtitles);
 }
 
-void TsubtitlesTextpinDVD::Tsubtitles::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs) const
+void TsubtitlesTextpinDVD::Tsubtitles::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const
 {
  for (const_iterator s=begin();s!=end();s++)
   (*s)->print(time,wasseek,f,forceChange,prefs);

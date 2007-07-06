@@ -475,15 +475,19 @@
 //#define IDFF_fontSize            803
 #define IDFF_fontSizeA               824
 #define IDFF_fontWeight              804
-#define IDFF_fontOutlineStrength     805 //outline strength (0..100) 100 - subtitles aren't transparent
-#define IDFF_fontOutlineRadius       806 //outline radius
+#define IDFF_fontOutlineWidth        3387
+#define IDFF_fontOpaqueBox           3400
 #define IDFF_fontSpacing             808
 #define IDFF_fontColor               809
+#define IDFF_fontOutlineColor        3391
+#define IDFF_fontShadowColor         3392
 #define IDFF_fontSplitting           831
 #define IDFF_fontXscale              832 // *100, multiplier of character width
 #define IDFF_fontFast                854
 #define IDFF_fontShadowMode          3374 // 0 - Glowing, 1 - classic gradient, 2 - classic
 #define IDFF_fontShadowSize          3375
+#define IDFF_fontBodyAlpha           3389
+#define IDFF_fontOutlineAlpha        3390
 #define IDFF_fontShadowAlpha         3376
 
 #define IDFF_filterBlur              900
@@ -569,10 +573,17 @@
 #define IDFF_OSDfontCharset        1502
 #define IDFF_OSDfontSize           1503
 #define IDFF_OSDfontWeight         1504
-#define IDFF_OSDfontOutlineStrength 1505
-#define IDFF_OSDfontOutlineRadius  1506
+#define IDFF_OSDfontOutlineWidth   3388
+#define IDFF_OSDfontOpaqueBox      3401
 #define IDFF_OSDfontSpacing        1507
 #define IDFF_OSDfontColor          1508
+#define IDFF_OSDfontOutlineColor   3393
+#define IDFF_OSDfontShadowColor    3394
+#define IDFF_OSDfontBodyAlpha      3395
+#define IDFF_OSDfontOutlineAlpha   3396
+#define IDFF_OSDfontShadowAlpha    3397
+#define IDFF_OSDfontShadowSize     3398
+#define IDFF_OSDfontShadowMode     3399
 #define IDFF_OSDfontXscale         1532
 #define IDFF_OSDfontFast           1535
   #define IDFF_OSDtype_inputSize          1520
@@ -1405,6 +1416,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3387
+//max:3402
 
 #endif

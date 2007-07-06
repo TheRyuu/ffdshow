@@ -21,13 +21,13 @@ class TrenderedSubtitleLines: protected std::vector<TrenderedSubtitleLine*>
 public:
  struct TprintPrefs
   {
-   TprintPrefs(IffdshowBase *Ideci):deci(Ideci),config(NULL),sizeDx(0),sizeDy(0),posXpix(0),fontchangesplit(false),textBorderLR(0),tabsize(8),dvd(false) {}
+   TprintPrefs(IffdshowBase *Ideci):deci(Ideci),config(NULL),sizeDx(0),sizeDy(0),posXpix(0),fontchangesplit(false),textBorderLR(0),tabsize(8),dvd(false),blur(false) {}
    unsigned char **dst;
    const stride_t *stride;
    const unsigned int *shiftX,*shiftY;
    unsigned int dx,dy;
    int xpos,ypos;
-   int align;
+   int align,alignSSA;
    int linespacing;
    unsigned int sizeDx,sizeDy;
    int posXpix;
@@ -40,6 +40,7 @@ public:
    const Tconfig *config;
    int shadowMode, shadowAlpha; // Subtitles shadow
    double shadowSize;
+   bool blur;
   };
  TrenderedSubtitleLines(void) {}
  TrenderedSubtitleLines(TrenderedSubtitleLine *ln) {push_back(ln);}
@@ -57,11 +58,14 @@ private:
  Tchars chars;
  HDC hdc;
  const short (*matrix)[5];
- const YUVcolor &yuv;
+ YUVcolorA yuv,outlineYUV,shadowYUV;
  int xscale;
  IffdshowBase *deci;
 public:
- TcharsChache(HDC Ihdc,const short (*Imatrix)[5],const YUVcolor &Iyuv,int Ixscale,IffdshowBase *Ideci);
+ const YUVcolorA& getBodyYUV(void) const {return yuv;}
+ const YUVcolorA& getOutlineYUV(void) const {return outlineYUV;}
+ const YUVcolorA& getShadowYUV(void) const {return shadowYUV;}
+ TcharsChache(HDC Ihdc,const short (*Imatrix)[5],const YUVcolorA &Iyuv,const YUVcolorA &Ioutline,const YUVcolorA &Ishadow,int Ixscale,IffdshowBase *Ideci);
  template<class tchar> const TrenderedSubtitleWord *getChar(tchar *s,const TrenderedSubtitleLines::TprintPrefs &prefs);
  ~TcharsChache();
 };
@@ -71,25 +75,58 @@ class TrenderedSubtitleWordBase
 private:
  bool own;
 public:
- TrenderedSubtitleWordBase(bool Iown):own(Iown) {}
+ TrenderedSubtitleWordBase(bool Iown):own(Iown) 
+  {
+   for (int i=0;i<3;i++)
+    {
+     bmp[i]=NULL;msk[i]=NULL;
+     outline[i]=NULL;shadow[i]=NULL;
+    }
+  }
  ~TrenderedSubtitleWordBase();
  unsigned int dx[3],dy[3];
  unsigned int dxCharY,dyCharY;
  unsigned char *bmp[3],*msk[3];stride_t bmpmskstride[3];
+ unsigned char *outline[3],*shadow[3];
  virtual void print(unsigned int dx[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const =0;
 };
 
 class TrenderedSubtitleWord : public TrenderedSubtitleWordBase
 {
 private:
+ YUVcolorA m_bodyYUV,m_outlineYUV,m_shadowYUV;
  bool shiftChroma;
- void drawShadow(HDC hdc,HBITMAP hbmp,unsigned char *bmp16,HGDIOBJ old,int xscale,const SIZE &sz,const TrenderedSubtitleLines::TprintPrefs &prefs,const short (*matrix)[5],const YUVcolor &yuv,unsigned int shadowSize,int alignment=-1);
+ void drawShadow(       HDC hdc,
+                        HBITMAP hbmp,
+                        unsigned char *bmp16,
+                        HGDIOBJ old,int xscale,
+                        const SIZE &sz,
+                        const TrenderedSubtitleLines::TprintPrefs &prefs,
+                        const short (*matrix)[5],
+                        const YUVcolorA &yuv,
+                        const YUVcolorA &outlineYUV,
+                        const YUVcolorA &shadowYUV,
+                        unsigned int shadowSize);
  unsigned int getShadowSize(const TrenderedSubtitleLines::TprintPrefs &prefs,LONG fontHeight);
 public:
- template<class tchar> TrenderedSubtitleWord(HDC hdc,const tchar *s,size_t strlens,const short (*matrix)[5],const YUVcolor &yuv,const TrenderedSubtitleLines::TprintPrefs &prefs,int xscale,int alignment=-1);
+ template<class tchar> TrenderedSubtitleWord(
+                        HDC hdc,
+                        const tchar *s,
+                        size_t strlens,
+                        const short (*matrix)[5],
+                        const YUVcolorA &YUV,
+                        const YUVcolorA &outlineYUV,
+                        const YUVcolorA &shadowYUV,
+                        const TrenderedSubtitleLines::TprintPrefs &prefs,
+                        int xscale);
  template<class tchar> TrenderedSubtitleWord(TcharsChache *chars,const tchar *s,size_t strlens,const TrenderedSubtitleLines::TprintPrefs &prefs);
  TrenderedSubtitleWord(bool IshiftChroma=true):shiftChroma(IshiftChroma),TrenderedSubtitleWordBase(false) {}
  virtual void print(unsigned int dx[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const;
+ unsigned int alignXsize;
+ void* (__cdecl *TrenderedSubtitleWord_printY)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short *colortbl,const unsigned char* dst,const DWORD* fontmaskconstants);
+ void* (__cdecl *TrenderedSubtitleWord_printUV)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short *colortbl,const unsigned char* dstU,const unsigned char* dstV,const DWORD* fontmaskconstants);
+ void* (__cdecl *YV12_lum2chr_min)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
+ void* (__cdecl *YV12_lum2chr_max)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
 };
 
 class TrenderedSubtitleLine : protected std::vector<TrenderedSubtitleWordBase*>
@@ -121,7 +158,7 @@ private:
  TrenderedSubtitleLines lines;
  unsigned int height;
  const Tsubtitle *oldsub;
- YUVcolor yuvcolor;
+ YUVcolorA yuvcolor,outlineYUV,shadowYUV;
  short matrix[5][5];
  template<class tchar> void prepareC(const TsubtitleTextBase<tchar> *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange);
  template<class tchar> int get_splitdx1(const TsubtitleWord<tchar> &w,int splitdx,int dx) const;
@@ -134,5 +171,19 @@ public:
  template<class tchar> void print(const TsubtitleTextBase<tchar> *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int *y=NULL);
  void done(void);
 };
+
+extern "C" {
+ void* (__cdecl TrenderedSubtitleWord_printY_mmx)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dst,const DWORD* fontmaskconstants);
+ void* (__cdecl TrenderedSubtitleWord_printUV_mmx)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dstU,const unsigned char* dstV,const DWORD* fontmaskconstants);
+ void* (__cdecl TrenderedSubtitleWord_printY_sse2)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dst,const DWORD* fontmaskconstants);
+ void* (__cdecl TrenderedSubtitleWord_printUV_sse2)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dstU,const unsigned char* dstV,const DWORD* fontmaskconstants);
+ void* (__cdecl YV12_lum2chr_min_mmx)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
+ void* (__cdecl YV12_lum2chr_max_mmx)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
+ void* (__cdecl YV12_lum2chr_min_mmx2)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
+ void* (__cdecl YV12_lum2chr_max_mmx2)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
+ void  __cdecl storeXmmRegs(unsigned char* buf);
+ void  __cdecl restoreXmmRegs(unsigned char* buf);
+ extern DWORD fontMaskConstants;
+}
 
 #endif

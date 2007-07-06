@@ -35,14 +35,18 @@ public:
  static int getCharset(const char_t *name);
  bool getTip(char_t *buf,size_t len)
   {
-   tsnprintf(buf,len,_l("Font: %s, %s charset, %ssize:%i, %s, spacing:%i\nShadow intensity: %i, shadow radius:%i"),name,getCharset(charset),autosize?_l("auto"):_l(""),autosize?sizeA:sizeP,weights[weight/100-1].name,spacing,outlineStrength,outlineRadius);
+   tsnprintf(buf,len,_l("Font: %s, %s charset, %ssize:%i, %s, spacing:%i\noutline width:%i"),name,getCharset(charset),autosize?_l("auto"):_l(""),autosize?sizeA:sizeP,weights[weight/100-1].name,spacing,outlineWidth);
    return true;
   }
- int spacing,weight,color,outlineStrength,outlineRadius;
+ int spacing,weight;
+ int opaqueBox;
+ int color,outlineColor,shadowColor;
+ int bodyAlpha,outlineAlpha,shadowAlpha;
  int split;
  int fast;
  virtual void reg_op(TregOp &t);
- int shadowSize, shadowAlpha, shadowMode; // Subtitles shadow
+ int outlineWidth;
+ int shadowSize, shadowMode; // Subtitles shadow
  static const char_t *shadowModes[];
 };
 
