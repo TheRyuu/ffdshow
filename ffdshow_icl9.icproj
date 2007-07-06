@@ -5,7 +5,8 @@
 	Name="ffdshow"
 	ProjectGUID="{6DF9C5D2-5835-4C6D-A4CF-E17AA58D7C98}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
-	VCNestedProjectFileName="ffdshow_icl9.vcproj">
+	VCNestedProjectFileName="ffdshow_icl9.vcproj"
+	VCNestedProjectCRC32="1763752887">
 	<Configurations>
 		<Configuration 
 			Name="Debug|Win32">
@@ -1172,6 +1173,41 @@
 			</File>
 			<File 
 				RelativePath=".\src\subtitles\distance.h">
+			</File>
+			<File 
+				RelativePath=".\src\subtitles\fontRenderer.asm">
+				<FileConfiguration 
+					Name="Debug|Win32">
+					<Tool 
+						Name="CustomTool"
+						Description="Assembling $(InputPath)"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						Outputs="$(IntDir)\$(InputName).obj"/>
+				</FileConfiguration>
+				<FileConfiguration 
+					Name="Release|Win32">
+					<Tool 
+						Name="CustomTool"
+						Description="Assembling $(InputPath)"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						Outputs="$(IntDir)\$(InputName).obj"/>
+				</FileConfiguration>
+				<FileConfiguration 
+					Name="Debug Unicode|Win32">
+					<Tool 
+						Name="CustomTool"
+						Description="Assembling $(InputPath)"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						Outputs="$(IntDir)\$(InputName).obj"/>
+				</FileConfiguration>
+				<FileConfiguration 
+					Name="Release Unicode|Win32">
+					<Tool 
+						Name="CustomTool"
+						Description="Assembling $(InputPath)"
+						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						Outputs="$(IntDir)\$(InputName).obj"/>
+				</FileConfiguration>
 			</File>
 			<File 
 				RelativePath=".\src\subtitles\matroskaSubs.h">
