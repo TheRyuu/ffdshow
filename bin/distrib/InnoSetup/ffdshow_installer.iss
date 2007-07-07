@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1328
+#define tryout_revision = 1340
 #define buildyear = 2007
 #define buildmonth = '07'
-#define buildday = '05'
+#define buildday = '07'
 
 ; Build specific options
 #define unicode_required = True
@@ -1197,7 +1197,6 @@ begin
     'megui.exe'#13#10
     'mencoder.exe'#13#10
     'MMPlayer.exe'#13#10
-    'MovieMk.exe'#13#10
     'moviethumb.exe'#13#10
     'mpcstar.exe'#13#10
     'MpegVideoWizard.exe'#13#10
