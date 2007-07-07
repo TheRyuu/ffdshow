@@ -967,6 +967,43 @@ static int vorbis_parse_comment_hdr(vorbis_context *vc) {
     return 0;
 }
 
+/**
+ * Copy the string str to buf. If str length is bigger than buf_size -
+ * 1 then it is clamped to buf_size - 1.
+ * NOTE: this function does what strncpy should have done to be
+ * useful. NEVER use strncpy.
+ *
+ * @param buf destination buffer
+ * @param buf_size size of destination buffer
+ * @param str source string
+ */
+void pstrcpy(char *buf, int buf_size, const char *str)
+{
+    int c;
+    char *q = buf;
+
+    if (buf_size <= 0)
+        return;
+
+    for(;;) {
+        c = *str++;
+        if (c == 0 || q >= buf + buf_size - 1)
+            break;
+        *q++ = c;
+    }
+    *q = '\0';
+}
+
+/* strcat and truncate. */
+char *pstrcat(char *buf, int buf_size, const char *s)
+{
+    int len;
+    len = strlen(buf);
+    if (len < buf_size)
+        pstrcpy(buf + len, buf_size - len, s);
+    return buf;
+}
+
 static int vorbis_comment_query_count(vorbis_context *vc, const char *tag)  {
     int i,count=0;
     int taglen = strlen(tag)+1; /* +1 for the = we append */

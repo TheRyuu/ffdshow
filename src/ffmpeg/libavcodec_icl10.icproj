@@ -479,10 +479,6 @@
 		<File 
 			RelativePath=".\libavcodec\i386\fft_sse.c"/>
 		<File 
-			RelativePath=".\libavformat\avformat.h"/>
-		<File 
-			RelativePath=".\libavformat\cutils.c"/>
-		<File 
 			RelativePath=".\libavutil\avutil.h"/>
 		<File 
 			RelativePath=".\libavutil\bswap.h"/>

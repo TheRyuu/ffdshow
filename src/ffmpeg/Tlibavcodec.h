@@ -2,7 +2,6 @@
 #define _TLIBAVCODEC_H_
 
 #include "libavcodec/avcodec.h"
-#include "libavformat/avformat.h"
 
 struct Tconfig;
 class Tdll;

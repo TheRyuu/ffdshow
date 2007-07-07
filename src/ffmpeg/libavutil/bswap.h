@@ -23,8 +23,8 @@
  * byte swap.
  */
 
-#ifndef __BSWAP_H__
-#define __BSWAP_H__
+#ifndef BSWAP_H
+#define BSWAP_H
 
 #ifdef HAVE_BYTESWAP_H
 #include <byteswap.h>
@@ -117,4 +117,4 @@ static inline uint64_t bswap_64(uint64_t x)
 #define le2me_64(x) (x)
 #endif
 
-#endif /* __BSWAP_H__ */
+#endif /* BSWAP_H */

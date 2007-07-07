@@ -1,5 +1,4 @@
 LAVC_DIR=libavcodec
-LAVF_DIR=libavformat
 LAVU_DIR=libavutil
 ZLIB_DIR=../zlib
 PNG_DIR =../png
@@ -134,8 +133,6 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/xl.c \
       $(LAVC_DIR)/zmbv.c \
       $(LAVC_DIR)/xiph.c \
-	\
-      $(LAVF_DIR)/cutils.c \
 	\
       $(LAVU_DIR)/crc.c \
       $(LAVU_DIR)/log.c \

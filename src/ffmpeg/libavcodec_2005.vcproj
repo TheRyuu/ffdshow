@@ -1372,18 +1372,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="libavformat"
-			>
-			<File
-				RelativePath=".\libavformat\avformat.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavformat\cutils.c"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="zlib"
 			>
 			<File
