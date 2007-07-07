@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- *
  */
 
 /**
@@ -90,9 +89,7 @@ static int get_prefix(GetBitContext *gb, int stop, int len)
 }
 
 static inline int decode210(GetBitContext *gb){
-    int n;
-    n = get_bits1(gb);
-    if (n == 1)
+    if (get_bits1(gb))
         return 0;
     else
         return 2 - get_bits1(gb);

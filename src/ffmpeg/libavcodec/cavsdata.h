@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with FFmpeg; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef AVCODEC_CAVSDATA_H
@@ -106,18 +106,18 @@ static const uint16_t dequant_mul[64] = {
 
 /** marks block as unavailable, i.e. out of picture
     or not yet decoded */
-static const vector_t un_mv    = {0,0,1,NOT_AVAIL};
+const vector_t ff_cavs_un_mv    = {0,0,1,NOT_AVAIL};
 
 /** marks block as "no prediction from this direction"
     e.g. forward motion vector in BWD partition */
-static const vector_t dir_mv   = {0,0,1,REF_DIR};
+const vector_t ff_cavs_dir_mv   = {0,0,1,REF_DIR};
 
 /** marks block as using intra prediction */
-static const vector_t intra_mv = {0,0,1,REF_INTRA};
+const vector_t ff_cavs_intra_mv = {0,0,1,REF_INTRA};
 
 #define EOB 0,0,0
 
-static const residual_vlc_t intra_2dvlc[7] = {
+static const dec_2dvlc_t intra_dec[7] = {
   {
     { //level / run / table_inc
       {  1, 1, 1},{ -1, 1, 1},{  1, 2, 1},{ -1, 2, 1},{  1, 3, 1},{ -1, 3, 1},
@@ -254,7 +254,7 @@ static const residual_vlc_t intra_2dvlc[7] = {
   }
 };
 
-static const residual_vlc_t inter_2dvlc[7] = {
+static const dec_2dvlc_t inter_dec[7] = {
   {
     { //level / run
       {  1, 1, 1},{ -1, 1, 1},{  1, 2, 1},{ -1, 2, 1},{  1, 3, 1},{ -1, 3, 1},
@@ -391,7 +391,7 @@ static const residual_vlc_t inter_2dvlc[7] = {
   }
 };
 
-static const residual_vlc_t chroma_2dvlc[5] = {
+static const dec_2dvlc_t chroma_dec[5] = {
   {
     { //level / run
       {  1, 1, 1},{ -1, 1, 1},{  1, 2, 1},{ -1, 2, 1},{  1, 3, 1},{ -1, 3, 1},
@@ -513,9 +513,9 @@ static const uint8_t tc_tab[64] = {
   5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 9, 9, 9
 };
 
-static const int_fast8_t left_modifier_l[8] = { 0,-1, 6,-1,-1, 7, 6, 7};
-static const int_fast8_t top_modifier_l[8]  = {-1, 1, 5,-1,-1, 5, 7, 7};
-static const int_fast8_t left_modifier_c[7] = { 5,-1, 2,-1, 6, 5, 6};
-static const int_fast8_t top_modifier_c[7]  = { 4, 1,-1,-1, 4, 6, 6};
+const int_fast8_t ff_left_modifier_l[8] = { 0,-1, 6,-1,-1, 7, 6, 7};
+const int_fast8_t ff_top_modifier_l[8]  = {-1, 1, 5,-1,-1, 5, 7, 7};
+const int_fast8_t ff_left_modifier_c[7] = { 5,-1, 2,-1, 6, 5, 6};
+const int_fast8_t ff_top_modifier_c[7]  = { 4, 1,-1,-1, 4, 6, 6};
 
 #endif // AVCODEC_CAVSDATA_H

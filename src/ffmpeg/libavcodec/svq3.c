@@ -16,8 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- *
- *
+ */
+
+/*
  * How to use this decoder:
  * SVQ3 data is transported within Apple Quicktime files. Quicktime files
  * have stsd atoms to describe media trak properties. A stsd atom for a
@@ -37,7 +38,6 @@
  * You will know you have these parameters passed correctly when the decoder
  * correctly decodes this file:
  *  ftp://ftp.mplayerhq.hu/MPlayer/samples/V-codecs/SVQ3/Vertical400kbit.sorenson3.mov
- *
  */
 
 /**
@@ -807,7 +807,7 @@ static int svq3_decode_frame (AVCodecContext *avctx,
     h->halfpel_flag = 1;
     h->thirdpel_flag = 1;
     h->unknown_svq3_flag = 0;
-    h->chroma_qp = 4;
+    h->chroma_qp[0] = h->chroma_qp[1] = 4;
 
     if (MPV_common_init (s) < 0)
       return -1;
@@ -891,11 +891,11 @@ static int svq3_decode_frame (AVCodecContext *avctx,
   s->current_picture.pict_type = s->pict_type;
   s->current_picture.key_frame = (s->pict_type == I_TYPE);
 
-  /* skip b frames if we dont have reference frames */
+  /* Skip B-frames if we do not have reference frames. */
   if (s->last_picture_ptr == NULL && s->pict_type == B_TYPE) return 0;
-  /* skip b frames if we are in a hurry */
+  /* Skip B-frames if we are in a hurry. */
   if (avctx->hurry_up && s->pict_type == B_TYPE) return 0;
-  /* skip everything if we are in a hurry >= 5 */
+  /* Skip everything if we are in a hurry >= 5. */
   if (avctx->hurry_up >= 5) return 0;
   if(  (avctx->skip_frame >= AVDISCARD_NONREF && s->pict_type==B_TYPE)
      ||(avctx->skip_frame >= AVDISCARD_NONKEY && s->pict_type!=I_TYPE)
@@ -993,7 +993,7 @@ static int svq3_decode_frame (AVCodecContext *avctx,
 
   avctx->frame_number = s->picture_number - 1;
 
-  /* dont output the last pic after seeking */
+  /* Do not output the last pic after seeking. */
   if (s->last_picture_ptr || s->low_delay) {
     *data_size = sizeof(AVFrame);
   }

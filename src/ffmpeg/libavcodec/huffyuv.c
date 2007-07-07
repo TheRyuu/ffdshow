@@ -3,6 +3,9 @@
  *
  * Copyright (c) 2002-2003 Michael Niedermayer <michaelni@gmx.at>
  *
+ * see http://www.pcisys.net/~melanson/codecs/huffyuv.txt for a description of
+ * the algorithm used
+ *
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -18,9 +21,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- *
- * see http://www.pcisys.net/~melanson/codecs/huffyuv.txt for a description of
- * the algorithm used
  */
 
 /**
@@ -28,9 +28,8 @@
  * huffyuv codec for libavcodec.
  */
 
-#include "common.h"
-#include "bitstream.h"
 #include "avcodec.h"
+#include "bitstream.h"
 #include "dsputil.h"
 
 #define VLC_BITS 11
@@ -1178,7 +1177,7 @@ static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, uint8
                 decode_bgr_bitstream(s, width-1);
                 add_left_prediction_bgr32(p->data[0] + last_line+4, s->temp[0], width-1, &leftr, &leftg, &leftb);
 
-                for(y=s->height-2; y>=0; y--){ //yes its stored upside down
+                for(y=s->height-2; y>=0; y--){ //Yes it is stored upside down.
                     decode_bgr_bitstream(s, width);
 
                     add_left_prediction_bgr32(p->data[0] + p->linesize[0]*y, s->temp[0], width, &leftr, &leftg, &leftb);
@@ -1227,7 +1226,7 @@ static int decode_end(AVCodecContext *avctx)
     common_end(s);
     av_freep(&s->bitstream_buffer);
 
-    for(i=0; i<3; i++){
+    for(i=0; i<6; i++){
         free_vlc(&s->vlc[i]);
     }
 

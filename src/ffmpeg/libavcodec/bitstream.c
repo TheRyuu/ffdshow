@@ -3,6 +3,8 @@
  * Copyright (c) 2000, 2001 Fabrice Bellard.
  * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
  *
+ * alternative bitstream reader & writer by Michael Niedermayer <michaelni@gmx.at>
+ *
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -18,8 +20,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- *
- * alternative bitstream reader & writer by Michael Niedermayer <michaelni@gmx.at>
  */
 
 /**
@@ -58,6 +58,28 @@ void ff_put_string(PutBitContext * pbc, char *s, int put_zero)
     }
     if(put_zero)
         put_bits(pbc, 8, 0);
+}
+
+void ff_copy_bits(PutBitContext *pb, uint8_t *src, int length)
+{
+    const uint16_t *srcw= (uint16_t*)src;
+    int words= length>>4;
+    int bits= length&15;
+    int i;
+
+    if(length==0) return;
+
+    if(words < 16 || put_bits_count(pb)&7){
+        for(i=0; i<words; i++) put_bits(pb, 16, be2me_16(srcw[i]));
+    }else{
+        for(i=0; put_bits_count(pb)&31; i++)
+            put_bits(pb, 8, src[i]);
+        flush_put_bits(pb);
+        memcpy(pbBufPtr(pb), src+i, 2*words-i);
+        skip_put_bytes(pb, 2*words-i);
+    }
+
+    put_bits(pb, bits, be2me_16(srcw[words])>>(16-bits));
 }
 
 /* VLC decoding */
@@ -261,7 +283,7 @@ int init_vlc_sparse(VLC *vlc, int nb_bits, int nb_codes,
                     codes, codes_wrap, codes_size,
                     symbols, symbols_wrap, symbols_size,
                     0, 0, flags) < 0) {
-        av_free(vlc->table);
+        av_freep(&vlc->table);
         return -1;
     }
     return 0;
@@ -270,6 +292,6 @@ int init_vlc_sparse(VLC *vlc, int nb_bits, int nb_codes,
 
 void free_vlc(VLC *vlc)
 {
-    av_free(vlc->table);
+    av_freep(&vlc->table);
 }
 

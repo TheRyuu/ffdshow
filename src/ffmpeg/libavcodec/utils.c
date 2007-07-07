@@ -266,7 +266,7 @@ int avcodec_default_get_buffer(AVCodecContext *s, AVFrame *pic){
         pixel_size= picture.linesize[0]*8 / w;
 //av_log(NULL, AV_LOG_ERROR, "%d %d %d %d\n", (int)picture.data[1], w, h, s->pix_fmt);
         assert(pixel_size>=1);
-            //FIXME next ensures that linesize= 2^x uvlinesize, thats needed because some MC code assumes it
+            //FIXME next ensures that linesize= 2^x uvlinesize, that is needed because some MC code assumes it
         if(pixel_size == 3*8)
             w= ALIGN(w, STRIDE_ALIGN<<h_chroma_shift);
         else

@@ -413,6 +413,8 @@
 		<File 
 			RelativePath=".\libavcodec\mpegvideo.h"/>
 		<File 
+			RelativePath=".\libavcodec\mpegvideo_common.h"/>
+		<File 
 			RelativePath=".\libavcodec\msmpeg4data.h"/>
 		<File 
 			RelativePath=".\libavcodec\msmpeg4tab.h"/>
@@ -704,6 +706,8 @@
 			RelativePath=".\libavcodec\mpegaudiodec.c"/>
 		<File 
 			RelativePath=".\libavcodec\mpegvideo.c"/>
+		<File 
+			RelativePath=".\libavcodec\mpegvideo_enc.c"/>
 		<File 
 			RelativePath=".\libavcodec\msmpeg4.c"/>
 		<File 

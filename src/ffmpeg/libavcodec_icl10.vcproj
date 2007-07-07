@@ -784,6 +784,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\mpegvideo_enc.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\msmpeg4.c"
 				>
 			</File>
@@ -1289,6 +1293,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mpegvideo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\mpegvideo_common.h"
 				>
 			</File>
 			<File

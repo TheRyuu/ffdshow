@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with FFmpeg; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
@@ -28,81 +28,8 @@
 #include "avcodec.h"
 #include "bitstream.h"
 #include "golomb.h"
-#include "mpegvideo.h"
 #include "cavs.h"
 #include "cavsdata.h"
-
-typedef struct {
-    MpegEncContext s;
-    Picture picture; ///< currently decoded frame
-    Picture DPB[2];  ///< reference frames
-    int dist[2];     ///< temporal distances from current frame to ref frames
-    int profile, level;
-    int aspect_ratio;
-    int mb_width, mb_height;
-    int pic_type;
-    int progressive;
-    int pic_structure;
-    int skip_mode_flag; ///< select between skip_count or one skip_flag per MB
-    int loop_filter_disable;
-    int alpha_offset, beta_offset;
-    int ref_flag;
-    int mbx, mby;      ///< macroblock coordinates
-    int flags;         ///< availability flags of neighbouring macroblocks
-    int stc;           ///< last start code
-    uint8_t *cy, *cu, *cv; ///< current MB sample pointers
-    int left_qp;
-    uint8_t *top_qp;
-
-    /** mv motion vector cache
-       0:    D3  B2  B3  C2
-       4:    A1  X0  X1   -
-       8:    A3  X2  X3   -
-
-       X are the vectors in the current macroblock (5,6,9,10)
-       A is the macroblock to the left (4,8)
-       B is the macroblock to the top (1,2)
-       C is the macroblock to the top-right (3)
-       D is the macroblock to the top-left (0)
-
-       the same is repeated for backward motion vectors */
-    vector_t mv[2*4*3];
-    vector_t *top_mv[2];
-    vector_t *col_mv;
-
-    /** luma pred mode cache
-       0:    --  B2  B3
-       3:    A1  X0  X1
-       6:    A3  X2  X3   */
-    int pred_mode_Y[3*3];
-    int *top_pred_Y;
-    int l_stride, c_stride;
-    int luma_scan[4];
-    int qp;
-    int qp_fixed;
-    int cbp;
-    ScanTable scantable;
-
-    /** intra prediction is done with un-deblocked samples
-     they are saved here before deblocking the MB  */
-    uint8_t *top_border_y, *top_border_u, *top_border_v;
-    uint8_t left_border_y[26], left_border_u[10], left_border_v[10];
-    uint8_t intern_border_y[26];
-    uint8_t topleft_border_y, topleft_border_u, topleft_border_v;
-
-    void (*intra_pred_l[8])(uint8_t *d,uint8_t *top,uint8_t *left,int stride);
-    void (*intra_pred_c[7])(uint8_t *d,uint8_t *top,uint8_t *left,int stride);
-    uint8_t *col_type_base;
-    uint8_t *col_type;
-
-    /* scaling factors for MV prediction */
-    int sym_factor;    ///< for scaling in symmetrical B block
-    int direct_den[2]; ///< for scaling in direct B block
-    int scale_den[2];  ///< for scaling neighbouring MVs
-
-    int got_keyframe;
-    DCTELEM *block;
-} AVSContext;
 
 /*****************************************************************************
  *
@@ -144,7 +71,7 @@ static inline int get_bs(vector_t *mvP, vector_t *mvQ, int b) {
  * ---------
  *
  */
-static void filter_mb(AVSContext *h, enum mb_t mb_type) {
+void ff_cavs_filter(AVSContext *h, enum mb_t mb_type) {
     DECLARE_ALIGNED_8(uint8_t, bs[8]);
     int qp_avg, alpha, beta, tc;
     int i;
@@ -215,56 +142,6 @@ static void filter_mb(AVSContext *h, enum mb_t mb_type) {
  * spatial intra prediction
  *
  ****************************************************************************/
-
-static inline void load_intra_pred_luma(AVSContext *h, uint8_t *top,
-                                        uint8_t **left, int block) {
-    int i;
-
-    switch(block) {
-    case 0:
-        *left = h->left_border_y;
-        h->left_border_y[0] = h->left_border_y[1];
-        memset(&h->left_border_y[17],h->left_border_y[16],9);
-        memcpy(&top[1],&h->top_border_y[h->mbx*16],16);
-        top[17] = top[16];
-        top[0] = top[1];
-        if((h->flags & A_AVAIL) && (h->flags & B_AVAIL))
-            h->left_border_y[0] = top[0] = h->topleft_border_y;
-        break;
-    case 1:
-        *left = h->intern_border_y;
-        for(i=0;i<8;i++)
-            h->intern_border_y[i+1] = *(h->cy + 7 + i*h->l_stride);
-        memset(&h->intern_border_y[9],h->intern_border_y[8],9);
-        h->intern_border_y[0] = h->intern_border_y[1];
-        memcpy(&top[1],&h->top_border_y[h->mbx*16+8],8);
-        if(h->flags & C_AVAIL)
-            memcpy(&top[9],&h->top_border_y[(h->mbx + 1)*16],8);
-        else
-            memset(&top[9],top[8],9);
-        top[17] = top[16];
-        top[0] = top[1];
-        if(h->flags & B_AVAIL)
-            h->intern_border_y[0] = top[0] = h->top_border_y[h->mbx*16+7];
-        break;
-    case 2:
-        *left = &h->left_border_y[8];
-        memcpy(&top[1],h->cy + 7*h->l_stride,16);
-        top[17] = top[16];
-        top[0] = top[1];
-        if(h->flags & A_AVAIL)
-            top[0] = h->left_border_y[8];
-        break;
-    case 3:
-        *left = &h->intern_border_y[8];
-        for(i=0;i<8;i++)
-            h->intern_border_y[i+9] = *(h->cy + 7 + (i+8)*h->l_stride);
-        memset(&h->intern_border_y[17],h->intern_border_y[16],9);
-        memcpy(&top[0],h->cy + 7 + 7*h->l_stride,9);
-        memset(&top[9],top[8],9);
-        break;
-    }
-}
 
 static void intra_pred_vert(uint8_t *d,uint8_t *top,uint8_t *left,int stride) {
     int y;
@@ -352,14 +229,6 @@ static void intra_pred_lp_top(uint8_t *d,uint8_t *top,uint8_t *left,int stride) 
 }
 
 #undef LOWPASS
-
-static inline void modify_pred(const int_fast8_t *mod_table, int *mode) {
-    *mode = mod_table[*mode];
-    if(*mode < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Illegal intra prediction mode\n");
-        *mode = 0;
-    }
-}
 
 /*****************************************************************************
  *
@@ -454,7 +323,7 @@ static inline void mc_part_std(AVSContext *h,int square,int chroma_height,int de
     }
 }
 
-static void inter_pred(AVSContext *h, enum mb_t mb_type) {
+void ff_cavs_inter(AVSContext *h, enum mb_t mb_type) {
     if(partition_flags[mb_type] == 0){ // 16x16
         mc_part_std(h, 1, 8, 0, h->cy, h->cu, h->cv, 0, 0,
                 h->s.dsp.put_cavs_qpel_pixels_tab[0],
@@ -483,9 +352,6 @@ static void inter_pred(AVSContext *h, enum mb_t mb_type) {
                 h->s.dsp.avg_cavs_qpel_pixels_tab[1],
                 h->s.dsp.avg_h264_chroma_pixels_tab[1],&h->mv[MV_FWD_X3]);
     }
-    /* set intra prediction modes to default values */
-    h->pred_mode_Y[3] =  h->pred_mode_Y[6] = INTRA_L_LP;
-    h->top_pred_Y[h->mbx*2+0] = h->top_pred_Y[h->mbx*2+1] = INTRA_L_LP;
 }
 
 /*****************************************************************************
@@ -493,20 +359,6 @@ static void inter_pred(AVSContext *h, enum mb_t mb_type) {
  * motion vector prediction
  *
  ****************************************************************************/
-
-static inline void set_mvs(vector_t *mv, enum block_t size) {
-    switch(size) {
-    case BLK_16X16:
-        mv[MV_STRIDE  ] = mv[0];
-        mv[MV_STRIDE+1] = mv[0];
-    case BLK_16X8:
-        mv[1] = mv[0];
-        break;
-    case BLK_8X16:
-        mv[MV_STRIDE] = mv[0];
-        break;
-    }
-}
 
 static inline void store_mvs(AVSContext *h) {
     h->col_mv[(h->mby*h->mb_width + h->mbx)*4 + 0] = h->mv[MV_FWD_X0];
@@ -576,8 +428,8 @@ static inline void mv_pred_sym(AVSContext *h, vector_t *src, enum block_t size) 
     set_mvs(dst, size);
 }
 
-static void mv_pred(AVSContext *h, enum mv_loc_t nP, enum mv_loc_t nC,
-                    enum mv_pred_t mode, enum block_t size, int ref) {
+void ff_cavs_mv(AVSContext *h, enum mv_loc_t nP, enum mv_loc_t nC,
+                enum mv_pred_t mode, enum block_t size, int ref) {
     vector_t *mvP = &h->mv[nP];
     vector_t *mvA = &h->mv[nP-1];
     vector_t *mvB = &h->mv[nP-4];
@@ -592,7 +444,7 @@ static void mv_pred(AVSContext *h, enum mv_loc_t nP, enum mv_loc_t nC,
        ((mvA->ref == NOT_AVAIL) || (mvB->ref == NOT_AVAIL) ||
            ((mvA->x | mvA->y | mvA->ref) == 0)  ||
            ((mvB->x | mvB->y | mvB->ref) == 0) )) {
-        mvP2 = &un_mv;
+        mvP2 = &ff_cavs_un_mv;
     /* if there is only one suitable candidate, take it */
     } else if((mvA->ref >= 0) && (mvB->ref < 0) && (mvC->ref < 0)) {
         mvP2= mvA;
@@ -645,16 +497,11 @@ static inline int get_ue_code(GetBitContext *gb, int order) {
  * @param stride line stride in frame buffer
  */
 static int decode_residual_block(AVSContext *h, GetBitContext *gb,
-                                 const residual_vlc_t *r, int esc_golomb_order,
+                                 const dec_2dvlc_t *r, int esc_golomb_order,
                                  int qp, uint8_t *dst, int stride) {
-    int i,pos = -1;
-    int level_code, esc_code, level, run, mask;
-    int level_buf[64];
-    int run_buf[64];
-    int dqm = dequant_mul[qp];
-    int dqs = dequant_shift[qp];
-    int dqa = 1 << (dqs - 1);
-    const uint8_t *scantab = h->scantable.permutated;
+    int i, level_code, esc_code, level, run, mask;
+    DCTELEM level_buf[64];
+    uint8_t run_buf[64];
     DCTELEM *block = h->block;
 
     for(i=0;i<65;i++) {
@@ -677,17 +524,9 @@ static int decode_residual_block(AVSContext *h, GetBitContext *gb,
         level_buf[i] = level;
         run_buf[i] = run;
     }
-    /* inverse scan and dequantization */
-    while(--i >= 0){
-        pos += run_buf[i];
-        if(pos > 63) {
-            av_log(h->s.avctx, AV_LOG_ERROR,
-                   "position out of block bounds at pic %d MB(%d,%d)\n",
-                   h->picture.poc, h->mbx, h->mby);
-            return -1;
-        }
-        block[scantab[pos]] = (level_buf[i]*dqm + dqa) >> dqs;
-    }
+    if(dequant(h,level_buf, run_buf, block, dequant_mul[qp],
+               dequant_shift[qp], i))
+        return -1;
     h->s.dsp.cavs_idct8_add(dst,block,stride);
     return 0;
 }
@@ -695,10 +534,10 @@ static int decode_residual_block(AVSContext *h, GetBitContext *gb,
 
 static inline void decode_residual_chroma(AVSContext *h) {
     if(h->cbp & (1<<4))
-        decode_residual_block(h,&h->s.gb,chroma_2dvlc,0, chroma_qp[h->qp],
+        decode_residual_block(h,&h->s.gb,chroma_dec,0, chroma_qp[h->qp],
                               h->cu,h->c_stride);
     if(h->cbp & (1<<5))
-        decode_residual_block(h,&h->s.gb,chroma_2dvlc,0, chroma_qp[h->qp],
+        decode_residual_block(h,&h->s.gb,chroma_dec,0, chroma_qp[h->qp],
                               h->cv,h->c_stride);
 }
 
@@ -718,7 +557,7 @@ static inline int decode_residual_inter(AVSContext *h) {
         h->qp = (h->qp + get_se_golomb(&h->s.gb)) & 63;
     for(block=0;block<4;block++)
         if(h->cbp & (1<<block))
-            decode_residual_block(h,&h->s.gb,inter_2dvlc,0,h->qp,
+            decode_residual_block(h,&h->s.gb,inter_dec,0,h->qp,
                                   h->cy + h->luma_scan[block], h->l_stride);
     decode_residual_chroma(h);
 
@@ -730,92 +569,6 @@ static inline int decode_residual_inter(AVSContext *h) {
  * macroblock level
  *
  ****************************************************************************/
-
-/**
- * initialise predictors for motion vectors and intra prediction
- */
-static inline void init_mb(AVSContext *h) {
-    int i;
-
-    /* copy predictors from top line (MB B and C) into cache */
-    for(i=0;i<3;i++) {
-        h->mv[MV_FWD_B2+i] = h->top_mv[0][h->mbx*2+i];
-        h->mv[MV_BWD_B2+i] = h->top_mv[1][h->mbx*2+i];
-    }
-    h->pred_mode_Y[1] = h->top_pred_Y[h->mbx*2+0];
-    h->pred_mode_Y[2] = h->top_pred_Y[h->mbx*2+1];
-    /* clear top predictors if MB B is not available */
-    if(!(h->flags & B_AVAIL)) {
-        h->mv[MV_FWD_B2] = un_mv;
-        h->mv[MV_FWD_B3] = un_mv;
-        h->mv[MV_BWD_B2] = un_mv;
-        h->mv[MV_BWD_B3] = un_mv;
-        h->pred_mode_Y[1] = h->pred_mode_Y[2] = NOT_AVAIL;
-        h->flags &= ~(C_AVAIL|D_AVAIL);
-    } else if(h->mbx) {
-        h->flags |= D_AVAIL;
-    }
-    if(h->mbx == h->mb_width-1) //MB C not available
-        h->flags &= ~C_AVAIL;
-    /* clear top-right predictors if MB C is not available */
-    if(!(h->flags & C_AVAIL)) {
-        h->mv[MV_FWD_C2] = un_mv;
-        h->mv[MV_BWD_C2] = un_mv;
-    }
-    /* clear top-left predictors if MB D is not available */
-    if(!(h->flags & D_AVAIL)) {
-        h->mv[MV_FWD_D3] = un_mv;
-        h->mv[MV_BWD_D3] = un_mv;
-    }
-    /* set pointer for co-located macroblock type */
-    h->col_type = &h->col_type_base[h->mby*h->mb_width + h->mbx];
-}
-
-static inline void check_for_slice(AVSContext *h);
-
-/**
- * save predictors for later macroblocks and increase
- * macroblock address
- * @returns 0 if end of frame is reached, 1 otherwise
- */
-static inline int next_mb(AVSContext *h) {
-    int i;
-
-    h->flags |= A_AVAIL;
-    h->cy += 16;
-    h->cu += 8;
-    h->cv += 8;
-    /* copy mvs as predictors to the left */
-    for(i=0;i<=20;i+=4)
-        h->mv[i] = h->mv[i+2];
-    /* copy bottom mvs from cache to top line */
-    h->top_mv[0][h->mbx*2+0] = h->mv[MV_FWD_X2];
-    h->top_mv[0][h->mbx*2+1] = h->mv[MV_FWD_X3];
-    h->top_mv[1][h->mbx*2+0] = h->mv[MV_BWD_X2];
-    h->top_mv[1][h->mbx*2+1] = h->mv[MV_BWD_X3];
-    /* next MB address */
-    h->mbx++;
-    if(h->mbx == h->mb_width) { //new mb line
-        h->flags = B_AVAIL|C_AVAIL;
-        /* clear left pred_modes */
-        h->pred_mode_Y[3] = h->pred_mode_Y[6] = NOT_AVAIL;
-        /* clear left mv predictors */
-        for(i=0;i<=20;i+=4)
-            h->mv[i] = un_mv;
-        h->mbx = 0;
-        h->mby++;
-        /* re-calculate sample pointers */
-        h->cy = h->picture.data[0] + h->mby*16*h->l_stride;
-        h->cu = h->picture.data[1] + h->mby*8*h->c_stride;
-        h->cv = h->picture.data[2] + h->mby*8*h->c_stride;
-        if(h->mby == h->mb_height) { //frame end
-            return 0;
-        } else {
-            //check_for_slice(h);
-        }
-    }
-    return 1;
-}
 
 static int decode_mb_i(AVSContext *h, int cbp_code) {
     GetBitContext *gb = &h->s.gb;
@@ -847,24 +600,7 @@ static int decode_mb_i(AVSContext *h, int cbp_code) {
         av_log(h->s.avctx, AV_LOG_ERROR, "illegal intra chroma pred mode\n");
         return -1;
     }
-
-    /* save pred modes before they get modified */
-    h->pred_mode_Y[3] =  h->pred_mode_Y[5];
-    h->pred_mode_Y[6] =  h->pred_mode_Y[8];
-    h->top_pred_Y[h->mbx*2+0] = h->pred_mode_Y[7];
-    h->top_pred_Y[h->mbx*2+1] = h->pred_mode_Y[8];
-
-    /* modify pred modes according to availability of neighbour samples */
-    if(!(h->flags & A_AVAIL)) {
-        modify_pred(left_modifier_l, &h->pred_mode_Y[4] );
-        modify_pred(left_modifier_l, &h->pred_mode_Y[7] );
-        modify_pred(left_modifier_c, &pred_mode_uv );
-    }
-    if(!(h->flags & B_AVAIL)) {
-        modify_pred(top_modifier_l, &h->pred_mode_Y[4] );
-        modify_pred(top_modifier_l, &h->pred_mode_Y[5] );
-        modify_pred(top_modifier_c, &pred_mode_uv );
-    }
+    modify_mb_i(h, &pred_mode_uv);
 
     /* get coded block pattern */
     if(h->pic_type == FF_I_TYPE)
@@ -884,40 +620,19 @@ static int decode_mb_i(AVSContext *h, int cbp_code) {
         h->intra_pred_l[h->pred_mode_Y[scan3x3[block]]]
             (d, top, left, h->l_stride);
         if(h->cbp & (1<<block))
-            decode_residual_block(h,gb,intra_2dvlc,1,h->qp,d,h->l_stride);
+            decode_residual_block(h,gb,intra_dec,1,h->qp,d,h->l_stride);
     }
 
     /* chroma intra prediction */
-    /* extend borders by one pixel */
-    h->left_border_u[9] = h->left_border_u[8];
-    h->left_border_v[9] = h->left_border_v[8];
-    h->top_border_u[h->mbx*10+9] = h->top_border_u[h->mbx*10+8];
-    h->top_border_v[h->mbx*10+9] = h->top_border_v[h->mbx*10+8];
-    if(h->mbx && h->mby) {
-        h->top_border_u[h->mbx*10] = h->left_border_u[0] = h->topleft_border_u;
-        h->top_border_v[h->mbx*10] = h->left_border_v[0] = h->topleft_border_v;
-    } else {
-        h->left_border_u[0] = h->left_border_u[1];
-        h->left_border_v[0] = h->left_border_v[1];
-        h->top_border_u[h->mbx*10] = h->top_border_u[h->mbx*10+1];
-        h->top_border_v[h->mbx*10] = h->top_border_v[h->mbx*10+1];
-    }
+    load_intra_pred_chroma(h);
     h->intra_pred_c[pred_mode_uv](h->cu, &h->top_border_u[h->mbx*10],
                                   h->left_border_u, h->c_stride);
     h->intra_pred_c[pred_mode_uv](h->cv, &h->top_border_v[h->mbx*10],
                                   h->left_border_v, h->c_stride);
 
     decode_residual_chroma(h);
-    filter_mb(h,I_8X8);
-
-    /* mark motion vectors as intra */
-    h->mv[MV_FWD_X0] = intra_mv;
-    set_mvs(&h->mv[MV_FWD_X0], BLK_16X16);
-    h->mv[MV_BWD_X0] = intra_mv;
-    set_mvs(&h->mv[MV_BWD_X0], BLK_16X16);
-    if(h->pic_type != FF_B_TYPE)
-        *h->col_type = I_8X8;
-
+    ff_cavs_filter(h,I_8X8);
+    set_mv_intra(h);
     return 0;
 }
 
@@ -928,39 +643,40 @@ static void decode_mb_p(AVSContext *h, enum mb_t mb_type) {
     init_mb(h);
     switch(mb_type) {
     case P_SKIP:
-        mv_pred(h, MV_FWD_X0, MV_FWD_C2, MV_PRED_PSKIP, BLK_16X16, 0);
+        ff_cavs_mv(h, MV_FWD_X0, MV_FWD_C2, MV_PRED_PSKIP,  BLK_16X16, 0);
         break;
     case P_16X16:
         ref[0] = h->ref_flag ? 0 : get_bits1(gb);
-        mv_pred(h, MV_FWD_X0, MV_FWD_C2, MV_PRED_MEDIAN,   BLK_16X16,ref[0]);
+        ff_cavs_mv(h, MV_FWD_X0, MV_FWD_C2, MV_PRED_MEDIAN, BLK_16X16,ref[0]);
         break;
     case P_16X8:
         ref[0] = h->ref_flag ? 0 : get_bits1(gb);
         ref[2] = h->ref_flag ? 0 : get_bits1(gb);
-        mv_pred(h, MV_FWD_X0, MV_FWD_C2, MV_PRED_TOP,      BLK_16X8, ref[0]);
-        mv_pred(h, MV_FWD_X2, MV_FWD_A1, MV_PRED_LEFT,     BLK_16X8, ref[2]);
+        ff_cavs_mv(h, MV_FWD_X0, MV_FWD_C2, MV_PRED_TOP,    BLK_16X8, ref[0]);
+        ff_cavs_mv(h, MV_FWD_X2, MV_FWD_A1, MV_PRED_LEFT,   BLK_16X8, ref[2]);
         break;
     case P_8X16:
         ref[0] = h->ref_flag ? 0 : get_bits1(gb);
         ref[1] = h->ref_flag ? 0 : get_bits1(gb);
-        mv_pred(h, MV_FWD_X0, MV_FWD_B3, MV_PRED_LEFT,     BLK_8X16, ref[0]);
-        mv_pred(h, MV_FWD_X1, MV_FWD_C2, MV_PRED_TOPRIGHT, BLK_8X16, ref[1]);
+        ff_cavs_mv(h, MV_FWD_X0, MV_FWD_B3, MV_PRED_LEFT,   BLK_8X16, ref[0]);
+        ff_cavs_mv(h, MV_FWD_X1, MV_FWD_C2, MV_PRED_TOPRIGHT,BLK_8X16, ref[1]);
         break;
     case P_8X8:
         ref[0] = h->ref_flag ? 0 : get_bits1(gb);
         ref[1] = h->ref_flag ? 0 : get_bits1(gb);
         ref[2] = h->ref_flag ? 0 : get_bits1(gb);
         ref[3] = h->ref_flag ? 0 : get_bits1(gb);
-        mv_pred(h, MV_FWD_X0, MV_FWD_B3, MV_PRED_MEDIAN,   BLK_8X8, ref[0]);
-        mv_pred(h, MV_FWD_X1, MV_FWD_C2, MV_PRED_MEDIAN,   BLK_8X8, ref[1]);
-        mv_pred(h, MV_FWD_X2, MV_FWD_X1, MV_PRED_MEDIAN,   BLK_8X8, ref[2]);
-        mv_pred(h, MV_FWD_X3, MV_FWD_X0, MV_PRED_MEDIAN,   BLK_8X8, ref[3]);
+        ff_cavs_mv(h, MV_FWD_X0, MV_FWD_B3, MV_PRED_MEDIAN,   BLK_8X8, ref[0]);
+        ff_cavs_mv(h, MV_FWD_X1, MV_FWD_C2, MV_PRED_MEDIAN,   BLK_8X8, ref[1]);
+        ff_cavs_mv(h, MV_FWD_X2, MV_FWD_X1, MV_PRED_MEDIAN,   BLK_8X8, ref[2]);
+        ff_cavs_mv(h, MV_FWD_X3, MV_FWD_X0, MV_PRED_MEDIAN,   BLK_8X8, ref[3]);
     }
-    inter_pred(h, mb_type);
+    ff_cavs_inter(h, mb_type);
+    set_intra_mode_default(h);
     store_mvs(h);
     if(mb_type != P_SKIP)
         decode_residual_inter(h);
-    filter_mb(h,mb_type);
+    ff_cavs_filter(h,mb_type);
     *h->col_type = mb_type;
 }
 
@@ -972,17 +688,17 @@ static void decode_mb_b(AVSContext *h, enum mb_t mb_type) {
     init_mb(h);
 
     /* reset all MVs */
-    h->mv[MV_FWD_X0] = dir_mv;
+    h->mv[MV_FWD_X0] = ff_cavs_dir_mv;
     set_mvs(&h->mv[MV_FWD_X0], BLK_16X16);
-    h->mv[MV_BWD_X0] = dir_mv;
+    h->mv[MV_BWD_X0] = ff_cavs_dir_mv;
     set_mvs(&h->mv[MV_BWD_X0], BLK_16X16);
     switch(mb_type) {
     case B_SKIP:
     case B_DIRECT:
         if(!(*h->col_type)) {
             /* intra MB at co-location, do in-plane prediction */
-            mv_pred(h, MV_FWD_X0, MV_FWD_C2, MV_PRED_BSKIP, BLK_16X16, 1);
-            mv_pred(h, MV_BWD_X0, MV_BWD_C2, MV_PRED_BSKIP, BLK_16X16, 0);
+            ff_cavs_mv(h, MV_FWD_X0, MV_FWD_C2, MV_PRED_BSKIP, BLK_16X16, 1);
+            ff_cavs_mv(h, MV_BWD_X0, MV_BWD_C2, MV_PRED_BSKIP, BLK_16X16, 0);
         } else
             /* direct prediction from co-located P MB, block-wise */
             for(block=0;block<4;block++)
@@ -990,14 +706,14 @@ static void decode_mb_b(AVSContext *h, enum mb_t mb_type) {
                             &h->col_mv[(h->mby*h->mb_width+h->mbx)*4 + block]);
         break;
     case B_FWD_16X16:
-        mv_pred(h, MV_FWD_X0, MV_FWD_C2, MV_PRED_MEDIAN, BLK_16X16, 1);
+        ff_cavs_mv(h, MV_FWD_X0, MV_FWD_C2, MV_PRED_MEDIAN, BLK_16X16, 1);
         break;
     case B_SYM_16X16:
-        mv_pred(h, MV_FWD_X0, MV_FWD_C2, MV_PRED_MEDIAN, BLK_16X16, 1);
+        ff_cavs_mv(h, MV_FWD_X0, MV_FWD_C2, MV_PRED_MEDIAN, BLK_16X16, 1);
         mv_pred_sym(h, &h->mv[MV_FWD_X0], BLK_16X16);
         break;
     case B_BWD_16X16:
-        mv_pred(h, MV_BWD_X0, MV_BWD_C2, MV_PRED_MEDIAN, BLK_16X16, 0);
+        ff_cavs_mv(h, MV_BWD_X0, MV_BWD_C2, MV_PRED_MEDIAN, BLK_16X16, 0);
         break;
     case B_8X8:
         for(block=0;block<4;block++)
@@ -1007,9 +723,9 @@ static void decode_mb_b(AVSContext *h, enum mb_t mb_type) {
             case B_SUB_DIRECT:
                 if(!(*h->col_type)) {
                     /* intra MB at co-location, do in-plane prediction */
-                    mv_pred(h, mv_scan[block], mv_scan[block]-3,
+                    ff_cavs_mv(h, mv_scan[block], mv_scan[block]-3,
                             MV_PRED_BSKIP, BLK_8X8, 1);
-                    mv_pred(h, mv_scan[block]+MV_BWD_OFFS,
+                    ff_cavs_mv(h, mv_scan[block]+MV_BWD_OFFS,
                             mv_scan[block]-3+MV_BWD_OFFS,
                             MV_PRED_BSKIP, BLK_8X8, 0);
                 } else
@@ -1017,11 +733,11 @@ static void decode_mb_b(AVSContext *h, enum mb_t mb_type) {
                                    &h->col_mv[(h->mby*h->mb_width + h->mbx)*4 + block]);
                 break;
             case B_SUB_FWD:
-                mv_pred(h, mv_scan[block], mv_scan[block]-3,
+                ff_cavs_mv(h, mv_scan[block], mv_scan[block]-3,
                         MV_PRED_MEDIAN, BLK_8X8, 1);
                 break;
             case B_SUB_SYM:
-                mv_pred(h, mv_scan[block], mv_scan[block]-3,
+                ff_cavs_mv(h, mv_scan[block], mv_scan[block]-3,
                         MV_PRED_MEDIAN, BLK_8X8, 1);
                 mv_pred_sym(h, &h->mv[mv_scan[block]], BLK_8X8);
                 break;
@@ -1029,7 +745,7 @@ static void decode_mb_b(AVSContext *h, enum mb_t mb_type) {
         }
         for(block=0;block<4;block++) {
             if(sub_type[block] == B_SUB_BWD)
-                mv_pred(h, mv_scan[block]+MV_BWD_OFFS,
+                ff_cavs_mv(h, mv_scan[block]+MV_BWD_OFFS,
                         mv_scan[block]+MV_BWD_OFFS-3,
                         MV_PRED_MEDIAN, BLK_8X8, 0);
         }
@@ -1039,36 +755,37 @@ static void decode_mb_b(AVSContext *h, enum mb_t mb_type) {
         flags = partition_flags[mb_type];
         if(mb_type & 1) { /* 16x8 macroblock types */
             if(flags & FWD0)
-                mv_pred(h, MV_FWD_X0, MV_FWD_C2, MV_PRED_TOP,  BLK_16X8, 1);
+                ff_cavs_mv(h, MV_FWD_X0, MV_FWD_C2, MV_PRED_TOP,  BLK_16X8, 1);
             if(flags & SYM0)
                 mv_pred_sym(h, &h->mv[MV_FWD_X0], BLK_16X8);
             if(flags & FWD1)
-                mv_pred(h, MV_FWD_X2, MV_FWD_A1, MV_PRED_LEFT, BLK_16X8, 1);
+                ff_cavs_mv(h, MV_FWD_X2, MV_FWD_A1, MV_PRED_LEFT, BLK_16X8, 1);
             if(flags & SYM1)
                 mv_pred_sym(h, &h->mv[MV_FWD_X2], BLK_16X8);
             if(flags & BWD0)
-                mv_pred(h, MV_BWD_X0, MV_BWD_C2, MV_PRED_TOP,  BLK_16X8, 0);
+                ff_cavs_mv(h, MV_BWD_X0, MV_BWD_C2, MV_PRED_TOP,  BLK_16X8, 0);
             if(flags & BWD1)
-                mv_pred(h, MV_BWD_X2, MV_BWD_A1, MV_PRED_LEFT, BLK_16X8, 0);
+                ff_cavs_mv(h, MV_BWD_X2, MV_BWD_A1, MV_PRED_LEFT, BLK_16X8, 0);
         } else {          /* 8x16 macroblock types */
             if(flags & FWD0)
-                mv_pred(h, MV_FWD_X0, MV_FWD_B3, MV_PRED_LEFT, BLK_8X16, 1);
+                ff_cavs_mv(h, MV_FWD_X0, MV_FWD_B3, MV_PRED_LEFT, BLK_8X16, 1);
             if(flags & SYM0)
                 mv_pred_sym(h, &h->mv[MV_FWD_X0], BLK_8X16);
             if(flags & FWD1)
-                mv_pred(h, MV_FWD_X1, MV_FWD_C2, MV_PRED_TOPRIGHT,BLK_8X16, 1);
+                ff_cavs_mv(h,MV_FWD_X1,MV_FWD_C2,MV_PRED_TOPRIGHT,BLK_8X16,1);
             if(flags & SYM1)
                 mv_pred_sym(h, &h->mv[MV_FWD_X1], BLK_8X16);
             if(flags & BWD0)
-                mv_pred(h, MV_BWD_X0, MV_BWD_B3, MV_PRED_LEFT, BLK_8X16, 0);
+                ff_cavs_mv(h, MV_BWD_X0, MV_BWD_B3, MV_PRED_LEFT, BLK_8X16, 0);
             if(flags & BWD1)
-                mv_pred(h, MV_BWD_X1, MV_BWD_C2, MV_PRED_TOPRIGHT,BLK_8X16, 0);
+                ff_cavs_mv(h,MV_BWD_X1,MV_BWD_C2,MV_PRED_TOPRIGHT,BLK_8X16,0);
         }
     }
-    inter_pred(h, mb_type);
+    ff_cavs_inter(h, mb_type);
+    set_intra_mode_default(h);
     if(mb_type != B_SKIP)
         decode_residual_inter(h);
-    filter_mb(h,mb_type);
+    ff_cavs_filter(h,mb_type);
 }
 
 /*****************************************************************************
@@ -1111,15 +828,15 @@ static inline void check_for_slice(AVSContext *h) {
  *
  ****************************************************************************/
 
-static void init_pic(AVSContext *h) {
+void ff_cavs_init_pic(AVSContext *h) {
     int i;
 
     /* clear some predictors */
     for(i=0;i<=20;i+=4)
-        h->mv[i] = un_mv;
-    h->mv[MV_BWD_X0] = dir_mv;
+        h->mv[i] = ff_cavs_un_mv;
+    h->mv[MV_BWD_X0] = ff_cavs_dir_mv;
     set_mvs(&h->mv[MV_BWD_X0], BLK_16X16);
-    h->mv[MV_FWD_X0] = dir_mv;
+    h->mv[MV_FWD_X0] = ff_cavs_dir_mv;
     set_mvs(&h->mv[MV_FWD_X0], BLK_16X16);
     h->pred_mode_Y[3] = h->pred_mode_Y[6] = NOT_AVAIL;
     h->cy = h->picture.data[0];
@@ -1165,7 +882,7 @@ static int decode_pic(AVSContext *h) {
         s->avctx->release_buffer(s->avctx, (AVFrame *)&h->picture);
 
     s->avctx->get_buffer(s->avctx, (AVFrame *)&h->picture);
-    init_pic(h);
+    ff_cavs_init_pic(h);
     h->picture.poc = get_bits(&s->gb,8)*2;
 
     /* get temporal distances and MV scaling factors */
@@ -1274,7 +991,7 @@ static int decode_pic(AVSContext *h) {
  * this data has to be stored for one complete row of macroblocks
  * and this storage space is allocated here
  */
-static void init_top_lines(AVSContext *h) {
+void ff_cavs_init_top_lines(AVSContext *h) {
     /* alloc top line of predictors */
     h->top_qp       = av_malloc( h->mb_width);
     h->top_mv[0]    = av_malloc((h->mb_width*2+1)*sizeof(vector_t));
@@ -1314,7 +1031,7 @@ static int decode_seq_header(AVSContext *h) {
     h->s.avctx->width  = s->width;
     h->s.avctx->height = s->height;
     if(!h->top_qp)
-        init_top_lines(h);
+        ff_cavs_init_top_lines(h);
     return 0;
 }
 
@@ -1398,7 +1115,7 @@ static int cavs_decode_frame(AVCodecContext * avctx,void *data, int *data_size,
     }
 }
 
-static int cavs_decode_init(AVCodecContext * avctx) {
+int ff_cavs_init(AVCodecContext *avctx) {
     AVSContext *h = avctx->priv_data;
     MpegEncContext * const s = &h->s;
 
@@ -1424,12 +1141,12 @@ static int cavs_decode_init(AVCodecContext * avctx) {
     h->intra_pred_c[   INTRA_C_LP_LEFT] = intra_pred_lp_left;
     h->intra_pred_c[    INTRA_C_LP_TOP] = intra_pred_lp_top;
     h->intra_pred_c[    INTRA_C_DC_128] = intra_pred_dc_128;
-    h->mv[ 7] = un_mv;
-    h->mv[19] = un_mv;
+    h->mv[ 7] = ff_cavs_un_mv;
+    h->mv[19] = ff_cavs_un_mv;
     return 0;
 }
 
-static int cavs_decode_end(AVCodecContext * avctx) {
+int ff_cavs_end(AVCodecContext *avctx) {
     AVSContext *h = avctx->priv_data;
 
     av_free(h->top_qp);
@@ -1450,12 +1167,11 @@ AVCodec cavs_decoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_CAVS,
     sizeof(AVSContext),
-    cavs_decode_init,
-    NULL,
-    cavs_decode_end,
-    cavs_decode_frame,
-    CODEC_CAP_DR1 | CODEC_CAP_DELAY,
-    NULL,
-	 /*.flush=*/ cavs_flush,
+    /*.init=*/ff_cavs_init,
+    /*.encode=*/NULL,
+    /*.close=*/ff_cavs_end,
+    /*.decode=*/cavs_decode_frame,
+    /*.capabilities=*/CODEC_CAP_DR1 | CODEC_CAP_DELAY,
+    /*.next=*/NULL,
+	/*.flush=*/cavs_flush,
 };
-

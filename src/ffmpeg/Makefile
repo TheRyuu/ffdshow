@@ -86,6 +86,7 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/mpegaudiodata.c \
       $(LAVC_DIR)/mpegaudiodec.c \
       $(LAVC_DIR)/mpegvideo.c \
+      $(LAVC_DIR)/mpegvideo_enc.c \
       $(LAVC_DIR)/msmpeg4.c \
       $(LAVC_DIR)/msmpeg4data.c \
       $(LAVC_DIR)/msrle.c \
