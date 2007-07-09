@@ -2113,8 +2113,6 @@
 		<File 
 			RelativePath=".\src\TkeyboardDirect.h"/>
 		<File 
-			RelativePath=".\src\TListEmptyIMediaSamples.h"/>
-		<File 
 			RelativePath=".\src\TtextInputPin.h"/>
 		<File 
 			RelativePath=".\src\Ttimer.h"/>
@@ -5030,8 +5028,6 @@
 			RelativePath=".\src\TinputPin.cpp"/>
 		<File 
 			RelativePath=".\src\TkeyboardDirect.cpp"/>
-		<File 
-			RelativePath=".\src\TListEmptyIMediaSamples.cpp"/>
 		<File 
 			RelativePath=".\src\TtextInputPin.cpp"/>
 		<File 

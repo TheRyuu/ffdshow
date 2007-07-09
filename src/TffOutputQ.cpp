@@ -186,7 +186,6 @@ DWORD TffOutputQueue::ThreadProc()
             }
             while (lNumberToSend != 0) {
                 m_ppSamples[--lNumberToSend]->Release();
-                m_pOutputDecVideo->addOne();
             }
             if (m_hr != S_OK) {
 
@@ -249,7 +248,6 @@ void TffOutputQueue::QueueSample(IMediaSample *pSample)
     if (NULL == m_List->AddTail(pSample)) {
         if (!IsSpecialSample(pSample)) {
             pSample->Release();
-            m_pOutputDecVideo->addOne();
         }
     }
 }
@@ -281,7 +279,6 @@ HRESULT TffOutputQueue::ReceiveMultiple (
         DPRINTF(_l("COutputQueue (queued) : Discarding %d samples code 0x%8.8X"), nSamples, m_hr);
         for (int i = 0; i < nSamples; i++) {
             ppSamples[i]->Release();
-            m_pOutputDecVideo->addOne();
         }
         return m_hr;
     }
@@ -331,7 +328,6 @@ void TffOutputQueue::FreeSamples()
             }
             if (!IsSpecialSample(pSample)) {
                 pSample->Release();
-                m_pOutputDecVideo->addOne();
             } else {
                 if (pSample == NEW_SEGMENT) {
                     //  Free NEW_SEGMENT packet
@@ -351,7 +347,6 @@ void TffOutputQueue::FreeSamples()
     }
     for (int i = 0; i < m_nBatched; i++) {
         m_ppSamples[i]->Release();
-        m_pOutputDecVideo->addOne();
     }
     m_nBatched = 0;
 }

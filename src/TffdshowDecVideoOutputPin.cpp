@@ -21,7 +21,6 @@
 #include "TffdshowDecVideoOutputPin.h"
 #include "TpresetSettingsVideo.h"
 #include "Tlibmplayer.h"
-#include "TListEmptyIMediaSamples.h"
 
 TffdshowDecVideoOutputPin::TffdshowDecVideoOutputPin(
         TCHAR *pObjectName,
@@ -32,8 +31,7 @@ TffdshowDecVideoOutputPin::TffdshowDecVideoOutputPin(
     fdv(Ifdv),
     queue(NULL),
     oldSettingOfMultiThread(-1),
-    isFirstFrame(true),
-    buffers(NULL)
+    isFirstFrame(true)
 {
  DPRINTF(_l("TffdshowDecVideoOutputPin::Constructor"));
 }
@@ -53,11 +51,6 @@ void TffdshowDecVideoOutputPin::freeQueue(void)
    delete queue;
    queue=  NULL;
    hEvent= NULL;
-  }
- if(buffers)
-  {
-   delete buffers;
-   buffers=NULL;
   }
 }
 
@@ -91,8 +84,6 @@ void TffdshowDecVideoOutputPin::waitUntillQueueCleanedUp(void)
   {
    WaitForSingleObject(hEvent, INFINITE);
   }
- if(buffers)
-  buffers->freeAll();
 }
 
 void TffdshowDecVideoOutputPin::waitForPopEvent(void)
@@ -122,8 +113,6 @@ HRESULT TffdshowDecVideoOutputPin::DeliverBeginFlush(void)
  fdv->m_aboutToFlash= true;
  if(fdv->isQueue==1)
   {
-   if(buffers)
-    buffers->BeginFlush();
    queue->BeginFlush();
   }
  else
@@ -143,8 +132,6 @@ HRESULT TffdshowDecVideoOutputPin::DeliverEndFlush(void)
  if(fdv->isQueue==1)
   {
    queue->EndFlush();
-   if(buffers)
-    buffers->EndFlush();
   }
  else
   {
@@ -164,8 +151,6 @@ HRESULT TffdshowDecVideoOutputPin::DeliverNewSegment( REFERENCE_TIME tStart, REF
   {
    DPRINTF(_l("queue->NewSegment"));
    queue->NewSegment(tStart, tStop, dRate);
-   if(buffers)
-    buffers->NewSegment();
   }
  else
   {
@@ -203,12 +188,6 @@ void TffdshowDecVideoOutputPin::SendAnyway(void)
  waitUntillQueueCleanedUp();
 }
 
-void TffdshowDecVideoOutputPin::BeginStop(void)
-{
- if(buffers)
-  buffers->BeginStop();
-}
-
 HRESULT TffdshowDecVideoOutputPin::Inactive(void)
 {
  DPRINTF(_l("TffdshowDecVideoOutputPin::Inactive"));
@@ -220,24 +199,12 @@ HRESULT TffdshowDecVideoOutputPin::Inactive(void)
    waitUntillQueueCleanedUp();
    queue->Reset();
   }
- HRESULT hr=CBaseOutputPin::Inactive();
- if(buffers)
-  buffers->EndStop();
- return hr;
+ return CBaseOutputPin::Inactive();
 }
 
 IMediaSample* TffdshowDecVideoOutputPin::GetBuffer(void)
 {
- if(buffers)
-  return buffers->GetBuffer();
- else
-  return NULL;
-}
-
-void TffdshowDecVideoOutputPin::addOne(void)
-{
- if(buffers)
-  return buffers->addOne();
+ return NULL;
 }
 
 HRESULT TffdshowDecVideoOutputPin::CompleteConnect(IPin *pReceivePin)
@@ -348,13 +315,5 @@ HRESULT TffdshowDecVideoOutputPin::GetDeliveryBuffer(IMediaSample ** ppSample,
 {
  if (!m_pAllocator)
   return E_NOINTERFACE;
- if(fdv->isQueue && buffers)
-  {
-   if(*ppSample=buffers->GetBuffer())
-    return S_OK;
-   else
-    return E_FAIL;
-  }
- else
-  return m_pAllocator->GetBuffer(ppSample,pStartTime,pEndTime,dwFlags);
+ return m_pAllocator->GetBuffer(ppSample,pStartTime,pEndTime,dwFlags);
 }

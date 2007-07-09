@@ -562,7 +562,6 @@ public:
  static const AMOVIESETUP_FILTER filter;
  static const DWORD defaultMerit;
  friend class TffdshowDecVideoOutputPin;
- friend class ListEmptyIMediaSamples;
 };
 
 class TffdshowDecVideoRaw :public TffdshowDecVideo

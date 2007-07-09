@@ -781,9 +781,6 @@
 				RelativePath="src\TkeyboardDirect.cpp">
 			</File>
 			<File 
-				RelativePath=".\src\TListEmptyIMediaSamples.cpp">
-			</File>
-			<File 
 				RelativePath="src\TtextInputPin.cpp">
 			</File>
 			<File 
@@ -981,9 +978,6 @@
 			</File>
 			<File 
 				RelativePath="src\TkeyboardDirect.h">
-			</File>
-			<File 
-				RelativePath=".\src\TListEmptyIMediaSamples.h">
 			</File>
 			<File 
 				RelativePath="src\TtextInputPin.h">

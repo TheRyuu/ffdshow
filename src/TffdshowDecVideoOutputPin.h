@@ -6,7 +6,6 @@
 #include "TffOutputQ.h"
 
 class TffdshowDecVideo;
-class ListEmptyIMediaSamples;
 struct IMediaSample;
 
 class TffdshowDecVideoOutputPin : public CTransformOutputPin
@@ -19,7 +18,6 @@ protected:
  void freeQueue(void);
  TffOutputQueue* queue;
  bool isFirstFrame;
- ListEmptyIMediaSamples* buffers;
 public:
  TffdshowDecVideoOutputPin(
         TCHAR *pObjectName,
@@ -40,16 +38,13 @@ public:
  void waitForPopEvent(void);
  void resetPopEvent(void);
  IMediaSample* GetBuffer(void);
- void addOne(void);
  IMemAllocator* GetAllocator(void) {return m_pAllocator;}
  void SendAnyway(void);
- void BeginStop(void);
  HRESULT GetDeliveryBuffer(IMediaSample ** ppSample,
   REFERENCE_TIME * pStartTime,
   REFERENCE_TIME * pEndTime,
   DWORD dwFlags);
-friend class TffdshowDecVideo;
- friend class ListEmptyIMediaSamples;
+ friend class TffdshowDecVideo;
 };
 
 #endif

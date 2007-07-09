@@ -1130,7 +1130,6 @@ STDMETHODIMP TffdshowDecVideo::Stop(void)
  DPRINTF(_l("TffdshowDecVideo::Stop thread=%d"),GetCurrentThreadId());
  if (hReconnectEvent)
   SetEvent(hReconnectEvent);
- m_pOutputDecVideo->BeginStop();
  if (videoWindow) {videoWindow=NULL;wasVideoWindow=false;}
  if (basicVideo) {basicVideo=NULL;wasBasicVideo=false;}
  return CTransformFilter::Stop();
