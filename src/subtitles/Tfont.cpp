@@ -1096,6 +1096,7 @@ void Tfont::done(void)
 
 template<class tchar> TrenderedSubtitleWord* Tfont::newWord(const tchar *s,size_t slen,TrenderedSubtitleLines::TprintPrefs prefs,const TsubtitleWord<tchar> *w,bool trimRightSpaces)
 {
+ typedef typename tchar_traits<tchar>::ffstring ffstring;
  OUTLINETEXTMETRIC otm;
  GetOutlineTextMetrics(hdc,sizeof(otm),&otm);
 
