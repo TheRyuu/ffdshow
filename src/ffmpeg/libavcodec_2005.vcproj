@@ -762,6 +762,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\mpeg12data.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\mpeg12enc.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\mpegaudiodata.c"
 				>
 			</File>
@@ -1227,7 +1235,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\mpeg12.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\mpeg12data.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\mpeg12decdata.h"
 				>
 			</File>
 			<File

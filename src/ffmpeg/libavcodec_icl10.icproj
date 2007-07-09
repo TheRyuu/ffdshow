@@ -403,7 +403,11 @@
 		<File 
 			RelativePath=".\libavcodec\mjpegenc.h"/>
 		<File 
+			RelativePath=".\libavcodec\mpeg12.h"/>
+		<File 
 			RelativePath=".\libavcodec\mpeg12data.h"/>
+		<File 
+			RelativePath=".\libavcodec\mpeg12decdata.h"/>
 		<File 
 			RelativePath=".\libavcodec\mpeg4data.h"/>
 		<File 
@@ -700,6 +704,10 @@
 		</File>
 		<File 
 			RelativePath=".\libavcodec\mpeg12.c"/>
+		<File 
+			RelativePath=".\libavcodec\mpeg12data.c"/>
+		<File 
+			RelativePath=".\libavcodec\mpeg12enc.c"/>
 		<File 
 			RelativePath=".\libavcodec\mpegaudiodata.c"/>
 		<File 

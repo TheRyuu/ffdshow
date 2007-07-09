@@ -83,6 +83,8 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/mjpeg_parser.c \
       $(LAVC_DIR)/motion_est.c \
       $(LAVC_DIR)/mpeg12.c \
+      $(LAVC_DIR)/mpeg12data.c \
+      $(LAVC_DIR)/mpeg12enc.c \
       $(LAVC_DIR)/mpegaudiodata.c \
       $(LAVC_DIR)/mpegaudiodec.c \
       $(LAVC_DIR)/mpegvideo.c \
