@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="TRUE"
-				AdditionalDependencies="kernel32.lib ole32.lib msvcrtd.lib msvcprtd.lib winmm.lib comctl32.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib ole32.lib msvcrtd.lib winmm.lib comctl32.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_vfw.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
@@ -115,7 +115,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="TRUE"
-				AdditionalDependencies="kernel32.lib ole32.lib msvcrt.lib msvcprt.lib winmm.lib comctl32.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib ole32.lib msvcrt.lib winmm.lib comctl32.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_vfw.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

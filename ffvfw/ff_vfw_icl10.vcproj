@@ -80,7 +80,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib ole32.lib msvcrtd.lib winmm.lib comctl32.lib msvcprtd.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib ole32.lib msvcrtd.lib winmm.lib comctl32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_vfw.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="true"
@@ -181,7 +181,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib ole32.lib msvcrtd.lib winmm.lib comctl32.lib msvcprtd.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib ole32.lib msvcrtd.lib winmm.lib comctl32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_vfw.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="true"
@@ -287,7 +287,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib ole32.lib msvcrt.lib winmm.lib comctl32.lib msvcprt.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib ole32.lib msvcrt.lib winmm.lib comctl32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_vfw.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -395,7 +395,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib ole32.lib msvcrt.lib winmm.lib comctl32.lib msvcprt.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib ole32.lib msvcrt.lib winmm.lib comctl32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_vfw.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"

@@ -86,7 +86,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AdditionalManifestFiles="..\bin\distrib\makeAVIS.exe.manifest"
+				AdditionalManifestFiles="..\bin\manifest32\makeAVIS.exe.manifest"
 				EmbedManifest="true"
 			/>
 			<Tool
@@ -176,7 +176,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AdditionalManifestFiles="..\bin\distrib\makeAVIS.exe.manifest"
+				AdditionalManifestFiles="..\bin\manifest64\makeAVIS.exe.manifest"
 				EmbedManifest="true"
 			/>
 			<Tool
@@ -274,7 +274,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AdditionalManifestFiles="..\bin\distrib\makeAVIS.exe.manifest"
+				AdditionalManifestFiles="..\bin\manifest32\makeAVIS.exe.manifest"
 				EmbedManifest="true"
 			/>
 			<Tool
@@ -372,7 +372,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AdditionalManifestFiles="..\bin\distrib\makeAVIS.exe.manifest"
+				AdditionalManifestFiles="..\bin\manifest64\makeAVIS.exe.manifest"
 				EmbedManifest="true"
 			/>
 			<Tool

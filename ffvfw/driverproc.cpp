@@ -28,7 +28,8 @@
 #include <initguid.h>
 #include "Iffvfw.h"
 #include "ffdebug.h"
-#include <map>
+#include "uClibc++/algorithm"
+#include "uClibc++/map"
 
 #ifndef ICVERSION
 #define ICVERSION       0x0104

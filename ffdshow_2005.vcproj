@@ -355,7 +355,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AdditionalManifestFiles="bin\distrib\ffdshow.ax.manifest"
+				AdditionalManifestFiles="bin\manifest32\ffdshow.ax.manifest"
 				EmbedManifest="true"
 			/>
 			<Tool
@@ -477,6 +477,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				AdditionalManifestFiles="bin\manifest64\ffdshow.ax.manifest"
 				EmbedManifest="true"
 			/>
 			<Tool
@@ -834,7 +835,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AdditionalManifestFiles="bin\distrib\ffdshow.ax.manifest"
+				AdditionalManifestFiles="bin\manifest32\ffdshow.ax.manifest"
 				EmbedManifest="true"
 			/>
 			<Tool
@@ -957,6 +958,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				AdditionalManifestFiles="bin\manifest64\ffdshow.ax.manifest"
 				EmbedManifest="true"
 			/>
 			<Tool
