@@ -28,6 +28,11 @@
 #ifndef AVCODEC_MPEG12DATA_H
 #define AVCODEC_MPEG12DATA_H
 
+/* x64 fixes */
+#ifdef __GNUC__
+ #include <stdint.h>
+#endif
+
 #include "mpegvideo.h"
 
 extern const uint16_t ff_mpeg12_vlc_dc_lum_code[12];

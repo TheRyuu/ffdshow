@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="libmplayer"
 	ProjectGUID="{76569356-593F-417E-A8C5-108FF3F364D9}"
 	RootNamespace="libmplayer"
@@ -244,6 +244,7 @@
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				CompileAs="1"
+				DisableSpecificWarnings="4996,4005,4002"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -340,6 +341,7 @@
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				CompileAs="1"
+				DisableSpecificWarnings="4996,4005,4002"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -439,6 +441,50 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\ffdebug.c"
+				>
+			</File>
+			<File
+				RelativePath=".\postproc\isP4HT.c"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\ffmpeg\libavutil\mem.c"
+				>
+			</File>
+			<File
 				RelativePath=".\mplayer.c"
 				>
 			</File>
@@ -527,54 +573,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ffmpeg\libavutil\mem.c"
-				>
-			</File>
-			<File
-				RelativePath="..\ffdebug.c"
-				>
-			</File>
-			<File
-				RelativePath=".\postproc\w32thread.c"
-				>
-			</File>
-			<File
-				RelativePath=".\postproc\isP4HT.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\postproc\swscale_template.c"
 				>
 				<FileConfiguration
@@ -609,6 +607,10 @@
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\postproc\w32thread.c"
+				>
 			</File>
 			<File
 				RelativePath=".\postproc\yuv2rgb.c"
@@ -719,7 +721,6 @@
 				RelativePath=".\postproc\swscale_multicpu.h"
 				>
 			</File>
-
 		</Filter>
 		<Filter
 			Name="mp3lib"

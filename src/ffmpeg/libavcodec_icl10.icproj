@@ -5,7 +5,7 @@
 	Name="libavcodec"
 	ProjectGUID="{F55142B4-710A-4FCB-A103-177135A92838}"
 	VCNestedProjectGUID="{5CAF881C-9349-4EE2-9697-982C10795033}"
-	VCNestedProjectCRC32="2281017183"
+	VCNestedProjectCRC32="2904318490"
 	VCNestedProjectFileName="libavcodec_icl10.vcproj"
 	OwnerKey="{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}">
 	<Platforms>
@@ -189,7 +189,7 @@
 				WarningLevel="1"
 				SuppressStartupBanner="1"
 				CompileAs="1"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="4996,4005,4002"
 				C99Support="1"/>
 			<Tool 
 				Name="LinkerTool"
@@ -266,7 +266,7 @@
 				WarningLevel="1"
 				SuppressStartupBanner="1"
 				CompileAs="1"
-				DisableSpecificWarnings=""
+				DisableSpecificWarnings="4996,4005,4002"
 				UseProcExt="2"
 				RequireProcExt="0"
 				C99Support="1"
@@ -367,7 +367,7 @@
 		<File 
 			RelativePath="..\codecs\ffcodecs.h"/>
 		<File 
-			RelativePath="..\imgfilters\ffimgfmt.h"/>
+			RelativePath="..\imgFilters\ffImgfmt.h"/>
 		<File 
 			RelativePath=".\libavcodec\golomb.h"/>
 		<File 
@@ -448,7 +448,7 @@
 			RelativePath=".\libavcodec\sp5x.h"/>
 		<File 
 			RelativePath=".\libavcodec\svq1.h"/>
-			<File 
+		<File 
 			RelativePath=".\libavcodec\svq1_cb.h"/>
 		<File 
 			RelativePath=".\libavcodec\svq1_vlc.h"/>

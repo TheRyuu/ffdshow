@@ -28,8 +28,12 @@
 #ifndef AVCODEC_MPEG12DECDATA_H
 #define AVCODEC_MPEG12DECDATA_H
 
-#include "mpegvideo.h"
+/* x64 fixes */
+#ifdef __GNUC__
+ #include <stdint.h>
+#endif
 
+#include "mpegvideo.h"
 
 #define MB_TYPE_ZERO_MV   0x20000000
 #define IS_ZERO_MV(a)   ((a)&MB_TYPE_ZERO_MV)

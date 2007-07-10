@@ -5,7 +5,7 @@
 	Name="libmplayer"
 	ProjectGUID="{86877EB0-73C2-4923-808E-A96D6D7BF6B1}"
 	VCNestedProjectGUID="{76569356-593F-417E-A8C5-108FF3F364D9}"
-	VCNestedProjectCRC32="837229564"
+	VCNestedProjectCRC32="3391042110"
 	VCNestedProjectFileName="libmplayer_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -165,6 +165,7 @@
 				WarningLevel="4"
 				SuppressStartupBanner="1"
 				CompileAs="1"
+				DisableSpecificWarnings="4996,4005,4002"
 				C99Support="1"/>
 			<Tool 
 				Name="LinkerTool"
@@ -234,6 +235,7 @@
 				WarningLevel="4"
 				SuppressStartupBanner="1"
 				CompileAs="1"
+				DisableSpecificWarnings="4996,4005,4002"
 				UseProcExt="2"
 				RequireProcExt="0"
 				C99Support="1"/>
@@ -286,7 +288,7 @@
 		<File 
 			RelativePath=".\libvo\fastmemcpy.h"/>
 		<File 
-			RelativePath="..\imgfilters\ffimgfmt.h"/>
+			RelativePath="..\imgFilters\ffImgfmt.h"/>
 		<File 
 			RelativePath=".\mp3lib\huffman.h"/>
 		<File 

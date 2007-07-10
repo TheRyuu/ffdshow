@@ -17,7 +17,7 @@
 	</Platforms>
 	<ToolFiles>
 		<ToolFile
-			RelativePath=".\nasm.rules"
+			RelativePath=".\yasm.rules"
 		/>
 	</ToolFiles>
 	<Configurations>
@@ -34,7 +34,7 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="Nasm"
+				Name="Yasm"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -61,7 +61,7 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="Nasm"
+				Name="Yasm"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -88,7 +88,7 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="Nasm"
+				Name="Yasm"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -114,7 +114,7 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="Nasm"
+				Name="Yasm"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"

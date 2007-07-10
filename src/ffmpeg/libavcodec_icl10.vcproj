@@ -273,7 +273,7 @@
 				WarningLevel="1"
 				SuppressStartupBanner="true"
 				CompileAs="1"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="4996,4005,4002"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -379,7 +379,7 @@
 				WarningLevel="1"
 				SuppressStartupBanner="true"
 				CompileAs="1"
-				DisableSpecificWarnings=""
+				DisableSpecificWarnings="4996,4005,4002"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -953,13 +953,6 @@
 				<FileConfiguration
 					Name="Release|Win32"
 					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
