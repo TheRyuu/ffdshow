@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1340
+#define tryout_revision = 1347
 #define buildyear = 2007
 #define buildmonth = '07'
-#define buildday = '07'
+#define buildday = '10'
 
 ; Build specific options
 #define unicode_required = True
@@ -306,17 +306,13 @@ Source: Runtimes\msvc71\msvcr71.dll; DestDir: {sys}; Flags: onlyifdoesntexist sh
 #endif
 
 #if MSVC80
+; Install MSVC80 runtime as private assembly (can only be used by components that are in the same directory).
   #if is64bit
 Source: Runtimes\msvc80_x64\msvcr80.dll; DestDir: {app}; MinVersion: 0,5.02; Flags: ignoreversion restartreplace uninsrestartdelete
 Source: Runtimes\msvc80_x64\microsoft.vc80.crt.manifest; DestDir: {app}; MinVersion: 0,5.02; Flags: ignoreversion restartreplace uninsrestartdelete
-Source: ..\..\manifest64\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
-Source: ..\..\manifest64\ff_vfw.dll.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
   #else
-; Install MSVC80 runtime as private assembly (can only be used by components that are in the same directory).
 Source: Runtimes\msvc80\msvcr80.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete
 Source: Runtimes\msvc80\microsoft.vc80.crt.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete
-Source: ..\..\manifest32\msvc80\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
-Source: ..\..\manifest32\msvc80\ff_vfw.dll.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
   #endif
 #endif
 
@@ -364,8 +360,14 @@ Source: ..\..\ffdshow_icl9.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: igno
 ;Source: ..\..\ffdshow_sse.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_SSE_Supported AND NOT Is_SSE2_Supported; Components: ffdshow
 ;Source: ..\..\ffdshow_sse2.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_SSE2_Supported; Components: ffdshow
 
-#if !MSVC80
-Source: ..\..\manifest32\\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow
+#if MSVC80
+	#if is64bit
+Source: ..\..\manifest64\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
+	#else
+Source: ..\..\manifest32\msvc80\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
+	#endif
+#else
+Source: ..\..\manifest32\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow
 #endif
 
 ; Single build:
@@ -383,12 +385,22 @@ Source: ..\..\ff_vfw.dll; DestDir: {app}; Flags: ignoreversion restartreplace un
 #else
 ; If you use MSVC8 for ffdshow.ax, ff_vfw.dll should be compiled by GCC. Both MSVC7.1 and MSVC8 does not work in some environment such as Windows XP SP2 without shared assembly of MSVCR80.
 Source: ..\..\ff_vfw.dll; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
+#endif
+
+#if MSVC80
+	#if is64bit
+Source: ..\..\manifest64\ff_vfw.dll.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03	
+	#else
+Source: ..\..\manifest32\msvc80\ff_vfw.dll.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02	
+	#endif
+#else
 Source: ..\..\manifest32\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
 #endif
 
 #if include_audx
 Source: audxlib.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow
 #endif
+
 #if include_app_plugins
   #if MSVC80
 Source: msvc71\ffavisynth.dll; DestDir: {code:GetAviSynthPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\avisynth
@@ -406,6 +418,7 @@ Source: msvc71\FLT_ffdshow.dll; DestDir: {code:GetDScalerDir|}; Flags: ignorever
 Source: ..\..\FLT_ffdshow.dll; DestDir: {code:GetDScalerDir|}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\dscaler
   #endif
 #endif
+
 #if include_makeavis
 Source: ..\..\makeAVIS.exe; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
   #if !MSVC80
@@ -417,6 +430,7 @@ Source: msvc71\ff_acm.acm; DestDir: {sys}; Flags: ignoreversion restartreplace u
 Source: ..\..\ff_acm.acm; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
   #endif
 #endif
+
 Source: ..\..\languages\*.*; DestDir: {app}\languages; Flags: ignoreversion; Components: ffdshow
 Source: ..\..\custom matrices\*.*; DestDir: {app}\custom matrices; Flags: ignoreversion; Components: ffdshow\vfw
 Source: ..\..\openIE.js; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
@@ -424,9 +438,9 @@ Source: ..\..\openIE.js; DestDir: {app}; Flags: ignoreversion; Components: ffdsh
 [InstallDelete]
 #if MSVC80
 Type: files; Name: {app}\ffdshow.ax.manifest; Components: ffdshow
-#if include_makeavis
+	#if include_makeavis
 Type: files; Name: {app}\makeAVIS.exe.manifest; Components: ffdshow\makeavis
-#endif
+	#endif
 #endif
 #if localize
 ; Localized shortcuts
@@ -1716,6 +1730,3 @@ begin
   showMsgAdded(CurPageID, ComplistVideo);
   showMsgAdded(CurPageID, ComplistAudio);
 end;
-
-
-
