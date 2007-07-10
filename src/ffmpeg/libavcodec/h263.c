@@ -5,6 +5,10 @@
  * Copyright (c) 2001 Juan J. Sierralta P.
  * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
  *
+ * ac prediction encoding, B-frame support, error resilience, optimizations,
+ * qpel decoding, gmc decoding, interlaced decoding
+ * by Michael Niedermayer <michaelni@gmx.at>
+ *
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -20,10 +24,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- *
- * ac prediction encoding, b-frame support, error resilience, optimizations,
- * qpel decoding, gmc decoding, interlaced decoding,
- * by Michael Niedermayer <michaelni@gmx.at>
  */
 
 /**
@@ -2517,23 +2517,6 @@ void mpeg4_encode_picture_header(MpegEncContext * s, int picture_number)
 #endif //CONFIG_ENCODERS
 
 /**
- * set qscale and update qscale dependent variables.
- */
-void ff_set_qscale(MpegEncContext * s, int qscale)
-{
-    if (qscale < 1)
-        qscale = 1;
-    else if (qscale > 31)
-        qscale = 31;
-
-    s->qscale = qscale;
-    s->chroma_qscale= s->chroma_qscale_table[qscale];
-
-    s->y_dc_scale= s->y_dc_scale_table[ qscale ];
-    s->c_dc_scale= s->c_dc_scale_table[ s->chroma_qscale ];
-}
-
-/**
  * predicts the dc.
  * encoding quantized level -> quantized diff
  * decoding quantized diff -> quantized level
@@ -3386,7 +3369,7 @@ int ff_h263_resync(MpegEncContext *s){
         if(ret>=0)
             return 0;
     }
-    //ok, it's not where its supposed to be ...
+    //OK, it's not where it is supposed to be ...
     s->gb= s->last_resync_gb;
     align_get_bits(&s->gb);
     left= s->gb.size_in_bits - get_bits_count(&s->gb);
@@ -4718,7 +4701,7 @@ retry:
         i += run;
         if (i >= 64){
             if(s->alt_inter_vlc && rl == &rl_inter && !s->mb_intra){
-                //looks like a hack but no, it's the way its supposed to work ...
+                //Looks like a hack but no, it's the way it is supposed to work ...
                 rl = &rl_intra_aic;
                 i = 0;
                 s->gb= gb;

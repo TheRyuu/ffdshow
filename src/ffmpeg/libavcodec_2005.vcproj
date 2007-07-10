@@ -498,6 +498,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\cavsdec.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\cavsdsp.c"
 				>
 			</File>
@@ -938,6 +942,10 @@
 				>
 			</File>
 			<File
+				RelativePath="libavcodec\svq1dec.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\svq3.c"
 				>
 				<FileConfiguration
@@ -1320,6 +1328,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\sp5x.h"
+				>
+			</File>
+			<File
+				RelativePath="libavcodec\svq1.h"
 				>
 			</File>
 			<File

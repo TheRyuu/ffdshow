@@ -3,6 +3,8 @@
  * Copyright (c) 2000, 2001 Fabrice Bellard.
  * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
  *
+ * gmc & q-pel & 32/64 bit based MC by Michael Niedermayer <michaelni@gmx.at>
+ *
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -18,8 +20,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- *
- * gmc & q-pel & 32/64 bit based MC by Michael Niedermayer <michaelni@gmx.at>
  */
 
 /**
@@ -3430,11 +3430,11 @@ static int dct_sad8x8_c(/*MpegEncContext*/ void *c, uint8_t *src1, uint8_t *src2
 
 static int dct264_sad8x8_c(/*MpegEncContext*/ void *c, uint8_t *src1, uint8_t *src2, int stride, int h){
     MpegEncContext * const s= (MpegEncContext *)c;
-    int16_t dct[8][8];
+    DCTELEM dct[8][8];
     int i;
     int sum=0;
 
-    s->dsp.diff_pixels(dct, src1, src2, stride);
+    s->dsp.diff_pixels(dct[0], src1, src2, stride);
 
 #define SRC(x) dct[i][x]
 #define DST(x,v) dct[i][x]= v

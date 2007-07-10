@@ -33,6 +33,7 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/bitstream.c \
       $(LAVC_DIR)/cabac.c \
       $(LAVC_DIR)/cavs.c \
+      $(LAVC_DIR)/cavsdec.c \
       $(LAVC_DIR)/cavsdsp.c \
       $(LAVC_DIR)/cinepak.c \
       $(LAVC_DIR)/cook.c \
@@ -111,6 +112,7 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/snow.c \
       $(LAVC_DIR)/sp5xdec.c \
       $(LAVC_DIR)/svq1.c \
+      $(LAVC_DIR)/svq1dec.c \
       $(LAVC_DIR)/truemotion1.c \
       $(LAVC_DIR)/truemotion2.c \
       $(LAVC_DIR)/truespeech.c \

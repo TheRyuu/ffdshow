@@ -30,9 +30,6 @@
 #ifndef AVCODEC_MSMPEG4TAB_H
 #define AVCODEC_MSMPEG4TAB_H
 
-#ifdef __GNUC__
- #include <stdint.h>
-#endif
 #include "bitstream.h"
 #include "rl.h"
 

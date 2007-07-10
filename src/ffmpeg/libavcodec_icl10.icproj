@@ -447,6 +447,8 @@
 		<File 
 			RelativePath=".\libavcodec\sp5x.h"/>
 		<File 
+			RelativePath=".\libavcodec\svq1.h"/>
+			<File 
 			RelativePath=".\libavcodec\svq1_cb.h"/>
 		<File 
 			RelativePath=".\libavcodec\svq1_vlc.h"/>
@@ -550,6 +552,8 @@
 			RelativePath=".\libavcodec\cabac.c"/>
 		<File 
 			RelativePath=".\libavcodec\cavs.c"/>
+		<File 
+			RelativePath=".\libavcodec\cavsdec.c"/>
 		<File 
 			RelativePath=".\libavcodec\cavsdsp.c"/>
 		<File 
@@ -829,6 +833,8 @@
 			RelativePath=".\libavcodec\sp5xdec.c"/>
 		<File 
 			RelativePath=".\libavcodec\svq1.c"/>
+		<File 
+			RelativePath=".\libavcodec\svq1dec.c"/>
 		<File 
 			RelativePath=".\libavcodec\svq3.c">
 			<FileConfiguration 

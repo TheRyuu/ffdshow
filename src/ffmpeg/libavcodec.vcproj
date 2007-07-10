@@ -209,6 +209,9 @@
 				RelativePath=".\libavcodec\cavs.c">
 			</File>
 			<File
+				RelativePath=".\libavcodec\cavsdec.c">
+			</File>
+			<File
 				RelativePath=".\libavcodec\cavsdsp.c">
 			</File>
 			<File
@@ -509,6 +512,9 @@
 				RelativePath="libavcodec\svq1.c">
 			</File>
 			<File
+				RelativePath="libavcodec\svq1dec.c">
+			</File>
+			<File
 				RelativePath=".\libavcodec\svq3.c">
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -790,6 +796,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\sp5x.h">
+			</File>
+			<File
+				RelativePath="libavcodec\svq1.h">
 			</File>
 			<File
 				RelativePath="libavcodec\svq1_cb.h">
