@@ -8,7 +8,7 @@ compression. Few other compression libraries are supported too.
 
    - various compression methods:
        H264
-       MPEG 4 compatible (Xvid, DivX 4, DivX 5) using libavcodec
+       MPEG 4 compatible (Xvid, DivX 4, DivX 5, DivX 6) using libavcodec
        or Xvid
        Divx 3 compatible, MSMPEG4v2, MSMPEG4v1
        WMV1/7, WMV2/8
@@ -42,12 +42,21 @@ compression. Few other compression libraries are supported too.
    - libavcodec's MPEG4/MPEG2/MPEG1, xvidcore 1.2 and x264 encoders are multithreaded
    - decompression
 
-3. Web links
+3. ffdshow-tryouts
+
+   ffdshow was originally developed by Milan Cutka. Since Milan Cutka stopped
+   updating in 2006, we launched a new project 'ffdshow-tryouts'.
+
+4. Web links
+
+   ffdshow-tryouts:
+   http://ffdshow-tryout.sourceforge.net/
+   http://sourceforge.net/project/showfiles.php?group_id=173941
+   http://ffdshow-tryout.svn.sourceforge.net/viewvc/ffdshow-tryout/?view=log
 
    ffdshow:
    http://ffdshow.sourceforge.net/tikiwiki/
    http://sourceforge.net/projects/ffdshow/
-   http://www.ffdshow.info/
 
    FFmpeg:
    http://ffmpeg.mplayerhq.hu/
@@ -64,9 +73,10 @@ compression. Few other compression libraries are supported too.
    or at Doom9:
    http://forum.doom9.org/showthread.php?t=120465
 
-4. Copying
+5. Copying
 
    ffdshow is distributed under GPL. See copying.txt
 
 
    Milan Cutka <milan_cutka@yahoo.com>
+   ffdshow-tryouts
