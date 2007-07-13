@@ -239,7 +239,10 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
      if (e!=embedded.end() && e->second)
       {
        if (!e->second->IsProcessOverlapDone())
-        e->second->processOverlap();
+        {
+         e->second->processOverlap();
+         e->second->init();
+        }
        sub=e->second->getSubtitle(cfg,frameStart,&forceChange);
       }
     }

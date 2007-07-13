@@ -19,8 +19,8 @@ protected:
  Tsubreader *subs;
  int sub_format;
  virtual void checkChange(const TsubtitlesSettings *cfg,bool *forceChange) {}
- void init(void);
 public:
+ void init(void);
  Tsubtitles(IffdshowBase *Ideci);
  virtual ~Tsubtitles();
  virtual void done(void);
