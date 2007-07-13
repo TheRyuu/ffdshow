@@ -341,7 +341,7 @@
 				RelativePath=".\libavcodec\jrevdct.c">
 			</File>
 			<File
-				RelativePath=".\libavcodec\lcl.c">
+				RelativePath=".\libavcodec\lcldec.c">
 			</File>
 			<File
 				RelativePath=".\libavcodec\ljpegenc.c">
@@ -718,6 +718,9 @@
 			</File>
 			<File
 				RelativePath="libavcodec\jpeglsdec.h">
+			</File>
+			<File
+				RelativePath=".\libavcodec\lcl.h">
 			</File>
 			<File
 				RelativePath=".\libavcodec\mathops.h">

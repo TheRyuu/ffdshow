@@ -682,7 +682,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\lcl.c"
+				RelativePath=".\libavcodec\lcldec.c"
 				>
 			</File>
 			<File
@@ -1228,6 +1228,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mathops.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\lcl.h"
 				>
 			</File>
 			<File

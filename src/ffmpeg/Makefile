@@ -72,7 +72,7 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/jpegls.c \
       $(LAVC_DIR)/jpeglsdec.c \
       $(LAVC_DIR)/jrevdct.c \
-      $(LAVC_DIR)/lcl.c \
+      $(LAVC_DIR)/lcldec.c \
       $(LAVC_DIR)/ljpegenc.c \
       $(LAVC_DIR)/loco.c \
       $(LAVC_DIR)/mace.c \

@@ -108,29 +108,13 @@
 #    define offsetof(T,F) ((unsigned int)((char *)&((T *)0)->F))
 #endif
 
-#    define snprintf _snprintf
-#    define vsnprintf _vsnprintf
+#define snprintf _snprintf
+#define vsnprintf _vsnprintf
 
-#ifdef __MINGW32__
-#    ifdef _DEBUG
-#        define DEBUG
-#    endif
-
-#    define snprintf _snprintf
-#    define vsnprintf _vsnprintf
-
-/* __MINGW32__ end */
-#elif defined (CONFIG_OS2)
-/* OS/2 EMX */
-
-#    include <float.h>
-
-#endif /* !__MINGW32__ && CONFIG_OS2 */
-
-#    ifdef USE_FASTMEMCPY
-#       include "fastmemcpy.h"
-#    	define memcpy(a,b,c) fast_memcpy(a,b,c)
-#    endif
+#ifdef USE_FASTMEMCPY
+#	include "fastmemcpy.h"
+#   define memcpy(a,b,c) fast_memcpy(a,b,c)
+#endif
 
 // Use rip-relative addressing if compiling PIC code on x86-64.
 #if defined(__MINGW32__) || defined(__CYGWIN__) || \
@@ -285,21 +269,7 @@ if((y)<(x)){\
 /* btw, rintf() is existing on fbsd too -- alex */
 static av_always_inline long int lrintf(float x)
 {
-#ifdef __MINGW32__
-#  ifdef ARCH_X86_32
-    int32_t i;
-    asm volatile(
-        "fistpl %0\n\t"
-        : "=m" (i) : "t" (x) : "st"
-    );
-    return i;
-#  else
-    /* XXX: incorrect, but make it compile */
-    return (int)(x + (x < 0 ? -0.5 : 0.5));
-#  endif /* ARCH_X86_32 */
-#else
     return (int)(rint(x));
-#endif /* __MINGW32__ */
 }
 #endif /* HAVE_LRINTF */
 
