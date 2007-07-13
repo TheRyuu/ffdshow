@@ -326,7 +326,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				CompileAs="1"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="4996,4244"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

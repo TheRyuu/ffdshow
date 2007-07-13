@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="libmpeg2_ff"
 	ProjectGUID="{A0116059-A93E-4A03-BA72-73E8C64B3C34}"
 	RootNamespace="libmpeg2_ff"
@@ -362,7 +362,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				CompileAs="2"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="4996,4244"
 				EnablePREfast="false"
 				OmitDefaultLibName="true"
 			/>

@@ -52,7 +52,6 @@ compression. Few other compression libraries are supported too.
    ffdshow-tryouts:
    http://ffdshow-tryout.sourceforge.net/
    http://sourceforge.net/project/showfiles.php?group_id=173941
-   http://ffdshow-tryout.svn.sourceforge.net/viewvc/ffdshow-tryout/?view=log
 
    ffdshow:
    http://ffdshow.sourceforge.net/tikiwiki/

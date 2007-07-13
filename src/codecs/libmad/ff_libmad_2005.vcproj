@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="ff_libmad"
 	ProjectGUID="{B8000FD0-4A45-4D79-B320-1AFBE61C01C0}"
 	RootNamespace="ff_libmad"
@@ -365,7 +365,7 @@
 				WarningLevel="1"
 				SuppressStartupBanner="true"
 				CompileAs="1"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="4996,4244"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

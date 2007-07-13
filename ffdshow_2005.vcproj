@@ -438,7 +438,7 @@
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				CompileAs="0"
-				DisableSpecificWarnings="4996,4250"
+				DisableSpecificWarnings="4996,4250,4244"
 				OmitDefaultLibName="true"
 			/>
 			<Tool

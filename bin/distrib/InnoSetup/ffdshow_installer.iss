@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1347
+#define tryout_revision = 1352
 #define buildyear = 2007
 #define buildmonth = '07'
-#define buildday = '10'
+#define buildday = '13'
 
 ; Build specific options
 #define unicode_required = True
@@ -74,14 +74,15 @@
   #define filename_prefix = '_xxl'
 #endif
 #if PREF_X64
+  #define MSVC80 = True
   #define is64bit = True
   #define unicode_required = True
   #define include_cpu_detection = False
   #define include_audx = False
   #define include_app_plugins = False
   #define include_makeavis = False
-  #define include_x264 = False
-  #define include_xvidcore = False
+  #define include_x264 = True
+  #define include_xvidcore = True
   #define filename_prefix = '_x64'
 #endif
 

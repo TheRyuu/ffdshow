@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="ff_theora"
 	ProjectGUID="{924512C3-75C6-45BE-B7A3-A747BFFD79A1}"
 	RootNamespace="ff_theora"
@@ -379,7 +379,7 @@
 				WarningLevel="0"
 				SuppressStartupBanner="true"
 				CompileAs="0"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="4996,4244"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

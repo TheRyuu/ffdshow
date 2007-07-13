@@ -164,6 +164,7 @@
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 				CompileAs="1"
+				DisableSpecificWarnings="4244"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

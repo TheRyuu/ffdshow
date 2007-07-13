@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="ff_tremor"
 	ProjectGUID="{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}"
 	RootNamespace="ff_tremor"
@@ -375,7 +375,7 @@
 				WarningLevel="0"
 				SuppressStartupBanner="true"
 				CompileAs="1"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="4996,4244"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
