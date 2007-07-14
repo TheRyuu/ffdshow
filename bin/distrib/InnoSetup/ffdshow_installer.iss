@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1352
+#define tryout_revision = 1355
 #define buildyear = 2007
 #define buildmonth = '07'
-#define buildday = '13'
+#define buildday = '14'
 
 ; Build specific options
 #define unicode_required = True
@@ -600,7 +600,7 @@ Description: {cm:runvfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,c
 #include "custom_messages.iss"
 
 [Code]
-const NUMBER_OF_COMPATIBLEAPPLICATIONS=150;
+const NUMBER_OF_COMPATIBLEAPPLICATIONS=200;
 type
   TCompApp = record
     rev: Integer;  // The application (name) have been added to the compatibility list at this rev.
@@ -1156,6 +1156,7 @@ begin
     'cscript.exe'#13#10
     'dashboard.exe'#13#10
     'DivX Player.exe'#13#10
+    'dllhost.exe'#13#10
     'drdivx.exe'#13#10
     'DreamMaker.exe'#13#10
     'DScaler.exe'#13#10
@@ -1508,7 +1509,10 @@ begin
   compApps[148].name := 'jwBrowser.exe';
   compApps[149].name := 'DVDAuthor.exe';
 
-  compApps[150].rev := 0;
+  compApps[150].rev := 1355;
+  compApps[150].name:= 'dllhost.exe';
+
+  compApps[151].rev := 0;
 
 // Compatibility list
   ComplistVideo.skipped := False;

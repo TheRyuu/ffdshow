@@ -135,7 +135,8 @@
           _l("ACDSee9.exe\r\n")\
           _l("BitComet.exe\r\n")\
           _l("jwBrowser.exe\r\n")\
-          _l("DVDAuthor.exe\r\n")
+          _l("DVDAuthor.exe\r\n")\
+          _l("dllhost.exe\r\n")
 
 #define BLACKLIST_EXE_FILENAME _l("explorer.exe;oblivion.exe;morrowind.exe")
 
