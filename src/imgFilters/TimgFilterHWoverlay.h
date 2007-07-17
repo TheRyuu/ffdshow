@@ -16,6 +16,7 @@ protected:
 public:
  TimgFilterHWoverlay(IffdshowBase *Ideci,Tfilters *Iparent);
  ~TimgFilterHWoverlay();
+ virtual bool acceptRandomYV12andRGB32(void) {return true;}
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
 };
 

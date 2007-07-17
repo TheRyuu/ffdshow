@@ -89,6 +89,7 @@ public:
 
  virtual HRESULT queryInterface(const IID &iid,void **ptr) const;
  STDMETHODIMP grabNow(void);
+ virtual bool acceptRandomYV12andRGB32(void) {return true;}
 };
 
 #endif

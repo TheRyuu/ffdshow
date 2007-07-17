@@ -1160,11 +1160,16 @@ YUVcolorA::YUVcolorA(YUVcolor yuv,unsigned int alpha)
  Y=(unsigned int)(0.257*yuv.r+0.504*yuv.g+0.098*yuv.b+16.0);
  U=(unsigned int)(-0.148*yuv.r-0.291*yuv.g+0.439*yuv.b+128.0);
  V=(unsigned int)(0.439*yuv.r-0.368*yuv.g-0.071*yuv.b+128.0);
+ r=yuv.r;
+ g=yuv.g;
+ b=yuv.b;
 }
 
 YUVcolorA::YUVcolorA(COLORREF rgb,unsigned int alpha)
 {
- unsigned int r=GetRValue(rgb),g=GetGValue(rgb),b=GetBValue(rgb);
+ r=GetRValue(rgb);
+ g=GetGValue(rgb);
+ b=GetBValue(rgb);
  Y=(unsigned int)(0.257*r+0.504*g+0.098*b+16.0);
  U=(unsigned int)(-0.148*r-0.291*g+0.439*b+128.0);
  V=(unsigned int)(0.439*r-0.368*g-0.071*b+128.0);

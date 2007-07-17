@@ -57,3 +57,11 @@ void* aligned_calloc(size_t size1, size_t size2, size_t alignment)
  if (ret) memset(ret,0,size);
  return ret;
 }
+
+void* aligned_calloc3(size_t size1, size_t size2, size_t size3, size_t alignment)
+{
+ size_t size=size1*size2+size3;
+ void *ret=aligned_malloc(size,alignment);
+ if (ret) memset(ret,0,size);
+ return ret;
+}

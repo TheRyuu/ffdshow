@@ -103,6 +103,23 @@ HRESULT TimgFilters::deliverSample(TfilterQueue::iterator it,TffPict &pict)
   }
 }
 
+bool TimgFilters::isAnyActiveDownstreamFilter(TfilterQueue::iterator it)
+{
+ it++;
+ while (it!=queue.end())
+  {
+   TimgFilter *filter=(TimgFilter*)it->filter;
+   const TfilterSettingsVideo *cfg=(const TfilterSettingsVideo*)it->getCfg();
+   if (cfg->is)
+    {
+     if (!filter->acceptRandomYV12andRGB32())
+      return true;
+    }
+   it++;
+  }
+ return false;
+}
+
 HRESULT TimgFilters::convertOutputSample(const TffPict &pict,int dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg)
 {
  return output->process(pict,dstcsp,dst,dstStride,dstSize,cfg);

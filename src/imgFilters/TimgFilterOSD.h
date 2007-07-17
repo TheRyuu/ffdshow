@@ -129,6 +129,7 @@ public:
  bool shortOSDmessage(const char_t *msg,unsigned int duration);
  HRESULT registerOSDprovider(IOSDprovider *provider,const char *name);
  HRESULT unregisterOSDprovider(IOSDprovider *provider);
+ virtual bool acceptRandomYV12andRGB32(void) {return true;}
 };
 
 #endif

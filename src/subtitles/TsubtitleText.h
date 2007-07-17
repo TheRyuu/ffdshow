@@ -242,6 +242,7 @@ public:
     c+=l->strlen();
    return c;
   }
+ virtual bool isText(void) const {return true;}
 };
 
 #endif

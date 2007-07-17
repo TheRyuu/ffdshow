@@ -272,11 +272,11 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child,const char_t *IpresetName):
  new TnoiseSettings(options,filters);
  resize=new TresizeAspectSettings(options,filters);
  new TperspectiveSettings(options,filters);
- subtitles=new TsubtitlesSettings(options,filters);
  new TavisynthSettings(options,filters);
  vis=new TvisSettings(options,filters);
  new TdctSettings(options,filters);
  new TbitmapSettings(options,filters);
+ subtitles=new TsubtitlesSettings(options,filters);
  grab=new TgrabSettings(options,filters);
  output=new ToutputVideoSettings(options,filters);
 }

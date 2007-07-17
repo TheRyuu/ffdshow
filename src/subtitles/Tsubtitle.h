@@ -16,6 +16,7 @@ struct Tsubtitle
  virtual bool copyProps(Tsubtitle *dst) {return false;}
  virtual void append(const unsigned char *data,unsigned int datalen) {}
  virtual void addEmpty(void) {}
+ virtual bool isText(void) const {return false;}
 };
 
 #endif

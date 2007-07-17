@@ -3,6 +3,7 @@
 
 void *aligned_malloc(size_t size,size_t alignment=0);
 void *aligned_calloc(size_t size1,size_t size2,size_t alignment=0);
+void *aligned_calloc3(size_t size1,size_t size2,size_t size3=0,size_t alignment=0);
 void *aligned_realloc(void *memblock,size_t size,size_t alignment=0);
 void aligned_free(void *mem_ptr);
 

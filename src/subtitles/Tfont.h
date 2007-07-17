@@ -41,6 +41,7 @@ public:
    int shadowMode, shadowAlpha; // Subtitles shadow
    double shadowSize;
    bool blur;
+   int csp,cspBpp;
   };
  TrenderedSubtitleLines(void) {}
  TrenderedSubtitleLines(TrenderedSubtitleLine *ln) {push_back(ln);}
@@ -89,6 +90,7 @@ public:
  unsigned char *bmp[3],*msk[3];stride_t bmpmskstride[3];
  unsigned char *outline[3],*shadow[3];
  virtual void print(unsigned int dx[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const =0;
+ int csp;
 };
 
 class TrenderedSubtitleWord : public TrenderedSubtitleWordBase
@@ -123,8 +125,8 @@ public:
  TrenderedSubtitleWord(bool IshiftChroma=true):shiftChroma(IshiftChroma),TrenderedSubtitleWordBase(false) {}
  virtual void print(unsigned int dx[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const;
  unsigned int alignXsize;
- void* (__cdecl *TrenderedSubtitleWord_printY)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short *colortbl,const unsigned char* dst,const DWORD* fontmaskconstants);
- void* (__cdecl *TrenderedSubtitleWord_printUV)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short *colortbl,const unsigned char* dstU,const unsigned char* dstV,const DWORD* fontmaskconstants);
+ void* (__cdecl *TrenderedSubtitleWord_printY)  (const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short *colortbl,const unsigned char* dst,const DWORD* fontmaskconstants);
+ void* (__cdecl *TrenderedSubtitleWord_printUV) (const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short *colortbl,const unsigned char* dstU,const unsigned char* dstV,const DWORD* fontmaskconstants);
  void* (__cdecl *YV12_lum2chr_min)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
  void* (__cdecl *YV12_lum2chr_max)(const unsigned char* lum0,const unsigned char* lum1,unsigned char* chr);
 };
@@ -158,6 +160,7 @@ private:
  TrenderedSubtitleLines lines;
  unsigned int height;
  const Tsubtitle *oldsub;
+ int oldCsp;
  YUVcolorA yuvcolor,outlineYUV,shadowYUV;
  short matrix[5][5];
  template<class tchar> void prepareC(const TsubtitleTextBase<tchar> *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange);

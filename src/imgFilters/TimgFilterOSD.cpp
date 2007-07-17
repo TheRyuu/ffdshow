@@ -244,6 +244,8 @@ void TimgFilterOSD::TosdLine::print(IffdshowBase *deci,const TffPict &pict,unsig
      printprefs.deci=deci;
      printprefs.config=config;
      printprefs.shadowMode=-1;
+     printprefs.csp=pict.csp;
+     printprefs.cspBpp=pict.cspInfo.Bpp;
      if (splitline)
       {
        printprefs.fontchangesplit=1;
@@ -471,7 +473,12 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
  if (!provOSDs.empty()/*!osds.empty()*/ || !shortOSD.empty() || cfg->user[0]!='\0')
   {
    unsigned char *dst[4];
-   getCurNext(FF_CSP_420P,pict,true,COPYMODE_FULL,dst);
+   char_t outputfourcc[20];
+   deciV->getOutputFourcc(outputfourcc,20);
+   if ((strncmp(outputfourcc,_l("RGB"),3)==0 && !parent->isAnyActiveDownstreamFilter(it)) || pict.csp==FF_CSP_RGB32)
+    getCurNext(FF_CSP_RGB32,pict,true,COPYMODE_FULL,dst);
+   else
+    getCurNext(FF_CSP_420P,pict,true,COPYMODE_FULL,dst);
 
    unsigned int x=dx1[0]*cfg->posX/100,y=dy1[0]*cfg->posY/100;
 
@@ -500,6 +507,9 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
      printprefs.linespacing=cfg->linespace;
      printprefs.deci=deci;
      printprefs.config=parent->config;
+     printprefs.shadowMode=-1;
+     printprefs.csp=pict.csp;
+     printprefs.cspBpp=pict.cspInfo.Bpp;
      fontUser.print(&subUser,true,printprefs);
     }
   }

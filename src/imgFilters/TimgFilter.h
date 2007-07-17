@@ -86,6 +86,7 @@ protected:
 public:
  TimgFilter(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual ~TimgFilter();
+ virtual bool acceptRandomYV12andRGB32(void) {return false;} // Subtitle filter may change color space to RGB32 randomly.
  virtual bool getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)=0;
  virtual HRESULT flush(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);

@@ -383,8 +383,9 @@ struct YUVcolor
 
 struct YUVcolorA
 {
+ unsigned int r,g,b;
  unsigned int Y,U,V,A;
- YUVcolorA(void) {Y=0;U=V=128;A=256;};
+ YUVcolorA(void) {Y=0;U=V=128;A=256;r=g=b=0;};
  YUVcolorA(YUVcolor yuv,unsigned int alpha=256);
  YUVcolorA(COLORREF rgb,unsigned int alpha=256);
 };

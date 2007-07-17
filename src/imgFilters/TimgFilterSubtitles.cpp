@@ -33,6 +33,8 @@ TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(unsigned char *Idst[4],strid
 {
  dst=Idst;
  stride=Istride;
+ csp=pict.csp;
+ cspBpp=pict.cspInfo.Bpp;
  shiftX=pict.cspInfo.shiftX;shiftY=pict.cspInfo.shiftY;
  dx=Idx[0];
  dy=Idy[0];
@@ -276,8 +278,14 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
          pict.setRO(true);
         }
       }*/
+
      unsigned char *dst[4];
-     getCurNext(FF_CSP_420P,pict,cfg->full,COPYMODE_DEF,dst);
+     char_t outputfourcc[20];
+     deciV->getOutputFourcc(outputfourcc,20);
+     if (((strncmp(outputfourcc,_l("RGB"),3)==0 && !parent->isAnyActiveDownstreamFilter(it)) || pict.csp==FF_CSP_RGB32) && sub->isText())
+      getCurNext(FF_CSP_RGB32,pict,cfg->full,COPYMODE_DEF,dst);
+     else
+      getCurNext(FF_CSP_420P,pict,cfg->full,COPYMODE_DEF,dst);
      unsigned int sizeDx,sizeDy;
      if (cfg->font.autosizeVideoWindow)
       {
@@ -294,6 +302,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
       }
 
      TsubPrintPrefs printprefs(dst,stride2,dx1,dy1,deci,cfg,pict,parent->config,!!isdvdproc);
+     printprefs.csp=pict.csp;
      if (!cfg->stereoscopic || isdvdproc)
       {
        printprefs.sizeDx=sizeDx;
