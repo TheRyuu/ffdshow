@@ -25,7 +25,7 @@
 const int ToutcspsPage::idcs []={IDC_CHB_OUT_I420,IDC_CHB_OUT_YV12,IDC_CHB_OUT_YUY2,IDC_CHB_OUT_YVYU,IDC_CHB_OUT_UYVY,IDC_CHB_OUT_NV12,IDC_CHB_OUT_RGB32,IDC_CHB_OUT_RGB24,IDC_CHB_OUT_RGB15,IDC_CHB_OUT_RGB16,0};
 const int ToutcspsPage::idffs[]={IDFF_outI420    ,IDFF_outYV12    ,IDFF_outYUY2    ,IDFF_outYVYU    ,IDFF_outUYVY    ,IDFF_outNV12    ,IDFF_outRGB32    ,IDFF_outRGB24    ,IDFF_outRGB555   ,IDFF_outRGB565   };
 
-#define TOUTCSPSPAGE_RECONNECTABLE_FILTERS _l("  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  ffdshow")
+#define TOUTCSPSPAGE_RECONNECTABLE_FILTERS _l("  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  EVR\n  ffdshow")
 
 void ToutcspsPage::init(void)
 {

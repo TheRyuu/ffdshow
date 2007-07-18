@@ -191,6 +191,7 @@ HRESULT TffdshowDecVideo::CheckConnect(PIN_DIRECTION dir,IPin *pPin)
        bool filterOk=clsid==CLSID_OverlayMixer ||
                      clsid==CLSID_VideoMixingRenderer ||
                      clsid==CLSID_VideoMixingRenderer9 ||
+                     clsid==CLSID_EnhancedVideoRenderer ||
                      clsid==CLSID_DirectVobSubFilter ||
                      clsid==CLSID_DirectVobSubFilter2 ||
                      clsid==CLSID_HaaliVideoRenderer ||
