@@ -1,16 +1,16 @@
 1. About ffdshow video decoder
 
-   ffdshow is a DirectShow filter and VFW codec  for many audio and video
-   formats, such as DivX, Xvid and H.264. ffdshow-tryouts supports a wide
-   range of video codecs.
-   On the audio front, ffdshow-tryouts impresses with support for popular
-   codecs like MP3, AAC, Vorbis, AC3 and DTS as well as not-so-popular
-   ones like LPCM, True Audio and QDM2.
+    ffdshow is a DirectShow filter and VFW codec for many audio and video
+    formats, such as DivX, Xvid and H.264. ffdshow-tryouts supports a wide
+    range of video codecs.
+    On the audio front, ffdshow-tryouts impresses with support for popular
+    codecs like MP3, AAC, Vorbis, AC3 and DTS as well as not-so-popular
+    ones like LPCM, True Audio and QDM2.
 
-   A powerful filter set further helps you to improve your audio-visual
-   experience: filters like denoise, deblock and resize enhance the
-   quality of your videos. Normalization, down-/upmixing and resampling
-   - to name a few - try to get the most out of your audio setup.
+    A powerful filter set further helps you to improve your audio-visual
+    experience: filters like denoise, deblock and resize enhance the
+    quality of your videos. Normalization, down-/upmixing and resampling
+    - to name a few - try to get the most out of your audio setup.
 
 2. Features
 
