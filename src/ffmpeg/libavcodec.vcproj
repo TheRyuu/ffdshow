@@ -431,6 +431,12 @@
 				RelativePath=".\libavcodec\png.c">
 			</File>
 			<File
+				RelativePath=".\libavcodec\pngdec.c">
+			</File>
+			<File
+				RelativePath=".\libavcodec\pngenc.c">
+			</File>
+			<File
 				RelativePath=".\libavcodec\qdm2.c">
 			</File>
 			<File
@@ -766,6 +772,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\parser.h">
+			</File>
+			<File
+				RelativePath=".\libavcodec\png.h">
 			</File>
 			<File
 				RelativePath=".\libavcodec\qdm2data.h">

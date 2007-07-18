@@ -97,6 +97,8 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/parser.c \
       $(LAVC_DIR)/pcm.c \
       $(LAVC_DIR)/png.c \
+      $(LAVC_DIR)/pngdec.c \
+      $(LAVC_DIR)/pngenc.c \
       $(LAVC_DIR)/qdm2.c \
       $(LAVC_DIR)/qpeg.c \
       $(LAVC_DIR)/qtrle.c \

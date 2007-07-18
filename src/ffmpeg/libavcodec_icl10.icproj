@@ -427,6 +427,8 @@
 		<File 
 			RelativePath=".\libavcodec\parser.h"/>
 		<File 
+			RelativePath=".\libavcodec\png.h"/>
+		<File 
 			RelativePath=".\libavcodec\qdm2data.h"/>
 		<File 
 			RelativePath=".\libavcodec\ra144.h"/>
@@ -736,6 +738,10 @@
 			RelativePath=".\libavcodec\pcm.c"/>
 		<File 
 			RelativePath=".\libavcodec\png.c"/>
+		<File 
+			RelativePath=".\libavcodec\pngdec.c"/>
+		<File 
+			RelativePath=".\libavcodec\pngenc.c"/>
 		<File 
 			RelativePath=".\libavcodec\qdm2.c"/>
 		<File 

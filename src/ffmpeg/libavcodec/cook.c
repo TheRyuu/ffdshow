@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- *
  */
 
 /**
@@ -68,7 +67,29 @@ typedef struct {
     int *previous;
 } cook_gains;
 
-typedef struct {
+typedef struct cook {
+    /*
+     * The following 5 functions provide the lowlevel arithmetic on
+     * the internal audio buffers.
+     */
+    void (* scalar_dequant)(struct cook *q, int index, int quant_index,
+                            int* subband_coef_index, int* subband_coef_sign,
+                            float* mlt_p);
+
+    void (* decouple) (struct cook *q,
+                       int subband,
+                       float f1, float f2,
+                       float *decode_buffer,
+                       float *mlt_buffer1, float *mlt_buffer2);
+
+    void (* imlt_window) (struct cook *q, float *buffer1,
+                          cook_gains *gains_ptr, float *previous_buffer);
+
+    void (* interpolate) (struct cook *q, float* buffer,
+                          int gain_index, int gain_index_next);
+
+    void (* saturate_output) (struct cook *q, int chan, int16_t *out);
+
     GetBitContext       gb;
     /* stream data */
     int                 nb_channels;
@@ -121,6 +142,9 @@ typedef struct {
     float               mono_previous_buffer2[1024];
     float               decode_buffer_1[1024];
     float               decode_buffer_2[1024];
+    float               decode_buffer_0[1060]; /* static allocation for joint decode */
+
+    float               *cplscales[5];
 } COOKContext;
 
 /*************** init functions ***************/
@@ -205,6 +229,18 @@ static int init_cook_mlt(COOKContext *q) {
            av_log2(mlt_size)+1);
 
     return 0;
+}
+
+static float *maybe_reformat_buffer32 (COOKContext *q, float *ptr, int n)
+{
+    if (1)
+        return ptr;
+}
+
+static int init_cplscales_table (COOKContext *q) {
+    int i;
+    for (i=0;i<5;i++)
+        q->cplscales[i] = maybe_reformat_buffer32 (q, cplscales[i], (1<<(i+2))-1);
 }
 
 /*************** init functions end ***********/
@@ -469,7 +505,7 @@ static inline void expand_category(COOKContext *q, int* category,
  * @param mlt_p                 pointer into the mlt buffer
  */
 
-static void scalar_dequant(COOKContext *q, int index, int quant_index,
+static void scalar_dequant_float(COOKContext *q, int index, int quant_index,
                            int* subband_coef_index, int* subband_coef_sign,
                            float* mlt_p){
     int i;
@@ -564,9 +600,9 @@ static void decode_vectors(COOKContext* q, int* category,
             memset(subband_coef_index, 0, sizeof(subband_coef_index));
             memset(subband_coef_sign, 0, sizeof(subband_coef_sign));
         }
-        scalar_dequant(q, index, quant_index_table[band],
-                       subband_coef_index, subband_coef_sign,
-                       &mlt_buffer[band * 20]);
+        q->scalar_dequant(q, index, quant_index_table[band],
+                          subband_coef_index, subband_coef_sign,
+                          &mlt_buffer[band * SUBBAND_SIZE]);
     }
 
     if(q->total_subbands*SUBBAND_SIZE >= q->samples_per_channel){
@@ -608,7 +644,7 @@ static void mono_decode(COOKContext *q, float* mlt_buffer) {
  * @param gain_index_next   index for the next block multiplier
  */
 
-static void interpolate(COOKContext *q, float* buffer,
+static void interpolate_float(COOKContext *q, float* buffer,
                         int gain_index, int gain_index_next){
     int i;
     float fc1, fc2;
@@ -629,6 +665,32 @@ static void interpolate(COOKContext *q, float* buffer,
     }
 }
 
+/**
+ * Apply transform window, overlap buffers.
+ *
+ * @param q                 pointer to the COOKContext
+ * @param inbuffer          pointer to the mltcoefficients
+ * @param gains_ptr         current and previous gains
+ * @param previous_buffer   pointer to the previous buffer to be used for overlapping
+ */
+
+static void imlt_window_float (COOKContext *q, float *buffer1,
+                               cook_gains *gains_ptr, float *previous_buffer)
+{
+    const float fc = q->pow2tab[gains_ptr->previous[0] + 63];
+    int i;
+    /* The weird thing here, is that the two halves of the time domain
+     * buffer are swapped. Also, the newest data, that we save away for
+     * next frame, has the wrong sign. Hence the subtraction below.
+     * Almost sounds like a complex conjugate/reverse data/FFT effect.
+     */
+
+    /* Apply window and overlap */
+    for(i = 0; i < q->samples_per_channel; i++){
+        buffer1[i] = buffer1[i] * fc * q->mlt_window[i] -
+          previous_buffer[i] * q->mlt_window[q->samples_per_channel - 1 - i];
+    }
+}
 
 /**
  * The modulated lapped transform, this takes transform coefficients
@@ -645,7 +707,6 @@ static void interpolate(COOKContext *q, float* buffer,
 static void imlt_gain(COOKContext *q, float *inbuffer,
                       cook_gains *gains_ptr, float* previous_buffer)
 {
-    const float fc = q->pow2tab[gains_ptr->previous[0] + 63];
     float *buffer0 = q->mono_mdct_output;
     float *buffer1 = q->mono_mdct_output + q->samples_per_channel;
     int i;
@@ -654,23 +715,13 @@ static void imlt_gain(COOKContext *q, float *inbuffer,
     q->mdct_ctx.fft.imdct_calc(&q->mdct_ctx, q->mono_mdct_output,
                                inbuffer, q->mdct_tmp);
 
-    /* The weird thing here, is that the two halves of the time domain
-     * buffer are swapped. Also, the newest data, that we save away for
-     * next frame, has the wrong sign. Hence the subtraction below.
-     * Almost sounds like a complex conjugate/reverse data/FFT effect.
-     */
-
-    /* Apply window and overlap */
-    for(i = 0; i < q->samples_per_channel; i++){
-        buffer1[i] = buffer1[i] * fc * q->mlt_window[i] -
-          previous_buffer[i] * q->mlt_window[q->samples_per_channel - 1 - i];
-    }
+    q->imlt_window (q, buffer1, gains_ptr, previous_buffer);
 
     /* Apply gain profile */
     for (i = 0; i < 8; i++) {
         if (gains_ptr->now[i] || gains_ptr->now[i + 1])
-            interpolate(q, &buffer1[q->gain_size_factor * i],
-                        gains_ptr->now[i], gains_ptr->now[i + 1]);
+            q->interpolate(q, &buffer1[q->gain_size_factor * i],
+                           gains_ptr->now[i], gains_ptr->now[i + 1]);
     }
 
     /* Save away the current to be previous block. */
@@ -708,6 +759,30 @@ static void decouple_info(COOKContext *q, int* decouple_tab){
     return;
 }
 
+/*
+ * function decouples a pair of signals from a single signal via multiplication.
+ *
+ * @param q                 pointer to the COOKContext
+ * @param subband           index of the current subband
+ * @param f1                multiplier for channel 1 extraction
+ * @param f2                multiplier for channel 2 extraction
+ * @param decode_buffer     input buffer
+ * @param mlt_buffer1       pointer to left channel mlt coefficients
+ * @param mlt_buffer2       pointer to right channel mlt coefficients
+ */
+static void decouple_float (COOKContext *q,
+                            int subband,
+                            float f1, float f2,
+                            float *decode_buffer,
+                            float *mlt_buffer1, float *mlt_buffer2)
+{
+    int j, tmp_idx;
+    for (j=0 ; j<SUBBAND_SIZE ; j++) {
+        tmp_idx = ((q->js_subband_start + subband)*SUBBAND_SIZE)+j;
+        mlt_buffer1[SUBBAND_SIZE*subband + j] = f1 * decode_buffer[tmp_idx];
+        mlt_buffer2[SUBBAND_SIZE*subband + j] = f2 * decode_buffer[tmp_idx];
+    }
+}
 
 /**
  * function for decoding joint stereo data
@@ -721,7 +796,7 @@ static void joint_decode(COOKContext *q, float* mlt_buffer1,
                          float* mlt_buffer2) {
     int i,j;
     int decouple_tab[SUBBAND_SIZE];
-    float decode_buffer[1060];
+    float *decode_buffer = q->decode_buffer_0;
     int idx, cpl_tmp,tmp_idx;
     float f1,f2;
     float* cplscale;
@@ -749,14 +824,10 @@ static void joint_decode(COOKContext *q, float* mlt_buffer1,
     for (i=q->js_subband_start ; i<q->subbands ; i++) {
         cpl_tmp = cplband[i];
         idx -=decouple_tab[cpl_tmp];
-        cplscale = (float*)cplscales[q->js_vlc_bits-2];  //choose decoupler table
+        cplscale = q->cplscales[q->js_vlc_bits-2];  //choose decoupler table
         f1 = cplscale[decouple_tab[cpl_tmp]];
         f2 = cplscale[idx-1];
-        for (j=0 ; j<SUBBAND_SIZE ; j++) {
-            tmp_idx = ((q->js_subband_start + i)*20)+j;
-            mlt_buffer1[20*i + j] = f1 * decode_buffer[tmp_idx];
-            mlt_buffer2[20*i + j] = f2 * decode_buffer[tmp_idx];
-        }
+        q->decouple (q, i, f1, f2, decode_buffer, mlt_buffer1, mlt_buffer2);
         idx = (1 << q->js_vlc_bits) - 1;
     }
 }
@@ -786,6 +857,26 @@ decode_bytes_and_gain(COOKContext *q, uint8_t *inbuffer,
     FFSWAP(int *, gains_ptr->now, gains_ptr->previous);
 }
 
+ /**
+ * Saturate the output signal to signed 16bit integers.
+ *
+ * @param q                 pointer to the COOKContext
+ * @param chan              channel to saturate
+ * @param out               pointer to the output vector
+ */
+static void
+saturate_output_float (COOKContext *q, int chan, int16_t *out)
+{
+    int j;
+    float *output = q->mono_mdct_output + q->samples_per_channel;
+    /* Clip and convert floats to 16 bits.
+     */
+    for (j = 0; j < q->samples_per_channel; j++) {
+        out[chan + q->nb_channels * j] =
+          av_clip(lrintf(output[j]), -32768, 32767);
+    }
+}
+
 /**
  * Final part of subpacket decoding:
  *  Apply modulated lapped transform, gain compensation,
@@ -804,17 +895,8 @@ mlt_compensate_output(COOKContext *q, float *decode_buffer,
                       cook_gains *gains, float *previous_buffer,
                       int16_t *out, int chan)
 {
-    float *output = q->mono_mdct_output + q->samples_per_channel;
-    int j;
-
     imlt_gain(q, decode_buffer, gains, previous_buffer);
-
-    /* Clip and convert floats to 16 bits.
-     */
-    for (j = 0; j < q->samples_per_channel; j++) {
-        out[chan + q->nb_channels * j] =
-          av_clip(lrintf(output[j]), -32768, 32767);
-    }
+    q->saturate_output (q, chan, out);
 }
 
 
@@ -986,6 +1068,7 @@ static int cook_decode_init(AVCodecContext *avctx)
     init_rootpow2table(q);
     init_pow2table(q);
     init_gain_table(q);
+    init_cplscales_table(q);
 
     if (init_cook_vlc_tables(q) != 0)
         return -1;
@@ -1020,6 +1103,15 @@ static int cook_decode_init(AVCodecContext *avctx)
     if ( init_cook_mlt(q) != 0 )
         return -1;
 
+    /* Initialize COOK signal arithmetic handling */
+    if (1) {
+        q->scalar_dequant  = scalar_dequant_float;
+        q->decouple        = decouple_float;
+        q->imlt_window     = imlt_window_float;
+        q->interpolate     = interpolate_float;
+        q->saturate_output = saturate_output_float;
+    }
+
     /* Try to catch some obviously faulty streams, othervise it might be exploitable */
     if (q->total_subbands > 53) {
         av_log(avctx,AV_LOG_ERROR,"total_subbands > 53, report sample!\n");
@@ -1050,7 +1142,7 @@ AVCodec cook_decoder =
     /*.id = */CODEC_ID_COOK,
     /*.priv_data_size = */sizeof(COOKContext),
     /*.init =*/ cook_decode_init,
-    /* encode */ NULL,
+    /*.encode = */ NULL,
     /*.close = */cook_decode_close,
     /*.decode = */cook_decode_frame,
 };
