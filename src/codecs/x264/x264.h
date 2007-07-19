@@ -2,6 +2,7 @@
  * x264.h: h264 encoder library
  *****************************************************************************
  * Copyright (C) 2003 Laurent Aimar
+ * $Id: x264.h,v 1.1 2004/06/03 19:24:12 fenrir Exp $
  *
  * Authors: Laurent Aimar <fenrir@via.ecp.fr>
  *
@@ -25,10 +26,10 @@
 
 #include <stdarg.h>
 
-#define X264_BUILD "55"
+#define X264_BUILD "56"
 
 /* x264_t:
- *      opaque handler for decoder and encoder */
+ *      opaque handler for encoder */
 typedef struct x264_t x264_t;
 
 /****************************************************************************
@@ -112,12 +113,16 @@ static const char * const x264_colmatrix_names[] = { "GBR", "bt709", "undef", ""
 #define X264_LOG_INFO           2
 #define X264_LOG_DEBUG          3
 
+/* Zones: override ratecontrol or other options for specific sections of the video.
+ * See x264_encoder_reconfig() for which options can be changed.
+ * If zones overlap, whichever comes later in the list takes precedence. */
 typedef struct
 {
-    int i_start, i_end;
-    int b_force_qp;
+    int i_start, i_end; /* range of frame numbers */
+    int b_force_qp; /* whether to use qp vs bitrate factor */
     int i_qp;
     float f_bitrate_factor;
+    struct x264_param_t *param;
 } x264_zone_t;
 
 typedef struct x264_param_t

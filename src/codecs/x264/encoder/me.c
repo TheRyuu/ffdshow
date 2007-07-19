@@ -22,9 +22,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA.
  *****************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
-
 #include "common/common.h"
 #include "me.h"
 
@@ -55,7 +52,7 @@ static void refine_subpel( x264_t *h, x264_me_t *m, int hpel_iters, int qpel_ite
     COPY3_IF_LT( bcost, cost, bmx, mx, bmy, my );\
 }
 
-#define COST_MV_PRED( mx, my ) \
+#define COST_MV_HPEL( mx, my ) \
 { \
     int stride = 16; \
     uint8_t *src = h->mc.get_ref( m->p_fref, m->i_stride[0], pix, &stride, mx, my, bw, bh ); \
@@ -184,13 +181,13 @@ void x264_me_search_ref( x264_t *h, x264_me_t *m, int (*mvc)[2], int i_mvc, int 
     /* try extra predictors if provided */
     if( h->mb.i_subpel_refine >= 3 )
     {
-        COST_MV_PRED( bmx, bmy );
+        COST_MV_HPEL( bmx, bmy );
         for( i = 0; i < i_mvc; i++ )
         {
              const int mx = x264_clip3( mvc[i][0], mv_x_min*4, mv_x_max*4 );
              const int my = x264_clip3( mvc[i][1], mv_y_min*4, mv_y_max*4 );
              if( mx != bpred_mx || my != bpred_my )
-                 COST_MV_PRED( mx, my );
+                 COST_MV_HPEL( mx, my );
         }
         bmx = ( bpred_mx + 2 ) >> 2;
         bmy = ( bpred_my + 2 ) >> 2;
@@ -495,6 +492,7 @@ me_hex2:
                 for( i=0; i<i_mvs; i++ )
                     COST_MV( mvs[i], my );
             }
+
             x264_free(ads);
 #endif
         }

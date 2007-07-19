@@ -24,73 +24,6 @@
 #ifndef _COMMON_H
 #define _COMMON_H 1
 
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
-#else
-#include <inttypes.h>
-#endif
-#include <stdarg.h>
-#include <stdlib.h>
-#include <assert.h>
-
-#ifdef __GNUC__
- #define printf(...)
-#else
- #define printf(x)
-#endif
-
-#ifdef _MSC_VER
-#define inline __inline
-#define strncasecmp(s1, s2, n) strnicmp(s1, s2, n)
-#define snprintf _snprintf
-#define X264_VERSION "" // no configure script for msvc
-#endif
-
-#ifdef _MSC_VER
-#define DECLARE_ALIGNED( type, var, n ) __declspec(align(n)) type var
-#else
-#define DECLARE_ALIGNED( type, var, n ) type var __attribute__((aligned(n)))
-#endif
-
-/* threads */
-#if defined(__WIN32__) && defined(HAVE_PTHREAD)
-#include <pthread.h>
-#define USE_CONDITION_VAR
-
-#elif defined(SYS_BEOS)
-#include <kernel/OS.h>
-#define pthread_t               thread_id
-#define pthread_create(t,u,f,d) { *(t)=spawn_thread(f,"",10,d); \
-                                  resume_thread(*(t)); }
-#define pthread_join(t,s)       { long tmp; \
-                                  wait_for_thread(t,(s)?(long*)(s):&tmp); }
-#ifndef usleep
-#define usleep(t)               snooze(t)
-#endif
-#define HAVE_PTHREAD 1
-
-#elif defined(HAVE_PTHREAD)
-#include <pthread.h>
-#define USE_CONDITION_VAR
-#else
-#define pthread_t               int
-#define pthread_create(t,u,f,d)
-#define pthread_join(t,s)
-#endif //SYS_*
-
-#ifndef USE_CONDITION_VAR
-#define pthread_mutex_t         int
-#define pthread_mutex_init(m,f)
-#define pthread_mutex_destroy(m)
-#define pthread_mutex_lock(m)
-#define pthread_mutex_unlock(m)
-#define pthread_cond_t          int
-#define pthread_cond_init(c,f)
-#define pthread_cond_destroy(c)
-#define pthread_cond_broadcast(c)
-#define pthread_cond_wait(c,m)  usleep(100)
-#endif
-
 /****************************************************************************
  * Macros
  ****************************************************************************/
@@ -107,12 +40,6 @@
 #define offsetof(T,F) ((unsigned int)((char *)&((T *)0)->F))
 #endif
 
-#if defined(__GNUC__) && (__GNUC__ > 3 || __GNUC__ == 3 && __GNUC_MINOR__ > 0)
-#define UNUSED __attribute__((unused))
-#else
-#define UNUSED
-#endif
-
 #define CHECKED_MALLOC( var, size )\
 {\
     var = x264_malloc( size );\
@@ -127,11 +54,19 @@
 #define X264_THREAD_MAX 128
 #define X264_SLICE_MAX 4
 #define X264_NAL_MAX (4 + X264_SLICE_MAX)
-#define X264_THREAD_HEIGHT 24 // number of pixels (per thread) in progress at any given time. could theoretically be as low as 22
+
+// number of pixels (per thread) in progress at any given time.
+// 16 for the macroblock in progress + 3 for deblocking + 3 for motion compensation filter + 2 for extra safety
+#define X264_THREAD_HEIGHT 24
 
 /****************************************************************************
  * Includes
  ****************************************************************************/
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
+#include "osdep.h"
 #include "x264.h"
 #include "bs.h"
 #include "set.h"
@@ -148,9 +83,7 @@
  * Generals functions
  ****************************************************************************/
 /* x264_malloc : will do or emulate a memalign
- * XXX you HAVE TO use x264_free for buffer allocated
- * with x264_malloc
- */
+ * you have to use x264_free for buffers allocated with x264_malloc */
 void *x264_malloc( int );
 void *x264_realloc( void *p, int i_size );
 void  x264_free( void * );
@@ -167,11 +100,6 @@ char *x264_param2string( x264_param_t *p, int b_res );
 
 /* log */
 //void x264_log( x264_t *h, int i_level, const char *psz_fmt, ... );
-#ifdef __GNUC__
- #define x264_log(...)
-#else
- #define x264_log(x)
-#endif
 
 void x264_reduce_fraction( int *n, int *d );
 
@@ -343,10 +271,13 @@ struct x264_t
     x264_pps_t      *pps;
     int             i_idr_pic_id;
 
+    /* quantization matrix for decoding, [cqm][qp%6][coef_y][coef_x] */
     int             (*dequant4_mf[4])[4][4]; /* [4][6][4][4] */
     int             (*dequant8_mf[2])[8][8]; /* [2][6][8][8] */
+    /* quantization matrix for trellis, [cqm][qp][coef] */
     int             (*unquant4_mf[4])[16];   /* [4][52][16] */
     int             (*unquant8_mf[2])[64];   /* [2][52][64] */
+    /* quantization matrix for deadzone */
     uint16_t        (*quant4_mf[4])[16];     /* [4][52][16] */
     uint16_t        (*quant8_mf[2])[64];     /* [2][52][64] */
     uint16_t        (*quant4_bias[4])[16];   /* [4][52][16] */

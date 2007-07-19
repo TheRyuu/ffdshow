@@ -5,7 +5,7 @@
 	Name="ff_x264"
 	ProjectGUID="{4A7578DE-B8B3-4CCC-BFD5-CAD5060065E1}"
 	VCNestedProjectGUID="{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}"
-	VCNestedProjectCRC32="2093195882"
+	VCNestedProjectCRC32="390786726"
 	VCNestedProjectFileName="ff_x264_icl10.vcproj"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -27,7 +27,7 @@
 				Name="CppCmplrTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../..;."
-				PreprocessorDefinitions="__WIN32__;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;inline=__inline;__X264__;ARCH_X86;HAVE_MMX;HAVE_SSE3"
+				PreprocessorDefinitions="WIN32;__WIN32__;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;inline=__inline;ARCH_X86;HAVE_MMX;HAVE_SSE3"
 				MinimalRebuild="1"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
@@ -88,7 +88,7 @@
 				Name="CppCmplrTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../..;."
-				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;inline=__inline;__X264__;ARCH_X86_64"
+				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;inline=__inline;ARCH_X86_64"
 				MinimalRebuild="1"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
@@ -155,7 +155,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="1"
 				AdditionalIncludeDirectories="../..;."
-				PreprocessorDefinitions="__WIN32__;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;inline=__inline;__X264__;ARCH_X86;HAVE_MMX;HAVE_SSE3"
+				PreprocessorDefinitions="WIN32;__WIN32__;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;inline=__inline;ARCH_X86;HAVE_MMX;HAVE_SSE3"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="0"
@@ -223,7 +223,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="1"
 				AdditionalIncludeDirectories="../..;."
-				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;inline=__inline;__X264__;ARCH_X86_64"
+				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;inline=__inline;ARCH_X86_64"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="0"
@@ -362,6 +362,8 @@
 			RelativePath=".\common\mc.c"/>
 		<File 
 			RelativePath=".\common\mc.h"/>
+		<File 
+			RelativePath=".\common\osdep.h"/>
 		<File 
 			RelativePath=".\common\pixel.c"/>
 		<File 

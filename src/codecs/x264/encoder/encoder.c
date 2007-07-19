@@ -21,8 +21,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA.
  *****************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
 #include <math.h>
 
 #include "common/common.h"
@@ -757,10 +755,12 @@ int x264_encoder_reconfig( x264_t *h, x264_param_t *param )
     COPY( analyse.b_dct_decimate );
     COPY( analyse.b_fast_pskip );
     COPY( analyse.b_mixed_references );
-#undef COPY
-
+    // can only twiddle these if they were enabled to begin with:
     if( h->pps->b_transform_8x8_mode )
-        h->param.analyse.b_transform_8x8 = param->analyse.b_transform_8x8;
+        COPY( analyse.b_transform_8x8 );
+    if( h->frames.i_max_ref1 > 1 )
+        COPY( b_bframe_pyramid );
+#undef COPY
 
     mbcmp_init( h );
 

@@ -1,4 +1,4 @@
-CFLAGS+= -I. -I../.. -DHAVE_PTHREAD -D__WIN32__ -D__X264__
+CFLAGS+= -I. -I../.. -DHAVE_PTHREAD -D__WIN32__
 
 ifneq ($(CC),icl)
 CFLAGS+=-DARCH_X86 -DHAVE_MMX -DHAVE_SSE3
