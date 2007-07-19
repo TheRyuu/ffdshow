@@ -695,7 +695,6 @@ void TrenderedSubtitleWord::print(unsigned int sdx[3],unsigned char *dstLn[3],co
      if (csp==FF_CSP_420P)
       {
        //YV12
-       const DWORD *fontmaskconstants=&fontMaskConstants;
        unsigned int halfAlingXsize=alignXsize>>1;
        unsigned short* colortbl=(unsigned short *)aligned_malloc(192,16);
        for (unsigned int i=0;i<halfAlingXsize;i++)
@@ -720,7 +719,7 @@ void TrenderedSubtitleWord::print(unsigned int sdx[3],unsigned char *dstLn[3],co
          {
           int srcPos=y*dx[0]+x;
           int dstPos=y*stride[0]+x;
-          TrenderedSubtitleWord_printY(&bmp[0][srcPos],&outline[0][srcPos],&shadow[0][srcPos],colortbl,&dstLn[0][dstPos],fontmaskconstants);
+          TrenderedSubtitleWord_printY(&bmp[0][srcPos],&outline[0][srcPos],&shadow[0][srcPos],colortbl,&dstLn[0][dstPos]);
          }
        if (endx<sdx[0])
         {
@@ -744,7 +743,7 @@ void TrenderedSubtitleWord::print(unsigned int sdx[3],unsigned char *dstLn[3],co
          {
           int srcPos=y*dx[1]+x;
           int dstPos=y*stride[1]+x;
-          TrenderedSubtitleWord_printUV(&bmp[1][srcPos],&outline[1][srcPos],&shadow[1][srcPos],colortbl,&dstLn[1][dstPos],&dstLn[2][dstPos],fontmaskconstants);
+          TrenderedSubtitleWord_printUV(&bmp[1][srcPos],&outline[1][srcPos],&shadow[1][srcPos],colortbl,&dstLn[1][dstPos],&dstLn[2][dstPos]);
          }
        if (endx<sdx[1])
         {
@@ -800,7 +799,7 @@ void TrenderedSubtitleWord::print(unsigned int sdx[3],unsigned char *dstLn[3],co
          {
           int srcPos=y*dx[1]+x;
           int dstPos=y*stride[0]+x;
-          TrenderedSubtitleWord_printY(&bmp[1][srcPos],&outline[1][srcPos],&shadow[1][srcPos],colortbl,&dstLn[0][dstPos],fontmaskconstants);
+          TrenderedSubtitleWord_printY(&bmp[1][srcPos],&outline[1][srcPos],&shadow[1][srcPos],colortbl,&dstLn[0][dstPos]);
          }
        if (endx<endx2)
         {

@@ -61,11 +61,17 @@ msk00ff  dd 0x00ff00ff,0x00ff00ff,0x00ff00ff,0x00ff00ff
 mskffff  dd 0xffffffff,0xffffffff,0xffffffff,0xffffffff
 msk8080  dd 0x80808080,0x80808080,0x80808080,0x80808080
 
-struc        mask
-  .mask256   resq 2
-  .mask00ff  resq 2
-  .maskffff  resq 2
-endstruc
+%ifidn __OUTPUT_FORMAT__,win64
+  %define mask256 msk256 wrt rip
+  %define mask00ff msk00ff wrt rip
+  %define maskffff mskffff wrt rip
+  %define mask8080 msk8080 wrt rip
+%else
+  %define mask256 msk256
+  %define mask00ff msk00ff
+  %define maskffff mskffff
+  %define mask8080 msk8080
+%endif
 
 ;=============================================================================
 ; Code
@@ -103,8 +109,7 @@ endstruc
 ;                                                 /* 1 rdx */ const unsigned char* outline,
 ;                                                 /* 2 r8  */ const unsigned char* shadow,
 ;                                                 /* 3 r9  */ const unsigned short* colortbl,
-;                                                 /* 4     */ const unsigned char* dst,
-;                                                 /* 5     */ const DWORD* fontmaskconstants);
+;                                                 /* 4     */ const unsigned char* dst);
 ;
 cglobal TrenderedSubtitleWord_printY_mmx
 TrenderedSubtitleWord_printY_mmx:
@@ -125,15 +130,14 @@ TrenderedSubtitleWord_printY_mmx:
   push      reg_si
 
 %ifidn __OUTPUT_FORMAT__,win64
-  mov       [reg_sp+(3+1)*ptrsize], reg_dx  ; outline
   mov       reg_si, r9
   mov       reg_ax, r8
 %else
+  mov       reg_dx, [reg_sp+(3+1)*ptrsize]  ; outline
   mov       reg_si, [reg_sp+(3+3)*ptrsize]  ; si = colortbl
   mov       reg_ax, [reg_sp+(3+2)*ptrsize]  ; ax = shadow
 %endif
   mov       reg_di, [reg_sp+(3+4)*ptrsize]  ; di = dst
-  mov       reg_dx, [reg_sp+(3+5)*ptrsize]  ; dx = fontMaskConstants
   _movdqa   _mm0, [reg_si + colortbl.shadow_A]
   _movdqa   _mm1, [reg_ax]
   _movdqa   _mm2, _mm1
@@ -145,7 +149,7 @@ TrenderedSubtitleWord_printY_mmx:
   pmullw    _mm2, _mm0
   psrlw     _mm2, 8           ; _mm1:_mm2 = s = m_shadowYUV.A *shadow [0][srcPos]>>8;
 
-  _movdqa   _mm4, [reg_dx + mask.mask256]
+  _movdqa   _mm4, [mask256]
   _movdqa   _mm5, _mm4
   psubw     _mm4, _mm1
   psubw     _mm5, _mm2         ; _mm4:_mm5 = (256-s)
@@ -183,7 +187,7 @@ TrenderedSubtitleWord_printY_mmx:
   pmullw    _mm5, _mm0
   psrlw     _mm5, 8           ; _mm4:_mm5 = b= m_bodyYUV.A * bmp[0][srcPos]>>8;
 
-  _movdqa   _mm6, [reg_dx+ mask.mask256]
+  _movdqa   _mm6, [mask256]
   _movdqa   _mm7, _mm6
   psubw     _mm6, _mm4
   psubw     _mm7, _mm5         ; _mm6:_mm7 = (256-b)
@@ -202,9 +206,8 @@ TrenderedSubtitleWord_printY_mmx:
   paddusb   _mm4, _mm6
   paddusb   _mm5, _mm7         ; _mm4:_mm5 = d = ((256-b)*d>>8)+(b*m_bodyYUV.Y>>8);
 
-  mov       reg_ax, [reg_sp+(3+1)*ptrsize]  ; outline
   _movdqa   _mm0, [reg_si + colortbl.outline_A]
-  _movdqa   _mm1, [reg_ax]
+  _movdqa   _mm1, [reg_dx]
   _movdqa   _mm2, _mm1
   punpckhbw _mm1, _mm3
   punpcklbw _mm2, _mm3
@@ -213,7 +216,7 @@ TrenderedSubtitleWord_printY_mmx:
   pmullw    _mm2, _mm0
   psrlw     _mm2, 8           ; _mm1:_mm2 = o = m_outlineYUV.A * outline[0][srcPos]>>8;
 
-  _movdqa   _mm6, [reg_dx+ mask.mask256]
+  _movdqa   _mm6, [mask256]
   _movdqa   _mm7, _mm6
   psubw     _mm6, _mm1
   psubw     _mm7, _mm2         ; _mm6:_mm7 = (256-o)
@@ -251,8 +254,7 @@ TrenderedSubtitleWord_printY_mmx:
 ;                                                    /* 2 r8  */ const unsigned char* shadow,
 ;                                                    /* 3 r9  */ const unsigned short* colortbl,
 ;                                                    /* 4     */ const unsigned char* dstU,
-;                                                    /* 5     */ const unsigned char* dstV,
-;                                                    /* 6     */ const DWORD* fontmaskconstants);
+;                                                    /* 5     */ const unsigned char* dstV);
 ;
 ; mmx version is not available for WIN64
 ;
@@ -264,14 +266,13 @@ TrenderedSubtitleWord_printUV_mmx:
   push      reg_bx
   mov       reg_bx, reg_sp
 %ifidn __OUTPUT_FORMAT__,win64
-  mov       [reg_bx+(4+2)*ptrsize], reg_dx
   mov       rsi, r9
 %else
   sub       esp, temp_bos_size
   and       esp, 0xfffffff0                 ; To align for SSE2.
-  mov       esi, [reg_bx+(4+3)*ptrsize]     ; si = colortbl
+  mov       esi, [reg_bx+(4+3)*ptrsize]     ; esi = colortbl
+  mov       edx, [reg_bx+(4+1)*ptrsize]     ; edx = outline
 %endif
-  mov       reg_dx, [reg_bx+(4+6)*ptrsize]  ; dx = fontMaskConstants
 
 ; U
   mov       reg_di, [reg_bx+(4+4)*ptrsize]  ; di = dst1. (4+4) means: First 4 is pcr,reg_di,reg_si,reg_bx. Second 4 means it's 5th (count from 0) parameter.
@@ -301,7 +302,7 @@ TrenderedSubtitleWord_printUV_mmx:
   _movdqa   [reg_sp + temp_bos.s2], _mm2
 %endif
 
-  _movdqa   _mm4, [reg_dx+ mask.mask256]
+  _movdqa   _mm4, [mask256]
   _movdqa   _mm5, _mm4
   psubw     _mm4, _mm1
   psubw     _mm5, _mm2                      ; _mm4:_mm5 = (256-s)
@@ -348,7 +349,7 @@ TrenderedSubtitleWord_printUV_mmx:
   _movdqa   [reg_sp + temp_bos.b2], _mm5
 %endif
 
-  _movdqa   _mm6, [reg_dx+ mask.mask256]
+  _movdqa   _mm6, [mask256]
   _movdqa   _mm7, _mm6
   psubw     _mm6, _mm4
   psubw     _mm7, _mm5                      ; _mm6:_mm7 = (256-b)
@@ -367,9 +368,8 @@ TrenderedSubtitleWord_printUV_mmx:
   paddusb    _mm4, _mm6
   paddusb    _mm5, _mm7                     ; _mm4:_mm5 = d = ((256-b)*d>>8)+(b*m_bodyYUV.U>>8);
 
-  mov       reg_ax, [reg_bx+(4+1)*ptrsize]  ; outline
   _movdqa   _mm0, [reg_si + colortbl.outline_A]
-  _movdqa   _mm1, [reg_ax]
+  _movdqa   _mm1, [reg_dx]
   _movdqa   _mm2, _mm1
   punpckhbw _mm1, _mm3
   punpcklbw _mm2, _mm3
@@ -388,7 +388,7 @@ TrenderedSubtitleWord_printUV_mmx:
   _movdqa   [reg_sp + temp_bos.o2], _mm2
 %endif
 
-  _movdqa   _mm6, [reg_dx+ mask.mask256]
+  _movdqa   _mm6, [mask256]
   _movdqa   _mm7, _mm6
   psubw     _mm6, _mm1
   psubw     _mm7, _mm2                      ; _mm6:_mm7 = (256-o)
@@ -421,7 +421,7 @@ TrenderedSubtitleWord_printUV_mmx:
   _movdqa   _mm2, [reg_sp + temp_bos.s2]    ; _mm1:_mm2 = s = m_shadowYUV.A *shadow [1][srcPos1]>>8;
 %endif
 
-  _movdqa   _mm4, [reg_dx+ mask.mask256]
+  _movdqa   _mm4, [mask256]
   _movdqa   _mm5, _mm4
   psubw     _mm4, _mm1
   psubw     _mm5, _mm2                      ; _mm4:_mm5 = (256-s)
@@ -452,7 +452,7 @@ TrenderedSubtitleWord_printUV_mmx:
   _movdqa   _mm5, [reg_sp + temp_bos.b2]    ; _mm4:_mm5 = b= m_bodyYUV.A * bmp[1][srcPos]>>8;
 %endif
 
-  _movdqa   _mm6, [reg_dx+ mask.mask256]
+  _movdqa   _mm6, [mask256]
   _movdqa   _mm7, _mm6
   psubw     _mm6, _mm4
   psubw     _mm7, _mm5                      ; _mm6:_mm7 = (256-b)
@@ -479,7 +479,7 @@ TrenderedSubtitleWord_printUV_mmx:
   _movdqa   _mm2, [reg_sp + temp_bos.o2]    ; _mm1:_mm2 = o = m_outlineYUV.A * outline[1][srcPos]>>8;
 %endif
 
-  _movdqa   _mm6, [reg_dx+ mask.mask256]
+  _movdqa   _mm6, [mask256]
   _movdqa   _mm7, _mm6
   psubw     _mm6, _mm1
   psubw     _mm7, _mm2                      ; _mm6:_mm7 = (256-o)
@@ -549,20 +549,11 @@ TrenderedSubtitleWord_printUV_sse2:
 ;
 cglobal YV12_lum2chr_min_mmx
 YV12_lum2chr_min_mmx:
-%ifidn __OUTPUT_FORMAT__,win64
-  mov       rax, 0x00ff00ff00ff00ff
-  movq      mm7, rax
-  mov       rax, 0xffffffffffffffff
-  movq      mm6, rax
-  mov       rax, 0x8080808080808080
-  movq      mm5, rax
-%else
-  movq      mm7, [msk00ff]
-  movq      mm6, [mskffff]
-  movq      mm5, [msk8080]
+  movq      mm7, [mask00ff]
+  movq      mm6, [maskffff]
+  movq      mm5, [mask8080]
   mov       reg_cx, [reg_sp+(1+0)*ptrsize]  ; lum0
   mov       reg_dx, [reg_sp+(1+1)*ptrsize]  ; lum1
-%endif
 ; horizontal compare line0
   movq      mm0, [reg_cx+8]
   movq      mm1, [reg_cx]
@@ -635,20 +626,11 @@ YV12_lum2chr_min_mmx:
 ;
 cglobal YV12_lum2chr_max_mmx
 YV12_lum2chr_max_mmx:
-%ifidn __OUTPUT_FORMAT__,win64
-  mov       rax, 0x00ff00ff00ff00ff
-  movq      mm7, rax
-  mov       rax, 0xffffffffffffffff
-  movq      mm6, rax
-  mov       rax, 0x8080808080808080
-  movq      mm5, rax
-%else
-  movq      mm7, [msk00ff]
-  movq      mm6, [mskffff]
-  movq      mm5, [msk8080]
+  movq      mm7, [mask00ff]
+  movq      mm6, [maskffff]
+  movq      mm5, [mask8080]
   mov       reg_cx, [reg_sp+(1+0)*ptrsize]  ; lum0
   mov       reg_dx, [reg_sp+(1+1)*ptrsize]  ; lum1
-%endif
 ; horizontal compare line0
   movq      mm0, [reg_cx+8]
   movq      mm1, [reg_cx]
@@ -721,11 +703,9 @@ YV12_lum2chr_max_mmx:
 ;
 cglobal YV12_lum2chr_max_mmx2
 YV12_lum2chr_max_mmx2:
+  movq      mm7, [mask00ff]
 %ifidn __OUTPUT_FORMAT__,win64
-  mov       rax, 0x00ff00ff00ff00ff
-  movq      mm7, rax
 %else
-  movq      mm7, [msk00ff]
   mov       reg_cx, [reg_sp+(1+0)*ptrsize]  ; lum0
   mov       reg_dx, [reg_sp+(1+1)*ptrsize]  ; lum1
 %endif
@@ -781,11 +761,9 @@ YV12_lum2chr_max_mmx2:
 ;
 cglobal YV12_lum2chr_min_mmx2
 YV12_lum2chr_min_mmx2:
+  movq      mm7, [mask00ff]
 %ifidn __OUTPUT_FORMAT__,win64
-  mov       rax, 0x00ff00ff00ff00ff
-  movq      mm7, rax
 %else
-  movq      mm7, [msk00ff]
   mov       reg_cx, [reg_sp+(1+0)*ptrsize]  ; lum0
   mov       reg_dx, [reg_sp+(1+1)*ptrsize]  ; lum1
 %endif
