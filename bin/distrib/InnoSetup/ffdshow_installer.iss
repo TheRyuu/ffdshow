@@ -1718,7 +1718,7 @@ end;
 
 procedure showMsgAdded(PageID: Integer; complist: TcomplistPage);
 begin
-  if (PageID = complist.page.ID) and (Complist_isMsgAddedShown = False) then begin
+  if (PageID = complist.page.ID) and (Complist_isMsgAddedShown = False) and (WizardSilent()= False) then begin
     if complist.countAdded = 1 then begin
       MsgBox(ExpandConstant('{cm:comp_oneCompAppAdded}'), mbInformation, MB_OK);
       Complist_isMsgAddedShown := True;
