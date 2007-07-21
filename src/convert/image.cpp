@@ -1757,24 +1757,46 @@ template<int CCIR> struct TpackedFuncPtrRGB
 
  static void bgr_to_yv12_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
  {
-  typedef TMAKE_COLORSPACE_SIMD<Tmmx, 3,2,2, 3,-1, CCIR> TMAKE_COLORSPACE_bgr_to_yv12_mmx;
-  TMAKE_COLORSPACE_bgr_to_yv12_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_bgr_to_yv12_mmx::BGR_TO_YV12());
+#ifndef WIN64
+  bgr_to_yv12_mmx_asm(x_ptr,x_stride,y_src,u_src,v_src,y_stride,uv_stride,width,height,false);
+#else
+  bgr_to_yv12_win64_sse2(x_ptr,x_stride,y_src,u_src,v_src,y_stride,uv_stride,width,height,false);
+#endif
  }
  static void bgra_to_yv12_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
  {
-  typedef TMAKE_COLORSPACE_SIMD<Tmmx, 4,2,2, 4,-1, CCIR> TMAKE_COLORSPACE_bgra_to_yv12_mmx;
-  TMAKE_COLORSPACE_bgra_to_yv12_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_bgra_to_yv12_mmx::BGR_TO_YV12());
+#ifndef WIN64
+  bgra_to_yv12_mmx_asm(x_ptr,x_stride,y_src,u_src,v_src,y_stride,uv_stride,width,height,false);
+#else
+  bgra_to_yv12_win64_sse2(x_ptr,x_stride,y_src,u_src,v_src,y_stride,uv_stride,width,height,false);
+#endif
  }
 
  static void yv12_to_bgr_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
  {
-  typedef TMAKE_COLORSPACE_SIMD<Tmmx, 3,8,2, 3,-1, CCIR> TMAKE_COLORSPACE_yv12_to_bgr_mmx;
-  TMAKE_COLORSPACE_yv12_to_bgr_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_bgr_mmx::YV12_TO_BGR());
+#ifndef WIN64
+  // WIN32
+  yv12_to_bgr_mmx_asm(x_ptr,x_stride,y_src,u_src,v_src,y_stride,uv_stride,width,height,false);
+#else
+  // WIN64
+  if (((size_t)x_ptr&15) || ((size_t)x_stride&15) || ((size_t)y_src&15) || ((size_t)y_stride&15))
+   yv12_to_bgr_win64_sse2u(x_ptr,x_stride,y_src,u_src,v_src,y_stride,uv_stride,width,height,false); // fail over (unaligned)
+  else
+   yv12_to_bgr_win64_sse2a(x_ptr,x_stride,y_src,u_src,v_src,y_stride,uv_stride,width,height,false); // faster
+#endif
  }
  static void yv12_to_bgra_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
  {
-  typedef TMAKE_COLORSPACE_SIMD<Tmmx, 4,8,2, 4,-1, CCIR> TMAKE_COLORSPACE_yv12_to_bgra_mmx;
-  TMAKE_COLORSPACE_yv12_to_bgra_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_bgra_mmx::YV12_TO_BGR());
+#ifndef WIN64
+  // WIN32
+  yv12_to_bgra_mmx_asm(x_ptr,x_stride,y_src,u_src,v_src,y_stride,uv_stride,width,height,false);
+#else
+  // WIN64
+  if (((size_t)x_ptr&15) || ((size_t)x_stride&15) || ((size_t)y_src&15) || ((size_t)y_stride&15))
+   yv12_to_bgra_win64_sse2u(x_ptr,x_stride,y_src,u_src,v_src,y_stride,uv_stride,width,height,false); // fail over (unaligned)
+  else
+   yv12_to_bgra_win64_sse2a(x_ptr,x_stride,y_src,u_src,v_src,y_stride,uv_stride,width,height,false); // faster
+#endif
  }
 };
 

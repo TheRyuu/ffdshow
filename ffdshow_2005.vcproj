@@ -36,9 +36,6 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="yasm64"
-			/>
-			<Tool
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
@@ -159,9 +156,6 @@
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
-				Name="yasm"
-			/>
-			<Tool
 				Name="VCXMLDataGeneratorTool"
 			/>
 			<Tool
@@ -268,9 +262,6 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="yasm64"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -397,9 +388,6 @@
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
-				Name="yasm"
-			/>
-			<Tool
 				Name="VCXMLDataGeneratorTool"
 			/>
 			<Tool
@@ -510,9 +498,6 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="yasm64"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -635,9 +620,6 @@
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
-				Name="yasm"
-			/>
-			<Tool
 				Name="VCXMLDataGeneratorTool"
 			/>
 			<Tool
@@ -746,9 +728,6 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="yasm64"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -874,9 +853,6 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="yasm"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -2234,7 +2210,8 @@
 					<Tool
 						Name="yasm64"
 					/>
-				</FileConfiguration>			</File>
+				</FileConfiguration>
+			</File>
 			<File
 				RelativePath=".\src\subtitles\spudec.cpp"
 				>
@@ -2667,7 +2644,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2675,7 +2652,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2683,7 +2660,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2691,7 +2668,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 			</File>
@@ -2791,7 +2768,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2799,7 +2776,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2807,7 +2784,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2815,7 +2792,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 			</File>
@@ -7084,6 +7061,242 @@
 			Name="convert"
 			>
 			<File
+				RelativePath=".\src\convert\colorspace_mmx.inc"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug Unicode|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug Unicode|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release Unicode|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release Unicode|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\src\convert\colorspace_rgb_mmx.asm"
+				>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="yasm64"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="yasm64"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug Unicode|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="yasm64"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release Unicode|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="yasm64"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\src\convert\colorspace_rgb_win64_sse2.asm"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug Unicode|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release Unicode|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\src\convert\colorspace_win64_sse2.inc"
+				>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="yasm64"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="yasm64"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug Unicode|x64"
+					>
+					<Tool
+						Name="yasm64"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+						Name="Release Unicode|x64"
+					>
+					<Tool
+						Name="yasm64"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug Unicode|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug Unicode|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release Unicode|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release Unicode|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\src\convert\convert_yuy2.h"
 				>
 			</File>
@@ -7255,7 +7468,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7263,7 +7476,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7271,7 +7484,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7279,7 +7492,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 			</File>
@@ -7367,7 +7580,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7375,7 +7588,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7383,7 +7596,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7391,7 +7604,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm"
+						Name="yasm64"
 					/>
 				</FileConfiguration>
 			</File>
