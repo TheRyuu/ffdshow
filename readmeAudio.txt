@@ -1,3 +1,4 @@
+
 1. About ffdshow audio decoder
 
     ffdshow is an open source directShow filter and VFW codec mainly used
@@ -6,12 +7,12 @@
     formats, but supporting numerous other video and audio formats as well.
 
     It has the ability to manipulate audio with effects like an equalizer,
-    volume control, a Dolby decoder, reverb, Winamp DSP plugins, and more.
+    volume control, a Dolby decoder, reverb, Winamp DSP plugins and more.
 
 2. Features
 
    - support for most used codecs: AC3, AAC, DTS, MP1/2/3, and Vorbis
-   - additional support for LPCM, TTA, QDM2, ADPCM, IMC or ATRAC3 and more...
+   - additional support for LPCM, TTA, QDM2, ADPCM, IMC or ATRAC3...
    - Dolby decoder
    - audio filters: equalizer, volume, reverb, mixer, equalizer and convolver
    - multichannel audio processing by Winamp plugins has been added
@@ -57,7 +58,6 @@
 
    All used sources (except of cpu utilization detection routine) and ffdshow
    itself are distributed under GPL. See copying.txt
-
 
    Milan Cutka <milan_cutka@yahoo.com>
    ffdshow-tryouts

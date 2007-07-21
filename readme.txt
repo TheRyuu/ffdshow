@@ -1,3 +1,4 @@
+
 1. About ffdshow video decoder
 
     ffdshow is an open source directShow filter and VFW codec mainly used
@@ -7,16 +8,16 @@
 
     ffdshow can be configured to display subtitles, to enable or disable
     various built-in codecs, to grab screenshots, to enable keyboard control,
-    and to enhance movies with increased resolution, sharpness, and many other
-    post-processing filters.Some of the postprocessing is borrowed from the
-    MPlayer project and AviSynth filters.
+    and to enhance movies with increased resolution, sharpness, and many
+    other post-processing filters.Some of the postprocessing is borrowed
+    from the MPlayer project and AviSynth filters.
 
 2. Features
 
    - fast video decompression using optimized MMX, SSE and 3DNow! code
    - support for different codecs: Xvid and all DIVX versions
    - support for H.264/AVC (Advanced Video Coding)
-   - support for MPEG1/2, WMV1/2/3, WVC1, VP5/6, SVQ1/3, DV and more...
+   - support for MPEG1/2, WMV1/2/3, WVC1, VP5/6, SVQ1/3, DV...
    - additional support for MSMPEG4v1, MSMPEG4v2, MSMPEG4v3 and H.263
    - deinterlacing support (set interlace flag) for H.264 MBAFF.
    - hardware deinterlacing support for RAW video
@@ -33,7 +34,8 @@
    - multithreaded resize: faster resize on multi-core CPUs
    - aspect ratio changing
    - subtitles support
-   - improved subtitle shadow. 3 shadow modes are available: classic, glowing and gradient
+   - improved subtitle shadow. 3 shadow modes are available: classic, glowing
+     and gradient
    - management of compatibility issues: "Use ffdshow only in:" option ensures 
      that ffdshow only runs in supported applications.
    - quality control is now configurable ("Decoder options" -> "Quality control")
@@ -79,7 +81,6 @@
 
    All used sources (except of cpu utilization detection routine) and ffdshow
    itself are distributed under GPL. See copying.txt
-
 
    Milan Cutka <milan_cutka@yahoo.com>
    ffdshow-tryouts

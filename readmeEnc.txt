@@ -1,3 +1,4 @@
+
 1. About ffdshow video encoder
 
    Video for Windows and DirectShow codec based on VFW code from Xvid
@@ -40,6 +41,7 @@
    - support for MPEG 4 quarterpel and GMC
    - selectable interlaced encoding
    - libavcodec's MPEG4/MPEG2/MPEG1, xvidcore 1.2 and x264 encoders are multithreaded
+   - libavcodec encoders pop up error messages
    - decompression
 
 3. ffdshow-tryouts
