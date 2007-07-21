@@ -1,8 +1,8 @@
 1. About ffdshow video encoder
 
-Video for Windows and DirectShow codec based on VFW code from Xvid
-project and using libavcodec library from FFmpeg project for
-compression. Few other compression libraries are supported too.
+   Video for Windows and DirectShow codec based on VFW code from Xvid
+   project and using libavcodec library from FFmpeg project for
+   compression. Few other compression libraries are supported too.
 
 2. Features:
 
@@ -69,8 +69,12 @@ compression. Few other compression libraries are supported too.
    MJPEGtools:
    http://mjpeg.sourceforge.net/
 
-   or at Doom9:
+   Doom9:
    http://forum.doom9.org/showthread.php?t=120465
+
+   or Wikipedia, the free encyclopedia:
+   http://en.wikipedia.org/wiki/Ffdshow
+
 
 5. Copying
 

@@ -648,7 +648,7 @@ static int AC3_encode_init(AVCodecContext *avctx)
 
     /* number of channels */
     if (channels < 1 || channels > 6)
-		return -1;
+    return -1;
     s->acmod = avctx->ac3mode; /* intentional diff from ffmpeg */
     s->lfe = avctx->ac3lfe; /* intentional diff from ffmpeg */
     s->nb_all_channels = channels;
