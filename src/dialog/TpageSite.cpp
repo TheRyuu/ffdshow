@@ -180,14 +180,17 @@ INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
 
      // Re-center the %&#@*! pagesite dialog
 
-     int xDiff=((wpl.rcNormalPosition.right-wpl.rcNormalPosition.left)-pagerect.Width())/2;
+     if (!cfgGet(IDFF_dlgRestorePos))
+      {
+       int xDiff=((wpl.rcNormalPosition.right-wpl.rcNormalPosition.left)-pagerect.Width())/2;
 
-     GetWindowPlacement(m_hwnd,&wpl);
+       GetWindowPlacement(m_hwnd,&wpl);
 
-     wpl.rcNormalPosition.left+=xDiff;
-     wpl.rcNormalPosition.right+=xDiff;
+       wpl.rcNormalPosition.left+=xDiff;
+       wpl.rcNormalPosition.right+=xDiff;
 
-     SetWindowPlacement(m_hwnd,&wpl);
+       SetWindowPlacement(m_hwnd,&wpl);
+      }
 
      return TRUE;
     }
