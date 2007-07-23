@@ -318,7 +318,7 @@ INT_PTR TcodecsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
            switch (nmdi->item.iSubItem)
             {
              case 0:
-              strcpy(nmdi->item.pszText,formats[i].descr);
+              strcpy(nmdi->item.pszText,_(IDC_LV_INCODECS,formats[i].descr));
               break;
              case 1:
               strcpy(nmdi->item.pszText,_(IDC_LV_INCODECS,formats[i].getDecoderName(cfgGet(formats[i].idff))));
