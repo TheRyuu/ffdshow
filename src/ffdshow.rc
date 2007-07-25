@@ -1849,9 +1849,9 @@ BEGIN
                     "Button",BS_AUTO3STATE | WS_TABSTOP,5,134,217,11
     CONTROL         "Connect to compatible filters only",IDC_CHB_OUTCHANGECOMPATONLY,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,20,147,206,10
-    CONTROL         "DV",IDC_CHB_OUT_DV,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,164,32,10
-    LTEXT           "Profile:",IDC_LBL_OUT_DV_PROFILE,42,164,37,8
-    COMBOBOX        IDC_CBX_OUT_DV_PROFILE,79,163,78,75,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "DV",IDC_CHB_OUT_DV,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,164,46,10
+    LTEXT           "Profile:",IDC_LBL_OUT_DV_PROFILE,64,164,37,8
+    COMBOBOX        IDC_CBX_OUT_DV_PROFILE,98,163,78,75,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     CONTROL         "Flip video",IDC_CHB_FLIP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,180,117,10
     LTEXT           "Method:",IDC_TXT_OUT_DEINT_METHOD,17,120,27,8
     COMBOBOX        IDC_CBX_OUT_HWDEINT_METHOD,49,118,45,50,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
@@ -1944,7 +1944,7 @@ BEGIN
     CONTROL         "greater than",IDC_BT_RESAMPLE_COND,"Button",BS_OWNERDRAW | WS_TABSTOP,19,72,49,13
     EDITTEXT        IDC_ED_RESAMPLE_CONDFREQ,69,72,70,13,ES_AUTOHSCROLL | ES_NUMBER,WS_EX_RIGHT
     PUSHBUTTON      "6",IDC_BT_RESAMPLE_CONDFREQ,140,72,11,13
-    EDITTEXT        IDC_ED_HELP,0,152,266,12,ES_MULTILINE | ES_READONLY | NOT WS_BORDER | WS_VSCROLL
+    EDITTEXT        IDC_ED_HELP,0,152,266,24,ES_MULTILINE | ES_READONLY | NOT WS_BORDER | WS_VSCROLL
 END
 
 IDD_ME_X264 DIALOGEX 0, 0, 267, 195
@@ -2066,7 +2066,7 @@ STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | DS_CENTER | WS_CHILD
 EXSTYLE WS_EX_CONTROLPARENT
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "Supported output sample formats",IDC_GRP_SF_OUT,0,0,266,63
+    GROUPBOX        "Supported output sample formats",IDC_GRP_SF_OUT,0,0,267,63
     CONTROL         "16 bit integer",IDC_CHB_OUT_PCM16,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,11,111,10
     CONTROL         "24 bit integer",IDC_CHB_OUT_PCM24,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,23,111,10
     CONTROL         "32 bit integer",IDC_CHB_OUT_PCM32,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,35,111,10
@@ -2074,8 +2074,8 @@ BEGIN
     CONTROL         "AC3",IDC_CHB_OUT_AC3,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,121,11,30,10
     RTEXT           "Bitrate:",IDC_LBL_OUT_AC3,152,12,47,9
     COMBOBOX        IDC_CBX_OUT_AC3,200,10,56,64,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    CONTROL         "LPCM",IDC_CHB_OUT_LPCM,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,121,47,100,10
-    GROUPBOX        "",IDC_GRP_AOUT_OTHER,0,60,266,84
+    CONTROL         "LPCM",IDC_CHB_OUT_LPCM,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,121,47,130,10
+    GROUPBOX        "",IDC_GRP_AOUT_OTHER,0,60,267,84
     LTEXT           "Connect to:",IDC_CHB_AOUT_CONNECTTO,4,70,75,8
     COMBOBOX        IDC_CBX_AOUT_CONNECTTO,83,68,165,72,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     CONTROL         "Apply only to S/PDIF output",IDC_CHB_AOUT_CONNECTTO_SPDIF,
@@ -2088,7 +2088,7 @@ BEGIN
     LTEXT           "Multichannel device:",IDC_LBL_AOUT_MULTICHANNEL_DEVICE,4,99,75,8
     COMBOBOX        IDC_CBX_AOUT_MULTICHANNEL_DEVICE,84,97,165,72,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     CONTROL         "Encode only multichannel streams",IDC_CHB_AOUT_AC3ENCODE_MODE,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,131,26,123,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,131,26,134,10
 END
 
 IDD_DOLBYDECODER DIALOGEX 0, 0, 267, 195
@@ -2795,7 +2795,7 @@ IDB_CLASSIC_ICON_XP     BITMAP                  "classic_icon_xp.bmp"
 // Menu
 //
 
-IDR_MENU_PRESET MENU 
+IDR_MENU_PRESET MENU
 BEGIN
     POPUP "New"
     BEGIN
@@ -2811,7 +2811,7 @@ BEGIN
     END
 END
 
-IDR_MENU_TRANSLATE MENU 
+IDR_MENU_TRANSLATE MENU
 BEGIN
     POPUP "Translate"
     BEGIN
@@ -2827,7 +2827,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_FFDSHOW, DIALOG
     BEGIN
@@ -3006,7 +3006,7 @@ END
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_FFDSHOWDECVIDEO     "ffdshow video decoder"
     IDS_FFDSHOWDECAUDIO     "ffdshow audio decoder"
@@ -3017,12 +3017,12 @@ BEGIN
     IDS_FFDSHOWDECVIDEORAW  "ffdshow raw video decoder"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_ABOUT               "About"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_BLUR                "Blur & NR"
     IDD_FONT                "Font"
@@ -3038,7 +3038,7 @@ BEGIN
     IDD_KEYS                "Keys & remote"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_SUBTITLES           "Subtitles"
     IDD_CODECS              "Codecs"
@@ -3053,13 +3053,13 @@ BEGIN
     IDD_INFOSIMD            "Info & CPU"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_GRAB                "Grab"
     IDD_OVERLAY             "Overlay"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_DSCALER             "DScaler filter"
     IDD_PERSPECTIVE         "Perspective corr."
@@ -3074,7 +3074,7 @@ BEGIN
     IDD_MIXER               "Mixer"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_GENERIC             "Generic"
     IDD_CREDITS             "Credits"
@@ -3084,7 +3084,7 @@ BEGIN
     IDD_GENERIC_FFV1        "Generic"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_GENERIC_RAW         "Generic"
     IDD_GENERIC_THEO        "Generic"
@@ -3101,7 +3101,7 @@ BEGIN
     IDD_QUANT               "Quantization"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_GENERIC_X264        "Generic"
     IDD_MASKING_THEO        "Masking"
@@ -3114,7 +3114,7 @@ BEGIN
     IDD_QUEUEMSG_1          "off"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_SECONDPASS          "Two passes - 2nd pass"
     IDD_GENERIC_WMV9        "Generic"
@@ -3128,7 +3128,7 @@ BEGIN
     IDD_ME_X264             "Motion estimation"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_LOGOAWAY            "Logoaway"
     IDD_OUTSFS              "Output"
@@ -3145,14 +3145,14 @@ BEGIN
     IDD_BITMAP              "Bitmap overlay"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_FFDSHOWDECAUDIORAW  "ffdshow audio processor"
     IDS_FFDSHOWDEC          "ffdshow decoder"
     IDS_FFDSHOWVIDEOPROC    "ffdshow video processor"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_QUEUEMSG_2          "off: Old video renderer does not support queue."
     IDD_QUEUEMSG_3          "off: The application is not listed in 'Use queue only in:'"
@@ -3160,7 +3160,7 @@ BEGIN
     IDD_QUEUEMSG_5          "off: The video renderer in use is not supported."
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDD_QUEUEMSG_6          "off: In Windows Media Player, queueing is not suported."
     IDD_QUEUEMSG_7          "off: Some video driver cannot work with YV12 + VMR9 + queue."
