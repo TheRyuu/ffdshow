@@ -211,8 +211,8 @@ bool verbose;
 
 void reg_op(TregOp &t)
 {
-  t._REG_OP_S("avsflnm",avsflnm,"c:\\1.avs");
-  t._REG_OP_S("aviflnm",aviflnm,"c:\\1.avi");
+  t._REG_OP_S("avsflnm",avsflnm,"C:\\1.avs");
+  t._REG_OP_S("aviflnm",aviflnm,"C:\\1.avi");
   t._REG_OP_N("mode",mode,2);
   t._REG_OP_N("isForceoutcsp",isForceoutcsp,0);
   t._REG_OP_N("forceoutcsp",forceoutcsp,FOURCC_YUY2);
@@ -279,7 +279,7 @@ const int ids[]={IDC_LBL_AVS,IDC_ED_AVS,IDC_BT_AVS,IDC_LBL_AVI,IDC_ED_AVI,
 
 const char *errors[]=
 {
-  "Avisynth AVI creation succeeded",
+  "AviSynth AVI creation succeeded",
   "Can't open AviSynth script file",
   "",
   "Error in AVIFileOpen",
@@ -824,8 +824,8 @@ struct Tcsp
 
 const char *ilaces[]=
 {
-  "progressive",
-  "interlaced",
+  "Progressive",
+  "Interlaced",
   NULL
 };
 
@@ -837,14 +837,6 @@ int cbxGetCurItemData(int id)
 
 int showProps(void)
 {
-  SetDlgItemText(m_hwnd,IDC_LBL_VIDEO_RES,"Resolution:");
-  SetDlgItemText(m_hwnd,IDC_LBL_VIDEO_FPS,"FPS:");
-  SetDlgItemText(m_hwnd,IDC_LBL_VIDEO_CSP,"Colorspace:");
-  SetDlgItemText(m_hwnd,IDC_LBL_VIDEO_FRAMESNUM,"Number of frames:");
-  SetDlgItemText(m_hwnd,IDC_LBL_VIDEO_TIME,"Time:");
-  SetDlgItemText(m_hwnd,IDC_LBL_AUDIO_SAMPLERATE,"Sample rate:");
-  SetDlgItemText(m_hwnd,IDC_LBL_AUDIO_CHANNELS,"Channels:");
-  SetDlgItemText(m_hwnd,IDC_LBL_AUDIO_BITSPERSAMPLE,"Bits per sample:");
   FILE *f=fopen(avsflnm,"rb");
   if (!f) return 0;
   int len=filelength(fileno(f));
@@ -1068,7 +1060,7 @@ INT_PTR CALLBACK dlgProc(HWND m_hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
 void help()
 {
   printf("MakeAVIS options:\n"
-         "  -i <file>   Input avisynth script\n"
+         "  -i <file>   Input AviSynth script\n"
          "  -v <file>   Output video file (- = stdout)\n"
          "  -a <file>   Output audio file (- = stdout)\n"
          "  -c <int>    Colorspace (0:YV12/1:YUY2/2:YVYU/3:I420)\n"
@@ -1154,7 +1146,7 @@ int main(int argc, char **argv)
   Tdll avisynth("avisynth.dll");
   if (!avisynth.ok)
    {
-    fprintf(stderr,"avisynth not installed\n");
+    fprintf(stderr,"AviSynth not installed\n");
     return -100;
    }
   AVIFileInit();
