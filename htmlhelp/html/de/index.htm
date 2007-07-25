@@ -7,7 +7,7 @@ have been made, which were ported to this translation (even if nothing
 was changed here). This is to know which revisions are not ported yet.
 If you skip to port a revision please note that revision for later porting. -->
 
-<!-- In sync with revision 1258 except for revision(s) -none-. -->
+<!-- In sync with revision 1326 except for revision(s) -none-. -->
 
 <head>
   <title>ffdshow tryouts | Changelog</title>
@@ -65,28 +65,28 @@ If you skip to port a revision please note that revision for later porting. -->
 
   <ul class="fixed">
     <li>libavcodec-Enkoder akzeptierten keine Bildfrequenzen au&szlig;er 25fps. Andere Enkoder hatten manchmal falsche Bildfrequenzen.</li>
-    <li>Falls ffdshowaudio() im AviSynth-Skript verwandt wurde, trat ein Fehler auf.</li>
+    <li>Falls ffdshowaudio() im AviSynth-Skript verwendet wurde, trat ein Fehler auf.</li>
     <li>Falls eine Unicode-Untertiteldatei 0x1a enthielt, schlug das Rendering fehl.</li>
     <li>Das Bild wurde gespiegelt, falls der AviSynthfilter im RGB-Farbraum ausgab.</li>
-    <li>Falls "RAW video" -> "YV12" im VFW-Dekoder aktiviert war, wurde das Bild gespiegelt, wenn der VFW-Codec via DirectShow verwandt wurde.</li>
+    <li>Falls "RAW video" -> "YV12" im VFW-Dekoder aktiviert war, wurde das Bild gespiegelt, wenn der VFW-Codec via DirectShow verwendet wurde.</li>
     <li>Verbesserte Stabilit&auml;t der Handhabung von Winamp-Plugins.</li>
     <li>Resizing w&auml;hrend des Abspielens: Wurde 8 (als erste Ziffer von 800) f&uuml;r die vertikale Gr&ouml;&szlig;e eingegeben, gab es je nach angewandter Methode einen Absturz (Lanczos tap>=4, spline, usw.).</li>
     <li>Falls Resize angewandt wurde, wurden &Auml;nderungen des Pixelseitenverh&auml;ltnisses (SAR) ignoriert.</li>
-    <li>Falls "Gr&ouml;&szlig;e &amp; Seitenverh&auml;ltnis" -> "Borders" -> "Inside" verwandt wurde, kalkulierte "Benutze SV des Originals" eine falsche Gr&ouml;&szlig;e.</li>
+    <li>Falls "Gr&ouml;&szlig;e &amp; Seitenverh&auml;ltnis" -> "Borders" -> "Inside" verwendet wurde, kalkulierte "Benutze SV des Originals" eine falsche Gr&ouml;&szlig;e.</li>
     <li>AviSynth-Skript konnte nicht gespeichert werden (nur Unicode-Builds).</li>
   </ul>
 
   <h3>Vor Beta2 korrigiert</h3>
 
   <ul class="fixed">
-    <li>Falls Overlaymixer und YUY2 verwandt wurden, wurde nach einer &Auml;nderung des Seitenverh&auml;ltnisses die H&ouml;he des Bildes halbiert. Dies war h&auml;ufig bei Wiedergabe von DVDs der Fall.</li>
+    <li>Falls Overlaymixer und YUY2 verwendet wurden, wurde nach einer &Auml;nderung des Seitenverh&auml;ltnisses die H&ouml;he des Bildes halbiert. Dies war h&auml;ufig bei Wiedergabe von DVDs der Fall.</li>
     <li>FFV1-Dekoder st&uuml;rzte beim Spulen oder bei Verz&ouml;gerung ab.</li>
     <li>FFV1-Enkoder: Die Standardentfernung zwischen Keyframes betrug 250, was zu hoch war und nicht unabh&auml;ngig konfiguriert werden konnte. Neuer Standard ist 10.</li>
     <li>Wenn NV12 der einzig verf&uuml;gbare Ausgabefarbraum f&uuml;r DirectShow-Dekoder war und "Unkomprimierte Videodaten" f&uuml;r den VfW-Dekoder aktiviert war, st&uuml;rzte der Thumbnailer des Windows Media Player 11 ab.</li>
     <li>Untertitel waren grau, selbst wenn wei&szlig; ausgew&auml;hlt war.</li>
     <li>L&ouml;schen der Standardvoreinstellung w&auml;hrend sie aktiv war, l&ouml;ste einen Absturz aus.</li>
     <li>Umgedrehtes NV12 verursachte entweder einen Absturz oder ein defektes Bild.</li>
-    <li>Wurde der interne Matroska-Splitter des Media Player Classic verwandt, war das Seitenverh&auml;ltnis immer 1.</li>
+    <li>Wurde der interne Matroska-Splitter des Media Player Classic verwendet, war das Seitenverh&auml;ltnis immer 1.</li>
     <li>Wenn der Audiokonfigurationsdialog w&auml;hrend der Wiedergabe ge&ouml;ffnet wurde, war die Prozessorauslastung ungew&ouml;hnlich hoch und er ist manchmal - besonders bei ADPCM-Wiedergabe - eingefroren.</li>
     <li>Wenn sich ffdshow mit VobSub (VSFilter) verband, versuchte es YV12 mit einer Breite, die kein Vielfaches von 8 war, zu verwenden und st&uuml;rzte ab.</li>
     <li>Wenn "Gr&ouml;&szlig;e &amp; Seitenverh&auml;ltnis" -> "R&auml;nder" -> "Innen" -> "100%" konfiguriert wurde, st&uuml;rzte ffdshow ab.</li>
@@ -130,21 +130,21 @@ If you skip to port a revision please note that revision for later porting. -->
     <li>Falls ffdshow das Ausgabematerial eines DVD-Dekoders als unkomprimiertes Videomaterial eingespeist bekam, die Untertiteldatei g&uuml;ltig und MPEG2 deaktiviert war, wurden Untertitel, die nicht zur DVD geh&ouml;rten, angezeigt.</li>
     <li>Falls videobildenthaltende Untertitel wie IDX+SUB (VOBsub) aktiviert waren, gab es an Stellen, an denen die H&ouml;he der Untertitel ungerade war, einen Absturz.</li>
     <li>Convolver, einer der Audiofilter, st&uuml;rze ab wenn versucht wurde eine Impuls-Datei zu laden.</li>
-    <li>Wurde Resize verwandt, waren manchmal horizontale Linien sichtbar ("Gr&ouml;&szlig;e &amp; Seitenverh&auml;ltnis" -> "Einstellungen" -> "Accurate rounding").</li>
-    <li>Falls Resize nach xsharpen verwandt wurde, war das Video gr&uuml;n.</li>
+    <li>Wurde Resize verwendet, waren manchmal horizontale Linien sichtbar ("Gr&ouml;&szlig;e &amp; Seitenverh&auml;ltnis" -> "Einstellungen" -> "Accurate rounding").</li>
+    <li>Falls Resize nach xsharpen verwendet wurde, war das Video gr&uuml;n.</li>
     <li>Stereoskopische Untertitel st&uuml;rzten ab.</li>
     <li>Das OSD-Element "Prozessorauslastung" zeigte auf Multiprozessorsystemen nicht den korrekten Wert an.</li>
     <li>Die automatische Nachbearbeitungsquallit&auml;tskontrolle funktionierte nicht auf Multiprozessorsystemen.</li>
     <li>Die Lautst&auml;rkeregelung funktionierte nicht korrekt.</li>
-    <li>DScaler: Das Video (TomsMoComp) st&uuml;rzte je nach zum Kompilieren verwandtem Compiler ab.</li>
+    <li>DScaler: Das Video (TomsMoComp) st&uuml;rzte je nach zum Kompilieren verwendetem Compiler ab.</li>
     <li>Die Overlaykontrolle konnte den Startwert nicht richtig laden.</li>
     <li>Oblivion und Morrowind (beides Spiele) st&uuml;rzten ab.</li>
     <li>Der Codeckonfigurationsdialog funktionierte unter Windows Vista nicht.</li>
     <li>War ein Fehler im AviSynth-Skript in ffdshow, wurde die Fehlermeldung auf dem Video angezeigt. Sie verblieb dort selbst nachdem die komplette AviSynth-Seite deaktiviert worden war.</li>
     <li>Der Dialog war entstellt, falls "Benachrichtungs- &amp; Dialogeinstellungen" -> "Japanese (Unicode)" ausgew&auml;hlt war (ANSI-Builds). Das Problem war, dass der Installer die Option standardm&auml;&szlig;ig f&uuml;r die japanische Windowsversion setzte.</li>
-    <li>ANSI/MBCS wurde nicht korrekt verarbeitet. Das OSD-Element "Quelldatei", zum Beispiel, konnte die letzten paar Zeichen nicht anzeigen, falls MBCS im Pfad verwandt wurde. Es war eine Sicherheitsangelegenheit.</li>
-    <li>Falls eine lokalisierte Fassung des ffdshow-Dialogs verwandt wurde, skalierte der Inhalt des Dialogs auf ca. 130%, die Fenstergr&ouml;&szlig;e &auml;nderte sich jedoch nicht. Infolgedessen waren Teile der rechten Dialogseite nicht mehr sichtbar (abh&auml;ngig davon wie der Dialog ge&ouml;ffnet wurde).</li>
-    <li>Untertitel waren entstellt falls "Untertitel" -> "Schriftart" -> "Schnelles Rendering" aktiviert war und MBCS in ANSI-Builds verwandt wurde.</li>
+    <li>ANSI/MBCS wurde nicht korrekt verarbeitet. Das OSD-Element "Quelldatei", zum Beispiel, konnte die letzten paar Zeichen nicht anzeigen, falls MBCS im Pfad verwendet wurde. Es war eine Sicherheitsangelegenheit.</li>
+    <li>Falls eine lokalisierte Fassung des ffdshow-Dialogs verwendet wurde, skalierte der Inhalt des Dialogs auf ca. 130%, die Fenstergr&ouml;&szlig;e &auml;nderte sich jedoch nicht. Infolgedessen waren Teile der rechten Dialogseite nicht mehr sichtbar (abh&auml;ngig davon wie der Dialog ge&ouml;ffnet wurde).</li>
+    <li>Untertitel waren entstellt falls "Untertitel" -> "Schriftart" -> "Schnelles Rendering" aktiviert war und MBCS in ANSI-Builds verwendet wurde.</li>
   </ul>
 
   <h2>
@@ -172,9 +172,9 @@ If you skip to port a revision please note that revision for later porting. -->
 
   <ul class="added">
     <li>Verbesserte Untertitelschatten. 3 Schattenmodi sind verf&uuml;gbar: klassisch, glimmend und geneigt.</li>
-    <li>Verwaltung von Kompatibilit&auml;tsproblemen: "ffdshow nur verwenden in:"-Option stellt sicher, dass ffdshow nur in unterst&uuml;tzten Anwendungen verwandt wird.</li>
+    <li>Verwaltung von Kompatibilit&auml;tsproblemen: "ffdshow nur verwenden in:"-Option stellt sicher, dass ffdshow nur in unterst&uuml;tzten Anwendungen verwendet wird.</li>
     <li>Unterst&uuml;tzung f&uuml;r Hardware-Deinterlacing von unkomprimierten Videodaten (interlacingbezogene Informationen, welche als unkomprimierte Videodaten eingespeist wurden, werden zu nachgeordneten Filtern gesandt).</li>
-    <li>Das neue OSD-Element "IDCT(libavcodec)" zeigt welche IDCT-Methode verwandt wird.</li>
+    <li>Das neue OSD-Element "IDCT(libavcodec)" zeigt welche IDCT-Methode verwendet wird.</li>
     <li>Unter "Untertitel" -> "Suchen in", kann die Priorit&auml;t von Erweiterungen angegeben werden.</li>
     <li>Unterst&uuml;tzung f&uuml;r das erweiterte Profil von VC-1 (libavcodec funktioniert ohne externe Codecs).</li>
     <li>Verschiedene WMV und VC-1 Inhalte k&ouml;nnen mit Hilfe des Microsoft Codecs abgespielt werden (VC-1 ben&ouml;tigt einen installierten WMP11 oder externen Codec).</li>
