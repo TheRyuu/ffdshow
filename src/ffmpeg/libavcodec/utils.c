@@ -500,8 +500,10 @@ int avcodec_open(AVCodecContext *avctx, AVCodec *codec)
 
     if (codec->priv_data_size > 0) {
         avctx->priv_data = av_mallocz(codec->priv_data_size);
-        if (!avctx->priv_data)
+        if (!avctx->priv_data) {
+            ret = AVERROR(ENOMEM);
             goto end;
+        }
     } else {
         avctx->priv_data = NULL;
     }
@@ -513,6 +515,7 @@ int avcodec_open(AVCodecContext *avctx, AVCodec *codec)
 
     if((avctx->coded_width||avctx->coded_height) && avcodec_check_dimensions(avctx,avctx->coded_width,avctx->coded_height)){
         av_freep(&avctx->priv_data);
+        ret = AVERROR(EINVAL);
         goto end;
     }
 

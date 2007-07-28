@@ -820,6 +820,7 @@ BitstreamReadHeaders(Bitstream * bs,
 				dec->time = (dec->last_time_base + time_incr)*dec->time_inc_resolution + time_increment;
 				dec->time_bp = dec->time_pp - (int32_t)(dec->last_non_b_time - dec->time);
 			}
+			if (dec->time_pp <= 0) dec->time_pp = 1;
 			DPRINTF(XVID_DEBUG_HEADER,"time_pp=%i\n", dec->time_pp);
 			DPRINTF(XVID_DEBUG_HEADER,"time_bp=%i\n", dec->time_bp);
 

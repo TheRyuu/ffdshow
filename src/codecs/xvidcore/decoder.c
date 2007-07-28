@@ -1715,7 +1715,7 @@ repeat:
       image_printf(&dec->cur, dec->edged_width, dec->height, 16, 16,
             "broken b-frame, mising ref frames");
       if (stats) stats->type = XVID_TYPE_NOTHING;
-    } else if (dec->time_pp <= dec->time_bp || dec->time_pp==0) {
+    } else if (dec->time_pp <= dec->time_bp) {
       /* this occurs when dx50_bvop_compatibility==0 sequences are
       decoded in vfw. */
       image_printf(&dec->cur, dec->edged_width, dec->height, 16, 16,

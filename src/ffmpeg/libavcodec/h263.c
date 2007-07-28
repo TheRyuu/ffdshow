@@ -138,6 +138,23 @@ int h263_get_picture_format(int width, int height)
     return format;
 }
 
+static void show_pict_info(MpegEncContext *s){
+    av_log(s->avctx, AV_LOG_DEBUG, "qp:%d %c size:%d rnd:%d%s%s%s%s%s%s%s%s%s %d/%d\n",
+         s->qscale, av_get_pict_type_char(s->pict_type),
+         s->gb.size_in_bits, 1-s->no_rounding,
+         s->obmc ? " AP" : "",
+         s->umvplus ? " UMV" : "",
+         s->h263_long_vectors ? " LONG" : "",
+         s->h263_plus ? " +" : "",
+         s->h263_aic ? " AIC" : "",
+         s->alt_inter_vlc ? " AIV" : "",
+         s->modified_quant ? " MQ" : "",
+         s->loop_filter ? " LOOP" : "",
+         s->h263_slice_structured ? " SS" : "",
+         s->avctx->time_base.den, s->avctx->time_base.num
+    );
+}
+
 #ifdef CONFIG_ENCODERS
 
 static void aspect_to_info(MpegEncContext * s, AVRational aspect){
@@ -5208,20 +5225,7 @@ int h263_decode_picture_header(MpegEncContext *s)
     }
 
      if(s->avctx->debug&FF_DEBUG_PICT_INFO){
-         av_log(s->avctx, AV_LOG_DEBUG, "qp:%d %c size:%d rnd:%d%s%s%s%s%s%s%s%s%s %d/%d\n",
-         s->qscale, av_get_pict_type_char(s->pict_type),
-         s->gb.size_in_bits, 1-s->no_rounding,
-         s->obmc ? " AP" : "",
-         s->umvplus ? " UMV" : "",
-         s->h263_long_vectors ? " LONG" : "",
-         s->h263_plus ? " +" : "",
-         s->h263_aic ? " AIC" : "",
-         s->alt_inter_vlc ? " AIV" : "",
-         s->modified_quant ? " MQ" : "",
-         s->loop_filter ? " LOOP" : "",
-         s->h263_slice_structured ? " SS" : "",
-         s->avctx->time_base.den, s->avctx->time_base.num
-         );
+        show_pict_info(s);
      }
 #if 1
     if (s->pict_type == I_TYPE && s->codec_tag == ff_get_fourcc("ZYGO")){
@@ -6122,11 +6126,7 @@ int intel_h263_decode_picture_header(MpegEncContext *s)
         av_log(s->avctx, AV_LOG_ERROR, "SAC not supported\n");
         return -1;      /* SAC: off */
     }
-    if (get_bits1(&s->gb) != 0) {
-        s->obmc= 1;
-        av_log(s->avctx, AV_LOG_ERROR, "Advanced Prediction Mode not supported\n");
-//        return -1;      /* advanced prediction mode: off */
-    }
+    s->obmc= get_bits1(&s->gb);
     if (get_bits1(&s->gb) != 0) {
         av_log(s->avctx, AV_LOG_ERROR, "PB frame mode no supported\n");
         return -1;      /* PB frame mode */
@@ -6146,6 +6146,9 @@ int intel_h263_decode_picture_header(MpegEncContext *s)
 
     s->y_dc_scale_table=
     s->c_dc_scale_table= ff_mpeg1_dc_scale_table;
+
+    if(s->avctx->debug&FF_DEBUG_PICT_INFO)
+        show_pict_info(s);
 
     return 0;
 }
