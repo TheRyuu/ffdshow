@@ -63,7 +63,6 @@ typedef const TCHAR *PCTSTR;
 #define REFTIME_INVALID _I64_MIN
 
 #define MAX_SUBTITLE_LENGTH 2000
-#define MAX_COMPATIBILITYLIST_LENGTH 4000
 
 #define countof(array) (sizeof(array)/sizeof(array[0]))
 

@@ -26,6 +26,7 @@
 #include "Tinfo.h"
 #include "Ttranslate.h"
 #include "TcompatibilityList.h"
+#include "TglobalSettings.h"
 
 //=================================== TdirectshowControlPageDec =======================================
 void TdirectshowControlPageDec::init(void)

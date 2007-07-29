@@ -2,6 +2,7 @@
 #define _TWINAMP2SETTINGS_H_
 
 #include "TfilterSettings.h"
+#include "TglobalSettings.h"
 
 struct Twinamp2settings :TfilterSettingsAudio
 {

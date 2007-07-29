@@ -20,6 +20,7 @@
 #include "Cwinamp2.h"
 #include "winamp2/Twinamp2.h"
 #include "winamp2/DSP.H"
+#include "TglobalSettings.h"
 
 void Twinamp2page::init(void)
 {

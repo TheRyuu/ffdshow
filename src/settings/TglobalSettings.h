@@ -5,6 +5,7 @@
 #include "ffcodecs.h"
 #include "Toptions.h"
 
+#define MAX_COMPATIBILITYLIST_LENGTH 5000
 #define COMPATIBLE_EXE_FILENAME _l("aegisub.exe\r\nALLPlayer.exe\r\nALShow.exe\r\nass_help3r.exe\r\navi2mpg.exe\r\navipreview.exe\r\naviutl.exe\r\nBePipe.exe\r\nbsplay.exe\r\nbsplayer.exe\r\nchristv.exe\r\nCorePlayer.exe\r\ncoreplayer.exe\r\ncrystalfree.exe\r\ncut_assistant.exe\r\nDScaler.exe\r\ndv.exe\r\nDVDMaker.exe\r\nehshell.exe\r\nfirefox.exe\r\ngom.exe\r\ngraphedit.exe\r\ngraphedt.exe\r\ngspot.exe\r\niexplore.exe\r\nJetAudio.exe\r\nkmplayer.exe\r\nLA.exe\r\nLilith.exe\r\nmakeAVIS.exe\r\nMedia Center 12.exe\r\nMedia Jukebox.exe\r\nmegui.exe\r\nmplayer2.exe\r\nmplayerc.exe\r\nMunite.exe\r\nMuzikbrowzer.exe\r\nMv2PlayerPlus.exe\r\nnvplayer.exe\r\npowerdvd.exe\r\nprogdvb.exe\r\nQonoha.exe\r\nrealplay.exe\r\nrlkernel.exe\r\nSinkuHadouken.exe\r\nSplitCam.exe\r\nTheaterTek DVD.exe\r\ntimecodec.exe\r\nViPlay3.exe\r\nvirtualdub.exe\r\nvirtualdubmod.exe\r\nwinamp.exe\r\nwindvd.exe\r\nwmenc.exe\r\nwmplayer.exe\r\nzplayer.exe\r\n")\
           _l("Sleipnir.exe\r\n")\
           _l("fenglei.exe\r\n")\
@@ -136,7 +137,33 @@
           _l("BitComet.exe\r\n")\
           _l("jwBrowser.exe\r\n")\
           _l("DVDAuthor.exe\r\n")\
-          _l("dllhost.exe\r\n")
+          _l("dllhost.exe\r\n")\
+          _l("GomEnc.exe\r\n")\
+          _l("bestplayer1.0.exe\r\n")\
+          _l("msoobe.exe\r\n")\
+          _l("vplayer.exe\r\n")\
+          _l("paltalk.exe\r\n")\
+          _l("ffmpeg.exe\r\n")\
+          _l("demo32.exe\r\n")\
+          _l("Omgjbox.exe\r\n")\
+          _l("UCC.exe\r\n")\
+          _l("Metacafe.exe\r\n")\
+          _l("avant.exe\r\n")\
+          _l("CTWave32.exe\r\n")\
+          _l("tvc.exe\r\n")\
+          _l("GoldWave.exe\r\n")\
+          _l("WindowsPhotoGallery.exe\r\n")\
+          _l("Producer.exe\r\n")\
+          _l("MusicManager.exe\r\n")\
+          _l("cinemaplayer.exe\r\n")\
+          _l("CTCMS.exe\r\n")\
+          _l("sidebar.exe\r\n")\
+          _l("LifeCam.exe\r\n")\
+          _l("NicoPlayer.exe\r\n")\
+          _l("afreecastudio.exe\r\n")\
+          _l("AVerTV.exe\r\n")\
+          _l("FusionHDTV.exe\r\n")\
+          _l("VIDEOS~1.SCR\r\n")
 
 #define BLACKLIST_EXE_FILENAME _l("explorer.exe;oblivion.exe;morrowind.exe")
 

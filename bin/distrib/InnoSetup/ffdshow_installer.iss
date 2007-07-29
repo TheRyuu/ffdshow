@@ -1121,6 +1121,7 @@ begin
     'Adobe Premiere Pro.exe'#13#10
     'aegisub.exe'#13#10
     'afreecaplayer.exe'#13#10
+    'afreecastudio.exe'#13#10
     'aim6.exe'#13#10
     'ALLPlayer.exe'#13#10
     'ALShow.exe'#13#10
@@ -1129,6 +1130,8 @@ begin
     'amvtransform.exe'#13#10
     'Apollo DivX to DVD Creator.exe'#13#10
     'ass_help3r.exe'#13#10
+    'avant.exe'#13#10
+    'AVerTV.exe'#13#10
     'Avi2Dvd.exe'#13#10
     'avi2mpg.exe'#13#10
     'avicodec.exe'#13#10
@@ -1136,6 +1139,7 @@ begin
     'aviutl.exe'#13#10
     'Badak.exe'#13#10
     'BePipe.exe'#13#10
+    'bestplayer1.0.exe'#13#10
     'BitComet.exe'#13#10
     'bplay.exe'#13#10
     'bsplay.exe'#13#10
@@ -1143,6 +1147,7 @@ begin
     'BTVD3DShell.exe'#13#10
     'carom.exe'#13#10
     'christv.exe'#13#10
+    'cinemaplayer.exe'#13#10
     'CodecInstaller.exe'#13#10
     'coolpro2.exe'#13#10
     'CorePlayer.exe'#13#10
@@ -1150,11 +1155,14 @@ begin
     'Crystal.exe'#13#10
     'crystalfree.exe'#13#10
     'CrystalPro.exe'#13#10
+    'CTCMS.exe'#13#10
     'CTCMSU.exe'#13#10
     'CTWave.exe'#13#10
+    'CTWave32.exe'#13#10
     'cut_assistant.exe'#13#10
     'cscript.exe'#13#10
     'dashboard.exe'#13#10
+    'demo32.exe'#13#10
     'DivX Player.exe'#13#10
     'dllhost.exe'#13#10
     'drdivx.exe'#13#10
@@ -1173,14 +1181,18 @@ begin
     'emule_TK4.exe'#13#10
     'Encode360.exe'#13#10
     'fenglei.exe'#13#10
+    'ffmpeg.exe'#13#10
     'filtermanager.exe'#13#10
     'firefox.exe'#13#10
     'Flash.exe'#13#10
     'FMRadio.exe'#13#10
     'Fortius.exe'#13#10
     'FSViewer.exe'#13#10
+    'FusionHDTV.exe'#13#10
     'GDivX Player.exe'#13#10
+    'GoldWave.exe'#13#10
     'gom.exe'#13#10
+    'GomEnc.exe'#13#10
     'GoogleDesktop.exe'#13#10
     'GoogleDesktopCrawl.exe'#13#10
     'graphedit.exe'#13#10
@@ -1203,6 +1215,7 @@ begin
     'jwBrowser.exe'#13#10
     'kmplayer.exe'#13#10
     'LA.exe'#13#10
+    'LifeCam.exe'#13#10
     'Lilith.exe'#13#10
     'makeAVIS.exe'#13#10
     'Maxthon.exe'#13#10
@@ -1215,25 +1228,31 @@ begin
     'MediaServer.exe'#13#10
     'megui.exe'#13#10
     'mencoder.exe'#13#10
+    'Metacafe.exe'#13#10
     'MMPlayer.exe'#13#10
     'moviethumb.exe'#13#10
     'mpcstar.exe'#13#10
     'MpegVideoWizard.exe'#13#10
     'mplayer2.exe'#13#10
     'mplayerc.exe'#13#10
+    'msoobe.exe'#13#10
     'Munite.exe'#13#10
+    'MusicManager.exe'#13#10
     'Muzikbrowzer.exe'#13#10
     'Mv2PlayerPlus.exe'#13#10
     'myplayer.exe'#13#10
     'nero.exe'#13#10
     'NeroHome.exe'#13#10
     'NeroVision.exe'#13#10
+    'NicoPlayer.exe'#13#10
     'NMSTranscoder.exe'#13#10
     'nvplayer.exe'#13#10
+    'Omgjbox.exe'#13#10
     'Opera.exe'#13#10
     'OrbStreamerClient.exe'#13#10
     'OUTLOOK.EXE'#13#10
     'PaintDotNet.exe'#13#10
+    'paltalk.exe'#13#10
     'pcwmp.exe'#13#10
     'PhotoScreensaver.scr'#13#10
     'Photoshop.exe'#13#10
@@ -1246,6 +1265,7 @@ begin
     'ppmate.exe'#13#10
     'PPStream.exe'#13#10
     'Procoder2.exe'#13#10
+    'Producer.exe'#13#10
     'progdvb.exe'#13#10
     'PVCR.exe'#13#10
     'Qonoha.exe'#13#10
@@ -1259,6 +1279,7 @@ begin
     'Shareaza.exe'#13#10
     'sherlock2.exe'#13#10
     'ShowTime.exe'#13#10
+    'sidebar.exe'#13#10
     'SinkuHadouken.exe'#13#10
     'Sleipnir.exe'#13#10
     'smartmovie.exe'#13#10
@@ -1277,20 +1298,25 @@ begin
     'TMPGEnc.exe'#13#10
     'TMPGEnc4XP.exe'#13#10
     'TOTALCMD.EXE'#13#10
+    'tvc.exe'#13#10
     'TVersity.exe'#13#10
     'TVUPlayer.exe'#13#10
+    'UCC.exe'#13#10
     'Ultra EDIT.exe'#13#10
     'VCD_PLAY.EXE'#13#10
     'VeohClient.exe'#13#10
     'VideoSnapshot.exe'#13#10
     'VideoSplitter.exe'#13#10
+    'VIDEOS~1.SCR'#13#10
     'ViPlay3.exe'#13#10
     'virtualdub.exe'#13#10
     'virtualdubmod.exe'#13#10
+    'vplayer.exe'#13#10
     'WCreator.exe'#13#10
     'WFTV.exe'#13#10
     'winamp.exe'#13#10
     'WinAVI.exe'#13#10
+    'WindowsPhotoGallery.exe'#13#10
     'windvd.exe'#13#10
     'WinMPGVideoConvert.exe'#13#10
     'WINWORD.EXE'#13#10
@@ -1512,7 +1538,35 @@ begin
   compApps[150].rev := 1355;
   compApps[150].name:= 'dllhost.exe';
 
-  compApps[151].rev := 0;
+  compApps[151].rev := 1378;
+  compApps[151].name:= 'GomEnc.exe';
+  compApps[152].name:= 'bestplayer1.0.exe';
+  compApps[153].name:= 'msoobe.exe';
+  compApps[154].name:= 'vplayer.exe';
+  compApps[155].name:= 'paltalk.exe';
+  compApps[156].name:= 'ffmpeg.exe';
+  compApps[157].name:= 'demo32.exe';
+  compApps[158].name:= 'Omgjbox.exe';
+  compApps[159].name:= 'UCC.exe';
+  compApps[160].name:= 'Metacafe.exe';
+  compApps[161].name:= 'avant.exe';
+  compApps[162].name:= 'CTWave32.exe';
+  compApps[163].name:= 'tvc.exe';
+  compApps[164].name:= 'GoldWave.exe';
+  compApps[165].name:= 'WindowsPhotoGallery.exe';
+  compApps[166].name:= 'Producer.exe';
+  compApps[167].name:= 'MusicManager.exe';
+  compApps[168].name:= 'cinemaplayer.exe';
+  compApps[169].name:= 'CTCMS.exe';
+  compApps[170].name:= 'sidebar.exe';
+  compApps[171].name:= 'LifeCam.exe';
+  compApps[172].name:= 'NicoPlayer.exe';
+  compApps[172].name:= 'afreecastudio.exe';
+  compApps[173].name:= 'AVerTV.exe';
+  compApps[174].name:= 'FusionHDTV.exe';
+  compApps[175].name:= 'VIDEOS~1.SCR';
+
+  compApps[176].rev := 0;
 
 // Compatibility list
   ComplistVideo.skipped := False;
