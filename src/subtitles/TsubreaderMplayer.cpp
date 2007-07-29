@@ -454,7 +454,7 @@ template<class tchar> Tsubtitle* TsubtitleParserRt<tchar>::parse(Tstream &fd,int
 template<class tchar>  TsubtitleParserSSA<tchar>::TsubtitleParserSSA(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader,bool isEmbedded0):
  TsubtitleParser<tchar>(Iformat,Ifps,Icfg,Iffcfg,Isubreader),
  inV4styles(0),inEvents(0),inInfo(0),
- playResX(0),playResY(0),
+ playResX(0),playResY(0),wrapStyle(0),
  timer(1,1),
  isEmbedded(isEmbedded0)
 {
@@ -520,7 +520,6 @@ template<class tchar> bool TsubtitleParserSSA<tchar>::Tstyle::toCOLORREF(const f
    long a=strtol(alphaS,&endalpha,radix);
    if (*endalpha=='\0')
     alpha=256-a;
-   if (a=1) a=0;
   }
  if (s2.empty()) return false;
  const tchar *colorS=s2.c_str();
@@ -622,6 +621,10 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
      double t=strtod(line+7,&end);
      if (*end=='\0' && t!=0)
       timer=Rational(t/100.0,INT32_MAX);
+    }
+   else if (inInfo && strnicmp(line,_L("WrapStyle:"),9)==0)
+    {
+     strToInt(line+10,&wrapStyle);
     }
    else if (strnicmp(line,_L("[V4 Styles]"),11)==0)
     {
@@ -739,7 +742,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
       }
      strings fields;
      strtok(line+7,_L(","),fields);
-     Tstyle style(playResX,playResY,version);
+     Tstyle style(playResX,playResY,version,wrapStyle);
      for (size_t i=0;i<fields.size() && i<styleFormat.size();i++)
        if (styleFormat[i])
         style.*(styleFormat[i])=fields[i];

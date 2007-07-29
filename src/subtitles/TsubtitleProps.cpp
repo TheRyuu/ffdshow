@@ -23,6 +23,7 @@
 
 void TSubtitleProps::reset(void)
 {
+ wrapStyle=-1;
  refResX=refResY=0;
  bold=-1;
  italic=underline=strikeout=false;

@@ -2497,6 +2497,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\subtitles\TwordWrap.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\subtitles\TwordWrap.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\subtitles\vobsub.cpp"
 				>
 			</File>

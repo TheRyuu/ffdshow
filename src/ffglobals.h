@@ -320,6 +320,18 @@ public:
     }
    return buf;
   }
+ void* resize(size_t Ibuflen)
+  {
+   if (buflen<Ibuflen)
+    {
+     void *temp=aligned_realloc(NULL,Ibuflen);
+     if (temp && buf && buflen)
+      memcpy(temp,buf,buflen);
+     if (buf) aligned_free(buf);
+     buf=temp;buflen=Ibuflen;
+    }
+   return buf;
+  }
  template<class T> operator T*() const {return (T*)buf;}
 };
 

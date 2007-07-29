@@ -592,6 +592,14 @@ const char_t* TsubtitlesSettings::fixIls[]=
  NULL
 };
 
+const char_t* TsubtitlesSettings::wordWraps[]=
+{
+ _l("Smart wrapping, lines are evenly broken"),
+ _l("End-of-line word wrapping"),
+ _l("Smart wrapping, lower line gets wider"),
+ NULL
+};
+
 const TfilterIDFF TsubtitlesSettings::idffs=
 {
  /*name*/      _l("Subtitles"),
@@ -680,6 +688,8 @@ TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters)
      _l("subSplitBorder"),0,
    IDFF_subCC                  ,&TsubtitlesSettings::cc                      ,0,0,_l(""),1,
      _l("subCC"),1,
+   IDFF_subWordWrap            ,&TsubtitlesSettings::wordWrap                ,0,2,_l(""),1,
+     _l("subWordWrap"),0,
    0
   };
  addOptions(iopts);
@@ -701,6 +711,7 @@ TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters)
  static const TcreateParamList1 listAlign(alignments);setParamList(IDFF_subAlign,&listAlign);
  static const TcreateParamList1 listDurations(durations);setParamList(IDFF_subMinDurationType,&listDurations);
  static const TcreateParamList1 listIls(fixIls);setParamList(IDFF_subFixLang,&listIls);
+ static const TcreateParamList1 listWordWraps(wordWraps);setParamList(IDFF_subWordWrap,&listWordWraps);
 }
 
 void TsubtitlesSettings::copy(const TfilterSettings *src)
@@ -745,6 +756,7 @@ void TsubtitlesSettings::createFilters(size_t filtersorder,Tfilters *filters,Tfi
      setOnChange(IDFF_subFilename,sub,&TimgFilterSubtitles::onSubFlnmChangeStr);
      setOnChange(IDFF_subFixDict,sub,&TimgFilterSubtitles::onSubFlnmChangeStr);
      setOnChange(IDFF_subTempFilename,sub,&TimgFilterSubtitles::onSubFlnmChangeStr);
+     setOnChange(IDFF_subWordWrap,sub,&TimgFilterSubtitles::onSubFlnmChange);
     }
   }
 }

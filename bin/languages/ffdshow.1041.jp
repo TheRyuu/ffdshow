@@ -497,6 +497,9 @@ ffdshow won't be used in unknown applications.\r\nTo enable this dialog again, c
 (This dailog will close in=（このダイアログは
 seconds.)=秒後に閉じます）
 Thank you. We are gathering the list of compatible applications. Please send us the exe file name of this application and help us improving ffdshow.=ありがとうございます。ffdshowと互換性のあるアプリケーションのリストを収集しています。このアプリケーションの実行ファイル名をお送りいただき開発を支援してください。
+Smart wrapping, lines are evenly broken=出来るだけ均等に分割
+End-of-line word wrapping=幅いっぱいになったら改行
+Smart wrapping, lower line gets wider=出来るだけ均等に分割、下の行を広めに
 
 [101]
 1=OK

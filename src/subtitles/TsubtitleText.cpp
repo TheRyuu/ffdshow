@@ -866,6 +866,7 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::processTokens(const tch
        !processToken(l3,_L("\\i"),&Tssa<tchar>::template boolProp<&TSubtitleProps::italic>) &&
        !processToken(l3,_L("\\be"),&Tssa<tchar>::template boolProp<&TSubtitleProps::bluredges>) &&
        !processToken(l3,_L("\\b"),&Tssa<tchar>::template intProp<&TSubtitleProps::bold,0,1>) &&
+       !processToken(l3,_L("\\l"),&Tssa<tchar>::template intProp<&TSubtitleProps::wrapStyle,0,3>) &&
        !processToken(l3,_L("\\u"),&Tssa<tchar>::template boolProp<&TSubtitleProps::underline>) &&
        !processToken(l3,_L("\\shad"),&Tssa<tchar>::template doubleProp<&TSubtitleProps::shadowDepth,0,4>) &&
        !processToken(l3,_L("\\s"),&Tssa<tchar>::template boolProp<&TSubtitleProps::strikeout>) &&

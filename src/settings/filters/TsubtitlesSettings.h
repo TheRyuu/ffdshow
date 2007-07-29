@@ -43,7 +43,9 @@ public:
  int isMinDuration,minDurationType,minDurationSubtitle,minDurationLine,minDurationChar;
  static const char_t *durations[];
  int fix,fixLang;char_t fixDict[60];
+ int wordWrap;
  static const char_t *fixIls[];
+ static const char_t *wordWraps[];
  int opacity;
  int splitBorder;
  TfontSettingsSub font; //HACK: must be last

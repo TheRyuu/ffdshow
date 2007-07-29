@@ -23,3 +23,4 @@
 #include "TsubtitlesTextpinUSF.cpp"
 #include "cc_decoder.cpp"
 #include "TsubtitleProps.cpp"
+#include "TwordWrap.cpp"

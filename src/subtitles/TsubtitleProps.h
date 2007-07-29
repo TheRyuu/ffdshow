@@ -5,7 +5,7 @@ struct TfontSettings;
 struct TSubtitleProps
 {
  TSubtitleProps(void) {reset();}
- TSubtitleProps(unsigned int IrefResX,unsigned int IrefResY) {reset();refResX=IrefResX;refResY=IrefResY;}
+ TSubtitleProps(unsigned int IrefResX,unsigned int IrefResY, int IwrapStyle) {reset();refResX=IrefResX;refResY=IrefResY;wrapStyle=IwrapStyle;}
  TSubtitleProps(bool Ibold,bool Iitalic, bool Iunderline) {reset();bold=Ibold;italic=Iitalic;underline=Iunderline;}
  int bold;
  bool italic,underline,strikeout,bluredges;
@@ -13,6 +13,7 @@ struct TSubtitleProps
  int colorA,SecondaryColourA, TertiaryColourA, OutlineColourA, ShadowColourA;
  bool isPos;int posx,posy;
  unsigned int refResX,refResY;
+ int wrapStyle; // -1 default
  int size;
  int scaleX,scaleY; //in percents, -1 default
  char_t fontname[LF_FACESIZE];

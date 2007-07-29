@@ -1760,6 +1760,7 @@
 #define IDC_LBL_FONT_OUTLINE_WIDTH      2063
 #define IDC_TBR_FONT_OUTLINE_WIDTH      2064
 #define IDC_GRP_FONT_COLOR              2065
+#define IDC_CBX_SUB_WORDWRAP            2066
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -1776,7 +1777,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        296
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2066
+#define _APS_NEXT_CONTROL_VALUE         2067
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

@@ -16,7 +16,7 @@ enum
 class TrenderedSubtitleLine;
 class TfontManager;
 struct Tconfig;
-class TrenderedSubtitleLines: protected std::vector<TrenderedSubtitleLine*>
+class TrenderedSubtitleLines: public std::vector<TrenderedSubtitleLine*>
 {
 public:
  struct TprintPrefs
@@ -164,7 +164,12 @@ private:
  YUVcolorA yuvcolor,outlineYUV,shadowYUV;
  short matrix[5][5];
  template<class tchar> void prepareC(const TsubtitleTextBase<tchar> *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange);
- template<class tchar> int get_splitdx1(const TsubtitleWord<tchar> &w,int splitdx,int dx) const;
+ template<class tchar> int get_splitdx_for_new_line(const TsubtitleWord<tchar> &w,int splitdx,int dx) const;
+ //template<class tchar> void WordWrapEndOfLine(const tchar* p,const TrenderedSubtitleLines::TprintPrefs &prefs,TrenderedSubtitleLine* &line,int dx,int splitdx0,int &splitdx1,const TsubtitleWord<tchar> &w,bool trimRight);
+ //template<class tchar> void WordWrapSmart(const tchar* p,const TrenderedSubtitleLines::TprintPrefs &prefs,TrenderedSubtitleLine* &line,int dx,int splitdx0,int &splitdx1,const TsubtitleWord<tchar> &w,int *pwidths,const tchar* allStr,bool trimRight);
+ //template<class tchar> void WordWrapSmartReverse(const tchar* p,const TrenderedSubtitleLines::TprintPrefs &prefs,TrenderedSubtitleLine* &line,int dx,int splitdx0,int &splitdx1,const TsubtitleWord<tchar> &w,bool trimRight);
+ //template<class tchar> unsigned int WordWrapSmartI(const tchar* p,const TrenderedSubtitleLines::TprintPrefs &prefs,TrenderedSubtitleLine* &line,int dx,int splitdx0,int &splitdx1,const TsubtitleWord<tchar> &w,bool trimRight,TrenderedSubtitleLines *Ilines,int splitdxMin);
+ //template<class tchar> int calcNextLine(const tchar* p, size_t strlenp, int *pwidths, int splitdxMin, int splitdx1, unsigned int &firstlinechars);
  TcharsChache *charsCache;
  template<class tchar> TrenderedSubtitleWord* newWord(const tchar *s,size_t slen,TrenderedSubtitleLines::TprintPrefs prefs,const TsubtitleWord<tchar> *w,bool trimRightSpaces=false);
 public:

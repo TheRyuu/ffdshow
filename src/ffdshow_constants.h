@@ -467,6 +467,7 @@
 #define IDFF_subOpacity              853
 #define IDFF_subSplitBorder          855
 #define IDFF_subCC                   860
+#define IDFF_subWordWrap             3403
 
 #define IDFF_fontName                820
 #define IDFF_fontCharset             802
@@ -1417,6 +1418,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3403
+//max:3404
 
 #endif

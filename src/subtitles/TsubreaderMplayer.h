@@ -93,7 +93,7 @@ template<class tchar> class TsubtitleParserSSA :public TsubtitleParser<tchar>
 {
 private:
  uint8_t inV4styles,inEvents,inInfo;
- int playResX,playResY;
+ int playResX,playResY,wrapStyle;
  Rational timer;
  bool isEmbedded;
  enum
@@ -110,7 +110,7 @@ private:
   private:
    int version;
   public:
-   Tstyle(int playResX,int playResY,int version):props(playResX,playResY) {this->version=version;}
+   Tstyle(int playResX,int playResY,int version,int wrapStyle):props(playResX,playResY,wrapStyle) {this->version=version;}
    ffstring name,fontname,fontsize,primaryColour,bold,italic,underline,strikeout,encoding,spacing,fontScaleX,fontScaleY;
    ffstring secondaryColour,tertiaryColour,outlineColour,backgroundColour,alignment;
    ffstring angleZ,borderStyle,outlineWidth,shadowDepth,marginLeft,marginRight,marginV,marginTop,marginBottom,alpha,relativeTo;

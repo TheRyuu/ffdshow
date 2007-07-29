@@ -29,6 +29,7 @@ void TsubtitlesTextPage::init(void)
  for (strings::const_iterator d=dicts.begin();d!=dicts.end();d++)
   cbxAdd(IDC_CBX_SUBFIX_ORTOGRAPHY,d->c_str());
  cbxSetDroppedWidth(IDC_CBX_SUBFIX_IL,250);
+ cbxSetDroppedWidth(IDC_CBX_SUB_WORDWRAP,250);
 }
 
 void TsubtitlesTextPage::cfg2dlg(void)
@@ -46,6 +47,8 @@ void TsubtitlesTextPage::split2dlg(void)
  SetDlgItemInt(m_hwnd,IDC_ED_SUB_SPLIT_BORDER,cfgGet(IDFF_subSplitBorder),FALSE);
  static const int idBorders[]={IDC_LBL_SUB_SPLIT_BORDER,IDC_ED_SUB_SPLIT_BORDER,IDC_LBL_SUB_SPLIT_BORDER2,0};
  enable(is,idBorders);
+ cbxSetCurSel(IDC_CBX_SUB_WORDWRAP,cfgGet(IDFF_subWordWrap));
+ enable(is,IDC_CBX_SUB_WORDWRAP);
 }
 void TsubtitlesTextPage::linespacing2dlg(void)
 {
@@ -161,6 +164,7 @@ void TsubtitlesTextPage::translate(void)
 
  cbxTranslate(IDC_CBX_SUB_MINDURATION,TsubtitlesSettings::durations);
  cbxTranslate(IDC_CBX_SUBFIX_IL,TsubtitlesSettings::fixIls);
+ cbxTranslate(IDC_CBX_SUB_WORDWRAP,TsubtitlesSettings::wordWraps);
 }
 
 TsubtitlesTextPage::TsubtitlesTextPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecVideo(Iparent,idff,4)
@@ -185,6 +189,7 @@ TsubtitlesTextPage::TsubtitlesTextPage(TffdshowPageDec *Iparent,const TfilterIDF
    IDC_CBX_SUB_MINDURATION,IDFF_subMinDurationType,BINDCBX_SEL,&TsubtitlesTextPage::min2dlg,
    IDC_CBX_SUBFIX_IL,IDFF_subFixLang,BINDCBX_SEL,NULL,
    IDC_CBX_SUBFIX_ORTOGRAPHY,IDFF_subFixDict,BINDCBX_TEXT,NULL,
+   IDC_CBX_SUB_WORDWRAP,IDFF_subWordWrap,BINDCBX_SEL,&TsubtitlesTextPage::split2dlg,
    0
   };
  bindComboboxes(cbx);
