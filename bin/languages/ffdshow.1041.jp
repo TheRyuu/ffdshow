@@ -494,7 +494,7 @@ ffdshow will behave as if it were not installed.\r\nThe application will be adde
 ffdshow will be used if it is set to decode a format.=ffdshowが要求されたフォーマットをデコードできればffdshowが使用されます。
 ffdshow will be used if it is set to decode a format.\r\nThe application will be added to "DirectShow control"->"Use ffdshow only in".=ffdshowが要求されたフォーマットをデコードできればffdshowが使用されます。\r\nこのアプリケーションは「DirectShowのコントロール」->「以下でのみffdshowを使用する」に追加されます。
 ffdshow won't be used in unknown applications.\r\nTo enable this dialog again, check "DirectShow control"->"Show dialog when an unknown application tries to load ffdshow".=ffdshowは今後未知のアプリケーションでは使用されません。\r\nこのダイアログを再び有効にするには「DirectShowのコントロール」->「未知のアプリケーションがffdshowをロードしようとした時ダイアログを表示する」をチェックしてください。
-(This dailog will close in=（このダイアログは
+(This dialog will close in=（このダイアログは
 seconds.)=秒後に閉じます）
 Thank you. We are gathering the list of compatible applications. Please send us the exe file name of this application and help us improving ffdshow.=ありがとうございます。ffdshowと互換性のあるアプリケーションのリストを収集しています。このアプリケーションの実行ファイル名をお送りいただき開発を支援してください。
 Smart wrapping, lines are evenly broken=出来るだけ均等に分割
