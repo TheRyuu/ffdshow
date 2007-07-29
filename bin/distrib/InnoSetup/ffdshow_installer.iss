@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1355
+#define tryout_revision = 1381
 #define buildyear = 2007
 #define buildmonth = '07'
-#define buildday = '14'
+#define buildday = '29'
 
 ; Build specific options
 #define unicode_required = True
@@ -31,12 +31,12 @@
 #define include_gnu_license = True
 #define include_setup_icon = False
 
-#define filename_prefix = ''
+#define filename_suffix = ''
 #define outputdir = '.'
 
 ; Custom builder preferences
 #define PREF_CLSID = False
-#define PREF_CLSID_ICL9 = False
+#define PREF_CLSID_ICL = False
 #define PREF_YAMAGATA = False
 #define PREF_XXL = False
 #define PREF_X64 = False
@@ -44,22 +44,26 @@
 #if PREF_CLSID
   #define MSVC80 = False
   #define unicode_required = False
-  #define filename_prefix = '_clsid'
+  #define filename_suffix = '_clsid'
   #define outputdir = '..\..\..\..\'
+  #define include_x264 = False
+  #define include_xvidcore = False
 #endif
-#if PREF_CLSID_ICL9
+#if PREF_CLSID_ICL
   #define MSVC80 = False
   #define unicode_required = True
   #define include_cpu_detection = True
   #define sse_required = True
-  #define filename_prefix = '_clsid_sse_icl9'
+  #define filename_suffix = '_clsid_sse_icl10'
   #define outputdir = '..\..\..\..\'
+  #define include_x264 = False
+  #define include_xvidcore = False
 #endif
 #if PREF_YAMAGATA
   #define MSVC80 = True
   #define unicode_required = False
   #define include_audx = True
-  #define filename_prefix = '_Q'
+  #define filename_suffix = '_Q'
 #endif
 #if PREF_XXL
   #define MSVC80 = False
@@ -71,7 +75,7 @@
   #define include_cpu_detection = True
   #define sse_required = False
   #define sse2_required = False
-  #define filename_prefix = '_xxl'
+  #define filename_suffix = '_xxl'
 #endif
 #if PREF_X64
   #define MSVC80 = True
@@ -83,7 +87,7 @@
   #define include_makeavis = False
   #define include_x264 = True
   #define include_xvidcore = True
-  #define filename_prefix = '_x64'
+  #define filename_suffix = '_x64'
 #endif
 
 [Setup]
@@ -121,7 +125,7 @@ MinVersion=4.1,5.0
 MinVersion=0,4
   #endif
 #endif
-OutputBaseFilename=ffdshow_rev{#= tryout_revision}_{#= buildyear}{#= buildmonth}{#= buildday}{#= filename_prefix}
+OutputBaseFilename=ffdshow_rev{#= tryout_revision}_{#= buildyear}{#= buildmonth}{#= buildday}{#= filename_suffix}
 OutputDir={#= outputdir}
 PrivilegesRequired=admin
 #if include_setup_icon
@@ -339,13 +343,13 @@ Source: ..\..\xvidcore.dll; DestDir: {app}; Flags: ignoreversion; Components: ff
 Source: ..\..\ff_kernelDeint.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 Source: ..\..\TomsMoComp_ff.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 #else
-Source: icl9\ff_kernelDeint.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: icl9\TomsMoComp_ff.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: icl10\ff_kernelDeint.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: icl10\TomsMoComp_ff.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 #endif
 Source: ..\..\libmpeg2_ff.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow
 
 ; Single build:
-#if !PREF_CLSID && !PREF_CLSID_ICL9
+#if !PREF_CLSID && !PREF_CLSID_ICL
 Source: ..\..\ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; Components: ffdshow
 #endif
 ; ANSI + Unicode:
@@ -353,8 +357,8 @@ Source: ..\..\ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restart
 Source: ..\..\ffdshow_ansi.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; MinVersion: 4,0; Components: ffdshow
 Source: ..\..\ffdshow_unicode.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; MinVersion: 0,4; Components: ffdshow
 #endif
-#if PREF_CLSID_ICL9
-Source: ..\..\ffdshow_icl9.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; MinVersion: 0,4; Components: ffdshow
+#if PREF_CLSID_ICL
+Source: ..\..\ffdshow_icl.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; MinVersion: 0,4; Components: ffdshow
 #endif
 ; Multi build example (requires cpu detection to be enabled):
 ;Source: ..\..\ffdshow_generic.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_MMX_Supported AND NOT Is_SSE_Supported; Components: ffdshow
@@ -1772,7 +1776,7 @@ end;
 
 procedure showMsgAdded(PageID: Integer; complist: TcomplistPage);
 begin
-  if (PageID = complist.page.ID) and (Complist_isMsgAddedShown = False) and (WizardSilent()= False) then begin
+  if (PageID = complist.page.ID) AND NOT Complist_isMsgAddedShown AND NOT WizardSilent then begin
     if complist.countAdded = 1 then begin
       MsgBox(ExpandConstant('{cm:comp_oneCompAppAdded}'), mbInformation, MB_OK);
       Complist_isMsgAddedShown := True;
