@@ -340,6 +340,10 @@ int MPV_encode_init(AVCodecContext *avctx)
         return -1;
     }
 
+    if(avctx->rc_max_rate && avctx->rc_max_rate == avctx->bit_rate && avctx->rc_max_rate != avctx->rc_min_rate){
+        av_log(avctx, AV_LOG_INFO, "impossible bitrate constraints, this will fail\n");
+    }
+
     if(avctx->rc_buffer_size && avctx->bit_rate*av_q2d(avctx->time_base) > avctx->rc_buffer_size){
         av_log(avctx, AV_LOG_ERROR, "VBV buffer too small for bitrate\n");
         return -1;
@@ -508,12 +512,12 @@ int MPV_encode_init(AVCodecContext *avctx)
     switch(avctx->codec->id) {
     case CODEC_ID_MPEG1VIDEO:
         s->out_format = FMT_MPEG1;
-        s->low_delay= 0; //!!(s->flags & CODEC_FLAG_LOW_DELAY);
+        s->low_delay= !!(s->flags & CODEC_FLAG_LOW_DELAY);
         avctx->delay= s->low_delay ? 0 : (s->max_b_frames + 1);
         break;
     case CODEC_ID_MPEG2VIDEO:
         s->out_format = FMT_MPEG1;
-        s->low_delay= 0; //!!(s->flags & CODEC_FLAG_LOW_DELAY);
+        s->low_delay= !!(s->flags & CODEC_FLAG_LOW_DELAY);
         avctx->delay= s->low_delay ? 0 : (s->max_b_frames + 1);
         s->rtp_mode= 1;
         break;
