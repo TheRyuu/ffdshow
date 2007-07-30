@@ -74,9 +74,10 @@ HRESULT TimgFilterCrop::process(TfilterQueue::iterator it,TffPict &pict,const Tf
 {
  const TcropSettings *cfg=(const TcropSettings*)cfg0;
  //init(pict,0,0);
- if (!cfg->equal(oldSettings))
+ if (!cfg->equal(oldSettings) || pict.rectClip!=oldRect)
   {
    oldSettings=*cfg;
+   oldRect=pict.rectClip;
    rectCrop=calcCrop(pict.rectClip,cfg);
   }
  csp_yuv_adj_to_plane(pict.csp,&pict.cspInfo,pict.rectFull.dy,pict.data,pict.stride);

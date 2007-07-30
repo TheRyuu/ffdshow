@@ -216,7 +216,11 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
      expandSizeChanged=false;
     }
    if (expand)
-    expand->process(NULL,pict,&expandSettings);
+    {
+     expand->process(NULL,pict,&expandSettings);
+     checkBorder(pict);
+     pict.rectClip=pict.rectFull;
+    }
   }
 
  if (AVIfps==-1) AVIfps=deciV->getAVIfps1000_2()/1000.0;

@@ -7,7 +7,7 @@
 
 DECLARE_FILTER(TimgFilterCrop,public,TimgFilter)
 private:
- Trect rectCrop;
+ Trect rectCrop,oldRect;
  TcropSettings oldSettings;
 protected:
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK&~(FF_CSP_NV12|FF_CSP_CLJR);}
