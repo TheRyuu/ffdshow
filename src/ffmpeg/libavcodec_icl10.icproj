@@ -613,8 +613,6 @@
 		<File 
 			RelativePath=".\libavcodec\h264_parser.c"/>
 		<File 
-			RelativePath=".\libavcodec\h264dsp.c"/>
-		<File 
 			RelativePath=".\libavcodec\h264idct.c"/>
 		<File 
 			RelativePath=".\libavcodec\huffyuv.c"/>
