@@ -1,7 +1,7 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1383
+#define tryout_revision = 1384
 #define buildyear = 2007
 #define buildmonth = '07'
 #define buildday = '30'
@@ -94,7 +94,11 @@
 AllowCancelDuringInstall=no
 AllowNoIcons=yes
 AllowUNCPath=no
+#if is64bit
+AppId=ffdshow64
+#else
 AppId=ffdshow
+#endif
 AppName=ffdshow
 AppVerName=ffdshow [rev {#= tryout_revision}] [{#= buildyear}-{#= buildmonth}-{#= buildday}]
 AppVersion=1.0
@@ -106,7 +110,11 @@ Compression=lzma/ultra
 InternalCompressLevel=ultra
 SolidCompression=true
 DefaultDirName={code:GetDefaultInstallDir|}
+#if is64bit
+DefaultGroupName=ffdshow64
+#else
 DefaultGroupName=ffdshow
+#endif
 DirExistsWarning=no
 #if include_info_before
 InfoBeforeFile=infobefore.rtf
@@ -787,8 +795,12 @@ end;
 
 function GetDefaultInstallDir(dummy: String): String;
 begin
-  if NOT RegQueryStringValue(HKLM, 'Software\GNU\ffdshow', 'pth', Result) OR (Length(Result) = 0) then begin
+  if NOT RegQueryStringValue(HKLM, 'Software\GNU\ffdshow', 'pth', Result) OR (Length(Result) = 0) OR NOT DirExists(Result) then begin
+    #if is64bit
+    Result := ExpandConstant('{pf}\ffdshow64');
+    #else
     Result := ExpandConstant('{pf}\ffdshow');
+    #endif
   end
 end;
 
