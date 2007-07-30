@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1381
+#define tryout_revision = 1383
 #define buildyear = 2007
 #define buildmonth = '07'
-#define buildday = '29'
+#define buildday = '30'
 
 ; Build specific options
 #define unicode_required = True
@@ -565,10 +565,10 @@ Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: dword; ValueName: libtheora
 
 ; Blacklist
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: isBlacklist; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: String; ValueName: blacklist; ValueData: "explorer.exe;oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist; OnlyBelowVersion: 0,6; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: String; ValueName: blacklist; ValueData: "oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist; OnlyBelowVersion: 0,6; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: String; ValueName: blacklist; ValueData: "oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist; MinVersion: 0,6; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: isBlacklist; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: blacklist; ValueData: "explorer.exe;oblivion.exe;morrowind.exe"; Flags: createvalueifdoesntexist; OnlyBelowVersion: 0,6; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: blacklist; ValueData: "oblivion.exe;morrowind.exe"; Flags: createvalueifdoesntexist; OnlyBelowVersion: 0,6; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: blacklist; ValueData: "oblivion.exe;morrowind.exe"; Flags: createvalueifdoesntexist; MinVersion: 0,6; Components: ffdshow
 
 ; Compatibility list
