@@ -120,7 +120,7 @@ const uint8_t *ff_find_start_code(const uint8_t * restrict p, const uint8_t *end
     }
 
     p= FFMIN(p, end)-4;
-    *state=  be2me_32(unaligned32(p));
+    *state= AV_RB32(p);
 
     return p+4;
 }
@@ -172,13 +172,13 @@ int alloc_picture(MpegEncContext *s, Picture *pic, int shared){
     const int b8_array_size= s->b8_stride*s->mb_height*2;
     const int b4_array_size= s->b4_stride*s->mb_height*4;
     int i;
+    int r= -1;
 
     if(shared){
         assert(pic->data[0]);
         assert(pic->type == 0 || pic->type == FF_BUFFER_TYPE_SHARED);
         pic->type= FF_BUFFER_TYPE_SHARED;
     }else{
-        int r;
 
         assert(!pic->data[0]);
 
@@ -186,11 +186,13 @@ int alloc_picture(MpegEncContext *s, Picture *pic, int shared){
 
         if(r<0 || !pic->age || !pic->type || !pic->data[0]){
             av_log(s->avctx, AV_LOG_ERROR, "get_buffer() failed (%d %d %d %p)\n", r, pic->age, pic->type, pic->data[0]);
+            s->avctx->release_buffer(s->avctx, (AVFrame*)pic);
             return -1;
         }
 
         if(s->linesize && (s->linesize != pic->linesize[0] || s->uvlinesize != pic->linesize[1])){
             av_log(s->avctx, AV_LOG_ERROR, "get_buffer() failed (stride changed)\n");
+            s->avctx->release_buffer(s->avctx, (AVFrame*)pic);
             return -1;
         }
 
@@ -245,6 +247,8 @@ int alloc_picture(MpegEncContext *s, Picture *pic, int shared){
 
     return 0;
 fail: //for the CHECKED_ALLOCZ macro
+    if(r>=0)
+        s->avctx->release_buffer(s->avctx, (AVFrame*)pic);
     return -1;
 }
 
