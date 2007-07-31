@@ -1027,8 +1027,8 @@ template<class tchar> Tsubtitle* TsubtitleParserMPL2<tchar>::parse(Tstream &fd,i
 		      _L("[%ld][%ld]%[^\r\n]"),
 		      &start, &end, line2) < 3));
     TsubtitleTextBase<tchar> current(this->format);
-    current.start = this->frameToTime(start);
-    current.stop = this->frameToTime(end);
+    current.start = (REFERENCE_TIME)start*1000000;
+    current.stop = (REFERENCE_TIME)end*1000000;
     p=line2;
     next=p;
     while ((next =sub_readtext (next, current))!=NULL)
