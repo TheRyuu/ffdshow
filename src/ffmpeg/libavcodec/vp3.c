@@ -1896,7 +1896,7 @@ static int vp3_decode_init(AVCodecContext *avctx)
     s->width = (avctx->width + 15) & 0xFFFFFFF0;
     s->height = (avctx->height + 15) & 0xFFFFFFF0;
     avctx->pix_fmt = PIX_FMT_YUV420P;
-    if(avctx->idct_algo==FF_IDCT_AUTO)
+    //if(avctx->idct_algo==FF_IDCT_AUTO)
         avctx->idct_algo=FF_IDCT_VP3;
     dsputil_init(&s->dsp, avctx);
 

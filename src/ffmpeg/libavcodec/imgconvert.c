@@ -1,5 +1,5 @@
 /*
- * Misc image convertion routines
+ * Misc image conversion routines
  * Copyright (c) 2001, 2002, 2003 Fabrice Bellard.
  *
  * This file is part of FFmpeg.
@@ -21,7 +21,7 @@
 
 /**
  * @file imgconvert.c
- * Misc image convertion routines.
+ * misc image conversion routines
  */
 
 /* TODO:
@@ -120,6 +120,14 @@ static const PixFmtInfo pix_fmt_info[PIX_FMT_NB] = {
         .depth = 8,
         .x_chroma_shift = 2, .y_chroma_shift = 0,
     },
+    [PIX_FMT_YUV440P] = {
+        .name = "yuv440p",
+        .nb_channels = 3,
+        .color_type = FF_COLOR_YUV,
+        .pixel_type = FF_PIXEL_PLANAR,
+        .depth = 8,
+        .x_chroma_shift = 0, .y_chroma_shift = 1,
+    },
 
     /* JPEG YUV */
     [PIX_FMT_YUVJ420P] = {
@@ -145,6 +153,14 @@ static const PixFmtInfo pix_fmt_info[PIX_FMT_NB] = {
         .pixel_type = FF_PIXEL_PLANAR,
         .depth = 8,
         .x_chroma_shift = 0, .y_chroma_shift = 0,
+    },
+    [PIX_FMT_YUVJ440P] = {
+        .name = "yuvj440p",
+        .nb_channels = 3,
+        .color_type = FF_COLOR_YUV_JPEG,
+        .pixel_type = FF_PIXEL_PLANAR,
+        .depth = 8,
+        .x_chroma_shift = 0, .y_chroma_shift = 1,
     },
 
     /* RGB formats */
@@ -415,6 +431,14 @@ void avpicture_init_pixfmtinfo(void)
  pix_fmt_info[PIX_FMT_YUV411P].depth = 8;
  pix_fmt_info[PIX_FMT_YUV411P].x_chroma_shift = 2;
  pix_fmt_info[PIX_FMT_YUV411P].y_chroma_shift = 0;
+ 
+ pix_fmt_info[PIX_FMT_YUV440P].name = "yuv440p";
+ pix_fmt_info[PIX_FMT_YUV440P].nb_channels = 3;
+ pix_fmt_info[PIX_FMT_YUV440P].color_type = FF_COLOR_YUV;
+ pix_fmt_info[PIX_FMT_YUV440P].pixel_type = FF_PIXEL_PLANAR;
+ pix_fmt_info[PIX_FMT_YUV440P].depth = 8;
+ pix_fmt_info[PIX_FMT_YUV440P].x_chroma_shift = 0;
+ pix_fmt_info[PIX_FMT_YUV440P].y_chroma_shift = 1;
 
  /* JPEG YUV */
  pix_fmt_info[PIX_FMT_YUVJ420P].name = "yuvj420p";
@@ -440,6 +464,14 @@ void avpicture_init_pixfmtinfo(void)
  pix_fmt_info[PIX_FMT_YUVJ444P].depth = 8;
  pix_fmt_info[PIX_FMT_YUVJ444P].x_chroma_shift = 0;
  pix_fmt_info[PIX_FMT_YUVJ444P].y_chroma_shift = 0;
+ 
+ pix_fmt_info[PIX_FMT_YUVJ440P].name = "yuvj440p";
+ pix_fmt_info[PIX_FMT_YUVJ440P].nb_channels = 3;
+ pix_fmt_info[PIX_FMT_YUVJ440P].color_type = FF_COLOR_YUV_JPEG;
+ pix_fmt_info[PIX_FMT_YUVJ440P].pixel_type = FF_PIXEL_PLANAR;
+ pix_fmt_info[PIX_FMT_YUVJ440P].depth = 8;
+ pix_fmt_info[PIX_FMT_YUVJ440P].x_chroma_shift = 0;
+ pix_fmt_info[PIX_FMT_YUVJ440P].y_chroma_shift = 1;
 
  /* RGB formats */
  pix_fmt_info[PIX_FMT_RGB24].name = "rgb24";
@@ -666,9 +698,11 @@ int avpicture_fill(AVPicture *picture, uint8_t *ptr,
     case PIX_FMT_YUV444P:
     case PIX_FMT_YUV410P:
     case PIX_FMT_YUV411P:
+    case PIX_FMT_YUV440P:
     case PIX_FMT_YUVJ420P:
     case PIX_FMT_YUVJ422P:
     case PIX_FMT_YUVJ444P:
+    case PIX_FMT_YUVJ440P:
         w2 = (width + (1 << pinfo->x_chroma_shift) - 1) >> pinfo->x_chroma_shift;
         h2 = (height + (1 << pinfo->y_chroma_shift) - 1) >> pinfo->y_chroma_shift;
         size2 = w2 * h2;

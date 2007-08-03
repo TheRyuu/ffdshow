@@ -250,7 +250,7 @@ static int init_cplscales_table (COOKContext *q) {
  * Why? No idea, some checksum/error detection method maybe.
  *
  * Out buffer size: extra bytes are needed to cope with
- * padding/missalignment.
+ * padding/misalignment.
  * Subpackets passed to the decoder can contain two, consecutive
  * half-subpackets, of identical but arbitrary size.
  *          1234 1234 1234 1234  extraA extraB
@@ -797,7 +797,7 @@ static void joint_decode(COOKContext *q, float* mlt_buffer1,
     int i,j;
     int decouple_tab[SUBBAND_SIZE];
     float *decode_buffer = q->decode_buffer_0;
-    int idx, cpl_tmp,tmp_idx;
+    int idx, cpl_tmp;
     float f1,f2;
     float* cplscale;
 
