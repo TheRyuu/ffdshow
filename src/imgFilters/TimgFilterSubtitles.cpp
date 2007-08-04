@@ -305,7 +305,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
        sizeDy=cfg->full ? pict.rectFull.dy : pict.rectClip.dy;
       }
      forceChange|=oldSizeDx!=sizeDx || oldSizeDy!=sizeDy;
-     oldSizeDx=sizeDx;oldSizeDy=oldSizeDy;
+     oldSizeDx=sizeDx;oldSizeDy=sizeDy;
 
      TsubPrintPrefs printprefs(dst,stride2,dx1,dy1,deci,cfg,pict,parent->config,!!isdvdproc);
      printprefs.csp=pict.csp;
