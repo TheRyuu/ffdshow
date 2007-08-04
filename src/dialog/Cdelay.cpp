@@ -34,12 +34,12 @@ TdelayPage::TdelayPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPa
  resInter=IDC_CHB_DELAY;
  static const TbindEditInt<TdelayPage> edInt[]=
   {
-   IDC_ED_DELAY_L  ,0,5000,IDFF_delayL  ,NULL,
-   IDC_ED_DELAY_C  ,0,5000,IDFF_delayC  ,NULL,
-   IDC_ED_DELAY_R  ,0,5000,IDFF_delayR  ,NULL,
-   IDC_ED_DELAY_SL ,0,5000,IDFF_delaySL ,NULL,
-   IDC_ED_DELAY_SR ,0,5000,IDFF_delaySR ,NULL,
-   IDC_ED_DELAY_LFE,0,5000,IDFF_delayLFE,NULL,
+   IDC_ED_DELAY_L  ,0,20000,IDFF_delayL  ,NULL,
+   IDC_ED_DELAY_C  ,0,20000,IDFF_delayC  ,NULL,
+   IDC_ED_DELAY_R  ,0,20000,IDFF_delayR  ,NULL,
+   IDC_ED_DELAY_SL ,0,20000,IDFF_delaySL ,NULL,
+   IDC_ED_DELAY_SR ,0,20000,IDFF_delaySR ,NULL,
+   IDC_ED_DELAY_LFE,0,20000,IDFF_delayLFE,NULL,
    0
   };
  bindEditInts(edInt);
