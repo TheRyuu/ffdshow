@@ -38,6 +38,7 @@ TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(unsigned char *Idst[4],strid
  shiftX=pict.cspInfo.shiftX;shiftY=pict.cspInfo.shiftY;
  dx=Idx[0];
  dy=Idy[0];
+ clipdy=pict.rectClip.dy;
  xpos=cfg->posX;
  ypos=cfg->posY;
  align=cfg->align;
@@ -116,10 +117,10 @@ bool TimgFilterSubtitles::getOutputFmt(TffPictBase &pict,const TfilterSettingsVi
     {
      const char_t *subflnm=cfg->autoFlnm?findAutoSubFlnm(cfg):cfg->flnm;
      if ((subflnm[0]=='\0' || !fileexists(subflnm)) && !deci->getParam2(IDFF_subTextpin)) return true;
-     if (!expand) expand=new TimgFilterExpand(deci,parent);
+     if (!expand) expand=new TimgFilterSubtitleExpand(deci,parent);
      int a1,a2;
      cfg->getExpand(&a1,&a2);
-     Trect::calcNewSizeAspect(pict.rectFull,a1,a2,expandSettings.newrect);
+     Trect::calcNewSizeAspect(/*cfg->full ? pict.rectFull : */pict.rectClip,a1,a2,expandSettings.newrect);
      expand->getOutputFmt(pict,&expandSettings);
     }
    return true;
@@ -206,9 +207,9 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
  if (cfg->isExpand && cfg->expandCode && !isdvdproc)
   {
    Trect newExpandRect=cfg->full?pict.rectFull:pict.rectClip;
-   if (expandSizeChanged || oldExpandCode!=cfg->expandCode || oldExpandRect!=newExpandRect)
+   if (expandSizeChanged || oldExpandCode!=cfg->expandCode || oldExpandRect!=newExpandRect || pict.rectClip!=oldRectClip)
     {
-     oldExpandCode=cfg->expandCode;oldExpandRect=newExpandRect;
+     oldExpandCode=cfg->expandCode;oldExpandRect=newExpandRect;oldRectClip=pict.rectClip;
      if (expand) delete expand;expand=NULL;
      TffPict newpict;newpict.rectFull=pict.rectFull;newpict.rectClip=pict.rectClip;
      getOutputFmt(newpict,cfg);
@@ -218,8 +219,9 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
    if (expand)
     {
      expand->process(NULL,pict,&expandSettings);
-     //checkBorder(pict);
-     //pict.rectClip=pict.rectFull;
+     checkBorder(pict);
+     pict.rectClip=pict.rectFull;
+     pict.calcDiff();
     }
   }
 
@@ -296,14 +298,14 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
        CRect r;
        deciV->getVideoDestRect(&r);
        sizeDx=r.Width();sizeDy=r.Height();
-       forceChange|=oldSizeDx!=sizeDx || oldSizeDy!=sizeDy;
-       oldSizeDx=sizeDx;oldSizeDy=oldSizeDy;
       }
      else
       {
-       sizeDx=pict.rectFull.dx;
-       sizeDy=pict.rectFull.dy;
+       sizeDx=cfg->full ? pict.rectFull.dx : pict.rectClip.dx;
+       sizeDy=cfg->full ? pict.rectFull.dy : pict.rectClip.dy;
       }
+     forceChange|=oldSizeDx!=sizeDx || oldSizeDy!=sizeDy;
+     oldSizeDx=sizeDx;oldSizeDy=oldSizeDy;
 
      TsubPrintPrefs printprefs(dst,stride2,dx1,dy1,deci,cfg,pict,parent->config,!!isdvdproc);
      printprefs.csp=pict.csp;

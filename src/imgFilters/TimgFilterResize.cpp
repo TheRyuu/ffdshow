@@ -214,6 +214,8 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
     {
      case TresizeAspectSettings::LIB_SWSCALER:
       {
+       if (pict.rectFull.dx!=pict.rectClip.dx)
+        parent->dirtyBorder=1;
        bool cspChanged=false;
        const unsigned char *src[4];
        cspChanged|=getCur(SWS_IN_CSPS,pict,cfg->full,src);

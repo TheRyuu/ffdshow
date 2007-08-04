@@ -21,11 +21,11 @@ class TrenderedSubtitleLines: public std::vector<TrenderedSubtitleLine*>
 public:
  struct TprintPrefs
   {
-   TprintPrefs(IffdshowBase *Ideci):deci(Ideci),config(NULL),sizeDx(0),sizeDy(0),posXpix(0),fontchangesplit(false),textBorderLR(0),tabsize(8),dvd(false),blur(false) {}
+   TprintPrefs(IffdshowBase *Ideci):deci(Ideci),config(NULL),sizeDx(0),sizeDy(0),posXpix(0),fontchangesplit(false),textBorderLR(0),tabsize(8),dvd(false),blur(false),clipdy(0) {}
    unsigned char **dst;
    const stride_t *stride;
    const unsigned int *shiftX,*shiftY;
-   unsigned int dx,dy;
+   unsigned int dx,dy,clipdy;
    int xpos,ypos;
    int align,alignSSA;
    int linespacing;

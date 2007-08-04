@@ -21,6 +21,8 @@
 #include "TexpandSettings.h"
 #include "TimgFilters.h"
 
+//========================= TimgFilterExpand ==============================
+
 TimgFilterExpand::TimgFilterExpand(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
  sizeChanged=true;oldcsp=-1;
@@ -77,7 +79,9 @@ void TimgFilterExpand::expand(TffPict &pict,const TfilterSettingsVideo *cfg,bool
     {
      dynone=newpict.rectClip.dy;
      ydif1none=0;
-     ydif2none=diffxy?diffy:(pictRect.dy-newpict.rectClip.dy)/2;
+     ydif2none=diffxy ? diffy : pict.rectClip.y;//(pictRect.dy-newpict.rectClip.dy)/2;
+     if (ydif2none+dynone>pict.rectFull.dy)
+      ydif2none=pict.rectFull.dy-dynone;
     }
    if (pictRect.dx<newpict.rectClip.dx)
     {
@@ -89,7 +93,9 @@ void TimgFilterExpand::expand(TffPict &pict,const TfilterSettingsVideo *cfg,bool
     {
      dxnone=newpict.rectClip.dx;
      xdif1none=0;
-     xdif2none=diffxy?diffx:(pictRect.dx-newpict.rectClip.dx)/2;
+     xdif2none=diffxy ? diffx : pict.rectClip.x;//(pictRect.dx-newpict.rectClip.dx)/2;
+     if (xdif2none+dxnone>pict.rectFull.dx)
+      xdif2none=pict.rectFull.dx-dxnone;
     }
    parent->dirtyBorder=1;
   }
@@ -114,4 +120,64 @@ HRESULT TimgFilterExpand::process(TfilterQueue::iterator it,TffPict &pict,const 
  if (is(pict,cfg))
   expand(pict,cfg,false);
  return it==NULL?S_OK:parent->deliverSample(++it,pict);
+}
+
+//========================= TimgFilterSubtitleExpand ==============================
+TimgFilterSubtitleExpand::TimgFilterSubtitleExpand(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilterExpand(Ideci,Iparent)
+{
+}
+
+void TimgFilterSubtitleExpand::expand(TffPict &pict,const TfilterSettingsVideo *cfg,bool diffxy)
+{
+ init(pict,true,0);
+ if (sizeChanged || oldcsp!=pict.csp)
+  {
+   sizeChanged=false;oldcsp=pict.csp;
+   newpict.csp=pict.csp;newpict.cspInfo=pict.cspInfo;newpict.rectFull=pict.rectFull;newpict.rectClip=pict.rectClip;
+   getOutputFmt(newpict,cfg);
+   if (diffxy)
+    getDiffXY(pict,cfg,diffx,diffy);
+   if (pictRect.dy<newpict.rectClip.dy)
+    {
+     dynone=pictRect.dy;
+     ydif1none=diffxy?diffy:(newpict.rectClip.dy-pictRect.dy)/2;
+     ydif2none=0;
+    }
+   else
+    {
+     dynone=newpict.rectClip.dy;
+     ydif1none=0;
+     ydif2none=diffxy ? diffy : pict.rectClip.y;
+     if (ydif2none+dynone>pict.rectFull.dy)
+      ydif2none=pict.rectFull.dy-dynone;
+    }
+   if (pictRect.dx<newpict.rectClip.dx)
+    {
+     dxnone=pictRect.dx;
+     xdif1none=diffxy?diffx:(newpict.rectClip.dx-pictRect.dx)/2;
+     xdif2none=0;
+    }
+   else
+    {
+     dxnone=newpict.rectClip.dx;
+     xdif1none=0;
+     xdif2none=diffxy ? diffx : pict.rectClip.x;
+     if (xdif2none+dxnone>pict.rectFull.dx)
+      xdif2none=pict.rectFull.dx-dxnone;
+    }
+   parent->dirtyBorder=1;
+  }
+
+ const unsigned char *src[4];
+ getCur(newpict.csp,pict,true,src);
+ unsigned char *dst[4];
+ getNext(newpict.csp,pict,newpict.rectClip,dst,&newpict.rectFull);
+
+ for (unsigned int i=0;i<pict.cspInfo.numPlanes;i++)
+  {
+   const unsigned char *src0=src[i]+(ydif2none>>pict.cspInfo.shiftY[i])*stride1[i]+(xdif2none>>pict.cspInfo.shiftX[i]);
+   unsigned char       *dst0=dst[i]+(ydif1none>>pict.cspInfo.shiftY[i])*stride2[i]+(xdif1none>>pict.cspInfo.shiftX[i]);
+   TffPict::copy(dst0,stride2[i],src0,stride1[i],pict.cspInfo.Bpp*dxnone>>pict.cspInfo.shiftX[i],dynone>>pict.cspInfo.shiftY[i]);
+  }
+ if (!parent->dirtyBorder) parent->dirtyBorder=1;
 }

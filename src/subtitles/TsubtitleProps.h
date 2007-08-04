@@ -20,7 +20,7 @@ struct TSubtitleProps
  int encoding; //-1 = default
  int spacing;  //-1 = default
  void reset(void);
- void toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy) const;
+ void toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy) const;
 
  // Alignment. This sets how text is "justified" within the Left/Right onscreen margins,
  // and also the vertical placing. Values may be 1=Left, 2=Centered, 3=Right.

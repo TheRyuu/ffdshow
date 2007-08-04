@@ -43,14 +43,14 @@ void TSubtitleProps::reset(void)
  ShadowColourA=128;
 }
 
-void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy) const
+void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy) const
 {
  memset(&lf,0,sizeof(lf));
  lf.lfHeight=(LONG)limit(size?size:fontSettings.getSize(dx,dy),3U,255U)*4;
  if (scaleY!=-1)
   lf.lfHeight=scaleY*lf.lfHeight/100;
  if (refResY && dy)
-  lf.lfHeight=dy*lf.lfHeight/refResY;
+  lf.lfHeight=(clipdy ? clipdy : dy)*lf.lfHeight/refResY;
  lf.lfWidth=0;
  if (bold==-1)
   lf.lfWeight=fontSettings.weight;

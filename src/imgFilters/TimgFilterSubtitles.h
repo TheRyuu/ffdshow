@@ -8,11 +8,12 @@
 #include "TexpandSettings.h"
 
 class TsubtitlesTextpin;
-class TimgFilterExpand;
+class TimgFilterSubtitleExpand;
 struct TfontSettingsSub;
 template<class tchar> struct TsubtitleTextBase;
 DECLARE_FILTER(TimgFilterSubtitles,public,TimgFilter)
 private:
+ Trect oldRectClip;
  int isdvdproc;
  bool wasDiscontinuity;
  bool expandSizeChanged,fontSizeChanged;
@@ -23,7 +24,7 @@ private:
  TfontSettingsSub *oldFontCfg,*oldFontCCcfg;
  int oldstereo,oldsplitborder;
  double AVIfps;
- TimgFilterExpand *expand;TexpandSettings expandSettings;Trect oldExpandRect;
+ TimgFilterSubtitleExpand *expand;TexpandSettings expandSettings;Trect oldExpandRect;
  int oldExpandCode;
  unsigned int oldSizeDx,oldSizeDy;
  CCritSec csEmbedded,csCC;

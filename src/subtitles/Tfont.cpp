@@ -1394,7 +1394,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
      for (typename TsubtitleLine<tchar>::const_iterator w=l->begin();w!=l->end();w++)
       {
        LOGFONT lf;
-       w->props.toLOGFONT(lf,*fontSettings,dx,dy);
+       w->props.toLOGFONT(lf,*fontSettings,dx,dy,prefs.clipdy);
        HFONT font=fontManager->getFont(lf);
        HGDIOBJ old=SelectObject(hdc,font);
        SetTextCharacterExtra(hdc,w->props.spacing>=0?w->props.spacing:fontSettings->spacing);
@@ -1437,7 +1437,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
      for (typename TsubtitleLine<tchar>::const_iterator w=l->begin();w!=l->end();w++)
       {
        LOGFONT lf;
-       w->props.toLOGFONT(lf,*fontSettings,dx,dy);
+       w->props.toLOGFONT(lf,*fontSettings,dx,dy,prefs.clipdy);
        HFONT font=fontManager->getFont(lf);
        HGDIOBJ old=SelectObject(hdc,font);
        if (!oldFont) oldFont=old;

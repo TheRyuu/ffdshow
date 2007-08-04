@@ -43,6 +43,8 @@ Trect TimgFilterCrop::calcCrop(const Trect &pictRect,const TcropSettings *cfg)
     rcdx=pictRect.dx-(cfg->cropLeft+cfg->cropRight );
     rcdy=pictRect.dy-(cfg->cropTop +cfg->cropBottom);
     rcx=cfg->cropLeft;rcy=cfg->cropTop;
+    if (rcdx<64) rcdx=64;
+    if (rcdy<16) rcdy=16;
     break;
    default:
     return pictRect;
