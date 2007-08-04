@@ -14,7 +14,7 @@ protected:
 public:
  TresizeAspectSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  int mode;
- unsigned int dx,dy,specifyHolizontalSizeOnly,dyReg;
+ unsigned int dx,dy,specifyHorizontalSizeOnly,dyReg;
  int multOf;
  int a1,a2;
  int mult1000;
@@ -32,7 +32,7 @@ public:
  int bordersInside,bordersLocked;
  int bordersUnits; //0 - percent, 1 - pixels
  int bordersPercentX,bordersPercentY;
- int bordersPixelsX,bordersPixelsY;
+ int bordersPixelsX,bordersPixelsY,bordersDivX,bordersDivY;
 
  bool areBorders(void) const
   {

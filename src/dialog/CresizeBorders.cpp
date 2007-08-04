@@ -22,10 +22,12 @@
 
 void TresizeBordersPage::init(void)
 {
- tbrSetRange(IDC_TBR_BORDER_HORIZ_PERCENT,0,100);
- tbrSetRange(IDC_TBR_BORDER_VERT_PERCENT ,0,100);
- tbrSetRange(IDC_TBR_BORDER_HORIZ_PIXELS,0,300);
- tbrSetRange(IDC_TBR_BORDER_VERT_PIXELS ,0,300);
+ tbrSetRange(IDC_TBR_BORDER_HORIZ_PERCENT,0,100,10);
+ tbrSetRange(IDC_TBR_BORDER_VERT_PERCENT ,0,100,10);
+ tbrSetRange(IDC_TBR_BORDER_HORIZ_PIXELS,0,300,16);
+ tbrSetRange(IDC_TBR_BORDER_VERT_PIXELS ,0,300,16);
+ tbrSetRange(IDC_TBR_BORDER_HORIZ_DIV ,0,100,10);
+ tbrSetRange(IDC_TBR_BORDER_VERT_DIV ,0,100,10);
 }
 
 void TresizeBordersPage::cfg2dlg(void)
@@ -46,6 +48,21 @@ void TresizeBordersPage::cfg2dlg(void)
  x=cfgGet(IDFF_bordersPercentY);tbrSet(IDC_TBR_BORDER_VERT_PERCENT ,x);setText(IDC_LBL_BORDER_VERT_PERCENT ,_l("%i%%"),x);
  tbrSet(IDC_TBR_BORDER_HORIZ_PIXELS,cfgGet(IDFF_bordersPixelsX),IDC_LBL_BORDER_HORIZ_PIXELS);
  tbrSet(IDC_TBR_BORDER_VERT_PIXELS ,cfgGet(IDFF_bordersPixelsY),IDC_LBL_BORDER_VERT_PIXELS );
+ div2dlg();
+}
+
+void TresizeBordersPage::div2dlg(void)
+{
+ int x;
+ x=cfgGet(IDFF_bordersDivX);
+ tbrSet(IDC_TBR_BORDER_HORIZ_DIV,x);
+ setText(IDC_LBL_BORDER_LEFT_NUM,_l("%i"),x);
+ setText(IDC_LBL_BORDER_RIGHT_NUM,_l("%i"),100-x);
+ int y;
+ y=cfgGet(IDFF_bordersDivY);
+ tbrSet(IDC_TBR_BORDER_VERT_DIV,y);
+ setText(IDC_LBL_BORDER_TOP_NUM,_l("%i"),y);
+ setText(IDC_LBL_BORDER_BOTTOM_NUM,_l("%i"),100-y);
 }
 
 INT_PTR TresizeBordersPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -118,4 +135,11 @@ TresizeBordersPage::TresizeBordersPage(TffdshowPageDec *Iparent,const TfilterIDF
    0,NULL
   };
  bindButtons(bt);
+ static const TbindTrackbar<TresizeBordersPage> htbr[]=
+  {
+   IDC_TBR_BORDER_HORIZ_DIV,IDFF_bordersDivX,&TresizeBordersPage::div2dlg,
+   IDC_TBR_BORDER_VERT_DIV,IDFF_bordersDivY,&TresizeBordersPage::div2dlg,
+   0,0,NULL
+  };
+ bindHtracks(htbr);
 }

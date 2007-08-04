@@ -1761,6 +1761,19 @@
 #define IDC_TBR_FONT_OUTLINE_WIDTH      2064
 #define IDC_GRP_FONT_COLOR              2065
 #define IDC_CBX_SUB_WORDWRAP            2066
+#define IDC_GRP_RESIZE_BORDERS_DIV      2067
+#define IDC_LBL_BORDER_LEFT             2068
+#define IDC_LBL_BORDER_RIGHT            2069
+#define IDC_LBL_BORDER_TOP              2070
+#define IDC_LBL_BORDER_BOTTOM           2071
+#define IDC_LBL_BORDER_LEFT_NUM         2073
+#define IDC_LBL_BORDER_TOP_NUM          2074
+#define IDC_LBL_BORDER_RIGHT_NUM        2075
+#define IDC_LBL_BORDER_BOTTOM_NUM       2076
+#define IDC_TBR_BORDER_HORIZ_DIV        2077
+#define IDC_TBR_BORDER_VERT_DIV         2078
+#define IDC_LBL_BORDER_HORIZ_DIV        2079
+#define IDC_LBL_BORDER_VERT_DIV         2080
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -1777,7 +1790,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        296
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2067
+#define _APS_NEXT_CONTROL_VALUE         2081
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

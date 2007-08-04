@@ -55,7 +55,7 @@ void TresizeAspectPage::resizeMode2dlg(void)
  setCheck(IDC_RBT_RESIZE_MOD_16     ,rm==2);
  setCheck(IDC_RBT_RESIZE_MODE_MULT  ,rm==3);
  setCheck(IDC_RBT_RESIZE_MODE_SIZE_H,rm==4);
- cfgSet(IDFF_resizeSpecifyHolizontalSizeOnly,rm==4);
+ cfgSet(IDFF_resizeSpecifyHorizontalSizeOnly,rm==4);
  enable(rm!=4,IDC_ED_RESIZEDY);
 }
 
@@ -65,7 +65,7 @@ void TresizeAspectPage::resize2dlg(void)
  setCheck(IDC_CHB_SAR_INTERNALLY,cfgGet(IDFF_resizeSARinternally));
  SetDlgItemInt(m_hwnd,IDC_ED_RESIZEDX,cfgGet(IDFF_resizeDx),FALSE);
  int y=cfgGet(IDFF_resizeDy);
- int isy0=cfgGet(IDFF_resizeSpecifyHolizontalSizeOnly);
+ int isy0=cfgGet(IDFF_resizeSpecifyHorizontalSizeOnly);
  //if(isy0) y=0;
  SetDlgItemInt(m_hwnd,IDC_ED_RESIZEDY, y ,FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_RESIZE_MOD_16,cfgGet(IDFF_resizeMultOf),FALSE);
@@ -136,11 +136,11 @@ void TresizeAspectPage::applyResizeXY(void)
    if(y)
     {
      cfgSet(IDFF_resizeDy,y);
-     cfgSet(IDFF_resizeSpecifyHolizontalSizeOnly,0);
+     cfgSet(IDFF_resizeSpecifyHorizontalSizeOnly,0);
     }
    else
     {
-     cfgSet(IDFF_resizeSpecifyHolizontalSizeOnly,1);
+     cfgSet(IDFF_resizeSpecifyHorizontalSizeOnly,1);
      if (rm==0) rm=4;
     }
    cfgSet(IDFF_resizeDy_real,y);

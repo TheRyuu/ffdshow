@@ -97,8 +97,8 @@ TresizeAspectSettings::TresizeAspectSettings(TintStrColl *Icoll,TfilterIDFFs *fi
      _l("resizeMode"),0,
    IDFF_resizeDx           ,(TintVal)&TresizeAspectSettings::dx    ,64,16384,_l(""),1,
      _l("resizeDx"),640,
-   IDFF_resizeSpecifyHolizontalSizeOnly,(TintVal)&TresizeAspectSettings::specifyHolizontalSizeOnly ,0,1,_l(""),1,
-     _l("resizeIsDy0"),0,  // if(resizeDy/*registry*/==0) older version crashes. When specifyHolizontalSizeOnly==1, Vertical size is calculated automatically.
+   IDFF_resizeSpecifyHorizontalSizeOnly,(TintVal)&TresizeAspectSettings::specifyHorizontalSizeOnly ,0,1,_l(""),1,
+     _l("resizeIsDy0"),0,  // if(resizeDy/*registry*/==0) older version crashes. When specifyHorizontalSizeOnly==1, Vertical size is calculated automatically.
    IDFF_resizeDy           ,(TintVal)&TresizeAspectSettings::dyReg ,0,16384,_l(""),1,
      _l("resizeDy"),480,
    IDFF_resizeDy_real      ,(TintVal)&TresizeAspectSettings::dy    ,0,16384,_l(""),1,
@@ -144,6 +144,10 @@ TresizeAspectSettings::TresizeAspectSettings(TintStrColl *Icoll,TfilterIDFFs *fi
      _l("bordersPixelsX"),0,
    IDFF_bordersPixelsY     ,&TresizeAspectSettings::bordersPixelsY ,0,300,_l(""),1,
      _l("bordersPixelsY"),0,
+   IDFF_bordersDivX        ,&TresizeAspectSettings::bordersDivX    ,0,100,_l(""),1,
+     _l("bordersDivX"),50,
+   IDFF_bordersDivY        ,&TresizeAspectSettings::bordersDivY    ,0,100,_l(""),1,
+     _l("bordersDivY"),50,
 
    IDFF_isAspect           ,&TresizeAspectSettings::isAspect    ,0,0,_l(""),1,
      _l("resizeAscpect"),1,
@@ -238,6 +242,7 @@ const int* TresizeAspectSettings::getResets(unsigned int pageId)
     IDFF_bordersInside,IDFF_bordersLocked,IDFF_bordersUnits,
     IDFF_bordersX,IDFF_bordersY,
     IDFF_bordersPixelsX,IDFF_bordersPixelsY,
+    IDFF_bordersDivX,IDFF_bordersDivY,
     0};
    return idResets;
   }
@@ -570,8 +575,6 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
      }
     if (rectClip->dx>rectFull->dx) rectClip->dx=rectFull->dx;
     if (rectClip->dy>rectFull->dy) rectClip->dy=rectFull->dy;
-    rectClip->x=((rectFull->dx-rectClip->dx)/2)&~1;
-    rectClip->y=((rectFull->dy-rectClip->dy)/2)&~1;
    }
 
 /*****************  finish  *****************/
@@ -585,15 +588,19 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
   rectClip->dy=rectClip->dy&~1;
   rectFull->dx=rectFull->dx&~1;
   rectFull->dy=rectFull->dy&~1;
+  rectClip->x=((rectFull->dx-rectClip->dx)*bordersDivX/100)&~1;
+  rectClip->y=((rectFull->dy-rectClip->dy)*bordersDivY/100)&~1;
+  if (rectClip->x+rectClip->dx > rectFull->dx) rectClip->x=(rectFull->dx-rectClip->dx)&~1;
+  if (rectClip->y+rectClip->dy > rectFull->dy) rectClip->y=(rectFull->dy-rectClip->dy)&~1;
 }
 
 void TresizeAspectSettings::reg_op(TregOp &t)
 {
- if (specifyHolizontalSizeOnly && mode==4) // for downgrade compatibility. (before save. This is executed before load too. No problem)
+ if (specifyHorizontalSizeOnly && mode==4) // for downgrade compatibility. (before save. This is executed before load too. No problem)
   mode=0;
  TfilterSettingsVideo::reg_op(t);
  dy=dyReg;
- if (specifyHolizontalSizeOnly && mode==0) // after load (Of course, this is executed after save. Can be igrored.)
+ if (specifyHorizontalSizeOnly && mode==0) // after load (Of course, this is executed after save. Can be igrored.)
   mode=4;
  else
   if (mode==4) mode=0;

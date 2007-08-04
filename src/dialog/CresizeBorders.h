@@ -7,6 +7,7 @@ class TresizeBordersPage :public TconfPageDecVideo
 {
 private:
  void onLock(void);
+ void div2dlg(void);
 protected:
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
  virtual Twidget* createDlgItem(int id,HWND h);

@@ -356,8 +356,8 @@
 #define IDFF_fullResize          723
 #define IDFF_resizeMode          728 //0 - exact size, 1 - aspect ratio , 2 - multiply of , 3 - multiply
 #define IDFF_resizeDx            702 //new width
-#define IDFF_resizeSpecifyHolizontalSizeOnly 703
-#define IDFF_is_resizeDy_0       703 //deprecated. same as IDFF_resizeSpecifyHolizontalSizeOnly
+#define IDFF_resizeSpecifyHorizontalSizeOnly 703
+#define IDFF_is_resizeDy_0       703 //deprecated. same as IDFF_resizeSpecifyHorizontalSizeOnly
 #define IDFF_resizeDy            705 //new height
 #define IDFF_resizeDy_real       766
 #define IDFF_resizeMultOf        764
@@ -382,6 +382,8 @@
 #define IDFF_bordersY IDFF_bordersPercentY
 #define IDFF_bordersPixelsX      757
 #define IDFF_bordersPixelsY      758
+#define IDFF_bordersDivX         3404
+#define IDFF_bordersDivY         3405
 
 #define IDFF_isAspect            704 //0 - no aspect ratio correctio, 1 - keep original aspect, 2 - aspect ratio is set in IDFF_aspectRatio
 #define IDFF_aspectRatio         707 //aspect ratio (<<16)
@@ -1418,6 +1420,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3404
+//max:3406
 
 #endif
