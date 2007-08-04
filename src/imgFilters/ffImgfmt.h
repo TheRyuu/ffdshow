@@ -260,6 +260,41 @@ static __inline enum PixelFormat csp_ffdshow2lavc(int pix_fmt)
 #define IMGFMT_YUVP 0x50565559
 #define IMGFMT_UYVP 0x50565955
 
+static __inline int csp_mplayercsp2Bpp(int mplayercsp)
+{
+ // return byte per pixel for the first plane.
+ // IMGFMT_NV21,IMGFMT_NV12 are troublesome, because bpp is different in first plane and second plane.
+ switch (mplayercsp)
+  {
+   case IMGFMT_YV12 :return 1;
+   case IMGFMT_422P :return 1;
+   case IMGFMT_444P :return 1;
+   case IMGFMT_411P :return 1;
+   case IMGFMT_YVU9 :return 1;
+
+   case IMGFMT_YUY2 :return 2;
+   case IMGFMT_UYVY :return 2;
+   case IMGFMT_YVYU :return 2;
+   case IMGFMT_VYUY :return 2;
+
+   case IMGFMT_RGB32 :return 4;
+
+   case IMGFMT_BGR15:return 2;
+   case IMGFMT_BGR16:return 2;
+   case IMGFMT_BGR24:return 3;
+   case IMGFMT_BGR32:return 4;
+
+   case IMGFMT_RGB15:return 2;
+   case IMGFMT_RGB16:return 2;
+   case IMGFMT_RGB24:return 3;
+
+   case IMGFMT_Y800 :return 1;
+   case IMGFMT_NV12 :return 1;
+   case IMGFMT_NV21 :return 1;
+   default          :return 1;
+  }
+}
+
 static __inline int csp_ffdshow2mplayer(int csp)
 {
  switch (csp&FF_CSPS_MASK)

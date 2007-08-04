@@ -1774,19 +1774,15 @@ static int simpleCopy(SwsContext *c, uint8_t* src[], stride_t srcStride[], int s
 
 	if(isPacked(c->srcFormat))
 	{
-		if(dstStride[0]==srcStride[0] && srcStride[0] > 0)
-			memcpy(dst[0] + dstStride[0]*srcSliceY, src[0], srcSliceH*dstStride[0]);
+		int length= c->srcW * csp_mplayercsp2Bpp(c->srcFormat);
+
+		if(dstStride[0]==srcStride[0] && srcStride[0] > 0 && srcSliceH>0)
+			memcpy(dst[0] + dstStride[0]*srcSliceY, src[0], (srcSliceH-1)*dstStride[0]+length); // older version crashed in ffdshow-crop, which moves the image horizontally. Last line overlfows.
 		else
 		{
 			int i;
 			uint8_t *srcPtr= src[0];
 			uint8_t *dstPtr= dst[0] + dstStride[0]*srcSliceY;
-			int length=0;
-
-			/* universal length finder */
-			while(length+c->srcW <= ABS(dstStride[0])
-			   && length+c->srcW <= ABS(srcStride[0])) length+= c->srcW;
-			ASSERT(length!=0);
 
 			for(i=0; i<srcSliceH; i++)
 			{
@@ -1812,8 +1808,8 @@ static int simpleCopy(SwsContext *c, uint8_t* src[], stride_t srcStride[], int s
 			}
 			else
 			{
-				if(dstStride[plane]==srcStride[plane] && srcStride[plane] > 0)
-					memcpy(dst[plane] + dstStride[plane]*y, src[plane], height*dstStride[plane]);
+				if(dstStride[plane]==srcStride[plane] && srcStride[plane] > 0 && height>0)
+					memcpy(dst[plane] + dstStride[plane]*y, src[plane], (height-1)*dstStride[plane] + length);
 				else
 				{
 					int i;
