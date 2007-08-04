@@ -21,6 +21,10 @@ private:
  bool getNext(int csp,TffPict &pict,int full,unsigned char **dst[4],const Trect *rect2=NULL);
  bool getNext(int csp,TffPict &pict,const Trect &clipRect,unsigned char **dst[4],const Trect *rect2=NULL);
  bool getCurNext(int csp,TffPict &pict,int full,int copy,unsigned char **dst[4]);
+#if 0
+ Tbuffer own3;
+ bool getCurNext3(int csp,TffPict &pict,int full,int copy,unsigned char **dst[4]);
+#endif
  int pictHalf;
 protected:
  Trect pictRect;
@@ -82,6 +86,13 @@ protected:
    unsigned char **dstP[4]={&dst[0],&dst[1],&dst[2],&dst[3]};
    return getCurNext(csp,pict,full,copy,dstP);
   }
+#if 0
+ bool getCurNext3(int csp,TffPict &pict,int full,int copy,unsigned char *dst[4])
+  {
+   unsigned char **dstP[4]={&dst[0],&dst[1],&dst[2],&dst[3]};
+   return getCurNext3(csp,pict,full,copy,dstP);
+  }
+#endif
  bool screenToPict(CPoint &pt);
 public:
  TimgFilter(IffdshowBase *Ideci,Tfilters *Iparent);
