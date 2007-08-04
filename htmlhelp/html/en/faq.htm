@@ -34,18 +34,20 @@
   </ul>
 
   <h2>
-    <a name="difference" id="difference">What is the difference between generic and SSE/SSE2 builds?</a>
+    <a name="difference" id="difference">What is the difference between generic and icl10
+        builds?</a>
   </h2>
 
   <p>
-    The main difference is the compiler that is used for compiling <em>ffdshow.ax</em>. There are four different compilers being used: <em>MSVC71</em>, <em>MSVC80</em>, <em>GCC</em> and <em>ICL9</em>.<br />
+    The main difference is the compiler that is used for compiling <em>ffdshow.ax</em>. There are four different compilers being used: <em>MSVC71</em>, <em>MSVC80</em>, <em>GCC</em> and <em>ICL10</em>.<br />
     The CPU requirements for the builds are as follows:
   </p>
 
   <ul>
     <li>Generic builds work on Pentium-MMX/AMD K6 or later.</li>
-    <li>SSE (ICL &amp; GCC) builds work on Pentium III/Athlon XP or later.</li>
-    <li>SSE2 builds work on Pentium 4/Athlon 64 or later.</li>
+    <li>icl10 builds work on Pentium III/Athlon XP or later (SSE required). </li>
+    <li>experimental x64 work on Windows Xp/Vista x64 Edition. You can install 32bit builds
+        on these 64bit OS too.&nbsp;</li>
   </ul>
 
   <h2>
@@ -97,7 +99,7 @@
   </h2>
 
   <p>
-    MSVC builds of <em>ffdshow.ax</em> are probably the most stable. However, there are no known issues with GCC builds either. For ICL builds there is only one known issue: it crashes on files created with a very old and buggy build of x264, but you'll probably never encounter those files in real life. So from a stability point of view, the build doesn't matter.
+    MSVC builds of <em>ffdshow.ax</em> are probably the most stable. However, there are no known issues with GCC builds either. So from a stability point of view, the build doesn't matter.
   </p>
 
   <h2>
