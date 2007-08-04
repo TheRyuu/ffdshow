@@ -34,6 +34,7 @@ public:
  virtual void done(void);
  virtual bool getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *cfg0);
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+ virtual bool acceptRandomYV12andRGB32(void) {return true;}
 };
 
 #endif
