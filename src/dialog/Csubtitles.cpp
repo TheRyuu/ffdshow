@@ -300,7 +300,7 @@ TsubtitlesPage::TsubtitlesPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff)
    IDC_CHB_SUBTEXTPIN,IDFF_subTextpin,NULL,
    IDC_CHB_SUB_SEARCHHEURISTIC,IDFF_subSearchHeuristic,&TsubtitlesPage::auto2dlg,
    IDC_CHB_SUBTITLES_EXPAND,IDFF_subIsExpand,&TsubtitlesPage::expand2dlg,
-   IDC_CHB_SUBCC,IDFF_subCC,NULL,
+   IDC_CHB_SUBCC,IDFF_subCC,&TsubtitlesPage::cfg2dlg,
    IDC_CHB_SUBTEXTPIN_SSA,IDFF_subTextpinSSA,NULL,
    0,NULL,NULL
   };

@@ -48,13 +48,13 @@ public:
  static const char_t *wordWraps[];
  int opacity;
  int splitBorder;
- TfontSettingsSub font; //HACK: must be last
  int cc;
  static const int delayDef=0,speedDef=1000;
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;
  virtual void createPages(TffdshowPageDec *parent) const;
  virtual bool getTip(unsigned int pageId,char_t *buf,size_t buflen);
  virtual void reg_op(TregOp &t);
+ TfontSettingsSub font; //HACK: must be last
 };
 
 #endif
