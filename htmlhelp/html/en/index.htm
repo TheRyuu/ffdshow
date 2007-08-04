@@ -58,7 +58,7 @@
   <h3>Fixed after beta3</h3>
 
   <ul class="fixed">
-    <li>If crop is used after subtitle letterbox, the bottom of the image was cropped too much.</li>
+    <li>When crop was used after letterbox subtitling the bottom of the image was cropped too much.</li>
   </ul>
 
 
@@ -160,7 +160,8 @@
     <li>x64 builds on Sourceforge.net <a class="links" href="http://sourceforge.net/project/showfiles.php?group_id=173941">download page</a>, although it is experimental.</li>
     <li>Faster RGB<->YV12 conversion for x64.</li>
     <li>Improved text subtitles and OSD rendering. Body, outline and shadow have size, color and alpha for each. If the output color space is RGB and no other image filter is used in the downstream, subtitles and OSD are rendered in RGB mode and the quality is improved further.</li>
-    <li>Multiple languages support: Horizontal scaling rate can be configured from language files. If you want to scale 125% horizontally, add two lines "horizontalScale9x=125" and  "horizontalScaleNT=125" in [Font] section of the language file.</li>
+    <li>Multiple languages support: A horizontal scaling ratio for the config dialogs can be configured from language files. To scale them to 125% horizontally add two lines "horizontalScale9x=125" and "horizontalScaleNT=125" in the "[Font]" section of the language file.</li>
+    <li>Improved German translation (making use of the extra space gained by scaling horizontally).</li>
   </ul>
 
   <h3>Added before beta3</h3>

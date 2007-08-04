@@ -1777,7 +1777,7 @@ static int simpleCopy(SwsContext *c, uint8_t* src[], stride_t srcStride[], int s
 		int length= c->srcW * csp_mplayercsp2Bpp(c->srcFormat);
 
 		if(dstStride[0]==srcStride[0] && srcStride[0] > 0 && srcSliceH>0)
-			memcpy(dst[0] + dstStride[0]*srcSliceY, src[0], (srcSliceH-1)*dstStride[0]+length); // older version crashed in ffdshow-crop, which moves the image horizontally. Last line overlfows.
+			memcpy(dst[0] + dstStride[0]*srcSliceY, src[0], (srcSliceH-1)*dstStride[0]+length); // older version crashed in ffdshow-crop, which moves the image horizontally. Last line overflows.
 		else
 		{
 			int i;
