@@ -25,7 +25,7 @@ protected:
  int idff_fontcharset,idff_fontname,idff_fontautosize,idff_fontautosizevideowindow,idff_fontsizep,idff_fontsizea,idff_fontspacing,idff_fontoutlinewidth,idff_fontweight,idff_fontcolor,idff_fontxscale,idff_fontfast;
  int idff_fontoutlinecolor,idff_fontshadowcolor,idff_fontbodyalpha,idff_fontoutlinealpha;
  int idff_fontshadowalpha,idff_fontshadowsize,idff_fontshadowmode;
- int idff_fontopaquebox;
+ int idff_fontopaquebox,idff_fontblur;
 public:
  virtual void init(void);
  virtual void cfg2dlg(void);

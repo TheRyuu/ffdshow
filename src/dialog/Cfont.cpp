@@ -125,6 +125,7 @@ void TfontPage::font2dlg(void)
  cbxSetDataCurSel(IDC_CBX_FONT_WEIGHT,cfgGet(idff_fontweight));
  SendDlgItemMessage(m_hwnd,IDC_CBX_FONT_NAME,CB_SELECTSTRING,WPARAM(-1),LPARAM(cfgGetStr(idff_fontname)));
  fillCharsets();
+ setCheck(IDC_CHB_FONT_BLUR,cfgGet(idff_fontblur));
 #ifdef UNICODE
  selectCharset(cfgGet(idff_fontcharset));
 #else
@@ -457,10 +458,12 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
  idff_fontshadowsize=IDFF_fontShadowSize;
  idff_fontshadowmode=IDFF_fontShadowMode;
  idff_fontopaquebox=IDFF_fontOpaqueBox;
+ idff_fontblur=IDFF_fontBlur;
  static const TbindCheckbox<TfontPageSubtitles> chb[]=
   {
    IDC_CHB_FONT_FAST,idff_fontfast,NULL,
    IDC_FONT_OPAQUE_BOX,idff_fontopaquebox,&TfontPageSubtitles::font2dlg,
+   IDC_CHB_FONT_BLUR,idff_fontblur,&TfontPageSubtitles::font2dlg,
    0,NULL,NULL
   };
  bindCheckboxes(chb);
@@ -510,10 +513,12 @@ TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent):TfontPage(Iparent)
  idff_fontshadowsize=IDFF_OSDfontShadowSize;
  idff_fontshadowmode=IDFF_OSDfontShadowMode;
  idff_fontopaquebox=IDFF_OSDfontOpaqueBox;
+ idff_fontblur=IDFF_OSDfontBlur;
  static const TbindCheckbox<TfontPageOSD> chb[]=
   {
    IDC_CHB_FONT_FAST,idff_fontfast,NULL,
    IDC_FONT_OPAQUE_BOX,idff_fontopaquebox,&TfontPageOSD::font2dlg,
+   IDC_CHB_FONT_BLUR,idff_fontblur,&TfontPageOSD::font2dlg,
    0,NULL,NULL
   };
  bindCheckboxes(chb);

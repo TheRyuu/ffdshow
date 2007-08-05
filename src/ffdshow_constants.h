@@ -493,6 +493,7 @@
 #define IDFF_fontBodyAlpha           3389
 #define IDFF_fontOutlineAlpha        3390
 #define IDFF_fontShadowAlpha         3376
+#define IDFF_fontBlur                3406
 
 #define IDFF_filterBlur              900
 #define IDFF_isBlur                  901
@@ -588,6 +589,7 @@
 #define IDFF_OSDfontShadowAlpha    3397
 #define IDFF_OSDfontShadowSize     3398
 #define IDFF_OSDfontShadowMode     3399
+#define IDFF_OSDfontBlur           3407
 #define IDFF_OSDfontXscale         1532
 #define IDFF_OSDfontFast           1535
   #define IDFF_OSDtype_inputSize          1520
@@ -1420,6 +1422,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3406
+//max:3408
 
 #endif

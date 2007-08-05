@@ -47,6 +47,7 @@ public:
  virtual void reg_op(TregOp &t);
  int outlineWidth;
  int shadowSize, shadowMode; // Subtitles shadow
+ int blur;
  static const char_t *shadowModes[];
 };
 

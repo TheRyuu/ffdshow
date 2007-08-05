@@ -41,6 +41,7 @@ void TSubtitleProps::reset(void)
  OutlineColour=ShadowColour=0;
  colorA=SecondaryColourA=TertiaryColourA=OutlineColourA=256;
  ShadowColourA=128;
+ blur=0;
 }
 
 void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy) const

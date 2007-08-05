@@ -1774,6 +1774,7 @@
 #define IDC_TBR_BORDER_VERT_DIV         2078
 #define IDC_LBL_BORDER_HORIZ_DIV        2079
 #define IDC_LBL_BORDER_VERT_DIV         2080
+#define IDC_CHB_FONT_BLUR               2081
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -1790,7 +1791,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        296
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2081
+#define _APS_NEXT_CONTROL_VALUE         2082
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

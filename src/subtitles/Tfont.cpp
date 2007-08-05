@@ -215,7 +215,7 @@ void TrenderedSubtitleWord::drawShadow(
  _dx=(xscale*dx[0]/100)/4+4+shadowSize;
  _dy=dy[0]/4+4+shadowSize;
  dxCharY=xscale*sz.cx/400;dyCharY=sz.cy/4;
- unsigned int al=prefs.csp==FF_CSP_420P ? alignXsize : alignXsize/4;
+ unsigned int al=prefs.csp==FF_CSP_420P ? alignXsize : 8; // swscaler blur requires multiple of 8.
  unsigned int _dxtemp=(_dx/al)*al;
  _dx=_dxtemp<_dx ? _dxtemp+al : _dxtemp;
  bmp[0]=(unsigned char*)aligned_calloc3(_dx,_dy,4,16);
@@ -247,7 +247,7 @@ void TrenderedSubtitleWord::drawShadow(
    // This code is better adapted to bigger characters.
    if (prefs.deci)
     {
-     unsigned char *blured_bmp=(unsigned char*)aligned_calloc(_dx,_dy,16);
+     unsigned char *blured_bmp=(unsigned char*)aligned_calloc3(_dx,_dy,4,16);
      Tlibmplayer *libmplayer;
      SwsFilter filter;
      SwsParams params;
@@ -1329,6 +1329,10 @@ template<class tchar> TrenderedSubtitleWord* Tfont::newWord(const tchar *s,size_
    if (prefs.shadowMode<=1)
     shadowYUV1.A=256*sqrt((double)shadowYUV1.A/256.0);
   }
+ if (fontSettings->blur || w->props.blur)
+  prefs.blur=true;
+ else
+  prefs.blur=false;
 
  if (!w->props.isColor && fontSettings->fast && !otm.otmItalicAngle && !otm.otmTextMetrics.tmItalic && !(prefs.shadowSize!=0 && prefs.shadowMode!=3) && prefs.csp==FF_CSP_420P)
   return new TrenderedSubtitleWord(charsCache,s1.c_str(),slen,prefs); // fast rendering
