@@ -101,7 +101,7 @@ HRESULT TimgFilterTomsMoComp::process(TfilterQueue::iterator it,TffPict &pict,co
    if (inited)
     {
      t->GetFrame(frameNum,1,src,dst,(const unsigned char**)psrc);
-     pict.fieldtype=FIELD_TYPE::PROGRESSIVE_FRAME;
+     pict.fieldtype=(pict.fieldtype & ~(FIELD_TYPE::MASK_PROG | FIELD_TYPE::MASK_INT)) | FIELD_TYPE::PROGRESSIVE_FRAME;
      for (unsigned int i=0;i<pict.cspInfo.numPlanes;i++)
       TffPict::copy(psrc[i],pstride[i],src[i],stride1[i],dx2[i],dy2[i]);
      frameNum++;

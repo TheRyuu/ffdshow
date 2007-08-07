@@ -215,7 +215,7 @@ HRESULT TimgFilterKernelDeint::process(TfilterQueue::iterator it,TffPict &pict,c
    TffPict::copy(prv.data[plane],prv.stride[plane],src[plane],stride1[plane],w,dy1[plane]);
   }
  n++;
- pict.fieldtype=FIELD_TYPE::PROGRESSIVE_FRAME;
+ pict.fieldtype=(pict.fieldtype & ~(FIELD_TYPE::MASK_PROG | FIELD_TYPE::MASK_INT)) | FIELD_TYPE::PROGRESSIVE_FRAME;
  return parent->deliverSample(++it,pict);
 }
 void TimgFilterKernelDeint::onSeek(void)
@@ -283,7 +283,7 @@ HRESULT TimgFilterKernelDeint2::process(TfilterQueue::iterator it,TffPict &pict,
 
    oldOrder=order;
 
-   pict.fieldtype=FIELD_TYPE::PROGRESSIVE_FRAME;
+   pict.fieldtype=(pict.fieldtype & ~(FIELD_TYPE::MASK_PROG | FIELD_TYPE::MASK_INT)) | FIELD_TYPE::PROGRESSIVE_FRAME;
    if (bob)
     {
      kernel->getFrame(src,stride1,dst,stride2,0);

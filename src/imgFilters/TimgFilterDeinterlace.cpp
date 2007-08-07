@@ -261,7 +261,7 @@ HRESULT TimgFilterMplayerDeinterlace::process(TfilterQueue::iterator it,TffPict 
                             dx1[0],dy1[0],
                             NULL,0,
                             &pp_mode,pp_ctx,pict.frametype&FRAME_TYPE::typemask);
- pict.fieldtype=FIELD_TYPE::PROGRESSIVE_FRAME;
+ pict.fieldtype=(pict.fieldtype & ~(FIELD_TYPE::MASK_PROG | FIELD_TYPE::MASK_INT)) | FIELD_TYPE::PROGRESSIVE_FRAME;
 
  if (pict.rectClip != pict.rectFull)
   parent->dirtyBorder=1;

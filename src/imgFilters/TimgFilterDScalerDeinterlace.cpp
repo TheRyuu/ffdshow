@@ -193,7 +193,7 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
      memmove(di.PictureHistory+1,di.PictureHistory,(flt->fm->nFieldsRequired-1)*sizeof(TPicture*));
      di.PictureHistory[0]=p;
     }
-   pict.fieldtype=FIELD_TYPE::PROGRESSIVE_FRAME;
+   pict.fieldtype=(pict.fieldtype & ~(FIELD_TYPE::MASK_PROG | FIELD_TYPE::MASK_INT)) | FIELD_TYPE::PROGRESSIVE_FRAME;
    pict.rtStart=rtStart;pict.rtStop=pict.rtStart+rtDuration;rtStart+=rtDuration;
 
    if (pict.rectClip != pict.rectFull)
