@@ -51,7 +51,7 @@ If you skip to port a revision please note that revision for later porting. -->
     ffdshow unterst&uuml;tzt einige verschiedene YUV-Ausgabeformate:
   </p>
   <ul style="list-style-type:circle">
-    <li><em>I420/IYUV</em>: &Auml;hnlich zum unten beschriebenen YV12, aber geringere Hardwareunterst&uuml;tzung. Selbst wenn es von Ihrer Grafikkarte unterst&uuml;tz wird, nicht empfohlen, da YV12 schneller ist. Verwendet 12 Bit pro Pixel (bpp).</li>
+    <li><em>I420/IYUV</em>: &Auml;hnlich zum unten beschriebenen YV12, aber geringere Hardwareunterst&uuml;tzung. Selbst wenn es von Ihrer Grafikkarte unterst&uuml;tzt wird, nicht empfohlen, da YV12 schneller ist. Verwendet 12 Bit pro Pixel (bpp).</li>
     <li><em>YV12</em>: Nahezu immer der schnellste Ausgabemodus (Videocodecs speichern gew&ouml;hnlich in YV12). Das empfohlene Ausgabeformat f&uuml;r die meisten Systeme. Allerdings unterst&uuml;tzen es einige &auml;ltere/Onboard-Grafikkarten nicht - falls dies bei Ihnen der Fall ist, probieren Sie YUY2. Der Windows Media Player hat manchmal Probleme mit YV12. Verwendet 12bpp.</li>
     <li><em>YUY2</em>: Verwendet von MJPEG und einigen MPEG2-Videostreams. Besitzt eine etwas gr&ouml;&szlig;ere Farbgenauigkeit als YV12. Etwas langsamere Ausgabe als YV12, jedoch f&uuml;r gew&ouml;hnlich nicht viel. Falls Ihr Eingangsvideo YUY2 ist, oder Ihre Grafikkarte YV12 nicht unterst&uuml;tzt, ist dies das empfohlene Format. Verwendet 16bpp.</li>
     <li><em>YVYU &amp; UYVY</em>: Selten und ungenutzt. Vermeiden. Verwenden 12bpp.</li>
@@ -61,7 +61,7 @@ If you skip to port a revision please note that revision for later porting. -->
   <h3>RGB-Farbraum</h3>
 
   <p>
-    Diese Modi verwenden das traditionellere und gel&auml;ufigere RGB-Farbformat. Lesen Sie (wieder) in <a class="links" href="http://en.wikipedia.org/wiki/RGB">Wikipedia</a> &uuml;ber RGB. RGB-Ausgabe ist langsamer, aber m&ouml;glicherweise genauer als YUV-Ausagbe - der Unterschied ist in jedem Fall minimal.<br />
+    Diese Modi verwenden das traditionellere und gel&auml;ufigere RGB-Farbformat. Lesen Sie (wieder) in <a class="links" href="http://en.wikipedia.org/wiki/RGB">Wikipedia</a> &uuml;ber RGB. RGB-Ausgabe ist langsamer, aber m&ouml;glicherweise genauer als YUV-Ausgabe - der Unterschied ist in jedem Fall minimal.<br />
     Die folgenden RGB-Formate werden unterst&uuml;tzt:
   </p>
   <ul style="list-style-type:circle">
@@ -105,7 +105,7 @@ If you skip to port a revision please note that revision for later porting. -->
   <h2>Tipps &amp; Tricks</h2>
 
   <ul style="list-style-type:square">
-    <li>Sie k&ouml;nnen mehr als ein Ausgabeformat w&auml;hlen, ffdshow wird versuchen das zum Eingangsmaterial &auml;hnlichste Ausagbeformat zu verwenden. Generell hei&szlig;t das YV12, aber nicht immer.</li>
+    <li>Sie k&ouml;nnen mehr als ein Ausgabeformat w&auml;hlen, ffdshow wird versuchen das zum Eingangsmaterial &auml;hnlichste Ausgabeformat zu verwenden. Generell hei&szlig;t das YV12, aber nicht immer.</li>
     <li>Die anderen Einstellungen auf der Seite sollten nicht ge&auml;ndert werden ohne sie zu kennen. Der Autor empfiehlt die Standardeinstellungen zu verwenden (siehe Screenshot oben). Video drehen ist gelegentlich f&uuml;r defekte oder alte Streams n&uuml;tzlich.</li>
   </ul>
 
