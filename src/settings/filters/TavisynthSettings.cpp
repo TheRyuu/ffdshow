@@ -81,18 +81,19 @@ TavisynthSettings::TavisynthSettings(TintStrColl *Icoll,TfilterIDFFs *filters):T
 void TavisynthSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
 {
  idffOnChange(idffs,filters,queue.temporary);
- if (is && show)
-  queueFilter<TimgFilterAvisynth>(filtersorder,filters,queue);
- else
-  {
-   TimgFilterAvisynth* avisynth=filters->getFilter<TimgFilterAvisynth>();
 
-   if (avisynth)
-    {
-     avisynth->onStop();
-     avisynth->reset();
-    }
+ TimgFilterAvisynth* avisynth=filters->getFilter<TimgFilterAvisynth>();
+
+ if (!avisynth)
+  return;
+
+ if (!is || !show || avisynth->deciV->getMovieFOURCC() == 0x53495641 /* "AVIS" */)
+  {
+   avisynth->onStop();
+   avisynth->reset();
   }
+ else
+  queueFilter<TimgFilterAvisynth>(filtersorder,filters,queue);
 }
 
 void TavisynthSettings::createPages(TffdshowPageDec *parent) const

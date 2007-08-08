@@ -1262,6 +1262,8 @@ const char* TimgFilterAvisynth::getInfoBuffer(void)
 {
  if (avisynth && oldcfg.is && oldcfg.show)
   return avisynth->infoBuf;
+ else if (deciV->getMovieFOURCC() == 0x53495641 /* "AVIS" */)
+  return "disabled (input is an AviSynth script)";
  else
   return "unavailable";
 }
