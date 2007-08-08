@@ -7,7 +7,7 @@ have been made, which were ported to this translation (even if nothing
 was changed here). This is to know which revisions are not ported yet.
 If you skip to port a revision please note that revision for later porting. -->
 
-<!-- In sync with revision 1317 except for revision(s) -none-. -->
+<!-- In sync with revision 1411 except for revision(s) -none-. -->
 
 <head>
   <title>ffdshow tryouts | FAQ</title>
@@ -33,7 +33,7 @@ If you skip to port a revision please note that revision for later porting. -->
   </h1>
 
   <ul class="links">
-    <li><a class="nav" href="#difference">Was ist der Unterschied zwischen generischen und SSE/SSE2-Builds?</a></li>
+    <li><a class="nav" href="#difference">Was ist der Unterschied zwischen generischen und ICL10-Builds?</a></li>
     <li><a class="nav" href="#performance">Welches Build hat die beste Dekodierleistung?</a></li>
     <li><a class="nav" href="#perf_filters">Welches Build hat die beste Dekodierleistung, wenn Filter verwendet werden?</a></li>
     <li><a class="nav" href="#stable">Welches Build ist das Stabilste?</a></li>
@@ -41,18 +41,18 @@ If you skip to port a revision please note that revision for later porting. -->
   </ul>
 
   <h2>
-    <a name="difference" id="difference">Was ist der Unterschied zwischen generischen und SSE/SSE2-Builds?</a>
+    <a name="difference" id="difference">Was ist der Unterschied zwischen generischen und ICL10-Builds?</a>
   </h2>
 
   <p>
-    Der Hauptunterschied ist der Compiler, der zum Kompilieren von <em>ffdshow.ax</em> verwendet wird. Es werden vier verschiedene Compiler verwendet: <em>MSVC71</em>, <em>MSVC80</em>, <em>GCC</em> und <em>ICL9</em>.<br />
-    The CPU-Anforderungen f&uuml;r die Builds sind wie folgt:
+    Der Hauptunterschied ist der Compiler, der zum Kompilieren von <em>ffdshow.ax</em> verwendet wird. Es werden vier verschiedene Compiler verwendet: <em>MSVC71</em>, <em>MSVC80</em>, <em>GCC</em> und <em>ICL10</em>.<br />
+    Die CPU-Anforderungen f&uuml;r die Builds sind wie folgt:
   </p>
 
   <ul>
     <li>Generische Builds ben&ouml;tigen einen Pentium-MMX/AMD K6 oder neuer.</li>
-    <li>SSE-Builds (MSVC &amp; ICL) ben&ouml;tigen einen Pentium III/Athlon XP oder neuer.</li>
-    <li>SSE2-Builds ben&ouml;tigen einen Pentium 4/Athlon 64 oder neuer.</li>
+    <li>ICL10-Builds ben&ouml;tigen einen Pentium III/Athlon XP oder neuer (SSE erforderlich).</li>
+    <li>Experimentelle x64-Builds funktionieren unter Windows XP/Vista x64 Edition in 64bit-Mediaplayern. Installieren Sie die regul&auml;ren 32bit-Builds unter diesen 64bit-Systemen um es mit 32bit-Mediaplayern zu verwenden.</li>
   </ul>
 
   <h2>
@@ -104,7 +104,7 @@ If you skip to port a revision please note that revision for later porting. -->
   </h2>
 
   <p>
-    MSVC-Builds von <em>ffdshow.ax</em> sind vermutlich die Stabilsten, allerdings sind auch keine Fehler in GCC-Builds bekannt. In ICL-Builds existiert nur ein bekannter Fehler: Sie st&uuml;rzen bei Dateien, die mit einer sehr alten und fehlerhaften Version von x264 erstellt wurden, ab. Allerdings ist es unwahrscheinlich solchen Dateien wirklich einmal zu begegnen. Von der Stabilit&auml;t betrachtet, spielt das Build also keine Rolle.
+    MSVC-Builds von <em>ffdshow.ax</em> sind vermutlich die Stabilsten, allerdings sind auch keine Fehler in GCC-Builds bekannt. Von der Stabilit&auml;t betrachtet, spielt das Build also keine Rolle.
   </p>
 
   <h2>
@@ -116,7 +116,7 @@ If you skip to port a revision please note that revision for later porting. -->
   </p>
 
   <ul>
-    <li>Der <em>resize</em>-Filter ist vollst&auml;ndig multithreaded. Er ist auf Dualcore-Systemen schneller (auf Pentium 4 HT-CPUs ineffektiv) und ben&ouml;tigt hierf&uuml;r keinerlei Konfiguration.</li>
+    <li>Der <em>Gr&ouml;&szlig;en&auml;nderungsfilter</em> ist vollst&auml;ndig multithreaded. Er ist auf Dualcore-Systemen schneller (auf Pentium 4 HT-CPUs ineffektiv) und ben&ouml;tigt hierf&uuml;r keinerlei Konfiguration.</li>
 	  <li>Der Xvid-Enkoder ist multithreaded.</li>
 	  <li>Der x264-Enkoder ist multithreaded.</li>
     <li>Ist "Queue &amp; misc" -> "Queue output samples" markiert, wird Beschleunigung durch Multicoreunterst&uuml;tzung aktiviert, von dessen positivem Effekt man unter Umst&auml;nden selbst auf einem Singlecore-CPU profitieren kann.</li>

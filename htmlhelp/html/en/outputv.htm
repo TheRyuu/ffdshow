@@ -16,7 +16,8 @@
   </a>
 
   <div class="translation">
-    Translation available in:
+    Translations available in:
+    &nbsp;<a class="links" href="../de/outputv.htm" title="German output video documentation"><img src="../images/germany.png" alt="German output video documentation" width="27" height="17" />&nbsp;German</a>
     &nbsp;<a class="links" href="../jp/outputv.htm" title="Japanese output video documentation"><img src="../images/japan.png" alt="Japanese output video documentation" width="27" height="17" />&nbsp;Japanese</a>
   </div>
 
@@ -24,7 +25,7 @@
     <a name="top" id="top">Output video configuration</a>
   </h1>
 
-  <img src="../images/outputV.png" title="Output video dialog" alt="Output video dialog" width="558" height="413" />
+  <img src="images/outputV.png" title="Output video dialog" alt="Output video dialog" width="558" height="413" />
 
   <p>
     The output page gives you control over the output formats used by ffdshow. The top half gives you control over the allowed output colorspaces, while the lower half is used for miscellaneous output settings.
@@ -40,13 +41,13 @@
 
   <p>
     The default output colorspace. Read more about YUV on <a class="links" href="http://en.wikipedia.org/wiki/YUV">this</a> and <a class="links" href="http://en.wikipedia.org/wiki/Chroma_subsampling">this</a> wikipedia article. As the YUV colorspace (and YV12 in particular) is the colorspace of choice for video compression, setting ffdshow to output YV12 saves it from having to do any colorspace conversion on the decoded image, speeding up decoding.<br />
-    There are a number of different YUV output formats supported by ffdshow:
+    There is a number of different YUV output formats supported by ffdshow:
   </p>
   <ul style="list-style-type:circle">
     <li><em>I420/IYUV</em>: Similar to YV12 described below, but less hardware support. Not recommended, even if it's supported by your video card, as YV12 is faster. Uses 12 bits per pixel (bpp).</li>
-    <li><em>YV12</em>: Almost always the fastest output mode (video codecs usually use YV12 for storage). The recommended output for most system setups. Although some older/onboard video cards do not support it - if this is the case for you, try YUY2. Windows Media Player sometimes has trouble with YV12 output. Uses 12bpp.</li>
+    <li><em>YV12</em>: Almost always the fastest output mode (video codecs usually use YV12 for storage). The recommended output format for most system setups. Although some older/onboard video cards do not support it - if this is the case for you, try YUY2. Windows Media Player sometimes has trouble with YV12 output. Uses 12bpp.</li>
     <li><em>YUY2</em>: Used by MJPEG and some MPEG2 video streams, and has slightly more color definition than YV12. Slightly slower to output than YV12, but generally not by much. If your input video is YUY2, or your video card doesn't support YV12, this is the recommended output. Uses 16bpp.</li>
-    <li><em>YVYU &amp; UYVY</em>: Rare and unused, avoid. Uses 12bpp.</li>
+    <li><em>YVYU &amp; UYVY</em>: Rare and unused, avoid. Use 12bpp.</li>
     <li><em>NV12</em>: Another rare output format, not even supported by many cards. Uses 12bpp.</li>
   </ul>
 
@@ -78,9 +79,9 @@
     Set pixel aspect ratio in output media type / Use overlay mixer
   </h3>
   <ul>
-    <li>Unchecked: Use classic connection method.</li>
-    <li>Checked: Use an advanced connection method that includes pixel aspect ratio (SAR) and interlacing information when connecting with the next filter (usually a video renderer).</li>
-    <li>Indeterminate/grayed: Try advanced connection method first and fall back to classic connection method if it fails. This is the default and should not be touched unless you have some special purpose.</li>
+    <li>Unchecked: Uses classic connection method.</li>
+    <li>Checked: Uses an advanced connection method that includes pixel aspect ratio (SAR) and interlacing information when connecting with the next filter (usually a video renderer).</li>
+    <li>Indeterminate/grayed: Trys advanced connection method first and falls back to classic connection method if it fails. This is the default and should not be touched unless you have some special purpose.</li>
   </ul>
 
   <h3>
@@ -88,10 +89,10 @@
     Set interlace flag in output media type / HW deinterlacing
   </h3>
   <ul>
-    <li>Send interlacing related information obtained from the input stream or ffdshow's internal decoders to the next filter.</li>
+    <li>Sends interlacing related information obtained from the input stream or ffdshow's internal decoders to the next filter.</li>
     <li>Some filters (like video renderers) will use this information to deinterlace the video if necessary.</li>
     <li>This is just for informing the downstream filters - the actual result will depend purely on the implementation of these filters.</li>
-    <li>Unchecked by default. DVDs are flagged as interlaced, but in most cases they are originally film (progressive) and just telecined. For such video, it is recommended to keep it unchecked.</li>
+    <li>Unchecked by default. DVDs are flagged as interlaced, but in most cases they were originally film (progressive) and just telecined. For such video, it is recommended to keep it unchecked.</li>
   </ul>
 
   <h2>Tips &amp; Tricks</h2>
