@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1384
+#define tryout_revision = 1410
 #define buildyear = 2007
-#define buildmonth = '07'
-#define buildday = '30'
+#define buildmonth = '08'
+#define buildday = '08'
 
 ; Build specific options
 #define unicode_required = True
@@ -612,7 +612,7 @@ Description: {cm:runvfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,c
 #include "custom_messages.iss"
 
 [Code]
-const NUMBER_OF_COMPATIBLEAPPLICATIONS=200;
+const NUMBER_OF_COMPATIBLEAPPLICATIONS=250;
 type
   TCompApp = record
     rev: Integer;  // The application (name) have been added to the compatibility list at this rev.
@@ -1131,7 +1131,12 @@ begin
     complist.edt.text := regstr;
   end else begin
     complist.edt.Text :=
+    '3wPlayer.exe'#13#10
     'ACDSee5.exe'#13#10
+    'ACDSee6.exe'#13#10
+    'ACDSee7.exe'#13#10
+    'ACDSee8.exe'#13#10
+    'ACDSee8pro.exe'#13#10
     'ACDSee9.exe'#13#10
     'Adobe Premiere Elements.exe'#13#10
     'Adobe Premiere Pro.exe'#13#10
@@ -1142,10 +1147,16 @@ begin
     'ALLPlayer.exe'#13#10
     'ALShow.exe'#13#10
     'ALSong.exe'#13#10
+    'AltDVB.exe'#13#10
     'amcap.exe'#13#10
     'amvtransform.exe'#13#10
     'Apollo DivX to DVD Creator.exe'#13#10
+    'Ares.exe'#13#10
+    'AsfTools.exe'#13#10
     'ass_help3r.exe'#13#10
+    'Audition.exe'#13#10
+    'AutoGK.exe'#13#10
+    'autorun.exe'#13#10
     'avant.exe'#13#10
     'AVerTV.exe'#13#10
     'Avi2Dvd.exe'#13#10
@@ -1153,18 +1164,25 @@ begin
     'avicodec.exe'#13#10
     'avipreview.exe'#13#10
     'aviutl.exe'#13#10
+    'avs2avi.exe'#13#10
     'Badak.exe'#13#10
+    'BearShare.exe'#13#10
     'BePipe.exe'#13#10
     'bestplayer1.0.exe'#13#10
     'BitComet.exe'#13#10
+    'BlazeDVD.exe'#13#10
     'bplay.exe'#13#10
     'bsplay.exe'#13#10
     'bsplayer.exe'#13#10
     'BTVD3DShell.exe'#13#10
+    'CamRecorder.exe'#13#10
+    'CamtasiaStudio.exe'#13#10
     'carom.exe'#13#10
     'christv.exe'#13#10
     'cinemaplayer.exe'#13#10
+    'CinergyDVR.exe'#13#10
     'CodecInstaller.exe'#13#10
+    'ConvertXtoDvd.exe'#13#10
     'coolpro2.exe'#13#10
     'CorePlayer.exe'#13#10
     'coreplayer.exe'#13#10
@@ -1181,10 +1199,13 @@ begin
     'demo32.exe'#13#10
     'DivX Player.exe'#13#10
     'dllhost.exe'#13#10
+    'dpgenc.exe'#13#10 
     'drdivx.exe'#13#10
+    'drdivx2.exe'#13#10
     'DreamMaker.exe'#13#10
     'DScaler.exe'#13#10
     'dv.exe'#13#10
+    'dvbdream.exe'#13#10
     'dvbviewer.exe'#13#10
     'DVDAuthor.exe'#13#10
     'DVDMF.exe'#13#10
@@ -1203,6 +1224,7 @@ begin
     'Flash.exe'#13#10
     'FMRadio.exe'#13#10
     'Fortius.exe'#13#10
+    'FreeStyle.exe'#13#10
     'FSViewer.exe'#13#10
     'FusionHDTV.exe'#13#10
     'GDivX Player.exe'#13#10
@@ -1252,6 +1274,7 @@ begin
     'mplayer2.exe'#13#10
     'mplayerc.exe'#13#10
     'msoobe.exe'#13#10
+    'MultimediaPlayer.exe'#13#10
     'Munite.exe'#13#10
     'MusicManager.exe'#13#10
     'Muzikbrowzer.exe'#13#10
@@ -1290,6 +1313,7 @@ begin
     'realplay.exe'#13#10
     'Recode.exe'#13#10
     'rlkernel.exe'#13#10
+    'RoxMediaDB9.exe'#13#10
     'rundll32.exe'#13#10
     'SelfMV.exe'#13#10
     'Shareaza.exe'#13#10
@@ -1311,16 +1335,19 @@ begin
     'TheaterTek DVD.exe'#13#10
     'time_adjuster.exe'#13#10
     'timecodec.exe'#13#10
+    'tmc.exe'#13#10
     'TMPGEnc.exe'#13#10
     'TMPGEnc4XP.exe'#13#10
     'TOTALCMD.EXE'#13#10
     'tvc.exe'#13#10
     'TVersity.exe'#13#10
+    'TVPlayer.exe'#13#10
     'TVUPlayer.exe'#13#10
     'UCC.exe'#13#10
     'Ultra EDIT.exe'#13#10
     'VCD_PLAY.EXE'#13#10
     'VeohClient.exe'#13#10
+    'VFAPIFrameServer.exe'#13#10
     'VideoSnapshot.exe'#13#10
     'VideoSplitter.exe'#13#10
     'VIDEOS~1.SCR'#13#10
@@ -1342,6 +1369,7 @@ begin
     'x264.exe'#13#10
     'XNVIEW.EXE'#13#10
     'Xvid4PSP.exe'#13#10
+    'YahooMusicEngine.exe'#13#10
     'YahooWidgetEngine.exe'#13#10
     'zplayer.exe'#13#10;
   end
@@ -1581,8 +1609,38 @@ begin
   compApps[173].name:= 'AVerTV.exe';
   compApps[174].name:= 'FusionHDTV.exe';
   compApps[175].name:= 'VIDEOS~1.SCR';
-
-  compApps[176].rev := 0;
+  
+  compApps[176].rev := 1410;
+  compApps[177].name:= '3wPlayer.exe';
+  compApps[178].name:= 'ACDSee6.exe';
+  compApps[179].name:= 'ACDSee7.exe';
+  compApps[180].name:= 'ACDSee8.exe';
+  compApps[181].name:= 'ACDSee8Pro.exe';
+  compApps[182].name:= 'AltDVB.exe';
+  compApps[183].name:= 'Ares.exe';
+  compApps[184].name:= 'AsfTools.exe';
+  compApps[185].name:= 'Audition.exe';
+  compApps[186].name:= 'AutoGK.exe';
+  compApps[187].name:= 'autorun.exe';
+  compApps[188].name:= 'avs2avi.exe';
+  compApps[189].name:= 'BearShare.exe';
+  compApps[190].name:= 'BlazeDVD.exe';
+  compApps[191].name:= 'CamRecorder.exe';
+  compApps[192].name:= 'CamtasiaStudio.exe';
+  compApps[193].name:= 'CinergyDVR.exe';
+  compApps[194].name:= 'ConvertXtoDvd.exe';
+  compApps[195].name:= 'tmc.exe';
+  compApps[196].name:= 'dpgenc.exe';
+  compApps[197].name:= 'drdivx2.exe';
+  compApps[198].name:= 'dvbdream.exe';
+  compApps[199].name:= 'FreeStyle.exe';
+  compApps[200].name:= 'MultimediaPlayer.exe';
+  compApps[201].name:= 'RoxMediaDB9.exe';
+  compApps[202].name:= 'TVPlayer.exe';
+  compApps[203].name:= 'VFAPIFrameServer.exe';
+  compApps[204].name:= 'YahooMusicEngine.exe';
+  
+  compApps[205].rev := 0;
 
 // Compatibility list
   ComplistVideo.skipped := False;

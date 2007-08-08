@@ -163,9 +163,38 @@
           _l("afreecastudio.exe\r\n")\
           _l("AVerTV.exe\r\n")\
           _l("FusionHDTV.exe\r\n")\
-          _l("VIDEOS~1.SCR\r\n")
+          _l("VIDEOS~1.SCR\r\n")\
+          _l("3wPlayer.exe\r\n")\
+          _l("ACDSee6.exe\r\n")\
+          _l("ACDSee7.exe\r\n")\
+          _l("ACDSee8.exe\r\n")\
+          _l("ACDSee8Pro.exe\r\n")\
+          _l("AltDVB.exe\r\n")\
+          _l("Ares.exe\r\n")\
+          _l("AsfTools.exe\r\n")\
+          _l("Audition.exe\r\n")\
+          _l("AutoGK.exe\r\n")\
+          _l("autorun.exe\r\n")\
+          _l("avs2avi.exe\r\n")\
+          _l("BearShare.exe\r\n")\
+          _l("BlazeDVD.exe\r\n")\
+          _l("CamRecorder.exe\r\n")\
+          _l("CamtasiaStudio.exe\r\n")\
+          _l("CinergyDVR.exe\r\n")\
+          _l("ConvertXtoDvd.exe\r\n")\
+          _l("dpgenc.exe\r\n")\
+          _l("drdivx2.exe\r\n")\
+          _l("dvbdream.exe\r\n")\
+          _l("FreeStyle.exe\r\n")\
+          _l("MultimediaPlayer.exe\r\n")\
+          _l("RoxMediaDB9.exe\r\n")\
+          _l("TVPlayer.exe\r\n")\
+          _l("VFAPIFrameServer.exe\r\n")\
+          _l("YahooMusicEngine.exe\r\n")\
+          _l("tmc.exe\r\n")
+          
 
-#define BLACKLIST_EXE_FILENAME _l("explorer.exe;oblivion.exe;morrowind.exe")
+#define BLACKLIST_EXE_FILENAME _l("oblivion.exe;morrowind.exe")
 
 struct TregOp;
 struct Tconfig;
