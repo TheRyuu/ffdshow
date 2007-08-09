@@ -365,6 +365,8 @@
 #define IDFF_resizeA2            730
 #define IDFF_resizeMult1000      753
 #define IDFF_resizeSARinternally 3380
+#define IDFF_resizeOutDeviceA1   3408
+#define IDFF_resizeOutDeviceA2   3409
 #define IDFF_resizeIf            733 //0 - always, 1 - size, 2 - number of pixels
 #define IDFF_resizeIfXcond       734 //-1 - less, 1 - more
 #define IDFF_resizeIfXval        735 //width to be compared to
@@ -1422,6 +1424,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3408
+//max:3410
 
 #endif

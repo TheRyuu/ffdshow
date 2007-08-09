@@ -62,7 +62,7 @@ void TresizeSettingsPage::blurSharpen2dlg(void)
  static const int idSh[]={IDC_TBR_RESIZE_SHARPEN_LUM,IDC_LBL_RESIZE_SHARPEN_LUM,
                           IDC_TBR_RESIZE_SHARPEN_CHROM,IDC_LBL_RESIZE_SHARPEN_CHROM,
                           IDC_TBR_RESIZE_GBLUR_LUM,IDC_LBL_RESIZE_GBLUR_LUM,
-                          IDC_TBR_RESIZE_GBLUR_CHROM,IDC_LBL_RESIZE_GBLUR_CHROM,0};
+                          IDC_TBR_RESIZE_GBLUR_CHROM,IDC_LBL_RESIZE_GBLUR_CHROM,IDC_CHB_RESIZE_ACCURATE_ROUNDING,0};
  int method=cfgGet(IDFF_resizeMethodLuma);
  enable(TresizeAspectSettings::methodsProps[method].library==TresizeAspectSettings::LIB_SWSCALER,idSh);
 }

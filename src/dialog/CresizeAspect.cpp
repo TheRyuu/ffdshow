@@ -56,28 +56,33 @@ void TresizeAspectPage::resizeMode2dlg(void)
  setCheck(IDC_RBT_RESIZE_MODE_MULT  ,rm==3);
  setCheck(IDC_RBT_RESIZE_MODE_SIZE_H,rm==4);
  cfgSet(IDFF_resizeSpecifyHorizontalSizeOnly,rm==4);
- enable(rm!=4,IDC_ED_RESIZEDY);
+ enable(rm!=4 && TresizeAspectSettings::methodsProps[cfgGet(IDFF_resizeMethodLuma)].library!=TresizeAspectSettings::LIB_SAI, IDC_ED_RESIZEDY);
 }
 
 void TresizeAspectPage::resize2dlg(void)
 {
  setCheck(IDC_CHB_RESIZE,cfgGet(IDFF_isResize));
- setCheck(IDC_CHB_SAR_INTERNALLY,cfgGet(IDFF_resizeSARinternally));
+ int sarinternally=cfgGet(IDFF_resizeSARinternally);
+ setCheck(IDC_CHB_SAR_INTERNALLY,sarinternally);
  SetDlgItemInt(m_hwnd,IDC_ED_RESIZEDX,cfgGet(IDFF_resizeDx),FALSE);
  int y=cfgGet(IDFF_resizeDy);
- int isy0=cfgGet(IDFF_resizeSpecifyHorizontalSizeOnly);
- //if(isy0) y=0;
  SetDlgItemInt(m_hwnd,IDC_ED_RESIZEDY, y ,FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_RESIZE_MOD_16,cfgGet(IDFF_resizeMultOf),FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_RESIZEA1,cfgGet(IDFF_resizeA1),FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_RESIZEA2,cfgGet(IDFF_resizeA2),FALSE);
+ SetDlgItemInt(m_hwnd,IDC_ED_RESIZE_OUT_DEVICE_A1,cfgGet(IDFF_resizeOutDeviceA1),FALSE);
+ SetDlgItemInt(m_hwnd,IDC_ED_RESIZE_OUT_DEVICE_A2,cfgGet(IDFF_resizeOutDeviceA2),FALSE);
  setText(IDC_ED_RESIZE_MULT,_l("%.3f"),float(cfgGet(IDFF_resizeMult1000)/1000.0));
  static const int idSai[]={IDC_RBT_RESIZE_MODE_SIZE,IDC_LBL_NEW_SIZE,IDC_ED_RESIZEDX,IDC_ED_RESIZEDY,IDC_BT_RESIZE_SIZE_MENU,
                            IDC_RBT_RESIZE_MODE_ASPECT,IDC_LBL_NEW_ASPECT,IDC_ED_RESIZEA1,IDC_LBL_NEW_ASPECT_SEP,IDC_ED_RESIZEA2,IDC_BT_RESIZE_ASPECT_MENU,
                            IDC_RBT_RESIZE_MOD_16,IDC_ED_RESIZE_MOD_16,IDC_ED_RESIZE_MOD_16,IDC_BT_RESIZE_MOD_16,
                            IDC_RBT_RESIZE_MODE_MULT,IDC_ED_RESIZE_MULT,
+                           IDC_CHB_SAR_INTERNALLY,IDC_RBT_RESIZE_MODE_SIZE_H,
                            0};
- enable(TresizeAspectSettings::methodsProps[cfgGet(IDFF_resizeMethodLuma)].library!=TresizeAspectSettings::LIB_SAI,idSai);
+ bool isLibSai=TresizeAspectSettings::methodsProps[cfgGet(IDFF_resizeMethodLuma)].library==TresizeAspectSettings::LIB_SAI;
+ enable(!isLibSai,idSai);
+ static const int idParOutDev[]={IDC_ED_RESIZE_OUT_DEVICE_A1,IDC_ED_RESIZE_OUT_DEVICE_A2,IDC_LBL_PAR_OUTDEV,0};
+ enable(sarinternally && !isLibSai,idParOutDev);
  resizeMode2dlg();
 }
 void TresizeAspectPage::resizeIf2dlg(void)
@@ -411,12 +416,14 @@ TresizeAspectPage::TresizeAspectPage(TffdshowPageDec *Iparent,const TfilterIDFF 
  bindRadioButtons(rbt);
  static const TbindEditInt<TresizeAspectPage> edInt[]=
   {
-   IDC_ED_RESIZEA1,0,10000,IDFF_resizeA1,NULL,
-   IDC_ED_RESIZEA2,0,10000,IDFF_resizeA2,NULL,
+   IDC_ED_RESIZEA1,1,10000,IDFF_resizeA1,NULL,
+   IDC_ED_RESIZEA2,1,10000,IDFF_resizeA2,NULL,
    IDC_ED_RESIZE_IFX,0,16384,IDFF_resizeIfXval,NULL,
    IDC_ED_RESIZE_IFY,0,16384,IDFF_resizeIfYval,NULL,
    IDC_ED_RESIZE_IFPIX,0,16384*16384,IDFF_resizeIfPixVal,NULL,
    IDC_ED_RESIZE_MOD_16,1,128,IDFF_resizeMultOf,NULL,
+   IDC_ED_RESIZE_OUT_DEVICE_A1,1,10000,IDFF_resizeOutDeviceA1,NULL,
+   IDC_ED_RESIZE_OUT_DEVICE_A2,1,10000,IDFF_resizeOutDeviceA2,NULL,
    0
   };
  bindEditInts(edInt);
@@ -436,7 +443,7 @@ TresizeAspectPage::TresizeAspectPage(TffdshowPageDec *Iparent,const TfilterIDFF 
   };
  static const TbindCheckbox<TresizeAspectPage> chb[]=
   {
-   IDC_CHB_SAR_INTERNALLY,IDFF_resizeSARinternally,NULL,
+   IDC_CHB_SAR_INTERNALLY,IDFF_resizeSARinternally,&TresizeAspectPage::resize2dlg,
    0,NULL,NULL
   };
  bindCheckboxes(chb);

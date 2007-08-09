@@ -293,8 +293,10 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
       if (incsp&FF_CSP_FLAGS_INTERLACED || outcsp&FF_CSP_FLAGS_INTERLACED) tmpcsp|=FF_CSP_FLAGS_INTERLACED;
      }
 
+#ifdef DEBUG
    char_t incspS[256],outcspS[256];
    DPRINTF(_l("colorspace conversion: %s -> %s (%s)"),csp_getName(incsp0,incspS,256),csp_getName(outcsp0,outcspS,256),getModeName(mode));
+#endif
 
    if (mode==MODE_xvidImage_input || mode==MODE_xvidImage_output)
     {

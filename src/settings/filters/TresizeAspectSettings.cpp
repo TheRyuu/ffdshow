@@ -113,6 +113,10 @@ TresizeAspectSettings::TresizeAspectSettings(TintStrColl *Icoll,TfilterIDFFs *fi
      _l("resizeMult1000"),2000,
    IDFF_resizeSARinternally,&TresizeAspectSettings::SARinternally  ,0,0,_l(""),1,
      _l("resizeSARinternally"),1,
+   IDFF_resizeOutDeviceA1  ,&TresizeAspectSettings::outDeviceA1    ,1,10000,_l(""),1,
+     _l("resizeOutDeviceA1"),1,
+   IDFF_resizeOutDeviceA2  ,&TresizeAspectSettings::outDeviceA2    ,1,10000,_l(""),1,
+     _l("resizeOutDeviceA2"),1,
    IDFF_resizeIf           ,&TresizeAspectSettings::_if            ,0,2,_l(""),1,
      _l("resizeIf"),0,
    IDFF_resizeIfXcond      ,&TresizeAspectSettings::xcond          ,-1,1,_l(""),1,
@@ -502,7 +506,7 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
       if(SARinternally && is)
        {
         ax=inRect.dx;
-        ay=inRect.dy*inRect.sar.den/inRect.sar.num;
+        ay=inRect.dy*inRect.sar.den*outDeviceA1/inRect.sar.num/outDeviceA2;
         rectClip->sar.num=1;rectClip->sar.den=1;
        }
       else
@@ -544,34 +548,39 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
     borderX=std::max(64,int(rectClip->dx+(bordersInside?-2:2)*bordersPixelsX));
     borderY=std::max(24,int(rectClip->dy+(bordersInside?-2:2)*(bordersLocked?rectClip->dy*bordersPixelsY/rectClip->dx:bordersPixelsY)));
    }
+  borderX&=~1;
+  borderY&=~1;
   if (borderX || borderY)
    {
-    if (bordersInside)
+    if (bordersInside && methodsProps[methodLuma].library!=LIB_SAI)
      {
       if (isAspect>=1)
        {
         unsigned int bdy=borderX*ay/ax;
         if (bdy<=borderY)
          {
-          rectClip->dx=borderX&~1;
+          rectClip->dx=borderX;
           rectClip->dy=bdy&~1;
          }
         else
          {
           rectClip->dx=borderY*ax/ay;
-          rectClip->dy=borderY&~1;
+          rectClip->dy=borderY;
          }
        }
       else
        {
-        rectClip->dx=borderX&~1;
-        rectClip->dy=borderY&~1;
+        rectClip->dx=borderX;
+        rectClip->dy=borderY;
        }
      }
     else
      {
-      rectFull->dx=borderX&~1;
-      rectFull->dy=borderY&~1;
+      if (methodsProps[methodLuma].library!=LIB_SAI || (borderX>rectFull->dx && borderY>rectFull->dy))
+       {
+        rectFull->dx=borderX;
+        rectFull->dy=borderY;
+       }
      }
     if (rectClip->dx>rectFull->dx) rectClip->dx=rectFull->dx;
     if (rectClip->dy>rectFull->dy) rectClip->dy=rectFull->dy;
