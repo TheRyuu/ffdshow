@@ -465,9 +465,9 @@ static int svq3_decode_mb (H264Context *h, unsigned int mb_type) {
       mb_type = MB_TYPE_16x16;
     }
   } else if (mb_type < 8) {     /* INTER */
-    if (h->thirdpel_flag && h->halfpel_flag == !get_bits (&s->gb, 1)) {
+    if (h->thirdpel_flag && h->halfpel_flag == !get_bits1 (&s->gb)) {
       mode = THIRDPEL_MODE;
-    } else if (h->halfpel_flag && h->thirdpel_flag == !get_bits (&s->gb, 1)) {
+    } else if (h->halfpel_flag && h->thirdpel_flag == !get_bits1 (&s->gb)) {
       mode = HALFPEL_MODE;
     } else {
       mode = FULLPEL_MODE;
@@ -748,7 +748,7 @@ static int svq3_decode_slice_header (H264Context *h) {
     i = (s->mb_num < 64) ? 6 : (1 + av_log2 (s->mb_num - 1));
     s->mb_skip_run = get_bits (&s->gb, i) - (s->mb_x + (s->mb_y * s->mb_width));
   } else {
-    get_bits1 (&s->gb);
+    skip_bits1 (&s->gb);
     s->mb_skip_run = 0;
   }
 
@@ -757,17 +757,17 @@ static int svq3_decode_slice_header (H264Context *h) {
   s->adaptive_quant = get_bits1 (&s->gb);
 
   /* unknown fields */
-  get_bits1 (&s->gb);
+  skip_bits1 (&s->gb);
 
   if (h->unknown_svq3_flag) {
-    get_bits1 (&s->gb);
+    skip_bits1 (&s->gb);
   }
 
-  get_bits1 (&s->gb);
-  get_bits (&s->gb, 2);
+  skip_bits1 (&s->gb);
+  skip_bits (&s->gb, 2);
 
   while (get_bits1 (&s->gb)) {
-    get_bits (&s->gb, 8);
+    skip_bits (&s->gb, 8);
   }
 
   /* reset intra predictors and invalidate motion vector references */
@@ -834,26 +834,26 @@ static int svq3_decode_frame (AVCodecContext *avctx,
 
       /* 'frame size code' and optional 'width, height' */
       if (get_bits (&gb, 3) == 7) {
-        get_bits (&gb, 12);
-        get_bits (&gb, 12);
+        skip_bits (&gb, 12);
+        skip_bits (&gb, 12);
       }
 
       h->halfpel_flag = get_bits1 (&gb);
       h->thirdpel_flag = get_bits1 (&gb);
 
       /* unknown fields */
-      get_bits1 (&gb);
-      get_bits1 (&gb);
-      get_bits1 (&gb);
-      get_bits1 (&gb);
+      skip_bits1 (&gb);
+      skip_bits1 (&gb);
+      skip_bits1 (&gb);
+      skip_bits1 (&gb);
 
       s->low_delay = get_bits1 (&gb);
 
       /* unknown field */
-      get_bits1 (&gb);
+      skip_bits1 (&gb);
 
       while (get_bits1 (&gb)) {
-        get_bits (&gb, 8);
+        skip_bits (&gb, 8);
       }
 
       h->unknown_svq3_flag = get_bits1 (&gb);

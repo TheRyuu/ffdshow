@@ -49,12 +49,6 @@
 
 #define BLKSIZE 1024
 
-#define CLAMP_TO_SHORT(value) \
-if (value > 32767) \
-    value = 32767; \
-else if (value < -32768) \
-    value = -32768; \
-
 /* step_table[] and index_table[] are from the ADPCM reference source */
 /* This is the index table: */
 static const int index_table[16] = {
@@ -203,11 +197,10 @@ static inline short adpcm_ima_expand_nibble(ADPCMChannelStatus *c, char nibble, 
     if (sign) predictor -= diff;
     else predictor += diff;
 
-    CLAMP_TO_SHORT(predictor);
-    c->predictor = predictor;
+    c->predictor = av_clip_int16(predictor);
     c->step_index = step_index;
 
-    return (short)predictor;
+    return (short)c->predictor;
 }
 
 static inline short adpcm_ms_expand_nibble(ADPCMChannelStatus *c, char nibble)
@@ -216,19 +209,17 @@ static inline short adpcm_ms_expand_nibble(ADPCMChannelStatus *c, char nibble)
 
     predictor = (((c->sample1) * (c->coeff1)) + ((c->sample2) * (c->coeff2))) / 256;
     predictor += (signed)((nibble & 0x08)?(nibble - 0x10):(nibble)) * c->idelta;
-    CLAMP_TO_SHORT(predictor);
 
     c->sample2 = c->sample1;
-    c->sample1 = predictor;
+    c->sample1 = av_clip_int16(predictor);
     c->idelta = (AdaptationTable[(int)nibble] * c->idelta) >> 8;
     if (c->idelta < 16) c->idelta = 16;
 
-    return (short)predictor;
+    return c->sample1;
 }
 
 static inline short adpcm_ct_expand_nibble(ADPCMChannelStatus *c, char nibble)
 {
-    int predictor;
     int sign, delta, diff;
     int new_step;
 
@@ -238,23 +229,14 @@ static inline short adpcm_ct_expand_nibble(ADPCMChannelStatus *c, char nibble)
      * the reference ADPCM implementation since modern CPUs can do the mults
      * quickly enough */
     diff = ((2 * delta + 1) * c->step) >> 3;
-    predictor = c->predictor;
     /* predictor update is not so trivial: predictor is multiplied on 254/256 before updating */
-    if(sign)
-        predictor = ((predictor * 254) >> 8) - diff;
-    else
-            predictor = ((predictor * 254) >> 8) + diff;
+    c->predictor = ((c->predictor * 254) >> 8) + (sign ? -diff : diff);
+    c->predictor = av_clip_int16(c->predictor);
     /* calculate new step and clamp it to range 511..32767 */
     new_step = (ct_adpcm_table[nibble & 7] * c->step) >> 8;
-    c->step = new_step;
-    if(c->step < 511)
-        c->step = 511;
-    if(c->step > 32767)
-        c->step = 32767;
+    c->step = av_clip(new_step, 511, 32767);
 
-    CLAMP_TO_SHORT(predictor);
-    c->predictor = predictor;
-    return (short)predictor;
+    return (short)c->predictor;
 }
 
 static inline short adpcm_sbpro_expand_nibble(ADPCMChannelStatus *c, char nibble, int size, int shift)
@@ -265,16 +247,8 @@ static inline short adpcm_sbpro_expand_nibble(ADPCMChannelStatus *c, char nibble
     delta = nibble & ((1<<(size-1))-1);
     diff = delta << (7 + c->step + shift);
 
-    if (sign)
-        c->predictor -= diff;
-    else
-        c->predictor += diff;
-
     /* clamp result */
-    if (c->predictor > 16256)
-        c->predictor = 16256;
-    else if (c->predictor < -16384)
-        c->predictor = -16384;
+    c->predictor = av_clip(c->predictor + (sign ? -diff : diff), -16384,16256);
 
     /* calculate new step */
     if (delta >= (2*size - 3) && c->step < 3)
@@ -293,7 +267,7 @@ static inline short adpcm_yamaha_expand_nibble(ADPCMChannelStatus *c, unsigned c
     }
 
     c->predictor += (c->step * yamaha_difflookup[nibble]) / 8;
-    CLAMP_TO_SHORT(c->predictor);
+    c->predictor = av_clip_int16(c->predictor);
     c->step = (c->step * yamaha_indexscale[nibble]) >> 8;
     c->step = av_clip(c->step, 127, 24567);
     return c->predictor;
@@ -322,11 +296,10 @@ static void xa_decode(short *out, const unsigned char *in,
 
             t = (signed char)(d<<4)>>4;
             s = ( t<<shift ) + ((s_1*f0 + s_2*f1+32)>>6);
-            CLAMP_TO_SHORT(s);
-            *out = s;
-            out += inc;
             s_2 = s_1;
-            s_1 = s;
+            s_1 = av_clip_int16(s);
+            *out = s_1;
+            out += inc;
         }
 
         if (inc==2) { /* stereo */
@@ -348,11 +321,10 @@ static void xa_decode(short *out, const unsigned char *in,
 
             t = (signed char)d >> 4;
             s = ( t<<shift ) + ((s_1*f0 + s_2*f1+32)>>6);
-            CLAMP_TO_SHORT(s);
-            *out = s;
-            out += inc;
             s_2 = s_1;
-            s_1 = s;
+            s_1 = av_clip_int16(s);
+            *out = s_1;
+            out += inc;
         }
 
         if (inc==2) { /* stereo */
@@ -442,7 +414,7 @@ static int adpcm_decode_frame(AVCodecContext *avctx,
         if(cs->predictor & 0x8000)
             cs->predictor -= 0x10000;
 
-        CLAMP_TO_SHORT(cs->predictor);
+        cs->predictor = av_clip_int16(cs->predictor);
 
         cs->step_index = (*src++) & 0x7F;
 
@@ -714,13 +686,11 @@ static int adpcm_decode_frame(AVCodecContext *avctx,
                 next_right_sample = (next_right_sample +
                     (current_right_sample * coeff1r) +
                     (previous_right_sample * coeff2r) + 0x80) >> 8;
-                CLAMP_TO_SHORT(next_left_sample);
-                CLAMP_TO_SHORT(next_right_sample);
 
                 previous_left_sample = current_left_sample;
-                current_left_sample = next_left_sample;
+                current_left_sample = av_clip_int16(next_left_sample);
                 previous_right_sample = current_right_sample;
-                current_right_sample = next_right_sample;
+                current_right_sample = av_clip_int16(next_right_sample);
                 *samples++ = (unsigned short)current_left_sample;
                 *samples++ = (unsigned short)current_right_sample;
             }
@@ -845,7 +815,7 @@ static int adpcm_decode_frame(AVCodecContext *avctx,
                     c->status[i].step_index += table[delta & (~signmask)];
 
                     c->status[i].step_index = av_clip(c->status[i].step_index, 0, 88);
-                    c->status[i].predictor = av_clip(c->status[i].predictor, -32768, 32767);
+                    c->status[i].predictor = av_clip_int16(c->status[i].predictor);
 
                     *samples++ = c->status[i].predictor;
                     if (samples >= samples_end) {

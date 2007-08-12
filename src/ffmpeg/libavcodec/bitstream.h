@@ -28,6 +28,7 @@
 
 #include "libavutil/log.h"
 #include "libavutil/bswap.h"
+#include "libavutil/intreadwrite.h"
 
 #if defined(ALT_BITSTREAM_READER_LE) && !defined(ALT_BITSTREAM_READER)
 #define ALT_BITSTREAM_READER
@@ -394,26 +395,6 @@ LAST_SKIP_BITS(name, gb, num)
 for examples see get_bits, show_bits, skip_bits, get_vlc
 */
 
-static inline int unaligned32_be(const void *v)
-{
-#ifdef CONFIG_ALIGN
-        const uint8_t *p=v;
-        return (((p[0]<<8) | p[1])<<16) | (p[2]<<8) | (p[3]);
-#else
-        return be2me_32( unaligned32(v)); //original
-#endif
-}
-
-static inline int unaligned32_le(const void *v)
-{
-#ifdef CONFIG_ALIGN
-       const uint8_t *p=v;
-       return (((p[3]<<8) | p[2])<<16) | (p[1]<<8) | (p[0]);
-#else
-       return le2me_32( unaligned32(v)); //original
-#endif
-}
-
 #ifdef ALT_BITSTREAM_READER
 #   define MIN_CACHE_BITS 25
 
@@ -426,13 +407,13 @@ static inline int unaligned32_le(const void *v)
 
 # ifdef ALT_BITSTREAM_READER_LE
 #   define UPDATE_CACHE(name, gb)\
-        name##_cache= unaligned32_le( ((const uint8_t *)(gb)->buffer)+(name##_index>>3) ) >> (name##_index&0x07);\
+        name##_cache= AV_RL32( ((const uint8_t *)(gb)->buffer)+(name##_index>>3) ) >> (name##_index&0x07);\
 
 #   define SKIP_CACHE(name, gb, num)\
         name##_cache >>= (num);
 # else
 #   define UPDATE_CACHE(name, gb)\
-        name##_cache= unaligned32_be( ((const uint8_t *)(gb)->buffer)+(name##_index>>3) ) << (name##_index&0x07);\
+        name##_cache= AV_RB32( ((const uint8_t *)(gb)->buffer)+(name##_index>>3) ) << (name##_index&0x07);\
 
 #   define SKIP_CACHE(name, gb, num)\
         name##_cache <<= (num);
@@ -959,6 +940,52 @@ static inline int decode012(GetBitContext *gb){
         return 0;
     else
         return get_bits1(gb) + 1;
+}
+
+/**
+ * Get unary code of limited length
+ * @todo FIXME Slow and ugly
+ * @param gb GetBitContext
+ * @param[in] stop The bitstop value (unary code of 1's or 0's)
+ * @param[in] len Maximum length
+ * @return Unary length/index
+ */
+static int get_unary(GetBitContext *gb, int stop, int len)
+{
+#if 1
+    int i;
+
+    for(i = 0; i < len && get_bits1(gb) != stop; i++);
+    return i;
+/*  int i = 0, tmp = !stop;
+
+  while (i != len && tmp != stop)
+  {
+    tmp = get_bits(gb, 1);
+    i++;
+  }
+  if (i == len && tmp != stop) return len+1;
+  return i;*/
+#else
+  unsigned int buf;
+  int log;
+
+  OPEN_READER(re, gb);
+  UPDATE_CACHE(re, gb);
+  buf=GET_CACHE(re, gb); //Still not sure
+  if (stop) buf = ~buf;
+
+  log= av_log2(-buf); //FIXME: -?
+  if (log < limit){
+    LAST_SKIP_BITS(re, gb, log+1);
+    CLOSE_READER(re, gb);
+    return log;
+  }
+
+  LAST_SKIP_BITS(re, gb, limit);
+  CLOSE_READER(re, gb);
+  return limit;
+#endif
 }
 
 #endif /* BITSTREAM_H */

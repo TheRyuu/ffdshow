@@ -195,12 +195,12 @@ int rv_decode_dc(MpegEncContext *s, int n)
             } else if (code == 0x7d) {
                 code = -128 + get_bits(&s->gb, 7);
             } else if (code == 0x7e) {
-                if (get_bits(&s->gb, 1) == 0)
+                if (get_bits1(&s->gb) == 0)
                     code = (int8_t)(get_bits(&s->gb, 8) + 1);
                 else
                     code = (int8_t)(get_bits(&s->gb, 8));
             } else if (code == 0x7f) {
-                get_bits(&s->gb, 11);
+                skip_bits(&s->gb, 11);
                 code = 1;
             }
         } else {
@@ -216,7 +216,7 @@ int rv_decode_dc(MpegEncContext *s, int n)
             } else if (code == 0x1fd) {
                 code = -128 + get_bits(&s->gb, 7);
             } else if (code == 0x1fe) {
-                get_bits(&s->gb, 9);
+                skip_bits(&s->gb, 9);
                 code = 1;
             } else {
                 av_log(s->avctx, AV_LOG_ERROR, "chroma dc error\n");
@@ -235,15 +235,15 @@ static int rv10_decode_picture_header(MpegEncContext *s)
     int mb_count, pb_frame, marker, unk, mb_xy;
 
 //printf("ff:%d\n", full_frame);
-    marker = get_bits(&s->gb, 1);
+    marker = get_bits1(&s->gb);
 
-    if (get_bits(&s->gb, 1))
+    if (get_bits1(&s->gb))
         s->pict_type = P_TYPE;
     else
         s->pict_type = I_TYPE;
 //printf("h:%X ver:%d\n",h,s->rv10_version);
     if(!marker) av_log(s->avctx, AV_LOG_ERROR, "marker missing\n");
-    pb_frame = get_bits(&s->gb, 1);
+    pb_frame = get_bits1(&s->gb);
 
 #ifdef DEBUG
     av_log(s->avctx, AV_LOG_DEBUG, "pict_type=%d pb_frame=%d\n", s->pict_type, pb_frame);
@@ -339,7 +339,7 @@ static int rv20_decode_picture_header(MpegEncContext *s)
         return -1;
     }
 
-    if (get_bits(&s->gb, 1)){
+    if (get_bits1(&s->gb)){
         av_log(s->avctx, AV_LOG_ERROR, "unknown bit set\n");
         return -1;
     }
@@ -350,7 +350,7 @@ static int rv20_decode_picture_header(MpegEncContext *s)
         return -1;
     }
     if(s->avctx->sub_id == 0x30203002){
-        if (get_bits(&s->gb, 1)){
+        if (get_bits1(&s->gb)){
             av_log(s->avctx, AV_LOG_ERROR, "unknown bit2 set\n");
             return -1;
         }
@@ -360,7 +360,7 @@ static int rv20_decode_picture_header(MpegEncContext *s)
         int f, new_w, new_h;
         int v= s->avctx->extradata_size >= 4 ? 7&((uint8_t*)s->avctx->extradata)[1] : 0;
 
-        if (get_bits(&s->gb, 1)){
+        if (get_bits1(&s->gb)){
             av_log(s->avctx, AV_LOG_ERROR, "unknown bit3 set\n");
 //            return -1;
         }

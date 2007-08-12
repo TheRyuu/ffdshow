@@ -135,7 +135,7 @@ static const uint8_t string_table[256] = {
           break;\
       }\
       /* divide block if next bit set */\
-      if (get_bits (bitbuf, 1) == 0)\
+      if (get_bits1 (bitbuf) == 0)\
         break;\
       /* add child nodes */\
       list[n++] = list[i];\
@@ -615,7 +615,7 @@ static int svq1_decode_frame_header (GetBitContext *bitbuf,MpegEncContext *s) {
   }
 
   /* unknown fields */
-  if (get_bits (bitbuf, 1) == 1) {
+  if (get_bits1 (bitbuf) == 1) {
     skip_bits1 (bitbuf);       /* use packet checksum if (1) */
     skip_bits1 (bitbuf);       /* component checksums after image data if (1) */
 
@@ -623,13 +623,13 @@ static int svq1_decode_frame_header (GetBitContext *bitbuf,MpegEncContext *s) {
       return -1;
   }
 
-  if (get_bits (bitbuf, 1) == 1) {
+  if (get_bits1 (bitbuf) == 1) {
     skip_bits1 (bitbuf);
     skip_bits (bitbuf, 4);
     skip_bits1 (bitbuf);
     skip_bits (bitbuf, 2);
 
-    while (get_bits (bitbuf, 1) == 1) {
+    while (get_bits1 (bitbuf) == 1) {
       skip_bits (bitbuf, 8);
     }
   }
