@@ -497,7 +497,7 @@ template<class tchar> bool TsubtitleParserSSA<tchar>::Tstyle::toCOLORREF(const f
  ffstring s1,s2;
  s1=colourStr;
  s1.ConvertToUpperCase();
- if (s1.compare(0,2,_L("&H")))//strnicmp(colorS,_L("&h"),2)==0)
+ if (s1.compare(0,2,_L("&H"),2)==0)
   {
    s1.erase(0,2);
    radix=16;
