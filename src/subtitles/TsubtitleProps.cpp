@@ -31,7 +31,8 @@ void TSubtitleProps::reset(void)
  isPos=false;
  size=0;
  fontname[0]='\0';
- encoding=spacing=-1;
+ encoding=-1;
+ spacing=INT_MIN;
  scaleX=scaleY=-1;
  alignment=-1;
  marginR=marginL=marginV=marginTop=marginBottom=-1;
@@ -68,6 +69,14 @@ void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,uns
  lf.lfQuality=DEFAULT_QUALITY;
  lf.lfPitchAndFamily=DEFAULT_PITCH|FF_DONTCARE;
  strncpy(lf.lfFaceName,fontname[0]?fontname:fontSettings.name,LF_FACESIZE);
+}
+
+int TSubtitleProps::get_spacing(unsigned int dy,unsigned int clipdy) const
+{
+ if (refResY)
+  return int(spacing*4.0*(clipdy ? clipdy : dy)/refResY);
+ else
+  return int(spacing*4.0); 
 }
 
 unsigned int TSubtitleProps::get_marginR(unsigned int screenWidth) const

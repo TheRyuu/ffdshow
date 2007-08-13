@@ -858,7 +858,7 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::processTokens(const tch
    if (!processToken(l3,_L("\\fn"),&Tssa<tchar>::fontName) &&
        !processToken(l3,_L("\\fscx"),&Tssa<tchar>::template intProp<&TSubtitleProps::scaleX,1,1000>) &&
        !processToken(l3,_L("\\fscy"),&Tssa<tchar>::template intProp<&TSubtitleProps::scaleY,1,1000>) &&
-       !processToken(l3,_L("\\fsp"),&Tssa<tchar>::template intProp<&TSubtitleProps::spacing,0,INT_MAX>) &&
+       !processToken(l3,_L("\\fsp"),&Tssa<tchar>::template doubleProp<&TSubtitleProps::spacing,INT_MIN+1,INT_MAX>) &&
        !processToken(l3,_L("\\fs"),&Tssa<tchar>::template intProp<&TSubtitleProps::size,1,INT_MAX>) &&
        !processToken(l3,_L("\\fe"),&Tssa<tchar>::template intProp<&TSubtitleProps::encoding,0,255>) &&
        !processToken(l3,_L("\\an"),&Tssa<tchar>::template intPropAn<&TSubtitleProps::alignment,1,9>) &&

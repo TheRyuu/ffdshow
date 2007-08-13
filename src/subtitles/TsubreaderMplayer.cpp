@@ -486,7 +486,7 @@ template<class tchar> void TsubtitleParserSSA<tchar>::strToDouble(const ffstring
   {
    tchar *end;
    double val=strtod(str.c_str(),&end);
-   if (*end=='\0' && val>=0) *d=val;
+   if (*end=='\0') *d=val;
   }
 }
 
@@ -556,7 +556,7 @@ template<class tchar> void TsubtitleParserSSA<tchar>::Tstyle::toProps(int versio
  if (underline==_L("-1")) props.underline=true;
  if (strikeout==_L("-1")) props.strikeout=true;
  strToInt(encoding,&props.encoding);
- strToInt(spacing,&props.spacing);
+ strToDouble(spacing,&props.spacing);
  strToInt(fontScaleX,&props.scaleX);
  strToInt(fontScaleY,&props.scaleY);
  strToInt(alignment,&props.alignment);
@@ -683,6 +683,12 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
         styleFormat.push_back(&Tstyle::bold);
        else if (strnicmp(f->first,_L("italic"),6)==0)
         styleFormat.push_back(&Tstyle::italic);
+       else if (strnicmp(f->first,_L("Spacing"),7)==0)
+        styleFormat.push_back(&Tstyle::spacing);
+       else if (strnicmp(f->first,_L("outline"),7)==0)
+        styleFormat.push_back(&Tstyle::outlineWidth);
+       else if (strnicmp(f->first,_L("shadow"),6)==0)
+        styleFormat.push_back(&Tstyle::shadowDepth);
        else if (strnicmp(f->first,_L("alignment"),9)==0)
         styleFormat.push_back(&Tstyle::alignment);
        else if (strnicmp(f->first,_L("encoding"),8)==0)
@@ -695,10 +701,6 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
         styleFormat.push_back(&Tstyle::marginV);
        else if (strnicmp(f->first,_L("borderstyle"),11)==0)
         styleFormat.push_back(&Tstyle::borderStyle);
-       else if (strnicmp(f->first,_L("outline"),7)==0)
-        styleFormat.push_back(&Tstyle::outlineWidth);
-       else if (strnicmp(f->first,_L("shadow"),6)==0)
-        styleFormat.push_back(&Tstyle::shadowDepth);
        else
         styleFormat.push_back(NULL);
       }

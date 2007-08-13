@@ -6,7 +6,7 @@ struct TSubtitleProps
 {
  TSubtitleProps(void) {reset();}
  TSubtitleProps(unsigned int IrefResX,unsigned int IrefResY, int IwrapStyle) {reset();refResX=IrefResX;refResY=IrefResY;wrapStyle=IwrapStyle;}
- TSubtitleProps(bool Ibold,bool Iitalic, bool Iunderline) {reset();bold=Ibold;italic=Iitalic;underline=Iunderline;}
+ TSubtitleProps(bool Iitalic, bool Iunderline) {reset();italic=Iitalic;underline=Iunderline;}
  int bold;
  bool italic,underline,strikeout,blur;
  bool isColor;COLORREF color,SecondaryColour, TertiaryColour, OutlineColour, ShadowColour;
@@ -18,7 +18,7 @@ struct TSubtitleProps
  int scaleX,scaleY; //in percents, -1 default
  char_t fontname[LF_FACESIZE];
  int encoding; //-1 = default
- int spacing;  //-1 = default
+ double spacing;  //INT_MIN = default
  void reset(void);
  void toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy) const;
 
@@ -32,6 +32,7 @@ struct TSubtitleProps
  int marginR,marginL,marginV,marginTop,marginBottom; // -1 = default
  int borderStyle; // -1 = default
  double outlineWidth,shadowDepth; // -1 = default
+ int get_spacing(unsigned int dy,unsigned int clipdy) const;
  unsigned int get_marginR(unsigned int screenWidth) const;
  unsigned int get_marginL(unsigned int screenWidth) const;
  unsigned int get_marginTop(unsigned int screenHeight) const;

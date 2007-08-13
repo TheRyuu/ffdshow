@@ -32,7 +32,7 @@ template<class tchar> TwordWrap<tchar>::TwordWrap(int Imode,const tchar *Istr,in
   }
  else if (mode==2)
   {
-   splitdxMin=splitdxMax=0x7fffffff;
+   splitdxMin=splitdxMax=INT_MAX;
    smart();
   }
  else if (mode==3)

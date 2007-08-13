@@ -1401,7 +1401,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
        w->props.toLOGFONT(lf,*fontSettings,dx,dy,prefs.clipdy);
        HFONT font=fontManager->getFont(lf);
        HGDIOBJ old=SelectObject(hdc,font);
-       SetTextCharacterExtra(hdc,w->props.spacing>=0?w->props.spacing:fontSettings->spacing);
+       SetTextCharacterExtra(hdc,w->props.spacing==INT_MIN ? fontSettings->spacing : w->props.get_spacing(dy,prefs.clipdy));
        const tchar *p=*w;
        if (*p) // drop empty words
         {
@@ -1414,7 +1414,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
          SIZE sz;
          size_t strlenp=strlen(p);
          int *ptempwidths=(int*)tempwidth.alloc((strlenp+1)*sizeof(int));
-         prefs.config->getGDI<tchar>().getTextExtentExPoint(hdc,p,(int)strlenp,0x7fffffff,&nfit,ptempwidths,&sz);
+         prefs.config->getGDI<tchar>().getTextExtentExPoint(hdc,p,(int)strlenp,INT_MAX,&nfit,ptempwidths,&sz);
          for (size_t x=0;x<strlenp;x++)
           {
            pwidths[charCount]=ptempwidths[x]+left;
@@ -1445,7 +1445,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
        HFONT font=fontManager->getFont(lf);
        HGDIOBJ old=SelectObject(hdc,font);
        if (!oldFont) oldFont=old;
-       SetTextCharacterExtra(hdc,w->props.spacing>=0?w->props.spacing:fontSettings->spacing);
+       SetTextCharacterExtra(hdc,w->props.spacing==INT_MIN ? fontSettings->spacing : w->props.get_spacing(dy,prefs.clipdy));
        if (!line)
         {
          line=new TrenderedSubtitleLine(w->props);
