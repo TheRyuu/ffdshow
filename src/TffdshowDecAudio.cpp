@@ -420,7 +420,7 @@ HRESULT TffdshowDecAudio::DecideBufferSize(IMemAllocator *pAllocator, ALLOCATOR_
 
  if (!presetSettings) initPreset();
 
- pProperties->cBuffers=4;
+ pProperties->cBuffers=10;
  pProperties->cbBuffer=48000*6*4/5;
  pProperties->cbAlign=1;
  pProperties->cbPrefix=0;
@@ -794,7 +794,8 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleSPDIF(void *buf,size_t size,int bit_
    pDataOutW[1]=0x4e1f;
    pDataOutW[2]=type;
    pDataOutW[3]=WORD(size*8);
-   _swab((char*)buf,(char*)&pDataOutW[4],(int)size);
+   pDataOutW[4] = 0x0b77;  // AC3 syncword
+   _swab((char*)buf,(char*)&pDataOutW[10],(int)(size*2-2));
   }
  else
   {
