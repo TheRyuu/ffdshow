@@ -19,6 +19,7 @@ private:
  FILE *statsfile;
  int cfgcomode;
  int psnr;
+ int grayscale;
  bool isAdaptive;
  int threadcount;
  int neroavc,theorart;

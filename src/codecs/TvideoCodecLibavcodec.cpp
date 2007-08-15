@@ -143,7 +143,8 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
  inter_matrix_chroma=avctx->inter_matrix_chroma=(uint16_t*)calloc(sizeof(uint16_t),16);
  ownmatrices=true;
 
- if (deci->getParam2(IDFF_grayscale)) avctx->flags|=CODEC_FLAG_GRAY;
+ grayscale=deci->getParam2(IDFF_grayscale);
+ if (grayscale && codecId!=CODEC_ID_THEORA) avctx->flags|=CODEC_FLAG_GRAY;
 
  avctx->codec_tag=fcc;
  avctx->workaround_bugs=deci->getParam2(IDFF_workaroundBugs);
@@ -426,10 +427,16 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
      int fieldtype=frame->interlaced_frame?(frame->top_field_first?FIELD_TYPE::INT_TFF:FIELD_TYPE::INT_BFF):FIELD_TYPE::PROGRESSIVE_FRAME;
      if (frame->play_flags&CODEC_FLAG_QPEL) frametype|=FRAME_TYPE::QPEL;
      int csp=csp_lavc2ffdshow(avctx->pix_fmt);
-     if ((avctx->flags&CODEC_FLAG_GRAY) && csp_isYUVplanar(csp)) // workaround for green picture when decoding mpeg with CODEC_FLAG_GRAY, the problem is probably somewhere else
+     if (grayscale) // workaround for green picture when decoding mpeg with CODEC_FLAG_GRAY, the problem is probably somewhere else
       {
-       if (frame->data[1][0]!=128) memset(frame->data[1],128,frame->linesize[1]*avctx->height/2);
-       if (frame->data[2][0]!=128) memset(frame->data[2],128,frame->linesize[2]*avctx->height/2);
+       const TcspInfo* cspinfo=csp_getInfo(csp);
+       for (unsigned int i=1;i<cspinfo->numPlanes;i++)
+        {
+         if (frame->data[i][0]!=cspinfo->black[i]
+             || (codecId!=CODEC_ID_MPEG4 && codecId!=CODEC_ID_MPEG2VIDEO && codecId!=CODEC_ID_MPEG1VIDEO && codecId!=CODEC_ID_VC1 && codecId!=CODEC_ID_WMV3 && codecId!=CODEC_ID_SVQ3 && codecId!=CODEC_ID_HUFFYUV)
+            )
+          memset(frame->data[i],cspinfo->black[i],frame->linesize[i]*avctx->height>>cspinfo->shiftY[i]);
+        }
       }
      Trect r(0,0,avctx->width,avctx->height);
      if (avctx->sample_aspect_ratio.num &&
