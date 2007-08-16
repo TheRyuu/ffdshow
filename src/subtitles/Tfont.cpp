@@ -1026,14 +1026,14 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
    prefsdx=prefs.dx;
    prefsdy=prefs.dy;
   }
- unsigned int h=0;
+ double h=0;
  for (const_iterator i=begin();i!=end();i++)
-  h+=prefs.linespacing*(*i)->charHeight()/100;
+  h+=(double)prefs.linespacing*(*i)->charHeight()/100.0;
 
  const_reverse_iterator ri=rbegin();
- unsigned int h1 = h - prefs.linespacing*(*ri)->charHeight()/100 + (*ri)->height();
+ unsigned int h1 = h - (double)prefs.linespacing*(*ri)->charHeight()/100.0 + (*ri)->height();
 
- double y=(prefs.ypos<0) ? -(double)prefs.ypos : ((double)prefs.ypos*prefsdy)/100-h/2;
+ double y=(prefs.ypos<0) ? -(double)prefs.ypos : ((double)prefs.ypos*prefsdy)/100.0-h/2;
  if (y+h1 >= (double)prefsdy) y=(double)prefsdy-h1-1;
  if (y<0) y=0;
 
@@ -1092,7 +1092,7 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
      if (y<0) y=0;
     }
 
-   if (y+(*i)->height()>=(double)prefsdy) break;
+   if ((int)y+(*i)->height()>prefsdy) break;
    //TODO: cleanup
    int x;
    unsigned int cdx=(*i)->width();
@@ -1471,9 +1471,12 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
            int strlenp=strlen(p);
            if (cx+strlenp-1<=wordWrap.getRightOfTheLine(cy))
             {
-             TrenderedSubtitleWord *rw=newWord(p,strlenp,prefs,w,w+1==l->end());
-             line->push_back(rw);
-             cx+=strlenp;
+             if (*p)
+              {
+               TrenderedSubtitleWord *rw=newWord(p,strlenp,prefs,w,w+1==l->end());
+               line->push_back(rw);
+               cx+=strlenp;
+              }
              break;
             }
            else
@@ -1484,14 +1487,23 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
                cy++;
                linesInWord++;
                n=wordWrap.getRightOfTheLine(cy)-cx+1;
-               lines.add(line,&height);
-               line=new TrenderedSubtitleLine(w->props);
+               if (!line->empty())
+                {
+                 lines.add(line,&height);
+                 line=new TrenderedSubtitleLine(w->props);
+                }
                if (cy>=wordWrap.getLineCount()) break;
               }
-             TrenderedSubtitleWord *rw=newWord(p,n,prefs,w,true);
-             line->push_back(rw);
-             lines.add(line,&height);
-             line=new TrenderedSubtitleLine(w->props);
+             if (*p)
+              {
+               TrenderedSubtitleWord *rw=newWord(p,n,prefs,w,true);
+               line->push_back(rw);
+              }
+             if (!line->empty())
+              {
+               lines.add(line,&height);
+               line=new TrenderedSubtitleLine(w->props);
+              }
              p+=wordWrap.getRightOfTheLine(cy)-cx+1;
              cx=wordWrap.getRightOfTheLine(cy)+1;
              cy++;

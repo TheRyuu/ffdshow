@@ -59,7 +59,7 @@ template<class tchar> int TwordWrap<tchar>::smart()
  rightOfTheLines.clear();
  for (int x=0;x<strlenp;x++)
   {
-   if (skippingSpace || (pwidths[x]-left>=splitdxMin && pwidths[x]-left<=splitdxMax)) // ideal for line break.
+   if (skippingSpace || (pwidths[x]-left>splitdxMin && pwidths[x]-left<=splitdxMax)) // ideal for line break.
     {
      if (skippingSpace)
       {
@@ -126,7 +126,7 @@ template<class tchar> int TwordWrap<tchar>::smartReverse()
  rightOfTheLines.push_front(xx);
  for (int x=strlenp-1;x>=0;x--)
   {
-   if (skippingSpace || (right-pwidthsLeft(x)>=splitdxMin && right-pwidthsLeft(x)<=splitdxMax)) // ideal for line break.
+   if (skippingSpace || (right-pwidthsLeft(x)>splitdxMin && right-pwidthsLeft(x)<=splitdxMax)) // ideal for line break.
     {
      if (skippingSpace)
       {
