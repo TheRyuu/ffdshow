@@ -423,8 +423,6 @@
 		<File 
 			RelativePath=".\libavcodec\msmpeg4data.h"/>
 		<File 
-			RelativePath=".\libavcodec\msmpeg4tab.h"/>
-		<File 
 			RelativePath=".\libavcodec\parser.h"/>
 		<File 
 			RelativePath=".\libavcodec\png.h"/>

@@ -1287,10 +1287,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\msmpeg4tab.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\parser.h"
 				>
 			</File>
