@@ -289,20 +289,20 @@ HRESULT TffdshowDecAudio::CheckConnect(PIN_DIRECTION dir,IPin *pPin)
     break;
    case PINDIR_OUTPUT:
     initPreset();
+	TsampleFormat outsf=getOutsf();
+	/* If "Decode only when AC3 output unchecked" option checked, 
+			then multichannel streams should not be downconverted */
+	if (globalSettings->ac3SPDIF && outsf.nchannels < 5)
+    {
+	   if (inpin->audio->codecId == CODEC_ID_LIBA52)
+		   inpin->audio->codecId = CODEC_ID_SPDIF_AC3;
+		if (inpin->audio->codecId == CODEC_ID_LIBDTS)
+		   inpin->audio->codecId = CODEC_ID_SPDIF_DTS;
+    }
     if (presetSettings->output->connectTo!=0)
      {
       if (presetSettings->output->connectToOnlySpdif)
        {
-		   /* If "Decode only when AC3 output unchecked" option checked, 
-			then multichannel streams should not be downconverted */
-		   if (globalSettings->ac3SPDIF)
-		   {
-			   if (inpin->audio->codecId == CODEC_ID_LIBA52)
-				   inpin->audio->codecId = CODEC_ID_SPDIF_AC3;
-				if (inpin->audio->codecId == CODEC_ID_LIBDTS)
-				   inpin->audio->codecId = CODEC_ID_SPDIF_DTS;
-		   }
-        TsampleFormat outsf=getOutsf();
         if (outsf.sf!=TsampleFormat::SF_AC3)
          {
           res=S_OK;
@@ -793,8 +793,8 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleSPDIF(void *buf,size_t size,int bit_
    pDataOutW[0]=0xf872;
    pDataOutW[1]=0x4e1f;
    pDataOutW[2]=type;
-   pDataOutW[3]=WORD(size*8);
-   pDataOutW[4] = 0x0b77;  // AC3 syncword
+   pDataOutW[3]=WORD(size*16);
+   //pDataOutW[4] = 0x0b77;  // AC3 syncword (removed because works only for DTS, not for DD)
    _swab((char*)buf,(char*)&pDataOutW[10],(int)(size*2-2));
   }
  else
