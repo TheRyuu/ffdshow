@@ -93,7 +93,7 @@ TresizeAspectSettings::TresizeAspectSettings(TintStrColl *Icoll,TfilterIDFFs *fi
      _l("orderResize"),0,
    IDFF_fullResize         ,&TresizeAspectSettings::full           ,0,0,_l(""),1,
      _l("fullResize"),0,
-   IDFF_resizeMode         ,&TresizeAspectSettings::mode           ,0,4,_l(""),1,
+   IDFF_resizeMode         ,&TresizeAspectSettings::mode           ,0,5,_l(""),1,
      _l("resizeMode"),0,
    IDFF_resizeDx           ,(TintVal)&TresizeAspectSettings::dx    ,64,16384,_l(""),1,
      _l("resizeDx"),640,
@@ -478,6 +478,10 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
        else
         rectFull->dy=dx*inRect.dy/inRect.dx;
        break;
+	  case 5: // Stick size to screen resolution
+		rectFull->dx=GetSystemMetrics(SM_CXSCREEN);
+		rectFull->dy=GetSystemMetrics(SM_CYSCREEN);
+	   break;
       case 0: // Specify horizontal and vertical size
       default:
        rectFull->dx=dx;

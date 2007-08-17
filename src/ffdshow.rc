@@ -30,12 +30,12 @@ LANGUAGE LANG_SLOVAK, SUBLANG_DEFAULT
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE
+2 TEXTINCLUDE 
 BEGIN
     "#include ""resource.h""\r\n"
     "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
@@ -44,7 +44,7 @@ BEGIN
     "\0"
 END
 
-3 TEXTINCLUDE
+3 TEXTINCLUDE 
 BEGIN
     "#include ""ffdshow.rc2""\r\n"
     "\0"
@@ -564,6 +564,8 @@ BEGIN
     EDITTEXT        IDC_ED_RESIZE_OUT_DEVICE_A2,226,119,31,14,ES_RIGHT | ES_AUTOHSCROLL
     LTEXT           "PAR of output device",IDC_LBL_PAR_OUTDEV,147,110,116,8
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,137,85,123,1
+    CONTROL         "Resize to screen resolution",IDC_RBT_RESIZE_MODE_SCREEN_RES,
+                    "Button",BS_AUTORADIOBUTTON,4,125,127,10
 END
 
 IDD_CROP DIALOGEX 0, 0, 267, 195
@@ -3064,6 +3066,10 @@ BEGIN
     IDD_PICTPROP            "Picture properties"
     IDD_NOISE               "Noise"
     IDD_SHARPEN             "Sharpen"
+END
+
+STRINGTABLE 
+BEGIN
     IDD_INFOSIMD            "Info & CPU"
 END
 

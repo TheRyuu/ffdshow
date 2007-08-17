@@ -55,6 +55,7 @@ void TresizeAspectPage::resizeMode2dlg(void)
  setCheck(IDC_RBT_RESIZE_MOD_16     ,rm==2);
  setCheck(IDC_RBT_RESIZE_MODE_MULT  ,rm==3);
  setCheck(IDC_RBT_RESIZE_MODE_SIZE_H,rm==4);
+ setCheck(IDC_RBT_RESIZE_MODE_SCREEN_RES,rm==5);
  cfgSet(IDFF_resizeSpecifyHorizontalSizeOnly,rm==4);
  enable(rm!=4 && TresizeAspectSettings::methodsProps[cfgGet(IDFF_resizeMethodLuma)].library!=TresizeAspectSettings::LIB_SAI, IDC_ED_RESIZEDY);
 }
@@ -405,6 +406,7 @@ TresizeAspectPage::TresizeAspectPage(TffdshowPageDec *Iparent,const TfilterIDFF 
    IDC_RBT_RESIZE_MOD_16,IDFF_resizeMode,2,&TresizeAspectPage::onModeChange,
    IDC_RBT_RESIZE_MODE_MULT,IDFF_resizeMode,3,&TresizeAspectPage::onModeChange,
    IDC_RBT_RESIZE_MODE_SIZE_H,IDFF_resizeMode,4,&TresizeAspectPage::onModeChange,
+   IDC_RBT_RESIZE_MODE_SCREEN_RES,IDFF_resizeMode,5,&TresizeAspectPage::onModeChange,
    IDC_RBT_ASPECT_NO,IDFF_isAspect,0,NULL,
    IDC_RBT_ASPECT_KEEP,IDFF_isAspect,1,NULL,
    IDC_RBT_ASPECT_USER,IDFF_isAspect,2,NULL,

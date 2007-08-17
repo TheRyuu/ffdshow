@@ -141,6 +141,7 @@ all RGB=tous les RVB
 8-bit palettized=8 bits palettisés
 not WMA9 pro, voice or lossless=sauf WM9pro, voix ou sans perte de qualité
 Dynamic range compression=Compression bande dynamique
+Use SPDIF when AC3 output set=Utiliser SPDIF quand sortie AC3
 Check for DTS in WAV=Vérifier si DTS dans WAV
 high accuracy mode enabled for tremor=mode haute précision activé pour les tremblements
 in 3gp files=dans les fichiers 3gp
@@ -1300,6 +1301,7 @@ brown=brun
 1986=Spécifier les tailles vert et horiz
 1987=Spécifier la taille horizontale
 1988=Traiter l'aspect ratio en interne
+2086=Redimensionner à la résolution d'écran
 
 [134]
 0=Recadrage
