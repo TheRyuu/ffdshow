@@ -507,19 +507,20 @@ template<class tchar> bool TsubtitleParserSSA<tchar>::Tstyle::toCOLORREF(const f
  s2=s1;
  if (s1.size()>6)
   {
-   s1.erase(2,s1.size()-2);
+   s1.erase(s1.size()-6,6);
    s2.erase(0,s2.size()-6);
   }
  else
   s1.clear();
 
+ int msb=0;
  if (!s1.empty())
   {
    const tchar *alphaS=s1.c_str();
    tchar *endalpha;
    long a=strtol(alphaS,&endalpha,radix);
    if (*endalpha=='\0')
-    alpha=256-a;
+    msb=a;
   }
  if (s2.empty()) return false;
  const tchar *colorS=s2.c_str();
@@ -527,7 +528,9 @@ template<class tchar> bool TsubtitleParserSSA<tchar>::Tstyle::toCOLORREF(const f
  COLORREF c=strtol(colorS,&endcolor,radix);
  if (*endcolor=='\0')
   {
-   colour=c;
+   DWORD result=msb * (radix==16 ? 0x1000000 : 1000000) + c;
+   colour=result & 0xffffff;
+   alpha=256-(result>>24);
    return true;
   }
  return false;

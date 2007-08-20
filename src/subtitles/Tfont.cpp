@@ -1351,7 +1351,7 @@ template<class tchar> TrenderedSubtitleWord* Tfont::newWord(const tchar *s,size_
 
 template<class tchar> int Tfont::get_splitdx_for_new_line(const TsubtitleWord<tchar> &w,int splitdx,int dx) const
 {
- if (w.props.get_marginR(dx) || w.props.get_marginL(dx))
+ if (w.props.marginR!=-1 || w.props.marginL!=-1)
   return (dx- w.props.get_marginR(dx) - w.props.get_marginL(dx))*4;
  else
   return splitdx;
