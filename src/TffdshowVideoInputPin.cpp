@@ -36,7 +36,8 @@ TffdshowVideoInputPin::TffdshowVideoInputPin(TCHAR *objectName,TffdshowVideo *If
   fv(Ifv),
   video(NULL),
   isInterlacedRawVideo(false),
-  isMPC_matroska(false)
+  isMPC_matroska(false),
+  pCompatibleFilter(NULL)
 {
  usingOwnAllocator=false;
  supdvddec=fv->deci->getParam2(IDFF_supDVDdec) && fv->deci->getParam2(IDFF_mpg2);
@@ -95,12 +96,120 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
  char_t pomS[60];
  DPRINTF(_l("TffdshowVideoInputPin::CheckMediaType: %s, %i, %i"),fourcc2str(hdr2fourcc(hdr,&mt->subtype),pomS,60),hdr->biWidth,hdr->biHeight);
 
- return fv->getVideoCodecId(hdr,&mt->subtype,NULL)==CODEC_ID_NONE?VFW_E_TYPE_NOT_ACCEPTED:S_OK;
+ /* Information : WMP 11 and Media Center under Vista do not check for uncompressed format anymore, so no way to get
+	FFDShow raw video decoder for postprocessing on uncompressed.
+	So instead of saying "Media Type not supported", we says it is but only if there is an existing filter that can
+	take this format in charge, and then FFDShow will be plugged after this codec (plug is done by TffdshowDecVideo::ConnectCompatibleFilter). */
+ int res = fv->getVideoCodecId(hdr,&mt->subtype,NULL);
+ 
+  OSVERSIONINFO osvi;
+ ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
+ osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+ GetVersionEx(&osvi);
+
+ if (res == 0 && pCompatibleFilter == NULL &&
+	 fv->deci->getParam2(IDFF_alternateUncompressed)==1 && // Enable Vista WMP11 postprocessing
+	 osvi.dwMajorVersion > 5 && // OS >= Vista
+	 (stricmp(fv->getExefilename(),_l("wmplayer.exe")) ||  stricmp(fv->getExefilename(),_l("ehshell.exe")) )) // Only WMP and Media Center are concerned
+ {
+	DPRINTF(_l("TffdshowVideoInputPin::CheckMediaType: input format disabled or not supported. Trying to maintain in the graph..."));	 
+	IFilterMapper2 *pMapper = NULL;
+	IEnumMoniker *pEnum = NULL;
+
+	HRESULT hr = CoCreateInstance(CLSID_FilterMapper2, 
+		NULL, CLSCTX_INPROC, IID_IFilterMapper2, 
+		(void **) &pMapper);
+
+	if (FAILED(hr))
+	{
+		// Error handling omitted for clarity.
+	}
+
+	GUID arrayInTypes[2];
+	arrayInTypes[0] = mt->majortype;//MEDIATYPE_Video;
+	arrayInTypes[1] = mt->subtype;//MEDIASUBTYPE_dvsd;
+
+	hr = pMapper->EnumMatchingFilters(
+			&pEnum,
+			0,                  // Reserved.
+			TRUE,               // Use exact match?
+			MERIT_DO_NOT_USE+1, // Minimum merit.
+			TRUE,               // At least one input pin?
+			1,                  // Number of major type/subtype pairs for input.
+			arrayInTypes,       // Array of major type/subtype pairs for input.
+			NULL,               // Input medium.
+			NULL,               // Input pin category.
+			FALSE,              // Must be a renderer?
+			TRUE,               // At least one output pin?
+			0,                  // Number of major type/subtype pairs for output.
+			NULL,               // Array of major type/subtype pairs for output.
+			NULL,               // Output medium.
+			NULL);              // Output pin category.
+
+	// Enumerate the monikers.
+	IMoniker *pMoniker;
+	ULONG cFetched;
+
+	while (pEnum->Next(1, &pMoniker, &cFetched) == S_OK)
+	{
+		IPropertyBag *pPropBag = NULL;
+		hr = pMoniker->BindToStorage(0, 0, IID_IPropertyBag, 
+		   (void **)&pPropBag);
+
+		if (SUCCEEDED(hr))
+		{
+			// To retrieve the friendly name of the filter, do the following:
+			VARIANT varName;
+			VariantInit(&varName);
+			hr = pPropBag->Read(L"FriendlyName", &varName, 0);
+			if (SUCCEEDED(hr))
+			{
+				if (varName.pbstrVal == NULL || _strnicmp(FFDSHOW_NAME_L,varName.bstrVal,22)!=0)
+				{
+					// Display the name in your UI somehow.
+					DPRINTF(_l("TffdshowVideoInputPin::CheckMediaType: compatible filter found (%s)"), varName.pbstrVal);
+					hr = pMoniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)&pCompatibleFilter);
+				}
+			}
+
+			// Now add the filter to the graph. Remember to release pFilter later.
+			IFilterGraph *pGraph=NULL;
+			fv->deci->getGraph(&pGraph);
+
+			IGraphBuilder *pGraphBuilder = NULL;
+			hr = pGraph->QueryInterface(__uuidof(IGraphBuilder), (void **)&pGraphBuilder);
+			if (hr==S_OK)
+			{
+				pGraphBuilder->AddFilter(pCompatibleFilter, varName.bstrVal);
+			}
+			else
+			{
+				pCompatibleFilter->Release();
+				pCompatibleFilter=NULL;
+			}
+			
+			// Clean up.
+			VariantClear(&varName);
+			pGraphBuilder->Release();
+			pPropBag->Release();
+		}
+		pMoniker->Release();
+		if (pCompatibleFilter != NULL)
+			break;
+	}
+
+	// Clean up.
+	pMapper->Release();
+	pEnum->Release();
+ }
+ if (pCompatibleFilter != NULL) return S_OK;
+ return res==CODEC_ID_NONE?VFW_E_TYPE_NOT_ACCEPTED:S_OK;
 }
 
 STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM_MEDIA_TYPE* pmt)
 {
- CAutoLock cObjectLock(m_pLock);
+DPRINTF(_l("TffdshowVideoInputPin::ReceiveConnection"));
+CAutoLock cObjectLock(m_pLock);
  const CLSID &ref=GetCLSID(pConnector);
  if (ref == CLSID_MPC_matroska)
   isMPC_matroska=true;
@@ -249,7 +358,13 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
 again:
  if (video) {delete video;codec=video=NULL;}
  codecId=(CodecID)fv->getVideoCodecId(&biIn.bmiHeader,&mt.subtype,&biIn.bmiHeader.biCompression);
- if (codecId==CODEC_ID_NONE) return false;
+ if (codecId==CODEC_ID_NONE) 
+ {
+	 if (pCompatibleFilter!=NULL)
+		 return true;
+
+	 return false;
+ }
 
  if (codecId==CODEC_ID_H264)
   {

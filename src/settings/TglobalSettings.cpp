@@ -420,6 +420,8 @@ TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imod
      _l("fastH264"),0,
    IDFF_libtheoraPostproc,&TglobalSettingsDecVideo::libtheoraPostproc ,0,0,_l(""),1,
      _l("libtheoraPostproc"),0,
+   IDFF_alternateUncompressed,&TglobalSettingsDecVideo::alternateUncompressed,0,0,_l(""),1,
+     _l("alternateUncompressed"),0,
    0
   };
  addOptions(iopts);

@@ -789,6 +789,7 @@
 #define IDFF_vp3                1039
 #define IDFF_tscc               1060
 #define IDFF_rawv               1009 // 0 - unsupported, 1 - all, 2 - all YUV, 3 - all RGB, else FOURCC of accepted colorspace
+#define IDFF_alternateUncompressed 3410 // Enable alternate method to enable FFDShow on uncompressed streams (for Vista VMP11 and VMC)
 #define IDFF_isDyInterlaced     1330 // enable height dependant interlaced colorspace conversions
 #define IDFF_dyInterlaced       1331
 #define IDFF_svq1               1025
@@ -1424,6 +1425,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3410
+//max:3411
 
 #endif

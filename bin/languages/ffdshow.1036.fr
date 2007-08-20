@@ -135,6 +135,7 @@ Internal postprocessing=Post-traitement interne
 doesn't support 24 bit compression=ne prend pas en charge la compression 24 bits
 AVIS (Avisynth AVI files)=AVIS (fichiers AVI de AviSynth)
 Raw video=Vidéo brute
+Enable in Vista WMP11=Activer dans Vista WMP11
 all supported=tous formats supportés
 all YUV=tous les YUV
 all RGB=tous les RVB
@@ -1054,6 +1055,15 @@ rosybrown=bois de rose
 sienna=terre-de-sienne
 saddlebrown=cuir
 brown=brun
+ffdshow will behave as if it were not installed.=FFDShow se comportera comme si il n'était pas installé.
+ffdshow will behave as if it were not installed.\r\nThe application will be added to "DirectShow control"->"Don't use ffdshow in".=FFDShow se comportera comme si il n'était pas installé.\r\nL'application sera ajoutée à "DirectShow control"->"Ne pas utiliser FFDShow dans".
+ffdshow will be used if it is set to decode a format.=FFDShow sera utilisé si il est paramétré pour décoder un format.
+ffdshow will be used if it is set to decode a format.\r\nThe application will be added to "DirectShow control"->"Use ffdshow only in".=FFDShow sera utilisé si il est paramétré pour décoer un format.
+ffdshow won't be used in unknown applications.\r\nTo enable this dialog again, check "DirectShow control"->"Show dialog when an unknown application tries to load ffdshow".=FFDShow ne sera pas utilisé dans les applications inconnues.\r\nPour réactiver ce message, cocher "DirectShow control"->"Afficher un message quand une application inconnue essaie de charger FFDShow".
+(This dialog will close in=(Ce message disparaîtra dans
+seconds.)=secondes.)
+Thank you. We are gathering the list of compatible applications. Please send us the exe file name of this application and help us improving ffdshow.=Merci. Nous réunissons la liste des applications compatibles. SVP envoyez-nous le nom du fichier exe de cette application et aidez-nous à améliorer FFDShow.
+
 
 [101]
 1=OK
@@ -1824,3 +1834,15 @@ brown=brun
 
 [267]
 8=Fermer
+
+[295]
+0=Gestionnaire de compatibilié FFDShow
+2041=L'application "
+2042=" a tenté de charger FFDShow.\r\nCe message s'affiche parce que cette application n'est pas listée dans la liste blanche ou la liste noire de FFDShow.\r\nVotre choix sera appliqué à la vidéo et à l'audio si tous les deux sont utilisés..
+2043=Ne plus me redemander.
+2044=Rapporter le nom de ce fichier exe par internet de manière anonyme.
+2045=Ne pas utiliser FFDShow. (juste cette fois)
+2046=Ne pas utiliser FFDShow. (toujours)
+2047=Utiliser FFDShow. (juste cette fois)
+2048=Utiliser FFDShow. (toujours)
+2049=Explication

@@ -488,10 +488,18 @@ void TcodecsPageVideo::fillCodecs(void)
    {_l("8-bit palletized"),FOURCC_MASK_PAL},
    NULL,0
   };
+
+ static const Tformat::Toption option={FOURCC_MASK_ALL, _l("Enable in Vista WMP11"),IDFF_alternateUncompressed,1};
+ raw.options.push_back(option);
+
  for (int i=0;rawincsps[i].name;i++)
+ {
   raw.decoders.push_back(Tformat::Tdecoder::init(rawincsps[i].name,rawincsps[i].fcc));
+ }
  for (int i=0;cspFccs[i].name;i++)
+ {
   raw.decoders.push_back(Tformat::Tdecoder::init(cspFccs[i].name,cspFccs[i].fcc));
+ }
  formats.push_back(raw);
 }
 

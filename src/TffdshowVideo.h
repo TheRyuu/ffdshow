@@ -19,6 +19,7 @@ public:
  virtual int getVideoCodecId(const BITMAPINFOHEADER *hdr,const GUID *subtype,FOURCC *AVIfourcc)=0;
  virtual void initCodecSettings(void)=0;
  virtual void lockReceive(void)=0,unlockReceive(void)=0;
+ const char_t* getExefilename(void) { return deci->getExeflnm(); }
 };
 
 #endif

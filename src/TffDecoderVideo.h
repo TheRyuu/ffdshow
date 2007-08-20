@@ -470,6 +470,7 @@ private:
    STDMETHODIMP_(const char*)getAviSynthInfo(void){return deciV->getAviSynthInfo();}
  } decVideo_char;
  template<class Tinterface> Tinterface* getDecVideoInterface(void);
+ void ConnectCompatibleFilter(void);
 protected:
  TffdshowDecVideoOutputPin *m_pOutputDecVideo;
  int IsQueueListedApp(const char_t *exe);
@@ -545,6 +546,7 @@ private:
  bool outOverlayMixer,outOldRenderer,outdv;
  int hwDeinterlace;
  STDMETHODIMP_(int) get_trayIconType(void);
+ bool compatibleFilterConnected;
 public:
  enum DOWNSTREAM_FILTER_TYPE
   {

@@ -264,6 +264,7 @@ STDMETHODIMP TffdshowDecVideoOutputPin::Connect(
  // with this.
 
  DPRINTF(_l("TffdshowDecVideoOutputPin::Connect"));
+ this->fdv->ConnectCompatibleFilter();
 #if 0
  PIN_INFO pininfo;
  FILTER_INFO filterinfo;

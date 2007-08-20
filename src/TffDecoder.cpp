@@ -101,7 +101,8 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  m_IsQueueListedApp(-1),
  reconnectFirstError(true),
  m_NeedToAttachFormat(false),
- inReconnect(false)
+ inReconnect(false),
+ compatibleFilterConnected(false)
 {
  DPRINTF(_l("TffdshowDecVideo::Constructor"));
 #ifdef OSDTIMETABALE
@@ -607,6 +608,79 @@ HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample)
  m_aboutToFlash= false;
  return hr;
 }
+
+void TffdshowDecVideo::ConnectCompatibleFilter(void)
+{
+	if (compatibleFilterConnected || inpin->pCompatibleFilter == NULL) return;
+	HRESULT hr;
+	IPin *connectedPin = NULL;
+	hr=inpin->ConnectedTo(&connectedPin);
+	if(FAILED(hr))
+		return;
+	IFilterGraph *pGraph=NULL;
+	getGraph(&pGraph);
+	IGraphBuilder *pGraphBuilder = NULL;
+	hr = pGraph->QueryInterface(__uuidof(IGraphBuilder), (void **)&pGraphBuilder);
+	if (hr!=S_OK)
+	{
+		connectedPin->Release();
+		return;
+	}
+	
+	AM_MEDIA_TYPE connectedPinMediaType;
+	inpin->ConnectionMediaType(&connectedPinMediaType);
+
+	hr = connectedPin->Disconnect();
+	hr = inpin->Disconnect();
+
+	// Browse pins compatible codec
+	IEnumPins *enumPins = NULL;
+	inpin->pCompatibleFilter->EnumPins(&enumPins);
+	IPin *outPin=NULL, *filterPin;
+	bool inPinConnected=false, outPinFound=false;
+	unsigned long fetched;
+	while (1)
+	{
+		enumPins->Next(1, &filterPin, &fetched);
+		if (fetched < 1) break;
+		
+		PIN_DIRECTION pinDirection;
+		filterPin->QueryDirection(&pinDirection);
+		if (pinDirection == PINDIR_INPUT && !inPinConnected)
+		{
+			// Input filter -> FFDShow ==> Input filter -> Compatible filter
+			hr = connectedPin->Connect(filterPin, &connectedPinMediaType);
+			inPinConnected=true;
+		}
+		else if (pinDirection == PINDIR_OUTPUT && outPin==NULL)
+		{
+			outPin=filterPin;
+			continue;
+		}
+		filterPin->Release();
+	}
+	enumPins->Release();
+
+	// Input filter -> Compatible filter ==> Input filter -> Compatible filter -> FFDShow
+	if (outPin==NULL) // Oops... problem, should not happen
+	{
+		pGraph->Reconnect(connectedPin);
+		return;
+	}
+
+	AM_MEDIA_TYPE connectedPinMediaTypeOut;
+	outPin->ConnectionMediaType(&connectedPinMediaTypeOut);
+	//hr=outPin->Connect(inpin, &connectedPinMediaTypeOut);
+	hr = pGraphBuilder->Connect(outPin, inpin);
+
+	outPin->Release();
+	connectedPin->Release();
+	pGraphBuilder->Release();	
+
+	compatibleFilterConnected=true;
+}
+
+
 HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
 {
  // If the next filter downstream is the video renderer, then it may
@@ -627,6 +701,9 @@ HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
 #endif
  // If no output pin to deliver to then no point sending us data
  ASSERT(m_pOutput!=NULL);
+
+ ConnectCompatibleFilter();
+
  AM_MEDIA_TYPE *pmt;
  // The source filter may dynamically ask us to start transforming from a
  // different media type than the one we're using now.  If we don't, we'll
@@ -972,6 +1049,7 @@ if (!outdv && hwDeinterlace)
    StopStreaming();
    m_pOutput->CurrentMediaType() = *pmtOut;
    DeleteMediaType(pmtOut);
+   ConnectCompatibleFilter();
    hr = StartStreaming();
    if (SUCCEEDED(hr))
     {

@@ -60,6 +60,7 @@ public:
  void setSampleSkipped(void);
  const char* get_current_idct(void){return video->get_current_idct();}
  bool isInterlacedRawVideo;
+ IBaseFilter *pCompatibleFilter;
 };
 
 class TffdshowVideoEncInputPin :public IMixerPinConfig,public TffdshowVideoInputPin
