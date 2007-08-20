@@ -37,6 +37,10 @@
 #include <string.h>
 #include <math.h>
 
+#ifndef __GNUC__
+#include <malloc.h>
+#endif
+
 #ifndef NAN
 #if __STDC_VERSION >= 199901L
   #define NAN 0.0/0.0
@@ -390,7 +394,11 @@ AVEvalExpr * ff_parse(char *s, const char **const_name,
                char **error){
     Parser p;
     AVEvalExpr * e;
+#ifdef __GNUC__
     char w[strlen(s) + 1], * wp = w;
+#else
+    char *w=(char *)alloca(strlen(s)),* wp=w;
+#endif
 
     while (*s)
         if (!isspace(*s++)) *wp++ = s[-1];

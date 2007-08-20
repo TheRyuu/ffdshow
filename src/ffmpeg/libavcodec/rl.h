@@ -27,7 +27,9 @@
 #ifndef AVCODEC_RL_H
 #define AVCODEC_RL_H
 
+#ifdef __GNUC__
 #include <stdint.h>
+#endif
 #include "bitstream.h"
 #include "mpegvideo.h"
 
