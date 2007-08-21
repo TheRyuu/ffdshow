@@ -2324,6 +2324,26 @@ static inline void RENAME(rgb15ToUV)(uint8_t *dstU, uint8_t *dstV, uint8_t *src1
 	}
 }
 
+static inline void RENAME(nv12ToUV)(uint8_t *dstU, uint8_t *dstV, uint8_t *src1, uint8_t *src2, int width)
+{
+	int i;
+	for(i=0; i<width; i++)
+	{
+		dstV[i]= src1[i<<1];
+		dstU[i]= src1[(i<<1)+1];
+	}
+}
+
+static inline void RENAME(nv21ToUV)(uint8_t *dstU, uint8_t *dstV, uint8_t *src1, uint8_t *src2, int width)
+{
+	int i;
+	for(i=0; i<width; i++)
+	{
+		dstU[i]= src1[i<<1];
+		dstV[i]= src1[(i<<1)+1];
+	}
+}
+
 // Bilinear / Bicubic scaling
 static inline void RENAME(hScale)(int16_t *dst, int dstW, uint8_t *src, int srcW, int xInc,
 				  int16_t *filter, int16_t *filterPos, long filterSize)
@@ -2749,6 +2769,18 @@ inline static void RENAME(hcscale)(uint16_t *dst, long dstWidth, uint8_t *src1, 
     else if(srcFormat==IMGFMT_RGB15)
     {
 	RENAME(rgb15ToUV)(formatConvBuffer, formatConvBuffer+2048, src1, src2, srcW);
+	src1= formatConvBuffer;
+	src2= formatConvBuffer+2048;
+    }
+    else if(srcFormat==IMGFMT_NV12)
+    {
+	RENAME(nv12ToUV)(formatConvBuffer, formatConvBuffer+2048, src1, src2, srcW);
+	src1= formatConvBuffer;
+	src2= formatConvBuffer+2048;
+    }
+    else if(srcFormat==IMGFMT_NV21)
+    {
+	RENAME(nv21ToUV)(formatConvBuffer, formatConvBuffer+2048, src1, src2, srcW);
 	src1= formatConvBuffer;
 	src2= formatConvBuffer+2048;
     }
