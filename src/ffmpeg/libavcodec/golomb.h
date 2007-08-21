@@ -59,9 +59,9 @@ static inline int get_ue_golomb(GetBitContext *gb){
 	UPDATE_CACHE(re, gb); // ICL9.1 can't process this macro properly. Next line is manually processed this line.
 #else
   # ifdef ALT_BITSTREAM_READER_LE
-    re_cache= unaligned32_le( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ) >> (re_index&0x07);
+    re_cache= AV_RL32( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ) >> (re_index&0x07);
   # else
-    re_cache= unaligned32_be( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ) >> (re_index&0x07);
+    re_cache= AV_RB32( ((const uint8_t *)(gb)->buffer)+(re_index>>3) ) >> (re_index&0x07);
   # endif
 #endif
 	buf=GET_CACHE(re, gb);
