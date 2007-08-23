@@ -979,6 +979,7 @@ unsigned int TrenderedSubtitleLine::charHeight(void) const
 }
 void TrenderedSubtitleLine::print(int startx,int starty,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int prefsdx,unsigned int prefsdy) const
 {
+ int lineHeight=height();
  for (const_iterator w=begin();w!=end() && startx<(int)prefsdx;startx+=(*w)->dxCharY,w++)
   {
    const unsigned char *msk[3],*bmp[3];
@@ -995,7 +996,8 @@ void TrenderedSubtitleLine::print(int startx,int starty,const TrenderedSubtitleL
        msk[i]+=-x[i];
        bmp[i]+=-x[i];
       }
-     dstLn[i]=prefs.dst[i]+prefs.stride[i]*(starty>>prefs.shiftY[i]);if (x[i]>0) dstLn[i]+=x[i]*prefs.cspBpp;
+     dstLn[i]=prefs.dst[i]+prefs.stride[i]*((starty+lineHeight-(*w)->dy[0])>>prefs.shiftY[i]);
+     if (x[i]>0) dstLn[i]+=x[i]*prefs.cspBpp;
 
      if (x[i]+(*w)->dx[i]>(prefsdx>>prefs.shiftX[i])) dx[i]=(prefsdx>>prefs.shiftX[i])-x[i];
      else if (x[i]<0) dx[i]=(*w)->dx[i]+x[i];
