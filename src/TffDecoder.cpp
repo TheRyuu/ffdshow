@@ -680,6 +680,61 @@ void TffdshowDecVideo::ConnectCompatibleFilter(void)
 	compatibleFilterConnected=true;
 }
 
+void TffdshowDecVideo::DisconnectFromCompatibleFilter(void)
+{
+	if (!compatibleFilterConnected) return;
+
+	HRESULT hr;
+	IPin *connectedPin = NULL;
+	hr=inpin->ConnectedTo(&connectedPin);
+	if(FAILED(hr))
+		return;
+
+	IFilterGraph *pGraph=NULL;
+	getGraph(&pGraph);
+	IGraphBuilder *pGraphBuilder = NULL;
+	hr = pGraph->QueryInterface(__uuidof(IGraphBuilder), (void **)&pGraphBuilder);
+	if (hr!=S_OK)
+	{
+		connectedPin->Release();
+		return;
+	}
+
+	hr = connectedPin->Disconnect();
+	hr = inpin->Disconnect();
+
+	// Browse pins compatible codec
+	IEnumPins *enumPins = NULL;
+	inpin->pCompatibleFilter->EnumPins(&enumPins);
+	IPin *outPin=NULL, *filterPin;
+	bool inPinDisConnected=false, outPinFound=false;
+	unsigned long fetched;
+	while (1)
+	{
+		enumPins->Next(1, &filterPin, &fetched);
+		if (fetched < 1) break;
+		
+		PIN_DIRECTION pinDirection;
+		filterPin->QueryDirection(&pinDirection);
+		if (pinDirection == PINDIR_INPUT && !inPinDisConnected)
+		{
+			IPin *pPin=NULL;
+			filterPin->ConnectedTo(&pPin);
+			if (pPin!=NULL)
+				pPin->Disconnect();
+			pPin->Release();
+			filterPin->Disconnect();
+			inPinDisConnected=true;
+		}
+		filterPin->Release();
+	}
+	enumPins->Release();
+	connectedPin->Release();
+	pGraphBuilder->Release();	
+
+	compatibleFilterConnected=false;
+}
+
 
 HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
 {
@@ -701,8 +756,6 @@ HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
 #endif
  // If no output pin to deliver to then no point sending us data
  ASSERT(m_pOutput!=NULL);
-
- ConnectCompatibleFilter();
 
  AM_MEDIA_TYPE *pmt;
  // The source filter may dynamically ask us to start transforming from a
@@ -1049,7 +1102,6 @@ if (!outdv && hwDeinterlace)
    StopStreaming();
    m_pOutput->CurrentMediaType() = *pmtOut;
    DeleteMediaType(pmtOut);
-   ConnectCompatibleFilter();
    hr = StartStreaming();
    if (SUCCEEDED(hr))
     {

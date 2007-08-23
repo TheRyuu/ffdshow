@@ -299,12 +299,13 @@ STDMETHODIMP TffdshowDecVideoOutputPin::Connect(
  if (FAILED(hr))
   {
    DPRINTF(_l("Failed to agree type"));
-
+	this->fdv->DisconnectFromCompatibleFilter();
    // Since the procedure is already returning an error code, there
    // is nothing else this function can do to report the error.
    EXECUTE_ASSERT( SUCCEEDED( BreakConnect() ) );
    return hr;
   }
+
  DPRINTF(_l("Connection succeeded"));
  return NOERROR;
 }
