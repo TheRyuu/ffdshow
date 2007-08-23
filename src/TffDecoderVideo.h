@@ -471,6 +471,7 @@ private:
  } decVideo_char;
  template<class Tinterface> Tinterface* getDecVideoInterface(void);
  void ConnectCompatibleFilter(void);
+ void DisconnectFromCompatibleFilter(void);
 protected:
  TffdshowDecVideoOutputPin *m_pOutputDecVideo;
  int IsQueueListedApp(const char_t *exe);
