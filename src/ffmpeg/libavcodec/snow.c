@@ -280,6 +280,7 @@ static const BlockNode null_block= { //FIXME add border maybe
 
 #define LOG2_MB_SIZE 4
 #define MB_SIZE (1<<LOG2_MB_SIZE)
+#define ENCODER_EXTRA_BITS 4
 
 typedef struct x_and_coeff{
     int16_t x;
@@ -651,7 +652,7 @@ static av_always_inline void liftS(DWTELEM *dst, DWTELEM *src, DWTELEM *ref, int
     int i;
 
     assert(shift == 4);
-#define LIFTS(src, ref, inv) ((inv) ? (src) + (((ref) + 4*(src))>>shift): (16*4*(src) + 4*(ref) + 8 + (5<<27))/(5*16) - (1<<23))
+#define LIFTS(src, ref, inv) ((inv) ? (src) + (((ref) + 4*(src))>>shift): -((-16*(src) + (ref) + add/4 + 1 + (5<<25))/(5*4) - (1<<23)))
     if(mirror_left){
         dst[0] = LIFTS(src[0], mul*2*ref[0]+add, inverse);
         dst += dst_step;
@@ -857,8 +858,8 @@ static void horizontal_decompose97i(DWTELEM *b, int width){
     DWTELEM temp[width];
     const int w2= (width+1)>>1;
 
-    lift (temp+w2, b    +1, b      , 1, 2, 2, width, -W_AM, W_AO, W_AS, 1, 0);
-    liftS(temp   , b      , temp+w2, 1, 2, 1, width, -W_BM, W_BO, W_BS, 0, 0);
+    lift (temp+w2, b    +1, b      , 1, 2, 2, width,  W_AM, W_AO, W_AS, 1, 1);
+    liftS(temp   , b      , temp+w2, 1, 2, 1, width,  W_BM, W_BO, W_BS, 0, 0);
     lift5(b   +w2, temp+w2, temp   , 1, 1, 1, width,  W_CM, W_CO, W_CS, 1, 0);
     lift (b      , temp   , b   +w2, 1, 1, 1, width,  W_DM, W_DO, W_DS, 0, 0);
 }
@@ -894,7 +895,7 @@ static void vertical_decompose97iL0(DWTELEM *b0, DWTELEM *b1, DWTELEM *b2, int w
 #ifdef liftS
         b1[i] -= (W_BM*(b0[i] + b2[i])+W_BO)>>W_BS;
 #else
-        b1[i] = (16*4*b1[i] - 4*(b0[i] + b2[i]) + 8*5 + (5<<27)) / (5*16) - (1<<23);
+        b1[i] = (16*4*b1[i] - 4*(b0[i] + b2[i]) + W_BO*5 + (5<<27)) / (5*16) - (1<<23);
 #endif
     }
 }
@@ -1041,8 +1042,8 @@ void ff_snow_horizontal_compose97i(DWTELEM *b, int width){
 
     lift (temp   , b      , b   +w2, 1, 1, 1, width,  W_DM, W_DO, W_DS, 0, 1);
     lift5(temp+w2, b   +w2, temp   , 1, 1, 1, width,  W_CM, W_CO, W_CS, 1, 1);
-    liftS(b      , temp   , temp+w2, 2, 1, 1, width,  W_BM, W_BO-1, W_BS, 0, 1);
-    lift (b+1    , temp+w2, b      , 2, 1, 2, width, -W_AM, W_AO, W_AS, 1, 1);
+    liftS(b      , temp   , temp+w2, 2, 1, 1, width,  W_BM, W_BO, W_BS, 0, 1);
+    lift (b+1    , temp+w2, b      , 2, 1, 2, width,  W_AM, W_AO, W_AS, 1, 0);
 }
 
 static void vertical_compose97iH0(DWTELEM *b0, DWTELEM *b1, DWTELEM *b2, int width){
@@ -2163,7 +2164,7 @@ void ff_snow_inner_add_yblock(const uint8_t *obmc, const int obmc_stride, uint8_
     int y, x;
     DWTELEM * dst;
     for(y=0; y<b_h; y++){
-        //FIXME ugly missue of obmc_stride
+        //FIXME ugly misuse of obmc_stride
         const uint8_t *obmc1= obmc + y*obmc_stride;
         const uint8_t *obmc2= obmc1+ (obmc_stride>>1);
         const uint8_t *obmc3= obmc1+ obmc_stride*(obmc_stride>>1);
@@ -2287,7 +2288,7 @@ assert(src_stride > 2*MB_SIZE + 5);
         s->dsp.inner_add_yblock(obmc, obmc_stride, block, b_w, b_h, src_x,src_y, src_stride, sb, add, dst8);
     }else
     for(y=0; y<b_h; y++){
-        //FIXME ugly missue of obmc_stride
+        //FIXME ugly misuse of obmc_stride
         const uint8_t *obmc1= obmc + y*obmc_stride;
         const uint8_t *obmc2= obmc1+ (obmc_stride>>1);
         const uint8_t *obmc3= obmc1+ obmc_stride*(obmc_stride>>1);
@@ -2482,7 +2483,7 @@ static int get_dc(SnowContext *s, int mb_x, int mb_y, int plane_index){
     }
     *b= backup;
 
-    return av_clip(((ab<<LOG2_OBMC_MAX) + aa/2)/aa, 0, 255); //FIXME we shouldnt need cliping
+    return av_clip(((ab<<LOG2_OBMC_MAX) + aa/2)/aa, 0, 255); //FIXME we should not need clipping
 }
 
 static inline int get_block_bits(SnowContext *s, int x, int y, int w){
@@ -2864,7 +2865,7 @@ static void iterative_me(SnowContext *s){
                 for(i=0; i<3; i++)
                     color[i]= get_dc(s, mb_x, mb_y, i);
 
-                // get previous score (cant be cached due to OBMC)
+                // get previous score (cannot be cached due to OBMC)
                 if(pass > 0 && (block->type&BLOCK_INTRA)){
                     int color0[3]= {block->color[0], block->color[1], block->color[2]};
                     check_block(s, mb_x, mb_y, color0, 1, *obmc_edged, &best_rd);
@@ -2990,7 +2991,7 @@ static void quantize(SnowContext *s, SubBand *b, DWTELEM *src, int stride, int b
     const int w= b->width;
     const int h= b->height;
     const int qlog= av_clip(s->qlog + b->qlog, 0, QROOT*16);
-    const int qmul= qexp[qlog&(QROOT-1)]<<(qlog>>QSHIFT);
+    const int qmul= qexp[qlog&(QROOT-1)]<<((qlog>>QSHIFT) + ENCODER_EXTRA_BITS);
     int x,y, thres1, thres2;
 
     if(s->qlog == LOSSLESS_QLOG) return;
@@ -3743,6 +3744,12 @@ redo_frame:
             for(y=0; y<h; y++){
                 for(x=0; x<w; x++){
                     s->spatial_dwt_buffer[y*w + x]= (s->spatial_dwt_buffer[y*w + x] + (1<<(FRAC_BITS-1))-1)>>FRAC_BITS;
+                }
+            }
+        }else{
+            for(y=0; y<h; y++){
+                for(x=0; x<w; x++){
+                    s->spatial_dwt_buffer[y*w + x]<<=ENCODER_EXTRA_BITS;
                 }
             }
         }
