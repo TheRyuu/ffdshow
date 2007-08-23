@@ -4,6 +4,7 @@
 #include "interfaces.h"
 #include "ffImgfmt.h"
 #include "TsubtitleProps.h"
+#include "rational.h"
 
 enum
 {
@@ -21,7 +22,7 @@ class TrenderedSubtitleLines: public std::vector<TrenderedSubtitleLine*>
 public:
  struct TprintPrefs
   {
-   TprintPrefs(IffdshowBase *Ideci):deci(Ideci),config(NULL),sizeDx(0),sizeDy(0),posXpix(0),fontchangesplit(false),textBorderLR(0),tabsize(8),dvd(false),blur(false),clipdy(0) {}
+   TprintPrefs(IffdshowBase *Ideci):deci(Ideci),config(NULL),sizeDx(0),sizeDy(0),posXpix(0),fontchangesplit(false),textBorderLR(0),tabsize(8),dvd(false),blur(false),clipdy(0),sar(1,1) {}
    unsigned char **dst;
    const stride_t *stride;
    const unsigned int *shiftX,*shiftY;
@@ -42,6 +43,7 @@ public:
    double shadowSize;
    bool blur;
    int csp,cspBpp;
+   Rational sar;
   };
  TrenderedSubtitleLines(void) {}
  TrenderedSubtitleLines(TrenderedSubtitleLine *ln) {push_back(ln);}
@@ -60,13 +62,13 @@ private:
  HDC hdc;
  const short (*matrix)[5];
  YUVcolorA yuv,outlineYUV,shadowYUV;
- int xscale;
+ int xscale,yscale;
  IffdshowBase *deci;
 public:
  const YUVcolorA& getBodyYUV(void) const {return yuv;}
  const YUVcolorA& getOutlineYUV(void) const {return outlineYUV;}
  const YUVcolorA& getShadowYUV(void) const {return shadowYUV;}
- TcharsChache(HDC Ihdc,const short (*Imatrix)[5],const YUVcolorA &Iyuv,const YUVcolorA &Ioutline,const YUVcolorA &Ishadow,int Ixscale,IffdshowBase *Ideci);
+ TcharsChache(HDC Ihdc,const short (*Imatrix)[5],const YUVcolorA &Iyuv,const YUVcolorA &Ioutline,const YUVcolorA &Ishadow,int Ixscale,int Iyscale,IffdshowBase *Ideci);
  template<class tchar> const TrenderedSubtitleWord *getChar(tchar *s,const TrenderedSubtitleLines::TprintPrefs &prefs);
  ~TcharsChache();
 };
@@ -101,7 +103,9 @@ private:
  void drawShadow(       HDC hdc,
                         HBITMAP hbmp,
                         unsigned char *bmp16,
-                        HGDIOBJ old,int xscale,
+                        HGDIOBJ old,
+                        int xscale,
+                        int yscale,
                         const SIZE &sz,
                         const TrenderedSubtitleLines::TprintPrefs &prefs,
                         const short (*matrix)[5],
@@ -120,7 +124,8 @@ public:
                         const YUVcolorA &outlineYUV,
                         const YUVcolorA &shadowYUV,
                         const TrenderedSubtitleLines::TprintPrefs &prefs,
-                        int xscale);
+                        int xscale,
+                        int yscale);
  template<class tchar> TrenderedSubtitleWord(TcharsChache *chars,const tchar *s,size_t strlens,const TrenderedSubtitleLines::TprintPrefs &prefs);
  TrenderedSubtitleWord(bool IshiftChroma=true):shiftChroma(IshiftChroma),TrenderedSubtitleWordBase(false) {}
  virtual void print(unsigned int dx[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const;
@@ -165,11 +170,6 @@ private:
  short matrix[5][5];
  template<class tchar> void prepareC(const TsubtitleTextBase<tchar> *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange);
  template<class tchar> int get_splitdx_for_new_line(const TsubtitleWord<tchar> &w,int splitdx,int dx) const;
- //template<class tchar> void WordWrapEndOfLine(const tchar* p,const TrenderedSubtitleLines::TprintPrefs &prefs,TrenderedSubtitleLine* &line,int dx,int splitdx0,int &splitdx1,const TsubtitleWord<tchar> &w,bool trimRight);
- //template<class tchar> void WordWrapSmart(const tchar* p,const TrenderedSubtitleLines::TprintPrefs &prefs,TrenderedSubtitleLine* &line,int dx,int splitdx0,int &splitdx1,const TsubtitleWord<tchar> &w,int *pwidths,const tchar* allStr,bool trimRight);
- //template<class tchar> void WordWrapSmartReverse(const tchar* p,const TrenderedSubtitleLines::TprintPrefs &prefs,TrenderedSubtitleLine* &line,int dx,int splitdx0,int &splitdx1,const TsubtitleWord<tchar> &w,bool trimRight);
- //template<class tchar> unsigned int WordWrapSmartI(const tchar* p,const TrenderedSubtitleLines::TprintPrefs &prefs,TrenderedSubtitleLine* &line,int dx,int splitdx0,int &splitdx1,const TsubtitleWord<tchar> &w,bool trimRight,TrenderedSubtitleLines *Ilines,int splitdxMin);
- //template<class tchar> int calcNextLine(const tchar* p, size_t strlenp, int *pwidths, int splitdxMin, int splitdx1, unsigned int &firstlinechars);
  TcharsChache *charsCache;
  template<class tchar> TrenderedSubtitleWord* newWord(const tchar *s,size_t slen,TrenderedSubtitleLines::TprintPrefs prefs,const TsubtitleWord<tchar> *w,bool trimRightSpaces=false);
 public:

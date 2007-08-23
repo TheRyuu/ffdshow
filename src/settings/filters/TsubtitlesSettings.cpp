@@ -666,7 +666,7 @@ TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters)
    IDFF_subLinespacing         ,&TsubtitlesSettings::linespacing             ,0,200,_l(""),1,
      _l("subLinespacing"), 100,
    IDFF_subTimeOverlap         ,&TsubtitlesSettings::timeoverlap             ,0,0,_l(""),1,
-     _l("subTimeOverlap"), 0,
+     _l("subTimeOverlap"), 1,
    IDFF_subIsMinDuration       ,&TsubtitlesSettings::isMinDuration           ,0,0,_l(""),1,
      _l("subIsMinDuration"), 0,
    IDFF_subMinDurationType     ,&TsubtitlesSettings::minDurationType         ,0,2,_l(""),1,

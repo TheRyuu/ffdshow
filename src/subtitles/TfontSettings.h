@@ -16,7 +16,7 @@ public:
  int charset;
  int autosize,autosizeVideoWindow;
  int sizeP,sizeA;
- int xscale;
+ int xscale,yscale;
  unsigned int getSize(unsigned int AVIdx,unsigned int AVIdy) const
   {
    if (autosize && AVIdx && AVIdy)
@@ -44,11 +44,14 @@ public:
  int bodyAlpha,outlineAlpha,shadowAlpha;
  int split;
  int fast;
+ int overrideScale,aspectAuto;
  virtual void reg_op(TregOp &t);
  int outlineWidth;
  int shadowSize, shadowMode; // Subtitles shadow
  int blur;
  static const char_t *shadowModes[];
+protected:
+ virtual void getDefaultStr(int id,char_t *buf,size_t buflen);
 };
 
 struct TfontSettingsOSD :TfontSettings

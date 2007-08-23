@@ -1,6 +1,7 @@
 #ifndef _TSUBTITLEPROPS_H_
 #define _TSUBTITLEPROPS_H_
 struct TfontSettings;
+struct Rational;
 
 struct TSubtitleProps
 {
@@ -37,6 +38,8 @@ struct TSubtitleProps
  unsigned int get_marginL(unsigned int screenWidth) const;
  unsigned int get_marginTop(unsigned int screenHeight) const;
  unsigned int get_marginBottom(unsigned int screenHeight) const;
+ int get_xscale(int Ixscale,const Rational& sar,int aspectAuto,int overrideScale) const;
+ int get_yscale(int Iyscale,const Rational& sar,int aspectAuto,int overrideScale) const;
  static int alignASS2SSA(int align);
 };
 

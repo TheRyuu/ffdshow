@@ -1781,6 +1781,10 @@
 #define IDC_LBL_PAR_OUTDEV              2084
 #define IDC_LBL_NEW_ASPECT_SEP2         2085
 #define IDC_RBT_RESIZE_MODE_SCREEN_RES  2086
+#define IDC_CHB_FONT_OVERRIDE_SCALING   2087
+#define IDC_CHB_FONT_ASPECT_AUTO        2088
+#define IDC_TBR_FONT_YSCALE             2089
+#define IDC_LBL_FONT_YSCALE             2090
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -1797,7 +1801,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        296
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2086
+#define _APS_NEXT_CONTROL_VALUE         2091
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

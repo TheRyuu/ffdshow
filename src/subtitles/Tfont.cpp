@@ -99,7 +99,8 @@ template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(
                        const YUVcolorA &outlineYUV,
                        const YUVcolorA &shadowYUV,
                        const TrenderedSubtitleLines::TprintPrefs &prefs,
-                       int xscale):
+                       int xscale,
+                       int yscale):
  TrenderedSubtitleWordBase(true),
  shiftChroma(true)
 {
@@ -150,7 +151,7 @@ template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(
    prefs.config->getGDI<tchar>().textOut(hdc,x,2,s->c_str(),sz/*(int)s->size()*/);
    x+=*cx;
   }
- drawShadow(hdc,hbmp,bmp16,old,xscale,sz,prefs,matrix,YUV,outlineYUV,shadowYUV,shadowSize);
+ drawShadow(hdc,hbmp,bmp16,old,xscale,yscale,sz,prefs,matrix,YUV,outlineYUV,shadowYUV,shadowSize);
 }
 void TrenderedSubtitleWord::drawShadow(
       HDC hdc,
@@ -158,6 +159,7 @@ void TrenderedSubtitleWord::drawShadow(
       unsigned char *bmp16,
       HGDIOBJ old,
       int xscale,
+      int yscale,
       const SIZE &sz,
       const TrenderedSubtitleLines::TprintPrefs &prefs,
       const short (*matrix)[5],
@@ -181,7 +183,7 @@ void TrenderedSubtitleWord::drawShadow(
  bmi.bmiHeader.biYPelsPerMeter=75;
  bmi.bmiHeader.biClrUsed=0;
  bmi.bmiHeader.biClrImportant=0;
- GetDIBits(hdc,hbmp,0,dy[0],bmp16,&bmi,DIB_RGB_COLORS);  // copy bitmap, get it in bmp16
+ GetDIBits(hdc,hbmp,0,dy[0],bmp16,&bmi,DIB_RGB_COLORS);  // copy bitmap, get it in bmp16 (RGB32).
  SelectObject(hdc,old);
  DeleteObject(hbmp);
 
@@ -212,10 +214,11 @@ void TrenderedSubtitleWord::drawShadow(
   }
 #endif
  unsigned int _dx,_dy;
- _dx=(xscale*dx[0]/100)/4+4+shadowSize;
- _dy=dy[0]/4+4+shadowSize;
- dxCharY=xscale*sz.cx/400;dyCharY=sz.cy/4;
- unsigned int al=prefs.csp==FF_CSP_420P ? alignXsize : 8; // swscaler blur requires multiple of 8.
+ _dx=xscale*dx[0]/400+4+shadowSize;
+ _dy=yscale*dy[0]/400+4+shadowSize;
+ dxCharY=xscale*sz.cx/400;dyCharY=yscale*sz.cy/400;
+
+ unsigned int al=prefs.csp==FF_CSP_420P ? alignXsize : 8; // swscaler requires multiple of 8.
  unsigned int _dxtemp=(_dx/al)*al;
  _dx=_dxtemp<_dx ? _dxtemp+al : _dxtemp;
  bmp[0]=(unsigned char*)aligned_calloc3(_dx,_dy,4,16);
@@ -224,47 +227,45 @@ void TrenderedSubtitleWord::drawShadow(
  shadow[0]=(unsigned char*)aligned_calloc3(_dx,_dy,4,16);
  int dxCharYstart=0;
 
- for (unsigned int y=2;y<dy[0]-2;y+=4)
-    {
-   unsigned char *dstBmpY=bmp[0]+(y/4+2)*_dx+2+dxCharYstart;
-   for (unsigned int xstep=xscale==100?4*65536:400*65536/xscale,x=(2<<16)+xstep;x<((dx[0]-2)<<16);x+=xstep,dstBmpY++)
-    {
-     unsigned int sum=0;
-     for (const unsigned char *bmp16src=bmp16+((y-2)*dx[0]+((x>>16)-2))*4,*bmp16srcEnd=bmp16src+5*dx[0]*4;bmp16src!=bmp16srcEnd;bmp16src+=dx[0]*4)
-      {
-       for (int i=0;i<=12;i+=4)
-         sum+=bmp16src[i];
-      }
-     sum/=20; // average of 5x4=20pixels
-     *dstBmpY=(unsigned char)sum;
-    }
-  }
- free(bmp16);
+ { // bmp16 RGB32->IMGFMT_Y800 (full range) conversion.
+  unsigned char *bmp16_wb=bmp16;
+  unsigned char *bmp16_rgb32=bmp16;
+  int cxy=dx[0]*dy[0];
+  while(cxy)
+   {
+    *bmp16_wb=*bmp16_rgb32;
+    bmp16_wb++;
+    bmp16_rgb32+=4;
+    cxy--;
+   }
+ }
 
+ // Scaling. GDI has drawn the font in 4x big size. So we have to shrink to 25% by default.
+ unsigned int scaledDx=xscale*dx[0]/400;
+ unsigned int scaledDy=yscale*dy[0]/400;
+ unsigned int scaledDxStride=(scaledDx+7)&~7;
+ Tlibmplayer *libmplayer;
+ SwsParams params;
+ prefs.deci->getPostproc(&libmplayer);
+ float lumaGBlur=0.0;
+ int resizeMethod=SWS_LANCZOS;
  if (prefs.blur || (prefs.shadowMode==0 && shadowSize>0))
   {
-   // Blur characters. Edge gets more smooth, outline gets thicker.
-   // This code is better adapted to bigger characters.
-   if (prefs.deci)
-    {
-     unsigned char *blured_bmp=(unsigned char*)aligned_calloc3(_dx,_dy,4,16);
-     Tlibmplayer *libmplayer;
-     SwsFilter filter;
-     SwsParams params;
-     prefs.deci->getPostproc(&libmplayer);
-     filter.lumH = filter.lumV = filter.chrH = filter.chrV = libmplayer->sws_getGaussianVec(0.6, 3.0);
-     libmplayer->sws_normalizeVec(filter.lumH, 1.0);
-
-     Tlibmplayer::swsInitParams(&params,SWS_GAUSS);
-     SwsContext *ctx=libmplayer->sws_getContext(_dx, _dy, IMGFMT_Y800, _dx, _dy, IMGFMT_Y800, &params, &filter, NULL);
-     libmplayer->sws_scale_ordered(ctx,(const uint8_t**)&bmp[0],(const stride_t *)&_dx,0,_dy,(uint8_t**)&blured_bmp,(stride_t *)&_dx);
-     libmplayer->sws_freeContext(ctx);
-     libmplayer->sws_freeVec(filter.lumH);
-     libmplayer->Release();
-     aligned_free(bmp[0]);
-     bmp[0]=blured_bmp;
-    }
+   lumaGBlur=1.9f;
+   resizeMethod=SWS_GAUSS;
   }
+ SwsFilter *filter=libmplayer->sws_getDefaultFilter(lumaGBlur,0,0,0,0,0,0);
+ Tlibmplayer::swsInitParams(&params,resizeMethod);
+ SwsContext *ctx=libmplayer->sws_getContext(dx[0], dy[0], IMGFMT_Y800, scaledDx, scaledDy, IMGFMT_Y800, &params, filter, NULL);
+ if (ctx)
+  {
+   uint8_t *scaledBmp=bmp[0]+2+_dx*2; // FIXME for thicker outlines.
+   libmplayer->sws_scale_ordered(ctx,(const uint8_t**)&bmp16,(const stride_t *)dx,0,dy[0],&scaledBmp,(stride_t *)&_dx);
+   libmplayer->sws_freeContext(ctx);
+  }
+ libmplayer->Release();
+ libmplayer=NULL;
+ free(bmp16);
 
  dx[0]=_dx;dy[0]=_dy;
  if (!matrix)
@@ -1152,13 +1153,14 @@ void TrenderedSubtitleLines::clear(void)
 }
 
 //================================= TcharsChache =================================
-TcharsChache::TcharsChache(HDC Ihdc,const short (*Imatrix)[5],const YUVcolorA &Iyuv,const YUVcolorA &Ioutline,const YUVcolorA &Ishadow,int Ixscale,IffdshowBase *Ideci):
+TcharsChache::TcharsChache(HDC Ihdc,const short (*Imatrix)[5],const YUVcolorA &Iyuv,const YUVcolorA &Ioutline,const YUVcolorA &Ishadow,int Ixscale,int Iyscale,IffdshowBase *Ideci):
  hdc(Ihdc),
  matrix(Imatrix),
  yuv(Iyuv),
  outlineYUV(Ioutline),
  shadowYUV(Ishadow),
  xscale(Ixscale),
+ yscale(Iyscale),
  deci(Ideci)
 {
 }
@@ -1172,7 +1174,7 @@ template<> const TrenderedSubtitleWord* TcharsChache::getChar(const wchar_t *s,c
  int key=(int)*s;
  Tchars::iterator l=chars.find(key);
  if (l!=chars.end()) return l->second;
- TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,matrix,yuv,outlineYUV,shadowYUV,prefs,xscale);
+ TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,matrix,yuv,outlineYUV,shadowYUV,prefs,xscale,yscale);
  chars[key]=ln;
  return ln;
 }
@@ -1184,7 +1186,7 @@ template<> const TrenderedSubtitleWord* TcharsChache::getChar(const char *s,cons
    int key=(int)*s;
    Tchars::iterator l=chars.find(key);
    if (l!=chars.end()) return l->second;
-   TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,matrix,yuv,outlineYUV,shadowYUV,prefs,xscale);
+   TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,matrix,yuv,outlineYUV,shadowYUV,prefs,xscale,yscale);
    chars[key]=ln;
    return ln;
   }
@@ -1194,7 +1196,7 @@ template<> const TrenderedSubtitleWord* TcharsChache::getChar(const char *s,cons
    int key=(int)*mbcs;
    Tchars::iterator l=chars.find(key);
    if (l!=chars.end()) return l->second;
-   TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,2,matrix,yuv,outlineYUV,shadowYUV,prefs,xscale);
+   TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,2,matrix,yuv,outlineYUV,shadowYUV,prefs,xscale,yscale);
    chars[key]=ln;
    return ln;
   }
@@ -1249,7 +1251,7 @@ void Tfont::init(const TfontSettings *IfontSettings)
   }
 
  if (fontSettings->fast)
-  charsCache=new TcharsChache(hdc,fontSettings->opaqueBox?NULL:matrix,yuvcolor,outlineYUV,shadowYUV,fontSettings->xscale,deci);
+  charsCache=new TcharsChache(hdc,fontSettings->opaqueBox?NULL:matrix,yuvcolor,outlineYUV,shadowYUV,fontSettings->xscale,fontSettings->yscale,deci);
 }
 void Tfont::done(void)
 {
@@ -1311,6 +1313,8 @@ template<class tchar> TrenderedSubtitleWord* Tfont::newWord(const tchar *s,size_
   }
  else
   {
+   if (fontSettings->outlineWidth==0 && prefs.csp==FF_CSP_RGB32)
+    memcpy(matrix,matrix0RGB,50);
    mat=fontSettings->opaqueBox?NULL:matrix;
    if (fontSettings->outlineWidth==3)
     prefs.blur=true;
@@ -1345,7 +1349,8 @@ template<class tchar> TrenderedSubtitleWord* Tfont::newWord(const tchar *s,size_
                                    w->props.isColor ? YUVcolorA(w->props.OutlineColour,w->props.OutlineColourA) : outlineYUV,
                                    w->props.isColor ? YUVcolorA(w->props.ShadowColour,w->props.ShadowColourA) : shadowYUV1,
                                    prefs,
-                                   w->props.scaleX!=-1?w->props.scaleX:fontSettings->xscale
+                                   w->props.get_xscale(fontSettings->xscale,prefs.sar,fontSettings->aspectAuto,fontSettings->overrideScale),
+                                   w->props.get_yscale(fontSettings->yscale,prefs.sar,fontSettings->aspectAuto,fontSettings->overrideScale)
                                    );
 }
 
@@ -1392,7 +1397,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
      int charCount=0;
      ffstring allStr;
      Tbuffer tempwidth;
-     int left=0;
+     double left=0.0,nextleft=0.0;
      int wordWrapMode=-1;
      int splitdxMax=splitdx0;
      for (typename TsubtitleLine<tchar>::const_iterator w=l->begin();w!=l->end();w++)
@@ -1405,11 +1410,12 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
        const tchar *p=*w;
        if (*p) // drop empty words
         {
+         int xscale=w->props.get_xscale(fontSettings->xscale,prefs.sar,fontSettings->aspectAuto,fontSettings->overrideScale);
          wordWrapMode=w->props.wrapStyle;
          splitdxMax=get_splitdx_for_new_line(*w,splitdx0,dx);
          allStr+=p;
          pwidths=(int*)width.resize((allStr.size()+1)*sizeof(int));
-         left=charCount>0 ? pwidths[charCount-1] : 0;
+         left=nextleft;
          int nfit;
          SIZE sz;
          size_t strlenp=strlen(p);
@@ -1417,7 +1423,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
          prefs.config->getGDI<tchar>().getTextExtentExPoint(hdc,p,(int)strlenp,INT_MAX,&nfit,ptempwidths,&sz);
          for (size_t x=0;x<strlenp;x++)
           {
-           pwidths[charCount]=ptempwidths[x]+left;
+           pwidths[charCount]=nextleft=(double)ptempwidths[x]*xscale/100+left;
            charCount++;
           }
         }

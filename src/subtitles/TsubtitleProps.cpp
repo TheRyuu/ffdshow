@@ -20,6 +20,8 @@
 #include "stdafx.h"
 #include "TsubtitleProps.h"
 #include "TsubtitlesSettings.h"
+#include "rational.h"
+#include <locale.h>
 
 void TSubtitleProps::reset(void)
 {
@@ -49,8 +51,6 @@ void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,uns
 {
  memset(&lf,0,sizeof(lf));
  lf.lfHeight=(LONG)limit(size?size:fontSettings.getSize(dx,dy),3U,255U)*4;
- if (scaleY!=-1)
-  lf.lfHeight=scaleY*lf.lfHeight/100;
  if (refResY && dy)
   lf.lfHeight=(clipdy ? clipdy : dy)*lf.lfHeight/refResY;
  lf.lfWidth=0;
@@ -150,4 +150,28 @@ int TSubtitleProps::alignASS2SSA(int align)
     return align-2;
   }
  return align;
+}
+
+int TSubtitleProps::get_xscale(int Ixscale,const Rational& sar,int aspectAuto,int overrideScale) const
+{
+ int result;
+ if (scaleX==-1 || overrideScale)
+  result=Ixscale;
+ else
+  result=scaleX;
+ if ((aspectAuto && sar.num>sar.den) && (overrideScale || scaleX==-1 || scaleX==scaleY))
+  result=result*sar.den/sar.num;
+ return result;
+}
+
+int TSubtitleProps::get_yscale(int Iyscale,const Rational& sar,int aspectAuto,int overrideScale) const
+{
+ int result;
+ if (scaleY==-1 || overrideScale)
+  result=Iyscale;
+ else
+  result=scaleY;
+ if ((aspectAuto && sar.num<sar.den) && (overrideScale || scaleY==-1 || scaleX==scaleY))
+  result=result*sar.num/sar.den;
+ return result;
 }

@@ -1,2 +1,0 @@
-Spacing - distance between characters
-Weight - most fonts supports only small subset of listed weights

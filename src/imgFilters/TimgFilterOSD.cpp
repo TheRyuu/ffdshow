@@ -246,6 +246,7 @@ void TimgFilterOSD::TosdLine::print(IffdshowBase *deci,const TffPict &pict,unsig
      printprefs.shadowMode=-1;
      printprefs.csp=pict.csp;
      printprefs.cspBpp=pict.cspInfo.Bpp;
+     printprefs.sar=pict.rectFull.sar;
      if (splitline)
       {
        printprefs.fontchangesplit=1;
@@ -510,6 +511,7 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
      printprefs.shadowMode=-1;
      printprefs.csp=pict.csp;
      printprefs.cspBpp=pict.cspInfo.Bpp;
+     printprefs.sar=pict.rectFull.sar;
      fontUser.print(&subUser,true,printprefs);
     }
   }

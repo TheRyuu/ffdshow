@@ -17,6 +17,7 @@
  */
 
 #include "stdafx.h"
+#include <locale.h>
 #include "TfontSettings.h"
 #include "ffdshow_constants.h"
 #include "reg.h"
@@ -101,29 +102,32 @@ int TfontSettings::getCharset(const char_t *name)
 void TfontSettings::reg_op(TregOp &t)
 {
  Toptions::reg_op(t);
-
-#ifndef UNICODE
- char_t lang[20];
- TregOpRegRead tl(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
- tl._REG_OP_S(IDFF_lang,_l("lang"),lang,20,_l(""));
-
- if (lang[0]=='\0')
-  {
-   TregOpRegRead tNSI(HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
-   char_t langId[MAX_PATH];
-   tNSI._REG_OP_S(0,_l("lang"),langId,MAX_PATH,_l("1033"));
-   if(strncmp(langId,_l("1041"),4)==0)
-    {lang[0]='J';lang[1]='P';}
-  }
-
- if ((lang[0]=='J' || lang[0]=='j') && (lang[0]=='J'  || lang[1]=='P' || lang[1]=='a'|| lang[1]=='p')) /* Japanese ANSI or Unicode */
-  charset= SHIFTJIS_CHARSET;
-#endif
 }
 
 TfontSettings::TfontSettings(TintStrColl *Icoll):Toptions(Icoll)
 {
  memset(name,0,sizeof(name));
+}
+
+void TfontSettings::getDefaultStr(int id,char_t *buf,size_t buflen)
+{
+ if (id==IDFF_OSDfontName || id==IDFF_fontName)
+  {
+   char_t *locale=_tsetlocale(LC_ALL,_l(""));
+   if (strcmp(locale,_l("Japanese_Japan.932"))==0)
+    { // Arial does not have Japanese characters.
+#ifdef UNICODE
+     // I just want to avoid typing kanji directly for encoding reason. GCC does not compile UNICODE source file.
+     wchar_t msgothic[]={0xff2d, 0xff33, 0x0020, 0xff30, 0x30b4, 0x30b7, 0x30c3, 0x30af, 0x0000}; // MS P Gothic
+     strcpy(buf,msgothic);
+#else
+     unsigned char msgothic[]={0x82, 0x6c, 0x82, 0x72, 0x20, 0x82, 0x6f, 0x83, 0x53, 0x83, 0x56, 0x83, 0x62, 0x83, 0x4e, 0x00}; // MS P Gothic
+     strcpy(buf,(const char*)msgothic);
+#endif
+    }
+   else
+    strcpy(buf,_l("Arial"));
+  }
 }
 
 //========================================= TfontSettingsOSD =========================================
@@ -156,6 +160,10 @@ TfontSettingsOSD::TfontSettingsOSD(TintStrColl *Icoll):TfontSettings(Icoll)
      _l("OSDfontSpacing"), 0,
    IDFF_OSDfontXscale        ,&TfontSettings::xscale         ,10,300,_l(""),0,
      _l("OSDfontXscale"), 100,
+   IDFF_OSDfontYscale        ,&TfontSettings::yscale         ,10,300,_l(""),0,
+     _l("OSDfontYscale"), 100,
+   IDFF_OSDfontAspectAuto    ,&TfontSettings::aspectAuto     ,0,0,_l(""),0,
+     _l("OSDfontAspectAuto"), 1,
    IDFF_OSDfontFast          ,&TfontSettings::fast           ,0,0,_l(""),0,
      _l("OSDfontFast"), 0,
    IDFF_OSDfontBodyAlpha     ,&TfontSettings::bodyAlpha      ,0,256,_l(""),1,
@@ -176,7 +184,7 @@ TfontSettingsOSD::TfontSettingsOSD(TintStrColl *Icoll):TfontSettings(Icoll)
  static const TstrOption sopts[]=
   {
    IDFF_OSDfontName,(TstrVal)&TfontSettings::name,LF_FACESIZE,_l(""),0,
-     _l("OSDfontName"), _l("Arial"),
+     _l("OSDfontName"), NULL,
    0
   };
  addOptions(sopts);
@@ -216,6 +224,12 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
      _l("fontSplitting"), 1,
    IDFF_fontXscale             ,&TfontSettings::xscale             ,10,300,_l(""),1,
      _l("fontXscale"), 100,
+   IDFF_fontYscale             ,&TfontSettings::yscale             ,10,300,_l(""),1,
+     _l("fontYscale"), 100,
+   IDFF_fontOverrideScale      ,&TfontSettings::overrideScale      ,0,0,_l(""),1,
+     _l("fontOverrideScale"), 0,
+   IDFF_fontAspectAuto         ,&TfontSettings::aspectAuto         ,0,0,_l(""),1,
+     _l("fontAspectAuto"), 1,
    IDFF_fontFast               ,&TfontSettings::fast               ,0,0,_l(""),1,
      _l("fontFast"), 0,
    IDFF_fontBodyAlpha          ,&TfontSettings::bodyAlpha          ,0,256,_l(""),1,
@@ -236,7 +250,7 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
  static const Toptions::TstrOption sopts[]=
   {
    IDFF_fontName,(TstrVal)&TfontSettings::name,LF_FACESIZE,_l(""),1,
-     _l("fontName"), _l("Arial"),
+     _l("fontName"), NULL,
    0
   };
  addOptions(sopts);

@@ -489,6 +489,9 @@
 #define IDFF_fontShadowColor         3392
 #define IDFF_fontSplitting           831
 #define IDFF_fontXscale              832 // *100, multiplier of character width
+#define IDFF_fontYscale              3411
+#define IDFF_fontOverrideScale       3414
+#define IDFF_fontAspectAuto          3415
 #define IDFF_fontFast                854
 #define IDFF_fontShadowMode          3374 // 0 - Glowing, 1 - classic gradient, 2 - classic
 #define IDFF_fontShadowSize          3375
@@ -593,6 +596,8 @@
 #define IDFF_OSDfontShadowMode     3399
 #define IDFF_OSDfontBlur           3407
 #define IDFF_OSDfontXscale         1532
+#define IDFF_OSDfontYscale         3412
+#define IDFF_OSDfontAspectAuto     3413
 #define IDFF_OSDfontFast           1535
   #define IDFF_OSDtype_inputSize          1520
   #define IDFF_OSDtype_inputAspect        1550
@@ -1425,6 +1430,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3411
+//max:3416
 
 #endif

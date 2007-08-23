@@ -52,6 +52,7 @@ void TfontPage::init(void)
 {
  tbrSetRange(IDC_TBR_FONT_SPACING,-10,10,2);
  tbrSetRange(IDC_TBR_FONT_XSCALE,30,300);
+ tbrSetRange(IDC_TBR_FONT_YSCALE,30,300);
  tbrSetRange(IDC_TBR_FONT_SUBSHADOW_SIZE,0,20, 1);
  tbrSetRange(IDC_TBR_FONT_BODY_ALPHA,0,256, 10);
  tbrSetRange(IDC_TBR_FONT_OUTLINE_ALPHA,0,256, 10);
@@ -68,6 +69,9 @@ void TfontPage::init(void)
 
  cbxCharset=GetDlgItem(m_hwnd,IDC_CBX_FONT_CHARSET);
  boldFont=NULL;
+ addHint(IDC_CBX_FONT_WEIGHT,_l("Weight - most fonts supports only small subset of listed weights."));
+ addHint(IDC_TBR_FONT_SPACING,_l("Spacing - distance between characters."));
+ addHint(IDC_CHB_FONT_ASPECT_AUTO,_l("Works when the video has non-square pixel aspect ratio."));
 }
 
 void TfontPage::selectCharset(int ii)
@@ -126,27 +130,11 @@ void TfontPage::font2dlg(void)
  SendDlgItemMessage(m_hwnd,IDC_CBX_FONT_NAME,CB_SELECTSTRING,WPARAM(-1),LPARAM(cfgGetStr(idff_fontname)));
  fillCharsets();
  setCheck(IDC_CHB_FONT_BLUR,cfgGet(idff_fontblur));
-#ifdef UNICODE
+ setCheck(IDC_CHB_FONT_ASPECT_AUTO,cfgGet(idff_fontaspectauto));
+ if (idff_fontoverridescale)
+  setCheck(IDC_CHB_FONT_OVERRIDE_SCALING,cfgGet(idff_fontoverridescale));
+ enable (!!idff_fontoverridescale,IDC_CHB_FONT_OVERRIDE_SCALING);
  selectCharset(cfgGet(idff_fontcharset));
-#else
- char_t lang[20];
- TregOpRegRead tl(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
- tl._REG_OP_S(IDFF_lang,_l("lang"),lang,20,_l(""));
-
- if (lang[0]=='\0')
-  {
-   TregOpRegRead tNSI(HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
-   char_t langId[MAX_PATH];
-   tNSI._REG_OP_S(0,_l("lang"),langId,MAX_PATH,_l("1033"));
-   if(strncmp(langId,_l("1041"),4)==0)
-    {lang[0]='J';lang[1]='P';}
-  }
-
- if ((lang[0]=='J' || lang[0]=='j') && (lang[1]=='A' || lang[1]=='P' || lang[1]=='a'|| lang[1]=='p')) /* Japanese ANSI or Unicode */
-  selectCharset(SHIFTJIS_CHARSET);
- else
-  selectCharset(cfgGet(idff_fontcharset));
-#endif
  setCheck(IDC_CHB_FONT_FAST,cfgGet(idff_fontfast));
  int opaquebox=cfgGet(idff_fontopaquebox);
  setCheck(IDC_FONT_OPAQUE_BOX,opaquebox);
@@ -192,6 +180,12 @@ void TfontPage::spacingxscale2dlg(void)
    int xscale=cfgGet(idff_fontxscale);
    tbrSet(IDC_TBR_FONT_XSCALE,cfgGet(idff_fontxscale));
    setText(IDC_LBL_FONT_XSCALE,_l("%s %i%%"),_(IDC_LBL_FONT_XSCALE),xscale);
+  }
+ if (idff_fontyscale)
+  {
+   int yscale=cfgGet(idff_fontyscale);
+   tbrSet(IDC_TBR_FONT_YSCALE,cfgGet(idff_fontyscale));
+   setText(IDC_LBL_FONT_YSCALE,_l("%s %i%%"),_(IDC_LBL_FONT_YSCALE),yscale);
   }
  tbrSet(IDC_TBR_FONT_SPACING,cfgGet(idff_fontspacing),IDC_LBL_FONT_SPACING);
 }
@@ -372,6 +366,7 @@ bool TfontPage::reset(bool testonly)
    deci->resetParam(idff_fontbodyalpha);
    deci->resetParam(idff_fontspacing);
    deci->resetParam(idff_fontxscale);
+   deci->resetParam(idff_fontyscale);
    deci->resetParam(idff_fontfast);
    deci->resetParam(idff_fontoutlinewidth);
    deci->resetParam(idff_fontoutlinecolor);
@@ -381,6 +376,9 @@ bool TfontPage::reset(bool testonly)
    deci->resetParam(idff_fontshadowsize);
    deci->resetParam(idff_fontshadowalpha);
    deci->resetParam(idff_fontopaquebox);
+   deci->resetParam(idff_fontaspectauto);
+   if (idff_fontoverridescale)
+    deci->resetParam(idff_fontoverridescale);
   }
  return true;
 }
@@ -448,6 +446,9 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
  idff_fontweight=IDFF_fontWeight;
  idff_fontcolor=IDFF_fontColor;
  idff_fontxscale=IDFF_fontXscale;
+ idff_fontyscale=IDFF_fontYscale;
+ idff_fontoverridescale=IDFF_fontOverrideScale;
+ idff_fontaspectauto=IDFF_fontAspectAuto;
  idff_fontfast=IDFF_fontFast;
  idff_fontshadowmode=IDFF_fontShadowMode;
  idff_fontoutlinecolor=IDFF_fontOutlineColor;
@@ -464,6 +465,8 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
    IDC_CHB_FONT_FAST,idff_fontfast,NULL,
    IDC_FONT_OPAQUE_BOX,idff_fontopaquebox,&TfontPageSubtitles::font2dlg,
    IDC_CHB_FONT_BLUR,idff_fontblur,&TfontPageSubtitles::font2dlg,
+   IDC_CHB_FONT_OVERRIDE_SCALING,idff_fontoverridescale,&TfontPageSubtitles::font2dlg,
+   IDC_CHB_FONT_ASPECT_AUTO,idff_fontaspectauto,&TfontPageSubtitles::font2dlg,
    0,NULL,NULL
   };
  bindCheckboxes(chb);
@@ -472,6 +475,7 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
    IDC_TBR_FONT_SPACING,idff_fontspacing,&TfontPageSubtitles::spacingxscale2dlg,
    IDC_TBR_FONT_OUTLINE_WIDTH,idff_fontoutlinewidth,&TfontPageSubtitles::shadow2dlg,
    IDC_TBR_FONT_XSCALE,idff_fontxscale,&TfontPageSubtitles::spacingxscale2dlg,
+   IDC_TBR_FONT_YSCALE,idff_fontyscale,&TfontPageSubtitles::spacingxscale2dlg,
    IDC_TBR_FONT_SUBSHADOW_SIZE,idff_fontshadowsize,&TfontPageSubtitles::font2dlg,
    IDC_TBR_FONT_BODY_ALPHA,idff_fontbodyalpha,&TfontPageSubtitles::shadowAlpha2dlg,
    IDC_TBR_FONT_OUTLINE_ALPHA,idff_fontoutlinealpha,&TfontPageSubtitles::shadowAlpha2dlg,
@@ -504,6 +508,9 @@ TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent):TfontPage(Iparent)
  idff_fontweight=IDFF_OSDfontWeight;
  idff_fontcolor=IDFF_OSDfontColor;
  idff_fontxscale=IDFF_OSDfontXscale;
+ idff_fontyscale=IDFF_OSDfontYscale;
+ idff_fontoverridescale=0;
+ idff_fontaspectauto=IDFF_OSDfontAspectAuto;
  idff_fontfast=IDFF_OSDfontFast;
  idff_fontoutlinecolor=IDFF_OSDfontOutlineColor;
  idff_fontshadowcolor=IDFF_OSDfontShadowColor;
@@ -519,6 +526,7 @@ TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent):TfontPage(Iparent)
    IDC_CHB_FONT_FAST,idff_fontfast,NULL,
    IDC_FONT_OPAQUE_BOX,idff_fontopaquebox,&TfontPageOSD::font2dlg,
    IDC_CHB_FONT_BLUR,idff_fontblur,&TfontPageOSD::font2dlg,
+   IDC_CHB_FONT_ASPECT_AUTO,idff_fontaspectauto,&TfontPageOSD::font2dlg,
    0,NULL,NULL
   };
  bindCheckboxes(chb);
@@ -527,6 +535,7 @@ TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent):TfontPage(Iparent)
    IDC_TBR_FONT_SPACING,idff_fontspacing,&TfontPageOSD::spacingxscale2dlg,
    IDC_TBR_FONT_OUTLINE_WIDTH,idff_fontoutlinewidth,&TfontPageOSD::shadow2dlg,
    IDC_TBR_FONT_XSCALE,idff_fontxscale,&TfontPageOSD::spacingxscale2dlg,
+   IDC_TBR_FONT_YSCALE,idff_fontyscale,&TfontPageOSD::spacingxscale2dlg,
    IDC_TBR_FONT_SUBSHADOW_SIZE,idff_fontshadowsize,&TfontPageOSD::font2dlg,
    IDC_TBR_FONT_BODY_ALPHA,idff_fontbodyalpha,&TfontPageOSD::shadowAlpha2dlg,
    IDC_TBR_FONT_OUTLINE_ALPHA,idff_fontoutlinealpha,&TfontPageOSD::shadowAlpha2dlg,

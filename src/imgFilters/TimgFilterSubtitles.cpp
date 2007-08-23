@@ -57,6 +57,7 @@ TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(unsigned char *Idst[4],strid
  deci->getParam(IDFF_fontShadowSize, &i);
  shadowSize=i;
  deci->getParam(IDFF_fontShadowAlpha, &shadowAlpha);
+ sar=pict.rectFull.sar;
 }
 
 TimgFilterSubtitles::TimgFilterSubtitles(IffdshowBase *Ideci,Tfilters *Iparent):

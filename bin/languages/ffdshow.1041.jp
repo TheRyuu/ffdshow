@@ -10,7 +10,7 @@ pointsizeNT=9
 enabled=有効
 disabled=無効
 no limitations=制限しない
-only one - check previous filter only=1つのみ - 以前のフィルターのみチェックする
+only one - check previous filter only=1つのみ - 直前のフィルターのみチェックする
 only one - check all previous filters=1つのみ - 以前のフィルター全てをチェックする
 only one - check all filters in graph=1つのみ - グラフ内のフィルター全てをチェックする
 none - disabled=なし - 使用しない
@@ -500,6 +500,10 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 Smart wrapping, lines are evenly broken=出来るだけ均等に分割
 End-of-line word wrapping=幅いっぱいになったら改行
 Smart wrapping, lower line gets wider=出来るだけ均等に分割、下の行を広めに
+Enable in Vista WMP11=VistaのWMP11で有効にする
+Weight - most fonts supports only small subset of listed weights.=ほとんどのフォントはリストに現れるうちの幾つかしかサポートしません。
+Spacing - distance between characters.=水平方向の文字間隔
+Works when the video has non-square pixel aspect ratio.=ビデオのピクセルアスペクト比が正方形でないときに補正します。
 
 [101]
 1=OK
@@ -724,16 +728,15 @@ Smart wrapping, lower line gets wider=出来るだけ均等に分割、下の行を広めに
 1108=ウェイト:
 1110=サイズ:
 1114=文字コード:
-1116=スペース:
+1116=文字間隔:
 1118=輪郭の強さ:
-1120=幅:
+1120=拡大率 幅:
 1124=色:
 1130=輪郭の太さ:
 1259=フォント
 1335=オートサイズ
 1539=映像のウィンドウサイズを使用する
 1827=高速レンダリング
-1143=スペース - 水平方向の文字間隔\r\nウェイト - ほとんどのフォントはリストに現れるうちの幾つかしかサポートしません。\r\n文字セット - 文字セット - ShiftJISを指定してください。
 1978=影の種類:
 1981=アルファ:
 1980=影のサイズ:
@@ -743,6 +746,9 @@ Smart wrapping, lower line gets wider=出来るだけ均等に分割、下の行を広めに
 2054=陰影:
 2060=塗りつぶし
 2081=ぼかし
+2087=ASS/ASS2 の拡大率を上書きする
+2088=アスペクト比を自動的に補正する
+2090=拡大率 高さ:
 
 [133]
 0=リサイズ、アスペクト
@@ -776,6 +782,7 @@ Smart wrapping, lower line gets wider=出来るだけ均等に分割、下の行を広めに
 1987=横幅を指定する
 1988=ピクセルのアスペクト比率（PAR）を\r\n内部的に処理する
 2084=表示デバイスのピクセルのアスペクト比率
+2086=スクリーンの解像度にリサイズする
 
 [134]
 0=切り出し

@@ -686,6 +686,10 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
         styleFormat.push_back(&Tstyle::bold);
        else if (strnicmp(f->first,_L("italic"),6)==0)
         styleFormat.push_back(&Tstyle::italic);
+       else if (strnicmp(f->first,_L("ScaleX"),6)==0)
+        styleFormat.push_back(&Tstyle::fontScaleX);
+       else if (strnicmp(f->first,_L("ScaleY"),6)==0)
+        styleFormat.push_back(&Tstyle::fontScaleY);
        else if (strnicmp(f->first,_L("Spacing"),7)==0)
         styleFormat.push_back(&Tstyle::spacing);
        else if (strnicmp(f->first,_L("outline"),7)==0)
