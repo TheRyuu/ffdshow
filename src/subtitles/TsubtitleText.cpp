@@ -819,6 +819,8 @@ template<class tchar> template<bool TSubtitleProps::*offset> void TsubtitleForma
 {
  if (start!=end && start[0]=='1')
   props.*offset=true;
+ else if (start!=end && start[0]=='0')
+  props.*offset=false;
  else
   props.*offset=defprops.*offset;
 }
