@@ -595,6 +595,7 @@ stats=stats
 Useful for directly storing encoded ac3 to a file in graphedt with File Writer filter=Utile pour stocker directement du ac3 encodé dans un fichier de GraphEdit avec le filtre File Writer
 WaveOut Device merit is too low. Do you want to raise it?=Le mérite de WaveOut Device est trop bas. Voulez-vous le monter ?
 Low merit=Mérite bas
+Check this option only if you have troubles with SPDIF output=Cocher cette option seulement si vous avez des problèmes avec la sortie SPDIF
 
 Use with care - can cause ffdshow to not unload after closing the movie.=À utiliser avec soin - peut empêcher ffdshow de se décharger après la fermeture du film.
 do not use=ne pas utiliser
@@ -1688,6 +1689,7 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 1846=Appliquer uniquement à la sortie S/PDIF
 1984=Périphér. multichaîne:
 1985=Encoder que les flux multichaînes
+2091=Maximiser la compatibilité SPDIF
 
 
 [244]
