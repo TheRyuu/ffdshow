@@ -463,6 +463,8 @@
 		<File 
 			RelativePath=".\libavcodec\ulti_cb.h"/>
 		<File 
+			RelativePath=".\libavcodec\unary.h"/>
+		<File 
 			RelativePath=".\libavcodec\vc1.h"/>
 		<File 
 			RelativePath=".\libavcodec\vc1acdata.h"/>

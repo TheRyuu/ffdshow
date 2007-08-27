@@ -1876,7 +1876,7 @@ DCT_SAD_FUNC(ssse3)
 #undef HSUM
 #undef DCT_SAD
 
-static int ssd_int8_vs_int16_mmx(int8_t *pix1, int16_t *pix2, int size){
+static int ssd_int8_vs_int16_mmx(const int8_t *pix1, const int16_t *pix2, int size){
     int sum;
     long i=size;
     asm volatile(
@@ -3625,14 +3625,16 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 #endif
 #endif
 
-        if(mm_flags & MM_SSE2){
+        if(mm_flags & MM_SSE2 & 0){
             c->horizontal_compose97i = ff_snow_horizontal_compose97i_sse2;
             c->vertical_compose97i = ff_snow_vertical_compose97i_sse2;
             c->inner_add_yblock = ff_snow_inner_add_yblock_sse2;
         }
         else{
+            if(mm_flags & MM_MMXEXT){
             c->horizontal_compose97i = ff_snow_horizontal_compose97i_mmx;
             c->vertical_compose97i = ff_snow_vertical_compose97i_mmx;
+          	}
             c->inner_add_yblock = ff_snow_inner_add_yblock_mmx;
         }
 

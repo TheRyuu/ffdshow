@@ -825,6 +825,9 @@
 				RelativePath=".\libavcodec\ulti_cb.h">
 			</File>
 			<File
+				RelativePath=".\libavcodec\unary.h">
+			</File>
+			<File
 				RelativePath=".\libavcodec\vc1.h">
 			</File>
 			<File
