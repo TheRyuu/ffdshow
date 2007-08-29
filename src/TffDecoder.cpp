@@ -620,7 +620,7 @@ void TffdshowDecVideo::ConnectCompatibleFilter(void)
 	IFilterGraph *pGraph=NULL;
 	getGraph(&pGraph);
 	IGraphBuilder *pGraphBuilder = NULL;
-	hr = pGraph->QueryInterface(__uuidof(IGraphBuilder), (void **)&pGraphBuilder);
+	hr = pGraph->QueryInterface(IID_IGraphBuilder, (void **)&pGraphBuilder);
 	if (hr!=S_OK)
 	{
 		connectedPin->Release();
@@ -693,7 +693,7 @@ void TffdshowDecVideo::DisconnectFromCompatibleFilter(void)
 	IFilterGraph *pGraph=NULL;
 	getGraph(&pGraph);
 	IGraphBuilder *pGraphBuilder = NULL;
-	hr = pGraph->QueryInterface(__uuidof(IGraphBuilder), (void **)&pGraphBuilder);
+	hr = pGraph->QueryInterface(IID_IGraphBuilder, (void **)&pGraphBuilder);
 	if (hr!=S_OK)
 	{
 		connectedPin->Release();

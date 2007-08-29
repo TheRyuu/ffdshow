@@ -110,7 +110,7 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
  if (res == 0 && pCompatibleFilter == NULL &&
 	 fv->deci->getParam2(IDFF_alternateUncompressed)==1 && // Enable Vista WMP11 postprocessing
 	 osvi.dwMajorVersion > 5 && // OS >= Vista
-	 (stricmp(fv->getExefilename(),_l("wmplayer.exe")) ||  stricmp(fv->getExefilename(),_l("ehshell.exe")) )) // Only WMP and Media Center are concerned
+	 (stricmp(fv->getExefilename(),_l("wmplayer.exe"))==0 ||  stricmp(fv->getExefilename(),_l("ehshell.exe"))==0 )) // Only WMP and Media Center are concerned
  {
 	DPRINTF(_l("TffdshowVideoInputPin::CheckMediaType: input format disabled or not supported. Trying to maintain in the graph..."));	 
 	IFilterMapper2 *pMapper = NULL;
@@ -177,7 +177,7 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
 			fv->deci->getGraph(&pGraph);
 
 			IGraphBuilder *pGraphBuilder = NULL;
-			hr = pGraph->QueryInterface(__uuidof(IGraphBuilder), (void **)&pGraphBuilder);
+			hr = pGraph->QueryInterface(IID_IGraphBuilder, (void **)&pGraphBuilder);
 			if (hr==S_OK)
 			{
 				pGraphBuilder->AddFilter(pCompatibleFilter, varName.bstrVal);
@@ -208,8 +208,8 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
 
 STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM_MEDIA_TYPE* pmt)
 {
-DPRINTF(_l("TffdshowVideoInputPin::ReceiveConnection"));
-CAutoLock cObjectLock(m_pLock);
+ DPRINTF(_l("TffdshowVideoInputPin::ReceiveConnection"));
+ CAutoLock cObjectLock(m_pLock);
  const CLSID &ref=GetCLSID(pConnector);
  if (ref == CLSID_MPC_matroska)
   isMPC_matroska=true;
