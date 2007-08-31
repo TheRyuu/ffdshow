@@ -102,7 +102,8 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  reconnectFirstError(true),
  m_NeedToAttachFormat(false),
  inReconnect(false),
- compatibleFilterConnected(false)
+ compatibleFilterConnected(false),
+ inputConnectedPin(NULL)
 {
  DPRINTF(_l("TffdshowDecVideo::Constructor"));
 #ifdef OSDTIMETABALE
@@ -172,6 +173,11 @@ TffdshowDecVideo::~TffdshowDecVideo()
  m_csReceive.Unlock();
  for (size_t i=0;i<textpins.size();i++) delete textpins[i];
  if (fontManager) delete fontManager;
+ if (inputConnectedPin != NULL)
+ {
+	 inputConnectedPin->Release();
+	 inputConnectedPin = NULL;
+ }
 }
 
 HRESULT TffdshowDecVideo::CheckConnect(PIN_DIRECTION dir,IPin *pPin)
@@ -613,24 +619,23 @@ void TffdshowDecVideo::ConnectCompatibleFilter(void)
 {
 	if (compatibleFilterConnected || inpin->pCompatibleFilter == NULL) return;
 	HRESULT hr;
-	IPin *connectedPin = NULL;
-	hr=inpin->ConnectedTo(&connectedPin);
-	if(FAILED(hr))
-		return;
+	if (inputConnectedPin == NULL) // Reuse of inputConnectedPin is possible
+	{
+		hr=inpin->ConnectedTo(&inputConnectedPin);
+		if(FAILED(hr))
+			return;
+	}
 	IFilterGraph *pGraph=NULL;
 	getGraph(&pGraph);
 	IGraphBuilder *pGraphBuilder = NULL;
 	hr = pGraph->QueryInterface(IID_IGraphBuilder, (void **)&pGraphBuilder);
 	if (hr!=S_OK)
-	{
-		connectedPin->Release();
 		return;
-	}
 	
 	AM_MEDIA_TYPE connectedPinMediaType;
 	inpin->ConnectionMediaType(&connectedPinMediaType);
 
-	hr = connectedPin->Disconnect();
+	hr = inputConnectedPin->Disconnect();
 	hr = inpin->Disconnect();
 
 	// Browse pins compatible codec
@@ -649,7 +654,7 @@ void TffdshowDecVideo::ConnectCompatibleFilter(void)
 		if (pinDirection == PINDIR_INPUT && !inPinConnected)
 		{
 			// Input filter -> FFDShow ==> Input filter -> Compatible filter
-			hr = connectedPin->Connect(filterPin, &connectedPinMediaType);
+			hr = inputConnectedPin->Connect(filterPin, &connectedPinMediaType);
 			inPinConnected=true;
 		}
 		else if (pinDirection == PINDIR_OUTPUT && outPin==NULL)
@@ -664,7 +669,7 @@ void TffdshowDecVideo::ConnectCompatibleFilter(void)
 	// Input filter -> Compatible filter ==> Input filter -> Compatible filter -> FFDShow
 	if (outPin==NULL) // Oops... problem, should not happen
 	{
-		pGraph->Reconnect(connectedPin);
+		pGraph->Reconnect(inputConnectedPin);
 		return;
 	}
 
@@ -674,7 +679,6 @@ void TffdshowDecVideo::ConnectCompatibleFilter(void)
 	hr = pGraphBuilder->Connect(outPin, inpin);
 
 	outPin->Release();
-	connectedPin->Release();
 	pGraphBuilder->Release();	
 
 	compatibleFilterConnected=true;
@@ -1236,6 +1240,11 @@ HRESULT TffdshowDecVideo::onGraphRemove(void)
  if (videoWindow) {videoWindow=NULL;wasVideoWindow=false;}
  if (basicVideo) {basicVideo=NULL;wasBasicVideo=false;}
  if (imgFilters) delete imgFilters;imgFilters=NULL;
+ if (inputConnectedPin != NULL)
+ {
+	 inputConnectedPin->Release();
+	 inputConnectedPin = NULL;
+ }
  return TffdshowDec::onGraphRemove();
 }
 

@@ -486,6 +486,7 @@ protected:
  TglobalSettingsDecVideo *globalSettings;
  bool m_aboutToFlash;
  int m_IsQueueListedApp;        // -1: first run, 0: false, 1: true
+ IPin *inputConnectedPin;
 private:
  HRESULT ReceiveI(IMediaSample *pSample);
  static const int VERSION=38;
