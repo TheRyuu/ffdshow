@@ -1367,10 +1367,11 @@ template<class tchar> TrenderedSubtitleWord* Tfont::newWord(const tchar *s,size_
  else
   prefs.blur=false;
 
+ TrenderedSubtitleWord *rw;
  if (!w->props.isColor && fontSettings->fast && !lf.lfItalic && !(prefs.shadowSize!=0 && prefs.shadowMode!=3) && prefs.csp==FF_CSP_420P)
-  return new TrenderedSubtitleWord(charsCache,s1.c_str(),slen,prefs,lf); // fast rendering
+  rw=new TrenderedSubtitleWord(charsCache,s1.c_str(),slen,prefs,lf); // fast rendering
  else
-  return new TrenderedSubtitleWord(hdc,                      // full rendering
+  rw=new TrenderedSubtitleWord(hdc,                      // full rendering
                                    s1.c_str(),
                                    slen,
                                    mat,
@@ -1382,6 +1383,13 @@ template<class tchar> TrenderedSubtitleWord* Tfont::newWord(const tchar *s,size_
                                    w->props.get_xscale(fontSettings->xscale,prefs.sar,fontSettings->aspectAuto,fontSettings->overrideScale),
                                    w->props.get_yscale(fontSettings->yscale,prefs.sar,fontSettings->aspectAuto,fontSettings->overrideScale)
                                    );
+ if (rw->dxCharY && rw->dyCharY)
+  return rw;
+ else
+  {
+   delete rw;
+   return NULL;
+  }
 }
 
 template<class tchar> int Tfont::get_splitdx_for_new_line(const TsubtitleWord<tchar> &w,int splitdx,int dx) const
@@ -1510,7 +1518,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
              if (*p)
               {
                TrenderedSubtitleWord *rw=newWord(p,strlenp,prefs,w,lf,w+1==l->end());
-               line->push_back(rw);
+               if (rw) line->push_back(rw);
                cx+=strlenp;
               }
              break;
@@ -1533,7 +1541,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
              if (*p)
               {
                TrenderedSubtitleWord *rw=newWord(p,n,prefs,w,lf,true);
-               line->push_back(rw);
+               if (rw) line->push_back(rw);
               }
              if (!line->empty())
               {
