@@ -251,6 +251,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
         {
          e->second->processOverlap();
          e->second->init();
+         forceChange=true;
         }
        sub=e->second->getSubtitle(cfg,frameStart,&forceChange);
       }

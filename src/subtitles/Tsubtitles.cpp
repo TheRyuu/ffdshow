@@ -54,7 +54,6 @@ void Tsubtitles::processOverlap(void)
 
 const Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME time,bool *forceChange)
 {
- if (forceChange) *forceChange=false;
  checkChange(cfg,forceChange);
  if (!subs || subs->empty()) return NULL;
 
