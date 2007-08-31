@@ -979,11 +979,11 @@ unsigned int TrenderedSubtitleLine::width(void) const
 }
 unsigned int TrenderedSubtitleLine::height(void) const
 {
- unsigned int aboveBaseline=0,belowBaseline=0;
+ int aboveBaseline=0,belowBaseline=0;
  for (const_iterator w=begin();w!=end();w++)
   {
-   aboveBaseline=std::max<unsigned int>(aboveBaseline,(*w)->get_baseline());
-   belowBaseline=std::max<unsigned int>(belowBaseline,(*w)->dy[0]-(*w)->get_baseline());
+   aboveBaseline=std::max<int>(aboveBaseline,(*w)->get_baseline());
+   belowBaseline=std::max<int>(belowBaseline,(*w)->dy[0]-(*w)->get_baseline());
   }
  return aboveBaseline+belowBaseline;
 }
