@@ -14,7 +14,7 @@ private:
 protected:
  const char_t *reg_child;
  Tpresets(const char_t *Ireg_child,const char_t *Ipresetext):reg_child(Ireg_child),presetext(Ipresetext) {}
- virtual Tpreset* getAutoPreset0(TautoPresetProps &aprops,bool filefirst);
+ Tpreset* getAutoPreset0(TautoPresetProps &aprops,bool filefirst);
 public:
  virtual ~Tpresets();
  virtual Tpresets* newPresets(void)=0;
@@ -36,7 +36,6 @@ struct TvideoAutoPresetProps;
 class TpresetsVideo :public Tpresets
 {
 protected:
- virtual Tpreset* getAutoPreset0(TautoPresetProps &aprops,bool filefirst);
  TpresetsVideo(const char_t *Ireg_child):Tpresets(Ireg_child,_l("ffpreset")) {}
 public:
  virtual Tpresets* newPresets(void) {return new TpresetsVideo(reg_child);}

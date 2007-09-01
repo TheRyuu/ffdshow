@@ -26,12 +26,13 @@ public:
   {
    return deci->getParamStr2(idff);
   }
- const char_t *getSourceFullFlnm(void),*getSourceName(void),*getExeflnm(void),*getVolumeName(void),*getVolumeSerial(void),*getPresetName(void),*getDecoder(void),*getDSfilterName(void);
+ const char_t *getSourceFullFlnm(void),*getSourceName(void),*getSourceNameExt(void),*getExeflnm(void),*getVolumeName(void),*getVolumeSerial(void),*getPresetName(void),*getDecoder(void),*getDSfilterName(void);
  static const char_t *getExeItem(IffdshowDec*,unsigned int index),*getDecoderItem(IffdshowDec *deciD,unsigned int index);
  bool presetNameMatch(const char_t *mask,const char_t *flnm);
  bool wildcardmatch(const char_t *mask,const char_t *flnm);
  bool stricoll(const char_t *s1,const char_t *s2);
  bool dsfilterMatch(const char_t *f1,const char_t *f2);
+ virtual void getSourceResolution(unsigned int *dx,unsigned int *dy){if (dx) *dx=0;if (dy) *dy=0;}
 };
 
 struct TregOp;
@@ -62,6 +63,8 @@ private:
 public:
  static void normalizePresetName(char_t *dst,const char_t *src);
  static bool isValidPresetName(const char_t *presetName);
+ virtual bool autoloadSizeMatch(int AVIdx,int AVIdy) const {return false;};
+ virtual bool is_autoloadSize(void) const {return false;}
 protected:
  Tpreset(const char_t *Ireg_child,const char_t *IpresetName,int Imin_order);
  const char_t *reg_child;

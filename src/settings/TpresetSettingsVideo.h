@@ -14,7 +14,7 @@ private:
  static const char_t aspectSAR,aspectDAR;
 public:
  TvideoAutoPresetProps(IffdshowBase *Ideci);
- void getSourceResolution(unsigned int *dx,unsigned int *dy);
+ virtual void getSourceResolution(unsigned int *dx,unsigned int *dy);
  const char_t* getFOURCC(void);
  static const char_t* getFOURCCitem(IffdshowDec *deciD,unsigned int index);
  const char_t *getSAR(void),*getDAR(void);
@@ -76,7 +76,8 @@ public:
  virtual void loadReg(void);
 
  int autoloadSize,autoloadSizeXmin,autoloadSizeXmax,autoloadSizeCond,autoloadSizeYmin,autoloadSizeYmax;
- bool autoloadSizeMatch(int AVIdx,int AVIdy);
+ virtual bool autoloadSizeMatch(int AVIdx,int AVIdy) const;
+ virtual bool is_autoloadSize(void) const {return !!autoloadSize;}
 
  int videoDelay,isVideoDelayEnd,videoDelayEnd;
  int idct;

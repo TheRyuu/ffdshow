@@ -47,6 +47,12 @@ const char_t* TautoPresetProps::getSourceName(void)
   getSourceFlnm();
  return sourceName;
 }
+const char_t* TautoPresetProps::getSourceNameExt(void)
+{
+ if (sourceName[0]=='\0')
+  getSourceFlnm();
+ return sourceNameExt;
+}
 const char_t* TautoPresetProps::getExeflnm(void)
 {
  return deci->getExeflnm();
@@ -226,7 +232,7 @@ Tpreset::Tpreset(const char_t *Ireg_child,const char_t *IpresetName,int Imin_ord
  static const TautoPresetItemDef autoPresetItems[]=
   {
    {
-    _l("on movie file name match"),NULL,
+    _l("on movie file name match with preset name"),NULL,
     _l("autoloadFlnm"),1,
     NULL,NULL,
     &TautoPresetProps::presetNameMatch,
@@ -237,7 +243,7 @@ Tpreset::Tpreset(const char_t *Ireg_child,const char_t *IpresetName,int Imin_ord
     _l("autoloadExt"),0,
     _l("autoloadExts"),_l(""),
     &TautoPresetProps::wildcardmatch,
-    &TautoPresetProps::getSourceName
+    &TautoPresetProps::getSourceNameExt
    },
    {
     _l("on application exe file name match"),NULL,
@@ -400,6 +406,10 @@ void Tpreset::addAutoPresetItems(const TautoPresetItemDef *IautoPresetItems)
 bool Tpreset::isAutoPreset(TautoPresetProps &props) const
 {
  props.presetName=presetName;
+ unsigned int dx,dy;
+ props.getSourceResolution(&dx,&dy);
+ if (is_autoloadSize() && autoloadSizeMatch(dx,dy))
+  return true;
  for (TautoPresetItems::const_iterator a=autoPresetItems.begin();a!=autoPresetItems.end();a++)
   if (a->match(props))
    return true;

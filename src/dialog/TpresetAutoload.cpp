@@ -43,7 +43,7 @@ void TpresetAutoloadDlgBase::TitemsWindow::showItems(void)
   DestroyWindow(*h);
  int y=0;
  HFONT fnt=(HFONT)SendMessage(m_hwnd,WM_GETFONT,0,0);
- CRect pr;GetWindowRect(m_hwnd,&pr);int prdlgdx=160; //TODO: compute
+ CRect pr;GetWindowRect(m_hwnd,&pr);int prdlgdx=170; //TODO: compute
  int id=0;
  int sbrWidth=GetSystemMetrics(SM_CXVSCROLL)+4;
  for (Titems::const_iterator i=items.begin();i!=items.end();i++,id++)

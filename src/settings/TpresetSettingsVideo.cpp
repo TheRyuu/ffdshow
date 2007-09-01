@@ -318,7 +318,7 @@ void TpresetVideo::loadReg(void)
   }
 }
 
-bool TpresetVideo::autoloadSizeMatch(int AVIdx,int AVIdy)
+bool TpresetVideo::autoloadSizeMatch(int AVIdx,int AVIdy) const
 {
  bool Xok=(autoloadSizeXmin<=AVIdx && AVIdx<=autoloadSizeXmax);
  bool Yok=(autoloadSizeYmin<=AVIdy && AVIdy<=autoloadSizeYmax);

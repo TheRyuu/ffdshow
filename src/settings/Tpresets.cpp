@@ -218,23 +218,6 @@ Tpreset* TpresetsVideo::getAutoPreset(IffdshowBase *deci,bool filefirst)
  TvideoAutoPresetProps aprops(deci);
  return getAutoPreset0(aprops,filefirst);
 }
-Tpreset* TpresetsVideo::getAutoPreset0(TautoPresetProps &aprops,bool filefirst)
-{
- if (Tpreset *preset=Tpresets::getAutoPreset0(aprops,filefirst))
-  return preset;
- else
-  {
-   unsigned int dx,dy;
-   ((TvideoAutoPresetProps&)aprops).getSourceResolution(&dx,&dy);
-   for (iterator i=begin();i!=end();i++)
-    {
-     TpresetVideo *presetV=(TpresetVideo*)*i;
-     if (presetV->autoloadSize && presetV->autoloadSizeMatch(dx,dy))
-      return presetV;
-    }
-  }
- return NULL;
-}
 Tpreset* TpresetsVideo::newPreset(const char_t *presetName)
 {
  return new TpresetVideo(reg_child,presetName?presetName:FFPRESET_DEFAULT);
