@@ -34,44 +34,24 @@
 #pragma warning(disable:4244)
 
 //============================ The matrix for outline =============================
-static const short matrix0[]={
- 000,000,000,000,000,
- 000,100,200,100,000, 
- 000,200,800,200,000,
- 000,100,200,100,000, 
- 000,000,000,000,000
-};
-
-static const short matrix0RGB[]={
- 000,000,000,000,000,
- 000,000,000,000,000, 
- 000,000,000,000,000,
- 000,000,000,000,000, 
- 000,000,000,000,000
+static const short matrix0_YV12[]={
+ 100,200,100,000,000,000,000,000,
+ 200,800,200,000,000,000,000,000,
+ 100,200,100,000,000,000,000,000
 };
 
 static const short matrix1[]={
- 000,000,000,000,000,
- 000,200,500,200,000, 
- 000,500,800,500,000,
- 000,200,500,200,000, 
- 000,000,000,000,000
+ 200,500,200,000,000,000,000,000,
+ 500,800,500,000,000,000,000,000,
+ 200,500,200,000,000,000,000,000
 };
 
 static const short matrix2[]={
- 000,200,300,200,000,
- 200,400,500,400,200,
- 300,500,800,500,300,
- 200,400,500,400,200,
- 000,200,300,200,000
-};
-
-static const short matrix3[]={
- 800,800,800,800,800,
- 800,800,800,800,800,
- 800,800,800,800,800,
- 800,800,800,800,800,
- 800,800,800,800,800
+ 000,200,300,200,000,000,000,000,
+ 200,400,500,400,200,000,000,000,
+ 300,500,800,500,300,000,000,000,
+ 200,400,500,400,200,000,000,000,
+ 000,200,300,200,000,000,000,000
 };
 
 //============================ TrenderedSubtitleWordBase =============================
@@ -94,7 +74,6 @@ template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(
                        HDC hdc,
                        const tchar *s0,
                        size_t strlens,
-                       const short (*matrix)[5],
                        const YUVcolorA &YUV,
                        const YUVcolorA &outlineYUV,
                        const YUVcolorA &shadowYUV,
@@ -147,7 +126,7 @@ template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(
     sz1.cx+=sz1.cy*0.35;
   }
  dx[0]=(sz1.cx/4+2)*4;dy[0]=sz1.cy+4;
- unsigned char *bmp16=(unsigned char*)calloc(dx[0]*4,dy[0]);
+ unsigned char *bmp16=(unsigned char*)aligned_calloc3(dx[0]*4,dy[0],32,16);
  HBITMAP hbmp=CreateCompatibleBitmap(hdc,dx[0],dy[0]);
  HGDIOBJ old=SelectObject(hdc,hbmp);
  RECT r={0,0,dx[0],dy[0]};
@@ -163,7 +142,7 @@ template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(
    prefs.config->getGDI<tchar>().textOut(hdc,x,2,s->c_str(),sz/*(int)s->size()*/);
    x+=*cx;
   }
- drawShadow(hdc,hbmp,bmp16,old,xscale,yscale,sz,prefs,matrix,YUV,outlineYUV,shadowYUV,shadowSize);
+ drawShadow(hdc,hbmp,bmp16,old,xscale,yscale,sz,prefs,YUV,outlineYUV,shadowYUV,shadowSize);
 }
 void TrenderedSubtitleWord::drawShadow(
       HDC hdc,
@@ -174,12 +153,19 @@ void TrenderedSubtitleWord::drawShadow(
       int yscale,
       const SIZE &sz,
       const TrenderedSubtitleLines::TprintPrefs &prefs,
-      const short (*matrix)[5],
       const YUVcolorA &yuv,
       const YUVcolorA &outlineYUV,
       const YUVcolorA &shadowYUV,
       unsigned int shadowSize)
 {
+ int outlineWidth=0;
+ if (!prefs.opaqueBox)
+  {
+   if (prefs.outlineWidth==0 && csp==FF_CSP_420P)
+    outlineWidth=1;
+   else
+    outlineWidth=prefs.outlineWidth;
+  }
  m_bodyYUV=yuv;
  m_outlineYUV=outlineYUV;
  m_shadowYUV=shadowYUV;
@@ -226,37 +212,49 @@ void TrenderedSubtitleWord::drawShadow(
   }
 #endif
  unsigned int _dx,_dy;
- _dx=xscale*dx[0]/400+4+shadowSize;
- _dy=yscale*dy[0]/400+4+shadowSize;
+ _dx=xscale*dx[0]/400+4+getLeftOverhang(shadowSize,prefs)+getRightOverhang(shadowSize,prefs);
+ _dy=yscale*dy[0]/400+4+getTopOverhang(shadowSize,prefs)+getBottomOverhang(shadowSize,prefs);
+ stride_t extra_dx=_dx+outlineWidth*2; // add margin to simplify the outline drawing process.
+ stride_t extra_dy=_dy+outlineWidth*2;
  dxCharY=xscale*sz.cx/400;dyCharY=yscale*sz.cy/400;
  baseline=yscale*baseline/400+2;
 
- unsigned int al=prefs.csp==FF_CSP_420P ? alignXsize : 8; // swscaler requires multiple of 8.
- unsigned int _dxtemp=(_dx/al)*al;
- _dx=_dxtemp<_dx ? _dxtemp+al : _dxtemp;
- bmp[0]=(unsigned char*)aligned_calloc3(_dx,_dy,4,16);
- msk[0]=(unsigned char*)aligned_calloc3(_dx,_dy,4,16);
- outline[0]=(unsigned char*)aligned_calloc3(_dx,_dy,4,16);
- shadow[0]=(unsigned char*)aligned_calloc3(_dx,_dy,4,16);
+ unsigned int al=csp==FF_CSP_420P ? alignXsize : 8; // swscaler requires multiple of 8.
+ _dx=((_dx+al-1)/al)*al;
+ extra_dx=((extra_dx+al-1)/al)*al;
+ if (csp==FF_CSP_420P)
+  _dy=((_dy+1)/2)*2;
+ if (_dy>extra_dy)
+  extra_dy=_dy;
+ bmp[0]=(unsigned char*)aligned_calloc3(extra_dx,extra_dy,16,16);
+ msk[0]=(unsigned char*)aligned_calloc3(_dx,_dy,16,16);
+ outline[0]=(unsigned char*)aligned_calloc3(_dx,_dy,16,16);
+ shadow[0]=(unsigned char*)aligned_calloc3(_dx,_dy,16,16);
  int dxCharYstart=0;
 
- { // bmp16 RGB32->IMGFMT_Y800 (full range) conversion.
-  unsigned char *bmp16_wb=bmp16;
-  unsigned char *bmp16_rgb32=bmp16;
-  int cxy=dx[0]*dy[0];
-  while(cxy)
-   {
-    *bmp16_wb=*bmp16_rgb32;
-    bmp16_wb++;
-    bmp16_rgb32+=4;
-    cxy--;
-   }
- }
+ // bmp16 RGB32->IMGFMT_Y800 (full range) conversion.
+ if (Tconfig::cpu_flags&FF_CPU_MMX)
+  {
+   fontRGB32toBW_mmx((dx[0]*dy[0]+7)/8,bmp16);
+   _mm_empty();
+  }
+ else
+  {
+   unsigned char *bmp16_wb=bmp16;
+   unsigned char *bmp16_rgb32=bmp16;
+   int cxy=dx[0]*dy[0];
+   while(cxy)
+    {
+     *bmp16_wb=*bmp16_rgb32;
+     bmp16_wb++;
+     bmp16_rgb32+=4;
+     cxy--;
+    }
+  }
 
  // Scaling. GDI has drawn the font in 4x big size. So we have to shrink to 25% by default.
  unsigned int scaledDx=xscale*dx[0]/400;
  unsigned int scaledDy=yscale*dy[0]/400;
- unsigned int scaledDxStride=(scaledDx+7)&~7;
  if (scaledDx<8) scaledDx=8; // swscaler returns error if scaledDx<8
  Tlibmplayer *libmplayer;
  SwsParams params;
@@ -273,79 +271,95 @@ void TrenderedSubtitleWord::drawShadow(
  SwsContext *ctx=libmplayer->sws_getContext(dx[0], dy[0], IMGFMT_Y800, scaledDx, scaledDy, IMGFMT_Y800, &params, filter, NULL);
  if (ctx)
   {
-   uint8_t *scaledBmp=bmp[0]+2+_dx*2; // FIXME for thicker outlines.
-   libmplayer->sws_scale_ordered(ctx,(const uint8_t**)&bmp16,(const stride_t *)dx,0,dy[0],&scaledBmp,(stride_t *)&_dx);
+   stride_t sdx=dx[0];
+   uint8_t *scaledBmp=bmp[0]+outlineWidth+getLeftOverhang(shadowSize,prefs)+extra_dx*(outlineWidth+getTopOverhang(shadowSize,prefs)); // FIXME for thicker outlines.
+   libmplayer->sws_scale_ordered(ctx,(const uint8_t**)&bmp16,&sdx,0,dy[0],&scaledBmp,(stride_t *)&extra_dx);
    libmplayer->sws_freeContext(ctx);
   }
  libmplayer->Release();
  libmplayer=NULL;
- free(bmp16);
+ aligned_free(bmp16);
 
  dx[0]=_dx;dy[0]=_dy;
- if (!matrix)
-  memset(msk[0],255,dx[0]*dy[0]);
- else
+
+ short *matrix=NULL;
+ unsigned int matrixSizeH=((outlineWidth*2+8)/8)*8; // 2 bytes for one.
+ unsigned int matrixSizeV=outlineWidth*2+1;
+ if (outlineWidth>2)
   {
-   memcpy(msk[0],bmp[0],dx[0]*dy[0]);
-
-    #define MAKE_SHADOW(x,y)                                  \
-    {                                                         \
-     unsigned int s=0,cnt=0;                                  \
-     for (int yy=-2;yy<=+2;yy++)                              \
-      {                                                       \
-       if (y+yy<0 || (unsigned int)(y+yy)>=dy[0]) continue;   \
-       for (int xx=-2;xx<=+2;xx++)                            \
-        {                                                     \
-         if (x+xx<0 || (unsigned int)(x+xx)>=dx[0]) continue; \
-         s+=bmp[0][dx[0]*(y+yy)+(x+xx)]*matrix[yy+2][xx+2];   \
-         cnt++;                                               \
-        }                                                     \
-      }                                                       \
-     s/=cnt*32;                                               \
-     if (s>255) s=255;                                        \
-     msk[0][dx[0]*y+x]=(unsigned char)s;                      \
-    }
-
-   int dyY1=dy[0]-1,dyY2=dy[0]-2;
-   for (unsigned int x=0;x<dx[0];x++)
-    {
-     MAKE_SHADOW(x,0);
-     MAKE_SHADOW(x,1);
-     MAKE_SHADOW(x,dyY2);
-     MAKE_SHADOW(x,dyY1);
-    }
-   int dxY1=dx[0]-1,dxY2=dx[0]-2;
-   for (unsigned int y0=2;y0<dy[0]-2;y0++)
-    {
-     MAKE_SHADOW(0,y0);
-     MAKE_SHADOW(1,y0);
-     MAKE_SHADOW(dxY2,y0);
-     MAKE_SHADOW(dxY1,y0);
-    }
-
-   __m64 matrix8_0=*(__m64*)matrix[0],matrix8_1=*(__m64*)matrix[1],matrix8_2=*(__m64*)matrix[2];
-   const int matrix4[3]={matrix[0][4],matrix[1][4],matrix[2][4]};
-   const unsigned char *bmpYsrc_2=bmp[0],*bmpYsrc_1=bmp[0]+1*dx[0],*bmpYsrc=bmp[0]+2*dx[0],*bmpYsrc1=bmp[0]+3*dx[0],*bmpYsrc2=bmp[0]+4*dx[0];
-   unsigned char *mskYdst=msk[0]+dx[0]*2;
-   __m64 m0=_mm_setzero_si64();
-   for (unsigned int y=2;y<dy[0]-2;y++,bmpYsrc_2+=dx[0],bmpYsrc_1+=dx[0],bmpYsrc+=dx[0],bmpYsrc1+=dx[0],bmpYsrc2+=dx[0],mskYdst+=dx[0])
-    for (unsigned int x=2;x<dx[0]-2;x++)
+   double r_cutoff=(double)outlineWidth/3;
+   double r_mul=800.0/r_cutoff;
+   matrix=(short*)aligned_calloc(matrixSizeH*2,matrixSizeV,16);
+   for (int y=-outlineWidth;y<=outlineWidth;y++)
+    for (int x=-outlineWidth;x<=outlineWidth;x++)
      {
-      __m64 r_2=_mm_madd_pi16(_mm_unpacklo_pi8(*(__m64*)(bmpYsrc_2+x-2),m0),matrix8_0);
-      __m64 r_1=_mm_madd_pi16(_mm_unpacklo_pi8(*(__m64*)(bmpYsrc_1+x-2),m0),matrix8_1);
-      __m64 r  =_mm_madd_pi16(_mm_unpacklo_pi8(*(__m64*)(bmpYsrc  +x-2),m0),matrix8_2);
-      __m64 r1 =_mm_madd_pi16(_mm_unpacklo_pi8(*(__m64*)(bmpYsrc1 +x-2),m0),matrix8_1);
-      __m64 r2 =_mm_madd_pi16(_mm_unpacklo_pi8(*(__m64*)(bmpYsrc2 +x-2),m0),matrix8_0);
-      r=_mm_add_pi32(_mm_add_pi32(_mm_add_pi32(_mm_add_pi32(r_2,r_1),r),r1),r2);
-      r=_mm_add_pi32(_mm_srli_si64(r,32),r);
-      int s=bmpYsrc_2[x+2]*matrix4[0];
-      s+=   bmpYsrc_1[x+2]*matrix4[1];
-      s+=   bmpYsrc  [x+2]*matrix4[2];
-      s+=   bmpYsrc1 [x+2]*matrix4[1];
-      s+=   bmpYsrc2 [x+2]*matrix4[0];
-      mskYdst[x]=limit_uint8((_mm_cvtsi64_si32(r)+s)/(25*32));
+      int pos=(y+outlineWidth)*matrixSizeH+x+outlineWidth;
+      double r=0.1+outlineWidth-sqrt(double(x*x+y*y));
+      if (r>r_cutoff)
+       matrix[pos]=800;
+      else if (r>0)
+       matrix[pos]=r*r_mul;
      }
   }
+ else if (prefs.outlineWidth==0 && csp==FF_CSP_420P)
+  matrix=(short *)matrix0_YV12;
+ else if (outlineWidth==1)
+  matrix=(short *)matrix1;
+ else if (outlineWidth==2)
+  matrix=(short *)matrix2;
+
+ if (prefs.opaqueBox)
+  memset(msk[0],255,dx[0]*dy[0]);
+ else if (outlineWidth)
+  {
+   // Prepare outline
+   if (Tconfig::cpu_flags&FF_CPU_SSE2)
+    {
+     size_t matrixSizeH_sse2=matrixSizeH>>3;
+     size_t srcStrideGap=extra_dx-matrixSizeH;
+     for (unsigned int y=0;y<_dy;y++)
+      for (unsigned int x=0;x<_dx;x++)
+       {
+        unsigned int sum=fontPrepareOutline_sse2(bmp[0]+extra_dx*y+x,srcStrideGap,matrix,matrixSizeH_sse2,matrixSizeV)/800;
+        msk[0][_dx*y+x]=sum>255 ? 255 : sum;
+       }
+    }
+#ifndef WIN64
+   else if (Tconfig::cpu_flags&FF_CPU_MMX)
+    {
+     size_t matrixSizeH_mmx=(matrixSizeV+3)/4;
+     size_t srcStrideGap=extra_dx-matrixSizeH_mmx*4;
+     size_t matrixGap=matrixSizeH_mmx & 1 ? 8 : 0;
+     for (unsigned int y=0;y<_dy;y++)
+      for (unsigned int x=0;x<_dx;x++)
+       {
+        unsigned int sum=fontPrepareOutline_mmx(bmp[0]+extra_dx*y+x,srcStrideGap,matrix,matrixSizeH_mmx,matrixSizeV,matrixGap)/800;
+        msk[0][_dx*y+x]=sum>255 ? 255 : sum;
+       }
+    }
+#endif
+   else
+    {
+     for (unsigned int y=0;y<_dy;y++)
+      for (unsigned int x=0;x<_dx;x++)
+       {
+        unsigned char *srcPos=bmp[0]+extra_dx*y+x; // (x-outlineWidth,y-outlineWidth)
+        unsigned int sum=0;
+        for (unsigned int yy=0;yy<matrixSizeV;yy++,srcPos+=extra_dx-matrixSizeV)
+         for (unsigned int xx=0;xx<matrixSizeV;xx++,srcPos++)
+          {
+           sum+=(*srcPos)*matrix[matrixSizeH*yy+xx];
+          }
+        sum/=800;
+        msk[0][_dx*y+x]=sum>255 ? 255 : sum;
+       }
+    }
+
+   // remove the margin that we have just added.
+   for (unsigned int y=0;y<_dy;y++)
+    memcpy(bmp[0]+_dx*y,bmp[0]+extra_dx*(y+outlineWidth)+outlineWidth,_dx);
+  }
+ // Draw outline, keeping the body bright.
  unsigned int count=_dx*_dy;
  for (unsigned int c=0;c<count;c++)
   {
@@ -469,7 +483,6 @@ void TrenderedSubtitleWord::drawShadow(
 
  if (csp==FF_CSP_420P)
   {
-   const DWORD *fontmaskconstants=&fontMaskConstants;
    int isColorOutline=(outlineYUV.U!=128 || outlineYUV.V!=128);
    if (Tconfig::cpu_flags&FF_CPU_MMX)
     {
@@ -578,9 +591,10 @@ void TrenderedSubtitleWord::drawShadow(
   }
  _mm_empty();
  aligned_free(msk[0]);
+ if (prefs.outlineWidth>2 && matrix)
+  aligned_free(matrix);
  msk[0]=NULL;
 }
-
 unsigned int TrenderedSubtitleWord::getShadowSize(const TrenderedSubtitleLines::TprintPrefs &prefs,LONG fontHeight)
 {
  if (prefs.shadowSize==0 || prefs.shadowMode==3)
@@ -600,6 +614,25 @@ unsigned int TrenderedSubtitleWord::getShadowSize(const TrenderedSubtitleLines::
  if (shadowSize>16)
   shadowSize = 16;
  return shadowSize;
+}
+unsigned int TrenderedSubtitleWord::getBottomOverhang(unsigned int shadowSize,const TrenderedSubtitleLines::TprintPrefs &prefs)
+{
+ return shadowSize+prefs.outlineWidth;
+}
+unsigned int TrenderedSubtitleWord::getRightOverhang(unsigned int shadowSize,const TrenderedSubtitleLines::TprintPrefs &prefs)
+{
+ return shadowSize+prefs.outlineWidth;
+}
+unsigned int TrenderedSubtitleWord::getTopOverhang(unsigned int shadowSize,const TrenderedSubtitleLines::TprintPrefs &prefs)
+{
+ if (prefs.shadowMode==0)
+  return shadowSize+prefs.outlineWidth;
+ else
+  return prefs.outlineWidth;
+}
+unsigned int TrenderedSubtitleWord::getLeftOverhang(unsigned int shadowSize,const TrenderedSubtitleLines::TprintPrefs &prefs)
+{
+ return getTopOverhang(shadowSize,prefs);
 }
 
 // fast rendering
@@ -764,7 +797,6 @@ void TrenderedSubtitleWord::print(unsigned int sdx[3],unsigned char *dstLn[3],co
      else
       {
        //RGB32
-       const DWORD *fontmaskconstants=&fontMaskConstants;
        unsigned int halfAlingXsize=alignXsize>>1;
        unsigned short* colortbl=(unsigned short *)aligned_malloc(192,16);
        colortbl[ 0]=colortbl[ 4]=(short)m_bodyYUV.b;
@@ -1184,9 +1216,8 @@ void TrenderedSubtitleLines::clear(void)
 }
 
 //================================= TcharsChache =================================
-TcharsChache::TcharsChache(HDC Ihdc,const short (*Imatrix)[5],const YUVcolorA &Iyuv,const YUVcolorA &Ioutline,const YUVcolorA &Ishadow,int Ixscale,int Iyscale,IffdshowBase *Ideci):
+TcharsChache::TcharsChache(HDC Ihdc,const YUVcolorA &Iyuv,const YUVcolorA &Ioutline,const YUVcolorA &Ishadow,int Ixscale,int Iyscale,IffdshowBase *Ideci):
  hdc(Ihdc),
- matrix(Imatrix),
  yuv(Iyuv),
  outlineYUV(Ioutline),
  shadowYUV(Ishadow),
@@ -1205,7 +1236,7 @@ template<> const TrenderedSubtitleWord* TcharsChache::getChar(const wchar_t *s,c
  int key=(int)*s;
  Tchars::iterator l=chars.find(key);
  if (l!=chars.end()) return l->second;
- TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,matrix,yuv,outlineYUV,shadowYUV,prefs,lf,xscale,yscale);
+ TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,yuv,outlineYUV,shadowYUV,prefs,lf,xscale,yscale);
  chars[key]=ln;
  return ln;
 }
@@ -1217,7 +1248,7 @@ template<> const TrenderedSubtitleWord* TcharsChache::getChar(const char *s,cons
    int key=(int)*s;
    Tchars::iterator l=chars.find(key);
    if (l!=chars.end()) return l->second;
-   TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,matrix,yuv,outlineYUV,shadowYUV,prefs,lf,xscale,yscale);
+   TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,yuv,outlineYUV,shadowYUV,prefs,lf,xscale,yscale);
    chars[key]=ln;
    return ln;
   }
@@ -1227,7 +1258,7 @@ template<> const TrenderedSubtitleWord* TcharsChache::getChar(const char *s,cons
    int key=(int)*mbcs;
    Tchars::iterator l=chars.find(key);
    if (l!=chars.end()) return l->second;
-   TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,2,matrix,yuv,outlineYUV,shadowYUV,prefs,lf,xscale,yscale);
+   TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,2,yuv,outlineYUV,shadowYUV,prefs,lf,xscale,yscale);
    chars[key]=ln;
    return ln;
   }
@@ -1258,31 +1289,8 @@ void Tfont::init(const TfontSettings *IfontSettings)
  yuvcolor=YUVcolorA(fontSettings->color,fontSettings->bodyAlpha);
  outlineYUV=YUVcolorA(fontSettings->outlineColor,fontSettings->outlineAlpha);
  shadowYUV=YUVcolorA(fontSettings->shadowColor,fontSettings->shadowAlpha);
- //if (fontSettings->outlineStrength<100)
- // for (int y=-2;y<=2;y++)
- //  for (int x=-2;x<=2;x++)
- //   {
- //    double d=8-(x*x+y*y);
- //    matrix[y+2][x+2]=short(3.57*fontSettings->outlineStrength*pow(d/8,2-fontSettings->outlineRadius/50.0)+0.5);
- //   }
- switch (fontSettings->outlineWidth)
-  {
-   case 0:
-    memcpy(matrix,matrix0,50);
-    break;
-   case 1:
-    memcpy(matrix,matrix1,50);
-    break;
-   case 2:
-    memcpy(matrix,matrix2,50);
-    break;
-   case 3:
-    memcpy(matrix,matrix3,50);
-    break;
-  }
-
  if (fontSettings->fast)
-  charsCache=new TcharsChache(hdc,fontSettings->opaqueBox?NULL:matrix,yuvcolor,outlineYUV,shadowYUV,fontSettings->xscale,fontSettings->yscale,deci);
+  charsCache=new TcharsChache(hdc,yuvcolor,outlineYUV,shadowYUV,fontSettings->xscale,fontSettings->yscale,deci);
 }
 void Tfont::done(void)
 {
@@ -1322,32 +1330,7 @@ template<class tchar> TrenderedSubtitleWord* Tfont::newWord(const tchar *s,size_
   }
 
  prefs.alignSSA=w->props.alignment;
-
- short (*mat)[5];
- if (w->props.outlineWidth==0)
-  {
-   if (prefs.csp==FF_CSP_420P)
-    mat=(short (*)[5])matrix0;
-   else
-    mat=(short (*)[5])matrix0RGB;
-  }
- else if (w->props.outlineWidth==1)
-  mat=(short (*)[5])matrix1;
- else if (w->props.outlineWidth==2)
-  mat=(short (*)[5])matrix2;
- else if (w->props.outlineWidth>=3)
-  {
-   mat=(short (*)[5])matrix3;
-   prefs.blur=true;
-  }
- else
-  {
-   if (fontSettings->outlineWidth==0 && prefs.csp==FF_CSP_RGB32)
-    memcpy(matrix,matrix0RGB,50);
-   mat=fontSettings->opaqueBox?NULL:matrix;
-   if (fontSettings->outlineWidth==3)
-    prefs.blur=true;
-  }
+ prefs.outlineWidth=w->props.outlineWidth==-1 ? fontSettings->outlineWidth : w->props.outlineWidth;
 
  if (prefs.shadowMode==-1) // OSD
   {
@@ -1367,14 +1350,19 @@ template<class tchar> TrenderedSubtitleWord* Tfont::newWord(const tchar *s,size_
  else
   prefs.blur=false;
 
+ if (w->props.outlineWidth==-1 && fontSettings->opaqueBox)
+  {
+   prefs.outlineWidth=0;
+   prefs.opaqueBox=true;
+  }
+
  TrenderedSubtitleWord *rw;
- if (!w->props.isColor && fontSettings->fast && !lf.lfItalic && !(prefs.shadowSize!=0 && prefs.shadowMode!=3) && prefs.csp==FF_CSP_420P)
+ if (!w->props.isColor && fontSettings->fast && !lf.lfItalic && !(prefs.shadowSize!=0 && prefs.shadowMode!=3) && prefs.csp==FF_CSP_420P && !prefs.opaqueBox)
   rw=new TrenderedSubtitleWord(charsCache,s1.c_str(),slen,prefs,lf); // fast rendering
  else
   rw=new TrenderedSubtitleWord(hdc,                      // full rendering
                                    s1.c_str(),
                                    slen,
-                                   mat,
                                    w->props.isColor ? YUVcolorA(w->props.color,w->props.colorA) : yuvcolor,
                                    w->props.isColor ? YUVcolorA(w->props.OutlineColour,w->props.OutlineColourA) : outlineYUV,
                                    w->props.isColor ? YUVcolorA(w->props.ShadowColour,w->props.ShadowColourA) : shadowYUV1,

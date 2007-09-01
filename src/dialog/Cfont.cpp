@@ -57,7 +57,7 @@ void TfontPage::init(void)
  tbrSetRange(IDC_TBR_FONT_BODY_ALPHA,0,256, 10);
  tbrSetRange(IDC_TBR_FONT_OUTLINE_ALPHA,0,256, 10);
  tbrSetRange(IDC_TBR_FONT_SUBSHADOW_ALPHA,0,256, 10);
- tbrSetRange(IDC_TBR_FONT_OUTLINE_WIDTH,0,3,1);
+ tbrSetRange(IDC_TBR_FONT_OUTLINE_WIDTH,0,16,1);
 
  strings sl;
  LOGFONT lf;lf.lfCharSet=DEFAULT_CHARSET;lf.lfPitchAndFamily=0;lf.lfFaceName[0]='\0';

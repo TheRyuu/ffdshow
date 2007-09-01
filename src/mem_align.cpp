@@ -47,7 +47,8 @@ void* aligned_realloc(void *ptr,size_t size,size_t alignment)
 
 void aligned_free(void *mem_ptr)
 {
- _aligned_free(mem_ptr);
+ if (mem_ptr)
+  _aligned_free(mem_ptr);
 }
 
 void* aligned_calloc(size_t size1, size_t size2, size_t alignment)
