@@ -56,7 +56,7 @@ public:
  virtual void setLang(int langid) {};
  virtual int findlang(int langname) {return 0;}
  void adjust_subs_time(float subtime);
- void processOverlap(int sub_format);
+ void processOverlap(void);
  bool IsProcessOverlapDone;
 };
 

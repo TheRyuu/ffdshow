@@ -48,8 +48,7 @@ void Tsubtitles::init(void)
 
 void Tsubtitles::processOverlap(void)
 {
- if ((sub_format&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SSA)
-  subs->processOverlap(sub_format);
+ subs->processOverlap();
 }
 
 const Tsubtitle* Tsubtitles::getSubtitle(const TsubtitlesSettings *cfg,REFERENCE_TIME time,bool *forceChange)
