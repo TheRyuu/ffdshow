@@ -81,11 +81,27 @@ int TSubtitleProps::get_spacing(unsigned int dy,unsigned int clipdy) const
 
 unsigned int TSubtitleProps::get_marginR(unsigned int screenWidth) const
 {
+ // called only for SSA/ASS/ASS2
  unsigned int result;
- if (marginR>0)
+ if (isPos)
+  {
+   switch (alignment)
+    {
+     case 3: // right(SSA)
+     case 7:
+     case 11:
+      result=refResX-posx;
+      break;
+     default:
+      result=0;
+      break;
+    }
+  }
+ else if (marginR>=0)
   result=marginR;
  else return 0;
 
+ if (result<0) result=0;
  if (refResX>0)
   return result*screenWidth/refResX;
  else
@@ -93,11 +109,35 @@ unsigned int TSubtitleProps::get_marginR(unsigned int screenWidth) const
 }
 unsigned int TSubtitleProps::get_marginL(unsigned int screenWidth) const
 {
+ // called only for SSA/ASS/ASS2
  unsigned int result;
- if (marginL>0)
+ if (isPos)
+  {
+   switch (alignment)
+    {
+     case 1: // left(SSA)
+     case 5:
+     case 9:
+      result=posx;
+      break;
+     case 3: // right(SSA)
+     case 7:
+     case 11:
+      result=0;
+      break;
+     case 2: // center(SSA)
+     case 6:
+     case 10:
+     default:
+      result=posx*2-refResX;
+      break;
+    }
+  }
+ else if (marginL>=0)
   result=marginL;
  else return 0;
 
+ if (result<0) result=0;
  if (refResX>0)
   return result*screenWidth/refResX;
  else
@@ -106,12 +146,35 @@ unsigned int TSubtitleProps::get_marginL(unsigned int screenWidth) const
 unsigned int TSubtitleProps::get_marginTop(unsigned int screenHeight) const
 {
  unsigned int result;
- if (marginTop>0)
+ if (isPos)
+  {
+   switch (alignment)
+    {
+     case 5: // SSA top
+     case 6:
+     case 7:
+      result=posy;
+      break;
+     case 9: // SSA mid
+     case 10:
+     case 11:
+      result=posy*2-refResY;
+      break;
+     case 1: // SSA bottom
+     case 2:
+     case 3:
+     default:
+      result=0;
+      break;
+    }
+  }
+ else if (marginTop>0)
   result=marginTop; //ASS
  else if (marginV>0)
   result=marginV; // SSA
  else return 0;
 
+ if (result<0) result=0;
  if (refResY>0)
   return result*screenHeight/refResY;
  else
@@ -120,12 +183,33 @@ unsigned int TSubtitleProps::get_marginTop(unsigned int screenHeight) const
 unsigned int TSubtitleProps::get_marginBottom(unsigned int screenHeight) const
 {
  unsigned int result;
- if (marginBottom>0)
+ if (isPos)
+  {
+   switch (alignment)
+    {
+     case 5: // SSA top
+     case 6:
+     case 7:
+     case 9: // SSA mid
+     case 10:
+     case 11:
+      result=0;
+      break;
+     case 1: // SSA bottom
+     case 2:
+     case 3:
+     default:
+      result=refResY-posy;
+      break;
+    }
+  }
+ else if (marginBottom>0)
   result=marginBottom; //ASS
  else if (marginV>0)
   result=marginV; // SSA
  else return 0;
 
+ if (result<0) result=0;
  if (refResY>0)
   return result*screenHeight/refResY;
  else

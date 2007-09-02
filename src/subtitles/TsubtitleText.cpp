@@ -767,29 +767,30 @@ template<class tchar> template<double TSubtitleProps::*offset,int min,int max> v
 }
 template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void TsubtitleFormat::Tssa<tchar>::pos(const tchar *start,const tchar *end)
 {
- props.alignment=5;
- intProp2<offset1,offset2,min,max>(start,end);
+ if (intProp2<offset1,offset2,min,max>(start,end))
+  props.isPos=true;
 }
-template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void TsubtitleFormat::Tssa<tchar>::intProp2(const tchar *start,const tchar *end)
+template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> bool TsubtitleFormat::Tssa<tchar>::intProp2(const tchar *start,const tchar *end)
 {
 // (x,y) is expected.
  tchar *buf=(tchar*)_alloca((end-start+1)*sizeof(tchar));memset(buf,0,(end-start+1)*sizeof(tchar));
  memcpy(buf,start,(end-start)*sizeof(tchar));
  const tchar *bufstart=strchr(buf,'(');
- if(!bufstart) return;
+ if(!bufstart) return false;
  bufstart++;
  tchar *bufend;
  int val=strtol(bufstart,&bufend,10);
  if (bufstart!=bufend && isIn(val,min,max)) props.*offset1=val;
- if (*bufend=='\0') return;
+ if (*bufend=='\0') return false;
 
  bufstart=strchr(bufend,',');
- if(!bufstart) return;
+ if(!bufstart) return false;
  bufstart++;
  val=strtol(bufstart,&bufend,10);
  if (bufstart!=bufend && isIn(val,min,max)) props.*offset2=val;
+ return true;
 }
-template<class tchar> void TsubtitleFormat::Tssa<tchar>::color(const tchar *start,const tchar *end)
+template<class tchar> template<COLORREF TSubtitleProps::*offset> void TsubtitleFormat::Tssa<tchar>::color(const tchar *start,const tchar *end)
 {
  tchar *buf=(tchar*)_alloca((end-start+1)*sizeof(tchar));memset(buf,0,(end-start+1)*sizeof(tchar));
  memcpy(buf,start,(end-start)*sizeof(tchar));
@@ -805,12 +806,12 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::color(const tchar *star
  int c=strtol(buf,&endbuf,radix);
  if (*endbuf=='&')
   {
-   props.color=c;
+   props.*offset=c;
    props.isColor=true;
   }
  else
   {
-   props.color=defprops.color;
+   props.*offset=defprops.*offset;
    props.isColor=defprops.isColor;
   }
 }
@@ -874,12 +875,16 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::processTokens(const tch
        !processToken(l3,_L("\\s"),&Tssa<tchar>::template boolProp<&TSubtitleProps::strikeout>) &&
        !processToken(l3,_L("\\r"),&Tssa<tchar>::reset) &&
        !processToken(l3,_L("\\clip"),NULL) &&
-       !processToken(l3,_L("\\c"),&Tssa<tchar>::color) &&
-       !processToken(l3,_L("\\pos"),&Tssa<tchar>::template pos<&TSubtitleProps::marginL,&TSubtitleProps::marginTop,0,4096>) &&
-       !processToken(l3,_L("\\1c"),NULL) && !processToken(l3,_L("\\1a"),NULL) &&
-       !processToken(l3,_L("\\2c"),NULL) && !processToken(l3,_L("\\2a"),NULL) &&
-       !processToken(l3,_L("\\3c"),NULL) && !processToken(l3,_L("\\3a"),NULL) &&
-       !processToken(l3,_L("\\4c"),NULL) && !processToken(l3,_L("\\4a"),NULL))
+       !processToken(l3,_L("\\c"),&Tssa<tchar>::template color<&TSubtitleProps::color>) &&
+       !processToken(l3,_L("\\pos"),&Tssa<tchar>::template pos<&TSubtitleProps::posx,&TSubtitleProps::posy,0,4096>) &&
+       !processToken(l3,_L("\\1c"),&Tssa<tchar>::template color<&TSubtitleProps::color>) && 
+       !processToken(l3,_L("\\2c"),NULL) &&
+       !processToken(l3,_L("\\3c"),&Tssa<tchar>::template color<&TSubtitleProps::OutlineColour>) &&
+       !processToken(l3,_L("\\4c"),&Tssa<tchar>::template color<&TSubtitleProps::ShadowColour>) &&
+       !processToken(l3,_L("\\1a"),NULL) &&
+       !processToken(l3,_L("\\2a"),NULL) &&
+       !processToken(l3,_L("\\3a"),NULL) &&
+       !processToken(l3,_L("\\4a"),NULL))
     l3++;
   }
 }

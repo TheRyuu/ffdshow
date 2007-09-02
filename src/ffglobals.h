@@ -20,6 +20,12 @@ extern const char_t *FFDSHOW_VER;
 #endif
 
 #ifdef __GNUC__
+ #define align16(x) x __attribute__((aligned(16)))
+#else
+ #define align16(x) __declspec(align(16)) x
+#endif
+
+#ifdef __GNUC__
 typedef const TCHAR *PCTSTR;
 #endif
 

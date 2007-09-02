@@ -34,19 +34,19 @@
 #pragma warning(disable:4244)
 
 //============================ The matrix for outline =============================
-static const short matrix0_YV12[]={
+align16(static const short matrix0_YV12[]) ={
  100,200,100,000,000,000,000,000,
  200,800,200,000,000,000,000,000,
  100,200,100,000,000,000,000,000
 };
 
-static const short matrix1[]={
+align16(static const short matrix1[]) ={
  200,500,200,000,000,000,000,000,
  500,800,500,000,000,000,000,000,
  200,500,200,000,000,000,000,000
 };
 
-static const short matrix2[]={
+align16(static const short matrix2[]) ={
  000,200,300,200,000,000,000,000,
  200,400,500,400,200,000,000,000,
  300,500,800,500,300,000,000,000,
@@ -224,7 +224,7 @@ void TrenderedSubtitleWord::drawShadow(
  extra_dx=((extra_dx+al-1)/al)*al;
  if (csp==FF_CSP_420P)
   _dy=((_dy+1)/2)*2;
- if (_dy>extra_dy)
+ if (_dy>(unsigned int)extra_dy)
   extra_dy=_dy;
  bmp[0]=(unsigned char*)aligned_calloc3(extra_dx,extra_dy,16,16);
  msk[0]=(unsigned char*)aligned_calloc3(_dx,_dy,16,16);
@@ -1103,6 +1103,8 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
 
  int old_alignment=-1;
  int old_marginTop=-1,old_marginL=-1;
+ bool old_isPos=false;
+ int old_posx=-1,old_posy=-1;
 
  for (const_iterator i=begin();i!=end();y+=(double)prefs.linespacing*(*i)->charHeight()/100,i++)
   {
@@ -1112,11 +1114,14 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
    unsigned int marginBottom=(*i)->props.get_marginBottom(prefsdy);
 
    // When the alignment or marginTop or marginL changes, it's a new paragraph.
-   if ((*i)->props.alignment>0 && ((*i)->props.alignment!=old_alignment || old_marginTop!=(*i)->props.marginTop || old_marginL!=(*i)->props.marginL))
+   if ((*i)->props.alignment>0 && ((*i)->props.alignment!=old_alignment || old_marginTop!=(*i)->props.marginTop || old_marginL!=(*i)->props.marginL || old_isPos!=(*i)->props.isPos || ((*i)->props.isPos && ((*i)->props.posx!=old_posx || (*i)->props.posy!=old_posy))))
     {
      old_alignment=(*i)->props.alignment;
      old_marginTop=(*i)->props.marginTop;
      old_marginL=(*i)->props.marginL;
+     old_isPos=(*i)->props.isPos;
+     old_posx=(*i)->props.posx;
+     old_posy=(*i)->props.posy;
      // calculate the height of the paragraph
      double paragraphHeight=0,h1=0;
      for (const_iterator pi=i;pi!=end();pi++)
@@ -1140,7 +1145,7 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
        case 9: // SSA mid
        case 10:
        case 11:
-        y=((double)prefsdy-h1)/2.0;
+        y=((double)prefsdy-marginTop-marginBottom-h1)/2.0+marginTop;
         break;
        case 5: // SSA top
        case 6:
@@ -1173,7 +1178,7 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
        case 2: // center(SSA)
        case 6:
        case 10:
-        x=(prefsdx-cdx)/2;
+        x=(prefsdx-(*i)->props.get_marginL(prefsdx)-(*i)->props.get_marginR(prefsdx)-cdx)/2+(*i)->props.get_marginL(prefsdx);
         if (x<0) x=0;
         if (x+cdx>=prefsdx) x=prefsdx-cdx;
         break;
