@@ -1127,7 +1127,7 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
      for (const_iterator pi=i;pi!=end();pi++)
       {
        double h2;
-       if ((*pi)->props.alignment!=old_alignment || (*pi)->props.marginTop!=old_marginTop || (*pi)->props.marginL!=old_marginL)
+       if ((*pi)->props.alignment!=old_alignment || (*pi)->props.marginTop!=old_marginTop || (*pi)->props.marginL!=old_marginL || (*pi)->props.isPos!=old_isPos || ((*pi)->props.isPos && ((*pi)->props.posx!=old_posx || (*pi)->props.posy!=old_posy)))
         break;
        h2=h1+(*pi)->height();
        h1+=(double)prefs.linespacing*(*pi)->charHeight()/100;
