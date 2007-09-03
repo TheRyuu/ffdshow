@@ -214,18 +214,16 @@ void TrenderedSubtitleWord::drawShadow(
  unsigned int _dx,_dy;
  _dx=xscale*dx[0]/400+4+getLeftOverhang(shadowSize,prefs)+getRightOverhang(shadowSize,prefs);
  _dy=yscale*dy[0]/400+4+getTopOverhang(shadowSize,prefs)+getBottomOverhang(shadowSize,prefs);
- stride_t extra_dx=_dx+outlineWidth*2; // add margin to simplify the outline drawing process.
- stride_t extra_dy=_dy+outlineWidth*2;
  dxCharY=xscale*sz.cx/400;dyCharY=yscale*sz.cy/400;
  baseline=yscale*baseline/400+2;
 
  unsigned int al=csp==FF_CSP_420P ? alignXsize : 8; // swscaler requires multiple of 8.
  _dx=((_dx+al-1)/al)*al;
- extra_dx=((extra_dx+al-1)/al)*al;
  if (csp==FF_CSP_420P)
   _dy=((_dy+1)/2)*2;
- if (_dy>(unsigned int)extra_dy)
-  extra_dy=_dy;
+ stride_t extra_dx=_dx+outlineWidth*2; // add margin to simplify the outline drawing process.
+ stride_t extra_dy=_dy+outlineWidth*2;
+ extra_dx=((extra_dx+7)/8)*8;     // align for swscaler
  bmp[0]=(unsigned char*)aligned_calloc3(extra_dx,extra_dy,16,16);
  msk[0]=(unsigned char*)aligned_calloc3(_dx,_dy,16,16);
  outline[0]=(unsigned char*)aligned_calloc3(_dx,_dy,16,16);

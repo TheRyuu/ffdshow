@@ -199,8 +199,8 @@ extern "C" {
  void  __cdecl storeXmmRegs(unsigned char* buf);
  void  __cdecl restoreXmmRegs(unsigned char* buf);
  void __cdecl fontRGB32toBW_mmx(size_t count,unsigned char *ptr);
- unsigned int __cdecl fontPrepareOutline_sse2(const unsigned char *src,size_t srcStride,const short *matrix,size_t matrixSizeH,size_t matrixSizeV);
- unsigned int __cdecl fontPrepareOutline_mmx (const unsigned char *src,size_t srcStride,const short *matrix,size_t matrixSizeH,size_t matrixSizeV,size_t matrixGap);
+ unsigned int __cdecl fontPrepareOutline_sse2(const unsigned char *src,size_t srcStrideGap,const short *matrix,size_t matrixSizeH,size_t matrixSizeV);
+ unsigned int __cdecl fontPrepareOutline_mmx (const unsigned char *src,size_t srcStrideGap,const short *matrix,size_t matrixSizeH,size_t matrixSizeV,size_t matrixGap);
 }
 
 #endif
