@@ -258,7 +258,7 @@ void TrenderedSubtitleWord::drawShadow(
  SwsParams params;
  prefs.deci->getPostproc(&libmplayer);
  float lumaGBlur=0.0;
- int resizeMethod=SWS_LANCZOS;
+ int resizeMethod=SWS_BILINEAR;
  if (prefs.blur || (prefs.shadowMode==0 && shadowSize>0))
   {
    lumaGBlur=1.9f;
