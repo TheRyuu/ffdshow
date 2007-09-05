@@ -281,6 +281,7 @@ static const BlockNode null_block= { //FIXME add border maybe
 #define LOG2_MB_SIZE 4
 #define MB_SIZE (1<<LOG2_MB_SIZE)
 #define ENCODER_EXTRA_BITS 4
+#define HTAPS 6
 
 typedef struct x_and_coeff{
     int16_t x;
@@ -317,6 +318,7 @@ typedef struct SnowContext{
     AVFrame input_picture;              ///< new_picture with the internal linesizes
     AVFrame current_picture;
     AVFrame last_picture[MAX_REF_FRAMES];
+    uint8_t *halfpel_plane[MAX_REF_FRAMES][4][4];
     AVFrame mconly_picture;
     uint8_t header_state[32];
     uint8_t block_state[128 + 32*128];
@@ -592,7 +594,11 @@ static inline int get_symbol2(RangeCoder *c, uint8_t *state, int log2){
     return v;
 }
 
-static av_always_inline void lift(DWTELEM *dst, DWTELEM *src, DWTELEM *ref, int dst_step, int src_step, int ref_step, int width, int mul, int add, int shift, int highpass, int inverse){
+static av_always_inline void
+lift(DWTELEM *dst, DWTELEM *src, DWTELEM *ref,
+     int dst_step, int src_step, int ref_step,
+     int width, int mul, int add, int shift,
+     int highpass, int inverse){
     const int mirror_left= !highpass;
     const int mirror_right= (width&1) ^ highpass;
     const int w= (width>>1) - 1 + (highpass & width);
@@ -606,15 +612,25 @@ static av_always_inline void lift(DWTELEM *dst, DWTELEM *src, DWTELEM *ref, int 
     }
 
     for(i=0; i<w; i++){
-        dst[i*dst_step] = LIFT(src[i*src_step], ((mul*(ref[i*ref_step] + ref[(i+1)*ref_step])+add)>>shift), inverse);
+        dst[i*dst_step] =
+            LIFT(src[i*src_step],
+                 ((mul*(ref[i*ref_step] + ref[(i+1)*ref_step])+add)>>shift),
+                 inverse);
     }
 
     if(mirror_right){
-        dst[w*dst_step] = LIFT(src[w*src_step], ((mul*2*ref[w*ref_step]+add)>>shift), inverse);
+        dst[w*dst_step] =
+            LIFT(src[w*src_step],
+                 ((mul*2*ref[w*ref_step]+add)>>shift),
+                 inverse);
     }
 }
 
-static av_always_inline void inv_lift(IDWTELEM *dst, IDWTELEM *src, IDWTELEM *ref, int dst_step, int src_step, int ref_step, int width, int mul, int add, int shift, int highpass, int inverse){
+static av_always_inline void
+inv_lift(IDWTELEM *dst, IDWTELEM *src, IDWTELEM *ref,
+         int dst_step, int src_step, int ref_step,
+         int width, int mul, int add, int shift,
+         int highpass, int inverse){
     const int mirror_left= !highpass;
     const int mirror_right= (width&1) ^ highpass;
     const int w= (width>>1) - 1 + (highpass & width);
@@ -628,23 +644,36 @@ static av_always_inline void inv_lift(IDWTELEM *dst, IDWTELEM *src, IDWTELEM *re
     }
 
     for(i=0; i<w; i++){
-        dst[i*dst_step] = LIFT(src[i*src_step], ((mul*(ref[i*ref_step] + ref[(i+1)*ref_step])+add)>>shift), inverse);
+        dst[i*dst_step] =
+            LIFT(src[i*src_step],
+                 ((mul*(ref[i*ref_step] + ref[(i+1)*ref_step])+add)>>shift),
+                 inverse);
     }
 
     if(mirror_right){
-        dst[w*dst_step] = LIFT(src[w*src_step], ((mul*2*ref[w*ref_step]+add)>>shift), inverse);
+        dst[w*dst_step] =
+            LIFT(src[w*src_step],
+                 ((mul*2*ref[w*ref_step]+add)>>shift),
+                 inverse);
     }
 }
 
 #ifndef liftS
-static av_always_inline void liftS(DWTELEM *dst, DWTELEM *src, DWTELEM *ref, int dst_step, int src_step, int ref_step, int width, int mul, int add, int shift, int highpass, int inverse){
+static av_always_inline void
+liftS(DWTELEM *dst, DWTELEM *src, DWTELEM *ref,
+      int dst_step, int src_step, int ref_step,
+      int width, int mul, int add, int shift,
+      int highpass, int inverse){
     const int mirror_left= !highpass;
     const int mirror_right= (width&1) ^ highpass;
     const int w= (width>>1) - 1 + (highpass & width);
     int i;
 
     assert(shift == 4);
-#define LIFTS(src, ref, inv) ((inv) ? (src) + (((ref) + 4*(src))>>shift): -((-16*(src) + (ref) + add/4 + 1 + (5<<25))/(5*4) - (1<<23)))
+#define LIFTS(src, ref, inv) \
+        ((inv) ? \
+            (src) + (((ref) + 4*(src))>>shift): \
+            -((-16*(src) + (ref) + add/4 + 1 + (5<<25))/(5*4) - (1<<23)))
     if(mirror_left){
         dst[0] = LIFTS(src[0], mul*2*ref[0]+add, inverse);
         dst += dst_step;
@@ -652,21 +681,32 @@ static av_always_inline void liftS(DWTELEM *dst, DWTELEM *src, DWTELEM *ref, int
     }
 
     for(i=0; i<w; i++){
-        dst[i*dst_step] = LIFTS(src[i*src_step], mul*(ref[i*ref_step] + ref[(i+1)*ref_step])+add, inverse);
+        dst[i*dst_step] =
+            LIFTS(src[i*src_step],
+                  mul*(ref[i*ref_step] + ref[(i+1)*ref_step])+add,
+                  inverse);
     }
 
     if(mirror_right){
-        dst[w*dst_step] = LIFTS(src[w*src_step], mul*2*ref[w*ref_step]+add, inverse);
+        dst[w*dst_step] =
+            LIFTS(src[w*src_step], mul*2*ref[w*ref_step]+add, inverse);
     }
 }
-static av_always_inline void inv_liftS(IDWTELEM *dst, IDWTELEM *src, IDWTELEM *ref, int dst_step, int src_step, int ref_step, int width, int mul, int add, int shift, int highpass, int inverse){
+static av_always_inline void
+inv_liftS(IDWTELEM *dst, IDWTELEM *src, IDWTELEM *ref,
+          int dst_step, int src_step, int ref_step,
+          int width, int mul, int add, int shift,
+          int highpass, int inverse){
     const int mirror_left= !highpass;
     const int mirror_right= (width&1) ^ highpass;
     const int w= (width>>1) - 1 + (highpass & width);
     int i;
 
     assert(shift == 4);
-#define LIFTS(src, ref, inv) ((inv) ? (src) + (((ref) + 4*(src))>>shift): -((-16*(src) + (ref) + add/4 + 1 + (5<<25))/(5*4) - (1<<23)))
+#define LIFTS(src, ref, inv) \
+    ((inv) ? \
+        (src) + (((ref) + 4*(src))>>shift): \
+        -((-16*(src) + (ref) + add/4 + 1 + (5<<25))/(5*4) - (1<<23)))
     if(mirror_left){
         dst[0] = LIFTS(src[0], mul*2*ref[0]+add, inverse);
         dst += dst_step;
@@ -674,11 +714,15 @@ static av_always_inline void inv_liftS(IDWTELEM *dst, IDWTELEM *src, IDWTELEM *r
     }
 
     for(i=0; i<w; i++){
-        dst[i*dst_step] = LIFTS(src[i*src_step], mul*(ref[i*ref_step] + ref[(i+1)*ref_step])+add, inverse);
+        dst[i*dst_step] =
+            LIFTS(src[i*src_step],
+                  mul*(ref[i*ref_step] + ref[(i+1)*ref_step])+add,
+                  inverse);
     }
 
     if(mirror_right){
-        dst[w*dst_step] = LIFTS(src[w*src_step], mul*2*ref[w*ref_step]+add, inverse);
+        dst[w*dst_step] =
+            LIFTS(src[w*src_step], mul*2*ref[w*ref_step]+add, inverse);
     }
 }
 #endif
@@ -1897,16 +1941,23 @@ static void decode_blocks(SnowContext *s){
 static void mc_block(uint8_t *dst, const uint8_t *src, uint8_t *tmp, int stride, int b_w, int b_h, int dx, int dy){
     int x, y;
 
-    for(y=0; y < b_h+5; y++){
+    for(y=0; y < b_h+HTAPS-1; y++){
         for(x=0; x < b_w; x++){
-            int a0= src[x    ];
-            int a1= src[x + 1];
-            int a2= src[x + 2];
-            int a3= src[x + 3];
-            int a4= src[x + 4];
-            int a5= src[x + 5];
+            int a_2=src[x + HTAPS/2-5];
+            int a_1=src[x + HTAPS/2-4];
+            int a0= src[x + HTAPS/2-3];
+            int a1= src[x + HTAPS/2-2];
+            int a2= src[x + HTAPS/2-1];
+            int a3= src[x + HTAPS/2+0];
+            int a4= src[x + HTAPS/2+1];
+            int a5= src[x + HTAPS/2+2];
+            int a6= src[x + HTAPS/2+3];
+            int a7= src[x + HTAPS/2+4];
+#if HTAPS==6
             int am= 20*(a2+a3) - 5*(a1+a4) + (a0+a5);
-
+#else
+            int am= 21*(a2+a3) - 7*(a1+a4) + 3*(a0+a5) - (a_1+a6);
+#endif
             if(dx<8) am = (32*a2*( 8-dx) +    am* dx    + 128)>>8;
             else     am = (   am*(16-dx) + 32*a3*(dx-8) + 128)>>8;
 
@@ -1918,17 +1969,30 @@ static void mc_block(uint8_t *dst, const uint8_t *src, uint8_t *tmp, int stride,
         tmp += stride;
         src += stride;
     }
-    tmp -= (b_h+5)*stride;
+    tmp -= (b_h+HTAPS-1)*stride;
 
     for(y=0; y < b_h; y++){
         for(x=0; x < b_w; x++){
-            int a0= tmp[x + 0*stride];
-            int a1= tmp[x + 1*stride];
-            int a2= tmp[x + 2*stride];
-            int a3= tmp[x + 3*stride];
-            int a4= tmp[x + 4*stride];
-            int a5= tmp[x + 5*stride];
+            int a_2=tmp[x + (HTAPS/2-5)*stride];
+            int a_1=tmp[x + (HTAPS/2-4)*stride];
+            int a0= tmp[x + (HTAPS/2-3)*stride];
+            int a1= tmp[x + (HTAPS/2-2)*stride];
+            int a2= tmp[x + (HTAPS/2-1)*stride];
+            int a3= tmp[x + (HTAPS/2+0)*stride];
+            int a4= tmp[x + (HTAPS/2+1)*stride];
+            int a5= tmp[x + (HTAPS/2+2)*stride];
+            int a6= tmp[x + (HTAPS/2+3)*stride];
+            int a7= tmp[x + (HTAPS/2+4)*stride];
+#if HTAPS==6
             int am= 20*(a2+a3) - 5*(a1+a4) + (a0+a5);
+#else
+            int am= 21*(a2+a3) - 7*(a1+a4) + 3*(a0+a5) - (a_1+a6);
+#endif
+//            int am= 18*(a2+a3) - 2*(a1+a4);
+/*            int aL= (-7*a0 + 105*a1 + 35*a2 - 5*a3)>>3;
+            int aR= (-7*a3 + 105*a2 + 35*a1 - 5*a0)>>3;*/
+
+//            if(b_w==16) am= 8*(a1+a2);
 
             if(dy<8) am =  (32*a2*( 8-dy) +    am* dy    + 128)>>8;
             else     am = (   am*(16-dy) + 32*a3*(dy-8) + 128)>>8;
@@ -1944,9 +2008,9 @@ static void mc_block(uint8_t *dst, const uint8_t *src, uint8_t *tmp, int stride,
 
 #define mca(dx,dy,b_w)\
 static void mc_block_hpel ## dx ## dy ## b_w(uint8_t *dst, const uint8_t *src, int stride, int h){\
-    uint8_t tmp[stride*(b_w+5)];\
+    uint8_t tmp[stride*(b_w+HTAPS-1)];\
     assert(h==b_w);\
-    mc_block(dst, src-2-2*stride, tmp, stride, b_w, b_w, dx, dy);\
+    mc_block(dst, src-(HTAPS/2-1)-(HTAPS/2-1)*stride, tmp, stride, b_w, b_w, dx, dy);\
 }
 
 mca( 0, 0,16)
@@ -2005,17 +2069,17 @@ static void pred_block(SnowContext *s, uint8_t *dst, uint8_t *tmp, int stride, i
         const int dx= mx&15;
         const int dy= my&15;
         const int tab_index= 3 - (b_w>>2) + (b_w>>4);
-        sx += (mx>>4) - 2;
-        sy += (my>>4) - 2;
+        sx += (mx>>4) - (HTAPS/2-1);
+        sy += (my>>4) - (HTAPS/2-1);
         src += sx + sy*stride;
-        if(   (unsigned)sx >= w - b_w - 4
-           || (unsigned)sy >= h - b_h - 4){
-            ff_emulated_edge_mc(tmp + MB_SIZE, src, stride, b_w+5, b_h+5, sx, sy, w, h);
+        if(   (unsigned)sx >= w - b_w - (HTAPS-2)
+           || (unsigned)sy >= h - b_h - (HTAPS-2)){
+            ff_emulated_edge_mc(tmp + MB_SIZE, src, stride, b_w+HTAPS-1, b_h+HTAPS-1, sx, sy, w, h);
             src= tmp + MB_SIZE;
         }
         assert(b_w>1 && b_h>1);
         assert(tab_index>=0 && tab_index<4 || b_w==32);
-        if((dx&3) || (dy&3) || !(b_w == b_h || 2*b_w == b_h || b_w == 2*b_h) || (b_w&(b_w-1)))
+        if((dx&3) || (dy&3) || !(b_w == b_h || 2*b_w == b_h || b_w == 2*b_h) || (b_w&(b_w-1)) || HTAPS != 6)
             mc_block(dst, src, tmp, stride, b_w, b_h, dx, dy);
         else if(b_w==32){
             int y;
@@ -2409,7 +2473,7 @@ static int get_block_rd(SnowContext *s, int mb_x, int mb_y, int plane_index, con
     uint8_t *src= s->  input_picture.data[plane_index];
     IDWTELEM *pred= (IDWTELEM*)s->m.obmc_scratchpad + plane_index*block_size*block_size*4;
     uint8_t cur[ref_stride*2*MB_SIZE]; //FIXME alignment
-    uint8_t tmp[ref_stride*(2*MB_SIZE+5)];
+    uint8_t tmp[ref_stride*(2*MB_SIZE+HTAPS-1)];
     const int b_stride = s->b_width << s->block_max_depth;
     const int b_height = s->b_height<< s->block_max_depth;
     const int w= p->width;
@@ -3457,6 +3521,50 @@ static int encode_init(AVCodecContext *avctx)
     return 0;
 }
 
+static void halfpel_interpol(SnowContext *s, uint8_t *halfpel[4][4], AVFrame *frame){
+    int p,x,y;
+
+    assert(!(s->avctx->flags & CODEC_FLAG_EMU_EDGE));
+
+    for(p=0; p<3; p++){
+        int is_chroma= !!p;
+        int w= s->avctx->width  >>is_chroma;
+        int h= s->avctx->height >>is_chroma;
+        int ls= frame->linesize[p];
+        uint8_t *src= frame->data[p];
+
+        halfpel[1][p]= (uint8_t*)av_malloc(ls * (h+2*EDGE_WIDTH)) + EDGE_WIDTH*(1+ls);
+        halfpel[2][p]= (uint8_t*)av_malloc(ls * (h+2*EDGE_WIDTH)) + EDGE_WIDTH*(1+ls);
+        halfpel[3][p]= (uint8_t*)av_malloc(ls * (h+2*EDGE_WIDTH)) + EDGE_WIDTH*(1+ls);
+
+        halfpel[0][p]= src;
+        for(y=0; y<h; y++){
+            for(x=0; x<w; x++){
+                int i= y*ls + x;
+
+                halfpel[1][p][i]= (20*(src[i] + src[i+1]) - 5*(src[i-1] + src[i+2]) + (src[i-2] + src[i+3]) + 16 )>>5;
+            }
+        }
+        for(y=0; y<h; y++){
+            for(x=0; x<w; x++){
+                int i= y*ls + x;
+
+                halfpel[2][p][i]= (20*(src[i] + src[i+ls]) - 5*(src[i-ls] + src[i+2*ls]) + (src[i-2*ls] + src[i+3*ls]) + 16 )>>5;
+            }
+        }
+        src= halfpel[1][p];
+        for(y=0; y<h; y++){
+            for(x=0; x<w; x++){
+                int i= y*ls + x;
+
+                halfpel[3][p][i]= (20*(src[i] + src[i+ls]) - 5*(src[i-ls] + src[i+2*ls]) + (src[i-2*ls] + src[i+3*ls]) + 16 )>>5;
+            }
+        }
+
+//FIXME border!
+    }
+}
+
 static int frame_start(SnowContext *s){
    AVFrame tmp;
    int w= s->avctx->width; //FIXME round up to x16 ?
@@ -3470,6 +3578,11 @@ static int frame_start(SnowContext *s){
 
     tmp= s->last_picture[s->max_ref_frames-1];
     memmove(s->last_picture+1, s->last_picture, (s->max_ref_frames-1)*sizeof(AVFrame));
+    memmove(s->halfpel_plane+1, s->halfpel_plane, (s->max_ref_frames-1)*sizeof(void*)*4*4);
+#ifdef USE_HALFPEL_PLANE
+    if(s->current_picture.data[0])
+        halfpel_interpol(s, s->halfpel_plane[0], &s->current_picture);
+#endif
     s->last_picture[0]= s->current_picture;
     s->current_picture= tmp;
 
@@ -3723,8 +3836,12 @@ redo_frame:
         }
     }
 
-    if(s->last_picture[s->max_ref_frames-1].data[0])
+    if(s->last_picture[s->max_ref_frames-1].data[0]){
         avctx->release_buffer(avctx, &s->last_picture[s->max_ref_frames-1]);
+        for(i=0; i<9; i++)
+            if(s->halfpel_plane[s->max_ref_frames-1][1+i/3][i%3])
+                av_free(s->halfpel_plane[s->max_ref_frames-1][1+i/3][i%3] - EDGE_WIDTH*(1+s->current_picture.linesize[i%3]));
+    }
 
     s->current_picture.coded_picture_number = avctx->frame_number;
     s->current_picture.pict_type = pict->pict_type;
@@ -3812,7 +3929,7 @@ static int decode_frame(AVCodecContext *avctx, void *data, int *data_size, uint8
     RangeCoder * const c= &s->c;
     int bytes_read;
     AVFrame *picture = data;
-    int level, orientation, plane_index;
+    int level, orientation, plane_index, i;
 
     ff_init_range_decoder(c, buf, buf_size);
     ff_build_rac_states(c, 0.05*(1LL<<32), 256-8);
@@ -3936,8 +4053,12 @@ if(s->avctx->debug&2048){
 
     emms_c();
 
-    if(s->last_picture[s->max_ref_frames-1].data[0])
+    if(s->last_picture[s->max_ref_frames-1].data[0]){
         avctx->release_buffer(avctx, &s->last_picture[s->max_ref_frames-1]);
+        for(i=0; i<9; i++)
+            if(s->halfpel_plane[s->max_ref_frames-1][1+i/3][i%3])
+                av_free(s->halfpel_plane[s->max_ref_frames-1][1+i/3][i%3] - EDGE_WIDTH*(1+s->current_picture.linesize[i%3]));
+    }
 
 if(!(s->avctx->debug&2048))
     *picture= s->current_picture;

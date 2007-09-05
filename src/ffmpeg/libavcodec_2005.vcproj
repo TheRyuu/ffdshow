@@ -614,6 +614,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\h264pred.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\huffyuv.c"
 				>
 			</File>
@@ -1208,6 +1212,10 @@
 			</File>
 			<File
 				RelativePath="libavcodec\h264data.h"
+				>
+			</File>
+			<File
+				RelativePath="libavcodec\h264pred.h"
 				>
 			</File>
 			<File
