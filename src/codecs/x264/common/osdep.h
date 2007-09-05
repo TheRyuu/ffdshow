@@ -21,15 +21,15 @@
 #ifndef _OSDEP_H
 #define _OSDEP_H
 
+#define _LARGEFILE_SOURCE 1
+#define _FILE_OFFSET_BITS 64
+#include <stdio.h>
+
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
 #else
 #include <inttypes.h>
 #endif
-
-#define _LARGEFILE_SOURCE 1
-#define _FILE_OFFSET_BITS 64
-#include <stdio.h>
 
 #ifdef __GNUC__
  #define x264_log(...)
@@ -43,6 +43,7 @@
 #define inline __inline
 #define strncasecmp strnicmp
 #define snprintf _snprintf
+#define fseek _fseeki64
 #define ftell _ftelli64
 #define isfinite _finite
 #define _CRT_SECURE_NO_DEPRECATE
