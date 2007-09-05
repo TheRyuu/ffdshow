@@ -1010,6 +1010,8 @@ TglobalSettingsDecAudio::TglobalSettingsDecAudio(const Tconfig *Iconfig,int Imod
      _l("vorbisgain"),0,
    IDFF_ac3SPDIF               ,&TglobalSettingsDecAudio::ac3SPDIF               ,0,0             ,_l(""),0,
      _l("ac3SPDIF"),0,
+   IDFF_SPDIFCompatibility     ,&TglobalSettingsDecAudio::SPDIFCompatibility     ,0,0             ,_l(""),0,
+     _l("SPDIFCompatibility"),0,
    0
   };
  addOptions(iopts);

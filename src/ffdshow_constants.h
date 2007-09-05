@@ -884,7 +884,7 @@
 #define IDFF_aoutMultichannelDevice 3377
 #define IDFF_aoutMultichannelDeviceId 3378
 #define IDFF_aoutAC3EncodeMode      3379
-#define IDFF_aoutSPDIFCompatibility 3416
+#define IDFF_SPDIFCompatibility 3416
 
 #define IDFF_dithering          1311
 #define IDFF_noiseShaping       1312

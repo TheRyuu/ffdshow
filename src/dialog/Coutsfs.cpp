@@ -44,7 +44,6 @@ void ToutsfsPage::init(void)
 
  addHint(IDC_CHB_ALWAYEXTENSIBLE,_l("\"not needed\": no custom channel mapping"));
  addHint(IDC_CHB_ALLOWOUTSTREAM,_l("Useful for directly storing encoded ac3 to a file in graphedt with File Writer filter"));
- addHint(IDC_CHB_AOUT_SPDIF_COMPATIBILITY,_l("Check this option only if you have troubles with SPDIF output"));
  
  devicesList = &ToutputAudioSettings::devicesList;
  char_t deviceId[255] = _l("");
@@ -95,9 +94,6 @@ void ToutsfsPage::ac32dlg(int &outsfs)
 
  enable(getCheck(IDC_CHB_OUT_AC3), IDC_CHB_AOUT_AC3ENCODE_MODE, FALSE);
  setCheck(IDC_CHB_AOUT_AC3ENCODE_MODE, (cfgGet(IDFF_aoutAC3EncodeMode) == 1));
-
- enable(getCheck(IDC_CHB_OUT_AC3), IDC_CHB_AOUT_SPDIF_COMPATIBILITY, FALSE);
- setCheck(IDC_CHB_AOUT_SPDIF_COMPATIBILITY, (cfgGet(IDFF_aoutSPDIFCompatibility) == 1));
 }
 void ToutsfsPage::connect2dlg(void)
 {
@@ -146,7 +142,6 @@ INT_PTR ToutsfsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         else
          setCheck(LOWORD(wParam),!getCheck(LOWORD(wParam)));
 		enable(getCheck(IDC_CHB_OUT_AC3), IDC_CHB_AOUT_AC3ENCODE_MODE, FALSE);
-		enable(getCheck(IDC_CHB_OUT_AC3), IDC_CHB_AOUT_SPDIF_COMPATIBILITY, FALSE);
         return TRUE;
        }
      }
@@ -200,7 +195,6 @@ ToutsfsPage::ToutsfsPage(TffdshowPageDec *Iparent):TconfPageDecAudio(Iparent)
    IDC_CHB_ALLOWOUTSTREAM,IDFF_allowOutStream,NULL,
    IDC_CHB_AOUT_CONNECTTO_SPDIF,IDFF_aoutConnectToOnlySpdif,NULL,
    IDC_CHB_AOUT_AC3ENCODE_MODE,IDFF_aoutAC3EncodeMode,NULL,
-   IDC_CHB_AOUT_SPDIF_COMPATIBILITY, IDFF_aoutSPDIFCompatibility,NULL,
    0,NULL,NULL
   };
  bindCheckboxes(chb);

@@ -422,7 +422,7 @@ HRESULT TffdshowDecAudio::DecideBufferSize(IMemAllocator *pAllocator, ALLOCATOR_
  if (!presetSettings) initPreset();
 
  // Workaround for SPDIF compatibility issues
- if (getParam2(IDFF_aoutSPDIFCompatibility))
+ if (getParam2(IDFF_ac3SPDIF))
 	pProperties->cBuffers=4;
  else
 	pProperties->cBuffers=10;
@@ -800,7 +800,7 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleSPDIF(void *buf,size_t size,int bit_
 	 pDataOutW[1]=0x4e1f;
 	 pDataOutW[2]=type;
 	 // Workaround for SPDIF compatibility issues
-	 if (getParam2(IDFF_aoutSPDIFCompatibility))
+	 if (getParam2(IDFF_SPDIFCompatibility))
 	 {
 	  pDataOutW[3]=WORD(size*8);
 	  _swab((char*)buf,(char*)&pDataOutW[4],(int)size);

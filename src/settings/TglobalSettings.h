@@ -316,6 +316,7 @@ public:
  int dtsinwav;
  int ac3drc,dtsdrc;
  int ac3SPDIF;
+ int SPDIFCompatibility;
  int showCurrentVolume;
  int showCurrentFFT;
  int firIsUserDisplayMaxFreq,firUserDisplayMaxFreq;

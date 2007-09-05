@@ -17,7 +17,6 @@ public:
  int outsfs;
  int outAC3bitrate;
  int connectTo,connectToOnlySpdif;
- int outSPDIFCompatibility;
  WCHAR multichannelDevice[255]; WCHAR multichannelDeviceId[255];
  static TdevicesList devicesList;
  static const char_t *connetTos[];
