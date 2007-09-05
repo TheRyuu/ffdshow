@@ -644,6 +644,7 @@ template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(TcharsChache 
  const TrenderedSubtitleWord **chars=(const TrenderedSubtitleWord**)_alloca(strlens*sizeof(TrenderedSubtitleLine*));
  for (int i=0;i<3;i++)
   dx[i]=dy[i]=0;
+ baseline=0;
  for (size_t i=0;i<strlens;i++)
   {
    chars[i]=charsChache->getChar(&s[i],prefs,lf);
@@ -655,6 +656,7 @@ template<class tchar> TrenderedSubtitleWord::TrenderedSubtitleWord(TcharsChache 
     }
    for (int p=0;p<3;p++)
     dy[p]=std::max(dy[p],chars[i]->dy[p]);
+   baseline=std::max(baseline,chars[i]->baseline);
    if(sizeof(tchar)==sizeof(char))
     if(_mbclen((const unsigned char *)&s[i])==2)
      i++;
@@ -1360,7 +1362,7 @@ template<class tchar> TrenderedSubtitleWord* Tfont::newWord(const tchar *s,size_
   }
 
  TrenderedSubtitleWord *rw;
- if (!w->props.isColor && fontSettings->fast && !lf.lfItalic && !(prefs.shadowSize!=0 && prefs.shadowMode!=3) && prefs.csp==FF_CSP_420P && !prefs.opaqueBox)
+ if (!w->props.isColor && fontSettings->fast && !lf.lfItalic && (prefs.shadowSize==0 || prefs.shadowMode>=2) && prefs.csp==FF_CSP_420P && !prefs.opaqueBox)
   rw=new TrenderedSubtitleWord(charsCache,s1.c_str(),slen,prefs,lf); // fast rendering
  else
   rw=new TrenderedSubtitleWord(hdc,                      // full rendering

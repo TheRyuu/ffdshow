@@ -140,7 +140,7 @@ void TfontPage::font2dlg(void)
  setCheck(IDC_FONT_OPAQUE_BOX,opaquebox);
  int shadowsize=cfgGet(idff_fontshadowsize);
  int shadowmode=cfgGet(idff_fontshadowmode);
- enable((shadowmode==3 || shadowsize==0) && opaquebox==0,IDC_CHB_FONT_FAST);
+ enable((shadowmode>=2 || shadowsize==0) && opaquebox==0,IDC_CHB_FONT_FAST);
  repaint(GetDlgItem(m_hwnd,IDC_IMG_FONT_COLOR));
  repaint(GetDlgItem(m_hwnd,IDC_IMG_FONT_COLOR_OUTLINE));
  repaint(GetDlgItem(m_hwnd,IDC_IMG_FONT_COLOR_SHADOW));
@@ -402,7 +402,7 @@ void TfontPage::shadow2dlg(void)
  cbxSetCurSel(IDC_CBX_FONT_SUBSHADOW_MODE,shadowmode);
  static const int idShadows[]={IDC_TBR_FONT_SUBSHADOW_ALPHA,IDC_TBR_FONT_SUBSHADOW_SIZE,0};
  enable(shadowmode!=3,idShadows);
- enable(shadowmode==3,IDC_CHB_FONT_FAST);
+ enable(shadowmode>=2,IDC_CHB_FONT_FAST);
  int outlinewidth=cfgGet(idff_fontoutlinewidth);
  char_t s[256];
  tbrSet(IDC_TBR_FONT_OUTLINE_WIDTH,outlinewidth,IDC_TXT_FONT_OUTLINE);
