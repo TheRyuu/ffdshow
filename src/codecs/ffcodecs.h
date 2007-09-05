@@ -125,6 +125,7 @@
  CODEC_OP(CODEC_ID_RA_144            ,143,"14_4") \
  CODEC_OP(CODEC_ID_RA_288            ,144,"28_8") \
  CODEC_OP(CODEC_ID_ATRAC3            ,145,"atrac 3") \
+ CODEC_OP(CODEC_ID_RV40              ,146,"rv40") \
 \
  /* Raw formats */ \
  CODEC_OP(CODEC_ID_RAW           ,300,"raw") \
