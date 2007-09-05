@@ -67,20 +67,15 @@ Type
 		pProcString: String;
 	end;
 
-
 var
   cpu_checked: Boolean;
-  cpu_mmx: Boolean;
   cpu_sse: Boolean;
   cpu_sse2: Boolean;
-  cpu_3dnow: Boolean;
-  cpu_ext3dnow: Boolean;
-  hyperthreading: Boolean;
+  cpu_cores: Integer;
 
 
-// functions to detect CPU & HyperThreading
+// functions to detect CPU
 function WinCPUID_Init(msGetFrequency: Integer; var pInfo: TCPUInfo): Integer; external 'WinCPUID_Init@files:WinCPUID.dll cdecl';
-function WinCPUID_PreHTCheck(): LongBool; external 'WinCPUID_PreHTCheck@files:WinCPUID.dll cdecl';
 // function to get system information
 procedure GetSystemInfo(var lpSystemInfo: TSystemInfo); external 'GetSystemInfo@kernel32.dll stdcall';
 
@@ -89,49 +84,25 @@ procedure CPUCheck();
 var
 	CPUInfo: TCPUInfo;
 begin
-  cpu_mmx := false;
-  cpu_sse := false;
-  cpu_sse2 := false;
-  cpu_3dnow := false;
-  cpu_ext3dnow := false;
-  hyperthreading := false;
+  cpu_cores := 1;
 
   WinCPUID_Init(0, CPUInfo);
 
   if (CPUInfo.bIsInitialized = 0) then begin
-	// something went wrong
+		// something went wrong
   end
   else begin
-    if (WinCPUID_PreHTCheck()) then begin
-      if (CPUInfo.htInfo.htResultCode = 4) then begin
-        hyperthreading := true;
-      end
-    end
-    if (CPUInfo.bMMX_Supported = 1) then begin
-      cpu_mmx := true;
-    end
     if (CPUInfo.bSSE_Supported = 1) then begin
       cpu_sse := true;
     end
     if (CPUInfo.bSSE2_Supported = 1) then begin
       cpu_sse2 := true;
     end
-    if (CPUInfo.b3DNow_Supported = 1) then begin
-      cpu_3dnow := true;
-    end
-    if (CPUInfo.bExt3DNow_Supported = 1) then begin
-      cpu_ext3dnow := true;
-    end
+    
+    cpu_cores := CPUInfo.htInfo.nLogicalProcs;
   end
+  
   cpu_checked := true;
-end;
-
-function Is_MMX_Supported(): Boolean;
-begin
-	if NOT cpu_checked then begin
-		CPUCheck();
-	end
-  Result := cpu_mmx;
 end;
 
 function Is_SSE_Supported(): Boolean;
@@ -150,18 +121,10 @@ begin
   Result := cpu_sse2;
 end;
 
-function Is_3dnow_Supported(): Boolean;
+function GetNumberOfCores(): Integer;
 begin
 	if NOT cpu_checked then begin
 		CPUCheck();
-	end
-  Result := cpu_3dnow;
-end;
-
-function Is_Ext3dnow_Supported(): Boolean;
-begin
-	if NOT cpu_checked then begin
-		CPUCheck();
-	end
-  Result := cpu_ext3dnow;
+	end  	
+  Result := cpu_cores;
 end;

@@ -1,20 +1,17 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1414
+#define tryout_revision = 1465
 #define buildyear = 2007
-#define buildmonth = '08'
-#define buildday = '11'
+#define buildmonth = '09'
+#define buildday = '05'
 
 ; Build specific options
 #define unicode_required = True
 
-#define include_cpu_detection = False
-#define mmx_required = True
+#define include_cpu_detection = True
 #define sse_required = False
 #define sse2_required = False
-#define _3dnow_required = False
-#define ext3dnow_required = False
 
 #define MSVC80 = True
 
@@ -46,8 +43,6 @@
   #define unicode_required = False
   #define filename_suffix = '_clsid'
   #define outputdir = '..\..\..\..\'
-  #define include_x264 = False
-  #define include_xvidcore = False
 #endif
 #if PREF_CLSID_ICL
   #define MSVC80 = False
@@ -56,8 +51,6 @@
   #define sse_required = True
   #define filename_suffix = '_clsid_sse_icl10'
   #define outputdir = '..\..\..\..\'
-  #define include_x264 = False
-  #define include_xvidcore = False
 #endif
 #if PREF_YAMAGATA
   #define MSVC80 = True
@@ -72,21 +65,14 @@
   #define include_audx = True
   #define include_info_before = True
   #define include_setup_icon = True
-  #define include_cpu_detection = True
-  #define sse_required = False
-  #define sse2_required = False
   #define filename_suffix = '_xxl'
 #endif
 #if PREF_X64
   #define MSVC80 = True
   #define is64bit = True
   #define unicode_required = True
-  #define include_cpu_detection = False
-  #define include_audx = False
   #define include_app_plugins = False
   #define include_makeavis = False
-  #define include_x264 = True
-  #define include_xvidcore = True
   #define filename_suffix = '_x64'
 #endif
 
@@ -194,7 +180,7 @@ Name: ffdshow\plugins\dscaler; Description: DScaler
 #endif
 
 ; CPU detection code
-#if include_cpu_detection && !is64bit
+#if include_cpu_detection
 #include "innosetup_cpu_detection.iss"
 #endif
 
@@ -910,34 +896,16 @@ begin
   Result := True;
 
   #if include_cpu_detection
-    #if mmx_required
-    if NOT Is_MMX_Supported() then begin
-      Result := False;
-      msgbox('This build of ffdshow requires a CPU with MMX extension support. Your CPU does not have those capabilities.', mbError, MB_OK);
-    end
-    #endif
-    #if sse_required
-    if NOT Is_SSE_Supported() then begin
-      Result := False;
-      msgbox('This build of ffdshow requires a CPU with SSE extension support. Your CPU does not have those capabilities.', mbError, MB_OK);
-    end
-    #endif
     #if sse2_required
-    if NOT Is_SSE2_Supported() then begin
+    if Result AND NOT Is_SSE2_Supported() then begin
       Result := False;
       msgbox('This build of ffdshow requires a CPU with SSE2 extension support. Your CPU does not have those capabilities.', mbError, MB_OK);
     end
     #endif
-    #if _3dnow_required
-    if NOT Is_3dnow_Supported() then begin
+    #if sse_required
+    if Result AND NOT Is_SSE_Supported() then begin
       Result := False;
-      msgbox('This build of ffdshow requires a CPU with 3dnow extension support. Your CPU does not have those capabilities.', mbError, MB_OK);
-    end
-    #endif
-    #if ext3dnow_required
-    if NOT Is_ext3dnow_Supported() then begin
-      Result := False;
-      msgbox('This build of ffdshow requires a CPU with 3dnowext extension support. Your CPU does not have those capabilities.', mbError, MB_OK);
+      msgbox('This build of ffdshow requires a CPU with SSE extension support. Your CPU does not have those capabilities.', mbError, MB_OK);
     end
     #endif
   #endif
@@ -947,9 +915,15 @@ end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
-  if CurStep=ssInstall then begin
+  if CurStep = ssInstall then begin
     RemoveBuildUsingNSIS;
   end
+  
+  #if include_cpu_detection
+  if CurStep = ssPostInstall then begin
+    RegWriteDwordValue(HKCU, 'Software\GNU\ffdshow\default', 'threadsnum', GetNumberOfCores);
+  end
+  #endif
 end;
 
 function InitializeUninstall(): Boolean;
