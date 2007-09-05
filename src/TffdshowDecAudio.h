@@ -78,6 +78,7 @@ public:
  STDMETHODIMP Count(DWORD *pcStreams);
  STDMETHODIMP Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlags, LCID* plcid, DWORD* pdwGroup, WCHAR** ppszName, IUnknown** ppObject, IUnknown** ppUnk);
  STDMETHODIMP_(TffdshowDecAudioInputPin *) GetCurrentPin(void);
+ STDMETHODIMP_(TinputPin*)getInputPin(void);
 
  static const AMOVIESETUP_MEDIATYPE inputMediaTypes[],outputMediaTypes[];
  static const AMOVIESETUP_PIN pins[];
@@ -147,6 +148,7 @@ private:
     }
    STDMETHODIMP currentSampleFormat(unsigned int *nchannels,unsigned int *freq,int *sampleFormat) {return deciA->currentSampleFormat(nchannels,freq,sampleFormat);}
    STDMETHODIMP_(int) getJitter(void) {return deciA->getJitter();}
+   STDMETHODIMP_(TinputPin*) getInputPin(void){ return((TinputPin*)deciA->GetCurrentPin());};
   } decAudio_char;
  template<class Tinterface> Tinterface* getDecAudioInterface(void);
 protected:

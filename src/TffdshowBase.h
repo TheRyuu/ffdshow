@@ -292,7 +292,6 @@ private:
  static HRESULT changeFilterMerit(const CLSID &clsid,DWORD merit);
  int defaultMerit;
  CmyTransformFilter *mfilter;
- TinputPin* &minput;
  CTransformOutputPin* &moutput;
  int cfgDlgAlwaysOnTop;
  int cfgDlgCaptionId,iconId;
@@ -306,6 +305,7 @@ private:
  CCritSec* locks[LOCKS_COUNT];
  int cpuUsage,cpuUsageCounter;
 protected:
+ TinputPin* &minput;
  TintStrColl *options;
  typedef std::vector<TintStrColl*> TintStrColls;
  virtual void getColls(TintStrColls &colls) {colls.push_back(options);}

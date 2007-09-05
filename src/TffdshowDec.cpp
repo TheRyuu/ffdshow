@@ -957,3 +957,8 @@ STDMETHODIMP_(const char_t*) TffdshowDec::getOSDstartupFormat(int *duration)
 {
  return globalSettings->osd->getStartupFormat(duration);
 }
+
+STDMETHODIMP_(TinputPin*) TffdshowDec::getInputPin()
+{
+ return minput;
+}

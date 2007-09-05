@@ -9,6 +9,7 @@ private:
  comptrQ<IffdshowDecVideo> deciV;
  bool wasResolution;unsigned int dx,dy;
  char_t fourcc[5];
+ char_t previousfourcc[5];
  double SAR,DAR;
  double fps;
  static const char_t aspectSAR,aspectDAR;
@@ -16,6 +17,7 @@ public:
  TvideoAutoPresetProps(IffdshowBase *Ideci);
  virtual void getSourceResolution(unsigned int *dx,unsigned int *dy);
  const char_t* getFOURCC(void);
+ const char_t* getPreviousFOURCC(void);
  static const char_t* getFOURCCitem(IffdshowDec *deciD,unsigned int index);
  const char_t *getSAR(void),*getDAR(void);
  const char_t *getFps(void);

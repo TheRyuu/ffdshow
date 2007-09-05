@@ -49,6 +49,9 @@
 #include "IffdshowDecVideo.h"
 #include "Teval.h"
 #include "Tconfig.h"
+#include "TinputPin.h"
+#include "libavcodec/bitstream.h"
+#include "ffdshow_mediaguids.h"
 
 //========================= TvideoAutoPresetProps =========================
 const char_t TvideoAutoPresetProps::aspectSAR=_l('S'),TvideoAutoPresetProps::aspectDAR=_l('D');
@@ -88,6 +91,100 @@ const char_t* TvideoAutoPresetProps::getFOURCC(void)
   }
  return fourcc;
 }
+
+/*This method retrieves the input FOURCC of the filter connected to FFDShow input pin
+ Useful to put conditions on FOURCC when FFDShow is in raw decoder mode */
+const char_t* TvideoAutoPresetProps::getPreviousFOURCC(void)
+{
+	TinputPin *pTinputPin;
+	FOURCC fcc=0;
+	if (deciD != NULL && (pTinputPin = deciD->getInputPin()) != NULL)
+	{
+		IPin *pPin = NULL;
+		HRESULT hr = pTinputPin->ConnectedTo(&pPin);
+		if (FAILED(hr))
+			return _l("");
+		PIN_INFO pininfo;
+		hr = pPin->QueryPinInfo(&pininfo);
+		if (FAILED(hr))
+		{
+			pPin->Release();
+			return _l("");
+		}
+		if (pininfo.pFilter)
+		{			
+			IEnumPins *enumPins = NULL;
+			pininfo.pFilter->EnumPins(&enumPins);
+			IPin *filterPin;
+			unsigned long fetched;
+			while (1)
+			{
+				enumPins->Next(1, &filterPin, &fetched);
+				if (fetched < 1) break;
+				
+				PIN_DIRECTION pinDirection;
+				filterPin->QueryDirection(&pinDirection);
+				if (pinDirection == PINDIR_INPUT)
+				{
+					AM_MEDIA_TYPE mt;
+					filterPin->ConnectionMediaType(&mt);
+					if (mt.formattype==FORMAT_VideoInfo)
+					  {
+					   VIDEOINFOHEADER *vih=(VIDEOINFOHEADER*)mt.pbFormat;
+					   fcc=vih->bmiHeader.biCompression;
+					  }
+					 else if (mt.formattype==FORMAT_VideoInfo2)
+					  {
+					   VIDEOINFOHEADER2 *vih2=(VIDEOINFOHEADER2*)mt.pbFormat;
+					   fcc=vih2->bmiHeader.biCompression;
+					  }
+					 else if (mt.formattype==FORMAT_MPEGVideo)
+					  {
+					   fcc=FOURCC_MPG1;
+					   //fcc=mpeg1info->hdr.bmiHeader.biCompression;
+					  }
+					 else if (mt.formattype==FORMAT_MPEG2Video)
+					  {
+					   MPEG2VIDEOINFO *mpeg2info=(MPEG2VIDEOINFO*)mt.pbFormat;
+					   if (mpeg2info->hdr.bmiHeader.biCompression==0)
+						fcc=FOURCC_MPG2;
+					   else
+						{
+						 fcc=FCCupper(mpeg2info->hdr.bmiHeader.biCompression);
+						}
+					  }
+					 else if (mt.formattype==FORMAT_TheoraIll)
+					  {
+					   fcc=FOURCC_THEO;
+					  }
+					 else if (mt.formattype==FORMAT_RLTheora)
+					  {
+						fcc=FOURCC_THEO;
+					  }
+					filterPin->Release();
+					break;
+				}
+				filterPin->Release();
+			}
+			enumPins->Release();
+			pininfo.pFilter->Release();
+		}
+		pPin->Release();
+	}
+	if (fcc==0)
+		return _l("");
+	#ifdef UNICODE
+	   char fourcc0[5];
+	   memcpy(fourcc0,&fcc,4);
+	   fourcc0[4]='\0';
+	   MultiByteToWideChar(CP_ACP,0,fourcc0,4,previousfourcc,4);
+	#else
+	   memcpy(previousfourcc,&fcc,4);
+	#endif
+	   previousfourcc[4]='\0';
+	return previousfourcc;
+}
+
 const char_t* TvideoAutoPresetProps::getFOURCCitem(IffdshowDec *deciD,unsigned int index)
 {
  const char_t **list=deciD->getSupportedFOURCCs();;
@@ -228,6 +325,14 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child,const char_t *IpresetName):
     &TautoPresetProps::stricoll,
     (TautoPresetItemDef::TgetValFc)&TvideoAutoPresetProps::getFOURCC,
     &TvideoAutoPresetProps::getFOURCCitem,
+   },
+   {
+    _l("on FOURCC from previous filter match"),_l("Useful when FFDShow is in raw mode, the compressed format (if any) is given by the previous filter in the chain."),
+    _l("autoloadPreviousFOURCC"),0,
+    _l("autoloadPreviousFOURCCs"),_l(""),
+    &TautoPresetProps::stricoll,
+    (TautoPresetItemDef::TgetValFc)&TvideoAutoPresetProps::getPreviousFOURCC,
+	&TvideoAutoPresetProps::getFOURCCitem,
    },
    {
     _l("on pixel aspect ratio match"),NULL,

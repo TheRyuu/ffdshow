@@ -8,6 +8,7 @@ struct IMediaSample;
 struct TfilterIDFF;
 struct TfilterIDFFs;
 class TffdshowPageDec;
+class TinputPin;
 struct Tstrptrs;
 template<class tchar> DECLARE_INTERFACE_(IffdshowDecT,IUnknown)
 {
@@ -93,6 +94,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecT,IUnknown)
  STDMETHOD (deleteOSDpreset)(const tchar *presetName) PURE;
  STDMETHOD (cycleOSDpresets)(void) PURE;
  STDMETHOD_(const tchar*,getOSDstartupFormat)(int *duration) PURE;
+ STDMETHOD_(TinputPin*, getInputPin)(void) PURE;
 };
 
 struct IffdshowDecA :IffdshowDecT<char> {};

@@ -521,6 +521,8 @@ Format: XXXX-YYYY=Format : XXXX-YYYY
 on decoder match=si le décodeur correspond
 on a DirectShow filter presence=en présence d'un filtre DirectShow
 Names of DirectShow filters, wildcard allowed=Noms de filtres DirectShow, jokers autorisés
+on FOURCC from previous filter match=si le 4CC du filtre précédent correspond
+on move file name match with preset name=si le nom du fichier correspond au preset
 
 Enter logical expression with 'aspect' variable and comparison and arithmetic operators,\nfor example \"16/9<aspect AND aspect<2.35\" or \"aspect=1\".=Entrer une expression logique avec la variable 'aspect' et des opérateurs arithmetiques et de comparison,\npar exemple \"16/9<aspect AND aspect<2.35\" ou \"aspect=1\".
 Enter logical expression with 'fps' variable and comparison and arithmetic operators,\nfor example \"fps>30\".=Entrer une expression logique avec la variable 'fps' et des opérateurs arithmetiques et de comparison,\npar exemple \"fps>30\".

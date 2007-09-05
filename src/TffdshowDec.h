@@ -119,6 +119,7 @@ public:
  STDMETHODIMP deleteOSDpreset(const char_t *presetName);
  STDMETHODIMP cycleOSDpresets(void);
  STDMETHODIMP_(const char_t*) getOSDstartupFormat(int *duration);
+ STDMETHODIMP_(TinputPin*)getInputPin(void);
 
  // IDispatch
  STDMETHODIMP GetTypeInfoCount(UINT FAR* pctinfo) {return E_NOTIMPL;}
@@ -397,6 +398,8 @@ protected:
     {
      return NULL;
     }
+
+   STDMETHODIMP_(TinputPin*) getInputPin(void){ return(deciD->getInputPin());};
   } dec_char;
  template<class Tinterface> Tinterface* getDecInterface(void);
 private:

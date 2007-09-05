@@ -1118,3 +1118,8 @@ int TffdshowDecAudio::get_trayIconType(void)
    return IDI_MODERN_ICON_A;
   }
 }
+
+STDMETHODIMP_(TinputPin*) TffdshowDecAudio::getInputPin(void)
+{
+ return GetCurrentPin();;
+}
