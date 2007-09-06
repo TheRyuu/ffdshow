@@ -116,10 +116,10 @@ private:
                         const YUVcolorA &shadowYUV,
                         unsigned int shadowSize);
  unsigned int getShadowSize(const TrenderedSubtitleLines::TprintPrefs &prefs,LONG fontHeight);
- unsigned int getBottomOverhang(unsigned int shadowSize,const TrenderedSubtitleLines::TprintPrefs &prefs);
- unsigned int getRightOverhang(unsigned int shadowSize,const TrenderedSubtitleLines::TprintPrefs &prefs);
- unsigned int getTopOverhang(unsigned int shadowSize,const TrenderedSubtitleLines::TprintPrefs &prefs);
- unsigned int getLeftOverhang(unsigned int shadowSize,const TrenderedSubtitleLines::TprintPrefs &prefs);
+ unsigned int getBottomOverhang(unsigned int shadowSize,unsigned int outlineWidth,const TrenderedSubtitleLines::TprintPrefs &prefs);
+ unsigned int getRightOverhang(unsigned int shadowSize,unsigned int outlineWidth,const TrenderedSubtitleLines::TprintPrefs &prefs);
+ unsigned int getTopOverhang(unsigned int shadowSize,unsigned int outlineWidth,const TrenderedSubtitleLines::TprintPrefs &prefs);
+ unsigned int getLeftOverhang(unsigned int shadowSize,unsigned int outlineWidth,const TrenderedSubtitleLines::TprintPrefs &prefs);
 public:
  template<class tchar> TrenderedSubtitleWord(
                         HDC hdc,

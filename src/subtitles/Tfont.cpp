@@ -211,9 +211,15 @@ void TrenderedSubtitleWord::drawShadow(
    TrenderedSubtitleWord_printUV=TrenderedSubtitleWord_printUV_mmx;
   }
 #endif
- unsigned int _dx,_dy;
- _dx=xscale*dx[0]/400+4+getLeftOverhang(shadowSize,prefs)+getRightOverhang(shadowSize,prefs);
- _dy=yscale*dy[0]/400+4+getTopOverhang(shadowSize,prefs)+getBottomOverhang(shadowSize,prefs);
+ unsigned int _dx,_dy,_dxCore,_dyCore;
+ unsigned int topOverhang=getTopOverhang(shadowSize,outlineWidth,prefs);
+ unsigned int bottomOverhang=getBottomOverhang(shadowSize,outlineWidth,prefs);
+ unsigned int leftOverhang=getLeftOverhang(shadowSize,outlineWidth,prefs);
+ unsigned int rightOverhang=getRightOverhang(shadowSize,outlineWidth,prefs);
+ _dx    =xscale*dx[0]/400+leftOverhang+ rightOverhang;
+ _dxCore=xscale*dx[0]/400+leftOverhang+ outlineWidth;
+ _dy    =yscale*dy[0]/400+topOverhang + bottomOverhang;
+ _dyCore=yscale*dy[0]/400+topOverhang + outlineWidth;
  dxCharY=xscale*sz.cx/400;dyCharY=yscale*sz.cy/400;
  baseline=yscale*baseline/400+2;
 
@@ -228,54 +234,75 @@ void TrenderedSubtitleWord::drawShadow(
  msk[0]=(unsigned char*)aligned_calloc3(_dx,_dy,16,16);
  outline[0]=(unsigned char*)aligned_calloc3(_dx,_dy,16,16);
  shadow[0]=(unsigned char*)aligned_calloc3(_dx,_dy,16,16);
- int dxCharYstart=0;
+ bool blur=prefs.blur || (prefs.shadowMode==0 && shadowSize>0);
 
- // bmp16 RGB32->IMGFMT_Y800 (full range) conversion.
- if (Tconfig::cpu_flags&FF_CPU_MMX)
+ if (yscale==100 && !blur)
   {
-   fontRGB32toBW_mmx((dx[0]*dy[0]+7)/8,bmp16);
-   _mm_empty();
+   for (unsigned int y=2;y<dy[0]-2;y+=4)
+    {
+     unsigned char *dstBmpY=bmp[0]+(y/4+topOverhang+outlineWidth)*extra_dx+leftOverhang+outlineWidth;
+     for (unsigned int xstep = xscale==100 ? 4*65536 : 400*65536/xscale,x=(2<<16)+xstep;x<((dx[0]-2)<<16);x+=xstep,dstBmpY++)
+      {
+       unsigned int sum=0;
+       for (const unsigned char *bmp16src=bmp16+((y-2)*dx[0]+((x>>16)-2))*4,*bmp16srcEnd=bmp16src+5*dx[0]*4;bmp16src!=bmp16srcEnd;bmp16src+=dx[0]*4)
+        {
+         for (int i=0;i<=12;i+=4)
+           sum+=bmp16src[i];
+        }
+       sum/=20; // average of 5x4=20pixels
+       *dstBmpY=(unsigned char)sum;
+      }
+    }
   }
  else
   {
-   unsigned char *bmp16_wb=bmp16;
-   unsigned char *bmp16_rgb32=bmp16;
-   int cxy=dx[0]*dy[0];
-   while(cxy)
+   // bmp16 RGB32->IMGFMT_Y800 (full range) conversion.
+   if (Tconfig::cpu_flags&FF_CPU_MMX)
     {
-     *bmp16_wb=*bmp16_rgb32;
-     bmp16_wb++;
-     bmp16_rgb32+=4;
-     cxy--;
+     fontRGB32toBW_mmx((dx[0]*dy[0]+7)/8,bmp16);
+     _mm_empty();
     }
-  }
+   else
+    {
+     unsigned char *bmp16_wb=bmp16;
+     unsigned char *bmp16_rgb32=bmp16;
+     int cxy=dx[0]*dy[0];
+     while(cxy)
+      {
+       *bmp16_wb=*bmp16_rgb32;
+       bmp16_wb++;
+       bmp16_rgb32+=4;
+       cxy--;
+      }
+    }
 
- // Scaling. GDI has drawn the font in 4x big size. So we have to shrink to 25% by default.
- unsigned int scaledDx=xscale*dx[0]/400;
- unsigned int scaledDy=yscale*dy[0]/400;
- if (scaledDx<8) scaledDx=8; // swscaler returns error if scaledDx<8
- Tlibmplayer *libmplayer;
- SwsParams params;
- prefs.deci->getPostproc(&libmplayer);
- float lumaGBlur=0.0;
- int resizeMethod=SWS_BILINEAR;
- if (prefs.blur || (prefs.shadowMode==0 && shadowSize>0))
-  {
-   lumaGBlur=1.9f;
-   resizeMethod=SWS_GAUSS;
+   // Scaling. GDI has drawn the font in 4x big size. So we have to shrink to 25% by default.
+   unsigned int scaledDx=xscale*dx[0]/400;
+   unsigned int scaledDy=yscale*dy[0]/400;
+   if (scaledDx<8) scaledDx=8; // swscaler returns error if scaledDx<8
+   Tlibmplayer *libmplayer;
+   SwsParams params;
+   prefs.deci->getPostproc(&libmplayer);
+   float lumaGBlur=0.0;
+   int resizeMethod=SWS_BILINEAR;
+   if (blur)
+    {
+     lumaGBlur=1.9f;
+     resizeMethod=SWS_GAUSS;
+    }
+   SwsFilter *filter=libmplayer->sws_getDefaultFilter(lumaGBlur,0,0,0,0,0,0);
+   Tlibmplayer::swsInitParams(&params,resizeMethod);
+   SwsContext *ctx=libmplayer->sws_getContext(dx[0], dy[0], IMGFMT_Y800, scaledDx, scaledDy, IMGFMT_Y800, &params, filter, NULL);
+   if (ctx)
+    {
+     stride_t sdx=dx[0];
+     uint8_t *scaledBmp=bmp[0]+outlineWidth+leftOverhang+extra_dx*(outlineWidth+topOverhang);
+     libmplayer->sws_scale_ordered(ctx,(const uint8_t**)&bmp16,&sdx,0,dy[0],&scaledBmp,(stride_t *)&extra_dx);
+     libmplayer->sws_freeContext(ctx);
+    }
+   libmplayer->Release();
+   libmplayer=NULL;
   }
- SwsFilter *filter=libmplayer->sws_getDefaultFilter(lumaGBlur,0,0,0,0,0,0);
- Tlibmplayer::swsInitParams(&params,resizeMethod);
- SwsContext *ctx=libmplayer->sws_getContext(dx[0], dy[0], IMGFMT_Y800, scaledDx, scaledDy, IMGFMT_Y800, &params, filter, NULL);
- if (ctx)
-  {
-   stride_t sdx=dx[0];
-   uint8_t *scaledBmp=bmp[0]+outlineWidth+getLeftOverhang(shadowSize,prefs)+extra_dx*(outlineWidth+getTopOverhang(shadowSize,prefs)); // FIXME for thicker outlines.
-   libmplayer->sws_scale_ordered(ctx,(const uint8_t**)&bmp16,&sdx,0,dy[0],&scaledBmp,(stride_t *)&extra_dx);
-   libmplayer->sws_freeContext(ctx);
-  }
- libmplayer->Release();
- libmplayer=NULL;
  aligned_free(bmp16);
 
  dx[0]=_dx;dy[0]=_dy;
@@ -311,12 +338,16 @@ void TrenderedSubtitleWord::drawShadow(
  else if (outlineWidth)
   {
    // Prepare outline
-   if (Tconfig::cpu_flags&FF_CPU_SSE2)
+   if (Tconfig::cpu_flags&FF_CPU_SSE2
+#ifndef WIN64
+       && outlineWidth>=2
+#endif
+      )
     {
      size_t matrixSizeH_sse2=matrixSizeH>>3;
      size_t srcStrideGap=extra_dx-matrixSizeH;
-     for (unsigned int y=0;y<_dy;y++)
-      for (unsigned int x=0;x<_dx;x++)
+     for (unsigned int y=topOverhang-outlineWidth;y<_dyCore;y++)
+      for (unsigned int x=leftOverhang-outlineWidth;x<_dxCore;x++)
        {
         unsigned int sum=fontPrepareOutline_sse2(bmp[0]+extra_dx*y+x,srcStrideGap,matrix,matrixSizeH_sse2,matrixSizeV)/800;
         msk[0][_dx*y+x]=sum>255 ? 255 : sum;
@@ -328,8 +359,8 @@ void TrenderedSubtitleWord::drawShadow(
      size_t matrixSizeH_mmx=(matrixSizeV+3)/4;
      size_t srcStrideGap=extra_dx-matrixSizeH_mmx*4;
      size_t matrixGap=matrixSizeH_mmx & 1 ? 8 : 0;
-     for (unsigned int y=0;y<_dy;y++)
-      for (unsigned int x=0;x<_dx;x++)
+     for (unsigned int y=topOverhang-outlineWidth;y<_dyCore;y++)
+      for (unsigned int x=leftOverhang-outlineWidth;x<_dxCore;x++)
        {
         unsigned int sum=fontPrepareOutline_mmx(bmp[0]+extra_dx*y+x,srcStrideGap,matrix,matrixSizeH_mmx,matrixSizeV,matrixGap)/800;
         msk[0][_dx*y+x]=sum>255 ? 255 : sum;
@@ -338,8 +369,8 @@ void TrenderedSubtitleWord::drawShadow(
 #endif
    else
     {
-     for (unsigned int y=0;y<_dy;y++)
-      for (unsigned int x=0;x<_dx;x++)
+     for (unsigned int y=topOverhang-outlineWidth;y<_dyCore;y++)
+      for (unsigned int x=leftOverhang-outlineWidth;x<_dxCore;x++)
        {
         unsigned char *srcPos=bmp[0]+extra_dx*y+x; // (x-outlineWidth,y-outlineWidth)
         unsigned int sum=0;
@@ -395,6 +426,11 @@ void TrenderedSubtitleWord::drawShadow(
    bmpmskstride[0]=dx[0];bmpmskstride[1]=dx[1];
   }
 
+    unsigned char* mskptr;
+    if (outlineWidth)
+     mskptr=msk[0];
+    else
+     mskptr=bmp[0];
     unsigned int shadowAlpha = 255; //prefs.shadowAlpha;
     unsigned int shadowMode = prefs.shadowMode; // 0: glowing, 1:classic with gradient, 2: classic with no gradient, >=3: no shadow
     if (shadowSize > 0)
@@ -428,7 +464,7 @@ void TrenderedSubtitleWord::drawShadow(
                 unsigned int pos = _dx*y+x;
                 int startx = x>=shadowSize ? 0 : shadowSize-x;
                 int endx = x+shadowSize<_dx ? circleSize : _dx-x+shadowSize;
-                if (msk[0][pos] == 0) continue;
+                if (mskptr[pos] == 0) continue;
                 for (int ry=starty; ry<endy;ry++)
                 {
                     for (int rx=startx; rx<endx;rx++)
@@ -437,7 +473,7 @@ void TrenderedSubtitleWord::drawShadow(
                         if (alpha)
                         {
                             unsigned int dstpos = _dx*(y+ry-shadowSize)+x+rx-shadowSize;
-                            unsigned int s = msk[0][pos] * alpha >> 8;
+                            unsigned int s = mskptr[pos] * alpha >> 8;
                             if (shadow[0][dstpos]<s)
                                 shadow[0][dstpos] = (unsigned char)s;
                         }
@@ -454,12 +490,12 @@ void TrenderedSubtitleWord::drawShadow(
             for (unsigned int x=0; x<_dx;x++)
             {
                 unsigned int pos = _dx*y+x;
-                if (msk[0][pos] == 0) continue;
+                if (mskptr[pos] == 0) continue;
 
                 unsigned int shadowAlphaGradient = shadowAlpha;
                 for (unsigned int xx=1; xx<=shadowSize; xx++)
                 {
-                    unsigned int s = msk[0][pos]*shadowAlphaGradient>>8;
+                    unsigned int s = mskptr[pos]*shadowAlphaGradient>>8;
                     if (x + xx < _dx)
                     {
                         if (y+xx < _dy && 
@@ -476,7 +512,7 @@ void TrenderedSubtitleWord::drawShadow(
     else if (shadowMode == 2) //Classic shadow
     {
         for (unsigned int y=shadowSize; y<_dy;y++)
-            memcpy(shadow[0]+_dx*y+shadowSize,msk[0]+_dx*(y-shadowSize),_dx-shadowSize);
+            memcpy(shadow[0]+_dx*y+shadowSize,mskptr+_dx*(y-shadowSize),_dx-shadowSize);
     }
 
  if (csp==FF_CSP_420P)
@@ -613,24 +649,24 @@ unsigned int TrenderedSubtitleWord::getShadowSize(const TrenderedSubtitleLines::
   shadowSize = 16;
  return shadowSize;
 }
-unsigned int TrenderedSubtitleWord::getBottomOverhang(unsigned int shadowSize,const TrenderedSubtitleLines::TprintPrefs &prefs)
+unsigned int TrenderedSubtitleWord::getBottomOverhang(unsigned int shadowSize,unsigned int outlineWidth,const TrenderedSubtitleLines::TprintPrefs &prefs)
 {
- return shadowSize+prefs.outlineWidth;
+ return shadowSize+outlineWidth;
 }
-unsigned int TrenderedSubtitleWord::getRightOverhang(unsigned int shadowSize,const TrenderedSubtitleLines::TprintPrefs &prefs)
+unsigned int TrenderedSubtitleWord::getRightOverhang(unsigned int shadowSize,unsigned int outlineWidth,const TrenderedSubtitleLines::TprintPrefs &prefs)
 {
- return shadowSize+prefs.outlineWidth;
+ return shadowSize+outlineWidth;
 }
-unsigned int TrenderedSubtitleWord::getTopOverhang(unsigned int shadowSize,const TrenderedSubtitleLines::TprintPrefs &prefs)
+unsigned int TrenderedSubtitleWord::getTopOverhang(unsigned int shadowSize,unsigned int outlineWidth,const TrenderedSubtitleLines::TprintPrefs &prefs)
 {
  if (prefs.shadowMode==0)
-  return shadowSize+prefs.outlineWidth;
+  return shadowSize+outlineWidth;
  else
-  return prefs.outlineWidth;
+  return outlineWidth;
 }
-unsigned int TrenderedSubtitleWord::getLeftOverhang(unsigned int shadowSize,const TrenderedSubtitleLines::TprintPrefs &prefs)
+unsigned int TrenderedSubtitleWord::getLeftOverhang(unsigned int shadowSize,unsigned int outlineWidth,const TrenderedSubtitleLines::TprintPrefs &prefs)
 {
- return getTopOverhang(shadowSize,prefs);
+ return getTopOverhang(shadowSize,outlineWidth,prefs);
 }
 
 // fast rendering
