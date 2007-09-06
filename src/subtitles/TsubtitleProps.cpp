@@ -82,7 +82,7 @@ int TSubtitleProps::get_spacing(unsigned int dy,unsigned int clipdy) const
 unsigned int TSubtitleProps::get_marginR(unsigned int screenWidth) const
 {
  // called only for SSA/ASS/ASS2
- unsigned int result;
+ int result;
  if (isPos)
   {
    switch (alignment)
@@ -91,6 +91,11 @@ unsigned int TSubtitleProps::get_marginR(unsigned int screenWidth) const
      case 7:
      case 11:
       result=refResX-posx;
+      break;
+     case 2: // center(SSA)
+     case 6:
+     case 10:
+      result=refResX-posx*2;
       break;
      default:
       result=0;
@@ -110,7 +115,7 @@ unsigned int TSubtitleProps::get_marginR(unsigned int screenWidth) const
 unsigned int TSubtitleProps::get_marginL(unsigned int screenWidth) const
 {
  // called only for SSA/ASS/ASS2
- unsigned int result;
+ int result;
  if (isPos)
   {
    switch (alignment)
@@ -145,7 +150,7 @@ unsigned int TSubtitleProps::get_marginL(unsigned int screenWidth) const
 }
 unsigned int TSubtitleProps::get_marginTop(unsigned int screenHeight) const
 {
- unsigned int result;
+ int result;
  if (isPos)
   {
    switch (alignment)
@@ -182,7 +187,7 @@ unsigned int TSubtitleProps::get_marginTop(unsigned int screenHeight) const
 }
 unsigned int TSubtitleProps::get_marginBottom(unsigned int screenHeight) const
 {
- unsigned int result;
+ int result;
  if (isPos)
   {
    switch (alignment)
@@ -190,10 +195,12 @@ unsigned int TSubtitleProps::get_marginBottom(unsigned int screenHeight) const
      case 5: // SSA top
      case 6:
      case 7:
+      result=0;
+      break;
      case 9: // SSA mid
      case 10:
      case 11:
-      result=0;
+      result=refResY-posy*2;
       break;
      case 1: // SSA bottom
      case 2:
