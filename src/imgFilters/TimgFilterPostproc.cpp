@@ -69,6 +69,7 @@ bool TimgFilterPostprocBase::pp_codec(int CodecID)
 		case CODEC_ID_CINEPAK:
 		case CODEC_ID_VP5:
 		case CODEC_ID_VP6:
+		case CODEC_ID_FLV4:
 			return true;
 		default: return false;
 	}
