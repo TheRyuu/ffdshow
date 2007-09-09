@@ -37,7 +37,7 @@ void Ttranslate::Tfont::init(Tinifile &ini)
  ini.getPrivateProfileString(_l("Font"),Tconfig::winNT?_l("typefaceNT"):_l("typeface9x"),_l(""),typeface,256);
  pointsize=ini.getPrivateProfileInt(_l("Font"),Tconfig::winNT?_l("pointsizeNT"):_l("pointsize9x"),pointsizeDef);
  italic=ini.getPrivateProfileInt(_l("Font"),Tconfig::winNT?_l("italicNT"):_l("italic9x"),italicDef)?TRUE:FALSE;
- horizontalScale=ini.getPrivateProfileInt(_l("Font"),Tconfig::winNT?_l("horizontalScaleNT"):_l("horizontalScale9x"),horizontalScaleDef);
+ lastHorizontalScale=horizontalScale=ini.getPrivateProfileInt(_l("Font"),Tconfig::winNT?_l("horizontalScaleNT"):_l("horizontalScale9x"),horizontalScaleDef);
 /*
  char charsetS[256];
  ini.getPrivateProfileString("Font",Tconfig::winNT?"charsetNT":"charset9x","Ansi",charsetS,256);
@@ -384,3 +384,5 @@ DLGTEMPLATE *Ttranslate::translateDialogTemplate(int dialogId) const
   }
  return (DLGTEMPLATE*)trans0;
 }
+
+int Ttranslate::lastHorizontalScale=Tfont::horizontalScaleDef;

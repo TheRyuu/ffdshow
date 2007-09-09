@@ -46,6 +46,9 @@ private:
   };
  typedef std::hash_map<int,Tdialog> Tdialogs;
  mutable Tdialogs dlgs,dlgsBuiltin;
+ static int lastHorizontalScale;
+ 
+ friend class Twindow;
 public:
  Ttranslate(HINSTANCE Ihi,const char_t *Ipth);
  ~Ttranslate() {}
