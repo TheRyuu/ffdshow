@@ -662,7 +662,12 @@ void Twindow::resizeDialog(HWND hwnd)
  if(!hwnd || resized)
   return;
 
- int scale=(tr ? tr->font.horizontalScale : Ttranslate::lastHorizontalScale);
+ int scale;
+
+ if (tr)
+  scale=Ttranslate::lastHorizontalScale=tr->font.horizontalScale;
+ else
+  scale=Ttranslate::lastHorizontalScale;
 
  if (scale == 100)
   return;
