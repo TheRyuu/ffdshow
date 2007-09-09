@@ -3752,13 +3752,19 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     }
 
     if(h->deblocking_filter == 1 && h0->max_contexts > 1) {
-        h0->max_contexts = 1;
-        if(!h0->single_decode_warning) {
-            av_log(s->avctx, AV_LOG_INFO, "Cannot parallelize deblocking type 1, decoding such frames in sequential order\n");
-            h0->single_decode_warning = 1;
+        if(s->avctx->flags2 & CODEC_FLAG2_FAST) {
+            /* Cheat slightly for speed:
+               Dont bother to deblock across slices */
+            h->deblocking_filter = 2;
+        } else {
+            h0->max_contexts = 1;
+            if(!h0->single_decode_warning) {
+                av_log(s->avctx, AV_LOG_INFO, "Cannot parallelize deblocking type 1, decoding such frames in sequential order\n");
+                h0->single_decode_warning = 1;
+            }
+            if(h != h0)
+                return 1; // deblocking switched inside frame
         }
-        if(h != h0)
-            return 1; // deblocking switched inside frame
     }
 
     if(   s->avctx->skip_loop_filter >= AVDISCARD_ALL
