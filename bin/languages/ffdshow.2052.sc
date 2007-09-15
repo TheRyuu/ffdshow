@@ -1,7 +1,6 @@
 ﻿Simplified Chinese
 ;originally translated by lain@Ringz Studio
 ;modified and updated by majie
-;for revision 1280
 
 [Font]
 typeface9x=
@@ -469,6 +468,14 @@ Video delay=视频延迟
 VorbisGain=Vorbis 增益
 Warped resize=偏移缩放
 white=白
+Smart wrapping, lines are evenly broken=自动换行，尽可能均等分割每行
+End-of-line word wrapping=换行字符换行
+Smart wrapping, lower line gets wider=自动换行，下面的行宽一些
+Enable in Vista WMP11=在Vista的WMP11中启用
+Weight - most fonts supports only small subset of listed weights.=宽度——大多数字体只支持所列宽度的一小部分。
+Spacing - distance between characters.=间隙——字符间的距离。
+Works when the video has non-square pixel aspect ratio.=视频不是方形像素长宽比时修正。
+No=无
 
 [101]
 1836=捐助
@@ -670,24 +677,27 @@ white=白
 
 [132]
 0=字体
-1259=字体
-1114=编码
 1108=粗细
-1335=自动尺寸
 1110=大小:
+1114=编码
 1116=间距:
-1120=宽度:
-1981=透明度:
-1978=阴影模式:
-1827=快速渲染
+1120=缩放宽度:
 1124=颜色
 1143=间　　距 - 字符间的距离\r\n粗　　细 - 大多数字体仅支持列表中给出的设定
+1259=字体
+1335=自动尺寸
+1827=快速渲染
+1978=阴影模式:
+1981=透明度:
 2052=文字
 2053=轮廓
 2054=阴影
 2060=不透明块
 2065=大小、色彩和透明度
-
+2081=模糊
+2087=覆盖ASS/ASS2缩放
+2088=自动修正长宽比
+2090=缩放高度:
 
 [133]
 0=尺寸与纵横比
@@ -708,6 +718,8 @@ white=白
 1189=调整尺寸, 若...
 1191=调整尺寸, 若像素...
 1188=始终调整尺寸
+2084=输出设备的像素纵横比
+2086=调整到屏幕分辨率大小
 
 [134]
 0=裁切
@@ -1485,6 +1497,14 @@ white=白
 1199=锁定
 1862=水平
 1863=垂直
+2067=划分边界
+2068=左
+2069=右
+2070=上
+2071=下
+2079=水平方向
+2080=垂直方向
+
 
 [262]
 0=旋转处理滤镜
