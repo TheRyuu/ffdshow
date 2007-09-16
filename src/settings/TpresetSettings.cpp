@@ -195,6 +195,12 @@ bool Tpreset::TautoPresetItem::match(TautoPresetProps &props) const
    return false;
   }
 }
+
+bool Tpreset::TautoPresetItem::getIs() const
+{
+ return !!is;
+}
+
 void Tpreset::TautoPresetItem::get(const char_t* *name,const char_t* *hint,int *allowWildcard,int *isPtr,int *isVal,char_t *val,size_t vallen,int *isList,int *isHelp) const
 {
  *name=item->desc;
@@ -406,14 +412,19 @@ void Tpreset::addAutoPresetItems(const TautoPresetItemDef *IautoPresetItems)
 bool Tpreset::isAutoPreset(TautoPresetProps &props) const
 {
  props.presetName=presetName;
+
  unsigned int dx,dy;
+
  props.getSourceResolution(&dx,&dy);
- if (is_autoloadSize() && autoloadSizeMatch(dx,dy))
-  return true;
+
+ if (is_autoloadSize() && !autoloadSizeMatch(dx,dy))
+  return false;
+
  for (TautoPresetItems::const_iterator a=autoPresetItems.begin();a!=autoPresetItems.end();a++)
-  if (a->match(props))
-   return true;
- return false;
+  if (a->getIs() && !a->match(props))
+   return false;
+
+ return true;
 }
 
 int Tpreset::getMinOrder(void) const

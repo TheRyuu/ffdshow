@@ -125,6 +125,7 @@ private:
    const TautoPresetItemDef *item;
    void reg_op(TregOp &t);
    void addWild(void);
+   bool getIs() const;
    bool match(TautoPresetProps &props) const;
    void get(const char_t* *name,const char_t* *hint,int *allowWildcard,int *is,int *isVal,char_t *val,size_t vallen,int *isList,int *isHelp) const;
    void set(int is,const char_t *val);
