@@ -97,12 +97,16 @@ bool TsubtitlesTextpinDVD::ctlSubtitles(unsigned int id,const void *data,unsigne
           refresh=true;
           TsubtitleDVD *sd=(TsubtitleDVD*)*s;
           if (sd->psphli)
+           {
            if (sd->psphli->StartX!=pSPHLI->StartX ||
                sd->psphli->StartY!=pSPHLI->StartY ||
                sd->psphli->StopX !=pSPHLI->StopX  ||
                sd->psphli->StopY !=pSPHLI->StopY  ||
                memcmp(&sd->psphli->ColCon,&pSPHLI->ColCon,sizeof(AM_COLCON))!=0)
             sd->changed=true;
+           }
+          else
+           sd->changed=true;
           sd->psphli.release();
           sd->psphli=new AM_PROPERTY_SPHLI(*pSPHLI);
          }
@@ -147,7 +151,7 @@ const Tsubtitle* TsubtitlesTextpinDVD::getSubtitle(const TsubtitlesSettings *cfg
    {
     subtitles.push_back(*s);
     if ((*s)->start<start) start=(*s)->start;
-    if ((*s)->stop <stop ) stop =(*s)->stop ;
+    if ((*s)->stop >stop ) stop =(*s)->stop ;
    }
  return subtitles.empty()?NULL:(subtitles.start=start,subtitles.stop=stop,&subtitles);
 }

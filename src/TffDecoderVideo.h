@@ -301,6 +301,8 @@ public:
  STDMETHODIMP_(bool) shouldSkipH264loopFilter(void);
  STDMETHODIMP_(int) get_downstreamID(void);
  STDMETHODIMP_(const char*) getAviSynthInfo(void);
+ STDMETHODIMP lockCSReceive(void) { lockReceive(); return S_OK; }
+ STDMETHODIMP unlockCSReceive(void) { unlockReceive(); return S_OK; }
 #ifdef OSDTIMETABALE
  STDMETHODIMP_(int) getOSDtime(void){return (int)OSDtime3;}
 #else
@@ -468,6 +470,8 @@ private:
    STDMETHODIMP findOverlayControl2(IhwOverlayControl* *overlayPtr) {return deciV->findOverlayControl2(overlayPtr);}
    STDMETHODIMP_(int) get_downstreamID(void) {return deciV->get_downstreamID();}
    STDMETHODIMP_(const char*)getAviSynthInfo(void){return deciV->getAviSynthInfo();}
+   STDMETHODIMP lockCSReceive(void) { return deciV->lockCSReceive(); }
+   STDMETHODIMP unlockCSReceive(void) { return deciV->unlockCSReceive(); }
  } decVideo_char;
  template<class Tinterface> Tinterface* getDecVideoInterface(void);
  void ConnectCompatibleFilter(void);

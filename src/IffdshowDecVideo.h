@@ -101,6 +101,8 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
  STDMETHOD_(bool,shouldSkipH264loopFilter)(void) PURE;
  STDMETHOD_(int,get_downstreamID)(void) PURE;
  STDMETHOD_(const char*,getAviSynthInfo)(void) PURE;
+ STDMETHOD (lockCSReceive)(void) PURE;
+ STDMETHOD (unlockCSReceive)(void) PURE;
 };
 
 struct IffdshowDecVideoA :IffdshowDecVideoT<char> {};

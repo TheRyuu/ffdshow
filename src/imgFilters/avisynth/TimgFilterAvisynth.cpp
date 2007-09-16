@@ -1080,7 +1080,7 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
       }
 
      if ((frameScaleNum == frameScaleDen) ||
-         pict.rtStart >= lastOutStopTime && pict.rtStop > pict.rtStart)
+         pict.rtStart >= lastOutStopTime && pict.rtStop >= pict.rtStart)
       {
        // Only deliver frames with strictly increasing timestamps
 
@@ -1110,6 +1110,8 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
          --it;
         }
       }
+     else if (debugPrint)
+      DPRINTF(_l("TimgFilterAvisynth: Not delivering frame %i; %10.6f - %10.6f = %10.6f"),curOutFrameNo,pict.rtStart/10000.0,pict.rtStop/10000.0,(pict.rtStop-pict.rtStart)/10000.0);
 
      curOutFrameNo++;
 

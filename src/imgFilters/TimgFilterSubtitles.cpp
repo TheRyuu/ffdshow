@@ -144,6 +144,9 @@ bool TimgFilterSubtitles::initSubtitles(int id,int type,const unsigned char *ext
    e=embedded.insert(std::make_pair(id,TsubtitlesTextpin::create(type,extradata,extradatalen,deci))).first;
   }
  csEmbedded.Unlock();
+
+ sequenceEnded=true;
+
  if(!e->second)
   return false;
  return *e->second;
@@ -173,12 +176,24 @@ bool TimgFilterSubtitles::ctlSubtitles(int id,int type,unsigned int ctl_id,const
  csEmbedded.Lock();
  bool res=e->second->ctlSubtitles(ctl_id,ctl_data,ctl_datalen);
  csEmbedded.Unlock();
- if (res && prevCfg)
+
+ if (res && prevCfg  && deci->getState2() == State_Running && sequenceEnded)
   {
-   again=true;
+   // Send last pict with changed subtitles upstream in the filter chain only if the graph is running -
+   // doing it while it's paused will hang everything
+
+   deciV->lockCSReceive();
+
    TffPict pict=prevPict;
+   pict.fieldtype|=FIELD_TYPE::SEQ_START|FIELD_TYPE::SEQ_END;
+
+   again=true;
+
    process(prevIt,pict,prevCfg);
+
    again=false;
+
+   deciV->unlockCSReceive();
   }
  return res;
 }
@@ -203,6 +218,12 @@ const char_t* TimgFilterSubtitles::findAutoSubFlnm(const TsubtitlesSettings *cfg
 
 HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
+ // Don't produce extra frames if there is going to be a new frame shortly anyway
+ if (pict.fieldtype & FIELD_TYPE::SEQ_END)
+  sequenceEnded=true;
+ else if (pict.fieldtype & FIELD_TYPE::SEQ_START)
+  sequenceEnded=false;
+
  const TsubtitlesSettings *cfg=(const TsubtitlesSettings*)cfg0;
 
  if (cfg->isExpand && cfg->expandCode && !isdvdproc)
@@ -234,6 +255,33 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
     subs.init(cfg,subflnm,AVIfps,!!deci->getParam2(IDFF_subWatch),false);
    subFlnmChanged=0;
   }
+
+ if (isdvdproc && sequenceEnded)
+  {
+   if (!again || !prevCfg)
+    {
+     prevIt=it;
+     prevCfg=cfg;
+     prevPict=pict;
+
+     pict.setRO(true);
+     prevPict.copyFrom(pict,prevbuf);
+    }
+   else
+    {
+     REFERENCE_TIME difference=(prevPict.rtStop-prevPict.rtStart)/10;
+
+     if (difference < 10)
+      difference=10;
+
+     prevPict.rtStart+=difference;
+     prevPict.rtStop+=difference;
+     pict=prevPict;
+
+     pict.setRO(true);
+    }
+  }
+
  if (subs || !embedded.empty())
   {
    REFERENCE_TIME frameStart=cfg->speed2*((pict.rtStart-parent->subtitleResetTime)-cfg->delay*(REF_SECOND_MULT/1000))/cfg->speed;
@@ -254,38 +302,24 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
          forceChange=true;
         }
        sub=e->second->getSubtitle(cfg,frameStart,&forceChange);
+
+       if (!sub)
+        sub=e->second->getSubtitle(cfg,frameStart+1,&forceChange);
       }
     }
    if (!useembedded)
     sub=subs.getSubtitle(cfg,frameStart,&forceChange);
+
    if (sub)
     {
-     if (!again)
-      init(pict,cfg->full,cfg->half);
+     init(pict,cfg->full,cfg->half);
+
      if (memcmp(oldFontCfg->name,cfg->font.name,sizeof(TfontSettingsSub)-sizeof(Toptions))!=0 || fontSizeChanged || oldstereo!=cfg->stereoscopic || oldsplitborder!=cfg->splitBorder)
       {
        memcpy(oldFontCfg,&cfg->font,sizeof(cfg->font));oldstereo=cfg->stereoscopic;oldsplitborder=cfg->splitBorder;
        font.init(oldFontCfg);
       }
      fontSizeChanged=false;
-
-     /*
-     if (isdvdproc)
-      {
-       if (!again || !prevCfg)
-        {
-         prevIt=it;
-         prevCfg=cfg;
-         prevPict=pict;
-         pict.setRO(true);
-         prevPict.copyFrom(pict,prevbuf);
-        }
-       else
-        {
-         pict=prevPict;
-         pict.setRO(true);
-        }
-      }*/
 
      unsigned char *dst[4];
      char_t outputfourcc[20];

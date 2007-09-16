@@ -55,6 +55,8 @@ TimgFilters::~TimgFilters()
 
 HRESULT TimgFilters::process(TffPict &pict,const TpresetVideo *cfg)
 {
+ deciV->lockCSReceive();
+
  csp_vflip(pict.csp,&pict.cspInfo,pict.data,pict.stride,pict.rectFull.dy);
  if (firstprocess)
   {
@@ -77,7 +79,12 @@ HRESULT TimgFilters::process(TffPict &pict,const TpresetVideo *cfg)
  if (cfg->isDyInterlaced && pict.rectFull.dy>(unsigned int)cfg->dyInterlaced)
   pict.csp|=FF_CSP_FLAGS_INTERLACED;
 
- return deliverSample(queue.begin(),pict);
+ HRESULT ret=deliverSample(queue.begin(),pict);
+
+ deciV->unlockCSReceive();
+
+ return ret;
+ 
 }
 
 HRESULT TimgFilters::deliverSample(TfilterQueue::iterator it,TffPict &pict)
