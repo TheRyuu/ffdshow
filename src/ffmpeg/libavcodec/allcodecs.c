@@ -1,5 +1,5 @@
 /*
- * Utils for libavcodec
+ * Provides registration of all codecs for libavcodec.
  * Copyright (c) 2002 Fabrice Bellard.
  *
  * This file is part of FFmpeg.
@@ -21,170 +21,149 @@
 
 /**
  * @file allcodecs.c
- * Utils for libavcodec.
+ * Provides registration of all codecs for libavcodec.
  */
 
-#include "allcodecs.h"
+#include "avcodec.h"
 
-/* If you do not call this function, then you can select exactly which
-   formats you want to support */
+#define REGISTER_ENCODER(x) { \
+          extern AVCodec x##_encoder; \
+          register_avcodec(&x##_encoder); }
+#define REGISTER_DECODER(x) { \
+          extern AVCodec x##_decoder; \
+          register_avcodec(&x##_decoder); }
+#define REGISTER_ENCDEC(x)  REGISTER_ENCODER(x); REGISTER_DECODER(x)
 
 /**
- * simple call to register all the codecs.
+ * Register all the codecs which were enabled at configuration time. 
+ * If you do not call this function you can select exactly which formats
+ * you want to support, by using the individual registration functions.
+ *
+ * @see register_avcodec
  */
 void avcodec_register_all(void)
 {
     static int inited = 0;
 
     if (inited != 0)
-	return;
+        return;
     inited = 1;
+    
+    /* video codecs */
+    REGISTER_DECODER	(aasc);
+    REGISTER_DECODER	(asv1);
+    REGISTER_DECODER	(asv2);
+    REGISTER_DECODER	(avs);
+    REGISTER_DECODER	(cavs);
+    REGISTER_DECODER	(cinepak);
+    REGISTER_DECODER	(cscd);
+    REGISTER_DECODER	(corepng);
+    REGISTER_DECODER	(cyuv);
+    REGISTER_ENCDEC		(dvvideo);
+    REGISTER_DECODER	(eightbps);
+    REGISTER_ENCDEC  	(ffv1);
+    REGISTER_ENCDEC  	(ffvhuff);
+    REGISTER_ENCDEC		(flv);
+    REGISTER_DECODER	(fraps);
+    REGISTER_ENCDEC		(h261);
+    REGISTER_ENCDEC		(h263);
+    REGISTER_DECODER	(h263i);
+    REGISTER_ENCODER	(h263p);
+    REGISTER_DECODER	(h264);
+    REGISTER_ENCDEC		(huffyuv);
+    REGISTER_DECODER	(indeo2);
+    REGISTER_DECODER	(indeo3);
+    REGISTER_DECODER	(jpegls); // not yet used by ffdshow?
+    REGISTER_ENCODER	(ljpeg);
+    REGISTER_DECODER	(loco);
+    REGISTER_ENCDEC		(mjpeg);
+    REGISTER_DECODER	(mjpegb);
+    REGISTER_ENCDEC		(mpeg1video);
+    REGISTER_ENCDEC		(mpeg2video);
+    REGISTER_ENCDEC		(mpeg4);
+    REGISTER_DECODER	(mpegvideo);
+    REGISTER_ENCDEC		(msmpeg4v1);
+    REGISTER_ENCDEC		(msmpeg4v2);
+    REGISTER_ENCDEC		(msmpeg4v3);
+    REGISTER_DECODER	(msrle);
+    REGISTER_DECODER	(msvideo1);
+    REGISTER_DECODER	(mszh);
+    #ifdef CONFIG_ZLIB
+    REGISTER_ENCDEC		(png);
+    #endif
+    REGISTER_DECODER	(qpeg);
+    REGISTER_DECODER	(qtrle);
+    REGISTER_DECODER	(rpza);
+    REGISTER_DECODER	(rv10);
+    REGISTER_DECODER	(rv20);
+		#if __STDC_VERSION__ >= 199901L
+    REGISTER_ENCDEC		(snow);
+    #endif
+    REGISTER_DECODER	(sp5x);
+    REGISTER_DECODER	(svq1);
+    REGISTER_DECODER	(svq3);
+    REGISTER_DECODER	(theora);
+    REGISTER_DECODER	(truemotion1);
+    REGISTER_DECODER	(truemotion2);
+    REGISTER_DECODER	(tscc);
+    REGISTER_DECODER	(ulti);
+    REGISTER_DECODER	(vc1);
+    REGISTER_DECODER	(vcr1);
+    REGISTER_DECODER	(vp3);
+    REGISTER_DECODER	(vp5);
+    REGISTER_DECODER	(vp6);
+    REGISTER_DECODER	(vp6f);
+    REGISTER_ENCDEC		(wmv1);
+    REGISTER_ENCDEC		(wmv2);
+    REGISTER_DECODER	(wmv3);
+    REGISTER_DECODER	(wnv1);
+    REGISTER_DECODER	(xl);
+    REGISTER_DECODER	(zlib);
+    REGISTER_DECODER	(zmbv);
 
-    /* encoders */
-#ifdef CONFIG_ENCODERS
-    register_avcodec(&ac3_encoder);
-    register_avcodec(&ffv1_encoder);
-    register_avcodec(&flv_encoder);
-    register_avcodec(&h261_encoder);
-    register_avcodec(&h263_encoder);
-    register_avcodec(&h263p_encoder);
-    register_avcodec(&huffyuv_encoder);
-    register_avcodec(&ljpeg_encoder);
-    register_avcodec(&mjpeg_encoder);
-    register_avcodec(&mpeg1video_encoder);
-    register_avcodec(&mpeg2video_encoder);
-    register_avcodec(&mpeg4_encoder);
-    register_avcodec(&msmpeg4v1_encoder);
-    register_avcodec(&msmpeg4v2_encoder);
-    register_avcodec(&msmpeg4v3_encoder);
-    register_avcodec(&png_encoder);
-    register_avcodec(&wmv1_encoder);
-    register_avcodec(&wmv2_encoder);
-#if __STDC_VERSION__ >= 199901L
-    register_avcodec(&snow_encoder);
-#endif
-    register_avcodec(&dvvideo_encoder);
-#endif
-    /* decoders */
-    register_avcodec(&cscd_decoder);
-    register_avcodec(&dvvideo_decoder);
-    register_avcodec(&flv_decoder);
-    register_avcodec(&h261_decoder);
-    register_avcodec(&h263_decoder);
-    register_avcodec(&h263i_decoder);
-    register_avcodec(&indeo2_decoder);
-    register_avcodec(&indeo3_decoder);
-    register_avcodec(&loco_decoder);
-    register_avcodec(&mjpeg_decoder);
-    register_avcodec(&mjpegb_decoder);
-    register_avcodec(&mpeg1video_decoder);
-    register_avcodec(&mpeg2video_decoder);
-    register_avcodec(&mpeg4_decoder);
-    register_avcodec(&mpegvideo_decoder);
-    register_avcodec(&msmpeg4v1_decoder);
-    register_avcodec(&msmpeg4v2_decoder);
-    register_avcodec(&msmpeg4v3_decoder);
-    register_avcodec(&qpeg_decoder);
-    register_avcodec(&rv10_decoder);
-    register_avcodec(&rv20_decoder);
-    register_avcodec(&sp5x_decoder);
-    register_avcodec(&svq1_decoder);
-    register_avcodec(&svq3_decoder);
-    register_avcodec(&tscc_decoder);
-    register_avcodec(&ulti_decoder);
-    register_avcodec(&vc1_decoder);
-    register_avcodec(&wmav1_decoder);
-    register_avcodec(&wmav2_decoder);
-    register_avcodec(&wmv1_decoder);
-    register_avcodec(&wmv2_decoder);
-    register_avcodec(&wmv3_decoder);
-    register_avcodec(&wnv1_decoder);
-#ifdef CONFIG_ZLIB
-    register_avcodec(&png_decoder);
-#endif
-    register_avcodec(&ffv1_decoder);
-    register_avcodec(&huffyuv_decoder);
-    register_avcodec(&mace3_decoder);
-    register_avcodec(&mace6_decoder);
-#if __STDC_VERSION__ >= 199901L
-    register_avcodec(&snow_decoder);
-#endif
-    register_avcodec(&asv1_decoder);
-    register_avcodec(&asv2_decoder);
-    register_avcodec(&cinepak_decoder);
-    register_avcodec(&cyuv_decoder);
-    register_avcodec(&eightbps_decoder);
-    register_avcodec(&h264_decoder);
-    register_avcodec(&msrle_decoder);
-    register_avcodec(&msvideo1_decoder);
-    register_avcodec(&mszh_decoder);
-    register_avcodec(&theora_decoder);
-    register_avcodec(&truemotion1_decoder);
-    register_avcodec(&truemotion2_decoder);
-    register_avcodec(&vcr1_decoder);
-    register_avcodec(&vp3_decoder);
-    register_avcodec(&vp5_decoder);
-    register_avcodec(&vp6_decoder);
-    register_avcodec(&vp6f_decoder);
-    register_avcodec(&zlib_decoder);
-    register_avcodec(&zmbv_decoder);
-#ifdef CONFIG_AC3
-    register_avcodec(&ac3_decoder);
-#endif
-#ifdef __GNUC__
-    register_avcodec(&imc_decoder);
-    register_avcodec(&ra_144_decoder);
-    register_avcodec(&ra_288_decoder);
-#endif
-    register_avcodec(&atrac3_decoder);
-    register_avcodec(&aasc_decoder);
-    register_avcodec(&amr_nb_decoder);
-    register_avcodec(&avs_decoder);
-    register_avcodec(&cavs_decoder);
-    register_avcodec(&cook_decoder);
-    register_avcodec(&corepng_decoder);
-    register_avcodec(&flac_decoder);
-    register_avcodec(&fraps_decoder);
-    register_avcodec(&msgsm_decoder);
-    register_avcodec(&qdm2_decoder);
-    register_avcodec(&rpza_decoder);
-    register_avcodec(&truespeech_decoder);
-    register_avcodec(&tta_decoder);
-    register_avcodec(&vorbis_decoder);
-    register_avcodec(&xl_decoder);
-    register_avcodec(&qtrle_decoder);  
+		/* audio codecs */
+    REGISTER_ENCODER	(ac3);   
+    REGISTER_DECODER	(atrac3);
+    REGISTER_DECODER	(amr_nb);
+    REGISTER_DECODER	(cook);
+    REGISTER_DECODER	(flac);
+    #ifdef __GNUC__
+    REGISTER_DECODER	(imc);
+    #endif
+    REGISTER_DECODER	(mace3);
+    REGISTER_DECODER	(mace6);
+    REGISTER_DECODER	(msgsm);
+    REGISTER_DECODER	(qdm2);
+    #ifdef __GNUC__
+    REGISTER_DECODER	(ra_144);
+    REGISTER_DECODER	(ra_288);
+    #endif
+    REGISTER_DECODER	(truespeech);
+    REGISTER_DECODER	(tta);
+    REGISTER_DECODER	(vorbis);
+    REGISTER_DECODER	(wmav1);
+    REGISTER_DECODER	(wmav2);
 
-#define PCM_CODEC(id, name) \
-    register_avcodec(& name ## _decoder);
+		/* pcm codecs */
+    REGISTER_DECODER  (pcm_alaw);
+    REGISTER_DECODER  (pcm_mulaw);
 
-	/* pcm codecs */
-    PCM_CODEC(CODEC_ID_PCM_ALAW, pcm_alaw);
-    PCM_CODEC(CODEC_ID_PCM_MULAW, pcm_mulaw);
-
-    /* adpcm codecs */
-    PCM_CODEC(CODEC_ID_ADPCM_4XM, adpcm_4xm);
-    PCM_CODEC(CODEC_ID_ADPCM_CT, adpcm_ct);
-    PCM_CODEC(CODEC_ID_ADPCM_EA, adpcm_ea);
-    PCM_CODEC(CODEC_ID_ADPCM_G726, adpcm_g726);
-    PCM_CODEC(CODEC_ID_ADPCM_IMA_DK3, adpcm_ima_dk3);
-    PCM_CODEC(CODEC_ID_ADPCM_IMA_DK4, adpcm_ima_dk4);
-    PCM_CODEC(CODEC_ID_ADPCM_IMA_QT, adpcm_ima_qt);
-    PCM_CODEC(CODEC_ID_ADPCM_IMA_SMJPEG, adpcm_ima_smjpeg);
-    PCM_CODEC(CODEC_ID_ADPCM_IMA_WAV, adpcm_ima_wav);
-    PCM_CODEC(CODEC_ID_ADPCM_IMA_WS, adpcm_ima_ws);
-    PCM_CODEC(CODEC_ID_ADPCM_MS, adpcm_ms);
-    PCM_CODEC(CODEC_ID_ADPCM_SBPRO_2, adpcm_sbpro_2);
-    PCM_CODEC(CODEC_ID_ADPCM_SBPRO_3, adpcm_sbpro_3);
-    PCM_CODEC(CODEC_ID_ADPCM_SBPRO_4, adpcm_sbpro_4);
-    PCM_CODEC(CODEC_ID_ADPCM_SWF, adpcm_swf);
-    PCM_CODEC(CODEC_ID_ADPCM_XA, adpcm_xa);
-    PCM_CODEC(CODEC_ID_ADPCM_YAMAHA, adpcm_yamaha);
-
-#undef PCM_CODEC
-
+		/* adpcm codecs */
+    REGISTER_DECODER  (adpcm_4xm);
+    REGISTER_DECODER  (adpcm_ct);
+    REGISTER_DECODER  (adpcm_ea);
+    REGISTER_DECODER  (adpcm_g726);
+    REGISTER_DECODER  (adpcm_ima_dk3);
+    REGISTER_DECODER  (adpcm_ima_dk4);
+    REGISTER_DECODER  (adpcm_ima_qt);
+    REGISTER_DECODER  (adpcm_ima_smjpeg);
+    REGISTER_DECODER  (adpcm_ima_wav);
+    REGISTER_DECODER  (adpcm_ima_ws);
+    REGISTER_DECODER  (adpcm_ms);
+    REGISTER_DECODER  (adpcm_sbpro_2);
+    REGISTER_DECODER  (adpcm_sbpro_3);
+    REGISTER_DECODER  (adpcm_sbpro_4);
+    REGISTER_DECODER  (adpcm_swf);
+    REGISTER_DECODER  (adpcm_xa);
+    REGISTER_DECODER  (adpcm_yamaha);
 }
-
-
-
-
-

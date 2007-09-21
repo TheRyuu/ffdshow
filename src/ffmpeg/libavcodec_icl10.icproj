@@ -339,8 +339,6 @@
 		<File 
 			RelativePath=".\libavcodec\ac3tab.h"/>
 		<File 
-			RelativePath=".\libavcodec\allcodecs.h"/>
-		<File 
 			RelativePath=".\libavcodec\atrac3data.h"/>
 		<File 
 			RelativePath=".\libavcodec\avcodec.h"/>

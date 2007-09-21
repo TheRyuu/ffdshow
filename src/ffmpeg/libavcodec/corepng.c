@@ -16,13 +16,14 @@
 
 
 #include "avcodec.h"
-#include "allcodecs.h"
 #include "common.h"
 #include "dsputil.h"
 
 #define PNGFrameType_RGB24 0x01
 #define PNGFrameType_YUY2  0x02
 #define PNGFrameType_YV12  0x03
+
+extern AVCodec png_decoder;
 
 typedef struct CorePNGCodecPrivate {
     int16_t wSize;

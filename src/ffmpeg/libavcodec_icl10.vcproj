@@ -1165,10 +1165,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\allcodecs.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\atrac3data.h"
 				>
 			</File>
