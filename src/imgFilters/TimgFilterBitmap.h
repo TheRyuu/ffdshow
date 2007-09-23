@@ -20,7 +20,7 @@ private:
    TffPict *pict;
    const TbitmapSettings *cfg;
    Tblendplane blend;
-   virtual void print(unsigned int dx[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const;
+   virtual void print(unsigned int dx[3],int dy1[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const;
   } w;
  TrenderedSubtitleLine l;
  TrenderedSubtitleLines ls;

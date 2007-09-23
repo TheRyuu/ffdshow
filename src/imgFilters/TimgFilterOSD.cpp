@@ -482,6 +482,7 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
     getCurNext(FF_CSP_420P,pict,true,COPYMODE_FULL,dst);
 
    unsigned int x=dx1[0]*cfg->posX/100,y=dy1[0]*cfg->posY/100;
+   if (y==0) y=1;
 
    for (TprovOSDs::iterator po=provOSDs.begin();po!=provOSDs.end();po++)
     if ((*po)->is)

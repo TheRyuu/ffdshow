@@ -36,7 +36,7 @@ private:
 
  struct TsubPrintPrefs : TrenderedSubtitleLines::TprintPrefs
   {
-   TsubPrintPrefs(unsigned char *Idst[4],stride_t Istride[4],unsigned int Idx[4],unsigned int Idy[4],IffdshowBase *Ideci,const TsubtitlesSettings *cfg,const TffPict &pict,const Tconfig *Iconfig,bool Idvd);
+   TsubPrintPrefs(unsigned char *Idst[4],stride_t Istride[4],unsigned int Idx[4],unsigned int Idy[4],IffdshowBase *Ideci,const TsubtitlesSettings *cfg,const TffPict &pict,int Iclipdy,const Tconfig *Iconfig,bool Idvd);
   };
 
  TsubtitleTextBase<char> *cc;

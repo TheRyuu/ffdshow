@@ -84,6 +84,8 @@ private:
    template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void pos(const tchar *start,const tchar *end);
    template<bool TSubtitleProps::*offset> void boolProp(const tchar *start,const tchar *end);
    template<COLORREF TSubtitleProps::*offset> void color(const tchar *start,const tchar *end);
+   template<int TSubtitleProps::*offset> void alpha(const tchar *start,const tchar *end);
+   void alphaAll(const tchar *start,const tchar *end);
    void reset(const tchar *start,const tchar *end);
    bool processToken(const tchar* &l2,const tchar *tok,TssaAction action);
    void processTokens(const tchar *l,const tchar* &l1,const tchar* &l2,const tchar *end);
@@ -147,6 +149,7 @@ private:
  typedef typename tchar_traits<tchar>::strings strings;
  void applyWords(const TsubtitleFormat::Twords &words);
 public:
+ TSubtitleProps props;
  TsubtitleLine(void) {}
  TsubtitleLine(const ffstring &Itext) {push_back(Itext);}
  TsubtitleLine(const ffstring &Itext,const TSubtitleProps &defProps) {push_back(TsubtitleWord(Itext,defProps));}

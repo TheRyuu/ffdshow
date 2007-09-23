@@ -45,14 +45,17 @@ void TSubtitleProps::reset(void)
  colorA=SecondaryColourA=TertiaryColourA=OutlineColourA=256;
  ShadowColourA=128;
  blur=0;
+ version=-1;
 }
 
-void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy) const
+void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy,const Rational& sar) const
 {
  memset(&lf,0,sizeof(lf));
  lf.lfHeight=(LONG)limit(size?size:fontSettings.getSize(dx,dy),3U,255U)*4;
  if (refResY && dy)
   lf.lfHeight=(clipdy ? clipdy : dy)*lf.lfHeight/refResY;
+ int yscale=get_yscale(fontSettings.yscale,sar,fontSettings.aspectAuto,fontSettings.overrideScale);
+ lf.lfHeight=lf.lfHeight*yscale/100;
  lf.lfWidth=0;
  if (bold==-1)
   lf.lfWeight=fontSettings.weight;
@@ -64,9 +67,9 @@ void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,uns
  lf.lfUnderline=underline;
  lf.lfStrikeOut=strikeout;
  lf.lfCharSet=BYTE(encoding!=-1?encoding:fontSettings.charset);
- lf.lfOutPrecision=OUT_DEFAULT_PRECIS;
+ lf.lfOutPrecision=OUT_TT_PRECIS;
  lf.lfClipPrecision=CLIP_DEFAULT_PRECIS;
- lf.lfQuality=DEFAULT_QUALITY;
+ lf.lfQuality=ANTIALIASED_QUALITY;
  lf.lfPitchAndFamily=DEFAULT_PITCH|FF_DONTCARE;
  strncpy(lf.lfFaceName,fontname[0]?fontname:fontSettings.name,LF_FACESIZE);
 }
@@ -79,7 +82,7 @@ int TSubtitleProps::get_spacing(unsigned int dy,unsigned int clipdy) const
   return int(spacing*4.0); 
 }
 
-unsigned int TSubtitleProps::get_marginR(unsigned int screenWidth) const
+int TSubtitleProps::get_marginR(unsigned int screenWidth) const
 {
  // called only for SSA/ASS/ASS2
  int result;
@@ -112,7 +115,7 @@ unsigned int TSubtitleProps::get_marginR(unsigned int screenWidth) const
  else
   return result;
 }
-unsigned int TSubtitleProps::get_marginL(unsigned int screenWidth) const
+int TSubtitleProps::get_marginL(unsigned int screenWidth) const
 {
  // called only for SSA/ASS/ASS2
  int result;
@@ -148,7 +151,7 @@ unsigned int TSubtitleProps::get_marginL(unsigned int screenWidth) const
  else
   return result;
 }
-unsigned int TSubtitleProps::get_marginTop(unsigned int screenHeight) const
+int TSubtitleProps::get_marginTop(unsigned int screenHeight) const
 {
  int result;
  if (isPos)
@@ -185,7 +188,7 @@ unsigned int TSubtitleProps::get_marginTop(unsigned int screenHeight) const
  else
   return result;
 }
-unsigned int TSubtitleProps::get_marginBottom(unsigned int screenHeight) const
+int TSubtitleProps::get_marginBottom(unsigned int screenHeight) const
 {
  int result;
  if (isPos)
@@ -250,7 +253,7 @@ int TSubtitleProps::get_xscale(int Ixscale,const Rational& sar,int aspectAuto,in
   result=Ixscale;
  else
   result=scaleX;
- if ((aspectAuto && sar.num>sar.den) && (overrideScale || scaleX==-1 || scaleX==scaleY))
+ if ((aspectAuto || version != -1) && sar.num>sar.den)
   result=result*sar.den/sar.num;
  return result;
 }
@@ -262,7 +265,7 @@ int TSubtitleProps::get_yscale(int Iyscale,const Rational& sar,int aspectAuto,in
   result=Iyscale;
  else
   result=scaleY;
- if ((aspectAuto && sar.num<sar.den) && (overrideScale || scaleY==-1 || scaleX==scaleY))
+ if ((aspectAuto || version != -1) && sar.num<sar.den)
   result=result*sar.num/sar.den;
  return result;
 }

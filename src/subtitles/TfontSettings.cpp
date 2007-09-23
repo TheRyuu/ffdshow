@@ -147,7 +147,7 @@ TfontSettingsOSD::TfontSettingsOSD(TintStrColl *Icoll):TfontSettings(Icoll)
    IDFF_OSDfontWeight        ,&TfontSettings::weight         ,0,900,_l(""),0,
      _l("OSDfontWeight"), FW_NORMAL,
    IDFF_OSDfontColor         ,&TfontSettings::color          ,1,1,_l(""),0,
-     _l("OSDfontColor"), RGB(102,204,0),
+     _l("OSDfontColor"), RGB(110,220,0),
    IDFF_OSDfontOutlineColor  ,&TfontSettings::outlineColor   ,1,1,_l(""),1,
      _l("OSDfontOutlineColor"), RGB(0,0,0),
    IDFF_OSDfontShadowColor   ,&TfontSettings::shadowColor    ,1,1,_l(""),1,

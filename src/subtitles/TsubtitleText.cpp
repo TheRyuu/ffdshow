@@ -815,6 +815,60 @@ template<class tchar> template<COLORREF TSubtitleProps::*offset> void TsubtitleF
    props.isColor=defprops.isColor;
   }
 }
+template<class tchar> template<int TSubtitleProps::*offset> void TsubtitleFormat::Tssa<tchar>::alpha(const tchar *start,const tchar *end)
+{
+ tchar *buf=(tchar*)_alloca((end-start+1)*sizeof(tchar));memset(buf,0,(end-start+1)*sizeof(tchar));
+ memcpy(buf,start,(end-start)*sizeof(tchar));
+ int radix;
+ if (strnicmp(buf,_L("&h"),2)==0)
+  {
+   radix=16;
+   buf+=2;
+  }
+ else
+  radix=10;
+ tchar *endbuf;
+ int a=strtol(buf,&endbuf,radix);
+ if (*endbuf=='&')
+  {
+   props.*offset=256-a;
+   props.isColor=true;
+  }
+ else
+  {
+   props.*offset=defprops.*offset;
+   props.isColor=defprops.isColor;
+  }
+}
+template<class tchar> void TsubtitleFormat::Tssa<tchar>::alphaAll(const tchar *start,const tchar *end)
+{
+ tchar *buf=(tchar*)_alloca((end-start+1)*sizeof(tchar));memset(buf,0,(end-start+1)*sizeof(tchar));
+ memcpy(buf,start,(end-start)*sizeof(tchar));
+ int radix;
+ if (strnicmp(buf,_L("&h"),2)==0)
+  {
+   radix=16;
+   buf+=2;
+  }
+ else
+  radix=10;
+ tchar *endbuf;
+ int a=strtol(buf,&endbuf,radix);
+ if (*endbuf=='&')
+  {
+   props.colorA=256-a;
+   props.OutlineColourA=256-a;
+   props.ShadowColourA=256-a;
+   props.isColor=true;
+  }
+ else
+  {
+   props.colorA=defprops.colorA;
+   props.OutlineColourA=defprops.OutlineColourA;
+   props.ShadowColourA=defprops.ShadowColourA;
+   props.isColor=defprops.isColor;
+  }
+}
 
 template<class tchar> template<bool TSubtitleProps::*offset> void TsubtitleFormat::Tssa<tchar>::boolProp(const tchar *start,const tchar *end)
 {
@@ -858,33 +912,37 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::processTokens(const tch
  words.add(l,l1,l2,props,end-l2+1);
  while (l3<end)
   {
-   if (!processToken(l3,_L("\\fn"),&Tssa<tchar>::fontName) &&
+   if (
+       !processToken(l3,_L("\\1a"),&Tssa<tchar>::template alpha<&TSubtitleProps::colorA>) &&
+       !processToken(l3,_L("\\2a"),NULL) &&
+       !processToken(l3,_L("\\3a"),&Tssa<tchar>::template alpha<&TSubtitleProps::OutlineColourA>) &&
+       !processToken(l3,_L("\\4a"),&Tssa<tchar>::template alpha<&TSubtitleProps::ShadowColourA>) &&
+       !processToken(l3,_L("\\1c"),&Tssa<tchar>::template color<&TSubtitleProps::color>) && 
+       !processToken(l3,_L("\\2c"),NULL) &&
+       !processToken(l3,_L("\\3c"),&Tssa<tchar>::template color<&TSubtitleProps::OutlineColour>) &&
+       !processToken(l3,_L("\\4c"),&Tssa<tchar>::template color<&TSubtitleProps::ShadowColour>) &&
+       !processToken(l3,_L("\\alpha"),&Tssa<tchar>::alphaAll) &&
+       !processToken(l3,_L("\\an"),&Tssa<tchar>::template intPropAn<&TSubtitleProps::alignment,1,9>) &&
+       !processToken(l3,_L("\\a"),&Tssa<tchar>::template intProp<&TSubtitleProps::alignment,1,11>) &&
+       !processToken(l3,_L("\\bord"),&Tssa<tchar>::template doubleProp<&TSubtitleProps::outlineWidth,0,100>) &&
+       !processToken(l3,_L("\\be"),&Tssa<tchar>::template boolProp<&TSubtitleProps::blur>) &&
+       !processToken(l3,_L("\\b"),&Tssa<tchar>::template intProp<&TSubtitleProps::bold,0,1>) &&
+       !processToken(l3,_L("\\clip"),NULL) &&
+       !processToken(l3,_L("\\c"),&Tssa<tchar>::template color<&TSubtitleProps::color>) &&
+       !processToken(l3,_L("\\fn"),&Tssa<tchar>::fontName) &&
        !processToken(l3,_L("\\fscx"),&Tssa<tchar>::template intProp<&TSubtitleProps::scaleX,1,1000>) &&
        !processToken(l3,_L("\\fscy"),&Tssa<tchar>::template intProp<&TSubtitleProps::scaleY,1,1000>) &&
        !processToken(l3,_L("\\fsp"),&Tssa<tchar>::template doubleProp<&TSubtitleProps::spacing,INT_MIN+1,INT_MAX>) &&
        !processToken(l3,_L("\\fs"),&Tssa<tchar>::template intProp<&TSubtitleProps::size,1,INT_MAX>) &&
        !processToken(l3,_L("\\fe"),&Tssa<tchar>::template intProp<&TSubtitleProps::encoding,0,255>) &&
-       !processToken(l3,_L("\\an"),&Tssa<tchar>::template intPropAn<&TSubtitleProps::alignment,1,9>) &&
-       !processToken(l3,_L("\\a"),&Tssa<tchar>::template intProp<&TSubtitleProps::alignment,1,11>) &&
        !processToken(l3,_L("\\i"),&Tssa<tchar>::template boolProp<&TSubtitleProps::italic>) &&
-       !processToken(l3,_L("\\be"),&Tssa<tchar>::template boolProp<&TSubtitleProps::blur>) &&
-       !processToken(l3,_L("\\b"),&Tssa<tchar>::template intProp<&TSubtitleProps::bold,0,1>) &&
-       !processToken(l3,_L("\\l"),&Tssa<tchar>::template intProp<&TSubtitleProps::wrapStyle,0,3>) &&
-       !processToken(l3,_L("\\u"),&Tssa<tchar>::template boolProp<&TSubtitleProps::underline>) &&
-       !processToken(l3,_L("\\shad"),&Tssa<tchar>::template doubleProp<&TSubtitleProps::shadowDepth,0,4>) &&
-       !processToken(l3,_L("\\s"),&Tssa<tchar>::template boolProp<&TSubtitleProps::strikeout>) &&
-       !processToken(l3,_L("\\r"),&Tssa<tchar>::reset) &&
-       !processToken(l3,_L("\\clip"),NULL) &&
-       !processToken(l3,_L("\\c"),&Tssa<tchar>::template color<&TSubtitleProps::color>) &&
        !processToken(l3,_L("\\pos"),&Tssa<tchar>::template pos<&TSubtitleProps::posx,&TSubtitleProps::posy,0,4096>) &&
-       !processToken(l3,_L("\\1c"),&Tssa<tchar>::template color<&TSubtitleProps::color>) && 
-       !processToken(l3,_L("\\2c"),NULL) &&
-       !processToken(l3,_L("\\3c"),&Tssa<tchar>::template color<&TSubtitleProps::OutlineColour>) &&
-       !processToken(l3,_L("\\4c"),&Tssa<tchar>::template color<&TSubtitleProps::ShadowColour>) &&
-       !processToken(l3,_L("\\1a"),NULL) &&
-       !processToken(l3,_L("\\2a"),NULL) &&
-       !processToken(l3,_L("\\3a"),NULL) &&
-       !processToken(l3,_L("\\4a"),NULL))
+       !processToken(l3,_L("\\q"),&Tssa<tchar>::template intProp<&TSubtitleProps::wrapStyle,0,3>) &&
+       !processToken(l3,_L("\\r"),&Tssa<tchar>::reset) &&
+       !processToken(l3,_L("\\shad"),&Tssa<tchar>::template doubleProp<&TSubtitleProps::shadowDepth,0,30>) &&
+       !processToken(l3,_L("\\s"),&Tssa<tchar>::template boolProp<&TSubtitleProps::strikeout>) &&
+       !processToken(l3,_L("\\u"),&Tssa<tchar>::template boolProp<&TSubtitleProps::underline>)
+      )
     l3++;
   }
 }
@@ -894,10 +952,9 @@ template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processSSA(const 
  Twords words;
  if (line.empty()) return words;
  const tchar *l=line[0];
- const TSubtitleProps &defprops=line[0].props;
  props=parent.defProps;
  const tchar *l1=l,*l2=l;
- Tssa<tchar> ssa(props,defprops,words);
+ Tssa<tchar> ssa(props,parent.defProps,words);
  while (*l2)
   {
    if (l2[0]=='{' /*&& l2[1]=='\\'*/)
@@ -984,6 +1041,7 @@ template<class tchar> void TsubtitleLine<tchar>::applyWords(const TsubtitleForma
 {
  for (TsubtitleFormat::Twords::const_iterator w=words.begin();w!=words.end();w++)
   {
+   this->props=w->props;
    if (w->i1==w->i2)
     continue;
    if (w->i1==0 && w->i2==this->front().size())
@@ -1000,7 +1058,10 @@ template<class tchar> void TsubtitleLine<tchar>::applyWords(const TsubtitleForma
 }
 template<class tchar> void TsubtitleLine<tchar>::format(TsubtitleFormat &format,int sfmt,TsubtitleTextBase<tchar> &parent)
 {
- applyWords(sfmt==Tsubreader::SUB_SSA?format.processSSA(*this,parent):format.processHTML(*this));
+ if (sfmt==Tsubreader::SUB_SSA)
+  applyWords(format.processSSA(*this,parent));
+ else
+  applyWords(format.processHTML(*this));
 }
 template<class tchar> void TsubtitleLine<tchar>::fix(TtextFix<tchar> &fix)
 {
@@ -1031,7 +1092,8 @@ template<class tchar> void TsubtitleTextBase<tchar>::fix(TtextFix<tchar> &fix)
 
 template<class tchar> void TsubtitleTextBase<tchar>::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const
 {
- if (subformat==Tsubreader::SUB_SSA)
+ prefs.subformat=subformat;
+ if ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SSA)
   prefs.linespacing=103;
  f.print(this,forceChange,prefs);
 }

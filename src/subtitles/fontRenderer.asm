@@ -104,16 +104,6 @@ struc        temp_bos
   .s2:       resq 2           ; xmm13
 endstruc
 
-;
-; void* (__cdecl TrenderedSubtitleWord_print_mmx)(/* 0 rcx */ const unsigned char* bmp,
-;                                                 /* 1 rdx */ const unsigned char* outline,
-;                                                 /* 2 r8  */ const unsigned char* shadow,
-;                                                 /* 3 r9  */ const unsigned short* colortbl,
-;                                                 /* 4     */ const unsigned char* dst);
-;
-cglobal TrenderedSubtitleWord_printY_mmx
-TrenderedSubtitleWord_printY_mmx:
-
 %define _movdqu movq
 %define _movdqa movq
 %define _mm0 mm0
@@ -124,6 +114,18 @@ TrenderedSubtitleWord_printY_mmx:
 %define _mm5 mm5
 %define _mm6 mm6
 %define _mm7 mm7
+%define register_size 8
+
+;
+; void* (__cdecl TrenderedSubtitleWord_printY_mmx)(/* 0 rcx */ const unsigned char* bmp,
+;                                                  /* 1 rdx */ const unsigned char* outline,
+;                                                  /* 2 r8  */ const unsigned char* shadow,
+;                                                  /* 3 r9  */ const unsigned short* colortbl,
+;                                                  /* 4     */ const unsigned char* dst,
+;                                                  /* 5     */ const unsigned short* msk);
+;
+cglobal TrenderedSubtitleWord_printY_mmx
+TrenderedSubtitleWord_printY_mmx:
 
 %macro printY 0
   push      reg_di
@@ -147,7 +149,7 @@ TrenderedSubtitleWord_printY_mmx:
   pmullw    _mm1, _mm0
   psrlw     _mm1, 8
   pmullw    _mm2, _mm0
-  psrlw     _mm2, 8           ; _mm1:_mm2 = s = m_shadowYUV.A *shadow [0][srcPos]>>8;
+  psrlw     _mm2, 8            ; _mm1:_mm2 = s = m_shadowYUV.A * shadow[0][srcPos] >> 8;
 
   _movdqa   _mm4, [mask256]
   _movdqa   _mm5, _mm4
@@ -161,79 +163,74 @@ TrenderedSubtitleWord_printY_mmx:
   pmullw    _mm4, _mm6
   psrlw     _mm4, 8
   pmullw    _mm5, _mm7
-  psrlw     _mm5, 8           ; _mm4:_mm5 = ((256-s)*dstLn[0][dstPos]>>8)
+  psrlw     _mm5, 8            ; _mm4:_mm5 = ((256-s) * dstLn[0][dstPos] >> 8)
 
   _movdqa   _mm0, [reg_si + colortbl.shadow_Y]
   pmullw    _mm1, _mm0
   psrlw     _mm1, 8
   pmullw    _mm2, _mm0
-  psrlw     _mm2, 8           ; _mm1:_mm2 = (s*m_shadowYUV.Y>>8)
+  psrlw     _mm2, 8            ; _mm1:_mm2 = (s * m_shadowYUV.Y >> 8)
 
   paddusb   _mm1,_mm4
-  paddusb   _mm2,_mm5          ; _mm1:_mm2 = d =((256-s)*dstLn[0][dstPos]>>8)+(s*m_shadowYUV.Y>>8);
+  paddusb   _mm2,_mm5          ; _mm1:_mm2 = d =((256-s) * dstLn[0][dstPos] >> 8) + (s * m_shadowYUV.Y >> 8);
 
-%ifidn __OUTPUT_FORMAT__,win64
-  mov       reg_ax, reg_cx                  ; bmp
-%else
-  mov       reg_ax, [reg_sp+(3+0)*ptrsize]  ; bmp
-%endif
-  _movdqa   _mm0, [reg_si + colortbl.body_A]
+  mov       reg_ax, [reg_sp+(3+5)*ptrsize]  ; ax = msk
   _movdqa   _mm4, [reg_ax]
+  _movdqa   _mm5, _mm4
+  punpckhbw _mm4, _mm3
+  punpcklbw _mm5, _mm3
+  _movdqa   _mm6, [mask256]
+  _movdqa   _mm7, _mm6
+  psubw     _mm6, _mm4
+  psubw     _mm7, _mm5         ; _mm6:_mm7 = (256-m)
+
+  pmullw    _mm6, _mm1
+  psrlw     _mm6, 8
+  pmullw    _mm7, _mm2
+  psrlw     _mm7, 8            ; _mm6:_mm7 = ((256-m) * d >> 8)
+
+  _movdqa   _mm0, [reg_si + colortbl.outline_A]
+  _movdqa   _mm4, [reg_dx]
   _movdqa   _mm5, _mm4
   punpckhbw _mm4, _mm3
   punpcklbw _mm5, _mm3
   pmullw    _mm4, _mm0
   psrlw     _mm4, 8
   pmullw    _mm5, _mm0
-  psrlw     _mm5, 8           ; _mm4:_mm5 = b= m_bodyYUV.A * bmp[0][srcPos]>>8;
+  psrlw     _mm5, 8            ; _mm4:_mm5 = o= m_outlineYUV.A * outline[0][srcPos] >> 8;
 
-  _movdqa   _mm6, [mask256]
-  _movdqa   _mm7, _mm6
-  psubw     _mm6, _mm4
-  psubw     _mm7, _mm5         ; _mm6:_mm7 = (256-b)
-
-  pmullw    _mm6, _mm1
-  psrlw     _mm6, 8
-  pmullw    _mm7, _mm2
-  psrlw     _mm7, 8           ; _mm6:_mm7 = ((256-b)*d>>8)
-
-  _movdqa   _mm0, [reg_si + colortbl.body_Y]
+  _movdqa   _mm0, [reg_si + colortbl.outline_Y]
   pmullw    _mm4, _mm0
   psrlw     _mm4, 8
   pmullw    _mm5, _mm0
-  psrlw     _mm5, 8           ; _mm4:_mm5 = (b*m_bodyYUV.Y>>8)
+  psrlw     _mm5, 8            ; _mm4:_mm5 = (o * m_outlineYUV.Y >> 8)
 
   paddusb   _mm4, _mm6
-  paddusb   _mm5, _mm7         ; _mm4:_mm5 = d = ((256-b)*d>>8)+(b*m_bodyYUV.Y>>8);
+  paddusb   _mm5, _mm7         ; _mm4:_mm5 = d = ((256-m) * d >> 8) + (o * m_outlineYUV.Y >> 8);
 
-  _movdqa   _mm0, [reg_si + colortbl.outline_A]
-  _movdqa   _mm1, [reg_dx]
+  _movdqa   _mm0, [reg_si + colortbl.body_A]
+%ifidn __OUTPUT_FORMAT__,win64
+  mov       reg_ax, reg_cx                  ; bmp
+%else
+  mov       reg_ax, [reg_sp+(3+0)*ptrsize]  ; bmp
+%endif
+  _movdqa   _mm1, [reg_ax]
   _movdqa   _mm2, _mm1
   punpckhbw _mm1, _mm3
   punpcklbw _mm2, _mm3
   pmullw    _mm1, _mm0
   psrlw     _mm1, 8
   pmullw    _mm2, _mm0
-  psrlw     _mm2, 8           ; _mm1:_mm2 = o = m_outlineYUV.A * outline[0][srcPos]>>8;
+  psrlw     _mm2, 8            ; _mm1:_mm2 = b = m_bodyYUV.A * bmp[0][srcPos] >> 8;
 
-  _movdqa   _mm6, [mask256]
-  _movdqa   _mm7, _mm6
-  psubw     _mm6, _mm1
-  psubw     _mm7, _mm2         ; _mm6:_mm7 = (256-o)
-
-  pmullw    _mm6, _mm4
-  psrlw     _mm6, 8
-  pmullw    _mm7, _mm5
-  psrlw     _mm7, 8           ; _mm6:_mm7 = ((256-o)*d>>8)
-
-  _movdqa   _mm0, [reg_si + colortbl.outline_Y]
+  _movdqa   _mm0, [reg_si + colortbl.body_Y]
   pmullw    _mm1, _mm0
   psrlw     _mm1, 8
   pmullw    _mm2, _mm0
-  psrlw     _mm2, 8           ; _mm1:_mm2 = (o*m_outlineYUV.Y>>8)
+  psrlw     _mm2, 8            ; _mm1:_mm2 = (b * m_bodyYUV.Y >> 8)
 
-  paddusb   _mm1, _mm6
-  paddusb   _mm2, _mm7         ; _mm1:_mm2 = ((256-o)*d>>8)+(o*m_outlineYUV.Y>>8);
+  paddusb   _mm1, _mm4
+  paddusb   _mm2, _mm5         ; _mm1:_mm2 = d + (o * m_bodyYUV.Y >> 8);
 
   packuswb  _mm2, _mm1
   _movdqu   [reg_di],_mm2
@@ -325,12 +322,8 @@ TrenderedSubtitleWord_printUV_mmx:
   paddusb    _mm1,_mm4
   paddusb    _mm2,_mm5                      ; _mm1:_mm2 = d =((256-s)*dstLn[1][dstPos]>>8)+(s*m_shadowYUV.U>>8);
 
-%ifidn __OUTPUT_FORMAT__,win64
-%else
-  mov       ecx, [reg_bx+(4+0)*ptrsize]     ; bmp
-%endif
-  _movdqa   _mm0, [reg_si + colortbl.body_A]
-  _movdqa   _mm4, [reg_cx]
+  _movdqa   _mm0, [reg_si + colortbl.outline_A]
+  _movdqa   _mm4, [reg_dx]                  ; mask1
   _movdqa   _mm5, _mm4
   punpckhbw _mm4, _mm3
   punpcklbw _mm5, _mm3
@@ -339,37 +332,41 @@ TrenderedSubtitleWord_printUV_mmx:
 %ifdef HAVE_LOCAL_SSE2_x64
   movdqa    xmm8, xmm4
 %else
-  _movdqa   [reg_sp + temp_bos.b1], _mm4
+  _movdqa   [reg_sp + temp_bos.o1], _mm4
 %endif
   pmullw    _mm5, _mm0
-  psrlw     _mm5, 8                         ; _mm4:_mm5 = b= m_bodyYUV.A * bmp[1][srcPos]>>8;
+  psrlw     _mm5, 8                         ; _mm4:_mm5 = o = m_outlineYUV.A * mask1[srcPos]>>8;
 %ifdef HAVE_LOCAL_SSE2_x64
   movdqa    xmm9, xmm5
 %else
-  _movdqa   [reg_sp + temp_bos.b2], _mm5
+  _movdqa   [reg_sp + temp_bos.o2], _mm5
 %endif
 
   _movdqa   _mm6, [mask256]
   _movdqa   _mm7, _mm6
   psubw     _mm6, _mm4
-  psubw     _mm7, _mm5                      ; _mm6:_mm7 = (256-b)
+  psubw     _mm7, _mm5                      ; _mm6:_mm7 = (256-o)
 
   pmullw    _mm6, _mm1
   psrlw     _mm6, 8
   pmullw    _mm7, _mm2
-  psrlw     _mm7, 8                         ; _mm6:_mm7 = ((256-b)*d>>8)
+  psrlw     _mm7, 8                         ; _mm6:_mm7 = ((256-o)*d>>8)
 
-  _movdqa   _mm0, [reg_si + colortbl.body_U]
+  _movdqa   _mm0, [reg_si + colortbl.outline_U]
   pmullw    _mm4, _mm0
   psrlw     _mm4, 8
   pmullw    _mm5, _mm0
-  psrlw     _mm5, 8                         ; _mm4:_mm5 = (b*m_bodyYUV.U>>8)
+  psrlw     _mm5, 8                         ; _mm4:_mm5 = (o*m_outlineYUV.U>>8)
 
   paddusb    _mm4, _mm6
-  paddusb    _mm5, _mm7                     ; _mm4:_mm5 = d = ((256-b)*d>>8)+(b*m_bodyYUV.U>>8);
+  paddusb    _mm5, _mm7                     ; _mm4:_mm5 = d = ((256-o)*d>>8)+(o*m_outlineYUV.U>>8);
 
-  _movdqa   _mm0, [reg_si + colortbl.outline_A]
-  _movdqa   _mm1, [reg_dx]
+  _movdqa   _mm0, [reg_si + colortbl.body_A]
+%ifidn __OUTPUT_FORMAT__,win64
+%else
+  mov       ecx, [reg_bx+(4+0)*ptrsize]     ; bmp
+%endif
+  _movdqa   _mm1, [reg_cx]
   _movdqa   _mm2, _mm1
   punpckhbw _mm1, _mm3
   punpcklbw _mm2, _mm3
@@ -378,34 +375,34 @@ TrenderedSubtitleWord_printUV_mmx:
 %ifdef HAVE_LOCAL_SSE2_x64
   movdqa    xmm10, xmm1
 %else
-  _movdqa   [reg_sp + temp_bos.o1], _mm1
+  _movdqa   [reg_sp + temp_bos.b1], _mm1
 %endif
   pmullw    _mm2, _mm0
-  psrlw     _mm2, 8                         ; _mm1:_mm2 = o = m_outlineYUV.A * outline[1][srcPos]>>8;
+  psrlw     _mm2, 8                         ; _mm1:_mm2 = b = m_bodyYUV.A * body[1][srcPos]>>8;
 %ifdef HAVE_LOCAL_SSE2_x64
   movdqa    xmm11, xmm2
 %else
-  _movdqa   [reg_sp + temp_bos.o2], _mm2
+  _movdqa   [reg_sp + temp_bos.b2], _mm2
 %endif
 
   _movdqa   _mm6, [mask256]
   _movdqa   _mm7, _mm6
   psubw     _mm6, _mm1
-  psubw     _mm7, _mm2                      ; _mm6:_mm7 = (256-o)
+  psubw     _mm7, _mm2                      ; _mm6:_mm7 = (256-b)
 
   pmullw    _mm6, _mm4
   psrlw     _mm6, 8
   pmullw    _mm7, _mm5
-  psrlw     _mm7, 8                         ; _mm6:_mm7 = ((256-o)*d>>8)
+  psrlw     _mm7, 8                         ; _mm6:_mm7 = ((256-b)*d>>8)
 
-  _movdqa   _mm0, [reg_si + colortbl.outline_U]
+  _movdqa   _mm0, [reg_si + colortbl.body_U]
   pmullw    _mm1, _mm0
   psrlw     _mm1, 8
   pmullw    _mm2, _mm0
-  psrlw     _mm2, 8                         ; _mm1:_mm2 = (o*m_outlineYUV.U>>8)
+  psrlw     _mm2, 8                         ; _mm1:_mm2 = (b*m_bodyYUV.U>>8)
 
   paddusb   _mm1, _mm6
-  paddusb   _mm2, _mm7                      ; _mm1:_mm2 = ((256-o)*d>>8)+(o*m_outlineYUV.U>>8);
+  paddusb   _mm2, _mm7                      ; _mm1:_mm2 = ((256-b)*d>>8)+(b*m_bodyYUV.U>>8);
 
   packuswb  _mm2, _mm1
   _movdqu   [reg_di],_mm2
@@ -448,55 +445,55 @@ TrenderedSubtitleWord_printUV_mmx:
   movdqa    xmm4, xmm8
   movdqa    xmm5, xmm9
 %else
-  _movdqa   _mm4, [reg_sp + temp_bos.b1]
-  _movdqa   _mm5, [reg_sp + temp_bos.b2]    ; _mm4:_mm5 = b= m_bodyYUV.A * bmp[1][srcPos]>>8;
+  _movdqa   _mm4, [reg_sp + temp_bos.o1]
+  _movdqa   _mm5, [reg_sp + temp_bos.o2]    ; _mm4:_mm5 = o = m_outlineYUV.A * mask1[srcPos]>>8;
 %endif
 
   _movdqa   _mm6, [mask256]
   _movdqa   _mm7, _mm6
   psubw     _mm6, _mm4
-  psubw     _mm7, _mm5                      ; _mm6:_mm7 = (256-b)
+  psubw     _mm7, _mm5                      ; _mm6:_mm7 = (256-o)
 
   pmullw    _mm6, _mm1
   psrlw     _mm6, 8
   pmullw    _mm7, _mm2
-  psrlw     _mm7, 8                         ; _mm6:_mm7 = ((256-b)*d>>8)
+  psrlw     _mm7, 8                         ; _mm6:_mm7 = ((256-o)*d>>8)
 
-  _movdqa   _mm0, [reg_si + colortbl.body_V]
+  _movdqa   _mm0, [reg_si + colortbl.outline_V]
   pmullw    _mm4, _mm0
   psrlw     _mm4, 8
   pmullw    _mm5, _mm0
-  psrlw     _mm5, 8                         ; _mm4:_mm5 = (b*m_bodyYUV.V>>8)
+  psrlw     _mm5, 8                         ; _mm4:_mm5 = (o*m_outlineYUV.V>>8)
 
   paddusb   _mm4, _mm6
-  paddusb   _mm5, _mm7                      ; _mm4:_mm5 = d = ((256-b)*d>>8)+(b*m_bodyYUV.V>>8);
+  paddusb   _mm5, _mm7                      ; _mm4:_mm5 = d = ((256-o)*d>>8)+(o*m_outlineYUV.V>>8);
 
 %ifdef HAVE_LOCAL_SSE2_x64
   movdqa    xmm1, xmm10
   movdqa    xmm2, xmm11
 %else
-  _movdqa   _mm1, [reg_sp + temp_bos.o1]
-  _movdqa   _mm2, [reg_sp + temp_bos.o2]    ; _mm1:_mm2 = o = m_outlineYUV.A * outline[1][srcPos]>>8;
+  _movdqa   _mm1, [reg_sp + temp_bos.b1]
+  _movdqa   _mm2, [reg_sp + temp_bos.b2]    ; _mm1:_mm2 = b = m_bodyYUV.A * bmp[1][srcPos]>>8;
 %endif
 
   _movdqa   _mm6, [mask256]
   _movdqa   _mm7, _mm6
   psubw     _mm6, _mm1
-  psubw     _mm7, _mm2                      ; _mm6:_mm7 = (256-o)
+  psubw     _mm7, _mm2                      ; _mm6:_mm7 = (256-b)
 
   pmullw    _mm6, _mm4
   psrlw     _mm6, 8
   pmullw    _mm7, _mm5
-  psrlw     _mm7, 8                         ; _mm6:_mm7 = ((256-o)*d>>8)
+  psrlw     _mm7, 8                         ; _mm6:_mm7 = ((256-b)*d>>8)
 
-  _movdqa   _mm0, [reg_si + colortbl.outline_V]
+  _movdqa   _mm0, [reg_si + colortbl.body_V]
   pmullw    _mm1, _mm0
   psrlw     _mm1, 8
   pmullw    _mm2, _mm0
-  psrlw     _mm2, 8                         ; _mm1:_mm2 = (o*m_outlineYUV.V>>8)
+  psrlw     _mm2, 8                         ; _mm1:_mm2 = (b*m_bodyYUV.V>>8)
 
   paddusb   _mm1, _mm6
-  paddusb   _mm2, _mm7                      ; _mm1:_mm2 = ((256-o)*d>>8)+(o*m_outlineYUV.V>>8);
+  paddusb   _mm2, _mm7                      ; _mm1:_mm2 = ((256-b)*d>>8)+(b*m_bodyYUV.V>>8);
 
   packuswb  _mm2, _mm1
   _movdqu   [reg_di],_mm2
@@ -526,19 +523,20 @@ TrenderedSubtitleWord_printUV_mmx:
 %define _mm5 xmm5
 %define _mm6 xmm6
 %define _mm7 xmm7
+%define register_size 16
 %ifidn __OUTPUT_FORMAT__,win64
 %define HAVE_LOCAL_SSE2_x64
 %endif
 
 ;
-; void* (__cdecl TrenderedSubtitleWord_print_sse2)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dst,const DWORD* fontmaskconstants);
+; void* (__cdecl TrenderedSubtitleWord_printY_sse2)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dst);
 ;
 cglobal TrenderedSubtitleWord_printY_sse2
 TrenderedSubtitleWord_printY_sse2:
   printY
 
 ;
-; void* (__cdecl TrenderedSubtitleWord_printUV_sse2)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dstU,const unsigned char* dstV,const DWORD* fontmaskconstants);
+; void* (__cdecl TrenderedSubtitleWord_printUV_sse2)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dstU,const unsigned char* dstV);
 ;
 cglobal TrenderedSubtitleWord_printUV_sse2
 TrenderedSubtitleWord_printUV_sse2:

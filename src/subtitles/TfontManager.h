@@ -10,6 +10,7 @@ private:
    THFONT(const LOGFONT &Ilf):lf(Ilf)
     {
      hf=CreateFontIndirect(&lf);
+     ASSERT(hf);
     }
    LOGFONT lf;
    HFONT hf;
@@ -40,7 +41,11 @@ public:
      return f->hf;
     }
    if (fonts.size()==32)
-    fonts.erase(std::min_element(fonts.begin(),fonts.end()));
+    {
+     THFONTs::iterator f=std::min_element(fonts.begin(),fonts.end());
+     DeleteObject(f->hf);
+     fonts.erase(f);
+    }
    fonts.push_back(font);
    return fonts.back().hf;
   }

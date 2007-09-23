@@ -29,7 +29,7 @@
 #include "Tsubreader.h"
 #include "TsubtitlesTextpin.h"
 
-TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(unsigned char *Idst[4],stride_t Istride[4],unsigned int Idx[4],unsigned int Idy[4],IffdshowBase *Ideci,const TsubtitlesSettings *cfg,const TffPict &pict,const Tconfig *Iconfig,bool Idvd):TrenderedSubtitleLines::TprintPrefs(Ideci)
+TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(unsigned char *Idst[4],stride_t Istride[4],unsigned int Idx[4],unsigned int Idy[4],IffdshowBase *Ideci,const TsubtitlesSettings *cfg,const TffPict &pict,int Iclipdy,const Tconfig *Iconfig,bool Idvd):TrenderedSubtitleLines::TprintPrefs(Ideci)
 {
  dst=Idst;
  stride=Istride;
@@ -38,7 +38,7 @@ TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(unsigned char *Idst[4],strid
  shiftX=pict.cspInfo.shiftX;shiftY=pict.cspInfo.shiftY;
  dx=Idx[0];
  dy=Idy[0];
- clipdy=pict.rectClip.dy;
+ clipdy=Iclipdy;
  xpos=cfg->posX;
  ypos=cfg->posY;
  align=cfg->align;
@@ -226,6 +226,8 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
 
  const TsubtitlesSettings *cfg=(const TsubtitlesSettings*)cfg0;
 
+ // Leter box. Expand rectFull and assign it to rectClip. So "Process whole image" is ignored.
+ int clipdy=pict.rectClip.dy; // save clipdy
  if (cfg->isExpand && cfg->expandCode && !isdvdproc)
   {
    Trect newExpandRect=cfg->full?pict.rectFull:pict.rectClip;
@@ -343,7 +345,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
      forceChange|=oldSizeDx!=sizeDx || oldSizeDy!=sizeDy;
      oldSizeDx=sizeDx;oldSizeDy=sizeDy;
 
-     TsubPrintPrefs printprefs(dst,stride2,dx1,dy1,deci,cfg,pict,parent->config,!!isdvdproc);
+     TsubPrintPrefs printprefs(dst,stride2,dx1,dy1,deci,cfg,pict,clipdy,parent->config,!!isdvdproc);
      printprefs.csp=pict.csp;
      if (!cfg->stereoscopic || isdvdproc)
       {
@@ -384,7 +386,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
     #else
      const TsubtitlesSettings &cfg2(*cfg);
     #endif
-     TsubPrintPrefs printprefs(dst,stride2,dx1,dy1,deci,&cfg2,pict,parent->config,!!isdvdproc);
+     TsubPrintPrefs printprefs(dst,stride2,dx1,dy1,deci,&cfg2,pict,clipdy,parent->config,!!isdvdproc);
      printprefs.sizeDx=pict.rectFull.dx;
      printprefs.sizeDy=pict.rectFull.dy;
 

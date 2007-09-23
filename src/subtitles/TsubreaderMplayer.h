@@ -96,10 +96,6 @@ private:
  int playResX,playResY,wrapStyle;
  Rational timer;
  bool isEmbedded;
- enum
-  {
-   SSA=4,ASS=5,ASS2=6
-  } version;
  typedef typename tchar_traits<tchar>::ffstring ffstring;
  typedef typename tchar_traits<tchar>::strings strings;
  static void strToInt(const ffstring &str,int *i);
@@ -110,18 +106,18 @@ private:
   private:
    int version;
   public:
-   Tstyle(int playResX,int playResY,int version,int wrapStyle):props(playResX,playResY,wrapStyle) {this->version=version;}
+   Tstyle(int playResX,int playResY,int version,int wrapStyle):props(playResX,playResY,wrapStyle) {this->version=version;props.version=version;}
    ffstring name,fontname,fontsize,primaryColour,bold,italic,underline,strikeout,encoding,spacing,fontScaleX,fontScaleY;
    ffstring secondaryColour,tertiaryColour,outlineColour,backgroundColour,alignment;
    ffstring angleZ,borderStyle,outlineWidth,shadowDepth,marginLeft,marginRight,marginV,marginTop,marginBottom,alpha,relativeTo;
    TSubtitleProps props;
-   void toProps(int version);
+   void toProps(void);
    bool toCOLORREF(const ffstring &colourStr,COLORREF &colour,int &alpha);
   };
  struct Tstyles : std::map<ffstring,Tstyle,ffstring_iless>
   {
    const TSubtitleProps* getProps(const ffstring &style);
-   void add(Tstyle &style,int version);
+   void add(Tstyle &style);
   };
  Tstyles styles;
  typedef std::vector<ffstring Tstyle::*> TstyleFormat;
@@ -139,6 +135,10 @@ private:
 public:
  TsubtitleParserSSA(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader,bool isEmbedded0);
  virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME);
+ enum
+  {
+   SSA=4,ASS=5,ASS2=6
+  } version;
 };
 template<class tchar> class TsubtitleParserDunnowhat :public TsubtitleParser<tchar>
 {

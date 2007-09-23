@@ -405,6 +405,18 @@ struct YUVcolorA
  YUVcolorA(void) {Y=0;U=V=128;A=256;r=g=b=0;};
  YUVcolorA(YUVcolor yuv,unsigned int alpha=256);
  YUVcolorA(COLORREF rgb,unsigned int alpha=256);
+ bool operator !=(const YUVcolorA &c2) const
+  {
+    return !(r==c2.r && g==c2.g && b==c2.b && A==c2.A);
+  }
+ bool operator ==(const YUVcolorA &c2) const
+  {
+    return (r==c2.r && g==c2.g && b==c2.b && A==c2.A);
+  }
+ bool isGray()
+  {
+   return (r==g && r==b);
+  }
 };
 
 enum
