@@ -1358,7 +1358,7 @@ template<> const TrenderedSubtitleWord* TcharsChache::getChar(const wchar_t *s,c
  int key=(int)*s;
  Tchars::iterator l=chars.find(key);
  if (l!=chars.end()) return l->second;
- TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,yuv,outlineYUV,shadowYUV,prefs,lf,xscale);
+ TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,yuv,outlineYUV,shadowYUV,prefs,lf,xscale*100/yscale);
  chars[key]=ln;
  return ln;
 }
@@ -1370,7 +1370,7 @@ template<> const TrenderedSubtitleWord* TcharsChache::getChar(const char *s,cons
    int key=(int)*s;
    Tchars::iterator l=chars.find(key);
    if (l!=chars.end()) return l->second;
-   TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,yuv,outlineYUV,shadowYUV,prefs,lf,xscale);
+   TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,1,yuv,outlineYUV,shadowYUV,prefs,lf,xscale*100/yscale);
    chars[key]=ln;
    return ln;
   }
@@ -1380,7 +1380,7 @@ template<> const TrenderedSubtitleWord* TcharsChache::getChar(const char *s,cons
    int key=(int)*mbcs;
    Tchars::iterator l=chars.find(key);
    if (l!=chars.end()) return l->second;
-   TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,2,yuv,outlineYUV,shadowYUV,prefs,lf,xscale);
+   TrenderedSubtitleWord *ln=new TrenderedSubtitleWord(hdc,s,2,yuv,outlineYUV,shadowYUV,prefs,lf,xscale*100/yscale);
    chars[key]=ln;
    return ln;
   }
@@ -1590,7 +1590,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
        const tchar *p=*w;
        if (*p) // drop empty words
         {
-         int xscale=w->props.get_xscale(fontSettings->xscale,prefs.sar,fontSettings->aspectAuto,fontSettings->overrideScale);
+         int xscale=w->props.get_xscale(fontSettings->xscale,prefs.sar,fontSettings->aspectAuto,fontSettings->overrideScale)*100/w->props.get_yscale(fontSettings->yscale,prefs.sar,fontSettings->aspectAuto,fontSettings->overrideScale);
          wordWrapMode=w->props.wrapStyle;
          splitdxMax=get_splitdx_for_new_line(*w,splitdx0,dx);
          allStr+=p;
