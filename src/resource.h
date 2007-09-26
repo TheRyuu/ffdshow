@@ -1787,6 +1787,15 @@
 #define IDC_LBL_FONT_YSCALE             2090
 #define IDC_CHB_CODEC_OPT3              2092
 #define IDC_CHB_CODEC_OPT4              2093
+#define IDC_LBL_CROP_TOLERANCE          2094
+#define IDC_ED_CROP_TOLERANCE           2095
+#define IDC_LBL_CROP_REFRESH            2096
+#define IDC_ED_CROP_REFRESH             2097
+#define IDC_RBT_AUTOCROPV               2098
+#define IDC_RBT_AUTOCROPH               2099
+#define IDC_RBT_AUTOCROPVH              2100
+#define IDC_LBL_CROP_STOPSCAN           2101
+#define IDC_ED_CROP_STOPSCAN            2102
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006

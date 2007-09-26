@@ -26,6 +26,9 @@ void TcropPage::init(void)
  tbrSetRange(IDC_TBR_PANSCAN_ZOOM,0,100,8);
  tbrSetRange(IDC_TBR_PANSCAN_X,-100,100,15);
  tbrSetRange(IDC_TBR_PANSCAN_Y,-100,100,15);
+ addHint(IDC_ED_CROP_STOPSCAN, _l("Scan of bars will stop after this position. Set 0 to always scan for bars"));
+ addHint(IDC_ED_CROP_TOLERANCE, _l("Tolerance when scanning bars"));
+ addHint(IDC_ED_CROP_REFRESH, _l("Set the delay in ms to rescan for the bars"));
 }
 
 void TcropPage::cfg2dlg(void)
@@ -33,12 +36,14 @@ void TcropPage::cfg2dlg(void)
  crop2dlg();
  zoom2dlg();
  panscan2dlg();
+ autocrop2dlg();
 }
 void TcropPage::crop2dlg(void)
 {
  bool is=(cfgGet(IDFF_cropNzoomMode)==1);
  setCheck(IDC_RBT_CROP,is);
- static const int idCrop[]={IDC_ED_CROP_LEFT,IDC_ED_CROP_TOP,IDC_ED_CROP_RIGHT,IDC_ED_CROP_BOTTOM,IDC_LBL_CROP_LEFT,IDC_LBL_CROP_TOP,IDC_LBL_CROP_RIGHT,IDC_LBL_CROP_BOTTOM,0};
+ static const int idCrop[]={IDC_ED_CROP_LEFT,IDC_ED_CROP_TOP,IDC_ED_CROP_RIGHT,IDC_ED_CROP_BOTTOM,IDC_LBL_CROP_LEFT,IDC_LBL_CROP_TOP,IDC_LBL_CROP_RIGHT,IDC_LBL_CROP_BOTTOM, 0};
+
  enable(is,idCrop);
  SetDlgItemInt(m_hwnd,IDC_ED_CROP_LEFT  ,cfgGet(IDFF_cropLeft  ),0);
  SetDlgItemInt(m_hwnd,IDC_ED_CROP_TOP   ,cfgGet(IDFF_cropTop   ),0);
@@ -72,6 +77,19 @@ void TcropPage::panscan2dlg(void)
  x=cfgGet(IDFF_panscanY);
  setText(IDC_LBL_PANSCAN_Y,_l("%s %i%%"),_(IDC_LBL_PANSCAN_Y),x);
  tbrSet(IDC_TBR_PANSCAN_Y,x);
+}
+
+void TcropPage::autocrop2dlg(void)
+{
+ int mode = cfgGet(IDFF_cropNzoomMode);
+ setCheck(IDC_RBT_AUTOCROPV,mode==3);
+ setCheck(IDC_RBT_AUTOCROPH,mode==4);
+ setCheck(IDC_RBT_AUTOCROPVH,mode==5);
+ static const int idautoCrop[]={IDC_LBL_CROP_TOLERANCE, IDC_ED_CROP_TOLERANCE, IDC_LBL_CROP_REFRESH, IDC_ED_CROP_REFRESH, IDC_LBL_CROP_STOPSCAN, IDC_ED_CROP_STOPSCAN, 0};
+ enable(mode>=3 && mode<=5,idautoCrop);
+ SetDlgItemInt(m_hwnd,IDC_ED_CROP_TOLERANCE,cfgGet(IDFF_cropTolerance),0);
+ SetDlgItemInt(m_hwnd,IDC_ED_CROP_REFRESH,cfgGet(IDFF_cropRefreshDelay),0);
+ SetDlgItemInt(m_hwnd,IDC_ED_CROP_STOPSCAN,cfgGet(IDFF_cropStopScan),0);
 }
 
 INT_PTR TcropPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -119,6 +137,9 @@ TcropPage::TcropPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPage
    IDC_RBT_ZOOM,IDFF_cropNzoomMode,0,&TcropPage::cfg2dlg,
    IDC_RBT_CROP,IDFF_cropNzoomMode,1,&TcropPage::cfg2dlg,
    IDC_RBT_PANSCAN,IDFF_cropNzoomMode,2,&TcropPage::cfg2dlg,
+   IDC_RBT_AUTOCROPV,IDFF_cropNzoomMode,3,&TcropPage::cfg2dlg,
+   IDC_RBT_AUTOCROPH,IDFF_cropNzoomMode,4,&TcropPage::cfg2dlg,
+   IDC_RBT_AUTOCROPVH,IDFF_cropNzoomMode,5,&TcropPage::cfg2dlg,
    0,0,0,NULL
   };
  bindRadioButtons(rbt);
@@ -128,6 +149,9 @@ TcropPage::TcropPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPage
    IDC_ED_CROP_RIGHT ,0,2048,IDFF_cropRight ,NULL,
    IDC_ED_CROP_TOP   ,0,2048,IDFF_cropTop   ,NULL,
    IDC_ED_CROP_BOTTOM,0,2048,IDFF_cropBottom,NULL,
+   IDC_ED_CROP_TOLERANCE,0,2048,IDFF_cropTolerance,NULL,
+   IDC_ED_CROP_REFRESH,0,3600000,IDFF_cropRefreshDelay,NULL,
+   IDC_ED_CROP_STOPSCAN,0,3600000,IDFF_cropStopScan,NULL,
    0
   };
  bindEditInts(edInt);

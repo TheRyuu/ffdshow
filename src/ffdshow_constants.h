@@ -413,7 +413,7 @@
 #define IDFF_showCropNzoom       752
 #define IDFF_orderCropNzoom      754
 #define IDFF_fullCropNzoom       765
-#define IDFF_cropNzoomMode       713 //0 - zoom, 1 - crop, 2 - pan&scan
+#define IDFF_cropNzoomMode       713 //0 - zoom, 1 - crop, 2 - pan&scan, 3 - autocrop vert, 4 - auto crop horiz, 5 - autocrop vert & horiz
 #define IDFF_magnificationX      714
 #define IDFF_cropLeft            715
 #define IDFF_cropRight           716
@@ -424,6 +424,13 @@
 #define IDFF_panscanZoom         744 //0 - orig size, 100 max zoom
 #define IDFF_panscanX            745 //-100..100 - center x position
 #define IDFF_panscanY            746 //-100..100 - center y position
+#define IDFF_cropTolerance       3417 // Autocrop tolerance
+#define IDFF_cropRefreshDelay    3418 // Autocrop refresh interval
+#define IDFF_cropStopScan        3419 // Autocrop stop scanning after x ms
+#define IDFF_autoCropTop         3420
+#define IDFF_autoCropBottom      3421
+#define IDFF_autoCropLeft        3422
+#define IDFF_autoCropRight       3423
 
 #define IDFF_filterSubtitles         800
 #define IDFF_isSubtitles             801
@@ -1431,6 +1438,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3417
+//max:3420
 
 #endif

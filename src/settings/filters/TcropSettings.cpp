@@ -47,7 +47,7 @@ TcropSettings::TcropSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSe
      _l("orderCropNzoom"),0,
    IDFF_fullCropNzoom      ,&TcropSettings::full               ,1,1,_l(""),1,
      _l("fullCropNzoom"),0,
-   IDFF_cropNzoomMode      ,&TcropSettings::mode               ,0,2,_l(""),1,
+   IDFF_cropNzoomMode      ,&TcropSettings::mode               ,0,5,_l(""),1,
      _l("isZoom"),0,
    IDFF_magnificationX     ,&TcropSettings::magnificationX     ,0,100,_l(""),1,
      _l("magnificationX"),0,
@@ -69,6 +69,12 @@ TcropSettings::TcropSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSe
      _l("panscanX"),0,
    IDFF_panscanY           ,&TcropSettings::panscanY           ,-100,100,_l(""),1,
      _l("panscanY"),0,
+   IDFF_cropTolerance      ,&TcropSettings::cropTolerance      ,0,2048,_l(""),1,
+     _l("cropTolerance"),40,
+   IDFF_cropRefreshDelay   ,&TcropSettings::cropRefreshDelay   ,0,3600000,_l(""),1,
+     _l("cropRefreshDelay"),5000,
+   IDFF_cropStopScan       ,&TcropSettings::cropStopScan       ,0,3600000,_l(""),1,
+     _l("cropStopScan"),100000,
    0
   };
  addOptions(iopts);
