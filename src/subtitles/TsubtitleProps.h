@@ -2,6 +2,7 @@
 #define _TSUBTITLEPROPS_H_
 struct TfontSettings;
 struct Rational;
+class TfontManager;
 
 struct TSubtitleProps
 {
@@ -22,7 +23,9 @@ struct TSubtitleProps
  int version;  // -1 = default
  double spacing;  //INT_MIN = default
  void reset(void);
- void toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy,const Rational& sar) const;
+ HGDIOBJ toGdiFont(HDC hdc, LOGFONT &lf, const TfontSettings &fontSettings, unsigned int dx, unsigned int dy, unsigned int clipdy, const Rational& sar, TfontManager *fontManager) const;
+ void toLOGFONT(LOGFONT &lf, const TfontSettings &fontSettings, unsigned int dx, unsigned int dy, unsigned int clipdy, const Rational& sar) const;
+ void fix_size(LOGFONT &lf, HDC hdc, TfontManager *fontManager) const;
 
  // Alignment. This sets how text is "justified" within the Left/Right onscreen margins,
  // and also the vertical placing. Values may be 1=Left, 2=Centered, 3=Right.
@@ -42,6 +45,7 @@ struct TSubtitleProps
  int get_xscale(int Ixscale,const Rational& sar,int aspectAuto,int overrideScale) const;
  int get_yscale(int Iyscale,const Rational& sar,int aspectAuto,int overrideScale) const;
  static int alignASS2SSA(int align);
+ mutable int m_ascent64,m_descent64; // multiple 64 to lfHeight. Get TextMetrics and plus 4 to tmAscent or tmDescent and divid by 8 for vsfilter compatibility.
 };
 
 #endif

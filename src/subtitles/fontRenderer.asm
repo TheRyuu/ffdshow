@@ -117,15 +117,15 @@ endstruc
 %define register_size 8
 
 ;
-; void* (__cdecl TrenderedSubtitleWord_printY_mmx)(/* 0 rcx */ const unsigned char* bmp,
+; void* (__cdecl TtextSubtitlePrintY_mmx)(/* 0 rcx */ const unsigned char* bmp,
 ;                                                  /* 1 rdx */ const unsigned char* outline,
 ;                                                  /* 2 r8  */ const unsigned char* shadow,
 ;                                                  /* 3 r9  */ const unsigned short* colortbl,
 ;                                                  /* 4     */ const unsigned char* dst,
 ;                                                  /* 5     */ const unsigned short* msk);
 ;
-cglobal TrenderedSubtitleWord_printY_mmx
-TrenderedSubtitleWord_printY_mmx:
+cglobal TtextSubtitlePrintY_mmx
+TtextSubtitlePrintY_mmx:
 
 %macro printY 0
   push      reg_di
@@ -246,7 +246,7 @@ TrenderedSubtitleWord_printY_mmx:
 %endif
 
 ;
-; void* (__cdecl TrenderedSubtitleWord_printUV_mmx)( /* 0 rcx */ const unsigned char* bmp,
+; void* (__cdecl TtextSubtitlePrintUV_mmx)( /* 0 rcx */ const unsigned char* bmp,
 ;                                                    /* 1 rdx */ const unsigned char* outline,
 ;                                                    /* 2 r8  */ const unsigned char* shadow,
 ;                                                    /* 3 r9  */ const unsigned short* colortbl,
@@ -255,8 +255,8 @@ TrenderedSubtitleWord_printY_mmx:
 ;
 ; mmx version is not available for WIN64
 ;
-cglobal TrenderedSubtitleWord_printUV_mmx
-TrenderedSubtitleWord_printUV_mmx:
+cglobal TtextSubtitlePrintUV_mmx
+TtextSubtitlePrintUV_mmx:
 %macro printUV 0
   push      reg_di
   push      reg_si
@@ -529,17 +529,17 @@ TrenderedSubtitleWord_printUV_mmx:
 %endif
 
 ;
-; void* (__cdecl TrenderedSubtitleWord_printY_sse2)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dst);
+; void* (__cdecl TtextSubtitlePrintY_sse2)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dst);
 ;
-cglobal TrenderedSubtitleWord_printY_sse2
-TrenderedSubtitleWord_printY_sse2:
+cglobal TtextSubtitlePrintY_sse2
+TtextSubtitlePrintY_sse2:
   printY
 
 ;
-; void* (__cdecl TrenderedSubtitleWord_printUV_sse2)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dstU,const unsigned char* dstV);
+; void* (__cdecl TtextSubtitlePrintUV_sse2)(const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short* colortbl,const unsigned char* dstU,const unsigned char* dstV);
 ;
-cglobal TrenderedSubtitleWord_printUV_sse2
-TrenderedSubtitleWord_printUV_sse2:
+cglobal TtextSubtitlePrintUV_sse2
+TtextSubtitlePrintUV_sse2:
   printUV
 
 ;

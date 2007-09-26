@@ -9,7 +9,7 @@ struct TsubtitleUSF2 : public Tsubtitle
 private:
  TsubreaderUSF2 *subs;
  int idx;
- mutable TrenderedSubtitleWord wrd;
+ mutable TrenderedVobsubWord wrd;
  mutable bool ok,first;
 public:
  TsubtitleUSF2(TsubreaderUSF2 *Isubs,int Iidx,REFERENCE_TIME start,REFERENCE_TIME stop);

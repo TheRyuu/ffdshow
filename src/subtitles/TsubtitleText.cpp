@@ -1093,8 +1093,6 @@ template<class tchar> void TsubtitleTextBase<tchar>::fix(TtextFix<tchar> &fix)
 template<class tchar> void TsubtitleTextBase<tchar>::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const
 {
  prefs.subformat=subformat;
- if ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SSA)
-  prefs.linespacing=103;
  f.print(this,forceChange,prefs);
 }
 template<class tchar> Tsubtitle* TsubtitleTextBase<tchar>::copy(void)

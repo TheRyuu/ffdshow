@@ -41,7 +41,7 @@ TsubtitleVobsub::~TsubtitleVobsub()
 void TsubtitleVobsub::drawalpha(int x0,int y0, unsigned int w,unsigned int h, const unsigned char* srcY, const unsigned char *srcaY, int strideY,const unsigned char* srcUV, const unsigned char *srcaUV, int strideUV,const TrenderedSubtitleLines::TprintPrefs &prefs)
 {
  if (x0<0 || y0<0 || w==0 || h==0) return;
- TrenderedSubtitleWord wrd;
+ TrenderedVobsubWord wrd;
  for (int i=0;i<3;i++)
   {
    wrd.dx[i]=w>>prefs.shiftX[i];

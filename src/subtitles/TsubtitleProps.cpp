@@ -21,6 +21,7 @@
 #include "TsubtitleProps.h"
 #include "TsubtitlesSettings.h"
 #include "rational.h"
+#include "TfontManager.h"
 #include <locale.h>
 
 void TSubtitleProps::reset(void)
@@ -46,6 +47,17 @@ void TSubtitleProps::reset(void)
  ShadowColourA=128;
  blur=0;
  version=-1;
+ m_ascent64=-1;
+ m_descent64=-1;
+}
+
+HGDIOBJ TSubtitleProps::toGdiFont(HDC hdc, LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy,const Rational& sar, TfontManager *fontManager) const
+{
+ toLOGFONT(lf,fontSettings,dx,dy,clipdy,sar);
+ HFONT font=fontManager->getFont(lf);
+ HGDIOBJ old=SelectObject(hdc,font);
+ fix_size(lf,hdc,fontManager);
+ return old;
 }
 
 void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy,const Rational& sar) const
@@ -72,6 +84,33 @@ void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,uns
  lf.lfQuality=ANTIALIASED_QUALITY;
  lf.lfPitchAndFamily=DEFAULT_PITCH|FF_DONTCARE;
  strncpy(lf.lfFaceName,fontname[0]?fontname:fontSettings.name,LF_FACESIZE);
+}
+
+void TSubtitleProps::fix_size(LOGFONT &lf, HDC hdc, TfontManager *fontManager) const
+{
+ // for ASS compatibility.
+ // vsfilter multiple 64 to lfHeight when it rasterizes the font.
+ // ffdshow multiple 4. This is not compatible, so here we want to correct.
+ OUTLINETEXTMETRIC otm4,otm64;
+ if (GetOutlineTextMetrics(hdc,sizeof(otm4),&otm4))
+  {
+   lf.lfHeight*=16;
+   HFONT font=fontManager->getFont(lf);
+   SelectObject(hdc,font);
+   GetOutlineTextMetrics(hdc,sizeof(otm64),&otm64);
+   double r4=(double)(otm4.otmTextMetrics.tmHeight-otm4.otmTextMetrics.tmInternalLeading)*16/lf.lfHeight;
+   double r64=(double)(otm64.otmTextMetrics.tmHeight-otm64.otmTextMetrics.tmInternalLeading)/lf.lfHeight;
+   m_ascent64=(otm64.otmTextMetrics.tmAscent + 4) >> 3;
+   m_descent64=(otm64.otmTextMetrics.tmDescent + 4) >> 3;
+   lf.lfHeight=LONG((double)lf.lfHeight*r64/r4/16);
+   font=fontManager->getFont(lf);
+   SelectObject(hdc,font);
+  }
+ else
+  {
+   m_ascent64=lf.lfHeight*2*0.8;
+   m_descent64=lf.lfHeight*2-m_ascent64;
+  }
 }
 
 int TSubtitleProps::get_spacing(unsigned int dy,unsigned int clipdy) const
