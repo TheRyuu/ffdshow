@@ -63,7 +63,6 @@
  CODEC_OP(CODEC_ID_TRUEMOTION1       ,51,"truemotion") \
  CODEC_OP(CODEC_ID_TRUEMOTION2       ,52,"truemotion2") \
  CODEC_OP(CODEC_ID_TSCC              ,53,"tscc") \
- CODEC_OP(CODEC_ID_DVD_SUBTITLE      ,54,"") \
  CODEC_OP(CODEC_ID_CYUV              ,55,"cyuv") \
  CODEC_OP(CODEC_ID_VCR1              ,56,"vcr1") \
  CODEC_OP(CODEC_ID_MSRLE             ,57,"msrle") \
@@ -77,6 +76,7 @@
  CODEC_OP(CODEC_ID_ULTI              ,65,"ulti") \
  CODEC_OP(CODEC_ID_CAVS              ,66,"cavs") \
  CODEC_OP(CODEC_ID_SNOW              ,67,"snow") \
+ CODEC_OP(CODEC_ID_VP6A              ,68,"vp6a") \
  \
  /* Well-known audio codecs */ \
  CODEC_OP(CODEC_ID_MP2               ,100,"") \

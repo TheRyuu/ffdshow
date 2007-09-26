@@ -112,6 +112,7 @@ void avcodec_register_all(void)
     REGISTER_DECODER	(vp3);
     REGISTER_DECODER	(vp5);
     REGISTER_DECODER	(vp6);
+    REGISTER_DECODER	(vp6a); // not yet used by ffdshow
     REGISTER_DECODER	(vp6f);
     REGISTER_ENCDEC		(wmv1);
     REGISTER_ENCDEC		(wmv2);

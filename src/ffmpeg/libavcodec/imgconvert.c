@@ -129,6 +129,16 @@ static const PixFmtInfo pix_fmt_info[PIX_FMT_NB] = {
         .x_chroma_shift = 0, .y_chroma_shift = 1,
     },
 
+    /* YUV formats with alpha plane */
+    [PIX_FMT_YUVA420P] = {
+        .name = "yuva420p",
+        .nb_channels = 4,
+        .color_type = FF_COLOR_YUV,
+        .pixel_type = FF_PIXEL_PLANAR,
+        .depth = 8,
+        .x_chroma_shift = 1, .y_chroma_shift = 1,
+    },
+
     /* JPEG YUV */
     [PIX_FMT_YUVJ420P] = {
         .name = "yuvj420p",
@@ -439,6 +449,14 @@ void avpicture_init_pixfmtinfo(void)
  pix_fmt_info[PIX_FMT_YUV440P].depth = 8;
  pix_fmt_info[PIX_FMT_YUV440P].x_chroma_shift = 0;
  pix_fmt_info[PIX_FMT_YUV440P].y_chroma_shift = 1;
+ 
+ pix_fmt_info[PIX_FMT_YUVA420P].name = "yuva420p";
+ pix_fmt_info[PIX_FMT_YUVA420P].nb_channels = 4;
+ pix_fmt_info[PIX_FMT_YUVA420P].color_type = FF_COLOR_YUV;
+ pix_fmt_info[PIX_FMT_YUVA420P].pixel_type = FF_PIXEL_PLANAR;
+ pix_fmt_info[PIX_FMT_YUVA420P].depth = 8;
+ pix_fmt_info[PIX_FMT_YUVA420P].x_chroma_shift = 1;
+ pix_fmt_info[PIX_FMT_YUVA420P].y_chroma_shift = 1;
 
  /* JPEG YUV */
  pix_fmt_info[PIX_FMT_YUVJ420P].name = "yuvj420p";
@@ -709,10 +727,25 @@ int avpicture_fill(AVPicture *picture, uint8_t *ptr,
         picture->data[0] = ptr;
         picture->data[1] = picture->data[0] + size;
         picture->data[2] = picture->data[1] + size2;
+        picture->data[3] = NULL;
         picture->linesize[0] = width;
         picture->linesize[1] = w2;
         picture->linesize[2] = w2;
+        picture->linesize[3] = 0;
         return size + 2 * size2;
+    case PIX_FMT_YUVA420P:
+        w2 = (width + (1 << pinfo->x_chroma_shift) - 1) >> pinfo->x_chroma_shift;
+        h2 = (height + (1 << pinfo->y_chroma_shift) - 1) >> pinfo->y_chroma_shift;
+        size2 = w2 * h2;
+        picture->data[0] = ptr;
+        picture->data[1] = picture->data[0] + size;
+        picture->data[2] = picture->data[1] + size2;
+        picture->data[3] = picture->data[1] + size2 + size2;
+        picture->linesize[0] = width;
+        picture->linesize[1] = w2;
+        picture->linesize[2] = w2;
+        picture->linesize[3] = width;
+        return 2 * size + 2 * size2;
     case PIX_FMT_NV12:
     case PIX_FMT_NV21:
         w2 = (width + (1 << pinfo->x_chroma_shift) - 1) >> pinfo->x_chroma_shift;
@@ -721,15 +754,18 @@ int avpicture_fill(AVPicture *picture, uint8_t *ptr,
         picture->data[0] = ptr;
         picture->data[1] = picture->data[0] + size;
         picture->data[2] = NULL;
+        picture->data[3] = NULL;
         picture->linesize[0] = width;
         picture->linesize[1] = w2;
         picture->linesize[2] = 0;
+        picture->linesize[3] = 0;
         return size + 2 * size2;
     case PIX_FMT_RGB24:
     case PIX_FMT_BGR24:
         picture->data[0] = ptr;
         picture->data[1] = NULL;
         picture->data[2] = NULL;
+        picture->data[3] = NULL;
         picture->linesize[0] = width * 3;
         return size * 3;
     case PIX_FMT_RGB32:
@@ -739,6 +775,7 @@ int avpicture_fill(AVPicture *picture, uint8_t *ptr,
         picture->data[0] = ptr;
         picture->data[1] = NULL;
         picture->data[2] = NULL;
+        picture->data[3] = NULL;
         picture->linesize[0] = width * 4;
         return size * 4;
     case PIX_FMT_GRAY16BE:
@@ -751,18 +788,21 @@ int avpicture_fill(AVPicture *picture, uint8_t *ptr,
         picture->data[0] = ptr;
         picture->data[1] = NULL;
         picture->data[2] = NULL;
+        picture->data[3] = NULL;
         picture->linesize[0] = width * 2;
         return size * 2;
     case PIX_FMT_UYVY422:
         picture->data[0] = ptr;
         picture->data[1] = NULL;
         picture->data[2] = NULL;
+        picture->data[3] = NULL;
         picture->linesize[0] = width * 2;
         return size * 2;
     case PIX_FMT_UYYVYY411:
         picture->data[0] = ptr;
         picture->data[1] = NULL;
         picture->data[2] = NULL;
+        picture->data[3] = NULL;
         picture->linesize[0] = width + width/2;
         return size + size/2;
     case PIX_FMT_RGB8:
@@ -773,6 +813,7 @@ int avpicture_fill(AVPicture *picture, uint8_t *ptr,
         picture->data[0] = ptr;
         picture->data[1] = NULL;
         picture->data[2] = NULL;
+        picture->data[3] = NULL;
         picture->linesize[0] = width;
         return size;
     case PIX_FMT_RGB4:
@@ -780,6 +821,7 @@ int avpicture_fill(AVPicture *picture, uint8_t *ptr,
         picture->data[0] = ptr;
         picture->data[1] = NULL;
         picture->data[2] = NULL;
+        picture->data[3] = NULL;
         picture->linesize[0] = width / 2;
         return size / 2;
     case PIX_FMT_MONOWHITE:
@@ -787,6 +829,7 @@ int avpicture_fill(AVPicture *picture, uint8_t *ptr,
         picture->data[0] = ptr;
         picture->data[1] = NULL;
         picture->data[2] = NULL;
+        picture->data[3] = NULL;
         picture->linesize[0] = (width + 7) >> 3;
         return picture->linesize[0] * height;
     case PIX_FMT_PAL8:
@@ -794,6 +837,7 @@ int avpicture_fill(AVPicture *picture, uint8_t *ptr,
         picture->data[0] = ptr;
         picture->data[1] = ptr + size2; /* palette is stored here as 256 32 bit words */
         picture->data[2] = NULL;
+        picture->data[3] = NULL;
         picture->linesize[0] = width;
         picture->linesize[1] = 4;
         return size2 + 256 * 4;

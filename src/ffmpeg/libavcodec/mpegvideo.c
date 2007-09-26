@@ -179,14 +179,12 @@ int alloc_picture(MpegEncContext *s, Picture *pic, int shared){
         assert(pic->type == 0 || pic->type == FF_BUFFER_TYPE_SHARED);
         pic->type= FF_BUFFER_TYPE_SHARED;
     }else{
-
         assert(!pic->data[0]);
 
         r= s->avctx->get_buffer(s->avctx, (AVFrame*)pic);
 
         if(r<0 || !pic->age || !pic->type || !pic->data[0]){
             av_log(s->avctx, AV_LOG_ERROR, "get_buffer() failed (%d %d %d %p)\n", r, pic->age, pic->type, pic->data[0]);
-            s->avctx->release_buffer(s->avctx, (AVFrame*)pic);
             return -1;
         }
 
@@ -198,6 +196,7 @@ int alloc_picture(MpegEncContext *s, Picture *pic, int shared){
 
         if(pic->linesize[1] != pic->linesize[2]){
             av_log(s->avctx, AV_LOG_ERROR, "get_buffer() failed (uv stride mismatch)\n");
+            s->avctx->release_buffer(s->avctx, (AVFrame*)pic);
             return -1;
         }
 
@@ -892,8 +891,13 @@ alloc:
             pic= (AVFrame*)&s->picture[i];
         }
 
-        pic->reference= (s->pict_type != B_TYPE || s->codec_id == CODEC_ID_H264)
-                        && !s->dropable ? 3 : 0;
+        pic->reference= 0;
+        if (!s->dropable){
+            if (s->codec_id == CODEC_ID_H264)
+                pic->reference = s->picture_structure;
+            else if (s->pict_type != B_TYPE)
+                pic->reference = 3;
+        }
 
         pic->coded_picture_number= s->coded_picture_number++;
 
