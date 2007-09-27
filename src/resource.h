@@ -1785,6 +1785,7 @@
 #define IDC_CHB_FONT_ASPECT_AUTO        2088
 #define IDC_TBR_FONT_YSCALE             2089
 #define IDC_LBL_FONT_YSCALE             2090
+#define IDC_GRP_AUTOCROP                2091
 #define IDC_CHB_CODEC_OPT3              2092
 #define IDC_CHB_CODEC_OPT4              2093
 #define IDC_LBL_CROP_TOLERANCE          2094
@@ -1812,7 +1813,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        296
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2091
+#define _APS_NEXT_CONTROL_VALUE         2092
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

@@ -21,3 +21,12 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 2047=Use ffdshow. (just this once)
 2048=Use ffdshow. (always)
 2049=Explanation
+
+[134]
+2091=Autocrop
+2094=Tolerance
+2096=Intervalle scan (ms)
+2098=Vertically
+2099=Horizontally
+2100=Vertically & horizontally
+2101=Stop scan after (ms)
