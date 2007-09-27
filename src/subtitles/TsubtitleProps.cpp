@@ -91,17 +91,17 @@ void TSubtitleProps::fix_size(LOGFONT &lf, HDC hdc, TfontManager *fontManager) c
  // for ASS compatibility.
  // vsfilter multiple 64 to lfHeight when it rasterizes the font.
  // ffdshow multiple 4. This is not compatible, so here we want to correct.
- OUTLINETEXTMETRIC otm4,otm64;
- if (GetOutlineTextMetrics(hdc,sizeof(otm4),&otm4))
+ TEXTMETRIC tm4, tm64;
+ if (GetTextMetrics(hdc,&tm4))
   {
    lf.lfHeight*=16;
    HFONT font=fontManager->getFont(lf);
    SelectObject(hdc,font);
-   GetOutlineTextMetrics(hdc,sizeof(otm64),&otm64);
-   double r4=(double)(otm4.otmTextMetrics.tmHeight-otm4.otmTextMetrics.tmInternalLeading)*16/lf.lfHeight;
-   double r64=(double)(otm64.otmTextMetrics.tmHeight-otm64.otmTextMetrics.tmInternalLeading)/lf.lfHeight;
-   m_ascent64=(otm64.otmTextMetrics.tmAscent + 4) >> 3;
-   m_descent64=(otm64.otmTextMetrics.tmDescent + 4) >> 3;
+   GetTextMetrics(hdc,&tm64);
+   double r4=(double)(tm4.tmHeight-tm4.tmInternalLeading)*16/lf.lfHeight;
+   double r64=(double)(tm64.tmHeight-tm64.tmInternalLeading)/lf.lfHeight;
+   m_ascent64=(tm64.tmAscent + 4) >> 3;
+   m_descent64=(tm64.tmDescent + 4) >> 3;
    lf.lfHeight=LONG((double)lf.lfHeight*r64/r4/16);
    font=fontManager->getFont(lf);
    SelectObject(hdc,font);
