@@ -60,11 +60,11 @@ private:
  class ParagraphKey
   {
    public:
-    int alignment;
-    int marginTop,marginBottom;
-    int marginL,marginR;
-    bool isPos;
-    int posx,posy;
+    short alignment;
+    short marginTop,marginBottom;
+    short marginL,marginR;
+    short isPos;
+    short posx,posy;
 
     ParagraphKey(): alignment(-1), marginTop(-1), marginBottom(-1), marginL(-1), marginR(-1), isPos(false), posx(-1),posy(-1){};
   };
