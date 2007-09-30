@@ -434,6 +434,10 @@ void TimgFilterAvisynth::Tavisynth::init(const TavisynthSettings &oldcfg, Tinput
    frameScaleNum/=frameScaleGCD;
    frameScaleDen/=frameScaleGCD;
 
+   if (frameScaleNum > frameScaleDen*60 ||
+       frameScaleDen > frameScaleNum*60)
+    frameScaleNum=frameScaleDen=1;
+
    inputRect=pict.rectClip;
    inputSar=pict.rectClip.sar;
    inputDar=pict.rectClip.dar();

@@ -1277,12 +1277,12 @@ STDMETHODIMP TffdshowDecVideo::Stop(void)
 
 void TffdshowDecVideo::lockReceive(void)
 {
- DPRINTF(_l("TffdshowDecVideo::lockReceive thread=%d"),GetCurrentThreadId());
+ //DPRINTF(_l("TffdshowDecVideo::lockReceive thread=%d"),GetCurrentThreadId());
  m_csReceive.Lock();
 }
 void TffdshowDecVideo::unlockReceive(void)
 {
- DPRINTF(_l("TffdshowDecVideo::unlockReceive thread=%d"),GetCurrentThreadId());
+ //DPRINTF(_l("TffdshowDecVideo::unlockReceive thread=%d"),GetCurrentThreadId());
  m_csReceive.Unlock();
 }
 
