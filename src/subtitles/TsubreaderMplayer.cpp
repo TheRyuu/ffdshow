@@ -458,6 +458,14 @@ template<class tchar>  TsubtitleParserSSA<tchar>::TsubtitleParserSSA(int Iformat
  timer(1,1),
  isEmbedded(isEmbedded0)
 {
+ defprops.alignment = 2;
+ defprops.outlineWidth = defprops.shadowDepth = 2;
+ defprops.size = 26;
+ strcpy(defprops.fontname, _l("Arial"));
+ defprops.encoding = 0;
+ defprops.isColor = true;
+ defprops.marginR = defprops.marginL = defprops.marginV = 10;
+ defprops.version = TsubtitleParserSSA::SSA;
 }
 
 template<class tchar> void TsubtitleParserSSA<tchar>::strToInt(const ffstring &str,int *i)
@@ -586,7 +594,17 @@ template<class tchar> void TsubtitleParserSSA<tchar>::Tstyles::add(Tstyle &s)
 template<class tchar> const TSubtitleProps* TsubtitleParserSSA<tchar>::Tstyles::getProps(const ffstring &style)
 {
  typename std::map<ffstring,Tstyle,ffstring_iless>::const_iterator si=this->find(style);
- return si!=this->end()?&si->second.props:NULL;
+ if (si!=this->end())
+  return &si->second.props;
+ if (style.compare(_L("*Default")) == 0)
+  {
+    typename std::map<ffstring,Tstyle,ffstring_iless>::const_iterator si=this->find(ffstring(_L("Default")));
+    if (si!=this->end())
+     return &si->second.props;
+    else
+     return NULL;
+  }
+ return NULL;
 }
 
 template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,int flags) {

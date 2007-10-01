@@ -41,7 +41,7 @@ void TSubtitleProps::reset(void)
  marginR=marginL=marginV=marginTop=marginBottom=-1;
  borderStyle=-1;
  outlineWidth=shadowDepth=-1;
- SecondaryColour=TertiaryColour=0xffffff;
+ color=SecondaryColour=TertiaryColour=0xffffff;
  OutlineColour=ShadowColour=0;
  colorA=SecondaryColourA=TertiaryColourA=OutlineColourA=256;
  ShadowColourA=128;
