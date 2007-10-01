@@ -1273,7 +1273,27 @@ void TrenderedSubtitleLines::clear(void)
 
 bool operator < (const TrenderedSubtitleLines::ParagraphKey &a, const TrenderedSubtitleLines::ParagraphKey &b)
  {
-  return memcmp(&a,&b,sizeof(TrenderedSubtitleLines::ParagraphKey)) < 0;
+#ifndef __INTEL_COMPILER
+  return (memcmp(&a,&b,sizeof(TrenderedSubtitleLines::ParagraphKey)) < 0);
+#else
+  if (a.alignment<b.alignment) return true;
+  if (a.alignment>b.alignment) return false;
+  if (a.marginTop<b.marginTop) return true;
+  if (a.marginTop>b.marginTop) return false;
+  if (a.marginBottom<b.marginBottom) return true;
+  if (a.marginBottom>b.marginBottom) return false;
+  if (a.marginL<b.marginL) return true;
+  if (a.marginL>b.marginL) return false;
+  if (a.marginR<b.marginR) return true;
+  if (a.marginR>b.marginR) return false;
+  if (a.isPos<b.isPos) return true;
+  if (a.isPos>b.isPos) return false;
+  if (a.posx<b.posx) return true;
+  if (a.posx>b.posx) return false;
+  if (a.posy<b.posy) return true;
+  //if (a.posy>b.posy) return false;
+  return false;
+#endif
  };
 //================================= TcharsChache =================================
 TcharsChache::TcharsChache(HDC Ihdc,const YUVcolorA &Iyuv,const YUVcolorA &Ioutline,const YUVcolorA &Ishadow,int Ixscale,int Iyscale,IffdshowBase *Ideci):
