@@ -346,7 +346,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
      oldSizeDx=sizeDx;oldSizeDy=sizeDy;
 
      TsubPrintPrefs printprefs(dst,stride2,dx1,dy1,deci,cfg,pict,clipdy,parent->config,!!isdvdproc);
-     printprefs.csp=pict.csp;
+     printprefs.csp=pict.csp & FF_CSPS_MASK;
      if (!cfg->stereoscopic || isdvdproc)
       {
        printprefs.sizeDx=sizeDx;
