@@ -1673,7 +1673,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
                p++;
               }
             }
-           int strlenp=strlen(p);
+           int strlenp=(int)strlen(p);
            if (cx+strlenp-1<=wordWrap.getRightOfTheLine(cy))
             {
              if (*p)

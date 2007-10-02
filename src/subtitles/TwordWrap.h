@@ -26,6 +26,6 @@ public:
  //3: same as 0, but lower line gets wider.
  void debugprint();
  int getRightOfTheLine(int n);
- int getLineCount(void) {return rightOfTheLines.size();}
+ int getLineCount(void) {return (int)rightOfTheLines.size();}
 };
 #endif _TWORDWRAP_H_

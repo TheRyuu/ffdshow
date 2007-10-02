@@ -53,7 +53,7 @@ template<class tchar> TwordWrap<tchar>::TwordWrap(int Imode,const tchar *Istr,in
 template<class tchar> int TwordWrap<tchar>::smart()
 {
  int left=0;
- int strlenp=str.size();
+ int strlenp=(int)str.size();
  bool skippingSpace=false;
  int xx=0;
  rightOfTheLines.clear();
@@ -113,12 +113,12 @@ template<class tchar> int TwordWrap<tchar>::smart()
     }
   }
  rightOfTheLines.push_back(strlenp);
- return rightOfTheLines.size();
+ return (int)rightOfTheLines.size();
 }
 
 template<class tchar> int TwordWrap<tchar>::smartReverse()
 {
- int strlenp=str.size();
+ int strlenp=(int)str.size();
  int right=pwidths[strlenp-1];
  bool skippingSpace=false;
  int xx=strlenp-1;
@@ -179,14 +179,14 @@ template<class tchar> int TwordWrap<tchar>::smartReverse()
        }
     }
   }
- return rightOfTheLines.size();
+ return (int)rightOfTheLines.size();
 }
 
 template<> int TwordWrap<char>::nextChar(int x)
 {
  if (x+1>=(int)str.size())
   return x;
- return x+_mbclen((const unsigned char *)str.c_str()+x);
+ return x+(int)_mbclen((const unsigned char *)str.c_str()+x);
 }
 
 template<> int TwordWrap<wchar_t>::nextChar(int x)
@@ -276,5 +276,5 @@ template<class tchar> int TwordWrap<tchar>::getRightOfTheLine(int n)
  if (n<(int)rightOfTheLines.size())
   return rightOfTheLines[n];
  else
-  return str.size();
+  return (int)str.size();
 }
