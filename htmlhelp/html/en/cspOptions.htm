@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>ffdshow tryouts | Advanced color space options configuration</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="description" content="Advanced color space options configuration" />
+  <link rel="stylesheet" href="../styles/style.css" type="text/css" />
+  <link rel="shortcut icon" type="image/x-icon" href="../images/favicon.ico" />
+</head>
+
+<body>
+  <a href="http://ffdshow-tryout.sourceforge.net/">
+    <img src="../images/logo_phpBB.png" title="ffdshow tryouts" alt="ffdshow tryouts" width="200" height="91" />
+  </a>
+
+  <h1>
+    <a name="top" id="top">Advanced color space options</a>
+  </h1>
+
+  <img src="images/cspOptions.png" title="Advanced color space options dialog" alt="Advanced color space options dialog" width="558" height="413" />
+
+  <p>
+    <b>Note : This feature is not in the svn nor in the patch section. This is a preview version to discuss how the feature and this document should be.</b><br />
+    The advanced color space options page gives you control over the YCbCr <-> RGB conversion. The top half gives you control over the ITU-R BT.601/709, while the lower half is used for black and white cutoff, which control the contrast.
+  </p>
+
+  <h2>YCbCr specification</h2>
+
+  <p>
+    ITU-R BT.601/709 are ITU-R standard for component digital video. They define how to convert YCbCr <-> RGB.<br />
+  </p>
+  <ul style="list-style-type:circle">
+    <li>ITU-R BT.601 : Almost all SDTV use this.</li>
+    <li>ITU-R BT.709 : Slightly different color compared to BT.601. HDTV use this. Please note that some HD clips prepared for computer may use ITU-R BT.601 color space.</li>
+  </ul>
+
+  <h2>Contrast</h2>
+
+  <p>
+    Almost all the video are encoded using Y (luma) range 16-235. YCbCr(16,128,128) is normally converted to RGB(0,0,0).<br />
+    Some video clips have Y below 16 which represent blacker than black. If you want to take advantage of this gradation at the expense of contrast, use PC or custom mode.
+  </p>
+
+  <div class="footer">
+    <table>
+      <tr>
+        <td>
+          <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a href="http://sourceforge.net">
+            <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
+          </a>
+        </td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>
