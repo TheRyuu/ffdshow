@@ -51,6 +51,7 @@ void avcodec_register_all(void)
     
     /* video codecs */
     REGISTER_DECODER	(aasc);
+    REGISTER_DECODER	(amv); // not yet used by ffdshow
     REGISTER_DECODER	(asv1);
     REGISTER_DECODER	(asv2);
     REGISTER_DECODER	(avs);
@@ -154,6 +155,7 @@ void avcodec_register_all(void)
     REGISTER_DECODER  (adpcm_ct);
     REGISTER_DECODER  (adpcm_ea);
     REGISTER_DECODER  (adpcm_g726);
+    REGISTER_DECODER  (adpcm_ima_amv); // not yet used by ffdshow
     REGISTER_DECODER  (adpcm_ima_dk3);
     REGISTER_DECODER  (adpcm_ima_dk4);
     REGISTER_DECODER  (adpcm_ima_qt);

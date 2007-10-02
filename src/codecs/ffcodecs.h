@@ -77,6 +77,9 @@
  CODEC_OP(CODEC_ID_CAVS              ,66,"cavs") \
  CODEC_OP(CODEC_ID_SNOW              ,67,"snow") \
  CODEC_OP(CODEC_ID_VP6A              ,68,"vp6a") \
+ CODEC_OP(CODEC_ID_RV30              ,69,"rv30") \
+ CODEC_OP(CODEC_ID_RV40              ,70,"rv40") \
+ CODEC_OP(CODEC_ID_AMV               ,71,"amv") \
  \
  /* Well-known audio codecs */ \
  CODEC_OP(CODEC_ID_MP2               ,100,"") \
@@ -111,22 +114,20 @@
  CODEC_OP(CODEC_ID_ADPCM_SBPRO_2     ,129,"") \
  CODEC_OP(CODEC_ID_ADPCM_SBPRO_3     ,130,"") \
  CODEC_OP(CODEC_ID_ADPCM_SBPRO_4     ,131,"") \
- CODEC_OP(CODEC_ID_FLAC              ,132,"flac") \
- CODEC_OP(CODEC_ID_AMR_NB            ,133,"amr nb") \
- CODEC_OP(CODEC_ID_GSM_MS            ,134,"gsm ms") \
- CODEC_OP(CODEC_ID_TTA               ,135,"tta") \
- CODEC_OP(CODEC_ID_MACE3             ,136,"mace3") \
- CODEC_OP(CODEC_ID_MACE6             ,137,"mace6") \
- CODEC_OP(CODEC_ID_QDM2              ,138,"qdm2") \
- CODEC_OP(CODEC_ID_MP3ADU            ,139,"mp3adu") \
- CODEC_OP(CODEC_ID_MP3ON4            ,140,"mp3on4") \
- CODEC_OP(CODEC_ID_COOK              ,141,"cook") \
- CODEC_OP(CODEC_ID_TRUESPEECH        ,142,"truespeech") \
- CODEC_OP(CODEC_ID_RA_144            ,143,"14_4") \
- CODEC_OP(CODEC_ID_RA_288            ,144,"28_8") \
- CODEC_OP(CODEC_ID_ATRAC3            ,145,"atrac 3") \
- CODEC_OP(CODEC_ID_RV40              ,146,"rv40") \
-\
+ CODEC_OP(CODEC_ID_ADPCM_IMA_AMV     ,132,"adpcm ima amv") \
+ CODEC_OP(CODEC_ID_FLAC              ,133,"flac") \
+ CODEC_OP(CODEC_ID_AMR_NB            ,134,"amr nb") \
+ CODEC_OP(CODEC_ID_GSM_MS            ,135,"gsm ms") \
+ CODEC_OP(CODEC_ID_TTA               ,136,"tta") \
+ CODEC_OP(CODEC_ID_MACE3             ,137,"mace3") \
+ CODEC_OP(CODEC_ID_MACE6             ,138,"mace6") \
+ CODEC_OP(CODEC_ID_QDM2              ,139,"qdm2") \
+ CODEC_OP(CODEC_ID_COOK              ,140,"cook") \
+ CODEC_OP(CODEC_ID_TRUESPEECH        ,141,"truespeech") \
+ CODEC_OP(CODEC_ID_RA_144            ,142,"14_4") \
+ CODEC_OP(CODEC_ID_RA_288            ,143,"28_8") \
+ CODEC_OP(CODEC_ID_ATRAC3            ,144,"atrac 3") \
+ \
  /* Raw formats */ \
  CODEC_OP(CODEC_ID_RAW           ,300,"raw") \
  CODEC_OP(CODEC_ID_YUY2          ,301,"raw") \
@@ -156,7 +157,7 @@
  CODEC_OP(CODEC_ID_PAL8          ,325,"raw") \
  CODEC_OP(CODEC_ID_LPCM          ,398,"raw") \
  CODEC_OP(CODEC_ID_PCM           ,399,"raw") \
-\
+ \
  CODEC_OP(CODEC_ID_PCM_S32LE           ,200,"raw") \
  CODEC_OP(CODEC_ID_PCM_S32BE           ,201,"raw") \
  CODEC_OP(CODEC_ID_PCM_U32LE           ,202,"raw") \
