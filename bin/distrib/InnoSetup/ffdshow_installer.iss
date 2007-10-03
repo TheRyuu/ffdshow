@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1465
+#define tryout_revision = 1500
 #define buildyear = 2007
-#define buildmonth = '09'
-#define buildday = '05'
+#define buildmonth = '10'
+#define buildday = '03'
 
 ; Build specific options
 #define unicode_required = True
@@ -1125,9 +1125,11 @@ begin
     'amcap.exe'#13#10
     'amvtransform.exe'#13#10
     'Apollo DivX to DVD Creator.exe'#13#10
+    'Apollo3GPVideoConverter.exe'#13#10
     'Ares.exe'#13#10
     'AsfTools.exe'#13#10
     'ass_help3r.exe'#13#10
+    'ASUSDVD.exe'#13#10
     'Audition.exe'#13#10
     'AutoGK.exe'#13#10
     'autorun.exe'#13#10
@@ -1174,9 +1176,11 @@ begin
     'DivX Player.exe'#13#10
     'dllhost.exe'#13#10
     'dpgenc.exe'#13#10 
+    'Dr.DivX.exe'#13#10
     'drdivx.exe'#13#10
     'drdivx2.exe'#13#10
     'DreamMaker.exe'#13#10
+    'DSBrws.exe'#13#10
     'DScaler.exe'#13#10
     'dv.exe'#13#10
     'dvbdream.exe'#13#10
@@ -1186,6 +1190,7 @@ begin
     'dvdplay.exe'#13#10
     'DVDMaker.exe'#13#10
     'DVD Shrink 3.2.exe'#13#10
+    'DXEnum.exe'#13#10
     'Easy RealMedia Tools.exe'#13#10
     'ehExtHost.exe'#13#10
     'ehshell.exe'#13#10
@@ -1202,6 +1207,7 @@ begin
     'FSViewer.exe'#13#10
     'FusionHDTV.exe'#13#10
     'GDivX Player.exe'#13#10
+    'gdsmux.exe'#13#10
     'GoldWave.exe'#13#10
     'gom.exe'#13#10
     'GomEnc.exe'#13#10
@@ -1261,6 +1267,7 @@ begin
     'NMSTranscoder.exe'#13#10
     'nvplayer.exe'#13#10
     'Omgjbox.exe'#13#10
+    'OnlineTV.exe'#13#10
     'Opera.exe'#13#10
     'OrbStreamerClient.exe'#13#10
     'OUTLOOK.EXE'#13#10
@@ -1345,7 +1352,8 @@ begin
     'Xvid4PSP.exe'#13#10
     'YahooMusicEngine.exe'#13#10
     'YahooWidgetEngine.exe'#13#10
-    'zplayer.exe'#13#10;
+    'zplayer.exe'#13#10
+    'Zune.exe'#13#10;
   end
 
 
@@ -1585,6 +1593,7 @@ begin
   compApps[175].name:= 'VIDEOS~1.SCR';
   
   compApps[176].rev := 1410;
+  compApps[176].name:= 'YahooMusicEngine.exe';
   compApps[177].name:= '3wPlayer.exe';
   compApps[178].name:= 'ACDSee6.exe';
   compApps[179].name:= 'ACDSee7.exe';
@@ -1612,9 +1621,18 @@ begin
   compApps[201].name:= 'RoxMediaDB9.exe';
   compApps[202].name:= 'TVPlayer.exe';
   compApps[203].name:= 'VFAPIFrameServer.exe';
-  compApps[204].name:= 'YahooMusicEngine.exe';
   
-  compApps[205].rev := 0;
+  compApps[204].rev := 1500;
+  compApps[204].name:= 'Apollo3GPVideoConverter.exe';
+  compApps[205].name:= 'DXEnum.exe';
+  compApps[206].name:= 'ASUSDVD.exe';
+  compApps[207].name:= 'Dr.DivX.exe';
+  compApps[208].name:= 'gdsmux.exe';
+  compApps[209].name:= 'DSBrws.exe';
+  compApps[210].name:= 'OnlineTV.exe';
+  compApps[211].name:= 'Zune.exe';
+  
+  compApps[212].rev := 0;
 
 // Compatibility list
   ComplistVideo.skipped := False;

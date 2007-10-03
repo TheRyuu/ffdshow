@@ -191,7 +191,15 @@
           _l("TVPlayer.exe\r\n")\
           _l("VFAPIFrameServer.exe\r\n")\
           _l("YahooMusicEngine.exe\r\n")\
-          _l("tmc.exe\r\n")
+          _l("tmc.exe\r\n")\
+          _l("Apollo3GPVideoConverter.exe\r\n")\
+          _l("ASUSDVD.exe\r\n")\
+          _l("Dr.DivX.exe\r\n")\
+          _l("DSBrws.exe\r\n")\
+          _l("DXEnum.exe\r\n")\
+          _l("gdsmux.exe\r\n")\
+          _l("OnlineTV.exe\r\n")\
+          _l("Zune.exe\r\n")
           
 
 #define BLACKLIST_EXE_FILENAME _l("oblivion.exe;morrowind.exe")
