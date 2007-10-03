@@ -1333,6 +1333,13 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 1254=Gche
 1255=Drte
 1256=Bas
+2091=Recadrage automatique
+2094=Tolérance
+2096=Intervalle scan (ms)
+2098=Vertical
+2099=Horizontal
+2100=Vertical et horizontal
+2101=Arrêt du scan après (ms)
 
 [136]
 0=Zone de notification
