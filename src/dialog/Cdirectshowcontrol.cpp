@@ -103,11 +103,11 @@ void TdirectshowControlPageDec::blacklist2dlg(void)
  enable(is,IDC_ED_BLACKLIST);
  enable(is,IDC_BT_BLACKLIST);
 
- is=cfgGet(IDFF_isCompatibilityList);
+ is=cfgGet(IDFF_isWhitelist);
  setCheck(IDC_CHB_COMPATIBILITYLIST,is);
- const char_t *complist0=cfgGetStr(IDFF_compatibilityList);
+ const char_t *complist0=cfgGetStr(IDFF_whitelist);
  ffstring complistResult;
- convertDelimit(complist0,_l("\r\n"),complistResult,_l(";"));
+ convertDelimit(complist0,_l(";"),complistResult,_l(";"));
  SetDlgItemText(m_hwnd,IDC_ED_COMPATIBILITYLIST,complistResult.c_str());
  setCheck(IDC_CHB_IS_COMPMGR,cfgGet(IDFF_isCompMgr));
  enable(is,IDC_ED_COMPATIBILITYLIST);
@@ -148,7 +148,7 @@ INT_PTR TdirectshowControlPageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lPar
        return TRUE;
       case IDC_ED_COMPATIBILITYLIST:
        if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
-        comp_dlg2cfg(IDC_ED_COMPATIBILITYLIST,IDFF_compatibilityList,_l("\r\n"));
+        comp_dlg2cfg(IDC_ED_COMPATIBILITYLIST,IDFF_whitelist,_l(";"));
        return TRUE;
      }    
     break;
@@ -203,7 +203,7 @@ TdirectshowControlPageDec::TdirectshowControlPageDec(TffdshowPageDec *Iparent):T
   {
    IDC_CHB_ADDTOROT,IDFF_addToROT,NULL,
    IDC_CHB_BLACKLIST,IDFF_isBlacklist,&TdirectshowControlPageDec::blacklist2dlg,
-   IDC_CHB_COMPATIBILITYLIST,IDFF_isCompatibilityList,&TdirectshowControlPageDec::blacklist2dlg,
+   IDC_CHB_COMPATIBILITYLIST,IDFF_isWhitelist,&TdirectshowControlPageDec::blacklist2dlg,
    IDC_CHB_IS_COMPMGR,IDFF_isCompMgr,&TdirectshowControlPageDec::onChbIsCompMgr,
    0,NULL,NULL
   };
@@ -227,7 +227,7 @@ TdirectshowControlPageDec::~TdirectshowControlPageDec()
 }
 void TdirectshowControlPageDec::onEditCompatibilitylist(void)
 {
- onEditCompI(IDFF_compatibilityList);
+ onEditCompI(IDFF_whitelist);
 }
 void TdirectshowControlPageDec::onEditBlacklist(void)
 {

@@ -6,201 +6,13 @@
 #include "Toptions.h"
 
 #define MAX_COMPATIBILITYLIST_LENGTH 5000
-#define COMPATIBLE_EXE_FILENAME _l("aegisub.exe\r\nALLPlayer.exe\r\nALShow.exe\r\nass_help3r.exe\r\navi2mpg.exe\r\navipreview.exe\r\naviutl.exe\r\nBePipe.exe\r\nbsplay.exe\r\nbsplayer.exe\r\nchristv.exe\r\nCorePlayer.exe\r\ncoreplayer.exe\r\ncrystalfree.exe\r\ncut_assistant.exe\r\nDScaler.exe\r\ndv.exe\r\nDVDMaker.exe\r\nehshell.exe\r\nfirefox.exe\r\ngom.exe\r\ngraphedit.exe\r\ngraphedt.exe\r\ngspot.exe\r\niexplore.exe\r\nJetAudio.exe\r\nkmplayer.exe\r\nLA.exe\r\nLilith.exe\r\nmakeAVIS.exe\r\nMedia Center 12.exe\r\nMedia Jukebox.exe\r\nmegui.exe\r\nmplayer2.exe\r\nmplayerc.exe\r\nMunite.exe\r\nMuzikbrowzer.exe\r\nMv2PlayerPlus.exe\r\nnvplayer.exe\r\npowerdvd.exe\r\nprogdvb.exe\r\nQonoha.exe\r\nrealplay.exe\r\nrlkernel.exe\r\nSinkuHadouken.exe\r\nSplitCam.exe\r\nTheaterTek DVD.exe\r\ntimecodec.exe\r\nViPlay3.exe\r\nvirtualdub.exe\r\nvirtualdubmod.exe\r\nwinamp.exe\r\nwindvd.exe\r\nwmenc.exe\r\nwmplayer.exe\r\nzplayer.exe\r\n")\
-          _l("Sleipnir.exe\r\n")\
-          _l("fenglei.exe\r\n")\
-          _l("MDirect.exe\r\n")\
-          _l("SubtitleEdit.exe\r\n")\
-          _l("sherlock2.exe\r\n")\
-          _l("GoogleDesktop.exe\r\n")\
-          _l("MediaServer.exe\r\n")\
-          _l("MediaPortal.exe\r\n")\
-          _l("honestechTV.exe\r\n")\
-          _l("DVD Shrink 3.2.exe\r\n")\
-          _l("stillcap.exe\r\n")\
-          _l("carom.exe\r\n")\
-          _l("WCreator.exe\r\n")\
-          _l("ppmate.exe\r\n")\
-          _l("ShowTime.exe\r\n")\
-          _l("YahooWidgetEngine.exe\r\n")\
-          _l("PowerDirector.exe\r\n")\
-          _l("infotv.exe\r\n")\
-          _l("rundll32.exe\r\n")\
-          _l("smartmovie.exe\r\n")\
-          _l("MpegVideoWizard.exe\r\n")\
-          _l("SWFConverter.exe\r\n")\
-          _l("FMRadio.exe\r\n")\
-          _l("TMPGEnc.exe\r\n")\
-          _l("HPWUCli.exe\r\n")\
-          _l("pcwmp.exe\r\n")\
-          _l("NeroVision.exe\r\n")\
-          _l("ICQLite.exe\r\n")\
-          _l("SubtitleWorkshop.exe\r\n")\
-          _l("Adobe Premiere Pro.exe\r\n")\
-          _l("Media Player Classic.exe\r\n")\
-          _l("Opera.exe\r\n")\
-          _l("amcap.exe\r\n")\
-          _l("PaintDotNet.exe\r\n")\
-          _l("GoogleDesktopCrawl.exe\r\n")\
-          _l("WinAVI.exe\r\n")\
-          _l("TVersity.exe\r\n")\
-          _l("IHT.exe\r\n")\
-          _l("START.EXE\r\n")\
-          _l("mencoder.exe\r\n")\
-          _l("dvdplay.exe\r\n")\
-          _l("ehExtHost.exe\r\n")\
-          _l("aim6.exe\r\n")\
-          _l("CrystalPro.exe\r\n")\
-          _l("PPStream.exe\r\n")\
-          _l("Crystal.exe\r\n")\
-          _l("TMPGEnc4XP.exe\r\n")\
-          _l("subedit.exe\r\n")\
-          _l("emule_TK4.exe\r\n")\
-          _l("BTVD3DShell.exe\r\n")\
-          _l("Xvid4PSP.exe\r\n")\
-          _l("dashboard.exe\r\n")\
-          _l("drdivx.exe\r\n")\
-          _l("NMSTranscoder.exe\r\n")\
-          _l("Fortius.exe\r\n")\
-          _l("VideoSnapshot.exe\r\n")\
-          _l("RadLight.exe\r\n")\
-          _l("Procoder2.exe\r\n")\
-          _l("DivX Player.exe\r\n")\
-          _l("i_view32.exe\r\n")\
-          _l("Recode.exe\r\n")\
-          _l("Encode360.exe\r\n")\
-          _l("ACDSee5.exe\r\n")\
-          _l("filtermanager.exe\r\n")\
-          _l("avicodec.exe\r\n")\
-          _l("x264.exe\r\n")\
-          _l("MediaLife.exe\r\n")\
-          _l("cscript.exe\r\n")\
-          _l("wscript.exe\r\n")\
-          _l("SopCast.exe\r\n")\
-          _l("DreamMaker.exe\r\n")\
-          _l("Maxthon.exe\r\n")\
-          _l("InfoTool.exe\r\n")\
-          _l("Ultra EDIT.exe\r\n")\
-          _l("moviethumb.exe\r\n")\
-          _l("GDivX Player.exe\r\n")\
-          _l("TOTALCMD.EXE\r\n")\
-          _l("CodecInstaller.exe\r\n")\
-          _l("OUTLOOK.EXE\r\n")\
-          _l("NeroHome.exe\r\n")\
-          _l("ALSong.exe\r\n")\
-          _l("HBP.exe\r\n")\
-          _l("Easy RealMedia Tools.exe\r\n")\
-          _l("myplayer.exe\r\n")\
-          _l("bplay.exe\r\n")\
-          _l("nero.exe\r\n")\
-          _l("ICQ.exe\r\n")\
-          _l("XNVIEW.EXE\r\n")\
-          _l("WINWORD.EXE\r\n")\
-          _l("POWERPNT.EXE\r\n")\
-          _l("Studio.exe\r\n")\
-          _l("iPlayer.exe\r\n")\
-          _l("Adobe Premiere Elements.exe\r\n")\
-          _l("Photoshop.exe\r\n")\
-          _l("VideoSplitter.exe\r\n")\
-          _l("dvbviewer.exe\r\n")\
-          _l("FSViewer.exe\r\n")\
-          _l("DVDMF.exe\r\n")\
-          _l("Flash.exe\r\n")\
-          _l("VCD_PLAY.EXE\r\n")\
-          _l("WinMPGVideoConvert.exe\r\n")\
-          _l("Apollo DivX to DVD Creator.exe\r\n")\
-          _l("Avi2Dvd.exe\r\n")\
-          _l("PVCR.exe\r\n")\
-          _l("HDVSplit.exe\r\n")\
-          _l("time_adjuster.exe\r\n")\
-          _l("playwnd.exe\r\n")\
-          _l("OrbStreamerClient.exe\r\n")\
-          _l("SelfMV.exe\r\n")\
-          _l("TVUPlayer.exe\r\n")\
-          _l("amvtransform.exe\r\n")\
-          _l("Badak.exe\r\n")\
-          _l("CTCMSU.exe\r\n")\
-          _l("CTWave.exe\r\n")\
-          _l("IncMail.exe\r\n")\
-          _l("MMPlayer.exe\r\n")\
-          _l("mpcstar.exe\r\n")\
-          _l("PhotoScreensaver.scr\r\n")\
-          _l("QQPlayerSvr.exe\r\n")\
-          _l("Shareaza.exe\r\n")\
-          _l("afreecaplayer.exe\r\n")\
-          _l("WFTV.exe\r\n")\
-          _l("coolpro2.exe\r\n")\
-          _l("PPLive.exe\r\n")\
-          _l("Picasa2.exe\r\n")\
-          _l("VeohClient.exe\r\n")\
-          _l("ACDSee9.exe\r\n")\
-          _l("BitComet.exe\r\n")\
-          _l("jwBrowser.exe\r\n")\
-          _l("DVDAuthor.exe\r\n")\
-          _l("dllhost.exe\r\n")\
-          _l("GomEnc.exe\r\n")\
-          _l("bestplayer1.0.exe\r\n")\
-          _l("msoobe.exe\r\n")\
-          _l("vplayer.exe\r\n")\
-          _l("paltalk.exe\r\n")\
-          _l("ffmpeg.exe\r\n")\
-          _l("demo32.exe\r\n")\
-          _l("Omgjbox.exe\r\n")\
-          _l("UCC.exe\r\n")\
-          _l("Metacafe.exe\r\n")\
-          _l("avant.exe\r\n")\
-          _l("CTWave32.exe\r\n")\
-          _l("tvc.exe\r\n")\
-          _l("GoldWave.exe\r\n")\
-          _l("WindowsPhotoGallery.exe\r\n")\
-          _l("Producer.exe\r\n")\
-          _l("MusicManager.exe\r\n")\
-          _l("cinemaplayer.exe\r\n")\
-          _l("CTCMS.exe\r\n")\
-          _l("sidebar.exe\r\n")\
-          _l("LifeCam.exe\r\n")\
-          _l("NicoPlayer.exe\r\n")\
-          _l("afreecastudio.exe\r\n")\
-          _l("AVerTV.exe\r\n")\
-          _l("FusionHDTV.exe\r\n")\
-          _l("VIDEOS~1.SCR\r\n")\
-          _l("3wPlayer.exe\r\n")\
-          _l("ACDSee6.exe\r\n")\
-          _l("ACDSee7.exe\r\n")\
-          _l("ACDSee8.exe\r\n")\
-          _l("ACDSee8Pro.exe\r\n")\
-          _l("AltDVB.exe\r\n")\
-          _l("Ares.exe\r\n")\
-          _l("AsfTools.exe\r\n")\
-          _l("Audition.exe\r\n")\
-          _l("AutoGK.exe\r\n")\
-          _l("autorun.exe\r\n")\
-          _l("avs2avi.exe\r\n")\
-          _l("BearShare.exe\r\n")\
-          _l("BlazeDVD.exe\r\n")\
-          _l("CamRecorder.exe\r\n")\
-          _l("CamtasiaStudio.exe\r\n")\
-          _l("CinergyDVR.exe\r\n")\
-          _l("ConvertXtoDvd.exe\r\n")\
-          _l("dpgenc.exe\r\n")\
-          _l("drdivx2.exe\r\n")\
-          _l("dvbdream.exe\r\n")\
-          _l("FreeStyle.exe\r\n")\
-          _l("MultimediaPlayer.exe\r\n")\
-          _l("RoxMediaDB9.exe\r\n")\
-          _l("TVPlayer.exe\r\n")\
-          _l("VFAPIFrameServer.exe\r\n")\
-          _l("YahooMusicEngine.exe\r\n")\
-          _l("tmc.exe\r\n")\
-          _l("Apollo3GPVideoConverter.exe\r\n")\
-          _l("ASUSDVD.exe\r\n")\
-          _l("Dr.DivX.exe\r\n")\
-          _l("DSBrws.exe\r\n")\
-          _l("DXEnum.exe\r\n")\
-          _l("gdsmux.exe\r\n")\
-          _l("OnlineTV.exe\r\n")\
-          _l("Zune.exe\r\n")
-          
+
+#define WHITELIST_EXE_FILENAME \
+	_l("3wPlayer.exe;ACDSee5.exe;ACDSee6.exe;ACDSee7.exe;ACDSee8.exe;ACDSee8Pro.exe;ACDSee9.exe;Adobe Premiere Elements.exe;Adobe Premiere Pro.exe;aegisub.exe;afreecaplayer.exe;afreecastudio.exe;aim6.exe;ALLPlayer.exe;ALShow.exe;ALSong.exe;AltDVB.exe;amcap.exe;amvtransform.exe;Apollo DivX to DVD Creator.exe;Apollo3GPVideoConverter.exe;Ares.exe;AsfTools.exe;ass_help3r.exe;ASUSDVD.exe;Audition.exe;AutoGK.exe;autorun.exe;avant.exe;AVerTV.exe;Avi2Dvd.exe;avi2mpg.exe;avicodec.exe;avipreview.exe;aviutl.exe;avs2avi.exe;Badak.exe;BearShare.exe;BePipe.exe;bestplayer1.0.exe;BitComet.exe;BlazeDVD.exe;bplay.exe;bsplay.exe;bsplayer.exe;BTVD3DShell.exe;CamRecorder.exe;CamtasiaStudio.exe;carom.exe;christv.exe;cinemaplayer.exe;CinergyDVR.exe;CodecInstaller.exe;ConvertXtoDvd.exe;coolpro2.exe;CorePlayer.exe;coreplayer.exe;Crystal.exe;crystalfree.exe;CrystalPro.exe;")\
+	_l("cscript.exe;CTCMS.exe;CTCMSU.exe;CTWave.exe;CTWave32.exe;cut_assistant.exe;dashboard.exe;demo32.exe;DivX Player.exe;dllhost.exe;dpgenc.exe;Dr.DivX.exe;drdivx.exe;drdivx2.exe;DreamMaker.exe;DSBrws.exe;DScaler.exe;dv.exe;dvbdream.exe;dvbviewer.exe;DVD Shrink 3.2.exe;DVDAuthor.exe;DVDMaker.exe;DVDMF.exe;dvdplay.exe;DXEnum.exe;Easy RealMedia Tools.exe;ehExtHost.exe;ehshell.exe;emule_TK4.exe;Encode360.exe;fenglei.exe;ffmpeg.exe;filtermanager.exe;firefox.exe;Flash.exe;FMRadio.exe;Fortius.exe;FreeStyle.exe;FSViewer.exe;FusionHDTV.exe;GDivX Player.exe;gdsmux.exe;GoldWave.exe;gom.exe;GomEnc.exe;GoogleDesktop.exe;GoogleDesktopCrawl.exe;graphedit.exe;graphedt.exe;gspot.exe;HBP.exe;HDVSplit.exe;honestechTV.exe;HPWUCli.exe;i_view32.exe;ICQ.exe;ICQLite.exe;iexplore.exe;IHT.exe;IncMail.exe;InfoTool.exe;infotv.exe;iPlayer.exe;JetAudio.exe;jwBrowser.exe;")\
+	_l("kmplayer.exe;LA.exe;LifeCam.exe;Lilith.exe;makeAVIS.exe;Maxthon.exe;MDirect.exe;Media Center 12.exe;Media Jukebox.exe;Media Player Classic.exe;MediaLife.exe;MediaPortal.exe;MediaServer.exe;megui.exe;mencoder.exe;Metacafe.exe;MMPlayer.exe;moviethumb.exe;mpcstar.exe;MpegVideoWizard.exe;mplayer2.exe;mplayerc.exe;msoobe.exe;MultimediaPlayer.exe;Munite.exe;MusicManager.exe;Muzikbrowzer.exe;Mv2PlayerPlus.exe;myplayer.exe;nero.exe;NeroHome.exe;NeroVision.exe;NicoPlayer.exe;NMSTranscoder.exe;nvplayer.exe;Omgjbox.exe;OnlineTV.exe;Opera.exe;OrbStreamerClient.exe;OUTLOOK.EXE;PaintDotNet.exe;paltalk.exe;pcwmp.exe;PhotoScreensaver.scr;Photoshop.exe;Picasa2.exe;playwnd.exe;PowerDirector.exe;powerdvd.exe;POWERPNT.EXE;PPLive.exe;ppmate.exe;PPStream.exe;Procoder2.exe;Producer.exe;progdvb.exe;PVCR.exe;Qonoha.exe;QQPlayerSvr.exe;RadLight.exe;realplay.exe;")\
+	_l("Recode.exe;rlkernel.exe;RoxMediaDB9.exe;rundll32.exe;SelfMV.exe;Shareaza.exe;sherlock2.exe;ShowTime.exe;sidebar.exe;SinkuHadouken.exe;Sleipnir.exe;smartmovie.exe;SopCast.exe;SplitCam.exe;START.EXE;stillcap.exe;Studio.exe;subedit.exe;SubtitleEdit.exe;SubtitleWorkshop.exe;SWFConverter.exe;TheaterTek DVD.exe;time_adjuster.exe;timecodec.exe;tmc.exe;TMPGEnc.exe;TMPGEnc4XP.exe;TOTALCMD.EXE;tvc.exe;TVersity.exe;TVPlayer.exe;TVUPlayer.exe;UCC.exe;Ultra EDIT.exe;VCD_PLAY.EXE;VeohClient.exe;VFAPIFrameServer.exe;VideoSnapshot.exe;VideoSplitter.exe;VIDEOS~1.SCR;ViPlay3.exe;virtualdub.exe;virtualdubmod.exe;vplayer.exe;WCreator.exe;WFTV.exe;winamp.exe;WinAVI.exe;WindowsPhotoGallery.exe;windvd.exe;WinMPGVideoConvert.exe;WINWORD.EXE;wmenc.exe;wmplayer.exe;wscript.exe;x264.exe;XNVIEW.EXE;Xvid4PSP.exe;YahooMusicEngine.exe;YahooWidgetEngine.exe;zplayer.exe;")\
+	_l("Zune.exe")     
 
 #define BLACKLIST_EXE_FILENAME _l("oblivion.exe;morrowind.exe")
 
@@ -215,16 +27,16 @@ protected:
  const char_t *reg_child;
  virtual void reg_op_codec(TregOp &t,TregOp *t2) {}
  void _reg_op_codec(short id,TregOp &tHKCU,TregOp *tHKLM,const char_t *name,int &val,int def);
- strings blacklistList,useonlyinList;bool firstBlacklist,firstUseonlyin;
+ strings blacklistList,whitelistList;bool firstBlacklist,firstWhitelist;
 public:
  TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const char_t *Ireg_child,TintStrColl *Icoll);
  virtual ~TglobalSettingsBase() {}
  bool exportReg(bool all,const char_t *regflnm,bool unicode);
  int filtermode;
  int multipleInstances;
- int isBlacklist,isUseonlyin;char_t blacklist[MAX_COMPATIBILITYLIST_LENGTH],useonlyin[MAX_COMPATIBILITYLIST_LENGTH];
+ int isBlacklist,isWhitelist;char_t blacklist[MAX_COMPATIBILITYLIST_LENGTH],whitelist[MAX_COMPATIBILITYLIST_LENGTH];
  virtual bool inBlacklist(const char_t *exe);
- virtual bool inUseonlyin(const char_t *exe,IffdshowBase *Ideci);
+ virtual bool inWhitelist(const char_t *exe,IffdshowBase *Ideci);
  int addToROT;
  int allowedCPUflags;
  int compOnLoadMode;

@@ -1,7 +1,7 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1500
+#define tryout_revision = 1502
 #define buildyear = 2007
 #define buildmonth = '10'
 #define buildday = '03'
@@ -566,10 +566,10 @@ Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: bl
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: blacklist; ValueData: "oblivion.exe;morrowind.exe"; Flags: createvalueifdoesntexist; MinVersion: 0,6; Components: ffdshow
 
 ; Compatibility list
-Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: isUseonlyin; ValueData: {code:Get_isUseonlyinVideo}; Check: IsCompVValid; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: String; ValueName: useonlyin;   ValueData: {code:Get_useonlyinVideo};                        Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: isUseonlyin; ValueData: {code:Get_isUseonlyinAudio}; Check: IsCompAValid; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: useonlyin;   ValueData: {code:Get_useonlyinAudio};                        Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: isWhitelist; ValueData: {code:Get_isWhitelistVideo}; Check: IsCompVValid; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: String; ValueName: whitelist;   ValueData: {code:Get_whitelistVideo};                        Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: isWhitelist; ValueData: {code:Get_isWhitelistAudio}; Check: IsCompAValid; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: whitelist;   ValueData: {code:Get_whitelistAudio};                        Components: ffdshow
 
 Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: dontaskComp; ValueData: {code:Get_isCompVdontask};   Check: IsCompVValid; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: dontaskComp; ValueData: {code:Get_isCompAdontask};   Check: IsCompAValid; Components: ffdshow
@@ -1007,28 +1007,30 @@ begin
     Result := '1';
 end;
 
-function Get_isUseonlyinVideo(dummy: String): String;
+function Get_isWhitelistVideo(dummy: String): String;
 begin
   Result := '1';
   if ComplistVideo.page.Values[0] then
     Result := '0';
 end;
 
-function Get_useonlyinVideo(dummy: String): String;
+function Get_whitelistVideo(dummy: String): String;
 begin
   Result := ComplistVideo.edt.Text;
+  StringChange(Result, #13#10, ';');
 end;
 
-function Get_isUseonlyinAudio(dummy: String): String;
+function Get_isWhitelistAudio(dummy: String): String;
 begin
   Result := '1';
   if ComplistAudio.page.Values[0] then
     Result := '0';
 end;
 
-function Get_useonlyinAudio(dummy: String): String;
+function Get_whitelistAudio(dummy: String): String;
 begin
   Result := ComplistAudio.edt.Text;
+  StringChange(Result, #13#10, ';');
 end;
 
 function isCompVValid(): Boolean;
@@ -1068,43 +1070,18 @@ var
   i: Integer;
   revision: Cardinal;
   rev: Integer;
+  default_compat_list: String;
 begin
   complist.countAdded := 0;
   complist.page.Add(ExpandConstant('{cm:comp_donotlimit}'));
   complist.page.Add(ExpandConstant('{cm:comp_useonlyin}'));
-  if ffRegReadDWordHKCU(regKeyName, 'isUseonlyin', 1)=1 then
+  if ffRegReadDWordHKCU(regKeyName, 'isWhitelist', i) = 1 then
     complist.page.Values[1] := True
   else
     complist.page.Values[0] := True;
-
-  // Edit control
-  complist.edt := TMemo.Create(complist.page);
-  complist.edt.Top := ScaleY(78);
-  complist.edt.Width := complist.page.SurfaceWidth;
-  complist.edt.Height := ScaleY(135);
-  complist.edt.Parent := complist.page.Surface;
-  complist.edt.MaxLength := 4000;
-  complist.edt.ScrollBars := ssVertical;
-  if RegQueryStringValue(HKCU, regKeyName, 'useonlyin', regstr) then begin
-    if RegQueryDwordValue(HKLM, 'Software\GNU\ffdshow', 'revision', revision) then begin
-      regstrUpper := AnsiUppercase(regstr);
-      rev := 1077;
-      for i:= 1 to NUMBER_OF_COMPATIBLEAPPLICATIONS do
-      begin
-        if compApps[i].rev = 0 then Break;
-        if compApps[i].rev > 1 then
-          rev := compApps[i].rev;
-        if rev > revision then begin
-          if Pos(AnsiUppercase(compApps[i].name),regstrUpper) = 0 then begin
-            regstr := compApps[i].name + #13#10 + regstr;
-            complist.countAdded := complist.countAdded + 1;
-          end
-        end
-      end
-    end
-    complist.edt.text := regstr;
-  end else begin
-    complist.edt.Text :=
+    
+  // Default list of compatible apps
+  default_compat_list :=
     '3wPlayer.exe'#13#10
     'ACDSee5.exe'#13#10
     'ACDSee6.exe'#13#10
@@ -1175,7 +1152,7 @@ begin
     'demo32.exe'#13#10
     'DivX Player.exe'#13#10
     'dllhost.exe'#13#10
-    'dpgenc.exe'#13#10 
+    'dpgenc.exe'#13#10
     'Dr.DivX.exe'#13#10
     'drdivx.exe'#13#10
     'drdivx2.exe'#13#10
@@ -1353,9 +1330,38 @@ begin
     'YahooMusicEngine.exe'#13#10
     'YahooWidgetEngine.exe'#13#10
     'zplayer.exe'#13#10
-    'Zune.exe'#13#10;
-  end
+    'Zune.exe';
 
+  // Edit control
+  complist.edt := TMemo.Create(complist.page);
+  complist.edt.Top := ScaleY(78);
+  complist.edt.Width := complist.page.SurfaceWidth;
+  complist.edt.Height := ScaleY(135);
+  complist.edt.Parent := complist.page.Surface;
+  complist.edt.MaxLength := 4000;
+  complist.edt.ScrollBars := ssVertical;
+  if RegQueryStringValue(HKCU, regKeyName, 'whitelist', regstr) then begin
+    StringChange(regstr, ';', #13#10);
+    if RegQueryDwordValue(HKLM, 'Software\GNU\ffdshow', 'revision', revision) then begin
+      regstrUpper := AnsiUppercase(regstr);
+
+      for i:= 1 to NUMBER_OF_COMPATIBLEAPPLICATIONS do begin
+        if compApps[i].rev = 0 then Break;
+        if compApps[i].rev > 1 then
+          rev := compApps[i].rev;
+        if rev > revision then begin
+          if Pos(AnsiUppercase(compApps[i].name),regstrUpper) = 0 then begin
+            regstr := compApps[i].name + #13#10 + regstr;
+            complist.countAdded := complist.countAdded + 1;
+          end
+        end
+      end
+      complist.edt.text := regstr;
+    end
+  end
+  else begin
+    complist.edt.Text := default_compat_list;
+  end
 
   // Check box
   complist.chbDontAsk := TCheckBox.Create(complist.page);
@@ -1378,261 +1384,12 @@ var
 begin
   { Create the pages }
 
-// new compatible applications should be written both here and edtTarget.Text := 'aegisub...
-// FIXME more smart way of initializing compApps.
-  for i := 1 to NUMBER_OF_COMPATIBLEAPPLICATIONS do
-   compApps[i].rev := -1;
+  // new compatible applications should be written both here and edtTarget.Text := 'aegisub...
+  // FIXME more smart way of initializing compApps.
 
-  compApps[1].rev   := 1077; //975;
-  compApps[1].name  := 'Munite.exe';
-  compApps[2].rev   := 1077; //975;
-  compApps[2].name  := 'nvplayer.exe';
-  compApps[3].rev   := 1077; //975;
-  compApps[3].name  := 'Qonoha.exe';
-  compApps[3].rev   := 1077; //976;
-  compApps[3].name  := 'SinkuHadouken.exe';
-  compApps[4].rev   := 1077; //985;
-  compApps[4].name  := 'Lilith.exe';
-  compApps[5].rev   := 1077; //1048;
-  compApps[5].name  := 'megui.exe';
-  compApps[6].rev   := 1116;
-  compApps[6].name  := 'TheaterTek DVD.exe';
-  compApps[7].rev   := 1125;
-  compApps[7].name  := 'graphedit.exe';
-  compApps[8].rev   := 1241;
-  compApps[8].name  := 'BePipe.exe';
+  //compApps[1].rev   := 1503;
+  //compApps[1].name  := 'example.exe';
 
-  compApps[9].rev   := 1245;
-  compApps[9].name  := 'christv.exe';
-
-  compApps[10].rev  := 1247;
-  compApps[10].name := 'avi2mpg.exe';
-  compApps[11].name := 'cut_assistant.exe';
-  compApps[12].name := 'SplitCam.exe';
-
-  compApps[13].rev  := 1253;
-  compApps[13].name := 'Sleipnir.exe';
-  compApps[14].name := 'fenglei.exe';
-  compApps[15].name := 'MDirect.exe';
-  compApps[16].name := 'SubtitleEdit.exe';
-  compApps[17].name := 'sherlock2.exe';
-  compApps[18].name := 'GoogleDesktop.exe';
-  compApps[19].name := 'MediaServer.exe';
-  compApps[20].name := 'MediaPortal.exe';
-  compApps[21].name := 'honestechTV.exe';
-  compApps[22].name := 'DVD Shrink 3.2.exe';
-  compApps[23].name := 'stillcap.exe';
-  compApps[24].name := 'carom.exe';
-  compApps[25].name := 'WCreator.exe';
-  compApps[26].name := 'ppmate.exe';
-
-  compApps[27].rev  := 1259;
-  compApps[27].name := 'ShowTime.exe';
-  compApps[28].name := 'YahooWidgetEngine.exe';
-  compApps[29].name := 'PowerDirector.exe';
-  compApps[30].name := 'infotv.exe';
-  compApps[31].name := 'rundll32.exe';
-  compApps[32].name := 'smartmovie.exe';
-  compApps[33].name := 'MpegVideoWizard.exe';
-  compApps[34].name := 'SWFConverter.exe';
-  compApps[35].name := 'FMRadio.exe';
-  compApps[36].name := 'TMPGEnc.exe';
-  compApps[37].name := 'HPWUCli.exe';
-
-  compApps[38].rev  := 1267;
-  compApps[38].name := 'pcwmp.exe';
-  compApps[39].name := 'NeroVision.exe';
-  compApps[40].name := 'ICQLite.exe';
-  compApps[41].name := 'SubtitleWorkshop.exe';
-  compApps[42].name := 'Adobe Premiere Pro.exe';
-  compApps[43].name := 'Media Player Classic.exe';
-  compApps[44].name := 'Opera.exe';
-  compApps[45].name := 'amcap.exe';
-  compApps[46].name := 'PaintDotNet.exe';
-  compApps[47].name := 'GoogleDesktopCrawl.exe';
-  compApps[48].name := 'WinAVI.exe';
-  compApps[49].name := 'TVersity.exe';
-  compApps[50].name := 'IHT.exe';
-  compApps[51].name := 'START.EXE';
-  compApps[52].name := 'mencoder.exe';
-  compApps[53].name := 'dvdplay.exe';
-
-  compApps[54].rev  := 1273;
-  compApps[54].name := 'ehExtHost.exe';
-  compApps[55].name := 'aim6.exe';
-  compApps[56].name := 'CrystalPro.exe';
-  compApps[57].name := 'PPStream.exe';
-  compApps[58].name := 'Crystal.exe';
-  compApps[59].name := 'TMPGEnc4XP.exe';
-  compApps[60].name := 'subedit.exe';
-  compApps[61].name := 'emule_TK4.exe';
-  compApps[62].name := 'BTVD3DShell.exe';
-  compApps[63].name := 'Xvid4PSP.exe';
-  compApps[64].name := 'dashboard.exe';
-  compApps[65].name := 'drdivx.exe';
-  compApps[66].name := 'NMSTranscoder.exe';
-  compApps[67].name := 'Fortius.exe';
-  compApps[68].name := 'VideoSnapshot.exe';
-  compApps[69].name := 'RadLight.exe';
-  compApps[70].name := 'Procoder2.exe';
-  compApps[71].name := 'DivX Player.exe';
-  compApps[72].name := 'i_view32.exe';
-  compApps[73].name := 'Recode.exe';
-  compApps[74].name := 'Encode360.exe';
-  compApps[75].name := 'ACDSee5.exe';
-  compApps[76].name := 'filtermanager.exe';
-  compApps[77].name := 'avicodec.exe';
-  compApps[78].name := 'x264.exe';
-  compApps[79].name := 'MediaLife.exe';
-  compApps[80].name := 'cscript.exe';
-  compApps[81].name := 'wscript.exe';
-  compApps[82].name := 'SopCast.exe';
-  compApps[83].name := 'DreamMaker.exe';
-  compApps[84].name := 'Maxthon.exe';
-  compApps[85].name := 'InfoTool.exe';
-  compApps[86].name := 'Ultra EDIT.exe';
-  compApps[87].name := 'moviethumb.exe';
-  compApps[88].name := 'GDivX Player.exe';
-  compApps[89].name := 'TOTALCMD.EXE';
-  compApps[90].name := 'CodecInstaller.exe';
-
-  compApps[91].rev  := 1283;
-  compApps[91].name := 'OUTLOOK.EXE';
-  compApps[92].name := 'NeroHome.exe';
-  compApps[93].name := 'ALSong.exe';
-  compApps[94].name := 'HBP.exe';
-  compApps[95].name := 'Easy RealMedia Tools.exe';
-  compApps[96].name := 'myplayer.exe';
-  compApps[97].name := 'bplay.exe';
-  compApps[98].name := 'nero.exe';
-  compApps[99].name := 'ICQ.exe';
-  compApps[100].name := 'XNVIEW.EXE';
-  compApps[101].name := 'WINWORD.EXE';
-  compApps[102].name := 'POWERPNT.EXE';
-  compApps[103].name := 'Studio.exe';
-  compApps[104].name := 'iPlayer.exe';
-  compApps[105].name := 'Adobe Premiere Elements.exe';
-  compApps[106].name := 'Photoshop.exe';
-  compApps[107].name := 'VideoSplitter.exe';
-  compApps[108].name := 'dvbviewer.exe';
-  compApps[109].name := 'FSViewer.exe';
-  compApps[110].name := 'DVDMF.exe';
-  compApps[111].name := 'Flash.exe';
-  compApps[112].name := 'VCD_PLAY.EXE';
-  compApps[113].name := 'WinMPGVideoConvert.exe';
-  compApps[114].name := 'Apollo DivX to DVD Creator.exe';
-  compApps[115].name := 'Avi2Dvd.exe';
-  compApps[116].name := 'PVCR.exe';
-  compApps[117].name := 'HDVSplit.exe';
-  compApps[118].name := 'time_adjuster.exe';
-  compApps[119].name := 'playwnd.exe';
-
-  compApps[120].rev  := 1296;
-  compApps[120].name := 'vstudio.exe';
-  compApps[121].name := 'msnmsgr.exe';
-  compApps[122].name := 'DXEnum.exe';
-  compApps[123].name := 'Shareaza.exe';
-  compApps[124].name := 'YahooMessenger.exe';
-  compApps[125].name := 'WebcamMax.exe';
-  compApps[126].name := 'TMPGEncDVDAuthor3.exe';
-  compApps[127].name := 'OrbStreamerClient.exe';
-  compApps[128].name := 'SelfMV.exe';
-  compApps[129].name := 'TVUPlayer.exe';
-  compApps[130].name := 'amvtransform.exe';
-  compApps[131].name := 'Badak.exe';
-  compApps[132].name := 'CTCMSU.exe';
-  compApps[133].name := 'CTWave.exe';
-  compApps[134].name := 'IncMail.exe';
-  compApps[135].name := 'MMPlayer.exe';
-  compApps[136].name := 'mpcstar.exe';
-  compApps[137].name := 'PhotoScreensaver.scr';
-  compApps[138].name := 'QQPlayerSvr.exe';
-  compApps[139].name := 'Shareaza.exe';
-
-  compApps[140].rev  := 1322;
-  compApps[140].name := 'afreecaplayer.exe';
-  compApps[141].name := 'WFTV.exe';
-  compApps[142].name := 'coolpro2.exe';
-  compApps[143].name := 'PPLive.exe';
-  compApps[144].name := 'Picasa2.exe';
-  compApps[145].name := 'VeohClient.exe';
-  compApps[146].name := 'ACDSee9.exe';
-  compApps[147].name := 'BitComet.exe';
-  compApps[148].name := 'jwBrowser.exe';
-  compApps[149].name := 'DVDAuthor.exe';
-
-  compApps[150].rev := 1355;
-  compApps[150].name:= 'dllhost.exe';
-
-  compApps[151].rev := 1378;
-  compApps[151].name:= 'GomEnc.exe';
-  compApps[152].name:= 'bestplayer1.0.exe';
-  compApps[153].name:= 'msoobe.exe';
-  compApps[154].name:= 'vplayer.exe';
-  compApps[155].name:= 'paltalk.exe';
-  compApps[156].name:= 'ffmpeg.exe';
-  compApps[157].name:= 'demo32.exe';
-  compApps[158].name:= 'Omgjbox.exe';
-  compApps[159].name:= 'UCC.exe';
-  compApps[160].name:= 'Metacafe.exe';
-  compApps[161].name:= 'avant.exe';
-  compApps[162].name:= 'CTWave32.exe';
-  compApps[163].name:= 'tvc.exe';
-  compApps[164].name:= 'GoldWave.exe';
-  compApps[165].name:= 'WindowsPhotoGallery.exe';
-  compApps[166].name:= 'Producer.exe';
-  compApps[167].name:= 'MusicManager.exe';
-  compApps[168].name:= 'cinemaplayer.exe';
-  compApps[169].name:= 'CTCMS.exe';
-  compApps[170].name:= 'sidebar.exe';
-  compApps[171].name:= 'LifeCam.exe';
-  compApps[172].name:= 'NicoPlayer.exe';
-  compApps[172].name:= 'afreecastudio.exe';
-  compApps[173].name:= 'AVerTV.exe';
-  compApps[174].name:= 'FusionHDTV.exe';
-  compApps[175].name:= 'VIDEOS~1.SCR';
-  
-  compApps[176].rev := 1410;
-  compApps[176].name:= 'YahooMusicEngine.exe';
-  compApps[177].name:= '3wPlayer.exe';
-  compApps[178].name:= 'ACDSee6.exe';
-  compApps[179].name:= 'ACDSee7.exe';
-  compApps[180].name:= 'ACDSee8.exe';
-  compApps[181].name:= 'ACDSee8Pro.exe';
-  compApps[182].name:= 'AltDVB.exe';
-  compApps[183].name:= 'Ares.exe';
-  compApps[184].name:= 'AsfTools.exe';
-  compApps[185].name:= 'Audition.exe';
-  compApps[186].name:= 'AutoGK.exe';
-  compApps[187].name:= 'autorun.exe';
-  compApps[188].name:= 'avs2avi.exe';
-  compApps[189].name:= 'BearShare.exe';
-  compApps[190].name:= 'BlazeDVD.exe';
-  compApps[191].name:= 'CamRecorder.exe';
-  compApps[192].name:= 'CamtasiaStudio.exe';
-  compApps[193].name:= 'CinergyDVR.exe';
-  compApps[194].name:= 'ConvertXtoDvd.exe';
-  compApps[195].name:= 'tmc.exe';
-  compApps[196].name:= 'dpgenc.exe';
-  compApps[197].name:= 'drdivx2.exe';
-  compApps[198].name:= 'dvbdream.exe';
-  compApps[199].name:= 'FreeStyle.exe';
-  compApps[200].name:= 'MultimediaPlayer.exe';
-  compApps[201].name:= 'RoxMediaDB9.exe';
-  compApps[202].name:= 'TVPlayer.exe';
-  compApps[203].name:= 'VFAPIFrameServer.exe';
-  
-  compApps[204].rev := 1500;
-  compApps[204].name:= 'Apollo3GPVideoConverter.exe';
-  compApps[205].name:= 'DXEnum.exe';
-  compApps[206].name:= 'ASUSDVD.exe';
-  compApps[207].name:= 'Dr.DivX.exe';
-  compApps[208].name:= 'gdsmux.exe';
-  compApps[209].name:= 'DSBrws.exe';
-  compApps[210].name:= 'OnlineTV.exe';
-  compApps[211].name:= 'Zune.exe';
-  
-  compApps[212].rev := 0;
 
 // Compatibility list
   ComplistVideo.skipped := False;

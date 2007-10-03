@@ -22,7 +22,7 @@ bool isNotCalledFromBlackList(HINSTANCE hInstance)
   return true;
  DWORD type;
  DWORD isBlacklist;
- DWORD isUseonlyin;
+ DWORD isWhitelist;
  DWORD cbData=sizeof(isBlacklist);
  char_t blacklist[MAX_COMPATIBILITYLIST_LENGTH];
  char_t fileName[MAX_PATH+2];
@@ -79,18 +79,18 @@ bool isNotCalledFromBlackList(HINSTANCE hInstance)
   }
  if (result && stricmp(fileName,_l("explorer.exe"))==0)
   {
-   regErr= RegQueryValueEx(hKey, _l("isUseonlyin"), NULL, &type, (LPBYTE)&isUseonlyin, &cbData);
-   if(regErr==ERROR_SUCCESS && isUseonlyin)
+   regErr= RegQueryValueEx(hKey, _l("isWhitelist"), NULL, &type, (LPBYTE)&isWhitelist, &cbData);
+   if(regErr==ERROR_SUCCESS && isWhitelist)
     {
      result=false;
      cbData= sizeof(blacklist);
-     regErr= RegQueryValueEx(hKey, _l("useonlyin"), NULL, &type, (LPBYTE)blacklist, &cbData);
+     regErr= RegQueryValueEx(hKey, _l("whitelist"), NULL, &type, (LPBYTE)blacklist, &cbData);
      if (regErr==ERROR_SUCCESS)
       {
-       strings useonlyinList;
-       strtok(blacklist,_l("\r\n"),useonlyinList);
+       strings whitelistList;
+       strtok(blacklist,_l(";"),whitelistList);
 
-       for (strings::const_iterator b=useonlyinList.begin();b!=useonlyinList.end();b++)
+       for (strings::const_iterator b=whitelistList.begin();b!=whitelistList.end();b++)
         {
          if (DwStrcasecmp(*b,_l("explorer.exe"))==0)
           {

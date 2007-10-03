@@ -56,8 +56,8 @@ TglobalSettingsBase::TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const 
      _l("multipleInstances"),TintOption::DEF_DYN,
    IDFF_isBlacklist      ,&TglobalSettingsBase::isBlacklist      ,0,0,_l(""),0,
      _l("isBlacklist"),1,
-   IDFF_isCompatibilityList      ,&TglobalSettingsBase::isUseonlyin      ,0,0,_l(""),0,
-     _l("isUseonlyin"),1,   
+   IDFF_isWhitelist      ,&TglobalSettingsBase::isWhitelist      ,0,0,_l(""),0,
+     _l("isWhitelist"),1,   
    IDFF_compManagerMode  ,&TglobalSettingsBase::compOnLoadMode   ,1,4,_l(""),0,
      NULL,1,
    IDFF_isCompMgr        ,&TglobalSettingsBase::isCompMgr        ,0,0,_l(""),0,
@@ -79,8 +79,8 @@ TglobalSettingsBase::TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const 
      NULL,NULL,
    IDFF_blacklist  ,(TstrVal)&TglobalSettingsBase::blacklist ,MAX_COMPATIBILITYLIST_LENGTH,_l(""),0,
      _l("blacklist"),BLACKLIST_EXE_FILENAME,
-   IDFF_compatibilityList  ,(TstrVal)&TglobalSettingsBase::useonlyin ,MAX_COMPATIBILITYLIST_LENGTH,_l(""),0,
-     _l("useonlyin"),COMPATIBLE_EXE_FILENAME,
+   IDFF_whitelist  ,(TstrVal)&TglobalSettingsBase::whitelist ,MAX_COMPATIBILITYLIST_LENGTH,_l(""),0,
+     _l("whitelist"),WHITELIST_EXE_FILENAME,
    0
   };
  addOptions(sopts);
@@ -99,7 +99,7 @@ void TglobalSettingsBase::load(void)
  tDScaler._REG_OP_S(IDFF_dscalerPath,_l("dscalerPth"),dscalerPth,MAX_PATH,_l(""));
  TregOpRegRead tCPU(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
  tCPU._REG_OP_N(IDFF_allowedCpuFlags,_l("allowedCPUflags"),allowedCPUflags,255);
- firstBlacklist=firstUseonlyin=true;
+ firstBlacklist=firstWhitelist=true;
 
  // Load Icon type : common through video, audio and vfw.
  TregOpRegRead tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\ffdshow"));
@@ -108,21 +108,6 @@ void TglobalSettingsBase::load(void)
  // Load compatibility manager::dontask : shared by video and audio.
  tHKCU_global._REG_OP_N(IDFF_isCompMgr,_l("isCompMgr"),isCompMgr,1);
 
- // fix 'SinkuHadouken.exe'#1310 -> 'SinkuHadouken.exe'#13#10 (rev 976 bug)
- char_t sinkuhadouken[19]={'S','i','n','k','u','H','a','d','o','u','k','e','n','.','e','x','e',0x1e,'\0'};
- ffstring complist(useonlyin);
- size_t pos=complist.find(sinkuhadouken);
- if (pos!=complist.npos)
-  complist.replace(pos+17,1,_l("\r\n"));
-
- // fix ' wmenc.exe'#13#10 -> 'wmenc.exe'#13#10 (rev 1125 bug)
- char_t wmenc[13]={' ','w','m','e','n','c','.','e','x','e',13,10,'\0'};
- pos=complist.find(wmenc);
- if (pos!=complist.npos)
-  complist.erase(pos,1);
-
- strncpy(useonlyin,complist.c_str(),countof(useonlyin));
- useonlyin[countof(useonlyin)-1]=0;
 }
 void TglobalSettingsBase::save(void)
 {
@@ -198,16 +183,16 @@ bool TglobalSettingsBase::inBlacklist(const char_t *exe)
  return false;
 }
 
-bool TglobalSettingsBase::inUseonlyin(const char_t *exe,IffdshowBase *Ideci)
+bool TglobalSettingsBase::inWhitelist(const char_t *exe,IffdshowBase *Ideci)
 {
- // MessageBox(NULL,exe,_l("ffdshow inUseonlyin"),MB_OK);
- bool old_firstUseonlyin=firstUseonlyin;
- if (firstUseonlyin)
+ // MessageBox(NULL,exe,_l("ffdshow inWhitelist"),MB_OK);
+ bool old_firstWhitelist=firstWhitelist;
+ if (firstWhitelist)
   {
-   firstUseonlyin=false;
-   strtok(useonlyin,_l("\r\n"),useonlyinList);
+   firstWhitelist=false;
+   strtok(whitelist,_l(";"),whitelistList);
   }
- for (strings::const_iterator b=useonlyinList.begin();b!=useonlyinList.end();b++)
+ for (strings::const_iterator b=whitelistList.begin();b!=whitelistList.end();b++)
   if (DwStrcasecmp(*b,exe)==0)
    return true;
  if (!isCompMgr)
@@ -228,14 +213,14 @@ bool TglobalSettingsBase::inUseonlyin(const char_t *exe,IffdshowBase *Ideci)
     result=false;
     break;
    case 2:
-    if (old_firstUseonlyin) addToCompatiblityList(blacklist,exe,_l(";"));
+    if (old_firstWhitelist) addToCompatiblityList(blacklist,exe,_l(";"));
     result=false;
     break;
    case 3:
     result=true;
     break;
    case 4:
-    if (old_firstUseonlyin) addToCompatiblityList(useonlyin,exe,_l("\r\n"));
+    if (old_firstWhitelist) addToCompatiblityList(whitelist,exe,_l(";"));
     result=true;
     break;
   }

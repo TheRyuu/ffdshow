@@ -45,7 +45,7 @@ void TcompatibilityList::init(void)
  resizeDialog();
  translate();
  const char_t *capt,*exp;
- if (IDFF_target==IDFF_compatibilityList)
+ if (IDFF_target==IDFF_whitelist)
   {
    capt=tr->translate(m_hwnd,IDD_DIRECTSHOWCONTROL,IDC_CHB_COMPATIBILITYLIST,NULL);
    exp= tr->translate(m_hwnd,dialogId,IDC_TXT_COMPATIBILITYLIST,NULL);
@@ -92,9 +92,6 @@ void TcompatibilityList::dlg2cfg(void)
 }
 const char_t* TcompatibilityList::getDelimit(void)
 {
- if (IDFF_target==IDFF_compatibilityList)
-  return _l("\r\n");
- else
   return _l(";");
 }
 INT_PTR TcompatibilityList::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -138,7 +135,7 @@ void TcompatibilityList::onAddFile(void)
   startdir+=_l("\\..");
 
  const char_t *capt;
- if (IDFF_target==IDFF_compatibilityList)
+ if (IDFF_target==IDFF_whitelist)
   capt=_l("Add compatible executable file");
  else
   capt=_l("Add incompatible executable file");
@@ -157,10 +154,10 @@ void TcompatibilityList::onReset(void)
       _(-IDD_COMPATIBILITY,_l("Load default settings")),
       MB_ICONQUESTION|MB_OKCANCEL)==IDOK)
   {
-   if (IDFF_target==IDFF_compatibilityList)
+   if (IDFF_target==IDFF_whitelist)
     {
      ffstring complistResult;
-     TdirectshowControlPageDec::convertDelimit(COMPATIBLE_EXE_FILENAME,_l("\r\n"),complistResult,_l("\r\n")); // to sort
+     TdirectshowControlPageDec::convertDelimit(WHITELIST_EXE_FILENAME,_l(";"),complistResult,_l("\r\n")); // to sort
      SetDlgItemText(m_hwnd,IDC_ED_COMPATIBILITYLIST,complistResult.c_str());
     }
    if (IDFF_target==IDFF_blacklist)
