@@ -698,21 +698,6 @@ int MPV_encode_picture(AVCodecContext *avctx, unsigned char *buf, int buf_size, 
 #ifdef HAVE_MMX
 void MPV_common_init_mmx(MpegEncContext *s);
 #endif
-#ifdef ARCH_ALPHA
-void MPV_common_init_axp(MpegEncContext *s);
-#endif
-#ifdef HAVE_MLIB
-void MPV_common_init_mlib(MpegEncContext *s);
-#endif
-#ifdef HAVE_MMI
-void MPV_common_init_mmi(MpegEncContext *s);
-#endif
-#ifdef ARCH_ARMV4L
-void MPV_common_init_armv4l(MpegEncContext *s);
-#endif
-#ifdef ARCH_POWERPC
-void MPV_common_init_ppc(MpegEncContext *s);
-#endif
 extern void (*draw_edges)(uint8_t *buf, int wrap, int width, int height, int w);
 void ff_clean_intra_table_entries(MpegEncContext *s);
 void ff_init_scantable(uint8_t *, ScanTable *st, const uint8_t *src_scantable);
@@ -841,11 +826,7 @@ void mpeg4_pred_ac(MpegEncContext * s, DCTELEM *block, int n,
                    int dir);
 void ff_set_mpeg4_time(MpegEncContext * s);
 void mpeg4_encode_picture_header(MpegEncContext *s, int picture_number);
-#ifdef CONFIG_ENCODERS
 void h263_encode_init(MpegEncContext *s);
-#else
-static void h263_encode_init(MpegEncContext *s) {assert(0);}
-#endif
 void h263_decode_init_vlc(MpegEncContext *s);
 int h263_decode_picture_header(MpegEncContext *s);
 int ff_h263_decode_gob_header(MpegEncContext *s);

@@ -59,10 +59,12 @@
 #define MB_MBAFF h->mb_mbaff
 #define MB_FIELD h->mb_field_decoding_flag
 #define FRAME_MBAFF h->mb_aff_frame
+#define FIELD_PICTURE 0
 #else
 #define MB_MBAFF 0
 #define MB_FIELD 0
 #define FRAME_MBAFF 0
+#define FIELD_PICTURE 0
 #undef  IS_INTERLACED
 #define IS_INTERLACED(mb_type) 0
 #endif
@@ -283,7 +285,7 @@ typedef struct H264Context{
     int prev_frame_num;           ///< frame_num of the last pic for POC type 1/2
 
     /**
-     * frame_num for frames or 2*frame_num for field pics.
+     * frame_num for frames or 2*frame_num+1 for field pics.
      */
     int curr_pic_num;
 
