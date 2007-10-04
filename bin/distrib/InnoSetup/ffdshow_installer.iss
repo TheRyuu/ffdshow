@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1502
+#define tryout_revision = 1504
 #define buildyear = 2007
 #define buildmonth = '10'
-#define buildday = '03'
+#define buildday = '04'
 
 ; Build specific options
 #define unicode_required = True
@@ -545,10 +545,10 @@ Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueN
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: isvolume;     ValueData: 1; Components: ffdshow; Tasks:     filter\normalize
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: volNormalize; ValueData: 1; Components: ffdshow; Tasks:     filter\normalize
 
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: ismixer; ValueData: {code:Get_ismixer}; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerOut; ValueData: {code:Get_mixerOut}; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerExpandStereo; ValueData: {code:Get_mixerExpandStereo}; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerVoiceControl; ValueData: {code:Get_mixerVoiceControl}; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: ismixer; ValueData: {code:GetIsMixer}; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerOut; ValueData: {code:GetMixerOut}; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerExpandStereo; ValueData: {code:GetMixerExpandStereo}; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerVoiceControl; ValueData: {code:GetMixerVoiceControl}; Components: ffdshow
 
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: allowOutChange; ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: hwOverlay; ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
@@ -566,13 +566,13 @@ Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: bl
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: blacklist; ValueData: "oblivion.exe;morrowind.exe"; Flags: createvalueifdoesntexist; MinVersion: 0,6; Components: ffdshow
 
 ; Compatibility list
-Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: isWhitelist; ValueData: {code:Get_isWhitelistVideo}; Check: IsCompVValid; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: String; ValueName: whitelist;   ValueData: {code:Get_whitelistVideo};                        Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: isWhitelist; ValueData: {code:Get_isWhitelistAudio}; Check: IsCompAValid; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: whitelist;   ValueData: {code:Get_whitelistAudio};                        Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: isWhitelist; ValueData: {code:GetIsWhitelistVideo}; Check: IsCompVValid; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: String; ValueName: whitelist;   ValueData: {code:GetWhitelistVideo};                        Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: isWhitelist; ValueData: {code:GetIsWhitelistAudio}; Check: IsCompAValid; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: whitelist;   ValueData: {code:GetWhitelistAudio};                        Components: ffdshow
 
-Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: dontaskComp; ValueData: {code:Get_isCompVdontask};   Check: IsCompVValid; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: dontaskComp; ValueData: {code:Get_isCompAdontask};   Check: IsCompAValid; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: dontaskComp; ValueData: {code:GetIsCompVdontask};   Check: IsCompVValid; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: dontaskComp; ValueData: {code:GetIsCompAdontask};   Check: IsCompAValid; Components: ffdshow
 
 ; Registry keys for the audio/video formats:
 #include "reg_formats.iss"
@@ -598,7 +598,8 @@ Description: {cm:runvfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,c
 #include "custom_messages.iss"
 
 [Code]
-const NUMBER_OF_COMPATIBLEAPPLICATIONS=250;
+const NUMBER_OF_COMPATIBLEAPPLICATIONS=50;
+
 type
   TCompApp = record
     rev: Integer;  // The application (name) have been added to the compatibility list at this rev.
@@ -615,12 +616,14 @@ type
 
 // Global vars
 var
-  reg_mixerOut: Cardinal;
-  reg_ismixer: Cardinal;
-
+  is_update: Boolean;
+  
   ComplistVideo: TcomplistPage;
   ComplistAudio: TcomplistPage;
   Complist_isMsgAddedShown: Boolean;
+
+  reg_mixerOut: Cardinal;
+  reg_ismixer: Cardinal;
 
   SpeakerPage: TInputOptionWizardPage;
   chbVoicecontrol: TCheckBox;
@@ -789,9 +792,6 @@ begin
     #endif
   end
 end;
-
-var
-  is_update: Boolean;
 
 function IsUpdate(): Boolean;
 begin
@@ -963,7 +963,7 @@ begin
   end;
 end;
 
-function Get_mixerOut(dummy: String): String;
+function GetMixerOut(dummy: String): String;
 begin
   if      SpeakerPage.Values[0] = True then
     Result := '0'
@@ -986,48 +986,48 @@ begin
   RegWriteDWordValue(HKLM, 'Software\GNU\ffdshow_audio', 'isSpkCfg', 1);
 end;
 
-function Get_ismixer(dummy: String): String;
+function GetIsMixer(dummy: String): String;
 begin
   Result := '1';
   if (is8DisableMixer = True) and (SpeakerPage.Values[8] = True) then
     Result := '0';
 end;
 
-function Get_mixerExpandStereo(dummy: String): String;
+function GetMixerExpandStereo(dummy: String): String;
 begin
   Result := '0'
   if chbExpandStereo.Checked then
     Result := '1';
 end;
 
-function Get_mixerVoiceControl(dummy: String): String;
+function GetMixerVoiceControl(dummy: String): String;
 begin
   Result := '0'
   if chbVoicecontrol.Checked then
     Result := '1';
 end;
 
-function Get_isWhitelistVideo(dummy: String): String;
+function GetIsWhitelistVideo(dummy: String): String;
 begin
   Result := '1';
   if ComplistVideo.page.Values[0] then
     Result := '0';
 end;
 
-function Get_whitelistVideo(dummy: String): String;
+function GetWhitelistVideo(dummy: String): String;
 begin
   Result := ComplistVideo.edt.Text;
   StringChange(Result, #13#10, ';');
 end;
 
-function Get_isWhitelistAudio(dummy: String): String;
+function GetIsWhitelistAudio(dummy: String): String;
 begin
   Result := '1';
   if ComplistAudio.page.Values[0] then
     Result := '0';
 end;
 
-function Get_whitelistAudio(dummy: String): String;
+function GetWhitelistAudio(dummy: String): String;
 begin
   Result := ComplistAudio.edt.Text;
   StringChange(Result, #13#10, ';');
@@ -1043,14 +1043,14 @@ begin
   Result := not ComplistAudio.skipped;
 end;
 
-function Get_isCompVdontask(dummy: String): String;
+function GetIsCompVdontask(dummy: String): String;
 begin
   Result := '0';
   if ComplistVideo.chbDontAsk.Checked then
     Result := '1';
 end;
 
-function Get_isCompAdontask(dummy: String): String;
+function GetIsCompAdontask(dummy: String): String;
 begin
   Result := '0';
   if ComplistAudio.chbDontAsk.Checked then
@@ -1063,22 +1063,26 @@ begin
     Result := defaultValue;
 end;
 
-procedure initComplist(var complist: TcomplistPage; regKeyName: String);
+procedure InitComplist(var complist: TcomplistPage; regKeyName: String);
 var
   regstr: String;
   regstrUpper: String;
   i: Integer;
   revision: Cardinal;
+  dword: Cardinal;
   rev: Integer;
   default_compat_list: String;
 begin
   complist.countAdded := 0;
   complist.page.Add(ExpandConstant('{cm:comp_donotlimit}'));
   complist.page.Add(ExpandConstant('{cm:comp_useonlyin}'));
-  if ffRegReadDWordHKCU(regKeyName, 'isWhitelist', i) = 1 then
+  
+  if ffRegReadDWordHKCU(regKeyName, 'isWhitelist', dword) AND (dword = 1) then begin
     complist.page.Values[1] := True
-  else
+  end
+  else begin
     complist.page.Values[0] := True;
+  end
     
   // Default list of compatible apps
   default_compat_list :=
@@ -1345,7 +1349,7 @@ begin
     if RegQueryDwordValue(HKLM, 'Software\GNU\ffdshow', 'revision', revision) then begin
       regstrUpper := AnsiUppercase(regstr);
 
-      for i:= 1 to NUMBER_OF_COMPATIBLEAPPLICATIONS do begin
+      for i:=1 to NUMBER_OF_COMPATIBLEAPPLICATIONS do begin
         if compApps[i].rev = 0 then Break;
         if compApps[i].rev > 1 then
           rev := compApps[i].rev;
@@ -1357,6 +1361,9 @@ begin
         end
       end
       complist.edt.text := regstr;
+    end
+    else begin
+      complist.edt.Text := default_compat_list;
     end
   end
   else begin
@@ -1391,7 +1398,7 @@ begin
   //compApps[1].name  := 'example.exe';
 
 
-// Compatibility list
+  // Compatibility list
   ComplistVideo.skipped := False;
   ComplistAudio.skipped := False;
   Complist_isMsgAddedShown := False;
@@ -1401,16 +1408,18 @@ begin
     ExpandConstant('{cm:comp_SetupLabelV2}'),
     ExpandConstant('{cm:comp_SetupLabelV3}'),
     True, False);
-  initComplist(ComplistVideo ,'Software\GNU\ffdshow');
+
+  InitComplist(ComplistVideo ,'Software\GNU\ffdshow');
 
   ComplistAudio.page := CreateInputOptionPage(ComplistVideo.page.ID,
     ExpandConstant('{cm:comp_SetupLabelA1}'),
     ExpandConstant('{cm:comp_SetupLabelA2}'),
     ExpandConstant('{cm:comp_SetupLabelA3}'),
     True, False);
-  initComplist(ComplistAudio,'Software\GNU\ffdshow_audio');
 
-// Speaker setup
+  InitComplist(ComplistAudio,'Software\GNU\ffdshow_audio');
+
+  // Speaker setup
 
   is8DisableMixer := False;
   SpeakerPage := CreateInputOptionPage(ComplistAudio.page.ID,
@@ -1538,8 +1547,7 @@ begin
     chbExpandStereo.Checked := True;
   chbExpandStereo.Parent := SpeakerPage.Surface;
 
-// VirtualDub plugin install directory setting
-
+  // VirtualDub plugin install directory setting
 #if include_app_plugins
   VdubDirPage := CreateInputDirPage(SpeakerPage.ID,
     ExpandConstant('{cm:SelectPluginDirLabel1,Virtual Dub}'),
