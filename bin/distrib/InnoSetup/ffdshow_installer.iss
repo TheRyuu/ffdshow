@@ -1,7 +1,7 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1504
+#define tryout_revision = 1505
 #define buildyear = 2007
 #define buildmonth = '10'
 #define buildday = '04'
@@ -1069,7 +1069,6 @@ var
   regstrUpper: String;
   i: Integer;
   revision: Cardinal;
-  dword: Cardinal;
   rev: Integer;
   default_compat_list: String;
 begin
@@ -1077,7 +1076,7 @@ begin
   complist.page.Add(ExpandConstant('{cm:comp_donotlimit}'));
   complist.page.Add(ExpandConstant('{cm:comp_useonlyin}'));
   
-  if ffRegReadDWordHKCU(regKeyName, 'isWhitelist', dword) AND (dword = 1) then begin
+  if ffRegReadDWordHKCU(regKeyName, 'isWhitelist', 1) = 1 then begin
     complist.page.Values[1] := True
   end
   else begin
@@ -1386,8 +1385,6 @@ var
   systemSpeakerConfig: Integer;
   reg_isSpkCfg: Cardinal;
   isMajorType: Boolean;
-  ii: Cardinal;
-  i: Integer;
 begin
   { Create the pages }
 
@@ -1527,8 +1524,7 @@ begin
   chbVoicecontrol.Width := ScaleX(170);
   chbVoicecontrol.Height := ScaleY(16);
   chbVoicecontrol.Caption := ExpandConstant('{cm:spk_VoiceControl}');
-  ii := ffRegReadDWordHKCU('Software\GNU\ffdshow_audio\default', 'mixerVoiceControl',0);
-  if ii = 0 then
+  if ffRegReadDWordHKCU('Software\GNU\ffdshow_audio\default', 'mixerVoiceControl',0) = 0 then
     chbVoicecontrol.Checked := False
   else
     chbVoicecontrol.Checked := True;
@@ -1540,8 +1536,7 @@ begin
   chbExpandStereo.Width := ScaleX(200);
   chbExpandStereo.Height := ScaleY(16);
   chbExpandStereo.Caption := ExpandConstant('{cm:spk_ExpandStereo}');
-  ii := ffRegReadDWordHKCU('Software\GNU\ffdshow_audio\default', 'mixerExpandStereo',0);
-  if ii = 0 then
+  if ffRegReadDWordHKCU('Software\GNU\ffdshow_audio\default', 'mixerExpandStereo',0) = 0 then
     chbExpandStereo.Checked := False
   else
     chbExpandStereo.Checked := True;
