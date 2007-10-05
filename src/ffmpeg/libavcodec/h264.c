@@ -2701,6 +2701,104 @@ static void hl_decode_mb(H264Context *h){
     else hl_decode_mb_simple(h);
 }
 
+static void pic_as_field(Picture *pic, const int bottom){
+    int i;
+    for (i = 0; i < 4; ++i) {
+        if (bottom)
+            pic->data[i] += pic->linesize[i];
+        pic->linesize[i] *= 2;
+    }
+}
+
+static int split_field_copy(Picture *dest, Picture *src,
+                            int parity, int id_add){
+    int match = !!(src->reference & parity);
+
+    if (match) {
+        *dest = *src;
+        pic_as_field(dest, parity == PICT_BOTTOM_FIELD);
+        dest->pic_id *= 2;
+        dest->pic_id += id_add;
+    }
+
+    return match;
+}
+
+/**
+ * Split one reference list into field parts, interleaving by parity
+ * as per H.264 spec section 8.2.4.2.5. Output fields have their data pointers
+ * set to look at the actual start of data for that field.
+ *
+ * @param dest output list
+ * @param dest_len maximum number of fields to put in dest
+ * @param src the source reference list containing fields and/or field pairs
+ *            (aka short_ref/long_ref, or
+ *             refFrameListXShortTerm/refFrameListLongTerm in spec-speak)
+ * @param src_len number of Picture's in source (pairs and unmatched fields)
+ * @param parity the parity of the picture being decoded/needing
+ *        these ref pics (PICT_{TOP,BOTTOM}_FIELD)
+ * @return number of fields placed in dest
+ */
+static int split_field_half_ref_list(Picture *dest, int dest_len,
+                                     Picture *src,  int src_len,  int parity){
+    int same_parity   = 1;
+    int same_i        = 0;
+    int opp_i         = 0;
+    int out_i;
+    int field_output;
+
+    for (out_i = 0; out_i < dest_len; out_i += field_output) {
+        if (same_parity && same_i < src_len) {
+            field_output = split_field_copy(dest + out_i, src + same_i,
+                                            parity, 1);
+            same_parity = !field_output;
+            same_i++;
+
+        } else if (opp_i < src_len) {
+            field_output = split_field_copy(dest + out_i, src + opp_i,
+                                            PICT_FRAME - parity, 0);
+            same_parity = field_output;
+            opp_i++;
+
+        } else {
+            break;
+        }
+    }
+
+    return out_i;
+}
+
+/**
+ * Split the reference frame list into a reference field list.
+ * This implements H.264 spec 8.2.4.2.5 for a combined input list.
+ * The input list contains both reference field pairs and
+ * unmatched reference fields; it is ordered as spec describes
+ * RefPicListX for frames in 8.2.4.2.1 and 8.2.4.2.3, except that
+ * unmatched field pairs are also present. Conceptually this is equivalent
+ * to concatenation of refFrameListXShortTerm with refFrameListLongTerm.
+ *
+ * @param dest output reference list where ordered fields are to be placed
+ * @param dest_len max number of fields to place at dest
+ * @param src source reference list, as described above
+ * @param src_len number of pictures (pairs and unmatched fields) in src
+ * @param parity parity of field being currently decoded
+ *        (one of PICT_{TOP,BOTTOM}_FIELD)
+ * @param long_i index into src array that holds first long reference picture,
+ *        or src_len if no long refs present.
+ */
+static int split_field_ref_list(Picture *dest, int dest_len,
+                                Picture *src,  int src_len,
+                                int parity,    int long_i){
+
+    int i = split_field_half_ref_list(dest, dest_len, src, long_i, parity);
+    dest += i;
+    dest_len -= i;
+
+    i += split_field_half_ref_list(dest, dest_len, src + long_i,
+                                   src_len - long_i, parity);
+    return i;
+}
+
 /**
  * fills the default_ref_list.
  */
@@ -2708,9 +2806,25 @@ static int fill_default_ref_list(H264Context *h){
     MpegEncContext * const s = &h->s;
     int i;
     int smallest_poc_greater_than_current = -1;
+    int structure_sel;
     Picture sorted_short_ref[32];
+    Picture field_entry_list[2][32];
+    Picture *frame_list[2];
+
+    if (FIELD_PICTURE) {
+        structure_sel = PICT_FRAME;
+        frame_list[0] = field_entry_list[0];
+        frame_list[1] = field_entry_list[1];
+    } else {
+        structure_sel = 0;
+        frame_list[0] = h->default_ref_list[0];
+        frame_list[1] = h->default_ref_list[1];
+    }
 
     if(h->slice_type==B_TYPE){
+        int list;
+        int len[2];
+        int short_len[2];
         int out_i;
         int limit= INT_MIN;
 
@@ -2738,71 +2852,93 @@ static int fill_default_ref_list(H264Context *h){
                 }
             }
         }
-    }
 
-    if(s->picture_structure == PICT_FRAME){
-        if(h->slice_type==B_TYPE){
-            int list;
-            tprintf(h->s.avctx, "current poc: %d, smallest_poc_greater_than_current: %d\n", s->current_picture_ptr->poc, smallest_poc_greater_than_current);
+        tprintf(h->s.avctx, "current poc: %d, smallest_poc_greater_than_current: %d\n", s->current_picture_ptr->poc, smallest_poc_greater_than_current);
 
-            // find the largest poc
-            for(list=0; list<2; list++){
-                int index = 0;
-                int j= -99;
-                int step= list ? -1 : 1;
+        // find the largest poc
+        for(list=0; list<2; list++){
+            int index = 0;
+            int j= -99;
+            int step= list ? -1 : 1;
 
-                for(i=0; i<h->short_ref_count && index < h->ref_count[list]; i++, j+=step) {
-                    while(j<0 || j>= h->short_ref_count){
-                        if(j != -99 && step == (list ? -1 : 1))
-                            return -1;
-                        step = -step;
-                        j= smallest_poc_greater_than_current + (step>>1);
-                    }
-                    if(sorted_short_ref[j].reference != 3) continue;
-                    h->default_ref_list[list][index  ]= sorted_short_ref[j];
-                    h->default_ref_list[list][index++].pic_id= sorted_short_ref[j].frame_num;
+            for(i=0; i<h->short_ref_count && index < h->ref_count[list]; i++, j+=step) {
+                int sel;
+                while(j<0 || j>= h->short_ref_count){
+                    if(j != -99 && step == (list ? -1 : 1))
+                        return -1;
+                    step = -step;
+                    j= smallest_poc_greater_than_current + (step>>1);
                 }
-
-                for(i = 0; i < 16 && index < h->ref_count[ list ]; i++){
-                    if(h->long_ref[i] == NULL) continue;
-                    if(h->long_ref[i]->reference != 3) continue;
-
-                    h->default_ref_list[ list ][index  ]= *h->long_ref[i];
-                    h->default_ref_list[ list ][index++].pic_id= i;;
-                }
-
-                if(list && (smallest_poc_greater_than_current<=0 || smallest_poc_greater_than_current>=h->short_ref_count) && (1 < index)){
-                    // swap the two first elements of L1 when
-                    // L0 and L1 are identical
-                    Picture temp= h->default_ref_list[1][0];
-                    h->default_ref_list[1][0] = h->default_ref_list[1][1];
-                    h->default_ref_list[1][1] = temp;
-                }
-
-                if(index < h->ref_count[ list ])
-                    memset(&h->default_ref_list[list][index], 0, sizeof(Picture)*(h->ref_count[ list ] - index));
+                sel = sorted_short_ref[j].reference | structure_sel;
+                if(sel != PICT_FRAME) continue;
+                frame_list[list][index  ]= sorted_short_ref[j];
+                frame_list[list][index++].pic_id= sorted_short_ref[j].frame_num;
             }
-        }else{
-            int index=0;
-            for(i=0; i<h->short_ref_count; i++){
-                if(h->short_ref[i]->reference != 3) continue; //FIXME refernce field shit
-                h->default_ref_list[0][index  ]= *h->short_ref[i];
-                h->default_ref_list[0][index++].pic_id= h->short_ref[i]->frame_num;
-            }
-            for(i = 0; i < 16; i++){
+            short_len[list] = index;
+
+            for(i = 0; i < 16 && index < h->ref_count[ list ]; i++){
+                int sel;
                 if(h->long_ref[i] == NULL) continue;
-                if(h->long_ref[i]->reference != 3) continue;
-                h->default_ref_list[0][index  ]= *h->long_ref[i];
-                h->default_ref_list[0][index++].pic_id= i;;
+                sel = h->long_ref[i]->reference | structure_sel;
+                if(sel != PICT_FRAME) continue;
+
+                frame_list[ list ][index  ]= *h->long_ref[i];
+                frame_list[ list ][index++].pic_id= i;;
             }
-            if(index < h->ref_count[0])
-                memset(&h->default_ref_list[0][index], 0, sizeof(Picture)*(h->ref_count[0] - index));
+            len[list] = index;
+
+            if(list && (smallest_poc_greater_than_current<=0 || smallest_poc_greater_than_current>=h->short_ref_count) && (1 < index)){
+                // swap the two first elements of L1 when
+                // L0 and L1 are identical
+                Picture temp= frame_list[1][0];
+                frame_list[1][0] = frame_list[1][1];
+                frame_list[1][1] = temp;
+            }
+
         }
-    }else{ //FIELD
-        if(h->slice_type==B_TYPE){
-        }else{
-            //FIXME second field balh
+
+        for(list=0; list<2; list++){
+            if (FIELD_PICTURE)
+                len[list] = split_field_ref_list(h->default_ref_list[list],
+                                                 h->ref_count[list],
+                                                 frame_list[list],
+                                                 len[list],
+                                                 s->picture_structure,
+                                                 short_len[list]);
+
+            if(len[list] < h->ref_count[ list ])
+                memset(&h->default_ref_list[list][len[list]], 0, sizeof(Picture)*(h->ref_count[ list ] - len[list]));
         }
+
+
+    }else{
+        int index=0;
+        int short_len;
+        for(i=0; i<h->short_ref_count; i++){
+            int sel;
+            sel = h->short_ref[i]->reference | structure_sel;
+            if(sel != PICT_FRAME) continue;
+            frame_list[0][index  ]= *h->short_ref[i];
+            frame_list[0][index++].pic_id= h->short_ref[i]->frame_num;
+        }
+        short_len = index;
+        for(i = 0; i < 16; i++){
+            int sel;
+            if(h->long_ref[i] == NULL) continue;
+            sel = h->long_ref[i]->reference | structure_sel;
+            if(sel != PICT_FRAME) continue;
+            frame_list[0][index  ]= *h->long_ref[i];
+            frame_list[0][index++].pic_id= i;;
+        }
+
+        if (FIELD_PICTURE)
+            index = split_field_ref_list(h->default_ref_list[0],
+                                         h->ref_count[0], frame_list[0],
+                                         index, s->picture_structure,
+                                         short_len);
+
+        if(index < h->ref_count[0])
+            memset(&h->default_ref_list[0][index], 0, sizeof(Picture)*(h->ref_count[0] - index));
     }
 #ifdef TRACE
     for (i=0; i<h->ref_count[0]; i++) {
@@ -2820,9 +2956,33 @@ static int fill_default_ref_list(H264Context *h){
 static void print_short_term(H264Context *h);
 static void print_long_term(H264Context *h);
 
+/**
+ * Extract structure information about the picture described by pic_num in
+ * the current decoding context (frame or field). Note that pic_num is
+ * picture number without wrapping (so, 0<=pic_num<max_pic_num).
+ * @param pic_num picture number for which to extract structure information
+ * @param structure one of PICT_XXX describing structure of picture
+ *                      with pic_num
+ * @return frame number (short term) or long term index of picture
+ *         described by pic_num
+ */
+static int pic_num_extract(H264Context *h, int pic_num, int *structure){
+    MpegEncContext * const s = &h->s;
+
+    *structure = s->picture_structure;
+    if(FIELD_PICTURE){
+        if (!(pic_num & 1))
+            /* opposite field */
+            *structure ^= PICT_FRAME;
+        pic_num >>= 1;
+    }
+
+    return pic_num;
+}
+
 static int decode_ref_pic_list_reordering(H264Context *h){
     MpegEncContext * const s = &h->s;
-    int list, index;
+    int list, index, pic_structure;
 
     print_short_term(h);
     print_long_term(h);
@@ -2851,6 +3011,7 @@ static int decode_ref_pic_list_reordering(H264Context *h){
                 if(reordering_of_pic_nums_idc<3){
                     if(reordering_of_pic_nums_idc<2){
                         const unsigned int abs_diff_pic_num= get_ue_golomb(&s->gb) + 1;
+                        int frame_num;
 
                         if(abs_diff_pic_num >= h->max_pic_num){
                             av_log(h->s.avctx, AV_LOG_ERROR, "abs_diff_pic_num overflow\n");
@@ -2861,25 +3022,34 @@ static int decode_ref_pic_list_reordering(H264Context *h){
                         else                                pred+= abs_diff_pic_num;
                         pred &= h->max_pic_num - 1;
 
+                        frame_num = pic_num_extract(h, pred, &pic_structure);
+
                         for(i= h->short_ref_count-1; i>=0; i--){
                             ref = h->short_ref[i];
-                            assert(ref->reference == 3);
+                            assert(ref->reference);
                             assert(!ref->long_ref);
-                            if(ref->data[0] != NULL && ref->frame_num == pred && ref->long_ref == 0) // ignore non existing pictures by testing data[0] pointer
+                            if(ref->data[0] != NULL &&
+                                   ref->frame_num == frame_num &&
+                                   (ref->reference & pic_structure) &&
+                                   ref->long_ref == 0) // ignore non existing pictures by testing data[0] pointer
                                 break;
                         }
                         if(i>=0)
-                            ref->pic_id= ref->frame_num;
+                            ref->pic_id= pred;
                     }else{
+                        int long_idx;
                         pic_id= get_ue_golomb(&s->gb); //long_term_pic_idx
-                        if(pic_id>31){
+
+                        long_idx= pic_num_extract(h, pic_id, &pic_structure);
+
+                        if(long_idx>31){
                             av_log(h->s.avctx, AV_LOG_ERROR, "long_term_pic_idx overflow\n");
                             return -1;
                         }
-                        ref = h->long_ref[pic_id];
-                        if(ref){
+                        ref = h->long_ref[long_idx];
+                        assert(!(ref && !ref->reference));
+                        if(ref && (ref->reference & pic_structure)){
                             ref->pic_id= pic_id;
-                            assert(ref->reference == 3);
                             assert(ref->long_ref);
                             i=0;
                         }else{
@@ -2899,6 +3069,10 @@ static int decode_ref_pic_list_reordering(H264Context *h){
                             h->ref_list[list][i]= h->ref_list[list][i-1];
                         }
                         h->ref_list[list][index]= *ref;
+                        if (FIELD_PICTURE){
+                            int bot = pic_structure == PICT_BOTTOM_FIELD;
+                            pic_as_field(&h->ref_list[list][index], bot);
+                        }
                     }
                 }else{
                     av_log(h->s.avctx, AV_LOG_ERROR, "illegal reordering_of_pic_nums_idc\n");
