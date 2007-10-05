@@ -47,7 +47,7 @@
  CODEC_OP(CODEC_ID_PNG               ,37,"png") \
  CODEC_OP(CODEC_ID_COREPNG           ,38,"corepng") \
  CODEC_OP(CODEC_ID_LJPEG             ,39,"ljpeg") \
- CODEC_OP(CODEC_ID_JPEGLS            ,40,"") \
+ CODEC_OP(CODEC_ID_JPEGLS            ,40,"jpegls") \
  CODEC_OP(CODEC_ID_CSCD              ,41,"camstudio") \
  CODEC_OP(CODEC_ID_QPEG              ,42,"qpeg") \
  CODEC_OP(CODEC_ID_LOCO              ,43,"loco") \

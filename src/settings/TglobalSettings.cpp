@@ -644,7 +644,7 @@ void TglobalSettingsDecVideo::load(void)
  /*FF_FOURCC1_OP(SVM2,h264 & rawmask,CODEC_ID_H264)*/ \
  FF_FOURCC1_OP(MJPG,mjpg & rawmask,CODEC_ID_MJPEG) \
  FF_FOURCC1_OP(LJPG,mjpg & rawmask,CODEC_ID_MJPEG) \
- FF_FOURCC1_OP(MJLS,mjpg & rawmask,CODEC_ID_MJPEG) \
+ FF_FOURCC1_OP(MJLS,mjpg & rawmask,CODEC_ID_JPEGLS) \
  FF_FOURCC1_OP(JPEG,(mjpg || svq1 || svq3) & rawmask,CODEC_ID_MJPEG) \
  FF_FOURCC1_OP(AVRN,avrn & rawmask,CODEC_ID_MJPEG) \
  FF_FOURCC1_OP(MJPA,avrn & rawmask,CODEC_ID_MJPEG) \

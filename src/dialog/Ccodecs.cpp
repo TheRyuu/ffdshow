@@ -450,7 +450,7 @@ void TcodecsPageVideo::fillCodecs(void)
    formats.push_back(Tformat(_l("MSS1/2")        ,IDFF_mss2,IDFF_MOVIE_WMV9,_l("Windows Screen Codecs (MSS1, MSS2)")));
    formats.push_back(Tformat(_l("H.261")         ,IDFF_h261,IDFF_MOVIE_LAVC,_l("H261, M261")));
    formats.push_back(Tformat(_l("Huffyuv")       ,IDFF_hfyu,IDFF_MOVIE_LAVC,_l("Huffyuv codec for libavcodec (HFYU, FFVH)")));
-   formats.push_back(Tformat(_l("MJPEG")         ,IDFF_mjpg,IDFF_MOVIE_LAVC,_l("MJPG, LJPG (lossless)")));
+   formats.push_back(Tformat(_l("MJPEG")         ,IDFF_mjpg,IDFF_MOVIE_LAVC,_l("MJPG, LJPG, MJLS")));
    formats.push_back(Tformat(_l("Other MJPEG")   ,IDFF_avrn,IDFF_MOVIE_LAVC,_l("AVRN, MJPA, SP5X, AMVV")));
    formats.push_back(Tformat(_l("SVQ1")          ,IDFF_svq1,IDFF_MOVIE_LAVC,_l("Sorenson Video (SVQ1)")));
    formats.push_back(Tformat(_l("SVQ3")          ,IDFF_svq3,IDFF_MOVIE_LAVC,_l("Sorenson Video (SVQ3)")));

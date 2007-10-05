@@ -74,7 +74,7 @@ void avcodec_register_all(void)
     REGISTER_ENCDEC		(huffyuv);
     REGISTER_DECODER	(indeo2);
     REGISTER_DECODER	(indeo3);
-    REGISTER_DECODER	(jpegls); // not yet used by ffdshow
+    REGISTER_DECODER	(jpegls);
     REGISTER_ENCODER	(ljpeg);
     REGISTER_DECODER	(loco);
     REGISTER_ENCDEC		(mjpeg);
