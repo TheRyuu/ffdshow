@@ -51,7 +51,7 @@ void avcodec_register_all(void)
     
     /* video codecs */
     REGISTER_DECODER	(aasc);
-    REGISTER_DECODER	(amv); // not yet used by ffdshow
+    REGISTER_DECODER	(amv);
     REGISTER_DECODER	(asv1);
     REGISTER_DECODER	(asv2);
     REGISTER_DECODER	(avs);
@@ -74,7 +74,7 @@ void avcodec_register_all(void)
     REGISTER_ENCDEC		(huffyuv);
     REGISTER_DECODER	(indeo2);
     REGISTER_DECODER	(indeo3);
-    REGISTER_DECODER	(jpegls); // not yet used by ffdshow?
+    REGISTER_DECODER	(jpegls); // not yet used by ffdshow
     REGISTER_ENCODER	(ljpeg);
     REGISTER_DECODER	(loco);
     REGISTER_ENCDEC		(mjpeg);
@@ -113,7 +113,7 @@ void avcodec_register_all(void)
     REGISTER_DECODER	(vp3);
     REGISTER_DECODER	(vp5);
     REGISTER_DECODER	(vp6);
-    REGISTER_DECODER	(vp6a); // not yet used by ffdshow
+    REGISTER_DECODER	(vp6a);
     REGISTER_DECODER	(vp6f);
     REGISTER_ENCDEC		(wmv1);
     REGISTER_ENCDEC		(wmv2);
@@ -155,7 +155,7 @@ void avcodec_register_all(void)
     REGISTER_DECODER  (adpcm_ct);
     REGISTER_DECODER  (adpcm_ea);
     REGISTER_DECODER  (adpcm_g726);
-    REGISTER_DECODER  (adpcm_ima_amv); // not yet used by ffdshow
+    REGISTER_DECODER  (adpcm_ima_amv);
     REGISTER_DECODER  (adpcm_ima_dk3);
     REGISTER_DECODER  (adpcm_ima_dk4);
     REGISTER_DECODER  (adpcm_ima_qt);

@@ -621,6 +621,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(VP62,vp6 & rawmask,CODEC_ID_VP6) \
  FF_FOURCC1_OP(VP6F,vp6f & rawmask,CODEC_ID_VP6F) \
  FF_FOURCC1_OP(FLV4,vp6f & rawmask,CODEC_ID_VP6F) \
+ FF_FOURCC1_OP(VP6A,vp6f & rawmask,CODEC_ID_VP6A) \
  FF_FOURCC1_OP(CAVS,cavs & rawmask,CODEC_ID_CAVS) \
  FF_FOURCC_OP (MPG1,mpg1 & rawmask,c_mpeg1) \
  FF_FOURCC_OP (MPG2,mpg2 & rawmask,c_mpeg2) \
@@ -647,6 +648,8 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(JPEG,(mjpg || svq1 || svq3) & rawmask,CODEC_ID_MJPEG) \
  FF_FOURCC1_OP(AVRN,avrn & rawmask,CODEC_ID_MJPEG) \
  FF_FOURCC1_OP(MJPA,avrn & rawmask,CODEC_ID_MJPEG) \
+ FF_FOURCC1_OP(AMVV,avrn & rawmask,CODEC_ID_AMV) \
+ FF_FOURCC1_OP(SP5X,avrn & rawmask,CODEC_ID_SP5X) \
  FF_FOURCC1_OP(DVSD,dvsd & rawmask,CODEC_ID_DVVIDEO) \
  FF_FOURCC1_OP(DV25,dvsd & rawmask,CODEC_ID_DVVIDEO) \
  FF_FOURCC1_OP(DV50,dvsd & rawmask,CODEC_ID_DVVIDEO) \
@@ -1112,6 +1115,7 @@ void TglobalSettingsDecAudio::load(void)
  FF_WAVE_FORMAT1_OP(IMA_WAV,iadpcm & rawmask,CODEC_ID_ADPCM_IMA_WAV) \
  FF_WAVE_FORMAT1_OP(IMA_DK4,iadpcm & rawmask,CODEC_ID_ADPCM_IMA_DK4) \
  FF_WAVE_FORMAT1_OP(IMA4   ,iadpcm & rawmask,CODEC_ID_ADPCM_IMA_QT) \
+ FF_WAVE_FORMAT1_OP(IMA_AMV,iadpcm & rawmask,CODEC_ID_ADPCM_IMA_AMV) \
  FF_WAVE_FORMAT1_OP(ADPCM  ,msadpcm& rawmask,CODEC_ID_ADPCM_MS) \
  FF_WAVE_FORMAT1_OP(CREATIVE_ADPCM,otherAdpcm& rawmask,CODEC_ID_ADPCM_CT) \
  FF_WAVE_FORMAT1_OP(YAMAHA_ADPCM  ,otherAdpcm& rawmask,CODEC_ID_ADPCM_YAMAHA) \

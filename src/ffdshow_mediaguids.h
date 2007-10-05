@@ -50,6 +50,7 @@
 #define FOURCC_VP61 mmioFOURCC('V','P','6','1')
 #define FOURCC_VP62 mmioFOURCC('V','P','6','2')
 #define FOURCC_VP6F mmioFOURCC('V','P','6','F')
+#define FOURCC_VP6A mmioFOURCC('V','P','6','A')
 #define FOURCC_FLV4 mmioFOURCC('F','L','V','4')
 #define FOURCC_CAVS mmioFOURCC('C','A','V','S')
 #define FOURCC_MSS1 mmioFOURCC('M','S','S','1')
@@ -130,6 +131,8 @@
 #define FOURCC_VIXL mmioFOURCC('V','I','X','L')
 #define FOURCC_AASC mmioFOURCC('A','A','S','C')
 #define FOURCC_FPS1 mmioFOURCC('F','P','S','1')
+#define FOURCC_AMVV mmioFOURCC('A','M','V','V')
+#define FOURCC_SP5X mmioFOURCC('S','P','5','X')
 #define FOURCC_RLE4 BI_RLE4
 #define FOURCC_RLE8 BI_RLE8
 #define FOURCC_BITFIELDS 3
@@ -261,6 +264,7 @@ DEFINE_GUID_FOURCC(NV21)
 #define WAVE_FORMAT_PCM32   0x9a120032
 #define WAVE_FORMAT_FLOAT32 0x9a120132
 #define WAVE_FORMAT_FLOAT64 0x9a120164
+#define WAVE_FORMAT_IMA_AMV mmioFOURCC('A','M','V','A')
 
 DEFINE_GUID_WAVE(WMA7)
 DEFINE_GUID_WAVE(WMA8)
@@ -322,6 +326,7 @@ DEFINE_GUID_WAVE(14_4)
 DEFINE_GUID_WAVE(28_8)
 DEFINE_GUID_WAVE(IMC)
 DEFINE_GUID_WAVE(ATRAC3)
+DEFINE_GUID_WAVE(IMA_AMV)
 
 // vorbis/tremor/illiminable
 #define WAVE_FORMAT_VORBIS 0xcddca2d5
