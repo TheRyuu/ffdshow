@@ -177,7 +177,7 @@ static void fill_caches(H264Context *h, int mb_type, int for_deblock){
 
     //wow what a mess, why didn't they simplify the interlacing&intra stuff, i can't imagine that these complex rules are worth it
 
-    top_xy     = mb_xy  - s->mb_stride;
+    top_xy     = mb_xy  - (s->mb_stride << FIELD_PICTURE);
     topleft_xy = top_xy - 1;
     topright_xy= top_xy + 1;
     left_xy[1] = left_xy[0] = mb_xy-1;
@@ -3395,7 +3395,7 @@ static void print_long_term(H264Context *h) {
 static int execute_ref_pic_marking(H264Context *h, MMCO *mmco, int mmco_count){
     MpegEncContext * const s = &h->s;
     int i, j;
-    int current_is_long=0;
+    int current_ref_assigned=0;
     Picture *pic;
 
     if((s->avctx->debug&FF_DEBUG_MMCO) && mmco_count==0)
@@ -3438,7 +3438,7 @@ static int execute_ref_pic_marking(H264Context *h, MMCO *mmco, int mmco_count){
             h->long_ref[ mmco[i].long_arg ]->long_ref=1;
             h->long_ref_count++;
 
-            current_is_long=1;
+            current_ref_assigned=1;
             break;
         case MMCO_SET_MAX_LONG:
             assert(mmco[i].long_arg <= 16);
@@ -3462,7 +3462,7 @@ static int execute_ref_pic_marking(H264Context *h, MMCO *mmco, int mmco_count){
         }
     }
 
-    if(!current_is_long){
+    if(!current_ref_assigned){
         pic= remove_short(h, s->current_picture_ptr->frame_num);
         if(pic){
             unreference_pic(h, pic, 0);
@@ -3502,7 +3502,7 @@ static int decode_ref_pic_marking(H264Context *h, GetBitContext *gb){
 
                 h->mmco[i].opcode= opcode;
                 if(opcode==MMCO_SHORT2UNUSED || opcode==MMCO_SHORT2LONG){
-                    h->mmco[i].short_pic_num= (h->frame_num - get_ue_golomb(gb) - 1) & ((1<<h->sps.log2_max_frame_num)-1); //FIXME fields
+                    h->mmco[i].short_pic_num= (h->curr_pic_num - get_ue_golomb(gb) - 1) & (h->max_pic_num - 1);
 /*                    if(h->mmco[i].short_pic_num >= h->short_ref_count || h->short_ref[ h->mmco[i].short_pic_num ] == NULL){
                         av_log(s->avctx, AV_LOG_ERROR, "illegal short ref in memory management control operation %d\n", mmco);
                         return -1;
@@ -3510,7 +3510,7 @@ static int decode_ref_pic_marking(H264Context *h, GetBitContext *gb){
                 }
                 if(opcode==MMCO_SHORT2LONG || opcode==MMCO_LONG2UNUSED || opcode==MMCO_LONG || opcode==MMCO_SET_MAX_LONG){
                     unsigned int long_arg= get_ue_golomb(gb);
-                    if(/*h->mmco[i].long_arg >= h->long_ref_count || h->long_ref[ h->mmco[i].long_arg ] == NULL*/ long_arg >= 16){
+                    if(long_arg >= 32 || (long_arg >= 16 && !(opcode == MMCO_LONG2UNUSED && FIELD_PICTURE))){
                         av_log(h->s.avctx, AV_LOG_ERROR, "illegal long ref in memory management control operation %d\n", opcode);
                         return -1;
                     }
@@ -3528,10 +3528,17 @@ static int decode_ref_pic_marking(H264Context *h, GetBitContext *gb){
         }else{
             assert(h->long_ref_count + h->short_ref_count <= h->sps.ref_frame_count);
 
-            if(h->long_ref_count + h->short_ref_count == h->sps.ref_frame_count){ //FIXME fields
+            if(h->long_ref_count + h->short_ref_count == h->sps.ref_frame_count &&
+                    !(FIELD_PICTURE && !s->first_field && s->current_picture_ptr->reference)) {
                 h->mmco[0].opcode= MMCO_SHORT2UNUSED;
                 h->mmco[0].short_pic_num= h->short_ref[ h->short_ref_count - 1 ]->frame_num;
                 h->mmco_index= 1;
+                if (FIELD_PICTURE) {
+                    h->mmco[0].short_pic_num *= 2;
+                    h->mmco[1].opcode= MMCO_SHORT2UNUSED;
+                    h->mmco[1].short_pic_num= h->mmco[0].short_pic_num + 1;
+                    h->mmco_index= 2;
+                }
             }else
                 h->mmco_index= 0;
         }
@@ -3619,11 +3626,15 @@ static int init_poc(H264Context *h){
         field_poc[1]= poc;
     }
 
-    if(s->picture_structure != PICT_BOTTOM_FIELD)
+    if(s->picture_structure != PICT_BOTTOM_FIELD) {
         s->current_picture_ptr->field_poc[0]= field_poc[0];
-    if(s->picture_structure != PICT_TOP_FIELD)
+        s->current_picture_ptr->poc = field_poc[0];
+    }
+    if(s->picture_structure != PICT_TOP_FIELD) {
         s->current_picture_ptr->field_poc[1]= field_poc[1];
-    if(s->picture_structure == PICT_FRAME) // FIXME field pix?
+        s->current_picture_ptr->poc = field_poc[1];
+    }
+    if(!FIELD_PICTURE || !s->first_field)
         s->current_picture_ptr->poc= FFMIN(field_poc[0], field_poc[1]);
 
     return 0;
@@ -3860,13 +3871,15 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     s->current_picture_ptr->frame_num= h->frame_num; //FIXME frame_num cleanup
 
     assert(s->mb_num == s->mb_width * s->mb_height);
-    if(first_mb_in_slice << h->mb_aff_frame >= s->mb_num ||
+    if(first_mb_in_slice << FIELD_OR_MBAFF_PICTURE >= s->mb_num ||
        first_mb_in_slice                    >= s->mb_num){
         av_log(h->s.avctx, AV_LOG_ERROR, "first_mb_in_slice overflow\n");
         return -1;
     }
     s->resync_mb_x = s->mb_x = first_mb_in_slice % s->mb_width;
-    s->resync_mb_y = s->mb_y = (first_mb_in_slice / s->mb_width) << h->mb_aff_frame;
+    s->resync_mb_y = s->mb_y = (first_mb_in_slice / s->mb_width) << FIELD_OR_MBAFF_PICTURE;
+    if (s->picture_structure == PICT_BOTTOM_FIELD)
+        s->resync_mb_y = s->mb_y = s->mb_y + 1;
     assert(s->mb_y < s->mb_height);
 
     if(s->picture_structure==PICT_FRAME){
@@ -4029,7 +4042,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     h->slice_num = ++h0->current_slice;
 
     h->emu_edge_width= (s->flags&CODEC_FLAG_EMU_EDGE) ? 0 : 16;
-    h->emu_edge_height= FRAME_MBAFF ? 0 : h->emu_edge_width;
+    h->emu_edge_height= (FRAME_MBAFF || FIELD_PICTURE) ? 0 : h->emu_edge_width;
 
     if(s->avctx->debug&FF_DEBUG_PICT_INFO){
         av_log(h->s.avctx, AV_LOG_DEBUG, "slice:%d %s mb:%d %c pps:%u frame:%d poc:%d/%d ref:%d/%d qp:%d loop:%d:%d:%d weight:%d%s\n",
@@ -4926,7 +4939,7 @@ static int decode_cabac_mb_skip( H264Context *h, int mb_x, int mb_y ) {
     }else{
         int mb_xy = mb_x + mb_y*s->mb_stride;
         mba_xy = mb_xy - 1;
-        mbb_xy = mb_xy - s->mb_stride;
+        mbb_xy = mb_xy - (s->mb_stride << FIELD_PICTURE);
     }
 
     if( h->slice_table[mba_xy] == h->slice_num && !IS_SKIP( s->current_picture.mb_type[mba_xy] ))
@@ -5370,6 +5383,8 @@ static inline void compute_mb_neighbors(H264Context *h)
         if (left_mb_frame_flag != curr_mb_frame_flag) {
             h->left_mb_xy[0] = pair_xy - 1;
         }
+    } else if (FIELD_PICTURE) {
+        h->top_mb_xy -= s->mb_stride;
     }
     return;
 }
@@ -6578,8 +6593,10 @@ static int decode_slice(struct AVCodecContext *avctx, H264Context *h){
         }
 
         for(;;){
+//START_TIMER
             int ret = decode_mb_cabac(h);
             int eos;
+//STOP_TIMER("decode_mb_cabac")
 
             if(ret>=0) hl_decode_mb(h);
 
@@ -6603,7 +6620,7 @@ static int decode_slice(struct AVCodecContext *avctx, H264Context *h){
                 s->mb_x = 0;
                 ff_draw_horiz_band(s, 16*s->mb_y, 16);
                 ++s->mb_y;
-                if(FRAME_MBAFF) {
+                if(FIELD_OR_MBAFF_PICTURE) {
                     ++s->mb_y;
                 }
             }
@@ -6640,7 +6657,7 @@ static int decode_slice(struct AVCodecContext *avctx, H264Context *h){
                 s->mb_x=0;
                 ff_draw_horiz_band(s, 16*s->mb_y, 16);
                 ++s->mb_y;
-                if(FRAME_MBAFF) {
+                if(FIELD_OR_MBAFF_PICTURE) {
                     ++s->mb_y;
                 }
                 if(s->mb_y >= s->mb_height){
