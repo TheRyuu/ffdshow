@@ -36,6 +36,7 @@
 #include "Coutcsps.h"
 #include "ChideShow.h"
 #include "COSD.h"
+#include "CcspOptions.h"
 #include "ISpecifyPropertyPagesVE.h"
 #include "resource.h"
 
@@ -125,6 +126,7 @@ void TffdshowPageDecVideo::onActivate(void)
    addTI(&tvis,new TmiscPage(this));
    addTI(&tvis,new TqueuePage(this));
    addTI(&tvis,new ToutcspsPage(this));
+   addTI(&tvis,new TcspOptionsPage(this));
   }
  sortOrder();
  if ((filterMode&IDFF_FILTERMODE_VFW)==0)

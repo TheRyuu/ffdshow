@@ -130,8 +130,8 @@ typedef struct SwsContext{
 
 	//Colorspace stuff
 	int contrast, brightness, saturation;	// for sws_getColorspaceDetails
-	int srcColorspaceTable[4];
-	int dstColorspaceTable[4];
+	int srcColorspaceTable[6];
+	int dstColorspaceTable[6];
 	int srcRange, dstRange;
 
 #define RED_DITHER   "0*8"

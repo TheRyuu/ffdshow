@@ -5105,6 +5105,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\dialog\CcspOptions.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dialog\CcspOptions.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\dialog\CcurveAlt.cpp"
 				>
 			</File>
@@ -7446,6 +7454,14 @@
 			</File>
 			<File
 				RelativePath=".\src\convert\Tconvert.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\convert\TrgbPrimaries.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\convert\TrgbPrimaries.h"
 				>
 			</File>
 			<File

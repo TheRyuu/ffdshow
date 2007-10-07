@@ -202,15 +202,16 @@ uint64_t __attribute__((aligned(8))) dither8[2]={
 
 #endif /* defined(ARCH_X86) || defined(ARCH_X86_64) */
 
-const int32_t Inverse_Table_6_9[8][4] = {
-    {117504, 138453, 13954, 34903}, /* no sequence_display_extension */
-    {117504, 138453, 13954, 34903}, /* ITU-R Rec. 709 (1990) */
-    {104597, 132201, 25675, 53279}, /* unspecified */
-    {104597, 132201, 25675, 53279}, /* reserved */
-    {104448, 132798, 24759, 53109}, /* FCC */
-    {104597, 132201, 25675, 53279}, /* ITU-R Rec. 624-4 System B, G */
-    {104597, 132201, 25675, 53279}, /* SMPTE 170M */
-    {117579, 136230, 16907, 35559}  /* SMPTE 240M (1987) */
+const int32_t Inverse_Table_6_9[8][6] = {
+ // {   crv,    cbu,   cgu,   cgv,    cy,      oy}  /* dived by 65536 to get familiar values */
+    {117504, 138453, 13954, 34903, 76309, 1048576}, /* no sequence_display_extension */
+    {117504, 138453, 13954, 34903, 76309, 1048576}, /* ITU-R Rec. 709 (1990) */
+    {104597, 132201, 25675, 53279, 76309, 1048576}, /* unspecified */
+    {104597, 132201, 25675, 53279, 76309, 1048576}, /* reserved */
+    {104448, 132798, 24759, 53109, 76309, 1048576}, /* FCC */
+    {104597, 132201, 25675, 53279, 76309, 1048576}, /* ITU-R Rec. 624-4 System B, G */
+    {104597, 132201, 25675, 53279, 76309, 1048576}, /* SMPTE 170M */
+    {117579, 136230, 16907, 35559, 76309, 1048576}  /* SMPTE 240M (1987) */
 };
 
 #define RGB(i)                                  \
@@ -665,14 +666,10 @@ int yuv2rgb_c_init_tables (SwsContext *c, const int inv_table[4], int fullRange,
     int64_t cbu =  inv_table[1];
     int64_t cgu = -inv_table[2];
     int64_t cgv = -inv_table[3];
-    int64_t cy  = 1<<16;
-    int64_t oy  = 0;
+    int64_t cy  =  inv_table[4];
+    int64_t oy  =  inv_table[5];
 
 //printf("%lld %lld %lld %lld %lld\n", cy, crv, cbu, cgu, cgv);
-    if(!fullRange){
-	cy= (cy*255) / 219;
-	oy= 16<<16;
-    }
 
     cy = (cy *contrast             )>>16;
     crv= (crv*contrast * saturation)>>32;

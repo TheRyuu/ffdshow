@@ -38,7 +38,7 @@
 #include "simd.h"
 
 #pragma warning(push)
-#pragma warning(disable: 4700 4701)
+#pragma warning(disable: 4700 4701 4799)
 
 /********************************
  * (c) Copyright 2003, Klaus Post

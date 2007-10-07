@@ -164,7 +164,7 @@ HRESULT TimgFilterMplayerBlur::process(TfilterQueue::iterator it,TffPict &pict,c
       }
      else swsf.chrH=swsf.chrV=NULL;
      SwsParams params;Tlibmplayer::swsInitParams(&params,0);
-     swsc=libmplayer->sws_getContext(dx1[0],dy1[0],csp_ffdshow2mplayer(csp1),dx1[0],dy1[0],csp_ffdshow2mplayer(csp2),&params,&swsf,NULL);
+     swsc=libmplayer->sws_getContext(dx1[0],dy1[0],csp_ffdshow2mplayer(csp1),dx1[0],dy1[0],csp_ffdshow2mplayer(csp2),&params,&swsf,NULL,NULL);
      if (oldluma)
       {
        libmplayer->sws_freeVec(swsf.lumH);

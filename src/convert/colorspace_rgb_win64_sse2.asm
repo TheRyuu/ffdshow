@@ -70,29 +70,34 @@
 %define SCALEBITS 6
 
 ;=============================================================================
-; Read only data
+; Random access data
 ;=============================================================================
 
-%ifdef FORMAT_COFF
-SECTION .rodata
-%else
-SECTION .rodata align=16
-%endif
+SECTION .data
 ALIGN 16
 
 ;-----------------------------------------------------------------------------
 ; RGB->YV12 multiplication matrices
 ;-----------------------------------------------------------------------------
+
+cglobal bgr_to_yv12_mmx_data
+bgr_to_yv12_mmx_data:
+
 ;         FIX(Y_B)	FIX(Y_G)	FIX(Y_R) Ignored
 
 y_mul: dw    25,      129,        66,      0,        25,      129,        66,      0
 u_mul: dw   112,      -74,       -38,      0,       112,      -74,       -38,      0
 v_mul: dw   -18,      -94,       112,      0,       -18,      -94,       112,      0
+y_add: dw    16,        0
 
+ALIGN 16
 
 ;-----------------------------------------------------------------------------
 ; YV12->RGB data
 ;-----------------------------------------------------------------------------
+
+cglobal yv12_to_bgr_mmx_data
+yv12_to_bgr_mmx_data:
 
 Y_SUB: dw  16,  16,  16,  16,  16,  16,  16,  16
 U_SUB: dw 128, 128, 128, 128, 128, 128, 128, 128
@@ -165,22 +170,22 @@ BRIGHT: db 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128,
 
   movq r13, xmm0
   shr r13, 8
-  add r13, Y_ADD
+  add r13, [y_add wrt rip]
   mov [rsi], r13b                   ; y_ptr[0]
 
   movq r13, xmm1
   shr r13, 8
-  add r13, Y_ADD
+  add r13, [y_add wrt rip]
   mov [rsi + 1], r13b               ; y_ptr[1]
 
   movq r13, xmm2
   shr r13, 8
-  add r13, Y_ADD
+  add r13, [y_add wrt rip]
   mov [rsi + rax + 0], r13b         ; y_ptr[y_stride + 0]
 
   movq r13, xmm3
   shr r13, 8
-  add r13, Y_ADD
+  add r13, [y_add wrt rip]
   mov [rsi + rax + 1], r13b         ; y_ptr[y_stride + 1]
 
   ; u_ptr, v_ptr

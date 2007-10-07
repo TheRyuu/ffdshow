@@ -9,6 +9,7 @@ class TimgFilterLevels : public TimgFilter, public IimgFilterLevels
 _DECLARE_FILTER(TimgFilterLevels,TimgFilter)
 private:
  TlevelsSettings oldSettings;
+ int flag_resetHistory;
  static const int HISTORY=32;
  int inMins[HISTORY],inMinSum,inMin,inMaxs[HISTORY],inMaxSum,inMax;unsigned int minMaxPos;void resetHistory(void);
  unsigned int map[256],mapchroma[256];

@@ -135,7 +135,7 @@ untested special converters
 #define RV ((int)( 0.439*(1<<RGB2YUV_SHIFT)+0.5))
 #define RU ((int)(-0.148*(1<<RGB2YUV_SHIFT)+0.5))
 
-extern const int32_t Inverse_Table_6_9[8][4];
+extern const int32_t Inverse_Table_6_9[8][6];
 
 /*
 NOTES
@@ -1891,17 +1891,17 @@ static uint16_t roundToInt16(int64_t f){
  * @param fullRange if 1 then the luma range is 0..255 if 0 its 16..235
  * @return -1 if not supported
  */
-int sws_setColorspaceDetails(SwsContext *c, const int inv_table[4], int srcRange, const int table[4], int dstRange, int brightness, int contrast, int saturation){
+int sws_setColorspaceDetails(SwsContext *c, const int inv_table[6], int srcRange, const int table[6], int dstRange, int brightness, int contrast, int saturation){
 	int64_t crv =  inv_table[0];
 	int64_t cbu =  inv_table[1];
 	int64_t cgu = -inv_table[2];
 	int64_t cgv = -inv_table[3];
-	int64_t cy  = 1<<16;
-	int64_t oy  = 0;
+	int64_t cy  =  inv_table[4];
+	int64_t oy  =  inv_table[5];
 
 	if(isYUV(c->dstFormat) || isGray(c->dstFormat)) return -1;
-	memcpy(c->srcColorspaceTable, inv_table, sizeof(int)*4);
-	memcpy(c->dstColorspaceTable,     table, sizeof(int)*4);
+	memcpy(c->srcColorspaceTable, inv_table, sizeof(int)*6);
+	memcpy(c->dstColorspaceTable,     table, sizeof(int)*6);
 
 	c->brightness= brightness;
 	c->contrast  = contrast;
@@ -1911,11 +1911,6 @@ int sws_setColorspaceDetails(SwsContext *c, const int inv_table[4], int srcRange
 
 	c->uOffset=   0x0400040004000400LL;
 	c->vOffset=   0x0400040004000400LL;
-
-	if(!srcRange){
-		cy= (cy*255) / 219;
-		oy= 16<<16;
-	}
 
 	cy = (cy *contrast             )>>16;
 	crv= (crv*contrast * saturation)>>32;
@@ -1963,13 +1958,13 @@ int sws_getColorspaceDetails(SwsContext *c, int **inv_table, int *srcRange, int 
 // SwsContext is copied to array for multithreading.
 // sws_scale_ordered modify c->sliceDir. It does not matter for now.
 SwsContext *sws_getContext(int srcW, int srcH, int origSrcFormat, int dstW, int dstH, int origDstFormat, SwsParams *params,
-                         SwsFilter *srcFilter, SwsFilter *dstFilter){
+                         SwsFilter *srcFilter, SwsFilter *dstFilter, const int yuv2rgbTable[6]){
         return sws_getContextEx(srcW, srcH, origSrcFormat, dstW, dstH, origDstFormat, params,
-                                srcFilter, dstFilter, GetCPUCount());
+                                srcFilter, dstFilter, yuv2rgbTable, GetCPUCount());
 }
 
 SwsContext *sws_getContextEx(int srcW, int srcH, int origSrcFormat, int dstW, int dstH, int origDstFormat, SwsParams *params,
-                         SwsFilter *srcFilter, SwsFilter *dstFilter, int threadCount){
+                         SwsFilter *srcFilter, SwsFilter *dstFilter, const int yuv2rgbTable[6], int threadCount){
 
 	SwsContext *c;
 	int i;
@@ -2079,7 +2074,7 @@ SwsContext *sws_getContextEx(int srcW, int srcH, int origSrcFormat, int dstW, in
 	c->chrDstW= -((-dstW) >> c->chrDstHSubSample);
 	c->chrDstH= -((-dstH) >> c->chrDstVSubSample);
 
-	sws_setColorspaceDetails(c, Inverse_Table_6_9[SWS_CS_DEFAULT], 0, Inverse_Table_6_9[SWS_CS_DEFAULT] /* FIXME*/, 0, 0, 1<<16, 1<<16);
+	sws_setColorspaceDetails(c, yuv2rgbTable ? yuv2rgbTable : Inverse_Table_6_9[SWS_CS_DEFAULT], 0, Inverse_Table_6_9[SWS_CS_DEFAULT] /* FIXME*/, 0, 0, 1<<16, 1<<16);
 
 	/* unscaled special Cases */
 	if(unscaled && !usesHFilter && !usesVFilter)

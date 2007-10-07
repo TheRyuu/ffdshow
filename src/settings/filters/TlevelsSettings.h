@@ -19,6 +19,7 @@ public:
  int mode;
  static const char_t *modes[];
  int inMin,gamma,inMax,outMin,outMax,posterize;
+ int YmaxDelta,Ythreshold,Ytemporal;
  int onlyLuma;
  int fullY;
  int inAuto;

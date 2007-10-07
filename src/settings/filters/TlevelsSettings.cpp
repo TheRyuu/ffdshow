@@ -32,6 +32,7 @@ const char_t* TlevelsSettings::modes[]=
  _l("Didee's YlevelsS"),
  _l("Didee's YlevelsC"),
  _l("curve"),
+ _l("Seb's BTB&WTW"),
  NULL
 };
 
@@ -50,6 +51,7 @@ void TlevelsSettings::calcMap(unsigned int map[256],int *divisor,int inMin,int i
  switch (mode)
   {
    case 0:
+   case 6: // Seb's BTB&WTW
     for (int x=0;x<256;x++) // original
      {
       double i=fullY?x:(x-16)*(255.0/219.0);
@@ -119,8 +121,19 @@ void TlevelsSettings::calcMap(unsigned int map[256],int *divisor,int inMin,int i
    case 5:
     calcCurve(map);
     break;
+/*
+   case 6: // Seb's BTB&WTW
+    for (int x=0;x<256;x++)
+     {
+      //double i=fullY?x:(x-16)*(255.0/219.0);
+      double p=(x-inMin)/(*divisor);
+      p=pow(limit(p,0.0,1.0),1/gamma);
+      p=p*(outMax-outMin)+outMin;
+      map[x]=limit(int(p),limitMin,limitMax);
+     }
+	break;*/
   }
- if (mode!=5 && posterize!=255)
+ if(mode!=5 && posterize!=255)
   {
    unsigned int stepd=256/(posterize-1);
    for (unsigned int x=0;x<256;x++)
@@ -283,12 +296,18 @@ TlevelsSettings::TlevelsSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
      _l("fullLevels"),0,
    IDFF_halfLevels     ,&TlevelsSettings::half    ,0,0,_l(""),1,
      _l("halfLevels"),0,
-   IDFF_levelsMode     ,&TlevelsSettings::mode    ,0,5,_l(""),1,
+   IDFF_levelsMode     ,&TlevelsSettings::mode    ,0,6,_l(""),1,
      _l("levelsMode"),0,
    IDFF_levelsGamma    ,&TlevelsSettings::gamma   ,1,400,_l(""),1,
      _l("levelsGamma"),100,
    IDFF_levelsPosterize,&TlevelsSettings::posterize,2,255,_l(""),1,
      _l("levelsPosterize"),255,
+   IDFF_levelsYmaxDelta,&TlevelsSettings::YmaxDelta,1,255,_l(""),1,
+     _l("YmaxDelta"),20,
+   IDFF_levelsYthreshold,&TlevelsSettings::Ythreshold,1,255,_l(""),1,
+     _l("Ythreshold"),10,
+   IDFF_levelsYtemporal,&TlevelsSettings::Ytemporal,1,10,_l(""),1,
+     _l("Ytemporal"),3,
    IDFF_levelsInMin    ,&TlevelsSettings::inMin   ,-3,-3,_l(""),1,
      _l("levelsInMin"),0,
    IDFF_levelsInMax    ,&TlevelsSettings::inMax   ,-3,-3,_l(""),1,
@@ -303,7 +322,6 @@ TlevelsSettings::TlevelsSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
      _l("levelsFullY"),0,
    IDFF_levelsInAuto   ,&TlevelsSettings::inAuto  ,0,0,_l(""),1,
      _l("levelsInAuto"),0,
-
    IDFF_levelsNumPoints,&TlevelsSettings::numPoints ,2,10,_l(""),1,
      _l("levelsNumPoints"),2,
    IDFF_levelsPoint0x  ,&TlevelsSettings::point0x   ,0,255,_l(""),1,
@@ -346,7 +364,6 @@ TlevelsSettings::TlevelsSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
      _l("levelsPoint9x"),0,
    IDFF_levelsPoint9y  ,&TlevelsSettings::point9y   ,0,255,_l(""),1,
      _l("levelsPoint9y"),0,
-
    0
   };
  addOptions(iopts);
@@ -381,6 +398,7 @@ const int* TlevelsSettings::getResets(unsigned int pageId)
  static const int idResets[]={
   IDFF_levelsMode,IDFF_levelsOnlyLuma,IDFF_levelsFullY,
   IDFF_levelsInMin,IDFF_levelsInMax,IDFF_levelsInAuto,IDFF_levelsOutMin,IDFF_levelsOutMax,IDFF_levelsGamma,IDFF_levelsPosterize,
+  IDFF_levelsYmaxDelta,IDFF_levelsYthreshold,IDFF_levelsYtemporal,
   IDFF_levelsNumPoints,IDFF_levelsPoint0x,IDFF_levelsPoint0y,IDFF_levelsPoint1x,IDFF_levelsPoint1y,IDFF_levelsPoint2x,IDFF_levelsPoint2y,IDFF_levelsPoint3x,IDFF_levelsPoint3y,IDFF_levelsPoint4x,IDFF_levelsPoint4y,IDFF_levelsPoint5x,IDFF_levelsPoint5y,IDFF_levelsPoint6x,IDFF_levelsPoint6y,IDFF_levelsPoint7x,IDFF_levelsPoint7y,IDFF_levelsPoint8x,IDFF_levelsPoint8y,IDFF_levelsPoint9x,IDFF_levelsPoint9y,
   0};
  return idResets;

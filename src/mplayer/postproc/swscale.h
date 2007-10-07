@@ -102,16 +102,16 @@ struct SwsContext;
 void sws_freeContext(struct SwsContext *swsContext);
 
 struct SwsContext *sws_getContext(int srcW, int srcH, int srcFormat, int dstW, int dstH, int dstFormat, SwsParams *params,
-                          SwsFilter *srcFilter, SwsFilter *dstFilter);
+                          SwsFilter *srcFilter, SwsFilter *dstFilter, const int32_t yuv2rgbTable[6]);
 struct SwsContext *sws_getContextEx(int srcW, int srcH, int srcFormat, int dstW, int dstH, int dstFormat, SwsParams *params,
-                          SwsFilter *srcFilter, SwsFilter *dstFilter,int threadCount);
+                          SwsFilter *srcFilter, SwsFilter *dstFilter, const int32_t yuv2rgbTable[6],int threadCount);
 int sws_scale(struct SwsContext *context, uint8_t* src[], stride_t srcStride[], int srcSliceY,
                            int srcSliceH, uint8_t* dst[], stride_t dstStride[]);
 int sws_scale_ordered(struct SwsContext *context, uint8_t* src[], stride_t srcStride[], int srcSliceY,
                            int srcSliceH, uint8_t* dst[], stride_t dstStride[]);
 
 
-int sws_setColorspaceDetails(struct SwsContext *c, const int inv_table[4], int srcRange, const int table[4], int dstRange, int brightness, int contrast, int saturation);
+int sws_setColorspaceDetails(struct SwsContext *c, const int inv_table[6], int srcRange, const int table[6], int dstRange, int brightness, int contrast, int saturation);
 int sws_getColorspaceDetails(struct SwsContext *c, int **inv_table, int *srcRange, int **table, int *dstRange, int *brightness, int *contrast, int *saturation);
 SwsVector *sws_getGaussianVec(double variance, double quality);
 SwsVector *sws_getConstVec(double c, int length);

@@ -107,3 +107,4 @@
 #include "Cqueue.cpp"
 #include "TcompatibilityList.cpp"
 #include "TcompatibilityManager.cpp"
+#include "CcspOptions.cpp"

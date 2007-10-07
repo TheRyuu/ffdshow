@@ -265,17 +265,16 @@ void TlevelsPage::init(void)
  strcpy(oldFont.lfFaceName,_l("Small fonts"));
  fontGradient=CreateFontIndirect(&oldFont);
  ReleaseDC(m_hwnd,hdc);
-
  isMap=false;
-
  hIn=GetDlgItem(m_hwnd,IDC_BMP_LEVELS_IN);
  hOut=GetDlgItem(m_hwnd,IDC_BMP_LEVELS_OUT);
-
  RECT r;GetWindowRect(hIn,&r);
  bdx=r.right-r.left-2;
-
  tbrSetRange(IDC_TBR_LEVELS_GAMMA,1,400,40);
  tbrSetRange(IDC_TBR_LEVELS_POSTERIZE,1,255);
+ SendDlgItemMessage(m_hwnd,IDC_UD_Y_MAX_DELTA ,UDM_SETRANGE,0,MAKELONG(50,1));
+ SendDlgItemMessage(m_hwnd,IDC_UD_Y_THRESHOLD ,UDM_SETRANGE,0,MAKELONG(150,1));
+ SendDlgItemMessage(m_hwnd,IDC_UD_Y_TEMPORAL ,UDM_SETRANGE,0,MAKELONG(20,1));
  startup=true;
 }
 
@@ -299,6 +298,9 @@ void TlevelsPage::levels2dlg(void)
  if (x==100) strcatf(pomS,_l(" (%s)"),_(IDC_LBL_LEVELS_GAMMA,_l("off")));
  setDlgItemText(m_hwnd,IDC_LBL_LEVELS_GAMMA,pomS);
  tbrSet(IDC_TBR_LEVELS_POSTERIZE,cfgGet(IDFF_levelsPosterize),IDC_LBL_LEVELS_POSTERIZE);
+ SetDlgItemInt(m_hwnd,IDC_ED_Y_MAX_DELTA ,deci->getParam2(IDFF_levelsYmaxDelta ),FALSE);
+ SetDlgItemInt(m_hwnd,IDC_ED_Y_THRESHOLD ,deci->getParam2(IDFF_levelsYthreshold ),FALSE);
+ SetDlgItemInt(m_hwnd,IDC_ED_Y_TEMPORAL ,deci->getParam2(IDFF_levelsYtemporal ),FALSE);
  mode2dlg();
 }
 void TlevelsPage::mode2dlg(void)
@@ -308,6 +310,20 @@ void TlevelsPage::mode2dlg(void)
  show(mode!=5,idnCurves);
  static const int idCurves[]={IDC_BMP_LEVELS_CURVES,IDC_LBX_LEVELS_CURVES,IDC_BT_LEVELS_CURVES_LOAD,0};
  show(mode==5,idCurves);
+ if(mode==6)
+  {
+   static const int idnCurves[]={IDC_CHB_LEVELS_SHOW_HISTOGRAM_FULL,IDC_LBL_LEVELS_POSTERIZE,IDC_TBR_LEVELS_POSTERIZE,0};
+   show(false,idnCurves);
+   static const int idCurves[]={IDC_LBL_Y_MAX_DELTA,IDC_ED_Y_MAX_DELTA,IDC_UD_Y_MAX_DELTA, IDC_LBL_Y_THRESHOLD,IDC_ED_Y_THRESHOLD,IDC_UD_Y_THRESHOLD, IDC_LBL_Y_TEMPORAL,IDC_ED_Y_TEMPORAL,IDC_UD_Y_TEMPORAL,0};
+   show(true,idCurves);
+   setCheck(IDC_CHB_LEVELS_SHOW_HISTOGRAM_FULL,true);
+   tbrSet(IDC_TBR_LEVELS_POSTERIZE,255,IDC_LBL_LEVELS_POSTERIZE);
+  }
+ else
+ {
+   static const int idnCurves[]={IDC_LBL_Y_MAX_DELTA,IDC_ED_Y_MAX_DELTA,IDC_UD_Y_MAX_DELTA, IDC_LBL_Y_THRESHOLD,IDC_ED_Y_THRESHOLD,IDC_UD_Y_THRESHOLD, IDC_LBL_Y_TEMPORAL,IDC_ED_Y_TEMPORAL,IDC_UD_Y_TEMPORAL,0};
+   show(false,idnCurves);
+ }
  map2dlg();
 }
 void TlevelsPage::map2dlg(void)
@@ -571,4 +587,12 @@ TlevelsPage::TlevelsPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):Tconf
    0,NULL
   };
  bindButtons(bt);
+ static const TbindEditInt<TlevelsPage> edInt[]=
+  {
+   IDC_ED_Y_MAX_DELTA ,1,50,IDFF_levelsYmaxDelta,NULL,
+   IDC_ED_Y_THRESHOLD ,1,150,IDFF_levelsYthreshold,NULL,
+   IDC_ED_Y_TEMPORAL ,1,20,IDFF_levelsYtemporal,NULL,
+   0
+  };
+ bindEditInts(edInt);
 }

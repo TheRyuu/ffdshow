@@ -69,41 +69,51 @@ BITS 32
 %define SCALEBITS 6
 
 ;=============================================================================
-; Read only data
+; Random access data
 ;=============================================================================
 
-%ifdef FORMAT_COFF
-SECTION .rodata
-%else
-SECTION .rodata align=16
-%endif
+SECTION .data
 ALIGN 16
 
 ;-----------------------------------------------------------------------------
 ; RGB->YV12 multiplication matrices
 ;-----------------------------------------------------------------------------
+
+; 16 bytes for each, for compatibility with sse2 version.
+; (Only 8 bytes are used here.)
+
+cglobal bgr_to_yv12_mmx_data
+bgr_to_yv12_mmx_data:
+
 ;         FIX(Y_B)	FIX(Y_G)	FIX(Y_R) Ignored
+y_mul: dw    25,      129,        66,      0,        25,      129,        66,      0
+u_mul: dw   112,      -74,       -38,      0,       112,      -74,       -38,      0
+v_mul: dw   -18,      -94,       112,      0,       -18,      -94,       112,      0
+y_add: dw    16,        0
 
-y_mul: dw    25,      129,        66,      0
-u_mul: dw   112,      -74,       -38,      0
-v_mul: dw   -18,      -94,       112,      0
-
+ALIGN 16
 
 ;-----------------------------------------------------------------------------
 ; YV12->RGB data
 ;-----------------------------------------------------------------------------
 
-Y_SUB: dw  16,  16,  16,  16
-U_SUB: dw 128, 128, 128, 128
-V_SUB: dw 128, 128, 128, 128
+; 16 bytes for each, for compatibility with sse2 version.
+; (Only 8 bytes are used here.)
 
-Y_MUL: dw  74,  74,  74,  74
+cglobal yv12_to_bgr_mmx_data
+yv12_to_bgr_mmx_data:
 
-UG_MUL: dw  25,  25,  25,  25
-VG_MUL: dw  52,  52,  52,  52
+Y_SUB: dw  16,  16,  16,  16,  16,  16,  16,  16
+U_SUB: dw 128, 128, 128, 128, 128, 128, 128, 128
+V_SUB: dw 128, 128, 128, 128, 128, 128, 128, 128
 
-UB_MUL: dw 129, 129, 129, 129
-VR_MUL: dw 102, 102, 102, 102
+Y_MUL: dw  74,  74,  74,  74,  74,  74,  74,  74
+
+UG_MUL: dw  25,  25,  25,  25,  25,  25,  25,  25
+VG_MUL: dw  52,  52,  52,  52,  52,  52,  52,  52
+
+UB_MUL: dw 129, 129, 129, 129, 129, 129, 129, 129
+VR_MUL: dw 102, 102, 102, 102, 102, 102, 102, 102
 
 BRIGHT: db 128, 128, 128, 128, 128, 128, 128, 128
 
@@ -164,22 +174,22 @@ BRIGHT: db 128, 128, 128, 128, 128, 128, 128, 128
 
   movd edx, mm0
   shr edx, 8
-  add edx, Y_ADD
+  add edx, [y_add]
   mov [esi], dl                 ; y_ptr[0]
 
   movd edx, mm1
   shr edx, 8
-  add edx, Y_ADD
+  add edx, [y_add]
   mov [esi + 1], dl             ; y_ptr[1]
 
   movd edx, mm2
   shr edx, 8
-  add edx, Y_ADD
+  add edx, [y_add]
   mov [esi + eax + 0], dl       ; y_ptr[y_stride + 0]
 
   movd edx, mm3
   shr edx, 8
-  add edx, Y_ADD
+  add edx, [y_add]
   mov [esi + eax + 1], dl       ; y_ptr[y_stride + 1]
 
   ; u_ptr, v_ptr
@@ -428,4 +438,6 @@ MAKE_COLORSPACE  bgra_to_yv12_mmx_asm,0,   4,2,2,  BGR_TO_YV12,  4, -1
 ; output
 MAKE_COLORSPACE  yv12_to_bgr_mmx_asm,48,   3,8,2,  YV12_TO_BGR,  3, -1
 MAKE_COLORSPACE  yv12_to_bgra_mmx_asm,48,  4,8,2,  YV12_TO_BGR,  4, -1
+
+
 

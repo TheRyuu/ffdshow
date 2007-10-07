@@ -231,9 +231,9 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
           swsparams->subsampling|=SWS_ACCURATE_RND;
          swsf=libmplayer->sws_getDefaultFilter(oldSettings.GblurLum/100.0f,oldSettings.GblurChrom/100.0f,oldSettings.sharpenLum/100.0f,oldSettings.sharpenChrom/100.0f,0,0,0);
          if (!oldinterlace)
-          swsc=libmplayer->sws_getContext(pictRect.dx,pictRect.dy,csp_ffdshow2mplayer(csp1),newpict.rectClip.dx,newpict.rectClip.dy,csp_ffdshow2mplayer(csp2),swsparams,swsf,NULL);
+          swsc=libmplayer->sws_getContext(pictRect.dx,pictRect.dy,csp_ffdshow2mplayer(csp1),newpict.rectClip.dx,newpict.rectClip.dy,csp_ffdshow2mplayer(csp2),swsparams,swsf,NULL,NULL);
          else
-          swsc=libmplayer->sws_getContext(pictRect.dx,pictRect.dy/2,csp_ffdshow2mplayer(csp1),newpict.rectClip.dx,newpict.rectClip.dy/2,csp_ffdshow2mplayer(csp2),swsparams,swsf,NULL);
+          swsc=libmplayer->sws_getContext(pictRect.dx,pictRect.dy/2,csp_ffdshow2mplayer(csp1),newpict.rectClip.dx,newpict.rectClip.dy/2,csp_ffdshow2mplayer(csp2),swsparams,swsf,NULL,NULL);
         }
        if (!oldinterlace)
         libmplayer->sws_scale_ordered(swsc,src,stride1,0,pictRect.dy,dst,stride2);

@@ -672,7 +672,7 @@ void Tspudec::sws_spu_image(unsigned char *d1, unsigned char *d2, int dw, int dh
   }
 
  SwsParams params;Tlibmplayer::swsInitParams(&params,SWS_GAUSS);
- SwsContext *ctx=libmplayer->sws_getContext(sw, sh, IMGFMT_Y800, dw, dh, IMGFMT_Y800, &params, &filter, NULL);
+ SwsContext *ctx=libmplayer->sws_getContext(sw, sh, IMGFMT_Y800, dw, dh, IMGFMT_Y800, &params, &filter, NULL,NULL);
  libmplayer->sws_scale_ordered(ctx,(const uint8_t**)&s1,&ss,0,sh,&d1,&ds);
  for (stride_t i=ss*sh-1; i>=0; i--) s2[i]=(unsigned char)canon_alpha(s2[i]);
  libmplayer->sws_scale_ordered(ctx,(const uint8_t**)&s2,&ss,0,sh,&d2,&ds);

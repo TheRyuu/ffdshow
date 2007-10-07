@@ -36,6 +36,7 @@
 #define _CONVERT_YUY2_H_
 
 #include "simd.h"
+#include "TrgbPrimaries.h"
 
 #pragma warning(push)
 #pragma warning(disable: 4700 4701)
@@ -59,15 +60,16 @@ template<bool RGB24,bool DUPL> struct Tmmx_ConvertRGBtoYUY2
   *  (paired instructions are indented by a space)
   *****************************/
 
- static void mmx_ConvertRGBtoYUY2(const unsigned char *SRC0,unsigned char *DST,stride_t src_pitch, stride_t dst_pitch,int w, int h, int MATRIX)
+ static void mmx_ConvertRGBtoYUY2(const unsigned char *SRC0,unsigned char *DST,stride_t src_pitch, stride_t dst_pitch,int w, int h, const Tmmx_ConvertRGBtoYUY2matrix *matrix)
   {
    int lwidth_bytes;
    if (RGB24)
     lwidth_bytes = w*3;    // Width in bytes
    else
-   lwidth_bytes = w<<2;    // Width in bytes
+    lwidth_bytes = w<<2;    // Width in bytes
    //SRC+=src_pitch*(h-1);       // ;Move source to bottom line (read top->bottom)
 
+/*
    static const int fraction[4] ={0x00084000,    //=(16.5) << 15 = 0x84000
                                   0x00084000,
                                   0x00004000,    //=(0.5) << 15 = 0x4000
@@ -88,12 +90,13 @@ template<bool RGB24,bool DUPL> struct Tmmx_ConvertRGBtoYUY2
                                   0x0000FFE0,
                                   0x00000000,    //=0
                                   0x00000000};
+*/
    __m64 rb_mask =_mm_set_pi32(0x0000ffff,0x0000ffff);    //=Mask for unpacked R and B
    __m64 fpix_add=_mm_set_pi32(0x00808000,0x00808000);    //=(128.5) << 16
    __m64 chroma_mask2=_mm_set_pi16(-1,0x0000,-1,0x0000);
-   const __m64 mm0=_mm_cvtsi32_si64(fraction[MATRIX]);
-   const __m64 mm7=*(__m64*)(cybgr_64+MATRIX);
-   const __m64 mm5=_mm_cvtsi32_si64(y1y2_mult[MATRIX]);
+   const __m64 mm0=_mm_cvtsi32_si64(matrix->fraction);
+   const __m64 mm7=*(__m64*)(&matrix->cybgr_64);
+   const __m64 mm5=_mm_cvtsi32_si64(matrix->y1y2_mult);
 #define mmx_ConvertRGBtoYUY2_BUFSIZE 8192
    if(lwidth_bytes>mmx_ConvertRGBtoYUY2_BUFSIZE)
     lwidth_bytes=mmx_ConvertRGBtoYUY2_BUFSIZE;
@@ -130,7 +133,7 @@ template<bool RGB24,bool DUPL> struct Tmmx_ConvertRGBtoYUY2
         paddd    (  mm1,mm3    );
        paddd     ( mm2,mm4     );
         psrld    (  mm1,15     );         //mm1= xxxx xxxx 0000 00y1 final value
-       movd      ( mm3,sub_32[MATRIX]);//mm3 = -32
+       movd      ( mm3,matrix->sub_32);//mm3 = -32
         psrld    (  mm2,15     );         //mm2= xxxx xxxx 0000 00y2 final value
        paddw     ( mm3,mm1     );
         pslld    (  mm6,14     );         //Shift up accumulated R and B values (<<15 in C)
@@ -143,7 +146,7 @@ template<bool RGB24,bool DUPL> struct Tmmx_ConvertRGBtoYUY2
        pmaddwd     (mm3,mm5 );            //mm3=scaled_y (latency 2 cycles)
         por        ( mm1,mm2);             //mm1 = 0000 0000 00Y2 00Y1
        punpckldq   (mm3,mm3);             //Move scaled_y to upper dword mm3=SCAL ED_Y SCAL ED_Y
-        movq       ( mm2,fpix_mul+MATRIX);
+        movq       ( mm2,matrix->fpix_mul);
        psubd       (mm6,mm3);             //mm6 = b_y and r_y
         movq       ( mm4,fpix_add);
        psrad       (mm6,14);              //Shift down b_y and r_y (>>10 in C-code)
@@ -305,8 +308,9 @@ private:
   }
 
 public:
- static void mmx_ConvertYUY2toRGB(const BYTE* src,BYTE* dst,const BYTE* src_end,stride_t src_pitch,stride_t dst_pitch,int row_size,int matrix)  //0=rec601, 1=rec709, 3=PC_601, 7=PC_709
+ static void mmx_ConvertYUY2toRGB(const BYTE* src,BYTE* dst,const BYTE* src_end,stride_t src_pitch,stride_t dst_pitch,int row_size,const unsigned char* Imatrix)
   {
+   /*
    static const int64_t yuv2rgb_constants[4][9]=
     {
      {0x00000000000100010LL, //rec601
@@ -350,14 +354,15 @@ public:
       0x000003B9F00003B9FLL}
     };
    const unsigned char *edx=(const unsigned char*)yuv2rgb_constants[matrix];
+   */
    __m64 mm0,mm1,mm2,mm3,mm4,mm5,mm6,mm7;
    for (;src!=src_end;src+=src_pitch,dst+=dst_pitch)
     {
      const unsigned char *srcLn=src,*srcLnEnd=srcLn+row_size-8;
      unsigned char *dstLn=dst;
-     while (YUV2RGB_INNER_LOOP(0,srcLn,srcLnEnd,dstLn,edx,mm0,mm1,mm2,mm3,mm4,mm5,mm6,mm7))
+     while (YUV2RGB_INNER_LOOP(0,srcLn,srcLnEnd,dstLn,Imatrix,mm0,mm1,mm2,mm3,mm4,mm5,mm6,mm7))
       ;
-     YUV2RGB_INNER_LOOP(1,srcLn,srcLnEnd,dstLn,edx,mm0,mm1,mm2,mm3,mm4,mm5,mm6,mm7);
+     YUV2RGB_INNER_LOOP(1,srcLn,srcLnEnd,dstLn,Imatrix,mm0,mm1,mm2,mm3,mm4,mm5,mm6,mm7);
     }
    _mm_empty();
   }

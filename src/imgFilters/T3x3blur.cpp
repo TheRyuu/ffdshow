@@ -32,7 +32,7 @@ T3x3blurSWS::T3x3blurSWS(IffdshowBase *deci,unsigned int Idx,unsigned int Idy):d
  swsf.lumV=swsf.lumH=libmplayer->sws_getConstVec(1/3.0,3);
  swsf.chrH=swsf.chrV=NULL;
  SwsParams params;Tlibmplayer::swsInitParams(&params,0);
- swsc=libmplayer->sws_getContext(dx,dy,IMGFMT_Y800,dx,dy,IMGFMT_Y800,&params,&swsf,NULL);
+ swsc=libmplayer->sws_getContext(dx,dy,IMGFMT_Y800,dx,dy,IMGFMT_Y800,&params,&swsf,NULL,NULL);
  libmplayer->sws_freeVec(swsf.lumH);
 }
 T3x3blurSWS::~T3x3blurSWS()

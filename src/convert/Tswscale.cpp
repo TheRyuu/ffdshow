@@ -31,13 +31,13 @@ Tswscale::~Tswscale()
 {
  done();
 }
-bool Tswscale::init(unsigned int Idx,unsigned int Idy,int incsp,int outcsp)
+bool Tswscale::init(unsigned int Idx,unsigned int Idy,int incsp,int outcsp,const int yuv2rgbTable[6])
 {
  done();
  int sw_incsp=csp_ffdshow2mplayer(incsp),sw_outcsp=csp_ffdshow2mplayer(outcsp);
  dx=Idx;dy=Idy;
  SwsParams params;Tlibmplayer::swsInitParams(&params,SWS_POINT);
- swsc=libmplayer->sws_getContext(dx,dy,sw_incsp,dx,dy,sw_outcsp,&params,NULL,NULL);
+ swsc=libmplayer->sws_getContext(dx,dy,sw_incsp,dx,dy,sw_outcsp,&params,NULL,NULL,yuv2rgbTable);
  return !!swsc;
 }
 void Tswscale::done(void)

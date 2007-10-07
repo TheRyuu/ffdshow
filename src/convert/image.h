@@ -3,6 +3,8 @@
 
 #include "ffImgfmt.h"
 
+extern "C" short bgr_to_yv12_mmx_data;
+extern "C" short yv12_to_bgr_mmx_data;
 void xvid_colorspace_init(void);
 
 typedef struct

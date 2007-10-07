@@ -10,6 +10,7 @@ struct IMixerPinConfig2;
 struct IcheckSubtitle;
 struct IOSDprovider;
 struct IhwOverlayControl;
+struct ToutputVideoSettings;
 template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
 {
  STDMETHOD_(int,getVersion2)(void) PURE;
@@ -103,6 +104,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
  STDMETHOD_(const char*,getAviSynthInfo)(void) PURE;
  STDMETHOD (lockCSReceive)(void) PURE;
  STDMETHOD (unlockCSReceive)(void) PURE;
+ STDMETHOD_(ToutputVideoSettings*,getToutputVideoSettings)(void) PURE;
 };
 
 struct IffdshowDecVideoA :IffdshowDecVideoT<char> {};

@@ -618,3 +618,8 @@ STDMETHODIMP_(int) TffdshowDecVideo::get_downstreamID(void)
 {
  return downstreamID;
 }
+
+STDMETHODIMP_(ToutputVideoSettings*) TffdshowDecVideo::getToutputVideoSettings(void)
+{
+ return presetSettings->output;
+}

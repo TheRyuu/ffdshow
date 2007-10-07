@@ -1797,6 +1797,30 @@
 #define IDC_RBT_AUTOCROPVH              2100
 #define IDC_LBL_CROP_STOPSCAN           2101
 #define IDC_ED_CROP_STOPSCAN            2102
+#define IDC_LBL_Y_MAX_DELTA             2103
+#define IDC_UD_Y_MAX_DELTA              2104
+#define IDC_ED_Y_MAX_DELTA              2105
+#define IDC_LBL_Y_THRESHOLD             2106
+#define IDC_UD_Y_THRESHOLD              2107
+#define IDC_ED_Y_THRESHOLD              2108
+#define IDC_LBL_Y_TEMPORAL              2109
+#define IDC_UD_Y_TEMPORAL               2110
+#define IDC_ED_Y_TEMPORAL               2111
+#define IDD_CSP_OPTIONS                 2112
+#define IDC_RBT_BT601                   2113
+#define IDC_RBT_BT709                   2114
+#define IDC_TBR_RGBCONV_WHITE           2115
+#define IDC_TBR_RGBCONV_BLACK           2116
+#define IDC_TBR_RGBCONV_CHROMA          2117
+#define IDC_TXT_RGBCONV_BLACK           2118
+#define IDC_TXT_RGBCONV_WHITE           2119
+#define IDC_TXT_RGBCONV_CHROMA          2120
+#define IDC_CHB_RGBCONV_CHROMA_LOCK     2121
+#define IDC_GRP_CSP_OPT2                2122
+#define IDC_GRP_CSP_OPT1                2123
+#define IDC_RBT_REC_YUV                 2124
+#define IDC_RBT_PC_YUV                  2125
+#define IDC_RBT_CUSTOM_YUV              2126
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -1813,7 +1837,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        296
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2092
+#define _APS_NEXT_CONTROL_VALUE         2127
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

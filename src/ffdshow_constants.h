@@ -222,6 +222,9 @@
 #define IDFF_levelsOutMax       1608
 #define IDFF_levelsOnlyLuma     1609
 #define IDFF_levelsFullY        1610
+#define IDFF_levelsYmaxDelta	1637
+#define IDFF_levelsYthreshold 	1638
+#define IDFF_levelsYtemporal 	1639
 #define IDFF_levelsPosterize    1614
 #define IDFF_levelsInAuto       1615
 #define IDFF_levelsNumPoints    1616
@@ -881,6 +884,12 @@
 #define IDFF_hwDeinterlace       1353 // deprecated.
 #define IDFF_hwDeintMethod       1361
 #define IDFF_avisynthYV12_RGB    1355
+#define IDFF_cspOptionsIturBt            1362 // 0: 601, 1:709
+#define IDFF_cspOptionsBlackCutoff       3424
+#define IDFF_cspOptionsWhiteCutoff       3425
+#define IDFF_cspOptionsChromaCutoff      3426
+#define IDFF_cspOptionsInterlockChroma   3427
+#define IDFF_cspOptionsCutoffMode        3428
 
 #define IDFF_filterOutputAudio      1314
 #define IDFF_outsfs                 1310
@@ -1438,6 +1447,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3420
+//max:3429
 
 #endif

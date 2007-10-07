@@ -17,6 +17,7 @@
  */
 
 #include "stdafx.h"
+#include "Tconvert.h"
 #include "ToutputVideoSettings.h"
 
 const TfilterIDFF ToutputVideoSettings::idffs=
@@ -99,6 +100,18 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
      _l("outChangeCompatOnly"),1,
    IDFF_avisynthYV12_RGB   ,&ToutputVideoSettings::avisynthYV12_RGB   ,0,0,_l(""),1,
      _l("avisynthYV12_RGB"),0,
+   IDFF_cspOptionsIturBt                ,&ToutputVideoSettings::cspOptionsIturBt           ,0,0,_l(""),1,
+     _l("cspOptionsIturBt"),TrgbPrimaries::ITUR_BT601,
+   IDFF_cspOptionsCutoffMode            ,&ToutputVideoSettings::cspOptionsCutoffMode       ,0,0,_l(""),1,
+     _l("cspOptionsCutoffMode"),TrgbPrimaries::RecYCbCr,
+   IDFF_cspOptionsBlackCutoff           ,&ToutputVideoSettings::cspOptionsBlackCutoff      ,0,32,_l(""),1,
+     _l("cspOptionsBlackCutoff"),16,
+   IDFF_cspOptionsWhiteCutoff           ,&ToutputVideoSettings::cspOptionsWhiteCutoff      ,215,255,_l(""),1,
+     _l("cspOptionsWhiteCutoff"),235,
+   IDFF_cspOptionsChromaCutoff          ,&ToutputVideoSettings::cspOptionsChromaCutoff     ,1,32,_l(""),1,
+     _l("cspOptionsChromaCutoff"),16,
+   IDFF_cspOptionsInterlockChroma       ,&ToutputVideoSettings::cspOptionsInterlockChroma  ,0,0,_l(""),1,
+     _l("cspOptionsInterlockChroma"),1,
    0
   };
  addOptions(iopts);
@@ -137,7 +150,7 @@ void ToutputVideoSettings::reg_op_outcsps(TregOp &t)
 
 const int* ToutputVideoSettings::getResets(unsigned int pageId)
 {
- static const int idResets[]={IDFF_flip,IDFF_outI420,IDFF_outYV12,IDFF_outYUY2,IDFF_outYVYU,IDFF_outUYVY,IDFF_outNV12,IDFF_outRGB32,IDFF_outRGB24,IDFF_outRGB555,IDFF_outDV,IDFF_outRGB565,IDFF_outClosest,IDFF_setSARinOutSample,IDFF_setDeintInOutSample,IDFF_avisynthYV12_RGB,IDFF_allowOutChange,IDFF_outChangeCompatOnly,0};
+ static const int idResets[]={IDFF_flip,IDFF_outI420,IDFF_outYV12,IDFF_outYUY2,IDFF_outYVYU,IDFF_outUYVY,IDFF_outNV12,IDFF_outRGB32,IDFF_outRGB24,IDFF_outRGB555,IDFF_outDV,IDFF_outRGB565,IDFF_outClosest,IDFF_hwOverlay,IDFF_hwDeinterlace,IDFF_avisynthYV12_RGB,/*IDFF_PC_YUV,*/IDFF_allowOutChange,IDFF_outChangeCompatOnly,0};
  return idResets;
 }
 
@@ -178,4 +191,46 @@ void ToutputVideoSettings::getDVsize(unsigned int *dx,unsigned int *dy) const
      if (dif2<dif1) goto ntsc; else goto pal;
     }
   }
+}
+
+int ToutputVideoSettings::get_cspOptionsWhiteCutoff() const
+{
+ if (cspOptionsCutoffMode == TrgbPrimaries::RecYCbCr)
+  return 235;
+ else  if (cspOptionsCutoffMode == TrgbPrimaries::PcYCbCr)
+  return 255;
+
+ return cspOptionsWhiteCutoff;
+}
+
+int ToutputVideoSettings::get_cspOptionsBlackCutoff() const
+{
+ if (cspOptionsCutoffMode == TrgbPrimaries::RecYCbCr)
+  return 16;
+ else  if (cspOptionsCutoffMode == TrgbPrimaries::PcYCbCr)
+  return 0;
+
+ return cspOptionsBlackCutoff;
+}
+
+int ToutputVideoSettings::get_cspOptionsChromaCutoff() const
+{
+ if (cspOptionsCutoffMode == TrgbPrimaries::RecYCbCr)
+  return 16;
+ else  if (cspOptionsCutoffMode == TrgbPrimaries::PcYCbCr)
+  return 1;
+
+ return get_cspOptionsChromaCutoffStatic(cspOptionsBlackCutoff, cspOptionsWhiteCutoff, cspOptionsChromaCutoff, cspOptionsInterlockChroma);
+}
+
+int ToutputVideoSettings::get_cspOptionsChromaCutoffStatic(int blackCutoff, int whiteCutoff, int chromaCutoff, int lock)
+{
+ int result=16;
+ if (lock)
+  result = int(double(255-(whiteCutoff-blackCutoff))/36.0*16.0);
+ else
+  result = chromaCutoff;
+ if (result < 1)
+  result = 1;
+ return result;
 }

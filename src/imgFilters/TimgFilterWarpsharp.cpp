@@ -122,7 +122,7 @@ void TimgFilterWarpsharp::warpsharp(const unsigned char *src,unsigned char *dst,
    libmplayer->sws_normalizeVec(swsf.lumV,1);
    swsf.chrH=swsf.chrV=NULL;
    SwsParams params;Tlibmplayer::swsInitParams(&params,0);
-   swsblur=libmplayer->sws_getContext(dx1[0],dy1[0],IMGFMT_Y800,dx1[0],dy1[0],IMGFMT_Y800,&params,&swsf,NULL);
+   swsblur=libmplayer->sws_getContext(dx1[0],dy1[0],IMGFMT_Y800,dx1[0],dy1[0],IMGFMT_Y800,&params,&swsf,NULL,NULL);
    libmplayer->sws_freeVec(swsf.lumV);
   }
  warpsharpblur(dst,stride2[0],blur,blurworkStride,dx1[0],dy1[0]);

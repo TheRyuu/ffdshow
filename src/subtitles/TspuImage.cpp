@@ -374,7 +374,7 @@ TspuImage::TscalerSw::TscalerSw(const TrenderedSubtitleLines::TprintPrefs &prefs
  filter.lumH=filter.lumV=filter.chrH=filter.chrV=libmplayer->sws_getGaussianVec(prefs.vobaagauss/1000.0, 3.0);
  libmplayer->sws_normalizeVec(filter.lumH,1.0);
  SwsParams params;Tlibmplayer::swsInitParams(&params,SWS_GAUSS);
- ctx=libmplayer->sws_getContext(srcdx,srcdy,IMGFMT_Y800,dstdx,dstdy,IMGFMT_Y800,&params,&filter,NULL);
+ ctx=libmplayer->sws_getContext(srcdx,srcdy,IMGFMT_Y800,dstdx,dstdy,IMGFMT_Y800,&params,&filter,NULL,NULL);
 }
 TspuImage::TscalerSw::~TscalerSw()
 {

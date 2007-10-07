@@ -11,6 +11,7 @@
 #include "Tinfo.h"
 
 struct TpresetVideo;
+struct ToutputVideoSettings;
 struct TffPict;
 struct IMixerPinConfig2;
 struct TglobalSettingsDecVideo;
@@ -303,6 +304,7 @@ public:
  STDMETHODIMP_(const char*) getAviSynthInfo(void);
  STDMETHODIMP lockCSReceive(void) { lockReceive(); return S_OK; }
  STDMETHODIMP unlockCSReceive(void) { unlockReceive(); return S_OK; }
+ STDMETHODIMP_(ToutputVideoSettings*) getToutputVideoSettings(void);
 #ifdef OSDTIMETABALE
  STDMETHODIMP_(int) getOSDtime(void){return (int)OSDtime3;}
 #else
@@ -472,6 +474,7 @@ private:
    STDMETHODIMP_(const char*)getAviSynthInfo(void){return deciV->getAviSynthInfo();}
    STDMETHODIMP lockCSReceive(void) { return deciV->lockCSReceive(); }
    STDMETHODIMP unlockCSReceive(void) { return deciV->unlockCSReceive(); }
+   STDMETHODIMP_(ToutputVideoSettings*) getToutputVideoSettings(void) {return deciV->getToutputVideoSettings();}
  } decVideo_char;
  template<class Tinterface> Tinterface* getDecVideoInterface(void);
  void ConnectCompatibleFilter(void);

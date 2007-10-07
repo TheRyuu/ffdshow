@@ -94,6 +94,7 @@ void ToutcspsPage::csp2dlg(void)
  setCheck(IDC_CHB_OUT_RGB16,cfgGet(IDFF_outRGB565));
  setCheck(IDC_CHB_OUT_CLOSESTMATCH,cfgGet(IDFF_outClosest));
  setCheck(IDC_CHB_AVISYNTH_YV12_RGB,cfgGet(IDFF_avisynthYV12_RGB));
+
 }
 void ToutcspsPage::overlay2dlg(void)
 {

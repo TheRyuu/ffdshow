@@ -17,6 +17,10 @@ public:
  int i420,yv12,yuy2,yvyu,uyvy,nv12,rgb32,rgb24,rgb555,rgb565;
  int closest;
  int dv,dvNorm;void getDVsize(unsigned int *dx,unsigned int *dy) const;
+ int get_cspOptionsBlackCutoff() const;
+ int get_cspOptionsWhiteCutoff() const;
+ int get_cspOptionsChromaCutoff() const;
+ static int get_cspOptionsChromaCutoffStatic(int blackCutoff, int whiteCutoff, int chromaCutoff, int lock);
  static const char_t *dvNorms[];
  static const char_t *deintMethods[];
 
@@ -30,9 +34,12 @@ public:
  void getOutputColorspaces(ints &ocsps),getOutputColorspaces(TcspInfos &ocsps);
  int hwOverlay,hwOverlayAspect;
  int hwOverlayOld,hwDeinterlaceOld;
- int allowOutChange3,outChangeCompatOnly;
+ int allowOutChange3, outChangeCompatOnly;
  int hwDeinterlace,hwDeintMethod;
  int avisynthYV12_RGB;
+ int cspOptionsIturBt, cspOptionsCutoffMode;
+ int cspOptionsBlackCutoff, cspOptionsWhiteCutoff, cspOptionsChromaCutoff;
+ int cspOptionsInterlockChroma;
  int flip;
 
  void reg_op_outcsps(TregOp &t);
