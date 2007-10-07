@@ -109,6 +109,7 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
 
  if (res == 0 && pCompatibleFilter == NULL &&
 	 fv->deci->getParam2(IDFF_alternateUncompressed)==1 && // Enable Vista WMP11 postprocessing
+	 fv->deci->getParam2(IDFF_rawv)!=0 &&
 	 osvi.dwMajorVersion > 5 && // OS >= Vista
 	 (stricmp(fv->getExefilename(),_l("wmplayer.exe"))==0 ||  stricmp(fv->getExefilename(),_l("ehshell.exe"))==0 )) // Only WMP and Media Center are concerned
  {
