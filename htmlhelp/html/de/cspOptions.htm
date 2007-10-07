@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>ffdshow tryouts | Erweiterte Farbraumoptionen</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="description" content="Advanced color space options" />
+  <link rel="stylesheet" href="../styles/style.css" type="text/css" />
+  <link rel="shortcut icon" type="image/x-icon" href="../images/favicon.ico" />
+</head>
+
+<body>
+  <a href="http://ffdshow-tryout.sourceforge.net/">
+    <img src="../images/logo_phpBB.png" title="ffdshow tryouts" alt="ffdshow tryouts" width="200" height="91" />
+  </a>
+
+  <h1>
+    <a name="top" id="top">Erweiterte Farbraumoptionen</a>
+  </h1>
+
+  <img src="images/cspOptions.png" title="Erweiterter Farbraumoptionendialog" alt="Erweiterter Farbraumoptionendialog" width="695" height="413" />
+
+  <p>
+    In diesem Dialog k&ouml;nnen Optionen, die f&uuml;r die Konvertierung zwischen YCbCr und RGB notwendig sind, konfiguriert werden. In der oberen H&auml;lfte des Dialogs l&auml;ßt sich zwischen den beiden ITU-Standards <em>ITU-R BT.601</em> und <em>ITU-R BT.709</em> ausw&auml;hlen. Die untere H&auml;lfte erlaubt die Kontrolle des Kontrastes, wobei schwarz, weiß sowie Chroma individuell anpaßbar sind.<br />
+    Die Einstellungen werden nur verwendet, wenn ffdshow YCbCr &lt;-&gt; RGB Konvertierungen vornimmt. Das bedeutet, daß beim simplen Abspielen eines MPEG-Videos im YV12 bzw. YUV2 Ausgangsfarbraum, diese Einstellungen ignoriert werden.    
+  </p>
+
+  <h2>YCbCr Auswahl</h2>
+
+  <p>
+    ITU-R BT.601 sowie BT.709 sind ITU-Standards f&uuml;r digitalisiertes Analogvideo. Diese legen fest wie zwischen YCbCr und RGB zu konvertieren ist.
+  </p>
+  <ul class="radio">
+    <li>&nbsp;<em>ITU-R BT.601</em>: haupts&auml;chlich f&uuml;r SDTV- sowie DVD-Inhalte.</li>
+    <li>&nbsp;<em>ITU-R BT.709</em>: haupts&auml;chlich f&uuml;r HDTV, HD-DVD sowie Blu-Ray. Hinweis: Einige HD-Clips, die zum Abspielen auf dem PC vorgesehen sind, k&ouml;nnen auch ITU-R BT.601 verwenden.</li>
+  </ul>
+
+  <h2>Kontrast</h2>
+
+  <p>
+    Fast alle Videos sind im Y-Wertebereich (16-235) encodiert. Bei der YCbCr &lt;-&gt; RGB Konvertierung wird YCbCr(16,128,128) zu RGB(0,0,0) umgewandelt. Allerdings haben einige Videos einen Y-Wert kleiner als 16, der f&uuml;r "dunkleres" schwarz steht. Mit den beiden Optionen "Benutzerdefiniert" und "Kompletter Wertebereich" kann man sich - auf Kosten des Kontrastes - diese Abstufung zu Nutze machen.
+  </p>
+
+  <h2>Zus&auml;tzliche Hinweise</h2>
+
+  <h3>MJPEG</h3>
+
+  <p>
+    MJPEG sowie JPEG (beide im Aufzeichnungsfilter verwendet) benutzen in den meisten Fällen den sogenannten <em>PC.601</em> Standard. In diesem Fall wird PC.601 verwendet und die Einstellungen des Dialogs ignoriert.
+  </p>
+
+  <h3>Bekannte Einschr&auml;nkungen</h3>
+
+  <ul style="list-style-type:disc">
+    <li>Ein &Auml;ndern der Einstellungen wird nicht direkt &uuml;bernommen, falls der Eingangsfarbraum NV12 oder Planar 4:2:2 verwendet wird. Der Videoplayer muß in diesem Falle neugestartet werden.</li>
+    <li>ffdshow findet nicht automatisch den passenden Farbraum außer f&uuml;r MJPEG. Seb's BTB&WTW Stufenfilter erkennt dagegen automatisch Y-Werte unter 16 sowie &uuml;ber 235.</li>
+  </ul>
+
+  <div class="footer">
+    <table>
+      <tr>
+        <td>
+          <a class="nav" href="#top">Top&nbsp;<img src="../images/arrow_up.png" width="12" height="9" alt="" /></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a href="http://sourceforge.net">
+            <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=173941&amp;type=2" width="125" height="37" alt="SourceForge.net Logo" />
+          </a>
+        </td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>
