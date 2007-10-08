@@ -60,6 +60,8 @@ Global
 		Release = Release
 		Release Unicode = Release Unicode
 	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
 		{6DF9C5D2-5835-4C6D-A4CF-E17AA58D7C98}.Debug.ActiveCfg = Debug|Win32
 		{6DF9C5D2-5835-4C6D-A4CF-E17AA58D7C98}.Debug.Build.0 = Debug|Win32
@@ -149,14 +151,6 @@ Global
 		{40E7C2DB-387E-412F-B6A9-51A322BB60F3}.Release.Build.0 = Release|Win32
 		{40E7C2DB-387E-412F-B6A9-51A322BB60F3}.Release Unicode.ActiveCfg = Release|Win32
 		{40E7C2DB-387E-412F-B6A9-51A322BB60F3}.Release Unicode.Build.0 = Release|Win32
-		{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}.Debug.ActiveCfg = Debug|Win32
-		{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}.Debug.Build.0 = Debug|Win32
-		{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}.Debug Unicode.ActiveCfg = Debug Unicode|Win32
-		{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}.Debug Unicode.Build.0 = Debug Unicode|Win32
-		{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}.Release.ActiveCfg = Release|Win32
-		{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}.Release.Build.0 = Release|Win32
-		{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}.Release Unicode.ActiveCfg = Release Unicode|Win32
-		{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}.Release Unicode.Build.0 = Release Unicode|Win32
 		{924512C3-75C6-45BE-B7A3-A747BFFD79A1}.Debug.ActiveCfg = Debug|Win32
 		{924512C3-75C6-45BE-B7A3-A747BFFD79A1}.Debug.Build.0 = Debug|Win32
 		{924512C3-75C6-45BE-B7A3-A747BFFD79A1}.Debug Unicode.ActiveCfg = Debug|Win32
@@ -237,6 +231,10 @@ Global
 		{624F21F1-717B-4010-90F9-C908F4AEEB44}.Release.Build.0 = Release|Win32
 		{624F21F1-717B-4010-90F9-C908F4AEEB44}.Release Unicode.ActiveCfg = Release|Win32
 		{624F21F1-717B-4010-90F9-C908F4AEEB44}.Release Unicode.Build.0 = Release|Win32
+		{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}.Debug.ActiveCfg = Debug|Win32
+		{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}.Debug Unicode.ActiveCfg = Debug Unicode|Win32
+		{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}.Release.ActiveCfg = Release|Win32
+		{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}.Release Unicode.ActiveCfg = Release Unicode|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		DPBuild = 5

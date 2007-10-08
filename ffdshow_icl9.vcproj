@@ -3237,6 +3237,14 @@
 				RelativePath="src\dialog\CresizeSettings.h">
 			</File>
 			<File
+				RelativePath=".\src\dialog\CcspOptions.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dialog\CcspOptions.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\dialog\CsecondPass.cpp">
 			</File>
 			<File
@@ -4198,6 +4206,14 @@
 			</File>
 			<File
 				RelativePath=".\src\convert\Tconvert.h">
+			</File>
+			<File
+				RelativePath=".\src\convert\TrgbPrimaries.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\convert\TrgbPrimaries.h"
+				>
 			</File>
 			<File
 				RelativePath="src\convert\Tswscale.cpp">
