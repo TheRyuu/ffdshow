@@ -22,24 +22,25 @@
   <img src="images/cspOptions.png" title="Erweiterter Farbraumoptionendialog" alt="Erweiterter Farbraumoptionendialog" width="695" height="413" />
 
   <p>
-    In diesem Dialog k&ouml;nnen Optionen, die f&uuml;r die Konvertierung zwischen YCbCr und RGB notwendig sind, konfiguriert werden. In der oberen H&auml;lfte des Dialogs l&auml;ﬂt sich zwischen den beiden ITU-Standards <em>ITU-R BT.601</em> und <em>ITU-R BT.709</em> ausw&auml;hlen. Die untere H&auml;lfte erlaubt die Kontrolle des Kontrastes, wobei schwarz, weiﬂ sowie Chroma individuell anpaﬂbar sind.<br />
-    Die Einstellungen werden nur verwendet, wenn ffdshow YCbCr &lt;-&gt; RGB Konvertierungen vornimmt. Das bedeutet, daﬂ beim simplen Abspielen eines MPEG-Videos im YV12 bzw. YUV2 Ausgangsfarbraum, diese Einstellungen ignoriert werden.    
+    In diesem Dialog k&ouml;nnen Optionen, die f&uuml;r die Konvertierung zwischen YCbCr und RGB notwendig sind, konfiguriert werden. In der oberen H&auml;lfte des Dialogs l&auml;&szlig;t sich zwischen den beiden ITU-Standards <em>ITU-R BT.601</em> und <em>ITU-R BT.709</em> ausw&auml;hlen. Die untere H&auml;lfte erlaubt die Kontrolle des Kontrastes, wobei Schwarz, Wei&szlig; sowie Chroma individuell anpassbar sind.<br />
+    Die Einstellungen werden nur verwendet, wenn ffdshow "YCbCr &lt;-&gt; RGB"-Konvertierungen vornimmt. Das bedeutet, dass beim simplen Abspielen eines MPEG-Videos im YV12- bzw. YUV2-Ausgangsfarbraum, diese Einstellungen ignoriert werden.
   </p>
 
-  <h2>YCbCr Auswahl</h2>
+  <h2>YCbCr-Auswahl</h2>
 
   <p>
-    ITU-R BT.601 sowie BT.709 sind ITU-Standards f&uuml;r digitalisiertes Analogvideo. Diese legen fest wie zwischen YCbCr und RGB zu konvertieren ist.
+    ITU-R BT.601 und BT.709 sind ITU-R-Standards f&uuml;r digitalisiertes Analogvideo. Diese legen fest wie zwischen YCbCr und RGB zu konvertieren ist.
   </p>
   <ul class="radio">
-    <li>&nbsp;<em>ITU-R BT.601</em>: haupts&auml;chlich f&uuml;r SDTV- sowie DVD-Inhalte.</li>
-    <li>&nbsp;<em>ITU-R BT.709</em>: haupts&auml;chlich f&uuml;r HDTV, HD-DVD sowie Blu-Ray. Hinweis: Einige HD-Clips, die zum Abspielen auf dem PC vorgesehen sind, k&ouml;nnen auch ITU-R BT.601 verwenden.</li>
+    <li>&nbsp;<em>ITU-R BT.601</em>: Haupts&auml;chlich f&uuml;r SDTV und DVDs.</li>
+    <li>&nbsp;<em>ITU-R BT.709</em>: Haupts&auml;chlich f&uuml;r HDTV, HD-DVDs sowie Blu-Rays. Hinweis: Einige HD-Clips, die zum Abspielen auf dem PC gedacht sind, k&ouml;nnen auch ITU-R BT.601 verwenden.</li>
   </ul>
 
   <h2>Kontrast</h2>
 
   <p>
-    Fast alle Videos sind im Y-Wertebereich (16-235) encodiert. Bei der YCbCr &lt;-&gt; RGB Konvertierung wird YCbCr(16,128,128) zu RGB(0,0,0) umgewandelt. Allerdings haben einige Videos einen Y-Wert kleiner als 16, der f&uuml;r "dunkleres" schwarz steht. Mit den beiden Optionen "Benutzerdefiniert" und "Kompletter Wertebereich" kann man sich - auf Kosten des Kontrastes - diese Abstufung zu Nutze machen.
+    Fast alle Videos sind im Y-Wertebereich 16-235 (Luma) encodiert. YCbCr(16,128,128) wird normalerweise nach RGB(0,0,0) konvertiert.<br />
+    Allerdings haben einige Videos einen Y-Wert kleiner als 16, der f&uuml;r "dunkleres" Schwarz steht. Mit den beiden Optionen "Benutzerdefiniert" und "Kompletter Wertebereich" kann man sich - auf Kosten des Kontrastes - diese Abstufung zu Nutze machen.
   </p>
 
   <h2>Zus&auml;tzliche Hinweise</h2>
@@ -47,14 +48,14 @@
   <h3>MJPEG</h3>
 
   <p>
-    MJPEG sowie JPEG (beide im Aufzeichnungsfilter verwendet) benutzen in den meisten F‰llen den sogenannten <em>PC.601</em> Standard. In diesem Fall wird PC.601 verwendet und die Einstellungen des Dialogs ignoriert.
+    MJPEG und JPEG (beide im Aufzeichnungsfilter verwendet) benutzen in den meisten F&auml;llen den sogenannten <em>PC.601</em>-Standard. In diesem Fall wird PC.601 verwendet und die Einstellung des Dialogs ignoriert.
   </p>
 
   <h3>Bekannte Einschr&auml;nkungen</h3>
 
   <ul style="list-style-type:disc">
-    <li>Ein &Auml;ndern der Einstellungen wird nicht direkt &uuml;bernommen, falls der Eingangsfarbraum NV12 oder Planar 4:2:2 verwendet wird. Der Videoplayer muﬂ in diesem Falle neugestartet werden.</li>
-    <li>ffdshow findet nicht automatisch den passenden Farbraum auﬂer f&uuml;r MJPEG. Seb's BTB&WTW Stufenfilter erkennt dagegen automatisch Y-Werte unter 16 sowie &uuml;ber 235.</li>
+    <li>Ein &Auml;ndern der Einstellungen wird nicht direkt &uuml;bernommen, falls der Eingangsfarbraum NV12 oder Planar 4:2:2 verwendet wird. Der Videoplayer muss in diesem Fall neugestartet werden.</li>
+    <li>ffdshow findet den passenden Farbraum  au&szlig;er f&uuml;r MJPEG nicht automatisch. Sie k&ouml;nnen Sebs BTB&WTW-Stufenfilter ausprobieren, welcher Y-Werte unter 16 oder &uuml;ber 235 automatisch erkennt.</li>
   </ul>
 
   <div class="footer">
