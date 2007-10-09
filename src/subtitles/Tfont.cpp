@@ -1101,9 +1101,14 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
    h1+=(double)prefs.linespacing*(*i)->charHeight()/100;
    if (h2>h) h=h2;
   }
+ 
+ if (prefs.isOSD && prefs.ypos>=0)        // IffdshowDecVideo::drawOSD
+  y = (double)(prefs.ypos*prefsdy)/100.0;
+ else if (prefs.ypos<0)                   // prefs.ypos<0 means -prefs.ypos is absolute potision. OSD use this.
+  y = -(double)prefs.ypos;
+ else
+  y = ((double)prefs.ypos*prefsdy)/100.0-h/2;
 
- // prefs.ypos<0 means -prefs.ypos is absolute potision. OSD use this.
- y=(prefs.ypos<0) ? -(double)prefs.ypos : ((double)prefs.ypos*prefsdy)/100.0-h/2;
  if (prefs.ypos>=0 && y+h >= (double)prefsdy) y=(double)prefsdy-h-1;
 
  for (const_iterator i=begin();i!=end();y+=(double)prefs.linespacing*(*i)->charHeight()/100,i++)
@@ -1127,7 +1132,7 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
        case ALIGN_RIGHT:x=x-cdx;break;
       }
     }
-   if (x+cdx>=prefsdx) x=prefsdx-cdx-1;
+   if (x+cdx>=prefsdx && !prefs.isOSD) x=prefsdx-cdx-1;
    if (x<0) x=0;
    (*i)->print(x,y,prefs,prefsdx,prefsdy); // print a line (=print words).
   }
