@@ -98,7 +98,7 @@ void avcodec_register_all(void)
     REGISTER_DECODER	(rv10);
     REGISTER_DECODER	(rv20);
 		#if __STDC_VERSION__ >= 199901L
-    REGISTER_ENCDEC		(snow);
+    //REGISTER_ENCDEC		(snow);
     #endif
     REGISTER_DECODER	(sp5x);
     REGISTER_DECODER	(svq1);

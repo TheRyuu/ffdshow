@@ -484,7 +484,7 @@ void TcodecsPageVideo::fillCodecs(void)
    formats.push_back(Tformat(_l("Truemotion 1,2"),IDFF_duck,IDFF_MOVIE_LAVC,_l("Doesn't support 24-bit compression.")));
    formats.push_back(Tformat(_l("Ultimotion")    ,IDFF_ulti,IDFF_MOVIE_LAVC,_l("IBM Ultimotion Video (ULTI)")));
    formats.push_back(Tformat(_l("Winnov V1")     ,IDFF_wnv1,IDFF_MOVIE_LAVC,_l("Winnov WNV1 Video (WNV1)")));
-   formats.push_back(Tformat(_l("Snow")          ,IDFF_snow,IDFF_MOVIE_LAVC,_l("experimental")));
+   //formats.push_back(Tformat(_l("Snow")          ,IDFF_snow,IDFF_MOVIE_LAVC,_l("experimental")));
    formats.push_back(Tformat(_l("AviSynth")      ,IDFF_avisV,IDFF_MOVIE_AVIS,_l("AVIS (AviSynth AVI files)")));
    for (Tformats::iterator f=formats.begin();f!=formats.end();f++)
     {

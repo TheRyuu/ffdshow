@@ -7599,8 +7599,8 @@ static int decode_frame(AVCodecContext *avctx,
         int next= ff_h264_find_frame_end(h, buf, buf_size);
 
         if( ff_combine_frame(&s->parse_context, next, (const uint8_t **)&buf, &buf_size) < 0 ) {
-            pict->interlaced_frame=MB_MBAFF;
-            pict->top_field_first=1;
+            pict->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
+            pict->top_field_first = 1;
             return buf_size;
         }
 //printf("next:%d buf_size:%d last_index:%d\n", next, buf_size, s->parse_context.last_index);
@@ -7785,8 +7785,8 @@ static int decode_frame(AVCodecContext *avctx,
     assert(pict->data[0] || !*data_size);
     ff_print_debug_info(s, pict);
 
-    pict->interlaced_frame=MB_MBAFF;
-    pict->top_field_first=1;
+    pict->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
+    pict->top_field_first = 1;
     return get_consumed_bytes(s, buf_index, buf_size);
 }
 

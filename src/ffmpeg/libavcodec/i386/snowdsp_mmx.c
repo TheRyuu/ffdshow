@@ -18,6 +18,8 @@
  * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
+ 
+#if 0 // disable snow
 
 #include "../avcodec.h"
 #include "../snow.h"
@@ -867,3 +869,5 @@ void ff_snow_inner_add_yblock_mmx(const uint8_t *obmc, const int obmc_stride, ui
     else
         ff_snow_inner_add_yblock(obmc, obmc_stride, block, b_w, b_h, src_x,src_y, src_stride, sb, add, dst8);
 }
+
+#endif

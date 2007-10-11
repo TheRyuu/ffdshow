@@ -118,7 +118,7 @@
 #define FOURCC_DUCK mmioFOURCC('D','U','C','K')
 #define FOURCC_TM20 mmioFOURCC('T','M','2','0')
 #define FOURCC_TSCC mmioFOURCC('T','S','C','C')
-#define FOURCC_SNOW mmioFOURCC('S','N','O','W')
+//#define FOURCC_SNOW mmioFOURCC('S','N','O','W')
 #define FOURCC_QPEG mmioFOURCC('Q','P','E','G')
 #define FOURCC_Q1_0 mmioFOURCC('Q','1','.','0')
 #define FOURCC_Q1_1 mmioFOURCC('Q','1','.','1')

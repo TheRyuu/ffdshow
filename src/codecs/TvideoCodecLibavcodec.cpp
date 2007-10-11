@@ -65,7 +65,7 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IencVideoSink *
    encoders.push_back(new Tencoder(_l("HuffYUV"),CODEC_ID_HUFFYUV));
    encoders.push_back(new Tencoder(_l("FFV1"),CODEC_ID_FFV1));
    encoders.push_back(new Tencoder(_l("DV"),CODEC_ID_DVVIDEO));
-   encoders.push_back(new Tencoder(_l("Snow (experimental)"),CODEC_ID_SNOW));
+   //encoders.push_back(new Tencoder(_l("SNOW (experimental)"),CODEC_ID_SNOW));
    encoders.push_back(new Tencoder(_l("FLV1"),CODEC_ID_FLV1));
   }
 }
