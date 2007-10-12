@@ -688,7 +688,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(DUCK,duck & rawmask,CODEC_ID_TRUEMOTION1) \
  FF_FOURCC1_OP(TM20,duck & rawmask,CODEC_ID_TRUEMOTION2) \
  FF_FOURCC1_OP(TSCC,tscc & rawmask,CODEC_ID_TSCC) \
- //FF_FOURCC1_OP(SNOW,snow & rawmask,CODEC_ID_SNOW) \
+ /*FF_FOURCC1_OP(SNOW,snow & rawmask,CODEC_ID_SNOW)*/ \
  FF_FOURCC1_OP(QPEG,qpeg & rawmask,CODEC_ID_QPEG) \
  FF_FOURCC1_OP(Q1_0,qpeg & rawmask,CODEC_ID_QPEG) \
  FF_FOURCC1_OP(Q1_1,qpeg & rawmask,CODEC_ID_QPEG) \
