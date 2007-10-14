@@ -47,7 +47,3 @@ void noise_floor_time_border_vector(sbr_info *sbr, uint8_t ch);
 #endif
 #endif
 
-
-
-
-

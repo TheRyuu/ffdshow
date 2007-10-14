@@ -69,7 +69,3 @@ char *err_msg[] = {
     "Bitstream value not allowed by specification"
 };
 
-
-
-
-

@@ -1005,7 +1005,3 @@ void cfftu(cfft_info *cfft)
     if (cfft) faad_free(cfft);
 }
 
-
-
-
-

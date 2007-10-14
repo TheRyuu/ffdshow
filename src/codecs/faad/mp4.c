@@ -248,7 +248,7 @@ int8_t AudioSpecificConfig2(uint8_t *pBuffer,
             uint8_t tmp_OTi = (uint8_t)faad_getbits(&ld, 5
                 DEBUGVAR(1,10,"parse_audio_decoder_specific_info(): extensionAudioObjectType"));
 
-            if (mp4ASC->objectTypeIndex == 5)
+            if (tmp_OTi == 5)
             {
                 mp4ASC->sbr_present_flag = (uint8_t)faad_get1bit(&ld
                     DEBUGVAR(1,11,"parse_audio_decoder_specific_info(): sbr_present_flag"));

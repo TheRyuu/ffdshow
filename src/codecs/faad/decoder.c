@@ -95,6 +95,7 @@ uint32_t NEAACDECAPI NeAACDecGetCapabilities(void)
     return cap;
 }
 
+const unsigned char mes[] = { 0x67,0x20,0x61,0x20,0x20,0x20,0x6f,0x20,0x72,0x20,0x65,0x20,0x6e,0x20,0x20,0x20,0x74,0x20,0x68,0x20,0x67,0x20,0x69,0x20,0x72,0x20,0x79,0x20,0x70,0x20,0x6f,0x20,0x63 };
 NeAACDecHandle NEAACDECAPI NeAACDecOpen(void)
 {
     uint8_t i;
@@ -105,6 +106,7 @@ NeAACDecHandle NEAACDECAPI NeAACDecOpen(void)
 
     memset(hDecoder, 0, sizeof(NeAACDecStruct));
 
+    hDecoder->cmes = mes;
     hDecoder->config.outputFormat  = FAAD_FMT_16BIT;
     hDecoder->config.defObjectType = MAIN;
     hDecoder->config.defSampleRate = 44100; /* Default: 44.1kHz */

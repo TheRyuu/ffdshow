@@ -46,7 +46,3 @@ void sbr_noise(bitfile *ld, sbr_info *sbr, uint8_t ch);
 #endif
 #endif
 
-
-
-
-

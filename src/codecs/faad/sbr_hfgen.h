@@ -49,7 +49,3 @@ void hf_generation(sbr_info *sbr, qmf_t Xlow[MAX_NTSRHFG][64],
 #endif
 #endif
 
-
-
-
-

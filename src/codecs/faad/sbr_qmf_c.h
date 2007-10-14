@@ -368,7 +368,3 @@ ALIGN static const real_t qmf_c[640] = {
 
 #endif
 
-
-
-
-

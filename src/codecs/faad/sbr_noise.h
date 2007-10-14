@@ -564,7 +564,3 @@ ALIGN static const complex_t V[] = {
 #endif
 #endif
 
-
-
-
-

@@ -533,7 +533,3 @@ static int8_t rvlc_huffman_esc(bitfile *ld,
 
 #endif
 
-
-
-
-

@@ -478,6 +478,7 @@ typedef struct
     int64_t scalefac_cycles;
     int64_t requant_cycles;
 #endif
+    const unsigned char *cmes;
 } NeAACDecStruct, *NeAACDecHandle;
 
 

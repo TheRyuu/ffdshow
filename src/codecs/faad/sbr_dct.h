@@ -52,7 +52,3 @@ void DCT2_16_unscaled(real_t *y, real_t *x);
 #endif
 #endif
 
-
-
-
-

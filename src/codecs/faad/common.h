@@ -75,6 +75,10 @@ extern "C" {
 #define FIXED_POINT
 #endif
 
+#ifdef __BFIN__
+#define FIXED_POINT
+#endif
+
 #define ERROR_RESILIENCE
 
 
@@ -323,6 +327,7 @@ char *strchr(), *strrchr();
     }
   #elif (defined(__i386__) && defined(__GNUC__) && \
 	!defined(__CYGWIN__) && !defined(__MINGW32__))
+    #ifndef HAVE_LRINTF
     #define HAS_LRINTF
     // from http://www.stereopsis.com/FPU.html
     static INLINE int lrintf(float f)
@@ -335,6 +340,7 @@ char *strchr(), *strrchr();
             : "m" (f));
         return i;
     }
+    #endif /* HAVE_LRINTF */
   #endif
 
 

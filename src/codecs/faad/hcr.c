@@ -410,6 +410,8 @@ uint8_t reordered_spectral_data(NeAACDecHandle hDecoder, ic_stream *ics,
             rewrev_bits(&segment[i]);
     }
 
+#if 0 // Seems to give false errors
+
     bitsleft = 0;
 
     for (i = 0; i < numberOfSegments && !bitsleft; i++)
@@ -424,6 +426,8 @@ uint8_t reordered_spectral_data(NeAACDecHandle hDecoder, ic_stream *ics,
                 codewordsleft++;
 
     if (codewordsleft) return 10;
+
+#endif
 
     return 0;
 

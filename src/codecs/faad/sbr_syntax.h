@@ -68,7 +68,3 @@ uint8_t sbr_extension_data(bitfile *ld, sbr_info *sbr, uint16_t cnt,
 #endif
 #endif /* __SBR_SYNTAX_H__ */
 
-
-
-
-

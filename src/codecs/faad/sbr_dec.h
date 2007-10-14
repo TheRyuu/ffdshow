@@ -254,7 +254,3 @@ uint8_t sbrDecodeSingleFramePS(sbr_info *sbr, real_t *left_channel, real_t *righ
 #endif
 #endif
 
-
-
-
-

@@ -256,11 +256,15 @@ static INLINE void faad_flushbits_rev(bitfile *ld, uint32_t bits)
         ld->start--;
         ld->bits_left += (32 - bits);
 
-        ld->bytes_left -= 4;
+        if (ld->bytes_left < 4)
+        {
+            ld->error = 1;
+            ld->bytes_left = 0;
+        } else {
+            ld->bytes_left -= 4;
+        }
 //        if (ld->bytes_left == 0)
 //            ld->no_more_reading = 1;
-        if (ld->bytes_left < 0)
-            ld->error = 1;
     }
 }
 
