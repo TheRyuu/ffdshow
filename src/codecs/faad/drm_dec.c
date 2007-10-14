@@ -952,6 +952,8 @@ uint8_t drm_ps_decode(drm_ps_info *ps, uint8_t guess, qmf_t X_left[38][64], qmf_
     {
         drm_add_pan(ps, X_left, X_right);
 
+        ps->g_last_had_pan = 1;
+
         memcpy(ps->g_prev_pan_index, ps->g_pan_index, sizeof(int8_t) * DRM_NUM_PAN_BANDS);
 
     } else {

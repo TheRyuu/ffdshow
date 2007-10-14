@@ -75,6 +75,8 @@ typedef struct
     int8_t g_last_good_sa_index[DRM_NUM_SA_BANDS];
     int8_t g_last_good_pan_index[DRM_NUM_PAN_BANDS];
 
+    qmf_t SA[NUM_OF_SUBSAMPLES][MAX_SA_BAND];
+
     complex_t d_buff[2][MAX_SA_BAND];
     complex_t d2_buff[NUM_OF_LINKS][MAX_DELAY][MAX_SA_BAND];
 
