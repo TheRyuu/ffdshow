@@ -385,6 +385,8 @@
 		<File 
 			RelativePath=".\libavcodec\h264pred.h"/>
 		<File 
+			RelativePath=".\libavcodec\huffman.h"/>
+		<File 
 			RelativePath=".\libavcodec\imcdata.h"/>
 		<File 
 			RelativePath=".\libavcodec\indeo2data.h"/>
@@ -616,6 +618,8 @@
 			RelativePath=".\libavcodec\h264idct.c"/>
 		<File 
 			RelativePath=".\libavcodec\h264pred.c"/>
+		<File 
+			RelativePath=".\libavcodec\huffman.c"/>
 		<File 
 			RelativePath=".\libavcodec\huffyuv.c"/>
 		<File 

@@ -299,6 +299,9 @@
 				RelativePath=".\libavcodec\h264pred.c">
 			</File>
 			<File
+				RelativePath=".\libavcodec\huffman.c">
+			</File>
+			<File
 				RelativePath=".\libavcodec\huffyuv.c">
 			</File>
 			<File
@@ -709,6 +712,8 @@
 			</File>
 			<File
 				RelativePath="libavcodec\h264pred.h">
+			<File
+				RelativePath="libavcodec\huffman.h">
 			</File>
 			<File
 				RelativePath=".\libavcodec\imcdata.h">
