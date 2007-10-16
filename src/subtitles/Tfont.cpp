@@ -1191,11 +1191,6 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
        pval.firstuse=false;
        switch (pkey.alignment)
         {
-         case 1: // SSA bottom
-         case 2:
-         case 3:
-          pval.y=(double)prefsdy-pval.height - pkey.marginBottom + pval.topOverhang;
-          break;
          case 9: // SSA mid
          case 10:
          case 11:
@@ -1205,6 +1200,12 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
          case 6:
          case 7:
           pval.y = pkey.marginTop + pval.topOverhang;
+          break;
+         case 1: // SSA bottom
+         case 2:
+         case 3:
+         default:
+          pval.y=(double)prefsdy-pval.height - pkey.marginBottom + pval.topOverhang;
           break;
         }
        if (pval.y<0) pval.y=0;
@@ -1226,17 +1227,18 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
      case 9:
       x=marginL - leftOverhang;
       break;
-     case 2: // center(SSA)
-     case 6:
-     case 10:
-      x=((int)prefsdx - marginL - marginR - (int)cdx)/2 + marginL - leftOverhang;
-      if (x<0) x=0;
-      if (x+cdx>=prefsdx) x=prefsdx-cdx;
-      break;
      case 3: // right(SSA)
      case 7:
      case 11:
       x=prefsdx - cdx - marginR - leftOverhang;
+      break;
+     case 2: // center(SSA)
+     case 6:
+     case 10:
+     default:
+      x=((int)prefsdx - marginL - marginR - (int)cdx)/2 + marginL - leftOverhang;
+      if (x<0) x=0;
+      if (x+cdx>=prefsdx) x=prefsdx-cdx;
       break;
     }
    if (x+cdx>=prefsdx && (*i)->props.alignment==-1 && prefs.xpos>=0) x=prefsdx-cdx-1;
