@@ -387,9 +387,9 @@ static int adpcm_decode_frame(AVCodecContext *avctx,
 
     //should protect all 4bit ADPCM variants
     //8 is needed for CODEC_ID_ADPCM_IMA_WAV with 2 channels
-    //broken,tested with black sheep trailer.mov
-    //if(*data_size/4 < buf_size + 8)
-    //    return -1;
+    //
+    if(*data_size/4 < buf_size + 8)
+        return -1;
 
     samples = data;
     samples_end= samples + *data_size/2;
