@@ -292,7 +292,7 @@ Name: {group}\{cm:shrt_vfwConfig};   Filename: rundll32.exe; Parameters: ff_vfw.
 #if include_makeavis
 Name: {group}\makeAVIS; Filename: {app}\makeAVIS.exe; Components: ffdshow\makeavis
 #endif
-Name: {group}\{cm:uninstall}; Filename: {uninstallexe}
+Name: {group}\{cm:shrt_uninstall}; Filename: {uninstallexe}
 
 [Files]
 ; For speaker config
@@ -1464,7 +1464,7 @@ begin
         else if reg_mixerOut = 16 then
           SpeakerPage.Add(CustomMessage('spk_sameAsInput'))
         else if reg_mixerOut = 18 then
-          SpeakerPage.Add(CustomMessage('spk_hrtf'));
+          SpeakerPage.Add(CustomMessage('spk_hrtf'))
         else if reg_mixerOut = 21 then
           SpeakerPage.Add('6.0 (' + CustomMessage('spk_front_3ch') + ' + ' + CustomMessage('spk_side_2ch') + ' + ' + CustomMessage('spk_rear_1ch') + ')')
         else if reg_mixerOut = 22 then
