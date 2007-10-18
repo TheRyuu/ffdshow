@@ -52,6 +52,13 @@
 //Capture image file
 #define WPRM_CAPTUREIMAGE 18
 
+//lParam - parameter id
+#define WPRM_GETPARAMSTR 19
+#define WPRM_GET_CURRENT_SUBTITLES 20
+#define WPRM_GET_PRESETLIST 21
+#define WPRM_GET_SOURCEFILE 22
+#define WPRM_GET_SUBTITLEFILESLIST 23
+
 //WM_COPYDATA
 //COPYDATASTRUCT.dwData=
 #define COPY_PUTPARAMSTR        9 // lpData points to new param value
