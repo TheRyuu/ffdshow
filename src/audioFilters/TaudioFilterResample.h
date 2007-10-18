@@ -17,8 +17,8 @@ public:
 template<class sample_t> struct TreSampleContext;
 DECLARE_FILTER(TaudioFilterResampleLavc,public,TaudioFilterResampleBase)
 private:
- TreSampleContext<int16_t>* ctxsInt[6];
- TreSampleContext<float>* ctxsFloat[6];
+ TreSampleContext<int16_t>* ctxsInt[8];
+ TreSampleContext<float>* ctxsFloat[8];
  Tbuffer buffIn;
  Tbuffer buffOut;
  int oldsf;

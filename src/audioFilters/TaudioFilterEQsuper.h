@@ -8,7 +8,7 @@ class supereq;
 DECLARE_FILTER(TaudioFilterEQsuper,public,TaudioFilter)
 private:
  TeqSettings old;unsigned int oldnchannels;
- supereq *eqs[6];
+ supereq *eqs[8];
  Tbuffer buf;
 protected:
  virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_FLOAT32;}

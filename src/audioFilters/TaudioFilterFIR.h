@@ -12,7 +12,7 @@ private:
  TfirSettings old;unsigned int oldfreq,oldchannels;
  int ip[2+1024];
  float w[65536];
- unsigned int tapes,filterpos;TfirFilter::_ftype_t *fir;float *filterbuf[6];
+ unsigned int tapes,filterpos;TfirFilter::_ftype_t *fir;float *filterbuf[8];
 
  struct TstoredFFT
   {

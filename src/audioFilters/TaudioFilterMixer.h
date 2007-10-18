@@ -14,6 +14,7 @@ private:
  Mixer<float,int,1,1> mixerFloat;
  CCritSec csMatrix;
  const TmixerMatrix::mixer_matrix_t *matrixPtr;
+ int inmask,outmask;
 protected:
  virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_ALL_24;}
 public:
@@ -23,6 +24,7 @@ public:
 
  virtual HRESULT queryInterface(const IID &iid,void **ptr) const;
  STDMETHODIMP getMixerMatrixData(double matrix[6][6]);
+ STDMETHODIMP getMixerMatrixData2(double matrix[9][9],int *inmaskPtr,int *outmaskPtr);
 };
 
 #endif

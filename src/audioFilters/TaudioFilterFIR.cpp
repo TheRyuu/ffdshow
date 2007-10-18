@@ -40,7 +40,7 @@ bool TaudioFilterFir::is(const TsampleFormat &fmt,const TfilterSettingsAudio *cf
 void TaudioFilterFir::done(void)
 {
  if (fir) aligned_free(fir);fir=NULL;
- for (int i=0;i<6;i++)
+ for (int i=0;i<8;i++)
   if (filterbuf[i])
    {
     delete []filterbuf[i];
@@ -135,7 +135,7 @@ void TaudioFilterFir::onSeek(void)
 {
  if (tapes)
   {
-   for (unsigned int i=0;i<6;i++)
+   for (unsigned int i=0;i<8;i++)
     if (filterbuf[i])
      memset(filterbuf[i],0,sizeof(float)*tapes);
    filterpos=0;

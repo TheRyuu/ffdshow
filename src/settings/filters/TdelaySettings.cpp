@@ -54,8 +54,14 @@ TdelaySettings::TdelaySettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilter
      _l("delaySL"),0,
    IDFF_delaySR    ,&TdelaySettings::sr   ,0,20000,_l(""),1,
      _l("delaySR"),0,
+   IDFF_delayBC    ,&TdelaySettings::bc   ,0,20000,_l(""),1,
+     _l("delayBC"),0,
    IDFF_delayLFE   ,&TdelaySettings::lfe  ,0,20000,_l(""),1,
      _l("delayLFE"),0,
+   IDFF_delayAL    ,&TdelaySettings::al   ,0,20000,_l(""),1,
+     _l("delayAL"),0,
+   IDFF_delayAR    ,&TdelaySettings::ar   ,0,20000,_l(""),1,
+     _l("delayAR"),0,
    0
   };
  addOptions(iopts);
@@ -74,7 +80,7 @@ void TdelaySettings::createPages(TffdshowPageDec *parent) const
 
 const int* TdelaySettings::getResets(unsigned int pageId)
 {
- static const int idResets[]={IDFF_delayL,IDFF_delayC,IDFF_delayR,IDFF_delaySL,IDFF_delaySR,IDFF_delayLFE,0};
+ static const int idResets[]={IDFF_delayL,IDFF_delayC,IDFF_delayR,IDFF_delaySL,IDFF_delaySR,IDFF_delayLFE,IDFF_delayAL,IDFF_delayAR,0};
  return idResets;
 }
 

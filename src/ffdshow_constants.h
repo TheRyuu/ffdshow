@@ -1032,36 +1032,82 @@
 #define IDFF_mixerMatrix03     2489
 #define IDFF_mixerMatrix04     2490
 #define IDFF_mixerMatrix05     2491
+#define IDFF_mixerMatrix06     3445
+#define IDFF_mixerMatrix07     3446
+#define IDFF_mixerMatrix08     3471
 #define IDFF_mixerMatrix10     2492
 #define IDFF_mixerMatrix11     2493
 #define IDFF_mixerMatrix12     2494
 #define IDFF_mixerMatrix13     2495
 #define IDFF_mixerMatrix14     2496
 #define IDFF_mixerMatrix15     2497
+#define IDFF_mixerMatrix16     3447
+#define IDFF_mixerMatrix17     3448
+#define IDFF_mixerMatrix18     3472
 #define IDFF_mixerMatrix20     2498
 #define IDFF_mixerMatrix21     2499
 #define IDFF_mixerMatrix22     2600
 #define IDFF_mixerMatrix23     2601
 #define IDFF_mixerMatrix24     2602
 #define IDFF_mixerMatrix25     2603
+#define IDFF_mixerMatrix26     3449
+#define IDFF_mixerMatrix27     3450
+#define IDFF_mixerMatrix28     3473
 #define IDFF_mixerMatrix30     2604
 #define IDFF_mixerMatrix31     2605
 #define IDFF_mixerMatrix32     2606
 #define IDFF_mixerMatrix33     2607
 #define IDFF_mixerMatrix34     2608
 #define IDFF_mixerMatrix35     2609
+#define IDFF_mixerMatrix36     3451
+#define IDFF_mixerMatrix37     3452
+#define IDFF_mixerMatrix38     3474
 #define IDFF_mixerMatrix40     2610
 #define IDFF_mixerMatrix41     2611
 #define IDFF_mixerMatrix42     2612
 #define IDFF_mixerMatrix43     2613
 #define IDFF_mixerMatrix44     2614
 #define IDFF_mixerMatrix45     2615
+#define IDFF_mixerMatrix46     3453
+#define IDFF_mixerMatrix47     3454
+#define IDFF_mixerMatrix48     3475
 #define IDFF_mixerMatrix50     2616
 #define IDFF_mixerMatrix51     2617
 #define IDFF_mixerMatrix52     2618
 #define IDFF_mixerMatrix53     2619
 #define IDFF_mixerMatrix54     2620
 #define IDFF_mixerMatrix55     2621
+#define IDFF_mixerMatrix56     3455
+#define IDFF_mixerMatrix57     3456
+#define IDFF_mixerMatrix58     3476
+#define IDFF_mixerMatrix60     3429
+#define IDFF_mixerMatrix61     3430
+#define IDFF_mixerMatrix62     3431
+#define IDFF_mixerMatrix63     3432
+#define IDFF_mixerMatrix64     3433
+#define IDFF_mixerMatrix65     3434
+#define IDFF_mixerMatrix66     3435
+#define IDFF_mixerMatrix67     3436
+#define IDFF_mixerMatrix68     3477
+#define IDFF_mixerMatrix70     3437
+#define IDFF_mixerMatrix71     3438
+#define IDFF_mixerMatrix72     3439
+#define IDFF_mixerMatrix73     3440
+#define IDFF_mixerMatrix74     3441
+#define IDFF_mixerMatrix75     3442
+#define IDFF_mixerMatrix76     3443
+#define IDFF_mixerMatrix77     3444
+#define IDFF_mixerMatrix78     3461
+#define IDFF_mixerMatrix80     3462
+#define IDFF_mixerMatrix81     3463
+#define IDFF_mixerMatrix82     3464
+#define IDFF_mixerMatrix83     3465
+#define IDFF_mixerMatrix84     3466
+#define IDFF_mixerMatrix85     3467
+#define IDFF_mixerMatrix86     3468
+#define IDFF_mixerMatrix87     3469
+#define IDFF_mixerMatrix88     3470
+
 #define IDFF_customMatrix      2622
 #define IDFF_mixerExpandStereo 2623
 #define IDFF_mixerVoiceControl 2624
@@ -1085,7 +1131,10 @@
 #define IDFF_delayR       2676
 #define IDFF_delaySL      2677
 #define IDFF_delaySR      2678
+#define IDFF_delayBC      3478
 #define IDFF_delayLFE     2679
+#define IDFF_delayAL      3457
+#define IDFF_delayAR      3458
 
 #define IDFF_filterFir      2700
 #define IDFF_isFir          2701
@@ -1140,6 +1189,8 @@
 #define IDFF_channelSwapREAR    2808
 #define IDFF_channelSwapSR      2809
 #define IDFF_channelSwapLFE     2810
+#define IDFF_channelSwapAL      3459
+#define IDFF_channelSwapAR      3460
 
 #define IDFF_filterConvolver          2850
 #define IDFF_isConvolver              2851
@@ -1447,6 +1498,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3429
+//max:3479
 
 #endif

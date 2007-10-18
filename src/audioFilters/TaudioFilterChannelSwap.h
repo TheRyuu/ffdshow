@@ -13,7 +13,7 @@ private:
   {
    int i;
    int speaker;
-  } speakers[6];
+  } speakers[8];
  static bool sortSpeakers(const Tspeaker &spk1,const Tspeaker &spk2);
  template<unsigned int nchannels,class sample_t> void swapChannels(sample_t *samples,size_t numsamples)
   {
@@ -31,7 +31,7 @@ private:
  template<class sample_t> void swapChannels(sample_t *samples,size_t numsamples)
   {
    typedef void (TaudioFilterChannelSwap::*TswapChannelsFc)(sample_t *samples,size_t numsamples);
-   static const TswapChannelsFc swapChannelsFc[7]=
+   static const TswapChannelsFc swapChannelsFc[9]=
     {
      NULL,
      &TaudioFilterChannelSwap::swapChannels<1,sample_t>,
@@ -39,7 +39,9 @@ private:
      &TaudioFilterChannelSwap::swapChannels<3,sample_t>,
      &TaudioFilterChannelSwap::swapChannels<4,sample_t>,
      &TaudioFilterChannelSwap::swapChannels<5,sample_t>,
-     &TaudioFilterChannelSwap::swapChannels<6,sample_t>
+     &TaudioFilterChannelSwap::swapChannels<6,sample_t>,
+     &TaudioFilterChannelSwap::swapChannels<7,sample_t>,
+     &TaudioFilterChannelSwap::swapChannels<8,sample_t>
     };
    (this->*swapChannelsFc[oldfmt.nchannels])(samples,numsamples);
   }

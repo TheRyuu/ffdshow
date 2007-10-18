@@ -25,7 +25,7 @@ private:
   {
    FilterABand B[BANDS];
   };
- FilterAChannel Channel[6];
+ FilterAChannel Channel[8];
  int32_t threshold[BANDS];
  static const int filtcount[BANDS-1]; /* number of voxels back for filter */
 protected:

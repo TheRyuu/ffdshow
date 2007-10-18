@@ -7,7 +7,7 @@ struct IaudioFilterMixer;
 class TmixerPage :public TconfPageDecAudio
 {
 private:
- static const int idffs[6*6],idcs[6*6+1];
+ static const int idffs[9*9],idcs[9*9+1];
  static bool isEdit(int idc);
  void matrix2dlg(void),slev2dlg(void),clev2dlg(void),lfe2dlg(void),dlg2out(void);
  struct TwidgetMixer : TwindowWidget

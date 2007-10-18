@@ -49,7 +49,7 @@ template<class sample_t> void TaudioFilterVolume::volume(sample_t* const samples
     if (isVol)
      {
       typedef void (*TprocessVol)(sample_t * const samples,size_t numsamples,const int *volumes);
-      static const TprocessVol processVol[7]=
+      static const TprocessVol processVol[9]=
        {
         NULL,
         &Tmultiply<1>::processVol,
@@ -57,7 +57,9 @@ template<class sample_t> void TaudioFilterVolume::volume(sample_t* const samples
         &Tmultiply<3>::processVol,
         &Tmultiply<4>::processVol,
         &Tmultiply<5>::processVol,
-        &Tmultiply<6>::processVol
+        &Tmultiply<6>::processVol,
+        &Tmultiply<7>::processVol,
+        &Tmultiply<8>::processVol
        };
       processVol[fmt.nchannels](samples,numsamples,volumes);
      }
@@ -103,7 +105,7 @@ template<class sample_t> void TaudioFilterVolume::volume(sample_t* const samples
 
     // Scale & clamp the samples
     typedef void (*TprocessMul)(sample_t * const samples,size_t numsamples,const int *volumes,float mul);
-    static const TprocessMul processMul[7]=
+    static const TprocessMul processMul[9]=
      {
       NULL,
       &Tmultiply<1>::processMul,
@@ -111,7 +113,9 @@ template<class sample_t> void TaudioFilterVolume::volume(sample_t* const samples
       &Tmultiply<3>::processMul,
       &Tmultiply<4>::processMul,
       &Tmultiply<5>::processMul,
-      &Tmultiply<6>::processMul
+      &Tmultiply<6>::processMul,
+      &Tmultiply<7>::processMul,
+      &Tmultiply<8>::processMul
      };
     processMul[fmt.nchannels](samples,numsamples,volumes,mul);
 
@@ -124,7 +128,7 @@ template<class sample_t> void TaudioFilterVolume::volume(sample_t* const samples
    }
  if (numsamples>0 && deci->getParam2(IDFF_showCurrentVolume) && deci->getCfgDlgHwnd())
   {
-   int64_t sum[6];memset(sum,0,sizeof(sum));
+   int64_t sum[8];memset(sum,0,sizeof(sum));
    for (size_t i=0;i<numsamples*fmt.nchannels;)
     for (unsigned int ch=0;ch<fmt.nchannels;ch++,i++)
      sum[ch]+=int64_t((int64_t)65536*ff_abs(samples[i]));
@@ -177,7 +181,7 @@ HRESULT TaudioFilterVolume::process(TfilterQueue::iterator it,TsampleFormat &fmt
    for (unsigned int i=0;i<fmt.nchannels;i++)
     {
      int v=100;
-     for (int ii=0;i<countof(speakers);ii++)
+     for (int ii=0;ii<countof(speakers);ii++)
       if (fmt.speakers[i]&speakers[ii])
        {
         v=cfg->*cfgmutes[ii]!=1 && (solo==0 || (fmt.speakers[i]&solo))?cfg->*cfgvols[ii]:0;

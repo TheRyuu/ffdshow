@@ -8,7 +8,7 @@ DECLARE_FILTER(TaudioFilterLFEcrossover,public,TaudioFilter)
 private:
  TsampleFormat oldfmt;int oldfreq;
  TsampleFormat outfmt;
- int li,ri,lfei,map[6];
+ int li,ri,lfei,map[8];
  float LFE_buf[256];unsigned int lfe_pos;
  TfirFilter::_ftype_t *filter_coefs_lfe;unsigned int lenLFE;
  float LFE_bufL[256+1],LFE_bufR[256+1];unsigned int lfe_posL,lfe_posR;

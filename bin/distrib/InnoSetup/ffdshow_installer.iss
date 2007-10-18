@@ -547,8 +547,6 @@ Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueN
 
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: ismixer; ValueData: {code:GetIsMixer}; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerOut; ValueData: {code:GetMixerOut}; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerExpandStereo; ValueData: {code:GetMixerExpandStereo}; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerVoiceControl; ValueData: {code:GetMixerVoiceControl}; Components: ffdshow
 
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: allowOutChange; ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: hwOverlay; ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
@@ -626,8 +624,6 @@ var
   reg_ismixer: Cardinal;
 
   SpeakerPage: TInputOptionWizardPage;
-  chbVoicecontrol: TCheckBox;
-  chbExpandStereo: TCheckBox;
   is8DisableMixer: Boolean;
 
   priorPageID: Integer;  // to be used "Don't ask me again" in compatibility list, so that audio and video config can link.
@@ -974,13 +970,13 @@ begin
   else if SpeakerPage.Values[3] = True then
     Result := '2'
   else if SpeakerPage.Values[4] = True then
-    Result := '5'
-  else if SpeakerPage.Values[5] = True then
     Result := '12'
-  else if SpeakerPage.Values[6] = True then
+  else if SpeakerPage.Values[5] = True then
     Result := '6'
-  else if SpeakerPage.Values[7] = True then
+  else if SpeakerPage.Values[6] = True then
     Result := '13'
+  else if SpeakerPage.Values[7] = True then
+    Result := '24'
   else if SpeakerPage.Values[8] = True then
     Result := IntToStr(reg_mixerOut);
   RegWriteDWordValue(HKLM, 'Software\GNU\ffdshow_audio', 'isSpkCfg', 1);
@@ -991,20 +987,6 @@ begin
   Result := '1';
   if (is8DisableMixer = True) and (SpeakerPage.Values[8] = True) then
     Result := '0';
-end;
-
-function GetMixerExpandStereo(dummy: String): String;
-begin
-  Result := '0'
-  if chbExpandStereo.Checked then
-    Result := '1';
-end;
-
-function GetMixerVoiceControl(dummy: String): String;
-begin
-  Result := '0'
-  if chbVoicecontrol.Checked then
-    Result := '1';
 end;
 
 function GetIsWhitelistVideo(dummy: String): String;
@@ -1428,10 +1410,10 @@ begin
   SpeakerPage.Add(ExpandConstant('2.0 ({cm:spk_headphone})'));                   // 17
   SpeakerPage.Add(ExpandConstant('2.0 ({cm:spk_stereo})'));                      // 1
   SpeakerPage.Add(ExpandConstant('3.0 ({cm:spk_front_3ch})'));                   // 2
-  SpeakerPage.Add(ExpandConstant('4.0 ({cm:spk_quadro})'));                      // 5
   SpeakerPage.Add(ExpandConstant('4.1 ({cm:spk_quadro} + {cm:spk_Subwoofer})')); // 12
   SpeakerPage.Add(ExpandConstant('5.0 ({cm:spk_5ch})'));                         // 6
   SpeakerPage.Add(ExpandConstant('5.1 ({cm:spk_5ch} + {cm:spk_Subwoofer})'));    // 13
+  SpeakerPage.Add(ExpandConstant('7.1 ({cm:spk_7ch} + {cm:spk_Subwoofer})'));    // 24
   if  RegQueryDWordValue(HKCU, 'Software\GNU\ffdshow_audio\default', 'mixerOut', reg_mixerOut)
   and RegQueryDWordValue(HKCU, 'Software\GNU\ffdshow_audio\default', 'ismixer' , reg_ismixer)
   and RegQueryDWordValue(HKLM, 'Software\GNU\ffdshow_audio'        , 'isSpkCfg', reg_isSpkCfg) then
@@ -1446,19 +1428,21 @@ begin
         SpeakerPage.Values[2] := True
       else if reg_mixerOut = 2 then
         SpeakerPage.Values[3] := True
-      else if reg_mixerOut = 5 then
-        SpeakerPage.Values[4] := True
       else if reg_mixerOut = 12 then
-        SpeakerPage.Values[5] := True
+        SpeakerPage.Values[4] := True
       else if reg_mixerOut = 6 then
-        SpeakerPage.Values[6] := True
+        SpeakerPage.Values[5] := True
       else if reg_mixerOut = 13 then
+        SpeakerPage.Values[6] := True
+      else if reg_mixerOut = 24 then
         SpeakerPage.Values[7] := True
       else begin
         if reg_mixerOut = 3 then
-          SpeakerPage.Add(ExpandConstant('2.1 ({cm:spk_front_2ch} + {cm:spk_Surround})'))
+          SpeakerPage.Add(ExpandConstant('2+1 ({cm:spk_front_2ch} + {cm:spk_rear_1ch})'))
         else if reg_mixerOut = 4 then
-          SpeakerPage.Add(ExpandConstant('3.1 ({cm:spk_front_3ch} + {cm:spk_Surround})'))
+          SpeakerPage.Add(ExpandConstant('3+1 ({cm:spk_front_3ch} + {cm:spk_rear_1ch})'))
+        else if reg_mixerOut = 5 then
+          SpeakerPage.Add(ExpandConstant('4.0 ({cm:spk_front_2ch} + {cm:spk_rear_2ch})'))
         else if reg_mixerOut = 7 then
           SpeakerPage.Add(ExpandConstant('1.1 ({cm:spk_mono} + {cm:spk_Subwoofer})'))
         else if reg_mixerOut = 8 then
@@ -1466,9 +1450,9 @@ begin
         else if reg_mixerOut = 9 then
           SpeakerPage.Add(ExpandConstant('3.1 ({cm:spk_front_3ch} + {cm:spk_Subwoofer})'))
         else if reg_mixerOut = 10 then
-          SpeakerPage.Add(ExpandConstant('2.1.1 ({cm:spk_front_2ch} + {cm:spk_Surround} + {cm:spk_Subwoofer})'))
+          SpeakerPage.Add(ExpandConstant('2+1.1 ({cm:spk_front_2ch} + {cm:spk_rear_1ch} + {cm:spk_Subwoofer})'))
         else if reg_mixerOut = 11 then
-          SpeakerPage.Add(ExpandConstant('3.1.1 ({cm:spk_front_3ch} + {cm:spk_Surround} + {cm:spk_Subwoofer})'))
+          SpeakerPage.Add(ExpandConstant('3+1.1 ({cm:spk_front_3ch} + {cm:spk_rear_1ch} + {cm:spk_Subwoofer})'))
         else if reg_mixerOut = 14 then
           SpeakerPage.Add(ExpandConstant('{cm:spk_dolby1}'))
         else if reg_mixerOut = 19 then
@@ -1480,7 +1464,15 @@ begin
         else if reg_mixerOut = 16 then
           SpeakerPage.Add(ExpandConstant('{cm:spk_sameasinput}'))
         else if reg_mixerOut = 18 then
-          SpeakerPage.Add(ExpandConstant('{cm:spk_HRTF}'));
+          SpeakerPage.Add(ExpandConstant('{cm:spk_HRTF}'))
+        else if reg_mixerOut = 21 then
+          SpeakerPage.Add(ExpandConstant('6.0 ({cm:spk_front_3ch} + {cm:spk_side_2ch} + {cm:spk_rear_1ch})'))
+        else if reg_mixerOut = 22 then
+          SpeakerPage.Add(ExpandConstant('6.1 ({cm:spk_front_3ch} + {cm:spk_side_2ch} + {cm:spk_rear_1ch} + {cm:spk_Subwoofer})'))
+        else if reg_mixerOut = 23 then
+          SpeakerPage.Add(ExpandConstant('7.0 ({cm:spk_front_3ch} + {cm:spk_side_2ch} + {cm:spk_rear_2ch})'))
+        else if reg_mixerOut > 24 then
+          SpeakerPage.Add('Unknown speaker configulation');
         SpeakerPage.Values[8] := True;
         isMajorType := False;
       end
@@ -1496,7 +1488,6 @@ begin
   end else begin
     reg_ismixer := 1;
     reg_mixerOut := 1;
-    SpeakerPage.Add(ExpandConstant('{cm:spk_MixerDisable}'));
     is8DisableMixer := True;
     systemSpeakerConfig := getSpeakerConfig(); // read the setting of control panel(requires directX 8)
     SpeakerPage.Values[2] := True;       // default 2.0 (Stereo)
@@ -1506,41 +1497,24 @@ begin
     else if systemSpeakerConfig = 1 then // DSSPEAKER_HEADPHONE
       SpeakerPage.Values[1] := True
     else if systemSpeakerConfig = 3 then // DSSPEAKER_QUAD
-      SpeakerPage.Values[4] := True
+      begin
+       SpeakerPage.Add(ExpandConstant('4.0 ({cm:spk_front_2ch} + {cm:spk_rear_2ch})'));
+       SpeakerPage.Values[8] := True;
+       isMajorType := False;
+       is8DisableMixer := False;
+       reg_mixerOut := 5;
+      end
     else if systemSpeakerConfig = 5 then // DSSPEAKER_SURROUND
-      SpeakerPage.Values[6] := True
+      SpeakerPage.Values[5] := True
     else if systemSpeakerConfig = 6 then // DSSPEAKER_5POINT1
-      SpeakerPage.Values[7] := True
+      SpeakerPage.Values[6] := True
     else if systemSpeakerConfig = 7 then // DSSPEAKER_7POINT1
-      SpeakerPage.Values[7] := True
+      SpeakerPage.Values[6] := True
     else if systemSpeakerConfig = 8 then // 7.1ch hometheater
       SpeakerPage.Values[7] := True;
+    if is8DisableMixer then
+     SpeakerPage.Add(ExpandConstant('{cm:spk_MixerDisable}'));
   end
-
-  // Check boxes
-  chbVoicecontrol := TCheckBox.Create(SpeakerPage);
-  chbVoicecontrol.Top := ScaleY(222);
-  chbVoicecontrol.Left := ScaleX(20);
-  chbVoicecontrol.Width := ScaleX(170);
-  chbVoicecontrol.Height := ScaleY(16);
-  chbVoicecontrol.Caption := ExpandConstant('{cm:spk_VoiceControl}');
-  if ffRegReadDWordHKCU('Software\GNU\ffdshow_audio\default', 'mixerVoiceControl',0) = 0 then
-    chbVoicecontrol.Checked := False
-  else
-    chbVoicecontrol.Checked := True;
-  chbVoicecontrol.Parent := SpeakerPage.Surface;
-
-  chbExpandStereo := TCheckBox.Create(SpeakerPage);
-  chbExpandStereo.Top := ScaleY(222);
-  chbExpandStereo.Left := ScaleX(200);
-  chbExpandStereo.Width := ScaleX(200);
-  chbExpandStereo.Height := ScaleY(16);
-  chbExpandStereo.Caption := ExpandConstant('{cm:spk_ExpandStereo}');
-  if ffRegReadDWordHKCU('Software\GNU\ffdshow_audio\default', 'mixerExpandStereo',0) = 0 then
-    chbExpandStereo.Checked := False
-  else
-    chbExpandStereo.Checked := True;
-  chbExpandStereo.Parent := SpeakerPage.Surface;
 
   // VirtualDub plugin install directory setting
 #if include_app_plugins

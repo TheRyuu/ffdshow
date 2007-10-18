@@ -28,7 +28,9 @@ const TchannelSwapPage::Tspeaker TchannelSwapPage::speakers[]=
  IDC_CBX_CHANNELSWAP_SL  ,SPEAKER_BACK_LEFT    ,IDFF_channelSwapSL,
  IDC_CBX_CHANNELSWAP_REAR,SPEAKER_BACK_CENTER  ,IDFF_channelSwapREAR,
  IDC_CBX_CHANNELSWAP_SR  ,SPEAKER_BACK_RIGHT   ,IDFF_channelSwapSR,
- IDC_CBX_CHANNELSWAP_LFE ,SPEAKER_LOW_FREQUENCY,IDFF_channelSwapLFE
+ IDC_CBX_CHANNELSWAP_LFE ,SPEAKER_LOW_FREQUENCY,IDFF_channelSwapLFE,
+ IDC_CBX_CHANNELSWAP_AL  ,SPEAKER_SIDE_LEFT    ,IDFF_channelSwapAL,
+ IDC_CBX_CHANNELSWAP_AR  ,SPEAKER_SIDE_RIGHT   ,IDFF_channelSwapAR
 };
 
 void TchannelSwapPage::cfg2dlg(void)
@@ -61,6 +63,8 @@ INT_PTR TchannelSwapPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       case IDC_CBX_CHANNELSWAP_REAR:
       case IDC_CBX_CHANNELSWAP_SR:
       case IDC_CBX_CHANNELSWAP_LFE:
+      case IDC_CBX_CHANNELSWAP_AL:
+      case IDC_CBX_CHANNELSWAP_AR:
        if (HIWORD(wParam)==CBN_SELCHANGE)
         {
          int ii=cbxs[LOWORD(wParam)];

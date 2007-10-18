@@ -365,7 +365,7 @@ HRESULT TaudioFilterCrystality::process(TfilterQueue::iterator it,TsampleFormat 
    old=*cfg;oldnchannels=fmt.nchannels;
    if (fmt.nchannels==2)
     echo3d.init(cfg);
-   for (int i=0;i<6;i++)
+   for (int i=0;i<8;i++)
     bandext[i].init(cfg);
   }
 
@@ -383,6 +383,6 @@ HRESULT TaudioFilterCrystality::process(TfilterQueue::iterator it,TsampleFormat 
 
 void TaudioFilterCrystality::onSeek(void)
 {
- for (int i=0;i<6;i++) bandext[i].onSeek();
+ for (int i=0;i<8;i++) bandext[i].onSeek();
  echo3d.onSeek();
 }

@@ -78,26 +78,28 @@ public:
  unsigned int freq;
  unsigned int nchannels;
  unsigned int channelmask;
- int speakers[6];
+ int speakers[8];
  int dolby;
  bool pcm_be;
 
  void setChannels(int Inchannels,int IchannelMask=0)
   {
-   nchannels=std::min(6,Inchannels);
+   nchannels=std::min(8,Inchannels);
    channelmask=IchannelMask;
    if (channelmask==0)
     {
-     static const int speakersPresets[6][6]=
+     static const int speakersPresets[8][8]=
       {
-       SPEAKER_FRONT_CENTER,0,0,0,0,0,
-       SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,0,0,0,0,
-       SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_BACK_CENTER,0,0,0,
-       SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_BACK_LEFT,SPEAKER_BACK_RIGHT,0,0,
-       SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_FRONT_CENTER,SPEAKER_BACK_LEFT,SPEAKER_BACK_RIGHT,0,
-       SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_FRONT_CENTER,SPEAKER_LOW_FREQUENCY,SPEAKER_BACK_LEFT,SPEAKER_BACK_RIGHT
+       SPEAKER_FRONT_CENTER,0,0,0,0,0,0,0,
+       SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,0,0,0,0,0,0,
+       SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_BACK_CENTER,0,0,0,0,0,
+       SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_BACK_LEFT,SPEAKER_BACK_RIGHT,0,0,0,0,
+       SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_FRONT_CENTER,SPEAKER_BACK_LEFT,SPEAKER_BACK_RIGHT,0,0,0,
+       SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_FRONT_CENTER,SPEAKER_LOW_FREQUENCY,SPEAKER_BACK_LEFT,SPEAKER_BACK_RIGHT,0,0,
+       SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_FRONT_CENTER,SPEAKER_BACK_LEFT,SPEAKER_BACK_RIGHT,SPEAKER_SIDE_LEFT,SPEAKER_SIDE_RIGHT,0,
+       SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_FRONT_CENTER,SPEAKER_LOW_FREQUENCY,SPEAKER_BACK_LEFT,SPEAKER_BACK_RIGHT,SPEAKER_SIDE_LEFT,SPEAKER_SIDE_RIGHT,
       };
-     memcpy(speakers,speakersPresets[nchannels-1],sizeof(int)*6);
+     memcpy(speakers,speakersPresets[nchannels-1],sizeof(int)*8);
     }
    else
     {
@@ -136,6 +138,10 @@ public:
  int nrear(void) const
   {
    return countbits(makeChannelMask2()&(SPEAKER_BACK_LEFT|SPEAKER_BACK_CENTER|SPEAKER_BACK_RIGHT));
+  }
+ int nside(void) const
+  {
+   return countbits(makeChannelMask2()&(SPEAKER_SIDE_LEFT|SPEAKER_SIDE_RIGHT));
   }
 
  unsigned int bitsPerSample(void) const

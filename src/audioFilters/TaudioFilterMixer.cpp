@@ -45,9 +45,9 @@ HRESULT TaudioFilterMixer::process(TfilterQueue::iterator it,TsampleFormat &fmt,
  samples=init(cfg,fmt,samples,numsamples);
  switch (fmt.sf)
   {
-   case TsampleFormat::SF_PCM16  :mixerPCM16.process(fmt,(int16_t*&)samples,numsamples,cfg,&matrixPtr);break;
-   case TsampleFormat::SF_PCM32  :mixerPCM32.process(fmt,(int32_t*&)samples,numsamples,cfg,&matrixPtr);break;
-   case TsampleFormat::SF_FLOAT32:mixerFloat.process(fmt,(float*&)  samples,numsamples,cfg,&matrixPtr);break;
+   case TsampleFormat::SF_PCM16  :mixerPCM16.process(fmt,(int16_t*&)samples,numsamples,cfg,&matrixPtr,&inmask,&outmask);break;
+   case TsampleFormat::SF_PCM32  :mixerPCM32.process(fmt,(int32_t*&)samples,numsamples,cfg,&matrixPtr,&inmask,&outmask);break;
+   case TsampleFormat::SF_FLOAT32:mixerFloat.process(fmt,(float*&)  samples,numsamples,cfg,&matrixPtr,&inmask,&outmask);break;
   }
  return parent->deliverSamples(++it,fmt,samples,numsamples);
 }
@@ -57,11 +57,25 @@ HRESULT TaudioFilterMixer::queryInterface(const IID &iid,void **ptr) const
  if (iid==IID_IaudioFilterMixer) {*ptr=(IaudioFilterMixer*)this;return S_OK;}
  else return E_NOINTERFACE;
 }
+
 STDMETHODIMP TaudioFilterMixer::getMixerMatrixData(double Imatrix[6][6])
 {
  if (!matrixPtr) return E_UNEXPECTED;
  if (!Imatrix) return E_POINTER;
  CAutoLock lock(&csMatrix);
- memcpy(Imatrix,*matrixPtr,sizeof(double)*6*6);
+ for (int i=0 ; i<6 ; i++)
+  for (int j=0 ; j<6 ; j++)
+   Imatrix[i][j]=(*matrixPtr)[i][j];
+ return S_OK;
+}
+
+STDMETHODIMP TaudioFilterMixer::getMixerMatrixData2(double Imatrix[9][9],int *inmaskPtr,int *outmaskPtr)
+{
+ if (!matrixPtr) return E_UNEXPECTED;
+ if (!Imatrix) return E_POINTER;
+ CAutoLock lock(&csMatrix);
+ memcpy(Imatrix,*matrixPtr,sizeof(double)*9*9);
+ *inmaskPtr  = inmask;
+ *outmaskPtr = outmask;
  return S_OK;
 }

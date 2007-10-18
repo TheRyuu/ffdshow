@@ -7,6 +7,7 @@ static const GUID IID_IaudioFilterMixer = { 0xb392377, 0xc34a, 0x4478, { 0x81, 0
 DECLARE_INTERFACE(IaudioFilterMixer)
 {
  STDMETHOD (getMixerMatrixData)(double matrix[6][6]) PURE;
+ STDMETHOD (getMixerMatrixData2)(double matrix[9][9],int *inmaskPtr,int *outmaskPtr) PURE;
 };
 
 #endif

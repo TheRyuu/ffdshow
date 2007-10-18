@@ -59,6 +59,10 @@ TchannelSwapSettings::TchannelSwapSettings(TintStrColl *Icoll,TfilterIDFFs *filt
      _l("channelSwapRear"),SPEAKER_BACK_CENTER,
    IDFF_channelSwapLFE    ,&TchannelSwapSettings::lfe   ,1,1,_l(""),1,
      _l("channelSwapLFE"),SPEAKER_LOW_FREQUENCY,
+   IDFF_channelSwapAL     ,&TchannelSwapSettings::al    ,1,1,_l(""),1,
+     _l("channelSwapAL"),SPEAKER_SIDE_LEFT,
+   IDFF_channelSwapAR     ,&TchannelSwapSettings::ar    ,1,1,_l(""),1,
+     _l("channelSwapAR"),SPEAKER_SIDE_RIGHT,
    0
   };
  addOptions(iopts);
@@ -77,7 +81,7 @@ void TchannelSwapSettings::createPages(TffdshowPageDec *parent) const
 
 const int* TchannelSwapSettings::getResets(unsigned int pageId)
 {
- static const int idResets[]={IDFF_channelSwapL,IDFF_channelSwapC,IDFF_channelSwapR,IDFF_channelSwapSL,IDFF_channelSwapSR,IDFF_channelSwapLFE,0};
+ static const int idResets[]={IDFF_channelSwapL,IDFF_channelSwapC,IDFF_channelSwapR,IDFF_channelSwapSL,IDFF_channelSwapSR,IDFF_channelSwapLFE,IDFF_channelSwapAL,IDFF_channelSwapAR,0};
  return idResets;
 }
 

@@ -807,26 +807,28 @@ TaudioFilterHeadphone2::af_hrtf_s::af_hrtf_s(const TsampleFormat &fmt):
  cf(DELAYBUFLEN),
  cr(DELAYBUFLEN),
  ba_l(DELAYBUFLEN),
- ba_r(DELAYBUFLEN)
+ ba_r(DELAYBUFLEN),
+ la(DELAYBUFLEN),
+ ra(DELAYBUFLEN)
 {
-    cyc_pos = dlbuflen - 1;
+ cyc_pos = dlbuflen - 1;
 
-    for(int i = 0; i < dlbuflen; i++)
-	lf[i] = rf[i] = lr[i] = rr[i] = cf[i] =
-	    cr[i] = 0;
+ for(int i = 0; i < dlbuflen; i++)
+  lf[i] = rf[i] = lr[i] = rr[i] = cf[i] =
+  cr[i] = /* la[i] = ra[i] = */ 0;
 
-    cf_ir = cf_filt + (cf_o = pulse_detect(cf_filt));
-    af_ir = af_filt + (af_o = pulse_detect(af_filt));
-    of_ir = of_filt + (of_o = pulse_detect(of_filt));
-    ar_ir = ar_filt + (ar_o = pulse_detect(ar_filt));
-    or_ir = or_filt + (or_o = pulse_detect(or_filt));
-    cr_ir = cr_filt + (cr_o = pulse_detect(cr_filt));
+ cf_ir = cf_filt + (cf_o = pulse_detect(cf_filt));
+ af_ir = af_filt + (af_o = pulse_detect(af_filt));
+ of_ir = of_filt + (of_o = pulse_detect(of_filt));
+ ar_ir = ar_filt + (ar_o = pulse_detect(ar_filt));
+ or_ir = or_filt + (or_o = pulse_detect(or_filt));
+ cr_ir = cr_filt + (cr_o = pulse_detect(cr_filt));
 
-    //ba_ir = (float*)malloc(basslen * sizeof(float));
-    float fc = 2.0f * BASSFILTFREQ / (float)fmt.freq;
-    ba_ir=TfirFilter::design_fir(&basslen, &fc, TfirSettings::LOWPASS, TfirSettings::WINDOW_KAISER, float(4*M_PI));
-    for(unsigned int i = 0; i < basslen; i++)
-	ba_ir[i] *= BASSGAIN;
+ //ba_ir = (float*)malloc(basslen * sizeof(float));
+ float fc = 2.0f * BASSFILTFREQ / (float)fmt.freq;
+ ba_ir=TfirFilter::design_fir(&basslen, &fc, TfirSettings::LOWPASS, TfirSettings::WINDOW_KAISER, float(4*M_PI));
+ for(unsigned int i = 0; i < basslen; i++)
+  ba_ir[i] *= BASSGAIN;
 }
 TaudioFilterHeadphone2::af_hrtf_s::~af_hrtf_s()
 {
@@ -834,17 +836,20 @@ TaudioFilterHeadphone2::af_hrtf_s::~af_hrtf_s()
 }
 void TaudioFilterHeadphone2::af_hrtf_s::update_ch(const float *in, const int k)
 {
+ /* 5/5+1 channel sources */
+ lf[k] = in[0];
+ cf[k] = in[4];
+ rf[k] = in[1];
+ lr[k] = in[2];
+ rr[k] = in[3];
 
-       /* 5/5+1 channel sources */
-       lf[k] = in[0];
-       cf[k] = in[4];
-       rf[k] = in[1];
-       lr[k] = in[2];
-       rr[k] = in[3];
+ //cr[k] = in[6];
+ //la[k] = in[7];
+ //ra[k] = in[8];
 
-    /* We need to update the bass compensation delay line, too. */
-    ba_l[k] = in[0] + in[4] + in[2];
-    ba_r[k] = in[4] + in[1] + in[3];
+ /* We need to update the bass compensation delay line, too. */
+ ba_l[k] = in[0] + in[4] + in[2] + in[7];
+ ba_r[k] = in[4] + in[1] + in[3] + in[8];
 }
 
 inline float af_filter_fir(register unsigned int n, const float* w, const float* x)
@@ -854,12 +859,12 @@ inline float af_filter_fir(register unsigned int n, const float* w, const float*
 
 float TaudioFilterHeadphone2::conv(const int nx, const int nk, const float *sx, const float *sk,const int offset)
 {
-    /* k = reminder of offset / nx */
-    int k = offset >= 0 ? offset % nx : nx + (offset % nx);
-    if(nk + k <= nx)
-	return af_filter_fir(nk, sx + k, sk);
-    else
-	return af_filter_fir(nk + k - nx, sx, sk + nx - k) + af_filter_fir(nx - k, sx + k, sk);
+ /* k = reminder of offset / nx */
+ int k = offset >= 0 ? offset % nx : nx + (offset % nx);
+ if(nk + k <= nx)
+  return af_filter_fir(nk, sx + k, sk);
+ else
+  return af_filter_fir(nk + k - nx, sx, sk + nx - k) + af_filter_fir(nx - k, sx + k, sk);
 }
 
 HRESULT TaudioFilterHeadphone2::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0)
@@ -882,6 +887,9 @@ HRESULT TaudioFilterHeadphone2::process(TfilterQueue::iterator it,TsampleFormat 
    indexes[3]=fmt.findSpeaker(SPEAKER_BACK_RIGHT);
    indexes[4]=fmt.findSpeaker(SPEAKER_FRONT_CENTER);
    indexes[5]=fmt.findSpeaker(SPEAKER_LOW_FREQUENCY);
+   //indexes[6]=fmt.findSpeaker(SPEAKER_BACK_CENTER);
+   //indexes[7]=fmt.findSpeaker(SPEAKER_SIDE_LEFT);
+   //indexes[8]=fmt.findSpeaker(SPEAKER_SIDE_RIGHT);
    s=new af_hrtf_s(fmt);
   }
 
@@ -893,36 +901,36 @@ HRESULT TaudioFilterHeadphone2::process(TfilterQueue::iterator it,TsampleFormat 
  const int dblen = s->dlbuflen, hlen = s->hrflen, blen = s->basslen;
  while(inbuf < end)
   {
-	const int k = s->cyc_pos;
-	for (int i=0;i<6;i++)
-         in[i]=indexes[i]!=-1?inbuf[indexes[i]]:0.0f;
+   const int k = s->cyc_pos;
+   for (int i=0 ; i<6 /* 9 */ ; i++)
+    in[i]=indexes[i]!=-1 ? inbuf[indexes[i]] : 0.0f;
 
-	s->update_ch(in, k);
+   s->update_ch(in, k);
 
-	/* Simulate a 7.5 ms -20 dB echo of the center channel in the
-	   front channels (like reflection from a room wall) - a kind of
-	   psycho-acoustically "cheating" to focus the center front
-	   channel, which is normally hard to be perceived as front */
-	static const float CFECHOAMPL=M17_0DB;	/* Center front echo amplitude */
-        s->lf[k] += CFECHOAMPL * s->cf[(k + CFECHODELAY) % s->dlbuflen];
-	s->rf[k] += CFECHOAMPL * s->cf[(k + CFECHODELAY) % s->dlbuflen];
+   /* Simulate a 7.5 ms -20 dB echo of the center channel in the
+      front channels (like reflection from a room wall) - a kind of
+      psycho-acoustically "cheating" to focus the center front
+      channel, which is normally hard to be perceived as front */
+   static const float CFECHOAMPL=M17_0DB;	/* Center front echo amplitude */
+   s->lf[k] += CFECHOAMPL * s->cf[(k + CFECHODELAY) % s->dlbuflen];
+   s->rf[k] += CFECHOAMPL * s->cf[(k + CFECHODELAY) % s->dlbuflen];
 
-	float common,left,right;
+   float common,left,right;
 
-	   common = conv(dblen, hlen, &s->cf[0], &s->cf_ir[0], k + s->cf_o);
+   common = conv(dblen, hlen, &s->cf[0], &s->cf_ir[0], k + s->cf_o);
 
-	      left    =
-		 ( conv(dblen, hlen, &s->lf[0], s->af_ir, k + s->af_o) +
-		   conv(dblen, hlen, &s->rf[0], s->of_ir, k + s->of_o) +
-		   conv(dblen, hlen, &s->lr[0], s->ar_ir, k + s->ar_o) +
-		   conv(dblen, hlen, &s->rr[0], s->or_ir, k + s->or_o) +
-		   common);
-	      right   =
-		 ( conv(dblen, hlen, &s->rf[0], s->af_ir, k + s->af_o) +
-		   conv(dblen, hlen, &s->lf[0], s->of_ir, k + s->of_o) +
-		   conv(dblen, hlen, &s->rr[0], s->ar_ir, k + s->ar_o) +
-		   conv(dblen, hlen, &s->lr[0], s->or_ir, k + s->or_o) +
-		   common);
+   left    =
+    ( conv(dblen, hlen, &s->lf[0], s->af_ir, k + s->af_o) +
+      conv(dblen, hlen, &s->rf[0], s->of_ir, k + s->of_o) +
+      conv(dblen, hlen, &s->lr[0], s->ar_ir, k + s->ar_o) +
+      conv(dblen, hlen, &s->rr[0], s->or_ir, k + s->or_o) +
+      common);
+   right   =
+    ( conv(dblen, hlen, &s->rf[0], s->af_ir, k + s->af_o) +
+      conv(dblen, hlen, &s->lf[0], s->of_ir, k + s->of_o) +
+      conv(dblen, hlen, &s->rr[0], s->ar_ir, k + s->ar_o) +
+      conv(dblen, hlen, &s->lr[0], s->or_ir, k + s->or_o) +
+      common);
 
 	/* Bass compensation for the lower frequency cut of the HRTF.  A
 	   cross talk of the left and right channel is introduced to
@@ -936,27 +944,27 @@ HRESULT TaudioFilterHeadphone2::process(TfilterQueue::iterator it,TsampleFormat 
 	right += (1 - BASSCROSS) * right_b + BASSCROSS * left_b;
 	/* Also mix the LFE channel (if available) */
 	if(indexes[5]!=-1) {
-	    left  += in[5] * M3_01DB;
-	    right += in[5] * M3_01DB;
+     left  += in[5] * M3_01DB;
+     right += in[5] * M3_01DB;
 	}
 
 	/* Amplitude renormalization. */
 	static const float AMPLNORM=M6_99DB;	/* Overall amplitude renormalization */
-        left  *= AMPLNORM;
+    left  *= AMPLNORM;
 	right *= AMPLNORM;
 
-	   /* "Cheating": linear stereo expansion to amplify the 3D
-	      perception.  Note: Too much will destroy the acoustic space
-	      and may even result in headaches. */
-	   float diff = STEXPAND2 * (left - right);
-	   out[0] = left  + diff;
-	   out[1] = right - diff;
+    /* "Cheating": linear stereo expansion to amplify the 3D
+       perception.  Note: Too much will destroy the acoustic space
+       and may even result in headaches. */
+    float diff = STEXPAND2 * (left - right);
+    out[0] = left  + diff;
+    out[1] = right - diff;
 	/* Next sample... */
 	inbuf += oldfmt.nchannels;
 	out += fmt.nchannels;
 	s->cyc_pos--;
 	if(s->cyc_pos < 0)
-	    s->cyc_pos += dblen;
+     s->cyc_pos += dblen;
   }
  return parent->deliverSamples(++it,fmt,samples,numsamples);
 }

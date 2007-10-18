@@ -112,7 +112,7 @@ HRESULT TaudioFilterOutput::process(TfilterQueue::iterator it,TsampleFormat &fmt
      struct Tac3channels
       {
        int ac3mode;
-       int speakers[6];
+       int speakers[8];
        int mask;
       };
      static const Tac3channels ac3channels[]=

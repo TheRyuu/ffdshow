@@ -20,7 +20,7 @@ private:
 
  TsampleFormat oldfmt;
  TvolumeSettings oldcfg;
- int volumes[6];
+ int volumes[8];
  bool isVol;
 
  struct Tmem
@@ -73,7 +73,7 @@ private:
  struct
   {
    bool have;
-   unsigned int volumes[6]; // 0 - 65536
+   unsigned int volumes[8]; // 0 - 65536
   } storedvolumes;
  CCritSec csVolumes;
 protected:

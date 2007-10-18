@@ -40,7 +40,7 @@ private:
    virtual void process(int16_t *data, const size_t datasize,unsigned int N);
    virtual void onSeek(void);
   };
- Tbandext bandext[6];
+ Tbandext bandext[8];
 
  struct Techo3d
   {

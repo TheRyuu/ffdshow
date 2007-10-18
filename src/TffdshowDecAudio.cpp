@@ -409,7 +409,7 @@ HRESULT TffdshowDecAudio::GetMediaType(int iPosition, CMediaType *mtOut)
     mtOut->SetType(&MEDIATYPE_Stream);
     mtOut->SetSubtype(&MEDIASUBTYPE_None);
     mtOut->SetFormatType(&FORMAT_None);
-    mtOut->SetSampleSize(48000*6*4/5);
+    mtOut->SetSampleSize(48000*8*4/5);
     mtOut->SetVariableSize();
     mtOut->SetTemporalCompression(FALSE);
     break;
@@ -429,7 +429,7 @@ HRESULT TffdshowDecAudio::DecideBufferSize(IMemAllocator *pAllocator, ALLOCATOR_
  else
 	pProperties->cBuffers=10;
 
- pProperties->cbBuffer=48000*6*4/5;
+ pProperties->cbBuffer=48000*8*4/5;
  pProperties->cbAlign=1;
  pProperties->cbPrefix=0;
 

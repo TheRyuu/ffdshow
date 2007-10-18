@@ -54,6 +54,10 @@ HRESULT TaudioFilterChannelSwap::process(TfilterQueue::iterator it,TsampleFormat
       speakers[i].speaker=cfg->rear;
      else if (fmt.speakers[i]==SPEAKER_LOW_FREQUENCY)
       speakers[i].speaker=cfg->lfe;
+     else if (fmt.speakers[i]==SPEAKER_SIDE_LEFT)
+      speakers[i].speaker=cfg->al;
+     else if (fmt.speakers[i]==SPEAKER_SIDE_RIGHT)
+      speakers[i].speaker=cfg->ar;
      speakers[i].i=i;
      newchannelmask|=speakers[i].speaker;
     }

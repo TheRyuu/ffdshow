@@ -26,7 +26,10 @@ void TdelayPage::cfg2dlg(void)
  SetDlgItemInt(m_hwnd,IDC_ED_DELAY_R  ,cfgGet(IDFF_delayR  ),FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_DELAY_SL ,cfgGet(IDFF_delaySL ),FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_DELAY_SR ,cfgGet(IDFF_delaySR ),FALSE);
+ SetDlgItemInt(m_hwnd,IDC_ED_DELAY_BC ,cfgGet(IDFF_delayBC ),FALSE);
  SetDlgItemInt(m_hwnd,IDC_ED_DELAY_LFE,cfgGet(IDFF_delayLFE),FALSE);
+ SetDlgItemInt(m_hwnd,IDC_ED_DELAY_AL ,cfgGet(IDFF_delayAL ),FALSE);
+ SetDlgItemInt(m_hwnd,IDC_ED_DELAY_AR ,cfgGet(IDFF_delayAR ),FALSE);
 }
 
 TdelayPage::TdelayPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecAudio(Iparent,idff)
@@ -39,7 +42,10 @@ TdelayPage::TdelayPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPa
    IDC_ED_DELAY_R  ,0,20000,IDFF_delayR  ,NULL,
    IDC_ED_DELAY_SL ,0,20000,IDFF_delaySL ,NULL,
    IDC_ED_DELAY_SR ,0,20000,IDFF_delaySR ,NULL,
+   IDC_ED_DELAY_BC ,0,20000,IDFF_delayBC ,NULL,
    IDC_ED_DELAY_LFE,0,20000,IDFF_delayLFE,NULL,
+   IDC_ED_DELAY_AL ,0,20000,IDFF_delayAL ,NULL,
+   IDC_ED_DELAY_AR ,0,20000,IDFF_delayAR ,NULL,
    0
   };
  bindEditInts(edInt);

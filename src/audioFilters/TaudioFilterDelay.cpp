@@ -59,12 +59,18 @@ HRESULT TaudioFilterDelay::process(TfilterQueue::iterator it,TsampleFormat &fmt,
       ms=cfg->r;
      else if (fmt.speakers[i]&SPEAKER_FRONT_CENTER)
       ms=cfg->c;
-     else if (fmt.speakers[i]&(SPEAKER_BACK_LEFT|SPEAKER_BACK_CENTER))
+     else if (fmt.speakers[i]&SPEAKER_BACK_LEFT)
       ms=cfg->sl;
      else if (fmt.speakers[i]&SPEAKER_BACK_RIGHT)
       ms=cfg->sr;
+     else if (fmt.speakers[i]&SPEAKER_BACK_CENTER)
+      ms=cfg->bc;
      else if (fmt.speakers[i]&SPEAKER_LOW_FREQUENCY)
       ms=cfg->lfe;
+     else if (fmt.speakers[i]&SPEAKER_SIDE_LEFT)
+      ms=cfg->al;
+     else if (fmt.speakers[i]&SPEAKER_SIDE_RIGHT)
+      ms=cfg->ar;
      else
       ms=0;
      delay[i].init(ms,fmt);
@@ -95,6 +101,6 @@ HRESULT TaudioFilterDelay::process(TfilterQueue::iterator it,TsampleFormat &fmt,
 
 void TaudioFilterDelay::onSeek(void)
 {
- for (int i=0;i<6;i++)
+ for (int i=0;i<8;i++)
   delay[i].clear();
 }

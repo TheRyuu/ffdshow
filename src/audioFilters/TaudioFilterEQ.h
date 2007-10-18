@@ -11,7 +11,7 @@ private:
  class Tequalizer
   {
   private:
-   static const int AF_NCH=6;
+   static const int AF_NCH=8;
    static const int KM=10;
    float wq[AF_NCH][KM][2];      // Circular buffer for W data
    float g[AF_NCH][KM];

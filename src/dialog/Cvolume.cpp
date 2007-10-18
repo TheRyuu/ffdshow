@@ -296,7 +296,7 @@ void TvolumePage::onFrame(void)
   setText(IDC_LBL_VOLUME_NORMALIZE_CURRENT,_l("%s %i%%"),_(IDC_LBL_VOLUME_NORMALIZE_CURRENT),amp);
  if (getCheck(IDC_CHB_VOLUME_SHOWCURRENT))
   {
-   unsigned int numchannels;int channels[6],volumes[6];
+   unsigned int numchannels;int channels[8],volumes[8];
    if (filter && filter->getVolumeData(&numchannels,channels,volumes)==S_OK)
     {
      bool isPbr[6];memset(isPbr,0,sizeof(isPbr));

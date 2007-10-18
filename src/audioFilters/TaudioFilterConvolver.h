@@ -82,8 +82,8 @@ private:
    ints input_chunk_ringbuffer_indexes; // array of indexes into the input_chunk_ringbuffers
    std::vector< std::vector<float> > overlap_buffers; // array of overlap buffers
 
-   unsigned int in_channels,in_channel[6];
-   unsigned int out_channels,out_channel[6];
+   unsigned int in_channels,in_channel[8];
+   unsigned int out_channels,out_channel[8];
    static inline float mix(float a,float b,float strength,float invstrength)
     {
      return a*invstrength+b*strength;

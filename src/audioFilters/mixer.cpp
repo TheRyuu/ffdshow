@@ -23,16 +23,18 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
  int out_ch     = outfmt.makeChannelMask();
  int in_nfront  = infmt.nfront();
  int in_nrear   = infmt.nrear();
+ int in_nside   = infmt.nside();
  int out_nfront = outfmt.nfront();
  int out_nrear  = outfmt.nrear();
+ int out_nside  = outfmt.nside();
  double clev=cfg->clev/100.0;             // central mix level
  double slev=cfg->slev/100.0;             // surround mix level
  double lfelev=cfg->lfelev/100.0;         // lfe mix level
 
  if (cfg->customMatrix)
-  for (int i=0;i<6;i++)
-   for (int j=0;j<6;j++)
-    matrix[i][j]=((int (*)[6])&cfg->matrix00)[i][j]/100000.0;
+  for (int i=0;i<9;i++)
+   for (int j=0;j<9;j++)
+    matrix[i][j]=((int (*)[9])&cfg->matrix00)[i][j]/100000.0;
  else
   {
    memset(&matrix, 0, sizeof(mixer_matrix_t));
@@ -55,26 +57,26 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
       }
      if (in_nrear == 1)
       {
-       matrix[CH_S][CH_L] = -0.7071 * slev;
-       matrix[CH_S][CH_R] = +0.7071 * slev;
+       matrix[CH_BC][CH_L] = -0.7071 * slev;
+       matrix[CH_BC][CH_R] = +0.7071 * slev;
       }
      else if (in_nrear == 2)
       {
        switch (outfmt.dolby)
         {
          case TsampleFormat::DOLBY_PROLOGICII:
-          matrix[CH_SL][CH_L] = -0.8660*slev;
-          matrix[CH_SR][CH_L] = -0.5000*slev;
-          matrix[CH_SL][CH_R] = +0.5000*slev;
-          matrix[CH_SR][CH_R] = +0.8660*slev;
+          matrix[CH_BL][CH_L] = -0.8660*slev;
+          matrix[CH_BR][CH_L] = -0.5000*slev;
+          matrix[CH_BL][CH_R] = +0.5000*slev;
+          matrix[CH_BR][CH_R] = +0.8660*slev;
           break;
          case TsampleFormat::DOLBY_SURROUND:
          case TsampleFormat::DOLBY_PROLOGIC:
          default:
-          matrix[CH_SL][CH_L] = -slev;
-          matrix[CH_SR][CH_L] = -slev;
-          matrix[CH_SL][CH_R] = +slev;
-          matrix[CH_SR][CH_R] = +slev;
+          matrix[CH_BL][CH_L] = -slev;
+          matrix[CH_BR][CH_L] = -slev;
+          matrix[CH_BL][CH_R] = +slev;
+          matrix[CH_BR][CH_R] = +slev;
           break;
         }
       }
@@ -85,8 +87,11 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
      if (in_ch & out_ch & SPEAKER_FRONT_LEFT)   matrix[CH_L ][CH_L ]=1.0;
      if (in_ch & out_ch & SPEAKER_FRONT_RIGHT)  matrix[CH_R ][CH_R ]=1.0;
      if (in_ch & out_ch & SPEAKER_FRONT_CENTER) matrix[CH_C ][CH_C ]=clev;
-     if (in_ch & out_ch & SPEAKER_BACK_LEFT)    matrix[CH_SL][CH_SL]=slev;
-     if (in_ch & out_ch & SPEAKER_BACK_RIGHT)   matrix[CH_SR][CH_SR]=slev;
+     if (in_ch & out_ch & SPEAKER_BACK_LEFT)    matrix[CH_BL][CH_BL]=slev;
+     if (in_ch & out_ch & SPEAKER_BACK_RIGHT)   matrix[CH_BR][CH_BR]=slev;
+     if (in_ch & out_ch & SPEAKER_SIDE_LEFT)    matrix[CH_AL][CH_AL]=slev;
+     if (in_ch & out_ch & SPEAKER_SIDE_RIGHT)   matrix[CH_AR][CH_AR]=slev;
+     if (in_ch & out_ch & SPEAKER_BACK_CENTER)  matrix[CH_BC][CH_BC]=slev;
 
      // calc matrix for fbw channels
      if (out_nfront == 1)
@@ -102,12 +107,14 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
         }
        if (in_nrear == 1)
         {
-         matrix[CH_S][CH_M] = slev * LEVEL_3DB;
+         matrix[CH_BC][CH_M] = slev * LEVEL_3DB;
         }
        else
         {
-         matrix[CH_SL][CH_M] = slev * LEVEL_3DB;
-         matrix[CH_SR][CH_M] = slev * LEVEL_3DB;
+         matrix[CH_BL][CH_M] = slev * LEVEL_3DB;
+         matrix[CH_BR][CH_M] = slev * LEVEL_3DB;
+         matrix[CH_AL][CH_M] = slev * LEVEL_3DB;
+         matrix[CH_AR][CH_M] = slev * LEVEL_3DB;
         }
       }
      else // not mono modes
@@ -129,26 +136,69 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
         {
          if (out_nrear == 0)
           {
-           matrix[CH_S][CH_L] = slev * LEVEL_3DB;
-           matrix[CH_S][CH_R] = slev * LEVEL_3DB;
+           matrix[CH_BC][CH_L] = slev * LEVEL_3DB;
+           matrix[CH_BC][CH_R] = slev * LEVEL_3DB;
           }
          else if (out_nrear == 2)
           {
-           matrix[CH_S][CH_SL] = slev * LEVEL_3DB;
-           matrix[CH_S][CH_SR] = slev * LEVEL_3DB;
+           matrix[CH_BC][CH_BL] = slev * LEVEL_3DB;
+           matrix[CH_BC][CH_BR] = slev * LEVEL_3DB;
           }
         }
        else if (in_nrear == 2)
         {
          if (out_nrear == 0)
           {
-           matrix[CH_SL][CH_L] = slev;
-           matrix[CH_SR][CH_R] = slev;
+           matrix[CH_BL][CH_L] = slev;
+           matrix[CH_BR][CH_R] = slev;
           }
          else if (out_nrear == 1)
           {
-           matrix[CH_SL][CH_S] = slev * LEVEL_3DB;
-           matrix[CH_SR][CH_S] = slev * LEVEL_3DB;
+           matrix[CH_BL][CH_BC] = slev * LEVEL_3DB;
+           matrix[CH_BR][CH_BC] = slev * LEVEL_3DB;
+          }
+        }
+       if (in_nside == 2)
+        {
+         if (out_nside == 0 && in_nrear > 0)
+          {
+           if (out_nrear == 2)
+            {
+             matrix[CH_AL][CH_L]  = slev * LEVEL_3DB;
+             matrix[CH_AL][CH_BL] = slev * LEVEL_3DB;
+             matrix[CH_AR][CH_R]  = slev * LEVEL_3DB;
+             matrix[CH_AR][CH_BR] = slev * LEVEL_3DB;
+            }
+           else if (out_nrear == 1)
+            {
+             matrix[CH_AL][CH_L] = slev * LEVEL_3DB;
+             matrix[CH_AL][CH_BC] = slev * LEVEL_3DB;
+             matrix[CH_AR][CH_R] = slev * LEVEL_3DB;
+             matrix[CH_AR][CH_BC] = slev * LEVEL_3DB;
+            }
+           else
+            {
+             matrix[CH_AL][CH_L] = slev;
+             matrix[CH_AR][CH_R] = slev;
+            }
+          }
+         else if (out_nside == 0 && in_nrear == 0)
+          {
+           if (out_nrear ==2)
+            {
+             matrix[CH_AL][CH_BL] = slev;
+             matrix[CH_AR][CH_BR] = slev;
+            }
+           else if (out_nrear == 1)
+            {
+             matrix[CH_AL][CH_BC] = slev;
+             matrix[CH_AR][CH_BC] = slev;
+            }
+           else
+            {
+             matrix[CH_AL][CH_L] = slev;
+             matrix[CH_AR][CH_R] = slev;
+            }
           }
         }
       }
@@ -172,17 +222,17 @@ TsampleFormat TmixerMatrix::calc_matrix(const TsampleFormat &infmt,const TmixerS
        if (out_nrear == 1)
         {
          // S' = slev * (L - R)
-         matrix[CH_L][CH_S] = + slev;
-         matrix[CH_R][CH_S] = - slev;
+         matrix[CH_L][CH_BC] = + slev;
+         matrix[CH_R][CH_BC] = - slev;
         }
        if (out_nrear == 2)
         {
          // SL' = slev * 1/2 (L - R)
          // SR' = slev * 1/2 (R - L)
-         matrix[CH_L][CH_SL] = + 0.5 * slev;
-         matrix[CH_R][CH_SL] = - 0.5 * slev;
-         matrix[CH_L][CH_SR] = - 0.5 * slev;
-         matrix[CH_R][CH_SR] = + 0.5 * slev;
+         matrix[CH_L][CH_BL] = + 0.5 * slev;
+         matrix[CH_R][CH_BL] = - 0.5 * slev;
+         matrix[CH_L][CH_BR] = - 0.5 * slev;
+         matrix[CH_R][CH_BR] = + 0.5 * slev;
         }
       }
 

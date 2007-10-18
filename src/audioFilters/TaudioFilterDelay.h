@@ -31,7 +31,7 @@ private:
        pos++;if (pos==len) pos=0;
       }
     }
-  } delay[6];
+  } delay[8];
 protected:
  virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {*honourPreferred=false;return TsampleFormat::SF_ALL;}
 public:

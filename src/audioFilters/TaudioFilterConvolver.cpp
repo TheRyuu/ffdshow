@@ -309,7 +309,7 @@ HRESULT TaudioFilterConvolver::process(TfilterQueue::iterator it,TsampleFormat &
      else
       {
        size_t oldsize=0;
-       TwavReader<float> *impulses[6];memset(impulses,0,sizeof(impulses));
+       TwavReader<float> *impulses[8];memset(impulses,0,sizeof(impulses));
        for (unsigned int i=0;i<fmt.nchannels;i++)
         {
          const char_t *file=NULL;

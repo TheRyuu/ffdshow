@@ -126,7 +126,7 @@ HRESULT TaudioFilterDenoise::process(TfilterQueue::iterator it,TsampleFormat &fm
 
 void TaudioFilterDenoise::onSeek(void)
 {
- for (int i=0;i<6;i++) memset(&Channel[i],0,sizeof(Channel[0]));
+ for (int i=0;i<8;i++) memset(&Channel[i],0,sizeof(Channel[0]));
  threshold[0]= 0;
  threshold[1]= ethreshold / 3;
  threshold[2]= ethreshold / 2;

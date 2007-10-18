@@ -44,8 +44,8 @@ public:
 DECLARE_FILTER(TaudioFilterHeadphone2,public,TaudioFilter)
 private:
  TsampleFormat oldfmt;
- int indexes[6];
- float in[6];
+ int indexes[9];
+ float in[9];
  Tbuffer buf;
 
  struct af_hrtf_s
@@ -59,7 +59,7 @@ private:
    int dlbuflen, hrflen;
    unsigned int basslen;
    /* L, C, R, Ls, Rs channels */
-   std::vector<float> lf,rf,lr,rr,cf,cr;
+   std::vector<float> lf,rf,lr,rr,cf,cr,ra,la;
    const float *cf_ir, *af_ir, *of_ir, *ar_ir, *or_ir, *cr_ir;
    int cf_o, af_o, of_o, ar_o, or_o, cr_o;
    /* Bass */

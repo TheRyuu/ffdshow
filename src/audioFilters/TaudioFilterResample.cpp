@@ -54,7 +54,7 @@ TaudioFilterResampleLavc::TaudioFilterResampleLavc(IffdshowBase *Ideci,Tfilters 
 
 void TaudioFilterResampleLavc::done(void)
 {
- for (int i=0;i<6;i++)
+ for (int i=0;i<8;i++)
   {
    if (ctxsInt[i])
     {

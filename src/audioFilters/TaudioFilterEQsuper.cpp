@@ -28,7 +28,7 @@ TaudioFilterEQsuper::TaudioFilterEQsuper(IffdshowBase *Ideci,Tfilters *Iparent):
 }
 TaudioFilterEQsuper::~TaudioFilterEQsuper()
 {
- for (int i=0;i<6;i++) if (eqs[i]) delete eqs[i];
+ for (int i=0;i<8;i++) if (eqs[i]) delete eqs[i];
 }
 
 HRESULT TaudioFilterEQsuper::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0)
@@ -67,7 +67,7 @@ HRESULT TaudioFilterEQsuper::process(TfilterQueue::iterator it,TsampleFormat &fm
 
 void TaudioFilterEQsuper::onSeek(void)
 {
- for (int i=0;i<6;i++)
+ for (int i=0;i<8;i++)
   if (eqs[i])
    {
     delete eqs[i];
