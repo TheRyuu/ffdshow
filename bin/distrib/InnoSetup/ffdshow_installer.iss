@@ -153,7 +153,7 @@ Name: fr; MessagesFile: compiler:Languages\French.isl
 Name: de; MessagesFile: compiler:Languages\German.isl; LicenseFile: ../../../copying.de.txt; InfoBeforeFile: infobefore\infobefore.de.rtf
 Name: hu; MessagesFile: compiler:Languages\Hungarian.isl
 Name: it; MessagesFile: compiler:Languages\Italian.isl
-Name: jp; MessagesFile: languages\Japanese.isl; LicenseFile: ../../../copying.jp.txt
+Name: jp; MessagesFile:          languages\Japanese.isl; LicenseFile: ../../../copying.jp.txt
 Name: no; MessagesFile: compiler:Languages\Norwegian.isl
 Name: pl; MessagesFile: compiler:Languages\Polish.isl; LicenseFile: ../../../copying.pl.txt; InfoBeforeFile: infobefore\infobefore.pl.rtf
 Name: pr; MessagesFile: compiler:Languages\Portuguese.isl
@@ -167,13 +167,13 @@ Name: sp; MessagesFile: compiler:Languages\Spanish.isl
 Name: Normal; Description: Normal; Flags: iscustom
 
 [Components]
-Name: ffdshow; Description: {cm:ffdshowds}; Types: Normal
-Name: ffdshow\vfw; Description: {cm:vfwinterface}; Types: Normal
+Name: ffdshow; Description: {cm:comp_ffdshowds}; Types: Normal
+Name: ffdshow\vfw; Description: {cm:comp_vfwInterface}; Types: Normal
 #if include_makeavis
-Name: ffdshow\makeavis; Description: {cm:makeavis}; Flags: dontinheritcheck
+Name: ffdshow\makeavis; Description: {cm:comp_makeAvis}; Flags: dontinheritcheck
 #endif
 #if include_app_plugins
-Name: ffdshow\plugins; Description: {cm:appplugins}; Flags: dontinheritcheck
+Name: ffdshow\plugins; Description: {cm:comp_appPlugins}; Flags: dontinheritcheck
 Name: ffdshow\plugins\avisynth; Description: AviSynth
 Name: ffdshow\plugins\virtualdub; Description: VirtualDub
 Name: ffdshow\plugins\dscaler; Description: DScaler
@@ -185,16 +185,16 @@ Name: ffdshow\plugins\dscaler; Description: DScaler
 #endif
 
 [Tasks]
-Name: resetsettings; Description: {cm:resetsettings}; Flags: unchecked; Components: ffdshow
-Name: video; Description: {cm:videoformats}; Flags: unchecked; Components: ffdshow
+Name: resetsettings; Description: {cm:tsk_resetSettings}; Flags: unchecked; Components: ffdshow
+Name: video; Description: {cm:tsk_videoFormats}; Flags: unchecked; Components: ffdshow
 Name: video\h264; Description: H.264 / AVC; Check: CheckTaskVideo('h264', 1, True); Components: ffdshow
 Name: video\h264; Description: H.264 / AVC; Check: NOT CheckTaskVideo('h264', 1, True); Components: ffdshow; Flags: unchecked
 Name: video\divx; Description: DivX; Check: CheckTaskVideo2('dx50', True); Components: ffdshow
 Name: video\divx; Description: DivX; Check: NOT CheckTaskVideo2('dx50', True); Components: ffdshow; Flags: unchecked
 Name: video\xvid; Description: Xvid; Check: CheckTaskVideo2('xvid', True); Components: ffdshow
 Name: video\xvid; Description: Xvid; Check: NOT CheckTaskVideo2('xvid', True); Components: ffdshow; Flags: unchecked
-Name: video\mpeg4; Description: {cm:genericMpeg4}; Check: CheckTaskVideo2('mp4v', True); Components: ffdshow
-Name: video\mpeg4; Description: {cm:genericMpeg4}; Check: NOT CheckTaskVideo2('mp4v', True); Components: ffdshow; Flags: unchecked
+Name: video\mpeg4; Description: {cm:tsk_genericMpeg4}; Check: CheckTaskVideo2('mp4v', True); Components: ffdshow
+Name: video\mpeg4; Description: {cm:tsk_genericMpeg4}; Check: NOT CheckTaskVideo2('mp4v', True); Components: ffdshow; Flags: unchecked
 Name: video\flv1; Description: FLV1; Check: CheckTaskVideo('flv1', 1, True); Components: ffdshow
 Name: video\flv1; Description: FLV1; Check: NOT CheckTaskVideo('flv1', 1, True); Components: ffdshow; Flags: unchecked
 Name: video\h263; Description: H.263; Check: CheckTaskVideo('h263', 1, True); Components: ffdshow
@@ -233,9 +233,9 @@ Name: video\other1; Description: H.261, MJPEG, Theora, VP3; Check: NOT IsUpdate;
 Name: video\other2; Description: CorePNG, MS Video 1, MSRLE, Techsmith, Truemotion; Check: NOT IsUpdate; Components: ffdshow
 Name: video\other3; Description: ASV1/2, CYUV, ZLIB, 8BPS, LOCO, MSZH, QPEG, WNV1, VCR1; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
 Name: video\other4; Description: CamStudio, ZMBV, Ultimotion, VIXL, AASC, IV32, FPS1, RT21; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
-Name: video\rawv; Description: {cm:rawvideo}; Check: CheckTaskVideo('rawv', 1, False); Flags: dontinheritcheck; Components: ffdshow
-Name: video\rawv; Description: {cm:rawvideo}; Check: NOT CheckTaskVideo('rawv', 1, False); Flags: dontinheritcheck unchecked; Components: ffdshow
-Name: audio; Description: {cm:audioformats}; Flags: unchecked; Components: ffdshow
+Name: video\rawv; Description: {cm:tsk_rawVideo}; Check: CheckTaskVideo('rawv', 1, False); Flags: dontinheritcheck; Components: ffdshow
+Name: video\rawv; Description: {cm:tsk_rawVideo}; Check: NOT CheckTaskVideo('rawv', 1, False); Flags: dontinheritcheck unchecked; Components: ffdshow
+Name: audio; Description: {cm:tsk_audioFormats}; Flags: unchecked; Components: ffdshow
 Name: audio\mp3; Description: MP3; Check: CheckTaskAudio('mp3', 7, True); Components: ffdshow
 Name: audio\mp3; Description: MP3; Check: NOT CheckTaskAudio('mp3', 7, True); Flags: unchecked; Components: ffdshow
 Name: audio\aac; Description: AAC; Flags: unchecked; Components: ffdshow
@@ -265,29 +265,29 @@ Name: audio\amr; Description: AMR; Check: NOT CheckTaskAudio('amr', 1, True); Fl
 Name: audio\qt; Description: QDM2, MACE; Check: CheckTaskAudio('qdm2', 1, True); Components: ffdshow
 Name: audio\qt; Description: QDM2, MACE; Check: NOT CheckTaskAudio('qdm2', 1, True); Flags: unchecked; Components: ffdshow
 Name: audio\adpcm; Description: ADPCM, MS GSM, Truespeech; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
-Name: audio\rawa; Description: {cm:rawaudio}; Check: CheckTaskAudio('rawa', 4, False); Flags: dontinheritcheck; Components: ffdshow
-Name: audio\rawa; Description: {cm:rawaudio}; Check: NOT CheckTaskAudio('rawa', 4, False); Flags: dontinheritcheck unchecked; Components: ffdshow
-Name: filter; Description: {cm:defaultfilters}; Flags: unchecked; Components: ffdshow
-Name: filter\normalize; Description: {cm:volumenorm}; Check:     GetTaskVolNormalize(); Components: ffdshow
-Name: filter\normalize; Description: {cm:volumenorm}; Check: NOT GetTaskVolNormalize(); Components: ffdshow; Flags: unchecked
-Name: filter\subtitles; Description: {cm:subtitles};  Check:     CheckTaskVideoInpreset('issubtitles', 1, False); Components: ffdshow
-Name: filter\subtitles; Description: {cm:subtitles};  Check: NOT CheckTaskVideoInpreset('issubtitles', 1, False); Components: ffdshow; Flags: unchecked;
+Name: audio\rawa; Description: {cm:tsk_rawAudio}; Check: CheckTaskAudio('rawa', 4, False); Flags: dontinheritcheck; Components: ffdshow
+Name: audio\rawa; Description: {cm:tsk_rawAudio}; Check: NOT CheckTaskAudio('rawa', 4, False); Flags: dontinheritcheck unchecked; Components: ffdshow
+Name: filter; Description: {cm:tsk_defaultFilters}; Flags: unchecked; Components: ffdshow
+Name: filter\normalize; Description: {cm:tsk_volumeNorm}; Check:     GetTaskVolNormalize(); Components: ffdshow
+Name: filter\normalize; Description: {cm:tsk_volumeNorm}; Check: NOT GetTaskVolNormalize(); Components: ffdshow; Flags: unchecked
+Name: filter\subtitles; Description: {cm:tsk_subtitles};  Check:     CheckTaskVideoInpreset('issubtitles', 1, False); Components: ffdshow
+Name: filter\subtitles; Description: {cm:tsk_subtitles};  Check: NOT CheckTaskVideoInpreset('issubtitles', 1, False); Components: ffdshow; Flags: unchecked;
 #if !PREF_YAMAGATA
-Name: tweaks; Description: {cm:tweaks}; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
-Name: tweaks\skipinloop; Description: {cm:skipinloop}; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
+Name: tweaks; Description: {cm:tsk_tweaks}; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
+Name: tweaks\skipinloop; Description: {cm:tsk_skipInloop}; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
 #endif
 
 [Icons]
-Name: {group}\{cm:audioconfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check: NOT CheckModernIcon ; IconIndex: 1; Components: ffdshow
-Name: {group}\{cm:audioconfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check:     CheckModernIcon ; IconIndex: 4; Components: ffdshow
-Name: {group}\{cm:videoconfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check: NOT CheckModernIcon ; IconIndex: 0; Components: ffdshow
-Name: {group}\{cm:videoconfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check:     CheckModernIcon ; IconIndex: 3; Components: ffdshow
+Name: {group}\{cm:shrt_audioConfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check: NOT CheckModernIcon; IconIndex: 1; Components: ffdshow
+Name: {group}\{cm:shrt_audioConfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check:     CheckModernIcon; IconIndex: 4; Components: ffdshow
+Name: {group}\{cm:shrt_videoConfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check: NOT CheckModernIcon; IconIndex: 0; Components: ffdshow
+Name: {group}\{cm:shrt_videoConfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check:     CheckModernIcon; IconIndex: 3; Components: ffdshow
 #if is64bit
-Name: {group}\{cm:vfwconfig}; Filename: rundll32.exe;   Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check: NOT CheckModernIcon ; IconIndex: 2; Components: ffdshow\vfw
-Name: {group}\{cm:vfwconfig}; Filename: rundll32.exe;   Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check:     CheckModernIcon ; IconIndex: 5; Components: ffdshow\vfw
+Name: {group}\{cm:shrt_vfwConfig};   Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check: NOT CheckModernIcon; IconIndex: 2; Components: ffdshow\vfw
+Name: {group}\{cm:shrt_vfwConfig};   Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check:     CheckModernIcon; IconIndex: 5; Components: ffdshow\vfw
 #else
-Name: {group}\{cm:vfwconfig}; Filename: rundll32.exe;   Parameters: ff_vfw.dll,configureVFW;                      IconFilename: {app}\ffdshow.ax; Check: NOT CheckModernIcon ; IconIndex: 2; Components: ffdshow\vfw
-Name: {group}\{cm:vfwconfig}; Filename: rundll32.exe;   Parameters: ff_vfw.dll,configureVFW;                      IconFilename: {app}\ffdshow.ax; Check:     CheckModernIcon ; IconIndex: 5; Components: ffdshow\vfw
+Name: {group}\{cm:shrt_vfwConfig};   Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW;                      IconFilename: {app}\ffdshow.ax; Check: NOT CheckModernIcon; IconIndex: 2; Components: ffdshow\vfw
+Name: {group}\{cm:shrt_vfwConfig};   Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW;                      IconFilename: {app}\ffdshow.ax; Check:     CheckModernIcon; IconIndex: 5; Components: ffdshow\vfw
 #endif
 #if include_makeavis
 Name: {group}\makeAVIS; Filename: {app}\makeAVIS.exe; Components: ffdshow\makeavis
@@ -388,9 +388,9 @@ Source: ..\..\ff_vfw.dll; DestDir: {sys}; Flags: ignoreversion restartreplace un
 
 #if MSVC80
 	#if is64bit
-Source: ..\..\manifest64\ff_vfw.dll.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03	
+Source: ..\..\manifest64\ff_vfw.dll.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
 	#else
-Source: ..\..\manifest32\msvc80\ff_vfw.dll.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02	
+Source: ..\..\manifest32\msvc80\ff_vfw.dll.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
 	#endif
 #else
 Source: ..\..\manifest32\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
@@ -436,7 +436,7 @@ Source: ..\..\openIE.js; DestDir: {app}; Flags: ignoreversion; Components: ffdsh
 
 [InstallDelete]
 #if MSVC80
-Type: files; Name: {app}\ffdshow.ax.manifest; Components: ffdshow
+Type: files; Name: {app}\ffdshow.ax.manifest;   Components: ffdshow
 	#if include_makeavis
 Type: files; Name: {app}\makeAVIS.exe.manifest; Components: ffdshow\makeavis
 	#endif
@@ -445,49 +445,49 @@ Type: files; Name: {app}\makeAVIS.exe.manifest; Components: ffdshow\makeavis
 ; Localized shortcuts
 Type: files; Name: {group}\Video decoder configuration.lnk; Components: ffdshow
 Type: files; Name: {group}\Audio decoder configuration.lnk; Components: ffdshow
-Type: files; Name: {group}\Uninstall ffdshow.lnk; Components: ffdshow
-Type: files; Name: {group}\VFW configuration.lnk; Components: ffdshow\vfw
+Type: files; Name: {group}\Uninstall ffdshow.lnk;           Components: ffdshow
+Type: files; Name: {group}\VFW configuration.lnk;           Components: ffdshow\vfw
 #endif
 ; Shortcuts belonging to old NSIS installers
-Type: files; Name: {group}\VFW codec configuration.lnk; Components: ffdshow\vfw
-Type: files; Name: {group}\Uninstall.lnk; Components: ffdshow
+Type: files; Name: {group}\VFW codec configuration.lnk;     Components: ffdshow\vfw
+Type: files; Name: {group}\Uninstall.lnk;                   Components: ffdshow
 
 [Registry]
 ; Cleanup of settings
-Root: HKCU; Subkey: Software\GNU; Flags: uninsdeletekeyifempty; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow; Flags: uninsdeletekey; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; Flags: uninsdeletekey; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio_raw; Flags: uninsdeletekey; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_enc; Flags: uninsdeletekey; Components: ffdshow\vfw
-Root: HKCU; Subkey: Software\GNU\ffdshow_vfw; Flags: uninsdeletekey; Components: ffdshow\vfw
-Root: HKLM; Subkey: Software\GNU; Flags: uninsdeletekeyifempty; Components: ffdshow
-Root: HKLM; Subkey: Software\GNU\ffdshow; Flags: uninsdeletekey; Components: ffdshow
-Root: HKLM; Subkey: Software\GNU\ffdshow_audio; Flags: uninsdeletekey; Components: ffdshow
-Root: HKLM; Subkey: Software\GNU\ffdshow_enc; Flags: uninsdeletekey; Components: ffdshow\vfw
-Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; Flags: uninsdeletekey; Components: ffdshow\vfw
+Root: HKCU; Subkey: Software\GNU;                   Flags: uninsdeletekeyifempty; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow;           Flags: uninsdeletekey;        Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio;     Flags: uninsdeletekey;        Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio_raw; Flags: uninsdeletekey;        Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_enc;       Flags: uninsdeletekey;        Components: ffdshow\vfw
+Root: HKCU; Subkey: Software\GNU\ffdshow_vfw;       Flags: uninsdeletekey;        Components: ffdshow\vfw
+Root: HKLM; Subkey: Software\GNU;                   Flags: uninsdeletekeyifempty; Components: ffdshow
+Root: HKLM; Subkey: Software\GNU\ffdshow;           Flags: uninsdeletekey;        Components: ffdshow
+Root: HKLM; Subkey: Software\GNU\ffdshow_audio;     Flags: uninsdeletekey;        Components: ffdshow
+Root: HKLM; Subkey: Software\GNU\ffdshow_enc;       Flags: uninsdeletekey;        Components: ffdshow\vfw
+Root: HKLM; Subkey: Software\GNU\ffdshow_vfw;       Flags: uninsdeletekey;        Components: ffdshow\vfw
 
 ; Reset settings
-Root: HKCU; Subkey: Software\GNU\ffdshow; Flags: deletekey; Components: ffdshow; Tasks: resetsettings
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; Flags: deletekey; Components: ffdshow; Tasks: resetsettings
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio_raw; Flags: deletekey; Components: ffdshow; Tasks: resetsettings
-Root: HKCU; Subkey: Software\GNU\ffdshow_enc; Flags: deletekey; Components: ffdshow\vfw; Tasks: resetsettings
-Root: HKCU; Subkey: Software\GNU\ffdshow_vfw; Flags: deletekey; Components: ffdshow\vfw; Tasks: resetsettings
-Root: HKLM; Subkey: Software\GNU\ffdshow; Flags: deletekey; Components: ffdshow; Tasks: resetsettings
-Root: HKLM; Subkey: Software\GNU\ffdshow_audio; Flags: deletekey; Components: ffdshow; Tasks: resetsettings
-Root: HKLM; Subkey: Software\GNU\ffdshow_enc; Flags: deletekey; Components: ffdshow\vfw; Tasks: resetsettings
-Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; Flags: deletekey; Components: ffdshow\vfw; Tasks: resetsettings
+Root: HKCU; Subkey: Software\GNU\ffdshow;           Flags: deletekey; Components: ffdshow;     Tasks: resetsettings
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio;     Flags: deletekey; Components: ffdshow;     Tasks: resetsettings
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio_raw; Flags: deletekey; Components: ffdshow;     Tasks: resetsettings
+Root: HKCU; Subkey: Software\GNU\ffdshow_enc;       Flags: deletekey; Components: ffdshow\vfw; Tasks: resetsettings
+Root: HKCU; Subkey: Software\GNU\ffdshow_vfw;       Flags: deletekey; Components: ffdshow\vfw; Tasks: resetsettings
+Root: HKLM; Subkey: Software\GNU\ffdshow;           Flags: deletekey; Components: ffdshow;     Tasks: resetsettings
+Root: HKLM; Subkey: Software\GNU\ffdshow_audio;     Flags: deletekey; Components: ffdshow;     Tasks: resetsettings
+Root: HKLM; Subkey: Software\GNU\ffdshow_enc;       Flags: deletekey; Components: ffdshow\vfw; Tasks: resetsettings
+Root: HKLM; Subkey: Software\GNU\ffdshow_vfw;       Flags: deletekey; Components: ffdshow\vfw; Tasks: resetsettings
 
 ; Path
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: string; ValueName: pth; ValueData: {app}; Components: ffdshow
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueName: pthPriority; Flags: deletevalue; Components: ffdshow
 #if include_app_plugins
-Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: string; ValueName: pthAvisynth; ValueData: {code:GetAviSynthPluginDir}; Flags: uninsclearvalue; Components: ffdshow\plugins\avisynth
-Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: string; ValueName: pthVirtualDub; ValueData: {code:GetVdubPluginDir}; Flags: uninsclearvalue; Components: ffdshow\plugins\virtualdub
-Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: string; ValueName: dscalerPth; ValueData: {code:GetDScalerDir|}; Flags: uninsclearvalue; Components: ffdshow\plugins\dscaler
+Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: string; ValueName: pthAvisynth;   ValueData: {code:GetAviSynthPluginDir}; Flags: uninsclearvalue; Components: ffdshow\plugins\avisynth
+Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: string; ValueName: pthVirtualDub; ValueData: {code:GetVdubPluginDir};     Flags: uninsclearvalue; Components: ffdshow\plugins\virtualdub
+Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: string; ValueName: dscalerPth;    ValueData: {code:GetDScalerDir|};       Flags: uninsclearvalue; Components: ffdshow\plugins\dscaler
 #endif
 
 ; Version info
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: revision; ValueData: {#= tryout_revision}; Components: ffdshow
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: revision;  ValueData: {#= tryout_revision};                       Components: ffdshow
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: builddate; ValueData: {#= buildyear}{#= buildmonth}{#= buildday}; Components: ffdshow
 
 ; Language
@@ -497,71 +497,71 @@ Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: string; ValueName: lang; Va
 
 ; Register VFW interface
 #if is64bit
-Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc; ValueType: string; ValueName: {app}\ff_vfw.dll; ValueData: ffdshow video encoder; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
-Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32; ValueType: string; ValueName: VIDC.FFDS; ValueData: {code:GetVFWLocation|}; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
+Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc;     ValueType: string; ValueName: {app}\ff_vfw.dll; ValueData: ffdshow video encoder;  MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
+Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32;        ValueType: string; ValueName: VIDC.FFDS;        ValueData: {code:GetVFWLocation|}; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
 Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; Flags: uninsdeletekey; Components: ffdshow\vfw
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Description; ValueData: ffdshow video encoder; Components: ffdshow\vfw
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Driver; ValueData: {code:GetVFWLocation|}; Components: ffdshow\vfw
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: FriendlyName; ValueData: ffdshow video encoder; Components: ffdshow\vfw
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Description;      ValueData: ffdshow video encoder;  Components: ffdshow\vfw
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Driver;           ValueData: {code:GetVFWLocation|}; Components: ffdshow\vfw
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: FriendlyName;     ValueData: ffdshow video encoder;  Components: ffdshow\vfw
 #else
-Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc; ValueType: string; ValueName: ff_vfw.dll; ValueData: ffdshow video encoder; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
-Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32; ValueType: string; ValueName: VIDC.FFDS; ValueData: ff_vfw.dll; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
+Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc;     ValueType: string; ValueName: ff_vfw.dll;   ValueData: ffdshow video encoder; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
+Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32;        ValueType: string; ValueName: VIDC.FFDS;    ValueData: ff_vfw.dll;            MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
 Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; Flags: uninsdeletekey; Components: ffdshow\vfw
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Description; ValueData: ffdshow video encoder; Components: ffdshow\vfw
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Driver; ValueData: ff_vfw.dll; Components: ffdshow\vfw
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Description;  ValueData: ffdshow video encoder; Components: ffdshow\vfw
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Driver;       ValueData: ff_vfw.dll;            Components: ffdshow\vfw
 Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: FriendlyName; ValueData: ffdshow video encoder; Components: ffdshow\vfw
 #endif
 
 #if include_makeavis
-Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc; ValueType: string; ValueName: ff_acm.acm; ValueData: ffdshow ACM codec; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\makeavis
-Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32; ValueType: string; ValueName: msacm.avis; ValueData: ff_acm.acm; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\makeavis
+Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc;      ValueType: string; ValueName: ff_acm.acm;   ValueData: ffdshow ACM codec; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\makeavis
+Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32;         ValueType: string; ValueName: msacm.avis;   ValueData: ff_acm.acm;        MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\makeavis
 Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; Flags: uninsdeletekey; Components: ffdshow\makeavis
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: Description; ValueData: ffdshow ACM codec; Components: ffdshow\makeavis
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: Driver; ValueData: ff_acm.acm; Components: ffdshow\makeavis
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: Description;  ValueData: ffdshow ACM codec; Components: ffdshow\makeavis
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: Driver;       ValueData: ff_acm.acm;        Components: ffdshow\makeavis
 Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: FriendlyName; ValueData: ffdshow ACM codec; Components: ffdshow\makeavis
 #endif
 
 ; Recommended settings
-Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: allowOutChange; ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: hwOverlay; ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: idct; ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: allowOutChange;      ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: hwOverlay;           ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: idct;                ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: outChangeCompatOnly; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: postprocH264mode; ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: resizeMethod; ValueData: 9; Flags: createvalueifdoesntexist; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: postprocH264mode;    ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: resizeMethod;        ValueData: 9; Flags: createvalueifdoesntexist; Components: ffdshow
 
 #if !PREF_YAMAGATA
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: fastH264; ValueData: 0; Components: ffdshow; Tasks: NOT tweaks\skipinloop; Flags: createvalueifdoesntexist
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: fastH264; ValueData: 2; Components: ffdshow; Tasks:     tweaks\skipinloop;
 #endif
 
-Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: subTextpin; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: subTextpinSSA; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: subIsExpand; ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: isSubtitles; ValueData: 0; Components: ffdshow; Tasks: NOT filter\subtitles
-Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: isSubtitles; ValueData: 1; Components: ffdshow; Tasks: filter\subtitles
+Root: HKCU; Subkey: Software\GNU\ffdshow;         ValueType: dword; ValueName: subTextpin;    ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow;         ValueType: dword; ValueName: subTextpinSSA; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: subIsExpand;   ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: isSubtitles;   ValueData: 0; Components: ffdshow; Tasks: NOT filter\subtitles
+Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: isSubtitles;   ValueData: 1; Components: ffdshow; Tasks: filter\subtitles
 
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerNormalizeMatrix; ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: volNormalize; ValueData: 0; Components: ffdshow; Tasks: NOT filter\normalize
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: isvolume;     ValueData: 1; Components: ffdshow; Tasks:     filter\normalize
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: volNormalize; ValueData: 1; Components: ffdshow; Tasks:     filter\normalize
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: volNormalize;         ValueData: 0; Components: ffdshow; Tasks: NOT filter\normalize
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: isvolume;             ValueData: 1; Components: ffdshow; Tasks:     filter\normalize
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: volNormalize;         ValueData: 1; Components: ffdshow; Tasks:     filter\normalize
 
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: ismixer; ValueData: {code:GetIsMixer}; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: ismixer;  ValueData: {code:GetIsMixer};  Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerOut; ValueData: {code:GetMixerOut}; Components: ffdshow
 
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: allowOutChange; ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: hwOverlay; ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: allowOutChange;      ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: hwOverlay;           ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: outChangeCompatOnly; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: postprocH264mode; ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: idct; ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: dword; ValueName: libtheoraPostproc; ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: postprocH264mode;    ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: idct;                ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
+Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: dword; ValueName: libtheoraPostproc;   ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
 
 ; Blacklist
-Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: isBlacklist; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: String; ValueName: blacklist; ValueData: "oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist; OnlyBelowVersion: 0,6; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: String; ValueName: blacklist; ValueData: "oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist; MinVersion: 0,6; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: isBlacklist; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: blacklist; ValueData: "oblivion.exe;morrowind.exe"; Flags: createvalueifdoesntexist; OnlyBelowVersion: 0,6; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: blacklist; ValueData: "oblivion.exe;morrowind.exe"; Flags: createvalueifdoesntexist; MinVersion: 0,6; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: isBlacklist; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: String; ValueName: blacklist;   ValueData: "oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist; OnlyBelowVersion: 0,6; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: String; ValueName: blacklist;   ValueData: "oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist; MinVersion: 0,6;       Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: isBlacklist; ValueData: 1;                             Flags: createvalueifdoesntexist;                        Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: blacklist;   ValueData: "oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist; OnlyBelowVersion: 0,6; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: blacklist;   ValueData: "oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist; MinVersion: 0,6;       Components: ffdshow
 
 ; Compatibility list
 Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: isWhitelist; ValueData: {code:GetIsWhitelistVideo}; Check: IsCompVValid; Components: ffdshow
@@ -577,19 +577,19 @@ Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: do
 
 [INI]
 #if !unicode_required
-Filename: {win}\system.ini; Section: drivers32; Key: vidc.ffds; String: ff_vfw.dll; Flags: uninsdeleteentry; MinVersion: 4,0; Components: ffdshow\vfw
+Filename: {win}\system.ini; Section: drivers32; Key: vidc.ffds;  String: ff_vfw.dll; Flags: uninsdeleteentry; MinVersion: 4,0; Components: ffdshow\vfw
   #if include_makeavis
 Filename: {win}\system.ini; Section: drivers32; Key: msacm.avis; String: ff_acm.acm; Flags: uninsdeleteentry; MinVersion: 4,0; Components: ffdshow\makeavis
   #endif
 #endif
 
 [Run]
-Description: {cm:runaudioconfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; Flags: postinstall nowait unchecked; Components: ffdshow
-Description: {cm:runvideoconfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configure; WorkingDir: {app}; Flags: postinstall nowait unchecked; Components: ffdshow
+Description: {cm:run_audioConfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; Flags: postinstall nowait unchecked; Components: ffdshow
+Description: {cm:run_videoConfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; Flags: postinstall nowait unchecked; Components: ffdshow
 #if is64bit
-Description: {cm:runvfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW; WorkingDir: {app}; Flags: postinstall nowait unchecked; Components: ffdshow\vfw
+Description: {cm:run_vfwConfig};   Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {app}; Flags: postinstall nowait unchecked; Components: ffdshow\vfw
 #else
-Description: {cm:runvfwconfig}; Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW; Flags: postinstall nowait unchecked; Components: ffdshow\vfw
+Description: {cm:run_vfwConfig};   Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW;                      Flags: postinstall nowait unchecked; Components: ffdshow\vfw
 #endif
 
 ; All custom strings in the installer:
@@ -615,7 +615,7 @@ type
 // Global vars
 var
   is_update: Boolean;
-  
+
   ComplistVideo: TcomplistPage;
   ComplistAudio: TcomplistPage;
   Complist_isMsgAddedShown: Boolean;
@@ -799,7 +799,7 @@ begin
   Result := True;
   if CurPageID = wpSelectComponents then begin
     if NOT IsComponentSelected('ffdshow') then begin
-      msgbox('You must select at least one component.', mbInformation, MB_OK);
+      MsgBox(CustomMessage('comp_msg_selectOneComp'), mbInformation, MB_OK);
       Result := False;
     end
   end
@@ -895,17 +895,17 @@ begin
     #if sse2_required
     if Result AND NOT Is_SSE2_Supported() then begin
       Result := False;
-      msgbox('This build of ffdshow requires a CPU with SSE2 extension support. Your CPU does not have those capabilities.', mbError, MB_OK);
+      MsgBox(CustomMessage('simd_msg_sse2'), mbError, MB_OK);
     end
     #endif
     #if sse_required
     if Result AND NOT Is_SSE_Supported() then begin
       Result := False;
-      msgbox('This build of ffdshow requires a CPU with SSE extension support. Your CPU does not have those capabilities.', mbError, MB_OK);
+      MsgBox(CustomMessage('simd_msg_sse'), mbError, MB_OK);
     end
     #endif
   #endif
-  
+
   is_update := RegKeyExists(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow_is1');
 end;
 
@@ -914,7 +914,7 @@ begin
   if CurStep = ssInstall then begin
     RemoveBuildUsingNSIS;
   end
-  
+
   #if include_cpu_detection
   if CurStep = ssPostInstall then begin
     RegWriteDwordValue(HKCU, 'Software\GNU\ffdshow\default', 'threadsnum', GetNumberOfCores);
@@ -1055,16 +1055,16 @@ var
   default_compat_list: String;
 begin
   complist.countAdded := 0;
-  complist.page.Add(ExpandConstant('{cm:comp_donotlimit}'));
-  complist.page.Add(ExpandConstant('{cm:comp_useonlyin}'));
-  
+  complist.page.Add(CustomMessage('white_dontLimit'));
+  complist.page.Add(CustomMessage('white_useOnlyIn'));
+
   if ffRegReadDWordHKCU(regKeyName, 'isWhitelist', 1) = 1 then begin
     complist.page.Values[1] := True
   end
   else begin
     complist.page.Values[0] := True;
   end
-    
+
   // Default list of compatible apps
   default_compat_list :=
     '3wPlayer.exe'#13#10
@@ -1357,7 +1357,7 @@ begin
   complist.chbDontAsk.Left := ScaleX(0);
   complist.chbDontAsk.Width := ScaleX(170);
   complist.chbDontAsk.Height := ScaleY(16);
-  complist.chbDontAsk.Caption := ExpandConstant('{cm:dontaskmeagain}');
+  complist.chbDontAsk.Caption := CustomMessage('white_dontAskAgain');
   complist.chbDontAsk.Parent := complist.page.Surface;
   complist.chbDontAsk.Checked := False;
 end;
@@ -1383,17 +1383,17 @@ begin
   Complist_isMsgAddedShown := False;
 
   ComplistVideo.page := CreateInputOptionPage(wpSelectTasks,
-    ExpandConstant('{cm:comp_SetupLabelV1}'),
-    ExpandConstant('{cm:comp_SetupLabelV2}'),
-    ExpandConstant('{cm:comp_SetupLabelV3}'),
+    CustomMessage('white_videoLabel1'),
+    CustomMessage('white_videoLabel2'),
+    CustomMessage('white_videoLabel3'),
     True, False);
 
   InitComplist(ComplistVideo ,'Software\GNU\ffdshow');
 
   ComplistAudio.page := CreateInputOptionPage(ComplistVideo.page.ID,
-    ExpandConstant('{cm:comp_SetupLabelA1}'),
-    ExpandConstant('{cm:comp_SetupLabelA2}'),
-    ExpandConstant('{cm:comp_SetupLabelA3}'),
+    CustomMessage('white_audioLabel1'),
+    CustomMessage('white_audioLabel2'),
+    CustomMessage('white_audioLabel3'),
     True, False);
 
   InitComplist(ComplistAudio,'Software\GNU\ffdshow_audio');
@@ -1402,18 +1402,18 @@ begin
 
   is8DisableMixer := False;
   SpeakerPage := CreateInputOptionPage(ComplistAudio.page.ID,
-    ExpandConstant('{cm:speakersetup}'),
-    ExpandConstant('{cm:SpeakerSetupLabel2}'),
-    ExpandConstant('{cm:SpeakerSetupLabel3}'),
+    CustomMessage('spk_Label1'),
+    CustomMessage('spk_Label2'),
+    CustomMessage('spk_Label3'),
     True, False);
-  SpeakerPage.Add(ExpandConstant('1.0 ({cm:spk_mono})'));                        // 0
-  SpeakerPage.Add(ExpandConstant('2.0 ({cm:spk_headphone})'));                   // 17
-  SpeakerPage.Add(ExpandConstant('2.0 ({cm:spk_stereo})'));                      // 1
-  SpeakerPage.Add(ExpandConstant('3.0 ({cm:spk_front_3ch})'));                   // 2
-  SpeakerPage.Add(ExpandConstant('4.1 ({cm:spk_quadro} + {cm:spk_Subwoofer})')); // 12
-  SpeakerPage.Add(ExpandConstant('5.0 ({cm:spk_5ch})'));                         // 6
-  SpeakerPage.Add(ExpandConstant('5.1 ({cm:spk_5ch} + {cm:spk_Subwoofer})'));    // 13
-  SpeakerPage.Add(ExpandConstant('7.1 ({cm:spk_7ch} + {cm:spk_Subwoofer})'));    // 24
+  SpeakerPage.Add('1.0 (' + CustomMessage('spk_mono') + ')');                                            // 0
+  SpeakerPage.Add('2.0 (' + CustomMessage('spk_headPhone') + ')');                                       // 17
+  SpeakerPage.Add('2.0 (' + CustomMessage('spk_stereo') + ')');                                          // 1
+  SpeakerPage.Add('3.0 (' + CustomMessage('spk_front_3ch') + ')');                                       // 2
+  SpeakerPage.Add('4.1 (' + CustomMessage('spk_quadro') + ' + ' + CustomMessage('spk_subwoofer') + ')'); // 12
+  SpeakerPage.Add('5.0 (' + CustomMessage('spk_5ch') + ')');                                             // 6
+  SpeakerPage.Add('5.1 (' + CustomMessage('spk_5ch') + ' + ' + CustomMessage('spk_subwoofer') + ')');    // 13
+  SpeakerPage.Add('7.1 (' + CustomMessage('spk_7ch') + ' + ' + CustomMessage('spk_subwoofer') + ')');    // 24
   if  RegQueryDWordValue(HKCU, 'Software\GNU\ffdshow_audio\default', 'mixerOut', reg_mixerOut)
   and RegQueryDWordValue(HKCU, 'Software\GNU\ffdshow_audio\default', 'ismixer' , reg_ismixer)
   and RegQueryDWordValue(HKLM, 'Software\GNU\ffdshow_audio'        , 'isSpkCfg', reg_isSpkCfg) then
@@ -1438,50 +1438,50 @@ begin
         SpeakerPage.Values[7] := True
       else begin
         if reg_mixerOut = 3 then
-          SpeakerPage.Add(ExpandConstant('2+1 ({cm:spk_front_2ch} + {cm:spk_rear_1ch})'))
+          SpeakerPage.Add('2+1 (' + CustomMessage('spk_front_2ch') + ' + ' + CustomMessage('spk_rear_1ch') + ')')
         else if reg_mixerOut = 4 then
-          SpeakerPage.Add(ExpandConstant('3+1 ({cm:spk_front_3ch} + {cm:spk_rear_1ch})'))
+          SpeakerPage.Add('3+1 (' + CustomMessage('spk_front_3ch') + ' + ' + CustomMessage('spk_rear_1ch') + ')')
         else if reg_mixerOut = 5 then
-          SpeakerPage.Add(ExpandConstant('4.0 ({cm:spk_front_2ch} + {cm:spk_rear_2ch})'))
+          SpeakerPage.Add('4.0 (' + CustomMessage('spk_front_2ch') + ' + ' + CustomMessage('spk_rear_2ch') + ')')
         else if reg_mixerOut = 7 then
-          SpeakerPage.Add(ExpandConstant('1.1 ({cm:spk_mono} + {cm:spk_Subwoofer})'))
+          SpeakerPage.Add('1.1 (' + CustomMessage('spk_mono') + ' + ' + CustomMessage('spk_subwoofer') + ')')
         else if reg_mixerOut = 8 then
-          SpeakerPage.Add(ExpandConstant('2.1 ({cm:spk_front_2ch} + {cm:spk_Subwoofer})'))
+          SpeakerPage.Add('2.1 (' + CustomMessage('spk_front_2ch') + ' + ' + CustomMessage('spk_subwoofer') + ')')
         else if reg_mixerOut = 9 then
-          SpeakerPage.Add(ExpandConstant('3.1 ({cm:spk_front_3ch} + {cm:spk_Subwoofer})'))
+          SpeakerPage.Add('3.1 (' + CustomMessage('spk_front_3ch') + ' + ' + CustomMessage('spk_subwoofer') + ')')
         else if reg_mixerOut = 10 then
-          SpeakerPage.Add(ExpandConstant('2+1.1 ({cm:spk_front_2ch} + {cm:spk_rear_1ch} + {cm:spk_Subwoofer})'))
+          SpeakerPage.Add('2+1.1 (' + CustomMessage('spk_front_2ch') + ' + ' + CustomMessage('spk_rear_1ch') + ' + ' + CustomMessage('spk_subwoofer') + ')')
         else if reg_mixerOut = 11 then
-          SpeakerPage.Add(ExpandConstant('3+1.1 ({cm:spk_front_3ch} + {cm:spk_rear_1ch} + {cm:spk_Subwoofer})'))
+          SpeakerPage.Add('3+1.1 (' + CustomMessage('spk_front_3ch') + ' + ' + CustomMessage('spk_rear_1ch') + ' + ' + CustomMessage('spk_subwoofer') + ')')
         else if reg_mixerOut = 14 then
-          SpeakerPage.Add(ExpandConstant('{cm:spk_dolby1}'))
+          SpeakerPage.Add(CustomMessage('spk_dolby1'))
         else if reg_mixerOut = 19 then
-          SpeakerPage.Add(ExpandConstant('{cm:spk_dolby1} + {cm:spk_Subwoofer}'))
+          SpeakerPage.Add(CustomMessage('spk_dolby1') + ' + ' + CustomMessage('spk_subwoofer'))
         else if reg_mixerOut = 15 then
-          SpeakerPage.Add(ExpandConstant('{cm:spk_dolby2}'))
+          SpeakerPage.Add(CustomMessage('spk_dolby2'))
         else if reg_mixerOut = 20 then
-          SpeakerPage.Add(ExpandConstant('{cm:spk_dolby2} + {cm:spk_Subwoofer}'))
+          SpeakerPage.Add(CustomMessage('spk_dolby2') + ' + ' + CustomMessage('spk_subwoofer'))
         else if reg_mixerOut = 16 then
-          SpeakerPage.Add(ExpandConstant('{cm:spk_sameasinput}'))
+          SpeakerPage.Add(CustomMessage('spk_sameAsInput'))
         else if reg_mixerOut = 18 then
-          SpeakerPage.Add(ExpandConstant('{cm:spk_HRTF}'))
+          SpeakerPage.Add(CustomMessage('spk_hrtf'));
         else if reg_mixerOut = 21 then
-          SpeakerPage.Add(ExpandConstant('6.0 ({cm:spk_front_3ch} + {cm:spk_side_2ch} + {cm:spk_rear_1ch})'))
+          SpeakerPage.Add('6.0 (' + CustomMessage('spk_front_3ch') + ' + ' + CustomMessage('spk_side_2ch') + ' + ' + CustomMessage('spk_rear_1ch') + ')')
         else if reg_mixerOut = 22 then
-          SpeakerPage.Add(ExpandConstant('6.1 ({cm:spk_front_3ch} + {cm:spk_side_2ch} + {cm:spk_rear_1ch} + {cm:spk_Subwoofer})'))
+          SpeakerPage.Add('6.1 (' + CustomMessage('spk_front_3ch') + ' + ' + CustomMessage('spk_side_2ch') + ' + ' + CustomMessage('spk_rear_1ch') + ' + ' + CustomMessage('spk_subwoofer') + ')')
         else if reg_mixerOut = 23 then
-          SpeakerPage.Add(ExpandConstant('7.0 ({cm:spk_front_3ch} + {cm:spk_side_2ch} + {cm:spk_rear_2ch})'))
+          SpeakerPage.Add('7.0 (' + CustomMessage('spk_front_3ch') + ' + ' + CustomMessage('spk_side_2ch') + ' + ' + CustomMessage('spk_rear_2ch') + ')')
         else if reg_mixerOut > 24 then
-          SpeakerPage.Add('Unknown speaker configulation');
+          SpeakerPage.Add(CustomMessage('spk_unknownSpk'));
         SpeakerPage.Values[8] := True;
         isMajorType := False;
       end
       if isMajorType then begin
-       SpeakerPage.Add(ExpandConstant('{cm:spk_MixerDisable}'));
+       SpeakerPage.Add(CustomMessage('spk_disableMixer'));
        is8DisableMixer := True;
       end
     end else begin
-      SpeakerPage.Add(ExpandConstant('{cm:spk_MixerDisable}'));
+      SpeakerPage.Add(CustomMessage('spk_disableMixer'));
       is8DisableMixer := True;
       SpeakerPage.Values[8] := True;
     end
@@ -1498,7 +1498,7 @@ begin
       SpeakerPage.Values[1] := True
     else if systemSpeakerConfig = 3 then // DSSPEAKER_QUAD
       begin
-       SpeakerPage.Add(ExpandConstant('4.0 ({cm:spk_front_2ch} + {cm:spk_rear_2ch})'));
+       SpeakerPage.Add('4.0 (' + CustomMessage('spk_front_2ch') + ' + ' + CustomMessage('spk_rear_2ch') + ')');
        SpeakerPage.Values[8] := True;
        isMajorType := False;
        is8DisableMixer := False;
@@ -1513,15 +1513,15 @@ begin
     else if systemSpeakerConfig = 8 then // 7.1ch hometheater
       SpeakerPage.Values[7] := True;
     if is8DisableMixer then
-     SpeakerPage.Add(ExpandConstant('{cm:spk_MixerDisable}'));
+     SpeakerPage.Add(CustomMessage('spk_disableMixer'));
   end
 
   // VirtualDub plugin install directory setting
 #if include_app_plugins
   VdubDirPage := CreateInputDirPage(SpeakerPage.ID,
-    ExpandConstant('{cm:SelectPluginDirLabel1,Virtual Dub}'),
-    ExpandConstant('{cm:SelectPluginDirLabel2,Virtual Dub}'),
-    ExpandConstant('{cm:SelectPluginDirLabel3,Virtual Dub}'),
+    FmtMessage(CustomMessage('plg_Label1'), ['Virtual Dub']),
+    FmtMessage(CustomMessage('plg_Label2'), ['Virtual Dub']),
+    FmtMessage(CustomMessage('plg_Label3'), ['Virtual Dub']),
     False, '');
   VdubDirPage.Add('');
 #endif
@@ -1574,11 +1574,11 @@ procedure showMsgAdded(PageID: Integer; complist: TcomplistPage);
 begin
   if (PageID = complist.page.ID) AND NOT Complist_isMsgAddedShown AND NOT WizardSilent then begin
     if complist.countAdded = 1 then begin
-      MsgBox(ExpandConstant('{cm:comp_oneCompAppAdded}'), mbInformation, MB_OK);
+      MsgBox(CustomMessage('white_msg_oneCompAppAdded'), mbInformation, MB_OK);
       Complist_isMsgAddedShown := True;
     end
     if complist.countAdded > 1 then begin
-      MsgBox(ExpandConstant('{cm:comp_multiCompAppAdded}'), mbInformation, MB_OK);
+      MsgBox(CustomMessage('white_msg_multiCompAppAdded'), mbInformation, MB_OK);
       Complist_isMsgAddedShown := True;
     end
   end

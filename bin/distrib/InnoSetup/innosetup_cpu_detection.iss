@@ -25,22 +25,22 @@ Type
 		dwCPUExtFamily,
 		dwCPUExtModel,
 		dwCPUStepping,
-		dwCPUFeatures,			// result from edx when cpuid called with eax=1
-		dwCPUAMDExtSignature,	// AMD extended features
+		dwCPUFeatures,			    // result from edx when cpuid called with eax=1
+		dwCPUAMDExtSignature,	    // AMD extended features
 		dwBrandIndex,
 		dwCLFlushLineSize,
-		dwCPUExtFeatures: DWORD;		// cpuid result when eax = 1
+		dwCPUExtFeatures: DWORD;    // cpuid result when eax = 1
 	end;
 
 	THTInfo = record
 		htResultCode: DWord;
-		nPhysicalProcs,				// Number of physical processors
-		nLogicalProcs,				// Number of logical processors (including physical processors)
+		nPhysicalProcs,				    // Number of physical processors
+		nLogicalProcs,				    // Number of logical processors (including physical processors)
 		nLogicalPerPackage: Integer;
-		dwPhysicalAffinity,			// Mask for physical CPUs
+		dwPhysicalAffinity,			    // Mask for physical CPUs
 		dwLogicalAffinity: DWORD;		// Mask for non-physical CPUs
 		nMaxPhysGetProcAff: Integer;	// Max number of physical processors to get Phys/Log Affinity table
-		pPhysProcAff: Integer;	// Allocate nMaxPhysGetProcAff*sizeof(PHYSPROCAFF_T) before calling WinCPUID_Init
+		pPhysProcAff: Integer;	        // Allocate nMaxPhysGetProcAff*sizeof(PHYSPROCAFF_T) before calling WinCPUID_Init
 	end;
 
 	TCPUInfo = record
@@ -98,10 +98,10 @@ begin
     if (CPUInfo.bSSE2_Supported = 1) then begin
       cpu_sse2 := true;
     end
-    
+
     cpu_cores := CPUInfo.htInfo.nLogicalProcs;
   end
-  
+
   cpu_checked := true;
 end;
 
@@ -125,6 +125,6 @@ function GetNumberOfCores(): Integer;
 begin
 	if NOT cpu_checked then begin
 		CPUCheck();
-	end  	
+	end
   Result := cpu_cores;
 end;
