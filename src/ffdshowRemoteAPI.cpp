@@ -335,7 +335,9 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			cd.lpData = alloca(sizeof(char)*(strlen(paramStr)+1));
 			text<char>(paramStr, (char*)cd.lpData);
 			cd.cbData = strlen(paramStr)+1;
-			SendMessage((HWND)wprm, WM_COPYDATA, lprm, (LPARAM)&cd);
+			DWORD ret = 0;
+			SendMessageTimeout((HWND)wprm, WM_COPYDATA, lprm, (LPARAM)&cd, 
+				SMTO_ABORTIFHUNG, 1500, &ret);
 			return TRUE;
 		}
 	case WPRM_GET_CURRENT_SUBTITLES:
@@ -349,7 +351,9 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			cd.lpData = alloca(sizeof(char)*(strlen(paramStr)+1));
 			text<char>(paramStr, (char*)cd.lpData);
 			cd.cbData = strlen(paramStr)+1;
-			SendMessage((HWND)wprm, WM_COPYDATA, WPRM_GET_CURRENT_SUBTITLES, (LPARAM)&cd);
+			DWORD ret = 0;
+			SendMessageTimeout((HWND)wprm, WM_COPYDATA, WPRM_GET_CURRENT_SUBTITLES, (LPARAM)&cd, 
+				SMTO_ABORTIFHUNG, 1500, &ret);
 			return TRUE;
 		}
 	case WPRM_GET_PRESETLIST:
@@ -382,7 +386,9 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			strcpy((char*)cd.lpData, "");
 			text<char>(presetList, (char*)cd.lpData);
 			cd.cbData = strlen(presetList)+1;
-			SendMessage((HWND)wprm, WM_COPYDATA, WPRM_GET_PRESETLIST, (LPARAM)&cd);
+			DWORD ret = 0;
+			SendMessageTimeout((HWND)wprm, WM_COPYDATA, WPRM_GET_PRESETLIST, (LPARAM)&cd, 
+				SMTO_ABORTIFHUNG, 1500, &ret);
 			return TRUE;
 		}
 	case WPRM_GET_SOURCEFILE:
@@ -394,7 +400,9 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 		strcpy((char*)cd.lpData, "");
 		text<char>(fileName, (char*)cd.lpData);
 		cd.cbData = strlen(fileName)+1;
-		SendMessage((HWND)wprm, WM_COPYDATA, WPRM_GET_SOURCEFILE, (LPARAM)&cd);
+		DWORD ret = 0;
+		SendMessageTimeout((HWND)wprm, WM_COPYDATA, WPRM_GET_SOURCEFILE, (LPARAM)&cd, 
+			SMTO_ABORTIFHUNG, 2000, &ret);
 		return TRUE;
 	  }
 	case WPRM_GET_SUBTITLEFILESLIST:
@@ -432,7 +440,10 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			strcpy((char*)cd.lpData, "");
 			text<char>(filesList, (char*)cd.lpData);
 			cd.cbData = strlen(filesList)+1;
-			SendMessage((HWND)wprm, WM_COPYDATA, WPRM_GET_SUBTITLEFILESLIST, (LPARAM)&cd);
+			DWORD ret = 0;
+			SendMessageTimeout((HWND)wprm, WM_COPYDATA, WPRM_GET_SUBTITLEFILESLIST, (LPARAM)&cd, 
+				SMTO_ABORTIFHUNG, 1500, &ret);
+			//SendMessage((HWND)wprm, WM_COPYDATA, WPRM_GET_SUBTITLEFILESLIST, (LPARAM)&cd);
         }
 		return TRUE;
    }
