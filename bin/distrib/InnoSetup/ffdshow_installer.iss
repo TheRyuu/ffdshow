@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1505
+#define tryout_revision = 1545
 #define buildyear = 2007
 #define buildmonth = '10'
-#define buildday = '04'
+#define buildday = '19'
 
 ; Build specific options
 #define unicode_required = True
@@ -286,8 +286,8 @@ Name: {group}\{cm:shrt_videoConfig}; Filename: rundll32.exe; Parameters: ffdshow
 Name: {group}\{cm:shrt_vfwConfig};   Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check: NOT CheckModernIcon; IconIndex: 2; Components: ffdshow\vfw
 Name: {group}\{cm:shrt_vfwConfig};   Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check:     CheckModernIcon; IconIndex: 5; Components: ffdshow\vfw
 #else
-Name: {group}\{cm:shrt_vfwConfig};   Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW;                      IconFilename: {app}\ffdshow.ax; Check: NOT CheckModernIcon; IconIndex: 2; Components: ffdshow\vfw
-Name: {group}\{cm:shrt_vfwConfig};   Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW;                      IconFilename: {app}\ffdshow.ax; Check:     CheckModernIcon; IconIndex: 5; Components: ffdshow\vfw
+Name: {group}\{cm:shrt_vfwConfig};   Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {sys}; IconFilename: {app}\ffdshow.ax; Check: NOT CheckModernIcon; IconIndex: 2; Components: ffdshow\vfw
+Name: {group}\{cm:shrt_vfwConfig};   Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {sys}; IconFilename: {app}\ffdshow.ax; Check:     CheckModernIcon; IconIndex: 5; Components: ffdshow\vfw
 #endif
 #if include_makeavis
 Name: {group}\makeAVIS; Filename: {app}\makeAVIS.exe; Components: ffdshow\makeavis
