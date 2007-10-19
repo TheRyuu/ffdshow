@@ -2,16 +2,7 @@
 #define _TRGBPRIMARIES_H_
 
 #include "interfaces.h"
-//#include "ffImgfmt.h"
-//#include "IffColorspaceConvert.h"
-//#include "convert_yuy2.h"
 
-//struct Tswscale;
-//struct Tconfig;
-//struct Tlibmplayer;
-//struct TcspInfo;
-//struct Tpalette;
-//struct TffPict;
 struct ToutputVideoSettings;
 typedef struct 
 {
@@ -41,6 +32,7 @@ public:
  void writeToXvidRgb2YuvMatrix(short *asmData);
  const unsigned char* getAvisynthYuv2RgbMatrix(void);
  const Tmmx_ConvertRGBtoYUY2matrix* getAvisynthRgb2YuvMatrix(void);
+ const void initXvid(void);
  const int32_t* toSwscaleTable(void);
  void setJpeg(bool isjpeg);
  enum

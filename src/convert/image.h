@@ -5,7 +5,13 @@
 
 extern "C" short bgr_to_yv12_mmx_data;
 extern "C" short yv12_to_bgr_mmx_data;
-void xvid_colorspace_init(void);
+void xvid_colorspace_init(
+      double rgb_y_out,
+      double b_u_out,
+      double g_u_out,
+      double g_v_out,
+      double r_v_out,
+      int    y_add_out);
 
 typedef struct
 {

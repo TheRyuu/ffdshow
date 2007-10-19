@@ -2097,25 +2097,37 @@ int image_output(IMAGE * image,
 }
 
 // initialize rgb lookup tables
-template<class CCIR> static void colorspace_init(void)
+template<class CCIR> static void colorspace_init(
+                      double rgb_y_out,
+                      double b_u_out,
+                      double g_u_out,
+                      double g_v_out,
+                      double r_v_out,
+                      int    y_add_out)
 {
  #define FIX_OUT(x) ((uint16_t) ((x) * (1L<<SCALEBITS_OUT) + 0.5))
  for (int i = 0; i < 256; i++)
   {
-   CCIR::RGB_Y_tab[i] = FIX_OUT(CCIR::RGB_Y_OUT) * (i - CCIR::Y_ADD_OUT);
-   CCIR::B_U_tab[i] = FIX_OUT(CCIR::B_U_OUT) * (i - CCIR::U_ADD_OUT);
-   CCIR::G_U_tab[i] = FIX_OUT(CCIR::G_U_OUT) * (i - CCIR::U_ADD_OUT);
-   CCIR::G_V_tab[i] = FIX_OUT(CCIR::G_V_OUT) * (i - CCIR::V_ADD_OUT);
-   CCIR::R_V_tab[i] = FIX_OUT(CCIR::R_V_OUT) * (i - CCIR::V_ADD_OUT);
+   CCIR::RGB_Y_tab[i] = FIX_OUT(rgb_y_out) * (i - y_add_out);
+   CCIR::B_U_tab[i] = FIX_OUT(b_u_out) * (i - CCIR::U_ADD_OUT);
+   CCIR::G_U_tab[i] = FIX_OUT(g_u_out) * (i - CCIR::U_ADD_OUT);
+   CCIR::G_V_tab[i] = FIX_OUT(g_v_out) * (i - CCIR::V_ADD_OUT);
+   CCIR::R_V_tab[i] = FIX_OUT(r_v_out) * (i - CCIR::V_ADD_OUT);
   }
  #undef FIX_OUT
 }
 
-void xvid_colorspace_init(void)
+void xvid_colorspace_init(
+      double rgb_y_out,
+      double b_u_out,
+      double g_u_out,
+      double g_v_out,
+      double r_v_out,
+      int    y_add_out)
 {
  /* Initialize internal colorspace transformation tables */
- colorspace_init< YUV_RGB_DATA<CCIR> >();
- colorspace_init< YUV_RGB_DATA<JPEG> >();
+ colorspace_init< YUV_RGB_DATA<CCIR> >(rgb_y_out, b_u_out, g_u_out, g_v_out, r_v_out, y_add_out);
+ colorspace_init< YUV_RGB_DATA<JPEG> >(rgb_y_out, b_u_out, g_u_out, g_v_out, r_v_out, y_add_out);
 
  /* All colorspace transformation functions User Format->YV12 */
  yv12_to_yv12    = yv12_to_yv12_c;

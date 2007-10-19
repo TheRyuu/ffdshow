@@ -325,6 +325,7 @@ UCHAR patcon:
     // If rejected, then you cannot use the AMCONTROL flags (send 0 for dwReserved1)
 #define AMCONTROL_PAD_TO_4x3        0x00000002 // if set means display the image in a 4x3 area
 #define AMCONTROL_PAD_TO_16x9       0x00000004 // if set means display the image in a 16x9 area
+#define AMCONTROL_COLORINFO_PRESENT 0x00000080 // if set, indicates DXVA color info is present in the upper (24) bits of the dwControlFlags
 
     typedef struct tagVIDEOINFOHEADER2
       {

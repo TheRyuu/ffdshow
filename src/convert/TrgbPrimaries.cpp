@@ -19,18 +19,9 @@
 #include "IffdshowBase.h"
 #include "IffdshowDecVideo.h"
 #include "ffdshow_constants.h"
-//#include "Tconfig.h"
-//#include "ffImgfmt.h"
-//#include "convert_yv12.h"
-//#include "convert_yuy2.h"
-//#include "Tswscale.h"
-//#include "image.h"
-//#include "ffdebug.h"
-//#include "TffPict.h"
-//#include "Tlibmplayer.h"
-//#include "libavcodec/bitstream.h"
 #include "TrgbPrimaries.h"
 #include "ToutputVideoSettings.h"
+#include "image.h"
 
 //===================================== TrgbPrimaries ====================================
 TrgbPrimaries::TrgbPrimaries():
@@ -167,6 +158,12 @@ void TrgbPrimaries::writeToXvidYuv2RgbMatrix(short *asmData)
    asmData[i+48]=UB_MUL;
    asmData[i+56]=VR_MUL;
   }
+}
+
+const void TrgbPrimaries::initXvid(void)
+{
+ toYuv2RgbDataI
+ xvid_colorspace_init(y_mul,ub_mul,ug_mul,vg_mul,vr_mul,cspOptionsBlackCutoff);
 }
 
 const Tmmx_ConvertRGBtoYUY2matrix* TrgbPrimaries::getAvisynthRgb2YuvMatrix(void)

@@ -360,7 +360,7 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
      if (!inited)
       {
        inited=true;
-       xvid_colorspace_init();
+       initXvid();
       }
     }
   }
