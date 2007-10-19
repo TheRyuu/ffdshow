@@ -321,6 +321,13 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			return TRUE;
 		}
 		return FALSE;
+	case WPRM_GET_FRAMERATE:
+		if (deciV != NULL)
+		{
+			unsigned int fps1000 = 0;
+			deciV->getAVIfps(&fps1000);
+			return fps1000;
+		}
  }
 
  switch(msg)
