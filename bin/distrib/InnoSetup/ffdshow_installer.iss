@@ -1,7 +1,7 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1545
+#define tryout_revision = 1548
 #define buildyear = 2007
 #define buildmonth = '10'
 #define buildday = '19'
@@ -1210,6 +1210,7 @@ begin
     'mencoder.exe'#13#10
     'Metacafe.exe'#13#10
     'MMPlayer.exe'#13#10
+    'moviemk.exe'#13#10
     'moviethumb.exe'#13#10
     'mpcstar.exe'#13#10
     'MpegVideoWizard.exe'#13#10
@@ -1373,8 +1374,8 @@ begin
   // new compatible applications should be written both here and edtTarget.Text := 'aegisub...
   // FIXME more smart way of initializing compApps.
 
-  //compApps[1].rev   := 1503;
-  //compApps[1].name  := 'example.exe';
+  compApps[1].rev   := 1548;
+  compApps[1].name  := 'moviemk.exe';
 
 
   // Compatibility list
