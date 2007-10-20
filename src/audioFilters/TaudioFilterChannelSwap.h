@@ -9,6 +9,7 @@ private:
  TchannelSwapSettings oldcfg;
  TsampleFormat oldfmt;
  int newchannelmask;
+ unsigned int old_nchannels;
  struct Tspeaker
   {
    int i;
@@ -45,11 +46,13 @@ private:
     };
    (this->*swapChannelsFc[oldfmt.nchannels])(samples,numsamples);
   }
+ void makeMap(const TsampleFormat &fmt,const TchannelSwapSettings *cfg);
 protected:
  virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {*honourPreferred=false;return TsampleFormat::SF_ALL;}
 public:
  TaudioFilterChannelSwap(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual HRESULT process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0);
+ virtual bool getOutputFmt(TsampleFormat &fmt,const TfilterSettingsAudio *cfg);
 };
 
 #endif
