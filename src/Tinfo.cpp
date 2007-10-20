@@ -209,6 +209,7 @@ TinfoDec::TinfoDec(IffdshowBase *Ideci):TinfoBase(Ideci),deciD(comptrQ<IffdshowD
    IDFF_OSDtype_shortInfo,_l("Short configuration description"),_l("info"),
    IDFF_OSDtype_movieSource,_l("Decoder"),_l("dec"),
    IDFF_OSDtype_exeflnm,_l("Host application"),_l("host"),
+   IDFF_OSDtype_activePresetName,_l("Active preset name"),_l("preset"),
    0
   };
  addItems(items);
@@ -241,6 +242,12 @@ const char_t* TinfoDec::TinfoValueDec::getVal0(bool &wasChange,bool &splitline)
      int bps=deciD->getInputBitrate2();
      tsprintf(s,bps==-1?_l("N/A"):_l("%i kbps"),bps);
      wasChange=true;
+     return s;
+    }
+   case IDFF_OSDtype_activePresetName:
+    {
+     deciD->getActivePresetName(s,countof(s));
+     wasChange=strcmp(s,olds)!=0;
      return s;
     }
    default:

@@ -662,6 +662,7 @@
   #define IDFF_OSDtype_frameTimestamps   1553
   #define IDFF_OSDtype_frameDuration     1554
   #define IDFF_OSDtype_exeflnm           1556
+  #define IDFF_OSDtype_activePresetName  3483
   #define IDFF_OSDtype_sourceFlnmWOpath  1557
   #define IDFF_OSDtype_sampleFrequency   1558
   #define IDFF_OSDtype_nchannels         1559
@@ -1502,6 +1503,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3483
+//max:3484
 
 #endif
