@@ -420,11 +420,16 @@ bool Tpreset::isAutoPreset(TautoPresetProps &props) const
  if (is_autoloadSize() && !autoloadSizeMatch(dx,dy))
   return false;
 
+ bool is=false;
  for (TautoPresetItems::const_iterator a=autoPresetItems.begin();a!=autoPresetItems.end();a++)
-  if (a->getIs() && !a->match(props))
-   return false;
+  if (a->getIs())
+   {
+    is=true;
+    if (!a->match(props))
+     return false;
+   }
 
- return true;
+ return is;
 }
 
 int Tpreset::getMinOrder(void) const
