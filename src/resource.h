@@ -1888,6 +1888,18 @@
 #define IDC_LBL_CHANNELSWAP_AR          2191
 #define IDC_LBL_CHANNELSWAP_AR2         2192
 #define IDC_CBX_CHANNELSWAP_AR          2193
+#define IDC_LBL_VOLUME_AL               2194
+#define IDC_LBL_VOLUME_AR               2195
+#define IDC_LBL_VOLUME_AL2              2196
+#define IDC_LBL_VOLUME_AR2              2197
+#define IDC_TBR_VOLUME_AL               2198
+#define IDC_TBR_VOLUME_AR               2199
+#define IDC_CHB_VOLUME_AR_SOLO          2200
+#define IDC_CHB_VOLUME_AR_MUTE          2201
+#define IDC_CHB_VOLUME_AL_MUTE          2202
+#define IDC_CHB_VOLUME_AL_SOLO          2203
+#define IDC_PBR_VOLUME_AR               2204
+#define IDC_PBR_VOLUME_AL               2205
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -1904,7 +1916,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        296
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2194
+#define _APS_NEXT_CONTROL_VALUE         2206
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

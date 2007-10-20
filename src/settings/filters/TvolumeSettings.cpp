@@ -56,6 +56,10 @@ TvolumeSettings::TvolumeSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
      _l("volumeSL"),100,
    IDFF_volumeSR            ,&TvolumeSettings::volSR       ,0,3200,_l(""),1,
      _l("volumeSR"),100,
+   IDFF_volumeAL            ,&TvolumeSettings::volAL       ,0,3200,_l(""),1,
+     _l("volumeAL"),100,
+   IDFF_volumeAR            ,&TvolumeSettings::volAR       ,0,3200,_l(""),1,
+     _l("volumeAR"),100,
    IDFF_volumeLFE           ,&TvolumeSettings::volLFE      ,0,3200,_l(""),1,
      _l("volumeLFE"),100,
 
@@ -69,6 +73,10 @@ TvolumeSettings::TvolumeSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
      _l("volumeSLmute"),0,
    IDFF_volumeSRmute        ,&TvolumeSettings::volSRmute   ,0,2,_l(""),1,
      _l("volumeSRmute"),0,
+   IDFF_volumeALmute        ,&TvolumeSettings::volALmute   ,0,2,_l(""),1,
+     _l("volumeALmute"),0,
+   IDFF_volumeARmute        ,&TvolumeSettings::volARmute   ,0,2,_l(""),1,
+     _l("volumeARmute"),0,
    IDFF_volumeLFEmute       ,&TvolumeSettings::volLFEmute  ,0,2,_l(""),1,
      _l("volumeLFEmute"),0,
 
@@ -77,9 +85,9 @@ TvolumeSettings::TvolumeSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
    IDFF_maxNormalization    ,&TvolumeSettings::normalizeMax,0,3200,_l(""),1,
      _l("volNormalizeMax"),500,
    IDFF_volumeNormalizeBufferLength     ,&TvolumeSettings::nSamples,128,1024,_l(""),1,
-	 _l("volNormalizeBufferLength"),128,
+     _l("volNormalizeBufferLength"),128,
    IDFF_volumeNormalizeResetOnSeek     ,&TvolumeSettings::normalizeResetOnSeek,0,0,_l(""),1,
-	 _l("volNormalizeResetOnSeek"),1,
+     _l("volNormalizeResetOnSeek"),1,
    0
   };
  addOptions(iopts);
@@ -100,7 +108,7 @@ const int* TvolumeSettings::getResets(unsigned int pageId)
 {
  static const int idResets[]={
   IDFF_volume,
-  IDFF_volumeL,IDFF_volumeC,IDFF_volumeR,IDFF_volumeSL,IDFF_volumeSR,IDFF_volumeLFE,
+  IDFF_volumeL,IDFF_volumeC,IDFF_volumeR,IDFF_volumeSL,IDFF_volumeSR,IDFF_volumeAL,IDFF_volumeAR,IDFF_volumeLFE,
   IDFF_volumeNormalize,IDFF_maxNormalization,IDFF_volumeNormalizeBufferLength,IDFF_volumeNormalizeResetOnSeek,
   0};
  return idResets;

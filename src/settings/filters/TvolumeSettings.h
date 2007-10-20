@@ -12,8 +12,8 @@ protected:
 public:
  TvolumeSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
  int vol;
- int volL,volC,volR,volSL,volSR,volLFE;
- int volLmute,volCmute,volRmute,volSLmute,volSRmute,volLFEmute;
+ int volL,volC,volR,volSL,volSR,volAL,volAR,volLFE;
+ int volLmute,volCmute,volRmute,volSLmute,volSRmute,volALmute,volARmute,volLFEmute;
  int normalize,normalizeMax,nSamples,normalizeResetOnSeek;
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;
  virtual void createPages(TffdshowPageDec *parent) const;

@@ -23,13 +23,13 @@
 #include "ffdebug.h"
 #include "IffdshowParamsEnum.h"
 
-const int TvolumePage::tbrs[6]={IDC_TBR_VOLUME_L,IDC_TBR_VOLUME_C,IDC_TBR_VOLUME_R,IDC_TBR_VOLUME_SL,IDC_TBR_VOLUME_SR,IDC_TBR_VOLUME_LFE};
-const int TvolumePage::lbls[6]={IDC_LBL_VOLUME_L2,IDC_LBL_VOLUME_C2,IDC_LBL_VOLUME_R2,IDC_LBL_VOLUME_SL2,IDC_LBL_VOLUME_SR2,IDC_LBL_VOLUME_LFE2};
-const int TvolumePage::pbrs[6]={IDC_PBR_VOLUME_L,IDC_PBR_VOLUME_C,IDC_PBR_VOLUME_R,IDC_PBR_VOLUME_SL,IDC_PBR_VOLUME_SR,IDC_PBR_VOLUME_LFE};
-const int TvolumePage::idffs[6]={IDFF_volumeL,IDFF_volumeC,IDFF_volumeR,IDFF_volumeSL,IDFF_volumeSR,IDFF_volumeLFE};
-const int TvolumePage::idffsMS[6]={IDFF_volumeLmute,IDFF_volumeCmute,IDFF_volumeRmute,IDFF_volumeSLmute,IDFF_volumeSRmute,IDFF_volumeLFEmute};
-const int TvolumePage::mutes[6]={IDC_CHB_VOLUME_L_MUTE,IDC_CHB_VOLUME_C_MUTE,IDC_CHB_VOLUME_R_MUTE,IDC_CHB_VOLUME_SL_MUTE,IDC_CHB_VOLUME_SR_MUTE,IDC_CHB_VOLUME_LFE_MUTE};
-const int TvolumePage::solos[6]={IDC_CHB_VOLUME_L_SOLO,IDC_CHB_VOLUME_C_SOLO,IDC_CHB_VOLUME_R_SOLO,IDC_CHB_VOLUME_SL_SOLO,IDC_CHB_VOLUME_SR_SOLO,IDC_CHB_VOLUME_LFE_SOLO};
+const int TvolumePage::tbrs[8]={IDC_TBR_VOLUME_L,IDC_TBR_VOLUME_C,IDC_TBR_VOLUME_R,IDC_TBR_VOLUME_SL,IDC_TBR_VOLUME_SR,IDC_TBR_VOLUME_AL,IDC_TBR_VOLUME_AR,IDC_TBR_VOLUME_LFE};
+const int TvolumePage::lbls[8]={IDC_LBL_VOLUME_L2,IDC_LBL_VOLUME_C2,IDC_LBL_VOLUME_R2,IDC_LBL_VOLUME_SL2,IDC_LBL_VOLUME_SR2,IDC_LBL_VOLUME_AL2,IDC_LBL_VOLUME_AR2,IDC_LBL_VOLUME_LFE2};
+const int TvolumePage::pbrs[8]={IDC_PBR_VOLUME_L,IDC_PBR_VOLUME_C,IDC_PBR_VOLUME_R,IDC_PBR_VOLUME_SL,IDC_PBR_VOLUME_SR,IDC_PBR_VOLUME_AL,IDC_PBR_VOLUME_AR,IDC_PBR_VOLUME_LFE};
+const int TvolumePage::idffs[8]={IDFF_volumeL,IDFF_volumeC,IDFF_volumeR,IDFF_volumeSL,IDFF_volumeSR,IDFF_volumeAL,IDFF_volumeAR,IDFF_volumeLFE};
+const int TvolumePage::idffsMS[8]={IDFF_volumeLmute,IDFF_volumeCmute,IDFF_volumeRmute,IDFF_volumeSLmute,IDFF_volumeSRmute,IDFF_volumeALmute,IDFF_volumeARmute,IDFF_volumeLFEmute};
+const int TvolumePage::mutes[8]={IDC_CHB_VOLUME_L_MUTE,IDC_CHB_VOLUME_C_MUTE,IDC_CHB_VOLUME_R_MUTE,IDC_CHB_VOLUME_SL_MUTE,IDC_CHB_VOLUME_SR_MUTE,IDC_CHB_VOLUME_AL_MUTE,IDC_CHB_VOLUME_AR_MUTE,IDC_CHB_VOLUME_LFE_MUTE};
+const int TvolumePage::solos[8]={IDC_CHB_VOLUME_L_SOLO,IDC_CHB_VOLUME_C_SOLO,IDC_CHB_VOLUME_R_SOLO,IDC_CHB_VOLUME_SL_SOLO,IDC_CHB_VOLUME_SR_SOLO,IDC_CHB_VOLUME_AL_SOLO,IDC_CHB_VOLUME_AR_SOLO,IDC_CHB_VOLUME_LFE_SOLO};
 
 const TvolumePage::TbindTrackbar<TvolumePage> TvolumePage::htbr[]=
 {
@@ -38,6 +38,8 @@ const TvolumePage::TbindTrackbar<TvolumePage> TvolumePage::htbr[]=
  IDC_TBR_VOLUME_R,IDFF_volumeR,NULL,
  IDC_TBR_VOLUME_SL,IDFF_volumeSL,NULL,
  IDC_TBR_VOLUME_SR,IDFF_volumeSR,NULL,
+ IDC_TBR_VOLUME_AL,IDFF_volumeAL,NULL,
+ IDC_TBR_VOLUME_AR,IDFF_volumeAR,NULL,
  IDC_TBR_VOLUME_LFE,IDFF_volumeLFE,NULL,
  IDC_TBR_VOLUME_MASTER,IDFF_volume,NULL,
  0,0,NULL
@@ -46,7 +48,7 @@ const TvolumePage::TbindTrackbar<TvolumePage> TvolumePage::htbr[]=
 void TvolumePage::init(void)
 {
  deciD->queryFilterInterface(IID_IaudioFilterVolume,(void**)&filter);
- for (int i=0;i<6;i++)
+ for (int i=0;i<countof(mutes);i++)
   {
    addHint(mutes[i],_l("mute"));
    addHint(solos[i],_l("solo"));
@@ -68,7 +70,7 @@ void TvolumePage::switchDb(void)
   tbrSetRange(IDC_TBR_VOLUME_MASTER,-30,30,5);
  else
   tbrSetRange(IDC_TBR_VOLUME_MASTER,0,300,10);
- for (int i=0;i<6;i++)
+ for (int i=0;i<countof(tbrs);i++)
   {
    if (isdb)
     tbrSetRange(tbrs[i],-30,30,5);
@@ -106,7 +108,7 @@ void TvolumePage::master2dlg(void)
 }
 void TvolumePage::speakers2dlg(void)
 {
- for (int i=0;i<6;i++)
+ for (int i=0;i<countof(tbrs);i++)
   cfg2volTbr(tbrs[i],lbls[i],idffs[i],0,-1);
  mute2dlg();
 }
@@ -170,6 +172,8 @@ INT_PTR TvolumePage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       case IDC_TBR_VOLUME_R:volTbr2cfg(IDC_TBR_VOLUME_R,IDFF_volumeR,-1);speakers2dlg();return TRUE;
       case IDC_TBR_VOLUME_SL:volTbr2cfg(IDC_TBR_VOLUME_SL,IDFF_volumeSL,-1);speakers2dlg();return TRUE;
       case IDC_TBR_VOLUME_SR:volTbr2cfg(IDC_TBR_VOLUME_SR,IDFF_volumeSR,-1);speakers2dlg();return TRUE;
+      case IDC_TBR_VOLUME_AL:volTbr2cfg(IDC_TBR_VOLUME_AL,IDFF_volumeAL,-1);speakers2dlg();return TRUE;
+      case IDC_TBR_VOLUME_AR:volTbr2cfg(IDC_TBR_VOLUME_AR,IDFF_volumeAR,-1);speakers2dlg();return TRUE;
       case IDC_TBR_VOLUME_LFE:volTbr2cfg(IDC_TBR_VOLUME_LFE,IDFF_volumeLFE,-1);speakers2dlg();return TRUE;
      }
     break;
@@ -208,6 +212,8 @@ INT_PTR TvolumePage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       case IDC_CHB_VOLUME_R_MUTE:
       case IDC_CHB_VOLUME_SL_MUTE:
       case IDC_CHB_VOLUME_SR_MUTE:
+      case IDC_CHB_VOLUME_AL_MUTE:
+      case IDC_CHB_VOLUME_AR_MUTE:
       case IDC_CHB_VOLUME_LFE_MUTE:
        {
         int idff=((TwidgetMS*)Twidget::getDlgItem((HWND)lParam))->idff;
@@ -220,6 +226,8 @@ INT_PTR TvolumePage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
       case IDC_CHB_VOLUME_R_SOLO:
       case IDC_CHB_VOLUME_SL_SOLO:
       case IDC_CHB_VOLUME_SR_SOLO:
+      case IDC_CHB_VOLUME_AL_SOLO:
+      case IDC_CHB_VOLUME_AR_SOLO:
       case IDC_CHB_VOLUME_LFE_SOLO:
        {
         int idff=((TwidgetMS*)Twidget::getDlgItem((HWND)lParam))->idff;
@@ -299,7 +307,7 @@ void TvolumePage::onFrame(void)
    unsigned int numchannels;int channels[8],volumes[8];
    if (filter && filter->getVolumeData(&numchannels,channels,volumes)==S_OK)
     {
-     bool isPbr[6];memset(isPbr,0,sizeof(isPbr));
+     bool isPbr[8];memset(isPbr,0,sizeof(isPbr));
      for (unsigned int i=0;i<numchannels;i++)
       {
        int pbr;
@@ -328,17 +336,27 @@ void TvolumePage::onFrame(void)
          pbr=IDC_PBR_VOLUME_SR;
          isPbr[4]=true;
         }
+       else if (channels[i]&SPEAKER_SIDE_LEFT)
+        {
+         pbr=IDC_PBR_VOLUME_AL;
+         isPbr[5]=true;
+        }
+       else if (channels[i]&SPEAKER_SIDE_RIGHT)
+        {
+         pbr=IDC_PBR_VOLUME_AR;
+         isPbr[6]=true;
+        }
        else if (channels[i]&SPEAKER_LOW_FREQUENCY)
         {
          pbr=IDC_PBR_VOLUME_LFE;
-         isPbr[5]=true;
+         isPbr[7]=true;
         }
        else
         continue;
        SendDlgItemMessage(m_hwnd,pbr,PBM_SETPOS,volumes[i]?50+ff_round(value2db(volumes[i]/65536.0)):0,0);
        //SendDlgItemMessage(m_hwnd,pbr,PBM_SETBARCOLOR,0,LPARAM(CLR_DEFAULT));
       }
-     for (unsigned int i=0;i<6;i++)
+     for (unsigned int i=0;i<countof(isPbr);i++)
       if (!isPbr[i])
        {
         SendDlgItemMessage(m_hwnd,pbrs[i],PBM_SETPOS,0,0);

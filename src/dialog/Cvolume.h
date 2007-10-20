@@ -11,7 +11,7 @@ private:
  void volTbr2cfg(int idc,int idff,int mult),cfg2volTbr(int tbr,int lbl,int idff,int lbltran,int mult);
 
  void normalize2dlg(void),master2dlg(void),speakers2dlg(void),mute2dlg(void);
- static const int tbrs[6],lbls[6],pbrs[6],idffs[6],idffsMS[6],mutes[6],solos[6];
+ static const int tbrs[8],lbls[8],pbrs[8],idffs[8],idffsMS[8],mutes[8],solos[8];
  IaudioFilterVolume *filter;
  struct TwidgetMS : TwindowWidget
   {

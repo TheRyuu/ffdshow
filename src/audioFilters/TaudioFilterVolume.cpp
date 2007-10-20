@@ -168,9 +168,9 @@ HRESULT TaudioFilterVolume::process(TfilterQueue::iterator it,TsampleFormat &fmt
    oldcfg=*cfg;
    if (mem) delete []mem;mem=NULL;
    isVol=false;
-   static const int speakers[]={SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_FRONT_CENTER,SPEAKER_BACK_LEFT|SPEAKER_BACK_CENTER,SPEAKER_BACK_RIGHT,SPEAKER_LOW_FREQUENCY};
-   static const int TvolumeSettings::*cfgvols[]={&TvolumeSettings::volL,&TvolumeSettings::volR,&TvolumeSettings::volC,&TvolumeSettings::volSL,&TvolumeSettings::volSR,&TvolumeSettings::volLFE};
-   static const int TvolumeSettings::*cfgmutes[]={&TvolumeSettings::volLmute,&TvolumeSettings::volRmute,&TvolumeSettings::volCmute,&TvolumeSettings::volSLmute,&TvolumeSettings::volSRmute,&TvolumeSettings::volLFEmute};
+   static const int speakers[]={SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_FRONT_CENTER,SPEAKER_BACK_LEFT|SPEAKER_BACK_CENTER,SPEAKER_BACK_RIGHT,SPEAKER_LOW_FREQUENCY,SPEAKER_SIDE_LEFT,SPEAKER_SIDE_RIGHT};
+   static const int TvolumeSettings::*cfgvols[]={&TvolumeSettings::volL,&TvolumeSettings::volR,&TvolumeSettings::volC,&TvolumeSettings::volSL,&TvolumeSettings::volSR,&TvolumeSettings::volLFE,&TvolumeSettings::volAL,&TvolumeSettings::volAR};
+   static const int TvolumeSettings::*cfgmutes[]={&TvolumeSettings::volLmute,&TvolumeSettings::volRmute,&TvolumeSettings::volCmute,&TvolumeSettings::volSLmute,&TvolumeSettings::volSRmute,&TvolumeSettings::volLFEmute,&TvolumeSettings::volALmute,&TvolumeSettings::volARmute};
    unsigned int solo=0;
    for (unsigned int i=0;i<countof(speakers);i++)
     if (cfg->*cfgmutes[i]==2)

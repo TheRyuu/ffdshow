@@ -948,12 +948,16 @@
 #define IDFF_volumeR              2410
 #define IDFF_volumeSL             2411
 #define IDFF_volumeSR             2412
+#define IDFF_volumeAL             3479
+#define IDFF_volumeAR             3480
 #define IDFF_volumeLFE            2413
 #define IDFF_volumeLmute          2415 //1 - mute, 2 - solo
 #define IDFF_volumeCmute          2416
 #define IDFF_volumeRmute          2417
 #define IDFF_volumeSLmute         2418
 #define IDFF_volumeSRmute         2419
+#define IDFF_volumeALmute         3481
+#define IDFF_volumeARmute         3482
 #define IDFF_volumeLFEmute        2420
 #define IDFF_volumeNormalize      2404
 #define IDFF_maxNormalization     2406 //*100
@@ -1498,6 +1502,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3479
+//max:3483
 
 #endif
