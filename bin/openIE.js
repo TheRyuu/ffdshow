@@ -1,6 +1,13 @@
-//Check if number of passed arguments is exactly 2
+//Check if number of passed arguments is 2 or 3
 var oArgs = WScript.Arguments;
-if (WScript.Arguments.Count() != 2) {
+if (oArgs.Count() < 2 | oArgs.Count() > 3)
+  showError();
+else
+  reportArgs(); 
+
+//Shows error message
+function showError()
+{
   var timeout = 10;
   var title = "Error";
   var button = 48;
@@ -10,15 +17,24 @@ if (WScript.Arguments.Count() != 2) {
     WScript.Quit();
   }
   WScript.Quit(); //Quit anyway after timeout...
-} else {
-  //Compose URL and create IE object
-  var strURL = "http://ffdshow-tryout.sourceforge.net/compmgr.php?app=" + oArgs(0) + "&rev=" + oArgs(1);
+}
+
+//Pass arguments via HTTP GET method to the compmgr.php script
+function reportArgs()
+{
+  //Compose URL
+  if (oArgs.Count() == 2)    
+    var strURL = "http://ffdshow-tryout.sourceforge.net/compmgr.php?app=" + oArgs(0) + "&rev=" + oArgs(1);
+  if (oArgs.Count() == 3)    
+    var strURL = "http://ffdshow-tryout.sourceforge.net/compmgr.php?app=" + oArgs(0) + "&rev=" + oArgs(1) + "&type=" + oArgs(2);
+    
+  //Create IE object
   var oIE = WScript.CreateObject("InternetExplorer.Application", "IE_");
 
   //Customize IE window
   oIE.Left = 50;
   oIE.Top = 100;
-  oIE.Height = 300;
+  oIE.Height = 320;
   oIE.Width = 380;
   oIE.MenuBar = 0;
   oIE.ToolBar = 0;
