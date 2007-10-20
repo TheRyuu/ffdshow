@@ -37,6 +37,9 @@
 #include "vp56data.h"
 #include "vp6data.h"
 
+#ifndef __GNUC__
+#include <malloc.h>
+#endif
 
 static void vp6_parse_coeff(vp56_context_t *s);
 static void vp6_parse_coeff_huffman(vp56_context_t *s);
@@ -212,7 +215,11 @@ static int vp6_huff_cmp(const void *va, const void *vb)
 static void vp6_build_huff_tree(vp56_context_t *s, uint8_t coeff_model[],
                                 const uint8_t *map, unsigned size, VLC *vlc)
 {
+#ifdef __GNUC__
     Node nodes[2*size], *tmp = &nodes[size];
+#else
+    Node *nodes=(Node *)alloca(2*size*sizeof(Node)), *tmp = &nodes[size];
+#endif
     int a, b, i;
 
     /* first compute probabilities from model */
