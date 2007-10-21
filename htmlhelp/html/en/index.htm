@@ -58,6 +58,10 @@
   <h3>Fixed after beta3</h3>
 
   <ul class="fixed">
+    <li>If swap channels were used, audio was lost when the number of channels of the input stream changed.</li>
+    <li>DVD memu was sometimes not highlighted.</li>
+    <li>Preset auto loading-'movie file name match (with wildcards)' did not work.</li>
+    <li>When the input color space was NV12 or NV21, ffdshow could not render properly.</li>
     <li>When crop was used after letterbox subtitling, the bottom of the image was cropped too much.</li>
   </ul>
 
@@ -155,6 +159,20 @@
   <h3>Added after beta3</h3>
 
   <ul class="added">
+    <li>h.264-PAFF interlacing is now supported.</li>
+    <li>h.264 decoder has been multithreaded. It is useful only when the video is encoded using multiple slices.</li>
+    <li>In YCbCr<->RGB conversion, ITU-R BT.601/709 standard selection and contrast configuration (standerd, full range, custom) has been added.</li>
+    <li>7.1ch audio processing has been added.</li>
+    <li>In 'Crop & zoom', 'Auto crop' has been added. Black borders can be removed automatically.</li>
+    <li>Preset auto loading behavior has been changed. A preset is loaded only if all conditions match. Formerly, a preset was loaded if one of the conditions matched.</li>
+    <li>In preset auto loading, 'on FOURCC from previous filter match' has been added. It is useful when ffdshow is used in raw mode to affect a condition on the original video FOURCC.</li>
+    <li>For Windows Media Player 11 and Windows Media Center on Vista, a new option for raw video processing has been added.</li>
+    <li>In 'Resize & aspect', 'Resize to screen resolution' has been added.</li>
+    <li>In 'Resize & aspect' - 'Process pixel aspect ratio internally', PAR of output device now can be configured.</li>
+    <li>In 'Resize & aspect' - 'Borders', the way of dividing borders now can be configured. It's useful when you use subtitles.</li>
+    <li>Vertical scaling of text subtitle. ASS subtitle can also be scaled with a new option 'Override ASS/ASS2 scaling'.</li>
+    <li>Added text subtilte blur. better blend in with the video.</li>
+    <li>New OSD item 'Active preset name'.</li>
     <li>Subtitle word wrapping: Three modes are available. 'Smart wrapping, lines are evenly broken', 'End-of-line word wrapping' and 'Smart wrapping, lower line gets wider'.</li>
     <li>Experimental x64 builds are <a class="links" href="http://sourceforge.net/project/showfiles.php?group_id=173941&package_id=214245&release_id=523000">available</a>.</li>
     <li>Faster RGB<->YV12 conversion for x64.</li>
