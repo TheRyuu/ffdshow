@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1548
+#define tryout_revision = 1562
 #define buildyear = 2007
 #define buildmonth = '10'
-#define buildday = '19'
+#define buildday = '21'
 
 ; Build specific options
 #define unicode_required = True
@@ -278,16 +278,15 @@ Name: tweaks\skipinloop; Description: {cm:tsk_skipInloop}; Check: NOT IsUpdate; 
 #endif
 
 [Icons]
-Name: {group}\{cm:shrt_audioConfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check: NOT CheckModernIcon; IconIndex: 1; Components: ffdshow
-Name: {group}\{cm:shrt_audioConfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check:     CheckModernIcon; IconIndex: 4; Components: ffdshow
-Name: {group}\{cm:shrt_videoConfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check: NOT CheckModernIcon; IconIndex: 0; Components: ffdshow
-Name: {group}\{cm:shrt_videoConfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check:     CheckModernIcon; IconIndex: 3; Components: ffdshow
+Name: {group}\{cm:shrt_audioConfig}; Filename: {sys}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; MinVersion: 0,4; Components: ffdshow
+Name: {group}\{cm:shrt_audioConfig}; Filename: {win}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; MinVersion: 4,0; Components: ffdshow
+Name: {group}\{cm:shrt_videoConfig}; Filename: {sys}\rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; MinVersion: 0,4; Components: ffdshow
+Name: {group}\{cm:shrt_videoConfig}; Filename: {win}\rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; MinVersion: 4,0; Components: ffdshow
 #if is64bit
-Name: {group}\{cm:shrt_vfwConfig};   Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check: NOT CheckModernIcon; IconIndex: 2; Components: ffdshow\vfw
-Name: {group}\{cm:shrt_vfwConfig};   Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; Check:     CheckModernIcon; IconIndex: 5; Components: ffdshow\vfw
+Name: {group}\{cm:shrt_vfwConfig};   Filename: {sys}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; Components: ffdshow\vfw
 #else
-Name: {group}\{cm:shrt_vfwConfig};   Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {sys}; IconFilename: {app}\ffdshow.ax; Check: NOT CheckModernIcon; IconIndex: 2; Components: ffdshow\vfw
-Name: {group}\{cm:shrt_vfwConfig};   Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {sys}; IconFilename: {app}\ffdshow.ax; Check:     CheckModernIcon; IconIndex: 5; Components: ffdshow\vfw
+Name: {group}\{cm:shrt_vfwConfig};   Filename: {sys}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {sys}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; MinVersion: 0,4; Components: ffdshow\vfw
+Name: {group}\{cm:shrt_vfwConfig};   Filename: {win}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {sys}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; MinVersion: 4,0; Components: ffdshow\vfw
 #endif
 #if include_makeavis
 Name: {group}\makeAVIS; Filename: {app}\makeAVIS.exe; Components: ffdshow\makeavis
@@ -584,12 +583,15 @@ Filename: {win}\system.ini; Section: drivers32; Key: msacm.avis; String: ff_acm.
 #endif
 
 [Run]
-Description: {cm:run_audioConfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; Flags: postinstall nowait unchecked; Components: ffdshow
-Description: {cm:run_videoConfig}; Filename: rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; Flags: postinstall nowait unchecked; Components: ffdshow
+Description: {cm:run_audioConfig}; Filename: {sys}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; Flags: postinstall nowait unchecked; MinVersion: 0,4; Components: ffdshow
+Description: {cm:run_audioConfig}; Filename: {win}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; Flags: postinstall nowait unchecked; MinVersion: 4,0; Components: ffdshow
+Description: {cm:run_videoConfig}; Filename: {sys}\rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; Flags: postinstall nowait unchecked; MinVersion: 0,4; Components: ffdshow
+Description: {cm:run_videoConfig}; Filename: {win}\rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; Flags: postinstall nowait unchecked; MinVersion: 4,0; Components: ffdshow
 #if is64bit
-Description: {cm:run_vfwConfig};   Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {app}; Flags: postinstall nowait unchecked; Components: ffdshow\vfw
+Description: {cm:run_vfwConfig};   Filename: {sys}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {app}; Flags: postinstall nowait unchecked; Components: ffdshow\vfw
 #else
-Description: {cm:run_vfwConfig};   Filename: rundll32.exe; Parameters: ff_vfw.dll,configureVFW;                      Flags: postinstall nowait unchecked; Components: ffdshow\vfw
+Description: {cm:run_vfwConfig};   Filename: {sys}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {sys}; Flags: postinstall nowait unchecked; MinVersion: 0,4; Components: ffdshow\vfw
+Description: {cm:run_vfwConfig};   Filename: {win}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {sys}; Flags: postinstall nowait unchecked; MinVersion: 4,0; Components: ffdshow\vfw
 #endif
 
 ; All custom strings in the installer:
@@ -703,16 +705,6 @@ begin
     Result := (regval = value)
   else
     Result := showbydefault;
-end;
-
-function CheckModernIcon(): Boolean;
-var
-  regVal: Cardinal;
-begin
-  Result := True;
-  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow', 'trayIconType', regVal) AND (regVal = 2) then begin
-    Result := False;
-  end
 end;
 
 function GetTaskVolNormalize(): Boolean;
