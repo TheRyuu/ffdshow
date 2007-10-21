@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVCODEC_H
-#define AVCODEC_H
+#ifndef FFMPEG_AVCODEC_H
+#define FFMPEG_AVCODEC_H
 
 /**
  * @file avcodec.h
@@ -40,8 +40,8 @@
 #define AV_STRINGIFY(s)         AV_TOSTRING(s)
 #define AV_TOSTRING(s) #s
 
-#define LIBAVCODEC_VERSION_INT  ((51<<16)+(45<<8)+0)
-#define LIBAVCODEC_VERSION      51.45.0
+#define LIBAVCODEC_VERSION_INT  ((51<<16)+(46<<8)+0)
+#define LIBAVCODEC_VERSION      51.46.0
 #define LIBAVCODEC_BUILD        LIBAVCODEC_VERSION_INT
 
 #define LIBAVCODEC_IDENT        "Lavc" AV_STRINGIFY(LIBAVCODEC_VERSION)
@@ -2524,4 +2524,4 @@ extern unsigned int av_xiphlacing(unsigned char *s, unsigned int v);
 #define AVERROR_NOFMT       AVERROR(EILSEQ)  /**< unknown format */
 #define AVERROR_NOTSUPP     AVERROR(ENOSYS)  /**< Operation not supported */
 
-#endif /* AVCODEC_H */
+#endif /* FFMPEG_AVCODEC_H */
