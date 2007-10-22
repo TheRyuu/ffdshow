@@ -144,7 +144,6 @@ typedef struct ADPCMChannelStatus {
 typedef struct ADPCMContext {
     int channel; /* for stereo MOVs, decode left, then decode right, then tell it's decoded */
     ADPCMChannelStatus status[2];
-    short sample_buffer[32]; /* hold left samples while waiting for right samples */
 } ADPCMContext;
 
 static int adpcm_decode_init(AVCodecContext * avctx)
@@ -154,11 +153,6 @@ static int adpcm_decode_init(AVCodecContext * avctx)
     if(avctx->channels > 2U){
         return -1;
     }
-
-    c->channel = 0;
-    c->status[0].predictor = c->status[1].predictor = 0;
-    c->status[0].step_index = c->status[1].step_index = 0;
-    c->status[0].step = c->status[1].step = 0;
 
     switch(avctx->codec->id) {
     case CODEC_ID_ADPCM_CT:
