@@ -14,7 +14,7 @@
    - support for most used codecs: AC3, AAC, DTS, MP1/2/3, and Vorbis
    - additional support for LPCM, TTA, QDM2, ADPCM, IMC or ATRAC3...
    - Dolby decoder
-   - audio filters: equalizer, volume, reverb, mixer, equalizer and convolver
+   - audio filters: equalizer, volume, reverb, mixer and convolver
    - multichannel audio processing by Winamp plugins has been added
    - audio decoder AC3 output: the new check box
      "Encode only multichannel streams" allows sending multichannel audio
