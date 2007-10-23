@@ -28,8 +28,8 @@
 
   <p>
     The objective of the queue is to reduce frame drops and delay of video.
-    It is effective when CPU load is high and ffdshow is dropping a few frames/sec or delayed a little.
-    Because video renderer is executed on another thead, the effect is greater if you have Pentium4HT or dual core CPU.
+    It is effective if CPU load is high and ffdshow is dropping a few frames/sec or delayed a little.
+    Because the video renderer is executed on another thread, the effect is greater if you have a Pentium 4 HT or a dual core CPU.
     It is confirmed to work with Media Player Classic's VMR7 and VMR9 mode (both including renderless mode).
     As this is an advanced option, you may require some sort of trial and error.
   </p>
@@ -51,7 +51,7 @@
   </h3>
 
   <p>
-    With some intel's on board video chips, queue does not work in VMR9-YV12.
+    With some of Intel's on-board video chips, queue does not work in VMR9-YV12.
   </p>
 
   <h3>
@@ -60,9 +60,9 @@
 
   <ul>
     <li>When you use VMR9 renderless mode of Media Player Classic.</li>
-    <li>If you are using older video card like Matrox G400 series.</li>
-    <li>If you have sporadic frame drops or delay in heavier scenes. (You may require queuCount > 10.)</li>
-    <li>Queue may be effective in single CPU too.</li>
+    <li>If you are using an older video card like Matrox G400 series.</li>
+    <li>If you have sporadic frame drops or delay in heavier scenes. (May require queueCount > 10.)</li>
+    <li>Queue may be effective in single core CPU too.</li>
   </ul>
 
   <h3>
@@ -74,42 +74,42 @@
   </ul>
 
   <h3>
-    How queue works?
+    How queue works
   </h3>
 
   <p>
-    ffdshow gets samples from the upper stream filter (usually splitter), processes them and writes to the buffer that has been gotten from the down stream filter.<br />
-    If queue is disabled, the video renderer have only one buffer.
+    ffdshow gets samples from the upper stream filter (usually the splitter), processes them and writes them to the buffer that it got allocated by the down stream filter.<br />
+    If queue is disabled, the video renderer has only one buffer.
     Even if ffdshow has finished the work early,
-    ffdshow has to wait because the buffer is occupied until the video renderer displays the current frame at the time specified by its time stump.
+    it has to wait because the buffer is occupied until the video renderer displays the current frame at the time specified by its time stamp.
     CPU wastes time without doing anything during this time.<br />
     If queue is enabled, the downstream filter has multiple buffers.
-    After ffdshow finished the work, ffdshow gets a buffer immediately, writes to it and put it in queue.
+    After ffdshow finished the work, it gets a buffer allocated immediately, writes to it and put it in queue.
     Then ffdshow begin to process next frame without waiting.
-    Thus, ffdshow can get out of a pinch by sending buffers in queue when it has received several heavy frames.
-    This is just like getting out of a pinch by drawing on savings.
+    Thus, ffdshow can get out of a pinch by sending buffers in queue if it has received several heavy frames.
+    This is just like getting out of a pinch by living on one's savings.
     On the other hand, it is hand-to-mouth life without queue.<br />
     For example, in 30fps movie, every frame must be processed within 33ms.
-    Assume the time required to process consecutive 10 frams are 20,20,20,20,20,20,50,50,50,50(ms) respectively.
-    First 6 frames look like no problem, but with queue disabled, ffdshow repeat 20ms work and 13ms rest.
-    Thus first 6 frames take (20 + 13) * 6 = 198ms. The 7th frame is either dropped or delayed.
-    With queue enabled, ffdshow processes first 6 frames in 20 * 6 = 120ms.
+    Assuming the time required to process consecutive 10 frams are 20, 20, 20, 20, 20, 20, 50, 50, 50, 50(ms) respectively.
+    The first 6 frames are displayed without problem, but with queue disabled, ffdshow repeat 20ms work and 13ms rest.
+    Thus first 6 frames take (20ms + 13ms) * 6 = 198ms. The 7th frame is either dropped or delayed.
+    With queue enabled, ffdshow processes the first 6 frames in 20ms * 6 = 120ms.
     Thus ffdshow can deliver all the frames in time.<br />
     In the actual program, a thread is needed to dispatch buffers in queue to video renderer.
     This thread is implemented inside ffdshow for VMR7, inside the video renderer for VMR9.
-    And main body of the video renderer is executed in the thread, which is different from the ffdshow's main thread.
+    The main body of the video renderer is executed in that thread, which is different from ffdshow's main thread.
   </p>
 
   <h3>
-    How to evaluate queue?
+    How to evaluate queue
   </h3>
 
   <p>
     It is best to belive your eyes and ears. Watch for frame drops and delay.<br />
-    If you are not confident, it may help to enable OSD 'Queued samples' and 'Video delay'.
+    If you are not confident, it may help to enable OSD "Queued samples" and "Video delay".
     However, don't forget OSD eats up CPU.<br />
-    Queue is not desined to use multiple cores equally, hence performance monitor doesn't help.<br />
-    Benchmark test by timeCodec.exe doesn't help because it skips the waiting time that is described above.
+    Queue is not desined to use multiple cores equally, hence performance monitor does not help.<br />
+    A benchmark test by timeCodec.exe does not help either because it skips the waiting time that is described above.
   </p>
 
   <h3>
@@ -117,12 +117,12 @@
   </h3>
 
   <p>
-    Number of buffers can be changed froom registry. The default value is10. Try
-    <em>HKEY_CURRENT_USER\Software\GNU\ffdshow\default</em> (replace default by preset name) <em>queueCount</em>.
+    The Number of buffers can be changed in registry. The default value is 10. Try
+    <em>HKEY_CURRENT_USER\Software\GNU\ffdshow\default</em> (replace "default" by the preset name) <em>queueCount</em>.
     By increasing the number, the effect is increased.
-    For the video heavier frams are sporadic, 10 would be enough, but if you want to cover a whole high bit rate scene, 50 would be required.
-    As it uses video memory, too large value can make the video card unstable.
-    For video card with 256MB memory, 50 would be the max, if you want to play full HD video.
+    If heavier frams are sporadic in the video, 10 is enough, but if you want to cover a whole high bit rate scene, 50 is required.
+    As it uses video memory, a too large value can make the video card unstable.
+    For a video card with 256MB memory, 50 is the max, if you want to play full HD video.
   </p>
 
   <h3>
@@ -130,10 +130,10 @@
   </h3>
 
   <p>
-    Depending on the video card, video driver and application settings, queue may cause troubles.<br />
-    As known issues, compatibility problems have been reported with some of the ATI's video cards such as X1300,X1600.
+    Depending on the video card, the video driver and the application settings, queue may cause troubles.<br />
+    Compatibility problems have been reported with some of ATI's video cards such as X1300 or X1600.
     There is no known issue with nVidia's video cards.<br />
-    As it is difficult to work around individual case, please disable queue if you have any troubles.
+    As it is difficult to work around an individual case, please disable queue if you have any troubles.
   </p>
 
   <div class="footer">
