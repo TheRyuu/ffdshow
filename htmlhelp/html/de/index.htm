@@ -7,7 +7,7 @@ have been made, which were ported to this translation (even if nothing
 was changed here). This is to know which revisions are not ported yet.
 If you skip to port a revision please note that revision for later porting. -->
 
-<!-- In sync with revision 1558 except for revision(s) -none-. -->
+<!-- In sync with revision 1568 except for revision(s) -none-. -->
 
 <head>
   <title>ffdshow tryouts | Changelog</title>
@@ -64,10 +64,10 @@ If you skip to port a revision please note that revision for later porting. -->
   <h3>Nach Beta3 korrigiert</h3>
 
   <ul class="fixed">
-    <li>Falls "Kan&auml;le tauschen" verwendet wurde, ging das Audiosignal verloren, wenn sich die Anzahl der Audioeingangskan&auml;le &auml;nderte.</li>
-    <li>DVD Men&uuml;s waren nicht hervorgehoben.</li>
-    <li>"Bedingungen f&uuml;r automatisches Laden" -> "on movie file name match (with wildcards)" hatte nicht funktioniert.</li>
-    <li>Wenn der Eingabefarbraum NV12 oder NV21 war, konnte ffdshow nicht richtig rendern.</li>
+    <li>Falls "Kan&auml;le tauschen" verwendet wurde, ging das Audiosignal verloren, wenn sich die Anzahl der eingehenden Audiokan&auml;le &auml;nderte.</li>
+    <li>DVD Men&uuml;s wurden manchmal nicht hervorgehoben.</li>
+    <li>"Bedingungen f&uuml;r automatisches Laden" -> "on movie file name match (with wildcards)" funktionierte nicht.</li>
+    <li>War der Eingabefarbraum NV12 oder NV21, konnte ffdshow nicht richtig rendern.</li>
     <li>Wurde "Beschneiden" nach gerahmten Untertiteln verwendet, wurde die Unterkante des Bildes zu stark beschnitten.</li>
   </ul>
 
@@ -166,19 +166,19 @@ If you skip to port a revision please note that revision for later porting. -->
 
   <ul class="added">
     <li>H.264-PAFF Interlacing wird unterst&uuml;tzt.</li>
-    <li>Der H.264 Dekoder ist jetzt multithreaded. Dieser ist jedoch nur dann effektiv, wenn das Video mit "multiple slices" enkodiert wurde.</li>
-    <li>In "YCbCr &lt;-&gt; RGB-Konvertierung" wurden ITU-R B.601/709-Standardauswahl sowie Kontrasteinstellungen (Standard, kompletter Wertebereich, benutzerdefiniert) hinzugef&uuml;gt.</li>
+    <li>Der H.264-Dekoder ist jetzt multithreaded. Dies ist jedoch nur effektiv, wenn das Video mit mehreren Slices enkodiert wurde.</li>
+    <li>Zur "YCbCr &lt;-&gt; RGB-Konvertierung" wurden ITU-R B.601/709-Standardauswahl sowie Kontrasteinstellungen (Standard, kompletter Wertebereich, benutzerdefiniert) hinzugef&uuml;gt.</li>
     <li>7.1-Kanal Audioverarbeitung wurde hinzugef&uuml;gt.</li>
     <li>In "Beschneiden/Vergr&ouml;&szlig;ern" wurde die Funktion "Autocrop" hinzugef&uuml;gt. Schwarze R&auml;nder k&ouml;nnen jetzt automatsch entfernt werden.</li>
-    <li>Das Verhalten der Profilautoladefunktion wurde ge&auml;ndert: Ein Profil wird geladen wenn alle Bedingungen erf&uuml;llt sind. Urspr&uuml;nglich wurde ein Profil geladen, wenn eine der Bedingungen erf&uuml;llt war.</li>
-    <li>Ein weiteres Bedingungskriterium "on FOURCC from previous filter match" wurde der Profilautoladefunktion hinzugef&uuml;gt. Dieses ist dann n&uuml;tzlich, wenn ffdshow im RAW-Modus verwendet wird, um den Zustand des originalen Video FOURCCs zu beeinflu&szlig;en.</li>
-    <li>F&uuml;r Vista's Windows Media Player 11 und Windows Media Center wurde eine neue Option f&uuml;r die RAW-Videoverarbeitung hinzugef&uuml;gt.</li>
+    <li>Das Verhalten der Profilautoladefunktion wurde ge&auml;ndert: Ein Profil wird geladen wenn alle Bedingungen erf&uuml;llt sind. Zuvor wurde ein Profil geladen, soblad eine der Bedingungen erf&uuml;llt wurde.</li>
+    <li>Die neue Bedingung "on FOURCC from previous filter match" wurde der Profilautoladefunktion hinzugef&uuml;gt. Dieses ist n&uuml;tzlich, wenn ffdshow im RAW-Modus verwendet wird, um den originalen Video-FOURCC als Bedingung zu verwenden.</li>
+    <li>F&uuml;r Vistas Windows Media Player 11 und Windows Media Center wurde eine neue Option f&uuml;r die Verarbeitung unkomprimierter Videodaten hinzugef&uuml;gt.</li>
     <li>In "Gr&ouml;&szlig;e &amp; Seitenverh&auml;ltnis" wurde die Option "Resize to screen resolution" hinzugef&uuml;gt.</li>
     <li>In "Gr&ouml;&szlig;e &amp; Seitenverh&auml;ltnis" -> "Pixelseitenverh&auml;ltnis intern verarbeiten" kann das Pixelseitenverh&auml;ltnis des Ausgabeger&auml;tes konfiguriert werden.</li>
-    <li>In "Gr&ouml;&szlig;e &amp; Seitenverh&auml;ltnis" -> "R&auml;nder" kann das Aufteilen der R&auml;nder eingestellt werden. Dies ist n&uuml;tzlich bei Verwendung von Untertiteln.</li>
-    <li>Vertikales Skalieren von textbasierten Untertiteln: ASS-Untertitel k&ouml;nnen mit einer neuen Option "Override ASS/ASS2 scaling" skaliert werden.</li>
+    <li>In "Gr&ouml;&szlig;e &amp; Seitenverh&auml;ltnis" -> "R&auml;nder" kann die Aufteilung der R&auml;nder eingestellt werden. Dies ist bei Verwendung von Untertiteln n&uuml;tzlich.</li>
+    <li>Vertikales Skalieren von textbasierten Untertiteln wurde hinzugef&uuml;gt. Auch ASS-Untertitel k&ouml;nnen mit der neuen Option "Override ASS/ASS2 scaling" skaliert werden.</li>
     <li>Blur-Effekt f&uuml;r textbasierte Untertitel wurde hinzugef&uuml;gt. Dies erlaubt ein besseres &Uuml;berblenden mit dem Video.</li>
-    <li>Neuer OSD-Auswahlpunkt: "Active preset name".</li>
+    <li>Neuers OSD-Element: "Active preset name".</li>
     <li>Untertitelumbruch: Drei Modi sind verf&uuml;gbar. "Intelligentes Umbrechen, Zeilen werden gleichm&auml;&szlig;ig umgebrochen", "Wort am Zeilenende umbrechen" und "Intelligentes Umbrechen, untere Zeile wird breiter".</li>
     <li>Experimentelle x64-Builds sind <a class="links" href="http://sourceforge.net/project/showfiles.php?group_id=173941&amp;package_id=214245&amp;release_id=523000">verf&uuml;gbar</a>.</li>
     <li>Schnellere RGB&lt;-&gt;YV12-Konvertierung f&uuml;r x64.</li>

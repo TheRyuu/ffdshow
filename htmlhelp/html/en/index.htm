@@ -58,11 +58,11 @@
   <h3>Fixed after beta3</h3>
 
   <ul class="fixed">
-    <li>If "Swap channels" was used, audio was lost when the number of channels of the input stream changed.</li>
+    <li>If "Swap channels" was used, audio was lost if the number of channels of the input stream changed.</li>
     <li>DVD menu was sometimes not highlighted.</li>
     <li>"Preset autoload conditions" -> "on movie file name match (with wildcards)" did not work.</li>
-    <li>When the input color space was NV12 or NV21, ffdshow could not render properly.</li>
-    <li>When crop was used after letterbox subtitling, the bottom of the image was cropped too much.</li>
+    <li>If the input color space was NV12 or NV21, ffdshow could not render properly.</li>
+    <li>If crop was used after letterbox subtitling, the bottom of the image was cropped too much.</li>
   </ul>
 
   <h3>Fixed before beta3</h3>
@@ -160,7 +160,7 @@
 
   <ul class="added">
     <li>H.264-PAFF interlacing is now supported.</li>
-    <li>H.264 decoder has been multithreaded. It is only effective when the video is encoded using multiple slices.</li>
+    <li>H.264 decoder has been multithreaded. It is only effective if the video is encoded using multiple slices.</li>
     <li>In "YCbCr &lt;-&gt; RGB conversion", ITU-R BT.601/709 standard selection and contrast configuration (standard, full range, custom) has been added.</li>
     <li>7.1ch audio processing has been added.</li>
     <li>In "Crop &amp; zoom", "Auto crop" has been added. Black borders can be removed automatically.</li>
