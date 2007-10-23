@@ -55,6 +55,7 @@
 #include "D3d9.h"
 #include "Vmr9.h"
 #include "IVMRffdshow9.h"
+//#include "dxva.h"
 
 void TffdshowDecVideo::getMinMax(int id,int &min,int &max)
 {
@@ -334,6 +335,7 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
    vih2->rcTarget=vih2->rcSource;
    vih2->AvgTimePerFrame=inpin->avgTimePerFrame;
    vih2->bmiHeader=bih;
+   //vih2->dwControlFlags=AMCONTROL_USED | AMCONTROL_COLORINFO_PRESENT | (DXVA_NominalRange_Wide << DXVA_NominalRangeShift) | (DXVA_VideoTransferMatrix_BT601 << DXVA_VideoTransferMatrixShift);
    hwDeinterlace=presetSettings->output->hwDeinterlace;
    if (hwDeinterlace)
     vih2->dwInterlaceFlags=AMINTERLACE_IsInterlaced|AMINTERLACE_DisplayModeBobOrWeave;
@@ -506,7 +508,7 @@ HRESULT TffdshowDecVideo::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROP
 HRESULT TffdshowDecVideo::DecideBufferSizeVMR(IMemAllocator *pAlloc, ALLOCATOR_PROPERTIES *ppropInputRequest, const CLSID &ref)
 {
  HRESULT result;
- if (downstreamID==VMR9)
+ if (downstreamID==VMR9 && !presetSettings->queueVMR9YV12)
   {
    CMediaType &mt=m_pOutput->CurrentMediaType();
    if (mt.subtype==MEDIASUBTYPE_YV12)
@@ -1469,6 +1471,7 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
 
      //DPRINTF(_l("AR pict: %i:%i"),newpict.rectFull.dar().num,newpict.rectFull.dar().den);
 
+     //vih->dwControlFlags=AMCONTROL_USED | AMCONTROL_COLORINFO_PRESENT | (DXVA_NominalRange_Wide << DXVA_NominalRangeShift);
      setVIH2aspect(vih,newpict.rectFull,presetSettings->output->hwOverlayAspect);
      if (presetSettings->output->hwOverlay==0)
       {

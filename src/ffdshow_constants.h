@@ -75,7 +75,9 @@
 #define IDFF_h264skipOnDelayTime 127
 #define IDFF_useQueueOnlyIn      128
 #define IDFF_useQueueOnlyInList  129
-#define IDFF_QueueCount          130
+#define IDFF_QueueCount          130 // typo
+#define IDFF_queueCount          130
+#define IDFF_queueVMR9YV12       3484
 
 #define IDFF_outputdebug     43
 #define IDFF_outputdebugfile 44
@@ -1503,6 +1505,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3484
+//max:3485
 
 #endif

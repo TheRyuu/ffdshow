@@ -7,9 +7,12 @@ Queue output samples
  greater if you have Pentium4HT or dual core CPU.
 
  Use queue only in:
-  Queue is disabled by default because of stability problem.
-  If you dare try it, uncheck or add the execute file name of the video
-  applications, separated by semicolons.
+  Queue is disabled by default because of stability problem outside Media
+  Player Classic. If you want to try, uncheck or add the execute file name
+  of the video applications, separated by semicolons.
+
+ Enable queue in VMR9-YV12
+  With some intel's on board video chip, queue does not work in VMR9-YV12.
 
 Other controls
  video delay:

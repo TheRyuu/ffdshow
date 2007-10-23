@@ -31,6 +31,7 @@ void TqueuePage::cfg2dlg(void)
  int enableQueue=(filterMode&IDFF_FILTERMODE_VFW)==0;
  setCheck(IDC_CHB_MULTITHREAD,cfgGet(IDFF_multiThreadDec));
  setCheck(IDC_CHB_USE_QUEUE_ONLY_IN,cfgGet(IDFF_useQueueOnlyIn));
+ setCheck(IDC_CHB_QUEUE_VMR9YV12,cfgGet(IDFF_queueVMR9YV12));
  SetDlgItemText(m_hwnd,IDC_ED_USE_QUEUE_ONLY_IN_LIST,cfgGetStr(IDFF_useQueueOnlyInList));
  static const int eq[]={IDC_CHB_MULTITHREAD,IDC_CHB_USE_QUEUE_ONLY_IN,IDC_ED_USE_QUEUE_ONLY_IN_LIST};
  enable(enableQueue,eq);
@@ -82,6 +83,7 @@ bool TqueuePage::reset(bool testonly)
    deci->resetParam(IDFF_videoDelay);
    deci->resetParam(IDFF_multiThreadDec);
    deci->resetParam(IDFF_useQueueOnlyIn);
+   deci->resetParam(IDFF_queueVMR9YV12);
   }
  return true;
 }
@@ -107,6 +109,7 @@ TqueuePage::TqueuePage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
    IDC_CHB_DY_INTERLACED,IDFF_isDyInterlaced,&TqueuePage::interlaced2dlg,
    IDC_CHB_MULTITHREAD,IDFF_multiThreadDec,NULL,
    IDC_CHB_USE_QUEUE_ONLY_IN,IDFF_useQueueOnlyIn,NULL,
+   IDC_CHB_QUEUE_VMR9YV12,IDFF_queueVMR9YV12,NULL,
    0,NULL,NULL
   };
  bindCheckboxes(chb);
