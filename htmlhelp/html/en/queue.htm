@@ -21,28 +21,33 @@
 
   <img src="images/queue.png" title="Queue dialog" alt="Queue dialog" width="558" height="473" />
 
-  <p>
-  </p>
-
   <h2>Overview</h2>
 
   <p>
-    The objective of the queue is to reduce frame drops and delay of video.
-    It is effective if CPU load is high and ffdshow is dropping a few frames/sec or delayed a little.
-    Because the video renderer is executed on another thread, the effect is greater if you have a Pentium 4 HT or a dual core CPU.
-    It is confirmed to work with Media Player Classic's VMR7 and VMR9 mode (both including renderless mode).
-    As this is an advanced option, you may require some sort of trial and error.
+    The objective of ffdshow's Queue feature is to reduce frame drops and delay of video. It is effective if CPU load is high and ffdshow is dropping a few frames/sec or delayed a little. Because the video renderer is executed in another thread, the effect is greater if you have a Pentium 4 HT or a dual core CPU. It is confirmed to work with Media Player Classic's VMR7 and VMR9 mode (both including renderless mode). As this is an advanced option, it may require some testing and configuring.
   </p>
 
+  <h2>
+    Settings
+  </h2>
+  
+  <h3>
+    <img src="../images/check.png" title="" alt="" width="13" height="13" />
+    Queue output samples
+  </h3>
+  
+  <p>
+    This option enables ffdshow's Queue feature. Disabling it though doesn't affect the other options that are available further below. 
+  </p>
+  
   <h3>
     <img src="../images/check.png" title="" alt="" width="13" height="13" />
     Use queue only in:
   </h3>
 
   <p>
-    Queue is disabled by default because of stability problem outside Media Player Classic.
-    If you want to try it in other applications, uncheck or add the names of execute files of the video
-    applications, and separate them by semicolons.
+    Queue is disabled by default because of stability problems using other video applications than Media Player Classic.<br />
+    If you want to try it with another application, uncheck or add the name of the main executable. Make sure to separate each entry with a semicolon.
   </p>
 
   <h3>
@@ -51,22 +56,27 @@
   </h3>
 
   <p>
-    With some of Intel's on-board video chips, queue does not work in VMR9-YV12.
+    This option enables the Queue feature when using the VMR9 video renderer and YV12 colorspace.<br />
+    Please note: With some Intel onboard video chips, Queue does not work in VMR9-YV12 mode.
   </p>
 
+  <h2>
+    Additional information
+  </h2>
+  
   <h3>
-    The cases that queue is likely to be effective
+    When is the Queue feature likely to be effective?
   </h3>
 
   <ul>
     <li>When you use VMR9 renderless mode of Media Player Classic.</li>
-    <li>If you are using an older video card like Matrox G400 series.</li>
-    <li>If you have sporadic frame drops or delay in heavier scenes. (May require queueCount > 10.)</li>
-    <li>Queue may be effective in single core CPU too.</li>
+    <li>If you are using an older video card like the Matrox G400 series.</li>
+    <li>If you have sporadic frame drops or delay in "heavier" scenes. Note: May require a <em>queueCount</em> &gt; 10 (see below).</li>
+    <li>Queue may be effective on single CPU setups too.</li>
   </ul>
 
   <h3>
-    The cases that queue is not effective
+    When will the Queue have no effect?
   </h3>
 
   <ul>
@@ -74,42 +84,40 @@
   </ul>
 
   <h3>
-    How queue works
+    How does the Queue feature actually work?
   </h3>
 
   <p>
-    ffdshow gets samples from the upper stream filter (usually the splitter), processes them and writes them to the buffer that it got allocated by the down stream filter.<br />
-    If queue is disabled, the video renderer has only one buffer.
-    Even if ffdshow has finished the work early,
-    it has to wait because the buffer is occupied until the video renderer displays the current frame at the time specified by its time stamp.
-    CPU wastes time without doing anything during this time.<br />
-    If queue is enabled, the downstream filter has multiple buffers.
-    After ffdshow finished the work, it gets a buffer allocated immediately, writes to it and put it in queue.
-    Then ffdshow begin to process next frame without waiting.
-    Thus, ffdshow can get out of a pinch by sending buffers in queue if it has received several heavy frames.
-    This is just like getting out of a pinch by living on one's savings.
-    On the other hand, it is hand-to-mouth life without queue.<br />
-    For example, in 30fps movie, every frame must be processed within 33ms.
-    Assuming the time required to process consecutive 10 frams are 20, 20, 20, 20, 20, 20, 50, 50, 50, 50(ms) respectively.
-    The first 6 frames are displayed without problem, but with queue disabled, ffdshow repeat 20ms work and 13ms rest.
-    Thus first 6 frames take (20ms + 13ms) * 6 = 198ms. The 7th frame is either dropped or delayed.
-    With queue enabled, ffdshow processes the first 6 frames in 20ms * 6 = 120ms.
-    Thus ffdshow can deliver all the frames in time.<br />
-    In the actual program, a thread is needed to dispatch buffers in queue to video renderer.
-    This thread is implemented inside ffdshow for VMR7, inside the video renderer for VMR9.
-    The main body of the video renderer is executed in that thread, which is different from ffdshow's main thread.
+    ffdshow gets samples from the upper stream filter (usually the splitter), processes and writes them to the buffer that it got allocated by the downstream filter.<br />
+    If Queue is <strong>disabled</strong>, the video renderer has only one buffer.
+    Even if ffdshow has finished the work early, it has to wait because the buffer is occupied until the video renderer displays the current frame at the time specified by its time stamp.
+    The CPU wastes time without doing anything during this period. And this is where the Queue feature kicks in:<br />
+    If Queue is <strong>enabled</strong>, the downstream filter has multiple buffers.
+    After ffdshow finishes the work, it gets a buffer allocated immediately, writes to it and puts it into the queue.
+    Then ffdshow begins to process the very next frame without waiting and wasting precious CPU cycles.
+    This way ffdshow can get out of a pinch by sending buffers into the queue if it has received several heavy frames.<br />
+    An example should make things more clear:<br />
+    In a 30fps movie, every frame must be processed within 33ms.
+    Assuming the time required to process 10 consecutive frames is 20, 20, 20, 20, 20, 20, 50, 50, 50, and 50ms respectively.
+    The first 6 frames are displayed without problems. The total processing time is (20ms + 13ms) * 6 = 198ms.
+    With Queue disabled, ffdshow spends 13ms (33ms - 20ms) after each of the first 6 frames doing nothing. When the 7th frame finally arrives, chances are it will be delayed or even dropped.<br /> 
+    With Queue enabled on the other hand, ffdshow processes the first 6 frames in 20ms * 6 = 120ms and can begin working immediately on the following, more intensive frames.  
+    This way ffdshow can deliver all the frames in time.<br />
+    Inside the actual implementation, a thread is needed to dispatch buffers in the queue to the video renderer.
+    This thread is implemented inside ffdshow for VMR7 and inside the video renderer for VMR9.
+    The main body of the video renderer is executed inside that thread, which is different from ffdshow's main thread.
   </p>
 
   <h3>
-    How to evaluate queue
+    How do I know if Queue is really working?
   </h3>
 
   <p>
-    It is best to belive your eyes and ears. Watch for frame drops and delay.<br />
-    If you are not confident, it may help to enable OSD "Queued samples" and "Video delay".
-    However, don't forget OSD eats up CPU.<br />
-    Queue is not desined to use multiple cores equally, hence performance monitor does not help.<br />
-    A benchmark test by timeCodec.exe does not help either because it skips the waiting time that is described above.
+    Since it is difficult to measure the effect empirically, it is best to believe your eyes and ears. Watch out for frame drops and/or delay.<br />
+    If you are not certain enough, it may help to enable both OSD items "Queued samples" and "Video delay".
+    However, don't forget the OSD itself consumes a few CPU cycles.<br />
+    Queue is not designed to use multiple cores equally. You won't see CPU graphs inside your performance monitoring tool balancing each other.<br />
+    Benchmarking the Queue feature with <em>timeCodec.exe</em> is futile because it skips the waiting time that is described above.
   </p>
 
   <h3>
@@ -117,12 +125,15 @@
   </h3>
 
   <p>
-    The Number of buffers can be changed in registry. The default value is 10. Try
-    <em>HKEY_CURRENT_USER\Software\GNU\ffdshow\default</em> (replace "default" by the preset name) <em>queueCount</em>.
-    By increasing the number, the effect is increased.
-    If heavier frams are sporadic in the video, 10 is enough, but if you want to cover a whole high bit rate scene, 50 is required.
-    As it uses video memory, a too large value can make the video card unstable.
-    For a video card with 256MB memory, 50 is the max, if you want to play full HD video.
+    The number of buffers can be changed inside the registry with the <em>queueCount</em> key. It is located at:
+  </p>
+  
+  <pre>HKEY_CURRENT_USER\Software\GNU\ffdshow\default</pre>
+  
+  <p>
+    If you are using presets, then replace <em>default</em> with the preset name. The default value is 10. By increasing the number, the "Queue effect" is increased.
+    If your video playback suffers from sporadic frame drops and/or delays, then 10 is a good value to begin with, but if you want to cover a whole high-bitrate scene, 50 is required.
+    As it uses video memory, a too large value can make the video card unstable. For a video card with 256MB memory, 50 would be the maximum, if you want to play full HD videos.
   </p>
 
   <h3>
@@ -130,10 +141,10 @@
   </h3>
 
   <p>
-    Depending on the video card, the video driver and the application settings, queue may cause troubles.<br />
-    Compatibility problems have been reported with some of ATI's video cards such as X1300 or X1600.
-    There is no known issue with nVidia's video cards.<br />
-    As it is difficult to work around an individual case, please disable queue if you have any troubles.
+    Depending on the video card, the video driver and the application settings, Queue may cause problems.<br />
+    Compatibility issues have been reported with some video cards from ATI's X1300 and X1600 series.
+    There are no known issues with Nvidia video cards.<br />
+    If problems with the Queue feature appear, disable it. Working around individual issues is too difficult.
   </p>
 
   <div class="footer">
