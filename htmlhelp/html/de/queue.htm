@@ -7,7 +7,7 @@ have been made, which were ported to this translation (even if nothing
 was changed here). This is to know which revisions are not ported yet.
 If you skip to port a revision please note that revision for later porting. -->
 
-<!-- In sync with revision 1575 except for revision(s) -none-. -->
+<!-- In sync with revision 1576 except for revision(s) -none-. -->
 
 <head>
   <title>ffdshow tryouts | Warteschlange</title>
@@ -60,7 +60,7 @@ If you skip to port a revision please note that revision for later porting. -->
 
   <p>
     Die Warteschlange ist standardm&auml;&szlig;ig deaktiviert, da es au&szlig;erhalb des Media Player Classic Stabilit&auml;tsprobleme gibt. <br />
-    Wollen Sie sie in einer anderen Anwendung ausprobieren, deaktivieren Sie die Option oder f&uuml;gen Sie den Namen der ausf&uuml;hbaren Datei der Videoanwendungen in das Feld ein. Trennen Sie zwei Namen durch Semikoli.
+    Wollen Sie sie in einer anderen Anwendung ausprobieren, deaktivieren Sie die Option oder f&uuml;gen Sie den Namen der ausf&uuml;hrbaren Datei der Videoanwendungen in das Feld ein. Trennen Sie zwei Namen durch Semikoli.
   </p>
 
   <h3>
@@ -78,7 +78,7 @@ If you skip to port a revision please note that revision for later porting. -->
   </h2>
 
   <h3>
-    Wann ist die Warteschlange wahrscheinlicht effizient?
+    Wann ist die Warteschlange wahrscheinlich effizient?
   </h3>
 
   <ul>
@@ -89,11 +89,11 @@ If you skip to port a revision please note that revision for later porting. -->
   </ul>
 
   <h3>
-    Wann hat die Warteschlange keine Effekt?
+    Wann hat die Warteschlange keinen Effekt?
   </h3>
 
   <ul>
-    <li>Videoverz&ouml;gerung ist w&auml;hrend des konpletten Videos zu beobachten.</li>
+    <li>Videoverz&ouml;gerung ist w&auml;hrend des kompletten Videos zu beobachten.</li>
   </ul>
 
   <h3>
@@ -108,7 +108,7 @@ If you skip to port a revision please note that revision for later porting. -->
     Falls die Warteschlange <strong>aktiviert</strong> ist, hat der nachfolgende Filter mehrere Zwischenspeicher.
     Nachdem ffdshow fertig ist, bekommt es sofort einen Zwischenspeicher zugewiesen, schreibt in ihn und stellt ihn in die Warteschlange.
     Dann beginnt es ohne zu warten und wertvolle Prozessorzeit zu verschwenden das n&auml;chste Bild zu verarbeiten.
-    Hierdurch kann sich ffdshow aus einer Zickm&uuml;hle befreien, indem es Zischenspeicher aus der Warteschlange sendet, wenn es mehrere komplexe Bilder erhalten hat.
+    Hierdurch kann sich ffdshow aus einer Zwickm&uuml;hle befreien, indem es Zwischenspeicher aus der Warteschlange sendet, wenn es mehrere komplexe Bilder erhalten hat.
     Es ist so als w&uuml;rde man sich aus einer Notlage befreien, indem man von seinem Gesparten zehrt.
     Ein Beispiel sollte das Ganze klarer machen:<br />
     In einem 30fps-Film muss jedes Bild innerhalb von 33ms verarbeitet werden.
@@ -117,7 +117,7 @@ If you skip to port a revision please note that revision for later porting. -->
     Ist die Warteschlange deaktiviert, tut ffdshow nach jedem der ersten sechs Bilder 13ms (33ms - 20ms) lang nichts. Das siebte Bild wird entweder verworfen oder versp&auml;tet dargestellt.
     Mit aktivierter Warteschlange verarbeitet ffdshow die ersten sechs bilder hingegen in in 20ms * 6 = 120ms und kann sofort mit der Arbeit an den folgenden komplexeren Bildern beginnen.
     So kann es alle Bilder rechtzeitig liefern.<br />
-    Im richtigen Programm wird ein Thread ben&ouml;tigt, um die Zwischenspeicher aus der Warteschlagne zum Videorenderer zu senden.
+    Im richtigen Programm wird ein Thread ben&ouml;tigt, um die Zwischenspeicher aus der Warteschlange zum Videorenderer zu senden.
     Dieser Thread ist f&uuml;r VMR7 in ffdshow und f&uuml;r VMR9 im Videorenderer implementiert.
     Der Hauptteil des Videorenderers wird in diesem Thread ausgef&uuml;hrt, welcher sich von ffdshows Hauptthread unterscheidet.
   </p>
@@ -157,7 +157,7 @@ If you skip to port a revision please note that revision for later porting. -->
   <p>
     Abh&auml;ngig von der Grafikkarte, dem Grafiktreiber und den Anwendungseinstellungen, kann die Warteschlange Schwierigkeiten verursachen.<br />
     Kompatibilit&auml;tsprobleme mit einigen ATI-Grafikkarten der X1300- oder X1600-Serie wurden berichtet.
-    Mit nVidia-Grafikkarten gibt es keine bekannten Probleme.<br />
+    Mit Nvidia-Grafikkarten gibt es keine bekannten Probleme.<br />
     Da es zu schwierig ist individuelle Probleme zu bearbeiten, deaktivieren Sie die Warteschlange bitte, wenn Sie Probleme haben.
   </p>
 
