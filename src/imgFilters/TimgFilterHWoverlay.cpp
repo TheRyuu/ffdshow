@@ -50,7 +50,7 @@ HRESULT TimgFilterHWoverlay::process(TfilterQueue::iterator it,TffPict &pict,con
     {
      static const struct {int hwoc;int idff,def;int ThwOverlaySettings::*cfg;} hw[]={{HWOC_BRIGHTNESS,IDFF_overlayBrightness,  -1,&ThwOverlaySettings::brightness},
                                                                                      {HWOC_CONTRAST  ,IDFF_overlayContrast  ,  -1,&ThwOverlaySettings::contrast  },
-                                                                                     {HWOC_HUE       ,IDFF_overlayHue       ,  -1,&ThwOverlaySettings::hue       },
+                                                                                     {HWOC_HUE       ,IDFF_overlayHue       ,  -190,&ThwOverlaySettings::hue       },
                                                                                      {HWOC_SATURATION,IDFF_overlaySaturation,  -1,&ThwOverlaySettings::saturation},
                                                                                      {HWOC_SHARPNESS ,IDFF_overlaySharpness ,  -1,&ThwOverlaySettings::sharpness },
                                                                                      {HWOC_GAMMA     ,IDFF_overlayGamma     ,  -1,&ThwOverlaySettings::gamma     }};
