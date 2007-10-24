@@ -417,19 +417,25 @@ bool Tpreset::isAutoPreset(TautoPresetProps &props) const
 
  props.getSourceResolution(&dx,&dy);
 
- if (is_autoloadSize() && !autoloadSizeMatch(dx,dy))
-  return false;
+ bool match=false;
+ if (is_autoloadSize())
+  {
+   if (autoloadSizeMatch(dx,dy))
+    match=true;
+   else
+    return false;
+  }
 
- bool is=false;
  for (TautoPresetItems::const_iterator a=autoPresetItems.begin();a!=autoPresetItems.end();a++)
   if (a->getIs())
    {
-    is=true;
     if (!a->match(props))
      return false;
+    else
+     match=true;
    }
 
- return is;
+ return match;
 }
 
 int Tpreset::getMinOrder(void) const
