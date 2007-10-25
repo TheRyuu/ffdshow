@@ -19,6 +19,8 @@ class Tffvfw :public Iffvfw,
               public IprocVideoSink
 {
 private:
+ DWORD previous_out_biSizeImage;
+ LPVOID previouts_lpOutput;
  bool graph;
  bool initCo(void),initDec(void);
  comptr<IffdshowEncVFW> deciE_VFW;comptrQ<IffdshowEnc> deciE;comptrQ<IffdshowBase> deciEB;

@@ -92,7 +92,9 @@ Tffvfw::Tffvfw(LPUNKNOWN punk,HRESULT *phr):
  CUnknown(NAME("Tffvfw"),punk),
  convert(NULL),
  dec(NULL),
- graph(false)
+ graph(false),
+ previous_out_biSizeImage(0),
+ previouts_lpOutput(NULL)
 {
  randomize();
 }
@@ -230,14 +232,22 @@ STDMETHODIMP_(LRESULT) Tffvfw::coFramesInfo(ICCOMPRESSFRAMES *icf)
 STDMETHODIMP_(LRESULT) Tffvfw::coBegin(BITMAPINFO *lpbiInput,BITMAPINFO *lpbiOutput)
 {
  if (initCo())
-  return deciE_VFW->begin(&lpbiInput->bmiHeader);
+  {
+   previous_out_biSizeImage = 0;
+   previouts_lpOutput = NULL;
+   return deciE_VFW->begin(&lpbiInput->bmiHeader);
+  }
  else
   return VFW_E_RUNTIME_ERROR;
 }
 STDMETHODIMP_(LRESULT) Tffvfw::coEnd(void)
 {
  if (initCo())
-  return deciE_VFW->end();
+  {
+   previous_out_biSizeImage = 0;
+   previouts_lpOutput = NULL;
+   return deciE_VFW->end();
+  }
  else
   return VFW_E_RUNTIME_ERROR;
 }
@@ -245,8 +255,18 @@ STDMETHODIMP_(LRESULT) Tffvfw::coRun(void *icc0)
 {
  if (initCo())
   {
-   deciE_VFW->setICC(icc0);
    ICCOMPRESS *icc=(ICCOMPRESS*)icc0;
+   // Work around applications' bugs
+   // Because Microsoft's document is incomplete, many applications are buggy in my opinion.
+   //  lpbiOutput->biSizeImage is used to return value, the applications should update lpbiOutput->biSizeImage on every call.
+   //  But some applications doesn't do this, thus lpbiOutput->biSizeImage smaller and smaller.
+   //  The size of the buffer isn't likely to change during encoding.
+   if (previouts_lpOutput == icc->lpOutput)
+    icc->lpbiOutput->biSizeImage = std::max(icc->lpbiOutput->biSizeImage, previous_out_biSizeImage); // looks like very bad code, but I have no choice. Not one application need this.
+   previous_out_biSizeImage = icc->lpbiOutput->biSizeImage;
+   previouts_lpOutput = icc->lpOutput;
+   // End of work around applications' bugs.
+   deciE_VFW->setICC(icc0);
    return deciE_VFW->compress(icc->lpbiInput,(const uint8_t*)icc->lpInput,icc->lpbiInput->biSizeImage,0,0);
   }
  else
