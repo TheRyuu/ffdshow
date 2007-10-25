@@ -504,6 +504,22 @@ Enable in Vista WMP11=VistaのWMP11で有効にする
 Weight - most fonts supports only small subset of listed weights.=ほとんどのフォントはリストに現れるうちの幾つかしかサポートしません。
 Spacing - distance between characters.=水平方向の文字間隔
 Works when the video has non-square pixel aspect ratio.=ビデオのピクセルアスペクト比が正方形でないときに補正します。
+on movie file name match with preset name=ファイル名とプリセット名の一致
+on movie file name match (with wildcards)=ファイル名の一致（ワイルドカード有効）
+on application exe file name match=アプリケーションの実行ファイル名の一致
+on volume name match=ボリューム名の一致
+on volume serial match=ボリュームシリアルの一致
+on decoder match=デコーダーの一致
+on a DirectShow filter presence=DirectShowフィルタの存在
+on FOURCC match=FOURCCの一致
+on FOURCC from previous filter match=直前のフィルタのFOURCCの一致
+on pixel aspect ratio match=ピクセルのアスペクト比の一致
+on picture aspect ratio match=画面のアスペクト比の一致
+on frame rate match=フレームレートが一致
+on number of channels match=チャンネル数の一致
+on sampling frequency match=サンプリング周波数の一致
+Do you really want to remove selected preset?=選択したプリセットを本当に削除してよいですか？
+Removing preset=プリセットの削除
 
 [101]
 1=OK
@@ -916,7 +932,9 @@ Works when the video has non-square pixel aspect ratio.=ビデオのピクセルアスペク
 1276=<= 幅 <=
 1277=<= 高さ <=
 1344=複数の拡張子は ; で区切ります
-1346=複数のファイル名は ; で区切ります
+1888=複数のファイル名は ; で区切ります
+2207=条件が一つでも一致した時 （OR）
+2208=すべての条件が一致した時 （AND）
 
 [172]
 0=取り込み

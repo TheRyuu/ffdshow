@@ -234,12 +234,13 @@ Tpreset::Tpreset(const char_t *Ireg_child,const char_t *IpresetName,int Imin_ord
  memset(presetName,0,sizeof(presetName));
  strcpy(presetName,IpresetName);
  autoLoadedFromFile=0;
+ autoLoadLogic=0;
 
  static const TautoPresetItemDef autoPresetItems[]=
   {
    {
     _l("on movie file name match with preset name"),NULL,
-    _l("autoloadFlnm"),1,
+    _l("autoloadFlnm"),0,
     NULL,NULL,
     &TautoPresetProps::presetNameMatch,
     &TautoPresetProps::getPresetName,
@@ -294,6 +295,8 @@ Tpreset::Tpreset(const char_t *Ireg_child,const char_t *IpresetName,int Imin_ord
 
  static const TintOptionT<Tpreset> iopts[]=
   {
+   IDFF_presetAutoloadLogic        ,&Tpreset::autoLoadLogic          ,0,0,_l(""),0,
+     _l("autoLoadLogic"),0,
    IDFF_autoLoadedFromFile         ,&Tpreset::autoLoadedFromFile     ,0,0,_l(""),0,
      NULL,0,
    0
@@ -316,6 +319,7 @@ Tpreset& Tpreset::operator =(const Tpreset &src)
  autoLoadedFromFile=src.autoLoadedFromFile;
  autoloadExtsNeedFix=src.autoloadExtsNeedFix;
  autoPresetItems=src.autoPresetItems;
+ autoLoadLogic=src.autoLoadLogic;
 
  filters->copy(src.filters);
  return *this;
@@ -417,25 +421,39 @@ bool Tpreset::isAutoPreset(TautoPresetProps &props) const
 
  props.getSourceResolution(&dx,&dy);
 
- bool match=false;
- if (is_autoloadSize())
+ if (autoLoadLogic)
   {
-   if (autoloadSizeMatch(dx,dy))
-    match=true;
-   else
-    return false;
+   // On all conditions match (AND)
+   bool match=false;
+   if (is_autoloadSize())
+    {
+     if (autoloadSizeMatch(dx,dy))
+      match=true;
+     else
+      return false;
+    }
+
+   for (TautoPresetItems::const_iterator a=autoPresetItems.begin();a!=autoPresetItems.end();a++)
+    if (a->getIs())
+     {
+      if (!a->match(props))
+       return false;
+      else
+       match=true;
+     }
+
+   return match;
   }
-
- for (TautoPresetItems::const_iterator a=autoPresetItems.begin();a!=autoPresetItems.end();a++)
-  if (a->getIs())
-   {
-    if (!a->match(props))
-     return false;
-    else
-     match=true;
-   }
-
- return match;
+ else
+  {
+   // On one of the conditoins match (OR)
+   if (is_autoloadSize() && autoloadSizeMatch(dx,dy))
+    return true;
+   for (TautoPresetItems::const_iterator a=autoPresetItems.begin();a!=autoPresetItems.end();a++)
+    if (a->match(props))
+     return true;
+   return false;
+  }
 }
 
 int Tpreset::getMinOrder(void) const

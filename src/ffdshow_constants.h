@@ -130,6 +130,7 @@
 #define IDFF_presetAutoloadSizeCond      1905 //0 - and, 1 - or
 #define IDFF_presetAutoloadSizeYmin      1906
 #define IDFF_presetAutoloadSizeYmax      1907
+#define IDFF_presetAutoloadLogic         3485
 /*
 #define IDFF_presetAutoloadFlnm          1901 //should preset be autoloaded depending on filename
 #define IDFF_presetAutoloadExt           1908 //should preset be autoloaded depending on file ext
@@ -1505,6 +1506,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3485
+//max:3486
 
 #endif

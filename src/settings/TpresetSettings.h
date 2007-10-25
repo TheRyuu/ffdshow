@@ -102,6 +102,7 @@ public:
   };
  void addAutoPresetItems(const TautoPresetItemDef *IautoPresetItems);
  int autoLoadedFromFile;
+ int autoLoadLogic;
 
  int autoloadExtsNeedFix;
  virtual bool isAutoPreset(TautoPresetProps &props) const;

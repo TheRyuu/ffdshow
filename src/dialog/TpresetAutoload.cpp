@@ -168,6 +168,13 @@ TpresetAutoloadDlgBase::TpresetAutoloadDlgBase(IffdshowBase *Ideci,HWND Iparent,
 {
  this->x=x;this->y=y;
  itemsw=NULL;
+ static const TbindRadiobutton<TpresetAutoloadDlgBase> rbt[]=
+  {
+   IDC_RBT_PRESETAUTOLOAD_OR,  IDFF_presetAutoloadLogic, 0, NULL,
+   IDC_RBT_PRESETAUTOLOAD_AND, IDFF_presetAutoloadLogic, 1, NULL,
+   0,0,0,NULL
+  };
+ bindRadioButtons(rbt);
 }
 void TpresetAutoloadDlgBase::init(void)
 {
@@ -184,6 +191,8 @@ void TpresetAutoloadDlgBase::init(void)
  for (unsigned int i=0;i<cnt;i++)
   deciD->getPresetAutoloadItemInfo(i,&items[i].name,&items[i].hint,&items[i].allowWildcard,&items[i].is,&items[i].isVal,items[i].val,sizeof(items[i].val),&items[i].isList,&items[i].isHelp);
  itemsw->showItems();
+ setCheck(IDC_RBT_PRESETAUTOLOAD_OR  ,deci->getParam2(IDFF_presetAutoloadLogic) == 0);
+ setCheck(IDC_RBT_PRESETAUTOLOAD_AND ,deci->getParam2(IDFF_presetAutoloadLogic) != 0);
 }
 bool TpresetAutoloadDlgBase::show(void)
 {
@@ -306,6 +315,6 @@ TpresetAutoloadDlgAudio::TpresetAutoloadDlgAudio(IffdshowBase *Ideci,HWND parent
 void TpresetAutoloadDlgAudio::init(void)
 {
  TpresetAutoloadDlgBase::init();
- static const int idSize[]={IDC_CHB_PRESETAUTOLOAD_SIZE,IDC_ED_PRESETAUTOLOAD_SIZE_XMIN,IDC_ED_PRESETAUTOLOAD_SIZE_XMAX,IDC_BT_PRESETAUTOLOAD_SIZE_COMP,IDC_ED_PRESETAUTOLOAD_SIZE_YMIN,IDC_ED_PRESETAUTOLOAD_SIZE_YMAX,0};
+ static const int idSize[]={IDC_CHB_PRESETAUTOLOAD_SIZE,IDC_ED_PRESETAUTOLOAD_SIZE_XMIN,IDC_ED_PRESETAUTOLOAD_SIZE_XMAX,IDC_BT_PRESETAUTOLOAD_SIZE_COMP,IDC_ED_PRESETAUTOLOAD_SIZE_YMIN,IDC_ED_PRESETAUTOLOAD_SIZE_YMAX,IDC_LBL_PRESETAUTOLOAD_WIDTH,IDC_LBL_PRESETAUTOLOAD_HEIGHT,0};
  enable(0,idSize);
 }
