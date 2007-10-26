@@ -135,8 +135,6 @@ private:
    mixFn=mixFns[cols-1]/*[rows-1]*/[insf.nchannels-1];
    return outsf;
   }
- unsigned int oldnchannels,oldchannelmask;int oldsf;
- TmixerSettings oldcfg;
  Tbuffer buf;
  TsampleFormat outfmt;
 public:
@@ -144,16 +142,11 @@ public:
 
  Mixer(void)
   {
-   oldnchannels=0;oldchannelmask=0xffffffff;oldsf=TsampleFormat::SF_NULL;
-   oldcfg.out=-1;
   }
- void process(TsampleFormat &fmt,sample_t* &samples1,size_t &numsamples,const TmixerSettings *cfg,const TmixerMatrix::mixer_matrix_t* *matrixPtr,int *inmask,int *outmask)
+ void process(TsampleFormat &fmt,sample_t* &samples1,size_t &numsamples,const TmixerSettings *cfg,const TmixerMatrix::mixer_matrix_t* *matrixPtr,int *inmask,int *outmask,bool wasChanged)
   {
-   if (oldnchannels!=fmt.nchannels || oldchannelmask!=fmt.channelmask || oldsf!=fmt.sf || !cfg->equal(oldcfg))
-    {
-     oldnchannels=fmt.nchannels;oldchannelmask=fmt.channelmask;oldsf=fmt.sf;oldcfg=*cfg;
-     outfmt=calc_matrix(fmt,cfg,matrixPtr,inmask,outmask);
-    }
+   if (wasChanged)
+    outfmt=calc_matrix(fmt,cfg,matrixPtr,inmask,outmask);
 
    TsampleFormat fmt2=fmt;
    fmt2.setChannels(outfmt.nchannels,outfmt.channelmask);

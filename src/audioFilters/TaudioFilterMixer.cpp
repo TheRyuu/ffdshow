@@ -25,6 +25,10 @@ TaudioFilterMixer::TaudioFilterMixer(IffdshowBase *Ideci,Tfilters *Iparent):Taud
 {
  mixerPCM16.deciA=mixerPCM32.deciA=mixerFloat.deciA=deciA;
  matrixPtr=NULL;
+ oldnchannels=0;
+ oldchannelmask=0xffffffff;
+ oldsf=TsampleFormat::SF_NULL;
+ oldcfg.out=-1;
 }
 
 bool TaudioFilterMixer::getOutputFmt(TsampleFormat &fmt,const TfilterSettingsAudio *cfg0)
@@ -43,11 +47,20 @@ HRESULT TaudioFilterMixer::process(TfilterQueue::iterator it,TsampleFormat &fmt,
  const TmixerSettings *cfg=(const TmixerSettings*)cfg0;
 
  samples=init(cfg,fmt,samples,numsamples);
+ bool wasChanged = oldnchannels!=fmt.nchannels || oldchannelmask!=fmt.channelmask || oldsf!=fmt.sf || !cfg->equal(oldcfg);
+ if (wasChanged)
+  {
+   oldnchannels=fmt.nchannels;
+   oldchannelmask=fmt.channelmask;
+   oldsf=fmt.sf;
+   oldcfg=*cfg;
+  }
+ 
  switch (fmt.sf)
   {
-   case TsampleFormat::SF_PCM16  :mixerPCM16.process(fmt,(int16_t*&)samples,numsamples,cfg,&matrixPtr,&inmask,&outmask);break;
-   case TsampleFormat::SF_PCM32  :mixerPCM32.process(fmt,(int32_t*&)samples,numsamples,cfg,&matrixPtr,&inmask,&outmask);break;
-   case TsampleFormat::SF_FLOAT32:mixerFloat.process(fmt,(float*&)  samples,numsamples,cfg,&matrixPtr,&inmask,&outmask);break;
+   case TsampleFormat::SF_PCM16  :mixerPCM16.process(fmt,(int16_t*&)samples,numsamples,cfg,&matrixPtr,&inmask,&outmask,wasChanged);break;
+   case TsampleFormat::SF_PCM32  :mixerPCM32.process(fmt,(int32_t*&)samples,numsamples,cfg,&matrixPtr,&inmask,&outmask,wasChanged);break;
+   case TsampleFormat::SF_FLOAT32:mixerFloat.process(fmt,(float*&)  samples,numsamples,cfg,&matrixPtr,&inmask,&outmask,wasChanged);break;
   }
  return parent->deliverSamples(++it,fmt,samples,numsamples);
 }

@@ -15,8 +15,13 @@ private:
  CCritSec csMatrix;
  const TmixerMatrix::mixer_matrix_t *matrixPtr;
  int inmask,outmask;
+ unsigned int oldnchannels,oldchannelmask;
+ int oldsf;
+ TmixerSettings oldcfg;
+
 protected:
  virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_ALL_24;}
+
 public:
  TaudioFilterMixer(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual bool getOutputFmt(TsampleFormat &fmt,const TfilterSettingsAudio *cfg);
