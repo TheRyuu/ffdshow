@@ -95,6 +95,7 @@ bool TcspOptionsPage::reset(bool testonly)
 TcspOptionsPage::TcspOptionsPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
 {
  dialogId=IDD_CSP_OPTIONS;
+ helpURL=_l("http://ffdshow-tryout.sourceforge.net/html/en/cspOptions.htm");
  inPreset=1;
  idffOrder=maxOrder+4;
  static const TbindRadiobutton<TcspOptionsPage> rbt[]=

@@ -224,7 +224,7 @@ ToutcspsPage::ToutcspsPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
 {
  backupDV=NULL;
  dialogId=IDD_OUTCSPS;
- //helpURL="in_out.html";
+ helpURL=_l("http://ffdshow-tryout.sourceforge.net/html/en/outputv.htm");
  inPreset=1;
  idffOrder=maxOrder+3;
  filterID=IDFF_filterOutputVideo;

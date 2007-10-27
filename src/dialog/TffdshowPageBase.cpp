@@ -235,9 +235,19 @@ void TffdshowPageBase::onHelp(void)
 {
  if (!page || !page->helpURL) return;
  char_t fullflnm[MAX_PATH];
- _makepath(fullflnm,NULL,config->pth,_l("help\\"),NULL);
- strcat(fullflnm,page->helpURL);
- if (fileexists(fullflnm))
+ bool internet=false;
+ if(strlen(page->helpURL)>6 && strncmp(page->helpURL,_l("http"),4)==0)
+  {
+   internet=true;
+   const char_t *translatedURL=_(-1,page->helpURL);
+   strncpy(fullflnm,translatedURL,std::min<size_t>(strlen(translatedURL)+1,MAX_PATH));
+  }
+ else
+  {
+   _makepath(fullflnm,NULL,config->pth,_l("help\\"),NULL);
+   strcat(fullflnm,page->helpURL);
+  }
+ if (internet || fileexists(fullflnm))
   ShellExecute(m_hwnd,_l("open"),fullflnm,NULL,_l("."),SW_SHOWNORMAL);
 }
 
