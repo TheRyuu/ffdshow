@@ -24,6 +24,8 @@
 #include "TimgFilterDCT.h"
 #include "TdctSettings.h"
 
+#pragma warning(disable:4799)
+
 extern "C" void Skl_IDct16_MMX (short *block);
 extern "C" void Skl_IDct16_SSE (short *block);
 extern "C" void fdct_mmx_skal (short *block);

@@ -4,6 +4,8 @@
 #include "simd.h"
 #include "ffImgfmt.h"
 
+#pragma warning(disable:4799)
+
 struct TcubicTable
 {
 private:

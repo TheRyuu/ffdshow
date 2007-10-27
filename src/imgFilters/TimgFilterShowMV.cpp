@@ -24,6 +24,8 @@
 #include "TvisSettings.h"
 #include "TimgFilters.h"
 
+#pragma warning(disable:4799)
+
 #define X 130
 __align8(const unsigned char,TimgFilterShowMV::numsL[])=
 {

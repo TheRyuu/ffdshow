@@ -108,8 +108,8 @@ void TSubtitleProps::fix_size(LOGFONT &lf, HDC hdc, TfontManager *fontManager) c
   }
  else
   {
-   m_ascent64=lf.lfHeight*2*0.8;
-   m_descent64=lf.lfHeight*2-m_ascent64;
+   m_ascent64=int(lf.lfHeight*2*0.8);
+   m_descent64=int(lf.lfHeight*2-m_ascent64);
   }
 }
 
