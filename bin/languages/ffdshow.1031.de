@@ -432,6 +432,10 @@ Insert file name=Dateiname einfügen
 Insert exe file name=Programmdateiname einfügen
 Use default device=Standard-Gerät verwenden
 disable=Deaktiviert
+http://ffdshow-tryout.sourceforge.net/html/en/queue.htm=http://ffdshow-tryout.sourceforge.net/html/de/queue.htm
+http://ffdshow-tryout.sourceforge.net/html/en/cspOptions.htm=http://ffdshow-tryout.sourceforge.net/html/de/cspOptions.htm
+http://ffdshow-tryout.sourceforge.net/html/en/resize.htm=http://ffdshow-tryout.sourceforge.net/html/de/resize.htm
+http://ffdshow-tryout.sourceforge.net/html/en/outputv.htm=http://ffdshow-tryout.sourceforge.net/html/de/outputv.htm
 
 [111]
 1164=Gesamtes Bild bearbeiten
