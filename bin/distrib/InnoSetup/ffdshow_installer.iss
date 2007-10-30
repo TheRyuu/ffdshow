@@ -400,6 +400,7 @@ Source: audxlib.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsre
 #endif
 
 #if include_app_plugins
+Source: ..\..\ffavisynth.avsi ; DestDir: {code:GetAviSynthPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\avisynth
   #if MSVC80
 Source: msvc71\ffavisynth.dll; DestDir: {code:GetAviSynthPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\avisynth
   #else

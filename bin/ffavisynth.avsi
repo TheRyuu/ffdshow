@@ -1,0 +1,1 @@
+loadCPlugin("ffavisynth.dll")
