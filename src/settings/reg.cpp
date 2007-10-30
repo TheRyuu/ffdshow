@@ -25,6 +25,8 @@ TregOpStreamRead::TregOpStreamRead(const void *buf,size_t len,char_t sep,bool Il
 {
  for (const char_t *cur=(const char_t*)buf,*end=(const char_t*)buf+len;cur<end;)
   {
+   while (*cur==' ' && cur<=end)
+    cur++;
    const char_t *s=(const char_t*)memchr(cur,sep,end-cur);
    if (!s)
     s=end;
