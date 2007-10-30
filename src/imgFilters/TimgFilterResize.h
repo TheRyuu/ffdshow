@@ -13,6 +13,7 @@ DECLARE_FILTER(TimgFilterResize,public,TimgFilter)
 private:
  bool sizeChanged,inited;
  TresizeAspectSettings oldSettings;
+ int oldcsp;
  TffPict newpict;
 
  bool oldinterlace,oldWarped;

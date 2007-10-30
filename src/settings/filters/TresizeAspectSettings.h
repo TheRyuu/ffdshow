@@ -19,7 +19,7 @@ public:
  int a1,a2;
  int mult1000;
  int SARinternally,outDeviceA1,outDeviceA2;
- void calcNewRects(Trect *rectFull,Trect *rectClip) const;
+ void calcNewRects(Trect *rectFull, Trect *rectClip, bool flip) const;
  int _if;
  int xcond;unsigned int xval;
  int ycond;unsigned int yval;

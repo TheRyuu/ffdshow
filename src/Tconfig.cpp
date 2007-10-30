@@ -245,7 +245,6 @@ void Tconfig::initCPU(int allowed_cpu_flags)
    fastmemcpy=memcpy;
    #endif
 
-   TffPict::initCopy(cpu_flags);
   }
 }
 

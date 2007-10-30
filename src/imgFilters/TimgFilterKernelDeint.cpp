@@ -277,7 +277,7 @@ HRESULT TimgFilterKernelDeint2::process(TfilterQueue::iterator it,TffPict &pict,
     done();
 
    if (!kernel)
-    kernel=createI(csp1&FF_CSP_420P,dx1[0],dy1[0],dx1[0]*pict.cspInfo.Bpp,order,cfg->kernelThreshold,!!cfg->kernelSharp,!!cfg->kernelTwoway,!!cfg->kernelLinked,!!cfg->kernelMap,bob,parent->config->cpu_flags,TffPict::copy);
+    kernel=createI(csp1&FF_CSP_420P,dx1[0],dy1[0],dx1[0]*pict.cspInfo.Bpp,order,cfg->kernelThreshold,!!cfg->kernelSharp,!!cfg->kernelTwoway,!!cfg->kernelLinked,!!cfg->kernelMap,bob,parent->config->cpu_flags);
    else if (oldOrder != order)
     kernel->setOrder(order);
 

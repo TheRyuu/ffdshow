@@ -2403,61 +2403,6 @@
 				RelativePath="src\imgFilters\TffPict.h">
 			</File>
 			<File 
-				RelativePath=".\src\imgFilters\TffPictCopy.asm">
-				<FileConfiguration 
-					Name="Debug|Win32">
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug|x64">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug Unicode|Win32">
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug Unicode|x64">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|Win32">
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|x64">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-			</File>
-			<File 
 				RelativePath="src\imgFilters\TffRect.h">
 			</File>
 			<File 

@@ -1097,8 +1097,9 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
         pict.setSar(input->outputSar);
 
        if (csp_isRGB_RGB(pict.csp))
-        pict.csp^=FF_CSP_FLAGS_VFLIP;
+        pict.csp|=FF_CSP_FLAGS_VFLIP;
 
+       memcpy(&pict.cspInfo,csp_getInfo(pict.csp),sizeof(pict.cspInfo));
        if (buffersFilled > minBuffers)
         {
          TffPict tempPict=pict;

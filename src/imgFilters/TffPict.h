@@ -74,7 +74,7 @@ struct Tpalette
 
 struct TffPictBase
 {
- TffPictBase(void) {}
+ TffPictBase(void) {csp=0;}
  TffPictBase(unsigned int Idx,unsigned int Idy);
  int csp;
  Trect rectFull,rectClip;
@@ -127,9 +127,7 @@ public:
  void copyBorder(const TffPict &src,unsigned int plane);
  void histogram(unsigned int histogram[256],int full,int half) const;
  void copyFrom(const TffPict &p,Tbuffer &buf,const Trect *rectCopy=NULL);
- typedef void (Tcopy)(unsigned char *dst, stride_t dstStride, const unsigned char *src, stride_t srcStride, int bytesPerLine, int height);
- static Tcopy *copy;
- static void initCopy(int cpu_flags);
+ static void copy(unsigned char *dst, stride_t dstStride, const unsigned char *src, stride_t srcStride, int bytesPerLine, int height, bool flip=false);
  void convertCSP(int Icsp,Tbuffer &buf,Tconvert *convert,int edge=0);
  void convertCSP(int Icsp,Tbuffer &buf,int edge=0);
  void setCSP(int Icsp);

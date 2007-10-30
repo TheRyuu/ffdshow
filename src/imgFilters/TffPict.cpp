@@ -60,6 +60,7 @@ Tpalette::Tpalette(const AVPaletteControl *palctrl)
 //=================================== TffPictBase ===================================
 TffPictBase::TffPictBase(unsigned int Idx,unsigned int Idy)
 {
+ csp=0;
  setSize(Idx,Idy);
 }
 void TffPictBase::setSize(unsigned int Idx,unsigned int Idy)
@@ -86,21 +87,6 @@ Trect TffPictBase::getRect(int full,int half) const
 }
 
 //===================================== TffPict =====================================
-TffPict::Tcopy* TffPict::copy=TffPict::asm_BitBlt_C;
-extern "C" void asm_BitBlt_ISSE(BYTE* dstp, int dst_pitch, const BYTE* srcp, int src_pitch, int row_size, int height);
-void TffPict::initCopy(int cpu_flags)
-{
- #ifndef WIN64
- if (cpu_flags&FF_CPU_MMXEXT)
-  copy=::asm_BitBlt_ISSE;
- else
- #endif
- if (cpu_flags&FF_CPU_MMX)
-  copy=asm_BitBlt_MMX;
- else
-  copy=asm_BitBlt_C;
-}
-
 TffPict::TffPict(void)
 {
  init();
@@ -410,43 +396,34 @@ void TffPict::alloc(unsigned int dx,unsigned int dy,int Icsp,Tbuffer &buf,int ed
  convertCSP(Icsp,buf,edge);
 }
 
-// copied from AviSynth
-/*****************************
- * Assembler bitblit by Steady
- *****************************/
-
-void TffPict::asm_BitBlt_MMX(BYTE* dstp, stride_t dst_pitch, const BYTE* srcp, stride_t src_pitch, int row_size, int height) {
-  if (height==0 || row_size==0) return;
-  const unsigned char *esi=srcp+(height-1)*src_pitch;unsigned char *edi=dstp+(height-1)*dst_pitch;
-  int row_size15=row_size-15;
-  for (;height;height--,esi-=src_pitch,edi-=dst_pitch)
-   {
-    int ebx;
-    for (ebx=0;ebx<row_size15;ebx+=16)
-     {
-      __m64 mm0=*(__m64*)(esi+ebx);
-      __m64 mm1=*(__m64*)(esi+ebx+8);
-      *(__m64*)(edi+ebx)=mm0;
-      *(__m64*)(edi+ebx+8)=mm1;
-     }
-    for (;ebx<row_size;ebx++)
-     edi[ebx]=esi[ebx];
-   }
- _mm_empty();
-}
-
-
-void TffPict::asm_BitBlt_C(BYTE* dstp, stride_t dst_pitch, const BYTE* srcp, stride_t src_pitch, int row_size, int height)
+void TffPict::copy(BYTE* dstp, stride_t dst_pitch, const BYTE* srcp, stride_t src_pitch, int row_size, int height, bool flip)
 {
-  if (dst_pitch == src_pitch && src_pitch == row_size) {
+  if (dst_pitch == src_pitch && src_pitch == row_size && !flip)
+   {
     memcpy(dstp, srcp, src_pitch * height);
-  } else {
-    for (int y=height; y>0; --y) {
-      memcpy(dstp, srcp, row_size);
-      dstp += dst_pitch;
-      srcp += src_pitch;
-    }
-  }
+   }
+  else
+   {
+    if (!flip)
+     {
+      for (int y=height; y>0; --y)
+       {
+        memcpy(dstp, srcp, row_size);
+        dstp += dst_pitch;
+        srcp += src_pitch;
+       }
+     }
+    else
+     {
+      dstp += dst_pitch * (height - 1);
+      for (int y=height; y>0; --y)
+       {
+        memcpy(dstp, srcp, row_size);
+        dstp -= dst_pitch;
+        srcp += src_pitch;
+       }
+     }
+   }
 }
 
 void TffPict::clear(int Bpp,unsigned int black,unsigned char *dst,stride_t stride,unsigned int row_size,unsigned int height)

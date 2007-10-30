@@ -162,43 +162,54 @@ bool TimgFilter::getNext(int csp,TffPict &pict,const Trect &clipRect,unsigned ch
 }
 bool TimgFilter::getCurNext(int csp,TffPict &pict,int full,int copy,unsigned char **dst[4])
 {
+ bool flip=false;
  csp_yuv_adj_to_plane(pict.csp,&pict.cspInfo,pict.rectFull.dy,pict.data,pict.stride);csp_yuv_order(pict.csp,pict.data,pict.stride);
  TffPict pictN;
  if (((csp&FF_CSPS_MASK)&(pict.csp&FF_CSPS_MASK))==0)
   {
-   if (!convert2) convert2=new Tconvert(deci,pict.rectFull.dx,pict.rectFull.dy);
+   bool flip1 = (pict.csp ^ csp) & FF_CSP_FLAGS_VFLIP;
+   if (!convert2)
+    convert2=new Tconvert(deci,pict.rectFull.dx,pict.rectFull.dy);
    pict.convertCSP((csp_bestMatch(pict.csp,csp&FF_CSPS_MASK)&~FF_CSP_FLAGS_VFLIP)|(csp&FF_CSP_FLAGS_YUV_ADJ),own2,convert2);
    pict.setRO(false);
    pictN=pict;
+   if (flip1)
+    pictN.rectClip.y = pictN.rectFull.dy - pictN.rectClip.y - pictN.rectClip.dy;
   }
  else
   {
-   pictN=pict;
-   pictN.convertCSP(pict.csp|(csp&FF_CSP_FLAGS_YUV_ADJ),own2);
+   pictN = pict;
+   flip = (pict.csp ^ csp) & FF_CSP_FLAGS_VFLIP;
+   if (flip)
+    pictN.rectClip.y = pictN.rectFull.dy - pictN.rectClip.y - pictN.rectClip.dy;
+   pictN.convertCSP((pict.csp & ~FF_CSP_FLAGS_VFLIP) | (csp & (FF_CSP_FLAGS_YUV_ADJ | FF_CSP_FLAGS_VFLIP)),own2);
   }
  const Trect r=pictRect;//=full?pict.rectFull:pict.rectClip;
- if (copy==COPYMODE_DEF) copy=full?COPYMODE_FULL:COPYMODE_CLIP;
+ if (copy==COPYMODE_DEF)
+  copy = full ? COPYMODE_FULL : COPYMODE_CLIP;
+ if (flip)
+  copy = COPYMODE_FULL;
  bool copyBorder=!full && pict.rectClip!=pict.rectFull;
  for (unsigned int i=0;i<pictN.cspInfo.numPlanes;i++)
   if (dst[i])
    {
     dx1[i]=dx2[i]=r.dx>>pict.cspInfo.shiftX[i];
     dy1[i]=dy2[i]=r.dy>>pict.cspInfo.shiftY[i];
-    if (pict.ro[i])
+    if (pict.ro[i] || flip)
      {
       pict.ro[i]=false;
       switch (copy)
        {
         case COPYMODE_CLIP:
          if (copyBorder) pictN.copyBorder(pict,i);
-         TffPict::copy(pictN.data[i]+pictN.diff[i],pictN.stride[i],pict.data[i]+pict.diff[i],pict.stride[i],(pict.rectClip.dx>>pict.cspInfo.shiftX[i])*pict.cspInfo.Bpp,pict.rectClip.dy>>pict.cspInfo.shiftY[i]);
+         TffPict::copy(pictN.data[i]+pictN.diff[i],pictN.stride[i],pict.data[i]+pict.diff[i],pict.stride[i],(pict.rectClip.dx>>pict.cspInfo.shiftX[i])*pict.cspInfo.Bpp,pict.rectClip.dy>>pict.cspInfo.shiftY[i],flip);
          break;
         case COPYMODE_FULL:
-         TffPict::copy(pictN.data[i],pictN.stride[i],pict.data[i],pict.stride[i],(pict.rectFull.dx>>pict.cspInfo.shiftX[i])*pict.cspInfo.Bpp,pict.rectFull.dy>>pict.cspInfo.shiftY[i]);
+         TffPict::copy(pictN.data[i],pictN.stride[i],pict.data[i],pict.stride[i],(pict.rectFull.dx>>pict.cspInfo.shiftX[i])*pict.cspInfo.Bpp,pict.rectFull.dy>>pict.cspInfo.shiftY[i],flip);
          break;
         case COPYMODE_NO:
          if (pictHalf)
-          TffPict::copy(pictN.data[i],pictN.stride[i],pict.data[i],pict.stride[i],(pictRect.dx>>pict.cspInfo.shiftX[i])*pict.cspInfo.Bpp,pictRect.dy>>pict.cspInfo.shiftY[i]);
+          TffPict::copy(pictN.data[i],pictN.stride[i],pict.data[i],pict.stride[i],(pictRect.dx>>pict.cspInfo.shiftX[i])*pict.cspInfo.Bpp,pictRect.dy>>pict.cspInfo.shiftY[i],flip);
        }
       pict.data[i]=pictN.data[i];
       pict.stride[i]=pictN.stride[i];
@@ -208,7 +219,8 @@ bool TimgFilter::getCurNext(int csp,TffPict &pict,int full,int copy,unsigned cha
     *dst[i]=pict.data[i]+(full?0:pict.diff[i])+(pictHalf?r.x*pict.cspInfo.Bpp>>pict.cspInfo.shiftX[i]:0);
    }
  bool cspChanged=csp2!=pict.csp;
- csp2=pictN.csp;
+ pict.csp=csp2=pictN.csp;
+ pict.rectClip.y = pictN.rectClip.y;
  if (full) checkBorder(pict);
  return cspChanged;
 }

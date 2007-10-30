@@ -6,7 +6,7 @@ SRCS=ffdshow_imgfilters_all.cpp
 ifneq ($(CC),icl)
 SRCS_NASM=../ffmpeg/libavcodec/i386/skl_dct_sse.asm \
           ../ffmpeg/libavcodec/i386/skl_fdct_mmx.asm \
-          TffPictCopy.asm simple_idct_mmx.asm
+          simple_idct_mmx.asm
 
 NASMFLAGS=-I../ffmpeg/libavcodec/i386/ -DWIN32 -DUSE32 -Dalloc -Dexec
 endif

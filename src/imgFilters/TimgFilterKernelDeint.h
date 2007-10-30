@@ -27,7 +27,7 @@ DECLARE_FILTER(TimgFilterKernelDeint2,public,TimgFilter)
 private:
  bool bob;
  Tdll *dll;
- IkernelDeint* (*createI)(bool IisYV12,unsigned int width,unsigned int height,unsigned int rowsize,int Iorder,int Ithreshold,bool Isharp,bool Itwoway,bool Ilinked,bool Imap,bool Ibob,int cpuflags,TffPict::Tcopy *copy);
+ IkernelDeint* (*createI)(bool IisYV12,unsigned int width,unsigned int height,unsigned int rowsize,int Iorder,int Ithreshold,bool Isharp,bool Itwoway,bool Ilinked,bool Imap,bool Ibob,int cpuflags);
  IkernelDeint *kernel;
  TdeinterlaceSettings oldcfg;
  int oldOrder;

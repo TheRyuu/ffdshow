@@ -60,7 +60,7 @@ LIBS=acm/Tacm.o \
 
 ifneq ($(CC),icl)
 LIBS+=audioFilters/TaudioFilterConvert.o audioFilters/dotproduct.o \
-      imgFilters/TffPictCopy.o imgFilters/simple_idct_mmx.o ffmpeg/libavcodec/i386/skl_dct_sse.o ffmpeg/libavcodec/i386/skl_dct_sse2.o ffmpeg/libavcodec/i386/skl_fdct_mmx.o ffmpeg/libavcodec/i386/skl_fdct_sse2.o
+      imgFilters/simple_idct_mmx.o ffmpeg/libavcodec/i386/skl_dct_sse.o ffmpeg/libavcodec/i386/skl_dct_sse2.o ffmpeg/libavcodec/i386/skl_fdct_mmx.o ffmpeg/libavcodec/i386/skl_fdct_sse2.o
 endif
 
 ifeq ($(CC),cl)

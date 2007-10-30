@@ -438,7 +438,7 @@ bool TresizeAspectSettings::ifResize(unsigned int AVIdx,unsigned int AVIdy) cons
   }
 }
 
-void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
+void TresizeAspectSettings::calcNewRects(Trect *rectFull, Trect *rectClip, bool flip) const
 { //TODO: fix this mess!
  const Trect inRect=*(full?rectFull:rectClip);
 
@@ -521,8 +521,16 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
      }
     else // Manual: x.xx:1
      {
-      ax=aspectRatio;
-      ay=1<<16;
+      if (is)
+       {
+        ax=aspectRatio;
+        ay=1<<16;
+       }
+      else
+       {
+        ax=inRect.dx;
+        ay=inRect.dy;
+       }
      }
     if (ax==0) ax=1;if (ay==0) ay=1;
     rectClip->dx=rectFull->dx;
@@ -602,7 +610,10 @@ void TresizeAspectSettings::calcNewRects(Trect *rectFull,Trect *rectClip) const
   rectFull->dx=rectFull->dx&~1;
   rectFull->dy=rectFull->dy&~1;
   rectClip->x=((rectFull->dx-rectClip->dx)*bordersDivX/100)&~1;
-  rectClip->y=((rectFull->dy-rectClip->dy)*bordersDivY/100)&~1;
+  if (flip)
+   rectClip->y=((rectFull->dy-rectClip->dy)*(100-bordersDivY)/100)&~1;
+  else
+   rectClip->y=((rectFull->dy-rectClip->dy)*bordersDivY/100)&~1;
   if (rectClip->x+rectClip->dx > rectFull->dx) rectClip->x=(rectFull->dx-rectClip->dx)&~1;
   if (rectClip->y+rectClip->dy > rectFull->dy) rectClip->y=(rectFull->dy-rectClip->dy)&~1;
 }

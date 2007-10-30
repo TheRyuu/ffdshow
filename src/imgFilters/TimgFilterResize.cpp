@@ -63,7 +63,7 @@ bool TimgFilterResize::is(const TffPictBase &pict,const TfilterSettingsVideo *cf
  if (TresizeAspectSettings::methodsProps[cfg->methodLuma].library==TresizeAspectSettings::LIB_SAI)
   {
    Trect newRectFull=pict.rectFull,newRectClip=pict.rectClip;
-   cfg->calcNewRects(&newRectFull,&newRectClip);
+   cfg->calcNewRects(&newRectFull, &newRectClip, !!(pict.csp & FF_CSP_FLAGS_VFLIP));
    return pict.rectFull!=newRectFull || pict.rectClip!=pict.rectClip;
   }
  else
@@ -110,7 +110,7 @@ bool TimgFilterResize::getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo
  if (super::getOutputFmt(pict,cfg0))
   {
    const TresizeAspectSettings *cfg=(const TresizeAspectSettings*)cfg0;
-   cfg->calcNewRects(&pict.rectFull,&pict.rectClip);
+   cfg->calcNewRects(&pict.rectFull, &pict.rectClip, !!(pict.csp & FF_CSP_FLAGS_VFLIP));
    return true;
   }
  else
@@ -121,13 +121,16 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
 {
  const TresizeAspectSettings *cfg=(const TresizeAspectSettings*)cfg0;
  init(pict,cfg->full,0);
- if (sizeChanged || !cfg->equal(oldSettings) || oldSettings.is!=cfg->is || oldSettings.full!=cfg->full)
+ if (sizeChanged || !cfg->equal(oldSettings) || oldSettings.is!=cfg->is || oldSettings.full!=cfg->full || oldcsp != pict.csp)
   {
    sizeChanged=false;
    oldSettings=*cfg;
+   oldcsp=pict.csp;
    done();
    inited=false;
-   newpict.rectFull=pict.rectFull;newpict.rectClip=pict.rectClip;
+   newpict.rectFull=pict.rectFull;
+   newpict.rectClip=pict.rectClip;
+   newpict.csp=pict.csp;
    getOutputFmt(newpict,cfg);
    enum TffdshowDecVideo::DOWNSTREAM_FILTER_TYPE downstream=(TffdshowDecVideo::DOWNSTREAM_FILTER_TYPE)deciV->get_downstreamID();
    char_t outputfourcc[20];

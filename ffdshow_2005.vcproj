@@ -2769,42 +2769,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\imgFilters\TffPictCopy.asm"
-				>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="yasm64"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="yasm64"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug Unicode|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="yasm64"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release Unicode|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="yasm64"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="src\imgFilters\TffRect.h"
 				>
 			</File>
