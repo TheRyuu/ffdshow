@@ -11,6 +11,7 @@ private:
  std::pair<bool,int> ddcc[6];
  bool firsttimeDDCC,isddcc;
  ThwOverlaySettings old;
+ int oldReset;
 protected:
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK;}
 public:

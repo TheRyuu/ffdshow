@@ -38,6 +38,7 @@ ThwOverlaySettings::ThwOverlaySettings(TintStrColl *Icoll,TfilterIDFFs *filters)
 {
  full=-1;
  half=0;
+ reset=0;
  order=TconfPageDec::maxOrder+1;
  static const TintOptionT<ThwOverlaySettings> iopts[]=
   {
@@ -45,20 +46,22 @@ ThwOverlaySettings::ThwOverlaySettings(TintStrColl *Icoll,TfilterIDFFs *filters)
      _l("isOverlayControl"),0,
    IDFF_overlayOrder       ,&ThwOverlaySettings::order       ,  -1,   -1,_l(""),0,
      NULL,0,
-   IDFF_overlayBrightness  ,&ThwOverlaySettings::brightness  ,   0,10000,_l(""),1,
+   IDFF_overlayBrightness  ,&ThwOverlaySettings::brightness  ,  -1,10000,_l(""),1,
      _l("overlayBrightness"),-1,
-   IDFF_overlayContrast    ,&ThwOverlaySettings::contrast    ,   0,20000,_l(""),1,
+   IDFF_overlayContrast    ,&ThwOverlaySettings::contrast    ,  -1,20000,_l(""),1,
      _l("overlayContrast"),-1,
-   IDFF_overlayHue         ,&ThwOverlaySettings::hue         ,-180,  180,_l(""),1,
+   IDFF_overlayHue         ,&ThwOverlaySettings::hue         ,-190,  180,_l(""),1,
      _l("overlayHue"),-190,
-   IDFF_overlaySaturation  ,&ThwOverlaySettings::saturation  ,   0,20000,_l(""),1,
+   IDFF_overlaySaturation  ,&ThwOverlaySettings::saturation  ,  -1,20000,_l(""),1,
      _l("overlaySaturation"),-1,
-   IDFF_overlaySharpness   ,&ThwOverlaySettings::sharpness   ,   0,   10,_l(""),1,
+   IDFF_overlaySharpness   ,&ThwOverlaySettings::sharpness   ,  -1,   10,_l(""),1,
      _l("overlaySharpness"),-1,
-   IDFF_overlayGamma       ,&ThwOverlaySettings::gamma       ,   1,  500,_l(""),1,
+   IDFF_overlayGamma       ,&ThwOverlaySettings::gamma       ,  -1,  500,_l(""),1,
      _l("overlayGamma"),-1,
-   IDFF_overlayColorEnable ,&ThwOverlaySettings::colorEnable ,   0,    0,_l(""),1,
+   IDFF_overlayColorEnable ,&ThwOverlaySettings::colorEnable ,  -1,    0,_l(""),1,
      _l("overlayColorEnable"),-1,
+   IDFF_overlayReset       ,&ThwOverlaySettings::reset       ,   0,    0,_l(""),1,
+     NULL,0,
    0
   };
  addOptions(iopts);

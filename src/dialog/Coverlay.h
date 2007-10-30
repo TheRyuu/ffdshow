@@ -12,6 +12,7 @@ public:
  virtual void cfg2dlg(void);
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
  virtual void onFrame(void);
+ virtual bool reset(bool testonly=false);
 };
 
 #endif

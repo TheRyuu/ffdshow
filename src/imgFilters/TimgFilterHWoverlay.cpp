@@ -28,6 +28,7 @@ TimgFilterHWoverlay::TimgFilterHWoverlay(IffdshowBase *Ideci,Tfilters *Iparent):
  overlayControl=NULL;
  firsttimeOverlay=firsttimeDDCC=isddcc=true;
  old.brightness=INT_MIN;old.is=0;
+ oldReset=0;
 }
 
 TimgFilterHWoverlay::~TimgFilterHWoverlay()
@@ -54,6 +55,12 @@ HRESULT TimgFilterHWoverlay::process(TfilterQueue::iterator it,TffPict &pict,con
                                                                                      {HWOC_SATURATION,IDFF_overlaySaturation,  -1,&ThwOverlaySettings::saturation},
                                                                                      {HWOC_SHARPNESS ,IDFF_overlaySharpness ,  -1,&ThwOverlaySettings::sharpness },
                                                                                      {HWOC_GAMMA     ,IDFF_overlayGamma     ,  -1,&ThwOverlaySettings::gamma     }};
+     if (cfg->reset > oldReset)
+      {
+       oldReset = cfg->reset;
+       overlayControl->reset();
+       firsttimeDDCC=true;
+      }
      if (firsttimeDDCC)
       {
        firsttimeDDCC=false;
@@ -79,7 +86,10 @@ HRESULT TimgFilterHWoverlay::process(TfilterQueue::iterator it,TffPict &pict,con
           overlayControl->set(hw[i].hwoc,cfg->*(hw[i].cfg));
        }
       else
-       overlayControl->reset();
+       {
+        overlayControl->reset();
+        firsttimeDDCC=true;
+       }
     }
    old=*cfg;
   }

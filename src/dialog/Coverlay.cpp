@@ -82,9 +82,8 @@ INT_PTR ToverlayPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     switch (LOWORD(wParam))
      {
       case IDC_CHB_OVERLAY:
-       cfgSet(IDFF_isOverlayControl,getCheck(IDC_CHB_OVERLAY));
        repaint=true;
-       return TRUE;
+       break;
      }
    break;
   }
@@ -99,4 +98,20 @@ void ToverlayPage::onFrame(void)
    cfg2dlg();
    repaint=false;
   }
+}
+
+bool ToverlayPage::reset(bool testonly)
+{
+ if (!testonly)
+  {
+   deci->resetParam(IDFF_overlayBrightness);
+   deci->resetParam(IDFF_overlayContrast);
+   deci->resetParam(IDFF_overlayHue);
+   deci->resetParam(IDFF_overlaySaturation);
+   deci->resetParam(IDFF_overlaySharpness);
+   deci->resetParam(IDFF_overlayGamma);
+   cfgSet(IDFF_overlayReset,cfgGet(IDFF_overlayReset)+1);
+   repaint = true;
+  }
+ return true;
 }

@@ -754,6 +754,7 @@
 #define IDFF_overlaySharpness   2106
 #define IDFF_overlayGamma       2107
 #define IDFF_overlayColorEnable 2108
+#define IDFF_overlayReset       3486
 
 #define IDFF_isKeys             1701
 #define IDFF_keysAlways         1702
@@ -1506,6 +1507,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3486
+//max:3487
 
 #endif
