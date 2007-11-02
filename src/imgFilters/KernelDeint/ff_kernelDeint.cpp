@@ -62,12 +62,30 @@ private:
    memset(stride,0,sizeof(stride));
    Bpp=0;
   }
+
+ void copy(BYTE* dstp, stride_t dst_pitch, const BYTE* srcp, stride_t src_pitch, int row_size, int height)
+  {
+   if (dst_pitch == src_pitch && src_pitch == row_size)
+    {
+     memcpy(dstp, srcp, src_pitch * height);
+    }
+   else
+    {
+     for (int y=height; y>0; --y)
+      {
+       memcpy(dstp, srcp, row_size);
+       dstp += dst_pitch;
+       srcp += src_pitch;
+      }
+    }
+  }
+
 public:
  TVideoFrame(void)
   {
    init();
   }
- TVideoFrame(bool yv12,unsigned int Idx,unsigned int Idy,const unsigned char *src[3],stride_t srcStride[3],stride_t Istride,int field,IkernelDeint::Tcopy *copy)
+ TVideoFrame(bool yv12,unsigned int Idx,unsigned int Idy,const unsigned char *src[3],stride_t srcStride[3],stride_t Istride,int field)
   {
    init();
    Bpp=yv12?1:2;
@@ -152,16 +170,14 @@ private:
  bool sharp,twoway,linked,map,bob;
  KernelDeintMask *fullsizeMask;
  KernelDeintMask *halfsizeMask;
- Tcopy *copy;
 
  unsigned char *scratch;int scratchPitch;
  void (TkernelDeint::*Deinterlace_0fc)(int plane,int n,int order,KernelDeintMask* mask,unsigned char *dst[3],stride_t dstStride[3]);
  bool masksFilled;
 public:
- TkernelDeint(bool IisYV12,unsigned int Iwidth,unsigned int Iheight,unsigned int rowsize,int Iorder,int Ithreshold,bool Isharp,bool Itwoway,bool Ilinked,bool Imap,bool Ibob,int /*cpuflags*/,Tcopy *Icopy):
+ TkernelDeint(bool IisYV12,unsigned int Iwidth,unsigned int Iheight,unsigned int rowsize,int Iorder,int Ithreshold,bool Isharp,bool Itwoway,bool Ilinked,bool Imap,bool Ibob,int /*cpuflags*/):
   width(Iwidth),height(Iheight),
   isYV12(IisYV12),
-  copy(Icopy),
   order(Iorder),
   threshold(Ithreshold),
   sharp(Isharp),
@@ -228,8 +244,8 @@ private:
   {
    if (bobframe==0)
     {
-     if (fields[fieldsptr]) delete fields[fieldsptr];fields[fieldsptr++]=new TVideoFrame(isYV12,width,height,cur,srcStride,scratchPitch,0,copy);
-     if (fields[fieldsptr]) delete fields[fieldsptr];fields[fieldsptr++]=new TVideoFrame(isYV12,width,height,cur,srcStride,scratchPitch,1,copy);
+     if (fields[fieldsptr]) delete fields[fieldsptr];fields[fieldsptr++]=new TVideoFrame(isYV12,width,height,cur,srcStride,scratchPitch,0);
+     if (fields[fieldsptr]) delete fields[fieldsptr];fields[fieldsptr++]=new TVideoFrame(isYV12,width,height,cur,srcStride,scratchPitch,1);
      fieldstart+=2;if (fieldsptr==NFIELDS) fieldsptr=0;
     }
    //if (!bob) n*=2;
@@ -2514,9 +2530,9 @@ RowEnd:;
   }
 };
 
-extern "C" IkernelDeint* createI(bool IisYV12,unsigned int width,unsigned int height,unsigned int rowsize,int Iorder,int Ithreshold,bool Isharp,bool Itwoway,bool Ilinked,bool Imap,bool Ibob,int cpuflags,IkernelDeint::Tcopy *Icopy)
+extern "C" IkernelDeint* createI(bool IisYV12,unsigned int width,unsigned int height,unsigned int rowsize,int Iorder,int Ithreshold,bool Isharp,bool Itwoway,bool Ilinked,bool Imap,bool Ibob,int cpuflags)
 {
- return new TkernelDeint(IisYV12,width,height,rowsize,Iorder,Ithreshold,Isharp,Itwoway,Ilinked,Imap,Ibob,cpuflags,Icopy);
+ return new TkernelDeint(IisYV12,width,height,rowsize,Iorder,Ithreshold,Isharp,Itwoway,Ilinked,Imap,Ibob,cpuflags);
 }
 
 extern "C" void __stdcall getVersion(char *ver,const char* *license)
