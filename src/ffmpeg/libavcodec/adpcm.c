@@ -149,8 +149,9 @@ typedef struct ADPCMContext {
 static int adpcm_decode_init(AVCodecContext * avctx)
 {
     ADPCMContext *c = avctx->priv_data;
+    unsigned int max_channels = 2;
 
-    if(avctx->channels > 2U){
+    if(avctx->channels > max_channels){
         return -1;
     }
 
@@ -868,25 +869,22 @@ AVCodec name ## _decoder = {                    \
     adpcm_decode_frame,                         \
 };
 
-#define ADPCM_CODEC(id, name)                   \
- ADPCM_DECODER(id,name)
-
-ADPCM_CODEC(CODEC_ID_ADPCM_4XM, adpcm_4xm);
-ADPCM_CODEC(CODEC_ID_ADPCM_CT, adpcm_ct);
-ADPCM_CODEC(CODEC_ID_ADPCM_EA, adpcm_ea);
-ADPCM_CODEC(CODEC_ID_ADPCM_IMA_AMV, adpcm_ima_amv);
-ADPCM_CODEC(CODEC_ID_ADPCM_IMA_DK3, adpcm_ima_dk3);
-ADPCM_CODEC(CODEC_ID_ADPCM_IMA_DK4, adpcm_ima_dk4);
-ADPCM_CODEC(CODEC_ID_ADPCM_IMA_QT, adpcm_ima_qt);
-ADPCM_CODEC(CODEC_ID_ADPCM_IMA_SMJPEG, adpcm_ima_smjpeg);
-ADPCM_CODEC(CODEC_ID_ADPCM_IMA_WAV, adpcm_ima_wav);
-ADPCM_CODEC(CODEC_ID_ADPCM_IMA_WS, adpcm_ima_ws);
-ADPCM_CODEC(CODEC_ID_ADPCM_MS, adpcm_ms);
-ADPCM_CODEC(CODEC_ID_ADPCM_SBPRO_4, adpcm_sbpro_4);
-ADPCM_CODEC(CODEC_ID_ADPCM_SBPRO_3, adpcm_sbpro_3);
-ADPCM_CODEC(CODEC_ID_ADPCM_SBPRO_2, adpcm_sbpro_2);
-ADPCM_CODEC(CODEC_ID_ADPCM_SWF, adpcm_swf);
-ADPCM_CODEC(CODEC_ID_ADPCM_XA, adpcm_xa);
-ADPCM_CODEC(CODEC_ID_ADPCM_YAMAHA, adpcm_yamaha);
+ADPCM_DECODER(CODEC_ID_ADPCM_4XM, adpcm_4xm);
+ADPCM_DECODER(CODEC_ID_ADPCM_CT, adpcm_ct);
+ADPCM_DECODER(CODEC_ID_ADPCM_EA, adpcm_ea);
+ADPCM_DECODER(CODEC_ID_ADPCM_IMA_AMV, adpcm_ima_amv);
+ADPCM_DECODER(CODEC_ID_ADPCM_IMA_DK3, adpcm_ima_dk3);
+ADPCM_DECODER(CODEC_ID_ADPCM_IMA_DK4, adpcm_ima_dk4);
+ADPCM_DECODER(CODEC_ID_ADPCM_IMA_QT, adpcm_ima_qt);
+ADPCM_DECODER(CODEC_ID_ADPCM_IMA_SMJPEG, adpcm_ima_smjpeg);
+ADPCM_DECODER(CODEC_ID_ADPCM_IMA_WAV, adpcm_ima_wav);
+ADPCM_DECODER(CODEC_ID_ADPCM_IMA_WS, adpcm_ima_ws);
+ADPCM_DECODER(CODEC_ID_ADPCM_MS, adpcm_ms);
+ADPCM_DECODER(CODEC_ID_ADPCM_SBPRO_4, adpcm_sbpro_4);
+ADPCM_DECODER(CODEC_ID_ADPCM_SBPRO_3, adpcm_sbpro_3);
+ADPCM_DECODER(CODEC_ID_ADPCM_SBPRO_2, adpcm_sbpro_2);
+ADPCM_DECODER(CODEC_ID_ADPCM_SWF, adpcm_swf);
+ADPCM_DECODER(CODEC_ID_ADPCM_XA, adpcm_xa);
+ADPCM_DECODER(CODEC_ID_ADPCM_YAMAHA, adpcm_yamaha);
 
 #undef ADPCM_CODEC
