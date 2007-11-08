@@ -609,18 +609,6 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\wmv2.c">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\libavcodec\wnv1.c">
@@ -768,6 +756,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mpegvideo_common.h">
+			</File>
+			<File
+				RelativePath=".\libavcodec\msmpeg4.h">
 			</File>
 			<File
 				RelativePath=".\libavcodec\msmpeg4data.h">

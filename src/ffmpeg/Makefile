@@ -137,6 +137,7 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/w32thread.c \
       $(LAVC_DIR)/wma.c \
       $(LAVC_DIR)/wmadec.c \
+      $(LAVC_DIR)/wmv2.c \
       $(LAVC_DIR)/wnv1.c \
       $(LAVC_DIR)/xl.c \
       $(LAVC_DIR)/zmbv.c \

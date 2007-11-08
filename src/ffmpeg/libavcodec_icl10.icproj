@@ -423,6 +423,8 @@
 		<File 
 			RelativePath=".\libavcodec\mpegvideo_common.h"/>
 		<File 
+			RelativePath=".\libavcodec\msmpeg4.h"/>
+		<File 
 			RelativePath=".\libavcodec\msmpeg4data.h"/>
 		<File 
 			RelativePath=".\libavcodec\parser.h"/>
@@ -917,32 +919,7 @@
 		<File 
 			RelativePath=".\libavcodec\wmadec.c"/>
 		<File 
-			RelativePath=".\libavcodec\wmv2.c">
-			<FileConfiguration 
-				Name="Debug|Win32">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Release|Win32">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Release|x64">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Debug|x64">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-		</File>
+			RelativePath=".\libavcodec\wmv2.c"/>
 		<File 
 			RelativePath=".\libavcodec\wnv1.c"/>
 		<File 

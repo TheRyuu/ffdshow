@@ -20,10 +20,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVCODEC_HUFFMAN_H
-#define AVCODEC_HUFFMAN_H
+#ifndef FFMPEG_HUFFMAN_H
+#define FFMPEG_HUFFMAN_H
 
 #include "avcodec.h"
+#include "bitstream.h"
 
 typedef struct {
     int16_t  sym;
@@ -35,4 +36,4 @@ typedef int (*huff_cmp_t)(const void *va, const void *vb);
 int ff_huff_build_tree(AVCodecContext *avctx, VLC *vlc, int nb_codes,
                        Node *nodes, huff_cmp_t cmp, int hnode_first);
 
-#endif /* AVCODEC_HUFFMAN_H */
+#endif /* FFMPEG_HUFFMAN_H */
