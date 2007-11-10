@@ -68,6 +68,8 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/imgconvert.c \
       $(LAVC_DIR)/indeo2.c \
       $(LAVC_DIR)/indeo3.c \
+      $(LAVC_DIR)/intrax8.c \
+      $(LAVC_DIR)/intrax8dsp.c \
       $(LAVC_DIR)/jfdctfst.c \
       $(LAVC_DIR)/jfdctint.c \
       $(LAVC_DIR)/jpegls.c \

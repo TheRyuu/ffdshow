@@ -393,6 +393,10 @@
 		<File 
 			RelativePath=".\libavcodec\indeo3data.h"/>
 		<File 
+			RelativePath=".\libavcodec\intrax8.h"/>
+		<File 
+			RelativePath=".\libavcodec\intrax8huf.h"/>
+		<File 
 			RelativePath=".\libavcodec\jpegls.h"/>
 		<File 
 			RelativePath=".\libavcodec\jpeglsdec.h"/>
@@ -657,6 +661,10 @@
 			RelativePath=".\libavcodec\indeo2.c"/>
 		<File 
 			RelativePath=".\libavcodec\indeo3.c"/>
+		<File 
+			RelativePath=".\libavcodec\intrax8.c"/>
+		<File 
+			RelativePath=".\libavcodec\intrax8dsp.c"/>
 		<File 
 			RelativePath=".\libavcodec\jfdctfst.c"/>
 		<File 

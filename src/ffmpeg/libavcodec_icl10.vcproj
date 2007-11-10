@@ -676,6 +676,14 @@
 				>
 			</File>
 			<File
+				RelativePath="libavcodec\intrax8.c"
+				>
+			</File>
+			<File
+				RelativePath="libavcodec\intrax8dsp.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\jfdctfst.c"
 				>
 			</File>
@@ -1242,6 +1250,14 @@
 			</File>
 			<File
 				RelativePath="libavcodec\indeo3data.h"
+				>
+			</File>
+			<File
+				RelativePath="libavcodec\intrax8.h"
+				>
+			</File>
+			<File
+				RelativePath="libavcodec\intrax8huf.h"
 				>
 			</File>
 			<File
