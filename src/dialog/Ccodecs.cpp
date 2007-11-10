@@ -445,7 +445,7 @@ void TcodecsPageVideo::fillCodecs(void)
    static const int movies_wmv3[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9,0};
    formats.push_back(Tformat(_l("WMV3/9")        ,IDFF_wmv3,movies_wmv3,_l("Windows Media Video 9 Simple & Main Profiles (WMV3)"),NULL,LAVC_UNSTABLE));
    static const int movies_wvc1[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9,0};
-   formats.push_back(Tformat(_l("WVC1")          ,IDFF_wvc1,movies_wvc1,_l("Windows Media Video 9 Advanced Profile (WVC1)"),NULL,LAVC_UNSTABLE));
+   formats.push_back(Tformat(_l("VC-1")          ,IDFF_wvc1,movies_wvc1,_l("Windows Media Video 9 Advanced Profile (WVC1)"),NULL,LAVC_UNSTABLE));
    formats.push_back(Tformat(_l("WMVP")          ,IDFF_wvp2,IDFF_MOVIE_WMV9,_l("Windows Media Video 9 Image (WMVP, WVP2)")));
    formats.push_back(Tformat(_l("MSS1/2")        ,IDFF_mss2,IDFF_MOVIE_WMV9,_l("Windows Screen Codecs (MSS1, MSS2)")));
    formats.push_back(Tformat(_l("H.261")         ,IDFF_h261,IDFF_MOVIE_LAVC,_l("H261, M261")));
@@ -475,7 +475,7 @@ void TcodecsPageVideo::fillCodecs(void)
    formats.push_back(Tformat(_l("Creative YUV")  ,IDFF_cyuv,IDFF_MOVIE_LAVC,_l("Creative YUV Video (CYUV)")));
    formats.push_back(Tformat(_l("Indeo 2")       ,IDFF_rt21,IDFF_MOVIE_LAVC,_l("Intel Indeo 2 (RT21)")));
    formats.push_back(Tformat(_l("Indeo 3")       ,IDFF_iv32,IDFF_MOVIE_LAVC,_l("Intel Indeo 3 (IV31, IV32)")));
-   formats.push_back(Tformat(_l("Fraps")         ,IDFF_fps1,IDFF_MOVIE_LAVC,_l("Fraps v0, v1, v2 & v4 (FPS1)")));
+   formats.push_back(Tformat(_l("Fraps")         ,IDFF_fps1,IDFF_MOVIE_LAVC,_l("Fraps v0, v1, v2 & v4 (FPS1)"),NULL,LAVC_UNSTABLE));
    formats.push_back(Tformat(_l("Miro VideoXL")  ,IDFF_vixl,IDFF_MOVIE_LAVC,_l("Miro VideoXL (VIXL)")));
    formats.push_back(Tformat(_l("MS Video 1")    ,IDFF_cram,IDFF_MOVIE_LAVC,_l("MS Video-1 (CRAM)")));
    formats.push_back(Tformat(_l("MS RLE")        ,IDFF_rle ,IDFF_MOVIE_LAVC,_l("MS RLE Video (MRLE)")));
@@ -484,7 +484,7 @@ void TcodecsPageVideo::fillCodecs(void)
    formats.push_back(Tformat(_l("Truemotion 1,2"),IDFF_duck,IDFF_MOVIE_LAVC,_l("Doesn't support 24-bit compression.")));
    formats.push_back(Tformat(_l("Ultimotion")    ,IDFF_ulti,IDFF_MOVIE_LAVC,_l("IBM Ultimotion Video (ULTI)")));
    formats.push_back(Tformat(_l("Winnov V1")     ,IDFF_wnv1,IDFF_MOVIE_LAVC,_l("Winnov WNV1 Video (WNV1)")));
-   //formats.push_back(Tformat(_l("Snow")          ,IDFF_snow,IDFF_MOVIE_LAVC,_l("experimental")));
+   //formats.push_back(Tformat(_l("Snow")          ,IDFF_snow,IDFF_MOVIE_LAVC,_l("experimental"),NULL,LAVC_UNSTABLE));
    formats.push_back(Tformat(_l("AviSynth")      ,IDFF_avisV,IDFF_MOVIE_AVIS,_l("AVIS (AviSynth AVI files)")));
    for (Tformats::iterator f=formats.begin();f!=formats.end();f++)
     {
