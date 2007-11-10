@@ -20,6 +20,7 @@
 #include "Cavisynth.h"
 #include "TffdshowPageDec.h"
 #include "imgfilters/avisynth/TimgFilterAvisynth.h"
+#include "TavisynthSettings.h"
 
 const char_t* TavisynthPage::avs_mask=_l("Avisynth scripts (*.avs)\0*.avs\0\0");
 
@@ -55,7 +56,7 @@ void TavisynthPage::init(void)
 
  edLimitText(IDC_ED_AVISYNTH_BUF_BACK,2);
  edLimitText(IDC_ED_AVISYNTH_BUF_AHEAD,2);
- edLimitText(IDC_ED_AVISYNTH,2048);
+ edLimitText(IDC_ED_AVISYNTH,MAX_AVISYNTH_SCRIPT_LENGTH);
 
  addHint(IDC_ED_AVISYNTH_BUF_AHEAD,_l("Number of frames to buffer ahead"));
  addHint(IDC_ED_AVISYNTH_BUF_BACK,_l("Number of used frames to keep in buffer"));
@@ -134,8 +135,8 @@ void TavisynthPage::onLoad(void)
    FILE *f=fopen(scriptflnm,_l("rb"));
    if (f)
     {
-     char script[2048];
-     size_t len=fread(script,1,2048,f);
+     char script[MAX_AVISYNTH_SCRIPT_LENGTH];
+     size_t len=fread(script,1,MAX_AVISYNTH_SCRIPT_LENGTH,f);
      fclose(f);
      script[len]='\0';
      setDlgItemText(m_hwnd,IDC_ED_AVISYNTH,text<char_t>(script));
@@ -154,9 +155,9 @@ void TavisynthPage::onSave(void)
      int linescnt=(int)SendDlgItemMessage(m_hwnd,IDC_ED_AVISYNTH,EM_GETLINECOUNT,0,0);
      for (int i=0;i<linescnt;i++)
       {
-       char_t line[2048];
+       char_t line[MAX_AVISYNTH_SCRIPT_LENGTH];
        WORD *lparam=(WORD*)line;
-       *lparam=2048;
+       *lparam=MAX_AVISYNTH_SCRIPT_LENGTH;
        LRESULT len=SendDlgItemMessage(m_hwnd,IDC_ED_AVISYNTH,EM_GETLINE,i,LPARAM(line));
        line[len]='\0';
        if (i>0) fputs("\n",f);
@@ -184,8 +185,8 @@ void TavisynthPage::onUseCurrent(void)
 
 void TavisynthPage::applySettings(void)
 {
- char_t script[2048];
- GetDlgItemText(m_hwnd,IDC_ED_AVISYNTH,script,2048);
+ char_t script[MAX_AVISYNTH_SCRIPT_LENGTH];
+ GetDlgItemText(m_hwnd,IDC_ED_AVISYNTH,script,MAX_AVISYNTH_SCRIPT_LENGTH);
  cfgSet(IDFF_avisynthScript,script);
 }
 

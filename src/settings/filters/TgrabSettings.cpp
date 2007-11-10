@@ -78,9 +78,9 @@ TgrabSettings::TgrabSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSe
  addOptions(iopts);
  static const TstrOption sopts[]=
   {
-   IDFF_grabPath   ,(TstrVal)&TgrabSettings::path   ,MAX_PATH ,_l(""),1,
+   IDFF_grabPath         ,(TstrVal)&TgrabSettings::path   ,MAX_PATH ,0, _l(""),1,
      _l("grabPath"),_l("c:\\"),
-   IDFF_grabPrefix ,(TstrVal)&TgrabSettings::prefix ,30       ,_l(""),1,
+   IDFF_grabPrefix       ,(TstrVal)&TgrabSettings::prefix ,30       ,0, _l(""),1,
      _l("grabPrefix"),_l("grab"),
    0
   };

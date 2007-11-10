@@ -609,14 +609,14 @@ TcoSettings::TcoSettings(TintStrColl *Icoll):Toptions(Icoll),options(Icoll)
  addOptions(iopts);
  static const TstrOption sopts[]=
   {
-   IDFF_enc_ff1_stats_flnm,(TstrVal)&TcoSettings::ff1_stats_flnm,MAX_PATH,_l(""),1,
+   IDFF_enc_ff1_stats_flnm                  ,(TstrVal)&TcoSettings::ff1_stats_flnm         ,MAX_PATH,0,_l(""),1,
      _l("ff1_stats_flnm"),_l("\\video.ffstats"),
-   IDFF_enc_storeExtFlnm  ,(TstrVal)&TcoSettings::storeExtFlnm  ,MAX_PATH,_l(""),1,
+   IDFF_enc_storeExtFlnm                    ,(TstrVal)&TcoSettings::storeExtFlnm           ,MAX_PATH,0,_l(""),1,
      _l("storeExtFlnm"),_l(""),
 
-   IDFF_enc_stats1flnm,(TstrVal)&TcoSettings::stats1flnm,MAX_PATH,_l(""),1,
+   IDFF_enc_stats1flnm                      ,(TstrVal)&TcoSettings::stats1flnm             ,MAX_PATH,0,_l(""),1,
      _l("stats1flnm"),_l("\\video.stats"),
-   IDFF_enc_stats2flnm,(TstrVal)&TcoSettings::stats2flnm,MAX_PATH,_l(""),1,
+   IDFF_enc_stats2flnm                      ,(TstrVal)&TcoSettings::stats2flnm             ,MAX_PATH,0,_l(""),1,
      _l("stats2flnm"),_l("\\videogk.stats"),
    0
   };

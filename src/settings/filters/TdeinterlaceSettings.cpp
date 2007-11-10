@@ -125,9 +125,9 @@ TdeinterlaceSettings::TdeinterlaceSettings(TintStrColl *Icoll,TfilterIDFFs *filt
  addOptions(iopts);
  static const TstrOption sopts[]=
   {
-   IDFF_dscalerDIflnm,(TstrVal)&TdeinterlaceSettings::dscalerFlnm,MAX_PATH,_l(""),1,
+   IDFF_dscalerDIflnm,(TstrVal)&TdeinterlaceSettings::dscalerFlnm,MAX_PATH,0,_l(""),1,
      _l("dscalerDIflnm"),_l(""),
-   IDFF_dscalerDIcfg ,(TstrVal)&TdeinterlaceSettings::dscalerCfg ,512     ,_l(""),1,
+   IDFF_dscalerDIcfg ,(TstrVal)&TdeinterlaceSettings::dscalerCfg ,512     ,0,_l(""),1,
      _l("dscalerDIcfg"),_l(""),
    0
   };

@@ -51,6 +51,7 @@ public:
    TstrVal val;
    size_t buflen; //if 0, readonly
    typedef fastdelegate::FastDelegate2<int,Tval> TonChangeBind;
+   bool multipleLines;
    const char_t *name;
    bool inPreset;
    const char_t *regname; //if NULL, don't perform registry operations

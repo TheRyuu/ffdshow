@@ -253,7 +253,7 @@ bool TimgFilterAvisynth::Tavisynth::createClip(const TavisynthSettings *cfg,Tinp
  env->SetGlobalVar("ffdshow_dar_x",AVSValue(dar.num));
  env->SetGlobalVar("ffdshow_dar_y",AVSValue(dar.den));
 
- char script[2048];
+ char script[MAX_AVISYNTH_SCRIPT_LENGTH];
 
  // Convert script to ASCII; add ffdshow_source if the option for it is checked
  _snprintf(

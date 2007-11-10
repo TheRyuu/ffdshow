@@ -133,7 +133,7 @@ TlogoawaySettings::TlogoawaySettings(TintStrColl *Icoll,TfilterIDFFs *filters):T
  addOptions(iopts);
  static const TstrOption sopts[]=
   {
-   IDFF_logoawayParamBitmapFlnm ,(TstrVal)&TlogoawaySettings::parambitmap,MAX_PATH,_l(""),1,
+   IDFF_logoawayParamBitmapFlnm ,(TstrVal)&TlogoawaySettings::parambitmap  ,MAX_PATH,0,_l(""),1,
      _l("logoawayParambitmap"),_l(""),
    0
   };

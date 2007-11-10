@@ -60,19 +60,19 @@ TconvolverSettings::TconvolverSettings(TintStrColl *Icoll,TfilterIDFFs *filters)
  addOptions(iopts);
  static const TstrOption sopts[]=
   {
-   IDFF_convolverFile    ,(TstrVal)&TconvolverSettings::file   ,MAX_PATH,_l(""),1,
+   IDFF_convolverFile    ,(TstrVal)&TconvolverSettings::file   ,MAX_PATH,0,_l(""),1,
      _l("convolverFile"),_l(""),
-   IDFF_convolverFileL   ,(TstrVal)&TconvolverSettings::fileL  ,MAX_PATH,_l(""),1,
+   IDFF_convolverFileL   ,(TstrVal)&TconvolverSettings::fileL  ,MAX_PATH,0,_l(""),1,
      _l("convolverFileL"),_l(""),
-   IDFF_convolverFileR   ,(TstrVal)&TconvolverSettings::fileR  ,MAX_PATH,_l(""),1,
+   IDFF_convolverFileR   ,(TstrVal)&TconvolverSettings::fileR  ,MAX_PATH,0,_l(""),1,
      _l("convolverFileR"),_l(""),
-   IDFF_convolverFileC   ,(TstrVal)&TconvolverSettings::fileC  ,MAX_PATH,_l(""),1,
+   IDFF_convolverFileC   ,(TstrVal)&TconvolverSettings::fileC  ,MAX_PATH,0,_l(""),1,
      _l("convolverFileC"),_l(""),
-   IDFF_convolverFileLFE ,(TstrVal)&TconvolverSettings::fileLFE,MAX_PATH,_l(""),1,
+   IDFF_convolverFileLFE ,(TstrVal)&TconvolverSettings::fileLFE,MAX_PATH,0,_l(""),1,
      _l("convolverFileLFE"),_l(""),
-   IDFF_convolverFileSL  ,(TstrVal)&TconvolverSettings::fileSL ,MAX_PATH,_l(""),1,
+   IDFF_convolverFileSL  ,(TstrVal)&TconvolverSettings::fileSL ,MAX_PATH,0,_l(""),1,
      _l("convolverFileSL"),_l(""),
-   IDFF_convolverFileSR  ,(TstrVal)&TconvolverSettings::fileSR ,MAX_PATH,_l(""),1,
+   IDFF_convolverFileSR  ,(TstrVal)&TconvolverSettings::fileSR ,MAX_PATH,0,_l(""),1,
      _l("convolverFileSR"),_l(""),
    0
   };

@@ -155,14 +155,16 @@ void Toptions::TstrOption::getInfo(Toptions *self,TffdshowParamInfo *info) const
 void Toptions::TstrOption::reg_op(Toptions *self,TregOp &t) const
 {
  if (regname)
-  if (def)
-   t._REG_OP_S(short(id),regname,&(self->*val),buflen,def);
-  else
-   {
-    char_t *defbuf=(char_t*)_alloca((buflen+1)*sizeof(char_t));defbuf[0]='\0';
-    self->getDefaultStr(id,defbuf,buflen);
-    t._REG_OP_S(short(id),regname,&(self->*val),buflen,defbuf);
-   }
+  {
+   if (def)
+    t._REG_OP_S(short(id), regname, &(self->*val), buflen, def, multipleLines);
+   else
+    {
+     char_t *defbuf=(char_t*)_alloca((buflen+1)*sizeof(char_t));defbuf[0]='\0';
+     self->getDefaultStr(id,defbuf,buflen);
+     t._REG_OP_S(short(id), regname, &(self->*val), buflen, defbuf, multipleLines);
+    }
+  }
 }
 void Toptions::TstrOption::reset(Toptions *self) const
 {

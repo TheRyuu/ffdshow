@@ -61,9 +61,9 @@ ToutputAudioSettings::ToutputAudioSettings(TintStrColl *Icoll,TfilterIDFFs *filt
  addOptions(iopts);
  static const TstrOption sopts[]=
   {
-   IDFF_aoutMultichannelDevice,(TstrVal)&ToutputAudioSettings::multichannelDevice,255,_l(""),0,
+   IDFF_aoutMultichannelDevice   ,(TstrVal)&ToutputAudioSettings::multichannelDevice    ,255,0, _l(""),0,
      NULL,_l(""),
-   IDFF_aoutMultichannelDeviceId,(TstrVal)&ToutputAudioSettings::multichannelDeviceId,255,_l(""),0,
+   IDFF_aoutMultichannelDeviceId ,(TstrVal)&ToutputAudioSettings::multichannelDeviceId  ,255,0, _l(""),0,
      _l("multichannelDeviceId"),_l(""),
    0
   };

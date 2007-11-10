@@ -51,11 +51,11 @@ Twinamp2settings::Twinamp2settings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfi
  addOptions(iopts);
  static const TstrOption sopts[]=
   {
-   IDFF_winamp2flnm       ,(TstrVal)&Twinamp2settings::flnm      ,MAX_PATH,_l(""),1,
+   IDFF_winamp2flnm                     ,(TstrVal)&Twinamp2settings::flnm                     ,MAX_PATH                     ,0 ,_l(""),1,
      _l("winamp2flnm"),_l(""),
-   IDFF_winamp2filtername ,(TstrVal)&Twinamp2settings::modulename,256     ,_l(""),1,
+   IDFF_winamp2filtername               ,(TstrVal)&Twinamp2settings::modulename               ,256                          ,0 ,_l(""),1,
      _l("winamp2filtername"),_l(""),
-   IDFF_winamp2allowMultichannelOnlyIn,(TstrVal)&Twinamp2settings::allowMultichannelOnlyIn,MAX_COMPATIBILITYLIST_LENGTH,_l(""),1,
+   IDFF_winamp2allowMultichannelOnlyIn  ,(TstrVal)&Twinamp2settings::allowMultichannelOnlyIn  ,MAX_COMPATIBILITYLIST_LENGTH ,0 ,_l(""),1,
      _l("allowMultichannelOnlyIn"),_l("dsp_dfx.dll"),
    0
   };

@@ -71,15 +71,15 @@ Tconfig::Tconfig(TintStrColl *Icoll):Toptions(Icoll),htmlcolors(NULL)
 {
  static const TintOptionT<Tconfig> iopts[]=
   {
-   IDFF_availableCpuFlags  ,&Tconfig::available_cpu_flags0,-1,-1,_l(""),0,NULL,0,
-   IDFF_cpuFlags           ,&Tconfig::cpu_flags0          ,-1,-1,_l(""),0,NULL,0,
-   IDFF_unicodeOS          ,&Tconfig::unicodeOS           ,-1,-1,_l(""),0,NULL,0,
+   IDFF_availableCpuFlags  ,&Tconfig::available_cpu_flags0,-1,-1,       _l(""),0,NULL,0,
+   IDFF_cpuFlags           ,&Tconfig::cpu_flags0          ,-1,-1,       _l(""),0,NULL,0,
+   IDFF_unicodeOS          ,&Tconfig::unicodeOS           ,-1,-1,       _l(""),0,NULL,0,
    0
   };
  addOptions(iopts);
  static const TstrOption sopts[]=
   {
-   IDFF_installPath,(TstrVal)&Tconfig::pth,MAX_PATH,_l(""),0,NULL,NULL,
+   IDFF_installPath        ,(TstrVal)&Tconfig::pth        ,MAX_PATH,0,  _l(""),0,NULL,NULL,
    0
   };
  addOptions(sopts);

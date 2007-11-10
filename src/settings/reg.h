@@ -2,6 +2,7 @@
 #define _REG_H_
 
 #include "inifiles.h"
+#include "malloc.h"
 
 #define FFDSHOW_REG_PARENT _l("Software\\GNU")
 #define FFDSHOW_REG_CLASS _l("config")
@@ -10,8 +11,8 @@ struct TregOp
 {
 public:
  virtual ~TregOp() {}
- virtual bool _REG_OP_N(short int id,const char_t *X,int &Y,const int Z)=0;
- virtual void _REG_OP_S(short int id,const char_t *X,char_t *Y,size_t buflen,const char_t *Z)=0;
+ virtual bool _REG_OP_N(short int id, const char_t *X, int &Y, const int Z)=0;
+ virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false)=0;
 };
 struct TregOpRegRead :public TregOp
 {
@@ -38,12 +39,17 @@ public:
    else
     return true;
   }
- virtual void _REG_OP_S(short int id,const char_t *X,char_t *Y,size_t buflen,const char_t *Z)
+#ifndef REG_REG_ONLY
+ virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false);
+#else
+ // for ff_acm. No multiple lines support.
+ virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false)
   {
    DWORD size=(DWORD)(buflen*sizeof(char_t));
    if ((!hKey || RegQueryValueEx(hKey,X,0,0,(LPBYTE)Y,&size)!=ERROR_SUCCESS) && Z)
     strcpy(Y,Z);
   }
+#endif
 };
 struct TregOpRegWrite :public TregOp
 {
@@ -65,15 +71,25 @@ public:
     RegSetValueEx(hKey,X,0,REG_DWORD,(LPBYTE)&Y,sizeof(int));
    return true; // write always returns true
   }
- virtual void _REG_OP_S(short int id,const char_t *X,char_t *Y,size_t buflen,const char_t *Z)
-  {
-   if (hKey) RegSetValueEx(hKey,X,0,REG_SZ,(LPBYTE)Y,DWORD((strlen(Y)+1)*sizeof(char_t)));
-  }
+ virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false);
 };
 
 #ifndef REG_REG_ONLY
 
-struct TregOpFileRead :public TregOp
+struct TregOpFileStreamReadBase :public TregOp
+{
+protected:
+ void processMultipleLines(char_t *Y, size_t buflen, char_t *bufMULTI_SZ, size_t buflenMULTI_SZ);
+};
+
+struct TregOpFileStreamWriteBase :public TregOp
+{
+protected:
+ ffstring outString;
+ void processMultipleLines(char_t *Y, size_t buflen, char_t *bufMULTI_SZ, size_t buflenMULTI_SZ);
+};
+
+struct TregOpFileRead :public TregOpFileStreamReadBase
 {
 private:
  Tinifile ini;
@@ -90,13 +106,10 @@ public:
    Y=atoi(propS);
    return true; // TODO: detect if default has been used
   }
- virtual void _REG_OP_S(short int id,const char_t *X,char_t *Y,size_t buflen,const char_t *Z)
-  {
-   ini.getPrivateProfileString(section,X,Z,Y,(DWORD)buflen);
-   Y[buflen-1]='\0';
-  }
+ virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false);
 };
-struct TregOpFileWrite :public TregOp
+
+struct TregOpFileWrite :public TregOpFileStreamWriteBase
 {
 private:
  Tinifile ini;
@@ -112,13 +125,10 @@ public:
    ini.writePrivateProfileString(section,X,_itoa(Y,pomS,10));
    return true;
   }
- virtual void _REG_OP_S(short int id,const char_t *X,char_t *Y,size_t buflen,const char_t *)
-  {
-   ini.writePrivateProfileString(section,X,Y);
-  }
+ virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *, bool multipleLines = false);
 };
 
-struct TregOpStreamRead :public TregOp
+struct TregOpStreamRead :public TregOpFileStreamReadBase
 {
 private:
  typedef std::map<ffstring,ffstring,ffstring_iless> Tstrs;
@@ -141,21 +151,10 @@ public:
      return true;
     }
   }
- virtual void _REG_OP_S(short int id,const char_t *X,char_t *Y,size_t buflen,const char_t *Z)
-  {
-   Tstrs::const_iterator i=strs.find(X);
-   if (i==strs.end())
-    {
-     if (loaddef)
-      strncpy(Y,Z,buflen);
-    }
-   else
-    strncpy(Y,i->second.c_str(),buflen);
-   Y[buflen-1]='\0';
-  }
+ virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false);
 };
 
-struct TregOpStreamWrite :public TregOp
+struct TregOpStreamWrite :public TregOpFileStreamWriteBase
 {
 private:
  char_t sep;
@@ -170,13 +169,7 @@ public:
    buf.append(sep);
    return true;
   }
- virtual void _REG_OP_S(short int id,const char_t *X,char_t *Y,size_t buflen,const char_t *)
-  {
-   char_t pomS[1024];
-   tsprintf(pomS,_l("%s=%s"),X,Y);
-   buf.append(pomS,strlen(pomS)*sizeof(char_t));
-   buf.append(sep);
-  }
+ virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *, bool multipleLines = false);
  void end(void)
   {
    buf.append(sep);
@@ -185,13 +178,6 @@ public:
   {
    buf.append(c);
   }
-};
-
-struct TregOpIDstreamWrite :public TregOp, public TbyteBuffer
-{
-public:
- virtual bool _REG_OP_N(short int id,const char_t *X,int &Y,const int);
- virtual void _REG_OP_S(short int id,const char_t *X,char_t *Y,size_t buflen,const char_t *Z);
 };
 
 struct Tval
@@ -203,14 +189,21 @@ struct Tval
  int i;
 };
 
-struct TregOpIDstreamRead: public TregOp
+struct TregOpIDstreamRead: public TregOpFileStreamReadBase
 {
  typedef std::hash_map<int,Tval> Tvals;
  Tvals vals;
 public:
  TregOpIDstreamRead(const void *buf,size_t len,const void* *last=NULL);
  virtual bool _REG_OP_N(short int id,const char_t *X,int &Y,const int Z);
- virtual void _REG_OP_S(short int id,const char_t *X,char_t *Y,size_t buflen,const char_t *Z);
+ virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false);
+};
+
+struct TregOpIDstreamWrite :public TregOpFileStreamWriteBase, public TbyteBuffer
+{
+public:
+ virtual bool _REG_OP_N(short int id,const char_t *X,int &Y,const int);
+ virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false);
 };
 
 struct Tstream;

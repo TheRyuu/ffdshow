@@ -55,9 +55,9 @@ TDScalerFilterSettings::TDScalerFilterSettings(TintStrColl *Icoll,TfilterIDFFs *
  addOptions(iopts);
  static const TstrOption sopts[]=
   {
-   IDFF_dscalerFltflnm,(TstrVal)&TDScalerFilterSettings::fltflnm,MAX_PATH,_l(""),1,
+   IDFF_dscalerFltflnm,(TstrVal)&TDScalerFilterSettings::fltflnm,MAX_PATH,0,_l(""),1,
      _l("dscalerFltflnm"),_l(""),
-   IDFF_dscalerCfg    ,(TstrVal)&TDScalerFilterSettings::cfg    ,512     ,_l(""),1,
+   IDFF_dscalerCfg    ,(TstrVal)&TDScalerFilterSettings::cfg    ,512     ,0,_l(""),1,
      _l("dscalerCfg"),_l(""),
    0
   };

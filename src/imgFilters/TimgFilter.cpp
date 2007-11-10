@@ -167,7 +167,7 @@ bool TimgFilter::getCurNext(int csp,TffPict &pict,int full,int copy,unsigned cha
  TffPict pictN;
  if (((csp&FF_CSPS_MASK)&(pict.csp&FF_CSPS_MASK))==0)
   {
-   bool flip1 = (pict.csp ^ csp) & FF_CSP_FLAGS_VFLIP;
+   bool flip1 = !!((pict.csp ^ csp) & FF_CSP_FLAGS_VFLIP);
    if (!convert2)
     convert2=new Tconvert(deci,pict.rectFull.dx,pict.rectFull.dy);
    pict.convertCSP((csp_bestMatch(pict.csp,csp&FF_CSPS_MASK)&~FF_CSP_FLAGS_VFLIP)|(csp&FF_CSP_FLAGS_YUV_ADJ),own2,convert2);
@@ -179,7 +179,7 @@ bool TimgFilter::getCurNext(int csp,TffPict &pict,int full,int copy,unsigned cha
  else
   {
    pictN = pict;
-   flip = (pict.csp ^ csp) & FF_CSP_FLAGS_VFLIP;
+   flip = !!((pict.csp ^ csp) & FF_CSP_FLAGS_VFLIP);
    if (flip)
     pictN.rectClip.y = pictN.rectFull.dy - pictN.rectClip.y - pictN.rectClip.dy;
    pictN.convertCSP((pict.csp & ~FF_CSP_FLAGS_VFLIP) | (csp & (FF_CSP_FLAGS_YUV_ADJ | FF_CSP_FLAGS_VFLIP)),own2);

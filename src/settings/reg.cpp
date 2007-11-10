@@ -19,6 +19,176 @@
 #include "stdafx.h"
 #include "reg.h"
 #include "Tstream.h"
+#include "char_t.h"
+
+//================================== TregOpRegRead  =================================
+void TregOpRegRead::_REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines)
+{
+ DWORD size=(DWORD)(buflen*sizeof(char_t));
+ if ((!hKey || RegQueryValueEx(hKey,X,0,0,(LPBYTE)Y,&size)!=ERROR_SUCCESS) && Z)
+  {
+   strcpy(Y,Z);
+   return;
+  }
+ if (multipleLines)
+  {
+   char_t *bufMULTI_SZ = (char_t *)alloca(sizeof(char_t) * (buflen + 1));
+   memcpy(bufMULTI_SZ, Y, buflen);
+   char_t *buf = Y;
+   char_t *bufend = Y + buflen;
+   while (*bufMULTI_SZ && buf<bufend)
+    {
+     size_t len = strlen(bufMULTI_SZ);
+     strncpy(buf, bufMULTI_SZ, std::min<size_t>(bufend - buf, len + 1));
+     bufMULTI_SZ += len + 1;
+     buf += len;
+     if (buf +2 < bufend)
+      strcpy(buf,_l("\r\n"));
+     buf += 2;
+    }
+   if (buf < bufend)
+    *buf = 0;
+   else
+    buf[buflen - 1] = 0;
+  }
+}
+
+//================================== TregOpRegWrite =================================
+void TregOpRegWrite::_REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines)
+{
+ if (!hKey) return;
+ if (multipleLines)
+  {
+   // from _l("\r\n") to double null terminated strings.
+   char_t *bufMULTI_SZ = (char_t *)alloca(sizeof(char_t) * (buflen + 1));
+   strncpy(bufMULTI_SZ, Y, buflen);
+   bufMULTI_SZ[buflen] = 0;
+   strings lines;
+   strtok(bufMULTI_SZ, _l("\r\n"), lines);
+   memset(bufMULTI_SZ, 0, sizeof(char_t) * (buflen + 1));
+   char_t *bufMULTI_SZpos = bufMULTI_SZ;
+   char_t *bufMULTI_SZend = bufMULTI_SZ + (buflen>0 ? buflen - 1 : 0);
+   for (strings::const_iterator l = lines.begin() ; l != lines.end() && bufMULTI_SZpos < bufMULTI_SZend ; l++)
+    {
+     strncpy(bufMULTI_SZpos, l->c_str(), std::min<size_t>(l->size(), bufMULTI_SZend - bufMULTI_SZpos));
+     bufMULTI_SZpos += l->size() + 1;
+    }
+   RegSetValueEx(hKey,X,0,REG_MULTI_SZ,(LPBYTE)bufMULTI_SZ,DWORD((bufMULTI_SZpos - bufMULTI_SZ + 1)*sizeof(char_t)));
+  }
+ else
+  {
+   RegSetValueEx(hKey,X,0,REG_SZ,(LPBYTE)Y,DWORD((strlen(Y)+1)*sizeof(char_t)));
+  }
+}
+
+
+//============================= TregOpFileStreamReadBase   ============================
+void TregOpFileStreamReadBase::processMultipleLines(char_t *Y, size_t buflen, char_t *bufMULTI_SZ, size_t buflenMULTI_SZ)
+{
+ bufMULTI_SZ[buflenMULTI_SZ - 1]=0;
+ size_t count = 0;
+ while (*bufMULTI_SZ && count < buflen)
+  {
+   if (*bufMULTI_SZ == '%')
+    {
+     bufMULTI_SZ++;
+     if (*bufMULTI_SZ == 'r')
+      {
+       Y[count] = '\r';
+       count++;
+       bufMULTI_SZ++;
+      }
+     else if (*bufMULTI_SZ == 'n')
+      {
+       Y[count] = '\n';
+       count++;
+       bufMULTI_SZ++;
+      }
+     else if (*bufMULTI_SZ == '%')
+      {
+       Y[count] = '%';
+       count++;
+       bufMULTI_SZ++;
+      }
+     else
+      {
+       Y[count] = '%';
+       count++;
+       if (count < buflen)
+        Y[count] = *bufMULTI_SZ;
+       else
+        break;
+       count++;
+       bufMULTI_SZ++;
+      }
+    }
+   else
+    {
+     Y[count] = *bufMULTI_SZ;
+     count++;
+     bufMULTI_SZ++;
+    }
+  }
+ if (count < buflen)
+  Y[count] = 0;
+ Y[buflen - 1] = 0;
+}
+
+//============================ TregOpFileStreamWriteBase   ============================
+void TregOpFileStreamWriteBase::processMultipleLines(char_t *Y, size_t buflen, char_t *bufMULTI_SZ, size_t buflenMULTI_SZ)
+{
+ strncpy(bufMULTI_SZ, Y, buflenMULTI_SZ - 1);
+ bufMULTI_SZ[buflenMULTI_SZ - 1] = 0;
+ strings lines1,lines2;
+ strtok(bufMULTI_SZ, _l("%"), lines1,true);
+ ffstring line1;
+ for (strings::const_iterator l = lines1.begin() ; l != lines1.end() ; l++)
+  {
+   if (line1.size())
+    line1 += _l("%%") + *l;
+   else
+    line1 = *l;
+  }
+ strtok(line1.c_str(), _l("\r\n"), lines2,true);
+ for (strings::const_iterator l = lines2.begin() ; l != lines2.end() ; l++)
+  {
+   if (outString.size())
+    outString += _l("%r%n") + *l;
+   else
+    outString = *l;
+  }
+}
+
+//================================== TregOpFileRead   =================================
+void TregOpFileRead::_REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines)
+{
+ if (multipleLines)
+  {
+   size_t buflenMULTI_SZ = buflen * 2 + 1;
+   char_t *bufMULTI_SZ = (char_t *)alloca(sizeof(char_t) * buflenMULTI_SZ);
+   ini.getPrivateProfileString(section, X, Z, bufMULTI_SZ, (DWORD)buflen);
+   processMultipleLines(Y, buflen, bufMULTI_SZ, buflenMULTI_SZ);
+  }
+ else
+  {
+   ini.getPrivateProfileString(section,X,Z,Y,(DWORD)buflen);
+   Y[buflen-1]='\0';
+  }
+}
+
+//================================== TregOpFileWrite  =================================
+void TregOpFileWrite::_REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *, bool multipleLines)
+{
+ if (multipleLines)
+  {
+   size_t buflenMULTI_SZ = buflen + 1;
+   char_t *bufMULTI_SZ = (char_t *)alloca(sizeof(char_t) * buflenMULTI_SZ);
+   processMultipleLines(Y, buflen, bufMULTI_SZ, buflenMULTI_SZ);
+   ini.writePrivateProfileString(section,X,outString.c_str());
+  }
+ else
+  ini.writePrivateProfileString(section,X,Y);
+}
 
 //================================== TregOpStreamRead =================================
 TregOpStreamRead::TregOpStreamRead(const void *buf,size_t len,char_t sep,bool Iloaddef):loaddef(Iloaddef)
@@ -41,32 +211,58 @@ TregOpStreamRead::TregOpStreamRead(const void *buf,size_t len,char_t sep,bool Il
    cur=s+1;
   }
 }
-
-//=============================== TregOpIDstreamWrite ===============================
-bool TregOpIDstreamWrite::_REG_OP_N(short int id,const char_t *X,int &Y,const int)
+void TregOpStreamRead::_REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines)
 {
- if (id)
+ Tstrs::const_iterator i=strs.find(X);
+ if (i==strs.end())
   {
-   append(id);
-   append(Y);
+   if (loaddef)
+    strncpy(Y,Z,buflen);
   }
- return true;
-}
-void TregOpIDstreamWrite::_REG_OP_S(short int id,const char_t *X,char_t *Y,size_t buflen,const char_t *Z)
-{
- if (id)
+ else
   {
-   append((short int)-id);
-   if (sizeof(char_t)==sizeof(wchar_t))
+   if (multipleLines)
     {
-     static const uint8_t marker[]={0xff,0xfe};
-     append(marker,2);
+     size_t buflenMULTI_SZ = buflen * 2 + 1;
+     char_t *bufMULTI_SZ = (char_t *)alloca(sizeof(char_t) * buflenMULTI_SZ);
+     strncpy(bufMULTI_SZ, i->second.c_str(), buflenMULTI_SZ);
+     processMultipleLines(Y, buflen, bufMULTI_SZ, buflenMULTI_SZ);
     }
-   append(Y,(strlen(Y)+1)*sizeof(char_t));
+   else
+    {
+     strncpy(Y,i->second.c_str(),buflen);
+    }
+  }
+ Y[buflen-1]='\0';
+}
+
+//================================ TregOpStreamWrite ================================
+void TregOpStreamWrite::_REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines)
+{
+ // not used
+
+ if (multipleLines)
+  {
+   size_t buflenMULTI_SZ = buflen + 1;
+   char_t *bufMULTI_SZ = (char_t *)alloca(sizeof(char_t) * buflenMULTI_SZ);
+   processMultipleLines(Y, buflen, bufMULTI_SZ, buflenMULTI_SZ);
+   ffstring pomS = ffstring(X) + _l("=") + outString;
+   buf.append(pomS.c_str(), pomS.size() * sizeof(char_t));
+   buf.append(sep);
+  }
+ else
+  {
+   ffstring pomS = ffstring(X) + _l("=") + ffstring(Y);
+   buf.append(pomS.c_str(), pomS.size() * sizeof(char_t));
+   buf.append(sep);
   }
 }
 
 //=============================== TregOpIDstreamRead ================================
+//
+// To test. Use graphedit and add ffdshow encoder. Load graph.
+//
+
 TregOpIDstreamRead::TregOpIDstreamRead(const void *buf,size_t len,const void* *last)
 {
  const char *p,*pEnd;
@@ -115,10 +311,68 @@ bool TregOpIDstreamRead::_REG_OP_N(short int id,const char_t *X,int &Y,const int
    return true;
   }
 }
-void TregOpIDstreamRead::_REG_OP_S(short int id,const char_t *X,char_t *Y,size_t buflen,const char_t *Z)
+void TregOpIDstreamRead::_REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines)
 {
  Tvals::const_iterator i=vals.find(id);
- strncpy(Y,i==vals.end()?Z:i->second.s.c_str(),buflen);Y[buflen-1]='\0';
+ if (i == vals.end())
+  {
+   strncpy(Y, Z, buflen);
+   Y[buflen-1]='\0';
+   return;
+  }
+
+ if (multipleLines)
+  {
+   // To test. Enable image processing in ffdshow encoder and enter AviSynth script (preset name=ffdshowenc).
+   size_t buflenMULTI_SZ = buflen * 2 + 1;
+   char_t *bufMULTI_SZ = (char_t *)alloca(sizeof(char_t) * buflenMULTI_SZ);
+   strncpy(bufMULTI_SZ, i->second.s.c_str(), buflenMULTI_SZ);
+   processMultipleLines(Y, buflen, bufMULTI_SZ, buflenMULTI_SZ);
+  }
+ else
+  {
+   strncpy(Y, i->second.s.c_str(), buflen);
+   Y[buflen-1]='\0';
+  }
+}
+
+//=============================== TregOpIDstreamWrite ===============================
+//
+//  To test. Use graphedit and add ffdshow encoder. Save graph.
+//
+
+bool TregOpIDstreamWrite::_REG_OP_N(short int id,const char_t *X,int &Y,const int)
+{
+ if (id)
+  {
+   append(id);
+   append(Y);
+  }
+ return true;
+}
+void TregOpIDstreamWrite::_REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines)
+{
+ if (id)
+  {
+   append((short int)-id);
+   if (sizeof(char_t)==sizeof(wchar_t))
+    {
+     static const uint8_t marker[]={0xff,0xfe};
+     append(marker,2);
+    }
+   if (multipleLines)
+    {
+     // To test. Enable image processing in ffdshow encoder and enter AviSynth script (preset name=ffdshowenc).
+     size_t buflenMULTI_SZ = buflen + 1;
+     char_t *bufMULTI_SZ = (char_t *)alloca(sizeof(char_t) * buflenMULTI_SZ);
+     processMultipleLines(Y, buflen, bufMULTI_SZ, buflenMULTI_SZ);
+     append(outString.c_str(), (outString.size() + 1) * sizeof(char_t));
+    }
+   else
+    {
+     append(Y,(strlen(Y)+1)*sizeof(char_t));
+    }
+  }
 }
 
 //===================================================================================
@@ -165,6 +419,60 @@ bool regExport(Tstream &f,HKEY hive,const char_t *key,bool unicode)
       {
        ffstring dataS=(const char_t*)data;
        f.printf(_l("\"%s\"=\"%s\"\n"),valuename,stringreplace(dataS,_l("\\"),_l("\\\\"),rfReplaceAll).c_str());
+       break;
+      }
+     case REG_MULTI_SZ:
+      {
+       ffstring outstring(_l("\""));
+       outstring += ffstring(valuename) + _l("\"=hex(7):");
+       const char_t *indata = (const char_t*)data;
+       while (*indata)
+        {
+         size_t len = strlen(indata);
+         if (unicode)
+          {
+           text<wchar_t> uni(indata);
+           BYTE *bin = (BYTE*)((const wchar_t *)uni);
+           while (*bin || *(bin + 1))
+            {
+             char_t s[20];
+             wsprintf(s,_l("%02x,%02x,"),*bin,*(bin+1));
+             outstring += s;
+             bin += 2;
+            }
+           outstring += _l("00,00,");
+          }
+         else
+          {
+           text<char> ansi(indata);
+           BYTE *bin = (BYTE*)((const char *)ansi);
+           while (*bin)
+            {
+             char_t s[20];
+             wsprintf(s,_l("%02x,"),*bin);
+             outstring += s;
+             bin++;
+            }
+           outstring += _l("00,");
+          }
+         indata += len + 1;
+        }
+       if (unicode)
+        outstring += _l("00,00\n");
+       else
+        outstring += _l("00\n");
+
+       size_t insCount = 76;
+       while (insCount < outstring.size())
+        {
+         insCount =  outstring.find(_l(","), insCount);
+         if (insCount == DwString<char_t>::npos)
+          break;
+         insCount++;
+         outstring.insert(insCount, _l("\\\n  "));
+         insCount += 78;
+        };
+       f.printf(_l("%s"),outstring.c_str());
        break;
       }
     }

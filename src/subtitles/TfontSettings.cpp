@@ -183,7 +183,7 @@ TfontSettingsOSD::TfontSettingsOSD(TintStrColl *Icoll):TfontSettings(Icoll)
  addOptions(iopts);
  static const TstrOption sopts[]=
   {
-   IDFF_OSDfontName,(TstrVal)&TfontSettings::name,LF_FACESIZE,_l(""),0,
+   IDFF_OSDfontName,(TstrVal)&TfontSettings::name,LF_FACESIZE,0,_l(""),0,
      _l("OSDfontName"), NULL,
    0
   };
@@ -249,7 +249,7 @@ TfontSettingsSub::TfontSettingsSub(TintStrColl *Icoll):TfontSettings(Icoll)
  addOptions(iopts);
  static const Toptions::TstrOption sopts[]=
   {
-   IDFF_fontName,(TstrVal)&TfontSettings::name,LF_FACESIZE,_l(""),1,
+   IDFF_fontName               ,(TstrVal)&TfontSettings::name      ,LF_FACESIZE,0,_l(""),1,
      _l("fontName"), NULL,
    0
   };

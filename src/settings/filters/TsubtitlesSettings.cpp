@@ -695,11 +695,11 @@ TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters)
  addOptions(iopts);
  static const TstrOption sopts[]=
   {
-   IDFF_subFilename     ,(TstrVal)&TsubtitlesSettings::flnm    ,MAX_PATH ,_l(""),1,
+   IDFF_subFilename            ,(TstrVal)&TsubtitlesSettings::flnm           ,MAX_PATH,0 ,_l(""),1,
      _l("subFlnm"),_l(""),
-   IDFF_subTempFilename ,(TstrVal)&TsubtitlesSettings::tempflnm,MAX_PATH ,_l(""),1,
+   IDFF_subTempFilename        ,(TstrVal)&TsubtitlesSettings::tempflnm       ,MAX_PATH,0 ,_l(""),1,
      NULL,_l(""),
-   IDFF_subFixDict      ,(TstrVal)&TsubtitlesSettings::fixDict ,60       ,_l(""),1,
+   IDFF_subFixDict             ,(TstrVal)&TsubtitlesSettings::fixDict        ,60      ,0 ,_l(""),1,
      _l("subFixDict"),_l(""),
    0
   };

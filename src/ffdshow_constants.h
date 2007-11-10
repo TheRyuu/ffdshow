@@ -589,7 +589,8 @@
 #define IDFF_avisynthEnableBuffering 1262
 #define IDFF_avisynthBufferAhead     1263
 #define IDFF_avisynthBufferBack      1264
-#define IDFF_avisynthScript          1254
+#define IDFF_avisynthScript          1254 // Use this if you want to manipulate the setting through external API.
+#define IDFF_avisynthScriptMULTI_SZ  1265 // Used to save data. If both IDFF_avisynthScript and IDFF_avisynthScriptMULTI_SZ exist, IDFF_avisynthScriptMULTI_SZ is used. If only one of these exists, the exsiting one is used.
 
 #define IDFF_isOSD                 1501
 #define IDFF_OSDfontName           1509

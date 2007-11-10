@@ -37,7 +37,8 @@ const TfilterIDFF TavisynthSettings::idffs=
 TavisynthSettings::TavisynthSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSettingsVideo(sizeof(*this),Icoll,filters,&idffs)
 {
  half=0;
- memset(script,0,sizeof(script));
+ memset(script, 0, sizeof(script));
+ memset(scriptMULTI_SZ, 0, sizeof(scriptMULTI_SZ));
  static const TintOptionT<TavisynthSettings> iopts[]=
   {
    IDFF_isAvisynth               ,&TavisynthSettings::is              ,0,0,_l(""),1,
@@ -71,11 +72,27 @@ TavisynthSettings::TavisynthSettings(TintStrColl *Icoll,TfilterIDFFs *filters):T
  addOptions(iopts);
  static const TstrOption sopts[]=
   {
-   IDFF_avisynthScript,(TstrVal)&TavisynthSettings::script,2048,_l(""),1,
+   IDFF_avisynthScript           ,(TstrVal)&TavisynthSettings::script         ,MAX_AVISYNTH_SCRIPT_LENGTH ,0,_l(""),1,
      _l("avisynthScript"),_l(""),
+   IDFF_avisynthScriptMULTI_SZ   ,(TstrVal)&TavisynthSettings::scriptMULTI_SZ ,MAX_AVISYNTH_SCRIPT_LENGTH, 1,_l(""),1,
+     _l("avisynthScriptMULTI_SZ"),NULL,
    0
   };
  addOptions(sopts);
+}
+
+void TavisynthSettings::reg_op(TregOp &t)
+{
+ strncpy(scriptMULTI_SZ, script, std::min((size_t)MAX_AVISYNTH_SCRIPT_LENGTH, strlen(script) + 1)); // before save
+ TfilterSettingsVideo::reg_op(t);
+ strncpy(script, scriptMULTI_SZ, std::min((size_t)MAX_AVISYNTH_SCRIPT_LENGTH, strlen(scriptMULTI_SZ) + 1)); // after load
+}
+
+void TavisynthSettings::getDefaultStr(int id,char_t *buf,size_t buflen)
+{
+ if (id == IDFF_avisynthScriptMULTI_SZ)
+  strncpy(buf, script, std::min(buflen, strlen(script) + 1));
+ return TfilterSettingsVideo::getDefaultStr(id, buf, buflen);
 }
 
 void TavisynthSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const

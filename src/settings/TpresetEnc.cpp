@@ -44,7 +44,7 @@ void TpresetEnc::initBuiltin(void)
      preset->vals.insert(std::make_pair(X,Tval(Z)));
      return true;
     }
-   virtual void _REG_OP_S(short int id,const char_t *X,char_t *Y,size_t buflen,const char_t *Z)
+   virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false)
     {
      preset->vals.insert(std::make_pair(X,Tval(Z)));
     }
@@ -89,7 +89,7 @@ void TpresetEnc::load(const char_t *Iname)
      else
       return false;
     }
-   virtual void _REG_OP_S(short int id,const char_t *X,char_t *Y,size_t buflen,const char_t *Z)
+   virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false)
     {
      DWORD size=MAX_PATH*sizeof(char_t);
      char_t val[MAX_PATH];
@@ -147,7 +147,7 @@ void TpresetEnc::apply(TcoSettings *co,const int *propsIDs)
       }
      return true;
     }
-   virtual void _REG_OP_S(short int id,const char_t *X,char_t *Y,size_t buflen,const char_t *Z)
+   virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false)
     {
      if (isIn(id))
       {
@@ -174,7 +174,7 @@ void TpresetEnc::store(TcoSettings *co,const int *propsIDs)
       preset->vals[X]=Tval(Y);
      return true;
     }
-   virtual void _REG_OP_S(short int id,const char_t *X,char_t *Y,size_t buflen,const char_t *Z)
+   virtual void _REG_OP_S(short int id, const char_t *X, char_t *Y, size_t buflen, const char_t *Z, bool multipleLines = false)
     {
      if (isIn(id))
       preset->vals[X]=Tval(Y);

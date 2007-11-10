@@ -306,7 +306,7 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child,const char_t *IpresetName):
 
  static const TstrOption sopts[]=
   {
-   IDFF_useQueueOnlyInList  ,(TstrVal)&TpresetVideo::useQueueOnlyInList ,128,_l(""),0,
+   IDFF_useQueueOnlyInList  ,(TstrVal)&TpresetVideo::useQueueOnlyInList ,128,0,_l(""),0,
      _l("useQueueOnlyInList"),_l("mplayerc.exe;"),
    0
   };

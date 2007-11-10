@@ -43,11 +43,11 @@ TOSDsettings::TOSDsettings(size_t IsizeofthisAll,TintStrColl *Icoll,TfilterIDFFs
  addOptions(iopts);
  static const TstrOption sopts[]=
   {
-   IDFF_OSDcurPreset  ,(TstrVal)&TOSDsettings::curPreset  ,40,_l(""),0,
+   IDFF_OSDcurPreset  ,(TstrVal)&TOSDsettings::curPreset  ,40       ,0 ,_l(""),0,
      _l("OSDcurPreset"),_l("default"),
-   IDFF_OSDstartPreset,(TstrVal)&TOSDsettings::startPreset,40,_l(""),0,
+   IDFF_OSDstartPreset,(TstrVal)&TOSDsettings::startPreset,40       ,0 ,_l(""),0,
      _l("OSDstartPreset"),_l(""),
-   IDFF_OSDsaveFlnm   ,(TstrVal)&TOSDsettings::saveFlnm   ,MAX_PATH,_l(""),0,
+   IDFF_OSDsaveFlnm   ,(TstrVal)&TOSDsettings::saveFlnm   ,MAX_PATH ,0 ,_l(""),0,
      _l("OSDsaveFlnm"),_l(""),
    0
   };
@@ -215,7 +215,7 @@ TOSDsettingsVideo::TOSDsettingsVideo(TintStrColl *Icoll,TfilterIDFFs *filters):
 
  static const TstrOption sopts[]=
   {
-   IDFF_OSDuser       ,(TstrVal)&TOSDsettingsVideo::user       ,256 ,_l(""),0,NULL,NULL,
+   IDFF_OSDuser                   ,(TstrVal)&TOSDsettingsVideo::user ,256,0 ,_l(""),0,NULL,NULL,
    0
   };
  addOptions(sopts);

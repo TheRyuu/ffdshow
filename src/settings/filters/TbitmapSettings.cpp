@@ -77,7 +77,7 @@ TbitmapSettings::TbitmapSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
  addOptions(iopts);
  static const TstrOption sopts[]=
   {
-   IDFF_bitmapFlnm ,(TstrVal)&TbitmapSettings::flnm,MAX_PATH,_l(""),1,
+   IDFF_bitmapFlnm     ,(TstrVal)&TbitmapSettings::flnm  ,MAX_PATH,0, _l(""),1,
      _l("bitmapFlnm"),_l(""),
    0
   };
