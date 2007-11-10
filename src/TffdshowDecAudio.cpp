@@ -660,6 +660,12 @@ HRESULT TffdshowDecAudio::Receive(IMediaSample* pIn)
    firsttransform=false;
    onTrayIconChange(0,0);
   }
+ if (m_dirtyStop)
+  {
+   m_dirtyStop = false;
+   inpin->onSeek(0);
+  }
+
  return S_OK;
 }
 

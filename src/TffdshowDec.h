@@ -478,6 +478,14 @@ protected:
  static bool streamsSort(const Tstream *s1,const Tstream *s2);
  virtual AM_MEDIA_TYPE* getInputMediaType(int lIndex);
  virtual void addOwnStreams(void) {}
+public:
+ virtual STDMETHODIMP Stop(void)
+  {
+   m_dirtyStop=true;
+   return CmyTransformFilter::Stop();
+  }
+protected:
+ bool m_dirtyStop; // Work around DVBViewer compatibility issue. Old DVBViewer doesn't call NewSegment after Stop and before next play.
 };
 
 #endif

@@ -146,3 +146,11 @@ HRESULT TinputPin::connectedTo(char_t *buf,size_t buflen)
  if (pi.pFilter) pi.pFilter->Release();
  return S_OK;
 }
+
+bool TinputPin::onSeek(REFERENCE_TIME segmentStart)
+{
+ if (codec)
+  return codec->onSeek(segmentStart);
+ else
+  return false;
+} 

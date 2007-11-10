@@ -826,6 +826,12 @@ HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
    isQueue=isQueue && !m_IsOldVideoRenderer;
   }
 
+ if (m_dirtyStop)
+  {
+   m_dirtyStop = false;
+   inpin->onSeek(0);
+  }
+
  long srcLength;
  HRESULT hr=inpin->decompress(pSample,&srcLength);
  if (srcLength<0)
@@ -1270,11 +1276,12 @@ STDMETHODIMP TffdshowDecVideo::Run(REFERENCE_TIME tStart)
 STDMETHODIMP TffdshowDecVideo::Stop(void)
 {
  DPRINTF(_l("TffdshowDecVideo::Stop thread=%d"),GetCurrentThreadId());
+ m_dirtyStop = true;
  if (hReconnectEvent)
   SetEvent(hReconnectEvent);
  if (videoWindow) {videoWindow=NULL;wasVideoWindow=false;}
  if (basicVideo) {basicVideo=NULL;wasBasicVideo=false;}
- return CTransformFilter::Stop();
+ return TffdshowDec::Stop();
 }
 
 void TffdshowDecVideo::lockReceive(void)

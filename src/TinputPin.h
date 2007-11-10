@@ -30,6 +30,7 @@ public:
  virtual HRESULT getEncoderInfo(char_t *buf,size_t buflen);
  const char_t* getFileSourceName(void);
  HRESULT connectedTo(char_t *buf,size_t buflen); // buflen : count of characters, not byte size.
+ bool onSeek(REFERENCE_TIME segmentStart);
 };
 
 template<class Tpin> class TpinsVector :public array_vector<Tpin*,40>

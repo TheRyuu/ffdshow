@@ -83,7 +83,8 @@ TffdshowDec::TffdshowDec(TintStrColl *Ioptions,const TCHAR *name,LPUNKNOWN punk,
   IcfgDlgCaptionId,IiconId,
   IdefaultMerit),
  proppageid(Iproppageid),
- dec_char(punk,this)
+ dec_char(punk,this),
+ m_dirtyStop(false)
 {
  static const TintOptionT<TffdshowDec> iopts[]=
   {
@@ -834,6 +835,7 @@ HRESULT TffdshowDec::NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,doubl
  else
   moviesecs=int(tStop/REF_SECOND_MULT);
  if (filters) filters->onSeek();
+ m_dirtyStop = false;
  return CTransformFilter::NewSegment(tStart,tStop,dRate);
 }
 
