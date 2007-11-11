@@ -1,310 +1,1407 @@
-Czech
+Czech (Èeština)
+;CP 1250
+;2007-11-10, ffdshow rev. 1596
+;
+;translated by: khagaroth, khronos[at]seznam[dot]cz
+;
+;pøekladatel: khagaroth, khronos[zavináè]seznam[teèka]cz
+;
+;Uvítám jakékoliv návrhy na vylepšení pøekladu a upozornìní na chyby. Do pøedmìtu 
+;emailu prosím uveïte "ffdshow - [pøedmìt vaší zprávy]", mám nastavenı automatickı
+;filtr, kterı podle toho zprávy roztøídí a také zabráníte tomu aby váš email uvázl
+;ve spamovém filtru.
+;
+;
+[Font]
+horizontalScale9x=110
+horizontalScaleNT=110
+
 [-1]
-From default=Podle pøednastaveného
-From selected=Podle zvoleného
-From file...=Naèíst ze souboru...
-Rename=Pøejmenuj
-Insert file name=Vlo jméno souboru
-off=vyp.
-flipped=pøevrácenı
-default=pùvodní
-2.35:1=2,35:1
-version=verze
-API version=verze API
-Easteurope=Vıchodoevropská
-thin=úzké
+"not needed": no custom channel mapping="není potøeba": bez vlastního pøiøazení kanálù
+(This dailog will close in=(Tento dialog bude zavøen za
+(This dialog will close in=(Tento dialog bude zavøen za
+10 bits=10 bitù
+11 bits=11 bitù
+16-bit integer=16bitové celoèíselné
+24-bit integer=24bitové celoèíselné
+3/0 - 3 front=3/0 - 3 pøední
+3/0+LFE 3.1 front=3/0+LFE 3.1 pøední
+3/2 - 5 channels=3/2 - 5 kanálù
+3/2+LFE 5.1 channels=3/2+LFE 5.1 kanálù
+32-bit float=32bitové s plovoucí èárkou
+32-bit integer=32bitové celoèíselné
+64-bit float=64bitové s plovoucí èárkou
+8 bits=8 bitù
+8-bit integer=8bitové celoèíselné
+8-bit palletized=8bitová bar. paleta
+9 bits=9 bitù
+Accurate deblocking=Pøesnı deblocking
+Action=Akce
+Activation key 1=Aktivaèní klávesa 1
+Activation key 2=Aktivaèní klávesa 2
+Adaptive Multi-Rate in 3gp files (AMR)=Adaptive Multi-Rate v 3gp souborech (AMR)
+Add compatible executable file=Pøidat kompatibilní program
+Add incompatible executable file=Pøidat nekompatibilní program
+add=pøièíst
+aggressive=agresivní
+all float=všechny s plovoucí èárkou
+all integer=všechny celoèíselné
+all RGB=všechny RGB
+all supported=všechny podporované
+all YUV=všechny YUV
+always=vdy
+amplitude=amplituda
+and=a
+any filter=jakıkoliv filtr
+Apply pulldown=Pouít pulldown
+Are you sure?=Jste si jisti?
+ATRAC3 compatible decoder=ATRAC3 kompatibilní dekodér
+ATSC A-52 stream decoder=Dekorér proudu ATSC A-52
+Audio settings=Zvukové pøedvolby
+auto=automaticky
+automatic=automaticky
+AVIS (AviSynth AVI files)=AVIS (Avisynth AVI soubory)
+back center=zadní centr
+back left=zadní levı
+back right=zadní pravı
+bandpass=pásmová propust
+bandstop=pásmová zádr
+bilinear (fast and not too bad)=bilinear (rychlá, slušná kvalita)
+blend=rozpustit
+Blur:=Rozostøení:
+Bob for video source\nWeave for film source\nIn most cases, Weave is the same as unchecked HW deinterlacing.=Bob pro video zdroje\nWeave pro filmové zdroje\nWeave má ve vìtšinì pøípadù stejnı efekt jako nezaškrtnutı HW deinterlacing.
+bold=tuèné
+bottom=spodek
+Bypass=Vynechat
+CamStudio Video (CSCD)=CamStudio video (CSCD)
+careful=opatrná
+center=støed
+Classic shadow=Klasickı stín
+closest=nejbliší
+Coded frame size=Velikost zakódovaného rámce
+color=barva
+compliant=normální
+Connect only to:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  ffdshow=Pøipojit se pouze k:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  ffdshow
+constant=konst.
+CPU load=Zatíení procesoru
+Creative YUV Video (CYUV)=Creative YUV video (CYUV)
+Cubic blending=Kubickı blending
+Cubic interpolation=Kubická interpolace
+Cubic=Kubická
+Current frame=Aktuální rámec
+Current input bitrate=Aktuální vstupní bitrate
+Current playing time=Aktuální hrací doba
+curve=køivka
+Custom=Vlastní
+Czech=Èeština
+darken=ztmavit
+Decoder FPS=FPS dekodéru
+Decoder=Dekodér
+Decrease video delay=Sníit zpodìní videa
+Default=Vıchozí
+default=vıchozí
+Delete preset=Smazat pøedvolbu
+Details=Podrobnosti
+Deutsch=Nìmèina
+disable=neaktivní
+disabled=zakázáno
+Disabled=ádnı
+Display aspect ratio=Pomìr stran obrazu
+DIV3, DIV4, DIV5, DIV6, AP41, COL1, DVX3, MPG3=DIV3, DIV4, DIV5, DIV6, AP41, COL1, DVX3, MPG3
+DivX 3=DivX 3
+DivX 4/5/6=DivX 4/5/6
+DIVX, DX50, BLZ0, DXGM=DIVX, DX50, BLZ0, DXGM
+do not use=nepouívat
+Do you really want to delete current OSD preset?=Chcete aktivní pøedvolbu opravdu smazat?
+Do you really want to remove selected preset?=Opravdu chcete oznaèenou pøedvolbu odebrat?
+doesn't support 24 bit compression.=nepodporuje 24 bitovou kompresi.
+doesn't support 24 bit compression=nepodporuje 24 bitovou kompresi
+Doesn't support 24-bit compression.=Nepodporuje 24bitovou kompresi.
+Don't display, only save data to file=Nezobrazovat, jen uloit do souboru
+DSP Group TrueSpeech compatible decoder=DSP Group TrueSpeech kompatibilní dekodér
+DTS Coherent Acoustics stream decoder=Dekorér proudù DTS Coherent Acoustics
+duration=délka
+DVD decoding (not working yet)=Dekódování DVD (ještì nefunguje)
+Dynamic range compression=Dynamická komprese
+Edit=Upravit
+Enable in Vista WMP11=Povolit ve WMP11 ve Vistì
+enabled=povolen
+Encoder info=Informace encodéru
+English (may work with other languages)=Angliètina (mùe fungovat s ostatními jazyky)
+Enter 0 for Auto=0 = automaticky
+Enter logical expression with 'aspect' variable and comparison and arithmetic operators,\nfor example "16/9<aspect AND aspect<2.35" or "aspect=1".=Zadejte logickı vıraz s promìnnou 'aspect', porovnáním a aritmetickımi operátory,\nnapø "16/9<aspect AND aspect<2.35" nebo "aspect=1".
+Enter logical expression with 'fps' variable and comparison and arithmetic operators,\nfor example "fps>30".=Zadejte logickı vıraz s promìnnou 'fps', mùete pouívat aritmetické a porovnávací operátory,\nnapø. "fps>30".
+Enter logical expression with 'freq' variable and comparison and arithmetic operators,\nfor example "44100<=freq AND 48000<=freq".=Zadejte logickı vıraz s promìnnou 'freq' a porovnáním aritmetickımi operátory,\nnapø. "44100<=freq AND 48000<=freq".
+Enter logical expression with 'freq' variable and comparison and arithmetic operators,\nfor example "44100<=freq AND 48000<=freq".=Zadejte logickı vıraz s promìnnou 'freq' a porovnáním pomocí aritmetickıch operátorù,\nnapø. "44100<=freq AND 48000<=freq".
+Enter new preset name=Zadejte název nové pøedvolby
+exclusion=vylouèit
+experimental=experimentální
+extrabold=extratuèné
+extralight=extralehké
+fast 1-pass=rychlı 1-prùchodovı
+fast 3-pass=rychlı 3-prùchodovı
+ffdshow and ffvfw internal FOURCCs=interní FOURCC ffdshow a ffvfw
+ffdshow audio decoder configuration=Nastavení ffdshow audio dekodéru
+ffdshow audio decoder=ffdshow audio dekodér
+ffdshow default=vıchozí
+ffdshow searches subtitle files in the folders which are configured in the edit box above.\nFor video.avi, ffdshow searches video.utf, video.idx, video.sub,... and use the file which is found at the first time.\nEnumerate extensions in the order you like and separate them by semicolons.\n\nutf;idx;sub;srt;smi;rt;txt;ssa;aqt;mpl;usf is the default settings.=ffdshow hledá titulky v adresáøích které jste nastavili v pøedchozím editaèním poli.\nPro video.avi, bude ffdshow hledat video.utf, video.idx, video.sub,... a pouije první nalezenı soubor.\nZadejte zde pøípony v poadovaném poøadí, oddìlujte je støedníky.\n\nutf;idx;sub;srt;smi;rt;txt;ssa;aqt;mpl;usf je vıchozí nastavení.
+ffdshow video decoder configuration=Nastavení ffdshow video dekodéru
+ffdshow will be used if it is set to decode a format.\r\nThe application will be added to "DirectShow control"->"Use ffdshow only in".=ffdshow bude pouito, pokud bude nastaveno jako vıchozí pro danı formát.\r\nProgram bude pøidán do seznamu "DirectShow"->"ffdshow pouít jen v".
+ffdshow will be used if it is set to decode a format.=ffdshow bude pouito, pokud bude nastaveno jako vıchozí pro danı formát.
+ffdshow will behave as if it were not installed.\r\nThe application will be added to "DirectShow control"->"Don't use ffdshow in".=ffdshow se bude chovat jako by nebylo nainstalováno.\r\nProgram bude pøidán do seznamu "DirectShow"->"ffdshow nepouívat v".
+ffdshow will behave as if it were not installed.=ffdshow se bude chovat jako by nebylo nainstalováno.
+ffdshow won't be used in unknown applications.\r\nTo enable this dialog again, check "DirectShow control"->"Show dialog when an unknown application tries to load ffdshow".=ffdshow nebude pouito v neznámıch programech.\r\nPro znovupovolení tohoto dialogu, zatrhnìte "DirectShow"->"Zobrazit dialog, pokud se ffdshow pokouší naèíst neznámá aplikace".
+FFV1 codec for libavcodec (FFV1)=FFV1 kodek pro libavcodec (FFV1)
+File=Soubor
+Filters known to support dynamic format change:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  ffdshow=Filtry o kterıch je známo, e podporují dynamickou zmìnu formátu:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  ffdshow
+Filters known to support dynamic format change:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  ffdshow=Filtry u kterıch je známo, e podporují dynamickou zmìnu formátu:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  ffdshow
+FLAC (Free Lossless Audio Codec);To play .flac files you also need a source filter.=FLAC (Free Lossless Audio Codec);Pro pøehrávání souborù .flac potøebujete navíc zdrojovı filtr.
+Flash Video (FLV1)=Flash video (FLV1) 
+FLV1=FLV1
+Format: XXXX-YYYY=Formát: XXXX-YYYY
+Format=Formát
+Frame duration=Délka rámce
+Frame mean quantizer=Prùmìrnı quantizer rámce
+Frame timestamps=Èasové znaèky rámcù
+Frame type=Typ rámce
+French=Francouzština
+frequency=frekvence
+From default=Z vıchozí
+From file...=Ze souboru...
+From selected=Z vybrané
+front center=pøední centr
+front left=pøední levı
+front right=pøední pravı
+full (slowest)=plná (nejpomalejší)
+FVFW,FFDS=FVFW,FFDS
+Glowing shadow=Záøící stín
+GMC warp points=GMC warp body
+Grab frame=Sejmout snímek
+Gradient shadow=Gradientní stín
+gray=šedá
+greater than=je vyšší ne
+guess MVS + deblock=odhad MVS + deblock
+guess MVS=odhad MVS
+H.263 (+)=H.263 (+)
+H.264/AVC=H.264/AVC
+H263, L263, M263, U263, X263, S263 (in 3gp files)=H263, L263, M263, U263, X263, S263 (v 3gp souborech)
+H263, S263 (in 3gp files)=H263, S263 (v 3gp souborech)
+H264, X264, VSSH - incomplete, DAVC, AVC1=H264, X264, VSSH - nekompletní, DAVC, AVC1
+H264, X264, VSSH (incomplete), DAVC, AVC1=H264, X264, VSSH (nekompletní), DAVC, AVC1
+H264, X264, VSSH (incomplete), DAVC, PAVC, AVC1=H264, X264, VSSH (neúplné), DAVC, PAVC, AVC1
+heavy=silné
+High - sine curve=Vysoká - sinová køivka
+High accuracy mode is enabled for tremor.=U tremoru je aktivován reim vysoké pøesnosti.
+high quality 3-pass=vysoce kvalitní 3-prùchodovı
+higher than=vyšší ne
+highpass=horní propust
+Host application=Hostitelskı program
+Huffyuv codec for libavcodec (HFYU, FFVH)=Huffyuv kodek pro  libavcodec (HFYU, FFVH)
+Channel=Kanál
+character=znak
+Check for DTS in WAV=Zjišovat DTS ve WAV
+Chinese AVS video (AVS1-P2, JiZhun profile)=Èínské AVS video (AVS1-P2, JiZhun profil)
+Chinese AVS=Èínské AVS
+chroma blur:=barva:
+chroma:=barva:
+IBM Ultimotion Video (ULTI)=IBM Ultimotion video (ULTI)
+Ignore pulldown=Ignorovat pulldown
+IMA Adaptive DPCM=IMA adaptivní DPCM
+IMC compatible decoder=IMC kompatibilní dekodér
+in 3gp files=v souborech 3gp
+incomplete=nekompletní
+Increase video delay=Zvıšit zpodìní videa
+indeterminate state - connect to any filter, allows output format changes only if connected to supported filter.\n\nFilters known to support dynamic format change:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  ffdshow=mezistav - pøipojit se k jakémukoliv filtru, zmìny formátu ale povolí pouze pokud je pøipojen podporovanı filtr.\n\nFiltry podporující dynamickou zmìnu formátu:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  ffdshow
+indeterminate state - connect to any filter, allows output format changes only if connected to supported filter=mezistav - pøipojit k jakémukoliv filtru, povolit zmìnu formátu pouze pokud je pøipojen podporovanı filtr
+indeterminate state - first try overlay, then use fallback format=zatreno - odelat rendereru hlavièku obsahující informace o SAR a prokládání\nmezistav - pokusit se odeslat hlavièku s informacemi o SAR a prokládání, pokud není podporována, pouít jednoduchou hlavièku\nnezatreno - vdy pouít jednoduchou hlavièku\n\nZasílání informací o prokládání je ovlivnìno i následující volbou.
+Input aspect ratio=Pomìr stran vstupu
+Input bitrate=Vstupní bitrate
+Input colorspace=Vstupní barevnı prostor
+Input description=Popis vstupu
+Input FOURCC=Vstupní FOURCC
+Input size and aspect ratio=Vstupní velikost a pomìr stran
+Input size=Vstupní velikost
+Insert exe file name=Vloit název exe souboru
+Insert file name=Vloit název souboru
+Internal postprocessing=Interní postprocessing
+invalid=neplatnı
+Italian=Italština
+Key=Klávesová zkratka
+left arrow=levá šipka
+left=vlevo
+less than=je niší ne
+libavcodec high quality=libavcodec vysoká kvalita
+libavcodec highest quality=libavcodec nejvyšší kvalita
+libavcodec normal quality=libavcodec normální kvalita
+libavcodec=libavcodec
+Library=Knihovna
+libsamplerate sinc fastest=libsamplerate sinc nejrychlejší
+libsamplerate sinc high quality=libsamplerate sinc vysoká kvalita
+libsamplerate sinc medium quality=libsamplerate sinc støední kvalita
+libtheora=libtheora
+light=lehké
+lighten=zesvìtlit
+line=øádek
+Linear blending=Lineární blending
+Linear interpolation=Lineární interpolace
+Linear=Lineární
+List of applications for which ffdshow should not load, separated by semicolons.=Seznam programù pro které nemá bıt ffdshow naèten, poloky oddìlujte støedníky.
+List of applications for which ffdshow should not load, separated by semicolons=Seznam programù, pro které nemá bıt ffdshow naèten, poloky oddìlujte støedníky
+List of applications which are compatible with ffdshow, separated by semicolons.=Seznam programù kompatibilních s ffdshow, poloky oddìlujte støedníky.
+List the names of executable files which are incompatible with ffdshow or which you don't want to use ffdshow, one for each line.=Zadejte názvy spustitelnıch programù aplikací, které nejsou s ffdshow kompatibilní nebo ve kterıch nechcete ffdshow pouívat, jeden na øádek.
+Load default settings=Naèíst vıchozí nastavení
+Load ffdshow preset=Naèíst pøedvolbu ffdshow
+LOCO Video (LOCO)=LOCO video (LOCO)
+Low - cosine curve=Nízká - cosinová køivka
+low accuracy enabled, inform me if you'd notice distortions=povolena nízká pøesnost, informujte mne pokud zaznamenáte jakékoliv zkreslení
+low accuracy mode enabled for tremor=u tremoru byl aktivován low accuracy reim
+lower than=niší ne
+lowpass=dolní propust
+luma blur:=jas:
+luma:=jas:
+MD5 sum=MD5 souèet
+Medium - linear=Støední - lineární køivka
+medium=støední
+MJPG, LJPG (lossless)=MJPG, LJPG (bezeztrátovı)
+Movie FPS=FPS filmu
+Movie length=Délka filmu
+MP41, MPG4, DIV1=MP41, MPG4, DIV1
+MP41=MP41
+MP42, DIV2=MP42, DIV2
+MP42=MP42
+MP43=MP43
+MP4V, 3IVX, 3IV1, 3IV2, MP4S, M4S2, RMP4, DM4V, WV1F, FMP4, HDX4, SMP4, LMP4, NDIG, SEDG=MP4V, 3IVX, 3IV1, 3IV2, MP4S, M4S2, RMP4, DM4V, WV1F, FMP4, HDX4, SMP4, LMP4, NDIG, SEDG
+MPEG in AVI=MPEG v AVI
+MPEG, MPG1, MPG2, 1001, 1002=MPEG, MPG1, MPG2, 1001, 1002
+MPEG1 codec=MPEG1 kodek
+mpeg1/2 decoder only=pouze mpeg1/2 dekodér
+MPEG1=MPEG1
+MPEG2 codec=MPEG2 kodek
+MPEG2=MPEG2
+MS Adaptive DPCM=MS adaptivní DPCM
+MS RLE Video (MRLE)=MS RLE video (MRLE)
+mute=ztišit
+Names of DirectShow filters, wildcard allowed=Názvy DirectShow filtrù, povoleny zástupné znaky
+New preset name=Název nové pøedvolby
+New=Nová
+Next preset=Následující pøedvolba
+no limitations=bez omezení
+No=Ne
+none - disabled=ádné - zakázat ffdshow
+none (fastest, most ugly)=ádná (nejrychlejší, nejniší kvalita)
 None=ádná
+none=ádnı
+normal=normální
+not WMA9 pro, voice or lossless=nezvládá WMA9 pro, voice ani lossless
+Number of frames to buffer ahead=Poèet snímkù, které mají bıt dopøedu pøednaèteny
+Number of frames to show preset=Poèet rámcù pro které má bıt OSD zobrazeno
+Number of channels=Poèet kanálù
+Number of taps:=Poèet tapù:
+Number of used frames to keep in buffer=Poèet pouitıch snímkù, které mají bıt uchovávány v bufferu
+numpad +=+ na èís. klávesnici
+numpad -=- na èís. klávesnici
+off=neaktiv.
+OGG (works with Theora only)=OGG (jen Theora)
+on a DirectShow filter presence=DirectShow filtr
+on application exe file name match=název exe souboru programu
+on decoder match=dekodér
+on FOURCC from previous filter match=FOURCC pøedchozího filtru
+on FOURCC match=FOURCC
+on frame rate match=snímkovací frekvence
+on movie file name match (with wildcards)=název souboru (se zástupnımi znaky)
+on movie file name match with preset name=název souboru a název pøedvolby
+on movie file name match=název souboru
+on number of channels match=poèet kanálù
+on picture aspect ratio match=pomìr stran obrazu
+on pixel aspect ratio match=pomìr stran pixelu
+on sampling frequency match=vzorkovací frekvence
+on volume name match=název disku
+on volume serial match=sériové èíslo disku
+only one - check all filters in graph=jedna - kontrolovat všechny filtry
+only one - check all previous filters=jedna - kontrolovat všechny pøedchozí filtry
+only one - check previous filter only=jedna - kontrolovat pouze pøedchozí filtr
+opacity=sytost
+or=nebo
+original=originál
+Other ADPCM=Ostatní ADPCM
+Other DV=Ostatní DV
+Other MJPEG=Ostatní MJPEG
+Other MPEG2=Ostatní MPEG2
+Other MPEG4=Ostatní MPEG4
+Output aspect ratio=Pomìr stran vıstupu
+Output colorspace=Vıstupní barevnı prostor
+Output description=Popis vıstupu
+Output size=Vıstupní velikost
+Output speakers=Vıstupní kanály
+Over bottom & left letterbox=Nad spodní a levı letterbox
+Over bottom & right letterbox=Nad spodní a pravı letterbox
+Over bottom letterbox=Nad spodní letterbox
+Over left letterbox=Nad levı letterbox
+Over right letterbox=Nad pravı letterbox
+Over top & left letterbox=Nad horní a levı letterbox
+Over top & right letterbox=Nad horní a pravı letterbox
+Over top letterbox=Nad horní letterbox
+Over video=Nad video
+P frames=P snímky
+Parameter=Parametr
+Pixel aspect ratio=Pomìr stran pixelu
+Polish=Polština
+preferred=upøednostòovanı
+Preset '%s' will be autoloaded ...=Pøedvolba '%s' bude naètena pokud ...
+Preset already exists=Pøedvolba ji existuje
+Preset autoload condition help=Nápovìda k podmínkám automatického naètení pøedvolby
+Preset name=Název pøedvolby
+Previous preset=Pøedchozí pøedvolba
+QDM2 compatible decoder (incomplete)=QDM2 kompatibilní dekédér (nekompletní)
+Queued samples=Snímky ve frontì
+Quicktime Animation Video (QTRLE)=Quicktime animaèní video (QTRLE)
+Quicktime Planar RGB Video (8BPS)=Quicktime planární RGB video (8BPS)
+Quicktime Video Video (QRPZA)=Quicktime video video (QRPZA)
+radius:=dosah:
+Raw frames=RAW snímky
+Real Video (RV10, RV20, incomplete)=Real Video (RV10, RV20, nekompletní)
+Remaining time=Zbıvající èas
+Removing preset=Odstranìní pøedvolby
+Rename preset...=Pøejmenovat pøedvolbu...
+Rename=Pøejmenovat
+Reset=Vıchozí
+right arrow=pravá šipka
+right=vpravo
+same as input=jako vstup
+Sample format=Formát vzorkování
+Sample frequency=Vzorkovací frekvence
+Save as...=Uloit jako...
+Save ffdshow preset=Uloit pøedvolbu ffdshow
+Second function=Druhá funkce
+seconds.)=sekund.)
+Seek backward=Skoèit zpìt
+Seek forward=Skoèit vpøed
+Select DScaler filter=Vyberte DScaler filtr
+Select file for storing frames=Zvolte soubor do kterého chcete ukládat snímky
+Select file with stored encoding statistics=Zvolte soubor s uloenou statistikou pøevodu
+Select Winamp 2 directory (not the plugins directory!)=Vyberte adresáø Winampu 2 (ne adresáø pluginù!)
+Select Winamp preset file=Zvolit soubor pøedvoleb Winampu
+semibold=polotuèné
+Send interlacing related information obtained from the input stream or ffdshow's internal decoders to the next filter. Some filters (like video renderers) will use this information to deinterlace the video if neccessary.\nThis is just for informing the downstream filters - the actual result will depend purely on the implementation of these filters.\n\n(formerly called "HW deinterlacing")=Poslat dalšímu filtru informace o prokládání získané z videa nebo interních dekodérù ffdshow. Nìkteré filtry (jako napø. video renderery) pouijí tuto informaci k odstranìní prokládání, pokud je tøeba.\nToto je pouze informace pro následující filtry - aktuální vısledek bude záviset pouze na implementaci tìchto filtrù.\n\n(døíve nazıváno "HW deinterlacing")
+Set all stable formats to libavcodec=U všech stabilních formátù nastavit libavcodec
+Set all supported formats to Xvid=U všech podporovanıch formátù nastavit XviD
+Set vertical size 0 for Auto=Vertikální velikost 0 = automaticky
+Shape XY=XY tvar
+Short configuration description=Zkrácenı popis nastavení
+Show on startup=Zobrazit pøi spuštìní
+size=velikost
+skip deblocking always=vynechat deblocking vdy
+skip deblocking when safe=vynech. deblocking pokud to jde
+Smooth timestamps=Vyhladit èasové znaèky
+softlight=mìkké svìtlo
+Solid fill=Vyplnìní barvou
+solo=sólo
+Source file name=Název zdrojového souboru
+Source file=Zdrojovı soubor
+start=zaèátek
+Startup OSD preset=OSD pøi spuštìní
+subtitle=titulek
+Subtitles delay/size decrease=Zpodìní titulkù/zmenšení velikosti
+Subtitles delay/size increase=Zpodìní titulkù/zvìtšení velikosti
+Subtitles delay=Zpodìní titulkù
+Subtitles position decrease=Posunout titulky dolù
+Subtitles position increase=Posunout titulky nahoru
+Supported FOURCCs/remarks=Podporované FOURCC/poznámky
+System time=Systémovı èas
+Thank you!=Dìkuji!
+Thank you. We are gathering the list of compatible applications. Please send us the exe file name of this application and help us improving ffdshow.=Dìkujeme. Pravidelnì aktualizujeme vıchozí seznam kompatibilních aplikací, zašlete nám prosím název exe souboru této aplikace a pomote nám tak vylepšit ffdshow.
+Theora Video (THEO)=Theora video (THEO) 
+Theora=Theora
+thin=tenké
+Time on ffdshow=Èas ffdshow
+time:=èas:
+Toggle avisynth=Pøepínání avisynth
+Toggle blur=Pøepínání rozostøení
+Toggle crop/zoom=Pøepínání oøezu/zvìtšení
+Toggle deinterlace=Pøepínání deinterlacingu
+Toggle flip=Pøepínání pøeklopení
+Toggle levels=Pøepínání úrovní
+Toggle noise=Pøepínání šumu
+Toggle OSD=Pøepínání OSD
+Toggle picture properties=Pøepínání vlastností obrazu
+Toggle postprocessing=Pøepínání postprocessingu
+Toggle resize=Pøepínání zmìny velikosti
+Toggle sharpen=Pøepínání zaostøení
+Toggle subtitles=Pøepínání titulkù
+Toggle visualizations=Pøepínání vizualizace
+Toggle warpsharp=Pøepínání warpsharp
+top=nahoøe
+TTA (Lossless Audio Codec);To play .tta files you also need a source filter.=TTA (Lossless Audio Codec);Pro pøehrávání souborù .tta potøebujete navíc zdrovovı filtr.
+Uncompressed=Nekomprimované
+Unchecked: Use classic connection method.\nChecked: Use an advanced connection method that includes pixel aspect ratio (SAR) and interlacing information when connecting with the next filter (usually a video renderer).\nIndeterminate/grayed: Try advanced connection method first and fall back to classic connection method if it fails.\n\n(formerly called "Use overlay mixer")=Nezatreno: Pouít normální metodu propojení.\nZatreno: Pouít pokroèilou metodu propojení, která poskytuje pøipojovanému filtru (vìtšinou video rendereru) informace o pomìru stran pixelu (SAR) a prokládání (øízeno následující volbou).\nMezistav: Zkusit pokroèilou metodu propojení a pokud sele, pouít normální.\n\n(døíve nazıváno "Pouít overlay mixer")
+unlikely=nepravdìpodobnı
+use speedup tricks=Pouít urychlující triky
+Use with care - can cause ffdshow to not unload after closing the movie.=Pouívejte opatrnì - mùe zpùsobit, e ffdshow nebude po zavøení filmu ukonèen.
+Useful for directly storing encoded ac3 to a file in graphedt with File Writer filter=Uiteèné pro pøímé uloení pøevedeného ac3 do souboru v Grapheditu s File Writer filtrem.
+Useful when FFDShow is in raw mode, the compressed format (if any) is given by the previous filter in the chain.=Uiteèné pokud FFDShow pracuje v raw reimu, komprimovanı formát (pokud je) je dán pøedchozím filtrem.
+Version=Verze
+very aggressive=velmi agresivní
+very high=velmi vysokı
+Very incomplete and experimental.\nSend me samples which don't work.=Nekompletní a experimentální.\nZasílejte vzorky které nefungují.
+Video delay=Zpodìní videa
+VP3 Video (VP31)=VP3 video (VP31) 
+VP3=VP3
+VP5 Video (VP50)=VP5 video (VP50)
+VP5=VP5
+VP6 Video (VP60, VP61, VP62)=VP6 video (VP60, VP61, VP62) 
+VP6=VP6
+VP6F Video (VP6F, FLV4)=VP6F video (VP6F, FLV4)
+VP6F=VP6F
+when decoding H.264 video and decoder deblocking is off=pøi dekódování H.264 videa s vypnutım deblockingem dekodéru
+when decoding H.264 video=pøi dekódování H.264 videa
+Winamp2 application directory, not plugin directory.=Aplikaèní adresáø Winampu 2, ne adresáø pluginù.
+Windows Media Audio compatible decoder=Windows Media Audio kompatibilní dekodér
+Windows Media Video 9 Advanced Profile (WVC1)=Windows Media Video 9 Advanced profil (WVC1)
+Windows Media Video 9 Image (WMVP, WVP2)=Windows Media Video 9 Image (WMVP, WVP2)
+Windows Media Video 9 Simple & Main Profiles (WMV3)=Windows Media Video 9 Simple & Main profily (WMV3)
+Windows Screen Codecs (MSS1, MSS2)=Windows Screen kodeky (MSS1, MSS2)
+Winnov WNV1 Video (WNV1)=Winnov WNV1 video (WNV1)
+XVID, XVIX=XVID, XVIX
+Xvid=Xvid
+YCbCr <-> RGB conversion options=Monosti pøevodu YCbCr <-> RGB
+3/0/0 - 3 front=3/0/0 - 3 pøední
+3/0/2 - 5 channels=3/0/2 - 5 kanálù
+3/2/1 - 6 channels=3/2/1 - 6 kanálù
+3/2/2 - 7 channels=3/2/2 - 7 kanálù
+headphone virtual spatialization=prostorová virtualizace pro sluchátka
+side left=postranní levı
+side right=postranní pravı
+Select impulse file=Zvolit impulzní soubor
+Enter logical expression with 'freq' variable and comparison and arithmetic operators,\nfor example "44100<=freq AND 48000<=freq".=Zadejte logickı vıraz s promìnnou 'freq, mùete pouívat logické a aritmetické operátory,\nnapø. "44100<=freq AND 48000<=freq".
+File where to write statistics=Soubor do kterého má bıt ukládána statistika
+Use SPDIF when AC3 output set=Pøi nastavení AC3 vıstupu pouít SPDIF
+Maximize SPDIF compatibility=Pouít pro SPDIF reim kompatibility
+Select name of exported Girder file=Zadejte název exportovaného Girder souboru
+Enter logical expression with 'aspect' variable and comparison and arithmetic operators,\nfor example "16/9<aspect AND aspect<2.35" or "aspect=1".=Zadejte logickı vıraz s promìnnou 'aspect', mùete pouívat logické, aritmetické a porovnávací operátory,\nnapø. "16/9<aspect AND aspect<2.35" nebo "aspect=1".
+Smart wrapping, lines are evenly broken=Chytré zalomení, rovnomìrné zalomení
+End-of-line word wrapping=Zalomení na konci øádku
+Smart wrapping, lower line gets wider=Chytré zalomení, spodní øádek širší
+indeterminate state - connect to any filter, allows output format changes only if connected to supported filter.\n\nFilters known to support dynamic format change:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  EVR\n  ffdshow=mezistav - pøipojit se k jakémukoliv filtru, zmìny vıstupního formátu povolit pouze po pøipojeni kompatibilního filtru.\n\nFiltry podporující dynamickou zmìnu formátu:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  EVR\n  ffdshow
+Connect only to:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  EVR\n  ffdshow=Pøipojit se pouze k:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  EVR\n  ffdshow
+Interlaced=Prokládané
+Greyscale=Ve stupních šedi
+Interlaced encoding=Prokládanı pøevod
+Top field first (for intelaced encoding only)=Horní pole první (pro prokládanı pøevod)
+Unlimited motion vector=Neomezenı pohybovı vektor
+Alternative inter vlc=Alternativní inter vlc
+
+[101]
+1836=Zaslat dar
+1835=Exportovat nastavení
+2=Storno
+3=Pouít
+1=OK
+
+[102]
+0=O ffdshow
+1839=Verze modulù
+1849=Licence
+
 [111]
-1164=Zpracuj celı obraz
-1162=Obnov
-1163=Pomoc
+1164=Zpracovat celı obraz
+1167=Pouze pravá polovina
+1162=Vıchozí
+1163=Nápovìda
+1723=Vıchozí poøadí
+
+[113]
+0=Titulky
+1105=Titulky
+1279=Hledat v
+1183=Soubor
+1244=Zn. naèíst
+1122=Horizonální pozice:
+1126=Vertikální pozice:
+1280=Zpodìní:
+1281=Rychlost:
+1837=Heuristické vyhledávání
+1968=Priorita podle pøípon:
+1414=Detekovat zmìny souboru
+1787=Zpracovat vloené titulky
+1789=Zpracovat SSA, ASS a ASS2 titulky (experimentální)
+1788=Dekódovat closed caption
+1683=Stereoskopické
+1360=Zarovnání:
+1364=Vıchozí
+
 [115]
 0=Kodeky
-1283=Podporované kodeky
-1011=XVID
-1017=Pomocí XviD
-1012=DivX 3
-1013=DivX 4
-1016=Pomocí XviD
-1014=DivX 5
-1018=Pomocí XviD
-1050=BLZ0
-1019=Pomocí XviD
-1024=MP43
-1023=MP42
-1025=MP41
-1026=WMV1
-1048=H.263+
-1049=MPEG1
-1053=Pomocí Libmpeg2
-1052=MPEG2
-1054=Pomocí Libmpeg2
-1055=MJPEG
-1056=DV
-1015=Nekomprimované video
-1284=Podporované vıstupní formáty
-1020=YV12
-1021=YUY2
-1022=YVYU
-1027=UYVY
-1051=RGB32
-1028=RGB24
-1029=RGB16
-1030=RGB15
-1031=Pouij "overlay mixer"
-1166=Don't register unchecked codecs
+
 [116]
-0=Informace
+0=DirectShow
+1285=DirectShow
+1502=Více instancí ffdshow:
+1935=ffdshow nepouívat v:
+1970=ffdshow pouít jen v:
+1974=upravit
+1973=upravit
+2051=Zobrazit dialog, pokud se ffdshow pokouší naèíst neznámá aplikace.
+1191=MMX
+1192=MMXEXT
+1193=SSE
+1194=SSE2
+1195=3DNow!
+1196=3DNow! Ext
 1284=Informace
-1050=Momentálnì se pøehrává:
-1055=Kodek:
-1264=Vıstup:
-1054=Rozmìry:
-1265=FPS:
-1059=Akt. snímek:
-1266=Dekod. FPS:
-1060=Dat. tok:
-[132]
-0=Písmo
-1259=Písmo
-1110=Velikost:
-1116=Mezery:
-1114=Sada
-1108=Hloubka
-1124=Barva
-1118=Síla stínu:
-1130=Prùmìr stínu:
-[141]
-0=OSD
-1182=OSD
-1110=Velikost:
-1116=Mezery:
-1114=Sada
-1108=Hloubka
-1124=Barva
-1118=Síla stínu:
-1130=Prùmìr stínu:
-[136]
-0=Ikona a dialog
-1257=Ikona
-1070=Zobraz ikonu
-1258=Konfiguraèní dialog
-1071=Obnov polohu dialogu
-1072=Zobrazuj bublinkovou nápovìdu
-1293=Jazyk
-[143]
-0=Klávesy
-1202=Aktivní
+1503=Merit:
+1832=Pouívat následující SIMD instrukce (pokud jsou podporovány):
+1197=MMX
+1198=MMXEXT
+1199=SSE
+1200=SSE2
+1201=3DNow!
+1202=3DNow! Ext
+
+[118]
+0=Ostatní
+1283=Monosti libavcodeku
+1314=Dekódovat ve stupních šedi
+1268=Zpodìní videa:
+1047=Obejití chyb kodéru:
+1307=Automatická detekce
+1308=Staré lavc msmpeg4 soubory
+1309=Stará chyba prokládání XviD
+1311=Chyba paddingu
+1313=Chyba qpel v XviD a DivX
+1943=Vıstupní fronta snímkù
+1946=Kontrola kvality
+1947=Vynech. H264 debl. pøi zpodìní o
+1316=Chyba prokl. barevné MC v divx
+1542=Reakce na chybu:
+1544=Zamaskování chyby:
+1916=Aktuální kvantizaèní matice
+1572=Poèet dekódovacích vláken:
+1365=Ostatní volby
+1945=Zakázat frontu ve Windwos Media Playeru
+1765=zaèátek
+1764=konec
+1550=Pøedp. prokl. vstup pokud vıška >
+1552=pixelù
+1952=ms
+
 [119]
-0=Nastavení zpracování
-1278=Pøednastavení
-1016=Novı
-1156=Naèti z disku...
-1155=Ulo na disk...
-1045=Pøejmenuj
-1044=Sma
-1051=Automatické nahrávání
-1080=Nejprve zkus soubor
-1157=Podmínky autom. nahrávání...
+0=Pøedvolby
+1278=Pøedvolby
+1016=Nová
+1156=Naèíst ze...
+1155=Uloit do...
+1045=Pøejm.
+1044=Odebrat
+1051=Automatické naètení
+1080=Preferovat naètení ze souboru
+1157=Podmínky automatického naètení...
+
 [120]
-0=Postprocessing
-1073=Postprocessing
-1027=Pøednastavení
-1008=Automatická volba kvality
-1028=Vlastní nastavení
-1270=Jas
-1271=Barva
-1272=Deblok (X)
-1273=Deblok (Y)
-1274=Dering
-1158=Síla zpracování:
-1160=Zpùsob zpracování:
-1238=mplayer
-1239=Nic's
-1037=Temporal odšumení
-1275=Oprava úrovnì
-1035=Jas
+1027=Pøedvolby
+1008=Automatická kontrola kvality
+1028=Vlastní
+1270=Sl. jasová -
+1271=barevná
+1158=Síla postprocessingu:
+1160=Metoda postprocessingu:
+1239=Nic-ova
+1275=Oprava úrovní
+1035=Jas. sloka
 1038=Plnı rozsah jasu
-1036=Barva (neimplementováno)
-1242=X práh:
-1243=Y práh:
+1242=Práh X:
+1243=Práh Y:
+1328=Nic-ova první
+1534=Pøesnı deblocking
+1457=rychlı SPP deblocking
+1459=Pozvolnı práh
+
+[121]
+0=Fronta & ostatní
+1365=Ostatní volby
+1268=Zpodìní videa:
+1958=Frontu pouít pouze v:
+1944=Fronta vıst. snímkù
+1765=zaèátek
+1764=konec
+1550=Pøedpokládat prokládanı vstup pøi vıšce >
+1552=pixelù
+1143=Fronta vıstupních snímkù\r\n   Úèelem fronty snímkù je omezit zahazování snímkù. Její efekt se projeví pøi vysoké    zátìi procesoru, kdy dochází k zahazování pár snímkù/sek. Vyuívá  chvíle, kdy    procesor dokonèí práci døíve a pøedvypoèítává  další snímky pro chvíle, kdy procesor    nestíhá.\r\n   Protoe je video renderer spuštìn v samostatném vláknì, efekt se ještì znásobí    pokud máte Pentium4HT nebo vícejadernı procesor.\r\n\r\nFrontu pouít pouze v:\r\n   Fronta je ve vıchozím nastavení zakázána, protoe ještì není zcela stabilní. Pokud ji     pøesto chcete vyzkoušet, zrušte zaškrtnutí této volby, nebo zadejte název    spustitelného souboru vašeho video pøehrávaèe, jednotlivé poloky oddìlujte    støedníkem.\r\n\r\nZpodìní videa:\r\n   Pokud máte reproduktory daleko od místa sledování, mohla by se vám tato volba    hodit.
+2206=Povolit frontu pro VMR9-YV12
+
 [125]
 0=Vlastnosti obrazu
 1072=Vlastnosti obrazu
-1017=Zisk jasu:
-1018=Posun jasu:
-1037=Gama korekce:
+1017=Jasovı zisk (kontrast):
+1018=Jasovı offset (jas):
+1037=Gamma korekce:
 1025=Odstín:
 1026=Sytost:
-[142]
-0=Úrovnì
-1170=Úrovnì
-1179=Mìò jen jas
-1184=Zobrazuj histogram
-1185=Plnı rozsah
-1291=Vstup
-1267=Vıstup
-1181=Gama korekce
+1038=RGB gamma korekce:
+1787=jen barevná sloka
+1782=síla:
+1830=Oprava jasové úrovnì
+1831=Plnı rozsah jasu
+1932="Scanline" efekt
+1781=Zabarvení:
+
 [126]
 0=Šum
 1038=Šum
 1067=Starı algoritmus
 1068=Novı algoritmus (avih)
-1069=Algoritmus z mplayeru
+1069=mplayer šum
 1232=Zprùmìrovanı
 1039=Rovnomìrnı šum
 1231=Vzorek
-1041=Síla zašumení jasu:
-1049=Síla zašumení barev:
-[176]
-0=DScaler filtr
-1308=DScaler filtr
-1309=Filtr
-[177]
-0=Korekce zobrazení
-1317=Korekce zobrazení
-1321=Pùvodní obdélník
-1319=Interpolace
+1041=Intenzita šumu jasové sloky:
+1049=Intenzita šumu barevné sloky:
+1052=Vertikální linie:
+1050=Blikání:
+1051=Chvìní:
+1054=Prach a škrábance:
+
 [127]
-0=Zostøení
-1065=Zostøení
-1063=xsharpen
-1064=unsharp mask
-1066=msharpen
-1216=Vysoká kvalita
-1215=Jen maska
-1067=warpsharp
-1019=Síla:
-1021=Hranice:
+0=Zaostøení
+1065=Zaostøit
+1064=unsharp maska
+1216=vysoká kvalita
+1215=pouze maska
+1019=Intenzita:
+1021=Práh:
+1217=vysoce kvalitní filtrování blokù
+1023=Blokovì adaptivní zaostøení:
+1143=xsharpen \r\nTento filtr provádí nepøíliš vıraznı, ale uitenı zaostøovací efekt. Funguje tak, e pøes snímek bìí malé okno, jeho støedovı pixel je buï poslán dál neupraven (v závislosti na nastavení prahové hodnoty), nebo namapován k nejjasnìjšímu, nebo nejtmavšímu pixelu okna, podle toho, kterı je k nìmu blíe. Pokud je støedovı pixel namapován, je také smíšen se svou originální hodnotou podle nastavené intenzity. Vısledkem je zaostøovací efekt, kterı nejene pøedchází zvırazòování šumu, ale naopak mùe šum redukovat.\r\n\r\nUnsharp maska\r\nTento filtr implementuje dobøe známou techniku zvıraznìní kontrastu/zaostøení nazıvanou unsharp masking. Základem této techniky je vytvoøení rozostøené verze snímku, která je poté odeètena od originálu. Vıslednı snímek bude mít zvıraznìnı kontrast kolem linií. Vısledkem je na pohled pøíjemné zaostøení, kvalitnìjší ne jednoduché zaostøení pomocí convolution kernelu nebo hornopropustního zvıraznìní.\r\n\r\nmsharpen\r\nZaostøuje hrany, ani by zvıraznil šum. Filtr napøed detekuje hrany a poté pouije zaostøení pouze na nì.\r\n\r\nPopisy jsou zkopírovány z originální dokumentace k filtrùm AviSynthu a VirtualDubu od (C) Donald Graft
+
 [128]
-0=Odšumení
-1134=Rozostøení a redukce šumu
-1136=Zjemnit:
-1137=Temporal smooth:
-1232=Zpracuj barvy
-1138=Zjemnìní jasu:
-1139=Zjemnìní barev:
-1140=Stupòovité odšumení:
-[137]
-0=Posun
-1148=Posun
-1149=Posun jasu X:
-1151=Posun jasu Y:
-1153=Posun barev X:
-1120=Posun barev Y:
-[139]
-0=Zobraz MV
-1074=Zobraz vektory pohybu
-[172]
-0=Ulo snímek
-1216=Ulo snímek
-1223=Kadı snímek
-1224=Jeden snímek
-1226=Rozsah
-1183=Cesta
-1218=...
-1261=Pøedpona
-1263=Poèet èíslic ve jménu
-1262=Formát
-1228=Teï
-1230=Kvalita:
-[113]
-0=Titulky
-1105=Titulky
-1133=Hledej
-1183=Soubor
-1120=...
-1122=Horizontální umístìní:
-1126=Vertikální umístìní:
-1280=Posun
-1281=Rychlost
-1244=Nahraj
-1124=...
-1279=Hledej v
+0=Rozostøení a NR
+1134=Rozostøení a red. šumu
+1136=zmìkèit:
+1137=temporální vyhlazení:
+1232=zpracovávat barvu
+1138=vyhlazení jasové sloky:
+1139=vyhlazení barevné sloky:
+1140=graduální redukce šumu:
+1141=mplayer - temporální redukce šumu:
+1142=swscaler - gaussovo rozostøení
+
+[132]
+0=Písmo
+1259=Písmo
+1108=Váha:
+1124=Barva
+1827=Rychlé vykresl.
+1335=Aut. velikost
+1110=Velikost:
+1116=Prokládání:
+1120=Šíøka:
+1114=Zn. sada:
+1118=Síla stínu:
+1130=Dosah stínu:
+1978=Typ stínu:
+1981=Prùhlednost:
+1980=Velikost stínu:
+1143=Prokládání - vzdálenost mezi jednotlivımi znaky\r\nSíla stínu - 100 = zcela neprùhledné znaky\r\nVáha - vìtšina písem podporuje jen nìkteré z uvedenıch moností
+2060=Neprùhl. rámeèek
+2065=Velikost, barva a prùhlednost
+2054=Stín:
+2053=Obrys:
+2052=Tìlo:
+2088=Automaticky opravit pomìr stran
+2081=Rozostøení
+2090=Y mìøítko:
+2087=Obejít ASS/ASS2 scaling
+
 [133]
 0=Velikost a pomìr
 1083=Velikost
-1185=Zadej velikost
-1285=Nová
-1186=Zadej pomìr stran
+1986=Zadaná horiz. a vert. velikost
+1987=Zadaná horizontální velikost
+1285=Velikost
+1186=Zadanı pomìr stran
 1286=Pomìr
-1187=Zvìtši na násobek
-1189=Zmìò pokud ...
-1287=x
-1190=a
-1288=y
-1191=Zmeò pokud je poèet bodù ...
-1192=vìtší ne
-1188=Zmeò vdy
+1187=Zvìtšit na nejbliší násobek
+1540=Vynásobit
+1189=Zmìnit velikost pokud ...
+1191=Zmìnit vel. pokud poèet pixelù ...
+1188=Velikost zmìnit vdy
+1988=Interní zpracování pomìru stran pixelu
 1289=Pomìr stran
-1100=Bez úprav
-1101=Zachovej pùvodní pomìr
-1102=Nastav pomìr stran:
-1290=Èerné okraje
-1201=Horizont.
-1200=Vertikál.
-1199=Zámek
-1234=Pomìr stran pro overlay:
-[138]
-0=Nastavení
-1282=Nastavení zmìny velikosti
-1285=Metoda
-1098=Rozostøení jasu:
-1099=Rozostøení barev:
-1019=Zostøení jasu:
-1020=Zostøení barev:
-1021=Parametr:
+1100=Neopravovat pomìr stran
+1101=Zachovat originální pomìr stran
+1102=Manuální:
+1234=Pomìr stran overlay:
+1185=Zadaná velikost
+1190=a
+2084=PAR vıstupního zaøízení
+2086=Rozlišení obrazovky
+
 [134]
-0=Oøezání
+0=Oøezání/Zvìtšení
 1137=Oøezání a zvìtšení
 1138=Zvìtšení
 1139=Oøezání
 1105=Horizontální zvìtšení:
 1107=Vertikální zvìtšení:
-1140=Zámek
-1252=Zhora
-1254=Zleva
-1255=Zprava
-1256=Zdola
-1141=Pan && scan
-1109=Zoom
-1111=Horizontal position
-1113=Vertical position
+1140=Spojit
+1252=Nahoøe
+1254=Vlevo
+1255=Vpravo
+1256=Dole
+1143=Zvìtšení\r\n\r\nOøezání\r\n  Šíøka a vıška oøezaného snímku je zaokrouhlována na násobky 8.\r\n  Pokud zadáte neplatnou hodnotu, editované políèko bude mít èervenou     barvu a neplatná hodnota nebude uloena.\r\n\r\nPokud pouijete tento filtr, budete pravdìpodobnì muset opravit pomìr stran.
+2091=Automatickı oøez
+2098=Vertikální
+2099=Horizontální
+2100=Vertikální a horizontální
+2096=Aktualizace (ms)
+2101=Zastav. skenování po (ms)
+
+[136]
+0=Lišta, dialogy a cesty
+1257=Ikona v systémové lištì
+2019=Ikony:
+2016=ádné
+2017=Moderní:
+2018=Klasické:
+1074=Podrobné informace
+1073=Pøidat kontextovou nabídku ikony do odpovídající nabídky pøehrávaèe
+1258=Konfiguraèní dialog
+1071=Obnovit pozici
+1072=Zobrazovat nápovìdné tipy
+1293=Jazyk:
+1259=Cesty
+1143=Ikona v systémové lištì\r\n  zobrazí ikonu v systémové èásti lišty \r\n  poklepáním na ikonu otevøete tento konfiguraèní dialog\r\n  pokud klepnete pravım tlaèítkem, otevøe se kontextová nabídka\r\nObnovit pozici\r\n  zapamatuje si pozici konfiguraèního dialogu (nefunguje v grapheditu)
+1070=Zobrazovat ikonu v systémové lištì
+
+[137]
+0=Posun a pøeklopení
+1148=Posun a pøekl.
+1149=Posun jasové sloky - X:
+1151=Posun jasové sloky - Y:
+1153=Posun barevné sloky - X:
+1120=Posun barevné sloky - Y:
+1939=Pøeklopení
+1940=Zrcadlení
+1143=Opravuje pozici jasovıch a barevnıch ploch\r\nMùe bıt pouito k opravì špatnıch záznamù
+
+[138]
+0=Monosti
+1282=Monosti zmìny velikosti
+1285=Jasovı reim:
+1098=Gauss. rozostø. jasové sloky:
+1099=Gauss. rozostø. bar. sloky:
+1021=Parametr:
+1019=Zaostø. jasové sloky:
+1020=Zaostø. barevné sloky:
+1286=Barevnı reim:
+1892=Spojit
+1100=Horizontální warp:
+1022=Vertikální warp:
+1953=Pøesné zaokrouhlení
+1143=Resize algorithms:\r\n  Fast bilinear - rychlı, pøijatelná kvalita\r\n  Bilinear - o nìco kvalitnìjší ne pøedchozí, ale také o nìco pomalejší\r\n  Bicubic - vysoká kvalita, pomalı\r\n  Point - nejrychlejší, nejhorší kvalita\r\n  Area - area averaging scaling\r\n  Bicublin - jasová sloka bicubic, barevná sloka bilinear\r\n  ádnı - jen pøidá èerné okraje nebo oøízne obraz\r\nGaussovské rozostøení - bìhem zmìny velikosti mùe bıt obraz mírnì rozostøen - nezávislé na filtru rozostøení\r\nZaostøení - bìhem zmìny velikosti obrazu mùe bıt obraz zaostøen - nezávislé na filtrech zaostøení\r\n\r\nProkládané snímky:\r\n  nezaškrtunuté - se snímky jsou zpracovávány jako progresivní\r\n  zaškrtnuté - snímky jsou zpracovávány jako prokládané\r\n  mezistav - rozhodnout podle typu snímku (pouijte pro MPEG2 video)\r\n\r\nPøesné zaokrouhlení:\r\n  nezaškrtnuté - nìkdy jsou vidìt horizontální linie\r\n  zaškrtnuté - vysoká kvalita, v nìkterıch pøípadech pomalejší\r\n
+1023=Parametr:
+1360=Prokládané snímky
+
+[139]
+0=Vizualizace
+1074=Pohybové vektory
+1337=Vizualizace
+1143=Zkuste to, vypadá to pìknì
+1075=Kvantizace
+1357=Graf
+
 [140]
-0=Deinterlacing
-1167=Deinterlacing
-1169=Lineární interpolace
-1170=Lineární prolínání
-1171=Kubická interpolace
-1173=Kubické prolínání
-1172=Medián
-1174=TomsMoComp
-1207=Pøesnost:
-1209=Vymìò pole
-1175=Bob (?)
+1209=Prohodit pole
+1523=Metoda:
+
+[141]
+1774=Horizontální pozice:
+1776=Vertikální pozice:
+1493=Uloit do:
+1491=Uiv. defin.:
+
+[142]
+0=Úrovnì
+1170=Úrovnì
+1179=Upravit pouze jasovou sloku
+1184=Zobrazit histogram
+1185=Plnı rozsah
+1291=Vstup
+1267=Vıstup
+1181=Gamma korekce:
+1909=Automaticky
+1189=Posterizace:
+1707=Reim:
+
+[143]
+0=Kláv. zkratky a dálk. ovládání
+1202=Ovl. z klávesnice
+1329=Odchytávat klávesové zkratky i v neaktivním stavu
+1330=Po aktivaci klávesové zkratky zobrazit OSD informaci
+1416=Velikost skoku (s):
+1418=s modifikátorem:
+1472=API dálk. ovládání
+1539=Pøijímat klávesnicové zprávy
+1829=Exportovat Girder pøíkazy
+1537=Uiv. definované:
+
+[171]
+1212=Pøedvolba '%s' bude naètena pokud ...
+1211=rozmìry videa
+8=Zavøít
+1888=Jednotlivé hodnoty oddìlujte ;
+1276=<= šíøka <=
+1277=<= vıška <=
+2207=alespoò jedna podmínka platí (NEBO)
+2208=všechny podmínky platí (A)
+
+[172]
+0=Sejmout snímek
+1216=Sejm.
+1223=Všechny snímky
+1224=Jeden snímek
+1226=Rozsah
+1228=Sejmout nyní
+1261=Pøedpona
+1263=Poèet èíslic
+1262=Formát
+1230=Kvalita:
+1740=Sejmout kadı
+1741=snímek
+1232=Cesta
+
 [173]
-0=Overlay
-1235=Ovládání overlay
+1235=Volby overlay
 1236=Jas:
-1137=Konstrast:
-1138=Barva:
+1137=Kontrast:
+1138=Odstín:
 1139=Sytost:
 1140=Ostrost:
-1141=Gama:
-[118]
-0=Rùzné
-1283=Rùzné
-1016=Otoè obraz
-1314=Stupnì šedi
-1045=IDCT
-1268=Spodìní obrazu:
-1269=ms
-1047=Oprav chyby komprese
-1294=Zdecimuj s pomìrem
-1307=Autodetekce
-[102]
-0=O programu
-1251=ffdshow MPEG-4 VIDEO DEKODÉR
-1072=Datum kompilace DirectShow filtru:
-1071=verze libavcodec
-1073=verze XviD
+1143=Funkèní pouze pokud je aktivní "Pouít pokroèilé funkce rendereru" a podporuje to hardware.\r\n\r\nPodporuje overlay mixer a VMR9 renderer windowed reim.\r\n
+
+[176]
+0=DScaler filtr
+1308=DScaler filtr
+1309=Filtr
+
+[177]
+0=Kor. perspektivy
+1317=Korekce perspektivy
+1321=Zdrojovı obdélník
+1319=Interpolace
+1143=Tento filtr se teprve vyvíjí: v obraze se mohou objevit èerné teèky.
+
+[179]
+1325=Koeficienty
+1919=H.263 kvantizace
+1922=MPEG kvantizace
+1920=Kvantizer:
+1917=Kvantizaèní matice
+
+[180]
+2024=Vstupní barevné prostory:
+2021=Pøidat ffdshow video zdroj
+2032=Pouít aktuální
+2033=Naèíst
+2034=Uloit
+2029=Zpìtn./Pøednaè. buffer:
+
+[181]
+1339=originální warpsharp ffdshow
+1341=Barevnı reim:
+1343=Reim rozostøení:
+1019=Hloubka:
+1021=Práh:
+1023=Rozostøení:
+
+[182]
+1163=Nápovìda
+1162=Vıchozí
+1723=Vıchozí poøadí
+
+[188]
+0=Hlasitost
+1377=Hlasitost
+1937=Stupnice v dB
+1375=Celková hlasitost:
+1457=Normalizovat
+1683=Zobrazit aktuální úroveò hlasitosti
+1637=Max. zesílení:
+1641=Aktuální:
+1956=Vyr. pamì:
+1957=Pøi posunu nastavit vıchozí
+1639=dB
+
+[189]
+0=Ekvalizér
+1814=Naèíst pøedvolbu Winampu
+1378=Ekvalizér
+1465=dB
+1466=dB
+
+[190]
+1400=DSP Winampu
+1401=Vyberte adresáø Winampu 2...
+1404=Nastavení
+1989=Povolit zpracování vícekanálového zvuku
+
+[191]
+1406=Vıstupní konf. reproduktorù:
+1636=Vlastní matice
+1586=Normalizovat matici
+1685=Vzdálenost sluchátek:
+1637=Rozšíøení sterea
+1588=Voice control
+2172=SideL
+
+[193]
+0=Verze modulù
+2=Zavøít
+
+[200]
+0=Obecné
+1494=Ostatní volby
+1420=Maximální vzdálenost mezi I snímky
+1422=Minimální vzdálenost mezi I snímky
+1424=b snímky
+1425=max. po sobì jdoucích b snímkù:
+1427=dynamicky
+1431=zpøesnit
+1572=Poèet vláken:
+
+[202]
+1460=Neukládat nastavení do registru
+1163=Nápovìda
+1459=Pøedvolby
+
+[203]
+0=Titulky
+1461=Titulky na zaèátku filmu
+1466=Titulky na konci filmu
+1462=Zaèátek (rámce)
+1464=Konec (rámce)
+1467=Zaèátek (rámce)
+1469=Konec (rámce)
+1471=Sníení datového toku titulkù
+1474=Kvantizer
+1479=Velikost (kB)
+1480=Zaèátek:
+1482=Konec:
+1484=Èernobílé titulky
+
+[204]
+0=Alternativní komprese
+1485=Pouít alternativní kompresi køivky
+1486=Agresivita køivky:
+1488=Odchylka maxima od prùmìru:
+1491=Odchylka minima od prùmìru:
+
+[205]
+0=Komprese køivky
+1463=Scény s vysokım dat. tokem:
+1420=Scény s nízkım dat. tokem:
+
+[206]
+0=Dva prùchody - 1. prùchod
+1424=Statistickı soubor
+
+[207]
+0=Obecné
+1425=Barevnı prostor:
+1426=Typ kodéru:
+1420=Vzdálenost klíè. snímkù:
+
+[209]
+0=Obecné
+1529=Barevnı prostor:
+
+[210]
+0=Obecné
+1530=Vysoká kvalita
+1531=Zahazovat snímky
+1420=Maximální vzdálenost mezi I snímky
+1422=Minimální vzdálenost mezi I snímky
+1424=Prahová hodnota rozdílu pro klíèové snímky:
+
+[211]
+0=Statistika
+1531=Zapsat informace do debuggeru
+1533=Zapsat informace do souboru
+1532=Zobrazit upozornìní na chyby
+1738=Zpøístupnit DirectShow diagram GraphEditu
+1537=Zobrazit diagram
+1538=Poèítat PSNR
+1541=Pøevedené snímky:
+1545=Prùmìrnı kvantizér:
+1544=Prùmìrné PSNR:
+
+[212]
+0=Obecné
+1428=Barevnı prostor:
+1315=Adaptivní huffmanovi tabulky
+
+[213]
+0=Vstup
+1548=Vynutit vstupní barevnı prostor
+1550=Pøedpokládat prokládání pokud je vıška >
+1552=pixelù
+1016=Pøeklopit obraz
+1554=Povolit zpracování obrazu
+1555=Nastavení
+1556=Odstranìní šumu Libavcodecu/x264
+1460=Intenzita redukce šumu:
+
+[214]
+0=Maskování
+1556=Jasové maskování:
+1558=Èasovì komplexní maskování:
+1560=Prostorovì komplexní maskování:
+1562=Maskování P blokù:
+1576=Okrajové maskování:
+1564=Maskování tmavıch oblastí:
+1569=práh
+1573=práh
+1571=také DC
+1575=také DC
+1568=Jasová sloka
+1572=Barevná sloka
+1566=Normalizovat adaptivní kvantizaci
+
+[215]
+0=Maskování
+
+[219]
+0=Regulace datového toku
+1648=Maximální datovı tok:
+1646=Minimální datovı tok:
+1643=Maximální kvantizaèní rozdíl:
+1641=Rozostøení kvant. druhého prùchodu:
+1639=Rozostøení kvant. jednoho/prvního prùchodu:
+1637=Kvantizaèní komprese:
+1650=Velikost bufferu datového proudu dekodéru:
+1645=Pro omezení kvantizeru v daném rozsahu pouít spojitou funkci
+1635=Tolerovaná odchylka velikosti souboru:
+
+[220]
+0=Regulace datového toku
+
+[222]
+0=Vıstup
+1654=Ukládat jako AVI
+1655=Ukládat jako externí soubor
+1659=Libavcodec/x264 statistika:
+1660=Nepouívat
+1661=Zapsat
+1662=Pouít
+1663=Pouít && zapsat
+1667=Vynutit FPS
+
+[223]
+0=Kvantizace
+1441=Typ kvantizace:
+1442=Min. kvantizer
+1443=Max. kvantizer
+1687=I násobiè
+1691=B násobiè
+1700=DCT algoritmus:
+1707=Pøesnost MPEG2 DC:
+1678=Makrobloky
+1677=B snímky
+1676=P snímky
+1675=I snímky
+
+[225]
+1828=Naèíst matici...
+1829=Uloit...
+1840=Intra matice:
+1763=Inter matice:
+
+[226]
+0=Dva prùchody - 2. prùchod
+1424=Statistickı soubor prvního prùchodu
+1842=Pøepsat novou statistikou
+1844=Statistickı soubor druhého prùchodu
+1847=Simulace
+1444=Max. datovı tok:
+1446=Max. navıšení datového toku:
+1448=Max. sníení datového toku:
+1462=Klíèové snímky
+1452=Pøi vzdálenosti klíèovıch snímkù niší ne
+1453=snímkù...
+1454=...omezit datovı tok klíè. snímkù o
+1450=Zvıhodnit dat. tok klíèovıch snímkù o
+
+[228]
+0=Obecné
+1866=Ukládat vıstupní snímky pøímo do ASF souboru
+1420=Vzdálenost mezi klíè. snímky (s):
+1872=Odstranit prokládání
+1868=Komplexnost:
+1870=Plynulost:
+
+[232]
+0=Obecné
+1470=Barevnı prostor:
+
+[256]
+0=Obecné
+1494=Ostatní volby
+1420=Maximální vzdálenost mezi IDR-klíèovımi snímky
+1422=Minimální vzdálenost mezi IDR-klíèovımi snímky
+1424=b snímky
+1425=max. po sobì jdoucích b snímkù:
+1427=Dynamicky
+1431=Zpøesnit
+1572=Poèet vláken:
+
+[269]
+0=Obecné
+1472=Profil:
+1572=Poèet pracovních vláken:
+
+[266]
+0=Vlastní matice
+
+[234]
+0=Maskování
+
+[258]
+0=Maskování
+
+[295]
+0=Správce kompatibility ffdshow
+2041=Program "
+2042=" se pokouší naèíst ffdshow.\r\nTento dislog se zobrazil, protoe tento program není v seznamu kompatibilních ani nekompatibilních programù.\r\nVaše volba bude platit jak pro audio tak pro video, pokud jsou pouívány oba.
+2043=Pøíštì se ji neptat.
+2044=Anonymì tento program odeslat do online databáze ffdshow.
+2045=Nepouívat ffdshow. (jen nyní)
+2046=Nepouívat ffdshow. (vdy)
+2047=Pouít ffdshow. (jen nyní)
+2048=Pouít ffdshow. (vdy)
+2049=Vysvìtlení
+
+[2020]
+0=Informace/Ladìní
+1284=Informace
+1832=Pouívat následující SIMD instrukce (pokud je podporuje procesor):
+
+[233]
+0=Zobrazit/skrıt filtry
+1473=Dostupné filtry:
+1474=Viditelné filtry:
+
+[242]
+1551=Reim:
+1574=Jen jas. sloka
+1542=Zleva
+1544=Zhora
+1546=Šíøka
+1548=Vıška
+1555=X-Y váha:
+1553=Rozostøení:
+1562=Pokroèilé:
+1854=Obr. loga:
+1559=Pøedvolba okraje:
+1558=Barva:
+
+[231]
+0=Vıstup
+1016=Pøeklopit video
+1031=Zasílat filtrùm rozšíøené informace
+1052=Vysoce kvalitní pøevod YV12 > RGB
+1284=Podporované vıstupní barevné prostory
+1017=Povolit zmìnu formátu vıstupu bìhem pøehrávání
+1034=Spojit se pouze s kompatibilními filtry
+1910=Profil:
+1036=Zvolit nejbliší odpovídající barevnı prostor
+1033=Poslat filtrùm informace o prokládání
+1966=Metoda:
+1912=Planární YUV:
+1913=Komprimovanı YUV:
+
+[255]
+1799=Název soub.:
+1802=Horizontální pozice:
+1803=Vertikální pozice:
+1810=Zarovnání:
+1361=Reim:
+1807=Neprùhlednost:
+
+[248]
+1709=Pøepínaè stop
+0=Pøepínaè stop
+1683=Povolit
+1710=Stopy:
+
+[259]
+0=Zpracování
+1579=Povolené formáty pro zpracování zvuku
+1578=Pøevod plovoucí èárky na celá èísla
+1586=32 bitù, plovoucí èárka
+1585=32 bitù, celá èísla
+1580=16 bitù, celá èísla
+
+[244]
+0=Dolby dekodér
+1657=Dolby dekodér
+1656=Zpodìní zadních kanálù:
+
+[246]
+1686=FIR filtr
+0=FIR filtr
+1690=Typ:
+1696=Frekvence:
+1692=Okno:
+1683=Zobrazit spektrum
+1698=Šíøka:
+1688=Poèet tapù:
+1700=Max. zobr. frekvence
+
+[262]
+1881=Impulzní soubor:
+1905=Manuální pøiøazení kanálù:
+1902=Zvolit soubor
+1903=Smazat
+1893=Nastavení úrovnì:
+1891=automaticky
+1889=Intenzita smìšování:
+
+[247]
+0=Redukce šumu
+1706=Redukce šumu
+1704=Práh:
+
+[236]
+1485=Velikost prostoru:
+1487=Tlumení:
+1038=Šíøka:
+1490=Úroveò efektu:
+1019=Úroveò originálu:
+
+[237]
+0=Pøevzorkování
+1497=Pøevz.
+1498=Pøevzorkovat na
+1499=Reim:
+1875=Pøevzorkovat vdy
+1876=Pøevzorkovat pokud je vzorkovací frekvence ...
+1143=Pro zmìnu vzorkovací frekvence kplepnìte na Pouít nebo OK.
+
+[245]
+0=Zpodìní
+1676=Zpodìní
+1658=Levı kanál:
+1663=Centrální kanál:
+1666=Pravı kanál:
+1669=Levı efektovı kanál:
+1672=Pravı efektovı kanál:
+1675=LFE:
+2178=Postranní levı kanál:
+2181=Postranní pravı kanál:
+2184=Zadní centrální kanál:
+
+[243]
+0=Vıstup
+1985=Pøevádìt pouze vícekanálové stopy
+1845=Pøipojit k:
+1984=Vícekanálové zaøízení:
+1846=Pouít pouze pro S/PDIF vıstup
+1811=Pokud to není potøeba, nepouívat hlavièku WAVEFORMATEXTENSIBLE
+1813=Povolit pøímı vıstup do souboru
+1574=16 bitù, celá èásla
+1575=24 bitù, celá èísla
+1576=32 bitù, celá èísla
+1577=32 bitù, plovoucí èárka
+1573=Podporované vıstupní formáty
+1143=Pro zlepšení vıkonu na pomalıch poèítaèích nebo v pøípadì problémù s ovladaèi zrušte zatrení všch poloek kromì 16 bitù, celá èísla.\r\nLPCM vıstup je urèen k propojení s DVD audio filtry jako je napø. ten od Cyberlinku.
+
+[270]
+1941=Práh:
+
+[261]
+1857=Okraje
+1860=Vnitøní
+1861=Vnìjší
+1862=Horizontální
+1863=Vertikální
+1199=Spojit
+1858=Procent
+1859=Pixelù
+0=Okraje
+2067=Rozdìlení okrajù
+2079=Horizontální
+2080=Vertikální
+2068=Levı
+2069=Pravı
+2070=Horní
+2071=Spodní
+
+[254]
+0=Text
+1793=Textové titulky
+1571=Rozdìlit dlouhé øádky
+1836=Levo/pravé okraje:
+1775=pixelù
+1723=Øádkování:
+1572=Pøekrıvat titulky se stejnım èasem
+1767=Zobrazit
+1772=minimálnì na:
+1794=Opravy:
+1787=Nahradit dvojité ' za "  A "" za "
+1788=Zkusit opravit I a l
+1790=Zkusit opravit diakritiku (?. -> ? ; !. -> ! atd.)
+1795=Zkusit opravit pravopis
+1791=Zkusit opravit velká písmena
+1792=Odstranit nechtìné mezery mezi èísly
+1798=Skrıt titulky pro sluchovì postiené
+
+[250]
+1725=Povolit
+1726=Upøednostòovanı jazyk:
+1728=Aktuální jazyk:
+1727=Metoda vyhlazení:
+1730=Gausovské rozostøení:
+1729=Mìøítko:
+1796=Øídit se nastevením pozice ze záloky Titulky
+
+[249]
+1714=Horní propust:
+1712=Zvìtšení šíøky pásma:
+1716=Zvıraznìní harmonickıch:
+1718=Hlasitost ozvìny:
+1720=Zpìtná vazba ozvìny:
+1722=Zvıraznìní sterea:
+
+[252]
+1733=LFE vıhybka
+0=LFE vıhybka
+1734=Frekvence dolní propusti:
+1736=Zisk:
+1741=Odstranit nízké frekvence pøidané do LFE kanálu z pravého a levého kanálu
+
+[253]
+1763=Prohození kanálù
+0=Prohození kanálù
+1749=Pøední levı
+1748=Pøední centr
+1747=Pøední pravı
+1746=Zadní levı
+1670=Zadní centr
+1745=Zadní pravı
+
+[2112]
+2123=YCbCr specifikace
+2122=Kontrast
+2124=Standardní ( Y : 16-235, bar. sloka : 16-240 )
+2125=Plnı rozsah ( Y : 0-255, bar. sloka : 1-255 )
+2126=Uivatelskı
+0=Pøevod RGB
+2118=oøez èerné :
+2119=oøez bílé :
+2120=oøez bar. sloky:
+2121=Propojit bar. sloky
+
+[216]
+1583=Bar. sloka
+1586=Bar. sloka
+1589=Bar. sloka
+1598=Bar. sloka

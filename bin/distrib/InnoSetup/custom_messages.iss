@@ -27,6 +27,10 @@ ru.FinishedRestartLabel=Äëÿ çàâåğøåíèÿ óñòàíîâêè [name] òğåáóåòñÿ ïåğåçàãğóçèòü 
 pl.WelcomeLabel2=Instalator zainstaluje [name] na twoim komputerze.%n%nZaleca siê zamkniêcie wszystkich innych aplikacji przed kontynuowaniem procesu instalacji.
 pl.FileAbortRetryIgnore=Zamknij aplikacjê u¿ywaj¹c¹ ffdshow i wciœnij Ponów. Jeœli problem nie ustêpuje, wciœnij Przerwij, zrestartuj komputer i ponownie uruchom instalacjê.
 pl.FinishedRestartLabel=By zakoñczyæ instalacjê [name], instalator musi zrestartowaæ twój komputer. Czy chcia³byœ zrestartowaæ go teraz?%n%nPodpowiedŸ: By unikn¹æ restartowania komputera nastêpnym razem, zaznacz w zak³adce "Informacje" - "Nie u¿ywaj ffdshow w:" - "explorer.exe" w konfiguracji dekodera wideo.
+;Czech
+cz.WelcomeLabel2=Tento instalátor nainstaluje na váš poèítaè [name].%n%nPøedtím ne spustíte instalaci je doporuèeno ukonèit všechny ostatní aplikace.
+cz.FileAbortRetryIgnore=Ukonèete aplikaci pouívající ffdshow a kliknìte na Opakovat. Pokud problém pøetrvává, ukonèete instalaci tlaèítkem Pøerušit, restartujte poèítaè a znovu spuste instalci.
+cz.FinishedRestartLabel=Aby mohla bıt instalace [name] dokonèena, musí instalátor restartovat poèítaè. Chcete poèítaè restartovat nyní?%n%nTip: Potøebì restartování se pro pøíštì mùete vyhnout pokud v nastavení video dekodéru nastavíte "DirectShow"-"ffdshow nepouívat v:"-"explorer.exe".
 
 ; Add other languages here
 #endif
@@ -475,6 +479,77 @@ pl.shrt_audioConfig=Konfiguracja dekodera audio
 pl.shrt_vfwConfig=Konfiguracja VFW
 pl.shrt_uninstall=Odinstaluj ffdshow
 
+;Czech
+cz.simd_msg_sse=Toto sestavení ffdshow vyaduje procesor s podporou rozšíøení SSE. Váš procesor tato rozšíøení nepodporuje.
+cz.simd_msg_sse2=Toto sestavení ffdshow vyaduje procesor s podporou rozšíøení SSE2. Váš procesor tato rozšíøení nepodporuje.
+
+cz.comp_ffdshowds=ffdshow DirectShow filtr
+cz.comp_vfwInterface=VFW rozhraní
+cz.comp_makeAvis=Podpora pro AviSynth
+cz.comp_appPlugins=Pluginy:
+cz.comp_msg_selectOneComp=Musíte zvolit minimálnì jeden komponent.
+
+cz.tsk_resetSettings=Vıchozí nastavení ffdshow
+cz.tsk_videoFormats=Dekódovat pomocí ffdshow následující video formáty:
+cz.tsk_genericMpeg4=Obecnı MPEG-4
+cz.tsk_rawVideo=Raw video
+cz.tsk_audioFormats=Dekódovat pomocí ffdshow následující audio formáty:
+cz.tsk_rawAudio=Raw audio
+cz.tsk_defaultFilters=Ve vıchozím nastavení povolit následující filtry:
+cz.tsk_volumeNorm=Normalizace
+cz.tsk_subtitles=Titulky
+cz.tsk_tweaks=Ladìní
+cz.tsk_skipInloop=Vdy vynechat H.264 inloop deblocking
+
+cz.white_msg_oneCompAppAdded=Na zaèátek seznamu byla pøidána kompatibilní aplikace.
+cz.white_msg_multiCompAppAdded=Na zaèátek seznamu bylo pøidáno nìkolik kompatibilních aplikací.
+cz.white_videoLabel1=Správa problémù s kompatibilitou (VIDEO)
+cz.white_videoLabel2=Protoe nìkteré aplikace pøi pouití ffdshow padají nebo zamrzají%ndoporuèujeme vám zvolit 'ffdshow pouívat jen v následujících aplikacích'.
+cz.white_videoLabel3=Zadejte názvy spustitelnıch souborù aplikací kompatibilních s ffdshow video dekodérem, jeden na øádek.
+cz.white_audioLabel1=Správa problémù s kompatibilitou (AUDIO)
+cz.white_audioLabel2=Tentokrát nastavení pro AUDIO dekodér.%nTato nastavení mùete pozdìji zmìnit na stránce nastavení "DirectShow".
+cz.white_audioLabel3=Zadejte názvy spustitelnıch souborù aplikací kompatibilních s ffdshow audio dekodérem, jeden na øádek.
+cz.white_dontLimit=Neomezovat.
+cz.white_useOnlyIn=ffdshow pouívat jen v následujících aplikacích:
+cz.white_dontAskAgain=Pøíštì se neptat.
+
+cz.spk_Label1=Nastavení reproduktorù
+cz.spk_Label2=Zvolte nastavení které nejvíce odpovídá konfiguraci vašeho poèítaèe. Pozdìji lze zmìnit na stránce nastavení "Mixer".
+cz.spk_Label3=Konfigurace reproduktorù:
+cz.spk_mono=mono
+cz.spk_stereo=stereo
+cz.spk_quadro=quadro
+cz.spk_rear_1ch=zadní 1k
+cz.spk_front_2ch=pøední 2k
+cz.spk_side_2ch=postranní 2k
+cz.spk_rear_2ch=zadní 2k
+cz.spk_front_3ch=pøední 3k
+cz.spk_5ch=pøední 3k + zadní 2k
+cz.spk_7ch=pøední 3k + postranní 2k + zadní 2k
+cz.spk_headPhone=sluchátka
+cz.spk_surround=surround
+cz.spk_subwoofer=subwoofer
+cz.spk_dolby1=Dolby Surround/ProLogic
+cz.spk_dolby2=Dolby ProLogic II
+cz.spk_hrtf=Head-related transfer function (HRTF)
+cz.spk_sameAsInput=Jako vstup
+cz.spk_disableMixer=Zakázat Mixer
+cz.spk_voiceControl=Voice control (volume)
+cz.spk_expandStereo=Rozšíøení sterea (surround)
+cz.spk_unknownSpk=Neznámá konfigurace
+
+cz.plg_Label1=Zvolte adresáø pluginù %1
+cz.plg_Label2=Kam má bıt nainstalován %1 plugin?
+cz.plg_Label3=Zvolte adresáø do kterého má bıt nainstalován %1 plugin, pokraèujte tlaèítkem Další.,
+
+cz.run_videoConfig=Otevøít nastavení video dekodéru
+cz.run_audioConfig=Otevøít nastavení audio dekodéru
+cz.run_vfwConfig=Otevøít nastavení VFW
+
+cz.shrt_videoConfig=Nastavení video dekodéru
+cz.shrt_audioConfig=Nastavení audio dekodéru
+cz.shrt_vfwConfig=Nastavení VFW
+cz.shrt_uninstall=Odinstalovat ffdshow
 
 ; Add other languages here
 ba.langid=1069
