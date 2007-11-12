@@ -653,7 +653,8 @@ void convertToAVI(const AVS_VideoInfo* vi,AVS_Clip *clip,int len,const char *scr
       }
       wfx->nChannels=WORD(avs_audio_channels(vi));
       wfx->nSamplesPerSec=avs_samples_per_second(vi);
-      wfx->wBitsPerSample=WORD((avs_samples_per_second(vi)/avs_audio_channels(vi))<<3);
+      //wfx->wBitsPerSample=WORD((avs_samples_per_second(vi)/avs_audio_channels(vi))<<3);
+      wfx->wBitsPerSample=WORD((avs_bytes_per_audio_sample(vi)/avs_audio_channels(vi))<<3);
       if (FAILED(avistreamA->SetFormat(0,wfx,sizeof(WAVEFORMATEX)+wfx->cbSize))) throw EmakeAVIS(8);
     }
 
@@ -681,7 +682,8 @@ void convertToAVI(const AVS_VideoInfo* vi,AVS_Clip *clip,int len,const char *scr
         }
         else if (asample[1]<=vi->num_audio_samples)
         {
-          LONG rawaudiolen=LONG((asample[1]-asample[0]+1)*avs_samples_per_second(vi));
+          //LONG rawaudiolen=LONG((asample[1]-asample[0]+1)*avs_samples_per_second(vi));
+          LONG rawaudiolen=LONG((asample[1]-asample[0]+1)*avs_bytes_per_audio_sample(vi));
           if (!rawaudiobuf) rawaudiobuf=malloc(rawaudiolen*2);
           //No need for env ?
           avs.Get_Audio(clip, rawaudiobuf,asample[0],asample[1]-asample[0]+1);
@@ -896,7 +898,8 @@ int showProps(void)
     SetDlgItemText(m_hwnd,IDC_LBL_AUDIO_SAMPLERATE,pomS);
     sprintf(pomS,"Channels: %i",vi->nchannels);
     SetDlgItemText(m_hwnd,IDC_LBL_AUDIO_CHANNELS,pomS);
-    sprintf(pomS,"Bits per sample: %i",(avs_samples_per_second(vi)/avs_audio_channels(vi))<<3);
+    //sprintf(pomS,"Bits per sample: %i",(avs_samples_per_second(vi)/avs_audio_channels(vi))<<3);
+    sprintf(pomS,"Bits per sample: %i",(avs_bytes_per_audio_sample(vi)/avs_audio_channels(vi))<<3);
     SetDlgItemText(m_hwnd,IDC_LBL_AUDIO_BITSPERSAMPLE,pomS);
     int secs=int(vi->num_audio_samples/avs_samples_per_second(vi));
     sprintf(pomS,"Time: %02i:%02i:%02i",secs/3600,(secs/60)%60,secs%60);
