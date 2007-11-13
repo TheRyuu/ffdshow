@@ -1,1 +1,1 @@
-loadCPlugin("ffavisynth.dll")
+Load_Stdcall_Plugin("ffavisynth.dll")
