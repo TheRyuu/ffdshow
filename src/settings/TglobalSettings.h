@@ -14,7 +14,7 @@
 	_l("Recode.exe;rlkernel.exe;RoxMediaDB9.exe;rundll32.exe;SelfMV.exe;Shareaza.exe;sherlock2.exe;ShowTime.exe;sidebar.exe;SinkuHadouken.exe;Sleipnir.exe;smartmovie.exe;SopCast.exe;SplitCam.exe;START.EXE;stillcap.exe;Studio.exe;subedit.exe;SubtitleEdit.exe;SubtitleWorkshop.exe;SWFConverter.exe;TheaterTek DVD.exe;time_adjuster.exe;timecodec.exe;tmc.exe;TMPGEnc.exe;TMPGEnc4XP.exe;TOTALCMD.EXE;tvc.exe;TVersity.exe;TVPlayer.exe;TVUPlayer.exe;UCC.exe;Ultra EDIT.exe;VCD_PLAY.EXE;VeohClient.exe;VFAPIFrameServer.exe;VideoSnapshot.exe;VideoSplitter.exe;VIDEOS~1.SCR;ViPlay.exe;ViPlay3.exe;virtualdub.exe;virtualdubmod.exe;vplayer.exe;WCreator.exe;WFTV.exe;winamp.exe;WinAVI.exe;WindowsPhotoGallery.exe;windvd.exe;WinMPGVideoConvert.exe;WINWORD.EXE;wmenc.exe;wmplayer.exe;wscript.exe;x264.exe;XNVIEW.EXE;Xvid4PSP.exe;YahooMusicEngine.exe;YahooWidgetEngine.exe;zplayer.exe;")\
 	_l("Zune.exe;moviemk.exe")     
 
-#define BLACKLIST_EXE_FILENAME _l("oblivion.exe;morrowind.exe;age3.exe;gta-vc.exe;gta3.exe;gta_sa.exe;hl2.exe;pes6.exe;war3.exe;sh3.exe")
+#define BLACKLIST_EXE_FILENAME _l("oblivion.exe;morrowind.exe;age3.exe;gta-vc.exe;gta3.exe;gta_sa.exe;hl2.exe;pes6.exe;war3.exe;sh3.exe;PES2008.exe;CM2008.exe;RF_Online.bin")
 
 struct TregOp;
 struct Tconfig;
