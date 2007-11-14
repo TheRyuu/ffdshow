@@ -1198,6 +1198,7 @@ begin
     'Media Player Classic.exe'#13#10
     'MediaLife.exe'#13#10
     'MediaPortal.exe'#13#10
+    'MEDIAREVOLUTION.EXE'#13#10
     'MediaServer.exe'#13#10
     'megui.exe'#13#10
     'mencoder.exe'#13#10
@@ -1288,6 +1289,7 @@ begin
     'VideoSnapshot.exe'#13#10
     'VideoSplitter.exe'#13#10
     'VIDEOS~1.SCR'#13#10
+    'ViPlay.exe'#13#10
     'ViPlay3.exe'#13#10
     'virtualdub.exe'#13#10
     'virtualdubmod.exe'#13#10
@@ -1369,6 +1371,12 @@ begin
 
   compApps[1].rev   := 1548;
   compApps[1].name  := 'moviemk.exe';
+
+  compApps[2].rev   := 1605;
+  compApps[2].name  := 'ViPlay.exe';
+  compApps[3].name  := 'MEDIAREVOLUTION.EXE';
+  
+  compApps[4].rev   := 0;
 
 
   // Compatibility list
