@@ -248,6 +248,8 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
     wFormatTag=WAVE_FORMAT_IMC;
    else if (mt.subtype==MEDIASUBTYPE_ATRAC3)
     wFormatTag=WAVE_FORMAT_ATRAC3;
+   else if (mt.subtype==MEDIASUBTYPE_NELLYMOSER)
+    wFormatTag=WAVE_FORMAT_NELLYMOSER;
    else if (mt.subtype==MEDIASUBTYPE_ULAW || mt.subtype==MEDIASUBTYPE_ulaw)
     wFormatTag=WAVE_FORMAT_MULAW;
    else if (mt.subtype==MEDIASUBTYPE_ALAW || mt.subtype==MEDIASUBTYPE_alaw)

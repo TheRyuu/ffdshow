@@ -135,6 +135,7 @@ void avcodec_register_all(void)
     REGISTER_DECODER	(mace3);
     REGISTER_DECODER	(mace6);
     REGISTER_DECODER	(msgsm);
+    REGISTER_DECODER 	(nellymoser);
     REGISTER_DECODER	(qdm2);
     #ifdef __GNUC__
     REGISTER_DECODER	(ra_144);

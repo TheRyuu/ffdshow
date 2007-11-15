@@ -97,6 +97,7 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/msmpeg4data.c \
       $(LAVC_DIR)/msrle.c \
       $(LAVC_DIR)/msvideo1.c \
+      $(LAVC_DIR)/nellymoserdec.c \
       $(LAVC_DIR)/parser.c \
       $(LAVC_DIR)/pcm.c \
       $(LAVC_DIR)/png.c \

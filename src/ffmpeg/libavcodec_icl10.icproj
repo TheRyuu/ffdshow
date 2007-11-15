@@ -747,6 +747,8 @@
 		<File 
 			RelativePath=".\libavcodec\msvideo1.c"/>
 		<File 
+			RelativePath=".\libavcodec\nellymoserdec.c"/>
+		<File 
 			RelativePath=".\libavcodec\parser.c"/>
 		<File 
 			RelativePath=".\libavcodec\pcm.c"/>

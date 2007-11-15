@@ -431,6 +431,9 @@
 				RelativePath=".\libavcodec\msvideo1.c">
 			</File>
 			<File
+				RelativePath=".\libavcodec\nellymoserdec.c">
+			</File>
+			<File
 				RelativePath=".\libavcodec\parser.c">
 			</File>
 			<File

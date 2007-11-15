@@ -818,6 +818,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\nellymoserdec.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\parser.c"
 				>
 			</File>

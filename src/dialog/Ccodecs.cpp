@@ -562,6 +562,7 @@ void TcodecsPageAudio::fillCodecs(void)
    formats.push_back(Tformat(_l("Real Audio")  ,IDFF_ra         ,IDFF_MOVIE_LAVC,_l("Real Audio 1.0 (14.4K) & RealAudio 2.0 (28.8K)")));
    formats.push_back(Tformat(_l("IMC")         ,IDFF_imc        ,IDFF_MOVIE_LAVC,_l("IMC compatible decoder")));
    formats.push_back(Tformat(_l("ATRAC3")      ,IDFF_atrac3     ,IDFF_MOVIE_LAVC,_l("ATRAC3 compatible decoder")));
+   formats.push_back(Tformat(_l("Nellymoser")  ,IDFF_nellymoser ,IDFF_MOVIE_LAVC,_l("Nellymoser")));
    formats.push_back(Tformat(_l("AVIS")        ,IDFF_avisA      ,IDFF_MOVIE_AVIS,_l("AVIS (AviSynth AVI files)")));
   }
  //Tformat::Tdecoder movie_raw[]={{"any",IDFF_MOVIE_RAW},{NULL,0)};
