@@ -28,10 +28,10 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				ForceConformanceInForLoopScope="TRUE"
-				PrecompiledHeaderFile=".\Debug/ff_tremor.pch"
-				AssemblerListingLocation=".\Debug/"
-				ObjectFile=".\Debug/"
-				ProgramDataBaseFileName=".\Debug/"
+				PrecompiledHeaderFile=".\debug_icl9/ff_tremor.pch"
+				AssemblerListingLocation=".\debug_icl9/"
+				ObjectFile=".\debug_icl9/"
+				ProgramDataBaseFileName=".\debug_icl9/"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="4"
 				CompileAs="1"/>
@@ -55,7 +55,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/ff_tremor.tlb"
+				TypeLibraryName=".\debug_icl9/ff_tremor.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -104,10 +104,10 @@
 				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
 				ForceConformanceInForLoopScope="TRUE"
-				PrecompiledHeaderFile=".\Release/ff_tremor.pch"
-				AssemblerListingLocation=".\Release/"
-				ObjectFile=".\Release/"
-				ProgramDataBaseFileName=".\Release/"
+				PrecompiledHeaderFile=".\release_icl9/ff_tremor.pch"
+				AssemblerListingLocation=".\release_icl9/"
+				ObjectFile=".\release_icl9/"
+				ProgramDataBaseFileName=".\release_icl9/"
 				WarningLevel="0"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="0"
@@ -127,7 +127,7 @@
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				OptimizeForWindows98="1"
-				ImportLibrary=".\Release/ff_tremor.lib"
+				ImportLibrary=".\release_icl9/ff_tremor.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -135,7 +135,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/ff_tremor.tlb"
+				TypeLibraryName=".\release_icl9/ff_tremor.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
