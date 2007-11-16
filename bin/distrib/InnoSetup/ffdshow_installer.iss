@@ -243,10 +243,16 @@ Name: audio\aac\libfaad2; Description: libfaad2; Check: CheckTaskAudio('aac', 8,
 Name: audio\aac\libfaad2; Description: libfaad2; Check: NOT CheckTaskAudio('aac', 8, True); Flags: exclusive unchecked; Components: ffdshow
 Name: audio\aac\realaac; Description: realaac; Check: CheckTaskAudio('aac', 19, False); Flags: exclusive; Components: ffdshow
 Name: audio\aac\realaac; Description: realaac; Check: NOT CheckTaskAudio('aac', 19, False); Flags: exclusive unchecked; Components: ffdshow
-Name: audio\ac3; Description: AC3; Check: CheckTaskAudio('ac3', 15, True); Components: ffdshow
-Name: audio\ac3; Description: AC3; Check: NOT CheckTaskAudio('ac3', 15, True); Flags: unchecked; Components: ffdshow
-Name: audio\dts; Description: DTS; Check: CheckTaskAudio('dts', 17, True); Components: ffdshow
-Name: audio\dts; Description: DTS; Check: NOT CheckTaskAudio('dts', 17, True); Flags: unchecked; Components: ffdshow
+Name: audio\ac3;        Description: AC3;                                                Components: ffdshow; Flags: unchecked
+Name: audio\ac3\liba52; Description: liba52; Check:     CheckTaskAudio('ac3', 15, True); Components: ffdshow; Flags: exclusive
+Name: audio\ac3\liba52; Description: liba52; Check: NOT CheckTaskAudio('ac3', 15, True); Components: ffdshow; Flags: exclusive unchecked
+Name: audio\ac3\spdif;  Description: S/PDIF; Check:     CheckTaskAudio('ac3', 16, True); Components: ffdshow; Flags: exclusive
+Name: audio\ac3\spdif;  Description: S/PDIF; Check: NOT CheckTaskAudio('ac3', 16, True); Components: ffdshow; Flags: exclusive unchecked
+Name: audio\dts;        Description: DTS;                                                Components: ffdshow; Flags: unchecked
+Name: audio\dts\libdts; Description: libdts; Check:     CheckTaskAudio('dts', 17, True); Components: ffdshow; Flags: exclusive
+Name: audio\dts\libdts; Description: libdts; Check: NOT CheckTaskAudio('dts', 17, True); Components: ffdshow; Flags: exclusive unchecked
+Name: audio\dts\spdif;  Description: S/PDIF; Check:     CheckTaskAudio('dts', 16, True); Components: ffdshow; Flags: exclusive
+Name: audio\dts\spdif;  Description: S/PDIF; Check: NOT CheckTaskAudio('dts', 16, True); Components: ffdshow; Flags: exclusive unchecked
 Name: audio\lpcm; Description: LPCM; Check: CheckTaskAudio('lpcm', 4, True); Components: ffdshow
 Name: audio\lpcm; Description: LPCM; Check: NOT CheckTaskAudio('lpcm', 4, True); Flags: unchecked; Components: ffdshow
 Name: audio\mp2; Description: MP1, MP2; Check: CheckTaskAudio('mp2', 7, True); Components: ffdshow
@@ -1291,6 +1297,7 @@ begin
     'VIDEOS~1.SCR'#13#10
     'ViPlay.exe'#13#10
     'ViPlay3.exe'#13#10
+    'ViPlay4.exe'#13#10
     'virtualdub.exe'#13#10
     'virtualdubmod.exe'#13#10
     'vplayer.exe'#13#10
@@ -1376,7 +1383,10 @@ begin
   compApps[2].name  := 'ViPlay.exe';
   compApps[3].name  := 'MEDIAREVOLUTION.EXE';
   
-  compApps[4].rev   := 0;
+  compApps[4].rev   := 1608;
+  compApps[4].name  := 'ViPlay4.exe';
+
+  compApps[5].rev   := 0;
 
 
   // Compatibility list
