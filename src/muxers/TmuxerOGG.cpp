@@ -56,7 +56,7 @@ size_t TmuxerOGG::writeHeader(const void *data,size_t len,bool flush,const BITMA
  written=0;
  if (data)
   {
-   const ogg_packet *op=(const ogg_packet*)data;
+   ogg_packet *op=(ogg_packet*)data;
    ogg_stream_packetin(&os,op);
    if (flush)
     {
@@ -74,7 +74,7 @@ size_t TmuxerOGG::writeFrame(const void *data,size_t len,const TencFrameParams &
 {
  if (out==INVALID_HANDLE_VALUE || !data || !frameParams.priv) return 0;
  written=0;
- const ogg_packet *op=(const ogg_packet*)frameParams.priv;
+ ogg_packet *op=(ogg_packet*)frameParams.priv;
  ogg_stream_packetin(&os,op);
  while (1)
   {
