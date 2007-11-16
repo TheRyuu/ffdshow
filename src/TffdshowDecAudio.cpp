@@ -272,6 +272,23 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
  CodecID codecId=globalSettings->getCodecId(wFormatTag,NULL);
  if (codecId==CODEC_ID_MP3LIB && _strnicmp(_l("vix.exe"),getExeflnm(),8)==0)
   return CODEC_ID_NONE;
+ // use SPDIF pass through when AC3 output and 'Use SPDIF when AC3 output set' are checked.
+ if (   codecId == CODEC_ID_LIBA52
+     && inpin && inpin->audio
+     && (inpin->audio->codecId == CODEC_ID_LIBA52 || inpin->audio->codecId == CODEC_ID_SPDIF_AC3)
+     && globalSettings->ac3SPDIF
+     && presetSettings && presetSettings->output
+     && (presetSettings->output->outsfs & TsampleFormat::SF_AC3)
+    )
+  inpin->audio->codecId = codecId = CODEC_ID_SPDIF_AC3;
+ if (   codecId == CODEC_ID_LIBDTS
+     && inpin && inpin->audio
+     && (inpin->audio->codecId == CODEC_ID_LIBDTS || inpin->audio->codecId == CODEC_ID_SPDIF_DTS)
+     && globalSettings->ac3SPDIF
+     && presetSettings && presetSettings->output
+     && (presetSettings->output->outsfs & TsampleFormat::SF_AC3)
+    )
+  inpin->audio->codecId = codecId = CODEC_ID_SPDIF_DTS;
  DPRINTF(_l("TffdshowDecAudio::getCodecId: codecId=%i"),codecId);
  return codecId;
 }
@@ -293,17 +310,7 @@ HRESULT TffdshowDecAudio::CheckConnect(PIN_DIRECTION dir,IPin *pPin)
     break;
    case PINDIR_OUTPUT:
     initPreset();
-	TsampleFormat outsf=getOutsf();
-	/* If "Decode only when AC3 output unchecked" option checked, 
-			then multichannel streams should not be downconverted */
-	if (globalSettings->ac3SPDIF 
-		&& presetSettings->output->outsfs==TsampleFormat::SF_AC3)
-    {
-	   if (inpin->audio->codecId == CODEC_ID_LIBA52)
-		   inpin->audio->codecId = CODEC_ID_SPDIF_AC3;
-		if (inpin->audio->codecId == CODEC_ID_LIBDTS)
-		   inpin->audio->codecId = CODEC_ID_SPDIF_DTS;
-    }
+    TsampleFormat outsf=getOutsf();
     if (presetSettings->output->connectTo!=0)
      {
       if (presetSettings->output->connectToOnlySpdif)
@@ -354,22 +361,6 @@ HRESULT TffdshowDecAudio::getMediaType(CMediaType *mtOut)
    DPRINTF(_l("TffdshowDecAudio::getMediaType:%s"),descS);
   }
 
- /* Change AC3 output format to PCM if checkbox checked and output format is not multichannel */
-  if (inpin != NULL 
-	  && inpin->audio->codecId != CODEC_ID_LIBA52
-	  && inpin->audio->codecId != CODEC_ID_SPDIF_AC3
-	  && inpin->audio->codecId != CODEC_ID_LIBDTS
-	  && inpin->audio->codecId != CODEC_ID_SPDIF_DTS)
-  if (presetSettings != NULL && presetSettings->output != NULL 
-	  && presetSettings->output->outAC3EncodeMode == 1)
-  {
-	 TsampleFormat outsf=getOutsf();
-	 if (outsf.sf==TsampleFormat::SF_AC3 && outsf.nchannels <= 5)
-	 {
-		outsf.sf = TsampleFormat::SF_LPCM16;
-		*mtOut=outsf.toCMediaType(alwaysextensible);
-	 }
-  }
 #ifdef VISTA_SPDIF
  /* Change spdif format to analog in order to be able to change of audio device
   Explanation : output format = multichannel <=> analog directsound device  => Connection rejected, ffdshow audio will be unloaded
@@ -425,14 +416,8 @@ HRESULT TffdshowDecAudio::DecideBufferSize(IMemAllocator *pAllocator, ALLOCATOR_
 
  if (!presetSettings) initPreset();
 
- // Workaround for SPDIF compatibility issues
- if (getParam2(IDFF_ac3SPDIF))
-	pProperties->cBuffers=4;
- else
-	pProperties->cBuffers=8;
-
+ pProperties->cBuffers=4;
  pProperties->cbBuffer=48000*8*4/5;
-
  pProperties->cbAlign=1;
  pProperties->cbPrefix=0;
 
@@ -766,7 +751,7 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleSPDIF(void *buf,size_t size,int bit_
  if (!fileout)
   {
    length=0;
-   while (length<size+sizeof(WORD)*4) length+=0x800; // 2048 = AC3 
+   while (length<size+sizeof(WORD)*8) length+=0x800; // 2048 = AC3 
    unsigned int size2=(unsigned int)(int64_t(1)*wfe->nBlockAlign*wfe->nSamplesPerSec*size*8/bit_rate);
    while (length<size2) length+=0x800;
   }
@@ -806,24 +791,19 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleSPDIF(void *buf,size_t size,int bit_
 
  if (!fileout)
   {
-	 WORD *pDataOutW=(WORD*)pDataOut;
-	 pDataOutW[0]=0xf872;
-	 pDataOutW[1]=0x4e1f;
-	 pDataOutW[2]=type;
-	 // Workaround for SPDIF compatibility issues
-	 if (getParam2(IDFF_SPDIFCompatibility))
-	 {
-	  pDataOutW[3]=WORD(size*8);
-	  _swab((char*)buf,(char*)&pDataOutW[4],(int)size);
-	 }
-	 else
-	 {
-	  pDataOutW[3]=WORD(14*size); //WORD(size <<3);
-	  //if (type == 1)
-		//pDataOutW[4] = 0x0b77;  // AC3 syncword (removed because works only for DTS, not for DD)  
-	  WORD *sbuf = (WORD *)buf;
-	  _swab((char*)sbuf, (char*)&pDataOutW[8], (int)(size*2-2));
-	 }
+   memset(pDataOut + 16 + size, 0, length -16 - size);
+   WORD *pDataOutW=(WORD*)pDataOut;
+   pDataOutW[0] = pDataOutW[1] = pDataOutW[2] = pDataOutW[3] = 0;
+   pDataOutW[4]=0xf872;
+   pDataOutW[5]=0x4e1f;
+   pDataOutW[6]=type;
+   pDataOutW[7]=WORD(size*8);
+   _swab((char*)buf,(char*)&pDataOutW[8],(int)(size & ~1));
+   if (size & 1) // _swab doesn't like odd number.
+    {
+     pDataOut[16 + size] = ((BYTE*)buf)[size - 1];
+     pDataOut[15 + size] = 0;
+    }
   }
  else
   {

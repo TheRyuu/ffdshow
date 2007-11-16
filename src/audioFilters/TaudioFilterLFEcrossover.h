@@ -17,7 +17,7 @@ private:
  Tbuffer buf;
  float gain;
 protected:
- virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_FLOAT32;}
+ virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const {return TsampleFormat::SF_FLOAT32;}
 public:
  TaudioFilterLFEcrossover(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual HRESULT process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0);

@@ -52,11 +52,26 @@ void TaudioFilterOutput::done(void)
  ac3inited=false;
 }
 
-int TaudioFilterOutput::getSupportedFormats(const TfilterSettingsAudio *cfg0,bool *honourPreferred) const
+int TaudioFilterOutput::getSupportedFormats(const TfilterSettingsAudio *cfg0,bool *honourPreferred,const TsampleFormat &sf) const
 {
  *honourPreferred=false;
  const ToutputAudioSettings *cfg=(ToutputAudioSettings*)cfg0;
- if (cfg->outsfs==TsampleFormat::SF_AC3 || cfg->outsfs==TsampleFormat::SF_LPCM16)
+ if (cfg->outsfs & TsampleFormat::SF_AC3)
+  {
+   if (cfg->outAC3EncodeMode)
+    {
+     if (sf.nchannels == 6)
+      return TsampleFormat::SF_PCM16;
+     int outsfs = cfg->outsfs & ~TsampleFormat::SF_AC3;
+     if (outsfs)
+      return outsfs;
+     else
+      return TsampleFormat::SF_PCM16 | TsampleFormat::SF_PCM24 | TsampleFormat::SF_PCM32;
+    }
+   else
+    return TsampleFormat::SF_PCM16;
+  }
+ if (cfg->outsfs==TsampleFormat::SF_LPCM16)
   return TsampleFormat::SF_PCM16;
  else
   return cfg->outsfs;
@@ -67,11 +82,23 @@ bool TaudioFilterOutput::getOutputFmt(TsampleFormat &fmt,const TfilterSettingsAu
  const ToutputAudioSettings *cfg=(ToutputAudioSettings*)cfg0;
  if (cfg->outsfs==TsampleFormat::SF_LPCM16)
   fmt.sf=TsampleFormat::SF_LPCM16;
- if (cfg->outsfs==TsampleFormat::SF_AC3)
-  fmt.sf=TsampleFormat::SF_AC3;
- else
-  if ((fmt.sf&cfg->outsfs)==0)
-   fmt.sf=TsampleFormat::sf_bestMatch(fmt.sf,cfg->outsfs);
+ else if (cfg->outsfs & TsampleFormat::SF_AC3)
+  {
+   if (cfg->outAC3EncodeMode && fmt.nchannels != 6)
+    {
+     int outsfs = cfg->outsfs & ~TsampleFormat::SF_AC3;
+     if (outsfs == 0)
+      outsfs = TsampleFormat::SF_PCM16 | TsampleFormat::SF_PCM24 | TsampleFormat::SF_PCM32;
+     if ((fmt.sf & outsfs)==0)
+      fmt.sf = TsampleFormat::sf_bestMatch(fmt.sf, outsfs);
+    }
+   else
+    {
+     fmt.sf = TsampleFormat::SF_AC3;
+    }
+  }
+ else if ((fmt.sf & cfg->outsfs)==0)
+  fmt.sf=TsampleFormat::sf_bestMatch(fmt.sf,cfg->outsfs);
  return true;
 }
 
@@ -83,25 +110,22 @@ HRESULT TaudioFilterOutput::process(TfilterQueue::iterator it,TsampleFormat &fmt
  // Change to PCM format if AC3 encode is requested only for multichannel streams and codec is not AC3/DTS
  bool changeFormat = false;
  const TffdshowDecAudioInputPin *pin =  deciA->GetCurrentPin();
- if (pin  && pin->audio)
- {
-	 if (pin->audio->codecId != CODEC_ID_LIBA52
-	  && pin->audio->codecId != CODEC_ID_SPDIF_AC3
-	  && pin->audio->codecId != CODEC_ID_LIBDTS
-	  && pin->audio->codecId != CODEC_ID_SPDIF_DTS)
-	 {
-		if (cfg->outAC3EncodeMode == 1 && cfg->outsfs == TsampleFormat::SF_AC3 && fmt.nchannels <= 5)
-			changeFormat = true;
-	 }
- }
- if (cfg->outsfs==TsampleFormat::SF_LPCM16 || changeFormat == true)
+ if (   pin
+     && pin->audio
+     && cfg->outAC3EncodeMode == 1
+     && (cfg->outsfs & TsampleFormat::SF_AC3)
+     && fmt.nchannels != 6
+    )
+  changeFormat = true;
+
+ if (cfg->outsfs==TsampleFormat::SF_LPCM16)
   {
    fmt.sf=TsampleFormat::SF_LPCM16;
    int16_t *samples16=(int16_t*)samples;
    for (size_t i=0;i<numsamples*fmt.nchannels;i++)
     bswap(samples16[i]);
   }
- else if (cfg->outsfs==TsampleFormat::SF_AC3 && parent->config->isDecoder[IDFF_MOVIE_LAVC])
+ else if ((cfg->outsfs & TsampleFormat::SF_AC3) && parent->config->isDecoder[IDFF_MOVIE_LAVC]  && !changeFormat)
   {
    if (!libavcodec) deci->getLibavcodec(&libavcodec);
    if (oldsf!=fmt)

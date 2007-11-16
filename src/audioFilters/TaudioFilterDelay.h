@@ -33,7 +33,7 @@ private:
     }
   } delay[8];
 protected:
- virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {*honourPreferred=false;return TsampleFormat::SF_ALL;}
+ virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const {*honourPreferred=false;return TsampleFormat::SF_ALL;}
 public:
  TaudioFilterDelay(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual HRESULT process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0);

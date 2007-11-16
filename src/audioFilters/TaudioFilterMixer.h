@@ -20,7 +20,7 @@ private:
  TmixerSettings oldcfg;
 
 protected:
- virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_ALL_24;}
+ virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const {return TsampleFormat::SF_ALL_24;}
 
 public:
  TaudioFilterMixer(IffdshowBase *Ideci,Tfilters *Iparent);

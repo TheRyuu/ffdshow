@@ -311,8 +311,8 @@ INT_PTR TcodecsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        break;
       case IDC_CHB_CODEC_OPT1:
       case IDC_CHB_CODEC_OPT2:
-	  case IDC_CHB_CODEC_OPT3:
-	  case IDC_CHB_CODEC_OPT4:
+      case IDC_CHB_CODEC_OPT3:
+      case IDC_CHB_CODEC_OPT4:
        dlg2options(LOWORD(wParam));
        return TRUE;
      }
@@ -533,10 +533,10 @@ void TcodecsPageAudio::fillCodecs(void)
    formats.push_back(Tformat(_l("MP3")         ,IDFF_mp3        ,movie_mp23,_l("MPEG-1 Audio Layer 3")));
    formats.push_back(Tformat(_l("MP1,MP2")     ,IDFF_mp2        ,movie_mp23,_l("MPEG-1 Audio Layer 1,2")));
    static const int movie_ac3[]={IDFF_MOVIE_LIBA52,IDFF_MOVIE_SPDIF,0};
-   static const Tformat::Toption options_ac3[]={{IDFF_MOVIE_LIBA52,_l("Dynamic range compression"),IDFF_ac3drc,1},{0,_l("Use SPDIF when AC3 output set"),IDFF_ac3SPDIF,1},{0,_l("Maximize SPDIF compatibility"),IDFF_SPDIFCompatibility,1},{NULL,0}};
+   static const Tformat::Toption options_ac3[]={{IDFF_MOVIE_LIBA52,_l("Dynamic range compression"),IDFF_ac3drc,1},{0,_l("Use SPDIF when AC3 output set"),IDFF_ac3SPDIF,1},{NULL,0}};
    formats.push_back(Tformat(_l("AC3")         ,IDFF_ac3        ,movie_ac3,_l("ATSC A-52 stream decoder"),options_ac3));
    static const int movie_dts[]={IDFF_MOVIE_LIBDTS,IDFF_MOVIE_SPDIF,0};
-   static const Tformat::Toption options_dts[]={{IDFF_MOVIE_LIBDTS,_l("Dynamic range compression"),IDFF_dtsdrc,1},{0,_l("Check for DTS in WAV"),IDFF_dtsinwav,1},{0,_l("Maximize SPDIF compatibility"),IDFF_SPDIFCompatibility,1},{NULL,0}};
+   static const Tformat::Toption options_dts[]={{IDFF_MOVIE_LIBDTS,_l("Dynamic range compression"),IDFF_dtsdrc,1},{0,_l("Use SPDIF when AC3 output set"),IDFF_ac3SPDIF,1},{0,_l("Check for DTS in WAV"),IDFF_dtsinwav,1},{NULL,0}};
    formats.push_back(Tformat(_l("DTS")         ,IDFF_dts        ,movie_dts,_l("DTS Coherent Acoustics stream decoder"),options_dts));
    static const int movie_aac[]={IDFF_MOVIE_LIBFAAD,IDFF_MOVIE_REALAAC,0};
    formats.push_back(Tformat(_l("AAC")         ,IDFF_aac        ,movie_aac,_l("Advanced Audio Coding (AAC)")));

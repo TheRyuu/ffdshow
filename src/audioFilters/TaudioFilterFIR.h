@@ -26,7 +26,7 @@ private:
  CCritSec csFFT;
 protected:
  virtual bool is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg);
- virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_FLOAT32;}
+ virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const {return TsampleFormat::SF_FLOAT32;}
 public:
  TaudioFilterFir(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual void done(void);

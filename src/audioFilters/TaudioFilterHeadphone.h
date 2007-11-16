@@ -32,7 +32,7 @@ private:
   } *p_sys;
  bool inited;
 protected:
- virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_FLOAT32;}
+ virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const {return TsampleFormat::SF_FLOAT32;}
 public:
  TaudioFilterHeadphone(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual bool getOutputFmt(TsampleFormat &fmt,const TfilterSettingsAudio *cfg);
@@ -96,7 +96,7 @@ private:
 
  static int pulse_detect(const float *sx);
 protected:
- virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_FLOAT32;}
+ virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const {return TsampleFormat::SF_FLOAT32;}
 public:
  TaudioFilterHeadphone2(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual bool getOutputFmt(TsampleFormat &fmt,const TfilterSettingsAudio *cfg);

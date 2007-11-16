@@ -11,7 +11,7 @@ private:
  revmodel *rev;
 protected:
  virtual bool is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg);
- virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_FLOAT32;}
+ virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const {return TsampleFormat::SF_FLOAT32;}
 public:
  TaudioFilterFreeverb(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual ~TaudioFilterFreeverb();

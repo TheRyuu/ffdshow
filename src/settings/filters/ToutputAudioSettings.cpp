@@ -46,15 +46,15 @@ ToutputAudioSettings::ToutputAudioSettings(TintStrColl *Icoll,TfilterIDFFs *filt
 {
  static const TintOptionT<ToutputAudioSettings> iopts[]=
   {
-   IDFF_outsfs                 ,&ToutputAudioSettings::outsfs             ,1,1,_l(""),1,
+   IDFF_outsfs                 ,&ToutputAudioSettings::outsfs                ,1,1,_l(""),1,
      _l("outsfs"),TsampleFormat::SF_PCM16,
-   IDFF_outAC3bitrate          ,&ToutputAudioSettings::outAC3bitrate      ,32,640,_l(""),1,
+   IDFF_outAC3bitrate          ,&ToutputAudioSettings::outAC3bitrate         ,32,640,_l(""),1,
      _l("outAC3bitrate"),640,
-   IDFF_aoutConnectTo          ,&ToutputAudioSettings::connectTo          ,0,2,_l(""),1,
+   IDFF_aoutConnectTo          ,&ToutputAudioSettings::connectTo             ,0,2,_l(""),1,
      _l("connectTo"),0,
-   IDFF_aoutConnectToOnlySpdif ,&ToutputAudioSettings::connectToOnlySpdif ,0,0,_l(""),1,
+   IDFF_aoutConnectToOnlySpdif ,&ToutputAudioSettings::connectToOnlySpdif    ,0,0,_l(""),1,
      _l("connectToOnlySpdif"),1,
-   IDFF_aoutAC3EncodeMode ,&ToutputAudioSettings::outAC3EncodeMode ,0,1,_l(""),1,
+   IDFF_aoutAC3EncodeMode      ,&ToutputAudioSettings::outAC3EncodeMode      ,0,0,_l(""),1,
      _l("outAC3EncodeMode"),0,
    0
   };

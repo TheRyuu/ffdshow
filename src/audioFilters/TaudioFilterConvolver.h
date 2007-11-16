@@ -100,7 +100,7 @@ private:
  unsigned int outchannels;
  TbyteBuffer buffer;
 protected:
- virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_FLOAT32;}
+ virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const {return TsampleFormat::SF_FLOAT32;}
  virtual bool is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg);
 public:
  TaudioFilterConvolver(IffdshowBase *Ideci,Tfilters *Iparent);

@@ -14,7 +14,7 @@ private:
  void unregister(void);
 protected:
  virtual bool is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg);
- virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {*honourPreferred=false;return TsampleFormat::SF_ALL;}
+ virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const {*honourPreferred=false;return TsampleFormat::SF_ALL;}
 public:
  TaudioFilterOSD(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual ~TaudioFilterOSD();

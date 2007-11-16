@@ -31,7 +31,7 @@ private:
  TeqSettings old;
  int oldsf;
 protected:
- virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_ALL_24;}
+ virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const {return TsampleFormat::SF_ALL_24;}
 public:
  TaudioFilterEQ(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual HRESULT process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0);

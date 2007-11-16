@@ -529,7 +529,7 @@ void* TaudioFilter::convertTo(const TsampleFormat &sfIn,const void *bufIn,size_t
 void* TaudioFilter::init(const TfilterSettingsAudio *cfg,TsampleFormat &sf,const void *bufIn,size_t numsamples,size_t samplestoalloc)
 {
  bool honourPreferred=true;
- int supSF=getSupportedFormats(cfg,&honourPreferred);
+ int supSF=getSupportedFormats(cfg,&honourPreferred,sf);
  int honouredSF=honourPreferred?(parent->preferredsfs|TsampleFormat::SF_PCM24):TsampleFormat::SF_ALL;
  if (supSF&honouredSF)
   supSF&=honouredSF;
@@ -549,7 +549,7 @@ bool TaudioFilter::getOutputFmt(TsampleFormat &sf,const TfilterSettingsAudio *cf
 {
  if (!is(sf,cfg)) return false;
  bool honourPreferred=true;
- int supSF=getSupportedFormats(cfg,&honourPreferred);
+ int supSF=getSupportedFormats(cfg,&honourPreferred,sf);
  int honouredSF=honourPreferred?(parent->preferredsfs|TsampleFormat::SF_PCM24):TsampleFormat::SF_ALL;
  if (supSF&honouredSF)
   supSF&=honouredSF;

@@ -38,7 +38,7 @@ void ToutsfsPage::init(void)
   }
  Tlibavcodec *lavc;
  deci->getLibavcodec(&lavc);
- static const int ac3s[]={IDC_CHB_OUT_AC3,IDC_LBL_OUT_AC3,IDC_CBX_OUT_AC3,0};
+ static const int ac3s[]={IDC_CHB_OUT_AC3,IDC_LBL_OUT_AC3,IDC_CBX_OUT_AC3,IDC_CHB_AOUT_AC3ENCODE_MODE,0};
  enable(lavc && lavc->ok && !lavc->dec_only,ac3s);
  if (lavc) lavc->Release();
 
@@ -86,15 +86,15 @@ void ToutsfsPage::ac32dlg(int &outsfs)
 {
  if (enabled(IDC_CHB_OUT_AC3))
   {
-   setCheck(IDC_CHB_OUT_AC3,outsfs&TsampleFormat::SF_AC3);
+   int isAC3 = outsfs & TsampleFormat::SF_AC3;
+   setCheck(IDC_CHB_OUT_AC3, isAC3);
    cbxSetDataCurSel(IDC_CBX_OUT_AC3,cfgGet(IDFF_outAC3bitrate));
+   static const int ac3s[]={IDC_LBL_OUT_AC3,IDC_CBX_OUT_AC3,IDC_CHB_AOUT_AC3ENCODE_MODE,0};
+   enable(isAC3, ac3s, FALSE);
+   setCheck(IDC_CHB_AOUT_AC3ENCODE_MODE, (cfgGet(IDFF_aoutAC3EncodeMode) == 1));
   }
- else
-  cfgSet(IDFF_outsfs,outsfs=TsampleFormat::SF_PCM16);
-
- enable(getCheck(IDC_CHB_OUT_AC3), IDC_CHB_AOUT_AC3ENCODE_MODE, FALSE);
- setCheck(IDC_CHB_AOUT_AC3ENCODE_MODE, (cfgGet(IDFF_aoutAC3EncodeMode) == 1));
 }
+
 void ToutsfsPage::connect2dlg(void)
 {
  int connect=cfgGet(IDFF_aoutConnectTo);
@@ -110,30 +110,27 @@ INT_PTR ToutsfsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
    case WM_COMMAND:
     switch (LOWORD(wParam))
      {
-      case IDC_CHB_OUT_AC3:
       case IDC_CHB_OUT_LPCM:
        setCheck(IDC_CHB_OUT_PCM16,0);
        setCheck(IDC_CHB_OUT_PCM24,0);
        setCheck(IDC_CHB_OUT_PCM32,0);
        setCheck(IDC_CHB_OUT_FLOAT32,0);
-       setCheck(LOWORD(wParam)==IDC_CHB_OUT_AC3?IDC_CHB_OUT_LPCM:IDC_CHB_OUT_AC3,0);
+       setCheck(IDC_CHB_OUT_AC3,0);
+      case IDC_CHB_OUT_AC3:
       case IDC_CHB_OUT_PCM16:
       case IDC_CHB_OUT_PCM24:
       case IDC_CHB_OUT_PCM32:
       case IDC_CHB_OUT_FLOAT32:
        {
         int outsfs=0;
-        if (getCheck(IDC_CHB_OUT_PCM16  )) outsfs|=TsampleFormat::SF_PCM16;
-        if (getCheck(IDC_CHB_OUT_PCM24  )) outsfs|=TsampleFormat::SF_PCM24;
-        if (getCheck(IDC_CHB_OUT_PCM32  )) outsfs|=TsampleFormat::SF_PCM32;
-        if (getCheck(IDC_CHB_OUT_FLOAT32)) outsfs|=TsampleFormat::SF_FLOAT32;
-        if (getCheck(IDC_CHB_OUT_AC3))
-         if (outsfs==0)
-          outsfs=TsampleFormat::SF_AC3;
-         else
-          setCheck(IDC_CHB_OUT_AC3,0);
+        if (getCheck(IDC_CHB_OUT_PCM16  )) outsfs |= TsampleFormat::SF_PCM16;
+        if (getCheck(IDC_CHB_OUT_PCM24  )) outsfs |= TsampleFormat::SF_PCM24;
+        if (getCheck(IDC_CHB_OUT_PCM32  )) outsfs |= TsampleFormat::SF_PCM32;
+        if (getCheck(IDC_CHB_OUT_FLOAT32)) outsfs |= TsampleFormat::SF_FLOAT32;
+        if (enabled(IDC_CHB_OUT_AC3) && getCheck(IDC_CHB_OUT_AC3))     outsfs |= TsampleFormat::SF_AC3;
+
         if (getCheck(IDC_CHB_OUT_LPCM))
-         if (outsfs==0 || outsfs==TsampleFormat::SF_AC3)
+         if (outsfs==0)
           outsfs=TsampleFormat::SF_LPCM16;
          else
           setCheck(IDC_CHB_OUT_LPCM,0);
@@ -141,7 +138,11 @@ INT_PTR ToutsfsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          cfgSet(IDFF_outsfs,outsfs);
         else
          setCheck(LOWORD(wParam),!getCheck(LOWORD(wParam)));
-		enable(getCheck(IDC_CHB_OUT_AC3), IDC_CHB_AOUT_AC3ENCODE_MODE, FALSE);
+        if (enabled(IDC_CHB_OUT_AC3))
+         {
+          static const int ac3s[]={IDC_LBL_OUT_AC3,IDC_CBX_OUT_AC3,IDC_CHB_AOUT_AC3ENCODE_MODE,0};
+          enable(getCheck(IDC_CHB_OUT_AC3), ac3s, FALSE);
+         }
         return TRUE;
        }
      }
@@ -172,6 +173,7 @@ bool ToutsfsPage::reset(bool testonly)
   {
    deci->resetParam(IDFF_alwaysextensible);
    deci->resetParam(IDFF_allowOutStream);
+   deci->resetParam(IDFF_aoutAC3EncodeMode);
   }
  return true;
 }

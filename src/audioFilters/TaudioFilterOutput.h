@@ -14,7 +14,7 @@ private:
  uint8_t *ac3buf;
  TbyteBuffer ac3inputbuf;
 protected:
- virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const;
+ virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const;
 public:
  TaudioFilterOutput(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual ~TaudioFilterOutput();

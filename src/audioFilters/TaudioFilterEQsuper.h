@@ -11,7 +11,7 @@ private:
  supereq *eqs[8];
  Tbuffer buf;
 protected:
- virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_FLOAT32;}
+ virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const {return TsampleFormat::SF_FLOAT32;}
 public:
  TaudioFilterEQsuper(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual ~TaudioFilterEQsuper();

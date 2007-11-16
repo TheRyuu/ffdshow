@@ -75,7 +75,7 @@ private:
   } echo3d;
 
 protected:
- virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_PCM16;}
+ virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const {return TsampleFormat::SF_PCM16;}
 public:
  TaudioFilterCrystality(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual ~TaudioFilterCrystality();

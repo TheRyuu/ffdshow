@@ -24,7 +24,7 @@ private:
  int oldsf;
  template<class sample_t,class Tctx> void resample(TsampleFormat &fmt,sample_t* &samples,size_t &numsamples,const TresampleSettings *cfg,Tctx ctxs[]);
 protected:
- virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_PCM16|TsampleFormat::SF_FLOAT32;}
+ virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const {return TsampleFormat::SF_PCM16|TsampleFormat::SF_FLOAT32;}
 public:
  TaudioFilterResampleLavc(IffdshowBase *Ideci,Tfilters *Iparent);
  virtual HRESULT process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples,size_t numsamples,const TfilterSettingsAudio *cfg0);
@@ -44,7 +44,7 @@ private:
  void *state;
 protected:
  virtual bool is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg);
- virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred) const {return TsampleFormat::SF_FLOAT32;}
+ virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const {return TsampleFormat::SF_FLOAT32;}
 public:
  static const char_t *dllname;
  TaudioFilterResampleSRC(IffdshowBase *Ideci,Tfilters *Iparent);
