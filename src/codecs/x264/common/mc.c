@@ -220,6 +220,14 @@ static inline void mc_hc( uint8_t *src, int i_src_stride, uint8_t *dst, int i_ds
     }
 }
 
+static void hpel_filter( uint8_t *dsth, uint8_t *dstv, uint8_t *dstc, uint8_t *src,
+                         int stride, int width, int height )
+{
+    mc_hh( src, stride, dsth, stride, width, height );
+    mc_hv( src, stride, dstv, stride, width, height );
+    mc_hc( src, stride, dstc, stride, width, height );
+}
+
 static const int hpel_ref0[16] = {0,1,1,1,0,1,1,1,2,3,3,3,0,1,1,1};
 static const int hpel_ref1[16] = {0,0,0,0,2,2,3,2,2,2,3,2,2,2,3,2};
 
@@ -361,6 +369,7 @@ void x264_mc_init( int cpu, x264_mc_functions_t *pf )
     pf->copy[PIXEL_4x4]   = mc_copy_w4;
 
     pf->plane_copy = plane_copy;
+    pf->hpel_filter = hpel_filter;
 
     pf->prefetch_fenc = prefetch_fenc_null;
     pf->prefetch_ref  = prefetch_ref_null;
@@ -379,54 +388,27 @@ void x264_mc_init( int cpu, x264_mc_functions_t *pf )
 #endif
 }
 
-extern void x264_hpel_filter_mmxext( uint8_t *dsth, uint8_t *dstv, uint8_t *dstc, uint8_t *src,
-                                     int i_stride, int i_width, int i_height );
-
-void x264_frame_filter( int cpu, x264_frame_t *frame, int b_interlaced, int mb_y, int b_end )
+void x264_frame_filter( x264_t *h, x264_frame_t *frame, int mb_y, int b_end )
 {
-    const int x_inc = 16, y_inc = 16;
+    const int b_interlaced = h->sh.b_mbaff;
     const int stride = frame->i_stride[0] << b_interlaced;
+    const int width = frame->i_width[0];
     int start = (mb_y*16 >> b_interlaced) - 8;
     int height = ((b_end ? frame->i_lines[0] : mb_y*16) >> b_interlaced) + 8;
+    int offs = start*stride - 8; // buffer = 4 for deblock + 3 for 6tap, rounded to 8
     int x, y;
 
     if( mb_y & b_interlaced )
         return;
-    mb_y >>= b_interlaced;
 
-#ifdef HAVE_MMX
-    if ( cpu & X264_CPU_MMXEXT )
+    for( y=0; y<=b_interlaced; y++, offs+=frame->i_stride[0] )
     {
-        // buffer = 4 for deblock + 3 for 6tap, rounded to 8
-        int offs = start*stride - 8;
-        x264_hpel_filter_mmxext(
+        h->mc.hpel_filter(
             frame->filtered[1] + offs,
             frame->filtered[2] + offs,
             frame->filtered[3] + offs,
             frame->plane[0] + offs,
-            stride, stride - 48, height - start );
-    }
-    else
-#endif
-    {
-        for( y = start; y < height; y += y_inc )
-        {
-            uint8_t *p_in = frame->plane[0] + y * stride - 8;
-            uint8_t *p_h  = frame->filtered[1] + y * stride - 8;
-            uint8_t *p_v  = frame->filtered[2] + y * stride - 8;
-            uint8_t *p_c  = frame->filtered[3] + y * stride - 8;
-            for( x = -8; x < stride - 64 + 8; x += x_inc )
-            {
-                mc_hh( p_in, stride, p_h, stride, x_inc, y_inc );
-                mc_hv( p_in, stride, p_v, stride, x_inc, y_inc );
-                mc_hc( p_in, stride, p_c, stride, x_inc, y_inc );
-
-                p_h += x_inc;
-                p_v += x_inc;
-                p_c += x_inc;
-                p_in += x_inc;
-            }
-        }
+            stride, width + 16, height - start );
     }
 
     /* generate integral image:
@@ -438,22 +420,22 @@ void x264_frame_filter( int cpu, x264_frame_t *frame, int b_interlaced, int mb_y
     {
         if( start < 0 )
         {
-            memset( frame->integral - 32 * stride - 32, 0, stride * sizeof(uint16_t) );
-            start = -32;
+            memset( frame->integral - PADV * stride - PADH, 0, stride * sizeof(uint16_t) );
+            start = -PADV;
         }
         if( b_end )
-            height += 24;
+            height += PADV-8;
         for( y = start; y < height; y++ )
         {
-            uint8_t  *ref  = frame->plane[0] + y * stride - 32;
-            uint16_t *line = frame->integral + (y+1) * stride - 31;
+            uint8_t  *ref  = frame->plane[0] + y * stride - PADH;
+            uint16_t *line = frame->integral + (y+1) * stride - PADH + 1;
             uint16_t v = line[0] = 0;
             for( x = 0; x < stride-1; x++ )
                 line[x] = v += ref[x] + line[x-stride] - line[x-stride-1];
             line -= 8*stride;
-            if( y >= 8-31 )
+            if( y >= 9-PADV )
             {
-                uint16_t *sum4 = line + frame->i_stride[0] * (frame->i_lines[0] + 64);
+                uint16_t *sum4 = line + stride * (frame->i_lines[0] + PADV*2);
                 for( x = 1; x < stride-8; x++, line++, sum4++ )
                 {
                     sum4[0] =  line[4+4*stride] - line[4] - line[4*stride] + line[0];
@@ -464,12 +446,12 @@ void x264_frame_filter( int cpu, x264_frame_t *frame, int b_interlaced, int mb_y
     }
 }
 
-void x264_frame_init_lowres( int cpu, x264_frame_t *frame )
+void x264_frame_init_lowres( x264_t *h, x264_frame_t *frame )
 {
     // FIXME: tapfilter?
     const int i_stride = frame->i_stride[0];
     const int i_stride2 = frame->i_stride_lowres;
-    const int i_width2 = i_stride2 - 64;
+    const int i_width2 = frame->i_width_lowres;
     int x, y, i;
     for( y = 0; y < frame->i_lines_lowres - 1; y++ )
     {
