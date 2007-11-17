@@ -9,7 +9,7 @@
 ;//
 ;//--------------------------------------------------------------------------
 
-#include <theora/theora.h>
+#include "theora.h"
 #include "dsp.h"
 #include "csimd.h"
 

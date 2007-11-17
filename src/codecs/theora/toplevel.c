@@ -20,7 +20,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <theora/theora.h>
+#include "theora.h"
 #include "toplevel.h"
 #include "../../compiler.h"
 static int _ilog(unsigned int v){

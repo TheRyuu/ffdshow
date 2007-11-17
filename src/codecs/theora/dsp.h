@@ -17,7 +17,7 @@
 #ifndef DSP_H
 #define DSP_H
 
-#include <theora/theora.h>
+#include "theora.h"
 
 #ifdef __cplusplus
 extern "C" {

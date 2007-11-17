@@ -22,7 +22,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions=""
 				Optimization="0"
-				AdditionalIncludeDirectories="../../xiph;.;../.."
+				AdditionalIncludeDirectories="../../xiph/theora;.;../.."
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="0"
@@ -97,7 +97,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="TRUE"
 				WholeProgramOptimization="TRUE"
-				AdditionalIncludeDirectories="../../xiph;.;../.."
+				AdditionalIncludeDirectories="../../xiph/theora;.;../.."
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="TRUE"
 				ExceptionHandling="FALSE"
@@ -274,16 +274,16 @@
 			Name="ogg"
 			Filter="">
 			<File
-				RelativePath="..\..\xiph\ogg\bitwise.c">
+				RelativePath="bitwise.c">
 			</File>
 			<File
-				RelativePath="..\..\xiph\ogg\framing.c">
+				RelativePath="framing.c">
 			</File>
 			<File
-				RelativePath="..\..\xiph\ogg\ogg.h">
+				RelativePath="ogg.h">
 			</File>
 			<File
-				RelativePath="..\..\xiph\ogg\os_types.h">
+				RelativePath="os_types.h">
 			</File>
 			<File
 				RelativePath="..\..\xiph\theora\theora.h">

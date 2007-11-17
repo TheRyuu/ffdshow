@@ -21,7 +21,7 @@
 # include "config.h"
 #endif
 
-#include <theora/theora.h>
+#include "theora.h"
 #include "huffman.h"
 #include "dsp.h"
 

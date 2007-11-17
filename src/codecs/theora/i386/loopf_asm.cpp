@@ -33,7 +33,7 @@
 #define STRICT              /* Strict type checking. */
 #include <memory.h>
 
-#include "ogg/ogg.h"
+#include "ogg.h"
 #include "codec_internal.h"
 #include "inttypes.h"
 #include "simd.h"
