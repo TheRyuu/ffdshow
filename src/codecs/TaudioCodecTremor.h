@@ -2,7 +2,7 @@
 #define _TAUDIOCODECTREMOR_H_
 
 #include "TaudioCodec.h"
-#include "vorbis/ivorbiscodec.h"
+#include "tremor/ivorbiscodec.h"
 
 class Tdll;
 class TaudioCodecTremor :public TaudioCodec

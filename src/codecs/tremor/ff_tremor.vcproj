@@ -21,7 +21,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../xiph/ogg,../../xiph/vorbis,.,../../xiph"
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -94,7 +94,7 @@
 				EnableIntrinsicFunctions="TRUE"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories="vorbis,../../xiph/ogg,../../xiph/vorbis,.,../../xiph"
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__"
 				StringPooling="TRUE"
 				ExceptionHandling="FALSE"
@@ -164,7 +164,7 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath="..\..\xiph\ogg\bitwise.c">
+				RelativePath="bitwise.c">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
@@ -264,7 +264,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\xiph\ogg\framing.c">
+				RelativePath="framing.c">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
@@ -460,10 +460,7 @@
 				RelativePath="config_types.h">
 			</File>
 			<File
-				RelativePath="..\..\xiph\vorbis\ivorbiscodec.h">
-			</File>
-			<File
-				RelativePath="..\..\xiph\vorbis\ivorbisfile.h">
+				RelativePath="ivorbiscodec.h">
 			</File>
 			<File
 				RelativePath="lsp_lookup.h">
@@ -478,13 +475,13 @@
 				RelativePath="misc.h">
 			</File>
 			<File
-				RelativePath="..\..\xiph\ogg\ogg.h">
+				RelativePath="ogg.h">
 			</File>
 			<File
 				RelativePath="os.h">
 			</File>
 			<File
-				RelativePath="..\..\xiph\ogg\os_types.h">
+				RelativePath="os_types.h">
 			</File>
 			<File
 				RelativePath="registry.h">
