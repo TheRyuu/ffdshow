@@ -7605,8 +7605,6 @@ static int decode_frame(AVCodecContext *avctx,
         int next= ff_h264_find_frame_end(h, buf, buf_size);
 
         if( ff_combine_frame(&s->parse_context, next, (const uint8_t **)&buf, &buf_size) < 0 ) {
-            pict->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
-            pict->top_field_first = 1;
             return buf_size;
         }
 //printf("next:%d buf_size:%d last_index:%d\n", next, buf_size, s->parse_context.last_index);
@@ -7717,7 +7715,7 @@ static int decode_frame(AVCodecContext *avctx,
         } else {
             cur->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
             /* Derive top_field_first from field pocs. */
-            cur->top_field_first = cur->field_poc[0] < cur->field_poc[1];
+            cur->top_field_first = cur->field_poc[0] <= cur->field_poc[1];
 
         //FIXME do something with unavailable reference frames
 
