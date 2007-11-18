@@ -21,11 +21,11 @@
 extern "C" {
 #endif
 
-#include <ogg/os_types.h>
+#include <xiph/ogg/os_types.h>
 
 typedef struct {
   void *iov_base; 
-  size_t iov_len;
+  unsigned int iov_len;
 } ogg_iovec_t;
 
 typedef struct {
