@@ -21,7 +21,7 @@
 				Name="CppCmplrTool"
 				AdditionalOptions=""
 				Optimization="0"
-				AdditionalIncludeDirectories="../../xiph/theora;.;../.."
+				AdditionalIncludeDirectories=".;../.."
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="0"
@@ -98,7 +98,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="TRUE"
 				WholeProgramOptimization="TRUE"
-				AdditionalIncludeDirectories="../../xiph/theora;.;../.."
+				AdditionalIncludeDirectories=".;../.."
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="TRUE"
 				ExceptionHandling="FALSE"
@@ -285,7 +285,7 @@
 				RelativePath="os_types.h">
 			</File>
 			<File 
-				RelativePath="..\..\xiph\theora\theora.h">
+				RelativePath="theora.h">
 			</File>
 		</Filter>
 		<Filter 

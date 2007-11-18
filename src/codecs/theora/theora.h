@@ -22,7 +22,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-#include "xiph/ogg/ogg.h"
+#include "ogg.h"
 
 /** \mainpage
  *

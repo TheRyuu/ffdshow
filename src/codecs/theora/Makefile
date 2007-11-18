@@ -1,4 +1,4 @@
-CFLAGS+= -I. -I../.. -I../../xiph/theora
+CFLAGS+= -I. -I../..
  
 SRCS_C=blockmap.c comment.c dct.c dct_decode.c \
      dct_encode.c decode.c encode.c frarray.c frinit.c \

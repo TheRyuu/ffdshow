@@ -25,7 +25,7 @@ extern "C" {
 
 typedef struct {
   void *iov_base; 
-  unsigned int iov_len;
+  size_t iov_len;
 } ogg_iovec_t;
 
 typedef struct {
