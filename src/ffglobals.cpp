@@ -29,6 +29,7 @@
 #include "reg.h"
 #include "Tstream.h"
 #include "compiler.h"
+//#include "ffdebug.h"
 
 #ifdef UNICODE
  #define UNICODE_BUILD "unicode"
@@ -639,6 +640,7 @@ static const uint8_t zigzag_scan[16]={
 bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
 {
  int sync=sync_video_packet(hdr,len);
+ unsigned int tmp;
  if((sync&~0x60) == 0x107 && sync != 0x107)  // H.264
   {
    hdr+=2;len-=2;
@@ -651,11 +653,44 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
     int sps_id, i;
     struct
      {
-      int profile_idc,level_idc,log2_max_frame_num,poc_type,log2_max_poc_lsb,offset_for_non_ref_pic,offset_for_top_to_bottom_field,poc_cycle_length,delta_pic_order_always_zero_flag,offset_for_ref_frame[256],ref_frame_count,gaps_in_frame_num_allowed_flag,frame_mbs_only_flag,mb_aff,mb_width,mb_height,direct_8x8_inference_flag,crop_left,crop_top,crop_right,crop_bottom,crop,vui_parameters_present_flag,timing_info_present_flag,num_units_in_tick,time_scale,fixed_frame_rate_flag,bitstream_restriction_flag,num_reorder_frames,transform_bypass,scaling_matrix_present;
-      Rational sar;
+      int profile_idc;
+      int level_idc;
+      int transform_bypass;              ///< qpprime_y_zero_transform_bypass_flag
+      int log2_max_frame_num;            ///< log2_max_frame_num_minus4 + 4
+      int poc_type;                      ///< pic_order_cnt_type
+      int log2_max_poc_lsb;              ///< log2_max_pic_order_cnt_lsb_minus4
+      int delta_pic_order_always_zero_flag;
+      int offset_for_non_ref_pic;
+      int offset_for_top_to_bottom_field;
+      int poc_cycle_length;              ///< num_ref_frames_in_pic_order_cnt_cycle
+      int ref_frame_count;               ///< num_ref_frames
+      int gaps_in_frame_num_allowed_flag;
+      int mb_width;                      ///< pic_width_in_mbs_minus1 + 1
+      int mb_height;                     ///< pic_height_in_map_units_minus1 + 1
+      int frame_mbs_only_flag;
+      int mb_aff;                        ///<mb_adaptive_frame_field_flag
+      int direct_8x8_inference_flag;
+      int crop;                   ///< frame_cropping_flag
+      int crop_left;              ///< frame_cropping_rect_left_offset
+      int crop_right;             ///< frame_cropping_rect_right_offset
+      int crop_top;               ///< frame_cropping_rect_top_offset
+      int crop_bottom;            ///< frame_cropping_rect_bottom_offset
+      int vui_parameters_present_flag;
+      AVRational sar;
+      int timing_info_present_flag;
+      uint32_t num_units_in_tick;
+      uint32_t time_scale;
+      int fixed_frame_rate_flag;
+      short offset_for_ref_frame[256]; //FIXME dyn aloc?
+      int bitstream_restriction_flag;
+      int num_reorder_frames;
+      int scaling_matrix_present;
+      uint8_t scaling_matrix4[6][16];
+      uint8_t scaling_matrix8[2][64];
      } _sps,*sps=&_sps;
     GetBitContext gb;init_get_bits(&gb,hdr,(int)len*8);
     skip_bits(&gb,24);
+
     profile_idc= get_bits(&gb, 8);
     get_bits1(&gb);   //constraint_set0_flag
     get_bits1(&gb);   //constraint_set1_flag
@@ -705,21 +740,27 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
         sps->delta_pic_order_always_zero_flag= get_bits1(&gb);
         sps->offset_for_non_ref_pic= get_se_golomb(&gb);
         sps->offset_for_top_to_bottom_field= get_se_golomb(&gb);
-        sps->poc_cycle_length= get_ue_golomb(&gb);
+        tmp= get_ue_golomb(&gb);
+
+        if(tmp >= sizeof(sps->offset_for_ref_frame) / sizeof(sps->offset_for_ref_frame[0])){
+            //DPRINTF(_l("poc_cycle_length overflow %u\n"), tmp);
+            return false;
+        }
+        sps->poc_cycle_length= tmp;
 
         for(i=0; i<sps->poc_cycle_length; i++)
             sps->offset_for_ref_frame[i]= get_se_golomb(&gb);
-    }
-    if(sps->poc_type > 2){
-        //DPRINTF("illegal POC type %d\n", sps->poc_type);
+    }else if(sps->poc_type != 2){
+        //DPRINTF(_l("illegal POC type %d\n"), sps->poc_type);
         return false;
     }
 
-    sps->ref_frame_count= get_ue_golomb(&gb);
     static const int MAX_PICTURE_COUNT=32;
-    if(sps->ref_frame_count > MAX_PICTURE_COUNT-2){
-        //DPRINTF("too many reference frames\n");
+    tmp= get_ue_golomb(&gb);
+    if(tmp > MAX_PICTURE_COUNT-2){
+        //DPRINTF(_l("too many reference frames\n"));
     }
+    sps->ref_frame_count= tmp;
     sps->gaps_in_frame_num_allowed_flag= get_bits1(&gb);
     sps->mb_width= get_ue_golomb(&gb) + 1;
     sps->mb_height= get_ue_golomb(&gb) + 1;
@@ -735,6 +776,9 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
 
     sps->direct_8x8_inference_flag= get_bits1(&gb);
 
+    //if(!sps->direct_8x8_inference_flag && sps->mb_aff)
+    //    DPRINTF(_l("MBAFF + !direct_8x8_inference is not implemented\n"));
+
     sps->crop= get_bits1(&gb);
     if(sps->crop){
         sps->crop_left  = get_ue_golomb(&gb);
@@ -742,7 +786,7 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
         sps->crop_top   = get_ue_golomb(&gb);
         sps->crop_bottom= get_ue_golomb(&gb);
         if(sps->crop_left || sps->crop_top){
-            //DPRINTF("insane cropping not completely supported, this could look slightly wrong ...\n");
+            //DPRINTF(_l("insane cropping not completely supported, this could look slightly wrong ...\n"));
         }
     }else{
         sps->crop_left  =
@@ -764,7 +808,7 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
             if( aspect_ratio_idc == EXTENDED_SAR ) {
                 sps->sar.num= get_bits(&gb, 16);
                 sps->sar.den= get_bits(&gb, 16);
-            }else if(aspect_ratio_idc < 16){
+            }else if(aspect_ratio_idc < 14){
                 static const AVRational pixel_aspect[14]={
                  {0, 1},
                  {1, 1},
