@@ -434,7 +434,7 @@ HMENU TtrayIconDecVideo::makeSubtitlesMenu(void)
  int ord=0;
  const char_t *cursubflnm=deciV->getCurrentSubFlnm();
  for (strings::const_iterator f=files.begin();f!=files.end();f++,ord++)
-  insertMenuItem(hm,ord,IDC_FIRST_SUBFILE+ord,f->c_str(),false,stricmp(f->c_str(),cursubflnm)==0,true);
+  insertMenuItem(hm,ord,IDC_FIRST_SUBFILE+ord, stringreplace(*f,_l("&"),_l("&&"),rfReplaceAll).c_str() ,false,stricmp(f->c_str(),cursubflnm)==0,true);
  if (textpinconnectedCnt)
   {
    std::vector<std::pair<ffstring,int> > textpins;
@@ -455,7 +455,7 @@ HMENU TtrayIconDecVideo::makeSubtitlesMenu(void)
      if (!files.empty()) insertSeparator(hm,ord);
      int subShown=deci->getParam2(IDFF_subShowEmbedded);
      for (size_t i=0;i<textpins.size();i++)
-      insertMenuItem(hm,ord,IDC_FIRST_TEXTPIN+textpins[i].second,textpins[i].first.c_str(),false,textpins[i].second==subShown,true);
+      insertMenuItem(hm,ord,IDC_FIRST_TEXTPIN+textpins[i].second,stringreplace(textpins[i].first,_l("&"),_l("&&"),rfReplaceAll).c_str() ,false,textpins[i].second==subShown,true);
     }
   }
  if (int langcnt=deciV->getSubtitleLanguagesCount2())
