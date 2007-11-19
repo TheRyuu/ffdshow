@@ -28,8 +28,8 @@
 #include "registry.h"
 #include "window.h"
 #include "misc.h"
-#include "os.h"
 #include "../../compiler.h"
+
 /* helpers */
 static void _v_readstring(oggpack_buffer *o,char *buf,int bytes){
   while(bytes--){
@@ -61,7 +61,7 @@ char *vorbis_comment_query(vorbis_comment *vc, char *tag, int count){
 
   strcpy(fulltag, tag);
   strcat(fulltag, "=");
-
+  
   for(i=0;i<vc->comments;i++){
     if(!tagcompare(vc->user_comments[i], fulltag, taglen)){
       if(count == found)
@@ -97,8 +97,8 @@ void vorbis_comment_clear(vorbis_comment *vc){
     if(vc->user_comments)_ogg_free(vc->user_comments);
 	if(vc->comment_lengths)_ogg_free(vc->comment_lengths);
     if(vc->vendor)_ogg_free(vc->vendor);
+    memset(vc,0,sizeof(*vc));
   }
-  memset(vc,0,sizeof(*vc));
 }
 
 /* blocksize 0 is guaranteed to be short, 1 is guarantted to be long.
@@ -124,13 +124,16 @@ void vorbis_info_clear(vorbis_info *vi){
       if(ci->mode_param[i])_ogg_free(ci->mode_param[i]);
 
     for(i=0;i<ci->maps;i++) /* unpack does the range checking */
-      _mapping_P[ci->map_type[i]]->free_info(ci->map_param[i]);
+      if(ci->map_param[i])
+	_mapping_P[ci->map_type[i]]->free_info(ci->map_param[i]);
 
     for(i=0;i<ci->floors;i++) /* unpack does the range checking */
-      _floor_P[ci->floor_type[i]]->free_info(ci->floor_param[i]);
-
+      if(ci->floor_param[i])
+	_floor_P[ci->floor_type[i]]->free_info(ci->floor_param[i]);
+    
     for(i=0;i<ci->residues;i++) /* unpack does the range checking */
-      _residue_P[ci->residue_type[i]]->free_info(ci->residue_param[i]);
+      if(ci->residue_param[i])
+	_residue_P[ci->residue_type[i]]->free_info(ci->residue_param[i]);
 
     for(i=0;i<ci->books;i++){
       if(ci->book_param[i]){
@@ -142,7 +145,7 @@ void vorbis_info_clear(vorbis_info *vi){
     }
     if(ci->fullbooks)
 	_ogg_free(ci->fullbooks);
-
+    
     _ogg_free(ci);
   }
 
@@ -167,13 +170,13 @@ static int _vorbis_unpack_info(vorbis_info *vi,oggpack_buffer *opb){
 
   ci->blocksizes[0]=1<<oggpack_read(opb,4);
   ci->blocksizes[1]=1<<oggpack_read(opb,4);
-
+  
   if(vi->rate<1)goto err_out;
   if(vi->channels<1)goto err_out;
-  if(ci->blocksizes[0]<64)goto err_out;
+  if(ci->blocksizes[0]<64)goto err_out; 
   if(ci->blocksizes[1]<ci->blocksizes[0])goto err_out;
   if(ci->blocksizes[1]>8192)goto err_out;
-
+  
   if(oggpack_read(opb,1)!=1)goto err_out; /* EOP check */
 
   return(0);
@@ -192,14 +195,14 @@ static int _vorbis_unpack_comment(vorbis_comment *vc,oggpack_buffer *opb){
   if(vc->comments<0)goto err_out;
   vc->user_comments=(char **)_ogg_calloc(vc->comments+1,sizeof(*vc->user_comments));
   vc->comment_lengths=(int *)_ogg_calloc(vc->comments+1, sizeof(*vc->comment_lengths));
-
+	    
   for(i=0;i<vc->comments;i++){
     int len=oggpack_read(opb,32);
     if(len<0)goto err_out;
 	vc->comment_lengths[i]=len;
     vc->user_comments[i]=(char *)_ogg_calloc(len+1,1);
     _v_readstring(opb,vc->user_comments[i],len);
-  }
+  }	  
   if(oggpack_read(opb,1)!=1)goto err_out; /* EOP check */
 
   return(0);
@@ -267,7 +270,7 @@ static int _vorbis_unpack_books(vorbis_info *vi,oggpack_buffer *opb){
     ci->map_param[i]=_mapping_P[ci->map_type[i]]->unpack(vi,opb);
     if(!ci->map_param[i])goto err_out;
   }
-
+  
   /* mode settings */
   ci->modes=oggpack_read(opb,6)+1;
   /*vi->mode_param=_ogg_calloc(vi->modes,sizeof(void *));*/
@@ -282,7 +285,7 @@ static int _vorbis_unpack_books(vorbis_info *vi,oggpack_buffer *opb){
     if(ci->mode_param[i]->transformtype>=VI_WINDOWB)goto err_out;
     if(ci->mode_param[i]->mapping>=ci->maps)goto err_out;
   }
-
+  
   if(oggpack_read(opb,1)!=1)goto err_out; /* top level EOP check */
 
   return(0);
@@ -298,9 +301,9 @@ static int _vorbis_unpack_books(vorbis_info *vi,oggpack_buffer *opb){
 
 int vorbis_synthesis_headerin(vorbis_info *vi,vorbis_comment *vc,ogg_packet *op){
   oggpack_buffer opb;
-
+  
   if(op){
-    oggpack_readinit(&opb,op->packet,op->bytes);
+    oggpack_readinit(&opb,op->packet);
 
     /* Which of the three types of header is this? */
     /* Also verify header-ness, vorbis */
@@ -355,6 +358,6 @@ int vorbis_synthesis_headerin(vorbis_info *vi,vorbis_comment *vc,ogg_packet *op)
 //===========================================================================
 void __stdcall getVersion(char *ver,const char* *license)
 {
- strcpy(ver, "1.0.1, build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64")");
- *license="(C) 1994-2003 Xiph.Org FOUNDATION http://www.xiph.org/";
+ strcpy(ver, "1.2.0, build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64")");
+ *license="(C) 1994-2007 Xiph.Org FOUNDATION http://www.xiph.org/";
 }

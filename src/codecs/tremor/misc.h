@@ -18,7 +18,7 @@
 #ifndef _V_RANDOM_H_
 #define _V_RANDOM_H_
 #include "ivorbiscodec.h"
-#include "os_types.h"
+#include "os.h"
 
 #ifndef _V_WIDE_MATH
 #define _V_WIDE_MATH
@@ -36,19 +36,29 @@ union magic {
   } halves;
   ogg_int64_t whole;
 };
+#endif 
+
+#if BYTE_ORDER==BIG_ENDIAN
+union magic {
+  struct {
+    ogg_int32_t hi;
+    ogg_int32_t lo;
+  } halves;
+  ogg_int64_t whole;
+};
 #endif
 
-static inline ogg_int32_t MULT32(ogg_int32_t x, ogg_int32_t y) {
+STIN ogg_int32_t MULT32(ogg_int32_t x, ogg_int32_t y) {
   union magic magic;
   magic.whole = (ogg_int64_t)x * y;
   return magic.halves.hi;
 }
 
-static inline ogg_int32_t MULT31(ogg_int32_t x, ogg_int32_t y) {
+STIN ogg_int32_t MULT31(ogg_int32_t x, ogg_int32_t y) {
   return MULT32(x,y)<<1;
 }
 
-static inline ogg_int32_t MULT31_SHIFT15(ogg_int32_t x, ogg_int32_t y) {
+STIN ogg_int32_t MULT31_SHIFT15(ogg_int32_t x, ogg_int32_t y) {
   union magic magic;
   magic.whole  = (ogg_int64_t)x * y;
   return ((ogg_uint32_t)(magic.halves.lo)>>15) | ((magic.halves.hi)<<17);
@@ -65,20 +75,20 @@ static inline ogg_int32_t MULT31_SHIFT15(ogg_int32_t x, ogg_int32_t y) {
 
 /*
  * For MULT32 and MULT31: The second argument is always a lookup table
- * value already preshifted from 31 to 8 bits.  We therefore take the
+ * value already preshifted from 31 to 8 bits.  We therefore take the 
  * opportunity to save on text space and use unsigned char for those
  * tables in this case.
  */
 
-static inline ogg_int32_t MULT32(ogg_int32_t x, ogg_int32_t y) {
+STIN ogg_int32_t MULT32(ogg_int32_t x, ogg_int32_t y) {
   return (x >> 9) * y;  /* y preshifted >>23 */
 }
 
-static inline ogg_int32_t MULT31(ogg_int32_t x, ogg_int32_t y) {
+STIN ogg_int32_t MULT31(ogg_int32_t x, ogg_int32_t y) {
   return (x >> 8) * y;  /* y preshifted >>23 */
 }
 
-static inline ogg_int32_t MULT31_SHIFT15(ogg_int32_t x, ogg_int32_t y) {
+STIN ogg_int32_t MULT31_SHIFT15(ogg_int32_t x, ogg_int32_t y) {
   return (x >> 6) * y;  /* y preshifted >>9 */
 }
 
@@ -115,7 +125,7 @@ static inline ogg_int32_t MULT31_SHIFT15(ogg_int32_t x, ogg_int32_t y) {
 
 #else
 
-static inline void XPROD32(ogg_int32_t  a, ogg_int32_t  b,
+STIN void XPROD32(ogg_int32_t  a, ogg_int32_t  b,
 			   ogg_int32_t  t, ogg_int32_t  v,
 			   ogg_int32_t *x, ogg_int32_t *y)
 {
@@ -123,7 +133,7 @@ static inline void XPROD32(ogg_int32_t  a, ogg_int32_t  b,
   *y = MULT32(b, t) - MULT32(a, v);
 }
 
-static inline void XPROD31(ogg_int32_t  a, ogg_int32_t  b,
+STIN void XPROD31(ogg_int32_t  a, ogg_int32_t  b,
 			   ogg_int32_t  t, ogg_int32_t  v,
 			   ogg_int32_t *x, ogg_int32_t *y)
 {
@@ -131,7 +141,7 @@ static inline void XPROD31(ogg_int32_t  a, ogg_int32_t  b,
   *y = MULT31(b, t) - MULT31(a, v);
 }
 
-static inline void XNPROD31(ogg_int32_t  a, ogg_int32_t  b,
+STIN void XNPROD31(ogg_int32_t  a, ogg_int32_t  b,
 			    ogg_int32_t  t, ogg_int32_t  v,
 			    ogg_int32_t *x, ogg_int32_t *y)
 {
@@ -146,7 +156,7 @@ static inline void XNPROD31(ogg_int32_t  a, ogg_int32_t  b,
 #ifndef _V_CLIP_MATH
 #define _V_CLIP_MATH
 
-static inline ogg_int32_t CLIP_TO_15(ogg_int32_t x) {
+STIN ogg_int32_t CLIP_TO_15(ogg_int32_t x) {
   int ret=x;
   ret-= ((x<=32767)-1)&(x-32767);
   ret-= ((x>=-32768)-1)&(x+32768);
@@ -155,7 +165,7 @@ static inline ogg_int32_t CLIP_TO_15(ogg_int32_t x) {
 
 #endif
 
-static inline ogg_int32_t VFLOAT_MULT(ogg_int32_t a,ogg_int32_t ap,
+STIN ogg_int32_t VFLOAT_MULT(ogg_int32_t a,ogg_int32_t ap,
 				      ogg_int32_t b,ogg_int32_t bp,
 				      ogg_int32_t *p){
   if(a && b){
@@ -164,13 +174,15 @@ static inline ogg_int32_t VFLOAT_MULT(ogg_int32_t a,ogg_int32_t ap,
     return MULT32(a,b);
 #else
     *p=ap+bp+31;
-    return (a>>15)*(b>>16);
+    return (a>>15)*(b>>16); 
 #endif
   }else
     return 0;
 }
 
-static inline ogg_int32_t VFLOAT_MULTI(ogg_int32_t a,ogg_int32_t ap,
+int _ilog(unsigned int);
+
+STIN ogg_int32_t VFLOAT_MULTI(ogg_int32_t a,ogg_int32_t ap,
 				      ogg_int32_t i,
 				      ogg_int32_t *p){
 
@@ -178,7 +190,7 @@ static inline ogg_int32_t VFLOAT_MULTI(ogg_int32_t a,ogg_int32_t ap,
   return VFLOAT_MULT(a,ap,i<<-ip,ip,p);
 }
 
-static inline ogg_int32_t VFLOAT_ADD(ogg_int32_t a,ogg_int32_t ap,
+STIN ogg_int32_t VFLOAT_ADD(ogg_int32_t a,ogg_int32_t ap,
 				      ogg_int32_t b,ogg_int32_t bp,
 				      ogg_int32_t *p){
 
@@ -212,7 +224,7 @@ static inline ogg_int32_t VFLOAT_ADD(ogg_int32_t a,ogg_int32_t ap,
   }
 
   a+=b;
-  if((a&0xc0000000)==0xc0000000 ||
+  if((a&0xc0000000)==0xc0000000 || 
      (a&0xc0000000)==0){
     a<<=1;
     (*p)--;
@@ -225,8 +237,6 @@ static inline ogg_int32_t VFLOAT_ADD(ogg_int32_t a,ogg_int32_t ap,
 #endif
 
 #endif
-
-
 
 
 

@@ -453,6 +453,9 @@
 				RelativePath="backends.h">
 			</File>
 			<File
+				RelativePath="block.h">
+			</File>
+			<File
 				RelativePath="codebook.h">
 			</File>
 			<File

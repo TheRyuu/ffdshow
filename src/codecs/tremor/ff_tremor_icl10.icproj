@@ -309,6 +309,8 @@
 		<File 
 			RelativePath=".\backends.h"/>
 		<File 
+			RelativePath=".\block.h"/>
+		<File 
 			RelativePath=".\codebook.h"/>
 		<File 
 			RelativePath=".\codec_internal.h"/>

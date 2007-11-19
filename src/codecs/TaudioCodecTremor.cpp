@@ -58,6 +58,8 @@ TaudioCodecTremor::TaudioCodecTremor(IffdshowBase *deci,IdecAudioSink *Isink):
 
 bool TaudioCodecTremor::initVorbis(void)
 {
+ ogg_reference orId,orCmt,orSetup;
+ ogg_buffer obId,obCmt,obSetup;
  clearVorbis(false);
 
  vorbis_info_init(&vi);
@@ -65,26 +67,46 @@ bool TaudioCodecTremor::initVorbis(void)
 
  m_packetno = 0;
  ogg_packet opId;memset(&opId, 0, sizeof(ogg_packet));
- opId.packet=pbVorbisInfo;
+ obId.data = pbVorbisInfo;
+ obId.size = cbVorbisInfo;
+ orId.buffer = &obId;
+ orId.begin = 0;
+ orId.length = cbVorbisInfo;
+ orId.next = NULL;
+ opId.packet= &orId;
  opId.bytes=cbVorbisInfo;
  opId.b_o_s = 1;
  opId.packetno = m_packetno++;
 
  // Build the "Comment Header" packet
  ogg_packet opCmt;memset(&opCmt, 0, sizeof(ogg_packet));
- opCmt.packet=pbVorbisComment;
+ obCmt.data = pbVorbisComment;
+ obCmt.size = cbVorbisComment;
+ orCmt.buffer = &obCmt;
+ orCmt.begin = 0;
+ orCmt.length = cbVorbisComment;
+ orCmt.next = NULL;
+ opCmt.packet = &orCmt;
  opCmt.bytes=cbVorbisComment;
  opCmt.b_o_s = 0;
  opCmt.packetno = m_packetno++;
 
  // Build the "Setup Header" packet
  ogg_packet opSetup;memset(&opSetup, 0, sizeof(ogg_packet));
- opSetup.packet=pbVorbisCodebook;
+ obSetup.data = pbVorbisCodebook;
+ obSetup.size = cbVorbisCodebook;
+ orSetup.buffer = &obSetup;
+ orSetup.begin = 0;
+ orSetup.length = cbVorbisCodebook;
+ orSetup.next = NULL;
+ opSetup.packet= &orSetup;
  opSetup.bytes=cbVorbisCodebook;
  opSetup.b_o_s = 0;
  opSetup.packetno = m_packetno++;
 
- if ((vorbis_synthesis_headerin(&vi,&vc,&opId)>=0) && (vorbis_synthesis_headerin(&vi,&vc,&opCmt)>=0) && (vorbis_synthesis_headerin(&vi,&vc,&opSetup)>=0))
+ if ((    vorbis_synthesis_headerin(&vi,&vc,&opId) >= 0)
+      && (vorbis_synthesis_headerin(&vi,&vc,&opCmt) >= 0)
+      && (vorbis_synthesis_headerin(&vi,&vc,&opSetup) >= 0))
   {
    postgain=1.0f;
    if (vorbis_comment_query_count(&vc,"LWING_GAIN"))
@@ -235,17 +257,25 @@ void TaudioCodecTremor::getInputDescr1(char_t *buf,size_t buflen) const
 
 HRESULT TaudioCodecTremor::decode(TbyteBuffer &src)
 {
+ ogg_reference or;
+ ogg_buffer ob;
  ogg_packet op;
  memset(&op,0,sizeof(op));
- op.packet = &*src.begin();
+ ob.data = &*src.begin();
+ ob.size = src.size();
+ or.buffer = &ob;
+ or.begin = 0;
+ or.length = ob.size;
+ or.next = NULL;
+ op.packet = &or;
  op.bytes = (long)src.size();
  op.b_o_s = 0;
  op.packetno = m_packetno++;
  if (oggds)
-  if (*op.packet&PACKET_TYPE_HEADER)
+  if (*(unsigned char*)op.packet&PACKET_TYPE_HEADER)
    {
     inited=false;
-    switch (*op.packet&PACKET_TYPE_BITS)
+    switch (*(unsigned char*)op.packet&PACKET_TYPE_BITS)
      {
       case PACKET_TYPE_HEADER:
        DPRINTF(_l("header:%i"),op.bytes);

@@ -1,12 +1,13 @@
 /********************************************************************
  *                                                                  *
- * THIS FILE IS PART OF THE OggVorbis SOFTWARE CODEC SOURCE CODE.   *
+ * THIS FILE IS PART OF THE OggVorbis 'TREMOR' CODEC SOURCE CODE.   *
+ *                                                                  *
  * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS     *
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
  * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
  *                                                                  *
- * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2002             *
- * by the Xiph.Org Foundation http://www.xiph.org/                  *
+ * THE OggVorbis 'TREMOR' SOURCE CODE IS (C) COPYRIGHT 1994-2002    *
+ * BY THE Xiph.Org FOUNDATION http://www.xiph.org/                  *
  *                                                                  *
  ********************************************************************
 
@@ -21,9 +22,7 @@
 #include <stdlib.h>
 #include "ogg.h"
 
-#define BUFFER_INCREMENT 256
-
-static const unsigned long mask[]=
+static unsigned long mask[]=
 {0x00000000,0x00000001,0x00000003,0x00000007,0x0000000f,
  0x0000001f,0x0000003f,0x0000007f,0x000000ff,0x000001ff,
  0x000003ff,0x000007ff,0x00000fff,0x00001fff,0x00003fff,
@@ -32,413 +31,235 @@ static const unsigned long mask[]=
  0x01ffffff,0x03ffffff,0x07ffffff,0x0fffffff,0x1fffffff,
  0x3fffffff,0x7fffffff,0xffffffff };
 
-static const unsigned int mask8B[]=
-{0x00,0x80,0xc0,0xe0,0xf0,0xf8,0xfc,0xfe0,0xff};
-
-void oggpack_writeinit(oggpack_buffer *b){
-  memset(b,0,sizeof(*b));
-  b->ptr=b->buffer=_ogg_malloc(BUFFER_INCREMENT);
-  b->buffer[0]='\0';
-  b->storage=BUFFER_INCREMENT;
+/* mark read process as having run off the end */
+static void _adv_halt(oggpack_buffer *b){
+  b->headptr=b->head->buffer->data+b->head->begin+b->head->length;
+  b->headend=-1;
+  b->headbit=0;
 }
 
-void oggpackB_writeinit(oggpack_buffer *b){
-  oggpack_writeinit(b);
-}
+/* spans forward, skipping as many bytes as headend is negative; if
+   headend is zero, simply finds next byte.  If we're up to the end
+   of the buffer, leaves headend at zero.  If we've read past the end,
+   halt the decode process. */
+static void _span(oggpack_buffer *b){
+  while(b->headend<1){
+    if(b->head->next){
+      b->count+=b->head->length;
+      b->head=b->head->next;
+      b->headptr=b->head->buffer->data+b->head->begin-b->headend; 
+      b->headend+=b->head->length;      
+    }else{
+      /* we've either met the end of decode, or gone past it. halt
+         only if we're past */
+      if(b->headend<0 || b->headbit)
+        /* read has fallen off the end */
+        _adv_halt(b);
 
-void oggpack_writetrunc(oggpack_buffer *b,long bits){
-  long bytes=bits>>3;
-  bits-=bytes*8;
-  b->ptr=b->buffer+bytes;
-  b->endbit=bits;
-  b->endbyte=bytes;
-  *b->ptr&=mask[bits];
-}
-
-void oggpackB_writetrunc(oggpack_buffer *b,long bits){
-  long bytes=bits>>3;
-  bits-=bytes*8;
-  b->ptr=b->buffer+bytes;
-  b->endbit=bits;
-  b->endbyte=bytes;
-  *b->ptr&=mask8B[bits];
-}
-
-/* Takes only up to 32 bits. */
-void oggpack_write(oggpack_buffer *b,unsigned long value,int bits){
-  if(b->endbyte+4>=b->storage){
-    b->buffer=_ogg_realloc(b->buffer,b->storage+BUFFER_INCREMENT);
-    b->storage+=BUFFER_INCREMENT;
-    b->ptr=b->buffer+b->endbyte;
-  }
-
-  value&=mask[bits];
-  bits+=b->endbit;
-
-  b->ptr[0]|=value<<b->endbit;
-
-  if(bits>=8){
-    b->ptr[1]=value>>(8-b->endbit);
-    if(bits>=16){
-      b->ptr[2]=value>>(16-b->endbit);
-      if(bits>=24){
-	b->ptr[3]=value>>(24-b->endbit);
-	if(bits>=32){
-	  if(b->endbit)
-	    b->ptr[4]=value>>(32-b->endbit);
-	  else
-	    b->ptr[4]=0;
-	}
-      }
+      break;
     }
   }
-
-  b->endbyte+=bits/8;
-  b->ptr+=bits/8;
-  b->endbit=bits&7;
 }
 
-/* Takes only up to 32 bits. */
-void oggpackB_write(oggpack_buffer *b,unsigned long value,int bits){
-  if(b->endbyte+4>=b->storage){
-    b->buffer=_ogg_realloc(b->buffer,b->storage+BUFFER_INCREMENT);
-    b->storage+=BUFFER_INCREMENT;
-    b->ptr=b->buffer+b->endbyte;
-  }
-
-  value=(value&mask[bits])<<(32-bits);
-  bits+=b->endbit;
-
-  b->ptr[0]|=value>>(24+b->endbit);
-
-  if(bits>=8){
-    b->ptr[1]=value>>(16+b->endbit);
-    if(bits>=16){
-      b->ptr[2]=value>>(8+b->endbit);
-      if(bits>=24){
-	b->ptr[3]=value>>(b->endbit);
-	if(bits>=32){
-	  if(b->endbit)
-	    b->ptr[4]=value<<(8-b->endbit);
-	  else
-	    b->ptr[4]=0;
-	}
-      }
-    }
-  }
-
-  b->endbyte+=bits/8;
-  b->ptr+=bits/8;
-  b->endbit=bits&7;
-}
-
-void oggpack_writealign(oggpack_buffer *b){
-  int bits=8-b->endbit;
-  if(bits<8)
-    oggpack_write(b,0,bits);
-}
-
-void oggpackB_writealign(oggpack_buffer *b){
-  int bits=8-b->endbit;
-  if(bits<8)
-    oggpackB_write(b,0,bits);
-}
-
-static void oggpack_writecopy_helper(oggpack_buffer *b,
-				     void *source,
-				     long bits,
-				     void (*w)(oggpack_buffer *,
-					       unsigned long,
-					       int)){
-  unsigned char *ptr=(unsigned char *)source;
-
-  long bytes=bits/8;
-  bits-=bytes*8;
-
-  if(b->endbit){
-    int i;
-    /* unaligned copy.  Do it the hard way. */
-    for(i=0;i<bytes;i++)
-      w(b,(unsigned long)(ptr[i]),8);
-  }else{
-    /* aligned block copy */
-    if(b->endbyte+bytes+1>=b->storage){
-      b->storage=b->endbyte+bytes+BUFFER_INCREMENT;
-      b->buffer=_ogg_realloc(b->buffer,b->storage);
-      b->ptr=b->buffer+b->endbyte;
-    }
-
-    memmove(b->ptr,source,bytes);
-    b->ptr+=bytes;
-    b->buffer+=bytes;
-    *b->ptr=0;
-
-  }
-  if(bits)
-    w(b,(unsigned long)(ptr[bytes]),bits);
-}
-
-void oggpack_writecopy(oggpack_buffer *b,void *source,long bits){
-  oggpack_writecopy_helper(b,source,bits,oggpack_write);
-}
-
-void oggpackB_writecopy(oggpack_buffer *b,void *source,long bits){
-  oggpack_writecopy_helper(b,source,bits,oggpackB_write);
-}
-
-void oggpack_reset(oggpack_buffer *b){
-  b->ptr=b->buffer;
-  b->buffer[0]=0;
-  b->endbit=b->endbyte=0;
-}
-
-void oggpackB_reset(oggpack_buffer *b){
-  oggpack_reset(b);
-}
-
-void oggpack_writeclear(oggpack_buffer *b){
-  _ogg_free(b->buffer);
+void oggpack_readinit(oggpack_buffer *b,ogg_reference *r){
   memset(b,0,sizeof(*b));
+
+  b->tail=b->head=r;
+  b->count=0;
+  b->headptr=b->head->buffer->data+b->head->begin;
+  b->headend=b->head->length;
+  _span(b);
 }
 
-void oggpackB_writeclear(oggpack_buffer *b){
-  oggpack_writeclear(b);
-}
-
-void oggpack_readinit(oggpack_buffer *b,unsigned char *buf,int bytes){
-  memset(b,0,sizeof(*b));
-  b->buffer=b->ptr=buf;
-  b->storage=bytes;
-}
-
-void oggpackB_readinit(oggpack_buffer *b,unsigned char *buf,int bytes){
-  oggpack_readinit(b,buf,bytes);
-}
+#define _lookspan()   while(!end){\
+                        head=head->next;\
+                        if(!head) return -1;\
+                        ptr=head->buffer->data + head->begin;\
+                        end=head->length;\
+                      }
 
 /* Read in bits without advancing the bitptr; bits <= 32 */
 long oggpack_look(oggpack_buffer *b,int bits){
-  unsigned long ret;
   unsigned long m=mask[bits];
+  unsigned long ret=-1;
 
-  bits+=b->endbit;
+  bits+=b->headbit;
 
-  if(b->endbyte+4>=b->storage){
-    /* not the main path */
-    if(b->endbyte*8+bits>b->storage*8)return(-1);
-  }
+  if(bits >= b->headend<<3){
+    int            end=b->headend;
+    unsigned char *ptr=b->headptr;
+    ogg_reference *head=b->head;
 
-  ret=b->ptr[0]>>b->endbit;
-  if(bits>8){
-    ret|=b->ptr[1]<<(8-b->endbit);
-    if(bits>16){
-      ret|=b->ptr[2]<<(16-b->endbit);
-      if(bits>24){
-	ret|=b->ptr[3]<<(24-b->endbit);
-	if(bits>32 && b->endbit)
-	  ret|=b->ptr[4]<<(32-b->endbit);
+    if(end<0)return -1;
+    
+    if(bits){
+      _lookspan();
+      ret=*ptr++>>b->headbit;
+      if(bits>8){
+        --end;
+        _lookspan();
+        ret|=*ptr++<<(8-b->headbit);  
+        if(bits>16){
+          --end;
+          _lookspan();
+          ret|=*ptr++<<(16-b->headbit);  
+          if(bits>24){
+            --end;
+            _lookspan();
+            ret|=*ptr++<<(24-b->headbit);  
+            if(bits>32 && b->headbit){
+              --end;
+              _lookspan();
+              ret|=*ptr<<(32-b->headbit);
+            }
+          }
+        }
+      }
+    }
+
+  }else{
+
+    /* make this a switch jump-table */
+    ret=b->headptr[0]>>b->headbit;
+    if(bits>8){
+      ret|=b->headptr[1]<<(8-b->headbit);  
+      if(bits>16){
+        ret|=b->headptr[2]<<(16-b->headbit);  
+        if(bits>24){
+          ret|=b->headptr[3]<<(24-b->headbit);  
+          if(bits>32 && b->headbit)
+            ret|=b->headptr[4]<<(32-b->headbit);
+        }
       }
     }
   }
-  return(m&ret);
+
+  ret&=m;
+  return ret;
 }
 
-/* Read in bits without advancing the bitptr; bits <= 32 */
-long oggpackB_look(oggpack_buffer *b,int bits){
-  unsigned long ret;
-  int m=32-bits;
-
-  bits+=b->endbit;
-
-  if(b->endbyte+4>=b->storage){
-    /* not the main path */
-    if(b->endbyte*8+bits>b->storage*8)return(-1);
-  }
-
-  ret=b->ptr[0]<<(24+b->endbit);
-  if(bits>8){
-    ret|=b->ptr[1]<<(16+b->endbit);
-    if(bits>16){
-      ret|=b->ptr[2]<<(8+b->endbit);
-      if(bits>24){
-	ret|=b->ptr[3]<<(b->endbit);
-	if(bits>32 && b->endbit)
-	  ret|=b->ptr[4]>>(8-b->endbit);
-      }
-    }
-  }
-  return(ret>>m);
-}
-
-long oggpack_look1(oggpack_buffer *b){
-  if(b->endbyte>=b->storage)return(-1);
-  return((b->ptr[0]>>b->endbit)&1);
-}
-
-long oggpackB_look1(oggpack_buffer *b){
-  if(b->endbyte>=b->storage)return(-1);
-  return((b->ptr[0]>>(7-b->endbit))&1);
-}
-
+/* limited to 32 at a time */
 void oggpack_adv(oggpack_buffer *b,int bits){
-  bits+=b->endbit;
-  b->ptr+=bits/8;
-  b->endbyte+=bits/8;
-  b->endbit=bits&7;
+  bits+=b->headbit;
+  b->headbit=bits&7;
+  b->headptr+=bits/8;
+  if((b->headend-=bits/8)<1)_span(b);
 }
 
-void oggpackB_adv(oggpack_buffer *b,int bits){
-  oggpack_adv(b,bits);
-}
-
-void oggpack_adv1(oggpack_buffer *b){
-  if(++(b->endbit)>7){
-    b->endbit=0;
-    b->ptr++;
-    b->endbyte++;
+/* spans forward and finds next byte.  Never halts */
+static void _span_one(oggpack_buffer *b){
+  while(b->headend<1){
+    if(b->head->next){
+      b->count+=b->head->length;
+      b->head=b->head->next;
+      b->headptr=b->head->buffer->data+b->head->begin; 
+      b->headend=b->head->length;      
+    }else
+      break;
   }
 }
 
-void oggpackB_adv1(oggpack_buffer *b){
-  oggpack_adv1(b);
+static int _halt_one(oggpack_buffer *b){
+  if(b->headend<1){
+    _adv_halt(b);
+    return -1;
+  }
+  return 0;
+}
+
+int oggpack_eop(oggpack_buffer *b){
+  if(b->headend<0)return -1;
+  return 0;
 }
 
 /* bits <= 32 */
 long oggpack_read(oggpack_buffer *b,int bits){
-  unsigned long ret;
   unsigned long m=mask[bits];
+  ogg_uint32_t ret=-1;
 
-  bits+=b->endbit;
+  bits+=b->headbit;
 
-  if(b->endbyte+4>=b->storage){
-    /* not the main path */
-    ret=-1UL;
-    if(b->endbyte*8+bits>b->storage*8)goto overflow;
-  }
+  if(bits >= b->headend<<3){
 
-  ret=b->ptr[0]>>b->endbit;
-  if(bits>8){
-    ret|=b->ptr[1]<<(8-b->endbit);
-    if(bits>16){
-      ret|=b->ptr[2]<<(16-b->endbit);
-      if(bits>24){
-	ret|=b->ptr[3]<<(24-b->endbit);
-	if(bits>32 && b->endbit){
-	  ret|=b->ptr[4]<<(32-b->endbit);
-	}
+    if(b->headend<0)return -1;
+    
+    if(bits){
+      if (_halt_one(b)) return -1;
+      ret=*b->headptr>>b->headbit;
+      
+      if(bits>=8){
+        ++b->headptr;
+        --b->headend;
+        _span_one(b);
+        if(bits>8){
+          if (_halt_one(b)) return -1;
+          ret|=*b->headptr<<(8-b->headbit);   
+          
+          if(bits>=16){
+            ++b->headptr;
+            --b->headend;
+            _span_one(b);
+            if(bits>16){
+              if (_halt_one(b)) return -1;
+              ret|=*b->headptr<<(16-b->headbit);  
+              
+              if(bits>=24){
+                ++b->headptr;
+                --b->headend;
+                _span_one(b);
+                if(bits>24){
+                  if (_halt_one(b)) return -1;
+                  ret|=*b->headptr<<(24-b->headbit);
+                  
+                  if(bits>=32){
+                    ++b->headptr;
+                    --b->headend;
+                    _span_one(b);
+                    if(bits>32){
+                      if (_halt_one(b)) return -1;
+                      if(b->headbit)ret|=*b->headptr<<(32-b->headbit);
+                      
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
+  }else{
+  
+    ret=b->headptr[0]>>b->headbit;
+    if(bits>8){
+      ret|=b->headptr[1]<<(8-b->headbit);  
+      if(bits>16){
+        ret|=b->headptr[2]<<(16-b->headbit);  
+        if(bits>24){
+          ret|=b->headptr[3]<<(24-b->headbit);  
+          if(bits>32 && b->headbit){
+            ret|=b->headptr[4]<<(32-b->headbit);
+          }
+        }
+      }
+    }
+    
+    b->headptr+=bits/8;
+    b->headend-=bits/8;
   }
+
   ret&=m;
-
- overflow:
-
-  b->ptr+=bits/8;
-  b->endbyte+=bits/8;
-  b->endbit=bits&7;
-  return(ret);
-}
-
-/* bits <= 32 */
-long oggpackB_read(oggpack_buffer *b,int bits){
-  unsigned long ret;
-  long m=32-bits;
-
-  bits+=b->endbit;
-
-  if(b->endbyte+4>=b->storage){
-    /* not the main path */
-    ret=-1UL;
-    if(b->endbyte*8+bits>b->storage*8)goto overflow;
-  }
-
-  ret=b->ptr[0]<<(24+b->endbit);
-  if(bits>8){
-    ret|=b->ptr[1]<<(16+b->endbit);
-    if(bits>16){
-      ret|=b->ptr[2]<<(8+b->endbit);
-      if(bits>24){
-	ret|=b->ptr[3]<<(b->endbit);
-	if(bits>32 && b->endbit)
-	  ret|=b->ptr[4]>>(8-b->endbit);
-      }
-    }
-  }
-  ret>>=m;
-
- overflow:
-
-  b->ptr+=bits/8;
-  b->endbyte+=bits/8;
-  b->endbit=bits&7;
-  return(ret);
-}
-
-long oggpack_read1(oggpack_buffer *b){
-  unsigned long ret;
-
-  if(b->endbyte>=b->storage){
-    /* not the main path */
-    ret=-1UL;
-    goto overflow;
-  }
-
-  ret=(b->ptr[0]>>b->endbit)&1;
-
- overflow:
-
-  b->endbit++;
-  if(b->endbit>7){
-    b->endbit=0;
-    b->ptr++;
-    b->endbyte++;
-  }
-  return(ret);
-}
-
-long oggpackB_read1(oggpack_buffer *b){
-  unsigned long ret;
-
-  if(b->endbyte>=b->storage){
-    /* not the main path */
-    ret=-1UL;
-    goto overflow;
-  }
-
-  ret=(b->ptr[0]>>(7-b->endbit))&1;
-
- overflow:
-
-  b->endbit++;
-  if(b->endbit>7){
-    b->endbit=0;
-    b->ptr++;
-    b->endbyte++;
-  }
-  return(ret);
+  b->headbit=bits&7;   
+  return ret;
 }
 
 long oggpack_bytes(oggpack_buffer *b){
-  return(b->endbyte+(b->endbit+7)/8);
+  return(b->count+b->headptr-b->head->buffer->data-b->head->begin+
+         (b->headbit+7)/8);
 }
 
 long oggpack_bits(oggpack_buffer *b){
-  return(b->endbyte*8+b->endbit);
+  return((b->count+b->headptr-b->head->buffer->data-b->head->begin)*8+
+         b->headbit);
 }
 
-long oggpackB_bytes(oggpack_buffer *b){
-  return oggpack_bytes(b);
-}
-
-long oggpackB_bits(oggpack_buffer *b){
-  return oggpack_bits(b);
-}
-
-unsigned char *oggpack_get_buffer(oggpack_buffer *b){
-  return(b->buffer);
-}
-
-unsigned char *oggpackB_get_buffer(oggpack_buffer *b){
-  return oggpack_get_buffer(b);
-}
-
-#undef BUFFER_INCREMENT
