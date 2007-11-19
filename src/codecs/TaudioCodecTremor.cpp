@@ -69,6 +69,8 @@ bool TaudioCodecTremor::initVorbis(void)
  ogg_packet opId;memset(&opId, 0, sizeof(ogg_packet));
  obId.data = pbVorbisInfo;
  obId.size = cbVorbisInfo;
+ obId.refcount = 255; // large enough not to be freed by the Tremor.
+ obId.ptr.next = NULL;
  orId.buffer = &obId;
  orId.begin = 0;
  orId.length = cbVorbisInfo;
@@ -82,6 +84,8 @@ bool TaudioCodecTremor::initVorbis(void)
  ogg_packet opCmt;memset(&opCmt, 0, sizeof(ogg_packet));
  obCmt.data = pbVorbisComment;
  obCmt.size = cbVorbisComment;
+ obCmt.refcount = 255;
+ obCmt.ptr.next = NULL;
  orCmt.buffer = &obCmt;
  orCmt.begin = 0;
  orCmt.length = cbVorbisComment;
@@ -95,6 +99,8 @@ bool TaudioCodecTremor::initVorbis(void)
  ogg_packet opSetup;memset(&opSetup, 0, sizeof(ogg_packet));
  obSetup.data = pbVorbisCodebook;
  obSetup.size = cbVorbisCodebook;
+ obSetup.refcount = 255;
+ obSetup.ptr.next = NULL;
  orSetup.buffer = &obSetup;
  orSetup.begin = 0;
  orSetup.length = cbVorbisCodebook;
@@ -263,6 +269,8 @@ HRESULT TaudioCodecTremor::decode(TbyteBuffer &src)
  memset(&op,0,sizeof(op));
  ob.data = &*src.begin();
  ob.size = src.size();
+ ob.refcount = 255;
+ ob.ptr.next = NULL;
  or.buffer = &ob;
  or.begin = 0;
  or.length = ob.size;
