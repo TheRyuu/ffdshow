@@ -5,8 +5,8 @@ Translated by Virtual_ManPL (Artur Osiñski)
 e-mail: Virtual_ManPL@wp.pl
 Gadu-Gadu: 6361956
 Jabber: Virtual_ManPL@maszyna.pl
-Latest translated ffdshow : 1534
-Revision: 1
+Latest translated ffdshow : 1589
+Revision: 2
 ============================================
 
 [115]
@@ -512,6 +512,9 @@ Bicubic=Dwuszeœcienna
 Point=Punktowa
 Area=Obszarowa
 Simple resize=Prosty
+Active preset name=Obecna aktywna nazwa
+side left=Boczny lewy
+side right=Boczny prawy
 
 [116]
 0=DirectShow
@@ -577,6 +580,8 @@ Simple resize=Prosty
 8=Zamknij
 1888=Oddziel wielokrotne elementy przez znak ;
 1915=i
+2207=gdy przynajmniej 1 warunek jest spe³niony (OR)
+2208=gdy wszystkie warunki s¹ spe³nione (AND)
 
 [233]
 0=Filtry
@@ -717,6 +722,8 @@ Simple resize=Prosty
 1745=Tylni prawy
 1143=Kana³y mog¹ by zamienione przez u¿ycie Miksera (filtra miksuj¹cego), ale ten filtr robi to szybciej.
 1747=Przedni prawy
+2188=Boczny lewy
+2191=Boczny prawy
 
 [191]
 0=Mikser
@@ -868,7 +875,7 @@ Simple resize=Prosty
 1021=Próg:
 1023=Wyostrzanie bloków:
 1215=Poka¿ maskê krawêdzi
-1143=xsharpen\r\n Filtr wykonuje subtelne ale przydatne wyostrzanie. Dzia³a to na zasadzie\r\n ma³ej ramki nad ka¿d¹ klatk¹ lub nad ka¿dym œrodkowym pikselem który\r\n jest pominiêty lub nieruszony (zale¿y od ustawienia progu) albozmapowany \r\n do jednego z dwóch najjaœniejszych lub najciemniejszych pikseli w oknie\r\n zale¿nie od bliskoœci œrodkowego piksela. Je¿eli œrodkowy piksel jest\r\nzmapowany to równie¿ Alfa-Zamglenie z oryginaln¹ wartoœci¹ piksela\r\n u¿ywaj¹cy konfigurowalnego ustawienia si³y. Koñcowym efektem jest obraz\r\n który mo¿e zawieraæ szum jednak w bardzo ma³ym stopniu i filtr stara siê\r\n przeciwdzia³aæ temu.\r\n\r\nUnsharp mask\r\n Filtr wykorzystuje dobrze znane technikê uwydatnienia kontrastu\r\n i wyostrzania. G³ównym celem jest utworzenie wyg³adzonego obrazu\r\n oraz oryginalnego obrazu a nastêpnie odjêcie ich od siebie. Rezultatem tego\r\n bêdzie obraz o podwy¿szonym kontraœcie.\r\n\r\nmsharpen\r\n Filtr ostrzy wa¿ne krawêdzie obrazu bez wzmacniania szumu. Dzia³a\r\n na zasadzie wykrywania krawêdzi i u¿ywania Kernela zaostrzaj¹cego tylko\r\n na obszarze krawêdzi.\r\n\r\nasharp\r\n  Jeden z najlepszych filtrów wyostrzaj¹cych który daje doskona³¹ jakoœæ\r\n obrazu wraz z w³¹czonym filtrem Przetwarzanie. Najlepsz¹ jakoœæ uzyskamy u¿ywaj¹c go z obrazem niskiej jakoœci.\r\n\r\nswscaler\r\n Jeden z najlepszych filtrów wyostrzaj¹cych który daje doskona³¹ jakoœæ\r\n obrazu wraz z w³¹czonym filtrem Przetwarzanie. Najlepsz¹ jakoœæ uzyskamy  u¿ywaj¹c go z obrazem wysokiej jakoœci.\r\n\r\nOpis xsharpen, unsharp mask oraz msharpen zosta³ skopiowany z oryginalnej dokumentacji filtrów AviSynth i VirtualDub\r\nPrawa autorskie Donald Graft\r\n\r\nOpis asharp oraz swscaler zosta³ napisany przez Artura Osiñskiego (Virtual_ManPL)
+1143=xsharpen\r\n Filtr wykonuje subtelne ale przydatne wyostrzanie. Dzia³a to na zasadzie\r\n ma³ej ramki nad ka¿d¹ klatk¹ lub nad ka¿dym œrodkowym pikselem który\r\n jest pominiêty lub nieruszony (zale¿y od ustawienia progu) albozmapowany \r\n do jednego z dwóch najjaœniejszych lub najciemniejszych pikseli w oknie\r\n zale¿nie od bliskoœci œrodkowego piksela. Je¿eli œrodkowy piksel jest\r\n zmapowany to równie¿ Alfa-Zamglenie z oryginaln¹ wartoœci¹ piksela\r\n u¿ywaj¹cy konfigurowalnego ustawienia si³y. Koñcowym efektem jest obraz\r\n który mo¿e zawieraæ szum jednak w bardzo ma³ym stopniu i filtr stara siê\r\n przeciwdzia³aæ temu.\r\n\r\nUnsharp mask\r\n Filtr wykorzystuje dobrze znane technikê uwydatnienia kontrastu\r\n i wyostrzania. G³ównym celem jest utworzenie wyg³adzonego obrazu\r\n oraz oryginalnego obrazu a nastêpnie odjêcie ich od siebie. Rezultatem tego\r\n bêdzie obraz o podwy¿szonym kontraœcie.\r\n\r\nmsharpen\r\n Filtr ostrzy wa¿ne krawêdzie obrazu bez wzmacniania szumu. Dzia³a\r\n na zasadzie wykrywania krawêdzi i u¿ywania Kernela zaostrzaj¹cego tylko\r\n na obszarze krawêdzi.\r\n\r\nasharp\r\n Jeden z najlepszych filtrów wyostrzaj¹cych który daje doskona³¹ jakoœæ\r\n obrazu wraz z w³¹czonym filtrem Przetwarzanie. Najlepsz¹ jakoœæ uzyskamy  u¿ywaj¹c go z obrazem niskiej jakoœci.\r\n\r\nswscaler\r\n Jeden z najlepszych filtrów wyostrzaj¹cych który daje doskona³¹ jakoœæ\r\n obrazu wraz z w³¹czonym filtrem Przetwarzanie. Najlepsz¹ jakoœæ uzyskamy   u¿ywaj¹c go z obrazem wysokiej jakoœci.\r\n\r\nOpis xsharpen, unsharp mask oraz msharpen zosta³ skopiowany z oryginalnej  dokumentacji filtrów AviSynth i VirtualDub\r\n Prawa autorskie Donald Graft\r\n\r\nOpis asharp oraz swscaler zosta³ napisany przez Artura Osiñskiego (Virtual_ManPL)
 
 [140]
 0=Przeplot
@@ -1045,7 +1052,7 @@ Simple resize=Prosty
 1099=Zamglenie chrominancji:
 1100=Poziome odkszta³cenie:
 1022=Pionowe odkszta³cenie:
-1143=Algorytmy zwiêkszania rozmiaru obrazu:\r\n najdok³adniejszymi s¹ algorytmy Lanczos oraz Spline\r\n\r\nZ przeplotem:\r\n zaznaczone - klatki s¹ traktowane jako progresywne\r\n niezaznaczone - klatki traktowane s¹ jako klatki z przeplotem\r\n wpó³zaznaczone - decyduje typ wejœciowej klatki (u¿ywane podczas  przetwarzania obrazu MPEG2)
+1143=Algorytmy zwiêkszania rozmiaru obrazu:\r\n najdok³adniejszymi s¹ algorytmy Lanczos oraz Spline\r\n\r\nZ przeplotem:\r\n zaznaczone - klatki s¹ traktowane jako progresywne\r\n niezaznaczone - klatki traktowane s¹ jako klatki z przeplotem\r\n wpó³zaznaczone - decyduje typ wejœciowej klatki (u¿ywane podczas   przetwarzania obrazu MPEG2)
 
 [254]
 0=Tekst
@@ -1105,7 +1112,7 @@ Simple resize=Prosty
 [173]
 0=Nak³adka
 1235=Nak³adka
-1143=Dzia³a tyko gdy zaznaczona jest opcja "Ustaw proporcjê pikseli w wyjœciowym typie materia³u" w zak³adce "Wyjœcie" oraz sprzêt to obs³uguje.\r\n\r\nObs³uguje mikser nak³adki i renderer VMR9 w trybie okienkowym.
+1143=Dzia³a tyko gdy zaznaczona jest opcja "Ustaw proporcjê pikseli w wyjœciowym typie materia³u" w zak³adce "Wyjœcie" oraz sprzêt to obs³uguje.\r\n\r\nObs³uguje mikser nak³adki i miksuj¹cy renderer obrazu 9 w trybie okienkowym.
 1236=Jasnoœæ:
 1137=Kontrast:
 1138=Barwa:
@@ -1145,7 +1152,8 @@ Simple resize=Prosty
 1765=pocz¹tek
 1550=Rozdziel wejœciowy przeplot jeœli wysokoœæ > :
 1552=pikseli
-1143=Kolejkowanie wyjœciowych próbek\r\n G³ównym zadaniem tej opcji jest zmniejszenie pomijania klatek wskutek\r\n zarz¹dzania w¹tkami procesora\r\n Opcja ta dzia³a tylko wtedy kiedy procesor obs³uguje wielow¹tkowoœæ\r\n\r\nU¿yj kolejkowania w\r\n Kolejkowanie jest domyœlnie wy³¹czone ze wzglêdu na problemy ze  stabilnoœci¹\r\n Jednak jeœli chcesz dodaæ aplikacjê wykorzystuj¹c¹ wielow¹tkowoœæ oddziel\r\n pliki przez znak ;\r\n\r\nInne ustawienia\r\n OpóŸnienie obrazu\r\n  Je¿eli odbiorca jest daleko od g³oœników, mo¿esz wypróbowaæ t¹ opcjê
+1143=Kolejkowanie wyjœciowych próbek\r\n G³ównym zadaniem tej opcji jest zmniejszenie pomijania klatek wskutek\r\n zarz¹dzania w¹tkami procesora\r\n Opcja ta dzia³a tylko wtedy kiedy procesor obs³uguje wielow¹tkowoœæ\r\n\r\nU¿yj kolejkowania w\r\n Kolejkowanie jest domyœlnie wy³¹czone ze wzglêdu na problemy ze   stabilnoœci¹\r\n Jednak jeœli chcesz dodaæ aplikacjê wykorzystuj¹c¹ wielow¹tkowoœæ oddziel\r\n pliki przez znak ;\r\n\r\nInne ustawienia\r\n OpóŸnienie obrazu\r\n  Je¿eli odbiorca jest daleko od g³oœników, mo¿esz wypróbowaæ t¹ opcjê
+2206=W³¹cz kolejkowanie miksuj¹cego renderera obrazu 9 - YV12
 
 [2112]
 0=Konwersja
