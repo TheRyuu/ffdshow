@@ -41,6 +41,7 @@ template<class Tcompare> bool searchPrevNextFilter(PIN_DIRECTION direction,IPin 
        static const GUID CLSID_DEXFILT={0xc4d81942,0x607,0x11d2,0xa3,0x92,0x00,0xe0,0x29,0x1f,0x39,0x59};
        if (pi.clsid == CLSID_DEXFILT)
         {
+         // Work around the compatibility problem with Windows Movie Maker.
          pi.pFilter->Release();
          return false;
         }
