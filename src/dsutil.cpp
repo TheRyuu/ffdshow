@@ -157,7 +157,7 @@ pins_vector::pins_vector(IBaseFilter *filter,PIN_DIRECTION dir)
  if (SUCCEEDED(filter->EnumPins(&ep)))
   {
    ep->Reset();
-   for (comptr<IPin> p;ep->Next(1,&p,NULL)==S_OK;p=NULL)
+   for (IPin *p=NULL;ep->Next(1,&p,NULL)==S_OK;p=NULL)
     {
      PIN_INFO pi;
      if (SUCCEEDED(p->QueryPinInfo(&pi)))
@@ -169,6 +169,7 @@ pins_vector::pins_vector(IBaseFilter *filter,PIN_DIRECTION dir)
         }
        pi.pFilter->Release();
       }
+     p->Release();
     }
   }
 }
