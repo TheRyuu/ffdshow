@@ -1527,10 +1527,11 @@ static void sub_hfyu_median_prediction_mmx2(uint8_t *dst, uint8_t *src1, uint8_t
         "mov"#m1" "#mm"0, %0          \n\t"\
         DIFF_PIXELS_1(m0, mm##7, mm##0, (%1,%3,4), (%2,%3,4))\
         "mov"#m1" %0, "#mm"0          \n\t"\
-        : "=m"(temp), "+r"(p1b), "+r"(p2b)\
+        : "+m"(temp), "+r"(p1b), "+r"(p2b)\
         : "r"((long)stride), "r"((long)stride*3)\
     );\
 }
+    //the "+m"(temp) is needed as gcc 2.95 sometimes fails to compile "=m"(temp)
 
 #define DIFF_PIXELS_4x8(p1,p2,stride,temp) DIFF_PIXELS_8(d, q,   %%mm,  p1, p2, stride, temp)
 #define DIFF_PIXELS_8x8(p1,p2,stride,temp) DIFF_PIXELS_8(q, dqa, %%xmm, p1, p2, stride, temp)
@@ -2834,6 +2835,7 @@ PREFETCH(prefetch_3dnow, prefetch)
 #undef PREFETCH
 
 #include "h264dsp_mmx.c"
+#include "vc1dsp_mmx.c"
 
 /* AVS specific */
 void ff_cavsdsp_init_mmx2(DSPContext* c, AVCodecContext *avctx);
@@ -3508,6 +3510,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->biweight_h264_pixels_tab[7]= ff_h264_biweight_4x2_mmx2;
 
             ff_cavsdsp_init_mmx2(c, avctx);
+            ff_vc1dsp_init_mmx(c, avctx);
 
 #ifdef CONFIG_ENCODERS
             c->sub_hfyu_median_prediction= sub_hfyu_median_prediction_mmx2;
