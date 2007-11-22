@@ -415,7 +415,7 @@ void convertToWav(const AVS_VideoInfo* vi,AVS_Clip *clip,size_t len,const char *
     else
     {
       dwFileSize = DWORD(vi->num_audio_samples * avs_bytes_per_audio_sample(vi) + 8)/* data chunk */;
-      wfx->wFormatTag=1; // WAVE_FORMAT_PCM
+      wfx->wFormatTag=vi->sample_type == 16 ? WAVE_FORMAT_IEEE_FLOAT : WAVE_FORMAT_PCM;
       wfx->nBlockAlign=WORD(avs_bytes_per_audio_sample(vi));
       wfx->nAvgBytesPerSec=avs_samples_per_second(vi)*wfx->nBlockAlign;
     }
@@ -647,7 +647,7 @@ void convertToAVI(const AVS_VideoInfo* vi,AVS_Clip *clip,int len,const char *scr
       {
         wfx=(WAVEFORMATEX*)malloc(sizeof(WAVEFORMATEX));
         wfx->cbSize=0;
-        wfx->wFormatTag=WAVE_FORMAT_PCM;
+        wfx->wFormatTag=vi->sample_type == 16 ? WAVE_FORMAT_IEEE_FLOAT : WAVE_FORMAT_PCM;
         wfx->nBlockAlign=WORD(avs_bytes_per_audio_sample(vi));
         wfx->nAvgBytesPerSec=avs_samples_per_second(vi)*wfx->nBlockAlign;
       }
