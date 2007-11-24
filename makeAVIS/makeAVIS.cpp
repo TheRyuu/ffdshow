@@ -418,6 +418,7 @@ void convertToWav(const AVS_VideoInfo* vi,AVS_Clip *clip,size_t len,const char *
       wfx->wFormatTag=vi->sample_type == 16 ? WAVE_FORMAT_IEEE_FLOAT : WAVE_FORMAT_PCM;
       wfx->nBlockAlign=WORD(avs_bytes_per_audio_sample(vi));
       wfx->nAvgBytesPerSec=avs_samples_per_second(vi)*wfx->nBlockAlign;
+      dwChunkSize += sizeof(wfx->cbSize);
     }
     /* dwFileSize is in fact the RIFF chunksize, ie real filesize
        without bytes from "RIFF" header and dwFileSize */
@@ -459,6 +460,10 @@ void convertToWav(const AVS_VideoInfo* vi,AVS_Clip *clip,size_t len,const char *
          uncompressed data */
       unsigned long dwSizeInSamplePoints = (DWORD)vi->num_audio_samples;
       fwrite(&dwSizeInSamplePoints, 1, sizeof(dwSizeInSamplePoints), wavefile);
+    }
+    else
+    {
+      fwrite(&wfx->cbSize, 1, sizeof(wfx->cbSize), wavefile);
     }
 
     /* data chunk */
