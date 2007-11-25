@@ -2,6 +2,7 @@
  * cpu.h: h264 encoder library
  *****************************************************************************
  * Copyright (C) 2003 Laurent Aimar
+ * $Id: cpu.h,v 1.1 2004/06/03 19:27:06 fenrir Exp $
  *
  * Authors: Laurent Aimar <fenrir@via.ecp.fr>
  *

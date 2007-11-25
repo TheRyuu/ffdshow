@@ -43,7 +43,7 @@ void    x264_param_default( x264_param_t *param )
     memset( param, 0, sizeof( x264_param_t ) );
 
     /* CPU autodetect */
-    //param->cpu = x264_cpu_detect();
+    param->cpu = x264_cpu_detect();
     param->i_threads = 1;
     param->b_deterministic = 1;
 
@@ -238,8 +238,8 @@ int x264_param_parse( x264_param_t *p, const char *name, const char *value )
 #define OPT(STR) else if( !strcmp( name, STR ) )
 #define OPT2(STR0, STR1) else if( !strcmp( name, STR0 ) || !strcmp( name, STR1 ) )
     if(0);
-    //OPT("asm")
-    //    p->cpu = atobool(value) ? x264_cpu_detect() : 0;
+    OPT("asm")
+        p->cpu = atobool(value) ? x264_cpu_detect() : 0;
     OPT("threads")
     {
         if( !strcmp(value, "auto") )

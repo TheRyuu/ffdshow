@@ -61,207 +61,172 @@ SECTION .text
 ;=============================================================================
 
 ;-----------------------------------------------------------------------------
-; void x264_pixel_avg_w4_mmxext( uint8_t *dst,  int i_dst_stride,
-;                                uint8_t *src1, int i_src1_stride,
-;                                uint8_t *src2, int i_src2_stride,
-;                                int i_height );
+; void x264_pixel_avg_w4_mmxext( uint8_t *dst, int dst_stride,
+;                                uint8_t *src, int src_stride,
+;                                int height );
 ;-----------------------------------------------------------------------------
-cglobal x264_pixel_avg_w4_mmxext
-    push        ebp
-    push        ebx
-    push        esi
-    push        edi
+%macro AVG_START 1
+cglobal %1
+    push   ebx
+    mov    eax, [esp+12]  ; dst
+    mov    ebx, [esp+16]  ; dst_stride
+    mov    ecx, [esp+20]  ; src
+    mov    edx, [esp+24]  ; src_stride
+    ; esi = height
+.height_loop:
+%endmacro
 
-    mov         edi, [esp+20]       ; dst
-    mov         ebx, [esp+28]       ; src1
-    mov         ecx, [esp+36]       ; src2
-    mov         esi, [esp+24]       ; i_dst_stride
-    mov         eax, [esp+32]       ; i_src1_stride
-    mov         edx, [esp+40]       ; i_src2_stride
-    mov         ebp, [esp+44]       ; i_height
-ALIGN 4
-.height_loop    
-    movd        mm0, [ebx]
-    pavgb       mm0, [ecx]
-    movd        mm1, [ebx+eax]
-    pavgb       mm1, [ecx+edx]
-    movd        [edi], mm0
-    movd        [edi+esi], mm1
-    dec         ebp
-    dec         ebp
-    lea         ebx, [ebx+eax*2]
-    lea         ecx, [ecx+edx*2]
-    lea         edi, [edi+esi*2]
-    jg          .height_loop
-
-    pop         edi
-    pop         esi
-    pop         ebx
-    pop         ebp
+%macro AVG_END 0
+    sub    esi, 2
+    lea    eax, [eax+ebx*2]
+    lea    ecx, [ecx+edx*2]
+    jg     .height_loop
+    pop    ebx
+    pop    esi
     ret
+%endmacro
 
-                          
+AVG_START x264_pixel_avg_w4_mmxext
+    movd   mm0, [ecx]
+    movd   mm1, [ecx+edx]
+    pavgb  mm0, [eax]
+    pavgb  mm1, [eax+ebx]
+    movd   [eax], mm0
+    movd   [eax+ebx], mm1
+AVG_END
 
-;-----------------------------------------------------------------------------
-; void x264_pixel_avg_w8_mmxext( uint8_t *dst,  int i_dst_stride,
-;                                uint8_t *src1, int i_src1_stride,
-;                                uint8_t *src2, int i_src2_stride,
-;                                int i_height );
-;-----------------------------------------------------------------------------
-cglobal x264_pixel_avg_w8_mmxext
-    push        ebp
-    push        ebx
-    push        esi
-    push        edi
+AVG_START x264_pixel_avg_w8_mmxext
+    movq   mm0, [ecx]
+    movq   mm1, [ecx+edx]
+    pavgb  mm0, [eax]
+    pavgb  mm1, [eax+ebx]
+    movq   [eax], mm0
+    movq   [eax+ebx], mm1
+AVG_END
 
-    mov         edi, [esp+20]       ; dst
-    mov         ebx, [esp+28]       ; src1
-    mov         ecx, [esp+36]       ; src2
-    mov         esi, [esp+24]       ; i_dst_stride
-    mov         eax, [esp+32]       ; i_src1_stride
-    mov         edx, [esp+40]       ; i_src2_stride
-    mov         ebp, [esp+44]       ; i_height
-ALIGN 4
-.height_loop    
-    movq        mm0, [ebx]
-    pavgb       mm0, [ecx]
-    movq        [edi], mm0
-    dec         ebp
-    lea         ebx, [ebx+eax]
-    lea         ecx, [ecx+edx]
-    lea         edi, [edi+esi]
-    jg          .height_loop
+AVG_START x264_pixel_avg_w16_mmxext
+    movq   mm0, [ecx]
+    movq   mm1, [ecx+8]
+    movq   mm2, [ecx+edx]
+    movq   mm3, [ecx+edx+8]
+    pavgb  mm0, [eax]
+    pavgb  mm1, [eax+8]
+    pavgb  mm2, [eax+ebx]
+    pavgb  mm3, [eax+ebx+8]
+    movq   [eax], mm0
+    movq   [eax+8], mm1
+    movq   [eax+ebx], mm2
+    movq   [eax+ebx+8], mm3
+AVG_END
 
-    pop         edi
-    pop         esi
-    pop         ebx
-    pop         ebp
+AVG_START x264_pixel_avg_w16_sse2
+    movdqu xmm0, [ecx]
+    movdqu xmm1, [ecx+edx]
+    pavgb  xmm0, [eax]
+    pavgb  xmm1, [eax+ebx]
+    movdqa [eax], xmm0
+    movdqa [eax+ebx], xmm1
+AVG_END
+
+%macro AVGH 2
+cglobal x264_pixel_avg_%1x%2_mmxext
+    push esi
+    mov esi, %2
+    jmp x264_pixel_avg_w%1_mmxext
+%endmacro
+
+AVGH 16, 16
+AVGH 16, 8
+AVGH 8, 16
+AVGH 8, 8
+AVGH 8, 4
+AVGH 4, 8
+AVGH 4, 4
+AVGH 4, 2
+
+%macro AVG2_START 1
+cglobal %1
+    push   ebx
+    push   esi
+    push   edi
+    push   ebp
+    mov    eax, [esp+20]  ; dst
+    mov    ebx, [esp+24]  ; dst_stride
+    mov    ecx, [esp+28]  ; src1
+    mov    edx, [esp+32]  ; src_stride
+    mov    edi, [esp+36]  ; src2
+    mov    esi, [esp+40]  ; height
+    sub    edi, ecx
+    lea    ebp, [edi+edx]
+.height_loop:
+%endmacro
+
+%macro AVG2_END 0
+    sub    esi, 2
+    lea    eax, [eax+ebx*2]
+    lea    ecx, [ecx+edx*2]
+    jg     .height_loop
+    pop    ebp
+    pop    edi
+    pop    esi
+    pop    ebx
     ret
+%endmacro
 
+AVG2_START x264_pixel_avg2_w4_mmxext
+    movd   mm0, [ecx]
+    movd   mm1, [ecx+edx]
+    pavgb  mm0, [ecx+edi]
+    pavgb  mm1, [ecx+ebp]
+    movd   [eax], mm0
+    movd   [eax+ebx], mm1
+AVG2_END
 
+AVG2_START x264_pixel_avg2_w8_mmxext
+    movq   mm0, [ecx]
+    movq   mm1, [ecx+edx]
+    pavgb  mm0, [ecx+edi]
+    pavgb  mm1, [ecx+ebp]
+    movq   [eax], mm0
+    movq   [eax+ebx], mm1
+AVG2_END
 
-;-----------------------------------------------------------------------------
-; void x264_pixel_avg_w16_mmxext( uint8_t *dst,  int i_dst_stride,
-;                                 uint8_t *src1, int i_src1_stride,
-;                                 uint8_t *src2, int i_src2_stride,
-;                                 int i_height );
-;-----------------------------------------------------------------------------
-cglobal x264_pixel_avg_w16_mmxext
-    push        ebp
-    push        ebx
-    push        esi
-    push        edi
+AVG2_START x264_pixel_avg2_w16_mmxext
+    movq   mm0, [ecx]
+    movq   mm1, [ecx+8]
+    movq   mm2, [ecx+edx]
+    movq   mm3, [ecx+edx+8]
+    pavgb  mm0, [ecx+edi]
+    pavgb  mm1, [ecx+edi+8]
+    pavgb  mm2, [ecx+ebp]
+    pavgb  mm3, [ecx+ebp+8]
+    movq   [eax], mm0
+    movq   [eax+8], mm1
+    movq   [eax+ebx], mm2
+    movq   [eax+ebx+8], mm3
+AVG2_END
 
-    mov         edi, [esp+20]       ; dst
-    mov         ebx, [esp+28]       ; src1
-    mov         ecx, [esp+36]       ; src2
-    mov         esi, [esp+24]       ; i_dst_stride
-    mov         eax, [esp+32]       ; i_src1_stride
-    mov         edx, [esp+40]       ; i_src2_stride
-    mov         ebp, [esp+44]       ; i_height
-ALIGN 4
-.height_loop    
-    movq        mm0, [ebx  ]
-    movq        mm1, [ebx+8]
-    pavgb       mm0, [ecx  ]
-    pavgb       mm1, [ecx+8]
-    movq        [edi  ], mm0
-    movq        [edi+8], mm1
-    dec         ebp
-    lea         ebx, [ebx+eax]
-    lea         ecx, [ecx+edx]
-    lea         edi, [edi+esi]
-    jg          .height_loop
+AVG2_START x264_pixel_avg2_w20_mmxext
+    movq   mm0, [ecx]
+    movq   mm1, [ecx+8]
+    movd   mm2, [ecx+16]
+    movq   mm3, [ecx+edx]
+    movq   mm4, [ecx+edx+8]
+    movd   mm5, [ecx+edx+16]
+    pavgb  mm0, [ecx+edi]
+    pavgb  mm1, [ecx+edi+8]
+    pavgb  mm2, [ecx+edi+16]
+    pavgb  mm3, [ecx+ebp]
+    pavgb  mm4, [ecx+ebp+8]
+    pavgb  mm5, [ecx+ebp+16]
+    movq   [eax], mm0
+    movq   [eax+8], mm1
+    movd   [eax+16], mm2
+    movq   [eax+ebx], mm3
+    movq   [eax+ebx+8], mm4
+    movd   [eax+ebx+16], mm5
+AVG2_END
 
-    pop         edi
-    pop         esi
-    pop         ebx
-    pop         ebp
-    ret
-
-
-
-;-----------------------------------------------------------------------------
-; void x264_pixel_avg_w20_mmxext( uint8_t *dst,  int i_dst_stride,
-;                                 uint8_t *src1, int i_src1_stride,
-;                                 uint8_t *src2, int i_src2_stride,
-;                                 int i_height );
-;-----------------------------------------------------------------------------
-cglobal x264_pixel_avg_w20_mmxext
-    push        ebp
-    push        ebx
-    push        esi
-    push        edi
-
-    mov         edi, [esp+20]       ; dst
-    mov         ebx, [esp+28]       ; src1
-    mov         ecx, [esp+36]       ; src2
-    mov         esi, [esp+24]       ; i_dst_stride
-    mov         eax, [esp+32]       ; i_src1_stride
-    mov         edx, [esp+40]       ; i_src2_stride
-    mov         ebp, [esp+44]       ; i_height
-ALIGN 4
-.height_loop    
-    movq        mm0, [ebx   ]
-    movq        mm1, [ebx+8 ]
-    movd        mm2, [ebx+16]
-    pavgb       mm0, [ecx   ]
-    pavgb       mm1, [ecx+8 ]
-    pavgb       mm2, [ecx+16]
-    movq        [edi   ], mm0
-    movq        [edi+8 ], mm1
-    movd        [edi+16], mm2
-    dec         ebp
-    lea         ebx, [ebx+eax]
-    lea         ecx, [ecx+edx]
-    lea         edi, [edi+esi]
-    jg          .height_loop
-
-    pop         edi
-    pop         esi
-    pop         ebx
-    pop         ebp
-    ret
-
-
-
-ALIGN 16
-;-----------------------------------------------------------------------------
-; void x264_pixel_avg_w16_sse2( uint8_t *dst,  int i_dst_stride,
-;                               uint8_t *src1, int i_src1_stride,
-;                               uint8_t *src2, int i_src2_stride,
-;                               int i_height );
-;-----------------------------------------------------------------------------
-cglobal x264_pixel_avg_w16_sse2
-    push        ebp
-    push        ebx
-    push        esi
-    push        edi
-
-    mov         edi, [esp+20]       ; dst
-    mov         ebx, [esp+28]       ; src1
-    mov         ecx, [esp+36]       ; src2
-    mov         esi, [esp+24]       ; i_dst_stride
-    mov         eax, [esp+32]       ; i_src1_stride
-    mov         edx, [esp+40]       ; i_src2_stride
-    mov         ebp, [esp+44]       ; i_height
-ALIGN 4
-.height_loop    
-    movdqu      xmm0, [ebx]
-    pavgb       xmm0, [ecx]
-    movdqu      [edi], xmm0
-
-    dec         ebp
-    lea         ebx, [ebx+eax]
-    lea         ecx, [ecx+edx]
-    lea         edi, [edi+esi]
-    jg          .height_loop
-
-    pop         edi
-    pop         esi
-    pop         ebx
-    pop         ebp
-    ret
 
 
 ;=============================================================================
@@ -519,8 +484,8 @@ ALIGN 4
 ;=============================================================================
 
 ;-----------------------------------------------------------------------------
-;   void x264_mc_chroma_mmxext( uint8_t *src, int i_src_stride,
-;                               uint8_t *dst, int i_dst_stride,
+;   void x264_mc_chroma_mmxext( uint8_t *dst, int i_dst_stride,
+;                               uint8_t *src, int i_src_stride,
 ;                               int dx, int dy,
 ;                               int i_width, int i_height )
 ;-----------------------------------------------------------------------------
@@ -536,9 +501,9 @@ cglobal x264_mc_chroma_mmxext
     mov     edi, edx
     sar     ecx, 3
     sar     edx, 3
-    imul    ecx, [picesp+4+8]
+    imul    ecx, [picesp+4+16]
     add     ecx, edx
-    add     [picesp+4+4], ecx     ; src += (dx>>3) + (dy>>3) * src_stride
+    add     [picesp+4+12], ecx   ; src += (dx>>3) + (dy>>3) * src_stride
 
     pxor    mm3, mm3
 
@@ -561,9 +526,9 @@ cglobal x264_mc_chroma_mmxext
     pmullw  mm6, mm4            ; mm6 = (8-dx)*dy =     cC
     pmullw  mm4, mm0            ; mm4 = (8-dx)*(8-dy) = cA
 
-    mov     eax, [picesp+4+4]   ; src
-    mov     edi, [picesp+4+12]  ; dst
-    mov     ecx, [picesp+4+8]   ; i_src_stride
+    mov     eax, [picesp+4+12]  ; src
+    mov     edi, [picesp+4+4]   ; dst
+    mov     ecx, [picesp+4+16]  ; i_src_stride
     mov     edx, [picesp+4+32]  ; i_height
 
 ALIGN 4
@@ -595,7 +560,7 @@ ALIGN 4
     movd    [edi], mm0
 
     add     eax, ecx
-    add     edi, [picesp+4+16]
+    add     edi, [picesp+4+8]
 
     dec     edx
     jnz     .height_loop
@@ -603,8 +568,8 @@ ALIGN 4
     sub     [picesp+4+28], dword 8
     jnz     .finish            ; width != 8 so assume 4
 
-    mov     edi, [picesp+4+12] ; dst
-    mov     eax, [picesp+4+4]  ; src
+    mov     edi, [picesp+4+4]  ; dst
+    mov     eax, [picesp+4+12] ; src
     mov     edx, [picesp+4+32] ; i_height
     add     edi, 4
     add     eax, 4

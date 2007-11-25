@@ -36,6 +36,65 @@ BITS 32
 SECTION .text
 
 ;-----------------------------------------------------------------------------
+;   int __cdecl x264_cpu_cpuid_test( void ) return 0 if unsupported
+;-----------------------------------------------------------------------------
+cglobal x264_cpu_cpuid_test
+    pushfd
+    push    ebx
+    push    ebp
+    push    esi
+    push    edi
+
+    pushfd
+    pop     eax
+    mov     ebx, eax
+    xor     eax, 0x200000
+    push    eax
+    popfd
+    pushfd
+    pop     eax
+    xor     eax, ebx
+    
+    pop     edi
+    pop     esi
+    pop     ebp
+    pop     ebx
+    popfd
+    ret
+
+;-----------------------------------------------------------------------------
+;   int __cdecl x264_cpu_cpuid( int op, int *eax, int *ebx, int *ecx, int *edx )
+;-----------------------------------------------------------------------------
+cglobal x264_cpu_cpuid
+
+    push    ebp
+    mov     ebp,    esp
+    push    ebx
+    push    esi
+    push    edi
+    
+    mov     eax,    [ebp +  8]
+    cpuid
+
+    mov     esi,    [ebp + 12]
+    mov     [esi],  eax
+
+    mov     esi,    [ebp + 16]
+    mov     [esi],  ebx
+
+    mov     esi,    [ebp + 20]
+    mov     [esi],  ecx
+
+    mov     esi,    [ebp + 24]
+    mov     [esi],  edx
+
+    pop     edi
+    pop     esi
+    pop     ebx
+    pop     ebp
+    ret
+
+;-----------------------------------------------------------------------------
 ;   void __cdecl x264_emms( void )
 ;-----------------------------------------------------------------------------
 cglobal x264_emms
