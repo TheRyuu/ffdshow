@@ -7388,7 +7388,7 @@ static int decode_nal_units(H264Context *h, uint8_t *buf, int buf_size){
         int consumed;
         int dst_length;
         int bit_length;
-        const uint8_t *ptr;
+        uint8_t *ptr;
         int i, nalsize = 0;
         int err;
 
@@ -7604,15 +7604,14 @@ static int decode_frame(AVCodecContext *avctx,
     if(s->flags&CODEC_FLAG_TRUNCATED){
         int next= ff_h264_find_frame_end(h, buf, buf_size);
 
-        if( ff_combine_frame(&s->parse_context, next, (const uint8_t **)&buf, &buf_size) < 0 ) {
+        if( ff_combine_frame(&s->parse_context, next, (const uint8_t **)&buf, &buf_size) < 0 )
             return buf_size;
-        }
 //printf("next:%d buf_size:%d last_index:%d\n", next, buf_size, s->parse_context.last_index);
     }
 
     if(h->is_avc && !h->got_avcC) {
         int i, cnt, nalsize;
-        const unsigned char *p = avctx->extradata, *pend=p+avctx->extradata_size;
+        unsigned char *p = avctx->extradata, *pend=p+avctx->extradata_size;
 #if 0
         if(avctx->extradata_size < 7) {
             av_log(avctx, AV_LOG_ERROR, "avcC too short\n");

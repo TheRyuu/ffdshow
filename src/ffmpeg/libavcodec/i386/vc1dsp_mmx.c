@@ -154,13 +154,11 @@ static void vc1_put_hor_16b_shift2_mmx(uint8_t *dst, long int stride,
  * Purely vertical or horizontal 1/2 shift interpolation.
  * Sacrify mm6 for *9 factor.
  */
-#define SDTEST  0
-
 static void vc1_put_shift2_mmx(uint8_t *dst, const uint8_t *src,
                                long int stride, int rnd, long int offset)
 {
     int h = 8;
-    START_TIMER
+
     rnd = 8-rnd;
     asm volatile(
         LOAD_ROUNDER_MMX("%6")
@@ -177,8 +175,8 @@ static void vc1_put_shift2_mmx(uint8_t *dst, const uint8_t *src,
         "punpcklbw %%mm0, %%mm2            \n\t"
         "paddw     %%mm1, %%mm3            \n\t"
         "paddw     %%mm2, %%mm4            \n\t"
-        "movd      0(%1,%3), %%mm1         \n\t"
-        "movd      4(%1,%3), %%mm2         \n\t"
+        "movd      0(%1,%4), %%mm1         \n\t"
+        "movd      4(%1,%4), %%mm2         \n\t"
         "pmullw    %%mm6, %%mm3            \n\t" /* 0,9,9,0*/
         "pmullw    %%mm6, %%mm4            \n\t" /* 0,9,9,0*/
         "punpcklbw %%mm0, %%mm1            \n\t"
@@ -202,7 +200,6 @@ static void vc1_put_shift2_mmx(uint8_t *dst, const uint8_t *src,
           "g"(stride-offset), "m"(fact_9)
         : "memory"
     );
-    STOP_TIMER("norm")
 }
 
 /**
