@@ -1121,6 +1121,7 @@ void TglobalSettingsDecAudio::load(void)
  FF_WAVE_FORMAT1_OP(CREATIVE_ADPCM,otherAdpcm& rawmask,CODEC_ID_ADPCM_CT) \
  FF_WAVE_FORMAT1_OP(YAMAHA_ADPCM  ,otherAdpcm& rawmask,CODEC_ID_ADPCM_YAMAHA) \
  FF_WAVE_FORMAT1_OP(G726          ,otherAdpcm& rawmask,CODEC_ID_ADPCM_G726) \
+ FF_WAVE_FORMAT1_OP(ADPCM_SWF     ,otherAdpcm& rawmask,CODEC_ID_ADPCM_SWF) \
  FF_WAVE_FORMAT1_OP(ALAW   ,law    & rawmask,CODEC_ID_PCM_ALAW) \
  FF_WAVE_FORMAT1_OP(MULAW  ,law    & rawmask,CODEC_ID_PCM_MULAW) \
  /*FF_WAVE_FORMAT1_OP(QT_ULAW,law    & rawmask,CODEC_ID_PCM_MULAW)*/ \

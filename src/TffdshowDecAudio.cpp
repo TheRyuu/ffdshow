@@ -219,6 +219,8 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
   wFormatTag=WAVE_FORMAT_SAMR;
  else if (mt.subtype==MEDIASUBTYPE_IMA_AMV)
 	wFormatTag=WAVE_FORMAT_IMA_AMV;
+ else if (mt.subtype==MEDIASUBTYPE_ADPCM_SWF)
+	wFormatTag=WAVE_FORMAT_ADPCM_SWF;
  else
   {
    const WAVEFORMATEX *wfex=(const WAVEFORMATEX*)mt.pbFormat;
