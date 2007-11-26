@@ -50,7 +50,7 @@ const char_t* Tcodec::getMovieSourceName(int source)
    case IDFF_MOVIE_LIBA52  :return _l("liba52");
    case IDFF_MOVIE_SPDIF   :return _l("S/PDIF");
    case IDFF_MOVIE_LIBDTS  :return _l("libdts");
-   case IDFF_MOVIE_TREMOR  :return _l("tremor");
+   case IDFF_MOVIE_TREMOR  :return _l("Tremor");
    case IDFF_MOVIE_REALAAC :return _l("realaac");
    case IDFF_MOVIE_AUDX    :return _l("Aud-X");
    default:
