@@ -39,7 +39,7 @@ private:
    TsubPrintPrefs(unsigned char *Idst[4],stride_t Istride[4],unsigned int Idx[4],unsigned int Idy[4],IffdshowBase *Ideci,const TsubtitlesSettings *cfg,const TffPict &pict,int Iclipdy,const Tconfig *Iconfig,bool Idvd);
   };
 
- TsubtitleTextBase<char> *cc;
+ TsubtitleTextBase<wchar_t> *cc;
  bool wasCCchange;
 protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
@@ -60,7 +60,7 @@ public:
 
  const char_t *getCurrentFlnm(void) const;
 
- void addClosedCaption(const char *line),hideClosedCaptions(void);
+ void addClosedCaption(const wchar_t *line),hideClosedCaptions(void);
 };
 
 

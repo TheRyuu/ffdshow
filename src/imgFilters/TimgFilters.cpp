@@ -239,7 +239,7 @@ HRESULT TimgFiltersPlayer::process(TffPict &pict,const TpresetVideo *cfg)
  return TimgFilters::process(pict,cfg);
 }
 
-HRESULT TimgFiltersPlayer::addClosedCaption(const char *line)
+HRESULT TimgFiltersPlayer::addClosedCaption(const wchar_t *line)
 {
  subtitles->addClosedCaption(line);
  return S_OK;

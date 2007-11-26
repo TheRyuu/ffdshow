@@ -462,7 +462,7 @@ STDMETHODIMP_(const char_t*) TffdshowDecVideo::getCurrentSubFlnm(void)
  return imgFilters?imgFilters->getCurrentSubFlnm():_l("");
 }
 
-STDMETHODIMP TffdshowDecVideo::addClosedCaption(const char* line)
+STDMETHODIMP TffdshowDecVideo::addClosedCaption(const wchar_t* line)
 {
  return imgFilters?imgFilters->addClosedCaption(line):E_UNEXPECTED;
 }

@@ -137,7 +137,7 @@ public:
  STDMETHODIMP getInputDAR(unsigned int *a1,unsigned int *a2);
  STDMETHODIMP getQuantMatrices(unsigned char intra8[64],unsigned char inter8[64],unsigned char intra4luma[16],unsigned char intra4chroma[16],unsigned char inter4luma[16],unsigned char inter4chroma[16]);
  STDMETHODIMP_(const char_t*) findAutoSubflnms(IcheckSubtitle *checkSubtitle);
- STDMETHODIMP addClosedCaption(const char* line);
+ STDMETHODIMP addClosedCaption(const wchar_t* line);
  STDMETHODIMP hideClosedCaptions(void);
  STDMETHODIMP_(int) getConnectedTextPinCnt(void);
  STDMETHODIMP getConnectedTextPinInfo(int i,const char_t* *name,int *id,int *found);
@@ -453,7 +453,7 @@ private:
     {
      return NULL;
     }
-   STDMETHODIMP addClosedCaption(const char* line) {return deciV->addClosedCaption(line);}
+   STDMETHODIMP addClosedCaption(const wchar_t* line) {return deciV->addClosedCaption(line);}
    STDMETHODIMP hideClosedCaptions(void) {return deciV->hideClosedCaptions();}
    STDMETHODIMP_(int) getConnectedTextPinCnt(void) {return deciV->getConnectedTextPinCnt();}
    STDMETHODIMP getConnectedTextPinInfo(int i,const tchar* *name,int *id,int *found)

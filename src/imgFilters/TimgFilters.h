@@ -49,7 +49,7 @@ public:
  bool ctlSubtitles(int id,int type,unsigned int ctl_id,const void *ctl_data,unsigned int ctl_datalen);
  const char_t *getCurrentSubFlnm(void) const;
 
- virtual HRESULT addClosedCaption(const char* line) {return E_NOTIMPL;}
+ virtual HRESULT addClosedCaption(const wchar_t* line) {return E_NOTIMPL;}
  virtual HRESULT hideClosedCaptions(void) {return E_NOTIMPL;}
  virtual bool shortOSDmessage(const char_t *msg,unsigned int duration) {return false;}
  virtual HRESULT registerOSDprovider(IOSDprovider *provider,const char *name) {return E_NOTIMPL;}
@@ -81,7 +81,7 @@ public:
 
  TfontSettingsOSD *fontSettingsOSD;
  virtual bool shortOSDmessage(const char_t *msg,unsigned int duration);
- virtual HRESULT addClosedCaption(const char *line),hideClosedCaptions(void);
+ virtual HRESULT addClosedCaption(const wchar_t *line),hideClosedCaptions(void);
  virtual HRESULT registerOSDprovider(IOSDprovider *provider,const char *name);
  virtual HRESULT unregisterOSDprovider(IOSDprovider *provider);
 };

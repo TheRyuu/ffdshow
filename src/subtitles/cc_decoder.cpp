@@ -30,7 +30,7 @@
 #include "ffdebug.h"
 #include "IffdshowDecVideo.h"
 
-char TccDecoder::chartbl[128];
+wchar_t TccDecoder::chartbl[128];
 
 int TccDecoder::good_parity(uint16_t data)
 {
@@ -119,7 +119,7 @@ bool TccDecoder::cc_row_t::ccrow_render(cc_renderer_t *renderer, int rownum)
 
     //int seg_pos[CC_COLUMNS + 1];seg_pos[0] = seg_begin;
     //int cumulative_seg_width[CC_COLUMNS + 1];cumulative_seg_width[0] = 0;
-    char buf[CC_COLUMNS + 1];
+    wchar_t buf[CC_COLUMNS + 1];
     //int seg_attr[CC_COLUMNS];int num_seg = 0;
 
     while (seg_begin < endpos) {
@@ -132,12 +132,12 @@ bool TccDecoder::cc_row_t::ccrow_render(cc_renderer_t *renderer, int rownum)
       buf[seg_end - seg_begin] = '\0';
 
       const cc_attribute_t *attr = &this->cells[attr_pos].attributes;
-      char sub[CC_COLUMNS*2]="";
-      if (attr->italic) strcat(sub,"<i>");
-      if (attr->underline) strcat(sub,"<u>");
+      wchar_t sub[CC_COLUMNS*2]=L"";
+      if (attr->italic) strcat(sub,L"<i>");
+      if (attr->underline) strcat(sub,L"<u>");
       strcat(sub,buf);
-      if (attr->italic) strcat(sub,"</i>");
-      if (attr->underline) strcat(sub,"</u>");
+      if (attr->italic) strcat(sub,L"</i>");
+      if (attr->underline) strcat(sub,L"</u>");
       renderer->deciV->addClosedCaption(sub);
       was=true;
       //ccrow_set_attributes(renderer, this, attr_pos);
@@ -160,7 +160,7 @@ bool TccDecoder::cc_row_t::ccrow_render(cc_renderer_t *renderer, int rownum)
  return was;
 }
 
-void TccDecoder::cc_buffer_t::ccbuf_add_char(uint8_t c)
+void TccDecoder::cc_buffer_t::ccbuf_add_char(wchar_t c)
 {
   cc_row_t *rowbuf = &this->rows[this->rowpos];
   int pos = rowbuf->pos;
@@ -259,7 +259,7 @@ void TccDecoder::cc_buffer_t::ccbuf_render(cc_renderer_t *renderer)
       wasrow|=this->rows[row].ccrow_render(renderer, row);
     else
       if (wasrow)
-       renderer->deciV->addClosedCaption("");
+       renderer->deciV->addClosedCaption(L"");
   }
 }
 
@@ -359,14 +359,133 @@ void TccDecoder::cc_decode_ext_attribute(int channel, uint8_t c1, uint8_t c2)
 
 void TccDecoder::cc_decode_special_char(int channel,  uint8_t c1, uint8_t c2)
 {
- /* FIXME: do real TM */
- /* must be mapped as a music note in the captioning font */
-  //static const char specialchar[] = {'«','-','¯','¬','T','ó','ú','Â','Ó', TRANSP_SPACE,'À','Ô','à','þ','¢','û'};
-  static const char specialchar[] = {'\253','-','\257','\254','T','\363','\372','\302','\323', TRANSP_SPACE,'\300','\324','\340','\376','\242','\373'};
+// data table copied from CCDecoder.cpp of guliberkli project
+/* 
+ *	Copyright (C) 2003-2006 Gabest
+ *	http://www.gabest.org
+ *
+ */
+  static const wchar_t specialchar[] = 
+   {
+    0x00ae, // (r)egistered
+    0x00b0, // degree
+    0x00bd, // 1/2
+    0x00bf, // inverted question mark
+    0x2122, // trade mark
+    0x00a2, // cent
+    0x00a3, // pound
+    0x266a, // music
+    0x00e0, // a`
+    0x00ff, // transparent space, handled above
+    0x00e8, // e`
+    0x00e2, // a^
+    0x00ea, // e^
+    0x00ee, // i^
+    0x00f4, // o^
+    0x00fb, // u^
+   };
 
   cc_set_channel(channel);
   cc_buffer_t *buf = active_ccbuffer();
   buf->ccbuf_add_char(specialchar[c2 & 0xf]);
+}
+
+void TccDecoder::cc_decode_extended_special_char(int channel,  uint8_t c1, uint8_t c2)
+{
+/* 
+ *	Copyright (C) 2003-2006 Gabest
+ *	http://www.gabest.org
+ *
+ */
+  static const wchar_t specialchar[] = 
+   {
+    0x00c0, // A'
+    0x00c9, // E'
+    0x00d3, // O'
+    0x00da, // U'
+    0x00dc, // U:
+    0x00fc, // u:
+    0x2018, // `
+    0x00a1, // inverted !
+    0x002a, // *
+    0x2019, // '
+    0x002d, // -
+    0x00a9, // (c)opyright
+    0x2120, // SM
+    0x00b7, // . (dot in the middle)
+    0x201c, // inverted "
+    0x201d, // "
+
+    0x00c1, // A`
+    0x00c2, // A^
+    0x00c7, // C,
+    0x00c8, // E`
+    0x00ca, // E^
+    0x00cb, // E:
+    0x00eb, // e:
+    0x00ce, // I^
+    0x00cf, // I:
+    0x00ef, // i:
+    0x00d4, // O^
+    0x00d9, // U`
+    0x00f9, // u`
+    0x00db, // U^
+    0x00ab, // <<
+    0x00bb, // >>
+   };
+
+  cc_set_channel(channel);
+  cc_buffer_t *buf = active_ccbuffer();
+  buf->ccbuf_add_char(specialchar[c2 - 0x20]);
+}
+
+void TccDecoder::cc_decode_more_extended_special_char(int channel,  uint8_t c1, uint8_t c2)
+{
+/* 
+ *	Copyright (C) 2003-2006 Gabest
+ *	http://www.gabest.org
+ *
+ */
+  static const wchar_t specialchar[] = 
+   {
+    0x00c3, // A~
+    0x00e3, // a~
+    0x00cd, // I'
+    0x00cc, // I`
+    0x00ec, // i`
+    0x00d2, // O`
+    0x00f2, // o`
+    0x00d5, // O~
+    0x00f5, // o~
+    0x007b, // {
+    0x007d, // }
+    0x005c, // /* \ */
+    0x005e, // ^
+    0x005f, // _
+    0x00a6, // |
+    0x007e, // ~
+
+    0x00c4, // A:
+    0x00e4, // a:
+    0x00d6, // O:
+    0x00f6, // o:
+    0x00df, // B (ss in german)
+    0x00a5, // Y=
+    0x00a4, // ox
+    0x007c, // |
+    0x00c5, // Ao
+    0x00e5, // ao
+    0x00d8, // O/
+    0x00f8, // o/
+    0x250c, // |-
+    0x2510, // -|
+    0x2514, // |_
+    0x2518, // _|
+  };
+
+  cc_set_channel(channel);
+  cc_buffer_t *buf = active_ccbuffer();
+  buf->ccbuf_add_char(specialchar[c2 - 0x20]);
 }
 
 void TccDecoder::cc_decode_midrow_attr(int channel,  uint8_t c1, uint8_t c2)
@@ -505,6 +624,16 @@ void TccDecoder::cc_decode_EIA608(uint16_t data)
 	    cc_decode_midrow_attr(channel, c1, c2);
 	  }
 	  break;
+
+        case 0x12:             /* extended special character */
+	  if (c2 >= 0x20 && c2 < 0x40) {  /* special char: 0x20 <= c2 <= 0x3f  */
+	    cc_decode_extended_special_char(channel, c1, c2);
+	  }
+
+        case 0x13:             /* more extended special character */
+	  if (c2 >= 0x20 && c2 < 0x40) {  /* special char: 0x20 <= c2 <= 0x3f  */
+	    cc_decode_more_extended_special_char(channel, c1, c2);
+	  }
 
         case 0x14:             /* possibly miscellaneous control code */
 	  cc_decode_misc_control_code(channel, c1, c2);
@@ -654,18 +783,18 @@ TccDecoder::TccDecoder(IffdshowDecVideo *deciV):
     {
      // first the normal ASCII codes
      for (int i = 0; i < 128; i++)
-       chartbl[i] = (char) i;
+       chartbl[i] = (wchar_t) i;
      /// now the special codes
-     chartbl[0x2a] = '\337';  // 'ß'
-     chartbl[0x5c] = '\332';  // 'Ú'
-     chartbl[0x5e] = '\335';  // 'Ý'
-     chartbl[0x5f] = '\241';  // '¡'
-     chartbl[0x60] = '\377';  // 'ÿ'
-     chartbl[0x7b] = '\232';  // 'š'
-     chartbl[0x7c] = '\270';  // '¸'
-     chartbl[0x7d] = '\320';  // 'Ð'
-     chartbl[0x7e] = '\275';  // '½'
-     chartbl[0x7f] = '\245';  // '¥'  // FIXME: this should be a solid block
+     chartbl[0x2a] = 0x00e1;
+     chartbl[0x5c] = 0x00e9;
+     chartbl[0x5e] = 0x00ed;
+     chartbl[0x5f] = 0x00f3;
+     chartbl[0x60] = 0x00fa;
+     chartbl[0x7b] = 0x00e7;
+     chartbl[0x7c] = 0x00f7;
+     chartbl[0x7d] = 0x00d1;
+     chartbl[0x7e] = 0x00f1;
+     chartbl[0x7f] = 0x003f; // '?';
     }
   };
  static const TcharTabInit charTabInit;

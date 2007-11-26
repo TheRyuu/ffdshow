@@ -416,11 +416,11 @@ const char_t* TimgFilterSubtitles::getCurrentFlnm(void) const
  return subs.subFlnm;
 }
 
-void TimgFilterSubtitles::addClosedCaption(const char *line)
+void TimgFilterSubtitles::addClosedCaption(const wchar_t *line)
 {
  CAutoLock l(&csCC);
  if (!cc)
-  cc=new TsubtitleTextBase<char>(Tsubreader::SUB_SUBRIP);
+  cc=new TsubtitleTextBase<wchar_t>(Tsubreader::SUB_SUBRIP);
  cc->add(line);
  TsubtitleFormat format(NULL);
  cc->format(format);

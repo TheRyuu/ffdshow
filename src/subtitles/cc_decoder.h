@@ -15,9 +15,9 @@ private:
 
  static int good_parity(uint16_t data);
 
- static const uint8_t TRANSP_SPACE=0x19;   /* code for transparent space, essentially arbitrary */
+ static const wchar_t TRANSP_SPACE=0x19;   /* code for transparent space, essentially arbitrary */
  static const int CC_ROWS=15,CC_COLUMNS=32,CC_CHANNELS=2;
- static char chartbl[128];
+ static wchar_t chartbl[128];
 
  struct cc_attribute_t
   {
@@ -29,7 +29,7 @@ private:
 
  struct cc_char_cell_t
   {
-   uint8_t c;                   /* character code, not the same as ASCII */
+   wchar_t c;                   /* character code, not the same as ASCII */
    cc_attribute_t attributes;   /* attributes of this character, if changed here */
    int midrow_attr;             /* true if this cell changes an attribute */
   };
@@ -55,7 +55,7 @@ private:
   {
    cc_row_t rows[CC_ROWS];
    int rowpos;              /* row cursor position */
-   void ccbuf_add_char(uint8_t c);
+   void ccbuf_add_char(wchar_t c);
    void ccbuf_set_cursor(int row, int column, int underline, int italics, int color);
    void ccbuf_apply_attribute(cc_attribute_t *attr);
    void ccbuf_tab(int tabsize);
@@ -91,6 +91,8 @@ private:
  void cc_decode_standard_char(uint8_t c1, uint8_t c2);
  void cc_decode_ext_attribute(int channel, uint8_t c1, uint8_t c2);
  void cc_decode_special_char(int channel,  uint8_t c1, uint8_t c2);
+ void cc_decode_extended_special_char(int channel,  uint8_t c1, uint8_t c2);
+ void cc_decode_more_extended_special_char(int channel,  uint8_t c1, uint8_t c2);
  void cc_decode_midrow_attr(int channel,  uint8_t c1, uint8_t c2);
  void cc_decode_misc_control_code(int channel,uint8_t c1, uint8_t c2);
  void cc_decode_tab(int channel, uint8_t c1, uint8_t c2);
