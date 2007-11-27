@@ -6,7 +6,7 @@
 	ProjectGUID="{4305F900-C57B-4C72-964B-B1EC2543F6FA}"
 	VCNestedProjectGUID="{864F0D43-412C-44DF-98AD-E8C24B230D5C}"
 	VCNestedProjectCRC32="1111599627"
-	VCNestedProjectFileName="TomsMoComp_ff_icl10.vcproj">
+	VCNestedProjectFileName="TomsMoComp_ff_2005_icl10.vcproj">
 	<Platforms>
 		<Platform 
 			Name="Win32"/>

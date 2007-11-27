@@ -6,7 +6,7 @@
 	ProjectGUID="{B1CE5652-E8B4-4497-8E3D-3913FF957FFF}"
 	VCNestedProjectGUID="{924512C3-75C6-45BE-B7A3-A747BFFD79A1}"
 	VCNestedProjectCRC32="2289212066"
-	VCNestedProjectFileName="ff_theora_icl10.vcproj">
+	VCNestedProjectFileName="ff_theora_2005_icl10.vcproj">
 	<Platforms>
 		<Platform 
 			Name="Win32"/>

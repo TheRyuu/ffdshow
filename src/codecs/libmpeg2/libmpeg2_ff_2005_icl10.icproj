@@ -6,7 +6,7 @@
 	ProjectGUID="{AB5D8418-9D6D-4E73-A00C-7501DD464CF9}"
 	VCNestedProjectGUID="{A0116059-A93E-4A03-BA72-73E8C64B3C34}"
 	VCNestedProjectCRC32="2017490808"
-	VCNestedProjectFileName="libmpeg2_ff_icl10.vcproj"
+	VCNestedProjectFileName="libmpeg2_ff_2005_icl10.vcproj"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform 

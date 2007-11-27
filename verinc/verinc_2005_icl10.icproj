@@ -6,7 +6,7 @@
 	ProjectGUID="{03C6FEFD-A70C-4366-A1E4-2439BE55EA1C}"
 	VCNestedProjectGUID="{6E9D86FD-2C66-4D21-9463-EFCB20167B70}"
 	VCNestedProjectCRC32="1853203892"
-	VCNestedProjectFileName="verinc_icl10.vcproj">
+	VCNestedProjectFileName="verinc_2005_icl10.vcproj">
 	<Platforms>
 		<Platform 
 			Name="Win32"/>

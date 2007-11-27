@@ -6,7 +6,7 @@
 	ProjectGUID="{3DFCD606-291B-4765-9913-A6EC1D83F33F}"
 	VCNestedProjectGUID="{BF29FAFC-7E71-4671-A2F8-D510EF5C0685}"
 	VCNestedProjectCRC32="1954224831"
-	VCNestedProjectFileName="ff_libfaad2_icl10.vcproj">
+	VCNestedProjectFileName="ff_libfaad2_2005_icl10.vcproj">
 	<Platforms>
 		<Platform 
 			Name="Win32"/>

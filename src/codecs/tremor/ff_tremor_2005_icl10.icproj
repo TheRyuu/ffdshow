@@ -6,7 +6,7 @@
 	ProjectGUID="{0B4D4596-3C85-46D0-BCDF-59AA6581CF41}"
 	VCNestedProjectGUID="{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}"
 	VCNestedProjectCRC32="3423867431"
-	VCNestedProjectFileName="ff_tremor_icl10.vcproj">
+	VCNestedProjectFileName="ff_tremor_2005_icl10.vcproj">
 	<Platforms>
 		<Platform 
 			Name="Win32"/>

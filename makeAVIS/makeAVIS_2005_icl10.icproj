@@ -6,7 +6,7 @@
 	ProjectGUID="{4C07D426-4A0C-49EC-A796-1EF68E7AEBF1}"
 	VCNestedProjectGUID="{5A4518FA-F2D9-4632-ACD3-85A7FCF91CE4}"
 	VCNestedProjectCRC32="2700058858"
-	VCNestedProjectFileName="makeAVIS_icl10.vcproj"
+	VCNestedProjectFileName="makeAVIS_2005_icl10.vcproj"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform 

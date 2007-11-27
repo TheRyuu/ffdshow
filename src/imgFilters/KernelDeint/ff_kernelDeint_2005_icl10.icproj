@@ -6,7 +6,7 @@
 	ProjectGUID="{91615D71-BA8E-4555-BF86-5C2F3DACCBF1}"
 	VCNestedProjectGUID="{C60F760B-5AFF-4C37-9EF7-A275665DBF21}"
 	VCNestedProjectCRC32="3598581150"
-	VCNestedProjectFileName="ff_kernelDeint_icl10.vcproj"
+	VCNestedProjectFileName="ff_kernelDeint_2005_icl10.vcproj"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform 

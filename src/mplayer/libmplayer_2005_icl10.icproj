@@ -6,7 +6,7 @@
 	ProjectGUID="{86877EB0-73C2-4923-808E-A96D6D7BF6B1}"
 	VCNestedProjectGUID="{76569356-593F-417E-A8C5-108FF3F364D9}"
 	VCNestedProjectCRC32="3391042110"
-	VCNestedProjectFileName="libmplayer_icl10.vcproj">
+	VCNestedProjectFileName="libmplayer_2005_icl10.vcproj">
 	<Platforms>
 		<Platform 
 			Name="Win32"/>

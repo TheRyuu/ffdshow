@@ -6,7 +6,7 @@
 	ProjectGUID="{7922889E-ECA8-4084-96FB-9481D4D0AA33}"
 	VCNestedProjectGUID="{9C87D880-7BB9-4F92-8AA6-B513298CDE82}"
 	VCNestedProjectCRC32="278849873"
-	VCNestedProjectFileName="ffavisynth_icl10.vcproj">
+	VCNestedProjectFileName="ffavisynth_2005_icl10.vcproj">
 	<Platforms>
 		<Platform 
 			Name="Win32"/>

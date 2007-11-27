@@ -6,7 +6,7 @@
 	ProjectGUID="{3AAF0E4F-55C7-4FA8-97ED-FA0923177E9A}"
 	VCNestedProjectGUID="{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}"
 	VCNestedProjectCRC32="1650173972"
-	VCNestedProjectFileName="xvidcore_icl10.vcproj"
+	VCNestedProjectFileName="xvidcore_2005_icl10.vcproj"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform 

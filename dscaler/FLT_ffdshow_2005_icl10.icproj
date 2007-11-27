@@ -6,7 +6,7 @@
 	ProjectGUID="{061AD782-3387-4541-97F1-84793EC37D9E}"
 	VCNestedProjectGUID="{F196E6C7-B12F-4F8E-BAB7-A448CBA0B278}"
 	VCNestedProjectCRC32="2260853876"
-	VCNestedProjectFileName="FLT_ffdshow_icl10.vcproj">
+	VCNestedProjectFileName="FLT_ffdshow_2005_icl10.vcproj">
 	<Platforms>
 		<Platform 
 			Name="Win32"/>

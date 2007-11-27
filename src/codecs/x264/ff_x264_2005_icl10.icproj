@@ -6,7 +6,7 @@
 	ProjectGUID="{4A7578DE-B8B3-4CCC-BFD5-CAD5060065E1}"
 	VCNestedProjectGUID="{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}"
 	VCNestedProjectCRC32="390786726"
-	VCNestedProjectFileName="ff_x264_icl10.vcproj"
+	VCNestedProjectFileName="ff_x264_2005_icl10.vcproj"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform 

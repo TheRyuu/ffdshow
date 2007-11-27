@@ -6,7 +6,7 @@
 	ProjectGUID="{997933F0-7FF5-4108-B514-C1DD9F87E71F}"
 	VCNestedProjectGUID="{B8000FD0-4A45-4D79-B320-1AFBE61C01C0}"
 	VCNestedProjectCRC32="2762432044"
-	VCNestedProjectFileName="ff_libmad_icl10.vcproj">
+	VCNestedProjectFileName="ff_libmad_2005_icl10.vcproj">
 	<Platforms>
 		<Platform 
 			Name="Win32"/>

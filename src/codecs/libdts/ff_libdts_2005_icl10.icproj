@@ -6,7 +6,7 @@
 	ProjectGUID="{AF81C4D7-73A0-4547-A18A-D94222584CA5}"
 	VCNestedProjectGUID="{29432947-08F2-41AA-953F-47E45252DD57}"
 	VCNestedProjectCRC32="1800714197"
-	VCNestedProjectFileName="ff_libdts_icl10.vcproj">
+	VCNestedProjectFileName="ff_libdts_2005_icl10.vcproj">
 	<Platforms>
 		<Platform 
 			Name="Win32"/>
