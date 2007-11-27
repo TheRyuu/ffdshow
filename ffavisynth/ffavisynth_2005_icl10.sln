@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ffavisynth", "ffavisynth_icl10.vcproj", "{461EAE01-C683-4E4E-BE55-F313D43EE27A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ffavisynth", "ffavisynth_2005_icl10.vcproj", "{461EAE01-C683-4E4E-BE55-F313D43EE27A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmpeg2_ff", "libmpeg2_ff_icl10.vcproj", "{A0116059-A93E-4A03-BA72-73E8C64B3C34}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmpeg2_ff", "libmpeg2_ff_2005_icl10.vcproj", "{A0116059-A93E-4A03-BA72-73E8C64B3C34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

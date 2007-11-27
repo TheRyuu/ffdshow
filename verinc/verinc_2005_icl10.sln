@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "verinc", "verinc_icl10.vcproj", "{6E9D86FD-2C66-4D21-9463-EFCB20167B70}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "verinc", "verinc_2005_icl10.vcproj", "{6E9D86FD-2C66-4D21-9463-EFCB20167B70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

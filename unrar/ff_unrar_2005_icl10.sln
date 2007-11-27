@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ff_unrar", "ff_unrar_icl10.vcproj", "{82199D65-5E04-48FB-99B5-9396D55566AE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ff_unrar", "ff_unrar_2005_icl10.vcproj", "{82199D65-5E04-48FB-99B5-9396D55566AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

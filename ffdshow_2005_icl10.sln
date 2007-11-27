@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ffdshow", "ffdshow_icl10.icproj", "{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}"
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ffdshow", "ffdshow_2005_icl10.icproj", "{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}"
 	ProjectSection(ProjectDependencies) = postProject
 		{35264226-DBDE-4CC1-A046-B366FA979D8E} = {35264226-DBDE-4CC1-A046-B366FA979D8E}
 		{AF81C4D7-73A0-4547-A18A-D94222584CA5} = {AF81C4D7-73A0-4547-A18A-D94222584CA5}
@@ -16,50 +16,50 @@ Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ffdshow", "ffdshow_icl10.ic
 		{6E9D86FD-2C66-4D21-9463-EFCB20167B70} = {6E9D86FD-2C66-4D21-9463-EFCB20167B70}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ff_wmv9", "src\codecs\wmv9\ff_wmv9_icl10.vcproj", "{22DA8FA3-50B3-49A9-AFD0-19CAAC924C23}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ff_wmv9", "src\codecs\wmv9\ff_wmv9_2005_icl10.vcproj", "{22DA8FA3-50B3-49A9-AFD0-19CAAC924C23}"
 EndProject
-Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_theora", "src\codecs\theora\ff_theora_icl10.icproj", "{B1CE5652-E8B4-4497-8E3D-3913FF957FFF}"
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_theora", "src\codecs\theora\ff_theora_2005_icl10.icproj", "{B1CE5652-E8B4-4497-8E3D-3913FF957FFF}"
 EndProject
-Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_libmad", "src\codecs\libmad\ff_libmad_icl10.icproj", "{997933F0-7FF5-4108-B514-C1DD9F87E71F}"
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_libmad", "src\codecs\libmad\ff_libmad_2005_icl10.icproj", "{997933F0-7FF5-4108-B514-C1DD9F87E71F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "makeAVIS", "makeavis\makeAVIS_icl10.vcproj", "{5A4518FA-F2D9-4632-ACD3-85A7FCF91CE4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "makeAVIS", "makeavis\makeAVIS_2005_icl10.vcproj", "{5A4518FA-F2D9-4632-ACD3-85A7FCF91CE4}"
 EndProject
-Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_liba52", "src\codecs\liba52\ff_liba52_icl10.icproj", "{7043607F-0E04-457D-AC6E-AA0E1F886250}"
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_liba52", "src\codecs\liba52\ff_liba52_2005_icl10.icproj", "{7043607F-0E04-457D-AC6E-AA0E1F886250}"
 EndProject
-Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_samplerate", "src\audioFilters\resample\libsamplerate\ff_samplerate_icl10.icproj", "{79B49668-7EFF-4CD1-8A68-2D81AD784108}"
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_samplerate", "src\audioFilters\resample\libsamplerate\ff_samplerate_2005_icl10.icproj", "{79B49668-7EFF-4CD1-8A68-2D81AD784108}"
 EndProject
-Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_libdts", "src\codecs\libdts\ff_libdts_icl10.icproj", "{AF81C4D7-73A0-4547-A18A-D94222584CA5}"
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_libdts", "src\codecs\libdts\ff_libdts_2005_icl10.icproj", "{AF81C4D7-73A0-4547-A18A-D94222584CA5}"
 EndProject
-Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_tremor", "src\codecs\tremor\ff_tremor_icl10.icproj", "{0B4D4596-3C85-46D0-BCDF-59AA6581CF41}"
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_tremor", "src\codecs\tremor\ff_tremor_2005_icl10.icproj", "{0B4D4596-3C85-46D0-BCDF-59AA6581CF41}"
 EndProject
-Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_unrar", "unrar\ff_unrar_icl10.icproj", "{9C78112E-B79D-4AE6-859D-F71383126B4E}"
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_unrar", "unrar\ff_unrar_2005_icl10.icproj", "{9C78112E-B79D-4AE6-859D-F71383126B4E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ffavisynth", "ffavisynth\ffavisynth_icl10.vcproj", "{9C87D880-7BB9-4F92-8AA6-B513298CDE82}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ffavisynth", "ffavisynth\ffavisynth_2005_icl10.vcproj", "{9C87D880-7BB9-4F92-8AA6-B513298CDE82}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17} = {0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ffvdub", "ffvdub\ffvdub_icl10.vcproj", "{FC61766A-BC95-4F23-ACB0-D09AD463AA53}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ffvdub", "ffvdub\ffvdub_2005_icl10.vcproj", "{FC61766A-BC95-4F23-ACB0-D09AD463AA53}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17} = {0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FLT_ffdshow", "dscaler\FLT_ffdshow_icl10.vcproj", "{F196E6C7-B12F-4F8E-BAB7-A448CBA0B278}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FLT_ffdshow", "dscaler\FLT_ffdshow_2005_icl10.vcproj", "{F196E6C7-B12F-4F8E-BAB7-A448CBA0B278}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17} = {0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}
 	EndProjectSection
 EndProject
-Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_vfw", "ffvfw\ff_vfw_icl10.icproj", "{348D33BD-3619-4769-898D-5E98A2A28D94}"
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_vfw", "ffvfw\ff_vfw_2005_icl10.icproj", "{348D33BD-3619-4769-898D-5E98A2A28D94}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17} = {0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}
 	EndProjectSection
 EndProject
-Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_acm", "ffacm\ff_acm_icl10.icproj", "{E95DA67C-BE8E-49EB-B147-6F3BC85DA42C}"
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_acm", "ffacm\ff_acm_2005_icl10.icproj", "{E95DA67C-BE8E-49EB-B147-6F3BC85DA42C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17} = {0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ffdshow_all", "ffdshow_all_icl10.vcproj", "{F49D9CEE-F57E-4283-945E-9F728BEBB21F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ffdshow_all", "ffdshow_all_2005_icl10.vcproj", "{F49D9CEE-F57E-4283-945E-9F728BEBB21F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{35264226-DBDE-4CC1-A046-B366FA979D8E} = {35264226-DBDE-4CC1-A046-B366FA979D8E}
 		{AF81C4D7-73A0-4547-A18A-D94222584CA5} = {AF81C4D7-73A0-4547-A18A-D94222584CA5}
@@ -82,13 +82,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ffdshow_all", "ffdshow_all_
 		{6E9D86FD-2C66-4D21-9463-EFCB20167B70} = {6E9D86FD-2C66-4D21-9463-EFCB20167B70}
 	EndProjectSection
 EndProject
-Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_realaac", "src\codecs\realaac\ff_realaac_icl10.icproj", "{35264226-DBDE-4CC1-A046-B366FA979D8E}"
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_realaac", "src\codecs\realaac\ff_realaac_2005_icl10.icproj", "{35264226-DBDE-4CC1-A046-B366FA979D8E}"
 EndProject
-Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "libmpeg2_ff", "src\codecs\libmpeg2\libmpeg2_ff_icl10.icproj", "{AB5D8418-9D6D-4E73-A00C-7501DD464CF9}"
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "libmpeg2_ff", "src\codecs\libmpeg2\libmpeg2_ff_2005_icl10.icproj", "{AB5D8418-9D6D-4E73-A00C-7501DD464CF9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "verinc", "verinc\verinc_icl10.vcproj", "{6E9D86FD-2C66-4D21-9463-EFCB20167B70}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "verinc", "verinc\verinc_2005_icl10.vcproj", "{6E9D86FD-2C66-4D21-9463-EFCB20167B70}"
 EndProject
-Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_libfaad2", "src\codecs\faad\ff_libfaad2_icl10.icproj", "{3DFCD606-291B-4765-9913-A6EC1D83F33F}"
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_libfaad2", "src\codecs\faad\ff_libfaad2_2005_icl10.icproj", "{3DFCD606-291B-4765-9913-A6EC1D83F33F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

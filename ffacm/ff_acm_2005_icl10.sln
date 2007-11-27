@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ff_acm", "ff_acm_icl10.vcproj", "{DCF06E0D-6673-46B8-A1D6-22425ECBD7B7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ff_acm", "ff_acm_2005_icl10.vcproj", "{DCF06E0D-6673-46B8-A1D6-22425ECBD7B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
