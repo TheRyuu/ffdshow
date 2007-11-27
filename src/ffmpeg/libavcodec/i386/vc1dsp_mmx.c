@@ -25,6 +25,7 @@
  */
 
 #include "dsputil.h"
+#include "dsputil_mmx.h"
 #include "x86_cpu.h"
 
 /** Add rounder from mm7 to mm3 and pack result at destination */
@@ -102,9 +103,6 @@ static void vc1_put_ver_16b_shift2_mmx(int16_t *dst,
         : "memory"
     );
 }
-
-/** To remove bias allowing use of MMX 16bits arithmetic */
-DECLARE_ALIGNED_16(static const uint64_t, ff_pw_128) = 0x0080008000800080ULL;
 
 /**
  * Data is already unpacked, so some operations can directly be made from
@@ -446,9 +444,7 @@ static void vc1_mspel_mc(uint8_t *dst, const uint8_t *src, int stride,
     vc1_put_shift_8bits[hmode](dst, src, stride, rnd, 1);
 }
 
-static void put_vc1_mspel_mc00_mmx(uint8_t *dst, const uint8_t *src, int stride, int rnd) {
-    put_pixels8_mmx(dst, src, stride, 8);
-}
+void ff_put_vc1_mspel_mc00_mmx(uint8_t *dst, const uint8_t *src, int stride, int rnd);
 
 /** Macro to ease bicubic filter interpolation functions declarations */
 #define DECLARE_FUNCTION(a, b)                                          \
@@ -476,7 +472,7 @@ DECLARE_FUNCTION(3, 2)
 DECLARE_FUNCTION(3, 3)
 
 void ff_vc1dsp_init_mmx(DSPContext* dsp, AVCodecContext *avctx) {
-    dsp->put_vc1_mspel_pixels_tab[ 0] = put_vc1_mspel_mc00_mmx;
+    dsp->put_vc1_mspel_pixels_tab[ 0] = ff_put_vc1_mspel_mc00_mmx;
     dsp->put_vc1_mspel_pixels_tab[ 4] = put_vc1_mspel_mc01_mmx;
     dsp->put_vc1_mspel_pixels_tab[ 8] = put_vc1_mspel_mc02_mmx;
     dsp->put_vc1_mspel_pixels_tab[12] = put_vc1_mspel_mc03_mmx;

@@ -620,6 +620,12 @@
 				RelativePath=".\libavcodec\wmv2.c">
 			</File>
 			<File
+				RelativePath=".\libavcodec\wmv2dec.c">
+			</File>
+			<File
+				RelativePath=".\libavcodec\wmv2enc.c">
+			</File>
+			<File
 				RelativePath=".\libavcodec\wnv1.c">
 			</File>
 			<File
@@ -873,6 +879,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\wmadata.h">
+			</File>
+			<File
+				RelativePath=".\libavcodec\wmv2.h">
 			</File>
 			<File
 				RelativePath=".\libavcodec\xiph.h">
