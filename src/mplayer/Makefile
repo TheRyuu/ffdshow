@@ -2,7 +2,7 @@ CFLAGS+=-I. -I.. -I../imgFilters -Ilibvo -w
 
 SRCS_C=postproc/rgb2rgb.c postproc/yuv2rgb.c postproc/swscale.c mplayer.c \
        postproc/postprocess.c libvo/aclib.c  postproc/w32thread.c \
-       mp3lib/sr1.c ../ffmpeg/libavutil/mem.c 
+       mp3lib/sr1.c ../ffmpeg/libavutil/mem.c
 
 ifneq ($(CC),icl)
 SRCS_C+= mp3lib/decode_MMX.c mp3lib/dct64_MMX.c \
@@ -13,9 +13,9 @@ endif
 
 ifeq ($(FFDEBUG),yes)
 SRCS_C+= ../ffdebug.c 
-CFLAGS+= -DFFDEBUG=1 
+CFLAGS+= -DFFDEBUG=1
 else
-CFLAGS+= -DFFDEBUG=0 
+CFLAGS+= -DFFDEBUG=0
 endif
 
 SLIB=../../bin/libmplayer.dll

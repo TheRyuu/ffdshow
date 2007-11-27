@@ -749,7 +749,7 @@ bool decodeH264SPS(const unsigned char *hdr,size_t len,TffPictBase &pict)
         sps->poc_cycle_length= tmp;
 
         for(i=0; i<sps->poc_cycle_length; i++)
-            sps->offset_for_ref_frame[i]= get_se_golomb(&gb);
+            sps->offset_for_ref_frame[i]= short(get_se_golomb(&gb));
     }else if(sps->poc_type != 2){
         //DPRINTF(_l("illegal POC type %d\n"), sps->poc_type);
         return false;

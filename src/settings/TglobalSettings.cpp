@@ -602,11 +602,6 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC_OP (WV1F,mp4v & rawmask,c_mpeg4) \
  FF_FOURCC_OP (FMP4,mp4v & rawmask,c_mpeg4) \
  FF_FOURCC_OP (SMP4,mp4v & rawmask,c_mpeg4) \
- FF_FOURCC1_OP(DIV3,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
- FF_FOURCC1_OP(DVX3,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
- FF_FOURCC1_OP(MP43,mp43 & rawmask,CODEC_ID_MSMPEG4V3) \
- FF_FOURCC1_OP(MP42,mp42 & rawmask,CODEC_ID_MSMPEG4V2) \
- FF_FOURCC1_OP(MP41,mp41 & rawmask,CODEC_ID_MSMPEG4V1) \
  FF_FOURCC_OP (WMV1,wmv1 & rawmask,c_wmv1) \
  FF_FOURCC_OP (WMV2,wmv2 & rawmask,c_wmv2) \
  FF_FOURCC_OP (WMV3,wmv3 & rawmask,c_wmv3) \
@@ -748,6 +743,9 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC_OP (XVIX,xvid & rawmask,c_mpeg4) \
  FF_FOURCC_OP (3IV1,mp4v & rawmask,c_mpeg4) \
  FF_FOURCC_OP (3IV2,mp4v & rawmask,c_mpeg4) \
+ FF_FOURCC1_OP(DIV3,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
+ FF_FOURCC1_OP(DVX3,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
+ FF_FOURCC1_OP(MP43,mp43 & rawmask,CODEC_ID_MSMPEG4V3) \
  FF_FOURCC1_OP(COL1,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
  FF_FOURCC1_OP(DIV4,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
  FF_FOURCC1_OP(DIV5,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
@@ -755,8 +753,10 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(AP41,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
  FF_FOURCC1_OP(MPG3,div3 & rawmask,CODEC_ID_MSMPEG4V3) \
  FF_FOURCC1_OP(DIV2,mp42 & rawmask,CODEC_ID_MSMPEG4V2) \
+ FF_FOURCC1_OP(MP42,mp42 & rawmask,CODEC_ID_MSMPEG4V2) \
  FF_FOURCC1_OP(MPG4,mp41 & rawmask,CODEC_ID_MSMPEG4V1) \
  FF_FOURCC1_OP(DIV1,mp41 & rawmask,CODEC_ID_MSMPEG4V1) \
+ FF_FOURCC1_OP(MP41,mp41 & rawmask,CODEC_ID_MSMPEG4V1) \
 
 #define FF_FOURCC_LIST(fourCC,decoder,codec) _l(#fourCC),
 
