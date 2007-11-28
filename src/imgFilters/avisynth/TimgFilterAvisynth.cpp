@@ -559,7 +559,7 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
        height[0]=input->dy;
        height[1]=height[2]=height[3]=0;
 
-       bufferSize=(size[0]=pitch[0]*height[0]);
+       bufferSize=(size[0]=abs(pitch[0])*height[0]);
        size[1]=size[2]=size[3]=0;
       }
 
@@ -584,8 +584,12 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
         buffers[bufNo].width[planeNo]=width[planeNo];
         buffers[bufNo].height[planeNo]=height[planeNo];
         buffers[bufNo].pitch[planeNo]=pitch[planeNo];
-        buffers[bufNo].data[planeNo]=newBuffer;
 
+        if (pitch[planeNo] < 0)
+         buffers[bufNo].data[planeNo]=newBuffer-pitch[planeNo]*(height[planeNo]-1);
+        else
+         buffers[bufNo].data[planeNo]=newBuffer;
+         
         newBuffer+=size[planeNo];
        }
     }
