@@ -53,7 +53,7 @@ CFLAGS+=-I. -I.. -Iuclibc++ -Ibaseclasses -I../baseclasses \
         -Isettings/filters -I../settings/filters -Icodecs -I../codecs \
         -Isubtitles -I../subtitles -Iconvert -I../convert -Idialog -I../dialog \
         -IaudioFilters -I../audioFilters -Icygwin -I../cygwin -Iffmpeg -I../ffmpeg \
-        -Iacm -I../acm -Ixiph -I../xiph -Ifilters -I../filters -Imuxers -I../muxers -I/dx/Include -L/dx/MingLib -ldx9
+        -Iacm -I../acm -Ixiph/vorbis -I../xiph/vorbis -Ifilters -I../filters -Imuxers -I../muxers -I/dx/Include -L/dx/MingLib -ldx9
 
 OBJS=$(SRCS:.cpp=.o) $(SRCS_C:.c=.o) $(SRCS_NASM:.asm=.o) $(RESSRC:.rc:.res.o)
 
