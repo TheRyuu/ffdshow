@@ -26,6 +26,7 @@
 TimgFilterLevels::TimgFilterLevels(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
  oldSettings.inMin=-1;
+ oldMode=0;
  resetHistory();
 }
 
@@ -40,23 +41,33 @@ HRESULT TimgFilterLevels::process(TfilterQueue::iterator it,TffPict &pict,const 
  const TlevelsSettings *cfg=(const TlevelsSettings*)cfg0;
  const unsigned char *srcY=NULL;
 
- if (flag_resetHistory)
- {
-	flag_resetHistory=false;
-	if (cfg->inAuto)
-	{
-	   inMin=cfg->inMin;
-	   inMax=cfg->inMax;
-	   inMinSum=0;
-	   inMaxSum=0;
-	}
-	else
-	{
-		inMin=0;memsetd(inMins,inMin,sizeof(inMins));inMinSum=inMin;
-		inMax=255;memsetd(inMaxs,inMax,sizeof(inMaxs));inMaxSum=inMax*HISTORY;
-		minMaxPos=0;
-	}
- }
+ if (flag_resetHistory || cfg->mode != oldMode)
+  {
+   flag_resetHistory=false;
+   oldMode = cfg->mode;
+    if (cfg->inAuto)
+     {
+      if (cfg->mode != 6)
+       {
+        inMin=0;memsetd(inMins,inMin,sizeof(inMins));inMinSum=inMin;
+        inMax=255;memsetd(inMaxs,inMax,sizeof(inMaxs));inMaxSum=inMax*HISTORY;
+        minMaxPos=0;
+       }
+      else
+       {
+        inMin=cfg->inMin;
+        inMax=cfg->inMax;
+        inMinSum=0;
+        inMaxSum=0;
+       }
+     }
+    else
+     {
+      inMin=0;memsetd(inMins,inMin,sizeof(inMins));inMinSum=inMin;
+      inMax=255;memsetd(inMaxs,inMax,sizeof(inMaxs));inMaxSum=inMax*HISTORY;
+      minMaxPos=0;
+     }
+  }
 
  if (cfg->inAuto || (deci->getParam2(IDFF_buildHistogram) && deci->getCfgDlgHwnd()))
   {
@@ -70,67 +81,67 @@ HRESULT TimgFilterLevels::process(TfilterQueue::iterator it,TffPict &pict,const 
   }
  if (cfg->inAuto)
   {
-	  if(cfg->mode!=6)
-	  {
-	   int newInMin,newInMax;
+   if(cfg->mode!=6)
+   {
+    int newInMin,newInMax;
 
-	   unsigned int l=pictRect.dx*pictRect.dy/7000;
-	   for (newInMin=0;newInMin<250 && histogram[newInMin]<l;newInMin++)
-		;
-	   for (newInMax=255;newInMax>newInMin+1 && histogram[newInMax]<l;newInMax--)
-		;
-	   int diff=newInMax-newInMin;
-	   if (diff<40)
-		{
-		 newInMin=limit(newInMin-20,0,254);
-		 newInMax=limit(newInMax+20,1,255);
-		}
-	   inMinSum-=inMins[minMaxPos];inMins[minMaxPos]=newInMin;inMinSum+=newInMin;
-	   inMaxSum-=inMaxs[minMaxPos];inMaxs[minMaxPos]=newInMax;inMaxSum+=newInMax;
-	   minMaxPos++;if (minMaxPos==HISTORY) minMaxPos=0;
-	   inMin=inMinSum/HISTORY;inMax=inMaxSum/HISTORY;
-	  }
-	  else
-	  {
-	   // mode==6
-	   unsigned int threshold=pictRect.dx*pictRect.dy*(cfg->Ythreshold)/1000;
+    unsigned int l=pictRect.dx*pictRect.dy/7000;
+    for (newInMin=0;newInMin<250 && histogram[newInMin]<l;newInMin++)
+     ;
+    for (newInMax=255;newInMax>newInMin+1 && histogram[newInMax]<l;newInMax--)
+     ;
+    int diff=newInMax-newInMin;
+    if (diff<40)
+     {
+      newInMin=limit(newInMin-20,0,254);
+      newInMax=limit(newInMax+20,1,255);
+     }
+    inMinSum-=inMins[minMaxPos];inMins[minMaxPos]=newInMin;inMinSum+=newInMin;
+    inMaxSum-=inMaxs[minMaxPos];inMaxs[minMaxPos]=newInMax;inMaxSum+=newInMax;
+    minMaxPos++;if (minMaxPos==HISTORY) minMaxPos=0;
+    inMin=inMinSum/HISTORY;inMax=inMaxSum/HISTORY;
+   }
+  else
+   {
+    // mode==6
+    unsigned int threshold=pictRect.dx*pictRect.dy*(cfg->Ythreshold)/1000;
 
-	   int countMin, countMax;
-	   int x;
+    int countMin, countMax;
+    int x;
 
-	   for(countMin=0,x=0;x<inMin;countMin+=histogram[x],x++)
-		;
-	   for(countMax=0,x=255;x>inMax;countMax+=histogram[x],x--)
-		;
+    for(countMin=0,x=0;x<inMin;countMin+=histogram[x],x++)
+     ;
+    for(countMax=0,x=255;x>inMax;countMax+=histogram[x],x--)
+     ;
 
-	   if( countMin>threshold )
-	   {
-		if(inMinSum>cfg->Ytemporal)
-		{
-			if(inMin>cfg->inMin-cfg->YmaxDelta)
-				inMin--;
-			inMinSum=0;
-		}
-		else
-			inMinSum++;
-	   }
-	   else
-		inMinSum=0;
+    if( countMin>threshold )
+     {
+      if(inMinSum>cfg->Ytemporal)
+       {
+        if(inMin>cfg->inMin-cfg->YmaxDelta)
+         inMin--;
+        inMinSum=0;
+       }
+      else
+       inMinSum++;
+     }
+    else
+     inMinSum=0;
 
-	   if( countMax>threshold )
-	   {
-		if(inMaxSum>cfg->Ytemporal)
-		{
-			if(inMax<cfg->inMax+cfg->YmaxDelta)
-				inMax++;
-			inMaxSum=0;
-		}
-		else
-			inMaxSum++;
-	   }
-	   else
-		inMaxSum=0;
-	  }
+    if( countMax>threshold )
+     {
+      if(inMaxSum>cfg->Ytemporal)
+       {
+        if(inMax<cfg->inMax+cfg->YmaxDelta)
+         inMax++;
+        inMaxSum=0;
+       }
+      else
+       inMaxSum++;
+     }
+    else
+     inMaxSum=0;
+   }
 
    //DPRINTF("min:%i max:%i\n",inMin,inMax);
   }
@@ -225,7 +236,7 @@ HRESULT TimgFilterLevels::process(TfilterQueue::iterator it,TffPict &pict,const 
 
 void TimgFilterLevels::resetHistory(void)
 {
-	flag_resetHistory=true;
+ flag_resetHistory=true;
 }
 void TimgFilterLevels::onSeek(void)
 {
