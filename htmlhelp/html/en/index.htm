@@ -58,13 +58,13 @@
   <h3>Fixed after beta3</h3>
 
   <ul class="fixed">
-    <li>Closed caption had some garble.</li>
-    <li>The crashes in Windows Movie Maker have been fixed. This was not a ffdshow's bug.</li>
-    <li>Subtitles that contain an "&" as part of the filename were displayed incorrectly inside ffdshow's context menu.</li>
+    <li>Closed caption decoder produced garbled characters. Supports Unicode now.</li>
+    <li>Crashes in Windows Movie Maker have been fixed. This was not ffdshow's bug.</li>
+    <li>Subtitles that contain an "&amp;" as part of the filename were displayed incorrectly inside ffdshow's context menu.</li>
     <li>MakeAVIS.exe in "Store uncompressed audio" mode produced noisy audio if the input audio was not 16bit integer.</li>
-    <li>If the AviSynth script was multiple lines, the script was not saved by using 'Export all settings' or 'Save to file...' in Presets page.</li>
-    <li>DTS S/PDIF pass through sometimes had terrible noise.</li>
-    <li>The compatibility problem with VFW encoder applications such as HyperCam has been fixed.</li>
+    <li>If the AviSynth script had multiple lines, the script was not saved by using "Export all settings" or "Save to file..." in Presets page.</li>
+    <li>DTS S/PDIF pass-through sometimes had terrible noise.</li>
+    <li>Compatibility problem with VFW encoder applications such as HyperCam has been fixed.</li>
     <li>If ConvertToRGB was used in AviSynth script, the video was flipped.</li>
     <li>If "Swap channels" was used, audio was lost if the number of channels of the input stream changed.</li>
     <li>DVD menu was sometimes not highlighted.</li>
@@ -168,11 +168,11 @@
 
   <ul class="added">
     <li>Nellymoser audio decoder has been added. The latest FLV Splitter is required.</li>
-    <li>Seb's BTB&amp;WTW level filter: Adjust contrast only if the 'dimmer than dimmest' (Y &lt; 16) and/or the 'brighter than brightest' (Y &gt; 235) part exist (depending on the configuration).</li>
+    <li>Seb's BTB&amp;WTW level filter: Adjust contrast only if the "dimmer than dimmest" (Y &lt; 16) and/or the "brighter than brightest" (Y &gt; 235) part exist (depending on the configuration).</li>
     <li>H.264-PAFF interlacing is now supported.</li>
     <li>H.264 decoder has been multithreaded. It is only effective if the video is encoded using multiple slices.</li>
     <li>Added reset button to overlay control.</li>
-    <li>You no longer have to use LoadCPlugin / Load_Stdcall_Plugin for loading ffavisynth.dll (ffdshow() and ffdshowAudio() function). It is automatically loaded on AviSynth start up.</li>
+    <li>You no longer have to use LoadCPlugin / Load_Stdcall_Plugin for loading ffavisynth.dll (ffdshow() and ffdshowAudio() function). It is automatically loaded on AviSynth start-up.</li>
     <li>In "YCbCr &lt;-&gt; RGB conversion", ITU-R BT.601/709 standard selection and contrast configuration (standard, full range, custom) has been added.</li>
     <li>7.1ch audio processing has been added.</li>
     <li>In "Crop &amp; zoom", "Auto crop" has been added. Black borders can be removed automatically.</li>

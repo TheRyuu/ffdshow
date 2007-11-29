@@ -7,7 +7,7 @@ have been made, which were ported to this translation (even if nothing
 was changed here). This is to know which revisions are not ported yet.
 If you skip to port a revision please note that revision for later porting. -->
 
-<!-- In sync with revision 1568 except for revision(s) -none-. -->
+<!-- In sync with revision 1654 except for revision(s) -none-. -->
 
 <head>
   <title>ffdshow tryouts | Changelog</title>
@@ -64,6 +64,14 @@ If you skip to port a revision please note that revision for later porting. -->
   <h3>Nach Beta3 korrigiert</h3>
 
   <ul class="fixed">
+    <li>Der "Closed caption"-Dekoder produzierte verst&uuml;mmelte Zeichen. Dieser unterst&uuml;tzt nun Unicode.</li>
+    <li>Fehler, der zu Abst&uuml;rzen im Windows Movie Maker f&uuml;hrte, wurde behoben. Der Fehler lag allerdings nicht an ffdshow.</li>
+    <li>Untertitel, die ein "&amp;" im Dateinamen enthalten, wurden falsch im ffdshows Kontextmen&uuml; angezeigt.</li>
+    <li>MakeAVIS.exe produzierte im "Store uncompressed audio"-Modus rauschendes Audio, falls der Audioeingang nicht auf 16-bit Integer gestellt war.</li>
+    <li>Mehrzeilige AviSynth-Skripte wurden nicht abgespeichert, wenn im Profildialog auf "Einstellungen exportieren" oder "In Datei speicher..." geklickt wurde.</li>
+    <li>"DTS S/PDIF pass-through" produzierte manchmal St&ouml;rger&auml;usche.</li>
+    <li>Kompatibilit&auml;tsproblem mit VFW-Enkoderanwendungen wie z.B. HyperCam wurde behoben.</li>
+    <li>Falls "ConvertToRGB" in einem AviSynth-Skript verwendet wurde, wurde das Video umgedreht dargestellt.</li>
     <li>Falls "Kan&auml;le tauschen" verwendet wurde, ging das Audiosignal verloren, wenn sich die Anzahl der eingehenden Audiokan&auml;le &auml;nderte.</li>
     <li>DVD Men&uuml;s wurden manchmal nicht hervorgehoben.</li>
     <li>"Bedingungen f&uuml;r automatisches Laden" -> "on movie file name match (with wildcards)" funktionierte nicht.</li>
@@ -93,7 +101,7 @@ If you skip to port a revision please note that revision for later porting. -->
     <li>Falls Overlaymixer und YUY2 verwendet wurden, wurde nach einer &Auml;nderung des Seitenverh&auml;ltnisses die H&ouml;he des Bildes halbiert. Dies war h&auml;ufig bei Wiedergabe von DVDs der Fall.</li>
     <li>FFV1-Dekoder st&uuml;rzte beim Spulen oder bei Verz&ouml;gerung ab.</li>
     <li>FFV1-Enkoder: Die Standardentfernung zwischen Keyframes betrug 250, was zu hoch war und nicht unabh&auml;ngig konfiguriert werden konnte. Neuer Standard ist 10.</li>
-    <li>Wenn NV12 der einzig verf&uuml;gbare Ausgabefarbraum f&uuml;r DirectShow-Dekoder war und "Unkomprimierte Videodaten" f&uuml;r den VfW-Dekoder aktiviert war, st&uuml;rzte der Thumbnailer des Windows Media Player 11 ab.</li>
+    <li>Wenn NV12 der einzig verf&uuml;gbare Ausgabefarbraum f&uuml;r DirectShow-Dekoder war und "Unkomprimierte Videodaten" f&uuml;r den VFW-Dekoder aktiviert war, st&uuml;rzte der Thumbnailer des Windows Media Player 11 ab.</li>
     <li>Untertitel waren grau, selbst wenn wei&szlig; ausgew&auml;hlt war.</li>
     <li>L&ouml;schen der Standardvoreinstellung w&auml;hrend sie aktiv war, l&ouml;ste einen Absturz aus.</li>
     <li>Umgedrehtes NV12 verursachte entweder einen Absturz oder ein defektes Bild.</li>
@@ -139,7 +147,7 @@ If you skip to port a revision please note that revision for later porting. -->
     <li>5.1 Vorbis (libavcodec) war defekt.</li>
     <li>Das Videobild war schwarz, wenn versucht wurde den ffdshow-DirectShow-Dekoder in PowerDVD zu verwenden.</li>
     <li>Falls ffdshow das Ausgabematerial eines DVD-Dekoders als unkomprimiertes Videomaterial eingespeist bekam, die Untertiteldatei g&uuml;ltig und MPEG2 deaktiviert war, wurden Untertitel, die nicht zur DVD geh&ouml;rten, angezeigt.</li>
-    <li>Falls videobildenthaltende Untertitel wie IDX+SUB (VOBsub) aktiviert waren, gab es an Stellen, an denen die H&ouml;he der Untertitel ungerade war, einen Absturz.</li>
+    <li>Falls videobildenthaltende Untertitel wie IDX+SUB (Vobsub) aktiviert waren, gab es an Stellen, an denen die H&ouml;he der Untertitel ungerade war, einen Absturz.</li>
     <li>Convolver, einer der Audiofilter, st&uuml;rze ab wenn versucht wurde eine Impuls-Datei zu laden.</li>
     <li>Wurde Gr&ouml;&szlig;en&auml;nderung verwendet, waren manchmal horizontale Linien sichtbar ("Gr&ouml;&szlig;e &amp; Seitenverh&auml;ltnis" -> "Einstellungen" -> "Accurate rounding").</li>
     <li>Falls Gr&ouml;&szlig;en&auml;nderung nach xsharpen verwendet wurde, war das Video gr&uuml;n.</li>
@@ -165,12 +173,16 @@ If you skip to port a revision please note that revision for later porting. -->
   <h3>Nach Beta3 hinzugef&uuml;gt</h3>
 
   <ul class="added">
+    <li>Nellymoser Audio Dekoder wurde hinzugef&uuml;gt. Der neueste FLV-Splitter wird ben&ouml;tigt.</li>
+    <li>Seb's BTB&amp;WTW-Stufenfilter: Kontrast einstellen nur wenn "dimmer than dimmest" (Y &lt; 16) und/oder "brighter than brightest" (Y &gt; 235) Teil existiert (abh&auml;ngig von der Konfiguration).</li>
     <li>H.264-PAFF Interlacing wird unterst&uuml;tzt.</li>
     <li>Der H.264-Dekoder ist jetzt multithreaded. Dies ist jedoch nur effektiv, wenn das Video mit mehreren Slices enkodiert wurde.</li>
+    <li>Reset-Button wurde zu der Overlaykontrolle hinzugef&uuml;gt.</li>
+    <li>LoadCPlugin / Load_Stdcall_Plugin m&uuml;ssen nicht mehr verwendet werden, um ffavisynth.dll zu laden (ffdshow()- und ffdshowAudio()-Funktion). Dies geschieht nun automatisch beim AviSynth-Start.</li>
     <li>Zur "YCbCr &lt;-&gt; RGB-Konvertierung" wurden ITU-R B.601/709-Standardauswahl sowie Kontrasteinstellungen (Standard, kompletter Wertebereich, benutzerdefiniert) hinzugef&uuml;gt.</li>
     <li>7.1-Kanal Audioverarbeitung wurde hinzugef&uuml;gt.</li>
     <li>In "Beschneiden/Vergr&ouml;&szlig;ern" wurde die Funktion "Autocrop" hinzugef&uuml;gt. Schwarze R&auml;nder k&ouml;nnen jetzt automatsch entfernt werden.</li>
-    <li>Das Verhalten der Profilautoladefunktion wurde ge&auml;ndert: Ein Profil wird geladen wenn alle Bedingungen erf&uuml;llt sind. Zuvor wurde ein Profil geladen, sobald eine der Bedingungen erf&uuml;llt wurde.</li>
+    <li>Profilautoladefunktion: Es kann nun zwischen "On one of the conditions match (OR)" oder "On all conditions match (AND)" gew&auml;hlt werden.</li>
     <li>Die neue Bedingung "on FOURCC from previous filter match" wurde der Profilautoladefunktion hinzugef&uuml;gt. Dieses ist n&uuml;tzlich, wenn ffdshow im RAW-Modus verwendet wird, um den originalen Video-FOURCC als Bedingung zu verwenden.</li>
     <li>F&uuml;r Vistas Windows Media Player 11 und Windows Media Center wurde eine neue Option f&uuml;r die Verarbeitung unkomprimierter Videodaten hinzugef&uuml;gt.</li>
     <li>In "Gr&ouml;&szlig;e &amp; Seitenverh&auml;ltnis" wurde die Option "Resize to screen resolution" hinzugef&uuml;gt.</li>
