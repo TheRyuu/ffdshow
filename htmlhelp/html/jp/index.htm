@@ -50,6 +50,14 @@
     </h3>
 
     <ul class="fixed">
+      <li>クローズドキャプションの文字化けを修正。</li>
+      <li>Windows Movie Makerでクラッシュしていたのを修正(ffdshowのバグではありません)。</li>
+      <li>字幕のファイル名に &amp;が含まれているとトレイアイコン右クリック時のコンテキストメニューに正しく表示されなかった。</li>
+      <li>MakeAVIS.exeの"Store uncompressed audio"モードで16bit整数以外のフォーマットが正しく書き出せなかった。</li>
+      <li>複数行のAviSynthスクリプトを「すべての設定を書き出す」やプリセットの「ファイルに保存」ボタンで保存出来なかった。</li>
+      <li>DTSのS/PDIFパススルーでノイズなどの問題が出ることがあった。</li>
+      <li>VFWエンコーダとアプリケーション（HyperCamなど）の相性問題を修正。</li>
+      <li>AviSynthのスクリプトでConvertToRGBを使用すると画像が反転していた。</li>
       <li>オーディオフィルタの「チャンネルの入れ替え」を使用時に、入力ストリームのチャンネル数などが変化すると無音になっていた。</li>
       <li>DVDのメニューがハイライトされないことがあった。</li>
       <li>プリセットの自動読み込み機能「movie file name match (with wildcards)」が機能していなかった。</li>
@@ -165,12 +173,16 @@
     </h3>
 
     <ul class="added">
+      <li>Nellymoserオーディオデコーダーの追加。最新のFLV Splitterが必要です。</li>
+      <li>Seb's BTB&amp;WTWレベルフィルタ：設定により最暗部(Y &lt; 16)、最明部(Y &gt; 235)の情報がある時だけそれを生かすコントラスト調整を行います。</li>
       <li>H.264-PAFF インターレースフォーマットのサポート。</li>
       <li>H.264デコーダのマルチスレッド化。ただしマルチスライスでエンコードされている場合にのみ有効。</li>
+      <li>オーバーレイコントロールにリセットボタンを追加。</li>
+      <li>ffavisynth.dllがAviSynth起動時に読み込まれるようにした。LoadCPlugin / Load_Stdcall_Plugin関数を使わずに<a class="links" href="http://www.avisynth.info/?ffdshow%A4%CE%A5%D5%A5%A3%A5%EB%A5%BF%A4%F2%BB%C8%A4%A6">ffdshow()、ffdshowAudio()関数</a>を使用できます。</li>
       <li>YCbCr&lt;-&gt;RGB変換にITU-R BT.601/709の選択、コントラスト（標準、フルレンジ、カスタム）のオプションを指定できるようにした。</li>
       <li>7.1chオーディオのサポート（フィルタ群）。</li>
       <li>切り出し（クロップ）フィルタに「自動切り出し」を追加。上下左右の黒い縁を自動で除去します。</li>
-      <li>プリセットの自動読み込みをAND条件で行うように変更。</li>
+      <li>プリセットの自動読み込みで「条件が一つでも一致した時（OR）」、「すべての条件が一致した時（AND）」を選択可能にした。</li>
       <li>プリセットの自動読み込み「on FOURCC from previous filter match」を追加。Raw videoを処理する場合で元のFORCCが関係する場合に有効です。</li>
       <li>Windows VistaのWindows Media Player 11とWindows Media CenterでRaw videの処理を有効にするオプションを追加した。</li>
       <li>「リサイズ、アスペクト」-「スクリーンの解像度にリサイズする」の追加。</li>
@@ -179,7 +191,7 @@
       <li>字幕の垂直方向の拡大・縮小をサポート。SSA/ASSの字幕もオプションにより拡大・縮小可能です。</li>
       <li>字幕のぼかしをサポート。背景に良く溶け込みます。</li>
       <li>字幕の折り返しを3モードサポート。「出来るだけ均等に分割」、「幅いっぱいになったら改行」、「出来るだけ均等に分割、下の行を広めに」。日本語禁則処理は今後の課題。</li>
-      <li>テキスト字幕とOSDのレンダリングを改善。文字、輪郭、陰影のそれぞれにサイズ、色、アルファを設定可能。RGB出力で字幕より下流にOSD、取り込み、オーバーレイ以外のフィルタがなければ字幕とOSDはRGB32でレンダリングされ画質がさらに改善します。</li>
+      <li>テキスト字幕とOSDのレンダリングを改善。文字、輪郭、陰影のそれぞれにサイズ、色、アルファを設定可能。RGB出力で字幕より下流にOSD、取り込み、オーバーレイ、リサイズ以外のフィルタがなければ字幕とOSDはRGB32でレンダリングされ画質がさらに改善します。</li>
       <li>多言語対応：言語ファイルから水平方向の拡大率を設定可能にした。水平方向を125％に引き伸ばしたければ、言語ファイルの[Font]セクションにhorizontalScale9x=125、horizontalScaleNT=125の2行を追加します。</li>
       <li>OSDに「Active preset name」を追加。</li>
       <li>実験的ながらx64版のバイナリーをSourceforge.netの<a class="links" href="http://sourceforge.net/project/showfiles.php?group_id=173941">ダウンロード</a>ページで公開。</li>
