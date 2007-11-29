@@ -1,7 +1,7 @@
 #ifndef __OGGSTREAMS_H
 #define __OGGSTREAMS_H
 
-#include "ogg/ogg.h"
+//#include "xiph/ogg/ogg.h"
 /*
  * Taken from http://tobias.everwicked.com/packfmt.htm
  *

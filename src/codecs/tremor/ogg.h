@@ -14,8 +14,8 @@
  function: subsumed libogg includes
 
  ********************************************************************/
-#ifndef _OGG_H
-#define _OGG_H
+#ifndef TREMOR_OGG_H
+#define TREMOR_OGG_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -203,5 +203,6 @@ extern void     ogg_page_dup(ogg_page *d, ogg_page *s);
 }
 #endif
 
-#endif  /* _OGG_H */
+#endif  /* TREMOR_OGG_H */
+
 

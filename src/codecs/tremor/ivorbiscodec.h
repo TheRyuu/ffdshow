@@ -23,7 +23,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-#include "ogg.h"
+#include "tremor/ogg.h"
 
 typedef struct vorbis_info{
   int version;
@@ -199,5 +199,6 @@ extern long     vorbis_packet_blocksize(vorbis_info *vi,ogg_packet *op);
 #endif /* __cplusplus */
 
 #endif
+
 
 

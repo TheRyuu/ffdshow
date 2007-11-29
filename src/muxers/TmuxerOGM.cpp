@@ -19,7 +19,7 @@
 
 #include "stdafx.h"
 #include "TmuxerOGM.h"
-#include "ogm/ogmstreams.h"
+#include "xiph/ogm/ogmstreams.h"
 #include "TffPict.h"
 #include "TencStats.h"
 #include "ffdshow_constants.h"

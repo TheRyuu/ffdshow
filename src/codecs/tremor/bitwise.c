@@ -20,7 +20,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include "ogg.h"
+#include "tremor/ogg.h"
 
 static unsigned long mask[]=
 {0x00000000,0x00000001,0x00000003,0x00000007,0x0000000f,
@@ -262,4 +262,5 @@ long oggpack_bits(oggpack_buffer *b){
   return((b->count+b->headptr-b->head->buffer->data-b->head->begin)*8+
          b->headbit);
 }
+
 

@@ -21,7 +21,7 @@
 				Name="CppCmplrTool"
 				AdditionalOptions=""
 				Optimization="0"
-				AdditionalIncludeDirectories=".;../.."
+				AdditionalIncludeDirectories=".;..;../.."
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="0"
@@ -98,7 +98,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="TRUE"
 				WholeProgramOptimization="TRUE"
-				AdditionalIncludeDirectories=".;../.."
+				AdditionalIncludeDirectories=".;..;../.."
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="TRUE"
 				ExceptionHandling="FALSE"
@@ -364,4 +364,5 @@
 		</File>
 	</Files>
 </VisualStudioProject>
+
 

@@ -1,6 +1,5 @@
-CFLAGS+=-Itheora
+SRCS=TaudioCodecTremor.cpp TvideoCodecTheora.cpp TaudioCodecLibavcodec.cpp TaudioCodec.cpp TvideoCodecLibavcodec.cpp ffdshow_codecs_all.cpp
 
-SRCS=ffdshow_codecs_all.cpp
 
 # enable SSE because compilation fails without it
 SSE=yes

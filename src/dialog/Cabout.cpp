@@ -26,6 +26,8 @@
 #include "TvideoCodecLibmpeg2.h"
 #include "TvideoCodecSkal.h"
 #include "TvideoCodecTheora.h"
+#define TREMOR_OGG_H // FIXME (dirty) This is necessary to avoid including various versions of ogg.h.
+#define OGG_OGG_H
 #include "TvideoCodecWmv9.h"
 #include "TvideoCodecX264.h"
 #include "TaudioCodecLibMAD.h"

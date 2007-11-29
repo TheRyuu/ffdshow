@@ -19,7 +19,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include "ogg.h"
+#include "theora/ogg.h"
 
 #define BUFFER_INCREMENT 256
 

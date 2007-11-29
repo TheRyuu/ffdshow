@@ -21,7 +21,7 @@
 #include "dsutil.h"
 #include "TffRect.h"
 #include "theora/theora.h"
-#include "vorbis/vorbisformat.h"
+#include "xiph/vorbis/vorbisformat.h"
 #include "ffdshow_mediaguids.h"
 
 // registry key info from RadLight Filter Manager v1.3 by RadScorpion

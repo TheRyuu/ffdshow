@@ -13,8 +13,8 @@
  function: toplevel libogg include
 
  ********************************************************************/
-#ifndef _OGG_H
-#define _OGG_H
+#ifndef THEORA_OGG_H
+#define THEORA_OGG_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -192,7 +192,8 @@ extern void     ogg_packet_clear(ogg_packet *op);
 }
 #endif
 
-#endif  /* _OGG_H */
+#endif  /* THEORA_OGG_H */
+
 
 
 

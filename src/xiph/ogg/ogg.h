@@ -14,8 +14,8 @@
  last mod: $Id: ogg.h 12446 2007-02-08 22:22:43Z xiphmont $
 
  ********************************************************************/
-#ifndef _OGG_H
-#define _OGG_H
+#ifndef OGG_OGG_H
+#define OGG_OGG_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -200,7 +200,8 @@ extern void     ogg_packet_clear(ogg_packet *op);
 }
 #endif
 
-#endif  /* _OGG_H */
+#endif  /* OGG_OGG_H */
+
 
 
 

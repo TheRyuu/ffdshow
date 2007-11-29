@@ -21,7 +21,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "ogg.h"
+#include "theora/ogg.h"
 
 /* A complete description of Ogg framing exists in docs/framing.html */
 

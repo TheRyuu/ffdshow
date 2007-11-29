@@ -24,6 +24,8 @@
 #include "avisynth/Tavisynth.h"
 #include "TvideoCodecLibmpeg2.h"
 #include "TvideoCodecTheora.h"
+#define TREMOR_OGG_H // FIXME (dirty) This is necessary to avoid including various versions of ogg.h.
+#define OGG_OGG_H
 #include "TaudioCodecLibMAD.h"
 #include "TaudioCodecLibFAAD.h"
 #include "TvideoCodecXviD4.h"

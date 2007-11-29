@@ -1,6 +1,6 @@
 LIBSONAME=../bin/ffdshow.ax
 
-SRCS=ffdshow_all.cpp TffDecoder_reg.cpp
+SRCS=ffdshow_all.cpp TffDecoder_reg.cpp Tconfig.cpp
 
 SRCS_C=ffdebug.c
 
@@ -48,6 +48,11 @@ endif
 LIBS=acm/Tacm.o \
      audioFilters/ffdshow_audiofilters_all.o \
      codecs/ffdshow_codecs_all.o \
+     codecs/TaudioCodecTremor.o \
+     codecs/TvideoCodecTheora.o \
+     codecs/TaudioCodecLibavcodec.o \
+     codecs/TaudioCodec.o \
+     codecs/TvideoCodecLibavcodec.o \
      convert/ffdshow_convert_all.o \
      dialog/ffdshow_dialog_all.o dialog/TSpecifyPropertyPagesVE.o \
      filters/ffdshow_filters_all.o \

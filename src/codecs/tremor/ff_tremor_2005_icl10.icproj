@@ -26,7 +26,7 @@
 			<Tool 
 				Name="CppCmplrTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories=".."
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;inline=__inline;__i386__"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -93,7 +93,7 @@
 			<Tool 
 				Name="CppCmplrTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories=".."
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;inline=__inline;__i386__"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -165,7 +165,7 @@
 				EnableIntrinsicFunctions="1"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="1"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories=".."
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;inline=__inline;__i386__"
 				StringPooling="1"
 				ExceptionHandling="0"
@@ -244,7 +244,7 @@
 				ImproveFloatingPointConsistency="0"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="1"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories=".."
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;inline=__inline;__i386__"
 				StringPooling="1"
 				ExceptionHandling="0"
@@ -381,4 +381,5 @@
 		</File>
 	</Files>
 </VisualStudioProject>
+
 

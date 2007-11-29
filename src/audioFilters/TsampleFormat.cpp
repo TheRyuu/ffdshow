@@ -19,7 +19,7 @@
 #include "stdafx.h"
 #include "TsampleFormat.h"
 #include "ffdshow_mediaguids.h"
-#include "vorbis/vorbisformat.h"
+#include "xiph/vorbis/vorbisformat.h"
 #include "dsutil.h"
 
 const int TsampleFormat::standardChannelMasks[]=

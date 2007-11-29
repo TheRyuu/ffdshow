@@ -3,7 +3,7 @@
 #include "ffdshowRemoteAPI.cpp"
 #include "ffglobals.cpp"
 #include "mem_align.cpp"
-#include "Tconfig.cpp"
+//#include "Tconfig.cpp"
 #include "TcpuUsage.cpp"
 #include "TffdshowBase.cpp"
 #include "TffdshowDec.cpp"

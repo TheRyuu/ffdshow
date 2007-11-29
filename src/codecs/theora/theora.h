@@ -22,7 +22,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-#include "ogg.h"
+#include "codecs/theora/ogg.h"
 
 /** \mainpage
  *

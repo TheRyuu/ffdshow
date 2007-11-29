@@ -50,6 +50,10 @@
  static inline void DBG(const char*fmt,...) {}
 #endif
 
+#ifndef WAVE_FORMAT_IEEE_FLOAT
+#define WAVE_FORMAT_IEEE_FLOAT 0x0003
+#endif
+
 // Merge with Tdll ?
 // Pass that around rather than having it global ?
 struct avs_t

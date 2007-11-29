@@ -22,7 +22,7 @@
 
 // Dequantization + inverse discrete cosine transform.
 
-#include "ogg.h"
+#include "codecs/theora/ogg.h"
 #include <math.h>
 #include <memory.h>
 #include <inttypes.h>

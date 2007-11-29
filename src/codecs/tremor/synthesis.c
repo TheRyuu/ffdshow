@@ -16,7 +16,7 @@
  ********************************************************************/
 
 #include <stdio.h>
-#include "ogg.h"
+#include "tremor/ogg.h"
 #include "ivorbiscodec.h"
 #include "codec_internal.h"
 #include "registry.h"
@@ -108,6 +108,7 @@ long vorbis_packet_blocksize(vorbis_info *vi,ogg_packet *op){
   if(mode==-1)return(OV_EBADPACKET);
   return(ci->blocksizes[ci->mode_param[mode]->blockflag]);
 }
+
 
 
 

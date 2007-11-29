@@ -18,14 +18,15 @@
  */
 
 #include "stdafx.h"
+#include "tremor\ogg.h"
 #include "TaudioCodecTremor.h"
 #include "Tdll.h"
 #include "IffdshowBase.h"
 #include "IffdshowDec.h"
 #include "IffdshowDecAudio.h"
 #include "ffdshow_mediaguids.h"
-#include "vorbis/vorbisformat.h"
-#include "ogm/ogmstreams.h"
+#include "xiph/vorbis/vorbisformat.h"
+#include "xiph/ogm/ogmstreams.h"
 #include "ffdebug.h"
 #include "dsutil.h"
 
@@ -263,7 +264,7 @@ void TaudioCodecTremor::getInputDescr1(char_t *buf,size_t buflen) const
 
 HRESULT TaudioCodecTremor::decode(TbyteBuffer &src)
 {
- ogg_reference or;
+ ogg_reference ogr;
  ogg_buffer ob;
  ogg_packet op;
  memset(&op,0,sizeof(op));
@@ -271,11 +272,11 @@ HRESULT TaudioCodecTremor::decode(TbyteBuffer &src)
  ob.size = src.size();
  ob.refcount = 255;
  ob.ptr.next = NULL;
- or.buffer = &ob;
- or.begin = 0;
- or.length = ob.size;
- or.next = NULL;
- op.packet = &or;
+ ogr.buffer = &ob;
+ ogr.begin = 0;
+ ogr.length = ob.size;
+ ogr.next = NULL;
+ op.packet = &ogr;
  op.bytes = (long)src.size();
  op.b_o_s = 0;
  op.packetno = m_packetno++;

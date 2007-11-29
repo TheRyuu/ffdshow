@@ -23,7 +23,7 @@
 #include "IffdshowDecAudio.h"
 #include "dsutil.h"
 #include "ffdshow_mediaguids.h"
-#include "vorbis/vorbisformat.h"
+#include "xiph/vorbis/vorbisformat.h"
 
 TaudioCodecLibavcodec::TaudioCodecLibavcodec(IffdshowBase *deci,IdecAudioSink *Isink):
  Tcodec(deci),
