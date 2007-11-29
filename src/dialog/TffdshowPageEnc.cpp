@@ -57,7 +57,7 @@
 
 const char_t* TffdshowPageEnc::encModeNames[]=
 {
- _l("one pass - constant bitrate"),
+ _l("one pass - average bitrate"),
  _l("one pass - quality"),
  _l("one pass - quantizer"),
  _l("two passes - 1st pass"),
