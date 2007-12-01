@@ -38,6 +38,8 @@ void TaudioFilterLFEcrossover::done(void)
 HRESULT TaudioFilterLFEcrossover::process(TfilterQueue::iterator it,TsampleFormat &fmt,void *samples0,size_t numsamples,const TfilterSettingsAudio *cfg0)
 {
  const TlfeCrossoverSettings *cfg=(const TlfeCrossoverSettings*)cfg0;
+ if (fmt.channelmask == 0)
+  fmt.channelmask = fmt.makeChannelMask();
 
  if (oldfmt!=fmt || oldfreq!=cfg->freq)
   {
@@ -59,7 +61,7 @@ HRESULT TaudioFilterLFEcrossover::process(TfilterQueue::iterator it,TsampleForma
    lenLFElr=256;
    filter_coefs_lfeLR=TfirFilter::design_fir(&lenLFElr,&f,TfirSettings::HIGHPASS,TfirSettings::WINDOW_HAMMING,0);
    outfmt=fmt;
-   if ((outfmt.channelmask&SPEAKER_LOW_FREQUENCY)==0)
+   if ((outfmt.channelmask & SPEAKER_LOW_FREQUENCY)==0)
     {
      outfmt.setChannels(outfmt.nchannels+1,outfmt.makeChannelMask()|SPEAKER_LOW_FREQUENCY);
      for (unsigned int i=0;i<outfmt.nchannels;i++)
