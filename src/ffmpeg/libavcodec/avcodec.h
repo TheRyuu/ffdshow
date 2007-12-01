@@ -40,8 +40,8 @@
 #define AV_STRINGIFY(s)         AV_TOSTRING(s)
 #define AV_TOSTRING(s) #s
 
-#define LIBAVCODEC_VERSION_INT  ((51<<16)+(46<<8)+0)
-#define LIBAVCODEC_VERSION      51.46.0
+#define LIBAVCODEC_VERSION_INT  ((51<<16)+(48<<8)+0)
+#define LIBAVCODEC_VERSION      51.48.0
 #define LIBAVCODEC_BUILD        LIBAVCODEC_VERSION_INT
 
 #define LIBAVCODEC_IDENT        "Lavc" AV_STRINGIFY(LIBAVCODEC_VERSION)
@@ -2353,8 +2353,10 @@ int avcodec_decode_video(AVCodecContext *avctx, AVFrame *picture,
  * @param[out] buf the output buffer
  * @param[in] buf_size the output buffer size
  * @param[in] samples the input buffer containing the samples
- * @return On error a negative value is returned, on succes zero or the number
- * of bytes used from the input buffer.
+ * The number of samples read from this buffer is frame_size*channels,
+ * both of which are defined in \p avctx.
+ * @return On error a negative value is returned, on success zero or the number
+ * of bytes used to encode the data read from the input buffer.
  */
 int avcodec_encode_audio(AVCodecContext *avctx, uint8_t *buf, int buf_size,
                          const short *samples);
