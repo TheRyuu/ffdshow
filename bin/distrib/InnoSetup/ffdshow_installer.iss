@@ -1,7 +1,7 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1669
+#define tryout_revision = 1674
 #define buildyear = 2007
 #define buildmonth = '12'
 #define buildday = '03'
@@ -1079,6 +1079,7 @@ begin
     'ACDSee8.exe'#13#10
     'ACDSee8pro.exe'#13#10
     'ACDSee9.exe'#13#10
+    'ACDSee10.exe'#13#10
     'Adobe Premiere Elements.exe'#13#10
     'Adobe Premiere Pro.exe'#13#10
     'aegisub.exe'#13#10
@@ -1114,6 +1115,7 @@ begin
     'bestplayer1.0.exe'#13#10
     'BitComet.exe'#13#10
     'BlazeDVD.exe'#13#10
+    'BoonPlayer.exe'#13#10
     'bplay.exe'#13#10
     'bsplay.exe'#13#10
     'bsplayer.exe'#13#10
@@ -1121,6 +1123,7 @@ begin
     'CamRecorder.exe'#13#10
     'CamtasiaStudio.exe'#13#10
     'carom.exe'#13#10
+    'CEC_MAIN.exe'#13#10
     'christv.exe'#13#10
     'cinemaplayer.exe'#13#10
     'CinergyDVR.exe'#13#10
@@ -1222,6 +1225,7 @@ begin
     'MpegVideoWizard.exe'#13#10
     'mplayer2.exe'#13#10
     'mplayerc.exe'#13#10
+    'msnmsgr.exe'#13#10
     'msoobe.exe'#13#10
     'MultimediaPlayer.exe'#13#10
     'Munite.exe'#13#10
@@ -1259,8 +1263,10 @@ begin
     'PVCR.exe'#13#10
     'Qonoha.exe'#13#10
     'QQPlayerSvr.exe'#13#10
+    'QzoneMusic.exe'#13#10
     'RadLight.exe'#13#10
     'realplay.exe'#13#10
+    'ReClockHelper.dll'#13#10
     'Recode.exe'#13#10
     'rlkernel.exe'#13#10
     'RoxMediaDB9.exe'#13#10
@@ -1321,6 +1327,7 @@ begin
     'x264.exe'#13#10
     'XNVIEW.EXE'#13#10
     'Xvid4PSP.exe'#13#10
+    'YahooMessenger.exe'#13#10
     'YahooMusicEngine.exe'#13#10
     'YahooWidgetEngine.exe'#13#10
     'zplayer.exe'#13#10
@@ -1391,8 +1398,17 @@ begin
   
   compApps[4].rev   := 1608;
   compApps[4].name  := 'ViPlay4.exe';
-
-  compApps[5].rev   := 0;
+  
+  compApps[5].rev   := 1674;
+  compApps[5].name  := 'ACDSee10.exe';
+  compApps[6].name  := 'BoonPlayer.exe';
+  compApps[7].name  := 'CEC_MAIN.exe';
+  compApps[8].name  := 'msnmsgr.exe';
+  compApps[9].name  := 'QzoneMusic.exe';
+  compApps[10].name := 'ReClockHelper.dll';
+  compApps[11].name := 'YahooMessenger.exe';
+  
+  compApps[12].rev   := 0;
 
 
   // Compatibility list
