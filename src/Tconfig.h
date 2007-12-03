@@ -28,7 +28,6 @@ private:
  mutable unsigned int shellversion;
  int available_cpu_flags0,cpu_flags0;
  mutable ThtmlColors *htmlcolors;
- Tdll *gdi32;
 public:
  Tconfig(TintStrColl *Icoll);
  Tconfig(HINSTANCE hInst,int allowedCpuGFlags);
@@ -56,7 +55,6 @@ public:
    BOOL (WINAPI *textOut)(IN HDC, IN int, IN int, IN const tchar*, IN int);
   };
  template<class tchar> const Tgdi<tchar>& getGDI(void) const;
- int unicodeOS;
 private:
  Tgdi<char> gdiA;Tgdi<wchar_t> gdiW;
 };

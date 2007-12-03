@@ -1626,7 +1626,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
          int nfit;
          SIZE sz;
          size_t strlenp=strlen(p);
-         int *ptempwidths=(int*)tempwidth.alloc((strlenp+1)*sizeof(int));
+         int *ptempwidths=(int*)tempwidth.alloc((strlenp+1)*sizeof(int)*2); // *2 to work around Layer For Unicode on Windows 9x.
          prefs.config->getGDI<tchar>().getTextExtentExPoint(hdc,p,(int)strlenp,INT_MAX,&nfit,ptempwidths,&sz);
          for (size_t x=0;x<strlenp;x++)
           {

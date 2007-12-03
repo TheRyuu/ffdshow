@@ -65,7 +65,7 @@
 #define IDFF_dtsdrc               80
 #define IDFF_supDVDdec            81
 //#define IDFF_neroavc              82
-#define IDFF_unicodeOS            87
+//#define IDFF_unicodeOS            87
 #define IDFF_numLAVCdecThreads    97
 #define IDFF_multiThreadDec       98
 #define IDFF_dontQueueInWMP       99

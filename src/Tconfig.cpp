@@ -75,7 +75,6 @@ Tconfig::Tconfig(TintStrColl *Icoll):Toptions(Icoll),htmlcolors(NULL)
   {
    IDFF_availableCpuFlags  ,&Tconfig::available_cpu_flags0,-1,-1,       _l(""),0,NULL,0,
    IDFF_cpuFlags           ,&Tconfig::cpu_flags0          ,-1,-1,       _l(""),0,NULL,0,
-   IDFF_unicodeOS          ,&Tconfig::unicodeOS           ,-1,-1,       _l(""),0,NULL,0,
    0
   };
  addOptions(iopts);
@@ -95,7 +94,6 @@ Tconfig::Tconfig(HINSTANCE hInst,int allowedCpuGFlags):Toptions(NULL),htmlcolors
 Tconfig::~Tconfig()
 {
  if (htmlcolors) delete htmlcolors;
- delete gdi32;
 }
 
 bool Tconfig::check(const char_t *dllname) const
@@ -144,11 +142,9 @@ void Tconfig::init1(HINSTANCE hi)
  gdiA.getTextExtentExPoint=GetTextExtentExPointA;
  gdiA.getTextExtentPoint32=GetTextExtentPoint32A;
  gdiA.textOut=TextOutA;
- gdi32=new Tdll(_l("gdi32.dll"),this);
- gdi32->loadFunction(gdiW.getTextExtentExPoint,"GetTextExtentExPointW");
- gdi32->loadFunction(gdiW.getTextExtentPoint32,"GetTextExtentPoint32W");
- gdi32->loadFunction(gdiW.textOut,"TextOutW");
- unicodeOS=gdi32->ok;
+ gdiW.getTextExtentExPoint = GetTextExtentExPointW;
+ gdiW.getTextExtentPoint32 = GetTextExtentPoint32W;
+ gdiW.textOut = TextOutW;
 }
 
 void Tconfig::init2(void)

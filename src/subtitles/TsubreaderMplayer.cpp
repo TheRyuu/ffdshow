@@ -1090,7 +1090,7 @@ template<class tchar> TsubtitleParserBase* TsubtitleParserBase::getParser0(int f
 }
 TsubtitleParserBase* TsubtitleParserBase::getParser(int format,double fps,const TsubtitlesSettings *cfg,const Tconfig *ffcfg,Tsubreader *subreader,bool utf8,bool isEmbedded)
 {
- if (ffcfg->unicodeOS && (utf8 || Tsubreader::getSubEnc(format)&Tstream::ENC_UNICODE))
+ if (utf8 || Tsubreader::getSubEnc(format)&Tstream::ENC_UNICODE)
   return getParser0<wchar_t>(format,fps,cfg,ffcfg,subreader,isEmbedded);
  else
   return getParser0<char>(format,fps,cfg,ffcfg,subreader,isEmbedded);
