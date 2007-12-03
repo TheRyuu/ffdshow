@@ -5,8 +5,8 @@ Translated by Virtual_ManPL (Artur Osiñski)
 e-mail: Virtual_ManPL@wp.pl
 Gadu-Gadu: 6361956
 Jabber: Virtual_ManPL@maszyna.pl
-Latest translated ffdshow : 1589
-Revision: 2
+Latest translated ffdshow : 1627
+Revision: 3
 ============================================
 
 [115]
@@ -37,7 +37,7 @@ TTA (Lossless Audio Codec);To play .tta files you also need a source filter.=TTA
 Other ADPCM=Inne ADPCM
 all supported=Wszystkie obs³ugiwane
 Adaptive Multi-Rate in 3gp files (AMR)=Adaptive Multi-Rate w plikach 3gp (AMR)
-not WMA9 pro, voice or lossless=Nie dla WMA9 pro, voice or lossless
+not WMA9 pro, voice or lossless=Nie dla WMA9 pro, voice i lossless
 AVIS (AviSynth AVI files)=AVIS (pliki AviSynth AVI)
 Uncompressed=Nieskompresowany
 List of applications for which ffdshow should not load, separated by semicolons=Lista aplikacji dla których ffdshow nie ³aduje siê, oddzielone drukropkiem
@@ -443,7 +443,7 @@ gray=Szaroœæ
 color=Kolor
 opacity=PrzeŸ.
 size=Rozmiar
-frequency=Czêstotliwoœæ
+frequency=Czêstotli.
 amplitude=Amplituda
 duration=Czas trwania
 chroma blur:=Chrominancja:
@@ -515,6 +515,11 @@ Simple resize=Prosty
 Active preset name=Obecna aktywna nazwa
 side left=Boczny lewy
 side right=Boczny prawy
+3/0/0 - 3 front=3/0/0 - 3 przednie
+3/0/2 - 5 channels=3/0/2 - 5 kana³ów
+3/2/1 - 6 channels=3/2/1 - 6 kana³ów
+3/2/2 - 7 channels=3/2/2 - 7 kana³ów
+Other MPEG2=Inne MPEG2
 
 [116]
 0=DirectShow
@@ -530,7 +535,7 @@ side right=Boczny prawy
 [2020]
 1284=Informacja
 0=Informacja
-1832=U¿yj nastêpuj¹cych instrukcji SIMD (jeœli s¹ obs³ugiwane przez CPU)
+1832=U¿yj nastêpuj¹cych instrukcji SIMD (jeœli s¹ obs³ugiwane przez CPU):
 
 [141]
 1774=Poziome po³o¿enie:
@@ -556,7 +561,7 @@ side right=Boczny prawy
 
 [248]
 0=Strumieñ
-1709=Prze³¹cznik strumienia
+1709=Prze³¹cznik strumienia:
 1683=W³¹cz
 1710=Strumieñ
 
@@ -578,7 +583,7 @@ side right=Boczny prawy
 1276=<= szerokoœæ <=
 1211=dopasowanie wymiaru filmu
 8=Zamknij
-1888=Oddziel wielokrotne elementy przez znak ;
+1888=Oddziel elementy znakiem ;
 1915=i
 2207=gdy przynajmniej 1 warunek jest spe³niony (OR)
 2208=gdy wszystkie warunki s¹ spe³nione (AND)
@@ -589,8 +594,8 @@ side right=Boczny prawy
 1474=Dostêpne filtry:
 
 [259]
-1579=Obs³ugiwane wejœciowe formaty próbek
-1578=Konwersja przetwarzania zmiennoprzecinkowego na sta³oprzecinkowe
+1579=Obs³ugiwane wejœciowe formaty próbek:
+1578=Konwersja przetwarzania zmiennoprzecinkowego na sta³oprzecinkowe:
 1582=Redukcja szumu:
 0=Wejœcie
 1580=16 bitowe sta³oprzecinkowe
@@ -698,12 +703,15 @@ side right=Boczny prawy
 [245]
 0=OpóŸnienie
 1676=OpóŸnienie
-1658=OpóŸnienie lewego kana³u:
-1666=OpóŸnienie prawego kana³u:
-1663=OpóŸnienie centralnego kana³u:
-1669=OpóŸnienie lewego tylnego kana³u:
-1672=OpóŸnienie prawego tylnego kana³u
-1675=OpóŸnienie kana³u LFE:
+1658=Lewego kana³u:
+1666=Prawego kana³u:
+1663=Centralnego kana³u:
+1669=Lewego tylnego kana³u:
+1672=Prawego tylnego kana³u:
+1675=Kana³u LFE:
+2178=Bocznego lewego kana³u:
+2181=Bocznego prawego kana³u:
+2184=Tylnego œrodkowego kana³u:
 
 [252]
 0=LFE
@@ -743,7 +751,7 @@ side right=Boczny prawy
 1575=24 bitowe sta³oprzecinkowe
 1576=32 bitowe sta³oprzecinkowe
 1577=32 bit zmiennoprzecinkowe
-1573=Obs³ugiwane wyjœciowe formaty próbek
+1573=Obs³ugiwane wyjœciowe formaty próbek:
 1143=Dla lepszej wydajnoœci na s³abszych komputerach i dla zachowania kompatybilnoœci ze sterownikami zaleca siê zaznaczyæ tylko 16 bitowy sta³oprzecinkowy wyjœciowy format próbki.\r\nWyjœciowy format próbki LPCM jest potrzebny dla dŸwiêkowych dekoderów DVD takich jak np.: Cyberlink.
 1813=Zezwól na bezpoœredni zapis wyjœciowy do pliku
 1811=Nie u¿ywa nag³ówkaWAVEFORMATEXTENSIABLE gdy nie jest wymagany
@@ -752,6 +760,7 @@ side right=Boczny prawy
 1985=Koduj tylko multikana³owe strumienie
 1984=Urz¹dzenie:
 1743=Transmisja:
+1587=AC3 (tryb kodowania S/PDIF)
 
 [102]
 0=O programie
@@ -875,7 +884,7 @@ side right=Boczny prawy
 1021=Próg:
 1023=Wyostrzanie bloków:
 1215=Poka¿ maskê krawêdzi
-1143=xsharpen\r\n Filtr wykonuje subtelne ale przydatne wyostrzanie. Dzia³a to na zasadzie\r\n ma³ej ramki nad ka¿d¹ klatk¹ lub nad ka¿dym œrodkowym pikselem który\r\n jest pominiêty lub nieruszony (zale¿y od ustawienia progu) albozmapowany \r\n do jednego z dwóch najjaœniejszych lub najciemniejszych pikseli w oknie\r\n zale¿nie od bliskoœci œrodkowego piksela. Je¿eli œrodkowy piksel jest\r\n zmapowany to równie¿ Alfa-Zamglenie z oryginaln¹ wartoœci¹ piksela\r\n u¿ywaj¹cy konfigurowalnego ustawienia si³y. Koñcowym efektem jest obraz\r\n który mo¿e zawieraæ szum jednak w bardzo ma³ym stopniu i filtr stara siê\r\n przeciwdzia³aæ temu.\r\n\r\nUnsharp mask\r\n Filtr wykorzystuje dobrze znane technikê uwydatnienia kontrastu\r\n i wyostrzania. G³ównym celem jest utworzenie wyg³adzonego obrazu\r\n oraz oryginalnego obrazu a nastêpnie odjêcie ich od siebie. Rezultatem tego\r\n bêdzie obraz o podwy¿szonym kontraœcie.\r\n\r\nmsharpen\r\n Filtr ostrzy wa¿ne krawêdzie obrazu bez wzmacniania szumu. Dzia³a\r\n na zasadzie wykrywania krawêdzi i u¿ywania Kernela zaostrzaj¹cego tylko\r\n na obszarze krawêdzi.\r\n\r\nasharp\r\n Jeden z najlepszych filtrów wyostrzaj¹cych który daje doskona³¹ jakoœæ\r\n obrazu wraz z w³¹czonym filtrem Przetwarzanie. Najlepsz¹ jakoœæ uzyskamy  u¿ywaj¹c go z obrazem niskiej jakoœci.\r\n\r\nswscaler\r\n Jeden z najlepszych filtrów wyostrzaj¹cych który daje doskona³¹ jakoœæ\r\n obrazu wraz z w³¹czonym filtrem Przetwarzanie. Najlepsz¹ jakoœæ uzyskamy   u¿ywaj¹c go z obrazem wysokiej jakoœci.\r\n\r\nOpis xsharpen, unsharp mask oraz msharpen zosta³ skopiowany z oryginalnej  dokumentacji filtrów AviSynth i VirtualDub\r\n Prawa autorskie Donald Graft\r\n\r\nOpis asharp oraz swscaler zosta³ napisany przez Artura Osiñskiego (Virtual_ManPL)
+1143=xsharpen\r\n Filtr wykonuje subtelne ale przydatne wyostrzanie. Dzia³a to na zasadzie\r\n ma³ej ramki nad ka¿d¹ klatk¹ lub nad ka¿dym œrodkowym pikselem który\r\n jest pominiêty lub nieruszony (zale¿y od ustawienia progu) albozmapowany \r\n do jednego z dwóch najjaœniejszych lub najciemniejszych pikseli w oknie\r\n zale¿nie od bliskoœci œrodkowego piksela. Je¿eli œrodkowy piksel jest\r\n zmapowany to równie¿ Alfa-Zamglenie z oryginaln¹ wartoœci¹ piksela\r\n u¿ywaj¹cy konfigurowalnego ustawienia si³y. Koñcowym efektem jest obraz\r\n który mo¿e zawieraæ szum jednak w bardzo ma³ym stopniu i filtr stara siê\r\n przeciwdzia³aæ temu.\r\n\r\nUnsharp mask\r\n Filtr wykorzystuje dobrze znane technikê uwydatnienia kontrastu\r\n i wyostrzania. G³ównym celem jest utworzenie wyg³adzonego obrazu\r\n oraz oryginalnego obrazu a nastêpnie odjêcie ich od siebie. Rezultatem tego\r\n bêdzie obraz o podwy¿szonym kontraœcie.\r\n\r\nmsharpen\r\n Filtr ostrzy wa¿ne krawêdzie obrazu bez wzmacniania szumu. Dzia³a\r\n na zasadzie wykrywania krawêdzi i u¿ywania Kernela zaostrzaj¹cego tylko\r\n na obszarze krawêdzi.\r\n\r\nasharp\r\n Jeden z najlepszych filtrów wyostrzaj¹cych który daje doskona³¹ jakoœæ\r\n obrazu wraz z w³¹czonym filtrem Przetwarzanie. Najlepsz¹ jakoœæ uzyskamy\r\n u¿ywaj¹c go z obrazem niskiej jakoœci.\r\n\r\nswscaler\r\n Jeden z najlepszych filtrów wyostrzaj¹cych który daje doskona³¹ jakoœæ\r\n obrazu wraz z w³¹czonym filtrem Przetwarzanie. Najlepsz¹ jakoœæ uzyskamy\r\n u¿ywaj¹c go z obrazem wysokiej jakoœci.\r\n\r\nOpis xsharpen, unsharp mask oraz msharpen zosta³ skopiowany z oryginalnej  dokumentacji filtrów AviSynth i VirtualDub\r\n Prawa autorskie Donald Graft\r\n\r\nOpis asharp oraz swscaler zosta³ napisany przez Artura Osiñskiego (Virtual_ManPL)
 
 [140]
 0=Przeplot
@@ -1052,7 +1061,7 @@ side right=Boczny prawy
 1099=Zamglenie chrominancji:
 1100=Poziome odkszta³cenie:
 1022=Pionowe odkszta³cenie:
-1143=Algorytmy zwiêkszania rozmiaru obrazu:\r\n najdok³adniejszymi s¹ algorytmy Lanczos oraz Spline\r\n\r\nZ przeplotem:\r\n zaznaczone - klatki s¹ traktowane jako progresywne\r\n niezaznaczone - klatki traktowane s¹ jako klatki z przeplotem\r\n wpó³zaznaczone - decyduje typ wejœciowej klatki (u¿ywane podczas   przetwarzania obrazu MPEG2)
+1143=Algorytmy zwiêkszania rozmiaru obrazu:\r\n najdok³adniejszymi s¹ algorytmy Lanczos oraz Spline\r\n\r\nZ przeplotem:\r\n zaznaczone - klatki s¹ traktowane jako progresywne\r\n niezaznaczone - klatki traktowane s¹ jako klatki z przeplotem\r\n wpó³zaznaczone - decyduje typ wejœciowej klatki (u¿ywane podczas\r\n przetwarzania obrazu MPEG2)
 
 [254]
 0=Tekst
@@ -1152,7 +1161,7 @@ side right=Boczny prawy
 1765=pocz¹tek
 1550=Rozdziel wejœciowy przeplot jeœli wysokoœæ > :
 1552=pikseli
-1143=Kolejkowanie wyjœciowych próbek\r\n G³ównym zadaniem tej opcji jest zmniejszenie pomijania klatek wskutek\r\n zarz¹dzania w¹tkami procesora\r\n Opcja ta dzia³a tylko wtedy kiedy procesor obs³uguje wielow¹tkowoœæ\r\n\r\nU¿yj kolejkowania w\r\n Kolejkowanie jest domyœlnie wy³¹czone ze wzglêdu na problemy ze   stabilnoœci¹\r\n Jednak jeœli chcesz dodaæ aplikacjê wykorzystuj¹c¹ wielow¹tkowoœæ oddziel\r\n pliki przez znak ;\r\n\r\nInne ustawienia\r\n OpóŸnienie obrazu\r\n  Je¿eli odbiorca jest daleko od g³oœników, mo¿esz wypróbowaæ t¹ opcjê
+1143=Kolejkowanie wyjœciowych próbek\r\n G³ównym zadaniem tej opcji jest zmniejszenie pomijania klatek wskutek\r\n zarz¹dzania w¹tkami procesora\r\n Opcja ta dzia³a tylko wtedy kiedy procesor obs³uguje wielow¹tkowoœæ\r\n\r\nU¿yj kolejkowania w\r\n Kolejkowanie jest domyœlnie wy³¹czone ze wzglêdu na problemy ze\r\n stabilnoœci¹\r\n Jednak jeœli chcesz dodaæ aplikacjê wykorzystuj¹c¹ wielow¹tkowoœæ oddziel\r\n pliki przez znak ;\r\n\r\nInne ustawienia\r\n OpóŸnienie obrazu\r\n  Je¿eli odbiorca jest daleko od g³oœników, mo¿esz wypróbowaæ t¹ opcjê
 2206=W³¹cz kolejkowanie miksuj¹cego renderera obrazu 9 - YV12
 
 [2112]
@@ -1193,7 +1202,7 @@ side right=Boczny prawy
 1857=Krawêdzie:
 1860=Wewnêtrzne
 1861=Zewnêtrzne
-2067=Dzielenie krawêdzi
+2067=Dzielenie krawêdzi:
 
 [225]
 1829=Zapisz matrycê...
