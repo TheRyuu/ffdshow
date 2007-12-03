@@ -1,7 +1,7 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1668
+#define tryout_revision = 1669
 #define buildyear = 2007
 #define buildmonth = '12'
 #define buildday = '03'
@@ -320,9 +320,11 @@ Source: Runtimes\msvc80\microsoft.vc80.crt.manifest; DestDir: {app}; Flags: igno
   #endif
 #endif
 
+#if !unicode_required
 ; Layer for Unicode on Windows 9x. installed only on Windows 9x (forced). The uninstaller does not remove this.
 ; Note Unicode build does not work on Windows 9x even with unicows.dll.
-Source: Runtimes\LayerForUnicode\unicows.dll ; DestDir: {sys}; Flags: sharedfile restartreplace uninsneveruninstall; OnlyBelowVersion: 0,1
+Source: Runtimes\LayerForUnicode\unicows.dll ; DestDir: {sys}; Flags: sharedfile uninsnosharedfileprompt restartreplace uninsneveruninstall; MinVersion: 4,0; Components: ffdshow
+#endif
 
 Source: ..\..\libavcodec.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 Source: ..\..\libmplayer.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
