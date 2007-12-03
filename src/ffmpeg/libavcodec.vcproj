@@ -715,6 +715,7 @@
 			</File>
 			<File
 				RelativePath="libavcodec\h264pred.h">
+			</File>
 			<File
 				RelativePath="libavcodec\huffman.h">
 			</File>

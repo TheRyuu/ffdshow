@@ -97,7 +97,7 @@ void avcodec_register_all(void)
     REGISTER_DECODER	(rpza);
     REGISTER_DECODER	(rv10);
     REGISTER_DECODER	(rv20);
-		#if __STDC_VERSION__ >= 199901L
+	#if __STDC_VERSION__ >= 199901L
     //REGISTER_ENCDEC		(snow);
     #endif
     REGISTER_DECODER	(sp5x);
@@ -123,7 +123,7 @@ void avcodec_register_all(void)
     REGISTER_DECODER	(zlib);
     REGISTER_DECODER	(zmbv);
 
-		/* audio codecs */
+	/* audio codecs */
     REGISTER_ENCODER	(ac3);   
     REGISTER_DECODER	(atrac3);
     REGISTER_DECODER	(amr_nb);
@@ -147,11 +147,11 @@ void avcodec_register_all(void)
     REGISTER_DECODER	(wmav1);
     REGISTER_DECODER	(wmav2);
 
-		/* pcm codecs */
+	/* pcm codecs */
     REGISTER_DECODER  (pcm_alaw);
     REGISTER_DECODER  (pcm_mulaw);
 
-		/* adpcm codecs */
+	/* adpcm codecs */
     REGISTER_DECODER  (adpcm_4xm);
     REGISTER_DECODER  (adpcm_ct);
     REGISTER_DECODER  (adpcm_ea);
