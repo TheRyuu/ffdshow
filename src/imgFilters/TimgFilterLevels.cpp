@@ -106,7 +106,7 @@ HRESULT TimgFilterLevels::process(TfilterQueue::iterator it,TffPict &pict,const 
     // mode==6
     unsigned int threshold=pictRect.dx*pictRect.dy*(cfg->Ythreshold)/1000;
 
-    int countMin, countMax;
+    unsigned int countMin, countMax;
     int x;
 
     for(countMin=0,x=0;x<inMin;countMin+=histogram[x],x++)
