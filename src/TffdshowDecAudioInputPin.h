@@ -37,7 +37,7 @@ public:
  HRESULT getMovieSource(const TaudioCodec* *moviePtr);
  virtual HRESULT getInCodecString(char_t *buf,size_t buflen);
  int getInputBitrate(void) const;
- int getJitter(void) const {return jitter/int(REF_SECOND_MULT/1000);}
+ int getJitter(void) const;
 };
 
 #endif

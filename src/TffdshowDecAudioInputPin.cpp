@@ -144,7 +144,9 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
   {
    REFERENCE_TIME j=filter->m_rtStartDec-rtStart;
    jitter=int(j);
-   if (ff_abs(j)>100*(REF_SECOND_MULT/1000)) // +-100ms jitter is allowed for now
+   if (ff_abs(j) > 100 * (REF_SECOND_MULT / 1000) // +-100ms jitter is allowed for now
+       && codecId != CODEC_ID_FLAC
+       && codecId != CODEC_ID_TTA)
     {
      DPRINTF(_l("jitter correction"));
      buf.clear();
@@ -209,4 +211,11 @@ bool TffdshowDecAudioInputPin::getsf(TsampleFormat &outsf)
   else
    outsf=audio->getInputSF();
  return false;
+}
+int TffdshowDecAudioInputPin::getJitter(void) const
+{
+ if (codecId != CODEC_ID_FLAC && codecId != CODEC_ID_TTA)
+  return jitter/int(REF_SECOND_MULT/1000);
+ else
+  return 0;
 }

@@ -326,8 +326,8 @@ const char_t* TsampleFormat::getSpeakerName(int speaker,bool shrt)
     case SPEAKER_FRONT_RIGHT:return shrt?_l("R"):_l("front right");
     case SPEAKER_FRONT_CENTER:return shrt?_l("C"):_l("front center");
     case SPEAKER_LOW_FREQUENCY:return _l("LFE");
-    case SPEAKER_BACK_LEFT:return shrt?_l("SL"):_l("back left");
-    case SPEAKER_BACK_RIGHT:return shrt?_l("SR"):_l("back right");
+    case SPEAKER_BACK_LEFT:return _l("back left");
+    case SPEAKER_BACK_RIGHT:return _l("back right");
     case SPEAKER_FRONT_LEFT_OF_CENTER:return _l("front left of center");
     case SPEAKER_FRONT_RIGHT_OF_CENTER:return _l("front right of center");
     case SPEAKER_BACK_CENTER:return _l("back center");
