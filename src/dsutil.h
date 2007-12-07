@@ -16,7 +16,7 @@ CLSID GetCLSID(IPin* pPin);
 
 void getFilterName(IBaseFilter *filter,char_t *name,char_t *filtername,size_t bufsize); // bufsize : count of characters, not byte size.
 
-struct pins_vector : array_vector<IPin*,40>
+struct pins_vector : std::vector<IPin*>
 {
 public:
  pins_vector(IBaseFilter *filter,PIN_DIRECTION dir);
