@@ -133,6 +133,13 @@
 #define FOURCC_FPS1 mmioFOURCC('F','P','S','1')
 #define FOURCC_AMVV mmioFOURCC('A','M','V','V')
 #define FOURCC_SP5X mmioFOURCC('S','P','5','X')
+#define FOURCC_SP51 mmioFOURCC('S','P','5','1')
+#define FOURCC_SP52 mmioFOURCC('S','P','5','2')
+#define FOURCC_SP53 mmioFOURCC('S','P','5','3')
+#define FOURCC_SP54 mmioFOURCC('S','P','5','4')
+#define FOURCC_SP55 mmioFOURCC('S','P','5','5')
+#define FOURCC_SP56 mmioFOURCC('S','P','5','6')
+#define FOURCC_SP57 mmioFOURCC('S','P','5','7')
 #define FOURCC_RLE4 BI_RLE4
 #define FOURCC_RLE8 BI_RLE8
 #define FOURCC_BITFIELDS 3

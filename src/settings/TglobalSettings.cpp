@@ -645,6 +645,13 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(MJPA,avrn & rawmask,CODEC_ID_MJPEG) \
  FF_FOURCC1_OP(AMVV,avrn & rawmask,CODEC_ID_AMV) \
  FF_FOURCC1_OP(SP5X,avrn & rawmask,CODEC_ID_SP5X) \
+ FF_FOURCC1_OP(SP51,avrn & rawmask,CODEC_ID_SP5X) \
+ FF_FOURCC1_OP(SP52,avrn & rawmask,CODEC_ID_SP5X) \
+ FF_FOURCC1_OP(SP53,avrn & rawmask,CODEC_ID_SP5X) \
+ FF_FOURCC1_OP(SP54,avrn & rawmask,CODEC_ID_SP5X) \
+ FF_FOURCC1_OP(SP55,avrn & rawmask,CODEC_ID_SP5X) \
+ FF_FOURCC1_OP(SP56,avrn & rawmask,CODEC_ID_SP5X) \
+ FF_FOURCC1_OP(SP57,avrn & rawmask,CODEC_ID_SP5X) \
  FF_FOURCC1_OP(DVSD,dvsd & rawmask,CODEC_ID_DVVIDEO) \
  FF_FOURCC1_OP(DV25,dvsd & rawmask,CODEC_ID_DVVIDEO) \
  FF_FOURCC1_OP(DV50,dvsd & rawmask,CODEC_ID_DVVIDEO) \
