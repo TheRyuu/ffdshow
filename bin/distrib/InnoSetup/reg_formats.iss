@@ -353,13 +353,20 @@ Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: mp43;
 Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: mp4v; ValueData: 0; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: NOT video\mpeg4
 Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: xvid; ValueData: 0; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: NOT video\xvid
 
-Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: div3; ValueData: 1; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\divx
-Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: dx50; ValueData: 1; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\divx
 Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: ffv1; ValueData: 1; Components: ffdshow\vfw
 Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: fvfw; ValueData: 1; Components: ffdshow\vfw
 Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: h264; ValueData: 1; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\h264
 Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: mp41; ValueData: 1; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\mpeg4
 Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: mp42; ValueData: 1; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\mpeg4
 Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: mp43; ValueData: 1; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\mpeg4
-Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: mp4v; ValueData: 1; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\mpeg4
+#if include_xvidcore
+Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: div3; ValueData: 9; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\divx
+Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: dx50; ValueData: 9; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\divx
+Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: xvid; ValueData: 9; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\xvid
+Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: mp4v; ValueData: 9; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\mpeg4
+#else
+Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: div3; ValueData: 1; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\divx
+Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: dx50; ValueData: 1; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\divx
 Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: xvid; ValueData: 1; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\xvid
+Root: HKLM; Subkey: Software\GNU\ffdshow_vfw; ValueType: dword; ValueName: mp4v; ValueData: 1; Components: ffdshow\vfw; Flags: createvalueifdoesntexist; Tasks: video\mpeg4
+#endif
