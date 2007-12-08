@@ -245,7 +245,7 @@ void TimgFilterOSD::TosdLine::print(IffdshowBase *deci,const TffPict &pict,unsig
      printprefs.deci=deci;
      printprefs.config=config;
      printprefs.shadowMode=-1;
-     printprefs.csp=pict.csp;
+     printprefs.csp=pict.csp & FF_CSPS_MASK;
      printprefs.cspBpp=pict.cspInfo.Bpp;
      printprefs.sar=pict.rectFull.sar;
      if (splitline)
@@ -511,7 +511,7 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
      printprefs.deci=deci;
      printprefs.config=parent->config;
      printprefs.shadowMode=-1;
-     printprefs.csp=pict.csp;
+     printprefs.csp=pict.csp & FF_CSPS_MASK;
      printprefs.cspBpp=pict.cspInfo.Bpp;
      printprefs.sar=pict.rectFull.sar;
      fontUser.print(&subUser,true,printprefs);

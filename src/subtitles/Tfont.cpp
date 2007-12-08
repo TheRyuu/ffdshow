@@ -63,7 +63,7 @@ template<class tchar> TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
  TrenderedSubtitleWordBase(true),
  props(Iprops)
 {
- csp=prefs.csp;
+ csp=prefs.csp & FF_CSPS_MASK;
  typedef typename tchar_traits<tchar>::ffstring ffstring;
  typedef typename tchar_traits<tchar>::strings strings;
  strings s1;
@@ -650,7 +650,7 @@ template<class tchar> TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
  TrenderedSubtitleWordBase(true),
  props(Iprops)
 {
- csp=prefs.csp;
+ csp=prefs.csp & FF_CSPS_MASK;
  m_bodyYUV=(charsChache->getBodyYUV());
  m_outlineYUV=(charsChache->getOutlineYUV());
  m_shadowYUV=(charsChache->getShadowYUV());
