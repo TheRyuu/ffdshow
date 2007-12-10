@@ -292,7 +292,7 @@ int TSubtitleProps::get_xscale(int Ixscale,const Rational& sar,int aspectAuto,in
   result=Ixscale;
  else
   result=scaleX;
- if ((aspectAuto || version != -1) && sar.num>sar.den)
+ if ((aspectAuto) && sar.num>sar.den)
   result=result*sar.den/sar.num;
  return result;
 }
@@ -304,7 +304,7 @@ int TSubtitleProps::get_yscale(int Iyscale,const Rational& sar,int aspectAuto,in
   result=Iyscale;
  else
   result=scaleY;
- if ((aspectAuto || version != -1) && sar.num<sar.den)
+ if ((aspectAuto) && sar.num<sar.den)
   result=result*sar.num/sar.den;
  return result;
 }
