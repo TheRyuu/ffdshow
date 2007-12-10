@@ -37,7 +37,8 @@ TffdshowVideoInputPin::TffdshowVideoInputPin(TCHAR *objectName,TffdshowVideo *If
   video(NULL),
   isInterlacedRawVideo(false),
   isMPC_matroska(false),
-  pCompatibleFilter(NULL)
+  pCompatibleFilter(NULL),
+  wasVC1(false)
 {
  usingOwnAllocator=false;
  supdvddec=fv->deci->getParam2(IDFF_supDVDdec) && fv->deci->getParam2(IDFF_mpg2);
@@ -357,7 +358,24 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
  char_t pomS[60];
  DPRINTF(_l("TffdshowVideoInputPin::initVideo: %s, width:%i, height:%i, aspectX:%i, aspectY:%i"),fourcc2str(hdr2fourcc(&biIn.bmiHeader,&mt.subtype),pomS,60) ,pictIn.rectFull.dx,pictIn.rectFull.dy,pictIn.rectFull.dar().num,pictIn.rectFull.dar().den);
 again:
- if (video) {delete video;codec=video=NULL;}
+ // FIXME Experimental //
+ // VC1 (in EVO) stream may have attached media type during playback (say, once per 5 second).
+ // When I try to use its codec private data, the video heavily stutters.
+ // pContext.pDMO->SetInputType (Currently ff_wmv.cpp line 769) takes too long.
+ // I gave up using it and decided to ignore it during playback of VC1 stream.
+ // It works fine for my sample.
+ if (video)
+  {
+   if (wasVC1 && biIn.bmiHeader.biCompression==0x31435657 /* "WVC1" */ )
+    {
+     return true;
+    }
+   else
+    {
+     delete video;
+     codec=video=NULL;
+    }
+  }
  codecId=(CodecID)fv->getVideoCodecId(&biIn.bmiHeader,&mt.subtype,&biIn.bmiHeader.biCompression);
  if (codecId==CODEC_ID_NONE) 
  {
@@ -395,7 +413,14 @@ again:
   }
 
  if (!fv->sink)
-  rawDecode=true;
+  {
+   rawDecode=true;
+   if (video)
+    {
+     delete video;
+     codec=video=NULL;
+    }
+  }
  else
   {
    fv->initCodecSettings();
@@ -420,6 +445,7 @@ again:
   }
  allocator.NotifyMediaType(mt);
  strippacket=!!(mt.majortype==MEDIATYPE_DVD_ENCRYPTED_PACK);
+ wasVC1 = biIn.bmiHeader.biCompression==0x31435657 /* "WVC1" */;
  return true;
 }
 

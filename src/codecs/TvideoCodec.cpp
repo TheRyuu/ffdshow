@@ -44,7 +44,7 @@ TvideoCodec::~TvideoCodec()
 //===================================== TvideoCodecDec ======================================
 TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci,IdecVideoSink *sink,CodecID codecId,FOURCC fcc,const CMediaType &mt)
 {
- TvideoCodecDec *movie;
+ TvideoCodecDec *movie=NULL;
  if      (lavc_codec    (codecId)) movie=new TvideoCodecLibavcodec(deci,sink);
  else if (raw_codec     (codecId)) movie=new TvideoCodecUncompressed(deci,sink);
  else if (wmv9_codec    (codecId)) movie=new TvideoCodecWmv9(deci,sink);
@@ -53,6 +53,7 @@ TvideoCodecDec* TvideoCodecDec::initDec(IffdshowBase *deci,IdecVideoSink *sink,C
  else if (codecId==CODEC_ID_AVISYNTH  ) movie=new TvideoCodecAvisynth(deci,sink);
  else if (codecId==CODEC_ID_THEORA_LIB) movie=new TvideoCodecTheora(deci,sink);
  else return NULL;
+ if (!movie) return NULL;
  if (movie->ok && movie->testMediaType(fcc,mt))
   {
    movie->codecId=codecId;

@@ -556,6 +556,9 @@ private:
  int hwDeinterlace;
  STDMETHODIMP_(int) get_trayIconType(void);
  bool compatibleFilterConnected;
+ DWORD inSampleTypeSpecificFlags;
+ bool inSampleEverField1Repeat;
+ REFERENCE_TIME m_rtStart;
 public:
  enum DOWNSTREAM_FILTER_TYPE
   {

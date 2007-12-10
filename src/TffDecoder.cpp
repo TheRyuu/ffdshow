@@ -104,7 +104,9 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  m_NeedToAttachFormat(false),
  inReconnect(false),
  compatibleFilterConnected(false),
- inputConnectedPin(NULL)
+ inputConnectedPin(NULL),
+ m_rtStart(0),
+ inSampleEverField1Repeat(false)
 {
  DPRINTF(_l("TffdshowDecVideo::Constructor"));
 #ifdef OSDTIMETABALE
@@ -609,14 +611,6 @@ HRESULT TffdshowDecVideo::DecideBufferSizeOld(IMemAllocator *pAlloc, ALLOCATOR_P
  return S_OK;
 }
 
-HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample)
-{
- m_aboutToFlash= false;
- HRESULT hr= ReceiveI(pSample);
- m_aboutToFlash= false;
- return hr;
-}
-
 void TffdshowDecVideo::ConnectCompatibleFilter(void)
 {
 	if (compatibleFilterConnected || inpin->pCompatibleFilter == NULL) return;
@@ -742,6 +736,14 @@ void TffdshowDecVideo::DisconnectFromCompatibleFilter(void)
 }
 
 
+HRESULT TffdshowDecVideo::Receive(IMediaSample *pSample)
+{
+ m_aboutToFlash= false;
+ HRESULT hr= ReceiveI(pSample);
+ m_aboutToFlash= false;
+ return hr;
+}
+
 HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
 {
  // If the next filter downstream is the video renderer, then it may
@@ -755,13 +757,16 @@ HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
  // This means that any decision to drop the frame must be taken before
  // calling GetDeliveryBuffer.
  ASSERT(pSample);
-#if 0
+ ASSERT(m_pOutput!=NULL);
+
+ inSampleTypeSpecificFlags = 0;
  AM_SAMPLE2_PROPERTIES inProp2;
  if (comptrQ<IMediaSample2> pIn2=pSample)
-  pIn2->GetProperties(sizeof(AM_SAMPLE2_PROPERTIES),(PBYTE)&inProp2);
-#endif
+  {
+   pIn2->GetProperties(sizeof(AM_SAMPLE2_PROPERTIES),(PBYTE)&inProp2);
+   inSampleTypeSpecificFlags = inProp2.dwTypeSpecificFlags;
+  }
  // If no output pin to deliver to then no point sending us data
- ASSERT(m_pOutput!=NULL);
 
  AM_MEDIA_TYPE *pmt;
  // The source filter may dynamically ask us to start transforming from a
@@ -996,8 +1001,27 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
  else
   {
    frameTimeOk=S_OK;
-   pict.rtStart=REFERENCE_TIME((segmentFrameCnt  )*inpin->avgTimePerFrame);
-   pict.rtStop =REFERENCE_TIME((segmentFrameCnt+1)*inpin->avgTimePerFrame-1);
+   pict.rtStart = m_rtStart;
+   if (inSampleTypeSpecificFlags & AM_VIDEO_FLAG_REPEAT_FIELD)
+    {
+     // field 1 repeat flag. Haali's splitter use this for interlaced VC1 in EVO.
+     pict.rtStop = pict.rtStart + inpin->avgTimePerFrame + (inpin->avgTimePerFrame >> 1) - 1;
+     m_rtStart += inpin->avgTimePerFrame + (inpin->avgTimePerFrame >> 1);
+     inSampleEverField1Repeat = true;
+    }
+   else
+    {
+     pict.rtStop = pict.rtStart + inpin->avgTimePerFrame - 1;
+     m_rtStart += inpin->avgTimePerFrame;
+    }
+  }
+
+ if ((inSampleEverField1Repeat || inpin->isInterlacedRawVideo) && !(inSampleTypeSpecificFlags & AM_VIDEO_FLAG_WEAVE))
+  {
+   if (inSampleTypeSpecificFlags & AM_VIDEO_FLAG_FIELD1FIRST)
+    pict.fieldtype = FIELD_TYPE::INT_TFF;
+   else
+    pict.fieldtype = FIELD_TYPE::INT_BFF;
   }
 
  //LONGLONG mediaTime1=-1,mediaTime2=-1;
@@ -1307,6 +1331,7 @@ HRESULT TffdshowDecVideo::NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,
  OSD_time_on_ffdshowDuration=0;
  segmentStart=tStart;
  segmentFrameCnt=0;
+ m_rtStart = 0;
  for (size_t i=0;i<textpins.size();i++)
   if (textpins[i]->needSegment)
    textpins[i]->NewSegment(tStart,tStop,dRate);

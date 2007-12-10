@@ -18,6 +18,7 @@ private:
  TvideoCodecDec *video;
  char_t autosubflnm[MAX_PATH];bool oldSubHeuristic;char_t oldSubSearchDir[MAX_PATH];
  bool isMPC_matroska;
+ bool wasVC1;
 protected:
  virtual bool init(const CMediaType &mt);
  virtual void done(void);
