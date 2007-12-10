@@ -33,8 +33,16 @@ struct Trect
   }
  static void calcNewSizeAspect(const Trect &in,int a1,int a2,Trect &out)
   {
-   if (in.dx>in.dy) {out.dy=a2*in.dx/a1;out.dx=in.dx;}
-   else             {out.dx=a1*in.dy/a2;out.dy=in.dy;}
+   if ((in.dx << 16) / in.dy > ((unsigned int)a1 << 16) / (unsigned int)a2)
+    {
+     out.dy = a2 * in.dx / a1;
+     out.dx= in.dx;
+    }
+   else
+    {
+     out.dx = a1 * in.dy / a2;
+     out.dy = in.dy;
+    }
    if (out.dx&3) out.dx=(out.dx/4+1)*4;
    if (out.dy&1) out.dy=(out.dy/2+1)*2;
   }
