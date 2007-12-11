@@ -813,7 +813,10 @@ static int decode_sequence_header(AVCodecContext *avctx, GetBitContext *gb)
     v->res_fasttx = get_bits1(gb);
     if (!v->res_fasttx)
     {
-        v->s.dsp.vc1_inv_trans_8x8 = simple_idct;
+        v->s.dsp.vc1_inv_trans_8x8 = ff_simple_idct;
+        v->s.dsp.vc1_inv_trans_8x4 = ff_simple_idct84_add;
+        v->s.dsp.vc1_inv_trans_4x8 = ff_simple_idct48_add;
+        v->s.dsp.vc1_inv_trans_4x4 = ff_simple_idct44_add;
     }
 
     v->fastuvmc =  get_bits1(gb); //common
@@ -2884,7 +2887,8 @@ static int vc1_decode_intra_block(VC1Context *v, DCTELEM block[64], int n, int c
 
 /** Decode P block
  */
-static int vc1_decode_p_block(VC1Context *v, DCTELEM block[64], int n, int mquant, int ttmb, int first_block)
+static int vc1_decode_p_block(VC1Context *v, DCTELEM block[64], int n, int mquant, int ttmb, int first_block,
+                              uint8_t *dst, int linesize, int skip_block)
 {
     MpegEncContext *s = &v->s;
     GetBitContext *gb = &s->gb;
@@ -2930,7 +2934,10 @@ static int vc1_decode_p_block(VC1Context *v, DCTELEM block[64], int n, int mquan
             if(!v->pquantizer)
                 block[idx] += (block[idx] < 0) ? -mquant : mquant;
         }
-        s->dsp.vc1_inv_trans_8x8(block);
+        if(!skip_block){
+            s->dsp.vc1_inv_trans_8x8(block);
+            s->dsp.add_pixels_clamped(block, dst, linesize);
+        }
         break;
     case TT_4X4:
         for(j = 0; j < 4; j++) {
@@ -2947,8 +2954,8 @@ static int vc1_decode_p_block(VC1Context *v, DCTELEM block[64], int n, int mquan
                 if(!v->pquantizer)
                     block[idx + off] += (block[idx + off] < 0) ? -mquant : mquant;
             }
-            if(!(subblkpat & (1 << (3 - j))))
-                s->dsp.vc1_inv_trans_4x4(block, j);
+            if(!(subblkpat & (1 << (3 - j))) && !skip_block)
+                s->dsp.vc1_inv_trans_4x4(dst + (j&1)*4 + (j&2)*2*linesize, linesize, block + off);
         }
         break;
     case TT_8X4:
@@ -2969,8 +2976,8 @@ static int vc1_decode_p_block(VC1Context *v, DCTELEM block[64], int n, int mquan
                 if(!v->pquantizer)
                     block[idx + off] += (block[idx + off] < 0) ? -mquant : mquant;
             }
-            if(!(subblkpat & (1 << (1 - j))))
-                s->dsp.vc1_inv_trans_8x4(block, j);
+            if(!(subblkpat & (1 << (1 - j))) && !skip_block)
+                s->dsp.vc1_inv_trans_8x4(dst + j*4*linesize, linesize, block + off);
         }
         break;
     case TT_4X8:
@@ -2991,8 +2998,8 @@ static int vc1_decode_p_block(VC1Context *v, DCTELEM block[64], int n, int mquan
                 if(!v->pquantizer)
                     block[idx + off] += (block[idx + off] < 0) ? -mquant : mquant;
             }
-            if(!(subblkpat & (1 << (1 - j))))
-                s->dsp.vc1_inv_trans_4x8(block, j);
+            if(!(subblkpat & (1 << (1 - j))) && !skip_block)
+                s->dsp.vc1_inv_trans_4x8(dst + j*4, linesize, block + off);
         }
         break;
     }
@@ -3101,11 +3108,9 @@ static int vc1_decode_p_mb(VC1Context *v)
                             s->dsp.vc1_v_overlap(s->dest[dst_idx] + off, s->linesize >> ((i & 4) >> 2));
                     }
                 } else if(val) {
-                    vc1_decode_p_block(v, s->block[i], i, mquant, ttmb, first_block);
+                    vc1_decode_p_block(v, s->block[i], i, mquant, ttmb, first_block, s->dest[dst_idx] + off, (i&4)?s->uvlinesize:s->linesize, (i&4) && (s->flags & CODEC_FLAG_GRAY));
                     if(!v->ttmbf && ttmb < 8) ttmb = -1;
                     first_block = 0;
-                    if((i<4) || !(s->flags & CODEC_FLAG_GRAY))
-                        s->dsp.add_pixels_clamped(s->block[i], s->dest[dst_idx] + off, (i&4)?s->uvlinesize:s->linesize);
                 }
             }
         }
@@ -3203,11 +3208,9 @@ static int vc1_decode_p_mb(VC1Context *v)
                             s->dsp.vc1_v_overlap(s->dest[dst_idx] + off, s->linesize >> ((i & 4) >> 2));
                     }
                 } else if(is_coded[i]) {
-                    status = vc1_decode_p_block(v, s->block[i], i, mquant, ttmb, first_block);
+                    status = vc1_decode_p_block(v, s->block[i], i, mquant, ttmb, first_block, s->dest[dst_idx] + off, (i&4)?s->uvlinesize:s->linesize, (i&4) && (s->flags & CODEC_FLAG_GRAY));
                     if(!v->ttmbf && ttmb < 8) ttmb = -1;
                     first_block = 0;
-                    if((i<4) || !(s->flags & CODEC_FLAG_GRAY))
-                        s->dsp.add_pixels_clamped(s->block[i], s->dest[dst_idx] + off, (i&4)?s->uvlinesize:s->linesize);
                 }
             }
             return status;
@@ -3377,11 +3380,9 @@ static void vc1_decode_b_mb(VC1Context *v)
             if(v->rangeredfrm) for(j = 0; j < 64; j++) s->block[i][j] <<= 1;
             s->dsp.put_signed_pixels_clamped(s->block[i], s->dest[dst_idx] + off, s->linesize >> ((i & 4) >> 2));
         } else if(val) {
-            vc1_decode_p_block(v, s->block[i], i, mquant, ttmb, first_block);
+            vc1_decode_p_block(v, s->block[i], i, mquant, ttmb, first_block, s->dest[dst_idx] + off, (i&4)?s->uvlinesize:s->linesize, (i&4) && (s->flags & CODEC_FLAG_GRAY));
             if(!v->ttmbf && ttmb < 8) ttmb = -1;
             first_block = 0;
-            if((i<4) || !(s->flags & CODEC_FLAG_GRAY))
-                s->dsp.add_pixels_clamped(s->block[i], s->dest[dst_idx] + off, (i&4)?s->uvlinesize:s->linesize);
         }
     }
 }
