@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1674
+#define tryout_revision = 1698
 #define buildyear = 2007
 #define buildmonth = '12'
-#define buildday = '03'
+#define buildday = '12'
 
 ; Build specific options
 #define unicode_required = True
@@ -1080,6 +1080,7 @@ begin
     'ACDSee8pro.exe'#13#10
     'ACDSee9.exe'#13#10
     'ACDSee10.exe'#13#10
+    'ACDSeePro2.exe'#13#10
     'Adobe Premiere Elements.exe'#13#10
     'Adobe Premiere Pro.exe'#13#10
     'aegisub.exe'#13#10
@@ -1087,6 +1088,7 @@ begin
     'afreecastudio.exe'#13#10
     'aim6.exe'#13#10
     'ALLPlayer.exe'#13#10
+    'AlltoaviV4.exe'#13#10
     'ALShow.exe'#13#10
     'ALSong.exe'#13#10
     'AltDVB.exe'#13#10
@@ -1175,6 +1177,7 @@ begin
     'Fortius.exe'#13#10
     'FreeStyle.exe'#13#10
     'FSViewer.exe'#13#10
+    'Funshion.exe'#13#10
     'FusionHDTV.exe'#13#10
     'GDivX Player.exe'#13#10
     'gdsmux.exe'#13#10
@@ -1197,6 +1200,7 @@ begin
     'IncMail.exe'#13#10
     'InfoTool.exe'#13#10
     'infotv.exe'#13#10
+    'Internet TV.exe'#13#10
     'iPlayer.exe'#13#10
     'i_view32.exe'#13#10
     'JetAudio.exe'#13#10
@@ -1206,6 +1210,7 @@ begin
     'LifeCam.exe'#13#10
     'Lilith.exe'#13#10
     'makeAVIS.exe'#13#10
+    'MatroskaDiag.exe'#13#10
     'Maxthon.exe'#13#10
     'MDirect.exe'#13#10
     'Media Center 12.exe'#13#10
@@ -1262,6 +1267,7 @@ begin
     'progdvb.exe'#13#10
     'PVCR.exe'#13#10
     'Qonoha.exe'#13#10
+    'QQ.exe'#13#10
     'QQPlayerSvr.exe'#13#10
     'QzoneMusic.exe'#13#10
     'RadLight.exe'#13#10
@@ -1295,6 +1301,7 @@ begin
     'TMPGEnc.exe'#13#10
     'TMPGEnc4XP.exe'#13#10
     'TOTALCMD.EXE'#13#10
+    'Tvants.exe'#13#10
     'tvc.exe'#13#10
     'TVersity.exe'#13#10
     'TVPlayer.exe'#13#10
@@ -1408,7 +1415,16 @@ begin
   compApps[10].name := 'ReClockHelper.dll';
   compApps[11].name := 'YahooMessenger.exe';
   
-  compApps[12].rev   := 0;
+  compApps[12].rev   := 1698;
+  compApps[12].name  := 'ACDSeePro2.exe';
+  compApps[13].name  := 'AlltoaviV4.exe';
+  compApps[14].name  := 'Funshion.exe';
+  compApps[15].name  := 'Internet TV.exe';
+  compApps[16].name  := 'MatroskaDiag.exe';
+  compApps[17].name  := 'QQ.exe';
+  compApps[18].name  := 'Tvants.exe';
+  
+  compApps[19].rev   := 0;
 
 
   // Compatibility list
