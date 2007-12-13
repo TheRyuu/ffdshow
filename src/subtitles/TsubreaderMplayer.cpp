@@ -1113,8 +1113,10 @@ TsubreaderMplayer::TsubreaderMplayer(Tstream &fd,int sub_format,double fps,const
  if (cfg->timeoverlap && !empty())
   {
    for (iterator s=begin();s!=end()-1;s++)
-    if ((*s)->stop<(*s)->start)
-     (*s)->stop=(*(s+1))->start-1;
+    { // without these braces, processOverlap() is executed multiple times... (MSVC8)
+     if ((*s)->stop<(*s)->start)
+      (*s)->stop=(*(s+1))->start-1;
+    }
    processOverlap();
   }
 }
@@ -1150,7 +1152,7 @@ void Tsubreader::processOverlap(void)
 
    // we need a structure to keep trace of the screen lines
    // used by the subs, a 'placeholder'
-   counter = 2 * sub_to_add + 1;  // the maximum number of subs derived rom a block of sub_to_add+1 subs
+   counter = 2 * sub_to_add + 1;  // the maximum number of subs derived from a block of sub_to_add+1 subs
    placeholder = (int **) malloc(sizeof(int *) * counter);
    for (int i = 0; i < counter; ++i)
     {
@@ -1167,10 +1169,12 @@ void Tsubreader::processOverlap(void)
      local_start = local_end + 1;
      local_end   = global_end;
      for (int j = 0; j <= sub_to_add; ++j)
-      if ((at(sub_first + j)->start - 1 > local_start) && (at(sub_first + j)->start - 1 < local_end))
-       local_end = at(sub_first + j)->start - 1;
-      else if ((at(sub_first + j)->stop > local_start) && (at(sub_first + j)->stop< local_end))
-       local_end = at(sub_first + j)->stop;
+      {
+       if ((at(sub_first + j)->start - 1 > local_start) && (at(sub_first + j)->start - 1 < local_end))
+        local_end = at(sub_first + j)->start - 1;
+       else if ((at(sub_first + j)->stop > local_start) && (at(sub_first + j)->stop < local_end))
+        local_end = at(sub_first + j)->stop;
+      }
 
      // here we allocate the screen lines to subs we must
      // display in current local_start-local_end interval.
@@ -1206,7 +1210,9 @@ void Tsubreader::processOverlap(void)
          for (i = 0; i < lines_to_add; ++i)
           {
            if (placeholder[counter][i] == -1)
-            ++tmp; // placeholder[counter][i] is part of the current group of blank lines
+            {
+             ++tmp; // placeholder[counter][i] is part of the current group of blank lines
+            }
            else
             {
              if (tmp == sub_lines)
@@ -1227,12 +1233,16 @@ void Tsubreader::processOverlap(void)
                tmp = 0;
               }
              else
-              tmp = 0; // current group doesn't fit at all, so we forget it
+              {
+               tmp = 0; // current group doesn't fit at all, so we forget it
+              }
             }
           }
          if (tmp)
-          if ((tmp >= sub_lines) && (tmp < fragment_length))  // last screen line is blank, a group ends with it
-           fragment_position = i - tmp;
+          {
+           if ((tmp >= sub_lines) && (tmp < fragment_length))  // last screen line is blank, a group ends with it
+            fragment_position = i - tmp;
+          }
          if (fragment_position == -1)
           {
            // it was not possible to find free screen line(s) for a subtitle,
@@ -1247,28 +1257,28 @@ void Tsubreader::processOverlap(void)
         }
       }
      for (int j = higher_line + 1; j < lines_to_add; ++j)
-      if (placeholder[counter][j] != -1)
-       higher_line = j;
-      else
-       break;
+      {
+       if (placeholder[counter][j] != -1)
+        higher_line = j;
+       else
+        break;
+      }
 
      // we read the placeholder structure and create the new subs.
      Tsubtitle *second=at(0)->create();
      second->start = local_start;
      second->stop  = local_end;
      for (int i = 0, j = 0; j < lines_to_add ; ++j)
-      if (placeholder[counter][j] != -1)
-       {
-        at(placeholder[counter][j])->copyProps(second);
-        int lines = at(placeholder[counter][j])->numlines();
-        for (int ls = 0; ls < lines; ++ls)
-         //second[sub_num].text[i++] = strdup(first[placeholder[counter][j]].text[ls]);
-         //second->push_back((*(TsubtitleTextBase<char>*)at(placeholder[counter][j]))[ls]);
-         at(placeholder[counter][j])->copyLine(second,ls);
-        j+=lines-1;
-       }
-      else
-       second->addEmpty();
+      {
+       if (placeholder[counter][j] != -1)
+        {
+         at(placeholder[counter][j])->copyProps(second);
+         int lines = at(placeholder[counter][j])->numlines();
+         for (int ls = 0; ls < lines; ++ls){
+          at(placeholder[counter][j])->copyLine(second,ls);}
+         j+=lines-1;
+        }
+      }
      newsubs.push_back(second);
      ++sub_num;
      ++counter;
