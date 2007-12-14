@@ -30,9 +30,16 @@ extern "C" void Skl_IDct16_MMX (short *block);
 extern "C" void Skl_IDct16_SSE (short *block);
 extern "C" void fdct_mmx_skal (short *block);
 extern "C" void fdct_xmm_skal (short *block);
+
+// MSVC71 has problem in compiling sse2 code of this file.
+// MSVC8 and ICL10 works.
+#if defined(__SSE2__) && ((_MSC_VER>=1400) || defined(__INTEL_COMPILER))
+#define DCT_SSE2
+#endif
+
 TimgFilterDCT::TimgFilterDCT(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent)
 {
-#ifdef __SSE2__
+#ifdef DCT_SSE2
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   {
    fdct=fdct_sse2;
@@ -40,7 +47,7 @@ TimgFilterDCT::TimgFilterDCT(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(I
   }
 #endif
 #ifndef WIN64
- #ifdef __SSE2__
+ #ifdef DCT_SSE2
  else
  #endif
  if (Tconfig::cpu_flags&FF_CPU_MMXEXT)
@@ -654,7 +661,7 @@ void TimgFilterDCT::fdct_c(short *block)
 	for (i = 0; i < 64; i++)
 		block[i] = (short int) roundRshift(data[i], 3);
 }
-#ifdef __SSE2__
+#ifdef DCT_SSE2
 void TimgFilterDCT::fdct_sse2(short *block)
 {
  static __align16(const unsigned short,fTab1[])=
