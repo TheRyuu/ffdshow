@@ -52,14 +52,6 @@
  #include "uClibc++/hash_map"
  #include "uClibc++/utility"
  #include "uClibc++/limits"
-#else
- #include <vector>
- #include <algorithm>
- #include <map>
- #include <list>
- #include <hash_map>
- #include <utility>
- #include <limits>
 #endif
 #if defined(__INTEL_COMPILER) || defined(__GNUC__) || (_MSC_VER>=1300)
  #include "tuple.h"
