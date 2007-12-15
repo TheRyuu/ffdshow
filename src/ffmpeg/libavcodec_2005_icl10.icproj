@@ -445,6 +445,8 @@
 		<File 
 			RelativePath=".\libavcodec\ratecontrol.h"/>
 		<File 
+			RelativePath=".\libavcodec\rectangle.h"/>
+		<File 
 			RelativePath=".\libavcodec\rl.h"/>
 		<File 
 			RelativePath=".\libavcodec\rtjpeg.h"/>

@@ -1335,6 +1335,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\rectangle.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\rl.h"
 				>
 			</File>
