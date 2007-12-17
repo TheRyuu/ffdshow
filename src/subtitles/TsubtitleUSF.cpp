@@ -71,5 +71,5 @@ void TsubtitleUSF2::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceCh
   }
  int dy1[3];
  dy1[0]=wrd.dy[0];dy1[1]=wrd.dy[1];dy1[2]=wrd.dy[2];
- wrd.print(wrd.dx,dy1,prefs.dst,prefs.stride,(const unsigned char**)wrd.bmp,(const unsigned char**)wrd.msk);
+ wrd.print(0,0/*dummy*/,wrd.dx,dy1,prefs.dst,prefs.stride,(const unsigned char**)wrd.bmp,(const unsigned char**)wrd.msk);
 }

@@ -141,7 +141,7 @@ public:
  unsigned int dxCharY,dyCharY;
  unsigned char *bmp[3],*msk[3];stride_t bmpmskstride[3];
  unsigned char *outline[3],*shadow[3];
- virtual void print(unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const =0;
+ virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const =0;
  int csp;
  virtual int get_ascent64() const {return dy[0]*8;}
  virtual int get_descent64() const {return 0;}
@@ -158,7 +158,7 @@ private:
  bool shiftChroma;
 public:
  TrenderedVobsubWord(bool IshiftChroma=true):shiftChroma(IshiftChroma),TrenderedSubtitleWordBase(false) {}
- virtual void print(unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const;
+ virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const;
 };
 
 class TrenderedTextSubtitleWord : public TrenderedSubtitleWordBase
@@ -205,7 +205,7 @@ public:
                         const TrenderedSubtitleLines::TprintPrefs &prefs,
                         const LOGFONT &lf,
                         TSubtitleProps Iprops);
- virtual void print(unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const;
+ virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const;
  unsigned int alignXsize;
  void* (__cdecl *TtextSubtitlePrintY)  (const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short *colortbl,const unsigned char* dst,const unsigned char* msk);
  void* (__cdecl *TtextSubtitlePrintUV) (const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short *colortbl,const unsigned char* dstU,const unsigned char* dstV);

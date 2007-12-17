@@ -141,7 +141,7 @@ TtextSubtitlePrintY_mmx:
 %endif
   mov       reg_di, [reg_sp+(3+4)*ptrsize]  ; di = dst
   _movdqa   _mm0, [reg_si + colortbl.shadow_A]
-  _movdqa   _mm1, [reg_ax]
+  _movdqu   _mm1, [reg_ax]
   _movdqa   _mm2, _mm1
   pxor      _mm3, _mm3
   punpckhbw _mm1, _mm3
@@ -175,7 +175,7 @@ TtextSubtitlePrintY_mmx:
   paddusb   _mm2,_mm5          ; _mm1:_mm2 = d =((256-s) * dstLn[0][dstPos] >> 8) + (s * m_shadowYUV.Y >> 8);
 
   mov       reg_ax, [reg_sp+(3+5)*ptrsize]  ; ax = msk
-  _movdqa   _mm4, [reg_ax]
+  _movdqu   _mm4, [reg_ax]
   _movdqa   _mm5, _mm4
   punpckhbw _mm4, _mm3
   punpcklbw _mm5, _mm3
@@ -190,7 +190,7 @@ TtextSubtitlePrintY_mmx:
   psrlw     _mm7, 8            ; _mm6:_mm7 = ((256-m) * d >> 8)
 
   _movdqa   _mm0, [reg_si + colortbl.outline_A]
-  _movdqa   _mm4, [reg_dx]
+  _movdqu   _mm4, [reg_dx]
   _movdqa   _mm5, _mm4
   punpckhbw _mm4, _mm3
   punpcklbw _mm5, _mm3
@@ -214,7 +214,7 @@ TtextSubtitlePrintY_mmx:
 %else
   mov       reg_ax, [reg_sp+(3+0)*ptrsize]  ; bmp
 %endif
-  _movdqa   _mm1, [reg_ax]
+  _movdqu   _mm1, [reg_ax]
   _movdqa   _mm2, _mm1
   punpckhbw _mm1, _mm3
   punpcklbw _mm2, _mm3
@@ -274,10 +274,10 @@ TtextSubtitlePrintUV_mmx:
 ; U
   mov       reg_di, [reg_bx+(4+4)*ptrsize]  ; di = dst1. (4+4) means: First 4 is pcr,reg_di,reg_si,reg_bx. Second 4 means it's 5th (count from 0) parameter.
 %ifidn __OUTPUT_FORMAT__,win64
-  _movdqa   _mm1, [r8]
+  _movdqu   _mm1, [r8]
 %else
   mov       eax, [reg_bx+(4+2)*ptrsize]  ; ax = shadow
-  _movdqa   _mm1, [eax]
+  _movdqu   _mm1, [eax]
 %endif
   _movdqa   _mm0, [reg_si + colortbl.shadow_A]  ; _movdqa = movq for MMX.
   _movdqa   _mm2, _mm1
@@ -323,7 +323,7 @@ TtextSubtitlePrintUV_mmx:
   paddusb    _mm2,_mm5                      ; _mm1:_mm2 = d =((256-s)*dstLn[1][dstPos]>>8)+(s*m_shadowYUV.U>>8);
 
   _movdqa   _mm0, [reg_si + colortbl.outline_A]
-  _movdqa   _mm4, [reg_dx]                  ; mask1
+  _movdqu   _mm4, [reg_dx]                  ; mask1
   _movdqa   _mm5, _mm4
   punpckhbw _mm4, _mm3
   punpcklbw _mm5, _mm3
@@ -366,7 +366,7 @@ TtextSubtitlePrintUV_mmx:
 %else
   mov       ecx, [reg_bx+(4+0)*ptrsize]     ; bmp
 %endif
-  _movdqa   _mm1, [reg_cx]
+  _movdqu   _mm1, [reg_cx]
   _movdqa   _mm2, _mm1
   punpckhbw _mm1, _mm3
   punpcklbw _mm2, _mm3

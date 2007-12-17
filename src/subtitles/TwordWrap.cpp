@@ -3,13 +3,14 @@
 #include "ffdebug.h"
 #include <mbstring.h>
 
-template TwordWrap<char>::TwordWrap(int Imode,const char *Istr,int *Ipwidths,int IsplitdxMax);
-template TwordWrap<wchar_t>::TwordWrap(int Imode,const wchar_t *Istr,int *Ipwidths,int IsplitdxMax);
-template<class tchar> TwordWrap<tchar>::TwordWrap(int Imode,const tchar *Istr,int *Ipwidths,int IsplitdxMax):
+template TwordWrap<char>::TwordWrap(int Imode, const char *Istr, int *Ipwidths, int IsplitdxMax, bool assCompatibleMode);
+template TwordWrap<wchar_t>::TwordWrap(int Imode, const wchar_t *Istr, int *Ipwidths, int IsplitdxMax, bool assCompatibleMode);
+template<class tchar> TwordWrap<tchar>::TwordWrap(int Imode, const tchar *Istr, int *Ipwidths, int IsplitdxMax, bool IassCompatibleMode):
   mode(Imode),
   str(Istr),
   pwidths(Ipwidths),
-  splitdxMax(IsplitdxMax)
+  splitdxMax(IsplitdxMax),
+  assCompatibleMode(IassCompatibleMode)
 {
  if (splitdxMax<1) splitdxMax=1;
  if (mode==0)
@@ -99,17 +100,34 @@ template<class tchar> int TwordWrap<tchar>::smart()
       }
      // fail over : no space to cut. Japanese subtitles often come here.
      if (!found)
-      for (;x<strlenp;x++)
-       {
-        if (pwidths[x]-left>splitdxMin)
-         {
-          if (x>xx && pwidths[x]-left>splitdxMax) x=prevChar(x);
-          left=pwidths[x];
-          xx=nextChar(x);
-          rightOfTheLines.push_back(rightOfDBCS(x));
-          break;
-         }
-       }
+      {
+       if (assCompatibleMode)
+        {
+         for (;x<strlenp;x++)
+          {
+           if (tchar_traits<tchar>::isspace((typename tchar_traits<tchar>::uchar_t)str.at(x)))
+            {
+             rightOfTheLines.push_back(x>0 ? x-1 : 0);
+             skippingSpace=true;
+             break;
+            }
+          }
+        }
+       else
+        {
+         for (;x<strlenp;x++)
+          {
+           if (pwidths[x]-left>splitdxMin)
+            {
+             if (x>xx && pwidths[x]-left>splitdxMax) x=prevChar(x);
+             left=pwidths[x];
+             xx=nextChar(x);
+             rightOfTheLines.push_back(rightOfDBCS(x));
+             break;
+            }
+          }
+        }
+      }
     }
   }
  rightOfTheLines.push_back(strlenp);
@@ -164,19 +182,35 @@ template<class tchar> int TwordWrap<tchar>::smartReverse()
       }
      // fail over : no space to cut. Japanese subtitles often come here.
      if (!found)
-      for (;x>=0;x--)
-       {
-        if (right-pwidths[x]>splitdxMin)
-         {
-          x=leftOfDBCS(x);
-          if (x<leftOfDBCS(xx) && right-pwidthsLeft(x)>splitdxMax)
-           x=nextChar(x);
-          xx=rightOfDBCS(prevChar(x));
-          rightOfTheLines.push_front(xx);
-          right=pwidths[xx];
-          break;
-         }
-       }
+      {
+       if (assCompatibleMode)
+        {
+         for (;x>=0;x--)
+          {
+           if (tchar_traits<tchar>::isspace((typename tchar_traits<tchar>::uchar_t)str.at(x)))
+            {
+             skippingSpace=true;
+             break;
+            }
+          }
+        }
+       else
+        {
+         for (;x>=0;x--)
+          {
+           if (right-pwidths[x]>splitdxMin)
+            {
+             x=leftOfDBCS(x);
+             if (x<leftOfDBCS(xx) && right-pwidthsLeft(x)>splitdxMax)
+              x=nextChar(x);
+             xx=rightOfDBCS(prevChar(x));
+             rightOfTheLines.push_front(xx);
+             right=pwidths[xx];
+             break;
+            }
+          }
+        }
+      }
     }
   }
  return (int)rightOfTheLines.size();

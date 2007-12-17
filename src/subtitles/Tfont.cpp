@@ -140,11 +140,14 @@ void TrenderedTextSubtitleWord::drawShadow(
  m_outlineYUV=outlineYUV;
  m_shadowYUV=shadowYUV;
 
- int outlineWidth=0;
- double outlineWidth_double=0;
+ int outlineWidth;
+ double outlineWidth_double = prefs.outlineWidth;
+ //if (props.refResY && prefs.clipdy)
+ // outlineWidth_double = outlineWidth_double * prefs.clipdy / props.refResY;
+
  if (!prefs.opaqueBox)
   {
-   if (csp==FF_CSP_420P && prefs.outlineWidth<0.6 && !m_bodyYUV.isGray())
+   if (csp==FF_CSP_420P && outlineWidth_double < 0.6 && !m_bodyYUV.isGray())
     {
      outlineWidth=1;
      outlineWidth_double=0.6;
@@ -152,8 +155,7 @@ void TrenderedTextSubtitleWord::drawShadow(
     }
    else
     {
-     outlineWidth=prefs.outlineWidth;
-     outlineWidth_double=prefs.outlineWidth;
+     outlineWidth=int(outlineWidth_double);
      if ((double)outlineWidth < outlineWidth_double)
       outlineWidth++;
     }
@@ -539,7 +541,13 @@ unsigned int TrenderedTextSubtitleWord::getShadowSize(const TrenderedSubtitleLin
  if (prefs.shadowSize==0 || prefs.shadowMode==3)
   return 0;
  if (prefs.shadowSize < 0) // SSA/ASS/ASS2
- return -1 * prefs.shadowSize;
+  {
+   //if (prefs.clipdy && props.refResY)
+   // return -1 * prefs.shadowSize * prefs.clipdy / props.refResY;
+   //else
+    return -1 * prefs.shadowSize;
+  }
+
  unsigned int shadowSize = prefs.shadowSize*fontHeight/180.0+2.6;
  if (prefs.shadowMode==0)
   shadowSize*=0.6;
@@ -733,10 +741,16 @@ template<class tchar> TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
   }
  _mm_empty();
 }
-void TrenderedTextSubtitleWord::print(unsigned int sdx[3],int sdy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const
+void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3], int sdy[3], unsigned char *dstLn[3], const stride_t stride[3], const unsigned char *bmp[3], const unsigned char *msk[3]) const
 {
  if (sdy[0]<=0 || sdy[1]<0)
   return;
+ int xoffset = 0;
+ if (startx < 0)
+  xoffset = -startx;
+ int xoffsetUV = xoffset >> 1;
+ int xoffsetRGB = xoffset << 2;
+ int startyUV = starty >> 1;
 #ifdef WIN64
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   {
@@ -771,32 +785,34 @@ void TrenderedTextSubtitleWord::print(unsigned int sdx[3],int sdy[3],unsigned ch
      //if (m_bodyYUV.A!=256)
      // mask0=outline[0];
 
-     unsigned int endx=sdx[0] & ~(alignXsize-1);
-     for (unsigned int y=0;y<(unsigned int)sdy[0];y++)
-      for (unsigned int x=0;x<endx;x+=alignXsize)
-       {
-        int srcPos=y*dx[0]+x;
-        int dstPos=y*stride[0]+x;
-        TtextSubtitlePrintY(&bmp[0][srcPos],&outline[0][srcPos],&shadow[0][srcPos],colortbl,&dstLn[0][dstPos],&msk[0][srcPos]);
-       }
-     if (endx<sdx[0])
+     int endx=sdx[0] & ~(alignXsize-1);
+     for (int y=0 ; y < sdy[0] ; y++)
+      if (y + starty >=0)
+       for (int x=0 ; x < endx ; x+=alignXsize)
+        {
+         int srcPos=y * dx[0] + x + xoffset;
+         int dstPos=y * stride[0] + x;
+         TtextSubtitlePrintY(&bmp[0][srcPos],&outline[0][srcPos],&shadow[0][srcPos],colortbl,&dstLn[0][dstPos],&msk[0][srcPos]);
+        }
+     if (endx < (int)sdx[0])
       {
-       for (unsigned int y=0;y<(unsigned int)sdy[0];y++)
-        for (unsigned int x=endx;x<sdx[0];x++)
-         {
-          #define YV12_Y_FONTRENDERER                                              \
-          int srcPos=y * dx[0] + x;                                                \
-          int dstPos=y * stride[0] + x;                                            \
-          int s=m_shadowYUV.A * shadow[0][srcPos] >> 8;                            \
-          int d=((256-s) * dstLn[0][dstPos] >> 8) + (s * m_shadowYUV.Y >> 8);      \
-          int o=m_outlineYUV.A * outline[0][srcPos] >> 8;                          \
-          int b=m_bodyYUV.A *bmp[0][srcPos] >> 8;                                  \
-          int m=msk[0][srcPos];                                                    \
-              d=((256-m) * d >> 8) + (o * m_outlineYUV.Y >> 8);                    \
-              dstLn[0][dstPos]=d + (b * m_bodyYUV.Y >> 8);
+       for (int y=0;y<sdy[0];y++)
+        if (y + starty >=0)
+         for (unsigned int x=endx;x<sdx[0];x++)
+          {
+           #define YV12_Y_FONTRENDERER                                              \
+           int srcPos=y * dx[0] + x + xoffset;                                      \
+           int dstPos=y * stride[0] + x;                                            \
+           int s=m_shadowYUV.A * shadow[0][srcPos] >> 8;                            \
+           int d=((256-s) * dstLn[0][dstPos] >> 8) + (s * m_shadowYUV.Y >> 8);      \
+           int o=m_outlineYUV.A * outline[0][srcPos] >> 8;                          \
+           int b=m_bodyYUV.A *bmp[0][srcPos] >> 8;                                  \
+           int m=msk[0][srcPos];                                                    \
+               d=((256-m) * d >> 8) + (o * m_outlineYUV.Y >> 8);                    \
+               dstLn[0][dstPos]=d + (b * m_bodyYUV.Y >> 8);
 
-          YV12_Y_FONTRENDERER
-         }
+           YV12_Y_FONTRENDERER
+          }
        }
      // UV
      const unsigned char *mask1=msk[1];
@@ -804,35 +820,37 @@ void TrenderedTextSubtitleWord::print(unsigned int sdx[3],int sdy[3],unsigned ch
      // mask1=outline[1];
 
      endx=sdx[1] & ~(alignXsize-1);
-     for (unsigned int y=0;y<(unsigned int)sdy[1];y++)
-      for (unsigned int x=0;x<endx;x+=alignXsize)
-       {
-        int srcPos=y*dx[1]+x;
-        int dstPos=y*stride[1]+x;
-        TtextSubtitlePrintUV(&bmp[1][srcPos],&outline[1][srcPos],&shadow[1][srcPos],colortbl,&dstLn[1][dstPos],&dstLn[2][dstPos]);
-       }
-     if (endx<sdx[1])
+     for (int y=0;y<sdy[1];y++)
+      if (y + startyUV >= 0)
+       for (int x=0 ; x < endx ; x+=alignXsize)
+        {
+         int srcPos=y * dx[1] + x + xoffsetUV;
+         int dstPos=y*stride[1]+x;
+         TtextSubtitlePrintUV(&bmp[1][srcPos],&outline[1][srcPos],&shadow[1][srcPos],colortbl,&dstLn[1][dstPos],&dstLn[2][dstPos]);
+        }
+     if (endx < (int)sdx[1])
       {
-       for (unsigned int y=0;y<(unsigned int)sdy[1];y++)
-        for (unsigned int x=0;x<sdx[1];x++)
-         {
-          #define YV12_UV_FONTRENDERER                                             \
-          int srcPos=y * dx[1] + x;                                                \
-          int dstPos=y * stride[1] + x;                                            \
-          /* U */                                                                  \
-          int s=m_shadowYUV.A * shadow[1][srcPos] >> 8;                            \
-          int d=((256-s) * dstLn[1][dstPos] >> 8) + (s * m_shadowYUV.U >> 8);      \
-          int o=m_outlineYUV.A * outline[1][srcPos] >> 8;                          \
-          int b=m_bodyYUV.A * bmp[1][srcPos] >> 8;                                 \
-              d=((256-o) * d >> 8) + (o * m_outlineYUV.U >> 8);                    \
-              dstLn[1][dstPos]=((256-b) * d >> 8) + (b * m_bodyYUV.U >> 8);        \
-          /* V */                                                                  \
-              d=((256-s) * dstLn[2][dstPos] >> 8) + (s * m_shadowYUV.V >> 8);      \
-              d=((256-o) * d >> 8) + (o * m_outlineYUV.V >> 8);                    \
-              dstLn[2][dstPos]=((256-b) * d >> 8) + (b * m_bodyYUV.V >> 8);
+       for (int y=0;y<sdy[1];y++)
+        if (y + startyUV >= 0)
+         for (int x=0 ; x < (int)sdx[1] ; x++)
+          {
+           #define YV12_UV_FONTRENDERER                                             \
+           int srcPos=y * dx[1] + x + xoffsetUV;                                    \
+           int dstPos=y * stride[1] + x;                                            \
+           /* U */                                                                  \
+           int s=m_shadowYUV.A * shadow[1][srcPos] >> 8;                            \
+           int d=((256-s) * dstLn[1][dstPos] >> 8) + (s * m_shadowYUV.U >> 8);      \
+           int o=m_outlineYUV.A * outline[1][srcPos] >> 8;                          \
+           int b=m_bodyYUV.A * bmp[1][srcPos] >> 8;                                 \
+               d=((256-o) * d >> 8) + (o * m_outlineYUV.U >> 8);                    \
+               dstLn[1][dstPos]=((256-b) * d >> 8) + (b * m_bodyYUV.U >> 8);        \
+           /* V */                                                                  \
+               d=((256-s) * dstLn[2][dstPos] >> 8) + (s * m_shadowYUV.V >> 8);      \
+               d=((256-o) * d >> 8) + (o * m_outlineYUV.V >> 8);                    \
+               dstLn[2][dstPos]=((256-b) * d >> 8) + (b * m_bodyYUV.V >> 8);
 
-          YV12_UV_FONTRENDERER
-         }
+           YV12_UV_FONTRENDERER
+          }
       }
      aligned_free(colortbl);
     }
@@ -860,42 +878,44 @@ void TrenderedTextSubtitleWord::print(unsigned int sdx[3],int sdy[3],unsigned ch
        colortbl[i+88]=(short)m_shadowYUV.A;
       }
 
-     unsigned int endx2=sdx[0]*4;
-     unsigned int endx=endx2 & ~(alignXsize-1);
-     for (unsigned int y=0;y<(unsigned int)sdy[0];y++)
-      for (unsigned int x=0;x<endx;x+=alignXsize)
-       {
-        int srcPos=y*dx[1]+x;
-        int dstPos=y*stride[0]+x;
-        TtextSubtitlePrintY(&bmp[1][srcPos],&outline[1][srcPos],&shadow[1][srcPos],colortbl,&dstLn[0][dstPos],&msk[1][srcPos]);
-       }
+     int endx2=sdx[0]*4;
+     int endx=endx2 & ~(alignXsize-1);
+     for (int y=0;y<sdy[0];y++)
+      if (y + starty >=0)
+       for (int x=0 ; x < endx ; x+=alignXsize)
+        {
+         int srcPos=y * dx[1] + x + xoffsetRGB;
+         int dstPos=y*stride[0]+x;
+         TtextSubtitlePrintY(&bmp[1][srcPos],&outline[1][srcPos],&shadow[1][srcPos],colortbl,&dstLn[0][dstPos],&msk[1][srcPos]);
+        }
      if (endx<endx2)
       {
-       for (unsigned int y=0;y<(unsigned int)sdy[1];y++)
-        for (unsigned int x=endx;x<endx2;x+=4)
-         {
-          #define RGBFONTRENDERER \
-          int srcPos=y * dx[1] + x;                                              \
-          int dstPos=y * stride[0] + x;                                          \
-          /* B */                                                                \
-          int s=m_shadowYUV.A * shadow[1][srcPos] >> 8;                          \
-          int d=((256-s) * dstLn[0][dstPos] >> 8) + (s * m_shadowYUV.b >> 8);    \
-          int o=m_outlineYUV.A * outline[1][srcPos] >> 8;                        \
-          int b=m_bodyYUV.A * bmp[1][srcPos] >> 8;                               \
-          int m=msk[1][srcPos];                                                  \
-              d=((256-m) * d >> 8)+(o * m_outlineYUV.b >> 8);                    \
-              dstLn[0][dstPos]=d + (b * m_bodyYUV.b >> 8);                       \
-          /* G */                                                                \
-              d=((256-s) * dstLn[0][dstPos+1] >> 8)+(s * m_shadowYUV.g >> 8);    \
-              d=((256-m) * d >> 8)+(o * m_outlineYUV.g >> 8);                    \
-              dstLn[0][dstPos + 1]=d + (b * m_bodyYUV.g >> 8);                   \
-          /* R */                                                                \
-              d=((256-s) * dstLn[0][dstPos+2] >> 8)+(s * m_shadowYUV.r >> 8);    \
-              d=((256-m) * d >> 8)+(o * m_outlineYUV.r >> 8);                    \
-              dstLn[0][dstPos + 2]=d + (b * m_bodyYUV.r >> 8);
+       for (int y=0 ; y < sdy[1] ; y++)
+        if (y + starty >=0)
+         for (int x=endx ; x < endx2 ; x+=4)
+          {
+           #define RGBFONTRENDERER \
+           int srcPos=y * dx[1] + x + xoffsetRGB;                                    \
+           int dstPos=y * stride[0] + x;                                          \
+           /* B */                                                                \
+           int s=m_shadowYUV.A * shadow[1][srcPos] >> 8;                          \
+           int d=((256-s) * dstLn[0][dstPos] >> 8) + (s * m_shadowYUV.b >> 8);    \
+           int o=m_outlineYUV.A * outline[1][srcPos] >> 8;                        \
+           int b=m_bodyYUV.A * bmp[1][srcPos] >> 8;                               \
+           int m=msk[1][srcPos];                                                  \
+               d=((256-m) * d >> 8)+(o * m_outlineYUV.b >> 8);                    \
+               dstLn[0][dstPos]=d + (b * m_bodyYUV.b >> 8);                       \
+           /* G */                                                                \
+               d=((256-s) * dstLn[0][dstPos+1] >> 8)+(s * m_shadowYUV.g >> 8);    \
+               d=((256-m) * d >> 8)+(o * m_outlineYUV.g >> 8);                    \
+               dstLn[0][dstPos + 1]=d + (b * m_bodyYUV.g >> 8);                   \
+           /* R */                                                                \
+               d=((256-s) * dstLn[0][dstPos+2] >> 8)+(s * m_shadowYUV.r >> 8);    \
+               d=((256-m) * d >> 8)+(o * m_outlineYUV.r >> 8);                    \
+               dstLn[0][dstPos + 2]=d + (b * m_bodyYUV.r >> 8);
 
-          RGBFONTRENDERER
-         }
+           RGBFONTRENDERER
+          }
       }
      aligned_free(colortbl);
     }
@@ -912,29 +932,32 @@ void TrenderedTextSubtitleWord::print(unsigned int sdx[3],int sdy[3],unsigned ch
      //if (m_bodyYUV.A!=256)
      // mask0=outline[0];
 
-     for (unsigned int y=0;y<(unsigned int)sdy[0];y++)
-      for (unsigned int x=0;x<sdx[0];x++)
-       {
-        YV12_Y_FONTRENDERER
-       }
+     for (int y=0 ; y < sdy[0] ; y++)
+      if (y + starty >=0)
+       for (int x=0 ; x < (int)sdx[0] ; x++)
+        {
+         YV12_Y_FONTRENDERER
+        }
      const unsigned char *mask1=msk[1];
      if (m_bodyYUV.A!=256)
       mask1=outline[1];
 
-     for (unsigned int y=0;y<(unsigned int)sdy[1];y++)
-      for (unsigned int x=0;x<sdx[1];x++)
-       {
-        YV12_UV_FONTRENDERER
-       }
+     for (int y=0 ; y < sdy[1] ; y++)
+      if (y + startyUV >=0)
+       for (int x=0 ; x < (int)sdx[1] ; x++)
+        {
+         YV12_UV_FONTRENDERER
+        }
     }
    else
     {
      //RGB32
-     for (unsigned int y=0;y<(unsigned int)sdy[1];y++)
-      for (unsigned int x=0;x<sdx[0]*4;x+=4)
-       {
-        RGBFONTRENDERER
-       }
+     for (int y=0 ; y < sdy[1] ; y++)
+      if (y + starty >=0)
+       for (int x=0 ; x < (int)sdx[0]*4 ; x+=4)
+        {
+         RGBFONTRENDERER
+        }
     }
   }
  _mm_empty();
@@ -1057,15 +1080,19 @@ void TrenderedSubtitleLine::print(int startx,int starty,const TrenderedSubtitleL
       }
      int sy=(starty+baseline-(*w)->get_baseline())>>prefs.shiftY[i];
      dy[i]=std::min((int(prefsdy)>>prefs.shiftY[i])-sy,int((*w)->dy[i]));
-     dstLn[i]=prefs.dst[i]+prefs.stride[i]*sy;
-     if (x[i]>0) dstLn[i]+=x[i]*prefs.cspBpp;
+     dstLn[i]=prefs.dst[i] + int(sy * prefs.stride[i]);
+     if (x[i]>0)
+      dstLn[i]+=x[i]*prefs.cspBpp;
 
-     if (x[i]+(*w)->dx[i]>(prefsdx>>prefs.shiftX[i])) dx[i]=(prefsdx>>prefs.shiftX[i])-x[i];
-     else if (x[i]<0) dx[i]=(*w)->dx[i]+x[i];
-     else dx[i]=(*w)->dx[i];
+     if (x[i]+(*w)->dx[i]>(prefsdx>>prefs.shiftX[i]))
+      dx[i]=(prefsdx>>prefs.shiftX[i])-x[i];
+     else if (x[i]<0)
+      dx[i]=(*w)->dx[i]+x[i];
+     else
+      dx[i]=(*w)->dx[i];
      dx[i]=std::min(dx[i],prefsdx>>prefs.shiftX[i]);
     }
-   (*w)->print(dx,dy,dstLn,prefs.stride,bmp,msk);
+   (*w)->print(startx, starty,dx,dy,dstLn,prefs.stride,bmp,msk);
   }
 }
 void TrenderedSubtitleLine::clear(void)
@@ -1208,7 +1235,6 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
           pval.y=(double)prefsdy-pval.height - pkey.marginBottom + pval.topOverhang;
           break;
         }
-       if (pval.y<0) pval.y=0;
       }
      y=pval.y;
      pval.y += (*i)->charHeight();
@@ -1237,12 +1263,9 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
      case 10:
      default:
       x=((int)prefsdx - marginL - marginR - (int)cdx)/2 + marginL - leftOverhang;
-      if (x<0) x=0;
-      if (x+cdx>=prefsdx) x=prefsdx-cdx;
       break;
     }
    if (x+cdx>=prefsdx && (*i)->props.alignment==-1 && prefs.xpos>=0) x=prefsdx-cdx-1;
-   if (x<0) x=0;
    (*i)->print(x,y,prefs,prefsdx,prefsdy); // print a line (=print words).
   }
 }
@@ -1352,7 +1375,7 @@ template<> const TrenderedTextSubtitleWord* TcharsChache::getChar(const char *s,
 }
 
 //============================== TrenderedVobsubWord ===============================
-void TrenderedVobsubWord::print(unsigned int sdx[3],int sdy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const
+void TrenderedVobsubWord::print(int startx, int starty /* not used */, unsigned int sdx[3],int sdy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const
 {
  if (sdy[0]<=0 || sdy[1]<0)
   return;
@@ -1648,7 +1671,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
          if (wordWrapMode>=2) wordWrapMode++;
         }
       }
-     TwordWrap<tchar> wordWrap(wordWrapMode,allStr.c_str(),pwidths,splitdxMax);
+     TwordWrap<tchar> wordWrap(wordWrapMode,allStr.c_str(),pwidths,splitdxMax,l->props.version != -1);
      //wordWrap.debugprint();
 
      TrenderedSubtitleLine *line=NULL;

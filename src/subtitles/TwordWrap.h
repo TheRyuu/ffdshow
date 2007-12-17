@@ -17,8 +17,9 @@ private:
  int leftOfDBCS(int x);
  int rightOfDBCS(int x);
  int pwidthsLeft(int x);
+ bool assCompatibleMode;
 public:
- TwordWrap(int Imode,const tchar *Istr,int *Ipwidths,int IsplitdxMax);
+ TwordWrap(int Imode, const tchar *Istr, int *Ipwidths, int IsplitdxMax, bool assCompatibleMode);
  //WrapStyle: Defines the default wrapping style. 
  //0: smart wrapping, lines are evenly broken
  //1: end-of-line word wrapping
