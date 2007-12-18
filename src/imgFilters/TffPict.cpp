@@ -137,8 +137,11 @@ TffPict::TffPict(int Icsp,unsigned char *data[4],const stride_t stride[4],const 
 }
 void TffPict::setTimestamps(IMediaSample *pIn)
 {
- if (FAILED(pIn->GetTime(&rtStart,&rtStop)))
+ HRESULT hr = pIn->GetTime(&rtStart,&rtStop); 
+ if (FAILED(hr))
   rtStart=rtStop=REFTIME_INVALID;
+ else if (hr == VFW_S_NO_STOP_TIME)
+  rtStop = rtStart + 1;
  if (FAILED(pIn->GetMediaTime(&mediatimeStart,&mediatimeStop)))
   mediatimeStart=mediatimeStop=REFTIME_INVALID;
 }
