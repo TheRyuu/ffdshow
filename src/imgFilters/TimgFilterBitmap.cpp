@@ -270,6 +270,8 @@ HRESULT TimgFilterBitmap::process(TfilterQueue::iterator it,TffPict &pict,const 
      prefs.xpos=cfg->posx;prefs.ypos=cfg->posy;if (cfg->posmode==1) {prefs.xpos*=-1;prefs.ypos*=-1;}
      prefs.align=cfg->align;
      prefs.linespacing=100;
+     prefs.cspBpp = pict.cspInfo.Bpp;
+     prefs.csp=pict.csp;
      w.pict=&pict;
      w.cfg=cfg;
      ls.print(prefs);
