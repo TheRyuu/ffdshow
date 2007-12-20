@@ -433,7 +433,7 @@ void TcodecsPageVideo::fillCodecs(void)
    if ((filterMode&IDFF_FILTERMODE_VFW)==0)
     {
      formats.push_back(Tformat(_l("MPEG1")       ,IDFF_mpg1,movies_mpeg12,_l("MPEG1 codec"),options_mpeg12,LAVC_UNSTABLE));
-     static const Tformat::Toption options_mpeg2[]={{IDFF_MOVIE_LAVC,_l("use speedup tricks"),IDFF_fastMpeg2,1},{0,_l("DVD decoding (not working yet)"),IDFF_supDVDdec,1},{0,NULL,0}};
+     static const Tformat::Toption options_mpeg2[]={{IDFF_MOVIE_LAVC,_l("use speedup tricks"),IDFF_fastMpeg2,1},{0,_l("DVD decoding"),IDFF_supDVDdec,1},{0,NULL,0}};
      formats.push_back(Tformat(_l("MPEG2")       ,IDFF_mpg2,movies_mpeg12,_l("MPEG2 codec"),options_mpeg2,LAVC_UNSTABLE));
     }
    formats.push_back(Tformat(_l("MPEG in AVI")   ,IDFF_mpegAVI,movies_mpeg12,_l("MPEG, MPG1, MPG2, 1001, 1002"),options_mpeg12));
