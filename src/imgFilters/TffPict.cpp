@@ -164,10 +164,11 @@ void TffPict::readLibavcodec(int Icsp,const char_t *flnm,const char_t *ext,Tbuff
    AVFrame *frame=libavcodec->avcodec_alloc_frame();
    int got_picture=0;
    int ret=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,src,srclen);
-   if (got_picture && frame->data[0])
+   if (got_picture && frame->data[0] && frame->data[1])
     {
      const stride_t linesize[4]={frame->linesize[0],frame->linesize[1],frame->linesize[2],frame->linesize[3]};
-     init(csp_lavc2ffdshow(avctx->pix_fmt),frame->data,linesize,Trect(0,0,avctx->width,avctx->height),true,frametype,fieldtype,srclen,avctx->palctrl);
+     Tpalette pal(frame->data[1],256);
+     init(csp_lavc2ffdshow(avctx->pix_fmt),frame->data,linesize,Trect(0,0,avctx->width,avctx->height),true,frametype,fieldtype,srclen,pal);
      Tconvert *convert=new Tconvert(deci,avctx->width,avctx->height);
      convertCSP(csp_bestMatch(csp,Icsp),buf,convert);
      delete convert;

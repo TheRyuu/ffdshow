@@ -149,6 +149,7 @@ template<class _mm> void TimgFilterBitmap::softlight(const TcspInfo &cspInfo,con
    {
     int x=0,cnt=dx[i];
     const int cnt3=cnt-_mm::size/2+1;
+#if 0
     for (;x<cnt3;x+=_mm::size/2)
      {
       typename _mm::__m dst8=_mm::unpacklo_pi8(_mm::load2(dst[0]+x),m0);
@@ -156,8 +157,9 @@ template<class _mm> void TimgFilterBitmap::softlight(const TcspInfo &cspInfo,con
       typename _mm::__m Y=_mm::unpacklo_pi8(_mm::packs_pu16(_mm::sub_pi16(_mm::add_pi16(src8,dst8),m128),m0),m0);
       dst8=_mm::add_pi16(_mm::mullo_pi16(Y,strength64), _mm::mullo_pi16(dst8,invstrength64));
       dst8=_mm::srai_pi16(dst8,7);
-      _mm::store2(dst[0]+x,_mm::packs_pu16(dst8,m0));
+      _mm::store2(dst[i]+x,_mm::packs_pu16(dst8,m0));
      }
+#endif
     for (;x<cnt;x++)
      {
       int Y=limit_uint8(dst[i][x]+src[i][x]-127);
