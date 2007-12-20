@@ -316,7 +316,7 @@ void bih2mediatype(const BITMAPINFOHEADER &bih,CMediaType *mt)
  mt->SetFormatType(&FORMAT_VideoInfo);
  mt->SetTemporalCompression(FALSE);
  mt->SetSampleSize(bih.biSizeImage);
- unsigned int elen=bih.biSize-sizeof(BITMAPINFOHEADER);
+ unsigned int elen = bih.biSize > sizeof(BITMAPINFOHEADER) ? bih.biSize - sizeof(BITMAPINFOHEADER) : 0;
  if (elen==0 && bih.biClrUsed>0)
   elen=sizeof(RGBQUAD)*bih.biClrUsed;
  VIDEOINFOHEADER *vih=(VIDEOINFOHEADER*)mt->ReallocFormatBuffer(sizeof(VIDEOINFOHEADER)+elen);
