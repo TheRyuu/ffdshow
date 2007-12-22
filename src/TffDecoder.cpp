@@ -55,6 +55,7 @@
 #include "D3d9.h"
 #include "Vmr9.h"
 #include "IVMRffdshow9.h"
+//#include "evr9.h"
 //#include "dxva.h"
 
 void TffdshowDecVideo::getMinMax(int id,int &min,int &max)
@@ -106,7 +107,8 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  compatibleFilterConnected(false),
  inputConnectedPin(NULL),
  m_rtStart(0),
- inSampleEverField1Repeat(false)
+ inSampleEverField1Repeat(false),
+ m_NeedToPauseRun(false)
 {
  DPRINTF(_l("TffdshowDecVideo::Constructor"));
 #ifdef OSDTIMETABALE
@@ -194,40 +196,47 @@ HRESULT TffdshowDecVideo::CheckConnect(PIN_DIRECTION dir,IPin *pPin)
    case PINDIR_OUTPUT:
     {
      if (!presetSettings) initPreset();
-     CLSID clsid=GetCLSID(pPin);
-     outOldRenderer=!!(clsid==CLSID_VideoRenderer);
-     if (presetSettings->output->allowOutChange3 || dvdproc)
-      {
-       bool filterOk=clsid==CLSID_OverlayMixer ||
-                     clsid==CLSID_VideoMixingRenderer ||
-                     clsid==CLSID_VideoMixingRenderer9 ||
-                     clsid==CLSID_EnhancedVideoRenderer ||
-                     clsid==CLSID_DirectVobSubFilter ||
-                     clsid==CLSID_DirectVobSubFilter2 ||
-                     clsid==CLSID_HaaliVideoRenderer ||
-                     clsid==CLSID_FFDSHOW || clsid==CLSID_FFDSHOWRAW;
-       allowOutChange=dvdproc ||
-                      presetSettings->output->allowOutChange3==1 ||
-                      (presetSettings->output->allowOutChange3==2 && filterOk);
-
-       if (presetSettings->output->allowOutChange3==1 && presetSettings->output->outChangeCompatOnly)
-        res=filterOk?S_OK:E_FAIL;
-       else
-        res=S_OK;
-      }
-     else
-      {
-       allowOutChange=false;
-       res=S_OK;
-      }
-      if (clsid==CLSID_DecklinkVideoRenderFilter || clsid==CLSID_InfTee || clsid==CLSID_SmartT)
-       allowOutChange=false;
+     res = checkAllowOutChange(pPin);
      break;
     }
    default:
     return E_UNEXPECTED;
   }
  return res==S_OK?CTransformFilter::CheckConnect(dir,pPin):res;
+}
+
+HRESULT TffdshowDecVideo::checkAllowOutChange(IPin *pPin)
+{
+ HRESULT hr;
+ CLSID clsid=GetCLSID(pPin);
+ outOldRenderer=!!(clsid==CLSID_VideoRenderer);
+ if (presetSettings->output->allowOutChange3 || dvdproc)
+  {
+   bool filterOk=clsid==CLSID_OverlayMixer ||
+                 clsid==CLSID_VideoMixingRenderer ||
+                 clsid==CLSID_VideoMixingRenderer9 ||
+                 clsid==CLSID_EnhancedVideoRenderer ||
+                 clsid==CLSID_DirectVobSubFilter ||
+                 clsid==CLSID_DirectVobSubFilter2 ||
+                 clsid==CLSID_HaaliVideoRenderer ||
+                 clsid==CLSID_FFDSHOW || clsid==CLSID_FFDSHOWRAW;
+   allowOutChange=dvdproc ||
+                  presetSettings->output->allowOutChange3==1 ||
+                  (presetSettings->output->allowOutChange3==2 && filterOk);
+
+   if (presetSettings->output->allowOutChange3==1 && presetSettings->output->outChangeCompatOnly)
+    hr=filterOk ? S_OK : E_FAIL;
+   else
+    hr=S_OK;
+  }
+ else
+  {
+   allowOutChange=false;
+   hr=S_OK;
+  }
+ if (clsid==CLSID_DecklinkVideoRenderFilter || clsid==CLSID_InfTee || clsid==CLSID_SmartT || clsid==CLSID_WMP_VIDEODSP_DMO)
+  allowOutChange=false;
+ return hr;
 }
 
 HRESULT TffdshowDecVideo::CheckInputType(const CMediaType *mtIn)
@@ -500,7 +509,7 @@ HRESULT TffdshowDecVideo::DecideBufferSize(IMemAllocator *pAlloc, ALLOCATOR_PROP
  isQueue=isQueue && !m_IsOldVideoRenderer &&
    (ref==CLSID_OverlayMixer || ref==CLSID_VideoMixingRenderer || ref==CLSID_VideoMixingRenderer9);
  isQueue=isQueue && !(m_IsOldVMR9RenderlessAndRGB=IsOldVMR9RenderlessAndRGB()); // inform MPC about queue only when queue is effective.
- //DPRINTF(_l("CLSID 0x%x,0x%x,0x%x"),ref.Data1,ref.Data2,ref.Data3);for(int i=0;i<8;i++) {DPRINTF(_l(",0x%2x"),ref.Data4[i]);}
+ // DPRINTF(_l("CLSID 0x%x,0x%x,0x%x"),ref.Data1,ref.Data2,ref.Data3);for(int i=0;i<8;i++) {DPRINTF(_l(",0x%2x"),ref.Data4[i]);}
  if (ref==CLSID_VideoRenderer || ref==CLSID_OverlayMixer)
   return DecideBufferSizeOld(pAlloc, ppropInputRequest,ref);
  else
@@ -829,6 +838,7 @@ HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
    lastTime=clock();
    m_IsOldVideoRenderer= IsOldRenderer();
    isQueue=isQueue && !m_IsOldVideoRenderer;
+   checkAllowOutChange(m_pOutput->GetConnected());
   }
 
  if (m_dirtyStop)
@@ -1076,6 +1086,27 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
 {
  if (pict.csp==FF_CSP_NULL)
   return S_OK;
+
+ if (m_NeedToPauseRun && graph) // Work around Windows Media Center
+  {
+   DPRINTF(_l("Work around Windows Media Center. After reconnecting Pause and Run."));
+   PIN_INFO pininfo;
+   m_pOutput->GetConnected()->QueryPinInfo(&pininfo);
+   if (pininfo.pFilter)
+    {
+     FILTER_STATE fs;
+     m_NeedToPauseRun = false;
+     IMediaFilter *imediafilter;
+     graph->QueryInterface(IID_IMediaFilter, (void**)(&imediafilter));
+     if (imediafilter)
+      {
+       imediafilter->Pause(); // Why would this be required? Microsoft should fix their application.
+       imediafilter->Run(0);
+       imediafilter->Release();
+      }
+     pininfo.pFilter->Release();
+    }
+  }
 
  sendOnFrameMsg();
 
@@ -1653,6 +1684,8 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
    NotifyEvent(EC_VIDEO_SIZE_CHANGED,MAKELPARAM(newpict.rectFull.dx,newdy),0);
    oldRect=newpict.rectFull;
    inReconnect=false;
+   if(_strnicmp(_l("ehshell.exe"),getExeflnm(),12) == 0)
+    m_NeedToPauseRun=true;
    return S_OK;
   }
  return S_FALSE;

@@ -517,7 +517,7 @@ private:
  bool m_IsOldVMR9RenderlessAndRGB;
  bool m_IsYV12andVMR9;
  bool reconnectFirstError;
- bool m_NeedToAttachFormat;
+ bool m_NeedToAttachFormat,m_NeedToPauseRun;
  HANDLE hReconnectEvent;
  ALLOCATOR_PROPERTIES ppropActual;
 
@@ -559,6 +559,7 @@ private:
  DWORD inSampleTypeSpecificFlags;
  bool inSampleEverField1Repeat;
  REFERENCE_TIME m_rtStart;
+ HRESULT checkAllowOutChange(IPin *pPin);
 public:
  enum DOWNSTREAM_FILTER_TYPE
   {
