@@ -51,16 +51,24 @@
     <a name="fixes" id="fixes">Bug fixes</a><br />
   </h2>
 
-  <p>
-    Note: Bugs that have been added and fixed during the tryouts development have not been included.
-  </p>
+  <h3>Fixed after beta4</h3>
+
+  <ul class="fixed">
+    <li>In Windows Media Center on Vista, AVI files that have non square aspect ratio could not be played properly due to a bug of Windows Media Center. Now, if you check both of "Allow output format changes during playback" and "Connect to compatible filters only", such files play with correct aspect ratio.</li>
+    <li>If ffdshow was inputing NV12/NV21 as raw video and resize was enabled, ffdshow crashed.</li>
+    <li>"Bitmap overlay" crashed.</li>
+    <li>DCT image filter for playback was not working.</li>
+    <li>In subtitle filter, if "Overlap subtitles with same time" was checked, ffdshow sometimes crashed.</li>
+    <li>The subtitles letterbox erroneously applied cropping instead of letterboxing if the specified AR was wider than the AR of the given video.</li>
+    <li>Windows Media Center crashed on creating thumbnails.</li>
+  </ul>
 
   <h3>Fixed before beta4</h3>
 
   <ul class="fixed">
     <li>In FLAC and TTA, A/V synch was lost.</li>
     <li>Closed caption decoder produced garbled characters.</li>
-    <li>Crashes in Windows Movie Maker have been fixed. This was not ffdshow's bug.</li>
+    <li>Crashes in Windows Movie Maker have been fixed.</li>
     <li>Subtitles that contain an "&amp;" as part of the filename were displayed incorrectly inside ffdshow's context menu.</li>
     <li>MakeAVIS.exe in "Store uncompressed audio" mode produced noisy audio if the input audio was not 16bit integer.</li>
     <li>If the AviSynth script had multiple lines, the script was not saved by using "Export all settings" or "Save to file..." in Presets page.</li>
@@ -164,6 +172,13 @@
   <h2>
     <a name="features" id="features">New features</a>
   </h2>
+
+  <h3>Added after beta4</h3>
+
+  <ul class="added">
+    <li>Added support for the FourCCs "SP51" to "SP57".</li>
+    <li>Enabled user setting of "Correct aspect ratio automatically" for SSA/ASS too, because vsfilter and VMR9 renderless of MPC have different behavior.</li>
+  </ul>
 
   <h3>Added after beta3</h3>
 
