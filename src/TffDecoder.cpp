@@ -1090,21 +1090,14 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
  if (m_NeedToPauseRun && graph) // Work around Windows Media Center
   {
    DPRINTF(_l("Work around Windows Media Center. After reconnecting Pause and Run."));
-   PIN_INFO pininfo;
-   m_pOutput->GetConnected()->QueryPinInfo(&pininfo);
-   if (pininfo.pFilter)
+   m_NeedToPauseRun = false;
+   IMediaFilter *imediafilter;
+   graph->QueryInterface(IID_IMediaFilter, (void**)(&imediafilter));
+   if (imediafilter)
     {
-     FILTER_STATE fs;
-     m_NeedToPauseRun = false;
-     IMediaFilter *imediafilter;
-     graph->QueryInterface(IID_IMediaFilter, (void**)(&imediafilter));
-     if (imediafilter)
-      {
-       imediafilter->Pause(); // Why would this be required? Microsoft should fix their application.
-       imediafilter->Run(0);
-       imediafilter->Release();
-      }
-     pininfo.pFilter->Release();
+     imediafilter->Pause(); // Why would this be required? Microsoft should fix their application.
+     imediafilter->Run(0);
+     imediafilter->Release();
     }
   }
 
