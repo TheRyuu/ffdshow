@@ -9,6 +9,17 @@ pointsize9x=9
 pointsizeNT=9
 
 [-1]
+1/0/0 - mono=1/0/0 - 单声道
+2/0/0 - stereo=2/0/0 - 立体声
+3/0/0 - 3 front=3/0/0 - 三个前置音箱
+2/0/1 - surround=2/0/1 - 环绕扬声器
+3/0/1 - surround=3/0/1 - 环绕扬声器
+3/2/1 - 6 channels=3/2/1 - 六声道
+2/0/2 - quadro=2/0/2 - 四个音箱
+3/0/2 - 5 channels=3/0/2 - 五声道
+3/2/1 - 6 channels=3/2/1 - 六声道
+3/2/2 - 7 channels=3/2/2 - 七声道
+Head-related transfer function (HRTF)=人体头部相关传递函数(HRTF)
 10 bits=10 位
 1/0+LFE 1.1 mono=1/0+低音 1.1 单声道
 1/0 - mono=1/0 - 单声道
@@ -39,6 +50,7 @@ Accurate deblocking=精确除马赛克
 Action=操作
 Activation key 1=热键 1
 Activation key 2=热键 2
+Active preset name=活动预设名称
 Adaptive sharpenning strength:=适应性锐化强度:
 adaptive with size 2=适应于尺寸 2
 adaptive with size 3=适应于尺寸 3
@@ -64,9 +76,9 @@ automatic=自动
 auto=自动
 AVIS (Avisynth AVI files)=AVIS (Avisynth AVI 文件)
 AviSynth info=AviSynth信息
-back center=后中
-back left=后左
-back right=后右
+back center=后中央
+back left=左后
+back right=右后
 Bicubic=三线性
 Bicublin=三线混合
 bilinear (fast and not too bad)=双线性 (快速且品质不错)
@@ -117,7 +129,7 @@ Disabled=关闭
 disabled=未启用
 disable=禁用
 Display aspect ratio=显示纵横比
-doesn't support 24 bit compression=不支持 24 位压缩
+Doesn't support 24-bit compression.=不支持 24 位压缩。
 Dolby Surround/ProLogic=Dolby 环绕/ProLogic
 do not use=不使用
 don't expand=不扩展
@@ -178,15 +190,15 @@ frequency=频率
 From default=基于默认
 From file...=基于文件...
 From selected=基于所选
-front center=前中
-front left=前左
-front right=前右
+front center=前中央
+front left=左前
+front right=右前
 Full search=完整查找
 full (slowest)=全面 (最慢)
 Gauss=高斯
 Generate access unit delimiters=产生存取单元分隔符
 Glowing shadow=发光式
-GMC warp points=GMC曲点(GMC warp points)
+GMC warp points=全动态补偿曲点
 Grab frame=截取帧
 Gradient shadow=倾斜式
 gray=灰度
@@ -229,7 +241,7 @@ Interlacing=隔行/交错
 Interpolation=插补
 Int=整数
 invalid=无效的
-Jitter=抖动(Jitter)
+Jitter=抖动
 kbps (at 25 fps)=kbps (于 25 fps)
 Kernel deinterlacer=Kernel 反交错
 Key=键
@@ -302,6 +314,7 @@ NW=左上
 Off=无
 off=禁用
 OGG (works with Theora only)=OGG (仅与 Theora 协同工作)
+one pass - average bitrate=一次处理 - 平均码率
 one pass - constant bitrate=一次处理 - 固定码率
 one pass - quality=一次处理 - 品质
 one pass - quantizer=一次处理 - 量化
@@ -340,7 +353,7 @@ Previous preset=上一预设
 Property=所属
 Quality=品质
 quantizer:%i, count:%i=量化:%i, 数量:%i
-quantizer?%i, percentage:%i=量化:%i, 百分比:%i
+quantizer:%i, percentage:%i=量化:%i, 百分比:%i
 Quantizer=量化
 Queued samples=采样排队
 radius:=范围:
@@ -478,6 +491,8 @@ Works when the video has non-square pixel aspect ratio.=视频不是方形像素
 No=无
 skip deblocking when safe=如果安全则跳过除马赛克
 skip deblocking always=总是跳过除马赛克
+side left=左侧
+side right=右侧
 
 [101]
 1836=捐助
@@ -602,8 +617,8 @@ skip deblocking always=总是跳过除马赛克
 1899=H.264 除马赛克
 
 [121]
-0=排队和其他
-1944=输出采样排队
+0=队列和其他
+1944=输出采样队列
 1958=只在下列程序中使用
 1365=其他控制
 1268=视频延迟：
@@ -611,9 +626,10 @@ skip deblocking always=总是跳过除马赛克
 1269=毫秒
 1764=终止
 1270=毫秒
-1550=如果高度大于就假定输入是交错的
+1550=假定输入是交错的，如果高度大于
 1552=像素
-1143=输出采样排队\r\n  排队的目的是为了减少丢帧。\r\n  当CPU负载很高而且帧速率有些下降时它很有效。\r\n  在CPU过早完成工作时存储时间并在延时到时使用它。\r\n  因为视频渲染器由另一个线程执行，所以如果你拥有超线程奔腾4或者双核处理器效果会更好。\r\n\r\n  只在下列程序中使用:\r\n    由于稳定性问题默认排队功能是关闭的。\r\n    如果你敢尝试，不选中它或者加入视频播放程序的文件名，多个文件名用分\r\n    号分隔。\r\n\r\n其他控制\r\n  视频延迟:\r\n    如果你的音箱离你比较远，你可以试试这个。
+1143=输出采样队列\r\n  使用队列的目的是为了减少丢帧。\r\n  当CPU负载很高而且帧速率有些下降时它很有效。\r\n  在CPU过早完成工作时存储时间并在延时到时使用它。\r\n  因为视频渲染器由另一个线程执行，所以如果你拥有超线程奔腾4或者双核处理器效果会更好。\r\n\r\n只在下列程序中使用:\r\n    由于稳定性问题默认队列功能是关闭的。\r\n    如果你想试试它的效果，清除复选框或者加入视频播放程序的文件名，多个文件名用分号分隔。\r\n\r\n在VMR9-YV12中启用队列\r\n  在一些英特尔的集成显示芯片上，队列不能工作在VMR9-YV12模式中。\r\n\r\n其他控制\r\n  视频延迟:\r\n    如果你的音箱离你比较远，你可以试试这个。
+2206=在VMR9-YV12中启用队列
 
 [125]
 0=画面属性
@@ -978,6 +994,27 @@ skip deblocking always=总是跳过除马赛克
 1701=主音:
 1702=环绕:
 1703=低音:
+1594=左
+1595=中
+1596=右
+2172=左侧
+2173=右侧
+1597=左后
+2176=后中
+1598=右后
+1599=低音
+1934=低音
+1937=分贝等级
+1630=左
+1631=中
+1635=右
+2174=左侧
+2175=右侧
+1632=右后
+2177=后中
+1633=右后
+1634=低音
+
 
 [193]
 2=关闭
@@ -1064,7 +1101,7 @@ skip deblocking always=总是跳过除马赛克
 
 [211]
 0=统计
-1531=写入信息到 debugger
+1531=写入信息到调试器
 1532=出现错误时显示消息框
 1533=写入信息到文件
 1738=使 DirectShow 图示在 GraphEdit 中可用
@@ -1353,7 +1390,8 @@ skip deblocking always=总是跳过除马赛克
 1813=允许直接输出到文件
 1811=不需要时不使用 WAVEFORMATEXTENSIBLE 头部
 1984=多通道设备
-1985=只编码多通道流
+1985=只编码5.1通道流
+1587=AC3(S/PDIF编码模式)
 
 [244]
 0=Dolby 解码
@@ -1362,13 +1400,25 @@ skip deblocking always=总是跳过除马赛克
 
 [245]
 0=延迟
+1660=毫秒
+1662=毫秒
+1665=毫秒
 1676=延迟
-1658=前左声道延迟:
+1658=左前声道延迟:
 1663=中央声道延迟:
-1666=前右声道延迟:
-1669=后左声道延迟:
-1672=后右声道延迟:
+1666=右前声道延迟:
+1668=毫秒
+1669=左后声道延迟:
+1671=毫秒
+1672=右后声道延迟:
 1675=低音声道延迟:
+1674=毫秒
+2178=左侧声道延迟:
+2180=毫秒
+2181=右侧声道延迟:
+2183=毫秒
+2184=后中央声道延迟:
+2186=毫秒
 
 [246]
 0=FIR 滤镜
@@ -1429,14 +1479,17 @@ skip deblocking always=总是跳过除马赛克
 [253]
 0=声道切换
 1763=声道切换
-1749=前左
-1748=前中
-1747=前右
-1746=后左
-1670=后中
-1745=后右
+1749=左前
+1748=前中央
+1747=右前
+1746=左后
+1670=后中央
+1745=右后
 1744=低音
-1143=混音滤镜也可以进行声道切换, 但这个更快.
+1143=混音滤镜也可以进行声道切换, 但这个更快。
+2188=左侧
+2191=右侧
+
 
 [254]
 0=文本字幕
@@ -1536,18 +1589,18 @@ skip deblocking always=总是跳过除马赛克
 1832=使用下列SIMD指令集(如果处理器支持):
 
 [288]
-0=1. 关于ffdshow视频解码器\r\n  ffdshow是一个DirectShow解码滤镜，用来对DIVX电影进行解压缩。ffdshow使用FFmpeg项目的libavcodec进行视频压缩和解压(也可以使用与xvid编解码器一起安装的xvidcore.dll)。从MPlayer引进的后期处理代码可以增强低码率电影的视觉品质，这些代码基于最早的Xvid DirectShow滤镜。Xvid是一个使用GPL授权的教学性质的MPEG4解码器实现。\r\n2. 主要特点\r\n - 使用优化的MMX、SSE、3DNow!代码进行快速视频解压\r\n - 支持不同编解码器：Xvid和所有版本的DIVX\r\n - 支持H.264和H.264/AVC(AVC：高级视频编码)\r\n - 另外还支持MSMPEG4v1、MSMPEG4v2、MSMPEG4v3、H.263\r\n - 可以作为其他解码器(比如MPEG1或者MPEG2)的后期处理滤镜\r\n - 适用于更高回放质量的图像后期处理\r\n - 自动质量控制：当CPU负载高时自动降低后期处理级别\r\n - 色调、饱和度和亮度修正(经过MMX优化)\r\n - 两个锐化滤镜：x锐化和非锐度屏蔽\r\n - 柔化和缓冲平滑\r\n - 带有菜单的任务栏图标可以快速打开配置对话框\r\n - 两个可选的噪点算法\r\n - 改变尺寸和纵横比\r\n - 字幕\r\n - 完全免费的软件：ffdshow在GPL下发布\r\n3. 配置方法\r\n  还没写。\r\n4. 网络链接\r\n ffdshow:\r\n  http://ffdshow.sourceforge.net/tikiwiki/\r\n  http://sourceforge.net/projects/ffdshow/\r\n  http://www.ffdshow.info/\r\n Xvid:\r\n   http://www.xvid.org/\r\n FFmpeg:\r\n  http://ffmpeg.mplayerhq.hu/\r\n libmpeg2:\r\n  http://libmpeg2.sourceforge.net/\r\n MPlayer:\r\n  http://www.mplayerhq.hu/\r\n x锐化、非锐度屏蔽、m锐化、色调和饱和度代码\r\n  http://sauron.mordor.net/dgraft/index.html\r\n 或者在doom9:\r\n  http://forum.doom9.org/showthread.php?t=120465\r\n5. 版权\r\n  所有使用的源代码(除了处理器功能检测例程)和ffdshow本身在GPL下发布。见copying.txt\r\n  Milan Cutka <milan_cutka@yahoo.com>
+0=1. 关于ffdshow视频解码器\r\n  ffdshow是一个DirectShow解码滤镜，用来对DIVX电影进行解压缩。ffdshow使用FFmpeg项目的libavcodec进行视频压缩和解压(也可以使用与xvid编解码器一起安装的xvidcore.dll)。从MPlayer引进的后期处理代码可以增强低码率电影的视觉品质，这些代码基于最早的Xvid DirectShow滤镜。Xvid是一个使用GPL授权的教学性质的MPEG4解码器实现。\r\n2. 主要特点\r\n - 使用优化的MMX、SSE、3DNow!代码进行快速视频解压\r\n - 支持不同编解码器：Xvid和所有版本的DIVX\r\n - 支持H.264和H.264/AVC(AVC：高级视频编码)\r\n - 另外还支持MSMPEG4v1、MSMPEG4v2、MSMPEG4v3、H.263\r\n - 可以作为其他解码器(比如MPEG1或者MPEG2)的后期处理滤镜\r\n - 适用于更高回放质量的图像后期处理\r\n - 自动质量控制：当CPU负载高时自动降低后期处理级别\r\n - 色调、饱和度和亮度修正(经过MMX优化)\r\n - 两个锐化滤镜：x锐化和非锐度屏蔽\r\n - 柔化和缓冲平滑\r\n - 带有菜单的任务栏图标可以快速打开配置对话框\r\n - 两个可选的噪点算法\r\n - 改变尺寸和纵横比\r\n - 字幕\r\n - 完全免费的软件：ffdshow在GPL下发布\r\n3. ffdshow-tryouts\r\n ffdshow最初由Milan Cutka开发。自从Milan Cutka在2006年停止更新之后，我们开始了一个新的项目，名叫“ffdshow-tryouts”。\r\n4. 网络链接\r\n ffdshow:\r\n  http://ffdshow-tryout.sourceforge.net/tikiwiki/\r\n  http://sourceforge.net/projects/ffdshow/\r\n  Xvid:\r\n   http://www.xvid.org/\r\n FFmpeg:\r\n  http://ffmpeg.mplayerhq.hu/\r\n libmpeg2:\r\n  http://libmpeg2.sourceforge.net/\r\n MPlayer:\r\n  http://www.mplayerhq.hu/\r\n   doom9:\r\n  http://forum.doom9.org/showthread.php?t=120465\r\n5. 版权\r\n  所有使用的源代码(除了处理器功能检测例程)和ffdshow本身在GPL下发布。见copying.txt\r\n  Milan Cutka <milan_cutka@yahoo.com>
 
 [289]
-0=1. 关于ffdshow音频解码器\r\n\r\n\r\n2. 主要特点:\r\n\r\n\r\n3. 配置方法\r\n\r\n还没写。\r\n\r\n4. 网络链接\r\n\r\nffdshow\r\n  http://sourceforge.net/projects/ffdshow/\r\nffmpeg\r\n  http://ffmpeg.org/\r\nmplayer\r\n  http://www.mplayerhq.hu/\r\n\r\n或者在Doom9\r\n  http://www.doom9.org/\r\n\r\n5.版权\r\n\r\n所有源代码和ffdshow本身都在GPL下发布。\r\n见copying.txt\r\n\r\n\r\nMilan Cutka <milan_cutka@yahoo.com>
+0=1. 关于ffdshow音频解码器\r\n  ffdshow是一个DirectShow滤镜还是一个VFW编码解码器，而且是开放源代码的。主要用于快速和高质量的MPEG-4视频解码，包括MPEG-4 ASP/高级简单方案(比如DivX、Xvid或者FFmpeg MPEG-4编码的视频)和AVC/高级视频编码(H.264)格式。同时也支持许多其他的音频视频格式。\r\n  ffdshow可以用作均衡器、音量控制器、杜比音频(Dolby)解码器、混响效果器和Winamp DSP插件等等。\r\n2. 主要特点\r\n - 支持常用的编解码器：AC3、AAC、DTS、MP1/2/3和Vorbis\r\n - 支持LPCM、TTA、QDM2、ADPCM、IMC和ATRAC3等等\r\n - 杜比音频(Dolby)解码器\r\n - 音频滤镜：均衡器、音量控制器、混响效果器、混音器和卷积器(convolver)\r\n - 增加了Winamp插件的多声道音频处理\r\n - 音频解码AC3输出：通过新的“只编码多声道音频流”复选框可以把多声道音频发送给AC3-SPDIF中的AV-amp。\r\n - 增加了Windows Vista上的SPDIF支持\r\n   (“音频解码器设置”->“输出”->“输出连接到：”)\r\n3. ffdshow-tryouts\r\n  ffdshow最初由Milan Cutka开发。自从Milan Cutka在2006年停止更新之后，我们开始了一个新的项目，名叫“ffdshow-tryouts”。\r\n4. 配置\r\n  - 安装文件可以改变扬声器设置，默认使用系统控制面板里的设置。\r\n5. 链接\r\n ffdshow-tryouts:\r\n http://ffdshow-tryout.sourceforge.net/\r\n http://sourceforge.net/project/showfiles.php?group_id=173941\r\n ffdshow:\r\n http://ffdshow.sourceforge.net/tikiwiki/\r\n http://sourceforge.net/projects/ffdshow/\r\n  FFmpeg:\r\n  http://ffmpeg.mplayerhq.hu/\r\n MPlayer:\r\n http://www.mplayerhq.hu/\r\n  维基百科:\r\n  http://en.wikipedia.org/wiki/Ffdshow\r\n6. 版权\r\n 所有使用的源代码(除了处理器功能检测例程)和ffdshow本身在GNU公共许可协议(GPL)下发布。参见copying.txt\r\n Milan Cutka <milan_cutka@yahoo.com>\r\n ffdshow-tryouts
 
 [290]
 0=1.关于ffdshow视频编码器\r\n    Video for Windows和DirectShow编解码器基于Xvid项目的VFW代码。使用FFmpeg项目的libavcodec库进行压缩。也支持少数其他的压缩库。\r\n2.主要特点:\r\n - 多种压缩算法:\r\n  H264\r\n  使用libavcodec或Xvid与MPEG 4兼容\r\n  与Divx 3兼容, MSMPEG4v2,MSMPEG4v1\r\n  WMV1/7,WMV2/8\r\n  H263,H263+\r\n  YV12色系中的HuffYUV\r\n  MJPEG\r\n  MPEG 1/2\r\n  Theora(格式未稳定，不能作常规使用)\r\n  所有Windows Media Video 9支持的编码器，可以输出到asf/wmv文件或AVI\r\n - 所有普通编码模式:静态码率、固定量化器、固定质量、二次处理编码(依赖于压缩器的功能)\r\n - 使用libavcodec和Xvid可以对动态估算方法进行详细选择\r\n - 最小和最大 I 帧间隔\r\n - 使用libavcodec可以进行最小和最大量化器选择，量化器类型和栅格量化选择\r\n - libavcodec和Xvid的适应性量化(亦称为遮蔽)，单一系数消除\r\n - 可选的片头片尾演职员表压缩\r\n - 二次处理编码的第二次处理使用两种曲线压缩算法，感谢Xvid的开发者\r\n - 第二次编码仿真:虽然不是很精确，但是仍然对高级曲线压缩参数的调较很有用\r\n - libavcodec内部的二次处理编码\r\n - 带有ffdshow图像滤镜的图像后期处理(必须安装最新的ffdshow版本)\r\n - 如果你的编码程序没有曲线图，编码时可以提供曲线图表\r\n - B帧支持:从1到8的连续的B帧\r\n - 支持MPEG4四分像素(quarterpel)和GMC\r\n - 可选择的交错编码\r\n - libavcodec的MPEG4/MPEG2/MPEG1和x264编码器是多线程的\r\n - 解压缩\r\n3.网络链接\r\n ffdshow:http://ffdshow.sourceforge.net/tikiwiki/\r\n FFmpeg:http://ffmpeg.mplayerhq.hu/\r\n Xvid:http://www.xvid.org/\r\n MPlayer:http://www.mplayerhq.hu/\r\n MJPEGtools:http://mjpeg.sourceforge.net/\r\n 或者在Doom9\r\n4.版权:ffdshow在GPL下发布。见copying.txt\r\nMilan Cutka <milan_cutka@yahoo.com>
 
 [295]
 0=ffdshow兼容性管理器
-2041=这个应用程序 "
-2042=" 在尝试装载ffdshow。\r\n显示这个对话框的原因是由于这个程序不在ffdshow的白名单或黑名单中。\r\n如果使用音频和视频，你的选择将会应用到它们二者。
+2041=名为 "
+2042=" 的程序正在尝试装载ffdshow。\r\n显示这个对话框的原因是由于这个程序不在ffdshow的白名单或黑名单中。\r\n如果使用音频和视频，你的选择将会应用到它们二者。
 2043=以后不要再问我。
 2044=通过互联网匿名报告这个exe文件名
 2045=不要使用ffdshow。(仅此一次)
@@ -1555,10 +1608,6 @@ skip deblocking always=总是跳过除马赛克
 2047=使用ffdshow。(仅此一次)
 2048=使用ffdshow。(永远使用)
 2049=说明
-
-[2020]
-1284=信息
-1832=使用下列SIMD指令集(如果处理器支持):
 
 [2112]
 0=RGB 变换
