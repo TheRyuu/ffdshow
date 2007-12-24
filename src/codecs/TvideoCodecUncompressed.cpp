@@ -72,8 +72,8 @@ bool TvideoCodecUncompressed::beginDecompress(TffPictBase &pict,FOURCC infcc,con
    case CODEC_ID_411P:csp=FF_CSP_411P;break;
    case CODEC_ID_410P:csp=FF_CSP_410P;break;
    case CODEC_ID_Y800:csp=FF_CSP_Y800;break;
-   case CODEC_ID_NV12:csp=FF_CSP_NV12;break;
-   case CODEC_ID_NV21:csp=FF_CSP_NV12|FF_CSP_FLAGS_YUV_ORDER;break;
+   case CODEC_ID_NV12:csp=FF_CSP_NV12|FF_CSP_FLAGS_YUV_ORDER;break;
+   case CODEC_ID_NV21:csp=FF_CSP_NV12;break;
    //case CODEC_ID_PAL1:csp=FF_CSP_PAL1;break;
    //case CODEC_ID_PAL4:csp=FF_CSP_PAL4;break;
    case CODEC_ID_PAL8:csp=FF_CSP_PAL8|FF_CSP_FLAGS_VFLIP;break;

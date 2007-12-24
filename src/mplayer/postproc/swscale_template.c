@@ -2329,8 +2329,8 @@ static inline void RENAME(nv12ToUV)(uint8_t *dstU, uint8_t *dstV, uint8_t *src1,
 	int i;
 	for(i=0; i<width; i++)
 	{
-		dstV[i]= src1[i<<1];
-		dstU[i]= src1[(i<<1)+1];
+		dstU[i]= src1[i<<1];
+		dstV[i]= src1[(i<<1)+1];
 	}
 }
 
@@ -2339,8 +2339,8 @@ static inline void RENAME(nv21ToUV)(uint8_t *dstU, uint8_t *dstV, uint8_t *src1,
 	int i;
 	for(i=0; i<width; i++)
 	{
-		dstU[i]= src1[i<<1];
-		dstV[i]= src1[(i<<1)+1];
+		dstV[i]= src1[i<<1];
+		dstU[i]= src1[(i<<1)+1];
 	}
 }
 

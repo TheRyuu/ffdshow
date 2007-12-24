@@ -385,6 +385,14 @@ void TffPict::convertCSP(int Icsp,Tbuffer &buf,int edge)
    data[2]=data[1]+stride[1]*((ODD2EVEN(rectFull.dy)>>cspInfo.shiftY[1])+edge);
    data[3]=data[2]+stride[2]*((ODD2EVEN(rectFull.dy)>>cspInfo.shiftY[2])+edge);
   }
+ else if ((csp & FF_CSPS_MASK) == FF_CSP_NV12)
+  {
+   stride[0]=stride[1]=((rectFull.dx+edge)/16+2)*16;
+   size_t size = stride[0] * (ODD2EVEN(rectFull.dy) + (ODD2EVEN(rectFull.dy)>>1));
+   buf.allocZ(size,128);
+   data[0] = buf;
+   data[1] = data[0] + stride[0] * (ODD2EVEN(rectFull.dy) + edge);
+  }
  else
   {
    stride[0]=rectFull.dx*cspInfo.Bpp;
