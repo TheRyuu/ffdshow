@@ -7,7 +7,7 @@ have been made, which were ported to this translation (even if nothing
 was changed here). This is to know which revisions are not ported yet.
 If you skip to port a revision please note that revision for later porting. -->
 
-<!-- In sync with revision 1691 except for revision(s) -none-. -->
+<!-- In sync with revision 1725 except for revision(s) -none-. -->
 
 <head>
   <title>ffdshow tryouts | Changelog</title>
@@ -56,17 +56,26 @@ If you skip to port a revision please note that revision for later porting. -->
 
   <h2>
     <a name="fixes" id="fixes">Fehlerkorrekturen</a><br />
-  </h2>
-  <p>
-    Anmerkung: Fehler, die w&auml;hrend der tryouts-Entwicklung eingef&uuml;gt und auch korrigiert wurden, werden nicht gelistet.
-  </p>
+  </h2>  
+  
+  <h3>Nach Beta4 korrigiert</h3>
 
+  <ul class="fixed">
+    <li>Im Vista Windows Media Center konnten AVI-Dateien, die ein nicht-quadratisches Seitenverh&auml;ltnis besitzen, aufgrund eines Windows Media Center-Bugs nicht richtig abgespielt werden. Sind nun die Optionen "Ausgabeformat-Wechsel w&auml;hrend Wiedergabe erlauben" sowie "Nur zu kompatiblen Filtern verbinden" aktiviert, so werden diese Dateien im korrekten Seitenverh&auml;ltnis abgespielt.</li>
+    <li>Falls RAW-Video im NV12/NV21-Farbraum als Eingabe diente und "Gr&ouml;&szlig;e &amp; Seitenverh&auml;ltnis" aktiviert war, st&uuml;rzte ffdshow ab.</li>
+    <li>"Bitmap overlay" st&uuml;rzte ab.</li>
+    <li>Der DCT Bildfilter funktionierte bei der Wiedergabe nicht.</li>
+    <li>Falls "Untertitel mit gleichem Zeitstempel &uuml;berlappen" aktiviert war, st&uuml;rzte ffdshow manchmal ab.</li>
+    <li>Die Untertitel-Letterbox-Funktion wendete f&auml;lschlicherweise "Beschneiden" anstatt "Letterbox" an, falls das angegebene Seitenverh&auml;ltnis breiter war als das des Videos.</li>
+    <li>Windows Media Center st&uuml;rzte beim Erstellen von Miniaturansichten ab.</li>
+  </ul>
+  
   <h3>Vor Beta4 korrigiert</h3>
 
   <ul class="fixed">
     <li>In FLAC und TTA ging die A/V-Synchronisation verloren.</li>
     <li>Der "Closed caption"-Dekoder produzierte verst&uuml;mmelte Zeichen.</li>
-    <li>Fehler, der zu Abst&uuml;rzen im Windows Movie Maker f&uuml;hrte, wurde behoben. Der Fehler lag allerdings nicht an ffdshow.</li>
+    <li>Fehler, die zu Abst&uuml;rzen im Windows Movie Maker f&uuml;hrten, wurden behoben.</li>
     <li>Untertitel, die ein "&amp;" im Dateinamen enthalten, wurden falsch im ffdshows Kontextmen&uuml; angezeigt.</li>
     <li>MakeAVIS.exe produzierte im "Store uncompressed audio"-Modus rauschendes Audio, falls der Audioeingang nicht auf 16-bit Integer gestellt war.</li>
     <li>Mehrzeilige AviSynth-Skripte wurden nicht abgespeichert, wenn im Profildialog auf "Einstellungen exportieren" oder "In Datei speicher..." geklickt wurde.</li>
@@ -168,8 +177,15 @@ If you skip to port a revision please note that revision for later porting. -->
   </ul>
 
   <h2>
-    <a name="features" id="features"> Neue Features</a>
+    <a name="features" id="features">Neue Features</a>
   </h2>
+  
+  <h3>Nach Beta4 hinzugef&uuml;gt</h3>
+
+  <ul class="added">
+    <li>Unterst&uuml;tzung f&uuml;r FourCC "SP51" bis "SP57" hinzugef&uuml;gt.</li>
+    <li>Die Option "Untertitel" -> "Schriftart" -> "Correct aspect ratio automatically" ist jetzt auch f&uuml;r SSA/ASS-Untertitel g&uuml;ltig, da VSFilter und MPCs "VMR9 renderless" sich anders verhalten.</li>
+  </ul>
 
   <h3>Nach Beta3 hinzugef&uuml;gt</h3>
 
