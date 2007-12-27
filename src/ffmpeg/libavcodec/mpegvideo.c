@@ -945,6 +945,8 @@ alloc:
 
     if(s->pict_type != I_TYPE && (s->last_picture_ptr==NULL || s->last_picture_ptr->data[0]==NULL) && !s->dropable){
         av_log(avctx, AV_LOG_ERROR, "warning: first frame is no keyframe\n");
+        if (s->codec_id == CODEC_ID_H264 || s->codec_id == CODEC_ID_FFV1)
+            return -1; // ffdshow custom code
         assert(s->pict_type != B_TYPE); //these should have been dropped if we don't have a reference
         goto alloc;
     }
