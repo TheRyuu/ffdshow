@@ -23,17 +23,17 @@
  * common internal api header.
  */
 
-#ifndef INTERNAL_H
-#define INTERNAL_H
+#ifndef FFMPEG_INTERNAL_H
+#define FFMPEG_INTERNAL_H
 
 #if defined(_MSC_VER) & !defined(__cplusplus)
-#define inline
+#    define inline
 #endif
 
 #if defined(__GNUC__) && (__GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ > 1)
-#	define GCC420_OR_NEWER 1
+#   define GCC420_OR_NEWER 1
 #else
-#	define GCC420_OR_NEWER 0
+#   define GCC420_OR_NEWER 0
 #endif
 
 #ifndef attribute_align_arg
@@ -112,12 +112,12 @@
 #define vsnprintf _vsnprintf
 
 #ifdef USE_FASTMEMCPY
-#	include "fastmemcpy.h"
-#   define memcpy(a,b,c) fast_memcpy(a,b,c)
+#    include "fastmemcpy.h"
+#    define memcpy(a,b,c) fast_memcpy(a,b,c)
 #endif
 
 // Use rip-relative addressing if compiling PIC code on x86-64.
-#if defined(__MINGW32__) || defined(__CYGWIN__) || \
+#if defined(__MINGW32__) || defined(__CYGWIN__) || defined(__DJGPP__) || \
     defined(__OS2__) || (defined (__OpenBSD__) && !defined(__ELF__))
 #    if defined(ARCH_X86_64) && defined(PIC)
 #        define MANGLE(a) "_" #a"(%%rip)"
@@ -127,7 +127,7 @@
 #else
 #    if defined(ARCH_X86_64) && defined(PIC)
 #        define MANGLE(a) #a"(%%rip)"
-#    elif defined(CONFIG_DARWIN)
+#    elif defined(__APPLE__)
 #        define MANGLE(a) "_" #a
 #    else
 #        define MANGLE(a) #a
@@ -143,13 +143,13 @@
 
 /* dprintf macros */
 #if defined(__GNUC__)
-#	ifdef DEBUG
-#		define dprintf(pctx, ...) av_log(pctx, AV_LOG_DEBUG, __VA_ARGS__)
-#	else
-#		define dprintf(pctx, ...)
-#	endif
+#   ifdef DEBUG
+#       define dprintf(pctx, ...) av_log(pctx, AV_LOG_DEBUG, __VA_ARGS__)
+#   else
+#       define dprintf(pctx, ...)
+#   endif
 #else
-#	define dprintf(pctx)
+#   define dprintf(pctx, ...)
 #endif
 
 #define av_abort()      do { av_log(NULL, AV_LOG_ERROR, "Abort at %s:%d\n", __FILE__, __LINE__); abort(); } while (0)
@@ -264,13 +264,10 @@ if((y)<(x)){\
 }
 
 #ifndef HAVE_LRINTF
-/* XXX: add ISOC specific test to avoid specific BSD testing. */
-/* better than nothing implementation. */
-/* btw, rintf() is existing on fbsd too -- alex */
 static av_always_inline long int lrintf(float x)
 {
     return (int)(rint(x));
 }
 #endif /* HAVE_LRINTF */
 
-#endif /* INTERNAL_H */
+#endif /* FFMPEG_INTERNAL_H */
