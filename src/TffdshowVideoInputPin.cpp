@@ -672,7 +672,7 @@ HRESULT TffdshowVideoInputPin::getInCodecString(char_t *buf,size_t buflen)
 }
 bool TffdshowVideoInputPin::waitForKeyframes(void)
 {
- return !rawDecode && !(video && mpeg12_codec(codecId) && biIn.bmiHeader.biCompression!=FOURCC_MPEG);
+ return !rawDecode && codecId != CODEC_ID_H264 && !(video && mpeg12_codec(codecId) && biIn.bmiHeader.biCompression!=FOURCC_MPEG);
 }
 void TffdshowVideoInputPin::setSampleSkipped(void)
 {
