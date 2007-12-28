@@ -93,7 +93,7 @@ void TcompatibilityManager::cfg2dlg(void)
  setCheck(IDC_RBT_COMP_2 ,mode==2);
  setCheck(IDC_RBT_COMP_3 ,mode==3);
  setCheck(IDC_RBT_COMP_4 ,mode==4);
- enable(mode==4,IDC_CHB_COMP_SEND,false);
+ enable(mode==2 || mode==4,IDC_CHB_COMP_SEND,false);
 
  char_t *msg=NULL;
  switch (mode)
@@ -167,20 +167,26 @@ INT_PTR TcompatibilityManager::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
      {
       case IDOK:
        {
-        if (mode==4 && chbsend)
+        if( (mode==2 || mode==4) && chbsend )
          {
           int revision;
+          ffstring targetlist;
+          if(mode==4) {
+            targetlist = "whitelist";
+          } else {
+            targetlist = "blacklist";
+          }
           TregOpRegRead tNSI(HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
           tNSI._REG_OP_N(0,_l("revision"),revision,0);
           char_t param[MAX_PATH+80];
           ffstring instpath(cfgGetStr(IDFF_installPath));
           if (instpath.size() && instpath[instpath.size()-1]!='\\')
-           instpath=instpath+_l("\\");
-          tsprintf(param, _l("\"%sopenIE.js\" \"%s\" %d"),instpath.c_str(),filename.c_str(),revision);
+          instpath=instpath+_l("\\");
+          tsprintf(param, _l("\"%sopenIE.js\" \"%s\" %d %s"),instpath.c_str(),filename.c_str(),revision,targetlist.c_str());
           if ((int)ShellExecute(NULL, _l("open"),_l("wscript.exe") ,param , NULL, SW_SHOWDEFAULT)<=32)
            {
             char_t url[MAX_PATH+80];
-            tsprintf(url,_l("http://ffdshow-tryout.sourceforge.net/compmgr.php?app=%s&rev=%d"),filename.c_str(),revision);
+            tsprintf(url,_l("http://ffdshow-tryout.sourceforge.net/compmgr.php?app=%s&rev=%d&type=%s"),filename.c_str(),revision,targetlist.c_str());
             ShellExecute(NULL, _l("open"),url , NULL, NULL, SW_HIDE);
            }
          }
