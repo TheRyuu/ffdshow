@@ -573,7 +573,7 @@ static int compute_bit_allocation(AC3EncodeContext *s,
            bit_alloc(s, mask, psd, bap, frame_bits, coarse_snr_offset, 0) < 0)
         coarse_snr_offset -= SNR_INC1;
     if (coarse_snr_offset < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Bit allocation failed, try increasing the bitrate, -ab 384k for example!\n");
+        av_log(NULL, AV_LOG_ERROR, "Bit allocation failed. Try increasing the bitrate.\n");
         return -1;
     }
     while ((coarse_snr_offset + SNR_INC1) <= 63 &&
@@ -632,6 +632,7 @@ static int AC3_encode_init(AVCodecContext *avctx)
     AC3EncodeContext *s = avctx->priv_data;
     int i, j, ch;
     float alpha;
+    int bw_code;
 #if 0
     static const uint8_t acmod_defs[6] = {
         0x01, /* C */
@@ -670,9 +671,8 @@ static int AC3_encode_init(AVCodecContext *avctx)
     s->bitstream_mode = 0; /* complete main audio service */
 
     /* bitrate & frame size */
-    bitrate /= 1000;
     for(i=0;i<19;i++) {
-        if ((ff_ac3_bitrate_tab[i] >> s->sr_shift) == bitrate)
+        if ((ff_ac3_bitrate_tab[i] >> s->sr_shift)*1000 == bitrate)
             break;
     }
     if (i == 19)
@@ -685,12 +685,21 @@ static int AC3_encode_init(AVCodecContext *avctx)
     s->frame_size = s->frame_size_min;
 
     /* bit allocation init */
-    for(ch=0;ch<s->nb_channels;ch++) {
-        /* bandwidth for each channel */
+    if(avctx->cutoff) {
+        /* calculate bandwidth based on user-specified cutoff frequency */
+        int cutoff = av_clip(avctx->cutoff, 1, s->sample_rate >> 1);
+        int fbw_coeffs = cutoff * 512 / s->sample_rate;
+        bw_code = av_clip((fbw_coeffs - 73) / 3, 0, 60);
+    } else {
+        /* use default bandwidth setting */
         /* XXX: should compute the bandwidth according to the frame
            size, so that we avoid anoying high freq artefacts */
-        s->chbwcod[ch] = 50; /* sample bandwidth as mpeg audio layer 2 table 0 */
-        s->nb_coefs[ch] = ((s->chbwcod[ch] + 12) * 3) + 37;
+        bw_code = 50;
+    }
+    for(ch=0;ch<s->nb_channels;ch++) {
+        /* bandwidth for each channel */
+        s->chbwcod[ch] = bw_code;
+        s->nb_coefs[ch] = bw_code * 3 + 73;
     }
     if (s->lfe) {
         s->nb_coefs[s->lfe_channel] = 7; /* fixed */
@@ -1241,11 +1250,11 @@ static int AC3_encode_frame(AVCodecContext *avctx,
     }
 
     /* adjust for fractional frame sizes */
-    while(s->bits_written >= s->bit_rate*1000 && s->samples_written >= s->sample_rate) {
-        s->bits_written -= s->bit_rate*1000;
+    while(s->bits_written >= s->bit_rate && s->samples_written >= s->sample_rate) {
+        s->bits_written -= s->bit_rate;
         s->samples_written -= s->sample_rate;
     }
-    s->frame_size = s->frame_size_min + (s->bits_written * s->sample_rate < s->samples_written * s->bit_rate*1000);
+    s->frame_size = s->frame_size_min + (s->bits_written * s->sample_rate < s->samples_written * s->bit_rate);
     s->bits_written += s->frame_size * 16;
     s->samples_written += AC3_FRAME_SIZE;
 
