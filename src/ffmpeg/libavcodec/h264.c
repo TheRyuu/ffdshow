@@ -3829,6 +3829,15 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
         return -1;
     }
 
+    // ffdshow custom code
+    if (s->pict_type == I_TYPE){
+        h->first_I_frame_detected = 1;
+    } else if (s->pict_type == P_TYPE && !h->first_I_frame_detected) {
+        av_log(h->s.avctx, AV_LOG_ERROR,
+               "P picture before first I picture, skipping\n");
+        return -1;
+    }
+
     pps_id= get_ue_golomb(&s->gb);
     if(pps_id>=MAX_PPS_COUNT){
         av_log(h->s.avctx, AV_LOG_ERROR, "pps_id out of range\n");
@@ -4033,6 +4042,8 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
             h->direct_spatial_mv_pred= get_bits1(&s->gb);
             if(FIELD_OR_MBAFF_PICTURE && h->direct_spatial_mv_pred)
                 av_log(h->s.avctx, AV_LOG_ERROR, "Interlaced pictures + spatial direct mode is not implemented\n");
+            else
+                h->is_valid_direct_spatial_mv_pred = 1; // ffdshow custom code
         }
         num_ref_idx_active_override_flag= get_bits1(&s->gb);
 
@@ -7491,10 +7502,17 @@ static void execute_decode_slices(H264Context *h, int context_count){
     int i;
 
     if(context_count == 1) {
-        if(avctx->thread_count > 1 && h->pps.cabac)
-        decode_slice2(avctx, h);
+        if(avctx->thread_count > 1 && h->pps.cabac
+           /* ffdshow custom code */
+           /* spatial direct mode plus interlacing is not supported by the multithreading code */
+           /* This check avoids using multithreading in such cases. */
+           /* Incomplete. Just checking the prior frame. Should be current frame. */
+           /* Just works for most of samples */
+           && !(FIELD_OR_MBAFF_PICTURE && h->direct_spatial_mv_pred)
+           && h->is_valid_direct_spatial_mv_pred)
+            decode_slice2(avctx, h);
         else
-        decode_slice(avctx, h);
+            decode_slice(avctx, h);
     } else {
         for(i = 1; i < context_count; i++) {
             hx = h->thread_context[i];
