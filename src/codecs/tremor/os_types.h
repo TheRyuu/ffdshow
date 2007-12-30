@@ -32,12 +32,11 @@
 #define _ogg_free    free
 
 #ifdef WIN64
-   #include "inttypes.h"
-   typedef int64_t ogg_int64_t;
-   typedef int32_t ogg_int32_t;
-   typedef uint32_t ogg_uint32_t;
-   typedef int16_t ogg_int16_t;
-   typedef uint16_t ogg_uint16_t;
+   typedef __int64 ogg_int64_t;
+   typedef __int32 ogg_int32_t;
+   typedef unsigned __int32 ogg_uint32_t;
+   typedef __int16 ogg_int16_t;
+   typedef unsigned __int16 ogg_uint16_t;
 
 #elif defined ( _WIN32 )
 
