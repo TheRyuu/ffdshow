@@ -874,31 +874,59 @@ bool TffdshowDecVideo::IsOldRenderer(void)
 {
  // Check downstream filter
  // Does Video Renderer support multithreading?
- IBaseFilter* pBaseFilter;
- CLSID clsid;
 
  const char_t *fileName= getExeflnm();
-
- bool isOld= false;
- // ZoomPlayer & Vix & IExplorer.exe hangs up on graph->FindFilterByName(L"Video Renderer", &pBaseFilter) for unknown reason.
- // IFilterGraph::FindFilterByName seems to have serious bug.
- if(_strnicmp(_l("mplayerc.exe"),fileName,13)!=0)
+ bool isOld = false;
+ const CLSID &ref=GetCLSID(m_pOutput->GetConnected());
+ if(_strnicmp(_l("mplayerc"),fileName,8)!=0)
   {
-   const CLSID &ref=GetCLSID(m_pOutput->GetConnected());
-   if(ref==CLSID_VideoRenderer || ref==CLSID_OverlayMixer)
-    isOld= true;
+   return (ref == CLSID_VideoRenderer || ref == CLSID_OverlayMixer) ? true : false;
   }
  else
   {
-   if(graph->FindFilterByName(L"Video Renderer", &pBaseFilter)==S_OK)
+   if (ref == CLSID_VideoRenderer)
+    return true;
+   if (ref != CLSID_OverlayMixer)
+    return false;
+   PIN_INFO pinInfo; 
+   m_pOutput->GetConnected()->QueryPinInfo(&pinInfo);
+   if (pinInfo.pFilter)
     {
-     pBaseFilter->GetClassID(&clsid);
-     if(clsid==CLSID_VideoRenderer)
-      isOld= true;
-     pBaseFilter->Release();
+     IEnumPins *iEnum = NULL;
+     pinInfo.pFilter->EnumPins(&iEnum);
+     if (iEnum)
+      {
+       ULONG cFetched;
+       IPin *overlayPin = NULL;
+       iEnum->Reset();
+       while (!isOld)
+        {
+         if (iEnum->Next(1, &overlayPin, &cFetched) != S_OK || !overlayPin)
+          break;
+         PIN_INFO pinInfo1;
+         overlayPin->QueryPinInfo(&pinInfo1);
+         if (pinInfo1.pFilter)
+          {
+           if (pinInfo1.dir == PINDIR_OUTPUT)
+            {
+             IPin *ipinRenderer;
+             if (overlayPin->ConnectedTo(&ipinRenderer) == S_OK && ipinRenderer)
+              {
+               CLSID clsid = GetCLSID(ipinRenderer);
+               if (clsid == CLSID_VideoRenderer)
+                isOld = true;
+               ipinRenderer->Release();
+              }
+            }
+           pinInfo1.pFilter->Release();
+          }
+         overlayPin->Release();
+        }
+       iEnum->Release();
+      }
+     pinInfo.pFilter->Release();
     }
   }
-
  return isOld;
 }
 
