@@ -1,19 +1,41 @@
-List of known issues in revision 1352:
+Known issues & bugs:
 
-1).I think I have found a bug in the ffdshow subtitle filter. If I slow down the playback speed of the video in Media Player Classic, then the subtitles will continue to play at their normal speed. So the subs go faster than the video and synchronization is lost. After changing the playback speed back to normal, the subtitles will synchronize and continue at the correct position.
-2).VirtualDub crashes when it is closed if the ffdshow VFW window is still open.
-3).When ffdshow is used for decoding VC-1 video or for processing Raw video after another VC-1 decoder, then framerate gets changed from 23,976 fps to 29.97 fps. Happens with .evo files. Details.
-4).The audio delay filter fields in ffdshow audio decoder don't accept negative values.
+List of known issues in revision 1737:
 
-Known limitations:
-5).Support for SSA/ASS subtitles is incomplete.
-6).7.1 audio input is not properly handled. Details. More details.
+   1. VirtualDub crashes when it is closed if the ffdshow VFW window is still open.
+   2. The audio delay filter fields in ffdshow audio decoder do not accept negative values.
+   3. H.263+ encoding hangs (in infinite loop?) at some settings. Details. There are similar problems with the MPEG-2 encoder.
+   4. FLV4 decoding crashes for this sample file.
+   5. Incompatibility with game Silent Hunter 3 since revision 1434.
+   6. B-frame decoding delay in VFW when using libavcodec for Xvid/DivX. Details.
+   7. In some cases VobSub subtitle files (.idx/.sub) are loaded, but no subs are displayed. VobSub support is still incomplete.
 
-ToDo:
 
-Update tremor. Details. 
-Update swscale (?) 
+Short term ToDo list:
 
+   1. Don't display a .sub file in "subtitle sources" list when a .idx with same name also exists.
+   2. Let 64-bit builds of ffdshow use the 64-bit registry hive for storing settings
+
+
+Mid term ToDo list:
+
+   1. Write documentation for profiles/preset settings.
+   2. Try to reproduce some reported stability/compatibility problems on Vista. We suspect these problems are caused by other filters.
+   3. Send color primary information to downstream on VIDEOINFOHEADER2.
+   4. Fix vobsub in matroska.
+   5. ASS: implement \move,\fad,\fade, scalable shadow and outline.
+   6. Improve translation dialog.
+   7. Improve audio preset loading rules.
+   8. Include some of the html docs in the installer.
+   9. Rename icl project files: _icl9 -> _icl10
+
+
+Long term ToDo list:
+
+   1. Create htmlhelp file or online wiki.
+   2. SSA/ASS: implement collisions and everything.
+   3. Update theora.
+   4. A filter instance similar to the "raw filter" that only has subtitle rendering abilities.
 
 --------------------------------------------------------------------------------------
 
