@@ -5,8 +5,8 @@ Translated by Virtual_ManPL (Artur OsiÒski)
 e-mail: Virtual_ManPL@wp.pl
 Gadu-Gadu: 6361956
 Jabber: Virtual_ManPL@maszyna.pl
-Latest translated ffdshow : 1627
-Revision: 3
+Latest translated ffdshow : 1685
+Revision: 4
 ============================================
 
 [115]
@@ -32,15 +32,15 @@ Details=SzczegÛ≥y
 disabled=Wy≥πczony
 High accuracy mode is enabled for tremor.=Tryb wysokiej dok≥adnoúci jest w≥πczony dla termor.
 enabled=W≥πczony
-FLAC (Free Lossless Audio Codec);To play .flac files you also need a source filter.=FLAC (Free Lossless Audio Codec); By odtwarzaÊ pliki .flac potrzebujesz rÛwnieø filtra ürÛd≥owego.
+FLAC (Free Lossless Audio Codec);To play .flac files you also need a source filter.=Free Lossless Audio Codec; By odtwarzaÊ pliki .flac potrzebujesz rÛwnieø filtra ürÛd≥owego.
 TTA (Lossless Audio Codec);To play .tta files you also need a source filter.=TTA (Lossless Audio Codec); By odtwarzaÊ pliki .tta potrzebujesz rÛwnieø filtra ürÛd≥owego.
 Other ADPCM=Inne ADPCM
 all supported=Wszystkie obs≥ugiwane
-Adaptive Multi-Rate in 3gp files (AMR)=Adaptive Multi-Rate w plikach 3gp (AMR)
-not WMA9 pro, voice or lossless=Nie dla WMA9 pro, voice i lossless
+Adaptive Multi-Rate in 3gp files (AMR)=Adaptive Multi-Rate w plikach 3gp
+not WMA9 pro, voice or lossless=Nie obs≥uguje WMA9 pro, voice or lossless
 AVIS (AviSynth AVI files)=AVIS (pliki AviSynth AVI)
 Uncompressed=Nieskompresowany
-List of applications for which ffdshow should not load, separated by semicolons=Lista aplikacji dla ktÛrych ffdshow nie ≥aduje siÍ, oddzielone drukropkiem
+List of applications for which ffdshow should not load, separated by semicolons=Lista aplikacji dla ktÛrych ffdshow nie ≥aduje siÍ, oddzielone dwukropkiem
 List of applications which are compatible with ffdshow, separated by semicolons.=Lista aplikacji ktÛre sπ kompatybilne z ffdshow, oddzielone dwukropkiem.
 very high=Najwyøszy
 ffdshow default=Domyúlnie
@@ -57,7 +57,7 @@ ATSC A-52 stream decoder=Dekoder strumienia ATSC A-52
 DTS Coherent Acoustics stream decoder=Dekoder strumienia DTS Coherent Acoustics
 Windows Media Audio compatible decoder=Kompatybilny dekoder Windows Media Audio
 DSP Group TrueSpeech compatible decoder=Kompatybilny dekoder DSP Group TrueSpeech
-QDM2 compatible decoder (incomplete)=Kompatybilny dekoder QDM2 (niedokoÒczony)
+QDM2 compatible decoder (incomplete)=Kompatybilny dekoder QDM2
 IMC compatible decoder=Kompatybilny dekoder IMC
 ATRAC3 compatible decoder=Kompatybilny dekoder ATRAC3
 Source file=èrÛd≥o pliku
@@ -86,7 +86,7 @@ Check for DTS in WAV=Sprawdü DTS w WAV
 Use SPDIF when AC3 output set=Uøyj S/PDIF gdy jest ustawiony AC3
 Preset name=Nazwa
 left=W lewo
-top=w gÛrÍ
+top=W gÛrÍ
 Reset=Resetuj
 Edit=Edytuj
 New=Nowy
@@ -127,8 +127,8 @@ front center=Przedni centralny
 back left=Tylni lewy
 back right=Tylni prawy
 invalid=nieprawid≥owy
-Winamp2 application directory, not plugin directory.=Katalog aplikacji Winamp 2, a nie katalog wtyczek.
-Select Winamp 2 directory (not the plugins directory!)=Wybierz katalog Winamp'a 2 (nie katalog z wtyczkami!)
+Winamp2 application directory, not plugin directory.=Katalog aplikacji WinAmp 2, a nie katalog wtyczek.
+Select Winamp 2 directory (not the plugins directory!)=Wybierz katalog WinAmp'a 2 (nie katalog z wtyczkami!)
 lowpass=Dolnoprzepustowy
 highpass=GÛrnoprzepustowy
 bandpass=årodkowoprzepustowy
@@ -151,7 +151,7 @@ Version=Wersja
 Useful for directly storing encoded ac3 to a file in graphedt with File Writer filter=Potrzebny do bezpoúredniego gromadzenia kodowanego AC3 dla pliku w GraphEdit z filtrem File Writer
 any filter=Kaødym filtrem
 ffdshow audio decoder=ffdshow dekoder düwiÍku
-H264, X264, VSSH (incomplete), DAVC, PAVC, AVC1=H264, X264, VSSH (niedokoÒczony), DAVC, PAVC, AVC1
+H264, X264, VSSH (incomplete), DAVC, PAVC, AVC1=H264, X264, VSSH, DAVC, PAVC, AVC1
 Other MPEG4=Inne MPEG4
 ffdshow and ffvfw internal FOURCCs=wewnÍtrzny FOURCC ffdshow i ffvfw
 H263, L263, M263, U263, X263, S263 (in 3gp files)=H263, L263, M263, U263, X263, S263 (w plikach 3gp)
@@ -212,18 +212,18 @@ extrabold=Ekstra wyt≥uszczona
 Jitter=Szybkozmienna fluktuacja fazy
 3/0 - 3 front=3/0 - 3 przednie kana≥y
 3/2 - 5 channels=3/2 - 5 kana≥Ûw
-Select Winamp preset file=Wybierz plik z ustawieniami Winamp
-MPEG1 codec=MPEG1 kodek
-MPEG2 codec=MPEG2 kodek
+Select Winamp preset file=Wybierz plik z ustawieniami WinAmp
+MPEG1 codec=MPEG1
+MPEG2 codec=MPEG2
 MPEG in AVI=MPEG w AVI
 Windows Media Video 9 Simple & Main Profiles (WMV3)=Windows Media Video 9 Profile Simple & Main (WMV3)
 Windows Media Video 9 Advanced Profile (WVC1)=Windows Media Video 9 Profil Advanced (WVC1)
-Huffyuv codec for libavcodec (HFYU, FFVH)=Huffyuv kodek dla libavcodec (HFYU, FFVH)
+Huffyuv codec for libavcodec (HFYU, FFVH)=Huffyuv dla libavcodec (HFYU, FFVH)
 Other MJPEG=Inne MJPEG
-FFV1 codec for libavcodec (FFV1)=FFV1 kodek dla libavcodec (FFV1)
+FFV1 codec for libavcodec (FFV1)=FFV1 dla libavcodec (FFV1)
 Other DV=Inne DV
 Chinese AVS video (AVS1-P2, JiZhun profile)=Chinese AVS video (AVS1-P2, profil JiZhun)
-Real Video (RV10, RV20, incomplete)=Real Video (RV10, RV20, niedokoÒczony)
+Real Video (RV10, RV20, incomplete)=Real Video (RV10, RV20)
 Doesn't support 24-bit compression.=Nie obs≥uguje kompresji 24 bitowej.
 Glowing shadow=Promienisty
 Gradient shadow=Gradientowy
@@ -298,11 +298,11 @@ English (may work with other languages)=Angielski (moøe dzia≥aÊ z innymi jÍzykam
 YCbCr <-> RGB conversion options=Opcje konwersji YCbCr <-> RGB
 Bob for video source\nWeave for film source\nIn most cases, Weave is the same as unchecked HW deinterlacing.=Bob dla ürÛd≥a obrazu\nWeave dla ürÛd≥a filmu\nW wiÍkszoúci przypadkÛw, w≥πczony Weave dzia≥a tak samo jak wy≥πczone sprzÍtowe usuwanie przeplotu.
 Connect only to:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  EVR\n  ffdshow=Po≥πcz tylko z:\n  Mikserem nak≥adki\n  Miksujπcym rendererem obrazu 7\n  Miksujπcym rendererem obrazu 9\n  VobSub\n  Rendererem obrazu Haali\n  Ulepszonym miksujπcym rendererem obrazu\n  ffdshow
-Unchecked: Use classic connection method.\nChecked: Use an advanced connection method that includes pixel aspect ratio (SAR) and interlacing information when connecting with the next filter (usually a video renderer).\nIndeterminate/grayed: Try advanced connection method first and fall back to classic connection method if it fails.\n\n(formerly called "Use overlay mixer")=Niezaznaczony: Uøyj klasycznej metody po≥πczenia.\nZaznaczony: Uøyj zaawansowanej metody po≥πczenia ktora zawiera wspÛ≥czynnik pikseli (SAR) oraz informacje o przeplocie kiedy ≥πczy siÍ z nastÍpnym filtrem (zazwyczaj z rendererem obrazu).\nWpÛ≥zaznaczony: Pierw uøyj zaawansowanej metody i jeúli zawiedzie uøyj klasycznej metody\n\n(Formalnie zwana nak≥adkπ obrazu)
+Unchecked: Use classic connection method.\nChecked: Use an advanced connection method that includes pixel aspect ratio (SAR) and interlacing information when connecting with the next filter (usually a video renderer).\nIndeterminate/grayed: Try advanced connection method first and fall back to classic connection method if it fails.\n\n(formerly called "Use overlay mixer")=Niezaznaczony: Uøyj klasycznej metody po≥πczenia.\nZaznaczony: Uøyj zaawansowanej metody po≥πczenia ktÛra zawiera wspÛ≥czynnik pikseli (SAR) oraz informacje o przeplocie kiedy ≥πczy siÍ z nastÍpnym filtrem (zazwyczaj z rendererem obrazu).\nWpÛ≥zaznaczony: Pierw uøyj zaawansowanej metody i jeúli zawiedzie uøyj klasycznej metody\n\n(Formalnie zwana nak≥adkπ obrazu)
 Send interlacing related information obtained from the input stream or ffdshow's internal decoders to the next filter. Some filters (like video renderers) will use this information to deinterlace the video if neccessary.\nThis is just for informing the downstream filters - the actual result will depend purely on the implementation of these filters.\n\n(formerly called "HW deinterlacing")=Wyúlij informacjÍ zwiπzanπ z przeplotem uzyskanπ od wejúciowego strumienia lub wewnÍtrznych dekoderÛw ffdshow do nastÍpnego filtra. NiektÛre filtry (jak renderery obrazu) w razie potrzeby uøywajπ tej informacji do usuwania blokÛw w obrazie.
 indeterminate state - connect to any filter, allows output format changes only if connected to supported filter.\n\nFilters known to support dynamic format change:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  EVR\n  ffdshow=WpÛ≥zaznaczony: po≥πcz do kaødego filtra, pozwÛl na zmianÍ wyjúciowego formatu tylko jeúli po≥πczono z obs≥ugiwanym filtrem.\n\nZnane filtry ktÛre obs≥ugujπ dynamicznπ zmianÍ formatu\n  Mikserem nak≥adki\n  Miksujπcym rendererem obrazu 7\n  Miksujπcym rendererem obrazu 9\n  VobSub\n  Rendererem obrazu Haali\n  Ulepszonym miksujπcym rendererem obrazu\n  ffdshow
 constant=sta≥e
-mpeg1/2 decoder only=Tylko dekoder mpeg1/2
+mpeg1/2 decoder only=Tylko dekoder MPEG1/2
 Error=B≥πd
 bottom=årodek
 guess MVS=Przypuszczalne wektory ruchu
@@ -435,7 +435,7 @@ Apply pulldown=ZezwÛl na pulldown
 Number of frames to buffer ahead=IloúÊ klatek buforowanych z wyprzedzeniem
 Number of used frames to keep in buffer=IloúÊ zatrzymywanych klatek w buforze
 Select DScaler filter=Wybierz filtr DScaler
-None=Wy≥πczony
+None=Wy≥πczona
 Linear=Linearna
 Cubic=Szeúcienna
 Number of taps:=IloúÊ taps:
@@ -443,7 +443,7 @@ gray=SzaroúÊ
 color=Kolor
 opacity=Przeü.
 size=Rozmiar
-frequency=CzÍstotli.
+frequency=CzÍstotliwoúÊ
 amplitude=Amplituda
 duration=Czas trwania
 chroma blur:=Chrominancja:
@@ -502,7 +502,7 @@ ffmpeg deinterlacer=Usuwanie przeplotu ffmpeg
 Kernel deinterlacer=Usuwanie przeplotu Kernel'a
 Tolerance when scanning bars=Tolerancja podczas skanowania paskÛw
 Scan of bars will stop after this position. Set 0 to always scan for bars=Skanowanie paskÛw zakoÒczy siÍ po tym po≥oøeniu. Ustaw 0 by zawsze skanowaÊ paski
-Set the delay in ms to rescan for the bars=Ustaw opÛüniene w ms do ponownego przeskanowania paskÛw
+Set the delay in ms to rescan for the bars=Ustaw opÛünienie w ms do ponownego przeskanowania paskÛw
 greater than=wiÍksza od
 less than=mniejsza niø
 Warped resize=ZwiÍkszenie Warped
@@ -519,6 +519,8 @@ side right=Boczny prawy
 3/0/2 - 5 channels=3/0/2 - 5 kana≥Ûw
 3/2/1 - 6 channels=3/2/1 - 6 kana≥Ûw
 3/2/2 - 7 channels=3/2/2 - 7 kana≥Ûw
+Advanced Audio Coding (AAC)=Advanced Audio Coding
+XviD MMX=Xvid MMX
 Other MPEG2=Inne MPEG2
 
 [116]
@@ -545,7 +547,7 @@ Other MPEG2=Inne MPEG2
 
 [136]
 0=Tray, komunikat, úcieøki
-1257=Ustawienia ikony Tray
+1257=Ustawienia ikon Tray
 2016=Brak
 2017=Nowe
 2018=Stare
@@ -553,7 +555,7 @@ Other MPEG2=Inne MPEG2
 1073=Dodaj ikonÍ menu tray do menu strumieni/napisÛw odtwarzacza
 1258=Ustawienia komunikatu
 1259=Ustawienia úcieøki
-1071=PrzywrÛÊ poprzedniπ pozycjÍ
+1071=ZapamiÍtuj ostatnie po≥oøenie
 1072=Pokaø wskazÛwki
 1293=JÍzyk:
 2019=Ikony Tray:
@@ -561,7 +563,7 @@ Other MPEG2=Inne MPEG2
 
 [248]
 0=StrumieÒ
-1709=Prze≥πcznik strumienia:
+1709=Prze≥πcznik strumienia
 1683=W≥πcz
 1710=StrumieÒ
 
@@ -570,7 +572,7 @@ Other MPEG2=Inne MPEG2
 1016=Nowy
 1278=Ustawienia profili
 1156=Importuj z pliku...
-1155=Eksportuj do pliku
+1155=Eksportuj do pliku.
 1044=UsuÒ
 1157=Warunki automatycznego ≥adowania...
 1051=Automatyczne ≥adowanie
@@ -595,7 +597,7 @@ Other MPEG2=Inne MPEG2
 
 [259]
 1579=Obs≥ugiwane wejúciowe formaty prÛbek:
-1578=Konwersja przetwarzania zmiennoprzecinkowego na sta≥oprzecinkowe:
+1578=Konwersja przetwarzania zmiennoprzecinkowego na sta≥oprzecinkowe
 1582=Redukcja szumu:
 0=Wejúcie
 1580=16 bitowe sta≥oprzecinkowe
@@ -624,7 +626,7 @@ Other MPEG2=Inne MPEG2
 0=Ekualizer
 1378=Korektor graficzny
 1826=Ulepszony korektor graficzny
-1814=Za≥aduj ustawienia z Winamp...
+1814=Za≥aduj ustawienia z WinAmp...
 1401=Zak≥Ûcenia
 1402=Zak≥Ûcenia
 1403=Zak≥Ûcenia
@@ -642,7 +644,7 @@ Other MPEG2=Inne MPEG2
 0=FIR
 1686=Filtr o skoÒczonej odpowiedzi impulsowej FIR
 1696=CzÍstotliwoúÊ:
-1700=Max. czÍstotliwoúÊ
+1700=Max. czÍstotliwoúÊ:
 1688=IloúÊ uderzeÒ:
 1690=Typ filtra:
 1692=Typ wykresu:
@@ -666,16 +668,16 @@ Other MPEG2=Inne MPEG2
 1704=PrÛg:
 
 [190]
-1401=Kliknij by zaznaczyÊ katalog Winamp 2...
+1401=Kliknij by zaznaczyÊ katalog WinAmp 2...
 1404=Konfiguruj
 1989=PozwÛl na wielokana≥owe przetwarzanie
-1400=Winamp 2 DSP
+1400=WinAmp 2 DSP
 
 [236]
 1485=WielkoúÊ pokoju:
 1487=T≥umienie:
 1490=Poziom mokroúci:
-1019=Poziom suchoúci
+1019=Poziom suchoúci:
 1038=Zakres:
 1484=Pog≥os
 0=Pog≥os
@@ -702,16 +704,16 @@ Other MPEG2=Inne MPEG2
 
 [245]
 0=OpÛünienie
-1676=OpÛünienie
-1658=Lewego kana≥u:
-1666=Prawego kana≥u:
-1663=Centralnego kana≥u:
-1669=Lewego tylnego kana≥u:
-1672=Prawego tylnego kana≥u:
-1675=Kana≥u LFE:
-2178=Bocznego lewego kana≥u:
-2181=Bocznego prawego kana≥u:
-2184=Tylnego úrodkowego kana≥u:
+1676=OpÛünienie kana≥u:
+1658=Przedniego lewego:
+1663=Przedniego centralnego:
+1666=Przedniego prawego:
+2178=Bocznego lewego:
+2181=Bocznego prawego:
+1669=Tylnego lewego:
+2184=Tylnego centralnego:
+1672=Tylnego prawego:
+1675=LFE:
 
 [252]
 0=LFE
@@ -754,7 +756,7 @@ Other MPEG2=Inne MPEG2
 1573=Obs≥ugiwane wyjúciowe formaty prÛbek:
 1143=Dla lepszej wydajnoúci na s≥abszych komputerach i dla zachowania kompatybilnoúci ze sterownikami zaleca siÍ zaznaczyÊ tylko 16 bitowy sta≥oprzecinkowy wyjúciowy format prÛbki.\r\nWyjúciowy format prÛbki LPCM jest potrzebny dla düwiÍkowych dekoderÛw DVD takich jak np.: Cyberlink.
 1813=ZezwÛl na bezpoúredni zapis wyjúciowy do pliku
-1811=Nie uøywa nag≥ÛwkaWAVEFORMATEXTENSIABLE gdy nie jest wymagany
+1811=Nie uøywaj nag≥Ûwka WAVEFORMATEXTENSIABLE gdy nie trzeba
 1846=Zastosuj tylko dla wyjúcia S/PDIF
 1845=Po≥πcz z:
 1985=Koduj tylko multikana≥owe strumienie
@@ -789,7 +791,7 @@ Other MPEG2=Inne MPEG2
 
 [132]
 0=Czcionka
-1259=Czcionka
+1259=Czcionka:
 1335=AutowielkoúÊ
 1827=Szybsza
 2081=Zamglona
@@ -860,7 +862,7 @@ Other MPEG2=Inne MPEG2
 1027=Standardowe:
 1008=Automatyczna kontrola jakoúci
 1534=Wysoka dok≥adnoúÊ
-1238=mplayer'a
+1238=MPlayer'a
 
 [143]
 0=SkrÛty
@@ -884,7 +886,7 @@ Other MPEG2=Inne MPEG2
 1021=PrÛg:
 1023=Wyostrzanie blokÛw:
 1215=Pokaø maskÍ krawÍdzi
-1143=xsharpen\r\n Filtr wykonuje subtelne ale przydatne wyostrzanie. Dzia≥a to na zasadzie\r\n ma≥ej ramki nad kaødπ klatkπ lub nad kaødym úrodkowym pikselem ktÛry\r\n jest pominiÍty lub nieruszony (zaleøy od ustawienia progu) albozmapowany \r\n do jednego z dwÛch najjaúniejszych lub najciemniejszych pikseli w oknie\r\n zaleønie od bliskoúci úrodkowego piksela. Jeøeli úrodkowy piksel jest\r\n zmapowany to rÛwnieø Alfa-Zamglenie z oryginalnπ wartoúciπ piksela\r\n uøywajπcy konfigurowalnego ustawienia si≥y. KoÒcowym efektem jest obraz\r\n ktÛry moøe zawieraÊ szum jednak w bardzo ma≥ym stopniu i filtr stara siÍ\r\n przeciwdzia≥aÊ temu.\r\n\r\nUnsharp mask\r\n Filtr wykorzystuje dobrze znane technikÍ uwydatnienia kontrastu\r\n i wyostrzania. G≥Ûwnym celem jest utworzenie wyg≥adzonego obrazu\r\n oraz oryginalnego obrazu a nastÍpnie odjÍcie ich od siebie. Rezultatem tego\r\n bÍdzie obraz o podwyøszonym kontraúcie.\r\n\r\nmsharpen\r\n Filtr ostrzy waøne krawÍdzie obrazu bez wzmacniania szumu. Dzia≥a\r\n na zasadzie wykrywania krawÍdzi i uøywania Kernela zaostrzajπcego tylko\r\n na obszarze krawÍdzi.\r\n\r\nasharp\r\n Jeden z najlepszych filtrÛw wyostrzajπcych ktÛry daje doskona≥π jakoúÊ\r\n obrazu wraz z w≥πczonym filtrem Przetwarzanie. Najlepszπ jakoúÊ uzyskamy\r\n uøywajπc go z obrazem niskiej jakoúci.\r\n\r\nswscaler\r\n Jeden z najlepszych filtrÛw wyostrzajπcych ktÛry daje doskona≥π jakoúÊ\r\n obrazu wraz z w≥πczonym filtrem Przetwarzanie. Najlepszπ jakoúÊ uzyskamy\r\n uøywajπc go z obrazem wysokiej jakoúci.\r\n\r\nOpis xsharpen, unsharp mask oraz msharpen zosta≥ skopiowany z oryginalnej  dokumentacji filtrÛw AviSynth i VirtualDub\r\n Prawa autorskie Donald Graft\r\n\r\nOpis asharp oraz swscaler zosta≥ napisany przez Artura OsiÒskiego (Virtual_ManPL)
+1143=xsharpen\r\n Filtr wykonuje subtelne ale przydatne wyostrzanie. Dzia≥a to na zasadzie\r\n ma≥ej ramki nad kaødπ klatkπ lub nad kaødym úrodkowym pikselem ktÛry\r\n jest pominiÍty lub nieruszony (zaleøy od ustawienia progu) albo zmapowany \r\n do jednego z dwÛch najjaúniejszych lub najciemniejszych pikseli w oknie\r\n zaleønie od bliskoúci úrodkowego piksela. Jeøeli úrodkowy piksel jest\r\n zmapowany to rÛwnieø Alfa-Zamglenie z oryginalnπ wartoúciπ piksela\r\n uøywajπcy konfigurowalnego ustawienia si≥y. KoÒcowym efektem jest obraz\r\n ktÛry moøe zawieraÊ szum jednak w bardzo ma≥ym stopniu i filtr stara siÍ\r\n przeciwdzia≥aÊ temu.\r\n\r\nUnsharp mask\r\n Filtr wykorzystuje dobrze znane technikÍ uwydatnienia kontrastu\r\n i wyostrzania. G≥Ûwnym celem jest utworzenie wyg≥adzonego obrazu\r\n oraz oryginalnego obrazu a nastÍpnie odjÍcie ich od siebie. Rezultatem tego\r\n bÍdzie obraz o podwyøszonym kontraúcie.\r\n\r\nmsharpen\r\n Filtr ostrzy waøne krawÍdzie obrazu bez wzmacniania szumu. Dzia≥a\r\n na zasadzie wykrywania krawÍdzi i uøywania Kernela zaostrzajπcego tylko\r\n na obszarze krawÍdzi.\r\n\r\nasharp\r\n Jeden z najlepszych filtrÛw wyostrzajπcych ktÛry daje doskona≥π jakoúÊ\r\n obrazu wraz z w≥πczonym filtrem Przetwarzanie. Najlepszπ jakoúÊ uzyskamy\r\n uøywajπc go z obrazem niskiej i úredniej jakoúci.\r\n\r\nswscaler\r\n Jeden z najlepszych filtrÛw wyostrzajπcych ktÛry daje doskona≥π jakoúÊ\r\n obrazu wraz z w≥πczonym filtrem Przetwarzanie. Najlepszπ jakoúÊ uzyskamy\r\n uøywajπc go z obrazem wysokiej jakoúci.\r\n\r\nOpis xsharpen, unsharp mask oraz msharpen zosta≥ skopiowany z oryginalnej dokumentacji filtrÛw AviSynth i VirtualDub\r\n Prawa autorskie Donald Graft\r\n\r\nOpis asharp oraz swscaler zosta≥ napisany przez Artura OsiÒskiego (Virtual_ManPL)
 
 [140]
 0=Przeplot
@@ -981,7 +983,7 @@ Other MPEG2=Inne MPEG2
 1050=Migotanie:
 1041=Si≥a szumu luminancji:
 1049=Si≥a szumu chrominancji:
-1069=Algorytm z mplayer'a
+1069=Algorytm z MPlayer'a
 1039=Jednolity
 1232=Uúredniony
 1231=Odbiornikowy
@@ -1011,7 +1013,7 @@ Other MPEG2=Inne MPEG2
 1138=Wygadzanie luminancji:
 1139=Wyg≥adzanie chrominancji:
 1140=Odszumianie stopniowe:
-1141=P≥ynna redukcja szumu mplayer'a
+1141=P≥ynna redukcja szumu MPlayer'a
 1142=Rozmywanie poziomÛw
 1878=Odszumianie3D
 1415=JakoúÊ
@@ -1096,7 +1098,7 @@ Other MPEG2=Inne MPEG2
 [179]
 1324=Dyskretna kosinusowa transformata
 1143=Dyskretna kosinusowa transformata jest filtrem ktÛry dla kaødego bloku 8x8 zmniejsza wybrane czÍstotliwoúci wartoúci oraz nastÍpnie przeprowadza odwrotny proces do Odwrotnej dyskretnej kosinusowej transformaty (IDCT).\r\n\r\nPrawa autorskie (2002 rok) - Tom Barry  - trbarry@trbarry.com
-1917=Matryca kwantyzatora
+1917=Matryca kwantyzatora...
 1919=Kwantyzator H.263
 1922=Kwantyzator MPEG
 1920=Kwantyzator:
@@ -1133,16 +1135,16 @@ Other MPEG2=Inne MPEG2
 1307=Autowykrywanie
 1572=IloúÊ dekowanych wπtkÛw:
 1943=PomiÒ klatkÍ gdy opÛünienie wynosi:
-1947=PomiÒ usuwanie blokÛw w H264 po:
+1947=PomiÒ usuwanie blokÛw w H.264 po:
 1946=Kontrola jakoúci
-1916=Aktualne matryce kwantyzatora
+1916=Aktualne matryce kwantyzatora..
 1283=Opcje libavcodec
 1314=Dekoduj w skali szaroúci
 1544=Metoda ukrywania defektÛw:
 1542=ElastycznoúÊ defektÛw:
 1047=PomiÒ b≥Ídy kompresji:
 1309=Stare b≥Ídy przeplotu w Xvid
-1308=Stare pliki lavc msmpeg4
+1308=Stare pliki lavc msMPEG4
 1311=B≥Ídy obramowania
 1316=B≥Ídy chroma przeplotu MC w DivX
 1315=B≥Ídy krawÍdzi
@@ -1157,11 +1159,11 @@ Other MPEG2=Inne MPEG2
 1958=Uøyj kolejkowania w:
 1268=OpÛünienie video
 1365=Inne ustawienia
-1764=koniec
+1764=koniec:
 1765=poczπtek
 1550=Rozdziel wejúciowy przeplot jeúli wysokoúÊ > :
 1552=pikseli
-1143=Kolejkowanie wyjúciowych prÛbek\r\n G≥Ûwnym zadaniem tej opcji jest zmniejszenie pomijania klatek wskutek\r\n zarzπdzania wπtkami procesora\r\n Opcja ta dzia≥a tylko wtedy kiedy procesor obs≥uguje wielowπtkowoúÊ\r\n\r\nUøyj kolejkowania w\r\n Kolejkowanie jest domyúlnie wy≥πczone ze wzglÍdu na problemy ze\r\n stabilnoúciπ\r\n Jednak jeúli chcesz dodaÊ aplikacjÍ wykorzystujπcπ wielowπtkowoúÊ oddziel\r\n pliki przez znak ;\r\n\r\nInne ustawienia\r\n OpÛünienie obrazu\r\n  Jeøeli odbiorca jest daleko od g≥oúnikÛw, moøesz wyprÛbowaÊ tπ opcjÍ
+1143=Kolejkowanie wyjúciowych prÛbek\r\n G≥Ûwnym zadaniem tej opcji jest zmniejszenie pomijania klatek wskutek\r\n zarzπdzania wπtkami procesora\r\n Opcja ta dzia≥a tylko wtedy kiedy procesor obs≥uguje wielowπtkowoúÊ\r\n\r\nUøyj kolejkowania w\r\n Kolejkowanie jest domyúlnie wy≥πczone ze wzglÍdu na problemy ze\r\n stabilnoúciπ\r\n Jednak jeúli chcesz dodaÊ aplikacjÍ wykorzystujπcπ wielowπtkowoúÊ oddziel\r\n pliki znakiem ;\r\n\r\nInne ustawienia\r\n OpÛünienie obrazu\r\n  Jeøeli odbiorca jest daleko od g≥oúnikÛw, moøesz wyprÛbowaÊ tπ opcjÍ
 2206=W≥πcz kolejkowanie miksujπcego renderera obrazu 9 - YV12
 
 [2112]
@@ -1187,16 +1189,16 @@ Other MPEG2=Inne MPEG2
 1807=PrzeüroczystoúÊ
 
 [261]
-1858=Procenty
-1859=Piksele
-2068=Lewo
-2069=Prawo
-2070=GÛra
-2071=DÛ≥
-2079=Poziomo
-2080=Pionowo
-1862=Poziomo
-1863=Pionowo
+1858=Procenty:
+1859=Piksele:
+2068=Lewo:
+2069=Prawo:
+2070=GÛra:
+2071=DÛ≥:
+2079=Poziomo:
+2080=Pionowo:
+1862=Poziomo:
+1863=Pionowo:
 1199=Zablokuj
 0=KrawÍdzie
 1857=KrawÍdzie:
@@ -1206,7 +1208,7 @@ Other MPEG2=Inne MPEG2
 
 [225]
 1829=Zapisz matrycÍ...
-1828=Za≥aduj matrycÍ..
+1828=Za≥aduj matrycÍ...
 1840=Intra matryca:
 1763=Inter matryca:
 
@@ -1214,8 +1216,8 @@ Other MPEG2=Inne MPEG2
 2021=Dodaj ürÛd≥owy obraz ffdshow
 2029=Bufory klatek:
 2032=Uøyj obecnego
-2033=Za≥aduj
-2034=Zapisz
+2033=Za≥aduj...
+2034=Zapisz...
 2024=Wejúciowe palety:
 2023=3:2 Pulldown:
 
@@ -1232,3 +1234,6 @@ Other MPEG2=Inne MPEG2
 1021=ZasiÍg:
 1023=Wyg≥adzanie:
 1143=aWarpSharp jest filtrem warsharp'ujπcym ktÛry dzia≥a inaczej niø inne filtry wyostrzajπce.\r\nPrawa autorskie - Marc Fauconneau
+
+[267]
+8=Zamknij
