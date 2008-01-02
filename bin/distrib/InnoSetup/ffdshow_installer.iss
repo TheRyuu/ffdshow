@@ -158,6 +158,7 @@ Name: no; MessagesFile: compiler:Languages\Norwegian.isl
 Name: pl; MessagesFile: compiler:Languages\Polish.isl; LicenseFile: ../../../copying.pl.txt; InfoBeforeFile: infobefore\infobefore.pl.rtf
 Name: pr; MessagesFile: compiler:Languages\Portuguese.isl
 Name: ru; MessagesFile: compiler:Languages\Russian.isl; LicenseFile: ../../../copying.ru.txt
+Name: sc; MessagesFile:          languages\ChineseSimp.isl;
 Name: sk; MessagesFile: compiler:Languages\Slovak.isl; LicenseFile: ../../../copying.sk.txt
 Name: sn; MessagesFile: compiler:Languages\Slovenian.isl
 Name: sp; MessagesFile: compiler:Languages\Spanish.isl

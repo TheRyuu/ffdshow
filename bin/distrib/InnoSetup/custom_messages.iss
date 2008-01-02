@@ -31,7 +31,10 @@ pl.FinishedRestartLabel=By zakoñczyæ instalacjê [name], instalator musi zrestart
 cz.WelcomeLabel2=Tento instalátor nainstaluje na váš poèítaè [name].%n%nPøedtím ne spustíte instalaci je doporuèeno ukonèit všechny ostatní aplikace.
 cz.FileAbortRetryIgnore=Ukonèete aplikaci pouívající ffdshow a kliknìte na Opakovat. Pokud problém pøetrvává, ukonèete instalaci tlaèítkem Pøerušit, restartujte poèítaè a znovu spuste instalci.
 cz.FinishedRestartLabel=Aby mohla bıt instalace [name] dokonèena, musí instalátor restartovat poèítaè. Chcete poèítaè restartovat nyní?%n%nTip: Potøebì restartování se pro pøíštì mùete vyhnout pokud v nastavení video dekodéru nastavíte "DirectShow"-"ffdshow nepouívat v:"-"explorer.exe".
-
+; Chinese (Simplified)
+sc.WelcomeLabel2=¼´½«°²×° [name] µ½ÄúµÄµçÄÔÖĞ¡£%n%n½¨ÒéÄúÔÚ¼ÌĞø°²×°Ç°¹Ø±ÕËùÓĞÆäËûÓ¦ÓÃ³ÌĞò¡£
+sc.FileAbortRetryIgnore=ÍË³öÕıÔÚÊ¹ÓÃ ffdshow µÄÓ¦ÓÃ³ÌĞòÈ»ºóÖØÊÔ¡£Èç¹ûÎÊÌâÈÔÈ»³öÏÖ£¬µ¥»÷¡°ÖĞÖ¹¡±°´Å¥£¬²¢ÖØĞÂÆô¶¯¼ÆËã»úÈ»ºóÔÙÔËĞĞ°²×°³ÌĞò¡£
+sc.FinishedRestartLabel=°²×°³ÌĞòĞèÒªÖØĞÂÆô¶¯¼ÆËã»úÀ´Íê³É [name] µÄ°²×°¹ı³Ì¡£ÄãÏëÏÖÔÚÖØĞÂÆô¶¯Âğ£¿%n%nÌáÊ¾£ºÈç¹ûÏÂ´Î°²×°²»ÏëÖØĞÂÆô¶¯¼ÆËã»ú£¬¿ÉÒÔ¹´Ñ¡¡°²»ÒªÔÚÏÂÁĞ³ÌĞòÖĞÊ¹ÓÃffdshow£º¡±¸´Ñ¡¿ò£¨Î»ÓÚ¡°ffdshowÊÓÆµ½âÂëÆ÷ÅäÖÃ¡±->¡°DirectShow¿ØÖÆ¡±£©£¬²¢°Ñ¡°explorer.exe¡±¼ÓÈëºóÃæµÄÁĞ±í¡£
 ; Add other languages here
 #endif
 
@@ -550,6 +553,79 @@ cz.shrt_videoConfig=Nastavení video dekodéru
 cz.shrt_audioConfig=Nastavení audio dekodéru
 cz.shrt_vfwConfig=Nastavení VFW
 cz.shrt_uninstall=Odinstalovat ffdshow
+
+;Chinese (Simplified)
+sc.langid=2052
+sc.simd_msg_sse=Õâ¸ö±àÒë°æµÄ ffdshow ĞèÒªÒ»¸öÖ§³Ö SSE Ö¸Áî¼¯µÄ CPU¡£µ«ÊÇÄúµÄ CPU ²¢²»Ö§³ÖÕâ¸ö¹¦ÄÜ¡£
+sc.simd_msg_sse2=Õâ¸ö±àÒë°æµÄ ffdshow ĞèÒªÒ»¸öÖ§³Ö SSE2 Ö¸Áî¼¯µÄ CPU¡£µ«ÊÇÄúµÄ CPU ²¢²»Ö§³ÖÕâ¸ö¹¦ÄÜ¡£
+
+sc.comp_ffdshowds=ffdshow DirectShow ÂË¾µ
+sc.comp_vfwInterface=VFW ½Ó¿Ú
+sc.comp_makeAvis=AviSynth ½Å±¾·şÎñ
+sc.comp_appPlugins=Ó¦ÓÃ³ÌĞò²å¼ş£º
+sc.comp_msg_selectOneComp=ÄúÖÁÉÙÒªÑ¡ÔñÒ»¸ö×é¼ş¡£
+
+sc.tsk_resetSettings=ÖØÖÃËùÓĞ ffdshow ÉèÖÃ
+sc.tsk_videoFormats=Ê¹ÓÃ ffdshow ½âÂëÏÂÁĞÊÓÆµ¸ñÊ½£º
+sc.tsk_genericMpeg4=ÆÕÍ¨ MPEG-4 ¸ñÊ½
+sc.tsk_rawVideo=Ô­Ê¼ÊÓÆµ¸ñÊ½
+sc.tsk_audioFormats=Ê¹ÓÃ ffdshow ½âÂëÏÂÁĞÒôÆµ¸ñÊ½£º
+sc.tsk_rawAudio=Ô­Ê¼ÒôÆµ¸ñÊ½
+sc.tsk_defaultFilters=Ä¬ÈÏÆôÓÃÏÂÁĞÂË¾µ£º
+sc.tsk_volumeNorm=ÒôÁ¿Õı³£»¯
+sc.tsk_subtitles=×ÖÄ»
+sc.tsk_tweaks=µ÷Õû
+sc.tsk_skipInloop=×ÜÊÇÌø¹ı H.264 inloop ³ı¿é
+
+sc.white_msg_oneCompAppAdded=Ò»¸ö¼æÈİÓ¦ÓÃ³ÌĞòÒÑ¾­Ìí¼Óµ½¼æÈİĞÔÁĞ±í¶¥¶Ë¡£ÇëÈ·ÈÏ¡£
+sc.white_msg_multiCompAppAdded=Ò»Ğ©¼æÈİÓ¦ÓÃ³ÌĞòÒÑ¾­Ìí¼Óµ½¼æÈİĞÔÁĞ±í¶¥¶Ë¡£ÇëÈ·ÈÏ¡£
+sc.white_videoLabel1=¹ÜÀí¼æÈİĞÔÎÊÌâ£¨ÊÓÆµ£©
+sc.white_videoLabel2=ÒòÎª°²×°ÁË ffdshow Ö®ºó»áÒıÆğÒ»Ğ©ÓÎÏ·±ÀÀ£»òÕßÊ§È¥ÏìÓ¦£¬%nËùÒÔÎÒÃÇÍÆ¼öÄúÑ¡Ôñ¡°½öÔÚÏÂÁĞ³ÌĞòÖĞÊ¹ÓÃ ffdshow¡±¡£
+sc.white_videoLabel3=ÏÂÃæÁĞ³öÁËÓë ffdshow ÊÓÆµ½âÂëÆ÷¼æÈİµÄ¿ÉÖ´ĞĞÎÄ¼şÃû£¬Ã¿ĞĞÒ»¸ö¡£
+sc.white_audioLabel1=¹ÜÀí¼æÈİĞÔÎÊÌâ£¨ÒôÆµ£©
+sc.white_audioLabel2=ÏÖÔÚÇëÅäÖÃÒôÆµ½âÂëÆ÷¡£%n°²×°Íê³ÉÖ®ºóÄú¿ÉÒÔÔÚ¡°DirectShow¿ØÖÆ¡±ÉèÖÃÒ³ÖĞ¸Ä±äÕâĞ©Ñ¡Ïî¡£
+sc.white_audioLabel3=ÏÂÃæÁĞ³öÁËÓë ffdshow ÒôÆµ½âÂëÆ÷¼æÈİµÄ¿ÉÖ´ĞĞÎÄ¼şÃû£¬Ã¿ĞĞÒ»¸ö¡£
+sc.white_dontLimit=ÎŞÏŞÖÆ¡£
+sc.white_useOnlyIn=½öÔÚÏÂÁĞ³ÌĞòÖĞÊ¹ÓÃ ffdshow£º
+sc.white_dontAskAgain=²»ÒªÔÙÎÊÎÒ¡£
+
+sc.spk_Label1=ÑïÉùÆ÷ÉèÖÃ
+sc.spk_Label2=ÇëÑ¡Ôñ×î½Ó½üÄúµÄ¼ÆËã»úÅäÖÃµÄÑïÉùÆ÷ÉèÖÃ¡£°²×°Íê³ÉÖ®ºó£¬Äú¿ÉÒÔÔÚ¡°»ìÒô¡±ÉèÖÃÒ³ÖĞ¸Ä±äÕâ¸öÑ¡Ïî¡£
+sc.spk_Label3=ÑïÉùÆ÷ÉèÖÃ£º
+sc.spk_mono=µ¥ÉùµÀÑïÉùÆ÷
+sc.spk_stereo=Ë«ÉùµÀÑïÉùÆ÷
+sc.spk_quadro=ËÄÉùµÀÑïÉùÆ÷
+sc.spk_rear_1ch=Ò»¸öºóÖÃÑïÉùÆ÷
+sc.spk_front_2ch=Á½¸öÇ°ÖÃÑïÉùÆ÷
+sc.spk_side_2ch=Á½¸ö²àÖÃÑïÉùÆ÷
+sc.spk_rear_2ch=Á½¸öºóÖÃÑïÉùÆ÷
+sc.spk_front_3ch=Èı¸öÇ°ÖÃÑïÉùÆ÷
+sc.spk_5ch=Èı¸öÇ°ÖÃ + Á½¸öºóÖÃÑïÉùÆ÷
+sc.spk_7ch=Èı¸öÇ°ÖÃ + Á½¸ö²àÖÃ + Á½¸öºóÖÃÑïÉùÆ÷
+sc.spk_headPhone=¶ú»ú
+sc.spk_surround=»·ÈÆ
+sc.spk_subwoofer=µÍÒôÑïÉùÆ÷
+sc.spk_dolby1=¶Å±È»·ÈÆ/ProLogic
+sc.spk_dolby2=¶Å±È ProLogic II
+sc.spk_hrtf=ÈËÌåÍ·²¿Ïà¹Ø´«µİº¯Êı£¨HRTF£©
+sc.spk_sameAsInput=ÓëÊäÈëÏàÍ¬
+sc.spk_disableMixer=¹Ø±Õ»ìÒô
+sc.spk_voiceControl=ÈËÉù¿ØÖÆ£¨ÒôÁ¿£©
+sc.spk_expandStereo=À©Õ¹Á¢ÌåÉù£¨»·ÈÆ£©
+sc.spk_unknownSpk=Î´ÖªÑïÉùÆ÷ÅäÖÃ
+
+sc.plg_Label1=Ñ¡Ôñ %1 ²å¼şÄ¿Â¼
+sc.plg_Label2=%1 ²å¼şÓ¦¸Ã°²×°ÔÚÄÄÀï£¿
+sc.plg_Label3=Ñ¡Ôñ°²×° %1 ²å¼şµÄÄ¿Â¼£¬È»ºóµ¥»÷¡°ÏÂÒ»²½¡±¡£
+
+sc.run_videoConfig=ÔËĞĞÊÓÆµ½âÂëÆ÷ÉèÖÃ³ÌĞò
+sc.run_audioConfig=ÔËĞĞÒôÆµ½âÂëÆ÷ÉèÖÃ³ÌĞò
+sc.run_vfwConfig=ÔËĞĞ VFW ÉèÖÃ³ÌĞò
+
+sc.shrt_videoConfig=ffdshow ÊÓÆµ½âÂëÆ÷ÉèÖÃ
+sc.shrt_audioConfig=ffdshow ÒôÆµ½âÂëÆ÷ÉèÖÃ
+sc.shrt_vfwConfig=ffdshow VFW ÉèÖÃ
+sc.shrt_uninstall=Ğ¶ÔØ ffdshow
 
 ; Add other languages here
 ba.langid=1069
