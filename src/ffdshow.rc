@@ -3159,6 +3159,7 @@ BEGIN
     IDS_FFDSHOWENCVFW       "Encoder"
     IDS_FFDSHOWDECVIDEOVFW  "ffdshow VFW video decoder"
     IDS_FFDSHOWDECVIDEORAW  "ffdshow raw video decoder"
+    IDS_FFDSHOWDECVIDEOSUBTITLES  "ffdshow subtitles filter"
 END
 
 STRINGTABLE 

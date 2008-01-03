@@ -576,6 +576,16 @@ const AMOVIESETUP_FILTER TffdshowDecVideoRaw::filter=
  pins                                  // Pin details
 };
 
+const DWORD TffdshowDecVideoSubtitles::defaultMerit=MERIT_DO_NOT_USE;
+const AMOVIESETUP_FILTER TffdshowDecVideoSubtitles::filter=
+{
+ &CLSID_FFDSHOWSUBTITLES,              // Filter CLSID
+ FFDSHOWSUBTITLES_NAME_L,              // Filter name
+ defaultMerit,
+ sizeof(pins)/sizeof(AMOVIESETUP_PIN), // Number of pins
+ pins                                  // Pin details
+};
+
 const DWORD TffdshowDecAudio::defaultMerit=0x40000000-1; // One less than ac3filter
 const AMOVIESETUP_FILTER TffdshowDecAudio::filter=
 {
@@ -727,7 +737,19 @@ CFactoryTemplate g_Templates[] =
   DwString<wchar_t>::CreateInstance,
   DwString<wchar_t>::GlobalInitialization,
   NULL
- }
+ },
+ {
+  FFDSHOWSUBTITLES_NAME_L,
+  &CLSID_FFDSHOWSUBTITLES,
+  TffdshowDecVideoSubtitles::CreateInstance,
+  NULL,
+  &TffdshowDecVideoSubtitles::filter
+ },
+ {
+  FFDSHOWRAW_NAME_L L" conf",
+  &CLSID_TFFDSHOWPAGESUBTITLES,
+  TffdshowPageDecVideoSubtitles::CreateInstance
+ },
 };
 
 int g_cTemplates=sizeof(g_Templates)/sizeof(CFactoryTemplate);

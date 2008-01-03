@@ -413,8 +413,21 @@ bool TtrayIconDec::sortOrdFilters(const TordFilters &of1,const TordFilters &of2)
 //================================== TtrayIconDecVideo =====================================
 TtrayIconDecVideo::TtrayIconDecVideo(IffdshowBase *Ideci):TtrayIconDec(Ideci),deciV(Ideci)
 {
- tsprintf(classname,mode&IDFF_FILTERMODE_VIDEORAW?_l("ffdshowraw_tray_%i"):_l("ffdshow_tray_%i"),rand()%1000);
- tip=mode&IDFF_FILTERMODE_VIDEORAW?_l("ffdshow video decoder raw"):_l("ffdshow video decoder");
+ if (mode & IDFF_FILTERMODE_VIDEOSUBTITLES)
+  {
+   tsprintf(classname,_l("ffdshowsubtitle_tray_%i"),rand()%1000);
+   tip = _l("ffdshow subtitle filter");
+  }
+ else if (mode & IDFF_FILTERMODE_VIDEORAW)
+  {
+   tsprintf(classname,_l("ffdshowraw_tray_%i"),rand()%1000);
+   tip = _l("ffdshow video decoder raw");
+  }
+ else
+  {
+   tsprintf(classname,_l("ffdshow_tray_%i"),rand()%1000);
+   tip = _l("ffdshow video decoder");
+  }
  icon=IDI_MODERN_ICON_V;
  if (cfgGet(IDFF_trayIconType)==2)
   icon=IDI_FFDSHOW;

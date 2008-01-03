@@ -112,6 +112,13 @@ CUnknown* WINAPI TffdshowDecVideoRaw::CreateInstance(LPUNKNOWN punk,HRESULT *phr
  return pNewObject;
 }
 
+CUnknown* WINAPI TffdshowDecVideoSubtitles::CreateInstance(LPUNKNOWN punk,HRESULT *phr)
+{
+ TffdshowDecVideoSubtitles *pNewObject=new TffdshowDecVideoSubtitles(punk,phr);
+ if (pNewObject==NULL) *phr=E_OUTOFMEMORY;
+ return pNewObject;
+}
+
 template<> interfaces<char_t>::IffdshowDecVideo* TffdshowDecVideo::getDecVideoInterface(void)
 {
  return this;
@@ -141,7 +148,7 @@ STDMETHODIMP TffdshowDecVideo::NonDelegatingQueryInterface(REFIID riid,void **pp
 STDMETHODIMP TffdshowDecVideo::setPresetPtr(Tpreset *preset)
 {
  HRESULT res=TffdshowDec::setPresetPtr(preset);
- if (res==S_OK) currentq=presetSettings->postproc->qual;
+ if (res==S_OK && presetSettings->postproc) currentq=presetSettings->postproc->qual;
  return S_OK;
 }
 STDMETHODIMP TffdshowDecVideo::getOutputFourcc(char_t *buf,size_t len)

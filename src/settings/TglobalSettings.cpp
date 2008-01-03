@@ -166,6 +166,11 @@ bool TglobalSettingsBase::exportReg(bool all,const char_t *regflnm,bool unicode)
 }
 void TglobalSettingsBase::_reg_op_codec(short id,TregOp &tHKCU,TregOp *tHKLM,const char_t *name,int &val,int def)
 {
+ if (name == NULL)
+  {
+   val=def;
+   return;
+  }
  if (!tHKCU._REG_OP_N(id,name,val,def) && tHKLM)
   tHKLM->_REG_OP_N(id,name,val,def);
 }
@@ -449,7 +454,11 @@ void TglobalSettingsDecVideo::reg_op_codec(TregOp &t,TregOp *t2)
  _reg_op_codec(IDFF_vp6 ,t,t2,_l("vp6") ,vp6,0);
  _reg_op_codec(IDFF_vp6f,t,t2,_l("vp6f"),vp6f,0);
  _reg_op_codec(IDFF_cavs,t,t2,_l("cavs"),cavs,0);
- _reg_op_codec(IDFF_rawv,t,t2,filtermode&IDFF_FILTERMODE_VIDEORAW?_l("raw_rawv"):_l("rawv"),rawv,filtermode&IDFF_FILTERMODE_VIDEORAW?IDFF_MOVIE_RAW:0);
+ _reg_op_codec(IDFF_rawv,t,t2,
+  filtermode & IDFF_FILTERMODE_VIDEOSUBTITLES ? NULL :
+   filtermode & IDFF_FILTERMODE_VIDEORAW ? _l("raw_rawv") : _l("rawv"),
+  rawv,
+  filtermode & IDFF_FILTERMODE_VIDEORAW ? 1 : 0);
  _reg_op_codec(IDFF_mpg1,t,t2,_l("mpg1"),mpg1,0);
  _reg_op_codec(IDFF_mpg2,t,t2,_l("mpg2"),mpg2,0);
  _reg_op_codec(IDFF_mpegAVI,t,t2,_l("mpegAVI"),mpegAVI,0);

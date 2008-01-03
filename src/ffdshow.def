@@ -10,3 +10,4 @@ EXPORTS
   configureEnc
   configureDec
   ffacm2creator
+  configureSubtitles

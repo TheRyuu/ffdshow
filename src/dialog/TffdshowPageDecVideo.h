@@ -27,6 +27,13 @@ public:
  TffdshowPageDecVideoRaw(LPUNKNOWN pUnk,HRESULT *phr,const wchar_t *ItitleW,const char_t *name,int dialogId,int resstr);
 };
 
+class TffdshowPageDecVideoSubtitles :public TffdshowPageDecVideo
+{
+public:
+ static CUnknown* WINAPI CreateInstance(LPUNKNOWN lpunk,HRESULT *phr);
+ TffdshowPageDecVideoSubtitles(LPUNKNOWN pUnk,HRESULT *phr,const wchar_t *ItitleW,const char_t *name,int dialogId,int resstr);
+};
+
 class TffdshowPageDecVideoVFW :public TffdshowPageDecVideo
 {
 public:

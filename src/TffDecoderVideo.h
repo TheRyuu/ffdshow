@@ -588,4 +588,13 @@ public:
  static const DWORD defaultMerit;
 };
 
+class TffdshowDecVideoSubtitles :public TffdshowDecVideo
+{
+public:
+ static CUnknown* WINAPI CreateInstance(LPUNKNOWN punk,HRESULT *phr);
+ TffdshowDecVideoSubtitles(LPUNKNOWN punk,HRESULT *phr);
+ static const AMOVIESETUP_FILTER filter;
+ static const DWORD defaultMerit;
+};
+
 #endif

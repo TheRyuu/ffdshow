@@ -171,6 +171,10 @@ TffdshowDecVideoRaw::TffdshowDecVideoRaw(LPUNKNOWN punk,HRESULT *phr):TffdshowDe
 {
 }
 
+TffdshowDecVideoSubtitles::TffdshowDecVideoSubtitles(LPUNKNOWN punk,HRESULT *phr):TffdshowDecVideo(CLSID_FFDSHOWSUBTITLES,NAME("TffdshowDecVideoSubtitles"), CLSID_TFFDSHOWPAGESUBTITLES, IDS_FFDSHOWDECVIDEOSUBTITLES, IDI_FFDSHOW,punk,phr, IDFF_FILTERMODE_PLAYER | IDFF_FILTERMODE_VIDEOSUBTITLES | IDFF_FILTERMODE_VIDEORAW, defaultMerit, new TintStrColl)
+{
+}
+
 // destructor
 TffdshowDecVideo::~TffdshowDecVideo()
 {
@@ -219,7 +223,7 @@ HRESULT TffdshowDecVideo::checkAllowOutChange(IPin *pPin)
                  clsid==CLSID_DirectVobSubFilter ||
                  clsid==CLSID_DirectVobSubFilter2 ||
                  clsid==CLSID_HaaliVideoRenderer ||
-                 clsid==CLSID_FFDSHOW || clsid==CLSID_FFDSHOWRAW;
+                 clsid==CLSID_FFDSHOW || clsid==CLSID_FFDSHOWRAW || clsid==CLSID_FFDSHOWSUBTITLES;
    allowOutChange=dvdproc ||
                   presetSettings->output->allowOutChange3==1 ||
                   (presetSettings->output->allowOutChange3==2 && filterOk);

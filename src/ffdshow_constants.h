@@ -4,6 +4,7 @@
 #define FFDSHOW_NAME_L     L"ffdshow Video Decoder"
 #define FFDSHOWRAW_NAME_L  L"ffdshow raw video filter"
 #define FFDSHOWVFW_NAME_L  L"ffdshow VFW decoder helper"
+#define FFDSHOWSUBTITLES_NAME_L  L"ffdshow subtitles filter"
 
 #define IDFF_autoPreset            1  //automatic preset loading enabled
 #define IDFF_trayIcon              3  //is tray icon visible
@@ -24,6 +25,7 @@
  #define IDFF_FILTERMODE_AUDIO      1024
  #define IDFF_FILTERMODE_ENC        2048
  #define IDFF_FILTERMODE_AUDIORAW   4096
+ #define IDFF_FILTERMODE_VIDEOSUBTITLES  8192
 #define IDFF_currentFrame         14
 #define IDFF_decodingFps          15
 #define IDFF_buildHistogram       16

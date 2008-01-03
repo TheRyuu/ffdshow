@@ -13,6 +13,7 @@
 #define IDS_FFDSHOWDECAUDIORAW          16
 #define IDS_FFDSHOWDEC                  17
 #define IDS_FFDSHOWVIDEOPROC            18
+#define IDS_FFDSHOWDECVIDEOSUBTITLES    19
 #define IDD_PAGESITE                    101
 #define IDD_ABOUT                       102
 #define IDD_FFDSHOW                     111

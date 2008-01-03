@@ -62,6 +62,17 @@ TffdshowPageDecVideoRaw::TffdshowPageDecVideoRaw(LPUNKNOWN pUnk,HRESULT *phr,con
 {
 }
 
+CUnknown* WINAPI TffdshowPageDecVideoSubtitles::CreateInstance(LPUNKNOWN punk,HRESULT *phr)
+{
+ TffdshowPageDecVideoSubtitles *pNewObject=new TffdshowPageDecVideoSubtitles(punk,phr,L"ffdshow subtitles",NAME("TffdshowDecVideoSubtitlePage"),IDD_FFDSHOW,IDS_FFDSHOWRAW);
+ if (pNewObject==NULL)
+  *phr=E_OUTOFMEMORY;
+ return pNewObject;
+}
+TffdshowPageDecVideoSubtitles::TffdshowPageDecVideoSubtitles(LPUNKNOWN pUnk,HRESULT *phr,const wchar_t *ItitleW,const char_t *name,int dialogId,int resstr):TffdshowPageDecVideo(pUnk,phr,ItitleW,name,dialogId,resstr)
+{
+}
+
 CUnknown* WINAPI TffdshowPageDecVideoVFW::CreateInstance(LPUNKNOWN punk,HRESULT *phr)
 {
  TffdshowPageDecVideoVFW *pNewObject=new TffdshowPageDecVideoVFW(punk,phr,L"Decoder",NAME("TffdshowDecVideoVFWpage"),IDD_FFDSHOW,IDS_FFDSHOWVFW);
@@ -93,18 +104,19 @@ void TffdshowPageDecVideo::onActivate(void)
  tvis.item.mask=TVIF_PARAM|TVIF_TEXT;
  if ((filterMode&IDFF_FILTERMODE_PROC)==0)
   {
-   addTI(&tvis,new TcodecsPageVideo(this));
+   if ((filterMode & IDFF_FILTERMODE_VIDEOSUBTITLES)==0)
+    addTI(&tvis,new TcodecsPageVideo(this));
    if ((filterMode&IDFF_FILTERMODE_VFW)==0)
     {
-     addTI(&tvis,new TdirectshowControlPageDec(this))->hti;
-     HTREEITEM htiInfo=addTI(&tvis,new TinfoPageDecVideo(this))->hti;
-     tvis.hParent=htiInfo;
-     HTREEITEM htiOSD=addTI(&tvis,new TOSDpageVideo(this))->hti;
-     //tvis.hParent=htiOSD;
-     addTI(&tvis,new TfontPageOSD(this));
-     TreeView_Expand(htv,htiOSD,TVE_EXPAND);
-     tvis.hParent=NULL;
-     TreeView_Expand(htv,htiInfo,TVE_EXPAND);
+       addTI(&tvis,new TdirectshowControlPageDec(this))->hti;
+       HTREEITEM htiInfo=addTI(&tvis,new TinfoPageDecVideo(this))->hti;
+       tvis.hParent=htiInfo;
+       HTREEITEM htiOSD=addTI(&tvis,new TOSDpageVideo(this))->hti;
+       //tvis.hParent=htiOSD;
+       addTI(&tvis,new TfontPageOSD(this));
+       TreeView_Expand(htv,htiOSD,TVE_EXPAND);
+       tvis.hParent=NULL;
+       TreeView_Expand(htv,htiInfo,TVE_EXPAND);
      HTREEITEM htiMisc=addTI(&tvis,new TdlgMiscPage(this))->hti;
      tvis.hParent=htiMisc;
      addTI(&tvis,new TkeysPage(this));
@@ -115,15 +127,10 @@ void TffdshowPageDecVideo::onActivate(void)
  tvis.hParent=NULL;
  htiPresets=addTI(&tvis,new TpresetsPageVideo(this))->hti;
  tvis.hParent=htiPresets;
- htiBeforeShowHide=addTI(&tvis,new ThideShowPage(this,filterPages))->hti;
-/*
- const char *activePresetName=deciD->getActivePresetName2();
- if (activePresetName)
-  deciD->createPresetPages(activePresetName,this);
-*/
+  htiBeforeShowHide=addTI(&tvis,new ThideShowPage(this,filterPages))->hti;
  if ((filterMode&IDFF_FILTERMODE_PROC)==0)
   {
-   addTI(&tvis,new TmiscPage(this));
+    addTI(&tvis,new TmiscPage(this));
    addTI(&tvis,new TqueuePage(this));
    addTI(&tvis,new ToutcspsPage(this));
    addTI(&tvis,new TcspOptionsPage(this));
@@ -211,4 +218,12 @@ extern "C" void CALLBACK configureRaw(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine
 void CALLBACK configureRaw(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine,int nCmdShow)
 {
  TffdshowPageDec::configure<IffdshowDecVideo>(CLSID_FFDSHOWRAW,IDFF_FILTERMODE_VIDEORAW,lpCmdLine);
+}
+extern "C" void CALLBACK configureSubtitles(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine,int nCmdShow);
+void CALLBACK configureSubtitles(HWND hwnd,HINSTANCE hinst,LPTSTR lpCmdLine,int nCmdShow)
+{
+ TffdshowPageDec::configure<IffdshowDecVideo>(
+  CLSID_FFDSHOWSUBTITLES,
+  IDFF_FILTERMODE_VIDEORAW | IDFF_FILTERMODE_VIDEOSUBTITLES,
+  lpCmdLine);
 }
