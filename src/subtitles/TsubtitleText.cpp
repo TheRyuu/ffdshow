@@ -770,6 +770,69 @@ template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::
  if (intProp2<offset1,offset2,min,max>(start,end))
   props.isPos=true;
 }
+template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void TsubtitleFormat::Tssa<tchar>::fad(const tchar *start,const tchar *end)
+{
+ if (intProp2<offset1,offset2,min,max>(start,end))
+  {
+   props.isFad=true;
+   props.fadeA1=0;
+   props.fadeA2=255;
+   props.fadeA3=0;
+   props.fadeT1=props.tStart;
+   props.fadeT2=props.fadeT1 + (props.tmpFadT1 * 10000);
+   props.fadeT3=props.tStop - (props.tmpFadT2 * 10000);
+   props.fadeT4=props.tStop;
+  }
+}
+template<class tchar> void TsubtitleFormat::Tssa<tchar>::fade(const tchar *start,const tchar *end)
+{
+ // \fade(<a1>, <a2>, <a3>, <t1>, <t2>, <t3>, <t4>)
+ tchar *buf=(tchar*)_alloca((end-start+1)*sizeof(tchar));memset(buf,0,(end-start+1)*sizeof(tchar));
+ memcpy(buf,start,(end-start)*sizeof(tchar));
+ const tchar *bufstart=strchr(buf,'(');
+ if(!bufstart) return;
+ bufstart++;
+ tchar *bufend;
+ int val;
+
+#define FADE2INT(v)                                        \
+ val=strtol(bufstart,&bufend,10);                          \
+ if (bufstart!=bufend) props.v=val;                        \
+ if (*bufend=='\0') return;                                \
+                                                           \
+ bufstart=strchr(bufend,',');                              \
+ if(!bufstart) return;                                     \
+ bufstart++;
+
+ FADE2INT(fadeA1);
+ FADE2INT(fadeA2);
+ FADE2INT(fadeA3);
+ FADE2INT(fadeT1);
+ FADE2INT(fadeT2);
+ FADE2INT(fadeT3);
+ val=strtol(bufstart,&bufend,10);
+ if (bufstart!=bufend)
+  props.fadeT4=val;
+ else
+  return;
+
+ if (props.fadeA1 <  0)  props.fadeA1=0;
+ if (props.fadeA1 > 255) props.fadeA1=255;
+ if (props.fadeA2 <  0)  props.fadeA2=0;
+ if (props.fadeA2 > 255) props.fadeA2=255;
+ if (props.fadeA3 <  0)  props.fadeA3=0;
+ if (props.fadeA3 > 255) props.fadeA3=255;
+ props.fadeA1 = 256 - props.fadeA1;
+ props.fadeA2 = 256 - props.fadeA2;
+ props.fadeA3 = 256 - props.fadeA3;
+
+ props.fadeT1 = props.tStart + props.fadeT1 * 10000;
+ props.fadeT2 = props.tStart + props.fadeT2 * 10000;
+ props.fadeT3 = props.tStart + props.fadeT3 * 10000;
+ props.fadeT4 = props.tStart + props.fadeT4 * 10000;
+ props.isFad = true;
+#undef FADE2INT
+}
 template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> bool TsubtitleFormat::Tssa<tchar>::intProp2(const tchar *start,const tchar *end)
 {
 // (x,y) is expected.
@@ -936,6 +999,8 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::processTokens(const tch
        !processToken(l3,_L("\\fs"),&Tssa<tchar>::template intProp<&TSubtitleProps::size,1,INT_MAX>) &&
        !processToken(l3,_L("\\fe"),&Tssa<tchar>::template intProp<&TSubtitleProps::encoding,0,255>) &&
        !processToken(l3,_L("\\i"),&Tssa<tchar>::template boolProp<&TSubtitleProps::italic>) &&
+       !processToken(l3,_L("\\fade"),&Tssa<tchar>::fade) &&
+       !processToken(l3,_L("\\fad"),&Tssa<tchar>::template fad<&TSubtitleProps::tmpFadT1,&TSubtitleProps::tmpFadT2,0,INT_MAX>) &&
        !processToken(l3,_L("\\pos"),&Tssa<tchar>::template pos<&TSubtitleProps::posx,&TSubtitleProps::posy,0,4096>) &&
        !processToken(l3,_L("\\q"),&Tssa<tchar>::template intProp<&TSubtitleProps::wrapStyle,0,3>) &&
        !processToken(l3,_L("\\r"),&Tssa<tchar>::reset) &&

@@ -25,7 +25,7 @@ public:
  static TsubtitleParserBase* getParser(int format,double fps,const TsubtitlesSettings *cfg,const Tconfig *ffcfg,Tsubreader *Isubreader,bool utf8,bool isEmbedded);
  TsubtitleParserBase(int Iformat,double Ifps):format(Iformat),fps(Ifps) {}
  enum FLAGS {PARSETIME=1,SSA_NODIALOGUE=2};
- virtual Tsubtitle* parse(Tstream &fd,int flags=PARSETIME)=0;
+ virtual Tsubtitle* parse(Tstream &fd, int flags=PARSETIME, REFERENCE_TIME start=REFTIME_INVALID, REFERENCE_TIME stop=REFTIME_INVALID)=0;
 };
 
 template<class tchar> class TsubtitleParser :public TsubtitleParserBase
@@ -52,19 +52,19 @@ template<class tchar> class TsubtitleParserMicrodvd :public TsubtitleParser<tcha
 {
 public:
  TsubtitleParserMicrodvd(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader):TsubtitleParser<tchar>(Iformat,Ifps,Icfg,Iffcfg,Isubreader) {}
- virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME);
+ virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME, REFERENCE_TIME start=REFTIME_INVALID, REFERENCE_TIME stop=REFTIME_INVALID);
 };
 template<class tchar> class TsubtitleParserSubrip :public TsubtitleParser<tchar>
 {
 public:
  TsubtitleParserSubrip(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader):TsubtitleParser<tchar>(Iformat,Ifps,Icfg,Iffcfg,Isubreader) {}
- virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME);
+ virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME, REFERENCE_TIME start=REFTIME_INVALID, REFERENCE_TIME stop=REFTIME_INVALID);
 };
 template<class tchar> class TsubtitleParserSubviewer :public TsubtitleParser<tchar>
 {
 public:
  TsubtitleParserSubviewer(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader):TsubtitleParser<tchar>(Iformat,Ifps,Icfg,Iffcfg,Isubreader) {}
- virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME);
+ virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME, REFERENCE_TIME start=REFTIME_INVALID, REFERENCE_TIME stop=REFTIME_INVALID);
 };
 template<class tchar> class TsubtitleParserSami :public TsubtitleParser<tchar>
 {
@@ -75,19 +75,19 @@ private:
  const tchar *slacktime_s;
 public:
  TsubtitleParserSami(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader):TsubtitleParser<tchar>(Iformat,Ifps,Icfg,Iffcfg,Isubreader),s(NULL),sub_slacktime(2000),sub_no_text_pp(false) {} // 20 seconds
- virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME);
+ virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME, REFERENCE_TIME start=REFTIME_INVALID, REFERENCE_TIME stop=REFTIME_INVALID);
 };
 template<class tchar> class TsubtitleParserVplayer :public TsubtitleParser<tchar>
 {
 public:
  TsubtitleParserVplayer(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader):TsubtitleParser<tchar>(Iformat,Ifps,Icfg,Iffcfg,Isubreader) {}
- virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME);
+ virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME, REFERENCE_TIME start=REFTIME_INVALID, REFERENCE_TIME stop=REFTIME_INVALID);
 };
 template<class tchar> class TsubtitleParserRt :public TsubtitleParser<tchar>
 {
 public:
  TsubtitleParserRt(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader):TsubtitleParser<tchar>(Iformat,Ifps,Icfg,Iffcfg,Isubreader) {}
- virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME);
+ virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME, REFERENCE_TIME start=REFTIME_INVALID, REFERENCE_TIME stop=REFTIME_INVALID);
 };
 template<class tchar> class TsubtitleParserSSA :public TsubtitleParser<tchar>
 {
@@ -134,7 +134,7 @@ private:
  TSubtitleProps defprops;
 public:
  TsubtitleParserSSA(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader,bool isEmbedded0);
- virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME);
+ virtual Tsubtitle* parse(Tstream &fd, int flags=TsubtitleParser<tchar>::PARSETIME, REFERENCE_TIME start=REFTIME_INVALID, REFERENCE_TIME stop=REFTIME_INVALID);
  enum
   {
    SSA=4,ASS=5,ASS2=6
@@ -144,7 +144,7 @@ template<class tchar> class TsubtitleParserDunnowhat :public TsubtitleParser<tch
 {
 public:
  TsubtitleParserDunnowhat(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader):TsubtitleParser<tchar>(Iformat,Ifps,Icfg,Iffcfg,Isubreader) {}
- virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME);
+ virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME, REFERENCE_TIME start=REFTIME_INVALID, REFERENCE_TIME stop=REFTIME_INVALID);
 };
 template<class tchar> class TsubtitleParserMPsub :public TsubtitleParser<tchar>
 {
@@ -153,7 +153,7 @@ private:
  bool sub_uses_time;
 public:
  TsubtitleParserMPsub(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader):TsubtitleParser<tchar>(Iformat,Ifps,Icfg,Iffcfg,Isubreader),mpsub_position(0),sub_uses_time(Iformat&Tsubreader::SUB_USESTIME?true:false) {}
- virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME);
+ virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME, REFERENCE_TIME start=REFTIME_INVALID, REFERENCE_TIME stop=REFTIME_INVALID);
 };
 template<class tchar> class TsubtitleParserAqt :public TsubtitleParser<tchar>
 {
@@ -161,13 +161,13 @@ private:
  Tsubtitle *previous;
 public:
  TsubtitleParserAqt(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader):TsubtitleParser<tchar>(Iformat,Ifps,Icfg,Iffcfg,Isubreader),previous(NULL) {}
- virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME);
+ virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME, REFERENCE_TIME start=REFTIME_INVALID, REFERENCE_TIME stop=REFTIME_INVALID);
 };
 template<class tchar> class TsubtitleParserSubviewer2 :public TsubtitleParser<tchar>
 {
 public:
  TsubtitleParserSubviewer2(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader):TsubtitleParser<tchar>(Iformat,Ifps,Icfg,Iffcfg,Isubreader) {}
- virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME);
+ virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME, REFERENCE_TIME start=REFTIME_INVALID, REFERENCE_TIME stop=REFTIME_INVALID);
 };
 template<class tchar> class TsubtitleParserSubrip09 :public TsubtitleParser<tchar>
 {
@@ -175,13 +175,13 @@ private:
  Tsubtitle *previous;
 public:
  TsubtitleParserSubrip09(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader):TsubtitleParser<tchar>(Iformat,Ifps,Icfg,Iffcfg,Isubreader),previous(NULL) {}
- virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME);
+ virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME, REFERENCE_TIME start=REFTIME_INVALID, REFERENCE_TIME stop=REFTIME_INVALID);
 };
 template<class tchar> class TsubtitleParserMPL2 :public TsubtitleParser<tchar>
 {
 public:
  TsubtitleParserMPL2(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader):TsubtitleParser<tchar>(Iformat,Ifps,Icfg,Iffcfg,Isubreader) {}
- virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME);
+ virtual Tsubtitle* parse(Tstream &fd,int flags=TsubtitleParser<tchar>::PARSETIME, REFERENCE_TIME start=REFTIME_INVALID, REFERENCE_TIME stop=REFTIME_INVALID);
 };
 
 struct TsubreaderMplayer :Tsubreader

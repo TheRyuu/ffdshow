@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2002-2006 Milan Cutka
+ *               2007-2008 h.yamagata
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -85,7 +86,6 @@ template<class tchar> TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
    sz.cy=std::max(sz.cy,sz0.cy);
   }
  OUTLINETEXTMETRIC otm;
- unsigned int shadowSize;
  SIZE sz1=sz;
  if (GetOutlineTextMetrics(hdc,sizeof(otm),&otm))
   {
@@ -95,12 +95,12 @@ template<class tchar> TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
    else
     if (otm.otmTextMetrics.tmItalic)
      sz1.cx+=sz1.cy*0.35;
-   shadowSize = getShadowSize(prefs,otm.otmTextMetrics.tmHeight);
+   m_shadowSize = getShadowSize(prefs,otm.otmTextMetrics.tmHeight);
   }
  else
   { // non true-type
    baseline=sz1.cy*0.8;
-   shadowSize = getShadowSize(prefs,lf.lfHeight);
+   m_shadowSize = getShadowSize(prefs,lf.lfHeight);
    if (lf.lfItalic)
     sz1.cx+=sz1.cy*0.35;
   }
@@ -121,7 +121,7 @@ template<class tchar> TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
    prefs.config->getGDI<tchar>().textOut(hdc,x,2,s->c_str(),sz/*(int)s->size()*/);
    x+=*cx;
   }
- drawShadow(hdc,hbmp,bmp16,old,xscale,sz,prefs,YUV,outlineYUV,shadowYUV,shadowSize);
+ drawShadow(hdc,hbmp,bmp16,old,xscale,sz,prefs,YUV,outlineYUV,shadowYUV);
 }
 void TrenderedTextSubtitleWord::drawShadow(
       HDC hdc,
@@ -133,14 +133,14 @@ void TrenderedTextSubtitleWord::drawShadow(
       const TrenderedSubtitleLines::TprintPrefs &prefs,
       const YUVcolorA &yuv,
       const YUVcolorA &outlineYUV,
-      const YUVcolorA &shadowYUV,
-      unsigned int shadowSize)
+      const YUVcolorA &shadowYUV
+     )
 {
  m_bodyYUV=yuv;
  m_outlineYUV=outlineYUV;
  m_shadowYUV=shadowYUV;
 
- int outlineWidth;
+ m_outlineWidth=1;
  double outlineWidth_double = prefs.outlineWidth;
  //if (props.refResY && prefs.clipdy)
  // outlineWidth_double = outlineWidth_double * prefs.clipdy / props.refResY;
@@ -149,15 +149,15 @@ void TrenderedTextSubtitleWord::drawShadow(
   {
    if (csp==FF_CSP_420P && outlineWidth_double < 0.6 && !m_bodyYUV.isGray())
     {
-     outlineWidth=1;
+     m_outlineWidth=1;
      outlineWidth_double=0.6;
      m_outlineYUV=0;
     }
    else
     {
-     outlineWidth=int(outlineWidth_double);
-     if ((double)outlineWidth < outlineWidth_double)
-      outlineWidth++;
+     m_outlineWidth=int(outlineWidth_double);
+     if ((double)m_outlineWidth < outlineWidth_double)
+      m_outlineWidth++;
     }
   }
 
@@ -207,14 +207,14 @@ void TrenderedTextSubtitleWord::drawShadow(
   }
 #endif
  unsigned int _dx,_dy,_dxCore,_dyCore;
- topOverhang=getTopOverhang(shadowSize,outlineWidth,prefs);
- bottomOverhang=getBottomOverhang(shadowSize,outlineWidth,prefs);
- leftOverhang=getLeftOverhang(shadowSize,outlineWidth,prefs);
- rightOverhang=getRightOverhang(shadowSize,outlineWidth,prefs);
+ topOverhang=getTopOverhang(prefs);
+ bottomOverhang=getBottomOverhang(prefs);
+ leftOverhang=getLeftOverhang(prefs);
+ rightOverhang=getRightOverhang(prefs);
  _dx    =xscale*dx[0]/400+leftOverhang+ rightOverhang;
- _dxCore=xscale*dx[0]/400+leftOverhang+ outlineWidth;
+ _dxCore=xscale*dx[0]/400+leftOverhang+ m_outlineWidth;
  _dy    =dy[0]/4+topOverhang + bottomOverhang;
- _dyCore=dy[0]/4+topOverhang + outlineWidth;
+ _dyCore=dy[0]/4+topOverhang + m_outlineWidth;
  dxCharY=xscale*sz.cx/400;dyCharY=sz.cy/4;
  baseline=baseline/4+2;
 
@@ -223,8 +223,8 @@ void TrenderedTextSubtitleWord::drawShadow(
  if (_dx < 16) _dx=16;
  if (csp==FF_CSP_420P)
   _dy=((_dy+1)/2)*2;
- stride_t extra_dx=_dx+outlineWidth*2; // add margin to simplify the outline drawing process.
- stride_t extra_dy=_dy+outlineWidth*2;
+ stride_t extra_dx=_dx + m_outlineWidth*2; // add margin to simplify the outline drawing process.
+ stride_t extra_dy=_dy + m_outlineWidth*2;
  extra_dx=((extra_dx+7)/8)*8;     // align for swscaler
  bmp[0]=(unsigned char*)aligned_calloc3(extra_dx,extra_dy,16,16);
  msk[0]=(unsigned char*)aligned_calloc3(_dx,_dy,16,16);
@@ -233,7 +233,7 @@ void TrenderedTextSubtitleWord::drawShadow(
 
  for (unsigned int y=2;y<dy[0]-2;y+=4)
   {
-   unsigned char *dstBmpY=bmp[0]+(y/4+topOverhang+outlineWidth)*extra_dx+leftOverhang+outlineWidth;
+   unsigned char *dstBmpY=bmp[0]+(y/4 + topOverhang + m_outlineWidth) * extra_dx + leftOverhang + m_outlineWidth;
    for (unsigned int xstep = xscale==100 ? 4*65536 : 400*65536/xscale,x=(2<<16)+xstep;x<((dx[0]-2)<<16);x+=xstep,dstBmpY++)
     {
      unsigned int sum=0;
@@ -248,10 +248,10 @@ void TrenderedTextSubtitleWord::drawShadow(
   }
  if (prefs.blur)
   {
-   int startx=leftOverhang+outlineWidth-1;
-   int starty=topOverhang+outlineWidth-1;
-   int endy=extra_dy-bottomOverhang-outlineWidth+1;
-   int endx=extra_dx-rightOverhang-outlineWidth+1;
+   int startx=leftOverhang + m_outlineWidth - 1;
+   int starty=topOverhang + m_outlineWidth - 1;
+   int endy=extra_dy - bottomOverhang - m_outlineWidth+1;
+   int endx=extra_dx - rightOverhang - m_outlineWidth+1;
    bmp[0]=blur(bmp[0], extra_dx, extra_dy, startx, starty, endx, endy, true);
   }
 
@@ -261,19 +261,19 @@ void TrenderedTextSubtitleWord::drawShadow(
 
  // Prepare matrix for outline calculation
  short *matrix=NULL;
- unsigned int matrixSizeH=((outlineWidth*2+8)/8)*8; // 2 bytes for one.
- unsigned int matrixSizeV=outlineWidth*2+1;
- if (outlineWidth>0)
+ unsigned int matrixSizeH = ((m_outlineWidth*2+8)/8)*8; // 2 bytes for one.
+ unsigned int matrixSizeV = m_outlineWidth*2+1;
+ if (m_outlineWidth>0)
   {
    double r_cutoff=1.5;
    if (outlineWidth_double<4.5)
     r_cutoff=outlineWidth_double/3.0;
    double r_mul=512.0/r_cutoff;
    matrix=(short*)aligned_calloc(matrixSizeH*2,matrixSizeV,16);
-   for (int y=-outlineWidth;y<=outlineWidth;y++)
-    for (int x=-outlineWidth;x<=outlineWidth;x++)
+   for (int y = -m_outlineWidth ; y <= m_outlineWidth ; y++)
+    for (int x = -m_outlineWidth ; x <= m_outlineWidth ; x++)
      {
-      int pos=(y+outlineWidth)*matrixSizeH+x+outlineWidth;
+      int pos=(y + m_outlineWidth)*matrixSizeH+x+m_outlineWidth;
       double r=0.5+outlineWidth_double-sqrt(double(x*x+y*y));
       if (r>r_cutoff)
        matrix[pos]=512;
@@ -284,19 +284,19 @@ void TrenderedTextSubtitleWord::drawShadow(
 
  if (prefs.opaqueBox)
   memset(msk[0],255,dx[0]*dy[0]);
- else if (outlineWidth)
+ else if (m_outlineWidth)
   {
    // Prepare outline
    if (Tconfig::cpu_flags&FF_CPU_SSE2
 #ifndef WIN64
-       && outlineWidth>=2
+       && m_outlineWidth>=2
 #endif
       )
     {
      size_t matrixSizeH_sse2=matrixSizeH>>3;
      size_t srcStrideGap=extra_dx-matrixSizeH;
-     for (unsigned int y=topOverhang-outlineWidth;y<_dyCore;y++)
-      for (unsigned int x=leftOverhang-outlineWidth;x<_dxCore;x++)
+     for (unsigned int y = topOverhang - m_outlineWidth ; y < _dyCore ; y++)
+      for (unsigned int x = leftOverhang - m_outlineWidth ; x < _dxCore ; x++)
        {
         unsigned int sum=fontPrepareOutline_sse2(bmp[0]+extra_dx*y+x,srcStrideGap,matrix,matrixSizeH_sse2,matrixSizeV) >> 9;
         msk[0][_dx*y+x]=sum>255 ? 255 : sum;
@@ -308,8 +308,8 @@ void TrenderedTextSubtitleWord::drawShadow(
      size_t matrixSizeH_mmx=(matrixSizeV+3)/4;
      size_t srcStrideGap=extra_dx-matrixSizeH_mmx*4;
      size_t matrixGap=matrixSizeH_mmx & 1 ? 8 : 0;
-     for (unsigned int y=topOverhang-outlineWidth;y<_dyCore;y++)
-      for (unsigned int x=leftOverhang-outlineWidth;x<_dxCore;x++)
+     for (unsigned int y = topOverhang - m_outlineWidth ; y < _dyCore ; y++)
+      for (unsigned int x = leftOverhang - m_outlineWidth ; x < _dxCore ; x++)
        {
         unsigned int sum=fontPrepareOutline_mmx(bmp[0]+extra_dx*y+x,srcStrideGap,matrix,matrixSizeH_mmx,matrixSizeV,matrixGap) >> 9;
         msk[0][_dx*y+x]=sum>255 ? 255 : sum;
@@ -318,8 +318,8 @@ void TrenderedTextSubtitleWord::drawShadow(
 #endif
    else
     {
-     for (unsigned int y=topOverhang-outlineWidth;y<_dyCore;y++)
-      for (unsigned int x=leftOverhang-outlineWidth;x<_dxCore;x++)
+     for (unsigned int y = topOverhang - m_outlineWidth ; y < _dyCore ; y++)
+      for (unsigned int x = leftOverhang - m_outlineWidth ; x < _dxCore ; x++)
        {
         unsigned char *srcPos=bmp[0]+extra_dx*y+x; // (x-outlineWidth,y-outlineWidth)
         unsigned int sum=0;
@@ -335,12 +335,12 @@ void TrenderedTextSubtitleWord::drawShadow(
 
    // remove the margin that we have just added.
    for (unsigned int y=0;y<_dy;y++)
-    memcpy(bmp[0]+_dx*y,bmp[0]+extra_dx*(y+outlineWidth)+outlineWidth,_dx);
+    memcpy(bmp[0]+_dx*y,bmp[0]+extra_dx*(y + m_outlineWidth) + m_outlineWidth, _dx);
 
-   if (prefs.outlineBlur || (prefs.shadowMode==0 && shadowSize>0)) // blur outline and msk
+   if (prefs.outlineBlur || (prefs.shadowMode==0 && m_shadowSize>0)) // blur outline and msk
     msk[0]=blur(msk[0], _dx, _dy, 0, 0, _dx, _dy, false);
   }
- else // outlineWidth==0
+ else // m_outlineWidth==0
   memcpy(msk[0],bmp[0],_dx*_dy);
 
  // Draw outline.
@@ -352,155 +352,22 @@ void TrenderedTextSubtitleWord::drawShadow(
    if (o>0)
     outline[0][c]=o;//*(255-b)>>8;
   }
- if (m_bodyYUV.A!=256 || m_outlineYUV.A!=256)
-  for (unsigned int c=0;c<count;c++)
-   {
-    msk[0][c]=(bmp[0][c] * m_bodyYUV.A >> 8) + (outline[0][c] * m_outlineYUV.A >> 8);
-   }
+ m_shadowMode=prefs.shadowMode;
 
-    unsigned char* mskptr;
-    if (outlineWidth)
-     mskptr=msk[0];
-    else
-     mskptr=bmp[0];
-    unsigned int shadowAlpha = 255; //prefs.shadowAlpha;
-    unsigned int shadowMode = prefs.shadowMode; // 0: glowing, 1:classic with gradient, 2: classic with no gradient, >=3: no shadow
-    if (shadowSize > 0)
-    if (shadowMode == 0) //Gradient glowing shadow (most complex)
-    {
-        _mm_empty();
-        if (_dx<shadowSize) shadowSize=_dx;
-        if (_dy<shadowSize) shadowSize=_dy;
-        unsigned int circle[1089]; // 1089=(16*2+1)^2
-        if (shadowSize>16) shadowSize=16;
-        int circleSize=shadowSize*2+1;
-        for (int y=0;y<circleSize;y++)
-        {
-            for (int x=0;x<circleSize;x++)
-            {
-                unsigned int rx=ff_abs(x-(int)shadowSize);
-                unsigned int ry=ff_abs(y-(int)shadowSize);
-                unsigned int r=(unsigned int)sqrt((double)(rx*rx+ry*ry));
-                if (r>shadowSize)
-                    circle[circleSize*y+x] = 0;
-                else
-                    circle[circleSize*y+x] = shadowAlpha*(shadowSize+1-r)/(shadowSize+1);
-            }
-        }
-        for (unsigned int y=0; y<_dy;y++)
-        {
-            int starty = y>=shadowSize ? 0 : shadowSize-y;
-            int endy = y+shadowSize<_dy ? circleSize : _dy-y+shadowSize;
-            for (unsigned int x=0; x<_dx;x++)
-            {
-                unsigned int pos = _dx*y+x;
-                int startx = x>=shadowSize ? 0 : shadowSize-x;
-                int endx = x+shadowSize<_dx ? circleSize : _dx-x+shadowSize;
-                if (mskptr[pos] == 0) continue;
-                for (int ry=starty; ry<endy;ry++)
-                {
-                    for (int rx=startx; rx<endx;rx++)
-                    {
-                        unsigned int alpha = circle[circleSize*ry+rx];
-                        if (alpha)
-                        {
-                            unsigned int dstpos = _dx*(y+ry-shadowSize)+x+rx-shadowSize;
-                            unsigned int s = mskptr[pos] * alpha >> 8;
-                            if (shadow[0][dstpos]<s)
-                                shadow[0][dstpos] = (unsigned char)s;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    else if (shadowMode == 1) //Gradient classic shadow
-    {
-        unsigned int shadowStep = shadowAlpha/shadowSize;
-        for (unsigned int y=0; y<_dy;y++)
-        {
-            for (unsigned int x=0; x<_dx;x++)
-            {
-                unsigned int pos = _dx*y+x;
-                if (mskptr[pos] == 0) continue;
-
-                unsigned int shadowAlphaGradient = shadowAlpha;
-                for (unsigned int xx=1; xx<=shadowSize; xx++)
-                {
-                    unsigned int s = mskptr[pos]*shadowAlphaGradient>>8;
-                    if (x + xx < _dx)
-                    {
-                        if (y+xx < _dy && 
-                            shadow[0][_dx*(y+xx)+x+xx] <s)
-                        {
-                            shadow[0][_dx*(y+xx)+x+xx] = s;
-                        }
-                    }
-                    shadowAlphaGradient -= shadowStep;
-                }
-            }
-        }
-    }
-    else if (shadowMode == 2) //Classic shadow
-    {
-        for (unsigned int y=shadowSize; y<_dy;y++)
-            memcpy(shadow[0]+_dx*y+shadowSize,mskptr+_dx*(y-shadowSize),_dx-shadowSize);
-    }
-
- // Preparation for each color space
  if (csp==FF_CSP_420P)
   {
-   dx[1]=dx[0]>>prefs.shiftX[1];
-   dy[1]=dy[0]>>prefs.shiftY[1];
+   dx[1]=dx[0]>>1;
+   dy[1]=dy[0]>>1;
    dx[1]=(dx[1]/alignXsize+1)*alignXsize;
    bmp[1]     = (unsigned char*)aligned_calloc(dx[1],dy[1],16);
    outline[1] = (unsigned char*)aligned_calloc(dx[1],dy[1],16);
    shadow[1]  = (unsigned char*)aligned_calloc(dx[1],dy[1],16);
 
-   dx[2]=dx[0]>>prefs.shiftX[2];
-   dy[2]=dy[0]>>prefs.shiftY[2];
+   dx[2]=dx[0]>>1;
+   dy[2]=dy[0]>>1;
    dx[2]=(dx[2]/alignXsize+1)*alignXsize;
 
    bmpmskstride[0]=dx[0];bmpmskstride[1]=dx[1];bmpmskstride[2]=dx[2]; // for fast rendering
-
-   int isColorOutline=(outlineYUV.U!=128 || outlineYUV.V!=128);
-   if (Tconfig::cpu_flags&FF_CPU_MMX || Tconfig::cpu_flags&FF_CPU_MMXEXT)
-    {
-     unsigned int edxAlign=(_dx & ~0xf) >> 1;
-     unsigned int edx=_dx >> 1;
-     for (unsigned int y=0 ; y<dy[1] ; y++)
-      for (unsigned int x=0 ; x<edx ; x+=8)
-       {
-        if (x>=edxAlign)
-         x=edx - 8;
-        unsigned int lum0=2*y*_dx+x*2;
-        unsigned int lum1=(2*y+1)*_dx+x*2;
-        unsigned int chr=y*dx[1]+x;
-        YV12_lum2chr_max(&bmp[0][lum0],&bmp[0][lum1],&bmp[1][chr]);
-        if (isColorOutline)
-         YV12_lum2chr_max(&outline[0][lum0],&outline[0][lum1],&outline[1][chr]);
-        else
-         YV12_lum2chr_min(&outline[0][lum0],&outline[0][lum1],&outline[1][chr]);
-        YV12_lum2chr_min(&shadow[0][lum0],&shadow [0][lum1],&shadow [1][chr]);
-       }
-    }
-   else
-    {
-     unsigned int _dx1=_dx/2;
-     for (unsigned int y=0;y<dy[1];y++)
-      for (unsigned int x=0;x<_dx1;x++)
-       {
-        unsigned int lum0=2*y*_dx+x*2;
-        unsigned int lum1=(2*y+1)*_dx+x*2;
-        unsigned int chr=y*dx[1]+x;
-        bmp[1][chr]=std::max(std::max(std::max(bmp[0][lum0],bmp[0][lum0+1]),bmp[0][lum1]),bmp[0][lum1+1]);
-        if (isColorOutline)
-         outline[1][chr]=std::max(std::max(std::max(outline[0][lum0],outline[0][lum0+1]),outline[0][lum1]),outline[0][lum1+1]);
-        else
-         outline[1][chr]=std::min(std::min(std::min(outline[0][lum0],outline[0][lum0+1]),outline[0][lum1]),outline[0][lum1+1]);
-        shadow[1][chr]=std::min(std::min(std::min(shadow[0][lum0],shadow[0][lum0+1]),shadow[0][lum1]),shadow[0][lum1+1]);
-       }
-    }
   }
  else
   {
@@ -513,7 +380,167 @@ void TrenderedTextSubtitleWord::drawShadow(
    msk[1]     = (unsigned char*)aligned_malloc(dx[1]*dy[1]+16,16);
 
    bmpmskstride[0]=dx[0];bmpmskstride[1]=dx[1];
+  }
+ updateMask();
 
+ if (matrix)
+  aligned_free(matrix);
+}
+
+void TrenderedTextSubtitleWord::updateMask(int fader, bool create) const
+{
+ // shadowMode 0: glowing, 1:classic with gradient, 2: classic with no gradient, >=3: no shadow
+ if (create == false && oldFader == fader)
+  return;
+ oldFader = fader;
+ unsigned int _dx=dx[0];
+ unsigned int _dy=dy[0];
+ unsigned int count=_dx*_dy;
+ unsigned int shadowSize = m_shadowSize;
+
+ unsigned int bodyYUVa = m_bodyYUV.A * fader >> 16;
+ unsigned int outlineYUVa = m_outlineYUV.A * fader >> 16;
+ unsigned int shadowYUVa = m_shadowYUV.A * fader >> 16;
+ if (bodyYUVa != 256 || outlineYUVa != 256)
+  for (unsigned int c=0;c<count;c++)
+   {
+    msk[0][c]=(bmp[0][c] * bodyYUVa >> 8) + (outline[0][c] * outlineYUVa >> 8);
+   }
+
+ unsigned char* mskptr;
+ if (m_outlineWidth)
+  mskptr=msk[0];
+ else
+  mskptr=bmp[0];
+
+ unsigned int shadowAlpha = 255;
+ if (shadowSize > 0 && (create || mskptr != bmp[0]))
+  if (m_shadowMode == 0) //Gradient glowing shadow (most complex)
+   {
+    _mm_empty();
+    if (_dx<shadowSize) shadowSize=_dx;
+    if (_dy<shadowSize) shadowSize=_dy;
+    unsigned int circle[1089]; // 1089=(16*2+1)^2
+    if (shadowSize>16) shadowSize=16;
+    int circleSize=shadowSize*2+1;
+    for (int y=0;y<circleSize;y++)
+     {
+      for (int x=0;x<circleSize;x++)
+       {
+        unsigned int rx=ff_abs(x-(int)shadowSize);
+        unsigned int ry=ff_abs(y-(int)shadowSize);
+        unsigned int r=(unsigned int)sqrt((double)(rx*rx+ry*ry));
+        if (r>shadowSize)
+         circle[circleSize*y+x] = 0;
+        else
+         circle[circleSize*y+x] = shadowAlpha*(shadowSize+1-r)/(shadowSize+1);
+       }
+     }
+    for (unsigned int y=0; y<_dy;y++)
+     {
+      int starty = y>=shadowSize ? 0 : shadowSize-y;
+      int endy = y+shadowSize<_dy ? circleSize : _dy-y+shadowSize;
+      for (unsigned int x=0; x<_dx;x++)
+       {
+        unsigned int pos = _dx*y+x;
+        int startx = x>=shadowSize ? 0 : shadowSize-x;
+        int endx = x+shadowSize<_dx ? circleSize : _dx-x+shadowSize;
+        if (mskptr[pos] == 0) continue;
+        for (int ry=starty; ry<endy;ry++)
+         {
+          for (int rx=startx; rx<endx;rx++)
+           {
+             unsigned int alpha = circle[circleSize*ry+rx];
+             if (alpha)
+              {
+               unsigned int dstpos = _dx*(y+ry-shadowSize)+x+rx-shadowSize;
+               unsigned int s = mskptr[pos] * alpha >> 8;
+               if (shadow[0][dstpos]<s)
+                shadow[0][dstpos] = (unsigned char)s;
+              }
+           }
+         }
+       }
+     }
+   }
+  else if (m_shadowMode == 1) //Gradient classic shadow
+   {
+    unsigned int shadowStep = shadowAlpha/shadowSize;
+    for (unsigned int y=0; y<_dy;y++)
+     {
+      for (unsigned int x=0; x<_dx;x++)
+       {
+        unsigned int pos = _dx*y+x;
+        if (mskptr[pos] == 0) continue;
+
+        unsigned int shadowAlphaGradient = shadowAlpha;
+        for (unsigned int xx=1; xx<=shadowSize; xx++)
+         {
+          unsigned int s = mskptr[pos]*shadowAlphaGradient>>8;
+          if (x + xx < _dx)
+           {
+            if (y+xx < _dy && shadow[0][_dx*(y+xx)+x+xx] <s)
+             shadow[0][_dx*(y+xx)+x+xx] = s;
+           }
+          shadowAlphaGradient -= shadowStep;
+         }
+       }
+     }
+   }
+  else if (m_shadowMode == 2) //Classic shadow
+   {
+    for (unsigned int y=shadowSize; y<_dy;y++)
+     memcpy(shadow[0]+_dx*y+shadowSize,mskptr+_dx*(y-shadowSize),_dx-shadowSize);
+   }
+
+ // Preparation for each color space
+ if (csp==FF_CSP_420P)
+  {
+   if (create)
+    {
+     int isColorOutline=(m_outlineYUV.U!=128 || m_outlineYUV.V!=128);
+     if (Tconfig::cpu_flags&FF_CPU_MMX || Tconfig::cpu_flags&FF_CPU_MMXEXT)
+      {
+       unsigned int edxAlign=(_dx & ~0xf) >> 1;
+       unsigned int edx=_dx >> 1;
+       for (unsigned int y=0 ; y<dy[1] ; y++)
+        for (unsigned int x=0 ; x<edx ; x+=8)
+         {
+          if (x>=edxAlign)
+           x=edx - 8;
+          unsigned int lum0=2*y*_dx+x*2;
+          unsigned int lum1=(2*y+1)*_dx+x*2;
+          unsigned int chr=y*dx[1]+x;
+          YV12_lum2chr_max(&bmp[0][lum0],&bmp[0][lum1],&bmp[1][chr]);
+          if (isColorOutline)
+           YV12_lum2chr_max(&outline[0][lum0],&outline[0][lum1],&outline[1][chr]);
+          else
+           YV12_lum2chr_min(&outline[0][lum0],&outline[0][lum1],&outline[1][chr]);
+          YV12_lum2chr_min(&shadow[0][lum0],&shadow [0][lum1],&shadow [1][chr]);
+         }
+      }
+     else
+      {
+       unsigned int _dx1=_dx/2;
+       for (unsigned int y=0;y<dy[1];y++)
+        for (unsigned int x=0;x<_dx1;x++)
+         {
+          unsigned int lum0=2*y*_dx+x*2;
+          unsigned int lum1=(2*y+1)*_dx+x*2;
+          unsigned int chr=y*dx[1]+x;
+          bmp[1][chr]=std::max(std::max(std::max(bmp[0][lum0],bmp[0][lum0+1]),bmp[0][lum1]),bmp[0][lum1+1]);
+          if (isColorOutline)
+           outline[1][chr]=std::max(std::max(std::max(outline[0][lum0],outline[0][lum0+1]),outline[0][lum1]),outline[0][lum1+1]);
+          else
+           outline[1][chr]=std::min(std::min(std::min(outline[0][lum0],outline[0][lum0+1]),outline[0][lum1]),outline[0][lum1+1]);
+          shadow[1][chr]=std::min(std::min(std::min(shadow[0][lum0],shadow[0][lum0+1]),shadow[0][lum1]),shadow[0][lum1+1]);
+         }
+      }
+    }
+  }
+ else
+  {
+   //RGB32
    unsigned int xy=(_dx*_dy)>>2;
 
    #define Y2RGB(bmp)                                                              \
@@ -526,15 +553,15 @@ void TrenderedTextSubtitleWord::drawShadow(
       *(bmp##RGB+2)    =*(bmp##Y+2)<<16     | *(bmp##Y+2)<<8     | *(bmp##Y+2);    \
       *(bmp##RGB+3)    =*(bmp##Y+3)<<16     | *(bmp##Y+3)<<8     | *(bmp##Y+3);    \
      }
-
-   Y2RGB(bmp)
-   Y2RGB(outline)
-   Y2RGB(shadow)
+   if (create)
+    {
+     Y2RGB(bmp)
+     Y2RGB(outline)
+     Y2RGB(shadow)
+    }
    Y2RGB(msk)
   }
  _mm_empty();
- if (matrix)
-  aligned_free(matrix);
 }
 unsigned int TrenderedTextSubtitleWord::getShadowSize(const TrenderedSubtitleLines::TprintPrefs &prefs,LONG fontHeight)
 {
@@ -615,24 +642,24 @@ unsigned char* TrenderedTextSubtitleWord::blur(unsigned char *src,stride_t Idx,s
  return dst;
 }
 
-unsigned int TrenderedTextSubtitleWord::getBottomOverhang(unsigned int shadowSize,unsigned int outlineWidth,const TrenderedSubtitleLines::TprintPrefs &prefs)
+unsigned int TrenderedTextSubtitleWord::getBottomOverhang(const TrenderedSubtitleLines::TprintPrefs &prefs)
 {
- return shadowSize+outlineWidth;
+ return m_shadowSize + m_outlineWidth;
 }
-unsigned int TrenderedTextSubtitleWord::getRightOverhang(unsigned int shadowSize,unsigned int outlineWidth,const TrenderedSubtitleLines::TprintPrefs &prefs)
+unsigned int TrenderedTextSubtitleWord::getRightOverhang(const TrenderedSubtitleLines::TprintPrefs &prefs)
 {
- return shadowSize+outlineWidth;
+ return m_shadowSize + m_outlineWidth;
 }
-unsigned int TrenderedTextSubtitleWord::getTopOverhang(unsigned int shadowSize,unsigned int outlineWidth,const TrenderedSubtitleLines::TprintPrefs &prefs)
+unsigned int TrenderedTextSubtitleWord::getTopOverhang(const TrenderedSubtitleLines::TprintPrefs &prefs)
 {
  if (prefs.shadowMode==0)
-  return shadowSize+outlineWidth;
+  return m_shadowSize + m_outlineWidth;
  else
-  return outlineWidth;
+  return m_outlineWidth;
 }
-unsigned int TrenderedTextSubtitleWord::getLeftOverhang(unsigned int shadowSize,unsigned int outlineWidth,const TrenderedSubtitleLines::TprintPrefs &prefs)
+unsigned int TrenderedTextSubtitleWord::getLeftOverhang(const TrenderedSubtitleLines::TprintPrefs &prefs)
 {
- return getTopOverhang(shadowSize,outlineWidth,prefs);
+ return getTopOverhang(prefs);
 }
 int TrenderedTextSubtitleWord::get_baseline() const
 {
@@ -741,7 +768,7 @@ template<class tchar> TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
   }
  _mm_empty();
 }
-void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3], int sdy[3], unsigned char *dstLn[3], const stride_t stride[3], const unsigned char *bmp[3], const unsigned char *msk[3]) const
+void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3], int sdy[3], unsigned char *dstLn[3], const stride_t stride[3], const unsigned char *bmp[3], const unsigned char *msk[3],REFERENCE_TIME rtStart) const
 {
  if (sdy[0]<=0 || sdy[1]<0)
   return;
@@ -751,6 +778,27 @@ void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3
  int xoffsetUV = xoffset >> 1;
  int xoffsetRGB = xoffset << 2;
  int startyUV = starty >> 1;
+ int bodyYUVa = m_bodyYUV.A;
+ int outlineYUVa = m_outlineYUV.A;
+ int shadowYUVa = m_shadowYUV.A;
+ if (props.isFad)
+  {
+   double fader = 1.0;
+   if      (rtStart < props.fadeT1)
+    fader = props.fadeA1 / 255.0;
+   else if (rtStart < props.fadeT2)
+    fader = (double)(rtStart - props.fadeT1) / (props.fadeT2 - props.fadeT1) * (props.fadeA2 - props.fadeA1) / 255.0 + props.fadeA1 / 255.0; 
+   else if (rtStart < props.fadeT3)
+    fader = props.fadeA2 / 255.0;
+   else if (rtStart < props.fadeT4)
+    fader = (double)(props.fadeT4 - rtStart) / (props.fadeT4 - props.fadeT3) * (props.fadeA2 - props.fadeA3) / 255.0 + props.fadeA3 / 255.0;
+   else
+    fader = props.fadeA3 / 255.0;
+   bodyYUVa = bodyYUVa * fader;
+   outlineYUVa = outlineYUVa * fader;
+   shadowYUVa = shadowYUVa * fader;
+   updateMask(int(fader * (1 << 16)), false);  // updateMask doesn't accept floating point because it use MMX.
+  }
 #ifdef WIN64
  if (Tconfig::cpu_flags&FF_CPU_SSE2)
   {
@@ -770,19 +818,19 @@ void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3
        colortbl[i]   =(short)m_bodyYUV.Y;
        colortbl[i+8] =(short)m_bodyYUV.U;
        colortbl[i+16]=(short)m_bodyYUV.V;
-       colortbl[i+24]=(short)m_bodyYUV.A;
+       colortbl[i+24]=(short)bodyYUVa;
        colortbl[i+32]=(short)m_outlineYUV.Y;
        colortbl[i+40]=(short)m_outlineYUV.U;
        colortbl[i+48]=(short)m_outlineYUV.V;
-       colortbl[i+56]=(short)m_outlineYUV.A;
+       colortbl[i+56]=(short)outlineYUVa;
        colortbl[i+64]=(short)m_shadowYUV.Y;
        colortbl[i+72]=(short)m_shadowYUV.U;
        colortbl[i+80]=(short)m_shadowYUV.V;
-       colortbl[i+88]=(short)m_shadowYUV.A;
+       colortbl[i+88]=(short)shadowYUVa;
       }
      // Y
      const unsigned char *mask0=msk[0];
-     //if (m_bodyYUV.A!=256)
+     //if (bodyYUVa!=256)
      // mask0=outline[0];
 
      int endx=sdx[0] & ~(alignXsize-1);
@@ -803,10 +851,10 @@ void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3
            #define YV12_Y_FONTRENDERER                                              \
            int srcPos=y * dx[0] + x + xoffset;                                      \
            int dstPos=y * stride[0] + x;                                            \
-           int s=m_shadowYUV.A * shadow[0][srcPos] >> 8;                            \
+           int s=shadowYUVa * shadow[0][srcPos] >> 8;                            \
            int d=((256-s) * dstLn[0][dstPos] >> 8) + (s * m_shadowYUV.Y >> 8);      \
-           int o=m_outlineYUV.A * outline[0][srcPos] >> 8;                          \
-           int b=m_bodyYUV.A *bmp[0][srcPos] >> 8;                                  \
+           int o=outlineYUVa * outline[0][srcPos] >> 8;                          \
+           int b=bodyYUVa *bmp[0][srcPos] >> 8;                                     \
            int m=msk[0][srcPos];                                                    \
                d=((256-m) * d >> 8) + (o * m_outlineYUV.Y >> 8);                    \
                dstLn[0][dstPos]=d + (b * m_bodyYUV.Y >> 8);
@@ -816,7 +864,7 @@ void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3
        }
      // UV
      const unsigned char *mask1=msk[1];
-     //if (m_bodyYUV.A!=256)
+     //if (bodyYUVa!=256)
      // mask1=outline[1];
 
      endx=sdx[1] & ~(alignXsize-1);
@@ -838,10 +886,10 @@ void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3
            int srcPos=y * dx[1] + x + xoffsetUV;                                    \
            int dstPos=y * stride[1] + x;                                            \
            /* U */                                                                  \
-           int s=m_shadowYUV.A * shadow[1][srcPos] >> 8;                            \
+           int s=shadowYUVa * shadow[1][srcPos] >> 8;                            \
            int d=((256-s) * dstLn[1][dstPos] >> 8) + (s * m_shadowYUV.U >> 8);      \
-           int o=m_outlineYUV.A * outline[1][srcPos] >> 8;                          \
-           int b=m_bodyYUV.A * bmp[1][srcPos] >> 8;                                 \
+           int o=outlineYUVa * outline[1][srcPos] >> 8;                          \
+           int b=bodyYUVa * bmp[1][srcPos] >> 8;                                    \
                d=((256-o) * d >> 8) + (o * m_outlineYUV.U >> 8);                    \
                dstLn[1][dstPos]=((256-b) * d >> 8) + (b * m_bodyYUV.U >> 8);        \
            /* V */                                                                  \
@@ -873,9 +921,9 @@ void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3
      colortbl[67]=colortbl[71]=0;
      for (unsigned int i=0;i<halfAlingXsize;i++)
       {
-       colortbl[i+24]=(short)m_bodyYUV.A;
-       colortbl[i+56]=(short)m_outlineYUV.A;
-       colortbl[i+88]=(short)m_shadowYUV.A;
+       colortbl[i+24]=(short)bodyYUVa;
+       colortbl[i+56]=(short)outlineYUVa;
+       colortbl[i+88]=(short)shadowYUVa;
       }
 
      int endx2=sdx[0]*4;
@@ -898,10 +946,10 @@ void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3
            int srcPos=y * dx[1] + x + xoffsetRGB;                                    \
            int dstPos=y * stride[0] + x;                                          \
            /* B */                                                                \
-           int s=m_shadowYUV.A * shadow[1][srcPos] >> 8;                          \
+           int s=shadowYUVa * shadow[1][srcPos] >> 8;                          \
            int d=((256-s) * dstLn[0][dstPos] >> 8) + (s * m_shadowYUV.b >> 8);    \
-           int o=m_outlineYUV.A * outline[1][srcPos] >> 8;                        \
-           int b=m_bodyYUV.A * bmp[1][srcPos] >> 8;                               \
+           int o=outlineYUVa * outline[1][srcPos] >> 8;                        \
+           int b=bodyYUVa * bmp[1][srcPos] >> 8;                                  \
            int m=msk[1][srcPos];                                                  \
                d=((256-m) * d >> 8)+(o * m_outlineYUV.b >> 8);                    \
                dstLn[0][dstPos]=d + (b * m_bodyYUV.b >> 8);                       \
@@ -929,7 +977,7 @@ void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3
     {
      // YV12-Y
      const unsigned char *mask0=msk[0];
-     //if (m_bodyYUV.A!=256)
+     //if (bodyYUVa!=256)
      // mask0=outline[0];
 
      for (int y=0 ; y < sdy[0] ; y++)
@@ -939,7 +987,7 @@ void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3
          YV12_Y_FONTRENDERER
         }
      const unsigned char *mask1=msk[1];
-     if (m_bodyYUV.A!=256)
+     if (bodyYUVa!=256)
       mask1=outline[1];
 
      for (int y=0 ; y < sdy[1] ; y++)
@@ -1092,7 +1140,7 @@ void TrenderedSubtitleLine::print(int startx,int starty,const TrenderedSubtitleL
       dx[i]=(*w)->dx[i];
      dx[i]=std::min(dx[i],prefsdx>>prefs.shiftX[i]);
     }
-   (*w)->print(startx, starty,dx,dy,dstLn,prefs.stride,bmp,msk);
+   (*w)->print(startx, starty,dx,dy,dstLn,prefs.stride,bmp,msk,prefs.rtStart);
   }
 }
 void TrenderedSubtitleLine::clear(void)
@@ -1375,7 +1423,7 @@ template<> const TrenderedTextSubtitleWord* TcharsChache::getChar(const char *s,
 }
 
 //============================== TrenderedVobsubWord ===============================
-void TrenderedVobsubWord::print(int startx, int starty /* not used */, unsigned int sdx[3],int sdy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const
+void TrenderedVobsubWord::print(int startx, int starty /* not used */, unsigned int sdx[3],int sdy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart) const
 {
  if (sdy[0]<=0 || sdy[1]<0)
   return;

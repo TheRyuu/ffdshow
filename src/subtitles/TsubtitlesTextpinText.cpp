@@ -90,11 +90,11 @@ void TsubtitlesTextpinText::addSubtitle(REFERENCE_TIME start,REFERENCE_TIME stop
      if (initdata.size())
       {
        TstreamMem fs(initdata,initdata.size(),utf8 ? Tstream::ENC_UTF8 : Tstream::ENC_ASCII);
-       parser->parse(fs,0);
+       parser->parse(fs, 0, start, stop);
       }
     }
    TstreamMem fs(data,datalen,utf8 ? Tstream::ENC_UTF8 : Tsubreader::getSubEnc(type));
-   Tsubtitle *sub=parser->parse(fs,(type&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SSA?TsubtitleParserBase::SSA_NODIALOGUE:0);
+   Tsubtitle *sub=parser->parse(fs, (type&Tsubreader::SUB_FORMATMASK)==Tsubreader::SUB_SSA ? TsubtitleParserBase::SSA_NODIALOGUE : 0, start, stop);
    if (sub)
     {
      sub->start=start;

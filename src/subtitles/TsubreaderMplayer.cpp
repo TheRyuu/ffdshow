@@ -45,7 +45,7 @@ template<class tchar> Tsubtitle* TsubtitleParser<tchar>::store(TsubtitleTextBase
  return subreader->back();
 }
 
-template<class tchar> Tsubtitle* TsubtitleParserSami<tchar>::parse(Tstream &fd,int flags) {
+template<class tchar> Tsubtitle* TsubtitleParserSami<tchar>::parse(Tstream &fd,int flags, REFERENCE_TIME start, REFERENCE_TIME stop) {
     tchar text[this->LINE_LEN+1], *p=NULL,*q;
     int state;
 
@@ -203,7 +203,7 @@ template<class tchar> const tchar* TsubtitleParser<tchar>::sub_readtext(const tc
     else return NULL;  // last text field
 }
 
-template<class tchar> Tsubtitle* TsubtitleParserMicrodvd<tchar>::parse(Tstream &fd,int flags) {
+template<class tchar> Tsubtitle* TsubtitleParserMicrodvd<tchar>::parse(Tstream &fd,int flags, REFERENCE_TIME, REFERENCE_TIME) {
     tchar line[this->LINE_LEN+1];
     tchar line2[this->LINE_LEN+1];
     const tchar *p, *next;
@@ -243,7 +243,7 @@ template<class tchar> Tsubtitle* TsubtitleParserMicrodvd<tchar>::parse(Tstream &
     return store(current);
 }
 
-template<class tchar> Tsubtitle* TsubtitleParserSubrip<tchar>::parse(Tstream &fd,int flags) {
+template<class tchar> Tsubtitle* TsubtitleParserSubrip<tchar>::parse(Tstream &fd,int flags, REFERENCE_TIME start, REFERENCE_TIME stop) {
     tchar line[this->LINE_LEN+1];
     int a1,a2,a3,a4,b1,b2,b3,b4;
     tchar *p=NULL, *q=NULL;
@@ -273,7 +273,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSubrip<tchar>::parse(Tstream &fd
     return store(current);
 }
 
-template<class tchar> Tsubtitle* TsubtitleParserSubviewer<tchar>::parse(Tstream &fd,int flags) {
+template<class tchar> Tsubtitle* TsubtitleParserSubviewer<tchar>::parse(Tstream &fd,int flags, REFERENCE_TIME start, REFERENCE_TIME stop) {
     tchar line[this->LINE_LEN+1];
     int a1,a2,a3,a4,b1,b2,b3,b4;
     tchar *p=NULL;
@@ -325,7 +325,7 @@ end:
     return current.empty()?NULL:store(current);
 }
 
-template<class tchar> Tsubtitle* TsubtitleParserSubviewer2<tchar>::parse(Tstream &fd,int flags) {
+template<class tchar> Tsubtitle* TsubtitleParserSubviewer2<tchar>::parse(Tstream &fd,int flags, REFERENCE_TIME start, REFERENCE_TIME stop) {
     tchar line[this->LINE_LEN+1];
     int a1,a2,a3,a4;
     tchar *p=NULL;
@@ -356,7 +356,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSubviewer2<tchar>::parse(Tstream
 }
 
 
-template<class tchar> Tsubtitle* TsubtitleParserVplayer<tchar>::parse(Tstream &fd,int flags) {
+template<class tchar> Tsubtitle* TsubtitleParserVplayer<tchar>::parse(Tstream &fd,int flags, REFERENCE_TIME start, REFERENCE_TIME stop) {
         tchar line[this->LINE_LEN+1];
         int a1,a2,a3,a4;
         const tchar *p=NULL, *next;tchar separator1,separator2;
@@ -404,7 +404,7 @@ template<class tchar> Tsubtitle* TsubtitleParserVplayer<tchar>::parse(Tstream &f
         return store(current);
 }
 
-template<class tchar> Tsubtitle* TsubtitleParserRt<tchar>::parse(Tstream &fd,int flags) {
+template<class tchar> Tsubtitle* TsubtitleParserRt<tchar>::parse(Tstream &fd,int flags, REFERENCE_TIME start, REFERENCE_TIME stop) {
         //TODO: This format uses quite rich (sub/super)set of xhtml
         // I couldn't check it since DTD is not included.
         // WARNING: full XML parses can be required for proper parsing
@@ -607,7 +607,7 @@ template<class tchar> const TSubtitleProps* TsubtitleParserSSA<tchar>::Tstyles::
  return NULL;
 }
 
-template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,int flags) {
+template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd, int flags, REFERENCE_TIME start, REFERENCE_TIME stop) {
 /*
  * Sub Station Alpha v4 (and v2?) scripts have 9 commas before subtitle
  * other Sub Station Alpha scripts have only 8 commas before subtitle
@@ -880,6 +880,13 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
            current.start=timer.den*this->hmsToTime(hour1,min1,sec1,hunsec1)/timer.num;
            current.stop =timer.den*this->hmsToTime(hour2,min2,sec2,hunsec2)/timer.num;
           }
+         else if (start != REFTIME_INVALID && stop != REFTIME_INVALID)
+          {
+           current.start=start;
+           current.stop=stop;
+          }
+         current.defProps.tStart=current.start;
+         current.defProps.tStop=current.stop;
 
          // FIXME
          // \h removal : \h is hard space, so it should be replaced HARD sapce, soft space for band-aid.
@@ -911,7 +918,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd,in
  return NULL;
 }
 
-template<class tchar> Tsubtitle* TsubtitleParserDunnowhat<tchar>::parse(Tstream &fd,int flags) {
+template<class tchar> Tsubtitle* TsubtitleParserDunnowhat<tchar>::parse(Tstream &fd,int flags, REFERENCE_TIME, REFERENCE_TIME) {
     tchar line[this->LINE_LEN+1];
     tchar text[this->LINE_LEN+1];
 
@@ -929,7 +936,7 @@ template<class tchar> Tsubtitle* TsubtitleParserDunnowhat<tchar>::parse(Tstream 
     return store(current);
 }
 
-template<class tchar> Tsubtitle* TsubtitleParserMPsub<tchar>::parse(Tstream &fd,int flags) {
+template<class tchar> Tsubtitle* TsubtitleParserMPsub<tchar>::parse(Tstream &fd,int flags, REFERENCE_TIME start, REFERENCE_TIME stop) {
         tchar line[this->LINE_LEN+1];
         float a,b;
         int num=0;
@@ -968,7 +975,7 @@ template<class tchar> Tsubtitle* TsubtitleParserMPsub<tchar>::parse(Tstream &fd,
         return NULL; // we should have returned before if it's OK
 }
 
-template<class tchar> Tsubtitle* TsubtitleParserAqt<tchar>::parse(Tstream &fd,int flags) {
+template<class tchar> Tsubtitle* TsubtitleParserAqt<tchar>::parse(Tstream &fd,int flags, REFERENCE_TIME, REFERENCE_TIME) {
     tchar line[this->LINE_LEN+1];
     const tchar *next;
     //int i;
@@ -1010,7 +1017,7 @@ template<class tchar> Tsubtitle* TsubtitleParserAqt<tchar>::parse(Tstream &fd,in
     return previous=store(current);
 }
 
-template<class tchar> Tsubtitle* TsubtitleParserSubrip09<tchar>::parse(Tstream &fd,int flags) {
+template<class tchar> Tsubtitle* TsubtitleParserSubrip09<tchar>::parse(Tstream &fd,int flags, REFERENCE_TIME start, REFERENCE_TIME stop) {
     tchar line[this->LINE_LEN+1];
     int a1,a2,a3;
     const tchar * next=NULL;
@@ -1047,7 +1054,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSubrip09<tchar>::parse(Tstream &
     return previous=store(current);
 }
 
-template<class tchar> Tsubtitle* TsubtitleParserMPL2<tchar>::parse(Tstream &fd,int flags) {
+template<class tchar> Tsubtitle* TsubtitleParserMPL2<tchar>::parse(Tstream &fd,int flags, REFERENCE_TIME, REFERENCE_TIME) {
     tchar line[this->LINE_LEN+1];
     tchar line2[this->LINE_LEN+1];
     const tchar *p,*next;

@@ -107,7 +107,7 @@ template<class _mm> struct TspuImageSimd : public TspuImage
 public:
  TspuImageSimd(const TspuPlane src[3],const CRect &rcclip,const CRect &rectReal,const CRect &rectOrig,const TrenderedSubtitleLines::TprintPrefs &prefs):TspuImage(src,rcclip,rectReal,rectOrig,prefs) {}
  virtual void ownprint(const TrenderedSubtitleLines::TprintPrefs &prefs);
- virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const;
+ virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const;
 };
 
 #endif

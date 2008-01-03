@@ -46,6 +46,11 @@ struct TSubtitleProps
  int get_yscale(int Iyscale,const Rational& sar,int aspectAuto,int overrideScale) const;
  static int alignASS2SSA(int align);
  mutable int m_ascent64,m_descent64; // multiple 64 to lfHeight. Get TextMetrics and plus 4 to tmAscent or tmDescent and divid by 8 for vsfilter compatibility.
+ int tmpFadT1,tmpFadT2;
+ int isFad;
+ int fadeA1,fadeA2,fadeA3;
+ REFERENCE_TIME tStart,tStop;
+ REFERENCE_TIME fadeT1,fadeT2,fadeT3,fadeT4;
 };
 
 #endif

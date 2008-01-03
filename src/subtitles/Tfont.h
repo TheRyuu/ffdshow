@@ -38,7 +38,8 @@ public:
     sar(1,1),
     opaqueBox(false),
     subformat(-1),
-    isOSD(false)
+    isOSD(false),
+    rtStart(REFTIME_INVALID)
     {
     }
    unsigned char **dst;
@@ -66,6 +67,7 @@ public:
    Rational sar;
    bool opaqueBox;
    int subformat;
+   REFERENCE_TIME rtStart;
   };
  TrenderedSubtitleLines(void) {}
  TrenderedSubtitleLines(TrenderedSubtitleLine *ln) {push_back(ln);}
@@ -141,7 +143,7 @@ public:
  unsigned int dxCharY,dyCharY;
  unsigned char *bmp[3],*msk[3];stride_t bmpmskstride[3];
  unsigned char *outline[3],*shadow[3];
- virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const =0;
+ virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const =0;
  int csp;
  virtual int get_ascent64() const {return dy[0]*8;}
  virtual int get_descent64() const {return 0;}
@@ -158,7 +160,7 @@ private:
  bool shiftChroma;
 public:
  TrenderedVobsubWord(bool IshiftChroma=true):shiftChroma(IshiftChroma),TrenderedSubtitleWordBase(false) {}
- virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const;
+ virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const;
 };
 
 class TrenderedTextSubtitleWord : public TrenderedSubtitleWordBase
@@ -167,6 +169,8 @@ private:
  YUVcolorA m_bodyYUV,m_outlineYUV,m_shadowYUV;
  int baseline;
  int topOverhang,bottomOverhang,leftOverhang,rightOverhang;
+ int m_outlineWidth,m_shadowSize,m_shadowMode;
+ mutable int oldFader;
  TSubtitleProps props;
  void drawShadow(       HDC hdc,
                         HBITMAP hbmp,
@@ -177,14 +181,15 @@ private:
                         const TrenderedSubtitleLines::TprintPrefs &prefs,
                         const YUVcolorA &yuv,
                         const YUVcolorA &outlineYUV,
-                        const YUVcolorA &shadowYUV,
-                        unsigned int shadowSize);
+                        const YUVcolorA &shadowYUV
+                       );
+ void updateMask(int fader = 1 << 16, bool create = true) const;
  unsigned char* blur(unsigned char *src,stride_t Idx,stride_t Idy,int startx,int starty,int endx, int endy, bool mild);
  unsigned int getShadowSize(const TrenderedSubtitleLines::TprintPrefs &prefs,LONG fontHeight);
- unsigned int getBottomOverhang(unsigned int shadowSize,unsigned int outlineWidth,const TrenderedSubtitleLines::TprintPrefs &prefs);
- unsigned int getRightOverhang(unsigned int shadowSize,unsigned int outlineWidth,const TrenderedSubtitleLines::TprintPrefs &prefs);
- unsigned int getTopOverhang(unsigned int shadowSize,unsigned int outlineWidth,const TrenderedSubtitleLines::TprintPrefs &prefs);
- unsigned int getLeftOverhang(unsigned int shadowSize,unsigned int outlineWidth,const TrenderedSubtitleLines::TprintPrefs &prefs);
+ unsigned int getBottomOverhang(const TrenderedSubtitleLines::TprintPrefs &prefs);
+ unsigned int getRightOverhang(const TrenderedSubtitleLines::TprintPrefs &prefs);
+ unsigned int getTopOverhang(const TrenderedSubtitleLines::TprintPrefs &prefs);
+ unsigned int getLeftOverhang(const TrenderedSubtitleLines::TprintPrefs &prefs);
 public:
  // full rendering
  template<class tchar> TrenderedTextSubtitleWord(
@@ -205,7 +210,7 @@ public:
                         const TrenderedSubtitleLines::TprintPrefs &prefs,
                         const LOGFONT &lf,
                         TSubtitleProps Iprops);
- virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const;
+ virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const;
  unsigned int alignXsize;
  void* (__cdecl *TtextSubtitlePrintY)  (const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short *colortbl,const unsigned char* dst,const unsigned char* msk);
  void* (__cdecl *TtextSubtitlePrintUV) (const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short *colortbl,const unsigned char* dstU,const unsigned char* dstV);

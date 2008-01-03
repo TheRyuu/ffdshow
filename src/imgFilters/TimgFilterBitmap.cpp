@@ -207,7 +207,7 @@ template<class _mm> TimgFilterBitmap::Tblendplane TimgFilterBitmap::getBlend(int
   }
 }
 
-void TimgFilterBitmap::TrenderedSubtitleLineBitmap::print(int startx, int starty /* not used */, unsigned int dx[3],int dy1[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3]) const
+void TimgFilterBitmap::TrenderedSubtitleLineBitmap::print(int startx, int starty /* not used */, unsigned int dx[3],int dy1[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart) const
 {
  blend(pict->cspInfo,dx,dy,dstLn,stride,bmp,bmpmskstride,cfg->strength,255-cfg->strength);
 }

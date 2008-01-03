@@ -82,6 +82,8 @@ private:
    template<double TSubtitleProps::*offset,int min,int max> void doubleProp(const tchar *start,const tchar *end);
    template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> bool intProp2(const tchar *start,const tchar *end);
    template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void pos(const tchar *start,const tchar *end);
+   template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void fad(const tchar *start,const tchar *end);
+   void fade(const tchar *start,const tchar *end);
    template<bool TSubtitleProps::*offset> void boolProp(const tchar *start,const tchar *end);
    template<COLORREF TSubtitleProps::*offset> void color(const tchar *start,const tchar *end);
    template<int TSubtitleProps::*offset> void alpha(const tchar *start,const tchar *end);
