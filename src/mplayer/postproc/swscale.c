@@ -1544,6 +1544,8 @@ static int NV12ToPlanarWrapper(SwsContext *c, uint8_t* srcParam[], stride_t srcS
         unsigned char *dst_V =dst[2];
 	int swapped=c->srcFormat == IMGFMT_NV12;
 	int x,y,idx;
+	int srcSliceHc = srcSliceH >> 1;
+	int srcWc = c->srcW >> 1;
 
 	if(dstStride[0]==srcStride[0] && srcStride[0]>0)
 		memcpy(dst[0], src, srcSliceH*dstStride[0]);
@@ -1560,13 +1562,26 @@ static int NV12ToPlanarWrapper(SwsContext *c, uint8_t* srcParam[], stride_t srcS
 		}
 	}
 
-    // chroma data is interlaced UVUV... so deinterlace it
     idx=0;
-    src=srcParam[0]+c->srcW*c->srcH;
-    for(y=0; y<srcSliceH/2;y++,dst_U+=dstStride[1],dst_V+=dstStride[2] ) {
-        for(x=0;x<c->srcW/2;x++,idx++){
-            *(dst_U + x) = *(src + (idx<<1) + (swapped ? 1 : 0));
-            *(dst_V + x) = *(src + (idx<<1) + (swapped ? 0 : 1));
+    src=srcParam[1];
+    if (swapped)
+    {
+        for(y = 0 ; y < srcSliceHc ; y++, dst_U += dstStride[1], dst_V += dstStride[2] ) {
+            idx = 0;
+            for(x = 0 ; x < srcWc ; x++, idx+=2){
+                *(dst_U + x) = *(src + idx);
+                *(dst_V + x) = *(src + idx + 1);
+            }
+            src += srcStride[1];
+        }
+    } else {
+        for(y = 0 ; y < srcSliceHc ; y++, dst_U += dstStride[1], dst_V += dstStride[2] ) {
+            idx = 0;
+            for(x = 0 ; x < srcWc ; x++, idx+=2){
+                *(dst_U + x) = *(src + idx + 1);
+                *(dst_V + x) = *(src + idx);
+            }
+            src += srcStride[1];
         }
     }
     return srcSliceH;
@@ -1787,6 +1802,36 @@ static int simpleCopy(SwsContext *c, uint8_t* src[], stride_t srcStride[], int s
 			for(i=0; i<srcSliceH; i++)
 			{
 				memcpy(dstPtr, srcPtr, length);
+				srcPtr+= srcStride[0];
+				dstPtr+= dstStride[0];
+			}
+		}
+	}
+	else if (c->srcFormat == IMGFMT_NV12 || c->srcFormat == IMGFMT_NV21)
+	{
+		if(dstStride[0]==srcStride[0] && srcStride[0] > 0 && srcSliceH>0)
+		{
+			memcpy(dst[0] + dstStride[0] * srcSliceY, src[0], (srcSliceH - 1) * dstStride[0] + c->srcW);
+			memcpy(dst[1] + (dstStride[0] * srcSliceY >> 1), src[1], ((srcSliceH >> 1) - 1) * dstStride[0] + c->srcW);
+		}	
+		else
+		{
+			int i;
+			int srcSliceHc = srcSliceH >> 1;
+			uint8_t *srcPtr= src[0];
+			uint8_t *dstPtr= dst[0] + dstStride[0] * srcSliceY;
+
+			for(i=0 ; i<srcSliceH ; i++)
+			{
+				memcpy(dstPtr, srcPtr, c->srcW);
+				srcPtr+= srcStride[0];
+				dstPtr+= dstStride[0];
+			}
+			srcPtr = src[1];
+			dstPtr = dst[1] + (dstStride[0] * srcSliceY >> 1);
+			for(i=0 ; i<srcSliceHc ; i++)
+			{
+				memcpy(dstPtr, srcPtr, c->srcW);
 				srcPtr+= srcStride[0];
 				dstPtr+= dstStride[0];
 			}
