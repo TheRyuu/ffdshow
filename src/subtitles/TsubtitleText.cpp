@@ -638,21 +638,27 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
 
  if (cfg.fix&fixHearingImpaired)
   for (int I=1;I<=S1.size();I++)
-   if (inHearing)
-    {
-     W1=S1.find(']',I);
-     if (W1>0)
-      S1.erase(std::max(1,I-1),W1);
-     else
-      {
-       S1.erase(std::max(1,I-1),S1.size());
-       break;
-      }
-     inHearing=false;
-     I=W1+1;
-    }
-   else if (S1[I]=='[')
-    inHearing=true;
+   {
+    if (inHearing)
+     {
+      W1=S1.find(']',I);
+      if (W1>0)
+       {
+        S1.erase(std::max(1,I-1),std::max(W1 - std::max(1,I-1) + 1, 0));
+        if (S1 == passtring<tchar>(_L("- ")) || S1 == passtring<tchar>(_L("-")))
+         S1 = _L("");
+       }
+      else
+       {
+        S1.erase(std::max(1,I-1),S1.size());
+        break;
+       }
+      inHearing=false;
+      I=W1+1;
+     }
+    else if (S1[I]=='[')
+     inHearing=true;
+   }
  bool useFixed=strcmp(text.c_str(),S1.c_str())!=0;
  if (useFixed)
   fixed=S1.c_str();
