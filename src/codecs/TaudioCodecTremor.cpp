@@ -18,7 +18,7 @@
  */
 
 #include "stdafx.h"
-#include "tremor\ogg.h"
+#include "tremor/ogg.h"
 #include "TaudioCodecTremor.h"
 #include "Tdll.h"
 #include "IffdshowBase.h"

@@ -18,8 +18,8 @@
 
 #include "stdafx.h"
 #include "TvideoCodecXviD4.h"
-#include "xvidcore\xvid.h"
-#include "xvidcore\decoder.h"
+#include "xvidcore/xvid.h"
+#include "xvidcore/decoder.h"
 #include "Tdll.h"
 #include "TcodecSettings.h"
 #include "IffdshowBase.h"

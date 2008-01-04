@@ -23,7 +23,7 @@
 #include "reg.h"
 #include "TffProc.h"
 #include "x264/x264.h"
-#include "xvidcore\xvid.h"
+#include "xvidcore/xvid.h"
 #include "ffImgfmt.h"
 #include "Tmuxer.h"
 #include "libavcodec/avcodec.h"
