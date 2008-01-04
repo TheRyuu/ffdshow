@@ -56,7 +56,7 @@
 #if defined(_MSC_VER) || defined(SYS_SunOS) || defined(SYS_MACOSX)
 #define sqrtf sqrt
 #endif
-#if defined(__WIN32__) || defined(WIN64)
+#if defined(_WIN32) || defined(WIN64)
 #define rename(src,dst) (unlink(dst), rename(src,dst)) // POSIX says that rename() removes the destination, but win32 doesn't.
 #ifndef strtok_r
 #define strtok_r(str,delim,save) strtok(str,delim)
