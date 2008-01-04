@@ -893,6 +893,10 @@ template<class tchar> inline passtring<tchar> operator + (const tchar *aStr1, co
  s1.append(aStr2);
  return s1;
 }
+template<class tchar> bool operator == (const passtring<tchar>& aStr1, const passtring<tchar>& aStr2)
+{
+ return DwString<tchar>(aStr1.c_str()) == DwString<tchar>(aStr2.c_str());
+}
 
 template<> inline DwString<char>& DwString<char>::operator=(const char *aCstr) {return assign(aCstr);}
 template<> inline DwString<char>& DwString<char>::operator=(const wchar_t *aCstr) {return assign((const char*)text<char>(aCstr));}
