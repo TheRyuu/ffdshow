@@ -145,3 +145,4 @@ TblurPage::TblurPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPage
   };
  bindHtracks(htbr);
 }
+

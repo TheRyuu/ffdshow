@@ -54,3 +54,4 @@ TcrystalityPage::TcrystalityPage(TffdshowPageDec *Iparent,const TfilterIDFF *idf
   };
  bindHtracks(htbr);
 }
+

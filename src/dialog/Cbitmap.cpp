@@ -122,3 +122,4 @@ TbitmapPage::TbitmapPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):Tconf
   };
  bindButtons(bt);
 }
+

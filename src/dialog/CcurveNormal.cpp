@@ -55,3 +55,4 @@ TcurveNormalPage::TcurveNormalPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparen
   };
  bindEditInts(edInt);
 }
+

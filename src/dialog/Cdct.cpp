@@ -110,3 +110,4 @@ TdctPage::TdctPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDe
   };
  bindButtons(bt);
 }
+

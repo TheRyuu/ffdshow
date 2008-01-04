@@ -76,3 +76,4 @@ TaudioSwitcherPage::TaudioSwitcherPage(TffdshowPageDec *Iparent):TconfPageDecAud
   };
  bindCheckboxes(chb);
 }
+

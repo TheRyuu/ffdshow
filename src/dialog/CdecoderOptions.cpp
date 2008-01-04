@@ -181,3 +181,4 @@ TmiscPage::TmiscPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
   };
  bindButtons(bt);
 }
+

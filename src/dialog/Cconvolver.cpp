@@ -248,3 +248,4 @@ TconvolverPage::TconvolverPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff)
   };
  bindHtracks(htbr);
 }
+

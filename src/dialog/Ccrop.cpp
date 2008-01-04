@@ -156,3 +156,4 @@ TcropPage::TcropPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPage
   };
  bindEditInts(edInt);
 }
+

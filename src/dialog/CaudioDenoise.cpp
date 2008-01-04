@@ -39,3 +39,4 @@ TaudioDenoisePage::TaudioDenoisePage(TffdshowPageDec *Iparent,const TfilterIDFF 
   };
  bindHtracks(htbr);
 }
+
