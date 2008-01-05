@@ -192,7 +192,7 @@ LRESULT TtrayIconBase::processTrayMsg(HWND hwnd,WPARAM wprm,LPARAM lprm)
      SetForegroundWindow(hwnd);
      int ord=0;
      HMENU hm=createMenu(ord);
-     int cmd=TrackPopupMenu(hm,TPM_RIGHTALIGN|TPM_BOTTOMALIGN|TPM_RETURNCMD,p.x,p.y,0,hwnd,NULL);
+     int cmd=TrackPopupMenu(hm,TPM_RETURNCMD,p.x,p.y,0,hwnd,NULL);
      PostMessage(hwnd,WM_NULL,0,0);
      processCmd(hm,cmd);
      DestroyMenu(hm);
