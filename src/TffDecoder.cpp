@@ -108,7 +108,8 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  inputConnectedPin(NULL),
  m_rtStart(0),
  inSampleEverField1Repeat(false),
- m_NeedToPauseRun(false)
+ m_NeedToPauseRun(false),
+ searchInterfaceInGraph(NULL)
 {
  DPRINTF(_l("TffdshowDecVideo::Constructor"));
 #ifdef OSDTIMETABALE
@@ -180,6 +181,7 @@ TffdshowDecVideo::~TffdshowDecVideo()
 {
  DPRINTF(_l("TffdshowDecVideo::Destructor"));
  m_csReceive.Unlock();
+ if (searchInterfaceInGraph) delete searchInterfaceInGraph;
  for (size_t i=0;i<textpins.size();i++) delete textpins[i];
  if (fontManager) delete fontManager;
  if (inputConnectedPin != NULL)
@@ -1396,6 +1398,7 @@ HRESULT TffdshowDecVideo::NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,
  return TffdshowDec::NewSegment(tStart,tStop,dRate);
 }
 
+// not used. compatibitliy for IffdshowDecVideo
 STDMETHODIMP TffdshowDecVideo::findOverlayControl(IMixerPinConfig2* *overlayPtr)
 {
  if (!overlayPtr) return E_POINTER;
@@ -1437,7 +1440,9 @@ STDMETHODIMP TffdshowDecVideo::findOverlayControl2(IhwOverlayControl* *overlayPt
  if (m_pGraph)
   {
    comptr<IMixerPinConfig2> overlay;
-   if (searchPinInterface(m_pGraph,IID_IMixerPinConfig2,(IUnknown**)&overlay) && overlay)
+   if (!searchInterfaceInGraph)
+    searchInterfaceInGraph = new TsearchInterfaceInGraph(m_pGraph, IID_IMixerPinConfig2, searchPinInterface);
+   if (searchInterfaceInGraph && searchInterfaceInGraph->getResult((IUnknown**)&overlay) && overlay)
     {
      (*overlayPtr=new ThwOverlayControlOverlay(overlay))->AddRef();
      return S_OK;
@@ -1450,6 +1455,10 @@ STDMETHODIMP TffdshowDecVideo::findOverlayControl2(IhwOverlayControl* *overlayPt
        (*overlayPtr=new ThwOverlayControlVMR9(vmr9comp.vmr9,vmr9comp.id))->AddRef();
        return S_OK;
       }
+    }
+   if (searchInterfaceInGraph && !searchInterfaceInGraph->waitSucceeded())
+    {
+     return E_FAIL;
     }
   }
  (*overlayPtr=new ThwOverlayControlBase)->AddRef();

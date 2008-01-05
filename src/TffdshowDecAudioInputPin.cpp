@@ -87,11 +87,14 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
  if (this!=filter->inpin)
   return S_FALSE;
 
+ CAutoLock cAutoLock(&m_csReceive);
+
+ if (filter->IsStopped())
+  return S_FALSE;
+
  HRESULT hr=TinputPin::Receive(pIn);
  if (hr!=S_OK)
   return hr;
-
- CAutoLock cAutoLock(&m_csReceive);
 
  AM_SAMPLE2_PROPERTIES* const pProps=SampleProps();
  if (pProps->dwStreamId!=AM_STREAM_MEDIA)

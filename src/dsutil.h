@@ -104,4 +104,35 @@ public:
  size_t size;
 };
 
+class TsearchInterfaceInGraph
+{
+// IFilterGraph::EnumFilters can freeze if it is called from streaming thread.
+// This class is work around for it.
+// Create a thread to execute IFilterGraph::EnumFilters and if it seems to be freezing, skip it.
+// So return value is not always correct. Check waitSucceeded().
+// In case of freezes, the thread is likely to return until next sample is delivered.
+private:
+ IFilterGraph *graph;
+ IID iid;
+ IUnknown *dest;
+ HANDLE hThread;
+ DWORD waitResult;
+ static unsigned int __stdcall searchFilterInterfaceThreadEntry(void *self);
+ bool (*searchInterfaceFunc)(IFilterGraph *graph,const IID &iid,IUnknown **dest);
+public:
+ TsearchInterfaceInGraph(IFilterGraph *Igraph,const IID &Iiid,bool (*IsearchInterfaceFunc)(IFilterGraph *graph,const IID &iid,IUnknown **dest)):
+   graph(Igraph),
+   iid(Iiid),
+   hThread(NULL),
+   searchInterfaceFunc(IsearchInterfaceFunc)
+  {
+  }
+ ~TsearchInterfaceInGraph();
+ bool getResult(IUnknown* *Idest);
+ bool waitSucceeded(void)
+  {
+   return waitResult == WAIT_OBJECT_0;
+  }
+};
+
 #endif

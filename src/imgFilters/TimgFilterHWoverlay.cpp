@@ -44,8 +44,8 @@ HRESULT TimgFilterHWoverlay::process(TfilterQueue::iterator it,TffPict &pict,con
   {
    if (cfg->is && firsttimeOverlay)
     {
-     firsttimeOverlay=false;
-     deciV->findOverlayControl2(&overlayControl);
+     if (SUCCEEDED(deciV->findOverlayControl2(&overlayControl)))
+      firsttimeOverlay=false;
     }
    if (overlayControl)
     {

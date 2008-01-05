@@ -3,6 +3,7 @@
 
 #include "TaudioFilter.h"
 #include "TOSDprovider.h"
+#include "dsutil.h"
 
 struct TOSDsettingsAudio;
 class TaudioFilterOSD : public TaudioFilter,public TOSDprovider
@@ -12,6 +13,7 @@ private:
  int outsfs;
  clock_t lasttime;IffdshowDecVideo *registered;
  void unregister(void);
+ TsearchInterfaceInGraph* sfi;
 protected:
  virtual bool is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg);
  virtual int getSupportedFormats(const TfilterSettingsAudio *cfg,bool *honourPreferred,const TsampleFormat &sf) const {*honourPreferred=false;return TsampleFormat::SF_ALL;}

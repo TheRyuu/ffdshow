@@ -452,3 +452,44 @@ void Textradata::set(const TdataSize &dataSize,unsigned int padding,bool Iown)
    size=dataSize.second;
   }
 }
+
+//==================================== TsearchInterfaceInGraph ========================================
+unsigned int __stdcall TsearchInterfaceInGraph::searchFilterInterfaceThreadEntry(void *self0)
+{
+ TsearchInterfaceInGraph *self = (TsearchInterfaceInGraph*)self0;
+ return (unsigned int)self->searchInterfaceFunc(self->graph,self->iid,&(self->dest));
+}
+
+bool TsearchInterfaceInGraph::getResult(IUnknown* *Idest)
+{
+ if (!hThread)
+  {
+   hThread = (HANDLE)_beginthreadex(NULL,0,searchFilterInterfaceThreadEntry,this,0,NULL);
+  }
+ if (hThread)
+  {
+   waitResult = WaitForSingleObject(hThread, 100);
+   if (waitResult == WAIT_OBJECT_0)
+    {
+     DWORD retval;
+     if (GetExitCodeThread(hThread, &retval) && retval)
+      {
+       *Idest=dest;
+       CloseHandle(hThread);
+       hThread = NULL;
+       return true;
+      }
+    }
+  }
+ return false;
+}
+
+TsearchInterfaceInGraph::~TsearchInterfaceInGraph()
+{
+ if (hThread)
+  {
+   WaitForSingleObject(hThread, INFINITE);
+   CloseHandle(hThread);
+   hThread = NULL;
+  }
+}

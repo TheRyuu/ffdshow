@@ -20,6 +20,8 @@ class TtextInputPin;
 class TpresetsVideo;
 class TffdshowVideoInputPin;
 class TffdshowDecVideoOutputPin;
+class TsearchInterfaceInGraph;
+
 class TffdshowDecVideo :public TffdshowDec,
                         public TffdshowVideo,
                         public interfaces<char_t>::IffdshowDecVideo,
@@ -560,6 +562,7 @@ private:
  bool inSampleEverField1Repeat;
  REFERENCE_TIME m_rtStart;
  HRESULT checkAllowOutChange(IPin *pPin);
+ TsearchInterfaceInGraph *searchInterfaceInGraph;
 public:
  enum DOWNSTREAM_FILTER_TYPE
   {
