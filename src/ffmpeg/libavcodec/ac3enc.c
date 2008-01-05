@@ -748,7 +748,7 @@ static void output_frame_header(AC3EncodeContext *s, unsigned char *frame)
     put_bits(&s->pb, 1, 1); /* original bitstream */
     put_bits(&s->pb, 1, 0); /* no time code 1 */
     put_bits(&s->pb, 1, 0); /* no time code 2 */
-    put_bits(&s->pb, 1, 0); /* no addtional bit stream info */
+    put_bits(&s->pb, 1, 0); /* no additional bit stream info */
 }
 
 /* symetric quantization on 'levels' levels */
@@ -1142,13 +1142,16 @@ static int output_frame_end(AC3EncodeContext *s)
     /* Now we must compute both crcs : this is not so easy for crc1
        because it is at the beginning of the data... */
     frame_size_58 = (frame_size >> 1) + (frame_size >> 3);
-    crc1 = bswap_16(av_crc(av_crc8005, 0, frame + 4, 2 * frame_size_58 - 4));
+    crc1 = bswap_16(av_crc(av_crc_get_table(AV_CRC_16_ANSI), 0,
+                           frame + 4, 2 * frame_size_58 - 4));
     /* XXX: could precompute crc_inv */
     crc_inv = pow_poly((CRC16_POLY >> 1), (16 * frame_size_58) - 16, CRC16_POLY);
     crc1 = mul_poly(crc_inv, crc1, CRC16_POLY);
     AV_WB16(frame+2,crc1);
 
-    crc2 = bswap_16(av_crc(av_crc8005, 0, frame + 2 * frame_size_58, (frame_size - frame_size_58) * 2 - 2));
+    crc2 = bswap_16(av_crc(av_crc_get_table(AV_CRC_16_ANSI), 0,
+                           frame + 2 * frame_size_58,
+                           (frame_size - frame_size_58) * 2 - 2));
     AV_WB16(frame+2*frame_size-2,crc2);
 
     //    printf("n=%d frame_size=%d\n", n, frame_size);

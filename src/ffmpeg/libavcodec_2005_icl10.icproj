@@ -513,6 +513,8 @@
 		<File 
 			RelativePath=".\libavutil\crc.h"/>
 		<File 
+			RelativePath=".\libavutil\crc_data.h"/>
+		<File 
 			RelativePath=".\libavutil\internal.h"/>
 		<File 
 			RelativePath=".\libavutil\intreadwrite.h"/>

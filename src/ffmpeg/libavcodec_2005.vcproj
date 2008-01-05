@@ -1599,6 +1599,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavutil\crc_data.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavutil\internal.h"
 				>
 			</File>
