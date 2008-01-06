@@ -220,5 +220,7 @@ bool TvideoCodecLibmpeg2::onSeek(REFERENCE_TIME segmentStart)
  if (extradata && extradata->data)
   mpeg2_buffer(mpeg2dec,extradata->data,extradata->data+extradata->size);
  oldpict.rtStop=0;
+ if (ccDecoder)
+  ccDecoder->onSeek();
  return true;
 }

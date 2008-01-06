@@ -770,6 +770,19 @@ void TccDecoder::cc_hide_displayed(void)
  cc_renderer.deciV->hideClosedCaptions();
 }
 
+void TccDecoder::onSeek(void)
+{
+ capid = 0;
+ lastcode = 0;
+ pts = 0;
+ f_offset = 0;
+ buffer[0].ccmem_clear();
+ buffer[1].ccmem_clear();
+ this->on_buf = &this->buffer[0];
+ this->off_buf = &this->buffer[1];
+ this->active = &this->off_buf;
+}
+
 TccDecoder::TccDecoder(IffdshowDecVideo *deciV):
  capid(0),
  lastcode(0),

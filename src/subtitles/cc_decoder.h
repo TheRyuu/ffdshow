@@ -104,6 +104,7 @@ private:
 public:
  TccDecoder(IffdshowDecVideo *deciV);
  void decode(const uint8_t *buffer,size_t buf_len);
+ void onSeek(void);
 };
 
 #endif

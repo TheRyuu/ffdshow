@@ -499,6 +499,7 @@ bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
  wasKey=false;
  segmentTimeStart=segmentStart;
  posB=1;b[0].rtStart=b[1].rtStart=b[0].rtStop=b[0].rtStop=0;b[0].srcSize=b[1].srcSize=0;
+ if (ccDecoder) ccDecoder->onSeek();
  return avctx?(libavcodec->avcodec_flush_buffers(avctx),true):false;
 }
 bool TvideoCodecLibavcodec::onDiscontinuity(void)
