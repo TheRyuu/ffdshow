@@ -40,7 +40,7 @@ protected:
  virtual void reg_op(TregOp &t);
  virtual int getDefault(int id);
 public:
- TpresetVideo(const char_t *Ireg_child,const char_t *IpresetName);
+ TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, int filtermode);
  virtual ~TpresetVideo() {}
  TpresetVideo& operator=(const TpresetVideo &src)
   {
@@ -107,7 +107,7 @@ public:
 class TpresetVideoPlayer : public TpresetVideo
 {
 public:
- TpresetVideoPlayer(const char_t *Ireg_child,const char_t *IpresetName);
+ TpresetVideoPlayer(const char_t *Ireg_child,const char_t *IpresetName, int filtermode);
  virtual Tpreset* copy(void) {return new_copy(this);}
 };
 

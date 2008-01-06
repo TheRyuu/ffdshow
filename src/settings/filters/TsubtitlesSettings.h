@@ -13,7 +13,7 @@ private:
 protected:
  virtual const int *getResets(unsigned int pageId);
 public:
- TsubtitlesSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
+ TsubtitlesSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL, int filtermode=0);
  virtual void copy(const TfilterSettings *src);
 
  char_t flnm[MAX_PATH],tempflnm[MAX_PATH];
@@ -49,6 +49,7 @@ public:
  int opacity;
  int splitBorder;
  int cc;
+ int filtermode;
  static const int delayDef=0,speedDef=1000;
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;
  virtual void createPages(TffdshowPageDec *parent) const;

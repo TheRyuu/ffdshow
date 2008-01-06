@@ -74,7 +74,7 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
              className,punk,Iclsid,
              globalSettings=new TglobalSettingsDecVideo(&config,Imode,Ioptions),
              dialogSettings=new TdialogSettingsDecVideo(Imode&IDFF_FILTERMODE_VFW?true:false,Ioptions),
-             presets=Imode&IDFF_FILTERMODE_PROC?(TpresetsVideo*)new TpresetsVideoProc:(Imode&IDFF_FILTERMODE_VFW?(TpresetsVideo*)new TpresetsVideoVFW:(TpresetsVideo*)new TpresetsVideoPlayer),
+             presets=Imode&IDFF_FILTERMODE_PROC?(TpresetsVideo*)new TpresetsVideoProc(Imode):(Imode&IDFF_FILTERMODE_VFW?(TpresetsVideo*)new TpresetsVideoVFW(Imode):(TpresetsVideo*)new TpresetsVideoPlayer(Imode)),
              (Tpreset*&)presetSettings,
              this,
              (TinputPin*&)inpin,
@@ -339,7 +339,7 @@ HRESULT TffdshowDecVideo::GetMediaType(int iPosition, CMediaType *mtOut)
    VIDEOINFOHEADER2 *vih2=(VIDEOINFOHEADER2*)mtOut->ReallocFormatBuffer(sizeof(VIDEOINFOHEADER2));
    if (!vih2) return E_OUTOFMEMORY;
    ZeroMemory(vih2,sizeof(VIDEOINFOHEADER2));
-   if((presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0) || hwOverlay0==0)
+   if((presetSettings->resize && presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0) || hwOverlay0==0)
     {
      pictOut.rectFull.sar.num= 1;//pictOut.rectFull.dx; // VMR9 behaves better when this is set to 1(SAR). But in reconnectOutput, it is different(DAR) in my system.
      pictOut.rectFull.sar.den= 1;//pictOut.rectFull.dy;
@@ -1576,7 +1576,7 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
        vih->dwPictAspectRatioY=newdy;
        vih->dwControlFlags=0;
       }
-     if(presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0)
+     if(presetSettings->resize && presetSettings->resize->is && presetSettings->resize->SARinternally && presetSettings->resize->mode==0)
       {
        vih->dwPictAspectRatioX= newpict.rectFull.dx;
        vih->dwPictAspectRatioY= newpict.rectFull.dy;

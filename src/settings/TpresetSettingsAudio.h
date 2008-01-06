@@ -20,7 +20,7 @@ struct ToutputAudioSettings;
 struct TpresetAudio :public Tpreset
 {
 public:
- TpresetAudio(const char_t *IpresetName,const char_t *Ireg_child);
+ TpresetAudio(const char_t *IpresetName, const char_t *Ireg_child, int filtermode=0);
  virtual ~TpresetAudio() {}
  TpresetAudio& operator=(const TpresetAudio &src)
   {

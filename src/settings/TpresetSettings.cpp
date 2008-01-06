@@ -225,10 +225,11 @@ const char_t* Tpreset::TautoPresetItem::getList(IffdshowDec *deciD,unsigned int 
 }
 
 //================================ Tpreset ================================
-Tpreset::Tpreset(const char_t *Ireg_child,const char_t *IpresetName,int Imin_order):
+Tpreset::Tpreset(const char_t *Ireg_child, const char_t *IpresetName, int Imin_order, int Ifiltermode):
  Toptions(options=new TintStrColl),
  reg_child(Ireg_child),
  min_order(Imin_order),
+ filtermode(Ifiltermode),
  filters(new TfilterIDFFs(Imin_order))
 {
  memset(presetName,0,sizeof(presetName));

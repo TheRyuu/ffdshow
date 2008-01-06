@@ -76,8 +76,8 @@ bool TaudioAutoPresetProps::freqMatch(const char_t *expr,const char_t *)
 }
 
 //============================== TpresetAudio =============================
-TpresetAudio::TpresetAudio(const char_t *IpresetName,const char_t *Ireg_child):
- Tpreset(Ireg_child,IpresetName,0)
+TpresetAudio::TpresetAudio(const char_t *IpresetName,const char_t *Ireg_child,int filtermode):
+ Tpreset(Ireg_child,IpresetName,0,filtermode)
 {
  static const TintOptionT<TpresetAudio> iopts[]=
   {

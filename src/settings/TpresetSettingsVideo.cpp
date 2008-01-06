@@ -240,8 +240,8 @@ bool TvideoAutoPresetProps::fpsMatch(const char_t *expr,const char_t *)
 }
 
 //============================== TpresetVideo =============================
-TpresetVideo::TpresetVideo(const char_t *Ireg_child,const char_t *IpresetName):
- Tpreset(Ireg_child,IpresetName,-1)
+TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, int filtermode):
+ Tpreset(Ireg_child,IpresetName,-1,filtermode)
 {
  static const TintOptionT<TpresetVideo> iopts[]=
   {
@@ -364,28 +364,37 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child,const char_t *IpresetName):
   };
  addAutoPresetItems(autoPresetItems);
 
- new TcropSettings(options,filters);
- new TdeinterlaceSettings(options,filters);
- new TlogoawaySettings(options,filters);
- postproc=new TpostprocSettings(options,filters);
- new TpictPropSettings(options,filters);
- new TgradFunSettings(options,filters);
- levels=new TlevelsSettings(options,filters);
- new ToffsetSettings(options,filters);
- new TblurSettings(options,filters);
- new TsharpenSettings(options,filters);
- new TwarpsharpSettings(options,filters);
- new TDScalerFilterSettings(options,filters);
- new TnoiseSettings(options,filters);
- resize=new TresizeAspectSettings(options,filters);
- new TperspectiveSettings(options,filters);
- new TavisynthSettings(options,filters);
- vis=new TvisSettings(options,filters);
- new TdctSettings(options,filters);
- new TbitmapSettings(options,filters);
- subtitles=new TsubtitlesSettings(options,filters);
- grab=new TgrabSettings(options,filters);
- output=new ToutputVideoSettings(options,filters);
+ if (!(filtermode & IDFF_FILTERMODE_VIDEOSUBTITLES))
+  {
+   new TcropSettings(options,filters);
+   new TdeinterlaceSettings(options,filters);
+   new TlogoawaySettings(options,filters);
+   postproc=new TpostprocSettings(options,filters);
+   new TpictPropSettings(options,filters);
+   new TgradFunSettings(options,filters);
+   levels=new TlevelsSettings(options,filters);
+   new ToffsetSettings(options,filters);
+   new TblurSettings(options,filters);
+   new TsharpenSettings(options,filters);
+   new TwarpsharpSettings(options,filters);
+   new TDScalerFilterSettings(options,filters);
+   new TnoiseSettings(options,filters);
+   resize=new TresizeAspectSettings(options,filters);
+   new TperspectiveSettings(options,filters);
+   new TavisynthSettings(options,filters);
+   vis=new TvisSettings(options,filters);
+   new TdctSettings(options,filters);
+   new TbitmapSettings(options,filters);
+   subtitles=new TsubtitlesSettings(options,filters,filtermode);
+   grab=new TgrabSettings(options,filters);
+   output=new ToutputVideoSettings(options,filters);
+  }
+ else
+  {
+   postproc=NULL;levels=NULL;resize=NULL;vis=NULL;grab=NULL;
+   subtitles=new TsubtitlesSettings(options,filters,filtermode);
+   output=new ToutputVideoSettings(options,filters);
+  }
 }
 
 void TpresetVideo::reg_op(TregOp &t)
@@ -433,7 +442,8 @@ bool TpresetVideo::autoloadSizeMatch(int AVIdx,int AVIdy) const
 }
 
 //=========================== TpresetVideoPlayer ==========================
-TpresetVideoPlayer::TpresetVideoPlayer(const char_t *Ireg_child, const char_t *IpresetName):TpresetVideo(Ireg_child,IpresetName)
+TpresetVideoPlayer::TpresetVideoPlayer(const char_t *Ireg_child, const char_t *IpresetName, int filtermode):TpresetVideo(Ireg_child, IpresetName, filtermode)
 {
+ if (!(filtermode & IDFF_FILTERMODE_VIDEOSUBTITLES))
  new ThwOverlaySettings(options,filters);
 }

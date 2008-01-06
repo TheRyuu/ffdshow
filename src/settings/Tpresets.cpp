@@ -220,13 +220,13 @@ Tpreset* TpresetsVideo::getAutoPreset(IffdshowBase *deci,bool filefirst)
 }
 Tpreset* TpresetsVideo::newPreset(const char_t *presetName)
 {
- return new TpresetVideo(reg_child,presetName?presetName:FFPRESET_DEFAULT);
+ return new TpresetVideo(reg_child,presetName?presetName:FFPRESET_DEFAULT, filtermode);
 }
 
 //======================================= TpresetsVideo =======================================
 Tpreset* TpresetsVideoPlayer::newPreset(const char_t *presetName)
 {
- return new TpresetVideoPlayer(reg_child,presetName?presetName:FFPRESET_DEFAULT);
+ return new TpresetVideoPlayer(reg_child,presetName?presetName:FFPRESET_DEFAULT, filtermode);
 }
 
 //======================================= TpresetsAudio =======================================

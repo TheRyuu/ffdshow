@@ -493,7 +493,7 @@ STDMETHODIMP TffdshowDecVideo::getConnectedTextPinInfo(int i,const char_t* *name
 STDMETHODIMP TffdshowDecVideo::getLevelsMap(unsigned int map[256])
 {
  if (!map) return E_POINTER;
- if (!presetSettings) return E_FAIL;
+ if (!presetSettings || !presetSettings->levels) return E_FAIL;
  int divisor;
  presetSettings->levels->calcMap(map,&divisor);
  return S_OK;

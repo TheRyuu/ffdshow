@@ -612,7 +612,7 @@ const TfilterIDFF TsubtitlesSettings::idffs=
  /*dlgId*/     IDD_SUBTITLES,
 };
 
-TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSettingsVideo(sizeof(*this),Icoll,filters,&idffs),font(Icoll)
+TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters, int Ifiltermode):TfilterSettingsVideo(sizeof(*this),Icoll,filters,&idffs),font(Icoll),filtermode(Ifiltermode)
 {
  deepcopy=true;
  memset(flnm,0,sizeof(flnm));

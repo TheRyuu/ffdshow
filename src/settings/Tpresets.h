@@ -36,9 +36,10 @@ struct TvideoAutoPresetProps;
 class TpresetsVideo :public Tpresets
 {
 protected:
- TpresetsVideo(const char_t *Ireg_child):Tpresets(Ireg_child,_l("ffpreset")) {}
+ int filtermode;
+ TpresetsVideo(const char_t *Ireg_child, int mode):Tpresets(Ireg_child,_l("ffpreset")) {filtermode=mode;}
 public:
- virtual Tpresets* newPresets(void) {return new TpresetsVideo(reg_child);}
+ virtual Tpresets* newPresets(void) {return new TpresetsVideo(reg_child, filtermode);}
  virtual Tpreset* getAutoPreset(IffdshowBase *deci,bool filefirst);
  virtual Tpreset* newPreset(const char_t *presetName=NULL);
 };
@@ -46,15 +47,15 @@ public:
 class TpresetsVideoProc :public TpresetsVideo
 {
 public:
- TpresetsVideoProc(void):TpresetsVideo(FFDSHOWDECVIDEO) {}
- virtual Tpresets* newPresets(void) {return new TpresetsVideoProc;}
+ TpresetsVideoProc(int mode):TpresetsVideo(FFDSHOWDECVIDEO, mode) {}
+ virtual Tpresets* newPresets(void) {return new TpresetsVideoProc(filtermode);}
 };
 
 class TpresetsVideoPlayer :public TpresetsVideo
 {
 public:
- TpresetsVideoPlayer(void):TpresetsVideo(FFDSHOWDECVIDEO) {}
- virtual Tpresets* newPresets(void) {return new TpresetsVideoPlayer;}
+ TpresetsVideoPlayer(int mode):TpresetsVideo(FFDSHOWDECVIDEO, mode) {}
+ virtual Tpresets* newPresets(void) {return new TpresetsVideoPlayer(filtermode);}
  virtual Tpreset* newPreset(const char_t *presetName=NULL);
 };
 
@@ -62,8 +63,8 @@ public:
 class TpresetsVideoVFW :public TpresetsVideo
 {
 public:
- TpresetsVideoVFW(void):TpresetsVideo(FFDSHOWDECVIDEOVFW) {}
- virtual Tpresets* newPresets(void) {return new TpresetsVideoVFW;}
+ TpresetsVideoVFW(int mode):TpresetsVideo(FFDSHOWDECVIDEOVFW, mode) {}
+ virtual Tpresets* newPresets(void) {return new TpresetsVideoVFW(filtermode);}
 };
 
 struct TaudioAutoPresetProps;

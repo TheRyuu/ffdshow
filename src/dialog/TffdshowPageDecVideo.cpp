@@ -108,6 +108,8 @@ void TffdshowPageDecVideo::onActivate(void)
     addTI(&tvis,new TcodecsPageVideo(this));
    if ((filterMode&IDFF_FILTERMODE_VFW)==0)
     {
+     if ((filterMode & IDFF_FILTERMODE_VIDEOSUBTITLES)==0)
+      {
        addTI(&tvis,new TdirectshowControlPageDec(this))->hti;
        HTREEITEM htiInfo=addTI(&tvis,new TinfoPageDecVideo(this))->hti;
        tvis.hParent=htiInfo;
@@ -117,6 +119,8 @@ void TffdshowPageDecVideo::onActivate(void)
        TreeView_Expand(htv,htiOSD,TVE_EXPAND);
        tvis.hParent=NULL;
        TreeView_Expand(htv,htiInfo,TVE_EXPAND);
+      }
+
      HTREEITEM htiMisc=addTI(&tvis,new TdlgMiscPage(this))->hti;
      tvis.hParent=htiMisc;
      addTI(&tvis,new TkeysPage(this));
@@ -127,9 +131,11 @@ void TffdshowPageDecVideo::onActivate(void)
  tvis.hParent=NULL;
  htiPresets=addTI(&tvis,new TpresetsPageVideo(this))->hti;
  tvis.hParent=htiPresets;
+ if ((filterMode & IDFF_FILTERMODE_VIDEOSUBTITLES)==0)
   htiBeforeShowHide=addTI(&tvis,new ThideShowPage(this,filterPages))->hti;
  if ((filterMode&IDFF_FILTERMODE_PROC)==0)
   {
+   if ((filterMode&IDFF_FILTERMODE_VIDEOSUBTITLES)==0)
     addTI(&tvis,new TmiscPage(this));
    addTI(&tvis,new TqueuePage(this));
    addTI(&tvis,new ToutcspsPage(this));
