@@ -16,15 +16,13 @@ private:
  void free(void);
  Tbuffer own1;
  Tbuffer own2;
+ Tbuffer own3;
  Tconvert *convert1,*convert2;
  bool getCur(int csp,TffPict &pict,int full,const unsigned char **src[4]);
  bool getNext(int csp,TffPict &pict,int full,unsigned char **dst[4],const Trect *rect2=NULL);
  bool getNext(int csp,TffPict &pict,const Trect &clipRect,unsigned char **dst[4],const Trect *rect2=NULL);
- bool getCurNext(int csp,TffPict &pict,int full,int copy,unsigned char **dst[4]);
-#if 0
- Tbuffer own3;
- bool getCurNext3(int csp,TffPict &pict,int full,int copy,unsigned char **dst[4]);
-#endif
+ bool getCurNext(int csp,TffPict &pict,int full,int copy,unsigned char **dst[4],Tbuffer &buf);
+
  int pictHalf;
 protected:
  Trect pictRect;
@@ -79,20 +77,18 @@ protected:
  bool getCurNext(int csp,TffPict &pict,int full,int copy,unsigned char **dst0,unsigned char **dst1,unsigned char **dst2,unsigned char **dst3)
   {
    unsigned char **dst[4]={dst0,dst1,dst2,dst3};
-   return getCurNext(csp,pict,full,copy,dst);
+   return getCurNext(csp,pict,full,copy,dst,own2);
   }
  bool getCurNext(int csp,TffPict &pict,int full,int copy,unsigned char *dst[4])
   {
    unsigned char **dstP[4]={&dst[0],&dst[1],&dst[2],&dst[3]};
-   return getCurNext(csp,pict,full,copy,dstP);
+   return getCurNext(csp,pict,full,copy,dstP,own2);
   }
-#if 0
  bool getCurNext3(int csp,TffPict &pict,int full,int copy,unsigned char *dst[4])
   {
    unsigned char **dstP[4]={&dst[0],&dst[1],&dst[2],&dst[3]};
-   return getCurNext3(csp,pict,full,copy,dstP);
+   return getCurNext(csp,pict,full,copy,dstP,own3);
   }
-#endif
  bool screenToPict(CPoint &pt);
 public:
  TimgFilter(IffdshowBase *Ideci,Tfilters *Iparent);
