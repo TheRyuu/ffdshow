@@ -117,8 +117,7 @@
 #endif
 
 // Use rip-relative addressing if compiling PIC code on x86-64.
-#if defined(__MINGW32__) || defined(__CYGWIN__) || defined(__DJGPP__) || \
-    defined(__OS2__) || (defined (__OpenBSD__) && !defined(__ELF__))
+#if defined(__MINGW32__) || defined(__CYGWIN__)
 #    if defined(ARCH_X86_64) && defined(PIC)
 #        define MANGLE(a) "_" #a"(%%rip)"
 #    else
@@ -127,8 +126,6 @@
 #else
 #    if defined(ARCH_X86_64) && defined(PIC)
 #        define MANGLE(a) #a"(%%rip)"
-#    elif defined(__APPLE__)
-#        define MANGLE(a) "_" #a
 #    else
 #        define MANGLE(a) #a
 #    endif
@@ -149,7 +146,7 @@
 #       define dprintf(pctx, ...)
 #   endif
 #else
-#   define dprintf(pctx, ...)
+#   define dprintf(pctx)
 #endif
 
 #define av_abort()      do { av_log(NULL, AV_LOG_ERROR, "Abort at %s:%d\n", __FILE__, __LINE__); abort(); } while (0)
