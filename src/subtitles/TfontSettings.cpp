@@ -113,8 +113,8 @@ void TfontSettings::getDefaultStr(int id,char_t *buf,size_t buflen)
 {
  if (id==IDFF_OSDfontName || id==IDFF_fontName)
   {
-   char_t *locale=_tsetlocale(LC_ALL,_l(""));
-   if (strcmp(locale,_l("Japanese_Japan.932"))==0)
+   LCID lcid = GetUserDefaultLCID();
+   if (lcid == 1041 /* Japanese */)
     { // Arial does not have Japanese characters.
 #ifdef UNICODE
      // I just want to avoid typing kanji directly for encoding reason. GCC does not compile UNICODE source file.
