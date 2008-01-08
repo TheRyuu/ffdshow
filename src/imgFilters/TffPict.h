@@ -88,7 +88,7 @@ class Tconvert;
 struct TffPict :TffPictBase
 {
 private:
- void clear(const Trect &r,unsigned int plane);
+ void clear(const Trect &r, unsigned int plane, int brightness=0, int blackcutoff=0);
  static void asm_BitBlt_MMX(BYTE* dstp, stride_t dst_pitch, const BYTE* srcp, stride_t src_pitch, int row_size, int height);
  static void asm_BitBlt_C(BYTE* dstp, stride_t dst_pitch, const BYTE* srcp, stride_t src_pitch, int row_size, int height);
  void copyRect(const TffPict &src,const Trect &r,unsigned int plane);
@@ -122,8 +122,9 @@ public:
 
  static const unsigned int PLANE_ALL=UINT_MAX;
  void clear(int full,unsigned int plane=PLANE_ALL);
+ void clear(int Bpp,unsigned int black,unsigned char *dst,stride_t stride,unsigned int row_size,unsigned int height,int brightness, int blackcutoff);
  static void clear(int Bpp,unsigned int black,unsigned char *dst,stride_t stride,unsigned int row_size,unsigned int height);
- void clearBorder(void);
+ void clearBorder(int brightness, int blackcutoff);
  void copyBorder(const TffPict &src,unsigned int plane);
  void histogram(unsigned int histogram[256],int full,int half) const;
  void copyFrom(const TffPict &p,Tbuffer &buf,const Trect *rectCopy=NULL);

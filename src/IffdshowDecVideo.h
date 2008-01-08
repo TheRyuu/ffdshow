@@ -105,6 +105,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
  STDMETHOD (lockCSReceive)(void) PURE;
  STDMETHOD (unlockCSReceive)(void) PURE;
  STDMETHOD_(ToutputVideoSettings*,getToutputVideoSettings)(void) PURE;
+ STDMETHOD_(int,getBordersBrightness)(void) PURE;
 };
 
 struct IffdshowDecVideoA :IffdshowDecVideoT<char> {};

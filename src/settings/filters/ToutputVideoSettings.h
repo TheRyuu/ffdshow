@@ -20,6 +20,8 @@ public:
  int get_cspOptionsBlackCutoff() const;
  int get_cspOptionsWhiteCutoff() const;
  int get_cspOptionsChromaCutoff() const;
+ int brightness2luma(int brightness) const;
+ // int luma2brightness(int luma) const;
  static int get_cspOptionsChromaCutoffStatic(int blackCutoff, int whiteCutoff, int chromaCutoff, int lock);
  static const char_t *dvNorms[];
  static const char_t *deintMethods[];

@@ -235,10 +235,10 @@ TffPict::TffPict(int Icsp,const char_t *flnm,Tbuffer &buf,IffdshowBase *deci)
   readOle(Icsp,flnm,ext,buf,deci);
 }
 
-void TffPict::clear(const Trect &r,unsigned int plane)
+void TffPict::clear(const Trect &r, unsigned int plane, int brightness, int brightnessY)
 {
  if (r.dx!=0 && r.dy!=0 && !ro[plane])
-  clear(cspInfo.Bpp,cspInfo.black[plane],data[plane]+r.y*stride[plane]+cspInfo.Bpp*r.x,stride[plane],cspInfo.Bpp*r.dx,r.dy);
+  clear(cspInfo.Bpp, cspInfo.black[plane], data[plane] + r.y * stride[plane] + cspInfo.Bpp*r.x, stride[plane], cspInfo.Bpp * r.dx, r.dy, brightness, brightnessY);
 }
 void TffPict::clear(int full,unsigned int plane)
 {
@@ -247,7 +247,7 @@ void TffPict::clear(int full,unsigned int plane)
   if (plane==PLANE_ALL || i==plane)
    clear(Trect(r.x>>cspInfo.shiftX[i],r.y>>cspInfo.shiftY[i],r.dx>>cspInfo.shiftX[i],r.dy>>cspInfo.shiftY[i]),i);
 }
-void TffPict::clearBorder(void)
+void TffPict::clearBorder(int brightness, int brightnessY)
 {
  if (rectFull==rectClip) return;
  for (unsigned int i=0;i<cspInfo.numPlanes;i++)
@@ -255,10 +255,10 @@ void TffPict::clearBorder(void)
    const int rectFulldx=rectFull.dx>>cspInfo.shiftX[i],rectFulldy=rectFull.dy>>cspInfo.shiftY[i];
    const int rectClipx =rectClip.x >>cspInfo.shiftX[i],rectClipy =rectClip.y >>cspInfo.shiftY[i];
    const int rectClipdx=rectClip.dx>>cspInfo.shiftX[i],rectClipdy=rectClip.dy>>cspInfo.shiftY[i];
-   clear(Trect(0,0,rectFulldx,rectClipy),i);
-   clear(Trect(0,rectClipy+rectClipdy,rectFulldx,rectFulldy-(rectClipy+rectClipdy)),i);
-   clear(Trect(0,rectClipy,rectClipx,rectClipdy),i);
-   clear(Trect(rectClipx+rectClipdx,rectClipy,rectFulldx-(rectClipx+rectClipdx),rectClipdy),i);
+   clear(Trect(0, 0, rectFulldx, rectClipy),i, brightness, brightnessY);
+   clear(Trect(0, rectClipy + rectClipdy, rectFulldx, rectFulldy - (rectClipy + rectClipdy)), i, brightness, brightnessY);
+   clear(Trect(0, rectClipy, rectClipx, rectClipdy), i, brightness, brightnessY);
+   clear(Trect(rectClipx+rectClipdx, rectClipy, rectFulldx - (rectClipx + rectClipdx), rectClipdy),i, brightness, brightnessY);
   }
 }
 void TffPict::copyBorder(const TffPict &src,unsigned int plane)
@@ -462,6 +462,53 @@ void TffPict::clear(int Bpp,unsigned int black,unsigned char *dst,stride_t strid
       }
     return;
    case 4:
+    for (unsigned int y=0;y<height;y++)
+     memsetd((uint32_t*)(dst+y*stride),black,row_size);
+    return;
+  }
+}
+
+void TffPict::clear(int Bpp, unsigned int black, unsigned char *dst, stride_t stride, unsigned int row_size, unsigned int height, int brightness, int brightnessY)
+{
+ switch (Bpp)
+  {
+   case 1:
+    {
+     if (black<=16)
+      {
+       if (csp_isYUV_NV(csp))
+        black = brightnessY;
+       else
+        black = brightness;
+      }
+     for (unsigned int y=0;y<height;y++)
+      memset(dst+y*stride,black,row_size);
+     return;
+    }
+   case 2:
+#if 0
+     // disabled because I have no case to test.
+     if ((black & 0xff) <= 16)
+      black = (black & 0xff00) + brightness;
+     if ((black >> 8) <= 16)
+      black = (black & 0xff) + (brightness << 8);
+#endif
+    black|=black<<16;
+    for (unsigned int y=0;y<height;y++)
+     for (uint32_t *p=(uint32_t*)(dst+y*stride),*pEnd=(uint32_t*)((uint8_t*)p+(row_size&~3));p!=pEnd;p++)
+      *p=black;
+    return;
+   case 3:
+    for (unsigned int y=0;y<height;y++)
+     for (uint8_t *p=dst+y*stride,*pEnd=p+row_size;p!=pEnd;p+=3)
+      {
+       p[0]=((uint8_t*)&black)[0];
+       p[1]=((uint8_t*)&black)[1];
+       p[2]=((uint8_t*)&black)[2];
+      }
+    return;
+   case 4:
+    black = brightness + (brightness << 8) + (brightness << 16);
     for (unsigned int y=0;y<height;y++)
      memsetd((uint32_t*)(dst+y*stride),black,row_size);
     return;

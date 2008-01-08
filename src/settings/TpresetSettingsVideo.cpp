@@ -300,6 +300,9 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
      _l("isDyInterlaced"),0,
    IDFF_dyInterlaced       ,&TpresetVideo::dyInterlaced       ,0,4096,_l(""),0,
      _l("dyInterlaced"),288,
+
+   IDFF_bordersBrightness  ,&TpresetVideo::bordersBrightness  ,0,255,_l(""),1,
+     _l("bordersBrightness"),0,
    0
   };
  addOptions(iopts);

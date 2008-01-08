@@ -66,7 +66,7 @@ TimgFilterSubtitles::TimgFilterSubtitles(IffdshowBase *Ideci,Tfilters *Iparent):
  subs(Ideci),
  oldFontCfg((TfontSettingsSub*)malloc(sizeof(TfontSettingsSub))),
  oldFontCCcfg((TfontSettingsSub*)malloc(sizeof(TfontSettingsSub))),
- cc(NULL),wasCCchange(true)
+ cc(NULL),wasCCchange(true),everRGB(false)
 {
  oldFontCfg->weight=oldFontCCcfg->weight=-1;oldstereo=oldsplitborder=-1;
  AVIfps=-1;
@@ -284,6 +284,9 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
     }
   }
 
+ char_t outputfourcc[20];
+ deciV->getOutputFourcc(outputfourcc,20);
+
  if (subs || !embedded.empty())
   {
    REFERENCE_TIME frameStart=cfg->speed2*((pict.rtStart-parent->subtitleResetTime)-cfg->delay*(REF_SECOND_MULT/1000))/cfg->speed;
@@ -324,10 +327,11 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
      fontSizeChanged=false;
 
      unsigned char *dst[4];
-     char_t outputfourcc[20];
-     deciV->getOutputFourcc(outputfourcc,20);
      if (((strncmp(outputfourcc,_l("RGB"),3)==0 && !parent->isAnyActiveDownstreamFilter(it)) || pict.csp==FF_CSP_RGB32) && sub->isText())
-      getCurNext(FF_CSP_RGB32,pict,cfg->full,COPYMODE_DEF,dst);
+      {
+       getCurNext(FF_CSP_RGB32,pict,cfg->full,COPYMODE_DEF,dst);
+       everRGB = true;
+      }
      else
       getCurNext(FF_CSP_420P,pict,cfg->full,COPYMODE_DEF,dst);
      unsigned int sizeDx,sizeDy;
@@ -378,10 +382,11 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
      if (!again)
       init(pict,cfg->full,cfg->half);
      unsigned char *dst[4];
-     char_t outputfourcc[20];
-     deciV->getOutputFourcc(outputfourcc,20);
      if (((strncmp(outputfourcc,_l("RGB"),3)==0 && !parent->isAnyActiveDownstreamFilter(it)) || pict.csp==FF_CSP_RGB32))
-      getCurNext3(FF_CSP_RGB32,pict,cfg->full,COPYMODE_DEF,dst);
+      {
+       getCurNext3(FF_CSP_RGB32,pict,cfg->full,COPYMODE_DEF,dst);
+       everRGB = true;
+      }
      else
       getCurNext3(FF_CSP_420P,pict,cfg->full,COPYMODE_DEF,dst);
     #if 0
@@ -408,6 +413,13 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
     }
    csCC.Unlock();
   }
+
+ if (everRGB && pict.csp != FF_CSP_RGB32 && strncmp(outputfourcc,_l("RGB"),3)==0 && !parent->isAnyActiveDownstreamFilter(it))
+  {
+   unsigned char *dst[4];
+   getCurNext3(FF_CSP_RGB32,pict,cfg->full,COPYMODE_DEF,dst);
+  }
+
  return parent->deliverSample(++it,pict);
 }
 void TimgFilterSubtitles::onSeek(void)

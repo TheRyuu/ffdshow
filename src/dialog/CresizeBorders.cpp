@@ -28,6 +28,9 @@ void TresizeBordersPage::init(void)
  tbrSetRange(IDC_TBR_BORDER_VERT_PIXELS ,0,300,16);
  tbrSetRange(IDC_TBR_BORDER_HORIZ_DIV ,0,100,10);
  tbrSetRange(IDC_TBR_BORDER_VERT_DIV ,0,100,10);
+ tbrSetRange(IDC_TBR_BORDER_BRIGHTNESS ,0,255,10);
+
+ addHint(IDC_TBR_BORDER_BRIGHTNESS, _l("Brightness x is interpreted as RGB(x,x,x) and converted to luma using the settings in RGB conversion page, if necessary."));
 }
 
 void TresizeBordersPage::cfg2dlg(void)
@@ -63,6 +66,10 @@ void TresizeBordersPage::div2dlg(void)
  tbrSet(IDC_TBR_BORDER_VERT_DIV,y);
  setText(IDC_LBL_BORDER_TOP_NUM,_l("%i"),y);
  setText(IDC_LBL_BORDER_BOTTOM_NUM,_l("%i"),100-y);
+ int brightness;
+ brightness=cfgGet(IDFF_bordersBrightness);
+ tbrSet(IDC_TBR_BORDER_BRIGHTNESS,brightness);
+ setText(IDC_LBL_BORDER_BRIGHTNESS_NUM,_l("%i"),brightness);
 }
 
 INT_PTR TresizeBordersPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -139,6 +146,7 @@ TresizeBordersPage::TresizeBordersPage(TffdshowPageDec *Iparent,const TfilterIDF
   {
    IDC_TBR_BORDER_HORIZ_DIV,IDFF_bordersDivX,&TresizeBordersPage::div2dlg,
    IDC_TBR_BORDER_VERT_DIV,IDFF_bordersDivY,&TresizeBordersPage::div2dlg,
+   IDC_TBR_BORDER_BRIGHTNESS,IDFF_bordersBrightness,&TresizeBordersPage::div2dlg,
    0,0,NULL
   };
  bindHtracks(htbr);

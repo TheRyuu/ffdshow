@@ -394,6 +394,7 @@
 #define IDFF_bordersPixelsY      758
 #define IDFF_bordersDivX         3404
 #define IDFF_bordersDivY         3405
+#define IDFF_bordersBrightness   3487
 
 #define IDFF_isAspect            704 //0 - no aspect ratio correctio, 1 - keep original aspect, 2 - aspect ratio is set in IDFF_aspectRatio
 #define IDFF_aspectRatio         707 //aspect ratio (<<16)
@@ -1510,6 +1511,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3487
+//max:3488
 
 #endif

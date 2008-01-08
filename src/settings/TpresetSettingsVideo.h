@@ -69,6 +69,7 @@ public:
    dropDelayTime=src.dropDelayTime;
    h264skipOnDelay=src.h264skipOnDelay;
    h264skipDelayTime=src.h264skipDelayTime;
+   bordersBrightness=src.bordersBrightness;
    strncpy(useQueueOnlyInList, src.useQueueOnlyInList, 256);
 
    isDyInterlaced=src.isDyInterlaced;dyInterlaced=src.dyInterlaced;
@@ -94,6 +95,7 @@ public:
  char_t useQueueOnlyInList[256];
 
  int isDyInterlaced,dyInterlaced;
+ int bordersBrightness;
 
  TpostprocSettings *postproc;
  TsubtitlesSettings *subtitles;

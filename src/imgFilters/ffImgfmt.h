@@ -466,6 +466,10 @@ static __inline int csp_isYUV(int x)
 {
  return csp_isYUVpacked(x)|csp_isYUVplanar(x);
 }
+static __inline int csp_isYUV_NV(int x)
+{
+ return csp_isYUVpacked(x)|csp_isYUVplanar(x)|(x & FF_CSP_NV12);
+}
 static __inline int csp_isRGB_RGB(int x)
 {
  return x&FF_CSPS_MASK&FF_CSPS_MASK_RGB;

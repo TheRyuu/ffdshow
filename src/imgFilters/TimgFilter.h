@@ -24,6 +24,7 @@ private:
  bool getCurNext(int csp,TffPict &pict,int full,int copy,unsigned char **dst[4],Tbuffer &buf);
 
  int pictHalf;
+ int oldBrightness;
 protected:
  Trect pictRect;
  unsigned int dx1[4],dy1[4],dx2[4],dy2[4];

@@ -630,3 +630,8 @@ STDMETHODIMP_(ToutputVideoSettings*) TffdshowDecVideo::getToutputVideoSettings(v
 {
  return presetSettings->output;
 }
+
+STDMETHODIMP_(int) TffdshowDecVideo::getBordersBrightness(void)
+{
+ return presetSettings->bordersBrightness;
+}

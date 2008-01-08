@@ -234,3 +234,28 @@ int ToutputVideoSettings::get_cspOptionsChromaCutoffStatic(int blackCutoff, int 
   result = 1;
  return result;
 }
+
+int ToutputVideoSettings::brightness2luma(int brightness) const
+{
+ int b = get_cspOptionsBlackCutoff();
+ int w = get_cspOptionsWhiteCutoff();
+ int luma = int(0.5 + b + brightness * (w - b) / 255.0);
+ return limit(luma, 0, 255);
+}
+
+#if 0
+int ToutputVideoSettings::luma2brightness(int luma) const
+{
+ double Kr;
+ int b = get_cspOptionsBlackCutoff();
+ int w = get_cspOptionsWhiteCutoff();
+ int c = 128 - get_cspOptionsChromaCutoff();
+ if (cspOptionsIturBt == TrgbPrimaries::ITUR_BT601)
+  Kr = 0.299;
+ else
+  Kr = 0.2125;
+ int brightness = int(255.0 / (w - b) * luma + 255.0 / c * 128.0 * (1 - Kr) - (255.0 * b / (w - b) + 255.0 * 128.0 / c * (1-Kr)));
+ return limit(brightness, 0, 255);
+}
+#endif
+

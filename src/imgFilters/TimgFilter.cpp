@@ -24,8 +24,9 @@
 #include "IffdshowBase.h"
 #include "IffdshowDec.h"
 #include "IffdshowDecVideo.h"
+#include "ToutputVideoSettings.h"
 
-TimgFilter::TimgFilter(IffdshowBase *Ideci,Tfilters *Iparent):Tfilter(Ideci),parent((TimgFilters*)Iparent),deciV(Ideci)
+TimgFilter::TimgFilter(IffdshowBase *Ideci,Tfilters *Iparent):Tfilter(Ideci),parent((TimgFilters*)Iparent),deciV(Ideci),oldBrightness(-1)
 {
  csp1=csp2=FF_CSP_NULL;
  convert1=convert2=NULL;
@@ -39,7 +40,8 @@ void TimgFilter::checkBorder(TffPict &pict)
 {
  if (pict.rectFull!=pict.rectClip && parent->dirtyBorder)
   {
-   pict.clearBorder();
+   int brightness = deciV->getBordersBrightness();
+   pict.clearBorder(brightness, deciV->getToutputVideoSettings()->brightness2luma(brightness));
    parent->dirtyBorder=0;
   }
 }
@@ -156,8 +158,12 @@ bool TimgFilter::getNext(int csp,TffPict &pict,const Trect &clipRect,unsigned ch
  for (unsigned int i=0;i<pict.cspInfo.numPlanes;i++)
   if (dst[i])
    *dst[i]+=pict.diff[i];
- if (cspChanged)
-  pict.clearBorder();
+ int brightness=deciV->getBordersBrightness();
+ if (cspChanged || oldBrightness != brightness)
+  {
+   oldBrightness = brightness;
+   pict.clearBorder(brightness, deciV->getToutputVideoSettings()->brightness2luma(brightness));
+  }
  return cspChanged;
 }
 bool TimgFilter::getCurNext(int csp,TffPict &pict,int full,int copy,unsigned char **dst[4],Tbuffer &buf)

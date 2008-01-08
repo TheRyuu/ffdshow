@@ -41,6 +41,7 @@ private:
 
  TsubtitleTextBase<wchar_t> *cc;
  bool wasCCchange;
+ bool everRGB;
 protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSP_420P;}
