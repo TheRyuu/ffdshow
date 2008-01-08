@@ -1041,6 +1041,7 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
   {
    if (inpin->avgTimePerFrame==0)
     inpin->avgTimePerFrame=pict.rtStop-pict.rtStart;
+   m_rtStart = pict.rtStart + inpin->avgTimePerFrame;
   }
  else
   {
