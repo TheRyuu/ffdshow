@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1698
-#define buildyear = 2007
-#define buildmonth = '12'
-#define buildday = '12'
+#define tryout_revision = 1763
+#define buildyear = 2008
+#define buildmonth = '01'
+#define buildday = '08'
 
 ; Build specific options
 #define unicode_required = True
