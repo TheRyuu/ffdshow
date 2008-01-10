@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1763
+#define tryout_revision = 1766
 #define buildyear = 2008
 #define buildmonth = '01'
-#define buildday = '08'
+#define buildday = '10'
 
 ; Build specific options
 #define unicode_required = True
@@ -285,13 +285,15 @@ Name: tweaks\skipinloop; Description: {cm:tsk_skipInloop}; Check: NOT IsUpdate; 
 #endif
 
 [Icons]
+#if is64bit
+Name: {group}\{cm:shrt_audioConfig}; Filename: {sys}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; MinVersion: 0,4; Components: ffdshow
+Name: {group}\{cm:shrt_videoConfig}; Filename: {sys}\rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; MinVersion: 0,4; Components: ffdshow
+Name: {group}\{cm:shrt_vfwConfig};   Filename: {sys}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; Components: ffdshow\vfw
+#else
 Name: {group}\{cm:shrt_audioConfig}; Filename: {syswow64}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; MinVersion: 0,4; Components: ffdshow
 Name: {group}\{cm:shrt_audioConfig}; Filename: {win}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; MinVersion: 4,0; Components: ffdshow
 Name: {group}\{cm:shrt_videoConfig}; Filename: {syswow64}\rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; MinVersion: 0,4; Components: ffdshow
 Name: {group}\{cm:shrt_videoConfig}; Filename: {win}\rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; MinVersion: 4,0; Components: ffdshow
-#if is64bit
-Name: {group}\{cm:shrt_vfwConfig};   Filename: {sys}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; Components: ffdshow\vfw
-#else
 Name: {group}\{cm:shrt_vfwConfig};   Filename: {syswow64}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {syswow64}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; MinVersion: 0,4; Components: ffdshow\vfw
 Name: {group}\{cm:shrt_vfwConfig};   Filename: {win}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {sys}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; MinVersion: 4,0; Components: ffdshow\vfw
 #endif
