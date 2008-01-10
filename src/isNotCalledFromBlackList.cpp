@@ -4,6 +4,7 @@
 #include "TglobalSettings.h"
 #include "isNotCalledFromBlackList.h"
 #include "TcompatibilityManager.h"
+#include "ffdebug.h"
 
 // Explorer.exe loads ffdshow.ax and never releases.
 // That causes annoying error on re-install that one have to log off.
@@ -16,10 +17,15 @@ bool isNotCalledFromBlackList(HINSTANCE hInstance)
  strings blacklistList2;
  HKEY hKey= NULL;
  LONG regErr;
+
  // read from registry directly because it is difficult to initialize Tconfig in DllMain.(Because it loads module)
  regErr= RegOpenKeyEx(HKEY_CURRENT_USER, _l("Software\\GNU\\ffdshow"), 0, KEY_READ, &hKey);
  if(regErr!=ERROR_SUCCESS)
   return true;
+
+ //TregOpRegRead tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\ffdshow"));
+ //tHKCU_global._REG_OP_N(IDFF_allowDPRINTF,_l("allowDPRINTF"),allowDPRINTF,0);
+
  DWORD type;
  DWORD isBlacklist;
  DWORD isWhitelist;
@@ -46,6 +52,7 @@ bool isNotCalledFromBlackList(HINSTANCE hInstance)
   }
  extractfilename(cmdCopy,fileName);
 
+ // FIXME: use TregOpRegRead
  regErr= RegQueryValueEx(hKey, _l("isBlacklist"), NULL, &type, (LPBYTE)&isBlacklist, &cbData);
  if(regErr==ERROR_SUCCESS && isBlacklist)
   {
@@ -69,6 +76,7 @@ bool isNotCalledFromBlackList(HINSTANCE hInstance)
  blacklistList2.push_back(_l("oblivion.exe"));
  blacklistList2.push_back(_l("morrowind.exe"));
  blacklistList2.push_back(_l("YSO_WIN.exe"));
+ blacklistList2.push_back(_l("WORMS 4 MAYHEM.EXE"));
  for (strings::const_iterator b=blacklistList2.begin();b!=blacklistList2.end();b++)
   {
    if (DwStrcasecmp(*b,fileName)==0)
