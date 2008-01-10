@@ -180,7 +180,6 @@ TffdshowDecVideoSubtitles::TffdshowDecVideoSubtitles(LPUNKNOWN punk,HRESULT *phr
 TffdshowDecVideo::~TffdshowDecVideo()
 {
  DPRINTF(_l("TffdshowDecVideo::Destructor"));
- m_csReceive.Unlock();
  if (searchInterfaceInGraph) delete searchInterfaceInGraph;
  for (size_t i=0;i<textpins.size();i++) delete textpins[i];
  if (fontManager) delete fontManager;
