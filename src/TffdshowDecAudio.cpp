@@ -213,6 +213,8 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
   wFormatTag=WAVE_FORMAT_LPCM;
  else if (mt.subtype==MEDIASUBTYPE_AAC3)
   wFormatTag=WAVE_FORMAT_AAC3;
+ else if (mt.subtype==MEDIASUBTYPE_AAC5)
+  wFormatTag=WAVE_FORMAT_AAC5;
  else if (mt.subtype==MEDIASUBTYPE_MPEG2_AUDIO)
   wFormatTag=WAVE_FORMAT_MPEG;
  else if (mt.subtype==MEDIASUBTYPE_SAMR)
@@ -221,6 +223,8 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
 	wFormatTag=WAVE_FORMAT_IMA_AMV;
  else if (mt.subtype==MEDIASUBTYPE_ADPCM_SWF)
 	wFormatTag=WAVE_FORMAT_ADPCM_SWF;
+ else if (mt.subtype==MEDIASUBTYPE_NELLYMOSER)
+	wFormatTag=WAVE_FORMAT_NELLYMOSER;
  else
   {
    const WAVEFORMATEX *wfex=(const WAVEFORMATEX*)mt.pbFormat;
@@ -250,8 +254,6 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
     wFormatTag=WAVE_FORMAT_IMC;
    else if (mt.subtype==MEDIASUBTYPE_ATRAC3)
     wFormatTag=WAVE_FORMAT_ATRAC3;
-   else if (mt.subtype==MEDIASUBTYPE_NELLYMOSER)
-    wFormatTag=WAVE_FORMAT_NELLYMOSER;
    else if (mt.subtype==MEDIASUBTYPE_ULAW || mt.subtype==MEDIASUBTYPE_ulaw)
     wFormatTag=WAVE_FORMAT_MULAW;
    else if (mt.subtype==MEDIASUBTYPE_ALAW || mt.subtype==MEDIASUBTYPE_alaw)

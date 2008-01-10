@@ -1126,7 +1126,7 @@ void TglobalSettingsDecAudio::load(void)
  FF_WAVE_FORMAT_OP (AAC2   ,aac    & rawmask,c_aac) \
  FF_WAVE_FORMAT_OP (AAC3   ,aac    & rawmask,c_aac) \
  FF_WAVE_FORMAT_OP (AAC4   ,aac    & rawmask,c_aac) \
- FF_WAVE_FORMAT_OP (mp4a   ,aac    & rawmask,c_aac) \
+ FF_WAVE_FORMAT_OP (AAC5   ,aac    & rawmask,c_aac) \
  FF_WAVE_FORMAT1_OP(AMR    ,amr    & rawmask,CODEC_ID_AMR_NB) \
  FF_WAVE_FORMAT1_OP(SAMR   ,amr    & rawmask,CODEC_ID_AMR_NB) \
  FF_WAVE_FORMAT1_OP(IMA_DK3,iadpcm & rawmask,CODEC_ID_ADPCM_IMA_DK3) \
