@@ -62,6 +62,7 @@ void TinfoPageDec::init(void)
  ListView_SetItemCount(hlv,infoitems.size()); 
  SendMessage(hlv,LVM_SETBKCOLOR,0,GetSysColor(COLOR_BTNFACE));
  SendMessage(hlv,LVM_SETTEXTBKCOLOR,0,GetSysColor(COLOR_BTNFACE));
+ setCheck(IDC_CHB_WRITEINFO2DBG, cfgGet(IDFF_allowDPRINTF));
 }
 
 void TinfoPageDec::cfg2dlg(void)
@@ -150,6 +151,11 @@ void TinfoPageDec::onFrame(void)
   } 
 }
 
+void TinfoPageDec::onAllowDPRINTF(void)
+{
+ cfgSet(IDFF_allowDPRINTFchanged,1);
+}
+
 void TinfoPageDec::translate(void)
 {
  TconfPageDec::translate();
@@ -161,6 +167,13 @@ void TinfoPageDec::translate(void)
 TinfoPageDec::TinfoPageDec(TffdshowPageDec *Iparent,TinfoBase *Iinfo):TconfPageDec(Iparent,NULL,0),info(Iinfo)
 {
  dialogId=IDD_INFOSIMD;
+
+ static const TbindCheckbox<TinfoPageDec> chb[]=
+  {
+   IDC_CHB_WRITEINFO2DBG,IDFF_allowDPRINTF,&TinfoPageDec::onAllowDPRINTF,
+   0,NULL,NULL
+  };
+ bindCheckboxes(chb);
 }
 TinfoPageDec::~TinfoPageDec()
 {

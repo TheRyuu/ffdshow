@@ -50,12 +50,14 @@
 #define IDFF_notreg               47
 #define IDFF_multipleInstances    66 // 0 - allow multiple instances of ffdshow in graph to be connected to each other, 1 - only check previous filter, 2 - check all filters in graph
 #define IDFF_isBlacklist          93
-#define IDFF_isWhitelist				 3372
+#define IDFF_isWhitelist         3372
 #define IDFF_compManagerMode     3383
 #define IDFF_isCompMgr           3384
 #define IDFF_isCompMgrChanged    3385
+#define IDFF_allowDPRINTF        3488
+#define IDFF_allowDPRINTFchanged 3489
 #define IDFF_blacklist            94
-#define IDFF_whitelist  				3371
+#define IDFF_whitelist           3371
 //#define IDFF_xvidInited           68
 #define IDFF_defaultMerit         72
 #define IDFF_subCurLang           73
@@ -1511,6 +1513,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3488
+//max:3490
 
 #endif

@@ -23,8 +23,8 @@ bool isNotCalledFromBlackList(HINSTANCE hInstance)
  if(regErr!=ERROR_SUCCESS)
   return true;
 
- //TregOpRegRead tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\ffdshow"));
- //tHKCU_global._REG_OP_N(IDFF_allowDPRINTF,_l("allowDPRINTF"),allowDPRINTF,0);
+ TregOpRegRead tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\ffdshow"));
+ tHKCU_global._REG_OP_N(IDFF_allowDPRINTF,_l("allowDPRINTF"),allowDPRINTF,0);
 
  DWORD type;
  DWORD isBlacklist;

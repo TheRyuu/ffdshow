@@ -26,6 +26,7 @@ private:
   };
  typedef std::vector<Titem> Titems;
  Titems infoitems;
+ void onAllowDPRINTF(void);
 protected:
  virtual const int* getInfos(void)=0;
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

@@ -68,6 +68,10 @@ TglobalSettingsBase::TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const 
      _l("addToROT"),0,
    IDFF_allowedCpuFlags  ,&TglobalSettingsBase::allowedCPUflags  ,1,1,_l(""),0,
      NULL,0,
+   IDFF_allowDPRINTF     ,&TglobalSettingsBase::allowDPRINTF     ,0,0,_l(""),0,
+     NULL,0,
+   IDFF_allowDPRINTFchanged,&TglobalSettingsBase::allowDPRINTFchanged,0,0,_l(""),0,
+     NULL,0,
    0
   };
  addOptions(iopts);
@@ -101,13 +105,15 @@ void TglobalSettingsBase::load(void)
  tCPU._REG_OP_N(IDFF_allowedCpuFlags,_l("allowedCPUflags"),allowedCPUflags,255);
  firstBlacklist=firstWhitelist=true;
 
- // Load Icon type : common through video, audio and vfw.
+ // Load Icon type : shared by video, audio and vfw.
  TregOpRegRead tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\ffdshow"));
  tHKCU_global._REG_OP_N(IDFF_trayIconType,_l("trayIconType"),trayIconType,1);
 
  // Load compatibility manager::dontask : shared by video and audio.
  tHKCU_global._REG_OP_N(IDFF_isCompMgr,_l("isCompMgr"),isCompMgr,1);
 
+ // Load allowDPRINTF : shared by all.
+ tHKCU_global._REG_OP_N(IDFF_allowDPRINTF,_l("allowDPRINTF"),allowDPRINTF,0);
 }
 void TglobalSettingsBase::save(void)
 {
@@ -120,19 +126,26 @@ void TglobalSettingsBase::save(void)
  TregOpRegWrite tCPU(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
  tCPU._REG_OP_N(IDFF_allowedCpuFlags,_l("allowedCPUflags"),allowedCPUflags,255);
 
- // Save Icon type : common through video, audio and vfw.
+ // Save Icon type : shared by video, audio and vfw.
  if (trayIconChanged)
   {
    TregOpRegWrite tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\ffdshow"));
    tHKCU_global._REG_OP_N(IDFF_trayIconType,_l("trayIconType"),trayIconType,0);
    trayIconChanged=0;
   }
- // Save compatibility manager::dontask : common through video and audio decoders.
+ // Save compatibility manager::dontask : shared by video and audio.
  if (isCompMgrChanged)
   {
    TregOpRegWrite tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\ffdshow"));
    tHKCU_global._REG_OP_N(IDFF_isCompMgr,_l("isCompMgr"),isCompMgr,0);
    isCompMgrChanged=0;
+  }
+ // Save allowDPRINTF : shared by all.
+ if (allowDPRINTFchanged)
+  {
+   TregOpRegWrite tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\ffdshow"));
+   tHKCU_global._REG_OP_N(IDFF_allowDPRINTF,_l("allowDPRINTF"),allowDPRINTF,0);
+   allowDPRINTFchanged=0;
   }
 }
 bool TglobalSettingsBase::exportReg(bool all,const char_t *regflnm,bool unicode)

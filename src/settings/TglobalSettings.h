@@ -45,6 +45,7 @@ public:
  virtual void save(void);
  int trayIcon,trayIconType,trayIconExt,trayIconChanged;
  int isCompMgr,isCompMgrChanged;
+ int allowDPRINTF,allowDPRINTFchanged;
 
  int outputdebug;
  int outputdebugfile;char_t debugfile[MAX_PATH];

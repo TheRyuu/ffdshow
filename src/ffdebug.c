@@ -21,10 +21,16 @@
 #include <stdio.h>
 #include "char_t.h"
 
+int allowDPRINTF=0;
+
 void DPRINTFvaA(const char *fmt,va_list valist)
 {
  char buf[1024];
- int len=_vsnprintf(buf,1023,fmt,valist);
+ int len;
+
+ if (!allowDPRINTF)
+  return;
+ len=_vsnprintf(buf,1023,fmt,valist);
  if (len>0)
   {
    if (buf[len-1]!='\n')
@@ -38,7 +44,11 @@ void DPRINTFvaA(const char *fmt,va_list valist)
 void DPRINTFvaW(const wchar_t *fmt,va_list valist)
 {
  wchar_t buf[1024];
- int len=_vsnwprintf(buf,1023,fmt,valist);
+ int len;
+
+ if (!allowDPRINTF)
+  return;
+ len=_vsnwprintf(buf,1023,fmt,valist);
  if (len>0)
   {
    if (buf[len-1]!='\n')
@@ -51,6 +61,8 @@ void DPRINTFvaW(const wchar_t *fmt,va_list valist)
 }
 void DPRINTFva(const char_t *fmt,va_list valist)
 {
+ if (!allowDPRINTF)
+  return;
 #ifdef UNICODE
  DPRINTFvaW(fmt,valist);
 #else
@@ -60,6 +72,9 @@ void DPRINTFva(const char_t *fmt,va_list valist)
 void DPRINTF(const char_t *fmt,...)
 {
  va_list args;
+
+ if (!allowDPRINTF)
+  return;
  va_start(args, fmt);
  DPRINTFva(fmt,args);
  va_end(args);
@@ -67,6 +82,9 @@ void DPRINTF(const char_t *fmt,...)
 void DPRINTFA(const char *fmt,...)
 {
  va_list args;
+
+ if (!allowDPRINTF)
+  return;
  va_start(args, fmt);
  DPRINTFvaA(fmt,args);
  va_end(args);
@@ -74,6 +92,9 @@ void DPRINTFA(const char *fmt,...)
 void DPRINTFW(const wchar_t *fmt,...)
 {
  va_list args;
+
+ if (!allowDPRINTF)
+  return;
  va_start(args, fmt);
  DPRINTFvaW(fmt,args);
  va_end(args);

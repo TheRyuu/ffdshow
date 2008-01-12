@@ -12,6 +12,8 @@
 extern "C" {
 #endif
 
+extern int allowDPRINTF;
+
 #if FFDEBUG!=0
 void DPRINTF(const char_t *fmt,...);
 void DPRINTFva(const char_t *fmt,va_list valist);
