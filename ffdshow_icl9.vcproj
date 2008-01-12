@@ -409,9 +409,6 @@
 					RelativePath=".\src\helpFIR.txt">
 				</File>
 				<File
-					RelativePath="src\helpFont.txt">
-				</File>
-				<File
 					RelativePath=".\src\helpGeneric_FFV1.txt">
 				</File>
 				<File

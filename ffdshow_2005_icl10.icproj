@@ -856,10 +856,10 @@
 			<Filter 
 				Name="hints">
 				<File 
-					RelativePath=".\src\helpChannelSwap.txt">
+					RelativePath="src\helpChannelSwap.txt">
 				</File>
 				<File 
-					RelativePath=".\src\helpCredits.txt">
+					RelativePath="src\helpCredits.txt">
 				</File>
 				<File 
 					RelativePath="src\helpCrop.txt">
@@ -874,19 +874,19 @@
 					RelativePath="src\helpDeinterlace.txt">
 				</File>
 				<File 
-					RelativePath=".\src\helpFF1.txt">
+					RelativePath="src\helpFF1.txt">
 				</File>
 				<File 
-					RelativePath=".\src\helpFIR.txt">
+					RelativePath="src\helpFIR.txt">
 				</File>
 				<File 
 					RelativePath="src\helpFont.txt">
 				</File>
 				<File 
-					RelativePath=".\src\helpGeneric_FFV1.txt">
+					RelativePath="src\helpGeneric_FFV1.txt">
 				</File>
 				<File 
-					RelativePath=".\src\helpGeneric_THEO.txt">
+					RelativePath="src\helpGeneric_THEO.txt">
 				</File>
 				<File 
 					RelativePath="src\helpLevels.txt">
@@ -895,10 +895,10 @@
 					RelativePath="src\helpOffset.txt">
 				</File>
 				<File 
-					RelativePath=".\src\helpOut.txt">
+					RelativePath="src\helpOut.txt">
 				</File>
 				<File 
-					RelativePath=".\src\helpOutsfs.txt">
+					RelativePath="src\helpOutsfs.txt">
 				</File>
 				<File 
 					RelativePath="src\helpOverlay.txt">
@@ -910,7 +910,10 @@
 					RelativePath="src\helpPictprop.txt">
 				</File>
 				<File 
-					RelativePath=".\src\helpResample.txt">
+					RelativePath="src\helpQueue.txt">
+				</File>
+				<File 
+					RelativePath="src\helpResample.txt">
 				</File>
 				<File 
 					RelativePath="src\helpResizeAspect.txt">
@@ -6705,9 +6708,6 @@
 		</Filter>
 		<File 
 			RelativePath="src\ffdshow.def">
-		</File>
-		<File 
-			RelativePath=".\src\helpQueue.txt">
 		</File>
 	</Files>
 </VisualStudioProject>

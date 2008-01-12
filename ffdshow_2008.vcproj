@@ -1006,11 +1006,11 @@
 				Name="hints"
 				>
 				<File
-					RelativePath=".\src\helpChannelSwap.txt"
+					RelativePath="src\helpChannelSwap.txt"
 					>
 				</File>
 				<File
-					RelativePath=".\src\helpCredits.txt"
+					RelativePath="src\helpCredits.txt"
 					>
 				</File>
 				<File
@@ -1030,23 +1030,19 @@
 					>
 				</File>
 				<File
-					RelativePath=".\src\helpFF1.txt"
+					RelativePath="src\helpFF1.txt"
 					>
 				</File>
 				<File
-					RelativePath=".\src\helpFIR.txt"
+					RelativePath="src\helpFIR.txt"
 					>
 				</File>
 				<File
-					RelativePath="src\helpFont.txt"
+					RelativePath="src\helpGeneric_FFV1.txt"
 					>
 				</File>
 				<File
-					RelativePath=".\src\helpGeneric_FFV1.txt"
-					>
-				</File>
-				<File
-					RelativePath=".\src\helpGeneric_THEO.txt"
+					RelativePath="src\helpGeneric_THEO.txt"
 					>
 				</File>
 				<File
@@ -1058,11 +1054,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\src\helpOut.txt"
+					RelativePath="src\helpOut.txt"
 					>
 				</File>
 				<File
-					RelativePath=".\src\helpOutsfs.txt"
+					RelativePath="src\helpOutsfs.txt"
 					>
 				</File>
 				<File
@@ -1078,7 +1074,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\src\helpResample.txt"
+					RelativePath="src\helpQueue.txt"
+					>
+				</File>
+				<File
+					RelativePath="src\helpResample.txt"
 					>
 				</File>
 				<File
@@ -8448,10 +8448,6 @@
 		</Filter>
 		<File
 			RelativePath="src\ffdshow.def"
-			>
-		</File>
-		<File
-			RelativePath=".\src\helpQueue.txt"
 			>
 		</File>
 	</Files>
