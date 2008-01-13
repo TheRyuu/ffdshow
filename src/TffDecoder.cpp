@@ -55,6 +55,9 @@
 #include "D3d9.h"
 #include "Vmr9.h"
 #include "IVMRffdshow9.h"
+#include "IffdshowDecAudio.h"
+#include "qnetwork.h"
+
 //#include "evr9.h"
 //#include "dxva.h"
 
@@ -1830,6 +1833,171 @@ int TffdshowDecVideo::get_trayIconType(void)
    default:
    return IDI_MODERN_ICON_V;
   }
+}
+
+void TffdshowDecVideo::getChapters(void)
+{
+	comptr<IEnumFilters> eff;
+	if (graph->EnumFilters(&eff)==S_OK)
+	{
+		eff->Reset();
+		for (comptr<IBaseFilter> bff;eff->Next(1,&bff,NULL)==S_OK;bff=NULL)
+		{
+			char_t name[MAX_PATH],filtername[MAX_PATH];
+			getFilterName(bff,name,filtername,countof(filtername));
+			if (!wcscmp(filtername, FFDSHOW_NAME_L)
+				|| !wcscmp(filtername, FFDSHOWRAW_NAME_L)
+				|| !wcscmp(filtername, FFDSHOWVFW_NAME_L)
+				|| !wcscmp(filtername, FFDSHOWSUBTITLES_NAME_L)
+				|| !wcscmp(filtername, FFDSHOWAUDIO_NAME_L))
+				continue;
+			IAMExtendedSeeking *pAMExtendedSeeking = NULL;
+			bff->QueryInterface(IID_IAMExtendedSeeking, (void**) &pAMExtendedSeeking);
+			if (pAMExtendedSeeking == NULL)
+				continue;
+			long markerCount = 0;
+			pAMExtendedSeeking->get_MarkerCount(&markerCount);
+			if (markerCount == 0)
+			{
+				pAMExtendedSeeking->Release();
+				continue;
+			}
+			chaptersList.clear();
+			
+			// Retrieve the list of chapters and add them to the chaptersList
+			for (int i=1; i<= markerCount; i++)
+			{
+				double markerTime = 0;
+				char_t *markerName = NULL;
+				pAMExtendedSeeking->GetMarkerTime(i, &markerTime);
+				pAMExtendedSeeking->GetMarkerName(i, &markerName);
+				if (markerName != NULL)
+				{
+					char_t fMarkerName[MAX_PATH];
+					//strncpy(fMarkerName, markerName, strlen(fMarkerName));
+					strcpy(fMarkerName, markerName);
+					long markerTimeL = (long)markerTime;
+					//chaptersList[markerTimeL]=fMarkerName;
+					std::pair<long, ffstring> pair = std::make_pair<long, ffstring>(markerTimeL, fMarkerName);
+					chaptersList.push_back(pair);
+					SysFreeString(markerName);
+				}
+				else
+				{
+					int hh, mm, ss;
+					char_t time_str[30];
+					hh = (int)(markerTime/3600);
+					mm = (int)((markerTime - hh*3600)/60);
+					ss = (int)(markerTime - hh*3600 - mm*60);
+					tsprintf(time_str,_l("%02i:%02i:%02"), hh, mm, ss);
+					long markerTimeL = (long)markerTime;
+					std::pair<long, ffstring> pair = std::make_pair<long, ffstring>(markerTimeL, time_str);
+					chaptersList.push_back(pair);
+					//chaptersList[markerTimeL] = time_str;
+				}			
+				markerName = NULL;
+			}
+			pAMExtendedSeeking->Release();
+			break;
+		}
+	}
+}
+
+STDMETHODIMP TffdshowDecVideo::get_MarkerCount(long * pMarkerCount)
+{
+	if (chaptersList.size() <= 1)
+		getChapters();
+	*pMarkerCount = (long)chaptersList.size();
+	return S_OK;
+}
+STDMETHODIMP TffdshowDecVideo::get_CurrentMarker(long * pCurrentMarker)
+{
+	if (chaptersList.size() <= 1)
+		getChapters();
+	DWORD currentTime = GetTickCount();
+	int i = 0;
+	for (i=0; i<chaptersList.size(); i++)
+	{
+		if ((double)currentTime < chaptersList[i].first) break;
+	}
+	/*for (TchaptersList::iterator i=chaptersList.begin();i!=chaptersList.end();i++)
+	{
+			if ((double)currentTime < i->first) break;
+		l++;
+	}*/
+	*pCurrentMarker = i;
+	return S_OK;
+}
+
+// Markers start at position 1
+STDMETHODIMP TffdshowDecVideo::GetMarkerTime(long MarkerNum, double * pMarkerTime)
+{
+	if (chaptersList.size() <= 1)
+		getChapters();
+	long l = 1;
+	if (MarkerNum > (long)chaptersList.size())
+		return S_FALSE;
+
+	for (long l=0; l<chaptersList.size(); l++)
+	{
+		if (l+1 == MarkerNum)
+		{
+			*pMarkerTime=(double)chaptersList[l].first;
+			break;
+		}
+	}
+
+	/*for (TchaptersList::iterator i=chaptersList.begin();i!=chaptersList.end();i++)
+	{
+		if (l == MarkerNum)
+		{
+			*pMarkerTime=(double)i->first;
+			break;
+		}
+		l++;
+	}*/
+	return S_OK;
+}
+
+// Markers start at position 1
+STDMETHODIMP TffdshowDecVideo::GetMarkerName(long MarkerNum, BSTR * pbstrMarkerName)
+{
+	if (chaptersList.size() <= 1)
+		getChapters();
+	if (MarkerNum > (long)chaptersList.size())
+		return S_FALSE;
+
+	for (int i = 0;i<chaptersList.size();i++)
+	{
+		if (i+1 == (int)MarkerNum)
+		{
+			const char_t* markerName = chaptersList[i].second.c_str();
+			*pbstrMarkerName=(char_t*)malloc(sizeof(char_t)*(strlen(markerName)+1));
+			strcpy(*pbstrMarkerName, markerName);
+			break;
+		}
+		i++;
+	}
+	/*for (TchaptersList::iterator i=chaptersList.begin();i!=chaptersList.end();i++)
+	 {
+		if (l == MarkerNum)
+		{
+			const char_t* markerName = i->second.c_str();
+			*pbstrMarkerName=(char_t*)malloc(sizeof(char_t)*(strlen(markerName)+1));
+			strcpy(*pbstrMarkerName, markerName);
+			break;
+		}
+		l++;
+	 }*/
+	return S_OK;
+}
+
+STDMETHODIMP TffdshowDecVideo::getChaptersList(TchaptersList **ppChaptersList)
+{
+	if (chaptersList.size() <= 1)
+		getChapters();
+	*ppChaptersList = &chaptersList;
+	return S_OK;
 }
 
 #ifdef OSDTIMETABALE

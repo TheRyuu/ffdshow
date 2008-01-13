@@ -11,6 +11,8 @@ struct IcheckSubtitle;
 struct IOSDprovider;
 struct IhwOverlayControl;
 struct ToutputVideoSettings;
+typedef std::vector<std::pair<long, ffstring>> TchaptersList;
+
 template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
 {
  STDMETHOD_(int,getVersion2)(void) PURE;
@@ -106,6 +108,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
  STDMETHOD (unlockCSReceive)(void) PURE;
  STDMETHOD_(ToutputVideoSettings*,getToutputVideoSettings)(void) PURE;
  STDMETHOD_(int,getBordersBrightness)(void) PURE;
+ STDMETHOD (getChaptersList)(TchaptersList **ppChaptersList) PURE;
 };
 
 struct IffdshowDecVideoA :IffdshowDecVideoT<char> {};

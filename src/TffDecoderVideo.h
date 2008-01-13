@@ -22,6 +22,8 @@ class TffdshowVideoInputPin;
 class TffdshowDecVideoOutputPin;
 class TsearchInterfaceInGraph;
 
+typedef std::vector<std::pair<long, ffstring>> TchaptersList;
+
 class TffdshowDecVideo :public TffdshowDec,
                         public TffdshowVideo,
                         public interfaces<char_t>::IffdshowDecVideo,
@@ -49,9 +51,17 @@ public:
  HRESULT SetMediaType(PIN_DIRECTION direction,const CMediaType *pmt);
  HRESULT CheckTransform(const CMediaType *mtIn,const CMediaType *mtOut);
  HRESULT DecideBufferSize(IMemAllocator *pima,ALLOCATOR_PROPERTIES *pProperties);
+
+  // IAMExtendedSeeking
+ STDMETHODIMP get_MarkerCount(long * pMarkerCount);
+ STDMETHODIMP get_CurrentMarker(long * pCurrentMarker);
+ STDMETHODIMP GetMarkerTime(long MarkerNum, double * pMarkerTime);
+ STDMETHODIMP GetMarkerName(long MarkerNum, BSTR * pbstrMarkerName);
 private:
  HRESULT DecideBufferSizeVMR(IMemAllocator *pima,ALLOCATOR_PROPERTIES *pProperties, const CLSID &ref);
  HRESULT DecideBufferSizeOld(IMemAllocator *pima,ALLOCATOR_PROPERTIES *pProperties, const CLSID &ref);
+ virtual void getChapters(void);
+
 public:
  virtual HRESULT NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,double dRate);
  virtual STDMETHODIMP Run(REFERENCE_TIME tStart);
@@ -146,6 +156,7 @@ public:
  STDMETHODIMP registerOSDprovider(IOSDprovider *provider,const char *name);
  STDMETHODIMP unregisterOSDprovider(IOSDprovider *provider);
  STDMETHODIMP findOverlayControl2(IhwOverlayControl* *overlayPtr);
+ STDMETHODIMP getChaptersList(TchaptersList **ppChaptersList);
 
  //compatibility
  STDMETHODIMP compat_getIffDecoderVersion2(void);
@@ -479,6 +490,7 @@ private:
    STDMETHODIMP unlockCSReceive(void) { return deciV->unlockCSReceive(); }
    STDMETHODIMP_(ToutputVideoSettings*) getToutputVideoSettings(void) {return deciV->getToutputVideoSettings();}
    STDMETHODIMP_(int) getBordersBrightness(void){return deciV->getBordersBrightness();}
+   STDMETHODIMP getChaptersList(TchaptersList **ppChaptersList) { return E_NOTIMPL; };
  } decVideo_char;
  template<class Tinterface> Tinterface* getDecVideoInterface(void);
  void ConnectCompatibleFilter(void);
@@ -582,6 +594,7 @@ public:
  static const AMOVIESETUP_FILTER filter;
  static const DWORD defaultMerit;
  friend class TffdshowDecVideoOutputPin;
+ TchaptersList chaptersList;
 };
 
 class TffdshowDecVideoRaw :public TffdshowDecVideo

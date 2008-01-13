@@ -378,7 +378,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 				Tpreset *preset = presets->at(i);
 				const char_t *presetName = preset->presetName;
 				// Resize the string if needed
-				if (strlen(presetList)+strlen(presetName)+ 1 >= string_size)
+				if (strlen(presetList)+strlen(presetName)+ 10 >= string_size)
 				{
 					string_size += 2048;
 					char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
@@ -432,7 +432,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			{
 				const char_t *fileName = files[i].c_str();
 				// Resize the string if needed
-				if (strlen(filesList)+strlen(fileName)+ 1 >= string_size)
+				if (strlen(filesList)+strlen(fileName)+ 10 >= string_size)
 				{
 					string_size += 2048;
 					char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
@@ -453,7 +453,45 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			//SendMessage((HWND)wprm, WM_COPYDATA, WPRM_GET_SUBTITLEFILESLIST, (LPARAM)&cd);
         }
 		return TRUE;
-   }
+	  }
+		case WPRM_GET_CHAPTERSLIST:
+		{
+			COPYDATASTRUCT cd;
+			cd.dwData = WPRM_GET_CHAPTERSLIST;
+			size_t string_size = 2048;
+			char_t *stringList = (char_t*)alloca(sizeof(char_t)*string_size);
+			strcpy(stringList, _l(""));
+			TchaptersList *pChaptersList = NULL;
+			deciV->getChaptersList(&pChaptersList);
+			
+			//for (TchaptersList::iterator i=pChaptersList->begin();i!=pChaptersList->end();i++)
+			for (long l = 0; l<pChaptersList->size(); l++)
+			{
+				long markerTime = (*pChaptersList)[l].first;
+				char_t tmpStr[40];
+				wsprintf(tmpStr, _l("%ld"), markerTime);
+				ffstring chapterString = _l("<chapter><time>") + ffstring(tmpStr)+_l("</time><name>")+ffstring((*pChaptersList)[l].second)
+					+_l("</name></chapter>");
+
+				// Resize the string if needed
+				if (strlen(stringList)+strlen(chapterString.c_str())+ 10 >= string_size)
+				{
+					string_size += 2048;
+					char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
+					strcpy(tmpStr, stringList);
+					stringList = tmpStr;
+				}
+				strcat(stringList, chapterString.c_str());
+			}
+			cd.lpData = alloca(sizeof(char)*(strlen(stringList)+1));
+			strcpy((char*)cd.lpData, "");
+			text<char>(stringList, (char*)cd.lpData);
+			cd.cbData = strlen(stringList)+1;
+			DWORD_PTR ret = 0;
+			SendMessageTimeout((HWND)wprm, WM_COPYDATA, WPRM_GET_CHAPTERSLIST, (LPARAM)&cd, 
+				SMTO_ABORTIFHUNG, 1500, &ret);
+			return TRUE;
+		}
  }
 
  if (acceptKeys && (msg==WM_SYSKEYDOWN || msg==WM_SYSKEYUP || msg==WM_KEYDOWN || msg==WM_KEYUP))
