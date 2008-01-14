@@ -1915,16 +1915,11 @@ STDMETHODIMP TffdshowDecVideo::get_CurrentMarker(long * pCurrentMarker)
 	if (chaptersList.size() <= 1)
 		getChapters();
 	DWORD currentTime = GetTickCount();
-	int i = 0;
+	unsigned int i = 0;
 	for (i=0; i<chaptersList.size(); i++)
 	{
 		if ((double)currentTime < chaptersList[i].first) break;
 	}
-	/*for (TchaptersList::iterator i=chaptersList.begin();i!=chaptersList.end();i++)
-	{
-			if ((double)currentTime < i->first) break;
-		l++;
-	}*/
 	*pCurrentMarker = i;
 	return S_OK;
 }
@@ -1938,7 +1933,7 @@ STDMETHODIMP TffdshowDecVideo::GetMarkerTime(long MarkerNum, double * pMarkerTim
 	if (MarkerNum > (long)chaptersList.size())
 		return S_FALSE;
 
-	for (long l=0; l<chaptersList.size(); l++)
+	for (long l=0; (unsigned long)l<chaptersList.size(); l++)
 	{
 		if (l+1 == MarkerNum)
 		{
@@ -1946,16 +1941,6 @@ STDMETHODIMP TffdshowDecVideo::GetMarkerTime(long MarkerNum, double * pMarkerTim
 			break;
 		}
 	}
-
-	/*for (TchaptersList::iterator i=chaptersList.begin();i!=chaptersList.end();i++)
-	{
-		if (l == MarkerNum)
-		{
-			*pMarkerTime=(double)i->first;
-			break;
-		}
-		l++;
-	}*/
 	return S_OK;
 }
 
@@ -1967,9 +1952,9 @@ STDMETHODIMP TffdshowDecVideo::GetMarkerName(long MarkerNum, BSTR * pbstrMarkerN
 	if (MarkerNum > (long)chaptersList.size())
 		return S_FALSE;
 
-	for (int i = 0;i<chaptersList.size();i++)
+	for (unsigned int i = 0;i<chaptersList.size();i++)
 	{
-		if (i+1 == (int)MarkerNum)
+		if (i+1 == (unsigned int)MarkerNum)
 		{
 			const char_t* markerName = chaptersList[i].second.c_str();
 			*pbstrMarkerName=(char_t*)malloc(sizeof(char_t)*(strlen(markerName)+1));
@@ -1978,17 +1963,6 @@ STDMETHODIMP TffdshowDecVideo::GetMarkerName(long MarkerNum, BSTR * pbstrMarkerN
 		}
 		i++;
 	}
-	/*for (TchaptersList::iterator i=chaptersList.begin();i!=chaptersList.end();i++)
-	 {
-		if (l == MarkerNum)
-		{
-			const char_t* markerName = i->second.c_str();
-			*pbstrMarkerName=(char_t*)malloc(sizeof(char_t)*(strlen(markerName)+1));
-			strcpy(*pbstrMarkerName, markerName);
-			break;
-		}
-		l++;
-	 }*/
 	return S_OK;
 }
 
