@@ -22,7 +22,7 @@ class TffdshowVideoInputPin;
 class TffdshowDecVideoOutputPin;
 class TsearchInterfaceInGraph;
 
-typedef std::vector<std::pair<long, ffstring>> TchaptersList;
+typedef std::vector<std::pair<long, ffstring> > TchaptersList;
 
 class TffdshowDecVideo :public TffdshowDec,
                         public TffdshowVideo,

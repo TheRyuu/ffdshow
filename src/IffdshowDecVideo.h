@@ -11,7 +11,7 @@ struct IcheckSubtitle;
 struct IOSDprovider;
 struct IhwOverlayControl;
 struct ToutputVideoSettings;
-typedef std::vector<std::pair<long, ffstring>> TchaptersList;
+typedef std::vector<std::pair<long, ffstring> > TchaptersList;
 
 template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
 {
