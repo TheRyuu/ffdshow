@@ -40,6 +40,7 @@ template<class tchar> void TsubtitleParser<tchar>::trail_space(tchar *s) {
 template<class tchar> Tsubtitle* TsubtitleParser<tchar>::store(TsubtitleTextBase<tchar> &sub)
 {
  sub.format(textformat);
+ sub.processKaraoke();
  sub.fix(textfix);
  subreader->push_back(new TsubtitleTextBase<tchar>(sub));
  return subreader->back();
@@ -882,11 +883,11 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd, i
           }
          else if (start != REFTIME_INVALID && stop != REFTIME_INVALID)
           {
-           current.start=start;
+           current.start = start;
            current.stop=stop;
           }
-         current.defProps.tStart=current.start;
-         current.defProps.tStop=current.stop;
+         current.defProps.tStart = current.defProps.karaokeStart = current.start;
+         current.defProps.tStop = current.stop;
 
          // FIXME
          // \h removal : \h is hard space, so it should be replaced HARD sapce, soft space for band-aid.

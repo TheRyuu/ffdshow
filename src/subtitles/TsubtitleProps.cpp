@@ -51,6 +51,9 @@ void TSubtitleProps::reset(void)
  m_descent64=-1;
  tStart=tStop=fadeT1=fadeT2=fadeT3=fadeT4=REFTIME_INVALID;
  isFad=0;
+ karaokeMode = KARAOKE_NONE;
+ karaokeStart = 0;
+ karaokeDuration = 0;
 }
 
 HGDIOBJ TSubtitleProps::toGdiFont(HDC hdc, LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy,const Rational& sar, TfontManager *fontManager) const

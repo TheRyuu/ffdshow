@@ -84,12 +84,16 @@ private:
    template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void pos(const tchar *start,const tchar *end);
    template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void fad(const tchar *start,const tchar *end);
    void fade(const tchar *start,const tchar *end);
+   void karaoke_kf(const tchar *start,const tchar *end);
+   void karaoke_ko(const tchar *start,const tchar *end);
+   void karaoke_k(const tchar *start,const tchar *end);
    template<bool TSubtitleProps::*offset> void boolProp(const tchar *start,const tchar *end);
    template<COLORREF TSubtitleProps::*offset> void color(const tchar *start,const tchar *end);
    template<int TSubtitleProps::*offset> void alpha(const tchar *start,const tchar *end);
    void alphaAll(const tchar *start,const tchar *end);
    void reset(const tchar *start,const tchar *end);
    bool processToken(const tchar* &l2,const tchar *tok,TssaAction action);
+   bool processTokenC(const tchar* &l2,const tchar *tok,TssaAction action);
    void processTokens(const tchar *l,const tchar* &l1,const tchar* &l2,const tchar *end);
   };
  const ThtmlColors *htmlcolors;
@@ -207,6 +211,7 @@ public:
    this->push_back(TsubtitleLine(_L(" "),defProps));
   }
  void format(TsubtitleFormat &format);
+ void processKaraoke(void);
  template<class Tval> void propagateProps(typename Tbase::iterator it,Tval TSubtitleProps::*offset,Tval val,typename Tbase::iterator itend)
   {
    for (;it!=itend;it++)

@@ -166,30 +166,29 @@ public:
 class TrenderedTextSubtitleWord : public TrenderedSubtitleWordBase
 {
 private:
+ TrenderedTextSubtitleWord *secondaryColoredWord;
+ TrenderedSubtitleLines::TprintPrefs prefs;
  YUVcolorA m_bodyYUV,m_outlineYUV,m_shadowYUV;
  int baseline;
  int topOverhang,bottomOverhang,leftOverhang,rightOverhang;
  int m_outlineWidth,m_shadowSize,m_shadowMode;
- mutable int oldFader;
+ int dstOffset;
+ mutable int oldFader,oldBodyYUVa,oldOutlineYUVa;
  TSubtitleProps props;
  void drawShadow(       HDC hdc,
                         HBITMAP hbmp,
                         unsigned char *bmp16,
                         HGDIOBJ old,
                         double xscale,
-                        const SIZE &sz,
-                        const TrenderedSubtitleLines::TprintPrefs &prefs,
-                        const YUVcolorA &yuv,
-                        const YUVcolorA &outlineYUV,
-                        const YUVcolorA &shadowYUV
+                        const SIZE &sz
                        );
- void updateMask(int fader = 1 << 16, bool create = true) const;
+ void updateMask(int fader = 1 << 16, int create = 1) const; // create: 0=update, 1=new, 2=update after copy (karaoke)
  unsigned char* blur(unsigned char *src,stride_t Idx,stride_t Idy,int startx,int starty,int endx, int endy, bool mild);
- unsigned int getShadowSize(const TrenderedSubtitleLines::TprintPrefs &prefs,LONG fontHeight);
- unsigned int getBottomOverhang(const TrenderedSubtitleLines::TprintPrefs &prefs);
- unsigned int getRightOverhang(const TrenderedSubtitleLines::TprintPrefs &prefs);
- unsigned int getTopOverhang(const TrenderedSubtitleLines::TprintPrefs &prefs);
- unsigned int getLeftOverhang(const TrenderedSubtitleLines::TprintPrefs &prefs);
+ unsigned int getShadowSize(LONG fontHeight);
+ unsigned int getBottomOverhang(void);
+ unsigned int getRightOverhang(void);
+ unsigned int getTopOverhang(void);
+ unsigned int getLeftOverhang(void);
 public:
  // full rendering
  template<class tchar> TrenderedTextSubtitleWord(
@@ -203,6 +202,11 @@ public:
                         LOGFONT lf,
                         double xscale,
                         TSubtitleProps Iprops);
+ // secondary (for karaoke)
+ TrenderedTextSubtitleWord(
+                        const TrenderedTextSubtitleWord &parent,
+                        bool senondaryColor                       // to distinguish from default copy constructor
+                        );
  // fast rendering
  template<class tchar> TrenderedTextSubtitleWord(
                         TcharsChache *chars,
@@ -210,6 +214,7 @@ public:
                         const TrenderedSubtitleLines::TprintPrefs &prefs,
                         const LOGFONT &lf,
                         TSubtitleProps Iprops);
+ ~TrenderedTextSubtitleWord();
  virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const;
  unsigned int alignXsize;
  void* (__cdecl *TtextSubtitlePrintY)  (const unsigned char* bmp,const unsigned char* outline,const unsigned char* shadow,const unsigned short *colortbl,const unsigned char* dst,const unsigned char* msk);

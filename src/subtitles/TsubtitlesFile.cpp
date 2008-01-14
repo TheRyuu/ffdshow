@@ -261,7 +261,7 @@ bool TsubtitlesFile::init(const TsubtitlesSettings *cfg,const char_t *IsubFlnm,d
   }
  if (!checkOnly)
   {
-   subs->adjust_subs_time(6.0);
+   //subs->adjust_subs_time(6.0);
    Tsubtitles::init();
    char_t subPath[MAX_PATH];
    extractfilepath(subFlnm,subPath);

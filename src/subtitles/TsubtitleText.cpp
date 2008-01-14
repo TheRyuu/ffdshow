@@ -790,6 +790,26 @@ template<class tchar> template<int TSubtitleProps::*offset1,int TSubtitleProps::
    props.fadeT4=props.tStop;
   }
 }
+
+template<class tchar> void TsubtitleFormat::Tssa<tchar>::karaoke_kf(const tchar *start,const tchar *end)
+{
+ intProp<&TSubtitleProps::tmpFadT1, 0, INT_MAX>(start, end);
+ props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
+ props.karaokeMode = TSubtitleProps::KARAOKE_kf;
+}
+template<class tchar> void TsubtitleFormat::Tssa<tchar>::karaoke_ko(const tchar *start,const tchar *end)
+{
+ intProp<&TSubtitleProps::tmpFadT1, 0, INT_MAX>(start, end);
+ props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
+ props.karaokeMode = TSubtitleProps::KARAOKE_ko;
+}
+template<class tchar> void TsubtitleFormat::Tssa<tchar>::karaoke_k(const tchar *start,const tchar *end)
+{
+ intProp<&TSubtitleProps::tmpFadT1, 0, INT_MAX>(start, end);
+ props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
+ props.karaokeMode = TSubtitleProps::KARAOKE_k;
+}
+
 template<class tchar> void TsubtitleFormat::Tssa<tchar>::fade(const tchar *start,const tchar *end)
 {
  // \fade(<a1>, <a2>, <a3>, <t1>, <t2>, <t3>, <t4>)
@@ -954,6 +974,28 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::reset(const tchar *star
  props=defprops;
 }
 
+// case sensitive version
+template<class tchar> bool TsubtitleFormat::Tssa<tchar>::processTokenC(const tchar* &l2,const tchar *tok,TssaAction action)
+{
+ size_t toklen=strlen(tok);
+ if (strncmp(l2,tok,toklen)==0)
+  {
+   const tchar *end1=strchr(l2+2,'\\');
+   const tchar *end2=strchr(l2,'}');
+   const tchar *end=(end1 && end1<end2)?end1:end2;
+   if (end)
+    {
+     const tchar *start=l2+toklen;
+     if (action)
+      (this->*action)(start,end);
+     l2=(end1 && end1<end2)?end1:end2+1;
+    }
+   return true;
+  }
+ else
+  return false;
+}
+
 template<class tchar> bool TsubtitleFormat::Tssa<tchar>::processToken(const tchar* &l2,const tchar *tok,TssaAction action)
 {
  size_t toklen=strlen(tok);
@@ -983,11 +1025,11 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::processTokens(const tch
   {
    if (
        !processToken(l3,_L("\\1a"),&Tssa<tchar>::template alpha<&TSubtitleProps::colorA>) &&
-       !processToken(l3,_L("\\2a"),NULL) &&
+       !processToken(l3,_L("\\2a"),&Tssa<tchar>::template alpha<&TSubtitleProps::SecondaryColourA>) &&
        !processToken(l3,_L("\\3a"),&Tssa<tchar>::template alpha<&TSubtitleProps::OutlineColourA>) &&
        !processToken(l3,_L("\\4a"),&Tssa<tchar>::template alpha<&TSubtitleProps::ShadowColourA>) &&
        !processToken(l3,_L("\\1c"),&Tssa<tchar>::template color<&TSubtitleProps::color>) && 
-       !processToken(l3,_L("\\2c"),NULL) &&
+       !processToken(l3,_L("\\2c"),&Tssa<tchar>::template color<&TSubtitleProps::SecondaryColour>) &&
        !processToken(l3,_L("\\3c"),&Tssa<tchar>::template color<&TSubtitleProps::OutlineColour>) &&
        !processToken(l3,_L("\\4c"),&Tssa<tchar>::template color<&TSubtitleProps::ShadowColour>) &&
        !processToken(l3,_L("\\alpha"),&Tssa<tchar>::alphaAll) &&
@@ -1012,7 +1054,11 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::processTokens(const tch
        !processToken(l3,_L("\\r"),&Tssa<tchar>::reset) &&
        !processToken(l3,_L("\\shad"),&Tssa<tchar>::template doubleProp<&TSubtitleProps::shadowDepth,0,30>) &&
        !processToken(l3,_L("\\s"),&Tssa<tchar>::template boolProp<&TSubtitleProps::strikeout>) &&
-       !processToken(l3,_L("\\u"),&Tssa<tchar>::template boolProp<&TSubtitleProps::underline>)
+       !processToken(l3,_L("\\u"),&Tssa<tchar>::template boolProp<&TSubtitleProps::underline>) &&
+       !processToken(l3,_L("\\kf"),&Tssa<tchar>::karaoke_kf) &&
+       !processToken(l3,_L("\\ko"),&Tssa<tchar>::karaoke_ko) &&
+       !processTokenC(l3,_L("\\K"),&Tssa<tchar>::karaoke_kf) &&
+       !processTokenC(l3,_L("\\k"),&Tssa<tchar>::karaoke_k)
       )
     l3++;
   }
@@ -1133,8 +1179,7 @@ template<class tchar> void TsubtitleLine<tchar>::format(TsubtitleFormat &format,
   applyWords(format.processSSA(*this,parent));
  else
   applyWords(format.processHTML(*this));
-}
-template<class tchar> void TsubtitleLine<tchar>::fix(TtextFix<tchar> &fix)
+}template<class tchar> void TsubtitleLine<tchar>::fix(TtextFix<tchar> &fix)
 {
  for (typename Tbase::iterator w=this->begin();w!=this->end();w++)
   w->fix(fix);
@@ -1154,6 +1199,21 @@ template<class tchar> void TsubtitleTextBase<tchar>::format(TsubtitleFormat &for
  if (sfmt==Tsubreader::SUB_MPL2)
   for (typename Tbase::iterator l=this->begin();l!=this->end();l++)
    format.processMPL2(*l);
+}
+template<class tchar> void TsubtitleTextBase<tchar>::processKaraoke(void)
+{
+ REFERENCE_TIME karaokeStart = REFTIME_INVALID;
+ for (typename Tbase::iterator l = this->begin() ; l != this->end() ; l++)
+  {
+   for (TsubtitleLine::iterator w = l->begin() ; w != l->end() ; w++)
+    {
+     if (karaokeStart == REFTIME_INVALID)
+      karaokeStart = w->props.karaokeStart;
+     else
+      w->props.karaokeStart = karaokeStart;
+     karaokeStart += w->props.karaokeDuration;
+    }
+  }
 }
 template<class tchar> void TsubtitleTextBase<tchar>::fix(TtextFix<tchar> &fix)
 {
