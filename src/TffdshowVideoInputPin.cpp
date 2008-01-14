@@ -109,100 +109,135 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
  GetVersionEx(&osvi);
 
  if (res == 0 && pCompatibleFilter == NULL &&
-	 fv->deci->getParam2(IDFF_alternateUncompressed)==1 && // Enable Vista WMP11 postprocessing
-	 fv->deci->getParam2(IDFF_rawv)!=0 &&
-	 osvi.dwMajorVersion > 5 && // OS >= Vista
-	 (stricmp(fv->getExefilename(),_l("wmplayer.exe"))==0 ||  stricmp(fv->getExefilename(),_l("ehshell.exe"))==0 )) // Only WMP and Media Center are concerned
+	 fv->deci->getParam2(IDFF_alternateUncompressed)==1 && // Enable WMP11 postprocessing
+	 fv->deci->getParam2(IDFF_rawv)!=0 && // Raw video not on disabled
+	 (stricmp(fv->getExefilename(),_l("wmplayer.exe"))==0 ||  
+		stricmp(fv->getExefilename(),_l("ehshell.exe"))==0 )) // Only WMP and Media Center are concerned
  {
-	DPRINTF(_l("TffdshowVideoInputPin::CheckMediaType: input format disabled or not supported. Trying to maintain in the graph..."));	 
-	IFilterMapper2 *pMapper = NULL;
-	IEnumMoniker *pEnum = NULL;
+	 bool doPostProcessing = false;
+	 if (osvi.dwMajorVersion > 5) // OS >= VISTA
+		doPostProcessing = true;
+	 else if (osvi.dwMajorVersion == 5) // If OS=XP, check version of WMP
+	 {
+		// Read WMP version from the aRegistry
+		HKEY hKey= NULL;
+		LONG regErr;
 
-	HRESULT hr = CoCreateInstance(CLSID_FilterMapper2, 
-		NULL, CLSCTX_INPROC, IID_IFilterMapper2, 
-		(void **) &pMapper);
+		// Read WMP version from the following registry key
+		regErr = RegOpenKeyEx(HKEY_LOCAL_MACHINE, _l("SOFTWARE\\Microsoft\\MediaPlayer\\Setup\\Installed Versions"), 0, KEY_READ, &hKey);
+		if(regErr!=ERROR_SUCCESS)
+			return res==CODEC_ID_NONE?VFW_E_TYPE_NOT_ACCEPTED:S_OK;
 
-	if (FAILED(hr))
-	{
-		// Error handling omitted for clarity.
-	}
+        DWORD dwType;
+		BYTE buf[4096] = { '\0' };   // make it big enough for any kind of values
+		DWORD dwSize = sizeof(buf);
+        regErr = RegQueryValueEx(hKey, _T("wmplayer.exe"), 0, &dwType, buf, &dwSize);
 
-	GUID arrayInTypes[2];
-	arrayInTypes[0] = mt->majortype;//MEDIATYPE_Video;
-	arrayInTypes[1] = mt->subtype;//MEDIASUBTYPE_dvsd;
+		if(hKey)
+			RegCloseKey(hKey);
 
-	hr = pMapper->EnumMatchingFilters(
-			&pEnum,
-			0,                  // Reserved.
-			TRUE,               // Use exact match?
-			MERIT_DO_NOT_USE+1, // Minimum merit.
-			TRUE,               // At least one input pin?
-			1,                  // Number of major type/subtype pairs for input.
-			arrayInTypes,       // Array of major type/subtype pairs for input.
-			NULL,               // Input medium.
-			NULL,               // Input pin category.
-			FALSE,              // Must be a renderer?
-			TRUE,               // At least one output pin?
-			0,                  // Number of major type/subtype pairs for output.
-			NULL,               // Array of major type/subtype pairs for output.
-			NULL,               // Output medium.
-			NULL);              // Output pin category.
-
-	// Enumerate the monikers.
-	IMoniker *pMoniker;
-	ULONG cFetched;
-
-	while (pEnum->Next(1, &pMoniker, &cFetched) == S_OK)
-	{
-		IPropertyBag *pPropBag = NULL;
-		hr = pMoniker->BindToStorage(0, 0, IID_IPropertyBag, 
-		   (void **)&pPropBag);
-
-		if (SUCCEEDED(hr))
+        if (regErr != ERROR_SUCCESS || dwType != REG_BINARY)
 		{
-			// To retrieve the friendly name of the filter, do the following:
-			VARIANT varName;
-			VariantInit(&varName);
-			hr = pPropBag->Read(L"FriendlyName", &varName, 0);
+			return res==CODEC_ID_NONE?VFW_E_TYPE_NOT_ACCEPTED:S_OK;
+		}
+
+		if (buf[2] >= 0x0b) // Third byte is the major version number
+			doPostProcessing = true;
+	 }
+
+
+	 if (doPostProcessing)
+	 {
+		DPRINTF(_l("TffdshowVideoInputPin::CheckMediaType: input format disabled or not supported. Trying to maintain in the graph..."));	 
+		IFilterMapper2 *pMapper = NULL;
+		IEnumMoniker *pEnum = NULL;
+
+		HRESULT hr = CoCreateInstance(CLSID_FilterMapper2, 
+			NULL, CLSCTX_INPROC, IID_IFilterMapper2, 
+			(void **) &pMapper);
+
+		if (FAILED(hr))
+		{
+			// Error handling omitted for clarity.
+		}
+
+		GUID arrayInTypes[2];
+		arrayInTypes[0] = mt->majortype;//MEDIATYPE_Video;
+		arrayInTypes[1] = mt->subtype;//MEDIASUBTYPE_dvsd;
+
+		hr = pMapper->EnumMatchingFilters(
+				&pEnum,
+				0,                  // Reserved.
+				TRUE,               // Use exact match?
+				MERIT_DO_NOT_USE+1, // Minimum merit.
+				TRUE,               // At least one input pin?
+				1,                  // Number of major type/subtype pairs for input.
+				arrayInTypes,       // Array of major type/subtype pairs for input.
+				NULL,               // Input medium.
+				NULL,               // Input pin category.
+				FALSE,              // Must be a renderer?
+				TRUE,               // At least one output pin?
+				0,                  // Number of major type/subtype pairs for output.
+				NULL,               // Array of major type/subtype pairs for output.
+				NULL,               // Output medium.
+				NULL);              // Output pin category.
+
+		// Enumerate the monikers.
+		IMoniker *pMoniker;
+		ULONG cFetched;
+
+		while (pEnum->Next(1, &pMoniker, &cFetched) == S_OK)
+		{
+			IPropertyBag *pPropBag = NULL;
+			hr = pMoniker->BindToStorage(0, 0, IID_IPropertyBag, 
+			   (void **)&pPropBag);
+
 			if (SUCCEEDED(hr))
 			{
-				if (varName.pbstrVal == NULL || _strnicmp(FFDSHOW_NAME_L,varName.bstrVal,22)!=0)
+				// To retrieve the friendly name of the filter, do the following:
+				VARIANT varName;
+				VariantInit(&varName);
+				hr = pPropBag->Read(L"FriendlyName", &varName, 0);
+				if (SUCCEEDED(hr))
 				{
-					// Display the name in your UI somehow.
-					DPRINTF(_l("TffdshowVideoInputPin::CheckMediaType: compatible filter found (%s)"), varName.pbstrVal);
-					hr = pMoniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)&pCompatibleFilter);
+					if (varName.pbstrVal == NULL || _strnicmp(FFDSHOW_NAME_L,varName.bstrVal,22)!=0)
+					{
+						// Display the name in your UI somehow.
+						DPRINTF(_l("TffdshowVideoInputPin::CheckMediaType: compatible filter found (%s)"), varName.pbstrVal);
+						hr = pMoniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)&pCompatibleFilter);
+					}
 				}
-			}
 
-			// Now add the filter to the graph. Remember to release pFilter later.
-			IFilterGraph *pGraph=NULL;
-			fv->deci->getGraph(&pGraph);
+				// Now add the filter to the graph. Remember to release pFilter later.
+				IFilterGraph *pGraph=NULL;
+				fv->deci->getGraph(&pGraph);
 
-			IGraphBuilder *pGraphBuilder = NULL;
-			hr = pGraph->QueryInterface(IID_IGraphBuilder, (void **)&pGraphBuilder);
-			if (hr==S_OK)
-			{
-				pGraphBuilder->AddFilter(pCompatibleFilter, varName.bstrVal);
+				IGraphBuilder *pGraphBuilder = NULL;
+				hr = pGraph->QueryInterface(IID_IGraphBuilder, (void **)&pGraphBuilder);
+				if (hr==S_OK)
+				{
+					pGraphBuilder->AddFilter(pCompatibleFilter, varName.bstrVal);
+				}
+				else
+				{
+					pCompatibleFilter->Release();
+					pCompatibleFilter=NULL;
+				}
+				
+				// Clean up.
+				VariantClear(&varName);
+				pGraphBuilder->Release();
+				pPropBag->Release();
 			}
-			else
-			{
-				pCompatibleFilter->Release();
-				pCompatibleFilter=NULL;
-			}
-			
-			// Clean up.
-			VariantClear(&varName);
-			pGraphBuilder->Release();
-			pPropBag->Release();
+			pMoniker->Release();
+			if (pCompatibleFilter != NULL)
+				break;
 		}
-		pMoniker->Release();
-		if (pCompatibleFilter != NULL)
-			break;
-	}
 
-	// Clean up.
-	pMapper->Release();
-	pEnum->Release();
+		// Clean up.
+		pMapper->Release();
+		pEnum->Release();
+	 }
  }
  if (pCompatibleFilter != NULL) return S_OK;
  return res==CODEC_ID_NONE?VFW_E_TYPE_NOT_ACCEPTED:S_OK;

@@ -503,7 +503,7 @@ void TcodecsPageVideo::fillCodecs(void)
    NULL,0
   };
 
- static const Tformat::Toption option={FOURCC_MASK_ALL, _l("Enable in Vista WMP11"),IDFF_alternateUncompressed,1};
+ static const Tformat::Toption option={FOURCC_MASK_ALL, _l("Enable in WMP11"),IDFF_alternateUncompressed,1};
  raw.options.push_back(option);
 
  for (int i=0;rawincsps[i].name;i++)
