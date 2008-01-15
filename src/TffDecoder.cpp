@@ -1966,11 +1966,11 @@ STDMETHODIMP TffdshowDecVideo::GetMarkerName(long MarkerNum, BSTR * pbstrMarkerN
 	return S_OK;
 }
 
-STDMETHODIMP TffdshowDecVideo::getChaptersList(TchaptersList **ppChaptersList)
+STDMETHODIMP TffdshowDecVideo::getChaptersList(void **ppChaptersList)
 {
 	if (chaptersList.size() <= 1)
 		getChapters();
-	*ppChaptersList = &chaptersList;
+	*ppChaptersList = (void**) &chaptersList;
 	return S_OK;
 }
 

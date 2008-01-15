@@ -156,7 +156,7 @@ public:
  STDMETHODIMP registerOSDprovider(IOSDprovider *provider,const char *name);
  STDMETHODIMP unregisterOSDprovider(IOSDprovider *provider);
  STDMETHODIMP findOverlayControl2(IhwOverlayControl* *overlayPtr);
- STDMETHODIMP getChaptersList(TchaptersList **ppChaptersList);
+ STDMETHODIMP getChaptersList(void **ppChaptersList);
 
  //compatibility
  STDMETHODIMP compat_getIffDecoderVersion2(void);
@@ -490,7 +490,7 @@ private:
    STDMETHODIMP unlockCSReceive(void) { return deciV->unlockCSReceive(); }
    STDMETHODIMP_(ToutputVideoSettings*) getToutputVideoSettings(void) {return deciV->getToutputVideoSettings();}
    STDMETHODIMP_(int) getBordersBrightness(void){return deciV->getBordersBrightness();}
-   STDMETHODIMP getChaptersList(TchaptersList **ppChaptersList) { return E_NOTIMPL; };
+   STDMETHODIMP getChaptersList(void **ppChaptersList) { return E_NOTIMPL; };
  } decVideo_char;
  template<class Tinterface> Tinterface* getDecVideoInterface(void);
  void ConnectCompatibleFilter(void);

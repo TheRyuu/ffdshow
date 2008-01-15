@@ -26,6 +26,7 @@
 #include "reg.h"
 #include "Tpresets.h"
 #include "TpresetSettings.h"
+#include "TffDecoderVideo.h"
 
 
 Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),Toptions(Icoll)
@@ -462,9 +463,8 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			char_t *stringList = (char_t*)alloca(sizeof(char_t)*string_size);
 			strcpy(stringList, _l(""));
 			TchaptersList *pChaptersList = NULL;
-			deciV->getChaptersList(&pChaptersList);
+			deciV->getChaptersList((void**)&pChaptersList);
 			
-			//for (TchaptersList::iterator i=pChaptersList->begin();i!=pChaptersList->end();i++)
 			for (long l = 0; l<pChaptersList->size(); l++)
 			{
 				long markerTime = (*pChaptersList)[l].first;
@@ -554,102 +554,6 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 	   SendMessage((HWND)wprm, WM_COPYDATA, paramid, lprm);
        return TRUE;
       }
-	 /* The following should be removed but are kept for backward compatibility (indeed, all
-	  the "get string" commands should be treated with postmessage to avoid thread blocking */
-	 case COPY_CURRENT_SUBTITLES:
-	  {
-		  if (!deciV || cds->cbData==0) return FALSE;
-		  const char_t *cursubflnm=deciV->getCurrentSubFlnm();
-		  strncpy((char*)cds->lpData,text<char>(cursubflnm),cds->cbData);
-          ((char*)cds->lpData)[cds->cbData-1]='\0';
-		  SendMessage((HWND)wprm, WM_COPYDATA, COPY_CURRENT_SUBTITLES, lprm);
-		  return TRUE;
-	  }
-	  case COPY_GET_PRESETLIST:
-	  {
-		COPYDATASTRUCT cd;
-		cd.dwData = COPY_GET_PRESETLIST;
-		Tpresets *presets;
-		deciD->getPresetsPtr(&presets);
-		int presetsNum = presets->size();
-		size_t string_size = 2048;
-		char_t *presetList = (char_t*)alloca(sizeof(char_t)*string_size);
-		strcpy(presetList, _l(""));
-		for (int i=0; i<presetsNum; i++)
-		{
-			Tpreset *preset = presets->at(i);
-			const char_t *presetName = preset->presetName;
-			// Resize the string if needed
-			if (strlen(presetList)+strlen(presetName)+ 1 >= string_size)
-			{
-				string_size += 2048;
-				char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
-				strcpy(tmpStr, presetList);
-				presetList = tmpStr;
-			}
-			strcat(presetList, presetName);
-			if (i != presetsNum - 1)
-				strcat(presetList, _l(";"));
-		}
-		cd.lpData = alloca(sizeof(char)*(strlen(presetList)+1));
-		strcpy((char*)cd.lpData, "");
-		text<char>(presetList, (char*)cd.lpData);
-		cd.cbData = strlen(presetList)+1;
-		SendMessage((HWND)wprm, WM_COPYDATA, COPY_GET_PRESETLIST, (LPARAM)&cd);
-		return TRUE;
-	  }
-	  case COPY_GET_SOURCEFILE:
-	  {
-		COPYDATASTRUCT cd;
-		cd.dwData = COPY_GET_SOURCEFILE;
-		const char_t *fileName = deci->getSourceName();
-		cd.lpData = alloca(sizeof(char)*(strlen(fileName)+1));
-		strcpy((char*)cd.lpData, "");
-		text<char>(fileName, (char*)cd.lpData);
-		cd.cbData = strlen(fileName)+1;
-		SendMessage((HWND)wprm, WM_COPYDATA, COPY_GET_SOURCEFILE, (LPARAM)&cd);
-		return TRUE;
-	  }
-	  case COPY_GET_SUBTITLEFILESLIST:
-	  {
-		COPYDATASTRUCT cd;
-		cd.dwData = COPY_GET_SUBTITLEFILESLIST;
-		if (!deciV) return FALSE;
-        strings files;
-        TsubtitlesFile::findPossibleSubtitles(deci->getSourceName(),deci->getParamStr2(IDFF_subSearchDir),files);
-        if (files.size() == 0)
-		{
-			return FALSE;
-		}
-		else
-        {
-			size_t string_size = 2048;
-			char_t *filesList = (char_t*)alloca(sizeof(char_t)*string_size);
-			strcpy(filesList, _l(""));
-			for (UINT i=0; i<files.size(); i++)
-			{
-				const char_t *fileName = files[i].c_str();
-				// Resize the string if needed
-				if (strlen(filesList)+strlen(fileName)+ 1 >= string_size)
-				{
-					string_size += 2048;
-					char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
-					strcpy(tmpStr, filesList);
-					filesList = tmpStr;
-				}
-				strcat(filesList, fileName);
-				if (i != files.size() - 1)
-					strcat(filesList, _l(";"));
-			}
-			cd.lpData = alloca(sizeof(char)*(strlen(filesList)+1));
-			strcpy((char*)cd.lpData, "");
-			text<char>(filesList, (char*)cd.lpData);
-			cd.cbData = strlen(filesList)+1;
-			SendMessage((HWND)wprm, WM_COPYDATA, COPY_GET_SUBTITLEFILESLIST, (LPARAM)&cd);
-			return TRUE;
-        }
-	  }
-	  /* End of elements to be removed */
 	  case COPY_SET_SHORTOSD_MSG:
 		  return SUCCEEDED(deciV->shortOSDmessage(text<char_t>((const char*)cds->lpData), 25))?TRUE:FALSE;
 	  case COPY_SET_OSD_MSG:
