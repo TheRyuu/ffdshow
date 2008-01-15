@@ -173,7 +173,8 @@ private:
  int topOverhang,bottomOverhang,leftOverhang,rightOverhang;
  int m_outlineWidth,m_shadowSize,m_shadowMode;
  int dstOffset;
- mutable int oldFader,oldBodyYUVa,oldOutlineYUVa;
+ mutable int oldFader;
+ mutable unsigned int oldBodyYUVa,oldOutlineYUVa;
  TSubtitleProps props;
  void drawShadow(       HDC hdc,
                         HBITMAP hbmp,

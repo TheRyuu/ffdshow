@@ -59,36 +59,36 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
 {
  *this = parent;
  secondaryColoredWord = NULL;
- bmp[0] = (unsigned char*)_aligned_malloc(_aligned_msize(parent.bmp[0], 16, 0), 16);
- memcpy(bmp[0], parent.bmp[0], _aligned_msize(bmp[0], 16, 0));
- bmp[1] = (unsigned char*)_aligned_malloc(_aligned_msize(parent.bmp[1], 16, 0), 16);
- memcpy(bmp[1], parent.bmp[1], _aligned_msize(bmp[1], 16, 0));
+ bmp[0]     = (unsigned char*)_aligned_malloc(dx[0] * dy[0] + 16, 16);
+ bmp[1]     = (unsigned char*)_aligned_malloc(dx[1] * dy[1] + 16, 16);
+ outline[0] = (unsigned char*)_aligned_malloc(dx[0] * dy[0] + 16, 16);
+ outline[1] = (unsigned char*)_aligned_malloc(dx[1] * dy[1] + 16, 16);
+ shadow[0]  = (unsigned char*)_aligned_malloc(dx[0] * dy[0] + 16, 16);
+ shadow[1]  = (unsigned char*)_aligned_malloc(dx[1] * dy[1] + 16, 16);
+ msk[0]     = (unsigned char*)_aligned_malloc(dx[0] * dy[0] + 16, 16);
 
- outline[0] = (unsigned char*)_aligned_malloc(_aligned_msize(parent.outline[0], 16, 0), 16);
- outline[1] = (unsigned char*)_aligned_malloc(_aligned_msize(parent.outline[1], 16, 0), 16);
- shadow[0] = (unsigned char*)_aligned_malloc(_aligned_msize(parent.shadow[0], 16, 0), 16);
- shadow[1] = (unsigned char*)_aligned_malloc(_aligned_msize(parent.shadow[1], 16, 0), 16);
- msk[0] = (unsigned char*)_aligned_malloc(_aligned_msize(parent.msk[0], 16, 0), 16);
+ memcpy(bmp[0], parent.bmp[0], dx[0] * dy[0]);
+ memcpy(bmp[1], parent.bmp[1], dx[1] * dy[1]);
  if (props.karaokeMode == TSubtitleProps::KARAOKE_ko)
   {
-   memset(outline[0], 0, _aligned_msize(outline[0], 16, 0));
-   memset(outline[1], 0, _aligned_msize(outline[1], 16, 0));
-   memset(shadow[0], 0, _aligned_msize(shadow[0], 16, 0));
-   memset(shadow[1], 0, _aligned_msize(shadow[1], 16, 0));
+   memset(outline[0], 0, dx[0] * dy[0]);
+   memset(outline[1], 0, dx[1] * dy[1]);
+   memset(shadow[0] , 0, dx[0] * dy[0]);
+   memset(shadow[1] , 0, dx[1] * dy[1]);
    m_outlineYUV.A = 0;
   }
  else
   {
-   memcpy(outline[0], parent.outline[0], _aligned_msize(outline[0], 16, 0));
-   memcpy(outline[1], parent.outline[1], _aligned_msize(outline[1], 16, 0));
-   memcpy(shadow[0], parent.shadow[0], _aligned_msize(shadow[0], 16, 0));
-   memcpy(shadow[1], parent.shadow[1], _aligned_msize(shadow[1], 16, 0));
+   memcpy(outline[0], parent.outline[0], dx[0] * dy[0]);
+   memcpy(outline[1], parent.outline[1], dx[1] * dy[1]);
+   memcpy(shadow[0] , parent.shadow[0] , dx[0] * dy[0]);
+   memcpy(shadow[1] , parent.shadow[1] , dx[1] * dy[1]);
   }
 
  if (parent.msk[1])
   {
-   msk[1] = (unsigned char*)_aligned_malloc(_aligned_msize(parent.msk[1], 16, 0), 16);
-   memset(msk[1], 0, _aligned_msize(msk[1], 16, 0));
+   msk[1] = (unsigned char*)_aligned_malloc(dx[1] * dy[1] + 16, 16);
+   memset(msk[1], 0, dx[1] * dy[1]);
   }
  m_bodyYUV = YUVcolorA(props.SecondaryColour,props.SecondaryColourA);
  oldFader = 0;
