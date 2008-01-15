@@ -17,8 +17,10 @@
 #include "ScriptError.h"
 #include "ScriptValue.h"
 #include "Filter.h"
+#include <limits.h>
+#include <ctype.h>
 #include <wchar.h>
-// STL
+// STLcd 
 #include "../../src/PODtypes.h"
 #if defined(UCLIBCPP) && (defined(__INTEL_COMPILER) || defined(__GNUC__) || (_MSC_VER>=1300))
  #include "../../src/uClibc++/vector"

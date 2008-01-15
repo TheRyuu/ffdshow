@@ -1,4 +1,4 @@
-CFLAGS+= -I. -I../src -I../include
+CFLAGS+= -I. -I../src -I../include -DUCLIBCPP
 
 SRCS=combase.cpp ffvdub.cpp Tffvdub.cpp TpropertyPageSite.cpp base64.cpp
 

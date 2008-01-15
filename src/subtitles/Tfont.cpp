@@ -59,13 +59,13 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
 {
  *this = parent;
  secondaryColoredWord = NULL;
- bmp[0]     = (unsigned char*)_aligned_malloc(dx[0] * dy[0] + 16, 16);
- bmp[1]     = (unsigned char*)_aligned_malloc(dx[1] * dy[1] + 16, 16);
- outline[0] = (unsigned char*)_aligned_malloc(dx[0] * dy[0] + 16, 16);
- outline[1] = (unsigned char*)_aligned_malloc(dx[1] * dy[1] + 16, 16);
- shadow[0]  = (unsigned char*)_aligned_malloc(dx[0] * dy[0] + 16, 16);
- shadow[1]  = (unsigned char*)_aligned_malloc(dx[1] * dy[1] + 16, 16);
- msk[0]     = (unsigned char*)_aligned_malloc(dx[0] * dy[0] + 16, 16);
+ bmp[0]     = (unsigned char*)aligned_malloc(dx[0] * dy[0] + 16, 16);
+ bmp[1]     = (unsigned char*)aligned_malloc(dx[1] * dy[1] + 16, 16);
+ outline[0] = (unsigned char*)aligned_malloc(dx[0] * dy[0] + 16, 16);
+ outline[1] = (unsigned char*)aligned_malloc(dx[1] * dy[1] + 16, 16);
+ shadow[0]  = (unsigned char*)aligned_malloc(dx[0] * dy[0] + 16, 16);
+ shadow[1]  = (unsigned char*)aligned_malloc(dx[1] * dy[1] + 16, 16);
+ msk[0]     = (unsigned char*)aligned_malloc(dx[0] * dy[0] + 16, 16);
 
  memcpy(bmp[0], parent.bmp[0], dx[0] * dy[0]);
  memcpy(bmp[1], parent.bmp[1], dx[1] * dy[1]);
@@ -87,7 +87,7 @@ TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
 
  if (parent.msk[1])
   {
-   msk[1] = (unsigned char*)_aligned_malloc(dx[1] * dy[1] + 16, 16);
+   msk[1] = (unsigned char*)aligned_malloc(dx[1] * dy[1] + 16, 16);
    memset(msk[1], 0, dx[1] * dy[1]);
   }
  m_bodyYUV = YUVcolorA(props.SecondaryColour,props.SecondaryColourA);

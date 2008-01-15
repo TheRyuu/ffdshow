@@ -1205,7 +1205,7 @@ template<class tchar> void TsubtitleTextBase<tchar>::processKaraoke(void)
  REFERENCE_TIME karaokeStart = REFTIME_INVALID;
  for (typename Tbase::iterator l = this->begin() ; l != this->end() ; l++)
   {
-   for (TsubtitleLine::iterator w = l->begin() ; w != l->end() ; w++)
+   for (typename TsubtitleLine::iterator w = l->begin() ; w != l->end() ; w++)
     {
      if (karaokeStart == REFTIME_INVALID)
       karaokeStart = w->props.karaokeStart;
