@@ -4,14 +4,13 @@ SRCS=ffdshow_all.cpp TffDecoder_reg.cpp Tconfig.cpp
 
 SRCS_C=ffdebug.c
 
-ifneq ($(CC),icl)
 SRCS_NASM=cpuid.asm memcpy.asm subtitles/fontRenderer.asm convert/colorspace_rgb_mmx.asm
-endif
 
 include makefile.inc
 
 ALLDLLS=LIBMPEG2 LIBMAD LIBFAAD2 THEORA X264 XVIDCORE LIBDTS SAMPLERATE TREMOR WMV9 \
-        REALAAC TOMSMOCOMP KDINT UNRAR VFW ACM
+        REALAAC TOMSMOCOMP KDINT UNRAR VFW ACM FFAVS LIBA52 FFVDUB DSCALER MAKEAVIS \
+        FFMPEG LIBMP VERINC REBASE
 
 ALLS=../bin/libmpeg2_ff.dll \
      ../bin/ff_libmad.dll \
@@ -33,15 +32,11 @@ ALLS=../bin/libmpeg2_ff.dll \
      ../bin/libmplayer.dll \
      ../bin/libavcodec.dll \
      ../bin/ffvdub.vdf \
-     ../bin/makeAVIS.exe
-
-ifneq ($(CC),icl)
-ALLS+=../bin/ffavisynth.dll \
-      ../bin/FLT_ffdshow.dll \
-      ../bin/verinc.exe \
-      ../bin/rebase.exe
-ALLDLLS+=FFAVS LIBA52 FFVDUB DSCALER MAKEAVIS FFMPEG LIBMP VERINC REBASE
-endif
+     ../bin/makeAVIS.exe \
+     ../bin/ffavisynth.dll \
+     ../bin/FLT_ffdshow.dll \
+     ../bin/verinc.exe \
+     ../bin/rebase.exe
 
 .all: lib $(ALLDLLS) $(LIBSONAME)
 
@@ -61,17 +56,11 @@ LIBS=acm/Tacm.o \
      settings/ffdshow_settings_all.o settings/lzo/minilzo.o \
      subtitles/ffdshow_subtitles_all.o \
      baseclasses/baseclasses_all.o \
-     ffmpeg/libavcodec/golomb.o
-
-ifneq ($(CC),icl)
-LIBS+=audioFilters/TaudioFilterConvert.o audioFilters/dotproduct.o \
-      imgFilters/simple_idct_mmx.o ffmpeg/libavcodec/i386/skl_dct_sse.o ffmpeg/libavcodec/i386/skl_dct_sse2.o ffmpeg/libavcodec/i386/skl_fdct_mmx.o ffmpeg/libavcodec/i386/skl_fdct_sse2.o
-endif
-
-ifeq ($(CC),cl)
-LIBS+=imgFilters/awarpsharp/aws.obj audioFilters/dotproduct.obj
-endif
-
+     ffmpeg/libavcodec/golomb.o \
+     audioFilters/TaudioFilterConvert.o audioFilters/dotproduct.o \
+     imgFilters/simple_idct_mmx.o ffmpeg/libavcodec/i386/skl_dct_sse.o \
+     ffmpeg/libavcodec/i386/skl_dct_sse2.o ffmpeg/libavcodec/i386/skl_fdct_mmx.o \
+     ffmpeg/libavcodec/i386/skl_fdct_sse2.o
 
 lib:    
 	$(MAKE) -C baseclasses
@@ -85,8 +74,7 @@ lib:
 	$(MAKE) -C subtitles
 	$(MAKE) -C muxers
 	$(MAKE) -C filters
-
-ifneq ($(CC),cl)
+	
 ../bin/libavcodec.dll:
 	$(MAKE) -C ffmpeg
 FFMPEG:
@@ -96,7 +84,6 @@ FFMPEG:
 	$(MAKE) -C mplayer
 LIBMP:
 	$(MAKE) -C mplayer
-endif
 
 ../bin/libmpeg2_ff.dll:
 	$(MAKE) -C codecs/libmpeg2
@@ -215,40 +202,12 @@ VERINC:
 REBASE:
 	$(MAKE) -C ../rebase
 
-ifneq ($(CC),icl)
 DO_REBASE=../bin/rebase.exe ../bin/rebase.txt
-endif
 
 RESSRC=ffdshow.rc 
 
-ifneq ($(CC),icl)
 ffdshow.res.o:../bin/verinc.exe 
-endif
 
-ifeq ($(CC),icl)
-$(LIBSONAME):$(OBJS) $(LIBS) $(RESSRC:.rc=.res.o) ffdshow.def
-	link $(OBJS) $(LIBS) ffdshow.res.o \
-             msvcrt.lib msvcprt.lib \
-             kernel32.lib user32.lib advapi32.lib winmm.lib ole32.lib uuid.lib oleaut32.lib comctl32.lib gdi32.lib shell32.lib comdlg32.lib oldnames.lib shlwapi.lib \
-             dinput.lib dxguid.lib \
-             libircmt.lib libmmds.lib \
-             /dll /machine:AMD64 /nodefaultlib \
-             /def:"ffdshow.def" \
-             /out:$(LIBSONAME) 
-	$(DO_REBASE)
-else
-ifeq ($(CC),cl)
-$(LIBSONAME):$(OBJS) $(LIBS) $(RESSRC:.rc=.res.o) ffdshow.def
-	link $(OBJS) $(LIBS) ffdshow.res.o \
-             msvcrt.lib msvcprt.lib \
-             kernel32.lib user32.lib advapi32.lib winmm.lib ole32.lib uuid.lib oleaut32.lib comctl32.lib gdi32.lib shell32.lib comdlg32.lib oldnames.lib shlwapi.lib \
-             dinput.lib dxguid.lib \
-             /dll /machine:I386 /nodefaultlib \
-             /def:"ffdshow.def" \
-             /out:$(LIBSONAME) 
-	$(DO_REBASE)
-
-else
 $(LIBSONAME):../bin/verinc.exe $(OBJS) $(LIBS) $(RESSRC:.rc=.res.o) ffdshow.def.gcc
 	$(FFDSHOW_PREFIX)dllwrap -mno-cygwin --target=i386-mingw32 \
                 -o $(LIBSONAME) -def ffdshow.def.gcc \
@@ -258,8 +217,6 @@ $(LIBSONAME):../bin/verinc.exe $(OBJS) $(LIBS) $(RESSRC:.rc=.res.o) ffdshow.def.
                 -lgdi32 -lcomdlg32 -lwinmm -lcomctl32 -luuid -lole32 -loleaut32 \
                 -ldinput -ldxguid -lshlwapi
 	$(DO_REBASE)
-endif
-endif
 
 clean:	
 	$(RM) $(TEMPFILES) $(LIBSONAME) mplayer/Tlibmplayer.o ffmpeg/Tlibavcodec.o xiph/ogg/bitwise.o xiph/ogg/framing.o xiph/ogg/bitwise.d xiph/ogg/framing.d
@@ -274,12 +231,8 @@ clean:
 	$(MAKE) -C subtitles clean
 	$(MAKE) -C muxers clean
 	$(MAKE) -C filters clean
-ifneq ($(CC),cl)
-ifneq ($(CC),icl)
 	$(MAKE) -C ffmpeg clean
 	$(MAKE) -C mplayer clean
-endif
-endif
 	$(MAKE) -C codecs/libmpeg2 clean
 	$(MAKE) -C codecs/libmad clean
 	$(MAKE) -C codecs/faad clean
@@ -316,12 +269,8 @@ distclean:
 	$(MAKE) -C subtitles distclean
 	$(MAKE) -C muxers distclean
 	$(MAKE) -C filters distclean
-ifneq ($(CC),cl)
-ifneq ($(CC),icl)
 	$(MAKE) -C ffmpeg distclean
 	$(MAKE) -C mplayer distclean
-endif
-endif
 	$(MAKE) -C codecs/libmpeg2 distclean
 	$(MAKE) -C codecs/libmad distclean
 	$(MAKE) -C codecs/faad distclean

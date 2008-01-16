@@ -1,7 +1,6 @@
 LAVC_DIR=libavcodec
 LAVU_DIR=libavutil
 ZLIB_DIR=../zlib
-PNG_DIR =../png
 
 CFLAGS+= -I. -I.. -I$(LAVC_DIR) -I$(LAVU_DIR) -I../codecs -I../imgFilters -I../zlib \
          -DHAVE_AV_CONFIG_H
@@ -221,7 +220,7 @@ include ../makefile_c.inc
 .all: $(SLIB)
 
 clean: 
-	rm -f *.o *.d *~ $(LAVC_DIR)/*.o $(LAVC_DIR)/*.d $(LAVC_DIR)/i386/*.o $(LAVC_DIR)/amr_float/*.o $(LAVF_DIR)/*.o $(LAVF_DIR)/*.d $(LAVU_DIR)/*.o $(LAVU_DIR)/*.d $(SLIB) $(ZLIB_DIR)/*.o $(PNG_DIR)/*.o $(LAVC_DIR)/i386/*.d $(LAVC_DIR)/amr_float/*.d $(ZLIB_DIR)/*.d
+	rm -f *.o *.d $(LAVC_DIR)/*.o $(LAVC_DIR)/*.d $(LAVC_DIR)/i386/*.o $(LAVC_DIR)/i386/*.d $(LAVC_DIR)/amr_float/*.o $(LAVC_DIR)/amr_float/*.d $(LAVU_DIR)/*.o $(LAVU_DIR)/*.d $(ZLIB_DIR)/*.o $(ZLIB_DIR)/*.d $(SLIB)
 
 #
 # include dependency files if they exist
