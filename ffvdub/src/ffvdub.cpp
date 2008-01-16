@@ -17,6 +17,7 @@
  */
 
 #include "stdafx.h"
+#include <new>
 #include "Tffvdub.h"
 #include "resource.h"
 

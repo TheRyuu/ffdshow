@@ -17,22 +17,5 @@
 #include "ScriptError.h"
 #include "ScriptValue.h"
 #include "Filter.h"
-#include <limits.h>
-#include <ctype.h>
-#include <wchar.h>
-// STLcd 
-#include "../../src/PODtypes.h"
-#if defined(UCLIBCPP) && (defined(__INTEL_COMPILER) || defined(__GNUC__) || (_MSC_VER>=1300))
- #include "../../src/uClibc++/vector"
- #include "../../src/uClibc++/algorithm"
- #include "../../src/uClibc++/map"
- #include "../../src/uClibc++/list"
- #include "../../src/uClibc++/hash_map"
- #include "../../src/uClibc++/utility"
- #include "../../src/uClibc++/limits"
-#endif
-#if defined(__INTEL_COMPILER) || defined(__GNUC__) || (_MSC_VER>=1300)
- #include "../../src/tuple.h"
-#endif
-#include "../../src/dwstring.h"
+
 #endif
