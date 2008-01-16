@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1776
+#define tryout_revision = 1785
 #define buildyear = 2008
 #define buildmonth = '01'
-#define buildday = '14'
+#define buildday = '16'
 
 ; Build specific options
 #define unicode_required = True
@@ -34,6 +34,7 @@
 ; Custom builder preferences
 #define PREF_CLSID = False
 #define PREF_CLSID_ICL = False
+#define PREF_CLSID_UNICODE = False
 #define PREF_YAMAGATA = False
 #define PREF_XXL = False
 #define PREF_X64 = False
@@ -41,6 +42,12 @@
 #if PREF_CLSID
   #define MSVC80 = False
   #define unicode_required = False
+  #define filename_suffix = '_clsid'
+  #define outputdir = '..\..\..\..\'
+#endif
+#if PREF_CLSID_UNICODE
+  #define MSVC80 = False
+  #define unicode_required = True
   #define filename_suffix = '_clsid'
   #define outputdir = '..\..\..\..\'
 #endif
