@@ -91,4 +91,9 @@
 #include "ffglobals.h"
 #include "comptr.h"
 
+#if defined(UNICODE) && defined(__GNUC__)
+ #undef TEXT
+ #define TEXT(q) L##q
+#endif
+
 #endif
