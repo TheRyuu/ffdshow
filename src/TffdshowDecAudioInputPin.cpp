@@ -29,7 +29,9 @@ TffdshowDecAudioInputPin::TffdshowDecAudioInputPin(const char_t* pObjectName, Tf
   number(Inumber),
   audio(NULL),
   jitter(0),
-  prevpostgain(1.0f)
+  prevpostgain(1.0f),
+  insample_rtStart(REFTIME_INVALID),
+  insample_rtStop(REFTIME_INVALID)
 {
 }
 TffdshowDecAudioInputPin::~TffdshowDecAudioInputPin()
@@ -79,6 +81,8 @@ STDMETHODIMP TffdshowDecAudioInputPin::NewSegment(REFERENCE_TIME tStart,REFERENC
  CAutoLock cAutoLock(&m_csReceive);
  buf.clear();
  jitter=0;
+ insample_rtStart = REFTIME_INVALID;
+ insample_rtStop = REFTIME_INVALID;
  return TinputPin::NewSegment(tStart,tStop,dRate);
 }
 
@@ -134,6 +138,13 @@ STDMETHODIMP TffdshowDecAudioInputPin::Receive(IMediaSample* pIn)
 
  REFERENCE_TIME rtStart=_I64_MIN,rtStop=_I64_MIN;
  hr=pIn->GetTime(&rtStart,&rtStop);
+
+ if (hr == S_OK)
+  {
+   insample_rtStart = rtStart;
+   insample_rtStop = rtStop;
+   //DPRINTF(_l("audio sample start duration %I64i %I64i"),rtStart,rtStop-rtStart);
+  }
 
  if (pIn->IsDiscontinuity()==S_OK)
   {

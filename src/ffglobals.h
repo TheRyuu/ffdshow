@@ -65,6 +65,8 @@ typedef const TCHAR *PCTSTR;
 #define M_SQRT2	1.41421356237309504880
 #endif
 
+#define ODD2EVEN(x) x&1?x+1:x
+
 #define REF_SECOND_MULT 10000000LL
 #define REFTIME_INVALID _I64_MIN
 

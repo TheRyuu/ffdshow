@@ -754,10 +754,17 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleSPDIF(void *buf,size_t size,int bit_
  size_t length;
  if (!fileout)
   {
+   unsigned int size2;
    length=0;
-   while (length<size+sizeof(WORD)*8) length+=0x800; // 2048 = AC3 
-   unsigned int size2=(unsigned int)(int64_t(1)*wfe->nBlockAlign*wfe->nSamplesPerSec*size*8/bit_rate);
-   while (length<size2) length+=0x800;
+   while (length < (ODD2EVEN(size)) + sizeof(WORD) * 8)
+    length += 0x800; // 2048 = AC3 
+   // bit_rate is not always correct. This is a bug of some where else. Because I can't fix it now, work around for it...
+   if (bit_rate <= 1 && inpin->insample_rtStart != REFTIME_INVALID && inpin->insample_rtStop != REFTIME_INVALID)
+    size2 = unsigned int(wfe->nBlockAlign * wfe->nSamplesPerSec * (inpin->insample_rtStop - inpin->insample_rtStart) / REF_SECOND_MULT);
+   else
+    size2 = unsigned int(int64_t(1) * wfe->nBlockAlign * wfe->nSamplesPerSec * size * 8 / bit_rate);
+   while (length<size2)
+    length+=0x800;
   }
  else
   length=size;
@@ -770,9 +777,17 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleSPDIF(void *buf,size_t size,int bit_
  if (FAILED(getDeliveryBuffer(&pOut,&pDataOut)))
   return E_FAIL;
 
- REFERENCE_TIME rtDur=REF_SECOND_MULT*size*8/bit_rate;
+ REFERENCE_TIME rtDur;
+ if (bit_rate <= 1 && inpin->insample_rtStart != REFTIME_INVALID && inpin->insample_rtStop != REFTIME_INVALID)
+  {
+   rtDur = inpin->insample_rtStop - inpin->insample_rtStart;
+  }
+ else
+  {
+   rtDur = REF_SECOND_MULT*size*8/bit_rate;
+  }
  REFERENCE_TIME rtStart=m_rtStartProc,rtStop=m_rtStartProc+rtDur;
- DPRINTF(_l("pin:%I64i startDec:%I64i"),rtStart,m_rtStartDec);
+ //DPRINTF(_l("pin:%I64i startDec:%I64i"),rtStart,m_rtStartDec);
  m_rtStartProc+=rtDur;if (incRtDec) m_rtStartDec+=rtDur;
 
  if (rtStart<0)
@@ -784,6 +799,11 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleSPDIF(void *buf,size_t size,int bit_
    pOut->SetMediaType(&mt);
   }
 
+ if (bit_rate <= 1 && inpin->insample_rtStart != REFTIME_INVALID && inpin->insample_rtStop != REFTIME_INVALID)
+  {
+   rtStart = inpin->insample_rtStart;
+   rtStop = inpin->insample_rtStop;
+  }
  pOut->SetTime(&rtStart,&rtStop);
  pOut->SetMediaTime(NULL,NULL);
 

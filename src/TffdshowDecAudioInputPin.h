@@ -18,6 +18,7 @@ protected:
  virtual bool init(const CMediaType &mt);
  virtual void done(void);
 public:
+ REFERENCE_TIME insample_rtStart,insample_rtStop;
  TffdshowDecAudioInputPin(const char_t* pObjectName, TffdshowDecAudio* pFilter, HRESULT* phr, LPWSTR pName,int Inumber);
  virtual ~TffdshowDecAudioInputPin();
  TaudioCodec *audio;
