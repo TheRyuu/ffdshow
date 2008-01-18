@@ -308,7 +308,7 @@ static inline void finalize_sequence (mpeg2_sequence_t * sequence)
         // FIXME
         // ffdshow custom code
         // special work around for 352 x 576, 4:3 movie
-	if (width == 4 && height == 3 && sequence->display_width == 720 && sequence->display_height == 576 && sequence->picture_width == 352 && sequence->picture_height == 576) {
+	if (sequence->picture_width == 352 && sequence->picture_height == 576 && sequence->display_width == 720 && sequence->display_height == 576 && width == 4 && height == 3) {
 	    width *= sequence->picture_height;
 	    height *= sequence->picture_width;
 	}
