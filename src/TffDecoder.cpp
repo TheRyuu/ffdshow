@@ -1845,11 +1845,11 @@ void TffdshowDecVideo::getChapters(void)
 		{
 			char_t name[MAX_PATH],filtername[MAX_PATH];
 			getFilterName(bff,name,filtername,countof(filtername));
-			if (!wcscmp(filtername, FFDSHOW_NAME_L)
-				|| !wcscmp(filtername, FFDSHOWRAW_NAME_L)
-				|| !wcscmp(filtername, FFDSHOWVFW_NAME_L)
-				|| !wcscmp(filtername, FFDSHOWSUBTITLES_NAME_L)
-				|| !wcscmp(filtername, FFDSHOWAUDIO_NAME_L))
+			if (!strcmp(_l("ffdshow Video Decoder"), filtername)
+				|| !strcmp(_l("ffdshow raw video filter"), filtername)
+				|| !strcmp(_l("ffdshow VFW decoder helper"), filtername)
+				|| !strcmp(_l("ffdshow subtitles filter"), filtername)
+				|| !strcmp(_l("ffdshow Audio Decoder"), filtername))
 				continue;
 			IAMExtendedSeeking *pAMExtendedSeeking = NULL;
 			bff->QueryInterface(IID_IAMExtendedSeeking, (void**) &pAMExtendedSeeking);
@@ -1868,17 +1868,18 @@ void TffdshowDecVideo::getChapters(void)
 			for (int i=1; i<= markerCount; i++)
 			{
 				double markerTime = 0;
-				char_t *markerName = NULL;
+				BSTR markerName = NULL;
 				pAMExtendedSeeking->GetMarkerTime(i, &markerTime);
 				pAMExtendedSeeking->GetMarkerName(i, &markerName);
 				if (markerName != NULL)
 				{
-					char_t fMarkerName[MAX_PATH];
+					//char_t fMarkerName[MAX_PATH];
 					//strncpy(fMarkerName, markerName, strlen(fMarkerName));
-					strcpy(fMarkerName, markerName);
+ 					
+					//strcpy(fMarkerName, markerName);
 					long markerTimeL = (long)markerTime;
 					//chaptersList[markerTimeL]=fMarkerName;
-					std::pair<long, ffstring> pair = std::make_pair<long, ffstring>(markerTimeL, fMarkerName);
+					std::pair<long, ffstring> pair = std::make_pair<long, ffstring>(markerTimeL, markerName);
 					chaptersList.push_back(pair);
 					SysFreeString(markerName);
 				}
@@ -1957,8 +1958,10 @@ STDMETHODIMP TffdshowDecVideo::GetMarkerName(long MarkerNum, BSTR * pbstrMarkerN
 		if (i+1 == (unsigned int)MarkerNum)
 		{
 			const char_t* markerName = chaptersList[i].second.c_str();
-			*pbstrMarkerName=(char_t*)malloc(sizeof(char_t)*(strlen(markerName)+1));
-			strcpy(*pbstrMarkerName, markerName);
+			//wcrtomb(
+			size_t wlen = (chaptersList[i].second.size()+1)*sizeof(WCHAR);
+			*pbstrMarkerName=(WCHAR*)CoTaskMemAlloc(wlen);memset(*pbstrMarkerName,0,wlen);
+			nCopyAnsiToWideChar(*pbstrMarkerName,markerName);
 			break;
 		}
 		i++;

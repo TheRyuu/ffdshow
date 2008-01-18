@@ -22,8 +22,6 @@ class TffdshowVideoInputPin;
 class TffdshowDecVideoOutputPin;
 class TsearchInterfaceInGraph;
 
-typedef std::vector<std::pair<long, ffstring> > TchaptersList;
-
 class TffdshowDecVideo :public TffdshowDec,
                         public TffdshowVideo,
                         public interfaces<char_t>::IffdshowDecVideo,
@@ -594,7 +592,7 @@ public:
  static const AMOVIESETUP_FILTER filter;
  static const DWORD defaultMerit;
  friend class TffdshowDecVideoOutputPin;
- TchaptersList chaptersList;
+ std::vector<std::pair<long, ffstring> > chaptersList;
 };
 
 class TffdshowDecVideoRaw :public TffdshowDecVideo

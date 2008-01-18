@@ -462,7 +462,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			size_t string_size = 2048;
 			char_t *stringList = (char_t*)alloca(sizeof(char_t)*string_size);
 			strcpy(stringList, _l(""));
-			TchaptersList *pChaptersList = NULL;
+			std::vector<std::pair<long, ffstring> > *pChaptersList = NULL;
 			deciV->getChaptersList((void**)&pChaptersList);
 			
 			for (long l = 0; l<pChaptersList->size(); l++)
