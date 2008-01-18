@@ -304,8 +304,18 @@ static inline void finalize_sequence (mpeg2_sequence_t * sequence)
 	default:	/* illegal */
 	    sequence->pixel_width = sequence->pixel_height = 0;	return;
 	}
-	width *= sequence->display_height;
-	height *= sequence->display_width;
+
+        // FIXME
+        // ffdshow custom code
+        // special work around for 352 x 576, 4:3 movie
+	if (width == 4 && height == 3 && sequence->display_width == 720 && sequence->display_height == 576 && sequence->picture_width == 352 && sequence->picture_height == 576) {
+	    width *= sequence->picture_height;
+	    height *= sequence->picture_width;
+	}
+	else {
+	    width *= sequence->display_height;
+	    height *= sequence->display_width;
+	}
 
     } else {
 	if (sequence->byte_rate == 50 * 0x3ffff)
