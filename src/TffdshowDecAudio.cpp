@@ -760,9 +760,9 @@ STDMETHODIMP TffdshowDecAudio::deliverSampleSPDIF(void *buf,size_t size,int bit_
     length += 0x800; // 2048 = AC3 
    // bit_rate is not always correct. This is a bug of some where else. Because I can't fix it now, work around for it...
    if (bit_rate <= 1 && inpin->insample_rtStart != REFTIME_INVALID && inpin->insample_rtStop != REFTIME_INVALID)
-    size2 = unsigned int(wfe->nBlockAlign * wfe->nSamplesPerSec * (inpin->insample_rtStop - inpin->insample_rtStart) / REF_SECOND_MULT);
+    size2 = (unsigned int)(wfe->nBlockAlign * wfe->nSamplesPerSec * (inpin->insample_rtStop - inpin->insample_rtStart) / REF_SECOND_MULT);
    else
-    size2 = unsigned int(int64_t(1) * wfe->nBlockAlign * wfe->nSamplesPerSec * size * 8 / bit_rate);
+    size2 = (unsigned int)(int64_t(1) * wfe->nBlockAlign * wfe->nSamplesPerSec * size * 8 / bit_rate);
    while (length<size2)
     length+=0x800;
   }

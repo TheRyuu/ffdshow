@@ -1,6 +1,5 @@
 #include "2pass.cpp"
 #include "dwstring.cpp"
-#include "ffdshowRemoteAPI.cpp"
 #include "ffglobals.cpp"
 #include "mem_align.cpp"
 //#include "Tconfig.cpp"
@@ -34,3 +33,4 @@
 #include "TffdshowDecVideoOutputPin.cpp"
 #include "isNotCalledFromBlackList.cpp"
 #include "TffOutputQ.cpp"
+#include "ffdshowRemoteAPI.cpp"
