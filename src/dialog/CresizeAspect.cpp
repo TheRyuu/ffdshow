@@ -32,6 +32,7 @@ void TresizeAspectPage::init(void)
  setFont(IDC_BT_RESIZE_MOD_16     ,parent->arrowsFont);
  setFont(IDC_BT_RESIZE_ASPECT_MENU,parent->arrowsFont);
  setFont(IDC_BT_RESIZE_PIX_MENU   ,parent->arrowsFont);
+ setFont(IDC_BT_RESIZE_USER_ASPECT,parent->arrowsFont);
 }
 
 void TresizeAspectPage::cfg2dlg(void)
@@ -39,6 +40,7 @@ void TresizeAspectPage::cfg2dlg(void)
  resize2dlg();
  resizeIf2dlg();
  aspect2dlg();
+ userAspect2dlg();
 }
 
 void TresizeAspectPage::onModeChange(void)
@@ -110,14 +112,17 @@ void TresizeAspectPage::aspect2dlg(void)
  unsigned int a1,a2;
  if (deciV->getInputDAR(&a1,&a2)==S_OK)
   setText(IDC_RBT_ASPECT_KEEP,_l("%s %3.2f:1"),_(IDC_RBT_ASPECT_KEEP),float(a1)/a2);
- int aspectI=cfgGet(IDFF_aspectRatio);
- setText(IDC_RBT_ASPECT_USER,_l("%s %3.2f:1"),_(IDC_RBT_ASPECT_USER),float(aspectI/65536.0));
- tbrSet(IDC_TBR_ASPECT_USER,aspectI/256);
- aspectI=cfgGet(IDFF_hwOverlayAspect);
+ int aspectI=cfgGet(IDFF_hwOverlayAspect);
  tbrSet(IDC_TBR_HWOVERLAY_ASPECT,aspectI/256);
  tsprintf(pomS,_l("%s "),_(IDC_LBL_HWOVERLAY_ASPECT));
  if (aspectI==0) strcat(pomS,_(IDC_LBL_HWOVERLAY_ASPECT,_l("default")));else strcatf(pomS,_l("%3.2f:1"),float(aspectI/65536.0));
  setDlgItemText(m_hwnd,IDC_LBL_HWOVERLAY_ASPECT,pomS);
+}
+void TresizeAspectPage::userAspect2dlg(void)
+{
+ int aspectI=cfgGet(IDFF_aspectRatio);
+ setText(IDC_ED_RESIZE_USER_ASPECT,_l("%3.2f"),float(aspectI/65536.0));
+ tbrSet(IDC_TBR_ASPECT_USER,aspectI/256);
 }
 void TresizeAspectPage::applyResizeXY(void)
 {
@@ -201,7 +206,7 @@ INT_PTR TresizeAspectPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        {
         int a=tbrGet(IDC_TBR_ASPECT_USER);
         cfgSet(IDFF_aspectRatio,a*256);
-        aspect2dlg();
+        userAspect2dlg();
         return TRUE;
        }
       case IDC_TBR_HWOVERLAY_ASPECT:
@@ -388,13 +393,49 @@ void TresizeAspectPage::onResizePixMenu(void)
  resizeIf2dlg();
 }
 
+void TresizeAspectPage::onResizeManualArMenu(void)
+{
+ static const char_t *aspects[]=
+  {
+   _l("1.25 ( 5:4)"),
+   _l("1.33 ( 4:3)"),
+   _l("1.67 ( 5:3)"),
+   _l("1.78 (16:9)"),
+   _l("1.85 (DVD)"),
+   _l("2.35 (cinemascope)"),
+   _l("2.40 (cinemascope, HD discs)"),
+   NULL
+  };
+ int cmd=selectFromMenu(aspects,IDC_BT_RESIZE_USER_ASPECT,true);
+ double ar;
+ switch (cmd)
+  {
+   case 0:ar = 1.25;break;
+   case 1:ar = 4.0/3.0;break;
+   case 2:ar = 5.0/3.0;break;
+   case 3:ar = 16.0/9.0;break;
+   case 4:ar = 1.85;break;
+   case 5:ar = 2.35;break;
+   case 6:ar = 2.40;break;
+   default:return;
+  }
+ cfgSet(IDFF_aspectRatio, int(ar * 65536.0));
+ userAspect2dlg();
+}
+
+void TresizeAspectPage::applySettings(void)
+{
+ userAspect2dlg();
+ TconfPageDecVideo::applySettings();
+}
+
 TresizeAspectPage::TresizeAspectPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecVideo(Iparent,idff,1)
 {
  resInter=IDC_CHB_RESIZE;
  helpURL=_l("http://ffdshow-tryout.sourceforge.net/html/en/resize.htm");
  static const TbindTrackbar<TresizeAspectPage> htbr[]=
   {
-   IDC_TBR_ASPECT_USER,IDFF_aspectRatio,&TresizeAspectPage::aspect2dlg,
+   IDC_TBR_ASPECT_USER,IDFF_aspectRatio,&TresizeAspectPage::userAspect2dlg,
    IDC_TBR_HWOVERLAY_ASPECT,IDFF_hwOverlayAspect,&TresizeAspectPage::aspect2dlg,
    0,0,NULL
   };
@@ -432,6 +473,7 @@ TresizeAspectPage::TresizeAspectPage(TffdshowPageDec *Iparent,const TfilterIDFF 
  static const TbindEditReal<TresizeAspectPage> edReal[]=
   {
    IDC_ED_RESIZE_MULT,0.001,1000.0,IDFF_resizeMult1000,1000.0,NULL,
+   IDC_ED_RESIZE_USER_ASPECT, 0.05, 5, IDFF_aspectRatio, 65536, NULL,
    0
   };
  bindEditReals(edReal);
@@ -441,6 +483,7 @@ TresizeAspectPage::TresizeAspectPage(TffdshowPageDec *Iparent,const TfilterIDFF 
    IDC_BT_RESIZE_MOD_16,&TresizeAspectPage::onResizeMulfOfMenu,
    IDC_BT_RESIZE_ASPECT_MENU,&TresizeAspectPage::onResizeAspectMenu,
    IDC_BT_RESIZE_PIX_MENU,&TresizeAspectPage::onResizePixMenu,
+   IDC_BT_RESIZE_USER_ASPECT,&TresizeAspectPage::onResizeManualArMenu,
    0,NULL
   };
  static const TbindCheckbox<TresizeAspectPage> chb[]=
