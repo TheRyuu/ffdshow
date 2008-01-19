@@ -1,10 +1,10 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 ; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1785
+#define tryout_revision = 1799
 #define buildyear = 2008
 #define buildmonth = '01'
-#define buildday = '16'
+#define buildday = '19'
 
 ; Build specific options
 #define unicode_required = True
@@ -28,13 +28,18 @@
 #define include_gnu_license = True
 #define include_setup_icon = False
 
+; Output settings
 #define filename_suffix = ''
 #define outputdir = '.'
+
+; location of binaries
+#define bindir = '..\..'
 
 ; Custom builder preferences
 #define PREF_CLSID = False
 #define PREF_CLSID_ICL = False
 #define PREF_CLSID_UNICODE = False
+#define PREF_CLSID_X64 = False
 #define PREF_YAMAGATA = False
 #define PREF_XXL = False
 #define PREF_X64 = False
@@ -42,13 +47,17 @@
 #if PREF_CLSID
   #define MSVC80 = False
   #define unicode_required = False
+  #define include_x264 = False
   #define filename_suffix = '_clsid'
+  #define bindir = '..\..\x86'
   #define outputdir = '..\..\..\..\'
 #endif
 #if PREF_CLSID_UNICODE
   #define MSVC80 = False
   #define unicode_required = True
+  #define include_x264 = False
   #define filename_suffix = '_clsid'
+  #define bindir = '..\..\x86'
   #define outputdir = '..\..\..\..\'
 #endif
 #if PREF_CLSID_ICL
@@ -56,7 +65,20 @@
   #define unicode_required = True
   #define include_cpu_detection = True
   #define sse_required = True
+  #define include_x264 = False
   #define filename_suffix = '_clsid_sse_icl10'
+  #define bindir = '..\..\x86'
+  #define outputdir = '..\..\..\..\'
+#endif
+#if PREF_CLSID_X64
+  #define MSVC80 = True
+  #define is64bit = True
+  #define unicode_required = True
+  #define include_x264 = False
+  #define include_app_plugins = False
+  #define include_makeavis = False
+  #define filename_suffix = '_clsid_x64'
+  #define bindir = '..\..\x64'
   #define outputdir = '..\..\..\..\'
 #endif
 #if PREF_YAMAGATA
@@ -78,6 +100,7 @@
   #define MSVC80 = True
   #define is64bit = True
   #define unicode_required = True
+  #define include_x264 = False
   #define include_app_plugins = False
   #define include_makeavis = False
   #define filename_suffix = '_x64'
@@ -339,49 +362,49 @@ Source: Runtimes\msvc80\microsoft.vc80.crt.manifest; DestDir: {app}; Flags: igno
 Source: Runtimes\LayerForUnicode\unicows.dll ; DestDir: {sys}; Flags: sharedfile uninsnosharedfileprompt restartreplace uninsneveruninstall; MinVersion: 4,0; Components: ffdshow
 #endif
 
-Source: ..\..\libavcodec.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: ..\..\libmplayer.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: ..\..\ff_realaac.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: ..\..\ff_liba52.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: ..\..\ff_libdts.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: ..\..\ff_libfaad2.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: ..\..\ff_libmad.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: ..\..\ff_tremor.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: ..\..\ff_unrar.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: ..\..\ff_samplerate.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: ..\..\ff_theora.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-#if include_x264
-Source: ..\..\ff_x264.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow\vfw
+Source: {#= bindir}\libavcodec.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: {#= bindir}\libmplayer.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: {#= bindir}\ff_realaac.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: {#= bindir}\ff_liba52.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: {#= bindir}\ff_libdts.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: {#= bindir}\ff_libfaad2.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: {#= bindir}\ff_libmad.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: {#= bindir}\ff_tremor.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: {#= bindir}\ff_unrar.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: {#= bindir}\ff_samplerate.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: {#= bindir}\ff_theora.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+#if include_x264 & !is64bit
+Source: {#= bindir}\ff_x264.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow\vfw
 Source: Runtimes\pthreadGC2.dll; DestDir: {sys}; Flags: sharedfile uninsnosharedfileprompt; Components: ffdshow\vfw
 #endif
 #if include_xvidcore
-Source: ..\..\xvidcore.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: {#= bindir}\xvidcore.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 #endif
 #if is64bit
-Source: ..\..\ff_kernelDeint.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: ..\..\TomsMoComp_ff.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: {#= bindir}\ff_kernelDeint.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: {#= bindir}\TomsMoComp_ff.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 #else
 Source: icl10\ff_kernelDeint.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 Source: icl10\TomsMoComp_ff.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 #endif
-Source: ..\..\libmpeg2_ff.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow
+Source: {#= bindir}\libmpeg2_ff.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow
 
 ; Single build:
 #if !PREF_CLSID && !PREF_CLSID_ICL
-Source: ..\..\ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; Components: ffdshow
+Source: {#= bindir}\ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; Components: ffdshow
 #endif
 ; ANSI + Unicode:
 #if PREF_CLSID
-Source: ..\..\ffdshow_ansi.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; MinVersion: 4,0; Components: ffdshow
-Source: ..\..\ffdshow_unicode.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; MinVersion: 0,4; Components: ffdshow
+Source: {#= bindir}\ffdshow_ansi.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; MinVersion: 4,0; Components: ffdshow
+Source: {#= bindir}\ffdshow_unicode.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; MinVersion: 0,4; Components: ffdshow
 #endif
 #if PREF_CLSID_ICL
-Source: ..\..\ffdshow_icl.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; MinVersion: 0,4; Components: ffdshow
+Source: {#= bindir}\ffdshow_icl.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; MinVersion: 0,4; Components: ffdshow
 #endif
 ; Multi build example (requires cpu detection to be enabled):
-;Source: ..\..\ffdshow_generic.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_MMX_Supported AND NOT Is_SSE_Supported; Components: ffdshow
-;Source: ..\..\ffdshow_sse.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_SSE_Supported AND NOT Is_SSE2_Supported; Components: ffdshow
-;Source: ..\..\ffdshow_sse2.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_SSE2_Supported; Components: ffdshow
+;Source: {#= bindir}\ffdshow_generic.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_MMX_Supported AND NOT Is_SSE_Supported; Components: ffdshow
+;Source: {#= bindir}\ffdshow_sse.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_SSE_Supported AND NOT Is_SSE2_Supported; Components: ffdshow
+;Source: {#= bindir}\ffdshow_sse2.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_SSE2_Supported; Components: ffdshow
 
 #if MSVC80
 	#if is64bit
@@ -395,19 +418,19 @@ Source: ..\..\manifest32\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversi
 
 ; Single build:
 #if !PREF_CLSID
-Source: ..\..\ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: {#= bindir}\ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 #endif
 ; ANSI + Unicode:
 #if PREF_CLSID
-Source: ..\..\ff_wmv9_ansi.dll; DestName: ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; MinVersion: 4,0; Components: ffdshow
-Source: ..\..\ff_wmv9_unicode.dll; DestName: ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; MinVersion: 0,4; Components: ffdshow
+Source: {#= bindir}\ff_wmv9_ansi.dll; DestName: ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; MinVersion: 4,0; Components: ffdshow
+Source: {#= bindir}\ff_wmv9_unicode.dll; DestName: ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; MinVersion: 0,4; Components: ffdshow
 #endif
 
 #if is64bit
-Source: ..\..\ff_vfw.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
+Source: {#= bindir}\ff_vfw.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
 #else
 ; If you use MSVC8 for ffdshow.ax, ff_vfw.dll should be compiled by GCC. Both MSVC7.1 and MSVC8 does not work in some environment such as Windows XP SP2 without shared assembly of MSVCR80.
-Source: ..\..\ff_vfw.dll; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
+Source: {#= bindir}\ff_vfw.dll; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
 #endif
 
 #if MSVC80
@@ -429,29 +452,29 @@ Source: ..\..\ffavisynth.avsi ; DestDir: {code:GetAviSynthPluginDir}; Flags: ign
   #if MSVC80
 Source: msvc71\ffavisynth.dll; DestDir: {code:GetAviSynthPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\avisynth
   #else
-Source: ..\..\ffavisynth.dll; DestDir: {code:GetAviSynthPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\avisynth
+Source: {#= bindir}\ffavisynth.dll; DestDir: {code:GetAviSynthPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\avisynth
   #endif
   #if MSVC80
 Source: msvc71\ffvdub.vdf; DestDir: {code:GetVdubPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\virtualdub
   #else
-Source: ..\..\ffvdub.vdf; DestDir: {code:GetVdubPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\virtualdub
+Source: {#= bindir}\ffvdub.vdf; DestDir: {code:GetVdubPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\virtualdub
   #endif
   #if MSVC80
 Source: msvc71\FLT_ffdshow.dll; DestDir: {code:GetDScalerDir|}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\dscaler
   #else
-Source: ..\..\FLT_ffdshow.dll; DestDir: {code:GetDScalerDir|}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\dscaler
+Source: {#= bindir}\FLT_ffdshow.dll; DestDir: {code:GetDScalerDir|}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\dscaler
   #endif
 #endif
 
 #if include_makeavis
-Source: ..\..\makeAVIS.exe; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
+Source: {#= bindir}\makeAVIS.exe; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
   #if !MSVC80
 Source: ..\..\manifest32\makeAVIS.exe.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
   #endif
   #if MSVC80
 Source: msvc71\ff_acm.acm; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
   #else
-Source: ..\..\ff_acm.acm; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
+Source: {#= bindir}\ff_acm.acm; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
   #endif
 #endif
 
