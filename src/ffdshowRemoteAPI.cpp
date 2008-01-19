@@ -465,7 +465,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			std::vector<std::pair<long, ffstring> > *pChaptersList = NULL;
 			deciV->getChaptersList((void**)&pChaptersList);
 			
-			for (long l = 0; l<pChaptersList->size(); l++)
+			for (unsigned long l = 0; l<pChaptersList->size(); l++)
 			{
 				long markerTime = (*pChaptersList)[l].first;
 				char_t tmpStr[40];
