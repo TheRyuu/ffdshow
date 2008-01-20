@@ -206,6 +206,8 @@ void TrenderedTextSubtitleWord::drawShadow(
       m_outlineWidth++;
     }
   }
+ else
+  m_outlineWidth = 0;
 
  if (outlineWidth_double < 1.0 && outlineWidth_double > 0)
   outlineWidth_double = 0.5 + outlineWidth_double/2.0;
