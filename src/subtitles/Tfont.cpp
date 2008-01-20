@@ -748,7 +748,10 @@ template<class tchar> TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
  TrenderedSubtitleWordBase(true),
  props(Iprops),
  prefs(Iprefs),
- secondaryColoredWord(NULL)
+ secondaryColoredWord(NULL),
+ dstOffset(0),
+ oldBodyYUVa(256),
+ oldOutlineYUVa(256)
 {
  csp=prefs.csp & FF_CSPS_MASK;
  m_bodyYUV=(charsChache->getBodyYUV());
