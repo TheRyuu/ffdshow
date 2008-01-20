@@ -39,6 +39,7 @@
 #define IDFF_errorResilience      71
 #define IDFF_fastMpeg2            90
 #define IDFF_fastH264             91
+#define IDFF_autodetect24P       3490
 #define IDFF_libtheoraPostproc    92
 //#define IDFF_subCurrentFlnm       29
 //#define IDFF_lastFrameLength      41
@@ -1513,6 +1514,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3490
+//max:3491
 
 #endif

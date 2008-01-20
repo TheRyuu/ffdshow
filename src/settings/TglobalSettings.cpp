@@ -425,6 +425,8 @@ TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imod
      _l("libtheoraPostproc"),0,
    IDFF_alternateUncompressed,&TglobalSettingsDecVideo::alternateUncompressed,0,0,_l(""),1,
      _l("alternateUncompressed"),0,
+   IDFF_autodetect24P  ,&TglobalSettingsDecVideo::autodetect24P  ,0,0,_l(""),0,
+     _l("autodetect24P"),1,
    0
   };
  addOptions(iopts);

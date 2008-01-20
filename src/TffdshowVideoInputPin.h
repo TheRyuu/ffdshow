@@ -62,6 +62,7 @@ public:
  const char* get_current_idct(void){return video->get_current_idct();}
  bool isInterlacedRawVideo;
  IBaseFilter *pCompatibleFilter;
+ CodecID getCurrentCodecId(void) {return video->codecId;}
 };
 
 class TffdshowVideoEncInputPin :public IMixerPinConfig,public TffdshowVideoInputPin

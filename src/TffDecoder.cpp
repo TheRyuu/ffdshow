@@ -1037,29 +1037,39 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
     frameTimeOk=S_OK;
    }
 
- if (frameTimeOk!=S_OK)
-  frameTimeOk=(pict.rtStart!=REFTIME_INVALID)?S_OK:S_FALSE;// pIn->GetTime(&pict.rtStart,&pict.rtStop);
- if (frameTimeOk==S_OK && pict.rtStop-pict.rtStart!=0)
+ CodecID codecId = inpin->getCurrentCodecId();
+ if (globalSettings->autodetect24P && (codecId == CODEC_ID_VC1 || codecId == CODEC_ID_WMV9_LIB) && inSampleEverField1Repeat && inpin->avgTimePerFrame == 333666)
   {
-   if (inpin->avgTimePerFrame==0)
-    inpin->avgTimePerFrame=pict.rtStop-pict.rtStart;
-   m_rtStart = pict.rtStart + inpin->avgTimePerFrame;
+   pict.rtStart = segmentFrameCnt * 417083;
+   pict.rtStop = pict.rtStart + 417082;
+   m_rtStart = pict.rtStop + 1;
   }
  else
   {
-   frameTimeOk=S_OK;
-   pict.rtStart = m_rtStart;
-   if (inSampleTypeSpecificFlags & AM_VIDEO_FLAG_REPEAT_FIELD)
+   if (frameTimeOk!=S_OK)
+    frameTimeOk=(pict.rtStart!=REFTIME_INVALID)?S_OK:S_FALSE;// pIn->GetTime(&pict.rtStart,&pict.rtStop);
+   if (frameTimeOk==S_OK && pict.rtStop-pict.rtStart!=0)
     {
-     // field 1 repeat flag. Haali's splitter use this for interlaced VC1 in EVO.
-     pict.rtStop = pict.rtStart + inpin->avgTimePerFrame + (inpin->avgTimePerFrame >> 1) - 1;
-     m_rtStart += inpin->avgTimePerFrame + (inpin->avgTimePerFrame >> 1);
-     inSampleEverField1Repeat = true;
+     if (inpin->avgTimePerFrame==0)
+      inpin->avgTimePerFrame=pict.rtStop-pict.rtStart;
+     m_rtStart = pict.rtStart + inpin->avgTimePerFrame;
     }
    else
     {
-     pict.rtStop = pict.rtStart + inpin->avgTimePerFrame - 1;
-     m_rtStart += inpin->avgTimePerFrame;
+     frameTimeOk=S_OK;
+     pict.rtStart = m_rtStart;
+     if (inSampleTypeSpecificFlags & AM_VIDEO_FLAG_REPEAT_FIELD)
+      {
+       // field 1 repeat flag. Haali's splitter use this for interlaced VC1 in EVO.
+       pict.rtStop = pict.rtStart + inpin->avgTimePerFrame + (inpin->avgTimePerFrame >> 1) - 1;
+       m_rtStart += inpin->avgTimePerFrame + (inpin->avgTimePerFrame >> 1);
+       inSampleEverField1Repeat = true;
+      }
+     else
+      {
+       pict.rtStop = pict.rtStart + inpin->avgTimePerFrame - 1;
+       m_rtStart += inpin->avgTimePerFrame;
+      }
     }
   }
 
