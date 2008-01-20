@@ -3,10 +3,10 @@ WelcomeLabel1=[name/ver]
 
 ; English
 en.WelcomeLabel2=This will install [name] on your computer.%n%nIt is recommended that you close all other applications before continuing.
-en.FileAbortRetryIgnore=Quit the application using ffdshow and click Retry. If the problem persists, click Abort, restart your computer and setup again.
-en.FinishedRestartLabel=To complete the installation of [name], Setup must restart your computer. Would you like to restart now?%n%nHint: To avoid restarting computer from the next time, it may be effective to enable "Info & debug"-"Don't use ffdshow in:"-"explorer.exe" in video decoder configuration.
+en.FileAbortRetryIgnore=Quit the application using [name] and click Retry. If the problem persists, click Abort, restart your computer and setup again.
+en.FinishedRestartLabel=To complete the installation of [name], Setup must restart your computer. Would you like to restart now?%n%nHint: To avoid restarting computer from the next time, it may be effective to enable "DirectShow control" -> "Don't use ffdshow in:" -> "explorer.exe" in video decoder configuration.
 #if unicode_required
-en.WinVersionTooLowError=This version of ffdshow requires Windows 2000 or newer.
+en.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
 #endif
 
 #if localize
@@ -16,8 +16,11 @@ jp.FileAbortRetryIgnore=ffdshow‚ðŽg—p’†‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ðI—¹‚µ‚ÄuÄŽŽsv‚ðƒ
 jp.FinishedRestartLabel=[name] ‚ÌƒCƒ“ƒXƒg[ƒ‹‚ðŠ®—¹‚·‚é‚½‚ß‚É‚ÍAƒRƒ“ƒsƒ…[ƒ^‚ðÄ‹N“®‚·‚é•K—v‚ª‚ ‚è‚Ü‚·B%n%n‚·‚®‚ÉÄ‹N“®‚µ‚Ü‚·‚©H%n%nƒqƒ“ƒgFƒrƒfƒIƒfƒR[ƒ_[Ý’è‚Ìuî•ñ‚ÆƒfƒoƒbƒOv‚ÌuDon't use ffdshow in:vuexplorer.exev‚ð—LŒø‚É‚µ‚Ä‚¨‚­‚ÆŽŸ‰ñ‚©‚çÄ‹N“®‚ª•s—v‚É‚È‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñB
 ; German
 de.WelcomeLabel2=Dieser Assistent wird jetzt [name] auf Ihrem Computer installieren.%n%nSie sollten alle anderen Anwendungen beenden, bevor Sie mit dem Setup fortfahren.
-de.FileAbortRetryIgnore=Beenden Sie das Programm, das ffdshow verwendet und klicken Sie auf "Wiederholen". Sollte das Problem weiterhin bestehen, klicken Sie auf "Abbrechen", starten Sie Ihren Computer neu und führen Sie das Setup erneut aus.
-de.FinishedRestartLabel=Um die Installation von [name] zu fertig zu stellen, muss das Setup Ihren Computer neu starten. Soll jetzt neu gestartet werden?%n%nHinweis: Um ihren Computer beim nächsten Mal nicht neu starten zu müssen, kann es helfen, in der Videodekoder-Konfiguration unter "Info" "ffdshow nicht verwenden in:" zu aktivieren.
+de.FileAbortRetryIgnore=Beenden Sie das Programm, das [name] verwendet und klicken Sie auf "Wiederholen". Sollte das Problem weiterhin bestehen, klicken Sie auf "Abbrechen", starten Sie Ihren Computer neu und führen Sie das Setup erneut aus.
+de.FinishedRestartLabel=Um die Installation von [name] zu fertig zu stellen, muss das Setup Ihren Computer neu starten. Soll jetzt neu gestartet werden?%n%nHinweis: Um ihren Computer beim nächsten Mal nicht neu starten zu müssen, kann es helfen, in der Videodekoder-Konfiguration unter "DirectShow-Optionen" -> "ffdshow nicht verwenden in:" zu aktivieren.
+#if unicode_required
+de.WinVersionTooLowError=Diese [name]-Version benötigt Windows 2000 oder neuer.
+#endif
 ; French
 fr.WelcomeLabel2=Ceci installera [name] sur votre ordinateur.%n%nIl est recommandé de fermer toutes les autres applications avant de continuer.
 fr.FileAbortRetryIgnore=Quitter l'application qui utilise ffdshow et cliquer sur  Ressayer. si le problème persiste, cliquer sur Annuler, redémarrer l'ordinateur et réinstaller de nouveau.
@@ -73,9 +76,9 @@ en.white_videoLabel3=List the names of executable files which are compatible wit
 en.white_audioLabel1=Management of Compatibility Issues (AUDIO)
 en.white_audioLabel2=This time, AUDIO decoder configuration. Please configure as well.%nYou can change these options later on the "DirectShow control" settings page.
 en.white_audioLabel3=List the names of executable files which are compatible with ffdshow audio decoder, one per line.
-en.white_dontLimit=Do not limit.
+en.white_dontLimit=Do not limit
 en.white_useOnlyIn=Use ffdshow only in the following applications:
-en.white_dontAskAgain=Don't ask me again.
+en.white_dontAskAgain=Don't ask me again
 
 en.spk_Label1=Speaker Setup
 en.spk_Label2=Select the speaker setup below that is most similar to the configuration on your computer. You can change it using "Mixer" settings after installation.
@@ -222,9 +225,9 @@ de.white_videoLabel3=Listen Sie die Namen ausführbarer Dateien, welche kompatibe
 de.white_audioLabel1=Verwaltung von Kompatibilitätsproblemen (AUDIO)
 de.white_audioLabel2=Dieses Mal der AUDIO-Dekoder. Bitte konfigurieren Sie auch diesen.%nSie können dies nach der Installation unter "DirectShow-Optionen" ändern.
 de.white_audioLabel3=Listen Sie die Namen ausführbarer Dateien, welche kompatibel zum ffdshow-Audiodekoder sind - pro Zeile einen.
-de.white_dontLimit=Nicht begrenzen.
+de.white_dontLimit=Nicht begrenzen
 de.white_useOnlyIn=ffdshow nur in folgenden Anwendungen verwenden:
-de.white_dontAskAgain=Nicht wieder fragen.
+de.white_dontAskAgain=Nicht wieder fragen
 
 de.spk_Label1=Lautsprecheraufbau
 de.spk_Label2=Wählen Sie unten den Lautsprecheraufbau, der am ehesten Ihrer Konfiguration entspricht. Er kann nach der Installation unter "Mixer" wieder geändert werden.
