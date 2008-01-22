@@ -117,7 +117,8 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
 	 bool doPostProcessing = false;
 	 if (osvi.dwMajorVersion > 5) // OS >= VISTA
 		doPostProcessing = true;
-	 else if (osvi.dwMajorVersion == 5) // If OS=XP, check version of WMP
+	 else if (osvi.dwMajorVersion == 5  // If OS=XP, check version of WMP
+		 && stricmp(fv->getExefilename(),_l("ehshell.exe"))==0) // But only for Media Center
 	 {
 		// Read WMP version from the aRegistry
 		HKEY hKey= NULL;
