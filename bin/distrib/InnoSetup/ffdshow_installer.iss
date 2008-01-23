@@ -1,19 +1,16 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
-; Place this script in directory: /bin/distrib/innosetup/
 
-#define tryout_revision = 1799
+#define tryout_revision = 1806
 #define buildyear = 2008
 #define buildmonth = '01'
-#define buildday = '19'
+#define buildday = '23'
 
 ; Build specific options
 #define unicode_required = True
 
-#define include_cpu_detection = True
+#define cpu_detection = True
 #define sse_required = False
 #define sse2_required = False
-
-#define MSVC80 = True
 
 #define is64bit = False
 
@@ -27,6 +24,14 @@
 #define include_info_before = False
 #define include_gnu_license = True
 #define include_setup_icon = False
+
+; Compiler settings
+; (select the environment that you used for compiling ffdshow.ax)
+; (this information will be used by the installer to check if a user has the required runtime files installed)
+#define MINGW_GCC = False
+#define VS2003SP1 = False
+#define VS2005SP1 = False
+#define VS2008 = False
 
 ; Output settings
 #define filename_suffix = ''
@@ -42,68 +47,81 @@
 #define PREF_CLSID_X64 = False
 #define PREF_YAMAGATA = False
 #define PREF_XXL = False
-#define PREF_X64 = False
+#define PREF_X64_VS2005SP1 = False
+#define PREF_X64_VS2008 = False
 
 #if PREF_CLSID
-  #define MSVC80 = False
+  #define VS2003SP1 = True  
   #define unicode_required = False
   #define include_x264 = False
+  #define cpu_detection = True
   #define filename_suffix = '_clsid'
   #define bindir = '..\..\x86'
   #define outputdir = '..\..\..\..\'
-#endif
-#if PREF_CLSID_UNICODE
-  #define MSVC80 = False
+#elif PREF_CLSID_UNICODE
+  #define VS2003SP1 = True  
   #define unicode_required = True
   #define include_x264 = False
+  #define cpu_detection = True
   #define filename_suffix = '_clsid'
   #define bindir = '..\..\x86'
   #define outputdir = '..\..\..\..\'
-#endif
-#if PREF_CLSID_ICL
-  #define MSVC80 = False
+#elif PREF_CLSID_ICL
+  #define VS2003SP1 = True
   #define unicode_required = True
-  #define include_cpu_detection = True
+  #define cpu_detection = True
   #define sse_required = True
   #define include_x264 = False
   #define filename_suffix = '_clsid_sse_icl10'
   #define bindir = '..\..\x86'
   #define outputdir = '..\..\..\..\'
-#endif
-#if PREF_CLSID_X64
-  #define MSVC80 = True
+#elif PREF_CLSID_X64
+  #define VS2005SP1 = True
   #define is64bit = True
-  #define unicode_required = True
   #define include_x264 = False
-  #define include_app_plugins = False
-  #define include_makeavis = False
+  #define unicode_required = True
+  #define cpu_detection = True
   #define filename_suffix = '_clsid_x64'
   #define bindir = '..\..\x64'
   #define outputdir = '..\..\..\..\'
-#endif
-#if PREF_YAMAGATA
-  #define MSVC80 = True
+#elif PREF_YAMAGATA
+  #define VS2005SP1 = True
   #define unicode_required = False
   #define include_audx = True
   #define filename_suffix = '_Q'
-#endif
-#if PREF_XXL
-  #define MSVC80 = False
+#elif PREF_XXL
+  #define VS2003SP1 = True
   #define unicode_required = False
+  #define cpu_detection = True
   #define localize = False
   #define include_audx = True
   #define include_info_before = True
   #define include_setup_icon = True
   #define filename_suffix = '_xxl'
-#endif
-#if PREF_X64
-  #define MSVC80 = True
+#elif PREF_X64_VS2005SP1 | PREF_X64_VS2008
   #define is64bit = True
   #define unicode_required = True
+  #define cpu_detection = True
   #define include_x264 = False
   #define include_app_plugins = False
   #define include_makeavis = False
   #define filename_suffix = '_x64'
+#endif
+#if PREF_X64_VS2005SP1
+  #define VS2005SP1 = True
+#elif PREF_X64_VS2008
+  #define VS2008 = True
+#endif
+
+; Fail if no proper settings were chosen
+#if !MINGW_GCC & !VS2003SP1 & !VS2005SP1 & ! VS2008
+You must configure your compiling environment!!!
+#endif
+#if VS2008 & !unicode_required
+VS2008 builds require Windows 2000 or above. You must set unicode_required to True!
+#endif
+#if is64bit & !VS2005SP1 & !VS2008 & !MINGW_GCC
+This can't be a 64-bit build.
 #endif
 
 [Setup]
@@ -138,12 +156,20 @@ InfoBeforeFile=infobefore.rtf
 #if include_gnu_license
 LicenseFile=gnu_license.txt
 #endif
-#if MSVC80
-  #if unicode_required
+#if VS2005SP1
+	#if is64bit
+MinVersion=0,5.01
+  #elif unicode_required
 MinVersion=0,5.0
   #else
 MinVersion=4.1,5.0
   #endif
+#elif VS2008
+ #if is64bit
+MinVersion=0,5.01 
+	#else
+MinVersion=0,5.0	
+	#endif
 #else
   #if unicode_required
 MinVersion=0,4
@@ -211,7 +237,7 @@ Name: ffdshow\plugins\dscaler; Description: DScaler
 #endif
 
 ; CPU detection code
-#if include_cpu_detection
+#if cpu_detection
 #include "innosetup_cpu_detection.iss"
 #endif
 
@@ -339,21 +365,9 @@ Name: {group}\{cm:shrt_uninstall}; Filename: {uninstallexe}
 ; For speaker config
 Source: msvc71\ffSpkCfg.dll; Flags: dontcopy
 
-; MSVC71 runtimes are required for ffdshow components that are placed outside the ffdshow installation directory.
-#if !is64bit
+#if VS2003SP1
 Source: Runtimes\msvc71\msvcp71.dll; DestDir: {sys}; Flags: onlyifdoesntexist sharedfile uninsnosharedfileprompt
 Source: Runtimes\msvc71\msvcr71.dll; DestDir: {sys}; Flags: onlyifdoesntexist sharedfile uninsnosharedfileprompt
-#endif
-
-#if MSVC80
-; Install MSVC80 runtime as private assembly (can only be used by components that are in the same directory).
-  #if is64bit
-Source: Runtimes\msvc80_x64\msvcr80.dll; DestDir: {app}; MinVersion: 0,5.02; Flags: ignoreversion restartreplace uninsrestartdelete
-Source: Runtimes\msvc80_x64\microsoft.vc80.crt.manifest; DestDir: {app}; MinVersion: 0,5.02; Flags: ignoreversion restartreplace uninsrestartdelete
-  #else
-Source: Runtimes\msvc80\msvcr80.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete
-Source: Runtimes\msvc80\microsoft.vc80.crt.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete
-  #endif
 #endif
 
 #if !unicode_required
@@ -380,13 +394,8 @@ Source: Runtimes\pthreadGC2.dll; DestDir: {sys}; Flags: sharedfile uninsnoshared
 #if include_xvidcore
 Source: {#= bindir}\xvidcore.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 #endif
-#if is64bit
 Source: {#= bindir}\ff_kernelDeint.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 Source: {#= bindir}\TomsMoComp_ff.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-#else
-Source: icl10\ff_kernelDeint.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: icl10\TomsMoComp_ff.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-#endif
 Source: {#= bindir}\libmpeg2_ff.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow
 
 ; Single build:
@@ -406,16 +415,6 @@ Source: {#= bindir}\ffdshow_icl.ax; DestName: ffdshow.ax; DestDir: {app}; Flags:
 ;Source: {#= bindir}\ffdshow_sse.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_SSE_Supported AND NOT Is_SSE2_Supported; Components: ffdshow
 ;Source: {#= bindir}\ffdshow_sse2.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_SSE2_Supported; Components: ffdshow
 
-#if MSVC80
-	#if is64bit
-Source: ..\..\manifest64\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
-	#else
-Source: ..\..\manifest32\msvc80\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
-	#endif
-#else
-Source: ..\..\manifest32\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow
-#endif
-
 ; Single build:
 #if !PREF_CLSID
 Source: {#= bindir}\ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
@@ -426,22 +425,7 @@ Source: {#= bindir}\ff_wmv9_ansi.dll; DestName: ff_wmv9.dll; DestDir: {app}; Fla
 Source: {#= bindir}\ff_wmv9_unicode.dll; DestName: ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; MinVersion: 0,4; Components: ffdshow
 #endif
 
-#if is64bit
-Source: {#= bindir}\ff_vfw.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
-#else
-; If you use MSVC8 for ffdshow.ax, ff_vfw.dll should be compiled by GCC. Both MSVC7.1 and MSVC8 does not work in some environment such as Windows XP SP2 without shared assembly of MSVCR80.
 Source: {#= bindir}\ff_vfw.dll; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
-#endif
-
-#if MSVC80
-	#if is64bit
-Source: ..\..\manifest64\ff_vfw.dll.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
-	#else
-Source: ..\..\manifest32\msvc80\ff_vfw.dll.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
-	#endif
-#else
-Source: ..\..\manifest32\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
-#endif
 
 #if include_audx
 Source: audxlib.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow
@@ -449,46 +433,69 @@ Source: audxlib.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsre
 
 #if include_app_plugins
 Source: ..\..\ffavisynth.avsi ; DestDir: {code:GetAviSynthPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\avisynth
-  #if MSVC80
-Source: msvc71\ffavisynth.dll; DestDir: {code:GetAviSynthPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\avisynth
-  #else
 Source: {#= bindir}\ffavisynth.dll; DestDir: {code:GetAviSynthPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\avisynth
-  #endif
-  #if MSVC80
-Source: msvc71\ffvdub.vdf; DestDir: {code:GetVdubPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\virtualdub
-  #else
 Source: {#= bindir}\ffvdub.vdf; DestDir: {code:GetVdubPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\virtualdub
-  #endif
-  #if MSVC80
-Source: msvc71\FLT_ffdshow.dll; DestDir: {code:GetDScalerDir|}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\dscaler
-  #else
 Source: {#= bindir}\FLT_ffdshow.dll; DestDir: {code:GetDScalerDir|}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\dscaler
-  #endif
 #endif
 
 #if include_makeavis
 Source: {#= bindir}\makeAVIS.exe; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
-  #if !MSVC80
-Source: ..\..\manifest32\makeAVIS.exe.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
-  #endif
-  #if MSVC80
-Source: msvc71\ff_acm.acm; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
-  #else
 Source: {#= bindir}\ff_acm.acm; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
-  #endif
 #endif
 
 Source: ..\..\languages\*.*; DestDir: {app}\languages; Flags: ignoreversion; Components: ffdshow
 Source: ..\..\custom matrices\*.*; DestDir: {app}\custom matrices; Flags: ignoreversion; Components: ffdshow\vfw
 Source: ..\..\openIE.js; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 
-[InstallDelete]
-#if MSVC80
-Type: files; Name: {app}\ffdshow.ax.manifest;   Components: ffdshow
-	#if include_makeavis
-Type: files; Name: {app}\makeAVIS.exe.manifest; Components: ffdshow\makeavis
+#if VS2005SP1
+	#if is64bit
+Source: ..\..\manifest64\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
+	#else
+Source: ..\..\manifest32\msvc80\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
 	#endif
+#elif VS2008
+	#if is64bit
+; ToDo
+	#else
+Source: ..\..\manifest32\msvc90\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
+	#endif
+#else
+Source: ..\..\manifest32\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow
 #endif
+
+#if VS2005SP1
+	#if is64bit
+Source: ..\..\manifest64\ff_vfw.dll.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
+	#else
+Source: ..\..\manifest32\msvc80\ff_vfw.dll.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
+	#endif
+#elif VS2008
+	#if is64bit
+; ToDo
+  #else
+; ToDo
+  #endif	
+#else
+Source: ..\..\manifest32\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
+#endif
+
+#if include_makeavis
+  #if VS2003SP1 | MINGW_GCC
+Source: ..\..\manifest32\makeAVIS.exe.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
+  #endif
+  #if is64bit
+    #if VS2005SP1
+Source: ..\..\manifest64\makeAVIS.exe.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
+    #elif VS2008
+; ToDo
+    #endif
+  #endif
+#endif
+
+[InstallDelete]
+; Remove private assemblies
+Type: files; Name: {app}\msvcr80.dll;                   Components: ffdshow
+Type: files; Name: {app}\microsoft.vc80.crt.manifest;   Components: ffdshow
 #if localize
 ; Localized shortcuts
 Type: files; Name: {group}\Video decoder configuration.lnk; Components: ffdshow
@@ -928,26 +935,37 @@ begin
   end
 end;
 
+#if VS2005SP1 | VS2008
+#include "msvc_runtime_detection.iss"
+#endif
+
 function InitializeSetup(): Boolean;
 begin
   Result := True;
 
-  #if include_cpu_detection
+  #if cpu_detection
     #if sse2_required
-    if Result AND NOT Is_SSE2_Supported() then begin
-      Result := False;
-      MsgBox(CustomMessage('simd_msg_sse2'), mbError, MB_OK);
-    end
-    #endif
-    #if sse_required
-    if Result AND NOT Is_SSE_Supported() then begin
-      Result := False;
-      MsgBox(CustomMessage('simd_msg_sse'), mbError, MB_OK);
-    end
+  if Result AND NOT Is_SSE2_Supported() then begin
+    Result := False;
+    MsgBox(CustomMessage('simd_msg_sse2'), mbError, MB_OK);
+  end
+    #elif sse_required
+  if Result AND NOT Is_SSE_Supported() then begin
+    Result := False;
+    MsgBox(CustomMessage('simd_msg_sse'), mbError, MB_OK);
+  end
     #endif
   #endif
-
-  is_update := RegKeyExists(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow_is1');
+  
+  #if VS2005SP1 | VS2008
+  if Result then begin
+    Result := CheckForRequiredRuntimes;
+  end
+  #endif
+  
+  if Result then begin
+    is_update := RegKeyExists(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow_is1');
+  end
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
@@ -956,7 +974,7 @@ begin
     RemoveBuildUsingNSIS;
   end
 
-  #if include_cpu_detection
+  #if cpu_detection
   if CurStep = ssPostInstall then begin
     RegWriteDwordValue(HKCU, 'Software\GNU\ffdshow\default', 'threadsnum', GetNumberOfCores);
   end
