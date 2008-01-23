@@ -73,8 +73,6 @@ static int16_t xsin1[128];
 /* new exponents are sent if their Norm 1 exceed this number */
 #define EXP_DIFF_THRESHOLD 1000
 
-static void fft_init(int ln);
-
 static inline int16_t fix15(float a)
 {
     int v;
@@ -92,7 +90,7 @@ typedef struct IComplex {
 
 static void fft_init(int ln)
 {
-    int i, j, m, n;
+    int i, n;
     float alpha;
 
     n = 1 << ln;
