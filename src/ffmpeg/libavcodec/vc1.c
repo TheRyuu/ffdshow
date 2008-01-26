@@ -4120,6 +4120,7 @@ static int vc1_decode_end(AVCodecContext *avctx)
     av_freep(&v->acpred_plane);
     av_freep(&v->over_flags_plane);
     av_freep(&v->mb_type_base);
+    ff_intrax8_common_end(&v->x8);
     return 0;
 }
 
