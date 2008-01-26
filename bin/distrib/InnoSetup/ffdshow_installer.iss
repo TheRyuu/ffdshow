@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 1806
+#define tryout_revision = 1814
 #define buildyear = 2008
 #define buildmonth = '01'
-#define buildday = '23'
+#define buildday = '263'
 
 ; Build specific options
 #define unicode_required = True
@@ -828,13 +828,13 @@ end;
 
 function GetDefaultInstallDir(dummy: String): String;
 begin
+  #if is 64bit
+  Result := ExpandConstant('{pf}\ffdshow64');
+  #else
   if NOT RegQueryStringValue(HKLM, 'Software\GNU\ffdshow', 'pth', Result) OR (Length(Result) = 0) OR NOT DirExists(Result) then begin
-    #if is64bit
-    Result := ExpandConstant('{pf}\ffdshow64');
-    #else
     Result := ExpandConstant('{pf}\ffdshow');
-    #endif
   end
+  #endif
 end;
 
 function IsUpdate(): Boolean;
