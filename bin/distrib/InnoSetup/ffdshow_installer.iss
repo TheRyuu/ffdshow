@@ -881,7 +881,7 @@ begin
   Result := True;
   #if is64bit
   if RegQueryStringValue(HKLM, 'Software\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow64', 'UninstallString', regval) then begin
-    msgbox('You must first uninstall your old version of ffdshow.', mbInformation, mb_ok);
+    MsgBox(CustomMessage('msg_unistallFirst'), mbInformation, mb_ok);
     if NOT Exec('>', regval, '', SW_SHOW, ewWaitUntilTerminated, resultCode) then begin
       MsgBox(SysErrorMessage(resultCode), mbError, MB_OK);
     end

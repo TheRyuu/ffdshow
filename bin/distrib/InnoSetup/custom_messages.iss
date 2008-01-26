@@ -47,6 +47,7 @@ sc.FinishedRestartLabel=°²×°³ÌĞòĞèÒªÖØĞÂÆô¶¯¼ÆËã»úÀ´Íê³É [name] µÄ°²×°¹ı³Ì¡£ÄãÏë
 [CustomMessages]
 ; English
 en.langid=1033
+en.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
 en.simd_msg_sse=This build of ffdshow requires a CPU with SSE extension support. Your CPU does not have those capabilities.
 en.simd_msg_sse2=This build of ffdshow requires a CPU with SSE2 extension support. Your CPU does not have those capabilities.
 
@@ -122,6 +123,7 @@ en.shrt_uninstall=Uninstall ffdshow
 #if localize
 ; Japanese
 jp.langid=1041
+;jp.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
 ;jp.simd_msg_sse=This build of ffdshow requires a CPU with SSE extension support. Your CPU does not have those capabilities.
 ;jp.simd_msg_sse2=This build of ffdshow requires a CPU with SSE2 extension support. Your CPU does not have those capabilities.
 
@@ -196,6 +198,7 @@ jp.shrt_uninstall=ffdshow‚ÌƒAƒ“ƒCƒ“ƒXƒg[ƒ‹
 
 ; German
 de.langid=1031
+de.msg_uninstallFirst=Sie müssen ihre alte ffdshow-Version erst deinstallieren.
 de.simd_msg_sse=Dieses ffdshow-Build benötigt einen Prozessor mit SSE-Unterstützung. Ihr Prozesser besitzt diese Eigenschaft nicht.
 de.simd_msg_sse2=Dieses ffdshow-Build benötigt einen Prozessor mit SSE2-Unterstützung. Ihr Prozesser besitzt diese Eigenschaft nicht.
 
@@ -270,6 +273,7 @@ de.shrt_uninstall=ffdshow deinstallieren
 
 ; French
 fr.langid=1036
+;fr.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
 ;fr.simd_msg_sse=This build of ffdshow requires a CPU with SSE extension support. Your CPU does not have those capabilities.
 ;fr.simd_msg_sse2=This build of ffdshow requires a CPU with SSE2 extension support. Your CPU does not have those capabilities.
 
@@ -343,6 +347,7 @@ fr.shrt_uninstall=Désinstaller ffdshow
 
 ; Russian
 ru.langid=1049
+;ru.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
 ;ru.simd_msg_sse=This build of ffdshow requires a CPU with SSE extension support. Your CPU does not have those capabilities.
 ;ru.simd_msg_sse2=This build of ffdshow requires a CPU with SSE2 extension support. Your CPU does not have those capabilities.
 
@@ -417,6 +422,7 @@ ru.shrt_uninstall=Äåèíñòàëëÿöèÿ ffdshow
 
 ; Polish
 pl.langid=1045
+;pl.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
 ;pl.simd_msg_sse=This build of ffdshow requires a CPU with SSE extension support. Your CPU does not have those capabilities.
 ;pl.simd_msg_sse2=This build of ffdshow requires a CPU with SSE2 extension support. Your CPU does not have those capabilities.
 
@@ -489,6 +495,8 @@ pl.shrt_vfwConfig=Konfiguracja VFW
 pl.shrt_uninstall=Odinstaluj ffdshow
 
 ;Czech
+cz.langid=1029
+;cz.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
 cz.simd_msg_sse=Toto sestavení ffdshow vyaduje procesor s podporou rozšíøení SSE. Váš procesor tato rozšíøení nepodporuje.
 cz.simd_msg_sse2=Toto sestavení ffdshow vyaduje procesor s podporou rozšíøení SSE2. Váš procesor tato rozšíøení nepodporuje.
 
@@ -562,6 +570,7 @@ cz.shrt_uninstall=Odinstalovat ffdshow
 
 ;Chinese (Simplified)
 sc.langid=2052
+;sc.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
 sc.simd_msg_sse=Õâ¸ö±àÒë°æµÄ ffdshow ĞèÒªÒ»¸öÖ§³Ö SSE Ö¸Áî¼¯µÄ CPU¡£µ«ÊÇÄúµÄ CPU ²¢²»Ö§³ÖÕâ¸ö¹¦ÄÜ¡£
 sc.simd_msg_sse2=Õâ¸ö±àÒë°æµÄ ffdshow ĞèÒªÒ»¸öÖ§³Ö SSE2 Ö¸Áî¼¯µÄ CPU¡£µ«ÊÇÄúµÄ CPU ²¢²»Ö§³ÖÕâ¸ö¹¦ÄÜ¡£
 
