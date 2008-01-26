@@ -233,6 +233,7 @@ static __inline bool spdif_codec(int x)    {return x==CODEC_ID_SPDIF_AC3 || x==C
 static __inline bool huffyuv_codec(int x)  {return x==CODEC_ID_HUFFYUV || x==CODEC_ID_FFVHUFF;}
 static __inline bool x264_codec(int x)     {return x==CODEC_ID_X264 || x==CODEC_ID_X264_LOSSLESS;}
 static __inline bool lossless_codec(int x) {return huffyuv_codec(x) || x==CODEC_ID_LJPEG || x==CODEC_ID_FFV1 || x==CODEC_ID_DVVIDEO || x==CODEC_ID_X264_LOSSLESS;}
+static __inline bool vc1_codec(int x)      {return x == CODEC_ID_VC1 || x == CODEC_ID_WMV9_LIB;}
 
 //I'm not sure of all these
 static __inline bool sup_CBR(int x)           {return !lossless_codec(x) && !raw_codec(x);}

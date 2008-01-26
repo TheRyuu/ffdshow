@@ -551,6 +551,7 @@ private:
  void calcNewSize(TffPictBase &p);
  unsigned int frameCnt;uint64_t bytesCnt;
  REFERENCE_TIME segmentStart;unsigned int segmentFrameCnt;
+ REFERENCE_TIME vc1rtStart;int vc1frameCnt;
  int currentFrame;
  int decodingFps,decodingCsp;
  HRESULT reconnectOutput(const TffPict &newpict);
@@ -573,6 +574,7 @@ private:
  DWORD inSampleTypeSpecificFlags;
  bool inSampleEverField1Repeat;
  REFERENCE_TIME m_rtStart;
+ REFERENCE_TIME insample_rtStart,insample_rtStop;
  HRESULT checkAllowOutChange(IPin *pPin);
  TsearchInterfaceInGraph *searchInterfaceInGraph;
 public:

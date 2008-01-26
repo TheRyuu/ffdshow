@@ -161,6 +161,8 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  m_frame.dstColorspace=0;
  currentFrame=-1;decodingFps=0;decodingCsp=FF_CSP_NULL;
  segmentStart=-1;segmentFrameCnt=0;
+ vc1frameCnt = 0;
+ vc1rtStart=0;
  videoWindow=NULL;wasVideoWindow=false;
  basicVideo=NULL;wasBasicVideo=false;
  currentq=0;
@@ -814,9 +816,19 @@ HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
   {
    late-=ff_abs(rtStart-lastrtStart);
    lastrtStart=rtStart;
+   insample_rtStart = rtStart;
+   insample_rtStop = rtStop;
   }
+ else
+  {
+   late -= inpin->avgTimePerFrame;
+   insample_rtStart = REFTIME_INVALID;
+   insample_rtStop = REFTIME_INVALID;
+  }
+
  if (late && pSample->IsSyncPoint()==S_OK) late=0;
- if (presetSettings->dropOnDelay && !mpeg12_codec(inpin->getInCodecId2()) && late>presetSettings->dropDelayTime*10000)
+ int codecId = inpin->getInCodecId2();
+ if (presetSettings->dropOnDelay && !mpeg12_codec(codecId) && !vc1_codec(codecId) && late>presetSettings->dropDelayTime*10000)
   {
    //MSR_NOTE(m_idSkip);
    setSampleSkipped(true);
@@ -1018,13 +1030,15 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
  if (waitForKeyframe)
   {
    //DPRINTF(_l("still waiting for a keyframe"));
+   m_rtStart += inpin->avgTimePerFrame;
    return S_FALSE;
   }
 
  //if (m_frame.srcLength==0) return S_FALSE;
 
  HRESULT frameTimeOk=S_FALSE;
- if (mpeg12_codec(inpin->getInCodecId2()) && inpin->biIn.bmiHeader.biCompression!=FOURCC_MPEG)
+ int codecId = inpin->getInCodecId2();
+ if (mpeg12_codec(codecId) && inpin->biIn.bmiHeader.biCompression!=FOURCC_MPEG)
   {
    if (pict.rtStart<0)
     return S_FALSE;
@@ -1037,17 +1051,27 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
     frameTimeOk=S_OK;
    }
 
- CodecID codecId = inpin->getCurrentCodecId();
- if (globalSettings->autodetect24P && (codecId == CODEC_ID_VC1 || codecId == CODEC_ID_WMV9_LIB) && inSampleEverField1Repeat && inpin->avgTimePerFrame == 333666)
+ if (frameTimeOk != S_OK)
+  frameTimeOk=(pict.rtStart!=REFTIME_INVALID) ? S_OK : S_FALSE;
+
+ if (globalSettings->autodetect24P && vc1_codec(codecId) && inSampleEverField1Repeat && inpin->avgTimePerFrame == 333666)
   {
-   pict.rtStart = segmentFrameCnt * 417083;
-   pict.rtStop = pict.rtStart + 417082;
-   m_rtStart = pict.rtStop + 1;
+   if (insample_rtStart != REFTIME_INVALID)
+    {
+     vc1rtStart = insample_rtStart;
+     pict.rtStop = pict.rtStart + 417082;
+     m_rtStart = pict.rtStop + 1;
+     vc1frameCnt = 0;
+    }
+   else
+    {
+     pict.rtStart = vc1rtStart + vc1frameCnt * 417083;
+     pict.rtStop = pict.rtStart + 417082;
+     m_rtStart = pict.rtStop + 1;
+    }
   }
  else
   {
-   if (frameTimeOk!=S_OK)
-    frameTimeOk=(pict.rtStart!=REFTIME_INVALID)?S_OK:S_FALSE;// pIn->GetTime(&pict.rtStart,&pict.rtStop);
    if (frameTimeOk==S_OK && pict.rtStop-pict.rtStart!=0)
     {
      if (inpin->avgTimePerFrame==0)
@@ -1089,6 +1113,8 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
   currentFrame=long((pict.rtStart+segmentStart)/(inpin->avgTimePerFrame*1.0)+0.5);
  else
   currentFrame++;
+
+ vc1frameCnt++;
 
  int videoDelay;
  if (moviesecs>0 && presetSettings->isVideoDelayEnd && presetSettings->videoDelay!=presetSettings->videoDelayEnd)
@@ -1402,6 +1428,8 @@ HRESULT TffdshowDecVideo::NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,
  OSD_time_on_ffdshowDuration=0;
  segmentStart=tStart;
  segmentFrameCnt=0;
+ vc1frameCnt = 0;
+ vc1rtStart=0;
  m_rtStart = 0;
  for (size_t i=0;i<textpins.size();i++)
   if (textpins[i]->needSegment)
