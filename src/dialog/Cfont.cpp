@@ -72,6 +72,7 @@ void TfontPage::init(void)
  addHint(IDC_CBX_FONT_WEIGHT,_l("Weight - most fonts supports only small subset of listed weights."));
  addHint(IDC_TBR_FONT_SPACING,_l("Spacing - distance between characters."));
  addHint(IDC_CHB_FONT_ASPECT_AUTO,_l("Works when the video has non-square pixel aspect ratio."));
+ addHint(IDC_CHB_FONT_FAST, _l("It is fast, but spaces between characters are not precise."));
 }
 
 void TfontPage::selectCharset(int ii)

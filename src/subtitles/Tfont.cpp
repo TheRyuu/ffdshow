@@ -789,8 +789,8 @@ template<class tchar> TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
  alignXsize=chars[0]->alignXsize;
  TtextSubtitlePrintY=chars[0]->TtextSubtitlePrintY;
  TtextSubtitlePrintUV=chars[0]->TtextSubtitlePrintUV;
- dx[0]=(dx[0]/alignXsize+2)*alignXsize;dx[1]=dx[2]=(dx[0]/alignXsize/2+1)*alignXsize;
  dxCharY=dx[0];
+ dx[0]=(dx[0]/alignXsize+2)*alignXsize;dx[1]=dx[2]=(dx[0]/alignXsize/2+1)*alignXsize;
  dyCharY=chars[0]->dyCharY;
  for (int i=0 ; i<=1 ; i++)
   {
