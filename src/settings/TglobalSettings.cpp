@@ -106,7 +106,7 @@ void TglobalSettingsBase::load(void)
  firstBlacklist=firstWhitelist=true;
 
  // Load Icon type : shared by video, audio and vfw.
- TregOpRegRead tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\ffdshow"));
+ TregOpRegRead tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
  tHKCU_global._REG_OP_N(IDFF_trayIconType,_l("trayIconType"),trayIconType,1);
 
  // Load compatibility manager::dontask : shared by video and audio.
@@ -129,21 +129,21 @@ void TglobalSettingsBase::save(void)
  // Save Icon type : shared by video, audio and vfw.
  if (trayIconChanged)
   {
-   TregOpRegWrite tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\ffdshow"));
+   TregOpRegWrite tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
    tHKCU_global._REG_OP_N(IDFF_trayIconType,_l("trayIconType"),trayIconType,0);
    trayIconChanged=0;
   }
  // Save compatibility manager::dontask : shared by video and audio.
  if (isCompMgrChanged)
   {
-   TregOpRegWrite tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\ffdshow"));
+   TregOpRegWrite tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
    tHKCU_global._REG_OP_N(IDFF_isCompMgr,_l("isCompMgr"),isCompMgr,0);
    isCompMgrChanged=0;
   }
  // Save allowDPRINTF : shared by all.
  if (allowDPRINTFchanged)
   {
-   TregOpRegWrite tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\ffdshow"));
+   TregOpRegWrite tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
    tHKCU_global._REG_OP_N(IDFF_allowDPRINTF,_l("allowDPRINTF"),allowDPRINTF,0);
    allowDPRINTFchanged=0;
   }

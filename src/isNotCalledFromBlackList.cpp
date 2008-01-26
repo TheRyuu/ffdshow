@@ -19,11 +19,11 @@ bool isNotCalledFromBlackList(HINSTANCE hInstance)
  LONG regErr;
 
  // read from registry directly because it is difficult to initialize Tconfig in DllMain.(Because it loads module)
- regErr= RegOpenKeyEx(HKEY_CURRENT_USER, _l("Software\\GNU\\ffdshow"), 0, KEY_READ, &hKey);
+ regErr= RegOpenKeyEx(HKEY_CURRENT_USER, FFDSHOW_REG_PARENT _l("\\") FFDSHOW, 0, KEY_READ, &hKey);
  if(regErr!=ERROR_SUCCESS)
   return true;
 
- TregOpRegRead tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\ffdshow"));
+ TregOpRegRead tHKCU_global(HKEY_CURRENT_USER,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
  tHKCU_global._REG_OP_N(IDFF_allowDPRINTF,_l("allowDPRINTF"),allowDPRINTF,0);
 
  DWORD type;
@@ -77,6 +77,7 @@ bool isNotCalledFromBlackList(HINSTANCE hInstance)
  blacklistList2.push_back(_l("morrowind.exe"));
  blacklistList2.push_back(_l("YSO_WIN.exe"));
  blacklistList2.push_back(_l("WORMS 4 MAYHEM.EXE"));
+ blacklistList2.push_back(_l("sh3.exe"));
  for (strings::const_iterator b=blacklistList2.begin();b!=blacklistList2.end();b++)
   {
    if (DwStrcasecmp(*b,fileName)==0)
