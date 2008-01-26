@@ -52,7 +52,6 @@
 				ModuleDefinitionFile=".\libavcodec.def"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
-				EntryPointSymbol="DllEntryPoint"
 				ImportLibrary=".\Debug/libavcodec.lib"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -129,7 +128,6 @@
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				EntryPointSymbol="DllEntryPoint"
 				ImportLibrary=".\Release/libavcodec.lib"/>
 			<Tool
 				Name="VCMIDLTool"

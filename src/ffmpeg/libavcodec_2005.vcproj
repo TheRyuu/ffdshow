@@ -90,7 +90,6 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
 				SubSystem="2"
-				EntryPointSymbol="DllEntryPoint"
 				ImportLibrary="$(IntDir)\$(TargetName).lib"
 			/>
 			<Tool
@@ -189,7 +188,6 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
 				SubSystem="2"
-				EntryPointSymbol="DllEntryPoint"
 				ImportLibrary="$(IntDir)\$(TargetName).lib"
 				TargetMachine="17"
 			/>
@@ -299,7 +297,6 @@
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				EntryPointSymbol="DllEntryPoint"
 				ImportLibrary="$(IntDir)\$(TargetName).lib"
 			/>
 			<Tool
@@ -403,7 +400,6 @@
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				EntryPointSymbol="DllEntryPoint"
 				ImportLibrary="$(IntDir)\$(TargetName).lib"
 				TargetMachine="17"
 			/>

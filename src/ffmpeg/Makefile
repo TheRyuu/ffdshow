@@ -208,13 +208,6 @@ endif
 
 NOINTRIN=1
 
-GCCDLLENTRY=--entry=_DllEntryPoint@12
-ifeq ($(CC),icl)
-CLDLLENTRY=/entry:"DllEntryPoint"
-else
-CLDLLENTRY=/entry:"DllEntryPoint@12"
-endif
-
 include ../makefile_c.inc
 
 .all: $(SLIB)

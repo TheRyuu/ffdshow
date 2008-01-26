@@ -29,7 +29,7 @@
 CRITICAL_SECTION g_csStaticDataLock;
 
 // --- standard WIN32 entrypoints --------------------------------------
-BOOL WINAPI DllEntryPoint(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
+BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
  static int count=0;
  char pomS[40];
