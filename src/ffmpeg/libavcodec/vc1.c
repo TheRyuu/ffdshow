@@ -3873,7 +3873,8 @@ static int vc1_decode_init(AVCodecContext *avctx)
         }
 
         buf2 = av_mallocz(avctx->extradata_size + FF_INPUT_BUFFER_PADDING_SIZE);
-        if(start[0]) start++; // in WVC1 extradata first byte is its size
+        // if(start[0]) /* ffdshow custom code (comment out this line) to support madshi's eac3to http://forum.doom9.org/showthread.php?p=1091626#post1091626*/
+         start++; // in WVC1 extradata first byte is its size
         next = start;
         for(; next < end; start = next){
             next = find_next_marker(start + 4, end);
