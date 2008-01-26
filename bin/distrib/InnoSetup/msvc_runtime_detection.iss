@@ -42,11 +42,11 @@ begin
           if FindFirst(temp, FindRec) then begin
             log('Found file: ' + FindRec.Name);
             // Check for registry key
-            if RegGetSubkeyNames({#= HKLM}, 'SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners', subkeys) then begin
+            if RegGetSubkeyNames(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners', subkeys) then begin
               temp := LowerCase(runtime.cpu_arch + '_' + runtime.name + '_' +  runtime.public_key_token);
               for i:=0 to (GetArrayLength(subkeys)-1) do begin
                 if Pos(temp, LowerCase(subkeys[i])) = 1 then begin
-                  if RegQueryBinaryValue({#= HKLM}, 'SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners\' + subkeys[i] + '\' + runtime.majorversion, runtime.version, binval) then begin
+                  if RegQueryBinaryValue(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners\' + subkeys[i] + '\' + runtime.majorversion, runtime.version, binval) then begin
                     // Everything has been found :-)
                     Result := True;
                     break;

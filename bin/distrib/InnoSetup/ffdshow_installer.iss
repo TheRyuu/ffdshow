@@ -1,6 +1,6 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 1816
+#define tryout_revision = 1819
 #define buildyear = 2008
 #define buildmonth = '01'
 #define buildday = '26'
@@ -654,15 +654,6 @@ Description: {cm:run_vfwConfig};   Filename: {win}\rundll32.exe; Parameters: ff_
 #include "custom_messages.iss"
 
 [Code]
-// There is no automatic registry redirection in [Code] section
-#if is64bit
-#define HKCU = 'HKCU64'
-#define HKLM = 'HKLM64'
-#else
-#define HKCU = 'HKCU'
-#define HKLM = 'HKLM'
-#endif
-
 const NUMBER_OF_COMPATIBLEAPPLICATIONS=50;
 
 type
@@ -701,11 +692,11 @@ var
   regval: Cardinal;
 begin
   Result := False;
-  if RegQueryDwordValue({#= HKCU}, 'Software\GNU\ffdshow', name, regval) then begin
+  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow', name, regval) then begin
     Result := (regval = value);
   end
   else begin
-    if RegQueryDwordValue({#= HKLM}, 'Software\GNU\ffdshow', name, regval) then begin
+    if RegQueryDwordValue(HKLM, 'Software\GNU\ffdshow', name, regval) then begin
       Result := (regval = value);
     end
     else begin
@@ -719,11 +710,11 @@ var
   regval: Cardinal;
 begin
   Result := False;
-  if RegQueryDwordValue({#= HKCU}, 'Software\GNU\ffdshow', name, regval) then begin
+  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow', name, regval) then begin
     Result := (regval > 0);
   end
   else begin
-    if RegQueryDwordValue({#= HKLM}, 'Software\GNU\ffdshow', name, regval) then begin
+    if RegQueryDwordValue(HKLM, 'Software\GNU\ffdshow', name, regval) then begin
       Result := (regval > 0);
     end
     else begin
@@ -737,11 +728,11 @@ var
   regval: Cardinal;
 begin
   Result := False;
-  if RegQueryDwordValue({#= HKCU}, 'Software\GNU\ffdshow_audio', name, regval) then begin
+  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow_audio', name, regval) then begin
     Result := (regval = value);
   end
   else begin
-    if RegQueryDwordValue({#= HKLM}, 'Software\GNU\ffdshow_audio', name, regval) then begin
+    if RegQueryDwordValue(HKLM, 'Software\GNU\ffdshow_audio', name, regval) then begin
       Result := (regval = value);
     end
     else begin
@@ -755,7 +746,7 @@ var
   regval: Cardinal;
 begin
   Result := False;
-  if RegQueryDwordValue({#= HKCU}, 'Software\GNU\ffdshow\default', name, regval) then
+  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow\default', name, regval) then
     Result := (regval = value)
   else
     Result := showbydefault;
@@ -766,7 +757,7 @@ var
   regval: Cardinal;
 begin
   Result := False;
-  if RegQueryDwordValue({#= HKCU}, 'Software\GNU\ffdshow_audio\default', name, regval) then
+  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow_audio\default', name, regval) then
     Result := (regval = value)
   else
     Result := showbydefault;
@@ -797,8 +788,8 @@ var
 function GetAviSynthPluginDir(dummy: String): String;
 begin
   if Length(avisynthplugindir) = 0 then begin
-    if NOT RegQueryStringValue({#= HKLM}, 'Software\AviSynth', 'plugindir2_5', avisynthplugindir) OR NOT DirExists(avisynthplugindir) then begin
-      if NOT RegQueryStringValue({#= HKLM}, 'Software\AviSynth', 'plugindir', avisynthplugindir) OR NOT DirExists(avisynthplugindir) then begin
+    if NOT RegQueryStringValue(HKLM, 'Software\AviSynth', 'plugindir2_5', avisynthplugindir) OR NOT DirExists(avisynthplugindir) then begin
+      if NOT RegQueryStringValue(HKLM, 'Software\AviSynth', 'plugindir', avisynthplugindir) OR NOT DirExists(avisynthplugindir) then begin
         avisynthplugindir := ExpandConstant('{app}');
       end
     end
@@ -837,7 +828,7 @@ end;
 
 function GetDefaultInstallDir(dummy: String): String;
 begin
-  if NOT RegQueryStringValue({#= HKLM}, 'Software\GNU\ffdshow', 'pth', Result) OR (Length(Result) = 0) OR NOT DirExists(Result) then begin
+  if NOT RegQueryStringValue(HKLM, 'Software\GNU\ffdshow', 'pth', Result) OR (Length(Result) = 0) OR NOT DirExists(Result) then begin
     #if is64bit
     Result := ExpandConstant('{pf64}\ffdshow64');
     #else
@@ -879,23 +870,13 @@ var
   resultCode: Integer;
 begin
   Result := True;
-  #if is64bit
-  if RegQueryStringValue(HKLM, 'Software\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow64', 'UninstallString', regval) then begin
-    MsgBox(CustomMessage('msg_unistallFirst'), mbInformation, mb_ok);
-    if NOT Exec('>', regval, '', SW_SHOW, ewWaitUntilTerminated, resultCode) then begin
-      MsgBox(SysErrorMessage(resultCode), mbError, MB_OK);
-    end
-    Result := NOT RegKeyExists(HKLM, 'Software\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow64');
-  end
-  #else
   if RegQueryStringValue(HKLM, 'Software\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow', 'UninstallString', regval) then begin
-    msgbox('You must first uninstall your old version of ffdshow.', mbInformation, mb_ok);
+    MsgBox(CustomMessage('msg_unistallFirst'), mbInformation, mb_ok);
     if NOT Exec('>', regval, '', SW_SHOW, ewWaitUntilTerminated, resultCode) then begin
       MsgBox(SysErrorMessage(resultCode), mbError, MB_OK);
     end
     Result := NOT RegKeyExists(HKLM, 'Software\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow');
   end
-  #endif
 end;
 
 #if VS2005SP1 | VS2008
@@ -943,7 +924,7 @@ end;
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssPostInstall then begin
-    RegWriteDwordValue({#= HKCU}, 'Software\GNU\ffdshow\default', 'threadsnum', GetNumberOfCores);
+    RegWriteDwordValue(HKCU, 'Software\GNU\ffdshow\default', 'threadsnum', GetNumberOfCores);
   end
 end;
 #endif
@@ -1003,7 +984,7 @@ begin
     Result := '24'
   else if SpeakerPage.Values[8] = True then
     Result := IntToStr(reg_mixerOut);
-  RegWriteDWordValue({#= HKLM}, 'Software\GNU\ffdshow_audio', 'isSpkCfg', 1);
+  RegWriteDWordValue(HKLM, 'Software\GNU\ffdshow_audio', 'isSpkCfg', 1);
 end;
 
 function GetIsMixer(dummy: String): String;
@@ -1065,7 +1046,7 @@ end;
 
 function ffRegReadDWordHKCU(regKeyName: String; regValName: String; defaultValue: Cardinal): Cardinal;
 begin
-  if NOT RegQueryDwordValue({#= HKCU}, regKeyName, regValName, Result) then
+  if NOT RegQueryDwordValue(HKCU, regKeyName, regValName, Result) then
     Result := defaultValue;
 end;
 
@@ -1367,9 +1348,9 @@ begin
   complist.edt.Parent := complist.page.Surface;
   complist.edt.MaxLength := 4000;
   complist.edt.ScrollBars := ssVertical;
-  if RegQueryStringValue({#= HKCU}, regKeyName, 'whitelist', regstr) then begin
+  if RegQueryStringValue(HKCU, regKeyName, 'whitelist', regstr) then begin
     StringChange(regstr, ';', #13#10);
-    if RegQueryDwordValue({#= HKLM}, 'Software\GNU\ffdshow', 'revision', revision) then begin
+    if RegQueryDwordValue(HKLM, 'Software\GNU\ffdshow', 'revision', revision) then begin
       regstrUpper := AnsiUppercase(regstr);
 
       for i:=1 to NUMBER_OF_COMPATIBLEAPPLICATIONS do begin
@@ -1483,9 +1464,9 @@ begin
   SpeakerPage.Add('5.0 (' + CustomMessage('spk_5ch') + ')');                                             // 6
   SpeakerPage.Add('5.1 (' + CustomMessage('spk_5ch') + ' + ' + CustomMessage('spk_subwoofer') + ')');    // 13
   SpeakerPage.Add('7.1 (' + CustomMessage('spk_7ch') + ' + ' + CustomMessage('spk_subwoofer') + ')');    // 24
-  if  RegQueryDWordValue({#= HKCU}, 'Software\GNU\ffdshow_audio\default', 'mixerOut', reg_mixerOut)
-  and RegQueryDWordValue({#= HKCU}, 'Software\GNU\ffdshow_audio\default', 'ismixer' , reg_ismixer)
-  and RegQueryDWordValue({#= HKLM}, 'Software\GNU\ffdshow_audio'        , 'isSpkCfg', reg_isSpkCfg) then
+  if  RegQueryDWordValue(HKCU, 'Software\GNU\ffdshow_audio\default', 'mixerOut', reg_mixerOut)
+  and RegQueryDWordValue(HKCU, 'Software\GNU\ffdshow_audio\default', 'ismixer' , reg_ismixer)
+  and RegQueryDWordValue(HKLM, 'Software\GNU\ffdshow_audio'        , 'isSpkCfg', reg_isSpkCfg) then
   begin
     if reg_ismixer = 1 then begin
       isMajorType := True;
@@ -1607,7 +1588,7 @@ begin
   if PageID = VdubDirPage.ID then begin
     if IsComponentSelected('ffdshow\plugins\virtualdub') then begin
       if VdubDirPage.Values[0] = '' then begin
-        if RegQueryStringValue({#= HKLM}, 'Software\GNU\ffdshow', 'pthVirtualDub', regval)
+        if RegQueryStringValue(HKLM, 'Software\GNU\ffdshow', 'pthVirtualDub', regval)
         and not (regval = ExpandConstant('{app}')) and not (regval = '') then
           VdubDirPage.Values[0] := regval
         else if FileOrDirExists(ExpandConstant('{pf}\virtualDub\plugins')) then
