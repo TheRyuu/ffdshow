@@ -190,7 +190,7 @@ static void x264_mb_analyse_load_costs( x264_t *h, x264_mb_analysis_t *a )
     a->p_cost_mv = p_cost_mv[a->i_qp];
 
     /* FIXME is this useful for all me methods? */
-    if( h->param.analyse.i_me_method == X264_ME_ESA && !x264_cost_mv_fpel[a->i_qp][0] )
+    if( h->param.analyse.i_me_method >= X264_ME_ESA && !x264_cost_mv_fpel[a->i_qp][0] )
     {
         for( j=0; j<4; j++ )
         {
@@ -1255,8 +1255,8 @@ static int x264_mb_analyse_inter_p4x4_chroma( x264_t *h, x264_mb_analysis_t *a, 
     if( pixel == PIXEL_4x4 )
     {
         CHROMA4x4MC( 2,2, a->l0.me4x4[i8x8][0], 0,0 );
-        CHROMA4x4MC( 2,2, a->l0.me4x4[i8x8][1], 0,2 );
-        CHROMA4x4MC( 2,2, a->l0.me4x4[i8x8][2], 2,0 );
+        CHROMA4x4MC( 2,2, a->l0.me4x4[i8x8][1], 2,0 );
+        CHROMA4x4MC( 2,2, a->l0.me4x4[i8x8][2], 0,2 );
         CHROMA4x4MC( 2,2, a->l0.me4x4[i8x8][3], 2,2 );
     }
     else if( pixel == PIXEL_8x4 )
