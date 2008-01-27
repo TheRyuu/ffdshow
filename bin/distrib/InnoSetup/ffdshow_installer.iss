@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 1819
+#define tryout_revision = 1824
 #define buildyear = 2008
 #define buildmonth = '01'
-#define buildday = '26'
+#define buildday = '27'
 
 ; Build specific options
 #define unicode_required = True
@@ -654,7 +654,7 @@ Description: {cm:run_vfwConfig};   Filename: {win}\rundll32.exe; Parameters: ff_
 #include "custom_messages.iss"
 
 [Code]
-const NUMBER_OF_COMPATIBLEAPPLICATIONS=50;
+const NUMBER_OF_COMPATIBLEAPPLICATIONS = 70;
 
 type
   TCompApp = record
@@ -1073,13 +1073,13 @@ begin
   // Default list of compatible apps
   default_compat_list :=
     '3wPlayer.exe'#13#10
+    'ACDSee10.exe'#13#10
     'ACDSee5.exe'#13#10
     'ACDSee6.exe'#13#10
     'ACDSee7.exe'#13#10
     'ACDSee8.exe'#13#10
     'ACDSee8pro.exe'#13#10
     'ACDSee9.exe'#13#10
-    'ACDSee10.exe'#13#10
     'ACDSeePro2.exe'#13#10
     'Adobe Premiere Elements.exe'#13#10
     'Adobe Premiere Pro.exe'#13#10
@@ -1088,11 +1088,13 @@ begin
     'afreecastudio.exe'#13#10
     'aim6.exe'#13#10
     'ALLPlayer.exe'#13#10
+    'allradio.exe'#13#10
     'AlltoaviV4.exe'#13#10
     'ALShow.exe'#13#10
     'ALSong.exe'#13#10
     'AltDVB.exe'#13#10
     'amcap.exe'#13#10
+    'amf_slv.exe'#13#10
     'amvtransform.exe'#13#10
     'Apollo DivX to DVD Creator.exe'#13#10
     'Apollo3GPVideoConverter.exe'#13#10
@@ -1122,6 +1124,7 @@ begin
     'bsplay.exe'#13#10
     'bsplayer.exe'#13#10
     'BTVD3DShell.exe'#13#10
+    'Camfrog Video Chat.exe'#13#10
     'CamRecorder.exe'#13#10
     'CamtasiaStudio.exe'#13#10
     'carom.exe'#13#10
@@ -1133,19 +1136,19 @@ begin
     'ConvertXtoDvd.exe'#13#10
     'coolpro2.exe'#13#10
     'CorePlayer.exe'#13#10
-    'coreplayer.exe'#13#10
     'Crystal.exe'#13#10
     'crystalfree.exe'#13#10
     'CrystalPro.exe'#13#10
+    'cscript.exe'#13#10
     'CTCMS.exe'#13#10
     'CTCMSU.exe'#13#10
     'CTWave.exe'#13#10
     'CTWave32.exe'#13#10
     'cut_assistant.exe'#13#10
-    'cscript.exe'#13#10
     'dashboard.exe'#13#10
     'demo32.exe'#13#10
     'DivX Player.exe'#13#10
+    'DivxToDVD.exe'#13#10
     'dllhost.exe'#13#10
     'dpgenc.exe'#13#10
     'Dr.DivX.exe'#13#10
@@ -1157,11 +1160,13 @@ begin
     'dv.exe'#13#10
     'dvbdream.exe'#13#10
     'dvbviewer.exe'#13#10
+    'DVD Shrink 3.2.exe'#13#10
     'DVDAuthor.exe'#13#10
+    'DVDMaker.exe'#13#10
     'DVDMF.exe'#13#10
     'dvdplay.exe'#13#10
-    'DVDMaker.exe'#13#10
-    'DVD Shrink 3.2.exe'#13#10
+    'dvdSanta.exe'#13#10
+    'DXEffectTester.exe'#13#10
     'DXEnum.exe'#13#10
     'Easy RealMedia Tools.exe'#13#10
     'ehExtHost.exe'#13#10
@@ -1173,6 +1178,7 @@ begin
     'filtermanager.exe'#13#10
     'firefox.exe'#13#10
     'Flash.exe'#13#10
+    'FLVPlayer4Free.exe'#13#10
     'FMRadio.exe'#13#10
     'Fortius.exe'#13#10
     'FreeStyle.exe'#13#10
@@ -1188,11 +1194,13 @@ begin
     'GoogleDesktopCrawl.exe'#13#10
     'graphedit.exe'#13#10
     'graphedt.exe'#13#10
+    'GraphStudio.exe'#13#10
     'gspot.exe'#13#10
     'HBP.exe'#13#10
     'HDVSplit.exe'#13#10
     'honestechTV.exe'#13#10
     'HPWUCli.exe'#13#10
+    'i_view32.exe'#13#10
     'ICQ.exe'#13#10
     'ICQLite.exe'#13#10
     'iexplore.exe'#13#10
@@ -1200,12 +1208,15 @@ begin
     'IncMail.exe'#13#10
     'InfoTool.exe'#13#10
     'infotv.exe'#13#10
+    'InstallChecker.exe'#13#10
     'Internet TV.exe'#13#10
     'iPlayer.exe'#13#10
-    'i_view32.exe'#13#10
+    'ipod_video_converter.exe'#13#10
+    'IPODConverter.exe'#13#10
     'JetAudio.exe'#13#10
     'jwBrowser.exe'#13#10
     'kmplayer.exe'#13#10
+    'KwMusic.exe'#13#10
     'LA.exe'#13#10
     'LifeCam.exe'#13#10
     'Lilith.exe'#13#10
@@ -1226,6 +1237,8 @@ begin
     'MMPlayer.exe'#13#10
     'moviemk.exe'#13#10
     'moviethumb.exe'#13#10
+    'MP4Converter.exe'#13#10
+    'Mp4Player.exe'#13#10
     'mpcstar.exe'#13#10
     'MpegVideoWizard.exe'#13#10
     'mplayer2.exe'#13#10
@@ -1237,6 +1250,7 @@ begin
     'MusicManager.exe'#13#10
     'Muzikbrowzer.exe'#13#10
     'Mv2PlayerPlus.exe'#13#10
+    'My Movies.exe'#13#10
     'myplayer.exe'#13#10
     'nero.exe'#13#10
     'NeroHome.exe'#13#10
@@ -1262,19 +1276,26 @@ begin
     'PPLive.exe'#13#10
     'ppmate.exe'#13#10
     'PPStream.exe'#13#10
+    'PQDVD_PSP.exe'#13#10
     'Procoder2.exe'#13#10
     'Producer.exe'#13#10
     'progdvb.exe'#13#10
+    'ProgDvbNet.exe'#13#10
     'PVCR.exe'#13#10
     'Qonoha.exe'#13#10
     'QQ.exe'#13#10
+    'QQLive.exe'#13#10
+    'QQMusic.exe'#13#10
     'QQPlayerSvr.exe'#13#10
+    'QvodPlayer.exe'#13#10
     'QzoneMusic.exe'#13#10
     'RadLight.exe'#13#10
     'realplay.exe'#13#10
     'ReClockHelper.dll'#13#10
     'Recode.exe'#13#10
+    'RecordingManager.exe'#13#10
     'rlkernel.exe'#13#10
+    'RoxMediaDB10.exe'#13#10
     'RoxMediaDB9.exe'#13#10
     'rundll32.exe'#13#10
     'SelfMV.exe'#13#10
@@ -1285,15 +1306,18 @@ begin
     'SinkuHadouken.exe'#13#10
     'Sleipnir.exe'#13#10
     'smartmovie.exe'#13#10
+    'songbird.exe'#13#10
     'SopCast.exe'#13#10
-    'START.EXE'#13#10
-    'SubtitleEdit.exe'#13#10
-    'SubtitleWorkshop.exe'#13#10
     'SplitCam.exe'#13#10
+    'START.EXE'#13#10
     'stillcap.exe'#13#10
     'Studio.exe'#13#10
     'subedit.exe'#13#10
+    'SubtitleEdit.exe'#13#10
+    'SubtitleWorkshop.exe'#13#10
+    'SubtitleWorkshop4.exe'#13#10
     'SWFConverter.exe'#13#10
+    'telewizja.exe'#13#10
     'TheaterTek DVD.exe'#13#10
     'time_adjuster.exe'#13#10
     'timecodec.exe'#13#10
@@ -1308,28 +1332,41 @@ begin
     'TVUPlayer.exe'#13#10
     'UCC.exe'#13#10
     'Ultra EDIT.exe'#13#10
+    'UUSeePlayer.exe'#13#10
     'VCD_PLAY.EXE'#13#10
     'VeohClient.exe'#13#10
     'VFAPIFrameServer.exe'#13#10
+    'VideoConvert.exe'#13#10
+    'videoconverter.exe'#13#10
+    'videoenc.exe'#13#10
+    'VideoManager.exe'#13#10
     'VideoSnapshot.exe'#13#10
     'VideoSplitter.exe'#13#10
     'VIDEOS~1.SCR'#13#10
+    'VideoWave9.exe'#13#10
     'ViPlay.exe'#13#10
     'ViPlay3.exe'#13#10
     'ViPlay4.exe'#13#10
     'virtualdub.exe'#13#10
     'virtualdubmod.exe'#13#10
     'vplayer.exe'#13#10
+    'WaveChk.exe'#13#10
     'WCreator.exe'#13#10
+    'WebMediaPlayer.exe'#13#10
     'WFTV.exe'#13#10
     'winamp.exe'#13#10
+    'WinAVI 9.0.exe'#13#10
+    'WinAVI MP4 Converter.exe'#13#10
     'WinAVI.exe'#13#10
     'WindowsPhotoGallery.exe'#13#10
     'windvd.exe'#13#10
+    'WinDvr.exe'#13#10
     'WinMPGVideoConvert.exe'#13#10
     'WINWORD.EXE'#13#10
+    'WLXPhotoGallery.exe'#13#10
     'wmenc.exe'#13#10
     'wmplayer.exe'#13#10
+    'wmprph.exe'#13#10
     'wscript.exe'#13#10
     'x264.exe'#13#10
     'XNVIEW.EXE'#13#10
@@ -1337,6 +1374,7 @@ begin
     'YahooMessenger.exe'#13#10
     'YahooMusicEngine.exe'#13#10
     'YahooWidgetEngine.exe'#13#10
+    'YahooWidgets.exe'#13#10
     'zplayer.exe'#13#10
     'Zune.exe';
 
@@ -1424,7 +1462,48 @@ begin
   compApps[17].name  := 'QQ.exe';
   compApps[18].name  := 'Tvants.exe';
   
-  compApps[19].rev   := 0;
+  compApps[19].rev   := 1824;
+  compApps[19].name  := 'allradio.exe';
+  compApps[20].name  := 'amf_slv.exe';
+  compApps[21].name  := 'Camfrog Video Chat.exe';
+  compApps[22].name  := 'DivxToDVD.exe';
+  compApps[23].name  := 'dvdSanta.exe';
+  compApps[24].name  := 'DXEffectTester.exe';
+  compApps[25].name  := 'FLVPlayer4Free.exe';
+  compApps[26].name  := 'GraphStudio.exe';
+  compApps[27].name  := 'InstallChecker.exe';
+  compApps[28].name  := 'ipod_video_converter.exe';
+  compApps[30].name  := 'IPODConverter.exe';
+  compApps[31].name  := 'KwMusic.exe';
+  compApps[32].name  := 'MP4Converter.exe';
+  compApps[33].name  := 'Mp4Player.exe';
+  compApps[34].name  := 'My Movies.exe';
+  compApps[35].name  := 'PQDVD_PSP.exe';
+  compApps[36].name  := 'ProgDvbNet.exe';
+  compApps[37].name  := 'QQLive.exe';
+  compApps[38].name  := 'QQMusic.exe';
+  compApps[39].name  := 'QvodPlayer.exe';
+  compApps[40].name  := 'RecordingManager.exe';
+  compApps[41].name  := 'RoxMediaDB10.exe';
+  compApps[42].name  := 'songbird.exe';
+  compApps[43].name  := 'SubtitleWorkshop4.exe';
+  compApps[44].name  := 'telewizja.exe';
+  compApps[45].name  := 'UUSeePlayer.exe';
+  compApps[46].name  := 'VideoConvert.exe';
+  compApps[47].name  := 'videoconverter.exe';
+  compApps[48].name  := 'videoenc.exe';
+  compApps[49].name  := 'VideoManager.exe';
+  compApps[50].name  := 'VideoWave9.exe';
+  compApps[51].name  := 'WaveChk.exe';
+  compApps[52].name  := 'WebMediaPlayer.exe';
+  compApps[53].name  := 'WinAVI 9.0.exe';
+  compApps[54].name  := 'WinAVI MP4 Converter.exe';
+  compApps[55].name  := 'WinDvr.exe';
+  compApps[56].name  := 'WLXPhotoGallery.exe';
+  compApps[57].name  := 'wmprph.exe';
+  compApps[58].name  := 'YahooWidgets.exe';
+  
+  compApps[59].rev   := 0;
 
 
   // Compatibility list
