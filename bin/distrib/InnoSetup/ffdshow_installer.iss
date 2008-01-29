@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 1824
+#define tryout_revision = 1827
 #define buildyear = 2008
 #define buildmonth = '01'
-#define buildday = '27'
+#define buildday = '29'
 
 ; Build specific options
 #define unicode_required = True
@@ -363,7 +363,7 @@ Name: {group}\{cm:shrt_uninstall}; Filename: {uninstallexe}
 
 [Files]
 ; For speaker config
-Source: msvc71\ffSpkCfg.dll; Flags: dontcopy
+Source: ffSpkCfg.dll; Flags: dontcopy
 
 #if VS2003SP1
 Source: Runtimes\msvc71\msvcp71.dll; DestDir: {sys}; Flags: onlyifdoesntexist sharedfile uninsnosharedfileprompt
