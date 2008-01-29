@@ -103,6 +103,8 @@ var
   runtime_url: String;
   ErrorCode: Integer;
 begin
+  Result := True;
+  
   #if VS2005SP1
     #if is64bit
     runtime_name := 'Microsoft Visual C++ 2005 SP1 Redistributable Package (x64)';
