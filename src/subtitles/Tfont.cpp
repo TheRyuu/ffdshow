@@ -881,7 +881,7 @@ void TrenderedTextSubtitleWord::print(int startx, int starty, unsigned int sdx[3
      secondaryColoredWord->dstOffset = std::max(offset - srcOffset, 0);
      secondaryColoredWord->print(startx2, starty, sdx2, sdy, dstLn, stride, Ibmp, Imsk, rtStart);
      sdx[0] -= sdx2[0];
-     sdx[1] -= sdx2[1];
+     sdx[1] = sdx[0] >> prefs.shiftX[1];
     }
   }
 
