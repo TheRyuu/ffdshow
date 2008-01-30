@@ -25,22 +25,37 @@ de.WinVersionTooLowError=Diese [name]-Version benötigt Windows 2000 oder neuer.
 fr.WelcomeLabel2=Ceci installera [name] sur votre ordinateur.%n%nIl est recommandé de fermer toutes les autres applications avant de continuer.
 fr.FileAbortRetryIgnore=Quitter l'application qui utilise ffdshow et cliquer sur  Ressayer. si le problème persiste, cliquer sur Annuler, redémarrer l'ordinateur et réinstaller de nouveau.
 fr.FinishedRestartLabel=Pour compléter l'installation de [name], l'installation doit redémarrer votre ordinateur. Voulez-vous le redémarrer maintenant ?%n%nHint : Pour éviter de redémarrer votre ordinateur la prochaine fois, il est conseiller d'activer l'option "ne pas utiliser ffdshow dans :"-"explorer.exe" dans « Infos & Debogage » du panneau configuration du décodeur vidéo ffdshow.
+#if unicode_required
+;fr.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
+#endif
 ; Russian
 ru.WelcomeLabel2=Ïðîãðàììà óñòàíîâèò [name] íà Âàø êîìïüþòåð.%n%nÐåêîìåíäóåòñÿ çàêðûòü âñå ïðî÷èå ïðèëîæåíèÿ ïåðåä òåì, êàê ïðîäîëæèòü.
 ru.FileAbortRetryIgnore=Çàêðîéòå âñå ïðèëîæåíèÿ, èñïîëüçóþùèå ffdshow, è íàæìèòå "Ïîâòîð". Åñëè ñèòóàöèÿ ïîâòîðèòñÿ, íàæìèòå "Îòêàç", ïåðåçàãðóçèòå Âàø êîìïüþòåð è ïîïðîáóéòå åù¸ ðàç.
 ru.FinishedRestartLabel=Äëÿ çàâåðøåíèÿ óñòàíîâêè [name] òðåáóåòñÿ ïåðåçàãðóçèòü êîìïüþòåð. Ïðîèçâåñòè ïåðåçàãðóçêó ñåé÷àñ?%n%nÏîäñêàçêà: èçáåæàòü ïåðåçàãðóçêè êîìïüþòåðà â ñëåäóþùèé ðàç ìîæåò ïîìî÷ü âêëþ÷åíèå "Èíôîðìàöèÿ"-"Don't use ffdshow in:"-"explorer.exe" â êîíôèãóðàöèè âèäåîäåêîäåðà.
+#if unicode_required
+;ru.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
+#endif
 ; Polish
 pl.WelcomeLabel2=Instalator zainstaluje [name] na twoim komputerze.%n%nZaleca siê zamkniêcie wszystkich innych aplikacji przed kontynuowaniem procesu instalacji.
 pl.FileAbortRetryIgnore=Zamknij aplikacjê u¿ywaj¹c¹ ffdshow i wciœnij Ponów. Jeœli problem nie ustêpuje, wciœnij Przerwij, zrestartuj komputer i ponownie uruchom instalacjê.
 pl.FinishedRestartLabel=By zakoñczyæ instalacjê [name], instalator musi zrestartowaæ twój komputer. Czy chcia³byœ zrestartowaæ go teraz?%n%nPodpowiedŸ: By unikn¹æ restartowania komputera nastêpnym razem, zaznacz w zak³adce "Informacje" - "Nie u¿ywaj ffdshow w:" - "explorer.exe" w konfiguracji dekodera wideo.
+#if unicode_required
+;pl.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
+#endif
 ;Czech
 cz.WelcomeLabel2=Tento instalátor nainstaluje na váš poèítaè [name].%n%nPøedtím než spustíte instalaci je doporuèeno ukonèit všechny ostatní aplikace.
 cz.FileAbortRetryIgnore=Ukonèete aplikaci používající ffdshow a kliknìte na Opakovat. Pokud problém pøetrvává, ukonèete instalaci tlaèítkem Pøerušit, restartujte poèítaè a znovu spuste instalci.
 cz.FinishedRestartLabel=Aby mohla být instalace [name] dokonèena, musí instalátor restartovat poèítaè. Chcete poèítaè restartovat nyní?%n%nTip: Potøebì restartování se pro pøíštì mùžete vyhnout pokud v nastavení video dekodéru nastavíte "DirectShow"-"ffdshow nepoužívat v:"-"explorer.exe".
+#if unicode_required
+;cz.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
+#endif
 ; Chinese (Simplified)
 sc.WelcomeLabel2=¼´½«°²×° [name] µ½ÄúµÄµçÄÔÖÐ¡£%n%n½¨ÒéÄúÔÚ¼ÌÐø°²×°Ç°¹Ø±ÕËùÓÐÆäËûÓ¦ÓÃ³ÌÐò¡£
 sc.FileAbortRetryIgnore=ÍË³öÕýÔÚÊ¹ÓÃ ffdshow µÄÓ¦ÓÃ³ÌÐòÈ»ºóÖØÊÔ¡£Èç¹ûÎÊÌâÈÔÈ»³öÏÖ£¬µ¥»÷¡°ÖÐÖ¹¡±°´Å¥£¬²¢ÖØÐÂÆô¶¯¼ÆËã»úÈ»ºóÔÙÔËÐÐ°²×°³ÌÐò¡£
 sc.FinishedRestartLabel=°²×°³ÌÐòÐèÒªÖØÐÂÆô¶¯¼ÆËã»úÀ´Íê³É [name] µÄ°²×°¹ý³Ì¡£ÄãÏëÏÖÔÚÖØÐÂÆô¶¯Âð£¿%n%nÌáÊ¾£ºÈç¹ûÏÂ´Î°²×°²»ÏëÖØÐÂÆô¶¯¼ÆËã»ú£¬¿ÉÒÔ¹´Ñ¡¡°²»ÒªÔÚÏÂÁÐ³ÌÐòÖÐÊ¹ÓÃffdshow£º¡±¸´Ñ¡¿ò£¨Î»ÓÚ¡°ffdshowÊÓÆµ½âÂëÆ÷ÅäÖÃ¡±->¡°DirectShow¿ØÖÆ¡±£©£¬²¢°Ñ¡°explorer.exe¡±¼ÓÈëºóÃæµÄÁÐ±í¡£
+#if unicode_required
+;sc.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
+#endif
 ; Add other languages here
 #endif
 
@@ -422,19 +437,19 @@ ru.shrt_uninstall=Äåèíñòàëëÿöèÿ ffdshow
 
 ; Polish
 pl.langid=1045
-;pl.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
-;pl.simd_msg_sse=This build of ffdshow requires a CPU with SSE extension support. Your CPU does not have those capabilities.
-;pl.simd_msg_sse2=This build of ffdshow requires a CPU with SSE2 extension support. Your CPU does not have those capabilities.
+pl.msg_uninstallFirst=Najpierw musisz odinstalowaæ star¹ wersjê ffdshow.
+pl.simd_msg_sse=Ta kompilacja ffdshow wymaga procesora z obs³ug¹ zestawu instrukcji SSE. Twój procesor ich nie obs³uguje.
+pl.simd_msg_sse2=Ta kompilacja ffdshow wymaga procesora z obs³ug¹ zestawu instrukcji SSE2. Twój procesor ich nie obs³uguje.
 
 pl.comp_ffdshowds=ffdshow - filtr DirectShow
 pl.comp_vfwInterface=interfejs VFW
 pl.comp_makeAvis=obs³uga skryptów AviSynth
 pl.comp_appPlugins=Pluginy innych aplikacji:
-;pl.comp_msg_selectOneComp=You must select at least one component.
+pl.comp_msg_selectOneComp=Musisz wybraæ co najmniej jeden sk³adnik.
 
 pl.tsk_resetSettings=Zresetuj wszystkie ustawienia ffdshow
 pl.tsk_videoFormats=Dekoduj nastêpuj¹ce formaty wideo u¿ywaj¹c ffdshow:
-pl.tsk_genericMpeg4=Generalne MPEG-4
+pl.tsk_genericMpeg4=Zwyk³e MPEG-4
 pl.tsk_rawVideo=Nieskompresowane wideo
 pl.tsk_audioFormats=Dekoduj nastêpuj¹ce formaty audio u¿ywaj¹c ffdshow:
 pl.tsk_rawAudio=Nieskompresowane audio
@@ -444,8 +459,8 @@ pl.tsk_subtitles=Napisy
 pl.tsk_tweaks=Ustawienia dodatkowe:
 pl.tsk_skipInloop=Zawsze pomijaj odblokowywanie H.264
 
-;pl.white_msg_oneCompAppAdded=A compatible application has been added to the top of the compatibility list. Please check.
-;pl.white_msg_multiCompAppAdded=A few compatible applications have been added to the top of the compatibility list. Please check.
+pl.white_msg_oneCompAppAdded=Kompatybilna aplikacja zosta³a dodana na górze listy kompatybilnoœci. Proszê sprawdziæ.
+pl.white_msg_multiCompAppAdded=Kilka kompatybilnych aplikacji zosta³o dodanych na górze listy kompatybilnoœci. Proszê sprawdziæ.
 pl.white_videoLabel1=Zarz¹dzanie problemami kompatybilnoœci (WIDEO)
 pl.white_videoLabel2=Z powodu, i¿ czêœæ gier zacina siê lub wogóle nie odpala z zainstalowanym ffdshow,%nzalecamy u¿ycie opcji "U¿yj ffdshow tylko w:".
 pl.white_videoLabel3=Dodaj do listy nazwy aplikacji, które s¹ kompatybilne z dekoderem wideo ffdshow, jedn¹ na liniê.
@@ -462,13 +477,13 @@ pl.spk_Label3=Rodzaj g³oœników:
 pl.spk_mono=monofoniczne
 pl.spk_stereo=stereofoniczne
 pl.spk_quadro=kwadrofoniczne
-;pl.spk_rear_1ch=rear 1ch
+pl.spk_rear_1ch=1 kana³ tylny
 pl.spk_front_2ch=2 kana³y przednie
-;pl.spk_side_2ch=side 2ch
-;pl.spk_rear_2ch=rear 2ch
+pl.spk_side_2ch=2 kana³y boczne
+pl.spk_rear_2ch=2 kana³y tylne
 pl.spk_front_3ch=3 kana³y przednie
 pl.spk_5ch=3 kana³y przednie + 2 tylne
-;pl.spk_7ch=front 3ch + side 2ch + rear 2ch
+pl.spk_7ch=3 kana³y przednie + 2 boczne + 2 tylne
 pl.spk_headPhone=s³uchawki
 pl.spk_surround=surround (przestrzenne)
 pl.spk_subwoofer=subwoofer (g³oœnik niskotonowy)
@@ -479,7 +494,7 @@ pl.spk_sameAsInput=takie same jak na wejœciu audio
 pl.spk_disableMixer=wy³¹cz Mikser
 pl.spk_voiceControl=Kontrola g³osu (g³oœnoœæ)
 pl.spk_expandStereo=Rozszerz sygna³ stereo (przestrzennie)
-;pl.spk_unknownSpk=Unknown speaker configuration
+pl.spk_unknownSpk=Nieznana konfiguracja g³oœników
 
 pl.plg_Label1=Wybierz katalog pluginu %1
 pl.plg_Label2=Gdzie powinien zostaæ zainstalowany plugin %1?
@@ -646,7 +661,6 @@ sc.shrt_uninstall=Ð¶ÔØ ffdshow
 ba.langid=1069
 br.langid=1046
 ca.langid=1027
-cz.langid=1029
 da.langid=1030
 du.langid=1043
 fi.langid=1035
