@@ -38,7 +38,8 @@ typedef struct x264_frame_t
     int     i_frame;    /* Presentation frame number */
     int     i_frame_num; /* Coded frame number */
     int     b_kept_as_ref;
-    float   f_qp_avg;
+    float   f_qp_avg_rc; /* QPs as decided by ratecontrol */
+    float   f_qp_avg_aq; /* QPs as decided by AQ in addition to ratecontrol */
 
     /* YUV buffer */
     int     i_plane;
@@ -104,7 +105,7 @@ typedef struct
 x264_frame_t *x264_frame_new( x264_t *h );
 void          x264_frame_delete( x264_frame_t *frame );
 
-void          x264_frame_copy_picture( x264_t *h, x264_frame_t *dst, x264_picture_t *src );
+int           x264_frame_copy_picture( x264_t *h, x264_frame_t *dst, x264_picture_t *src );
 
 void          x264_frame_expand_border( x264_t *h, x264_frame_t *frame, int mb_y, int b_end );
 void          x264_frame_expand_border_filtered( x264_t *h, x264_frame_t *frame, int mb_y, int b_end );

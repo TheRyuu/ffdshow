@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="ff_x264"
 	ProjectGUID="{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}"
 	RootNamespace="ff_x264"
@@ -530,14 +530,6 @@
 			</File>
 			<File
 				RelativePath=".\common\cpu.h"
-				>
-			</File>
-			<File
-				RelativePath=".\common\csp.c"
-				>
-			</File>
-			<File
-				RelativePath=".\common\csp.h"
 				>
 			</File>
 			<File

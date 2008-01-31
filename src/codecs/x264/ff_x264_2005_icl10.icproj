@@ -5,7 +5,7 @@
 	Name="ff_x264"
 	ProjectGUID="{4A7578DE-B8B3-4CCC-BFD5-CAD5060065E1}"
 	VCNestedProjectGUID="{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}"
-	VCNestedProjectCRC32="390786726"
+	VCNestedProjectCRC32="1296100962"
 	VCNestedProjectFileName="ff_x264_2005_icl10.vcproj"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -317,10 +317,6 @@
 			RelativePath=".\common\cpu.c"/>
 		<File 
 			RelativePath=".\common\cpu.h"/>
-		<File 
-			RelativePath=".\common\csp.c"/>
-		<File 
-			RelativePath=".\common\csp.h"/>
 		<File 
 			RelativePath=".\common\dct.c"/>
 		<File 
