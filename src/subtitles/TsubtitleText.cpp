@@ -796,18 +796,21 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::karaoke_kf(const tchar 
  intProp<&TSubtitleProps::tmpFadT1, 0, INT_MAX>(start, end);
  props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
  props.karaokeMode = TSubtitleProps::KARAOKE_kf;
+ props.karaokeNewWord = true;
 }
 template<class tchar> void TsubtitleFormat::Tssa<tchar>::karaoke_ko(const tchar *start,const tchar *end)
 {
  intProp<&TSubtitleProps::tmpFadT1, 0, INT_MAX>(start, end);
  props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
  props.karaokeMode = TSubtitleProps::KARAOKE_ko;
+ props.karaokeNewWord = true;
 }
 template<class tchar> void TsubtitleFormat::Tssa<tchar>::karaoke_k(const tchar *start,const tchar *end)
 {
  intProp<&TSubtitleProps::tmpFadT1, 0, INT_MAX>(start, end);
  props.karaokeDuration = (REFERENCE_TIME)props.tmpFadT1 * 100000;
  props.karaokeMode = TSubtitleProps::KARAOKE_k;
+ props.karaokeNewWord = true;
 }
 
 template<class tchar> void TsubtitleFormat::Tssa<tchar>::fade(const tchar *start,const tchar *end)
@@ -1083,8 +1086,8 @@ template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processSSA(const 
      }
    l2++;
   }
- parent.defProps=props;
  words.add(l,l1,l2,props,0);
+ parent.defProps=props;
  return words;
 }
 
@@ -1156,8 +1159,10 @@ template<class tchar> size_t TsubtitleLine<tchar>::strlen(void) const
 }
 template<class tchar> void TsubtitleLine<tchar>::applyWords(const TsubtitleFormat::Twords &words)
 {
+ bool karaokeNewWord = false;
  for (TsubtitleFormat::Twords::const_iterator w=words.begin();w!=words.end();w++)
   {
+   karaokeNewWord |= w->props.karaokeNewWord;
    this->props=w->props;
    if (w->i1==w->i2)
     continue;
@@ -1168,7 +1173,9 @@ template<class tchar> void TsubtitleLine<tchar>::applyWords(const TsubtitleForma
     }
    TsubtitleWord word(this->front()+w->i1,w->i2-w->i1);
    word.props=w->props;
+   word.props.karaokeNewWord = karaokeNewWord;
    this->push_back(word);
+   karaokeNewWord = false;
   }
  if (!this->empty())
   this->erase(this->begin());
@@ -1200,21 +1207,69 @@ template<class tchar> void TsubtitleTextBase<tchar>::format(TsubtitleFormat &for
   for (typename Tbase::iterator l=this->begin();l!=this->end();l++)
    format.processMPL2(*l);
 }
-template<class tchar> void TsubtitleTextBase<tchar>::processKaraoke(void)
+
+template<class tchar> void TsubtitleTextBase<tchar>::prepareKaraoke(void)
 {
- REFERENCE_TIME karaokeStart = REFTIME_INVALID;
+ int sfmt=subformat&Tsubreader::SUB_FORMATMASK;
+ if (sfmt != Tsubreader::SUB_SSA)
+  return;
+
+ TsubtitleTextBase<tchar> temp(subformat, defProps);
+ TsubtitleLine tempLine;
+ int wrapStyle = 0;
  for (typename Tbase::iterator l = this->begin() ; l != this->end() ; l++)
   {
+   if (l->props.wrapStyle == 2 || l->lineBreakReason == 2)
+    {
+     temp.push_back(tempLine);
+     tempLine.clear();
+    }
+   else if (!tempLine.empty())
+    {
+     tempLine.back().addTailSpace();
+    }
+
+   tempLine.props = l->props;
+   for (typename TsubtitleLine::iterator w = l->begin() ; w != l->end() ; w++)
+    {
+     wrapStyle = w->props.wrapStyle;
+     tempLine.push_back(*w);
+    }
+  }
+ if (!tempLine.empty())
+  temp.push_back(tempLine);
+
+ clear();
+ for (typename Tbase::iterator l = temp.begin() ; l != temp.end() ; l++)
+  {
+   push_back(*l);
+  }
+
+ REFERENCE_TIME karaokeStart = REFTIME_INVALID;
+ REFERENCE_TIME karaokeDuration = 0;
+ for (typename Tbase::iterator l = this->begin() ; l != this->end() ; l++)
+  {
+   if (karaokeStart != REFTIME_INVALID)
+    karaokeStart += karaokeDuration;
+
+   karaokeDuration = 0;
    for (typename TsubtitleLine::iterator w = l->begin() ; w != l->end() ; w++)
     {
      if (karaokeStart == REFTIME_INVALID)
       karaokeStart = w->props.karaokeStart;
      else
       w->props.karaokeStart = karaokeStart;
-     karaokeStart += w->props.karaokeDuration;
+     
+     if (w->props.karaokeNewWord)
+      {
+       karaokeStart += karaokeDuration;
+       karaokeDuration = w->props.karaokeDuration;
+      }
+     w->props.karaokeDuration = karaokeDuration;
     }
   }
 }
+
 template<class tchar> void TsubtitleTextBase<tchar>::fix(TtextFix<tchar> &fix)
 {
  for (typename Tbase::iterator l=this->begin();l!=this->end();l++)

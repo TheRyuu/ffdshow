@@ -175,7 +175,6 @@ private:
  int dstOffset;
  mutable int oldFader;
  mutable unsigned int oldBodyYUVa,oldOutlineYUVa;
- TSubtitleProps props;
  void drawShadow(       HDC hdc,
                         HBITMAP hbmp,
                         unsigned char *bmp16,
@@ -191,6 +190,7 @@ private:
  unsigned int getTopOverhang(void);
  unsigned int getLeftOverhang(void);
 public:
+ TSubtitleProps props;
  // full rendering
  template<class tchar> TrenderedTextSubtitleWord(
                         HDC hdc,
@@ -233,10 +233,11 @@ public:
 
 class TrenderedSubtitleLine : protected std::vector<TrenderedSubtitleWordBase*>
 {
+ bool firstrun;
 public:
- TrenderedSubtitleLine(void) {props.reset();}
- TrenderedSubtitleLine(TSubtitleProps p) {props=p;}
- TrenderedSubtitleLine(TrenderedSubtitleWordBase *w) {push_back(w);props.reset();}
+ TrenderedSubtitleLine(void):firstrun(true) {props.reset();}
+ TrenderedSubtitleLine(TSubtitleProps p):firstrun(true) {props=p;}
+ TrenderedSubtitleLine(TrenderedSubtitleWordBase *w):firstrun(true) {push_back(w);props.reset();}
  unsigned int width(void) const;
  unsigned int height(void) const;
  double charHeight(void) const;
@@ -245,6 +246,7 @@ public:
  int get_bottomOverhang(void) const;
  int get_leftOverhang(void) const;
  int get_rightOverhang(void) const;
+ void prepareKaraoke(void);
  using std::vector<value_type>::push_back;
  using std::vector<value_type>::empty;
  void clear(void);

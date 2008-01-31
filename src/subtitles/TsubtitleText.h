@@ -49,11 +49,12 @@ public:
   };
  struct Twords : std::vector<Tword>
   {
-   template<class tchar> void add(const tchar *l,const tchar* &l1,const tchar* &l2,const TSubtitleProps &props,size_t step)
+   template<class tchar> void add(const tchar *l,const tchar* &l1,const tchar* &l2, TSubtitleProps &props,size_t step)
     {
      Tword word;word.i1=l1-l;word.i2=l2-l;word.props=props;
      push_back(word);
      l1=(l2+=step);
+     props.karaokeNewWord = false;
     }
   };
 private:
@@ -144,6 +145,10 @@ public:
   {
    getText().erase(0,num);
   }
+ void addTailSpace(void)
+  {
+   text += _L(" ");
+  }
 };
 
 template<class tchar> struct TsubtitleLine : std::vector< TsubtitleWord<tchar> >
@@ -156,15 +161,18 @@ private:
  void applyWords(const TsubtitleFormat::Twords &words);
 public:
  TSubtitleProps props;
+ int lineBreakReason; // 0: none, 1: \n, 2: \N
  TsubtitleLine(void) {}
  TsubtitleLine(const ffstring &Itext) {push_back(Itext);}
  TsubtitleLine(const ffstring &Itext,const TSubtitleProps &defProps) {push_back(TsubtitleWord(Itext,defProps));}
 
  TsubtitleLine(const tchar *Itext) {push_back(Itext);}
  TsubtitleLine(const tchar *Itext,const TSubtitleProps &defProps) {push_back(TsubtitleWord(Itext,defProps));}
+ TsubtitleLine(const tchar *Itext,const TSubtitleProps &defProps,int IlineBreakReason):lineBreakReason(IlineBreakReason) {push_back(TsubtitleWord(Itext,defProps));}
 
  TsubtitleLine(const tchar *s,size_t len) {push_back(TsubtitleWord(s,len));}
  TsubtitleLine(const tchar *s,size_t len,const TSubtitleProps &defProps) {push_back(TsubtitleWord(s,len,defProps));}
+ TsubtitleLine(const tchar *s,size_t len,const TSubtitleProps &defProps,int IlineBreakReason):lineBreakReason(IlineBreakReason) {push_back(TsubtitleWord(s,len,defProps));}
  size_t strlen(void) const;
  void format(TsubtitleFormat &format,int sfmt,TsubtitleTextBase<tchar> &parent);
  void fix(TtextFix<tchar> &fix);
@@ -206,12 +214,20 @@ public:
   {
    this->push_back(TsubtitleLine(s,len,defProps));
   }
+ void addSSA(const tchar *s, int lineBreakReason)
+  {
+   this->push_back(TsubtitleLine(s, defProps, lineBreakReason));
+  }
+ void addSSA(const tchar *s, size_t len, int lineBreakReason)
+  {
+   this->push_back(TsubtitleLine(s, len, defProps, lineBreakReason));
+  }
  virtual void addEmpty(void)
   {
    this->push_back(TsubtitleLine(_L(" "),defProps));
   }
  void format(TsubtitleFormat &format);
- void processKaraoke(void);
+ void prepareKaraoke(void);
  template<class Tval> void propagateProps(typename Tbase::iterator it,Tval TSubtitleProps::*offset,Tval val,typename Tbase::iterator itend)
   {
    for (;it!=itend;it++)

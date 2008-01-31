@@ -49,6 +49,7 @@ struct TSubtitleProps
  int tmpFadT1,tmpFadT2;
  int isFad;
  int fadeA1,fadeA2,fadeA3;
+ bool karaokeNewWord; // true if the word is top of karaoke sequence.
  REFERENCE_TIME tStart,tStop;
  REFERENCE_TIME fadeT1,fadeT2,fadeT3,fadeT4;
  REFERENCE_TIME karaokeDuration,karaokeStart;

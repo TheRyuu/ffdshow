@@ -1218,6 +1218,39 @@ int TrenderedSubtitleLine::get_rightOverhang(void) const
   }
  return rightOverhang-dx;
 }
+void TrenderedSubtitleLine::prepareKaraoke(void)
+{
+ if (!firstrun)
+  return;
+ firstrun = false;
+ int sequenceWidth;
+ REFERENCE_TIME karaokeStart = REFTIME_INVALID;
+ for (iterator w = begin() ; w != end() ; w++)
+  {
+   if (((TrenderedTextSubtitleWord *)(*w))->props.karaokeNewWord)
+    {
+     sequenceWidth = (*w)->dxCharY;
+     for (iterator s = w + 1 ; s != end() ; s++)
+      {
+       if (((TrenderedTextSubtitleWord *)(*s))->props.karaokeNewWord)
+        break;
+       else
+        sequenceWidth += (*s)->dxCharY;
+      }
+     if (sequenceWidth <= 0) continue;
+     if (karaokeStart == REFTIME_INVALID)
+      karaokeStart = ((TrenderedTextSubtitleWord *)(*w))->props.karaokeStart;
+     for (iterator s = w ; s != end() ; s++)
+      {
+       if (((TrenderedTextSubtitleWord *)(*s))->props.karaokeNewWord && s != w)
+        break;
+       ((TrenderedTextSubtitleWord *)(*s))->props.karaokeDuration *= (double)(*s)->dxCharY / sequenceWidth;
+       ((TrenderedTextSubtitleWord *)(*s))->props.karaokeStart = karaokeStart;
+       karaokeStart += ((TrenderedTextSubtitleWord *)(*s))->props.karaokeDuration;
+      }
+    }
+  }
+}
 void TrenderedSubtitleLine::print(int startx,int starty,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int prefsdx,unsigned int prefsdy) const
 {
  int baseline=baselineHeight();
@@ -1345,6 +1378,7 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
  // pass 1: prepare paragraphs.
  for (const_iterator i=begin();i!=end();i++)
   {
+   (*i)->prepareKaraoke();
    ParagraphKey pkey;
    prepareKey(i,pkey,prefsdx,prefsdy);
    std::map<ParagraphKey,ParagraphValue>::iterator pi=paragraphs.find(pkey);

@@ -40,7 +40,7 @@ template<class tchar> void TsubtitleParser<tchar>::trail_space(tchar *s) {
 template<class tchar> Tsubtitle* TsubtitleParser<tchar>::store(TsubtitleTextBase<tchar> &sub)
 {
  sub.format(textformat);
- sub.processKaraoke();
+ sub.prepareKaraoke();
  sub.fix(textfix);
  subreader->push_back(new TsubtitleTextBase<tchar>(sub));
  return subreader->back();
@@ -903,13 +903,23 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd, i
          const tchar *line2=event.text.c_str();
          do
          {
-          const tchar *tmp;
-          while (((tmp=strstr(line2, _L("\\n"))) != NULL) || ((tmp=strstr(line2, _L("\\N"))) != NULL) )
+          const tchar *tmp,*tmp1;
+          int lineBreakReason = 0;
+          do
            {
-            current.add(line2,tmp-line2);
+            tmp=strstr(line2, _L("\\n"));
+            tmp1=strstr(line2, _L("\\N"));
+            if (tmp == NULL && tmp1 == NULL)
+             break;
+            if (tmp && tmp1)
+             tmp = std::min(tmp,tmp1);
+            if (tmp == NULL)
+             tmp = tmp1;
+            current.addSSA(line2, tmp-line2, lineBreakReason);
+            lineBreakReason = tmp[1] == 'n' ? 1 : 2;
             line2=tmp+2;
-           }
-          current.add(line2);
+           } while (1);
+          current.addSSA(line2, lineBreakReason);
          } while (flags&this->SSA_NODIALOGUE && fd.fgets((tchar*)(line2=line),this->LINE_LEN));
          return store(current);
         }
