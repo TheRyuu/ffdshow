@@ -960,7 +960,7 @@ TglobalSettingsDecVideo::TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Ico
    IDFF_subSearchDir,(TstrVal)&TsubtitlesSettings::searchDir,2*MAX_PATH ,0 ,_l(""),0,
      _l("subSearchDir"),NULL,
    IDFF_subSearchExt,(TstrVal)&TsubtitlesSettings::searchExt,2*MAX_PATH ,0 ,_l(""),0,
-     _l("subSearchExt"),_l("utf;idx;sub;srt;smi;rt;txt;ssa;aqt;mpl;usf"),
+     _l("subSearchExt"),_l("utf;idx;sub;srt;smi;rt;txt;ass;ssa;aqt;mpl;usf"),
    0
   };
  addOptions(sopts);
