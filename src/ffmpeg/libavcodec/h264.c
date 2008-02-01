@@ -1308,7 +1308,7 @@ static inline void write_back_motion(H264Context *h, int mb_type){
  * @param dst_length is the number of decoded bytes FIXME here or a decode rbsp tailing?
  * @returns decoded bytes, might be src+1 if no escapes
  */
-static uint8_t *decode_nal(H264Context *h, uint8_t *src, int *dst_length, int *consumed, int length){
+static const uint8_t *decode_nal(H264Context *h, const uint8_t *src, int *dst_length, int *consumed, int length){
     int i, si, di;
     uint8_t *dst;
     int bufidx;
@@ -1375,7 +1375,7 @@ static uint8_t *decode_nal(H264Context *h, uint8_t *src, int *dst_length, int *c
  * identifies the exact end of the bitstream
  * @return the length of the trailing, or 0 if damaged
  */
-static int decode_rbsp_trailing(H264Context *h, uint8_t *src){
+static int decode_rbsp_trailing(H264Context *h, const uint8_t *src){
     int v= *src;
     int r;
 
@@ -1971,10 +1971,10 @@ static int alloc_tables(H264Context *h){
     CHECKED_ALLOCZ(h->slice_table_base  , (big_mb_num+s->mb_stride) * sizeof(uint8_t))
     CHECKED_ALLOCZ(h->cbp_table, big_mb_num * sizeof(uint16_t))
 
-        CHECKED_ALLOCZ(h->chroma_pred_mode_table, big_mb_num * sizeof(uint8_t))
-        CHECKED_ALLOCZ(h->mvd_table[0], 32*big_mb_num * sizeof(uint16_t));
-        CHECKED_ALLOCZ(h->mvd_table[1], 32*big_mb_num * sizeof(uint16_t));
-        CHECKED_ALLOCZ(h->direct_table, 32*big_mb_num * sizeof(uint8_t));
+    CHECKED_ALLOCZ(h->chroma_pred_mode_table, big_mb_num * sizeof(uint8_t))
+    CHECKED_ALLOCZ(h->mvd_table[0], 32*big_mb_num * sizeof(uint16_t));
+    CHECKED_ALLOCZ(h->mvd_table[1], 32*big_mb_num * sizeof(uint16_t));
+    CHECKED_ALLOCZ(h->direct_table, 32*big_mb_num * sizeof(uint8_t));
 
     memset(h->slice_table_base, -1, (big_mb_num+s->mb_stride)  * sizeof(uint8_t));
     h->slice_table= h->slice_table_base + s->mb_stride*2 + 1;
@@ -2027,8 +2027,6 @@ static void clone_tables(H264Context *dst, H264Context *src){
  * Allocate buffers which are not shared amongst multiple threads.
  */
 static int context_init(H264Context *h){
-    MpegEncContext * const s = &h->s;
-
     CHECKED_ALLOCZ(h->top_borders[0], h->s.mb_width * (16+8+8) * sizeof(uint8_t))
     CHECKED_ALLOCZ(h->top_borders[1], h->s.mb_width * (16+8+8) * sizeof(uint8_t))
 
@@ -2340,13 +2338,13 @@ static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple){
                     continue;
                 if(IS_16X16(mb_type)){
                     int8_t *ref = &h->ref_cache[list][scan8[0]];
-                    fill_rectangle(ref, 4, 4, 8, 16+*ref^(s->mb_y&1), 1);
+                    fill_rectangle(ref, 4, 4, 8, (16+*ref)^(s->mb_y&1), 1);
                 }else{
                     for(i=0; i<16; i+=4){
                         //FIXME can refs be smaller than 8x8 when !direct_8x8_inference ?
                         int ref = h->ref_cache[list][scan8[i]];
                         if(ref >= 0)
-                            fill_rectangle(&h->ref_cache[list][scan8[i]], 2, 2, 8, 16+ref^(s->mb_y&1), 1);
+                            fill_rectangle(&h->ref_cache[list][scan8[i]], 2, 2, 8, (16+ref)^(s->mb_y&1), 1);
                     }
                 }
             }
@@ -5286,7 +5284,7 @@ static inline int get_cabac_cbf_ctx( H264Context *h, int cat, int idx ) {
     return ctx + 4 * cat;
 }
 
-static const attribute_used uint8_t last_coeff_flag_offset_8x8[63] = {
+DECLARE_ASM_CONST(1, const uint8_t, last_coeff_flag_offset_8x8[63]) = {
     0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
     3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4,
@@ -7529,7 +7527,7 @@ static void execute_decode_slices(H264Context *h, int context_count){
 }
 
 
-static int decode_nal_units(H264Context *h, uint8_t *buf, int buf_size){
+static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
     MpegEncContext * const s = &h->s;
     AVCodecContext * const avctx= s->avctx;
     int buf_index=0;
@@ -7553,7 +7551,7 @@ static int decode_nal_units(H264Context *h, uint8_t *buf, int buf_size){
         int consumed;
         int dst_length;
         int bit_length;
-        uint8_t *ptr;
+        const uint8_t *ptr;
         int i, nalsize = 0;
         int err;
 
@@ -7731,7 +7729,7 @@ static int get_consumed_bytes(MpegEncContext *s, int pos, int buf_size){
 
 static int decode_frame(AVCodecContext *avctx,
                              void *data, int *data_size,
-                             uint8_t *buf, int buf_size)
+                             const uint8_t *buf, int buf_size)
 {
     H264Context *h = avctx->priv_data;
     MpegEncContext *s = &h->s;
@@ -7974,6 +7972,7 @@ static int decode_end(AVCodecContext *avctx)
 
     return 0;
 }
+
 
 AVCodec h264_decoder = {
     "h264",
