@@ -433,7 +433,7 @@ Subtitle sources=字幕源
 Subtitles position decrease=字幕位置降低
 Subtitles position increase=字幕位置增加
 subtitle=字幕
-Supported FOURCCs/remarks=可支持的 FOURCCs/remarks
+Supported FOURCCs/remarks=可支持的 FOURCCs/备注
 swscaler gaussian=sw 高斯缩放
 SW=左下
 System time=系统时间
@@ -489,10 +489,49 @@ Weight - most fonts supports only small subset of listed weights.=宽度——�
 Spacing - distance between characters.=间隙——字符间的距离。
 Works when the video has non-square pixel aspect ratio.=视频不是方形像素长宽比时修正。
 No=无
-skip deblocking when safe=如果安全则跳过除马赛克
-skip deblocking always=总是跳过除马赛克
+skip deblocking when safe=当安全时跳过除块
+skip deblocking always=总是跳过除块
 side left=左侧
 side right=右侧
+Internal postprocessing=内部后期处理
+use speedup tricks=使用加速技巧
+DVD decoding=DVD 解码
+Enable in WMP11=在 WMP11 中启用
+discard telecine=不使用电视电影处理
+Use SPDIF when AC3 output set=当 AC3 输出被设定时使用 SPDIF
+MPEG-1 Audio Layer 3=MPEG-1 音频第3层
+MPEG-1 Audio Layer 1,2=MPEG-1 音频第1、2层
+ATSC A-52 stream decoder=ATSC A-52 流解码器
+DTS Coherent Acoustics stream decoder=DTS 相干声学流解码器
+Advanced Audio Coding (AAC)=高级音频编码 (AAC)
+High accuracy mode is enabled for Tremor.=已为 Tremor 启用高精度模式。
+Adaptive Multi-Rate in 3gp files (AMR)=3gp 文件中的适应性多速率 (AMR)
+Linear Pulse Code Modulation=线性脉冲编码调制
+Windows Media Audio compatible decoder=Windows Media Audio 兼容解码器
+not WMA9 pro, voice or lossless=用于非 WMA9 Professional、Voice 或 Lossless 的普通 WMA9 格式
+MS Adaptive DPCM=MS 自适应性 DPCM
+IMA Adaptive DPCM=IMA 自适应性 DPCM
+Other ADPCM=其他 ADPCM
+Creative, Yamaha, G726=包括 Creative、Yamaha 或 G726 ADPCM
+Mu-law & A-law=CCITT Mu-Law 和 A-Law
+MS GSM Audio=MS GSM 音频
+FLAC (Free Lossless Audio Codec);To play .flac files you also need a source filter.=FLAC (自由无损音频编码解码器)；要播放 .flac 文件，您还需要一个源滤镜。
+TTA (Lossless Audio Codec);To play .tta files you also need a source filter.=TTA (无损音频编码解码器)；要播放 .tta 文件，您还需要一个源滤镜。
+DSP Group TrueSpeech compatible decoder=DSP Group TrueSpeech 兼容解码器
+QDM2 compatible decoder (incomplete)=QDM2 兼容解码器 (未完成)
+Real Audio 1.0 (14.4K) & RealAudio 2.0 (28.8K)=Real Audio 1.0 (14.4K) 和 RealAudio 2.0 (28.8K)
+IMC compatible decoder=IMC 兼容解码器
+ATRAC3 compatible decoder=ATRAC3 兼容解码器
+AVIS (AviSynth AVI files)=AVIS (AviSynth AVI 文件)
+Uncompressed=未压缩音频
+all float=全部浮点
+64-bit float=64 位浮点
+raw,twos,sowt,fl32,fl64,in24,in32=包括 raw、twos、sowt、fl32、fl64、in24 和 in32
+H264, X264, VSSH (incomplete), DAVC, PAVC, AVC1=H264, X264, VSSH (未完成), DAVC, PAVC, AVC1
+H263, L263, M263, U263, X263, S263 (in 3gp files)=H263, L263, M263, U263, X263, S263 (在3gp文件中)
+MPEG1 codec=MPEG1 编码解码器
+MPEG2 codec=MPEG2 编码解码器
+Real Video (RV10, RV20, incomplete)=Real Video (RV10, RV20, 未完成)
 
 [101]
 1836=捐助
@@ -957,11 +996,11 @@ side right=右侧
 0=音量
 1377=音量
 1375=主音量:
-1648=前左
-1649=中央
-1650=前右
-1651=后左
-1652=后右
+1648=左
+1649=中
+1650=右
+1651=左后
+1652=右后
 1457=正常化
 1641=当前:
 1637=最高放大率:
@@ -970,6 +1009,8 @@ side right=右侧
 1937=以分贝来衡量
 1956=缓冲长度
 1957=寻道时复位
+2194=左侧
+2195=右侧
 
 [189]
 0=均衡
@@ -1567,6 +1608,7 @@ side right=右侧
 2071=下
 2079=水平方向
 2080=垂直方向
+2209=亮度
 
 
 [262]
@@ -1580,13 +1622,17 @@ side right=右侧
 1903=清除
 1905=自定义声道映射
 
+[266]
+0=自定义表
+
 [270]
 1941=阈值：
 
 [2020]
-0=信息和处理器
+0=信息和CPU
 1284=信息
 1832=使用下列SIMD指令集(如果处理器支持):
+2212=把字符串输出到调试器
 
 [288]
 0=1. 关于ffdshow视频解码器\r\n  ffdshow是一个DirectShow解码滤镜，用来对DIVX电影进行解压缩。ffdshow使用FFmpeg项目的libavcodec进行视频压缩和解压(也可以使用与xvid编解码器一起安装的xvidcore.dll)。从MPlayer引进的后期处理代码可以增强低码率电影的视觉品质，这些代码基于最早的Xvid DirectShow滤镜。Xvid是一个使用GPL授权的教学性质的MPEG4解码器实现。\r\n2. 主要特点\r\n - 使用优化的MMX、SSE、3DNow!代码进行快速视频解压\r\n - 支持不同编解码器：Xvid和所有版本的DIVX\r\n - 支持H.264和H.264/AVC(AVC：高级视频编码)\r\n - 另外还支持MSMPEG4v1、MSMPEG4v2、MSMPEG4v3、H.263\r\n - 可以作为其他解码器(比如MPEG1或者MPEG2)的后期处理滤镜\r\n - 适用于更高回放质量的图像后期处理\r\n - 自动质量控制：当CPU负载高时自动降低后期处理级别\r\n - 色调、饱和度和亮度修正(经过MMX优化)\r\n - 两个锐化滤镜：x锐化和非锐度屏蔽\r\n - 柔化和缓冲平滑\r\n - 带有菜单的任务栏图标可以快速打开配置对话框\r\n - 两个可选的噪点算法\r\n - 改变尺寸和纵横比\r\n - 字幕\r\n - 完全免费的软件：ffdshow在GPL下发布\r\n3. ffdshow-tryouts\r\n ffdshow最初由Milan Cutka开发。自从Milan Cutka在2006年停止更新之后，我们开始了一个新的项目，名叫“ffdshow-tryouts”。\r\n4. 网络链接\r\n ffdshow:\r\n  http://ffdshow-tryout.sourceforge.net/tikiwiki/\r\n  http://sourceforge.net/projects/ffdshow/\r\n  Xvid:\r\n   http://www.xvid.org/\r\n FFmpeg:\r\n  http://ffmpeg.mplayerhq.hu/\r\n libmpeg2:\r\n  http://libmpeg2.sourceforge.net/\r\n MPlayer:\r\n  http://www.mplayerhq.hu/\r\n   doom9:\r\n  http://forum.doom9.org/showthread.php?t=120465\r\n5. 版权\r\n  所有使用的源代码(除了处理器功能检测例程)和ffdshow本身在GPL下发布。见copying.txt\r\n  Milan Cutka <milan_cutka@yahoo.com>

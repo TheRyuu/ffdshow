@@ -51,10 +51,10 @@ cz.FinishedRestartLabel=Aby mohla bıt instalace [name] dokonèena, musí instaláto
 #endif
 ; Chinese (Simplified)
 sc.WelcomeLabel2=¼´½«°²×° [name] µ½ÄúµÄµçÄÔÖĞ¡£%n%n½¨ÒéÄúÔÚ¼ÌĞø°²×°Ç°¹Ø±ÕËùÓĞÆäËûÓ¦ÓÃ³ÌĞò¡£
-sc.FileAbortRetryIgnore=ÍË³öÕıÔÚÊ¹ÓÃ ffdshow µÄÓ¦ÓÃ³ÌĞòÈ»ºóÖØÊÔ¡£Èç¹ûÎÊÌâÈÔÈ»³öÏÖ£¬µ¥»÷¡°ÖĞÖ¹¡±°´Å¥£¬²¢ÖØĞÂÆô¶¯¼ÆËã»úÈ»ºóÔÙÔËĞĞ°²×°³ÌĞò¡£
+sc.FileAbortRetryIgnore=ÍË³öÕıÔÚÊ¹ÓÃ [name] µÄÓ¦ÓÃ³ÌĞòÈ»ºóÖØÊÔ¡£Èç¹ûÎÊÌâÈÔÈ»³öÏÖ£¬µ¥»÷¡°ÖĞÖ¹¡±°´Å¥£¬²¢ÖØĞÂÆô¶¯¼ÆËã»úÈ»ºóÔÙÔËĞĞ°²×°³ÌĞò¡£
 sc.FinishedRestartLabel=°²×°³ÌĞòĞèÒªÖØĞÂÆô¶¯¼ÆËã»úÀ´Íê³É [name] µÄ°²×°¹ı³Ì¡£ÄãÏëÏÖÔÚÖØĞÂÆô¶¯Âğ£¿%n%nÌáÊ¾£ºÈç¹ûÏÂ´Î°²×°²»ÏëÖØĞÂÆô¶¯¼ÆËã»ú£¬¿ÉÒÔ¹´Ñ¡¡°²»ÒªÔÚÏÂÁĞ³ÌĞòÖĞÊ¹ÓÃffdshow£º¡±¸´Ñ¡¿ò£¨Î»ÓÚ¡°ffdshowÊÓÆµ½âÂëÆ÷ÅäÖÃ¡±->¡°DirectShow¿ØÖÆ¡±£©£¬²¢°Ñ¡°explorer.exe¡±¼ÓÈëºóÃæµÄÁĞ±í¡£
 #if unicode_required
-;sc.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
+sc.WinVersionTooLowError=Õâ¸ö°æ±¾µÄ [name] ĞèÒª Windows 2000 »ò¸ü¸ß°æ±¾µÄÏµÍ³¡£
 #endif
 ; Add other languages here
 #endif
@@ -585,7 +585,7 @@ cz.shrt_uninstall=Odinstalovat ffdshow
 
 ;Chinese (Simplified)
 sc.langid=2052
-;sc.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
+sc.msg_uninstallFirst=Äú±ØĞëÏÈĞ¶ÔØ¾É°æ±¾µÄ ffdshow¡£
 sc.simd_msg_sse=Õâ¸ö±àÒë°æµÄ ffdshow ĞèÒªÒ»¸öÖ§³Ö SSE Ö¸Áî¼¯µÄ CPU¡£µ«ÊÇÄúµÄ CPU ²¢²»Ö§³ÖÕâ¸ö¹¦ÄÜ¡£
 sc.simd_msg_sse2=Õâ¸ö±àÒë°æµÄ ffdshow ĞèÒªÒ»¸öÖ§³Ö SSE2 Ö¸Áî¼¯µÄ CPU¡£µ«ÊÇÄúµÄ CPU ²¢²»Ö§³ÖÕâ¸ö¹¦ÄÜ¡£
 

@@ -1,4 +1,3 @@
-; *** Inno Setup version 5.1.11+ Chinese Simplified messages 简体中文翻译：南京管得好信息科技有限公司 ***
 ;
 ; To download user-contributed translations of this file, go to:
 ;   http://www.jrsoftware.org/is3rdparty.php
@@ -70,7 +69,7 @@ AboutSetupMenuItem=关于安装程序(&A)...
 AboutSetupTitle=关于安装程序
 AboutSetupMessage=%1 版本 %2%n%3%n%n%1 网址：%n%4
 AboutSetupNote=
-TranslatorNote=Inno Setup翻译：南京管得好信息科技有限公司
+TranslatorNote=
 
 ; *** Buttons
 ButtonBack=< 上一步(&B)
