@@ -89,17 +89,15 @@ void avcodec_register_all(void)
     REGISTER_DECODER	(msrle);
     REGISTER_DECODER	(msvideo1);
     REGISTER_DECODER	(mszh);
-    #ifdef CONFIG_ZLIB
     REGISTER_ENCDEC		(png);
-    #endif
     REGISTER_DECODER	(qpeg);
     REGISTER_DECODER	(qtrle);
     REGISTER_DECODER	(rpza);
     REGISTER_DECODER	(rv10);
     REGISTER_DECODER	(rv20);
-	#if __STDC_VERSION__ >= 199901L
+    //#if __STDC_VERSION__ >= 199901L
     //REGISTER_ENCDEC		(snow);
-    #endif
+    //#endif
     REGISTER_DECODER	(sp5x);
     REGISTER_DECODER	(svq1);
     REGISTER_DECODER	(svq3);
@@ -123,35 +121,31 @@ void avcodec_register_all(void)
     REGISTER_DECODER	(zlib);
     REGISTER_DECODER	(zmbv);
 
-	/* audio codecs */
+    /* audio codecs */
     REGISTER_ENCODER	(ac3);   
     REGISTER_DECODER	(atrac3);
     REGISTER_DECODER	(amr_nb);
     REGISTER_DECODER	(cook);
     REGISTER_DECODER	(flac);
-    #ifdef __GNUC__
     REGISTER_DECODER	(imc);
-    #endif
     REGISTER_DECODER	(mace3);
     REGISTER_DECODER	(mace6);
     REGISTER_DECODER	(msgsm);
     REGISTER_DECODER 	(nellymoser);
     REGISTER_DECODER	(qdm2);
-    #ifdef __GNUC__
-    REGISTER_DECODER	(ra_144);
+    REGISTER_DECODER	(ra_144);  
     REGISTER_DECODER	(ra_288);
-    #endif
     REGISTER_DECODER	(truespeech);
     REGISTER_DECODER	(tta);
     REGISTER_DECODER	(vorbis);
     REGISTER_DECODER	(wmav1);
     REGISTER_DECODER	(wmav2);
 
-	/* pcm codecs */
+    /* pcm codecs */
     REGISTER_DECODER  (pcm_alaw);
     REGISTER_DECODER  (pcm_mulaw);
 
-	/* adpcm codecs */
+    /* adpcm codecs */
     REGISTER_DECODER  (adpcm_4xm);
     REGISTER_DECODER  (adpcm_ct);
     REGISTER_DECODER  (adpcm_ea);

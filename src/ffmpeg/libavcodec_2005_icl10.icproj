@@ -501,8 +501,6 @@
 		<File 
 			RelativePath=".\libavcodec\xiph.h"/>
 		<File 
-			RelativePath=".\libavcodec\i386\fft_sse.c"/>
-		<File 
 			RelativePath=".\libavutil\avutil.h"/>
 		<File 
 			RelativePath=".\libavutil\bswap.h"/>
@@ -635,32 +633,7 @@
 		<File 
 			RelativePath=".\libavcodec\huffyuv.c"/>
 		<File 
-			RelativePath=".\libavcodec\imc.c">
-			<FileConfiguration 
-				Name="Debug|Win32">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Release|Win32">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Release|x64">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Debug|x64">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-		</File>
+			RelativePath=".\libavcodec\imc.c"/>
 		<File 
 			RelativePath=".\libavcodec\imgconvert.c"/>
 		<File 
@@ -771,59 +744,9 @@
 		<File 
 			RelativePath=".\libavcodec\qtrle.c"/>
 		<File 
-			RelativePath=".\libavcodec\ra144.c">
-			<FileConfiguration 
-				Name="Debug|Win32">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Release|Win32">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Debug|x64">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Release|x64">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-		</File>
+			RelativePath=".\libavcodec\ra144.c"/>
 		<File 
-			RelativePath=".\libavcodec\ra288.c">
-			<FileConfiguration 
-				Name="Debug|Win32">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Release|Win32">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Release|x64">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Debug|x64">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-		</File>
+			RelativePath=".\libavcodec\ra288.c"/>
 		<File 
 			RelativePath=".\libavcodec\rangecoder.c"/>
 		<File 

@@ -304,18 +304,6 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\imc.c">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="libavcodec\imgconvert.c">
@@ -457,33 +445,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\ra144.c">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\libavcodec\ra288.c">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\libavcodec\rangecoder.c">
@@ -985,13 +949,6 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\amr_float\typedef.h">
-			</File>
-		</Filter>
-		<Filter
-			Name="i386"
-			Filter="">
-			<File
-				RelativePath=".\libavcodec\i386\fft_sse.c">
 			</File>
 		</Filter>
 		<Filter
