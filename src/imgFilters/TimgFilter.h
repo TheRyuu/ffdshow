@@ -98,6 +98,12 @@ public:
  virtual bool getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)=0;
  virtual HRESULT flush(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
+ virtual int getImgFilterID(void) {return IMGFILTER_UNKNOWN;}
+ enum
+  {
+   IMGFILTER_UNKNOWN,
+   IMGFILTER_SUBTITLES
+  };
 };
 
 #endif

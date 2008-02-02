@@ -111,6 +111,24 @@ HRESULT TimgFilters::deliverSample(TfilterQueue::iterator it,TffPict &pict)
   }
 }
 
+// draw DVD subtitles and menu before resize, if it is not done.
+void TimgFilters::adhocDVDsub(TfilterQueue::iterator it0,TffPict &pict)
+{
+ TfilterQueue::iterator it = it0;
+ while (it!=queue.end())
+  {
+   TimgFilter *filter=(TimgFilter*)it->filter;
+   if (filter->getImgFilterID() == TimgFilter::IMGFILTER_SUBTITLES)
+    {
+     const TfilterSettingsVideo *cfg=(const TfilterSettingsVideo*)it->getCfg();
+     if (((TimgFilterSubtitles*)filter)->enterAdhocMode())
+      filter->process(it0,pict,cfg);
+     break;
+    }
+   it++;
+  }
+}
+
 bool TimgFilters::isAnyActiveDownstreamFilter(TfilterQueue::iterator it)
 {
  it++;

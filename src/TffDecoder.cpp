@@ -190,8 +190,8 @@ TffdshowDecVideo::~TffdshowDecVideo()
  if (fontManager) delete fontManager;
  if (inputConnectedPin != NULL)
  {
-	 inputConnectedPin->Release();
-	 inputConnectedPin = NULL;
+  inputConnectedPin->Release();
+  inputConnectedPin = NULL;
  }
 }
 

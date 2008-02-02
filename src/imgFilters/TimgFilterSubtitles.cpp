@@ -66,7 +66,9 @@ TimgFilterSubtitles::TimgFilterSubtitles(IffdshowBase *Ideci,Tfilters *Iparent):
  subs(Ideci),
  oldFontCfg((TfontSettingsSub*)malloc(sizeof(TfontSettingsSub))),
  oldFontCCcfg((TfontSettingsSub*)malloc(sizeof(TfontSettingsSub))),
- cc(NULL),wasCCchange(true),everRGB(false)
+ cc(NULL),wasCCchange(true),everRGB(false),
+ adhocMode(0),
+ prevAdhocMode(0)
 {
  oldFontCfg->weight=oldFontCCcfg->weight=-1;oldstereo=oldsplitborder=-1;
  AVIfps=-1;
@@ -189,6 +191,9 @@ bool TimgFilterSubtitles::ctlSubtitles(int id,int type,unsigned int ctl_id,const
 
    again=true;
 
+   if (prevAdhocMode == 1)
+    adhocMode = 1;
+
    process(prevIt,pict,prevCfg);
 
    again=false;
@@ -258,13 +263,14 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
    subFlnmChanged=0;
   }
 
- if (isdvdproc && sequenceEnded)
+ if (isdvdproc && sequenceEnded && adhocMode != 2)
   {
    if (!again || !prevCfg)
     {
      prevIt=it;
      prevCfg=cfg;
      prevPict=pict;
+     prevAdhocMode = adhocMode;
 
      pict.setRO(true);
      prevPict.copyFrom(pict,prevbuf);
@@ -295,7 +301,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
    csEmbedded.Lock();
    int shownEmbedded=deci->getParam2(IDFF_subShowEmbedded);
    bool useembedded=!embedded.empty() && shownEmbedded;
-   if (useembedded)
+   if (useembedded && (adhocMode == 0 || (adhocMode ==1 && isdvdproc) || (adhocMode == 2 && !isdvdproc)))
     {
      Tembedded::iterator e=embedded.find(shownEmbedded);
      if (e!=embedded.end() && e->second)
@@ -312,7 +318,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
         sub=e->second->getSubtitle(cfg,frameStart+1,&forceChange);
       }
     }
-   if (!useembedded)
+   if (!useembedded && adhocMode != 1)
     sub=subs.getSubtitle(cfg,frameStart,&forceChange);
 
    if (sub)
@@ -374,7 +380,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
    csEmbedded.Unlock();
   }
 
- if (cfg->cc)
+ if (cfg->cc && adhocMode != 1)
   {
    csCC.Lock();
    if (cc && cc->numlines())
@@ -414,10 +420,23 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
    csCC.Unlock();
   }
 
- if (everRGB && pict.csp != FF_CSP_RGB32 && strncmp(outputfourcc,_l("RGB"),3)==0 && !parent->isAnyActiveDownstreamFilter(it))
+ if (adhocMode != 1 && everRGB && pict.csp != FF_CSP_RGB32 && strncmp(outputfourcc,_l("RGB"),3)==0 && !parent->isAnyActiveDownstreamFilter(it))
   {
    unsigned char *dst[4];
    getCurNext3(FF_CSP_RGB32,pict,cfg->full,COPYMODE_DEF,dst);
+  }
+
+ if (adhocMode == 1)
+  {
+   adhocMode = 2;
+   if (!again)
+    return S_OK;
+   else
+    return parent->deliverSample(it,pict);
+  }
+ else
+  {
+   adhocMode = 0;
   }
 
  return parent->deliverSample(++it,pict);
@@ -454,3 +473,11 @@ void TimgFilterSubtitles::hideClosedCaptions(void)
    wasCCchange=true;
   }
 }
+
+bool TimgFilterSubtitles::enterAdhocMode(void)
+{
+ if (adhocMode == 0)
+  adhocMode = 1;
+ return !again;
+}
+

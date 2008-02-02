@@ -329,7 +329,7 @@ void TffPict::copyFrom(const TffPict &p,Tbuffer &buf,const Trect *rectCopy)
   }
  else
   rectFull=rectClip=*rectCopy;
- convertCSP(p.csp&FF_CSPS_MASK,buf);
+ convertCSP(p.csp, buf);
  if (!rectCopy)
   for (unsigned int i=0;i<cspInfo.numPlanes;i++)
    copy(data[i],stride[i],p.data[i],p.stride[i],cspInfo.Bpp*(rectFull.dx>>cspInfo.shiftX[i]),rectFull.dy>>cspInfo.shiftY[i]);

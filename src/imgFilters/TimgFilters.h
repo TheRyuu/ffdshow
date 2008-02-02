@@ -39,6 +39,7 @@ public:
  HRESULT deliverSample(TfilterQueue::iterator it,TffPict &pict);
  HRESULT convertOutputSample(const TffPict &pict,int dstcsp,unsigned char *dst[4],int dstStride[4],LONG &dstSize,const ToutputVideoSettings *cfg);
  bool isAnyActiveDownstreamFilter(TfilterQueue::iterator it);
+ void adhocDVDsub(TfilterQueue::iterator it,TffPict &pict);
 
  int dirtyBorder;
  REFERENCE_TIME subtitleResetTime;

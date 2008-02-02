@@ -205,6 +205,8 @@ HRESULT TimgFilterResize::process(TfilterQueue::iterator it,TffPict &pict,const 
 
  if (inited)
   {
+   parent->adhocDVDsub(it, pict); // draw DVD subtitles and menu before resize, if it is not done.
+
    bool interlace;
    switch (cfg->interlaced)
     {
