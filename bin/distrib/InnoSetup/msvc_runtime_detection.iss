@@ -4,7 +4,7 @@ type
     cpu_arch: String;
     name: String;
     public_key_token: String;
-    version: String;
+    version: Array of String;
     majorversion: String;
     msvcr_filename: String;
   end;
@@ -20,79 +20,90 @@ var
   temp: String;
   foundname: String;
   subkeys: TArrayOfString;
-  i: Integer;
+  i,j: Integer;
   binval: String;
 begin
   Result := False;
 
   // Start detection
-  temp := ExpandConstant('{win}\WinSxS\' + runtime.cpu_arch + '_' + runtime.name + '_' + runtime.public_key_token + '_' + runtime.version + '_*');
-  if FindFirst(temp, FindRec) then begin
-    foundname := FindRec.Name;
-    log('Found runtime folder name: '+ foundname);
-    temp := ExpandConstant('{win}\WinSxS\' + foundname + '\' + runtime.msvcr_filename);
-    if FileExists(temp) then begin
-      log('File found: ' + temp);
-      temp := ExpandConstant('{win}\WinSxS\Manifests\' + foundname + '.manifest');
-      if FileExists(temp) then begin
-        log('File found: ' + temp);
-        // Check for policy file
-        if IsVista then begin
-          temp := ExpandConstant('{win}\WinSxS\Manifests\' + runtime.cpu_arch + '_policy.' + runtime.majorversion + '.' + runtime.name + '_' + runtime.public_key_token + '_' + runtime.version + '_*');
-          if FindFirst(temp, FindRec) then begin
-            log('Found file: ' + FindRec.Name);
-            // Check for registry key
-            if RegGetSubkeyNames(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners', subkeys) then begin
-              temp := LowerCase(runtime.cpu_arch + '_' + runtime.name + '_' +  runtime.public_key_token);
-              for i:=0 to (GetArrayLength(subkeys)-1) do begin
-                if Pos(temp, LowerCase(subkeys[i])) = 1 then begin
-                  if RegQueryBinaryValue(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners\' + subkeys[i] + '\' + runtime.majorversion, runtime.version, binval) then begin
-                    // Everything has been found :-)
-                    Result := True;
-                    break;
+  for i:=0 to (GetArrayLength(runtime.version)-1) do begin
+    if NOT Result then begin
+      log('Start search for runtime version: ' + runtime.version[i]);
+      temp := ExpandConstant('{win}\WinSxS\' + runtime.cpu_arch + '_' + runtime.name + '_' + runtime.public_key_token + '_' + runtime.version[i] + '_*');
+      if FindFirst(temp, FindRec) then begin
+        foundname := FindRec.Name;
+        log('Found runtime folder name: '+ foundname);
+        temp := ExpandConstant('{win}\WinSxS\' + foundname + '\' + runtime.msvcr_filename);
+        if FileExists(temp) then begin
+          log('Found runtime file: ' + temp);
+          temp := ExpandConstant('{win}\WinSxS\Manifests\' + foundname + '.manifest');
+          if FileExists(temp) then begin
+            log('Found manifest file: ' + temp);
+            // Check for policy file
+
+            // Vista
+            if IsVista then begin
+              temp := ExpandConstant('{win}\WinSxS\Manifests\' + runtime.cpu_arch + '_policy.' + runtime.majorversion + '.' + runtime.name + '_' + runtime.public_key_token + '_' + runtime.version[i] + '_*');
+              if FindFirst(temp, FindRec) then begin
+                log('Found policy file: ' + FindRec.Name);
+                // Check for registry key
+                if RegGetSubkeyNames(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners', subkeys) then begin
+                  temp := LowerCase(runtime.cpu_arch + '_' + runtime.name + '_' +  runtime.public_key_token);
+                  for j:=0 to (GetArrayLength(subkeys)-1) do begin
+                    if Pos(temp, LowerCase(subkeys[j])) = 1 then begin
+                      if RegQueryBinaryValue(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners\' + subkeys[j] + '\' + runtime.majorversion, runtime.version[i], binval) then begin
+                        log('Found policy registry key: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners\' + subkeys[j] + '\' + runtime.majorversion + ', ' + runtime.version[i]);
+                        // Everything has been found
+                        log('Runtime has successfully been detected');
+                        Result := True;
+                        break;
+                      end
+                    end
+                  end
+                  if NOT Result then begin
+                    log('Registry key not found');
                   end
                 end
               end
-              if NOT Result then begin
-                log('Registry key not found');
+              else begin
+                log('Could not find policy manifest file');
+              end
+            end
+            // 2000/XP/2003
+            else begin
+              temp := ExpandConstant('{win}\WinSxS\Policies\' + runtime.cpu_arch + '_policy.' + runtime.majorversion + '.' + runtime.name + '_' + runtime.public_key_token + '_*');
+              if FindFirst(temp, FindRec) then begin
+                foundname := FindRec.Name;
+                log('Found policy folder name: ' + foundname);
+                temp := ExpandConstant('{win}\WinSxS\Policies\' + foundname + '\' + runtime.version[i] + '.policy');
+                if FileExists(temp) then begin
+                  log('Found policy file: ' + temp);
+                  // Everything has been found
+                  log('Runtime has successfully been detected');
+                  Result := True;
+                end
+                else begin
+                  log('File not found: ' + temp);
+                end
+              end
+              else begin
+                log('Could not find Policies folder');
               end
             end
           end
           else begin
-            log('Could not find policy manifest file');
+            log('File not found: ' + temp);
           end
         end
-        // 2000/XP/2003
         else begin
-          temp := ExpandConstant('{win}\WinSxS\Policies\' + runtime.cpu_arch + '_policy.' + runtime.majorversion + '.' + runtime.name + '_' + runtime.public_key_token + '_*');
-          if FindFirst(temp, FindRec) then begin
-            foundname := FindRec.Name;
-            log('Found policy folder name: ' + foundname);
-            temp := ExpandConstant('{win}\WinSxS\Policies\' + foundname + '\' + runtime.version + '.policy');
-            if FileExists(temp) then begin
-              log('File found: ' + temp);
-              // Everything has been found :-)
-              Result := True;
-            end
-            else begin
-              log('File not found: ' + temp);
-            end
-          end
-          else begin
-            log('Could not find Policies folder');
-          end
+          log('File not found: ' + runtime.msvcr_filename);
         end
       end
       else begin
-        log('File not found: ' + temp);
+        log('Runtime folder not found');
       end
+      log('End search for runtime version: ' + runtime.version[i]);
     end
-    else begin
-      log('File not found: ' + runtime.msvcr_filename);
-    end
-  end
-  else begin
-    log('Runtime folder not found');
   end
 end;
 
@@ -131,12 +142,15 @@ begin
   #endif
   #if VS2005SP1
   runtime.name := 'Microsoft.VC80.CRT';
-  runtime.version := '8.0.50727.762';
+  SetArrayLength(runtime.version, 2);
+  runtime.version[0] := '8.0.50727.762';
+  runtime.version[1] := '8.0.50727.1433';
   runtime.majorversion := '8.0';
   runtime.msvcr_filename := 'msvcr80.dll';
   #else
   runtime.name := 'Microsoft.VC90.CRT';
-  runtime.version := '9.0.21022.8';
+  SetArrayLength(runtime.version, 1);
+  runtime.version[0] := '9.0.21022.8';
   runtime.majorversion := '9.0';
   runtime.msvcr_filename := 'msvcr90.dll';
   #endif
