@@ -3682,7 +3682,7 @@ const char* avcodec_get_current_idct_mmx(AVCodecContext *avctx,DSPContext *c)
         return "Simple MMX (ff_simple_idct_mmx)";
     if (c->idct_put==Skl_IDct16_Put_SSE2)
         return "Skal's IDCT (Skl_IDct16_SSE2)";
-    if (c->idct_put==Skl_IDct16_SSE)
+    if (c->idct_put==Skl_IDct16_Put_SSE)
         return "Skal's IDCT (Skl_IDct16_SSE)";
     if (c->idct_put==Skl_IDct16_Put_MMX)
         return "Skal's IDCT (Skl_IDct16_MMX)";
