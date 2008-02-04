@@ -1239,11 +1239,8 @@ template<class tchar> void TsubtitleTextBase<tchar>::prepareKaraoke(void)
  if (!tempLine.empty())
   temp.push_back(tempLine);
 
- clear();
- for (typename Tbase::iterator l = temp.begin() ; l != temp.end() ; l++)
-  {
-   push_back(*l);
-  }
+ this->clear();
+ this->insert(this->end(), temp.begin(),temp.end());
 
  REFERENCE_TIME karaokeStart = REFTIME_INVALID;
  REFERENCE_TIME karaokeDuration = 0;
