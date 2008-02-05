@@ -399,7 +399,7 @@ AVEvalExpr * ff_parse(char *s, const char **const_name,
 #else
     char *w=(char *)alloca(strlen(s));
 #endif
-		char *wp=w;
+    char *wp=w;
 
     while (*s)
         if (!isspace(*s++)) *wp++ = s[-1];
