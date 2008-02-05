@@ -5,12 +5,13 @@ Translated by Virtual_ManPL (Artur OsiÒski)
 e-mail: Virtual_ManPL@wp.pl
 Gadu-Gadu: 6361956
 Jabber: Virtual_ManPL@maszyna.pl
-Latest translated ffdshow : 1685
-Revision: 4
+Latest translated ffdshow : 1805
+Revision: 7
 ============================================
 
 [115]
 0=Kodeki
+1837=W≥πcz w WMP11
 
 [182]
 1162=Resetuj
@@ -30,18 +31,18 @@ Revision: 4
 Decoder=Dekoder
 Details=SzczegÛ≥y
 disabled=Wy≥πczony
-High accuracy mode is enabled for tremor.=Tryb wysokiej dok≥adnoúci jest w≥πczony dla termor.
+High accuracy mode is enabled for tremor.=Tryb wysokiej dok≥adnoúci jest w≥πczony dla Termor.
 enabled=W≥πczony
-FLAC (Free Lossless Audio Codec);To play .flac files you also need a source filter.=Free Lossless Audio Codec; By odtwarzaÊ pliki .flac potrzebujesz rÛwnieø filtra ürÛd≥owego.
-TTA (Lossless Audio Codec);To play .tta files you also need a source filter.=TTA (Lossless Audio Codec); By odtwarzaÊ pliki .tta potrzebujesz rÛwnieø filtra ürÛd≥owego.
+FLAC (Free Lossless Audio Codec);To play .flac files you also need a source filter.=Free Lossless Audio Codec; By odtwarzaÊ pliki .flac potrzebujesz rÛwnieø filtra ürÛd≥owego
+TTA (Lossless Audio Codec);To play .tta files you also need a source filter.=TTA (Lossless Audio Codec); By odtwarzaÊ pliki .tta potrzebujesz rÛwnieø filtra ürÛd≥owego
 Other ADPCM=Inne ADPCM
 all supported=Wszystkie obs≥ugiwane
 Adaptive Multi-Rate in 3gp files (AMR)=Adaptive Multi-Rate w plikach 3gp
-not WMA9 pro, voice or lossless=Nie obs≥uguje WMA9 pro, voice or lossless
+not WMA9 pro, voice or lossless=Nie obs≥uguje WMA9 pro, voice oraz lossless
 AVIS (AviSynth AVI files)=AVIS (pliki AviSynth AVI)
 Uncompressed=Nieskompresowany
 List of applications for which ffdshow should not load, separated by semicolons=Lista aplikacji dla ktÛrych ffdshow nie ≥aduje siÍ, oddzielone dwukropkiem
-List of applications which are compatible with ffdshow, separated by semicolons.=Lista aplikacji ktÛre sπ kompatybilne z ffdshow, oddzielone dwukropkiem.
+List of applications which are compatible with ffdshow, separated by semicolons.=Lista aplikacji ktÛre sπ kompatybilne z ffdshow, oddzielone dwukropkiem
 very high=Najwyøszy
 ffdshow default=Domyúlnie
 preferred=Preferowany
@@ -79,7 +80,7 @@ File where to write statistics=Plik gdzie zapisujπ siÍ statystyki
 ffdshow audio decoder configuration=Konfiguracja dekodera düwiÍku ffdshow
 Thank you!=DziÍkujÍ Tobie!
 Set all stable formats to libavcodec=Ustaw wszystkie stabilne formaty na libavcodec
-Set all supported formats to Xvid=Ustaw wszystkie obs≥ugiwane formaty na XviD
+Set all supported formats to Xvid=Ustaw wszystkie obs≥ugiwane formaty na Xvid
 Maximize SPDIF compatibility=KompatybilnoúÊ S/PDIF
 Dynamic range compression=Dynamiczny zakres kompresji
 Check for DTS in WAV=Sprawdü DTS w WAV
@@ -128,7 +129,7 @@ back left=Tylni lewy
 back right=Tylni prawy
 invalid=nieprawid≥owy
 Winamp2 application directory, not plugin directory.=Katalog aplikacji WinAmp 2, a nie katalog wtyczek.
-Select Winamp 2 directory (not the plugins directory!)=Wybierz katalog WinAmp'a 2 (nie katalog z wtyczkami!)
+Select Winamp 2 directory (not the plugins directory!)=Wybierz katalog WinAmp 2 (nie katalog z wtyczkami!)
 lowpass=Dolnoprzepustowy
 highpass=GÛrnoprzepustowy
 bandpass=årodkowoprzepustowy
@@ -136,12 +137,12 @@ bandstop=årodkowozaporowy
 Select impulse file=Wybierz plik z impulsami
 higher than=wiÍksze od
 lower than=mniejsze niø
-libavcodec normal quality=libavcodec normalna jakoúÊ
-libavcodec high quality=libavcodec wysoka jakoúÊ
+libavcodec normal quality=libavcodec najniøsza jakoúÊ
+libavcodec high quality=libavcodec úrednia jakoúÊ
 libavcodec highest quality=libavcodec najwyøsza jakoúÊ
-libsamplerate sinc high quality=libsamplerate sinc wysoka jakoúÊ
+libsamplerate sinc high quality=libsamplerate sinc najwyøsza jakoúÊ
 libsamplerate sinc medium quality=libsamplerate sinc úrednia jakoúÊ
-libsamplerate sinc fastest=libsamplerate sinc najszybciej
+libsamplerate sinc fastest=libsamplerate sinc najniøsza jakoúÊ
 back center=Tylni centralny
 same as input=Identyczny jak wejúciowy
 headphone virtual spatialization=Wirtualne przestrzenne s≥uchawki
@@ -472,7 +473,7 @@ Direct=Bezpoúrednio
 Opposite=Przeciwstawnie
 Interpolation=Interpolacyjnie
 Select name of exported Girder file=Wybierz nazwÍ dla pliku eksportowanych komend
-Toggle warpsharp=Prze≥πcznik Warpsharp
+Toggle warpsharp=Prze≥πcznik WarpSharp
 Grab frame=Zrzut klatki
 Subtitles delay/size decrease=Zmniejszenie opÛünienia/wielkoúci napisÛw
 Subtitles delay/size increase=ZwiÍkszenia opÛünienia/wielkoúci napisÛw
@@ -522,6 +523,31 @@ side right=Boczny prawy
 Advanced Audio Coding (AAC)=Advanced Audio Coding
 XviD MMX=Xvid MMX
 Other MPEG2=Inne MPEG2
+High accuracy mode is enabled for Tremor.=Tryb wysokiej dok≥adnoúci jest w≥πczony dla Termor
+VorbisGain=VorbisGain (wysoka jakoúÊ)
+libmad=libmad (najwyøsza jakoúÊ)
+libfaad2=libfaad2 (najwyøsza jakoúÊ)
+Tremor=Tremor (najwyøsza jakoúÊ)
+Winamp2 directory can not be changed during playback.=Katalog WinAmp2 nie moøe zostaÊ zmieniony podczas odtwarzania
+ffdshow video decoder=ffdshow dekoder obrazu
+Load Avisynth script=Za≥aduj skrypt AviSynth
+Save Avisynth script=Zapisz skrypt AviSynth
+Enable in WMP11=W≥πcz w WMP11
+discard telecine=OdrzuÊ telecine
+Raw video=Nieskompresowany
+DVD decoding=Dekodowanie DVD
+equal number of frames, equal framerate=rÛwna iloúÊ klatek, rÛwna szybkoúÊ klatek
+double number of frames, double framerate=podwÛjna iloúÊ klatek, podwÛjna szybkoúÊ klatek
+double number of frames, equal framerate=podwÛjna iloúÊ klatek, rÛwna szybkoúÊ klatek
+No motion estimation - blend images=Brak oszacowania ruchu - wtopiony obraz
+Current location only=Tylko aktualna pozycja
+1 pixel motion, left & right=Ruch 1 piksela , lewo & prawo
+3x3 square=Kwadrat 3x3
+Blur:=Zamglenie:
+Exponent:=Wyk≥adnik:
+Load image file=Za≥aduj plik obrazu
+Select curve file=Wybierz plik z wykresem
+Brightness x is interpreted as RGB(x,x,x) and converted to luma using the settings in RGB conversion page, if necessary.=JasnoúÊ x jest interpretowana jako RGB (x,x,x) i konwertowana do luminancji uøywajπc ustawieÒ z strony konwersji RGB, jeúli potrzebne.
 
 [116]
 0=DirectShow
@@ -538,6 +564,7 @@ Other MPEG2=Inne MPEG2
 1284=Informacja
 0=Informacja
 1832=Uøyj nastÍpujπcych instrukcji SIMD (jeúli sπ obs≥ugiwane przez CPU):
+2212=Wyjúciowe ≥aÒcuchy do debuggera
 
 [141]
 1774=Poziome po≥oøenie:
@@ -598,12 +625,12 @@ Other MPEG2=Inne MPEG2
 [259]
 1579=Obs≥ugiwane wejúciowe formaty prÛbek:
 1578=Konwersja przetwarzania zmiennoprzecinkowego na sta≥oprzecinkowe
-1582=Redukcja szumu:
 0=Wejúcie
 1580=16 bitowe sta≥oprzecinkowe
 1585=32 bitowe sta≥oprzecinkowe
 1586=32 bitowe zmiennoprzecinkowe
-1583=Rozpraszanie szumu
+1582=Redukcja szumu:
+1583=Dithering (redukcja zak≥ÛceÒ)
 
 [244]
 0=Dolby
@@ -700,7 +727,7 @@ Other MPEG2=Inne MPEG2
 1875=Zawsze zmieÒ prÛbkowanie
 1876=ZmieÒ prÛbkowanie jeúli...
 1877=wiÍksze od
-1143=Opcja ta umoøliwia zmianÍ prÛbkowania prÛbki do wybranej wartoúci.
+1143=Opcja ta umoøliwia zmianÍ prÛbkowania prÛbki do wybranej wartoúci.\r\nBiblioteka libsamplerate oferuje wyøszπ jakoúÊ zmiany prÛbkowania od biblioteki libavcodec.\r\nMaksymalne dostÍpne prÛbkowanie to 100000 Hz.\r\nMaksymalne prÛbkowanie przy zmianie prÛbkowania to 192000 Hz.
 
 [245]
 0=OpÛünienie
@@ -730,7 +757,7 @@ Other MPEG2=Inne MPEG2
 1746=Tylni lewy
 1670=Tylni centralny
 1745=Tylni prawy
-1143=Kana≥y mogπ by zamienione przez uøycie Miksera (filtra miksujπcego), ale ten filtr robi to szybciej.
+1143=Kana≥y mogπ byÊ zamienione przez uøycie Miksera (filtra miksujπcego), ale ten filtr robi to szybciej.
 1747=Przedni prawy
 2188=Boczny lewy
 2191=Boczny prawy
@@ -829,7 +856,7 @@ Other MPEG2=Inne MPEG2
 1722=G≥Íbia:
 1358=Proporcja:
 1787=W≥πcz napisy wbudowane w film
-1789=W≥πcz obs≥ugÍ napisÛw SSA, ASS oraz ASS2 (opcja eksperymentalna)
+1789=W≥πcz obs≥ugÍ napisÛw SSA, ASS oraz ASS2
 1788=Dekoduj zamkniÍte napisy w filmie
 1968=Priorytet rozszerzenia:
 
@@ -886,7 +913,7 @@ Other MPEG2=Inne MPEG2
 1021=PrÛg:
 1023=Wyostrzanie blokÛw:
 1215=Pokaø maskÍ krawÍdzi
-1143=xsharpen\r\n Filtr wykonuje subtelne ale przydatne wyostrzanie. Dzia≥a to na zasadzie\r\n ma≥ej ramki nad kaødπ klatkπ lub nad kaødym úrodkowym pikselem ktÛry\r\n jest pominiÍty lub nieruszony (zaleøy od ustawienia progu) albo zmapowany \r\n do jednego z dwÛch najjaúniejszych lub najciemniejszych pikseli w oknie\r\n zaleønie od bliskoúci úrodkowego piksela. Jeøeli úrodkowy piksel jest\r\n zmapowany to rÛwnieø Alfa-Zamglenie z oryginalnπ wartoúciπ piksela\r\n uøywajπcy konfigurowalnego ustawienia si≥y. KoÒcowym efektem jest obraz\r\n ktÛry moøe zawieraÊ szum jednak w bardzo ma≥ym stopniu i filtr stara siÍ\r\n przeciwdzia≥aÊ temu.\r\n\r\nUnsharp mask\r\n Filtr wykorzystuje dobrze znane technikÍ uwydatnienia kontrastu\r\n i wyostrzania. G≥Ûwnym celem jest utworzenie wyg≥adzonego obrazu\r\n oraz oryginalnego obrazu a nastÍpnie odjÍcie ich od siebie. Rezultatem tego\r\n bÍdzie obraz o podwyøszonym kontraúcie.\r\n\r\nmsharpen\r\n Filtr ostrzy waøne krawÍdzie obrazu bez wzmacniania szumu. Dzia≥a\r\n na zasadzie wykrywania krawÍdzi i uøywania Kernela zaostrzajπcego tylko\r\n na obszarze krawÍdzi.\r\n\r\nasharp\r\n Jeden z najlepszych filtrÛw wyostrzajπcych ktÛry daje doskona≥π jakoúÊ\r\n obrazu wraz z w≥πczonym filtrem Przetwarzanie. Najlepszπ jakoúÊ uzyskamy\r\n uøywajπc go z obrazem niskiej i úredniej jakoúci.\r\n\r\nswscaler\r\n Jeden z najlepszych filtrÛw wyostrzajπcych ktÛry daje doskona≥π jakoúÊ\r\n obrazu wraz z w≥πczonym filtrem Przetwarzanie. Najlepszπ jakoúÊ uzyskamy\r\n uøywajπc go z obrazem wysokiej jakoúci.\r\n\r\nOpis xsharpen, unsharp mask oraz msharpen zosta≥ skopiowany z oryginalnej dokumentacji filtrÛw AviSynth i VirtualDub\r\n Prawa autorskie Donald Graft\r\n\r\nOpis asharp oraz swscaler zosta≥ napisany przez Artura OsiÒskiego (Virtual_ManPL)
+1143=xsharpen\r\n Filtr wykonuje subtelne ale przydatne wyostrzanie. Dzia≥a to na zasadzie\r\n ma≥ej ramki nad kaødπ klatkπ lub nad kaødym úrodkowym pikselem ktÛry\r\n jest pominiÍty lub nieruszony (zaleøy od ustawienia progu) albo zmapowany\r\n do jednego z dwÛch najjaúniejszych lub najciemniejszych pikseli w oknie\r\n zaleønie od bliskoúci úrodkowego piksela. Jeøeli úrodkowy piksel jest\r\n zmapowany to rÛwnieø Alfa-Zamglenie z oryginalnπ wartoúciπ piksela\r\n uøywajπcy konfigurowalnego ustawienia si≥y. KoÒcowym efektem jest obraz\r\n ktÛry moøe zawieraÊ szum jednak w bardzo ma≥ym stopniu i filtr stara siÍ\r\n przeciwdzia≥aÊ temu.\r\n\r\nUnsharp mask\r\n Filtr wykorzystuje dobrze znane technikÍ uwydatnienia kontrastu\r\n i wyostrzania. G≥Ûwnym celem jest utworzenie wyg≥adzonego obrazu\r\n oraz oryginalnego obrazu a nastÍpnie odjÍcie ich od siebie. Rezultatem tego\r\n bÍdzie obraz o podwyøszonym kontraúcie.\r\n\r\nmsharpen\r\n Filtr ostrzy waøne krawÍdzie obrazu bez wzmacniania szumu. Dzia≥a\r\n na zasadzie wykrywania krawÍdzi i uøywania Kernela zaostrzajπcego tylko\r\n na obszarze krawÍdzi.\r\n\r\nasharp\r\n Jeden z najlepszych filtrÛw wyostrzajπcych ktÛry daje doskona≥π jakoúÊ\r\n obrazu wraz z w≥πczonym filtrem Przetwarzanie. Najlepszπ jakoúÊ uzyskamy\r\n uøywajπc go z obrazem niskiej i úredniej jakoúci.\r\n\r\nswscaler\r\n Jeden z najlepszych filtrÛw wyostrzajπcych ktÛry daje doskona≥π jakoúÊ\r\n obrazu wraz z w≥πczonym filtrem Przetwarzanie. Najlepszπ jakoúÊ uzyskamy\r\n uøywajπc go z obrazem wysokiej jakoúci.\r\n\r\nOpis xsharpen, unsharp mask oraz msharpen zosta≥ skopiowany z oryginalnej dokumentacji filtrÛw AviSynth i VirtualDub\r\n Prawa autorskie Donald Graft\r\n\r\nOpis asharp oraz swscaler zosta≥ napisany przez Artura OsiÒskiego (Virtual_ManPL)
 
 [140]
 0=Przeplot
@@ -926,7 +953,7 @@ Other MPEG2=Inne MPEG2
 2094=Tolerancja:
 2096=Odúwieø po:
 2101=ZakoÒcz skanowanie po
-1143=PowiÍkszanie\r\nPrzycinanie\r\n szerokoúÊ i wysokoúÊ przyciÍtego obrazu sπ zaokrπglone do 8 razy\r\n jeúli podasz z≥π wartoúÊ linia bÍdzie mia≥a czerwone t≥o i wartoúÊ nie bÍdzie\r\n zapisana\r\n uøywajπc tego filtra zapewne bÍdziesz musia≥ teø poprawiÊ wspÛ≥czynnik\r\n obrazu
+1143=PowiÍkszanie\r\nPrzycinanie\r\n szerokoúÊ i wysokoúÊ przyciÍtego obrazu sπ zaokrπglone do 8 razy jeúli\r\n podasz z≥π wartoúÊ linia bÍdzie mia≥a czerwone t≥o i wartoúÊ nie bÍdzie\r\n zapisana\r\n uøywajπc tego filtra zapewne bÍdziesz musia≥ teø poprawiÊ wspÛ≥czynnik\r\n obrazu
 2098=Pionowe
 2099=Poziome
 2100=Pionowe i poziome
@@ -963,6 +990,7 @@ Other MPEG2=Inne MPEG2
 1559=Typ krawÍdzi:
 1562=Kierunki i tryby pracy:
 1143=Filtr tez umoøliwia zamazywanie wybranego obszaru obrazu.
+1558=Kolor:
 
 [139]
 0=Wizualizacje
@@ -1047,7 +1075,7 @@ Other MPEG2=Inne MPEG2
 1317=Korekcja perspektywy
 1321=èrÛd≥owe prostokπty
 1319=Interpolacja:
-1143=Ten filtr jest w trakcie tworzenia dlatego na obrazie mogπ pojawiaÊ siÍ czarne kropki.
+1143=Ten filtr jest w trakcie tworzenia dlatego na obrazie mogπ pojawiaÊ siÍ czarne kropki.\r\nNajlepszπ jakoúÊ oferuje interpolacja szeúcienna, a nastÍpnie linearna.
 
 [138]
 0=Metoda
@@ -1063,7 +1091,7 @@ Other MPEG2=Inne MPEG2
 1099=Zamglenie chrominancji:
 1100=Poziome odkszta≥cenie:
 1022=Pionowe odkszta≥cenie:
-1143=Algorytmy zwiÍkszania rozmiaru obrazu:\r\n najdok≥adniejszymi sπ algorytmy Lanczos oraz Spline\r\n\r\nZ przeplotem:\r\n zaznaczone - klatki sπ traktowane jako progresywne\r\n niezaznaczone - klatki traktowane sπ jako klatki z przeplotem\r\n wpÛ≥zaznaczone - decyduje typ wejúciowej klatki (uøywane podczas\r\n przetwarzania obrazu MPEG2)
+1143=Algorytmy zwiÍkszania rozmiaru obrazu:\r\n najdok≥adniejszym algorytmem ktÛry oferuje najlepsza jakoúÊ obrazu jest\r\n Spline, a nastÍpnie Lanczos\r\n\r\nZ przeplotem:\r\n zaznaczone - klatki traktowane sπ jako klatki z przeplotem\r\n niezaznaczone - klatki sπ traktowane jako klatki progresywne\r\n wpÛ≥zaznaczone - decyduje typ wejúciowej klatki (uøywane podczas\r\n przetwarzania obrazu MPEG2)
 
 [254]
 0=Tekst
@@ -1118,7 +1146,7 @@ Other MPEG2=Inne MPEG2
 1262=Format:
 1230=JakoúÊ:
 1263=IloúÊ cyfr w nazwie:
-1143=Umoøliwia zrzut klatek obrazu do pliku BMP, JPEG oraz PNG.
+1143=Umoøliwia zrzut klatek obrazu do pliku BMP, PNG oraz JPEG.
 
 [173]
 0=Nak≥adka
@@ -1205,6 +1233,7 @@ Other MPEG2=Inne MPEG2
 1860=WewnÍtrzne
 1861=ZewnÍtrzne
 2067=Dzielenie krawÍdzi:
+2209=JasnoúÊ:
 
 [225]
 1829=Zapisz matrycÍ...
@@ -1233,7 +1262,27 @@ Other MPEG2=Inne MPEG2
 1019=G≥ÍbokoúÊ warstwy:
 1021=ZasiÍg:
 1023=Wyg≥adzanie:
-1143=aWarpSharp jest filtrem warsharp'ujπcym ktÛry dzia≥a inaczej niø inne filtry wyostrzajπce.\r\nPrawa autorskie - Marc Fauconneau
+1143=aWarpSharp jest filtrem warpsharp'ujπcym ktÛry dzia≥a inaczej niø inne filtry wyostrzajπce.\r\nPrawa autorskie - Marc Fauconneau
 
 [267]
 8=Zamknij
+
+[239]
+1210=Pionowy filtr
+1207=Si≥a szukania:
+
+[251]
+1728=Tryb:
+1730=PrÛg:
+1727=Ochrona przed artefaktami
+
+[240]
+1212=Si≥a szukania:
+1367=PrÛg:
+
+[241]
+1526=PrÛg:
+1528=Wyostrz
+1530=Mapuj
+1529=Dwustronnie
+1531=Po≥πcz luminancyjna i chrominancyjna maske ruchu
