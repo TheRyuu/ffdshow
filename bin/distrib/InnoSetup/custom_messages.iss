@@ -14,6 +14,9 @@ en.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
 jp.WelcomeLabel2=‚±‚ÌƒvƒƒOƒ‰ƒ€‚Í‚²g—p‚ÌƒRƒ“ƒsƒ…[ƒ^‚Ö [name] ‚ğƒCƒ“ƒXƒg[ƒ‹‚µ‚Ü‚·B%n%n‘±s‚·‚é‘O‚É‘¼‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğ‚·‚×‚ÄI—¹‚µ‚Ä‚­‚¾‚³‚¢B
 jp.FileAbortRetryIgnore=ffdshow‚ğg—p’†‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğI—¹‚µ‚ÄuÄsv‚ğƒNƒŠƒbƒN‚µ‚Ä‚­‚¾‚³‚¢B‰ğŒˆ‚µ‚È‚¢ê‡‚Íu’†~v‚ğƒNƒŠƒbƒN‚µ‚ÄƒRƒ“ƒsƒ…[ƒ^‚ğÄ‹N“®ŒãA‚à‚¤ˆê“xƒZƒbƒgƒAƒbƒv‚ğÀs‚µ‚Ä‚­‚¾‚³‚¢B
 jp.FinishedRestartLabel=[name] ‚ÌƒCƒ“ƒXƒg[ƒ‹‚ğŠ®—¹‚·‚é‚½‚ß‚É‚ÍAƒRƒ“ƒsƒ…[ƒ^‚ğÄ‹N“®‚·‚é•K—v‚ª‚ ‚è‚Ü‚·B%n%n‚·‚®‚ÉÄ‹N“®‚µ‚Ü‚·‚©H%n%nƒqƒ“ƒgFƒrƒfƒIƒfƒR[ƒ_[İ’è‚Ìuî•ñ‚ÆƒfƒoƒbƒOv‚ÌuDon't use ffdshow in:vuexplorer.exev‚ğ—LŒø‚É‚µ‚Ä‚¨‚­‚ÆŸ‰ñ‚©‚çÄ‹N“®‚ª•s—v‚É‚È‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñB
+#if unicode_required
+;jp.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
+#endif
 ; German
 de.WelcomeLabel2=Dieser Assistent wird jetzt [name] auf Ihrem Computer installieren.%n%nSie sollten alle anderen Anwendungen beenden, bevor Sie mit dem Setup fortfahren.
 de.FileAbortRetryIgnore=Beenden Sie das Programm, das [name] verwendet und klicken Sie auf "Wiederholen". Sollte das Problem weiterhin bestehen, klicken Sie auf "Abbrechen", starten Sie Ihren Computer neu und führen Sie das Setup erneut aus.
@@ -40,7 +43,7 @@ pl.WelcomeLabel2=Instalator zainstaluje [name] na twoim komputerze.%n%nZaleca si
 pl.FileAbortRetryIgnore=Zamknij aplikacjê u¿ywaj¹c¹ ffdshow i wciœnij Ponów. Jeœli problem nie ustêpuje, wciœnij Przerwij, zrestartuj komputer i ponownie uruchom instalacjê.
 pl.FinishedRestartLabel=By zakoñczyæ instalacjê [name], instalator musi zrestartowaæ twój komputer. Czy chcia³byœ zrestartowaæ go teraz?%n%nPodpowiedŸ: By unikn¹æ restartowania komputera nastêpnym razem, zaznacz w zak³adce "Informacje" - "Nie u¿ywaj ffdshow w:" - "explorer.exe" w konfiguracji dekodera wideo.
 #if unicode_required
-;pl.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
+pl.WinVersionTooLowError=Ta wersja [name] wymaga systemu Windows 2000 lub nowszego.
 #endif
 ;Czech
 cz.WelcomeLabel2=Tento instalátor nainstaluje na váš poèítaè [name].%n%nPøedtím ne spustíte instalaci je doporuèeno ukonèit všechny ostatní aplikace.
@@ -502,11 +505,11 @@ pl.plg_Label3=Wybierz folder, w którym instalator powinien zainstalowaæ plugin %
 
 pl.run_videoConfig=Uruchom konfiguracjê dekodera wideo
 pl.run_audioConfig=Uruchom konfiguracjê dekodera audio
-pl.run_vfwConfig=Uruchom konfiguracjê VFW
+pl.run_vfwConfig=Uruchom konfiguracjê interfejsu VFW
 
 pl.shrt_videoConfig=Konfiguracja dekodera wideo
 pl.shrt_audioConfig=Konfiguracja dekodera audio
-pl.shrt_vfwConfig=Konfiguracja VFW
+pl.shrt_vfwConfig=Konfiguracja interfejsu VFW
 pl.shrt_uninstall=Odinstaluj ffdshow
 
 ;Czech
