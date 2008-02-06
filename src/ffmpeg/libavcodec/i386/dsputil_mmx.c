@@ -58,7 +58,7 @@ DECLARE_ALIGNED_16(const xmm_t,    ff_pw_32 ) = {0x0020002000200020ULL, 0x002000
 DECLARE_ALIGNED_8 (const uint64_t, ff_pw_42 ) = 0x002A002A002A002AULL;
 DECLARE_ALIGNED_8 (const uint64_t, ff_pw_64 ) = 0x0040004000400040ULL;
 DECLARE_ALIGNED_8 (const uint64_t, ff_pw_96 ) = 0x0060006000600060ULL;
-DECLARE_ALIGNED_16(const uint64_t, ff_pw_128) = 0x0080008000800080ULL;
+DECLARE_ALIGNED_8 (const uint64_t, ff_pw_128) = 0x0080008000800080ULL;
 
 DECLARE_ALIGNED_8 (const uint64_t, ff_pb_1  ) = 0x0101010101010101ULL;
 DECLARE_ALIGNED_8 (const uint64_t, ff_pb_3  ) = 0x0303030303030303ULL;
@@ -2061,7 +2061,7 @@ static void OPNAME ## mpeg4_qpel16_h_lowpass_mmx2(uint8_t *dst, uint8_t *src, in
         "add %4, %1                       \n\t"\
         "decl %2                          \n\t"\
         " jnz 1b                          \n\t"\
-        : "+a"(src), "+c"(dst), "+m"(h)\
+        : "+a"(src), "+c"(dst), "+g"(h)\
         : "d"((long)srcStride), "S"((long)dstStride), /*"m"(ff_pw_20), "m"(ff_pw_3),*/ "m"(temp), "m"(ROUNDER)\
         : "memory"\
     );\
@@ -2174,7 +2174,7 @@ static void OPNAME ## mpeg4_qpel8_h_lowpass_mmx2(uint8_t *dst, uint8_t *src, int
         "add %4, %1                       \n\t"\
         "decl %2                          \n\t"\
         " jnz 1b                          \n\t"\
-        : "+a"(src), "+c"(dst), "+m"(h)\
+        : "+a"(src), "+c"(dst), "+g"(h)\
         : "S"((long)srcStride), "D"((long)dstStride), /*"m"(ff_pw_20), "m"(ff_pw_3),*/ "m"(temp), "m"(ROUNDER)\
         : "memory"\
     );\
