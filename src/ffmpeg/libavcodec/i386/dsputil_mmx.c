@@ -3182,17 +3182,6 @@ static void float_to_int16_sse(int16_t *dst, const float *src, int len){
     asm volatile("emms");
 }
 
-#if 0 // disable snow
-extern void ff_snow_horizontal_compose97i_sse2(DWTELEM *b, int width);
-extern void ff_snow_horizontal_compose97i_mmx(DWTELEM *b, int width);
-extern void ff_snow_vertical_compose97i_sse2(DWTELEM *b0, DWTELEM *b1, DWTELEM *b2, DWTELEM *b3, DWTELEM *b4, DWTELEM *b5, int width);
-extern void ff_snow_vertical_compose97i_mmx(DWTELEM *b0, DWTELEM *b1, DWTELEM *b2, DWTELEM *b3, DWTELEM *b4, DWTELEM *b5, int width);
-extern void ff_snow_inner_add_yblock_sse2(const uint8_t *obmc, const int obmc_stride, uint8_t * * block, int b_w, int b_h,
-                           int src_x, int src_y, int src_stride, slice_buffer * sb, int add, uint8_t * dst8);
-extern void ff_snow_inner_add_yblock_mmx(const uint8_t *obmc, const int obmc_stride, uint8_t * * block, int b_w, int b_h,
-                          int src_x, int src_y, int src_stride, slice_buffer * sb, int add, uint8_t * dst8);
-#endif
-
 void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 {
     mm_flags = mm_support();
@@ -3528,20 +3517,47 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         }
 
 #if GCC420_OR_NEWER
-/* FIXME works in most codecs, but crashes svq1 due to unaligned chroma
+#define H264_QPEL_FUNCS(x, y, CPU)\
+            c->put_h264_qpel_pixels_tab[0][x+y*4] = put_h264_qpel16_mc##x##y##_##CPU;\
+            c->put_h264_qpel_pixels_tab[1][x+y*4] = put_h264_qpel8_mc##x##y##_##CPU;\
+            c->avg_h264_qpel_pixels_tab[0][x+y*4] = avg_h264_qpel16_mc##x##y##_##CPU;\
+            c->avg_h264_qpel_pixels_tab[1][x+y*4] = avg_h264_qpel8_mc##x##y##_##CPU;
         if((mm_flags & MM_SSE2) && !(mm_flags & MM_3DNOW)){
             // these functions are slower than mmx on AMD, but faster on Intel
+/* FIXME works in most codecs, but crashes svq1 due to unaligned chroma
             c->put_pixels_tab[0][0] = put_pixels16_sse2;
             c->avg_pixels_tab[0][0] = avg_pixels16_sse2;
-        }
 */
-
+            H264_QPEL_FUNCS(0, 0, sse2);
+        }
+        if(mm_flags & MM_SSE2){
+            H264_QPEL_FUNCS(0, 1, sse2);
+            H264_QPEL_FUNCS(0, 2, sse2);
+            H264_QPEL_FUNCS(0, 3, sse2);
+            H264_QPEL_FUNCS(1, 1, sse2);
+            H264_QPEL_FUNCS(1, 2, sse2);
+            H264_QPEL_FUNCS(1, 3, sse2);
+            H264_QPEL_FUNCS(2, 1, sse2);
+            H264_QPEL_FUNCS(2, 2, sse2);
+            H264_QPEL_FUNCS(2, 3, sse2);
+            H264_QPEL_FUNCS(3, 1, sse2);
+            H264_QPEL_FUNCS(3, 2, sse2);
+            H264_QPEL_FUNCS(3, 3, sse2);
+        }
 #ifdef HAVE_SSSE3
         if(mm_flags & MM_SSSE3){
-            SET_QPEL_FUNCS(put_h264_qpel, 0, 16, ssse3);
-            SET_QPEL_FUNCS(put_h264_qpel, 1, 8, ssse3);
-            SET_QPEL_FUNCS(avg_h264_qpel, 0, 16, ssse3);
-            SET_QPEL_FUNCS(avg_h264_qpel, 1, 8, ssse3);
+            H264_QPEL_FUNCS(1, 0, ssse3);
+            H264_QPEL_FUNCS(1, 1, ssse3);
+            H264_QPEL_FUNCS(1, 2, ssse3);
+            H264_QPEL_FUNCS(1, 3, ssse3);
+            H264_QPEL_FUNCS(2, 0, ssse3);
+            H264_QPEL_FUNCS(2, 1, ssse3);
+            H264_QPEL_FUNCS(2, 2, ssse3);
+            H264_QPEL_FUNCS(2, 3, ssse3);
+            H264_QPEL_FUNCS(3, 0, ssse3);
+            H264_QPEL_FUNCS(3, 1, ssse3);
+            H264_QPEL_FUNCS(3, 2, ssse3);
+            H264_QPEL_FUNCS(3, 3, ssse3);
         }
 #endif
 
@@ -3564,22 +3580,8 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         }
 #endif
 #endif
-#endif
+#endif /*GCC420_OR_NEWER*/
 
-#if 0 // disable snow
-        if(mm_flags & MM_SSE2 & 0){
-            c->horizontal_compose97i = ff_snow_horizontal_compose97i_sse2;
-            c->vertical_compose97i = ff_snow_vertical_compose97i_sse2;
-            c->inner_add_yblock = ff_snow_inner_add_yblock_sse2;
-        }
-        else{
-            if(mm_flags & MM_MMXEXT){
-            c->horizontal_compose97i = ff_snow_horizontal_compose97i_mmx;
-            c->vertical_compose97i = ff_snow_vertical_compose97i_mmx;
-          	}
-            c->inner_add_yblock = ff_snow_inner_add_yblock_mmx;
-        }
-#endif
 
         if(mm_flags & MM_3DNOW){
 #ifdef CONFIG_ENCODERS
