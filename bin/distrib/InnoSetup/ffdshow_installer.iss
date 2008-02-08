@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 1827
+#define tryout_revision = 1851
 #define buildyear = 2008
-#define buildmonth = '01'
-#define buildday = '29'
+#define buildmonth = '02'
+#define buildday = '08'
 
 ; Build specific options
 #define unicode_required = True
@@ -503,9 +503,13 @@ Type: files; Name: {group}\Audio decoder configuration.lnk; Components: ffdshow
 Type: files; Name: {group}\Uninstall ffdshow.lnk;           Components: ffdshow
 Type: files; Name: {group}\VFW configuration.lnk;           Components: ffdshow\vfw
 #endif
-; Shortcuts belonging to old NSIS installers
-Type: files; Name: {group}\VFW codec configuration.lnk;     Components: ffdshow\vfw
-Type: files; Name: {group}\Uninstall.lnk;                   Components: ffdshow
+#if !include_x264
+Type: files; Name: {app}\ff_x264.dll;                   Components: ffdshow
+#endif
+#if !include_xvidcore
+Type: files; Name: {app}\xvidcore.dll;                   Components: ffdshow
+#endif
+
 
 [Registry]
 ; Cleanup of settings
