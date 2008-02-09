@@ -1243,8 +1243,10 @@ typedef struct AVCodecContext {
 #define FF_CMP_VSAD   8
 #define FF_CMP_VSSE   9
 #define FF_CMP_NSSE   10
+#if 0 // disable snow
 #define FF_CMP_W53    11
 #define FF_CMP_W97    12
+#endif
 #define FF_CMP_DCTMAX 13
 #define FF_CMP_DCT264 14
 #define FF_CMP_CHROMA 256

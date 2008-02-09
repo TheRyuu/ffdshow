@@ -301,7 +301,7 @@ static int sse16_c(void *v, uint8_t *pix1, uint8_t *pix2, int line_size, int h)
     return s;
 }
 
-
+#if 0 // disable snow
 #ifdef CONFIG_ENCODERS
 static inline int w_c(void *v, uint8_t * pix1, uint8_t * pix2, int line_size, int w, int h, int type){
     int s, i, j;
@@ -395,6 +395,7 @@ int w53_32_c(void *v, uint8_t * pix1, uint8_t * pix2, int line_size, int h){
 int w97_32_c(void *v, uint8_t * pix1, uint8_t * pix2, int line_size, int h){
     return w_c(v, pix1, pix2, line_size, 32, h, 0);
 }
+#endif
 #endif
 
 static void get_pixels_c(DCTELEM *restrict block, const uint8_t *pixels, int line_size)
@@ -3240,6 +3241,7 @@ void ff_set_cmp(DSPContext* c, me_cmp_func *cmp, int type){
         case FF_CMP_NSSE:
             cmp[i]= c->nsse[i];
             break;
+#if 0 // disable snow
 #ifdef CONFIG_ENCODERS
         case FF_CMP_W53:
             cmp[i]= c->w53[i];
@@ -3247,6 +3249,7 @@ void ff_set_cmp(DSPContext* c, me_cmp_func *cmp, int type){
         case FF_CMP_W97:
             cmp[i]= c->w97[i];
             break;
+#endif
 #endif
         default:
             av_log(NULL, AV_LOG_ERROR,"internal error in cmp function selection\n");
@@ -4198,11 +4201,13 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
     c->vsse[4]= vsse_intra16_c;
     c->nsse[0]= nsse16_c;
     c->nsse[1]= nsse8_c;
+#if 0 // disable snow
 #ifdef CONFIG_ENCODERS
     c->w53[0]= w53_16_c;
     c->w53[1]= w53_8_c;
     c->w97[0]= w97_16_c;
     c->w97[1]= w97_8_c;
+#endif
 #endif
     c->add_bytes= add_bytes_c;
     c->diff_bytes= diff_bytes_c;

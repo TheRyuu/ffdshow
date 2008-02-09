@@ -149,9 +149,10 @@ static void a(uint8_t *block, const uint8_t *pixels, int line_size, int h){\
 // although currently h<4 is not used as functions with width <8 are neither used nor implemented
 typedef int (*me_cmp_func)(void /*MpegEncContext*/ *s, uint8_t *blk1/*align width (8 or 16)*/, uint8_t *blk2/*align 1*/, int line_size, int h)/* __attribute__ ((const))*/;
 
-
+#if 0 // disable snow
 // for snow slices
 typedef struct slice_buffer_s slice_buffer;
+#endif
 
 /**
  * DSPContext.
@@ -190,8 +191,10 @@ typedef struct DSPContext {
     me_cmp_func vsad[5];
     me_cmp_func vsse[5];
     me_cmp_func nsse[5];
+#if 0 // disable snow
     me_cmp_func w53[5];
     me_cmp_func w97[5];
+#endif
     me_cmp_func dct_max[5];
     me_cmp_func dct264_sad[5];
 
@@ -453,10 +456,12 @@ static inline int get_penalty_factor(int lambda, int lambda2, int type){
         return lambda>>FF_LAMBDA_SHIFT;
     case FF_CMP_DCT:
         return (3*lambda)>>(FF_LAMBDA_SHIFT+1);
+#if 0 // disable snow
     case FF_CMP_W53:
         return (4*lambda)>>(FF_LAMBDA_SHIFT);
     case FF_CMP_W97:
         return (2*lambda)>>(FF_LAMBDA_SHIFT);
+#endif
     case FF_CMP_SATD:
     case FF_CMP_DCT264:
         return (2*lambda)>>FF_LAMBDA_SHIFT;
