@@ -1414,13 +1414,6 @@ typedef struct AVCodecContext {
 #define SLICE_FLAG_ALLOW_PLANE    0x0004 ///< allow draw_horiz_band() with 1 component at a time (SVQ1)
 
     /**
-     * XVideo Motion Acceleration
-     * - encoding: forbidden
-     * - decoding: set by decoder
-     */
-    int xvmc_acceleration;
-
-    /**
      * macroblock decision mode
      * - encoding: Set by user.
      * - decoding: unused

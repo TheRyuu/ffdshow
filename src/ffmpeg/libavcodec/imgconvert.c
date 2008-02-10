@@ -260,12 +260,6 @@ static const PixFmtInfo pix_fmt_info[PIX_FMT_NB] = {
         .pixel_type = FF_PIXEL_PALETTE,
         .depth = 8,
     },
-    [PIX_FMT_XVMC_MPEG2_MC] = {
-        .name = "xvmcmc",
-    },
-    [PIX_FMT_XVMC_MPEG2_IDCT] = {
-        .name = "xvmcidct",
-    },
     [PIX_FMT_UYYVYY411] = {
         .name = "uyyvyy411",
         .nb_channels = 1,
@@ -571,10 +565,6 @@ void avpicture_init_pixfmtinfo(void)
  pix_fmt_info[PIX_FMT_PAL8].color_type = FF_COLOR_RGB;
  pix_fmt_info[PIX_FMT_PAL8].pixel_type = FF_PIXEL_PALETTE;
  pix_fmt_info[PIX_FMT_PAL8].depth = 8;
-
- pix_fmt_info[PIX_FMT_XVMC_MPEG2_MC].name = "xvmcmc";
-
- pix_fmt_info[PIX_FMT_XVMC_MPEG2_IDCT].name = "xvmcidct";
 
  pix_fmt_info[PIX_FMT_UYYVYY411].name = "uyyvyy411";
  pix_fmt_info[PIX_FMT_UYYVYY411].nb_channels = 1;
