@@ -27,8 +27,6 @@
 #include "libavcodec/avcodec.h"
 #include "IffdshowBase.h"
 
-#pragma warning(disable: 4244)
-
 const char_t* TvideoCodecX264::dllname=_l("ff_x264.dll");
 
 TvideoCodecX264::TvideoCodecX264(IffdshowBase *Ideci,IencVideoSink *Isink):
@@ -152,7 +150,7 @@ LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
      param.rc.i_qp_constant=0;
      if (coCfg->mode==ENC_MODE::VBR_QUAL)
       param.rc.i_rc_method=X264_RC_CRF;
-      param.rc.f_rf_constant=50*(100-coCfg->qual)/100+1;
+      param.rc.f_rf_constant=float(50*(100-coCfg->qual)/100+1);
      //param.analyse.b_aq=coCfg->x264_is_aq;
      //param.analyse.f_aq_strength=coCfg->x264_aq_strength100/100.0f;
      //param.analyse.f_aq_sensitivity=(float)coCfg->x264_f_aq_sensitivity;
