@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 1851
+#define tryout_revision = 1857
 #define buildyear = 2008
 #define buildmonth = '02'
-#define buildday = '08'
+#define buildday = '12'
 
 ; Build specific options
 #define unicode_required = True
@@ -53,7 +53,7 @@
 #if PREF_CLSID
   #define VS2003SP1 = True  
   #define unicode_required = False
-  #define include_x264 = False
+  #define include_x264 = True
   #define cpu_detection = True
   #define filename_suffix = '_clsid'
   #define bindir = '..\..\x86'
@@ -61,7 +61,7 @@
 #elif PREF_CLSID_UNICODE
   #define VS2003SP1 = True  
   #define unicode_required = True
-  #define include_x264 = False
+  #define include_x264 = True
   #define cpu_detection = True
   #define filename_suffix = '_clsid'
   #define bindir = '..\..\x86'
@@ -71,7 +71,7 @@
   #define unicode_required = True
   #define cpu_detection = True
   #define sse_required = True
-  #define include_x264 = False
+  #define include_x264 = True
   #define filename_suffix = '_clsid_sse_icl10'
   #define bindir = '..\..\x86'
   #define outputdir = '..\..\..\..\'
@@ -875,7 +875,7 @@ var
 begin
   Result := True;
   if RegQueryStringValue(HKLM, 'Software\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow', 'UninstallString', regval) then begin
-    MsgBox(CustomMessage('msg_unistallFirst'), mbInformation, mb_ok);
+    MsgBox(CustomMessage('msg_uninstallFirst'), mbInformation, mb_ok);
     if NOT Exec('>', regval, '', SW_SHOW, ewWaitUntilTerminated, resultCode) then begin
       MsgBox(SysErrorMessage(resultCode), mbError, MB_OK);
     end

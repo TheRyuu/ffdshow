@@ -224,7 +224,7 @@ de.comp_ffdshowds=ffdshow-DirectShow-Filter
 de.comp_vfwInterface=VFW-Interface
 de.comp_makeAvis=Hilfe für AviSynth-Skripte
 de.comp_appPlugins=Anwendungsplugins:
-en.comp_msg_selectOneComp=Sie müssen mindestens eine Komponente auswählen.
+de.comp_msg_selectOneComp=Sie müssen mindestens eine Komponente auswählen.
 
 de.tsk_resetSettings=Alle ffdshow-Einstellungen zurücksetzen
 de.tsk_videoFormats=Folgende Videoformate mit ffdshow dekodieren:
