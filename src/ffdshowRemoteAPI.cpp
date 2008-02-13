@@ -94,12 +94,6 @@ void Tremote::start(void)
 }
 void Tremote::stop(void)
 {
- if (h)
-  {
-   SendMessage(h,WM_CLOSE,0,0);
-   WaitForSingleObject(hThread,INFINITE);
-   hThread=NULL;
-  }
 if (fThread)
 {
 	SetEvent(fEvent);
@@ -108,6 +102,13 @@ if (fThread)
 	CloseHandle(fThread);
 	fThread = NULL; fEvent = NULL;
  }
+
+if (h)
+  {
+   SendMessage(h,WM_CLOSE,0,0);
+   WaitForSingleObject(hThread,INFINITE);
+   hThread=NULL;
+  }
  deciD=NULL;deciV=NULL;
 }
 unsigned int __stdcall Tremote::threadProc(void *self0)
@@ -198,7 +199,7 @@ unsigned int __stdcall Tremote::ffwdThreadProc(void *self0)
 	 self->deciV->drawOSD(0, 10, _l(""));
  }
 
- self->fThread=NULL;
+ //self->fThread=NULL;
  _endthreadex(0);
  return 0;
 }
