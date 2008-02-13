@@ -725,11 +725,11 @@ unsigned avcodec_build( void )
 
 void avcodec_init(void)
 {
-    static int inited = 0;
+    static int initialized = 0;
 
-    if (inited != 0)
+    if (initialized != 0)
         return;
-    inited = 1;
+    initialized = 1;
 #if __STDC_VERSION__ < 199901L
     {
     extern void avpicture_init_pixfmtinfo(void);

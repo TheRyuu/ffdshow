@@ -40,8 +40,8 @@
 #define AV_STRINGIFY(s)         AV_TOSTRING(s)
 #define AV_TOSTRING(s) #s
 
-#define LIBAVCODEC_VERSION_INT  ((51<<16)+(50<<8)+0)
-#define LIBAVCODEC_VERSION      51.50.0
+#define LIBAVCODEC_VERSION_INT  ((51<<16)+(50<<8)+1)
+#define LIBAVCODEC_VERSION      51.50.1
 #define LIBAVCODEC_BUILD        LIBAVCODEC_VERSION_INT
 
 #define LIBAVCODEC_IDENT        "Lavc" AV_STRINGIFY(LIBAVCODEC_VERSION)
@@ -2474,8 +2474,6 @@ typedef struct AVCodecParser {
 
 
 /* memory */
-/* FOXFIX: Not in lavc */
-void av_free(void *ptr);
 
 /**
  * Reallocates the given block if it is not large enough, otherwise it

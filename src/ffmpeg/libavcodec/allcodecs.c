@@ -43,12 +43,12 @@
  */
 void avcodec_register_all(void)
 {
-    static int inited = 0;
+    static int initialized;
 
-    if (inited != 0)
+    if (initialized)
         return;
-    inited = 1;
-    
+    initialized = 1;
+
     /* video codecs */
     REGISTER_DECODER	(aasc);
     REGISTER_DECODER	(amv);
