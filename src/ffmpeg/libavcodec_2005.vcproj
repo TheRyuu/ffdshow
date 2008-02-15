@@ -1155,6 +1155,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\imgconvert.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\indeo2data.h"
 				>
 			</File>

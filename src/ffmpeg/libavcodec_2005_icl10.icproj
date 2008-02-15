@@ -389,6 +389,8 @@
 		<File 
 			RelativePath=".\libavcodec\imcdata.h"/>
 		<File 
+			RelativePath=".\libavcodec\imgconvert.h"/>
+		<File 
 			RelativePath=".\libavcodec\indeo2data.h"/>
 		<File 
 			RelativePath=".\libavcodec\indeo3data.h"/>
