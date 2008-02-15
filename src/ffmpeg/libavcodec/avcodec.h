@@ -948,7 +948,7 @@ typedef struct AVCodecContext {
      * - encoding: Set by user
      * - decoding: unused
      */
-    char *rc_eq;
+    const char *rc_eq;
 
     /**
      * maximum bitrate
@@ -1043,10 +1043,6 @@ typedef struct AVCodecContext {
      * - decoding: unused
      */
     float dark_masking;
-
-
-    /* for binary compatibility */
-    int unused;
 
     /**
      * IDCT algorithm, see FF_IDCT_* below.
