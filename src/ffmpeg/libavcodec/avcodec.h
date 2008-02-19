@@ -37,9 +37,6 @@
 #include "libavutil/avutil.h"
 #include <sys/types.h> /* size_t */
 
-#define AV_STRINGIFY(s)         AV_TOSTRING(s)
-#define AV_TOSTRING(s) #s
-
 #define LIBAVCODEC_VERSION_INT  ((51<<16)+(50<<8)+1)
 #define LIBAVCODEC_VERSION      51.50.1
 #define LIBAVCODEC_BUILD        LIBAVCODEC_VERSION_INT

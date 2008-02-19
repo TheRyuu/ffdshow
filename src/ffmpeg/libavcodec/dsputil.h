@@ -523,18 +523,17 @@ static inline void emms(void)
         emms();\
 }
 
-#define DECLARE_ALIGNED_8(t, v) DECLARE_ALIGNED(8, t, v)
-
-#define STRIDE_ALIGN 8
-
-void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx);
 void dsputil_init_pix_mmx(DSPContext* c, AVCodecContext *avctx);
+void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx);
 
-#else
+#endif
 
-#define DECLARE_ALIGNED_8(t, v) DECLARE_ALIGNED(8, t, v)
-#define STRIDE_ALIGN 8
+#ifndef DECLARE_ALIGNED_8
+#   define DECLARE_ALIGNED_8(t, v) DECLARE_ALIGNED(8, t, v)
+#endif
 
+#ifndef STRIDE_ALIGN
+#   define STRIDE_ALIGN 8
 #endif
 
 /* PSNR */
