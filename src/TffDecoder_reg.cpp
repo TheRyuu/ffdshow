@@ -510,6 +510,80 @@ AMOVIESETUP_PIN TffdshowDecVideo::pins[]=
  }
 };
 
+AMOVIESETUP_PIN TffdshowDecVideoRaw::pins[]=
+{
+ {
+  L"Input",                                                  // String pin name
+  FALSE,                                                     // Is it rendered
+  FALSE,                                                     // Is it an output
+  FALSE,                                                     // Allowed none
+  FALSE,                                                     // Allowed many
+  &CLSID_NULL,                                               // Connects to filter
+  L"Output",                                                 // Connects to pin
+  sizeof(inputMediaTypes) / sizeof(AMOVIESETUP_MEDIATYPE),   // Number of types
+  inputMediaTypes                                            // The pin details
+ },
+ {
+  L"Output",                                                 // String pin name
+  FALSE,                                                     // Is it rendered
+  TRUE,                                                      // Is it an output
+  FALSE,                                                     // Allowed none
+  FALSE,                                                     // Allowed many
+  &CLSID_NULL,                                               // Connects to filter
+  L"Input",                                                  // Connects to pin
+  sizeof(outputMediaTypes) / sizeof(AMOVIESETUP_MEDIATYPE),  // Number of types
+  outputMediaTypes                                           // The pin details
+ },
+ {
+  L"In Text",                                                  // String pin name
+  FALSE,                                                       // Is it rendered
+  FALSE,                                                       // Is it an output
+  FALSE,                                                       // Allowed none
+  FALSE,                                                       // Allowed many
+  &CLSID_NULL,                                                 // Connects to filter
+  NULL,                                                        // Connects to pin
+  sizeof(inputTextMediaTypes) / sizeof(AMOVIESETUP_MEDIATYPE), // Number of types
+  inputTextMediaTypes                                          // The pin details
+ }
+};
+
+AMOVIESETUP_PIN TffdshowDecVideoSubtitles::pins[]=
+{
+ {
+  L"Input",                                                  // String pin name
+  FALSE,                                                     // Is it rendered
+  FALSE,                                                     // Is it an output
+  FALSE,                                                     // Allowed none
+  FALSE,                                                     // Allowed many
+  &CLSID_NULL,                                               // Connects to filter
+  L"Output",                                                 // Connects to pin
+  sizeof(inputMediaTypes) / sizeof(AMOVIESETUP_MEDIATYPE),   // Number of types
+  inputMediaTypes                                            // The pin details
+ },
+ {
+  L"Output",                                                 // String pin name
+  FALSE,                                                     // Is it rendered
+  TRUE,                                                      // Is it an output
+  FALSE,                                                     // Allowed none
+  FALSE,                                                     // Allowed many
+  &CLSID_NULL,                                               // Connects to filter
+  L"Input",                                                  // Connects to pin
+  sizeof(outputMediaTypes) / sizeof(AMOVIESETUP_MEDIATYPE),  // Number of types
+  outputMediaTypes                                           // The pin details
+ },
+ {
+  L"In Text",                                                  // String pin name
+  FALSE,                                                       // Is it rendered
+  FALSE,                                                       // Is it an output
+  FALSE,                                                       // Allowed none
+  FALSE,                                                       // Allowed many
+  &CLSID_NULL,                                                 // Connects to filter
+  NULL,                                                        // Connects to pin
+  sizeof(inputTextMediaTypes) / sizeof(AMOVIESETUP_MEDIATYPE), // Number of types
+  inputTextMediaTypes                                          // The pin details
+ }
+};
+
 const AMOVIESETUP_PIN TffdshowDecAudio::pins[]=
 {
  {
