@@ -1773,7 +1773,7 @@ void ff_draw_horiz_band(MpegEncContext *s, int y, int h){
             offset[2]=
             offset[3]= 0;
         }else{
-            offset[0]= y * s->linesize;;
+            offset[0]= y * s->linesize;
             offset[1]=
             offset[2]= (y >> s->chroma_y_shift) * s->uvlinesize;
             offset[3]= 0;
