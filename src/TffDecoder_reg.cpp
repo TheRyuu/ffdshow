@@ -312,6 +312,38 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::inputMediaTypes[]=
  { &MEDIATYPE_Video, &MEDIASUBTYPE_RGB565 }
 };
 
+const AMOVIESETUP_MEDIATYPE TffdshowDecVideoRaw::inputMediaTypes[]=
+{
+ { &MEDIATYPE_Video,              &MEDIASUBTYPE_NULL   },
+// explicitly register for raw video types for easier enumeration
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_YV12   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_IYUV   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_YUY2   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_YUYV   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_UYVY   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_VYUY   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_RGB32  },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_RGB24  },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_RGB555 },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_RGB565 }
+};
+
+const AMOVIESETUP_MEDIATYPE TffdshowDecVideoSubtitles::inputMediaTypes[]=
+{
+ { &MEDIATYPE_Video,              &MEDIASUBTYPE_NULL   },
+// explicitly register for raw video types for easier enumeration
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_YV12   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_IYUV   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_YUY2   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_YUYV   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_UYVY   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_VYUY   },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_RGB32  },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_RGB24  },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_RGB555 },
+ { &MEDIATYPE_Video, &MEDIASUBTYPE_RGB565 }
+};
+
 const AMOVIESETUP_MEDIATYPE TffdshowDecVideo::outputMediaTypes[]=
 {
  { &MEDIATYPE_Video, &MEDIASUBTYPE_NULL   }

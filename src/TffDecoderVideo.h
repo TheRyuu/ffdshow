@@ -604,6 +604,7 @@ public:
 
 class TffdshowDecVideoRaw :public TffdshowDecVideo
 {
+ static const AMOVIESETUP_MEDIATYPE inputMediaTypes[];
 public:
  static CUnknown* WINAPI CreateInstance(LPUNKNOWN punk,HRESULT *phr);
  TffdshowDecVideoRaw(LPUNKNOWN punk,HRESULT *phr);
@@ -613,6 +614,7 @@ public:
 
 class TffdshowDecVideoSubtitles :public TffdshowDecVideo
 {
+ static const AMOVIESETUP_MEDIATYPE inputMediaTypes[];
 public:
  static CUnknown* WINAPI CreateInstance(LPUNKNOWN punk,HRESULT *phr);
  TffdshowDecVideoSubtitles(LPUNKNOWN punk,HRESULT *phr);
