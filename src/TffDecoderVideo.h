@@ -577,6 +577,10 @@ private:
  REFERENCE_TIME insample_rtStart,insample_rtStop;
  HRESULT checkAllowOutChange(IPin *pPin);
  TsearchInterfaceInGraph *searchInterfaceInGraph;
+ void update_time_on_ffdshow1(void);
+ void update_time_on_ffdshow2(void);
+ void update_time_on_ffdshow3(REFERENCE_TIME rtStart, REFERENCE_TIME rtStop);
+ void update_time_on_ffdshow4(void);
 public:
  enum DOWNSTREAM_FILTER_TYPE
   {
@@ -587,6 +591,7 @@ public:
    VMR9,
    VMR9RENDERLESS_MPC,
    DVOBSUB,
+   HAALI_RENDERER
   } downstreamID;
  void set_downstreamID(IPin *downstream_input_pin);
  static const AMOVIESETUP_MEDIATYPE inputMediaTypes[],outputMediaTypes[];

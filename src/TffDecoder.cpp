@@ -1160,20 +1160,6 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
  if (pict.csp==FF_CSP_NULL)
   return S_OK;
 
- if (m_NeedToPauseRun && graph) // Work around Windows Media Center
-  {
-   DPRINTF(_l("Work around Windows Media Center. After reconnecting Pause and Run."));
-   m_NeedToPauseRun = false;
-   IMediaFilter *imediafilter;
-   graph->QueryInterface(IID_IMediaFilter, (void**)(&imediafilter));
-   if (imediafilter)
-    {
-     imediafilter->Pause(); // Why would this be required? Microsoft should fix their application.
-     imediafilter->Run(0);
-     imediafilter->Release();
-    }
-  }
-
  sendOnFrameMsg();
 
  if (presetSettings->output->hwOverlayAspect)
@@ -1272,16 +1258,14 @@ if (!outdv && hwDeinterlace)
     {
      VIDEOINFOHEADER2* vih = (VIDEOINFOHEADER2*)omt.pbFormat;
      BITMAPINFOHEADER *bmi=&vih->bmiHeader;
-       vih->dwPictAspectRatioX = pict.rectFull.sar.num;
-       vih->dwPictAspectRatioY = pict.rectFull.sar.den;
+     setVIH2aspect(vih, pict.rectFull, 0);
      SetRect(&vih->rcTarget, 0, 0, 0, 0);
      SetRect(&vih->rcSource, 0, 0, pict.rectFull.dx, pict.rectFull.dy);
      bmi->biXPelsPerMeter = pict.rectFull.dx * vih->dwPictAspectRatioX;
      bmi->biYPelsPerMeter = pict.rectFull.dy * vih->dwPictAspectRatioY;
      pOut->SetMediaType(&omt);
      comptrQ<IMediaEventSink> pMES=graph;
-     if (pMES)
-      pMES->Notify(EC_VIDEO_SIZE_CHANGED, MAKELPARAM(pict.rectFull.dx, pict.rectFull.dy), 0);
+     NotifyEvent(EC_VIDEO_SIZE_CHANGED, MAKELPARAM(pict.rectFull.dx, pict.rectFull.dy), 0);
     }
   }
 
@@ -1304,63 +1288,28 @@ if (!outdv && hwDeinterlace)
  if (pOut->GetPointer(&dst)!=S_OK)
   return S_FALSE;
  LONG dstSize=pOut->GetSize();
- #if 0
- if(downstreamID==VMR9)
-  {
-   IVMRSurface9* ivmr9=NULL;
-   IDirect3DSurface9* id3d9=NULL;
-   D3DSURFACE_DESC desc;
-   pOut->QueryInterface(IID_IVMRSurface9,(void**)&ivmr9);
-   if(ivmr9)
-    {
-     ivmr9->GetSurface(&id3d9);
-     if(id3d9)
-      {
-       id3d9->GetDesc(&desc);
-       id3d9->Release();
-      }
-     ivmr9->Release();
-    }
-  }
- IBasicVideo* ibv=NULL;
- graph->QueryInterface(IID_IBasicVideo,(void**)&ibv);
- if(ibv)
-  {
-   long VideoHeight;
-   long DestinationHeight;
-   HRESULT hr1=ibv->get_VideoHeight(&VideoHeight);
-   HRESULT hr2=ibv->get_DestinationHeight(&DestinationHeight);
-   ibv->Release();
-  }
- #endif
  HRESULT cr=imgFilters->convertOutputSample(pict,m_frame.dstColorspace,&dst,&m_frame.dstStride,dstSize,presetSettings->output);
  pOut->SetActualDataLength(cr==S_FALSE?dstSize:m_frame.dstSize);
- if(isOSD_time_on_ffdshow && m_pClock && rtStart!=REFTIME_INVALID)
+ update_time_on_ffdshow3(rtStart, rtStop);
+
+ hr= m_pOutput->Deliver(pOut);
+
+ update_time_on_ffdshow4();
+
+ if (m_NeedToPauseRun && graph) // Work around Windows Media Center
   {
-   m_pClock->GetTime(&OSD_time_on_ffdshowEnd);
-   if(OSD_time_on_ffdshowFirstRun)
+   DPRINTF(_l("Work around Windows Media Center. After reconnecting Pause and Run."));
+   m_NeedToPauseRun = false;
+   IMediaFilter *imediafilter;
+   graph->QueryInterface(IID_IMediaFilter, (void**)(&imediafilter));
+   if (imediafilter)
     {
-     OSD_time_on_ffdshowFirstRun= false;
-     OSD_time_on_ffdshowOldStart= rtStart;
-     OSD_time_on_ffdshowDuration= 0;
-     OSD_time_on_ffdshowResult=0;
-    }
-   else
-    {
-     OSD_time_on_ffdshowResult= OSD_time_on_ffdshowEnd
-                               -OSD_time_on_ffdshowAfterGetBuffer
-                               +OSD_time_on_ffdshowBeforeGetBuffer
-                               -OSD_time_on_ffdshowStart;
-     if(rtStop>rtStart+1)
-      OSD_time_on_ffdshowDuration= rtStop-rtStart;
-     else
-      OSD_time_on_ffdshowDuration= rtStart-OSD_time_on_ffdshowOldStart;
-     OSD_time_on_ffdshowOldStart= rtStart;
+     imediafilter->Pause(); // Why would this be required? Microsoft should fix their application.
+     imediafilter->Run(0);
+     imediafilter->Release();
     }
   }
- hr= m_pOutput->Deliver(pOut);
- if(isOSD_time_on_ffdshow && m_pClock)
-   m_pClock->GetTime(&OSD_time_on_ffdshowStart);
+
  return hr;
 }
 
@@ -1567,7 +1516,7 @@ HRESULT TffdshowDecVideo::reconnectOutput(const TffPict &newpict)
   }
  if ((newpict.rectFull==oldRect && newpict.rectFull.sar!=oldRect.sar)
       && _strnicmp(_l("wmplayer.exe"),getExeflnm(),13)!=0
-      && downstreamID==OVERLAY_MIXER)
+      && (downstreamID == OVERLAY_MIXER || (dvdproc &&  (downstreamID ==  VMR7 || downstreamID == VMR9 || downstreamID == VMR9RENDERLESS_MPC))))
   {
    m_NeedToAttachFormat = true;
    oldRect=newpict.rectFull;
@@ -1792,16 +1741,15 @@ HRESULT TffdshowDecVideo::initializeOutputSample(IMediaSample **ppOutSample)
  //ASSERT(m_pOutput->m_pAllocator != NULL);
  IMediaSample *pOutSample;
  HRESULT hr;
- if(isOSD_time_on_ffdshow && m_pClock)
-  m_pClock->GetTime(&OSD_time_on_ffdshowBeforeGetBuffer);
- //DPRINTF(_l("About to call GetDeliveryBuffer"));
+ update_time_on_ffdshow1();
+
  hr=m_pOutputDecVideo->GetDeliveryBuffer(&pOutSample,
                                 pProps->dwSampleFlags&AM_SAMPLE_TIMEVALID?&pProps->tStart:NULL,
                                 pProps->dwSampleFlags&AM_SAMPLE_STOPVALID?&pProps->tStop :NULL,
                                 dwFlags);
- //DPRINTF(_l("GetDeliveryBuffer returned %x"),hr);
- if(isOSD_time_on_ffdshow && m_pClock)
-  m_pClock->GetTime(&OSD_time_on_ffdshowAfterGetBuffer);
+
+ update_time_on_ffdshow2();
+
  if (FAILED(hr))
   return hr;
  *ppOutSample=pOutSample;
@@ -1853,6 +1801,7 @@ void TffdshowDecVideo::set_downstreamID(IPin *downstream_input_pin)
  if (ref==CLSID_VideoRenderer)        downstreamID=OLD_RENDERER;
  if (ref==CLSID_OverlayMixer)         downstreamID=OVERLAY_MIXER;
  if (ref==CLSID_VideoMixingRenderer)  downstreamID=VMR7;
+ if (ref==CLSID_HaaliVideoRenderer)   downstreamID=HAALI_RENDERER;
  if (ref==CLSID_VideoMixingRenderer9)
   if (IsVMR9Renderless(downstream_input_pin))
    downstreamID=VMR9RENDERLESS_MPC;
@@ -2013,6 +1962,51 @@ STDMETHODIMP TffdshowDecVideo::getChaptersList(void **ppChaptersList)
 		getChapters();
 	*ppChaptersList = (void**) &chaptersList;
 	return S_OK;
+}
+
+void TffdshowDecVideo::update_time_on_ffdshow1(void)
+{
+ if(isOSD_time_on_ffdshow && m_pClock)
+  m_pClock->GetTime(&OSD_time_on_ffdshowBeforeGetBuffer);
+}
+
+void TffdshowDecVideo::update_time_on_ffdshow2(void)
+{
+ if(isOSD_time_on_ffdshow && m_pClock)
+  m_pClock->GetTime(&OSD_time_on_ffdshowAfterGetBuffer);
+}
+
+void TffdshowDecVideo::update_time_on_ffdshow3(REFERENCE_TIME rtStart, REFERENCE_TIME rtStop)
+{
+ if(isOSD_time_on_ffdshow && m_pClock && rtStart!=REFTIME_INVALID)
+  {
+   m_pClock->GetTime(&OSD_time_on_ffdshowEnd);
+   if(OSD_time_on_ffdshowFirstRun)
+    {
+     OSD_time_on_ffdshowFirstRun= false;
+     OSD_time_on_ffdshowOldStart= rtStart;
+     OSD_time_on_ffdshowDuration= 0;
+     OSD_time_on_ffdshowResult=0;
+    }
+   else
+    {
+     OSD_time_on_ffdshowResult= OSD_time_on_ffdshowEnd
+                               -OSD_time_on_ffdshowAfterGetBuffer
+                               +OSD_time_on_ffdshowBeforeGetBuffer
+                               -OSD_time_on_ffdshowStart;
+     if(rtStop>rtStart+1)
+      OSD_time_on_ffdshowDuration= rtStop-rtStart;
+     else
+      OSD_time_on_ffdshowDuration= rtStart-OSD_time_on_ffdshowOldStart;
+     OSD_time_on_ffdshowOldStart= rtStart;
+    }
+  }
+}
+
+void TffdshowDecVideo::update_time_on_ffdshow4(void)
+{
+ if(isOSD_time_on_ffdshow && m_pClock)
+   m_pClock->GetTime(&OSD_time_on_ffdshowStart);
 }
 
 #ifdef OSDTIMETABALE
