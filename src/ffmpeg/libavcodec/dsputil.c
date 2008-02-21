@@ -45,8 +45,14 @@ void ff_spatial_dwt(int *buffer, int width, int height, int stride, int type, in
 /* vorbis.c */
 void vorbis_inverse_coupling(float *mag, float *ang, int blocksize);
 
+/* pngdec.c */
+void ff_add_png_paeth_prediction(uint8_t *dst, uint8_t *src, uint8_t *top, int w, int bpp);
+
 uint8_t ff_cropTbl[256 + 2 * MAX_NEG_CROP] = {0, };
 uint32_t ff_squareTbl[512] = {0, };
+
+static const unsigned long pb_7f = 0x7f7f7f7f7f7f7f7fUL;
+static const unsigned long pb_80 = 0x8080808080808080UL;
 
 const uint8_t ff_zigzag_direct[64] = {
     0,   1,  8, 16,  9,  2,  3, 10,
@@ -97,7 +103,7 @@ const uint8_t ff_alternate_vertical_scan[64] = {
     38, 46, 54, 62, 39, 47, 55, 63,
 };
 
-/* a*ff_inverse[b]>>32 == a/b for all 0<=a<=65536 && 2<=b<=255 */
+/* a*inverse[b]>>32 == a/b for all 0<=a<=65536 && 2<=b<=255 */
 const uint32_t ff_inverse[256]={
          0, 4294967295U,2147483648U,1431655766, 1073741824,  858993460,  715827883,  613566757,
  536870912,  477218589,  429496730,  390451573,  357913942,  330382100,  306783379,  286331154,
@@ -3266,32 +3272,47 @@ static void clear_blocks_c(DCTELEM *blocks)
 }
 
 static void add_bytes_c(uint8_t *dst, uint8_t *src, int w){
-    int i;
-    for(i=0; i+7<w; i+=8){
-        dst[i+0] += src[i+0];
-        dst[i+1] += src[i+1];
-        dst[i+2] += src[i+2];
-        dst[i+3] += src[i+3];
-        dst[i+4] += src[i+4];
-        dst[i+5] += src[i+5];
-        dst[i+6] += src[i+6];
-        dst[i+7] += src[i+7];
+    long i;
+    for(i=0; i<=w-sizeof(long); i+=sizeof(long)){
+        long a = *(long*)(src+i);
+        long b = *(long*)(dst+i);
+        *(long*)(dst+i) = ((a&pb_7f) + (b&pb_7f)) ^ ((a^b)&pb_80);
     }
     for(; i<w; i++)
         dst[i+0] += src[i+0];
 }
 
+static void add_bytes_l2_c(uint8_t *dst, uint8_t *src1, uint8_t *src2, int w){
+    long i;
+    for(i=0; i<=w-sizeof(long); i+=sizeof(long)){
+        long a = *(long*)(src1+i);
+        long b = *(long*)(src2+i);
+        *(long*)(dst+i) = ((a&pb_7f) + (b&pb_7f)) ^ ((a^b)&pb_80);
+    }
+    for(; i<w; i++)
+        dst[i] = src1[i]+src2[i];
+}
+
 static void diff_bytes_c(uint8_t *dst, uint8_t *src1, uint8_t *src2, int w){
-    int i;
-    for(i=0; i+7<w; i+=8){
-        dst[i+0] = src1[i+0]-src2[i+0];
-        dst[i+1] = src1[i+1]-src2[i+1];
-        dst[i+2] = src1[i+2]-src2[i+2];
-        dst[i+3] = src1[i+3]-src2[i+3];
-        dst[i+4] = src1[i+4]-src2[i+4];
-        dst[i+5] = src1[i+5]-src2[i+5];
-        dst[i+6] = src1[i+6]-src2[i+6];
-        dst[i+7] = src1[i+7]-src2[i+7];
+    long i;
+#ifndef HAVE_FAST_UNALIGNED
+    if((long)src2 & (sizeof(long)-1)){
+        for(i=0; i+7<w; i+=8){
+            dst[i+0] = src1[i+0]-src2[i+0];
+            dst[i+1] = src1[i+1]-src2[i+1];
+            dst[i+2] = src1[i+2]-src2[i+2];
+            dst[i+3] = src1[i+3]-src2[i+3];
+            dst[i+4] = src1[i+4]-src2[i+4];
+            dst[i+5] = src1[i+5]-src2[i+5];
+            dst[i+6] = src1[i+6]-src2[i+6];
+            dst[i+7] = src1[i+7]-src2[i+7];
+        }
+    }else
+#endif
+    for(i=0; i<=w-sizeof(long); i+=sizeof(long)){
+        long a = *(long*)(src1+i);
+        long b = *(long*)(src2+i);
+        *(long*)(dst+i) = ((a|pb_80) - (b&pb_7f)) ^ ((a^b^pb_80)&pb_80);
     }
     for(; i<w; i++)
         dst[i+0] = src1[i+0]-src2[i+0];
@@ -4210,9 +4231,13 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
 #endif
 #endif
     c->add_bytes= add_bytes_c;
+    c->add_bytes_l2= add_bytes_l2_c;
     c->diff_bytes= diff_bytes_c;
     c->sub_hfyu_median_prediction= sub_hfyu_median_prediction_c;
     c->bswap_buf= bswap_buf;
+
+    c->add_png_paeth_prediction= ff_add_png_paeth_prediction;
+
 
     c->h264_v_loop_filter_luma= h264_v_loop_filter_luma_c;
     c->h264_h_loop_filter_luma= h264_h_loop_filter_luma_c;
