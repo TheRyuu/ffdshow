@@ -61,6 +61,10 @@
 #define WPRM_GET_FRAMERATE 24
 #define WPRM_GET_CHAPTERSLIST 25
 
+// Set OSD Position
+#define WPRM_SET_OSDX 26
+#define WPRM_SET_OSDY 27
+
 //WM_COPYDATA
 //COPYDATASTRUCT.dwData=
 #define COPY_PUTPARAMSTR        9 // lpData points to new param value

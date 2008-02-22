@@ -55,6 +55,8 @@ Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),Toptions(Ic
  fMode=1; // Default mode : fast forward
  fSeconds=10; // Default step : 10 seconds
  inExplorer=deci->inExplorer()==S_OK;
+ OSDPositionX=0; // Vertical position of the DrawOSD (default : Top of screen)
+ OSDPositionY=10; // Horizontal position of the DrawOSD (default : Left + 10px)
 }
 Tremote::~Tremote()
 {
@@ -188,7 +190,7 @@ unsigned int __stdcall Tremote::ffwdThreadProc(void *self0)
 		ss = pos - hh*3600 - mm*60;
 		tsprintf(msg,_l("%s %02i:%02i:%02i / %s"),mode<0?_l("<<"):_l(">>"), hh, mm, ss, duration_str);
 		self->deciV->resetOSD();
-		self->deciV->drawOSD(0, 10, msg);
+		self->deciV->drawOSD(self->OSDPositionX, self->OSDPositionY, msg);
 		//self->deciV->shortOSDmessage(msg,30);
 		elapsedTime = GetTickCount() - currentTime;
 		if (elapsedTime < 200 && elapsedTime > 0)
@@ -196,11 +198,13 @@ unsigned int __stdcall Tremote::ffwdThreadProc(void *self0)
 		else
 			Sleep(100);
 	 }
-	 self->deciV->drawOSD(0, 10, _l(""));
+	 self->deciV->drawOSD(self->OSDPositionX, self->OSDPositionY, _l(""));
  }
 
  //self->fThread=NULL;
- _endthreadex(0);
+ /* Albain FIX : when using _endthreadex in a subthread created inside a thread then the class is not
+    unloaded */
+ //_endthreadex(0);
  return 0;
 }
 
@@ -301,7 +305,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			CloseHandle(fEvent);
 			CloseHandle(fThread);
 			fThread = NULL; fEvent = NULL;
-			deciV->drawOSD(0, 10, _l(""));
+			deciV->drawOSD(OSDPositionX, OSDPositionY, _l(""));
 		}
 		if (fSeconds != 0)
 		{
@@ -330,6 +334,13 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			deciV->getAVIfps(&fps1000);
 			return fps1000;
 		}
+		return FALSE;
+	case WPRM_SET_OSDX:
+		OSDPositionX=(int)lprm;
+		return TRUE;
+	case WPRM_SET_OSDY:
+		OSDPositionY=(int)lprm;
+		return TRUE;
  }
 
  switch(msg)
@@ -559,7 +570,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 		  return SUCCEEDED(deciV->shortOSDmessage(text<char_t>((const char*)cds->lpData), 25))?TRUE:FALSE;
 	  case COPY_SET_OSD_MSG:
 		  deciV->resetOSD();
-		  return SUCCEEDED(deciV->drawOSD(0, 10, text<char_t>((const char*)cds->lpData)))?TRUE:FALSE;
+		  return SUCCEEDED(deciV->drawOSD(OSDPositionX, OSDPositionY, text<char_t>((const char*)cds->lpData)))?TRUE:FALSE;
     }
   }
  return DefWindowProc(hwnd,msg,wprm,lprm);

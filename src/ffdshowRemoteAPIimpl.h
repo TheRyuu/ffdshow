@@ -28,6 +28,7 @@ private:
  void start(void),stop(void);
  bool inExplorer;
  DWORD pdwROT;
+ int OSDPositionX, OSDPositionY;
 public:
  Tremote(TintStrColl *Icoll,IffdshowBase *Ideci);
  ~Tremote();
