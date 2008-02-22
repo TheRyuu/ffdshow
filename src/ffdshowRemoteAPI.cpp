@@ -55,8 +55,8 @@ Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),Toptions(Ic
  fMode=1; // Default mode : fast forward
  fSeconds=10; // Default step : 10 seconds
  inExplorer=deci->inExplorer()==S_OK;
- OSDPositionX=0; // Vertical position of the DrawOSD (default : Top of screen)
- OSDPositionY=10; // Horizontal position of the DrawOSD (default : Left + 10px)
+ OSDPositionX=0; // Horizontal position of the DrawOSD (default : Left of screen)
+ OSDPositionY=10; // Vertical position of the DrawOSD (default : Top + 10px)
 }
 Tremote::~Tremote()
 {
