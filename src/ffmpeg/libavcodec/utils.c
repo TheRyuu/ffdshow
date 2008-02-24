@@ -281,21 +281,14 @@ int avcodec_default_get_buffer(AVCodecContext *s, AVFrame *pic){
 
         ff_fill_linesize(&picture, s->pix_fmt, w);
 
-        for (i=1; i<4; i++)
+        for (i=0; i<4; i++)
             picture.linesize[i] = ALIGN(picture.linesize[i], STRIDE_ALIGN);
-
-        /* next ensures that linesize= 2^x uvlinesize, that is needed because
-         * some MC code assumes it */
-        if (picture.linesize[1])
-            picture.linesize[0] = ALIGN(picture.linesize[0], picture.linesize[1]);
-        else
-            picture.linesize[0] = ALIGN(picture.linesize[0], STRIDE_ALIGN);
 
         tmpsize = ff_fill_pointer(&picture, NULL, s->pix_fmt, h);
 
         for (i=0; i<3 && picture.data[i+1]; i++)
             size[i] = picture.data[i+1] - picture.data[i];
-        size[i] = tmpsize - size[i];
+        size[i] = tmpsize - (picture.data[i] - picture.data[0]);
 
         buf->last_pic_num= -256*256*256*64;
         memset(buf->base, 0, sizeof(buf->base));
