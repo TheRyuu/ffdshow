@@ -515,7 +515,7 @@ static inline void emms(void)
  #if defined(__INTEL_COMPILER) || defined(_MSC_VER)
     __asm emms;
  #else
-    __asm __volatile ("emms;":::"memory");
+    asm volatile ("emms;":::"memory");
  #endif
 }
 
