@@ -172,6 +172,7 @@ ifneq ($(CC),cl)
 SRCS_C+=$(LAVC_DIR)/i386/cputest.c \
       $(LAVC_DIR)/i386/cavsdsp_mmx.c \
       $(LAVC_DIR)/i386/dsputil_mmx.c \
+      $(LAVC_DIR)/i386/dsputilenc_mmx.c \
       $(LAVC_DIR)/i386/fdct_mmx.c \
       $(LAVC_DIR)/i386/fft_3dn.c \
       $(LAVC_DIR)/i386/fft_3dn2.c \

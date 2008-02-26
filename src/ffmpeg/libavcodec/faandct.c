@@ -2,6 +2,8 @@
  * Floating point AAN DCT
  * Copyright (c) 2003 Michael Niedermayer <michaelni@gmx.at>
  *
+ * this implementation is based upon the IJG integer AAN DCT (see jfdctfst.c)
+ *
  * This file is part of FFmpeg.
  *
  * FFmpeg is free software; you can redistribute it and/or
@@ -18,7 +20,8 @@
  * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
- * this implementation is based upon the IJG integer AAN DCT (see jfdctfst.c)
+ * The AAN DCT in this file except ff_faandct248() can also be used under the
+ * new (3 clause) BSD license.
  */
 
 /**
@@ -206,15 +209,15 @@ void ff_faandct248(DCTELEM * data)
         data[8*6 + i] = lrintf(SCALE(8*6 + i) * (tmp13 - z1));
 
         tmp10 = tmp4 + tmp7;
-	tmp11 = tmp5 + tmp6;
-	tmp12 = tmp5 - tmp6;
-	tmp13 = tmp4 - tmp7;
+        tmp11 = tmp5 + tmp6;
+        tmp12 = tmp5 - tmp6;
+        tmp13 = tmp4 - tmp7;
 
-	data[8*1 + i] = lrintf(SCALE(8*0 + i) * (tmp10 + tmp11));
-	data[8*5 + i] = lrintf(SCALE(8*4 + i) * (tmp10 - tmp11));
+        data[8*1 + i] = lrintf(SCALE(8*0 + i) * (tmp10 + tmp11));
+        data[8*5 + i] = lrintf(SCALE(8*4 + i) * (tmp10 - tmp11));
 
-	z1 = (tmp12 + tmp13)* A1;
-	data[8*3 + i] = lrintf(SCALE(8*2 + i) * (tmp13 + z1));
-	data[8*7 + i] = lrintf(SCALE(8*6 + i) * (tmp13 - z1));
+        z1 = (tmp12 + tmp13)* A1;
+        data[8*3 + i] = lrintf(SCALE(8*2 + i) * (tmp13 + z1));
+        data[8*7 + i] = lrintf(SCALE(8*6 + i) * (tmp13 - z1));
     }
 }
