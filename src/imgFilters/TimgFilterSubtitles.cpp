@@ -233,7 +233,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
 
  // Leter box. Expand rectFull and assign it to rectClip. So "Process whole image" is ignored.
  int clipdy=pict.rectClip.dy; // save clipdy
- if (cfg->isExpand && cfg->expandCode && !isdvdproc)
+ if (cfg->isExpand && cfg->expandCode && !isdvdproc && adhocMode != 1)
   {
    Trect newExpandRect=cfg->full?pict.rectFull:pict.rectClip;
    if (expandSizeChanged || oldExpandCode!=cfg->expandCode || oldExpandRect!=newExpandRect || pict.rectClip!=oldRectClip)
