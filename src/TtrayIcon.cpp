@@ -504,9 +504,10 @@ void TtrayIconDecVideo::processCmd(HMENU hm,int cmd)
   deci->putParam(IDFF_subCurLang,cmd-IDC_FIRST_SUBLANG);
  else if (cmd>=IDC_FIRST_SUBFILE)
   {
-   char_t subflnm[MAX_PATH];
-   GetMenuString(hm,cmd,subflnm,MAX_PATH,MF_BYCOMMAND);
-   deci->putParamStr(IDFF_subTempFilename,subflnm);
+   char_t subflnm0[MAX_PATH];
+   GetMenuString(hm,cmd,subflnm0,MAX_PATH,MF_BYCOMMAND);
+   ffstring subflnm(subflnm0);
+   deci->putParamStr(IDFF_subTempFilename,stringreplace(subflnm,_l("&&"),_l("&"),rfReplaceAll).c_str());
    deci->putParam(IDFF_isSubtitles,1);
    deci->putParam(IDFF_subShowEmbedded,0);
   }
