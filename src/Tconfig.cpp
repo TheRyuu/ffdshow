@@ -207,7 +207,6 @@ void Tconfig::initCPU(int allowed_cpu_flags)
 {
  if (available_cpu_flags==0)
   {
-   #ifndef __GNUC__
    available_cpu_flags=check_cpu_features();
    if ((available_cpu_flags&FF_CPU_SSE) && sigill_check(sse_os_trigger))
     available_cpu_flags&=~FF_CPU_SSE;
@@ -217,16 +216,8 @@ void Tconfig::initCPU(int allowed_cpu_flags)
     available_cpu_flags&=~FF_CPU_SSE3;
    if ((available_cpu_flags&FF_CPU_SSSE3) && sigill_check(ssse3_os_trigger))
     available_cpu_flags&=~FF_CPU_SSSE3;
-   #else
-   available_cpu_flags=(IsProcessorFeaturePresent(PF_MMX_INSTRUCTIONS_AVAILABLE)?FF_CPU_MMX|FF_CPU_MMXEXT:0)|
-                       (IsProcessorFeaturePresent(PF_3DNOW_INSTRUCTIONS_AVAILABLE)?FF_CPU_3DNOW|FF_CPU_3DNOWEXT:0)|
-                       (IsProcessorFeaturePresent(PF_XMMI_INSTRUCTIONS_AVAILABLE)?FF_CPU_SSE:0)|
-                       (IsProcessorFeaturePresent(PF_XMMI64_INSTRUCTIONS_AVAILABLE)?FF_CPU_SSE2:0);
-   /*Vista only        (IsProcessorFeaturePresent(PF_SSE3_INSTRUCTIONS_AVAILABLE)?FF_CPU_SSE3:0);*/
-   /*For MinGW GCC 4.0.x compiled version of ffdshow.ax*/
    #ifdef __INTEL_COMPILER
    available_cpu_flags|=FF_CPU_MMX|FF_CPU_MMXEXT;
-   #endif
    #endif
    cpu_flags=available_cpu_flags&allowed_cpu_flags;
    sws_cpu_flags=Tlibmplayer::swsCpuCaps();
@@ -234,15 +225,12 @@ void Tconfig::initCPU(int allowed_cpu_flags)
    //GetCpuCaps(&gCpuCaps);
    cache_line=64;//gCpuCaps.cl_size;
    #ifndef WIN64
-   //if      (cpu_flags&FF_CPU_SSE2)   fastmemcpy=fast_memcpy_SSE;
    if      (cpu_flags&FF_CPU_MMXEXT) fastmemcpy=memcpy_xmm;
-   //else if (cpu_flags&FF_CPU_3DNOW)  fastmemcpy=memcpy_;
    else if (cpu_flags&FF_CPU_MMX)    fastmemcpy=memcpy_mmx;
    else                              fastmemcpy=memcpy_x86;
    #else
    fastmemcpy=memcpy;
    #endif
-
   }
 }
 

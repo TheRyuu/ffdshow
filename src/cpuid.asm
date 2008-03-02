@@ -144,10 +144,10 @@ check_cpu_features:
   CHECK_FEATURE CPUID_SSE2, FF_CPU_SSE2, ebp, edx
 
 ; SSE3 support?
-  CHECK_FEATURE CPUID_SSE3, FF_CPU_SSE3, ebp, edx
+  CHECK_FEATURE CPUID_SSE3, FF_CPU_SSE3, ebp, ecx
 
 ; SSSE3 support?
-  CHECK_FEATURE CPUID_SSSE3, FF_CPU_SSSE3, ebp, edx
+  CHECK_FEATURE CPUID_SSSE3, FF_CPU_SSSE3, ebp, ecx
 
 ; extended functions?
   mov eax, 0x80000000
