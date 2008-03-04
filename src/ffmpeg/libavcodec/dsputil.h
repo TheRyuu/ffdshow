@@ -155,6 +155,17 @@ typedef struct slice_buffer_s slice_buffer;
 #endif
 
 /**
+ * Scantable.
+ */
+typedef struct ScanTable{
+    const uint8_t *scantable;
+    uint8_t permutated[64];
+    uint8_t raster_end[64];
+} ScanTable;
+
+void ff_init_scantable(uint8_t *, ScanTable *st, const uint8_t *src_scantable);
+
+/**
  * DSPContext.
  */
 typedef struct DSPContext {
@@ -389,6 +400,8 @@ typedef struct DSPContext {
     void (*add_8x8basis)(int16_t rem[64], int16_t basis[64], int scale);
 #define BASIS_SHIFT 16
 #define RECON_SHIFT 6
+
+    void (*draw_edges)(uint8_t *buf, int wrap, int width, int height, int w);
 
     /* h264 functions */
     void (*h264_idct_add)(uint8_t *dst, DCTELEM *block, int stride);

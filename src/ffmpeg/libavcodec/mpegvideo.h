@@ -87,15 +87,6 @@ enum OutputFormat {
 #define USER_START_CODE         0x000001b2
 
 /**
- * Scantable.
- */
-typedef struct ScanTable{
-    const uint8_t *scantable;
-    uint8_t permutated[64];
-    uint8_t raster_end[64];
-} ScanTable;
-
-/**
  * Picture.
  */
 typedef struct Picture{
@@ -698,9 +689,7 @@ int MPV_encode_picture(AVCodecContext *avctx, unsigned char *buf, int buf_size, 
 #ifdef HAVE_MMX
 void MPV_common_init_mmx(MpegEncContext *s);
 #endif
-extern void (*draw_edges)(uint8_t *buf, int wrap, int width, int height, int w);
 void ff_clean_intra_table_entries(MpegEncContext *s);
-void ff_init_scantable(uint8_t *, ScanTable *st, const uint8_t *src_scantable);
 void ff_draw_horiz_band(MpegEncContext *s, int y, int h);
 void ff_emulated_edge_mc(uint8_t *buf, uint8_t *src, int linesize, int block_w, int block_h,
                                     int src_x, int src_y, int w, int h);

@@ -53,9 +53,6 @@ static void dct_unquantize_h263_intra_c(MpegEncContext *s,
                                   DCTELEM *block, int n, int qscale);
 static void dct_unquantize_h263_inter_c(MpegEncContext *s,
                                   DCTELEM *block, int n, int qscale);
-static void draw_edges_c(uint8_t *buf, int wrap, int width, int height, int w);
-
-void (*draw_edges)(uint8_t *buf, int wrap, int width, int height, int w)= draw_edges_c;
 
 
 /* enable all paranoid tests for rounding, overflows, etc... */
@@ -69,26 +66,6 @@ static const uint8_t ff_default_chroma_qscale_table[32]={
     0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
 };
 
-void ff_init_scantable(uint8_t *permutation, ScanTable *st, const uint8_t *src_scantable){
-    int i;
-    int end;
-
-    st->scantable= src_scantable;
-
-    for(i=0; i<64; i++){
-        int j;
-        j = src_scantable[i];
-        st->permutated[i] = permutation[j];
-    }
-
-    end=-1;
-    for(i=0; i<64; i++){
-        int j;
-        j = st->permutated[i];
-        if(j>end) end=j;
-        st->raster_end[i]= end;
-    }
-}
 
 const uint8_t *ff_find_start_code(const uint8_t * restrict p, const uint8_t *end, uint32_t * restrict state){
     int i;
@@ -774,35 +751,6 @@ void init_vlc_rl(RLTable *rl, int use_static)
     }
 }
 
-/* draw the edges of width 'w' of an image of size width, height */
-//FIXME check that this is ok for mpeg4 interlaced
-static void draw_edges_c(uint8_t *buf, int wrap, int width, int height, int w)
-{
-    uint8_t *ptr, *last_line;
-    int i;
-
-    last_line = buf + (height - 1) * wrap;
-    for(i=0;i<w;i++) {
-        /* top and bottom */
-        memcpy(buf - (i + 1) * wrap, buf, width);
-        memcpy(last_line + (i + 1) * wrap, last_line, width);
-    }
-    /* left and right */
-    ptr = buf;
-    for(i=0;i<height;i++) {
-        memset(ptr - w, ptr[0], w);
-        memset(ptr + width, ptr[width-1], w);
-        ptr += wrap;
-    }
-    /* corners */
-    for(i=0;i<w;i++) {
-        memset(buf - (i + 1) * wrap - w, buf[0], w); /* top left */
-        memset(buf - (i + 1) * wrap + width, buf[width-1], w); /* top right */
-        memset(last_line + (i + 1) * wrap - w, last_line[0], w); /* top left */
-        memset(last_line + (i + 1) * wrap + width, last_line[width-1], w); /* top right */
-    }
-}
-
 int ff_find_unused_picture(MpegEncContext *s, int shared){
     int i;
 
@@ -987,9 +935,9 @@ void MPV_frame_end(MpegEncContext *s)
     /* draw edge for correct motion prediction if outside */
 
     if(s->unrestricted_mv && s->current_picture.reference && !s->intra_only && !(s->flags&CODEC_FLAG_EMU_EDGE)) {
-            draw_edges(s->current_picture.data[0], s->linesize  , s->h_edge_pos   , s->v_edge_pos   , EDGE_WIDTH  );
-            draw_edges(s->current_picture.data[1], s->uvlinesize, s->h_edge_pos>>1, s->v_edge_pos>>1, EDGE_WIDTH/2);
-            draw_edges(s->current_picture.data[2], s->uvlinesize, s->h_edge_pos>>1, s->v_edge_pos>>1, EDGE_WIDTH/2);
+            s->dsp.draw_edges(s->current_picture.data[0], s->linesize  , s->h_edge_pos   , s->v_edge_pos   , EDGE_WIDTH  );
+            s->dsp.draw_edges(s->current_picture.data[1], s->uvlinesize, s->h_edge_pos>>1, s->v_edge_pos>>1, EDGE_WIDTH/2);
+            s->dsp.draw_edges(s->current_picture.data[2], s->uvlinesize, s->h_edge_pos>>1, s->v_edge_pos>>1, EDGE_WIDTH/2);
     }
     emms_c();
 

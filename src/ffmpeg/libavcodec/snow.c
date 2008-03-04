@@ -2692,7 +2692,9 @@ static int get_4block_rd(SnowContext *s, int mb_x, int mb_y, int plane_index){
     const int ref_stride= s->current_picture.linesize[plane_index];
     uint8_t *dst= s->current_picture.data[plane_index];
     uint8_t *src= s-> input_picture.data[plane_index];
-    static const IDWTELEM zero_dst[4096]; //FIXME
+    //FIXME zero_dst is const but add_yblock changes dst if add is 0 (this is never the case for dst=zero_dst
+    // const has only been removed from zero_dst to suppress a warning
+    static IDWTELEM zero_dst[4096]; //FIXME
     const int b_stride = s->b_width << s->block_max_depth;
     const int w= p->width;
     const int h= p->height;
@@ -3908,9 +3910,9 @@ static int frame_start(SnowContext *s){
    int h= s->avctx->height;
 
     if(s->current_picture.data[0]){
-        draw_edges(s->current_picture.data[0], s->current_picture.linesize[0], w   , h   , EDGE_WIDTH  );
-        draw_edges(s->current_picture.data[1], s->current_picture.linesize[1], w>>1, h>>1, EDGE_WIDTH/2);
-        draw_edges(s->current_picture.data[2], s->current_picture.linesize[2], w>>1, h>>1, EDGE_WIDTH/2);
+        s->dsp.draw_edges(s->current_picture.data[0], s->current_picture.linesize[0], w   , h   , EDGE_WIDTH  );
+        s->dsp.draw_edges(s->current_picture.data[1], s->current_picture.linesize[1], w>>1, h>>1, EDGE_WIDTH/2);
+        s->dsp.draw_edges(s->current_picture.data[2], s->current_picture.linesize[2], w>>1, h>>1, EDGE_WIDTH/2);
     }
 
     tmp= s->last_picture[s->max_ref_frames-1];
