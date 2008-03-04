@@ -24,8 +24,6 @@
 #ifndef A52_H
 #define A52_H
 
-//#define LIBA52_DOUBLE
-
 # ifdef __cplusplus
 extern "C" {
 # endif

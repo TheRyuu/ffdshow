@@ -7,7 +7,7 @@ SLIB=../../../bin/ff_liba52.dll
 DEF=ff_liba52.def
 
 # enable SSE because compilation fails without it
-SSE=yes
+SSE=no
 
 include ../../makefile_c.inc
 

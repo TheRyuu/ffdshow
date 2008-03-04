@@ -613,7 +613,6 @@ int a52_block (a52_state_t * state)
     for (i = 0; i < nfchans; i++)
 	dithflag[i] = bitstream_get (state, 1);
 
-
     chaninfo = !state->acmod;
     do {
 	if (bitstream_get (state, 1)) {	/* dynrnge */
@@ -640,7 +639,6 @@ int a52_block (a52_state_t * state)
                 range = state->compr;
 
 		state->dynrng = state->level * range;
-
 	    }
 	}
     } while (chaninfo--);
@@ -770,7 +768,6 @@ int a52_block (a52_state_t * state)
 		return 1;
 	    bitstream_get (state, 2);	/* gainrng */
 	}
-
     if (lfeexpstr != EXP_REUSE) {
 	do_bit_alloc |= 32;
 	state->lfe_expbap.exp[0] = bitstream_get (state, 4);

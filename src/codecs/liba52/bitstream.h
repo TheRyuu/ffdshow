@@ -22,18 +22,30 @@
  */
 
 /* code from ffmpeg/libavcodec */
-#if defined(__GNUC__)
-#    define __forceinline __attribute__((__always_inline__)) inline
+#ifndef av_always_inline
+#if defined(__GNUC__) && (__GNUC__ > 3 || __GNUC__ == 3 && __GNUC_MINOR__ > 0)
+#    define av_always_inline __attribute__((always_inline)) inline
+#else
+#    define av_always_inline inline
+#endif
+#endif
+
+#ifndef av_noinline
+#if defined(__GNUC__) && (__GNUC__ > 3 || __GNUC__ == 3 && __GNUC_MINOR__ > 0)
+#    define av_noinline __attribute__((noinline))
+#else
+#    define av_noinline
+#endif
 #endif
 
 #ifdef ALT_BITSTREAM_READER
 
-/* used to avoid missaligned exceptions on some archs (alpha, ...) */
+/* used to avoid misaligned exceptions on some archs (alpha, ...) */
 #if defined (ARCH_X86) || defined(ARCH_ARMV4L)
 #    define unaligned32(a) (*(uint32_t*)(a))
 #else
 #    ifdef __GNUC__
-static __forceinline uint32_t unaligned32(const void *v) {
+static av_always_inline uint32_t unaligned32(const void *v) {
     struct Unaligned {
 	uint32_t i;
     } __attribute__((packed));
@@ -68,7 +80,7 @@ static inline uint32_t unaligned32(const void *v) {
         #  define LEGACY_REGS "=q"
         #endif
 
-        static __forceinline uint32_t swab32(uint32_t x)
+        static av_always_inline uint32_t swab32(uint32_t x)
         {
          __asm("bswap	%0":
               "=r" (x)     :
@@ -78,7 +90,7 @@ static inline uint32_t unaligned32(const void *v) {
 
 #	else
 
-	static __forceinline const uint32_t swab32(uint32_t x)
+	static av_always_inline const uint32_t swab32(uint32_t x)
 	{
 	#ifdef WIN64
 	return _byteswap_ulong(x);
@@ -89,11 +101,15 @@ static inline uint32_t unaligned32(const void *v) {
 #	endif
 #endif
 
+#ifdef ALT_BITSTREAM_READER
+extern int indx;
+#endif
+
 void a52_bitstream_set_ptr (a52_state_t * state, uint8_t * buf);
 uint32_t a52_bitstream_get_bh (a52_state_t * state, uint32_t num_bits);
 int32_t a52_bitstream_get_bh_2 (a52_state_t * state, uint32_t num_bits);
 
-static inline uint32_t bitstream_get (a52_state_t * state, uint32_t num_bits) // note num_bits is practically a constant due to inlineing
+static inline uint32_t bitstream_get (a52_state_t * state, uint32_t num_bits)
 {
 #ifdef ALT_BITSTREAM_READER
     uint32_t result= swab32( unaligned32(((uint8_t *)state->buffer_start)+(state->indx>>3)) );
