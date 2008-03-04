@@ -37,13 +37,8 @@ void (*a52_downmix)(sample_t * samples, int acmod, int output, sample_t bias,
 	      sample_t clev, sample_t slev)= NULL;
 void (*a52_upmix)(sample_t * samples, int acmod, int output)= NULL;
 
-static void downmix_SSE (sample_t * samples, int acmod, int output, sample_t bias,
-	      sample_t clev, sample_t slev);
-static void downmix_3dnow (sample_t * samples, int acmod, int output, sample_t bias,
-	      sample_t clev, sample_t slev);
 static void downmix_C (sample_t * samples, int acmod, int output, sample_t bias,
 	      sample_t clev, sample_t slev);
-static void upmix_MMX (sample_t * samples, int acmod, int output);
 static void upmix_C (sample_t * samples, int acmod, int output);
 
 void a52_downmix_accel_init(int mm_accel)
