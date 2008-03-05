@@ -188,7 +188,7 @@ void TffdshowPageEnc::onActivate(void)
                           new TmaskingPageXvid(this),
                           new TmaskingPageSkal(this),
                           new TmaskingPageTheo(this),
-                          //new TmaskingPageX264(this),
+                          new TmaskingPageX264(this),
                           NULL),&localCfg.codecId);
    addTI(&tvis,TconfPages(new TonePassPage(this),
                           new TonePassXvidPage(this),

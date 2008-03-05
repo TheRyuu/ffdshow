@@ -223,6 +223,9 @@ typedef struct x264_param_t
         int          i_trellis;  /* trellis RD quantization */
         int          b_fast_pskip; /* early SKIP detection on P-frames */
         int          b_dct_decimate; /* transform coefficient thresholding on P-frames */
+        int          b_aq; /* psy adaptive QP */
+        float        f_aq_strength;
+        float        f_aq_sensitivity;
         int          i_noise_reduction; /* adaptive pseudo-deadzone */
 
         /* the deadzone size that will be used in luma quantization */

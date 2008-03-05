@@ -151,9 +151,9 @@ LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
      if (coCfg->mode==ENC_MODE::VBR_QUAL)
       param.rc.i_rc_method=X264_RC_CRF;
       param.rc.f_rf_constant=float(50*(100-coCfg->qual)/100+1);
-     //param.analyse.b_aq=coCfg->x264_is_aq;
-     //param.analyse.f_aq_strength=coCfg->x264_aq_strength100/100.0f;
-     //param.analyse.f_aq_sensitivity=(float)coCfg->x264_f_aq_sensitivity;
+     param.analyse.b_aq=coCfg->x264_is_aq;
+     param.analyse.f_aq_strength=coCfg->x264_aq_strength100/100.0f;
+     param.analyse.f_aq_sensitivity=(float)coCfg->x264_f_aq_sensitivity;
     }
    else
     {

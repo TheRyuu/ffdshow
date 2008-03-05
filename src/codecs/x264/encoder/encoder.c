@@ -401,6 +401,7 @@ static int x264_validate_parameters( x264_t *h )
         h->param.analyse.b_fast_pskip = 0;
         h->param.analyse.i_noise_reduction = 0;
         h->param.analyse.i_subpel_refine = x264_clip3( h->param.analyse.i_subpel_refine, 1, 6 );
+        h->param.analyse.b_aq = 0;
     }
     if( h->param.rc.i_rc_method == X264_RC_CQP )
     {
@@ -475,6 +476,10 @@ static int x264_validate_parameters( x264_t *h )
     if( !h->param.b_cabac )
         h->param.analyse.i_trellis = 0;
     h->param.analyse.i_trellis = x264_clip3( h->param.analyse.i_trellis, 0, 2 );
+    h->param.analyse.b_aq = h->param.analyse.b_aq && h->param.analyse.f_aq_strength > 0;
+    /* VAQ on static sensitivity mode effectively replaces qcomp, so qcomp is raised towards 1 to compensate. */
+    if(h->param.analyse.b_aq && h->param.analyse.f_aq_sensitivity != 0) 
+        h->param.rc.f_qcompress = x264_clip3f(h->param.rc.f_qcompress + h->param.analyse.f_aq_strength * 0.4 / 0.28, 0, 1);
     h->param.analyse.i_noise_reduction = x264_clip3( h->param.analyse.i_noise_reduction, 0, 1<<16 );
 
     {
