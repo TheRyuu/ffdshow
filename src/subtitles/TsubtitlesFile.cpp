@@ -36,6 +36,7 @@ const char_t* TsubtitlesFile::exts[]=
  _l("smi"),
  _l("rt") ,
  _l("txt"),
+ _l("ass"),
  _l("ssa"),
  _l("aqt"),
  _l("mpl"),
