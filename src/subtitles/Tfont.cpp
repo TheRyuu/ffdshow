@@ -1870,16 +1870,17 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
 
      TrenderedSubtitleLine *line=NULL;
      int cx=0,cy=0;
-     for (typename TsubtitleLine<tchar>::const_iterator w=l->begin();w!=l->end();w++)
+     for (typename TsubtitleLine<tchar>::const_iterator w0=l->begin();w0!=l->end();w0++)
       {
+       TsubtitleWord<tchar> w(*w0);
        LOGFONT lf;
-       HGDIOBJ old = w->props.toGdiFont(hdc, lf, *fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager);
-       SetTextCharacterExtra(hdc,w->props.spacing==INT_MIN ? fontSettings->spacing : w->props.get_spacing(dy,prefs.clipdy));
+       HGDIOBJ old = w.props.toGdiFont(hdc, lf, *fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager);
+       SetTextCharacterExtra(hdc,w.props.spacing==INT_MIN ? fontSettings->spacing : w.props.get_spacing(dy,prefs.clipdy));
        if (!line)
         {
-         line=new TrenderedSubtitleLine(w->props);
+         line=new TrenderedSubtitleLine(w.props);
         }
-       const tchar *p=*w;
+       const tchar *p=w;
        if (*p) // drop empty words
         {
          #ifdef DEBUG
@@ -1902,7 +1903,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
             {
              if (*p)
               {
-               TrenderedTextSubtitleWord *rw=newWord(p,strlenp,prefs,w,lf,w+1==l->end());
+               TrenderedTextSubtitleWord *rw=newWord(p,strlenp,prefs,&w,lf,w0+1==l->end());
                if (rw) line->push_back(rw);
                cx+=strlenp;
               }
@@ -1919,19 +1920,22 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
                if (!line->empty())
                 {
                  lines.add(line,&height);
-                 line=new TrenderedSubtitleLine(w->props);
+                 line=new TrenderedSubtitleLine(w.props);
                 }
                if (cy>=wordWrap.getLineCount()) break;
               }
              if (*p)
               {
-               TrenderedTextSubtitleWord *rw=newWord(p,n,prefs,w,lf,true);
+               TrenderedTextSubtitleWord *rw=newWord(p,n,prefs,&w,lf,true);
+               w.props.karaokeNewWord = false;
+               w.props.karaokeStart += w.props.karaokeDuration;
+               w.props.karaokeDuration = 0;
                if (rw) line->push_back(rw);
               }
              if (!line->empty())
               {
                lines.add(line,&height);
-               line=new TrenderedSubtitleLine(w->props);
+               line=new TrenderedSubtitleLine(w.props);
               }
              p+=wordWrap.getRightOfTheLine(cy)-cx+1;
              cx=wordWrap.getRightOfTheLine(cy)+1;
