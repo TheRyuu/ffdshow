@@ -13,7 +13,7 @@ CFLAGS+=-std=gnu99
 endif
 endif
 
-#CFLAGS+=-fverbose-asm -save-temps -fno-stack-check
+#CFLAGS+=-fverbose-asm -save-temps -fno-stack-check -fno-math-errno -fno-signed-zeros
        
 SRCS_C=DllEntry.c \
       $(LAVC_DIR)/8bps.c \
