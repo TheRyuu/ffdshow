@@ -26,6 +26,8 @@
 #ifndef FFMPEG_BSWAP_H
 #define FFMPEG_BSWAP_H
 
+#include "common.h"
+
 #ifdef HAVE_BYTESWAP_H
 #include <byteswap.h>
 #else
@@ -34,11 +36,6 @@
 #  define LEGACY_REGS "=Q"
 #else
 #  define LEGACY_REGS "=q"
-#endif
-
-/*custom*/
-#ifndef av_always_inline
-#define av_always_inline always_inline
 #endif
 
 static av_always_inline uint16_t bswap_16(uint16_t x)

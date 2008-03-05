@@ -32,6 +32,8 @@
 #include "bitstream.h"
 #include "ratecontrol.h"
 #include "parser.h"
+#include "mpeg12data.h"
+#include "rl.h"
 
 #define FRAME_SKIPPED 100 ///< return value for header parsers if frame is not coded
 
@@ -42,8 +44,6 @@ enum OutputFormat {
     FMT_MJPEG,
     FMT_H264,
 };
-
-#define EDGE_WIDTH 16
 
 #define MPEG_BUF_SIZE (16 * 1024)
 
@@ -60,10 +60,6 @@ enum OutputFormat {
 #define ME_MAP_SIZE 64
 #define ME_MAP_SHIFT 3
 #define ME_MAP_MV_BITS 11
-
-/* run length table */
-#define MAX_RUN    64
-#define MAX_LEVEL  64
 
 #define I_TYPE FF_I_TYPE  ///< Intra
 #define P_TYPE FF_P_TYPE  ///< Predicted
@@ -691,8 +687,6 @@ void MPV_common_init_mmx(MpegEncContext *s);
 #endif
 void ff_clean_intra_table_entries(MpegEncContext *s);
 void ff_draw_horiz_band(MpegEncContext *s, int y, int h);
-void ff_emulated_edge_mc(uint8_t *buf, uint8_t *src, int linesize, int block_w, int block_h,
-                                    int src_x, int src_y, int w, int h);
 void ff_mpeg_flush(AVCodecContext *avctx);
 void ff_print_debug_info(MpegEncContext *s, AVFrame *pict);
 void ff_write_quant_matrix(PutBitContext *pb, uint16_t *matrix);
@@ -760,10 +754,7 @@ int ff_get_mb_score(MpegEncContext * s, int mx, int my, int src_index,
                                int ref_index, int size, int h, int add_rate);
 
 /* mpeg12.c */
-extern const uint16_t ff_mpeg1_default_intra_matrix[64];
-extern const uint16_t ff_mpeg1_default_non_intra_matrix[64];
 extern const uint8_t ff_mpeg1_dc_scale_table[128];
-extern const AVRational ff_frame_rate_tab[];
 
 void mpeg1_encode_picture_header(MpegEncContext *s, int picture_number);
 void mpeg1_encode_mb(MpegEncContext *s,
@@ -773,8 +764,6 @@ void ff_mpeg1_encode_init(MpegEncContext *s);
 void ff_mpeg1_encode_slice_header(MpegEncContext *s);
 void ff_mpeg1_clean_buffers(MpegEncContext *s);
 int ff_mpeg1_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size, int64_t *rtStart);
-
-#include "rl.h"
 
 extern const uint8_t ff_mpeg4_y_dc_scale_table[32];
 extern const uint8_t ff_mpeg4_c_dc_scale_table[32];

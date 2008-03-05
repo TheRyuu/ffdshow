@@ -165,6 +165,10 @@ typedef struct ScanTable{
 
 void ff_init_scantable(uint8_t *, ScanTable *st, const uint8_t *src_scantable);
 
+void ff_emulated_edge_mc(uint8_t *buf, uint8_t *src, int linesize,
+                         int block_w, int block_h,
+                         int src_x, int src_y, int w, int h);
+
 /**
  * DSPContext.
  */
@@ -402,6 +406,7 @@ typedef struct DSPContext {
 #define RECON_SHIFT 6
 
     void (*draw_edges)(uint8_t *buf, int wrap, int width, int height, int w);
+#define EDGE_WIDTH 16
 
     /* h264 functions */
     void (*h264_idct_add)(uint8_t *dst, DCTELEM *block, int stride);

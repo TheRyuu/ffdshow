@@ -33,7 +33,7 @@
 #include <stdint.h>
 #endif
 #include "mpegvideo.h"
-//#include "rational.h"
+#include "..\libavutil\rational.h"
 
 
 #define EXTENDED_SAR          255
