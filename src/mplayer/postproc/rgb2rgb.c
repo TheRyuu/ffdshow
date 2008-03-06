@@ -13,7 +13,7 @@
 #include "swscale.h"
 #include "../cpudetect.h"
 #include "../mangle.h"
-#include "../ffmpeg/libavutil/bswap.h"
+#include "../bswap.h"
 #include "../libvo/fastmemcpy.h"
 
 #define FAST_BGR2YV12 // use 7 bit coeffs instead of 15bit

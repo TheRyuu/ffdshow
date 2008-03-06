@@ -18,7 +18,7 @@
 #include "mpg123.h"
 #include "huffman.h"
 #include "inttypes.h"
-#include "../ffmpeg/libavutil/bswap.h"
+#include "../bswap.h"
 #include "../cpudetect.h"
 #include "../mp_msg.h"
 

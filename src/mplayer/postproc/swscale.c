@@ -72,7 +72,7 @@ untested special converters
 #include "swscale.h"
 #include "swscale_internal.h"
 #include "../ffmpeg/libavutil/x86_cpu.h"
-#include "../ffmpeg/libavutil/bswap.h"
+#include "../bswap.h"
 #include "ffImgfmt.h"
 #include "rgb2rgb.h"
 #include "../libvo/fastmemcpy.h"
