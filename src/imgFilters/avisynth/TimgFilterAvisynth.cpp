@@ -543,9 +543,9 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
        height[1]=height[2]=input->dy/2;
        height[3]=0;
 
-       bufferSize =(size[0]=pitch[0]*height[0]);
-       bufferSize+=(size[1]=pitch[1]*height[1]);
-       bufferSize+=(size[2]=pitch[2]*height[2]);
+       bufferSize =(size[0]=abs(pitch[0]*height[0]));
+       bufferSize+=(size[1]=abs(pitch[1]*height[1]));
+       bufferSize+=(size[2]=abs(pitch[2]*height[2]));
        size[3]=0;
       }
      else
