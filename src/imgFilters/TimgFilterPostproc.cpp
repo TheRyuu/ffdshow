@@ -1008,7 +1008,7 @@ HRESULT TimgFilterPostprocNic::process(TfilterQueue::iterator it,TffPict &pict,c
 //============================ TimgFilterPostprocFspp ===============================
 void TimgFilterPostprocFspp::filter(uint8_t *dst, const uint8_t *src0,
 		            stride_t dst_stride, stride_t src_stride,
-		            int width, int height,
+		            int width, int height0,
 		            int8_t *qp_store, int qp_stride, int is_luma)
 {
     int x, x0, y, es, qy, t;
@@ -1021,19 +1021,20 @@ void TimgFilterPostprocFspp::filter(uint8_t *dst, const uint8_t *src0,
 
     memset(block3, 0, 4*8*BLOCKSZ);
 
+    const int height = height0 & ~(step - 1);
     //src=src-src_stride*8-8;//!
     if (!src0 || !dst) return; // HACK avoid crash for Y8 colourspace
-    for(y=0; y<height; y++){
-        int index= 8 + 8*stride + y*stride;
-        memcpy(src + index, src0 + y*src_stride, width);//this line can be avoided by using DR & user fr.buffers
+    for(y = 0 ; y < height0 ; y++){
+        int index= 8 + 8 * stride + y * stride;
+        memcpy(src + index, src0 + y * src_stride, width);//this line can be avoided by using DR & user fr.buffers
         for(x=0; x<8; x++){
             src[index         - x - 1]= src[index +         x    ];
             src[index + width + x    ]= src[index + width - x - 1];
         }
     }
-    for(y=0; y<8; y++){
-        memcpy(src + (      7-y)*stride, src + (      y+8)*stride, stride);
-        memcpy(src + (height+8+y)*stride, src + (height-y+7)*stride, stride);
+    for(y = 0 ; y < 8 ; y++){
+        memcpy(src + (          7 - y) * stride, src + (          y + 8) * stride, stride);
+        memcpy(src + (height0 + 8 + y) * stride, src + (height0 - y + 7) * stride, stride);
     }
     //FIXME (try edge emu)
 
@@ -1083,6 +1084,10 @@ void TimgFilterPostprocFspp::filter(uint8_t *dst, const uint8_t *src0,
                                dst_stride, stride, width, y&7, 5-log2_count);
         else store_slice2_s(dst + ((y-8)&~7)*dst_stride, temp+ 8 +0*stride,
                             dst_stride, stride, width, y&7, 5-log2_count);
+    }
+
+    for(; y < height0 + 8 ; y++){
+        memcpy(dst+ (y - 8) * dst_stride, src0 + (y-8) * src_stride, width);
     }
 }
 
