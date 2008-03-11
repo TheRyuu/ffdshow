@@ -449,8 +449,6 @@ typedef struct H264Context{
     int todecode;
     H264mb *blocks[2];
 
-    /* ffdshow custom stuff (temporary work around for multithreading and spatial direct mode plus interlacing) */
-    int is_valid_direct_spatial_mv_pred;
     /* ffdshow custom stuff */
     int first_I_frame_detected;
 }H264Context;

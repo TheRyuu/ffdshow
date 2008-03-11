@@ -4098,10 +4098,6 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     if(h->slice_type == FF_P_TYPE || h->slice_type == FF_SP_TYPE || h->slice_type == FF_B_TYPE){
         if(h->slice_type == FF_B_TYPE){
             h->direct_spatial_mv_pred= get_bits1(&s->gb);
-            /* ffdshow custom code */
-            /* todo: is this workaround still needed? */
-            if(!(FIELD_OR_MBAFF_PICTURE && h->direct_spatial_mv_pred))
-                h->is_valid_direct_spatial_mv_pred = 1;
         }
         num_ref_idx_active_override_flag= get_bits1(&s->gb);
 
@@ -7562,12 +7558,9 @@ static void execute_decode_slices(H264Context *h, int context_count){
     if(context_count == 1) {
         if(avctx->thread_count > 1 && h->pps.cabac
            /* ffdshow custom code */
-           /* spatial direct mode plus interlacing is not supported by the multithreading code */
-           /* This check avoids using multithreading in such cases. */
-           /* Incomplete. Just checking the prior frame. Should be current frame. */
-           /* Just works for most of samples */
-           && !(FIELD_OR_MBAFF_PICTURE && h->direct_spatial_mv_pred)
-           && h->is_valid_direct_spatial_mv_pred)
+           /* interlacing is not supported by the multithreading code */
+           && !(FIELD_OR_MBAFF_PICTURE)
+           )
             decode_slice2(avctx, h);
         else
             decode_slice(avctx, h);
