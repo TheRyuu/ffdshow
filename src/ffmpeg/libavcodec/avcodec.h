@@ -35,7 +35,6 @@
 #endif
 
 #include "libavutil/avutil.h"
-#include <sys/types.h> /* size_t */
 
 #define LIBAVCODEC_VERSION_MAJOR 51
 #define LIBAVCODEC_VERSION_MINOR 51
