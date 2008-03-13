@@ -38,8 +38,8 @@
 #include <sys/types.h> /* size_t */
 
 #define LIBAVCODEC_VERSION_MAJOR 51
-#define LIBAVCODEC_VERSION_MINOR 50
-#define LIBAVCODEC_VERSION_MICRO  1
+#define LIBAVCODEC_VERSION_MINOR 51
+#define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
                                                LIBAVCODEC_VERSION_MINOR, \
@@ -541,7 +541,7 @@ typedef struct AVCodecContext {
      * information on struct for av_log
      * - set by avcodec_alloc_context
      */
-    AVClass *av_class;
+    const AVClass *av_class;
     /**
      * the average bitrate
      * - encoding: Set by user; unused for constant quantizer encoding.
@@ -2544,6 +2544,6 @@ extern unsigned int av_xiphlacing(unsigned char *s, unsigned int v);
 #define AVERROR_INVALIDDATA AVERROR(EINVAL)  /**< invalid data found */
 #define AVERROR_NOMEM       AVERROR(ENOMEM)  /**< not enough memory */
 #define AVERROR_NOFMT       AVERROR(EILSEQ)  /**< unknown format */
-#define AVERROR_NOTSUPP     AVERROR(ENOSYS)  /**< Operation not supported */
+#define AVERROR_NOTSUPP     AVERROR(ENOSYS)  /**< Operation not supported. */
 
 #endif /* FFMPEG_AVCODEC_H */

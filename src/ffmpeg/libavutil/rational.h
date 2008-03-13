@@ -31,6 +31,9 @@
 #ifdef __GNUC__
 #include <stdint.h>
 #endif
+#ifndef __GNUC__
+#include "common.h"
+#endif
 
 /**
  * Rational number num/den.
