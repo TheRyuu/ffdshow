@@ -64,7 +64,7 @@ void TgenericPage::cfg2dlg(void)
     flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Generate access unit delimiters")),IDFF_enc_x264_b_aud,1,false));
     flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Each MB partition can independently select a reference frame")),IDFF_enc_x264_mixed_ref,1,false));
     flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Transform coefficient thresholding on P-frames")),IDFF_enc_x264_b_dct_decimate,1,false));
-    flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Interlaced")),IDFF_enc_x264_interlaced,0,false));
+    flags.push_back(std::make_tuple(_(IDC_LV_GENERIC,_l("Interlaced")),IDFF_enc_x264_interlaced,1,false));
     break;
   }
 if (codecId==CODEC_ID_X264)
