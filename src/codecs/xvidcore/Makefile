@@ -3,7 +3,7 @@ CFLAGS+= -I. -I../..
 ifneq ($(CC),icl)
 CFLAGS+=-DARCH_IS_IA32 -DARCH_IS_32BIT
 endif
-       
+
 SRCS_C=decoder.c \
 	encoder.c \
 	xvid.c \
@@ -94,7 +94,7 @@ include ../../makefile_c.inc
 .all: $(SLIB)
 
 clean: 
-	rm -f *.o bitstream/*.o dct/*.o image/*.o motion/*.o plugins/*.o prediction/*.o quant/*.o utils/*.o *~ $(SLIB) *.d bitstream/*.d dct/*.d image/*.d motion/*.d plugins/*.d prediction/*.d quant/*.d utils/*.d
+	rm -f *.o bitstream/*.o bitstream/x86_asm/*.o dct/*.o dct/x86_asm/*.o image/*.o image/x86_asm/*.o motion/*.o motion/x86_asm/*.o plugins/*.o plugins/x86_asm/*.o prediction/*.o quant/*.o quant/x86_asm/*.o utils/*.o utils/x86_asm/*.o *~ $(SLIB) *.d bitstream/*.d dct/*.d image/*.d motion/*.d plugins/*.d prediction/*.d quant/*.d utils/*.d
 
 #
 # include dependency files if they exist

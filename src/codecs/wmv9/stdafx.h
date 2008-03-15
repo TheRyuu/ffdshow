@@ -18,13 +18,8 @@
 #include <mmreg.h>
 // STL
 #include "../../PODtypes.h"
-#if defined(UCLIBCPP) && (defined(__INTEL_COMPILER) || defined(__GNUC__) || (_MSC_VER>=1300))
  #include "../../uClibc++/algorithm"
  #include "../../uClibc++/vector"
-#else
- #include <algorithm>
- #include <vector>
-#endif
 // WMV9
 #ifdef __GNUC__
  #define AM_NOVTABLE

@@ -160,44 +160,6 @@ int Txvid_2pass::codec_2pass_init(void)
 		twopass.nns_array_length = frames;
 		frames = 0;
 
-/* // this isn't necessary with the current core.
-		// reorder the array(s) so they are in the order that they were received
-		// IPBBPBB to
-		// IBBPBBP
-		for (i=0; i<twopass.nns_array_length; i++)
-		{
-			NNSTATS temp_nns, temp_nns2;
-			int k, num_bframes;
-			if (twopass.nns1_array[i].dd_v & NNSTATS_BFRAME)
-			{
-				num_bframes = 1;
-				for (k=i+1; k<twopass.nns_array_length; k++)
-				{
-					if (twopass.nns1_array[k].dd_v & NNSTATS_BFRAME)
-						num_bframes++;
-					else
-						k=twopass.nns_array_length;
-				}
-
-				i--;
-				memcpy (&temp_nns, &twopass.nns1_array[i], sizeof(NNSTATS));
-				if (config.mode == DLG_MODE_2PASS_2_EXT)
-					memcpy (&temp_nns2, &twopass.nns2_array[i], sizeof(NNSTATS));
-
-				for (k=0; k<num_bframes; k++)
-				{
-					memcpy(&twopass.nns1_array[i], &twopass.nns1_array[i+1], sizeof(NNSTATS));
-					if (config.mode == DLG_MODE_2PASS_2_EXT)
-						memcpy(&twopass.nns2_array[i], &twopass.nns2_array[i+1], sizeof(NNSTATS));
-					i++;
-				}
-
-				memcpy(&twopass.nns1_array[i], &temp_nns, sizeof(NNSTATS));
-				if (config.mode == DLG_MODE_2PASS_2_EXT)
-					memcpy(&twopass.nns2_array[i], &temp_nns2, sizeof(NNSTATS));
-			}
-		}
-*/
 		// continue with the initialization..
 		if (config.mode == DLG_MODE_2PASS_2_EXT)
 		{
@@ -284,8 +246,6 @@ int Txvid_2pass::codec_2pass_init(void)
 					DEBUGERR(_l("ERROR:  No p-frames or b-frames were present in the 1st pass.  Rate control cannot function properly!"));
 					return ICERR_ERROR;
 				}
-
-
 
 			// perform prepass to compensate for over/undersizing
 			frames = 0;
@@ -607,8 +567,6 @@ int Txvid_2pass::codec_2pass_init(void)
 					return ICERR_ERROR;
 				}
 
-
-
 			// perform prepass to compensate for over/undersizing
 			frames = 0;
 
@@ -794,7 +752,6 @@ int Txvid_2pass::codec_2pass_init(void)
 
 			twopass.curve_bias_bonus = (total1 - total2) * (double)config.alt_curve_bonus_bias / 100.0 / (double)(frames - credits_frames - i_frames);
 			twopass.curve_comp_scale = ((total1 - total2) * (1.0 - (double)config.alt_curve_bonus_bias / 100.0) + total2) / total2;
-
 
 			// special info for alt curve:  bias bonus and quantizer thresholds,
 			{
@@ -1400,7 +1357,6 @@ int Txvid_2pass::codec_2pass_get_quant(TencFrameParams *frame)
 
 	return ICERR_OK;
 }
-
 
 int Txvid_2pass::codec_2pass_update(const TencFrameParams *frame)
 {

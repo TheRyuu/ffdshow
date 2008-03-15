@@ -44,7 +44,6 @@
 #include <wchar.h>
 // STL
 #include "PODtypes.h"
-#if defined(UCLIBCPP) && (defined(__INTEL_COMPILER) || defined(__GNUC__) || (_MSC_VER>=1300))
  #include "uClibc++/vector"
  #include "uClibc++/algorithm"
  #include "uClibc++/map"
@@ -52,10 +51,7 @@
  #include "uClibc++/hash_map"
  #include "uClibc++/utility"
  #include "uClibc++/limits"
-#endif
-#if defined(__INTEL_COMPILER) || defined(__GNUC__) || (_MSC_VER>=1300)
- #include "tuple.h"
-#endif
+#include "tuple.h"
 // baseclasses
 #include <streams.h>
 // DirectX/VFW/ACM
