@@ -133,12 +133,10 @@
 #    else
 #        define MANGLE(a) "_" #a
 #    endif
+#elif defined(ARCH_X86_64) && defined(PIC)
+#    define MANGLE(a) #a"(%%rip)"
 #else
-#    if defined(ARCH_X86_64) && defined(PIC)
-#        define MANGLE(a) #a"(%%rip)"
-#    else
-#        define MANGLE(a) #a
-#    endif
+#    define MANGLE(a) #a
 #endif
 
 /* debug stuff */
