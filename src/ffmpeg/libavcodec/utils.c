@@ -112,8 +112,10 @@ void av_free_static(void)
 /**
  * Call av_free_static automatically before it's too late
  */
-
+ 
+#ifdef __GNUC__
 static void do_free(void) __attribute__ ((destructor));
+#endif
 
 static void do_free(void)
 {

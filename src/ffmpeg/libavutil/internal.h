@@ -267,11 +267,8 @@ if((y)<(x)){\
     }\
 }
 
-#ifndef HAVE_LRINTF
-static av_always_inline long int lrintf(float x)
-{
-    return (int)(rint(x));
-}
-#endif /* HAVE_LRINTF */
+#ifndef __GNUC__
+  #define lrintf(x) (int)(x)
+#endif
 
 #endif /* FFMPEG_INTERNAL_H */
