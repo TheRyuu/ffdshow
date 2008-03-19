@@ -26,13 +26,12 @@
 
 
 #include "common.h"
-#include "clip1.h"
 
 #ifdef _MSC_VER
 #undef HAVE_MMX  /* not finished now */
 #endif
 #ifdef HAVE_MMX
-#   include "i386/predict.h"
+#   include "x86/predict.h"
 #endif
 #ifdef ARCH_PPC
 #   include "ppc/predict.h"

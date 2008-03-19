@@ -36,10 +36,6 @@
 #define XCHG(type,a,b) { type t = a; a = b; b = t; }
 #define FIX8(f) ((int)(f*(1<<8)+.5))
 
-#ifndef offsetof
-#define offsetof(T,F) ((unsigned int)((char *)&((T *)0)->F))
-#endif
-
 #define CHECKED_MALLOC( var, size )\
 {\
     var = x264_malloc( size );\
@@ -63,8 +59,8 @@
  * Includes
  ****************************************************************************/
 #include "osdep.h"
-#include <stdio.h>
 #include <stdarg.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
@@ -102,6 +98,11 @@ char *x264_param2string( x264_param_t *p, int b_res );
 //void x264_log( x264_t *h, int i_level, const char *psz_fmt, ... );
 
 void x264_reduce_fraction( int *n, int *d );
+
+static inline uint8_t x264_clip_uint8( int x )
+{
+    return x&(~255) ? (-x)>>31 : x;
+}
 
 static inline int x264_clip3( int v, int i_min, int i_max )
 {
@@ -456,16 +457,16 @@ struct x264_t
             int     non_zero_count[X264_SCAN8_SIZE];
 
             /* -1 if unused, -2 if unavailable */
-            int8_t  ref[2][X264_SCAN8_SIZE];
+            DECLARE_ALIGNED( int8_t, ref[2][X264_SCAN8_SIZE], 4 );
 
             /* 0 if not available */
-            int16_t mv[2][X264_SCAN8_SIZE][2];
-            int16_t mvd[2][X264_SCAN8_SIZE][2];
+            DECLARE_ALIGNED( int16_t, mv[2][X264_SCAN8_SIZE][2], 16 );
+            DECLARE_ALIGNED( int16_t, mvd[2][X264_SCAN8_SIZE][2], 4 );
 
             /* 1 if SKIP or DIRECT. set only for B-frames + CABAC */
-            int8_t  skip[X264_SCAN8_SIZE];
+            DECLARE_ALIGNED( int8_t, skip[X264_SCAN8_SIZE], 4 );
 
-            int16_t direct_mv[2][X264_SCAN8_SIZE][2];
+            DECLARE_ALIGNED( int16_t, direct_mv[2][X264_SCAN8_SIZE][2], 16 ) ;
             int8_t  direct_ref[2][X264_SCAN8_SIZE];
             int     pskip_mv[2];
 

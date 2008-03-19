@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="9,00"
 	Name="ff_x264"
 	ProjectGUID="{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}"
 	RootNamespace="ff_x264"
 	Keyword="Win32Proj"
+	TargetFrameworkVersion="0"
 	>
 	<Platforms>
 		<Platform
@@ -49,7 +50,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../..;."
+				AdditionalIncludeDirectories="../..;.;common/x86;"
 				PreprocessorDefinitions="WIN32;__WIN32__;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;inline=__inline;ARCH_X86;HAVE_MMX;HAVE_SSE3"
 				MinimalRebuild="true"
 				ExceptionHandling="0"
@@ -107,9 +108,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -142,7 +140,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../..;."
+				AdditionalIncludeDirectories="../..;.;common/x86;"
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;inline=__inline;ARCH_X86_64"
 				MinimalRebuild="true"
 				ExceptionHandling="0"
@@ -197,9 +195,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -296,9 +291,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -391,9 +383,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -670,59 +659,11 @@
 				RelativePath=".\common\vlc.h"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="i386"
-			>
-			<File
-				RelativePath=".\common\i386\dct.h"
-				>
-			</File>
-			<File
-				RelativePath=".\common\i386\mc-c.c"
-				>
-			</File>
-			<File
-				RelativePath=".\common\i386\mc.h"
-				>
-			</File>
-			<File
-				RelativePath=".\common\i386\pixel.h"
-				>
-			</File>
-			<File
-				RelativePath=".\common\i386\predict-c.c"
-				>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\common\i386\predict.h"
-				>
-			</File>
-			<File
-				RelativePath=".\common\i386\quant.h"
-				>
-			</File>
 			<Filter
-				Name="i386"
+				Name="x86"
 				>
 				<File
-					RelativePath=".\common\i386\cpu-a.asm"
+					RelativePath=".\common\x86\cpu-32.asm"
 					>
 					<FileConfiguration
 						Name="Debug|x64"
@@ -742,171 +683,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\common\i386\dct-a.asm"
-					>
-					<FileConfiguration
-						Name="Debug|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\common\i386\deblock-a.asm"
-					>
-					<FileConfiguration
-						Name="Debug|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\common\i386\mc-a.asm"
-					>
-					<FileConfiguration
-						Name="Debug|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\common\i386\mc-a2.asm"
-					>
-					<FileConfiguration
-						Name="Debug|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\common\i386\pixel-a.asm"
-					>
-					<FileConfiguration
-						Name="Debug|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\common\i386\pixel-sse2.asm"
-					>
-					<FileConfiguration
-						Name="Debug|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\common\i386\predict-a.asm"
-					>
-					<FileConfiguration
-						Name="Debug|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\common\i386\quant-a.asm"
-					>
-					<FileConfiguration
-						Name="Debug|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-				</File>
-			</Filter>
-			<Filter
-				Name="amd64"
-				>
-				<File
-					RelativePath=".\common\amd64\amd64inc.asm"
+					RelativePath=".\common\x86\cpu-64.asm"
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
@@ -922,7 +699,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -w -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -940,13 +717,33 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -w -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\common\amd64\dct-a.asm"
+					RelativePath=".\common\x86\dct-32.asm"
+					>
+					<FileConfiguration
+						Name="Debug|x64"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="yasm"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="yasm"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\common\x86\dct-64.asm"
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
@@ -962,7 +759,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -w -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -980,13 +777,273 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -w -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\common\amd64\deblock-a.asm"
+					RelativePath=".\common\x86\dct-a.asm"
+					>
+					<FileConfiguration
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="yasm assembling $(InputPath)"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+							Outputs="$(IntDir)\$(InputName).obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="yasm assembling $(InputPath)"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+							Outputs="$(IntDir)\$(InputName).obj"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\common\x86\dct.h"
+					>
+				</File>
+				<File
+					RelativePath=".\common\x86\deblock-a.asm"
+					>
+					<FileConfiguration
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="yasm assembling $(InputPath)"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+							Outputs="$(IntDir)\$(InputName).obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="yasm assembling $(InputPath)"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+							Outputs="$(IntDir)\$(InputName).obj"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\common\x86\mc-a.asm"
+					>
+					<FileConfiguration
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="yasm assembling $(InputPath)"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+							Outputs="$(IntDir)\$(InputName).obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="yasm assembling $(InputPath)"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+							Outputs="$(IntDir)\$(InputName).obj"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\common\x86\mc-a2.asm"
+					>
+					<FileConfiguration
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="yasm assembling $(InputPath)"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+							Outputs="$(IntDir)\$(InputName).obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="yasm assembling $(InputPath)"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+							Outputs="$(IntDir)\$(InputName).obj"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\common\x86\mc-c.c"
+					>
+				</File>
+				<File
+					RelativePath=".\common\x86\mc.h"
+					>
+				</File>
+				<File
+					RelativePath=".\common\x86\pixel-32.asm"
+					>
+					<FileConfiguration
+						Name="Debug|x64"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="yasm"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="yasm"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\common\x86\pixel-a.asm"
+					>
+					<FileConfiguration
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="yasm assembling $(InputPath)"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+							Outputs="$(IntDir)\$(InputName).obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="yasm assembling $(InputPath)"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+							Outputs="$(IntDir)\$(InputName).obj"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\common\x86\pixel.h"
+					>
+				</File>
+				<File
+					RelativePath=".\common\x86\predict-a.asm"
+					>
+					<FileConfiguration
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="yasm assembling $(InputPath)"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+							Outputs="$(IntDir)\$(InputName).obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="yasm assembling $(InputPath)"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+							Outputs="$(IntDir)\$(InputName).obj"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\common\x86\predict-c.c"
+					>
+				</File>
+				<File
+					RelativePath=".\common\x86\predict.h"
+					>
+				</File>
+				<File
+					RelativePath=".\common\x86\quant-a.asm"
+					>
+					<FileConfiguration
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="yasm assembling $(InputPath)"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+							Outputs="$(IntDir)\$(InputName).obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="yasm assembling $(InputPath)"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+							Outputs="$(IntDir)\$(InputName).obj"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\common\x86\quant.h"
+					>
+				</File>
+				<File
+					RelativePath=".\common\x86\sad-a.asm"
+					>
+					<FileConfiguration
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="yasm assembling $(InputPath)"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+							Outputs="$(IntDir)\$(InputName).obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="yasm assembling $(InputPath)"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+							Outputs="$(IntDir)\$(InputName).obj"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\common\x86\x86inc-32.asm"
+					>
+					<FileConfiguration
+						Name="Debug|x64"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="yasm"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="yasm"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\common\x86\x86inc-64.asm"
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
@@ -1002,7 +1059,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -w -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -1020,38 +1077,22 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -w -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\common\amd64\mc-a.asm"
+					RelativePath=".\common\x86\x86inc.asm"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -w -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 							Outputs="$(IntDir)\$(InputName).obj"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
 						/>
 					</FileConfiguration>
 					<FileConfiguration
@@ -1060,211 +1101,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -w -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-							Outputs="$(IntDir)\$(InputName).obj"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\common\amd64\mc-a2.asm"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -w -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-							Outputs="$(IntDir)\$(InputName).obj"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -w -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-							Outputs="$(IntDir)\$(InputName).obj"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\common\amd64\pixel-a.asm"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -w -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-							Outputs="$(IntDir)\$(InputName).obj"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -w -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-							Outputs="$(IntDir)\$(InputName).obj"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\common\amd64\pixel-sse2.asm"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -w -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-							Outputs="$(IntDir)\$(InputName).obj"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -w -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-							Outputs="$(IntDir)\$(InputName).obj"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\common\amd64\predict-a.asm"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -w -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-							Outputs="$(IntDir)\$(InputName).obj"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -w -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-							Outputs="$(IntDir)\$(InputName).obj"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\common\amd64\quant-a.asm"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -w -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
-							Outputs="$(IntDir)\$(InputName).obj"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="yasm"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -w -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>

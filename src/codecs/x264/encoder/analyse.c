@@ -44,8 +44,8 @@ typedef struct
 
     /* 8x8 */
     int       i_cost8x8;
-    int       mvc[32][5][2]; /* [ref][0] is 16x16 mv,
-                                [ref][1..4] are 8x8 mv from partition [0..3] */
+    /* [ref][0] is 16x16 mv, [ref][1..4] are 8x8 mv from partition [0..3] */
+    DECLARE_ALIGNED( int, mvc[32][5][2], 8 );
     x264_me_t me8x8[4];
 
     /* Sub 4x4 */
@@ -1145,7 +1145,7 @@ static void x264_mb_analyse_inter_p16x8( x264_t *h, x264_mb_analysis_t *a )
 {
     x264_me_t m;
     uint8_t  **p_fenc = h->mb.pic.p_fenc;
-    int mvc[3][2];
+    DECLARE_ALIGNED( int, mvc[3][2], 8 );
     int i, j;
 
     /* XXX Needed for x264_mb_predict_mv */
@@ -1195,7 +1195,7 @@ static void x264_mb_analyse_inter_p8x16( x264_t *h, x264_mb_analysis_t *a )
 {
     x264_me_t m;
     uint8_t  **p_fenc = h->mb.pic.p_fenc;
-    int mvc[3][2];
+    DECLARE_ALIGNED( int, mvc[3][2], 8 );
     int i, j;
 
     /* XXX Needed for x264_mb_predict_mv */
@@ -1698,7 +1698,7 @@ static void x264_mb_analyse_inter_b16x8( x264_t *h, x264_mb_analysis_t *a )
         { h->mb.pic.p_fref[0][a->l0.i_ref],
           h->mb.pic.p_fref[1][a->l1.i_ref] };
     DECLARE_ALIGNED( uint8_t,  pix[2][16*8], 16 );
-    int mvc[2][2];
+    DECLARE_ALIGNED( int, mvc[2][2], 8 );
     int i, l;
 
     h->mb.i_partition = D_16x8;
@@ -1721,10 +1721,8 @@ static void x264_mb_analyse_inter_b16x8( x264_t *h, x264_mb_analysis_t *a )
             LOAD_FENC( m, h->mb.pic.p_fenc, 0, 8*i );
             LOAD_HPELS( m, p_fref[l], l, lX->i_ref, 0, 8*i );
 
-            mvc[0][0] = lX->me8x8[2*i].mv[0];
-            mvc[0][1] = lX->me8x8[2*i].mv[1];
-            mvc[1][0] = lX->me8x8[2*i+1].mv[0];
-            mvc[1][1] = lX->me8x8[2*i+1].mv[1];
+            *(uint64_t*)mvc[0] = *(uint64_t*)lX->me8x8[2*i].mv;
+            *(uint64_t*)mvc[1] = *(uint64_t*)lX->me8x8[2*i+1].mv;
 
             x264_mb_predict_mv( h, l, 8*i, 2, m->mvp );
             x264_me_search( h, m, mvc, 2 );
@@ -1769,7 +1767,7 @@ static void x264_mb_analyse_inter_b8x16( x264_t *h, x264_mb_analysis_t *a )
         { h->mb.pic.p_fref[0][a->l0.i_ref],
           h->mb.pic.p_fref[1][a->l1.i_ref] };
     uint8_t pix[2][8*16];
-    int mvc[2][2];
+    DECLARE_ALIGNED( int, mvc[2][2], 8 );
     int i, l;
 
     h->mb.i_partition = D_8x16;
@@ -1791,10 +1789,8 @@ static void x264_mb_analyse_inter_b8x16( x264_t *h, x264_mb_analysis_t *a )
             LOAD_FENC( m, h->mb.pic.p_fenc, 8*i, 0 );
             LOAD_HPELS( m, p_fref[l], l, lX->i_ref, 8*i, 0 );
 
-            mvc[0][0] = lX->me8x8[i].mv[0];
-            mvc[0][1] = lX->me8x8[i].mv[1];
-            mvc[1][0] = lX->me8x8[i+2].mv[0];
-            mvc[1][1] = lX->me8x8[i+2].mv[1];
+            *(uint64_t*)mvc[0] = *(uint64_t*)lX->me8x8[i].mv;
+            *(uint64_t*)mvc[1] = *(uint64_t*)lX->me8x8[i+2].mv;
 
             x264_mb_predict_mv( h, l, 4*i, 2, m->mvp );
             x264_me_search( h, m, mvc, 2 );
@@ -2047,13 +2043,8 @@ void x264_macroblock_analyse( x264_t *h )
     int i_cost = COST_MAX;
     int i;
 
-    h->mb.i_qp = x264_ratecontrol_qp( h );
-    
-    if( h->param.analyse.b_aq )
-        x264_adaptive_quant( h );
- 
-     /* init analysis */
-    x264_mb_analyse_init( h, &analysis, h->mb.i_qp );
+    /* init analysis */
+    x264_mb_analyse_init( h, &analysis, x264_ratecontrol_qp( h ) );
 
     /*--------------------------- Do the analysis ---------------------------*/
     if( h->sh.i_type == SLICE_TYPE_I )
@@ -2722,6 +2713,7 @@ static void x264_analyse_update_cache( x264_t *h, x264_mb_analysis_t *a  )
             completed = (l ? h->fref1 : h->fref0)[ ref >> h->mb.b_interlaced ]->i_lines_completed;
             if( (h->mb.cache.mv[l][x264_scan8[15]][1] >> (2 - h->mb.b_interlaced)) + h->mb.i_mb_y*16 > completed )
             {
+                x264_log( h, X264_LOG_WARNING, "internal error (MV out of thread range)\n");
                 fprintf(stderr, "mb type: %d \n", h->mb.i_type);
                 fprintf(stderr, "mv: l%dr%d (%d,%d) \n", l, ref,
                                 h->mb.cache.mv[l][x264_scan8[15]][0],
@@ -2729,7 +2721,11 @@ static void x264_analyse_update_cache( x264_t *h, x264_mb_analysis_t *a  )
                 fprintf(stderr, "limit: %d \n", h->mb.mv_max_spel[1]);
                 fprintf(stderr, "mb_xy: %d,%d \n", h->mb.i_mb_x, h->mb.i_mb_y);
                 fprintf(stderr, "completed: %d \n", completed );
-                assert(0);
+                x264_log( h, X264_LOG_WARNING, "recovering by using intra mode\n");
+                x264_mb_analyse_intra( h, a, COST_MAX );
+                h->mb.i_type = I_16x16;
+                h->mb.i_intra16x16_pred_mode = a->i_predict16x16;
+                x264_mb_analyse_intra_chroma( h, a );
             }
         }
     }

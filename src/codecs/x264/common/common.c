@@ -125,9 +125,6 @@ void    x264_param_default( x264_param_t *param )
     param->analyse.i_chroma_qp_offset = 0;
     param->analyse.b_fast_pskip = 1;
     param->analyse.b_dct_decimate = 1;
-    param->analyse.b_aq = 1;
-    param->analyse.f_aq_strength = 0.5;
-    param->analyse.f_aq_sensitivity = 13;
     param->analyse.i_luma_deadzone[0] = 21;
     param->analyse.i_luma_deadzone[1] = 11;
     param->analyse.b_psnr = 1;
@@ -460,13 +457,6 @@ int x264_param_parse( x264_param_t *p, const char *name, const char *value )
         p->analyse.b_fast_pskip = atobool(value);
     OPT("dct-decimate")
         p->analyse.b_dct_decimate = atobool(value);
-    OPT("aq-strength")
-    {
-        p->analyse.f_aq_strength = atof(value);
-        p->analyse.b_aq = 1;
-    }
-    OPT("aq-sensitivity")
-        p->analyse.f_aq_sensitivity = atof(value);
     OPT("deadzone-inter")
         p->analyse.i_luma_deadzone[0] = atoi(value);
     OPT("deadzone-intra")
@@ -896,10 +886,6 @@ char *x264_param2string( x264_param_t *p, int b_res )
         s += sprintf( s, " ip_ratio=%.2f", p->rc.f_ip_factor );
         if( p->i_bframe )
             s += sprintf( s, " pb_ratio=%.2f", p->rc.f_pb_factor );
-        if( p->analyse.b_aq )
-            s += sprintf( s, " aq=1:%.1f:%.1f", p->analyse.f_aq_strength, p->analyse.f_aq_sensitivity );
-        else
-            s += sprintf( s, " aq=0" );
         if( p->rc.psz_zones )
             s += sprintf( s, " zones=%s", p->rc.psz_zones );
         else if( p->rc.i_zones )

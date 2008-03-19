@@ -23,7 +23,7 @@
 
 #include "common.h"
 #ifdef HAVE_MMX
-#   include "i386/dct.h"
+#   include "x86/dct.h"
 #endif
 #ifdef ARCH_PPC
 #   include "ppc/dct.h"
@@ -31,14 +31,6 @@
 
 int x264_dct4_weight2_zigzag[2][16];
 int x264_dct8_weight2_zigzag[2][64];
-
-static inline int clip_uint8( int a )
-{
-    if (a&(~255))
-        return (-a)>>31;
-    else
-        return a;
-}
 
 /*
  * XXX For all dct dc : input could be equal to output so ...
@@ -232,7 +224,7 @@ static void add4x4_idct( uint8_t *p_dst, int16_t dct[4][4] )
     {
         for( x = 0; x < 4; x++ )
         {
-            p_dst[x] = clip_uint8( p_dst[x] + d[y][x] );
+            p_dst[x] = x264_clip_uint8( p_dst[x] + d[y][x] );
         }
         p_dst += FDEC_STRIDE;
     }
@@ -356,7 +348,7 @@ static void add8x8_idct8( uint8_t *dst, int16_t dct[8][8] )
 #undef DST
 
 #define SRC(x)     dct[i][x]
-#define DST(x,rhs) dst[i + x*FDEC_STRIDE] = clip_uint8( dst[i + x*FDEC_STRIDE] + ((rhs) >> 6) );
+#define DST(x,rhs) dst[i + x*FDEC_STRIDE] = x264_clip_uint8( dst[i + x*FDEC_STRIDE] + ((rhs) >> 6) );
     for( i = 0; i < 8; i++ )
         IDCT8_1D
 #undef SRC
@@ -597,10 +589,8 @@ void x264_zigzag_init( int cpu, x264_zigzag_function_t *pf, int b_interlaced )
         if( cpu&X264_CPU_MMX )
             pf->scan_4x4 = x264_zigzag_scan_4x4_field_mmx;
 #endif
-#ifdef ARCH_X86_64
         if( cpu&X264_CPU_SSE2 )
             pf->scan_4x4 = x264_zigzag_scan_4x4_field_sse2;
-#endif
 #endif
 
 #ifdef ARCH_PPC

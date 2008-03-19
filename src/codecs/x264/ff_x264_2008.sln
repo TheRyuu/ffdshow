@@ -1,6 +1,6 @@
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ff_x264", "ff_x264_2005.vcproj", "{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}"
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ff_x264", "ff_x264_2008.vcproj", "{340D7FC0-5EF2-4C3E-9F8B-01C0923F268F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
