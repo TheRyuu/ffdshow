@@ -337,14 +337,14 @@ struct x264_t
     /* Current MB DCT coeffs */
     struct
     {
-        DECLARE_ALIGNED( int, luma16x16_dc[16], 16 );
-        DECLARE_ALIGNED( int, chroma_dc[2][4], 16 );
+        DECLARE_ALIGNED( int16_t, luma16x16_dc[16], 16 );
+        DECLARE_ALIGNED( int16_t, chroma_dc[2][4], 16 );
         // FIXME merge with union
-        DECLARE_ALIGNED( int, luma8x8[4][64], 16 );
+        DECLARE_ALIGNED( int16_t, luma8x8[4][64], 16 );
         union
         {
-            DECLARE_ALIGNED( int, residual_ac[15], 16 );
-            DECLARE_ALIGNED( int, luma4x4[16], 16 );
+            DECLARE_ALIGNED( int16_t, residual_ac[15], 16 );
+            DECLARE_ALIGNED( int16_t, luma4x4[16], 16 );
         } block[16+8];
     } dct;
 
@@ -424,6 +424,12 @@ struct x264_t
         int     i_intra16x16_pred_mode;
         int     i_chroma_pred_mode;
 
+        /* skip flags for i4x4 and i8x8
+         * 0 = encode as normal.
+         * 1 (non-RD only) = the DCT is still in h->dct, restore fdec and skip reconstruction.
+         * 2 (RD only) = the DCT has since been overwritten by RD; restore that too. */
+        int i_skip_intra;
+
         struct
         {
             /* space for p_fenc and p_fdec */
@@ -431,6 +437,12 @@ struct x264_t
 #define FDEC_STRIDE 32
             DECLARE_ALIGNED( uint8_t, fenc_buf[24*FENC_STRIDE], 16 );
             DECLARE_ALIGNED( uint8_t, fdec_buf[27*FDEC_STRIDE], 16 );
+
+            /* i4x4 and i8x8 backup data, for skipping the encode stage when possible */            
+            DECLARE_ALIGNED( uint8_t, i4x4_fdec_buf[16*16], 16 );
+            DECLARE_ALIGNED( uint8_t, i8x8_fdec_buf[16*16], 16 );
+            DECLARE_ALIGNED( int16_t, i8x8_dct_buf[3][64], 16 );
+            DECLARE_ALIGNED( int16_t, i4x4_dct_buf[15][16], 16 );
 
             /* pointer over mb of the frame to be compressed */
             uint8_t *p_fenc[3];
@@ -451,10 +463,10 @@ struct x264_t
         struct
         {
             /* real intra4x4_pred_mode if I_4X4 or I_8X8, I_PRED_4x4_DC if mb available, -1 if not */
-            int     intra4x4_pred_mode[X264_SCAN8_SIZE];
+            int8_t  intra4x4_pred_mode[X264_SCAN8_SIZE];
 
             /* i_non_zero_count if available else 0x80 */
-            int     non_zero_count[X264_SCAN8_SIZE];
+            int8_t  non_zero_count[X264_SCAN8_SIZE];
 
             /* -1 if unused, -2 if unavailable */
             DECLARE_ALIGNED( int8_t, ref[2][X264_SCAN8_SIZE], 4 );
@@ -486,11 +498,11 @@ struct x264_t
         int     b_direct_auto_write; /* analyse direct modes, to use and/or save */
 
         /* B_direct and weighted prediction */
-        int     dist_scale_factor[16][2];
-        int     bipred_weight[32][4];
+        int16_t dist_scale_factor[16][2];
+        int16_t bipred_weight[32][4];
         /* maps fref1[0]'s ref indices into the current list0 */
-        int     map_col_to_list0_buf[2]; // for negative indices
-        int     map_col_to_list0[16];
+        int8_t  map_col_to_list0_buf[2]; // for negative indices
+        int8_t  map_col_to_list0[16];
     } mb;
 
     /* rate control encoding only */
