@@ -23,9 +23,6 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/ac3tab.c \
       $(LAVC_DIR)/adpcm.c \
       $(LAVC_DIR)/allcodecs.c \
-      $(LAVC_DIR)/amr.c \
-      $(LAVC_DIR)/amr_float/interf_dec.c \
-      $(LAVC_DIR)/amr_float/sp_dec.c \
       $(LAVC_DIR)/atrac3.c \
       $(LAVC_DIR)/asv1.c \
       $(LAVC_DIR)/avs.c \
@@ -75,6 +72,7 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/jpeglsdec.c \
       $(LAVC_DIR)/jrevdct.c \
       $(LAVC_DIR)/lcldec.c \
+      $(LAVC_DIR)/libamr.c \
       $(LAVC_DIR)/ljpegenc.c \
       $(LAVC_DIR)/loco.c \
       $(LAVC_DIR)/mace.c \
@@ -146,6 +144,8 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/xl.c \
       $(LAVC_DIR)/zmbv.c \
       $(LAVC_DIR)/xiph.c \
+      $(LAVC_DIR)/amr_float/interf_dec.c \
+      $(LAVC_DIR)/amr_float/sp_dec.c \
 	\
       $(LAVU_DIR)/crc.c \
       $(LAVU_DIR)/log.c \

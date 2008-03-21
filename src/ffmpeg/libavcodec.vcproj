@@ -186,9 +186,6 @@
 				RelativePath=".\libavcodec\allcodecs.c">
 			</File>
 			<File
-				RelativePath=".\libavcodec\amr.c">
-			</File>
-			<File
 				RelativePath=".\libavcodec\asv1.c">
 			</File>
 			<File
@@ -337,6 +334,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\lcldec.c">
+			</File>
+			<File
+				RelativePath=".\libavcodec\libamr.c">
 			</File>
 			<File
 				RelativePath=".\libavcodec\ljpegenc.c">

@@ -348,9 +348,9 @@ static int amr_nb_decode_frame(AVCodecContext * avctx,
 
 #endif
 
-AVCodec amr_nb_decoder =
+AVCodec libamr_nb_decoder =
 {
-    "amr_nb",
+    "libamr_nb",
     CODEC_TYPE_AUDIO,
     CODEC_ID_AMR_NB,
     sizeof(AMRContext),

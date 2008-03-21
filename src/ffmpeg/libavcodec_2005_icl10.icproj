@@ -557,8 +557,6 @@
 		<File 
 			RelativePath=".\libavcodec\allcodecs.c"/>
 		<File 
-			RelativePath=".\libavcodec\amr.c"/>
-		<File 
 			RelativePath=".\libavcodec\asv1.c"/>
 		<File 
 			RelativePath=".\libavcodec\atrac3.c"/>
@@ -658,6 +656,8 @@
 			RelativePath=".\libavcodec\jrevdct.c"/>
 		<File 
 			RelativePath=".\libavcodec\lcldec.c"/>
+		<File 
+			RelativePath=".\libavcodec\libamr.c"/>
 		<File 
 			RelativePath=".\libavcodec\ljpegenc.c"/>
 		<File 

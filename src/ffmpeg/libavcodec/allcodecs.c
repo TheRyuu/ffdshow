@@ -124,7 +124,7 @@ void avcodec_register_all(void)
     /* audio codecs */
     REGISTER_ENCODER	(ac3);   
     REGISTER_DECODER	(atrac3);
-    REGISTER_DECODER	(amr_nb);
+    REGISTER_DECODER	(libamr_nb);
     REGISTER_DECODER	(cook);
     REGISTER_DECODER	(flac);
     REGISTER_DECODER	(imc);
