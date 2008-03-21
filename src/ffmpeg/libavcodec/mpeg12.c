@@ -1140,7 +1140,7 @@ typedef struct Mpeg1Context {
 
 } Mpeg1Context;
 
-static int mpeg_decode_init(AVCodecContext *avctx)
+static av_cold int mpeg_decode_init(AVCodecContext *avctx)
 {
     Mpeg1Context *s = avctx->priv_data;
     MpegEncContext *s2 = &s->mpeg_enc_ctx;
@@ -2214,7 +2214,7 @@ static int mpeg_decode_frame(AVCodecContext *avctx,
         input_size = buf_end - buf_ptr;
 
         if(avctx->debug & FF_DEBUG_STARTCODE){
-            av_log(avctx, AV_LOG_DEBUG, "%3X at %zd left %d\n", start_code, buf_ptr-buf, input_size);
+            av_log(avctx, AV_LOG_DEBUG, "%3X at %td left %d\n", start_code, buf_ptr-buf, input_size);
         }
 
         /* prepare data for next start code */
