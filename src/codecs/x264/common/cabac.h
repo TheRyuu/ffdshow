@@ -27,7 +27,7 @@
 typedef struct
 {
     /* context */
-    DECLARE_ALIGNED( uint8_t, state[460], 16 );
+    DECLARE_ALIGNED_16( uint8_t state[460] );
 
     int f8_bits_encoded; // only if using x264_cabac_size_decision()
 
@@ -45,24 +45,44 @@ typedef struct
 
 } x264_cabac_t;
 
+extern const uint8_t x264_cabac_transition[128][2];
+extern const uint16_t x264_cabac_entropy[128][2];
+
 /* init the contexts given i_slice_type, the quantif and the model */
 void x264_cabac_context_init( x264_cabac_t *cb, int i_slice_type, int i_qp, int i_model );
 
 /* encoder only: */
 void x264_cabac_encode_init ( x264_cabac_t *cb, uint8_t *p_data, uint8_t *p_end );
-void x264_cabac_encode_decision( x264_cabac_t *cb, int i_ctx_idx, int b );
+void x264_cabac_encode_decision( x264_cabac_t *cb, int i_ctx, int b );
 void x264_cabac_encode_bypass( x264_cabac_t *cb, int b );
+void x264_cabac_encode_ue_bypass( x264_cabac_t *cb, int exp_bits, int val );
 void x264_cabac_encode_terminal( x264_cabac_t *cb );
 void x264_cabac_encode_flush( x264_t *h, x264_cabac_t *cb );
-
-/* internal only. these don't write the bitstream, just calculate bit cost: */
-void x264_cabac_size_decision( x264_cabac_t *cb, int i_ctx, int b );
-int  x264_cabac_size_decision2( uint8_t *state, int b );
-int  x264_cabac_size_decision_noup( uint8_t *state, int b );
 
 static inline int x264_cabac_pos( x264_cabac_t *cb )
 {
     return (cb->p - cb->p_start + cb->i_bytes_outstanding) * 8 + cb->i_queue;
+}
+
+/* internal only. these don't write the bitstream, just calculate bit cost: */
+
+static inline void x264_cabac_size_decision( x264_cabac_t *cb, long i_ctx, long b )
+{
+    int i_state = cb->state[i_ctx];
+    cb->state[i_ctx] = x264_cabac_transition[i_state][b];
+    cb->f8_bits_encoded += x264_cabac_entropy[i_state][b];
+}
+
+static inline int x264_cabac_size_decision2( uint8_t *state, long b )
+{
+    int i_state = *state;
+    *state = x264_cabac_transition[i_state][b];
+    return x264_cabac_entropy[i_state][b];
+}
+
+static inline int x264_cabac_size_decision_noup( uint8_t *state, long b )
+{
+    return x264_cabac_entropy[*state][b];
 }
 
 #endif

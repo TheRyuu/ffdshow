@@ -24,23 +24,6 @@
 #include "common/common.h"
 #include "macroblock.h"
 
-static inline void x264_cabac_encode_ue_bypass( x264_cabac_t *cb, int exp_bits, int val )
-{
-#ifdef RDO_SKIP_BS
-    cb->f8_bits_encoded += ( bs_size_ue( val + (1<<exp_bits)-1 ) - exp_bits ) << 8;
-#else
-    int k;
-    for( k = exp_bits; val >= (1<<k); k++ )
-    {
-        x264_cabac_encode_bypass( cb, 1 );
-        val -= 1 << k;
-    }
-    x264_cabac_encode_bypass( cb, 0 );
-    while( k-- )
-        x264_cabac_encode_bypass( cb, (val >> k)&0x01 );
-#endif
-}
-
 static inline void x264_cabac_mb_type_intra( x264_t *h, x264_cabac_t *cb, int i_mb_type,
                     int ctx0, int ctx1, int ctx2, int ctx3, int ctx4, int ctx5 )
 {
@@ -60,7 +43,7 @@ static inline void x264_cabac_mb_type_intra( x264_t *h, x264_cabac_t *cb, int i_
         x264_cabac_encode_decision( cb, ctx0, 1 );
         x264_cabac_encode_terminal( cb );
 
-        x264_cabac_encode_decision( cb, ctx1, ( h->mb.i_cbp_luma == 0 ? 0 : 1 ));
+        x264_cabac_encode_decision( cb, ctx1, !!h->mb.i_cbp_luma );
         if( h->mb.i_cbp_chroma == 0 )
         {
             x264_cabac_encode_decision( cb, ctx2, 0 );
@@ -68,10 +51,10 @@ static inline void x264_cabac_mb_type_intra( x264_t *h, x264_cabac_t *cb, int i_
         else
         {
             x264_cabac_encode_decision( cb, ctx2, 1 );
-            x264_cabac_encode_decision( cb, ctx3, ( h->mb.i_cbp_chroma == 1 ? 0 : 1 ) );
+            x264_cabac_encode_decision( cb, ctx3, h->mb.i_cbp_chroma != 1 );
         }
-        x264_cabac_encode_decision( cb, ctx4, ( (i_pred / 2) ? 1 : 0 ));
-        x264_cabac_encode_decision( cb, ctx5, ( (i_pred % 2) ? 1 : 0 ));
+        x264_cabac_encode_decision( cb, ctx4, i_pred>>1 );
+        x264_cabac_encode_decision( cb, ctx5, i_pred&1 );
     }
 }
 
@@ -381,6 +364,7 @@ static void x264_cabac_mb_qp_delta( x264_t *h, x264_cabac_t *cb )
     x264_cabac_encode_decision( cb, 60 + ctx, 0 );
 }
 
+#ifndef RDO_SKIP_BS
 void x264_cabac_mb_skip( x264_t *h, int b_skip )
 {
     int ctx = 0;
@@ -397,6 +381,7 @@ void x264_cabac_mb_skip( x264_t *h, int b_skip )
     ctx += (h->sh.i_type == SLICE_TYPE_P) ? 11 : 24;
     x264_cabac_encode_decision( &h->cabac, ctx, b_skip );
 }
+#endif
 
 static inline void x264_cabac_mb_sub_p_partition( x264_cabac_t *cb, int i_sub )
 {
@@ -654,9 +639,9 @@ static int x264_cabac_mb_cbf_ctxidxinc( x264_t *h, int i_cat, int i_idx )
 
         /* no need to test skip/pcm */
         if( i_mba_xy >= 0 )
-            i_nza = h->mb.cache.non_zero_count[x264_scan8[16+i_idx] - 1];
+            i_nza = h->mb.cache.non_zero_count[x264_scan8[i_idx] - 1];
         if( i_mbb_xy >= 0 )
-            i_nzb = h->mb.cache.non_zero_count[x264_scan8[16+i_idx] - 8];
+            i_nzb = h->mb.cache.non_zero_count[x264_scan8[i_idx] - 8];
     }
 
     if( IS_INTRA( h->mb.i_type ) )
@@ -1026,7 +1011,7 @@ void x264_macroblock_write_cabac( x264_t *h, x264_cabac_t *cb )
             /* AC Luma */
             if( h->mb.i_cbp_luma != 0 )
                 for( i = 0; i < 16; i++ )
-                    block_residual_write_cabac( h, cb, DCT_LUMA_AC, i, h->dct.block[i].residual_ac, 15 );
+                    block_residual_write_cabac( h, cb, DCT_LUMA_AC, i, h->dct.luma4x4[i]+1, 15 );
         }
         else if( h->mb.b_transform_8x8 )
         {
@@ -1038,7 +1023,7 @@ void x264_macroblock_write_cabac( x264_t *h, x264_cabac_t *cb )
         {
             for( i = 0; i < 16; i++ )
                 if( h->mb.i_cbp_luma & ( 1 << ( i / 4 ) ) )
-                    block_residual_write_cabac( h, cb, DCT_LUMA_4x4, i, h->dct.block[i].luma4x4, 16 );
+                    block_residual_write_cabac( h, cb, DCT_LUMA_4x4, i, h->dct.luma4x4[i], 16 );
         }
 
         if( h->mb.i_cbp_chroma &0x03 )    /* Chroma DC residual present */
@@ -1048,8 +1033,8 @@ void x264_macroblock_write_cabac( x264_t *h, x264_cabac_t *cb )
         }
         if( h->mb.i_cbp_chroma&0x02 ) /* Chroma AC residual present */
         {
-            for( i = 0; i < 8; i++ )
-                block_residual_write_cabac( h, cb, DCT_CHROMA_AC, i, h->dct.block[16+i].residual_ac, 15 );
+            for( i = 16; i < 24; i++ )
+                block_residual_write_cabac( h, cb, DCT_CHROMA_AC, i, h->dct.luma4x4[i]+1, 15 );
         }
     }
 
@@ -1119,12 +1104,12 @@ void x264_partition_size_cabac( x264_t *h, x264_cabac_t *cb, int i8, int i_pixel
             {
                 int i4;
                 for( i4 = 0; i4 < 4; i4++ )
-                    block_residual_write_cabac( h, cb, DCT_LUMA_4x4, i4+i8*4, h->dct.block[i4+i8*4].luma4x4, 16 );
+                    block_residual_write_cabac( h, cb, DCT_LUMA_4x4, i4+i8*4, h->dct.luma4x4[i4+i8*4], 16 );
             }
         }
 
-        block_residual_write_cabac( h, cb, DCT_CHROMA_AC, i8,   h->dct.block[16+i8  ].residual_ac, 15 );
-        block_residual_write_cabac( h, cb, DCT_CHROMA_AC, i8+4, h->dct.block[16+i8+4].residual_ac, 15 );
+        block_residual_write_cabac( h, cb, DCT_CHROMA_AC, 16+i8, h->dct.luma4x4[16+i8]+1, 15 );
+        block_residual_write_cabac( h, cb, DCT_CHROMA_AC, 20+i8, h->dct.luma4x4[20+i8]+1, 15 );
 
         i8 += x264_pixel_size[i_pixel].h >> 3;
     }
@@ -1143,7 +1128,7 @@ static void x264_partition_i4x4_size_cabac( x264_t *h, x264_cabac_t *cb, int i4,
     const int i_pred = x264_mb_predict_intra4x4_mode( h, i4 );
     i_mode = x264_mb_pred_mode4x4_fix( i_mode );
     x264_cabac_mb_intra4x4_pred_mode( cb, i_pred, i_mode );
-    block_residual_write_cabac( h, cb, DCT_LUMA_4x4, i4, h->dct.block[i4].luma4x4, 16 );
+    block_residual_write_cabac( h, cb, DCT_LUMA_4x4, i4, h->dct.luma4x4[i4], 16 );
 }
 
 static void x264_i8x8_chroma_size_cabac( x264_t *h, x264_cabac_t *cb )
@@ -1157,8 +1142,8 @@ static void x264_i8x8_chroma_size_cabac( x264_t *h, x264_cabac_t *cb )
         if( h->mb.i_cbp_chroma == 2 )
         {
             int i;
-            for( i = 0; i < 8; i++ )
-                block_residual_write_cabac( h, cb, DCT_CHROMA_AC, i, h->dct.block[16+i].residual_ac, 15 );
+            for( i = 16; i < 24; i++ )
+                block_residual_write_cabac( h, cb, DCT_CHROMA_AC, i, h->dct.luma4x4[i]+1, 15 );
         }
     }
 }

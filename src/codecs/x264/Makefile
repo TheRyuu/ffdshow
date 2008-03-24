@@ -15,8 +15,10 @@ SRCS_C=common/mc.c common/predict.c common/pixel.c common/macroblock.c \
 ifneq ($(CC),icl)
 SRCS_C+=common/x86/mc-c.c common/x86/predict-c.c
 
-SRCS_NASM=common/x86/dct-a.asm common/x86/deblock-a.asm common/x86/mc-a.asm common/x86/mc-a2.asm \
-          common/x86/pixel-a.asm common/x86/predict-a.asm common/x86/quant-a.asm common/x86/sad-a.asm \
+SRCS_NASM=common/x86/cabac-a.asm common/x86/dct-a.asm common/x86/deblock-a.asm \
+          common/x86/mc-a.asm common/x86/mc-a2.asm \
+          common/x86/pixel-a.asm common/x86/predict-a.asm \
+          common/x86/quant-a.asm common/x86/sad-a.asm \
           common/x86/cpu-32.asm common/x86/dct-32.asm common/x86/pixel-32.asm \
           common/x86/x86inc.asm common/x86/x86inc-32.asm
 endif
