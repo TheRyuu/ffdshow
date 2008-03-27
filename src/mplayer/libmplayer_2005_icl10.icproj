@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject 
 	ProjectType="Intel C++ Project"
-	Version="10.0"
+	Version="10.1"
 	Name="libmplayer"
 	ProjectGUID="{86877EB0-73C2-4923-808E-A96D6D7BF6B1}"
 	VCNestedProjectGUID="{76569356-593F-417E-A8C5-108FF3F364D9}"
-	VCNestedProjectCRC32="3391042110"
+	VCNestedProjectCRC32="1528317775"
 	VCNestedProjectFileName="libmplayer_2005_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -37,17 +37,17 @@
 				C99Support="1"/>
 			<Tool 
 				Name="LinkerTool"
-				DelayImpLib=""
-				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../bin/libmplayer.dll"
 				SuppressStartupBanner="1"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\libmplayer.def"
 				GenerateDebugInformation="1"
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
 				ImportLibrary="$(IntDir)\$(TargetName).lib"
-				AdditionalOptions="/MACHINE:I386"/>
+				AdditionalOptions="/MACHINE:I386"
+				DelayImpLib=""/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -99,17 +99,17 @@
 				C99Support="1"/>
 			<Tool 
 				Name="LinkerTool"
-				DelayImpLib=""
-				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../bin/libmplayer.dll"
 				SuppressStartupBanner="1"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\libmplayer.def"
 				GenerateDebugInformation="1"
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
 				ImportLibrary="$(IntDir)\$(TargetName).lib"
-				TargetMachine="17"/>
+				TargetMachine="17"
+				DelayImpLib=""/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -145,10 +145,10 @@
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="0"
-				WholeProgramOptimization="0"/>
+				WholeProgramOptimization="1"/>
 			<Tool 
 				Name="CppCmplrTool"
-				WholeProgramOptimization="0"
+				WholeProgramOptimization="1"
 				GlobalOptimizations="1"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="1"
@@ -162,23 +162,27 @@
 				RuntimeLibrary="2"
 				BufferSecurityCheck="0"
 				EnableFunctionLevelLinking="1"
-				WarningLevel="4"
+				WarningLevel="1"
 				SuppressStartupBanner="1"
 				CompileAs="1"
 				DisableSpecificWarnings="4996,4005,4002"
+				FloatingPointSpeculation="1"
 				C99Support="1"/>
 			<Tool 
 				Name="LinkerTool"
-				DelayImpLib=""
-				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../bin/libmplayer.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="1"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\libmplayer.def"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
 				ImportLibrary="$(IntDir)\$(TargetName).lib"
-				AdditionalOptions="/MACHINE:I386"/>
+				TargetMachine="1"
+				AdditionalOptions=""
+				DelayImpLib=""/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -221,7 +225,7 @@
 				GlobalOptimizations="1"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="1"
-				ImproveFloatingPointConsistency="0"
+				ImproveFloatingPointConsistency="1"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="1"
 				AdditionalIncludeDirectories=".,..,../imgFilters,libvo"
@@ -236,21 +240,24 @@
 				SuppressStartupBanner="1"
 				CompileAs="1"
 				DisableSpecificWarnings="4996,4005,4002"
-				UseProcExt="2"
+				FloatingPointSpeculation="1"
+				UseProcExt="0"
 				RequireProcExt="0"
 				C99Support="1"/>
 			<Tool 
 				Name="LinkerTool"
-				DelayImpLib=""
-				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../bin/libmplayer.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="1"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\libmplayer.def"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
 				ImportLibrary="$(IntDir)\$(TargetName).lib"
-				TargetMachine="17"/>
+				TargetMachine="17"
+				DelayImpLib=""/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
