@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject 
 	ProjectType="Intel C++ Project"
-	Version="10.0"
+	Version="10.1"
 	Name="libavcodec"
 	ProjectGUID="{F55142B4-710A-4FCB-A103-177135A92838}"
 	VCNestedProjectGUID="{5CAF881C-9349-4EE2-9697-982C10795033}"
-	VCNestedProjectCRC32="2904318490"
+	VCNestedProjectCRC32="388014198"
 	VCNestedProjectFileName="libavcodec_2005_icl10.vcproj"
 	OwnerKey="{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}">
 	<Platforms>
@@ -45,20 +45,19 @@
 				C99Support="1"/>
 			<Tool 
 				Name="LinkerTool"
-				DelayImpLib=""
-				IgnoreImportLibrary="1"
-				AdditionalDependencies="User32.lib msvcrtd.lib kernel32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../bin/libavcodec.dll"
 				SuppressStartupBanner="1"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="User32.lib msvcrtd.lib kernel32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\libavcodec.def"
+				GenerateManifest="1"
 				GenerateDebugInformation="1"
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
 				SubSystem="2"
-				EntryPointSymbol="DllEntryPoint"
 				ImportLibrary="$(IntDir)\$(TargetName).lib"
-				GenerateManifest="1"
-				AdditionalOptions="/MACHINE:I386"/>
+				TargetMachine="1"
+				DelayImpLib=""/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -110,24 +109,23 @@
 				SuppressStartupBanner="1"
 				DebugInformationFormat="3"
 				CompileAs="0"
-				DisableSpecificWarnings=""
+				DisableSpecificWarnings="4996"
 				C99Support="1"/>
 			<Tool 
 				Name="LinkerTool"
-				DelayImpLib=""
-				IgnoreImportLibrary="1"
-				AdditionalDependencies="User32.lib msvcrtd.lib kernel32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../bin/libavcodec.dll"
 				SuppressStartupBanner="1"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="User32.lib msvcrtd.lib kernel32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\libavcodec.def"
+				GenerateManifest="1"
 				GenerateDebugInformation="1"
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
 				SubSystem="2"
-				EntryPointSymbol="DllEntryPoint"
 				ImportLibrary="$(IntDir)\$(TargetName).lib"
 				TargetMachine="17"
-				GenerateManifest="1"/>
+				DelayImpLib=""/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -163,10 +161,10 @@
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="0"
-				WholeProgramOptimization="0"/>
+				WholeProgramOptimization="1"/>
 			<Tool 
 				Name="CppCmplrTool"
-				WholeProgramOptimization="0"
+				WholeProgramOptimization="1"
 				GlobalOptimizations="1"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="1"
@@ -189,25 +187,24 @@
 				WarningLevel="1"
 				SuppressStartupBanner="1"
 				CompileAs="1"
-				DisableSpecificWarnings="4996,4005,4002"
+				DisableSpecificWarnings="4996,4005,4002,4244"
 				C99Support="1"/>
 			<Tool 
 				Name="LinkerTool"
-				DelayImpLib=""
-				IgnoreImportLibrary="1"
-				AdditionalDependencies="User32.lib msvcrt.lib kernel32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../bin/libavcodec.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="1"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="User32.lib msvcrt.lib kernel32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\libavcodec.def"
+				GenerateManifest="1"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				EntryPointSymbol="DllEntryPoint"
 				ImportLibrary="$(IntDir)\$(TargetName).lib"
-				GenerateManifest="1"
-				AdditionalOptions="/MACHINE:I386"/>
+				TargetMachine="1"
+				DelayImpLib=""/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -243,10 +240,10 @@
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="0"
-				WholeProgramOptimization="0"/>
+				WholeProgramOptimization="1"/>
 			<Tool 
 				Name="CppCmplrTool"
-				WholeProgramOptimization="0"
+				WholeProgramOptimization="1"
 				GlobalOptimizations="1"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="1"
@@ -260,34 +257,34 @@
 				RuntimeLibrary="2"
 				BufferSecurityCheck="0"
 				EnableFunctionLevelLinking="1"
+				EnableEnhancedInstructionSet="0"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
 				BrowseInformation="0"
 				WarningLevel="1"
 				SuppressStartupBanner="1"
 				CompileAs="1"
-				DisableSpecificWarnings="4996,4005,4002"
-				UseProcExt="2"
+				DisableSpecificWarnings="4996,4005,4002,4244"
+				UseProcExt="0"
 				RequireProcExt="0"
 				C99Support="1"
 				Cpp0xSupport="0"/>
 			<Tool 
 				Name="LinkerTool"
-				DelayImpLib=""
-				IgnoreImportLibrary="1"
-				AdditionalDependencies="User32.lib msvcrt.lib kernel32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../bin/libavcodec.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="1"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="User32.lib msvcrt.lib kernel32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\libavcodec.def"
+				GenerateManifest="1"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				EntryPointSymbol="DllEntryPoint"
 				ImportLibrary="$(IntDir)\$(TargetName).lib"
 				TargetMachine="17"
-				GenerateManifest="1"/>
+				DelayImpLib=""/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -781,7 +778,7 @@
 				Name="Release|x64">
 				<Tool 
 					Name="GeneralTool"
-					ExcludedFromBuild="0"/>
+					ExcludedFromBuild="1"/>
 			</FileConfiguration>
 		</File>
 		<File 
@@ -806,12 +803,6 @@
 			</FileConfiguration>
 			<FileConfiguration 
 				Name="Release|x64">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Debug|x64">
 				<Tool 
 					Name="GeneralTool"
 					ExcludedFromBuild="1"/>

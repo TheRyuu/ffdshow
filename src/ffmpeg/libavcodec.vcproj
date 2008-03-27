@@ -118,7 +118,6 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="TRUE"
-				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="msvcrt.lib kernel32.lib oldnames.lib $(NOINHERIT)"
 				OutputFile="../../bin/libavcodec.dll"
 				LinkIncremental="1"
@@ -128,7 +127,8 @@
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary=".\Release/libavcodec.lib"/>
+				ImportLibrary=".\Release/libavcodec.lib"
+				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"
@@ -354,6 +354,9 @@
 				RelativePath=".\libavcodec\mjpeg.c">
 			</File>
 			<File
+				RelativePath=".\libavcodec\mjpeg_parser.c">
+			</File>
+			<File
 				RelativePath=".\libavcodec\mjpegbdec.c">
 			</File>
 			<File
@@ -361,9 +364,6 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mjpegenc.c">
-			</File>
-			<File
-				RelativePath=".\libavcodec\mjpeg_parser.c">
 			</File>
 			<File
 				RelativePath=".\libavcodec\motion_est.c">
