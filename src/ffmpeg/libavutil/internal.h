@@ -30,10 +30,6 @@
 #    define NDEBUG
 #endif
 
-#if defined(_MSC_VER) & !defined(__cplusplus)
-#    define inline
-#endif
-
 #ifdef __GNUC__
 #include <stdint.h>
 #endif
@@ -126,18 +122,18 @@
 #    define memcpy(a,b,c) fast_memcpy(a,b,c)
 #endif
 
-// Use rip-relative addressing if compiling PIC code on x86-64.
 #if defined(__MINGW32__) || defined(__CYGWIN__)
-#    if defined(ARCH_X86_64) && defined(PIC)
-#        define MANGLE(a) "_" #a"(%%rip)"
-#    else
-#        define MANGLE(a) "_" #a
-#    endif
-#elif defined(ARCH_X86_64) && defined(PIC)
-#    define MANGLE(a) #a"(%%rip)"
-#else
-#    define MANGLE(a) #a
+#define EXTERN_PREFIX "_"
 #endif
+
+// Use rip-relative addressing if compiling PIC code on x86-64.
+#if defined(ARCH_X86_64) && defined(PIC)
+#    define LOCAL_MANGLE(a) #a "(%%rip)"
+#else
+#    define LOCAL_MANGLE(a) #a
+#endif
+
+#define MANGLE(a) EXTERN_PREFIX LOCAL_MANGLE(a)
 
 /* debug stuff */
 

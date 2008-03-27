@@ -1706,6 +1706,7 @@ PREFETCH(prefetch_3dnow, prefetch)
 
 /* CAVS specific */
 void ff_cavsdsp_init_mmx2(DSPContext* c, AVCodecContext *avctx);
+void ff_cavsdsp_init_3dnow(DSPContext* c, AVCodecContext *avctx);
 
 void ff_put_cavs_qpel8_mc00_mmx2(uint8_t *dst, uint8_t *src, int stride) {
     put_pixels8_mmx(dst, src, stride, 8);
@@ -2334,6 +2335,8 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 
             c->avg_h264_chroma_pixels_tab[0]= avg_h264_chroma_mc8_3dnow_rnd;
             c->avg_h264_chroma_pixels_tab[1]= avg_h264_chroma_mc4_3dnow;
+            
+            ff_cavsdsp_init_3dnow(c, avctx);
         }
 
 #if GCC420_OR_NEWER

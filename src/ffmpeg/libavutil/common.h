@@ -41,6 +41,10 @@
 #    include <math.h>
 #endif /* HAVE_AV_CONFIG_H */
 
+#if defined(_MSC_VER) & !defined(__cplusplus)
+#    define inline __inline
+#endif
+
 #ifndef av_always_inline
 #if defined(__GNUC__) && (__GNUC__ > 3 || __GNUC__ == 3 && __GNUC_MINOR__ > 0)
 #    define av_always_inline __attribute__((always_inline)) inline
@@ -338,7 +342,8 @@ static inline av_pure int ff_get_fourcc(const char *s){
         }\
     }
 
-#if defined(ARCH_X86) || defined(ARCH_POWERPC) || defined(ARCH_BFIN)
+/*
+#if defined(ARCH_X86)
 #define AV_READ_TIME read_time
 #if defined(ARCH_X86_64)
 static inline uint64_t read_time(void)
@@ -356,56 +361,15 @@ static inline long long read_time(void)
                  : "=A" (l));
     return l;
 }
-#else //FIXME check ppc64
-static inline uint64_t read_time(void)
-{
-    uint32_t tbu, tbl, temp;
-
-     /* from section 2.2.1 of the 32-bit PowerPC PEM */
-     __asm__ __volatile__(
-         "1:\n"
-         "mftbu  %2\n"
-         "mftb   %0\n"
-         "mftbu  %1\n"
-         "cmpw   %2,%1\n"
-         "bne    1b\n"
-     : "=r"(tbl), "=r"(tbu), "=r"(temp)
-     :
-     : "cc");
-
-     return (((uint64_t)tbu)<<32) | (uint64_t)tbl;
-}
 #endif
 #elif defined(HAVE_GETHRTIME)
 #define AV_READ_TIME gethrtime
 #endif
+*/
 
-#ifdef AV_READ_TIME
-#define START_TIMER \
-uint64_t tend;\
-uint64_t tstart= AV_READ_TIME();\
-
-#define STOP_TIMER(id) \
-tend= AV_READ_TIME();\
-{\
-    static uint64_t tsum=0;\
-    static int tcount=0;\
-    static int tskip_count=0;\
-    if(tcount<2 || tend - tstart < FFMAX(8*tsum/tcount, 2000)){\
-        tsum+= tend - tstart;\
-        tcount++;\
-    }else\
-        tskip_count++;\
-    if(((tcount+tskip_count)&(tcount+tskip_count-1))==0){\
-        av_log(NULL, AV_LOG_DEBUG, "%"PRIu64" dezicycles in %s, %d runs, %d skips\n",\
-               tsum*10/tcount, id, tcount, tskip_count);\
-    }\
-}
-#else
 #define START_TIMER
 #define STOP_TIMER(id) {}
-#endif
 
-#endif
+#endif /* HAVE_AV_CONFIG_H */
 
 #endif /* FFMPEG_COMMON_H */
