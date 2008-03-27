@@ -26,8 +26,8 @@
 
 #define RDO_SKIP_BS
 
-static int cabac_prefix_transition[15][128];
-static int cabac_prefix_size[15][128];
+static uint8_t cabac_prefix_transition[15][128];
+static uint16_t cabac_prefix_size[15][128];
 
 /* CAVLC: produces exactly the same bit count as a normal encode */
 /* this probably still leaves some unnecessary computations */
@@ -49,7 +49,9 @@ static int cabac_prefix_size[15][128];
 #define x264_macroblock_write_cabac  x264_macroblock_size_cabac
 #include "cabac.c"
 
-
+#define COPY_CABAC h->mc.memcpy_aligned( &cabac_tmp.f8_bits_encoded, &h->cabac.f8_bits_encoded, \
+        sizeof(x264_cabac_t) - offsetof(x264_cabac_t,f8_bits_encoded) )
+    
 static int ssd_mb( x264_t *h )
 {
     return h->pixf.ssd[PIXEL_16x16]( h->mb.pic.p_fenc[0], FENC_STRIDE,
@@ -78,21 +80,21 @@ static int x264_rd_cost_mb( x264_t *h, int i_lambda2 )
 
     if( IS_SKIP( h->mb.i_type ) )
     {
-        i_bits = 1 * i_lambda2;
+        i_bits = (1 * i_lambda2 + 128) >> 8;
     }
     else if( h->param.b_cabac )
     {
         x264_cabac_t cabac_tmp;
-        h->mc.memcpy_aligned( &cabac_tmp, &h->cabac, offsetof(x264_cabac_t,i_low) );
+        COPY_CABAC;
         x264_macroblock_size_cabac( h, &cabac_tmp );
-        i_bits = ( cabac_tmp.f8_bits_encoded * i_lambda2 + 128 ) >> 8;
+        i_bits = ( (uint64_t)cabac_tmp.f8_bits_encoded * i_lambda2 + 32768 ) >> 16;
     }
     else
     {
         bs_t bs_tmp = h->out.bs;
         bs_tmp.i_bits_encoded = 0;
         x264_macroblock_size_cavlc( h, &bs_tmp );
-        i_bits = bs_tmp.i_bits_encoded * i_lambda2;
+        i_bits = ( bs_tmp.i_bits_encoded * i_lambda2 + 128 ) >> 8;
     }
 
     h->mb.b_transform_8x8 = b_transform_bak;
@@ -125,13 +127,13 @@ int x264_rd_cost_part( x264_t *h, int i_lambda2, int i8, int i_pixel )
     if( h->param.b_cabac )
     {
         x264_cabac_t cabac_tmp;
-        h->mc.memcpy_aligned( &cabac_tmp, &h->cabac, offsetof(x264_cabac_t,i_low) );
+        COPY_CABAC;
         x264_partition_size_cabac( h, &cabac_tmp, i8, i_pixel );
-        i_bits = ( cabac_tmp.f8_bits_encoded * i_lambda2 + 128 ) >> 8;
+        i_bits = ( (uint64_t)cabac_tmp.f8_bits_encoded * i_lambda2 + 32768 ) >> 16;
     }
     else
     {
-        i_bits = x264_partition_size_cavlc( h, i8, i_pixel ) * i_lambda2;
+        i_bits = ( x264_partition_size_cavlc( h, i8, i_pixel ) * i_lambda2 + 128 ) >> 8;
     }
 
     return i_ssd + i_bits;
@@ -147,13 +149,13 @@ int x264_rd_cost_i8x8( x264_t *h, int i_lambda2, int i8, int i_mode )
     if( h->param.b_cabac )
     {
         x264_cabac_t cabac_tmp;
-        h->mc.memcpy_aligned( &cabac_tmp, &h->cabac, offsetof(x264_cabac_t,i_low) );
+        COPY_CABAC;
         x264_partition_i8x8_size_cabac( h, &cabac_tmp, i8, i_mode );
-        i_bits = ( cabac_tmp.f8_bits_encoded * i_lambda2 + 128 ) >> 8;
+        i_bits = ( (uint64_t)cabac_tmp.f8_bits_encoded * i_lambda2 + 32768 ) >> 16;
     }
     else
     {
-        i_bits = x264_partition_i8x8_size_cavlc( h, i8, i_mode ) * i_lambda2;
+        i_bits = ( x264_partition_i8x8_size_cavlc( h, i8, i_mode ) * i_lambda2 + 128 ) >> 8;
     }
 
     return i_ssd + i_bits;
@@ -169,14 +171,13 @@ int x264_rd_cost_i4x4( x264_t *h, int i_lambda2, int i4, int i_mode )
     if( h->param.b_cabac )
     {
         x264_cabac_t cabac_tmp;
-        h->mc.memcpy_aligned( &cabac_tmp, &h->cabac, offsetof(x264_cabac_t,i_low) );
-        
+        COPY_CABAC;
         x264_partition_i4x4_size_cabac( h, &cabac_tmp, i4, i_mode );
-        i_bits = ( cabac_tmp.f8_bits_encoded * i_lambda2 + 128 ) >> 8;
+        i_bits = ( (uint64_t)cabac_tmp.f8_bits_encoded * i_lambda2 + 32768 ) >> 16;
     }
     else
     {
-        i_bits = x264_partition_i4x4_size_cavlc( h, i4, i_mode ) * i_lambda2;
+        i_bits = ( x264_partition_i4x4_size_cavlc( h, i4, i_mode ) * i_lambda2 + 128 ) >> 8;
     }
 
     return i_ssd + i_bits;
@@ -196,13 +197,13 @@ int x264_rd_cost_i8x8_chroma( x264_t *h, int i_lambda2, int i_mode, int b_dct )
     if( h->param.b_cabac )
     {
         x264_cabac_t cabac_tmp;
-        h->mc.memcpy_aligned( &cabac_tmp, &h->cabac, offsetof(x264_cabac_t,i_low) );
+        COPY_CABAC;
         x264_i8x8_chroma_size_cabac( h, &cabac_tmp );
-        i_bits = ( cabac_tmp.f8_bits_encoded * i_lambda2 + 128 ) >> 8;
+        i_bits = ( (uint64_t)cabac_tmp.f8_bits_encoded * i_lambda2 + 32768 ) >> 16;
     }
     else
     {
-        i_bits = x264_i8x8_chroma_size_cavlc( h ) * i_lambda2;
+        i_bits = ( x264_i8x8_chroma_size_cavlc( h ) * i_lambda2 + 128 ) >> 8;
     }
 
     return i_ssd + i_bits;
@@ -240,19 +241,6 @@ void x264_rdo_init( )
         }
     }
 }
-
-// node ctx: 0..3: abslevel1 (with abslevelgt1 == 0).
-//           4..7: abslevelgt1 + 3 (and abslevel1 doesn't matter).
-/* map node ctx => cabac ctx for level=1 */
-static const int coeff_abs_level1_ctx[8] = { 1, 2, 3, 4, 0, 0, 0, 0 };
-/* map node ctx => cabac ctx for level>1 */
-static const int coeff_abs_levelgt1_ctx[8] = { 5, 5, 5, 5, 6, 7, 8, 9 };
-static const int coeff_abs_level_transition[2][8] = {
-/* update node.ctx after coding a level=1 */
-    { 1, 2, 3, 3, 4, 5, 6, 7 },
-/* update node.ctx after coding a level>1 */
-    { 4, 4, 4, 4, 5, 6, 7, 7 }
-};
 
 // should the intra and inter lambdas be different?
 // I'm just matching the behaviour of deadzone quant.
