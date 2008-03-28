@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject 
 	ProjectType="Intel C++ Project"
-	Version="10.0"
+	Version="10.1"
 	Name="ffdshow"
 	ProjectGUID="{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
-	VCNestedProjectCRC32="16692515"
+	VCNestedProjectCRC32="1950142675"
 	VCNestedProjectFileName="ffdshow_2005_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -18,8 +18,8 @@
 			Name="Debug|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="$(ConfigurationName)$(PlatformName)"
-				IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+				OutputDirectory="debug_2005_icl10"
+				IntermediateDirectory="debug_2005_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="false"
@@ -45,7 +45,7 @@
 				TypeLibraryName=".\Debug/ffdshow.tlb"/>
 			<Tool 
 				Name="CppCmplrTool"
-				AdditionalOptions="/Zc:wchar_t"
+				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters"
 				PreprocessorDefinitions="DEBUG;_DEBUG;WIN32;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
@@ -116,8 +116,8 @@
 			Name="Debug|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="$(ConfigurationName)$(PlatformName)"
-				IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+				OutputDirectory="debug_2005_x64_icl10"
+				IntermediateDirectory="debug_2005_x64_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="false"
@@ -143,7 +143,7 @@
 				TypeLibraryName=".\Debug/ffdshow.tlb"/>
 			<Tool 
 				Name="CppCmplrTool"
-				AdditionalOptions="/Zc:wchar_t"
+				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters"
 				PreprocessorDefinitions="DEBUG;_DEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX;ARCH_IS_64BIT;ARCH_IS_GENERIC"
@@ -214,8 +214,8 @@
 			Name="Release|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="$(ConfigurationName)$(PlatformName)"
-				IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+				OutputDirectory="release_2005_icl10"
+				IntermediateDirectory="release_2005_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="false"
@@ -241,7 +241,6 @@
 				TypeLibraryName=".\Release/ffdshow.tlb"/>
 			<Tool 
 				Name="CppCmplrTool"
-				AdditionalOptions="/Zc:wchar_t"
 				Optimization="2"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
@@ -262,7 +261,7 @@
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\"
 				BrowseInformation="0"
-				WarningLevel="4"
+				WarningLevel="0"
 				SuppressStartupBanner="true"
 				CompileAs="0"
 				DisableSpecificWarnings="4996,4250"
@@ -280,7 +279,7 @@
 				Name="LinkerTool"
 				RegisterOutput="false"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib msvcrt.lib msvcprt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="unicows.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib msvcrt.lib msvcprt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="bin\ffdshow.ax"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -317,8 +316,8 @@
 			Name="Release|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="$(ConfigurationName)$(PlatformName)"
-				IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+				OutputDirectory="release_2005_x64_icl10"
+				IntermediateDirectory="release_2005_x64_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="false"
@@ -344,7 +343,6 @@
 				TypeLibraryName=".\Release/ffdshow.tlb"/>
 			<Tool 
 				Name="CppCmplrTool"
-				AdditionalOptions="/Zc:wchar_t"
 				Optimization="2"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
@@ -401,6 +399,7 @@
 				Name="VCALinkTool"/>
 			<Tool 
 				Name="VCManifestTool"
+				AdditionalManifestFiles="bin\manifest64\ffdshow.ax.manifest"
 				EmbedManifest="true"/>
 			<Tool 
 				Name="VCXDCMakeTool"/>
@@ -421,8 +420,8 @@
 			Name="Debug Unicode|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="debug_unicode$(PlatformName)"
-				IntermediateDirectory="debug_unicode$(PlatformName)"
+				OutputDirectory="debug_unicode_2005_icl10"
+				IntermediateDirectory="debug_unicode_2005_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="false"
@@ -448,7 +447,7 @@
 				TypeLibraryName=".\Debug/ffdshow.tlb"/>
 			<Tool 
 				Name="CppCmplrTool"
-				AdditionalOptions="/Zc:wchar_t"
+				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters"
 				PreprocessorDefinitions="DEBUG;_DEBUG;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
@@ -519,8 +518,8 @@
 			Name="Debug Unicode|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="debug_unicode$(PlatformName)"
-				IntermediateDirectory="debug_unicode$(PlatformName)"
+				OutputDirectory="debug_unicode_2005_x64_icl10"
+				IntermediateDirectory="debug_unicode_2005_x64_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="false"
@@ -546,7 +545,7 @@
 				TypeLibraryName=".\Debug/ffdshow.tlb"/>
 			<Tool 
 				Name="CppCmplrTool"
-				AdditionalOptions="/Zc:wchar_t"
+				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters"
 				PreprocessorDefinitions="DEBUG;_DEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX;ARCH_IS_64BIT;ARCH_IS_GENERIC"
@@ -618,8 +617,8 @@
 			Name="Release Unicode|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="release_unicode$(PlatformName)"
-				IntermediateDirectory="release_unicode$(PlatformName)"
+				OutputDirectory="release_unicode_2005_icl10"
+				IntermediateDirectory="release_unicode_2005_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="false"
@@ -646,7 +645,6 @@
 				TypeLibraryName=".\Release/ffdshow.tlb"/>
 			<Tool 
 				Name="CppCmplrTool"
-				AdditionalOptions="/Zc:wchar_t"
 				Optimization="2"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
@@ -667,7 +665,7 @@
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\"
 				BrowseInformation="0"
-				WarningLevel="4"
+				WarningLevel="0"
 				SuppressStartupBanner="true"
 				CompileAs="0"
 				DisableSpecificWarnings="4996,4250"
@@ -722,8 +720,8 @@
 			Name="Release Unicode|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="release_unicode$(PlatformName)"
-				IntermediateDirectory="release_unicode$(PlatformName)"
+				OutputDirectory="release_unicode_2005_x64_icl10"
+				IntermediateDirectory="release_unicode_2005_x64_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="false"
@@ -750,7 +748,6 @@
 				TypeLibraryName=".\Release/ffdshow.tlb"/>
 			<Tool 
 				Name="CppCmplrTool"
-				AdditionalOptions="/Zc:wchar_t"
 				Optimization="2"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
@@ -771,7 +768,7 @@
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\"
 				BrowseInformation="0"
-				WarningLevel="4"
+				WarningLevel="0"
 				SuppressStartupBanner="true"
 				CompileAs="0"
 				DisableSpecificWarnings="4996,4250"
@@ -809,6 +806,7 @@
 				Name="VCALinkTool"/>
 			<Tool 
 				Name="VCManifestTool"
+				AdditionalManifestFiles="bin\manifest64\ffdshow.ax.manifest"
 				EmbedManifest="true"/>
 			<Tool 
 				Name="VCXDCMakeTool"/>
@@ -878,9 +876,6 @@
 				</File>
 				<File 
 					RelativePath="src\helpFIR.txt">
-				</File>
-				<File 
-					RelativePath="src\helpFont.txt">
 				</File>
 				<File 
 					RelativePath="src\helpGeneric_FFV1.txt">
@@ -954,11 +949,6 @@
 						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
 					Name="Release|x64">
 					<Tool 
 						Name="GeneralTool"
@@ -967,22 +957,12 @@
 						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
-					Name="Debug Unicode|Win32">
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
 					Name="Debug Unicode|x64">
 					<Tool 
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
 						Name="yasm64"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|Win32">
-					<Tool 
-						Name="yasm"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release Unicode|x64">
@@ -1004,28 +984,12 @@
 						Name="yasm"/>
 				</FileConfiguration>
 				<FileConfiguration 
-					Name="Debug|x64">
-					<Tool 
-						Name="CustomTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
-						Outputs="$(IntDir)\$(InputName).obj"/>
-				</FileConfiguration>
-				<FileConfiguration 
 					Name="Release|Win32">
 					<Tool 
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
 						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="CustomTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
-						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Debug Unicode|Win32">
@@ -1036,28 +1000,12 @@
 						Name="yasm"/>
 				</FileConfiguration>
 				<FileConfiguration 
-					Name="Debug Unicode|x64">
-					<Tool 
-						Name="CustomTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
-						Outputs="$(IntDir)\$(InputName).obj"/>
-				</FileConfiguration>
-				<FileConfiguration 
 					Name="Release Unicode|Win32">
 					<Tool 
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
 						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|x64">
-					<Tool 
-						Name="CustomTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
-						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
 			<File 
@@ -1185,58 +1133,6 @@
 			</File>
 			<File 
 				RelativePath=".\src\memcpy.asm">
-				<FileConfiguration 
-					Name="Debug|Win32">
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug|x64">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm64"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm64"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug Unicode|Win32">
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug Unicode|x64">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm64"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|Win32">
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|x64">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm64"/>
-				</FileConfiguration>
 			</File>
 			<File 
 				RelativePath=".\src\mmintrin64.c">
@@ -1850,58 +1746,6 @@
 			</File>
 			<File 
 				RelativePath=".\src\subtitles\fontRenderer.asm">
-				<FileConfiguration 
-					Name="Debug|Win32">
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug|x64">
-					<Tool 
-						Name="CustomTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
-						Outputs="$(IntDir)\$(InputName).obj"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="CustomTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
-						Outputs="$(IntDir)\$(InputName).obj"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug Unicode|Win32">
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug Unicode|x64">
-					<Tool 
-						Name="CustomTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
-						Outputs="$(IntDir)\$(InputName).obj"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|Win32">
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|x64">
-					<Tool 
-						Name="CustomTool"
-						Description="yasm assembling $(InputPath)"
-						CommandLine="yasm -f win64 -DWIN64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
-						Outputs="$(IntDir)\$(InputName).obj"/>
-				</FileConfiguration>
 			</File>
 			<File 
 				RelativePath=".\src\subtitles\spudec.cpp">
@@ -2147,22 +1991,12 @@
 			<File 
 				RelativePath=".\src\imgFilters\simple_idct_mmx.asm">
 				<FileConfiguration 
-					Name="Debug|Win32">
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
 					Name="Debug|x64">
 					<Tool 
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release|x64">
@@ -2170,12 +2004,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug Unicode|Win32">
-					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Debug Unicode|x64">
@@ -2183,12 +2012,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|Win32">
-					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release Unicode|x64">
@@ -2196,7 +2020,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 			</File>
 			<File 
@@ -2242,12 +2066,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release|x64">
@@ -2255,12 +2074,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug Unicode|Win32">
-					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Debug Unicode|x64">
@@ -2268,12 +2082,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|Win32">
-					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release Unicode|x64">
@@ -2281,7 +2090,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 			</File>
 			<File 
@@ -2297,12 +2106,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release|x64">
@@ -2310,12 +2114,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug Unicode|Win32">
-					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Debug Unicode|x64">
@@ -2323,12 +2122,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|Win32">
-					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release Unicode|x64">
@@ -2336,7 +2130,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 			</File>
 			<File 
@@ -2422,54 +2216,6 @@
 			</File>
 			<File 
 				RelativePath="src\imgFilters\TimgFilter.cpp">
-				<FileConfiguration 
-					Name="Debug|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						AdditionalOptions=""/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						AdditionalOptions=""/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						AdditionalOptions=""/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						AdditionalOptions=""/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug Unicode|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						AdditionalOptions=""/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug Unicode|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						AdditionalOptions=""/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						AdditionalOptions=""/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						AdditionalOptions=""/>
-				</FileConfiguration>
 			</File>
 			<File 
 				RelativePath="src\imgFilters\TimgFilter.h">
@@ -4145,6 +3891,12 @@
 				RelativePath=".\src\dialog\Ccrystality.h">
 			</File>
 			<File 
+				RelativePath=".\src\dialog\CcspOptions.cpp">
+			</File>
+			<File 
+				RelativePath=".\src\dialog\CcspOptions.h">
+			</File>
+			<File 
 				RelativePath=".\src\dialog\CcurveAlt.cpp">
 			</File>
 			<File 
@@ -5626,6 +5378,9 @@
 				<FileConfiguration 
 					Name="Debug|Win32">
 					<Tool 
+						Name="GeneralTool"
+						ExcludedFromBuild="true"/>
+					<Tool 
 						Name="yasm"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -5634,10 +5389,13 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release|Win32">
+					<Tool 
+						Name="GeneralTool"
+						ExcludedFromBuild="true"/>
 					<Tool 
 						Name="yasm"/>
 				</FileConfiguration>
@@ -5647,10 +5405,13 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Debug Unicode|Win32">
+					<Tool 
+						Name="GeneralTool"
+						ExcludedFromBuild="true"/>
 					<Tool 
 						Name="yasm"/>
 				</FileConfiguration>
@@ -5660,10 +5421,13 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release Unicode|Win32">
+					<Tool 
+						Name="GeneralTool"
+						ExcludedFromBuild="true"/>
 					<Tool 
 						Name="yasm"/>
 				</FileConfiguration>
@@ -5673,7 +5437,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 			</File>
 			<File 
@@ -5689,12 +5453,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release|x64">
@@ -5702,12 +5461,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug Unicode|Win32">
-					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Debug Unicode|x64">
@@ -5715,12 +5469,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|Win32">
-					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release Unicode|x64">
@@ -5728,7 +5477,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 			</File>
 			<File 
@@ -5774,12 +5523,15 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm64"/>
+						Name="CustomTool"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Debug|x64">
 					<Tool 
-						Name="yasm64"/>
+						Name="GeneralTool"
+						ExcludedFromBuild="true"/>
+					<Tool 
+						Name="CustomTool"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release|Win32">
@@ -5787,12 +5539,15 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm64"/>
+						Name="CustomTool"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release|x64">
 					<Tool 
-						Name="yasm64"/>
+						Name="GeneralTool"
+						ExcludedFromBuild="true"/>
+					<Tool 
+						Name="CustomTool"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Debug Unicode|Win32">
@@ -5800,12 +5555,15 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm64"/>
+						Name="CustomTool"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Debug Unicode|x64">
 					<Tool 
-						Name="yasm64"/>
+						Name="GeneralTool"
+						ExcludedFromBuild="true"/>
+					<Tool 
+						Name="CustomTool"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release Unicode|Win32">
@@ -5813,12 +5571,15 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm64"/>
+						Name="CustomTool"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release Unicode|x64">
 					<Tool 
-						Name="yasm64"/>
+						Name="GeneralTool"
+						ExcludedFromBuild="true"/>
+					<Tool 
+						Name="CustomTool"/>
 				</FileConfiguration>
 			</File>
 			<File 
@@ -5930,6 +5691,12 @@
 				RelativePath=".\src\convert\Tconvert.h">
 			</File>
 			<File 
+				RelativePath=".\src\convert\TrgbPrimaries.cpp">
+			</File>
+			<File 
+				RelativePath=".\src\convert\TrgbPrimaries.h">
+			</File>
+			<File 
 				RelativePath="src\convert\Tswscale.cpp">
 			</File>
 			<File 
@@ -5947,34 +5714,7 @@
 			<File 
 				RelativePath=".\src\audioFilters\dotproduct.asm">
 				<FileConfiguration 
-					Name="Debug|x64">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug Unicode|x64">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="yasm"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release Unicode|x64">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
+					Name="Debug|Win32">
 					<Tool 
 						Name="yasm"/>
 				</FileConfiguration>
@@ -6044,7 +5784,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release|x64">
@@ -6052,7 +5792,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Debug Unicode|x64">
@@ -6060,7 +5800,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release Unicode|x64">
@@ -6068,7 +5808,7 @@
 						Name="GeneralTool"
 						ExcludedFromBuild="true"/>
 					<Tool 
-						Name="yasm"/>
+						Name="yasm64"/>
 				</FileConfiguration>
 			</File>
 			<File 
@@ -6711,5 +6451,4 @@
 		</File>
 	</Files>
 </VisualStudioProject>
-
 
