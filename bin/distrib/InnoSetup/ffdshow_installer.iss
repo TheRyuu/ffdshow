@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 1857
+#define tryout_revision = 1920
 #define buildyear = 2008
-#define buildmonth = '02'
-#define buildday = '12'
+#define buildmonth = '03'
+#define buildday = '28'
 
 ; Build specific options
 #define unicode_required = True
@@ -79,6 +79,7 @@
   #define VS2005SP1 = True
   #define is64bit = True
   #define include_x264 = False
+  #define include_xvidcore = False
   #define unicode_required = True
   #define cpu_detection = True
   #define filename_suffix = '_clsid_x64'
@@ -103,6 +104,7 @@
   #define unicode_required = True
   #define cpu_detection = True
   #define include_x264 = False
+  #define include_xvidcore = False
   #define include_app_plugins = False
   #define include_makeavis = False
   #define filename_suffix = '_x64'
@@ -391,7 +393,7 @@ Source: {#= bindir}\ff_theora.dll; DestDir: {app}; Flags: ignoreversion; Compone
 Source: {#= bindir}\ff_x264.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow\vfw
 Source: Runtimes\pthreadGC2.dll; DestDir: {sys}; Flags: sharedfile uninsnosharedfileprompt; Components: ffdshow\vfw
 #endif
-#if include_xvidcore
+#if include_xvidcore & !is64bit
 Source: {#= bindir}\xvidcore.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 #endif
 Source: {#= bindir}\ff_kernelDeint.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
@@ -507,7 +509,7 @@ Type: files; Name: {group}\VFW configuration.lnk;           Components: ffdshow\
 Type: files; Name: {app}\ff_x264.dll;                   Components: ffdshow
 #endif
 #if !include_xvidcore
-Type: files; Name: {app}\xvidcore.dll;                   Components: ffdshow
+Type: files; Name: {app}\xvidcore.dll;                  Components: ffdshow
 #endif
 
 
