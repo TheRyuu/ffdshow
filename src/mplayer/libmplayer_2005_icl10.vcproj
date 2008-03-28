@@ -230,6 +230,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Qip"
+				Optimization="2"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
@@ -242,7 +244,7 @@
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
-				WarningLevel="1"
+				WarningLevel="0"
 				SuppressStartupBanner="true"
 				CompileAs="1"
 				DisableSpecificWarnings="4996,4005,4002"
@@ -330,6 +332,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Qip"
+				Optimization="2"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
@@ -343,7 +347,7 @@
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
 				PrecompiledHeaderFile=".\ReleaseDLL/libmplayer.pch"
-				WarningLevel="4"
+				WarningLevel="0"
 				SuppressStartupBanner="true"
 				CompileAs="1"
 				DisableSpecificWarnings="4996,4005,4002"

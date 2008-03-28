@@ -5,7 +5,7 @@
 	Name="ff_liba52"
 	ProjectGUID="{7043607F-0E04-457D-AC6E-AA0E1F886250}"
 	VCNestedProjectGUID="{7C4F2A8F-C1A6-4E75-AF26-285A1B70A066}"
-	VCNestedProjectCRC32="3512945069"
+	VCNestedProjectCRC32="1651580091"
 	VCNestedProjectFileName="ff_liba52_2005_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -22,88 +22,76 @@
 				IntermediateDirectory="release_2005_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
-				ATLMinimizesCRunTimeLibraryUsage="false"
-				ManagedExtensions="0"
+				ATLMinimizesCRunTimeLibraryUsage="0"
 				WholeProgramOptimization="1"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool 
-				Name="MidlCmplrTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="true"
-				SuppressStartupBanner="true"
-				TargetEnvironment="1"
-				TypeLibraryName=".\release_2005_icl10/ff_liba52.tlb"
-				HeaderFileName=""/>
-			<Tool 
 				Name="CppCmplrTool"
-				Optimization="2"
+				WholeProgramOptimization="1"
+				Optimization="1000"
+				GlobalOptimizations="1"
 				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="true"
+				EnableIntrinsicFunctions="1"
 				FavorSizeOrSpeed="1"
-				OmitFramePointers="true"
+				OmitFramePointers="1"
 				AdditionalIncludeDirectories="../.."
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;ALT_BITSTREAM_READER"
-				StringPooling="true"
+				StringPooling="1"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="false"
-				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="false"
+				BufferSecurityCheck="0"
+				EnableFunctionLevelLinking="1"
+				RuntimeTypeInfo="0"
 				AssemblerListingLocation="$(IntDir)\"
 				BrowseInformation="0"
 				WarningLevel="3"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="1"
 				DebugInformationFormat="0"
 				CompileAs="2"
-				DisableSpecificWarnings="4305,4244,4996"/>
-			<Tool 
-				Name="VCManagedResourceCompilerTool"/>
-			<Tool 
-				Name="ResCmplrTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1051"/>
-			<Tool 
-				Name="PreLinkEventTool"/>
+				DisableSpecificWarnings="4305,4244,4996"
+				AdditionalOptions="/Qip"/>
 			<Tool 
 				Name="LinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrt.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_liba52.dll"
 				LinkIncremental="1"
-				SuppressStartupBanner="true"
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
+				SuppressStartupBanner="1"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="kernel32.lib msvcrt.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\ff_liba52.def"
+				GenerateManifest="1"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				OptimizeForWindows98="1"
 				ImportLibrary="$(IntDir)/ff_liba52.lib"
-				TargetMachine="1"/>
+				TargetMachine="1"
+				DelayImpLib=""/>
 			<Tool 
-				Name="VCALinkTool"/>
+				Name="LibrarianTool"/>
 			<Tool 
-				Name="VCManifestTool"
-				EmbedManifest="true"/>
+				Name="ResCmplrTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1051"/>
 			<Tool 
-				Name="VCXDCMakeTool"/>
+				Name="MidlCmplrTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="1"
+				SuppressStartupBanner="1"
+				TargetEnvironment="1"
+				TypeLibraryName=".\release_2005_icl10/ff_liba52.tlb"
+				HeaderFileName=""/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="VCFxCopTool"/>
+				Name="PreBuildEventTool"/>
 			<Tool 
-				Name="VCAppVerifierTool"/>
-			<Tool 
-				Name="VCWebDeploymentTool"/>
+				Name="PreLinkEventTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Release|x64">
@@ -113,91 +101,78 @@
 				IntermediateDirectory="release_2005_x64_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
-				ATLMinimizesCRunTimeLibraryUsage="false"
-				ManagedExtensions="0"
+				ATLMinimizesCRunTimeLibraryUsage="0"
 				WholeProgramOptimization="1"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool 
-				Name="MidlCmplrTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="true"
-				SuppressStartupBanner="true"
-				TargetEnvironment="3"
-				TypeLibraryName=".\release_2005_x64_icl10/ff_liba52.tlb"
-				HeaderFileName=""/>
-			<Tool 
 				Name="CppCmplrTool"
-				Optimization="2"
+				WholeProgramOptimization="1"
+				Optimization="1000"
+				GlobalOptimizations="1"
 				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="true"
+				EnableIntrinsicFunctions="1"
+				ImproveFloatingPointConsistency="0"
 				FavorSizeOrSpeed="1"
-				OmitFramePointers="true"
+				OmitFramePointers="1"
 				AdditionalIncludeDirectories="../.."
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;ALT_BITSTREAM_READER"
-				StringPooling="true"
+				StringPooling="1"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="false"
-				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="false"
+				BufferSecurityCheck="0"
+				EnableFunctionLevelLinking="1"
+				RuntimeTypeInfo="0"
 				AssemblerListingLocation="$(IntDir)\"
 				WarningLevel="0"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="1"
 				DebugInformationFormat="0"
 				CompileAs="2"
 				DisableSpecificWarnings="4305,4244,4996"
-				GlobalOptimizations="1"
-				ImproveFloatingPointConsistency="0"
-				UseProcExt="2"
+				AdditionalOptions="/Qip"
+				UseProcExt="0"
 				RequireProcExt="0"/>
 			<Tool 
-				Name="VCManagedResourceCompilerTool"/>
-			<Tool 
-				Name="ResCmplrTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1051"/>
-			<Tool 
-				Name="PreLinkEventTool"/>
-			<Tool 
 				Name="LinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrt.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_liba52.dll"
 				LinkIncremental="1"
-				SuppressStartupBanner="true"
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
+				SuppressStartupBanner="1"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="kernel32.lib msvcrt.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\ff_liba52.def"
+				GenerateManifest="1"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				OptimizeForWindows98="1"
 				ImportLibrary="$(IntDir)/ff_liba52.lib"
-				TargetMachine="17"/>
+				TargetMachine="17"
+				DelayImpLib=""/>
 			<Tool 
-				Name="VCALinkTool"/>
+				Name="LibrarianTool"/>
 			<Tool 
-				Name="VCManifestTool"
-				EmbedManifest="true"/>
+				Name="ResCmplrTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1051"/>
 			<Tool 
-				Name="VCXDCMakeTool"/>
+				Name="MidlCmplrTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="1"
+				SuppressStartupBanner="1"
+				TargetEnvironment="3"
+				TypeLibraryName=".\release_2005_x64_icl10/ff_liba52.tlb"
+				HeaderFileName=""/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="VCFxCopTool"/>
+				Name="PreBuildEventTool"/>
 			<Tool 
-				Name="VCAppVerifierTool"/>
-			<Tool 
-				Name="VCWebDeploymentTool"/>
+				Name="PreLinkEventTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Debug|Win32">
@@ -207,23 +182,7 @@
 				IntermediateDirectory="debug_2005_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
-				ATLMinimizesCRunTimeLibraryUsage="false"/>
-			<Tool 
-				Name="PreBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool 
-				Name="MidlCmplrTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="true"
-				SuppressStartupBanner="true"
-				TargetEnvironment="1"
-				TypeLibraryName=".\debug_2005_icl10/ff_liba52.tlb"
-				HeaderFileName=""/>
+				ATLMinimizesCRunTimeLibraryUsage="0"/>
 			<Tool 
 				Name="CppCmplrTool"
 				Optimization="0"
@@ -232,55 +191,57 @@
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				ForceConformanceInForLoopScope="true"
-				RuntimeTypeInfo="false"
+				ForceConformanceInForLoopScope="1"
+				RuntimeTypeInfo="0"
 				AssemblerListingLocation="$(IntDir)\"
 				BrowseInformation="0"
 				WarningLevel="3"
-				SuppressStartupBanner="true"
-				Detect64BitPortabilityProblems="false"
+				SuppressStartupBanner="1"
+				Detect64BitPortabilityProblems="0"
 				DebugInformationFormat="4"
 				CompileAs="2"
 				DisableSpecificWarnings="4305,4244,4996"/>
 			<Tool 
-				Name="VCManagedResourceCompilerTool"/>
+				Name="LinkerTool"
+				OutputFile="../../../bin/ff_liba52.dll"
+				SuppressStartupBanner="1"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="kernel32.lib msvcrtd.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				IgnoreAllDefaultLibraries="1"
+				ModuleDefinitionFile=".\ff_liba52.def"
+				GenerateManifest="1"
+				GenerateDebugInformation="1"
+				ProgramDatabaseFile="$(IntDir)/ff_liba52.pdb"
+				SubSystem="2"
+				ImportLibrary="$(IntDir)/ff_liba52.lib"
+				TargetMachine="1"
+				DelayImpLib=""/>
+			<Tool 
+				Name="LibrarianTool"/>
 			<Tool 
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1051"/>
 			<Tool 
-				Name="PreLinkEventTool"/>
-			<Tool 
-				Name="LinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrtd.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
-				OutputFile="../../../bin/ff_liba52.dll"
-				SuppressStartupBanner="true"
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
-				ModuleDefinitionFile=".\ff_liba52.def"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_liba52.pdb"
-				SubSystem="2"
-				ImportLibrary="$(IntDir)/ff_liba52.lib"
-				TargetMachine="1"/>
-			<Tool 
-				Name="VCALinkTool"/>
-			<Tool 
-				Name="VCManifestTool"
-				EmbedManifest="true"/>
-			<Tool 
-				Name="VCXDCMakeTool"/>
+				Name="MidlCmplrTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="1"
+				SuppressStartupBanner="1"
+				TargetEnvironment="1"
+				TypeLibraryName=".\debug_2005_icl10/ff_liba52.tlb"
+				HeaderFileName=""/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="VCFxCopTool"/>
+				Name="PreBuildEventTool"/>
 			<Tool 
-				Name="VCAppVerifierTool"/>
-			<Tool 
-				Name="VCWebDeploymentTool"/>
+				Name="PreLinkEventTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Debug|x64">
@@ -290,23 +251,7 @@
 				IntermediateDirectory="debug_2005_x64_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
-				ATLMinimizesCRunTimeLibraryUsage="false"/>
-			<Tool 
-				Name="PreBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool 
-				Name="MidlCmplrTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="true"
-				SuppressStartupBanner="true"
-				TargetEnvironment="3"
-				TypeLibraryName=".\debug_2005_x64_icl10/ff_liba52.tlb"
-				HeaderFileName=""/>
+				ATLMinimizesCRunTimeLibraryUsage="0"/>
 			<Tool 
 				Name="CppCmplrTool"
 				Optimization="0"
@@ -315,104 +260,85 @@
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				ForceConformanceInForLoopScope="true"
-				RuntimeTypeInfo="false"
+				ForceConformanceInForLoopScope="1"
+				RuntimeTypeInfo="0"
 				AssemblerListingLocation="$(IntDir)\"
 				WarningLevel="3"
-				SuppressStartupBanner="true"
-				Detect64BitPortabilityProblems="false"
+				SuppressStartupBanner="1"
+				Detect64BitPortabilityProblems="0"
 				DebugInformationFormat="3"
 				CompileAs="2"
 				DisableSpecificWarnings="4305,4244,4996"/>
 			<Tool 
-				Name="VCManagedResourceCompilerTool"/>
+				Name="LinkerTool"
+				OutputFile="../../../bin/ff_liba52.dll"
+				SuppressStartupBanner="1"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="kernel32.lib msvcrtd.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				IgnoreAllDefaultLibraries="1"
+				ModuleDefinitionFile=".\ff_liba52.def"
+				GenerateManifest="1"
+				GenerateDebugInformation="1"
+				ProgramDatabaseFile="$(IntDir)/ff_liba52.pdb"
+				SubSystem="2"
+				ImportLibrary="$(IntDir)/ff_liba52.lib"
+				TargetMachine="17"
+				DelayImpLib=""/>
+			<Tool 
+				Name="LibrarianTool"/>
 			<Tool 
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1051"/>
 			<Tool 
-				Name="PreLinkEventTool"/>
-			<Tool 
-				Name="LinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrtd.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
-				OutputFile="../../../bin/ff_liba52.dll"
-				SuppressStartupBanner="true"
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
-				ModuleDefinitionFile=".\ff_liba52.def"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_liba52.pdb"
-				SubSystem="2"
-				ImportLibrary="$(IntDir)/ff_liba52.lib"
-				TargetMachine="17"/>
-			<Tool 
-				Name="VCALinkTool"/>
-			<Tool 
-				Name="VCManifestTool"
-				EmbedManifest="true"/>
-			<Tool 
-				Name="VCXDCMakeTool"/>
+				Name="MidlCmplrTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="1"
+				SuppressStartupBanner="1"
+				TargetEnvironment="3"
+				TypeLibraryName=".\debug_2005_x64_icl10/ff_liba52.tlb"
+				HeaderFileName=""/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="VCFxCopTool"/>
+				Name="PreBuildEventTool"/>
 			<Tool 
-				Name="VCAppVerifierTool"/>
-			<Tool 
-				Name="VCWebDeploymentTool"/>
+				Name="PreLinkEventTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
 		</Configuration>
 	</Configurations>
 	<Files>
-		<Filter 
-			Name="Source Files"
-			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
-			<File 
-				RelativePath="bit_allocate.c">
-			</File>
-			<File 
-				RelativePath="bitstream.c">
-			</File>
-			<File 
-				RelativePath="downmix.c">
-			</File>
-			<File 
-				RelativePath="imdct.c">
-			</File>
-			<File 
-				RelativePath="parse.c">
-			</File>
-		</Filter>
-		<Filter 
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl">
-			<File 
-				RelativePath="a52.h">
-			</File>
-			<File 
-				RelativePath="a52_internal.h">
-			</File>
-			<File 
-				RelativePath="bitstream.h">
-			</File>
-			<File 
-				RelativePath="config.h">
-			</File>
-			<File 
-				RelativePath="..\..\csimd.h">
-			</File>
-			<File 
-				RelativePath="..\..\inttypes.h">
-			</File>
-			<File 
-				RelativePath="tables.h">
-			</File>
-		</Filter>
 		<File 
-			RelativePath="ff_liba52.def">
-		</File>
+			RelativePath=".\a52.h"/>
+		<File 
+			RelativePath=".\a52_internal.h"/>
+		<File 
+			RelativePath=".\bitstream.h"/>
+		<File 
+			RelativePath=".\config.h"/>
+		<File 
+			RelativePath="..\..\csimd.h"/>
+		<File 
+			RelativePath="..\..\inttypes.h"/>
+		<File 
+			RelativePath=".\tables.h"/>
+		<File 
+			RelativePath=".\bit_allocate.c"/>
+		<File 
+			RelativePath=".\bitstream.c"/>
+		<File 
+			RelativePath=".\downmix.c"/>
+		<File 
+			RelativePath=".\imdct.c"/>
+		<File 
+			RelativePath=".\parse.c"/>
+		<File 
+			RelativePath=".\ff_liba52.def"/>
 	</Files>
 </VisualStudioProject>
 

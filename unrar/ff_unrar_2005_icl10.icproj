@@ -5,7 +5,7 @@
 	Name="ff_unrar"
 	ProjectGUID="{9C78112E-B79D-4AE6-859D-F71383126B4E}"
 	VCNestedProjectGUID="{82199D65-5E04-48FB-99B5-9396D55566AE}"
-	VCNestedProjectCRC32="196494722"
+	VCNestedProjectCRC32="1084350464"
 	VCNestedProjectFileName="ff_unrar_2005_icl10.vcproj"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -24,67 +24,53 @@
 				ConfigurationType="2"
 				CharacterSet="0"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool 
-				Name="MidlCmplrTool"/>
-			<Tool 
 				Name="CppCmplrTool"
 				Optimization="0"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;SFX_MODULE;SHELL_EXT"
-				MinimalRebuild="true"
+				MinimalRebuild="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				ForceConformanceInForLoopScope="true"
-				RuntimeTypeInfo="false"
+				ForceConformanceInForLoopScope="1"
+				RuntimeTypeInfo="0"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="rar.hpp"
 				BrowseInformation="0"
 				WarningLevel="0"
-				Detect64BitPortabilityProblems="false"
+				Detect64BitPortabilityProblems="0"
 				DebugInformationFormat="4"
 				DisableSpecificWarnings="4996"/>
 			<Tool 
-				Name="VCManagedResourceCompilerTool"/>
-			<Tool 
-				Name="ResCmplrTool"/>
-			<Tool 
-				Name="PreLinkEventTool"/>
-			<Tool 
 				Name="LinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalDependencies="msvcrtd.lib kernel32.lib user32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_unrar.dll"
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrtd.lib kernel32.lib user32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="dll.def"
-				GenerateDebugInformation="true"
+				GenerateManifest="1"
+				GenerateDebugInformation="1"
 				ProgramDatabaseFile="$(IntDir)/ff_unrar.pdb"
 				SubSystem="2"
 				ImportLibrary="$(IntDir)/ff_unrar.lib"
-				TargetMachine="1"/>
+				TargetMachine="1"
+				DelayImpLib=""/>
 			<Tool 
-				Name="VCALinkTool"/>
+				Name="LibrarianTool"/>
 			<Tool 
-				Name="VCManifestTool"
-				EmbedManifest="true"/>
+				Name="ResCmplrTool"/>
 			<Tool 
-				Name="VCXDCMakeTool"/>
+				Name="MidlCmplrTool"/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="VCFxCopTool"/>
+				Name="PreBuildEventTool"/>
 			<Tool 
-				Name="VCAppVerifierTool"/>
-			<Tool 
-				Name="VCWebDeploymentTool"/>
+				Name="PreLinkEventTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Debug|x64">
@@ -95,67 +81,53 @@
 				ConfigurationType="2"
 				CharacterSet="0"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
+				Name="CppCmplrTool"
+				Optimization="0"
+				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;SFX_MODULE;SHELL_EXT"
+				MinimalRebuild="1"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				ForceConformanceInForLoopScope="1"
+				RuntimeTypeInfo="0"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="rar.hpp"
+				WarningLevel="0"
+				Detect64BitPortabilityProblems="0"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4996"/>
 			<Tool 
-				Name="CustomTool"/>
+				Name="LinkerTool"
+				OutputFile="../bin/ff_unrar.dll"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrtd.lib kernel32.lib user32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				IgnoreAllDefaultLibraries="1"
+				ModuleDefinitionFile="dll.def"
+				GenerateManifest="1"
+				GenerateDebugInformation="1"
+				ProgramDatabaseFile="$(IntDir)/ff_unrar.pdb"
+				SubSystem="2"
+				ImportLibrary="$(IntDir)/ff_unrar.lib"
+				TargetMachine="17"
+				DelayImpLib=""/>
 			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
+				Name="LibrarianTool"/>
 			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="ResCmplrTool"/>
 			<Tool 
 				Name="MidlCmplrTool"
 				TargetEnvironment="3"/>
 			<Tool 
-				Name="CppCmplrTool"
-				Optimization="0"
-				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;SFX_MODULE;SHELL_EXT"
-				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				ForceConformanceInForLoopScope="true"
-				RuntimeTypeInfo="false"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="rar.hpp"
-				WarningLevel="0"
-				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="3"
-				DisableSpecificWarnings="4996"/>
+				Name="BscMakeTool"/>
 			<Tool 
-				Name="VCManagedResourceCompilerTool"/>
-			<Tool 
-				Name="ResCmplrTool"/>
+				Name="PreBuildEventTool"/>
 			<Tool 
 				Name="PreLinkEventTool"/>
 			<Tool 
-				Name="LinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalDependencies="msvcrtd.lib kernel32.lib user32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
-				OutputFile="../bin/ff_unrar.dll"
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
-				ModuleDefinitionFile="dll.def"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_unrar.pdb"
-				SubSystem="2"
-				ImportLibrary="$(IntDir)/ff_unrar.lib"
-				TargetMachine="17"/>
-			<Tool 
-				Name="VCALinkTool"/>
-			<Tool 
-				Name="VCManifestTool"
-				EmbedManifest="true"/>
-			<Tool 
-				Name="VCXDCMakeTool"/>
-			<Tool 
-				Name="BscMakeTool"/>
-			<Tool 
-				Name="VCFxCopTool"/>
-			<Tool 
-				Name="VCAppVerifierTool"/>
-			<Tool 
-				Name="VCWebDeploymentTool"/>
-			<Tool 
 				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Release|Win32">
@@ -165,72 +137,60 @@
 				IntermediateDirectory="release_2005_icl10"
 				ConfigurationType="2"
 				CharacterSet="0"
-				ManagedExtensions="0"
 				WholeProgramOptimization="1"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool 
-				Name="MidlCmplrTool"/>
-			<Tool 
 				Name="CppCmplrTool"
-				Optimization="1"
+				WholeProgramOptimization="1"
+				Optimization="1000"
+				GlobalOptimizations="1"
 				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="true"
-				FavorSizeOrSpeed="2"
-				OmitFramePointers="true"
+				EnableIntrinsicFunctions="1"
+				FavorSizeOrSpeed="1"
+				OmitFramePointers="1"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;SFX_MODULE;SHELL_EXT"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="false"
-				RuntimeTypeInfo="false"
+				BufferSecurityCheck="0"
+				RuntimeTypeInfo="0"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="rar.hpp"
 				BrowseInformation="0"
-				DisableSpecificWarnings="4996"/>
-			<Tool 
-				Name="VCManagedResourceCompilerTool"/>
-			<Tool 
-				Name="ResCmplrTool"/>
-			<Tool 
-				Name="PreLinkEventTool"/>
+				DisableSpecificWarnings="4996"
+				AdditionalOptions="/Qip"/>
 			<Tool 
 				Name="LinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalDependencies="msvcrt.lib kernel32.lib user32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_unrar.dll"
 				LinkIncremental="1"
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrt.lib kernel32.lib user32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="dll.def"
+				GenerateManifest="1"
 				ProgramDatabaseFile="$(IntDir)/ff_unrar.pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				OptimizeForWindows98="1"
 				ImportLibrary="$(IntDir)/ff_unrar.lib"
-				TargetMachine="1"/>
+				TargetMachine="1"
+				DelayImpLib=""/>
 			<Tool 
-				Name="VCALinkTool"/>
+				Name="LibrarianTool"/>
 			<Tool 
-				Name="VCManifestTool"
-				EmbedManifest="true"/>
+				Name="ResCmplrTool"/>
 			<Tool 
-				Name="VCXDCMakeTool"/>
+				Name="MidlCmplrTool"/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="VCFxCopTool"/>
+				Name="PreBuildEventTool"/>
 			<Tool 
-				Name="VCAppVerifierTool"/>
-			<Tool 
-				Name="VCWebDeploymentTool"/>
+				Name="PreLinkEventTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Release|x64">
@@ -240,375 +200,266 @@
 				IntermediateDirectory="release_2005_x64_icl10"
 				ConfigurationType="2"
 				CharacterSet="0"
-				ManagedExtensions="0"
 				WholeProgramOptimization="1"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool 
-				Name="MidlCmplrTool"
-				TargetEnvironment="3"/>
-			<Tool 
 				Name="CppCmplrTool"
-				Optimization="1"
+				WholeProgramOptimization="1"
+				Optimization="1000"
+				GlobalOptimizations="1"
 				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="true"
-				FavorSizeOrSpeed="2"
-				OmitFramePointers="true"
+				EnableIntrinsicFunctions="1"
+				ImproveFloatingPointConsistency="0"
+				FavorSizeOrSpeed="1"
+				OmitFramePointers="1"
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;SFX_MODULE;SHELL_EXT"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="false"
-				RuntimeTypeInfo="false"
+				BufferSecurityCheck="0"
+				RuntimeTypeInfo="0"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="rar.hpp"
 				WarningLevel="0"
 				DisableSpecificWarnings="4996"
-				GlobalOptimizations="0"
-				ImproveFloatingPointConsistency="0"
-				UseProcExt="2"
+				AdditionalOptions="/Qip"
+				UseProcExt="0"
 				RequireProcExt="0"/>
 			<Tool 
-				Name="VCManagedResourceCompilerTool"/>
-			<Tool 
-				Name="ResCmplrTool"/>
-			<Tool 
-				Name="PreLinkEventTool"/>
-			<Tool 
 				Name="LinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalDependencies="msvcrt.lib kernel32.lib user32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_unrar.dll"
 				LinkIncremental="1"
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrt.lib kernel32.lib user32.lib oldnames.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="dll.def"
+				GenerateManifest="1"
 				ProgramDatabaseFile="$(IntDir)/ff_unrar.pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				OptimizeForWindows98="1"
 				ImportLibrary="$(IntDir)/ff_unrar.lib"
-				TargetMachine="17"/>
+				TargetMachine="17"
+				DelayImpLib=""/>
 			<Tool 
-				Name="VCALinkTool"/>
+				Name="LibrarianTool"/>
 			<Tool 
-				Name="VCManifestTool"
-				EmbedManifest="true"/>
+				Name="ResCmplrTool"/>
 			<Tool 
-				Name="VCXDCMakeTool"/>
+				Name="MidlCmplrTool"
+				TargetEnvironment="3"/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="VCFxCopTool"/>
+				Name="PreBuildEventTool"/>
 			<Tool 
-				Name="VCAppVerifierTool"/>
-			<Tool 
-				Name="VCWebDeploymentTool"/>
+				Name="PreLinkEventTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
 		</Configuration>
 	</Configurations>
 	<Files>
-		<Filter 
-			Name="Source Files"
-			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
-			<File 
-				RelativePath=".\archive.cpp">
-			</File>
-			<File 
-				RelativePath=".\arcread.cpp">
-			</File>
-			<File 
-				RelativePath=".\cmddata.cpp">
-			</File>
-			<File 
-				RelativePath=".\crc.cpp">
-			</File>
-			<File 
-				RelativePath=".\dll.cpp">
-				<FileConfiguration 
-					Name="Debug|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						UsePrecompiledHeader="1"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Debug|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						UsePrecompiledHeader="1"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						UsePrecompiledHeader="1"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="CppCmplrTool"
-						UsePrecompiledHeader="1"/>
-				</FileConfiguration>
-			</File>
-			<File 
-				RelativePath=".\encname.cpp">
-			</File>
-			<File 
-				RelativePath=".\errhnd.cpp">
-			</File>
-			<File 
-				RelativePath=".\extinfo.cpp">
-			</File>
-			<File 
-				RelativePath=".\extract.cpp">
-			</File>
-			<File 
-				RelativePath=".\filcreat.cpp">
-			</File>
-			<File 
-				RelativePath=".\file.cpp">
-			</File>
-			<File 
-				RelativePath=".\filefn.cpp">
-			</File>
-			<File 
-				RelativePath=".\filestr.cpp">
-			</File>
-			<File 
-				RelativePath=".\find.cpp">
-			</File>
-			<File 
-				RelativePath=".\getbits.cpp">
-			</File>
-			<File 
-				RelativePath=".\int64.cpp">
-			</File>
-			<File 
-				RelativePath=".\isnt.cpp">
-			</File>
-			<File 
-				RelativePath=".\match.cpp">
-			</File>
-			<File 
-				RelativePath=".\options.cpp">
-			</File>
-			<File 
-				RelativePath=".\pathfn.cpp">
-			</File>
-			<File 
-				RelativePath=".\rar.cpp">
-			</File>
-			<File 
-				RelativePath=".\rarvm.cpp">
-			</File>
-			<File 
-				RelativePath=".\rawread.cpp">
-			</File>
-			<File 
-				RelativePath=".\rdwrfn.cpp">
-			</File>
-			<File 
-				RelativePath=".\recvol.cpp">
-			</File>
-			<File 
-				RelativePath=".\rs.cpp">
-			</File>
-			<File 
-				RelativePath=".\savepos.cpp">
-			</File>
-			<File 
-				RelativePath=".\scantree.cpp">
-			</File>
-			<File 
-				RelativePath=".\strfn.cpp">
-			</File>
-			<File 
-				RelativePath=".\strlist.cpp">
-			</File>
-			<File 
-				RelativePath=".\system.cpp">
-			</File>
-			<File 
-				RelativePath=".\timefn.cpp">
-			</File>
-			<File 
-				RelativePath=".\unicode.cpp">
-			</File>
-			<File 
-				RelativePath=".\unpack.cpp">
-			</File>
-		</Filter>
-		<Filter 
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
-			<File 
-				RelativePath=".\archive.hpp">
-			</File>
-			<File 
-				RelativePath=".\array.hpp">
-			</File>
-			<File 
-				RelativePath=".\cmddata.hpp">
-			</File>
-			<File 
-				RelativePath=".\coder.hpp">
-			</File>
-			<File 
-				RelativePath=".\compress.hpp">
-			</File>
-			<File 
-				RelativePath=".\consio.hpp">
-			</File>
-			<File 
-				RelativePath=".\crc.hpp">
-			</File>
-			<File 
-				RelativePath=".\dll.hpp">
-			</File>
-			<File 
-				RelativePath=".\encname.hpp">
-			</File>
-			<File 
-				RelativePath=".\errhnd.hpp">
-			</File>
-			<File 
-				RelativePath=".\extinfo.hpp">
-			</File>
-			<File 
-				RelativePath=".\extract.hpp">
-			</File>
-			<File 
-				RelativePath=".\filcreat.hpp">
-			</File>
-			<File 
-				RelativePath=".\file.hpp">
-			</File>
-			<File 
-				RelativePath=".\filefn.hpp">
-			</File>
-			<File 
-				RelativePath=".\filestr.hpp">
-			</File>
-			<File 
-				RelativePath=".\find.hpp">
-			</File>
-			<File 
-				RelativePath=".\getbits.hpp">
-			</File>
-			<File 
-				RelativePath=".\global.hpp">
-			</File>
-			<File 
-				RelativePath=".\headers.hpp">
-			</File>
-			<File 
-				RelativePath=".\int64.hpp">
-			</File>
-			<File 
-				RelativePath=".\isnt.hpp">
-			</File>
-			<File 
-				RelativePath=".\loclang.hpp">
-			</File>
-			<File 
-				RelativePath=".\log.hpp">
-			</File>
-			<File 
-				RelativePath=".\match.hpp">
-			</File>
-			<File 
-				RelativePath=".\model.hpp">
-			</File>
-			<File 
-				RelativePath=".\options.hpp">
-			</File>
-			<File 
-				RelativePath=".\os.hpp">
-			</File>
-			<File 
-				RelativePath=".\pathfn.hpp">
-			</File>
-			<File 
-				RelativePath=".\rar.hpp">
-			</File>
-			<File 
-				RelativePath=".\rardefs.hpp">
-			</File>
-			<File 
-				RelativePath=".\rarfn.hpp">
-			</File>
-			<File 
-				RelativePath=".\rarlang.hpp">
-			</File>
-			<File 
-				RelativePath=".\raros.hpp">
-			</File>
-			<File 
-				RelativePath=".\rartypes.hpp">
-			</File>
-			<File 
-				RelativePath=".\rarvm.hpp">
-			</File>
-			<File 
-				RelativePath=".\rawread.hpp">
-			</File>
-			<File 
-				RelativePath=".\rdwrfn.hpp">
-			</File>
-			<File 
-				RelativePath=".\recvol.hpp">
-			</File>
-			<File 
-				RelativePath=".\resource.hpp">
-			</File>
-			<File 
-				RelativePath=".\rs.hpp">
-			</File>
-			<File 
-				RelativePath=".\savepos.hpp">
-			</File>
-			<File 
-				RelativePath=".\scantree.hpp">
-			</File>
-			<File 
-				RelativePath=".\smallfn.hpp">
-			</File>
-			<File 
-				RelativePath=".\strfn.hpp">
-			</File>
-			<File 
-				RelativePath=".\strlist.hpp">
-			</File>
-			<File 
-				RelativePath=".\suballoc.hpp">
-			</File>
-			<File 
-				RelativePath=".\system.hpp">
-			</File>
-			<File 
-				RelativePath=".\timefn.hpp">
-			</File>
-			<File 
-				RelativePath=".\unicode.hpp">
-			</File>
-			<File 
-				RelativePath=".\unpack.hpp">
-			</File>
-			<File 
-				RelativePath=".\version.hpp">
-			</File>
-		</Filter>
 		<File 
-			RelativePath=".\dll.def">
+			RelativePath=".\archive.hpp"/>
+		<File 
+			RelativePath=".\array.hpp"/>
+		<File 
+			RelativePath=".\cmddata.hpp"/>
+		<File 
+			RelativePath=".\coder.hpp"/>
+		<File 
+			RelativePath=".\compress.hpp"/>
+		<File 
+			RelativePath=".\consio.hpp"/>
+		<File 
+			RelativePath=".\crc.hpp"/>
+		<File 
+			RelativePath=".\dll.hpp"/>
+		<File 
+			RelativePath=".\encname.hpp"/>
+		<File 
+			RelativePath=".\errhnd.hpp"/>
+		<File 
+			RelativePath=".\extinfo.hpp"/>
+		<File 
+			RelativePath=".\extract.hpp"/>
+		<File 
+			RelativePath=".\filcreat.hpp"/>
+		<File 
+			RelativePath=".\file.hpp"/>
+		<File 
+			RelativePath=".\filefn.hpp"/>
+		<File 
+			RelativePath=".\filestr.hpp"/>
+		<File 
+			RelativePath=".\find.hpp"/>
+		<File 
+			RelativePath=".\getbits.hpp"/>
+		<File 
+			RelativePath=".\global.hpp"/>
+		<File 
+			RelativePath=".\headers.hpp"/>
+		<File 
+			RelativePath=".\int64.hpp"/>
+		<File 
+			RelativePath=".\isnt.hpp"/>
+		<File 
+			RelativePath=".\loclang.hpp"/>
+		<File 
+			RelativePath=".\log.hpp"/>
+		<File 
+			RelativePath=".\match.hpp"/>
+		<File 
+			RelativePath=".\model.hpp"/>
+		<File 
+			RelativePath=".\options.hpp"/>
+		<File 
+			RelativePath=".\os.hpp"/>
+		<File 
+			RelativePath=".\pathfn.hpp"/>
+		<File 
+			RelativePath=".\rar.hpp"/>
+		<File 
+			RelativePath=".\rardefs.hpp"/>
+		<File 
+			RelativePath=".\rarfn.hpp"/>
+		<File 
+			RelativePath=".\rarlang.hpp"/>
+		<File 
+			RelativePath=".\raros.hpp"/>
+		<File 
+			RelativePath=".\rartypes.hpp"/>
+		<File 
+			RelativePath=".\rarvm.hpp"/>
+		<File 
+			RelativePath=".\rawread.hpp"/>
+		<File 
+			RelativePath=".\rdwrfn.hpp"/>
+		<File 
+			RelativePath=".\recvol.hpp"/>
+		<File 
+			RelativePath=".\resource.hpp"/>
+		<File 
+			RelativePath=".\rs.hpp"/>
+		<File 
+			RelativePath=".\savepos.hpp"/>
+		<File 
+			RelativePath=".\scantree.hpp"/>
+		<File 
+			RelativePath=".\smallfn.hpp"/>
+		<File 
+			RelativePath=".\strfn.hpp"/>
+		<File 
+			RelativePath=".\strlist.hpp"/>
+		<File 
+			RelativePath=".\suballoc.hpp"/>
+		<File 
+			RelativePath=".\system.hpp"/>
+		<File 
+			RelativePath=".\timefn.hpp"/>
+		<File 
+			RelativePath=".\unicode.hpp"/>
+		<File 
+			RelativePath=".\unpack.hpp"/>
+		<File 
+			RelativePath=".\version.hpp"/>
+		<File 
+			RelativePath=".\archive.cpp"/>
+		<File 
+			RelativePath=".\arcread.cpp"/>
+		<File 
+			RelativePath=".\cmddata.cpp"/>
+		<File 
+			RelativePath=".\crc.cpp"/>
+		<File 
+			RelativePath=".\dll.cpp">
+			<FileConfiguration 
+				Name="Debug|Win32">
+				<Tool 
+					Name="CppCmplrTool"
+					UsePrecompiledHeader="1"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Debug|x64">
+				<Tool 
+					Name="CppCmplrTool"
+					UsePrecompiledHeader="1"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release|Win32">
+				<Tool 
+					Name="CppCmplrTool"
+					UsePrecompiledHeader="1"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release|x64">
+				<Tool 
+					Name="CppCmplrTool"
+					UsePrecompiledHeader="1"/>
+			</FileConfiguration>
 		</File>
+		<File 
+			RelativePath=".\encname.cpp"/>
+		<File 
+			RelativePath=".\errhnd.cpp"/>
+		<File 
+			RelativePath=".\extinfo.cpp"/>
+		<File 
+			RelativePath=".\extract.cpp"/>
+		<File 
+			RelativePath=".\filcreat.cpp"/>
+		<File 
+			RelativePath=".\file.cpp"/>
+		<File 
+			RelativePath=".\filefn.cpp"/>
+		<File 
+			RelativePath=".\filestr.cpp"/>
+		<File 
+			RelativePath=".\find.cpp"/>
+		<File 
+			RelativePath=".\getbits.cpp"/>
+		<File 
+			RelativePath=".\int64.cpp"/>
+		<File 
+			RelativePath=".\isnt.cpp"/>
+		<File 
+			RelativePath=".\match.cpp"/>
+		<File 
+			RelativePath=".\options.cpp"/>
+		<File 
+			RelativePath=".\pathfn.cpp"/>
+		<File 
+			RelativePath=".\rar.cpp"/>
+		<File 
+			RelativePath=".\rarvm.cpp"/>
+		<File 
+			RelativePath=".\rawread.cpp"/>
+		<File 
+			RelativePath=".\rdwrfn.cpp"/>
+		<File 
+			RelativePath=".\recvol.cpp"/>
+		<File 
+			RelativePath=".\rs.cpp"/>
+		<File 
+			RelativePath=".\savepos.cpp"/>
+		<File 
+			RelativePath=".\scantree.cpp"/>
+		<File 
+			RelativePath=".\strfn.cpp"/>
+		<File 
+			RelativePath=".\strlist.cpp"/>
+		<File 
+			RelativePath=".\system.cpp"/>
+		<File 
+			RelativePath=".\timefn.cpp"/>
+		<File 
+			RelativePath=".\unicode.cpp"/>
+		<File 
+			RelativePath=".\unpack.cpp"/>
+		<File 
+			RelativePath=".\dll.def"/>
 	</Files>
 </VisualStudioProject>
 

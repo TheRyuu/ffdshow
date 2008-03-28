@@ -5,7 +5,7 @@
 	Name="ffdshow"
 	ProjectGUID="{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
-	VCNestedProjectCRC32="3073195734"
+	VCNestedProjectCRC32="655289389"
 	VCNestedProjectFileName="ffdshow_2005_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -589,7 +589,8 @@
 				TypeLibraryName=".\release_unicode_2005_icl10/ffdshow.tlb"/>
 			<Tool 
 				Name="CppCmplrTool"
-				Optimization="2"
+				AdditionalOptions="/Qip"
+				Optimization="1000"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
@@ -601,6 +602,7 @@
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="false"
+				EnableEnhancedInstructionSet="1"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="StdAfx.h"
@@ -613,7 +615,8 @@
 				SuppressStartupBanner="true"
 				CompileAs="0"
 				DisableSpecificWarnings="4996,4250"
-				OmitDefaultLibName="true"/>
+				OmitDefaultLibName="true"
+				GlobalOptimizations="1"/>
 			<Tool 
 				Name="VCManagedResourceCompilerTool"/>
 			<Tool 
@@ -684,7 +687,8 @@
 				TypeLibraryName=".\release_unicode_2005_x64_icl10/ffdshow.tlb"/>
 			<Tool 
 				Name="CppCmplrTool"
-				Optimization="2"
+				AdditionalOptions="/Qip"
+				Optimization="1000"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
@@ -696,6 +700,7 @@
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="false"
+				EnableEnhancedInstructionSet="0"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="StdAfx.h"
@@ -711,7 +716,7 @@
 				OmitDefaultLibName="true"
 				GlobalOptimizations="1"
 				ImproveFloatingPointConsistency="0"
-				UseProcExt="2"
+				UseProcExt="0"
 				RequireProcExt="0"/>
 			<Tool 
 				Name="VCManagedResourceCompilerTool"/>
@@ -5610,8 +5615,6 @@
 					Name="Debug|x64">
 					<Tool 
 						Name="yasm64"/>
-					<Tool 
-						Name="GeneralTool"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release|Win32">
@@ -5625,8 +5628,6 @@
 					Name="Release|x64">
 					<Tool 
 						Name="yasm64"/>
-					<Tool 
-						Name="GeneralTool"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Debug Unicode|Win32">
@@ -5640,8 +5641,6 @@
 					Name="Debug Unicode|x64">
 					<Tool 
 						Name="yasm64"/>
-					<Tool 
-						Name="GeneralTool"/>
 				</FileConfiguration>
 				<FileConfiguration 
 					Name="Release Unicode|Win32">
@@ -5655,8 +5654,6 @@
 					Name="Release Unicode|x64">
 					<Tool 
 						Name="yasm64"/>
-					<Tool 
-						Name="GeneralTool"/>
 				</FileConfiguration>
 			</File>
 			<File 

@@ -5,7 +5,7 @@
 	Name="ff_realaac"
 	ProjectGUID="{35264226-DBDE-4CC1-A046-B366FA979D8E}"
 	VCNestedProjectGUID="{59623010-E8D1-492B-B45D-DCB58582008B}"
-	VCNestedProjectCRC32="3299665834"
+	VCNestedProjectCRC32="2606266109"
 	VCNestedProjectFileName="ff_realaac_2005_icl10.vcproj"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -24,66 +24,52 @@
 				ConfigurationType="2"
 				CharacterSet="0"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool 
-				Name="MidlCmplrTool"/>
-			<Tool 
 				Name="CppCmplrTool"
 				Optimization="0"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;USE_DEFAULT_STDLIB;HELIX_FEATURE_AUDIO_CODEC_AAC_SBR"
-				MinimalRebuild="true"
+				MinimalRebuild="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				RuntimeTypeInfo="false"
+				RuntimeTypeInfo="0"
 				UsePrecompiledHeader="0"
 				BrowseInformation="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="false"
+				Detect64BitPortabilityProblems="0"
 				DebugInformationFormat="4"
 				CompileAs="1"
 				DisableSpecificWarnings="4996"/>
 			<Tool 
-				Name="VCManagedResourceCompilerTool"/>
-			<Tool 
-				Name="ResCmplrTool"/>
-			<Tool 
-				Name="PreLinkEventTool"/>
-			<Tool 
 				Name="LinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_realaac.dll"
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="ff_realaac.def"
-				GenerateDebugInformation="true"
+				GenerateManifest="1"
+				GenerateDebugInformation="1"
 				ProgramDatabaseFile="$(IntDir)/ff_realaac.pdb"
 				SubSystem="2"
 				ImportLibrary="$(IntDir)/ff_realaac.lib"
-				TargetMachine="1"/>
+				TargetMachine="1"
+				DelayImpLib=""/>
 			<Tool 
-				Name="VCALinkTool"/>
+				Name="LibrarianTool"/>
 			<Tool 
-				Name="VCManifestTool"
-				EmbedManifest="true"/>
+				Name="ResCmplrTool"/>
 			<Tool 
-				Name="VCXDCMakeTool"/>
+				Name="MidlCmplrTool"/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="VCFxCopTool"/>
+				Name="PreBuildEventTool"/>
 			<Tool 
-				Name="VCAppVerifierTool"/>
-			<Tool 
-				Name="VCWebDeploymentTool"/>
+				Name="PreLinkEventTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Debug|x64">
@@ -94,66 +80,52 @@
 				ConfigurationType="2"
 				CharacterSet="0"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool 
-				Name="MidlCmplrTool"
-				TargetEnvironment="3"/>
-			<Tool 
 				Name="CppCmplrTool"
 				Optimization="0"
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;USE_DEFAULT_STDLIB;HELIX_FEATURE_AUDIO_CODEC_AAC_SBR"
-				MinimalRebuild="true"
+				MinimalRebuild="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				RuntimeTypeInfo="false"
+				RuntimeTypeInfo="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="false"
+				Detect64BitPortabilityProblems="0"
 				DebugInformationFormat="3"
 				CompileAs="1"
 				DisableSpecificWarnings="4996"/>
 			<Tool 
-				Name="VCManagedResourceCompilerTool"/>
-			<Tool 
-				Name="ResCmplrTool"/>
-			<Tool 
-				Name="PreLinkEventTool"/>
-			<Tool 
 				Name="LinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_realaac.dll"
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="ff_realaac.def"
-				GenerateDebugInformation="true"
+				GenerateManifest="1"
+				GenerateDebugInformation="1"
 				ProgramDatabaseFile="$(IntDir)/ff_realaac.pdb"
 				SubSystem="2"
 				ImportLibrary="$(IntDir)/ff_realaac.lib"
-				TargetMachine="17"/>
+				TargetMachine="17"
+				DelayImpLib=""/>
 			<Tool 
-				Name="VCALinkTool"/>
+				Name="LibrarianTool"/>
 			<Tool 
-				Name="VCManifestTool"
-				EmbedManifest="true"/>
+				Name="ResCmplrTool"/>
 			<Tool 
-				Name="VCXDCMakeTool"/>
+				Name="MidlCmplrTool"
+				TargetEnvironment="3"/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="VCFxCopTool"/>
+				Name="PreBuildEventTool"/>
 			<Tool 
-				Name="VCAppVerifierTool"/>
-			<Tool 
-				Name="VCWebDeploymentTool"/>
+				Name="PreLinkEventTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Release|Win32">
@@ -163,74 +135,63 @@
 				IntermediateDirectory="release_2005_icl10"
 				ConfigurationType="2"
 				CharacterSet="0"
-				ManagedExtensions="0"
 				WholeProgramOptimization="1"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool 
-				Name="MidlCmplrTool"/>
-			<Tool 
 				Name="CppCmplrTool"
+				WholeProgramOptimization="1"
+				Optimization="1000"
+				GlobalOptimizations="1"
 				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="true"
+				EnableIntrinsicFunctions="1"
 				FavorSizeOrSpeed="1"
-				OmitFramePointers="true"
+				OmitFramePointers="1"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;USE_DEFAULT_STDLIB;HELIX_FEATURE_AUDIO_CODEC_AAC_SBR"
-				StringPooling="true"
+				StringPooling="1"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="false"
-				RuntimeTypeInfo="false"
+				BufferSecurityCheck="0"
+				RuntimeTypeInfo="0"
 				UsePrecompiledHeader="0"
 				BrowseInformation="0"
 				WarningLevel="3"
 				CompileAs="1"
-				DisableSpecificWarnings="4996"/>
-			<Tool 
-				Name="VCManagedResourceCompilerTool"/>
-			<Tool 
-				Name="ResCmplrTool"/>
-			<Tool 
-				Name="PreLinkEventTool"/>
+				DisableSpecificWarnings="4996"
+				AdditionalOptions="/Qip"/>
 			<Tool 
 				Name="LinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrt.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_realaac.dll"
 				LinkIncremental="1"
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="kernel32.lib msvcrt.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="ff_realaac.def"
+				GenerateManifest="1"
 				ProgramDatabaseFile="$(IntDir)/ff_realaac.pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				OptimizeForWindows98="1"
 				ImportLibrary="$(IntDir)/ff_realaac.lib"
-				TargetMachine="1"/>
+				TargetMachine="1"
+				DelayImpLib=""/>
 			<Tool 
-				Name="VCALinkTool"/>
+				Name="LibrarianTool"/>
 			<Tool 
-				Name="VCManifestTool"
-				EmbedManifest="true"/>
+				Name="ResCmplrTool"/>
 			<Tool 
-				Name="VCXDCMakeTool"/>
+				Name="MidlCmplrTool"/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="VCFxCopTool"/>
+				Name="PreBuildEventTool"/>
 			<Tool 
-				Name="VCAppVerifierTool"/>
-			<Tool 
-				Name="VCWebDeploymentTool"/>
+				Name="PreLinkEventTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Release|x64">
@@ -240,199 +201,141 @@
 				IntermediateDirectory="release_2005_x64_icl10"
 				ConfigurationType="2"
 				CharacterSet="0"
-				ManagedExtensions="0"
 				WholeProgramOptimization="1"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool 
-				Name="MidlCmplrTool"
-				TargetEnvironment="3"/>
-			<Tool 
 				Name="CppCmplrTool"
+				WholeProgramOptimization="1"
+				Optimization="1000"
+				GlobalOptimizations="1"
 				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="true"
+				EnableIntrinsicFunctions="1"
+				ImproveFloatingPointConsistency="0"
 				FavorSizeOrSpeed="1"
-				OmitFramePointers="true"
+				OmitFramePointers="1"
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;USE_DEFAULT_STDLIB;HELIX_FEATURE_AUDIO_CODEC_AAC_SBR"
-				StringPooling="true"
+				StringPooling="1"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="false"
-				RuntimeTypeInfo="false"
+				BufferSecurityCheck="0"
+				RuntimeTypeInfo="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="0"
 				CompileAs="1"
 				DisableSpecificWarnings="4996,4244"
-				GlobalOptimizations="1"
-				ImproveFloatingPointConsistency="0"
-				UseProcExt="2"
+				AdditionalOptions="/Qip"
+				UseProcExt="0"
 				RequireProcExt="0"/>
 			<Tool 
-				Name="VCManagedResourceCompilerTool"/>
-			<Tool 
-				Name="ResCmplrTool"/>
-			<Tool 
-				Name="PreLinkEventTool"/>
-			<Tool 
 				Name="LinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrt.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_realaac.dll"
 				LinkIncremental="1"
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="kernel32.lib msvcrt.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="ff_realaac.def"
+				GenerateManifest="1"
 				ProgramDatabaseFile="$(IntDir)/ff_realaac.pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				OptimizeForWindows98="1"
 				ImportLibrary="$(IntDir)/ff_realaac.lib"
-				TargetMachine="17"/>
+				TargetMachine="17"
+				DelayImpLib=""/>
 			<Tool 
-				Name="VCALinkTool"/>
+				Name="LibrarianTool"/>
 			<Tool 
-				Name="VCManifestTool"
-				EmbedManifest="true"/>
+				Name="ResCmplrTool"/>
 			<Tool 
-				Name="VCXDCMakeTool"/>
+				Name="MidlCmplrTool"
+				TargetEnvironment="3"/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="VCFxCopTool"/>
+				Name="PreBuildEventTool"/>
 			<Tool 
-				Name="VCAppVerifierTool"/>
-			<Tool 
-				Name="VCWebDeploymentTool"/>
+				Name="PreLinkEventTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
 		</Configuration>
 	</Configurations>
 	<Files>
-		<Filter 
-			Name="Source Files"
-			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
-			<File 
-				RelativePath=".\aacdec.c">
-			</File>
-			<File 
-				RelativePath=".\aactabs.c">
-			</File>
-			<File 
-				RelativePath=".\bitstream.c">
-			</File>
-			<File 
-				RelativePath=".\buffers.c">
-			</File>
-			<File 
-				RelativePath=".\dct4.c">
-			</File>
-			<File 
-				RelativePath=".\decelmnt.c">
-			</File>
-			<File 
-				RelativePath=".\dequant.c">
-			</File>
-			<File 
-				RelativePath=".\fft.c">
-			</File>
-			<File 
-				RelativePath=".\filefmt.c">
-			</File>
-			<File 
-				RelativePath=".\huffman.c">
-			</File>
-			<File 
-				RelativePath=".\hufftabs.c">
-			</File>
-			<File 
-				RelativePath=".\imdct.c">
-			</File>
-			<File 
-				RelativePath=".\noiseless.c">
-			</File>
-			<File 
-				RelativePath=".\pns.c">
-			</File>
-			<File 
-				RelativePath=".\sbr.c">
-			</File>
-			<File 
-				RelativePath=".\sbrfft.c">
-			</File>
-			<File 
-				RelativePath=".\sbrfreq.c">
-			</File>
-			<File 
-				RelativePath=".\sbrhfadj.c">
-			</File>
-			<File 
-				RelativePath=".\sbrhfgen.c">
-			</File>
-			<File 
-				RelativePath=".\sbrhuff.c">
-			</File>
-			<File 
-				RelativePath=".\sbrimdct.c">
-			</File>
-			<File 
-				RelativePath=".\sbrmath.c">
-			</File>
-			<File 
-				RelativePath=".\sbrqmf.c">
-			</File>
-			<File 
-				RelativePath=".\sbrside.c">
-			</File>
-			<File 
-				RelativePath=".\sbrtabs.c">
-			</File>
-			<File 
-				RelativePath=".\stproc.c">
-			</File>
-			<File 
-				RelativePath=".\tns.c">
-			</File>
-			<File 
-				RelativePath=".\trigtabs.c">
-			</File>
-		</Filter>
-		<Filter 
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
-			<File 
-				RelativePath=".\aaccommon.h">
-			</File>
-			<File 
-				RelativePath=".\aacdec.h">
-			</File>
-			<File 
-				RelativePath=".\assembly.h">
-			</File>
-			<File 
-				RelativePath=".\bitstream.h">
-			</File>
-			<File 
-				RelativePath=".\coder.h">
-			</File>
-			<File 
-				RelativePath=".\sbr.h">
-			</File>
-			<File 
-				RelativePath=".\statname.h">
-			</File>
-		</Filter>
 		<File 
-			RelativePath=".\ff_realaac.def">
-		</File>
+			RelativePath=".\aaccommon.h"/>
+		<File 
+			RelativePath=".\aacdec.h"/>
+		<File 
+			RelativePath=".\assembly.h"/>
+		<File 
+			RelativePath=".\bitstream.h"/>
+		<File 
+			RelativePath=".\coder.h"/>
+		<File 
+			RelativePath=".\sbr.h"/>
+		<File 
+			RelativePath=".\statname.h"/>
+		<File 
+			RelativePath=".\aacdec.c"/>
+		<File 
+			RelativePath=".\aactabs.c"/>
+		<File 
+			RelativePath=".\bitstream.c"/>
+		<File 
+			RelativePath=".\buffers.c"/>
+		<File 
+			RelativePath=".\dct4.c"/>
+		<File 
+			RelativePath=".\decelmnt.c"/>
+		<File 
+			RelativePath=".\dequant.c"/>
+		<File 
+			RelativePath=".\fft.c"/>
+		<File 
+			RelativePath=".\filefmt.c"/>
+		<File 
+			RelativePath=".\huffman.c"/>
+		<File 
+			RelativePath=".\hufftabs.c"/>
+		<File 
+			RelativePath=".\imdct.c"/>
+		<File 
+			RelativePath=".\noiseless.c"/>
+		<File 
+			RelativePath=".\pns.c"/>
+		<File 
+			RelativePath=".\sbr.c"/>
+		<File 
+			RelativePath=".\sbrfft.c"/>
+		<File 
+			RelativePath=".\sbrfreq.c"/>
+		<File 
+			RelativePath=".\sbrhfadj.c"/>
+		<File 
+			RelativePath=".\sbrhfgen.c"/>
+		<File 
+			RelativePath=".\sbrhuff.c"/>
+		<File 
+			RelativePath=".\sbrimdct.c"/>
+		<File 
+			RelativePath=".\sbrmath.c"/>
+		<File 
+			RelativePath=".\sbrqmf.c"/>
+		<File 
+			RelativePath=".\sbrside.c"/>
+		<File 
+			RelativePath=".\sbrtabs.c"/>
+		<File 
+			RelativePath=".\stproc.c"/>
+		<File 
+			RelativePath=".\tns.c"/>
+		<File 
+			RelativePath=".\trigtabs.c"/>
+		<File 
+			RelativePath=".\ff_realaac.def"/>
 	</Files>
 </VisualStudioProject>
 

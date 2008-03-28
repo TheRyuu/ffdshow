@@ -248,6 +248,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Qip"
+				Optimization="2"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
@@ -357,6 +359,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Qip"
+				Optimization="2"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
@@ -374,7 +378,7 @@
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\"
 				BrowseInformation="0"
-				WarningLevel="1"
+				WarningLevel="0"
 				SuppressStartupBanner="true"
 				CompileAs="1"
 				DisableSpecificWarnings="4996,4005,4002,4244"

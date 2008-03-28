@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject 
 	ProjectType="Intel C++ Project"
-	Version="10.0"
+	Version="10.1"
 	Name="ff_theora"
 	ProjectGUID="{B1CE5652-E8B4-4497-8E3D-3913FF957FFF}"
 	VCNestedProjectGUID="{924512C3-75C6-45BE-B7A3-A747BFFD79A1}"
-	VCNestedProjectCRC32="3653634145"
+	VCNestedProjectCRC32="2733486765"
 	VCNestedProjectFileName="ff_theora_2005_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -22,81 +22,66 @@
 				IntermediateDirectory="debug_2005_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
-				ATLMinimizesCRunTimeLibraryUsage="false"/>
-			<Tool 
-				Name="PreBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool 
-				Name="MidlCmplrTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="true"
-				SuppressStartupBanner="true"
-				TargetEnvironment="1"
-				TypeLibraryName=".\debug_2005_icl10/ff_theora.tlb"/>
+				ATLMinimizesCRunTimeLibraryUsage="0"/>
 			<Tool 
 				Name="CppCmplrTool"
-				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories=".;..;../.."
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
-				ForceConformanceInForLoopScope="true"
-				RuntimeTypeInfo="false"
+				ForceConformanceInForLoopScope="1"
+				RuntimeTypeInfo="0"
 				PrecompiledHeaderFile=""
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
 				BrowseInformation="0"
 				WarningLevel="0"
-				SuppressStartupBanner="true"
-				Detect64BitPortabilityProblems="false"
+				SuppressStartupBanner="1"
+				Detect64BitPortabilityProblems="0"
 				DebugInformationFormat="4"
-				DisableSpecificWarnings="4996"/>
+				DisableSpecificWarnings="4996"
+				AdditionalOptions=""/>
 			<Tool 
-				Name="VCManagedResourceCompilerTool"/>
+				Name="LinkerTool"
+				OutputFile="../../../bin/ff_theora.dll"
+				SuppressStartupBanner="1"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				IgnoreAllDefaultLibraries="1"
+				ModuleDefinitionFile="ff_theora.def"
+				GenerateManifest="1"
+				GenerateDebugInformation="1"
+				ProgramDatabaseFile="$(IntDir)/ff_theora.pdb"
+				SubSystem="2"
+				ImportLibrary="$(IntDir)/ff_theora.lib"
+				AdditionalOptions="/MACHINE:I386"
+				DelayImpLib=""/>
+			<Tool 
+				Name="LibrarianTool"/>
 			<Tool 
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1051"/>
 			<Tool 
-				Name="PreLinkEventTool"/>
-			<Tool 
-				Name="LinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
-				OutputFile="../../../bin/ff_theora.dll"
-				SuppressStartupBanner="true"
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
-				ModuleDefinitionFile="ff_theora.def"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_theora.pdb"
-				SubSystem="2"
-				ImportLibrary="$(IntDir)/ff_theora.lib"/>
-			<Tool 
-				Name="VCALinkTool"/>
-			<Tool 
-				Name="VCManifestTool"
-				EmbedManifest="true"/>
-			<Tool 
-				Name="VCXDCMakeTool"/>
+				Name="MidlCmplrTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="1"
+				SuppressStartupBanner="1"
+				TargetEnvironment="1"
+				TypeLibraryName=".\debug_2005_icl10/ff_theora.tlb"/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="VCFxCopTool"/>
+				Name="PreBuildEventTool"/>
 			<Tool 
-				Name="VCAppVerifierTool"/>
-			<Tool 
-				Name="VCWebDeploymentTool"/>
+				Name="PreLinkEventTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Debug|x64">
@@ -106,80 +91,65 @@
 				IntermediateDirectory="debug_2005_x64_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
-				ATLMinimizesCRunTimeLibraryUsage="false"/>
-			<Tool 
-				Name="PreBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool 
-				Name="MidlCmplrTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="true"
-				SuppressStartupBanner="true"
-				TargetEnvironment="3"
-				TypeLibraryName=".\debug_2005_x64_icl10/ff_theora.tlb"/>
+				ATLMinimizesCRunTimeLibraryUsage="0"/>
 			<Tool 
 				Name="CppCmplrTool"
-				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories=".;..;../.."
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
-				ForceConformanceInForLoopScope="true"
-				RuntimeTypeInfo="false"
+				ForceConformanceInForLoopScope="1"
+				RuntimeTypeInfo="0"
 				PrecompiledHeaderFile=""
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
 				WarningLevel="0"
-				SuppressStartupBanner="true"
-				Detect64BitPortabilityProblems="false"
+				SuppressStartupBanner="1"
+				Detect64BitPortabilityProblems="0"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4996"/>
+				DisableSpecificWarnings="4996"
+				AdditionalOptions=""/>
 			<Tool 
-				Name="VCManagedResourceCompilerTool"/>
+				Name="LinkerTool"
+				OutputFile="../../../bin/ff_theora.dll"
+				SuppressStartupBanner="1"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				IgnoreAllDefaultLibraries="1"
+				ModuleDefinitionFile="ff_theora.def"
+				GenerateManifest="1"
+				GenerateDebugInformation="1"
+				ProgramDatabaseFile="$(IntDir)/ff_theora.pdb"
+				SubSystem="2"
+				ImportLibrary="$(IntDir)/ff_theora.lib"
+				TargetMachine="17"
+				DelayImpLib=""/>
+			<Tool 
+				Name="LibrarianTool"/>
 			<Tool 
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1051"/>
 			<Tool 
-				Name="PreLinkEventTool"/>
-			<Tool 
-				Name="LinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
-				OutputFile="../../../bin/ff_theora.dll"
-				SuppressStartupBanner="true"
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
-				ModuleDefinitionFile="ff_theora.def"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/ff_theora.pdb"
-				SubSystem="2"
-				ImportLibrary="$(IntDir)/ff_theora.lib"
-				TargetMachine="17"/>
-			<Tool 
-				Name="VCALinkTool"/>
-			<Tool 
-				Name="VCManifestTool"
-				EmbedManifest="true"/>
-			<Tool 
-				Name="VCXDCMakeTool"/>
+				Name="MidlCmplrTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="1"
+				SuppressStartupBanner="1"
+				TargetEnvironment="3"
+				TypeLibraryName=".\debug_2005_x64_icl10/ff_theora.tlb"/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="VCFxCopTool"/>
+				Name="PreBuildEventTool"/>
 			<Tool 
-				Name="VCAppVerifierTool"/>
-			<Tool 
-				Name="VCWebDeploymentTool"/>
+				Name="PreLinkEventTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Release|Win32">
@@ -189,88 +159,74 @@
 				IntermediateDirectory="release_2005_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
-				ATLMinimizesCRunTimeLibraryUsage="false"
-				ManagedExtensions="0"
+				ATLMinimizesCRunTimeLibraryUsage="0"
 				WholeProgramOptimization="1"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool 
-				Name="MidlCmplrTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="true"
-				SuppressStartupBanner="true"
-				TargetEnvironment="1"
-				TypeLibraryName=".\release_2005_icl10/ff_theora.tlb"/>
-			<Tool 
 				Name="CppCmplrTool"
-				AdditionalOptions=""
-				Optimization="2"
+				WholeProgramOptimization="1"
+				Optimization="1000"
+				GlobalOptimizations="1"
 				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="true"
+				EnableIntrinsicFunctions="1"
 				FavorSizeOrSpeed="1"
-				OmitFramePointers="true"
+				OmitFramePointers="1"
 				AdditionalIncludeDirectories=".;..;../.."
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS"
-				StringPooling="true"
+				StringPooling="1"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="false"
-				EnableFunctionLevelLinking="false"
-				RuntimeTypeInfo="false"
+				BufferSecurityCheck="0"
+				EnableFunctionLevelLinking="0"
+				RuntimeTypeInfo="0"
 				PrecompiledHeaderFile=""
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
 				BrowseInformation="0"
 				WarningLevel="0"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="1"
 				CompileAs="0"
-				DisableSpecificWarnings="4996"/>
+				DisableSpecificWarnings="4996"
+				AdditionalOptions="/Qip"/>
 			<Tool 
-				Name="VCManagedResourceCompilerTool"/>
+				Name="LinkerTool"
+				OutputFile="../../../bin/ff_theora.dll"
+				LinkIncremental="1"
+				SuppressStartupBanner="1"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				IgnoreAllDefaultLibraries="1"
+				ModuleDefinitionFile="ff_theora.def"
+				GenerateManifest="1"
+				ProgramDatabaseFile="$(IntDir)/ff_theora.pdb"
+				SubSystem="2"
+				ImportLibrary="$(IntDir)/ff_theora.lib"
+				AdditionalOptions="/MACHINE:I386"
+				DelayImpLib=""/>
+			<Tool 
+				Name="LibrarianTool"/>
 			<Tool 
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="NDEBUG"
 				Culture="1051"/>
 			<Tool 
-				Name="PreLinkEventTool"/>
-			<Tool 
-				Name="LinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
-				OutputFile="../../../bin/ff_theora.dll"
-				LinkIncremental="1"
-				SuppressStartupBanner="true"
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
-				ModuleDefinitionFile="ff_theora.def"
-				ProgramDatabaseFile="$(IntDir)/ff_theora.pdb"
-				SubSystem="2"
-				ImportLibrary="$(IntDir)/ff_theora.lib"/>
-			<Tool 
-				Name="VCALinkTool"/>
-			<Tool 
-				Name="VCManifestTool"
-				EmbedManifest="true"/>
-			<Tool 
-				Name="VCXDCMakeTool"/>
+				Name="MidlCmplrTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="1"
+				SuppressStartupBanner="1"
+				TargetEnvironment="1"
+				TypeLibraryName=".\release_2005_icl10/ff_theora.tlb"/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="VCFxCopTool"/>
+				Name="PreBuildEventTool"/>
 			<Tool 
-				Name="VCAppVerifierTool"/>
-			<Tool 
-				Name="VCWebDeploymentTool"/>
+				Name="PreLinkEventTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Release|x64">
@@ -280,279 +236,196 @@
 				IntermediateDirectory="release_2005_x64_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
-				ATLMinimizesCRunTimeLibraryUsage="false"
-				ManagedExtensions="0"
+				ATLMinimizesCRunTimeLibraryUsage="0"
 				WholeProgramOptimization="1"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool 
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool 
-				Name="MidlCmplrTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="true"
-				SuppressStartupBanner="true"
-				TargetEnvironment="3"
-				TypeLibraryName=".\release_2005_x64_icl10/ff_theora.tlb"/>
-			<Tool 
 				Name="CppCmplrTool"
-				AdditionalOptions=""
-				Optimization="2"
+				WholeProgramOptimization="1"
+				Optimization="1000"
+				GlobalOptimizations="1"
 				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="true"
+				EnableIntrinsicFunctions="1"
+				ImproveFloatingPointConsistency="0"
 				FavorSizeOrSpeed="1"
-				OmitFramePointers="true"
+				OmitFramePointers="1"
 				AdditionalIncludeDirectories=".;..;../.."
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS"
-				StringPooling="true"
+				StringPooling="1"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="false"
-				EnableFunctionLevelLinking="false"
-				RuntimeTypeInfo="false"
+				BufferSecurityCheck="0"
+				EnableFunctionLevelLinking="0"
+				RuntimeTypeInfo="0"
 				PrecompiledHeaderFile=""
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
 				WarningLevel="0"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="1"
 				CompileAs="0"
 				DisableSpecificWarnings="4996,4244"
-				GlobalOptimizations="1"
-				ImproveFloatingPointConsistency="0"
-				UseProcExt="2"
+				AdditionalOptions="/Qip"
+				UseProcExt="0"
 				RequireProcExt="0"/>
 			<Tool 
-				Name="VCManagedResourceCompilerTool"/>
+				Name="LinkerTool"
+				OutputFile="../../../bin/ff_theora.dll"
+				LinkIncremental="1"
+				SuppressStartupBanner="1"
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				IgnoreAllDefaultLibraries="1"
+				ModuleDefinitionFile="ff_theora.def"
+				GenerateManifest="1"
+				ProgramDatabaseFile="$(IntDir)/ff_theora.pdb"
+				SubSystem="2"
+				ImportLibrary="$(IntDir)/ff_theora.lib"
+				TargetMachine="17"
+				DelayImpLib=""/>
+			<Tool 
+				Name="LibrarianTool"/>
 			<Tool 
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="NDEBUG"
 				Culture="1051"/>
 			<Tool 
-				Name="PreLinkEventTool"/>
-			<Tool 
-				Name="LinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
-				OutputFile="../../../bin/ff_theora.dll"
-				LinkIncremental="1"
-				SuppressStartupBanner="true"
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
-				ModuleDefinitionFile="ff_theora.def"
-				ProgramDatabaseFile="$(IntDir)/ff_theora.pdb"
-				SubSystem="2"
-				ImportLibrary="$(IntDir)/ff_theora.lib"
-				TargetMachine="17"/>
-			<Tool 
-				Name="VCALinkTool"/>
-			<Tool 
-				Name="VCManifestTool"
-				EmbedManifest="true"/>
-			<Tool 
-				Name="VCXDCMakeTool"/>
+				Name="MidlCmplrTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="1"
+				SuppressStartupBanner="1"
+				TargetEnvironment="3"
+				TypeLibraryName=".\release_2005_x64_icl10/ff_theora.tlb"/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="VCFxCopTool"/>
+				Name="PreBuildEventTool"/>
 			<Tool 
-				Name="VCAppVerifierTool"/>
-			<Tool 
-				Name="VCWebDeploymentTool"/>
+				Name="PreLinkEventTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="CustomNodeTool"/>
 		</Configuration>
 	</Configurations>
 	<Files>
-		<Filter 
-			Name="Source Files"
-			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
-			<File 
-				RelativePath=".\blockmap.c">
-			</File>
-			<File 
-				RelativePath=".\comment.c">
-			</File>
-			<File 
-				RelativePath=".\cpu.c">
-			</File>
-			<File 
-				RelativePath=".\dct.c">
-			</File>
-			<File 
-				RelativePath=".\dct_decode.c">
-			</File>
-			<File 
-				RelativePath=".\dct_encode.c">
-			</File>
-			<File 
-				RelativePath=".\decode.c">
-			</File>
-			<File 
-				RelativePath=".\dsp.c">
-			</File>
-			<File 
-				RelativePath=".\encode.c">
-			</File>
-			<File 
-				RelativePath=".\encoder_toplevel.c">
-			</File>
-			<File 
-				RelativePath=".\frarray.c">
-			</File>
-			<File 
-				RelativePath=".\frinit.c">
-			</File>
-			<File 
-				RelativePath=".\huffman.c">
-			</File>
-			<File 
-				RelativePath=".\idct.c">
-			</File>
-			<File 
-				RelativePath=".\mcomp.c">
-			</File>
-			<File 
-				RelativePath=".\misc_common.c">
-			</File>
-			<File 
-				RelativePath=".\pb.c">
-			</File>
-			<File 
-				RelativePath=".\pp.c">
-			</File>
-			<File 
-				RelativePath=".\quant.c">
-			</File>
-			<File 
-				RelativePath=".\reconstruct.c">
-			</File>
-			<File 
-				RelativePath=".\scan.c">
-			</File>
-			<File 
-				RelativePath=".\toplevel.c">
-			</File>
-		</Filter>
-		<Filter 
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl">
-			<File 
-				RelativePath=".\block_inline.h">
-			</File>
-			<File 
-				RelativePath=".\cpu.h">
-			</File>
-			<File 
-				RelativePath=".\dsp.h">
-			</File>
-			<File 
-				RelativePath=".\encoder_internal.h">
-			</File>
-			<File 
-				RelativePath=".\encoder_lookup.h">
-			</File>
-			<File 
-				RelativePath=".\huffman.h">
-			</File>
-			<File 
-				RelativePath=".\hufftables.h">
-			</File>
-			<File 
-				RelativePath=".\pp.h">
-			</File>
-			<File 
-				RelativePath=".\quant_lookup.h">
-			</File>
-			<File 
-				RelativePath=".\toplevel.h">
-			</File>
-			<File 
-				RelativePath=".\toplevel_lookup.h">
-			</File>
-		</Filter>
-		<Filter 
-			Name="ogg">
-			<File 
-				RelativePath="bitwise.c">
-			</File>
-			<File 
-				RelativePath="framing.c">
-			</File>
-			<File 
-				RelativePath="ogg.h">
-			</File>
-			<File 
-				RelativePath="os_types.h">
-			</File>
-			<File 
-				RelativePath="theora.h">
-			</File>
-		</Filter>
-		<Filter 
-			Name="i386">
-			<File 
-				RelativePath=".\i386\csimd.h">
-			</File>
-			<File 
-				RelativePath=".\i386\DeblockOpt.cpp">
-			</File>
-			<File 
-				RelativePath=".\i386\DeRingOpt.cpp">
-			</File>
-			<File 
-				RelativePath=".\i386\dsp_mmx.cpp">
-			</File>
-			<File 
-				RelativePath=".\i386\dsp_mmxext.cpp">
-			</File>
-			<File 
-				RelativePath=".\i386\fdct_mmx.cpp">
-			</File>
-			<File 
-				RelativePath=".\i386\loopf_asm.cpp">
-			</File>
-			<File 
-				RelativePath="..\..\mmintrin64.c">
-				<FileConfiguration 
-					Name="Debug|Win32">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="CppCmplrTool"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="CppCmplrTool"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|x64">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="true"/>
-					<Tool 
-						Name="CppCmplrTool"/>
-				</FileConfiguration>
-			</File>
-			<File 
-				RelativePath=".\i386\mmxIdct.cpp">
-			</File>
-			<File 
-				RelativePath=".\i386\recon_mmx.cpp">
-			</File>
-		</Filter>
 		<File 
-			RelativePath=".\ff_theora.def">
+			RelativePath=".\block_inline.h"/>
+		<File 
+			RelativePath=".\cpu.h"/>
+		<File 
+			RelativePath=".\dsp.h"/>
+		<File 
+			RelativePath=".\encoder_internal.h"/>
+		<File 
+			RelativePath=".\encoder_lookup.h"/>
+		<File 
+			RelativePath=".\huffman.h"/>
+		<File 
+			RelativePath=".\hufftables.h"/>
+		<File 
+			RelativePath=".\pp.h"/>
+		<File 
+			RelativePath=".\quant_lookup.h"/>
+		<File 
+			RelativePath=".\toplevel.h"/>
+		<File 
+			RelativePath=".\toplevel_lookup.h"/>
+		<File 
+			RelativePath=".\i386\csimd.h"/>
+		<File 
+			RelativePath=".\i386\DeblockOpt.cpp"/>
+		<File 
+			RelativePath=".\i386\DeRingOpt.cpp"/>
+		<File 
+			RelativePath=".\i386\dsp_mmx.cpp"/>
+		<File 
+			RelativePath=".\i386\dsp_mmxext.cpp"/>
+		<File 
+			RelativePath=".\i386\fdct_mmx.cpp"/>
+		<File 
+			RelativePath=".\i386\loopf_asm.cpp"/>
+		<File 
+			RelativePath="..\..\mmintrin64.c">
+			<FileConfiguration 
+				Name="Debug|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
+			<FileConfiguration 
+				Name="Release|x64">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="1"/>
+			</FileConfiguration>
 		</File>
+		<File 
+			RelativePath=".\i386\mmxIdct.cpp"/>
+		<File 
+			RelativePath=".\i386\recon_mmx.cpp"/>
+		<File 
+			RelativePath=".\bitwise.c"/>
+		<File 
+			RelativePath=".\framing.c"/>
+		<File 
+			RelativePath=".\ogg.h"/>
+		<File 
+			RelativePath=".\os_types.h"/>
+		<File 
+			RelativePath=".\theora.h"/>
+		<File 
+			RelativePath=".\blockmap.c"/>
+		<File 
+			RelativePath=".\comment.c"/>
+		<File 
+			RelativePath=".\cpu.c"/>
+		<File 
+			RelativePath=".\dct.c"/>
+		<File 
+			RelativePath=".\dct_decode.c"/>
+		<File 
+			RelativePath=".\dct_encode.c"/>
+		<File 
+			RelativePath=".\decode.c"/>
+		<File 
+			RelativePath=".\dsp.c"/>
+		<File 
+			RelativePath=".\encode.c"/>
+		<File 
+			RelativePath=".\encoder_toplevel.c"/>
+		<File 
+			RelativePath=".\frarray.c"/>
+		<File 
+			RelativePath=".\frinit.c"/>
+		<File 
+			RelativePath=".\huffman.c"/>
+		<File 
+			RelativePath=".\idct.c"/>
+		<File 
+			RelativePath=".\mcomp.c"/>
+		<File 
+			RelativePath=".\misc_common.c"/>
+		<File 
+			RelativePath=".\pb.c"/>
+		<File 
+			RelativePath=".\pp.c"/>
+		<File 
+			RelativePath=".\quant.c"/>
+		<File 
+			RelativePath=".\reconstruct.c"/>
+		<File 
+			RelativePath=".\scan.c"/>
+		<File 
+			RelativePath=".\toplevel.c"/>
+		<File 
+			RelativePath=".\ff_theora.def"/>
 	</Files>
 </VisualStudioProject>
 
