@@ -16,8 +16,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="debug"
-			IntermediateDirectory="debug"
+			OutputDirectory="debug_2005"
+			IntermediateDirectory="debug_2005"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -41,7 +41,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\DebugDLL/ffSpkCfg.tlb"
+				TypeLibraryName=".\debug_2005/ffSpkCfg.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -106,8 +106,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="release"
-			IntermediateDirectory="release"
+			OutputDirectory="release_2005"
+			IntermediateDirectory="release_2005"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -132,7 +132,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\ReleaseDLL/ffSpkCfg.tlb"
+				TypeLibraryName=".\release_2005/ffSpkCfg.tlb"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"

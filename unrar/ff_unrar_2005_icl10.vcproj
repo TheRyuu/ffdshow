@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="ff_unrar"
 	ProjectGUID="{82199D65-5E04-48FB-99B5-9396D55566AE}"
 	RootNamespace="ff_unrar"
@@ -20,8 +20,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="debug_2005_icl10"
+			IntermediateDirectory="debug_2005_icl10"
 			ConfigurationType="2"
 			CharacterSet="0"
 			>
@@ -108,8 +108,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="debug_2005_x64_icl10"
+			IntermediateDirectory="debug_2005_x64_icl10"
 			ConfigurationType="2"
 			CharacterSet="0"
 			>
@@ -196,12 +196,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="release_2005_icl10"
+			IntermediateDirectory="release_2005_icl10"
 			ConfigurationType="2"
 			CharacterSet="0"
 			ManagedExtensions="0"
-			WholeProgramOptimization="0"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -225,7 +225,6 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="true"
-				WholeProgramOptimization="false"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;SFX_MODULE;SHELL_EXT"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -289,12 +288,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="release_2005_x64_icl10"
+			IntermediateDirectory="release_2005_x64_icl10"
 			ConfigurationType="2"
 			CharacterSet="0"
 			ManagedExtensions="0"
-			WholeProgramOptimization="0"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -319,13 +318,13 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="true"
-				WholeProgramOptimization="false"
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;SFX_MODULE;SHELL_EXT"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="rar.hpp"
+				WarningLevel="0"
 				DisableSpecificWarnings="4996"
 			/>
 			<Tool

@@ -5,7 +5,7 @@
 	Name="ff_tremor"
 	ProjectGUID="{0B4D4596-3C85-46D0-BCDF-59AA6581CF41}"
 	VCNestedProjectGUID="{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}"
-	VCNestedProjectCRC32="3423867431"
+	VCNestedProjectCRC32="614769768"
 	VCNestedProjectFileName="ff_tremor_2005_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -18,11 +18,27 @@
 			Name="Debug|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="$(ConfigurationName)$(PlatformName)"
-				IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+				OutputDirectory="debug_2005_icl10"
+				IntermediateDirectory="debug_2005_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
-				ATLMinimizesCRunTimeLibraryUsage="0"/>
+				ATLMinimizesCRunTimeLibraryUsage="false"/>
+			<Tool 
+				Name="PreBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool 
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool 
+				Name="MidlCmplrTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="true"
+				SuppressStartupBanner="true"
+				TargetEnvironment="1"
+				TypeLibraryName=".\debug_2005_icl10/ff_tremor.tlb"
+				HeaderFileName=""/>
 			<Tool 
 				Name="CppCmplrTool"
 				Optimization="0"
@@ -30,66 +46,81 @@
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;inline=__inline;__i386__"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				ForceConformanceInForLoopScope="1"
-				RuntimeTypeInfo="0"
+				ForceConformanceInForLoopScope="true"
+				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)/"
 				ObjectFile="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)/"
 				BrowseInformation="0"
-				SuppressStartupBanner="1"
-				Detect64BitPortabilityProblems="0"
+				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 				CompileAs="1"
 				DisableSpecificWarnings="4996"/>
 			<Tool 
-				Name="LinkerTool"
-				DelayImpLib=""
-				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
-				OutputFile="../../../bin/ff_tremor.dll"
-				SuppressStartupBanner="1"
-				IgnoreAllDefaultLibraries="1"
-				ModuleDefinitionFile=".\ff_tremor.def"
-				GenerateDebugInformation="1"
-				ProgramDatabaseFile="$(IntDir)/ff_tremor.pdb"
-				ImportLibrary="$(IntDir)/ff_tremor.lib"
-				TargetMachine="1"
-				GenerateManifest="1"/>
-			<Tool 
-				Name="LibrarianTool"/>
+				Name="VCManagedResourceCompilerTool"/>
 			<Tool 
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1051"/>
 			<Tool 
-				Name="MidlCmplrTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="1"
-				SuppressStartupBanner="1"
-				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/ff_tremor.tlb"
-				HeaderFileName=""/>
+				Name="PreLinkEventTool"/>
+			<Tool 
+				Name="LinkerTool"
+				IgnoreImportLibrary="true"
+				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				OutputFile="../../../bin/ff_tremor.dll"
+				SuppressStartupBanner="true"
+				GenerateManifest="true"
+				IgnoreAllDefaultLibraries="true"
+				ModuleDefinitionFile=".\ff_tremor.def"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(IntDir)/ff_tremor.pdb"
+				ImportLibrary="$(IntDir)/ff_tremor.lib"
+				TargetMachine="1"/>
+			<Tool 
+				Name="VCALinkTool"/>
+			<Tool 
+				Name="VCManifestTool"
+				EmbedManifest="true"/>
+			<Tool 
+				Name="VCXDCMakeTool"/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
+				Name="VCFxCopTool"/>
 			<Tool 
-				Name="PreLinkEventTool"/>
+				Name="VCAppVerifierTool"/>
+			<Tool 
+				Name="VCWebDeploymentTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Debug|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="$(ConfigurationName)$(PlatformName)"
-				IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+				OutputDirectory="debug_2005_x64_icl10"
+				IntermediateDirectory="debug_2005_x64_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
-				ATLMinimizesCRunTimeLibraryUsage="0"/>
+				ATLMinimizesCRunTimeLibraryUsage="false"/>
+			<Tool 
+				Name="PreBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool 
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool 
+				Name="MidlCmplrTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="true"
+				SuppressStartupBanner="true"
+				TargetEnvironment="3"
+				TypeLibraryName=".\debug_2005_x64_icl10/ff_tremor.tlb"
+				HeaderFileName=""/>
 			<Tool 
 				Name="CppCmplrTool"
 				Optimization="0"
@@ -97,289 +128,358 @@
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;inline=__inline;__i386__"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				ForceConformanceInForLoopScope="1"
-				RuntimeTypeInfo="0"
+				ForceConformanceInForLoopScope="true"
+				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)/"
 				ObjectFile="$(IntDir)/"
-				SuppressStartupBanner="1"
-				Detect64BitPortabilityProblems="0"
+				ProgramDataBaseFileName="$(IntDir)/"
+				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 				CompileAs="1"
 				DisableSpecificWarnings="4996"/>
 			<Tool 
-				Name="LinkerTool"
-				DelayImpLib=""
-				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
-				OutputFile="../../../bin/ff_tremor.dll"
-				SuppressStartupBanner="1"
-				IgnoreAllDefaultLibraries="1"
-				ModuleDefinitionFile=".\ff_tremor.def"
-				GenerateDebugInformation="1"
-				ProgramDatabaseFile="$(IntDir)/ff_tremor.pdb"
-				ImportLibrary="$(IntDir)/ff_tremor.lib"
-				TargetMachine="17"
-				GenerateManifest="1"/>
-			<Tool 
-				Name="LibrarianTool"/>
+				Name="VCManagedResourceCompilerTool"/>
 			<Tool 
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1051"/>
 			<Tool 
-				Name="MidlCmplrTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="1"
-				SuppressStartupBanner="1"
-				TargetEnvironment="3"
-				TypeLibraryName=".\Debug/ff_tremor.tlb"
-				HeaderFileName=""/>
+				Name="PreLinkEventTool"/>
+			<Tool 
+				Name="LinkerTool"
+				IgnoreImportLibrary="true"
+				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				OutputFile="../../../bin/ff_tremor.dll"
+				SuppressStartupBanner="true"
+				GenerateManifest="true"
+				IgnoreAllDefaultLibraries="true"
+				ModuleDefinitionFile=".\ff_tremor.def"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(IntDir)/ff_tremor.pdb"
+				ImportLibrary="$(IntDir)/ff_tremor.lib"
+				TargetMachine="17"/>
+			<Tool 
+				Name="VCALinkTool"/>
+			<Tool 
+				Name="VCManifestTool"
+				EmbedManifest="true"/>
+			<Tool 
+				Name="VCXDCMakeTool"/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
+				Name="VCFxCopTool"/>
 			<Tool 
-				Name="PreLinkEventTool"/>
+				Name="VCAppVerifierTool"/>
+			<Tool 
+				Name="VCWebDeploymentTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Release|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="$(ConfigurationName)$(PlatformName)"
-				IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+				OutputDirectory="release_2005_icl10"
+				IntermediateDirectory="release_2005_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
-				ATLMinimizesCRunTimeLibraryUsage="0"
-				WholeProgramOptimization="0"/>
+				ATLMinimizesCRunTimeLibraryUsage="false"
+				ManagedExtensions="0"
+				WholeProgramOptimization="1"/>
+			<Tool 
+				Name="PreBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool 
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool 
+				Name="MidlCmplrTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="true"
+				SuppressStartupBanner="true"
+				TargetEnvironment="1"
+				TypeLibraryName=".\release_2005_icl10/ff_tremor.tlb"
+				HeaderFileName=""/>
 			<Tool 
 				Name="CppCmplrTool"
-				WholeProgramOptimization="0"
 				Optimization="2"
 				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="1"
+				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				OmitFramePointers="1"
+				OmitFramePointers="true"
 				AdditionalIncludeDirectories=".."
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;inline=__inline;__i386__"
-				StringPooling="1"
+				StringPooling="true"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="0"
-				EnableFunctionLevelLinking="1"
-				RuntimeTypeInfo="0"
+				BufferSecurityCheck="false"
+				EnableFunctionLevelLinking="true"
+				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)/"
 				ObjectFile="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)/"
 				BrowseInformation="0"
 				WarningLevel="0"
-				SuppressStartupBanner="1"
+				SuppressStartupBanner="true"
 				CompileAs="1"
 				DisableSpecificWarnings="4996"/>
 			<Tool 
+				Name="VCManagedResourceCompilerTool"/>
+			<Tool 
+				Name="ResCmplrTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1051"/>
+			<Tool 
+				Name="PreLinkEventTool"/>
+			<Tool 
 				Name="LinkerTool"
-				DelayImpLib=""
-				IgnoreImportLibrary="1"
+				IgnoreImportLibrary="true"
 				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_tremor.dll"
 				LinkIncremental="1"
-				SuppressStartupBanner="1"
-				IgnoreAllDefaultLibraries="1"
+				SuppressStartupBanner="true"
+				GenerateManifest="true"
+				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_tremor.def"
 				ProgramDatabaseFile="$(IntDir)/ff_tremor.pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				OptimizeForWindows98="1"
 				ImportLibrary="$(IntDir)/ff_tremor.lib"
-				TargetMachine="1"
-				GenerateManifest="1"/>
+				TargetMachine="1"/>
 			<Tool 
-				Name="LibrarianTool"/>
+				Name="VCALinkTool"/>
 			<Tool 
-				Name="ResCmplrTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1051"/>
+				Name="VCManifestTool"
+				EmbedManifest="true"/>
 			<Tool 
-				Name="MidlCmplrTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="1"
-				SuppressStartupBanner="1"
-				TargetEnvironment="1"
-				TypeLibraryName=".\Release/ff_tremor.tlb"
-				HeaderFileName=""/>
+				Name="VCXDCMakeTool"/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
+				Name="VCFxCopTool"/>
 			<Tool 
-				Name="PreLinkEventTool"/>
+				Name="VCAppVerifierTool"/>
+			<Tool 
+				Name="VCWebDeploymentTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Release|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="$(ConfigurationName)$(PlatformName)"
-				IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+				OutputDirectory="release_2005_x64_icl10"
+				IntermediateDirectory="release_2005_x64_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
-				ATLMinimizesCRunTimeLibraryUsage="0"
-				WholeProgramOptimization="0"/>
+				ATLMinimizesCRunTimeLibraryUsage="false"
+				ManagedExtensions="0"
+				WholeProgramOptimization="1"/>
+			<Tool 
+				Name="PreBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool 
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool 
+				Name="MidlCmplrTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="true"
+				SuppressStartupBanner="true"
+				TargetEnvironment="3"
+				TypeLibraryName=".\release_2005_x64_icl10/ff_tremor.tlb"
+				HeaderFileName=""/>
 			<Tool 
 				Name="CppCmplrTool"
-				WholeProgramOptimization="0"
 				Optimization="2"
-				GlobalOptimizations="1"
 				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="1"
-				ImproveFloatingPointConsistency="0"
+				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				OmitFramePointers="1"
+				OmitFramePointers="true"
 				AdditionalIncludeDirectories=".."
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;inline=__inline;__i386__"
-				StringPooling="1"
+				StringPooling="true"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="0"
-				EnableFunctionLevelLinking="1"
-				RuntimeTypeInfo="0"
+				BufferSecurityCheck="false"
+				EnableFunctionLevelLinking="true"
+				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)/"
 				ObjectFile="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)/"
 				WarningLevel="0"
-				SuppressStartupBanner="1"
+				SuppressStartupBanner="true"
 				CompileAs="1"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="4996,4244"
+				GlobalOptimizations="1"
+				ImproveFloatingPointConsistency="0"
 				UseProcExt="2"
 				RequireProcExt="0"/>
 			<Tool 
+				Name="VCManagedResourceCompilerTool"/>
+			<Tool 
+				Name="ResCmplrTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1051"/>
+			<Tool 
+				Name="PreLinkEventTool"/>
+			<Tool 
 				Name="LinkerTool"
-				DelayImpLib=""
-				IgnoreImportLibrary="1"
+				IgnoreImportLibrary="true"
 				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_tremor.dll"
 				LinkIncremental="1"
-				SuppressStartupBanner="1"
-				IgnoreAllDefaultLibraries="1"
+				SuppressStartupBanner="true"
+				GenerateManifest="true"
+				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\ff_tremor.def"
 				ProgramDatabaseFile="$(IntDir)/ff_tremor.pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				OptimizeForWindows98="1"
 				ImportLibrary="$(IntDir)/ff_tremor.lib"
-				TargetMachine="17"
-				GenerateManifest="1"/>
+				TargetMachine="17"/>
 			<Tool 
-				Name="LibrarianTool"/>
+				Name="VCALinkTool"/>
 			<Tool 
-				Name="ResCmplrTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1051"/>
+				Name="VCManifestTool"
+				EmbedManifest="true"/>
 			<Tool 
-				Name="MidlCmplrTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="1"
-				SuppressStartupBanner="1"
-				TargetEnvironment="3"
-				TypeLibraryName=".\Release/ff_tremor.tlb"
-				HeaderFileName=""/>
+				Name="VCXDCMakeTool"/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
+				Name="VCFxCopTool"/>
 			<Tool 
-				Name="PreLinkEventTool"/>
+				Name="VCAppVerifierTool"/>
+			<Tool 
+				Name="VCWebDeploymentTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="CustomNodeTool"/>
 		</Configuration>
 	</Configurations>
 	<Files>
+		<Filter 
+			Name="Source Files"
+			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
+			<File 
+				RelativePath="bitwise.c">
+			</File>
+			<File 
+				RelativePath=".\block.c">
+			</File>
+			<File 
+				RelativePath=".\codebook.c">
+			</File>
+			<File 
+				RelativePath=".\floor0.c">
+			</File>
+			<File 
+				RelativePath=".\floor1.c">
+			</File>
+			<File 
+				RelativePath=".\info.c">
+			</File>
+			<File 
+				RelativePath=".\mapping0.c">
+			</File>
+			<File 
+				RelativePath=".\mdct.c">
+			</File>
+			<File 
+				RelativePath=".\registry.c">
+			</File>
+			<File 
+				RelativePath=".\res012.c">
+			</File>
+			<File 
+				RelativePath=".\sharedbook.c">
+			</File>
+			<File 
+				RelativePath=".\synthesis.c">
+			</File>
+			<File 
+				RelativePath=".\window.c">
+			</File>
+		</Filter>
+		<Filter 
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl">
+			<File 
+				RelativePath="backends.h">
+			</File>
+			<File 
+				RelativePath="block.h">
+			</File>
+			<File 
+				RelativePath="codebook.h">
+			</File>
+			<File 
+				RelativePath="codec_internal.h">
+			</File>
+			<File 
+				RelativePath="config_types.h">
+			</File>
+			<File 
+				RelativePath="ivorbiscodec.h">
+			</File>
+			<File 
+				RelativePath="lsp_lookup.h">
+			</File>
+			<File 
+				RelativePath="mdct.h">
+			</File>
+			<File 
+				RelativePath="mdct_lookup.h">
+			</File>
+			<File 
+				RelativePath="misc.h">
+			</File>
+			<File 
+				RelativePath="ogg.h">
+			</File>
+			<File 
+				RelativePath="os.h">
+			</File>
+			<File 
+				RelativePath="os_types.h">
+			</File>
+			<File 
+				RelativePath="registry.h">
+			</File>
+			<File 
+				RelativePath="window.h">
+			</File>
+			<File 
+				RelativePath="window_lookup.h">
+			</File>
+		</Filter>
 		<File 
-			RelativePath=".\backends.h"/>
-		<File 
-			RelativePath=".\block.h"/>
-		<File 
-			RelativePath=".\codebook.h"/>
-		<File 
-			RelativePath=".\codec_internal.h"/>
-		<File 
-			RelativePath=".\config_types.h"/>
-		<File 
-			RelativePath=".ivorbiscodec.h"/>
-		<File 
-			RelativePath=".\lsp_lookup.h"/>
-		<File 
-			RelativePath=".\mdct.h"/>
-		<File 
-			RelativePath=".\mdct_lookup.h"/>
-		<File 
-			RelativePath=".\misc.h"/>
-		<File 
-			RelativePath="ogg.h"/>
-		<File 
-			RelativePath=".\os.h"/>
-		<File 
-			RelativePath="os_types.h"/>
-		<File 
-			RelativePath=".\registry.h"/>
-		<File 
-			RelativePath=".\window.h"/>
-		<File 
-			RelativePath=".\window_lookup.h"/>
-		<File 
-			RelativePath="bitwise.c"/>
-		<File 
-			RelativePath=".\block.c"/>
-		<File 
-			RelativePath=".\codebook.c"/>
-		<File 
-			RelativePath=".\floor0.c"/>
-		<File 
-			RelativePath=".\floor1.c"/>
-		<File 
-			RelativePath=".\info.c"/>
-		<File 
-			RelativePath=".\mapping0.c"/>
-		<File 
-			RelativePath=".\mdct.c"/>
-		<File 
-			RelativePath=".\registry.c"/>
-		<File 
-			RelativePath=".\res012.c"/>
-		<File 
-			RelativePath=".\sharedbook.c"/>
-		<File 
-			RelativePath=".\synthesis.c"/>
-		<File 
-			RelativePath=".\window.c"/>
-		<File 
-			RelativePath=".\ff_tremor.def">
+			RelativePath="ff_tremor.def">
 			<FileConfiguration 
 				Name="Release|Win32">
 				<Tool 
 					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
+					ExcludedFromBuild="true"/>
+				<Tool 
+					Name="CustomTool"/>
 			</FileConfiguration>
 			<FileConfiguration 
 				Name="Release|x64">
 				<Tool 
 					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
+					ExcludedFromBuild="true"/>
+				<Tool 
+					Name="CustomTool"/>
 			</FileConfiguration>
 		</File>
 	</Files>
 </VisualStudioProject>
-
 

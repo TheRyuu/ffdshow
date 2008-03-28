@@ -23,8 +23,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
+			OutputDirectory="release_2005"
+			IntermediateDirectory="release_2005"
 			ConfigurationType="10"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -41,7 +41,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\Release/ffdshow_all.tlb"
+				TypeLibraryName=".\release_2005/ffdshow_all.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -50,8 +50,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="release_2005_x64"
+			IntermediateDirectory="release_2005_x64"
 			ConfigurationType="10"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -69,7 +69,7 @@
 			<Tool
 				Name="VCMIDLTool"
 				TargetEnvironment="3"
-				TypeLibraryName=".\Release/ffdshow_all.tlb"
+				TypeLibraryName=".\release_2005_x64/ffdshow_all.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -78,8 +78,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\Debug"
-			IntermediateDirectory=".\Debug"
+			OutputDirectory="debug_2005"
+			IntermediateDirectory="debug_2005"
 			ConfigurationType="10"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -95,7 +95,7 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\Debug/ffdshow_all.tlb"
+				TypeLibraryName=".\debug_2005/ffdshow_all.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -104,8 +104,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="debug_2005_x64"
+			IntermediateDirectory="debug_2005_x64"
 			ConfigurationType="10"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -122,7 +122,7 @@
 			<Tool
 				Name="VCMIDLTool"
 				TargetEnvironment="3"
-				TypeLibraryName=".\Debug/ffdshow_all.tlb"
+				TypeLibraryName=".\debug_2005_x64/ffdshow_all.tlb"
 				HeaderFileName=""
 			/>
 			<Tool

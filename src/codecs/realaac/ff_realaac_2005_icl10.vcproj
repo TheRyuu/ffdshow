@@ -20,8 +20,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="debug_2005_icl10"
+			IntermediateDirectory="debug_2005_icl10"
 			ConfigurationType="2"
 			CharacterSet="0"
 			>
@@ -107,8 +107,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="debug_2005_x64_icl10"
+			IntermediateDirectory="debug_2005_x64_icl10"
 			ConfigurationType="2"
 			CharacterSet="0"
 			>
@@ -194,12 +194,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="release_2005_icl10"
+			IntermediateDirectory="release_2005_icl10"
 			ConfigurationType="2"
 			CharacterSet="0"
 			ManagedExtensions="0"
-			WholeProgramOptimization="0"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -222,7 +222,6 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				WholeProgramOptimization="false"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;USE_DEFAULT_STDLIB;HELIX_FEATURE_AUDIO_CODEC_AAC_SBR"
 				StringPooling="true"
 				ExceptionHandling="0"
@@ -289,12 +288,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="release_2005_x64_icl10"
+			IntermediateDirectory="release_2005_x64_icl10"
 			ConfigurationType="2"
 			CharacterSet="0"
 			ManagedExtensions="0"
-			WholeProgramOptimization="0"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -318,7 +317,6 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				WholeProgramOptimization="false"
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;USE_DEFAULT_STDLIB;HELIX_FEATURE_AUDIO_CODEC_AAC_SBR"
 				StringPooling="true"
 				ExceptionHandling="0"
@@ -326,9 +324,9 @@
 				BufferSecurityCheck="false"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="0"
 				CompileAs="1"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="4996,4244"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject 
 	ProjectType="Intel C++ Project"
-	Version="10.0"
+	Version="10.1"
 	Name="ff_libmad"
 	ProjectGUID="{997933F0-7FF5-4108-B514-C1DD9F87E71F}"
 	VCNestedProjectGUID="{B8000FD0-4A45-4D79-B320-1AFBE61C01C0}"
-	VCNestedProjectCRC32="2762432044"
+	VCNestedProjectCRC32="268575096"
 	VCNestedProjectFileName="ff_libmad_2005_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -18,346 +18,449 @@
 			Name="Debug|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="$(ConfigurationName)$(PlatformName)"
-				IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+				OutputDirectory="debug_2005_icl10"
+				IntermediateDirectory="debug_2005_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
-				ATLMinimizesCRunTimeLibraryUsage="0"
+				ATLMinimizesCRunTimeLibraryUsage="false"
 				CharacterSet="0"/>
 			<Tool 
+				Name="PreBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool 
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool 
+				Name="MidlCmplrTool"/>
+			<Tool 
 				Name="CppCmplrTool"
+				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="."
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;FPM_DEFAULT,_LIB,HAVE_CONFIG_H,ASO_ZEROCHECK,WIN32,_DEBUG,DEBUG"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				BufferSecurityCheck="1"
-				ForceConformanceInForLoopScope="1"
-				RuntimeTypeInfo="0"
+				BufferSecurityCheck="true"
+				ForceConformanceInForLoopScope="true"
+				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)/"
 				ObjectFile="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)/"
 				BrowseInformation="0"
-				SuppressStartupBanner="1"
-				Detect64BitPortabilityProblems="0"
+				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 				CompileAs="1"
-				DisableSpecificWarnings="4996"
-				AdditionalOptions=""/>
+				DisableSpecificWarnings="4996"/>
 			<Tool 
-				Name="LinkerTool"
-				DelayImpLib=""
-				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
-				OutputFile="../../../bin/ff_libmad.dll"
-				SuppressStartupBanner="1"
-				IgnoreAllDefaultLibraries="1"
-				ModuleDefinitionFile="ff_libmad.def"
-				GenerateDebugInformation="1"
-				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
-				ImportLibrary="$(IntDir)\ff_libmad.lib"
-				GenerateManifest="1"
-				AdditionalOptions=""/>
-			<Tool 
-				Name="LibrarianTool"/>
+				Name="VCManagedResourceCompilerTool"/>
 			<Tool 
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1033"/>
 			<Tool 
-				Name="MidlCmplrTool"/>
+				Name="PreLinkEventTool"/>
+			<Tool 
+				Name="LinkerTool"
+				IgnoreImportLibrary="true"
+				AdditionalOptions=""
+				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				OutputFile="../../../bin/ff_libmad.dll"
+				SuppressStartupBanner="true"
+				GenerateManifest="true"
+				IgnoreAllDefaultLibraries="true"
+				ModuleDefinitionFile="ff_libmad.def"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
+				ImportLibrary="$(IntDir)\ff_libmad.lib"/>
+			<Tool 
+				Name="VCALinkTool"/>
+			<Tool 
+				Name="VCManifestTool"
+				EmbedManifest="true"/>
+			<Tool 
+				Name="VCXDCMakeTool"/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
+				Name="VCFxCopTool"/>
 			<Tool 
-				Name="PreLinkEventTool"/>
+				Name="VCAppVerifierTool"/>
+			<Tool 
+				Name="VCWebDeploymentTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Debug|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="$(ConfigurationName)$(PlatformName)"
-				IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+				OutputDirectory="debug_2005_x64_icl10"
+				IntermediateDirectory="debug_2005_x64_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
-				ATLMinimizesCRunTimeLibraryUsage="0"
+				ATLMinimizesCRunTimeLibraryUsage="false"
 				CharacterSet="0"/>
 			<Tool 
+				Name="PreBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool 
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool 
+				Name="MidlCmplrTool"
+				TargetEnvironment="3"/>
+			<Tool 
 				Name="CppCmplrTool"
+				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="."
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;FPM_DEFAULT,_LIB,HAVE_CONFIG_H,ASO_ZEROCHECK,WIN64,_DEBUG,DEBUG"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				BufferSecurityCheck="1"
-				ForceConformanceInForLoopScope="1"
-				RuntimeTypeInfo="0"
+				BufferSecurityCheck="true"
+				ForceConformanceInForLoopScope="true"
+				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)/"
 				ObjectFile="$(IntDir)/"
-				SuppressStartupBanner="1"
-				Detect64BitPortabilityProblems="0"
+				ProgramDataBaseFileName="$(IntDir)/"
+				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 				CompileAs="1"
-				DisableSpecificWarnings="4996"
-				AdditionalOptions=""/>
+				DisableSpecificWarnings="4996"/>
 			<Tool 
-				Name="LinkerTool"
-				DelayImpLib=""
-				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
-				OutputFile="../../../bin/ff_libmad.dll"
-				SuppressStartupBanner="1"
-				IgnoreAllDefaultLibraries="1"
-				ModuleDefinitionFile="ff_libmad.def"
-				GenerateDebugInformation="1"
-				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
-				ImportLibrary="$(IntDir)\ff_libmad.lib"
-				TargetMachine="17"
-				GenerateManifest="1"
-				AdditionalOptions=""/>
-			<Tool 
-				Name="LibrarianTool"/>
+				Name="VCManagedResourceCompilerTool"/>
 			<Tool 
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1033"/>
 			<Tool 
-				Name="MidlCmplrTool"
-				TargetEnvironment="3"/>
+				Name="PreLinkEventTool"/>
+			<Tool 
+				Name="LinkerTool"
+				IgnoreImportLibrary="true"
+				AdditionalOptions=""
+				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				OutputFile="../../../bin/ff_libmad.dll"
+				SuppressStartupBanner="true"
+				GenerateManifest="true"
+				IgnoreAllDefaultLibraries="true"
+				ModuleDefinitionFile="ff_libmad.def"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
+				ImportLibrary="$(IntDir)\ff_libmad.lib"
+				TargetMachine="17"/>
+			<Tool 
+				Name="VCALinkTool"/>
+			<Tool 
+				Name="VCManifestTool"
+				EmbedManifest="true"/>
+			<Tool 
+				Name="VCXDCMakeTool"/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
+				Name="VCFxCopTool"/>
 			<Tool 
-				Name="PreLinkEventTool"/>
+				Name="VCAppVerifierTool"/>
+			<Tool 
+				Name="VCWebDeploymentTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Release|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="$(ConfigurationName)$(PlatformName)"
-				IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+				OutputDirectory="release_2005_icl10"
+				IntermediateDirectory="release_2005_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
-				ATLMinimizesCRunTimeLibraryUsage="0"
+				ATLMinimizesCRunTimeLibraryUsage="false"
 				CharacterSet="0"
-				WholeProgramOptimization="0"/>
+				ManagedExtensions="0"
+				WholeProgramOptimization="1"/>
+			<Tool 
+				Name="PreBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool 
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool 
+				Name="MidlCmplrTool"/>
 			<Tool 
 				Name="CppCmplrTool"
-				WholeProgramOptimization="0"
+				AdditionalOptions=""
 				Optimization="2"
 				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="1"
+				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				OmitFramePointers="1"
+				OmitFramePointers="true"
 				AdditionalIncludeDirectories="."
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG,FPM_INTEL,WIN32,_LIB,HAVE_CONFIG_H,ASO_ZEROCHECK"
-				StringPooling="1"
+				StringPooling="true"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="0"
-				EnableFunctionLevelLinking="0"
-				RuntimeTypeInfo="0"
+				BufferSecurityCheck="false"
+				EnableFunctionLevelLinking="false"
+				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)/"
 				ObjectFile="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)/"
 				BrowseInformation="0"
 				WarningLevel="1"
-				SuppressStartupBanner="1"
+				SuppressStartupBanner="true"
 				CompileAs="1"
-				DisableSpecificWarnings="4996"
-				AdditionalOptions=""/>
+				DisableSpecificWarnings="4996"/>
 			<Tool 
-				Name="LinkerTool"
-				DelayImpLib=""
-				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
-				OutputFile="../../../bin/ff_libmad.dll"
-				SuppressStartupBanner="1"
-				IgnoreAllDefaultLibraries="1"
-				ModuleDefinitionFile="ff_libmad.def"
-				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				OptimizeForWindows98="2"
-				ImportLibrary="$(IntDir)\ff_libmad.lib"
-				GenerateManifest="1"
-				AdditionalOptions=""/>
-			<Tool 
-				Name="LibrarianTool"/>
+				Name="VCManagedResourceCompilerTool"/>
 			<Tool 
 				Name="ResCmplrTool"
 				PreprocessorDefinitions="NDEBUG"
 				Culture="1033"/>
 			<Tool 
-				Name="MidlCmplrTool"/>
+				Name="PreLinkEventTool"/>
+			<Tool 
+				Name="LinkerTool"
+				IgnoreImportLibrary="true"
+				AdditionalOptions=""
+				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				OutputFile="../../../bin/ff_libmad.dll"
+				SuppressStartupBanner="true"
+				GenerateManifest="true"
+				IgnoreAllDefaultLibraries="true"
+				ModuleDefinitionFile="ff_libmad.def"
+				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				OptimizeForWindows98="2"
+				ImportLibrary="$(IntDir)\ff_libmad.lib"/>
+			<Tool 
+				Name="VCALinkTool"/>
+			<Tool 
+				Name="VCManifestTool"
+				EmbedManifest="true"/>
+			<Tool 
+				Name="VCXDCMakeTool"/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
+				Name="VCFxCopTool"/>
 			<Tool 
-				Name="PreLinkEventTool"/>
+				Name="VCAppVerifierTool"/>
+			<Tool 
+				Name="VCWebDeploymentTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="CustomNodeTool"/>
 		</Configuration>
 		<Configuration 
 			Name="Release|x64">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="$(ConfigurationName)$(PlatformName)"
-				IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+				OutputDirectory="release_2005_x64_icl10"
+				IntermediateDirectory="release_2005_x64_icl10"
 				ConfigurationType="2"
 				UseOfMFC="0"
-				ATLMinimizesCRunTimeLibraryUsage="0"
+				ATLMinimizesCRunTimeLibraryUsage="false"
 				CharacterSet="0"
-				WholeProgramOptimization="0"/>
+				ManagedExtensions="0"
+				WholeProgramOptimization="1"/>
+			<Tool 
+				Name="PreBuildEventTool"/>
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool 
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool 
+				Name="MidlCmplrTool"
+				TargetEnvironment="3"/>
 			<Tool 
 				Name="CppCmplrTool"
-				WholeProgramOptimization="0"
+				AdditionalOptions=""
 				Optimization="2"
-				GlobalOptimizations="1"
 				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="1"
-				ImproveFloatingPointConsistency="0"
+				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				OmitFramePointers="1"
+				OmitFramePointers="true"
 				AdditionalIncludeDirectories="."
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG,FPM_INTEL,WIN64,_LIB,HAVE_CONFIG_H,ASO_ZEROCHECK"
-				StringPooling="1"
+				StringPooling="true"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
-				BufferSecurityCheck="0"
-				EnableFunctionLevelLinking="0"
-				RuntimeTypeInfo="0"
+				BufferSecurityCheck="false"
+				EnableFunctionLevelLinking="false"
+				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)/"
 				ObjectFile="$(IntDir)/"
-				WarningLevel="1"
-				SuppressStartupBanner="1"
+				ProgramDataBaseFileName="$(IntDir)/"
+				WarningLevel="0"
+				SuppressStartupBanner="true"
 				CompileAs="1"
-				DisableSpecificWarnings="4996"
-				AdditionalOptions=""
+				DisableSpecificWarnings="4996,4244"
+				GlobalOptimizations="1"
+				ImproveFloatingPointConsistency="0"
 				UseProcExt="2"
 				RequireProcExt="0"/>
 			<Tool 
+				Name="VCManagedResourceCompilerTool"/>
+			<Tool 
+				Name="ResCmplrTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"/>
+			<Tool 
+				Name="PreLinkEventTool"/>
+			<Tool 
 				Name="LinkerTool"
-				DelayImpLib=""
-				IgnoreImportLibrary="1"
+				IgnoreImportLibrary="true"
+				AdditionalOptions=""
 				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_libmad.dll"
-				SuppressStartupBanner="1"
-				IgnoreAllDefaultLibraries="1"
+				SuppressStartupBanner="true"
+				GenerateManifest="true"
+				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile="ff_libmad.def"
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				OptimizeForWindows98="2"
 				ImportLibrary="$(IntDir)\ff_libmad.lib"
-				TargetMachine="17"
-				GenerateManifest="1"
-				AdditionalOptions=""/>
+				TargetMachine="17"/>
 			<Tool 
-				Name="LibrarianTool"/>
+				Name="VCALinkTool"/>
 			<Tool 
-				Name="ResCmplrTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1033"/>
+				Name="VCManifestTool"
+				EmbedManifest="true"/>
 			<Tool 
-				Name="MidlCmplrTool"
-				TargetEnvironment="3"/>
+				Name="VCXDCMakeTool"/>
 			<Tool 
 				Name="BscMakeTool"/>
 			<Tool 
-				Name="PreBuildEventTool"/>
+				Name="VCFxCopTool"/>
 			<Tool 
-				Name="PreLinkEventTool"/>
+				Name="VCAppVerifierTool"/>
+			<Tool 
+				Name="VCWebDeploymentTool"/>
 			<Tool 
 				Name="PostBuildEventTool"/>
-			<Tool 
-				Name="CustomTool"/>
-			<Tool 
-				Name="CustomNodeTool"/>
 		</Configuration>
 	</Configurations>
 	<Files>
+		<Filter 
+			Name="Source Files"
+			Filter="c">
+			<File 
+				RelativePath=".\bit.c">
+			</File>
+			<File 
+				RelativePath=".\decoder.c">
+			</File>
+			<File 
+				RelativePath=".\fixed.c">
+			</File>
+			<File 
+				RelativePath=".\frame.c">
+			</File>
+			<File 
+				RelativePath=".\huffman.c">
+			</File>
+			<File 
+				RelativePath=".\layer12.c">
+			</File>
+			<File 
+				RelativePath=".\layer3.c">
+			</File>
+			<File 
+				RelativePath=".\stream.c">
+			</File>
+			<File 
+				RelativePath=".\synth.c">
+			</File>
+			<File 
+				RelativePath=".\timer.c">
+			</File>
+			<File 
+				RelativePath=".\version.c">
+			</File>
+		</Filter>
+		<Filter 
+			Name="Header Files"
+			Filter="h">
+			<File 
+				RelativePath=".\bit.h">
+			</File>
+			<File 
+				RelativePath="config.h">
+			</File>
+			<File 
+				RelativePath=".\decoder.h">
+			</File>
+			<File 
+				RelativePath=".\fixed.h">
+			</File>
+			<File 
+				RelativePath=".\frame.h">
+			</File>
+			<File 
+				RelativePath=".\global.h">
+			</File>
+			<File 
+				RelativePath=".\huffman.h">
+			</File>
+			<File 
+				RelativePath=".\layer12.h">
+			</File>
+			<File 
+				RelativePath=".\layer3.h">
+			</File>
+			<File 
+				RelativePath="mad.h">
+			</File>
+			<File 
+				RelativePath=".\stream.h">
+			</File>
+			<File 
+				RelativePath=".\synth.h">
+			</File>
+			<File 
+				RelativePath=".\timer.h">
+			</File>
+			<File 
+				RelativePath=".\version.h">
+			</File>
+		</Filter>
+		<Filter 
+			Name="Data Files"
+			Filter="dat">
+			<File 
+				RelativePath=".\D.dat">
+			</File>
+			<File 
+				RelativePath=".\imdct_s.dat">
+			</File>
+			<File 
+				RelativePath=".\qc_table.dat">
+			</File>
+			<File 
+				RelativePath=".\rq_table.dat">
+			</File>
+			<File 
+				RelativePath=".\sf_table.dat">
+			</File>
+		</Filter>
 		<File 
-			RelativePath=".\D.dat"/>
-		<File 
-			RelativePath=".\imdct_s.dat"/>
-		<File 
-			RelativePath=".\qc_table.dat"/>
-		<File 
-			RelativePath=".\rq_table.dat"/>
-		<File 
-			RelativePath=".\sf_table.dat"/>
-		<File 
-			RelativePath=".\bit.h"/>
-		<File 
-			RelativePath=".\config.h"/>
-		<File 
-			RelativePath=".\decoder.h"/>
-		<File 
-			RelativePath=".\fixed.h"/>
-		<File 
-			RelativePath=".\frame.h"/>
-		<File 
-			RelativePath=".\global.h"/>
-		<File 
-			RelativePath=".\huffman.h"/>
-		<File 
-			RelativePath=".\layer12.h"/>
-		<File 
-			RelativePath=".\layer3.h"/>
-		<File 
-			RelativePath=".\mad.h"/>
-		<File 
-			RelativePath=".\stream.h"/>
-		<File 
-			RelativePath=".\synth.h"/>
-		<File 
-			RelativePath=".\timer.h"/>
-		<File 
-			RelativePath=".\version.h"/>
-		<File 
-			RelativePath=".\bit.c"/>
-		<File 
-			RelativePath=".\decoder.c"/>
-		<File 
-			RelativePath=".\fixed.c"/>
-		<File 
-			RelativePath=".\frame.c"/>
-		<File 
-			RelativePath=".\huffman.c"/>
-		<File 
-			RelativePath=".\layer12.c"/>
-		<File 
-			RelativePath=".\layer3.c"/>
-		<File 
-			RelativePath=".\stream.c"/>
-		<File 
-			RelativePath=".\synth.c"/>
-		<File 
-			RelativePath=".\timer.c"/>
-		<File 
-			RelativePath=".\version.c"/>
-		<File 
-			RelativePath=".\ff_libmad.def"/>
+			RelativePath="ff_libmad.def">
+		</File>
 	</Files>
 </VisualStudioProject>
 

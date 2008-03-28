@@ -20,8 +20,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="debug_2005"
+			IntermediateDirectory="debug_2005"
 			ConfigurationType="1"
 			CharacterSet="0"
 			>
@@ -110,8 +110,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="debug_2005_x64"
+			IntermediateDirectory="debug_2005_x64"
 			ConfigurationType="1"
 			CharacterSet="0"
 			>
@@ -200,8 +200,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="release_2005"
+			IntermediateDirectory="release_2005"
 			ConfigurationType="1"
 			CharacterSet="0"
 			ManagedExtensions="0"
@@ -298,8 +298,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="release_2005_x64"
+			IntermediateDirectory="release_2005_x64"
 			ConfigurationType="1"
 			CharacterSet="0"
 			ManagedExtensions="0"

@@ -20,8 +20,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="debug_2005"
+			IntermediateDirectory="debug_2005"
 			ConfigurationType="2"
 			CharacterSet="0"
 			>
@@ -114,8 +114,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="debug_2005_x64"
+			IntermediateDirectory="debug_2005_x64"
 			ConfigurationType="2"
 			CharacterSet="0"
 			>
@@ -208,8 +208,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="release_2005"
+			IntermediateDirectory="release_2005"
 			ConfigurationType="2"
 			CharacterSet="0"
 			ManagedExtensions="0"
@@ -306,8 +306,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="release_2005_x64"
+			IntermediateDirectory="release_2005_x64"
 			ConfigurationType="2"
 			CharacterSet="0"
 			ManagedExtensions="0"
@@ -404,8 +404,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug Unicode|Win32"
-			OutputDirectory="debug_unicode$(PlatformName)"
-			IntermediateDirectory="debug_unicode$(PlatformName)"
+			OutputDirectory="debug_unicode_2005"
+			IntermediateDirectory="debug_unicode_2005"
 			ConfigurationType="2"
 			CharacterSet="1"
 			>
@@ -496,8 +496,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug Unicode|x64"
-			OutputDirectory="debug_unicode$(PlatformName)"
-			IntermediateDirectory="debug_unicode$(PlatformName)"
+			OutputDirectory="debug_unicode_2005_x64"
+			IntermediateDirectory="debug_unicode_2005_x64"
 			ConfigurationType="2"
 			CharacterSet="1"
 			>
@@ -589,8 +589,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release Unicode|Win32"
-			OutputDirectory="release_unicode$(PlatformName)"
-			IntermediateDirectory="release_unicode$(PlatformName)"
+			OutputDirectory="release_unicode_2005"
+			IntermediateDirectory="release_unicode_2005"
 			ConfigurationType="2"
 			CharacterSet="1"
 			ManagedExtensions="0"
@@ -687,8 +687,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release Unicode|x64"
-			OutputDirectory="release_unicode$(PlatformName)"
-			IntermediateDirectory="release_unicode$(PlatformName)"
+			OutputDirectory="release_unicode_2005_x64"
+			IntermediateDirectory="release_unicode_2005_x64"
 			ConfigurationType="2"
 			CharacterSet="1"
 			ManagedExtensions="0"
