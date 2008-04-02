@@ -181,6 +181,8 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
             tmpConvert1=new Tconvert(libmplayer,avisynthYV12_RGB,dx,dy,*this);
             tmpConvert2=new Tconvert(libmplayer,avisynthYV12_RGB,dx,dy,*this);
             if (incsp&FF_CSP_FLAGS_INTERLACED || outcsp&FF_CSP_FLAGS_INTERLACED) tmpcsp|=FF_CSP_FLAGS_INTERLACED;
+            if ((incsp | outcsp) & FF_CSP_FLAGS_YUV_JPEG)
+             tmpcsp |= FF_CSP_FLAGS_YUV_JPEG;
            }
           else
            if (csp_supXvid(outcsp1)

@@ -50,6 +50,7 @@ void TrgbPrimaries::UpdateSettings(void)
    cspOptionsWhiteCutoff = outcfg->get_cspOptionsWhiteCutoff();
    cspOptionsChromaCutoff = outcfg->get_cspOptionsChromaCutoff();
   }
+ wasJpeg = false;
 }
 
 void TrgbPrimaries::reset(void)
@@ -58,6 +59,7 @@ void TrgbPrimaries::reset(void)
  cspOptionsBlackCutoff = 16;
  cspOptionsWhiteCutoff = 235;
  cspOptionsChromaCutoff = 16;
+ wasJpeg = false;
 }
 
 void TrgbPrimaries::setJpeg(bool isjpeg)
@@ -69,6 +71,9 @@ void TrgbPrimaries::setJpeg(bool isjpeg)
    cspOptionsBlackCutoff = 0;
    cspOptionsWhiteCutoff = 255;
    cspOptionsChromaCutoff = 1;
+   if (!wasJpeg)
+    initXvid();
+   wasJpeg = true;
   }
 }
 

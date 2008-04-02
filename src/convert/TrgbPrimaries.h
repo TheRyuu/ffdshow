@@ -22,6 +22,7 @@ private:
 
  void reset(void);
  IffdshowDecVideo* deciV;
+ bool wasJpeg;
 protected:
  int cspOptionsIturBt, cspOptionsBlackCutoff, cspOptionsWhiteCutoff, cspOptionsChromaCutoff;
 public:
