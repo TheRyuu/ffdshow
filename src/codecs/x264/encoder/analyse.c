@@ -202,8 +202,6 @@ static void x264_mb_analyse_load_costs( x264_t *h, x264_mb_analysis_t *a )
 
 static void x264_mb_analyse_init( x264_t *h, x264_mb_analysis_t *a, int i_qp )
 {
-    memset( a, 0, sizeof( x264_mb_analysis_t ) );
-
     /* conduct the analysis using this lamda and QP */
     a->i_qp = h->mb.i_qp = i_qp;
     h->mb.i_chroma_qp = i_chroma_qp_table[x264_clip3( i_qp + h->pps->i_chroma_qp_index_offset, 0, 51 )];
@@ -1024,7 +1022,7 @@ static void x264_mb_analyse_inter_p16x16( x264_t *h, x264_mb_analysis_t *a )
     assert( a->l0.me16x16.mv[1] <= h->mb.mv_max_spel[1] || h->param.i_threads == 1 );
 
     h->mb.i_type = P_L0;
-    if( a->b_mbrd && a->l0.i_ref == 0
+    if( a->b_mbrd && a->l0.me16x16.i_ref == 0
         && a->l0.me16x16.mv[0] == h->mb.cache.pskip_mv[0]
         && a->l0.me16x16.mv[1] == h->mb.cache.pskip_mv[1] )
     {
@@ -2063,8 +2061,11 @@ void x264_macroblock_analyse( x264_t *h )
     int i_cost = COST_MAX;
     int i;
 
-    /* init analysis */
-    x264_mb_analyse_init( h, &analysis, x264_ratecontrol_qp( h ) );
+    h->mb.i_qp = x264_ratecontrol_qp( h );
+    if( h->param.rc.i_aq_mode )
+        x264_adaptive_quant( h );
+
+    x264_mb_analyse_init( h, &analysis, h->mb.i_qp );
 
     /*--------------------------- Do the analysis ---------------------------*/
     if( h->sh.i_type == SLICE_TYPE_I )

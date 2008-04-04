@@ -26,7 +26,7 @@
 
 #include <stdarg.h>
 
-#define X264_BUILD "58"
+#define X264_BUILD "59"
 
 /* x264_t:
  *      opaque handler for encoder */
@@ -73,6 +73,9 @@ typedef struct x264_t x264_t;
 #define X264_RC_CQP                  0
 #define X264_RC_CRF                  1
 #define X264_RC_ABR                  2
+#define X264_AQ_NONE                 0
+#define X264_AQ_LOCAL                1
+#define X264_AQ_GLOBAL               2
 
 static const char * const x264_direct_pred_names[] = { "none", "spatial", "temporal", "auto", 0 };
 static const char * const x264_motion_est_names[] = { "dia", "hex", "umh", "esa", "tesa", 0 };
@@ -250,6 +253,9 @@ typedef struct x264_param_t
         float       f_vbv_buffer_init; /* <=1: fraction of buffer_size. >1: kbit */
         float       f_ip_factor;
         float       f_pb_factor;
+
+        int         i_aq_mode;      /* psy adaptive QP. (X264_AQ_*) */
+        float       f_aq_strength;
 
         /* 2pass */
         int         b_stat_write;   /* Enable stat writing in psz_stat_out */
