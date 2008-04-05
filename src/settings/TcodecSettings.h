@@ -227,7 +227,7 @@ public:
  int x264_b_bframe_pyramid;
  int x264_b_aud;
  int x264_mixed_ref;
- int x264_is_aq,x264_aq_strength100,x264_f_aq_sensitivity;
+ int x264_aq_strength100;
  int x264_b_dct_decimate;
 
  FOURCC raw_fourcc;

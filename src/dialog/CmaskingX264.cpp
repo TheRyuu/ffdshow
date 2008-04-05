@@ -27,35 +27,23 @@ bool TmaskingPageX264::enabled(void)
 void TmaskingPageX264::init(void)
 {
  tbrSetRange(IDC_TBR_X264_AQ_STRENGTH,1,100);
- tbrSetRange(IDC_TBR_X264_AQ_SENSITIVITY,1,30);
 }
 
 void TmaskingPageX264::cfg2dlg(void)
 {
- int is=cfgGet(IDFF_enc_x264_is_aq);
- setCheck(IDC_CHB_X264_AQ,is);
  tbrSet(IDC_TBR_X264_AQ_STRENGTH,cfgGet(IDFF_enc_x264_aq_strength100),IDC_LBL_X264_AQ_STRENGTH);
- tbrSet(IDC_TBR_X264_AQ_SENSITIVITY,cfgGet(IDFF_enc_x264_f_aq_sensitivity),IDC_LBL_X264_AQ_SENSITIVITY);
- static const int idAQ[]={IDC_TBR_X264_AQ_STRENGTH,IDC_LBL_X264_AQ_STRENGTH,IDC_TBR_X264_AQ_SENSITIVITY,IDC_LBL_X264_AQ_SENSITIVITY,0};
- enable(is,idAQ);
+ static const int idAQ[]={IDC_TBR_X264_AQ_STRENGTH,IDC_LBL_X264_AQ_STRENGTH,0};
 }
 
 TmaskingPageX264::TmaskingPageX264(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
 {
  dialogId=IDD_MASKING_X264;
- static const int props[]={IDFF_enc_x264_is_aq,IDFF_enc_x264_aq_strength100,IDFF_enc_x264_f_aq_sensitivity,0};
+ static const int props[]={IDFF_enc_x264_aq_strength100,0};
  propsIDs=props;
- static const TbindCheckbox<TmaskingPageX264> chb[]=
-  {
-   IDC_CHB_X264_AQ,IDFF_enc_x264_is_aq,&TmaskingPageX264::cfg2dlg,
-   0,NULL,NULL
-  };
- bindCheckboxes(chb);
  static const TbindTrackbar<TmaskingPageX264> htbr[]=
   {
    IDC_TBR_X264_AQ_STRENGTH,IDFF_enc_x264_aq_strength100,&TmaskingPageX264::cfg2dlg,
-   IDC_TBR_X264_AQ_SENSITIVITY,IDFF_enc_x264_f_aq_sensitivity,&TmaskingPageX264::cfg2dlg,
-   0,0,NULL
+   0,NULL,NULL
   };
  bindHtracks(htbr);
 }

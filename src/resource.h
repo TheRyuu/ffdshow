@@ -1636,11 +1636,8 @@
 #define IDC_LBX_LEVELS_CURVES           1924
 #define IDC_CHB_VOLUME_C_SOLO           1925
 #define IDC_CHB_VOLUME_R_MUTE           1926
-#define IDC_CHB_X264_AQ                 1926
 #define IDC_CHB_VOLUME_R_SOLO           1927
-#define IDC_LBL_X264_AQ_SENSITIVITY     1927
 #define IDC_CHB_VOLUME_SL_MUTE          1928
-#define IDC_TBR_X264_AQ_SENSITIVITY     1928
 #define IDC_CHB_VOLUME_SL_SOLO          1929
 #define IDC_CHB_VOLUME_SR_MUTE          1930
 #define IDC_CHB_VOLUME_SR_SOLO          1931

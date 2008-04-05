@@ -597,13 +597,8 @@ TcoSettings::TcoSettings(TintStrColl *Icoll):Toptions(Icoll),options(Icoll)
        _l("x264_mixed_ref"),0,
    IDFF_enc_x264_b_dct_decimate             ,&TcoSettings::x264_b_dct_decimate             , 0,   0,_l(""),1,
        _l("x264_b_dct_decimate"),1,
-
-   IDFF_enc_x264_is_aq                      ,&TcoSettings::x264_is_aq                      , 0,   2,_l(""),1,
-       _l("x264_is_aq"),X264_AQ_GLOBAL,
    IDFF_enc_x264_aq_strength100             ,&TcoSettings::x264_aq_strength100             , 1, 100,_l(""),1,
        _l("x264_aq_strength100"),30,
-   IDFF_enc_x264_f_aq_sensitivity           ,&TcoSettings::x264_f_aq_sensitivity           , 1,  30,_l(""),1,
-       _l("x264_f_aq_sensitivity"),15,
    0,
   };
  addOptions(iopts);
