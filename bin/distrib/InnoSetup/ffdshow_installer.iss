@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 1920
+#define tryout_revision = 1926
 #define buildyear = 2008
-#define buildmonth = '03'
-#define buildday = '28'
+#define buildmonth = '04'
+#define buildday = '07'
 
 ; Build specific options
 #define unicode_required = True
@@ -1122,6 +1122,7 @@ begin
     'Badak.exe'#13#10
     'BearShare.exe'#13#10
     'BePipe.exe'#13#10
+    'BESTplayer.exe'#13#10
     'bestplayer1.0.exe'#13#10
     'BitComet.exe'#13#10
     'BlazeDVD.exe'#13#10
@@ -1509,7 +1510,10 @@ begin
   compApps[57].name  := 'wmprph.exe';
   compApps[58].name  := 'YahooWidgets.exe';
   
-  compApps[59].rev   := 0;
+  compApps[59].rev   := 1926;
+  compApps[59].name  := 'BESTplayer.exe';
+  
+  compApps[60].rev   := 0;
 
 
   // Compatibility list
