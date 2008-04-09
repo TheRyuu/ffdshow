@@ -143,7 +143,6 @@ Twinamp2dsp::Twinamp2dsp(Twinamp2dspDll *Idll,winampDSPModule *Imod):mod(Imod),d
 }
 Twinamp2dsp::~Twinamp2dsp()
 {
- mod->Quit(mod);
 }
 int Twinamp2dsp::init(void)
 {
@@ -234,6 +233,7 @@ unsigned int __stdcall Twinamp2dsp::threadProc(void *self0)
    self->h=(HWND)-1;
    DestroyWindow(h);
   }
+ self->mod->Quit(self->mod);
  UnregisterClass(FFDSHOW_WINAMP_CLASS,hi);
  _endthreadex(0);
  return 0;
