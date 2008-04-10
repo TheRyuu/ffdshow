@@ -415,14 +415,18 @@ void x264_dct_init( int cpu, x264_dct_function_t *dctf )
 
     if( cpu&X264_CPU_SSE2 )
     {
-        #ifdef ARCH_X86_64
         dctf->sub8x8_dct8   = x264_sub8x8_dct8_sse2;
         dctf->sub16x16_dct8 = x264_sub16x16_dct8_sse2;
-        #endif
         dctf->add8x8_idct8  = x264_add8x8_idct8_sse2;
         dctf->add16x16_idct8= x264_add16x16_idct8_sse2;
     }
-
+    if( (cpu&X264_CPU_SSE2) && !(cpu&X264_CPU_3DNOW) )
+    {
+        dctf->sub8x8_dct    = x264_sub8x8_dct_sse2;
+        dctf->sub16x16_dct  = x264_sub16x16_dct_sse2;
+        dctf->add8x8_idct   = x264_add8x8_idct_sse2;
+        dctf->add16x16_idct = x264_add16x16_idct_sse2;
+    }
 #endif //HAVE_MMX
 
 #ifdef ARCH_PPC
