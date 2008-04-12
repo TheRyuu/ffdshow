@@ -77,7 +77,8 @@ const char_t* TcoSettings::x264_me_methods[]=
  _l("diamond"),
  _l("hexagonal"),
  _l("UMH"),
- _l("exhaustive"),
+ _l("ESA"),
+ _l("TESA"),
  NULL
 };
 
@@ -579,7 +580,7 @@ TcoSettings::TcoSettings(TintStrColl *Icoll):Toptions(Icoll),options(Icoll)
        _l("x264_me_subpelrefine"),5,
    IDFF_enc_x264_mv_range                   ,&TcoSettings::x264_mv_range                   , 1,1024,_l(""),1,
        _l("x264_mv_range"),512,
-   IDFF_enc_x264_me_method                  ,&TcoSettings::x264_me_method                  , 0,   3,_l(""),1,
+   IDFF_enc_x264_me_method                  ,&TcoSettings::x264_me_method                  , 0,   4,_l(""),1,
        _l("x264_me_method"),X264_ME_HEX,
    IDFF_enc_x264_me_range                   ,&TcoSettings::x264_me_range                   , 4,1024,_l(""),1,
        _l("x264_me_range"),16,
