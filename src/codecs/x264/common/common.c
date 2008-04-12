@@ -553,7 +553,6 @@ int x264_param_parse( x264_param_t *p, const char *name, const char *value )
 /****************************************************************************
  * x264_log:
  ****************************************************************************/
-/*
 void x264_log( x264_t *h, int i_level, const char *psz_fmt, ... )
 {
     if( i_level <= h->param.i_log_level )
@@ -564,7 +563,7 @@ void x264_log( x264_t *h, int i_level, const char *psz_fmt, ... )
         va_end( arg );
     }
 }
-*/
+
 static void x264_log_default( void *p_unused, int i_level, const char *psz_fmt, va_list arg )
 {
     char *psz_prefix;
