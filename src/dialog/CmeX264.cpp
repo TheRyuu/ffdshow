@@ -142,7 +142,7 @@ TmeX264page::TmeX264page(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
  static const TbindEditInt<TmeX264page> edInt[]=
   {
    IDC_ED_X264_REF_FRAMES,1,16,IDFF_enc_x264_max_ref_frames,NULL,
-   IDC_ED_X264_MV_RANGE,1,1024,IDFF_enc_x264_mv_range,NULL,
+   IDC_ED_X264_MV_RANGE,1,511,IDFF_enc_x264_mv_range,NULL,
    IDC_ED_X264_ME_RANGE,1,1024,IDFF_enc_x264_me_range,NULL,
    0,NULL,NULL
   };
