@@ -25,7 +25,7 @@ CFLAGS+=-w
 CFLAGS+=-DNDEBUG -UDEBUG -DFFDEBUG=0
 #CFLAGS+=-DDEBUG -D_DEBUG
 
-OPTFLAGS=-O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline-functions -finline -frename-registers -fweb -funit-at-a-time
+OPTFLAGS=-O3 -march=i686 -fomit-frame-pointer
 
 
 ifeq ($(UNICODE),yes)

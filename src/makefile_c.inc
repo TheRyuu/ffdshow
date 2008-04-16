@@ -19,7 +19,7 @@ ifeq ($(SSE2),yes)
   CFLAGS+=-msse2
 endif
 CFLAGS+=-DNDEBUG -UDEBUG -DWIN32 -D_WIN32
-OPTFLAGS=-O2 -march=pentium-mmx -mtune=i686 -fomit-frame-pointer -finline-functions -finline -frename-registers -fweb -funit-at-a-time
+OPTFLAGS=-O3 -march=i686 -fomit-frame-pointer
 CPPFLAGS+=-fno-rtti
 
 GCCDEF=$(DEF)
