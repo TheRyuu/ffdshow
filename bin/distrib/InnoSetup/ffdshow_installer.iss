@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 1926
+#define tryout_revision = 1942
 #define buildyear = 2008
 #define buildmonth = '04'
-#define buildday = '07'
+#define buildday = '16'
 
 ; Build specific options
 #define unicode_required = True
@@ -53,14 +53,6 @@
 #if PREF_CLSID
   #define VS2003SP1 = True  
   #define unicode_required = False
-  #define include_x264 = True
-  #define cpu_detection = True
-  #define filename_suffix = '_clsid'
-  #define bindir = '..\..\x86'
-  #define outputdir = '..\..\..\..\'
-#elif PREF_CLSID_UNICODE
-  #define VS2003SP1 = True  
-  #define unicode_required = True
   #define include_x264 = True
   #define cpu_detection = True
   #define filename_suffix = '_clsid'
@@ -122,7 +114,7 @@ You must configure your compiling environment!!!
 #if VS2008 & !unicode_required
 VS2008 builds require Windows 2000 or above. You must set unicode_required to True!
 #endif
-#if is64bit & !VS2005SP1 & !VS2008 & !MINGW_GCC
+#if is64bit & !VS2005SP1 & !VS2008
 This can't be a 64-bit build.
 #endif
 
@@ -391,7 +383,7 @@ Source: {#= bindir}\ff_samplerate.dll; DestDir: {app}; Flags: ignoreversion; Com
 Source: {#= bindir}\ff_theora.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 #if include_x264 & !is64bit
 Source: {#= bindir}\ff_x264.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow\vfw
-Source: Runtimes\pthreadGC2.dll; DestDir: {sys}; Flags: sharedfile uninsnosharedfileprompt; Components: ffdshow\vfw
+Source: Runtimes\pthreadGC2.dll; DestDir: {sys}; Flags: sharedfile uninsnosharedfileprompt restartreplace uninsrestartdelete; Components: ffdshow\vfw
 #endif
 #if include_xvidcore & !is64bit
 Source: {#= bindir}\xvidcore.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
@@ -583,10 +575,6 @@ Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.av
 #endif
 
 ; Recommended settings
-Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: allowOutChange;      ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: hwOverlay;           ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: idct;                ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: outChangeCompatOnly; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: postprocH264mode;    ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: resizeMethod;        ValueData: 9; Flags: createvalueifdoesntexist; Components: ffdshow
 
@@ -608,13 +596,6 @@ Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueN
 
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: ismixer;  ValueData: {code:GetIsMixer};  Components: ffdshow
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerOut; ValueData: {code:GetMixerOut}; Components: ffdshow
-
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: allowOutChange;      ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: hwOverlay;           ValueData: 2; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: outChangeCompatOnly; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: postprocH264mode;    ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: idct;                ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: dword; ValueName: libtheoraPostproc;   ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
 
 ; Blacklist
 Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: isBlacklist; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
