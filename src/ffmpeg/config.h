@@ -31,3 +31,9 @@
 #ifndef __GNUC__
   #define EMULATE_FAST_INT
 #endif
+
+#define HAVE_7REGS
+#define HAVE_EBX_AVAILABLE
+
+/* CPU specific */
+//#define HAVE_FAST_CMOV
