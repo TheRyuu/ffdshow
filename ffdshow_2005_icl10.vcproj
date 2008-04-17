@@ -2653,7 +2653,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\ffmpeg\libavcodec\i386\skl_dct_sse.asm"
+				RelativePath=".\src\ImgFilters\Skal\skl_dct_sse.asm"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -2717,7 +2717,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\src\ffmpeg\libavcodec\i386\skl_fdct_mmx.asm"
+				RelativePath=".\src\ImgFilters\Skal\skl_fdct_mmx.asm"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
