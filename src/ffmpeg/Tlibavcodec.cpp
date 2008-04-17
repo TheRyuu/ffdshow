@@ -26,10 +26,10 @@ const char_t* Tlibavcodec::idctNames[]=
  _l("auto"),
  _l("libmpeg2"),
  _l("simple MMX"),
- _l("Skal's IDCT"),
+ _l("Xvid"),
  _l("simple"),
  _l("integer"),
- _l("XviD MMX"),
+ _l("FAAN"),
  NULL
 };
 const char_t* Tlibavcodec::errorResiliences[]=

@@ -549,6 +549,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\faanidct.c"
+				>
+			</File>
+			<File
 				RelativePath="libavcodec\fft.c"
 				>
 			</File>
@@ -865,10 +869,6 @@
 				>
 			</File>
 			<File
-				RelativePath="libavcodec\skl_dct_c.c"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\snow.c"
 				>
 				<FileConfiguration
@@ -1110,6 +1110,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\faanidct.h"
+				>
+			</File>
+			<File
 				RelativePath="..\codecs\ffcodecs.h"
 				>
 			</File>
@@ -1291,10 +1295,6 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\simple_idct.h"
-				>
-			</File>
-			<File
-				RelativePath="libavcodec\skl_dct.h"
 				>
 			</File>
 			<File

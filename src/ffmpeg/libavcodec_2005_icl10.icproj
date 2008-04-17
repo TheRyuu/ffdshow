@@ -364,6 +364,8 @@
 		<File 
 			RelativePath=".\libavcodec\faandct.h"/>
 		<File 
+			RelativePath=".\libavcodec\faanidct.h"/>
+		<File 
 			RelativePath="..\codecs\ffcodecs.h"/>
 		<File 
 			RelativePath="..\imgFilters\ffImgfmt.h"/>
@@ -455,8 +457,6 @@
 			RelativePath=".\libavcodec\rtjpeg.h"/>
 		<File 
 			RelativePath=".\libavcodec\simple_idct.h"/>
-		<File 
-			RelativePath=".\libavcodec\skl_dct.h"/>
 		<File 
 			RelativePath=".\libavcodec\snow.h"/>
 		<File 
@@ -595,6 +595,8 @@
 			RelativePath=".\libavcodec\eval.c"/>
 		<File 
 			RelativePath=".\libavcodec\faandct.c"/>
+		<File 
+			RelativePath=".\libavcodec\faanidct.c"/>
 		<File 
 			RelativePath=".\libavcodec\fft.c"/>
 		<File 
@@ -762,8 +764,6 @@
 			RelativePath=".\libavcodec\rv10.c"/>
 		<File 
 			RelativePath=".\libavcodec\simple_idct.c"/>
-		<File 
-			RelativePath=".\libavcodec\skl_dct_c.c"/>
 		<File 
 			RelativePath=".\libavcodec\snow.c">
 			<FileConfiguration 
