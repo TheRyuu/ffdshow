@@ -22,6 +22,8 @@
 
 %include "x86inc.asm"
 
+SECTION_RODATA
+
 SECTION .text
 
 cextern x264_cabac_range_lps
@@ -79,7 +81,7 @@ endstruc
 %endif
 %endmacro
 
-cglobal x264_cabac_encode_decision, 0,7
+cglobal x264_cabac_encode_decision_asm, 0,7
     movifnidn t0d, r0m
     movifnidn t1d, r1m
     picgetgot t2

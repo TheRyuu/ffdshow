@@ -56,7 +56,7 @@ typedef struct x264_frame_t
 
     /* for unrestricted mv we allocate more data than needed
      * allocated data are stored in buffer */
-    void    *buffer[8];
+    void    *buffer[4];
     void    *buffer_lowres[4];
 
     /* motion data */
