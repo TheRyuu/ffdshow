@@ -41,6 +41,7 @@
 #include <io.h>    // _setmode()
 #include <fcntl.h> // _O_BINARY
 #define inline __inline
+#define strcasecmp stricmp
 #define strncasecmp strnicmp
 #define snprintf _snprintf
 #define fseek _fseeki64
@@ -75,9 +76,11 @@
 #if defined(__GNUC__) && (__GNUC__ > 3 || __GNUC__ == 3 && __GNUC_MINOR__ > 0)
 #define UNUSED __attribute__((unused))
 #define ALWAYS_INLINE __attribute__((always_inline)) inline
+#define NOINLINE __attribute__((noinline))
 #else
 #define UNUSED
 #define ALWAYS_INLINE inline
+#define NOINLINE
 #endif
 
 /* threads */
