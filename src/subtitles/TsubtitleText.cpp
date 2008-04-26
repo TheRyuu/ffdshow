@@ -1271,6 +1271,13 @@ template<class tchar> void TsubtitleTextBase<tchar>::fix(TtextFix<tchar> &fix)
 {
  for (typename Tbase::iterator l=this->begin();l!=this->end();l++)
   l->fix(fix);
+ if (stop == REFTIME_INVALID)
+  {
+   size_t len = 0;
+   for (typename Tbase::iterator l=this->begin();l!=this->end();l++)
+    len += l->strlen();
+   stop = start + len * 900000;
+  }
 }
 
 template<class tchar> void TsubtitleTextBase<tchar>::print(REFERENCE_TIME time,bool wasseek,Tfont &f,bool forceChange,TrenderedSubtitleLines::TprintPrefs &prefs) const
