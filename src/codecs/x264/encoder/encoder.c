@@ -1031,7 +1031,7 @@ static inline void x264_slice_init( x264_t *h, int i_nal_type, int i_global_qp )
 static void x264_slice_write( x264_t *h )
 {
     int i_skip;
-    int mb_xy;
+    int mb_xy, i_mb_x, i_mb_y;
     int i;
 
     /* init stats */
@@ -1054,10 +1054,12 @@ static void x264_slice_write( x264_t *h )
     h->mb.i_last_qp = h->sh.i_qp;
     h->mb.i_last_dqp = 0;
 
-    for( mb_xy = h->sh.i_first_mb, i_skip = 0; mb_xy < h->sh.i_last_mb; )
+    i_mb_y = h->sh.i_first_mb / h->sps->i_mb_width;
+    i_mb_x = h->sh.i_first_mb % h->sps->i_mb_width;
+    i_skip = 0;
+
+    while( (mb_xy = i_mb_x + i_mb_y * h->sps->i_mb_width) < h->sh.i_last_mb )
     {
-        const int i_mb_y = mb_xy / h->sps->i_mb_width;
-        const int i_mb_x = mb_xy % h->sps->i_mb_width;
         int mb_spos = bs_pos(&h->out.bs) + x264_cabac_pos(&h->cabac);
 
         if( i_mb_x == 0 )
@@ -1147,15 +1149,16 @@ static void x264_slice_write( x264_t *h )
 
         if( h->sh.b_mbaff )
         {
-            if( (i_mb_y&1) && i_mb_x == h->sps->i_mb_width - 1 )
-                mb_xy++;
-            else if( i_mb_y&1 )
-                mb_xy += 1 - h->sps->i_mb_width;
-            else
-                mb_xy += h->sps->i_mb_width;
+            i_mb_x += i_mb_y & 1;
+            i_mb_y ^= i_mb_x < h->sps->i_mb_width;
         }
         else
-            mb_xy++;
+            i_mb_x++;
+        if(i_mb_x == h->sps->i_mb_width)
+        {
+            i_mb_y++;
+            i_mb_x = 0;
+        }
     }
 
     if( h->param.b_cabac )
@@ -1485,7 +1488,7 @@ do_encode:
         x264_slices_write( h );
 
     /* restore CPU state (before using float again) */
-    x264_cpu_restore( h->param.cpu );
+    x264_emms();
 
     if( h->sh.i_type == SLICE_TYPE_P && !h->param.rc.b_stat_read 
         && h->param.i_scenecut_threshold >= 0
@@ -1632,11 +1635,11 @@ static void x264_encoder_frame_end( x264_t *h, x264_t *thread_current,
     /* ---------------------- Update encoder state ------------------------- */
 
     /* update rc */
-    x264_cpu_restore( h->param.cpu );
+    x264_emms();
     x264_ratecontrol_end( h, h->out.i_frame_size * 8 );
 
     /* restore CPU state (before using float again) */
-    x264_cpu_restore( h->param.cpu );
+    x264_emms();
 
     x264_noise_reduction_update( h );
 
@@ -1689,7 +1692,7 @@ static void x264_encoder_frame_end( x264_t *h, x264_t *thread_current,
                          h->fenc->plane[i], h->fenc->i_stride[i],
                          h->param.i_width >> !!i, h->param.i_height >> !!i );
         }
-        x264_cpu_restore( h->param.cpu );
+        x264_emms();
 
         h->stat.i_sqe_global[h->sh.i_type] += sqe[0] + sqe[1] + sqe[2];
         h->stat.f_psnr_average[h->sh.i_type] += x264_psnr( sqe[0] + sqe[1] + sqe[2], 3 * h->param.i_width * h->param.i_height / 2 );
