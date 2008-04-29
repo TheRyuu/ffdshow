@@ -151,6 +151,7 @@ typedef uint64_t uint_fast64_t;
 #define FFMAX(a,b) ((a) > (b) ? (a) : (b))
 #define FFMAX3(a,b,c) FFMAX(FFMAX(a,b),c)
 #define FFMIN(a,b) ((a) > (b) ? (b) : (a))
+#define FFMIN3(a,b,c) FFMIN(FFMIN(a,b),c)
 
 #define FFSWAP(type,a,b) do{type SWAP_tmp= b; b= a; a= SWAP_tmp;}while(0)
 
