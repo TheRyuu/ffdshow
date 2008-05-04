@@ -282,5 +282,9 @@ AVCodec rpza_decoder = {
     NULL,
     rpza_decode_end,
     rpza_decode_frame,
-    CODEC_CAP_DR1,
+    /*.capabilities = */CODEC_CAP_DR1,
+    /*.next = */NULL,
+    /*.flush = */NULL,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
 };

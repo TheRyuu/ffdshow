@@ -857,6 +857,11 @@ AVCodec name ## _decoder = {                    \
     NULL,                                       \
     NULL,                                       \
     adpcm_decode_frame,                         \
+    /*.capabilities = */0,                      \
+    /*.next = */NULL,                           \
+    /*.flush = */NULL,                          \
+    /*.supported_framerates = */NULL,           \
+    /*.pix_fmts = */NULL,                       \
 };
 
 ADPCM_DECODER(CODEC_ID_ADPCM_4XM, adpcm_4xm);

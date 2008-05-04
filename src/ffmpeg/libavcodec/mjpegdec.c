@@ -1292,6 +1292,8 @@ AVCodec mjpeg_decoder = {
     /*.close=*/ff_mjpeg_decode_end,
     /*.decode=*/ff_mjpeg_decode_frame,
     /*.capabilities=*/CODEC_CAP_DR1,
-    /*.next=*/NULL,
-    /*.flush=*/NULL,
+    /*.next = */NULL,
+    /*.flush = */NULL,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
 };

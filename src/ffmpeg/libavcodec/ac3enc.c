@@ -1271,4 +1271,9 @@ AVCodec ac3_encoder = {
     /*.encode=*/AC3_encode_frame,
     /*.close=*/AC3_encode_close,
     /*.decode=*/NULL,
+    /*.capabilities = */0,
+    /*.next = */NULL,
+    /*.flush = */NULL,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
 };

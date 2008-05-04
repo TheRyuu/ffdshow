@@ -315,5 +315,9 @@ AVCodec qpeg_decoder = {
     NULL,
     decode_end,
     decode_frame,
-    CODEC_CAP_DR1,
+    /*.capabilities = */CODEC_CAP_DR1,
+    /*.next = */NULL,
+    /*.flush = */NULL,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
 };

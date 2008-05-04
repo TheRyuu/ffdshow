@@ -8047,13 +8047,16 @@ AVCodec h264_decoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_H264,
     sizeof(H264Context),
-    /*.init=*/decode_init,
-    /*.encode=*/NULL,
-    /*.close=*/decode_end,
-    /*.decode=*/decode_frame,
-    /*.capabilities=*//*CODEC_CAP_DRAW_HORIZ_BAND |*/ CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
-    /*.next=*/NULL,
-    /*.flush=*/flush_dpb
+    /*.init = */decode_init,
+    /*.encode = */NULL,
+    /*.close = */decode_end,
+    /*.decode = */decode_frame,
+    /*.capabilities = *//*CODEC_CAP_DRAW_HORIZ_BAND |*/ CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
+    /*.next = */NULL,
+    /*.flush = */flush_dpb,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
+    /*.long_name = */"H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
 };
 
 #include "svq3.c"

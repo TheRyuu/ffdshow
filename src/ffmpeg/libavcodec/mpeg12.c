@@ -2363,6 +2363,8 @@ AVCodec mpeg1video_decoder = {
     /*.capabilities=*/CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
     /*.next=*/NULL,
     /*.flush=*/ff_mpeg_flush,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
 };
 
 AVCodec mpeg2video_decoder = {
@@ -2377,6 +2379,8 @@ AVCodec mpeg2video_decoder = {
     /*.capabilities=*/CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
     /*.next=*/NULL,
     /*.flush=*/ff_mpeg_flush,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
 };
 
 //legacy decoder
@@ -2392,4 +2396,6 @@ AVCodec mpegvideo_decoder = {
     /*.capabilities=*/CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
     /*.next=*/NULL,
     /*.flush=*/ff_mpeg_flush,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
 };

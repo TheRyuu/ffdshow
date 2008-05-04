@@ -435,6 +435,11 @@ AVCodec mace3_decoder = {
     NULL,
     NULL,
     mace_decode_frame,
+    /*.capabilities = */0,
+    /*.next = */NULL,
+    /*.flush = */NULL,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
 };
 
 AVCodec mace6_decoder = {
@@ -446,5 +451,10 @@ AVCodec mace6_decoder = {
     NULL,
     NULL,
     mace_decode_frame,
+    /*.capabilities = */0,
+    /*.next = */NULL,
+    /*.flush = */NULL,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
 };
 

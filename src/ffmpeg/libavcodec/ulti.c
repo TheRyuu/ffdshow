@@ -409,7 +409,10 @@ AVCodec ulti_decoder = {
     NULL,
     ulti_decode_end,
     ulti_decode_frame,
-    CODEC_CAP_DR1,
-    NULL
+    /*.capabilities = */CODEC_CAP_DR1,
+    /*.next = */NULL,
+    /*.flush = */NULL,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
 };
 

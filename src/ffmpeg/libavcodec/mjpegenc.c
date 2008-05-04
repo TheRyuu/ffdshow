@@ -461,5 +461,7 @@ AVCodec mjpeg_encoder = {
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION >= 199901L
     .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUVJ420P, PIX_FMT_YUVJ422P, -1},
+#else
+    /*.pix_fmts = */NULL,
 #endif
 };

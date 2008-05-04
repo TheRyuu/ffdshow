@@ -707,7 +707,11 @@ AVCodec rv10_decoder = {
     NULL,
     rv10_decode_end,
     rv10_decode_frame,
-    CODEC_CAP_DR1
+    /*.capabilities = */CODEC_CAP_DR1,
+    /*.next = */NULL,
+    /*.flush = */NULL,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
 };
 
 AVCodec rv20_decoder = {
@@ -719,8 +723,10 @@ AVCodec rv20_decoder = {
     NULL,
     rv10_decode_end,
     rv10_decode_frame,
-    CODEC_CAP_DR1 | CODEC_CAP_DELAY,
-    /*next*/NULL,
-    /*.flush=*/ff_mpeg_flush
+    /*.capabilities = */CODEC_CAP_DR1 | CODEC_CAP_DELAY,
+    /*.next = */NULL,
+    /*.flush = */ff_mpeg_flush,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
 };
 

@@ -695,7 +695,11 @@ AVCodec mszh_decoder = {
     NULL,
     decode_end,
     decode_frame,
-    CODEC_CAP_DR1,
+    /*.capabilities = */CODEC_CAP_DR1,
+    /*.next = */NULL,
+    /*.flush = */NULL,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
 };
 
 AVCodec zlib_decoder = {
@@ -707,5 +711,9 @@ AVCodec zlib_decoder = {
     NULL,
     decode_end,
     decode_frame,
-    CODEC_CAP_DR1,
+    /*.capabilities = */CODEC_CAP_DR1,
+    /*.next = */NULL,
+    /*.flush = */NULL,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
 };

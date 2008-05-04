@@ -2713,7 +2713,7 @@ static int encode_picture(MpegEncContext *s, int picture_number)
 
     s->me.scene_change_score=0;
 
-//    s->lambda= s->current_picture_ptr->quality; //FIXME qscale / ... stuff for ME ratedistoration
+//    s->lambda= s->current_picture_ptr->quality; //FIXME qscale / ... stuff for ME rate distortion
 
     if(s->pict_type==FF_I_TYPE){
         if(s->msmpeg4_version >= 3) s->no_rounding=1;
@@ -3042,7 +3042,7 @@ int dct_quantize_trellis_c(MpegEncContext *s,
     survivor_count= 1;
 
     for(i=start_i; i<=last_non_zero; i++){
-        int level_index, j, zero_distoration;
+        int level_index, j, zero_distortion;
         int dct_coeff= FFABS(block[ scantable[i] ]);
         int best_score=256*256*256*120;
 
@@ -3052,10 +3052,10 @@ int dct_quantize_trellis_c(MpegEncContext *s,
 #endif
            )
             dct_coeff= (dct_coeff*inv_aanscales[ scantable[i] ]) >> 12;
-        zero_distoration= dct_coeff*dct_coeff;
+        zero_distortion= dct_coeff*dct_coeff;
 
         for(level_index=0; level_index < coeff_count[i]; level_index++){
-            int distoration;
+            int distortion;
             int level= coeff[level_index][i];
             const int alevel= FFABS(level);
             int unquant_coeff;
@@ -3076,12 +3076,12 @@ int dct_quantize_trellis_c(MpegEncContext *s,
                 unquant_coeff<<= 3;
             }
 
-            distoration= (unquant_coeff - dct_coeff) * (unquant_coeff - dct_coeff) - zero_distoration;
+            distortion= (unquant_coeff - dct_coeff) * (unquant_coeff - dct_coeff) - zero_distortion;
             level+=64;
             if((level&(~127)) == 0){
                 for(j=survivor_count-1; j>=0; j--){
                     int run= i - survivor[j];
-                    int score= distoration + length[UNI_AC_ENC_INDEX(run, level)]*lambda;
+                    int score= distortion + length[UNI_AC_ENC_INDEX(run, level)]*lambda;
                     score += score_tab[i-run];
 
                     if(score < best_score){
@@ -3094,7 +3094,7 @@ int dct_quantize_trellis_c(MpegEncContext *s,
                 if(s->out_format == FMT_H263){
                     for(j=survivor_count-1; j>=0; j--){
                         int run= i - survivor[j];
-                        int score= distoration + last_length[UNI_AC_ENC_INDEX(run, level)]*lambda;
+                        int score= distortion + last_length[UNI_AC_ENC_INDEX(run, level)]*lambda;
                         score += score_tab[i-run];
                         if(score < last_score){
                             last_score= score;
@@ -3105,10 +3105,10 @@ int dct_quantize_trellis_c(MpegEncContext *s,
                     }
                 }
             }else{
-                distoration += esc_length*lambda;
+                distortion += esc_length*lambda;
                 for(j=survivor_count-1; j>=0; j--){
                     int run= i - survivor[j];
-                    int score= distoration + score_tab[i-run];
+                    int score= distortion + score_tab[i-run];
 
                     if(score < best_score){
                         best_score= score;
@@ -3120,7 +3120,7 @@ int dct_quantize_trellis_c(MpegEncContext *s,
                 if(s->out_format == FMT_H263){
                   for(j=survivor_count-1; j>=0; j--){
                         int run= i - survivor[j];
-                        int score= distoration + score_tab[i-run];
+                        int score= distortion + score_tab[i-run];
                         if(score < last_score){
                             last_score= score;
                             last_run= run;
@@ -3840,5 +3840,7 @@ AVCodec wmv1_encoder = {
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION >= 199901L
     .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
+#else
+    /*.pix_fmts = */NULL,
 #endif
 };

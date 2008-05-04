@@ -4484,8 +4484,11 @@ AVCodec snow_decoder = {
     NULL,
     decode_end,
     decode_frame,
-    0 /*CODEC_CAP_DR1*/ /*| CODEC_CAP_DRAW_HORIZ_BAND*/,
-    NULL
+    /*.capabilities = */0 /*CODEC_CAP_DR1*/ /*| CODEC_CAP_DRAW_HORIZ_BAND*/,
+    /*.next = */NULL,
+    /*.flush = */NULL,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
 };
 
 #ifdef CONFIG_ENCODERS
@@ -4497,6 +4500,11 @@ AVCodec snow_encoder = {
     encode_init,
     encode_frame,
     encode_end,
+    /*.capabilities = */0,
+    /*.next = */NULL,
+    /*.flush = */NULL,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
 };
 #endif
 

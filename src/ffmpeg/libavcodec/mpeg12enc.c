@@ -960,5 +960,7 @@ AVCodec mpeg2video_encoder = {
     /*.supported_framerates=*/ff_frame_rate_tab+1,
 #if __STDC_VERSION >= 199901L
     .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_YUV422P, -1},
+#else
+    /*.pix_fmts = */NULL,
 #endif
 };

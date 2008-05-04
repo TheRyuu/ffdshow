@@ -655,6 +655,9 @@
 				RelativePath="..\imgFilters\ffImgfmt.h">
 			</File>
 			<File
+				RelativePath="libavcodec\flac.h">
+			</File>
+			<File
 				RelativePath="libavcodec\golomb.h">
 			</File>
 			<File

@@ -1244,7 +1244,10 @@ AVCodec dvvideo_encoder = {
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION >= 199901L
     .pix_fmts = (enum PixelFormat[]) {PIX_FMT_YUV411P, PIX_FMT_YUV422P, PIX_FMT_YUV420P, -1},
+#else
+    /*.pix_fmts = */NULL,
 #endif
+    /*.long_name = */"DV (Digital Video)",
 };
 #endif // CONFIG_ENCODERS
 
@@ -1260,4 +1263,7 @@ AVCodec dvvideo_decoder = {
     /*.capabilities=*/CODEC_CAP_DR1,
     /*.next=*/NULL,
     /*.flush=*/NULL,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
+    /*.long_name = */"DV (Digital Video)",
 };
