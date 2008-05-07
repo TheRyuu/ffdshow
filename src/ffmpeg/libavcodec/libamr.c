@@ -112,7 +112,7 @@ static int getBitrateMode(int bitrate)
     {
         if(rates[i].rate==bitrate)
         {
-            return(rates[i].mode);
+            return rates[i].mode;
         }
     }
     /* no bitrate matching, return an error */
@@ -363,4 +363,5 @@ AVCodec libamr_nb_decoder =
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name = */"libamr-nb Adaptive Multi-Rate (AMR) Narrow-Band",
 };

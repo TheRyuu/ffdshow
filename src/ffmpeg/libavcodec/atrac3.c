@@ -1077,4 +1077,5 @@ AVCodec atrac3_decoder =
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name = */"Atrac 3 (Adaptive TRansform Acoustic Coding 3)",
 };

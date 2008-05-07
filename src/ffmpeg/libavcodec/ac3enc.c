@@ -1276,4 +1276,5 @@ AVCodec ac3_encoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name = */"ATSC A/52 / AC-3",
 };
