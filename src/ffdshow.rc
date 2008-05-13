@@ -839,7 +839,7 @@ BEGIN
     LTEXT           "Separate multiple items by ;",IDC_LBL_AUTOLOAD_SEPARATE,4,292,169,8
     DEFPUSHBUTTON   "Close",IDCLOSE,123,290,50,14
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,4,289,169,1
-    CONTROL         "On one of the conditoins match (OR)",IDC_RBT_PRESETAUTOLOAD_OR,
+    CONTROL         "On one of the conditions match (OR)",IDC_RBT_PRESETAUTOLOAD_OR,
                     "Button",BS_AUTORADIOBUTTON,4,21,169,10
     CONTROL         "On all conditions match (AND)",IDC_RBT_PRESETAUTOLOAD_AND,
                     "Button",BS_AUTORADIOBUTTON,4,35,169,10
