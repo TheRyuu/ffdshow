@@ -443,8 +443,6 @@ typedef struct H264Context{
     int last_slice_type;
     /** @} */
     
-    int mb_xy;
-
     /* experimental */
 
     int phaze;
