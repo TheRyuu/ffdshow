@@ -2,16 +2,10 @@ LAVC_DIR=libavcodec
 LAVU_DIR=libavutil
 ZLIB_DIR=../zlib
 
-CFLAGS+= -I. -I.. -I$(LAVC_DIR) -I$(LAVU_DIR) -I../codecs -I../imgFilters -I../zlib \
+CFLAGS+= -I. -I.. -I$(LAVC_DIR) -I$(LAVU_DIR) -I../codecs -I../imgFilters -I$(ZLIB_DIR) \
          -DHAVE_AV_CONFIG_H
 
-ifeq ($(CC),icl)
-CFLAGS+=-Qc99
-else
-ifneq ($(CC),cl)
 CFLAGS+=-std=gnu99
-endif
-endif
 
 #CFLAGS+=-fverbose-asm -save-temps -fno-stack-check -fno-math-errno -fno-signed-zeros
        
@@ -166,10 +160,8 @@ SRCS_C=DllEntry.c \
       $(ZLIB_DIR)/trees.c \
       $(ZLIB_DIR)/uncompr.c \
       $(ZLIB_DIR)/zutil.c \
-
-ifneq ($(CC),icl)
-ifneq ($(CC),cl)
-SRCS_C+=$(LAVC_DIR)/i386/cputest.c \
+	\
+      $(LAVC_DIR)/i386/cputest.c \
       $(LAVC_DIR)/i386/cavsdsp_mmx.c \
       $(LAVC_DIR)/i386/dsputil_mmx.c \
       $(LAVC_DIR)/i386/dsputilenc_mmx.c \
@@ -189,21 +181,14 @@ SRCS_C+=$(LAVC_DIR)/i386/cputest.c \
       $(LAVC_DIR)/i386/vp3dsp_sse2.c
 
 NASMFLAGS=-DUSE32 -Dalloc -Dexec
-endif
-endif
 
-# For 64-bit build. Dunno if it will compile properly.
+SLIB= ../../bin/libavcodec.dll
+DEF=libavcodec.def
+
+
+# For 64-bit build
 ifeq ($(64BIT),yes)
  CFLAGS+=-DARCH_X86_64
-endif
-
-ifeq ($(DECODERS_ONLY),yes)
- CFLAGS+=-DDECODERS_ONLY
- SLIB= ../../bin/libavcodec_dec.dll
- DEF=libavcodec_dec.def
-else
- SLIB= ../../bin/libavcodec.dll
- DEF=libavcodec.def
 endif
 
 NOINTRIN=1
@@ -213,7 +198,9 @@ include ../makefile_c.inc
 .all: $(SLIB)
 
 clean: 
-	rm -f *.o *.d $(LAVC_DIR)/*.o $(LAVC_DIR)/*.d $(LAVC_DIR)/i386/*.o $(LAVC_DIR)/i386/*.d $(LAVC_DIR)/amr_float/*.o $(LAVC_DIR)/amr_float/*.d $(LAVU_DIR)/*.o $(LAVU_DIR)/*.d $(ZLIB_DIR)/*.o $(ZLIB_DIR)/*.d $(SLIB)
+	rm -f *.o *.d $(LAVC_DIR)/*.o $(LAVC_DIR)/*.d $(LAVC_DIR)/i386/*.o $(LAVC_DIR)/i386/*.d \
+		$(LAVC_DIR)/amr_float/*.o $(LAVC_DIR)/amr_float/*.d $(LAVU_DIR)/*.o $(LAVU_DIR)/*.d \
+		$(ZLIB_DIR)/*.o $(ZLIB_DIR)/*.d $(SLIB)
 
 #
 # include dependency files if they exist

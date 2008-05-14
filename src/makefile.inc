@@ -11,8 +11,14 @@ endif
 OUTPUTFLAG=-MMD -o\
 
 CFLAGS+=-mno-cygwin -mdll -fno-rtti -mthreads -pipe -D_WINGDI_ -DUCLIBCPP -D_GLIBCPP_HAVE_MBSTATE_T -D_WIN32_IE=0x0500
-CFLAGS+=-DARCH_IS_IA32 -DARCH_IS_32BIT
 CFLAGS+=-DHAVE_MMX
+
+ifeq ($(64BIT),yes)
+CFLAGS+=-DARCH_IS_IA64 -DARCH_IS_64BIT
+else
+CFLAGS+=-DARCH_IS_IA32 -DARCH_IS_32BIT
+#endif
+
 CFLAGS+=-mmmx
 ifeq ($(SSE),yes)
   CFLAGS+=-msse -mfpmath=sse
@@ -25,7 +31,12 @@ CFLAGS+=-w
 CFLAGS+=-DNDEBUG -UDEBUG -DFFDEBUG=0
 #CFLAGS+=-DDEBUG -D_DEBUG
 
-OPTFLAGS=-O3 -march=i686 -fomit-frame-pointer
+OPTFLAGS=-O3 -fomit-frame-pointer
+ifeq ($(64BIT),yes)
+	OPTFLAGS+=-m64
+else
+	OPTFLAGS+=-march=i686
+endif
 
 
 ifeq ($(UNICODE),yes)

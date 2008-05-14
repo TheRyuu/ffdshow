@@ -7,10 +7,17 @@ else
   NASM=yasm
 endif
 
+ifeq ($(64BIT),yes)
+	TARGET_OS=i686-mingw64
+else
+	TARGET_OS=i686-mingw32
+endif
 
 OUTPUTFLAG=-MMD -o\
 
 CFLAGS+=-mno-cygwin -mdll -mthreads -pipe
+CFLAGS+=-DNDEBUG -UDEBUG -DWIN32 -D_WIN32
+
 CFLAGS+=-mmmx
 ifeq ($(SSE),yes)
   CFLAGS+=-msse -mfpmath=sse
@@ -18,8 +25,14 @@ endif
 ifeq ($(SSE2),yes)
   CFLAGS+=-msse2
 endif
-CFLAGS+=-DNDEBUG -UDEBUG -DWIN32 -D_WIN32
-OPTFLAGS=-O3 -march=i686 -fomit-frame-pointer
+
+OPTFLAGS=-O3 -fomit-frame-pointer
+ifeq ($(64BIT),yes)
+	OPTFLAGS+=-m64
+else
+	OPTFLAGS+=-march=i686
+endif
+
 CPPFLAGS+=-fno-rtti
 
 GCCDEF=$(DEF)
@@ -54,12 +67,12 @@ endif
 	$(FFDSHOW_PREFIX)windres $< -o $@ -D_WIN32_IE=0x0500 -DIDCLOSE=8
 
 $(SLIB): $(OBJS) $(DEF)
-	$(FFDSHOW_PREFIX)dllwrap -mno-cygwin --target=i386-mingw32 \
+	$(FFDSHOW_PREFIX)dllwrap -mno-cygwin --target=$(TARGET_OS) \
              -Wl,--enable-stdcall-fixup,--strip-all \
              --def $(GCCDEF) $(GCCDLLENTRY) -o $@ $(OBJS) $(GCCLIBS)
 
 $(SEXE): $(OBJS)
-	$(FFDSHOW_PREFIX)$(CC) -mno-cygwin --target=i386-mingw32 \
+	$(FFDSHOW_PREFIX)$(CC) -mno-cygwin --target=$(TARGET_OS) \
              -Wl,--enable-stdcall-fixup -o $@ $(OBJS) $(GCCLIBS)
 	$(FFDSHOW_PREFIX)strip $@
 

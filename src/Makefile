@@ -208,8 +208,14 @@ RESSRC=ffdshow.rc
 
 ffdshow.res.o:../bin/verinc.exe 
 
+ifeq ($(64BIT),yes)
+	TARGET_OS=i686-mingw64
+else
+	TARGET_OS=i686-mingw32
+endif
+
 $(LIBSONAME):../bin/verinc.exe $(OBJS) $(LIBS) $(RESSRC:.rc=.res.o) ffdshow.def.gcc
-	$(FFDSHOW_PREFIX)dllwrap -mno-cygwin --target=i386-mingw32 \
+	$(FFDSHOW_PREFIX)dllwrap -mno-cygwin --target=$(TARGET_OS) \
                 -o $(LIBSONAME) -def ffdshow.def.gcc \
                 -Wl,--strip-all,--enable-stdcall-fixup \
     $(OBJS) $(LIBS) ffdshow.res.o \
