@@ -385,4 +385,5 @@ AVCodec truespeech_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name = */"DSP Group TrueSpeech",
 };

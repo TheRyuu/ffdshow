@@ -308,4 +308,5 @@ AVCodec msrle_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name= */"Microsoft RLE",
 };

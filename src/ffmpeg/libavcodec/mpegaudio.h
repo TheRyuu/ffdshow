@@ -23,8 +23,8 @@
  * mpeg audio declarations for both encoder and decoder.
  */
 
-#ifndef MPEGAUDIO_H
-#define MPEGAUDIO_H
+#ifndef FFMPEG_MPEGAUDIO_H
+#define FFMPEG_MPEGAUDIO_H
 
 /* max frame size, in samples */
 #define MPA_FRAME_SIZE 1152
@@ -68,4 +68,4 @@ void ff_mpa_synth_filter(MPA_INT *synth_buf_ptr, int *synth_buf_offset,
                          OUT_INT *samples, int incr,
                          int32_t sb_samples[SBLIMIT]);
 
-#endif /* MPEGAUDIO_H */
+#endif /* FFMPEG_MPEGAUDIO_H */

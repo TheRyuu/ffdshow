@@ -1243,7 +1243,7 @@ AVCodec dvvideo_encoder = {
     /*.flush=*/NULL,
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION >= 199901L
-    .pix_fmts = (enum PixelFormat[]) {PIX_FMT_YUV411P, PIX_FMT_YUV422P, PIX_FMT_YUV420P, -1},
+    .pix_fmts = (enum PixelFormat[]) {PIX_FMT_YUV411P, PIX_FMT_YUV422P, PIX_FMT_YUV420P, PIX_FMT_NONE},
 #else
     /*.pix_fmts = */NULL,
 #endif

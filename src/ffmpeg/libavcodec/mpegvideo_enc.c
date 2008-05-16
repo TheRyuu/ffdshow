@@ -3713,8 +3713,9 @@ AVCodec h263_encoder = {
     /*.flush=*/NULL,
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
 #endif
+    /*.long_name= */"H.263",
 };
 
 AVCodec h263p_encoder = {
@@ -3731,8 +3732,9 @@ AVCodec h263p_encoder = {
     /*.flush=*/NULL,
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
 #endif
+    /*.long_name= */"H.263+ / H.263 version 2",
 };
 
 AVCodec flv_encoder = {
@@ -3749,8 +3751,9 @@ AVCodec flv_encoder = {
     /*.flush=*/NULL,
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
 #endif
+    /*.long_name= */"Flash Video",
 };
 
 AVCodec mpeg4_encoder = {
@@ -3767,8 +3770,9 @@ AVCodec mpeg4_encoder = {
     /*.flush=*/NULL,
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
 #endif
+    /*.long_name= */"MPEG-4 part 2",
 };
 
 AVCodec msmpeg4v1_encoder = {
@@ -3785,8 +3789,9 @@ AVCodec msmpeg4v1_encoder = {
     /*.flush=*/NULL,
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
 #endif
+    /*.long_name= */"MPEG-4 part 2 Microsoft variant version 1",
 };
 
 AVCodec msmpeg4v2_encoder = {
@@ -3803,8 +3808,9 @@ AVCodec msmpeg4v2_encoder = {
     /*.flush=*/NULL,
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
 #endif
+    /*.long_name= */"MPEG-4 part 2 Microsoft variant version 2",
 };
 
 AVCodec msmpeg4v3_encoder = {
@@ -3821,8 +3827,9 @@ AVCodec msmpeg4v3_encoder = {
     /*.flush=*/NULL,
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
 #endif
+    /*.long_name= */"MPEG-4 part 2 Microsoft variant version 3",
 };
 
 AVCodec wmv1_encoder = {
@@ -3839,8 +3846,9 @@ AVCodec wmv1_encoder = {
     /*.flush=*/NULL,
     /*.supported_framerates=*/NULL,
 #if __STDC_VERSION >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, -1},
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_NONE},
 #else
     /*.pix_fmts = */NULL,
 #endif
+    /*.long_name= */"Windows Media Video 7",
 };

@@ -24,11 +24,11 @@
  * mpeg audio layer common tables.
  */
 
-#ifndef MPEGAUDIODATA_H
-#define MPEGAUDIODATA_H
+#ifndef FFMPEG_MPEGAUDIODATA_H
+#define FFMPEG_MPEGAUDIODATA_H
 
-#include "common.h"
+#include "libavutil/common.h"
 
 extern const int32_t ff_mpa_enwindow[257];
 
-#endif /* MPEGAUDIODATA_H */
+#endif /* FFMPEG_MPEGAUDIODATA_H */

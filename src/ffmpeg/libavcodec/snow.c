@@ -4489,6 +4489,7 @@ AVCodec snow_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name = */"Snow",
 };
 
 #ifdef CONFIG_ENCODERS
@@ -4505,6 +4506,7 @@ AVCodec snow_encoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name = */"Snow",
 };
 #endif
 

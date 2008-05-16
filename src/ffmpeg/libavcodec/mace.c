@@ -440,6 +440,7 @@ AVCodec mace3_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name = */"MACE (Macintosh Audio Compression/Expansion) 3:1",
 };
 
 AVCodec mace6_decoder = {
@@ -456,5 +457,6 @@ AVCodec mace6_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name = */"MACE (Macintosh Audio Compression/Expansion) 6:1",
 };
 

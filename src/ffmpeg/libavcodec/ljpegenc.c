@@ -200,4 +200,5 @@ AVCodec ljpeg_encoder = { //FIXME avoid MPV_* lossless JPEG should not need them
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name = */"Lossless JPEG",
 };

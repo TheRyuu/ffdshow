@@ -700,6 +700,7 @@ AVCodec mszh_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name =*/"LCL (LossLess Codec Library) MSZH",
 };
 
 AVCodec zlib_decoder = {
@@ -716,4 +717,5 @@ AVCodec zlib_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name =*/"LCL (LossLess Codec Library) ZLIB",
 };

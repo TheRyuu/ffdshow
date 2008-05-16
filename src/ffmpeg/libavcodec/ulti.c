@@ -414,5 +414,6 @@ AVCodec ulti_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name = */"IBM UltiMotion",
 };
 

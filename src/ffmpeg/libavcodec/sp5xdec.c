@@ -202,6 +202,7 @@ AVCodec sp5x_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name = */"Sunplus JPEG (SP5X)"
 };
 
 AVCodec amv_decoder = {
@@ -218,4 +219,5 @@ AVCodec amv_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name = */"AMV Video",
 };

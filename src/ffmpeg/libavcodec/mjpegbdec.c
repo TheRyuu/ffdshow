@@ -149,4 +149,5 @@ AVCodec mjpegb_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name = */"Apple MJPEG-B",
 };

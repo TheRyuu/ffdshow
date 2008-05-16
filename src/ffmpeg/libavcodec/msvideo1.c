@@ -343,4 +343,5 @@ AVCodec msvideo1_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name= */"Microsoft Video 1",
 };

@@ -21,9 +21,9 @@
  
 #if 0 // disable snow
 
-#include "../avcodec.h"
-#include "../snow.h"
-#include "x86_cpu.h"
+#include "libavutil/x86_cpu.h"
+#include "libavcodec/avcodec.h"
+#include "libavcodec/snow.h"
 
 void ff_snow_horizontal_compose97i_sse2(IDWTELEM *b, int width){
     const int w2= (width+1)>>1;

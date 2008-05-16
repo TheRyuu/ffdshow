@@ -862,6 +862,12 @@ AVCodec wmav1_decoder =
     NULL,
     ff_wma_end,
     wma_decode_superframe,
+    /*.capabilities = */0,
+    /*.next = */NULL,
+    /*.flush = */NULL,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
+    /*.long_name = */"Windows Media Audio 1",
 };
 
 AVCodec wmav2_decoder =
@@ -879,4 +885,5 @@ AVCodec wmav2_decoder =
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name = */"Windows Media Audio 2",
 };

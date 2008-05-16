@@ -161,7 +161,7 @@ SRCS_C=DllEntry.c \
       $(ZLIB_DIR)/uncompr.c \
       $(ZLIB_DIR)/zutil.c \
 	\
-      $(LAVC_DIR)/i386/cputest.c \
+      $(LAVC_DIR)/i386/cpuid.c \
       $(LAVC_DIR)/i386/cavsdsp_mmx.c \
       $(LAVC_DIR)/i386/dsputil_mmx.c \
       $(LAVC_DIR)/i386/dsputilenc_mmx.c \

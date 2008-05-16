@@ -139,4 +139,5 @@ AVCodec xl_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name = */"Miro VideoXL",
 };

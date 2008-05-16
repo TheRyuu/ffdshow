@@ -65,9 +65,9 @@ static inline int mpeg2_fast_decode_block_intra(MpegEncContext *s, DCTELEM *bloc
 static int mpeg_decode_motion(MpegEncContext *s, int fcode, int pred);
 static void exchange_uv(MpegEncContext *s);
 
-static const enum PixelFormat pixfmt_yuv_420[]= {PIX_FMT_YUV420P,-1};
-static const enum PixelFormat pixfmt_yuv_422[]= {PIX_FMT_YUV422P,-1};
-static const enum PixelFormat pixfmt_yuv_444[]= {PIX_FMT_YUV444P,-1};
+static const enum PixelFormat pixfmt_yuv_420[]= {PIX_FMT_YUV420P,PIX_FMT_NONE};
+static const enum PixelFormat pixfmt_yuv_422[]= {PIX_FMT_YUV422P,PIX_FMT_NONE};
+static const enum PixelFormat pixfmt_yuv_444[]= {PIX_FMT_YUV444P,PIX_FMT_NONE};
 
 uint8_t ff_mpeg12_static_rl_table_store[2][2][2*MAX_RUN + MAX_LEVEL + 3];
 
@@ -2105,7 +2105,7 @@ int ff_mpeg1_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size, 
     /* EOF considered as end of frame */
     if (buf_size == 0)
         return 0;
-        
+
 /*
  0  frame start         -> 1/4
  1  first_SEQEXT        -> 0/2
@@ -2365,6 +2365,7 @@ AVCodec mpeg1video_decoder = {
     /*.flush=*/ff_mpeg_flush,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name= */"MPEG-1 video",
 };
 
 AVCodec mpeg2video_decoder = {
@@ -2381,6 +2382,7 @@ AVCodec mpeg2video_decoder = {
     /*.flush=*/ff_mpeg_flush,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+/*.long_name= */"MPEG-2 video",
 };
 
 //legacy decoder
@@ -2398,4 +2400,5 @@ AVCodec mpegvideo_decoder = {
     /*.flush=*/ff_mpeg_flush,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
+    /*.long_name= */"MPEG-1 video",
 };
