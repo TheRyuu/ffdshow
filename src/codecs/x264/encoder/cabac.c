@@ -304,6 +304,15 @@ static void x264_cabac_mb_qp_delta( x264_t *h, x264_cabac_t *cb )
     int i_dqp = h->mb.i_qp - h->mb.i_last_qp;
     int ctx;
 
+    /* Avoid writing a delta quant if we have an empty i16x16 block, e.g. in a completely flat background area */
+    if( h->mb.i_type == I_16x16 && !h->mb.cbp[h->mb.i_mb_xy] )
+    {
+#ifndef RD_SKIP_BS
+        h->mb.i_qp = h->mb.i_last_qp;
+#endif
+        i_dqp = 0;
+    }
+
     /* No need to test for PCM / SKIP */
     if( h->mb.i_last_dqp &&
         ( h->mb.type[i_mbn_xy] == I_16x16 || (h->mb.cbp[i_mbn_xy]&0x3f) ) )
@@ -484,7 +493,7 @@ static inline void x264_cabac_mb_mvd_cpn( x264_t *h, x264_cabac_t *cb, int i_lis
 
 static inline void x264_cabac_mb_mvd( x264_t *h, x264_cabac_t *cb, int i_list, int idx, int width, int height )
 {
-    int mvp[2];
+    DECLARE_ALIGNED_4( int16_t mvp[2] );
     int mdx, mdy;
 
     /* Calculate mvd */
@@ -497,7 +506,7 @@ static inline void x264_cabac_mb_mvd( x264_t *h, x264_cabac_t *cb, int i_list, i
     x264_cabac_mb_mvd_cpn( h, cb, i_list, idx, 1, mdy );
 
     /* save value */
-    x264_macroblock_cache_mvd( h, block_idx_x[idx], block_idx_y[idx], width, height, i_list, mdx, mdy );
+    x264_macroblock_cache_mvd( h, block_idx_x[idx], block_idx_y[idx], width, height, i_list, pack16to32_mask(mdx,mdy) );
 }
 
 static inline void x264_cabac_mb8x8_mvd( x264_t *h, x264_cabac_t *cb, int i_list, int i )
