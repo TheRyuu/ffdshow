@@ -8,9 +8,9 @@ else
 endif
 
 ifeq ($(64BIT),yes)
-	TARGET_OS=i686-mingw64
+	TARGET_OS=i686-pc-mingw64
 else
-	TARGET_OS=i686-mingw32
+	TARGET_OS=i686-pc-mingw32
 endif
 
 OUTPUTFLAG=-MMD -o\

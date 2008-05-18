@@ -1,3 +1,9 @@
+ifeq ($(64BIT),yes)
+	TARGET_OS=i686-pc-mingw64
+else
+	TARGET_OS=i686-pc-mingw32
+endif
+
 LIBSONAME=../bin/ffdshow.ax
 
 SRCS=ffdshow_all.cpp TffDecoder_reg.cpp Tconfig.cpp
@@ -58,9 +64,8 @@ LIBS=acm/Tacm.o \
      baseclasses/baseclasses_all.o \
      ffmpeg/libavcodec/golomb.o \
      audioFilters/TaudioFilterConvert.o audioFilters/dotproduct.o \
-     imgFilters/simple_idct_mmx.o ffmpeg/libavcodec/i386/skl_dct_sse.o \
-     ffmpeg/libavcodec/i386/skl_dct_sse2.o ffmpeg/libavcodec/i386/skl_fdct_mmx.o \
-     ffmpeg/libavcodec/i386/skl_fdct_sse2.o
+     imgFilters/simple_idct_mmx.o imgFilters/Skal/skl_dct_sse.o \
+     imgFilters/Skal/skl_fdct_mmx.o
 
 lib:    
 	$(MAKE) -C baseclasses
@@ -208,11 +213,6 @@ RESSRC=ffdshow.rc
 
 ffdshow.res.o:../bin/verinc.exe 
 
-ifeq ($(64BIT),yes)
-	TARGET_OS=i686-mingw64
-else
-	TARGET_OS=i686-mingw32
-endif
 
 $(LIBSONAME):../bin/verinc.exe $(OBJS) $(LIBS) $(RESSRC:.rc=.res.o) ffdshow.def.gcc
 	$(FFDSHOW_PREFIX)dllwrap -mno-cygwin --target=$(TARGET_OS) \
