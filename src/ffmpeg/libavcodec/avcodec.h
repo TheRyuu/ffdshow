@@ -37,7 +37,7 @@
 #include "libavutil/avutil.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 51
-#define LIBAVCODEC_VERSION_MINOR 56
+#define LIBAVCODEC_VERSION_MINOR 57
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -660,7 +660,7 @@ typedef struct AVCodecContext {
 
     /* audio only */
     int sample_rate; ///< samples per second
-    int channels;
+    int channels;    ///< number of audio channels
     float postgain;		/* FOXFIX: Now removed from lavc */
 
     /**
@@ -2021,7 +2021,7 @@ typedef struct AVPaletteControl {
      * data is probably 6 bits in size and needs to be scaled. */
     unsigned int palette[AVPALETTE_COUNT];
 
-} AVPaletteControl;
+} AVPaletteControl attribute_deprecated;
 
 /**
  * Allocate memory for a picture.  Call avpicture_free to free it.
