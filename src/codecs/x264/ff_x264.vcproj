@@ -329,7 +329,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="../..;."
-				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;inline=__inline;__X264__;ARCH_X86_64"
+				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS;inline=__inline;HAVE_MMX;ARCH_X86_64"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -667,7 +667,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -677,7 +677,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -719,7 +719,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -737,7 +737,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -779,7 +779,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -797,7 +797,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -811,7 +811,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -821,7 +821,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -839,7 +839,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;&#x0D;&#x0A;"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -849,7 +849,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -863,7 +863,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;&#x0D;&#x0A;"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -873,7 +873,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -887,7 +887,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;&#x0D;&#x0A;"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -897,7 +897,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -905,6 +905,13 @@
 				<File
 					RelativePath=".\common\x86\mc-c.c"
 					>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\common\x86\mc.h"
@@ -939,7 +946,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -949,7 +956,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -967,7 +974,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -977,7 +984,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -999,7 +1006,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -1009,7 +1016,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -1027,7 +1034,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -1037,7 +1044,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -1079,7 +1086,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -1097,7 +1104,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -1111,7 +1118,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>
@@ -1121,7 +1128,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="yasm assembling $(InputPath)"
-							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
+							CommandLine="yasm -f win64 -DWIN64 -Icommon/x86/ -DHAVE_MMX -DARCH_X86_64 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#x0D;&#x0A;"
 							Outputs="$(IntDir)\$(InputName).obj"
 						/>
 					</FileConfiguration>

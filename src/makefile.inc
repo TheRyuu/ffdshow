@@ -17,7 +17,7 @@ ifeq ($(64BIT),yes)
 CFLAGS+=-DARCH_IS_IA64 -DARCH_IS_64BIT
 else
 CFLAGS+=-DARCH_IS_IA32 -DARCH_IS_32BIT
-#endif
+endif
 
 CFLAGS+=-mmmx
 ifeq ($(SSE),yes)
