@@ -262,7 +262,7 @@ static int func_name(SwsContext *c, uint8_t* src[], stride_t srcStride[], int sr
              int srcSliceH, uint8_t* dst[], stride_t dstStride[]){\
     int y;\
 \
-    if(c->srcFormat == IMGFMT_422P){\
+    if(c->srcFormat == IMGFMT_422P || c->srcFormat == IMGFMT_YV16){\
 	srcStride[1] *= 2;\
 	srcStride[2] *= 2;\
     }\

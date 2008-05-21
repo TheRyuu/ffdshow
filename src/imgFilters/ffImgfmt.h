@@ -31,13 +31,14 @@ enum
  FF_CSP_PAL8       =1U<<19,
  FF_CSP_CLJR       =1U<<20,
  FF_CSP_Y800       =1U<<21,
- FF_CSP_NV12       =1U<<22
+ FF_CSP_NV12       =1U<<22,
+ FF_CSP_YV16       =1U<<23
 };
 
-#define FF_CSPS_NUM 23
+#define FF_CSPS_NUM 24
 
 #define FF_CSPS_MASK            ((2<<FF_CSPS_NUM)-1)
-#define FF_CSPS_MASK_YUV_PLANAR (FF_CSP_420P|FF_CSP_422P|FF_CSP_444P|FF_CSP_411P|FF_CSP_410P)
+#define FF_CSPS_MASK_YUV_PLANAR (FF_CSP_420P|FF_CSP_422P|FF_CSP_444P|FF_CSP_411P|FF_CSP_410P|FF_CSP_YV16)
 #define FF_CSPS_MASK_YUV_PACKED (FF_CSP_YUY2|FF_CSP_UYVY|FF_CSP_YVYU|FF_CSP_VYUY)
 #define FF_CSPS_MASK_RGB        (FF_CSP_RGBA|FF_CSP_RGB32|FF_CSP_RGB24|FF_CSP_RGB15|FF_CSP_RGB16)
 #define FF_CSPS_MASK_BGR        (FF_CSP_ABGR|FF_CSP_BGR32|FF_CSP_BGR24|FF_CSP_BGR15|FF_CSP_BGR16)
@@ -222,6 +223,7 @@ static __inline enum PixelFormat csp_ffdshow2lavc(int pix_fmt)
 #define IMGFMT_YVU9 0x39555659
 #define IMGFMT_IF09 0x39304649
 #define IMGFMT_YV12 0x32315659
+#define IMGFMT_YV16 0x36315659
 #define IMGFMT_I420 0x30323449
 #define IMGFMT_IYUV 0x56555949
 #define IMGFMT_CLPL 0x4C504C43
@@ -267,6 +269,7 @@ static __inline int csp_mplayercsp2Bpp(int mplayercsp)
   {
    case IMGFMT_YV12 :return 1;
    case IMGFMT_422P :return 1;
+   case IMGFMT_YV16 :return 1;
    case IMGFMT_444P :return 1;
    case IMGFMT_411P :return 1;
    case IMGFMT_YVU9 :return 1;
@@ -300,6 +303,7 @@ static __inline int csp_ffdshow2mplayer(int csp)
   {
    case FF_CSP_420P :return IMGFMT_YV12;
    case FF_CSP_422P :return IMGFMT_422P;
+   case FF_CSP_YV16 :return IMGFMT_YV16;
    case FF_CSP_444P :return IMGFMT_444P;
    case FF_CSP_411P :return IMGFMT_411P;
    case FF_CSP_410P :return IMGFMT_YVU9;
@@ -353,7 +357,8 @@ static __inline int csp_ffdshow2mplayer(int csp)
   FF_CSP_RGB16|     \
   FF_CSP_RGB15|     \
   FF_CSP_NV12|      \
-  FF_CSP_Y800       \
+  FF_CSP_Y800|      \
+  FF_CSP_YV16       \
  )
 #define SWS_OUT_CSPS \
  (                   \
@@ -375,7 +380,8 @@ static __inline int csp_ffdshow2mplayer(int csp)
   FF_CSP_BGR16|      \
   FF_CSP_BGR15|      \
   FF_CSP_NV12|       \
-  FF_CSP_Y800        \
+  FF_CSP_Y800|       \
+  FF_CSP_YV16        \
  )
 
 static __inline int csp_supSWSin(int x)

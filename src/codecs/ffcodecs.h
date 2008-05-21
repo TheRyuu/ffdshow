@@ -156,6 +156,7 @@
  CODEC_OP(CODEC_ID_PAL1          ,323,"raw") \
  CODEC_OP(CODEC_ID_PAL4          ,324,"raw") \
  CODEC_OP(CODEC_ID_PAL8          ,325,"raw") \
+ CODEC_OP(CODEC_ID_YV16          ,326,"raw") \
  CODEC_OP(CODEC_ID_LPCM          ,398,"raw") \
  CODEC_OP(CODEC_ID_PCM           ,399,"raw") \
  \

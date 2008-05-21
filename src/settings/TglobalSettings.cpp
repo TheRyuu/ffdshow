@@ -745,7 +745,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(444P,rawv==1 || rawv==2 || rawv==FOURCC_444P,CODEC_ID_444P) \
  FF_FOURCC1_OP(YV24,rawv==1 || rawv==2 || rawv==FOURCC_YV24,CODEC_ID_444P) \
  FF_FOURCC1_OP(422P,rawv==1 || rawv==2 || rawv==FOURCC_422P,CODEC_ID_422P) \
- FF_FOURCC1_OP(YV16,rawv==1 || rawv==2 || rawv==FOURCC_YV16,CODEC_ID_422P) \
+ FF_FOURCC1_OP(YV16,rawv==1 || rawv==2 || rawv==FOURCC_YV16,CODEC_ID_YV16) \
  FF_FOURCC1_OP(411P,rawv==1 || rawv==2 || rawv==FOURCC_411P,CODEC_ID_411P) \
  FF_FOURCC1_OP(Y41B,rawv==1 || rawv==2 || rawv==FOURCC_Y41B,CODEC_ID_411P) \
  FF_FOURCC1_OP(410P,rawv==1 || rawv==2 || rawv==FOURCC_410P,CODEC_ID_410P) \
