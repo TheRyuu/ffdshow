@@ -16,7 +16,13 @@ endif
 OUTPUTFLAG=-MMD -o\
 
 CFLAGS+=-mno-cygwin -mdll -mthreads -pipe
-CFLAGS+=-DNDEBUG -UDEBUG -DWIN32 -D_WIN32
+CFLAGS+=-DNDEBUG -UDEBUG
+
+ifeq ($(64BIT),yes)
+	CFLAGS+=-DWIN64 -D_WIN64
+else
+	CFLAGS+=-DWIN32 -D_WIN32
+endif
 
 CFLAGS+=-mmmx
 ifeq ($(SSE),yes)
@@ -61,7 +67,11 @@ endif
 	$(FFDSHOW_PREFIX)$(CC) -c $(CFLAGS) $(CPPFLAGS) $(OPTFLAGS) $(OUTPUTFLAG)$@ $<
 
 %.o: %.asm
+ifeq ($(64BIT),yes)
+	$(NASM) -f win64 -DWIN64 -DPREFIX $(NASMFLAGS) -I$(<D)/ -o $@  $<
+else
 	$(NASM) -f win32 -DWIN32 -DPREFIX $(NASMFLAGS) -I$(<D)/ -o $@  $<
+endif
 
 %.res.o: %.rc
 	$(FFDSHOW_PREFIX)windres $< -o $@ -D_WIN32_IE=0x0500 -DIDCLOSE=8

@@ -59,7 +59,11 @@ OBJS=$(SRCS:.cpp=.o) $(SRCS_C:.c=.o) $(SRCS_NASM:.asm=.o) $(RESSRC:.rc:.res.o)
 	$(FFDSHOW_PREFIX)$(CC) -c $(CFLAGS) $(OPTFLAGS) $(OUTPUTFLAG)$@ $<
 
 %.o: %.asm
+ifeq ($(64BIT),yes)
+	$(NASM) -f win64 -DWIN64 -DPREFIX $(NASMFLAGS) -I$(<D)/ -o $@ $<
+else
 	$(NASM) -f win32 -DWIN32 -DPREFIX $(NASMFLAGS) -I$(<D)/ -o $@ $<
+endif
 
 %.res.o: %.rc
 	$(FFDSHOW_PREFIX)windres $< -o $@ -D_WIN32_IE=0x0500 -DIDCLOSE=8

@@ -186,9 +186,10 @@ SLIB= ../../bin/libavcodec.dll
 DEF=libavcodec.def
 
 
-# For 64-bit build
 ifeq ($(64BIT),yes)
- CFLAGS+=-DARCH_X86_64
+	CFLAGS+=-DARCH_X86_64
+else
+	CFLAGS+=-DARCH_X86_32
 endif
 
 NOINTRIN=1
