@@ -12,9 +12,6 @@
 #define ARCH_X86 1
 #endif
 
-/* Define this for Cygwin build for win32 */
-#define WIN32 1
-
 /* Define this to any prefered value from 386 up to infinity with step 100 */
 #define __CPU__ 686
 

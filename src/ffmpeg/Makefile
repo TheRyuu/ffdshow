@@ -8,7 +8,7 @@ CFLAGS+= -I. -I.. -I$(LAVC_DIR) -I$(LAVU_DIR) -I../codecs -I../imgFilters -I$(ZL
 CFLAGS+=-std=gnu99
 
 #CFLAGS+=-fverbose-asm -save-temps -fno-stack-check -fno-math-errno -fno-signed-zeros
-       
+
 SRCS_C=DllEntry.c \
       $(LAVC_DIR)/8bps.c \
       $(LAVC_DIR)/aasc.c \
@@ -140,7 +140,7 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/xiph.c \
       $(LAVC_DIR)/amr_float/interf_dec.c \
       $(LAVC_DIR)/amr_float/sp_dec.c \
-	\
+    \
       $(LAVU_DIR)/crc.c \
       $(LAVU_DIR)/log.c \
       $(LAVU_DIR)/lzo.c \
@@ -148,7 +148,7 @@ SRCS_C=DllEntry.c \
       $(LAVU_DIR)/mem.c \
       $(LAVU_DIR)/random.c \
       $(LAVU_DIR)/rational.c \
-	\
+    \
       $(ZLIB_DIR)/adler32.c \
       $(ZLIB_DIR)/compress.c \
       $(ZLIB_DIR)/crc32.c \
@@ -160,7 +160,7 @@ SRCS_C=DllEntry.c \
       $(ZLIB_DIR)/trees.c \
       $(ZLIB_DIR)/uncompr.c \
       $(ZLIB_DIR)/zutil.c \
-	\
+    \
       $(LAVC_DIR)/i386/cpuid.c \
       $(LAVC_DIR)/i386/cavsdsp_mmx.c \
       $(LAVC_DIR)/i386/dsputil_mmx.c \
@@ -182,15 +182,14 @@ SRCS_C=DllEntry.c \
 
 NASMFLAGS=-DUSE32 -Dalloc -Dexec
 
-SLIB= ../../bin/libavcodec.dll
-DEF=libavcodec.def
-
-
 ifeq ($(64BIT),yes)
-	CFLAGS+=-DARCH_X86_64
+    CFLAGS+=-DARCH_X86_64
 else
-	CFLAGS+=-DARCH_X86_32
+    CFLAGS+=-DARCH_X86_32
 endif
+
+SLIB=../../bin/libavcodec.dll
+DEF=libavcodec.def
 
 NOINTRIN=1
 
@@ -198,10 +197,10 @@ include ../makefile_c.inc
 
 .all: $(SLIB)
 
-clean: 
+clean:
 	rm -f *.o *.d $(LAVC_DIR)/*.o $(LAVC_DIR)/*.d $(LAVC_DIR)/i386/*.o $(LAVC_DIR)/i386/*.d \
-		$(LAVC_DIR)/amr_float/*.o $(LAVC_DIR)/amr_float/*.d $(LAVU_DIR)/*.o $(LAVU_DIR)/*.d \
-		$(ZLIB_DIR)/*.o $(ZLIB_DIR)/*.d $(SLIB)
+    $(LAVC_DIR)/amr_float/*.o $(LAVC_DIR)/amr_float/*.d $(LAVU_DIR)/*.o $(LAVU_DIR)/*.d \
+    $(ZLIB_DIR)/*.o $(ZLIB_DIR)/*.d $(SLIB)
 
 #
 # include dependency files if they exist

@@ -29,15 +29,15 @@
 #ifndef SMP_MOTION_H
 #define SMP_MOTION_H
 
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 
 # include <windows.h>
 # define pthread_t				HANDLE
 # define pthread_create(t,u,f,d) *(t)=CreateThread(NULL,0,f,d,0,NULL)
 # define pthread_join(t,s)		{ WaitForSingleObject(t,INFINITE); \
-									CloseHandle(t); } 
+									CloseHandle(t); }
 # define sched_yield()			Sleep(0);
-static __inline int pthread_num_processors_np() 
+static __inline int pthread_num_processors_np()
 {
 	DWORD p_aff, s_aff, r = 0;
 	GetProcessAffinityMask(GetCurrentProcess(), &p_aff, &s_aff);

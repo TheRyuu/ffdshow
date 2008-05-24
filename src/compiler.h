@@ -38,9 +38,9 @@
     #define COMPILER_SSE ""
     #define COMPILER_SSE2 ""
   #endif
-  #define COMPILER "gcc "STRINGIFY(__GNUC__)"."STRINGIFY(__GNUC_MINOR__)"."STRINGIFY(__GNUC_PATCHLEVEL__) COMPILER_SSE COMPILER_SSE2
+  #define COMPILER "MinGW GCC "STRINGIFY(__GNUC__)"."STRINGIFY(__GNUC_MINOR__)"."STRINGIFY(__GNUC_PATCHLEVEL__) COMPILER_SSE COMPILER_SSE2
 #else
-  #define COMPILER "unknown"
+  #define COMPILER "unknown and not supported"
 #endif
 
 #ifdef WIN64

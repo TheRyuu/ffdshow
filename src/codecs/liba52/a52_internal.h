@@ -134,5 +134,3 @@ extern void (*a52_imdct_512) (sample_t * data, sample_t * delay, sample_t bias);
 #define LEVEL_0DB 1.0
 #define LEVEL_15DB 0.841395141645195
 #define LEVEL_PLUS11DB 3.54813389233575
-#define malloc aligned_malloc
-#define free aligned_free

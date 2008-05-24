@@ -23,8 +23,12 @@
  */
 
 #include "config.h"
+
 #include <stddef.h>
 #include <inttypes.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "dts.h"
 #include "dts_internal.h"

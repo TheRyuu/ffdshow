@@ -21,10 +21,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <stdlib.h>
-#include <stddef.h>
 #include "config.h"
 
+#include <stdlib.h>
+#include <stddef.h>
 #include <inttypes.h>
 
 #include "a52.h"
@@ -35,8 +35,7 @@
 
 void a52_bitstream_set_ptr (a52_state_t * state, uint8_t * buf)
 {
-    int align;
-
+    intptr_t align;
     align = (intptr_t)buf & 3;
     state->buffer_start = (uint32_t *) (buf - align);
 #ifdef ALT_BITSTREAM_READER

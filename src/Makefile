@@ -1,7 +1,7 @@
 ifeq ($(64BIT),yes)
-	TARGET_OS=i686-pc-mingw64
+    TARGET_OS=x86_64-pc-mingw32
 else
-	TARGET_OS=i686-pc-mingw32
+    TARGET_OS=i686-pc-mingw32
 endif
 
 LIBSONAME=../bin/ffdshow.ax

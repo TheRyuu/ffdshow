@@ -1,9 +1,9 @@
-#if defined(__GNUC__) 
+#if defined(__GNUC__)
   #define HAVE_MMX 1
   #define HAVE_SSSE3 1
 
   #define ARCH_X86 1
-	
+
   #ifndef ARCH_X86_64
     #define ARCH_X86_32 1
   #endif

@@ -1,7 +1,11 @@
-CFLAGS+= -I. -I../.. -Icommon/x86/ -D_WIN32 -DHAVE_PTHREAD
+CFLAGS+= -I. -I../.. -Icommon/x86/
 
-ifneq ($(CC),icl)
-CFLAGS+=-DARCH_X86 -DHAVE_MMX
+CFLAGS+=-DHAVE_MMX -DHAVE_PTHREAD
+
+ifeq ($(64BIT),yes)
+    CFLAGS+=-DARCH_X86_64
+else
+    CFLAGS+=-DARCH_X86
 endif
 
 SRCS_C=common/mc.c common/predict.c common/pixel.c common/macroblock.c \
@@ -15,6 +19,14 @@ SRCS_C=common/mc.c common/predict.c common/pixel.c common/macroblock.c \
 ifneq ($(CC),icl)
 SRCS_C+=common/x86/mc-c.c common/x86/predict-c.c
 
+ifeq ($(64BIT),yes)
+SRCS_NASM=common/x86/cabac-a.asm common/x86/dct-a.asm common/x86/deblock-a.asm \
+          common/x86/mc-a.asm common/x86/mc-a2.asm \
+          common/x86/pixel-a.asm common/x86/predict-a.asm \
+          common/x86/quant-a.asm common/x86/sad-a.asm \
+          common/x86/cpu-64.asm common/x86/dct-64.asm \
+          common/x86/x86inc.asm common/x86/x86inc-64.asm
+else
 SRCS_NASM=common/x86/cabac-a.asm common/x86/dct-a.asm common/x86/deblock-a.asm \
           common/x86/mc-a.asm common/x86/mc-a2.asm \
           common/x86/pixel-a.asm common/x86/predict-a.asm \
@@ -22,8 +34,13 @@ SRCS_NASM=common/x86/cabac-a.asm common/x86/dct-a.asm common/x86/deblock-a.asm \
           common/x86/cpu-32.asm common/x86/dct-32.asm common/x86/pixel-32.asm \
           common/x86/x86inc.asm common/x86/x86inc-32.asm
 endif
+endif
 
-NASMFLAGS+=-DHAVE_MMX
+ifeq ($(64BIT),yes)
+    NASMFLAGS+=-DHAVE_MMX -DARCH_X86_64
+else
+    NASMFLAGS+=-DHAVE_MMX
+endif
 
 GCCLIBS=-lpthread
 
@@ -34,7 +51,7 @@ include ../../makefile_c.inc
 
 .all: $(SLIB)
 
-clean: 
+clean:
 	rm -f *.o encoder/*.o common/*.o common/x86/*.o *~ $(SLIB) *.d encoder/*.d common/*.d common/x86/*.d
 
 #

@@ -2,11 +2,10 @@ all:.all
 
 #if FFDSHOW_PREFIX is set, assume cross-compilation
 ifeq ($(FFDSHOW_PREFIX),)
-  NASM=yasm.exe
+    NASM=yasm.exe
 else
-  NASM=yasm
+    NASM=yasm
 endif
-
 
 OUTPUTFLAG=-MMD -o\
 
@@ -14,30 +13,29 @@ CFLAGS+=-mno-cygwin -mdll -fno-rtti -mthreads -pipe -D_WINGDI_ -DUCLIBCPP -D_GLI
 CFLAGS+=-DHAVE_MMX
 
 ifeq ($(64BIT),yes)
-CFLAGS+=-DARCH_IS_IA64 -DARCH_IS_64BIT
+    CFLAGS+=-DWIN64 -D_WIN64
 else
-CFLAGS+=-DARCH_IS_IA32 -DARCH_IS_32BIT
+    CFLAGS+=-DWIN32 -D_WIN32
 endif
 
 CFLAGS+=-mmmx
 ifeq ($(SSE),yes)
-  CFLAGS+=-msse -mfpmath=sse
+    CFLAGS+=-msse -mfpmath=sse
 endif
 ifeq ($(SSE2),yes)
-  CFLAGS+=-msse2
+    CFLAGS+=-msse2
 endif
 
-CFLAGS+=-w
+#CFLAGS+=-w
 CFLAGS+=-DNDEBUG -UDEBUG -DFFDEBUG=0
 #CFLAGS+=-DDEBUG -D_DEBUG
 
 OPTFLAGS=-O3 -fomit-frame-pointer
 ifeq ($(64BIT),yes)
-	OPTFLAGS+=-m64
+    OPTFLAGS+=-m64
 else
-	OPTFLAGS+=-march=i686
+    OPTFLAGS+=-march=i686
 endif
-
 
 ifeq ($(UNICODE),yes)
   CFLAGS+=-DUNICODE -D_UNICODE

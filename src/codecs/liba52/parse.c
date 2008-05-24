@@ -26,17 +26,25 @@
 
 #include "config.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <inttypes.h>
 #include <math.h>
-#include <malloc.h>
 
 #include "a52.h"
 #include "a52_internal.h"
 #include "bitstream.h"
 #include "tables.h"
 #include "../../compiler.h"
+
+#if defined(HAVE_MEMALIGN) && !defined(__cplusplus)
+/* some systems have memalign() but no declaration for it */
+void * memalign (size_t align, size_t size);
+#else
+/* assume malloc alignment is sufficient */
+#define memalign(align,size) malloc (size)
+#endif
 
 typedef struct {
     sample_t q1[2];
@@ -49,26 +57,6 @@ typedef struct {
 
 static const uint8_t halfrate[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3};
 
-#ifdef __GNUC__
-#define _aligned_malloc __mingw_aligned_malloc
-#define _aligned_realloc __mingw_aligned_realloc
-#define _aligned_free __mingw_aligned_free
-#endif
-
-static void* aligned_malloc(size_t size, size_t alignment=0)
-{
- return _aligned_malloc(size,alignment?alignment:16);
-}
-static void* memalign(size_t alignment,size_t size)
-{
- return aligned_malloc(size,alignment);
-}
-
-void aligned_free(void *mem_ptr)
-{
- _aligned_free(mem_ptr);
-}
-
 a52_state_t * a52_init (uint32_t mm_accel)
 {
     a52_state_t * state;
@@ -77,6 +65,8 @@ a52_state_t * a52_init (uint32_t mm_accel)
     state = (a52_state_t*)malloc (sizeof (a52_state_t));
     if (state == NULL)
 	return NULL;
+
+    memset (state, 0, sizeof(a52_state_t));
 
     state->samples = (sample_t*)memalign (16, 256 * 12 * sizeof (sample_t));
     if (state->samples == NULL) {

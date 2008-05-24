@@ -8,9 +8,9 @@ else
 endif
 
 ifeq ($(64BIT),yes)
-	TARGET_OS=i686-pc-mingw64
+    TARGET_OS=x86_64-pc-mingw32
 else
-	TARGET_OS=i686-pc-mingw32
+    TARGET_OS=i686-pc-mingw32
 endif
 
 OUTPUTFLAG=-MMD -o\
@@ -19,45 +19,44 @@ CFLAGS+=-mno-cygwin -mdll -mthreads -pipe
 CFLAGS+=-DNDEBUG -UDEBUG
 
 ifeq ($(64BIT),yes)
-	CFLAGS+=-DWIN64 -D_WIN64
+    CFLAGS+=-DWIN64 -D_WIN64
 else
-	CFLAGS+=-DWIN32 -D_WIN32
+    CFLAGS+=-DWIN32 -D_WIN32
 endif
 
 CFLAGS+=-mmmx
 ifeq ($(SSE),yes)
-  CFLAGS+=-msse -mfpmath=sse
+    CFLAGS+=-msse -mfpmath=sse
 endif
 ifeq ($(SSE2),yes)
-  CFLAGS+=-msse2
+    CFLAGS+=-msse2
 endif
 
 OPTFLAGS=-O3 -fomit-frame-pointer
 ifeq ($(64BIT),yes)
-	OPTFLAGS+=-m64
+    OPTFLAGS+=-m64
 else
-	OPTFLAGS+=-march=i686
+    OPTFLAGS+=-march=i686
 endif
 
 CPPFLAGS+=-fno-rtti
 
 GCCDEF=$(DEF)
 
-
 ifeq ($(UNICODE),yes)
-  CFLAGS+=-DUNICODE -D_UNICODE
+    CFLAGS+=-DUNICODE -D_UNICODE
 endif
 
 OBJS+=$(SRCS:.cpp=.o) $(SRCS_C:.c=.o) $(SRCS_NASM:.asm=.o) $(RESSRC:.rc=.res.o)
 
 ifeq ($(FORCECPP),1)
-  CFLAGS+=-x c++
+    CFLAGS+=-x c++
 endif
 
 ifeq ($(EXCEPTIONS),1)
-  CPPFLAGS+=-fexceptions
+    CPPFLAGS+=-fexceptions
 else
-  CPPFLAGS+=-fno-exceptions
+    CPPFLAGS+=-fno-exceptions
 endif
 
 .c.o:
