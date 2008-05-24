@@ -781,7 +781,9 @@ static void decode_plane(FFV1Context *s, uint8_t *src, int w, int h, int stride,
 #else
     int_fast16_t *sample_buffer;
 #endif
-    int_fast16_t *sample[2]= {sample_buffer[0]+3, sample_buffer[1]+3};
+    int_fast16_t *sample[2];
+    sample[0]=sample_buffer[0]+3;
+    sample[1]=sample_buffer[1]+3;
 
     s->run_index=0;
 
@@ -812,10 +814,11 @@ static void decode_rgb_frame(FFV1Context *s, uint32_t *src, int w, int h, int st
 #else
     int_fast16_t *sample_buffer[3][2];
 #endif
-    int_fast16_t *sample[3][2]= {
-        {sample_buffer[0][0]+3, sample_buffer[0][1]+3},
-        {sample_buffer[1][0]+3, sample_buffer[1][1]+3},
-        {sample_buffer[2][0]+3, sample_buffer[2][1]+3}};
+    int_fast16_t *sample[3][2];
+    for(x=0; x<3; x++){
+        sample[x][0] = sample_buffer[x][0]+3;
+        sample[x][1] = sample_buffer[x][1]+3;
+    }
 
     s->run_index=0;
 

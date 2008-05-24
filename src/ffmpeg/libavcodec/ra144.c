@@ -32,10 +32,9 @@
 /* internal globals */
 typedef struct {
     unsigned int     oldval;
-    unsigned int     gbuf1[8];
-    unsigned short   gbuf2[120];
+    unsigned int     gbuf1[4];
+    unsigned short   gbuf2[4][30];
     unsigned int    *decptr;                /* decoder ptr */
-    signed   short  *decsp;
 
     /* the swapped buffers */
     unsigned int     swapbuffers[4][10];
@@ -46,8 +45,6 @@ typedef struct {
 
     unsigned int buffer[5];
     unsigned short int buffer_2[148];
-
-    unsigned short *sptr;
 } Real144_internal;
 
 static int ra144_decode_init(AVCodecContext * avctx)
@@ -71,7 +68,7 @@ static int t_sqrt(unsigned int x)
         x = x >> 2;
     }
 
-    return (sqrt_table[x] << s) << 2;
+    return (ff_sqrt(x << 20) << s) << 2;
 }
 
 /* do 'voice' */
@@ -112,12 +109,10 @@ static void rotate_block(const short *source, short *target, int offset)
 /* inverse root mean square */
 static int irms(const short *data, int factor)
 {
-    const short *p1, *p2;
-    unsigned int sum;
+    unsigned int i, sum = 0;
 
-    p2 = (p1 = data) + BLOCKSIZE;
-    for (sum=0; p2 > p1; p1++)
-        sum += (*p1) * (*p1);
+    for (i=0; i < BLOCKSIZE; i++)
+        sum += data[i] * data[i];
 
     if (sum == 0)
         return 0; /* OOPS - division by zero */
@@ -129,96 +124,79 @@ static int irms(const short *data, int factor)
 static void add_wav(int n, int f, int m1, int m2, int m3, const short *s1,
                     const short *s2, const short *s3, short *dest)
 {
-    int a, b, c, i;
+    int a = 0;
+    int b, c, i;
     const short *ptr, *ptr2;
 
-    ptr  = wavtable1 + n * 9;
-    ptr2 = wavtable2 + n * 9;
+    ptr  = wavtable1[n];
+    ptr2 = wavtable2[n];
 
-    if (f != 0)
-        a = ((*ptr) * m1) >> ((*ptr2) + 1);
-    else
-        a = 0;
+    if (f)
+        a = (ptr[0] * m1) >> (ptr2[0] + 1);
 
-    ptr++;
-    ptr2++;
-    b = ((*ptr) * m2) >> ((*ptr2) + 1);
-    ptr++;
-    ptr2++;
-    c = ((*ptr) * m3) >> ((*ptr2) + 1);
+    b = (ptr[1] * m2) >> (ptr2[1] + 1);
+    c = (ptr[2] * m3) >> (ptr2[2] + 1);
 
-    if (f != 0)
-        for (i=0; i < BLOCKSIZE; i++)
-            dest[i] = ((*(s1++)) * a + (*(s2++)) * b + (*(s3++)) * c) >> 12;
-    else
-        for (i=0; i < BLOCKSIZE; i++)
-            dest[i] = ((*(s2++)) * b + (*(s3++)) * c) >> 12;
+    for (i=0; i < BLOCKSIZE; i++)
+        dest[i] = ((*(s1++)) * a + (*(s2++)) * b + (*(s3++)) * c) >> 12;
 }
 
 
 static void final(const short *i1, const short *i2,
                   void *out, int *statbuf, int len)
 {
-    int x, sum, i;
-    int buffer[10];
-    short *ptr;
-    short *ptr2;
+    int x, i;
     unsigned short int work[50];
+    short *ptr = work;
 
     memcpy(work, statbuf,20);
     memcpy(work + 10, i2, len * 2);
 
-    for(i=0; i<10; i++)
-        buffer[9-i] = i1[i];
+    for (i=0; i<len; i++) {
+        int sum = 0;
+        int new_val;
 
-    ptr2 = (ptr = work) + len;
+        for(x=0; x<10; x++)
+            sum += i1[9-x] * ptr[x];
 
-    while (ptr < ptr2) {
-        for(sum=0, x=0; x<=9; x++)
-            sum += buffer[x] * (ptr[x]);
+        sum >>= 12;
 
-        sum = sum >> 12;
-        x = ptr[10] - sum;
+        new_val = ptr[10] - sum;
 
-        if (x<-32768 || x>32767) {
+        if (new_val < -32768 || new_val > 32767) {
             memset(out, 0, len * 2);
             memset(statbuf, 0, 20);
             return;
         }
 
-        ptr[10] = x;
+        ptr[10] = new_val;
         ptr++;
     }
-    memcpy(out, ptr+10 - len, len * 2);
-    memcpy(statbuf, ptr, 20);
+
+    memcpy(out, work+10, len * 2);
+    memcpy(statbuf, work + 40, 20);
 }
 
 static unsigned int rms(const int *data, int f)
 {
-    const int *c;
     int x;
-    unsigned int res;
-    int b;
+    unsigned int res = 0x10000;
+    int b = 0;
 
-    c = data;
-    b = 0;
-    res = 0x10000;
     for (x=0; x<10; x++) {
-        res = (((0x1000000 - (*c) * (*c)) >> 12) * res) >> 12;
+        res = (((0x1000000 - (*data) * (*data)) >> 12) * res) >> 12;
 
         if (res == 0)
             return 0;
 
-        if (res <= 0x3fff) {
-            while (res <= 0x3fff) {
-                b++;
-                res <<= 2;
-            }
-        } else {
             if (res > 0x10000)
                 return 0; /* We're screwed, might as well go out with a bang. :P */
+
+        while (res <= 0x3fff) {
+            b++;
+            res <<= 2;
         }
-        c++;
+        data++;
     }
 
     if (res > 0)
@@ -256,20 +234,20 @@ static void do_output_subblock(Real144_internal *glob, const unsigned short  *gs
     memmove(glob->buffer_2, glob->buffer_2 + BLOCKSIZE, (BUFFERSIZE - BLOCKSIZE) * 2);
     block = glob->buffer_2 + BUFFERSIZE - BLOCKSIZE;
 
-    add_wav(d, a, g, e, f, buffer_a, etable1 + b*BLOCKSIZE,
-            etable2 + c*BLOCKSIZE, block);
+    add_wav(d, a, g, e, f, buffer_a, etable1[b],
+            etable2[c], block);
 
     final(gsp, block, output_buffer, glob->buffer, BLOCKSIZE);
 }
 
 static void dec1(Real144_internal *glob, const int *data, const int *inp,
-                 int n, int f)
+                 int n, int f, int block_idx)
 {
     short *ptr,*end;
+    signed   short  *decsp = glob->gbuf2[block_idx];
 
-    *(glob->decptr++) = rms(data, f);
-    glob->decptr++;
-    end = (ptr = glob->decsp) + (n * 10);
+     *(glob->decptr++) = rms(data, f);
+    end = (ptr = decsp) + (n * 10);
 
     while (ptr < end)
         *(ptr++) = *(inp++);
@@ -277,37 +255,23 @@ static void dec1(Real144_internal *glob, const int *data, const int *inp,
 
 static int eq(const short *in, int *target)
 {
-    int retval;
-    int a;
-    int b;
-    int c;
+    int retval = 0;
+    int b, c, i;
     unsigned int u;
-    const short *sptr;
-    int *ptr1, *ptr2, *ptr3;
-    int *bp1, *bp2;
     int buffer1[10];
     int buffer2[10];
+    int *bp1 = buffer1;
+    int *bp2 = buffer2;
 
-    retval = 0;
-    bp1 = buffer1;
-    bp2 = buffer2;
-    ptr2 = (ptr3 = buffer2) + 9;
-    sptr = in;
+    for (i=0; i < 10; i++)
+        buffer2[i] = in[i];
 
-    while (ptr2 >= ptr3)
-        *(ptr3++) = *(sptr++);
+    u = target[9] = bp2[9];
 
-    target += 9;
-    a = bp2[9];
-    *target = a;
-
-    if (a + 0x1000 > 0x1fff)
+    if (u + 0x1000 > 0x1fff)
         return 0; /* We're screwed, might as well go out with a bang. :P */
 
-    c = 8;
-    u = a;
-
-    while (c >= 0) {
+    for (c=8; c >= 0; c--) {
         if (u == 0x1000)
             u++;
 
@@ -319,13 +283,10 @@ static int eq(const short *in, int *target)
         if (b == 0)
             b++;
 
-        ptr2 = bp1;
-        ptr1 = (ptr3 = bp2) + c;
-
         for (u=0; u<=c; u++)
-            *(ptr2++) = ((*(ptr3++) - (((*target) * (*(ptr1--))) >> 12)) * (0x1000000 / b)) >> 12;
+            bp1[u] = ((bp2[u] - ((target[c+1] * bp2[c-u]) >> 12)) * (0x1000000 / b)) >> 12;
 
-        *(--target) = u = bp1[(c--)];
+        target[c] = u = bp1[c];
 
         if ((u + 0x1000) > 0x1fff)
             retval = 1;
@@ -343,6 +304,8 @@ static void dec2(Real144_internal *glob, const int *data, const int *inp,
     int a,b;
     int x;
     int result;
+    signed   short *decsp = glob->gbuf2[l];
+    unsigned short *sptr  = decsp;
 
     if(l + 1 < NBLOCKS / 2)
         a = NBLOCKS - (l + 1);
@@ -352,24 +315,21 @@ static void dec2(Real144_internal *glob, const int *data, const int *inp,
     b = NBLOCKS - a;
 
     if (l == 0) {
-        glob->decsp = glob->sptr = glob->gbuf2;
         glob->decptr = glob->gbuf1;
     }
     ptr1 = inp;
     ptr2 = inp2;
 
     for (x=0; x<10*n; x++)
-        *(glob->sptr++) = (a * (*ptr1++) + b * (*ptr2++)) >> 2;
+        *(sptr++) = (a * (*ptr1++) + b * (*ptr2++)) >> 2;
 
-    result = eq(glob->decsp, work);
+    result = eq(decsp, work);
 
     if (result == 1) {
-        dec1(glob, data, inp, n, f);
+        dec1(glob, data, inp, n, f, l);
     } else {
         *(glob->decptr++) = rms(work, f);
-        glob->decptr++;
     }
-    glob->decsp += n * 10;
 }
 
 /* Uncompress one block (20 bytes -> 160*2 bytes) */
@@ -378,18 +338,19 @@ static int ra144_decode_frame(AVCodecContext * avctx,
             const uint8_t * buf, int buf_size)
 {
     static const uint8_t sizes[10] = {6, 5, 5, 4, 4, 3, 3, 3, 3, 2};
-    unsigned int a, b, c;
+    unsigned int a, c;
     int i;
-    signed short *shptr;
     int16_t *data = vdata;
     unsigned int val;
 
     Real144_internal *glob = avctx->priv_data;
     GetBitContext gb;
 
-    if(buf_size == 0)
-        return 0;
-
+    if(buf_size < 20) {
+        av_log(avctx, AV_LOG_ERROR,
+               "Frame too small (%d bytes). Truncated file?\n", buf_size);
+        return buf_size;
+    }
     init_get_bits(&gb, buf, 20 * 8);
 
     for (i=0; i<10; i++)
@@ -401,38 +362,23 @@ static int ra144_decode_frame(AVCodecContext * avctx,
     val = decodeval[get_bits(&gb, 5) << 1]; // Useless table entries?
     a = t_sqrt(val*glob->oldval) >> 12;
 
-    for (c=0; c < NBLOCKS; c++) {
-        if (c == (NBLOCKS - 1)) {
-            dec1(glob, glob->swapbuf1, glob->swapbuf2, 3, val);
-        } else {
-            if (c * 2 == (NBLOCKS - 2)) {
-                if (glob->oldval < val) {
-                    dec2(glob, glob->swapbuf1, glob->swapbuf2, 3, a, glob->swapbuf2alt, c);
-                } else {
-                    dec2(glob, glob->swapbuf1alt, glob->swapbuf2alt, 3, a, glob->swapbuf2, c);
-                }
-            } else {
-                if (c * 2 < (NBLOCKS - 2)) {
-                    dec2(glob, glob->swapbuf1alt, glob->swapbuf2alt, 3, glob->oldval, glob->swapbuf2, c);
-                } else {
-                    dec2(glob, glob->swapbuf1, glob->swapbuf2, 3, val, glob->swapbuf2alt, c);
-                }
-            }
-        }
+    dec2(glob, glob->swapbuf1alt, glob->swapbuf2alt, 3, glob->oldval, glob->swapbuf2, 0);
+    if (glob->oldval < val) {
+        dec2(glob, glob->swapbuf1, glob->swapbuf2, 3, a, glob->swapbuf2alt, 1);
+    } else {
+        dec2(glob, glob->swapbuf1alt, glob->swapbuf2alt, 3, a, glob->swapbuf2, 1);
     }
+    dec2(glob, glob->swapbuf1, glob->swapbuf2, 3, val, glob->swapbuf2alt, 2);
+    dec1(glob, glob->swapbuf1, glob->swapbuf2, 3, val, 3);
 
     /* do output */
-    for (b=0, c=0; c<4; c++) {
-        unsigned int gval = glob->gbuf1[c * 2];
-        unsigned short *gsp = glob->gbuf2 + b;
-        signed short output_buffer[40];
+    for (c=0; c<4; c++) {
+        do_output_subblock(glob, glob->gbuf2[c], glob->gbuf1[c], data, &gb);
 
-        do_output_subblock(glob, gsp, gval, output_buffer, &gb);
-
-        shptr = output_buffer;
-        while (shptr < output_buffer + BLOCKSIZE)
-            *data++ = av_clip_int16(*(shptr++) << 2);
-        b += 30;
+        for (i=0; i<BLOCKSIZE; i++) {
+            *data = av_clip_int16(*data << 2);
+            data++;
+        }
     }
 
     glob->oldval = val;
