@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 1942
+#define tryout_revision = 1975
 #define buildyear = 2008
-#define buildmonth = '04'
-#define buildday = '16'
+#define buildmonth = '05'
+#define buildday = '25'
 
 ; Build specific options
 #define unicode_required = True
@@ -21,8 +21,9 @@
 #define include_x264 = True
 #define include_xvidcore = True
 #define include_audx = False
+
 #define include_info_before = False
-#define include_gnu_license = True
+#define include_gnu_license = False
 #define include_setup_icon = False
 
 ; Compiler settings
@@ -43,7 +44,6 @@
 ; Custom builder preferences
 #define PREF_CLSID = False
 #define PREF_CLSID_ICL = False
-#define PREF_CLSID_UNICODE = False
 #define PREF_CLSID_X64 = False
 #define PREF_YAMAGATA = False
 #define PREF_XXL = False
@@ -71,7 +71,6 @@
   #define VS2005SP1 = True
   #define is64bit = True
   #define include_x264 = False
-  #define include_xvidcore = False
   #define unicode_required = True
   #define cpu_detection = True
   #define filename_suffix = '_clsid_x64'
@@ -96,7 +95,6 @@
   #define unicode_required = True
   #define cpu_detection = True
   #define include_x264 = False
-  #define include_xvidcore = False
   #define include_app_plugins = False
   #define include_makeavis = False
   #define filename_suffix = '_x64'
@@ -381,11 +379,13 @@ Source: {#= bindir}\ff_tremor.dll; DestDir: {app}; Flags: ignoreversion; Compone
 Source: {#= bindir}\ff_unrar.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 Source: {#= bindir}\ff_samplerate.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 Source: {#= bindir}\ff_theora.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-#if include_x264 & !is64bit
+#if include_x264
 Source: {#= bindir}\ff_x264.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow\vfw
+  #if !is64bit
 Source: Runtimes\pthreadGC2.dll; DestDir: {sys}; Flags: sharedfile uninsnosharedfileprompt restartreplace uninsrestartdelete; Components: ffdshow\vfw
+  #endif
 #endif
-#if include_xvidcore & !is64bit
+#if include_xvidcore
 Source: {#= bindir}\xvidcore.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 #endif
 Source: {#= bindir}\ff_kernelDeint.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
