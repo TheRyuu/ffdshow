@@ -5730,7 +5730,7 @@ static int decode_vol_header(MpegEncContext *s, GetBitContext *gb){
 
 /**
  * decodes the user data stuff in the header.
- * allso inits divx/xvid/lavc_version/build
+ * Also initializes divx/xvid/lavc_version/build.
  */
 static int decode_user_data(MpegEncContext *s, GetBitContext *gb){
     char buf[256];
@@ -5753,6 +5753,8 @@ static int decode_user_data(MpegEncContext *s, GetBitContext *gb){
         s->divx_version= ver;
         s->divx_build= build;
         s->divx_packed= e==3 && last=='p';
+        if(s->divx_packed)
+            av_log(s->avctx, AV_LOG_WARNING, "Invalid and inefficient vfw-avi packed B frames detected\n");
     }
 
     /* ffmpeg detection */
@@ -5773,7 +5775,7 @@ static int decode_user_data(MpegEncContext *s, GetBitContext *gb){
         s->lavc_build= build;
     }
 
-    /* xvid detection */
+    /* Xvid detection */
     e=sscanf(buf, "XviD%d", &build);
     if(e==1){
         s->xvid_build= build;
