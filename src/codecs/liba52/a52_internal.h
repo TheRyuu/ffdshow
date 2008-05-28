@@ -68,12 +68,9 @@ struct a52_state_s {
 
     uint32_t *buffer_start;
     uint16_t lfsr_state;	/* dither state */
-    #ifdef ALT_BITSTREAM_READER
-    int indx;
-    #else
+
     uint32_t bits_left;
     uint32_t current_word;
-    #endif
 
     uint8_t csnroffst;		/* coarse SNR offset */
     ba_t cplba;			/* coupling bit allocation parameters */
@@ -118,16 +115,15 @@ void a52_bit_allocate (a52_state_t * state, ba_t * ba, int bndstart,
 
 int a52_downmix_init (int input, int flags, sample_t * level,
 		      sample_t clev, sample_t slev);
-void a52_downmix_accel_init(int mm_accel);
 int a52_downmix_coeff (sample_t * coeff, int acmod, int output, sample_t level,
 		       sample_t clev, sample_t slev);
-extern void (*a52_downmix) (sample_t * samples, int acmod, int output, sample_t bias,
+void a52_downmix (sample_t * samples, int acmod, int output, sample_t bias,
 		  sample_t clev, sample_t slev);
-extern void (*a52_upmix) (sample_t * samples, int acmod, int output);
+void a52_upmix (sample_t * samples, int acmod, int output);
 
 void a52_imdct_init (uint32_t mm_accel);
-extern void (*a52_imdct_256) (sample_t * data, sample_t * delay, sample_t bias);
-extern void (*a52_imdct_512) (sample_t * data, sample_t * delay, sample_t bias);
+void a52_imdct_256 (sample_t * data, sample_t * delay, sample_t bias);
+void a52_imdct_512 (sample_t * data, sample_t * delay, sample_t bias);
 
 #define ROUND(x) ((int)((x) + ((x) > 0 ? 0.5 : -0.5)))
 #define LEVEL_PLUS15DB 1.18850222743702

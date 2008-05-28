@@ -21,50 +21,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/* code from ffmpeg/libavcodec */
-#ifndef av_always_inline
-#if defined(__GNUC__) && (__GNUC__ > 3 || __GNUC__ == 3 && __GNUC_MINOR__ > 0)
-#    define av_always_inline __attribute__((always_inline)) inline
-#else
-#    define av_always_inline inline
-#endif
-#endif
-
-#ifndef av_noinline
-#if defined(__GNUC__) && (__GNUC__ > 3 || __GNUC__ == 3 && __GNUC_MINOR__ > 0)
-#    define av_noinline __attribute__((noinline))
-#else
-#    define av_noinline
-#endif
-#endif
-
-#ifdef ALT_BITSTREAM_READER
-
-/* used to avoid misaligned exceptions on some archs (alpha, ...) */
-#if defined (ARCH_X86) || defined(ARCH_ARMV4L)
-#    define unaligned32(a) (*(uint32_t*)(a))
-#else
-#    ifdef __GNUC__
-static av_always_inline uint32_t unaligned32(const void *v) {
-    struct Unaligned {
-	uint32_t i;
-    } __attribute__((packed));
-
-    return ((const struct Unaligned *) v)->i;
-}
-#    elif defined(__DECC)
-static inline uint32_t unaligned32(const void *v) {
-    return *(const __unaligned uint32_t *) v;
-}
-#    else
-static inline uint32_t unaligned32(const void *v) {
-    return *(const uint32_t *) v;
-}
-#    endif
-#endif //!ARCH_X86
-
-#endif
-
 /* (stolen from the kernel) */
 #ifdef WORDS_BIGENDIAN
 
@@ -72,37 +28,22 @@ static inline uint32_t unaligned32(const void *v) {
 
 #else
 
-#	ifdef __GNUC__
+#	if 0 && defined (__i386__)
 
-        #ifdef ARCH_X86_64
-        #  define LEGACY_REGS "=Q"
-        #else
-        #  define LEGACY_REGS "=q"
-        #endif
-
-        static av_always_inline uint32_t swab32(uint32_t x)
-        {
-         __asm("bswap	%0":
-              "=r" (x)     :
-              "0" (x));
-          return x;
-        }
+#	define swab32(x) __i386_swab32(x)
+	static inline const uint32_t __i386_swab32(uint32_t x)
+	{
+		__asm__("bswap %0" : "=r" (x) : "0" (x));
+		return x;
+	}
 
 #	else
 
-	static av_always_inline const uint32_t swab32(uint32_t x)
-	{
-	#ifdef WIN64
-	return _byteswap_ulong(x);
-	#else
-	__asm mov eax,x __asm bswap eax// __asm mov x, eax;
-	#endif
-	}
-#	endif
-#endif
+#	define swab32(x)\
+((((uint8_t*)&x)[0] << 24) | (((uint8_t*)&x)[1] << 16) |  \
+ (((uint8_t*)&x)[2] << 8)  | (((uint8_t*)&x)[3]))
 
-#ifdef ALT_BITSTREAM_READER
-extern int indx;
+#	endif
 #endif
 
 void a52_bitstream_set_ptr (a52_state_t * state, uint8_t * buf);
@@ -111,17 +52,8 @@ int32_t a52_bitstream_get_bh_2 (a52_state_t * state, uint32_t num_bits);
 
 static inline uint32_t bitstream_get (a52_state_t * state, uint32_t num_bits)
 {
-#ifdef ALT_BITSTREAM_READER
-    uint32_t result= swab32( unaligned32(((uint8_t *)state->buffer_start)+(state->indx>>3)) );
-
-    result<<= (state->indx&0x07);
-    result>>= 32 - num_bits;
-    state->indx+= num_bits;
-
-    return result;
-#else
     uint32_t result;
-
+	
     if (num_bits < state->bits_left) {
 	result = (state->current_word << (32 - state->bits_left)) >> (32 - num_bits);
 	state->bits_left -= num_bits;
@@ -129,23 +61,12 @@ static inline uint32_t bitstream_get (a52_state_t * state, uint32_t num_bits)
     }
 
     return a52_bitstream_get_bh (state, num_bits);
-#endif
 }
-
 
 static inline int32_t bitstream_get_2 (a52_state_t * state, uint32_t num_bits)
 {
-#ifdef ALT_BITSTREAM_READER
-    int32_t result= swab32( unaligned32(((uint8_t *)state->buffer_start)+(state->indx>>3)) );
-
-    result<<= (state->indx&0x07);
-    result>>= 32 - num_bits;
-    state->indx+= num_bits;
-
-    return result;
-#else
     int32_t result;
-
+	
     if (num_bits < state->bits_left) {
 	result = (((int32_t)state->current_word) << (32 - state->bits_left)) >> (32 - num_bits);
 	state->bits_left -= num_bits;
@@ -153,5 +74,4 @@ static inline int32_t bitstream_get_2 (a52_state_t * state, uint32_t num_bits)
     }
 
     return a52_bitstream_get_bh_2 (state, num_bits);
-#endif
 }

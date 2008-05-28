@@ -38,15 +38,10 @@ void a52_bitstream_set_ptr (a52_state_t * state, uint8_t * buf)
     intptr_t align;
     align = (intptr_t)buf & 3;
     state->buffer_start = (uint32_t *) (buf - align);
-#ifdef ALT_BITSTREAM_READER
-    state->indx=0;
-#else
     state->bits_left = 0;
-#endif
     bitstream_get (state, align * 8);
 }
 
-#ifndef ALT_BITSTREAM_READER
 static inline void bitstream_fill_current (a52_state_t * state)
 {
     uint32_t tmp;
@@ -99,4 +94,3 @@ int32_t a52_bitstream_get_bh_2 (a52_state_t * state, uint32_t num_bits)
 
     return result;
 }
-#endif

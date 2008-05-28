@@ -35,12 +35,6 @@
 
 #include "a52.h"
 #include "a52_internal.h"
-#define FF_CPU_ONLY
-#include "../../Tconfig.h"
-#include "mangle.h"
-
-void (* a52_imdct_256) (sample_t *data, sample_t *delay, sample_t bias);
-void (* a52_imdct_512) (sample_t *data, sample_t *delay, sample_t bias);
 
 typedef struct complex_s {
     sample_t real;
@@ -243,7 +237,7 @@ static void ifft128_c (complex_t * buf)
     ifft_pass (buf, roots128 - 32, 32);
 }
 
-static void a52_imdct_512_C (sample_t * data, sample_t * delay, sample_t bias)
+void a52_imdct_512 (sample_t * data, sample_t * delay, sample_t bias)
 {
     int i, k;
     sample_t t_r, t_i, a_r, a_i, b_r, b_i, w_1, w_2;
@@ -287,7 +281,7 @@ static void a52_imdct_512_C (sample_t * data, sample_t * delay, sample_t bias)
     }
 }
 
-static void a52_imdct_256_C(sample_t * data, sample_t * delay, sample_t bias)
+void a52_imdct_256(sample_t * data, sample_t * delay, sample_t bias)
 {
     int i, k;
     sample_t t_r, t_i, a_r, a_i, b_r, b_i, c_r, c_i, d_r, d_i, w_1, w_2;
@@ -426,6 +420,4 @@ void a52_imdct_init (uint32_t mm_accel)
 	ifft128 = ifft128_c;
 	ifft64 = ifft64_c;
     }
-    a52_imdct_512 = a52_imdct_512_C;
-    a52_imdct_256 = a52_imdct_256_C;
 }

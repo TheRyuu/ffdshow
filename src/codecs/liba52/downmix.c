@@ -28,24 +28,8 @@
 
 #include "a52.h"
 #include "a52_internal.h"
-#define FF_CPU_ONLY
-#include "../../Tconfig.h"
 
 #define CONVERT(acmod,output) (((output) << 3) + (acmod))
-
-void (*a52_downmix)(sample_t * samples, int acmod, int output, sample_t bias,
-	      sample_t clev, sample_t slev)= NULL;
-void (*a52_upmix)(sample_t * samples, int acmod, int output)= NULL;
-
-static void downmix_C (sample_t * samples, int acmod, int output, sample_t bias,
-	      sample_t clev, sample_t slev);
-static void upmix_C (sample_t * samples, int acmod, int output);
-
-void a52_downmix_accel_init(int mm_accel)
-{
-    a52_upmix= upmix_C;
-    a52_downmix= downmix_C;
-}
 
 int a52_downmix_init (int input, int flags, sample_t * level,
 		      sample_t clev, sample_t slev)
@@ -463,8 +447,8 @@ static void zero (sample_t * samples)
 	samples[i] = 0;
 }
 
-static void downmix_C (sample_t * samples, int acmod, int output, sample_t bias,
-		       sample_t clev, sample_t slev)
+void a52_downmix (sample_t * samples, int acmod, int output, sample_t bias,
+		  sample_t clev, sample_t slev)
 {
     switch (CONVERT (acmod, output & A52_CHANNEL_MASK)) {
 
@@ -604,7 +588,7 @@ static void downmix_C (sample_t * samples, int acmod, int output, sample_t bias,
     }
 }
 
-static void upmix_C (sample_t * samples, int acmod, int output)
+void a52_upmix (sample_t * samples, int acmod, int output)
 {
     switch (CONVERT (acmod, output & A52_CHANNEL_MASK)) {
 

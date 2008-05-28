@@ -66,15 +66,11 @@ a52_state_t * a52_init (uint32_t mm_accel)
     if (state == NULL)
 	return NULL;
 
-    memset (state, 0, sizeof(a52_state_t));
-
     state->samples = (sample_t*)memalign (16, 256 * 12 * sizeof (sample_t));
     if (state->samples == NULL) {
 	free (state);
 	return NULL;
     }
-
-    a52_downmix_accel_init(mm_accel);
 
     for (i = 0; i < 256 * 12; i++)
 	state->samples[i] = 0;
