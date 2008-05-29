@@ -458,6 +458,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\acelp_vectors.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\adpcm.c"
 				>
 			</File>
@@ -1052,6 +1056,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\ac3tab.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\acelp_vectors.h"
 				>
 			</File>
 			<File

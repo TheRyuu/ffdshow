@@ -340,6 +340,8 @@
 		<File 
 			RelativePath=".\libavcodec\ac3tab.h"/>
 		<File 
+			RelativePath=".\libavcodec\acelp_cevtors.h"/>
+		<File 
 			RelativePath=".\libavcodec\atrac3data.h"/>
 		<File 
 			RelativePath=".\libavcodec\avcodec.h"/>
@@ -555,6 +557,8 @@
 			RelativePath=".\libavcodec\ac3enc.c"/>
 		<File 
 			RelativePath=".\libavcodec\ac3tab.c"/>
+		<File 
+			RelativePath=".\libavcodec\acelp_vectors.c"/>
 		<File 
 			RelativePath=".\libavcodec\adpcm.c"/>
 		<File 

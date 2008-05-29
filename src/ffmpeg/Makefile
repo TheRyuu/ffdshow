@@ -15,6 +15,7 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/ac3.c \
       $(LAVC_DIR)/ac3enc.c \
       $(LAVC_DIR)/ac3tab.c \
+      $(LAVC_DIR)/acelp_vectors.c \
       $(LAVC_DIR)/adpcm.c \
       $(LAVC_DIR)/allcodecs.c \
       $(LAVC_DIR)/atrac3.c \
