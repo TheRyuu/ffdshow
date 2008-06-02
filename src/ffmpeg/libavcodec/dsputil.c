@@ -376,7 +376,7 @@ static inline int w_c(void *v, uint8_t * pix1, uint8_t * pix2, int line_size, in
         pix1 += line_size;
         pix2 += line_size;
     }
-#if __STDC_VERSION >= 199901L
+#if __STDC_VERSION__ >= 199901L
     ff_spatial_dwt(tmp, w, h, 32, type, dec_count);
 #endif
     s=0;

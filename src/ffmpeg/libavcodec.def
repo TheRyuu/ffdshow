@@ -13,7 +13,6 @@ EXPORTS
   avcodec_flush_buffers
   avcodec_close
   getVersion
-  av_free_static
   av_free
 
   dsputil_init

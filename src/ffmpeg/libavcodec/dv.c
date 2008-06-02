@@ -1045,7 +1045,9 @@ static int dvvideo_decode_frame(AVCodecContext *avctx,
     s->picture.key_frame = 1;
     s->picture.pict_type = FF_I_TYPE;
     avctx->pix_fmt = s->sys->pix_fmt;
-    avctx->time_base = (AVRational){s->sys->frame_rate_base, s->sys->frame_rate};
+    //avctx->time_base = (AVRational){s->sys->frame_rate_base, s->sys->frame_rate};
+	avctx->time_base.num = s->sys->frame_rate_base;
+	avctx->time_base.den = s->sys->frame_rate;
     avcodec_set_dimensions(avctx, s->sys->width, s->sys->height);
     if(avctx->get_buffer(avctx, &s->picture) < 0) {
         av_log(avctx, AV_LOG_ERROR, "get_buffer() failed\n");
@@ -1243,7 +1245,7 @@ AVCodec dvvideo_encoder = {
     /*.next=*/NULL,
     /*.flush=*/NULL,
     /*.supported_framerates=*/NULL,
-#if __STDC_VERSION >= 199901L
+#if __STDC_VERSION__ >= 199901L
     .pix_fmts = (enum PixelFormat[]) {PIX_FMT_YUV411P, PIX_FMT_YUV422P, PIX_FMT_YUV420P, PIX_FMT_NONE},
 #else
     /*.pix_fmts = */NULL,

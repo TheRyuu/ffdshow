@@ -2379,6 +2379,8 @@ int avcodec_decode_video(AVCodecContext *avctx, AVFrame *picture,
  * @param[in] samples the input buffer containing the samples
  * The number of samples read from this buffer is frame_size*channels,
  * both of which are defined in \p avctx.
+ * For PCM audio the number of samples read from \p samples is equal to
+ * \p buf_size * input_sample_size / output_sample_size.
  * @return On error a negative value is returned, on success zero or the number
  * of bytes used to encode the data read from the input buffer.
  */
@@ -2439,7 +2441,7 @@ typedef struct AVCodecParserContext {
     int64_t frame_offset; /* offset of the current frame */
     int64_t cur_offset; /* current offset
                            (incremented by each av_parser_parse()) */
-    int64_t last_frame_offset; /* offset of the last frame */
+    int64_t next_frame_offset; /* offset of the next frame */
     /* video info */
     int pict_type; /* XXX: Put it back in AVCodecContext. */
     int repeat_pict; /* XXX: Put it back in AVCodecContext. */
@@ -2454,6 +2456,7 @@ typedef struct AVCodecParserContext {
 #define AV_PARSER_PTS_NB 4
     int cur_frame_start_index;
     int64_t cur_frame_offset[AV_PARSER_PTS_NB];
+    int64_t cur_frame_end[AV_PARSER_PTS_NB];
     int64_t cur_frame_pts[AV_PARSER_PTS_NB];
     int64_t cur_frame_dts[AV_PARSER_PTS_NB];
 
@@ -2461,7 +2464,6 @@ typedef struct AVCodecParserContext {
 #define PARSER_FLAG_COMPLETE_FRAMES           0x0001
 
     int64_t offset;      ///< byte offset from starting packet start
-    int64_t last_offset;
 } AVCodecParserContext;
 
 typedef struct AVCodecParser {
@@ -2499,18 +2501,6 @@ void *av_fast_realloc(void *ptr, unsigned int *size, unsigned int min_size);
  *
  */
 attribute_deprecated void av_free_static(void);
-
-/**
- * Allocation of static arrays.
- *
- * @warning Do not use for normal allocation.
- *
- * @param[in] size The amount of memory you need in bytes.
- * @return block of memory of the requested size
- * @deprecated. Code which uses av_mallocz_static is broken/misdesigned
- * and should correctly use static arrays
- */
-attribute_deprecated void *av_mallocz_static(unsigned int size);
 
 /**
  * Copy image 'src' to 'dst'.

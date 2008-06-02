@@ -41,7 +41,7 @@
 #endif
 
 #ifndef NAN
-#if __STDC_VERSION >= 199901L
+#if __STDC_VERSION__ >= 199901L
   #define NAN 0.0/0.0
 #else
   #define NAN -1234567891234

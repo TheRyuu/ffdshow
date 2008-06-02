@@ -1063,8 +1063,8 @@ AVCodec ffv1_encoder = {
     /*.next = */NULL,
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
-#if __STDC_VERSION >= 199901L
-    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_YUV444P, PIX_FMT_YUV422P, PIX_FMT_YUV411P, PIX_FMT_YUV410P, PIX_FMT_RGBA32, PIX_FMT_NONE},
+#if __STDC_VERSION__ >= 199901L
+    .pix_fmts= (enum PixelFormat[]){PIX_FMT_YUV420P, PIX_FMT_YUV444P, PIX_FMT_YUV422P, PIX_FMT_YUV411P, PIX_FMT_YUV410P, PIX_FMT_RGB32, PIX_FMT_NONE},
 #else
     /*.pix_fmts = */NULL,
 #endif
