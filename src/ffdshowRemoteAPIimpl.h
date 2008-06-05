@@ -29,11 +29,18 @@ private:
  bool inExplorer;
  DWORD pdwROT;
  int OSDPositionX, OSDPositionY;
+ std::vector<std::pair<long, ffstring> > AudioStreamsNames, AudioStreamsLanguageNames,
+	 SubtitleStreamsNames, SubtitleStreamsLanguageNames;
+ long currentSubtitleStream, currentAudioStream;
+ bool streamsLoaded;
+ bool foundHaali;
 public:
  Tremote(TintStrColl *Icoll,IffdshowBase *Ideci);
  ~Tremote();
  void load(void),save(void);
  void onChange(int id,int val);
+ void getStreams(bool reload);
+ void setStream(long streamNb);
 };
 
 #endif

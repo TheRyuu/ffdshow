@@ -27,7 +27,9 @@
 #include "Tpresets.h"
 #include "TpresetSettings.h"
 #include "TffDecoderVideo.h"
-
+#include "dsutil.h"
+#include "strmif.h"
+#include "ffdebug.h"
 
 Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),Toptions(Icoll)
 {
@@ -57,6 +59,9 @@ Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),Toptions(Ic
  inExplorer=deci->inExplorer()==S_OK;
  OSDPositionX=0; // Horizontal position of the DrawOSD (default : Left of screen)
  OSDPositionY=10; // Vertical position of the DrawOSD (default : Top + 10px)
+ currentSubtitleStream=0, currentAudioStream=0;
+ streamsLoaded=false;
+ foundHaali=false;
 }
 Tremote::~Tremote()
 {
@@ -327,6 +332,22 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			return TRUE;
 		}
 		return FALSE;
+	case WPRM_SET_OSDX:
+		OSDPositionX=(int)lprm;
+		return TRUE;
+	case WPRM_SET_OSDY:
+		OSDPositionY=(int)lprm;
+		return TRUE;
+	case WPRM_SET_STREAM:
+		getStreams(false);
+		setStream((long)lprm);
+		return TRUE;
+	case WPRM_GET_CURRENT_AUDIO_STREAM:
+		getStreams(false);
+		return currentAudioStream;
+	case WPRM_GET_CURRENT_SUBTITLE_STREAM:
+		getStreams(false);
+		return currentSubtitleStream;
 	case WPRM_GET_FRAMERATE:
 		if (deciV != NULL)
 		{
@@ -335,17 +356,11 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			return fps1000;
 		}
 		return FALSE;
-	case WPRM_SET_OSDX:
-		OSDPositionX=(int)lprm;
-		return TRUE;
-	case WPRM_SET_OSDY:
-		OSDPositionY=(int)lprm;
-		return TRUE;
  }
 
  switch(msg)
  {
-	 case WPRM_GETPARAMSTR:
+	 case MSG_GETPARAMSTR:
 		{
 			COPYDATASTRUCT cd;
 			cd.dwData = (int)lprm;
@@ -360,10 +375,10 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 				SMTO_ABORTIFHUNG, 1500, &ret);
 			return TRUE;
 		}
-	case WPRM_GET_CURRENT_SUBTITLES:
+	case MSG_GET_CURRENT_SUBTITLES:
 		{
 			COPYDATASTRUCT cd;
-			cd.dwData = (int)WPRM_GET_CURRENT_SUBTITLES;
+			cd.dwData = (int)MSG_GET_CURRENT_SUBTITLES;
 			if (!deciV) return FALSE;
 			const char_t *paramStr = deciV->getCurrentSubFlnm();
 			if (paramStr == NULL)
@@ -372,14 +387,14 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			text<char>(paramStr, (char*)cd.lpData);
 			cd.cbData = strlen(paramStr)+1;
 			DWORD_PTR ret = 0;
-			SendMessageTimeout((HWND)wprm, WM_COPYDATA, WPRM_GET_CURRENT_SUBTITLES, (LPARAM)&cd, 
+			SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_CURRENT_SUBTITLES, (LPARAM)&cd, 
 				SMTO_ABORTIFHUNG, 1500, &ret);
 			return TRUE;
 		}
-	case WPRM_GET_PRESETLIST:
+	case MSG_GET_PRESETLIST:
 		{
 			COPYDATASTRUCT cd;
-			cd.dwData = WPRM_GET_PRESETLIST;
+			cd.dwData = MSG_GET_PRESETLIST;
 			Tpresets *presets;
 			deciD->getPresetsPtr(&presets);
 			int presetsNum = presets->size();
@@ -407,28 +422,28 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			text<char>(presetList, (char*)cd.lpData);
 			cd.cbData = strlen(presetList)+1;
 			DWORD_PTR ret = 0;
-			SendMessageTimeout((HWND)wprm, WM_COPYDATA, WPRM_GET_PRESETLIST, (LPARAM)&cd, 
+			SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_PRESETLIST, (LPARAM)&cd, 
 				SMTO_ABORTIFHUNG, 1500, &ret);
 			return TRUE;
 		}
-	case WPRM_GET_SOURCEFILE:
+	case MSG_GET_SOURCEFILE:
 	  {
 		COPYDATASTRUCT cd;
-		cd.dwData = WPRM_GET_SOURCEFILE;
+		cd.dwData = MSG_GET_SOURCEFILE;
 		const char_t *fileName = deci->getSourceName();
 		cd.lpData = alloca(sizeof(char)*(strlen(fileName)+1));
 		strcpy((char*)cd.lpData, "");
 		text<char>(fileName, (char*)cd.lpData);
 		cd.cbData = strlen(fileName)+1;
 		DWORD_PTR ret = 0;
-		SendMessageTimeout((HWND)wprm, WM_COPYDATA, WPRM_GET_SOURCEFILE, (LPARAM)&cd, 
+		SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_SOURCEFILE, (LPARAM)&cd, 
 			SMTO_ABORTIFHUNG, 2000, &ret);
 		return TRUE;
 	  }
-	case WPRM_GET_SUBTITLEFILESLIST:
+	case MSG_GET_SUBTITLEFILESLIST:
 	  {
 		COPYDATASTRUCT cd;
-		cd.dwData = WPRM_GET_SUBTITLEFILESLIST;
+		cd.dwData = MSG_GET_SUBTITLEFILESLIST;
 		if (!deciV) return FALSE;
         strings files;
         TsubtitlesFile::findPossibleSubtitles(deci->getSourceName(),deci->getParamStr2(IDFF_subSearchDir),files);
@@ -461,23 +476,23 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			text<char>(filesList, (char*)cd.lpData);
 			cd.cbData = strlen(filesList)+1;
 			DWORD_PTR ret = 0;
-			SendMessageTimeout((HWND)wprm, WM_COPYDATA, WPRM_GET_SUBTITLEFILESLIST, (LPARAM)&cd, 
+			SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_SUBTITLEFILESLIST, (LPARAM)&cd, 
 				SMTO_ABORTIFHUNG, 1500, &ret);
-			//SendMessage((HWND)wprm, WM_COPYDATA, WPRM_GET_SUBTITLEFILESLIST, (LPARAM)&cd);
+			//SendMessage((HWND)wprm, WM_COPYDATA, MSG_GET_SUBTITLEFILESLIST, (LPARAM)&cd);
         }
 		return TRUE;
 	  }
-		case WPRM_GET_CHAPTERSLIST:
+		case MSG_GET_CHAPTERSLIST:
 		{
 			COPYDATASTRUCT cd;
-			cd.dwData = WPRM_GET_CHAPTERSLIST;
+			cd.dwData = MSG_GET_CHAPTERSLIST;
 			size_t string_size = 2048;
 			char_t *stringList = (char_t*)alloca(sizeof(char_t)*string_size);
 			strcpy(stringList, _l(""));
 			std::vector<std::pair<long, ffstring> > *pChaptersList = NULL;
 			deciV->getChaptersList((void**)&pChaptersList);
 			
-			for (unsigned long l = 0; l<pChaptersList->size(); l++)
+			for (long l = 0; l<(long) pChaptersList->size(); l++)
 			{
 				long markerTime = (*pChaptersList)[l].first;
 				char_t tmpStr[40];
@@ -500,7 +515,81 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			text<char>(stringList, (char*)cd.lpData);
 			cd.cbData = strlen(stringList)+1;
 			DWORD_PTR ret = 0;
-			SendMessageTimeout((HWND)wprm, WM_COPYDATA, WPRM_GET_CHAPTERSLIST, (LPARAM)&cd, 
+			SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_CHAPTERSLIST, (LPARAM)&cd, 
+				SMTO_ABORTIFHUNG, 1500, &ret);
+			return TRUE;
+		}
+		case MSG_GET_AUDIOSTREAMSLIST:
+		{
+			COPYDATASTRUCT cd;
+			cd.dwData = MSG_GET_AUDIOSTREAMSLIST;
+			size_t string_size = 2048;
+			char_t *stringList = (char_t*)alloca(sizeof(char_t)*string_size);
+			strcpy(stringList, _l(""));
+			getStreams(false);
+			
+			for (long l = 0; l<(long)AudioStreamsNames.size(); l++)
+			{
+				long streamNb = AudioStreamsNames[l].first;
+				char_t tmpStr[40];
+				tsprintf(tmpStr, _l("%ld"), streamNb);
+				ffstring xmlString = _l("<stream><id>") + ffstring(tmpStr)+_l("</id><name>")+ffstring(AudioStreamsNames[l].second)
+					+_l("</name><language_name>")+ffstring(AudioStreamsLanguageNames[l].second)+_l("</language_name></stream>");
+
+				// Resize the string if needed
+				if (strlen(stringList)+strlen(xmlString.c_str())+ 10 >= string_size)
+				{
+					string_size += 2048;
+					char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
+					strcpy(tmpStr, stringList);
+					stringList = tmpStr;
+				}
+				strcat(stringList, xmlString.c_str());
+			}
+			cd.lpData = alloca(sizeof(char)*(strlen(stringList)+1));
+			strcpy((char*)cd.lpData, "");
+			text<char>(stringList, (char*)cd.lpData);
+			cd.cbData = strlen(stringList)+1;
+			DWORD_PTR ret = 0;
+			DPRINTF(_l("Sending : %s"), stringList);
+			SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_AUDIOSTREAMSLIST, (LPARAM)&cd, 
+				SMTO_ABORTIFHUNG, 1500, &ret);
+			return TRUE;
+		}
+		case MSG_GET_SUBTITLESTREAMSLIST:
+		{
+			COPYDATASTRUCT cd;
+			cd.dwData = MSG_GET_SUBTITLESTREAMSLIST;
+			size_t string_size = 2048;
+			char_t *stringList = (char_t*)alloca(sizeof(char_t)*string_size);
+			strcpy(stringList, _l(""));
+			getStreams(false);
+			
+			for (long l = 0; l<(long)SubtitleStreamsNames.size(); l++)
+			{
+				long streamNb = SubtitleStreamsNames[l].first;
+				char_t tmpStr[40];
+				tsprintf(tmpStr, _l("%ld"), streamNb);
+				ffstring xmlString = _l("<stream><id>") + ffstring(tmpStr)+_l("</id><name>")+ffstring(SubtitleStreamsNames[l].second)
+					+_l("</name><language_name>")+ffstring(SubtitleStreamsLanguageNames[l].second)+_l("</language_name></stream>");
+
+				// Resize the string if needed
+				if (strlen(stringList)+strlen(xmlString.c_str())+ 10 >= string_size)
+				{
+					string_size += 2048;
+					char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
+					strcpy(tmpStr, stringList);
+					stringList = tmpStr;
+				}
+				strcat(stringList, xmlString.c_str());
+			}
+			cd.lpData = alloca(sizeof(char)*(strlen(stringList)+1));
+			strcpy((char*)cd.lpData, "");
+			text<char>(stringList, (char*)cd.lpData);
+			cd.cbData = strlen(stringList)+1;
+			DWORD_PTR ret = 0;
+			DPRINTF(_l("Sending : %s"), stringList);
+			SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_SUBTITLESTREAMSLIST, (LPARAM)&cd, 
 				SMTO_ABORTIFHUNG, 1500, &ret);
 			return TRUE;
 		}
@@ -574,4 +663,167 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
     }
   }
  return DefWindowProc(hwnd,msg,wprm,lprm);
+}
+
+
+void Tremote::getStreams(bool reload)
+{
+	if (streamsLoaded && !reload)
+		return;
+	
+	AudioStreamsNames.clear();
+	AudioStreamsLanguageNames.clear();
+	SubtitleStreamsNames.clear();
+	SubtitleStreamsLanguageNames.clear();
+	currentAudioStream = 0;
+	currentSubtitleStream = 0;
+
+	comptr<IEnumFilters> eff;
+	IFilterGraph    *m_pGraph = NULL;
+	deci->getGraph(&m_pGraph); // Graph we belong to
+	if (m_pGraph->EnumFilters(&eff)==S_OK)
+	{
+		eff->Reset();
+		const char_t *fileName = deci->getSourceName();
+		for (comptr<IBaseFilter> bff;eff->Next(1,&bff,NULL)==S_OK;bff=NULL)
+		{
+			char_t name[MAX_PATH],filtername[MAX_PATH];
+			getFilterName(bff,name,filtername,countof(filtername));
+			FILTER_INFO filterinfo;
+			bff->QueryFilterInfo(&filterinfo);
+			if (filterinfo.pGraph)
+				filterinfo.pGraph->Release();
+
+			if (!strcmp(_l("ffdshow Video Decoder"), filtername)
+				|| !strcmp(_l("ffdshow raw video filter"), filtername)
+				|| !strcmp(_l("ffdshow VFW decoder helper"), filtername)
+				|| !strcmp(_l("ffdshow subtitles filter"), filtername)
+				|| !strcmp(_l("ffdshow Audio Decoder"), filtername))
+				continue;
+			IAMStreamSelect *pAMStreamSelect = NULL;
+			bff->QueryInterface(IID_IAMStreamSelect, (void**) &pAMStreamSelect);
+			if (pAMStreamSelect == NULL)
+				continue;
+			
+			foundHaali = false;
+
+			// Haali splitter
+			if (!strcmp(filtername, fileName))
+			{
+				AudioStreamsNames.clear();
+				AudioStreamsLanguageNames.clear();
+				SubtitleStreamsNames.clear();
+				SubtitleStreamsLanguageNames.clear();
+				currentAudioStream = 0;
+				currentSubtitleStream = 0;
+				foundHaali = true;
+			}
+
+			DWORD cStreams = 0;
+			pAMStreamSelect->Count(&cStreams);
+			for (long streamNb=0; streamNb<(long)cStreams; streamNb++)
+			{
+				DWORD streamSelect = 0;
+				LCID streamLanguageId = 0;
+				DWORD streamGroup = 0;
+				WCHAR *pstreamName = NULL;
+				HRESULT hr = pAMStreamSelect->Info(streamNb, NULL, &streamSelect, 
+					&streamLanguageId, &streamGroup, &pstreamName, NULL, NULL);
+
+				if (hr != S_OK)
+					continue;
+
+				// Not audio or subtitles
+				if (streamGroup != 1 && streamGroup != 2 && streamGroup != 6590033)
+				{
+					if (pstreamName != NULL)
+						CoTaskMemFree(pstreamName);
+					continue;
+				}
+
+				// Get language name
+				char_t languageName[256];
+				if (streamLanguageId == 0 || GetLocaleInfo(streamLanguageId, LOCALE_SLANGUAGE, languageName, 255) == 0)
+				{
+					tsprintf(languageName, _l("Undetermined (%ld)"), streamNb);
+				}
+
+				char_t streamName[256];
+				if (pstreamName != NULL)
+				{
+					text<char_t>(pstreamName, -1, streamName, 255);
+					//wcsncpy(streamName, pstreamName, 255);
+				}
+				else
+					tsprintf(streamName, _l("Undetermined (%ld)"), streamNb);
+
+				if (streamGroup == 1) // Audio
+				{
+					if (streamSelect == AMSTREAMSELECTINFO_ENABLED ||
+						streamSelect == AMSTREAMSELECTINFO_EXCLUSIVE || 
+						streamSelect == (AMSTREAMSELECTINFO_ENABLED | AMSTREAMSELECTINFO_EXCLUSIVE))
+						currentAudioStream = streamNb;
+					std::pair<long, ffstring> pair = std::make_pair<long, ffstring>(streamNb, streamName);
+					AudioStreamsNames.push_back(pair);
+					std::pair<long, ffstring> pair2 = std::make_pair<long, ffstring>(streamNb, languageName);
+					AudioStreamsLanguageNames.push_back(pair2);
+				}
+				else // Subtitles
+				{
+					if (streamSelect == AMSTREAMSELECTINFO_ENABLED ||
+						streamSelect == AMSTREAMSELECTINFO_EXCLUSIVE || 
+						streamSelect == (AMSTREAMSELECTINFO_ENABLED | AMSTREAMSELECTINFO_EXCLUSIVE))
+						currentSubtitleStream = streamNb;
+					std::pair<long, ffstring> pair = std::make_pair<long, ffstring>(streamNb, streamName);
+					SubtitleStreamsNames.push_back(pair);
+					std::pair<long, ffstring> pair2 = std::make_pair<long, ffstring>(streamNb, languageName);
+					SubtitleStreamsLanguageNames.push_back(pair2);
+				}
+				if (pstreamName != NULL)
+					CoTaskMemFree(pstreamName);
+			}
+			
+			pAMStreamSelect->Release();
+			if (foundHaali)
+				break;
+		}
+	}
+	streamsLoaded = true;
+}
+
+void Tremote::setStream(long streamNb)
+{
+
+	comptr<IEnumFilters> eff;
+	IFilterGraph    *m_pGraph = NULL;
+	deci->getGraph(&m_pGraph); // Graph we belong to
+	if (m_pGraph->EnumFilters(&eff)==S_OK)
+	{
+		eff->Reset();
+		const char_t *fileName = deci->getSourceName();
+		for (comptr<IBaseFilter> bff;eff->Next(1,&bff,NULL)==S_OK;bff=NULL)
+		{
+			char_t name[MAX_PATH],filtername[MAX_PATH];
+			getFilterName(bff,name,filtername,countof(filtername));
+			if (!strcmp(_l("ffdshow Video Decoder"), filtername)
+				|| !strcmp(_l("ffdshow raw video filter"), filtername)
+				|| !strcmp(_l("ffdshow VFW decoder helper"), filtername)
+				|| !strcmp(_l("ffdshow subtitles filter"), filtername)
+				|| !strcmp(_l("ffdshow Audio Decoder"), filtername))
+				continue;
+			IAMStreamSelect *pAMStreamSelect = NULL;
+			bff->QueryInterface(IID_IAMStreamSelect, (void**) &pAMStreamSelect);
+			if (pAMStreamSelect == NULL)
+				continue;
+			
+			if (foundHaali && strcmp(filtername, fileName))
+			{
+				pAMStreamSelect->Release();
+				continue;
+			}
+			pAMStreamSelect->Enable(streamNb, AMSTREAMSELECTENABLE_ENABLE);
+			pAMStreamSelect->Release();
+			break;
+		}
+	}
 }
