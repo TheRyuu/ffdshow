@@ -1,7 +1,7 @@
-About libdts
+About libdca
 ------------
 
-libdts is a free library for decoding DTS Coherent Acoustics streams. It is
+libdca is a free library for decoding DTS Coherent Acoustics streams. It is
 released under the terms of the GPL license. The DTS Coherent Acoustics
 standard is used in a variety of applications, including DVD, DTS audio CD and
 radio broadcasting.
@@ -22,19 +22,19 @@ The main goals in libdts development are:
 
       *	Speed - current code is not optimised at all.
 
-The project homepage is at http://www.videolan.org/dtsdec.html
+The project homepage is at http://www.videolan.org/developers/libdca.html
 
 
-dtsdec
+dcadec
 ------
 
-dtsdec is a test program for libdts. It decodes DTS Coherent Acoustics streams,
+dcadec is a test program for libdca. It decodes DTS Coherent Acoustics streams,
 and also includes a demultiplexer for mpeg-1 and mpeg-2 program streams.
 
-The libdts source code is always distributed in the dtsdec package, to
+The libdca source code is always distributed in the dcadec package, to
 make sure it easier for people to test it.
 
-The basic usage is to just type "dtsdec file" where file is a DTS Coherent
+The basic usage is to just type "dcadec file" where file is a DTS Coherent
 Acoustics file.
 
 The "-s" option must be used for multiplexed (audio and video) mpeg-2
@@ -42,7 +42,7 @@ files. These files are usualy found on the internet or on unencrypted
 DVDs.
 
 The "-o" option is used to select a given output layer. By default
-dtsdec does a stereo downmix and outputs to your speakers, but you can
+dcadec does a stereo downmix and outputs to your speakers, but you can
 try other choices using this option. This is also used for performance
 testing and conformance testing.
 
@@ -91,10 +91,10 @@ Coherent Acoustics)
 SVN repository
 --------------
 
-The latest libdts and dtsdec source code can always be found by anonymous
+The latest libdca and dcadec source code can always be found by anonymous
 SVN repository:
 
-# svn co svn://svn.videolan.org/libdts/trunk libdts-trunk
+# svn co svn://svn.videolan.org/libdca/trunk libdca-trunk
 
 If you build libdts from SVN you'll have to run ./bootstrap first.
 

@@ -2,9 +2,9 @@
 #define _TAUDIOCODECLIBDTS_H_
 
 #include "TaudioCodec.h"
-namespace libdts
+namespace libdca
 {
- #include "libdts/dts.h"
+ #include "libdts/dca.h"
 }
 
 class Tdll;
@@ -13,16 +13,16 @@ class TaudioCodecLibDTS :public TaudioCodec
 private:
  Tdll *dll;
  bool inited;
- libdts::dts_state_t* (*dts_init)(uint32_t mm_accel);
- void (*dts_free)(libdts::dts_state_t * state);
- int (*dts_syncinfo)(libdts::dts_state_t *state, uint8_t * buf, int * flags, int * sample_rate, int * bit_rate, int *frame_length);
- int (*dts_frame)(libdts::dts_state_t * state, uint8_t * buf, int * flags, libdts::level_t * level, libdts::sample_t bias);
- void (*dts_dynrng)(libdts::dts_state_t * state, libdts::level_t (* call) (libdts::level_t, void *), void * data);
- int (*dts_blocks_num)(libdts::dts_state_t * state);
- int (*dts_block)(libdts::dts_state_t * state);
- libdts::sample_t* (*dts_samples)(libdts::dts_state_t * state);
+ libdca::dca_state_t* (*dca_init)(uint32_t mm_accel);
+ void (*dca_free)(libdca::dca_state_t * state);
+ int (*dca_syncinfo)(libdca::dca_state_t *state, uint8_t * buf, int * flags, int * sample_rate, int * bit_rate, int *frame_length);
+ int (*dca_frame)(libdca::dca_state_t * state, uint8_t * buf, int * flags, libdca::level_t * level, libdca::sample_t bias);
+ void (*dca_dynrng)(libdca::dca_state_t * state, libdca::level_t (* call) (libdca::level_t, void *), void * data);
+ int (*dca_blocks_num)(libdca::dca_state_t * state);
+ int (*dca_block)(libdca::dca_state_t * state);
+ libdca::sample_t* (*dca_samples)(libdca::dca_state_t * state);
 
- libdts::dts_state_t *state;
+ libdca::dca_state_t *state;
  static struct Tscmap
   {
    int nchannels;

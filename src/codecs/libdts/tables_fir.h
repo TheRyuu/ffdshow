@@ -2,25 +2,26 @@
  * fir.h
  * Copyright (C) 2004 Gildas Bazin <gbazin@videolan.org>
  *
- * This file is part of dtsdec, a free DTS Coherent Acoustics stream decoder.
- * See http://www.videolan.org/dtsdec.html for updates.
+ * This file is part of libdca, a free DTS Coherent Acoustics stream decoder.
+ * See http://www.videolan.org/developers/libdca.html for updates.
  *
- * dtsdec is free software; you can redistribute it and/or modify
+ * libdca is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * dtsdec is distributed in the hope that it will be useful,
+ * libdca is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-double fir_32bands_perfect[] =
+static const double fir_32bands_perfect[] =
 {
 +1.135985195E-010,
 -6.022448247E-007,
@@ -536,7 +537,7 @@ double fir_32bands_perfect[] =
 -1.135985195E-010
 };
 
-double fir_32bands_nonperfect[] =
+static const double fir_32bands_nonperfect[] =
 {
 -1.390191784E-007,
 -1.693738625E-007,
@@ -1052,7 +1053,7 @@ double fir_32bands_nonperfect[] =
 +1.390191784E-007
 };
 
-double lfe_fir_64[] =
+static const double lfe_fir_64[] =
 {
 2.6584343868307770E-004,
 8.1793652498163280E-005,
@@ -1568,7 +1569,7 @@ double lfe_fir_64[] =
 2.6584343868307770E-004
 };
 
-double lfe_fir_128[] =
+static const double lfe_fir_128[] =
 {
 0.00053168571,
 0.00016358691,

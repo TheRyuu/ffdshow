@@ -469,11 +469,11 @@
 				>
 			</File>
 			<File
-				RelativePath="dts.h"
+				RelativePath="dca.h"
 				>
 			</File>
 			<File
-				RelativePath="dts_internal.h"
+				RelativePath="dca_internal.h"
 				>
 			</File>
 			<File

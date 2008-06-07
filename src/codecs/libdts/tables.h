@@ -20,13 +20,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-static const int dts_sample_rates[] =
+static const int dca_sample_rates[] =
 {
     0, 8000, 16000, 32000, 0, 0, 11025, 22050, 44100, 0, 0,
     12000, 24000, 48000, 96000, 192000
 };
 
-static const int dts_bit_rates[] =
+static const int dca_bit_rates[] =
 {
     32000, 56000, 64000, 96000, 112000, 128000,
     192000, 224000, 256000, 320000, 384000,
@@ -36,7 +36,7 @@ static const int dts_bit_rates[] =
     2048000, 3072000, 3840000, 1/*open*/, 2/*variable*/, 3/*lossless*/
 };
 
-static const uint8_t dts_channels[] =
+static const uint8_t dca_channels[] =
 {
     1, 2, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 6, 7, 8, 8
 };

@@ -65,17 +65,17 @@ TaudioCodecLibDTS::TaudioCodecLibDTS(IffdshowBase *deci,IdecAudioSink *Isink):
 bool TaudioCodecLibDTS::init(const CMediaType &mt)
 {
  dll=new Tdll(dllname,config);
- dll->loadFunction(dts_init,"dts_init");
- dll->loadFunction(dts_free,"dts_free");
- dll->loadFunction(dts_syncinfo,"dts_syncinfo");
- dll->loadFunction(dts_frame,"dts_frame");
- dll->loadFunction(dts_dynrng,"dts_dynrng");
- dll->loadFunction(dts_blocks_num,"dts_blocks_num");
- dll->loadFunction(dts_block,"dts_block");
- dll->loadFunction(dts_samples,"dts_samples");
+ dll->loadFunction(dca_init,"dca_init");
+ dll->loadFunction(dca_free,"dca_free");
+ dll->loadFunction(dca_syncinfo,"dca_syncinfo");
+ dll->loadFunction(dca_frame,"dca_frame");
+ dll->loadFunction(dca_dynrng,"dca_dynrng");
+ dll->loadFunction(dca_blocks_num,"dca_blocks_num");
+ dll->loadFunction(dca_block,"dca_block");
+ dll->loadFunction(dca_samples,"dca_samples");
  if (dll->ok)
   {
-   state=dts_init(Tconfig::cpu_flags);
+   state=dca_init(Tconfig::cpu_flags);
    fmt.sf=TsampleFormat::SF_FLOAT32;
    drc=deci->getParam2(IDFF_dtsdrc);
    inited=true;
@@ -88,7 +88,7 @@ TaudioCodecLibDTS::~TaudioCodecLibDTS()
 {
  if (dll)
   {
-   if (state) dts_free(state);
+   if (state) dca_free(state);
    delete dll;
   }
 }
@@ -108,7 +108,7 @@ HRESULT TaudioCodecLibDTS::decode(TbyteBuffer &src)
  while (end-p>=14)
   {
    int size=0,flags,sample_rate,frame_length,bit_rate;
-   if ((size=dts_syncinfo(state,p,&flags,&sample_rate,&bit_rate,&frame_length))>0)
+   if ((size=dca_syncinfo(state,p,&flags,&sample_rate,&bit_rate,&frame_length))>0)
     {
      bool enoughData=p+size<=end;
      if (enoughData)
@@ -129,21 +129,21 @@ HRESULT TaudioCodecLibDTS::decode(TbyteBuffer &src)
         }
        else
         {
-         flags|=DTS_ADJUST_LEVEL;
-         libdts::sample_t level=1,bias=0;
-         if (dts_frame(state,p,&flags,&level,bias)==0)
+         flags|=DCA_ADJUST_LEVEL;
+         libdca::sample_t level=1,bias=0;
+         if (dca_frame(state,p,&flags,&level,bias)==0)
           {
            bpssum+=(lastbps=bit_rate/1000);numframes++;
            if (drc==0)
-            dts_dynrng(state,NULL,NULL);
-           int scmapidx=std::min(flags&DTS_CHANNEL_MASK,int(countof(scmaps)/2));
-           const Tscmap &scmap=scmaps[scmapidx+((flags&DTS_LFE)?(countof(scmaps)/2):0)];
-           int blocks=dts_blocks_num(state);
+            dca_dynrng(state,NULL,NULL);
+           int scmapidx=std::min(flags&DCA_CHANNEL_MASK,int(countof(scmaps)/2));
+           const Tscmap &scmap=scmaps[scmapidx+((flags&DCA_LFE)?(countof(scmaps)/2):0)];
+           int blocks=dca_blocks_num(state);
            float *dst0,*dst;dst0=dst=(float*)getDst(blocks*256*scmap.nchannels*sizeof(float));
            int i=0;
-           for(;i<blocks && dts_block(state)==0;i++)
+           for(;i<blocks && dca_block(state)==0;i++)
             {
-             libdts::sample_t* samples=dts_samples(state);
+             libdca::sample_t* samples=dca_samples(state);
              for (int j=0;j<256;j++,samples++)
               for (int ch=0;ch<scmap.nchannels;ch++)
                *dst++=float(*(samples+256*scmap.ch[ch])/level);

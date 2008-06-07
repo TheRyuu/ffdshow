@@ -4,22 +4,23 @@
  * Copyright (C) 2000-2003 Michel Lespinasse <walken@zoy.org>
  * Copyright (C) 1999-2000 Aaron Holtzman <aholtzma@ess.engr.uvic.ca>
  *
- * This file is part of dtsdec, a free DTS Coherent Acoustics stream decoder.
- * See http://www.videolan.org/dtsdec.html for updates.
+ * This file is part of libdca, a free DTS Coherent Acoustics stream decoder.
+ * See http://www.videolan.org/developers/libdca.html for updates.
  *
- * dtsdec is free software; you can redistribute it and/or modify
+ * libdca is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * dtsdec is distributed in the hope that it will be useful,
+ * libdca is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #include "config.h"
@@ -30,18 +31,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "dts.h"
-#include "dts_internal.h"
+#include "dca.h"
+#include "dca_internal.h"
 #include "bitstream.h"
 
 #define BUFFER_SIZE 4096
 
-void dts_bitstream_init (dts_state_t * state, uint8_t * buf, int word_mode,
+void dca_bitstream_init (dca_state_t * state, uint8_t * buf, int word_mode,
                          int bigendian_mode)
 {
     intptr_t align;
-    align = (intptr_t)buf & 3;
-//  align = (uintptr_t)buf & 3;
+
+    align = (uintptr_t)buf & 3;
     state->buffer_start = (uint32_t *) ((uintptr_t)buf - align);
     state->bits_left = 0;
     state->current_word = 0;
@@ -50,7 +51,7 @@ void dts_bitstream_init (dts_state_t * state, uint8_t * buf, int word_mode,
     bitstream_get (state, align * 8);
 }
 #include<stdio.h>
-static inline void bitstream_fill_current (dts_state_t * state)
+static inline void bitstream_fill_current (dca_state_t * state)
 {
     uint32_t tmp;
 
@@ -77,7 +78,7 @@ static inline void bitstream_fill_current (dts_state_t * state)
  * -ah
  */
 
-uint32_t dts_bitstream_get_bh (dts_state_t * state, uint32_t num_bits)
+uint32_t dca_bitstream_get_bh (dca_state_t * state, uint32_t num_bits)
 {
     uint32_t result;
 

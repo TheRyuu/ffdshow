@@ -1,10 +1,10 @@
 EXPORTS
-  dts_init
-  dts_syncinfo
-  dts_frame
-  dts_dynrng
-  dts_blocks_num
-  dts_block
-  dts_samples
-  dts_free
+  dca_init
+  dca_syncinfo
+  dca_frame
+  dca_dynrng
+  dca_blocks_num
+  dca_block
+  dca_samples
+  dca_free
   getVersion
