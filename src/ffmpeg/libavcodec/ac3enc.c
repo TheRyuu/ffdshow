@@ -463,7 +463,8 @@ static int bit_alloc(AC3EncodeContext *s,
         for(ch=0;ch<s->nb_all_channels;ch++) {
             ff_ac3_bit_alloc_calc_bap(mask[i][ch], psd[i][ch], 0,
                                       s->nb_coefs[ch], snr_offset,
-                                      s->bit_alloc.floor, bap[i][ch]);
+                                      s->bit_alloc.floor, ff_ac3_bap_tab,
+                                      bap[i][ch]);
             frame_bits += compute_mantissa_size(s, bap[i][ch],
                                                  s->nb_coefs[ch]);
         }
@@ -633,7 +634,7 @@ static av_cold int AC3_encode_init(AVCodecContext *avctx)
 
     /* number of channels */
     if (channels < 1 || channels > 6)
-    	return -1;
+        return -1;
     s->channel_mode = avctx->ac3mode; /* intentional diff from ffmpeg */
     s->lfe = avctx->ac3lfe; /* intentional diff from ffmpeg */
     s->nb_all_channels = channels;
