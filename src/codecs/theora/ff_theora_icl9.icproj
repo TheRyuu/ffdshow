@@ -6,7 +6,7 @@
 	ProjectGUID="{604792C5-7BD2-4E42-9FD8-FFC3C41E87B3}"
 	VCNestedProjectGUID="{924512C3-75C6-45BE-B7A3-A747BFFD79A1}"
 	VCNestedProjectFileName="ff_theora_icl9.vcproj"
-	VCNestedProjectCRC32="1849553487">
+	VCNestedProjectCRC32="1890011204">
 	<Configurations>
 		<Configuration 
 			Name="Debug|Win32">
@@ -288,81 +288,9 @@
 				RelativePath="theora.h">
 			</File>
 		</Filter>
-		<Filter 
-			Name="i386"
-			Filter="">
-			<File 
-				RelativePath="..\..\csimd.h">
-			</File>
-			<File 
-				RelativePath=".\i386\DeblockOpt.cpp">
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
-			</File>
-			<File 
-				RelativePath=".\i386\DeRingOpt.cpp">
-			</File>
-			<File 
-				RelativePath=".\i386\dsp_mmx.cpp">
-			</File>
-			<File 
-				RelativePath=".\i386\dsp_mmxext.cpp">
-			</File>
-			<File 
-				RelativePath=".\i386\fdct_mmx.cpp">
-			</File>
-			<File 
-				RelativePath=".\i386\loopf_asm.cpp">
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
-			</File>
-			<File 
-				RelativePath=".\i386\mmxIdct.cpp">
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="CppCmplrTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
-			</File>
-			<File 
-				RelativePath=".\i386\recon_mmx.cpp">
-			</File>
-			<File 
-				RelativePath="..\..\simd.h">
-			</File>
-			<File 
-				RelativePath=".\i386\vp3dsp_sse2.cpp">
-				<FileConfiguration 
-					Name="Debug|Win32">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="TRUE"/>
-					<Tool 
-						Name="CppCmplrTool"/>
-				</FileConfiguration>
-				<FileConfiguration 
-					Name="Release|Win32">
-					<Tool 
-						Name="GeneralTool"
-						ExcludedFromBuild="TRUE"/>
-					<Tool 
-						Name="CppCmplrTool"/>
-				</FileConfiguration>
-			</File>
-		</Filter>
 		<File 
 			RelativePath=".\ff_theora.def">
 		</File>
 	</Files>
 </VisualStudioProject>
-
 

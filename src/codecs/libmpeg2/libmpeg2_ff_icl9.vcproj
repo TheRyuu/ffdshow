@@ -149,6 +149,9 @@
 				RelativePath="libmpeg2\cpu_accel.c">
 			</File>
 			<File
+				RelativePath="libmpeg2\cpu_state.c">
+			</File>
+			<File
 				RelativePath="libmpeg2\decode.c">
 			</File>
 			<File
@@ -159,24 +162,6 @@
 			</File>
 			<File
 				RelativePath=".\libmpeg2\idct_mmx.c">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\libmpeg2\idct_sse2.c">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\libmpeg2\mc_sse2.c">
 				<FileConfiguration
 					Name="Release|Win32">
 					<Tool
