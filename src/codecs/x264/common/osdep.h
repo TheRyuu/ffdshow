@@ -1,5 +1,5 @@
 /*****************************************************************************
- * common.h: h264 encoder
+ * osdep.h: h264 encoder
  *****************************************************************************
  * Copyright (C) 2007 x264 project
  *
@@ -37,9 +37,12 @@
  #define x264_log(x)
 #endif
 
-#ifdef _MSC_VER
+#ifdef _WIN32
 #include <io.h>    // _setmode()
 #include <fcntl.h> // _O_BINARY
+#endif
+
+#ifdef _MSC_VER
 #define inline __inline
 #define strcasecmp stricmp
 #define strncasecmp strnicmp
@@ -57,7 +60,7 @@
 #if defined(_MSC_VER) || defined(SYS_SunOS) || defined(SYS_MACOSX)
 #define sqrtf sqrt
 #endif
-#if defined(_WIN32) || defined(WIN64)
+#if defined(_WIN32) || defined(_WIN64)
 #define rename(src,dst) (unlink(dst), rename(src,dst)) // POSIX says that rename() removes the destination, but win32 doesn't.
 #ifndef strtok_r
 #define strtok_r(str,delim,save) strtok(str,delim)

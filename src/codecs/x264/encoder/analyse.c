@@ -340,7 +340,7 @@ static void x264_mb_analyse_init( x264_t *h, x264_mb_analysis_t *a, int i_qp )
                 a->b_fast_intra = 1;
             }
         }
-        h->mb.b_skip_pbskip_mc = 0;
+        h->mb.b_skip_mc = 0;
     }
 }
 
@@ -1874,6 +1874,7 @@ static void x264_mb_analyse_p_rd( x264_t *h, x264_mb_analysis_t *a, int i_satd )
     if( a->l0.i_cost8x8 <= thresh )
     {
         h->mb.i_type = P_8x8;
+        h->mb.i_partition = D_8x8;
         x264_analyse_update_cache( h, a );
         a->l0.i_cost8x8 = x264_rd_cost_mb( h, a->i_lambda2 );
 
@@ -1892,6 +1893,7 @@ static void x264_mb_analyse_p_rd( x264_t *h, x264_mb_analysis_t *a, int i_satd )
             {
                 h->mb.i_sub_partition[0] = h->mb.i_sub_partition[1] =
                 h->mb.i_sub_partition[2] = h->mb.i_sub_partition[3] = D_L0_8x8;
+                x264_analyse_update_cache( h, a );
                 i_cost = x264_rd_cost_mb( h, a->i_lambda2 );
                 if( a->l0.i_cost8x8 < i_cost )
                 {
@@ -1914,8 +1916,12 @@ static void x264_mb_analyse_b_rd( x264_t *h, x264_mb_analysis_t *a, int i_satd_i
     if( a->b_direct_available && a->i_rd16x16direct == COST_MAX )
     {
         h->mb.i_type = B_DIRECT;
+        /* Assumes direct/skip MC is still in fdec */
+        /* Requires b-rdo to be done before intra analysis */
+        h->mb.b_skip_mc = 1;
         x264_analyse_update_cache( h, a );
         a->i_rd16x16direct = x264_rd_cost_mb( h, a->i_lambda2 );
+        h->mb.b_skip_mc = 0;
     }
 
     //FIXME not all the update_cache calls are needed
@@ -2007,7 +2013,7 @@ static inline void x264_mb_analyse_transform( x264_t *h )
     if( x264_mb_transform_8x8_allowed( h ) && h->param.analyse.b_transform_8x8 )
     {
         int i_cost4, i_cost8;
-        /* FIXME only luma mc is needed */
+        /* Only luma MC is really needed, but the full MC is re-used in macroblock_encode. */
         x264_mb_mc( h );
 
         i_cost8 = h->pixf.sa8d[PIXEL_16x16]( h->mb.pic.p_fenc[0], FENC_STRIDE,
@@ -2016,6 +2022,7 @@ static inline void x264_mb_analyse_transform( x264_t *h )
                                              h->mb.pic.p_fdec[0], FDEC_STRIDE );
 
         h->mb.b_transform_8x8 = i_cost8 < i_cost4;
+        h->mb.b_skip_mc = 1;
     }
 }
 
@@ -2311,6 +2318,8 @@ void x264_macroblock_analyse( x264_t *h )
                 }
                 else if( i_partition == D_16x8 )
                 {
+                    h->mb.i_sub_partition[0] = h->mb.i_sub_partition[1] =
+                    h->mb.i_sub_partition[2] = h->mb.i_sub_partition[3] = D_L0_8x8;
                     x264_macroblock_cache_ref( h, 0, 0, 4, 2, 0, analysis.l0.me16x8[0].i_ref );
                     x264_macroblock_cache_ref( h, 0, 2, 4, 2, 0, analysis.l0.me16x8[1].i_ref );
                     x264_me_refine_qpel_rd( h, &analysis.l0.me16x8[0], analysis.i_lambda2, 0 );
@@ -2318,6 +2327,8 @@ void x264_macroblock_analyse( x264_t *h )
                 }
                 else if( i_partition == D_8x16 )
                 {
+                    h->mb.i_sub_partition[0] = h->mb.i_sub_partition[1] =
+                    h->mb.i_sub_partition[2] = h->mb.i_sub_partition[3] = D_L0_8x8;
                     x264_macroblock_cache_ref( h, 0, 0, 2, 4, 0, analysis.l0.me8x16[0].i_ref );
                     x264_macroblock_cache_ref( h, 2, 0, 2, 4, 0, analysis.l0.me8x16[1].i_ref );
                     x264_me_refine_qpel_rd( h, &analysis.l0.me8x16[0], analysis.i_lambda2, 0 );
@@ -2375,15 +2386,8 @@ void x264_macroblock_analyse( x264_t *h )
             else if( analysis.b_mbrd )
             {
                 i_bskip_cost = ssd_mb( h );
-
                 /* 6 = minimum cavlc cost of a non-skipped MB */
-                if( i_bskip_cost <= ((6 * analysis.i_lambda2 + 128) >> 8) )
-                {
-                    h->mb.i_type = B_SKIP;
-                    x264_analyse_update_cache( h, &analysis );
-                    h->mb.b_skip_pbskip_mc = 1;
-                    return;
-                }
+                b_skip = h->mb.b_skip_mc = i_bskip_cost <= ((6 * analysis.i_lambda2 + 128) >> 8);
             }
             else if( !h->mb.b_direct_auto_write )
             {
@@ -2398,7 +2402,8 @@ void x264_macroblock_analyse( x264_t *h )
             const unsigned int flags = h->param.analyse.inter;
             int i_type;
             int i_partition;
-            h->mb.b_skip_pbskip_mc = 0;
+            int i_satd_inter = 0; // shut up uninitialized warning
+            h->mb.b_skip_mc = 0;
 
             x264_mb_analyse_load_costs( h, &analysis );
 
@@ -2541,11 +2546,9 @@ void x264_macroblock_analyse( x264_t *h )
                 }
             }
 
-            x264_mb_analyse_intra( h, &analysis, i_cost );
-
             if( analysis.b_mbrd )
             {
-                int i_satd_inter = i_cost;
+                i_satd_inter = i_cost;
                 x264_mb_analyse_b_rd( h, &analysis, i_satd_inter );
                 i_type = B_SKIP;
                 i_cost = i_bskip_cost;
@@ -2560,6 +2563,12 @@ void x264_macroblock_analyse( x264_t *h )
 
                 h->mb.i_type = i_type;
                 h->mb.i_partition = i_partition;
+            }
+            
+            x264_mb_analyse_intra( h, &analysis, i_satd_inter );
+
+            if( analysis.b_mbrd )
+            {
                 x264_mb_analyse_transform_rd( h, &analysis, &i_satd_inter, &i_cost );
                 x264_intra_rd( h, &analysis, i_satd_inter * 17/16 );
             }

@@ -373,7 +373,6 @@ static int x264_validate_parameters( x264_t *h )
         h->param.analyse.b_fast_pskip = 0;
         h->param.analyse.i_noise_reduction = 0;
         h->param.analyse.i_subpel_refine = x264_clip3( h->param.analyse.i_subpel_refine, 1, 6 );
-        h->param.rc.i_aq_mode = 0;
     }
     if( h->param.rc.i_rc_method == X264_RC_CQP )
     {
@@ -382,6 +381,7 @@ static int x264_validate_parameters( x264_t *h )
         float qp_b = qp_p + 6*log(h->param.rc.f_pb_factor)/log(2);
         h->param.rc.i_qp_min = x264_clip3( (int)(X264_MIN3( qp_p, qp_i, qp_b )), 0, 51 );
         h->param.rc.i_qp_max = x264_clip3( (int)(X264_MAX3( qp_p, qp_i, qp_b ) + .999), 0, 51 );
+        h->param.rc.i_aq_mode = 0;
     }
 
     if( ( h->param.i_width % 16 || h->param.i_height % 16 )
@@ -631,6 +631,7 @@ x264_t *x264_encoder_open   ( x264_param_t *param )
           || h->param.rc.i_rc_method == X264_RC_CRF
           || h->param.b_bframe_adaptive
           || h->param.b_pre_scenecut );
+    h->frames.b_have_lowres |= (h->param.rc.b_stat_read && h->param.rc.i_vbv_buffer_size > 0);
 
     h->frames.i_last_idr = - h->param.i_keyint_max;
     h->frames.i_input    = 0;
@@ -1602,7 +1603,7 @@ static void x264_encoder_frame_end( x264_t *h, x264_t *thread_current,
     /* restore CPU state (before using float again) */
     x264_emms();
 
-    x264_noise_reduction_update( h );
+    x264_noise_reduction_update( thread_current );
 
     /* ---------------------- Compute/Print statistics --------------------- */
     x264_thread_sync_stat( h, h->thread[0] );
@@ -1728,7 +1729,7 @@ void    x264_encoder_close  ( x264_t *h )
 
     for( i=0; i<h->param.i_threads; i++ )
     {
-        // don't strictly have to wait for the other threads, but it's simpler than cancelling them
+        // don't strictly have to wait for the other threads, but it's simpler than canceling them
         if( h->thread[i]->b_thread_active )
             x264_pthread_join( h->thread[i]->thread_handle, NULL );
     }

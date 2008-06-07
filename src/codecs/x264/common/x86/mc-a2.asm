@@ -387,6 +387,12 @@ cglobal x264_plane_copy_mmxext, 6,7
     emms
     RET
 
+
+
+; These functions are not general-use; not only do the SSE ones require aligned input,
+; but they also will fail if given a non-mod16 size or a size less than 64.
+; memzero SSE will fail for non-mod128.
+
 ;-----------------------------------------------------------------------------
 ; void *x264_memcpy_aligned_mmx( void *dst, const void *src, size_t n );
 ;-----------------------------------------------------------------------------
@@ -399,15 +405,15 @@ cglobal x264_memcpy_aligned_mmx, 3,3
     movq [r0 + r2 + 0], mm0
     movq [r0 + r2 + 8], mm1
 .copy32:
-        sub r2d, 32
-        movq mm0, [r1 + r2 +  0]
-        movq mm1, [r1 + r2 +  8]
-        movq mm2, [r1 + r2 + 16]
-        movq mm3, [r1 + r2 + 24]
-        movq [r0 + r2 +  0], mm0
-        movq [r0 + r2 +  8], mm1
-        movq [r0 + r2 + 16], mm2
-        movq [r0 + r2 + 24], mm3
+    sub r2d, 32
+    movq mm0, [r1 + r2 +  0]
+    movq mm1, [r1 + r2 +  8]
+    movq mm2, [r1 + r2 + 16]
+    movq mm3, [r1 + r2 + 24]
+    movq [r0 + r2 +  0], mm0
+    movq [r0 + r2 +  8], mm1
+    movq [r0 + r2 + 16], mm2
+    movq [r0 + r2 + 24], mm3
     jg .copy32
     REP_RET
 
@@ -429,14 +435,36 @@ cglobal x264_memcpy_aligned_sse2, 3,3
     movdqa xmm1, [r1 + r2 + 16]
     movdqa [r0 + r2 + 16], xmm1
 .copy64:
-        sub r2d, 64
-        movdqa xmm0, [r1 + r2 +  0]
-        movdqa [r0 + r2 +  0], xmm0
-        movdqa xmm1, [r1 + r2 + 16]
-        movdqa [r0 + r2 + 16], xmm1
-        movdqa xmm2, [r1 + r2 + 32]
-        movdqa [r0 + r2 + 32], xmm2
-        movdqa xmm3, [r1 + r2 + 48]
-        movdqa [r0 + r2 + 48], xmm3
+    sub r2d, 64
+    movdqa xmm0, [r1 + r2 +  0]
+    movdqa [r0 + r2 +  0], xmm0
+    movdqa xmm1, [r1 + r2 + 16]
+    movdqa [r0 + r2 + 16], xmm1
+    movdqa xmm2, [r1 + r2 + 32]
+    movdqa [r0 + r2 + 32], xmm2
+    movdqa xmm3, [r1 + r2 + 48]
+    movdqa [r0 + r2 + 48], xmm3
     jg .copy64
     REP_RET
+
+;-----------------------------------------------------------------------------
+; void *x264_memzero_aligned( void *dst, size_t n );
+;-----------------------------------------------------------------------------
+%macro MEMZERO 1
+cglobal x264_memzero_aligned_%1, 2,2
+    pxor m0, m0
+.loop:
+    sub r1d, regsize*8
+%assign i 0
+%rep 8
+    mova [r0 + r1 + i], m0
+%assign i i+regsize
+%endrep
+    jg .loop
+    REP_RET
+%endmacro
+
+INIT_MMX
+MEMZERO mmx
+INIT_XMM
+MEMZERO sse2

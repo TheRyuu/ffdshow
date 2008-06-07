@@ -786,7 +786,7 @@ if( pass == 0 || !visited[(m0x)&7][(m0y)&7][(m1x)&7][(m1y)&7] ) \
     int i0 = 4 + 3*(m0x-om0x) + (m0y-om0y); \
     int i1 = 4 + 3*(m1x-om1x) + (m1y-om1y); \
     visited[(m0x)&7][(m0y)&7][(m1x)&7][(m1y)&7] = 1; \
-    memcpy( pix, pix0[i0], bs ); \
+    h->mc.memcpy_aligned( pix, pix0[i0], bs ); \
     if( i_weight == 32 ) \
         h->mc.avg[i_pixel]( pix, bw, pix1[i1], bw ); \
     else \
@@ -837,7 +837,7 @@ int x264_me_refine_bidir( x264_t *h, x264_me_t *m0, x264_me_t *m1, int i_weight 
     int bcost = COST_MAX;
     int pass = 0;
     uint8_t visited[8][8][8][8];
-    memset( visited, 0, sizeof(visited) );
+    h->mc.memzero_aligned( visited, sizeof(visited) );
 
     BIME_CACHE( 0, 0 );
     CHECK_BIDIR( 0, 0, 0, 0 );
