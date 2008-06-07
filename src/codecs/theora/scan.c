@@ -11,6 +11,7 @@
  ********************************************************************
 
   function:
+  last mod: $Id: scan.c 11442 2006-05-27 17:28:08Z giles $
 
  ********************************************************************/
 
@@ -214,13 +215,13 @@ static void InitScanMapArrays(PP_INSTANCE *ppi){
 
   /* Clear down the fragment level map arrays for the current frame. */
   memset( ppi->FragScores, 0,
-	  ppi->ScanFrameFragments * sizeof(*ppi->FragScores) );
+          ppi->ScanFrameFragments * sizeof(*ppi->FragScores) );
   memset( ppi->SameGreyDirPixels, 0,
-	  ppi->ScanFrameFragments );
+          ppi->ScanFrameFragments );
   memset( ppi->FragDiffPixels, 0,
-	  ppi->ScanFrameFragments );
+          ppi->ScanFrameFragments );
   memset( ppi->RowChangedPixels, 0,
-	  3* ppi->ScanConfig.VideoFrameHeight*sizeof(*ppi->RowChangedPixels));
+          3* ppi->ScanConfig.VideoFrameHeight*sizeof(*ppi->RowChangedPixels));
 
   memset( ppi->ScanDisplayFragments, BLOCK_NOT_CODED, ppi->ScanFrameFragments);
 
@@ -264,8 +265,8 @@ static void InitScanMapArrays(PP_INSTANCE *ppi){
   /* Adjust line search length if block threshold low */
   ppi->MaxLineSearchLen = MAX_SEARCH_LINE_LEN;
   while ( (ppi->MaxLineSearchLen > 0) &&
-	  (LineLengthScores[ppi->MaxLineSearchLen-1] >
-	   ppi->PrimaryBlockThreshold) )
+          (LineLengthScores[ppi->MaxLineSearchLen-1] >
+           ppi->PrimaryBlockThreshold) )
     ppi->MaxLineSearchLen -= 1;
 
 }
@@ -317,7 +318,7 @@ void ScanYUVInit( PP_INSTANCE *  ppi, SCAN_CONFIG_DATA * ScanConfigPtr){
      frame all blocks are marked for coding in line with the behaviour
      for other key frames. */
   memset( ppi->PrevFragments[ppi->PrevFrameLimit-1],
-	  BLOCK_CODED, ppi->ScanFrameFragments );
+          BLOCK_CODED, ppi->ScanFrameFragments );
 
   /* Initialise scan arrays */
   InitScanMapArrays(ppi);
@@ -335,10 +336,10 @@ static void SetFromPrevious(PP_INSTANCE *ppi) {
     /* Now build up PrevFragments[0] from PrevFragments[1 to PrevFrameLimit] */
     for ( i = 0; i < ppi->ScanFrameFragments; i++ ){
       for ( j = 1; j < ppi->PrevFrameLimit; j++ ){
-	if ( ppi->PrevFragments[j][i] > BLOCK_CODED_BAR ){
-	  ppi->PrevFragments[0][i] = BLOCK_CODED;
-	  break;
-	}
+        if ( ppi->PrevFragments[j][i] > BLOCK_CODED_BAR ){
+          ppi->PrevFragments[0][i] = BLOCK_CODED;
+          break;
+        }
       }
     }
   }
@@ -350,18 +351,18 @@ static void UpdatePreviousBlockLists(PP_INSTANCE *ppi) {
   /* Shift previous frame block lists along. */
   for ( i = ppi->PrevFrameLimit; i > 1; i-- ){
     memcpy( ppi->PrevFragments[i], ppi->PrevFragments[i-1],
-	    ppi->ScanFrameFragments );
+            ppi->ScanFrameFragments );
   }
 
   /* Now copy in this frames block list */
   memcpy( ppi->PrevFragments[1], ppi->ScanDisplayFragments,
-	  ppi->ScanFrameFragments );
+          ppi->ScanFrameFragments );
 }
 
 static void CreateOutputDisplayMap( PP_INSTANCE *ppi,
-				    char *InternalFragmentsPtr,
-				    char *RecentHistoryPtr,
-				    unsigned char *ExternalFragmentsPtr ) {
+                                    signed char *InternalFragmentsPtr,
+                                    signed char *RecentHistoryPtr,
+                                    unsigned char *ExternalFragmentsPtr ) {
   ogg_uint32_t i;
   ogg_uint32_t HistoryBlocksAdded = 0;
   ogg_uint32_t YBand =  (ppi->ScanYPlaneFragments/8);   /* 1/8th of Y image. */
@@ -395,9 +396,9 @@ static void CreateOutputDisplayMap( PP_INSTANCE *ppi,
 }
 
 static int RowSadScan( PP_INSTANCE *ppi,
-		       unsigned char * YuvPtr1,
-		       unsigned char * YuvPtr2,
-		       signed char *  DispFragPtr){
+                       unsigned char * YuvPtr1,
+                       unsigned char * YuvPtr2,
+                       signed char *  DispFragPtr){
   ogg_int32_t    i, j;
   ogg_uint32_t   GrpSad;
   ogg_uint32_t   LocalGrpLowSadThresh = ppi->ModifiedGrpLowSadThresh;
@@ -421,21 +422,21 @@ static int RowSadScan( PP_INSTANCE *ppi,
        pixels belongs is already marked for update then do nothing. */
     for ( i = 0; i < ppi->PlaneHFragments; i ++ ){
       if ( *LocalDispFragPtr <= BLOCK_NOT_CODED ){
-	/* Calculate the SAD score for the block row */
-        GrpSad = dsp_static_row_sad8(LocalYuvPtr1,LocalYuvPtr2);
+        /* Calculate the SAD score for the block row */
+        GrpSad = dsp_row_sad8(ppi->dsp, LocalYuvPtr1,LocalYuvPtr2);
 
-	/* Now test the group SAD score */
-	if ( GrpSad > LocalGrpLowSadThresh ){
-	  /* If SAD very high we must update else we have candidate block */
-	  if ( GrpSad > LocalGrpHighSadThresh ){
-	    /* Force update */
-	    *LocalDispFragPtr = BLOCK_CODED;
-	  }else{
-	    /* Possible Update required */
-	    *LocalDispFragPtr = CANDIDATE_BLOCK;
-	  }
-	  InterestingBlocksInRow = 1;
-	}
+        /* Now test the group SAD score */
+        if ( GrpSad > LocalGrpLowSadThresh ){
+          /* If SAD very high we must update else we have candidate block */
+          if ( GrpSad > LocalGrpHighSadThresh ){
+            /* Force update */
+            *LocalDispFragPtr = BLOCK_CODED;
+          }else{
+            /* Possible Update required */
+            *LocalDispFragPtr = CANDIDATE_BLOCK;
+          }
+          InterestingBlocksInRow = 1;
+        }
       }
       LocalDispFragPtr++;
 
@@ -453,9 +454,9 @@ static int RowSadScan( PP_INSTANCE *ppi,
 }
 
 static int ColSadScan( PP_INSTANCE *ppi,
-		       unsigned char * YuvPtr1,
-		       unsigned char * YuvPtr2,
-		       signed char *  DispFragPtr ){
+                       unsigned char * YuvPtr1,
+                       unsigned char * YuvPtr2,
+                       signed char *  DispFragPtr ){
   ogg_int32_t     i;
   ogg_uint32_t    MaxSad;
   ogg_uint32_t    LocalGrpLowSadThresh = ppi->ModifiedGrpLowSadThresh;
@@ -479,19 +480,19 @@ static int ColSadScan( PP_INSTANCE *ppi,
     /* Skip if block already marked to be coded. */
     if ( *LocalDispFragPtr <= BLOCK_NOT_CODED ){
       /* Calculate the SAD score for the block column */
-      MaxSad = dsp_static_col_sad8x8(LocalYuvPtr1, LocalYuvPtr2, ppi->PlaneStride );
+      MaxSad = dsp_col_sad8x8(ppi->dsp, LocalYuvPtr1, LocalYuvPtr2, ppi->PlaneStride );
 
       /* Now test the group SAD score */
       if ( MaxSad > LocalGrpLowSadThresh ){
-	/* If SAD very high we must update else we have candidate block */
-	if ( MaxSad > LocalGrpHighSadThresh ){
-	  /* Force update */
-	  *LocalDispFragPtr = BLOCK_CODED;
-	}else{
-	  /* Possible Update required */
-	  *LocalDispFragPtr = CANDIDATE_BLOCK;
-	}
-	InterestingBlocksInRow = 1;
+        /* If SAD very high we must update else we have candidate block */
+        if ( MaxSad > LocalGrpHighSadThresh ){
+          /* Force update */
+          *LocalDispFragPtr = BLOCK_CODED;
+        }else{
+          /* Possible Update required */
+          *LocalDispFragPtr = CANDIDATE_BLOCK;
+        }
+        InterestingBlocksInRow = 1;
       }
     }
 
@@ -507,8 +508,8 @@ static int ColSadScan( PP_INSTANCE *ppi,
 }
 
 static void SadPass2( PP_INSTANCE *ppi,
-		      ogg_int32_t RowNumber,
-		      signed char *  DispFragPtr ){
+                      ogg_int32_t RowNumber,
+                      signed char *  DispFragPtr ){
   ogg_int32_t  i;
 
   /* First row */
@@ -516,11 +517,11 @@ static void SadPass2( PP_INSTANCE *ppi,
     /* First block in row. */
     if ( DispFragPtr[0] == CANDIDATE_BLOCK ){
       if ( (DispFragPtr[1] == BLOCK_CODED) ||
-	   (DispFragPtr[ppi->PlaneHFragments] == BLOCK_CODED) ||
-	   (DispFragPtr[ppi->PlaneHFragments+1] == BLOCK_CODED) ){
-	ppi->TmpCodedMap[0] =  BLOCK_CODED_LOW;
+           (DispFragPtr[ppi->PlaneHFragments] == BLOCK_CODED) ||
+           (DispFragPtr[ppi->PlaneHFragments+1] == BLOCK_CODED) ){
+        ppi->TmpCodedMap[0] =  BLOCK_CODED_LOW;
       }else{
-	ppi->TmpCodedMap[0] = DispFragPtr[0];
+        ppi->TmpCodedMap[0] = DispFragPtr[0];
       }
     }else{
       ppi->TmpCodedMap[0] = DispFragPtr[0];
@@ -529,17 +530,17 @@ static void SadPass2( PP_INSTANCE *ppi,
     /* All but first and last in row */
     for ( i = 1; (i < ppi->PlaneHFragments-1); i++ ){
       if ( DispFragPtr[i] == CANDIDATE_BLOCK ){
-	if ( (DispFragPtr[i-1] == BLOCK_CODED) ||
-	     (DispFragPtr[i+1] == BLOCK_CODED) ||
-	     (DispFragPtr[i+ppi->PlaneHFragments] == BLOCK_CODED) ||
-	     (DispFragPtr[i+ppi->PlaneHFragments-1] == BLOCK_CODED) ||
-	     (DispFragPtr[i+ppi->PlaneHFragments+1] == BLOCK_CODED) ){
-	  ppi->TmpCodedMap[i] =  BLOCK_CODED_LOW;
-	}else{
-	  ppi->TmpCodedMap[i] = DispFragPtr[i];
-	}
+        if ( (DispFragPtr[i-1] == BLOCK_CODED) ||
+             (DispFragPtr[i+1] == BLOCK_CODED) ||
+             (DispFragPtr[i+ppi->PlaneHFragments] == BLOCK_CODED) ||
+             (DispFragPtr[i+ppi->PlaneHFragments-1] == BLOCK_CODED) ||
+             (DispFragPtr[i+ppi->PlaneHFragments+1] == BLOCK_CODED) ){
+          ppi->TmpCodedMap[i] =  BLOCK_CODED_LOW;
+        }else{
+          ppi->TmpCodedMap[i] = DispFragPtr[i];
+        }
       }else{
-	ppi->TmpCodedMap[i] = DispFragPtr[i];
+        ppi->TmpCodedMap[i] = DispFragPtr[i];
       }
     }
 
@@ -547,11 +548,11 @@ static void SadPass2( PP_INSTANCE *ppi,
     i = ppi->PlaneHFragments-1;
     if ( DispFragPtr[i] == CANDIDATE_BLOCK ){
       if ( (DispFragPtr[i-1] == BLOCK_CODED) ||
-	   (DispFragPtr[i+ppi->PlaneHFragments] == BLOCK_CODED) ||
-	   (DispFragPtr[i+ppi->PlaneHFragments-1] == BLOCK_CODED) ){
-	ppi->TmpCodedMap[i] =  BLOCK_CODED_LOW;
+           (DispFragPtr[i+ppi->PlaneHFragments] == BLOCK_CODED) ||
+           (DispFragPtr[i+ppi->PlaneHFragments-1] == BLOCK_CODED) ){
+        ppi->TmpCodedMap[i] =  BLOCK_CODED_LOW;
       }else{
-	ppi->TmpCodedMap[i] = DispFragPtr[i];
+        ppi->TmpCodedMap[i] = DispFragPtr[i];
       }
     }else{
       ppi->TmpCodedMap[i] = DispFragPtr[i];
@@ -561,13 +562,13 @@ static void SadPass2( PP_INSTANCE *ppi,
     /* First block in row. */
     if ( DispFragPtr[0] == CANDIDATE_BLOCK ){
       if ( (DispFragPtr[1] == BLOCK_CODED) ||
-	   (DispFragPtr[(-ppi->PlaneHFragments)] == BLOCK_CODED) ||
-	   (DispFragPtr[(-ppi->PlaneHFragments)+1] == BLOCK_CODED) ||
-	   (DispFragPtr[ppi->PlaneHFragments] == BLOCK_CODED) ||
-	   (DispFragPtr[ppi->PlaneHFragments+1] == BLOCK_CODED) ){
-	ppi->TmpCodedMap[0] =  BLOCK_CODED_LOW;
+           (DispFragPtr[(-ppi->PlaneHFragments)] == BLOCK_CODED) ||
+           (DispFragPtr[(-ppi->PlaneHFragments)+1] == BLOCK_CODED) ||
+           (DispFragPtr[ppi->PlaneHFragments] == BLOCK_CODED) ||
+           (DispFragPtr[ppi->PlaneHFragments+1] == BLOCK_CODED) ){
+        ppi->TmpCodedMap[0] =  BLOCK_CODED_LOW;
       }else{
-	ppi->TmpCodedMap[0] = DispFragPtr[0];
+        ppi->TmpCodedMap[0] = DispFragPtr[0];
       }
     }else{
       ppi->TmpCodedMap[0] = DispFragPtr[0];
@@ -576,20 +577,20 @@ static void SadPass2( PP_INSTANCE *ppi,
     /* All but first and last in row */
     for ( i = 1; (i < ppi->PlaneHFragments-1); i++ ){
       if ( DispFragPtr[i] == CANDIDATE_BLOCK ){
-	if ( (DispFragPtr[i-1] == BLOCK_CODED) ||
-	     (DispFragPtr[i+1] == BLOCK_CODED) ||
-	     (DispFragPtr[i-ppi->PlaneHFragments] == BLOCK_CODED) ||
-	     (DispFragPtr[i-ppi->PlaneHFragments-1] == BLOCK_CODED) ||
-	     (DispFragPtr[i-ppi->PlaneHFragments+1] == BLOCK_CODED) ||
-	     (DispFragPtr[i+ppi->PlaneHFragments] == BLOCK_CODED) ||
-	     (DispFragPtr[i+ppi->PlaneHFragments-1] == BLOCK_CODED) ||
-	     (DispFragPtr[i+ppi->PlaneHFragments+1] == BLOCK_CODED) ){
-	  ppi->TmpCodedMap[i] =  BLOCK_CODED_LOW;
-	}else{
-	  ppi->TmpCodedMap[i] = DispFragPtr[i];
-	}
+        if ( (DispFragPtr[i-1] == BLOCK_CODED) ||
+             (DispFragPtr[i+1] == BLOCK_CODED) ||
+             (DispFragPtr[i-ppi->PlaneHFragments] == BLOCK_CODED) ||
+             (DispFragPtr[i-ppi->PlaneHFragments-1] == BLOCK_CODED) ||
+             (DispFragPtr[i-ppi->PlaneHFragments+1] == BLOCK_CODED) ||
+             (DispFragPtr[i+ppi->PlaneHFragments] == BLOCK_CODED) ||
+             (DispFragPtr[i+ppi->PlaneHFragments-1] == BLOCK_CODED) ||
+             (DispFragPtr[i+ppi->PlaneHFragments+1] == BLOCK_CODED) ){
+          ppi->TmpCodedMap[i] =  BLOCK_CODED_LOW;
+        }else{
+          ppi->TmpCodedMap[i] = DispFragPtr[i];
+        }
       }else{
-	ppi->TmpCodedMap[i] = DispFragPtr[i];
+        ppi->TmpCodedMap[i] = DispFragPtr[i];
       }
     }
 
@@ -597,13 +598,13 @@ static void SadPass2( PP_INSTANCE *ppi,
     i = ppi->PlaneHFragments-1;
     if ( DispFragPtr[i] == CANDIDATE_BLOCK ){
       if ( (DispFragPtr[i-1] == BLOCK_CODED) ||
-	   (DispFragPtr[i-ppi->PlaneHFragments] == BLOCK_CODED) ||
-	   (DispFragPtr[i-ppi->PlaneHFragments-1] == BLOCK_CODED) ||
-	   (DispFragPtr[i+ppi->PlaneHFragments] == BLOCK_CODED) ||
-	   (DispFragPtr[i+ppi->PlaneHFragments-1] == BLOCK_CODED) ){
-	ppi->TmpCodedMap[i] =  BLOCK_CODED_LOW;
+           (DispFragPtr[i-ppi->PlaneHFragments] == BLOCK_CODED) ||
+           (DispFragPtr[i-ppi->PlaneHFragments-1] == BLOCK_CODED) ||
+           (DispFragPtr[i+ppi->PlaneHFragments] == BLOCK_CODED) ||
+           (DispFragPtr[i+ppi->PlaneHFragments-1] == BLOCK_CODED) ){
+        ppi->TmpCodedMap[i] =  BLOCK_CODED_LOW;
       }else{
-	ppi->TmpCodedMap[i] = DispFragPtr[i];
+        ppi->TmpCodedMap[i] = DispFragPtr[i];
       }
     }else{
       ppi->TmpCodedMap[i] = DispFragPtr[i];
@@ -613,11 +614,11 @@ static void SadPass2( PP_INSTANCE *ppi,
     /* First block in row. */
     if ( DispFragPtr[0] == CANDIDATE_BLOCK ){
       if ( (DispFragPtr[1] == BLOCK_CODED) ||
-	   (DispFragPtr[(-ppi->PlaneHFragments)] == BLOCK_CODED) ||
-	   (DispFragPtr[(-ppi->PlaneHFragments)+1] == BLOCK_CODED)){
-	ppi->TmpCodedMap[0] =  BLOCK_CODED_LOW;
+           (DispFragPtr[(-ppi->PlaneHFragments)] == BLOCK_CODED) ||
+           (DispFragPtr[(-ppi->PlaneHFragments)+1] == BLOCK_CODED)){
+        ppi->TmpCodedMap[0] =  BLOCK_CODED_LOW;
       }else{
-	ppi->TmpCodedMap[0] = DispFragPtr[0];
+        ppi->TmpCodedMap[0] = DispFragPtr[0];
       }
     }else{
       ppi->TmpCodedMap[0] = DispFragPtr[0];
@@ -626,17 +627,17 @@ static void SadPass2( PP_INSTANCE *ppi,
     /* All but first and last in row */
     for ( i = 1; (i < ppi->PlaneHFragments-1); i++ ){
       if ( DispFragPtr[i] == CANDIDATE_BLOCK ){
-	if ( (DispFragPtr[i-1] == BLOCK_CODED) ||
-	     (DispFragPtr[i+1] == BLOCK_CODED) ||
-	     (DispFragPtr[i-ppi->PlaneHFragments] == BLOCK_CODED) ||
-	     (DispFragPtr[i-ppi->PlaneHFragments-1] == BLOCK_CODED) ||
-	     (DispFragPtr[i-ppi->PlaneHFragments+1] == BLOCK_CODED) ){
-	  ppi->TmpCodedMap[i] =  BLOCK_CODED_LOW;
-	}else{
-	  ppi->TmpCodedMap[i] = DispFragPtr[i];
-	}
+        if ( (DispFragPtr[i-1] == BLOCK_CODED) ||
+             (DispFragPtr[i+1] == BLOCK_CODED) ||
+             (DispFragPtr[i-ppi->PlaneHFragments] == BLOCK_CODED) ||
+             (DispFragPtr[i-ppi->PlaneHFragments-1] == BLOCK_CODED) ||
+             (DispFragPtr[i-ppi->PlaneHFragments+1] == BLOCK_CODED) ){
+          ppi->TmpCodedMap[i] =  BLOCK_CODED_LOW;
+        }else{
+          ppi->TmpCodedMap[i] = DispFragPtr[i];
+        }
       }else{
-	ppi->TmpCodedMap[i] = DispFragPtr[i];
+        ppi->TmpCodedMap[i] = DispFragPtr[i];
       }
     }
 
@@ -644,11 +645,11 @@ static void SadPass2( PP_INSTANCE *ppi,
     i = ppi->PlaneHFragments-1;
     if ( DispFragPtr[i] == CANDIDATE_BLOCK ){
       if ( (DispFragPtr[i-1] == BLOCK_CODED) ||
-	   (DispFragPtr[i-ppi->PlaneHFragments] == BLOCK_CODED) ||
-	   (DispFragPtr[i-ppi->PlaneHFragments-1] == BLOCK_CODED) ){
-	ppi->TmpCodedMap[i] =  BLOCK_CODED_LOW;
+           (DispFragPtr[i-ppi->PlaneHFragments] == BLOCK_CODED) ||
+           (DispFragPtr[i-ppi->PlaneHFragments-1] == BLOCK_CODED) ){
+        ppi->TmpCodedMap[i] =  BLOCK_CODED_LOW;
       }else{
-	ppi->TmpCodedMap[i] = DispFragPtr[i];
+        ppi->TmpCodedMap[i] = DispFragPtr[i];
       }
     }else{
       ppi->TmpCodedMap[i] = DispFragPtr[i];
@@ -660,7 +661,7 @@ static void SadPass2( PP_INSTANCE *ppi,
 }
 
 static unsigned char ApplyPakLowPass( PP_INSTANCE *ppi,
-				      unsigned char * SrcPtr ){
+                                      unsigned char * SrcPtr ){
   unsigned char * SrcPtr1 = SrcPtr - 1;
   unsigned char * SrcPtr0 = SrcPtr1 - ppi->PlaneStride; /* Note the
                                                            use of
@@ -669,26 +670,26 @@ static unsigned char ApplyPakLowPass( PP_INSTANCE *ppi,
   unsigned char * SrcPtr2 = SrcPtr1 + ppi->PlaneStride;
 
   return  (unsigned char)( ( (ogg_uint32_t)SrcPtr0[0] +
-	      (ogg_uint32_t)SrcPtr0[1] +
-	      (ogg_uint32_t)SrcPtr0[2] +
-	      (ogg_uint32_t)SrcPtr1[0] +
-	      (ogg_uint32_t)SrcPtr1[2] +
-	      (ogg_uint32_t)SrcPtr2[0] +
-	      (ogg_uint32_t)SrcPtr2[1] +
-	      (ogg_uint32_t)SrcPtr2[2]   ) >> 3 );
+              (ogg_uint32_t)SrcPtr0[1] +
+              (ogg_uint32_t)SrcPtr0[2] +
+              (ogg_uint32_t)SrcPtr1[0] +
+              (ogg_uint32_t)SrcPtr1[2] +
+              (ogg_uint32_t)SrcPtr2[0] +
+              (ogg_uint32_t)SrcPtr2[1] +
+              (ogg_uint32_t)SrcPtr2[2]   ) >> 3 );
 
 }
 
 static void RowDiffScan( PP_INSTANCE *ppi,
-			 unsigned char * YuvPtr1,
-			 unsigned char * YuvPtr2,
-			 ogg_int16_t   * YUVDiffsPtr,
-			 unsigned char * bits_map_ptr,
-			 signed char   * SgcPtr,
-			 signed char   * DispFragPtr,
-			 unsigned char * FDiffPixels,
-			 ogg_int32_t   * RowDiffsPtr,
-			 unsigned char * ChLocalsPtr, int EdgeRow ){
+                         unsigned char * YuvPtr1,
+                         unsigned char * YuvPtr2,
+                         ogg_int16_t   * YUVDiffsPtr,
+                         unsigned char * bits_map_ptr,
+                         signed char   * SgcPtr,
+                         signed char   * DispFragPtr,
+                         unsigned char * FDiffPixels,
+                         ogg_int32_t   * RowDiffsPtr,
+                         unsigned char * ChLocalsPtr, int EdgeRow ){
 
   ogg_int32_t    i,j;
   ogg_int32_t    FragChangedPixels;
@@ -704,31 +705,31 @@ static void RowDiffScan( PP_INSTANCE *ppi,
       /* Test for break out conditions to save time. */
       if (*DispFragPtr == CANDIDATE_BLOCK){
 
-	/* Clear down entries in changed locals array */
+        /* Clear down entries in changed locals array */
         SET8_0(ChLocalsPtr);
 
-	for ( j = 0; j < HFRAGPIXELS; j++ ){
-	  /* Take a local copy of the measured difference. */
-	  Diff = (int)YuvPtr1[j] - (int)YuvPtr2[j];
+        for ( j = 0; j < HFRAGPIXELS; j++ ){
+          /* Take a local copy of the measured difference. */
+          Diff = (int)YuvPtr1[j] - (int)YuvPtr2[j];
 
-	  /* Store the actual difference value */
-	  YUVDiffsPtr[j] = Diff;
+          /* Store the actual difference value */
+          YUVDiffsPtr[j] = Diff;
 
-	  /* Test against the Level thresholds and record the results */
-	  SgcPtr[0] += ppi->SgcThreshTable[Diff+255];
+          /* Test against the Level thresholds and record the results */
+          SgcPtr[0] += ppi->SgcThreshTable[Diff+255];
 
-	  /* Test against the SRF thresholds */
-	  bits_map_ptr[j] = ppi->SrfThreshTable[Diff+255];
-	  FragChangedPixels += ppi->SrfThreshTable[Diff+255];
-	}
+          /* Test against the SRF thresholds */
+          bits_map_ptr[j] = ppi->SrfThreshTable[Diff+255];
+          FragChangedPixels += ppi->SrfThreshTable[Diff+255];
+        }
       }else{
-	/* If we are breaking out here mark all pixels as changed. */
-	if ( *DispFragPtr > BLOCK_NOT_CODED ){
+        /* If we are breaking out here mark all pixels as changed. */
+        if ( *DispFragPtr > BLOCK_NOT_CODED ){
           SET8_1(bits_map_ptr);
           SET8_8(ChLocalsPtr);
-	}else{
+        }else{
           SET8_0(ChLocalsPtr);
-	}
+        }
       }
 
       *RowDiffsPtr += FragChangedPixels;
@@ -743,11 +744,11 @@ static void RowDiffScan( PP_INSTANCE *ppi,
       FDiffPixels ++;
 
       /* If we have a lot of changed pixels for this fragment on this
-	 row then the fragment is almost sure to be picked (e.g. through
-	 the line search) so we can mark it as selected and then ignore
-	 it. */
+         row then the fragment is almost sure to be picked (e.g. through
+         the line search) so we can mark it as selected and then ignore
+         it. */
       if (FragChangedPixels >= 7){
-	*DispFragPtr = BLOCK_CODED_LOW;
+        *DispFragPtr = BLOCK_CODED_LOW;
       }
       DispFragPtr++;
     }
@@ -766,22 +767,22 @@ static void RowDiffScan( PP_INSTANCE *ppi,
       SET8_0(ChLocalsPtr);
 
       for ( j = 0; j < HFRAGPIXELS; j++ ){
-	/* Take a local copy of the measured difference. */
-	Diff = (int)YuvPtr1[j] - (int)YuvPtr2[j];
+        /* Take a local copy of the measured difference. */
+        Diff = (int)YuvPtr1[j] - (int)YuvPtr2[j];
 
-	/* Store the actual difference value */
-	YUVDiffsPtr[j] = Diff;
+        /* Store the actual difference value */
+        YUVDiffsPtr[j] = Diff;
 
-	/* Test against the Level thresholds and record the results */
-	SgcPtr[0] += ppi->SgcThreshTable[Diff+255];
+        /* Test against the Level thresholds and record the results */
+        SgcPtr[0] += ppi->SgcThreshTable[Diff+255];
 
-	if (j>0 && ppi->SrfPakThreshTable[Diff+255] )
-	  Diff = (int)ApplyPakLowPass( ppi, &YuvPtr1[j] ) -
-	    (int)ApplyPakLowPass( ppi, &YuvPtr2[j] );
+        if (j>0 && ppi->SrfPakThreshTable[Diff+255] )
+          Diff = (int)ApplyPakLowPass( ppi, &YuvPtr1[j] ) -
+            (int)ApplyPakLowPass( ppi, &YuvPtr2[j] );
 
-	/* Test against the SRF thresholds */
-	bits_map_ptr[j] = ppi->SrfThreshTable[Diff+255];
-	FragChangedPixels += ppi->SrfThreshTable[Diff+255];
+        /* Test against the SRF thresholds */
+        bits_map_ptr[j] = ppi->SrfThreshTable[Diff+255];
+        FragChangedPixels += ppi->SrfThreshTable[Diff+255];
       }
     }else{
       /* If we are breaking out here mark all pixels as changed. */
@@ -816,41 +817,41 @@ static void RowDiffScan( PP_INSTANCE *ppi,
     /* Fragment in between!! */
 
     for ( i = HFRAGPIXELS ; i < ppi->PlaneWidth-HFRAGPIXELS;
-	  i += HFRAGPIXELS ){
+          i += HFRAGPIXELS ){
       /* Reset count of pixels changed for the current fragment. */
       FragChangedPixels = 0;
 
       /* Test for break out conditions to save time. */
       if (*DispFragPtr == CANDIDATE_BLOCK){
-	/* Clear down entries in changed locals array */
+        /* Clear down entries in changed locals array */
         SET8_0(ChLocalsPtr);
-	for ( j = 0; j < HFRAGPIXELS; j++ ){
-	  /* Take a local copy of the measured difference. */
-	  Diff = (int)YuvPtr1[j] - (int)YuvPtr2[j];
+        for ( j = 0; j < HFRAGPIXELS; j++ ){
+          /* Take a local copy of the measured difference. */
+          Diff = (int)YuvPtr1[j] - (int)YuvPtr2[j];
 
-	  /* Store the actual difference value */
-	  YUVDiffsPtr[j] = Diff;
+          /* Store the actual difference value */
+          YUVDiffsPtr[j] = Diff;
 
-	  /* Test against the Level thresholds and record the results */
-	  SgcPtr[0] += ppi->SgcThreshTable[Diff+255];
+          /* Test against the Level thresholds and record the results */
+          SgcPtr[0] += ppi->SgcThreshTable[Diff+255];
 
-	  if (ppi->SrfPakThreshTable[Diff+255] )
-	    Diff = (int)ApplyPakLowPass( ppi, &YuvPtr1[j] ) -
-	      (int)ApplyPakLowPass( ppi, &YuvPtr2[j] );
+          if (ppi->SrfPakThreshTable[Diff+255] )
+            Diff = (int)ApplyPakLowPass( ppi, &YuvPtr1[j] ) -
+              (int)ApplyPakLowPass( ppi, &YuvPtr2[j] );
 
 
-	  /* Test against the SRF thresholds */
-	  bits_map_ptr[j] = ppi->SrfThreshTable[Diff+255];
-	  FragChangedPixels += ppi->SrfThreshTable[Diff+255];
-	}
+          /* Test against the SRF thresholds */
+          bits_map_ptr[j] = ppi->SrfThreshTable[Diff+255];
+          FragChangedPixels += ppi->SrfThreshTable[Diff+255];
+        }
       }else{
-	/* If we are breaking out here mark all pixels as changed. */
-	if ( *DispFragPtr > BLOCK_NOT_CODED ){
+        /* If we are breaking out here mark all pixels as changed. */
+        if ( *DispFragPtr > BLOCK_NOT_CODED ){
           SET8_1(bits_map_ptr);
           SET8_8(ChLocalsPtr);
-	}else{
+        }else{
           SET8_0(ChLocalsPtr);
-	}
+        }
       }
 
       *RowDiffsPtr += FragChangedPixels;
@@ -865,11 +866,11 @@ static void RowDiffScan( PP_INSTANCE *ppi,
       FDiffPixels ++;
 
       /* If we have a lot of changed pixels for this fragment on this
-	 row then the fragment is almost sure to be picked
-	 (e.g. through the line search) so we can mark it as selected
-	 and then ignore it. */
+         row then the fragment is almost sure to be picked
+         (e.g. through the line search) so we can mark it as selected
+         and then ignore it. */
       if (FragChangedPixels >= 7){
-	*DispFragPtr = BLOCK_CODED_LOW;
+        *DispFragPtr = BLOCK_CODED_LOW;
       }
       DispFragPtr++;
     }
@@ -885,32 +886,32 @@ static void RowDiffScan( PP_INSTANCE *ppi,
       SET8_0(ChLocalsPtr);
 
       for ( j = 0; j < HFRAGPIXELS; j++ ){
-	/* Take a local copy of the measured difference. */
-	Diff = (int)YuvPtr1[j] - (int)YuvPtr2[j];
+        /* Take a local copy of the measured difference. */
+        Diff = (int)YuvPtr1[j] - (int)YuvPtr2[j];
 
-	/* Store the actual difference value */
-	YUVDiffsPtr[j] = Diff;
+        /* Store the actual difference value */
+        YUVDiffsPtr[j] = Diff;
 
-	/* Test against the Level thresholds and record the results */
-	SgcPtr[0] += ppi->SgcThreshTable[Diff+255];
+        /* Test against the Level thresholds and record the results */
+        SgcPtr[0] += ppi->SgcThreshTable[Diff+255];
 
-	if (j<7 && ppi->SrfPakThreshTable[Diff+255] )
-	  Diff = (int)ApplyPakLowPass( ppi, &YuvPtr1[j] ) -
-	    (int)ApplyPakLowPass( ppi, &YuvPtr2[j] );
+        if (j<7 && ppi->SrfPakThreshTable[Diff+255] )
+          Diff = (int)ApplyPakLowPass( ppi, &YuvPtr1[j] ) -
+            (int)ApplyPakLowPass( ppi, &YuvPtr2[j] );
 
 
-	/* Test against the SRF thresholds */
-	bits_map_ptr[j] = ppi->SrfThreshTable[Diff+255];
-	FragChangedPixels += ppi->SrfThreshTable[Diff+255];
+        /* Test against the SRF thresholds */
+        bits_map_ptr[j] = ppi->SrfThreshTable[Diff+255];
+        FragChangedPixels += ppi->SrfThreshTable[Diff+255];
       }
     }else{
       /* If we are breaking out here mark all pixels as changed.*/
       if ( *DispFragPtr > BLOCK_NOT_CODED ) {
           SET8_1(bits_map_ptr);
           SET8_8(ChLocalsPtr);
-	}else{
+        }else{
           SET8_0(ChLocalsPtr);
-	}
+        }
     }
     /* If we have a lot of changed pixels for this fragment on this
        row then the fragment is almost sure to be picked (e.g. through
@@ -932,9 +933,9 @@ static void RowDiffScan( PP_INSTANCE *ppi,
 }
 
 static void ConsolidateDiffScanResults( PP_INSTANCE *ppi,
-					unsigned char * FDiffPixels,
-					signed char * SgcScoresPtr,
-					signed char * DispFragPtr ){
+                                        unsigned char * FDiffPixels,
+                                        signed char * SgcScoresPtr,
+                                        signed char * DispFragPtr ){
   ogg_int32_t i;
 
   for ( i = 0; i < ppi->PlaneHFragments; i ++ ){
@@ -942,22 +943,22 @@ static void ConsolidateDiffScanResults( PP_INSTANCE *ppi,
        difference scan. Ignore definite YES and NO cases. */
     if ( DispFragPtr[i] == CANDIDATE_BLOCK ){
       if ( ((ogg_uint32_t)abs(SgcScoresPtr[i]) > ppi->BlockSgcThresh) ){
-	/* Block marked for update due to Sgc change */
-	DispFragPtr[i] = BLOCK_CODED_SGC;
+        /* Block marked for update due to Sgc change */
+        DispFragPtr[i] = BLOCK_CODED_SGC;
       }else if ( FDiffPixels[i] == 0 ){
-	/* Block is no longer a candidate for the main tests but will
-	   still be considered a candidate in RowBarEnhBlockMap() */
-	DispFragPtr[i] = CANDIDATE_BLOCK_LOW;
+        /* Block is no longer a candidate for the main tests but will
+           still be considered a candidate in RowBarEnhBlockMap() */
+        DispFragPtr[i] = CANDIDATE_BLOCK_LOW;
       }
     }
   }
 }
 
 static void RowChangedLocalsScan( PP_INSTANCE *ppi,
-				  unsigned char * PixelMapPtr,
-				  unsigned char * ChLocalsPtr,
-				  signed char  * DispFragPtr,
-				  unsigned char   RowType ){
+                                  unsigned char * PixelMapPtr,
+                                  unsigned char * ChLocalsPtr,
+                                  signed char  * DispFragPtr,
+                                  unsigned char   RowType ){
 
   unsigned char changed_locals = 0;
   unsigned char * PixelsChangedPtr0;
@@ -986,45 +987,45 @@ static void RowChangedLocalsScan( PP_INSTANCE *ppi,
       /* Skip a group of 8 pixels if the assosciated fragment has no
          pixels of interest. */
       if ( *DispFragPtr == CANDIDATE_BLOCK ){
-	for ( j = 0; j < HFRAGPIXELS; j++ ){
-	  changed_locals = 0;
+        for ( j = 0; j < HFRAGPIXELS; j++ ){
+          changed_locals = 0;
 
-	  /* If the pixel itself has changed */
-	  if ( PixelsChangedPtr1[1] ){
-	    if ( (i > 0) || (j > 0) ){
-	      changed_locals += PixelsChangedPtr0[0];
-	      changed_locals += PixelsChangedPtr1[0];
-	      changed_locals += PixelsChangedPtr2[0];
-	    }
+          /* If the pixel itself has changed */
+          if ( PixelsChangedPtr1[1] ){
+            if ( (i > 0) || (j > 0) ){
+              changed_locals += PixelsChangedPtr0[0];
+              changed_locals += PixelsChangedPtr1[0];
+              changed_locals += PixelsChangedPtr2[0];
+            }
 
-	    changed_locals += PixelsChangedPtr0[1];
-	    changed_locals += PixelsChangedPtr2[1];
+            changed_locals += PixelsChangedPtr0[1];
+            changed_locals += PixelsChangedPtr2[1];
 
-	    if ( (i + j) < LastRowIndex ){
-	      changed_locals += PixelsChangedPtr0[2];
-	      changed_locals += PixelsChangedPtr1[2];
-	      changed_locals += PixelsChangedPtr2[2];
-	    }
+            if ( (i + j) < LastRowIndex ){
+              changed_locals += PixelsChangedPtr0[2];
+              changed_locals += PixelsChangedPtr1[2];
+              changed_locals += PixelsChangedPtr2[2];
+            }
 
-	    /* Store the number of changed locals */
-	    *ChLocalsPtr |= changed_locals;
-	  }
+            /* Store the number of changed locals */
+            *ChLocalsPtr |= changed_locals;
+          }
 
-	  /* Increment to next pixel in the row */
-	  ChLocalsPtr++;
-	  PixelsChangedPtr0++;
-	  PixelsChangedPtr1++;
-	  PixelsChangedPtr2++;
-	}
+          /* Increment to next pixel in the row */
+          ChLocalsPtr++;
+          PixelsChangedPtr0++;
+          PixelsChangedPtr1++;
+          PixelsChangedPtr2++;
+        }
       }else{
-	if ( *DispFragPtr > BLOCK_NOT_CODED )
+        if ( *DispFragPtr > BLOCK_NOT_CODED )
           SET8_0(ChLocalsPtr);
 
-	/* Step pointers */
-	ChLocalsPtr += HFRAGPIXELS;
-	PixelsChangedPtr0 += HFRAGPIXELS;
-	PixelsChangedPtr1 += HFRAGPIXELS;
-	PixelsChangedPtr2 += HFRAGPIXELS;
+        /* Step pointers */
+        ChLocalsPtr += HFRAGPIXELS;
+        PixelsChangedPtr0 += HFRAGPIXELS;
+        PixelsChangedPtr1 += HFRAGPIXELS;
+        PixelsChangedPtr2 += HFRAGPIXELS;
       }
 
       /* Move on to next fragment. */
@@ -1037,56 +1038,56 @@ static void RowChangedLocalsScan( PP_INSTANCE *ppi,
       /* Skip a group of 8 pixels if the assosciated fragment has no
          pixels of interest */
       if ( *DispFragPtr == CANDIDATE_BLOCK ){
-	for ( j = 0; j < HFRAGPIXELS; j++ ){
-	  changed_locals = 0;
+        for ( j = 0; j < HFRAGPIXELS; j++ ){
+          changed_locals = 0;
 
-	  /* If the pixel itself has changed */
-	  if ( PixelsChangedPtr1[1] ){
-	    if ( RowType == FIRST_ROW ){
-	      if ( (i > 0) || (j > 0) ){
-		changed_locals += PixelsChangedPtr1[0];
-		changed_locals += PixelsChangedPtr2[0];
-	      }
+          /* If the pixel itself has changed */
+          if ( PixelsChangedPtr1[1] ){
+            if ( RowType == FIRST_ROW ){
+              if ( (i > 0) || (j > 0) ){
+                changed_locals += PixelsChangedPtr1[0];
+                changed_locals += PixelsChangedPtr2[0];
+              }
 
-	      changed_locals += PixelsChangedPtr2[1];
+              changed_locals += PixelsChangedPtr2[1];
 
-	      if ( (i + j) < LastRowIndex ){
-		changed_locals += PixelsChangedPtr1[2];
-		changed_locals += PixelsChangedPtr2[2];
-	      }
-	    }else{
-	      if ( (i > 0) || (j > 0 ) ){
-		changed_locals += PixelsChangedPtr0[0];
-		changed_locals += PixelsChangedPtr1[0];
-	      }
+              if ( (i + j) < LastRowIndex ){
+                changed_locals += PixelsChangedPtr1[2];
+                changed_locals += PixelsChangedPtr2[2];
+              }
+            }else{
+              if ( (i > 0) || (j > 0 ) ){
+                changed_locals += PixelsChangedPtr0[0];
+                changed_locals += PixelsChangedPtr1[0];
+              }
 
-	      changed_locals += PixelsChangedPtr0[1];
+              changed_locals += PixelsChangedPtr0[1];
 
-	      if ( (i + j) < LastRowIndex ){
-		changed_locals += PixelsChangedPtr0[2];
-		changed_locals += PixelsChangedPtr1[2];
-	      }
-	    }
+              if ( (i + j) < LastRowIndex ){
+                changed_locals += PixelsChangedPtr0[2];
+                changed_locals += PixelsChangedPtr1[2];
+              }
+            }
 
-	    /* Store the number of changed locals */
-	    *ChLocalsPtr |= changed_locals;
-	  }
+            /* Store the number of changed locals */
+            *ChLocalsPtr |= changed_locals;
+          }
 
-	  /* Increment to next pixel in the row */
-	  ChLocalsPtr++;
-	  PixelsChangedPtr0++;
-	  PixelsChangedPtr1++;
-	  PixelsChangedPtr2++;
-	}
+          /* Increment to next pixel in the row */
+          ChLocalsPtr++;
+          PixelsChangedPtr0++;
+          PixelsChangedPtr1++;
+          PixelsChangedPtr2++;
+        }
       }else{
-	if ( *DispFragPtr > BLOCK_NOT_CODED )
+        if ( *DispFragPtr > BLOCK_NOT_CODED )
           SET8_0(ChLocalsPtr);
 
-	/* Step pointers */
-	ChLocalsPtr += HFRAGPIXELS;
-	PixelsChangedPtr0 += HFRAGPIXELS;
-	PixelsChangedPtr1 += HFRAGPIXELS;
-	PixelsChangedPtr2 += HFRAGPIXELS;
+        /* Step pointers */
+        ChLocalsPtr += HFRAGPIXELS;
+        PixelsChangedPtr0 += HFRAGPIXELS;
+        PixelsChangedPtr1 += HFRAGPIXELS;
+        PixelsChangedPtr2 += HFRAGPIXELS;
       }
 
       /* Move on to next fragment. */
@@ -1096,13 +1097,13 @@ static void RowChangedLocalsScan( PP_INSTANCE *ppi,
 }
 
 static void NoiseScoreRow( PP_INSTANCE *ppi,
-			   unsigned char * PixelMapPtr,
-			   unsigned char * ChLocalsPtr,
-			   ogg_int16_t   * YUVDiffsPtr,
-			   unsigned char * PixelNoiseScorePtr,
-			   ogg_uint32_t  * FragScorePtr,
-			   signed char   * DispFragPtr,
-			   ogg_int32_t   * RowDiffsPtr ){
+                           unsigned char * PixelMapPtr,
+                           unsigned char * ChLocalsPtr,
+                           ogg_int16_t   * YUVDiffsPtr,
+                           unsigned char * PixelNoiseScorePtr,
+                           ogg_uint32_t  * FragScorePtr,
+                           signed char   * DispFragPtr,
+                           ogg_int32_t   * RowDiffsPtr ){
   ogg_int32_t i,j;
   unsigned char  changed_locals = 0;
   ogg_int32_t  Score;
@@ -1119,49 +1120,49 @@ static void NoiseScoreRow( PP_INSTANCE *ppi,
 
       /* Pixels grouped along the row into fragments */
       for ( j = 0; j < HFRAGPIXELS; j++ ){
-	if ( PixelMapPtr[j] ){
-	  AbsDiff = (ogg_int32_t)( abs(YUVDiffsPtr[j]) );
-	  changed_locals = ChLocalsPtr[j];
+        if ( PixelMapPtr[j] ){
+          AbsDiff = (ogg_int32_t)( abs(YUVDiffsPtr[j]) );
+          changed_locals = ChLocalsPtr[j];
 
-	  /* Give this pixel a score based on changed locals and level
+          /* Give this pixel a score based on changed locals and level
              of its own change. */
-	  Score = (1 + ((ogg_int32_t)(changed_locals +
-				      ppi->NoiseScoreBoostTable[AbsDiff]) -
-			ppi->NoiseSupLevel));
+          Score = (1 + ((ogg_int32_t)(changed_locals +
+                                      ppi->NoiseScoreBoostTable[AbsDiff]) -
+                        ppi->NoiseSupLevel));
 
-	  /* For no zero scores adjust by a level based score multiplier. */
-	  if ( Score > 0 ){
-	    Score = ((double)Score *
-		     ppi->AbsDiff_ScoreMultiplierTable[AbsDiff] );
-	    if ( Score < 1 )
-	      Score = 1;
-	  }else{
-	    /* Set -ve values to 0 */
-	    Score = 0;
+          /* For no zero scores adjust by a level based score multiplier. */
+          if ( Score > 0 ){
+            Score = ((double)Score *
+                     ppi->AbsDiff_ScoreMultiplierTable[AbsDiff] );
+            if ( Score < 1 )
+              Score = 1;
+          }else{
+            /* Set -ve values to 0 */
+            Score = 0;
 
-	    /* If there are no changed locals then clear the pixel
-	       changed flag and decrement the pixels changed in
-	       fragment count to speed later stages. */
-	    if ( changed_locals == 0 ){
-	      PixelMapPtr[j] = 0;
-	      *RowDiffsPtr -= 1;
-	    }
-	  }
+            /* If there are no changed locals then clear the pixel
+               changed flag and decrement the pixels changed in
+               fragment count to speed later stages. */
+            if ( changed_locals == 0 ){
+              PixelMapPtr[j] = 0;
+              *RowDiffsPtr -= 1;
+            }
+          }
 
-	  /* Update the pixel scores etc. */
-	  PixelNoiseScorePtr[j] = (unsigned char)Score;
-	  FragScore += (ogg_uint32_t)Score;
-	}
+          /* Update the pixel scores etc. */
+          PixelNoiseScorePtr[j] = (unsigned char)Score;
+          FragScore += (ogg_uint32_t)Score;
+        }
       }
 
       /* Add fragment score (with plane correction factor) into main
          data structure */
       *FragScorePtr += (ogg_int32_t)(FragScore *
-				     ppi->YUVPlaneCorrectionFactor);
+                                     ppi->YUVPlaneCorrectionFactor);
 
       /* If score is greater than trip threshold then mark blcok for update. */
       if ( *FragScorePtr > ppi->BlockThreshold ){
-	*DispFragPtr = BLOCK_CODED_LOW;
+        *DispFragPtr = BLOCK_CODED_LOW;
       }
     }
 
@@ -1176,12 +1177,12 @@ static void NoiseScoreRow( PP_INSTANCE *ppi,
 }
 
 static void PrimaryEdgeScoreRow( PP_INSTANCE *ppi,
-				 unsigned char * ChangedLocalsPtr,
-				 ogg_int16_t   * YUVDiffsPtr,
-				 unsigned char * PixelNoiseScorePtr,
-				 ogg_uint32_t  * FragScorePtr,
-				 signed char   * DispFragPtr,
-				 unsigned char   RowType ){
+                                 unsigned char * ChangedLocalsPtr,
+                                 ogg_int16_t   * YUVDiffsPtr,
+                                 unsigned char * PixelNoiseScorePtr,
+                                 ogg_uint32_t  * FragScorePtr,
+                                 signed char   * DispFragPtr,
+                                 unsigned char   RowType ){
   ogg_uint32_t     BodyNeighbours;
   ogg_uint32_t     AbsDiff;
   unsigned char    changed_locals = 0;
@@ -1218,83 +1219,83 @@ static void PrimaryEdgeScoreRow( PP_INSTANCE *ppi,
     for ( i = 0; i < ppi->PlaneWidth; i += HFRAGPIXELS ){
       /* Does the fragment contain anything interesting to work with. */
       if ( *DispFragPtr == CANDIDATE_BLOCK ){
-	/* Reset the cumulative fragment score. */
-	FragScore = 0;
+        /* Reset the cumulative fragment score. */
+        FragScore = 0;
 
-	/* Pixels grouped along the row into fragments */
-	for ( j = 0; j < HFRAGPIXELS; j++ ){
-	  /* How many changed locals has the current pixel got. */
-	  changed_locals = ChangedLocalsPtr[j];
+        /* Pixels grouped along the row into fragments */
+        for ( j = 0; j < HFRAGPIXELS; j++ ){
+          /* How many changed locals has the current pixel got. */
+          changed_locals = ChangedLocalsPtr[j];
 
-	  /* Is the pixel a suitable candidate */
-	  if ( (changed_locals > 2) && (changed_locals < 6) ){
-	    /* The pixel may qualify... have a closer look.  */
-	    BodyNeighbours = 0;
+          /* Is the pixel a suitable candidate */
+          if ( (changed_locals > 2) && (changed_locals < 6) ){
+            /* The pixel may qualify... have a closer look.  */
+            BodyNeighbours = 0;
 
-	    /* Count the number of "BodyNeighbours" .. Pixels that
-	       have 7 or more changed neighbours.  */
-	    if ( (i > 0) || (j > 0 ) ){
-	      if ( CHLocalsPtr0[0] >= 7 )
-		BodyNeighbours++;
-	      if ( CHLocalsPtr1[0] >= 7 )
-		BodyNeighbours++;
-	      if ( CHLocalsPtr2[0] >= 7 )
-		BodyNeighbours++;
-	    }
+            /* Count the number of "BodyNeighbours" .. Pixels that
+               have 7 or more changed neighbours.  */
+            if ( (i > 0) || (j > 0 ) ){
+              if ( CHLocalsPtr0[0] >= 7 )
+                BodyNeighbours++;
+              if ( CHLocalsPtr1[0] >= 7 )
+                BodyNeighbours++;
+              if ( CHLocalsPtr2[0] >= 7 )
+                BodyNeighbours++;
+            }
 
-	    if ( CHLocalsPtr0[1] >= 7 )
-	      BodyNeighbours++;
-	    if ( CHLocalsPtr2[1] >= 7 )
-	      BodyNeighbours++;
+            if ( CHLocalsPtr0[1] >= 7 )
+              BodyNeighbours++;
+            if ( CHLocalsPtr2[1] >= 7 )
+              BodyNeighbours++;
 
-	    if ( (i + j) < LastRowIndex ){
-	      if ( CHLocalsPtr0[2] >= 7 )
-		BodyNeighbours++;
-	      if ( CHLocalsPtr1[2] >= 7 )
-		BodyNeighbours++;
-	      if ( CHLocalsPtr2[2] >= 7 )
-		BodyNeighbours++;
-	    }
+            if ( (i + j) < LastRowIndex ){
+              if ( CHLocalsPtr0[2] >= 7 )
+                BodyNeighbours++;
+              if ( CHLocalsPtr1[2] >= 7 )
+                BodyNeighbours++;
+              if ( CHLocalsPtr2[2] >= 7 )
+                BodyNeighbours++;
+            }
 
-	    if ( BodyNeighbours > 0 ){
-	      AbsDiff = abs( YUVDiffsPtr[j] );
-	      Score = (ogg_int32_t)
-		( (double)(BodyNeighbours *
-			   BodyNeighbourScore) *
-		  ppi->AbsDiff_ScoreMultiplierTable[AbsDiff] );
-	      if ( Score < 1 )
-		Score = 1;
+            if ( BodyNeighbours > 0 ){
+              AbsDiff = abs( YUVDiffsPtr[j] );
+              Score = (ogg_int32_t)
+                ( (double)(BodyNeighbours *
+                           BodyNeighbourScore) *
+                  ppi->AbsDiff_ScoreMultiplierTable[AbsDiff] );
+              if ( Score < 1 )
+                Score = 1;
 
-	      /* Increment the score by a value determined by the
+              /* Increment the score by a value determined by the
                  number of body neighbours. */
-	      PixelNoiseScorePtr[j] += (unsigned char)Score;
-	      FragScore += (ogg_uint32_t)Score;
-	    }
-	  }
+              PixelNoiseScorePtr[j] += (unsigned char)Score;
+              FragScore += (ogg_uint32_t)Score;
+            }
+          }
 
-	  /* Increment pointers into changed locals buffer */
-	  CHLocalsPtr0 ++;
-	  CHLocalsPtr1 ++;
-	  CHLocalsPtr2 ++;
-	}
+          /* Increment pointers into changed locals buffer */
+          CHLocalsPtr0 ++;
+          CHLocalsPtr1 ++;
+          CHLocalsPtr2 ++;
+        }
 
-	/* Add fragment score (with plane correction factor) into main
+        /* Add fragment score (with plane correction factor) into main
            data structure */
-	*FragScorePtr += (ogg_int32_t)(FragScore *
-				       ppi->YUVPlaneCorrectionFactor);
+        *FragScorePtr += (ogg_int32_t)(FragScore *
+                                       ppi->YUVPlaneCorrectionFactor);
 
-	/* If score is greater than trip threshold then mark blcok for
+        /* If score is greater than trip threshold then mark blcok for
            update. */
-	if ( *FragScorePtr > ppi->BlockThreshold ){
-	  *DispFragPtr = BLOCK_CODED_LOW;
-	}
+        if ( *FragScorePtr > ppi->BlockThreshold ){
+          *DispFragPtr = BLOCK_CODED_LOW;
+        }
 
       }else{
-	/* Nothing to do for this fragment group */
-	/* Advance pointers into changed locals buffer */
-	CHLocalsPtr0 += HFRAGPIXELS;
-	CHLocalsPtr1 += HFRAGPIXELS;
-	CHLocalsPtr2 += HFRAGPIXELS;
+        /* Nothing to do for this fragment group */
+        /* Advance pointers into changed locals buffer */
+        CHLocalsPtr0 += HFRAGPIXELS;
+        CHLocalsPtr1 += HFRAGPIXELS;
+        CHLocalsPtr2 += HFRAGPIXELS;
       }
 
       /* Increment the various pointers */
@@ -1310,102 +1311,102 @@ static void PrimaryEdgeScoreRow( PP_INSTANCE *ppi,
     for ( i = 0; i < ppi->PlaneWidth; i += HFRAGPIXELS ){
       /* Does the fragment contain anything interesting to work with. */
       if ( *DispFragPtr == CANDIDATE_BLOCK ){
-	/* Reset the cumulative fragment score. */
-	FragScore = 0;
+        /* Reset the cumulative fragment score. */
+        FragScore = 0;
 
-	/* Pixels grouped along the row into fragments */
-	for ( j = 0; j < HFRAGPIXELS; j++ ){
-	  /* How many changed locals has the current pixel got. */
-	  changed_locals = ChangedLocalsPtr[j];
+        /* Pixels grouped along the row into fragments */
+        for ( j = 0; j < HFRAGPIXELS; j++ ){
+          /* How many changed locals has the current pixel got. */
+          changed_locals = ChangedLocalsPtr[j];
 
-	  /* Is the pixel a suitable candidate */
-	  if ( (changed_locals > 2) && (changed_locals < 6) ){
-	    /* The pixel may qualify... have a closer look. */
-	    BodyNeighbours = 0;
+          /* Is the pixel a suitable candidate */
+          if ( (changed_locals > 2) && (changed_locals < 6) ){
+            /* The pixel may qualify... have a closer look. */
+            BodyNeighbours = 0;
 
-	    /* Count the number of "BodyNeighbours" .. Pixels
-	       that have 7 or more changed neighbours. */
-	    if ( RowType == LAST_ROW ){
-	      /* Test for cases where it could be the first pixel on
+            /* Count the number of "BodyNeighbours" .. Pixels
+               that have 7 or more changed neighbours. */
+            if ( RowType == LAST_ROW ){
+              /* Test for cases where it could be the first pixel on
                  the line */
-	      if ( (i > 0) || (j > 0) ){
-		if ( CHLocalsPtr0[0] >= 7 )
-		  BodyNeighbours++;
-		if ( CHLocalsPtr1[0] >= 7 )
-		  BodyNeighbours++;
-	      }
+              if ( (i > 0) || (j > 0) ){
+                if ( CHLocalsPtr0[0] >= 7 )
+                  BodyNeighbours++;
+                if ( CHLocalsPtr1[0] >= 7 )
+                  BodyNeighbours++;
+              }
 
-	      if ( CHLocalsPtr0[1] >= 7 )
-		BodyNeighbours++;
+              if ( CHLocalsPtr0[1] >= 7 )
+                BodyNeighbours++;
 
               /* Test for the end of line case */
-	      if ( (i + j) < LastRowIndex ){
-		if ( CHLocalsPtr0[2] >= 7 )
-		  BodyNeighbours++;
+              if ( (i + j) < LastRowIndex ){
+                if ( CHLocalsPtr0[2] >= 7 )
+                  BodyNeighbours++;
 
-		if ( CHLocalsPtr1[2] >= 7 )
-		  BodyNeighbours++;
-	      }
-	    }else{
-	      /* First Row */
-	      /* Test for cases where it could be the first pixel on
+                if ( CHLocalsPtr1[2] >= 7 )
+                  BodyNeighbours++;
+              }
+            }else{
+              /* First Row */
+              /* Test for cases where it could be the first pixel on
                  the line */
-	      if ( (i > 0) || (j > 0) ){
-		if ( CHLocalsPtr1[0] >= 7 )
-		  BodyNeighbours++;
-		if ( CHLocalsPtr2[0] >= 7 )
-		  BodyNeighbours++;
-	      }
+              if ( (i > 0) || (j > 0) ){
+                if ( CHLocalsPtr1[0] >= 7 )
+                  BodyNeighbours++;
+                if ( CHLocalsPtr2[0] >= 7 )
+                  BodyNeighbours++;
+              }
 
-	      /* Test for the end of line case */
-	      if ( CHLocalsPtr2[1] >= 7 )
-		BodyNeighbours++;
+              /* Test for the end of line case */
+              if ( CHLocalsPtr2[1] >= 7 )
+                BodyNeighbours++;
 
-	      if ( (i + j) < LastRowIndex ){
-		if ( CHLocalsPtr1[2] >= 7 )
-		  BodyNeighbours++;
-		if ( CHLocalsPtr2[2] >= 7 )
-		  BodyNeighbours++;
-	      }
-	    }
+              if ( (i + j) < LastRowIndex ){
+                if ( CHLocalsPtr1[2] >= 7 )
+                  BodyNeighbours++;
+                if ( CHLocalsPtr2[2] >= 7 )
+                  BodyNeighbours++;
+              }
+            }
 
-	    /* Allocate a score according to the number of Body neighbours. */
-	    if ( BodyNeighbours > 0 ){
-	      AbsDiff = abs( YUVDiffsPtr[j] );
-	      Score = (ogg_int32_t)
-		( (double)(BodyNeighbours * BodyNeighbourScore) *
-		  ppi->AbsDiff_ScoreMultiplierTable[AbsDiff] );
-	      if ( Score < 1 )
-		Score = 1;
+            /* Allocate a score according to the number of Body neighbours. */
+            if ( BodyNeighbours > 0 ){
+              AbsDiff = abs( YUVDiffsPtr[j] );
+              Score = (ogg_int32_t)
+                ( (double)(BodyNeighbours * BodyNeighbourScore) *
+                  ppi->AbsDiff_ScoreMultiplierTable[AbsDiff] );
+              if ( Score < 1 )
+                Score = 1;
 
-	      PixelNoiseScorePtr[j] += (unsigned char)Score;
-	      FragScore += (ogg_uint32_t)Score;
-	    }
-	  }
+              PixelNoiseScorePtr[j] += (unsigned char)Score;
+              FragScore += (ogg_uint32_t)Score;
+            }
+          }
 
-	  /* Increment pointers into changed locals buffer */
-	  CHLocalsPtr0 ++;
-	  CHLocalsPtr1 ++;
-	  CHLocalsPtr2 ++;
-	}
+          /* Increment pointers into changed locals buffer */
+          CHLocalsPtr0 ++;
+          CHLocalsPtr1 ++;
+          CHLocalsPtr2 ++;
+        }
 
-	/* Add fragment score (with plane correction factor) into main
+        /* Add fragment score (with plane correction factor) into main
            data structure */
-	*FragScorePtr +=
-	  (ogg_int32_t)(FragScore * ppi->YUVPlaneCorrectionFactor);
+        *FragScorePtr +=
+          (ogg_int32_t)(FragScore * ppi->YUVPlaneCorrectionFactor);
 
-	/* If score is greater than trip threshold then mark blcok for
+        /* If score is greater than trip threshold then mark blcok for
            update. */
-	if ( *FragScorePtr > ppi->BlockThreshold ){
-	  *DispFragPtr = BLOCK_CODED_LOW;
-	}
+        if ( *FragScorePtr > ppi->BlockThreshold ){
+          *DispFragPtr = BLOCK_CODED_LOW;
+        }
 
       }else{
-	/* Nothing to do for this fragment group */
-	/* Advance pointers into changed locals buffer */
-	CHLocalsPtr0 += HFRAGPIXELS;
-	CHLocalsPtr1 += HFRAGPIXELS;
-	CHLocalsPtr2 += HFRAGPIXELS;
+        /* Nothing to do for this fragment group */
+        /* Advance pointers into changed locals buffer */
+        CHLocalsPtr0 += HFRAGPIXELS;
+        CHLocalsPtr1 += HFRAGPIXELS;
+        CHLocalsPtr2 += HFRAGPIXELS;
       }
 
       /* Increment the various pointers */
@@ -1419,19 +1420,19 @@ static void PrimaryEdgeScoreRow( PP_INSTANCE *ppi,
 }
 
 static void PixelLineSearch( PP_INSTANCE *ppi,
-			     unsigned char * ChangedLocalsPtr,
-			     ogg_int32_t RowNumber,
-			     ogg_int32_t ColNumber,
-			     unsigned char direction,
-			     ogg_uint32_t * line_length ){
+                             unsigned char * ChangedLocalsPtr,
+                             ogg_int32_t RowNumber,
+                             ogg_int32_t ColNumber,
+                             unsigned char direction,
+                             ogg_uint32_t * line_length ){
   /* Exit if the pixel does not qualify or we have fallen off the edge
      of either the image plane or the row. */
-  if ( ((*ChangedLocalsPtr) <= 1) ||
-       ((*ChangedLocalsPtr) >= 6) ||
-       (RowNumber < 0) ||
+  if ( (RowNumber < 0) ||
        (RowNumber >= ppi->PlaneHeight) ||
        (ColNumber < 0) ||
-       (ColNumber >= ppi->PlaneWidth) ){
+       (ColNumber >= ppi->PlaneWidth) ||
+       ((*ChangedLocalsPtr) <= 1) ||
+       ((*ChangedLocalsPtr) >= 6) ){
     /* If not then it isn't part of any line. */
     return;
   }
@@ -1452,117 +1453,117 @@ static void PixelLineSearch( PP_INSTANCE *ppi,
 
       search_ptr = ChangedLocalsPtr - ppi->PlaneWidth;
       if ( search_ptr < ppi->ChLocals )
-	search_ptr += ppi->ChLocalsCircularBufferSize;
+        search_ptr += ppi->ChLocalsCircularBufferSize;
 
       PixelLineSearch( ppi, search_ptr, RowNumber - 1, ColNumber,
-		       direction, &TmpLineLength );
+                       direction, &TmpLineLength );
 
       if ( TmpLineLength > BestLineLength )
-	BestLineLength = TmpLineLength;
+        BestLineLength = TmpLineLength;
     }
 
     /* up and left */
     if ( (BestLineLength < ppi->MaxLineSearchLen) &&
-	 ((direction == UP) || (direction == LEFT)) ){
+         ((direction == UP) || (direction == LEFT)) ){
       TmpLineLength = *line_length;
 
       search_ptr = ChangedLocalsPtr - ppi->PlaneWidth;
       if ( search_ptr < ppi->ChLocals )
-	search_ptr += ppi->ChLocalsCircularBufferSize;
+        search_ptr += ppi->ChLocalsCircularBufferSize;
       search_ptr -= 1;
 
       PixelLineSearch( ppi, search_ptr, RowNumber - 1, ColNumber - 1,
-		       direction,  &TmpLineLength );
+                       direction,  &TmpLineLength );
 
       if ( TmpLineLength > BestLineLength )
-	BestLineLength = TmpLineLength;
+        BestLineLength = TmpLineLength;
     }
 
     /* up and right */
     if ( (BestLineLength < ppi->MaxLineSearchLen) &&
-	 ((direction == UP) || (direction == RIGHT)) ){
+         ((direction == UP) || (direction == RIGHT)) ){
       TmpLineLength = *line_length;
 
       search_ptr = ChangedLocalsPtr - ppi->PlaneWidth;
       if ( search_ptr < ppi->ChLocals )
-	search_ptr += ppi->ChLocalsCircularBufferSize;
+        search_ptr += ppi->ChLocalsCircularBufferSize;
       search_ptr += 1;
 
       PixelLineSearch( ppi, search_ptr, RowNumber - 1, ColNumber + 1,
-		       direction, &TmpLineLength );
+                       direction, &TmpLineLength );
 
       if ( TmpLineLength > BestLineLength )
-	BestLineLength = TmpLineLength;
+        BestLineLength = TmpLineLength;
     }
 
     /* left */
     if ( (BestLineLength < ppi->MaxLineSearchLen) && ( direction == LEFT ) ){
       TmpLineLength = *line_length;
       PixelLineSearch( ppi, ChangedLocalsPtr - 1, RowNumber, ColNumber - 1,
-		       direction, &TmpLineLength );
+                       direction, &TmpLineLength );
 
       if ( TmpLineLength > BestLineLength )
-	BestLineLength = TmpLineLength;
+        BestLineLength = TmpLineLength;
     }
 
     /* right */
     if ( (BestLineLength < ppi->MaxLineSearchLen) && ( direction == RIGHT ) ){
       TmpLineLength = *line_length;
       PixelLineSearch( ppi, ChangedLocalsPtr + 1, RowNumber, ColNumber + 1,
-		       direction, &TmpLineLength );
+                       direction, &TmpLineLength );
 
       if ( TmpLineLength > BestLineLength )
-	BestLineLength = TmpLineLength;
+        BestLineLength = TmpLineLength;
     }
 
     /* Down */
     if ( BestLineLength < ppi->MaxLineSearchLen ){
       TmpLineLength = *line_length;
       if ( direction == DOWN ){
-	search_ptr = ChangedLocalsPtr + ppi->PlaneWidth;
-	if ( search_ptr >= (ppi->ChLocals + ppi->ChLocalsCircularBufferSize) )
-	  search_ptr -= ppi->ChLocalsCircularBufferSize;
+        search_ptr = ChangedLocalsPtr + ppi->PlaneWidth;
+        if ( search_ptr >= (ppi->ChLocals + ppi->ChLocalsCircularBufferSize) )
+          search_ptr -= ppi->ChLocalsCircularBufferSize;
 
-	PixelLineSearch( ppi, search_ptr, RowNumber + 1, ColNumber, direction,
-			 &TmpLineLength );
+        PixelLineSearch( ppi, search_ptr, RowNumber + 1, ColNumber, direction,
+                         &TmpLineLength );
 
-	if ( TmpLineLength > BestLineLength )
-	  BestLineLength = TmpLineLength;
+        if ( TmpLineLength > BestLineLength )
+          BestLineLength = TmpLineLength;
       }
 
 
       /* down and left */
       if ( (BestLineLength < ppi->MaxLineSearchLen) &&
-	   ((direction == DOWN) || (direction == LEFT)) ){
-	TmpLineLength = *line_length;
+           ((direction == DOWN) || (direction == LEFT)) ){
+        TmpLineLength = *line_length;
 
-	search_ptr = ChangedLocalsPtr + ppi->PlaneWidth;
-	if ( search_ptr >= (ppi->ChLocals + ppi->ChLocalsCircularBufferSize) )
-	  search_ptr -= ppi->ChLocalsCircularBufferSize;
-	search_ptr -= 1;
+        search_ptr = ChangedLocalsPtr + ppi->PlaneWidth;
+        if ( search_ptr >= (ppi->ChLocals + ppi->ChLocalsCircularBufferSize) )
+          search_ptr -= ppi->ChLocalsCircularBufferSize;
+        search_ptr -= 1;
 
-	PixelLineSearch( ppi, search_ptr, RowNumber + 1, ColNumber - 1,
-			 direction, &TmpLineLength );
+        PixelLineSearch( ppi, search_ptr, RowNumber + 1, ColNumber - 1,
+                         direction, &TmpLineLength );
 
-	if ( TmpLineLength > BestLineLength )
-	  BestLineLength = TmpLineLength;
+        if ( TmpLineLength > BestLineLength )
+          BestLineLength = TmpLineLength;
       }
 
       /* down and right */
       if ( (BestLineLength < ppi->MaxLineSearchLen) &&
-	   ((direction == DOWN) || (direction == RIGHT)) ){
-	TmpLineLength = *line_length;
+           ((direction == DOWN) || (direction == RIGHT)) ){
+        TmpLineLength = *line_length;
 
-	search_ptr = ChangedLocalsPtr + ppi->PlaneWidth;
-	if ( search_ptr >= (ppi->ChLocals + ppi->ChLocalsCircularBufferSize) )
-	  search_ptr -= ppi->ChLocalsCircularBufferSize;
-	search_ptr += 1;
+        search_ptr = ChangedLocalsPtr + ppi->PlaneWidth;
+        if ( search_ptr >= (ppi->ChLocals + ppi->ChLocalsCircularBufferSize) )
+          search_ptr -= ppi->ChLocalsCircularBufferSize;
+        search_ptr += 1;
 
-	PixelLineSearch( ppi, search_ptr, RowNumber + 1, ColNumber + 1,
-			 direction, &TmpLineLength );
+        PixelLineSearch( ppi, search_ptr, RowNumber + 1, ColNumber + 1,
+                         direction, &TmpLineLength );
 
-	if ( TmpLineLength > BestLineLength )
-	  BestLineLength = TmpLineLength;
+        if ( TmpLineLength > BestLineLength )
+          BestLineLength = TmpLineLength;
       }
     }
 
@@ -1572,9 +1573,9 @@ static void PixelLineSearch( PP_INSTANCE *ppi,
 }
 
 static unsigned char LineSearchScorePixel( PP_INSTANCE *ppi,
-					   unsigned char * ChangedLocalsPtr,
-					   ogg_int32_t RowNumber,
-					   ogg_int32_t ColNumber ){
+                                           unsigned char * ChangedLocalsPtr,
+                                           ogg_int32_t RowNumber,
+                                           ogg_int32_t ColNumber ){
     ogg_uint32_t line_length = 0;
     ogg_uint32_t line_length2 = 0;
     ogg_uint32_t line_length_score = 0;
@@ -1583,16 +1584,16 @@ static unsigned char LineSearchScorePixel( PP_INSTANCE *ppi,
 
     /* Look UP and Down */
     PixelLineSearch( ppi, ChangedLocalsPtr, RowNumber,
-		     ColNumber, UP, &tmp_line_length );
+                     ColNumber, UP, &tmp_line_length );
 
     if (tmp_line_length < ppi->MaxLineSearchLen) {
       /* Look DOWN */
       PixelLineSearch( ppi, ChangedLocalsPtr, RowNumber,
-		       ColNumber, DOWN, &tmp_line_length2 );
+                       ColNumber, DOWN, &tmp_line_length2 );
       line_length = tmp_line_length + tmp_line_length2 - 1;
 
       if ( line_length > ppi->MaxLineSearchLen )
-	line_length = ppi->MaxLineSearchLen;
+        line_length = ppi->MaxLineSearchLen;
     }else
       line_length = tmp_line_length;
 
@@ -1602,16 +1603,16 @@ static unsigned char LineSearchScorePixel( PP_INSTANCE *ppi,
       tmp_line_length2 = 0;
 
       PixelLineSearch( ppi, ChangedLocalsPtr, RowNumber,
-		       ColNumber, LEFT,  &tmp_line_length );
+                       ColNumber, LEFT,  &tmp_line_length );
       if (tmp_line_length < ppi->MaxLineSearchLen){
-	PixelLineSearch( ppi, ChangedLocalsPtr, RowNumber,
-			 ColNumber, RIGHT,  &tmp_line_length2 );
-	line_length2 = tmp_line_length + tmp_line_length2 - 1;
+        PixelLineSearch( ppi, ChangedLocalsPtr, RowNumber,
+                         ColNumber, RIGHT,  &tmp_line_length2 );
+        line_length2 = tmp_line_length + tmp_line_length2 - 1;
 
-	if ( line_length2 > ppi->MaxLineSearchLen )
-	  line_length2 = ppi->MaxLineSearchLen;
+        if ( line_length2 > ppi->MaxLineSearchLen )
+          line_length2 = ppi->MaxLineSearchLen;
       }else
-	line_length2 = tmp_line_length;
+        line_length2 = tmp_line_length;
 
     }
 
@@ -1626,12 +1627,12 @@ static unsigned char LineSearchScorePixel( PP_INSTANCE *ppi,
 }
 
 static void LineSearchScoreRow( PP_INSTANCE *ppi,
-				unsigned char * ChangedLocalsPtr,
-				ogg_int16_t   * YUVDiffsPtr,
-				unsigned char * PixelNoiseScorePtr,
-				ogg_uint32_t  * FragScorePtr,
-				signed char   * DispFragPtr,
-				ogg_int32_t     RowNumber ){
+                                unsigned char * ChangedLocalsPtr,
+                                ogg_int16_t   * YUVDiffsPtr,
+                                unsigned char * PixelNoiseScorePtr,
+                                ogg_uint32_t  * FragScorePtr,
+                                signed char   * DispFragPtr,
+                                ogg_int32_t     RowNumber ){
   ogg_uint32_t AbsDiff;
   unsigned char  changed_locals = 0;
   ogg_int32_t  Score;
@@ -1652,36 +1653,36 @@ static void LineSearchScoreRow( PP_INSTANCE *ppi,
 
       /* Pixels grouped along the row into fragments */
       for ( j = 0; j < HFRAGPIXELS; j++ ){
-	/* How many changed locals has the current pixel got. */
-	changed_locals = ChangedLocalsPtr[j];
+        /* How many changed locals has the current pixel got. */
+        changed_locals = ChangedLocalsPtr[j];
 
-	/* Is the pixel a suitable candidate for edge enhancement */
-	if ( (changed_locals > 1) && (changed_locals < 6) &&
-	     (PixelNoiseScorePtr[j] < ppi->LineSearchTripTresh) ) {
-	  Score = (ogg_int32_t)
-	    LineSearchScorePixel( ppi, &ChangedLocalsPtr[j], RowNumber, i+j );
+        /* Is the pixel a suitable candidate for edge enhancement */
+        if ( (changed_locals > 1) && (changed_locals < 6) &&
+             (PixelNoiseScorePtr[j] < ppi->LineSearchTripTresh) ) {
+          Score = (ogg_int32_t)
+            LineSearchScorePixel( ppi, &ChangedLocalsPtr[j], RowNumber, i+j );
 
-	  if ( Score ){
-	    AbsDiff = abs( YUVDiffsPtr[j] );
-	    Score = (ogg_int32_t)
-	      ( (double)Score * ppi->AbsDiff_ScoreMultiplierTable[AbsDiff] );
-	    if ( Score < 1 )
-	      Score = 1;
+          if ( Score ){
+            AbsDiff = abs( YUVDiffsPtr[j] );
+            Score = (ogg_int32_t)
+              ( (double)Score * ppi->AbsDiff_ScoreMultiplierTable[AbsDiff] );
+            if ( Score < 1 )
+              Score = 1;
 
-	    PixelNoiseScorePtr[j] += (unsigned char)Score;
-	    FragScore += (ogg_uint32_t)Score;
-	  }
-	}
+            PixelNoiseScorePtr[j] += (unsigned char)Score;
+            FragScore += (ogg_uint32_t)Score;
+          }
+        }
       }
 
       /* Add fragment score (with plane correction factor) into main
          data structure */
       *FragScorePtr +=
-	(ogg_int32_t)(FragScore * ppi->YUVPlaneCorrectionFactor);
+        (ogg_int32_t)(FragScore * ppi->YUVPlaneCorrectionFactor);
 
       /* If score is greater than trip threshold then mark blcok for update. */
       if ( *FragScorePtr > ppi->BlockThreshold ){
-	*DispFragPtr = BLOCK_CODED_LOW;
+        *DispFragPtr = BLOCK_CODED_LOW;
       }
     }
 
@@ -1711,19 +1712,19 @@ static void RowCopy( PP_INSTANCE *ppi, ogg_uint32_t BlockMapIndex ){
     /* If the fragement is marked for update or was recently marked
        for update (PrevFragmentsPtr[i]) */
     if ( (BlockMapPtr[i] > BLOCK_NOT_CODED) ||
-	 (PrevFragmentsPtr[i] == BLOCK_CODED) ){
+         (PrevFragmentsPtr[i] == BLOCK_CODED) ){
       /* Set up the various pointers required. */
       SourcePtr = &ppi->ScanConfig.Yuv1ptr[PixelIndex];
       DestPtr = &ppi->ScanConfig.SrfWorkSpcPtr[PixelIndex];
 
       /* For each row of the block */
       for ( j = 0; j < VFRAGPIXELS; j++ ){
-	/* Copy the data unaltered from source to destination */
-	memcpy(DestPtr,SourcePtr,8);
+        /* Copy the data unaltered from source to destination */
+        memcpy(DestPtr,SourcePtr,8);
 
-	/* Increment pointers for next line in the block */
-	SourcePtr += ppi->PlaneWidth;
-	DestPtr += ppi->PlaneWidth;
+        /* Increment pointers for next line in the block */
+        SourcePtr += ppi->PlaneWidth;
+        DestPtr += ppi->PlaneWidth;
       }
     }
 
@@ -1733,9 +1734,9 @@ static void RowCopy( PP_INSTANCE *ppi, ogg_uint32_t BlockMapIndex ){
 }
 
 static void RowBarEnhBlockMap( PP_INSTANCE *ppi,
-			       signed char   * UpdatedBlockMapPtr,
-			       signed char   * BarBlockMapPtr,
-			       ogg_uint32_t RowNumber ){
+                               signed char   * UpdatedBlockMapPtr,
+                               signed char   * BarBlockMapPtr,
+                               ogg_uint32_t RowNumber ){
   int i;
 
   /* Start by blanking the row in the bar block map structure. */
@@ -1747,33 +1748,33 @@ static void RowBarEnhBlockMap( PP_INSTANCE *ppi,
     /* For each fragment in the row. */
     for ( i = 0; i < ppi->PlaneHFragments; i ++ ){
       /* Test for CANDIDATE_BLOCK or CANDIDATE_BLOCK_LOW. Uncoded or
-	 coded blocks will be ignored. */
+         coded blocks will be ignored. */
       if ( UpdatedBlockMapPtr[i] <= CANDIDATE_BLOCK ){
-	/* Is one of the immediate neighbours updated in the main map. */
-	/* Note special cases for blocks at the start and end of rows. */
-	if ( i == 0 ){
+        /* Is one of the immediate neighbours updated in the main map. */
+        /* Note special cases for blocks at the start and end of rows. */
+        if ( i == 0 ){
 
-	  if ((UpdatedBlockMapPtr[i+1] > BLOCK_NOT_CODED ) ||
-	      (UpdatedBlockMapPtr[i+ppi->PlaneHFragments]>BLOCK_NOT_CODED ) ||
-	      (UpdatedBlockMapPtr[i+ppi->PlaneHFragments+1]>BLOCK_NOT_CODED ) )
-	    BarBlockMapPtr[i] = BLOCK_CODED_BAR;
+          if ((UpdatedBlockMapPtr[i+1] > BLOCK_NOT_CODED ) ||
+              (UpdatedBlockMapPtr[i+ppi->PlaneHFragments]>BLOCK_NOT_CODED ) ||
+              (UpdatedBlockMapPtr[i+ppi->PlaneHFragments+1]>BLOCK_NOT_CODED ) )
+            BarBlockMapPtr[i] = BLOCK_CODED_BAR;
 
 
-	}else if ( i == (ppi->PlaneHFragments - 1) ){
+        }else if ( i == (ppi->PlaneHFragments - 1) ){
 
-	  if ((UpdatedBlockMapPtr[i-1] > BLOCK_NOT_CODED ) ||
-	      (UpdatedBlockMapPtr[i+ppi->PlaneHFragments-1]>BLOCK_NOT_CODED) ||
-	       (UpdatedBlockMapPtr[i+ppi->PlaneHFragments]>BLOCK_NOT_CODED) )
-	      BarBlockMapPtr[i] = BLOCK_CODED_BAR;
+          if ((UpdatedBlockMapPtr[i-1] > BLOCK_NOT_CODED ) ||
+              (UpdatedBlockMapPtr[i+ppi->PlaneHFragments-1]>BLOCK_NOT_CODED) ||
+               (UpdatedBlockMapPtr[i+ppi->PlaneHFragments]>BLOCK_NOT_CODED) )
+              BarBlockMapPtr[i] = BLOCK_CODED_BAR;
 
-	}else{
-	  if((UpdatedBlockMapPtr[i-1] > BLOCK_NOT_CODED ) ||
-	     (UpdatedBlockMapPtr[i+1] > BLOCK_NOT_CODED ) ||
-	     (UpdatedBlockMapPtr[i+ppi->PlaneHFragments-1] > BLOCK_NOT_CODED)||
-	     (UpdatedBlockMapPtr[i+ppi->PlaneHFragments] > BLOCK_NOT_CODED ) ||
-	     (UpdatedBlockMapPtr[i+ppi->PlaneHFragments+1] > BLOCK_NOT_CODED) )
-	      BarBlockMapPtr[i] = BLOCK_CODED_BAR;
-	}
+        }else{
+          if((UpdatedBlockMapPtr[i-1] > BLOCK_NOT_CODED ) ||
+             (UpdatedBlockMapPtr[i+1] > BLOCK_NOT_CODED ) ||
+             (UpdatedBlockMapPtr[i+ppi->PlaneHFragments-1] > BLOCK_NOT_CODED)||
+             (UpdatedBlockMapPtr[i+ppi->PlaneHFragments] > BLOCK_NOT_CODED ) ||
+             (UpdatedBlockMapPtr[i+ppi->PlaneHFragments+1] > BLOCK_NOT_CODED) )
+              BarBlockMapPtr[i] = BLOCK_CODED_BAR;
+        }
       }
     }
 
@@ -1785,29 +1786,29 @@ static void RowBarEnhBlockMap( PP_INSTANCE *ppi,
     /* For each fragment in the row. */
     for ( i = 0; i < ppi->PlaneHFragments; i ++ ){
       /* Test for CANDIDATE_BLOCK or CANDIDATE_BLOCK_LOW
-	 Uncoded or coded blocks will be ignored. */
+         Uncoded or coded blocks will be ignored. */
       if ( UpdatedBlockMapPtr[i] <= CANDIDATE_BLOCK ){
-	/* Is one of the immediate neighbours updated in the main map. */
-	/* Note special cases for blocks at the start and end of rows. */
-	if ( i == 0 ){
-	  if((UpdatedBlockMapPtr[i+1] > BLOCK_NOT_CODED ) ||
-	     (UpdatedBlockMapPtr[i-ppi->PlaneHFragments] > BLOCK_NOT_CODED ) ||
-	     (UpdatedBlockMapPtr[i-ppi->PlaneHFragments+1] > BLOCK_NOT_CODED ))
-	    BarBlockMapPtr[i] = BLOCK_CODED_BAR;
+        /* Is one of the immediate neighbours updated in the main map. */
+        /* Note special cases for blocks at the start and end of rows. */
+        if ( i == 0 ){
+          if((UpdatedBlockMapPtr[i+1] > BLOCK_NOT_CODED ) ||
+             (UpdatedBlockMapPtr[i-ppi->PlaneHFragments] > BLOCK_NOT_CODED ) ||
+             (UpdatedBlockMapPtr[i-ppi->PlaneHFragments+1] > BLOCK_NOT_CODED ))
+            BarBlockMapPtr[i] = BLOCK_CODED_BAR;
 
-	}else if ( i == (ppi->PlaneHFragments - 1) ){
-	  if((UpdatedBlockMapPtr[i-1] > BLOCK_NOT_CODED ) ||
-	     (UpdatedBlockMapPtr[i-ppi->PlaneHFragments-1] > BLOCK_NOT_CODED)||
-	     (UpdatedBlockMapPtr[i-ppi->PlaneHFragments] > BLOCK_NOT_CODED ) )
-	    BarBlockMapPtr[i] = BLOCK_CODED_BAR;
-	}else{
-	  if((UpdatedBlockMapPtr[i-1] > BLOCK_NOT_CODED ) ||
-	     (UpdatedBlockMapPtr[i+1] > BLOCK_NOT_CODED ) ||
-	     (UpdatedBlockMapPtr[i-ppi->PlaneHFragments-1] > BLOCK_NOT_CODED)||
-	     (UpdatedBlockMapPtr[i-ppi->PlaneHFragments] > BLOCK_NOT_CODED ) ||
-	     (UpdatedBlockMapPtr[i-ppi->PlaneHFragments+1] > BLOCK_NOT_CODED) )
-	    BarBlockMapPtr[i] = BLOCK_CODED_BAR;
-	}
+        }else if ( i == (ppi->PlaneHFragments - 1) ){
+          if((UpdatedBlockMapPtr[i-1] > BLOCK_NOT_CODED ) ||
+             (UpdatedBlockMapPtr[i-ppi->PlaneHFragments-1] > BLOCK_NOT_CODED)||
+             (UpdatedBlockMapPtr[i-ppi->PlaneHFragments] > BLOCK_NOT_CODED ) )
+            BarBlockMapPtr[i] = BLOCK_CODED_BAR;
+        }else{
+          if((UpdatedBlockMapPtr[i-1] > BLOCK_NOT_CODED ) ||
+             (UpdatedBlockMapPtr[i+1] > BLOCK_NOT_CODED ) ||
+             (UpdatedBlockMapPtr[i-ppi->PlaneHFragments-1] > BLOCK_NOT_CODED)||
+             (UpdatedBlockMapPtr[i-ppi->PlaneHFragments] > BLOCK_NOT_CODED ) ||
+             (UpdatedBlockMapPtr[i-ppi->PlaneHFragments+1] > BLOCK_NOT_CODED) )
+            BarBlockMapPtr[i] = BLOCK_CODED_BAR;
+        }
       }
     }
 
@@ -1818,45 +1819,45 @@ static void RowBarEnhBlockMap( PP_INSTANCE *ppi,
       /* Test for CANDIDATE_BLOCK or CANDIDATE_BLOCK_LOW */
       /* Uncoded or coded blocks will be ignored. */
       if ( UpdatedBlockMapPtr[i] <= CANDIDATE_BLOCK ){
-	/* Is one of the immediate neighbours updated in the main map. */
-	/* Note special cases for blocks at the start and end of rows. */
-	if ( i == 0 ){
+        /* Is one of the immediate neighbours updated in the main map. */
+        /* Note special cases for blocks at the start and end of rows. */
+        if ( i == 0 ){
 
-	  if((UpdatedBlockMapPtr[i+1] > BLOCK_NOT_CODED ) ||
-	     (UpdatedBlockMapPtr[i-ppi->PlaneHFragments] > BLOCK_NOT_CODED ) ||
-	     (UpdatedBlockMapPtr[i-ppi->PlaneHFragments+1] > BLOCK_NOT_CODED)||
-	     (UpdatedBlockMapPtr[i+ppi->PlaneHFragments] > BLOCK_NOT_CODED ) ||
-	     (UpdatedBlockMapPtr[i+ppi->PlaneHFragments+1] > BLOCK_NOT_CODED) )
-	    BarBlockMapPtr[i] = BLOCK_CODED_BAR;
+          if((UpdatedBlockMapPtr[i+1] > BLOCK_NOT_CODED ) ||
+             (UpdatedBlockMapPtr[i-ppi->PlaneHFragments] > BLOCK_NOT_CODED ) ||
+             (UpdatedBlockMapPtr[i-ppi->PlaneHFragments+1] > BLOCK_NOT_CODED)||
+             (UpdatedBlockMapPtr[i+ppi->PlaneHFragments] > BLOCK_NOT_CODED ) ||
+             (UpdatedBlockMapPtr[i+ppi->PlaneHFragments+1] > BLOCK_NOT_CODED) )
+            BarBlockMapPtr[i] = BLOCK_CODED_BAR;
 
-	}else if ( i == (ppi->PlaneHFragments - 1) ){
+        }else if ( i == (ppi->PlaneHFragments - 1) ){
 
-	  if((UpdatedBlockMapPtr[i-1] > BLOCK_NOT_CODED ) ||
-	     (UpdatedBlockMapPtr[i-ppi->PlaneHFragments-1] > BLOCK_NOT_CODED)||
-	     (UpdatedBlockMapPtr[i-ppi->PlaneHFragments] > BLOCK_NOT_CODED ) ||
-	     (UpdatedBlockMapPtr[i+ppi->PlaneHFragments-1] > BLOCK_NOT_CODED)||
-	     (UpdatedBlockMapPtr[i+ppi->PlaneHFragments] > BLOCK_NOT_CODED ) )
-	    BarBlockMapPtr[i] = BLOCK_CODED_BAR;
+          if((UpdatedBlockMapPtr[i-1] > BLOCK_NOT_CODED ) ||
+             (UpdatedBlockMapPtr[i-ppi->PlaneHFragments-1] > BLOCK_NOT_CODED)||
+             (UpdatedBlockMapPtr[i-ppi->PlaneHFragments] > BLOCK_NOT_CODED ) ||
+             (UpdatedBlockMapPtr[i+ppi->PlaneHFragments-1] > BLOCK_NOT_CODED)||
+             (UpdatedBlockMapPtr[i+ppi->PlaneHFragments] > BLOCK_NOT_CODED ) )
+            BarBlockMapPtr[i] = BLOCK_CODED_BAR;
 
-	}else{
-	  if((UpdatedBlockMapPtr[i-1] > BLOCK_NOT_CODED ) ||
-	     (UpdatedBlockMapPtr[i+1] > BLOCK_NOT_CODED ) ||
-	     (UpdatedBlockMapPtr[i-ppi->PlaneHFragments-1] > BLOCK_NOT_CODED)||
-	     (UpdatedBlockMapPtr[i-ppi->PlaneHFragments] > BLOCK_NOT_CODED ) ||
-	     (UpdatedBlockMapPtr[i-ppi->PlaneHFragments+1] > BLOCK_NOT_CODED)||
-	     (UpdatedBlockMapPtr[i+ppi->PlaneHFragments-1] > BLOCK_NOT_CODED)||
-	     (UpdatedBlockMapPtr[i+ppi->PlaneHFragments] > BLOCK_NOT_CODED ) ||
-	     (UpdatedBlockMapPtr[i+ppi->PlaneHFragments+1] > BLOCK_NOT_CODED ))
-	    BarBlockMapPtr[i] = BLOCK_CODED_BAR;
-	}
+        }else{
+          if((UpdatedBlockMapPtr[i-1] > BLOCK_NOT_CODED ) ||
+             (UpdatedBlockMapPtr[i+1] > BLOCK_NOT_CODED ) ||
+             (UpdatedBlockMapPtr[i-ppi->PlaneHFragments-1] > BLOCK_NOT_CODED)||
+             (UpdatedBlockMapPtr[i-ppi->PlaneHFragments] > BLOCK_NOT_CODED ) ||
+             (UpdatedBlockMapPtr[i-ppi->PlaneHFragments+1] > BLOCK_NOT_CODED)||
+             (UpdatedBlockMapPtr[i+ppi->PlaneHFragments-1] > BLOCK_NOT_CODED)||
+             (UpdatedBlockMapPtr[i+ppi->PlaneHFragments] > BLOCK_NOT_CODED ) ||
+             (UpdatedBlockMapPtr[i+ppi->PlaneHFragments+1] > BLOCK_NOT_CODED ))
+            BarBlockMapPtr[i] = BLOCK_CODED_BAR;
+        }
       }
     }
   }
 }
 
 static void BarCopyBack( PP_INSTANCE *ppi,
-			 signed char  * UpdatedBlockMapPtr,
-			 signed char  * BarBlockMapPtr ){
+                         signed char  * UpdatedBlockMapPtr,
+                         signed char  * BarBlockMapPtr ){
   ogg_int32_t i;
 
   /* For each fragment in the row. */
@@ -1868,12 +1869,12 @@ static void BarCopyBack( PP_INSTANCE *ppi,
 }
 
 static void AnalysePlane( PP_INSTANCE *ppi,
-			  unsigned char * PlanePtr0,
-			  unsigned char * PlanePtr1,
-			  ogg_uint32_t FragArrayOffset,
-			  ogg_uint32_t PWidth,
-			  ogg_uint32_t PHeight,
-			  ogg_uint32_t PStride ) {
+                          unsigned char * PlanePtr0,
+                          unsigned char * PlanePtr1,
+                          ogg_uint32_t FragArrayOffset,
+                          ogg_uint32_t PWidth,
+                          ogg_uint32_t PHeight,
+                          ogg_uint32_t PStride ) {
   unsigned char  * RawPlanePtr0;
   unsigned char  * RawPlanePtr1;
 
@@ -1966,8 +1967,8 @@ static void AnalysePlane( PP_INSTANCE *ppi,
   /* Initialise the PAK thresh table. */
   for ( i = -255; i <= 255; i++ )
     if ( ppi->SrfThreshTable[i+255] &&
-	 (i <= ppi->HighChange) &&
-	 (i >= ppi->NegHighChange) )
+         (i <= ppi->HighChange) &&
+         (i >= ppi->NegHighChange) )
       ppi->SrfPakThreshTable[i+255] = 1;
     else
       ppi->SrfPakThreshTable[i+255] = 0;
@@ -2037,33 +2038,33 @@ static void AnalysePlane( PP_INSTANCE *ppi,
     if ( i > 0 ){
       /* For last iteration the ch locals and noise scans are invalid */
       if ( RowNumber1 < ppi->PlaneVFragments ){
-	ScoreFragIndex1 = (RowNumber1 * ppi->PlaneHFragments) +
-	  FragArrayOffset;
+        ScoreFragIndex1 = (RowNumber1 * ppi->PlaneHFragments) +
+          FragArrayOffset;
 
-	ChLocalsPtr1 = &ppi->ChLocals[Row1Mod3 * BlockRowPixels];
-	PixelsChangedPtr1 =
-	  &ppi->PixelChangedMap[(Row1Mod3) * BlockRowPixels];
+        ChLocalsPtr1 = &ppi->ChLocals[Row1Mod3 * BlockRowPixels];
+        PixelsChangedPtr1 =
+          &ppi->PixelChangedMap[(Row1Mod3) * BlockRowPixels];
 
-	PixelScoresPtr1 = &ppi->PixelScores[(RowNumber1 % 4) * BlockRowPixels];
+        PixelScoresPtr1 = &ppi->PixelScores[(RowNumber1 % 4) * BlockRowPixels];
 
-	YUVDiffsPtr1 = &ppi->yuv_differences[Row1Mod3 * BlockRowPixels];
-	FragScoresPtr1 = &ppi->FragScores[ScoreFragIndex1];
-	DispFragPtr1 = &ppi->ScanDisplayFragments[ScoreFragIndex1];
+        YUVDiffsPtr1 = &ppi->yuv_differences[Row1Mod3 * BlockRowPixels];
+        FragScoresPtr1 = &ppi->FragScores[ScoreFragIndex1];
+        DispFragPtr1 = &ppi->ScanDisplayFragments[ScoreFragIndex1];
 
       }
 
       if ( RowNumber2 >= 0 ){
-	ScoreFragIndex2 = (RowNumber2 * ppi->PlaneHFragments) +
-	  FragArrayOffset;
-	ChLocalsPtr2 = (&ppi->ChLocals[Row2Mod3 * BlockRowPixels]);
-	YUVDiffsPtr2 = &ppi->yuv_differences[Row2Mod3 * BlockRowPixels];
+        ScoreFragIndex2 = (RowNumber2 * ppi->PlaneHFragments) +
+          FragArrayOffset;
+        ChLocalsPtr2 = (&ppi->ChLocals[Row2Mod3 * BlockRowPixels]);
+        YUVDiffsPtr2 = &ppi->yuv_differences[Row2Mod3 * BlockRowPixels];
 
-	PixelScoresPtr2 = &ppi->PixelScores[(RowNumber2 % 4) * BlockRowPixels];
+        PixelScoresPtr2 = &ppi->PixelScores[(RowNumber2 % 4) * BlockRowPixels];
 
-	FragScoresPtr2 =  &ppi->FragScores[ScoreFragIndex2];
-	DispFragPtr2 = &ppi->ScanDisplayFragments[ScoreFragIndex2];
+        FragScoresPtr2 =  &ppi->FragScores[ScoreFragIndex2];
+        DispFragPtr2 = &ppi->ScanDisplayFragments[ScoreFragIndex2];
       }else{
-	ChLocalsPtr2 = NULL;
+        ChLocalsPtr2 = NULL;
       }
     }else{
       ChLocalsPtr1 = NULL;
@@ -2073,12 +2074,12 @@ static void AnalysePlane( PP_INSTANCE *ppi,
     /* Fast break out test for obvious yes and no cases in this row of
        blocks */
     if ( i < ppi->PlaneVFragments ){
-      dsp_static_save_fpu ();
+      dsp_save_fpu (ppi->dsp);
       UpdatedOrCandidateBlocks =
-	RowSadScan( ppi, RawPlanePtr0, RawPlanePtr1, DispFragPtr0 );
+        RowSadScan( ppi, RawPlanePtr0, RawPlanePtr1, DispFragPtr0 );
       UpdatedOrCandidateBlocks |=
         ColSadScan( ppi, RawPlanePtr0, RawPlanePtr1, DispFragPtr0 );
-      dsp_static_restore_fpu ();
+      dsp_restore_fpu (ppi->dsp);
     }else{
       /* Make sure we still call other functions if RowSadScan() disabled */
       UpdatedOrCandidateBlocks = 1;
@@ -2093,116 +2094,116 @@ static void AnalysePlane( PP_INSTANCE *ppi,
       /* Check results of diff scan in last set of blocks. */
       /* Eliminate NO cases and add in +SGC cases */
       ConsolidateDiffScanResults( ppi, &ppi->FragDiffPixels[ScoreFragIndex1],
-				  &ppi->SameGreyDirPixels[ScoreFragIndex1],
-				  DispFragPtr1
-				  );
+                                  &ppi->SameGreyDirPixels[ScoreFragIndex1],
+                                  DispFragPtr1
+                                  );
     }
 
     for ( j = 0; j < VFRAGPIXELS; j++ ){
       /* Last two iterations do not apply */
       if ( i < ppi->PlaneVFragments ){
-	/* Is the current fragment at an edge. */
-	EdgeRow = ( ( (i == 0) && (j == 0) ) ||
-		    ( (i == (ppi->PlaneVFragments - 1)) &&
-		      (j == (VFRAGPIXELS - 1)) ) );
+        /* Is the current fragment at an edge. */
+        EdgeRow = ( ( (i == 0) && (j == 0) ) ||
+                    ( (i == (ppi->PlaneVFragments - 1)) &&
+                      (j == (VFRAGPIXELS - 1)) ) );
 
-	/* Clear the arrays that will be used for the changed pixels maps */
-	memset( PixelsChangedPtr0, 0, ppi->PlaneWidth );
+        /* Clear the arrays that will be used for the changed pixels maps */
+        memset( PixelsChangedPtr0, 0, ppi->PlaneWidth );
 
-	/* Difference scan and map each row */
-	if ( UpdatedOrCandidateBlocks ){
-	  /* Scan the row for interesting differences */
-	  /* Also clear the array that will be used for changed locals map */
-	  RowDiffScan( ppi, RawPlanePtr0, RawPlanePtr1,
-		       YUVDiffsPtr, PixelsChangedPtr0,
-		       &ppi->SameGreyDirPixels[FragIndex],
-		       DispFragPtr0, &ppi->FragDiffPixels[FragIndex],
-		       RowDiffsPtr, ChLocalsPtr0, EdgeRow);
-	}else{
-	  /* Clear the array that will be used for changed locals map */
-	  memset( ChLocalsPtr0, 0, ppi->PlaneWidth );
-	}
+        /* Difference scan and map each row */
+        if ( UpdatedOrCandidateBlocks ){
+          /* Scan the row for interesting differences */
+          /* Also clear the array that will be used for changed locals map */
+          RowDiffScan( ppi, RawPlanePtr0, RawPlanePtr1,
+                       YUVDiffsPtr, PixelsChangedPtr0,
+                       &ppi->SameGreyDirPixels[FragIndex],
+                       DispFragPtr0, &ppi->FragDiffPixels[FragIndex],
+                       RowDiffsPtr, ChLocalsPtr0, EdgeRow);
+        }else{
+          /* Clear the array that will be used for changed locals map */
+          memset( ChLocalsPtr0, 0, ppi->PlaneWidth );
+        }
 
-	/* The actual image plane pointers must be incremented by
-	   stride as this may be different (more) than the plane
-	   width. Our own internal buffers use ppi->PlaneWidth. */
-	RawPlanePtr0 += ppi->PlaneStride;
-	RawPlanePtr1 += ppi->PlaneStride;
-	PixelsChangedPtr0 += ppi->PlaneWidth;
-	ChLocalsPtr0 += ppi->PlaneWidth;
-	YUVDiffsPtr += ppi->PlaneWidth;
-	RowDiffsPtr++;
+        /* The actual image plane pointers must be incremented by
+           stride as this may be different (more) than the plane
+           width. Our own internal buffers use ppi->PlaneWidth. */
+        RawPlanePtr0 += ppi->PlaneStride;
+        RawPlanePtr1 += ppi->PlaneStride;
+        PixelsChangedPtr0 += ppi->PlaneWidth;
+        ChLocalsPtr0 += ppi->PlaneWidth;
+        YUVDiffsPtr += ppi->PlaneWidth;
+        RowDiffsPtr++;
       }
 
       /* Run behind calculating the changed locals data and noise scores. */
       if ( ChLocalsPtr1 != NULL ){
-	/* Last few iterations do not apply */
-	if ( RowNumber1 < ppi->PlaneVFragments ){
-	  /* Blank the next row in the pixel scores data structure. */
-	  memset( PixelScoresPtr1, 0, ppi->PlaneWidth );
+        /* Last few iterations do not apply */
+        if ( RowNumber1 < ppi->PlaneVFragments ){
+          /* Blank the next row in the pixel scores data structure. */
+          memset( PixelScoresPtr1, 0, ppi->PlaneWidth );
 
-	  /* Don't bother doing anything if there are no changed
+          /* Don't bother doing anything if there are no changed
              pixels in this row */
-	  if ( *RowDiffsPtr1 ){
-	    /* Last valid row is a special case */
-	    if ( i < ppi->PlaneVFragments )
-	      RowChangedLocalsScan( ppi, PixelsChangedPtr1, ChLocalsPtr1,
-				    DispFragPtr1,
-				    ( (((i-1)==0) && (j==0)) ?
-				      FIRST_ROW : NOT_EDGE_ROW) );
-	    else
-	      RowChangedLocalsScan( ppi, PixelsChangedPtr1, ChLocalsPtr1,
-				    DispFragPtr1,
-				    ((j==(VFRAGPIXELS-1)) ?
-				     LAST_ROW : NOT_EDGE_ROW) );
+          if ( *RowDiffsPtr1 ){
+            /* Last valid row is a special case */
+            if ( i < ppi->PlaneVFragments )
+              RowChangedLocalsScan( ppi, PixelsChangedPtr1, ChLocalsPtr1,
+                                    DispFragPtr1,
+                                    ( (((i-1)==0) && (j==0)) ?
+                                      FIRST_ROW : NOT_EDGE_ROW) );
+            else
+              RowChangedLocalsScan( ppi, PixelsChangedPtr1, ChLocalsPtr1,
+                                    DispFragPtr1,
+                                    ((j==(VFRAGPIXELS-1)) ?
+                                     LAST_ROW : NOT_EDGE_ROW) );
 
-	    NoiseScoreRow( ppi, PixelsChangedPtr1, ChLocalsPtr1, YUVDiffsPtr1,
-			   PixelScoresPtr1, FragScoresPtr1, DispFragPtr1,
-			   RowDiffsPtr1 );
-	  }
+            NoiseScoreRow( ppi, PixelsChangedPtr1, ChLocalsPtr1, YUVDiffsPtr1,
+                           PixelScoresPtr1, FragScoresPtr1, DispFragPtr1,
+                           RowDiffsPtr1 );
+          }
 
-	  ChLocalsPtr1 += ppi->PlaneWidth;
-	  PixelsChangedPtr1 += ppi->PlaneWidth;
-	  YUVDiffsPtr1 += ppi->PlaneWidth;
-	  PixelScoresPtr1 += ppi->PlaneWidth;
-	  RowDiffsPtr1 ++;
-	}
+          ChLocalsPtr1 += ppi->PlaneWidth;
+          PixelsChangedPtr1 += ppi->PlaneWidth;
+          YUVDiffsPtr1 += ppi->PlaneWidth;
+          PixelScoresPtr1 += ppi->PlaneWidth;
+          RowDiffsPtr1 ++;
+        }
 
-	/* Run edge enhancement algorithms */
-	if ( RowNumber2 < ppi->PlaneVFragments ){
-	  if ( ChLocalsPtr2 != NULL ){
-	    /* Don't bother doing anything if there are no changed
+        /* Run edge enhancement algorithms */
+        if ( RowNumber2 < ppi->PlaneVFragments ){
+          if ( ChLocalsPtr2 != NULL ){
+            /* Don't bother doing anything if there are no changed
                pixels in this row */
-	    if ( *RowDiffsPtr2 ){
-	      if ( RowNumber1 < ppi->PlaneVFragments ){
-		PrimaryEdgeScoreRow( ppi, ChLocalsPtr2, YUVDiffsPtr2,
-				     PixelScoresPtr2, FragScoresPtr2,
-				     DispFragPtr2,
-				     ( (((i-2)==0) && (j==0)) ?
-				       FIRST_ROW : NOT_EDGE_ROW)  );
-	      }else{
-		/* Edge enhancement */
-		PrimaryEdgeScoreRow( ppi, ChLocalsPtr2, YUVDiffsPtr2,
-				     PixelScoresPtr2, FragScoresPtr2,
-				     DispFragPtr2,
-				     ((j==(VFRAGPIXELS-1)) ?
-				      LAST_ROW : NOT_EDGE_ROW) );
-	      }
+            if ( *RowDiffsPtr2 ){
+              if ( RowNumber1 < ppi->PlaneVFragments ){
+                PrimaryEdgeScoreRow( ppi, ChLocalsPtr2, YUVDiffsPtr2,
+                                     PixelScoresPtr2, FragScoresPtr2,
+                                     DispFragPtr2,
+                                     ( (((i-2)==0) && (j==0)) ?
+                                       FIRST_ROW : NOT_EDGE_ROW)  );
+              }else{
+                /* Edge enhancement */
+                PrimaryEdgeScoreRow( ppi, ChLocalsPtr2, YUVDiffsPtr2,
+                                     PixelScoresPtr2, FragScoresPtr2,
+                                     DispFragPtr2,
+                                     ((j==(VFRAGPIXELS-1)) ?
+                                      LAST_ROW : NOT_EDGE_ROW) );
+              }
 
-	      /* Recursive line search */
-	      LineSearchScoreRow( ppi, ChLocalsPtr2, YUVDiffsPtr2,
-				  PixelScoresPtr2, FragScoresPtr2,
-				  DispFragPtr2,
-				  LineSearchRowNumber );
-	    }
+              /* Recursive line search */
+              LineSearchScoreRow( ppi, ChLocalsPtr2, YUVDiffsPtr2,
+                                  PixelScoresPtr2, FragScoresPtr2,
+                                  DispFragPtr2,
+                                  LineSearchRowNumber );
+            }
 
-	    ChLocalsPtr2 += ppi->PlaneWidth;
-	    YUVDiffsPtr2 += ppi->PlaneWidth;
-	    PixelScoresPtr2 += ppi->PlaneWidth;
-	    LineSearchRowNumber += 1;
-	    RowDiffsPtr2 ++;
-	  }
-	}
+            ChLocalsPtr2 += ppi->PlaneWidth;
+            YUVDiffsPtr2 += ppi->PlaneWidth;
+            PixelScoresPtr2 += ppi->PlaneWidth;
+            LineSearchRowNumber += 1;
+            RowDiffsPtr2 ++;
+          }
+        }
       }
     }
 
@@ -2210,20 +2211,20 @@ static void AnalysePlane( PP_INSTANCE *ppi,
     if ( (RowNumber3 >= 0) && (RowNumber3 < ppi->PlaneVFragments) ){
       ScoreFragIndex3 = (RowNumber3 * ppi->PlaneHFragments) + FragArrayOffset;
       RowBarEnhBlockMap(ppi,
-			&ppi->ScanDisplayFragments[ScoreFragIndex3],
-			&ppi->BarBlockMap[(RowNumber3 % 3) *
-					 ppi->PlaneHFragments],
-			RowNumber3 );
+                        &ppi->ScanDisplayFragments[ScoreFragIndex3],
+                        &ppi->BarBlockMap[(RowNumber3 % 3) *
+                                         ppi->PlaneHFragments],
+                        RowNumber3 );
     }
 
     /* BAR copy back and "ppi->SRF filtering" or "pixel copy back" */
     if ( (RowNumber4 >= 0) && (RowNumber4 < ppi->PlaneVFragments) ){
       /* BAR copy back stage must lag by one more row to avoid BAR blocks
-	 being used in BAR descisions. */
+         being used in BAR descisions. */
       ScoreFragIndex4 = (RowNumber4 * ppi->PlaneHFragments) + FragArrayOffset;
 
       BarCopyBack(ppi, &ppi->ScanDisplayFragments[ScoreFragIndex4],
-		  &ppi->BarBlockMap[(RowNumber4 % 3) * ppi->PlaneHFragments]);
+                  &ppi->BarBlockMap[(RowNumber4 % 3) * ppi->PlaneHFragments]);
 
       /* Copy over the data from any blocks marked for update into the
          output buffer. */
@@ -2260,9 +2261,9 @@ ogg_uint32_t YUVAnalyseFrame( PP_INSTANCE *ppi, ogg_uint32_t * KFIndicator ){
   ppi->UPlanePtr0 = (ppi->ScanConfig.Yuv0ptr + ppi->YFramePixels);
   ppi->UPlanePtr1 = (ppi->ScanConfig.Yuv1ptr + ppi->YFramePixels);
   ppi->VPlanePtr0 = (ppi->ScanConfig.Yuv0ptr + ppi->YFramePixels +
-		     ppi->UVFramePixels);
+                     ppi->UVFramePixels);
   ppi->VPlanePtr1 = (ppi->ScanConfig.Yuv1ptr + ppi->YFramePixels +
-		     ppi->UVFramePixels);
+                     ppi->UVFramePixels);
 
   /* Check previous frame lists and if necessary mark extra blocks for
      update. */
@@ -2270,25 +2271,25 @@ ogg_uint32_t YUVAnalyseFrame( PP_INSTANCE *ppi, ogg_uint32_t * KFIndicator ){
 
   /* Ananlyse the U and V palnes. */
   AnalysePlane( ppi, ppi->UPlanePtr0, ppi->UPlanePtr1,
-		ppi->ScanYPlaneFragments, ppi->VideoUVPlaneWidth,
-		ppi->VideoUVPlaneHeight, ppi->VideoUPlaneStride );
+                ppi->ScanYPlaneFragments, ppi->VideoUVPlaneWidth,
+                ppi->VideoUVPlaneHeight, ppi->VideoUPlaneStride );
   AnalysePlane( ppi, ppi->VPlanePtr0, ppi->VPlanePtr1,
-		(ppi->ScanYPlaneFragments + ppi->ScanUVPlaneFragments),
-		ppi->VideoUVPlaneWidth, ppi->VideoUVPlaneHeight,
-		ppi->VideoVPlaneStride );
+                (ppi->ScanYPlaneFragments + ppi->ScanUVPlaneFragments),
+                ppi->VideoUVPlaneWidth, ppi->VideoUVPlaneHeight,
+                ppi->VideoVPlaneStride );
 
   /* Now analyse the Y plane. */
   AnalysePlane( ppi, ppi->YPlanePtr0, ppi->YPlanePtr1, 0,
-		ppi->VideoYPlaneWidth, ppi->VideoYPlaneHeight,
-		ppi->VideoYPlaneStride );
+                ppi->VideoYPlaneWidth, ppi->VideoYPlaneHeight,
+                ppi->VideoYPlaneStride );
 
   /* Update the list of previous frame block updates. */
   UpdatePreviousBlockLists(ppi);
 
   /* Create an output block map for the calling process. */
   CreateOutputDisplayMap( ppi, ppi->ScanDisplayFragments,
-			  ppi->PrevFragments[0],
-			  ppi->ScanConfig.disp_fragments );
+                          ppi->PrevFragments[0],
+                          ppi->ScanConfig.disp_fragments );
 
   /* Set the candidate key frame indicator (0-100) */
   *KFIndicator = ppi->KFIndicator;
@@ -2297,8 +2298,4 @@ ogg_uint32_t YUVAnalyseFrame( PP_INSTANCE *ppi, ogg_uint32_t * KFIndicator ){
      level weighting not a true block count). */
   return ppi->OutputBlocksUpdated;
 }
-
-
-
-
 

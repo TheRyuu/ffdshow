@@ -11,6 +11,7 @@
  ********************************************************************
 
   function:
+  last mod: $Id: frarray.c 11442 2006-05-27 17:28:08Z giles $
 
  ********************************************************************/
 
@@ -65,7 +66,7 @@ static ogg_uint32_t FrArrayCodeSBRun( CP_INSTANCE *cpi, ogg_uint32_t value ){
 
 /* Short run bit string coding */
 static ogg_uint32_t FrArrayCodeBlockRun( CP_INSTANCE *cpi,
-					 ogg_uint32_t value ) {
+                                         ogg_uint32_t value ) {
   ogg_uint32_t CodedVal = 0;
   ogg_uint32_t CodedBits = 0;
 
@@ -109,10 +110,10 @@ static ogg_uint32_t FrArrayCodeBlockRun( CP_INSTANCE *cpi,
 
 void PackAndWriteDFArray( CP_INSTANCE *cpi ){
   ogg_uint32_t  i;
-  unsigned char	val;
+  unsigned char val;
   ogg_uint32_t  run_count;
 
-  ogg_uint32_t	SB, MB, B;   /* Block, MB and SB loop variables */
+  ogg_uint32_t  SB, MB, B;   /* Block, MB and SB loop variables */
   ogg_uint32_t  BListIndex = 0;
   ogg_uint32_t  LastSbBIndex = 0;
   ogg_int32_t   DfBlockIndex;  /* Block index in display_fragments */
@@ -128,24 +129,24 @@ void PackAndWriteDFArray( CP_INSTANCE *cpi ){
     for ( MB=0; MB<4; MB++ ) {
       /* If MB in frame */
       if ( QuadMapToMBTopLeft(cpi->pb.BlockMap,SB,MB) >= 0 ) {
-	for ( B=0; B<4; B++ ) {
-	  DfBlockIndex = QuadMapToIndex1( cpi->pb.BlockMap,SB, MB, B );
+        for ( B=0; B<4; B++ ) {
+          DfBlockIndex = QuadMapToIndex1( cpi->pb.BlockMap,SB, MB, B );
 
-	  /* Does Block lie in frame: */
-	  if ( DfBlockIndex >= 0 ) {
-	    /* In Frame: If it is not coded then this SB is only
+          /* Does Block lie in frame: */
+          if ( DfBlockIndex >= 0 ) {
+            /* In Frame: If it is not coded then this SB is only
                partly coded.: */
-	    if ( cpi->pb.display_fragments[DfBlockIndex] ) {
-	      cpi->pb.SBCodedFlags[SB] = 1; /* SB at least partly coded */
-	      cpi->BlockCodedFlags[BListIndex] = 1; /* Block is coded */
-	    }else{
-	      cpi->pb.SBFullyFlags[SB] = 0; /* SB not fully coded */
-	      cpi->BlockCodedFlags[BListIndex] = 0; /* Block is not coded */
-	    }
+            if ( cpi->pb.display_fragments[DfBlockIndex] ) {
+              cpi->pb.SBCodedFlags[SB] = 1; /* SB at least partly coded */
+              cpi->BlockCodedFlags[BListIndex] = 1; /* Block is coded */
+            }else{
+              cpi->pb.SBFullyFlags[SB] = 0; /* SB not fully coded */
+              cpi->BlockCodedFlags[BListIndex] = 0; /* Block is not coded */
+            }
 
-	    BListIndex++;
-	  }
-	}
+            BListIndex++;
+          }
+        }
       }
     }
 
@@ -190,11 +191,11 @@ void PackAndWriteDFArray( CP_INSTANCE *cpi ){
     while ( i < cpi->pb.SuperBlocks ) {
       run_count = 0;
       while ( (i < cpi->pb.SuperBlocks) && (cpi->pb.SBFullyFlags[i] == val) ) {
-	i++;
-	/* Skip partially coded blocks */
-	while( (i < cpi->pb.SuperBlocks) && cpi->PartiallyCodedFlags[i] )
-	  i++;
-	run_count++;
+        i++;
+        /* Skip partially coded blocks */
+        while( (i < cpi->pb.SuperBlocks) && cpi->PartiallyCodedFlags[i] )
+          i++;
+        run_count++;
       }
 
       /* Code the run */
@@ -213,8 +214,8 @@ void PackAndWriteDFArray( CP_INSTANCE *cpi ){
     for ( i = 0; i < BListIndex; ) {
       run_count = 0;
       while ( (cpi->BlockCodedFlags[i] == val) && (i < BListIndex) ) {
-	i++;
-	run_count++;
+        i++;
+        run_count++;
       }
 
       FrArrayCodeBlockRun( cpi, run_count );
@@ -232,7 +233,7 @@ static void FrArrayDeCodeInit(PB_INSTANCE *pbi){
 
 /* Short run bit string decoding */
 static int FrArrayDeCodeBlockRun(  PB_INSTANCE *pbi, ogg_uint32_t bit_value,
-			    ogg_int32_t * run_value ){
+                            ogg_int32_t * run_value ){
   int  ret_val = 0;
 
   /* Add in the new bit value. */
@@ -301,7 +302,7 @@ static int FrArrayDeCodeBlockRun(  PB_INSTANCE *pbi, ogg_uint32_t bit_value,
 
 /* Long run bit string decoding */
 static int FrArrayDeCodeSBRun (PB_INSTANCE *pbi, ogg_uint32_t bit_value,
-			ogg_int32_t * run_value ){
+                        ogg_int32_t * run_value ){
   int ret_val = 0;
 
   /* Add in the new bit value. */
@@ -481,8 +482,8 @@ void QuadDecodeDisplayFragments ( PB_INSTANCE *pbi ){
     DataToDecode = 0;
     for ( SB=0; SB<pbi->SuperBlocks; SB++ ) {
       if ( !pbi->SBCodedFlags[SB] ) {
-	DataToDecode = 1;
-	break;
+        DataToDecode = 1;
+        break;
       }
     }
 
@@ -491,16 +492,16 @@ void QuadDecodeDisplayFragments ( PB_INSTANCE *pbi ){
       /* Un-pack the Super-Block fully coded flags. */
       GetNextSbInit(pbi);
       for( SB = 0; SB < pbi->SuperBlocks; SB++) {
-	/* Skip blocks already marked as partially coded */
-	while( (SB < pbi->SuperBlocks) && pbi->SBCodedFlags[SB] )
-	  SB++;
+        /* Skip blocks already marked as partially coded */
+        while( (SB < pbi->SuperBlocks) && pbi->SBCodedFlags[SB] )
+          SB++;
 
-	if ( SB < pbi->SuperBlocks ) {
-	  pbi->SBFullyFlags[SB] = GetNextSbBit (pbi);
+        if ( SB < pbi->SuperBlocks ) {
+          pbi->SBFullyFlags[SB] = GetNextSbBit (pbi);
 
-	  if ( pbi->SBFullyFlags[SB] )       /* If SB is fully coded. */
-	    pbi->SBCodedFlags[SB] = 1;       /* Mark the SB as coded */
-	}
+          if ( pbi->SBFullyFlags[SB] )       /* If SB is fully coded. */
+            pbi->SBCodedFlags[SB] = 1;       /* Mark the SB as coded */
+        }
       }
     }
 
@@ -509,9 +510,9 @@ void QuadDecodeDisplayFragments ( PB_INSTANCE *pbi ){
        decode. */
     for ( SB=0; SB<pbi->SuperBlocks; SB++ ) {
       if ( pbi->SBCodedFlags[SB] && !pbi->SBFullyFlags[SB] ) {
-	/* Initialise the block list decoder. */
-	GetNextBInit(pbi);
-	break;
+        /* Initialise the block list decoder. */
+        GetNextBInit(pbi);
+        break;
       }
     }
   }
@@ -521,27 +522,27 @@ void QuadDecodeDisplayFragments ( PB_INSTANCE *pbi ){
     for ( MB=0; MB<4; MB++ ){
       /* If MB is in the frame */
       if ( QuadMapToMBTopLeft(pbi->BlockMap, SB,MB) >= 0 ){
-	/* Only read block level data if SB was fully or partially coded */
-	if ( pbi->SBCodedFlags[SB] ) {
-	  for ( B=0; B<4; B++ ){
-	    /* If block is valid (in frame)... */
-	    dfIndex = QuadMapToIndex1( pbi->BlockMap, SB, MB, B );
-	    if ( dfIndex >= 0 ){
-	      if ( pbi->SBFullyFlags[SB] )
-		pbi->display_fragments[dfIndex] = 1;
-	      else
-		pbi->display_fragments[dfIndex] = GetNextBBit(pbi);
+        /* Only read block level data if SB was fully or partially coded */
+        if ( pbi->SBCodedFlags[SB] ) {
+          for ( B=0; B<4; B++ ){
+            /* If block is valid (in frame)... */
+            dfIndex = QuadMapToIndex1( pbi->BlockMap, SB, MB, B );
+            if ( dfIndex >= 0 ){
+              if ( pbi->SBFullyFlags[SB] )
+                pbi->display_fragments[dfIndex] = 1;
+              else
+                pbi->display_fragments[dfIndex] = GetNextBBit(pbi);
 
-	      /* Create linear list of coded block indices */
-	      if ( pbi->display_fragments[dfIndex] ) {
-		pbi->MBCodedFlags[MBIndex] = 1;
-		pbi->CodedBlockList[pbi->CodedBlockIndex] = dfIndex;
-		pbi->CodedBlockIndex++;
-	      }
-	    }
-	  }
-	}
-	MBIndex++;
+              /* Create linear list of coded block indices */
+              if ( pbi->display_fragments[dfIndex] ) {
+                pbi->MBCodedFlags[MBIndex] = 1;
+                pbi->CodedBlockList[pbi->CodedBlockIndex] = dfIndex;
+                pbi->CodedBlockIndex++;
+              }
+            }
+          }
+        }
+        MBIndex++;
 
       }
     }
@@ -553,13 +554,13 @@ CODING_MODE FrArrayUnpackMode(PB_INSTANCE *pbi){
   /* Coding scheme:
      Token                      Codeword           Bits
      Entry   0 (most frequent)  0                   1
-     Entry   1       	        10 	            2
-     Entry   2       	        110 		    3
-     Entry   3       	        1110 		    4
-     Entry   4       	        11110 		    5
-     Entry   5       	        111110 	            6
-     Entry   6       	        1111110 	    7
-     Entry   7       	        1111111 	    7
+     Entry   1                  10                  2
+     Entry   2                  110                 3
+     Entry   3                  1110                4
+     Entry   4                  11110               5
+     Entry   5                  111110              6
+     Entry   6                  1111110             7
+     Entry   7                  1111111             7
   */
 
   /* Initialise the decoding. */
@@ -617,8 +618,4 @@ CODING_MODE FrArrayUnpackMode(PB_INSTANCE *pbi){
   else
     return (CODING_MODE)7;
 }
-
-
-
-
 

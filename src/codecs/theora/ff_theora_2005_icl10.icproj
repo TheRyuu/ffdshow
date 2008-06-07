@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject 
 	ProjectType="Intel C++ Project"
-	Version="10.1"
+	Version="10.0"
 	Name="ff_theora"
 	ProjectGUID="{B1CE5652-E8B4-4497-8E3D-3913FF957FFF}"
 	VCNestedProjectGUID="{924512C3-75C6-45BE-B7A3-A747BFFD79A1}"
-	VCNestedProjectCRC32="2733486765"
+	VCNestedProjectCRC32="343354560"
 	VCNestedProjectFileName="ff_theora_2005_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -44,19 +44,19 @@
 				AdditionalOptions=""/>
 			<Tool 
 				Name="LinkerTool"
-				OutputFile="../../../bin/ff_theora.dll"
-				SuppressStartupBanner="1"
+				DelayImpLib=""
 				IgnoreImportLibrary="1"
 				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				OutputFile="../../../bin/ff_theora.dll"
+				SuppressStartupBanner="1"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="ff_theora.def"
-				GenerateManifest="1"
 				GenerateDebugInformation="1"
 				ProgramDatabaseFile="$(IntDir)/ff_theora.pdb"
 				SubSystem="2"
 				ImportLibrary="$(IntDir)/ff_theora.lib"
-				AdditionalOptions="/MACHINE:I386"
-				DelayImpLib=""/>
+				GenerateManifest="1"
+				AdditionalOptions="/MACHINE:I386"/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -112,19 +112,19 @@
 				AdditionalOptions=""/>
 			<Tool 
 				Name="LinkerTool"
-				OutputFile="../../../bin/ff_theora.dll"
-				SuppressStartupBanner="1"
+				DelayImpLib=""
 				IgnoreImportLibrary="1"
 				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				OutputFile="../../../bin/ff_theora.dll"
+				SuppressStartupBanner="1"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="ff_theora.def"
-				GenerateManifest="1"
 				GenerateDebugInformation="1"
 				ProgramDatabaseFile="$(IntDir)/ff_theora.pdb"
 				SubSystem="2"
 				ImportLibrary="$(IntDir)/ff_theora.lib"
 				TargetMachine="17"
-				DelayImpLib=""/>
+				GenerateManifest="1"/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -189,19 +189,19 @@
 				AdditionalOptions="/Qip"/>
 			<Tool 
 				Name="LinkerTool"
+				DelayImpLib=""
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_theora.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="1"
-				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="ff_theora.def"
-				GenerateManifest="1"
 				ProgramDatabaseFile="$(IntDir)/ff_theora.pdb"
 				SubSystem="2"
 				ImportLibrary="$(IntDir)/ff_theora.lib"
-				AdditionalOptions="/MACHINE:I386"
-				DelayImpLib=""/>
+				GenerateManifest="1"
+				AdditionalOptions="/MACHINE:I386"/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -268,19 +268,19 @@
 				RequireProcExt="0"/>
 			<Tool 
 				Name="LinkerTool"
+				DelayImpLib=""
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_theora.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="1"
-				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="ff_theora.def"
-				GenerateManifest="1"
 				ProgramDatabaseFile="$(IntDir)/ff_theora.pdb"
 				SubSystem="2"
 				ImportLibrary="$(IntDir)/ff_theora.lib"
 				TargetMachine="17"
-				DelayImpLib=""/>
+				GenerateManifest="1"/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -331,45 +331,6 @@
 			RelativePath=".\toplevel.h"/>
 		<File 
 			RelativePath=".\toplevel_lookup.h"/>
-		<File 
-			RelativePath=".\i386\csimd.h"/>
-		<File 
-			RelativePath=".\i386\DeblockOpt.cpp"/>
-		<File 
-			RelativePath=".\i386\DeRingOpt.cpp"/>
-		<File 
-			RelativePath=".\i386\dsp_mmx.cpp"/>
-		<File 
-			RelativePath=".\i386\dsp_mmxext.cpp"/>
-		<File 
-			RelativePath=".\i386\fdct_mmx.cpp"/>
-		<File 
-			RelativePath=".\i386\loopf_asm.cpp"/>
-		<File 
-			RelativePath="..\..\mmintrin64.c">
-			<FileConfiguration 
-				Name="Debug|Win32">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Release|Win32">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Release|x64">
-				<Tool 
-					Name="GeneralTool"
-					ExcludedFromBuild="1"/>
-			</FileConfiguration>
-		</File>
-		<File 
-			RelativePath=".\i386\mmxIdct.cpp"/>
-		<File 
-			RelativePath=".\i386\recon_mmx.cpp"/>
 		<File 
 			RelativePath=".\bitwise.c"/>
 		<File 

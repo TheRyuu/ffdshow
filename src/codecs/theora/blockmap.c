@@ -11,15 +11,16 @@
  ********************************************************************
 
   function:
+  last mod: $Id: blockmap.c 11442 2006-05-27 17:28:08Z giles $
 
  ********************************************************************/
 
 #include "codec_internal.h"
 
 static void CreateMapping ( ogg_int32_t (*BlockMap)[4][4],
-			    ogg_uint32_t FirstSB,
-			    ogg_uint32_t FirstFrag, ogg_uint32_t HFrags,
-			    ogg_uint32_t VFrags ){
+                            ogg_uint32_t FirstSB,
+                            ogg_uint32_t FirstFrag, ogg_uint32_t HFrags,
+                            ogg_uint32_t VFrags ){
   ogg_uint32_t i, j = 0;
   ogg_uint32_t xpos;
   ogg_uint32_t ypos;
@@ -42,28 +43,28 @@ static void CreateMapping ( ogg_int32_t (*BlockMap)[4][4],
 
       /* Map Blocks within this Super-Block */
       for ( i=0; (i<4) && (ypos<VFrags); i++, ypos++ ){
-	/* X co-ordinate of Super-Block in Block units */
-	xpos = SBcol<<2;
+        /* X co-ordinate of Super-Block in Block units */
+        xpos = SBcol<<2;
 
-	for ( j=0; (j<4) && (xpos<HFrags); j++, xpos++ ){
-	  if ( i<2 ){
-	    MB = ( j<2 ? 0 : 1 );
-	  }else{
-	    MB = ( j<2 ? 2 : 3 );
-	  }
+        for ( j=0; (j<4) && (xpos<HFrags); j++, xpos++ ){
+          if ( i<2 ){
+            MB = ( j<2 ? 0 : 1 );
+          }else{
+            MB = ( j<2 ? 2 : 3 );
+          }
 
-	  if ( i%2 ){
-	    B = ( j%2 ? 3 : 2 );
-	  }else{
-	    B = ( j%2 ? 1 : 0 );
-	  }
+          if ( i%2 ){
+            B = ( j%2 ? 3 : 2 );
+          }else{
+            B = ( j%2 ? 1 : 0 );
+          }
 
-	  /* Set mapping and move to next fragment */
-	  BlockMap[SB][MB][B] = FragIndex++;
-	}
+          /* Set mapping and move to next fragment */
+          BlockMap[SB][MB][B] = FragIndex++;
+        }
 
-	/* Move to first fragment in next row in Super-Block */
-	FragIndex += HFrags-j;
+        /* Move to first fragment in next row in Super-Block */
+        FragIndex += HFrags-j;
       }
 
       /* Move on to next Super-Block */
@@ -77,9 +78,9 @@ static void CreateMapping ( ogg_int32_t (*BlockMap)[4][4],
 }
 
 void CreateBlockMapping ( ogg_int32_t  (*BlockMap)[4][4],
-			  ogg_uint32_t YSuperBlocks,
-			  ogg_uint32_t UVSuperBlocks,
-			  ogg_uint32_t HFrags, ogg_uint32_t VFrags ) {
+                          ogg_uint32_t YSuperBlocks,
+                          ogg_uint32_t UVSuperBlocks,
+                          ogg_uint32_t HFrags, ogg_uint32_t VFrags ) {
   ogg_uint32_t i, j;
 
   for ( i=0; i<YSuperBlocks + UVSuperBlocks * 2; i++ ){
@@ -94,10 +95,6 @@ void CreateBlockMapping ( ogg_int32_t  (*BlockMap)[4][4],
   CreateMapping ( BlockMap, 0, 0, HFrags, VFrags );
   CreateMapping ( BlockMap, YSuperBlocks, HFrags*VFrags, HFrags/2, VFrags/2 );
   CreateMapping ( BlockMap, YSuperBlocks + UVSuperBlocks, (HFrags*VFrags*5)/4,
-		  HFrags/2, VFrags/2 );
+                  HFrags/2, VFrags/2 );
 }
-
-
-
-
 

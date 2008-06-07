@@ -11,6 +11,7 @@
  ********************************************************************
 
   function:
+  last mod: $Id: toplevel.c 11801 2006-08-25 05:47:27Z conrad $
 
  ********************************************************************/
 
@@ -22,6 +23,7 @@
 #include <string.h>
 #include "theora.h"
 #include "toplevel.h"
+#include "dsp.h"
 #include "../../compiler.h"
 static int _ilog(unsigned int v){
   int ret=0;
@@ -131,6 +133,8 @@ static int _theora_unpack_info(theora_info *ci, oggpack_buffer *opb){
   ci->offset_x=ret;
   theora_read(opb,8,&ret);
   ci->offset_y=ret;
+  /* Change offset_y to have the meaning everyone expects it to have */
+  ci->offset_y = ci->height - ci->frame_height - ci->offset_y;
 
   theora_read(opb,32,&ret);
   ci->fps_numerator=ret;
@@ -153,6 +157,11 @@ static int _theora_unpack_info(theora_info *ci, oggpack_buffer *opb){
 
   theora_read(opb,2,&ret);
   ci->pixelformat=ret;
+  if(ci->pixelformat==OC_PF_RSVD)
+    return (OC_BADHEADER);
+  /* 4:2:2 and 4:4:4 not currently implemented */
+  else if(ci->pixelformat != OC_PF_420)
+    return (OC_IMPL);
 
   /* spare configuration bits */
   if ( theora_read(opb,3,&ret) == -1 )
@@ -163,7 +172,7 @@ static int _theora_unpack_info(theora_info *ci, oggpack_buffer *opb){
 
 static int _theora_unpack_comment(theora_comment *tc, oggpack_buffer *opb){
   int i;
-  long len;
+  long len,tmp;
 
    _tp_readlsbint(opb,&len);
   if(len<0)return(OC_BADHEADER);
@@ -171,7 +180,8 @@ static int _theora_unpack_comment(theora_comment *tc, oggpack_buffer *opb){
   _tp_readbuffer(opb,tc->vendor, len);
   tc->vendor[len]='\0';
 
-  _tp_readlsbint(opb,(long *) &tc->comments);
+  _tp_readlsbint(opb,&tmp);
+  tc->comments=tmp;
   if(tc->comments<0)goto parse_err;
   tc->user_comments=_ogg_calloc(tc->comments,sizeof(*tc->user_comments));
   tc->comment_lengths=_ogg_calloc(tc->comments,sizeof(*tc->comment_lengths));
@@ -222,17 +232,17 @@ int theora_decode_header(theora_info *ci, theora_comment *cc, ogg_packet *op){
   {
     char id[6];
     int typeflag;
-
+    
     theora_read(opb,8,&ret);
     typeflag = ret;
     if(!(typeflag&0x80)) {
-      free(opb);
+      _ogg_free(opb);
       return(OC_NOTFORMAT);
     }
 
     _tp_readbuffer(opb,id,6);
     if(memcmp(id,"theora",6)) {
-      free(opb);
+      _ogg_free(opb);
       return(OC_NOTFORMAT);
     }
 
@@ -240,44 +250,44 @@ int theora_decode_header(theora_info *ci, theora_comment *cc, ogg_packet *op){
     case 0x80:
       if(!op->b_o_s){
         /* Not the initial packet */
-        free(opb);
+        _ogg_free(opb);
         return(OC_BADHEADER);
       }
       if(ci->version_major!=0){
         /* previously initialized info header */
-        free(opb);
+        _ogg_free(opb);
         return OC_BADHEADER;
       }
 
       ret = _theora_unpack_info(ci,opb);
-      free(opb);
+      _ogg_free(opb);
       return(ret);
 
     case 0x81:
       if(ci->version_major==0){
         /* um... we didn't get the initial header */
-        free(opb);
+        _ogg_free(opb);
         return(OC_BADHEADER);
-  }
+      }
 
       ret = _theora_unpack_comment(cc,opb);
-      free(opb);
+      _ogg_free(opb);
       return(ret);
 
     case 0x82:
       if(ci->version_major==0 || cc->vendor==NULL){
         /* um... we didn't get the initial header or comments yet */
-        free(opb);
+        _ogg_free(opb);
         return(OC_BADHEADER);
       }
 
       ret = _theora_unpack_tables(ci,opb);
-      free(opb);
+      _ogg_free(opb);
       return(ret);
 
     default:
-      free(opb);
-      if(ci->version_major==0 || cc->vendor==NULL ||
+      _ogg_free(opb);
+      if(ci->version_major==0 || cc->vendor==NULL || 
          ((codec_setup_info *)ci->codec_setup)->HuffRoot[0]==NULL){
         /* we haven't gotten the three required headers */
         return(OC_BADHEADER);
@@ -287,7 +297,7 @@ int theora_decode_header(theora_info *ci, theora_comment *cc, ogg_packet *op){
     }
   }
   /* I don't think it's possible to get this far, but better safe.. */
-  free(opb);
+  _ogg_free(opb);
   return(OC_BADHEADER);
 }
 
@@ -295,14 +305,15 @@ int theora_decode_init(theora_state *th, theora_info *c){
   PB_INSTANCE *pbi;
   codec_setup_info *ci;
 
-  dsp_static_init ();
-
   ci=(codec_setup_info *)c->codec_setup;
   memset(th, 0, sizeof(*th));
   th->internal_decode=pbi=_ogg_calloc(1,sizeof(*pbi));
   th->internal_encode=NULL;
 
   InitPBInstance(pbi);
+
+  dsp_static_init (&pbi->dsp);
+
   memcpy(&pbi->info,c,sizeof(*c));
   pbi->info.codec_setup=NULL;
   th->i=&pbi->info;
@@ -342,34 +353,39 @@ int theora_decode_packetin(theora_state *th,ogg_packet *op){
   oggpackB_readinit(pbi->opb,op->packet);
 #endif
 
-  /* verify that this is a video frame */
-  theora_read(pbi->opb,1,&ret);
+  if(op->bytes!=0){
+    /* verify that this is a video frame */
+    theora_read(pbi->opb,1,&ret);
 
-  if (ret==0) {
-    ret=LoadAndDecode(pbi);
+    if (ret==0) {
+      ret=LoadAndDecode(pbi);
 
-    if(ret)return ret;
+      if(ret)return ret;
 
-    if(pbi->PostProcessingLevel)
-      PostProcess(pbi);
+      if(pbi->PostProcessingLevel)
+        PostProcess(pbi);
 
-    if(op->granulepos>-1)
-      th->granulepos=op->granulepos;
-    else{
-      if(th->granulepos==-1){
-	th->granulepos=0;
-      }else{
-        if(pbi->FrameType==KEY_FRAME){
-	  long frames= th->granulepos & ((1<<pbi->keyframe_granule_shift)-1);
-	  th->granulepos>>=pbi->keyframe_granule_shift;
-	  th->granulepos+=frames+1;
-	  th->granulepos<<=pbi->keyframe_granule_shift;
-	}else
-	  th->granulepos++;
+      if(op->granulepos>-1)
+        th->granulepos=op->granulepos;
+      else{
+        if(th->granulepos==-1){
+          th->granulepos=0;
+        }else{
+          if(pbi->FrameType==KEY_FRAME){
+            long frames= th->granulepos & ((1<<pbi->keyframe_granule_shift)-1);
+            th->granulepos>>=pbi->keyframe_granule_shift;
+            th->granulepos+=frames+1;
+            th->granulepos<<=pbi->keyframe_granule_shift;
+          }else
+            th->granulepos++;
+        }
       }
-    }
 
-    return(0);
+      return(0);
+    }
+  }else{
+    th->granulepos++;
+    return(OC_DUPFRAME);
   }
 
   return OC_BADPACKET;

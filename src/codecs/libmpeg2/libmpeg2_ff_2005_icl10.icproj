@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject 
 	ProjectType="Intel C++ Project"
-	Version="10.1"
+	Version="10.0"
 	Name="libmpeg2_ff"
 	ProjectGUID="{AB5D8418-9D6D-4E73-A00C-7501DD464CF9}"
 	VCNestedProjectGUID="{A0116059-A93E-4A03-BA72-73E8C64B3C34}"
-	VCNestedProjectCRC32="3721063107"
+	VCNestedProjectCRC32="847080813"
 	VCNestedProjectFileName="libmpeg2_ff_2005_icl10.vcproj"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -44,19 +44,19 @@
 				DisableSpecificWarnings="4996"/>
 			<Tool 
 				Name="LinkerTool"
-				OutputFile="../../../bin/libmpeg2_ff.dll"
-				SuppressStartupBanner="1"
+				DelayImpLib=""
 				IgnoreImportLibrary="1"
 				AdditionalDependencies="kernel32.lib msvcrtd.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				OutputFile="../../../bin/libmpeg2_ff.dll"
+				SuppressStartupBanner="1"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="libmpeg2_ff.def"
-				GenerateManifest="1"
 				GenerateDebugInformation="1"
 				ProgramDatabaseFile="$(IntDir)/libmpeg2_ff.pdb"
 				SubSystem="2"
 				ImportLibrary="$(IntDir)/libmpeg2_ff.lib"
 				TargetMachine="1"
-				DelayImpLib=""/>
+				GenerateManifest="1"/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -106,19 +106,19 @@
 				DisableSpecificWarnings="4996"/>
 			<Tool 
 				Name="LinkerTool"
-				OutputFile="../../../bin/libmpeg2_ff.dll"
-				SuppressStartupBanner="1"
+				DelayImpLib=""
 				IgnoreImportLibrary="1"
 				AdditionalDependencies="kernel32.lib msvcrtd.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				OutputFile="../../../bin/libmpeg2_ff.dll"
+				SuppressStartupBanner="1"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="libmpeg2_ff.def"
-				GenerateManifest="1"
 				GenerateDebugInformation="1"
 				ProgramDatabaseFile="$(IntDir)/libmpeg2_ff.pdb"
 				SubSystem="2"
 				ImportLibrary="$(IntDir)/libmpeg2_ff.lib"
 				TargetMachine="17"
-				DelayImpLib=""/>
+				GenerateManifest="1"/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -176,14 +176,14 @@
 				AdditionalOptions="/Oa /Qip"/>
 			<Tool 
 				Name="LinkerTool"
+				DelayImpLib=""
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../../bin/libmpeg2_ff.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="1"
-				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="libmpeg2_ff.def"
-				GenerateManifest="1"
 				GenerateDebugInformation="0"
 				ProgramDatabaseFile="$(IntDir)/libmpeg2_ff.pdb"
 				SubSystem="2"
@@ -191,7 +191,7 @@
 				EnableCOMDATFolding="2"
 				ImportLibrary="$(IntDir)/libmpeg2_ff.lib"
 				TargetMachine="1"
-				DelayImpLib=""/>
+				GenerateManifest="1"/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -250,14 +250,14 @@
 				RequireProcExt="0"/>
 			<Tool 
 				Name="LinkerTool"
+				DelayImpLib=""
+				IgnoreImportLibrary="1"
+				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				OutputFile="../../../bin/libmpeg2_ff.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="1"
-				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="libmpeg2_ff.def"
-				GenerateManifest="1"
 				GenerateDebugInformation="0"
 				ProgramDatabaseFile="$(IntDir)/libmpeg2_ff.pdb"
 				SubSystem="2"
@@ -265,7 +265,7 @@
 				EnableCOMDATFolding="2"
 				ImportLibrary="$(IntDir)/libmpeg2_ff.lib"
 				TargetMachine="17"
-				DelayImpLib=""/>
+				GenerateManifest="1"/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -307,6 +307,8 @@
 		<File 
 			RelativePath=".\libmpeg2\cpu_accel.c"/>
 		<File 
+			RelativePath=".\libmpeg2\cpu_state.c"/>
+		<File 
 			RelativePath=".\libmpeg2\decode.c"/>
 		<File 
 			RelativePath=".\libmpeg2\header.c"/>
@@ -314,36 +316,6 @@
 			RelativePath=".\libmpeg2\idct.c"/>
 		<File 
 			RelativePath=".\libmpeg2\idct_mmx.c">
-			<FileConfiguration 
-				Name="Release|Win32">
-				<Tool 
-					Name="CppCmplrTool"
-					AssemblerOutput="4"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Release|x64">
-				<Tool 
-					Name="CppCmplrTool"
-					AssemblerOutput="4"/>
-			</FileConfiguration>
-		</File>
-		<File 
-			RelativePath=".\libmpeg2\idct_sse2.c">
-			<FileConfiguration 
-				Name="Release|Win32">
-				<Tool 
-					Name="CppCmplrTool"
-					AssemblerOutput="4"/>
-			</FileConfiguration>
-			<FileConfiguration 
-				Name="Release|x64">
-				<Tool 
-					Name="CppCmplrTool"
-					AssemblerOutput="4"/>
-			</FileConfiguration>
-		</File>
-		<File 
-			RelativePath=".\libmpeg2\mc_sse2.c">
 			<FileConfiguration 
 				Name="Release|Win32">
 				<Tool 

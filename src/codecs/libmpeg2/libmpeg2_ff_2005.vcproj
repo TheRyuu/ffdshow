@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="libmpeg2_ff"
 	ProjectGUID="{A0116059-A93E-4A03-BA72-73E8C64B3C34}"
 	RootNamespace="libmpeg2_ff"
@@ -436,6 +436,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libmpeg2\cpu_state.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libmpeg2\decode.c"
 				>
 			</File>
@@ -449,46 +453,6 @@
 			</File>
 			<File
 				RelativePath=".\libmpeg2\idct_mmx.c"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\libmpeg2\idct_sse2.c"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\libmpeg2\mc_sse2.c"
 				>
 				<FileConfiguration
 					Name="Release|Win32"

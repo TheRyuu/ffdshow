@@ -21,34 +21,26 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <stddef.h>
+#include "config.h"
+
 #include <inttypes.h>
 
-#include "config.h"
 #include "mpeg2.h"
 #include "attributes.h"
 #include "mpeg2_internal.h"
-#include "../../simd.h"
 
 mpeg2_mc_t mpeg2_mc;
 
 void mpeg2_mc_init (uint32_t accel)
 {
 #ifdef ARCH_X86
-    #ifdef __SSE2__
-      if (accel & MPEG2_ACCEL_X86_SSE2)
-          mpeg2_mc = mpeg2_mc_sse2;
-      else
-    #endif
-    #ifndef WIN64
     if (accel & MPEG2_ACCEL_X86_MMXEXT)
 	mpeg2_mc = mpeg2_mc_mmxext;
-    /*else if (accel & MPEG2_ACCEL_X86_3DNOW)
-	mpeg2_mc = mpeg2_mc_3dnow;*/
+    else if (accel & MPEG2_ACCEL_X86_3DNOW)
+	mpeg2_mc = mpeg2_mc_3dnow;
     else if (accel & MPEG2_ACCEL_X86_MMX)
 	mpeg2_mc = mpeg2_mc_mmx;
     else
-    #endif
 #endif
 #ifdef ARCH_PPC
     if (accel & MPEG2_ACCEL_PPC_ALTIVEC)
@@ -64,6 +56,11 @@ void mpeg2_mc_init (uint32_t accel)
     if (accel & MPEG2_ACCEL_SPARC_VIS)
 	mpeg2_mc = mpeg2_mc_vis;
     else
+#endif
+#ifdef ARCH_ARM
+    if (accel & MPEG2_ACCEL_ARM) {
+	mpeg2_mc = mpeg2_mc_arm;
+    } else
 #endif
 	mpeg2_mc = mpeg2_mc_c;
 }

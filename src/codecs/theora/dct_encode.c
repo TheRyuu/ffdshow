@@ -11,6 +11,7 @@
  ********************************************************************
 
   function:
+  last mod: $Id: dct_encode.c 12849 2007-04-11 18:20:04Z giles $
 
  ********************************************************************/
 
@@ -18,10 +19,11 @@
 #include "codec_internal.h"
 #include "dsp.h"
 
+
 static int ModeUsesMC[MAX_MODES] = { 0, 0, 1, 1, 1, 0, 1, 1 };
 
 static unsigned char TokenizeDctValue (ogg_int16_t DataValue,
-				       ogg_uint32_t * TokenListPtr ){
+                                       ogg_uint32_t * TokenListPtr ){
   unsigned char tokens_added = 0;
   ogg_uint32_t AbsDataVal = abs( (ogg_int32_t)DataValue );
 
@@ -111,8 +113,8 @@ static unsigned char TokenizeDctValue (ogg_int16_t DataValue,
 }
 
 static unsigned char TokenizeDctRunValue (unsigned char RunLength,
-					  ogg_int16_t DataValue,
-					  ogg_uint32_t * TokenListPtr ){
+                                          ogg_int16_t DataValue,
+                                          ogg_uint32_t * TokenListPtr ){
   unsigned char tokens_added = 0;
   ogg_uint32_t AbsDataVal = abs( (ogg_int32_t)DataValue );
 
@@ -124,23 +126,23 @@ static unsigned char TokenizeDctRunValue (unsigned char RunLength,
     if ( RunLength <= 5 ) {
       TokenListPtr[0] = DCT_RUN_CATEGORY1 + (RunLength - 1);
       if ( DataValue > 0 )
-	TokenListPtr[1] = 0;
+        TokenListPtr[1] = 0;
       else
-	TokenListPtr[1] = 1;
+        TokenListPtr[1] = 1;
     } else if ( RunLength <= 9 ) {
       /* Zero runs of 6-9 */
       TokenListPtr[0] = DCT_RUN_CATEGORY1B;
       if ( DataValue > 0 )
-	TokenListPtr[1] = (RunLength - 6);
+        TokenListPtr[1] = (RunLength - 6);
       else
-	TokenListPtr[1] = 0x04 + (RunLength - 6);
+        TokenListPtr[1] = 0x04 + (RunLength - 6);
     } else {
       /* Zero runs of 10-17 */
       TokenListPtr[0] = DCT_RUN_CATEGORY1C;
       if ( DataValue > 0 )
-	TokenListPtr[1] = (RunLength - 10);
+        TokenListPtr[1] = (RunLength - 10);
       else
-	TokenListPtr[1] = 0x08 + (RunLength - 10);
+        TokenListPtr[1] = 0x08 + (RunLength - 10);
     }
     tokens_added = 2;
   } else if ( AbsDataVal <= 3 ) {
@@ -149,9 +151,9 @@ static unsigned char TokenizeDctRunValue (unsigned char RunLength,
 
       /* Extra bits token bit 1 indicates sign, bit 0 indicates value */
       if ( DataValue > 0 )
-	TokenListPtr[1] = (AbsDataVal - 2);
+        TokenListPtr[1] = (AbsDataVal - 2);
       else
-	TokenListPtr[1] = (0x02) + (AbsDataVal - 2);
+        TokenListPtr[1] = (0x02) + (AbsDataVal - 2);
       tokens_added = 2;
     }else{
       TokenListPtr[0] = DCT_RUN_CATEGORY2 + 1;
@@ -160,9 +162,9 @@ static unsigned char TokenizeDctRunValue (unsigned char RunLength,
       /* bit 2 indicates sign, bit 1 indicates value, bit 0 indicates
          run length */
       if ( DataValue > 0 )
-	TokenListPtr[1] = ((AbsDataVal - 2) << 1) + (RunLength - 2);
+        TokenListPtr[1] = ((AbsDataVal - 2) << 1) + (RunLength - 2);
       else
-	TokenListPtr[1] = (0x04) + ((AbsDataVal - 2) << 1) + (RunLength - 2);
+        TokenListPtr[1] = (0x04) + ((AbsDataVal - 2) << 1) + (RunLength - 2);
       tokens_added = 2;
     }
   } else  {
@@ -175,7 +177,7 @@ static unsigned char TokenizeDctRunValue (unsigned char RunLength,
 }
 
 static unsigned char TokenizeDctBlock (ogg_int16_t * RawData,
-				       ogg_uint32_t * TokenListPtr ) {
+                                       ogg_uint32_t * TokenListPtr ) {
   ogg_uint32_t i;
   unsigned char  run_count;
   unsigned char  token_count = 0;     /* Number of tokens crated. */
@@ -203,37 +205,37 @@ static unsigned char TokenizeDctBlock (ogg_int16_t * RawData,
       /* If we have a short zero run followed by a low data value code
          the two as a composite token. */
       if ( run_count ){
-	AbsData = abs(RawData[i]);
+        AbsData = abs(RawData[i]);
 
-	if ( ((AbsData == 1) && (run_count <= 17)) ||
-	     ((AbsData <= 3) && (run_count <= 3)) ) {
-	  /* Tokenise the run and subsequent value combination value */
-	  token_count += TokenizeDctRunValue( run_count,
-					      RawData[i],
-					      &TokenListPtr[token_count] );
-	}else{
+        if ( ((AbsData == 1) && (run_count <= 17)) ||
+             ((AbsData <= 3) && (run_count <= 3)) ) {
+          /* Tokenise the run and subsequent value combination value */
+          token_count += TokenizeDctRunValue( run_count,
+                                              RawData[i],
+                                              &TokenListPtr[token_count] );
+        }else{
 
-	/* Else if we have a long non-EOB run or a run followed by a
-	   value token > MAX_RUN_VAL then code the run and token
-	   seperately */
-	  if ( run_count <= 8 )
-	    TokenListPtr[token_count] = DCT_SHORT_ZRL_TOKEN;
-	  else
-	    TokenListPtr[token_count] = DCT_ZRL_TOKEN;
+        /* Else if we have a long non-EOB run or a run followed by a
+           value token > MAX_RUN_VAL then code the run and token
+           seperately */
+          if ( run_count <= 8 )
+            TokenListPtr[token_count] = DCT_SHORT_ZRL_TOKEN;
+          else
+            TokenListPtr[token_count] = DCT_ZRL_TOKEN;
 
-	  token_count++;
-	  TokenListPtr[token_count] = run_count - 1;
-	  token_count++;
+          token_count++;
+          TokenListPtr[token_count] = run_count - 1;
+          token_count++;
 
-	  /* Now tokenize the value */
-	  token_count += TokenizeDctValue( RawData[i],
-					   &TokenListPtr[token_count] );
-	}
+          /* Now tokenize the value */
+          token_count += TokenizeDctValue( RawData[i],
+                                           &TokenListPtr[token_count] );
+        }
       }else{
-	/* Else there was NO zero run. */
-	/* Tokenise the value  */
-	token_count += TokenizeDctValue( RawData[i],
-					 &TokenListPtr[token_count] );
+        /* Else there was NO zero run. */
+        /* Tokenise the value  */
+        token_count += TokenizeDctValue( RawData[i],
+                                         &TokenListPtr[token_count] );
       }
     }
   }
@@ -244,7 +246,7 @@ static unsigned char TokenizeDctBlock (ogg_int16_t * RawData,
 }
 
 ogg_uint32_t DPCMTokenizeBlock (CP_INSTANCE *cpi,
-				ogg_int32_t FragIndex){
+                                ogg_int32_t FragIndex){
   ogg_uint32_t  token_count;
 
   if ( GetFrameType(&cpi->pb) == KEY_FRAME ){
@@ -257,7 +259,7 @@ ogg_uint32_t DPCMTokenizeBlock (CP_INSTANCE *cpi,
 
   /* Tokenise the dct data. */
   token_count = TokenizeDctBlock( cpi->pb.QFragData[FragIndex],
-				  cpi->pb.TokenList[FragIndex] );
+                                  cpi->pb.TokenList[FragIndex] );
 
   cpi->FragTokenCounts[FragIndex] = token_count;
   cpi->TotTokenCount += token_count;
@@ -277,10 +279,10 @@ static int AllZeroDctData( Q_LIST_ENTRY * QuantList ){
 }
 
 static void MotionBlockDifference (CP_INSTANCE * cpi, unsigned char * FiltPtr,
-			    ogg_int16_t *DctInputPtr, ogg_int32_t MvDevisor,
-			    unsigned char* old_ptr1, unsigned char* new_ptr1,
-			    ogg_uint32_t FragIndex,ogg_uint32_t PixelsPerLine,
-			    ogg_uint32_t ReconPixelsPerLine) {
+                            ogg_int16_t *DctInputPtr, ogg_int32_t MvDevisor,
+                            unsigned char* old_ptr1, unsigned char* new_ptr1,
+                            ogg_uint32_t FragIndex,ogg_uint32_t PixelsPerLine,
+                            ogg_uint32_t ReconPixelsPerLine) {
 
   ogg_int32_t MvShift;
   ogg_int32_t MvModMask;
@@ -351,25 +353,25 @@ static void MotionBlockDifference (CP_INSTANCE * cpi, unsigned char * FiltPtr,
 
   /* Is the MV offset exactly pixel alligned */
   if ( AbsRefOffset == 0 ){
-    dsp_static_sub8x8( FiltPtr, ReconPtr1, DctInputPtr,
-	       PixelsPerLine, ReconPixelsPerLine );
-    dsp_static_copy8x8 (new_ptr1, old_ptr1, PixelsPerLine);
+    dsp_sub8x8(cpi->dsp, FiltPtr, ReconPtr1, DctInputPtr,
+               PixelsPerLine, ReconPixelsPerLine);
+    dsp_copy8x8 (cpi->dsp, new_ptr1, old_ptr1, PixelsPerLine);
   } else {
     /* Fractional pixel MVs. */
     /* Note that we only use two pixel values even for the diagonal */
-    dsp_static_sub8x8avg2(FiltPtr, ReconPtr1,ReconPtr2,DctInputPtr,
+    dsp_sub8x8avg2(cpi->dsp, FiltPtr, ReconPtr1,ReconPtr2,DctInputPtr,
                  PixelsPerLine, ReconPixelsPerLine);
-    dsp_static_copy8x8 (new_ptr1, old_ptr1, PixelsPerLine);
+    dsp_copy8x8 (cpi->dsp, new_ptr1, old_ptr1, PixelsPerLine);
   }
 }
 
 void TransformQuantizeBlock (CP_INSTANCE *cpi, ogg_int32_t FragIndex,
-			     ogg_uint32_t PixelsPerLine ) {
-  unsigned char	*new_ptr1;    /* Pointers into current frame */
-  unsigned char	*old_ptr1;    /* Pointers into old frame */
-  unsigned char	*FiltPtr;     /* Pointers to srf filtered pixels */
+                             ogg_uint32_t PixelsPerLine ) {
+  unsigned char *new_ptr1;    /* Pointers into current frame */
+  unsigned char *old_ptr1;    /* Pointers into old frame */
+  unsigned char *FiltPtr;     /* Pointers to srf filtered pixels */
   ogg_int16_t   *DctInputPtr; /* Pointer into buffer containing input to DCT */
-  int LeftEdge;		      /* Flag if block at left edge of component */
+  int LeftEdge;               /* Flag if block at left edge of component */
   ogg_uint32_t  ReconPixelsPerLine; /* Line length for recon buffers. */
 
   unsigned char   *ReconPtr1;   /* DCT reconstructed image pointers */
@@ -378,7 +380,7 @@ void TransformQuantizeBlock (CP_INSTANCE *cpi, ogg_int32_t FragIndex,
 
   new_ptr1 = &cpi->yuv1ptr[cpi->pb.pixel_index_table[FragIndex]];
   old_ptr1 = &cpi->yuv0ptr[cpi->pb.pixel_index_table[FragIndex]];
-  DctInputPtr	= cpi->DCTDataBuffer;
+  DctInputPtr   = cpi->DCTDataBuffer;
 
   /* Set plane specific values */
   if (FragIndex < (ogg_int32_t)cpi->pb.YPlaneFragments){
@@ -400,53 +402,61 @@ void TransformQuantizeBlock (CP_INSTANCE *cpi, ogg_int32_t FragIndex,
     cpi->pb.CodingMode = cpi->pb.FragCodingMethod[FragIndex];
   }
 
-  /* Selection of Quantiser matirx and set other plane related values. */
+  /* Selection of Quantiser matrix and set other plane related values. */
   if ( FragIndex < (ogg_int32_t)cpi->pb.YPlaneFragments ){
     LeftEdge = !(FragIndex%cpi->pb.HFragments);
 
-    /* Select the approrpriate Y quantiser matrix */
+    /* Select the appropriate Y quantiser matrix */
     if ( cpi->pb.CodingMode == CODE_INTRA )
-      select_Y_quantiser(&cpi->pb);
+      select_quantiser(&cpi->pb, BLOCK_Y);
     else
-      select_Inter_quantiser(&cpi->pb);
-  }else{
+      select_quantiser(&cpi->pb, BLOCK_INTER_Y);
+  } else {
     LeftEdge = !((FragIndex-cpi->pb.YPlaneFragments)%(cpi->pb.HFragments>>1));
-
-    /* Select the approrpriate UV quantiser matrix */
-    if ( cpi->pb.CodingMode == CODE_INTRA )
-      select_UV_quantiser(&cpi->pb);
-    else
-      select_Inter_quantiser(&cpi->pb);
+	
+    if(FragIndex < (ogg_int32_t)cpi->pb.YPlaneFragments + (ogg_int32_t)cpi->pb.UVPlaneFragments) {
+      /* U plane */
+      if ( cpi->pb.CodingMode == CODE_INTRA )
+        select_quantiser(&cpi->pb, BLOCK_U);
+      else
+        select_quantiser(&cpi->pb, BLOCK_INTER_U);
+    } else {
+      /* V plane */
+      if ( cpi->pb.CodingMode == CODE_INTRA )
+        select_quantiser(&cpi->pb, BLOCK_V);
+      else
+        select_quantiser(&cpi->pb, BLOCK_INTER_V);
+    }
   }
 
   if ( ModeUsesMC[cpi->pb.CodingMode] ){
 
     MotionBlockDifference(cpi, FiltPtr, DctInputPtr, MvDevisor,
-			  old_ptr1, new_ptr1, FragIndex, PixelsPerLine,
-			  ReconPixelsPerLine);
+                          old_ptr1, new_ptr1, FragIndex, PixelsPerLine,
+                          ReconPixelsPerLine);
 
   } else if ( (cpi->pb.CodingMode==CODE_INTER_NO_MV ) ||
-	      ( cpi->pb.CodingMode==CODE_USING_GOLDEN ) ) {
+              ( cpi->pb.CodingMode==CODE_USING_GOLDEN ) ) {
     if ( cpi->pb.CodingMode==CODE_INTER_NO_MV ) {
       ReconPtr1 = &cpi->
-	pb.LastFrameRecon[cpi->pb.recon_pixel_index_table[FragIndex]];
+        pb.LastFrameRecon[cpi->pb.recon_pixel_index_table[FragIndex]];
     } else {
       ReconPtr1 = &cpi->
-	pb.GoldenFrame[cpi->pb.recon_pixel_index_table[FragIndex]];
+        pb.GoldenFrame[cpi->pb.recon_pixel_index_table[FragIndex]];
     }
 
-    dsp_static_sub8x8( FiltPtr, ReconPtr1, DctInputPtr,
-	       PixelsPerLine, ReconPixelsPerLine );
-    dsp_static_copy8x8 (new_ptr1, old_ptr1, PixelsPerLine);
+    dsp_sub8x8(cpi->dsp, FiltPtr, ReconPtr1, DctInputPtr,
+               PixelsPerLine, ReconPixelsPerLine);
+    dsp_copy8x8 (cpi->dsp, new_ptr1, old_ptr1, PixelsPerLine);
   } else if ( cpi->pb.CodingMode==CODE_INTRA ) {
-    dsp_static_sub8x8_128(FiltPtr, DctInputPtr, PixelsPerLine);
-    dsp_static_copy8x8 (new_ptr1, old_ptr1, PixelsPerLine);
+    dsp_sub8x8_128(cpi->dsp, FiltPtr, DctInputPtr, PixelsPerLine);
+    dsp_copy8x8 (cpi->dsp, new_ptr1, old_ptr1, PixelsPerLine);
   }
 
   /* Proceed to encode the data into the encode buffer if the encoder
      is enabled. */
   /* Perform a 2D DCT transform on the data. */
-  dsp_static_fdct_short( cpi->DCTDataBuffer, cpi->DCT_codes );
+  dsp_fdct_short(cpi->dsp, cpi->DCTDataBuffer, cpi->DCT_codes );
 
   /* Quantize that transform data. */
   quantize ( &cpi->pb, cpi->DCT_codes, cpi->pb.QFragData[FragIndex] );

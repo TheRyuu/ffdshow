@@ -54,6 +54,7 @@ TvideoCodecLibmpeg2::TvideoCodecLibmpeg2(IffdshowBase *Ideci,IdecVideoSink *Isin
    if (Tconfig::cpu_flags&FF_CPU_3DNOW ) accel|=MPEG2_ACCEL_X86_3DNOW;
    if (Tconfig::cpu_flags&FF_CPU_MMXEXT) accel|=MPEG2_ACCEL_X86_MMXEXT;
    if (Tconfig::cpu_flags&FF_CPU_SSE2  ) accel|=MPEG2_ACCEL_X86_SSE2;
+   if (Tconfig::cpu_flags&FF_CPU_SSE3  ) accel|=MPEG2_ACCEL_X86_SSE3;
    mpeg2_set_accel(accel);
   }
  mpeg2dec=NULL;info=NULL;quants=NULL;quantBytes=1;extradata=NULL;buffer=NULL;

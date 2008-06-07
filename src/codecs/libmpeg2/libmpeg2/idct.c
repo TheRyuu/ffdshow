@@ -21,22 +21,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "config.h"
 
 #include <stdlib.h>
 #include <inttypes.h>
 
-#include "config.h"
 #include "mpeg2.h"
 #include "attributes.h"
 #include "mpeg2_internal.h"
-#include "../../simd.h"
 
-#define W1 2841 /* 2048*sqrt (2)*cos (1*pi/16) */
-#define W2 2676 /* 2048*sqrt (2)*cos (2*pi/16) */
-#define W3 2408 /* 2048*sqrt (2)*cos (3*pi/16) */
-#define W5 1609 /* 2048*sqrt (2)*cos (5*pi/16) */
-#define W6 1108 /* 2048*sqrt (2)*cos (6*pi/16) */
-#define W7 565  /* 2048*sqrt (2)*cos (7*pi/16) */
+#define W1 2841 /* 2048 * sqrt (2) * cos (1 * pi / 16) */
+#define W2 2676 /* 2048 * sqrt (2) * cos (2 * pi / 16) */
+#define W3 2408 /* 2048 * sqrt (2) * cos (3 * pi / 16) */
+#define W5 1609 /* 2048 * sqrt (2) * cos (5 * pi / 16) */
+#define W6 1108 /* 2048 * sqrt (2) * cos (6 * pi / 16) */
+#define W7 565  /* 2048 * sqrt (2) * cos (7 * pi / 16) */
 
 /* idct main entry point  */
 void (* mpeg2_idct_copy) (int16_t * block, uint8_t * dest, int stride);
@@ -55,8 +54,8 @@ uint8_t mpeg2_clip[3840 * 2 + 256];
 #if 0
 #define BUTTERFLY(t0,t1,W0,W1,d0,d1)	\
 do {					\
-    t0 = W0*d0 + W1*d1;			\
-    t1 = W0*d1 - W1*d0;			\
+    t0 = W0 * d0 + W1 * d1;		\
+    t1 = W0 * d1 - W1 * d0;		\
 } while (0)
 #else
 #define BUTTERFLY(t0,t1,W0,W1,d0,d1)	\
@@ -237,15 +236,11 @@ static void mpeg2_idct_add_c (const int last, int16_t * block,
 void mpeg2_idct_init (uint32_t accel)
 {
 #ifdef ARCH_X86
-  #ifdef __SSE2__
     if (accel & MPEG2_ACCEL_X86_SSE2) {
 	mpeg2_idct_copy = mpeg2_idct_copy_sse2;
 	mpeg2_idct_add = mpeg2_idct_add_sse2;
-    }
-    else
-  #endif
-  #ifndef WIN64
-    if (accel & MPEG2_ACCEL_X86_MMXEXT) {
+	mpeg2_idct_mmx_init ();
+    } else if (accel & MPEG2_ACCEL_X86_MMXEXT) {
 	mpeg2_idct_copy = mpeg2_idct_copy_mmxext;
 	mpeg2_idct_add = mpeg2_idct_add_mmxext;
 	mpeg2_idct_mmx_init ();
@@ -253,9 +248,7 @@ void mpeg2_idct_init (uint32_t accel)
 	mpeg2_idct_copy = mpeg2_idct_copy_mmx;
 	mpeg2_idct_add = mpeg2_idct_add_mmx;
 	mpeg2_idct_mmx_init ();
-    }
-    else
-   #endif
+    } else
 #endif
 #ifdef ARCH_PPC
     if (accel & MPEG2_ACCEL_PPC_ALTIVEC) {
@@ -280,8 +273,8 @@ void mpeg2_idct_init (uint32_t accel)
     } else
 #endif
     {
-	extern __align16(uint8_t,mpeg2_scan_norm[64]);
-	extern __align16(uint8_t,mpeg2_scan_alt[64]);
+	extern uint8_t mpeg2_scan_norm[64];
+	extern uint8_t mpeg2_scan_alt[64];
 	int i, j;
 
 	mpeg2_idct_copy = mpeg2_idct_copy_c;

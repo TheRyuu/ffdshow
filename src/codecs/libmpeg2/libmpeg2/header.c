@@ -22,12 +22,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "config.h"
 
+#include <inttypes.h>
 #include <stdlib.h>	/* defines NULL */
 #include <string.h>	/* memcmp */
-#include <inttypes.h>
 
-#include "config.h"
 #include "mpeg2.h"
 #include "attributes.h"
 #include "mpeg2_internal.h"
@@ -40,7 +40,7 @@
 #define PIC_CODING_EXT 0x100
 
 /* default intra quant matrix, in zig-zag order */
-static __align16(const uint8_t,default_intra_quantizer_matrix[64]) = {
+static const uint8_t default_intra_quantizer_matrix[64] ATTR_ALIGN(16) = {
     8,
     16, 16,
     19, 16, 19,
@@ -58,7 +58,7 @@ static __align16(const uint8_t,default_intra_quantizer_matrix[64]) = {
     83
 };
 
-__align16(uint8_t,mpeg2_scan_norm[64]) = {
+uint8_t mpeg2_scan_norm[64] ATTR_ALIGN(16) = {
     /* Zig-Zag scan pattern */
      0,  1,  8, 16,  9,  2,  3, 10, 17, 24, 32, 25, 18, 11,  4,  5,
     12, 19, 26, 33, 40, 48, 41, 34, 27, 20, 13,  6,  7, 14, 21, 28,
@@ -66,7 +66,7 @@ __align16(uint8_t,mpeg2_scan_norm[64]) = {
     58, 59, 52, 45, 38, 31, 39, 46, 53, 60, 61, 54, 47, 55, 62, 63
 };
 
-__align16(uint8_t,mpeg2_scan_alt[64]) = {
+uint8_t mpeg2_scan_alt[64] ATTR_ALIGN(16) = {
     /* Alternate scan pattern */
      0, 8,  16, 24,  1,  9,  2, 10, 17, 25, 32, 40, 48, 56, 57, 49,
     41, 33, 26, 18,  3, 11,  4, 12, 19, 27, 34, 42, 50, 58, 35, 43,
@@ -92,7 +92,7 @@ void mpeg2_header_state_init (mpeg2dec_t * mpeg2dec)
 		mpeg2_free (mpeg2dec->yuv_buf[i][0]);
 		mpeg2_free (mpeg2dec->yuv_buf[i][1]);
 		mpeg2_free (mpeg2dec->yuv_buf[i][2]);
-    }
+	    }
 	if (mpeg2dec->decoder.convert_id)
 	    mpeg2_free (mpeg2dec->decoder.convert_id);
     }
@@ -159,7 +159,7 @@ int mpeg2_header_sequence (mpeg2dec_t * mpeg2dec)
 		       SEQ_VIDEO_FORMAT_UNSPECIFIED);
 
     sequence->pixel_width = buffer[3] >> 4;	/* aspect ratio */
-	sequence->frame_period = frame_period[buffer[3] & 15];
+    sequence->frame_period = frame_period[buffer[3] & 15];
 
     sequence->byte_rate = (buffer[4]<<10) | (buffer[5]<<2) | (buffer[6]>>6);
 
@@ -177,7 +177,7 @@ int mpeg2_header_sequence (mpeg2dec_t * mpeg2dec)
     } else
 	for (i = 0; i < 64; i++)
 	    mpeg2dec->new_quantizer_matrix[0][mpeg2_scan_norm[i]] =
-		default_intra_quantizer_matrix [i];
+		default_intra_quantizer_matrix[i];
 
     if (buffer[7] & 1)
 	for (i = 0; i < 64; i++)
@@ -239,7 +239,7 @@ static int sequence_ext (mpeg2dec_t * mpeg2dec)
     sequence->vbv_buffer_size |= buffer[4] << 21;
 
     sequence->frame_period =
-	sequence->frame_period * ((buffer[5]&31)+1) / (((buffer[5]>>2)&3)+1);
+	sequence->frame_period * ((buffer[5]&31)+1) / (((buffer[5]>>5)&3)+1);
 
     mpeg2dec->ext_state = SEQ_DISPLAY_EXT;
 
@@ -252,7 +252,7 @@ static int sequence_display_ext (mpeg2dec_t * mpeg2dec)
     mpeg2_sequence_t * sequence = &(mpeg2dec->new_sequence);
 
     sequence->flags = ((sequence->flags & ~SEQ_MASK_VIDEO_FORMAT) |
-	     ((buffer[0]<<4) & SEQ_MASK_VIDEO_FORMAT));
+		       ((buffer[0]<<4) & SEQ_MASK_VIDEO_FORMAT));
     if (buffer[0] & 1) {
 	sequence->flags |= SEQ_FLAG_COLOUR_DESCRIPTION;
 	sequence->colour_primaries = buffer[1];
@@ -265,10 +265,10 @@ static int sequence_display_ext (mpeg2dec_t * mpeg2dec)
 	return 1;
 
     if( (buffer[1] << 6) | (buffer[2] >> 2) )
-    sequence->display_width = (buffer[1] << 6) | (buffer[2] >> 2);
+	sequence->display_width = (buffer[1] << 6) | (buffer[2] >> 2);
     if( ((buffer[2]& 1 ) << 13) | (buffer[3] << 5) | (buffer[4] >> 3) )
-    sequence->display_height =
-	((buffer[2]& 1 ) << 13) | (buffer[3] << 5) | (buffer[4] >> 3);
+	sequence->display_height =
+	    ((buffer[2]& 1 ) << 13) | (buffer[3] << 5) | (buffer[4] >> 3);
 
     return 0;
 }
@@ -318,8 +318,8 @@ static inline void finalize_sequence (mpeg2_sequence_t * sequence)
 	}
 
     } else {
-	if (sequence->byte_rate == 50 * 0x3ffff)
-	    sequence->byte_rate = 0;        /* mpeg-1 VBR */
+	if (sequence->byte_rate == 50 * 0x3ffff) 
+	    sequence->byte_rate = 0;        /* mpeg-1 VBR */ 
 
 	switch (sequence->pixel_width) {
 	case 0:	case 15:	/* illegal */
@@ -418,13 +418,13 @@ int mpeg2_guess_aspect (const mpeg2_sequence_t * sequence,
     return (height == 576) ? 1 : 2;
 }
 
-static void copy_matrix (mpeg2dec_t * mpeg2dec, int index)
+static void copy_matrix (mpeg2dec_t * mpeg2dec, int idx)
 {
-    if (memcmp (mpeg2dec->quantizer_matrix[index],
-		mpeg2dec->new_quantizer_matrix[index], 64)) {
-	memcpy (mpeg2dec->quantizer_matrix[index],
-		mpeg2dec->new_quantizer_matrix[index], 64);
-	mpeg2dec->scaled[index] = -1;
+    if (memcmp (mpeg2dec->quantizer_matrix[idx],
+		mpeg2dec->new_quantizer_matrix[idx], 64)) {
+	memcpy (mpeg2dec->quantizer_matrix[idx],
+		mpeg2dec->new_quantizer_matrix[idx], 64);
+	mpeg2dec->scaled[idx] = -1;
     }
 }
 
@@ -474,15 +474,15 @@ void mpeg2_header_sequence_finalize (mpeg2dec_t * mpeg2dec)
 			      (sequence->chroma_height == sequence->height));
 
     if (mpeg2dec->sequence.width != (unsigned)-1) {
-    /*
+	/*
 	 * According to 6.1.1.6, repeat sequence headers should be
-	 * identical to the original. However some encoders dont
+	 * identical to the original. However some encoders do not
 	 * respect that and change various fields (including bitrate
 	 * and aspect ratio) in the repeat sequence headers. So we
 	 * choose to be as conservative as possible and only restart
 	 * the decoder if the width, height, chroma_width,
 	 * chroma_height or low_delay flag are modified.
-     */
+	 */
 	if (sequence->width != mpeg2dec->sequence.width ||
 	    sequence->height != mpeg2dec->sequence.height ||
 	    sequence->chroma_width != mpeg2dec->sequence.chroma_width ||
@@ -493,8 +493,8 @@ void mpeg2_header_sequence_finalize (mpeg2dec_t * mpeg2dec)
 	    mpeg2_header_end (mpeg2dec);
 	    mpeg2dec->action = invalid_end_action;
 	    mpeg2dec->state = STATE_INVALID_END;
-	return;
-    }
+	    return;
+	}
 	mpeg2dec->state = (memcmp (&(mpeg2dec->sequence), sequence,
 				   sizeof (mpeg2_sequence_t)) ?
 			   STATE_SEQUENCE_MODIFIED : STATE_SEQUENCE_REPEATED);
@@ -595,7 +595,7 @@ int mpeg2_header_picture (mpeg2dec_t * mpeg2dec)
 
     /* XXXXXX decode extra_information_picture as well */
 
-    mpeg2dec->q_scale_type = 0;
+    decoder->q_scale_type = 0;
     decoder->intra_dc_precision = 7;
     decoder->frame_pred_frame_dct = 1;
     decoder->concealment_motion_vectors = 0;
@@ -632,6 +632,7 @@ static int picture_coding_ext (mpeg2dec_t * mpeg2dec)
 	if (!(mpeg2dec->sequence.flags & SEQ_FLAG_PROGRESSIVE_SEQUENCE)) {
 	    picture->nb_fields = (buffer[3] & 2) ? 3 : 2;
 	    flags |= (buffer[3] & 128) ? PIC_FLAG_TOP_FIELD_FIRST : 0;
+	    flags |= (buffer[3] &   2) ? PIC_FLAG_REPEAT_FIRST_FIELD : 0;
 	} else
 	    picture->nb_fields = (buffer[3]&2) ? ((buffer[3]&128) ? 6 : 4) : 2;
 	break;
@@ -641,7 +642,7 @@ static int picture_coding_ext (mpeg2dec_t * mpeg2dec)
     decoder->top_field_first = buffer[3] >> 7;
     decoder->frame_pred_frame_dct = (buffer[3] >> 6) & 1;
     decoder->concealment_motion_vectors = (buffer[3] >> 5) & 1;
-    mpeg2dec->q_scale_type = buffer[3] & 16;
+    decoder->q_scale_type = buffer[3] & 16;
     decoder->intra_vlc_format = (buffer[3] >> 3) & 1;
     decoder->scan = (buffer[3] & 4) ? mpeg2_scan_alt : mpeg2_scan_norm;
     if (!(buffer[4] & 0x80))
@@ -835,8 +836,8 @@ static int quant_matrix_ext (mpeg2dec_t * mpeg2dec)
 		mpeg2dec->new_quantizer_matrix[i][mpeg2_scan_norm[j]] =
 		    (buffer[j] << (i+5)) | (buffer[j+1] >> (3-i));
 	    mpeg2dec->copy_matrix |= 1 << i;
-	buffer += 64;
-    }
+	    buffer += 64;
+	}
 
     return 0;
 }
@@ -866,7 +867,7 @@ int mpeg2_header_user_data (mpeg2dec_t * mpeg2dec)
     return 0;
 }
 
-static void prescale (mpeg2dec_t * mpeg2dec, int index)
+static void prescale (mpeg2dec_t * mpeg2dec, int idx)
 {
     static int non_linear_scale [] = {
 	 0,  1,  2,  3,  4,  5,   6,   7,
@@ -877,14 +878,13 @@ static void prescale (mpeg2dec_t * mpeg2dec, int index)
     int i, j, k;
     mpeg2_decoder_t * decoder = &(mpeg2dec->decoder);
 
-    if (mpeg2dec->scaled[index] != mpeg2dec->q_scale_type) {
-	mpeg2dec->scaled[index] = mpeg2dec->q_scale_type;
+    if (mpeg2dec->scaled[idx] != decoder->q_scale_type) {
+	mpeg2dec->scaled[idx] = decoder->q_scale_type;
 	for (i = 0; i < 32; i++) {
-	    k = mpeg2dec->q_scale_type ? non_linear_scale[i] : (i << 1);
-	    decoder->quantizer_scales[i] = k;
+	    k = decoder->q_scale_type ? non_linear_scale[i] : (i << 1);
 	    for (j = 0; j < 64; j++)
-		decoder->quantizer_prescale[index][i][j] =
-		    k * mpeg2dec->quantizer_matrix[index][j];
+		decoder->quantizer_prescale[idx][i][j] =
+		    k * mpeg2dec->quantizer_matrix[idx][j];
 	}
     }
 }
@@ -893,7 +893,7 @@ mpeg2_state_t mpeg2_header_slice_start (mpeg2dec_t * mpeg2dec)
 {
     mpeg2_decoder_t * decoder = &(mpeg2dec->decoder);
 
-    mpeg2dec->info.user_data = NULL; mpeg2dec->info.user_data_len = 0;
+    mpeg2dec->info.user_data = NULL;	mpeg2dec->info.user_data_len = 0;
     mpeg2dec->state = ((mpeg2dec->picture->nb_fields > 1 ||
 			mpeg2dec->state == STATE_PICTURE_2ND) ?
 		       STATE_SLICE : STATE_SLICE_1ST);

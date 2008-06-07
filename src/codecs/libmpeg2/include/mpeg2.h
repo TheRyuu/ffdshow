@@ -21,14 +21,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef MPEG2_H
-#define MPEG2_H
-
-#ifdef HAVE_STDINT
-#  include <stdint.h>
-#else
-#  include "inttypes.h"
-#endif
+#ifndef LIBMPEG2_MPEG2_H
+#define LIBMPEG2_MPEG2_H
 
 #define MPEG2_VERSION(a,b,c) (((a)<<16)|((b)<<8)|(c))
 #define MPEG2_RELEASE MPEG2_VERSION (0, 5, 0)	/* 0.5.0 */
@@ -88,6 +82,7 @@ typedef struct mpeg2_gop_s {
 #define PIC_FLAG_COMPOSITE_DISPLAY 32
 #define PIC_FLAG_SKIP 64
 #define PIC_FLAG_TAGS 128
+#define PIC_FLAG_REPEAT_FIRST_FIELD 256
 #define PIC_MASK_COMPOSITE_DISPLAY 0xfffff000
 
 typedef struct mpeg2_picture_s {
@@ -117,7 +112,7 @@ typedef struct mpeg2_info_s {
     const mpeg2_fbuf_t * display_fbuf;
     const mpeg2_fbuf_t * discard_fbuf;
     const uint8_t * user_data;
-    int user_data_len;
+    unsigned int user_data_len;
 } mpeg2_info_t;
 
 typedef struct mpeg2dec_s mpeg2dec_t;
@@ -201,9 +196,9 @@ typedef enum {
     MPEG2_ALLOC_CONVERTED = 4
 } mpeg2_alloc_t;
 
-void * mpeg2_malloc (size_t size, mpeg2_alloc_t reason);
+void * mpeg2_malloc (unsigned size, mpeg2_alloc_t reason);
 void mpeg2_free (void * buf);
-
+void mpeg2_malloc_hooks (void * malloc (unsigned, mpeg2_alloc_t),
+			 int free (void *));
 extern "C" void mpeg2_set_rtStart(mpeg2dec_t *mpeg2dec,int64_t rtStart);
-
-#endif /* MPEG2_H */
+#endif /* LIBMPEG2_MPEG2_H */

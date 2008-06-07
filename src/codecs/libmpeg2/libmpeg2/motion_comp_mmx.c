@@ -21,21 +21,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <stddef.h>
-#include <inttypes.h>
-
 #include "config.h"
 
-#if defined(ARCH_X86) && !defined(WIN64)
+#if defined(ARCH_X86) || defined(ARCH_X86_64)
 
-#pragma warning(disable: 4305 4309 4799 4127 4701)
+#include <inttypes.h>
 
 #include "mpeg2.h"
 #include "attributes.h"
 #include "mpeg2_internal.h"
 #include "mmx.h"
-
-using namespace csimd;
 
 #define CPU_MMXEXT 0
 #define CPU_3DNOW 1
@@ -57,6 +52,8 @@ using namespace csimd;
  */
 
 /* some rounding constants */
+static mmx_t mask1 = {0xfefefefefefefefeLL};
+static mmx_t round4 = {0x0002000200020002LL};
 
 /*
  * This code should probably be compiled with loop unrolling
@@ -66,7 +63,7 @@ using namespace csimd;
  * unrolling will help
  */
 
-static __forceinline void mmx_zero_reg (__m64 &mm0)
+static inline void mmx_zero_reg ()
 {
     /* load 0 into mm0 */
     pxor_r2r (mm0, mm0);
@@ -76,8 +73,6 @@ static inline void mmx_average_2_U8 (uint8_t * dest, const uint8_t * src1,
 				     const uint8_t * src2)
 {
     /* *dest = (*src1 + *src2 + 1)/ 2; */
-    __m64 mm1,mm2,mm3,mm4;
-    __m64 mask1 = _mm_set1_pi8(0xfe);
 
     movq_m2r (*src1, mm1);	/* load 8 src1 bytes */
     movq_r2r (mm1, mm2);	/* copy 8 src1 bytes */
@@ -98,8 +93,6 @@ static inline void mmx_interp_average_2_U8 (uint8_t * dest,
 					    const uint8_t * src2)
 {
     /* *dest = (*dest + (*src1 + *src2 + 1)/ 2 + 1)/ 2; */
-    __m64 mm1,mm2,mm3,mm4,mm5,mm6;
-    __m64 mask1 = _mm_set1_pi8(0xfe);
 
     movq_m2r (*dest, mm1);	/* load 8 dest bytes */
     movq_r2r (mm1, mm2);	/* copy 8 dest bytes */
@@ -131,8 +124,6 @@ static inline void mmx_average_4_U8 (uint8_t * dest, const uint8_t * src1,
 				     const uint8_t * src4)
 {
     /* *dest = (*src1 + *src2 + *src3 + *src4 + 2)/ 4; */
-    __m64 mm0=_mm_setzero_si64(),mm1,mm2,mm3,mm4,mm5,mm6;
-    __m64 round4 = _mm_set1_pi16(0x0002);
 
     movq_m2r (*src1, mm1);	/* load 8 src1 bytes */
     movq_r2r (mm1, mm2);	/* copy 8 src1 bytes */
@@ -187,9 +178,6 @@ static inline void mmx_interp_average_4_U8 (uint8_t * dest,
 					    const uint8_t * src4)
 {
     /* *dest = (*dest + (*src1 + *src2 + *src3 + *src4 + 2)/ 4 + 1)/ 2; */
-    __m64 mm0=_mm_setzero_si64(),mm1,mm2,mm3,mm4,mm5,mm6;
-    __m64 round4 = _mm_set1_pi16(0x0002);
-    __m64 mask1 = _mm_set1_pi8(0xfe);
 
     movq_m2r (*src1, mm1);	/* load 8 src1 bytes */
     movq_r2r (mm1, mm2);	/* copy 8 src1 bytes */
@@ -252,6 +240,7 @@ static inline void mmx_interp_average_4_U8 (uint8_t * dest,
 static inline void MC_avg_mmx (const int width, int height, uint8_t * dest,
 			       const uint8_t * ref, const int stride)
 {
+    mmx_zero_reg ();
 
     do {
 	mmx_average_2_U8 (dest, dest, ref);
@@ -281,8 +270,7 @@ static void MC_avg_o_8_mmx (uint8_t * dest, const uint8_t * ref,
 static inline void MC_put_mmx (const int width, int height, uint8_t * dest,
 			       const uint8_t * ref, const int stride)
 {
-    __m64 mm0,mm1;
-    mmx_zero_reg (mm0);
+    mmx_zero_reg ();
 
     do {
 	movq_m2r (* ref, mm1);	/* load 8 ref bytes */
@@ -317,6 +305,8 @@ static void MC_put_o_8_mmx (uint8_t * dest, const uint8_t * ref,
 static inline void MC_avg_x_mmx (const int width, int height, uint8_t * dest,
 				 const uint8_t * ref, const int stride)
 {
+    mmx_zero_reg ();
+
     do {
 	mmx_interp_average_2_U8 (dest, ref, ref+1);
 
@@ -345,6 +335,8 @@ static void MC_avg_x_8_mmx (uint8_t * dest, const uint8_t * ref,
 static inline void MC_put_x_mmx (const int width, int height, uint8_t * dest,
 				 const uint8_t * ref, const int stride)
 {
+    mmx_zero_reg ();
+
     do {
 	mmx_average_2_U8 (dest, ref, ref+1);
 
@@ -374,6 +366,8 @@ static inline void MC_avg_xy_mmx (const int width, int height, uint8_t * dest,
 				  const uint8_t * ref, const int stride)
 {
     const uint8_t * ref_next = ref + stride;
+
+    mmx_zero_reg ();
 
     do {
 	mmx_interp_average_4_U8 (dest, ref, ref+1, ref_next, ref_next+1);
@@ -407,6 +401,8 @@ static inline void MC_put_xy_mmx (const int width, int height, uint8_t * dest,
 {
     const uint8_t * ref_next = ref + stride;
 
+    mmx_zero_reg ();
+
     do {
 	mmx_average_4_U8 (dest, ref, ref+1, ref_next, ref_next+1);
 
@@ -438,6 +434,8 @@ static inline void MC_avg_y_mmx (const int width, int height, uint8_t * dest,
 {
     const uint8_t * ref_next = ref + stride;
 
+    mmx_zero_reg ();
+
     do {
 	mmx_interp_average_2_U8 (dest, ref, ref_next);
 
@@ -468,6 +466,8 @@ static inline void MC_put_y_mmx (const int width, int height, uint8_t * dest,
 				 const uint8_t * ref, const int stride)
 {
     const uint8_t * ref_next = ref + stride;
+
+    mmx_zero_reg ();
 
     do {
 	mmx_average_2_U8 (dest, ref, ref_next);
@@ -508,16 +508,16 @@ MPEG2_MC_EXTERN (mmx)
 do {					\
     if (cpu == CPU_MMXEXT)		\
 	pavgb_r2r (src, dest);		\
-/*    else				\
-	pavgusb_r2r (src, dest);*/	\
+    else				\
+	pavgusb_r2r (src, dest);	\
 } while (0)
 
 #define pavg_m2r(src,dest)		\
 do {					\
     if (cpu == CPU_MMXEXT)		\
 	pavgb_m2r (src, dest);		\
-/*    else				\
-	pavgusb_m2r (src, dest);*/	\
+    else				\
+	pavgusb_m2r (src, dest);	\
 } while (0)
 
 
@@ -528,7 +528,6 @@ static inline void MC_put1_8 (int height, uint8_t * dest, const uint8_t * ref,
 			      const int stride)
 {
     do {
-        __m64 mm0;
 	movq_m2r (*ref, mm0);
 	movq_r2m (mm0, *dest);
 	ref += stride;
@@ -540,7 +539,6 @@ static inline void MC_put1_16 (int height, uint8_t * dest, const uint8_t * ref,
 			       const int stride)
 {
     do {
-        __m64 mm0,mm1;
 	movq_m2r (*ref, mm0);
 	movq_m2r (*(ref+8), mm1);
 	ref += stride;
@@ -554,7 +552,6 @@ static inline void MC_avg1_8 (int height, uint8_t * dest, const uint8_t * ref,
 			      const int stride, const int cpu)
 {
     do {
-        __m64 mm0;
 	movq_m2r (*ref, mm0);
 	pavg_m2r (*dest, mm0);
 	ref += stride;
@@ -567,7 +564,6 @@ static inline void MC_avg1_16 (int height, uint8_t * dest, const uint8_t * ref,
 			       const int stride, const int cpu)
 {
     do {
-        __m64 mm0,mm1;
 	movq_m2r (*ref, mm0);
 	movq_m2r (*(ref+8), mm1);
 	pavg_m2r (*dest, mm0);
@@ -584,7 +580,6 @@ static inline void MC_put2_8 (int height, uint8_t * dest, const uint8_t * ref,
 			      const int cpu)
 {
     do {
-        __m64 mm0;
 	movq_m2r (*ref, mm0);
 	pavg_m2r (*(ref+offset), mm0);
 	ref += stride;
@@ -598,7 +593,6 @@ static inline void MC_put2_16 (int height, uint8_t * dest, const uint8_t * ref,
 			       const int cpu)
 {
     do {
-        __m64 mm0,mm1;
 	movq_m2r (*ref, mm0);
 	movq_m2r (*(ref+8), mm1);
 	pavg_m2r (*(ref+offset), mm0);
@@ -615,7 +609,6 @@ static inline void MC_avg2_8 (int height, uint8_t * dest, const uint8_t * ref,
 			      const int cpu)
 {
     do {
-        __m64 mm0;
 	movq_m2r (*ref, mm0);
 	pavg_m2r (*(ref+offset), mm0);
 	pavg_m2r (*dest, mm0);
@@ -630,7 +623,6 @@ static inline void MC_avg2_16 (int height, uint8_t * dest, const uint8_t * ref,
 			       const int cpu)
 {
     do {
-        __m64 mm0,mm1;
 	movq_m2r (*ref, mm0);
 	movq_m2r (*(ref+8), mm1);
 	pavg_m2r (*(ref+offset), mm0);
@@ -644,12 +636,11 @@ static inline void MC_avg2_16 (int height, uint8_t * dest, const uint8_t * ref,
     } while (--height);
 }
 
+static mmx_t mask_one = {0x0101010101010101LL};
+
 static inline void MC_put4_8 (int height, uint8_t * dest, const uint8_t * ref,
 			      const int stride, const int cpu)
 {
-    __m64 mm0,mm1,mm2,mm3,mm5,mm6,mm7;
-    __m64 mask_one = _mm_set1_pi8(1);
-
     movq_m2r (*ref, mm0);
     movq_m2r (*(ref+1), mm1);
     movq_r2r (mm0, mm7);
@@ -689,10 +680,7 @@ static inline void MC_put4_8 (int height, uint8_t * dest, const uint8_t * ref,
 static inline void MC_put4_16 (int height, uint8_t * dest, const uint8_t * ref,
 			       const int stride, const int cpu)
 {
-    __m64 mask_one = _mm_set1_pi8(1);
     do {
-            __m64 mm0,mm1,mm2,mm3,mm6,mm7;
-
 	movq_m2r (*ref, mm0);
 	movq_m2r (*(ref+stride+1), mm1);
 	movq_r2r (mm0, mm7);
@@ -738,10 +726,7 @@ static inline void MC_put4_16 (int height, uint8_t * dest, const uint8_t * ref,
 static inline void MC_avg4_8 (int height, uint8_t * dest, const uint8_t * ref,
 			      const int stride, const int cpu)
 {
-    __m64 mask_one = _mm_set1_pi8(1);
     do {
-            __m64 mm0,mm1,mm2,mm3,mm6,mm7;
-
 	movq_m2r (*ref, mm0);
 	movq_m2r (*(ref+stride+1), mm1);
 	movq_r2r (mm0, mm7);
@@ -770,10 +755,7 @@ static inline void MC_avg4_8 (int height, uint8_t * dest, const uint8_t * ref,
 static inline void MC_avg4_16 (int height, uint8_t * dest, const uint8_t * ref,
 			       const int stride, const int cpu)
 {
-    __m64 mask_one = _mm_set1_pi8(1);
     do {
-            __m64 mm0,mm1,mm2,mm3,mm6,mm7;
-
 	movq_m2r (*ref, mm0);
 	movq_m2r (*(ref+stride+1), mm1);
 	movq_r2r (mm0, mm7);
@@ -920,7 +902,7 @@ static void MC_put_xy_8_mmxext (uint8_t * dest, const uint8_t * ref,
 MPEG2_MC_EXTERN (mmxext)
 
 
-/*
+
 static void MC_avg_o_16_3dnow (uint8_t * dest, const uint8_t * ref,
 			       int stride, int height)
 {
@@ -1019,5 +1001,5 @@ static void MC_put_xy_8_3dnow (uint8_t * dest, const uint8_t * ref,
 
 
 MPEG2_MC_EXTERN (3dnow)
-*/
+
 #endif

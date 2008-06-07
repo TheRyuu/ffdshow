@@ -5,12 +5,13 @@
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
  * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
  *                                                                  *
- * THE Theora SOURCE CODE IS COPYRIGHT (C) 2002-2003                *
+ * THE Theora SOURCE CODE IS COPYRIGHT (C) 2002-2006                *
  * by the Xiph.Org Foundation http://www.xiph.org/                  *
  *                                                                  *
  ********************************************************************
 
   function:
+  last mod: $Id: decode.c 11442 2006-05-27 17:28:08Z giles $
 
  ********************************************************************/
 
@@ -71,17 +72,29 @@ static int LoadFrameHeader(PB_INSTANCE *pbi){
   /* Quality (Q) index */
   NQIndex = 0;
   theora_read(pbi->opb,6,&ret);
+  if (ret < 0 || ret >= 64) {   /* range check */
+    ret = 0;
+    pbi->DecoderErrorCode = 1;
+  }
   DctQIndex[NQIndex++] = (unsigned char)ret;
 
   theora_read(pbi->opb,1,&ret);
   SpareBits = (unsigned char)ret;
   if (SpareBits) {
     theora_read(pbi->opb,6,&ret);
+    if (ret < 0 || ret >= 64) { /* range check */
+      ret = 0;
+      pbi->DecoderErrorCode = 1;
+    }
     DctQIndex[NQIndex++] = (unsigned char)ret;
     theora_read(pbi->opb,1,&ret);
     SpareBits = (unsigned char)ret;
     if (SpareBits) {
       theora_read(pbi->opb,6,&ret);
+      if (ret < 0 || ret >= 64) {       /* range check */
+        ret = 0;
+        pbi->DecoderErrorCode = 1;
+      }
       DctQIndex[NQIndex++] = (unsigned char)ret;
     }
   }
@@ -102,7 +115,7 @@ static int LoadFrameHeader(PB_INSTANCE *pbi){
   /* Set this frame quality value and tables from the coded Q Index */
   UpdateQ(pbi, DctQIndex[0]);
 
-  return 1;
+  return pbi->DecoderErrorCode;
 }
 
 void SetFrameType( PB_INSTANCE *pbi,unsigned char FrType ){
@@ -122,18 +135,18 @@ void SetFrameType( PB_INSTANCE *pbi,unsigned char FrType ){
 static int LoadFrame(PB_INSTANCE *pbi){
 
   /* Load the frame header (including the frame size). */
-  if ( LoadFrameHeader(pbi) ){
+  if ( LoadFrameHeader(pbi) == 0 ){
     /* Read in the updated block map */
     QuadDecodeDisplayFragments( pbi );
-    return 1;
+    return 0;
   }
 
-  return 0;
+  return pbi->DecoderErrorCode;
 }
 
 static void DecodeModes (PB_INSTANCE *pbi,
-			 ogg_uint32_t SBRows,
-			 ogg_uint32_t SBCols){
+                         ogg_uint32_t SBRows,
+                         ogg_uint32_t SBCols){
   long ret;
   ogg_int32_t   FragIndex;
   ogg_uint32_t  MB;
@@ -158,7 +171,7 @@ static void DecodeModes (PB_INSTANCE *pbi,
       pbi->FragCodingMethod[i] = CODE_INTRA;
     }
   }else{
-    ogg_uint32_t  ModeEntry; /* Mode bits read */
+    ogg_uint32_t        ModeEntry; /* Mode bits read */
     CODING_MODE         CustomModeAlphabet[MAX_MODES];
     const CODING_MODE  *ModeList;
 
@@ -183,51 +196,51 @@ static void DecodeModes (PB_INSTANCE *pbi,
     /* Unravel the quad-tree */
     for ( SBrow=0; SBrow<SBRows; SBrow++ ){
       for ( SBcol=0; SBcol<SBCols; SBcol++ ){
-	for ( MB=0; MB<4; MB++ ){
-	  /* There may be MB's lying out of frame which must be
-	     ignored. For these MB's top left block will have a negative
-	     Fragment Index. */
-	  if ( QuadMapToMBTopLeft(pbi->BlockMap, SB,MB) >= 0){
-	    /* Is the Macro-Block coded: */
-	    if ( pbi->MBCodedFlags[MBListIndex++] ){
-	      /* Upack the block level modes and motion vectors */
-	      FragIndex = QuadMapToMBTopLeft( pbi->BlockMap, SB, MB );
+        for ( MB=0; MB<4; MB++ ){
+          /* There may be MB's lying out of frame which must be
+             ignored. For these MB's top left block will have a negative
+             Fragment Index. */
+          if ( QuadMapToMBTopLeft(pbi->BlockMap, SB,MB) >= 0){
+            /* Is the Macro-Block coded: */
+            if ( pbi->MBCodedFlags[MBListIndex++] ){
+              /* Upack the block level modes and motion vectors */
+              FragIndex = QuadMapToMBTopLeft( pbi->BlockMap, SB, MB );
 
-	      /* Unpack the mode. */
-	      if ( CodingScheme == (MODE_METHODS-1) ){
-		/* This is the fall back coding scheme. */
-		/* Simply MODE_BITS bits per mode entry. */
+              /* Unpack the mode. */
+              if ( CodingScheme == (MODE_METHODS-1) ){
+                /* This is the fall back coding scheme. */
+                /* Simply MODE_BITS bits per mode entry. */
                 theora_read(pbi->opb, MODE_BITS, &ret);
                 CodingMethod = (CODING_MODE)ret;
-	      }else{
-		ModeEntry = FrArrayUnpackMode(pbi);
+              }else{
+                ModeEntry = FrArrayUnpackMode(pbi);
                 CodingMethod = ModeList[ModeEntry];
-	      }
+              }
 
-	      /* Note the coding mode for each block in macro block. */
-	      pbi->FragCodingMethod[FragIndex] = CodingMethod;
-	      pbi->FragCodingMethod[FragIndex + 1] = CodingMethod;
-	      pbi->FragCodingMethod[FragIndex + pbi->HFragments] =
-		CodingMethod;
-	      pbi->FragCodingMethod[FragIndex + pbi->HFragments + 1] =
-		CodingMethod;
+              /* Note the coding mode for each block in macro block. */
+              pbi->FragCodingMethod[FragIndex] = CodingMethod;
+              pbi->FragCodingMethod[FragIndex + 1] = CodingMethod;
+              pbi->FragCodingMethod[FragIndex + pbi->HFragments] =
+                CodingMethod;
+              pbi->FragCodingMethod[FragIndex + pbi->HFragments + 1] =
+                CodingMethod;
 
-	      /* Matching fragments in the U and V planes */
-	      UVRow = (FragIndex / (pbi->HFragments * 2));
-	      UVColumn = (FragIndex % pbi->HFragments) / 2;
-	      UVFragOffset = (UVRow * (pbi->HFragments / 2)) + UVColumn;
-	      pbi->FragCodingMethod[pbi->YPlaneFragments + UVFragOffset] =
-		CodingMethod;
-	      pbi->FragCodingMethod[pbi->YPlaneFragments +
-				   pbi->UVPlaneFragments + UVFragOffset] =
-		CodingMethod;
+              /* Matching fragments in the U and V planes */
+              UVRow = (FragIndex / (pbi->HFragments * 2));
+              UVColumn = (FragIndex % pbi->HFragments) / 2;
+              UVFragOffset = (UVRow * (pbi->HFragments / 2)) + UVColumn;
+              pbi->FragCodingMethod[pbi->YPlaneFragments + UVFragOffset] =
+                CodingMethod;
+              pbi->FragCodingMethod[pbi->YPlaneFragments +
+                                   pbi->UVPlaneFragments + UVFragOffset] =
+                CodingMethod;
 
-	    }
-	  }
-	}
+            }
+          }
+        }
 
-	/* Next Super-Block */
-	SB++;
+        /* Next Super-Block */
+        SB++;
       }
     }
   }
@@ -292,6 +305,9 @@ static ogg_int32_t ExtractMVectorComponentA(PB_INSTANCE *pbi){
     if (ret)
       MVectComponent = -MVectComponent;
     break;
+  default:
+    /* occurs if there is a read error */
+    MVectComponent = 0;
   }
 
   return MVectComponent;
@@ -312,8 +328,8 @@ static ogg_int32_t ExtractMVectorComponentB(PB_INSTANCE *pbi){
 }
 
 static void DecodeMVectors ( PB_INSTANCE *pbi,
-			     ogg_uint32_t SBRows,
-			     ogg_uint32_t SBCols ){
+                             ogg_uint32_t SBRows,
+                             ogg_uint32_t SBCols ){
   long ret;
   ogg_int32_t   FragIndex;
   ogg_uint32_t  MB;
@@ -339,16 +355,26 @@ static void DecodeMVectors ( PB_INSTANCE *pbi,
     return;
   }
 
-  /* set the default motion vector to 0,0 */
+  /* set the default motion vectors to 0,0 */
   MVect[0].x = 0;
   MVect[0].y = 0;
+  MVect[1].x = 0;
+  MVect[1].y = 0;
+  MVect[2].x = 0;
+  MVect[2].y = 0;
+  MVect[3].x = 0;
+  MVect[3].y = 0;
+  MVect[4].x = 0;
+  MVect[4].y = 0;
+  MVect[5].x = 0;
+  MVect[5].y = 0;
   LastInterMV.x = 0;
   LastInterMV.y = 0;
   PriorLastInterMV.x = 0;
   PriorLastInterMV.y = 0;
 
   /* Read the entropy method used and set up the appropriate decode option */
-  theora_read(pbi->opb, 1, &ret);
+  theora_read(pbi->opb, 1, &ret);  
   if ( ret == 0 )
     ExtractMVectorComponent = ExtractMVectorComponentA;
   else
@@ -359,147 +385,147 @@ static void DecodeMVectors ( PB_INSTANCE *pbi,
 
     for ( SBcol=0; SBcol<SBCols; SBcol++ ){
       for ( MB=0; MB<4; MB++ ){
-	/* There may be MB's lying out of frame which must be
-	   ignored. For these MB's the top left block will have a
-	   negative Fragment. */
-	if ( QuadMapToMBTopLeft(pbi->BlockMap, SB,MB) >= 0 ) {
-	  /* Is the Macro-Block further coded: */
-	  if ( pbi->MBCodedFlags[MBListIndex++] ){
-	    /* Upack the block level modes and motion vectors */
-	    FragIndex = QuadMapToMBTopLeft( pbi->BlockMap, SB, MB );
+        /* There may be MB's lying out of frame which must be
+           ignored. For these MB's the top left block will have a
+           negative Fragment. */
+        if ( QuadMapToMBTopLeft(pbi->BlockMap, SB,MB) >= 0 ) {
+          /* Is the Macro-Block further coded: */
+          if ( pbi->MBCodedFlags[MBListIndex++] ){
+            /* Upack the block level modes and motion vectors */
+            FragIndex = QuadMapToMBTopLeft( pbi->BlockMap, SB, MB );
 
-	    /* Clear the motion vector before we start. */
-	    MVect[0].x = 0;
-	    MVect[0].y = 0;
+            /* Clear the motion vector before we start. */
+            MVect[0].x = 0;
+            MVect[0].y = 0;
 
-	    /* Unpack the mode (and motion vectors if necessary). */
-	    CodingMethod = pbi->FragCodingMethod[FragIndex];
+            /* Unpack the mode (and motion vectors if necessary). */
+            CodingMethod = pbi->FragCodingMethod[FragIndex];
 
-	    /* Read the motion vector or vectors if present. */
-	    if ( (CodingMethod == CODE_INTER_PLUS_MV) ||
-		 (CodingMethod == CODE_GOLDEN_MV) ){
-	      MVect[0].x = ExtractMVectorComponent(pbi);
-	      MVect[1].x = MVect[0].x;
-	      MVect[2].x = MVect[0].x;
-	      MVect[3].x = MVect[0].x;
-	      MVect[4].x = MVect[0].x;
-	      MVect[5].x = MVect[0].x;
-	      MVect[0].y = ExtractMVectorComponent(pbi);
-	      MVect[1].y = MVect[0].y;
-	      MVect[2].y = MVect[0].y;
-	      MVect[3].y = MVect[0].y;
-	      MVect[4].y = MVect[0].y;
-	      MVect[5].y = MVect[0].y;
-	    }else if ( CodingMethod == CODE_INTER_FOURMV ){
-	      /* Extrac the 4 Y MVs */
-	      MVect[0].x = ExtractMVectorComponent(pbi);
-	      MVect[0].y = ExtractMVectorComponent(pbi);
+            /* Read the motion vector or vectors if present. */
+            if ( (CodingMethod == CODE_INTER_PLUS_MV) ||
+                 (CodingMethod == CODE_GOLDEN_MV) ){
+              MVect[0].x = ExtractMVectorComponent(pbi);
+              MVect[1].x = MVect[0].x;
+              MVect[2].x = MVect[0].x;
+              MVect[3].x = MVect[0].x;
+              MVect[4].x = MVect[0].x;
+              MVect[5].x = MVect[0].x;
+              MVect[0].y = ExtractMVectorComponent(pbi);
+              MVect[1].y = MVect[0].y;
+              MVect[2].y = MVect[0].y;
+              MVect[3].y = MVect[0].y;
+              MVect[4].y = MVect[0].y;
+              MVect[5].y = MVect[0].y;
+            }else if ( CodingMethod == CODE_INTER_FOURMV ){
+              /* Extrac the 4 Y MVs */
+              MVect[0].x = ExtractMVectorComponent(pbi);
+              MVect[0].y = ExtractMVectorComponent(pbi);
 
-	      MVect[1].x = ExtractMVectorComponent(pbi);
-	      MVect[1].y = ExtractMVectorComponent(pbi);
+              MVect[1].x = ExtractMVectorComponent(pbi);
+              MVect[1].y = ExtractMVectorComponent(pbi);
 
-	      MVect[2].x = ExtractMVectorComponent(pbi);
-	      MVect[2].y = ExtractMVectorComponent(pbi);
+              MVect[2].x = ExtractMVectorComponent(pbi);
+              MVect[2].y = ExtractMVectorComponent(pbi);
 
-	      MVect[3].x = ExtractMVectorComponent(pbi);
-	      MVect[3].y = ExtractMVectorComponent(pbi);
+              MVect[3].x = ExtractMVectorComponent(pbi);
+              MVect[3].y = ExtractMVectorComponent(pbi);
 
-	      /* Calculate the U and V plane MVs as the average of the
+              /* Calculate the U and V plane MVs as the average of the
                  Y plane MVs. */
-	      /* First .x component */
-	      MVect[4].x = MVect[0].x + MVect[1].x + MVect[2].x + MVect[3].x;
-	      if ( MVect[4].x >= 0 )
-		MVect[4].x = (MVect[4].x + 2) / 4;
-	      else
-		MVect[4].x = (MVect[4].x - 2) / 4;
-	      MVect[5].x = MVect[4].x;
-	      /* Then .y component */
-	      MVect[4].y = MVect[0].y + MVect[1].y + MVect[2].y + MVect[3].y;
-	      if ( MVect[4].y >= 0 )
-		MVect[4].y = (MVect[4].y + 2) / 4;
-	      else
-		MVect[4].y = (MVect[4].y - 2) / 4;
-	      MVect[5].y = MVect[4].y;
-	    }
+              /* First .x component */
+              MVect[4].x = MVect[0].x + MVect[1].x + MVect[2].x + MVect[3].x;
+              if ( MVect[4].x >= 0 )
+                MVect[4].x = (MVect[4].x + 2) / 4;
+              else
+                MVect[4].x = (MVect[4].x - 2) / 4;
+              MVect[5].x = MVect[4].x;
+              /* Then .y component */
+              MVect[4].y = MVect[0].y + MVect[1].y + MVect[2].y + MVect[3].y;
+              if ( MVect[4].y >= 0 )
+                MVect[4].y = (MVect[4].y + 2) / 4;
+              else
+                MVect[4].y = (MVect[4].y - 2) / 4;
+              MVect[5].y = MVect[4].y;
+            }
 
-	    /* Keep track of last and prior last inter motion vectors. */
-	    if ( CodingMethod == CODE_INTER_PLUS_MV ){
-	      PriorLastInterMV.x = LastInterMV.x;
-	      PriorLastInterMV.y = LastInterMV.y;
-	      LastInterMV.x = MVect[0].x;
-	      LastInterMV.y = MVect[0].y;
-	    }else if ( CodingMethod == CODE_INTER_LAST_MV ){
-	      /* Use the last coded Inter motion vector. */
-	      MVect[0].x = LastInterMV.x;
-	      MVect[1].x = MVect[0].x;
-	      MVect[2].x = MVect[0].x;
-	      MVect[3].x = MVect[0].x;
-	      MVect[4].x = MVect[0].x;
-	      MVect[5].x = MVect[0].x;
-	      MVect[0].y = LastInterMV.y;
-	      MVect[1].y = MVect[0].y;
-	      MVect[2].y = MVect[0].y;
-	      MVect[3].y = MVect[0].y;
-	      MVect[4].y = MVect[0].y;
-	      MVect[5].y = MVect[0].y;
-	    }else if ( CodingMethod == CODE_INTER_PRIOR_LAST ){
+            /* Keep track of last and prior last inter motion vectors. */
+            if ( CodingMethod == CODE_INTER_PLUS_MV ){
+              PriorLastInterMV.x = LastInterMV.x;
+              PriorLastInterMV.y = LastInterMV.y;
+              LastInterMV.x = MVect[0].x;
+              LastInterMV.y = MVect[0].y;
+            }else if ( CodingMethod == CODE_INTER_LAST_MV ){
+              /* Use the last coded Inter motion vector. */
+              MVect[0].x = LastInterMV.x;
+              MVect[1].x = MVect[0].x;
+              MVect[2].x = MVect[0].x;
+              MVect[3].x = MVect[0].x;
+              MVect[4].x = MVect[0].x;
+              MVect[5].x = MVect[0].x;
+              MVect[0].y = LastInterMV.y;
+              MVect[1].y = MVect[0].y;
+              MVect[2].y = MVect[0].y;
+              MVect[3].y = MVect[0].y;
+              MVect[4].y = MVect[0].y;
+              MVect[5].y = MVect[0].y;
+            }else if ( CodingMethod == CODE_INTER_PRIOR_LAST ){
               /* Use the next-to-last coded Inter motion vector. */
-	      MVect[0].x = PriorLastInterMV.x;
-	      MVect[1].x = MVect[0].x;
-	      MVect[2].x = MVect[0].x;
-	      MVect[3].x = MVect[0].x;
-	      MVect[4].x = MVect[0].x;
-	      MVect[5].x = MVect[0].x;
-	      MVect[0].y = PriorLastInterMV.y;
-	      MVect[1].y = MVect[0].y;
-	      MVect[2].y = MVect[0].y;
-	      MVect[3].y = MVect[0].y;
-	      MVect[4].y = MVect[0].y;
-	      MVect[5].y = MVect[0].y;
+              MVect[0].x = PriorLastInterMV.x;
+              MVect[1].x = MVect[0].x;
+              MVect[2].x = MVect[0].x;
+              MVect[3].x = MVect[0].x;
+              MVect[4].x = MVect[0].x;
+              MVect[5].x = MVect[0].x;
+              MVect[0].y = PriorLastInterMV.y;
+              MVect[1].y = MVect[0].y;
+              MVect[2].y = MVect[0].y;
+              MVect[3].y = MVect[0].y;
+              MVect[4].y = MVect[0].y;
+              MVect[5].y = MVect[0].y;
 
-	      /* Swap the prior and last MV cases over */
-	      TmpMVect.x = PriorLastInterMV.x;
-	      TmpMVect.y = PriorLastInterMV.y;
-	      PriorLastInterMV.x = LastInterMV.x;
-	      PriorLastInterMV.y = LastInterMV.y;
-	      LastInterMV.x = TmpMVect.x;
-	      LastInterMV.y = TmpMVect.y;
-	    }else if ( CodingMethod == CODE_INTER_FOURMV ){
-	      /* Update last MV and prior last mv */
-	      PriorLastInterMV.x = LastInterMV.x;
-	      PriorLastInterMV.y = LastInterMV.y;
-	      LastInterMV.x = MVect[3].x;
-	      LastInterMV.y = MVect[3].y;
-	    }
+              /* Swap the prior and last MV cases over */
+              TmpMVect.x = PriorLastInterMV.x;
+              TmpMVect.y = PriorLastInterMV.y;
+              PriorLastInterMV.x = LastInterMV.x;
+              PriorLastInterMV.y = LastInterMV.y;
+              LastInterMV.x = TmpMVect.x;
+              LastInterMV.y = TmpMVect.y;
+            }else if ( CodingMethod == CODE_INTER_FOURMV ){
+              /* Update last MV and prior last mv */
+              PriorLastInterMV.x = LastInterMV.x;
+              PriorLastInterMV.y = LastInterMV.y;
+              LastInterMV.x = MVect[3].x;
+              LastInterMV.y = MVect[3].y;
+            }
 
-	    /* Note the coding mode and vector for each block in the
+            /* Note the coding mode and vector for each block in the
                current macro block. */
-	    pbi->FragMVect[FragIndex].x = MVect[0].x;
-	    pbi->FragMVect[FragIndex].y = MVect[0].y;
+            pbi->FragMVect[FragIndex].x = MVect[0].x;
+            pbi->FragMVect[FragIndex].y = MVect[0].y;
 
-	    pbi->FragMVect[FragIndex + 1].x = MVect[1].x;
-	    pbi->FragMVect[FragIndex + 1].y = MVect[1].y;
+            pbi->FragMVect[FragIndex + 1].x = MVect[1].x;
+            pbi->FragMVect[FragIndex + 1].y = MVect[1].y;
 
-	    pbi->FragMVect[FragIndex + pbi->HFragments].x = MVect[2].x;
-	    pbi->FragMVect[FragIndex + pbi->HFragments].y = MVect[2].y;
+            pbi->FragMVect[FragIndex + pbi->HFragments].x = MVect[2].x;
+            pbi->FragMVect[FragIndex + pbi->HFragments].y = MVect[2].y;
 
-	    pbi->FragMVect[FragIndex + pbi->HFragments + 1].x = MVect[3].x;
-	    pbi->FragMVect[FragIndex + pbi->HFragments + 1].y = MVect[3].y;
+            pbi->FragMVect[FragIndex + pbi->HFragments + 1].x = MVect[3].x;
+            pbi->FragMVect[FragIndex + pbi->HFragments + 1].y = MVect[3].y;
 
-	    /* Matching fragments in the U and V planes */
-	    UVRow = (FragIndex / (pbi->HFragments * 2));
-	    UVColumn = (FragIndex % pbi->HFragments) / 2;
-	    UVFragOffset = (UVRow * (pbi->HFragments / 2)) + UVColumn;
+            /* Matching fragments in the U and V planes */
+            UVRow = (FragIndex / (pbi->HFragments * 2));
+            UVColumn = (FragIndex % pbi->HFragments) / 2;
+            UVFragOffset = (UVRow * (pbi->HFragments / 2)) + UVColumn;
 
-	    pbi->FragMVect[pbi->YPlaneFragments + UVFragOffset].x = MVect[4].x;
-	    pbi->FragMVect[pbi->YPlaneFragments + UVFragOffset].y = MVect[4].y;
+            pbi->FragMVect[pbi->YPlaneFragments + UVFragOffset].x = MVect[4].x;
+            pbi->FragMVect[pbi->YPlaneFragments + UVFragOffset].y = MVect[4].y;
 
-	    pbi->FragMVect[pbi->YPlaneFragments + pbi->UVPlaneFragments +
-			  UVFragOffset].x = MVect[5].x;
-	    pbi->FragMVect[pbi->YPlaneFragments + pbi->UVPlaneFragments +
-			  UVFragOffset].y = MVect[5].y;
-	  }
-	}
+            pbi->FragMVect[pbi->YPlaneFragments + pbi->UVPlaneFragments +
+                          UVFragOffset].x = MVect[5].x;
+            pbi->FragMVect[pbi->YPlaneFragments + pbi->UVPlaneFragments +
+                          UVFragOffset].y = MVect[5].y;
+          }
+        }
       }
 
       /* Next Super-Block */
@@ -509,7 +535,7 @@ static void DecodeMVectors ( PB_INSTANCE *pbi,
 }
 
 static ogg_uint32_t ExtractToken(oggpack_buffer *opb,
-				 HUFF_ENTRY * CurrentRoot){
+                                 HUFF_ENTRY * CurrentRoot){
   long ret;
   ogg_uint32_t Token;
   /* Loop searches down through tree based upon bits read from the
@@ -518,6 +544,7 @@ static ogg_uint32_t ExtractToken(oggpack_buffer *opb,
   while ( CurrentRoot->Value < 0 ){
 
     theora_read(opb, 1, &ret);
+    if (ret < 0) break; /* out of packet data! */
     if (ret)
       CurrentRoot = CurrentRoot->OneChild;
     else
@@ -529,9 +556,9 @@ static ogg_uint32_t ExtractToken(oggpack_buffer *opb,
 }
 
 static void UnpackAndExpandDcToken( PB_INSTANCE *pbi,
-				    Q_LIST_ENTRY *ExpandedBlock,
-				    unsigned char * CoeffIndex ){
-  long			ret;
+                                    Q_LIST_ENTRY *ExpandedBlock,
+                                    unsigned char * CoeffIndex ){
+  long                  ret;
   ogg_int32_t           ExtraBits = 0;
   ogg_uint32_t          Token;
 
@@ -594,8 +621,8 @@ static void UnpackAndExpandDcToken( PB_INSTANCE *pbi,
 }
 
 static void UnpackAndExpandAcToken( PB_INSTANCE *pbi,
-				    Q_LIST_ENTRY * ExpandedBlock,
-				    unsigned char * CoeffIndex  ) {
+                                    Q_LIST_ENTRY * ExpandedBlock,
+                                    unsigned char * CoeffIndex  ) {
   long                  ret;
   ogg_int32_t           ExtraBits = 0;
   ogg_uint32_t          Token;
@@ -688,10 +715,18 @@ static void UnPackVideo (PB_INSTANCE *pbi){
   pbi->BlocksToDecode = pbi->CodedBlockIndex;
 
   /* Get the DC huffman table choice for Y and then UV */
-  theora_read(pbi->opb,DC_HUFF_CHOICE_BITS,&ret);
+  theora_read(pbi->opb,DC_HUFF_CHOICE_BITS,&ret); 
   DcHuffChoice1 = ret + DC_HUFF_OFFSET;
-  theora_read(pbi->opb,DC_HUFF_CHOICE_BITS,&ret);
+  if (ret < 0 || DcHuffChoice1 >= NUM_HUFF_TABLES) {
+    DcHuffChoice1 = DC_HUFF_OFFSET;
+    pbi->DecoderErrorCode = 1;
+  }
+  theora_read(pbi->opb,DC_HUFF_CHOICE_BITS,&ret); 
   DcHuffChoice2 = ret + DC_HUFF_OFFSET;
+  if (ret < 0 || DcHuffChoice2 >= NUM_HUFF_TABLES) {
+    DcHuffChoice2 = DC_HUFF_OFFSET;
+    pbi->DecoderErrorCode = 1;
+  }
 
   /* UnPack DC coefficients / tokens */
   CodedBlockListPtr = pbi->CodedBlockList;
@@ -718,18 +753,26 @@ static void UnPackVideo (PB_INSTANCE *pbi){
     }else{
       /* Else unpack a DC token */
       UnpackAndExpandDcToken( pbi,
-			      pbi->QFragData[FragIndex],
-			      &pbi->FragCoeffs[FragIndex] );
+                              pbi->QFragData[FragIndex],
+                              &pbi->FragCoeffs[FragIndex] );
     }
     CodedBlockListPtr++;
   }
 
   /* Get the AC huffman table choice for Y and then for UV. */
 
-  theora_read(pbi->opb,AC_HUFF_CHOICE_BITS,&ret);
+  theora_read(pbi->opb,AC_HUFF_CHOICE_BITS,&ret); 
   AcHuffIndex1 = ret + AC_HUFF_OFFSET;
-  theora_read(pbi->opb,AC_HUFF_CHOICE_BITS,&ret);
+  if (ret < 0 || AcHuffIndex1 >= NUM_HUFF_TABLES) {
+    AcHuffIndex1 = AC_HUFF_OFFSET;
+    pbi->DecoderErrorCode = 1;
+  }
+  theora_read(pbi->opb,AC_HUFF_CHOICE_BITS,&ret); 
   AcHuffIndex2 = ret + AC_HUFF_OFFSET;
+  if (ret < 0 || AcHuffIndex2 >= NUM_HUFF_TABLES) {
+    AcHuffIndex2 = AC_HUFF_OFFSET;
+    pbi->DecoderErrorCode = 1;
+  }
 
   /* Unpack Lower AC coefficients. */
   while ( EncodedCoeffs < 64 ) {
@@ -758,25 +801,25 @@ static void UnPackVideo (PB_INSTANCE *pbi){
 
       /* Should we decode a token for this block on this pass. */
       if ( pbi->FragCoeffs[FragIndex] <= EncodedCoeffs ) {
-	pbi->FragCoefEOB[FragIndex] = pbi->FragCoeffs[FragIndex];
-	/* If we are in the middle of an EOB run */
-	if ( pbi->EOB_Run ) {
-	  /* Mark the current block as fully expanded and decrement
+        pbi->FragCoefEOB[FragIndex] = pbi->FragCoeffs[FragIndex];
+        /* If we are in the middle of an EOB run */
+        if ( pbi->EOB_Run ) {
+          /* Mark the current block as fully expanded and decrement
              EOB_RUN count */
-	  pbi->FragCoeffs[FragIndex] = BLOCK_SIZE;
-	  pbi->EOB_Run --;
-	  pbi->BlocksToDecode --;
-	}else{
-	  /* Else unpack an AC token */
-	  /* Work out which huffman table to use, then decode a token */
-	  if ( FragIndex < (ogg_int32_t)pbi->YPlaneFragments )
-	    pbi->ACHuffChoice = AcHuffChoice1;
-	  else
-	    pbi->ACHuffChoice = AcHuffChoice2;
+          pbi->FragCoeffs[FragIndex] = BLOCK_SIZE;
+          pbi->EOB_Run --;
+          pbi->BlocksToDecode --;
+        }else{
+          /* Else unpack an AC token */
+          /* Work out which huffman table to use, then decode a token */
+          if ( FragIndex < (ogg_int32_t)pbi->YPlaneFragments )
+            pbi->ACHuffChoice = AcHuffChoice1;
+          else
+            pbi->ACHuffChoice = AcHuffChoice2;
 
-	  UnpackAndExpandAcToken( pbi, pbi->QFragData[FragIndex],
-				  &pbi->FragCoeffs[FragIndex] );
-	}
+          UnpackAndExpandAcToken( pbi, pbi->QFragData[FragIndex],
+                                  &pbi->FragCoeffs[FragIndex] );
+        }
       }
       CodedBlockListPtr++;
     }
@@ -811,36 +854,37 @@ static void DecodeData(PB_INSTANCE *pbi){
 
   /* Decode the modes data */
   DecodeModes( pbi, pbi->YSBRows, pbi->YSBCols);
+  if (pbi->DecoderErrorCode) return;
 
   /* Unpack and decode the motion vectors. */
   DecodeMVectors ( pbi, pbi->YSBRows, pbi->YSBCols);
+  if (pbi->DecoderErrorCode) return;
 
   /* Unpack and decode the actual video data. */
   UnPackVideo(pbi);
+  if (pbi->DecoderErrorCode) return;
 
   /* Reconstruct and display the frame */
+  dsp_save_fpu (pbi->dsp);
   ReconRefFrames(pbi);
+  dsp_restore_fpu (pbi->dsp);
 
 }
 
 
 int LoadAndDecode(PB_INSTANCE *pbi){
-  int    LoadFrameOK;
 
   /* Reset the DC predictors. */
   pbi->InvLastIntraDC = 0;
   pbi->InvLastInterDC = 0;
 
-  /* Load the next frame. */
-  LoadFrameOK = LoadFrame(pbi);
-
-  if ( LoadFrameOK ){
-      pbi->LastFrameQualityValue = pbi->ThisFrameQualityValue;
+  if ( LoadFrame(pbi) == 0 ){
+    pbi->LastFrameQualityValue = pbi->ThisFrameQualityValue;
 
     /* Decode the data into the fragment buffer. */
     DecodeData(pbi);
-    return(0);
+    if (pbi->DecoderErrorCode == 0) return 0;
   }
 
-  return(OC_BADPACKET);
+  return OC_BADPACKET;
 }

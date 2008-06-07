@@ -76,6 +76,7 @@ void TvideoCodecTheora::create(void)
    if (Tconfig::cpu_flags&FF_CPU_MMX   ) cpu|=CPU_X86_MMX;
    if (Tconfig::cpu_flags&FF_CPU_3DNOW ) cpu|=CPU_X86_3DNOW;
    if (Tconfig::cpu_flags&FF_CPU_MMXEXT) cpu|=CPU_X86_MMXEXT;
+   if (Tconfig::cpu_flags&FF_CPU_3DNOWEXT) cpu|=CPU_X86_3DNOWEXT;
    if (Tconfig::cpu_flags&FF_CPU_SSE   ) cpu|=CPU_X86_SSE;
    if (Tconfig::cpu_flags&FF_CPU_SSE2  ) cpu|=CPU_X86_SSE2;
    set_cpu_flags(cpu);

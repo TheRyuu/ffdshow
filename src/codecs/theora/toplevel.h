@@ -11,6 +11,7 @@
  ********************************************************************
 
   function:
+  last mod: $Id: toplevel.h 11442 2006-05-27 17:28:08Z giles $
 
  ********************************************************************/
 
@@ -24,6 +25,6 @@
 #define VERSION_MINOR 2
 #define VERSION_SUB 0
 
-#define VENDOR_STRING "Xiph.Org libTheora I 20040317 3 2 0"
+#define VENDOR_STRING "Xiph.Org libTheora I 20060526 3 2 0"
 
 void theora_encoder_clear (CP_INSTANCE * cpi);

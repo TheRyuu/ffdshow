@@ -11,6 +11,7 @@
  ********************************************************************
 
   function:
+  last mod: $Id: frinit.c 11442 2006-05-27 17:28:08Z giles $
 
  ********************************************************************/
 
@@ -83,7 +84,7 @@ static void CalcPixelIndexTable( PB_INSTANCE *pbi){
     PixelIndexTablePtr[ i ] =
       ((i / (pbi->HFragments / 2) ) *
        (VFRAGPIXELS *
-	(pbi->info.width / 2)) );
+        (pbi->info.width / 2)) );
     PixelIndexTablePtr[ i ] +=
       ((i % (pbi->HFragments / 2) ) *
        HFRAGPIXELS) + pbi->YPlaneSize;
@@ -115,7 +116,7 @@ static void CalcPixelIndexTable( PB_INSTANCE *pbi){
   /* V blocks */
   PixelIndexTablePtr =
     &pbi->recon_pixel_index_table[pbi->YPlaneFragments +
-				 pbi->UVPlaneFragments];
+                                 pbi->UVPlaneFragments];
 
   for ( i = 0; i < pbi->UVPlaneFragments; i++ ) {
     PixelIndexTablePtr[ i ] =
@@ -211,7 +212,7 @@ void InitFragmentInfo(PB_INSTANCE * pbi){
     _ogg_malloc(pbi->UnitFragments * sizeof(*pbi->pixel_index_table));
 
   pbi->recon_pixel_index_table =
-    _ogg_calloc(pbi->UnitFragments , sizeof(*pbi->recon_pixel_index_table));
+    _ogg_malloc(pbi->UnitFragments * sizeof(*pbi->recon_pixel_index_table));
 
   pbi->FragTokenCounts =
     _ogg_malloc(pbi->UnitFragments * sizeof(*pbi->FragTokenCounts));
@@ -383,15 +384,11 @@ void InitFrameDetails(PB_INSTANCE *pbi){
 
   /* Configure mapping between quad-tree and fragments */
   CreateBlockMapping ( pbi->BlockMap, pbi->YSuperBlocks,
-		       pbi->UVSuperBlocks, pbi->HFragments, pbi->VFragments);
+                       pbi->UVSuperBlocks, pbi->HFragments, pbi->VFragments);
 
   /* Re-initialise the pixel index table. */
 
   CalcPixelIndexTable( pbi );
 
 }
-
-
-
-
 

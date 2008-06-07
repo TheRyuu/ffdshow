@@ -21,16 +21,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef _ATTRIBUTES_H_
-#define _ATTRIBUTES_H_
+#ifndef LIBMPEG2_ATTRIBUTES_H
+#define LIBMPEG2_ATTRIBUTES_H
 
 /* use gcc attribs to align critical data structures */
-#ifdef __GNUC__
-  #define __align8(t,v) t v __attribute__ ((aligned (8)))
-  #define __align16(t,v) t v __attribute__ ((aligned (16)))
+#ifdef ATTRIBUTE_ALIGNED_MAX
+#define ATTR_ALIGN(align) __attribute__ ((__aligned__ ((ATTRIBUTE_ALIGNED_MAX < align) ? ATTRIBUTE_ALIGNED_MAX : align)))
 #else
-  #define __align8(t,v) __declspec(align(8)) t v
-  #define __align16(t,v) __declspec(align(16)) t v
+#define ATTR_ALIGN(align)
 #endif
 
 #ifdef HAVE_BUILTIN_EXPECT
@@ -41,4 +39,4 @@
 #define unlikely(x) (x)
 #endif
 
-#endif
+#endif /* LIBMPEG2_ATTRIBUTES_H */

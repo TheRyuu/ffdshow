@@ -11,6 +11,7 @@
  ********************************************************************
 
   function:
+  last mod: $Id: misc_common.c 11442 2006-05-27 17:28:08Z giles $
 
  ********************************************************************/
 
@@ -18,7 +19,7 @@
 #include "codec_internal.h"
 #include "block_inline.h"
 
-#define FIXED_Q	                150
+#define FIXED_Q                 150
 #define MAX_UP_REG_LOOPS        2
 
 /* Gives the initial bytes per block estimate for each Q value */
@@ -71,7 +72,7 @@ double GetEstimatedBpb( CP_INSTANCE *cpi, ogg_uint32_t TargetQ ){
 }
 
 static void UpRegulateMB( CP_INSTANCE *cpi, ogg_uint32_t RegulationQ,
-		   ogg_uint32_t SB, ogg_uint32_t MB, int NoCheck ) {
+                   ogg_uint32_t SB, ogg_uint32_t MB, int NoCheck ) {
   ogg_int32_t  FragIndex;
   ogg_uint32_t B;
 
@@ -89,11 +90,11 @@ static void UpRegulateMB( CP_INSTANCE *cpi, ogg_uint32_t RegulationQ,
       FragIndex = QuadMapToIndex1( cpi->pb.BlockMap, SB, MB, B );
 
       if ( ( !cpi->pb.display_fragments[FragIndex] ) &&
-	   ( (NoCheck) || (cpi->FragmentLastQ[FragIndex] > RegulationQ) ) ){
-	cpi->pb.display_fragments[FragIndex] = 1;
-	cpi->extra_fragments[FragIndex] = 1;
-	cpi->FragmentLastQ[FragIndex] = RegulationQ;
-	cpi->MotionScore++;
+           ( (NoCheck) || (cpi->FragmentLastQ[FragIndex] > RegulationQ) ) ){
+        cpi->pb.display_fragments[FragIndex] = 1;
+        cpi->extra_fragments[FragIndex] = 1;
+        cpi->FragmentLastQ[FragIndex] = RegulationQ;
+        cpi->MotionScore++;
       }
     }
 
@@ -106,7 +107,7 @@ static void UpRegulateMB( CP_INSTANCE *cpi, ogg_uint32_t RegulationQ,
 
     FragIndex = cpi->pb.YPlaneFragments + UVFragOffset;
     if ( ( !cpi->pb.display_fragments[FragIndex] ) &&
-	 ( (NoCheck) || (cpi->FragmentLastQ[FragIndex] > RegulationQ) ) ) {
+         ( (NoCheck) || (cpi->FragmentLastQ[FragIndex] > RegulationQ) ) ) {
       cpi->pb.display_fragments[FragIndex] = 1;
       cpi->extra_fragments[FragIndex] = 1;
       cpi->FragmentLastQ[FragIndex] = RegulationQ;
@@ -115,7 +116,7 @@ static void UpRegulateMB( CP_INSTANCE *cpi, ogg_uint32_t RegulationQ,
 
     FragIndex += cpi->pb.UVPlaneFragments;
     if ( ( !cpi->pb.display_fragments[FragIndex] ) &&
-	 ( (NoCheck) || (cpi->FragmentLastQ[FragIndex] > RegulationQ) ) ) {
+         ( (NoCheck) || (cpi->FragmentLastQ[FragIndex] > RegulationQ) ) ) {
       cpi->pb.display_fragments[FragIndex] = 1;
       cpi->extra_fragments[FragIndex] = 1;
       cpi->FragmentLastQ[FragIndex] = RegulationQ;
@@ -125,8 +126,8 @@ static void UpRegulateMB( CP_INSTANCE *cpi, ogg_uint32_t RegulationQ,
 }
 
 static void UpRegulateBlocks (CP_INSTANCE *cpi, ogg_uint32_t RegulationQ,
-		       ogg_int32_t RecoveryBlocks,
-		       ogg_uint32_t * LastSB, ogg_uint32_t * LastMB ) {
+                       ogg_int32_t RecoveryBlocks,
+                       ogg_uint32_t * LastSB, ogg_uint32_t * LastMB ) {
 
   ogg_uint32_t LoopTimesRound = 0;
   ogg_uint32_t MaxSB = cpi->pb.YSBRows *
@@ -135,32 +136,32 @@ static void UpRegulateBlocks (CP_INSTANCE *cpi, ogg_uint32_t RegulationQ,
 
   /* First scan for blocks for which a residue update is outstanding. */
   while ( (cpi->MotionScore < RecoveryBlocks) &&
-	  (LoopTimesRound < MAX_UP_REG_LOOPS) ) {
+          (LoopTimesRound < MAX_UP_REG_LOOPS) ) {
     LoopTimesRound++;
 
     for ( SB = (*LastSB); SB < MaxSB; SB++ ) {
       /* Check its four Macro-Blocks */
       for ( MB=(*LastMB); MB<4; MB++ ) {
-	/* Mark relevant blocks for update */
-	UpRegulateMB( cpi, RegulationQ, SB, MB, 0 );
+        /* Mark relevant blocks for update */
+        UpRegulateMB( cpi, RegulationQ, SB, MB, 0 );
 
-	/* Keep track of the last refresh MB. */
-	(*LastMB) += 1;
-	if ( (*LastMB) == 4 )
-	  (*LastMB) = 0;
+        /* Keep track of the last refresh MB. */
+        (*LastMB) += 1;
+        if ( (*LastMB) == 4 )
+          (*LastMB) = 0;
 
-	/* Termination clause */
-	if (cpi->MotionScore >= RecoveryBlocks) {
-	  /* Make sure we don't stall at SB level */
-	  if ( *LastMB == 0 )
-	    SB++;
-	  break;
-	}
+        /* Termination clause */
+        if (cpi->MotionScore >= RecoveryBlocks) {
+          /* Make sure we don't stall at SB level */
+          if ( *LastMB == 0 )
+            SB++;
+          break;
+        }
       }
 
       /* Termination clause */
       if (cpi->MotionScore >= RecoveryBlocks)
-	break;
+        break;
     }
 
     /* Update super block start index  */
@@ -173,15 +174,15 @@ static void UpRegulateBlocks (CP_INSTANCE *cpi, ogg_uint32_t RegulationQ,
 }
 
 void UpRegulateDataStream (CP_INSTANCE *cpi, ogg_uint32_t RegulationQ,
-			   ogg_int32_t RecoveryBlocks ) {
+                           ogg_int32_t RecoveryBlocks ) {
   ogg_uint32_t LastPassMBPos = 0;
   ogg_uint32_t StdLastMBPos = 0;
 
   ogg_uint32_t MaxSB = cpi->pb.YSBRows *
     cpi->pb.YSBCols;    /* Tot super blocks in image */
 
-  ogg_uint32_t SB=0;	/* Super-Block index */
-  ogg_uint32_t MB;	/* Macro-Block index */
+  ogg_uint32_t SB=0;    /* Super-Block index */
+  ogg_uint32_t MB;      /* Macro-Block index */
 
   /* Decduct the number of blocks in an MB / 2 from the recover block count.
      This will compensate for the fact that once we start checking an MB
@@ -191,7 +192,7 @@ void UpRegulateDataStream (CP_INSTANCE *cpi, ogg_uint32_t RegulationQ,
 
   /* Up regulate blocks last coded at higher Q */
   UpRegulateBlocks( cpi, RegulationQ, RecoveryBlocks,
-		    &cpi->LastEndSB, &StdLastMBPos );
+                    &cpi->LastEndSB, &StdLastMBPos );
 
   /* If we have still not used up the minimum number of blocks and are
      at the minimum Q then run through a final pass of the data to
@@ -200,28 +201,28 @@ void UpRegulateDataStream (CP_INSTANCE *cpi, ogg_uint32_t RegulationQ,
        (cpi->MotionScore < RecoveryBlocks) ) {
     if ( cpi->FinalPassLastPos < MaxSB ) {
       for ( SB = cpi->FinalPassLastPos; SB < MaxSB; SB++ ) {
-	/* Check its four Macro-Blocks */
-	for ( MB=LastPassMBPos; MB<4; MB++ ) {
-	  /* Mark relevant blocks for update */
-	  UpRegulateMB( cpi, RegulationQ, SB, MB, 1 );
+        /* Check its four Macro-Blocks */
+        for ( MB=LastPassMBPos; MB<4; MB++ ) {
+          /* Mark relevant blocks for update */
+          UpRegulateMB( cpi, RegulationQ, SB, MB, 1 );
 
-	  /* Keep track of the last refresh MB. */
-	  LastPassMBPos += 1;
-	  if ( LastPassMBPos == 4 ) {
-	    LastPassMBPos = 0;
+          /* Keep track of the last refresh MB. */
+          LastPassMBPos += 1;
+          if ( LastPassMBPos == 4 ) {
+            LastPassMBPos = 0;
 
-	    /* Increment SB index */
-	    cpi->FinalPassLastPos += 1;
-	  }
+            /* Increment SB index */
+            cpi->FinalPassLastPos += 1;
+          }
 
-	  /* Termination clause */
-	  if (cpi->MotionScore >= RecoveryBlocks)
-	    break;
-	}
+          /* Termination clause */
+          if (cpi->MotionScore >= RecoveryBlocks)
+            break;
+        }
 
-	/* Termination clause */
-	if (cpi->MotionScore >= RecoveryBlocks)
-	  break;
+        /* Termination clause */
+        if (cpi->MotionScore >= RecoveryBlocks)
+          break;
 
       }
     }
@@ -237,20 +238,20 @@ void RegulateQ( CP_INSTANCE *cpi, ogg_int32_t UpdateScore ) {
     double TargetUnitScoreBytes = (double)cpi->ThisFrameTargetBytes /
       (double)UpdateScore;
     double LastBitError = 10000.0;       /* Silly high number */
-  /* Search for the best Q for the target bitrate. */
-  for ( i = 0; i < Q_TABLE_SIZE; i++ ) {
-    PredUnitScoreBytes = GetEstimatedBpb( cpi, cpi->pb.QThreshTable[i] );
-    if ( PredUnitScoreBytes > TargetUnitScoreBytes ) {
-      if ( (PredUnitScoreBytes - TargetUnitScoreBytes) <= LastBitError ) {
-	QIndex = i;
+    /* Search for the best Q for the target bitrate. */
+    for ( i = 0; i < Q_TABLE_SIZE; i++ ) {
+      PredUnitScoreBytes = GetEstimatedBpb( cpi, cpi->pb.QThreshTable[i] );
+      if ( PredUnitScoreBytes > TargetUnitScoreBytes ) {
+        if ( (PredUnitScoreBytes - TargetUnitScoreBytes) <= LastBitError ) {
+          QIndex = i;
+        } else {
+          QIndex = i - 1;
+        }
+        break;
       } else {
-	QIndex = i - 1;
+        LastBitError = TargetUnitScoreBytes - PredUnitScoreBytes;
       }
-      break;
-    } else {
-      LastBitError = TargetUnitScoreBytes - PredUnitScoreBytes;
     }
-  }
   }
 
   /* QIndex should now indicate the optimal Q. */
@@ -306,10 +307,10 @@ void CopyBackExtraFrags(CP_INSTANCE *cpi){
       DestPtr = &cpi->ConvDestBuffer[PixelIndex];
 
       for ( j = 0; j < VFRAGPIXELS; j++ ) {
-	memcpy( DestPtr, SrcPtr, HFRAGPIXELS);
+        memcpy( DestPtr, SrcPtr, HFRAGPIXELS);
 
-	SrcPtr += PlaneLineStep;
-	DestPtr += PlaneLineStep;
+        SrcPtr += PlaneLineStep;
+        DestPtr += PlaneLineStep;
       }
     }
   }
@@ -317,8 +318,8 @@ void CopyBackExtraFrags(CP_INSTANCE *cpi){
   /* Now the U and V planes */
   PlaneLineStep = cpi->pb.info.width / 2;
   for ( i = cpi->pb.YPlaneFragments;
-	i < (cpi->pb.YPlaneFragments + (2 * cpi->pb.UVPlaneFragments)) ;
-	i++ ) {
+        i < (cpi->pb.YPlaneFragments + (2 * cpi->pb.UVPlaneFragments)) ;
+        i++ ) {
 
     /* We are only interested in updated fragments. */
     if ( cpi->extra_fragments[i] ) {
@@ -328,15 +329,11 @@ void CopyBackExtraFrags(CP_INSTANCE *cpi){
       DestPtr = &cpi->ConvDestBuffer[PixelIndex];
 
       for ( j = 0; j < VFRAGPIXELS; j++ ) {
-	memcpy( DestPtr, SrcPtr, HFRAGPIXELS);
-	SrcPtr += PlaneLineStep;
-	DestPtr += PlaneLineStep;
+        memcpy( DestPtr, SrcPtr, HFRAGPIXELS);
+        SrcPtr += PlaneLineStep;
+        DestPtr += PlaneLineStep;
       }
     }
   }
 }
-
-
-
-
 

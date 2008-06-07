@@ -11,19 +11,16 @@
  ********************************************************************
 
   function:
+  last mod: $Id: dsp.c 12826 2007-04-02 21:08:28Z j $
 
  ********************************************************************/
 
 #include <stdlib.h>
-#include "cpu.h"
-#include "dsp.h"
 #include "codec_internal.h"
 
 #define DSP_OP_AVG(a,b) ((((int)(a)) + ((int)(b)))/2)
 #define DSP_OP_DIFF(a,b) (((int)(a)) - ((int)(b)))
 #define DSP_OP_ABS_DIFF(a,b) abs((((int)(a)) - ((int)(b))))
-
-DspFunctions dsp_funcs;
 
 static void sub8x8__c (unsigned char *FiltPtr, unsigned char *ReconPtr,
                   ogg_int16_t *DctInputPtr, ogg_uint32_t PixelsPerLine,
@@ -75,7 +72,7 @@ static void sub8x8_128__c (unsigned char *FiltPtr, ogg_int16_t *DctInputPtr,
 static void sub8x8avg2__c (unsigned char *FiltPtr, unsigned char *ReconPtr1,
                      unsigned char *ReconPtr2, ogg_int16_t *DctInputPtr,
                      ogg_uint32_t PixelsPerLine,
-                     ogg_uint32_t ReconPixelsPerLine)
+                     ogg_uint32_t ReconPixelsPerLine) 
 {
   int i;
 
@@ -103,12 +100,12 @@ static ogg_uint32_t row_sad8__c (unsigned char *Src1, unsigned char *Src2)
   ogg_uint32_t SadValue;
   ogg_uint32_t SadValue1;
 
-  SadValue    = DSP_OP_ABS_DIFF (Src1[0], Src2[0]) +
+  SadValue    = DSP_OP_ABS_DIFF (Src1[0], Src2[0]) + 
 	        DSP_OP_ABS_DIFF (Src1[1], Src2[1]) +
 	        DSP_OP_ABS_DIFF (Src1[2], Src2[2]) +
 	        DSP_OP_ABS_DIFF (Src1[3], Src2[3]);
 
-  SadValue1   = DSP_OP_ABS_DIFF (Src1[4], Src2[4]) +
+  SadValue1   = DSP_OP_ABS_DIFF (Src1[4], Src2[4]) + 
 	        DSP_OP_ABS_DIFF (Src1[5], Src2[5]) +
 	        DSP_OP_ABS_DIFF (Src1[6], Src2[6]) +
 	        DSP_OP_ABS_DIFF (Src1[7], Src2[7]);
@@ -189,7 +186,7 @@ static ogg_uint32_t sad8x8__c (unsigned char *ptr1, ogg_uint32_t stride1,
 }
 
 static ogg_uint32_t sad8x8_thres__c (unsigned char *ptr1, ogg_uint32_t stride1,
-		       		  unsigned char *ptr2, ogg_uint32_t stride2,
+		       		  unsigned char *ptr2, ogg_uint32_t stride2, 
 			   	  ogg_uint32_t thres)
 {
   ogg_uint32_t  i;
@@ -385,6 +382,7 @@ static void nop (void) { /* NOP */ }
 
 void dsp_init(DspFunctions *funcs)
 {
+  /* TH_DEBUG("setting dsp functions to C defaults.\n"); */
   funcs->save_fpu = nop;
   funcs->restore_fpu = nop;
   funcs->sub8x8 = sub8x8__c;
@@ -400,51 +398,24 @@ void dsp_init(DspFunctions *funcs)
   funcs->inter8x8_err_xy2 = inter8x8_err_xy2__c;
 }
 
-extern void FilterHoriz(unsigned char * PixelPtr, ogg_int32_t LineLength, ogg_int32_t *BoundingValuePtr);
-extern void FilterVert(unsigned char * PixelPtr, 	ogg_int32_t LineLength, ogg_int32_t *BoundingValuePtr);
-extern void SetupBoundingValueArray_Generic(struct PB_INSTANCE *pbi, ogg_int32_t FLimit);
-extern void FilterHoriz_MMX(unsigned char * PixelPtr, ogg_int32_t LineLength, ogg_int32_t *BoundingValuePtr);
-extern void FilterVert_MMX(unsigned char * PixelPtr, 	ogg_int32_t LineLength, ogg_int32_t *BoundingValuePtr);
-extern void SetupBoundingValueArray_ForMMX(struct PB_INSTANCE *pbi, ogg_int32_t FLimit);
-extern void DeblockLoopFilteredBand(PB_INSTANCE *pbi, unsigned char *SrcPtr, unsigned char *DesPtr,ogg_uint32_t PlaneLineStep, ogg_uint32_t FragsAcross,ogg_uint32_t StartFrag,const ogg_uint32_t *QuantScale);
-extern void DeblockLoopFilteredBand_MMX(PB_INSTANCE *pbi, unsigned char *SrcPtr, unsigned char *DesPtr,ogg_uint32_t PlaneLineStep, ogg_uint32_t FragsAcross,ogg_uint32_t StartFrag,const ogg_uint32_t *QuantScale);
-extern void DeringBlockStrong(const unsigned char *SrcPtr,unsigned char *DstPtr,const ogg_int32_t Pitch,ogg_uint32_t FragQIndex,const ogg_uint32_t *QuantScale);
-extern void DeringBlockWeak( const unsigned char *SrcPtr,unsigned char *DstPtr,const ogg_int32_t Pitch,ogg_uint32_t FragQIndex,const ogg_uint32_t *QuantScale);
-extern void DeringBlockStrong_MMX(const unsigned char *SrcPtr,unsigned char *DstPtr,const ogg_int32_t Pitch,ogg_uint32_t FragQIndex,const ogg_uint32_t *QuantScale);
-extern void DeringBlockWeak_MMX( const unsigned char *SrcPtr,unsigned char *DstPtr,const ogg_int32_t Pitch,ogg_uint32_t FragQIndex,const ogg_uint32_t *QuantScale);
-void dsp_static_init(void)
+void dsp_static_init(DspFunctions *funcs)
 {
-  cpu_init ();
-  dsp_init (&dsp_funcs);
-  dsp_recon_init (&dsp_funcs);
-  dsp_dct_init (&dsp_funcs);
-  dsp_funcs.IDct1=IDct1;
-  dsp_funcs.IDct10=IDct10;
-  dsp_funcs.IDctSlow=IDctSlow;
-  dsp_funcs.FilterHoriz=FilterHoriz;
-  dsp_funcs.FilterVert=FilterVert;
-  dsp_funcs.SetupBoundingValueArray=SetupBoundingValueArray_Generic;
-  dsp_funcs.DeblockLoopFilteredBand=DeblockLoopFilteredBand;
-  dsp_funcs.DeringBlockStrong=DeringBlockStrong;
-  dsp_funcs.DeringBlockWeak=DeringBlockWeak;
 
+  cpu_init (cpu_flags);
+  dsp_init (funcs);
+
+  dsp_recon_init (funcs, cpu_flags);
+  dsp_dct_init (funcs, cpu_flags);
+#if defined(USE_ASM)
   if (cpu_flags & CPU_X86_MMX) {
-    dsp_i386_mmx_init(&dsp_funcs);
-    dsp_funcs.IDct1=MMX_idct1;
-    dsp_funcs.IDct10=MMX_idct10;
-    dsp_funcs.IDctSlow=MMX_idct;
-    fillidctconstants();
-    dsp_funcs.FilterHoriz=FilterHoriz_MMX;
-    dsp_funcs.FilterVert=FilterVert_MMX;
-    dsp_funcs.SetupBoundingValueArray=SetupBoundingValueArray_ForMMX;
-    dsp_funcs.DeblockLoopFilteredBand=DeblockLoopFilteredBand_MMX;
-    dsp_funcs.DeringBlockStrong=DeringBlockStrong_MMX;
-    dsp_funcs.DeringBlockWeak=DeringBlockWeak_MMX;
+    dsp_mmx_init(funcs);
   }
+# ifndef WIN32
+  /* This is implemented for win32 yet */
   if (cpu_flags & CPU_X86_MMXEXT) {
-    dsp_i386_mmxext_init(&dsp_funcs);
+    dsp_mmxext_init(funcs);
   }
-  if (cpu_flags & CPU_X86_SSE2) {
-    //dsp_funcs.IDctSlow=ff_vp3_idct_sse2;
-  }
+# endif
+#endif
 }
+

@@ -21,11 +21,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "config.h"
+
 #include <string.h>	/* memcmp/memset, try to remove */
 #include <stdlib.h>
 #include <inttypes.h>
 
-#include "config.h"
 #include "mpeg2.h"
 #include "attributes.h"
 #include "mpeg2_internal.h"
@@ -295,7 +296,7 @@ int mpeg2_convert (mpeg2dec_t * mpeg2dec, mpeg2_convert_t convert, void * arg)
     int error;
 
     error = convert (MPEG2_CONVERT_SET, NULL, &(mpeg2dec->sequence), 0,
-		 mpeg2_accels, arg, &convert_init);
+		     mpeg2_accels, arg, &convert_init);
     if (!error) {
 	mpeg2dec->convert = convert;
 	mpeg2dec->convert_arg = arg;
@@ -379,6 +380,7 @@ uint32_t mpeg2_accel (uint32_t accel)
 {
     if (!mpeg2_accels) {
 	mpeg2_accels = mpeg2_detect_accel (accel) | MPEG2_ACCEL_DETECT;
+	mpeg2_cpu_state_init (mpeg2_accels);
 	mpeg2_idct_init (mpeg2_accels);
 	mpeg2_mc_init (mpeg2_accels);
     }

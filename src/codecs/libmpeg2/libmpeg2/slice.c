@@ -22,24 +22,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "config.h"
 
-#include <stddef.h>
 #include <inttypes.h>
 
-#include "config.h"
 #include "mpeg2.h"
 #include "attributes.h"
 #include "mpeg2_internal.h"
-#ifndef WIN64
-  #include "../../csimd.h"
-#else
-  #define _mm_empty()
-#endif
 
 extern mpeg2_mc_t mpeg2_mc;
 extern void (* mpeg2_idct_copy) (int16_t * block, uint8_t * dest, int stride);
 extern void (* mpeg2_idct_add) (int last, int16_t * block,
 				uint8_t * dest, int stride);
+extern void (* mpeg2_cpu_state_save) (cpu_state_t * state);
+extern void (* mpeg2_cpu_state_restore) (cpu_state_t * state);
 
 #include "vlc.h"
 
@@ -146,7 +142,6 @@ static inline void get_quantizer_scale (mpeg2_decoder_t * const decoder)
 
     quantizer_scale_code = UBITS (bit_buf, 5);
     DUMPBITS (bit_buf, bits, 5);
-    decoder->quantizer_scale = decoder->quantizer_scales[quantizer_scale_code];
 
     decoder->quantizer_matrix[0] =
 	decoder->quantizer_prescale[0][quantizer_scale_code];
@@ -338,8 +333,8 @@ static inline int get_chroma_dc_dct_diff (mpeg2_decoder_t * const decoder)
 #undef bit_ptr
 }
 
-#define SATURATE(val)					\
-do {							\
+#define SATURATE(val)				\
+do {						\
     val <<= 4;					\
     if (unlikely (val != (int16_t) val))	\
 	val = (SBITS (val, 1) ^ 2047) << 4;	\
@@ -508,7 +503,7 @@ static void get_intra_block_B15 (mpeg2_decoder_t * const decoder,
 	    } else {
 
 		/* end of block. I commented out this code because if we */
-		/* dont exit here we will still exit at the later test :) */
+		/* do not exit here we will still exit at the later test :) */
 
 		/* if (i >= 128) break;	*/	/* end of block */
 
@@ -944,10 +939,10 @@ static inline void slice_intra_DCT (mpeg2_decoder_t * const decoder,
     /* Get the intra DC coefficient and inverse quantize it */
     if (cc == 0)
 	decoder->DCTblock[0] =
-	decoder->dc_dct_pred[0] += get_luma_dc_dct_diff (decoder);
+	    decoder->dc_dct_pred[0] += get_luma_dc_dct_diff (decoder);
     else
 	decoder->DCTblock[0] =
-	decoder->dc_dct_pred[cc] += get_chroma_dc_dct_diff (decoder);
+	    decoder->dc_dct_pred[cc] += get_chroma_dc_dct_diff (decoder);
 
     if (decoder->mpeg1) {
 	if (decoder->coding_type != D_TYPE)
@@ -1569,9 +1564,6 @@ do {								\
 
 #define NEXT_MACROBLOCK							\
 do {									\
-    if(decoder->quant_store)                                            \
-        decoder->quant_store[decoder->quant_stride*(decoder->v_offset>>4) \
-                    +(decoder->offset>>4)] = decoder->quantizer_scale;  \
     decoder->offset += 16;						\
     if (decoder->offset == decoder->width) {				\
 	do { /* just so we can use the break statement */		\
@@ -1587,13 +1579,18 @@ do {									\
 	} while (0);							\
 	decoder->v_offset += 16;					\
 	if (decoder->v_offset > decoder->limit_y) {			\
-	    _mm_empty();			\
+	    if (mpeg2_cpu_state_restore)				\
+		mpeg2_cpu_state_restore (&cpu_state);			\
 	    return;							\
 	}								\
 	decoder->offset = 0;						\
     }									\
 } while (0)
 
+/**
+ * Dummy motion decoding function, to avoid calling NULL in
+ * case of malformed streams.
+ */
 static void motion_dummy (mpeg2_decoder_t * const decoder,
                           motion_t * const motion,
                           mpeg2_mc_fct * const * const table)
@@ -1658,7 +1655,7 @@ void mpeg2_init_fbuf (mpeg2_decoder_t * decoder, uint8_t * current_fbuf[3],
     if (decoder->mpeg1) {
 	decoder->motion_parser[0] = motion_zero_420;
         decoder->motion_parser[MC_FIELD] = motion_dummy;
-	decoder->motion_parser[MC_FRAME] = motion_mp1;
+ 	decoder->motion_parser[MC_FRAME] = motion_mp1;
         decoder->motion_parser[MC_DMV] = motion_dummy;
 	decoder->motion_parser[4] = motion_reuse_420;
     } else if (decoder->picture_structure == FRAME_PICTURE) {
@@ -1793,13 +1790,15 @@ void mpeg2_slice (mpeg2_decoder_t * const decoder, const int code,
 #define bit_buf (decoder->bitstream_buf)
 #define bits (decoder->bitstream_bits)
 #define bit_ptr (decoder->bitstream_ptr)
+    cpu_state_t cpu_state;
 
     bitstream_init (decoder, buffer);
 
     if (slice_init (decoder, code))
 	return;
 
-    _mm_empty();
+    if (mpeg2_cpu_state_save)
+	mpeg2_cpu_state_save (&cpu_state);
 
     while (1) {
 	int macroblock_modes;
@@ -1847,14 +1846,14 @@ void mpeg2_slice (mpeg2_decoder_t * const decoder, const int code,
 	    slice_intra_DCT (decoder, 0, dest_y + DCT_offset, DCT_stride);
 	    slice_intra_DCT (decoder, 0, dest_y + DCT_offset + 8, DCT_stride);
 	    if (likely (decoder->chroma_format == 0)) {
-	    slice_intra_DCT (decoder, 1, decoder->dest[1] + (offset >> 1),
-			     decoder->uv_stride);
-	    slice_intra_DCT (decoder, 2, decoder->dest[2] + (offset >> 1),
-			     decoder->uv_stride);
-	    if (decoder->coding_type == D_TYPE) {
-		NEEDBITS (bit_buf, bits, bit_ptr);
-		DUMPBITS (bit_buf, bits, 1);
-	    }
+		slice_intra_DCT (decoder, 1, decoder->dest[1] + (offset >> 1),
+				 decoder->uv_stride);
+		slice_intra_DCT (decoder, 2, decoder->dest[2] + (offset >> 1),
+				 decoder->uv_stride);
+		if (decoder->coding_type == D_TYPE) {
+		    NEEDBITS (bit_buf, bits, bit_ptr);
+		    DUMPBITS (bit_buf, bits, 1);
+		}
 	    } else if (likely (decoder->chroma_format == 1)) {
 		uint8_t * dest_u = decoder->dest[1] + (offset >> 1);
 		uint8_t * dest_v = decoder->dest[2] + (offset >> 1);
@@ -1864,7 +1863,7 @@ void mpeg2_slice (mpeg2_decoder_t * const decoder, const int code,
 		slice_intra_DCT (decoder, 2, dest_v, DCT_stride);
 		slice_intra_DCT (decoder, 1, dest_u + DCT_offset, DCT_stride);
 		slice_intra_DCT (decoder, 2, dest_v + DCT_offset, DCT_stride);
-	} else {
+	    } else {
 		uint8_t * dest_u = decoder->dest[1] + offset;
 		uint8_t * dest_v = decoder->dest[2] + offset;
 		slice_intra_DCT (decoder, 1, dest_u, DCT_stride);
@@ -1877,10 +1876,18 @@ void mpeg2_slice (mpeg2_decoder_t * const decoder, const int code,
 				 DCT_stride);
 		slice_intra_DCT (decoder, 2, dest_v + DCT_offset + 8,
 				 DCT_stride);
-		}
+	    }
 	} else {
 
 	    motion_parser_t * parser;
+
+	    if (   ((macroblock_modes >> MOTION_TYPE_SHIFT) < 0)
+                || ((macroblock_modes >> MOTION_TYPE_SHIFT) >=
+                    (int)(sizeof(decoder->motion_parser) 
+                          / sizeof(decoder->motion_parser[0])))
+	       ) {
+		break; // Illegal !
+	    }
 
 	    parser =
 		decoder->motion_parser[macroblock_modes >> MOTION_TYPE_SHIFT];
@@ -1930,16 +1937,16 @@ void mpeg2_slice (mpeg2_decoder_t * const decoder, const int code,
 		    coded_block_pattern |= bit_buf & (3 << 30);
 		    DUMPBITS (bit_buf, bits, 2);
 
-		offset = decoder->offset;
-		dest_y = decoder->dest[0] + offset;
+		    offset = decoder->offset;
+		    dest_y = decoder->dest[0] + offset;
 		    if (coded_block_pattern & 1)
 			slice_non_intra_DCT (decoder, 0, dest_y, DCT_stride);
 		    if (coded_block_pattern & 2)
 			slice_non_intra_DCT (decoder, 0, dest_y + 8,
-					 DCT_stride);
+					     DCT_stride);
 		    if (coded_block_pattern & 4)
 			slice_non_intra_DCT (decoder, 0, dest_y + DCT_offset,
-					 DCT_stride);
+					     DCT_stride);
 		    if (coded_block_pattern & 8)
 			slice_non_intra_DCT (decoder, 0,
 					     dest_y + DCT_offset + 8,
@@ -1949,11 +1956,11 @@ void mpeg2_slice (mpeg2_decoder_t * const decoder, const int code,
 		    DCT_offset = (DCT_offset + offset) >> 1;
 		    if (coded_block_pattern & 16)
 			slice_non_intra_DCT (decoder, 1,
-					 decoder->dest[1] + (offset >> 1),
+					     decoder->dest[1] + (offset >> 1),
 					     DCT_stride);
 		    if (coded_block_pattern & 32)
 			slice_non_intra_DCT (decoder, 2,
-					 decoder->dest[2] + (offset >> 1),
+					     decoder->dest[2] + (offset >> 1),
 					     DCT_stride);
 		    if (coded_block_pattern & (2 << 30))
 			slice_non_intra_DCT (decoder, 1,
@@ -2039,7 +2046,8 @@ void mpeg2_slice (mpeg2_decoder_t * const decoder, const int code,
 		NEEDBITS (bit_buf, bits, bit_ptr);
 		continue;
 	    default:	/* end of slice, or error */
-		_mm_empty();
+		if (mpeg2_cpu_state_restore)
+		    mpeg2_cpu_state_restore (&cpu_state);
 		return;
 	    }
 	}

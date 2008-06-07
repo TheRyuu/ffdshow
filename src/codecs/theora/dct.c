@@ -11,6 +11,7 @@
  ********************************************************************
 
   function:
+  last mod: $Id: dct.c 12826 2007-04-02 21:08:28Z j $
 
  ********************************************************************/
 
@@ -39,7 +40,7 @@ static void fdct_short__c ( ogg_int16_t * InputData, ogg_int16_t * OutputData ){
   ogg_int32_t  icommon_product1;   /* Re-used product  (c4s4 * (s12 - s56)). */
   ogg_int32_t  icommon_product2;   /* Re-used product  (c4s4 * (d12 + d56)). */
 
-  ogg_int32_t  temp1, temp2;	     /* intermediate variable for computation */
+  ogg_int32_t  temp1, temp2;         /* intermediate variable for computation */
 
   ogg_int32_t  InterData[64];
   ogg_int32_t *ip = InterData;
@@ -252,15 +253,15 @@ static void fdct_short__c ( ogg_int16_t * InputData, ogg_int16_t * OutputData ){
   }
 }
 
-void dsp_dct_init (DspFunctions *funcs)
+void dsp_dct_init (DspFunctions *funcs, ogg_uint32_t cpu_flags)
 {
   funcs->fdct_short = fdct_short__c;
+  dsp_dct_decode_init(funcs, cpu_flags);
+  dsp_idct_init(funcs, cpu_flags);
+#if defined(USE_ASM)
   if (cpu_flags & CPU_X86_MMX) {
-    dsp_i386_mmx_fdct_init(&dsp_funcs);
+    dsp_mmx_fdct_init(funcs);
   }
+#endif
 }
-
-
-
-
 

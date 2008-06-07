@@ -11,14 +11,13 @@
  ********************************************************************
 
   function:
+  last mod: $Id: dct_decode.c 12826 2007-04-02 21:08:28Z j $
 
  ********************************************************************/
 
 #include <stdlib.h>
 #include <string.h>
 #include "codec_internal.h"
-#include "dsp.h"
-#include <mmintrin.h>
 
 
 #define GOLDEN_FRAME_THRESH_Q   50
@@ -28,7 +27,7 @@
 #define PL 1
 #define HIGHBITDUPPED(X) (((signed short) X)  >> 15)
 
-/* in-loop filter tables. one of these is used in dct_decode.c */
+/* in-loop filter tables. */
 
 static const unsigned char LoopFilterLimitValuesV1[Q_TABLE_SIZE] = {
   30, 25, 20, 20, 15, 15, 14, 14,
@@ -41,34 +40,22 @@ static const unsigned char LoopFilterLimitValuesV1[Q_TABLE_SIZE] = {
   0,  0,  0,  0,  0,  0,  0,  0
 };
 
-const unsigned char LoopFilterLimitValuesV2[Q_TABLE_SIZE] = {
-  30, 25, 20, 20, 15, 15, 14, 14,
-  13, 13, 12, 12, 11, 11, 10, 10,
-  9,  9,  8,  8,  7,  7,  7,  7,
-  6,  6,  6,  6,  5,  5,  5,  5,
-  4,  4,  4,  4,  3,  3,  3,  3,
-  2,  2,  2,  2,  2,  2,  2,  2,
-  2,  2,  2,  2,  2,  2,  2,  2,
-  1,  1,  1,  1,  1,  1,  1,  1
-};
-
 static const int ModeUsesMC[MAX_MODES] = { 0, 0, 1, 1, 1, 0, 1, 1 };
 
-void SetupBoundingValueArray_Generic(PB_INSTANCE *pbi,
-					    ogg_int32_t FLimit){
+static void SetupBoundingValueArray_Generic(PB_INSTANCE *pbi,
+                                            ogg_int32_t FLimit){
 
-  ogg_int32_t * BoundingValuePtr = pbi->FiltBoundingValue+256;
+  ogg_int16_t * BoundingValuePtr = pbi->FiltBoundingValue+127;
   ogg_int32_t i;
 
   /* Set up the bounding value array. */
-  memset ( pbi->FiltBoundingValue, 0, (512*sizeof(*pbi->FiltBoundingValue)) );
+  memset ( pbi->FiltBoundingValue, 0, (256*sizeof(*pbi->FiltBoundingValue)) );
   for ( i = 0; i < FLimit; i++ ){
     BoundingValuePtr[-i-FLimit] = (-FLimit+i);
     BoundingValuePtr[-i] = -i;
     BoundingValuePtr[i] = i;
     BoundingValuePtr[i+FLimit] = FLimit-i;
   }
-  pbi->BoundingValuePtr=BoundingValuePtr;
 }
 
 /* handle the in-loop filter limit value table */
@@ -108,10 +95,8 @@ void InitFilterTables(PB_INSTANCE *pbi){
 void SetupLoopFilter(PB_INSTANCE *pbi){
   ogg_int32_t FLimit;
 
-  /* nb: this was using the V2 values rather than V1
-     we think is was a mistake; the results were not used */
   FLimit = pbi->LoopFilterLimits[pbi->FrameQIndex];
- dsp_funcs.SetupBoundingValueArray(pbi, FLimit);
+  SetupBoundingValueArray_Generic(pbi, FLimit);
 }
 
 static void ExpandKFBlock ( PB_INSTANCE *pbi, ogg_int32_t FragmentNumber ){
@@ -136,29 +121,32 @@ static void ExpandKFBlock ( PB_INSTANCE *pbi, ogg_int32_t FragmentNumber ){
   /* Invert quantisation and DCT to get pixel data. */
   switch(pbi->FragCoefEOB[FragmentNumber]){
   case 0:case 1:
-    dsp_funcs.IDct1( pbi->quantized_list, pbi->dequant_coeffs, pbi->ReconDataBuffer );
+    IDct1( pbi->quantized_list, pbi->dequant_coeffs, pbi->ReconDataBuffer );
     break;
-  case 2: case 3:case 4:case 5:case 6:case 7:case 8: case 9:case 10:
-    dsp_funcs.IDct10( pbi->quantized_list, pbi->dequant_coeffs, pbi->ReconDataBuffer );
+  case 2: case 3:
+    dsp_IDct3(pbi->dsp, pbi->quantized_list, pbi->dequant_coeffs, pbi->ReconDataBuffer );
+    break;
+  case 4:case 5:case 6:case 7:case 8: case 9:case 10:
+    dsp_IDct10(pbi->dsp, pbi->quantized_list, pbi->dequant_coeffs, pbi->ReconDataBuffer );
     break;
   default:
-    dsp_funcs.IDctSlow( pbi->quantized_list, pbi->dequant_coeffs, pbi->ReconDataBuffer );
+    dsp_IDctSlow(pbi->dsp, pbi->quantized_list, pbi->dequant_coeffs, pbi->ReconDataBuffer );
   }
 
   /* Convert fragment number to a pixel offset in a reconstruction buffer. */
   ReconPixelIndex = pbi->recon_pixel_index_table[FragmentNumber];
 
   /* Get the pixel index for the first pixel in the fragment. */
-  dsp_static_recon_intra8x8 ((unsigned char *)(&pbi->ThisFrameRecon[ReconPixelIndex]),
+  dsp_recon_intra8x8 (pbi->dsp, (unsigned char *)(&pbi->ThisFrameRecon[ReconPixelIndex]),
               (ogg_int16_t *)pbi->ReconDataBuffer, ReconPixelsPerLine);
 
 }
 
 static void ExpandBlock ( PB_INSTANCE *pbi, ogg_int32_t FragmentNumber ){
   unsigned char *LastFrameRecPtr;   /* Pointer into previous frame
-				       reconstruction. */
+                                       reconstruction. */
   unsigned char *LastFrameRecPtr2;  /* Pointer into previous frame
-				       reconstruction for 1/2 pixel MC. */
+                                       reconstruction for 1/2 pixel MC. */
 
   ogg_uint32_t   ReconPixelsPerLine; /* Pixels per line */
   ogg_int32_t    ReconPixelIndex;    /* Offset for block into a
@@ -197,16 +185,16 @@ static void ExpandBlock ( PB_INSTANCE *pbi, ogg_int32_t FragmentNumber ){
 
     /* Select appropriate dequantiser matrix. */
     if ( pbi->CodingMode == CODE_INTRA )
-      if ( FragmentNumber <
-		(ogg_int32_t)(pbi->YPlaneFragments + pbi->UVPlaneFragments) )
+      if ( FragmentNumber < 
+                (ogg_int32_t)(pbi->YPlaneFragments + pbi->UVPlaneFragments) )
         pbi->dequant_coeffs = pbi->dequant_U_coeffs;
       else
         pbi->dequant_coeffs = pbi->dequant_V_coeffs;
     else
-      if ( FragmentNumber <
-		(ogg_int32_t)(pbi->YPlaneFragments + pbi->UVPlaneFragments) )
+      if ( FragmentNumber < 
+                (ogg_int32_t)(pbi->YPlaneFragments + pbi->UVPlaneFragments) )
         pbi->dequant_coeffs = pbi->dequant_InterU_coeffs;
-    else
+      else
         pbi->dequant_coeffs = pbi->dequant_InterV_coeffs;
   }
 
@@ -216,13 +204,16 @@ static void ExpandBlock ( PB_INSTANCE *pbi, ogg_int32_t FragmentNumber ){
   /* Invert quantisation and DCT to get pixel data. */
   switch(pbi->FragCoefEOB[FragmentNumber]){
   case 0:case 1:
-    dsp_funcs.IDct1( pbi->quantized_list, pbi->dequant_coeffs, pbi->ReconDataBuffer );
+    IDct1( pbi->quantized_list, pbi->dequant_coeffs, pbi->ReconDataBuffer );
     break;
-  case 2: case 3:case 4:case 5:case 6:case 7:case 8: case 9:case 10:
-    dsp_funcs.IDct10( pbi->quantized_list, pbi->dequant_coeffs, pbi->ReconDataBuffer );
+  case 2: case 3:
+    dsp_IDct3(pbi->dsp, pbi->quantized_list, pbi->dequant_coeffs, pbi->ReconDataBuffer );
+    break;
+  case 4:case 5:case 6:case 7:case 8: case 9:case 10:
+    dsp_IDct10(pbi->dsp, pbi->quantized_list, pbi->dequant_coeffs, pbi->ReconDataBuffer );
     break;
   default:
-    dsp_funcs.IDctSlow( pbi->quantized_list, pbi->dequant_coeffs, pbi->ReconDataBuffer );
+    dsp_IDctSlow(pbi->dsp, pbi->quantized_list, pbi->dequant_coeffs, pbi->ReconDataBuffer );
   }
 
   /* Convert fragment number to a pixel offset in a reconstruction buffer. */
@@ -234,9 +225,9 @@ static void ExpandBlock ( PB_INSTANCE *pbi, ogg_int32_t FragmentNumber ){
     /* Reconstruct the pixel data using the last frame reconstruction
        and change data when the motion vector is (0,0), the recon is
        based on the lastframe without loop filtering---- for testing */
-    dsp_static_recon_inter8x8 (&pbi->ThisFrameRecon[ReconPixelIndex],
-		&pbi->LastFrameRecon[ReconPixelIndex],
-		pbi->ReconDataBuffer, ReconPixelsPerLine );
+    dsp_recon_inter8x8 (pbi->dsp, &pbi->ThisFrameRecon[ReconPixelIndex],
+                &pbi->LastFrameRecon[ReconPixelIndex],
+                  pbi->ReconDataBuffer, ReconPixelsPerLine);
   }else if ( ModeUsesMC[pbi->CodingMode] ) {
     /* The mode uses a motion vector. */
     /* Get vector from list */
@@ -252,21 +243,21 @@ static void ExpandBlock ( PB_INSTANCE *pbi, ogg_int32_t FragmentNumber ){
     if ( pbi->MVector.x > 0 ){
       MVOffset = pbi->MVector.x >> MvShift;
       if ( pbi->MVector.x & MvModMask )
-	ReconPtr2Offset += 1;
+        ReconPtr2Offset += 1;
     } else if ( pbi->MVector.x < 0 ) {
       MVOffset -= (-pbi->MVector.x) >> MvShift;
       if ( (-pbi->MVector.x) & MvModMask )
-	ReconPtr2Offset -= 1;
+        ReconPtr2Offset -= 1;
     }
 
     if ( pbi->MVector.y > 0 ){
       MVOffset += (pbi->MVector.y >>  MvShift) * ReconPixelsPerLine;
       if ( pbi->MVector.y & MvModMask )
-	ReconPtr2Offset += ReconPixelsPerLine;
+        ReconPtr2Offset += ReconPixelsPerLine;
     } else if ( pbi->MVector.y < 0 ){
       MVOffset -= ((-pbi->MVector.y) >> MvShift) * ReconPixelsPerLine;
       if ( (-pbi->MVector.y) & MvModMask )
-	ReconPtr2Offset -= ReconPixelsPerLine;
+        ReconPtr2Offset -= ReconPixelsPerLine;
     }
 
     /* Set up the first of the two reconstruction buffer pointers. */
@@ -282,37 +273,37 @@ static void ExpandBlock ( PB_INSTANCE *pbi, ogg_int32_t FragmentNumber ){
     /* Select the appropriate reconstruction function */
     if ( (int)(LastFrameRecPtr - LastFrameRecPtr2) == 0 ) {
       /* Reconstruct the pixel dats from the reference frame and change data
-	 (no half pixel in this case as the two references were the same. */
-      dsp_static_recon_inter8x8 (
-		  &pbi->ThisFrameRecon[ReconPixelIndex],
-		  LastFrameRecPtr, pbi->ReconDataBuffer,
-		  ReconPixelsPerLine );
+         (no half pixel in this case as the two references were the same. */
+      dsp_recon_inter8x8 (pbi->dsp,
+          &pbi->ThisFrameRecon[ReconPixelIndex],
+                  LastFrameRecPtr, pbi->ReconDataBuffer,
+                  ReconPixelsPerLine);
     }else{
       /* Fractional pixel reconstruction. */
       /* Note that we only use two pixels per reconstruction even for
          the diagonal. */
-      dsp_static_recon_inter8x8_half(&pbi->ThisFrameRecon[ReconPixelIndex],
-			    LastFrameRecPtr, LastFrameRecPtr2,
-			    pbi->ReconDataBuffer, ReconPixelsPerLine );
+      dsp_recon_inter8x8_half(pbi->dsp, &pbi->ThisFrameRecon[ReconPixelIndex],
+                            LastFrameRecPtr, LastFrameRecPtr2,
+                            pbi->ReconDataBuffer, ReconPixelsPerLine);
     }
   } else if ( pbi->CodingMode == CODE_USING_GOLDEN ){
     /* Golden frame with motion vector */
     /* Reconstruct the pixel data using the golden frame
        reconstruction and change data */
-    dsp_static_recon_inter8x8 (&pbi->ThisFrameRecon[ReconPixelIndex],
-		&pbi->GoldenFrame[ ReconPixelIndex ],
-		pbi->ReconDataBuffer, ReconPixelsPerLine );
+    dsp_recon_inter8x8 (pbi->dsp, &pbi->ThisFrameRecon[ReconPixelIndex],
+                &pbi->GoldenFrame[ ReconPixelIndex ],
+                  pbi->ReconDataBuffer, ReconPixelsPerLine);
   } else {
     /* Simple Intra coding */
     /* Get the pixel index for the first pixel in the fragment. */
-    dsp_static_recon_intra8x8 (&pbi->ThisFrameRecon[ReconPixelIndex],
-		pbi->ReconDataBuffer, ReconPixelsPerLine );
+    dsp_recon_intra8x8 (pbi->dsp, &pbi->ThisFrameRecon[ReconPixelIndex],
+              pbi->ReconDataBuffer, ReconPixelsPerLine);
   }
 }
 
 static void UpdateUMV_HBorders( PB_INSTANCE *pbi,
-				unsigned char * DestReconPtr,
-				ogg_uint32_t  PlaneFragOffset ) {
+                                unsigned char * DestReconPtr,
+                                ogg_uint32_t  PlaneFragOffset ) {
   ogg_uint32_t  i;
   ogg_uint32_t  PixelIndex;
 
@@ -331,7 +322,7 @@ static void UpdateUMV_HBorders( PB_INSTANCE *pbi,
   if ( PlaneFragOffset == 0 ) {
     /* Y Plane */
     BlockVStep = (pbi->YStride *
-		  (VFRAGPIXELS - 1));
+                  (VFRAGPIXELS - 1));
     PlaneStride = pbi->YStride;
     PlaneBorderWidth = UMV_BORDER;
     PlaneFragments = pbi->YPlaneFragments;
@@ -339,7 +330,7 @@ static void UpdateUMV_HBorders( PB_INSTANCE *pbi,
   }else{
     /* U or V plane. */
     BlockVStep = (pbi->UVStride *
-		  (VFRAGPIXELS - 1));
+                  (VFRAGPIXELS - 1));
     PlaneStride = pbi->UVStride;
     PlaneBorderWidth = UMV_BORDER / 2;
     PlaneFragments = pbi->UVPlaneFragments;
@@ -353,7 +344,7 @@ static void UpdateUMV_HBorders( PB_INSTANCE *pbi,
   DestPtr1 = SrcPtr1 - (PlaneBorderWidth * PlaneStride);
 
   PixelIndex = pbi->recon_pixel_index_table[PlaneFragOffset +
-					   PlaneFragments - LineFragments] +
+                                           PlaneFragments - LineFragments] +
     BlockVStep;
   SrcPtr2 = &DestReconPtr[ PixelIndex - PlaneBorderWidth];
   DestPtr2 = SrcPtr2 + PlaneStride;
@@ -369,8 +360,8 @@ static void UpdateUMV_HBorders( PB_INSTANCE *pbi,
 }
 
 static void UpdateUMV_VBorders( PB_INSTANCE *pbi,
-				unsigned char * DestReconPtr,
-				ogg_uint32_t  PlaneFragOffset ){
+                                unsigned char * DestReconPtr,
+                                ogg_uint32_t  PlaneFragOffset ){
   ogg_uint32_t  i;
   ogg_uint32_t  PixelIndex;
 
@@ -406,7 +397,7 @@ static void UpdateUMV_VBorders( PB_INSTANCE *pbi,
   DestPtr1 = &DestReconPtr[ PixelIndex - PlaneBorderWidth ];
 
   PixelIndex = pbi->recon_pixel_index_table[PlaneFragOffset +
-					   LineFragments - 1] +
+                                           LineFragments - 1] +
     (HFRAGPIXELS - 1);
   SrcPtr2 = &DestReconPtr[ PixelIndex ];
   DestPtr2 = &DestReconPtr[ PixelIndex + 1 ];
@@ -424,7 +415,7 @@ static void UpdateUMV_VBorders( PB_INSTANCE *pbi,
 }
 
 void UpdateUMVBorder( PB_INSTANCE *pbi,
-		      unsigned char * DestReconPtr ) {
+                      unsigned char * DestReconPtr ) {
   ogg_uint32_t  PlaneFragOffset;
 
   /* Y plane */
@@ -443,9 +434,9 @@ void UpdateUMVBorder( PB_INSTANCE *pbi,
 }
 
 static void CopyRecon( PB_INSTANCE *pbi, unsigned char * DestReconPtr,
-		unsigned char * SrcReconPtr ) {
+                unsigned char * SrcReconPtr ) {
   ogg_uint32_t  i;
-  ogg_uint32_t	PlaneLineStep; /* Pixels per line */
+  ogg_uint32_t  PlaneLineStep; /* Pixels per line */
   ogg_uint32_t  PixelIndex;
 
   unsigned char  *SrcPtr;      /* Pointer to line of source image data */
@@ -461,7 +452,7 @@ static void CopyRecon( PB_INSTANCE *pbi, unsigned char * DestReconPtr,
       SrcPtr = &SrcReconPtr[ PixelIndex ];
       DestPtr = &DestReconPtr[ PixelIndex ];
 
-      dsp_static_copy8x8 (SrcPtr, DestPtr, PlaneLineStep);
+      dsp_copy8x8 (pbi->dsp, SrcPtr, DestPtr, PlaneLineStep);
     }
   }
 
@@ -473,16 +464,16 @@ static void CopyRecon( PB_INSTANCE *pbi, unsigned char * DestReconPtr,
       SrcPtr = &SrcReconPtr[ PixelIndex ];
       DestPtr = &DestReconPtr[ PixelIndex ];
 
-      dsp_static_copy8x8 (SrcPtr, DestPtr, PlaneLineStep);
+      dsp_copy8x8 (pbi->dsp, SrcPtr, DestPtr, PlaneLineStep);
 
     }
   }
 }
 
 static void CopyNotRecon( PB_INSTANCE *pbi, unsigned char * DestReconPtr,
-		   unsigned char * SrcReconPtr ) {
+                   unsigned char * SrcReconPtr ) {
   ogg_uint32_t  i;
-  ogg_uint32_t	PlaneLineStep; /* Pixels per line */
+  ogg_uint32_t  PlaneLineStep; /* Pixels per line */
   ogg_uint32_t  PixelIndex;
 
   unsigned char  *SrcPtr;      /* Pointer to line of source image data */
@@ -498,7 +489,7 @@ static void CopyNotRecon( PB_INSTANCE *pbi, unsigned char * DestReconPtr,
       SrcPtr = &SrcReconPtr[ PixelIndex ];
       DestPtr = &DestReconPtr[ PixelIndex ];
 
-      dsp_static_copy8x8 (SrcPtr, DestPtr, PlaneLineStep);
+      dsp_copy8x8 (pbi->dsp, SrcPtr, DestPtr, PlaneLineStep);
     }
   }
 
@@ -510,15 +501,15 @@ static void CopyNotRecon( PB_INSTANCE *pbi, unsigned char * DestReconPtr,
       SrcPtr = &SrcReconPtr[ PixelIndex ];
       DestPtr = &DestReconPtr[ PixelIndex ];
 
-      dsp_static_copy8x8 (SrcPtr, DestPtr, PlaneLineStep);
+      dsp_copy8x8 (pbi->dsp, SrcPtr, DestPtr, PlaneLineStep);
 
     }
   }
 }
 
 void ExpandToken( Q_LIST_ENTRY * ExpandedBlock,
-		  unsigned char * CoeffIndex, ogg_uint32_t Token,
-		  ogg_int32_t ExtraBits ){
+                  unsigned char * CoeffIndex, ogg_uint32_t Token,
+                  ogg_int32_t ExtraBits ){
   /* Is the token is a combination run and value token. */
   if ( Token >= DCT_RUN_CATEGORY1 ){
     /* Expand the token and additional bits to a zero run length and
@@ -526,55 +517,55 @@ void ExpandToken( Q_LIST_ENTRY * ExpandedBlock,
     if ( Token < DCT_RUN_CATEGORY2 ) {
       /* Decoding method depends on token */
       if ( Token < DCT_RUN_CATEGORY1B ) {
-	/* Step on by the zero run length */
-	*CoeffIndex += (unsigned char)((Token - DCT_RUN_CATEGORY1) + 1);
+        /* Step on by the zero run length */
+        *CoeffIndex += (unsigned char)((Token - DCT_RUN_CATEGORY1) + 1);
 
-	/* The extra bit determines the sign. */
-	if ( ExtraBits & 0x01 )
-	  ExpandedBlock[*CoeffIndex] = -1;
-	else
-	  ExpandedBlock[*CoeffIndex] = 1;
+        /* The extra bit determines the sign. */
+        if ( ExtraBits & 0x01 )
+          ExpandedBlock[*CoeffIndex] = -1;
+        else
+          ExpandedBlock[*CoeffIndex] = 1;
       } else if ( Token == DCT_RUN_CATEGORY1B ) {
-	/* Bits 0-1 determines the zero run length */
-	*CoeffIndex += (6 + (ExtraBits & 0x03));
+        /* Bits 0-1 determines the zero run length */
+        *CoeffIndex += (6 + (ExtraBits & 0x03));
 
-	/* Bit 2 determines the sign */
-	if ( ExtraBits & 0x04 )
-	  ExpandedBlock[*CoeffIndex] = -1;
-	else
-	  ExpandedBlock[*CoeffIndex] = 1;
+        /* Bit 2 determines the sign */
+        if ( ExtraBits & 0x04 )
+          ExpandedBlock[*CoeffIndex] = -1;
+        else
+          ExpandedBlock[*CoeffIndex] = 1;
       }else{
-	/* Bits 0-2 determines the zero run length */
-	*CoeffIndex += (10 + (ExtraBits & 0x07));
+        /* Bits 0-2 determines the zero run length */
+        *CoeffIndex += (10 + (ExtraBits & 0x07));
 
-	/* Bit 3 determines the sign */
-	if ( ExtraBits & 0x08 )
-	  ExpandedBlock[*CoeffIndex] = -1;
-	else
-	  ExpandedBlock[*CoeffIndex] = 1;
+        /* Bit 3 determines the sign */
+        if ( ExtraBits & 0x08 )
+          ExpandedBlock[*CoeffIndex] = -1;
+        else
+          ExpandedBlock[*CoeffIndex] = 1;
       }
     }else{
       /* If token == DCT_RUN_CATEGORY2 we have a single 0 followed by
          a value */
       if ( Token == DCT_RUN_CATEGORY2 ){
-	/* Step on by the zero run length */
-	*CoeffIndex += 1;
+        /* Step on by the zero run length */
+        *CoeffIndex += 1;
 
-	/* Bit 1 determines sign, bit 0 the value */
-	if ( ExtraBits & 0x02 )
-	  ExpandedBlock[*CoeffIndex] = -(2 + (ExtraBits & 0x01));
-	else
-	  ExpandedBlock[*CoeffIndex] = 2 + (ExtraBits & 0x01);
+        /* Bit 1 determines sign, bit 0 the value */
+        if ( ExtraBits & 0x02 )
+          ExpandedBlock[*CoeffIndex] = -(2 + (ExtraBits & 0x01));
+        else
+          ExpandedBlock[*CoeffIndex] = 2 + (ExtraBits & 0x01);
       }else{
-	/* else we have 2->3 zeros followed by a value */
-	/* Bit 0 determines the zero run length */
-	*CoeffIndex += 2 + (ExtraBits & 0x01);
+        /* else we have 2->3 zeros followed by a value */
+        /* Bit 0 determines the zero run length */
+        *CoeffIndex += 2 + (ExtraBits & 0x01);
 
-	/* Bit 2 determines the sign, bit 1 the value */
-	if ( ExtraBits & 0x04 )
-	  ExpandedBlock[*CoeffIndex] = -(2 + ((ExtraBits & 0x02) >> 1));
-	else
-	  ExpandedBlock[*CoeffIndex] = 2 + ((ExtraBits & 0x02) >> 1);
+        /* Bit 2 determines the sign, bit 1 the value */
+        if ( ExtraBits & 0x04 )
+          ExpandedBlock[*CoeffIndex] = -(2 + ((ExtraBits & 0x02) >> 1));
+        else
+          ExpandedBlock[*CoeffIndex] = 2 + ((ExtraBits & 0x02) >> 1);
       }
     }
 
@@ -615,47 +606,47 @@ void ExpandToken( Q_LIST_ENTRY * ExpandedBlock,
 
       /* Extra bit determines sign */
       if ( ExtraBits )
-	ExpandedBlock[*CoeffIndex] =
-	  -((Q_LIST_ENTRY)(Token + DCT_VAL_CAT2_MIN));
+        ExpandedBlock[*CoeffIndex] =
+          -((Q_LIST_ENTRY)(Token + DCT_VAL_CAT2_MIN));
       else
-	ExpandedBlock[*CoeffIndex] =
-	  (Q_LIST_ENTRY)(Token + DCT_VAL_CAT2_MIN);
+        ExpandedBlock[*CoeffIndex] =
+          (Q_LIST_ENTRY)(Token + DCT_VAL_CAT2_MIN);
     } else if ( Token == DCT_VAL_CATEGORY3 ) {
       /* Bit 1 determines sign, Bit 0 the value */
       if ( ExtraBits & 0x02 )
-	ExpandedBlock[*CoeffIndex] = -(DCT_VAL_CAT3_MIN + (ExtraBits & 0x01));
+        ExpandedBlock[*CoeffIndex] = -(DCT_VAL_CAT3_MIN + (ExtraBits & 0x01));
       else
-	ExpandedBlock[*CoeffIndex] = DCT_VAL_CAT3_MIN + (ExtraBits & 0x01);
+        ExpandedBlock[*CoeffIndex] = DCT_VAL_CAT3_MIN + (ExtraBits & 0x01);
     } else if ( Token == DCT_VAL_CATEGORY4 ) {
       /* Bit 2 determines sign, Bit 0-1 the value */
       if ( ExtraBits & 0x04 )
-	ExpandedBlock[*CoeffIndex] = -(DCT_VAL_CAT4_MIN + (ExtraBits & 0x03));
+        ExpandedBlock[*CoeffIndex] = -(DCT_VAL_CAT4_MIN + (ExtraBits & 0x03));
       else
-	ExpandedBlock[*CoeffIndex] = DCT_VAL_CAT4_MIN + (ExtraBits & 0x03);
+        ExpandedBlock[*CoeffIndex] = DCT_VAL_CAT4_MIN + (ExtraBits & 0x03);
     } else if ( Token == DCT_VAL_CATEGORY5 ) {
       /* Bit 3 determines sign, Bit 0-2 the value */
       if ( ExtraBits & 0x08 )
-	ExpandedBlock[*CoeffIndex] = -(DCT_VAL_CAT5_MIN + (ExtraBits & 0x07));
+        ExpandedBlock[*CoeffIndex] = -(DCT_VAL_CAT5_MIN + (ExtraBits & 0x07));
       else
-	ExpandedBlock[*CoeffIndex] = DCT_VAL_CAT5_MIN + (ExtraBits & 0x07);
+        ExpandedBlock[*CoeffIndex] = DCT_VAL_CAT5_MIN + (ExtraBits & 0x07);
     } else if ( Token == DCT_VAL_CATEGORY6 ) {
       /* Bit 4 determines sign, Bit 0-3 the value */
       if ( ExtraBits & 0x10 )
-	ExpandedBlock[*CoeffIndex] = -(DCT_VAL_CAT6_MIN + (ExtraBits & 0x0F));
+        ExpandedBlock[*CoeffIndex] = -(DCT_VAL_CAT6_MIN + (ExtraBits & 0x0F));
       else
-	ExpandedBlock[*CoeffIndex] = DCT_VAL_CAT6_MIN + (ExtraBits & 0x0F);
+        ExpandedBlock[*CoeffIndex] = DCT_VAL_CAT6_MIN + (ExtraBits & 0x0F);
     } else if ( Token == DCT_VAL_CATEGORY7 ) {
       /* Bit 5 determines sign, Bit 0-4 the value */
       if ( ExtraBits & 0x20 )
-	ExpandedBlock[*CoeffIndex] = -(DCT_VAL_CAT7_MIN + (ExtraBits & 0x1F));
+        ExpandedBlock[*CoeffIndex] = -(DCT_VAL_CAT7_MIN + (ExtraBits & 0x1F));
       else
-	ExpandedBlock[*CoeffIndex] = DCT_VAL_CAT7_MIN + (ExtraBits & 0x1F);
+        ExpandedBlock[*CoeffIndex] = DCT_VAL_CAT7_MIN + (ExtraBits & 0x1F);
     } else if ( Token == DCT_VAL_CATEGORY8 ) {
       /* Bit 9 determines sign, Bit 0-8 the value */
       if ( ExtraBits & 0x200 )
-	ExpandedBlock[*CoeffIndex] = -(DCT_VAL_CAT8_MIN + (ExtraBits & 0x1FF));
+        ExpandedBlock[*CoeffIndex] = -(DCT_VAL_CAT8_MIN + (ExtraBits & 0x1FF));
       else
-	ExpandedBlock[*CoeffIndex] = DCT_VAL_CAT8_MIN + (ExtraBits & 0x1FF);
+        ExpandedBlock[*CoeffIndex] = DCT_VAL_CAT8_MIN + (ExtraBits & 0x1FF);
     }
 
     /* Step on the coefficient index. */
@@ -664,7 +655,7 @@ void ExpandToken( Q_LIST_ENTRY * ExpandedBlock,
 }
 
 void ClearDownQFragData(PB_INSTANCE *pbi){
-  ogg_int32_t       i,j;
+  ogg_int32_t       i;
   Q_LIST_ENTRY *    QFragPtr;
 
   for ( i = 0; i < pbi->CodedBlockIndex; i++ ) {
@@ -674,9 +665,9 @@ void ClearDownQFragData(PB_INSTANCE *pbi){
   }
 }
 
-void FilterHoriz(unsigned char * PixelPtr,
-			ogg_int32_t LineLength,
-			ogg_int32_t *BoundingValuePtr){
+static void FilterHoriz__c(unsigned char * PixelPtr,
+                        ogg_int32_t LineLength,
+                        ogg_int16_t *BoundingValuePtr){
   ogg_int32_t j;
   ogg_int32_t FiltVal;
 
@@ -696,17 +687,15 @@ void FilterHoriz(unsigned char * PixelPtr,
   }
 }
 
-void FilterVert(unsigned char * PixelPtr,
-		ogg_int32_t LineLength,
-		ogg_int32_t *BoundingValuePtr){
+static void FilterVert__c(unsigned char * PixelPtr,
+                ogg_int32_t LineLength,
+                ogg_int16_t *BoundingValuePtr){
   ogg_int32_t j;
   ogg_int32_t FiltVal;
-
+  PixelPtr -= 2*LineLength;
   /* the math was correct, but negative array indicies are forbidden
      by ANSI/C99 and will break optimization on several modern
      compilers */
-
-  PixelPtr -= 2*LineLength;
 
   for ( j = 0; j < 8; j++ ) {
     FiltVal = ( (ogg_int32_t)PixelPtr[0] ) -
@@ -726,7 +715,7 @@ void FilterVert(unsigned char * PixelPtr,
 void LoopFilter(PB_INSTANCE *pbi){
   ogg_int32_t i;
 
-  ogg_int32_t * BoundingValuePtr=pbi->BoundingValuePtr;//pbi->FiltBoundingValue+256;
+  ogg_int16_t * BoundingValuePtr=pbi->FiltBoundingValue+127;
   int FragsAcross=pbi->HFragments;
   int FromFragment,ToFragment;
   int FragsDown = pbi->VFragments;
@@ -741,14 +730,14 @@ void LoopFilter(PB_INSTANCE *pbi){
   QIndex = Q_TABLE_SIZE - 1;
   while ( QIndex >= 0 ) {
     if ( (QIndex == 0) ||
-	 ( pbi->QThreshTable[QIndex] >= pbi->ThisFrameQualityValue) )
+         ( pbi->QThreshTable[QIndex] >= pbi->ThisFrameQualityValue) )
       break;
     QIndex --;
   }
 
   FLimit = pbi->LoopFilterLimits[QIndex];
   if ( FLimit == 0 ) return;
-  dsp_funcs.SetupBoundingValueArray(pbi, FLimit);
+  SetupBoundingValueArray_Generic(pbi, FLimit);
 
   for ( j = 0; j < 3 ; j++){
     switch(j) {
@@ -791,16 +780,16 @@ void LoopFilter(PB_INSTANCE *pbi){
       /* Filter right hand border only if the block to the right is
          not coded */
       if ( !pbi->display_fragments[ i + 1 ] ){
-	dsp_funcs.FilterHoriz(pbi->LastFrameRecon+
-		    pbi->recon_pixel_index_table[i]+6,
-		    LineLength,BoundingValuePtr);
+        dsp_FilterHoriz(pbi->dsp,pbi->LastFrameRecon+
+                    pbi->recon_pixel_index_table[i]+6,
+                    LineLength,BoundingValuePtr);
       }
 
       /* Bottom done if next row set */
       if( !pbi->display_fragments[ i + LineFragments] ){
-	dsp_funcs.FilterVert(pbi->LastFrameRecon+
-		   pbi->recon_pixel_index_table[i+LineFragments],
-		   LineLength, BoundingValuePtr);
+        dsp_FilterVert(pbi->dsp,pbi->LastFrameRecon+
+                   pbi->recon_pixel_index_table[i+LineFragments],
+                   LineLength, BoundingValuePtr);
       }
     }
     i++;
@@ -809,25 +798,25 @@ void LoopFilter(PB_INSTANCE *pbi){
     /* middle columns  */
     for ( n = 1 ; n < FragsAcross - 1 ; n++, i++) {
       if( pbi->display_fragments[i]){
-	/* Filter Left edge always */
-	dsp_funcs.FilterHoriz(pbi->LastFrameRecon+
-		    pbi->recon_pixel_index_table[i]-2,
-		    LineLength, BoundingValuePtr);
+        /* Filter Left edge always */
+        dsp_FilterHoriz(pbi->dsp,pbi->LastFrameRecon+
+                    pbi->recon_pixel_index_table[i]-2,
+                    LineLength, BoundingValuePtr);
 
-	/* Filter right hand border only if the block to the right is
+        /* Filter right hand border only if the block to the right is
            not coded */
-	if ( !pbi->display_fragments[ i + 1 ] ){
-	  dsp_funcs.FilterHoriz(pbi->LastFrameRecon+
-		      pbi->recon_pixel_index_table[i]+6,
-		      LineLength, BoundingValuePtr);
-	}
+        if ( !pbi->display_fragments[ i + 1 ] ){
+          dsp_FilterHoriz(pbi->dsp,pbi->LastFrameRecon+
+                      pbi->recon_pixel_index_table[i]+6,
+                      LineLength, BoundingValuePtr);
+        }
 
-	/* Bottom done if next row set */
-	if( !pbi->display_fragments[ i + LineFragments] ){
-	  dsp_funcs.FilterVert(pbi->LastFrameRecon+
-		     pbi->recon_pixel_index_table[i + LineFragments],
-		     LineLength, BoundingValuePtr);
-	}
+        /* Bottom done if next row set */
+        if( !pbi->display_fragments[ i + LineFragments] ){
+          dsp_FilterVert(pbi->dsp,pbi->LastFrameRecon+
+                     pbi->recon_pixel_index_table[i + LineFragments],
+                     LineLength, BoundingValuePtr);
+        }
 
       }
     }
@@ -836,15 +825,15 @@ void LoopFilter(PB_INSTANCE *pbi){
     /* Last Column */
     if( pbi->display_fragments[i]){
       /* Filter Left edge always */
-      dsp_funcs.FilterHoriz(pbi->LastFrameRecon+
-		  pbi->recon_pixel_index_table[i] - 2 ,
-		  LineLength, BoundingValuePtr);
+      dsp_FilterHoriz(pbi->dsp,pbi->LastFrameRecon+
+                  pbi->recon_pixel_index_table[i] - 2 ,
+                  LineLength, BoundingValuePtr);
 
       /* Bottom done if next row set */
       if( !pbi->display_fragments[ i + LineFragments] ){
-	dsp_funcs.FilterVert(pbi->LastFrameRecon+
-		   pbi->recon_pixel_index_table[i + LineFragments],
-		   LineLength, BoundingValuePtr);
+        dsp_FilterVert(pbi->dsp,pbi->LastFrameRecon+
+                   pbi->recon_pixel_index_table[i + LineFragments],
+                   LineLength, BoundingValuePtr);
       }
     }
     i++;
@@ -859,78 +848,78 @@ void LoopFilter(PB_INSTANCE *pbi){
       /* only do 2 prediction if fragment coded and on non intra or if
          all fragments are intra */
       if( pbi->display_fragments[i]){
-	/* TopRow is always done */
-	dsp_funcs.FilterVert(pbi->LastFrameRecon+
-		   pbi->recon_pixel_index_table[i],
-		   LineLength, BoundingValuePtr);
+        /* TopRow is always done */
+        dsp_FilterVert(pbi->dsp,pbi->LastFrameRecon+
+                   pbi->recon_pixel_index_table[i],
+                   LineLength, BoundingValuePtr);
 
-	/* Filter right hand border only if the block to the right is
+        /* Filter right hand border only if the block to the right is
            not coded */
-	if ( !pbi->display_fragments[ i + 1 ] ){
-	  dsp_funcs.FilterHoriz(pbi->LastFrameRecon+
-		      pbi->recon_pixel_index_table[i] + 6,
-		      LineLength, BoundingValuePtr);
-	}
+        if ( !pbi->display_fragments[ i + 1 ] ){
+          dsp_FilterHoriz(pbi->dsp,pbi->LastFrameRecon+
+                      pbi->recon_pixel_index_table[i] + 6,
+                      LineLength, BoundingValuePtr);
+        }
 
-	/* Bottom done if next row set */
-	if( !pbi->display_fragments[ i + LineFragments] ){
-	  dsp_funcs.FilterVert(pbi->LastFrameRecon+
-		     pbi->recon_pixel_index_table[i + LineFragments],
-		     LineLength, BoundingValuePtr);
-	}
+        /* Bottom done if next row set */
+        if( !pbi->display_fragments[ i + LineFragments] ){
+          dsp_FilterVert(pbi->dsp,pbi->LastFrameRecon+
+                     pbi->recon_pixel_index_table[i + LineFragments],
+                     LineLength, BoundingValuePtr);
+        }
       }
       i++;
 
       /*****************************************************************/
       /* middle columns  */
       for ( n = 1 ; n < FragsAcross - 1 ; n++, i++){
-	if( pbi->display_fragments[i]){
-	  /* Filter Left edge always */
-	  dsp_funcs.FilterHoriz(pbi->LastFrameRecon+
-		      pbi->recon_pixel_index_table[i] - 2,
-		      LineLength, BoundingValuePtr);
+        if( pbi->display_fragments[i]){
+          /* Filter Left edge always */
+          dsp_FilterHoriz(pbi->dsp,pbi->LastFrameRecon+
+                      pbi->recon_pixel_index_table[i] - 2,
+                      LineLength, BoundingValuePtr);
 
-	  /* TopRow is always done */
-	  dsp_funcs.FilterVert(pbi->LastFrameRecon+
-		     pbi->recon_pixel_index_table[i],
-		     LineLength, BoundingValuePtr);
+          /* TopRow is always done */
+          dsp_FilterVert(pbi->dsp,pbi->LastFrameRecon+
+                     pbi->recon_pixel_index_table[i],
+                     LineLength, BoundingValuePtr);
 
-	  /* Filter right hand border only if the block to the right
+          /* Filter right hand border only if the block to the right
              is not coded */
-	  if ( !pbi->display_fragments[ i + 1 ] ){
-	    dsp_funcs.FilterHoriz(pbi->LastFrameRecon+
-			pbi->recon_pixel_index_table[i] + 6,
-			LineLength, BoundingValuePtr);
-	  }
+          if ( !pbi->display_fragments[ i + 1 ] ){
+            dsp_FilterHoriz(pbi->dsp,pbi->LastFrameRecon+
+                        pbi->recon_pixel_index_table[i] + 6,
+                        LineLength, BoundingValuePtr);
+          }
 
-	  /* Bottom done if next row set */
-	  if( !pbi->display_fragments[ i + LineFragments] ){
-	    dsp_funcs.FilterVert(pbi->LastFrameRecon+
-		       pbi->recon_pixel_index_table[i + LineFragments],
-		       LineLength, BoundingValuePtr);
-	  }
-	}
+          /* Bottom done if next row set */
+          if( !pbi->display_fragments[ i + LineFragments] ){
+            dsp_FilterVert(pbi->dsp,pbi->LastFrameRecon+
+                       pbi->recon_pixel_index_table[i + LineFragments],
+                       LineLength, BoundingValuePtr);
+          }
+        }
       }
 
       /******************************************************************/
       /* Last Column */
       if( pbi->display_fragments[i]){
-	/* Filter Left edge always*/
-	dsp_funcs.FilterHoriz(pbi->LastFrameRecon+
-		    pbi->recon_pixel_index_table[i] - 2,
-		    LineLength, BoundingValuePtr);
+        /* Filter Left edge always*/
+        dsp_FilterHoriz(pbi->dsp,pbi->LastFrameRecon+
+                    pbi->recon_pixel_index_table[i] - 2,
+                    LineLength, BoundingValuePtr);
 
-	/* TopRow is always done */
-	dsp_funcs.FilterVert(pbi->LastFrameRecon+
-		   pbi->recon_pixel_index_table[i],
-		   LineLength, BoundingValuePtr);
+        /* TopRow is always done */
+        dsp_FilterVert(pbi->dsp,pbi->LastFrameRecon+
+                   pbi->recon_pixel_index_table[i],
+                   LineLength, BoundingValuePtr);
 
-	/* Bottom done if next row set */
-	if( !pbi->display_fragments[ i + LineFragments] ){
-	  dsp_funcs.FilterVert(pbi->LastFrameRecon+
-		     pbi->recon_pixel_index_table[i + LineFragments],
-		     LineLength, BoundingValuePtr);
-	}
+        /* Bottom done if next row set */
+        if( !pbi->display_fragments[ i + LineFragments] ){
+          dsp_FilterVert(pbi->dsp,pbi->LastFrameRecon+
+                     pbi->recon_pixel_index_table[i + LineFragments],
+                     LineLength, BoundingValuePtr);
+        }
       }
       i++;
 
@@ -945,16 +934,16 @@ void LoopFilter(PB_INSTANCE *pbi){
     if( pbi->display_fragments[i]){
 
       /* TopRow is always done */
-      dsp_funcs.FilterVert(pbi->LastFrameRecon+
-		 pbi->recon_pixel_index_table[i],
-		 LineLength, BoundingValuePtr);
+      dsp_FilterVert(pbi->dsp,pbi->LastFrameRecon+
+                 pbi->recon_pixel_index_table[i],
+                 LineLength, BoundingValuePtr);
 
       /* Filter right hand border only if the block to the right is
          not coded */
       if ( !pbi->display_fragments[ i + 1 ] ){
-	dsp_funcs.FilterHoriz(pbi->LastFrameRecon+
-		    pbi->recon_pixel_index_table[i] + 6,
-		    LineLength, BoundingValuePtr);
+        dsp_FilterHoriz(pbi->dsp,pbi->LastFrameRecon+
+                    pbi->recon_pixel_index_table[i] + 6,
+                    LineLength, BoundingValuePtr);
       }
     }
     i++;
@@ -963,23 +952,23 @@ void LoopFilter(PB_INSTANCE *pbi){
     /* middle columns  */
     for ( n = 1 ; n < FragsAcross - 1 ; n++, i++){
       if( pbi->display_fragments[i]){
-	/* Filter Left edge always */
-	dsp_funcs.FilterHoriz(pbi->LastFrameRecon+
-		    pbi->recon_pixel_index_table[i] - 2,
-		    LineLength, BoundingValuePtr);
+        /* Filter Left edge always */
+        dsp_FilterHoriz(pbi->dsp,pbi->LastFrameRecon+
+                    pbi->recon_pixel_index_table[i] - 2,
+                    LineLength, BoundingValuePtr);
 
-	/* TopRow is always done */
-	dsp_funcs.FilterVert(pbi->LastFrameRecon+
-		   pbi->recon_pixel_index_table[i],
-		   LineLength, BoundingValuePtr);
+        /* TopRow is always done */
+        dsp_FilterVert(pbi->dsp,pbi->LastFrameRecon+
+                   pbi->recon_pixel_index_table[i],
+                   LineLength, BoundingValuePtr);
 
-	/* Filter right hand border only if the block to the right is
+        /* Filter right hand border only if the block to the right is
            not coded */
-	if ( !pbi->display_fragments[ i + 1 ] ){
-	  dsp_funcs.FilterHoriz(pbi->LastFrameRecon+
-		      pbi->recon_pixel_index_table[i] + 6,
-		      LineLength, BoundingValuePtr);
-	}
+        if ( !pbi->display_fragments[ i + 1 ] ){
+          dsp_FilterHoriz(pbi->dsp,pbi->LastFrameRecon+
+                      pbi->recon_pixel_index_table[i] + 6,
+                      LineLength, BoundingValuePtr);
+        }
       }
     }
 
@@ -987,19 +976,18 @@ void LoopFilter(PB_INSTANCE *pbi){
     /* Last Column */
     if( pbi->display_fragments[i]){
       /* Filter Left edge always */
-      dsp_funcs.FilterHoriz(pbi->LastFrameRecon+
-		  pbi->recon_pixel_index_table[i] - 2,
-		  LineLength, BoundingValuePtr);
+      dsp_FilterHoriz(pbi->dsp,pbi->LastFrameRecon+
+                  pbi->recon_pixel_index_table[i] - 2,
+                  LineLength, BoundingValuePtr);
 
       /* TopRow is always done */
-      dsp_funcs.FilterVert(pbi->LastFrameRecon+
-		 pbi->recon_pixel_index_table[i],
-		 LineLength, BoundingValuePtr);
+      dsp_FilterVert(pbi->dsp,pbi->LastFrameRecon+
+                 pbi->recon_pixel_index_table[i],
+                 LineLength, BoundingValuePtr);
 
     }
     i++;
   }
- _mm_empty();
 }
 
 void ReconRefFrames (PB_INSTANCE *pbi){
@@ -1105,7 +1093,7 @@ void ReconRefFrames (PB_INSTANCE *pbi){
       FragsDown = pbi->VFragments >> 1;
       break;
     /*case 2:  v */
-    default:
+    default:    
       FromFragment = pbi->YPlaneFragments + pbi->UVPlaneFragments;
       ToFragment = pbi->YPlaneFragments + (2 * pbi->UVPlaneFragments) ;
       FragsAcross = pbi->HFragments >> 1;
@@ -1123,22 +1111,22 @@ void ReconRefFrames (PB_INSTANCE *pbi){
     for ( m = 0 ; m < FragsDown ; m++) {
       for ( n = 0 ; n < FragsAcross ; n++, i++){
 
-	/* only do 2 prediction if fragment coded and on non intra or
+        /* only do 2 prediction if fragment coded and on non intra or
            if all fragments are intra */
         if( pbi->display_fragments[i] || (GetFrameType(pbi) == KEY_FRAME) ){
-	  /* Type of Fragment */
-	  WhichFrame = Mode2Frame[pbi->FragCodingMethod[i]];
+          /* Type of Fragment */
+          WhichFrame = Mode2Frame[pbi->FragCodingMethod[i]];
 
-	  /* Check Borderline Cases */
-	  WhichCase = (n==0) + ((m==0) << 1) + ((n+1 == FragsAcross) << 2);
+          /* Check Borderline Cases */
+          WhichCase = (n==0) + ((m==0) << 1) + ((n+1 == FragsAcross) << 2);
 
           fn[0]=i-1;
           fn[1]=i-FragsAcross-1;
           fn[2]=i-FragsAcross;
           fn[3]=i-FragsAcross+1;
 
-	    /* fragment valid for prediction use if coded and it comes
-               from same frame as the one we are predicting */
+          /* fragment valid for prediction use if coded and it comes
+             from same frame as the one we are predicting */
           for(k=pcount=wpc=0; k<4; k++) {
             int pflag;
             pflag=1<<k;
@@ -1149,31 +1137,31 @@ void ReconRefFrames (PB_INSTANCE *pbi){
               wpc|=pflag;
               pcount++;
             }
-	  }
+          }
 
-	  if(wpc==0){
+          if(wpc==0){
             /* fall back to the last coded fragment */
-	      pbi->QFragData[i][0] += Last[WhichFrame];
+            pbi->QFragData[i][0] += Last[WhichFrame];
 
-	  }else{
+          }else{
 
-	    /* don't do divide if divisor is 1 or 0 */
+            /* don't do divide if divisor is 1 or 0 */
             PredictedDC = pc[wpc][0]*v[0];
             for(k=1; k<pcount; k++){
               PredictedDC += pc[wpc][k]*v[k];
             }
 
-	    /* if we need to do a shift */
-	    if(pc[wpc][4] != 0 ){
+            /* if we need to do a shift */
+            if(pc[wpc][4] != 0 ){
 
-	      /* If negative add in the negative correction factor */
-	      PredictedDC += (HIGHBITDUPPED(PredictedDC) & pc[wpc][5]);
+              /* If negative add in the negative correction factor */
+              PredictedDC += (HIGHBITDUPPED(PredictedDC) & pc[wpc][5]);
 
-	      /* Shift in lieu of a divide */
-	      PredictedDC >>= pc[wpc][4];
-	    }
+              /* Shift in lieu of a divide */
+              PredictedDC >>= pc[wpc][4];
+            }
 
-	    /* check for outranging on the two predictors that can outrange */
+            /* check for outranging on the two predictors that can outrange */
             if((wpc&(PU|PUL|PL)) == (PU|PUL|PL)){
               if( abs(PredictedDC - v[2]) > 128) {
                 PredictedDC = v[2];
@@ -1182,24 +1170,24 @@ void ReconRefFrames (PB_INSTANCE *pbi){
               } else if( abs(PredictedDC - v[1]) > 128) {
                 PredictedDC = v[1];
               }
-	    }
+            }
 
-	    pbi->QFragData[i][0] += PredictedDC;
+            pbi->QFragData[i][0] += PredictedDC;
 
-	  }
+          }
 
-	  /* Save the last fragment coded for whatever frame we are
+          /* Save the last fragment coded for whatever frame we are
              predicting from */
-	  Last[WhichFrame] = pbi->QFragData[i][0];
+          Last[WhichFrame] = pbi->QFragData[i][0];
 
-	  /* Inverse DCT and reconstitute buffer in thisframe */
-	  ExpandBlockA( pbi, i );
+          /* Inverse DCT and reconstitute buffer in thisframe */
+          ExpandBlockA( pbi, i );
 
-	}
+        }
       }
     }
   }
-  _mm_empty();
+
   /* Copy the current reconstruction back to the last frame recon buffer. */
   if(pbi->CodedBlockIndex > (ogg_int32_t) (pbi->UnitFragments >> 1)){
     SwapReconBuffersTemp = pbi->ThisFrameRecon;
@@ -1223,4 +1211,15 @@ void ReconRefFrames (PB_INSTANCE *pbi){
     /* We may need to update the UMV border */
     UpdateUMVBorder(pbi, pbi->GoldenFrame);
   }
+}
+
+void dsp_dct_decode_init (DspFunctions *funcs, ogg_uint32_t cpu_flags)
+{
+  funcs->FilterVert = FilterVert__c;
+  funcs->FilterHoriz = FilterHoriz__c;
+#if defined(USE_ASM)
+  if (cpu_flags & CPU_X86_MMX) {
+    dsp_mmx_dct_decode_init(funcs);
+  }
+#endif
 }

@@ -8,7 +8,7 @@
 /* #undef ARCH_PPC */
 
 /* x86 architecture */
-#define ARCH_X86
+
 #ifdef __GNUC__
 /* Define if you have the `__builtin_expect' function. */
 #define HAVE_BUILTIN_EXPECT
@@ -63,7 +63,7 @@
 #define HAVE_SYS_TYPES_H 1
 
 /* Define to 1 if you have the <time.h> header file. */
-#define HAVE_TIME_H */
+#define HAVE_TIME_H 1
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
@@ -149,7 +149,7 @@
 #ifdef __GNUC__
 #define inline __attribute__ ((__always_inline__)) __inline
 #else
-#define inline __forceinline
+#define inline __inline
 #endif
 
 /* Define as `__restrict' if that's what the C compiler calls it, or to

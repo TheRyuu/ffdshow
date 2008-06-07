@@ -11,6 +11,7 @@
  ********************************************************************
 
   function:
+  last mod: $Id: codec_internal.h 12849 2007-04-11 18:20:04Z giles $
 
  ********************************************************************/
 
@@ -31,6 +32,13 @@
 #define theora_read(x,y,z) ( oggpackB_read(x,y,z) )
 #endif
 
+#ifdef DEBUG
+#include <stdio.h>
+#define TH_DEBUG(x) fprintf(stderr, x)
+#else
+#define TH_DEBUG(x)
+#endif
+
 #define CURRENT_ENCODE_VERSION   1
 #define HUGE_ERROR              (1<<28)  /*  Out of range test value */
 
@@ -38,6 +46,22 @@
 #define BLOCK_HEIGHT_WIDTH          8
 #define HFRAGPIXELS                 8
 #define VFRAGPIXELS                 8
+
+/* Blocks on INTRA/INTER Y/U/V planes */
+enum BlockMode {
+  BLOCK_Y,
+  BLOCK_U,
+  BLOCK_V,
+  BLOCK_INTER_Y,
+  BLOCK_INTER_U,
+  BLOCK_INTER_V
+};
+
+/* Encoding profiles */
+enum EncodingProfiles {
+  PROFILE_VP3,
+  PROFILE_FULL
+};
 
 /* Baseline dct block size */
 #define BLOCK_SIZE              (BLOCK_HEIGHT_WIDTH * BLOCK_HEIGHT_WIDTH)
@@ -227,6 +251,8 @@ typedef struct PP_INSTANCE {
   ogg_int32_t ChLocalsCircularBufferSize;
   ogg_int32_t PixelMapCircularBufferSize;
 
+  DspFunctions dsp;  /* Selected functions for this platform */
+
 } PP_INSTANCE;
 
 /** block coding modes */
@@ -276,9 +302,9 @@ typedef struct codec_setup_info {
 /** Decoder (Playback) instance -- installed in a theora_state */
 typedef struct PB_INSTANCE {
   oggpack_buffer *opb;
-  theora_info    info;
+  theora_info     info;
   /* how far do we shift the granulepos to seperate out P frame counts? */
-  int            keyframe_granule_shift;
+  int             keyframe_granule_shift;
 
 
   /***********************************************************************/
@@ -353,17 +379,17 @@ typedef struct PB_INSTANCE {
   /**********************************************************************/
   /* Fragment Information */
   ogg_uint32_t  *pixel_index_table;        /* start address of first
-					      pixel of fragment in
-					      source */
+                                              pixel of fragment in
+                                              source */
   ogg_uint32_t  *recon_pixel_index_table;  /* start address of first
-					      pixel in recon buffer */
+                                              pixel in recon buffer */
 
   unsigned char *display_fragments;        /* Fragment update map */
   unsigned char *skipped_display_fragments;/* whether fragment YUV
-					      Conversion and update is to be
-					      skipped */
+                                              Conversion and update is to be
+                                              skipped */
   ogg_int32_t   *CodedBlockList;           /* A list of fragment indices for
-					      coded blocks. */
+                                              coded blocks. */
   MOTION_VECTOR *FragMVect;                /* fragment motion vectors */
 
   ogg_uint32_t  *FragTokenCounts;          /* Number of tokens per fragment */
@@ -376,9 +402,9 @@ typedef struct PB_INSTANCE {
                                               coefficients data */
 
   unsigned char *FragCoeffs;                /* # of coeffs decoded so far for
-					       fragment */
+                                               fragment */
   unsigned char *FragCoefEOB;               /* Position of last non 0 coef
-						within QFragData */
+                                                within QFragData */
   Q_LIST_ENTRY (*QFragData)[64];            /* Fragment Coefficients
                                                Array Pointers */
   CODING_MODE   *FragCodingMethod;          /* coding method for the
@@ -390,15 +416,15 @@ typedef struct PB_INSTANCE {
 
   COEFFNODE     *_Nodes;
   ogg_uint32_t  *transIndex;                    /* ptr to table of
-						   transposed indexes */
+                                                   transposed indexes */
 
   /***********************************************************************/
   ogg_int32_t    bumpLast;
 
   /* Macro Block and SuperBlock Information */
   ogg_int32_t  (*BlockMap)[4][4];               /* super block + sub macro
-						   block + sub frag ->
-						   FragIndex */
+                                                   block + sub frag ->
+                                                   FragIndex */
 
   /* Coded flag arrays and counters for them */
   unsigned char *SBCodedFlags;
@@ -412,7 +438,7 @@ typedef struct PB_INSTANCE {
   COORDINATE    *FragCoordinates;
   MOTION_VECTOR  MVector;
   ogg_int32_t    ReconPtr2Offset;       /* Offset for second reconstruction
-					   in half pixel MC */
+                                           in half pixel MC */
   Q_LIST_ENTRY  *quantized_list;
   ogg_int16_t   *ReconDataBuffer;
   Q_LIST_ENTRY   InvLastIntraDC;
@@ -443,11 +469,17 @@ typedef struct PB_INSTANCE {
 
   /* Loop filter bounding values */
   unsigned char  LoopFilterLimits[Q_TABLE_SIZE];
-  ogg_int32_t    FiltBoundingValue[512];
-  ogg_int32_t   *BoundingValuePtr;
+  ogg_int16_t    FiltBoundingValue[256];
+
+  /* encoder profiles differ by their quantization table usage */
+  int            encoder_profile;
+
+  /* Naming convention for all quant matrices and related data structures:
+   * Fields containing "Inter" in their name are for Inter frames, the
+   * rest is Intra. */
 
   /* Dequantiser and rounding tables */
-  ogg_uint32_t QThreshTable[Q_TABLE_SIZE];
+  ogg_uint32_t   QThreshTable[Q_TABLE_SIZE];
   Q_LIST_ENTRY   DcScaleFactorTable[Q_TABLE_SIZE];
   Q_LIST_ENTRY   Y_coeffs[64];
   Q_LIST_ENTRY   U_coeffs[64];
@@ -461,11 +493,11 @@ typedef struct PB_INSTANCE {
   Q_LIST_ENTRY  *dequant_InterY_coeffs;
   Q_LIST_ENTRY  *dequant_InterU_coeffs;
   Q_LIST_ENTRY  *dequant_InterV_coeffs;
-  Q_LIST_ENTRY  *dequant_coeffs;	/* currently active quantizer */
+  Q_LIST_ENTRY  *dequant_coeffs;        /* currently active quantizer */
   unsigned int   zigzag_index[64];
   ogg_int32_t    quant_Y_coeffs[64];
   ogg_int32_t    quant_UV_coeffs[64];
-  ogg_int32_t    fp_quant_Y_coeffs[64]; /* used in reiniting quantizers */
+  
 
   HUFF_ENTRY    *HuffRoot_VP3x[NUM_HUFF_TABLES];
   ogg_uint32_t  *HuffCodeArray_VP3x[NUM_HUFF_TABLES];
@@ -473,14 +505,27 @@ typedef struct PB_INSTANCE {
   const unsigned char *ExtraBitLengths_VP3x;
 
   /* Quantiser and rounding tables */
-  ogg_int32_t    fp_quant_UV_coeffs[64];
-  ogg_int32_t    fp_quant_Inter_coeffs[64];
+  ogg_int32_t    fp_quant_Y_coeffs[64]; /* used in reiniting quantizers */
+  ogg_int32_t    fp_quant_U_coeffs[64];
+  ogg_int32_t    fp_quant_V_coeffs[64];
+  ogg_int32_t    fp_quant_Inter_Y_coeffs[64];
+  ogg_int32_t    fp_quant_Inter_U_coeffs[64];
+  ogg_int32_t    fp_quant_Inter_V_coeffs[64];
+  
   ogg_int32_t    fp_quant_Y_round[64];
-  ogg_int32_t    fp_quant_UV_round[64];
-  ogg_int32_t    fp_quant_Inter_round[64];
+  ogg_int32_t    fp_quant_U_round[64];
+  ogg_int32_t    fp_quant_V_round[64];
+  ogg_int32_t    fp_quant_Inter_Y_round[64];
+  ogg_int32_t    fp_quant_Inter_U_round[64];
+  ogg_int32_t    fp_quant_Inter_V_round[64];
+  
   ogg_int32_t    fp_ZeroBinSize_Y[64];
-  ogg_int32_t    fp_ZeroBinSize_UV[64];
-  ogg_int32_t    fp_ZeroBinSize_Inter[64];
+  ogg_int32_t    fp_ZeroBinSize_U[64];
+  ogg_int32_t    fp_ZeroBinSize_V[64];
+  ogg_int32_t    fp_ZeroBinSize_Inter_Y[64];
+  ogg_int32_t    fp_ZeroBinSize_Inter_U[64];
+  ogg_int32_t    fp_ZeroBinSize_Inter_V[64];
+
   ogg_int32_t   *fquant_coeffs;
   ogg_int32_t   *fquant_round;
   ogg_int32_t   *fquant_ZbSize;
@@ -492,6 +537,8 @@ typedef struct PB_INSTANCE {
   short         *ModifierPointer[4];
 
   unsigned char *DataOutputInPtr;
+
+  DspFunctions   dsp;  /* Selected functions for this platform */
 
 } PB_INSTANCE;
 
@@ -548,12 +595,12 @@ typedef struct CP_INSTANCE {
 
   /* Up regulation variables */
   ogg_uint32_t     FinalPassLastPos;  /* Used to regulate a final
-					 unrestricted high quality
-					 pass. */
-  ogg_uint32_t     LastEndSB;	      /* Where we were in the loop
+                                         unrestricted high quality
+                                         pass. */
+  ogg_uint32_t     LastEndSB;         /* Where we were in the loop
                                          last time. */
   ogg_uint32_t     ResidueLastEndSB;  /* Where we were in the residue
-					 update loop last time. */
+                                         update loop last time. */
 
   /* Controlling Block Selection */
   ogg_uint32_t     MVChangeFactor;
@@ -581,16 +628,16 @@ typedef struct CP_INSTANCE {
   ogg_uint32_t     *OptimisedTokenListEb; /* Optimised token list extra bits */
   unsigned char    *OptimisedTokenList;   /* Optimised token list. */
   unsigned char    *OptimisedTokenListHi; /* Optimised token list huffman
-					     table index */
+                                             table index */
 
   unsigned char    *OptimisedTokenListPl; /* Plane to which the token
-					     belongs Y = 0 or UV = 1 */
-  ogg_int32_t       OptimisedTokenCount;	   /* Count of Optimized tokens */
+                                             belongs Y = 0 or UV = 1 */
+  ogg_int32_t       OptimisedTokenCount;           /* Count of Optimized tokens */
   ogg_uint32_t      RunHuffIndex;         /* Huffman table in force at
-					     the start of a run */
+                                             the start of a run */
   ogg_uint32_t      RunPlaneIndex;        /* The plane (Y=0 UV=1) to
-					     which the first token in
-					     an EOB run belonged. */
+                                             which the first token in
+                                             an EOB run belonged. */
 
 
   ogg_uint32_t      TotTokenCount;
@@ -605,13 +652,13 @@ typedef struct CP_INSTANCE {
   unsigned char    *UncodedMbFlags;
 
   unsigned char    *extra_fragments;   /* extra updates not
-					  recommended by pre-processor */
+                                          recommended by pre-processor */
   ogg_int16_t      *OriginalDC;
 
   ogg_uint32_t     *FragmentLastQ;     /* Array used to keep track of
-					  quality at which each
-					  fragment was last
-					  updated. */
+                                          quality at which each
+                                          fragment was last
+                                          updated. */
   unsigned char    *FragTokens;
   ogg_uint32_t     *FragTokenCounts;   /* Number of tokens per fragment */
 
@@ -632,7 +679,7 @@ typedef struct CP_INSTANCE {
   ogg_uint32_t      RunLength;
   ogg_uint32_t      MaxBitTarget;     /* Cut off target for rate capping */
   double            BitRateCapFactor; /* Factor relating delta frame target
-					 to cut off target. */
+                                         to cut off target. */
 
   unsigned char     MBCodingMode;     /* Coding mode flags */
 
@@ -680,44 +727,25 @@ typedef struct CP_INSTANCE {
   int               packetflag;
   int               doneflag;
 
+  DspFunctions   dsp;  /* Selected functions for this platform */
+
 } CP_INSTANCE;
 
 #define clamp255(x) ((unsigned char)((((x)<0)-1) & ((x) | -((x)>255))))
 
 extern void ConfigurePP( PP_INSTANCE *ppi, int Level ) ;
 extern ogg_uint32_t YUVAnalyseFrame( PP_INSTANCE *ppi,
-				     ogg_uint32_t * KFIndicator );
+                                     ogg_uint32_t * KFIndicator );
 
 extern void ClearPPInstance(PP_INSTANCE *ppi);
-extern void InitPPInstance(PP_INSTANCE *ppi);
+extern void InitPPInstance(PP_INSTANCE *ppi, DspFunctions *funcs);
 extern int GetFrameType(PB_INSTANCE *pbi);
 extern void InitPBInstance(PB_INSTANCE *pbi);
 extern void ClearPBInstance(PB_INSTANCE *pbi);
 
-
-extern void IDctSlow(  Q_LIST_ENTRY * InputData,
-		       ogg_int16_t *QuantMatrix,
-		       ogg_int16_t * OutputData ) ;
-
-extern void IDct10( Q_LIST_ENTRY * InputData,
-		    ogg_int16_t *QuantMatrix,
-		    ogg_int16_t * OutputData );
-
 extern void IDct1( Q_LIST_ENTRY * InputData,
-		   ogg_int16_t *QuantMatrix,
-		   ogg_int16_t * OutputData );
-
-extern void MMX_idct(  Q_LIST_ENTRY * InputData,
-		       ogg_int16_t *QuantMatrix,
-		       ogg_int16_t * OutputData ) ;
-extern void MMX_idct10( Q_LIST_ENTRY * InputData,
-		    ogg_int16_t *QuantMatrix,
-		    ogg_int16_t * OutputData );
-extern void MMX_idct1( Q_LIST_ENTRY * InputData,
-		   ogg_int16_t *QuantMatrix,
-		   ogg_int16_t * OutputData );
-extern void fillidctconstants(void);
-extern void ff_vp3_idct_sse2(Q_LIST_ENTRY * input_data, ogg_int16_t * qtbl, ogg_int16_t * output);
+                   ogg_int16_t *QuantMatrix,
+                   ogg_int16_t * OutputData );
 
 extern void ReconIntra( PB_INSTANCE *pbi, unsigned char * ReconPtr,
                         ogg_int16_t * ChangePtr, ogg_uint32_t LineStep );
@@ -739,23 +767,22 @@ extern void CopyBlock(unsigned char *src,
 extern void LoopFilter(PB_INSTANCE *pbi);
 extern void ReconRefFrames (PB_INSTANCE *pbi);
 extern void ExpandToken( Q_LIST_ENTRY * ExpandedBlock,
-			 unsigned char * CoeffIndex, ogg_uint32_t Token,
-			 ogg_int32_t ExtraBits );
+                         unsigned char * CoeffIndex, ogg_uint32_t Token,
+                         ogg_int32_t ExtraBits );
 extern void ClearDownQFragData(PB_INSTANCE *pbi);
-extern void select_Y_quantiser ( PB_INSTANCE *pbi );
-extern void select_Inter_quantiser ( PB_INSTANCE *pbi );
-extern void select_UV_quantiser ( PB_INSTANCE *pbi );
-extern void select_InterUV_quantiser ( PB_INSTANCE *pbi );
+
+extern void select_quantiser (PB_INSTANCE *pbi, int type);
+
 extern void quantize( PB_INSTANCE *pbi,
-		      ogg_int16_t * DCT_block,
-		      Q_LIST_ENTRY * quantized_list);
+                      ogg_int16_t * DCT_block,
+                      Q_LIST_ENTRY * quantized_list);
 extern void UpdateQ( PB_INSTANCE *pbi, int NewQIndex );
 extern void UpdateQC( CP_INSTANCE *cpi, ogg_uint32_t NewQ );
 extern void fdct_short ( ogg_int16_t * InputData, ogg_int16_t * OutputData );
 extern ogg_uint32_t DPCMTokenizeBlock (CP_INSTANCE *cpi,
-				       ogg_int32_t FragIndex);
+                                       ogg_int32_t FragIndex);
 extern void TransformQuantizeBlock (CP_INSTANCE *cpi, ogg_int32_t FragIndex,
-				    ogg_uint32_t PixelsPerLine ) ;
+                                    ogg_uint32_t PixelsPerLine ) ;
 extern void ClearFragmentInfo(PB_INSTANCE * pbi);
 extern void InitFragmentInfo(PB_INSTANCE * pbi);
 extern void ClearFrameInfo(PB_INSTANCE * pbi);
@@ -783,54 +810,54 @@ extern void UpdateFragQIndex(PB_INSTANCE *pbi);
 extern void PostProcess(PB_INSTANCE *pbi);
 extern void InitMotionCompensation ( CP_INSTANCE *cpi );
 extern ogg_uint32_t GetMBIntraError (CP_INSTANCE *cpi, ogg_uint32_t FragIndex,
-				     ogg_uint32_t PixelsPerLine ) ;
+                                     ogg_uint32_t PixelsPerLine ) ;
 extern ogg_uint32_t GetMBInterError (CP_INSTANCE *cpi,
-				     unsigned char * SrcPtr,
-				     unsigned char * RefPtr,
-				     ogg_uint32_t FragIndex,
-				     ogg_int32_t LastXMV,
-				     ogg_int32_t LastYMV,
-				     ogg_uint32_t PixelsPerLine ) ;
+                                     unsigned char * SrcPtr,
+                                     unsigned char * RefPtr,
+                                     ogg_uint32_t FragIndex,
+                                     ogg_int32_t LastXMV,
+                                     ogg_int32_t LastYMV,
+                                     ogg_uint32_t PixelsPerLine ) ;
 extern void WriteFrameHeader( CP_INSTANCE *cpi) ;
 extern ogg_uint32_t GetMBMVInterError (CP_INSTANCE *cpi,
-				       unsigned char * RefFramePtr,
-				       ogg_uint32_t FragIndex,
-				       ogg_uint32_t PixelsPerLine,
-				       ogg_int32_t *MVPixelOffset,
-				       MOTION_VECTOR *MV );
+                                       unsigned char * RefFramePtr,
+                                       ogg_uint32_t FragIndex,
+                                       ogg_uint32_t PixelsPerLine,
+                                       ogg_int32_t *MVPixelOffset,
+                                       MOTION_VECTOR *MV );
 extern ogg_uint32_t GetMBMVExhaustiveSearch (CP_INSTANCE *cpi,
-					     unsigned char * RefFramePtr,
-					     ogg_uint32_t FragIndex,
-					     ogg_uint32_t PixelsPerLine,
-					     MOTION_VECTOR *MV );
+                                             unsigned char * RefFramePtr,
+                                             ogg_uint32_t FragIndex,
+                                             ogg_uint32_t PixelsPerLine,
+                                             MOTION_VECTOR *MV );
 extern ogg_uint32_t GetFOURMVExhaustiveSearch (CP_INSTANCE *cpi,
-					       unsigned char * RefFramePtr,
-					       ogg_uint32_t FragIndex,
-					       ogg_uint32_t PixelsPerLine,
-					       MOTION_VECTOR *MV ) ;
+                                               unsigned char * RefFramePtr,
+                                               ogg_uint32_t FragIndex,
+                                               ogg_uint32_t PixelsPerLine,
+                                               MOTION_VECTOR *MV ) ;
 extern ogg_uint32_t EncodeData(CP_INSTANCE *cpi);
 extern ogg_uint32_t PickIntra( CP_INSTANCE *cpi,
-			       ogg_uint32_t SBRows,
-			       ogg_uint32_t SBCols);
+                               ogg_uint32_t SBRows,
+                               ogg_uint32_t SBCols);
 extern ogg_uint32_t PickModes(CP_INSTANCE *cpi,
-			      ogg_uint32_t SBRows,
-			      ogg_uint32_t SBCols,
-			      ogg_uint32_t PixelsPerLine,
-			      ogg_uint32_t *InterError,
-			      ogg_uint32_t *IntraError);
+                              ogg_uint32_t SBRows,
+                              ogg_uint32_t SBCols,
+                              ogg_uint32_t PixelsPerLine,
+                              ogg_uint32_t *InterError,
+                              ogg_uint32_t *IntraError);
 
 extern CODING_MODE FrArrayUnpackMode(PB_INSTANCE *pbi);
 extern void CreateBlockMapping ( ogg_int32_t  (*BlockMap)[4][4],
-				 ogg_uint32_t YSuperBlocks,
-				 ogg_uint32_t UVSuperBlocks,
-				 ogg_uint32_t HFrags, ogg_uint32_t VFrags );
+                                 ogg_uint32_t YSuperBlocks,
+                                 ogg_uint32_t UVSuperBlocks,
+                                 ogg_uint32_t HFrags, ogg_uint32_t VFrags );
 extern void UpRegulateDataStream (CP_INSTANCE *cpi, ogg_uint32_t RegulationQ,
-				  ogg_int32_t RecoveryBlocks ) ;
+                                  ogg_int32_t RecoveryBlocks ) ;
 extern void RegulateQ( CP_INSTANCE *cpi, ogg_int32_t UpdateScore );
 extern void CopyBackExtraFrags(CP_INSTANCE *cpi);
 
 extern void UpdateUMVBorder( PB_INSTANCE *pbi,
-			     unsigned char * DestReconPtr );
+                             unsigned char * DestReconPtr );
 extern void PInitFrameInfo(PP_INSTANCE * ppi);
 extern int GetFrameType(PB_INSTANCE *pbi);
 extern void SetFrameType( PB_INSTANCE *pbi,unsigned char FrType );
@@ -838,7 +865,7 @@ extern double GetEstimatedBpb( CP_INSTANCE *cpi, ogg_uint32_t TargetQ );
 extern void ClearTmpBuffers(PB_INSTANCE * pbi);
 extern void InitTmpBuffers(PB_INSTANCE * pbi);
 extern void ScanYUVInit( PP_INSTANCE *  ppi,
-			 SCAN_CONFIG_DATA * ScanConfigPtr);
+                         SCAN_CONFIG_DATA * ScanConfigPtr);
 extern int LoadAndDecode(PB_INSTANCE *pbi);
 
 #endif /* ENCODER_INTERNAL_H */

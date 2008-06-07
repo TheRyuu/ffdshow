@@ -11,6 +11,7 @@
  ********************************************************************
 
   function: read/write and client interface for comment header packet
+  last mod: $Id: comment.c 11442 2006-05-27 17:28:08Z giles $
 
  ********************************************************************/
 
@@ -101,7 +102,7 @@ void theora_comment_clear(theora_comment *tc){
     for(i=0;i<tc->comments;i++)
       if(tc->user_comments[i])_ogg_free(tc->user_comments[i]);
     if(tc->user_comments)_ogg_free(tc->user_comments);
-        if(tc->comment_lengths)_ogg_free(tc->comment_lengths);
+    if(tc->comment_lengths)_ogg_free(tc->comment_lengths);
     if(tc->vendor)_ogg_free(tc->vendor);
     memset(tc,0,sizeof(*tc));
   }
