@@ -73,8 +73,8 @@ LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
  if (Tconfig::cpu_flags&FF_CPU_MMX     ) param.cpu|=X264_CPU_MMX;
  if (Tconfig::cpu_flags&FF_CPU_MMXEXT  ) param.cpu|=X264_CPU_MMXEXT;
  if (Tconfig::cpu_flags&FF_CPU_SSE     ) param.cpu|=X264_CPU_SSE;
- if (Tconfig::cpu_flags&FF_CPU_SSE2    ) param.cpu|=X264_CPU_SSE2;
- if (Tconfig::cpu_flags&FF_CPU_SSSE3   ) param.cpu|=X264_CPU_SSSE3;
+ //if (Tconfig::cpu_flags&FF_CPU_SSE2    ) param.cpu|=X264_CPU_SSE2;
+ //if (Tconfig::cpu_flags&FF_CPU_SSSE3   ) param.cpu|=X264_CPU_SSSE3;
  if (Tconfig::cpu_flags&FF_CPU_3DNOW   ) param.cpu|=X264_CPU_3DNOW;
  if (Tconfig::cpu_flags&FF_CPU_3DNOWEXT) param.cpu|=X264_CPU_3DNOWEXT;
 
