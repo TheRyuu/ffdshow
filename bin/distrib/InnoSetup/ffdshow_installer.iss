@@ -382,7 +382,9 @@ Source: {#= bindir}\ff_theora.dll; DestDir: {app}; Flags: ignoreversion; Compone
 #if include_x264
 Source: {#= bindir}\ff_x264.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow\vfw
   #if !is64bit
-Source: Runtimes\pthreadGC2.dll; DestDir: {sys}; Flags: sharedfile uninsnosharedfileprompt restartreplace uninsrestartdelete; Components: ffdshow\vfw
+Source: Runtimes\pthreadGC2\x86\pthreadGC2.dll; DestDir: {sys}; Flags: sharedfile uninsnosharedfileprompt restartreplace uninsrestartdelete; Components: ffdshow\vfw
+  #else
+Source: Runtimes\pthreadGC2\x64\pthreadGC2-64.dll; DestDir: {sys}; Flags: sharedfile uninsnosharedfileprompt restartreplace uninsrestartdelete; Components: ffdshow\vfw
   #endif
 #endif
 #if include_xvidcore
