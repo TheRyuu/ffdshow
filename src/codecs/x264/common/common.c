@@ -31,8 +31,6 @@
 #include "common.h"
 #include "cpu.h"
 
-#pragma warning(disable: 4244)
-
 static void x264_log_default( void *, int, const char *, va_list );
 
 /****************************************************************************

@@ -360,6 +360,7 @@ SATD_X_DECL7()
 SATD_X_DECL7( _mmxext )
 SATD_X_DECL5( _sse2 )
 SATD_X_DECL7( _ssse3 )
+SATD_X_DECL5( _ssse3_phadd )
 #endif
 
 /****************************************************************************
@@ -556,23 +557,20 @@ void x264_pixel_init( int cpu, x264_pixel_function_t *pixf )
         pixf->intra_sa8d_x3_8x8 = x264_intra_sa8d_x3_8x8_mmxext;
         pixf->ssim_4x4x2_core  = x264_pixel_ssim_4x4x2_core_mmxext;
 
-        if( cpu&X264_CPU_CACHELINE_SPLIT )
+        if( cpu&X264_CPU_CACHELINE_32 )
         {
-            if( cpu&X264_CPU_CACHELINE_32 )
-            {
-                INIT5( sad, _cache32_mmxext );
-                INIT4( sad_x3, _cache32_mmxext );
-                INIT4( sad_x4, _cache32_mmxext );
-            }
-            else
-            {
-                INIT5( sad, _cache64_mmxext );
-                INIT4( sad_x3, _cache64_mmxext );
-                INIT4( sad_x4, _cache64_mmxext );
-            }
+            INIT5( sad, _cache32_mmxext );
+            INIT4( sad_x3, _cache32_mmxext );
+            INIT4( sad_x4, _cache32_mmxext );
+        }
+        else if( cpu&X264_CPU_CACHELINE_64 )
+        {
+            INIT5( sad, _cache64_mmxext );
+            INIT4( sad_x3, _cache64_mmxext );
+            INIT4( sad_x4, _cache64_mmxext );
         }
 #else
-        if( cpu&X264_CPU_CACHELINE_SPLIT )
+        if( cpu&X264_CPU_CACHELINE_64 )
         {
             pixf->sad[PIXEL_8x16] = x264_pixel_sad_8x16_cache64_mmxext;
             pixf->sad[PIXEL_8x8]  = x264_pixel_sad_8x8_cache64_mmxext;
@@ -588,19 +586,15 @@ void x264_pixel_init( int cpu, x264_pixel_function_t *pixf )
         pixf->intra_satd_x3_4x4   = x264_intra_satd_x3_4x4_mmxext;
     }
 
-    // disable on AMD processors since it is slower
-    if( (cpu&X264_CPU_SSE2) && !(cpu&X264_CPU_3DNOW) )
+    if( (cpu&X264_CPU_SSE2) && !(cpu&X264_CPU_SSE2_IS_SLOW) )
     {
         INIT2( sad, _sse2 );
         INIT2( sad_x3, _sse2 );
         INIT2( sad_x4, _sse2 );
-        INIT5( satd, _sse2 );
-        INIT5( satd_x3, _sse2 );
-        INIT5( satd_x4, _sse2 );
         INIT_ADS( _sse2 );
 
 #ifdef ARCH_X86
-        if( cpu&X264_CPU_CACHELINE_SPLIT )
+        if( cpu&X264_CPU_CACHELINE_64 )
         {
             INIT2( sad, _cache64_sse2 );
             INIT2( sad_x3, _cache64_sse2 );
@@ -608,10 +602,12 @@ void x264_pixel_init( int cpu, x264_pixel_function_t *pixf )
         }
 #endif
     }
-    // these are faster on both Intel and AMD
     if( cpu&X264_CPU_SSE2 )
     {
         INIT5( ssd, _sse2 );
+        INIT5( satd, _sse2 );
+        INIT5( satd_x3, _sse2 );
+        INIT5( satd_x4, _sse2 );
         pixf->ssim_4x4x2_core  = x264_pixel_ssim_4x4x2_core_sse2;
         pixf->ssim_end4        = x264_pixel_ssim_end4_sse2;
         pixf->sa8d[PIXEL_16x16] = x264_pixel_sa8d_16x16_sse2;
@@ -621,7 +617,7 @@ void x264_pixel_init( int cpu, x264_pixel_function_t *pixf )
 #endif
     }
 
-    if( (cpu&X264_CPU_SSE3) && (cpu&X264_CPU_CACHELINE_SPLIT) )
+    if( (cpu&X264_CPU_SSE3) && (cpu&X264_CPU_CACHELINE_64) )
     {
         INIT2( sad, _sse3 );
         INIT2( sad_x3, _sse3 );
@@ -642,11 +638,17 @@ void x264_pixel_init( int cpu, x264_pixel_function_t *pixf )
 #ifdef ARCH_X86_64
         pixf->intra_sa8d_x3_8x8 = x264_intra_sa8d_x3_8x8_ssse3;
 #endif
-        if( cpu&X264_CPU_CACHELINE_SPLIT )
+        if( cpu&X264_CPU_CACHELINE_64 )
         {
             INIT2( sad, _cache64_ssse3 );
             INIT2( sad_x3, _cache64_ssse3 );
             INIT2( sad_x4, _cache64_ssse3 );
+        }
+        if( cpu&X264_CPU_PHADD_IS_FAST )
+        {
+            INIT5( satd, _ssse3_phadd );
+            INIT5( satd_x3, _ssse3_phadd );
+            INIT5( satd_x4, _ssse3_phadd );
         }
     }
 #endif //HAVE_MMX

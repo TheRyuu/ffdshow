@@ -46,6 +46,8 @@ extern void x264_mc_copy_w16_sse3( uint8_t *, int, uint8_t *, int, int );
 extern void x264_mc_copy_w16_aligned_sse2( uint8_t *, int, uint8_t *, int, int );
 extern void x264_pixel_avg_weight_4x4_mmxext( uint8_t *, int, uint8_t *, int, int );
 extern void x264_pixel_avg_weight_w8_mmxext( uint8_t *, int, uint8_t *, int, int, int );
+extern void x264_pixel_avg_weight_w8_sse2( uint8_t *, int, uint8_t *, int, int, int );
+extern void x264_pixel_avg_weight_w16_sse2( uint8_t *, int, uint8_t *, int, int, int );
 extern void x264_pixel_avg_weight_w16_mmxext( uint8_t *, int, uint8_t *, int, int, int );
 extern void x264_prefetch_fenc_mmxext( uint8_t *, int, uint8_t *, int, int );
 extern void x264_prefetch_ref_mmxext( uint8_t *, int, int );
@@ -69,18 +71,23 @@ PIXEL_AVG_WALL(cache32_mmxext)
 PIXEL_AVG_WALL(cache64_mmxext)
 PIXEL_AVG_WALL(cache64_sse2)
 PIXEL_AVG_WALL(sse2)
-PIXEL_AVG_WALL(sse3)
 
-#define AVG_WEIGHT(W,H) \
-void x264_pixel_avg_weight_ ## W ## x ## H ## _mmxext( uint8_t *dst, int i_dst, uint8_t *src, int i_src, int i_weight_dst ) \
+#define AVG_WEIGHT(W,H,name) \
+void x264_pixel_avg_weight_ ## W ## x ## H ## _##name( uint8_t *dst, int i_dst, uint8_t *src, int i_src, int i_weight_dst ) \
 { \
-    x264_pixel_avg_weight_w ## W ## _mmxext( dst, i_dst, src, i_src, i_weight_dst, H ); \
+    x264_pixel_avg_weight_w ## W ## _##name( dst, i_dst, src, i_src, i_weight_dst, H ); \
 }
-AVG_WEIGHT(16,16)
-AVG_WEIGHT(16,8)
-AVG_WEIGHT(8,16)
-AVG_WEIGHT(8,8)
-AVG_WEIGHT(8,4)
+
+AVG_WEIGHT(16,16,mmxext)
+AVG_WEIGHT(16,8,mmxext)
+AVG_WEIGHT(8,16,mmxext)
+AVG_WEIGHT(8,8,mmxext)
+AVG_WEIGHT(8,4,mmxext)
+AVG_WEIGHT(16,16,sse2)
+AVG_WEIGHT(16,8,sse2)
+AVG_WEIGHT(8,16,sse2)
+AVG_WEIGHT(8,8,sse2)
+AVG_WEIGHT(8,4,sse2)
 
 #define PIXEL_AVG_WTAB(instr, name1, name2, name3, name4, name5)\
 static void (* const x264_pixel_avg_wtab_##instr[6])( uint8_t *, int, uint8_t *, int, uint8_t *, int ) =\
@@ -104,7 +111,6 @@ PIXEL_AVG_WTAB(cache32_mmxext, mmxext, cache32_mmxext, cache32_mmxext, cache32_m
 PIXEL_AVG_WTAB(cache64_mmxext, mmxext, cache64_mmxext, cache64_mmxext, cache64_mmxext, cache64_mmxext)
 PIXEL_AVG_WTAB(sse2, mmxext, mmxext, mmxext, sse2, sse2)
 PIXEL_AVG_WTAB(cache64_sse2, mmxext, cache64_mmxext, cache64_sse2, cache64_sse2, cache64_sse2)
-PIXEL_AVG_WTAB(cache64_sse3, mmxext, cache64_mmxext, sse3, sse3, sse3)
 
 #define MC_COPY_WTAB(instr, name1, name2, name3)\
 static void (* const x264_mc_copy_wtab_##instr[5])( uint8_t *, int, uint8_t *, int, int ) =\
@@ -118,7 +124,6 @@ static void (* const x264_mc_copy_wtab_##instr[5])( uint8_t *, int, uint8_t *, i
 
 MC_COPY_WTAB(mmx,mmx,mmx,mmx)
 MC_COPY_WTAB(sse2,mmx,mmx,sse2)
-MC_COPY_WTAB(sse3,mmx,mmx,sse3)
 
 static const int hpel_ref0[16] = {0,1,1,1,0,1,1,1,2,3,3,3,0,1,1,1};
 static const int hpel_ref1[16] = {0,0,0,0,2,2,3,2,2,2,3,2,2,2,3,2};
@@ -153,7 +158,6 @@ MC_LUMA(cache64_mmxext,cache64_mmxext,mmx)
 #endif
 MC_LUMA(sse2,sse2,sse2)
 MC_LUMA(cache64_sse2,cache64_sse2,sse2)
-MC_LUMA(cache64_sse3,cache64_sse3,sse3)
 
 #define GET_REF(name)\
 uint8_t *get_ref_##name( uint8_t *dst,   int *i_dst_stride,\
@@ -186,7 +190,6 @@ GET_REF(cache64_mmxext)
 #endif
 GET_REF(sse2)
 GET_REF(cache64_sse2)
-GET_REF(cache64_sse3)
 
 #define HPEL(align, cpu, cpuv, cpuc, cpuh)\
 void x264_hpel_filter_v_##cpuv( uint8_t *dst, uint8_t *src, int16_t *buf, int stride, int width);\
@@ -249,7 +252,7 @@ void x264_mc_init_mmx( int cpu, x264_mc_functions_t *pf )
     pf->avg[PIXEL_4x8]   = x264_pixel_avg_4x8_mmxext;
     pf->avg[PIXEL_4x4]   = x264_pixel_avg_4x4_mmxext;
     pf->avg[PIXEL_4x2]   = x264_pixel_avg_4x2_mmxext;
-    
+
     pf->avg_weight[PIXEL_16x16] = x264_pixel_avg_weight_16x16_mmxext;
     pf->avg_weight[PIXEL_16x8]  = x264_pixel_avg_weight_16x8_mmxext;
     pf->avg_weight[PIXEL_8x16]  = x264_pixel_avg_weight_8x16_mmxext;
@@ -270,7 +273,7 @@ void x264_mc_init_mmx( int cpu, x264_mc_functions_t *pf )
         pf->mc_luma = mc_luma_cache32_mmxext;
         pf->get_ref = get_ref_cache32_mmxext;
     }
-    else if( cpu&X264_CPU_CACHELINE_SPLIT )
+    else if( cpu&X264_CPU_CACHELINE_64 )
     {
         pf->mc_luma = mc_luma_cache64_mmxext;
         pf->get_ref = get_ref_cache64_mmxext;
@@ -284,26 +287,27 @@ void x264_mc_init_mmx( int cpu, x264_mc_functions_t *pf )
     pf->memzero_aligned = x264_memzero_aligned_sse2;
     pf->hpel_filter = x264_hpel_filter_sse2_amd;
 
-    // disable on AMD processors since it is slower
-    if( cpu&X264_CPU_3DNOW )
+    if( cpu&X264_CPU_SSE2_IS_SLOW )
         return;
 
-    pf->mc_luma = mc_luma_sse2;
-    pf->get_ref = get_ref_sse2;
     pf->copy[PIXEL_16x16] = x264_mc_copy_w16_aligned_sse2;
     pf->avg[PIXEL_16x16] = x264_pixel_avg_16x16_sse2;
     pf->avg[PIXEL_16x8]  = x264_pixel_avg_16x8_sse2;
+    pf->avg_weight[PIXEL_16x16] = x264_pixel_avg_weight_16x16_sse2;
+    pf->avg_weight[PIXEL_16x8]  = x264_pixel_avg_weight_16x8_sse2;
+    pf->avg_weight[PIXEL_8x16]  = x264_pixel_avg_weight_8x16_sse2;
+    pf->avg_weight[PIXEL_8x8]   = x264_pixel_avg_weight_8x8_sse2;
+    pf->avg_weight[PIXEL_8x4]   = x264_pixel_avg_weight_8x4_sse2;
     pf->hpel_filter = x264_hpel_filter_sse2;
 
-    if( cpu&X264_CPU_CACHELINE_SPLIT )
+    if( cpu&X264_CPU_SSE2_IS_FAST )
     {
-        pf->mc_luma = mc_luma_cache64_sse2;
-        pf->get_ref = get_ref_cache64_sse2;
-        /* lddqu doesn't work on Core2 */
-        if( (cpu&X264_CPU_SSE3) && !(cpu&X264_CPU_SSSE3) )
+        pf->mc_luma = mc_luma_sse2;
+        pf->get_ref = get_ref_sse2;
+        if( cpu&X264_CPU_CACHELINE_64 )
         {
-            pf->mc_luma = mc_luma_cache64_sse3;
-            pf->get_ref = get_ref_cache64_sse3;
+            pf->mc_luma = mc_luma_cache64_sse2;
+            pf->get_ref = get_ref_cache64_sse2;
         }
     }
 
