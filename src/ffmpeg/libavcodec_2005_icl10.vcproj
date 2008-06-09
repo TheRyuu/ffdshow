@@ -805,6 +805,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\nellymoser.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\nellymoserdec.c"
 				>
 			</File>
@@ -1263,6 +1267,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\msmpeg4data.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\nellymoser.h"
 				>
 			</File>
 			<File

@@ -440,6 +440,8 @@
 		<File 
 			RelativePath=".\libavcodec\msmpeg4data.h"/>
 		<File 
+			RelativePath=".\libavcodec\nellymoser.h"/>
+		<File 
 			RelativePath=".\libavcodec\parser.h"/>
 		<File 
 			RelativePath=".\libavcodec\png.h"/>
@@ -736,6 +738,8 @@
 			RelativePath=".\libavcodec\msrle.c"/>
 		<File 
 			RelativePath=".\libavcodec\msvideo1.c"/>
+		<File 
+			RelativePath=".\libavcodec\nellymoser.c"/>
 		<File 
 			RelativePath=".\libavcodec\nellymoserdec.c"/>
 		<File 

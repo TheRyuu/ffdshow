@@ -787,7 +787,7 @@ LRESULT TvideoCodecLibavcodec::beginCompress(int cfgcomode,int csp,const Trect &
 
  if (coCfg->trellisquant && sup_trellisQuant(coCfg->codecId))
   {
-   avctx->flags|=CODEC_FLAG_TRELLIS_QUANT;
+   avctx->trellis=1;
    if (coCfg->me_cbp_rd && sup_cbp_rd(coCfg->codecId)) avctx->flags|=CODEC_FLAG_CBP_RD;
   }
  if (coCfg->quant_type==QUANT::MPEG && sup_MPEGquant(coCfg->codecId))

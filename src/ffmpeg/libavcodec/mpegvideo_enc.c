@@ -415,7 +415,7 @@ av_cold int MPV_encode_init(AVCodecContext *avctx)
     }
 */
 
-    if((s->flags & CODEC_FLAG_CBP_RD) && !(s->flags & CODEC_FLAG_TRELLIS_QUANT)){
+    if((s->flags & CODEC_FLAG_CBP_RD) && !avctx->trellis){
         av_log(avctx, AV_LOG_ERROR, "CBP RD needs trellis quant\n");
         return -1;
     }
@@ -663,7 +663,7 @@ av_cold int MPV_encode_init(AVCodecContext *avctx)
     if(!s->denoise_dct)
         s->denoise_dct = denoise_dct_c;
     s->fast_dct_quantize = s->dct_quantize;
-    if(s->flags & CODEC_FLAG_TRELLIS_QUANT)
+    if(avctx->trellis)
         s->dct_quantize = dct_quantize_trellis_c;
 
     if(s->modified_quant)
