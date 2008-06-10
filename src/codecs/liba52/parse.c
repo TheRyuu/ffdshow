@@ -1,6 +1,6 @@
 /*
  * parse.c
- * Copyright (C) 2000-2002 Michel Lespinasse <walken@zoy.org>
+ * Copyright (C) 2000-2003 Michel Lespinasse <walken@zoy.org>
  * Copyright (C) 1999-2000 Aaron Holtzman <aholtzma@ess.engr.uvic.ca>
  *
  * added dialog normalisation, rf mode (drc), some extende bitstream information
@@ -371,7 +371,7 @@ static inline int16_t dither_gen (a52_state_t * state)
 
     state->lfsr_state = (uint16_t) nstate;
 
-    return nstate;
+    return (3 * nstate) >> 2;
 }
 
 static void coeff_get (a52_state_t * state, sample_t * coeff,
@@ -763,11 +763,11 @@ int a52_block (a52_state_t * state)
     }
 
     if (bitstream_get (state, 1)) {	/* baie */
-	    do_bit_alloc = 127;
+	do_bit_alloc = 127;
 	state->bai = bitstream_get (state, 11);
     }
     if (bitstream_get (state, 1)) {	/* snroffste */
-	    do_bit_alloc = 127;
+	do_bit_alloc = 127;
 	state->csnroffst = bitstream_get (state, 6);
 	if (state->chincpl)	/* cplinu */
 	    state->cplba.bai = bitstream_get (state, 7);
@@ -783,7 +783,7 @@ int a52_block (a52_state_t * state)
     }
 
     if (bitstream_get (state, 1)) {	/* deltbaie */
-	    do_bit_alloc = 127;
+	do_bit_alloc = 127;
 	if (state->chincpl)	/* cplinu */
 	    state->cplba.deltbae = bitstream_get (state, 2);
 	for (i = 0; i < nfchans; i++)
@@ -802,7 +802,8 @@ int a52_block (a52_state_t * state)
 	if (zero_snr_offsets (nfchans, state)) {
 	    memset (state->cpl_expbap.bap, 0, sizeof (state->cpl_expbap.bap));
 	    for (i = 0; i < nfchans; i++)
-		        memset (state->fbw_expbap[i].bap, 0, sizeof (state->fbw_expbap[i].bap));
+		memset (state->fbw_expbap[i].bap, 0,
+			sizeof (state->fbw_expbap[i].bap));
 	    memset (state->lfe_expbap.bap, 0, sizeof (state->lfe_expbap.bap));
 	} else {
 	    if (state->chincpl && (do_bit_alloc & 64))	/* cplinu */

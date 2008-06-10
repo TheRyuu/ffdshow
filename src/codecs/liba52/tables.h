@@ -46,7 +46,6 @@ static const int8_t exp_3[128] = {
     25,25,25
 };
 
-//#define Q(x) ROUND (32768.0 * x)
 #define Q(x) (32768.0 * x)
 
 #define Q0 Q (-2/3)

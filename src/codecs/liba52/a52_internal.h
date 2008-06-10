@@ -1,6 +1,6 @@
 /*
  * a52_internal.h
- * Copyright (C) 2000-2002 Michel Lespinasse <walken@zoy.org>
+ * Copyright (C) 2000-2003 Michel Lespinasse <walken@zoy.org>
  * Copyright (C) 1999-2000 Aaron Holtzman <aholtzma@ess.engr.uvic.ca>
  *
  * This file is part of a52dec, a free ATSC A-52 stream decoder.
@@ -66,9 +66,8 @@ struct a52_state_s {
 
     uint16_t bai;		/* bit allocation information */
 
-    uint32_t *buffer_start;
+    uint32_t * buffer_start;
     uint16_t lfsr_state;	/* dither state */
-
     uint32_t bits_left;
     uint32_t current_word;
 
