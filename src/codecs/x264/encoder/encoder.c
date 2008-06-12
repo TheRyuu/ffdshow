@@ -1222,7 +1222,7 @@ static int x264_slices_write( x264_t *h )
  *       B      5   2*4
  *       B      6   2*5
  ****************************************************************************/
-int     x264_encoder_encode( x264_t *h,
+int attribute_align_arg x264_encoder_encode( x264_t *h,
                              x264_nal_t **pp_nal, int *pi_nal,
                              x264_fill_picture_t pic_in_fill,void *pic_in_fill_data,
                              x264_picture_t *pic_out )

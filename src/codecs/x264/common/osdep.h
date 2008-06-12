@@ -67,6 +67,20 @@
 #endif
 #endif
 
+#if defined(__GNUC__) && (__GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ > 1)
+#   define GCC420_OR_NEWER 1
+#else
+#   define GCC420_OR_NEWER 0
+#endif
+
+#ifndef attribute_align_arg
+#if GCC420_OR_NEWER
+#    define attribute_align_arg __attribute__((force_align_arg_pointer))
+#else
+#    define attribute_align_arg
+#endif
+#endif
+
 #ifdef _MSC_VER
 #define DECLARE_ALIGNED( var, n ) __declspec(align(n)) var
 #else

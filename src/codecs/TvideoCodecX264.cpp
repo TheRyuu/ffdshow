@@ -64,7 +64,7 @@ const char_t* TvideoCodecX264::getName(void) const
  return codecName;
 }
 
-LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
+LRESULT __declspec(align(16))(TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r))
 {
  x264_param_t param;
  x264_param_default(&param);
@@ -73,8 +73,9 @@ LRESULT TvideoCodecX264::beginCompress(int cfgcomode,int csp,const Trect &r)
  if (Tconfig::cpu_flags&FF_CPU_MMX     ) param.cpu|=X264_CPU_MMX;
  if (Tconfig::cpu_flags&FF_CPU_MMXEXT  ) param.cpu|=X264_CPU_MMXEXT;
  if (Tconfig::cpu_flags&FF_CPU_SSE     ) param.cpu|=X264_CPU_SSE;
- //if (Tconfig::cpu_flags&FF_CPU_SSE2    ) param.cpu|=X264_CPU_SSE2;
- //if (Tconfig::cpu_flags&FF_CPU_SSSE3   ) param.cpu|=X264_CPU_SSSE3;
+ if (Tconfig::cpu_flags&FF_CPU_SSE2    ) param.cpu|=X264_CPU_SSE2;
+ if (Tconfig::cpu_flags&FF_CPU_SSE3    ) param.cpu|=X264_CPU_SSE3;
+ if (Tconfig::cpu_flags&FF_CPU_SSSE3   ) param.cpu|=X264_CPU_SSSE3;
 
  /* Video Properties */
  param.i_width =r.dx;
@@ -233,7 +234,7 @@ void TvideoCodecX264::fill_x264_pict(x264_frame_t *out,const TffPict *in)
  out->i_type=X264_TYPE_AUTO;
  out->i_qpplus1=0;
 }
-HRESULT TvideoCodecX264::compress(const TffPict &pict,TencFrameParams &params)
+HRESULT __declspec(align(16))(TvideoCodecX264::compress(const TffPict &pict,TencFrameParams &params))
 {
  int i_nal;
  x264_nal_t *nal;
