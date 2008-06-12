@@ -142,9 +142,10 @@ begin
   #endif
   #if VS2005SP1
   runtime.name := 'Microsoft.VC80.CRT';
-  SetArrayLength(runtime.version, 2);
+  SetArrayLength(runtime.version, 3);
   runtime.version[0] := '8.0.50727.762';
   runtime.version[1] := '8.0.50727.1433';
+  runtime.version[2] := '8.0.50727.1434';
   runtime.majorversion := '8.0';
   runtime.msvcr_filename := 'msvcr80.dll';
   #else
