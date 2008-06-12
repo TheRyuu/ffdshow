@@ -23,9 +23,9 @@
 #ifndef LIBMPEG2_SSE_H
 #define LIBMPEG2_SSE_H
 
-typedef	union {
+DECLARE_ALIGNED(16, typedef union {
 	float			sf[4];	/* Single-precision (32-bit) value */
-} ATTR_ALIGN(16) sse_t;	/* On a 16 byte (128-bit) boundary */
+}, sse_t);	/* On a 16 byte (128-bit) boundary */
 
 
 #define	sse_i2r(op, imm, reg) \

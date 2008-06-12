@@ -24,11 +24,30 @@
 #ifndef LIBMPEG2_ATTRIBUTES_H
 #define LIBMPEG2_ATTRIBUTES_H
 
-/* use gcc attribs to align critical data structures */
-#ifdef ATTRIBUTE_ALIGNED_MAX
-#define ATTR_ALIGN(align) __attribute__ ((__aligned__ ((ATTRIBUTE_ALIGNED_MAX < align) ? ATTRIBUTE_ALIGNED_MAX : align)))
+/* use GCC and MSVC attribs to align critical data structures */
+#if defined(__GNUC__)
+#define DECLARE_ALIGNED(n,t,v)      t v __attribute__ ((aligned (n)))
+#define DECLARE_ASM_CONST(n,t,v)    static const t v attribute_used __attribute__ ((aligned (n)))
+#elif defined(_MSC_VER)
+#define DECLARE_ALIGNED(n,t,v)      __declspec(align(n)) t v
+#define DECLARE_ASM_CONST(n,t,v)    __declspec(align(n)) static const t v
 #else
-#define ATTR_ALIGN(align)
+#define DECLARE_ALIGNED(n,t,v)      t v
+#define DECLARE_ASM_CONST(n,t,v)    static const t v
+#endif
+
+#if defined(__GNUC__) && (__GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ > 1)
+#   define GCC420_OR_NEWER 1
+#else
+#   define GCC420_OR_NEWER 0
+#endif
+
+#ifndef attribute_align_arg
+#if GCC420_OR_NEWER
+#    define attribute_align_arg __attribute__((force_align_arg_pointer))
+#else
+#    define attribute_align_arg
+#endif
 #endif
 
 #ifdef HAVE_BUILTIN_EXPECT

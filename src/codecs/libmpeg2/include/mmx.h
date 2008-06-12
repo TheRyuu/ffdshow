@@ -30,7 +30,7 @@
  * values by ULL, lest they be truncated by the compiler)
  */
 
-typedef	union {
+DECLARE_ALIGNED(8, typedef union {
 	long long		q;	/* Quadword (64-bit) value */
 	unsigned long long	uq;	/* Unsigned Quadword */
 	int			d[2];	/* 2 Doubleword (32-bit) values */
@@ -40,7 +40,7 @@ typedef	union {
 	char			b[8];	/* 8 Byte (8-bit) values */
 	unsigned char		ub[8];	/* 8 Unsigned Byte */
 	float			s[2];	/* Single-precision (32-bit) value */
-} ATTR_ALIGN(8) mmx_t;	/* On an 8-byte (64-bit) boundary */
+}, mmx_t);	/* On an 8-byte (64-bit) boundary */
 
 
 #define	mmx_i2r(op,imm,reg) \
@@ -263,7 +263,7 @@ typedef	union {
 
 /* SSE2 */
 
-typedef	union {
+DECLARE_ALIGNED(16, typedef union {
 	long long		q[2];	/* Quadword (64-bit) value */
 	unsigned long long	uq[2];	/* Unsigned Quadword */
 	int			d[4];	/* 2 Doubleword (32-bit) values */
@@ -273,7 +273,7 @@ typedef	union {
 	char			b[16];	/* 8 Byte (8-bit) values */
 	unsigned char		ub[16];	/* 8 Unsigned Byte */
 	float			s[4];	/* Single-precision (32-bit) value */
-} ATTR_ALIGN(16) sse_t;	/* On an 16-byte (128-bit) boundary */
+}, sse_t);	/* On an 16-byte (128-bit) boundary */
 
 #define	movdqu_m2r(var,reg)	mmx_m2r (movdqu, var, reg)
 #define	movdqu_r2m(reg,var)	mmx_r2m (movdqu, reg, var)

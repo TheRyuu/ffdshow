@@ -103,7 +103,7 @@ struct mpeg2_decoder_s {
     int16_t dc_dct_pred[3];
 
     /* DCT coefficients */
-    int16_t DCTblock[64] ATTR_ALIGN(64);
+    DECLARE_ALIGNED(64, int16_t, DCTblock[64]);
 
     uint8_t * picture_dest[3];
     void (* convert) (void * convert_id, uint8_t * const * src,

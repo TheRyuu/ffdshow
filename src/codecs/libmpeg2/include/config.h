@@ -14,6 +14,9 @@
 #define HAVE_BUILTIN_EXPECT
 #endif
 
+/* Win32 MinGW GCC fixes for SSE2 crashes. */
+/*#define ATTRIBUTE_ALIGNED_MAX 16 */
+
 /* Define to 1 if you have the <ddraw.h> header file. */
 /* #undef HAVE_DDRAW_H */
 

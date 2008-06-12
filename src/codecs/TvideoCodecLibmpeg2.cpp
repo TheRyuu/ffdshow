@@ -53,8 +53,8 @@ TvideoCodecLibmpeg2::TvideoCodecLibmpeg2(IffdshowBase *Ideci,IdecVideoSink *Isin
    if (Tconfig::cpu_flags&FF_CPU_MMX   ) accel|=MPEG2_ACCEL_X86_MMX;
    if (Tconfig::cpu_flags&FF_CPU_3DNOW ) accel|=MPEG2_ACCEL_X86_3DNOW;
    if (Tconfig::cpu_flags&FF_CPU_MMXEXT) accel|=MPEG2_ACCEL_X86_MMXEXT;
-   //if (Tconfig::cpu_flags&FF_CPU_SSE2  ) accel|=MPEG2_ACCEL_X86_SSE2;
-   //if (Tconfig::cpu_flags&FF_CPU_SSE3  ) accel|=MPEG2_ACCEL_X86_SSE3;
+   if (Tconfig::cpu_flags&FF_CPU_SSE2  ) accel|=MPEG2_ACCEL_X86_SSE2;
+   if (Tconfig::cpu_flags&FF_CPU_SSE3  ) accel|=MPEG2_ACCEL_X86_SSE3;
    mpeg2_set_accel(accel);
   }
  mpeg2dec=NULL;info=NULL;quants=NULL;quantBytes=1;extradata=NULL;buffer=NULL;
@@ -90,7 +90,7 @@ TvideoCodecLibmpeg2::~TvideoCodecLibmpeg2()
  if (buffer) delete buffer;
 }
 
-HRESULT TvideoCodecLibmpeg2::decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn)
+HRESULT __declspec(align(16))(TvideoCodecLibmpeg2::decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn))
 {
  HRESULT hr=decompressI(src,srcLen,pIn);
  int len=mpeg2dec->buf_end - mpeg2dec->buf_start;
@@ -103,7 +103,7 @@ HRESULT TvideoCodecLibmpeg2::decompress(const unsigned char *src,size_t srcLen,I
  return hr;
 }
 
-HRESULT TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,IMediaSample *pIn)
+HRESULT __declspec(align(16))(TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,IMediaSample *pIn))
 {
  //if (pIn->IsDiscontinuity()) onSeek();
  REFERENCE_TIME rtStart=REFTIME_INVALID,rtStop=_I64_MIN;
