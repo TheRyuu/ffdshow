@@ -1,52 +1,40 @@
 
-1. About ffdshow video decoder
+1. About ffdshow
 
-    ffdshow is an open source directShow filter and VFW codec mainly used
-    for the fast and high-quality decoding of video in the MPEG-4 ASP
-    (e.g. encoded with DivX, Xvid or FFmpeg MPEG-4) and AVC (H.264)
-    formats, but supporting numerous other video and audio formats as well.
+    ffdshow is an open source directShow filter and VFW codec that can be used
+    for the fast and high-quality decoding of a large number of audio and video
+    formats.
 
-    ffdshow can be configured to display subtitles, to enable or disable
-    various built-in codecs, to grab screenshots, to enable keyboard control,
-    and to enhance movies with increased resolution, sharpness, and many
-    other post-processing filters.Some of the postprocessing is borrowed
-    from the MPlayer project and AviSynth filters.
+    ffdshow has a large number of postprocessing filters that can optionally
+    be enabled to enhance audio and video output. Examples of these filters are
+    deblocking, resizing, aspect ratio correction, sharpness, subtitle display,
+    deinterlacing, cropping, and color correction. 
 
 2. Features
 
-   - fast video decompression using optimized MMX, SSE and 3DNow! code
-   - support for different codecs: Xvid and all DIVX versions
+   - Fast video decompression using optimized MMX, SSE, SSE2, SSSE3, and 3DNow!
+     SIMD instructions.
+   - Support for a large number of video formats: DivX, Xvid, H.264/AVC, Theora,
+     MPEG1/2, VP3/5/6, FLV1/4, SVQ1/3, and many many more.
    - support for H.264/AVC (Advanced Video Coding)
-   - support for picture-adaptive frame-field coding (PAFF)
-   - multithreaded libavcodec H.264 decoder
-   - support for MPEG1/2, WMV1/2/3, WVC1, VP5/6, SVQ1/3, DV...
-   - additional support for MSMPEG4v1, MSMPEG4v2, MSMPEG4v3 and H.263
-   - deinterlacing support (set interlace flag) for H.264 MBAFF.
-   - hardware deinterlacing support for RAW video
-   - can act as generic postprocessing filter for other decoders like MPEG1 or
-     MPEG2
-   - image postprocessing for higher playback quality
-   - automatic quality control: automatically reduces postprocessing level when
-     CPU load is high
-   - hue, saturation and luminance correction (MMX optimized)
-   - two sharpening filters: xsharpen and unsharp mask
-   - blur and temporal smoother
-   - tray icon with menu and quick access to configuration dialog
-   - noising with two selectable algorithms
-   - multithreaded resize: faster resize on multi-core CPUs
-   - aspect ratio changing
-   - subtitles support
-   - improved subtitle shadow. 3 shadow modes are available: classic, glowing
-     and gradient
-   - management of compatibility issues: "Use ffdshow only in:" option ensures 
-     that ffdshow only runs in supported applications.
-   - quality control is now configurable ("Decoder options" -> "Quality control")
-   - completely free software: ffdshow is distributed under GPL
+   - Hardware deinterlacing support for RAW video
+   - Can act as generic postprocessing filter for processing the raw ouput of 
+     other decoders.
+   - Video postprocessing for higher quality video playback. 
+   - Automatic quality control: automatically reduces postprocessing level when
+     CPU load is high.
+   - Hue, saturation and luminance correction (MMX optimized).
+   - Tray icon with menu and quick access to configuration dialog.
+   - Multithreaded resize: faster resize on multi-core CPUs.
+   - Subtitles support.
+   - Blacklist/whitelist functionality for configurating ffdshow to be used only
+     by specific applications. Useful for solving compatibilty issues.
+   - Completely free software: ffdshow is distributed under GPL
 
 3. ffdshow-tryouts
 
    ffdshow was originally developed by Milan Cutka. Since Milan Cutka stopped
-   updating in 2006, we launched a new project 'ffdshow-tryouts'.
+   updating in 2006, we launched a new project called 'ffdshow-tryouts'.
 
 4. Web links
 
@@ -83,6 +71,3 @@
 
    All used sources (except of cpu utilization detection routine) and ffdshow
    itself are distributed under GPL. See copying.txt
-
-   Milan Cutka <milan_cutka@yahoo.com>
-   ffdshow-tryouts
