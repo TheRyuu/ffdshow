@@ -3,7 +3,7 @@
 
    Video for Windows and DirectShow codec based on VFW code from Xvid
    project and using libavcodec library from FFmpeg project for
-   compression. Few other compression libraries are supported too.
+   compression. A few other compression libraries are supported too.
 
 2. Features:
 
@@ -47,7 +47,7 @@
 3. ffdshow-tryouts
 
    ffdshow was originally developed by Milan Cutka. Since Milan Cutka stopped
-   updating in 2006, we launched a new project 'ffdshow-tryouts'.
+   updating in 2006, we launched a new project called 'ffdshow-tryouts'.
 
 4. Web links
 
@@ -81,7 +81,3 @@
 5. Copying
 
    ffdshow is distributed under GPL. See copying.txt
-
-
-   Milan Cutka <milan_cutka@yahoo.com>
-   ffdshow-tryouts

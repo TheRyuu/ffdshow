@@ -1,5 +1,5 @@
 
-1. About ffdshow
+1. About ffdshow video decoder
 
     ffdshow is an open source directShow filter and VFW codec that can be used
     for the fast and high-quality decoding of a large number of audio and video
