@@ -1,51 +1,45 @@
 Known issues & bugs:
 
-List of known issues in revision 1737:
+List of known issues in revision 2003:
 
-   1. VirtualDub crashes when it is closed if the ffdshow VFW window is still open.
-   2. The audio delay filter fields in ffdshow audio decoder do not accept negative values.
-   3. H.263+ encoding hangs (in infinite loop?) at some settings. Details. There are similar problems with the MPEG-2 encoder.
-   4. FLV4 decoding crashes for this sample file.
-   5. Incompatibility with game Silent Hunter 3 since revision 1434.
-   6. B-frame decoding delay in VFW when using libavcodec for Xvid/DivX. Details.
-   7. In some cases VobSub subtitle files (.idx/.sub) are loaded, but no subs are displayed. VobSub support is still incomplete.
+   1. H.263+ encoding hangs (in infinite loop?) at some settings. Details. There are similar problems with the MPEG-2 encoder.
+   2. FLV4 decoding crashes for this sample file.
+   3. B-frame decoding delay in VFW when using libavcodec for Xvid/DivX. Details.
+   4. In some cases VobSub subtitle files (.idx/.sub) are loaded, but no subs are displayed. VobSub support is still incomplete.
+   5. Compatibility issue with Vista Receiver Service (ehRecvr.exe). Details.
+   6. Some issues with logoaway in combination with image mask filter. Details.
 
 
 Short term ToDo list:
 
-   1. Don't display a .sub file in "subtitle sources" list when a .idx with same name also exists.
-   2. Let 64-bit builds of ffdshow use the 64-bit registry hive for storing settings
+   1. Update libswscale and mp3lib.
+   2. Fix compilation of libmplayer to 64bit target using GCC.
+   3. Fix compilation of kerneldeint to 64bit target using GCC.
+   4. Don't display a .sub file in "subtitle sources" list when a .idx with same name also exists.
 
 
 Mid term ToDo list:
 
-   1. Write documentation for profiles/preset settings.
-   2. Try to reproduce some reported stability/compatibility problems on Vista. We suspect these problems are caused by other filters.
-   3. Send color primary information to downstream on VIDEOINFOHEADER2.
-   4. Fix vobsub in matroska.
-   5. ASS: implement \move,\fad,\fade, scalable shadow and outline.
-   6. Improve translation dialog.
-   7. Improve audio preset loading rules.
-   8. Include some of the html docs in the installer.
-   9. Rename icl project files: _icl9 -> _icl10
+   1. Fix vobsub in matroska.
+   2. ASS: Implement \move.
+   3. Improve translation dialog.
+   4. Improve audio preset loading rules.
 
 
 Long term ToDo list:
 
-   1. Create htmlhelp file or online wiki.
+   1. Set up an online wiki with a FAQ, Tips&Tricks, and most importantly documentation for the many options of ffdshow.
    2. SSA/ASS: implement collisions and everything.
-   3. Update theora.
-   4. A filter instance similar to the "raw filter" that only has subtitle rendering abilities.
+
 
 --------------------------------------------------------------------------------------
 
-TODO
+TODO  (is this still up-to-date???)
 
 - support for video with dimensions not multiples of 16 [DONE BY ADDING BLACK BORDERS]
 - priorities
 - documentation
 - pan and scan
-- convert MMX assembly to something usable with GCC [DONE]
 - correct chroma smoother
 - allow changing of input frame size during playback [WIP]
 - show all subtitles in current directory [IN TRAY ICON MENU]
@@ -55,7 +49,3 @@ TODO
 - stream mixer
 - expand filter
 - avisynth + ICL
-
-not important
-
-- aspect ratio [DONE] => internal resizing [DONE]

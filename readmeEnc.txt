@@ -1,83 +1,71 @@
 
-1. About ffdshow video encoder
+### 1. About ffdshow video encoder ###
 
-   Video for Windows and DirectShow codec based on VFW code from Xvid
-   project and using libavcodec library from FFmpeg project for
-   compression. A few other compression libraries are supported too.
+VFW (Video for Windows) and DirectShow codec. Uses the libavcodec library from the FFmpeg project for encoding. A few other encoding libraries, such as xvidcore and libtheora, are also supported.
 
-2. Features:
+### 2. Features: ###
 
-   - various compression methods:
-       H264
-       MPEG 4 compatible (Xvid, DivX 4, DivX 5, DivX 6) using libavcodec
-       or Xvid
-       Divx 3 compatible, MSMPEG4v2, MSMPEG4v1
-       WMV1/7, WMV2/8
-       H263, H263+
-       HuffYUV in YV12 colorspace
-       MJPEG
-       MPEG 1/2
-       Theora (not for regular use, format isn't stabilized yet)
-       all Windows Media Video 9 supported encoders with output
-       to asf/wmv file or AVI
-   - all common encoding modes: constant bitrate, fixed quantizer,
-     fixed quality, two pass encoding (depends on compressor features)
-   - for libavcodec and Xvid detailed selection of motion estimation method
-   - minimum and maximum I frames interval
-   - minimum and maximum quantizer selection, quantizer type and trellis
-     quantization selection for libavcodec
-   - adaptive quantization (aka. masking) for libavcodec and Xvid,
-     single coefficient elimination
-   - selectable compression of starting and ending credits
-   - two curve compression algorithms for second pass of two pass encoding
-     thanks to Xvid developers
-   - second pass simulation: although not very precise, still helpful
-     for tweaking advanced curve compression parameters
-   - ability to use libavcodec internal two pass code
-   - image preprocessing with ffdshow image filters
-    (latest ffdshow version must be installed)
-   - graph during encoding: if your encoding program doesn't provide one
-   - B frames support: from one to eight consecutive B frames
-   - support for MPEG 4 quarterpel and GMC
-   - selectable interlaced encoding
-   - libavcodec's MPEG4/MPEG2/MPEG1, xvidcore 1.2 and x264 encoders are multithreaded
-   - libavcodec encoders pop up error messages
-   - decompression
+- Various compression methods:
+H.264
+MPEG-4 compatible (Xvid, DivX) using libavcodec or Xvid
+Divx 3 compatible, MSMPEG4v2, MSMPEG4v1
+WMV1/7, WMV2/8
+H263, H263+
+HuffYUV in YV12 colorspace
+MJPEG
+MPEG 1/2
+Theora (not for regular use, format specification hasn't stabilized yet)
 
-3. ffdshow-tryouts
+- All common encoding modes: constant bitrate, fixed quantizer, fixed quality, two pass encoding (depends on compressor features).
+- For libavcodec and Xvid detailed selection of motion estimation method.
+- Minimum and maximum I frames interval.
+- Minimum and maximum quantizer selection, quantizer type and trellis, quantization selection for libavcodec.
+- Adaptive quantization (aka. masking) for libavcodec and Xvid, single coefficient elimination.
+- Selectable compression of starting and ending credits.
+- Two curve compression algorithms for second pass of two pass encoding thanks to Xvid developers.
+- Second pass simulation: although not very precise, still helpful for tweaking advanced curve compression parameters.
+- Ability to use libavcodec internal two pass code.
+- Image preprocessing with ffdshow image filters.
+- Graph during encoding: if your encoding program doesn't provide one.
+- B frames support: from one to eight consecutive B frames.
+- Support for MPEG-4 quarterpel and GMC.
+- Selectable interlaced encoding.
+- Libavcodec's MPEG4/MPEG2/MPEG1, xvidcore 1.2 and x264 encoders are multithreaded.
+- Libavcodec encoders pop up error messages.
+- Decompression.
 
-   ffdshow was originally developed by Milan Cutka. Since Milan Cutka stopped
-   updating in 2006, we launched a new project called 'ffdshow-tryouts'.
+### 3. ffdshow-tryouts ###
 
-4. Web links
+ffdshow was originally developed by Milan Cutka. Since Milan Cutka stopped updating in 2006, we launched a new project called 'ffdshow-tryouts'.
 
-   ffdshow-tryouts:
-   http://ffdshow-tryout.sourceforge.net/
-   http://sourceforge.net/project/showfiles.php?group_id=173941
+### 4. Web links ###
 
-   ffdshow:
-   http://ffdshow.sourceforge.net/tikiwiki/
-   http://sourceforge.net/projects/ffdshow/
+ffdshow-tryouts:
+http://ffdshow-tryout.sourceforge.net/
+http://sourceforge.net/project/showfiles.php?group_id=173941
 
-   FFmpeg:
-   http://ffmpeg.mplayerhq.hu/
+ffdshow (old):
+http://ffdshow.sourceforge.net/tikiwiki/
+http://sourceforge.net/projects/ffdshow/
 
-   Xvid:
-   http://www.xvid.org/
+FFmpeg:
+http://ffmpeg.mplayerhq.hu/
 
-   MPlayer:
-   http://www.mplayerhq.hu/
+Xvid:
+http://www.xvid.org/
 
-   MJPEGtools:
-   http://mjpeg.sourceforge.net/
+MPlayer:
+http://www.mplayerhq.hu/
 
-   Doom9:
-   http://forum.doom9.org/showthread.php?t=120465
+MJPEGtools:
+http://mjpeg.sourceforge.net/
 
-   or Wikipedia, the free encyclopedia:
-   http://en.wikipedia.org/wiki/Ffdshow
+Doom9:
+http://forum.doom9.org/showthread.php?t=120465
 
+or Wikipedia, the free encyclopedia:
+http://en.wikipedia.org/wiki/Ffdshow
 
-5. Copying
+### 5. Copying ###
 
-   ffdshow is distributed under GPL. See copying.txt
+ffdshow is distributed under GPL. See copying.txt
