@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="windows-1250"?>
-<VisualStudioProject
-	ProjectType="Visual C++"
-	Version="7.10"
+<VisualStudioProject 
+	ProjectType="Intel C++ Project"
+	Version="9.1"
 	Name="ff_tremor"
-	ProjectGUID="{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}"
-	SccProjectName=""
-	SccLocalPath="">
-	<Platforms>
-		<Platform
-			Name="Win32"/>
-	</Platforms>
+	ProjectGUID="{16DEA1B3-6240-4C92-847E-72CBD6421F99}"
+	VCNestedProjectGUID="{E2FBCE81-39C0-4D44-B4C5-0D5348998BC4}"
+	VCNestedProjectFileName="ff_tremor_icl.vcproj"
+	VCNestedProjectCRC32="457405824">
 	<Configurations>
-		<Configuration
-			Name="Debug|Win32"
-			OutputDirectory="debug_icl9"
-			IntermediateDirectory="debug_icl9"
-			ConfigurationType="2"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE">
-			<Tool
-				Name="VCCLCompilerTool"
+		<Configuration 
+			Name="Debug|Win32">
+			<Tool 
+				Name="GeneralTool"
+				OutputDirectory="debug_icl"
+				IntermediateDirectory="debug_icl"
+				ConfigurationType="2"
+				UseOfMFC="0"
+				ATLMinimizesCRunTimeLibraryUsage="FALSE"/>
+			<Tool 
+				Name="CppCmplrTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".."
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__"
@@ -28,17 +27,17 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				ForceConformanceInForLoopScope="TRUE"
-				PrecompiledHeaderFile=".\debug_icl9/ff_tremor.pch"
-				AssemblerListingLocation=".\debug_icl9/"
-				ObjectFile=".\debug_icl9/"
-				ProgramDataBaseFileName=".\debug_icl9/"
+				PrecompiledHeaderFile=".\debug_icl/ff_tremor.pch"
+				AssemblerListingLocation=".\debug_icl/"
+				ObjectFile=".\debug_icl/"
+				ProgramDataBaseFileName=".\debug_icl/"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="4"
 				CompileAs="1"/>
-			<Tool
-				Name="VCCustomBuildTool"/>
-			<Tool
-				Name="VCLinkerTool"
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="LinkerTool"
 				IgnoreImportLibrary="TRUE"
 				AdditionalDependencies="msvcrtd.lib kernel32.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_tremor.dll"
@@ -49,47 +48,49 @@
 				GenerateDebugInformation="TRUE"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
 				TargetMachine="1"/>
-			<Tool
-				Name="VCMIDLTool"
+			<Tool 
+				Name="MidlCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\debug_icl9/ff_tremor.tlb"
+				TypeLibraryName=".\debug_icl/ff_tremor.tlb"
 				HeaderFileName=""/>
-			<Tool
-				Name="VCPostBuildEventTool"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
-			<Tool
-				Name="VCResourceCompilerTool"
+			<Tool 
+				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="PreBuildEventTool"/>
+			<Tool 
+				Name="PreLinkEventTool"/>
+			<Tool 
+				Name="ResCmplrTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1051"/>
-			<Tool
+			<Tool 
 				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="VCXMLDataGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="VCWebDeploymentTool"/>
-			<Tool
+			<Tool 
 				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
-		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="release_icl9"
-			IntermediateDirectory="release_icl9"
-			ConfigurationType="2"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			WholeProgramOptimization="TRUE">
-			<Tool
-				Name="VCCLCompilerTool"
+		<Configuration 
+			Name="Release|Win32">
+			<Tool 
+				Name="GeneralTool"
+				OutputDirectory="release_icl"
+				IntermediateDirectory="release_icl"
+				ConfigurationType="2"
+				UseOfMFC="0"
+				ATLMinimizesCRunTimeLibraryUsage="FALSE"
+				WholeProgramOptimization="TRUE"/>
+			<Tool 
+				Name="CppCmplrTool"
 				AdditionalOptions="/Qip"
-				Optimization="2"
+				Optimization="1000"
 				GlobalOptimizations="TRUE"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="TRUE"
@@ -104,18 +105,18 @@
 				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
 				ForceConformanceInForLoopScope="TRUE"
-				PrecompiledHeaderFile=".\release_icl9/ff_tremor.pch"
-				AssemblerListingLocation=".\release_icl9/"
-				ObjectFile=".\release_icl9/"
-				ProgramDataBaseFileName=".\release_icl9/"
+				PrecompiledHeaderFile=".\release_icl/ff_tremor.pch"
+				AssemblerListingLocation=".\release_icl/"
+				ObjectFile=".\release_icl/"
+				ProgramDataBaseFileName=".\release_icl/"
 				WarningLevel="0"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="0"
 				CompileAs="1"/>
-			<Tool
-				Name="VCCustomBuildTool"/>
-			<Tool
-				Name="VCLinkerTool"
+			<Tool 
+				Name="CustomTool"/>
+			<Tool 
+				Name="LinkerTool"
 				IgnoreImportLibrary="TRUE"
 				AdditionalDependencies="msvcrt.lib kernel32.lib $(NOINHERIT) libirc.lib"
 				OutputFile="../../../bin/ff_tremor.dll"
@@ -127,390 +128,387 @@
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				OptimizeForWindows98="1"
-				ImportLibrary=".\release_icl9/ff_tremor.lib"
+				ImportLibrary=".\release_icl/ff_tremor.lib"
 				TargetMachine="1"/>
-			<Tool
-				Name="VCMIDLTool"
+			<Tool 
+				Name="MidlCmplrTool"
 				PreprocessorDefinitions="NDEBUG"
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\release_icl9/ff_tremor.tlb"
+				TypeLibraryName=".\release_icl/ff_tremor.tlb"
 				HeaderFileName=""/>
-			<Tool
-				Name="VCPostBuildEventTool"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
-			<Tool
-				Name="VCResourceCompilerTool"
+			<Tool 
+				Name="PostBuildEventTool"/>
+			<Tool 
+				Name="PreBuildEventTool"/>
+			<Tool 
+				Name="PreLinkEventTool"/>
+			<Tool 
+				Name="ResCmplrTool"
 				PreprocessorDefinitions="NDEBUG"
 				Culture="1051"/>
-			<Tool
+			<Tool 
 				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="VCXMLDataGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="VCWebDeploymentTool"/>
-			<Tool
+			<Tool 
 				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
+			<Tool 
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
-	<References>
-	</References>
 	<Files>
-		<Filter
+		<Filter 
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
-			<File
+			<File 
 				RelativePath="bitwise.c">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 						BasicRuntimeChecks="3"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="2"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="block.c">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 						BasicRuntimeChecks="3"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="2"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="codebook.c">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 						BasicRuntimeChecks="3"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="2"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="floor0.c">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 						BasicRuntimeChecks="3"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="2"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="floor1.c">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 						BasicRuntimeChecks="3"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="2"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="framing.c">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 						BasicRuntimeChecks="3"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="2"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="info.c">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 						BasicRuntimeChecks="3"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="2"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="mapping0.c">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 						BasicRuntimeChecks="3"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="2"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="mdct.c">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 						BasicRuntimeChecks="3"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="2"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="registry.c">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 						BasicRuntimeChecks="3"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="2"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="res012.c">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 						BasicRuntimeChecks="3"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="2"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="sharedbook.c">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 						BasicRuntimeChecks="3"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="2"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="synthesis.c">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 						BasicRuntimeChecks="3"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="2"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 				</FileConfiguration>
 			</File>
-			<File
+			<File 
 				RelativePath="window.c">
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"
 						BasicRuntimeChecks="3"/>
 				</FileConfiguration>
-				<FileConfiguration
+				<FileConfiguration 
 					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
+					<Tool 
+						Name="CppCmplrTool"
 						Optimization="2"
 						AdditionalIncludeDirectories=".."
 						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;inline=__inline;__i386__;$(NoInherit)"/>
 				</FileConfiguration>
 			</File>
 		</Filter>
-		<Filter
+		<Filter 
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
-			<File
+			<File 
 				RelativePath="backends.h">
 			</File>
-			<File
+			<File 
 				RelativePath="block.h">
 			</File>
-			<File
+			<File 
 				RelativePath="codebook.h">
 			</File>
-			<File
+			<File 
 				RelativePath="codec_internal.h">
 			</File>
-			<File
+			<File 
 				RelativePath="config_types.h">
 			</File>
-			<File
+			<File 
 				RelativePath="ivorbiscodec.h">
 			</File>
-			<File
+			<File 
 				RelativePath="lsp_lookup.h">
 			</File>
-			<File
+			<File 
 				RelativePath="mdct.h">
 			</File>
-			<File
+			<File 
 				RelativePath="mdct_lookup.h">
 			</File>
-			<File
+			<File 
 				RelativePath="misc.h">
 			</File>
-			<File
+			<File 
 				RelativePath="ogg.h">
 			</File>
-			<File
+			<File 
 				RelativePath="os.h">
 			</File>
-			<File
+			<File 
 				RelativePath="os_types.h">
 			</File>
-			<File
+			<File 
 				RelativePath="registry.h">
 			</File>
-			<File
+			<File 
 				RelativePath="window.h">
 			</File>
-			<File
+			<File 
 				RelativePath="window_lookup.h">
 			</File>
 		</Filter>
-		<File
+		<File 
 			RelativePath="ff_tremor.def">
-			<FileConfiguration
-				Name="Release|Win32"
-				ExcludedFromBuild="TRUE">
-				<Tool
-					Name="VCCustomBuildTool"/>
+			<FileConfiguration 
+				Name="Release|Win32">
+				<Tool 
+					Name="GeneralTool"
+					ExcludedFromBuild="TRUE"/>
+				<Tool 
+					Name="CustomTool"/>
 			</FileConfiguration>
 		</File>
 	</Files>
-	<Globals>
-		<Global
-			Name="DevPartner_IsInstrumented"
-			Value="0"/>
-	</Globals>
 </VisualStudioProject>
+
+

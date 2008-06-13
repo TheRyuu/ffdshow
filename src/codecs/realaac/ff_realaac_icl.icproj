@@ -5,15 +5,15 @@
 	Name="ff_realaac"
 	ProjectGUID="{7E765DDC-3E5A-4C35-9349-A184F860F00F}"
 	VCNestedProjectGUID="{59623010-E8D1-492B-B45D-DCB58582008B}"
-	VCNestedProjectFileName="ff_realaac_icl9.vcproj"
+	VCNestedProjectFileName="ff_realaac_icl.vcproj"
 	Keyword="Win32Proj">
 	<Configurations>
 		<Configuration 
 			Name="Debug|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="debug_icl9"
-				IntermediateDirectory="debug_icl9"
+				OutputDirectory="debug_icl"
+				IntermediateDirectory="debug_icl"
 				ConfigurationType="2"
 				CharacterSet="0"/>
 			<Tool 
@@ -68,8 +68,8 @@
 			Name="Release|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="release_icl9"
-				IntermediateDirectory="release_icl9"
+				OutputDirectory="release_icl"
+				IntermediateDirectory="release_icl"
 				ConfigurationType="2"
 				CharacterSet="0"
 				WholeProgramOptimization="1"/>

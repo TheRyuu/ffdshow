@@ -5,15 +5,15 @@
 	Name="ff_samplerate"
 	ProjectGUID="{F2AD15F2-7AAB-4BEB-A4BE-5AAD4C1859C1}"
 	VCNestedProjectGUID="{9687FAF7-4894-4D5A-A7B8-03EECF6E5F0B}"
-	VCNestedProjectFileName="ff_samplerate_icl9.vcproj"
+	VCNestedProjectFileName="ff_samplerate_icl.vcproj"
 	Keyword="Win32Proj">
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32">
 			<Tool
 				Name="GeneralTool"
-				OutputDirectory="debug_icl9"
-				IntermediateDirectory="debug_icl9"
+				OutputDirectory="debug_icl"
+				IntermediateDirectory="debug_icl"
 				ConfigurationType="2"
 				CharacterSet="0"/>
 			<Tool
@@ -69,8 +69,8 @@
 			Name="Release|Win32">
 			<Tool
 				Name="GeneralTool"
-				OutputDirectory="release_icl9"
-				IntermediateDirectory="release_icl9"
+				OutputDirectory="release_icl"
+				IntermediateDirectory="release_icl"
 				ConfigurationType="2"
 				CharacterSet="0"
 				WholeProgramOptimization="1"/>

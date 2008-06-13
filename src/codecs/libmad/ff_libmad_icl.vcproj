@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="ff_theora"
-	ProjectGUID="{924512C3-75C6-45BE-B7A3-A747BFFD79A1}"
+	Name="ff_libmad"
+	ProjectGUID="{B8000FD0-4A45-4D79-B320-1AFBE61C01C0}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -13,51 +13,47 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="debug_icl9"
-			IntermediateDirectory="debug_icl9"
+			OutputDirectory="debug_icl"
+			IntermediateDirectory="debug_icl"
 			ConfigurationType="2"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="0">
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions=""
 				Optimization="0"
-				AdditionalIncludeDirectories=".;..;../.."
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				AdditionalIncludeDirectories="."
+				PreprocessorDefinitions="FPM_DEFAULT,_LIB,HAVE_CONFIG_H,ASO_ZEROCHECK,WIN32,_DEBUG,DEBUG"
 				MinimalRebuild="TRUE"
-				BasicRuntimeChecks="0"
+				ExceptionHandling="FALSE"
+				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				ForceConformanceInForLoopScope="TRUE"
-				PrecompiledHeaderFile=""
+				PrecompiledHeaderFile=".\Debug/ff_libmad.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
-				WarningLevel="0"
 				SuppressStartupBanner="TRUE"
-				DebugInformationFormat="4"/>
+				DebugInformationFormat="4"
+				CompileAs="1"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="TRUE"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="msvcrtd.lib kernel32.lib $(NOINHERIT)"
-				OutputFile="../../../bin/ff_theora.dll"
+				OutputFile="../../../bin/ff_libmad.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				IgnoreAllDefaultLibraries="TRUE"
-				ModuleDefinitionFile="ff_theora.def"
+				ModuleDefinitionFile="ff_libmad.def"
 				GenerateDebugInformation="TRUE"
-				SubSystem="2"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"/>
 			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="TRUE"
-				SuppressStartupBanner="TRUE"
-				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/ff_theora.tlb"/>
+				Name="VCMIDLTool"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -67,7 +63,7 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_DEBUG"
-				Culture="1051"/>
+				Culture="1033"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
@@ -81,11 +77,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="release_icl9"
-			IntermediateDirectory="release_icl9"
+			OutputDirectory="release_icl"
+			IntermediateDirectory="release_icl"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="0"
 			WholeProgramOptimization="TRUE">
 			<Tool
 				Name="VCCLCompilerTool"
@@ -97,47 +94,42 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="TRUE"
 				WholeProgramOptimization="TRUE"
-				AdditionalIncludeDirectories=".;..;../.."
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				OptimizeForProcessor="0"
+				AdditionalIncludeDirectories="."
+				PreprocessorDefinitions="NDEBUG,FPM_INTEL,WIN32,_LIB,HAVE_CONFIG_H,ASO_ZEROCHECK"
 				StringPooling="TRUE"
 				ExceptionHandling="FALSE"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="FALSE"
 				ForceConformanceInForLoopScope="TRUE"
-				PrecompiledHeaderFile=""
+				PrecompiledHeaderFile=".\Release/ff_libmad.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
 				WarningLevel="0"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="0"
-				CompileAs="0"/>
+				CompileAs="1"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="TRUE"
-				AdditionalOptions="/MACHINE:I386"
+				AdditionalOptions=""
 				AdditionalDependencies="msvcrt.lib kernel32.lib $(NOINHERIT) libirc.lib"
-				OutputFile="../../../bin/ff_theora.dll"
+				OutputFile="../../../bin/ff_libmad.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				IgnoreAllDefaultLibraries="TRUE"
-				ModuleDefinitionFile="ff_theora.def"
+				ModuleDefinitionFile="ff_libmad.def"
 				GenerateDebugInformation="FALSE"
-				ProgramDatabaseFile=""
-				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary=".\Release/ff_theora.lib"/>
+				OptimizeForWindows98="2"
+				ImportLibrary=".\Release/ff_libmad.lib"/>
 			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="TRUE"
-				SuppressStartupBanner="TRUE"
-				TargetEnvironment="1"
-				TypeLibraryName=".\Release/ff_theora.tlb"/>
+				Name="VCMIDLTool"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -147,7 +139,7 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="NDEBUG"
-				Culture="1051"/>
+				Culture="1033"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
@@ -165,132 +157,108 @@
 	<Files>
 		<Filter
 			Name="Source Files"
-			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
+			Filter="c">
 			<File
-				RelativePath=".\blockmap.c">
+				RelativePath=".\bit.c">
 			</File>
 			<File
-				RelativePath=".\comment.c">
+				RelativePath=".\decoder.c">
 			</File>
 			<File
-				RelativePath=".\cpu.c">
+				RelativePath=".\fixed.c">
 			</File>
 			<File
-				RelativePath=".\dct.c">
-			</File>
-			<File
-				RelativePath=".\dct_decode.c">
-			</File>
-			<File
-				RelativePath=".\dct_encode.c">
-			</File>
-			<File
-				RelativePath=".\decode.c">
-			</File>
-			<File
-				RelativePath=".\dsp.c">
-			</File>
-			<File
-				RelativePath=".\encode.c">
-			</File>
-			<File
-				RelativePath=".\encoder_toplevel.c">
-			</File>
-			<File
-				RelativePath=".\frarray.c">
-			</File>
-			<File
-				RelativePath=".\frinit.c">
+				RelativePath=".\frame.c">
 			</File>
 			<File
 				RelativePath=".\huffman.c">
 			</File>
 			<File
-				RelativePath=".\idct.c">
+				RelativePath=".\layer12.c">
 			</File>
 			<File
-				RelativePath=".\mcomp.c">
+				RelativePath=".\layer3.c">
 			</File>
 			<File
-				RelativePath=".\misc_common.c">
+				RelativePath=".\stream.c">
 			</File>
 			<File
-				RelativePath=".\pb.c">
+				RelativePath=".\synth.c">
 			</File>
 			<File
-				RelativePath=".\pp.c">
+				RelativePath=".\timer.c">
 			</File>
 			<File
-				RelativePath=".\quant.c">
-			</File>
-			<File
-				RelativePath=".\reconstruct.c">
-			</File>
-			<File
-				RelativePath=".\scan.c">
-			</File>
-			<File
-				RelativePath=".\toplevel.c">
+				RelativePath=".\version.c">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl">
+			Filter="h">
 			<File
-				RelativePath=".\block_inline.h">
+				RelativePath=".\bit.h">
 			</File>
 			<File
-				RelativePath=".\codec_internal.h">
+				RelativePath="config.h">
 			</File>
 			<File
-				RelativePath=".\cpu.h">
+				RelativePath=".\decoder.h">
 			</File>
 			<File
-				RelativePath=".\dsp.h">
+				RelativePath=".\fixed.h">
 			</File>
 			<File
-				RelativePath=".\encoder_lookup.h">
+				RelativePath=".\frame.h">
+			</File>
+			<File
+				RelativePath=".\global.h">
 			</File>
 			<File
 				RelativePath=".\huffman.h">
 			</File>
 			<File
-				RelativePath=".\hufftables.h">
+				RelativePath=".\layer12.h">
 			</File>
 			<File
-				RelativePath=".\pp.h">
+				RelativePath=".\layer3.h">
 			</File>
 			<File
-				RelativePath=".\quant_lookup.h">
+				RelativePath="mad.h">
 			</File>
 			<File
-				RelativePath=".\toplevel.h">
+				RelativePath=".\stream.h">
 			</File>
 			<File
-				RelativePath=".\toplevel_lookup.h">
+				RelativePath=".\synth.h">
+			</File>
+			<File
+				RelativePath=".\timer.h">
+			</File>
+			<File
+				RelativePath=".\version.h">
 			</File>
 		</Filter>
 		<Filter
-			Name="ogg"
-			Filter="">
+			Name="Data Files"
+			Filter="dat">
 			<File
-				RelativePath="bitwise.c">
+				RelativePath=".\D.dat">
 			</File>
 			<File
-				RelativePath="framing.c">
+				RelativePath=".\imdct_s.dat">
 			</File>
 			<File
-				RelativePath="ogg.h">
+				RelativePath=".\qc_table.dat">
 			</File>
 			<File
-				RelativePath="os_types.h">
+				RelativePath=".\rq_table.dat">
 			</File>
 			<File
-				RelativePath="theora.h">
+				RelativePath=".\sf_table.dat">
 			</File>
 		</Filter>
 		<File
-			RelativePath=".\ff_theora.def">
+			RelativePath="ff_libmad.def">
 		</File>
 	</Files>
 	<Globals>

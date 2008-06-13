@@ -5,15 +5,15 @@
 	Name="ff_liba52"
 	ProjectGUID="{B36212E2-8598-4482-A0EE-118143DB3E69}"
 	VCNestedProjectGUID="{7C4F2A8F-C1A6-4E75-AF26-285A1B70A066}"
-	VCNestedProjectFileName="ff_liba52_icl9.vcproj"
+	VCNestedProjectFileName="ff_liba52_icl.vcproj"
 	VCNestedProjectCRC32="2114153024">
 	<Configurations>
 		<Configuration 
 			Name="Release|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="release_icl9"
-				IntermediateDirectory="release_icl9"
+				OutputDirectory="release_icl"
+				IntermediateDirectory="release_icl"
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -96,8 +96,8 @@
 			Name="Debug|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="debug_icl9"
-				IntermediateDirectory="debug_icl9"
+				OutputDirectory="debug_icl"
+				IntermediateDirectory="debug_icl"
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="FALSE"/>

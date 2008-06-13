@@ -5,15 +5,15 @@
 	Name="ff_kernelDeint"
 	ProjectGUID="{336A5C37-8D1B-46A6-8948-DD2B715AFEFA}"
 	VCNestedProjectGUID="{C60F760B-5AFF-4C37-9EF7-A275665DBF21}"
-	VCNestedProjectFileName="ff_kernelDeint_icl9.vcproj"
+	VCNestedProjectFileName="ff_kernelDeint_icl.vcproj"
 	Keyword="Win32Proj">
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32">
 			<Tool
 				Name="GeneralTool"
-				OutputDirectory="debug"
-				IntermediateDirectory="debug"
+				OutputDirectory="debug_icl"
+				IntermediateDirectory="debug_icl"
 				ConfigurationType="2"
 				CharacterSet="0"/>
 			<Tool
@@ -66,8 +66,8 @@
 			Name="Release|Win32">
 			<Tool
 				Name="GeneralTool"
-				OutputDirectory="release_icl9"
-				IntermediateDirectory="release_icl9"
+				OutputDirectory="release_icl"
+				IntermediateDirectory="release_icl"
 				ConfigurationType="2"
 				CharacterSet="0"/>
 			<Tool

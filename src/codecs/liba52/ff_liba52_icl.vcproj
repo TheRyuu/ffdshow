@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="ff_libdts"
-	ProjectGUID="{29432947-08F2-41AA-953F-47E45252DD57}"
+	Name="ff_liba52"
+	ProjectGUID="{7C4F2A8F-C1A6-4E75-AF26-285A1B70A066}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -13,8 +13,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="release_icl9"
-			IntermediateDirectory="release_icl9"
+			OutputDirectory="release_icl"
+			IntermediateDirectory="release_icl"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -26,7 +26,6 @@
 				GlobalOptimizations="TRUE"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="TRUE"
-				ImproveFloatingPointConsistency="FALSE"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="TRUE"
 				WholeProgramOptimization="TRUE"
@@ -38,30 +37,32 @@
 				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
 				ForceConformanceInForLoopScope="TRUE"
-				PrecompiledHeaderFile=".\Release/ff_libdts.pch"
+				PrecompiledHeaderFile=".\Release/ff_liba52.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
 				WarningLevel="0"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="0"
-				CompileAs="1"/>
+				CompileAs="2"
+				DisableSpecificWarnings="4305,4244"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="TRUE"
-				AdditionalDependencies="msvcrt.lib kernel32.lib $(NOINHERIT) libirc.lib"
-				OutputFile="../../../bin/ff_libdts.dll"
+				AdditionalDependencies="kernel32.lib msvcrt.lib $(NOINHERIT)  libirc.lib"
+				OutputFile="../../../bin/ff_liba52.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				IgnoreAllDefaultLibraries="TRUE"
-				ModuleDefinitionFile=".\ff_libdts.def"
+				ModuleDefinitionFile=".\ff_liba52.def"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary=".\Release/ff_libdts.lib"
+				OptimizeForWindows98="1"
+				ImportLibrary=".\Release/ff_liba52.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -69,7 +70,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/ff_libdts.tlb"
+				TypeLibraryName=".\Release/ff_liba52.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -94,8 +95,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="debug_icl9"
-			IntermediateDirectory="debug_icl9"
+			OutputDirectory="debug_icl"
+			IntermediateDirectory="debug_icl"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -110,25 +111,26 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
 				ForceConformanceInForLoopScope="TRUE"
-				PrecompiledHeaderFile=".\Debug/ff_libdts.pch"
+				PrecompiledHeaderFile=".\Debug/ff_liba52.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="4"
-				CompileAs="1"/>
+				CompileAs="1"
+				DisableSpecificWarnings="4305,4244"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="TRUE"
 				AdditionalDependencies="kernel32.lib msvcrtd.lib $(NOINHERIT)"
-				OutputFile="../../../bin/ff_libdts.dll"
+				OutputFile="../../../bin/ff_liba52.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				IgnoreAllDefaultLibraries="TRUE"
-				ModuleDefinitionFile=".\ff_libdts.def"
+				ModuleDefinitionFile=".\ff_liba52.def"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
 				ImportLibrary="$(OutDir)/$(ProjectName).lib"
@@ -139,7 +141,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/ff_libdts.tlb"
+				TypeLibraryName=".\Debug/ff_liba52.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -170,14 +172,13 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath="bitstream.c">
+				RelativePath="bit_allocate.c">
 				<FileConfiguration
 					Name="Release|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;$(NoInherit)"/>
+						AdditionalIncludeDirectories=""/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -185,8 +186,27 @@
 						Name="VCCLCompilerTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;$(NoInherit)"
-						BasicRuntimeChecks="3"/>
+						BasicRuntimeChecks="3"
+						CompileAs="2"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="bitstream.c">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="2"
+						AdditionalIncludeDirectories=""/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="0"
+						AdditionalIncludeDirectories=""
+						BasicRuntimeChecks="3"
+						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
 			<File
@@ -196,8 +216,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;$(NoInherit)"/>
+						AdditionalIncludeDirectories=""/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -205,8 +224,28 @@
 						Name="VCCLCompilerTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;$(NoInherit)"
-						BasicRuntimeChecks="3"/>
+						BasicRuntimeChecks="3"
+						CompileAs="2"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="imdct.c">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="2"
+						AdditionalIncludeDirectories=""
+						AssemblerOutput="4"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="0"
+						AdditionalIncludeDirectories=""
+						BasicRuntimeChecks="3"
+						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
 			<File
@@ -216,8 +255,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;$(NoInherit)"/>
+						AdditionalIncludeDirectories=""/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -225,8 +263,8 @@
 						Name="VCCLCompilerTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;$(NoInherit)"
-						BasicRuntimeChecks="3"/>
+						BasicRuntimeChecks="3"
+						CompileAs="2"/>
 				</FileConfiguration>
 			</File>
 		</Filter>
@@ -234,16 +272,19 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
+				RelativePath="a52.h">
+			</File>
+			<File
+				RelativePath="a52_internal.h">
+			</File>
+			<File
 				RelativePath="bitstream.h">
 			</File>
 			<File
 				RelativePath="config.h">
 			</File>
 			<File
-				RelativePath="dca.h">
-			</File>
-			<File
-				RelativePath="dca_internal.h">
+				RelativePath="..\..\csimd.h">
 			</File>
 			<File
 				RelativePath="..\..\inttypes.h">
@@ -251,32 +292,14 @@
 			<File
 				RelativePath="tables.h">
 			</File>
-			<File
-				RelativePath="tables_adpcm.h">
-			</File>
-			<File
-				RelativePath=".\tables_dynrange.h">
-			</File>
-			<File
-				RelativePath="tables_fir.h">
-			</File>
-			<File
-				RelativePath="tables_huffman.h">
-			</File>
-			<File
-				RelativePath="tables_quantization.h">
-			</File>
-			<File
-				RelativePath="tables_vq.h">
-			</File>
 		</Filter>
 		<File
-			RelativePath="ff_libdts.def">
+			RelativePath="ff_liba52.def">
 		</File>
 	</Files>
 	<Globals>
 		<Global
 			Name="DevPartner_IsInstrumented"
-			Value="1"/>
+			Value="0"/>
 	</Globals>
 </VisualStudioProject>

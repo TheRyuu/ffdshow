@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "TomsMoComp_ff", "TomsMoComp_ff_icl9.icproj", "{9BD54593-C2E6-4AF9-AD8E-66A6D934A235}"
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "TomsMoComp_ff", "TomsMoComp_ff_icl.icproj", "{9BD54593-C2E6-4AF9-AD8E-66A6D934A235}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject

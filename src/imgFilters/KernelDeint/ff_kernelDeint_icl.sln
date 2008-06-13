@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_kernelDeint", "ff_kernelDeint_icl9.icproj", "{336A5C37-8D1B-46A6-8948-DD2B715AFEFA}"
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "ff_kernelDeint", "ff_kernelDeint_icl.icproj", "{336A5C37-8D1B-46A6-8948-DD2B715AFEFA}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject

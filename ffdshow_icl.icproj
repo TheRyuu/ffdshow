@@ -6,14 +6,14 @@
 	ProjectGUID="{6DF9C5D2-5835-4C6D-A4CF-E17AA58D7C98}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
 	VCNestedProjectCRC32="1133766944"
-	VCNestedProjectFileName="ffdshow_icl9.vcproj">
+	VCNestedProjectFileName="ffdshow_icl.vcproj">
 	<Configurations>
 		<Configuration 
 			Name="Debug|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="debug_icl9"
-				IntermediateDirectory="debug_icl9"
+				OutputDirectory="debug_icl"
+				IntermediateDirectory="debug_icl"
 				ConfigurationType="2"
 				UseOfMFC="0"
 				UseOfATL="0"
@@ -65,7 +65,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug_icl9/ffdshow.tlb"/>
+				TypeLibraryName=".\Debug_icl/ffdshow.tlb"/>
 			<Tool 
 				Name="PostBuildEventTool"
 				Description="Registering output..."
@@ -94,8 +94,8 @@
 			Name="Release|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="release_icl9"
-				IntermediateDirectory="release_icl9"
+				OutputDirectory="release_icl"
+				IntermediateDirectory="release_icl"
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -124,9 +124,9 @@
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="StdAfx.h"
 				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
-				AssemblerListingLocation=".\Release_icl9/"
-				ObjectFile=".\Release_icl9/"
-				ProgramDataBaseFileName=".\Release_icl9/"
+				AssemblerListingLocation=".\Release_icl/"
+				ObjectFile=".\Release_icl/"
+				ProgramDataBaseFileName=".\Release_icl/"
 				WarningLevel="0"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="0"
@@ -156,7 +156,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release_icl9/ffdshow.tlb"/>
+				TypeLibraryName=".\Release_icl/ffdshow.tlb"/>
 			<Tool 
 				Name="PostBuildEventTool"
 				Description="Registering output..."
@@ -185,8 +185,8 @@
 			Name="Debug Unicode|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="debug_unicode_icl9"
-				IntermediateDirectory="debug_unicode_icl9"
+				OutputDirectory="debug_unicode_icl"
+				IntermediateDirectory="debug_unicode_icl"
 				ConfigurationType="2"
 				UseOfMFC="0"
 				UseOfATL="0"
@@ -238,7 +238,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug_icl9/ffdshow.tlb"/>
+				TypeLibraryName=".\Debug_icl/ffdshow.tlb"/>
 			<Tool 
 				Name="PostBuildEventTool"
 				Description="Registering output..."
@@ -267,8 +267,8 @@
 			Name="Release Unicode|Win32">
 			<Tool 
 				Name="GeneralTool"
-				OutputDirectory="release_unicode_icl9"
-				IntermediateDirectory="release_unicode_icl9"
+				OutputDirectory="release_unicode_icl"
+				IntermediateDirectory="release_unicode_icl"
 				ConfigurationType="2"
 				UseOfMFC="0"
 				ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -329,7 +329,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release_icl9/ffdshow.tlb"/>
+				TypeLibraryName=".\Release_icl/ffdshow.tlb"/>
 			<Tool 
 				Name="PostBuildEventTool"
 				Description="Registering output..."

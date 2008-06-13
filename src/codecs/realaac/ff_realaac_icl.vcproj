@@ -12,8 +12,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="debug_icl9"
-			IntermediateDirectory="debug_icl9"
+			OutputDirectory="debug_icl"
+			IntermediateDirectory="debug_icl"
 			ConfigurationType="2"
 			CharacterSet="0">
 			<Tool
@@ -67,8 +67,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="release_icl9"
-			IntermediateDirectory="release_icl9"
+			OutputDirectory="release_icl"
+			IntermediateDirectory="release_icl"
 			ConfigurationType="2"
 			CharacterSet="0"
 			WholeProgramOptimization="TRUE">
