@@ -8,6 +8,10 @@ else
 endif
 
 ifeq ($(64BIT),yes)
+    FFDSHOW_PREFIX=x86_64-pc-mingw32-
+endif
+
+ifeq ($(64BIT),yes)
     TARGET_OS=x86_64-pc-mingw32
 else
     TARGET_OS=i686-pc-mingw32
@@ -24,7 +28,10 @@ else
     CFLAGS+=-DWIN32 -D_WIN32
 endif
 
+ifneq ($(64BIT),yes)
 CFLAGS+=-mmmx
+endif
+
 ifeq ($(SSE),yes)
     CFLAGS+=-msse -mfpmath=sse
 endif

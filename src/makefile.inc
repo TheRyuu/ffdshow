@@ -7,6 +7,10 @@ else
     NASM=yasm
 endif
 
+ifeq ($(64BIT),yes)
+    FFDSHOW_PREFIX=x86_64-pc-mingw32-
+endif
+
 OUTPUTFLAG=-MMD -o\
 
 CFLAGS+=-mno-cygwin -mdll -fno-rtti -mthreads -pipe -D_WINGDI_ -DUCLIBCPP -D_GLIBCPP_HAVE_MBSTATE_T -D_WIN32_IE=0x0500
@@ -18,7 +22,10 @@ else
     CFLAGS+=-DWIN32 -D_WIN32
 endif
 
+ifneq ($(64BIT),yes)
 CFLAGS+=-mmmx
+endif
+
 ifeq ($(SSE),yes)
     CFLAGS+=-msse -mfpmath=sse
 endif
