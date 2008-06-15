@@ -1,17 +1,36 @@
-CFLAGS+=-I. -I.. -I../imgFilters -Ilibvo
-
-SRCS_C=postproc/rgb2rgb.c postproc/yuv2rgb.c postproc/swscale.c mplayer.c \
-    postproc/postprocess.c libvo/aclib.c postproc/w32thread.c \
-    ../ffmpeg/libavutil/mem.c mp3lib/sr1.c mp3lib/decode_MMX.c \
-    mp3lib/dct64_MMX.c mp3lib/tabinit_MMX.c mp3lib/dct64_3dnow.c \
-    mp3lib/dct64_sse.c mp3lib/dct64_k7.c mp3lib/dct36_3dnow.c \
-    mp3lib/dct36_k7.c
-
-CFLAGS+=-ffast-math
+CFLAGS+=-I. -I.. -I../imgFilters -I../ffmpeg/libavutil -Ilibvo -Imp3lib -Ipostproc
 
 ifeq ($(64BIT),yes)
-    CFLAGS+=-DARCH_X86_64
+SRCS_C=mplayer.c \
+		postproc/rgb2rgb.c \
+		postproc/yuv2rgb.c \
+		postproc/swscale.c \
+		postproc/postprocess.c \
+		postproc/w32thread.c \
+		libvo/aclib.c \
+		mp3lib/sr1.c \
+		../ffmpeg/libavutil/mem.c
 else
+SRCS_C=mplayer.c \
+		postproc/rgb2rgb.c \
+		postproc/yuv2rgb.c \
+		postproc/swscale.c \
+		postproc/postprocess.c \
+		postproc/w32thread.c \
+		libvo/aclib.c \
+		mp3lib/sr1.c \
+		mp3lib/decode_MMX.c \
+		mp3lib/dct64_MMX.c \
+		mp3lib/tabinit_MMX.c \
+		mp3lib/dct64_3dnow.c \
+		mp3lib/dct64_sse.c \
+		mp3lib/dct64_k7.c \
+		mp3lib/dct36_3dnow.c \
+		mp3lib/dct36_k7.c \
+		../ffmpeg/libavutil/mem.c
+endif
+
+ifneq ($(64BIT),yes)
     CFLAGS+=-DARCH_X86_32
 endif
 

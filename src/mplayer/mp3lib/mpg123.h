@@ -6,10 +6,10 @@
 #include "../config.h"
 
 #ifndef M_PI
-#define M_PI            3.141592653589793238462
+#define M_PI		3.141592653589793238462
 #endif
 #ifndef M_SQRT2
-#define M_SQRT2         1.414213562373095048802
+#define M_SQRT2		1.414213562373095048802
 #endif
 #define REAL_IS_FLOAT
 typedef float real;
@@ -63,24 +63,24 @@ struct frame {
 
 
 struct gr_info_s {
-    int scfsi;
-    unsigned part2_3_length;
-    unsigned big_values;
-    unsigned scalefac_compress;
-    unsigned block_type;
-    unsigned mixed_block_flag;
-    unsigned table_select[3];
-    unsigned subblock_gain[3];
-    unsigned maxband[3];
-    unsigned maxbandl;
-    unsigned maxb;
-    unsigned region1start;
-    unsigned region2start;
-    unsigned preflag;
-    unsigned scalefac_scale;
-    unsigned count1table_select;
-    real *full_gain[3];
-    real *pow2gain;
+      int scfsi;
+      unsigned part2_3_length;
+      unsigned big_values;
+      unsigned scalefac_compress;
+      unsigned block_type;
+      unsigned mixed_block_flag;
+      unsigned table_select[3];
+      unsigned subblock_gain[3];
+      unsigned maxband[3];
+      unsigned maxbandl;
+      unsigned maxb;
+      unsigned region1start;
+      unsigned region2start;
+      unsigned preflag;
+      unsigned scalefac_scale;
+      unsigned count1table_select;
+      real *full_gain[3];
+      real *pow2gain;
 };
 
 struct III_sideinfo
@@ -93,13 +93,14 @@ struct III_sideinfo
 };
 
 extern int synth_1to1_pent( struct mp3lib_ctx *,real *,int,short * );
+#if !defined(WIN64)
 //extern int synth_1to1_MMX( struct mp3lib_ctx*,real *,int,short * );
 extern int synth_1to1_MMX_s(real *, int, short *, short *, int *);
 
 extern void dct36_3dnow(real *,real *,real *,real *,real *);
 extern void dct36_3dnowex(real *,real *,real *,real *,real *);
 extern void dct36_sse(real *,real *,real *,real *,real *);
-
+#endif
 typedef int (*synth_func_t)( struct mp3lib_ctx *,real *,int,short * );
 typedef void (*dct36_func_t)(real *,real *,real *,real *,real *);
 

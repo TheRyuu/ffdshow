@@ -8,8 +8,10 @@
    byte first (like Motorola and SPARC, unlike Intel and VAX).  */
 #undef WORDS_BIGENDIAN
 
+#ifndef WIN64
 #ifdef __GNUC__
 #define ARCH_X86 1
+#endif
 #endif
 
 /* Define this to any prefered value from 386 up to infinity with step 100 */
@@ -17,11 +19,15 @@
 
 #undef TARGET_LINUX
 
-#define USE_FASTMEMCPY 1
-#define HAVE_MEMALIGN 1
 /* Runtime Cpudetection */
 #define RUNTIME_CPUDETECT 1
+#define USE_FASTMEMCPY 1
+#define HAVE_THREADS 1
+#define HAVE_MEMALIGN 1
+#define ASMALIGN(ZEROBITS) ".align 1<<" #ZEROBITS "\n\t"
+#define HAVE_BSWAP 1
 
+#ifndef WIN64
 #ifdef __GNUC__
 /* Extension defines */
 #define HAVE_3DNOW 1    // only define if you have 3DNOW (AMD k6-2, AMD Athlon, iDT WinChip, etc.)
@@ -30,6 +36,7 @@
 #define HAVE_MMX2 1     // only define if you have MMX2 (Athlon/PIII/4/CelII)
 #define HAVE_SSE 1      // only define if you have SSE (Intel Pentium III/4 or Celeron II)
 #define HAVE_SSE2 1     // only define if you have SSE2 (Intel Pentium 4)
+#endif
 #endif
 
 #ifndef __GNUC__
@@ -51,5 +58,3 @@
  #define memalign(a,b) __mingw_aligned_malloc(b,a)
  #define free(x) __mingw_aligned_free(x)
 #endif
-
-#define HAVE_THREADS

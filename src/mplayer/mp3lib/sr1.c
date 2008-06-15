@@ -9,11 +9,11 @@
 #define LOCAL static __inline
 #endif
 
-#include        <stdlib.h>
-#include        <stdio.h>
-#include        <string.h>
-#include        <signal.h>
-#include        <math.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <signal.h>
+#include <math.h>
 
 #include "mpg123.h"
 #include "huffman.h"
@@ -57,14 +57,14 @@ LOCAL unsigned int getbits(mp3lib_ctx *ctx,int number_of_bits)
   if((ctx->bitsleft-=number_of_bits)<0) return 0;
   if(!number_of_bits) return 0;
   rval = ctx->wordpointer[0];
-  rval <<= 8;
+         rval <<= 8;
   rval |= ctx->wordpointer[1];
-  rval <<= 8;
+         rval <<= 8;
   rval |= ctx->wordpointer[2];
   rval <<= ctx->bitindex;
-  rval &= 0xffffff;
+         rval &= 0xffffff;
   ctx->bitindex += number_of_bits;
-  rval >>= (24-number_of_bits);
+         rval >>= (24-number_of_bits);
   ctx->wordpointer += (ctx->bitindex>>3);
   ctx->bitindex &= 7;
   return rval;
@@ -77,7 +77,7 @@ LOCAL unsigned int getbits_fast(mp3lib_ctx *ctx,int number_of_bits)
 //  if(MP3_frames>=7741) printf("getbits_fast: bits=%d  bitsleft=%d  wordptr=%x\n",number_of_bits,bitsleft,wordpointer);
   if((ctx->bitsleft-=number_of_bits)<0) return 0;
   if(!number_of_bits) return 0;
-#if defined(CAN_COMPILE_X86_ASM)
+#ifdef CAN_COMPILE_X86_ASM
   rval = bswap_16(*((uint16_t *)ctx->wordpointer));
 #else
   /*
@@ -87,9 +87,9 @@ LOCAL unsigned int getbits_fast(mp3lib_ctx *ctx,int number_of_bits)
   rval = ctx->wordpointer[0] << 8 | ctx->wordpointer[1];
 #endif
   rval <<= ctx->bitindex;
-  rval &= 0xffff;
+         rval &= 0xffff;
   ctx->bitindex += number_of_bits;
-  rval >>= (16-number_of_bits);
+         rval >>= (16-number_of_bits);
   ctx->wordpointer += (ctx->bitindex>>3);
   ctx->bitindex &= 7;
   return rval;
@@ -121,13 +121,13 @@ LOCAL void set_pointer(mp3lib_ctx *ctx,int backstep)
 LOCAL int stream_head_read(mp3lib_ctx *ctx,unsigned char *hbuf,uint32_t *newhead){
   if(mp3_read(ctx,hbuf,4) != 4) return FALSE;
 #if defined(CAN_COMPILE_X86_ASM)
-  *newhead = bswap_32(*((uint32_t *)hbuf));
+  *newhead = bswap_32(*((uint32_t*)hbuf));
 #else
   /*
    * we may not be able to address unaligned 32-bit data on non-x86 cpus.
    * Fall back to some portable code.
    */
-  *newhead =
+  *newhead = 
       hbuf[0] << 24 |
       hbuf[1] << 16 |
       hbuf[2] <<  8 |
@@ -137,7 +137,7 @@ LOCAL int stream_head_read(mp3lib_ctx *ctx,unsigned char *hbuf,uint32_t *newhead
 }
 
 LOCAL int stream_head_shift(mp3lib_ctx *ctx,unsigned char *hbuf,uint32_t *head){
-  *((uint32_t *)hbuf) >>= 8;
+  *((uint32_t*)hbuf) >>= 8;
   if(mp3_read(ctx,hbuf+3,1) != 1) return 0;
   *head <<= 8;
   *head |= hbuf[3];
@@ -151,7 +151,7 @@ LOCAL int stream_head_shift(mp3lib_ctx *ctx,unsigned char *hbuf,uint32_t *head){
 LOCAL int decode_header(mp3lib_ctx *ctx,struct frame *fr,uint32_t newhead){
 
     // head_check:
-    if( (newhead & 0xffe00000) != 0xffe00000 ||
+    if( (newhead & 0xffe00000) != 0xffe00000 ||  
         (newhead & 0x0000fc00) == 0x0000fc00) return FALSE;
 
     fr->lay = 4-((newhead>>17)&3);
@@ -331,12 +331,13 @@ static int _has_mmx = 0;  // used by layer2.c, layer3.c to pre-scale coeffs
 /******************************************************************************/
 
 /* It's hidden from gcc in assembler */
+#ifdef CAN_COMPILE_X86_ASM
 extern void dct64_MMX(short *, short *, real *);
 extern void dct64_MMX_3dnow(short *, short *, real *);
 extern void dct64_MMX_3dnowex(short *, short *, real *);
 extern void dct64_sse(short *, short *, real *);
 void (*dct64_MMX_func)(short *, short *, real *);
-
+#endif
 #include "../cpudetect.h"
 
 // Init decoder tables.  Call first, once!
@@ -392,17 +393,12 @@ mp3lib_ctx* MP3_Init(int mono){
 	mp_msg(MSGT_DECAUDIO,MSGL_V,"mp3lib: using MMX optimized decore!\n");
     }
     else
-    /*
-    if (gCpuCaps.cpuType >= CPUTYPE_I586)
-    {
-	ctx->synth_func = synth_1to1_pent;
-	mp_msg(MSGT_DECAUDIO,MSGL_V,"mp3lib: using Pentium optimized decore!\n");
-    }
-    else*/
 #endif
     {
 	ctx->synth_func = NULL; /* use default c version */
+#ifdef DEBUG
 	mp_msg(MSGT_DECAUDIO,MSGL_V,"mp3lib: using generic C decore!\n");
+#endif
     }
 
     ctx->fr.synth=synth_1to1;
@@ -412,7 +408,9 @@ mp3lib_ctx* MP3_Init(int mono){
 
     init_layer2();
     init_layer3(ctx->fr.down_sample_sblimit);
+#ifdef DEBUG
     mp_msg(MSGT_DECAUDIO,MSGL_INFO,"MP3lib: init layer2&3 finished, tables done\n");
+#endif
     return ctx;
 }
 
@@ -451,4 +449,4 @@ int MP3_DecodeFrame(mp3lib_ctx *ctx,const unsigned char *Isrc,unsigned int Isrcl
 void MP3_Done(mp3lib_ctx *ctx)
 {
  if (ctx) free(ctx);
-}
+        }

@@ -26,7 +26,8 @@ int IsCPUID(void)
         : "+a" (result)
         :: "%ecx","%edx"
     );
-#elif defined(__WIN32__)
+#ifndef _WIN64
+#elif defined(_WIN32)
     _asm{
         push    ecx
         pushfd
@@ -44,6 +45,7 @@ CPUIDok:
         pop     ecx
     }
 #else  // _WINDOWS
+#endif
     result= 0;
 #endif // _WINDOWS
     return result;
@@ -101,7 +103,8 @@ int isP4HT (void)
         : "=m" (dwMax), "=m" (Ident.s.dw0), "=m" (Ident.s.dw1), "=m" (Ident.s.dw2), "=m" (dwStandard), "=m" (dwBrandIndex), "=m" (dwFeature)
         :: "%eax","%ebx","%ecx","%edx"
     );
-#elif defined(__WIN32__)
+#ifndef _WIN64
+#elif defined(_WIN32)
     _asm {
         push ebx
         push ecx
@@ -127,6 +130,7 @@ int isP4HT (void)
         pop edx
     }
 #else
+#endif
     return 0;
 #endif
 

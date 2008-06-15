@@ -36,20 +36,6 @@
 #include <stddef.h>
 #include <assert.h>
 
-#if defined(__GNUC__) && (__GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ > 1)
-#   define GCC420_OR_NEWER 1
-#else
-#   define GCC420_OR_NEWER 0
-#endif
-
-#ifndef attribute_align_arg
-#if GCC420_OR_NEWER
-#    define attribute_align_arg __attribute__((force_align_arg_pointer))
-#else
-#    define attribute_align_arg
-#endif
-#endif
-
 #ifndef attribute_used
 #if defined(__GNUC__) && (__GNUC__ > 3 || __GNUC__ == 3 && __GNUC_MINOR__ > 0)
 #    define attribute_used __attribute__((used))
