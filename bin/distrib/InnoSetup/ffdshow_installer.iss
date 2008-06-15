@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 1999
+#define tryout_revision = 2009
 #define buildyear = 2008
 #define buildmonth = '06'
-#define buildday = '12'
+#define buildday = '15'
 
 ; Build specific options
 #define unicode_required = True
@@ -96,7 +96,6 @@
   #define cpu_detection = True
   #define include_x264 = False
   #define include_app_plugins = False
-  #define include_makeavis = False
   #define filename_suffix = '_x64'
 #endif
 #if PREF_X64_VS2005SP1
@@ -337,9 +336,9 @@ Name: tweaks\skipinloop; Description: {cm:tsk_skipInloop}; Check: NOT IsUpdate; 
 
 [Icons]
 #if is64bit
-Name: {group}\{cm:shrt_audioConfig}; Filename: {sys}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; MinVersion: 0,4; Components: ffdshow
-Name: {group}\{cm:shrt_videoConfig}; Filename: {sys}\rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; MinVersion: 0,4; Components: ffdshow
-Name: {group}\{cm:shrt_vfwConfig};   Filename: {sys}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; Components: ffdshow\vfw
+Name: {group}\{cm:shrt_audioConfig}; Filename: {sys}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; Components: ffdshow
+Name: {group}\{cm:shrt_videoConfig}; Filename: {sys}\rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; Components: ffdshow
+Name: {group}\{cm:shrt_vfwConfig};   Filename: {sys}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {sys}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; Components: ffdshow\vfw
 #else
 Name: {group}\{cm:shrt_audioConfig}; Filename: {syswow64}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; MinVersion: 0,4; Components: ffdshow
 Name: {group}\{cm:shrt_audioConfig}; Filename: {win}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; MinVersion: 4,0; Components: ffdshow
@@ -461,9 +460,9 @@ Source: ..\..\manifest32\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversi
 
 #if VS2005SP1
 	#if is64bit
-Source: ..\..\manifest64\ff_vfw.dll.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
+Source: ..\..\manifest64\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
 	#else
-Source: ..\..\manifest32\msvc80\ff_vfw.dll.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
+Source: ..\..\manifest32\msvc80\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
 	#endif
 #elif VS2008
 	#if is64bit
@@ -551,29 +550,20 @@ Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: string; ValueName: lang; Va
 #endif
 
 ; Register VFW interface
-#if is64bit
-Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc;     ValueType: string; ValueName: {app}\ff_vfw.dll; ValueData: ffdshow video encoder;  MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
-Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32;        ValueType: string; ValueName: VIDC.FFDS;        ValueData: {code:GetVFWLocation|}; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; Flags: uninsdeletekey; Components: ffdshow\vfw
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Description;      ValueData: ffdshow video encoder;  Components: ffdshow\vfw
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Driver;           ValueData: {code:GetVFWLocation|}; Components: ffdshow\vfw
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: FriendlyName;     ValueData: ffdshow video encoder;  Components: ffdshow\vfw
-#else
 Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc;     ValueType: string; ValueName: ff_vfw.dll;   ValueData: ffdshow video encoder; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
 Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32;        ValueType: string; ValueName: VIDC.FFDS;    ValueData: ff_vfw.dll;            MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; Flags: uninsdeletekey; Components: ffdshow\vfw
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Description;  ValueData: ffdshow video encoder; Components: ffdshow\vfw
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Driver;       ValueData: ff_vfw.dll;            Components: ffdshow\vfw
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: FriendlyName; ValueData: ffdshow video encoder; Components: ffdshow\vfw
-#endif
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; MinVersion: 0,4; Flags: uninsdeletekey; Components: ffdshow\vfw
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Description;  ValueData: ffdshow video encoder; MinVersion: 0,4; Components: ffdshow\vfw
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Driver;       ValueData: ff_vfw.dll;            MinVersion: 0,4; Components: ffdshow\vfw
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: FriendlyName; ValueData: ffdshow video encoder; MinVersion: 0,4; Components: ffdshow\vfw
 
 #if include_makeavis
 Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc;      ValueType: string; ValueName: ff_acm.acm;   ValueData: ffdshow ACM codec; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\makeavis
 Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32;         ValueType: string; ValueName: msacm.avis;   ValueData: ff_acm.acm;        MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\makeavis
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; Flags: uninsdeletekey; Components: ffdshow\makeavis
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: Description;  ValueData: ffdshow ACM codec; Components: ffdshow\makeavis
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: Driver;       ValueData: ff_acm.acm;        Components: ffdshow\makeavis
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: FriendlyName; ValueData: ffdshow ACM codec; Components: ffdshow\makeavis
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; MinVersion: 0,4;   Flags: uninsdeletekey;   Components: ffdshow\makeavis
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: Description;  ValueData: ffdshow ACM codec; MinVersion: 0,4; Components: ffdshow\makeavis
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: Driver;       ValueData: ff_acm.acm;        MinVersion: 0,4; Components: ffdshow\makeavis
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: FriendlyName; ValueData: ffdshow ACM codec; MinVersion: 0,4; Components: ffdshow\makeavis
 #endif
 
 ; Recommended settings
@@ -620,7 +610,7 @@ Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: do
 #include "reg_formats.iss"
 
 [INI]
-#if !unicode_required
+#if !is64bit & !unicode_required
 Filename: {win}\system.ini; Section: drivers32; Key: vidc.ffds;  String: ff_vfw.dll; Flags: uninsdeleteentry; MinVersion: 4,0; Components: ffdshow\vfw
   #if include_makeavis
 Filename: {win}\system.ini; Section: drivers32; Key: msacm.avis; String: ff_acm.acm; Flags: uninsdeleteentry; MinVersion: 4,0; Components: ffdshow\makeavis
@@ -633,7 +623,7 @@ Description: {cm:run_audioConfig}; Filename: {win}\rundll32.exe; Parameters: ffd
 Description: {cm:run_videoConfig}; Filename: {syswow64}\rundll32.exe; Parameters: ffdshow.ax,configure;     WorkingDir: {app}; Flags: postinstall nowait unchecked; MinVersion: 0,4; Components: ffdshow
 Description: {cm:run_videoConfig}; Filename: {win}\rundll32.exe; Parameters: ffdshow.ax,configure;          WorkingDir: {app}; Flags: postinstall nowait unchecked; MinVersion: 4,0; Components: ffdshow
 #if is64bit
-Description: {cm:run_vfwConfig};   Filename: {sys}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;       WorkingDir: {app}; Flags: postinstall nowait unchecked; Components: ffdshow\vfw
+Description: {cm:run_vfwConfig};   Filename: {sys}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;       WorkingDir: {sys}; Flags: postinstall nowait unchecked; Components: ffdshow\vfw
 #else
 Description: {cm:run_vfwConfig};   Filename: {syswow64}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;  WorkingDir: {syswow64}; Flags: postinstall nowait unchecked; MinVersion: 0,4; Components: ffdshow\vfw
 Description: {cm:run_vfwConfig};   Filename: {win}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;       WorkingDir: {sys}; Flags: postinstall nowait unchecked; MinVersion: 4,0; Components: ffdshow\vfw
@@ -759,13 +749,6 @@ begin
     if CheckTaskAudioInpreset('volNormalize', 1, False) then
      Result := True;
 end;
-
-#if is64bit
-function GetVFWLocation(dummy: String): String;
-begin
-  Result := GetShortName(ExpandConstant('{app}\ff_vfw.dll'));
-end;
-#endif
 
 #if include_app_plugins
 // Global vars
