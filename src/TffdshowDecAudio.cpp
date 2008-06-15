@@ -37,6 +37,11 @@
 #include "resource.h"
 #include "Tinfo.h"
 
+#ifdef VISTA_SPDIF
+#include <InitGuid.h>
+#include <IffMmdevice.h> // Vista header import (MMDeviceAPI.h)
+#endif
+
 const TfilterIDFF TffdshowDecAudio::nextFilters[]=
 {
  {

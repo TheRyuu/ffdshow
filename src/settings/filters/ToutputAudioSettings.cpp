@@ -20,6 +20,11 @@
 #include "TsampleFormat.h"
 #include "TaudioFilterOutput.h"
 
+#ifdef VISTA_SPDIF
+#include <InitGuid.h>
+#include <IffMmdevice.h> // Vista header import (MMDeviceAPI.h)
+#endif
+
 const char_t* ToutputAudioSettings::connetTos[]=
 {
  _l("any filter"),

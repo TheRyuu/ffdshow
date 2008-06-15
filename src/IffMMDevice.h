@@ -1,5 +1,23 @@
-#define __RPC__in           
-#define __RPC__out     
+#define __RPC__in
+#define __RPC__out
+
+#if (_MSC_VER<1400) // VC 7.1 or lower
+	#ifndef __in
+	#define __in
+	#endif
+
+	#ifndef __deref_out
+	#define __deref_out
+	#endif
+
+	#ifndef __in_opt
+	#define __in_opt
+	#endif
+
+	#ifndef __out
+	#define __out
+	#endif
+#endif
 
 #ifndef PROPERTYKEY_DEFINED
 #define PROPERTYKEY_DEFINED

@@ -75,10 +75,6 @@
  #endif
 #endif
 
-#ifdef VISTA_SPDIF
-#include <IffMmdevice.h> // Vista header import (MMDeviceAPI.h)
-#endif
-
 // ffdshow
 #include "inttypes.h"
 #include "dwstring.h"
