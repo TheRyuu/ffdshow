@@ -93,7 +93,8 @@ struct III_sideinfo
 };
 
 extern int synth_1to1_pent( struct mp3lib_ctx *,real *,int,short * );
-#if !defined(WIN64)
+
+#ifdef ARCH_X86
 //extern int synth_1to1_MMX( struct mp3lib_ctx*,real *,int,short * );
 extern int synth_1to1_MMX_s(real *, int, short *, short *, int *);
 
@@ -101,6 +102,7 @@ extern void dct36_3dnow(real *,real *,real *,real *,real *);
 extern void dct36_3dnowex(real *,real *,real *,real *,real *);
 extern void dct36_sse(real *,real *,real *,real *,real *);
 #endif
+
 typedef int (*synth_func_t)( struct mp3lib_ctx *,real *,int,short * );
 typedef void (*dct36_func_t)(real *,real *,real *,real *,real *);
 

@@ -22,11 +22,7 @@
 #include "../cpudetect.h"
 #include "../mp_msg.h"
 
-#include "fastmemcpy.h"
-
-#ifdef ARCH_X86
-#define CAN_COMPILE_X86_ASM
-#endif
+#include "../libvo/fastmemcpy.h"
 
 static const long outscale = 32768;
 #include "tabinit.c"
@@ -77,7 +73,7 @@ LOCAL unsigned int getbits_fast(mp3lib_ctx *ctx,int number_of_bits)
 //  if(MP3_frames>=7741) printf("getbits_fast: bits=%d  bitsleft=%d  wordptr=%x\n",number_of_bits,bitsleft,wordpointer);
   if((ctx->bitsleft-=number_of_bits)<0) return 0;
   if(!number_of_bits) return 0;
-#ifdef CAN_COMPILE_X86_ASM
+#ifdef ARCH_X86
   rval = bswap_16(*((uint16_t *)ctx->wordpointer));
 #else
   /*
@@ -120,7 +116,7 @@ LOCAL void set_pointer(mp3lib_ctx *ctx,int backstep)
 
 LOCAL int stream_head_read(mp3lib_ctx *ctx,unsigned char *hbuf,uint32_t *newhead){
   if(mp3_read(ctx,hbuf,4) != 4) return FALSE;
-#if defined(CAN_COMPILE_X86_ASM)
+#ifdef ARCH_X86
   *newhead = bswap_32(*((uint32_t*)hbuf));
 #else
   /*
@@ -232,7 +228,6 @@ switch(fr->lay){
     return 1;
 }
 
-
 LOCAL int stream_read_frame_body(mp3lib_ctx *ctx,int size){
 
   /* flip/init buffer for Layer 3 */
@@ -248,7 +243,6 @@ LOCAL int stream_read_frame_body(mp3lib_ctx *ctx,int size){
 
   return 1;
 }
-
 
 /*****************************************************************
  * read next frame     return number of frames read.
@@ -331,13 +325,14 @@ static int _has_mmx = 0;  // used by layer2.c, layer3.c to pre-scale coeffs
 /******************************************************************************/
 
 /* It's hidden from gcc in assembler */
-#ifdef CAN_COMPILE_X86_ASM
+#ifdef ARCH_X86
 extern void dct64_MMX(short *, short *, real *);
 extern void dct64_MMX_3dnow(short *, short *, real *);
 extern void dct64_MMX_3dnowex(short *, short *, real *);
 extern void dct64_sse(short *, short *, real *);
 void (*dct64_MMX_func)(short *, short *, real *);
 #endif
+
 #include "../cpudetect.h"
 
 // Init decoder tables.  Call first, once!
@@ -357,7 +352,7 @@ mp3lib_ctx* MP3_Init(int mono){
 
     make_decode_tables(outscale);
 
-#ifdef CAN_COMPILE_X86_ASM
+#ifdef ARCH_X86
 
     if (gCpuCaps.hasMMX)
     {
@@ -449,4 +444,4 @@ int MP3_DecodeFrame(mp3lib_ctx *ctx,const unsigned char *Isrc,unsigned int Isrcl
 void MP3_Done(mp3lib_ctx *ctx)
 {
  if (ctx) free(ctx);
-        }
+}
