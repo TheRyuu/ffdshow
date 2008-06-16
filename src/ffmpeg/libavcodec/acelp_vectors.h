@@ -23,6 +23,10 @@
 #ifndef FFMPEG_ACELP_VECTORS_H
 #define FFMPEG_ACELP_VECTORS_H
 
+#ifdef __GNUC__
+#include <stdint.h>
+#endif
+
 /*
  * Track|Pulse|        Positions
  * -------------------------------------------------------------------------

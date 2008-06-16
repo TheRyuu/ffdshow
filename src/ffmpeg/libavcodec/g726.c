@@ -37,7 +37,7 @@ typedef struct Float11 {
     int mant;   /**< 6bit mantissa */
 } Float11;
 
-static inline Float11* i2f(int16_t i, Float11* f)
+static inline Float11* i2f(int i, Float11* f)
 {
     f->sign = (i < 0);
     if (f->sign)
@@ -387,5 +387,5 @@ AVCodec adpcm_g726_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
-    /*.long_name = */"G.726 ADPCM",
+    /*.long_name = */NULL_IF_CONFIG_SMALL("G.726 ADPCM"),
 };
