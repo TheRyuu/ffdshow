@@ -1,14 +1,13 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2009
+#define tryout_revision = 2010
 #define buildyear = 2008
 #define buildmonth = '06'
-#define buildday = '15'
+#define buildday = '16'
 
 ; Build specific options
 #define unicode_required = True
 
-#define cpu_detection = True
 #define sse_required = False
 #define sse2_required = False
 
@@ -16,10 +15,12 @@
 
 #define localize = True
 
-#define include_app_plugins = True
-#define include_makeavis = True
 #define include_x264 = True
 #define include_xvidcore = True
+#define include_makeavis = True
+#define include_plugin_avisynth = True
+#define include_plugin_virtualdub = True
+#define include_plugin_dscaler = True
 #define include_audx = False
 
 #define include_info_before = False
@@ -41,6 +42,9 @@
 ; location of binaries
 #define bindir = '..\..'
 
+; Other
+#define cpu_detection = True
+
 ; Custom builder preferences
 #define PREF_CLSID = False
 #define PREF_CLSID_ICL = False
@@ -53,17 +57,12 @@
 #if PREF_CLSID
   #define VS2003SP1 = True  
   #define unicode_required = False
-  #define include_x264 = True
-  #define cpu_detection = True
   #define filename_suffix = '_clsid'
   #define bindir = '..\..\x86'
   #define outputdir = '..\..\..\..\'
 #elif PREF_CLSID_ICL
   #define VS2003SP1 = True
-  #define unicode_required = True
-  #define cpu_detection = True
   #define sse_required = True
-  #define include_x264 = True
   #define filename_suffix = '_clsid_sse_icl10'
   #define bindir = '..\..\x86'
   #define outputdir = '..\..\..\..\'
@@ -71,8 +70,7 @@
   #define VS2005SP1 = True
   #define is64bit = True
   #define include_x264 = False
-  #define unicode_required = True
-  #define cpu_detection = True
+  #define include_plugin_dscaler = False
   #define filename_suffix = '_clsid_x64'
   #define bindir = '..\..\x64'
   #define outputdir = '..\..\..\..\'
@@ -84,7 +82,6 @@
 #elif PREF_XXL
   #define VS2003SP1 = True
   #define unicode_required = False
-  #define cpu_detection = True
   #define localize = False
   #define include_audx = True
   #define include_info_before = True
@@ -92,10 +89,8 @@
   #define filename_suffix = '_xxl'
 #elif PREF_X64_VS2005SP1 | PREF_X64_VS2008
   #define is64bit = True
-  #define unicode_required = True
-  #define cpu_detection = True
   #define include_x264 = False
-  #define include_app_plugins = False
+  #define include_plugin_dscaler = False
   #define filename_suffix = '_x64'
 #endif
 #if PREF_X64_VS2005SP1
@@ -111,8 +106,14 @@ You must configure your compiling environment!!!
 #if VS2008 & !unicode_required
 VS2008 builds require Windows 2000 or above. You must set unicode_required to True!
 #endif
-#if is64bit & !VS2005SP1 & !VS2008
+#if is64bit & !VS2005SP1 & !VS2008 & !MINGW_GCC
 This can't be a 64-bit build.
+#endif
+#if is64bit & !unicode_required
+Unicode is required for 64-bit builds.
+#endif
+#if is64bit & include_plugin_dscaler
+There is no 64-bit version of DScaler.
 #endif
 
 [Setup]
@@ -220,10 +221,16 @@ Name: ffdshow\vfw; Description: {cm:comp_vfwInterface}; Types: Normal
 #if include_makeavis
 Name: ffdshow\makeavis; Description: {cm:comp_makeAvis}; Flags: dontinheritcheck
 #endif
-#if include_app_plugins
+#if include_plugin_avisynth | include_plugin_virtualdub | include_plugin_dscaler
 Name: ffdshow\plugins; Description: {cm:comp_appPlugins}; Flags: dontinheritcheck
+#endif
+#if include_plugin_avisynth
 Name: ffdshow\plugins\avisynth; Description: AviSynth
+#endif
+#if include_plugin_virtualdub
 Name: ffdshow\plugins\virtualdub; Description: VirtualDub
+#endif
+#if include_plugin_dscaler
 Name: ffdshow\plugins\dscaler; Description: DScaler
 #endif
 
@@ -426,10 +433,14 @@ Source: {#= bindir}\ff_vfw.dll; DestDir: {sys}; Flags: ignoreversion restartrepl
 Source: audxlib.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow
 #endif
 
-#if include_app_plugins
+#if include_plugin_avisynth
 Source: ..\..\ffavisynth.avsi ; DestDir: {code:GetAviSynthPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\avisynth
 Source: {#= bindir}\ffavisynth.dll; DestDir: {code:GetAviSynthPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\avisynth
+#endif
+#if include_plugin_virtualdub
 Source: {#= bindir}\ffvdub.vdf; DestDir: {code:GetVdubPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\virtualdub
+#endif
+#if include_plugin_dscaler
 Source: {#= bindir}\FLT_ffdshow.dll; DestDir: {code:GetDScalerDir|}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\dscaler
 #endif
 
@@ -534,9 +545,13 @@ Root: HKLM; Subkey: Software\GNU\ffdshow_vfw;       Flags: deletekey; Components
 ; Path
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: string; ValueName: pth; ValueData: {app}; Components: ffdshow
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueName: pthPriority; Flags: deletevalue; Components: ffdshow
-#if include_app_plugins
+#if include_plugin_avisynth
 Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: string; ValueName: pthAvisynth;   ValueData: {code:GetAviSynthPluginDir}; Flags: uninsclearvalue; Components: ffdshow\plugins\avisynth
+#endif
+#if include_plugin_virtualdub
 Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: string; ValueName: pthVirtualDub; ValueData: {code:GetVdubPluginDir};     Flags: uninsclearvalue; Components: ffdshow\plugins\virtualdub
+#endif
+#if include_plugin_dscaler
 Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: string; ValueName: dscalerPth;    ValueData: {code:GetDScalerDir|};       Flags: uninsclearvalue; Components: ffdshow\plugins\dscaler
 #endif
 
@@ -750,12 +765,9 @@ begin
      Result := True;
 end;
 
-#if include_app_plugins
-// Global vars
+#if include_plugin_avisynth
 var
   avisynthplugindir: String;
-  dscalerdir: String;
-  VdubDirPage: TInputDirWizardPage;
 
 function GetAviSynthPluginDir(dummy: String): String;
 begin
@@ -769,7 +781,12 @@ begin
 
   Result := avisynthplugindir;
 end;
+#endif
 
+#if include_plugin_dscaler
+var
+  dscalerdir: String;
+  
 function GetDScalerDir(dummy: String): String;
 var
   proglist: Array of String;
@@ -791,6 +808,11 @@ begin
   end
   Result := dscalerdir;
 end;
+#endif
+
+#if include_plugin_virtualdub
+var
+  VdubDirPage: TInputDirWizardPage;
 
 function GetVdubPluginDir(dummy: String): String;
 begin
@@ -1621,35 +1643,40 @@ begin
      SpeakerPage.Add(CustomMessage('spk_disableMixer'));
   end
 
+#if include_plugin_virtualdub
   // VirtualDub plugin install directory setting
-#if include_app_plugins
   VdubDirPage := CreateInputDirPage(SpeakerPage.ID,
-    FmtMessage(CustomMessage('plg_Label1'), ['Virtual Dub']),
-    FmtMessage(CustomMessage('plg_Label2'), ['Virtual Dub']),
-    FmtMessage(CustomMessage('plg_Label3'), ['Virtual Dub']),
+    FmtMessage(CustomMessage('plg_Label1'), ['VirtualDub']),
+    FmtMessage(CustomMessage('plg_Label2'), ['VirtualDub']),
+    FmtMessage(CustomMessage('plg_Label3'), ['VirtualDub']),
     False, '');
   VdubDirPage.Add('');
 #endif
 end;
 
 function ShouldSkipPage(PageID: Integer): Boolean;
-#if include_app_plugins
+#if include_plugin_virtualdub
 var
   regval: String;
 #endif
 begin
   Result := False;
-#if include_app_plugins
+#if include_plugin_virtualdub
   if PageID = VdubDirPage.ID then begin
     if IsComponentSelected('ffdshow\plugins\virtualdub') then begin
       if VdubDirPage.Values[0] = '' then begin
         if RegQueryStringValue(HKLM, 'Software\GNU\ffdshow', 'pthVirtualDub', regval)
         and not (regval = ExpandConstant('{app}')) and not (regval = '') then
           VdubDirPage.Values[0] := regval
-        else if FileOrDirExists(ExpandConstant('{pf}\virtualDub\plugins')) then
-            VdubDirPage.Values[0] := ExpandConstant('{pf}\virtualDub\plugins')
-        else if FileOrDirExists(ExpandConstant('{sd}\virtualDub\plugins')) then
-            VdubDirPage.Values[0] := ExpandConstant('{sd}\virtualDub\plugins')
+#if is64bit
+        else if FileOrDirExists(ExpandConstant('{pf64}\VirtualDub\plugins')) then
+            VdubDirPage.Values[0] := ExpandConstant('{pf64}\VirtualDub\plugins')
+#else
+        else if FileOrDirExists(ExpandConstant('{pf}\VirtualDub\plugins')) then
+            VdubDirPage.Values[0] := ExpandConstant('{pf}\VirtualDub\plugins')
+#endif
+        else if FileOrDirExists(ExpandConstant('{sd}\VirtualDub\plugins')) then
+            VdubDirPage.Values[0] := ExpandConstant('{sd}\VirtualDub\plugins')
         else
           VdubDirPage.Values[0] := ExpandConstant('{app}');
       end
