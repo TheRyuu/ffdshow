@@ -3,7 +3,7 @@ CFLAGS+= -I. -I../..
 ifneq ($(64BIT),yes)
 	CFLAGS+=-DARCH_IS_IA32 -DARCH_IS_32BIT
 else
-	CFLAGS+=-DARCH_IS_X86_64 -DARCH_IS_64BIT
+	CFLAGS+=-DARCH_IS_GENERIC -DARCH_IS_64BIT
 endif
 
 SRCS_C=decoder.c \
@@ -49,20 +49,7 @@ SRCS_C=decoder.c \
 		utils/mem_transfer.c \
 		utils/timer.c
 
-ifeq ($(64BIT),yes)
-SRCS_NASM=dct/x86_64_asm/fdct_mmx_skal.asm \
-		dct/x86_64_asm/idct_mmx.asm \
-		image/x86_64_asm/interpolate8x8_mmx.asm \
-		image/x86_64_asm/interpolate8x8_xmm.asm \
-		image/x86_64_asm/qpel_mmx.asm \
-		motion/x86_64_asm/sad_xmm.asm \
-		motion/x86_64_asm/sad_mmx.asm \
-		quant/x86_64_asm/quantize_h263_mmx.asm \
-		quant/x86_64_asm/quantize_mpeg_xmm.asm \
-		utils/x86_64_asm/mem_transfer_mmx.asm \
-		utils/x86_64_asm/interlacing_mmx.asm \
-		utils/x86_64_asm/cpuid.asm
-else
+ifneq ($(64BIT),yes)
 SRCS_NASM=bitstream/x86_asm/cbp_3dne.asm \
 		bitstream/x86_asm/cbp_mmx.asm \
 		bitstream/x86_asm/cbp_sse2.asm \
