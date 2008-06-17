@@ -17,6 +17,7 @@ SRCS_C=common/mc.c common/predict.c common/pixel.c common/macroblock.c \
 		ff_x264.c
 
 ifneq ($(64BIT),yes)
+SRCS_C+=common/x86/mc-c.c common/x86/predict-c.c
 SRCS_NASM=common/x86/cabac-a.asm common/x86/dct-a.asm common/x86/deblock-a.asm \
 			common/x86/mc-a.asm common/x86/mc-a2.asm \
 			common/x86/pixel-a.asm common/x86/predict-a.asm \
