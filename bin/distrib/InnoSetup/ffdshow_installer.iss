@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2010
+#define tryout_revision = 2014
 #define buildyear = 2008
 #define buildmonth = '06'
-#define buildday = '16'
+#define buildday = '17'
 
 ; Build specific options
 #define unicode_required = True
@@ -89,9 +89,11 @@
   #define filename_suffix = '_xxl'
 #elif PREF_X64_VS2005SP1 | PREF_X64_VS2008
   #define is64bit = True
-  #define include_x264 = False
+  #define include_x264 = True
   #define include_plugin_dscaler = False
   #define filename_suffix = '_x64'
+  #define include_info_before = True
+  #define include_setup_icon = True
 #endif
 #if PREF_X64_VS2005SP1
   #define VS2005SP1 = True
