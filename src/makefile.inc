@@ -22,6 +22,12 @@ else
     CFLAGS+=-DWIN32 -D_WIN32
 endif
 
+ifeq ($(64BIT),yes)
+	CFLAGS+=-DARCH_IS_GENERIC -DARCH_IS_64BIT
+else
+	CFLAGS+=-DARCH_IS_IA32 -DARCH_IS_32BIT
+endif
+
 ifneq ($(64BIT),yes)
 CFLAGS+=-mmmx
 endif
