@@ -141,10 +141,6 @@ static inline int x264_predictor_difference( int16_t (*mvc)[2], intptr_t i_mvc )
     return sum;
 }
 
-#ifdef HAVE_MMX
-#include "x86/util.h"
-#endif
-
 /****************************************************************************
  *
  ****************************************************************************/
@@ -548,6 +544,9 @@ struct x264_t
             int i_mbs_analysed;
             /* Adaptive direct mv pred */
             int i_direct_score[2];
+            /* Metrics */
+            int64_t i_ssd[3];
+            double f_ssim;
         } frame;
 
         /* Cumulated stats */
@@ -594,6 +593,10 @@ struct x264_t
 
 // included at the end because it needs x264_t
 #include "macroblock.h"
+
+#ifdef HAVE_MMX
+#include "x86/util.h"
+#endif
 
 #endif
 
