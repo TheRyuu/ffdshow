@@ -614,6 +614,13 @@ typedef struct MDCTContext {
     FFTContext fft;
 } MDCTContext;
 
+/**
+ * Generate a sine window.
+ * @param   window  pointer to half window
+ * @param   n       size of half window
+ */
+void ff_sine_window_init(float *window, int n);
+
 int ff_mdct_init(MDCTContext *s, int nbits, int inverse);
 void ff_imdct_calc(MDCTContext *s, FFTSample *output,
                 const FFTSample *input, FFTSample *tmp);

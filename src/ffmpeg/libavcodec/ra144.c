@@ -343,6 +343,7 @@ static int ra144_decode_frame(AVCodecContext * avctx,
     if(buf_size < 20) {
         av_log(avctx, AV_LOG_ERROR,
                "Frame too small (%d bytes). Truncated file?\n", buf_size);
+        *data_size = 0;
         return buf_size;
     }
     init_get_bits(&gb, buf, 20 * 8);
@@ -398,5 +399,5 @@ AVCodec ra_144_decoder =
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
-    /*.long_name = */"RealAudio 1.0 (14.4K)",
+    /*.long_name = */NULL_IF_CONFIG_SMALL("RealAudio 1.0 (14.4K)"),
 };
