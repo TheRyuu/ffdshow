@@ -481,10 +481,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\csimd.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\inttypes.h"
 				>
 			</File>

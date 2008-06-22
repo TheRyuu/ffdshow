@@ -11,8 +11,6 @@ DEF=ff_libfaad2.def
 
 include ../../makefile_c.inc
 
-OPTFLAGS+=-Os
-
 .all: $(SLIB)
 
 clean: 

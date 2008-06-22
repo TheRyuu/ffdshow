@@ -22,7 +22,7 @@
  */
 
 #include <stdlib.h>
-#include <inttypes.h>
+#include "../../../inttypes.h"
 
 #include "mpeg2.h"
 

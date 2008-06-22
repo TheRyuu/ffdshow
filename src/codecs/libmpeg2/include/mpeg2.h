@@ -166,16 +166,16 @@ void mpeg2_custom_fbuf (mpeg2dec_t * mpeg2dec, int custom_fbuf);
 #define MPEG2_ACCEL_SPARC_VIS2 2
 #define MPEG2_ACCEL_DETECT 0x80000000
 
-extern "C" uint32_t mpeg2_accel (uint32_t accel);
-extern "C" mpeg2dec_t * mpeg2_init (void);
-extern "C" const mpeg2_info_t * mpeg2_info (mpeg2dec_t * mpeg2dec);
-extern "C" void mpeg2_close (mpeg2dec_t * mpeg2dec);
+uint32_t mpeg2_accel (uint32_t accel);
+mpeg2dec_t * mpeg2_init (void);
+const mpeg2_info_t * mpeg2_info (mpeg2dec_t * mpeg2dec);
+void mpeg2_close (mpeg2dec_t * mpeg2dec);
 
-extern "C" void mpeg2_buffer (mpeg2dec_t * mpeg2dec, uint8_t * start, uint8_t * end);
+void mpeg2_buffer (mpeg2dec_t * mpeg2dec, uint8_t * start, uint8_t * end);
 int mpeg2_getpos (mpeg2dec_t * mpeg2dec);
-extern "C" mpeg2_state_t mpeg2_parse (mpeg2dec_t * mpeg2dec);
+mpeg2_state_t mpeg2_parse (mpeg2dec_t * mpeg2dec);
 
-extern "C" void mpeg2_reset (mpeg2dec_t * mpeg2dec, int full_reset);
+void mpeg2_reset (mpeg2dec_t * mpeg2dec, int full_reset);
 void mpeg2_skip (mpeg2dec_t * mpeg2dec, int skip);
 void mpeg2_slice_region (mpeg2dec_t * mpeg2dec, int start, int end);
 
@@ -183,7 +183,7 @@ void mpeg2_tag_picture (mpeg2dec_t * mpeg2dec, uint32_t tag, uint32_t tag2);
 
 void mpeg2_init_fbuf (mpeg2_decoder_t * decoder, uint8_t * current_fbuf[3],
 		      uint8_t * forward_fbuf[3], uint8_t * backward_fbuf[3]);
-extern "C" void mpeg2_slice (mpeg2_decoder_t * decoder, int code, const uint8_t * buffer);
+void mpeg2_slice (mpeg2_decoder_t * decoder, int code, const uint8_t * buffer);
 int mpeg2_guess_aspect (const mpeg2_sequence_t * sequence,
 			unsigned int * pixel_width,
 			unsigned int * pixel_height);
@@ -200,5 +200,5 @@ void * mpeg2_malloc (unsigned size, mpeg2_alloc_t reason);
 void mpeg2_free (void * buf);
 void mpeg2_malloc_hooks (void * malloc (unsigned, mpeg2_alloc_t),
 			 int free (void *));
-extern "C" void mpeg2_set_rtStart(mpeg2dec_t *mpeg2dec,int64_t rtStart);
+void mpeg2_set_rtStart(mpeg2dec_t *mpeg2dec,int64_t rtStart);
 #endif /* LIBMPEG2_MPEG2_H */

@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <inttypes.h>
+#include "../../inttypes.h"
 #include <math.h>
 
 #include "a52.h"
@@ -371,7 +371,7 @@ static inline int16_t dither_gen (a52_state_t * state)
 
     state->lfsr_state = (uint16_t) nstate;
 
-    return (3 * nstate) >> 2;
+    return nstate;
 }
 
 static void coeff_get (a52_state_t * state, sample_t * coeff,
@@ -973,7 +973,7 @@ void a52_free (a52_state_t * state)
 }
 
 //===========================================================================
-extern "C" void __stdcall getVersion(char *ver,const char* *license)
+void __stdcall getVersion(char *ver,const char* *license)
 {
  strcpy(ver, VERSION", build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64")");
  *license="(C) 2000-2003 Michel Lespinasse <walken@zoy.org>\n(C) 1999-2000 Aaron Holtzman <aholtzma@ess.engr.uvic.ca>\ndialog normalisation, rf mode (drc), some extended bitstream information\n2004-2005, Simone Karin Lehmann < simone at lisanet dot de >";

@@ -23,7 +23,7 @@
 
 #include "config.h"
 
-#include <inttypes.h>
+#include "../../inttypes.h"
 
 #include "a52.h"
 #include "a52_internal.h"
@@ -231,7 +231,7 @@ void a52_bit_allocate (a52_state_t * state, ba_t * ba, int bndstart,
 	int startband, endband;
 
 	startband = j;
-	endband = (bndtab[i-20] < end) ? bndtab[i-20] : end;
+	endband = ((bndtab-20)[i] < end) ? (bndtab-20)[i] : end;
 	psd = 128 * exp[j++];
 	while (j < endband) {
 	    int next, delta;

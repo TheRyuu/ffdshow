@@ -31,7 +31,7 @@
 #ifndef M_PI
 #define M_PI 3.1415926535897932384626433832795029
 #endif
-#include <inttypes.h>
+#include "../../inttypes.h"
 
 #include "a52.h"
 #include "a52_internal.h"

@@ -1,5 +1,4 @@
 CFLAGS+= -I. -I../..
-FORCECPP=1
 
 SRCS_C=bit_allocate.c bitstream.c downmix.c imdct.c parse.c
 

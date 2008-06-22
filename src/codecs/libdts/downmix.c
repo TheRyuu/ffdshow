@@ -26,7 +26,7 @@
 #include "config.h"
 
 #include <string.h>
-#include <inttypes.h>
+#include "../../inttypes.h"
 
 #include "dca.h"
 #include "dca_internal.h"

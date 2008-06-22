@@ -25,7 +25,7 @@
 
 #include <string.h>	/* memcmp/memset, try to remove */
 #include <stdlib.h>
-#include <inttypes.h>
+#include "../../../inttypes.h"
 
 #include "mpeg2.h"
 #include "attributes.h"
@@ -409,7 +409,7 @@ void mpeg2_reset (mpeg2dec_t * mpeg2dec, int full_reset)
 }
 
 static int ffdshow_accels=0;
-extern "C" void mpeg2_set_accel(int accel)
+void mpeg2_set_accel(int accel)
 {
  ffdshow_accels=accel;
 }

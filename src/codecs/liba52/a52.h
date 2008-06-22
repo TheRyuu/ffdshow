@@ -24,10 +24,6 @@
 #ifndef A52_H
 #define A52_H
 
-# ifdef __cplusplus
-extern "C" {
-# endif
-
 #ifndef LIBA52_DOUBLE
 typedef float sample_t;
 #else
@@ -62,9 +58,5 @@ void a52_dynrng (a52_state_t * state,
 		 sample_t (* call) (sample_t, void *), void * data);
 int a52_block (a52_state_t * state);
 void a52_free (a52_state_t * state);
-
-# ifdef __cplusplus
-}
-# endif
 
 #endif /* A52_H */

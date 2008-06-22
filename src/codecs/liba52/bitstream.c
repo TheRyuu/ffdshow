@@ -25,7 +25,7 @@
 
 #include <stdlib.h>
 #include <stddef.h>
-#include <inttypes.h>
+#include "../../inttypes.h"
 
 #include "a52.h"
 #include "a52_internal.h"

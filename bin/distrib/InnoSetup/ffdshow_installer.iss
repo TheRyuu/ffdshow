@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2014
+#define tryout_revision = 2018
 #define buildyear = 2008
 #define buildmonth = '06'
-#define buildday = '17'
+#define buildday = '22'
 
 ; Build specific options
 #define unicode_required = True
@@ -51,6 +51,7 @@
 #define PREF_CLSID_X64 = False
 #define PREF_YAMAGATA = False
 #define PREF_XXL = False
+#define PREF_XXL_X64 = False
 #define PREF_X64_VS2005SP1 = False
 #define PREF_X64_VS2008 = False
 
@@ -87,13 +88,21 @@
   #define include_info_before = True
   #define include_setup_icon = True
   #define filename_suffix = '_xxl'
-#elif PREF_X64_VS2005SP1 | PREF_X64_VS2008
+#elif PREF_XXL_X64
+  #define VS2005SP1 = True
   #define is64bit = True
-  #define include_x264 = True
+  #define include_x264 = False
   #define include_plugin_dscaler = False
-  #define filename_suffix = '_x64'
   #define include_info_before = True
   #define include_setup_icon = True
+  #define filename_suffix = '_xxl_x64'
+#elif PREF_X64_VS2005SP1 | PREF_X64_VS2008
+  #define is64bit = True
+  #define include_x264 = False
+  #define include_plugin_dscaler = False
+  #define include_info_before = True
+  #define include_setup_icon = True
+  #define filename_suffix = '_x64'
 #endif
 #if PREF_X64_VS2005SP1
   #define VS2005SP1 = True

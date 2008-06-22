@@ -24,7 +24,7 @@
 
 #include "config.h"
 
-#include <inttypes.h>
+#include "../../../inttypes.h"
 #include <stdlib.h>	/* defines NULL */
 #include <string.h>	/* memcmp */
 

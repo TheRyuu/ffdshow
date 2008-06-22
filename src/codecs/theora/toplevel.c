@@ -484,5 +484,5 @@ ogg_int64_t theora_granule_frame(theora_state *th,ogg_int64_t granulepos){
 void __stdcall getVersion(char *ver,const char* *license)
 {
  strcpy(ver,VENDOR_STRING", build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64")");
- *license="Copyright (C) 2002-2005 Xiph.org Foundation";
+ *license="Copyright (C) 2002-2007 Xiph.org Foundation";
 }

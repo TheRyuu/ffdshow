@@ -1,9 +1,6 @@
 CFLAGS+= -I. -Iinclude -I../..
-FORCECPP=1
 
-ifeq ($(64BIT),yes)
-	CFLAGS+=-DARCH_X86_64
-else
+ifneq ($(64BIT),yes)
 	CFLAGS+=-DARCH_X86
 endif
 

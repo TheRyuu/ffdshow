@@ -25,7 +25,7 @@
 
 #if defined(ARCH_X86) || defined(ARCH_X86_64)
 
-#include <inttypes.h>
+#include "../../../inttypes.h"
 
 #include "mpeg2.h"
 #include "attributes.h"
