@@ -74,7 +74,12 @@ void TdirectInput::hook(void)
 {
  if (di) unhook();
  DPRINTF(_l("hook"));
- DirectInputCreate(0,DIRECTINPUT_VERSION,&di,NULL);if (!di) return;
+#ifdef _UNICODE
+ DirectInput8Create(0,DIRECTINPUT_VERSION,IID_IDirectInput8W,(LPVOID*)&di,NULL);
+#else
+ DirectInput8Create(0,DIRECTINPUT_VERSION,IID_IDirectInput8A,(LPVOID*)&di,NULL);
+#endif
+ if (!di) return;
  di->CreateDevice(deviceId,&did,NULL);if (!did) return;
 
  h=createInvisibleWindow(0,classname,classname,DefWindowProc,0,NULL);

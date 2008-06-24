@@ -56,7 +56,7 @@
 #include <streams.h>
 // DirectX/VFW/ACM
 #include <mmreg.h>
-#define DIRECTINPUT_VERSION 0x0300
+#define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 #include <dvdmedia.h>
 #include <mpconfig.h>
