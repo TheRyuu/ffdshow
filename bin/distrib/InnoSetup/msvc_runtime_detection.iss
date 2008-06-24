@@ -60,15 +60,9 @@ begin
                       end
                     end
                   end
-                  if NOT Result then begin
-                    log('Registry key not found');
-                  end
                 end
-                else begin
-                  // Vista x64 seems to have yet another scheme than the x86 version of Vista
-                  // ToDo: figure out the exact requirements for a properly installed runtime and adjust the detection
-                  log('Runtime has successfully been detected (Vista x64 workaround)');
-                  Result := True;
+                if NOT Result then begin
+                  log('Registry key not found');
                 end
               end
               else begin

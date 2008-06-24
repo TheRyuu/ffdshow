@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2018
+#define tryout_revision = 2022
 #define buildyear = 2008
 #define buildmonth = '06'
-#define buildday = '22'
+#define buildday = '24'
 
 ; Build specific options
 #define unicode_required = True
@@ -71,6 +71,7 @@
   #define VS2005SP1 = True
   #define is64bit = True
   #define include_x264 = False
+  #define include_xvidcore = False
   #define include_plugin_dscaler = False
   #define filename_suffix = '_clsid_x64'
   #define bindir = '..\..\x64'
@@ -99,6 +100,7 @@
 #elif PREF_X64_VS2005SP1 | PREF_X64_VS2008
   #define is64bit = True
   #define include_x264 = False
+  #define include_xvidcore = False
   #define include_plugin_dscaler = False
   #define include_info_before = True
   #define include_setup_icon = True
@@ -834,11 +836,7 @@ end;
 function GetDefaultInstallDir(dummy: String): String;
 begin
   if NOT RegQueryStringValue(HKLM, 'Software\GNU\ffdshow', 'pth', Result) OR (Length(Result) = 0) OR NOT DirExists(Result) then begin
-    #if is64bit
-    Result := ExpandConstant('{pf64}\ffdshow64');
-    #else
     Result := ExpandConstant('{pf}\ffdshow');
-    #endif
   end
 end;
 
@@ -869,20 +867,20 @@ begin
   end
 end;
 
-function RemoveBuildUsingNSIS(): Boolean;
+#if !is64bit
+procedure RemoveBuildUsingNSIS();
 var
   regval: String;
   resultCode: Integer;
 begin
-  Result := True;
   if RegQueryStringValue(HKLM, 'Software\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow', 'UninstallString', regval) then begin
     MsgBox(CustomMessage('msg_uninstallFirst'), mbInformation, mb_ok);
     if NOT Exec('>', regval, '', SW_SHOW, ewWaitUntilTerminated, resultCode) then begin
       MsgBox(SysErrorMessage(resultCode), mbError, MB_OK);
     end
-    Result := NOT RegKeyExists(HKLM, 'Software\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow');
   end
 end;
+#endif
 
 #if VS2005SP1 | VS2008
 #include "msvc_runtime_detection.iss"
@@ -906,9 +904,11 @@ begin
     #endif
   #endif
   
+  #if !is64bit
   if Result then begin
-    Result := RemoveBuildUsingNSIS;
+    RemoveBuildUsingNSIS;
   end
+  #endif
   
   #if VS2005SP1 | VS2008
   if Result then begin
@@ -935,17 +935,13 @@ end;
 #endif
   
 function InitializeUninstall(): Boolean;
-var
-  regval: String;
-  ResultCode: Integer;
 begin
-  // Also uninstall NSIS build when uninstalling Inno Setup build.
-  if RegQueryStringValue(HKLM, 'Software\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow', 'UninstallString', regval) then begin
-    if NOT Exec('>', regval, '', SW_SHOW, ewWaitUntilTerminated, resultCode) then begin
-      MsgBox(SysErrorMessage(resultCode), mbError, MB_OK);
-    end
-  end
   Result := True;
+  
+  #if !is64bit
+  // Also uninstall ancient versions when uninstalling.
+  RemoveBuildUsingNSIS;
+  #endif
 end;
 
 // #define DSSPEAKER_DIRECTOUT         0x00000000
@@ -1679,13 +1675,8 @@ begin
         if RegQueryStringValue(HKLM, 'Software\GNU\ffdshow', 'pthVirtualDub', regval)
         and not (regval = ExpandConstant('{app}')) and not (regval = '') then
           VdubDirPage.Values[0] := regval
-#if is64bit
-        else if FileOrDirExists(ExpandConstant('{pf64}\VirtualDub\plugins')) then
-            VdubDirPage.Values[0] := ExpandConstant('{pf64}\VirtualDub\plugins')
-#else
         else if FileOrDirExists(ExpandConstant('{pf}\VirtualDub\plugins')) then
             VdubDirPage.Values[0] := ExpandConstant('{pf}\VirtualDub\plugins')
-#endif
         else if FileOrDirExists(ExpandConstant('{sd}\VirtualDub\plugins')) then
             VdubDirPage.Values[0] := ExpandConstant('{sd}\VirtualDub\plugins')
         else
