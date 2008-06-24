@@ -248,8 +248,13 @@ static void convert_float_32_sse2(const float *inbuf,int32_t *samples,unsigned i
    cmpnltps (xmm0, xmm7);                  // !(xd | xc | xb | xa < MAX_INT)
    cmpnltps (xmm1, xmm7);                  // !(xh | xg | xf | xe < MAX_INT)
 
+   #if (_MSC_VER >= 1500)
+   pxor     (xmm2, _mm_castps_si128((const __m128)xmm0));                  // 0x80000000 -> 0x7FFFFFFF if +ve saturation
+   pxor     (xmm3, _mm_castps_si128((const __m128)xmm1));
+   #else
    pxor     (xmm2, _mm_castps_si128(xmm0));                  // 0x80000000 -> 0x7FFFFFFF if +ve saturation
    pxor     (xmm3, _mm_castps_si128(xmm1));
+   #endif
    movdqa   (edi+edx-32+32, xmm2);          // store dd | cc | bb | aa
    movdqa   (edi+edx-16+32, xmm3);          // store hh | gg | ff | ee
   }
