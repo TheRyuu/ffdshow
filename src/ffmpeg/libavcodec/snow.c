@@ -254,7 +254,7 @@ static const uint8_t obmc4[16]={
 //error:0.000000
 };
 
-static const uint8_t *obmc_tab[4]={
+static const uint8_t * const obmc_tab[4]={
     obmc32, obmc16, obmc8, obmc4
 };
 
@@ -4489,7 +4489,7 @@ AVCodec snow_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
-    /*.long_name = */"Snow",
+    /*.long_name = */NULL_IF_CONFIG_SMALL("Snow"),
 };
 
 #ifdef CONFIG_ENCODERS
@@ -4506,7 +4506,7 @@ AVCodec snow_encoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
-    /*.long_name = */"Snow",
+    /*.long_name = */NULL_IF_CONFIG_SMALL("Snow"),
 };
 #endif
 

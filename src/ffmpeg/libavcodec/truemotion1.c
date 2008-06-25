@@ -117,7 +117,7 @@ typedef struct comp_types {
 } comp_types;
 
 /* { valid for metatype }, algorithm, num of deltas, vert res, horiz res */
-static comp_types compression_types[17] = {
+static const comp_types compression_types[17] = {
     { ALGO_NOP,    0, 0, 0 },
 
     { ALGO_RGB16V, 4, 4, BLOCK_4x4 },
@@ -903,5 +903,5 @@ AVCodec truemotion1_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
-    /*.long_name = */"Duck TrueMotion 1.0",
+    /*.long_name = */NULL_IF_CONFIG_SMALL("Duck TrueMotion 1.0"),
 };

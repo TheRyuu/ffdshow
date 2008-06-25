@@ -551,6 +551,11 @@ static inline void emms(void)
 void dsputil_init_pix_mmx(DSPContext* c, AVCodecContext *avctx);
 void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx);
 
+#else
+
+#define mm_flags 0
+#define mm_support() 0
+
 #endif
 
 #ifndef DECLARE_ALIGNED_8

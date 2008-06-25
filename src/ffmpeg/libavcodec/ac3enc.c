@@ -490,7 +490,7 @@ static int compute_bit_allocation(AC3EncodeContext *s,
     uint8_t bap1[NB_BLOCKS][AC3_MAX_CHANNELS][N/2];
     int16_t psd[NB_BLOCKS][AC3_MAX_CHANNELS][N/2];
     int16_t mask[NB_BLOCKS][AC3_MAX_CHANNELS][50];
-    static int frame_bits_inc[8] = { 0, 0, 2, 2, 2, 4, 2, 4 };
+    static const int frame_bits_inc[8] = { 0, 0, 2, 2, 2, 4, 2, 4 };
 
     /* init default parameters */
     s->slow_decay_code = 2;
@@ -1277,5 +1277,5 @@ AVCodec ac3_encoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
-    /*.long_name = */"ATSC A/52 / AC-3",
+    /*.long_name = */NULL_IF_CONFIG_SMALL("ATSC A/52 / AC-3"),
 };

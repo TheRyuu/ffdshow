@@ -68,7 +68,7 @@ typedef struct Parser{
 } Parser;
 
 #ifdef __GNUC__
-static int8_t si_prefixes['z' - 'E' + 1]={
+static const int8_t si_prefixes['z' - 'E' + 1]={
     ['y'-'E']= -24,
     ['z'-'E']= -21,
     ['a'-'E']= -18,
@@ -91,7 +91,7 @@ static int8_t si_prefixes['z' - 'E' + 1]={
     ['Y'-'E']=  24,
 };
 #else
-static int8_t si_prefixes['z' - 'E' + 1];
+static const int8_t si_prefixes['z' - 'E' + 1];
 #endif
 
 /** strtod() function extended with 'k', 'M', 'G', 'ki', 'Mi', 'Gi' and 'B'
