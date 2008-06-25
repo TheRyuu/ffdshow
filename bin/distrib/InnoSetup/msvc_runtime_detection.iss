@@ -22,6 +22,7 @@ var
   subkeys: TArrayOfString;
   i,j: Integer;
   binval: String;
+  rootkey: Integer;
 begin
   Result := False;
 
@@ -47,11 +48,17 @@ begin
               if FindFirst(temp, FindRec) then begin
                 log('Found policy file: ' + FindRec.Name);
                 // Check for registry key
-                if RegGetSubkeyNames(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners', subkeys) then begin
+                if IsWin64 then begin
+                  rootkey := HKLM64;
+                end
+                else begin
+                  rootkey := HKLM;
+                end
+                if RegGetSubkeyNames(rootkey, 'SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners', subkeys) then begin
                   temp := LowerCase(runtime.cpu_arch + '_' + runtime.name + '_' +  runtime.public_key_token);
                   for j:=0 to (GetArrayLength(subkeys)-1) do begin
                     if Pos(temp, LowerCase(subkeys[j])) = 1 then begin
-                      if RegQueryBinaryValue(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners\' + subkeys[j] + '\' + runtime.majorversion, runtime.version[i], binval) then begin
+                      if RegQueryBinaryValue(rootkey, 'SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners\' + subkeys[j] + '\' + runtime.majorversion, runtime.version[i], binval) then begin
                         log('Found policy registry key: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners\' + subkeys[j] + '\' + runtime.majorversion + ', ' + runtime.version[i]);
                         // Everything has been found
                         log('Runtime has successfully been detected');
@@ -150,8 +157,9 @@ begin
   runtime.msvcr_filename := 'msvcr80.dll';
   #else
   runtime.name := 'Microsoft.VC90.CRT';
-  SetArrayLength(runtime.version, 1);
+  SetArrayLength(runtime.version, 2);
   runtime.version[0] := '9.0.21022.8';
+  runtime.version[1] := '9.0.30411.0';
   runtime.majorversion := '9.0';
   runtime.msvcr_filename := 'msvcr90.dll';
   #endif
