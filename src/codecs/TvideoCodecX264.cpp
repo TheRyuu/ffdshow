@@ -106,6 +106,7 @@ LRESULT __declspec(align(16))(TvideoCodecX264::beginCompress(int cfgcomode,int c
    param.analyse.i_direct_8x8_inference=-1;
    param.b_bframe_adaptive=coCfg->b_dynamic;
    param.b_bframe_pyramid=coCfg->x264_b_bframe_pyramid;
+   param.analyse.b_bframe_rdo=coCfg->x264_b_rdo;
    param.analyse.b_bidir_me=coCfg->b_refine;
   }
 
@@ -128,6 +129,7 @@ LRESULT __declspec(align(16))(TvideoCodecX264::beginCompress(int cfgcomode,int c
  param.analyse.b_chroma_me=coCfg->me_cmp_chroma;
  param.analyse.b_mixed_references=coCfg->x264_mixed_ref;
  param.analyse.b_dct_decimate=coCfg->x264_b_dct_decimate;
+
  param.i_threads=coCfg->numthreads;
  param.b_deterministic=0;
 

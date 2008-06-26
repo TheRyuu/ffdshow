@@ -598,6 +598,8 @@ TcoSettings::TcoSettings(TintStrColl *Icoll):Toptions(Icoll),options(Icoll)
        _l("x264_mixed_ref"),0,
    IDFF_enc_x264_b_dct_decimate             ,&TcoSettings::x264_b_dct_decimate             , 0,   0,_l(""),1,
        _l("x264_b_dct_decimate"),1,
+   IDFF_enc_x264_b_rdo                      ,&TcoSettings::x264_b_rdo                      , 0,   0,_l(""),1,
+       _l("x264_b_rdo"),0,
    IDFF_enc_x264_aq_strength100             ,&TcoSettings::x264_aq_strength100             , 1, 100,_l(""),1,
        _l("x264_aq_strength100"),30,
    0,

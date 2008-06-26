@@ -220,15 +220,16 @@ public:
  int x264_me_inter,x264_me_intra;
  int x264_me_subpelrefine;
  int x264_me_method,x264_me_range;
- static const char_t *x264_me_methods[];
  int x264_mv_range;
  int x264_i_direct_mv_pred;
  int x264_i_deblocking_filter_alphac0,x264_i_deblocking_filter_beta;
  int x264_b_bframe_pyramid;
  int x264_b_aud;
  int x264_mixed_ref;
- int x264_aq_strength100;
+ int x264_b_rdo;
  int x264_b_dct_decimate;
+ int x264_aq_strength100;
+ static const char_t *x264_me_methods[];
 
  FOURCC raw_fourcc;
 
