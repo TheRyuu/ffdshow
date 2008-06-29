@@ -180,7 +180,7 @@
 				RelativePath=".\libavcodec\ac3tab.c">
 			</File>
 			<File
-				RelativePath=".\libavcodec\acelp_vectors.c">
+				RelativePath=".\libavcodec\acelp_filters.c">
 			</File>
 			<File
 				RelativePath=".\libavcodec\adpcm.c">
@@ -616,7 +616,7 @@
 				RelativePath=".\libavcodec\ac3tab.h">
 			</File>
 			<File
-				RelativePath=".\libavcodec\acelp_vectors.h">
+				RelativePath=".\libavcodec\acelp_filters.h">
 			</File>
 			<File
 				RelativePath=".\libavcodec\atrac3data.h">

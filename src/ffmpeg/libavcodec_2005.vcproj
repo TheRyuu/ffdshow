@@ -461,7 +461,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\acelp_vectors.c"
+				RelativePath=".\libavcodec\acelp_filters.c"
 				>
 			</File>
 			<File
@@ -1066,7 +1066,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\acelp_vectors.h"
+				RelativePath=".\libavcodec\acelp_filters.h"
 				>
 			</File>
 			<File

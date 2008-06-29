@@ -560,7 +560,7 @@
 		<File 
 			RelativePath=".\libavcodec\ac3tab.c"/>
 		<File 
-			RelativePath=".\libavcodec\acelp_vectors.c"/>
+			RelativePath=".\libavcodec\acelp_filters.c"/>
 		<File 
 			RelativePath=".\libavcodec\adpcm.c"/>
 		<File 

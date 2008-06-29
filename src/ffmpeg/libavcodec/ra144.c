@@ -22,6 +22,7 @@
 #include "avcodec.h"
 #include "bitstream.h"
 #include "ra144.h"
+#include "acelp_filters.h"
 
 #define NBLOCKS         4       ///< number of subblocks within a block
 #define BLOCKSIZE       40      ///< subblock size in 16-bit words
@@ -237,7 +238,12 @@ static void do_output_subblock(RA144Context *ractx, const uint16_t  *lpc_coefs,
     memcpy(ractx->curr_sblock + 10, block,
            BLOCKSIZE*sizeof(*ractx->curr_sblock));
 
-    lpc_filter(ractx->curr_sblock, lpc_coefs, BLOCKSIZE);
+    if (ff_acelp_lp_synthesis_filter(
+                                     ractx->curr_sblock + 10, lpc_coefs -1,
+                                     ractx->curr_sblock + 10, BLOCKSIZE,
+                                     11, 1, 0xfff)
+        )
+        memset(ractx->curr_sblock, 0, 50*sizeof(*ractx->curr_sblock));
 }
 
 static void int_to_int16(int16_t *out, const int *inp)
@@ -323,7 +329,7 @@ static int interp(RA144Context *ractx, int16_t *out, int block_num,
     }
 }
 
-/* Uncompress one block (20 bytes -> 160*2 bytes) */
+/** Uncompress one block (20 bytes -> 160*2 bytes) */
 static int ra144_decode_frame(AVCodecContext * avctx, void *vdata,
                               int *data_size, const uint8_t *buf, int buf_size)
 {
