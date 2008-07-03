@@ -26,6 +26,9 @@
 
 #include "common/macroblock.h"
 
+extern const int x264_lambda2_tab[52];
+extern const int x264_lambda_tab[52];
+
 void x264_rdo_init( );
 
 int x264_macroblock_probe_skip( x264_t *h, int b_bidir );
@@ -52,7 +55,6 @@ void x264_quant_8x8_trellis( x264_t *h, int16_t dct[8][8], int i_quant_cat,
                              int i_qp, int b_intra );
 
 void x264_noise_reduction_update( x264_t *h );
-void x264_denoise_dct( x264_t *h, int16_t *dct );
 
 #endif
 
