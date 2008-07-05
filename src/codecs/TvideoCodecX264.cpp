@@ -136,6 +136,7 @@ LRESULT __declspec(align(16))(TvideoCodecX264::beginCompress(int cfgcomode,int c
  if (coCfg->codecId==CODEC_ID_X264_LOSSLESS)
   {
    lossless=true;
+   param.rc.i_rc_method=X264_RC_CQP;
    param.rc.i_qp_constant=0;
   }
  else
@@ -150,7 +151,7 @@ LRESULT __declspec(align(16))(TvideoCodecX264::beginCompress(int cfgcomode,int c
      param.rc.f_qblur=(coCfg->ff1_stats_mode&FFSTATS::WRITE?coCfg->ff1_vqblur2:coCfg->ff1_vqblur1)/100.0f;
      param.rc.i_qp_constant=0;
      if (coCfg->mode==ENC_MODE::VBR_QUAL)
-      param.rc.i_rc_method=X264_RC_CRF;
+     param.rc.i_rc_method=X264_RC_CRF;
       param.rc.f_rf_constant=float(50*(100-coCfg->qual)/100+1);
       param.rc.i_aq_mode=X264_AQ_GLOBAL;
      param.rc.f_aq_strength=coCfg->x264_aq_strength100/100.0f;
