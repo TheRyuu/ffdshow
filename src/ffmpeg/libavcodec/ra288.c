@@ -33,7 +33,7 @@ typedef struct {
     float output[40];
     float pr1[36];
     float pr2[10];
-    int   phase, phasep;
+    int   phase;
 
     float st1a[111], st1b[37], st1[37];
     float st2a[38], st2b[11], st2[11];
@@ -41,65 +41,65 @@ typedef struct {
     float lhist[10];
 } Real288_internal;
 
-/* Decode and produce output */
-static void decode(Real288_internal *glob, int amp_coef, int cb_coef)
+static inline float scalar_product_float(float * v1, float * v2, int size)
 {
-    unsigned int x, y;
-    float f;
+    float res = 0.;
+
+    while (size--)
+        res += *v1++ * *v2++;
+
+    return res;
+}
+
+/* Decode and produce output */
+static void decode(Real288_internal *glob, float gain, int cb_coef)
+{
+    int x, y;
     double sum, sumsum;
-    float *p1, *p2;
     float buffer[5];
-    const float *table;
 
-    for (x=36; x--; glob->sb[x+5] = glob->sb[x]);
+    memmove(glob->sb + 5, glob->sb, 36 * sizeof(*glob->sb));
 
-    for (x=5; x--;) {
-        p1 = glob->sb+x;
-        p2 = glob->pr1;
-        for (sum=0, y=36; y--; sum -= (*(++p1))*(*(p2++)));
-
-        glob->sb[x] = sum;
-    }
-
-    f = amptable[amp_coef];
-    table = codetable + cb_coef * 5;
+    for (x=4; x >= 0; x--)
+        glob->sb[x] = -scalar_product_float(glob->sb + x + 1, glob->pr1, 36);
 
     /* convert log and do rms */
-    for (sum=32, x=10; x--; sum -= glob->pr2[x] * glob->lhist[x]);
+    sum = 32. - scalar_product_float(glob->pr2, glob->lhist, 10);
 
     if (sum < 0)
         sum = 0;
     else if (sum > 60)
         sum = 60;
 
-    sumsum = exp(sum * 0.1151292546497) * f;    /* pow(10.0,sum/20)*f */
+    sumsum = exp(sum * 0.1151292546497) * gain;    /* pow(10.0,sum/20)*f */
 
-    for (sum=0, x=5; x--;) {
-        buffer[x] = table[x] * sumsum;
-        sum += buffer[x] * buffer[x];
-    }
+    for (x=0; x < 5; x++)
+        buffer[x] = codetable[cb_coef][x] * sumsum;
 
-    if ((sum /= 5) < 1)
+    sum = scalar_product_float(buffer, buffer, 5) / 5;
+
+    if (sum < 1)
         sum = 1;
 
     /* shift and store */
-    for (x=10; --x; glob->lhist[x] = glob->lhist[x-1]);
+    memmove(glob->lhist, glob->lhist - 1, 10 * sizeof(*glob->lhist));
 
     *glob->lhist = glob->history[glob->phase] = 10 * log10(sum) - 32;
 
     for (x=1; x < 5; x++)
-        for (y=x; y--; buffer[x] -= glob->pr1[x-y-1] * buffer[y]);
+        for (y=x-1; y >= 0; y--)
+            buffer[x] -= glob->pr1[x-y-1] * buffer[y];
 
     /* output */
     for (x=0; x < 5; x++) {
-        f = glob->sb[4-x] + buffer[x];
+        float f = glob->sb[4-x] + buffer[x];
 
         if (f > 4095)
             f = 4095;
         else if (f < -4095)
             f = -4095;
 
-        glob->output[glob->phasep+x] = glob->sb[4-x] = f;
+        glob->output[glob->phase*5+x] = glob->sb[4-x] = f;
     }
 }
 
@@ -113,9 +113,7 @@ static void colmult(float *tgt, float *m1, const float *m2, int n)
 static int pred(float *in, float *tgt, int n)
 {
     int x, y;
-    float *p1, *p2;
     double f0, f1, f2;
-    float temp;
 
     if (in[n] == 0)
         return 0;
@@ -124,19 +122,22 @@ static int pred(float *in, float *tgt, int n)
         return 0;
 
     for (x=1 ; ; x++) {
+        float *p1 = in + x;
+        float *p2 = tgt;
+
         if (n < x)
             return 1;
 
-        p1 = in + x;
-        p2 = tgt;
         f1 = *(p1--);
-        for (y=x; --y; f1 += (*(p1--))*(*(p2++)));
+
+        for (y=0; y < x - 1; y++)
+            f1 += (*(p1--))*(*(p2++));
 
         p1 = tgt + x - 1;
         p2 = tgt;
         *(p1--) = f2 = -f1/f0;
         for (y=x >> 1; y--;) {
-            temp = *p2 + *p1 * f2;
+            float temp = *p2 + *p1 * f2;
             *(p1--) += *p2 * f2;
             *(p2++) = temp;
         }
@@ -148,15 +149,9 @@ static int pred(float *in, float *tgt, int n)
 /* product sum (lsf) */
 static void prodsum(float *tgt, float *src, int len, int n)
 {
-    unsigned int x;
-    float *p1, *p2;
-    double sum;
+    for (; n >= 0; n--)
+        tgt[n] = scalar_product_float(src, src - n, len);
 
-    while (n >= 0) {
-        p1 = (p2 = src) - n;
-        for (sum=0, x=len; x--; sum += (*p1++) * (*p2++));
-        tgt[n--] = sum;
-    }
 }
 
 static void co(int n, int i, int j, float *in, float *out, float *st1,
@@ -190,18 +185,19 @@ static void co(int n, int i, int j, float *in, float *out, float *st1,
 
 static void update(Real288_internal *glob)
 {
-    int x,y;
     float buffer1[40], temp1[37];
     float buffer2[8], temp2[11];
 
-    for (x=0, y=glob->phasep+5; x < 40; buffer1[x++] = glob->output[(y++)%40]);
+    memcpy(buffer1     , glob->output + 20, 20*sizeof(*buffer1));
+    memcpy(buffer1 + 20, glob->output     , 20*sizeof(*buffer1));
 
     co(36, 40, 35, buffer1, temp1, glob->st1a, glob->st1b, table1);
 
     if (pred(temp1, glob->st1, 36))
         colmult(glob->pr1, glob->st1, table1a, 36);
 
-    for (x=0, y=glob->phase + 1; x < 8; buffer2[x++] = glob->history[(y++) % 8]);
+    memcpy(buffer2    , glob->history + 4, 4*sizeof(*buffer2));
+    memcpy(buffer2 + 4, glob->history    , 4*sizeof(*buffer2));
 
     co(10, 8, 20, buffer2, temp2, glob->st2a, glob->st2b, table2);
 
@@ -229,12 +225,13 @@ static int ra288_decode_frame(AVCodecContext * avctx, void *data,
     init_get_bits(&gb, buf, avctx->block_align * 8);
 
     for (x=0; x < 32; x++) {
-        int amp_coef = get_bits(&gb, 3);
+        float gain = amptable[get_bits(&gb, 3)];
         int cb_coef = get_bits(&gb, 6 + (x&1));
-        glob->phasep = (glob->phase = x & 7) * 5;
-        decode(glob, amp_coef, cb_coef);
+        glob->phase = x & 7;
+        decode(glob, gain, cb_coef);
 
-        for (y=0; y<5; *(out++) = 8 * glob->output[glob->phasep+(y++)]);
+        for (y=0; y < 5; y++)
+            *(out++) = 8 * glob->output[glob->phase*5 + y];
 
         if (glob->phase == 3)
             update(glob);

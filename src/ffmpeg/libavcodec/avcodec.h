@@ -37,8 +37,8 @@
 #include "libavutil/avutil.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 51
-#define LIBAVCODEC_VERSION_MINOR 57
-#define LIBAVCODEC_VERSION_MICRO  2
+#define LIBAVCODEC_VERSION_MINOR 58
+#define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
                                                LIBAVCODEC_VERSION_MINOR, \
@@ -110,6 +110,7 @@ enum Motion_Est_ID {
     ME_HEX,         ///< hexagon based search
     ME_UMH,         ///< uneven multi-hexagon search
     ME_ITER,        ///< iterative search
+    ME_TESA,        ///< transformed exhaustive search algorithm
 };
 
 enum AVDiscard{
@@ -192,6 +193,7 @@ typedef struct RcOverride{
 #define CODEC_FLAG2_SKIP_RD       0x00004000 ///< RD optimal MB level residual skipping
 #define CODEC_FLAG2_CHUNKS        0x00008000 ///< Input bitstream might be truncated at a packet boundaries instead of only at frame boundaries.
 #define CODEC_FLAG2_NON_LINEAR_QUANT 0x00010000 ///< Use MPEG-2 nonlinear quantizer.
+#define CODEC_FLAG2_BIT_RESERVOIR 0x00020000 ///< Use a bit reservoir when encoding if possible
 
 /* Unsupported options :
  *              Syntax Arithmetic coding (SAC)
@@ -577,7 +579,7 @@ typedef struct AVCodecContext {
     /**
      * Motion estimation algorithm used for video coding.
      * 1 (zero), 2 (full), 3 (log), 4 (phods), 5 (epzs), 6 (x1), 7 (hex),
-     * 8 (umh), 9 (iter) [7, 8 are x264 specific, 9 is snow specific]
+     * 8 (umh), 9 (iter), 10 (tesa) [7, 8, 10 are x264 specific, 9 is snow specific]
      * - encoding: MUST be set by user.
      * - decoding: unused
      */
@@ -1627,12 +1629,6 @@ typedef struct AVCodecContext {
 #define FF_PROFILE_UNKNOWN -99
 
 /* FOXFIX: Now removed from lavc */
-    int xvid_build;
-    /* lavc specific stuff, used to workaround bugs in libavcodec */
-    int lavc_build;
-    /* divx specific, used to workaround (many) bugs in divx5 */
-    int divx_version;
-    int divx_build;
     int ac3mode,ac3lfe;
     int ac3channels[6];
     int nal_length_size;
@@ -1985,7 +1981,11 @@ typedef struct AVCodec {
     void (*flush)(AVCodecContext *);
     const AVRational *supported_framerates; ///< array of supported framerates, or NULL if any, array is terminated by {0,0}
     const enum PixelFormat *pix_fmts;       ///< array of supported pixel formats, or NULL if unknown, array is terminated by -1
-    const char *long_name;                  ///< descriptive name for the codec, meant to be more human readable than \p name
+    /**
+     * Descriptive name for the codec, meant to be more human readable than \p name.
+     * You \e should use the NULL_IF_CONFIG_SMALL() macro to define it.
+     */
+    const char *long_name;
     const int *supported_samplerates;       ///< array of supported audio samplerates, or NULL if unknown, array is terminated by 0
 } AVCodec;
 

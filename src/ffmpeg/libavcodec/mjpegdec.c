@@ -1194,7 +1194,7 @@ int ff_mjpeg_decode_frame(AVCodecContext *avctx,
                         return -1;
                     break;
                 case LSE:
-                    if (ff_jpegls_decode_lse(s) < 0)
+                    if (!ENABLE_JPEGLS_DECODER || ff_jpegls_decode_lse(s) < 0)
                         return -1;
                     break;
                 case EOI:

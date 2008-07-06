@@ -2355,6 +2355,8 @@ static void mpeg4_encode_vol_header(MpegEncContext * s, int vo_number, int vol_n
 {
     int vo_ver_id;
 
+    if (!ENABLE_MPEG4_ENCODER)  return;
+
     if(s->max_b_frames || s->quarter_sample){
         vo_ver_id= 5;
         s->vo_type= ADV_SIMPLE_VO_TYPE;
@@ -4561,6 +4563,7 @@ static int h263_decode_block(MpegEncContext * s, DCTELEM * block,
     } else if (s->mb_intra) {
         /* DC coef */
         if(s->codec_id == CODEC_ID_RV10){
+#ifdef CONFIG_RV10_DECODER
           if (s->rv10_version == 3 && s->pict_type == FF_I_TYPE) {
             int component, diff;
             component = (n <= 3 ? 0 : n - 4 + 1);
@@ -4580,7 +4583,8 @@ static int h263_decode_block(MpegEncContext * s, DCTELEM * block,
                 if (level == 255)
                     level = 128;
           }
-        } else {
+#endif
+        }else{
             level = get_bits(&s->gb, 8);
             if((level&0x7F) == 0){
                 av_log(s->avctx, AV_LOG_ERROR, "illegal dc %d at %d %d\n", level, s->mb_x, s->mb_y);

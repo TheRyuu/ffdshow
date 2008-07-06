@@ -33,6 +33,7 @@
 #include "simple_idct.h"
 #include "faandct.h"
 #include "faanidct.h"
+#include "h263.h"
 //#include "snow.h"
 
 #if 0 // disable snow
@@ -329,8 +330,8 @@ static int sse16_c(void *v, uint8_t *pix1, uint8_t *pix2, int line_size, int h)
     return s;
 }
 
-#if 0 // disable snow
-#ifdef CONFIG_ENCODERS
+
+#ifdef CONFIG_SNOW_ENCODER //dwt is in snow.c
 static inline int w_c(void *v, uint8_t * pix1, uint8_t * pix2, int line_size, int w, int h, int type){
     int s, i, j;
     const int dec_count= w==8 ? 3 : 4;
@@ -423,7 +424,6 @@ int w53_32_c(void *v, uint8_t * pix1, uint8_t * pix2, int line_size, int h){
 int w97_32_c(void *v, uint8_t * pix1, uint8_t * pix2, int line_size, int h){
     return w_c(v, pix1, pix2, line_size, 32, h, 0);
 }
-#endif
 #endif
 
 /* draw the edges of width 'w' of an image of size width, height */
@@ -2702,6 +2702,7 @@ static void wmv2_mspel8_h_lowpass(uint8_t *dst, uint8_t *src, int dstStride, int
     }
 }
 
+#ifdef CONFIG_CAVS_DECODER
 /* AVS specific */
 void ff_cavsdsp_init(DSPContext* c, AVCodecContext *avctx);
 
@@ -2717,13 +2718,16 @@ void ff_put_cavs_qpel16_mc00_c(uint8_t *dst, uint8_t *src, int stride) {
 void ff_avg_cavs_qpel16_mc00_c(uint8_t *dst, uint8_t *src, int stride) {
     avg_pixels16_c(dst, src, stride, 16);
 }
+#endif /* CONFIG_CAVS_DECODER */
 
+#if defined(CONFIG_VC1_DECODER) || defined(CONFIG_WMV3_DECODER)
 /* VC-1 specific */
 void ff_vc1dsp_init(DSPContext* c, AVCodecContext *avctx);
 
 void ff_put_vc1_mspel_mc00_c(uint8_t *dst, uint8_t *src, int stride, int rnd) {
     put_pixels8_c(dst, src, stride, 8);
 }
+#endif /* CONFIG_VC1_DECODER||CONFIG_WMV3_DECODER */
 
 void ff_intrax8dsp_init(DSPContext* c, AVCodecContext *avctx);
 
@@ -2805,6 +2809,7 @@ static void put_mspel8_mc22_c(uint8_t *dst, uint8_t *src, int stride){
 }
 
 static void h263_v_loop_filter_c(uint8_t *src, int stride, int qscale){
+    if(ENABLE_ANY_H263) {
     int x;
     const int strength= ff_h263_loop_filter_strength[qscale];
 
@@ -2837,9 +2842,11 @@ static void h263_v_loop_filter_c(uint8_t *src, int stride, int qscale){
         src[x-2*stride] = p0 - d2;
         src[x+  stride] = p3 + d2;
     }
+    }
 }
 
 static void h263_h_loop_filter_c(uint8_t *src, int stride, int qscale){
+    if(ENABLE_ANY_H263) {
     int y;
     const int strength= ff_h263_loop_filter_strength[qscale];
 
@@ -2871,6 +2878,7 @@ static void h263_h_loop_filter_c(uint8_t *src, int stride, int qscale){
 
         src[y*stride-2] = p0 - d2;
         src[y*stride+1] = p3 + d2;
+    }
     }
 }
 
@@ -3369,15 +3377,13 @@ void ff_set_cmp(DSPContext* c, me_cmp_func *cmp, int type){
         case FF_CMP_NSSE:
             cmp[i]= c->nsse[i];
             break;
-#if 0 // disable snow
-#ifdef CONFIG_ENCODERS
+#ifdef CONFIG_SNOW_ENCODER
         case FF_CMP_W53:
             cmp[i]= c->w53[i];
             break;
         case FF_CMP_W97:
             cmp[i]= c->w97[i];
             break;
-#endif
 #endif
         default:
             av_log(NULL, AV_LOG_ERROR,"internal error in cmp function selection\n");
@@ -3585,7 +3591,7 @@ static int dct_sad8x8_c(/*MpegEncContext*/ void *c, uint8_t *src1, uint8_t *src2
     return s->dsp.sum_abs_dctelem(temp);
 }
 
-//#ifdef CONFIG_GPL
+#ifdef CONFIG_GPL
 #define DCT8_1D {\
     const int s07 = SRC(0) + SRC(7);\
     const int s16 = SRC(1) + SRC(6);\
@@ -3636,7 +3642,7 @@ static int dct264_sad8x8_c(/*MpegEncContext*/ void *c, uint8_t *src1, uint8_t *s
 #undef DST
     return sum;
 }
-//#endif
+#endif
 
 static int dct_max8x8_c(/*MpegEncContext*/ void *c, uint8_t *src1, uint8_t *src2, int stride, int h){
     MpegEncContext * const s= (MpegEncContext *)c;
@@ -3886,7 +3892,9 @@ static int vsse16_c(/*MpegEncContext*/ void *c, uint8_t *s1, uint8_t *s2, int st
 WRAPPER8_16_SQ(hadamard8_diff8x8_c, hadamard8_diff16_c)
 WRAPPER8_16_SQ(hadamard8_intra8x8_c, hadamard8_intra16_c)
 WRAPPER8_16_SQ(dct_sad8x8_c, dct_sad16_c)
+#ifdef CONFIG_GPL
 WRAPPER8_16_SQ(dct264_sad8x8_c, dct264_sad16_c)
+#endif
 WRAPPER8_16_SQ(dct_max8x8_c, dct_max16_c)
 WRAPPER8_16_SQ(quant_psnr8x8_c, quant_psnr16_c)
 WRAPPER8_16_SQ(rd8x8_c, rd16_c)
@@ -4082,7 +4090,7 @@ int ff_check_alignment(void){
     if((long)&aligned & 15){
         if(!did_fail){
 #if defined(HAVE_MMX) || defined(HAVE_ALTIVEC)
-            av_log(NULL, AV_LOG_WARNING,
+            av_log(NULL, AV_LOG_ERROR,
                 "Compiler did not align stack variables. Libavcodec has been miscompiled\n"
                 "and may be very slow or crash. This is not a bug in libavcodec,\n"
                 "but in the compiler. You may try recompiling using gcc >= 4.2.\n"
@@ -4117,7 +4125,7 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
 #endif //CONFIG_ENCODERS
 
     if(avctx->lowres==1){
-        if(avctx->idct_algo==FF_IDCT_INT || avctx->idct_algo==FF_IDCT_AUTO){
+        if(avctx->idct_algo==FF_IDCT_INT || avctx->idct_algo==FF_IDCT_AUTO || !ENABLE_H264_DECODER){
             c->idct_put= ff_jref_idct4_put;
             c->idct_add= ff_jref_idct4_add;
         }else{
@@ -4142,7 +4150,8 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
             c->idct_add= ff_jref_idct_add;
             c->idct    = j_rev_dct;
             c->idct_permutation_type= FF_LIBMPEG2_IDCT_PERM;
-        }else if(avctx->idct_algo==FF_IDCT_VP3){
+        }else if((ENABLE_VP3_DECODER || ENABLE_VP5_DECODER || ENABLE_VP6_DECODER || ENABLE_THEORA_DECODER ) &&
+                avctx->idct_algo==FF_IDCT_VP3){
             c->idct_put= ff_vp3_idct_put_c;
             c->idct_add= ff_vp3_idct_add_c;
             c->idct    = ff_vp3_idct_c;
@@ -4165,10 +4174,12 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
         }
     }
 
-    c->h264_idct_add= ff_h264_idct_add_c;
-    c->h264_idct8_add= ff_h264_idct8_add_c;
-    c->h264_idct_dc_add= ff_h264_idct_dc_add_c;
-    c->h264_idct8_dc_add= ff_h264_idct8_dc_add_c;
+    if (ENABLE_H264_DECODER) {
+        c->h264_idct_add= ff_h264_idct_add_c;
+        c->h264_idct8_add= ff_h264_idct8_add_c;
+        c->h264_idct_dc_add= ff_h264_idct_dc_add_c;
+        c->h264_idct8_dc_add= ff_h264_idct8_dc_add_c;
+    }
 
     c->get_pixels = get_pixels_c;
     c->diff_pixels = diff_pixels_c;
@@ -4307,10 +4318,16 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
     c->biweight_h264_pixels_tab[9]= biweight_h264_pixels2x2_c;
 
     c->draw_edges = draw_edges_c;
-    
+
+#ifdef CONFIG_CAVS_DECODER
     ff_cavsdsp_init(c,avctx);
+#endif
+#if defined(CONFIG_VC1_DECODER) || defined(CONFIG_WMV3_DECODER)
     ff_vc1dsp_init(c,avctx);
+#endif
+#if defined(CONFIG_WMV2_DECODER) || defined(CONFIG_VC1_DECODER) || defined(CONFIG_WMV3_DECODER)
     ff_intrax8dsp_init(c,avctx);
+#endif
 
     c->put_mspel_pixels_tab[0]= put_mspel8_mc00_c;
     c->put_mspel_pixels_tab[1]= put_mspel8_mc10_c;
@@ -4329,9 +4346,9 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
     c->hadamard8_diff[4]= hadamard8_intra16_c;
     SET_CMP_FUNC(dct_sad)
     SET_CMP_FUNC(dct_max)
-//#ifdef CONFIG_GPL
+#ifdef CONFIG_GPL
     SET_CMP_FUNC(dct264_sad)
-//#endif
+#endif
     c->sad[0]= pix_abs16_c;
     c->sad[1]= pix_abs8_c;
     c->sse[0]= sse16_c;
@@ -4346,22 +4363,21 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
     c->vsse[4]= vsse_intra16_c;
     c->nsse[0]= nsse16_c;
     c->nsse[1]= nsse8_c;
-#if 0 // disable snow
-#ifdef CONFIG_ENCODERS
+#ifdef CONFIG_SNOW_ENCODER
     c->w53[0]= w53_16_c;
     c->w53[1]= w53_8_c;
     c->w97[0]= w97_16_c;
     c->w97[1]= w97_8_c;
 #endif
-#endif
+
     c->add_bytes= add_bytes_c;
     c->add_bytes_l2= add_bytes_l2_c;
     c->diff_bytes= diff_bytes_c;
     c->sub_hfyu_median_prediction= sub_hfyu_median_prediction_c;
     c->bswap_buf= bswap_buf;
-
+#ifdef CONFIG_PNG_DECODER
     c->add_png_paeth_prediction= ff_add_png_paeth_prediction;
-
+#endif
 
     c->h264_v_loop_filter_luma= h264_v_loop_filter_luma_c;
     c->h264_h_loop_filter_luma= h264_h_loop_filter_luma_c;
@@ -4371,15 +4387,17 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
     c->h264_h_loop_filter_chroma_intra= h264_h_loop_filter_chroma_intra_c;
     c->h264_loop_filter_strength= NULL;
 
-    c->h263_h_loop_filter= h263_h_loop_filter_c;
-    c->h263_v_loop_filter= h263_v_loop_filter_c;
+    if (ENABLE_ANY_H263) {
+        c->h263_h_loop_filter= h263_h_loop_filter_c;
+        c->h263_v_loop_filter= h263_v_loop_filter_c;
+    }
 
     c->h261_loop_filter= h261_loop_filter_c;
 
     c->try_8x8basis= try_8x8basis_c;
     c->add_8x8basis= add_8x8basis_c;
 
-#if 0 // disable snow
+#ifdef CONFIG_SNOW_DECODER
 #if __STDC_VERSION__ >= 199901L
     c->vertical_compose97i = ff_snow_vertical_compose97i;
     c->horizontal_compose97i = ff_snow_horizontal_compose97i;
@@ -4387,8 +4405,9 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
 #endif
 #endif
 
+#ifdef CONFIG_VORBIS_DECODER
     c->vorbis_inverse_coupling = vorbis_inverse_coupling;
-
+#endif
     c->vector_fmul = vector_fmul_c;
     c->vector_fmul_reverse = vector_fmul_reverse_c;
     c->vector_fmul_add_add = ff_vector_fmul_add_add_c;
