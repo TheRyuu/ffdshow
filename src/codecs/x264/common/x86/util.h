@@ -1,7 +1,10 @@
 /*****************************************************************************
  * mc.h: h264 encoder library
  *****************************************************************************
- * Copyright (C) 2008 Loren Merritt
+ * Copyright (C) 2008 x264 Project
+ *
+ * Authors: Jason Garrett-Glaser <darkshikari@gmail.com>
+ *          Loren Merritt <lorenm@u.washington.edu>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02111, USA.
  *****************************************************************************/
 
 #ifndef X264_X86_UTIL_H
@@ -74,24 +77,22 @@ static inline int x264_predictor_difference_mmxext( int16_t (*mvc)[2], intptr_t 
 #define array_non_zero_count array_non_zero_count_mmx
 static inline int array_non_zero_count_mmx( int16_t *v )
 {
-    static const uint64_t pw_2 = 0x0202020202020202ULL;
     int count;
     asm(
         "pxor     %%mm7,  %%mm7 \n"
         "movq     (%1),   %%mm0 \n"
-        "movq     16(%1), %%mm1 \n"
-        "packsswb 8(%1),  %%mm0 \n"
+        "movq     8(%1),  %%mm1 \n"
+        "packsswb 16(%1), %%mm0 \n"
         "packsswb 24(%1), %%mm1 \n"
         "pcmpeqb  %%mm7,  %%mm0 \n"
         "pcmpeqb  %%mm7,  %%mm1 \n"
         "paddb    %%mm0,  %%mm1 \n"
-        "paddb    %2,     %%mm1 \n"
         "psadbw   %%mm7,  %%mm1 \n"
         "movd     %%mm1,  %0    \n"
         :"=r"(count)
-        :"r"(v), "m"(pw_2)
+        :"r"(v)
     );
-    return count;
+    return (count+0x10)&0xff;
 }
 #undef array_non_zero_int
 #define array_non_zero_int array_non_zero_int_mmx

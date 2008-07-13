@@ -1,7 +1,10 @@
 /*****************************************************************************
  * osdep.h: h264 encoder
  *****************************************************************************
- * Copyright (C) 2007 x264 project
+ * Copyright (C) 2007-2008 x264 project
+ *
+ * Authors: Loren Merritt <lorenm@u.washington.edu>
+ *          Laurent Aimar <fenrir@via.ecp.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02111, USA.
  *****************************************************************************/
 
 #ifndef X264_OSDEP_H
@@ -150,13 +153,40 @@
 #define x264_pthread_cond_wait(c,m)
 #endif
 
-/* FIXME: long isn't always the native register size (e.g. win64). */
-#define WORD_SIZE sizeof(long)
+#define WORD_SIZE sizeof(void*)
 
 #if !defined(_WIN64) && !defined(__LP64__)
 #if defined(_MSC_VER) || defined(__INTEL_COMPILER)
 #define BROKEN_STACK_ALIGNMENT /* define it if stack is not mod16 */
 #endif
+#endif
+
+#ifdef WORDS_BIGENDIAN
+#define endian_fix(x) (x)
+#define endian_fix32(x) (x)
+#elif defined(__GNUC__) && defined(HAVE_MMX)
+static ALWAYS_INLINE uint32_t endian_fix32( uint32_t x )
+{
+    asm("bswap %0":"+r"(x));
+    return x;
+}
+static ALWAYS_INLINE intptr_t endian_fix( intptr_t x )
+{
+    asm("bswap %0":"+r"(x));
+    return x;
+}
+#else
+static ALWAYS_INLINE uint32_t endian_fix32( uint32_t x )
+{
+    return (x<<24) + ((x<<8)&0xff0000) + ((x>>8)&0xff00) + (x>>24);
+}
+static ALWAYS_INLINE intptr_t endian_fix( intptr_t x )
+{
+    if( WORD_SIZE == 8 )
+        return endian_fix32(x>>32) + ((uint64_t)endian_fix32(x)<<32);
+    else
+        return endian_fix32(x);
+}
 #endif
 
 #endif /* X264_OSDEP_H */

@@ -652,6 +652,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\common\vlc.c"
+				>
+			</File>
+			<File
 				RelativePath=".\common\vlc.h"
 				>
 			</File>

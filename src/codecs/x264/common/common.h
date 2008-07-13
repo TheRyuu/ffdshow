@@ -1,10 +1,10 @@
 /*****************************************************************************
  * common.h: h264 encoder
  *****************************************************************************
- * Copyright (C) 2003 Laurent Aimar
- * $Id: common.h,v 1.1 2004/06/03 19:27:06 fenrir Exp $
+ * Copyright (C) 2003-2008 x264 project
  *
  * Authors: Laurent Aimar <fenrir@via.ecp.fr>
+ *          Loren Merritt <lorenm@u.washington.edu>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02111, USA.
  *****************************************************************************/
 
 #ifndef X264_COMMON_H
@@ -33,7 +33,7 @@
 #define X264_MAX3(a,b,c) X264_MAX((a),X264_MAX((b),(c)))
 #define X264_MIN4(a,b,c,d) X264_MIN((a),X264_MIN3((b),(c),(d)))
 #define X264_MAX4(a,b,c,d) X264_MAX((a),X264_MAX3((b),(c),(d)))
-#define XCHG(type,a,b) { type t = a; a = b; b = t; }
+#define XCHG(type,a,b) do{ type t = a; a = b; b = t; } while(0)
 #define FIX8(f) ((int)(f*(1<<8)+.5))
 
 #define CHECKED_MALLOC( var, size )\
@@ -50,6 +50,7 @@
 #define X264_THREAD_MAX 128
 #define X264_SLICE_MAX 4
 #define X264_NAL_MAX (4 + X264_SLICE_MAX)
+#define X264_PCM_COST (386*8)
 
 // number of pixels (per thread) in progress at any given time.
 // 16 for the macroblock in progress + 3 for deblocking + 3 for motion compensation filter + 2 for extra safety
@@ -536,8 +537,8 @@ struct x264_t
             int i_mb_count_p;
             int i_mb_count_skip;
             int i_mb_count_8x8dct[2];
-            int i_mb_count_size[7];
-            int i_mb_count_ref[32];
+            int i_mb_count_ref[2][32];
+            int i_mb_partition[17];
             /* Estimated (SATD) cost as Intra/Predicted frame */
             /* XXX: both omit the cost of MBs coded as P_SKIP */
             int i_intra_cost;
@@ -565,9 +566,9 @@ struct x264_t
         double  f_ssim_mean_y[5];
         /* */
         int64_t i_mb_count[5][19];
+        int64_t i_mb_partition[2][17];
         int64_t i_mb_count_8x8dct[2];
-        int64_t i_mb_count_size[2][7];
-        int64_t i_mb_count_ref[2][32];
+        int64_t i_mb_count_ref[2][2][32];
         /* */
         int     i_direct_score[2];
         int     i_direct_frames[2];

@@ -1,10 +1,11 @@
 /*****************************************************************************
  * macroblock.h: h264 encoder library
  *****************************************************************************
- * Copyright (C) 2003 Laurent Aimar
- * $Id: macroblock.h,v 1.1 2004/06/03 19:27:07 fenrir Exp $
+ * Copyright (C) 2005-2008 x264 project
  *
- * Authors: Laurent Aimar <fenrir@via.ecp.fr>
+ * Authors: Loren Merritt <lorenm@u.washington.edu>
+ *          Laurent Aimar <fenrir@via.ecp.fr>
+ *          Jason Garrett-Glaser <darkshikari@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02111, USA.
  *****************************************************************************/
 
 #ifndef X264_MACROBLOCK_H
@@ -54,7 +55,7 @@ static const uint8_t x264_pred_i4x4_neighbors[12] =
 
 
 /* XXX mb_type isn't the one written in the bitstream -> only internal usage */
-#define IS_INTRA(type) ( (type) == I_4x4 || (type) == I_8x8 || (type) == I_16x16 )
+#define IS_INTRA(type) ( (type) == I_4x4 || (type) == I_8x8 || (type) == I_16x16 || (type) == I_PCM )
 #define IS_SKIP(type)  ( (type) == P_SKIP || (type) == B_SKIP )
 #define IS_DIRECT(type)  ( (type) == B_DIRECT )
 enum mb_class_e
@@ -124,28 +125,29 @@ static const uint8_t x264_mb_type_list1_table[X264_MBTYPE_MAX][2] =
 enum mb_partition_e
 {
     /* sub partition type for P_8x8 and B_8x8 */
-    D_L0_4x4        = 0,
-    D_L0_8x4        = 1,
-    D_L0_4x8        = 2,
-    D_L0_8x8        = 3,
+    D_L0_4x4          = 0,
+    D_L0_8x4          = 1,
+    D_L0_4x8          = 2,
+    D_L0_8x8          = 3,
 
     /* sub partition type for B_8x8 only */
-    D_L1_4x4        = 4,
-    D_L1_8x4        = 5,
-    D_L1_4x8        = 6,
-    D_L1_8x8        = 7,
+    D_L1_4x4          = 4,
+    D_L1_8x4          = 5,
+    D_L1_4x8          = 6,
+    D_L1_8x8          = 7,
 
-    D_BI_4x4        = 8,
-    D_BI_8x4        = 9,
-    D_BI_4x8        = 10,
-    D_BI_8x8        = 11,
-    D_DIRECT_8x8    = 12,
+    D_BI_4x4          = 8,
+    D_BI_8x4          = 9,
+    D_BI_4x8          = 10,
+    D_BI_8x8          = 11,
+    D_DIRECT_8x8      = 12,
 
     /* partition */
-    D_8x8           = 13,
-    D_16x8          = 14,
-    D_8x16          = 15,
-    D_16x16         = 16,
+    D_8x8             = 13,
+    D_16x8            = 14,
+    D_8x16            = 15,
+    D_16x16           = 16,
+    X264_PARTTYPE_MAX = 17,
 };
 
 static const uint8_t x264_mb_partition_listX_table[2][17] =
@@ -217,6 +219,32 @@ static const uint8_t block_idx_xy[4][4] =
     { 1, 3, 9,  11 },
     { 4, 6, 12, 14 },
     { 5, 7, 13, 15 }
+};
+static const uint8_t block_idx_xy_1d[16] =
+{
+    0, 1, 4, 5, 2, 3, 6, 7, 8, 9, 12, 13, 10, 11, 14, 15
+};
+static const uint8_t block_idx_xy_fenc[16] =
+{
+    0*4 + 0*4*FENC_STRIDE, 1*4 + 0*4*FENC_STRIDE,
+    0*4 + 1*4*FENC_STRIDE, 1*4 + 1*4*FENC_STRIDE,
+    2*4 + 0*4*FENC_STRIDE, 3*4 + 0*4*FENC_STRIDE,
+    2*4 + 1*4*FENC_STRIDE, 3*4 + 1*4*FENC_STRIDE,
+    0*4 + 2*4*FENC_STRIDE, 1*4 + 2*4*FENC_STRIDE,
+    0*4 + 3*4*FENC_STRIDE, 1*4 + 3*4*FENC_STRIDE,
+    2*4 + 2*4*FENC_STRIDE, 3*4 + 2*4*FENC_STRIDE,
+    2*4 + 3*4*FENC_STRIDE, 3*4 + 3*4*FENC_STRIDE
+};
+static const uint16_t block_idx_xy_fdec[16] =
+{
+    0*4 + 0*4*FDEC_STRIDE, 1*4 + 0*4*FDEC_STRIDE,
+    0*4 + 1*4*FDEC_STRIDE, 1*4 + 1*4*FDEC_STRIDE,
+    2*4 + 0*4*FDEC_STRIDE, 3*4 + 0*4*FDEC_STRIDE,
+    2*4 + 1*4*FDEC_STRIDE, 3*4 + 1*4*FDEC_STRIDE,
+    0*4 + 2*4*FDEC_STRIDE, 1*4 + 2*4*FDEC_STRIDE,
+    0*4 + 3*4*FDEC_STRIDE, 1*4 + 3*4*FDEC_STRIDE,
+    2*4 + 2*4*FDEC_STRIDE, 3*4 + 2*4*FDEC_STRIDE,
+    2*4 + 3*4*FDEC_STRIDE, 3*4 + 3*4*FDEC_STRIDE
 };
 
 static const uint8_t i_chroma_qp_table[52] =

@@ -1,10 +1,10 @@
 /*****************************************************************************
  * set: h264 encoder (SPS and PPS init and write)
  *****************************************************************************
- * Copyright (C) 2003 Laurent Aimar
- * $Id: set.c,v 1.1 2004/06/03 19:27:08 fenrir Exp $
+ * Copyright (C) 2003-2008 x264 project
  *
  * Authors: Laurent Aimar <fenrir@via.ecp.fr>
+ *          Loren Merritt <lorenm@u.washington.edu>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02111, USA.
  *****************************************************************************/
 
 #include <math.h>
@@ -27,6 +27,8 @@
 #ifndef _MSC_VER
 #include "config.h"
 #endif
+
+#define bs_write_ue bs_write_ue_big
 
 static void transpose( uint8_t *buf, int w )
 {
@@ -339,8 +341,8 @@ void x264_sps_write( bs_t *s, x264_sps_t *sps )
         bs_write1( s, sps->vui.b_timing_info_present );
         if( sps->vui.b_timing_info_present )
         {
-            bs_write( s, 32, sps->vui.i_num_units_in_tick );
-            bs_write( s, 32, sps->vui.i_time_scale );
+            bs_write32( s, sps->vui.i_num_units_in_tick );
+            bs_write32( s, sps->vui.i_time_scale );
             bs_write1( s, sps->vui.b_fixed_frame_rate );
         }
 
