@@ -675,11 +675,6 @@ unsigned avcodec_version( void )
   return LIBAVCODEC_VERSION_INT;
 }
 
-unsigned avcodec_build( void )
-{
-  return LIBAVCODEC_BUILD;
-}
-
 void avcodec_init(void)
 {
     static int initialized = 0;

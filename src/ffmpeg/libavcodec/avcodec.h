@@ -37,7 +37,7 @@
 #include "libavutil/avutil.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 51
-#define LIBAVCODEC_VERSION_MINOR 58
+#define LIBAVCODEC_VERSION_MINOR 60
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -62,6 +62,7 @@ enum CodecType {
     CODEC_TYPE_AUDIO,
     CODEC_TYPE_DATA,
     CODEC_TYPE_SUBTITLE,
+    CODEC_TYPE_ATTACHMENT,
     CODEC_TYPE_NB
 };
 
@@ -2150,8 +2151,6 @@ AVCodec *av_codec_next(AVCodec *c);
 
 /* returns LIBAVCODEC_VERSION_INT constant */
 unsigned avcodec_version(void);
-/* returns LIBAVCODEC_BUILD constant */
-unsigned avcodec_build(void);
 
 /**
  * Initializes libavcodec.
