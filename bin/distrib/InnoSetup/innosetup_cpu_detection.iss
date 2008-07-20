@@ -99,7 +99,7 @@ begin
       cpu_sse2 := true;
     end
 
-    cpu_cores := CPUInfo.htInfo.nLogicalProcs;
+    cpu_cores := CPUInfo.htInfo.nPhysicalProcs;
   end
 
   cpu_checked := true;

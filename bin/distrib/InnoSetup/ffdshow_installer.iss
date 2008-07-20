@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2022
+#define tryout_revision = 2043
 #define buildyear = 2008
-#define buildmonth = '06'
-#define buildday = '24'
+#define buildmonth = '07'
+#define buildday = '20'
 
 ; Build specific options
 #define unicode_required = True
@@ -929,7 +929,9 @@ end;
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssPostInstall then begin
-    RegWriteDwordValue(HKCU, 'Software\GNU\ffdshow\default', 'threadsnum', GetNumberOfCores);
+    if IsTaskSelected('resetsettings') OR NOT RegValueExists(HKCU, 'Software\GNU\ffdshow\default', 'threadsnum') then begin
+      RegWriteDwordValue(HKCU, 'Software\GNU\ffdshow\default', 'threadsnum', GetNumberOfCores);
+    end
   end
 end;
 #endif
