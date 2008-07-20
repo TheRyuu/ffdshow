@@ -2196,6 +2196,15 @@ static int frame_start(H264Context *h){
         memset(h->slice_table, -1, (s->mb_height*s->mb_stride-1) * sizeof(uint8_t));
 
 //    s->decode= (s->flags&CODEC_FLAG_PSNR) || !s->encoding || s->current_picture.reference /*|| h->contains_intra*/ || 1;
+
+    // We mark the current picture as non reference after allocating it, so
+    // that if we break out due to an error it can be released automatically
+    // in the next MPV_frame_start().
+    // SVQ3 as well as most other codecs have only last/next/current and thus
+    // get released even with set reference, besides SVQ3 and others do not
+    // mark frames as reference later "naturally".
+    if(s->codec_id != CODEC_ID_SVQ3)
+        s->current_picture_ptr->reference= 0;
     return 0;
 }
 
@@ -3205,15 +3214,11 @@ static inline int unreference_pic(H264Context *h, Picture *pic, int refmask){
     if (pic->reference &= refmask) {
         return 0;
     } else {
-        if(pic == h->delayed_output_pic)
-            pic->reference=DELAYED_PIC_REF;
-        else{
-            for(i = 0; h->delayed_pic[i]; i++)
-                if(pic == h->delayed_pic[i]){
-                    pic->reference=DELAYED_PIC_REF;
-                    break;
-                }
-        }
+        for(i = 0; h->delayed_pic[i]; i++)
+            if(pic == h->delayed_pic[i]){
+                pic->reference=DELAYED_PIC_REF;
+                break;
+            }
         return 1;
     }
 }
@@ -3248,15 +3253,12 @@ static void flush_dpb(AVCodecContext *avctx){
             h->delayed_pic[i]->reference= 0;
         h->delayed_pic[i]= NULL;
     }
-    if(h->delayed_output_pic)
-        h->delayed_output_pic->reference= 0;
-    h->delayed_output_pic= NULL;
+    h->outputed_poc= INT_MIN;
     idr(h);
     if(h->s.current_picture_ptr)
         h->s.current_picture_ptr->reference= 0;
     h->s.first_field= 0;
     ff_mpeg_flush(avctx);
-    h->first_I_frame_detected = 0;
 }
 
 /**
@@ -3845,7 +3847,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     unsigned int pps_id;
     int num_ref_idx_active_override_flag;
     static const uint8_t slice_type_map[5]= {FF_P_TYPE, FF_B_TYPE, FF_I_TYPE, FF_SP_TYPE, FF_SI_TYPE};
-    unsigned int slice_type, tmp, i;
+    unsigned int slice_type, tmp, i, j;
     int default_ref_list_done = 0;
     int last_pic_structure;
 
@@ -4146,6 +4148,15 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
 
     if(FRAME_MBAFF)
         fill_mbaff_ref_list(h);
+
+     h->ref2frm[1][0]= h->ref2frm[1][1]= -1;
+     for(j=0; j<2; j++){
+         h->ref2frm[j][  0]=
+         h->ref2frm[j][  1]= -1;
+         for(i=0; i<48; i++)
+             h->ref2frm[j][i+2]= 4*h->ref_list[j][i].frame_num
+                                 +(h->ref_list[j][i].reference&3);
+     }
 
     if( h->slice_type != FF_I_TYPE && h->slice_type != FF_SI_TYPE && h->pps.cabac ){
         tmp = get_ue_golomb(&s->gb);
@@ -6411,6 +6422,7 @@ static void filter_mb_fast( H264Context *h, int mb_x, int mb_y, uint8_t *img_y, 
     mb_xy = h->mb_xy;
 
     if(mb_x==0 || mb_y==mb_y_firstrow || !s->dsp.h264_loop_filter_strength || h->pps.chroma_qp_diff ||
+1 ||
        (h->deblocking_filter == 2 && (h->slice_table[mb_xy] != h->slice_table[h->top_mb_xy] ||
                                       h->slice_table[mb_xy] != h->slice_table[mb_xy - 1]))) {
         filter_mb(h, mb_x, mb_y, img_y, img_cb, img_cr, linesize, uvlinesize);
@@ -6478,7 +6490,7 @@ static void filter_mb_fast( H264Context *h, int mb_x, int mb_y, uint8_t *img_y, 
             int step = IS_8x8DCT(mb_type) ? 2 : 1;
             edges = (mb_type & MB_TYPE_16x16) && !(h->cbp & 15) ? 1 : 4;
             s->dsp.h264_loop_filter_strength( bS, h->non_zero_count_cache, h->ref_cache, h->mv_cache,
-                                              (h->slice_type == FF_B_TYPE), edges, step, mask_edge0, mask_edge1 );
+                                              (h->slice_type == FF_B_TYPE), edges, step, mask_edge0, mask_edge1, FIELD_PICTURE);
         }
         if( IS_INTRA(s->current_picture.mb_type[mb_xy-1]) )
             bSv[0][0] = 0x0004000400040004ULL;
@@ -6522,11 +6534,6 @@ static void filter_mb( H264Context *h, int mb_x, int mb_y, uint8_t *img_y, uint8
     const int mvy_limit = IS_INTERLACED(mb_type) ? 2 : 4;
     int first_vertical_edge_done = 0;
     int dir;
-    /* FIXME: A given frame may occupy more than one position in
-     * the reference list. So ref2frm should be populated with
-     * frame numbers, not indexes. */
-    static const int ref2frm[34] = {-1,-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
-                                    16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31};
 
     //for sufficiently low qp, filtering wouldn't do anything
     //this is a conservative estimate: could also check beta_offset and more accurate chroma_qp
@@ -6709,10 +6716,13 @@ static void filter_mb( H264Context *h, int mb_x, int mb_y, uint8_t *img_y, uint8
                     int b_idx= 8 + 4 + edge * (dir ? 8:1);
                     int bn_idx= b_idx - (dir ? 8:1);
                     int v = 0;
+                    int xn= (h->ref_cache[0][ b_idx] ^ h->ref_cache[0][bn_idx]) < 0;
+
                     for( l = 0; !v && l < 1 + (h->slice_type == FF_B_TYPE); l++ ) {
-                        v |= ref2frm[h->ref_cache[l][b_idx]+2] != ref2frm[h->ref_cache[l][bn_idx]+2] ||
-                             FFABS( h->mv_cache[l][b_idx][0] - h->mv_cache[l][bn_idx][0] ) >= 4 ||
-                             FFABS( h->mv_cache[l][b_idx][1] - h->mv_cache[l][bn_idx][1] ) >= mvy_limit;
+                        int ln= l^xn;
+                        v |= h->ref2frm[l][h->ref_cache[l][b_idx]+2] != h->ref2frm[ln][h->ref_cache[ln][bn_idx]+2] ||
+                             FFABS( h->mv_cache[l][b_idx][0] - h->mv_cache[ln][bn_idx][0] ) >= 4 ||
+                             FFABS( h->mv_cache[l][b_idx][1] - h->mv_cache[ln][bn_idx][1] ) >= mvy_limit;
                     }
                     bS[0] = bS[1] = bS[2] = bS[3] = v;
                     mv_done = 1;
@@ -6732,11 +6742,13 @@ static void filter_mb( H264Context *h, int mb_x, int mb_y, uint8_t *img_y, uint8
                     }
                     else if(!mv_done)
                     {
+                        int xn= (h->ref_cache[0][ b_idx] ^ h->ref_cache[0][bn_idx]) < 0;
                         bS[i] = 0;
                         for( l = 0; l < 1 + (h->slice_type == FF_B_TYPE); l++ ) {
-                            if( ref2frm[h->ref_cache[l][b_idx]+2] != ref2frm[h->ref_cache[l][bn_idx]+2] ||
-                                FFABS( h->mv_cache[l][b_idx][0] - h->mv_cache[l][bn_idx][0] ) >= 4 ||
-                                FFABS( h->mv_cache[l][b_idx][1] - h->mv_cache[l][bn_idx][1] ) >= mvy_limit ) {
+                            int ln= l^xn;
+                            if( h->ref2frm[l][h->ref_cache[l][b_idx]+2] != h->ref2frm[ln][h->ref_cache[ln][bn_idx]+2] ||
+                                FFABS( h->mv_cache[l][b_idx][0] - h->mv_cache[ln][bn_idx][0] ) >= 4 ||
+                                FFABS( h->mv_cache[l][b_idx][1] - h->mv_cache[ln][bn_idx][1] ) >= mvy_limit ) {
                                 bS[i] = 1;
                                 break;
                             }
@@ -7951,7 +7963,6 @@ static int decode_frame(AVCodecContext *avctx,
     if(!(s->flags2 & CODEC_FLAG2_CHUNKS) || (s->mb_y >= s->mb_height && s->mb_height)){
         Picture *out = s->current_picture_ptr;
         Picture *cur = s->current_picture_ptr;
-        Picture *prev = h->delayed_output_pic;
         int i, pics, cross_idr, out_of_order, out_idx;
 
         s->mb_y= 0;
@@ -7995,15 +8006,18 @@ static int decode_frame(AVCodecContext *avctx,
 
         //FIXME do something with unavailable reference frames
 
-#if 0 //decode order
-            *data_size = sizeof(AVFrame);
-#else
             /* Sort B-frames into display order */
 
             if(h->sps.bitstream_restriction_flag
                && s->avctx->has_b_frames < h->sps.num_reorder_frames){
                 s->avctx->has_b_frames = h->sps.num_reorder_frames;
                 s->low_delay = 0;
+            }
+
+            if(   s->avctx->strict_std_compliance >= FF_COMPLIANCE_STRICT
+               && !h->sps.bitstream_restriction_flag){
+                s->avctx->has_b_frames= MAX_DELAYED_PIC_COUNT;
+                s->low_delay= 0;
             }
 
             pics = 0;
@@ -8028,41 +8042,32 @@ static int decode_frame(AVCodecContext *avctx,
                     out_idx = i;
                 }
 
-            out_of_order = !cross_idr && prev && out->poc < prev->poc;
+            out_of_order = !cross_idr && out->poc < h->outputed_poc;
+
             if(h->sps.bitstream_restriction_flag && s->avctx->has_b_frames >= h->sps.num_reorder_frames)
                 { }
-            else if(prev && pics <= s->avctx->has_b_frames)
-                out = prev;
-            else if((out_of_order && pics-1 == s->avctx->has_b_frames && pics < 15)
+            else if((out_of_order && pics-1 == s->avctx->has_b_frames && s->avctx->has_b_frames < MAX_DELAYED_PIC_COUNT)
                || (s->low_delay &&
-                ((!cross_idr && prev && out->poc > prev->poc + 2)
+                ((!cross_idr && out->poc > h->outputed_poc + 2)
                  || cur->pict_type == FF_B_TYPE)))
             {
                 s->low_delay = 0;
                 s->avctx->has_b_frames++;
-                out = prev;
             }
-            else if(out_of_order)
-                out = prev;
 
             if(out_of_order || pics > s->avctx->has_b_frames){
+                out->reference &= ~DELAYED_PIC_REF;
                 for(i=out_idx; h->delayed_pic[i]; i++)
                     h->delayed_pic[i] = h->delayed_pic[i+1];
             }
-
-            if(prev == out)
-                *data_size = 0;
-            else
+            if(!out_of_order && pics > s->avctx->has_b_frames){
                 *data_size = sizeof(AVFrame);
-            if(prev && prev != out && prev->reference == DELAYED_PIC_REF)
-                prev->reference = 0;
-            h->delayed_output_pic = out;
-#endif
 
-            if(out)
+                h->outputed_poc = out->poc;
                 *pict= *(AVFrame*)out;
-            else
+            }else{
                 av_log(avctx, AV_LOG_DEBUG, "no picture\n");
+            }
         }
     }
 

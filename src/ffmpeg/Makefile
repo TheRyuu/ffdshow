@@ -3,11 +3,10 @@ LAVU_DIR=libavutil
 ZLIB_DIR=../zlib
 
 CFLAGS+= -I. -I.. -I$(LAVC_DIR) -I$(LAVU_DIR) -I../codecs -I../imgFilters -I$(ZLIB_DIR) \
-         -DHAVE_AV_CONFIG_H
+         -DHAVE_AV_CONFIG_H -D_ISOC9X_SOURCE -std=gnu9x
 
-CFLAGS+=-std=gnu99
-
-#CFLAGS+=-fverbose-asm -save-temps -fno-stack-check -fno-math-errno -fno-signed-zeros
+#CFLAGS+= -save-temps
+#CFLAGS+= -fverbose-asm
 
 SRCS_C=DllEntry.c \
       $(LAVC_DIR)/8bps.c \
@@ -196,6 +195,9 @@ DEF=libavcodec.def
 NOINTRIN=1
 
 include ../makefile_c.inc
+
+OPTFLAGS+= -fno-math-errno
+#OPTFLAGS+= -fno-signed-zeros
 
 .all: $(SLIB)
 
