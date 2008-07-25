@@ -29,6 +29,7 @@
 #include "dsputil.h"
 #include "mpegvideo.h"
 #include "h263_parser.h"
+#include "mpeg4video_parser.h"
 #include "msmpeg4.h"
 
 //#define DEBUG
@@ -319,47 +320,6 @@ static int decode_slice(MpegEncContext *s){
     return -1;
 }
 
-/**
- * finds the end of the current frame in the bitstream.
- * @return the position of the first byte of the next frame, or -1
- */
-int ff_mpeg4_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size){
-    int vop_found, i;
-    uint32_t state;
-
-    vop_found= pc->frame_start_found;
-    state= pc->state;
-
-    i=0;
-    if(!vop_found){
-        for(i=0; i<buf_size; i++){
-            state= (state<<8) | buf[i];
-            if(state == 0x1B6){
-                i++;
-                vop_found=1;
-                break;
-            }
-        }
-    }
-
-    if(vop_found){
-        /* EOF considered as end of frame */
-        if (buf_size == 0)
-            return 0;
-        for(; i<buf_size; i++){
-            state= (state<<8) | buf[i];
-            if((state&0xFFFFFF00) == 0x100){
-                pc->frame_start_found=0;
-                pc->state=-1;
-                return i-3;
-            }
-        }
-    }
-    pc->frame_start_found= vop_found;
-    pc->state= state;
-    return END_NOT_FOUND;
-}
-
 int ff_h263_decode_frame(AVCodecContext *avctx,
                              void *data, int *data_size,
                              const uint8_t *buf, int buf_size)
@@ -548,7 +508,7 @@ retry:
             s->padding_bug_score= 256*256*256*64;
 
         /* very ugly XVID padding bug detection FIXME/XXX solve this differently
-         * lets hope this at least works
+         * Let us hope this at least works.
          */
         if(   s->resync_marker==0 && s->data_partitioning==0 && s->divx_version==0
            && s->codec_id==CODEC_ID_MPEG4 && s->vo_type==0)

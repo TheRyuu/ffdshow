@@ -766,6 +766,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\mpeg4video_parser.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\mpegaudiodata.c"
 				>
 			</File>
@@ -1236,6 +1240,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mpeg4data.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\mpeg4video_parser.h"
 				>
 			</File>
 			<File
