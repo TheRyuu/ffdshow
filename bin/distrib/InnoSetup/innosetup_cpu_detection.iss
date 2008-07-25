@@ -72,6 +72,7 @@ var
   cpu_sse: Boolean;
   cpu_sse2: Boolean;
   cpu_cores: Integer;
+  cpu_family: Integer;
 
 
 // functions to detect CPU
@@ -85,6 +86,7 @@ var
 	CPUInfo: TCPUInfo;
 begin
   cpu_cores := 1;
+  cpu_family := 6;
 
   WinCPUID_Init(0, CPUInfo);
 
@@ -100,6 +102,8 @@ begin
     end
 
     cpu_cores := CPUInfo.htInfo.nPhysicalProcs;
+    
+    cpu_family := CPUInfo.coreInfo.dwCPUFamily;
   end
 
   cpu_checked := true;
@@ -127,4 +131,12 @@ begin
 		CPUCheck();
 	end
   Result := cpu_cores;
+end;
+
+function HasSupportedCPU(): Boolean;
+begin
+	if NOT cpu_checked then begin
+		CPUCheck();
+	end
+  Result := (cpu_family >= 6);
 end;

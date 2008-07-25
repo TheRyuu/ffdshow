@@ -15,7 +15,7 @@ jp.WelcomeLabel2=В±ВћГvГНГOГЙГАВЌВ≤ОgЧpВћГRГУГsГЕБ[Г^В÷ [name] ВрГCГУГXГgБ[ГЛВµВ
 jp.FileAbortRetryIgnore=ffdshowВрОgЧpТЖВћГAГvГКГPБ[ГVГЗГУВрПIЧєВµВƒБuНƒООНsБvВрГNГКГbГNВµВƒВ≠ВЊВ≥ВҐБBЙрМИВµВ»ВҐПкНЗВЌБuТЖО~БvВрГNГКГbГNВµВƒГRГУГsГЕБ[Г^ВрНƒЛNУЃМгБAВаВ§ИкУxГZГbГgГAГbГvВрОјНsВµВƒВ≠ВЊВ≥ВҐБB
 jp.FinishedRestartLabel=[name] ВћГCГУГXГgБ[ГЛВрКЃЧєВЈВйВљВяВ…ВЌБAГRГУГsГЕБ[Г^ВрНƒЛNУЃВЈВйХKЧvВ™В†ВиВ№ВЈБB%n%nВЈВЃВ…НƒЛNУЃВµВ№ВЈВ©БH%n%nГqГУГgБFГrГfГIГfГRБ[Г_Б[РЁТиВћБuПоХсВ∆ГfГoГbГOБvВћБuDon't use ffdshow in:БvБuexplorer.exeБvВрЧLМшВ…ВµВƒВ®В≠В∆ОЯЙсВ©ВзНƒЛNУЃВ™ХsЧvВ…В»ВйВ©ВаВµВкВ№ВєВсБB
 #if unicode_required
-;jp.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
+jp.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
 #endif
 ; German
 de.WelcomeLabel2=Dieser Assistent wird jetzt [name] auf Ihrem Computer installieren.%n%nSie sollten alle anderen Anwendungen beenden, bevor Sie mit dem Setup fortfahren.
@@ -29,14 +29,14 @@ fr.WelcomeLabel2=Ceci installera [name] sur votre ordinateur.%n%nIl est recomman
 fr.FileAbortRetryIgnore=Quitter l'application qui utilise ffdshow et cliquer sur  Ressayer. si le problиme persiste, cliquer sur Annuler, redйmarrer l'ordinateur et rйinstaller de nouveau.
 fr.FinishedRestartLabel=Pour complйter l'installation de [name], l'installation doit redйmarrer votre ordinateur. Voulez-vous le redйmarrer maintenant ?%n%nHint : Pour йviter de redйmarrer votre ordinateur la prochaine fois, il est conseiller d'activer l'option "ne pas utiliser ffdshow dans :"-"explorer.exe" dans Ђ Infos & Debogage ї du panneau configuration du dйcodeur vidйo ffdshow.
 #if unicode_required
-;fr.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
+fr.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
 #endif
 ; Russian
 ru.WelcomeLabel2=ѕрограмма установит [name] на ¬аш компьютер.%n%n–екомендуетс€ закрыть все прочие приложени€ перед тем, как продолжить.
 ru.FileAbortRetryIgnore=«акройте все приложени€, использующие ffdshow, и нажмите "ѕовтор". ≈сли ситуаци€ повторитс€, нажмите "ќтказ", перезагрузите ¬аш компьютер и попробуйте ещЄ раз.
 ru.FinishedRestartLabel=ƒл€ завершени€ установки [name] требуетс€ перезагрузить компьютер. ѕроизвести перезагрузку сейчас?%n%nѕодсказка: избежать перезагрузки компьютера в следующий раз может помочь включение "»нформаци€"-"Don't use ffdshow in:"-"explorer.exe" в конфигурации видеодекодера.
 #if unicode_required
-;ru.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
+ru.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
 #endif
 ; Polish
 pl.WelcomeLabel2=Instalator zainstaluje [name] na twoim komputerze.%n%nZaleca siк zamkniкcie wszystkich innych aplikacji przed kontynuowaniem procesu instalacji.
@@ -50,7 +50,7 @@ cz.WelcomeLabel2=Tento instalбtor nainstaluje na vбЪ poинtaи [name].%n%nPшedtнm 
 cz.FileAbortRetryIgnore=Ukonиete aplikaci pouЮнvajнcн ffdshow a kliknмte na Opakovat. Pokud problйm pшetrvбvб, ukonиete instalaci tlaинtkem PшeruЪit, restartujte poинtaи a znovu spusЭte instalci.
 cz.FinishedRestartLabel=Aby mohla bэt instalace [name] dokonиena, musн instalбtor restartovat poинtaи. Chcete poинtaи restartovat nynн?%n%nTip: Potшebм restartovбnн se pro pшнЪtм mщЮete vyhnout pokud v nastavenн video dekodйru nastavнte "DirectShow"-"ffdshow nepouЮнvat v:"-"explorer.exe".
 #if unicode_required
-;cz.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
+cz.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
 #endif
 ; Chinese (Simplified)
 sc.WelcomeLabel2=ЉіљЂ∞≤„∞ [name] µљƒъµƒµзƒ‘÷–°£%n%nљ®“йƒъ‘ЏЉћ–ш∞≤„∞«∞єЎ±’Ћщ”–∆дЋы”¶”√≥ћ–т°£
@@ -68,6 +68,7 @@ en.langid=1033
 en.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
 en.simd_msg_sse=This build of ffdshow requires a CPU with SSE extension support. Your CPU does not have those capabilities.
 en.simd_msg_sse2=This build of ffdshow requires a CPU with SSE2 extension support. Your CPU does not have those capabilities.
+en.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported.
 
 en.comp_ffdshowds=ffdshow DirectShow filter
 en.comp_vfwInterface=VFW interface

@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2043
+#define tryout_revision = 2048
 #define buildyear = 2008
 #define buildmonth = '07'
-#define buildday = '20'
+#define buildday = '25'
 
 ; Build specific options
 #define unicode_required = True
@@ -891,6 +891,10 @@ begin
   Result := True;
 
   #if cpu_detection
+  if Result AND NOT HasSupportedCPU() then begin
+    Result := False;
+    MsgBox(CustomMessage('unsupported_cpu'), mbError, MB_OK);
+  end
     #if sse2_required
   if Result AND NOT Is_SSE2_Supported() then begin
     Result := False;
