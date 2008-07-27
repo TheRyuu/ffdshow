@@ -26,6 +26,7 @@
 #include "Tconfig.h"
 #include "TglobalSettings.h"
 #include "TcompatibilityManager.h"
+#include "string.h"
 
 //================================= TcompatibilityManager ==================================
 int TcompatibilityManager::s_mode;
@@ -89,11 +90,23 @@ void TcompatibilityManager::onModeChange(void)
 
 void TcompatibilityManager::cfg2dlg(void)
 {
- setCheck(IDC_RBT_COMP_1 ,mode==1);
- setCheck(IDC_RBT_COMP_2 ,mode==2);
- setCheck(IDC_RBT_COMP_3 ,mode==3);
- setCheck(IDC_RBT_COMP_4 ,mode==4);
- enable(mode==2 || mode==4,IDC_CHB_COMP_SEND,false);
+ bool show_report_checkbox = false;
+
+ setCheck(IDC_RBT_COMP_1, mode==1);
+ setCheck(IDC_RBT_COMP_2, mode==2);
+ setCheck(IDC_RBT_COMP_3, mode==3);
+ setCheck(IDC_RBT_COMP_4, mode==4);
+ 
+ /* only enable reporting if filename is not already on the list */ 
+ if(mode==2) {
+	show_report_checkbox = (strstr(BLACKLIST_EXE_FILENAME,filename.c_str()) == NULL);
+ } else {
+ 	if(mode==4) {
+ 		show_report_checkbox = (strstr(WHITELIST_EXE_FILENAME,filename.c_str()) == NULL);
+ 	}
+ }
+ enable(show_report_checkbox,IDC_CHB_COMP_SEND);
+ Twindow::show(show_report_checkbox,IDC_CHB_COMP_SEND);
 
  char_t *msg=NULL;
  switch (mode)
@@ -128,7 +141,7 @@ void TcompatibilityManager::onChbSend(void)
  time=-1;setcaption();
  chbsend=!chbsend;
  setCheck(IDC_CHB_COMP_SEND,chbsend);
- char_t *msg=_l("Thank you. We are gathering the list of compatible applications. Please send us the exe file name of this application and help us improving ffdshow.");
+ char_t *msg=_l("Thank you. We are gathering a list of (in)compatible applications. By sending us the filename of this application you are helping us to improve ffdshow.");
  setText(IDC_EDT_COMP_1,_(-IDD_COMPATIBILITY_MANAGER,msg));
 }
 
