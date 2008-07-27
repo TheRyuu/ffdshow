@@ -32,9 +32,9 @@
 	_l("wscript.exe;x264.exe;XNVIEW.EXE;Xvid4PSP.exe;YahooMessenger.exe;YahooMusicEngine.exe;YahooWidgetEngine.exe;YahooWidgets.exe;zplayer.exe;Zune.exe;")
 	
 #define BLACKLIST_EXE_FILENAME \
-	_l("age3.exe;cm2008.exe;cmr4.exe;cmr5.exe;conflictdeniedops.exe;conquer.exe;crazy_taxi_pc.exe;dmc3se.exe;em3.exe;em4.exe;fable.exe;ff7.exe;fordorr.exe;game.exe;gta-vc.exe;gta3.exe;gta_sa.exe;")\
-	_l("gta-underground.exe;guildII.exe;hl.exe;hl2.exe;juiced.exe;juiced2_hin.exe;maxpayne.exe;morrowind.exe;oblivion.exe;pes2008.exe;pes4.exe;pes5.exe;pes6.exe;questviewer.exe;residentevil3.exe;")\
-	_l("rf.exe;rf_online.bin;sacred.exe;sega rally.exe;sh3.exe;sh4.exe;sims.exe;tw2008.exe;twoworlds.exe;wa.exe;war3.exe;worms 4 mayhem.exe;worms3d.exe;")
+	_l("age3.exe;BeachSoccer.exe;cm2008.exe;cmr4.exe;cmr5.exe;conflictdeniedops.exe;conquer.exe;crazy_taxi_pc.exe;dmc3se.exe;em3.exe;em4.exe;fable.exe;ff7.exe;fordorr.exe;game.exe;Grandia2.exe;gta-vc.exe;gta3.exe;gta_sa.exe;")\
+	_l("gta-underground.exe;guildII.exe;hl.exe;hl2.exe;juiced.exe;juiced2_hin.exe;MassEffectLauncher.exe;maxpayne.exe;morrowind.exe;oblivion.exe;pes2008.exe;pes4.exe;pes5.exe;pes6.exe;powerdvd8.exe;questviewer.exe;residentevil3.exe;")\
+	_l("rf.exe;rf_online.bin;RomeGame.exe;sacred.exe;sega rally.exe;sh3.exe;sh4.exe;sims.exe;tw2008.exe;twoworlds.exe;wa.exe;war3.exe;worms 4 mayhem.exe;worms3d.exe;")
 
 struct TregOp;
 struct Tconfig;
