@@ -63,11 +63,14 @@ static inline void bitstream_fill_current (a52_state_t * state)
 
 uint32_t a52_bitstream_get_bh (a52_state_t * state, uint32_t num_bits)
 {
-    uint32_t result;
+    uint32_t result = 0;
 
-    num_bits -= state->bits_left;
-    result = ((state->current_word << (32 - state->bits_left)) >>
-	      (32 - state->bits_left));
+    if (state->bits_left)
+    {
+	num_bits -= state->bits_left;
+	result = ((state->current_word << (32 - state->bits_left)) >>
+		  (32 - state->bits_left));
+    }
 
     bitstream_fill_current (state);
 
@@ -81,11 +84,14 @@ uint32_t a52_bitstream_get_bh (a52_state_t * state, uint32_t num_bits)
 
 int32_t a52_bitstream_get_bh_2 (a52_state_t * state, uint32_t num_bits)
 {
-    int32_t result;
+    int32_t result = 0;
 
-    num_bits -= state->bits_left;
-    result = ((((int32_t)state->current_word) << (32 - state->bits_left)) >>
-	      (32 - state->bits_left));
+    if (state->bits_left)
+    {
+	num_bits -= state->bits_left;
+	result = ((((int32_t)state->current_word) << (32 - state->bits_left))
+		  >> (32 - state->bits_left));
+    }
 
     bitstream_fill_current(state);
 

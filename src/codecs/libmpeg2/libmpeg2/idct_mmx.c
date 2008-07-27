@@ -1290,8 +1290,6 @@ void mpeg2_idct_add_mmx (const int last, int16_t * const block,
 
 void mpeg2_idct_mmx_init (void)
 {
-    extern uint8_t mpeg2_scan_norm[64];
-    extern uint8_t mpeg2_scan_alt[64];
     int i, j;
 
     /* the mmx/mmxext idct uses a reordered input, so we patch scan tables */

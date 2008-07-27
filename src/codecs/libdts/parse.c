@@ -305,7 +305,14 @@ int dca_frame (dca_state_t * state, uint8_t * buf, int * flags,
 
     /* Primary audio coding header */
     state->subframes = bitstream_get (state, 4) + 1;
+
+    if (state->subframes > DCA_SUBFRAMES_MAX)
+        state->subframes = DCA_SUBFRAMES_MAX;
+
     state->prim_channels = bitstream_get (state, 3) + 1;
+
+    if (state->prim_channels > DCA_PRIM_CHANNELS_MAX)
+        state->prim_channels = DCA_PRIM_CHANNELS_MAX;
 
 #ifdef DEBUG
     fprintf (stderr, "subframes: %i\n", state->subframes);
@@ -357,7 +364,10 @@ int dca_frame (dca_state_t * state, uint8_t * buf, int * flags,
     for (i = 0; i < state->prim_channels; i++)
     {
         state->bitalloc_huffman[i] = bitstream_get (state, 3);
-        /* if (state->bitalloc_huffman[i] == 7) bailout */
+        /* There might be a way not to trash the whole frame, but for
+         * now we must bail out or we will buffer overflow later. */
+        if (state->bitalloc_huffman[i] == 7)
+            return 1;
 #ifdef DEBUG
         fprintf (stderr, "bit allocation quantizer: %i\n",
                  state->bitalloc_huffman[i]);
@@ -534,6 +544,7 @@ static int dca_subframe_header (dca_state_t * state)
                 k < state->vq_start_subband[j] &&
                 state->bitalloc[j][k] > 0)
             {
+                /* tmode cannot overflow since transient_huffman[j] < 4 */
                 state->transition_mode[j][k] = InverseQ (state,
                     tmode[state->transient_huffman[j]]);
             }
