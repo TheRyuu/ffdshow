@@ -79,13 +79,19 @@ const uint8_t ff_div6[52]={
 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8,
 };
 
+static const int left_block_options[4][8]={
+    {0,1,2,3,7,10,8,11},
+    {2,2,3,3,8,11,8,11},
+    {0,0,1,1,7,10,7,10},
+    {0,2,0,2,7,10,7,10}
+};
 
 static void fill_caches(H264Context *h, int mb_type, int for_deblock){
     MpegEncContext * const s = &h->s;
     const int mb_xy= h->mb_xy;
     int topleft_xy, top_xy, topright_xy, left_xy[2];
     int topleft_type, top_type, topright_type, left_type[2];
-    int left_block[8];
+    int * left_block;
     int topleft_partition= -1;
     int i;
 
@@ -101,14 +107,7 @@ static void fill_caches(H264Context *h, int mb_type, int for_deblock){
     topleft_xy = top_xy - 1;
     topright_xy= top_xy + 1;
     left_xy[1] = left_xy[0] = mb_xy-1;
-    left_block[0]= 0;
-    left_block[1]= 1;
-    left_block[2]= 2;
-    left_block[3]= 3;
-    left_block[4]= 7;
-    left_block[5]= 10;
-    left_block[6]= 8;
-    left_block[7]= 11;
+    left_block = left_block_options[0];
     if(FRAME_MBAFF){
         const int pair_xy          = s->mb_x     + (s->mb_y & ~1)*s->mb_stride;
         const int top_pair_xy      = pair_xy     - s->mb_stride;
@@ -147,34 +146,13 @@ static void fill_caches(H264Context *h, int mb_type, int for_deblock){
             left_xy[1] = left_xy[0] = pair_xy - 1;
             if (curr_mb_frame_flag) {
                 if (bottom) {
-                    left_block[0]= 2;
-                    left_block[1]= 2;
-                    left_block[2]= 3;
-                    left_block[3]= 3;
-                    left_block[4]= 8;
-                    left_block[5]= 11;
-                    left_block[6]= 8;
-                    left_block[7]= 11;
+                    left_block = left_block_options[1];
                 } else {
-                    left_block[0]= 0;
-                    left_block[1]= 0;
-                    left_block[2]= 1;
-                    left_block[3]= 1;
-                    left_block[4]= 7;
-                    left_block[5]= 10;
-                    left_block[6]= 7;
-                    left_block[7]= 10;
+                    left_block= left_block_options[2];
                 }
             } else {
                 left_xy[1] += s->mb_stride;
-                //left_block[0]= 0;
-                left_block[1]= 2;
-                left_block[2]= 0;
-                left_block[3]= 2;
-                //left_block[4]= 7;
-                left_block[5]= 10;
-                left_block[6]= 7;
-                left_block[7]= 10;
+                left_block = left_block_options[3];
             }
         }
     }
@@ -2151,6 +2129,7 @@ static av_cold int decode_init(AVCodecContext *avctx){
     }
 
     h->thread_context[0] = h;
+    h->outputed_poc = INT_MIN;
     return 0;
 }
 
@@ -2848,7 +2827,6 @@ static int decode_ref_pic_list_reordering(H264Context *h){
 
     print_short_term(h);
     print_long_term(h);
-    if(h->slice_type_nos==FF_I_TYPE) return 0; //FIXME move before function
 
     for(list=0; list<h->list_count; list++){
         memcpy(h->ref_list[list], h->default_ref_list[list], sizeof(Picture)*h->ref_count[list]);
@@ -3309,7 +3287,7 @@ static int execute_ref_pic_marking(H264Context *h, MMCO *mmco, int mmco_count){
                     // Comment below left from previous code as it is an interresting note.
                     /* First field in pair is in short term list or
                      * at a different long term index.
-                     * This is not allowed; see 7.4.3, notes 2 and 3.
+                     * This is not allowed; see 7.4.3.3, notes 2 and 3.
                      * Report the problem and keep the pair where it is,
                      * and mark this field valid.
                      */
@@ -3356,7 +3334,7 @@ static int execute_ref_pic_marking(H264Context *h, MMCO *mmco, int mmco_count){
          * which is already referenced. If short referenced, it
          * should be first entry in short_ref. If not, it must exist
          * in long_ref; trying to put it on the short list here is an
-         * error in the encoded bit stream (ref: 7.4.3, NOTE 2 and 3).
+         * error in the encoded bit stream (ref: 7.4.3.3, NOTE 2 and 3).
          */
         if (h->short_ref_count && h->short_ref[0] == s->current_picture_ptr) {
             /* Just mark the second field valid */
@@ -3809,9 +3787,12 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
             s->avctx->sample_aspect_ratio.den = 1;
 
         if(h->sps.timing_info_present_flag){
-            //s->avctx->time_base= (AVRational){h->sps.num_units_in_tick * 2, h->sps.time_scale};
-            s->avctx->time_base.num= h->sps.num_units_in_tick * 2;
-            s->avctx->time_base.den= h->sps.time_scale;
+        		#if __STDC_VERSION__ >= 199901L
+            s->avctx->time_base= (AVRational){h->sps.num_units_in_tick * 2, h->sps.time_scale};
+            #else
+            s->avctx->time_base.num = h->sps.num_units_in_tick * 2;
+            s->avctx->time_base.den = h->sps.time_scale;
+            #endif
             if(h->x264_build > 0 && h->x264_build < 44)
                 s->avctx->time_base.den *= 2;
             av_reduce(&s->avctx->time_base.num, &s->avctx->time_base.den,
@@ -3973,7 +3954,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
         fill_default_ref_list(h);
     }
 
-    if(decode_ref_pic_list_reordering(h) < 0)
+    if(h->slice_type_nos!=FF_I_TYPE && decode_ref_pic_list_reordering(h) < 0)
         return -1;
 
     if(   (h->pps.weighted_pred          && h->slice_type_nos == FF_P_TYPE )
@@ -7400,7 +7381,11 @@ static inline int decode_seq_parameter_set(H264Context *h){
                sps->crop_left, sps->crop_right,
                sps->crop_top, sps->crop_bottom,
                sps->vui_parameters_present_flag ? "VUI" : "",
+               #if __STDC_VERSION__ >= 199901L
                ((const char*[]){"Gray","420","422","444"})[sps->chroma_format_idc]
+               #else
+               ""
+               #endif
                );
     }
     return 0;
@@ -7998,7 +7983,7 @@ AVCodec h264_decoder = {
     /*.encode = */NULL,
     /*.close = */decode_end,
     /*.decode = */decode_frame,
-    /*.capabilities = *//*CODEC_CAP_DRAW_HORIZ_BAND |*/ CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
+    /*.capabilities = *//*CODEC_CAP_DRAW_HORIZ_BAND |*/ CODEC_CAP_DR1 | CODEC_CAP_DELAY,
     /*.next = */NULL,
     /*.flush = */flush_dpb,
     /*.supported_framerates = */NULL,
