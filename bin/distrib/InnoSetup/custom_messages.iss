@@ -5,61 +5,56 @@ WelcomeLabel1=[name/ver]
 en.WelcomeLabel2=This will install [name] on your computer.%n%nIt is recommended that you close all other applications before continuing.
 en.FileAbortRetryIgnore=Quit the application using [name] and click Retry. If the problem persists, click Abort, restart your computer and setup again.
 en.FinishedRestartLabel=To complete the installation of [name], Setup must restart your computer. Would you like to restart now?%n%nHint: To avoid restarting computer from the next time, it may be effective to enable "DirectShow control" -> "Don't use ffdshow in:" -> "explorer.exe" in video decoder configuration.
-#if unicode_required
-en.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
-#endif
 
 #if localize
 ; Japanese
 jp.WelcomeLabel2=‚±‚ÌƒvƒƒOƒ‰ƒ€‚Í‚²g—p‚ÌƒRƒ“ƒsƒ…[ƒ^‚Ö [name] ‚ğƒCƒ“ƒXƒg[ƒ‹‚µ‚Ü‚·B%n%n‘±s‚·‚é‘O‚É‘¼‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğ‚·‚×‚ÄI—¹‚µ‚Ä‚­‚¾‚³‚¢B
 jp.FileAbortRetryIgnore=ffdshow‚ğg—p’†‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğI—¹‚µ‚ÄuÄsv‚ğƒNƒŠƒbƒN‚µ‚Ä‚­‚¾‚³‚¢B‰ğŒˆ‚µ‚È‚¢ê‡‚Íu’†~v‚ğƒNƒŠƒbƒN‚µ‚ÄƒRƒ“ƒsƒ…[ƒ^‚ğÄ‹N“®ŒãA‚à‚¤ˆê“xƒZƒbƒgƒAƒbƒv‚ğÀs‚µ‚Ä‚­‚¾‚³‚¢B
 jp.FinishedRestartLabel=[name] ‚ÌƒCƒ“ƒXƒg[ƒ‹‚ğŠ®—¹‚·‚é‚½‚ß‚É‚ÍAƒRƒ“ƒsƒ…[ƒ^‚ğÄ‹N“®‚·‚é•K—v‚ª‚ ‚è‚Ü‚·B%n%n‚·‚®‚ÉÄ‹N“®‚µ‚Ü‚·‚©H%n%nƒqƒ“ƒgFƒrƒfƒIƒfƒR[ƒ_[İ’è‚Ìuî•ñ‚ÆƒfƒoƒbƒOv‚ÌuDon't use ffdshow in:vuexplorer.exev‚ğ—LŒø‚É‚µ‚Ä‚¨‚­‚ÆŸ‰ñ‚©‚çÄ‹N“®‚ª•s—v‚É‚È‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñB
-#if unicode_required
-jp.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
-#endif
+
 ; German
 de.WelcomeLabel2=Dieser Assistent wird jetzt [name] auf Ihrem Computer installieren.%n%nSie sollten alle anderen Anwendungen beenden, bevor Sie mit dem Setup fortfahren.
 de.FileAbortRetryIgnore=Beenden Sie das Programm, das [name] verwendet und klicken Sie auf "Wiederholen". Sollte das Problem weiterhin bestehen, klicken Sie auf "Abbrechen", starten Sie Ihren Computer neu und führen Sie das Setup erneut aus.
 de.FinishedRestartLabel=Um die Installation von [name] zu fertig zu stellen, muss das Setup Ihren Computer neu starten. Soll jetzt neu gestartet werden?%n%nHinweis: Um ihren Computer beim nächsten Mal nicht neu starten zu müssen, kann es helfen, in der Videodekoder-Konfiguration unter "DirectShow-Optionen" -> "ffdshow nicht verwenden in:" zu aktivieren.
-#if unicode_required
-de.WinVersionTooLowError=Diese [name]-Version benötigt Windows 2000 oder neuer.
-#endif
+
 ; French
 fr.WelcomeLabel2=Ceci installera [name] sur votre ordinateur.%n%nIl est recommandé de fermer toutes les autres applications avant de continuer.
-fr.FileAbortRetryIgnore=Quitter l'application qui utilise ffdshow et cliquer sur  Ressayer. si le problème persiste, cliquer sur Annuler, redémarrer l'ordinateur et réinstaller de nouveau.
+fr.FileAbortRetryIgnore=Quitter l'application qui utilise [name] et cliquer sur Ressayer. Si le problème persiste, cliquer sur Annuler, redémarrer l'ordinateur et réinstaller de nouveau.
 fr.FinishedRestartLabel=Pour compléter l'installation de [name], l'installation doit redémarrer votre ordinateur. Voulez-vous le redémarrer maintenant ?%n%nHint : Pour éviter de redémarrer votre ordinateur la prochaine fois, il est conseiller d'activer l'option "ne pas utiliser ffdshow dans :"-"explorer.exe" dans « Infos & Debogage » du panneau configuration du décodeur vidéo ffdshow.
-#if unicode_required
-fr.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
-#endif
+
 ; Russian
 ru.WelcomeLabel2=Ïğîãğàììà óñòàíîâèò [name] íà Âàø êîìïüşòåğ.%n%nĞåêîìåíäóåòñÿ çàêğûòü âñå ïğî÷èå ïğèëîæåíèÿ ïåğåä òåì, êàê ïğîäîëæèòü.
-ru.FileAbortRetryIgnore=Çàêğîéòå âñå ïğèëîæåíèÿ, èñïîëüçóşùèå ffdshow, è íàæìèòå "Ïîâòîğ". Åñëè ñèòóàöèÿ ïîâòîğèòñÿ, íàæìèòå "Îòêàç", ïåğåçàãğóçèòå Âàø êîìïüşòåğ è ïîïğîáóéòå åù¸ ğàç.
+ru.FileAbortRetryIgnore=Çàêğîéòå âñå ïğèëîæåíèÿ, èñïîëüçóşùèå [name], è íàæìèòå "Ïîâòîğ". Åñëè ñèòóàöèÿ ïîâòîğèòñÿ, íàæìèòå "Îòêàç", ïåğåçàãğóçèòå Âàø êîìïüşòåğ è ïîïğîáóéòå åù¸ ğàç.
 ru.FinishedRestartLabel=Äëÿ çàâåğøåíèÿ óñòàíîâêè [name] òğåáóåòñÿ ïåğåçàãğóçèòü êîìïüşòåğ. Ïğîèçâåñòè ïåğåçàãğóçêó ñåé÷àñ?%n%nÏîäñêàçêà: èçáåæàòü ïåğåçàãğóçêè êîìïüşòåğà â ñëåäóşùèé ğàç ìîæåò ïîìî÷ü âêëş÷åíèå "Èíôîğìàöèÿ"-"Don't use ffdshow in:"-"explorer.exe" â êîíôèãóğàöèè âèäåîäåêîäåğà.
-#if unicode_required
-ru.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
-#endif
+
 ; Polish
 pl.WelcomeLabel2=Instalator zainstaluje [name] na twoim komputerze.%n%nZaleca siê zamkniêcie wszystkich innych aplikacji przed kontynuowaniem procesu instalacji.
-pl.FileAbortRetryIgnore=Zamknij aplikacjê u¿ywaj¹c¹ ffdshow i wciœnij Ponów. Jeœli problem nie ustêpuje, wciœnij Przerwij, zrestartuj komputer i ponownie uruchom instalacjê.
+pl.FileAbortRetryIgnore=Zamknij aplikacjê u¿ywaj¹c¹ [name] i wciœnij Ponów. Jeœli problem nie ustêpuje, wciœnij Przerwij, zrestartuj komputer i ponownie uruchom instalacjê.
 pl.FinishedRestartLabel=By zakoñczyæ instalacjê [name], instalator musi zrestartowaæ twój komputer. Czy chcia³byœ zrestartowaæ go teraz?%n%nPodpowiedŸ: By unikn¹æ restartowania komputera nastêpnym razem, zaznacz w zak³adce "Informacje" - "Nie u¿ywaj ffdshow w:" - "explorer.exe" w konfiguracji dekodera wideo.
-#if unicode_required
-pl.WinVersionTooLowError=Ta wersja [name] wymaga systemu Windows 2000 lub nowszego.
-#endif
+
 ;Czech
 cz.WelcomeLabel2=Tento instalátor nainstaluje na váš poèítaè [name].%n%nPøedtím ne spustíte instalaci je doporuèeno ukonèit všechny ostatní aplikace.
-cz.FileAbortRetryIgnore=Ukonèete aplikaci pouívající ffdshow a kliknìte na Opakovat. Pokud problém pøetrvává, ukonèete instalaci tlaèítkem Pøerušit, restartujte poèítaè a znovu spuste instalci.
+cz.FileAbortRetryIgnore=Ukonèete aplikaci pouívající [name] a kliknìte na Opakovat. Pokud problém pøetrvává, ukonèete instalaci tlaèítkem Pøerušit, restartujte poèítaè a znovu spuste instalci.
 cz.FinishedRestartLabel=Aby mohla bıt instalace [name] dokonèena, musí instalátor restartovat poèítaè. Chcete poèítaè restartovat nyní?%n%nTip: Potøebì restartování se pro pøíštì mùete vyhnout pokud v nastavení video dekodéru nastavíte "DirectShow"-"ffdshow nepouívat v:"-"explorer.exe".
-#if unicode_required
-cz.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
-#endif
+
 ; Chinese (Simplified)
 sc.WelcomeLabel2=¼´½«°²×° [name] µ½ÄúµÄµçÄÔÖĞ¡£%n%n½¨ÒéÄúÔÚ¼ÌĞø°²×°Ç°¹Ø±ÕËùÓĞÆäËûÓ¦ÓÃ³ÌĞò¡£
 sc.FileAbortRetryIgnore=ÍË³öÕıÔÚÊ¹ÓÃ [name] µÄÓ¦ÓÃ³ÌĞòÈ»ºóÖØÊÔ¡£Èç¹ûÎÊÌâÈÔÈ»³öÏÖ£¬µ¥»÷¡°ÖĞÖ¹¡±°´Å¥£¬²¢ÖØĞÂÆô¶¯¼ÆËã»úÈ»ºóÔÙÔËĞĞ°²×°³ÌĞò¡£
 sc.FinishedRestartLabel=°²×°³ÌĞòĞèÒªÖØĞÂÆô¶¯¼ÆËã»úÀ´Íê³É [name] µÄ°²×°¹ı³Ì¡£ÄãÏëÏÖÔÚÖØĞÂÆô¶¯Âğ£¿%n%nÌáÊ¾£ºÈç¹ûÏÂ´Î°²×°²»ÏëÖØĞÂÆô¶¯¼ÆËã»ú£¬¿ÉÒÔ¹´Ñ¡¡°²»ÒªÔÚÏÂÁĞ³ÌĞòÖĞÊ¹ÓÃffdshow£º¡±¸´Ñ¡¿ò£¨Î»ÓÚ¡°ffdshowÊÓÆµ½âÂëÆ÷ÅäÖÃ¡±->¡°DirectShow¿ØÖÆ¡±£©£¬²¢°Ñ¡°explorer.exe¡±¼ÓÈëºóÃæµÄÁĞ±í¡£
-#if unicode_required
-sc.WinVersionTooLowError=Õâ¸ö°æ±¾µÄ [name] ĞèÒª Windows 2000 »ò¸ü¸ß°æ±¾µÄÏµÍ³¡£
-#endif
+
 ; Add other languages here
+
+#if unicode_required
+en.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
+;jp.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
+de.WinVersionTooLowError=Diese [name]-Version benötigt Windows 2000 oder neuer.
+;fr.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
+;ru.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
+pl.WinVersionTooLowError=Ta wersja [name] wymaga systemu Windows 2000 lub nowszego.
+;cz.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
+sc.WinVersionTooLowError=Õâ¸ö°æ±¾µÄ [name] ĞèÒª Windows 2000 »ò¸ü¸ß°æ±¾µÄÏµÍ³¡£
+; Add other languages here
+#endif
 #endif
 
 [CustomMessages]
@@ -145,6 +140,7 @@ jp.langid=1041
 ;jp.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
 ;jp.simd_msg_sse=This build of ffdshow requires a CPU with SSE extension support. Your CPU does not have those capabilities.
 ;jp.simd_msg_sse2=This build of ffdshow requires a CPU with SSE2 extension support. Your CPU does not have those capabilities.
+;jp.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported.
 
 jp.comp_ffdshowds=ffdshow DirectShow ƒtƒBƒ‹ƒ^[
 jp.comp_vfwInterface=VFW ƒCƒ“ƒ^[ƒtƒF[ƒX
@@ -220,6 +216,7 @@ de.langid=1031
 de.msg_uninstallFirst=Sie müssen ihre alte ffdshow-Version erst deinstallieren.
 de.simd_msg_sse=Dieses ffdshow-Build benötigt einen Prozessor mit SSE-Unterstützung. Ihr Prozesser besitzt diese Eigenschaft nicht.
 de.simd_msg_sse2=Dieses ffdshow-Build benötigt einen Prozessor mit SSE2-Unterstützung. Ihr Prozesser besitzt diese Eigenschaft nicht.
+de.unsupported_cpu=Dieses ffdshow-Build benötigt einen Prozessor vom Typ i686 der neuer. Ihr Prozesser wird nicht unterstützt.
 
 de.comp_ffdshowds=ffdshow-DirectShow-Filter
 de.comp_vfwInterface=VFW-Interface
@@ -295,6 +292,7 @@ fr.langid=1036
 ;fr.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
 ;fr.simd_msg_sse=This build of ffdshow requires a CPU with SSE extension support. Your CPU does not have those capabilities.
 ;fr.simd_msg_sse2=This build of ffdshow requires a CPU with SSE2 extension support. Your CPU does not have those capabilities.
+;fr.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported.
 
 fr.comp_ffdshowds=Filtre ffdshow DirectShow
 fr.comp_vfwInterface=Interface VFW
@@ -364,11 +362,13 @@ fr.shrt_audioConfig=Configuration décodeur audio
 fr.shrt_vfwConfig=Configuration VFW
 fr.shrt_uninstall=Désinstaller ffdshow
 
+
 ; Russian
 ru.langid=1049
 ;ru.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
 ;ru.simd_msg_sse=This build of ffdshow requires a CPU with SSE extension support. Your CPU does not have those capabilities.
 ;ru.simd_msg_sse2=This build of ffdshow requires a CPU with SSE2 extension support. Your CPU does not have those capabilities.
+;ru.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported.
 
 ru.comp_ffdshowds=ffdshow DirectShow-ôèëüòğ
 ru.comp_vfwInterface=VFW èíòåğôåéñ
@@ -444,6 +444,7 @@ pl.langid=1045
 pl.msg_uninstallFirst=Najpierw musisz odinstalowaæ star¹ wersjê ffdshow.
 pl.simd_msg_sse=Ta kompilacja ffdshow wymaga procesora z obs³ug¹ zestawu instrukcji SSE. Twój procesor ich nie obs³uguje.
 pl.simd_msg_sse2=Ta kompilacja ffdshow wymaga procesora z obs³ug¹ zestawu instrukcji SSE2. Twój procesor ich nie obs³uguje.
+;pl.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported.
 
 pl.comp_ffdshowds=ffdshow - filtr DirectShow
 pl.comp_vfwInterface=interfejs VFW
@@ -513,11 +514,13 @@ pl.shrt_audioConfig=Konfiguracja dekodera audio
 pl.shrt_vfwConfig=Konfiguracja interfejsu VFW
 pl.shrt_uninstall=Odinstaluj ffdshow
 
+
 ;Czech
 cz.langid=1029
 ;cz.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
 cz.simd_msg_sse=Toto sestavení ffdshow vyaduje procesor s podporou rozšíøení SSE. Váš procesor tato rozšíøení nepodporuje.
 cz.simd_msg_sse2=Toto sestavení ffdshow vyaduje procesor s podporou rozšíøení SSE2. Váš procesor tato rozšíøení nepodporuje.
+;cz.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported.
 
 cz.comp_ffdshowds=ffdshow DirectShow filtr
 cz.comp_vfwInterface=VFW rozhraní
@@ -587,11 +590,13 @@ cz.shrt_audioConfig=Nastavení audio dekodéru
 cz.shrt_vfwConfig=Nastavení VFW
 cz.shrt_uninstall=Odinstalovat ffdshow
 
+
 ;Chinese (Simplified)
 sc.langid=2052
 sc.msg_uninstallFirst=Äú±ØĞëÏÈĞ¶ÔØ¾É°æ±¾µÄ ffdshow¡£
 sc.simd_msg_sse=Õâ¸ö±àÒë°æµÄ ffdshow ĞèÒªÒ»¸öÖ§³Ö SSE Ö¸Áî¼¯µÄ CPU¡£µ«ÊÇÄúµÄ CPU ²¢²»Ö§³ÖÕâ¸ö¹¦ÄÜ¡£
 sc.simd_msg_sse2=Õâ¸ö±àÒë°æµÄ ffdshow ĞèÒªÒ»¸öÖ§³Ö SSE2 Ö¸Áî¼¯µÄ CPU¡£µ«ÊÇÄúµÄ CPU ²¢²»Ö§³ÖÕâ¸ö¹¦ÄÜ¡£
+;sc.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported.
 
 sc.comp_ffdshowds=ffdshow DirectShow ÂË¾µ
 sc.comp_vfwInterface=VFW ½Ó¿Ú
@@ -660,6 +665,7 @@ sc.shrt_videoConfig=ffdshow ÊÓÆµ½âÂëÆ÷ÉèÖÃ
 sc.shrt_audioConfig=ffdshow ÒôÆµ½âÂëÆ÷ÉèÖÃ
 sc.shrt_vfwConfig=ffdshow VFW ÉèÖÃ
 sc.shrt_uninstall=Ğ¶ÔØ ffdshow
+
 
 ; Add other languages here
 ba.langid=1069
