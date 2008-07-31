@@ -412,8 +412,8 @@ void TcodecsPageVideo::fillCodecs(void)
    formats.push_back(Tformat(_l("H.264/AVC")     ,IDFF_h264,IDFF_MOVIE_LAVC,_l("H264, X264, VSSH (incomplete), DAVC, PAVC, AVC1"),options_h264));
    static const int movies_mpeg4[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_XVID4,0};
    formats.push_back(Tformat(_l("Xvid")          ,IDFF_xvid,movies_mpeg4,_l("XVID, XVIX")));
-   formats.push_back(Tformat(_l("DivX 4/5/6")    ,IDFF_dx50,movies_mpeg4,_l("DIVX, DX50, BLZ0, DXGM")));
-   formats.push_back(Tformat(_l("Other MPEG4")   ,IDFF_mp4v,movies_mpeg4,_l("MP4V, 3IVX, 3IV1, 3IV2, MP4S, M4S2, RMP4, DM4V, WV1F, FMP4, HDX4, SMP4, LMP4, NDIG, SEDG")));
+   formats.push_back(Tformat(_l("DivX 4/5/6")    ,IDFF_dx50,movies_mpeg4,_l("DIVX, DX50")));
+   formats.push_back(Tformat(_l("Other MPEG4")   ,IDFF_mp4v,movies_mpeg4,_l("MP4V, 3IVX, 3IV1, 3IV2, MP4S, M4S2, RMP4, DM4V, WV1F, FMP4, HDX4, SMP4, LMP4, NDIG, SEDG, BLZ0, DXGM")));
    formats.push_back(Tformat(_l("DivX 3")        ,IDFF_div3,IDFF_MOVIE_LAVC,_l("DIV3, DIV4, DIV5, DIV6, AP41, COL1, DVX3, MPG3")));
    formats.push_back(Tformat(_l("FVFW,FFDS")     ,IDFF_fvfw,movies_mpeg4,_l("ffdshow and ffvfw internal FOURCCs")));
    formats.push_back(Tformat(_l("MP43")          ,IDFF_mp43,IDFF_MOVIE_LAVC,_l("MP43")));
