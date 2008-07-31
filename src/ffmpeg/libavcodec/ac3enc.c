@@ -1278,4 +1278,9 @@ AVCodec ac3_encoder = {
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
     /*.long_name = */NULL_IF_CONFIG_SMALL("ATSC A/52 / AC-3"),
+    #if __STDC_VERSION__ >= 199901L
+    .sample_fmts = (enum SampleFormat[]){SAMPLE_FMT_S16,SAMPLE_FMT_NONE},
+    #else
+    /*.sample_fmts = */NULL,
+    #endif
 };
