@@ -23,7 +23,7 @@ SRCS_NASM=common/x86/cabac-a.asm common/x86/dct-a.asm common/x86/deblock-a.asm \
 			common/x86/pixel-a.asm common/x86/predict-a.asm \
 			common/x86/quant-a.asm common/x86/sad-a.asm \
 			common/x86/cpu-32.asm common/x86/dct-32.asm common/x86/pixel-32.asm \
-			common/x86/x86inc.asm common/x86/x86inc-32.asm
+			common/x86/x86inc.asm common/x86/x86inc-32.asm common/x86/x86util.asm
 endif
 
 ifneq ($(64BIT),yes)

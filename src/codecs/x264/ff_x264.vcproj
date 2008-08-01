@@ -1288,6 +1288,26 @@
 						/>
 					</FileConfiguration>
 				</File>
+				<File
+					RelativePath=".\common\x86\x86util.asm"
+					>
+					<FileConfiguration
+						Name="Debug|x64"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="yasm"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="yasm"
+						/>
+					</FileConfiguration>
+				</File>
 			</Filter>
 		</Filter>
 		<File
