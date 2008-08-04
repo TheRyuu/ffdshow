@@ -11,11 +11,11 @@
 	_l("3wPlayer.exe;ACDSee10.exe;ACDSee5.exe;ACDSee6.exe;ACDSee7.exe;ACDSee8.exe;ACDSee8Pro.exe;ACDSee9.exe;ACDSeePro2.exe;aegisub.exe;afreecaplayer.exe;")\
 	_l("afreecastudio.exe;aim6.exe;ALLPlayer.exe;allradio.exe;AlltoaviV4.exe;ALShow.exe;ALSong.exe;AltDVB.exe;amcap.exe;amf_slv.exe;amvtransform.exe;Apollo DivX to DVD Creator.exe;Apollo3GPVideoConverter.exe;")\
 	_l("Ares.exe;AsfTools.exe;ass_help3r.exe;ASUSDVD.exe;Audition.exe;AutoGK.exe;autorun.exe;avant.exe;AVerTV.exe;Avi2Dvd.exe;avi2mpg.exe;avicodec.exe;avipreview.exe;aviutl.exe;avs2avi.exe;Badak.exe;")\
-	_l("BearShare.exe;BePipe.exe;bestplayer1.0.exe;BitComet.exe;BlazeDVD.exe;BoonPlayer.exe;bplay.exe;bsplay.exe;bsplayer.exe;BTVD3DShell.exe;Camfrog Video Chat.exe;CamRecorder.exe;CamtasiaStudio.exe;")\
+	_l("BearShare.exe;BePipe.exe;bestplayer.exe;bestplayer1.0.exe;BitComet.exe;BlazeDVD.exe;BoonPlayer.exe;bplay.exe;bsplay.exe;bsplayer.exe;BTVD3DShell.exe;Camfrog Video Chat.exe;CamRecorder.exe;CamtasiaStudio.exe;")\
 	_l("carom.exe;CEC_MAIN.exe;christv.exe;cinemaplayer.exe;CinergyDVR.exe;CodecInstaller.exe;ConvertXtoDvd.exe;coolpro2.exe;CorePlayer.exe;Crystal.exe;crystalfree.exe;CrystalPro.exe;cscript.exe;CTCMS.exe;")\
 	_l("CTCMSU.exe;CTWave.exe;CTWave32.exe;cut_assistant.exe;dashboard.exe;demo32.exe;DivX Player.exe;DivxToDVD.exe;dllhost.exe;dpgenc.exe;Dr.DivX.exe;drdivx.exe;drdivx2.exe;DreamMaker.exe;DSBrws.exe;")\
-	_l("DScaler.exe;dv.exe;dvbdream.exe;dvbviewer.exe;DVD Shrink 3.2.exe;DVDAuthor.exe;DVDMaker.exe;DVDMF.exe;dvdplay.exe;dvdSanta.exe;DXEffectTester.exeFLVPlayer4Free.exe;DXEnum.exe;Easy RealMedia Tools.exe;")\
-	_l("ehExtHost.exe;ehshell.exe;emule_TK4.exe;Encode360.exe;fenglei.exe;ffmpeg.exe;filtermanager.exe;firefox.exe;Flash.exe;FMRadio.exe;Fortius.exe;FreeStyle.exe;FSViewer.exe;Funshion.exe;FusionHDTV.exe;")\
+	_l("DScaler.exe;dv.exe;dvbdream.exe;dvbviewer.exe;DVD Shrink 3.2.exe;DVDAuthor.exe;DVDMaker.exe;DVDMF.exe;dvdplay.exe;dvdSanta.exe;DXEffectTester.exe;DXEnum.exe;Easy RealMedia Tools.exe;")\
+	_l("ehExtHost.exe;ehshell.exe;Encode360.exe;explorer.exe;fenglei.exe;ffmpeg.exe;filtermanager.exe;firefox.exe;Flash.exe;FLVPlayer4Free.exe;FMRadio.exe;Fortius.exe;FreeStyle.exe;FSViewer.exe;Funshion.exe;FusionHDTV.exe;")\
 	_l("GDivX Player.exe;gdsmux.exe;GoldWave.exe;gom.exe;GomEnc.exe;GoogleDesktop.exe;GoogleDesktopCrawl.exe;graphedit.exe;graphedt.exe;GraphStudio.exe;gspot.exe;HBP.exe;HDVSplit.exe;honestechTV.exe;")\
 	_l("HPWUCli.exe;i_view32.exe;ICQ.exe;ICQLite.exe;iexplore.exe;IHT.exe;IncMail.exe;InfoTool.exe;infotv.exe;InstallChecker.exe;Internet TV.exe;iPlayer.exe;ipod_video_converter.exe;IPODConverter.exe;")\
 	_l("JetAudio.exe;jwBrowser.exe;kmplayer.exe;KwMusic.exe;LA.exe;LifeCam.exe;Lilith.exe;makeAVIS.exe;MatroskaDiag.exe;Maxthon.exe;MDirect.exe;Media Center 12.exe;Media Jukebox.exe;Media Player Classic.exe;")\
