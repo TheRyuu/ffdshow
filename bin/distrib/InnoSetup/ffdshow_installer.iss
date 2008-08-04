@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2048
+#define tryout_revision = 2063
 #define buildyear = 2008
-#define buildmonth = '07'
-#define buildday = '25'
+#define buildmonth = '08'
+#define buildday = '04'
 
 ; Build specific options
 #define unicode_required = True
@@ -253,8 +253,8 @@ Name: ffdshow\plugins\dscaler; Description: DScaler
 #endif
 
 [Tasks]
-Name: resetsettings; Description: {cm:tsk_resetSettings}; Flags: unchecked; Components: ffdshow
-Name: video; Description: {cm:tsk_videoFormats}; Flags: unchecked; Components: ffdshow
+Name: resetsettings; Description: {cm:tsk_resetSettings}; GroupDescription: {cm:tsk_settings}; Flags: unchecked; Components: ffdshow
+Name: video; Description: {cm:tsk_videoFormats}; GroupDescription: {cm:tsk_video_formats}; Flags: unchecked; Components: ffdshow
 Name: video\h264; Description: H.264 / AVC; Check: CheckTaskVideo('h264', 1, True); Components: ffdshow
 Name: video\h264; Description: H.264 / AVC; Check: NOT CheckTaskVideo('h264', 1, True); Components: ffdshow; Flags: unchecked
 Name: video\divx; Description: DivX; Check: CheckTaskVideo2('dx50', True); Components: ffdshow
@@ -306,7 +306,7 @@ Name: video\other3; Description: ASV1/2, CYUV, ZLIB, 8BPS, LOCO, MSZH, QPEG, WNV
 Name: video\other4; Description: CamStudio, ZMBV, Ultimotion, VIXL, AASC, IV32, FPS1, RT21; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
 Name: video\rawv; Description: {cm:tsk_rawVideo}; Check: CheckTaskVideo('rawv', 1, False); Flags: dontinheritcheck; Components: ffdshow
 Name: video\rawv; Description: {cm:tsk_rawVideo}; Check: NOT CheckTaskVideo('rawv', 1, False); Flags: dontinheritcheck unchecked; Components: ffdshow
-Name: audio; Description: {cm:tsk_audioFormats}; Flags: unchecked; Components: ffdshow
+Name: audio; Description: {cm:tsk_audioFormats}; GroupDescription: {cm:tsk_audio_formats}; Flags: unchecked; Components: ffdshow
 Name: audio\mp3; Description: MP3; Check: CheckTaskAudio('mp3', 7, True); Components: ffdshow
 Name: audio\mp3; Description: MP3; Check: NOT CheckTaskAudio('mp3', 7, True); Flags: unchecked; Components: ffdshow
 Name: audio\aac; Description: AAC; Flags: unchecked; Components: ffdshow
@@ -344,15 +344,16 @@ Name: audio\qt; Description: QDM2, MACE; Check: NOT CheckTaskAudio('qdm2', 1, Tr
 Name: audio\adpcm; Description: ADPCM, MS GSM, Truespeech; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
 Name: audio\rawa; Description: {cm:tsk_rawAudio}; Check: CheckTaskAudio('rawa', 4, False); Flags: dontinheritcheck; Components: ffdshow
 Name: audio\rawa; Description: {cm:tsk_rawAudio}; Check: NOT CheckTaskAudio('rawa', 4, False); Flags: dontinheritcheck unchecked; Components: ffdshow
-Name: filter; Description: {cm:tsk_defaultFilters}; Flags: unchecked; Components: ffdshow
+Name: filter; Description: {cm:tsk_defaultFilters}; GroupDescription: {cm:tsk_filter_settings}; Flags: unchecked; Components: ffdshow
 Name: filter\normalize; Description: {cm:tsk_volumeNorm}; Check:     GetTaskVolNormalize(); Components: ffdshow
 Name: filter\normalize; Description: {cm:tsk_volumeNorm}; Check: NOT GetTaskVolNormalize(); Components: ffdshow; Flags: unchecked
 Name: filter\subtitles; Description: {cm:tsk_subtitles};  Check:     CheckTaskVideoInpreset('issubtitles', 1, False); Components: ffdshow
 Name: filter\subtitles; Description: {cm:tsk_subtitles};  Check: NOT CheckTaskVideoInpreset('issubtitles', 1, False); Components: ffdshow; Flags: unchecked;
 #if !PREF_YAMAGATA
-Name: tweaks; Description: {cm:tsk_tweaks}; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
-Name: tweaks\skipinloop; Description: {cm:tsk_skipInloop}; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
+Name: skiph264inloop; Description: {cm:tsk_skipInloop}; GroupDescription: {cm:tsk_tweaks}; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
 #endif
+Name: whitelist; Description: {cm:tsk_whitelist}; GroupDescription: {cm:tsk_compatibility_manager}; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
+Name: whitelist\prompt; Description: {cm:tsk_whitelist_prompt}; Flags: unchecked ; Components: ffdshow
 
 [Icons]
 #if is64bit
@@ -599,8 +600,8 @@ Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: p
 Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: resizeMethod;        ValueData: 9; Flags: createvalueifdoesntexist; Components: ffdshow
 
 #if !PREF_YAMAGATA
-Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: fastH264; ValueData: 0; Components: ffdshow; Tasks: NOT tweaks\skipinloop; Flags: createvalueifdoesntexist
-Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: fastH264; ValueData: 2; Components: ffdshow; Tasks:     tweaks\skipinloop;
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: fastH264; ValueData: 0; Components: ffdshow; Tasks: NOT skiph264inloop; Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: fastH264; ValueData: 2; Components: ffdshow; Tasks:     skiph264inloop;
 #endif
 
 Root: HKCU; Subkey: Software\GNU\ffdshow;         ValueType: dword; ValueName: subTextpin;    ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
@@ -626,13 +627,15 @@ Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: bl
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: blacklist;   ValueData: "oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist; MinVersion: 0,6;       Components: ffdshow
 
 ; Compatibility list
-Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: isWhitelist; ValueData: {code:GetIsWhitelistVideo}; Check: IsCompVValid; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: String; ValueName: whitelist;   ValueData: {code:GetWhitelistVideo};                        Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: isWhitelist; ValueData: {code:GetIsWhitelistAudio}; Check: IsCompAValid; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: whitelist;   ValueData: {code:GetWhitelistAudio};                        Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: isWhitelist; ValueData: 0; Check: NOT IsUpdate; Components: ffdshow; Tasks: NOT whitelist
+Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: isWhitelist; ValueData: 1; Check: NOT IsUpdate; Components: ffdshow; Tasks: whitelist
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: isWhitelist; ValueData: 0; Check: NOT IsUpdate; Components: ffdshow; Tasks: NOT whitelist
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: isWhitelist; ValueData: 1; Check: NOT IsUpdate; Components: ffdshow; Tasks: whitelist
 
-Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: dontaskComp; ValueData: {code:GetIsCompVdontask};   Check: IsCompVValid; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: dontaskComp; ValueData: {code:GetIsCompAdontask};   Check: IsCompAValid; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: dontaskComp; ValueData: 0; Check: NOT IsUpdate; Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
+Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: dontaskComp; ValueData: 1; Check: NOT IsUpdate; Components: ffdshow; Tasks: whitelist AND whitelist\prompt
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: dontaskComp; ValueData: 0; Check: NOT IsUpdate; Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: dontaskComp; ValueData: 1; Check: NOT IsUpdate; Components: ffdshow; Tasks: whitelist AND whitelist\prompt
 
 ; Registry keys for the audio/video formats:
 #include "reg_formats.iss"
@@ -661,38 +664,14 @@ Description: {cm:run_vfwConfig};   Filename: {win}\rundll32.exe; Parameters: ff_
 #include "custom_messages.iss"
 
 [Code]
-const NUMBER_OF_COMPATIBLEAPPLICATIONS = 70;
-
-type
-  TCompApp = record
-    rev: Integer;  // The application (name) have been added to the compatibility list at this rev.
-    name: String;
-  end;
-
-  TcomplistPage = record
-    page: TInputOptionWizardPage;
-    edt: TMemo;
-    chbDontAsk: TCheckBox;
-    skipped: Boolean;
-    countAdded: Integer;
-  end;
-
 // Global vars
 var
   is_update: Boolean;
-
-  ComplistVideo: TcomplistPage;
-  ComplistAudio: TcomplistPage;
-  Complist_isMsgAddedShown: Boolean;
-
   reg_mixerOut: Cardinal;
   reg_ismixer: Cardinal;
-
   SpeakerPage: TInputOptionWizardPage;
   is8DisableMixer: Boolean;
 
-  priorPageID: Integer;  // to be used "Don't ask me again" in compatibility list, so that audio and video config can link.
-  compApps : array[1..NUMBER_OF_COMPATIBLEAPPLICATIONS] of TCompApp;
 
 function CheckTaskVideo(name: String; value: Integer; showbydefault: Boolean): Boolean;
 var
@@ -845,28 +824,6 @@ begin
   Result := is_update;
 end;
 
-function NextButtonClick(CurPageID: Integer): Boolean;
-begin
-  Result := True;
-  if CurPageID = wpSelectComponents then begin
-    if NOT IsComponentSelected('ffdshow') then begin
-      MsgBox(CustomMessage('comp_msg_selectOneComp'), mbInformation, MB_OK);
-      Result := False;
-    end
-  end
-  if CurPageID = ComplistVideo.page.ID then begin
-    ComplistAudio.chbDontAsk.Checked := ComplistVideo.chbDontAsk.Checked;
-  end
-end;
-
-function BackButtonClick(CurPageID: Integer): Boolean;
-begin
-  Result := True;
-  if CurPageID = ComplistAudio.page.ID then begin
-    ComplistVideo.chbDontAsk.Checked := ComplistAudio.chbDontAsk.Checked;
-  end
-end;
-
 #if !is64bit
 procedure RemoveBuildUsingNSIS();
 var
@@ -1001,434 +958,10 @@ begin
     Result := '0';
 end;
 
-function GetIsWhitelistVideo(dummy: String): String;
-begin
-  Result := '1';
-  if ComplistVideo.page.Values[0] then
-    Result := '0';
-end;
-
-function GetWhitelistVideo(dummy: String): String;
-begin
-  Result := ComplistVideo.edt.Text;
-  StringChange(Result, #13#10, ';');
-end;
-
-function GetIsWhitelistAudio(dummy: String): String;
-begin
-  Result := '1';
-  if ComplistAudio.page.Values[0] then
-    Result := '0';
-end;
-
-function GetWhitelistAudio(dummy: String): String;
-begin
-  Result := ComplistAudio.edt.Text;
-  StringChange(Result, #13#10, ';');
-end;
-
-function isCompVValid(): Boolean;
-begin
-  Result := not ComplistVideo.skipped;
-end;
-
-function isCompAValid(): Boolean;
-begin
-  Result := not ComplistAudio.skipped;
-end;
-
-function GetIsCompVdontask(dummy: String): String;
-begin
-  Result := '0';
-  if ComplistVideo.chbDontAsk.Checked then
-    Result := '1';
-end;
-
-function GetIsCompAdontask(dummy: String): String;
-begin
-  Result := '0';
-  if ComplistAudio.chbDontAsk.Checked then
-    Result := '1';
-end;
-
 function ffRegReadDWordHKCU(regKeyName: String; regValName: String; defaultValue: Cardinal): Cardinal;
 begin
   if NOT RegQueryDwordValue(HKCU, regKeyName, regValName, Result) then
     Result := defaultValue;
-end;
-
-procedure InitComplist(var complist: TcomplistPage; regKeyName: String);
-var
-  regstr: String;
-  regstrUpper: String;
-  i: Integer;
-  revision: Cardinal;
-  rev: Integer;
-  default_compat_list: String;
-begin
-  complist.countAdded := 0;
-  complist.page.Add(CustomMessage('white_dontLimit'));
-  complist.page.Add(CustomMessage('white_useOnlyIn'));
-
-  if ffRegReadDWordHKCU(regKeyName, 'isWhitelist', 1) = 1 then begin
-    complist.page.Values[1] := True
-  end
-  else begin
-    complist.page.Values[0] := True;
-  end
-
-  // Default list of compatible apps
-  default_compat_list :=
-    '3wPlayer.exe'#13#10
-    'ACDSee10.exe'#13#10
-    'ACDSee5.exe'#13#10
-    'ACDSee6.exe'#13#10
-    'ACDSee7.exe'#13#10
-    'ACDSee8.exe'#13#10
-    'ACDSee8pro.exe'#13#10
-    'ACDSee9.exe'#13#10
-    'ACDSeePro2.exe'#13#10
-    'Adobe Premiere Elements.exe'#13#10
-    'Adobe Premiere Pro.exe'#13#10
-    'aegisub.exe'#13#10
-    'afreecaplayer.exe'#13#10
-    'afreecastudio.exe'#13#10
-    'aim6.exe'#13#10
-    'ALLPlayer.exe'#13#10
-    'allradio.exe'#13#10
-    'AlltoaviV4.exe'#13#10
-    'ALShow.exe'#13#10
-    'ALSong.exe'#13#10
-    'AltDVB.exe'#13#10
-    'amcap.exe'#13#10
-    'amf_slv.exe'#13#10
-    'amvtransform.exe'#13#10
-    'Apollo DivX to DVD Creator.exe'#13#10
-    'Apollo3GPVideoConverter.exe'#13#10
-    'Ares.exe'#13#10
-    'AsfTools.exe'#13#10
-    'ass_help3r.exe'#13#10
-    'ASUSDVD.exe'#13#10
-    'Audition.exe'#13#10
-    'AutoGK.exe'#13#10
-    'autorun.exe'#13#10
-    'avant.exe'#13#10
-    'AVerTV.exe'#13#10
-    'Avi2Dvd.exe'#13#10
-    'avi2mpg.exe'#13#10
-    'avicodec.exe'#13#10
-    'avipreview.exe'#13#10
-    'aviutl.exe'#13#10
-    'avs2avi.exe'#13#10
-    'Badak.exe'#13#10
-    'BearShare.exe'#13#10
-    'BePipe.exe'#13#10
-    'BESTplayer.exe'#13#10
-    'bestplayer1.0.exe'#13#10
-    'BitComet.exe'#13#10
-    'BlazeDVD.exe'#13#10
-    'BoonPlayer.exe'#13#10
-    'bplay.exe'#13#10
-    'bsplay.exe'#13#10
-    'bsplayer.exe'#13#10
-    'BTVD3DShell.exe'#13#10
-    'Camfrog Video Chat.exe'#13#10
-    'CamRecorder.exe'#13#10
-    'CamtasiaStudio.exe'#13#10
-    'carom.exe'#13#10
-    'CEC_MAIN.exe'#13#10
-    'christv.exe'#13#10
-    'cinemaplayer.exe'#13#10
-    'CinergyDVR.exe'#13#10
-    'CodecInstaller.exe'#13#10
-    'ConvertXtoDvd.exe'#13#10
-    'coolpro2.exe'#13#10
-    'CorePlayer.exe'#13#10
-    'Crystal.exe'#13#10
-    'crystalfree.exe'#13#10
-    'CrystalPro.exe'#13#10
-    'cscript.exe'#13#10
-    'CTCMS.exe'#13#10
-    'CTCMSU.exe'#13#10
-    'CTWave.exe'#13#10
-    'CTWave32.exe'#13#10
-    'cut_assistant.exe'#13#10
-    'dashboard.exe'#13#10
-    'demo32.exe'#13#10
-    'DivX Player.exe'#13#10
-    'DivxToDVD.exe'#13#10
-    'dllhost.exe'#13#10
-    'dpgenc.exe'#13#10
-    'Dr.DivX.exe'#13#10
-    'drdivx.exe'#13#10
-    'drdivx2.exe'#13#10
-    'DreamMaker.exe'#13#10
-    'DSBrws.exe'#13#10
-    'DScaler.exe'#13#10
-    'dv.exe'#13#10
-    'dvbdream.exe'#13#10
-    'dvbviewer.exe'#13#10
-    'DVD Shrink 3.2.exe'#13#10
-    'DVDAuthor.exe'#13#10
-    'DVDMaker.exe'#13#10
-    'DVDMF.exe'#13#10
-    'dvdplay.exe'#13#10
-    'dvdSanta.exe'#13#10
-    'DXEffectTester.exe'#13#10
-    'DXEnum.exe'#13#10
-    'Easy RealMedia Tools.exe'#13#10
-    'ehExtHost.exe'#13#10
-    'ehshell.exe'#13#10
-    'emule_TK4.exe'#13#10
-    'Encode360.exe'#13#10
-    'fenglei.exe'#13#10
-    'ffmpeg.exe'#13#10
-    'filtermanager.exe'#13#10
-    'firefox.exe'#13#10
-    'Flash.exe'#13#10
-    'FLVPlayer4Free.exe'#13#10
-    'FMRadio.exe'#13#10
-    'Fortius.exe'#13#10
-    'FreeStyle.exe'#13#10
-    'FSViewer.exe'#13#10
-    'Funshion.exe'#13#10
-    'FusionHDTV.exe'#13#10
-    'GDivX Player.exe'#13#10
-    'gdsmux.exe'#13#10
-    'GoldWave.exe'#13#10
-    'gom.exe'#13#10
-    'GomEnc.exe'#13#10
-    'GoogleDesktop.exe'#13#10
-    'GoogleDesktopCrawl.exe'#13#10
-    'graphedit.exe'#13#10
-    'graphedt.exe'#13#10
-    'GraphStudio.exe'#13#10
-    'gspot.exe'#13#10
-    'HBP.exe'#13#10
-    'HDVSplit.exe'#13#10
-    'honestechTV.exe'#13#10
-    'HPWUCli.exe'#13#10
-    'i_view32.exe'#13#10
-    'ICQ.exe'#13#10
-    'ICQLite.exe'#13#10
-    'iexplore.exe'#13#10
-    'IHT.exe'#13#10
-    'IncMail.exe'#13#10
-    'InfoTool.exe'#13#10
-    'infotv.exe'#13#10
-    'InstallChecker.exe'#13#10
-    'Internet TV.exe'#13#10
-    'iPlayer.exe'#13#10
-    'ipod_video_converter.exe'#13#10
-    'IPODConverter.exe'#13#10
-    'JetAudio.exe'#13#10
-    'jwBrowser.exe'#13#10
-    'kmplayer.exe'#13#10
-    'KwMusic.exe'#13#10
-    'LA.exe'#13#10
-    'LifeCam.exe'#13#10
-    'Lilith.exe'#13#10
-    'makeAVIS.exe'#13#10
-    'MatroskaDiag.exe'#13#10
-    'Maxthon.exe'#13#10
-    'MDirect.exe'#13#10
-    'Media Center 12.exe'#13#10
-    'Media Jukebox.exe'#13#10
-    'Media Player Classic.exe'#13#10
-    'MediaLife.exe'#13#10
-    'MediaPortal.exe'#13#10
-    'MEDIAREVOLUTION.EXE'#13#10
-    'MediaServer.exe'#13#10
-    'megui.exe'#13#10
-    'mencoder.exe'#13#10
-    'Metacafe.exe'#13#10
-    'MMPlayer.exe'#13#10
-    'moviemk.exe'#13#10
-    'moviethumb.exe'#13#10
-    'MP4Converter.exe'#13#10
-    'Mp4Player.exe'#13#10
-    'mpcstar.exe'#13#10
-    'MpegVideoWizard.exe'#13#10
-    'mplayer2.exe'#13#10
-    'mplayerc.exe'#13#10
-    'msnmsgr.exe'#13#10
-    'msoobe.exe'#13#10
-    'MultimediaPlayer.exe'#13#10
-    'Munite.exe'#13#10
-    'MusicManager.exe'#13#10
-    'Muzikbrowzer.exe'#13#10
-    'Mv2PlayerPlus.exe'#13#10
-    'My Movies.exe'#13#10
-    'myplayer.exe'#13#10
-    'nero.exe'#13#10
-    'NeroHome.exe'#13#10
-    'NeroVision.exe'#13#10
-    'NicoPlayer.exe'#13#10
-    'NMSTranscoder.exe'#13#10
-    'nvplayer.exe'#13#10
-    'Omgjbox.exe'#13#10
-    'OnlineTV.exe'#13#10
-    'Opera.exe'#13#10
-    'OrbStreamerClient.exe'#13#10
-    'OUTLOOK.EXE'#13#10
-    'PaintDotNet.exe'#13#10
-    'paltalk.exe'#13#10
-    'pcwmp.exe'#13#10
-    'PhotoScreensaver.scr'#13#10
-    'Photoshop.exe'#13#10
-    'Picasa2.exe'#13#10
-    'playwnd.exe'#13#10
-    'PowerDirector.exe'#13#10
-    'powerdvd.exe'#13#10
-    'POWERPNT.EXE'#13#10
-    'PPLive.exe'#13#10
-    'ppmate.exe'#13#10
-    'PPStream.exe'#13#10
-    'PQDVD_PSP.exe'#13#10
-    'Procoder2.exe'#13#10
-    'Producer.exe'#13#10
-    'progdvb.exe'#13#10
-    'ProgDvbNet.exe'#13#10
-    'PVCR.exe'#13#10
-    'Qonoha.exe'#13#10
-    'QQ.exe'#13#10
-    'QQLive.exe'#13#10
-    'QQMusic.exe'#13#10
-    'QQPlayerSvr.exe'#13#10
-    'QvodPlayer.exe'#13#10
-    'QzoneMusic.exe'#13#10
-    'RadLight.exe'#13#10
-    'realplay.exe'#13#10
-    'ReClockHelper.dll'#13#10
-    'Recode.exe'#13#10
-    'RecordingManager.exe'#13#10
-    'rlkernel.exe'#13#10
-    'RoxMediaDB10.exe'#13#10
-    'RoxMediaDB9.exe'#13#10
-    'rundll32.exe'#13#10
-    'SelfMV.exe'#13#10
-    'Shareaza.exe'#13#10
-    'sherlock2.exe'#13#10
-    'ShowTime.exe'#13#10
-    'sidebar.exe'#13#10
-    'SinkuHadouken.exe'#13#10
-    'Sleipnir.exe'#13#10
-    'smartmovie.exe'#13#10
-    'songbird.exe'#13#10
-    'SopCast.exe'#13#10
-    'SplitCam.exe'#13#10
-    'START.EXE'#13#10
-    'stillcap.exe'#13#10
-    'Studio.exe'#13#10
-    'subedit.exe'#13#10
-    'SubtitleEdit.exe'#13#10
-    'SubtitleWorkshop.exe'#13#10
-    'SubtitleWorkshop4.exe'#13#10
-    'SWFConverter.exe'#13#10
-    'telewizja.exe'#13#10
-    'TheaterTek DVD.exe'#13#10
-    'time_adjuster.exe'#13#10
-    'timecodec.exe'#13#10
-    'tmc.exe'#13#10
-    'TMPGEnc.exe'#13#10
-    'TMPGEnc4XP.exe'#13#10
-    'TOTALCMD.EXE'#13#10
-    'Tvants.exe'#13#10
-    'tvc.exe'#13#10
-    'TVersity.exe'#13#10
-    'TVPlayer.exe'#13#10
-    'TVUPlayer.exe'#13#10
-    'UCC.exe'#13#10
-    'Ultra EDIT.exe'#13#10
-    'UUSeePlayer.exe'#13#10
-    'VCD_PLAY.EXE'#13#10
-    'VeohClient.exe'#13#10
-    'VFAPIFrameServer.exe'#13#10
-    'VideoConvert.exe'#13#10
-    'videoconverter.exe'#13#10
-    'videoenc.exe'#13#10
-    'VideoManager.exe'#13#10
-    'VideoSnapshot.exe'#13#10
-    'VideoSplitter.exe'#13#10
-    'VIDEOS~1.SCR'#13#10
-    'VideoWave9.exe'#13#10
-    'ViPlay.exe'#13#10
-    'ViPlay3.exe'#13#10
-    'ViPlay4.exe'#13#10
-    'virtualdub.exe'#13#10
-    'virtualdubmod.exe'#13#10
-    'vplayer.exe'#13#10
-    'WaveChk.exe'#13#10
-    'WCreator.exe'#13#10
-    'WebMediaPlayer.exe'#13#10
-    'WFTV.exe'#13#10
-    'winamp.exe'#13#10
-    'WinAVI 9.0.exe'#13#10
-    'WinAVI MP4 Converter.exe'#13#10
-    'WinAVI.exe'#13#10
-    'WindowsPhotoGallery.exe'#13#10
-    'windvd.exe'#13#10
-    'WinDvr.exe'#13#10
-    'WinMPGVideoConvert.exe'#13#10
-    'WINWORD.EXE'#13#10
-    'WLXPhotoGallery.exe'#13#10
-    'wmenc.exe'#13#10
-    'wmplayer.exe'#13#10
-    'wmprph.exe'#13#10
-    'wscript.exe'#13#10
-    'x264.exe'#13#10
-    'XNVIEW.EXE'#13#10
-    'Xvid4PSP.exe'#13#10
-    'YahooMessenger.exe'#13#10
-    'YahooMusicEngine.exe'#13#10
-    'YahooWidgetEngine.exe'#13#10
-    'YahooWidgets.exe'#13#10
-    'zplayer.exe'#13#10
-    'Zune.exe';
-
-  // Edit control
-  complist.edt := TMemo.Create(complist.page);
-  complist.edt.Top := ScaleY(78);
-  complist.edt.Width := complist.page.SurfaceWidth;
-  complist.edt.Height := ScaleY(135);
-  complist.edt.Parent := complist.page.Surface;
-  complist.edt.MaxLength := 4000;
-  complist.edt.ScrollBars := ssVertical;
-  if RegQueryStringValue(HKCU, regKeyName, 'whitelist', regstr) then begin
-    StringChange(regstr, ';', #13#10);
-    if RegQueryDwordValue(HKLM, 'Software\GNU\ffdshow', 'revision', revision) then begin
-      regstrUpper := AnsiUppercase(regstr);
-
-      for i:=1 to NUMBER_OF_COMPATIBLEAPPLICATIONS do begin
-        if compApps[i].rev = 0 then Break;
-        if compApps[i].rev > 1 then
-          rev := compApps[i].rev;
-        if rev > revision then begin
-          if Pos(AnsiUppercase(compApps[i].name),regstrUpper) = 0 then begin
-            regstr := compApps[i].name + #13#10 + regstr;
-            complist.countAdded := complist.countAdded + 1;
-          end
-        end
-      end
-      complist.edt.text := regstr;
-    end
-    else begin
-      complist.edt.Text := default_compat_list;
-    end
-  end
-  else begin
-    complist.edt.Text := default_compat_list;
-  end
-
-  // Check box
-  complist.chbDontAsk := TCheckBox.Create(complist.page);
-  complist.chbDontAsk.Top := ScaleY(220);
-  complist.chbDontAsk.Left := ScaleX(0);
-  complist.chbDontAsk.Width := ScaleX(170);
-  complist.chbDontAsk.Height := ScaleY(16);
-  complist.chbDontAsk.Caption := CustomMessage('white_dontAskAgain');
-  complist.chbDontAsk.Parent := complist.page.Surface;
-  complist.chbDontAsk.Checked := False;
 end;
 
 procedure InitializeWizard;
@@ -1437,111 +970,12 @@ var
   reg_isSpkCfg: Cardinal;
   isMajorType: Boolean;
 begin
-  { Create the pages }
-
-  // new compatible applications should be written both here and edtTarget.Text := 'aegisub...
-  // FIXME more smart way of initializing compApps.
-
-  compApps[1].rev   := 1548;
-  compApps[1].name  := 'moviemk.exe';
-
-  compApps[2].rev   := 1605;
-  compApps[2].name  := 'ViPlay.exe';
-  compApps[3].name  := 'MEDIAREVOLUTION.EXE';
-  
-  compApps[4].rev   := 1608;
-  compApps[4].name  := 'ViPlay4.exe';
-  
-  compApps[5].rev   := 1674;
-  compApps[5].name  := 'ACDSee10.exe';
-  compApps[6].name  := 'BoonPlayer.exe';
-  compApps[7].name  := 'CEC_MAIN.exe';
-  compApps[8].name  := 'msnmsgr.exe';
-  compApps[9].name  := 'QzoneMusic.exe';
-  compApps[10].name := 'ReClockHelper.dll';
-  compApps[11].name := 'YahooMessenger.exe';
-  
-  compApps[12].rev   := 1698;
-  compApps[12].name  := 'ACDSeePro2.exe';
-  compApps[13].name  := 'AlltoaviV4.exe';
-  compApps[14].name  := 'Funshion.exe';
-  compApps[15].name  := 'Internet TV.exe';
-  compApps[16].name  := 'MatroskaDiag.exe';
-  compApps[17].name  := 'QQ.exe';
-  compApps[18].name  := 'Tvants.exe';
-  
-  compApps[19].rev   := 1824;
-  compApps[19].name  := 'allradio.exe';
-  compApps[20].name  := 'amf_slv.exe';
-  compApps[21].name  := 'Camfrog Video Chat.exe';
-  compApps[22].name  := 'DivxToDVD.exe';
-  compApps[23].name  := 'dvdSanta.exe';
-  compApps[24].name  := 'DXEffectTester.exe';
-  compApps[25].name  := 'FLVPlayer4Free.exe';
-  compApps[26].name  := 'GraphStudio.exe';
-  compApps[27].name  := 'InstallChecker.exe';
-  compApps[28].name  := 'ipod_video_converter.exe';
-  compApps[30].name  := 'IPODConverter.exe';
-  compApps[31].name  := 'KwMusic.exe';
-  compApps[32].name  := 'MP4Converter.exe';
-  compApps[33].name  := 'Mp4Player.exe';
-  compApps[34].name  := 'My Movies.exe';
-  compApps[35].name  := 'PQDVD_PSP.exe';
-  compApps[36].name  := 'ProgDvbNet.exe';
-  compApps[37].name  := 'QQLive.exe';
-  compApps[38].name  := 'QQMusic.exe';
-  compApps[39].name  := 'QvodPlayer.exe';
-  compApps[40].name  := 'RecordingManager.exe';
-  compApps[41].name  := 'RoxMediaDB10.exe';
-  compApps[42].name  := 'songbird.exe';
-  compApps[43].name  := 'SubtitleWorkshop4.exe';
-  compApps[44].name  := 'telewizja.exe';
-  compApps[45].name  := 'UUSeePlayer.exe';
-  compApps[46].name  := 'VideoConvert.exe';
-  compApps[47].name  := 'videoconverter.exe';
-  compApps[48].name  := 'videoenc.exe';
-  compApps[49].name  := 'VideoManager.exe';
-  compApps[50].name  := 'VideoWave9.exe';
-  compApps[51].name  := 'WaveChk.exe';
-  compApps[52].name  := 'WebMediaPlayer.exe';
-  compApps[53].name  := 'WinAVI 9.0.exe';
-  compApps[54].name  := 'WinAVI MP4 Converter.exe';
-  compApps[55].name  := 'WinDvr.exe';
-  compApps[56].name  := 'WLXPhotoGallery.exe';
-  compApps[57].name  := 'wmprph.exe';
-  compApps[58].name  := 'YahooWidgets.exe';
-  
-  compApps[59].rev   := 1926;
-  compApps[59].name  := 'BESTplayer.exe';
-  
-  compApps[60].rev   := 0;
-
-
-  // Compatibility list
-  ComplistVideo.skipped := False;
-  ComplistAudio.skipped := False;
-  Complist_isMsgAddedShown := False;
-
-  ComplistVideo.page := CreateInputOptionPage(wpSelectTasks,
-    CustomMessage('white_videoLabel1'),
-    CustomMessage('white_videoLabel2'),
-    CustomMessage('white_videoLabel3'),
-    True, False);
-
-  InitComplist(ComplistVideo ,'Software\GNU\ffdshow');
-
-  ComplistAudio.page := CreateInputOptionPage(ComplistVideo.page.ID,
-    CustomMessage('white_audioLabel1'),
-    CustomMessage('white_audioLabel2'),
-    CustomMessage('white_audioLabel3'),
-    True, False);
-
-  InitComplist(ComplistAudio,'Software\GNU\ffdshow_audio');
+  { Create custom pages }
 
   // Speaker setup
 
   is8DisableMixer := False;
-  SpeakerPage := CreateInputOptionPage(ComplistAudio.page.ID,
+  SpeakerPage := CreateInputOptionPage(wpSelectTasks,
     CustomMessage('spk_Label1'),
     CustomMessage('spk_Label2'),
     CustomMessage('spk_Label3'),
@@ -1667,14 +1101,12 @@ begin
 #endif
 end;
 
-function ShouldSkipPage(PageID: Integer): Boolean;
 #if include_plugin_virtualdub
+function ShouldSkipPage(PageID: Integer): Boolean;
 var
   regval: String;
-#endif
 begin
   Result := False;
-#if include_plugin_virtualdub
   if PageID = VdubDirPage.ID then begin
     if IsComponentSelected('ffdshow\plugins\virtualdub') then begin
       if VdubDirPage.Values[0] = '' then begin
@@ -1693,39 +1125,6 @@ begin
       Result := True;
     end
   end
+end;
 #endif
 
-  if PageID = ComplistVideo.page.ID then begin
-    if ffRegReadDWordHKCU('Software\GNU\ffdshow','dontaskComp',0) = 1 then begin
-      Result := True;
-      ComplistVideo.skipped := True;
-    end
-  end
-  if PageID = ComplistAudio.page.ID then begin
-    if ffRegReadDWordHKCU('Software\GNU\ffdshow_audio','dontaskComp',0) = 1 then begin
-      Result := True;
-      ComplistAudio.Skipped := True;
-    end
-  end
-  priorPageID := PageID;
-end;
-
-procedure showMsgAdded(PageID: Integer; complist: TcomplistPage);
-begin
-  if (PageID = complist.page.ID) AND NOT Complist_isMsgAddedShown AND NOT WizardSilent then begin
-    if complist.countAdded = 1 then begin
-      MsgBox(CustomMessage('white_msg_oneCompAppAdded'), mbInformation, MB_OK);
-      Complist_isMsgAddedShown := True;
-    end
-    if complist.countAdded > 1 then begin
-      MsgBox(CustomMessage('white_msg_multiCompAppAdded'), mbInformation, MB_OK);
-      Complist_isMsgAddedShown := True;
-    end
-  end
-end;
-
-procedure CurPageChanged(CurPageID: Integer);
-begin
-  showMsgAdded(CurPageID, ComplistVideo);
-  showMsgAdded(CurPageID, ComplistAudio);
-end;

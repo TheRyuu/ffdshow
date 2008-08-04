@@ -71,29 +71,24 @@ en.comp_makeAvis=AviSynth scripts serving
 en.comp_appPlugins=Application plugins:
 en.comp_msg_selectOneComp=You must select at least one component.
 
+en.tsk_settings=Settings
 en.tsk_resetSettings=Reset all ffdshow settings
+en.tsk_video_formats=Video formats
+en.tsk_audio_formats=Audio formats
 en.tsk_videoFormats=Decode the following video formats with ffdshow:
 en.tsk_genericMpeg4=Generic MPEG-4
 en.tsk_rawVideo=Raw Video
 en.tsk_audioFormats=Decode the following audio formats with ffdshow:
 en.tsk_rawAudio=Raw Audio
+en.tsk_filter_settings=Filter settings
 en.tsk_defaultFilters=Enable the following filters by default:
 en.tsk_volumeNorm=Volume normalization
 en.tsk_subtitles=Subtitles
 en.tsk_tweaks=Tweaks
 en.tsk_skipInloop=Always skip H.264 inloop deblocking
-
-en.white_msg_oneCompAppAdded=A compatible application has been added to the top of the compatibility list. Please check.
-en.white_msg_multiCompAppAdded=A few compatible applications have been added to the top of the compatibility list. Please check.
-en.white_videoLabel1=Management of Compatibility Issues (VIDEO)
-en.white_videoLabel2=Because a few games crash or freeze with ffdshow installed%nwe recommend you select 'Use ffdshow only in the following applications'.
-en.white_videoLabel3=List the names of executable files which are compatible with ffdshow video decoder, one per line.
-en.white_audioLabel1=Management of Compatibility Issues (AUDIO)
-en.white_audioLabel2=This time, AUDIO decoder configuration. Please configure as well.%nYou can change these options later on the "DirectShow control" settings page.
-en.white_audioLabel3=List the names of executable files which are compatible with ffdshow audio decoder, one per line.
-en.white_dontLimit=Do not limit
-en.white_useOnlyIn=Use ffdshow only in the following applications:
-en.white_dontAskAgain=Don't ask me again
+en.tsk_compatibility_manager=Compatibility Manager
+en.tsk_whitelist=Restrict ffdshow to be used only by whitelisted applications
+en.tsk_whitelist_prompt=Display Compatibility Manager window when an unknown application tries to load ffdshow
 
 en.spk_Label1=Speaker Setup
 en.spk_Label2=Select the speaker setup below that is most similar to the configuration on your computer. You can change it using "Mixer" settings after installation.
@@ -160,18 +155,6 @@ jp.tsk_subtitles=š–‹
 ;jp.tsk_tweaks=Tweaks
 ;jp.tsk_skipInloop=Always skip H.264 inloop deblocking
 
-jp.white_msg_oneCompAppAdded=ŒİŠ·ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğƒŠƒXƒg‚Ìæ“ª‚É’Ç‰Á‚µ‚Ü‚µ‚½BŒäŠm”F‚­‚¾‚³‚¢B
-jp.white_msg_multiCompAppAdded=ŒİŠ·ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğƒŠƒXƒg‚Ìæ“ª‚É’Ç‰Á‚µ‚Ü‚µ‚½BŒäŠm”F‚­‚¾‚³‚¢B
-jp.white_videoLabel1=ŒİŠ·«–â‘è‚ÌŠÇ—iƒrƒfƒIj
-jp.white_videoLabel2=ƒQ[ƒ€‚È‚Ç‚Åffdshow‚ªƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ä‚¢‚é‚ÆƒNƒ‰ƒbƒVƒ…‚µ‚½‚èƒtƒŠ[ƒY‚·‚é‚±‚Æ‚ª‚ ‚é‚½‚ßuˆÈ‰º‚Å‚Ì‚İffdshow‚ğg—p‚·‚év‚ğ‘I‘ğ‚·‚é‚±‚Æ‚ğ‚¨Š©‚ß‚µ‚Ü‚·B
-jp.white_videoLabel3=ffdshowƒrƒfƒIƒfƒR[ƒ_‚ÆŒİŠ·«‚Ì‚ ‚éƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğ1s‚É1‚Â‚¸‚Â—ñ‹“‚µ‚Ä‚­‚¾‚³‚¢B
-jp.white_audioLabel1=ŒİŠ·«–â‘è‚ÌŠÇ—iƒI[ƒfƒBƒIj
-jp.white_audioLabel2=¡“x‚ÍƒI[ƒfƒBƒIƒfƒR[ƒ_‚Ìİ’è‚Å‚·B“¯—l‚Éİ’è‚µ‚Ä‚­‚¾‚³‚¢B%nƒCƒ“ƒXƒg[ƒ‹Œã‚Éuî•ñ‚ÆƒfƒoƒbƒOv‚Ìİ’è‚©‚ç•ÏX‚·‚é‚±‚Æ‚ào—ˆ‚Ü‚·B
-jp.white_audioLabel3=ffdshowƒI[ƒfƒBƒIƒfƒR[ƒ_‚ÆŒİŠ·«‚Ì‚ ‚éƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ğ1s‚É1‚Â‚¸‚Â—ñ‹“‚µ‚Ä‚­‚¾‚³‚¢B
-jp.white_dontLimit=§ŒÀ‚µ‚È‚¢B
-jp.white_useOnlyIn=ˆÈ‰º‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Å‚Ì‚İffdshow‚ğg—p‚·‚éB
-jp.white_dontAskAgain=¡Œã•\¦‚µ‚È‚¢
-
 jp.spk_Label1=ƒXƒs[ƒJ[‚Ìİ’è
 jp.spk_Label2=Œ»İ‚ÌƒRƒ“ƒsƒ…[ƒ^\¬‚ÉÅ‚à‹ß‚¢ƒXƒs[ƒJ[‚Ìí—Ş‚ğ‘I‚ñ‚Å‚­‚¾‚³‚¢B%nƒCƒ“ƒXƒg[ƒ‹Œã‚Éuƒ~ƒLƒT[v‚Ìİ’è‚©‚ç•ÏX‚·‚é‚±‚Æ‚ào—ˆ‚Ü‚·B
 jp.spk_Label3=ƒXƒs[ƒJ[‚Ìí—Ş
@@ -235,18 +218,6 @@ de.tsk_volumeNorm=Lautstärke-Normalisierung
 de.tsk_subtitles=Untertitel
 de.tsk_tweaks=Optimierungen
 de.tsk_skipInloop=Internes H.264-Deblocking immer überspringen
-
-de.white_msg_oneCompAppAdded=Eine kompatible Anwendung wurde am Anfang der Kompatibilitätsliste hinzugefügt. Bitte überprüfen Sie.
-de.white_msg_multiCompAppAdded=Einige kompatible Anwendungen wurden am Anfang der Kompatibilitätsliste hinzugefügt. Bitte überprüfen Sie.
-de.white_videoLabel1=Verwaltung von Kompatibilitätsproblemen (VIDEO)
-de.white_videoLabel2=Da einige wenige Spiele abstürzen, wenn ffdshow installiert ist, wird empfohlen "ffdshow nur in folgenden Anwendungen verwenden" auszuwählen.
-de.white_videoLabel3=Listen Sie die Namen ausführbarer Dateien, welche kompatibel zum ffdshow-Videodekoder sind - pro Zeile einen.
-de.white_audioLabel1=Verwaltung von Kompatibilitätsproblemen (AUDIO)
-de.white_audioLabel2=Dieses Mal der AUDIO-Dekoder. Bitte konfigurieren Sie auch diesen.%nSie können dies nach der Installation unter "DirectShow-Optionen" ändern.
-de.white_audioLabel3=Listen Sie die Namen ausführbarer Dateien, welche kompatibel zum ffdshow-Audiodekoder sind - pro Zeile einen.
-de.white_dontLimit=Nicht begrenzen
-de.white_useOnlyIn=ffdshow nur in folgenden Anwendungen verwenden:
-de.white_dontAskAgain=Nicht wieder fragen
 
 de.spk_Label1=Lautsprecheraufbau
 de.spk_Label2=Wählen Sie unten den Lautsprecheraufbau, der am ehesten Ihrer Konfiguration entspricht. Er kann nach der Installation unter "Mixer" wieder geändert werden.
@@ -312,18 +283,6 @@ fr.tsk_subtitles=Sous-titres
 fr.tsk_tweaks=Optimisations
 fr.tsk_skipInloop=Toujours sauter le deblocking intégré H.264
 
-;fr.white_msg_oneCompAppAdded=A compatible application has been added to the top of the compatibility list. Please check.
-;fr.white_msg_multiCompAppAdded=A few compatible applications have been added to the top of the compatibility list. Please check.
-fr.white_videoLabel1=Administration des problèmes de compatibilité (VIDEO)
-fr.white_videoLabel2=Parce que quelques jeux se plante ou gel quand ffdshow est installé,%nNous conseillons de sélectionner "Utiliser ffdshow seulement dans".
-fr.white_videoLabel3=Lister le nom d'exécutables qui sont compatible avec le décodeur vidéo ffdshow, un pour chaque ligne.
-fr.white_audioLabel1=Administration des problèmes de compatibilité (AUDIO)
-fr.white_audioLabel2=Maintenant, la configuration du décodeur AUDIO . S.V.P configurer le également.%nVous pouvez changer les paramètres ultérieurement depuis "Info & debug" dans la configuration.
-fr.white_audioLabel3=Lister le nom d'exécutables qui sont compatible avec le décodeur audio ffdshow, un pour chaque ligne.
-fr.white_dontLimit=Ne pas limiter.
-fr.white_useOnlyIn=Utiliser ffdshow seulement dans ces applications :
-fr.white_dontAskAgain=Ne plus me demander.
-
 fr.spk_Label1=Configuration des haut-parleurs :
 fr.spk_Label2=Sélectionner parmi les options la configuration qui correspond le plus a celle de vos Hauts-parleurs. Vous pouvez la changer ulterieurement a partir du "Mixer".
 fr.spk_Label3=Configuration des Hauts-parleurs:
@@ -387,18 +346,6 @@ ru.tsk_volumeNorm=Íîğìàëèçàöèÿ çâóêà
 ru.tsk_subtitles=Ñóáòèòğû
 ru.tsk_tweaks=Îïòèìèçàöèè
 ru.tsk_skipInloop=Îòêëş÷èòü ñîáñòâåííûé äåáëîêèíã H.264
-
-;ru.white_msg_oneCompAppAdded=A compatible application has been added to the top of the compatibility list. Please check.
-;ru.white_msg_multiCompAppAdded=A few compatible applications have been added to the top of the compatibility list. Please check.
-ru.white_videoLabel1=Óïğàâëåíèå ñîâìåñòèìîñòüş (Âèäåî)
-ru.white_videoLabel2=Òàê êàê íåêîòîğûå èãğû ïàäàşò èëè çàâèñàşò ïğè óñòàíîâëåííîì ffdshow,%nìû ğåêîìåíäóåì âêëş÷èòü "Èñïîëüçîâàòü ffdshow òîëüêî ñ".
-ru.white_videoLabel3=Ñïèñîê âûïîëíÿåìûõ ôàéëîâ, êîòîğûå ñîâìåñòèìû ñ âèäåîäåêîäåğîì ffdshow, ïî îäíîìó íà ñòğîêó.
-ru.white_audioLabel1=Óïğàâëåíèå ñîâìåñòèìîñòüş (Çâóê)
-ru.white_audioLabel2=Òåïåğü íàñòğîéêà ñîâìåñòèìîñòè àóäèîäåêîäåğà. Âû ìîæåòå èçìåíèòü%níàñòğîéêè ïîñëå óñòàíîâêè, èñïîëüçóÿ ìåíş "Èíôîğìàöèÿ".
-ru.white_audioLabel3=Ñïèñîê âûïîëíÿåìûõ ôàéëîâ, êîòîğûå ñîâìåñòèìû ñ àóäèîäåêîäåğîì ffdshow, ïî îäíîìó íà ñòğîêó.
-ru.white_dontLimit=Áåç îãğàíè÷åíèé.
-ru.white_useOnlyIn=Èñïîëüçîâàòü ffdshow òîëüêî ñî ñëåäóşùèìè ïğîãğàììàìè:
-ru.white_dontAskAgain=Áîëüøå íå ñïğàøèâàòü.
 
 ru.spk_Label1=Íàñòğîéêà àóäèîñèñòåìû
 ru.spk_Label2=Âûáåğèòå êîíôèãóğàöèş äèíàìèêîâ, ñîâïàäàşùóş ñ Âàøåé. Âû ìîæåòå èçìåíèòü å¸ ïîñëå óñòàíîâêè, èñïîëüçóÿ íàñòğîéêè "Ìèêøåğ".
@@ -464,18 +411,6 @@ pl.tsk_subtitles=Napisy
 pl.tsk_tweaks=Ustawienia dodatkowe:
 pl.tsk_skipInloop=Zawsze pomijaj odblokowywanie H.264
 
-pl.white_msg_oneCompAppAdded=Kompatybilna aplikacja zosta³a dodana na górze listy kompatybilnoœci. Proszê sprawdziæ.
-pl.white_msg_multiCompAppAdded=Kilka kompatybilnych aplikacji zosta³o dodanych na górze listy kompatybilnoœci. Proszê sprawdziæ.
-pl.white_videoLabel1=Zarz¹dzanie problemami kompatybilnoœci (WIDEO)
-pl.white_videoLabel2=Z powodu, i¿ czêœæ gier zacina siê lub wogóle nie odpala z zainstalowanym ffdshow,%nzalecamy u¿ycie opcji "U¿yj ffdshow tylko w:".
-pl.white_videoLabel3=Dodaj do listy nazwy aplikacji, które s¹ kompatybilne z dekoderem wideo ffdshow, jedn¹ na liniê.
-pl.white_audioLabel1=Zarz¹dzanie problemami kompatybilnoœci (AUDIO)
-pl.white_audioLabel2=Teraz czas na konfiguracjê dekodera audio. Proszê dokonaæ odpowiednich zmian.%nMo¿esz je wprowadziæ równie¿ po instalacji, w zak³adce "Informacje".
-pl.white_audioLabel3=Dodaj do listy nazwy aplikacji, które s¹ kompatybilne z dekoderem audio ffdshow, jedn¹ na liniê.
-pl.white_dontLimit=Nie ograniczaj.
-pl.white_useOnlyIn=U¿yj ffdshow tylko w nastêpuj¹cych aplikacjach:
-pl.white_dontAskAgain=Nie pytaj ponownie.
-
 pl.spk_Label1=Ustawienia g³oœników
 pl.spk_Label2=Wybierz rodzaj g³oœników z listy poni¿ej, który najbardziej odpowiada twojej konfiguracji. Po instalacji, ustawienia te mo¿esz zmieniæ w zak³adce "Mikser" w konfiguracji dekodera audio.
 pl.spk_Label3=Rodzaj g³oœników:
@@ -540,18 +475,6 @@ cz.tsk_subtitles=Titulky
 cz.tsk_tweaks=Ladìní
 cz.tsk_skipInloop=Vdy vynechat H.264 inloop deblocking
 
-cz.white_msg_oneCompAppAdded=Na zaèátek seznamu byla pøidána kompatibilní aplikace.
-cz.white_msg_multiCompAppAdded=Na zaèátek seznamu bylo pøidáno nìkolik kompatibilních aplikací.
-cz.white_videoLabel1=Správa problémù s kompatibilitou (VIDEO)
-cz.white_videoLabel2=Protoe nìkteré aplikace pøi pouití ffdshow padají nebo zamrzají%ndoporuèujeme vám zvolit 'ffdshow pouívat jen v následujících aplikacích'.
-cz.white_videoLabel3=Zadejte názvy spustitelnıch souborù aplikací kompatibilních s ffdshow video dekodérem, jeden na øádek.
-cz.white_audioLabel1=Správa problémù s kompatibilitou (AUDIO)
-cz.white_audioLabel2=Tentokrát nastavení pro AUDIO dekodér.%nTato nastavení mùete pozdìji zmìnit na stránce nastavení "DirectShow".
-cz.white_audioLabel3=Zadejte názvy spustitelnıch souborù aplikací kompatibilních s ffdshow audio dekodérem, jeden na øádek.
-cz.white_dontLimit=Neomezovat.
-cz.white_useOnlyIn=ffdshow pouívat jen v následujících aplikacích:
-cz.white_dontAskAgain=Pøíštì se neptat.
-
 cz.spk_Label1=Nastavení reproduktorù
 cz.spk_Label2=Zvolte nastavení které nejvíce odpovídá konfiguraci vašeho poèítaèe. Pozdìji lze zmìnit na stránce nastavení "Mixer".
 cz.spk_Label3=Konfigurace reproduktorù:
@@ -615,18 +538,6 @@ sc.tsk_volumeNorm=ÒôÁ¿Õı³£»¯
 sc.tsk_subtitles=×ÖÄ»
 sc.tsk_tweaks=µ÷Õû
 sc.tsk_skipInloop=×ÜÊÇÌø¹ı H.264 inloop ³ı¿é
-
-sc.white_msg_oneCompAppAdded=Ò»¸ö¼æÈİÓ¦ÓÃ³ÌĞòÒÑ¾­Ìí¼Óµ½¼æÈİĞÔÁĞ±í¶¥¶Ë¡£ÇëÈ·ÈÏ¡£
-sc.white_msg_multiCompAppAdded=Ò»Ğ©¼æÈİÓ¦ÓÃ³ÌĞòÒÑ¾­Ìí¼Óµ½¼æÈİĞÔÁĞ±í¶¥¶Ë¡£ÇëÈ·ÈÏ¡£
-sc.white_videoLabel1=¹ÜÀí¼æÈİĞÔÎÊÌâ£¨ÊÓÆµ£©
-sc.white_videoLabel2=ÒòÎª°²×°ÁË ffdshow Ö®ºó»áÒıÆğÒ»Ğ©ÓÎÏ·±ÀÀ£»òÕßÊ§È¥ÏìÓ¦£¬%nËùÒÔÎÒÃÇÍÆ¼öÄúÑ¡Ôñ¡°½öÔÚÏÂÁĞ³ÌĞòÖĞÊ¹ÓÃ ffdshow¡±¡£
-sc.white_videoLabel3=ÏÂÃæÁĞ³öÁËÓë ffdshow ÊÓÆµ½âÂëÆ÷¼æÈİµÄ¿ÉÖ´ĞĞÎÄ¼şÃû£¬Ã¿ĞĞÒ»¸ö¡£
-sc.white_audioLabel1=¹ÜÀí¼æÈİĞÔÎÊÌâ£¨ÒôÆµ£©
-sc.white_audioLabel2=ÏÖÔÚÇëÅäÖÃÒôÆµ½âÂëÆ÷¡£%n°²×°Íê³ÉÖ®ºóÄú¿ÉÒÔÔÚ¡°DirectShow¿ØÖÆ¡±ÉèÖÃÒ³ÖĞ¸Ä±äÕâĞ©Ñ¡Ïî¡£
-sc.white_audioLabel3=ÏÂÃæÁĞ³öÁËÓë ffdshow ÒôÆµ½âÂëÆ÷¼æÈİµÄ¿ÉÖ´ĞĞÎÄ¼şÃû£¬Ã¿ĞĞÒ»¸ö¡£
-sc.white_dontLimit=ÎŞÏŞÖÆ¡£
-sc.white_useOnlyIn=½öÔÚÏÂÁĞ³ÌĞòÖĞÊ¹ÓÃ ffdshow£º
-sc.white_dontAskAgain=²»ÒªÔÙÎÊÎÒ¡£
 
 sc.spk_Label1=ÑïÉùÆ÷ÉèÖÃ
 sc.spk_Label2=ÇëÑ¡Ôñ×î½Ó½üÄúµÄ¼ÆËã»úÅäÖÃµÄÑïÉùÆ÷ÉèÖÃ¡£°²×°Íê³ÉÖ®ºó£¬Äú¿ÉÒÔÔÚ¡°»ìÒô¡±ÉèÖÃÒ³ÖĞ¸Ä±äÕâ¸öÑ¡Ïî¡£
