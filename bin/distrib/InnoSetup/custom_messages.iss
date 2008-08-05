@@ -73,22 +73,22 @@ en.comp_msg_selectOneComp=You must select at least one component.
 
 en.tsk_settings=Settings
 en.tsk_resetSettings=Reset all ffdshow settings
-en.tsk_video_formats=Video formats
-en.tsk_audio_formats=Audio formats
-en.tsk_videoFormats=Decode the following video formats with ffdshow:
+en.tsk_videoFormats=Video formats
+en.tsk_videoFormatsSelect=Decode the following video formats with ffdshow:
 en.tsk_genericMpeg4=Generic MPEG-4
 en.tsk_rawVideo=Raw Video
-en.tsk_audioFormats=Decode the following audio formats with ffdshow:
+en.tsk_audioFormats=Audio formats
+en.tsk_audioFormatsSelect=Decode the following audio formats with ffdshow:
 en.tsk_rawAudio=Raw Audio
-en.tsk_filter_settings=Filter settings
-en.tsk_defaultFilters=Enable the following filters by default:
+en.tsk_filters=Filter settings
+en.tsk_filtersSelect=Enable the following filters by default:
 en.tsk_volumeNorm=Volume normalization
 en.tsk_subtitles=Subtitles
 en.tsk_tweaks=Tweaks
 en.tsk_skipInloop=Always skip H.264 inloop deblocking
-en.tsk_compatibility_manager=Compatibility Manager
+en.tsk_compatibilityManager=Compatibility Manager
 en.tsk_whitelist=Restrict ffdshow to be used only by whitelisted applications
-en.tsk_whitelist_prompt=Display Compatibility Manager window when an unknown application tries to load ffdshow
+en.tsk_whitelistPrompt=Display Compatibility Manager window when an unknown application tries to load ffdshow
 
 en.spk_Label1=Speaker Setup
 en.spk_Label2=Select the speaker setup below that is most similar to the configuration on your computer. You can change it using "Mixer" settings after installation.
@@ -143,17 +143,24 @@ jp.comp_makeAvis=AviSynth ƒXƒNƒŠƒvƒgƒT[ƒrƒ“ƒO
 jp.comp_appPlugins=ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒvƒ‰ƒOƒCƒ“
 ;jp.comp_msg_selectOneComp=You must select at least one component.
 
+;jp.tsk_settings=Settings
 jp.tsk_resetSettings=ffdshow‚Ì‚·‚×‚Ä‚Ìİ’è‚ğ‰Šú’l‚É–ß‚·
-jp.tsk_videoFormats=ˆÈ‰º‚Ì‚·‚×‚Ä‚ÌƒrƒfƒIƒtƒH[ƒ}ƒbƒg‚ğffdshow‚ÅƒfƒR[ƒh‚·‚é
+;jp.tsk_videoFormats=Video formats
+jp.tsk_videoFormatsSelect=ˆÈ‰º‚Ì‚·‚×‚Ä‚ÌƒrƒfƒIƒtƒH[ƒ}ƒbƒg‚ğffdshow‚ÅƒfƒR[ƒh‚·‚é
 ;jp.tsk_genericMpeg4=Generic MPEG-4
 ;jp.tsk_rawVideo=Raw Video
-jp.tsk_audioFormats=ˆÈ‰º‚Ì‚·‚×‚Ä‚ÌƒI[ƒfƒBƒIƒtƒH[ƒ}ƒbƒg‚ğffdshow‚ÅƒfƒR[ƒh‚·‚é
+;jp.tsk_audioFormats=Audio formats
+jp.tsk_audioFormatsSelect=ˆÈ‰º‚Ì‚·‚×‚Ä‚ÌƒI[ƒfƒBƒIƒtƒH[ƒ}ƒbƒg‚ğffdshow‚ÅƒfƒR[ƒh‚·‚é
 ;jp.tsk_rawAudio=Raw Audio
-jp.tsk_defaultFilters=ˆÈ‰º‚ÌƒtƒBƒ‹ƒ^[‚ğ—LŒø‚É‚·‚é
+;jp.tsk_filters=Filter settings
+jp.tsk_filtersSelect=ˆÈ‰º‚ÌƒtƒBƒ‹ƒ^[‚ğ—LŒø‚É‚·‚é
 jp.tsk_volumeNorm=ƒ{ƒŠƒ…[ƒ€ ƒm[ƒ}ƒ‰ƒCƒY
 jp.tsk_subtitles=š–‹
 ;jp.tsk_tweaks=Tweaks
 ;jp.tsk_skipInloop=Always skip H.264 inloop deblocking
+;jp.tsk_compatibilityManager=Compatibility Manager
+;jp.tsk_whitelist=Restrict ffdshow to be used only by whitelisted applications
+;jp.tsk_whitelistPrompt=Display Compatibility Manager window when an unknown application tries to load ffdshow
 
 jp.spk_Label1=ƒXƒs[ƒJ[‚Ìİ’è
 jp.spk_Label2=Œ»İ‚ÌƒRƒ“ƒsƒ…[ƒ^\¬‚ÉÅ‚à‹ß‚¢ƒXƒs[ƒJ[‚Ìí—Ş‚ğ‘I‚ñ‚Å‚­‚¾‚³‚¢B%nƒCƒ“ƒXƒg[ƒ‹Œã‚Éuƒ~ƒLƒT[v‚Ìİ’è‚©‚ç•ÏX‚·‚é‚±‚Æ‚ào—ˆ‚Ü‚·B
@@ -207,17 +214,24 @@ de.comp_makeAvis=Hilfe für AviSynth-Skripte
 de.comp_appPlugins=Anwendungsplugins:
 de.comp_msg_selectOneComp=Sie müssen mindestens eine Komponente auswählen.
 
+de.tsk_settings=Einstellungen
 de.tsk_resetSettings=Alle ffdshow-Einstellungen zurücksetzen
-de.tsk_videoFormats=Folgende Videoformate mit ffdshow dekodieren:
+de.tsk_videoFormats=Videoformate
+de.tsk_videoFormatsSelect=Folgende Videoformate mit ffdshow dekodieren:
 de.tsk_genericMpeg4=Gewöhnliches MPEG-4
 de.tsk_rawVideo=Unkomprimierte Videodaten
-de.tsk_audioFormats=Folgende Audioformate mit ffdshow dekodieren:
+de.tsk_audioFormats=Audioformate
+de.tsk_audioFormatsSelect=Folgende Audioformate mit ffdshow dekodieren:
 de.tsk_rawAudio=Unkomprimierte Audiodaten
-de.tsk_defaultFilters=Folgende Filter standardmäßig aktivieren:
+de.tsk_filters=Filtereinstellungen
+de.tsk_filtersSelect=Folgende Filter standardmäßig aktivieren:
 de.tsk_volumeNorm=Lautstärke-Normalisierung
 de.tsk_subtitles=Untertitel
 de.tsk_tweaks=Optimierungen
 de.tsk_skipInloop=Internes H.264-Deblocking immer überspringen
+de.tsk_compatibilityManager=Kompatibilitätsmanager
+de.tsk_whitelist=ffdshow nur in Anwendungen, die auf der weißen Liste stehen, verwenden
+de.tsk_whitelistPrompt=Kompatibilitätsmanager-Fenster anzeigen, wenn eine unbekannte Anwendung versucht ffdshow zu laden
 
 de.spk_Label1=Lautsprecheraufbau
 de.spk_Label2=Wählen Sie unten den Lautsprecheraufbau, der am ehesten Ihrer Konfiguration entspricht. Er kann nach der Installation unter "Mixer" wieder geändert werden.
@@ -271,17 +285,24 @@ fr.comp_makeAvis=Service de scripts AviSynth
 fr.comp_appPlugins=Plugins d'applications :
 ;fr.comp_msg_selectOneComp=You must select at least one component.
 
+;fr.tsk_settings=Settings
 fr.tsk_resetSettings=Réinitialiser tous les paramètres ffdshow
-fr.tsk_videoFormats=Décoder les formats vidéo suivants avec ffdshow :
+;fr.tsk_videoFormats=Video formats
+fr.tsk_videoFormatsSelect=Décoder les formats vidéo suivants avec ffdshow :
 fr.tsk_genericMpeg4=MPEG-4 Générique
 fr.tsk_rawVideo=Video brut
-fr.tsk_audioFormats=Décoder les formats audio suivants avec ffdshow :
+;fr.tsk_audioFormats=Audio formats
+fr.tsk_audioFormatsSelect=Décoder les formats audio suivants avec ffdshow :
 fr.tsk_rawAudio=Audio brut
-fr.tsk_defaultFilters=Activer les filtres suivant par défaut :
+;fr.tsk_filters=Filter settings
+fr.tsk_filtersSelect=Activer les filtres suivant par défaut :
 fr.tsk_volumeNorm=Normalisation du volume
 fr.tsk_subtitles=Sous-titres
 fr.tsk_tweaks=Optimisations
 fr.tsk_skipInloop=Toujours sauter le deblocking intégré H.264
+;fr.tsk_compatibilityManager=Compatibility Manager
+;fr.tsk_whitelist=Restrict ffdshow to be used only by whitelisted applications
+;fr.tsk_whitelistPrompt=Display Compatibility Manager window when an unknown application tries to load ffdshow
 
 fr.spk_Label1=Configuration des haut-parleurs :
 fr.spk_Label2=Sélectionner parmi les options la configuration qui correspond le plus a celle de vos Hauts-parleurs. Vous pouvez la changer ulterieurement a partir du "Mixer".
@@ -335,17 +356,24 @@ ru.comp_makeAvis=Îáñëóæèâàíèå ñêğèïòîâ AviSynth
 ru.comp_appPlugins=Ïëàãèíû ïğèëîæåíèé:
 ;ru.comp_msg_selectOneComp=You must select at least one component.
 
+;ru.tsk_settings=Settings
 ru.tsk_resetSettings=Ñáğîñèòü âñå íàñòğîéêè ffdshow
-ru.tsk_videoFormats=Äåêîäèğîâàòü ñëåäóşùèå âèäåîôîğìàòû ñ ffdshow:
+;ru.tsk_videoFormats=Video formats
+ru.tsk_videoFormatsSelect=Äåêîäèğîâàòü ñëåäóşùèå âèäåîôîğìàòû ñ ffdshow:
 ru.tsk_genericMpeg4=Generic MPEG-4
 ru.tsk_rawVideo=Raw Video
-ru.tsk_audioFormats=Äåêîäèğîâàòü ñëåäóşùèå àóäèîôîğìàòû ñ ffdshow:
+;ru.tsk_audioFormats=Audio formats
+ru.tsk_audioFormatsSelect=Äåêîäèğîâàòü ñëåäóşùèå àóäèîôîğìàòû ñ ffdshow:
 ru.tsk_rawAudio=Raw Audio
-ru.tsk_defaultFilters=Âêëş÷èòü ñëåäóşùèå ôèëüòğû ïî óìîë÷àíèş:
+;ru.tsk_filters=Filter settings
+ru.tsk_filtersSelect=Âêëş÷èòü ñëåäóşùèå ôèëüòğû ïî óìîë÷àíèş:
 ru.tsk_volumeNorm=Íîğìàëèçàöèÿ çâóêà
 ru.tsk_subtitles=Ñóáòèòğû
 ru.tsk_tweaks=Îïòèìèçàöèè
 ru.tsk_skipInloop=Îòêëş÷èòü ñîáñòâåííûé äåáëîêèíã H.264
+;ru.tsk_compatibilityManager=Compatibility Manager
+;ru.tsk_whitelist=Restrict ffdshow to be used only by whitelisted applications
+;ru.tsk_whitelistPrompt=Display Compatibility Manager window when an unknown application tries to load ffdshow
 
 ru.spk_Label1=Íàñòğîéêà àóäèîñèñòåìû
 ru.spk_Label2=Âûáåğèòå êîíôèãóğàöèş äèíàìèêîâ, ñîâïàäàşùóş ñ Âàøåé. Âû ìîæåòå èçìåíèòü å¸ ïîñëå óñòàíîâêè, èñïîëüçóÿ íàñòğîéêè "Ìèêøåğ".
@@ -399,17 +427,24 @@ pl.comp_makeAvis=obs³uga skryptów AviSynth
 pl.comp_appPlugins=Pluginy innych aplikacji:
 pl.comp_msg_selectOneComp=Musisz wybraæ co najmniej jeden sk³adnik.
 
+;pl.tsk_settings=Settings
 pl.tsk_resetSettings=Zresetuj wszystkie ustawienia ffdshow
-pl.tsk_videoFormats=Dekoduj nastêpuj¹ce formaty wideo u¿ywaj¹c ffdshow:
+;pl.tsk_videoFormats=Video formats
+pl.tsk_videoFormatsSelect=Dekoduj nastêpuj¹ce formaty wideo u¿ywaj¹c ffdshow:
 pl.tsk_genericMpeg4=Zwyk³e MPEG-4
 pl.tsk_rawVideo=Nieskompresowane wideo
-pl.tsk_audioFormats=Dekoduj nastêpuj¹ce formaty audio u¿ywaj¹c ffdshow:
+;pl.tsk_audioFormats=Audio formats
+pl.tsk_audioFormatsSelect=Dekoduj nastêpuj¹ce formaty audio u¿ywaj¹c ffdshow:
 pl.tsk_rawAudio=Nieskompresowane audio
-pl.tsk_defaultFilters=W³¹cz nastêpuj¹ce filtry jako domyœlne:
+;pl.tsk_filters=Filter settings
+pl.tsk_filtersSelect=W³¹cz nastêpuj¹ce filtry jako domyœlne:
 pl.tsk_volumeNorm=Normalizacja g³oœnoœci
 pl.tsk_subtitles=Napisy
 pl.tsk_tweaks=Ustawienia dodatkowe:
 pl.tsk_skipInloop=Zawsze pomijaj odblokowywanie H.264
+;pl.tsk_compatibilityManager=Compatibility Manager
+;pl.tsk_whitelist=Restrict ffdshow to be used only by whitelisted applications
+;pl.tsk_whitelistPrompt=Display Compatibility Manager window when an unknown application tries to load ffdshow
 
 pl.spk_Label1=Ustawienia g³oœników
 pl.spk_Label2=Wybierz rodzaj g³oœników z listy poni¿ej, który najbardziej odpowiada twojej konfiguracji. Po instalacji, ustawienia te mo¿esz zmieniæ w zak³adce "Mikser" w konfiguracji dekodera audio.
@@ -450,7 +485,7 @@ pl.shrt_vfwConfig=Konfiguracja interfejsu VFW
 pl.shrt_uninstall=Odinstaluj ffdshow
 
 
-;Czech
+; Czech
 cz.langid=1029
 ;cz.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
 cz.simd_msg_sse=Toto sestavení ffdshow vyaduje procesor s podporou rozšíøení SSE. Váš procesor tato rozšíøení nepodporuje.
@@ -463,17 +498,24 @@ cz.comp_makeAvis=Podpora pro AviSynth
 cz.comp_appPlugins=Pluginy:
 cz.comp_msg_selectOneComp=Musíte zvolit minimálnì jeden komponent.
 
+;cz.tsk_settings=Settings
 cz.tsk_resetSettings=Vıchozí nastavení ffdshow
-cz.tsk_videoFormats=Dekódovat pomocí ffdshow následující video formáty:
+;cz.tsk_videoFormats=Video formats
+cz.tsk_videoFormatsSelect=Dekódovat pomocí ffdshow následující video formáty:
 cz.tsk_genericMpeg4=Obecnı MPEG-4
 cz.tsk_rawVideo=Raw video
-cz.tsk_audioFormats=Dekódovat pomocí ffdshow následující audio formáty:
+;cz.tsk_audioFormats=Audio formats
+cz.tsk_audioFormatsSelect=Dekódovat pomocí ffdshow následující audio formáty:
 cz.tsk_rawAudio=Raw audio
-cz.tsk_defaultFilters=Ve vıchozím nastavení povolit následující filtry:
+;cz.tsk_filters=Filter settings
+cz.tsk_filtersSelect=Ve vıchozím nastavení povolit následující filtry:
 cz.tsk_volumeNorm=Normalizace
 cz.tsk_subtitles=Titulky
 cz.tsk_tweaks=Ladìní
 cz.tsk_skipInloop=Vdy vynechat H.264 inloop deblocking
+;cz.tsk_compatibilityManager=Compatibility Manager
+;cz.tsk_whitelist=Restrict ffdshow to be used only by whitelisted applications
+;cz.tsk_whitelistPrompt=Display Compatibility Manager window when an unknown application tries to load ffdshow
 
 cz.spk_Label1=Nastavení reproduktorù
 cz.spk_Label2=Zvolte nastavení které nejvíce odpovídá konfiguraci vašeho poèítaèe. Pozdìji lze zmìnit na stránce nastavení "Mixer".
@@ -514,7 +556,7 @@ cz.shrt_vfwConfig=Nastavení VFW
 cz.shrt_uninstall=Odinstalovat ffdshow
 
 
-;Chinese (Simplified)
+; Chinese (Simplified)
 sc.langid=2052
 sc.msg_uninstallFirst=Äú±ØĞëÏÈĞ¶ÔØ¾É°æ±¾µÄ ffdshow¡£
 sc.simd_msg_sse=Õâ¸ö±àÒë°æµÄ ffdshow ĞèÒªÒ»¸öÖ§³Ö SSE Ö¸Áî¼¯µÄ CPU¡£µ«ÊÇÄúµÄ CPU ²¢²»Ö§³ÖÕâ¸ö¹¦ÄÜ¡£
@@ -527,17 +569,24 @@ sc.comp_makeAvis=AviSynth ½Å±¾·şÎñ
 sc.comp_appPlugins=Ó¦ÓÃ³ÌĞò²å¼ş£º
 sc.comp_msg_selectOneComp=ÄúÖÁÉÙÒªÑ¡ÔñÒ»¸ö×é¼ş¡£
 
+;sc.tsk_settings=Settings
 sc.tsk_resetSettings=ÖØÖÃËùÓĞ ffdshow ÉèÖÃ
-sc.tsk_videoFormats=Ê¹ÓÃ ffdshow ½âÂëÏÂÁĞÊÓÆµ¸ñÊ½£º
+;sc.tsk_videoFormats=Video formats
+sc.tsk_videoFormatsSelect=Ê¹ÓÃ ffdshow ½âÂëÏÂÁĞÊÓÆµ¸ñÊ½£º
 sc.tsk_genericMpeg4=ÆÕÍ¨ MPEG-4 ¸ñÊ½
 sc.tsk_rawVideo=Ô­Ê¼ÊÓÆµ¸ñÊ½
-sc.tsk_audioFormats=Ê¹ÓÃ ffdshow ½âÂëÏÂÁĞÒôÆµ¸ñÊ½£º
+;sc.tsk_audioFormats=Audio formats
+sc.tsk_audioFormatsSelect=Ê¹ÓÃ ffdshow ½âÂëÏÂÁĞÒôÆµ¸ñÊ½£º
 sc.tsk_rawAudio=Ô­Ê¼ÒôÆµ¸ñÊ½
-sc.tsk_defaultFilters=Ä¬ÈÏÆôÓÃÏÂÁĞÂË¾µ£º
+;sc.tsk_filters=Filter settings
+sc.tsk_filtersSelect=Ä¬ÈÏÆôÓÃÏÂÁĞÂË¾µ£º
 sc.tsk_volumeNorm=ÒôÁ¿Õı³£»¯
 sc.tsk_subtitles=×ÖÄ»
 sc.tsk_tweaks=µ÷Õû
 sc.tsk_skipInloop=×ÜÊÇÌø¹ı H.264 inloop ³ı¿é
+;sc.tsk_compatibilityManager=Compatibility Manager
+;sc.tsk_whitelist=Restrict ffdshow to be used only by whitelisted applications
+;sc.tsk_whitelistPrompt=Display Compatibility Manager window when an unknown application tries to load ffdshow
 
 sc.spk_Label1=ÑïÉùÆ÷ÉèÖÃ
 sc.spk_Label2=ÇëÑ¡Ôñ×î½Ó½üÄúµÄ¼ÆËã»úÅäÖÃµÄÑïÉùÆ÷ÉèÖÃ¡£°²×°Íê³ÉÖ®ºó£¬Äú¿ÉÒÔÔÚ¡°»ìÒô¡±ÉèÖÃÒ³ÖĞ¸Ä±äÕâ¸öÑ¡Ïî¡£

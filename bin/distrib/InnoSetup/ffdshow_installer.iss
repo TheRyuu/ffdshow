@@ -56,7 +56,7 @@
 #define PREF_X64_VS2008 = False
 
 #if PREF_CLSID
-  #define VS2003SP1 = True  
+  #define VS2003SP1 = True
   #define unicode_required = False
   #define filename_suffix = '_clsid'
   #define bindir = '..\..\x86'
@@ -171,9 +171,9 @@ MinVersion=4.1,5.0
   #endif
 #elif VS2008
  #if is64bit
-MinVersion=0,5.01 
+MinVersion=0,5.01
 	#else
-MinVersion=0,5.0	
+MinVersion=0,5.0
 	#endif
 #else
   #if unicode_required
@@ -254,7 +254,7 @@ Name: ffdshow\plugins\dscaler; Description: DScaler
 
 [Tasks]
 Name: resetsettings; Description: {cm:tsk_resetSettings}; GroupDescription: {cm:tsk_settings}; Flags: unchecked; Components: ffdshow
-Name: video; Description: {cm:tsk_videoFormats}; GroupDescription: {cm:tsk_video_formats}; Flags: unchecked; Components: ffdshow
+Name: video; Description: {cm:tsk_videoFormatsSelect}; GroupDescription: {cm:tsk_videoFormats}; Flags: unchecked; Components: ffdshow
 Name: video\h264; Description: H.264 / AVC; Check: CheckTaskVideo('h264', 1, True); Components: ffdshow
 Name: video\h264; Description: H.264 / AVC; Check: NOT CheckTaskVideo('h264', 1, True); Components: ffdshow; Flags: unchecked
 Name: video\divx; Description: DivX; Check: CheckTaskVideo2('dx50', True); Components: ffdshow
@@ -306,7 +306,7 @@ Name: video\other3; Description: ASV1/2, CYUV, ZLIB, 8BPS, LOCO, MSZH, QPEG, WNV
 Name: video\other4; Description: CamStudio, ZMBV, Ultimotion, VIXL, AASC, IV32, FPS1, RT21; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
 Name: video\rawv; Description: {cm:tsk_rawVideo}; Check: CheckTaskVideo('rawv', 1, False); Flags: dontinheritcheck; Components: ffdshow
 Name: video\rawv; Description: {cm:tsk_rawVideo}; Check: NOT CheckTaskVideo('rawv', 1, False); Flags: dontinheritcheck unchecked; Components: ffdshow
-Name: audio; Description: {cm:tsk_audioFormats}; GroupDescription: {cm:tsk_audio_formats}; Flags: unchecked; Components: ffdshow
+Name: audio; Description: {cm:tsk_audioFormatsSelect}; GroupDescription: {cm:tsk_audioFormats}; Flags: unchecked; Components: ffdshow
 Name: audio\mp3; Description: MP3; Check: CheckTaskAudio('mp3', 7, True); Components: ffdshow
 Name: audio\mp3; Description: MP3; Check: NOT CheckTaskAudio('mp3', 7, True); Flags: unchecked; Components: ffdshow
 Name: audio\aac; Description: AAC; Flags: unchecked; Components: ffdshow
@@ -344,7 +344,7 @@ Name: audio\qt; Description: QDM2, MACE; Check: NOT CheckTaskAudio('qdm2', 1, Tr
 Name: audio\adpcm; Description: ADPCM, MS GSM, Truespeech; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
 Name: audio\rawa; Description: {cm:tsk_rawAudio}; Check: CheckTaskAudio('rawa', 4, False); Flags: dontinheritcheck; Components: ffdshow
 Name: audio\rawa; Description: {cm:tsk_rawAudio}; Check: NOT CheckTaskAudio('rawa', 4, False); Flags: dontinheritcheck unchecked; Components: ffdshow
-Name: filter; Description: {cm:tsk_defaultFilters}; GroupDescription: {cm:tsk_filter_settings}; Flags: unchecked; Components: ffdshow
+Name: filter; Description: {cm:tsk_filtersSelect}; GroupDescription: {cm:tsk_filters}; Flags: unchecked; Components: ffdshow
 Name: filter\normalize; Description: {cm:tsk_volumeNorm}; Check:     GetTaskVolNormalize(); Components: ffdshow
 Name: filter\normalize; Description: {cm:tsk_volumeNorm}; Check: NOT GetTaskVolNormalize(); Components: ffdshow; Flags: unchecked
 Name: filter\subtitles; Description: {cm:tsk_subtitles};  Check:     CheckTaskVideoInpreset('issubtitles', 1, False); Components: ffdshow
@@ -352,8 +352,8 @@ Name: filter\subtitles; Description: {cm:tsk_subtitles};  Check: NOT CheckTaskVi
 #if !PREF_YAMAGATA
 Name: skiph264inloop; Description: {cm:tsk_skipInloop}; GroupDescription: {cm:tsk_tweaks}; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
 #endif
-Name: whitelist; Description: {cm:tsk_whitelist}; GroupDescription: {cm:tsk_compatibility_manager}; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
-Name: whitelist\prompt; Description: {cm:tsk_whitelist_prompt}; Flags: unchecked ; Components: ffdshow
+Name: whitelist; Description: {cm:tsk_whitelist}; GroupDescription: {cm:tsk_compatibilityManager}; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
+Name: whitelist\prompt; Description: {cm:tsk_whitelistPrompt}; Flags: unchecked ; Components: ffdshow
 
 [Icons]
 #if is64bit
@@ -494,7 +494,7 @@ Source: ..\..\manifest32\msvc80\ff_vfw.dll.manifest; DestDir: {sys}; Flags: igno
 ; ToDo
   #else
 ; ToDo
-  #endif	
+  #endif
 #else
 Source: ..\..\manifest32\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
 #endif
@@ -778,7 +778,7 @@ end;
 #if include_plugin_dscaler
 var
   dscalerdir: String;
-  
+
 function GetDScalerDir(dummy: String): String;
 var
   proglist: Array of String;
@@ -864,19 +864,19 @@ begin
   end
     #endif
   #endif
-  
+
   #if !is64bit
   if Result then begin
     RemoveBuildUsingNSIS;
   end
   #endif
-  
+
   #if VS2005SP1 | VS2008
   if Result then begin
     Result := CheckForRequiredRuntimes;
   end
   #endif
-  
+
   if Result then begin
     #if is64bit
     is_update := RegKeyExists(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\ffdshow64_is1');
@@ -896,11 +896,11 @@ begin
   end
 end;
 #endif
-  
+
 function InitializeUninstall(): Boolean;
 begin
   Result := True;
-  
+
   #if !is64bit
   // Also uninstall ancient versions when uninstalling.
   RemoveBuildUsingNSIS;
