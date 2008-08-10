@@ -82,7 +82,7 @@ typedef struct x264_frame_t
     int     i_lines_completed; /* in pixels */
     int     i_reference_count; /* number of threads using this frame (not necessarily the number of pointers) */
 #if defined(HAVE_PTHREAD)
-    x264_pthread_mutex_t mutex;
+    x264_pthread_mutex_t mutex;      
     x264_pthread_cond_t  cv;
 #endif
 
