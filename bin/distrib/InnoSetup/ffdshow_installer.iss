@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2063
+#define tryout_revision = 2070
 #define buildyear = 2008
 #define buildmonth = '08'
-#define buildday = '04'
+#define buildday = '11'
 
 ; Build specific options
 #define unicode_required = True
@@ -33,7 +33,8 @@
 #define MINGW_GCC = False
 #define VS2003SP1 = False
 #define VS2005SP1 = False
-#define VS2008 = False
+#define VS2008    = False
+#define VS2008SP1 = False
 
 ; Output settings
 #define filename_suffix = ''
@@ -53,7 +54,7 @@
 #define PREF_XXL = False
 #define PREF_XXL_X64 = False
 #define PREF_X64_VS2005SP1 = False
-#define PREF_X64_VS2008 = False
+#define PREF_X64_VS2008SP1 = False
 
 #if PREF_CLSID
   #define VS2003SP1 = True
@@ -97,7 +98,7 @@
   #define include_info_before = True
   #define include_setup_icon = True
   #define filename_suffix = '_xxl_x64'
-#elif PREF_X64_VS2005SP1 | PREF_X64_VS2008
+#elif PREF_X64_VS2005SP1 | PREF_X64_VS2008SP1
   #define is64bit = True
   #define include_x264 = False
   #define include_xvidcore = False
@@ -108,18 +109,18 @@
 #endif
 #if PREF_X64_VS2005SP1
   #define VS2005SP1 = True
-#elif PREF_X64_VS2008
-  #define VS2008 = True
+#elif PREF_X64_VS2008SP1
+  #define VS2008SP1 = True
 #endif
 
 ; Fail if no proper settings were chosen
-#if !MINGW_GCC & !VS2003SP1 & !VS2005SP1 & ! VS2008
+#if !MINGW_GCC & !VS2003SP1 & !VS2005SP1 & !VS2008 & !VS2008SP1
 You must configure your compiling environment!!!
 #endif
-#if VS2008 & !unicode_required
+#if (VS2008 | VS2008SP1) & !unicode_required
 VS2008 builds require Windows 2000 or above. You must set unicode_required to True!
 #endif
-#if is64bit & !VS2005SP1 & !VS2008 & !MINGW_GCC
+#if is64bit & !VS2005SP1 & !VS2008 & !VS2008SP1 & !MINGW_GCC
 This can't be a 64-bit build.
 #endif
 #if is64bit & !unicode_required
@@ -169,7 +170,7 @@ MinVersion=0,5.0
   #else
 MinVersion=4.1,5.0
   #endif
-#elif VS2008
+#elif VS2008 | VS2008SP1
  #if is64bit
 MinVersion=0,5.01
 	#else
@@ -353,7 +354,7 @@ Name: filter\subtitles; Description: {cm:tsk_subtitles};  Check: NOT CheckTaskVi
 Name: skiph264inloop; Description: {cm:tsk_skipInloop}; GroupDescription: {cm:tsk_tweaks}; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
 #endif
 Name: whitelist; Description: {cm:tsk_whitelist}; GroupDescription: {cm:tsk_compatibilityManager}; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
-Name: whitelist\prompt; Description: {cm:tsk_whitelistPrompt}; Flags: unchecked ; Components: ffdshow
+Name: whitelist\prompt; Description: {cm:tsk_whitelistPrompt}; Flags: unchecked; Components: ffdshow
 
 [Icons]
 #if is64bit
@@ -473,7 +474,7 @@ Source: ..\..\manifest64\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversi
 	#else
 Source: ..\..\manifest32\msvc80\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
 	#endif
-#elif VS2008
+#elif VS2008 | VS2008SP1
 	#if is64bit
 ; ToDo
 	#else
@@ -489,7 +490,7 @@ Source: ..\..\manifest64\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversi
 	#else
 Source: ..\..\manifest32\msvc80\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
 	#endif
-#elif VS2008
+#elif VS2008 | VS2008SP1
 	#if is64bit
 ; ToDo
   #else
@@ -506,7 +507,7 @@ Source: ..\..\manifest32\makeAVIS.exe.manifest; DestDir: {app}; Flags: ignorever
   #if is64bit
     #if VS2005SP1
 Source: ..\..\manifest64\makeAVIS.exe.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
-    #elif VS2008
+    #elif VS2008 | VS2008SP1
 ; ToDo
     #endif
   #endif
@@ -632,10 +633,10 @@ Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: is
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: isWhitelist; ValueData: 0; Check: NOT IsUpdate; Components: ffdshow; Tasks: NOT whitelist
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: isWhitelist; ValueData: 1; Check: NOT IsUpdate; Components: ffdshow; Tasks: whitelist
 
-Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: dontaskComp; ValueData: 0; Check: NOT IsUpdate; Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
-Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: dontaskComp; ValueData: 1; Check: NOT IsUpdate; Components: ffdshow; Tasks: whitelist AND whitelist\prompt
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: dontaskComp; ValueData: 0; Check: NOT IsUpdate; Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: dontaskComp; ValueData: 1; Check: NOT IsUpdate; Components: ffdshow; Tasks: whitelist AND whitelist\prompt
+Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: dontaskComp; ValueData: 0; Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
+Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: dontaskComp; ValueData: 1; Components: ffdshow; Tasks: whitelist AND whitelist\prompt
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: dontaskComp; ValueData: 0; Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: dontaskComp; ValueData: 1; Components: ffdshow; Tasks: whitelist AND whitelist\prompt
 
 ; Registry keys for the audio/video formats:
 #include "reg_formats.iss"
@@ -839,7 +840,7 @@ begin
 end;
 #endif
 
-#if VS2005SP1 | VS2008
+#if VS2005SP1 | VS2008 | VS2008SP1
 #include "msvc_runtime_detection.iss"
 #endif
 
@@ -871,7 +872,7 @@ begin
   end
   #endif
 
-  #if VS2005SP1 | VS2008
+  #if VS2005SP1 | VS2008 | VS2008SP1
   if Result then begin
     Result := CheckForRequiredRuntimes;
   end

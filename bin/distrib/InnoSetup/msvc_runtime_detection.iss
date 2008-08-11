@@ -141,6 +141,15 @@ begin
     runtime_url := 'http://www.microsoft.com/downloads/details.aspx?familyid=9B2DA534-3E03-4391-8A4D-074B9F2BC1BF&displaylang=en';
     #endif
   #endif
+  #if VS2008SP1
+    #if is64bit
+    runtime_name := 'Microsoft Visual C++ 2008 SP1 Redistributable Package (x64)';
+    runtime_url := 'http://www.microsoft.com/downloads/details.aspx?FamilyID=ba9257ca-337f-4b40-8c14-157cfdffee4e&DisplayLang=en';
+    #else
+    runtime_name := 'Microsoft Visual C++ 2008 SP1 Redistributable Package (x86)';
+    runtime_url := 'http://www.microsoft.com/downloads/details.aspx?FamilyID=a5c84275-3b97-4ab7-a40d-3802b2af5fc2&DisplayLang=en';
+    #endif
+  #endif
 
   #if is64bit
   runtime.cpu_arch := 'amd64';
@@ -155,7 +164,8 @@ begin
   runtime.version[2] := '8.0.50727.1434';
   runtime.majorversion := '8.0';
   runtime.msvcr_filename := 'msvcr80.dll';
-  #else
+  #endif
+  #if VS2008
   runtime.name := 'Microsoft.VC90.CRT';
   SetArrayLength(runtime.version, 2);
   runtime.version[0] := '9.0.21022.8';
@@ -163,6 +173,14 @@ begin
   runtime.majorversion := '9.0';
   runtime.msvcr_filename := 'msvcr90.dll';
   #endif
+  #if VS2008SP1
+  runtime.name := 'Microsoft.VC90.CRT';
+  SetArrayLength(runtime.version, 1);
+  runtime.version[0] := '9.0.30729.1';
+  runtime.majorversion := '9.0';
+  runtime.msvcr_filename := 'msvcr90.dll';
+  #endif
+  
   runtime.public_key_token := '1fc8b3b9a1e18e3b';
 
   if NOT DetectRuntime(runtime) then begin

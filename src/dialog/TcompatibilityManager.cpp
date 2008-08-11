@@ -99,6 +99,7 @@ void TcompatibilityManager::cfg2dlg(void)
  
  /* only enable reporting if filename is not already on the list */ 
  if(mode==2) {
+ 	//fixme: make case insensitive (maybe by lowercasing both strings)
 	show_report_checkbox = (strstr(BLACKLIST_EXE_FILENAME,filename.c_str()) == NULL);
  } else {
  	if(mode==4) {

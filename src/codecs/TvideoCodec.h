@@ -63,6 +63,9 @@ public:
   {
    int deblocking_filter,slice_alpha_c0_offset,slice_beta_offset;
   } h264;
+ /* fixme: all code concerning "*intra_matrix_luma,*intra_matrix_chroma,*inter_matrix_luma,*inter_matrix_chroma" in
+  * ffdshow does not seems to be doing anything useful. Remove all the relevant code if that is really the case.
+  */ 
  uint16_t *intra_matrix,*inter_matrix,*intra_matrix_luma,*intra_matrix_chroma,*inter_matrix_luma,*inter_matrix_chroma;
 
  float calcMeanQuant(void);
