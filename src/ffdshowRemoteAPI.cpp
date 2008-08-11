@@ -694,12 +694,12 @@ void Tremote::getStreams(bool reload)
 			if (filterinfo.pGraph)
 				filterinfo.pGraph->Release();
 
-			if (!strcmp(_l("ffdshow Video Decoder"), filtername)
+			/*if (!strcmp(_l("ffdshow Video Decoder"), filtername)
 				|| !strcmp(_l("ffdshow raw video filter"), filtername)
 				|| !strcmp(_l("ffdshow VFW decoder helper"), filtername)
 				|| !strcmp(_l("ffdshow subtitles filter"), filtername)
 				|| !strcmp(_l("ffdshow Audio Decoder"), filtername))
-				continue;
+				continue;*/
 			IAMStreamSelect *pAMStreamSelect = NULL;
 			bff->QueryInterface(IID_IAMStreamSelect, (void**) &pAMStreamSelect);
 			if (pAMStreamSelect == NULL)

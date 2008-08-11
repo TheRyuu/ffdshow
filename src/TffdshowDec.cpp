@@ -687,12 +687,14 @@ STDMETHODIMP TffdshowDec::Count(DWORD* pcStreams)
      const TfilterIDFFs *filters;getFilterIDFFs(activepresetname,&filters);
      for (TfilterIDFFs::const_iterator f=filters->begin();f!=filters->end();f++)
       if (f->idff->is && (f->idff->show==0 || getParam2(f->idff->show)))
-       streams.push_back(new TstreamFilter(this,getParam2(f->idff->order),1,f->idff,tr));
+	   // 10 is the group of the stream. 1 is for audio stream so should not be used
+       streams.push_back(new TstreamFilter(this,getParam2(f->idff->order),10,f->idff,tr)); 	 
      std::sort(streams.begin(),streams.end(),streamsSort);
     }
    for (const TfilterIDFF *f=getNextFilterIDFF();f && f->name;f++)
     if (f->show==0 || getParam2(f->show))
-     streams.push_back(new TstreamFilter(this,f->order?getParam2(f->order):1000,f->order?1:2,f,tr));
+	    // Group 1 or 2 should not be used : for audio (1) and subtitle (2) streams
+		streams.push_back(new TstreamFilter(this,f->order?getParam2(f->order):1000,f->order?10:20,f,tr));
   }
  tr->release();
  addOwnStreams();
