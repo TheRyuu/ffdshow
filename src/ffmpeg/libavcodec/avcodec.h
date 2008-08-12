@@ -37,7 +37,7 @@
 #include "libavutil/avutil.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 51
-#define LIBAVCODEC_VERSION_MINOR 61
+#define LIBAVCODEC_VERSION_MINOR 64
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -2158,7 +2158,9 @@ int avpicture_deinterlace(AVPicture *dst, const AVPicture *src,
 
 AVCodec *av_codec_next(AVCodec *c);
 
-/* returns LIBAVCODEC_VERSION_INT constant */
+/**
+ * Returns the LIBAVCODEC_VERSION_INT constant.
+ */
 unsigned avcodec_version(void);
 
 /**

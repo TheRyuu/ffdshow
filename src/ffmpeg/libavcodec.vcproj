@@ -553,12 +553,12 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\vorbis.c">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\libavcodec\vorbis_dec.c">
+			</File>
+			<File
+				RelativePath=".\libavcodec\vorbis_data.c">
 			</File>
 			<File
 				RelativePath=".\libavcodec\vp3.c">

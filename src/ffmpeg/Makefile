@@ -8,7 +8,8 @@ CFLAGS+= -I. -I.. -I$(LAVC_DIR) -I$(LAVU_DIR) -I../codecs -I../imgFilters -I$(ZL
 #CFLAGS+= -save-temps
 #CFLAGS+= -fverbose-asm
 
-SRCS_C=DllEntry.c \
+SRCS_C=\
+      DllEntry.c \
       $(LAVC_DIR)/8bps.c \
       $(LAVC_DIR)/aasc.c \
       $(LAVC_DIR)/ac3.c \
@@ -124,6 +125,8 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/vc1dsp.c \
       $(LAVC_DIR)/vcr1.c \
       $(LAVC_DIR)/vorbis.c \
+      $(LAVC_DIR)/vorbis_dec.c \
+      $(LAVC_DIR)/vorbis_data.c \
       $(LAVC_DIR)/vp3.c \
       $(LAVC_DIR)/vp3dsp.c \
       $(LAVC_DIR)/vp5.c \
@@ -182,7 +185,9 @@ SRCS_C=DllEntry.c \
       $(LAVC_DIR)/i386/vp3dsp_mmx.c \
       $(LAVC_DIR)/i386/vp3dsp_sse2.c
 
-NASMFLAGS=-DUSE32 -Dalloc -Dexec
+SRCS_YASM=\
+      $(LAVC_DIR)/i386/fft_mmx.asm
+
 
 ifeq ($(64BIT),yes)
     CFLAGS+=-DARCH_X86_64

@@ -851,6 +851,10 @@
 		<File 
 			RelativePath=".\libavcodec\vorbis.c"/>
 		<File 
+			RelativePath=".\libavcodec\vorbis_dec.c"/>
+		<File 
+			RelativePath=".\libavcodec\vorbis_data.c"/>
+		<File 
 			RelativePath=".\libavcodec\vp3.c"/>
 		<File 
 			RelativePath=".\libavcodec\vp3dsp.c"/>

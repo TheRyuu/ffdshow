@@ -2619,22 +2619,22 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         if(mm_flags & MM_SSE){
             c->vorbis_inverse_coupling = vorbis_inverse_coupling_sse;
             c->vector_fmul = vector_fmul_sse;
+            c->vector_fmul_reverse = vector_fmul_reverse_sse;
+            c->vector_fmul_add_add = vector_fmul_add_add_sse;
+            c->vector_fmul_window = vector_fmul_window_sse;
             #ifndef ARCH_X86_64
             c->float_to_int16 = float_to_int16_sse;
             c->float_to_int16_interleave = float_to_int16_interleave_sse;
             #endif
-            c->vector_fmul_reverse = vector_fmul_reverse_sse;
-            c->vector_fmul_add_add = vector_fmul_add_add_sse;
-            c->vector_fmul_window = vector_fmul_window_sse;
         }
+        if(mm_flags & MM_3DNOW)
+            c->vector_fmul_add_add = vector_fmul_add_add_3dnow; // faster than sse
         if(mm_flags & MM_SSE2){
             #ifndef ARCH_X86_64
             c->float_to_int16 = float_to_int16_sse2;
             c->float_to_int16_interleave = float_to_int16_interleave_sse2;
             #endif
         }
-        if(mm_flags & MM_3DNOW)
-            c->vector_fmul_add_add = vector_fmul_add_add_3dnow; // faster than sse
     }
 
     if (ENABLE_ENCODERS)
