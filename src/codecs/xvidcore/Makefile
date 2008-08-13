@@ -50,7 +50,7 @@ SRCS_C=decoder.c \
 		utils/timer.c
 
 ifneq ($(64BIT),yes)
-SRCS_NASM=bitstream/x86_asm/cbp_3dne.asm \
+SRCS_YASM=bitstream/x86_asm/cbp_3dne.asm \
 		bitstream/x86_asm/cbp_mmx.asm \
 		bitstream/x86_asm/cbp_sse2.asm \
 		dct/x86_asm/fdct_mmx_ffmpeg.asm \

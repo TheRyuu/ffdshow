@@ -1,7 +1,7 @@
 SRCS=ffdshow_audiofilters_all.cpp
 
 ifneq ($(CC),icl)
-SRCS_NASM=TaudioFilterConvert.asm dotproduct.asm
+SRCS_YASM=TaudioFilterConvert.asm dotproduct.asm
 endif
 
 # enable SSE because compilation fails without it

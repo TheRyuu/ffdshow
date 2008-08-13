@@ -3,7 +3,7 @@ LAVU_DIR=libavutil
 ZLIB_DIR=../zlib
 
 CFLAGS+= -I. -I.. -I$(LAVC_DIR) -I$(LAVU_DIR) -I../codecs -I../imgFilters -I$(ZLIB_DIR) \
-         -DHAVE_AV_CONFIG_H -D_ISOC9X_SOURCE -std=gnu9x
+         -DHAVE_AV_CONFIG_H -D_ISOC9X_SOURCE -std=gnu99 -fasm
 
 #CFLAGS+= -save-temps
 #CFLAGS+= -fverbose-asm

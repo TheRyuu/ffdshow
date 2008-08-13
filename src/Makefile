@@ -10,7 +10,7 @@ SRCS=ffdshow_all.cpp TffDecoder_reg.cpp Tconfig.cpp
 
 SRCS_C=ffdebug.c
 
-SRCS_NASM=cpuid.asm memcpy.asm subtitles/fontRenderer.asm convert/colorspace_rgb_mmx.asm
+SRCS_YASM=cpuid.asm memcpy.asm subtitles/fontRenderer.asm convert/colorspace_rgb_mmx.asm
 
 include makefile.inc
 
