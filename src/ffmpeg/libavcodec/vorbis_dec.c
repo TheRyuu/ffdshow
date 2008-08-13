@@ -34,6 +34,10 @@
 #include "vorbis.h"
 #include "xiph.h"
 
+#ifndef __GNUC__
+#include <malloc.h>
+#endif
+
 #define V_NB_BITS 8
 #define V_NB_BITS2 11
 #define V_MAX_VLCS (1<<16)
@@ -327,7 +331,11 @@ static int vorbis_parse_setup_hdr_codebooks(vorbis_context *vc) {
         if (codebook_setup->lookup_type==1) {
             uint_fast16_t i, j, k;
             uint_fast16_t codebook_lookup_values=ff_vorbis_nth_root(entries, codebook_setup->dimensions);
+			#if __STDC_VERSION__ >= 199901L
             uint_fast16_t codebook_multiplicands[codebook_lookup_values];
+			#else
+			uint_fast16_t *codebook_multiplicands=(uint_fast16_t *)alloca(codebook_lookup_values*sizeof(uint_fast16_t));
+			#endif
 
             float codebook_minimum_value=vorbisfloat2float(get_bits_long(gb, 32));
             float codebook_delta_value=vorbisfloat2float(get_bits_long(gb, 32));
@@ -918,6 +926,7 @@ static av_cold int vorbis_decode_init(AVCodecContext *avccontext) {
     vorbis_context *vc = avccontext->priv_data ;
     uint8_t *headers = avccontext->extradata;
     int headers_len=avccontext->extradata_size;
+    uint8_t *header_start[3];
     int header_len[3];
     GetBitContext *gb = &(vc->gb);
     int i,j,hdr_type;
@@ -933,11 +942,12 @@ static av_cold int vorbis_decode_init(AVCodecContext *avccontext) {
         vc->exp_bias = 15<<23;
     }
 
+		/* ffdshow custom code (begin) */
     if ((!headers_len || headers[0]!=2) && avccontext->vorbis_header_size[0]==0) {
         av_log(avccontext, AV_LOG_ERROR, "Extradata corrupt.\n");
         return -1;
-    }
-
+    }	
+    
     if (avccontext->vorbis_header_size[0]==0) {
         for(j=1,i=0;i<2;++i, ++j) {
             header_len[i]=0;
@@ -958,8 +968,12 @@ static av_cold int vorbis_decode_init(AVCodecContext *avccontext) {
         header_len[1]=avccontext->vorbis_header_size[1];
         header_len[2]=avccontext->vorbis_header_size[2];
     }
+    header_start[0]=headers;
+    header_start[1]=headers+header_len[0];
+    header_start[2]=header_start[1]+header_len[1];
+    /* ffdshow custom code (end) */
 
-    init_get_bits(gb, headers, header_len[0]*8);
+    init_get_bits(gb, header_start[0], header_len[0]*8);
     hdr_type=get_bits(gb, 8);
     if (hdr_type!=1) {
         av_log(avccontext, AV_LOG_ERROR, "First header is not the id header.\n");
@@ -971,7 +985,7 @@ static av_cold int vorbis_decode_init(AVCodecContext *avccontext) {
         return -1;
     }
 
-    init_get_bits(gb, headers+header_len[0]+header_len[1], header_len[2]*8);
+    init_get_bits(gb, header_start[2], header_len[2]*8);
     hdr_type=get_bits(gb, 8);
     if (hdr_type!=5) {
         av_log(avccontext, AV_LOG_ERROR, "Third header is not the setup header.\n");
@@ -1113,9 +1127,15 @@ static uint_fast8_t vorbis_floor1_decode(vorbis_context *vc, vorbis_floor_data *
     GetBitContext *gb=&vc->gb;
     uint_fast16_t range_v[4]={ 256, 128, 86, 64 };
     uint_fast16_t range=range_v[vf->multiplier-1];
+    #if __STDC_VERSION__ >= 199901L
     uint_fast16_t floor1_Y[vf->x_list_dim];
     uint_fast16_t floor1_Y_final[vf->x_list_dim];
     int floor1_flag[vf->x_list_dim];
+    #else
+    uint_fast16_t *floor1_Y=(uint_fast16_t *)alloca((vf->x_list_dim)*sizeof(uint_fast16_t));
+	uint_fast16_t *floor1_Y_final=(uint_fast16_t *)alloca((vf->x_list_dim)*sizeof(uint_fast16_t));
+	int *floor1_flag=(int *)alloca((vf->x_list_dim)*sizeof(int));
+    #endif
     uint_fast8_t class_;
     uint_fast8_t cdim;
     uint_fast8_t cbits;
@@ -1244,7 +1264,11 @@ static int vorbis_residue_decode(vorbis_context *vc, vorbis_residue *vr, uint_fa
     uint_fast8_t c_p_c=vc->codebooks[vr->classbook].dimensions;
     uint_fast16_t n_to_read=vr->end-vr->begin;
     uint_fast16_t ptns_to_read=n_to_read/vr->partition_size;
+    #if __STDC_VERSION__ >= 199901L
     uint_fast8_t classifs[ptns_to_read*vc->audio_channels];
+    #else
+    uint_fast8_t *classifs=(uint_fast8_t *)alloca((ptns_to_read*vc->audio_channels)*sizeof(uint_fast8_t));
+    #endif
     uint_fast8_t pass;
     uint_fast8_t ch_used;
     uint_fast8_t i,j,l;
@@ -1431,12 +1455,21 @@ static int vorbis_parse_audio_packet(vorbis_context *vc) {
     uint_fast8_t blockflag;
     uint_fast16_t blocksize;
     int_fast32_t i,j,dir;
+    #if __STDC_VERSION__ >= 199901L
     uint_fast8_t no_residue[vc->audio_channels];
     uint_fast8_t do_not_decode[vc->audio_channels];
+    #else
+    uint_fast8_t *no_residue=(uint_fast8_t *)alloca((vc->audio_channels)*sizeof(uint_fast8_t));
+	uint_fast8_t *do_not_decode=(uint_fast8_t *)alloca((vc->audio_channels)*sizeof(uint_fast8_t));
+    #endif
     vorbis_mapping *mapping;
     float *ch_res_ptr=vc->channel_residues;
     float *ch_floor_ptr=vc->channel_floors;
+    #if __STDC_VERSION__ >= 199901L
     uint_fast8_t res_chan[vc->audio_channels];
+    #else
+	uint_fast8_t *res_chan=(uint_fast8_t *)alloca((vc->audio_channels)*sizeof(uint_fast8_t));
+    #endif
     uint_fast8_t res_num=0;
     int_fast16_t retlen=0;
     float fadd_bias = vc->add_bias;
@@ -1569,7 +1602,11 @@ static int vorbis_decode_frame(AVCodecContext *avccontext,
 {
     vorbis_context *vc = avccontext->priv_data ;
     GetBitContext *gb = &(vc->gb);
+    #if __STDC_VERSION__ >= 199901L
     const float *channel_ptrs[vc->audio_channels];
+    #else
+    const float **channel_ptrs=(float **)alloca((vc->audio_channels)*sizeof(float));
+    #endif
     int i;
 
     int_fast16_t len;

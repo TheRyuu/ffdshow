@@ -254,7 +254,45 @@ if((y)<(x)){\
 }
 
 #ifndef __GNUC__
-  #define lrintf(x) (int)(x)
+
+#ifndef rint
+#define rint(x) (int)(x+0.5)
 #endif
+
+#ifndef llrint
+static av_always_inline av_const long long llrint(double x)
+{
+    return rint(x);
+}
+#endif
+
+#ifndef lrint
+static av_always_inline av_const long int lrint(double x)
+{
+    return rint(x);
+}
+#endif
+
+#ifndef lrintf
+static av_always_inline av_const long int lrintf(float x)
+{
+    return (int)(rint(x));
+}
+#endif
+
+#ifndef round
+static av_always_inline av_const double round(double x)
+{
+    return (x > 0) ? floor(x + 0.5) : ceil(x - 0.5);
+}
+#endif
+
+#ifndef roundf
+static av_always_inline av_const float roundf(float x)
+{
+    return (x > 0) ? floor(x + 0.5) : ceil(x - 0.5);
+}
+#endif
+#endif /* __GNUC__ */
 
 #endif /* FFMPEG_INTERNAL_H */

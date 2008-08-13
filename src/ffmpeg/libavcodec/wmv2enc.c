@@ -220,9 +220,10 @@ AVCodec wmv2_encoder = {
     CODEC_TYPE_VIDEO,
     CODEC_ID_WMV2,
     sizeof(Wmv2Context),
-    wmv2_encode_init,
-    MPV_encode_picture,
-    MPV_encode_end,
+    /*.init = */wmv2_encode_init,
+    /*.encode = */MPV_encode_picture,
+    /*.close = */MPV_encode_end,
+	/*.decode = */NULL,
     /*.capabilities = */0,
     /*.next = */NULL,
     /*.flush = */NULL,
@@ -232,5 +233,5 @@ AVCodec wmv2_encoder = {
 #else
     /*.pix_fmts = */NULL,
 #endif
-    /*.long_name= */"Windows Media Video 8",
+    /*.long_name= */NULL_IF_CONFIG_SMALL("Windows Media Video 8"),
 };
