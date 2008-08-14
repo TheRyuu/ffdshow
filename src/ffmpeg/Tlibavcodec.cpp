@@ -221,7 +221,7 @@ void Tlibavcodec::avlogMsgBox(AVCodecContext *avctx,int level,const char *fmt,va
 //=================================== TlibavcodecExt ===================================
 void TlibavcodecExt::connectTo(AVCodecContext *ctx,Tlibavcodec *libavcodec)
 {
- ctx->self=this;
+ ctx->opaque=this;
  ctx->get_buffer=get_buffer;default_get_buffer=libavcodec->avcodec_default_get_buffer;
  ctx->reget_buffer=reget_buffer;default_reget_buffer=libavcodec->avcodec_default_reget_buffer;
  ctx->release_buffer=release_buffer;default_release_buffer=libavcodec->avcodec_default_release_buffer;
@@ -229,24 +229,24 @@ void TlibavcodecExt::connectTo(AVCodecContext *ctx,Tlibavcodec *libavcodec)
 }
 int TlibavcodecExt::get_buffer(AVCodecContext *c, AVFrame *pic)
 {
- int ret=c->self->default_get_buffer(c,pic);
+ int ret=c->opaque->default_get_buffer(c,pic);
  if (ret==0)
-  c->self->onGetBuffer(pic);
+  c->opaque->onGetBuffer(pic);
  return ret;
 }
 int TlibavcodecExt::reget_buffer(AVCodecContext *c, AVFrame *pic)
 {
- int ret=c->self->default_reget_buffer(c,pic);
+ int ret=c->opaque->default_reget_buffer(c,pic);
  if (ret==0)
-  c->self->onRegetBuffer(pic);
+  c->opaque->onRegetBuffer(pic);
  return ret;
 }
 void TlibavcodecExt::release_buffer(AVCodecContext *c, AVFrame *pic)
 {
- c->self->default_release_buffer(c,pic);
- c->self->onReleaseBuffer(pic);
+ c->opaque->default_release_buffer(c,pic);
+ c->opaque->onReleaseBuffer(pic);
 }
 void TlibavcodecExt::handle_user_data0(AVCodecContext *c, const uint8_t *buf,int buf_len)
 {
- c->self->handle_user_data(buf,buf_len);
+ c->opaque->handle_user_data(buf,buf_len);
 }

@@ -25,6 +25,15 @@
  * MDCT/IMDCT transforms.
  */
 
+float ff_sine_128 [ 128];
+float ff_sine_256 [ 256];
+float ff_sine_512 [ 512];
+float ff_sine_1024[1024];
+float ff_sine_2048[2048];
+float *ff_sine_windows[5] = {
+    ff_sine_128, ff_sine_256, ff_sine_512, ff_sine_1024, ff_sine_2048,
+};
+
 // Generate a sine window.
 void ff_sine_window_init(float *window, int n) {
     int i;

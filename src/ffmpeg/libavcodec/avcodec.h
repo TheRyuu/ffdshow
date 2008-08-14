@@ -786,7 +786,7 @@ typedef struct AVCodecContext {
      * - encoding: Set by user.
      * - decoding: Set by user.
      */
-    struct TlibavcodecExt *self;
+    struct TlibavcodecExt *opaque;
 
     char codec_name[32];
     enum CodecType codec_type; /* see CODEC_TYPE_xxx */
