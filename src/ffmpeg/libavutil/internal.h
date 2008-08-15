@@ -103,11 +103,6 @@
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
 
-#ifdef CONFIG_FASTMEMCPY
-#    include "fastmemcpy.h"
-#    define memcpy(a,b,c) fast_memcpy(a,b,c)
-#endif
-
 #if defined(__MINGW32__) || defined(__CYGWIN__)
 #define EXTERN_PREFIX "_"
 #endif

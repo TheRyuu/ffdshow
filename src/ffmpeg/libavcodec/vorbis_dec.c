@@ -32,7 +32,6 @@
 #include "dsputil.h"
 
 #include "vorbis.h"
-#include "xiph.h"
 
 #ifndef __GNUC__
 #include <malloc.h>
@@ -159,6 +158,13 @@ typedef struct vorbis_context_s {
     float *saved;
     uint_fast32_t add_bias; // for float->int conversion
     uint_fast32_t exp_bias;
+    
+    /* ffdshow custom code (begin) */
+    char *vendor;
+    int comments;
+    char **user_comments;
+    int *comment_lengths;
+    /* ffdshow custom code (end) */
 } vorbis_context;
 
 /* Helper functions */
@@ -219,6 +225,16 @@ static void vorbis_free(vorbis_context *vc) {
         av_freep(&vc->win[0]);
         av_freep(&vc->win[1]);
     }
+    
+    /* ffdshow custom code (begin) */
+    av_freep(&vc->vendor);
+    av_freep(&vc->comment_lengths);
+    if (vc->user_comments){
+        for(i=0;i<vc->comments;i++)
+            av_freep(&vc->user_comments[i]);
+        av_freep(&vc->user_comments);
+    }
+    /* ffdshow custom code (end) */
 }
 
 // Parse setup header -------------------------------------------------
@@ -920,6 +936,128 @@ static int vorbis_parse_id_hdr(vorbis_context *vc){
     return 0;
 }
 
+/* ffdshow custom code (begin) */
+static unsigned int get_bits_long_le(GetBitContext *s, int n){
+    if(n<=17) return get_bits(s, n);
+    else{
+        int ret= get_bits(s, 16);
+        return ret | (get_bits(s, n-16) << 16);
+    }
+}
+
+static void vorbis_readstring(GetBitContext *gb,char *buf,int bytes){
+    while (bytes--) {
+        *buf++=get_bits(gb,8);
+    }
+}
+
+/**
+ * Copy the string str to buf. If str length is bigger than buf_size -
+ * 1 then it is clamped to buf_size - 1.
+ * NOTE: this function does what strncpy should have done to be
+ * useful. NEVER use strncpy.
+ * 
+ * @param buf destination buffer
+ * @param buf_size size of destination buffer
+ * @param str source string
+ */
+void pstrcpy(char *buf, int buf_size, const char *str)
+{
+    int c;
+    char *q = buf;
+
+    if (buf_size <= 0)
+        return;
+
+    for(;;) {
+        c = *str++;
+        if (c == 0 || q >= buf + buf_size - 1)
+            break;
+        *q++ = c;
+    }
+    *q = '\0';
+}
+
+/* strcat and truncate. */
+char *pstrcat(char *buf, int buf_size, const char *s)
+{
+    int len;
+    len = strlen(buf);
+    if (len < buf_size) 
+        pstrcpy(buf + len, buf_size - len, s);
+    return buf;
+}
+
+static int vorbis_parse_comment_hdr(vorbis_context *vc) {
+    GetBitContext *gb=&vc->gb;
+    int vendorlen,i;
+    if ((get_bits(gb, 8)!='v') || (get_bits(gb, 8)!='o') ||
+        (get_bits(gb, 8)!='r') || (get_bits(gb, 8)!='b') ||
+        (get_bits(gb, 8)!='i') || (get_bits(gb, 8)!='s')) {
+        av_log(vc->avccontext, AV_LOG_ERROR, " Vorbis comment header packet corrupt (no vorbis signature). \n");
+        return 1;
+    }
+    vendorlen=get_bits_long_le(gb,32);
+    if(vendorlen<0) return 3;
+    vc->vendor=av_mallocz(vendorlen+1);
+    vorbis_readstring(gb,vc->vendor,vendorlen);
+    vc->comments=get_bits_long_le(gb,32);
+    if(vc->comments<0) return 4;
+    vc->user_comments=(char **)av_mallocz((vc->comments+1)*sizeof(*vc->user_comments));
+    vc->comment_lengths=(int *)av_mallocz((vc->comments+1)*sizeof(*vc->comment_lengths));
+    for (i=0;i<vc->comments;i++) {
+        int len=get_bits_long_le(gb,32);
+        if(len<0) return 5;
+        vc->comment_lengths[i]=len;
+        vc->user_comments[i]=av_mallocz(len+1);
+        vorbis_readstring(gb,vc->user_comments[i],len);
+    }     
+    if (!get_bits1(gb)) {
+        av_log(vc->avccontext, AV_LOG_ERROR, " Vorbis comment header packet corrupt (framing flag). \n");
+        return 2;
+    }      
+    return 0;
+}
+
+static int vorbis_comment_query_count(vorbis_context *vc, const char *tag)  {
+    int i,count=0;
+    int taglen = strlen(tag)+1; /* +1 for the = we append */
+    char *fulltag = (char *)av_malloc(taglen+1);
+    strcpy(fulltag,tag);
+    pstrcat(fulltag, taglen+1, "=");
+
+    for (i=0;i<vc->comments;i++) {
+        if(!strnicmp(vc->user_comments[i], fulltag, taglen))
+        count++;
+    }
+    av_free(fulltag);
+
+    return count;
+}
+
+static const char *vorbis_comment_query(vorbis_context *vc, const char *tag, int count) {
+    long i;
+    int found = 0;
+    int taglen = strlen(tag)+1; /* +1 for the = we append */
+    char *fulltag = (char *)av_malloc(taglen+ 1);
+
+    strcpy(fulltag, tag);
+    pstrcat(fulltag, taglen+1, "=");
+  
+    for (i=0;i<vc->comments;i++){
+        if (!strnicmp(vc->user_comments[i], fulltag, taglen)) {
+            if (count == found) {/* We return a pointer to the data, not a copy */
+                av_free(fulltag);
+                return vc->user_comments[i] + taglen;
+            } else
+                found++;
+        }
+    }
+    av_free(fulltag);
+    return NULL; /* didn't find anything */
+}
+/* ffdshow custom code (end) */
+
 // Process the extradata using the functions above (identification header, setup header)
 
 static av_cold int vorbis_decode_init(AVCodecContext *avccontext) {
@@ -984,6 +1122,29 @@ static av_cold int vorbis_decode_init(AVCodecContext *avccontext) {
         vorbis_free(vc);
         return -1;
     }
+    
+    /* ffdshow custom code (begin) */
+    init_get_bits(gb, header_start[1], header_len[1]*8);
+    hdr_type=get_bits(gb, 8);
+    if (hdr_type!=3) {
+        av_log(avccontext, AV_LOG_ERROR, "Second header is not the comment header.\n");
+        return -1;
+    }
+    if (vorbis_parse_comment_hdr(vc)) {
+        av_log(avccontext, AV_LOG_ERROR, "Comment header corrupt.\n");
+        vorbis_free(vc);
+        return -1;
+    }
+    
+    if (vorbis_comment_query_count(vc,"LWING_GAIN"))
+        sscanf(vorbis_comment_query(vc,"LWING_GAIN",0),"%f",&avccontext->postgain);
+    if (vorbis_comment_query_count(vc,"POSTGAIN"))
+        sscanf(vorbis_comment_query(vc,"POSTGAIN",0),"%f",&avccontext->postgain);
+    if (vorbis_comment_query_count(vc,"REPLAYGAIN_TRACK_GAIN")) {
+        if (sscanf(vorbis_comment_query(vc,"REPLAYGAIN_TRACK_GAIN",0),"%f dB",&avccontext->postgain)==1)
+            avccontext->postgain=(float)pow(10.0,avccontext->postgain/20.0);
+    }    
+    /* ffdshow custom code (end) */
 
     init_get_bits(gb, header_start[2], header_len[2]*8);
     hdr_type=get_bits(gb, 8);
