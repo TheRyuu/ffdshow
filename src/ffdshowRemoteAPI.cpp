@@ -343,10 +343,10 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 		setStream((long)lprm);
 		return TRUE;
 	case WPRM_GET_CURRENT_AUDIO_STREAM:
-		getStreams(false);
+		getStreams(true);
 		return currentAudioStream;
 	case WPRM_GET_CURRENT_SUBTITLE_STREAM:
-		getStreams(false);
+		getStreams(true);
 		return currentSubtitleStream;
 	case WPRM_GET_FRAMERATE:
 		if (deciV != NULL)
@@ -805,12 +805,7 @@ void Tremote::setStream(long streamNb)
 		{
 			char_t name[MAX_PATH],filtername[MAX_PATH];
 			getFilterName(bff,name,filtername,countof(filtername));
-			if (!strcmp(_l("ffdshow Video Decoder"), filtername)
-				|| !strcmp(_l("ffdshow raw video filter"), filtername)
-				|| !strcmp(_l("ffdshow VFW decoder helper"), filtername)
-				|| !strcmp(_l("ffdshow subtitles filter"), filtername)
-				|| !strcmp(_l("ffdshow Audio Decoder"), filtername))
-				continue;
+
 			IAMStreamSelect *pAMStreamSelect = NULL;
 			bff->QueryInterface(IID_IAMStreamSelect, (void**) &pAMStreamSelect);
 			if (pAMStreamSelect == NULL)
