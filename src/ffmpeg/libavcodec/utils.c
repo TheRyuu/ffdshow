@@ -381,9 +381,8 @@ void avcodec_get_context_defaults(AVCodecContext *s){
 
     s->av_class= &av_codec_context_class;
 
-		s->rc_eq= av_strdup("tex^qComp");
-		s->time_base.num=0; s->time_base.den=1;	
-    
+    s->time_base.num=0; s->time_base.den=1;
+
     s->get_buffer= avcodec_default_get_buffer;
     s->release_buffer= avcodec_default_release_buffer;
     s->get_format= avcodec_default_get_format;
@@ -626,7 +625,6 @@ int avcodec_close(AVCodecContext *avctx)
         avctx->codec->close(avctx);
     avcodec_default_free_buffers(avctx);
     av_freep(&avctx->priv_data);
-    av_freep(&avctx->rc_eq);
     avctx->codec = NULL;
     //entangled_thread_counter--; /* ffdshow custom coment out */
     return 0;
@@ -766,6 +764,8 @@ int av_get_bits_per_sample_format(enum SampleFormat sample_fmt) {
     case SAMPLE_FMT_S32:
     case SAMPLE_FMT_FLT:
         return 32;
+    case SAMPLE_FMT_DBL:
+        return 64;
     default:
         return 0;
     }
