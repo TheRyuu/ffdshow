@@ -1,31 +1,36 @@
 CFLAGS+= -I. -I.. -I../.. -I../../xiph -Idec -Ienc -DUSE_ASM
 
 SRCS_C=\
-  blockmap.c \
+  cpu.c \
   comment.c \
-  dct.c \
-  dct_decode.c \
-	dct_encode.c \
-	decode.c \
-	encode.c \
-	frarray.c \
-	frinit.c \
 	huffman.c \
 	idct.c \
-	mcomp.c \
 	misc_common.c \
-	pb.c \
-	pp.c \
-	quant.c \
-	reconstruct.c \
-	scan.c \
 	toplevel.c \
-	encoder_toplevel.c \
-	cpu.c \
-	dsp.c \
+	dec/decode.c \
+	dec/quant.c \
+	enc/blockmap.c \
+	enc/dct.c \
+  enc/dct_decode.c \
+	enc/dct_encode.c \
+	enc/dsp.c \
+	enc/encode.c \
+	enc/encoder_toplevel.c \
+	enc/frarray.c \
+	enc/frinit.c \
+	enc/mcomp.c \
+	enc/pb.c \
+	enc/pp.c \
+	enc/reconstruct.c \
+	enc/scan.c
+
+SRCS_C+=\
+	version.c
+	
+SRCS_C+=\
 	../../xiph/ogg/bitwise.c \
 	../../xiph/ogg/framing.c
-	
+
 ifeq ($(64BIT),yes)
 SRCS_C+=\
 	enc/x86_64/recon_mmx.c \
@@ -53,8 +58,8 @@ include ../../makefile_c.inc
 
 .all: $(SLIB)
 
-clean: 
-	rm -f $(SLIB) *.o *.d enc/x86_32/*.o enc/x86_32/*.d enc/x86_64/*.o *.d enc/x86_64/*.d ../../xiph/ogg/*.o ../../xiph/ogg/*.d
+clean:
+	rm -f $(SLIB) *.o *.d dec/*.o dec/*.d enc/*.o enc/*.d enc/x86_32/*.o enc/x86_32/*.d enc/x86_64/*.o *.d enc/x86_64/*.d ../../xiph/ogg/*.o ../../xiph/ogg/*.d
 
 #
 # include dependency files if they exist
