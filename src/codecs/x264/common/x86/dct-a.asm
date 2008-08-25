@@ -32,30 +32,6 @@ pb_zigzag4: db 0,1,4,8,5,2,3,6,9,12,13,10,7,11,14,15
 
 SECTION .text
 
-%macro SBUTTERFLY 4
-    mova       m%4, m%2
-    punpckl%1  m%2, m%3
-    punpckh%1  m%4, m%3
-    SWAP %3, %4
-%endmacro
-
-%macro TRANSPOSE4x4W 5
-    SBUTTERFLY wd, %1, %2, %5
-    SBUTTERFLY wd, %3, %4, %5
-    SBUTTERFLY dq, %1, %3, %5
-    SBUTTERFLY dq, %2, %4, %5
-    SWAP %2, %3
-%endmacro
-
-%macro TRANSPOSE2x4x4W 5
-    SBUTTERFLY wd, %1, %2, %5
-    SBUTTERFLY wd, %3, %4, %5
-    SBUTTERFLY dq, %1, %3, %5
-    SBUTTERFLY dq, %2, %4, %5
-    SBUTTERFLY qdq, %1, %2, %5
-    SBUTTERFLY qdq, %3, %4, %5
-%endmacro
-
 %macro HADAMARD4_1D 4
     SUMSUB_BADC m%2, m%1, m%4, m%3
     SUMSUB_BADC m%4, m%2, m%3, m%1
@@ -65,7 +41,7 @@ SECTION .text
 ;-----------------------------------------------------------------------------
 ; void x264_dct4x4dc_mmx( int16_t d[4][4] )
 ;-----------------------------------------------------------------------------
-cglobal x264_dct4x4dc_mmx, 1,1,1
+cglobal x264_dct4x4dc_mmx, 1,1
     movq   m0, [r0+ 0]
     movq   m1, [r0+ 8]
     movq   m2, [r0+16]
@@ -143,7 +119,7 @@ cglobal x264_sub4x4_dct_mmx, 3,3
 ;-----------------------------------------------------------------------------
 ; void x264_add4x4_idct_mmx( uint8_t *p_dst, int16_t dct[4][4] )
 ;-----------------------------------------------------------------------------
-cglobal x264_add4x4_idct_mmx, 2,2,1
+cglobal x264_add4x4_idct_mmx, 2,2
 .skip_prologue:
     movq  m0, [r1+ 0]
     movq  m1, [r1+ 8]
@@ -179,7 +155,7 @@ cglobal x264_sub8x8_dct_sse2, 3,3
     movhps [r0+56], m3
     ret
 
-cglobal x264_add8x8_idct_sse2, 2,2,1
+cglobal x264_add8x8_idct_sse2, 2,2
 .skip_prologue:
     call .8x4
     add  r1, 64
@@ -221,7 +197,7 @@ cglobal %1, 3,3
 ; void x264_add8x8_idct_mmx( uint8_t *pix, int16_t dct[4][4][4] )
 ;-----------------------------------------------------------------------------
 %macro ADD_NxN_IDCT 6
-cglobal %1, 2,2,1
+cglobal %1, 2,2
 .skip_prologue:
     call %2
     add  r0, %4-%5-%6*FDEC_STRIDE
@@ -292,7 +268,6 @@ cglobal x264_zigzag_sub_4x4_frame_ssse3, 3,3
     movd      [r2+1*FDEC_STRIDE], xmm1
     movd      [r2+2*FDEC_STRIDE], xmm2
     movd      [r2+3*FDEC_STRIDE], xmm3
-    picgetgot r1
     punpckldq xmm0, xmm1
     punpckldq xmm2, xmm3
     punpckldq xmm4, xmm5

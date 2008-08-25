@@ -29,34 +29,7 @@ SECTION_RODATA
 pw_32: times 8 dw 32
 
 SECTION .text
-
 INIT_XMM
-
-%macro SBUTTERFLY 4
-    mova      m%4, m%2
-    punpckl%1 m%2, m%3
-    punpckh%1 m%4, m%3
-    SWAP %3, %4
-%endmacro
-
-%macro TRANSPOSE8x8W 9
-    SBUTTERFLY wd,  %1, %2, %9
-    SBUTTERFLY wd,  %3, %4, %9
-    SBUTTERFLY wd,  %5, %6, %9
-    SBUTTERFLY wd,  %7, %8, %9
-    SBUTTERFLY dq,  %1, %3, %9
-    SBUTTERFLY dq,  %2, %4, %9
-    SBUTTERFLY dq,  %5, %7, %9
-    SBUTTERFLY dq,  %6, %8, %9
-    SBUTTERFLY qdq, %1, %5, %9
-    SBUTTERFLY qdq, %2, %6, %9
-    SBUTTERFLY qdq, %3, %7, %9
-    SBUTTERFLY qdq, %4, %8, %9
-    SWAP %2, %5
-    SWAP %4, %7
-%endmacro
-
-SECTION .text
 
 %macro DCT8_1D 10
     SUMSUB_BA  m%8, m%1 ; %8=s07, %1=d07
@@ -151,7 +124,7 @@ cglobal x264_sub8x8_dct8_sse2
     paddw   m%9, m%2
     paddw   m%9, m%4
     paddw   m%9, m%6 ; %9=a7
-    
+
     movdqa  m%10, m%6
     psraw   m%10, 1
     paddw   m%10, m%6
@@ -208,7 +181,7 @@ cglobal x264_add8x8_idct8_sse2
     TRANSPOSE8x8W 0,1,2,3,4,5,6,7,8
     paddw         m0, [pw_32 GLOBAL] ; rounding for the >>6 at the end
     IDCT8_1D      0,1,2,3,4,5,6,7,8,9
- 
+
     pxor  m9, m9
     STORE_DIFF m0, m8, m9, [r0+0*FDEC_STRIDE]
     STORE_DIFF m1, m8, m9, [r0+1*FDEC_STRIDE]
