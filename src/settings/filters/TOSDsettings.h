@@ -41,7 +41,7 @@ public:
  TOSDsettingsVideo(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
 
  TfontSettingsOSD font;
- char_t user[256];int userPx,userPy;
+ char_t user[2048];int userPx,userPy;
  int linespace;
  int posX,posY;
  void resetLook(void);

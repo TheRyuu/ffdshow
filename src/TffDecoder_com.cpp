@@ -286,8 +286,11 @@ STDMETHODIMP TffdshowDecVideo::drawOSD(int px,int py,const char_t *text)
  if ((globalSettings->filtermode&IDFF_FILTERMODE_PLAYER)==0) return E_UNEXPECTED;
  if (px<0 || px>100 || py<0 || py>100) return E_INVALIDARG;
  if (!text) return E_POINTER;
- if (strlen(text)>255) return E_OUTOFMEMORY;
- globalSettings->osd.userPx=px;globalSettings->osd.userPy=py;strcpy(globalSettings->osd.user,text);
+ globalSettings->osd.userPx=px;globalSettings->osd.userPy=py;
+ if (strlen(text)>2048)
+  strncpy(globalSettings->osd.user,text,2048);
+ else
+  strcpy(globalSettings->osd.user,text);
  return S_OK;
 }
 STDMETHODIMP TffdshowDecVideo::calcMeanQuant(float *quant)

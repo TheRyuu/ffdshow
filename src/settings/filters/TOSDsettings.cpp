@@ -215,7 +215,7 @@ TOSDsettingsVideo::TOSDsettingsVideo(TintStrColl *Icoll,TfilterIDFFs *filters):
 
  static const TstrOption sopts[]=
   {
-   IDFF_OSDuser                   ,(TstrVal)&TOSDsettingsVideo::user ,256,0 ,_l(""),0,NULL,NULL,
+   IDFF_OSDuser                   ,(TstrVal)&TOSDsettingsVideo::user ,2048,0 ,_l(""),0,NULL,NULL,
    0
   };
  addOptions(sopts);

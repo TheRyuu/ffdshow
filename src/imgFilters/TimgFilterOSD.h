@@ -111,7 +111,7 @@ private:
  unsigned int framecnt;
  Tfont fontUser;
  TsubtitleTextBase<char_t> subUser;
- char_t oldLinesUser[256];
+ char_t oldLinesUser[2048];
  strings linesUser;
 
  CCritSec cs;
