@@ -63,7 +63,7 @@ en.langid=1033
 en.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
 en.simd_msg_sse=This build of ffdshow requires a CPU with SSE extension support. Your CPU does not have those capabilities.
 en.simd_msg_sse2=This build of ffdshow requires a CPU with SSE2 extension support. Your CPU does not have those capabilities.
-en.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported.
+en.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported. Revision 1940 of ffdshow is the last one that works on old CPUs.
 
 en.comp_ffdshowds=ffdshow DirectShow filter
 en.comp_vfwInterface=VFW interface
