@@ -31,13 +31,13 @@
 #include "ffImgfmt.h"
 
 #ifdef HAVE_AV_CONFIG_H
-#include "common.h"
+#include "libavutil/common.h"
 #endif
 
 #include "libavutil/avutil.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 51
-#define LIBAVCODEC_VERSION_MINOR 69
+#define LIBAVCODEC_VERSION_MINOR 70
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -67,7 +67,6 @@ enum CodecType {
 };
 
 /**
- * Currently unused, may be used if 24/32 bits samples are ever supported.
  * all in native-endian format
  */
 enum SampleFormat {
@@ -78,7 +77,14 @@ enum SampleFormat {
     SAMPLE_FMT_S32,             ///< signed 32 bits
     SAMPLE_FMT_FLT,             ///< float
     SAMPLE_FMT_DBL,             ///< double
-    SAMPLE_I=100,SAMPLE_P
+};
+
+/**
+ * Needed for CorePNG
+ */
+enum CorePNGFrameType {
+    SAMPLE_I,
+    SAMPLE_P
 };
 
 /* in bytes */
@@ -316,7 +322,6 @@ typedef struct AVPanScan{
      * - decoding: Set by libavcodec.\
      */\
     int64_t pts;\
-    int64_t rtStart;  /* FOXFIX: Now removed from lavc */\
 \
     /**\
      * picture number in bitstream order\
@@ -440,10 +445,6 @@ typedef struct AVPanScan{
      * \
      */\
     int qscale_type;\
-	 /* FOXFIX: below now removed from lavc */ \
-    int mb_width,mb_height,mb_stride,b8_stride;\
-    int num_sprite_warping_points,real_sprite_warping_points;\
-    int play_flags;\
     \
     /**\
      * The content of the picture is interlaced.\
@@ -501,6 +502,12 @@ typedef struct AVPanScan{
      * - decoding: Read by user.\
      */\
     int64_t reordered_opaque;\
+\
+    /* ffdshow custom code */\
+    int64_t rtStart;\
+    int mb_width,mb_height,mb_stride,b8_stride;\
+    int num_sprite_warping_points,real_sprite_warping_points;\
+    int play_flags;
 
 
 #define FF_QSCALE_TYPE_MPEG1 0
@@ -673,7 +680,6 @@ typedef struct AVCodecContext {
     /* audio only */
     int sample_rate; ///< samples per second
     int channels;    ///< number of audio channels
-    float postgain;		/* FOXFIX: Now removed from lavc */
 
     /**
      * audio sample format
@@ -1468,22 +1474,6 @@ typedef struct AVCodecContext {
      */
     int scenechange_threshold;
 
-/* FOXFIX: Now removed from lavc */
-	 /**
-     * minimum and maxminum quantizer for I frames. If 0, derived from qmin, i_quant_factor, i_quant_offset
-     * - encoding: set by user.
-     * - decoding: unused
-     */
-    int qmin_i,qmax_i;
-
-/* FOXFIX: Now removed from lavc */
-    /**
-     * minimum and maximum quantizer for B frames. If 0, derived from qmin, b_quant_factor, b_quant_offset
-     * - encoding: set by user.
-     * - decoding: unused
-     */
-    int qmin_b,qmax_b;
-
     /**
      * minimum Lagrange multipler
      * - encoding: Set by user.
@@ -1646,17 +1636,6 @@ typedef struct AVCodecContext {
      */
      int profile;
 #define FF_PROFILE_UNKNOWN -99
-
-/* FOXFIX: Now removed from lavc */
-    int ac3mode,ac3lfe;
-    int ac3channels[6];
-    int nal_length_size;
-    int h264_deblocking_filter,h264_slice_alpha_c0_offset,h264_slice_beta_offset;
-    int vorbis_header_size[3];
-    int64_t granulepos;
-    int64_t *parserRtStart;
-    void (*handle_user_data)(struct AVCodecContext *c,const uint8_t *buf,int buf_size);
-/* End FOXFIX */
 
     /**
      * level
@@ -1974,6 +1953,45 @@ typedef struct AVCodecContext {
      * - decoding: Set by user.
      */
     int64_t reordered_opaque;
+
+    /**
+     * Bits per sample/pixel of internal libavcodec pixel/sample format.
+     * This field is applicable only when sample_fmt is SAMPLE_FMT_S32.
+     * - encoding: set by user.
+     * - decoding: set by libavcodec.
+     */
+    int bits_per_raw_sample;
+    
+        
+    /* ffdshow custom stuff (begin) */
+    
+    /**
+     * minimum and maxminum quantizer for I frames. If 0, derived from qmin, i_quant_factor, i_quant_offset
+     * - encoding: set by user.
+     * - decoding: unused
+     */
+    int qmin_i,qmax_i;
+
+    /**
+     * minimum and maximum quantizer for B frames. If 0, derived from qmin, b_quant_factor, b_quant_offset
+     * - encoding: set by user.
+     * - decoding: unused
+     */
+    int qmin_b,qmax_b;
+    
+    float postgain;
+    int ac3mode,ac3lfe;
+    int ac3channels[6];
+    int nal_length_size;
+    int h264_deblocking_filter,h264_slice_alpha_c0_offset,h264_slice_beta_offset;
+    int vorbis_header_size[3];
+    int64_t granulepos;
+    int64_t *parserRtStart;
+    void (*handle_user_data)(struct AVCodecContext *c,const uint8_t *buf,int buf_size);
+    
+    enum CorePNGFrameType corepng_frame_type;    
+    
+    /* ffdshow custom stuff (end) */
 } AVCodecContext;
 
 /**

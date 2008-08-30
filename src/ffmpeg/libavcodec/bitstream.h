@@ -342,7 +342,7 @@ static inline void set_put_bits_buffer_size(PutBitContext *s, int size){
 
 /* Bitstream reader API docs:
 name
-    abritary name which is used as prefix for the internal variables
+    arbitrary name which is used as prefix for the internal variables
 
 gb
     getbitcontext
