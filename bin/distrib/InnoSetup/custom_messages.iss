@@ -135,7 +135,7 @@ jp.langid=1041
 ;jp.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
 ;jp.simd_msg_sse=This build of ffdshow requires a CPU with SSE extension support. Your CPU does not have those capabilities.
 ;jp.simd_msg_sse2=This build of ffdshow requires a CPU with SSE2 extension support. Your CPU does not have those capabilities.
-;jp.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported.
+;jp.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported. Revision 1940 of ffdshow is the last one that works on old CPUs.
 
 jp.comp_ffdshowds=ffdshow DirectShow ƒtƒBƒ‹ƒ^[
 jp.comp_vfwInterface=VFW ƒCƒ“ƒ^[ƒtƒF[ƒX
@@ -206,7 +206,7 @@ de.langid=1031
 de.msg_uninstallFirst=Sie müssen ihre alte ffdshow-Version erst deinstallieren.
 de.simd_msg_sse=Dieses ffdshow-Build benötigt einen Prozessor mit SSE-Unterstützung. Ihr Prozesser besitzt diese Eigenschaft nicht.
 de.simd_msg_sse2=Dieses ffdshow-Build benötigt einen Prozessor mit SSE2-Unterstützung. Ihr Prozesser besitzt diese Eigenschaft nicht.
-de.unsupported_cpu=Dieses ffdshow-Build benötigt einen Prozessor vom Typ i686 der neuer. Ihr Prozesser wird nicht unterstützt.
+de.unsupported_cpu=Dieses ffdshow-Build benötigt einen Prozessor vom Typ i686 der neuer. Ihr Prozessor wird nicht unterstützt. Revision 1940 von ffdshow ist die letzte, die auf alten Prozessoren funktioniert.
 
 de.comp_ffdshowds=ffdshow-DirectShow-Filter
 de.comp_vfwInterface=VFW-Interface
@@ -277,7 +277,7 @@ fr.langid=1036
 ;fr.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
 ;fr.simd_msg_sse=This build of ffdshow requires a CPU with SSE extension support. Your CPU does not have those capabilities.
 ;fr.simd_msg_sse2=This build of ffdshow requires a CPU with SSE2 extension support. Your CPU does not have those capabilities.
-;fr.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported.
+;fr.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported. Revision 1940 of ffdshow is the last one that works on old CPUs.
 
 fr.comp_ffdshowds=Filtre ffdshow DirectShow
 fr.comp_vfwInterface=Interface VFW
@@ -348,7 +348,7 @@ ru.langid=1049
 ;ru.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
 ;ru.simd_msg_sse=This build of ffdshow requires a CPU with SSE extension support. Your CPU does not have those capabilities.
 ;ru.simd_msg_sse2=This build of ffdshow requires a CPU with SSE2 extension support. Your CPU does not have those capabilities.
-;ru.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported.
+;ru.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported. Revision 1940 of ffdshow is the last one that works on old CPUs.
 
 ru.comp_ffdshowds=ffdshow DirectShow-ôèëüòğ
 ru.comp_vfwInterface=VFW èíòåğôåéñ
@@ -419,7 +419,7 @@ pl.langid=1045
 pl.msg_uninstallFirst=Najpierw musisz odinstalowaæ star¹ wersjê ffdshow.
 pl.simd_msg_sse=Ta kompilacja ffdshow wymaga procesora z obs³ug¹ zestawu instrukcji SSE. Twój procesor ich nie obs³uguje.
 pl.simd_msg_sse2=Ta kompilacja ffdshow wymaga procesora z obs³ug¹ zestawu instrukcji SSE2. Twój procesor ich nie obs³uguje.
-;pl.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported.
+;pl.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported. Revision 1940 of ffdshow is the last one that works on old CPUs.
 
 pl.comp_ffdshowds=ffdshow - filtr DirectShow
 pl.comp_vfwInterface=interfejs VFW
@@ -490,7 +490,7 @@ cz.langid=1029
 ;cz.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
 cz.simd_msg_sse=Toto sestavení ffdshow vyaduje procesor s podporou rozšíøení SSE. Váš procesor tato rozšíøení nepodporuje.
 cz.simd_msg_sse2=Toto sestavení ffdshow vyaduje procesor s podporou rozšíøení SSE2. Váš procesor tato rozšíøení nepodporuje.
-;cz.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported.
+;cz.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported. Revision 1940 of ffdshow is the last one that works on old CPUs.
 
 cz.comp_ffdshowds=ffdshow DirectShow filtr
 cz.comp_vfwInterface=VFW rozhraní
@@ -562,6 +562,7 @@ sc.msg_uninstallFirst=Äú±ØĞëÏÈĞ¶ÔØ¾É°æ±¾µÄ ffdshow¡£
 sc.simd_msg_sse=Õâ¸ö±àÒë°æµÄ ffdshow ĞèÒªÒ»¸öÖ§³Ö SSE Ö¸Áî¼¯µÄ CPU¡£µ«ÊÇÄúµÄ CPU ²¢²»Ö§³ÖÕâ¸ö¹¦ÄÜ¡£
 sc.simd_msg_sse2=Õâ¸ö±àÒë°æµÄ ffdshow ĞèÒªÒ»¸öÖ§³Ö SSE2 Ö¸Áî¼¯µÄ CPU¡£µ«ÊÇÄúµÄ CPU ²¢²»Ö§³ÖÕâ¸ö¹¦ÄÜ¡£
 sc.unsupported_cpu=Õâ¸ö±àÒë°æµÄ ffdshow ĞèÒª i686 »ò¸üĞÂµÄ CPU¡£ÄúµÄ CPU ²»±»Ö§³Ö¡£
+;[The message above is only a partial translation:]  sc.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported. Revision 1940 of ffdshow is the last one that works on old CPUs.
 
 sc.comp_ffdshowds=ffdshow DirectShow ÂË¾µ
 sc.comp_vfwInterface=VFW ½Ó¿Ú
