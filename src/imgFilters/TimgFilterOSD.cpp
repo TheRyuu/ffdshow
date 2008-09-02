@@ -496,6 +496,7 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
        strcpy(oldLinesUser,cfg->user);
        strtok(cfg->user,_l("\n"),linesUser);
        subUser.set(linesUser);
+	   subUser.format(TsubtitleFormat(parent->config->getHtmlColors()));
       }
      TrenderedSubtitleLines::TprintPrefs printprefs(deci);
      printprefs.isOSD=true;
@@ -514,6 +515,7 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
      printprefs.csp=pict.csp & FF_CSPS_MASK;
      printprefs.cspBpp=pict.cspInfo.Bpp;
      printprefs.sar=pict.rectFull.sar;
+
      fontUser.print(&subUser,true,printprefs);
     }
   }

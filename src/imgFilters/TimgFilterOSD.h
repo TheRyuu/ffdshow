@@ -6,6 +6,7 @@
 #include "Tsubreader.h"
 #include "TsubtitleText.h"
 #include "TOSDprovider.h"
+#include "Tconfig.h"
 
 struct TfontSettingsOSD;
 struct TOSDsettings;
