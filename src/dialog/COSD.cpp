@@ -19,6 +19,7 @@
 #include "stdafx.h"
 #include "COSD.h"
 #include "TsubtitlesSettings.h"
+#include "Tsubreader.h"
 #include "TffdshowPageDec.h"
 #include "IffdshowDecVideo.h"
 
@@ -46,12 +47,22 @@ void TOSDpageDec::init(void)
  lvx=rc.left-rp.left;lvy=rc.top-rp.top;
 
  edLimitText(IDC_ED_OSD_SAVE,MAX_PATH);
+ cbxAdd(IDC_CBX_OSD_USERFORMAT, _l("HTML"), Tsubreader::SUB_SUBVIEWER);
+ cbxAdd(IDC_CBX_OSD_USERFORMAT, _l("SSA"), Tsubreader::SUB_SSA);
 }
 
 void TOSDpageDec::cfg2dlg(void)
 {
  pos2dlg();
  osds2dlg();
+ int format = cfgGet(IDFF_OSD_userformat);
+ if (cbxSetDataCurSel(IDC_CBX_OSD_USERFORMAT,format)==CB_ERR)
+  {
+   format=(int)cbxGetItemData(IDC_CBX_OSD_USERFORMAT,0);
+   cfgSet(IDFF_OSD_userformat,format);
+   parent->setChange();
+   cbxSetCurSel(IDC_CBX_OSD_USERFORMAT,0);
+  }
 }
 
 void TOSDpageDec::pos2dlg(void)
@@ -497,6 +508,7 @@ TOSDpageDec::TOSDpageDec(TffdshowPageDec *Iparent):TconfPageDec(Iparent,NULL,0)
  static const TbindCombobox<TOSDpageDec> cbx[]=
   {
    IDC_CBX_OSD_PRESETS,IDFF_OSDcurPreset,BINDCBX_DATATEXT,&TOSDpageDec::osd2dlg,
+   IDC_CBX_OSD_USERFORMAT, IDFF_OSD_userformat, BINDCBX_DATA, &TOSDpageDec::cfg2dlg,
    0
   };
  bindComboboxes(cbx);

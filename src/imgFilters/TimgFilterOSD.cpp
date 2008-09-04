@@ -399,7 +399,7 @@ TimgFilterOSD::TimgFilterOSD(IffdshowBase *Ideci,Tfilters *Iparent):
  TimgFilter(Ideci,Iparent),
  parent((TimgFiltersPlayer*)Iparent),
  fontUser(Ideci),
- subUser(0),
+ subUser(Ideci->getParam2(IDFF_OSD_userformat)),
  framecnt(0),
  oldFont((TfontSettingsOSD*)malloc(sizeof(TfontSettingsOSD))),
  trans(NULL),
@@ -448,6 +448,8 @@ bool TimgFilterOSD::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0)
 HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  const TOSDsettingsVideo *cfg=(const TOSDsettingsVideo*)cfg0;tempcfg=cfg;
+ if (subUser.subformat != cfg->userFormat)
+	 subUser.subformat = cfg->userFormat;
 
  init(pict,true,0);
  csProvider.Lock();

@@ -44,6 +44,7 @@ public:
  char_t user[2048];int userPx,userPy;
  int linespace;
  int posX,posY;
+ int userFormat;
  void resetLook(void);
 
  virtual void reg_op(TregOp &t);

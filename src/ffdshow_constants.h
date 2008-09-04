@@ -637,6 +637,7 @@
   #define IDFF_OSDtype_shortInfo          1536
   #define IDFF_OSDtype_gmcWarpPoints      1539
   #define IDFF_OSDtype_movieSource        33
+  #define IDFF_OSD_userformat             3491
    #define IDFF_MOVIE_NONE     0
    #define IDFF_MOVIE_LAVC     1
    //#define IDFF_MOVIE_XVID   2
@@ -1512,6 +1513,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3491
+//max:3492
 
 #endif

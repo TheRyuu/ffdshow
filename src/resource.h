@@ -1908,6 +1908,8 @@
 #define IDC_ED_RESIZE_USER_ASPECT       2213
 #define IDC_BT_RESIZE_USER_ASPECT       2214
 #define IDC_LBL_USER_ASPECT_1           2215
+#define IDC_CBX_OSD_USERFORMAT          2217
+#define IDC_LBL_OSD_USERFORMAT          2218
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -1924,7 +1926,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        296
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2216
+#define _APS_NEXT_CONTROL_VALUE         2218
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

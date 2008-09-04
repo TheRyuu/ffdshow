@@ -181,12 +181,12 @@ public:
 template<class tchar> struct TsubtitleTextBase :public Tsubtitle,public std::vector< TsubtitleLine<tchar> >
 {
 private:
- int subformat;
  typedef TsubtitleLine<tchar> TsubtitleLine;
  typedef std::vector<TsubtitleLine> Tbase;
  typedef typename tchar_traits<tchar>::ffstring ffstring;
  typedef typename tchar_traits<tchar>::strings strings;
 public:
+ int subformat;
  TSubtitleProps defProps;
  TsubtitleTextBase(int Isubformat):subformat(Isubformat) {}
  TsubtitleTextBase(int Isubformat,const TSubtitleProps &IdefProps):subformat(Isubformat),defProps(IdefProps) {}
