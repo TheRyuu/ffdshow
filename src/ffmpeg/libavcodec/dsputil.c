@@ -2730,6 +2730,9 @@ void ff_put_vc1_mspel_mc00_c(uint8_t *dst, uint8_t *src, int stride, int rnd) {
 
 void ff_intrax8dsp_init(DSPContext* c, AVCodecContext *avctx);
 
+/* H264 specific */
+void ff_h264dspenc_init(DSPContext* c, AVCodecContext *avctx);
+
 static void wmv2_mspel8_v_lowpass(uint8_t *dst, uint8_t *src, int dstStride, int srcStride, int w){
     uint8_t *cm = ff_cropTbl + MAX_NEG_CROP;
     int i;
@@ -3888,6 +3891,15 @@ static int vsse16_c(/*MpegEncContext*/ void *c, uint8_t *s1, uint8_t *s2, int st
     return score;
 }
 
+static int ssd_int8_vs_int16_c(const int8_t *pix1, const int16_t *pix2,
+                               int size){
+    int score=0;
+    int i;
+    for(i=0; i<size; i++)
+        score += (pix1[i]-pix2[i])*(pix1[i]-pix2[i]);
+    return score;
+}
+
 WRAPPER8_16_SQ(hadamard8_diff8x8_c, hadamard8_diff16_c)
 WRAPPER8_16_SQ(hadamard8_intra8x8_c, hadamard8_intra16_c)
 WRAPPER8_16_SQ(dct_sad8x8_c, dct_sad16_c)
@@ -3933,6 +3945,12 @@ void ff_vector_fmul_window_c(float *dst, const float *src0, const float *src1, c
     }
 }
 
+static void int32_to_float_fmul_scalar_c(float *dst, const int *src, float mul, int len){
+    int i;
+    for(i=0; i<len; i++)
+        dst[i] = src[i] * mul;
+}
+
 static av_always_inline int float_to_int16_one(const float *src){
     int_fast32_t tmp = *(const int32_t*)src;
     if(tmp & 0xf0000){
@@ -3962,6 +3980,28 @@ void ff_float_to_int16_interleave_c(int16_t *dst, const float **src, long len, i
             for(i=0, j=c; i<len; i++, j+=channels)
                 dst[j] = float_to_int16_one(src[c]+i);
     }
+}
+
+static void add_int16_c(int16_t * v1, int16_t * v2, int order)
+{
+    while (order--)
+       *v1++ += *v2++;
+}
+
+static void sub_int16_c(int16_t * v1, int16_t * v2, int order)
+{
+    while (order--)
+        *v1++ -= *v2++;
+}
+
+static int32_t scalarproduct_int16_c(int16_t * v1, int16_t * v2, int order, int shift)
+{
+    int res = 0;
+
+    while (order--)
+        res += (*v1++ * *v2++) >> shift;
+
+    return res;
 }
 
 #define W0 2048
@@ -4401,6 +4441,8 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
     c->w97[1]= w97_8_c;
 #endif
 
+    c->ssd_int8_vs_int16 = ssd_int8_vs_int16_c;
+
     c->add_bytes= add_bytes_c;
     c->add_bytes_l2= add_bytes_l2_c;
     c->diff_bytes= diff_bytes_c;
@@ -4439,12 +4481,22 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
 #ifdef CONFIG_VORBIS_DECODER
     c->vorbis_inverse_coupling = vorbis_inverse_coupling;
 #endif
+#ifdef CONFIG_AC3_DECODER
+    c->ac3_downmix = ff_ac3_downmix_c;
+#endif
+#ifdef CONFIG_FLAC_ENCODER
+    c->flac_compute_autocorr = ff_flac_compute_autocorr;
+#endif
     c->vector_fmul = vector_fmul_c;
     c->vector_fmul_reverse = vector_fmul_reverse_c;
     c->vector_fmul_add_add = ff_vector_fmul_add_add_c;
     c->vector_fmul_window = ff_vector_fmul_window_c;
+    c->int32_to_float_fmul_scalar = int32_to_float_fmul_scalar_c;
     c->float_to_int16 = ff_float_to_int16_c;
     c->float_to_int16_interleave = ff_float_to_int16_interleave_c;
+    c->add_int16 = add_int16_c;
+    c->sub_int16 = sub_int16_c;
+    c->scalarproduct_int16 = scalarproduct_int16_c;
 
     c->shrink[0]= ff_img_copy_plane;
     c->shrink[1]= ff_shrink22;

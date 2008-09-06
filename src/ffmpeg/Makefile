@@ -15,6 +15,15 @@ SRCS_C=\
       $(LAVC_DIR)/ac3.c \
       $(LAVC_DIR)/ac3enc.c \
       $(LAVC_DIR)/ac3tab.c \
+      $(LAVC_DIR)/eac3dec.c \
+      $(LAVC_DIR)/ac3dec.c \
+      $(LAVC_DIR)/ac3dec_data.c \
+      $(LAVC_DIR)/mpeg4audio.c \
+      $(LAVC_DIR)/aactab.c \
+      $(LAVC_DIR)/aac.c \
+      $(LAVC_DIR)/aac_ac3_parser.c \
+      $(LAVC_DIR)/aac_parser.c \
+      $(LAVC_DIR)/ac3_parser.c \
       $(LAVC_DIR)/acelp_filters.c \
       $(LAVC_DIR)/adpcm.c \
       $(LAVC_DIR)/allcodecs.c \
@@ -153,6 +162,8 @@ SRCS_C=\
       $(LAVU_DIR)/mem.c \
       $(LAVU_DIR)/random.c \
       $(LAVU_DIR)/rational.c \
+      $(LAVU_DIR)/md5.c \
+      $(LAVU_DIR)/lfg.c \
     \
       $(ZLIB_DIR)/adler32.c \
       $(ZLIB_DIR)/compress.c \

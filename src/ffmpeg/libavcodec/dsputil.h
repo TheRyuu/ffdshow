@@ -226,6 +226,9 @@ typedef struct DSPContext {
     me_cmp_func ildct_cmp[5]; //only width 16 used
     me_cmp_func frame_skip_cmp[5]; //only width 8 used
 
+    int (*ssd_int8_vs_int16)(const int8_t *pix1, const int16_t *pix2,
+                             int size);
+
     /**
      * Halfpel motion compensation with rounding (a+b+1)>>1.
      * this is an array[4][4] of motion compensation functions for 4
@@ -357,6 +360,9 @@ typedef struct DSPContext {
 
     /* assume len is a multiple of 4, and arrays are 16-byte aligned */
     void (*vorbis_inverse_coupling)(float *mag, float *ang, int blocksize);
+    void (*ac3_downmix)(float (*samples)[256], float (*matrix)[2], int out_ch, int in_ch, int len);
+    /* no alignment needed */
+    void (*flac_compute_autocorr)(const int32_t *data, int len, int lag, double *autoc);
     /* assume len is a multiple of 8, and arrays are 16-byte aligned */
     void (*vector_fmul)(float *dst, const float *src, int len);
     void (*vector_fmul_reverse)(float *dst, const float *src0, const float *src1, int len);
@@ -364,6 +370,8 @@ typedef struct DSPContext {
     void (*vector_fmul_add_add)(float *dst, const float *src0, const float *src1, const float *src2, int src3, int len, int step);
     /* assume len is a multiple of 4, and arrays are 16-byte aligned */
     void (*vector_fmul_window)(float *dst, const float *src0, const float *src1, const float *win, float add_bias, int len);
+    /* assume len is a multiple of 8, and arrays are 16-byte aligned */
+    void (*int32_to_float_fmul_scalar)(float *dst, const int *src, float mul, int len);
 
     /* C version: convert floats from the range [384.0,386.0] to ints in [-32768,32767]
      * simd versions: convert floats from [-32768.0,32767.0] without rescaling and arrays are 16byte aligned */
@@ -454,6 +462,23 @@ typedef struct DSPContext {
     void (*x8_setup_spatial_compensation)(uint8_t *src, uint8_t *dst, int linesize,
            int * range, int * sum,  int edges);
 
+    /* ape functions */
+    /**
+     * Add contents of the second vector to the first one.
+     * @param len length of vectors, should be multiple of 16
+     */
+    void (*add_int16)(int16_t *v1/*align 16*/, int16_t *v2, int len);
+    /**
+     * Add contents of the second vector to the first one.
+     * @param len length of vectors, should be multiple of 16
+     */
+    void (*sub_int16)(int16_t *v1/*align 16*/, int16_t *v2, int len);
+    /**
+     * Calculate scalar product of two vectors.
+     * @param len length of vectors, should be multiple of 16
+     * @param shift number of bits to discard from product
+     */
+    int32_t (*scalarproduct_int16)(int16_t *v1, int16_t *v2/*align 16*/, int len, int shift);
 } DSPContext;
 
 void dsputil_static_init(void);
@@ -642,6 +667,14 @@ static inline void ff_imdct_half(MDCTContext *s, FFTSample *output, const FFTSam
 {
     s->fft.imdct_half(s, output, input);
 }
+
+/**
+ * Generate a Kaiser-Bessel Derived Window.
+ * @param   window  pointer to half window
+ * @param   alpha   determines window shape
+ * @param   n       size of half window
+ */
+void ff_kbd_window_init(float *window, float alpha, int n);
 
 /**
  * Generate a sine window.
