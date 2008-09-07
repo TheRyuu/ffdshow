@@ -140,6 +140,7 @@ void avcodec_register_all(void)
     REGISTER_DECODER	(vorbis);
     REGISTER_DECODER	(wmav1);
     REGISTER_DECODER	(wmav2);
+	REGISTER_DECODER	(aac);
 
     /* pcm codecs */
     REGISTER_DECODER  (pcm_alaw);

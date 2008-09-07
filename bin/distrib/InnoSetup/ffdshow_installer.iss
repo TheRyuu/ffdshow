@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2070
+#define tryout_revision = 2101
 #define buildyear = 2008
-#define buildmonth = '08'
-#define buildday = '11'
+#define buildmonth = '09'
+#define buildday = '07'
 
 ; Build specific options
 #define unicode_required = True
@@ -311,6 +311,8 @@ Name: audio; Description: {cm:tsk_audioFormatsSelect}; GroupDescription: {cm:tsk
 Name: audio\mp3; Description: MP3; Check: CheckTaskAudio('mp3', 7, True); Components: ffdshow
 Name: audio\mp3; Description: MP3; Check: NOT CheckTaskAudio('mp3', 7, True); Flags: unchecked; Components: ffdshow
 Name: audio\aac; Description: AAC; Flags: unchecked; Components: ffdshow
+Name: audio\aac\libavcodec; Description: libavcodec; Check: CheckTaskAudio('aac', 1, False); Flags: exclusive; Components: ffdshow
+Name: audio\aac\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('aac', 1, False); Flags: exclusive unchecked; Components: ffdshow
 Name: audio\aac\libfaad2; Description: libfaad2; Check: CheckTaskAudio('aac', 8, True); Flags: exclusive; Components: ffdshow
 Name: audio\aac\libfaad2; Description: libfaad2; Check: NOT CheckTaskAudio('aac', 8, True); Flags: exclusive unchecked; Components: ffdshow
 Name: audio\aac\realaac; Description: realaac; Check: CheckTaskAudio('aac', 19, False); Flags: exclusive; Components: ffdshow
@@ -1128,4 +1130,3 @@ begin
   end
 end;
 #endif
-

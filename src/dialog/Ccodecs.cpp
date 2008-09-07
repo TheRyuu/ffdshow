@@ -539,7 +539,7 @@ void TcodecsPageAudio::fillCodecs(void)
    static const int movie_dts[]={IDFF_MOVIE_LIBDTS,IDFF_MOVIE_SPDIF,0};
    static const Tformat::Toption options_dts[]={{IDFF_MOVIE_LIBDTS,_l("Dynamic range compression"),IDFF_dtsdrc,1},{0,_l("Use SPDIF when AC3 output set"),IDFF_ac3SPDIF,1},{0,_l("Check for DTS in WAV"),IDFF_dtsinwav,1},{NULL,0}};
    formats.push_back(Tformat(_l("DTS")         ,IDFF_dts        ,movie_dts,_l("DTS Coherent Acoustics stream decoder"),options_dts));
-   static const int movie_aac[]={IDFF_MOVIE_LIBFAAD,IDFF_MOVIE_REALAAC,0};
+   static const int movie_aac[]={IDFF_MOVIE_LIBFAAD, IDFF_MOVIE_REALAAC, IDFF_MOVIE_LAVC,0};
    formats.push_back(Tformat(_l("AAC")         ,IDFF_aac        ,movie_aac,_l("Advanced Audio Coding (AAC)")));
    static const int movie_vorbis[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_TREMOR,0};
    static const Tformat::Toption options_vorbis[]={{0,_l("VorbisGain"),IDFF_vorbisgain,1},{0,NULL,0}};

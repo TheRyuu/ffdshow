@@ -1,5 +1,8 @@
 all:.all
 
+#64BIT=yes
+#DEBUG=yes
+
 #if FFDSHOW_PREFIX is set, assume cross-compilation
 ifeq ($(FFDSHOW_PREFIX),)
   YASM=yasm.exe
@@ -20,7 +23,6 @@ endif
 OUTPUTFLAG=-MMD -o\
 
 CFLAGS+=-mno-cygwin -mdll -mthreads -pipe
-CFLAGS+=-DNDEBUG -UDEBUG
 
 ifeq ($(64BIT),yes)
     CFLAGS+=-DWIN64 -D_WIN64
@@ -39,7 +41,16 @@ ifeq ($(SSE2),yes)
     CFLAGS+=-msse2
 endif
 
-OPTFLAGS=-O3 -fomit-frame-pointer
+ifeq ($(DEBUG),yes)
+    CFLAGS+=-DDEBUG -D_DEBUG -g 
+    OPTFLAGS=-O2 -fomit-frame-pointer
+    YASMFLAGS+=-g cv8
+else
+    CFLAGS+=-DNDEBUG -UDEBUG
+    OPTFLAGS=-O3 -fomit-frame-pointer
+    LDFLAGS=,--strip-all
+endif
+
 ifeq ($(64BIT),yes)
     OPTFLAGS+=-m64
 else
@@ -84,7 +95,7 @@ endif
 
 $(SLIB): $(OBJS) $(DEF)
 	$(FFDSHOW_PREFIX)dllwrap -mno-cygwin --target=$(TARGET_OS) \
-             -Wl,--enable-stdcall-fixup,--strip-all \
+             -Wl,--enable-stdcall-fixup $(LDFLAGS) \
              --def $(GCCDEF) $(GCCDLLENTRY) -o $@ $(OBJS) $(GCCLIBS)
 
 $(SEXE): $(OBJS)
