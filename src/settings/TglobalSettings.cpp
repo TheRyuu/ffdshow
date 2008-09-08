@@ -1093,8 +1093,6 @@ void TglobalSettingsDecAudio::load(void)
 {
  TglobalSettingsDec::load();
 
- if (ac3==IDFF_MOVIE_MPLAYER /*|| ac3==IDFF_MOVIE_LAVC*/) ac3=IDFF_MOVIE_LIBA52;
-
  fixMissing(wma1      ,IDFF_MOVIE_LAVC);
  fixMissing(wma2      ,IDFF_MOVIE_LAVC);
  fixMissing(amr       ,IDFF_MOVIE_LAVC);
