@@ -124,6 +124,7 @@ void avcodec_register_all(void)
     /* audio codecs */
     REGISTER_DECODER	(ac3);
     REGISTER_ENCODER	(ac3);
+	REGISTER_DECODER	(eac3);
     REGISTER_DECODER	(aac);
     REGISTER_DECODER	(atrac3);
     REGISTER_DECODER	(dca);
@@ -143,9 +144,6 @@ void avcodec_register_all(void)
     REGISTER_DECODER	(vorbis);
     REGISTER_DECODER	(wmav1);
     REGISTER_DECODER	(wmav2);
-	REGISTER_DECODER	(aac);
-	REGISTER_DECODER	(ac3);
-	REGISTER_DECODER	(eac3);
 
     /* pcm codecs */
     REGISTER_DECODER  (pcm_alaw);
