@@ -431,6 +431,7 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecAudio::inputMediaTypes[]=
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_Vorbis     },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_Vorbis2    },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_VorbisIll  },
+ //{ &MEDIATYPE_Audio , &MEDIASUBTYPE_EAC3       },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_PCM        },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_RAW        },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_IEEE_FLOAT }

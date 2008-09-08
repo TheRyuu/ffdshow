@@ -533,26 +533,25 @@ void TcodecsPageAudio::fillCodecs(void)
    static const int movie_mp23[]={IDFF_MOVIE_MPLAYER,IDFF_MOVIE_LIBMAD,IDFF_MOVIE_AUDX,0};
    formats.push_back(Tformat(_l("MP3")         ,IDFF_mp3        ,movie_mp23,_l("MPEG-1 Audio Layer 3")));
    formats.push_back(Tformat(_l("MP1,MP2")     ,IDFF_mp2        ,movie_mp23,_l("MPEG-1 Audio Layer 1,2")));
-   
-#ifdef INCLUDE_UNSTABLE_DECODERS
-   // Disabled as long as AC3 decoder from ffmpeg is unstable
-   static const int movie_ac3[]={IDFF_MOVIE_LIBA52,IDFF_MOVIE_SPDIF, IDFF_MOVIE_LAVC,0};
+   static const Tformat::Toption options_ac3[]={{IDFF_MOVIE_LIBA52,_l("Dynamic range compression"),IDFF_ac3drc,1},{0,_l("Use SPDIF when AC3 output set"),IDFF_ac3SPDIF,1},{NULL,0}};
+#if 1
+   static const int movie_ac3[]={IDFF_MOVIE_LIBA52,IDFF_MOVIE_LAVC,IDFF_MOVIE_SPDIF,0};
+   formats.push_back(Tformat(_l("AC3")         ,IDFF_ac3        ,movie_ac3,_l("ATSC A-52 (AC3) decoder. E-AC3 decoder (libavcodec only)."),options_ac3));
 #else
    static const int movie_ac3[]={IDFF_MOVIE_LIBA52,IDFF_MOVIE_SPDIF,0};
+   formats.push_back(Tformat(_l("AC3")         ,IDFF_ac3        ,movie_ac3,_l("ATSC A-52 (AC3) decoder"),options_ac3));
 #endif
-   static const Tformat::Toption options_ac3[]={{IDFF_MOVIE_LIBA52,_l("Dynamic range compression"),IDFF_ac3drc,1},{0,_l("Use SPDIF when AC3 output set"),IDFF_ac3SPDIF,1},{NULL,0}};
-   formats.push_back(Tformat(_l("AC3")         ,IDFF_ac3        ,movie_ac3,_l("ATSC A-52 stream decoder and E-AC3 decoder (libavcodec only)"),options_ac3));
+   //formats.push_back(Tformat(_l("E-AC3")       ,IDFF_eac3       ,IDFF_MOVIE_LAVC,_l("E-AC3 decoder")));
    static const int movie_dts[]={IDFF_MOVIE_LIBDTS,IDFF_MOVIE_SPDIF,0};
    static const Tformat::Toption options_dts[]={{IDFF_MOVIE_LIBDTS,_l("Dynamic range compression"),IDFF_dtsdrc,1},{0,_l("Use SPDIF when AC3 output set"),IDFF_ac3SPDIF,1},{0,_l("Check for DTS in WAV"),IDFF_dtsinwav,1},{NULL,0}};
    formats.push_back(Tformat(_l("DTS")         ,IDFF_dts        ,movie_dts,_l("DTS Coherent Acoustics stream decoder"),options_dts));
-
 #ifdef INCLUDE_UNSTABLE_DECODERS
-   // Disabled as long as AAC decoder from ffmpeg is not fully functional
    static const int movie_aac[]={IDFF_MOVIE_LIBFAAD, IDFF_MOVIE_REALAAC, IDFF_MOVIE_LAVC,0};
+   formats.push_back(Tformat(_l("AAC")         ,IDFF_aac        ,movie_aac,_l("Advanced Audio Coding (AAC). libavcodec does not support SBR and PS.")));
 #else
    static const int movie_aac[]={IDFF_MOVIE_LIBFAAD, IDFF_MOVIE_REALAAC,0};
+   formats.push_back(Tformat(_l("AAC")         ,IDFF_aac        ,movie_aac,_l("Advanced Audio Coding (AAC)")));
 #endif
-   formats.push_back(Tformat(_l("AAC")         ,IDFF_aac        ,movie_aac,_l("Advanced Audio Coding (AAC). libavcodec missing SBR & PS supports")));
    static const int movie_vorbis[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_TREMOR,0};
    static const Tformat::Toption options_vorbis[]={{0,_l("VorbisGain"),IDFF_vorbisgain,1},{0,NULL,0}};
    formats.push_back(Tformat(_l("Vorbis")      ,IDFF_vorbis     ,movie_vorbis,_l("High accuracy mode is enabled for Tremor."),options_vorbis));
@@ -567,8 +566,8 @@ void TcodecsPageAudio::fillCodecs(void)
    formats.push_back(Tformat(_l("Other ADPCM") ,IDFF_otherAdpcm ,IDFF_MOVIE_LAVC,_l("Creative, Yamaha, G726")));
    formats.push_back(Tformat(_l("Mulaw/Alaw")  ,IDFF_law        ,IDFF_MOVIE_LAVC,_l("Mu-law & A-law")));
    formats.push_back(Tformat(_l("MS GSM")      ,IDFF_gsm        ,IDFF_MOVIE_LAVC,_l("MS GSM Audio")));
-   formats.push_back(Tformat(_l("FLAC")        ,IDFF_flac       ,IDFF_MOVIE_LAVC,_l("FLAC (Free Lossless Audio Codec);To play .flac files you also need a source filter.")));
-   formats.push_back(Tformat(_l("True Audio")  ,IDFF_tta        ,IDFF_MOVIE_LAVC,_l("TTA (Lossless Audio Codec);To play .tta files you also need a source filter.")));
+   formats.push_back(Tformat(_l("FLAC")        ,IDFF_flac       ,IDFF_MOVIE_LAVC,_l("FLAC (Free Lossless Audio Codec). To play .flac files you also need a source filter.")));
+   formats.push_back(Tformat(_l("True Audio")  ,IDFF_tta        ,IDFF_MOVIE_LAVC,_l("TTA (Lossless Audio Codec). To play .tta files you also need a source filter.")));
    formats.push_back(Tformat(_l("TrueSpeech")  ,IDFF_truespeech ,IDFF_MOVIE_LAVC,_l("DSP Group TrueSpeech compatible decoder")));
    formats.push_back(Tformat(_l("QDM2")        ,IDFF_qdm2       ,IDFF_MOVIE_LAVC,_l("QDM2 compatible decoder (incomplete)")));
    formats.push_back(Tformat(_l("MACE3,MACE6") ,IDFF_mace       ,IDFF_MOVIE_LAVC,_l("Macintosh Audio Compression/Expansion")));

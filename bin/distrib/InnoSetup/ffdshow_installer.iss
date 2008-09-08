@@ -1,6 +1,6 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2102
+#define tryout_revision = 2108
 #define buildyear = 2008
 #define buildmonth = '09'
 #define buildday = '08'
@@ -311,19 +311,19 @@ Name: audio; Description: {cm:tsk_audioFormatsSelect}; GroupDescription: {cm:tsk
 Name: audio\mp3; Description: MP3; Check: CheckTaskAudio('mp3', 7, True); Components: ffdshow
 Name: audio\mp3; Description: MP3; Check: NOT CheckTaskAudio('mp3', 7, True); Flags: unchecked; Components: ffdshow
 Name: audio\aac; Description: AAC; Flags: unchecked; Components: ffdshow
-Name: audio\aac\libavcodec; Description: libavcodec; Check: CheckTaskAudio('aac', 1, False); Flags: exclusive; Components: ffdshow
-Name: audio\aac\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('aac', 1, False); Flags: exclusive unchecked; Components: ffdshow
 Name: audio\aac\libfaad2; Description: libfaad2; Check: CheckTaskAudio('aac', 8, True); Flags: exclusive; Components: ffdshow
 Name: audio\aac\libfaad2; Description: libfaad2; Check: NOT CheckTaskAudio('aac', 8, True); Flags: exclusive unchecked; Components: ffdshow
 Name: audio\aac\realaac; Description: realaac; Check: CheckTaskAudio('aac', 19, False); Flags: exclusive; Components: ffdshow
 Name: audio\aac\realaac; Description: realaac; Check: NOT CheckTaskAudio('aac', 19, False); Flags: exclusive unchecked; Components: ffdshow
+;Name: audio\aac\libavcodec; Description: libavcodec; Check: CheckTaskAudio('aac', 1, False); Flags: exclusive; Components: ffdshow
+;Name: audio\aac\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('aac', 1, False); Flags: exclusive unchecked; Components: ffdshow
 Name: audio\ac3;        Description: AC3;                                                 Components: ffdshow; Flags: unchecked
 Name: audio\ac3\liba52; Description: liba52; Check:     CheckTaskAudio('ac3', 15, True);  Components: ffdshow; Flags: exclusive
 Name: audio\ac3\liba52; Description: liba52; Check: NOT CheckTaskAudio('ac3', 15, True);  Components: ffdshow; Flags: exclusive unchecked
-Name: audio\ac3\spdif;  Description: S/PDIF; Check:     CheckTaskAudio('ac3', 16, False); Components: ffdshow; Flags: exclusive
-Name: audio\ac3\spdif;  Description: S/PDIF; Check: NOT CheckTaskAudio('ac3', 16, False); Components: ffdshow; Flags: exclusive unchecked
 Name: audio\ac3\libavcodec; Description: libavcodec; Check:     CheckTaskAudio('ac3', 1, True);  Components: ffdshow; Flags: exclusive
 Name: audio\ac3\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('ac3', 1, True);  Components: ffdshow; Flags: exclusive unchecked
+Name: audio\ac3\spdif;  Description: S/PDIF; Check:     CheckTaskAudio('ac3', 16, False); Components: ffdshow; Flags: exclusive
+Name: audio\ac3\spdif;  Description: S/PDIF; Check: NOT CheckTaskAudio('ac3', 16, False); Components: ffdshow; Flags: exclusive unchecked
 Name: audio\dts;        Description: DTS;                                                 Components: ffdshow; Flags: unchecked
 Name: audio\dts\libdts; Description: libdts; Check:     CheckTaskAudio('dts', 17, True);  Components: ffdshow; Flags: exclusive
 Name: audio\dts\libdts; Description: libdts; Check: NOT CheckTaskAudio('dts', 17, True);  Components: ffdshow; Flags: exclusive unchecked
