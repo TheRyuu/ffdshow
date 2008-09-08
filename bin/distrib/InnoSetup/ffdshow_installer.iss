@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2101
+#define tryout_revision = 2102
 #define buildyear = 2008
 #define buildmonth = '09'
-#define buildday = '07'
+#define buildday = '08'
 
 ; Build specific options
 #define unicode_required = True
@@ -322,6 +322,8 @@ Name: audio\ac3\liba52; Description: liba52; Check:     CheckTaskAudio('ac3', 15
 Name: audio\ac3\liba52; Description: liba52; Check: NOT CheckTaskAudio('ac3', 15, True);  Components: ffdshow; Flags: exclusive unchecked
 Name: audio\ac3\spdif;  Description: S/PDIF; Check:     CheckTaskAudio('ac3', 16, False); Components: ffdshow; Flags: exclusive
 Name: audio\ac3\spdif;  Description: S/PDIF; Check: NOT CheckTaskAudio('ac3', 16, False); Components: ffdshow; Flags: exclusive unchecked
+Name: audio\ac3\libavcodec; Description: libavcodec; Check:     CheckTaskAudio('ac3', 1, True);  Components: ffdshow; Flags: exclusive
+Name: audio\ac3\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('ac3', 1, True);  Components: ffdshow; Flags: exclusive unchecked
 Name: audio\dts;        Description: DTS;                                                 Components: ffdshow; Flags: unchecked
 Name: audio\dts\libdts; Description: libdts; Check:     CheckTaskAudio('dts', 17, True);  Components: ffdshow; Flags: exclusive
 Name: audio\dts\libdts; Description: libdts; Check: NOT CheckTaskAudio('dts', 17, True);  Components: ffdshow; Flags: exclusive unchecked

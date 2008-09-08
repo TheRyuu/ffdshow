@@ -12,7 +12,12 @@ endif
 
 ifeq ($(64BIT),yes)
     FFDSHOW_PREFIX=x86_64-pc-mingw32-
+    CFLAGS+=-L/sdk/lib/x64
+else
+    CFLAGS+=-L/sdk/lib
 endif
+
+CFLAGS+=-I/sdk/Include 
 
 ifeq ($(64BIT),yes)
     TARGET_OS=x86_64-pc-mingw32

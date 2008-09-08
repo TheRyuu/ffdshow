@@ -1093,7 +1093,7 @@ void TglobalSettingsDecAudio::load(void)
 {
  TglobalSettingsDec::load();
 
- if (ac3==IDFF_MOVIE_MPLAYER || ac3==IDFF_MOVIE_LAVC) ac3=IDFF_MOVIE_LIBA52;
+ if (ac3==IDFF_MOVIE_MPLAYER /*|| ac3==IDFF_MOVIE_LAVC*/) ac3=IDFF_MOVIE_LIBA52;
 
  fixMissing(wma1      ,IDFF_MOVIE_LAVC);
  fixMissing(wma2      ,IDFF_MOVIE_LAVC);
@@ -1229,7 +1229,7 @@ const CodecID TglobalSettingsDecAudio::c_mp123[IDFF_MOVIE_MAX+1]=
 const CodecID TglobalSettingsDecAudio::c_ac3[IDFF_MOVIE_MAX+1]=
 {
  CODEC_ID_NONE,
- CODEC_ID_NONE,
+ CODEC_ID_AC3,
  CODEC_ID_NONE,
  CODEC_ID_NONE,
  CODEC_ID_NONE,
