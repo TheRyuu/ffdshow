@@ -1251,7 +1251,7 @@ const CodecID TglobalSettingsDecAudio::c_ac3[IDFF_MOVIE_MAX+1]=
 const CodecID TglobalSettingsDecAudio::c_dts[IDFF_MOVIE_MAX+1]=
 {
  CODEC_ID_NONE,
- CODEC_ID_NONE,
+ CODEC_ID_DTS,
  CODEC_ID_NONE,
  CODEC_ID_NONE,
  CODEC_ID_NONE,

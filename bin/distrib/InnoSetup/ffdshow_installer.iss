@@ -318,13 +318,15 @@ Name: audio\aac\realaac; Description: realaac; Check: NOT CheckTaskAudio('aac', 
 ;Name: audio\aac\libavcodec; Description: libavcodec; Check: CheckTaskAudio('aac', 1, False); Flags: exclusive; Components: ffdshow
 ;Name: audio\aac\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('aac', 1, False); Flags: exclusive unchecked; Components: ffdshow
 Name: audio\ac3;        Description: AC3;                                                 Components: ffdshow; Flags: unchecked
+Name: audio\ac3\libavcodec; Description: libavcodec; Check:     CheckTaskAudio('ac3', 1, False);  Components: ffdshow; Flags: exclusive
+Name: audio\ac3\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('ac3', 1, False);  Components: ffdshow; Flags: exclusive unchecked
 Name: audio\ac3\liba52; Description: liba52; Check:     CheckTaskAudio('ac3', 15, True);  Components: ffdshow; Flags: exclusive
 Name: audio\ac3\liba52; Description: liba52; Check: NOT CheckTaskAudio('ac3', 15, True);  Components: ffdshow; Flags: exclusive unchecked
-Name: audio\ac3\libavcodec; Description: libavcodec; Check:     CheckTaskAudio('ac3', 1, True);  Components: ffdshow; Flags: exclusive
-Name: audio\ac3\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('ac3', 1, True);  Components: ffdshow; Flags: exclusive unchecked
 Name: audio\ac3\spdif;  Description: S/PDIF; Check:     CheckTaskAudio('ac3', 16, False); Components: ffdshow; Flags: exclusive
 Name: audio\ac3\spdif;  Description: S/PDIF; Check: NOT CheckTaskAudio('ac3', 16, False); Components: ffdshow; Flags: exclusive unchecked
 Name: audio\dts;        Description: DTS;                                                 Components: ffdshow; Flags: unchecked
+Name: audio\dts\libavcodec; Description: libavcodec; Check:     CheckTaskAudio('dts', 1, False);  Components: ffdshow; Flags: exclusive
+Name: audio\dts\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('dts', 1, False);  Components: ffdshow; Flags: exclusive unchecked
 Name: audio\dts\libdts; Description: libdts; Check:     CheckTaskAudio('dts', 17, True);  Components: ffdshow; Flags: exclusive
 Name: audio\dts\libdts; Description: libdts; Check: NOT CheckTaskAudio('dts', 17, True);  Components: ffdshow; Flags: exclusive unchecked
 Name: audio\dts\spdif;  Description: S/PDIF; Check:     CheckTaskAudio('dts', 16, False); Components: ffdshow; Flags: exclusive
