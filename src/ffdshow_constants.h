@@ -36,7 +36,7 @@
 //#define IDFF_subFlnmChanged       20
 #define IDFF_workaroundBugs       25
 #define IDFF_errorConcealment     70
-#define IDFF_errorResilience      71
+#define IDFF_errorRecognizion      71
 #define IDFF_fastMpeg2            90
 #define IDFF_fastH264             91
 #define IDFF_autodetect24P       3490

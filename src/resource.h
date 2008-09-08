@@ -859,11 +859,11 @@
 #define IDC_ED_RESIZE_MULT              1541
 #define IDC_LBL_STATS_KBPS              1542
 #define IDC_LBL_LOGOAWAY_X              1542
-#define IDC_LBL_ERROR_RESILIENCE        1542
+#define IDC_LBL_ERROR_RECOGNIZION       1542
 #define IDC_ED_RESIZE_MOD_16            1542
 #define IDC_LBL_STATS_FPS               1543
 #define IDC_ED_LOGOAWAY_X               1543
-#define IDC_CBX_ERROR_RESILIENCE        1543
+#define IDC_CBX_ERROR_RECOGNIZION       1543
 #define IDC_RBT_RESIZE_MODE_MULT2       1543
 #define IDC_LBL_STATS_PSNR              1544
 #define IDC_LBL_LOGOAWAY_Y              1544

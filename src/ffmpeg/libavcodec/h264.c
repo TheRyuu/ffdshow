@@ -7424,7 +7424,7 @@ static void execute_decode_slices(H264Context *h, int context_count){
     } else {
         for(i = 1; i < context_count; i++) {
             hx = h->thread_context[i];
-            hx->s.error_resilience = avctx->error_resilience;
+            hx->s.error_recognizion = avctx->error_recognizion;
             hx->s.error_count = 0;
         }
 

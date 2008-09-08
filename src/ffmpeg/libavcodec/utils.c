@@ -415,7 +415,7 @@ void avcodec_get_context_defaults(AVCodecContext *s){
     s->i_quant_factor=-0.8;
     s->i_quant_offset=0.0;
     s->error_concealment= 3;
-    s->error_resilience= 1;
+    s->error_recognizion= 1;
     s->workaround_bugs= FF_BUG_AUTODETECT;
     s->gop_size= 50;
     s->me_method= ME_EPZS;   
