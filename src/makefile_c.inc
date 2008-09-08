@@ -48,7 +48,7 @@ ifeq ($(DEBUG),yes)
 else
     CFLAGS+=-DNDEBUG -UDEBUG
     OPTFLAGS=-O3 -fomit-frame-pointer
-    LDFLAGS=,--strip-all
+    LDFLAGS=--strip-all
 endif
 
 ifeq ($(64BIT),yes)
