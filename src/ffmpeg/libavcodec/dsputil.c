@@ -40,6 +40,9 @@
 void ff_spatial_dwt(int *buffer, int width, int height, int stride, int type, int decomposition_count);
 #endif
 
+/* ac3dec.c */
+void ff_ac3_downmix_c(float (*samples)[256], float (*matrix)[2], int out_ch, int in_ch, int len);
+
 /* vorbis.c */
 void vorbis_inverse_coupling(float *mag, float *ang, int blocksize);
 

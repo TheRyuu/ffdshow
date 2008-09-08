@@ -122,8 +122,11 @@ void avcodec_register_all(void)
     REGISTER_DECODER	(zmbv);
 
     /* audio codecs */
-    REGISTER_ENCODER	(ac3);   
+    REGISTER_DECODER	(ac3);
+    REGISTER_ENCODER	(ac3);
+    REGISTER_DECODER	(aac);
     REGISTER_DECODER	(atrac3);
+    REGISTER_DECODER	(dca);
     REGISTER_DECODER	(libamr_nb);
     REGISTER_DECODER	(cook);
     REGISTER_DECODER	(flac);
