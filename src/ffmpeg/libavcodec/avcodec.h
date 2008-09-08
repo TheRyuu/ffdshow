@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef FFMPEG_AVCODEC_H
-#define FFMPEG_AVCODEC_H
+#ifndef AVCODEC_AVCODEC_H
+#define AVCODEC_AVCODEC_H
 
 /**
  * @file avcodec.h
@@ -36,8 +36,8 @@
 
 #include "libavutil/avutil.h"
 
-#define LIBAVCODEC_VERSION_MAJOR 51
-#define LIBAVCODEC_VERSION_MINOR 70
+#define LIBAVCODEC_VERSION_MAJOR 52
+#define LIBAVCODEC_VERSION_MINOR  0
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -73,7 +73,6 @@ enum SampleFormat {
     SAMPLE_FMT_NONE = -1,
     SAMPLE_FMT_U8,              ///< unsigned 8 bits
     SAMPLE_FMT_S16,             ///< signed 16 bits
-    SAMPLE_FMT_S24,             ///< signed 24 bits @deprecated Deprecated in favor of SAMPLE_FMT_S32
     SAMPLE_FMT_S32,             ///< signed 32 bits
     SAMPLE_FMT_FLT,             ///< float
     SAMPLE_FMT_DBL,             ///< double
@@ -545,8 +544,6 @@ typedef struct AVPanScan{
 typedef struct AVFrame {
     FF_COMMON_FRAME
 } AVFrame;
-
-#define DEFAULT_FRAME_RATE_BASE 1001000
 
 /**
  * main external API structure.
@@ -1148,7 +1145,7 @@ typedef struct AVCodecContext {
      * - encoding: Set by libavcodec.
      * - decoding: Set by user.
      */
-     int bits_per_sample;
+     int bits_per_coded_sample;
 
     /**
      * prediction method (needed for huffyuv)
@@ -1162,6 +1159,7 @@ typedef struct AVCodecContext {
 
     /**
      * sample aspect ratio (0 if unknown)
+     * That is the width of a pixel divided by the height of the pixel.
      * Numerator and denominator must be relatively prime and smaller than 256 for some video standards.
      * - encoding: Set by user.
      * - decoding: Set by libavcodec.
@@ -2604,4 +2602,4 @@ void av_log_missing_feature(void *avc, const char *feature, int want_sample);
 #define AVERROR_NOFMT       AVERROR(EILSEQ)  /**< unknown format */
 #define AVERROR_NOTSUPP     AVERROR(ENOSYS)  /**< Operation not supported. */
 
-#endif /* FFMPEG_AVCODEC_H */
+#endif /* AVCODEC_AVCODEC_H */

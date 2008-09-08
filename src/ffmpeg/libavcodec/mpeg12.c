@@ -1207,7 +1207,9 @@ static int mpeg_decode_postinit(AVCodecContext *avctx){
                 1<<30);
         //MPEG-2 aspect
             if(s->aspect_ratio_info > 1){
-                if( (s1->pan_scan.width == 0 )||(s1->pan_scan.height == 0) ){
+                //we ignore the spec here as reality does not match the spec, see for example
+                // res_change_ffmpeg_aspect.ts and sequence-display-aspect.mpg
+                if( (s1->pan_scan.width == 0 )||(s1->pan_scan.height == 0) || 1){
                     AVRational r={s->width, s->height};
                     s->avctx->sample_aspect_ratio=
                         av_div_q(

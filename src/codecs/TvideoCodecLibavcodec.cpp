@@ -229,14 +229,14 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
  if (fcc==FOURCC_RLE4 || fcc==FOURCC_RLE8 || fcc==FOURCC_CSCD || sup_palette(codecId))
   {
    BITMAPINFOHEADER bih;ExtractBIH(mt,&bih);
-   avctx->bits_per_sample=bih.biBitCount;
-   if (avctx->bits_per_sample<=8 || codecId==CODEC_ID_PNG)
+   avctx->bits_per_coded_sample=bih.biBitCount;
+   if (avctx->bits_per_coded_sample<=8 || codecId==CODEC_ID_PNG)
     {
      avctx->palctrl=&pal;
      pal.palette_changed=1;
      const void *palette;int palettesize;
      if (!extradata->data)
-      switch (avctx->bits_per_sample)
+      switch (avctx->bits_per_coded_sample)
        {
         case 2:
          palette=qt_default_palette_4;

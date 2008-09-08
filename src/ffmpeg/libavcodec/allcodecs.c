@@ -129,6 +129,7 @@ void avcodec_register_all(void)
     REGISTER_DECODER	(atrac3);
     REGISTER_DECODER	(libamr_nb);
     REGISTER_DECODER	(cook);
+    REGISTER_DECODER	(dca);
     REGISTER_DECODER	(flac);
     REGISTER_DECODER	(imc);
     REGISTER_DECODER	(mace3);

@@ -51,13 +51,13 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
     {
      const WAVEFORMATEX *wfex=(const WAVEFORMATEX*)mt.pbFormat;
      avctx->bit_rate=wfex->nAvgBytesPerSec*8;
-     avctx->bits_per_sample=wfex->wBitsPerSample;
+     avctx->bits_per_coded_sample=wfex->wBitsPerSample;
      avctx->block_align=wfex->nBlockAlign;
     }
    else
     {
      avctx->bit_rate=fmt.avgBytesPerSec()*8;
-     avctx->bits_per_sample=fmt.bitsPerSample();
+     avctx->bits_per_coded_sample=fmt.bitsPerSample();
      avctx->block_align=fmt.blockAlign();
     }
    if (codecId==CODEC_ID_WMAV1 || codecId==CODEC_ID_WMAV2)

@@ -1439,6 +1439,15 @@ AVCodec aac_decoder = {
     NULL,
     aac_decode_close,
     aac_decode_frame,
-    .long_name = NULL_IF_CONFIG_SMALL("Advanced Audio Coding"),
+    /*.capabilities = */0,
+    /*.next = */NULL,
+    /*.flush = */NULL,
+    /*.supported_framerates = */NULL,
+    /*.pix_fmts = */NULL,
+    /*.long_name = */NULL_IF_CONFIG_SMALL("Advanced Audio Coding"),
+    #if __STDC_VERSION__ >= 199901L
     .sample_fmts = (enum SampleFormat[]){SAMPLE_FMT_S16,SAMPLE_FMT_NONE},
+    #else
+    /*.sample_fmts = */NULL,
+    #endif
 };

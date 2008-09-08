@@ -23,8 +23,8 @@
  * common internal api header.
  */
 
-#ifndef FFMPEG_INTERNAL_H
-#define FFMPEG_INTERNAL_H
+#ifndef AVUTIL_INTERNAL_H
+#define AVUTIL_INTERNAL_H
 
 #if !defined(DEBUG) && !defined(NDEBUG)
 #    define NDEBUG
@@ -42,10 +42,6 @@
 #else
 #    define attribute_used
 #endif
-#endif
-
-#ifndef M_PI
-#define M_PI    3.14159265358979323846
 #endif
 
 #ifndef INT16_MIN
@@ -290,4 +286,4 @@ static av_always_inline av_const float roundf(float x)
 #endif
 #endif /* __GNUC__ */
 
-#endif /* FFMPEG_INTERNAL_H */
+#endif /* AVUTIL_INTERNAL_H */
