@@ -131,6 +131,40 @@
     ABS2 %3, %4, %5, %6
 %endmacro
 
+%macro SPLATB_MMX 3
+    movd      %1, [%2-3] ;to avoid crossing a cacheline
+    punpcklbw %1, %1
+%if mmsize==16
+    pshuflw   %1, %1, 0xff
+    movlhps   %1, %1
+%else
+    pshufw    %1, %1, 0xff
+%endif
+%endmacro
+
+%macro SPLATB_SSSE3 3
+    movd      %1, [%2-3]
+    pshufb    %1, %3
+%endmacro
+
+%macro PALIGNR_MMX 4
+    %ifnidn %4, %2
+    mova    %4, %2
+    %endif
+    %if mmsize == 8
+    psllq   %1, (8-%3)*8
+    psrlq   %4, %3*8
+    %else
+    pslldq  %1, 16-%3
+    psrldq  %4, %3
+    %endif
+    por     %1, %4
+%endmacro
+
+%macro PALIGNR_SSSE3 4
+    palignr %1, %2, %3
+%endmacro
+
 %macro SUMSUB_BA 2
     paddw   %1, %2
     paddw   %2, %2
@@ -203,3 +237,4 @@
     packuswb   %1, %1
     movh       %4, %1
 %endmacro
+

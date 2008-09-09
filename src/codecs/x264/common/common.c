@@ -100,7 +100,6 @@ void    x264_param_default( x264_param_t *param )
     param->rc.psz_stat_out = "x264_2pass.log";
     param->rc.b_stat_read = 0;
     param->rc.psz_stat_in = "x264_2pass.log";
-    param->rc.psz_rc_eq = "blurCplx^(1-qComp)";
     param->rc.f_qcompress = 0.6;
     param->rc.f_qblur = 0.5;
     param->rc.f_complexity_blur = 20;
@@ -532,8 +531,6 @@ int x264_param_parse( x264_param_t *p, const char *name, const char *value )
         p->rc.psz_stat_in = strdup(value);
         p->rc.psz_stat_out = strdup(value);
     }
-    OPT("rceq")
-        p->rc.psz_rc_eq = strdup(value);
     OPT("qcomp")
         p->rc.f_qcompress = atof(value);
     OPT("qblur")
@@ -645,7 +642,6 @@ int x264_nal_encode( void *p_data, int *pi_data, int b_annexeb, x264_nal_t *nal 
     uint8_t *dst = p_data;
     uint8_t *src = nal->p_payload;
     uint8_t *end = &nal->p_payload[nal->i_payload];
-
     int i_count = 0;
 
     /* FIXME this code doesn't check overflow */
@@ -670,49 +666,14 @@ int x264_nal_encode( void *p_data, int *pi_data, int b_annexeb, x264_nal_t *nal 
             i_count = 0;
         }
         if( *src == 0 )
-        {
             i_count++;
-        }
         else
-        {
             i_count = 0;
-        }
         *dst++ = *src++;
     }
     *pi_data = dst - (uint8_t*)p_data;
 
     return *pi_data;
-}
-
-/****************************************************************************
- * x264_nal_decode:
- ****************************************************************************/
-int x264_nal_decode( x264_nal_t *nal, void *p_data, int i_data )
-{
-    uint8_t *src = p_data;
-    uint8_t *end = &src[i_data];
-    uint8_t *dst = nal->p_payload;
-
-    nal->i_type    = src[0]&0x1f;
-    nal->i_ref_idc = (src[0] >> 5)&0x03;
-
-    src++;
-
-    while( src < end )
-    {
-        if( src < end - 3 && src[0] == 0x00 && src[1] == 0x00  && src[2] == 0x03 )
-        {
-            *dst++ = 0x00;
-            *dst++ = 0x00;
-
-            src += 3;
-            continue;
-        }
-        *dst++ = *src++;
-    }
-
-    nal->i_payload = dst - (uint8_t*)p_data;
-    return 0;
 }
 
 
@@ -894,9 +855,8 @@ char *x264_param2string( x264_param_t *p, int b_res )
         else
             s += sprintf( s, " bitrate=%d ratetol=%.1f",
                           p->rc.i_bitrate, p->rc.f_rate_tolerance );
-        s += sprintf( s, " rceq='%s' qcomp=%.2f qpmin=%d qpmax=%d qpstep=%d",
-                      p->rc.psz_rc_eq, p->rc.f_qcompress,
-                      p->rc.i_qp_min, p->rc.i_qp_max, p->rc.i_qp_step );
+        s += sprintf( s, " qcomp=%.2f qpmin=%d qpmax=%d qpstep=%d",
+                      p->rc.f_qcompress, p->rc.i_qp_min, p->rc.i_qp_max, p->rc.i_qp_step );
         if( p->rc.b_stat_read )
             s += sprintf( s, " cplxblur=%.1f qblur=%.1f",
                           p->rc.f_complexity_blur, p->rc.f_qblur );

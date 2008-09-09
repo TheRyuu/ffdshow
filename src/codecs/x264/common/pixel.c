@@ -529,20 +529,24 @@ void x264_pixel_init( int cpu, x264_pixel_function_t *pixf )
 {
     memset( pixf, 0, sizeof(*pixf) );
 
-#define INIT2( name, cpu ) \
-    pixf->name[PIXEL_16x16] = x264_pixel_##name##_16x16##cpu;\
-    pixf->name[PIXEL_16x8]  = x264_pixel_##name##_16x8##cpu;
-#define INIT4( name, cpu ) \
-    INIT2( name, cpu ) \
-    pixf->name[PIXEL_8x16]  = x264_pixel_##name##_8x16##cpu;\
-    pixf->name[PIXEL_8x8]   = x264_pixel_##name##_8x8##cpu;
-#define INIT5( name, cpu ) \
-    INIT4( name, cpu ) \
-    pixf->name[PIXEL_8x4]   = x264_pixel_##name##_8x4##cpu;
-#define INIT7( name, cpu ) \
-    INIT5( name, cpu ) \
-    pixf->name[PIXEL_4x8]   = x264_pixel_##name##_4x8##cpu;\
-    pixf->name[PIXEL_4x4]   = x264_pixel_##name##_4x4##cpu;
+#define INIT2_NAME( name1, name2, cpu ) \
+    pixf->name1[PIXEL_16x16] = x264_pixel_##name2##_16x16##cpu;\
+    pixf->name1[PIXEL_16x8]  = x264_pixel_##name2##_16x8##cpu;
+#define INIT4_NAME( name1, name2, cpu ) \
+    INIT2_NAME( name1, name2, cpu ) \
+    pixf->name1[PIXEL_8x16]  = x264_pixel_##name2##_8x16##cpu;\
+    pixf->name1[PIXEL_8x8]   = x264_pixel_##name2##_8x8##cpu;
+#define INIT5_NAME( name1, name2, cpu ) \
+    INIT4_NAME( name1, name2, cpu ) \
+    pixf->name1[PIXEL_8x4]   = x264_pixel_##name2##_8x4##cpu;
+#define INIT7_NAME( name1, name2, cpu ) \
+    INIT5_NAME( name1, name2, cpu ) \
+    pixf->name1[PIXEL_4x8]   = x264_pixel_##name2##_4x8##cpu;\
+    pixf->name1[PIXEL_4x4]   = x264_pixel_##name2##_4x4##cpu;
+#define INIT2( name, cpu ) INIT2_NAME( name, name, cpu )
+#define INIT4( name, cpu ) INIT4_NAME( name, name, cpu )
+#define INIT5( name, cpu ) INIT5_NAME( name, name, cpu )
+#define INIT7( name, cpu ) INIT7_NAME( name, name, cpu )
 
 #define INIT_ADS( cpu ) \
     pixf->ads[PIXEL_16x16] = x264_pixel_ads4##cpu;\
@@ -550,6 +554,7 @@ void x264_pixel_init( int cpu, x264_pixel_function_t *pixf )
     pixf->ads[PIXEL_8x8] = x264_pixel_ads1##cpu;
 
     INIT7( sad, );
+    INIT7_NAME( sad_aligned, sad, );
     INIT7( sad_x3, );
     INIT7( sad_x4, );
     INIT7( ssd, );
@@ -574,6 +579,7 @@ void x264_pixel_init( int cpu, x264_pixel_function_t *pixf )
     if( cpu&X264_CPU_MMXEXT )
     {
         INIT7( sad, _mmxext );
+        INIT7_NAME( sad_aligned, sad, _mmxext );
         INIT7( sad_x3, _mmxext );
         INIT7( sad_x4, _mmxext );
         INIT7( satd, _mmxext );
@@ -613,6 +619,7 @@ void x264_pixel_init( int cpu, x264_pixel_function_t *pixf )
         }
 #endif
         pixf->intra_satd_x3_16x16 = x264_intra_satd_x3_16x16_mmxext;
+        pixf->intra_sad_x3_16x16 = x264_intra_sad_x3_16x16_mmxext;
         pixf->intra_satd_x3_8x8c  = x264_intra_satd_x3_8x8c_mmxext;
         pixf->intra_satd_x3_4x4   = x264_intra_satd_x3_4x4_mmxext;
     }
@@ -624,7 +631,7 @@ void x264_pixel_init( int cpu, x264_pixel_function_t *pixf )
         INIT2( sad_x4, _sse2 );
         INIT_ADS( _sse2 );
         pixf->var[PIXEL_8x8] = x264_pixel_var_8x8_sse2;
-
+        pixf->intra_sad_x3_16x16 = x264_intra_sad_x3_16x16_sse2;
 #ifdef ARCH_X86
         if( cpu&X264_CPU_CACHELINE_64 )
         {
@@ -640,6 +647,7 @@ void x264_pixel_init( int cpu, x264_pixel_function_t *pixf )
         INIT5( satd, _sse2 );
         INIT5( satd_x3, _sse2 );
         INIT5( satd_x4, _sse2 );
+        INIT2_NAME( sad_aligned, sad, _sse2_aligned );
         pixf->var[PIXEL_16x16] = x264_pixel_var_16x16_sse2;
         pixf->ssim_4x4x2_core  = x264_pixel_ssim_4x4x2_core_sse2;
         pixf->ssim_end4        = x264_pixel_ssim_end4_sse2;
@@ -666,6 +674,7 @@ void x264_pixel_init( int cpu, x264_pixel_function_t *pixf )
         pixf->sa8d[PIXEL_16x16]= x264_pixel_sa8d_16x16_ssse3;
         pixf->sa8d[PIXEL_8x8]  = x264_pixel_sa8d_8x8_ssse3;
         pixf->intra_satd_x3_16x16 = x264_intra_satd_x3_16x16_ssse3;
+        pixf->intra_sad_x3_16x16  = x264_intra_sad_x3_16x16_ssse3;
         pixf->intra_satd_x3_8x8c  = x264_intra_satd_x3_8x8c_ssse3;
         pixf->intra_satd_x3_4x4   = x264_intra_satd_x3_4x4_ssse3;
 #ifdef ARCH_X86_64

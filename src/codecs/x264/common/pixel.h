@@ -69,10 +69,12 @@ typedef struct
     x264_pixel_cmp_t ssim[7];
     x264_pixel_cmp_t sa8d[4];
     x264_pixel_cmp_t mbcmp[7]; /* either satd or sad for subpel refine and mode decision */
+    x264_pixel_cmp_t mbcmp_unaligned[7]; /* unaligned mbcmp for subpel */
     x264_pixel_cmp_t fpelcmp[7]; /* either satd or sad for fullpel motion search */
     x264_pixel_cmp_x3_t fpelcmp_x3[7];
     x264_pixel_cmp_x4_t fpelcmp_x4[7];
     x264_pixel_var_t var[4];
+    x264_pixel_cmp_t sad_aligned[7]; /* Aligned SAD for mbcmp */
 
     void (*ssim_4x4x2_core)( const uint8_t *pix1, int stride1,
                              const uint8_t *pix2, int stride2, int sums[2][4] );
@@ -89,12 +91,14 @@ typedef struct
     int (*ads[7])( int enc_dc[4], uint16_t *sums, int delta,
                    uint16_t *cost_mvx, int16_t *mvs, int width, int thresh );
 
-    /* calculate satd of V, H, and DC modes.
+    /* calculate satd or sad of V, H, and DC modes.
      * may be NULL, in which case just use pred+satd instead. */
-    void (*intra_satd_x3_16x16)( uint8_t *fenc, uint8_t *fdec, int res[3] );
-    void (*intra_satd_x3_8x8c)( uint8_t *fenc, uint8_t *fdec, int res[3] );
-    void (*intra_satd_x3_4x4)( uint8_t *fenc, uint8_t *fdec, int res[3] );
-    void (*intra_sa8d_x3_8x8)( uint8_t *fenc, uint8_t edge[33], int res[3] );
+    void (*intra_mbcmp_x3_16x16)( uint8_t *fenc, uint8_t *fdec  , int res[3] );
+    void (*intra_satd_x3_16x16) ( uint8_t *fenc, uint8_t *fdec  , int res[3] );
+    void (*intra_sad_x3_16x16)  ( uint8_t *fenc, uint8_t *fdec  , int res[3] );
+    void (*intra_satd_x3_8x8c)  ( uint8_t *fenc, uint8_t *fdec  , int res[3] );
+    void (*intra_satd_x3_4x4)   ( uint8_t *fenc, uint8_t *fdec  , int res[3] );
+    void (*intra_sa8d_x3_8x8)   ( uint8_t *fenc, uint8_t edge[33], int res[3] );
 } x264_pixel_function_t;
 
 void x264_pixel_init( int cpu, x264_pixel_function_t *pixf );

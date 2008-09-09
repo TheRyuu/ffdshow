@@ -544,7 +544,7 @@ static void x264_mb_analyse_intra( x264_t *h, x264_mb_analysis_t *a, int i_satd_
     int i, idx;
     int i_max;
     int predict_mode[9];
-    int b_merged_satd = h->pixf.intra_satd_x3_16x16 && h->pixf.mbcmp[0] == h->pixf.satd[0];
+    int b_merged_satd = !!h->pixf.intra_mbcmp_x3_16x16;
 
     /*---------------- Try all mode and calculate their score ---------------*/
 
@@ -553,7 +553,7 @@ static void x264_mb_analyse_intra( x264_t *h, x264_mb_analysis_t *a, int i_satd_
 
     if( b_merged_satd && i_max == 4 )
     {
-        h->pixf.intra_satd_x3_16x16( p_src, p_dst, a->i_satd_i16x16_dir );
+        h->pixf.intra_mbcmp_x3_16x16( p_src, p_dst, a->i_satd_i16x16_dir );
         h->predict_16x16[I_PRED_16x16_P]( p_dst );
         a->i_satd_i16x16_dir[I_PRED_16x16_P] =
             h->pixf.mbcmp[PIXEL_16x16]( p_dst, FDEC_STRIDE, p_src, FENC_STRIDE );
@@ -588,7 +588,7 @@ static void x264_mb_analyse_intra( x264_t *h, x264_mb_analysis_t *a, int i_satd_
     if( flags & X264_ANALYSE_I8x8 )
     {
         DECLARE_ALIGNED_16( uint8_t edge[33] );
-        x264_pixel_cmp_t sa8d = (*h->pixf.mbcmp == *h->pixf.sad) ? h->pixf.sad[PIXEL_8x8] : h->pixf.sa8d[PIXEL_8x8];
+        x264_pixel_cmp_t sa8d = (h->pixf.mbcmp[0] == h->pixf.satd[0]) ? h->pixf.sa8d[PIXEL_8x8] : h->pixf.mbcmp[PIXEL_8x8];
         int i_satd_thresh = a->b_mbrd ? COST_MAX : X264_MIN( i_satd_inter, a->i_satd_i16x16 );
         int i_cost = 0;
         b_merged_satd = h->pixf.intra_sa8d_x3_8x8 && h->pixf.mbcmp[0] == h->pixf.satd[0];

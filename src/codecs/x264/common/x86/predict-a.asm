@@ -22,6 +22,7 @@
 ;*****************************************************************************
 
 %include "x86inc.asm"
+%include "x86util.asm"
 
 %macro STORE8x8 2
     movq        [r0 + 0*FDEC_STRIDE], %1
@@ -66,6 +67,7 @@ SECTION_RODATA
 
 ALIGN 16
 pb_1:       times 16 db 1
+pb_3:       times 16 db 3
 pw_2:       times 4 dw 2
 pw_4:       times 4 dw 4
 pw_8:       times 8 dw 8
@@ -144,11 +146,61 @@ cglobal predict_4x4_vl_mmxext, 1,1
     RET
 
 ;-----------------------------------------------------------------------------
+; void predict_4x4_dc( uint8_t *src )
+;-----------------------------------------------------------------------------
+
+cglobal predict_4x4_dc_mmxext, 1,4
+    pxor   mm7, mm7
+    movd   mm0, [r0-FDEC_STRIDE]
+    psadbw mm0, mm7
+    movd   r3d, mm0
+    movzx  r1d, byte [r0-1]
+%assign n 1
+%rep 3
+    movzx  r2d, byte [r0+FDEC_STRIDE*n-1]
+    add    r1d, r2d
+%assign n n+1
+%endrep
+    lea    r1d, [r1+r3+4]
+    shr    r1d, 3
+    imul   r1d, 0x01010101
+    mov   [r0+FDEC_STRIDE*0], r1d
+    mov   [r0+FDEC_STRIDE*1], r1d
+    mov   [r0+FDEC_STRIDE*2], r1d
+    mov   [r0+FDEC_STRIDE*3], r1d
+    RET
+
+;-----------------------------------------------------------------------------
 ; void predict_8x8_v_mmxext( uint8_t *src, uint8_t *edge )
 ;-----------------------------------------------------------------------------
 cglobal predict_8x8_v_mmxext, 2,2
     movq        mm0, [r1+16]
     STORE8x8    mm0, mm0
+    RET
+
+;-----------------------------------------------------------------------------
+; void predict_8x8_h_mmxext( uint8_t *src, uint8_t edge[33] )
+;-----------------------------------------------------------------------------
+
+INIT_MMX
+cglobal predict_8x8_h_mmxext, 2,2
+    movu   m3, [r1+7]
+    mova   m7, m3
+    punpckhbw m3, m3
+    punpcklbw m7, m7
+    pshufw m0, m3, 0xff
+    pshufw m1, m3, 0xaa
+    pshufw m2, m3, 0x55
+    pshufw m3, m3, 0x00
+    pshufw m4, m7, 0xff
+    pshufw m5, m7, 0xaa
+    pshufw m6, m7, 0x55
+    pshufw m7, m7, 0x00
+%assign n 0
+%rep 8
+    mova [r0+n*FDEC_STRIDE], m %+ n
+%assign n n+1
+%endrep
     RET
 
 ;-----------------------------------------------------------------------------
@@ -368,6 +420,30 @@ cglobal predict_8x8c_v_mmx, 1,1
     RET
 
 ;-----------------------------------------------------------------------------
+; void predict_8x8c_h_mmxext( uint8_t *src )
+;-----------------------------------------------------------------------------
+
+%macro PRED_8x8C_H 1
+cglobal predict_8x8c_h_%1, 1,1
+%ifidn %1, ssse3
+    mova   m1, [pb_3 GLOBAL]
+%endif
+%assign n 0
+%rep 8
+    SPLATB m0, r0+FDEC_STRIDE*n-1, m1
+    mova [r0+FDEC_STRIDE*n], m0
+%assign n n+1
+%endrep
+    REP_RET
+%endmacro
+
+INIT_MMX
+%define SPLATB SPLATB_MMX
+PRED_8x8C_H mmxext
+%define SPLATB SPLATB_SSSE3
+PRED_8x8C_H ssse3
+
+;-----------------------------------------------------------------------------
 ; void predict_8x8c_dc_core_mmxext( uint8_t *src, int s2, int s3 )
 ;-----------------------------------------------------------------------------
 cglobal predict_8x8c_dc_core_mmxext, 1,1
@@ -541,6 +617,39 @@ cglobal predict_16x16_v_sse2, 1,2
     movdqa      xmm0, [r0 - FDEC_STRIDE]
     STORE16x16_SSE2 xmm0
     REP_RET
+
+;-----------------------------------------------------------------------------
+; void predict_16x16_h_mmxext( uint8_t *src )
+;-----------------------------------------------------------------------------
+
+%macro PRED_16x16_H 1
+cglobal predict_16x16_h_%1, 1,2
+    mov r1, FDEC_STRIDE*12
+%ifidn %1, ssse3
+    mova   m1, [pb_3 GLOBAL]
+%endif
+.vloop:
+%assign n 0
+%rep 4
+    SPLATB m0, r0+r1+FDEC_STRIDE*n-1, m1
+    mova [r0+r1+FDEC_STRIDE*n], m0
+%if mmsize==8
+    mova [r0+r1+FDEC_STRIDE*n+8], m0
+%endif
+%assign n n+1
+%endrep
+    add r1, -FDEC_STRIDE*4
+    jge .vloop
+    REP_RET
+%endmacro
+
+;no SSE2, its slower than MMX on all systems that don't support SSSE3
+INIT_MMX
+%define SPLATB SPLATB_MMX
+PRED_16x16_H mmxext
+INIT_XMM
+%define SPLATB SPLATB_SSSE3
+PRED_16x16_H ssse3
 
 ;-----------------------------------------------------------------------------
 ; void predict_16x16_dc_core_mmxext( uint8_t *src, int i_dc_left )

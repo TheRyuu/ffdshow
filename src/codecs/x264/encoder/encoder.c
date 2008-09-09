@@ -583,7 +583,9 @@ static int x264_validate_parameters( x264_t *h )
 static void mbcmp_init( x264_t *h )
 {
     int satd = !h->mb.b_lossless && h->param.analyse.i_subpel_refine > 1;
-    memcpy( h->pixf.mbcmp, satd ? h->pixf.satd : h->pixf.sad, sizeof(h->pixf.mbcmp) );
+    memcpy( h->pixf.mbcmp, satd ? h->pixf.satd : h->pixf.sad_aligned, sizeof(h->pixf.mbcmp) );
+    memcpy( h->pixf.mbcmp_unaligned, satd ? h->pixf.satd : h->pixf.sad, sizeof(h->pixf.mbcmp_unaligned) );
+    h->pixf.intra_mbcmp_x3_16x16 = satd ? h->pixf.intra_satd_x3_16x16 : h->pixf.intra_sad_x3_16x16;
     satd &= h->param.analyse.i_me_method == X264_ME_TESA;
     memcpy( h->pixf.fpelcmp, satd ? h->pixf.satd : h->pixf.sad, sizeof(h->pixf.fpelcmp) );
     memcpy( h->pixf.fpelcmp_x3, satd ? h->pixf.satd_x3 : h->pixf.sad_x3, sizeof(h->pixf.fpelcmp_x3) );
@@ -621,8 +623,6 @@ x264_t *x264_encoder_open   ( x264_param_t *param )
         h->param.rc.psz_stat_out = strdup( h->param.rc.psz_stat_out );
     if( h->param.rc.psz_stat_in )
         h->param.rc.psz_stat_in = strdup( h->param.rc.psz_stat_in );
-    if( h->param.rc.psz_rc_eq )
-        h->param.rc.psz_rc_eq = strdup( h->param.rc.psz_rc_eq );
 
     /* VUI */
     if( h->param.vui.i_sar_width > 0 && h->param.vui.i_sar_height > 0 )
@@ -1237,9 +1237,8 @@ static void x264_slice_write( x264_t *h )
     /* Compute misc bits */
     h->stat.frame.i_misc_bits = bs_pos( &h->out.bs )
                               + NALU_OVERHEAD * 8
-                              - h->stat.frame.i_itex_bits
-                              - h->stat.frame.i_ptex_bits
-                              - h->stat.frame.i_hdr_bits;
+                              - h->stat.frame.i_tex_bits
+                              - h->stat.frame.i_mv_bits;
 }
 
 static void x264_thread_sync_context( x264_t *dst, x264_t *src )
@@ -2029,8 +2028,6 @@ void    x264_encoder_close  ( x264_t *h )
         free( h->param.rc.psz_stat_out );
     if( h->param.rc.psz_stat_in )
         free( h->param.rc.psz_stat_in );
-    if( h->param.rc.psz_rc_eq )
-        free( h->param.rc.psz_rc_eq );
 
     x264_cqm_delete( h );
 
