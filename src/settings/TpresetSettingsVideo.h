@@ -57,7 +57,7 @@ public:
 
    videoDelay=src.videoDelay;isVideoDelayEnd=src.isVideoDelayEnd;videoDelayEnd=src.videoDelayEnd;
    idct=src.idct;
-   workaroundBugs=src.workaroundBugs;errorRecognizion=src.errorRecognizion;errorConcealment=src.errorConcealment;
+   workaroundBugs=src.workaroundBugs;errorRecognition=src.errorRecognition;errorConcealment=src.errorConcealment;
    lavcDecThreads=src.lavcDecThreads;
    grayscale=src.grayscale;
    multiThread=src.multiThread;
@@ -85,7 +85,7 @@ public:
 
  int videoDelay,isVideoDelayEnd,videoDelayEnd;
  int idct;
- int workaroundBugs,errorRecognizion,errorConcealment;
+ int workaroundBugs,errorRecognition,errorConcealment;
  int lavcDecThreads;
  int grayscale;
  int multiThread;

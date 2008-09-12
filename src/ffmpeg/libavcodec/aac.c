@@ -629,13 +629,15 @@ static int decode_tns(AACContext * ac, TemporalNoiseShaping * tns,
                     tns->order[w][filt] = 0;
                     return -1;
                 }
-                tns->direction[w][filt] = get_bits1(gb);
-                coef_compress = get_bits1(gb);
-                coef_len = coef_res + 3 - coef_compress;
-                tmp2_idx = 2*coef_compress + coef_res;
+                if (tns->order[w][filt]) {
+                    tns->direction[w][filt] = get_bits1(gb);
+                    coef_compress = get_bits1(gb);
+                    coef_len = coef_res + 3 - coef_compress;
+                    tmp2_idx = 2*coef_compress + coef_res;
 
-                for (i = 0; i < tns->order[w][filt]; i++)
-                    tns->coef[w][filt][i] = tns_tmp2_map[tmp2_idx][get_bits(gb, coef_len)];
+                    for (i = 0; i < tns->order[w][filt]; i++)
+                        tns->coef[w][filt][i] = tns_tmp2_map[tmp2_idx][get_bits(gb, coef_len)];
+                }
             }
         }
     }
@@ -753,7 +755,9 @@ static int decode_spectrum_and_dequant(AACContext * ac, float coef[1024], GetBit
     if (pulse_present) {
         for(i = 0; i < pulse->num_pulse; i++){
             float co  = coef_base[ pulse->pos[i] ];
-            float ico = co / sqrtf(sqrtf(fabsf(co))) + pulse->amp[i];
+            float ico = -pulse->amp[i];
+            if (co)
+                ico = co / sqrtf(sqrtf(fabsf(co))) + (co > 0 ? -ico : ico);
             coef_base[ pulse->pos[i] ] = cbrtf(fabsf(ico)) * ico;
         }
     }

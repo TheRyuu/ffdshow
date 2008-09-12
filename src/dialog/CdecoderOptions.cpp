@@ -45,7 +45,7 @@ void TmiscPage::init(void)
  islavc=((filterMode&IDFF_FILTERMODE_PLAYER) && source==IDFF_MOVIE_LAVC) || (filterMode&(IDFF_FILTERMODE_CONFIG|IDFF_FILTERMODE_VFW));
  for (int i=0;workarounds[i].ff_bug;i++)
   enable(islavc,workarounds[i].idc_chb);
- static const int idLavc[]={IDC_LBL_IDCT,IDC_CBX_IDCT,IDC_CHB_GRAY,IDC_LBL_BUGS,IDC_LBL_ERROR_CONCEALMENT,IDC_CBX_ERROR_CONCEALMENT,IDC_LBL_ERROR_RECOGNIZION,IDC_CBX_ERROR_RECOGNIZION,IDC_BT_QUANTMATRIX_EXPORT,IDC_ED_NUMTHREADS,IDC_CHB_H264_SKIP_ON_DELAY,IDC_ED_H264SKIP_ON_DELAY_TIME,0};
+ static const int idLavc[]={IDC_LBL_IDCT,IDC_CBX_IDCT,IDC_CHB_GRAY,IDC_LBL_BUGS,IDC_LBL_ERROR_CONCEALMENT,IDC_CBX_ERROR_CONCEALMENT,IDC_LBL_ERROR_RECOGNITION,IDC_CBX_ERROR_RECOGNITION,IDC_BT_QUANTMATRIX_EXPORT,IDC_ED_NUMTHREADS,IDC_CHB_H264_SKIP_ON_DELAY,IDC_ED_H264SKIP_ON_DELAY_TIME,0};
  enable(islavc,idLavc);
  addHint(IDC_ED_NUMTHREADS,_l("mpeg1/2 decoder only"));
 }
@@ -60,7 +60,7 @@ void TmiscPage::cfg2dlg(void)
    int bugs=cfgGet(IDFF_workaroundBugs);
    for (int i=0;workarounds[i].ff_bug;i++)
     setCheck(workarounds[i].idc_chb,bugs&workarounds[i].ff_bug);
-   cbxSetCurSel(IDC_CBX_ERROR_RECOGNIZION,cfgGet(IDFF_errorRecognizion));
+   cbxSetCurSel(IDC_CBX_ERROR_RECOGNITION,cfgGet(IDFF_errorRecognition));
    cbxSetCurSel(IDC_CBX_ERROR_CONCEALMENT,cfgGet(IDFF_errorConcealment));
    SetDlgItemInt(m_hwnd,IDC_ED_NUMTHREADS,cfgGet(IDFF_numLAVCdecThreads),FALSE);
    setCheck(IDC_CHB_H264_SKIP_ON_DELAY,cfgGet(IDFF_h264skipOnDelay));
@@ -106,7 +106,7 @@ bool TmiscPage::reset(bool testonly)
    deci->resetParam(IDFF_idct);
    deci->resetParam(IDFF_workaroundBugs);
    deci->resetParam(IDFF_errorConcealment);
-   deci->resetParam(IDFF_errorRecognizion);
+   deci->resetParam(IDFF_errorRecognition);
    deci->resetParam(IDFF_numLAVCdecThreads);
    deci->resetParam(IDFF_dropOnDelay);
    deci->resetParam(IDFF_dropOnDelayTime);
@@ -122,7 +122,7 @@ void TmiscPage::translate(void)
 
  cbxTranslate(IDC_CBX_IDCT,Tlibavcodec::idctNames);
  cbxTranslate(IDC_CBX_ERROR_CONCEALMENT,Tlibavcodec::errorConcealments);
- cbxTranslate(IDC_CBX_ERROR_RECOGNIZION,Tlibavcodec::errorRecognizions);
+ cbxTranslate(IDC_CBX_ERROR_RECOGNITION,Tlibavcodec::errorRecognitions);
 }
 
 void TmiscPage::getTip(char_t *tipS,size_t len)
@@ -169,7 +169,7 @@ TmiscPage::TmiscPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
  static const TbindCombobox<TmiscPage> cbx[]=
   {
    IDC_CBX_IDCT,IDFF_idct,BINDCBX_SEL,NULL,
-   IDC_CBX_ERROR_RECOGNIZION,IDFF_errorRecognizion,BINDCBX_SEL,NULL,
+   IDC_CBX_ERROR_RECOGNITION,IDFF_errorRecognition,BINDCBX_SEL,NULL,
    IDC_CBX_ERROR_CONCEALMENT,IDFF_errorConcealment,BINDCBX_SEL,NULL,
    0
   };

@@ -270,8 +270,8 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
      _l("workaroundBugs2"),FF_BUG_AUTODETECT,
    IDFF_errorConcealment   ,&TpresetVideo::errorConcealment   ,0,3,_l(""),1,
      _l("errorConcealment"),FF_EC_GUESS_MVS|FF_EC_DEBLOCK,
-   IDFF_errorRecognizion    ,&TpresetVideo::errorRecognizion  ,0,4,_l(""),1,
-     _l("errorRecognizion"),FF_ER_CAREFUL,
+   IDFF_errorRecognition    ,&TpresetVideo::errorRecognition  ,0,4,_l(""),1,
+     _l("errorRecognition"),FF_ER_CAREFUL,
    IDFF_numLAVCdecThreads ,&TpresetVideo::lavcDecThreads      ,1,8,_l(""),1,
      _l("threadsnum"),1,
    IDFF_grayscale          ,&TpresetVideo::grayscale          ,0,0,_l(""),1,
@@ -317,7 +317,7 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
 
  static const TcreateParamList1 listIDCT(Tlibavcodec::idctNames);setParamList(IDFF_idct,&listIDCT);
  static const TcreateParamList1 listErrorConcealment(Tlibavcodec::errorConcealments);setParamList(IDFF_errorConcealment,&listErrorConcealment);
- static const TcreateParamList1 listErrorRecognizion(Tlibavcodec::errorRecognizions);setParamList(IDFF_errorRecognizion,&listErrorRecognizion);
+ static const TcreateParamList1 listErrorRecognition(Tlibavcodec::errorRecognitions);setParamList(IDFF_errorRecognition,&listErrorRecognition);
 
  static const char_t *aspectHelp=_l("Enter logical expression with 'aspect' variable and comparison and arithmetic operators,\nfor example \"16/9<aspect AND aspect<2.35\" or \"aspect=1\".");
  static const char_t *fpsHelp=_l("Enter logical expression with 'fps' variable and comparison and arithmetic operators,\nfor example \"fps>30\".");

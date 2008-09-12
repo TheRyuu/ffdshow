@@ -32,7 +32,7 @@ const char_t* Tlibavcodec::idctNames[]=
  _l("FAAN"),
  NULL
 };
-const char_t* Tlibavcodec::errorRecognizions[]=
+const char_t* Tlibavcodec::errorRecognitions[]=
 {
  _l("none"),
  _l("careful"),

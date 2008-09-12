@@ -32,9 +32,9 @@
  * libavcodec api, context stuff, interlaced stereo out).
  */
 
-static const uint16_t MACEtab1[] = { 0xfff3, 0x0008, 0x004c, 0x00de, 0x00de, 0x004c, 0x0008, 0xfff3 };
+static const int16_t MACEtab1[] = {-13, 8, 76, 222, 222, 76, 8, -13};
 
-static const uint16_t MACEtab3[] = { 0xffee, 0x008c, 0x008c, 0xffee };
+static const int16_t MACEtab3[] = {-18, 140, 140, -18};
 
 static const int16_t MACEtab2[][4] = {
     {    37,    116,    206,    330}, {    39,    121,    216,    346},
@@ -141,7 +141,7 @@ static const int16_t MACEtab4[][2] = {
 #define QT_8S_2_16S(x) (((x) & 0xFF00) | (((x) >> 8) & 0xFF))
 
 typedef struct ChannelData {
-    int16_t index, lev, factor, prev2, previous, level;
+    int16_t index, factor, prev2, previous, level;
 } ChannelData;
 
 typedef struct MACEContext {
@@ -163,7 +163,7 @@ static inline int16_t mace_broken_clip_int16(int n)
 }
 
 static void chomp3(ChannelData *chd, int16_t *output, uint8_t val,
-                   const uint16_t tab1[],
+                   const int16_t tab1[],
                    const int16_t *tab2, int tab2_stride,
                    uint32_t numChannels)
 {
@@ -174,16 +174,16 @@ static void chomp3(ChannelData *chd, int16_t *output, uint8_t val,
     else
         current = - 1 - tab2[((chd->index & 0x7f0) >> 4)*tab2_stride + 2*tab2_stride-val-1];
 
-    current = mace_broken_clip_int16(current + chd->lev);
+    current = mace_broken_clip_int16(current + chd->level);
 
-    chd->lev = current - (current >> 3);
+    chd->level = current - (current >> 3);
     *output = QT_8S_2_16S(current);
     if (( chd->index += tab1[val]-(chd->index >> 5) ) < 0)
         chd->index = 0;
 }
 
 static void chomp6(ChannelData *chd, int16_t *output, uint8_t val,
-                   const uint16_t tab1[],
+                   const int16_t tab1[],
                    const int16_t *tab2, int tab2_stride,
                    uint32_t numChannels)
 {
@@ -205,7 +205,7 @@ static void chomp6(ChannelData *chd, int16_t *output, uint8_t val,
 
     current = mace_broken_clip_int16(current + chd->level);
 
-    chd->level = ((current*chd->factor) >> 15);
+    chd->level = (current*chd->factor) >> 15;
     current >>= 1;
 
     output[0] = QT_8S_2_16S(chd->previous + chd->prev2 -

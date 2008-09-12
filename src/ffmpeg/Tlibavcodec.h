@@ -72,7 +72,7 @@ public:
 
  void (*av_free)(void *ptr);
 
- static const char_t *idctNames[],*errorRecognizions[],*errorConcealments[];
+ static const char_t *idctNames[],*errorRecognitions[],*errorConcealments[];
  struct Tdia_size
   {
    int size;
