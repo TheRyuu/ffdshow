@@ -130,7 +130,7 @@ static inline void flush_put_bits(PutBitContext *s)
         *s->buf_ptr++=s->bit_buf;
         s->bit_buf>>=8;
 #else
-        *s->buf_ptr++=s->bit_buf >> 24;
+        *s->buf_ptr++=(uint8_t)(s->bit_buf >> 24);
         s->bit_buf<<=8;
 #endif
         s->bit_left+=8;
