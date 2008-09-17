@@ -11,15 +11,9 @@ CFLAGS+= -I. -I.. -I$(LAVC_DIR) -I$(LAVU_DIR) -I../codecs -I../imgFilters -I$(ZL
 SRCS_C=\
       DllEntry.c \
       $(LAVC_DIR)/8bps.c \
-      $(LAVC_DIR)/aac.c \
-      $(LAVC_DIR)/aac_ac3_parser.c \
-      $(LAVC_DIR)/aac_parser.c \
       $(LAVC_DIR)/aactab.c \
       $(LAVC_DIR)/aasc.c \
       $(LAVC_DIR)/ac3.c \
-      $(LAVC_DIR)/ac3_parser.c \
-      $(LAVC_DIR)/ac3dec.c \
-      $(LAVC_DIR)/ac3dec_data.c \
       $(LAVC_DIR)/ac3enc.c \
       $(LAVC_DIR)/ac3tab.c \
       $(LAVC_DIR)/acelp_filters.c \
@@ -38,11 +32,8 @@ SRCS_C=\
       $(LAVC_DIR)/corepng.c \
       $(LAVC_DIR)/cscd.c \
       $(LAVC_DIR)/cyuv.c \
-      $(LAVC_DIR)/dca.c \
-      $(LAVC_DIR)/dca_parser.c \
       $(LAVC_DIR)/dsputil.c \
       $(LAVC_DIR)/dv.c \
-      $(LAVC_DIR)/eac3dec.c \
       $(LAVC_DIR)/error_resilience.c \
       $(LAVC_DIR)/eval.c \
       $(LAVC_DIR)/faandct.c \
@@ -81,7 +72,6 @@ SRCS_C=\
       $(LAVC_DIR)/libamr.c \
       $(LAVC_DIR)/ljpegenc.c \
       $(LAVC_DIR)/loco.c \
-      $(LAVC_DIR)/lpc.c \
       $(LAVC_DIR)/mace.c \
       $(LAVC_DIR)/mdct.c \
       $(LAVC_DIR)/mjpeg.c \
@@ -93,7 +83,6 @@ SRCS_C=\
       $(LAVC_DIR)/mpeg12.c \
       $(LAVC_DIR)/mpeg12data.c \
       $(LAVC_DIR)/mpeg12enc.c \
-      $(LAVC_DIR)/mpeg4audio.c \
       $(LAVC_DIR)/mpeg4video_parser.c \
       $(LAVC_DIR)/mpegaudiodata.c \
       $(LAVC_DIR)/mpegaudiodec.c \
@@ -159,12 +148,9 @@ SRCS_C=\
       $(LAVC_DIR)/amr_float/sp_dec.c \
     \
       $(LAVU_DIR)/crc.c \
-      $(LAVU_DIR)/lfg.c \
-      $(LAVU_DIR)/lls.c \
       $(LAVU_DIR)/log.c \
       $(LAVU_DIR)/lzo.c \
       $(LAVU_DIR)/mathematics.c \
-      $(LAVU_DIR)/md5.c \
       $(LAVU_DIR)/mem.c \
       $(LAVU_DIR)/random.c \
       $(LAVU_DIR)/rational.c \

@@ -594,15 +594,24 @@ static int decode_scalefactors(AACContext * ac, float sf[120], GetBitContext * g
 /**
  * Decode pulse data; reference: table 4.7.
  */
-static void decode_pulses(Pulse * pulse, GetBitContext * gb, const uint16_t * swb_offset) {
-    int i;
+static int decode_pulses(Pulse * pulse, GetBitContext * gb, const uint16_t * swb_offset, int num_swb) {
+    int i, pulse_swb;
     pulse->num_pulse = get_bits(gb, 2) + 1;
-    pulse->pos[0]    = get_bits(gb, 5) + swb_offset[get_bits(gb, 6)];
+    pulse_swb        = get_bits(gb, 6);
+    if (pulse_swb >= num_swb)
+        return -1;
+    pulse->pos[0]    = swb_offset[pulse_swb];
+    pulse->pos[0]   += get_bits(gb, 5);
+    if (pulse->pos[0] > 1023)
+        return -1;
     pulse->amp[0]    = get_bits(gb, 4);
     for (i = 1; i < pulse->num_pulse; i++) {
         pulse->pos[i] = get_bits(gb, 5) + pulse->pos[i-1];
+        if (pulse->pos[i] > 1023)
+            return -1;
         pulse->amp[i] = get_bits(gb, 4);
     }
+    return 0;
 }
 
 /**
@@ -753,12 +762,19 @@ static int decode_spectrum_and_dequant(AACContext * ac, float coef[1024], GetBit
     }
 
     if (pulse_present) {
+        idx = 0;
         for(i = 0; i < pulse->num_pulse; i++){
             float co  = coef_base[ pulse->pos[i] ];
-            float ico = -pulse->amp[i];
-            if (co)
-                ico = co / sqrtf(sqrtf(fabsf(co))) + (co > 0 ? -ico : ico);
-            coef_base[ pulse->pos[i] ] = cbrtf(fabsf(ico)) * ico;
+            while(offsets[idx + 1] <= pulse->pos[i])
+                idx++;
+            if (band_type[idx] != NOISE_BT && sf[idx]) {
+                float ico = -pulse->amp[i];
+                if (co) {
+                    co /= sf[idx];
+                    ico = co / sqrtf(sqrtf(fabsf(co))) + (co > 0 ? -ico : ico);
+                }
+                coef_base[ pulse->pos[i] ] = cbrtf(fabsf(ico)) * ico * sf[idx];
+            }
         }
     }
     return 0;
@@ -803,7 +819,10 @@ static int decode_ics(AACContext * ac, SingleChannelElement * sce, GetBitContext
                 av_log(ac->avccontext, AV_LOG_ERROR, "Pulse tool not allowed in eight short sequence.\n");
                 return -1;
             }
-            decode_pulses(&pulse, gb, ics->swb_offset);
+            if (decode_pulses(&pulse, gb, ics->swb_offset, ics->num_swb)) {
+                av_log(ac->avccontext, AV_LOG_ERROR, "Pulse data corrupt or invalid.\n");
+                return -1;
+            }
         }
         if ((tns->present = get_bits1(gb)) && decode_tns(ac, tns, gb, ics))
             return -1;
