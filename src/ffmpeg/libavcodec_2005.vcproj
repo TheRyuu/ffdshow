@@ -801,6 +801,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\msrledec.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\msvideo1.c"
 				>
 			</File>
@@ -1279,6 +1283,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\msmpeg4data.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\msrledec.h"
 				>
 			</File>
 			<File

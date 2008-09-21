@@ -91,6 +91,7 @@ SRCS_C=\
       $(LAVC_DIR)/msmpeg4.c \
       $(LAVC_DIR)/msmpeg4data.c \
       $(LAVC_DIR)/msrle.c \
+      $(LAVC_DIR)/msrledec.c \
       $(LAVC_DIR)/msvideo1.c \
       $(LAVC_DIR)/nellymoser.c \
       $(LAVC_DIR)/nellymoserdec.c \
