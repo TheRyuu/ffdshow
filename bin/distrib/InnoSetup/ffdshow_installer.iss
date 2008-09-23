@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2108
+#define tryout_revision = 2139
 #define buildyear = 2008
 #define buildmonth = '09'
-#define buildday = '08'
+#define buildday = '23'
 
 ; Build specific options
 #define unicode_required = True
@@ -21,7 +21,6 @@
 #define include_plugin_avisynth = True
 #define include_plugin_virtualdub = True
 #define include_plugin_dscaler = True
-#define include_audx = False
 
 #define include_info_before = False
 #define include_gnu_license = False
@@ -80,13 +79,11 @@
 #elif PREF_YAMAGATA
   #define VS2005SP1 = True
   #define unicode_required = False
-  #define include_audx = True
   #define filename_suffix = '_Q'
 #elif PREF_XXL
   #define VS2003SP1 = True
   #define unicode_required = False
   #define localize = False
-  #define include_audx = True
   #define include_info_before = True
   #define include_setup_icon = True
   #define filename_suffix = '_xxl'
@@ -313,22 +310,20 @@ Name: audio\mp3; Description: MP3; Check: NOT CheckTaskAudio('mp3', 7, True); Fl
 Name: audio\aac; Description: AAC; Flags: unchecked; Components: ffdshow
 Name: audio\aac\libfaad2; Description: libfaad2; Check: CheckTaskAudio('aac', 8, True); Flags: exclusive; Components: ffdshow
 Name: audio\aac\libfaad2; Description: libfaad2; Check: NOT CheckTaskAudio('aac', 8, True); Flags: exclusive unchecked; Components: ffdshow
-Name: audio\aac\realaac; Description: realaac; Check: CheckTaskAudio('aac', 19, False); Flags: exclusive; Components: ffdshow
-Name: audio\aac\realaac; Description: realaac; Check: NOT CheckTaskAudio('aac', 19, False); Flags: exclusive unchecked; Components: ffdshow
 ;Name: audio\aac\libavcodec; Description: libavcodec; Check: CheckTaskAudio('aac', 1, False); Flags: exclusive; Components: ffdshow
 ;Name: audio\aac\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('aac', 1, False); Flags: exclusive unchecked; Components: ffdshow
 Name: audio\ac3;        Description: AC3;                                                 Components: ffdshow; Flags: unchecked
-Name: audio\ac3\libavcodec; Description: libavcodec; Check:     CheckTaskAudio('ac3', 1, False);  Components: ffdshow; Flags: exclusive
-Name: audio\ac3\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('ac3', 1, False);  Components: ffdshow; Flags: exclusive unchecked
 Name: audio\ac3\liba52; Description: liba52; Check:     CheckTaskAudio('ac3', 15, True);  Components: ffdshow; Flags: exclusive
 Name: audio\ac3\liba52; Description: liba52; Check: NOT CheckTaskAudio('ac3', 15, True);  Components: ffdshow; Flags: exclusive unchecked
+;Name: audio\ac3\libavcodec; Description: libavcodec; Check:     CheckTaskAudio('ac3', 1, False);  Components: ffdshow; Flags: exclusive
+;Name: audio\ac3\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('ac3', 1, False);  Components: ffdshow; Flags: exclusive unchecked
 Name: audio\ac3\spdif;  Description: S/PDIF; Check:     CheckTaskAudio('ac3', 16, False); Components: ffdshow; Flags: exclusive
 Name: audio\ac3\spdif;  Description: S/PDIF; Check: NOT CheckTaskAudio('ac3', 16, False); Components: ffdshow; Flags: exclusive unchecked
 Name: audio\dts;        Description: DTS;                                                 Components: ffdshow; Flags: unchecked
-Name: audio\dts\libavcodec; Description: libavcodec; Check:     CheckTaskAudio('dts', 1, False);  Components: ffdshow; Flags: exclusive
-Name: audio\dts\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('dts', 1, False);  Components: ffdshow; Flags: exclusive unchecked
 Name: audio\dts\libdts; Description: libdts; Check:     CheckTaskAudio('dts', 17, True);  Components: ffdshow; Flags: exclusive
 Name: audio\dts\libdts; Description: libdts; Check: NOT CheckTaskAudio('dts', 17, True);  Components: ffdshow; Flags: exclusive unchecked
+;Name: audio\dts\libavcodec; Description: libavcodec; Check:     CheckTaskAudio('dts', 1, False);  Components: ffdshow; Flags: exclusive
+;Name: audio\dts\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('dts', 1, False);  Components: ffdshow; Flags: exclusive unchecked
 Name: audio\dts\spdif;  Description: S/PDIF; Check:     CheckTaskAudio('dts', 16, False); Components: ffdshow; Flags: exclusive
 Name: audio\dts\spdif;  Description: S/PDIF; Check: NOT CheckTaskAudio('dts', 16, False); Components: ffdshow; Flags: exclusive unchecked
 Name: audio\lpcm; Description: LPCM; Check: CheckTaskAudio('lpcm', 4, True); Components: ffdshow
@@ -397,7 +392,6 @@ Source: Runtimes\LayerForUnicode\unicows.dll ; DestDir: {sys}; Flags: sharedfile
 
 Source: {#= bindir}\libavcodec.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 Source: {#= bindir}\libmplayer.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: {#= bindir}\ff_realaac.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 Source: {#= bindir}\ff_liba52.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 Source: {#= bindir}\ff_libdts.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 Source: {#= bindir}\ff_libfaad2.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
@@ -449,10 +443,6 @@ Source: {#= bindir}\ff_wmv9_unicode.dll; DestName: ff_wmv9.dll; DestDir: {app}; 
 #endif
 
 Source: {#= bindir}\ff_vfw.dll; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
-
-#if include_audx
-Source: audxlib.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow
-#endif
 
 #if include_plugin_avisynth
 Source: ..\..\ffavisynth.avsi ; DestDir: {code:GetAviSynthPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\avisynth
