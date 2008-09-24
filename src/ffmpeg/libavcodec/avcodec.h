@@ -2583,7 +2583,21 @@ extern unsigned int av_xiphlacing(unsigned char *s, unsigned int v);
  * message which tells the user how to report samples to the development
  * mailing list.
  */
-void av_log_missing_feature(void *avc, const char *feature, int want_sample);
+extern void av_log_missing_feature(void *avc, const char *feature, int want_sample);
+
+/**
+ * ffdshow custom stuff
+ *
+ * @return  POC decoded in the prior call.
+ */
+int avcodec_get_h264_poc_decoded(AVCodecContext *avctx);
+
+/**
+ * ffdshow custom stuff
+ *
+ * @return  POC of the outputed picture in the prior call.
+ */
+int avcodec_get_h264_poc_outputed(AVCodecContext *avctx);
 
 /* error handling */
 #if EINVAL > 0
