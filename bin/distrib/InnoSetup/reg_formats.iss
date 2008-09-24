@@ -297,7 +297,6 @@ Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: tru
 Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: tta;        ValueData: 0;  Components: ffdshow;                                  Tasks: NOT audio\tta
 Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: vorbis;     ValueData: 0;  Components: ffdshow;                                  Tasks: NOT audio\vorbis
 
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: aac;        ValueData: 19; Components: ffdshow;                                  Tasks: audio\aac\realaac
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: aac;        ValueData: 8;  Components: ffdshow;                                  Tasks: audio\aac\libfaad2
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: ac3;        ValueData: 15; Components: ffdshow;                                  Tasks: audio\ac3\liba52
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: ac3;        ValueData: 16; Components: ffdshow;                                  Tasks: audio\ac3\spdif
@@ -321,7 +320,6 @@ Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: tta
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: vorbis;     ValueData: 18; Components: ffdshow;                                  Tasks: audio\vorbis\tremor
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: vorbis;     ValueData: 1;  Components: ffdshow;                                  Tasks: audio\vorbis\libavcodec
 
-Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: aac;        ValueData: 19; Components: ffdshow;                                  Tasks: audio\aac\realaac
 Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: aac;        ValueData: 8;  Components: ffdshow;                                  Tasks: audio\aac\libfaad2
 Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: ac3;        ValueData: 15; Components: ffdshow;                                  Tasks: audio\ac3\liba52
 Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: ac3;        ValueData: 16; Components: ffdshow;                                  Tasks: audio\ac3\spdif
