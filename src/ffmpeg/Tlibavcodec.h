@@ -71,6 +71,8 @@ public:
  void (*avcodec_get_encoder_info)(AVCodecContext *avctx,int *xvid_build,int *divx_version,int *divx_build,int *lavc_build);
 
  void (*av_free)(void *ptr);
+ int (*avcodec_get_h264_poc_decoded)(AVCodecContext *avctx);
+ int (*avcodec_get_h264_poc_outputed)(AVCodecContext *avctx);
 
  static const char_t *idctNames[],*errorRecognitions[],*errorConcealments[];
  struct Tdia_size

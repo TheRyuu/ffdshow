@@ -36,7 +36,7 @@ TffdshowVideoInputPin::TffdshowVideoInputPin(TCHAR *objectName,TffdshowVideo *If
   fv(Ifv),
   video(NULL),
   isInterlacedRawVideo(false),
-  isMPC_matroska(false),
+  connectedSplitter(Unknown_Splitter),
   pCompatibleFilter(NULL),
   wasVC1(false)
 {
@@ -77,7 +77,15 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
   {
    MPEG2VIDEOINFO *mpeg2info=(MPEG2VIDEOINFO*)mt->pbFormat;
    hdr=&(hdr0=mpeg2info->hdr.bmiHeader);
-   if (hdr->biCompression==0) hdr->biCompression=FOURCC_MPG2;
+   if (hdr->biCompression==0 || hdr->biCompression == 0x0038002d)
+    {
+     if (mt->subtype == MEDIASUBTYPE_H264_TRANSPORT)
+      hdr->biCompression=FOURCC_H264;
+     else if (mt->subtype == MEDIASUBTYPE_AVC1)
+      hdr->biCompression = FOURCC_H264;
+     else
+      hdr->biCompression=FOURCC_MPG2;
+    }
   }
  else if (mt->formattype==FORMAT_TheoraIll)
   {
@@ -249,8 +257,15 @@ STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM
  DPRINTF(_l("TffdshowVideoInputPin::ReceiveConnection"));
  CAutoLock cObjectLock(m_pLock);
  const CLSID &ref=GetCLSID(pConnector);
- if (ref == CLSID_MPC_matroska)
-  isMPC_matroska=true;
+ if (ref == CLSID_MPC_MatroskaSplitter || ref == CLSID_GabestMatroskaSplitter)
+  connectedSplitter = MPC_matroska_splitter;
+ else if (ref == CLSID_HaaliMediaSplitter)
+  connectedSplitter = Haali_Media_splitter;
+ else if (ref == CLSID_MPC_MpegSourceFilter || ref == CLSID_MPC_MpegSplitterFilter)
+  connectedSplitter = MPC_mpegSplitters;
+ else if (ref == CLSID_DVBSourceFilter)
+  connectedSplitter = DVBSourceFilter;
+ 
 #if 0
  PIN_INFO pininfo;
  FILTER_INFO filterinfo;
@@ -325,8 +340,15 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
    biIn.bmiHeader=mpeg2info->hdr.bmiHeader;
    pictIn.setSize(std::max(mpeg2info->hdr.rcSource.right,mpeg2info->hdr.bmiHeader.biWidth),std::max(mpeg2info->hdr.rcSource.bottom,mpeg2info->hdr.bmiHeader.biHeight));
    pictIn.setDar(Rational(mpeg2info->hdr.dwPictAspectRatioX,mpeg2info->hdr.dwPictAspectRatioY));
-   if (biIn.bmiHeader.biCompression==0)
-    biIn.bmiHeader.biCompression=FOURCC_MPG2;
+   if (biIn.bmiHeader.biCompression==0 || biIn.bmiHeader.biCompression == 0x0038002d)
+    {
+     if (mt.subtype == MEDIASUBTYPE_H264_TRANSPORT)
+      biIn.bmiHeader.biCompression = FOURCC_H264;
+     else if (mt.subtype == MEDIASUBTYPE_AVC1)
+      biIn.bmiHeader.biCompression = FOURCC_H264;
+     else
+      biIn.bmiHeader.biCompression=FOURCC_MPG2;
+    }
    else
     {
      biIn.bmiHeader.biCompression=FCCupper(biIn.bmiHeader.biCompression);
@@ -468,7 +490,7 @@ again:
      static const GUID CLSID_NeroDigitalParser={0xE206E4DE,0xA7EE,0x4A62,0xB3,0xE9,0x4F,0xBC,0x8F,0xE8,0x4C,0x73};
      static const GUID CLSID_HalliMatroskaFile={0x55DA30FC,0xF16B,0x49FC,0xBA,0xA5,0xAE,0x59,0xFC,0x65,0xF8,0x2D};
      //neroavc=biIn.bmiHeader.biCompression==FOURCC_AVC1 && (searchPreviousFilter(this,CLSID_NeroDigitalParser) || searchPreviousFilter(this,CLSID_HalliMatroskaFile));
-     video->isMPC_matroska=isMPC_matroska;
+     video->connectedSplitter = connectedSplitter;
      video->isInterlacedRawVideo=isInterlacedRawVideo;
      video->containerSar=pictIn.rectFull.sar;
      if (!video->beginDecompress(pictIn,biIn.bmiHeader.biCompression,mt,(neroavc?TvideoCodecDec::SOURCE_NEROAVC:0)|(truncated?TvideoCodecDec::SOURCE_TRUNCATED:0)))

@@ -41,6 +41,8 @@ private:
  TccDecoder *ccDecoder;
  bool autoSkipingLoopFilter;
  enum AVDiscard initialSkipLoopFilter;
+ bool h264onTS;
+ bool isTSfile(void);
 protected:
  virtual LRESULT beginCompress(int cfgcomode,int csp,const Trect &r);
  virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);
@@ -69,6 +71,26 @@ public:
  virtual bool drawMV(unsigned char *dst,unsigned int dx,stride_t stride,unsigned int dy) const;
  virtual void getEncoderInfo(char_t *buf,size_t buflen) const;
  virtual const char* get_current_idct(void);
+ class TcodedPictureBuffer;
+ friend class TcodedPictureBuffer;
+ class TcodedPictureBuffer
+  {
+  private:
+   Tbuffer priorBuf,outBuf,tmpBuf; 
+   int priorSize,outSampleSize,used_bytes;
+   TvideoCodecLibavcodec* parent;
+   REFERENCE_TIME prior_rtStart,prior_rtStop,out_rtStart,out_rtStop;
+   REFERENCE_TIME poc2rtStart[64];  // memorize POCs and corresponding timestamps. Use the lower 6 bit of POC, to save memory.
+   REFERENCE_TIME poc2rtStop[64];
+
+  public:
+   TcodedPictureBuffer(TvideoCodecLibavcodec* Iparent);
+   void init(void);
+   int append(const uint8_t *buf, int buf_size);
+   int send(int *got_picture_ptr);
+   void onSeek(void);
+   void get_pict_timestamps(REFERENCE_TIME *pict_rtStart, REFERENCE_TIME *pict_rtStop);
+  } codedPictureBuffer;
 };
 
 #endif

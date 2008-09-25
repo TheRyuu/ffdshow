@@ -31,13 +31,15 @@
 #include "simd.h"
 #include "dsutil.h"
 #include "cc_decoder.h"
+#include "TffdshowVideoInputPin.h"
 #include "ffdebug.h"
 
 TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IdecVideoSink *IsinkD):
  Tcodec(Ideci),TcodecDec(Ideci,IsinkD),
  TvideoCodec(Ideci),
  TvideoCodecDec(Ideci,IsinkD),
- TvideoCodecEnc(Ideci,NULL)
+ TvideoCodecEnc(Ideci,NULL),
+ codedPictureBuffer(this)
 {
  create();
 }
@@ -45,7 +47,8 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IencVideoSink *
  Tcodec(Ideci),TcodecDec(Ideci,NULL),
  TvideoCodec(Ideci),
  TvideoCodecDec(Ideci,NULL),
- TvideoCodecEnc(Ideci,IsinkE)
+ TvideoCodecEnc(Ideci,IsinkE),
+ codedPictureBuffer(this)
 {
  create();
  if (ok && !libavcodec->dec_only)
@@ -79,6 +82,7 @@ void TvideoCodecLibavcodec::create(void)
  codecName[0]='\0';
  ccDecoder=NULL;
  autoSkipingLoopFilter= false;
+ h264onTS = false;
 }
 
 TvideoCodecLibavcodec::~TvideoCodecLibavcodec()
@@ -121,6 +125,7 @@ void TvideoCodecLibavcodec::end(void)
 //----------------------------- decompression -----------------------------
 bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const CMediaType &mt,int sourceFlags)
 {
+ h264onTS = false;
  avcodec=libavcodec->avcodec_find_decoder(codecId);
  if (!avcodec) return false;
 
@@ -226,6 +231,14 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
   }
  else
   sendextradata=false;
+ if (codecId == CODEC_ID_H264 && connectedSplitter != TffdshowVideoInputPin::MPC_mpegSplitters && connectedSplitter != TffdshowVideoInputPin::Haali_Media_splitter)
+  {
+   if (connectedSplitter == TffdshowVideoInputPin::DVBSourceFilter || isTSfile())
+    {
+     h264onTS = true;
+     codedPictureBuffer.init();
+    }
+  }
  if (fcc==FOURCC_RLE4 || fcc==FOURCC_RLE8 || fcc==FOURCC_CSCD || sup_palette(codecId))
   {
    BITMAPINFOHEADER bih;ExtractBIH(mt,&bih);
@@ -299,6 +312,16 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
  posB=1;
  return true;
 }
+
+bool TvideoCodecLibavcodec::isTSfile(void)
+{   
+ const char_t *sourceFullFlnm;
+ char_t sourceExt[MAX_PATH];
+ sourceFullFlnm = deci->getSourceName();
+ extractfileext(sourceFullFlnm,sourceExt);
+ return (stricmp(sourceExt,_l("ts"))==0 || stricmp(sourceExt,_l("m2ts"))==0 || stricmp(sourceExt,_l("m2t"))==0 || stricmp(sourceExt,_l("mts"))==0);
+}
+
 void TvideoCodecLibavcodec::onGetBuffer(AVFrame *pic)
 {
  //DPRINTF("onGetBuffer");
@@ -380,6 +403,9 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
     }
   }
 
+ if (h264onTS)
+  size = codedPictureBuffer.append(src, size);
+
  while (!src || size>0)
   {
    int got_picture,used_bytes;
@@ -397,8 +423,15 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
       ffbuf=(unsigned char*)realloc(ffbuf,ffbuflen=neededsize);
      if (src)
       {
-       memcpy(ffbuf,src,size);memset(ffbuf+size,0,FF_INPUT_BUFFER_PADDING_SIZE);
-       used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,ffbuf,size);
+       if (h264onTS)
+        {
+         used_bytes = codedPictureBuffer.send(&got_picture);
+        }
+       else
+        {
+         memcpy(ffbuf,src,size);memset(ffbuf+size,0,FF_INPUT_BUFFER_PADDING_SIZE);
+         used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,ffbuf,size);
+        }
       }
      else
       used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,NULL,0);
@@ -440,7 +473,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
       }
      Trect r(0,0,avctx->width,avctx->height);
      if (avctx->sample_aspect_ratio.num &&
-         !(isMPC_matroska && avctx->sample_aspect_ratio.num==1 && avctx->sample_aspect_ratio.den==1)
+         !(connectedSplitter == TffdshowVideoInputPin::MPC_matroska_splitter && avctx->sample_aspect_ratio.num==1 && avctx->sample_aspect_ratio.den==1)
         )  // With MPC's internal matroska splitter, AR is not reliable.
       r.sar=avctx->sample_aspect_ratio;
      else
@@ -455,7 +488,9 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
      const stride_t linesize[4]={frame->linesize[0],frame->linesize[1],frame->linesize[2],frame->linesize[3]};
      TffPict pict(csp,frame->data,linesize,r,true,frametype,fieldtype,srcLen0,pIn,avctx->palctrl); //TODO: src frame size
      pict.gmcWarpingPoints=frame->num_sprite_warping_points;pict.gmcWarpingPointsReal=frame->real_sprite_warping_points;
-     if (neroavc)
+     if (h264onTS)
+      codedPictureBuffer.get_pict_timestamps(&pict.rtStart, &pict.rtStop);
+     else if (neroavc)
       {
        pict.rtStart=frame->rtStart;
        if (pict.rtStart==REFTIME_INVALID)
@@ -479,7 +514,6 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
         pict.rtStop=b[posB].rtStop;
         pict.srcSize=b[posB].srcSize;
        }
-     //DPRINTF("%I64i",pict.rtStart);
      HRESULT hr=sinkD->deliverDecodedSample(pict);
      if (FAILED(hr) || (used_bytes && sinkD->acceptsManyFrames()!=S_OK) || avctx->codec_id==CODEC_ID_LOCO)
       return hr;
@@ -500,6 +534,7 @@ bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
  segmentTimeStart=segmentStart;
  posB=1;b[0].rtStart=b[1].rtStart=b[0].rtStop=b[0].rtStop=0;b[0].srcSize=b[1].srcSize=0;
  if (ccDecoder) ccDecoder->onSeek();
+ codedPictureBuffer.onSeek();
  return avctx?(libavcodec->avcodec_flush_buffers(avctx),true):false;
 }
 bool TvideoCodecLibavcodec::onDiscontinuity(void)
@@ -1162,4 +1197,95 @@ const char* TvideoCodecLibavcodec::get_current_idct(void)
   return libavcodec->avcodec_get_current_idct(avctx);
  else
   return NULL;
+}
+
+TvideoCodecLibavcodec::TcodedPictureBuffer::TcodedPictureBuffer(TvideoCodecLibavcodec* Iparent):
+ parent(Iparent)
+{
+}
+
+void TvideoCodecLibavcodec::TcodedPictureBuffer::init(void)
+{
+ onSeek();
+ priorBuf.alloc(512 * 1024);
+ outBuf.alloc(512 * 1024);
+}
+
+void TvideoCodecLibavcodec::TcodedPictureBuffer::onSeek(void)
+{
+ used_bytes = outSampleSize = priorSize = 0;
+ prior_rtStart = prior_rtStop = REFTIME_INVALID;
+ for (int i = 0 ; i < 64 ; i++)
+  poc2rtStart[i] = poc2rtStop[i] = REFTIME_INVALID;
+}
+
+/*
+ * libavcodec has to receive whole access unit at the same time.
+ * Here, we implement coded picture buffer (CPB).
+ * This function parses access unit (AU) from the stream and buffers it.
+ * We have to memorize the timestamp of the AU. 
+ */
+int TvideoCodecLibavcodec::TcodedPictureBuffer::append(const uint8_t *buf, int buf_size)
+{
+ used_bytes = outSampleSize = 0;
+ int startCodePos = 0;
+ for (; startCodePos < buf_size - 3 ; startCodePos++)
+  {
+   if (buf[startCodePos] == 0 && buf[startCodePos+1] == 0 && buf[startCodePos+2] == 1 && (buf[startCodePos+3] & 0x1f) == 0x09) // search NAL start code (00 00 01) + AU delimiter
+    {
+     // send to libavcodec (priorBuf + current sample(just before the start code))
+     uint8_t *dstOut = (uint8_t *)outBuf.resize2(priorSize + startCodePos + FF_INPUT_BUFFER_PADDING_SIZE);
+     memcpy(dstOut, priorBuf, priorSize);
+     memcpy(dstOut + priorSize, buf, startCodePos);
+     outSampleSize = priorSize + startCodePos;
+
+     // copy the left of sample to priorBuf
+     uint8_t *dstPrior = (uint8_t *)priorBuf.resize2(buf_size - startCodePos);
+     const uint8_t *src = buf + startCodePos;
+     priorSize = buf_size - startCodePos;
+     memcpy(dstPrior, src, priorSize);
+     if (priorSize > 3 && prior_rtStart != REFTIME_INVALID)
+      {
+       out_rtStart = prior_rtStart;
+       out_rtStop  = prior_rtStop;
+      }
+     else
+      {
+       out_rtStart = parent->rtStart;
+       out_rtStop  = parent->rtStop;
+      }
+     prior_rtStart = parent->rtStart;
+     prior_rtStop  = parent->rtStop;
+     return outSampleSize;
+    }
+  }
+
+ // start code not found
+ uint8_t *dstPrior = (uint8_t *)priorBuf.resize2(buf_size + priorSize);
+ memcpy(dstPrior + priorSize, buf, buf_size);
+ priorSize += buf_size;
+ prior_rtStart = parent->rtStart;
+ prior_rtStop = parent->rtStop;
+ return 0;
+}
+
+int TvideoCodecLibavcodec::TcodedPictureBuffer::send(int *got_picture_ptr)
+{
+ if (outSampleSize < 4)
+  return -1;
+ int used = parent->libavcodec->avcodec_decode_video(parent->avctx, parent->frame, got_picture_ptr, (uint8_t *)outBuf + used_bytes, outSampleSize - used_bytes);
+ int poc = parent->libavcodec->avcodec_get_h264_poc_decoded(parent->avctx); // retrieve POC of the sample that we have just sent. Not necesarily equal to POC of the picture we are going to show next.
+ poc2rtStart[poc & 0x3f] = out_rtStart;
+ poc2rtStop [poc & 0x3f] = out_rtStop;
+ if (used < 0)
+  return -1;
+ used_bytes += used;
+ return used;
+}
+
+void TvideoCodecLibavcodec::TcodedPictureBuffer::get_pict_timestamps(REFERENCE_TIME *pict_rtStart, REFERENCE_TIME *pict_rtStop)
+{
+ int poc = parent->libavcodec->avcodec_get_h264_poc_outputed(parent->avctx); // retrieve POC of the picture we are going to show next.
+ *pict_rtStart = poc2rtStart[poc & 0x3f];
+ *pict_rtStop  = poc2rtStop [poc & 0x3f];
 }

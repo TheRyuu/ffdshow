@@ -21,7 +21,7 @@ public:
  TvideoCodec(IffdshowBase *Ideci);
  virtual ~TvideoCodec();
  bool ok;
- bool isMPC_matroska;
+ int connectedSplitter;
  bool isInterlacedRawVideo;
  Rational containerSar;
 

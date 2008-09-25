@@ -29,3 +29,5 @@ EXPORTS
 
   avcodec_get_current_idct
   avcodec_get_encoder_info
+  avcodec_get_h264_poc_decoded
+  avcodec_get_h264_poc_outputed

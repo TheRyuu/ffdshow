@@ -98,6 +98,8 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(avcodec_default_reget_buffer,"avcodec_default_reget_buffer");
  dll->loadFunction(avcodec_get_current_idct,"avcodec_get_current_idct");
  dll->loadFunction(avcodec_get_encoder_info,"avcodec_get_encoder_info");
+ dll->loadFunction(avcodec_get_h264_poc_decoded,"avcodec_get_h264_poc_decoded");
+ dll->loadFunction(avcodec_get_h264_poc_outputed,"avcodec_get_h264_poc_outputed");
 
  if (!dec_only)
   {
