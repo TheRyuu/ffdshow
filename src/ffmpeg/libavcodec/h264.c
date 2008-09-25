@@ -3073,6 +3073,7 @@ static void flush_dpb(AVCodecContext *avctx){
         h->s.current_picture_ptr->reference= 0;
     h->s.first_field= 0;
     ff_mpeg_flush(avctx);
+    h->first_I_slice_detected = 0; // ffdshow custom code
 }
 
 /**
@@ -3662,8 +3663,8 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
 
     // ffdshow custom code
     if (s->pict_type == FF_I_TYPE){
-        h->first_I_frame_detected = 1;
-    } else if (s->pict_type == FF_P_TYPE && !h->first_I_frame_detected) {
+        h->first_I_slice_detected = 1;
+    } else if (s->pict_type == FF_P_TYPE && !h->first_I_slice_detected) {
         av_log(h->s.avctx, AV_LOG_ERROR,
                "P picture before first I picture, skipping\n");
         return -1;

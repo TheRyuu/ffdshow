@@ -471,7 +471,7 @@ typedef struct H264Context{
     H264mb *blocks[2];
 
     /* ffdshow custom stuff */
-    int first_I_frame_detected;
+    int first_I_slice_detected;
 }H264Context;
 
 #endif /* AVCODEC_H264_H */
