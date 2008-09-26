@@ -25,7 +25,7 @@
 	_l("playwnd.exe;PowerDirector.exe;powerdvd.exe;POWERPNT.EXE;PPLive.exe;ppmate.exe;PPStream.exe;PQDVD_PSP.exe;Procoder2.exe;Producer.exe;progdvb.exe;ProgDvbNet.exe;PVCR.exe;Qonoha.exe;QQ.exe;QQLive.exe;")\
 	_l("QQMusic.exe;QQPlayerSvr.exe;QvodPlayer.exe;QzoneMusic.exe;RadLight.exe;realplay.exe;ReClockHelper.dll;Recode.exe;RecordingManager.exe;rlkernel.exe;RoxMediaDB10.exe;RoxMediaDB9.exe;rundll32.exe;")\
 	_l("SelfMV.exe;Shareaza.exe;sherlock2.exe;ShowTime.exe;sidebar.exe;SinkuHadouken.exe;Sleipnir.exe;smartmovie.exe;songbird.exe;SopCast.exe;SplitCam.exe;START.EXE;stillcap.exe;Studio.exe;subedit.exe;")\
-	_l("SubtitleEdit.exe;SubtitleWorkshop.exe;SubtitleWorkshop4.exe;SWFConverter.exe;telewizja.exe;TheaterTek DVD.exe;time_adjuster.exe;timecodec.exe;tmc.exe;TMPGEnc.exe;TMPGEnc4XP.exe;TOTALCMD.EXE;Tvants.exe;")\
+	_l("SubtitleEdit.exe;SubtitleWorkshop.exe;SubtitleWorkshop4.exe;SWFConverter.exe;telewizja.exe;TheaterTek DVD.exe;time_adjuster.exe;timecodec.exe;tmc.exe;TMPGEnc.exe;TMPGEnc4XP.exe;TOTALCMD.EXE;TSPlayer.exe;Tvants.exe;")\
 	_l("tvc.exe;TVersity.exe;TVPlayer.exe;TVUPlayer.exe;UCC.exe;Ultra EDIT.exe;UUSeePlayer.exe;VCD_PLAY.EXE;VeohClient.exe;VFAPIFrameServer.exe;VideoConvert.exe;videoconverter.exe;videoenc.exe;VideoManager.exe;")\
 	_l("VideoSnapshot.exe;VideoSplitter.exe;VIDEOS~1.SCR;VideoWave9.exe;ViPlay.exe;ViPlay3.exe;ViPlay4.exe;virtualdub.exe;virtualdubmod.exe;vplayer.exe;WaveChk.exe;WCreator.exe;WebMediaPlayer.exe;WFTV.exe;")\
 	_l("winamp.exe;WinAVI 9.0.exe;WinAVI MP4 Converter.exe;WinAVI.exe;WindowsPhotoGallery.exe;windvd.exe;WinDvr.exe;WinMPGVideoConvert.exe;WINWORD.EXE;WLXPhotoGallery.exe;wmenc.exe;wmplayer.exe;wmprph.exe;")\

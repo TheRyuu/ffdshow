@@ -77,8 +77,8 @@
   #define bindir = '..\..\x64'
   #define outputdir = '..\..\..\..\'
 #elif PREF_YAMAGATA
-  #define VS2005SP1 = True
-  #define unicode_required = False
+  #define VS2008 = True
+  #define unicode_required = True
   #define filename_suffix = '_Q'
 #elif PREF_XXL
   #define VS2003SP1 = True
