@@ -70,6 +70,7 @@ TtrayIconBase::TtrayIconBase(IffdshowBase *Ideci):deci(Ideci)
 TtrayIconBase::~TtrayIconBase()
 {
  if (visible) Shell_NotifyIcon(NIM_DELETE,(::NOTIFYICONDATA*)&nid);
+ if (nid.hIcon) DestroyIcon(nid.hIcon);
  if (h) DestroyWindow(h);
  if (at) UnregisterClass(classname,hi);
  if (tr) tr->release();
