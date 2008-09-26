@@ -69,7 +69,7 @@ void    x264_param_default( x264_param_t *param )
     param->i_keyint_min = 25;
     param->i_bframe = 0;
     param->i_scenecut_threshold = 40;
-    param->b_bframe_adaptive = 1;
+    param->i_bframe_adaptive = X264_B_ADAPT_FAST;
     param->i_bframe_bias = 0;
     param->b_bframe_pyramid = 0;
 
@@ -93,7 +93,7 @@ void    x264_param_default( x264_param_t *param )
     param->rc.i_qp_step = 4;
     param->rc.f_ip_factor = 1.4;
     param->rc.f_pb_factor = 1.3;
-    param->rc.i_aq_mode = X264_AQ_GLOBAL;
+    param->rc.i_aq_mode = X264_AQ_VARIANCE;
     param->rc.f_aq_strength = 1.0;
 
     param->rc.b_stat_write = 0;
@@ -116,8 +116,10 @@ void    x264_param_default( x264_param_t *param )
                          | X264_ANALYSE_PSUB16x16 | X264_ANALYSE_BSUB16x16;
     param->analyse.i_direct_mv_pred = X264_DIRECT_PRED_SPATIAL;
     param->analyse.i_me_method = X264_ME_HEX;
+    param->analyse.f_psy_rd = 1.0;
+    param->analyse.f_psy_trellis = 0;
     param->analyse.i_me_range = 16;
-    param->analyse.i_subpel_refine = 5;
+    param->analyse.i_subpel_refine = 6;
     param->analyse.b_chroma_me = 1;
     param->analyse.i_mv_range_thread = -1;
     param->analyse.i_mv_range = -1; // set from level_idc
@@ -328,7 +330,14 @@ int x264_param_parse( x264_param_t *p, const char *name, const char *value )
     OPT("bframes")
         p->i_bframe = atoi(value);
     OPT("b-adapt")
-        p->b_bframe_adaptive = atobool(value);
+    {
+        p->i_bframe_adaptive = atobool(value);
+        if( b_error )
+        {
+            b_error = 0;
+            p->i_bframe_adaptive = atoi(value);
+        }
+    }
     OPT("b-bias")
         p->i_bframe_bias = atoi(value);
     OPT("b-pyramid")
@@ -463,6 +472,21 @@ int x264_param_parse( x264_param_t *p, const char *name, const char *value )
         p->analyse.i_mv_range_thread = atoi(value);
     OPT2("subme", "subq")
         p->analyse.i_subpel_refine = atoi(value);
+    OPT("psy-rd")
+    {
+        if( 2 == sscanf( value, "%f:%f", &p->analyse.f_psy_rd, &p->analyse.f_psy_trellis ) ||
+            2 == sscanf( value, "%f,%f", &p->analyse.f_psy_rd, &p->analyse.f_psy_trellis ) )
+        { }
+        else if( sscanf( value, "%f", &p->analyse.f_psy_rd ) )
+        {
+            p->analyse.f_psy_trellis = 0;
+        }
+        else
+        {
+            p->analyse.f_psy_rd = 0;
+            p->analyse.f_psy_trellis = 0;
+        }
+    }
     OPT("bime")
         p->analyse.b_bidir_me = atobool(value);
     OPT("chroma-me")
@@ -818,6 +842,7 @@ char *x264_param2string( x264_param_t *p, int b_res )
     s += sprintf( s, " analyse=%#x:%#x", p->analyse.intra, p->analyse.inter );
     s += sprintf( s, " me=%s", x264_motion_est_names[ p->analyse.i_me_method ] );
     s += sprintf( s, " subme=%d", p->analyse.i_subpel_refine );
+    s += sprintf( s, " psy_rd=%.1f:%.1f", p->analyse.f_psy_rd, p->analyse.f_psy_trellis );
     s += sprintf( s, " brdo=%d", p->analyse.b_bframe_rdo );
     s += sprintf( s, " mixed_ref=%d", p->analyse.b_mixed_references );
     s += sprintf( s, " me_range=%d", p->analyse.i_me_range );
@@ -836,7 +861,7 @@ char *x264_param2string( x264_param_t *p, int b_res )
     if( p->i_bframe )
     {
         s += sprintf( s, " b_pyramid=%d b_adapt=%d b_bias=%d direct=%d wpredb=%d bime=%d",
-                      p->b_bframe_pyramid, p->b_bframe_adaptive, p->i_bframe_bias,
+                      p->b_bframe_pyramid, p->i_bframe_adaptive, p->i_bframe_bias,
                       p->analyse.i_direct_mv_pred, p->analyse.b_weighted_bipred,
                       p->analyse.b_bidir_me );
     }

@@ -77,6 +77,14 @@ x264_frame_t *x264_frame_new( x264_t *h )
         CHECKED_MALLOC( frame->buffer_lowres[0], 4 * luma_plane_size );
         for( i = 0; i < 4; i++ )
             frame->lowres[i] = frame->buffer_lowres[0] + (frame->i_stride_lowres * i_padv + PADH) + i * luma_plane_size;
+
+        for( j = 0; j <= !!h->param.i_bframe; j++ )
+            for( i = 0; i <= h->param.i_bframe; i++ )
+            {
+                CHECKED_MALLOC( frame->lowres_mvs[j][i], 2*h->mb.i_mb_count*sizeof(int16_t) );
+                memset( frame->lowres_mvs[j][i], 0, 2*h->mb.i_mb_count*sizeof(int16_t) );
+                CHECKED_MALLOC( frame->lowres_mv_costs[j][i], h->mb.i_mb_count*sizeof(int) );
+            }
     }
 
     if( h->param.analyse.i_me_method >= X264_ME_ESA )
@@ -97,6 +105,7 @@ x264_frame_t *x264_frame_new( x264_t *h )
     CHECKED_MALLOC( frame->mb_type, i_mb_count * sizeof(int8_t));
     CHECKED_MALLOC( frame->mv[0], 2*16 * i_mb_count * sizeof(int16_t) );
     CHECKED_MALLOC( frame->ref[0], 4 * i_mb_count * sizeof(int8_t) );
+    CHECKED_MALLOC( frame->i_intra_cost, i_mb_count * sizeof(uint16_t) );
     if( h->param.i_bframe )
     {
         CHECKED_MALLOC( frame->mv[1], 2*16 * i_mb_count * sizeof(int16_t) );
@@ -113,6 +122,9 @@ x264_frame_t *x264_frame_new( x264_t *h )
     for( i = 0; i < h->param.i_bframe + 2; i++ )
         for( j = 0; j < h->param.i_bframe + 2; j++ )
             CHECKED_MALLOC( frame->i_row_satds[i][j], i_lines/16 * sizeof(int) );
+
+    if( h->param.rc.i_aq_mode )
+        CHECKED_MALLOC( frame->f_qp_offset, h->mb.i_mb_count * sizeof(float) );
 
     x264_pthread_mutex_init( &frame->mutex, NULL );
     x264_pthread_cond_init( &frame->cv, NULL );
@@ -134,6 +146,13 @@ void x264_frame_delete( x264_frame_t *frame )
     for( i = 0; i < X264_BFRAME_MAX+2; i++ )
         for( j = 0; j < X264_BFRAME_MAX+2; j++ )
             x264_free( frame->i_row_satds[i][j] );
+    for( j = 0; j < 2; j++ )
+        for( i = 0; i <= X264_BFRAME_MAX; i++ )
+        {
+            x264_free( frame->lowres_mvs[j][i] );
+            x264_free( frame->lowres_mv_costs[j][i] );
+        }
+    x264_free( frame->f_qp_offset );
     x264_free( frame->i_row_bits );
     x264_free( frame->i_row_qp );
     x264_free( frame->mb_type );
@@ -906,6 +925,7 @@ x264_frame_t *x264_frame_pop_unused( x264_t *h )
         frame = x264_frame_new( h );
     assert( frame->i_reference_count == 0 );
     frame->i_reference_count = 1;
+    frame->b_intra_calculated = 0;
     return frame;
 }
 

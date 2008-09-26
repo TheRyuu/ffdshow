@@ -311,11 +311,11 @@ struct x264_t
     struct
     {
         /* Frames to be encoded (whose types have been decided) */
-        x264_frame_t *current[X264_BFRAME_MAX+3];
+        x264_frame_t *current[X264_BFRAME_MAX*4+3];
         /* Temporary buffer (frames types not yet decided) */
-        x264_frame_t *next[X264_BFRAME_MAX+3];
+        x264_frame_t *next[X264_BFRAME_MAX*4+3];
         /* Unused frames */
-        x264_frame_t *unused[X264_BFRAME_MAX + X264_THREAD_MAX*2 + 16+4];
+        x264_frame_t *unused[X264_BFRAME_MAX*4 + X264_THREAD_MAX*2 + 16+4];
         /* For adaptive B decision */
         x264_frame_t *last_nonb;
 
@@ -381,6 +381,8 @@ struct x264_t
         int     b_chroma_me;
         int     b_trellis;
         int     b_noise_reduction;
+        int     i_psy_rd; /* Psy RD strength--fixed point value*/
+        int     i_psy_trellis; /* Psy trellis strength--fixed point value*/
 
         int     b_interlaced;
 
@@ -461,6 +463,16 @@ struct x264_t
             DECLARE_ALIGNED_16( uint8_t i8x8_fdec_buf[16*16] );
             DECLARE_ALIGNED_16( int16_t i8x8_dct_buf[3][64] );
             DECLARE_ALIGNED_16( int16_t i4x4_dct_buf[15][16] );
+
+            /* Psy trellis DCT data */
+            DECLARE_ALIGNED_16( int16_t fenc_dct8[4][64] );
+            DECLARE_ALIGNED_16( int16_t fenc_dct4[16][16] );
+
+            /* Psy RD SATD scores */
+            int fenc_satd[4][4];
+            int fenc_satd_sum;
+            int fenc_sa8d[2][2];
+            int fenc_sa8d_sum;
 
             /* pointer over mb of the frame to be compressed */
             uint8_t *p_fenc[3];

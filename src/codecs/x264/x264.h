@@ -26,7 +26,7 @@
 
 #include <stdarg.h>
 
-#define X264_BUILD "61"
+#define X264_BUILD "64"
 
 /* x264_t:
  *      opaque handler for encoder */
@@ -76,8 +76,10 @@ typedef struct x264_t x264_t;
 #define X264_RC_CRF                  1
 #define X264_RC_ABR                  2
 #define X264_AQ_NONE                 0
-#define X264_AQ_LOCAL                1
-#define X264_AQ_GLOBAL               2
+#define X264_AQ_VARIANCE             1
+#define X264_B_ADAPT_NONE            0
+#define X264_B_ADAPT_FAST            1
+#define X264_B_ADAPT_TRELLIS         2
 
 static const char * const x264_direct_pred_names[] = { "none", "spatial", "temporal", "auto", 0 };
 static const char * const x264_motion_est_names[] = { "dia", "hex", "umh", "esa", "tesa", 0 };
@@ -176,7 +178,7 @@ typedef struct x264_param_t
     int         i_scenecut_threshold; /* how aggressively to insert extra I frames */
     int         b_pre_scenecut;     /* compute scenecut on lowres frames */
     int         i_bframe;   /* how many b-frame between 2 references pictures */
-    int         b_bframe_adaptive;
+    int         i_bframe_adaptive;
     int         i_bframe_bias;
     int         b_bframe_pyramid;   /* Keep some B-frames as references */
 
@@ -230,6 +232,8 @@ typedef struct x264_param_t
         int          b_fast_pskip; /* early SKIP detection on P-frames */
         int          b_dct_decimate; /* transform coefficient thresholding on P-frames */
         int          i_noise_reduction; /* adaptive pseudo-deadzone */
+        float        f_psy_rd; /* Psy RD strength */
+        float        f_psy_trellis; /* Psy trellis strength */
 
         /* the deadzone size that will be used in luma quantization */
         int          i_luma_deadzone[2]; /* {inter, intra} */
