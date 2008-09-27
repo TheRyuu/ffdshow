@@ -313,13 +313,14 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
  return true;
 }
 
+// return true for TS and PS files.
 bool TvideoCodecLibavcodec::isTSfile(void)
 {   
  const char_t *sourceFullFlnm;
  char_t sourceExt[MAX_PATH];
  sourceFullFlnm = deci->getSourceName();
  extractfileext(sourceFullFlnm,sourceExt);
- return (stricmp(sourceExt,_l("ts"))==0 || stricmp(sourceExt,_l("m2ts"))==0 || stricmp(sourceExt,_l("m2t"))==0 || stricmp(sourceExt,_l("mts"))==0);
+ return (stricmp(sourceExt,_l("ts"))==0 || stricmp(sourceExt,_l("m2ts"))==0 || stricmp(sourceExt,_l("m2t"))==0 || stricmp(sourceExt,_l("mts"))==0 || stricmp(sourceExt,_l("mpg"))==0  || stricmp(sourceExt,_l("mpeg"))==0);
 }
 
 void TvideoCodecLibavcodec::onGetBuffer(AVFrame *pic)
