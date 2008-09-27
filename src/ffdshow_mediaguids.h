@@ -30,6 +30,8 @@
 #define FOURCC_X263 mmioFOURCC('X','2','6','3')
 #define FOURCC_H264 mmioFOURCC('H','2','6','4')
 #define FOURCC_X264 mmioFOURCC('X','2','6','4')
+#define FOURCC_h264 mmioFOURCC('h','2','6','4')
+#define FOURCC_avc1 mmioFOURCC('a','v','c','1')
 //#define FOURCC_L264 mmioFOURCC('L','2','6','4')
 #define FOURCC_VSSH mmioFOURCC('V','S','S','H')
 #define FOURCC_DAVC mmioFOURCC('D','A','V','C')
@@ -145,7 +147,10 @@
 #define FOURCC_BITFIELDS 3
 
 //H.264/AVC
+DEFINE_GUID_FOURCC(H264)
+DEFINE_GUID_FOURCC(h264)
 DEFINE_GUID_FOURCC(AVC1)
+DEFINE_GUID_FOURCC(avc1)
 
 //theora
 #define FOURCC_THEO mmioFOURCC('T','H','E','O')
