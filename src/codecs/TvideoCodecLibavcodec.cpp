@@ -39,7 +39,8 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IdecVideoSink *
  TvideoCodec(Ideci),
  TvideoCodecDec(Ideci,IsinkD),
  TvideoCodecEnc(Ideci,NULL),
- codedPictureBuffer(this)
+ codedPictureBuffer(this),
+ h264RandomAccess(this)
 {
  create();
 }
@@ -48,7 +49,8 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IencVideoSink *
  TvideoCodec(Ideci),
  TvideoCodecDec(Ideci,NULL),
  TvideoCodecEnc(Ideci,IsinkE),
- codedPictureBuffer(this)
+ codedPictureBuffer(this),
+ h264RandomAccess(this)
 {
  create();
  if (ok && !libavcodec->dec_only)
@@ -345,9 +347,10 @@ HRESULT TvideoCodecLibavcodec::flushDec(void)
 }
 HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen0,IMediaSample *pIn)
 {
+ bool isSyncPoint = pIn && pIn->IsSyncPoint() == S_OK;
  if (codecId==CODEC_ID_FFV1) // libavcodec can crash or loop infinitely when first frame after seeking is not keyframe
   if (!wasKey)
-   if (pIn && pIn->IsSyncPoint()==S_OK)
+   if (isSyncPoint)
     wasKey=true;
    else
     return pIn && pIn->IsPreroll()==S_OK?S_FALSE:S_OK;
@@ -424,9 +427,24 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
       ffbuf=(unsigned char*)realloc(ffbuf,ffbuflen=neededsize);
      if (src)
       {
-       if (h264onTS)
+       if (codecId == CODEC_ID_H264)
         {
-         used_bytes = codedPictureBuffer.send(&got_picture);
+         if (h264onTS)
+          used_bytes = codedPictureBuffer.send(&got_picture);
+         else
+          {
+           memcpy(ffbuf,src,size);memset(ffbuf+size,0,FF_INPUT_BUFFER_PADDING_SIZE);
+           if (h264RandomAccess.search(ffbuf, size))
+            {
+             memcpy(ffbuf,src,size);memset(ffbuf+size,0,FF_INPUT_BUFFER_PADDING_SIZE);
+             used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,ffbuf,size);
+             if (used_bytes < 0)
+              return S_FALSE;
+             h264RandomAccess.judgeUsability(&got_picture);
+            }
+           else
+            return S_FALSE;
+          }
         }
        else
         {
@@ -536,6 +554,7 @@ bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
  posB=1;b[0].rtStart=b[1].rtStart=b[0].rtStop=b[0].rtStop=0;b[0].srcSize=b[1].srcSize=0;
  if (ccDecoder) ccDecoder->onSeek();
  codedPictureBuffer.onSeek();
+ h264RandomAccess.onSeek();
  return avctx?(libavcodec->avcodec_flush_buffers(avctx),true):false;
 }
 bool TvideoCodecLibavcodec::onDiscontinuity(void)
@@ -1274,19 +1293,101 @@ int TvideoCodecLibavcodec::TcodedPictureBuffer::send(int *got_picture_ptr)
 {
  if (outSampleSize < 4)
   return -1;
+
+ if (parent->h264RandomAccess.search((uint8_t *)outBuf + used_bytes, outSampleSize - used_bytes) == 0)
+  return -1;
+
  int used = parent->libavcodec->avcodec_decode_video(parent->avctx, parent->frame, got_picture_ptr, (uint8_t *)outBuf + used_bytes, outSampleSize - used_bytes);
- int poc = parent->libavcodec->avcodec_get_h264_poc_decoded(parent->avctx); // retrieve POC of the sample that we have just sent. Not necesarily equal to POC of the picture we are going to show next.
- poc2rtStart[poc & 0x3f] = out_rtStart;
- poc2rtStop [poc & 0x3f] = out_rtStop;
+
  if (used < 0)
   return -1;
+
+ int poc = parent->avctx->h264_poc_decoded; // retrieve POC of the sample that we have just sent. Not necesarily equal to POC of the picture we are going to show next.
+ poc2rtStart[poc & 0x3f] = out_rtStart;
+ poc2rtStop [poc & 0x3f] = out_rtStop;
+
+ parent->h264RandomAccess.judgeUsability(got_picture_ptr);
+
  used_bytes += used;
  return used;
 }
 
 void TvideoCodecLibavcodec::TcodedPictureBuffer::get_pict_timestamps(REFERENCE_TIME *pict_rtStart, REFERENCE_TIME *pict_rtStop)
 {
- int poc = parent->libavcodec->avcodec_get_h264_poc_outputed(parent->avctx); // retrieve POC of the picture we are going to show next.
+ int poc = parent->avctx->h264_poc_outputed; // retrieve POC of the picture we are going to show next.
  *pict_rtStart = poc2rtStart[poc & 0x3f];
  *pict_rtStop  = poc2rtStop [poc & 0x3f];
+}
+
+TvideoCodecLibavcodec::Th264RandomAccess::Th264RandomAccess(TvideoCodecLibavcodec *Iparent):
+ parent(Iparent)
+{
+ onSeek();
+}
+
+void TvideoCodecLibavcodec::Th264RandomAccess::onSeek(void)
+{
+ recovery_mode = 1;
+ recovery_frame_cnt = 0;
+}
+
+// return 0:not found, don't send it to libavcodec, 1:send it anyway.
+int TvideoCodecLibavcodec::Th264RandomAccess::search(uint8_t* buf, int buf_size)
+{
+ if (parent->codecId == CODEC_ID_H264 && recovery_mode == 1)
+  {
+   int is_recovery_point = parent->libavcodec->avcodec_h264_search_recovery_point(parent->avctx, buf, buf_size, &recovery_frame_cnt);
+   if (is_recovery_point == 3) // IDR
+    {
+     recovery_mode = 0;
+     return 1;
+    }
+   else if (is_recovery_point == 2) // GDR, recovery_frame_cnt is valid.
+    {
+     recovery_mode = 2;
+     return 1;
+    }
+   else if (is_recovery_point == 1) // I frames are not ideal for recovery, but if we ignore them, better frames may not come forever. recovery_frame_cnt is not valid.
+    {
+     recovery_mode = 2;
+     recovery_frame_cnt = 0;
+     return 1;
+    }
+   else
+    return 0;
+  }
+ else
+  return 1 ;
+}
+
+void TvideoCodecLibavcodec::Th264RandomAccess::judgeUsability(int *got_picture_ptr)
+{
+ if (parent->codecId != CODEC_ID_H264)
+  return;
+
+ if (recovery_mode ==1 || recovery_mode ==2)
+  {
+   recovery_frame_cnt += parent->avctx->h264_frame_num_decoded;
+   recovery_mode = 3;
+  }
+
+ if (recovery_mode == 3)
+  {
+   if (recovery_frame_cnt <= parent->avctx->h264_frame_num_decoded)
+    {
+     recovery_poc = parent->avctx->h264_poc_decoded;
+     recovery_mode = 4;
+    }
+  }
+
+ if (recovery_mode == 4)
+  {
+   if (parent->avctx->h264_poc_outputed >= recovery_poc)
+    {
+     recovery_mode = 0;
+    }
+  }
+
+ if (recovery_mode != 0)
+  *got_picture_ptr = 0;
 }

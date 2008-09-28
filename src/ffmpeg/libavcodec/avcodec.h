@@ -1986,7 +1986,10 @@ typedef struct AVCodecContext {
     int64_t granulepos;
     int64_t *parserRtStart;
     void (*handle_user_data)(struct AVCodecContext *c,const uint8_t *buf,int buf_size);
-    
+    int h264_poc_decoded;
+    int h264_poc_outputed;
+    int h264_frame_num_decoded;
+
     enum CorePNGFrameType corepng_frame_type;    
     
     /* ffdshow custom stuff (end) */
@@ -2521,16 +2524,11 @@ extern void av_log_missing_feature(void *avc, const char *feature, int want_samp
 /**
  * ffdshow custom stuff
  *
- * @return  POC decoded in the prior call.
+ * @param[out] recovery_frame_cnt. Valid only if GDR.
+ * @return   0: no recovery point, 1:I-frame 2:Recovery Point SEI (GDR), 3:IDR, -1:error
  */
-int avcodec_get_h264_poc_decoded(AVCodecContext *avctx);
-
-/**
- * ffdshow custom stuff
- *
- * @return  POC of the outputed picture in the prior call.
- */
-int avcodec_get_h264_poc_outputed(AVCodecContext *avctx);
+int avcodec_h264_search_recovery_point(AVCodecContext *avctx,
+                         const uint8_t *buf, int buf_size, int *recovery_frame_cnt);
 
 /* error handling */
 #if EINVAL > 0

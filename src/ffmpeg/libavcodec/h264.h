@@ -465,13 +465,12 @@ typedef struct H264Context{
     int mb_xy;
 
     /* experimental */
-
     int phaze;
     int todecode;
     H264mb *blocks[2];
 
     /* ffdshow custom stuff */
-    int first_I_slice_detected;
+    int recovery_frame_cnt;
 }H264Context;
 
 #endif /* AVCODEC_H264_H */

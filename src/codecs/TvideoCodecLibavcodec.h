@@ -91,6 +91,20 @@ public:
    void onSeek(void);
    void get_pict_timestamps(REFERENCE_TIME *pict_rtStart, REFERENCE_TIME *pict_rtStop);
   } codedPictureBuffer;
+ class Th264RandomAccess
+  {
+  private:
+   TvideoCodecLibavcodec* parent;
+   int recovery_mode;  // 0:OK, 1:searching 2: found, 3:waiting for frame_num decoded, 4:waiting for POC outputed
+   int recovery_frame_cnt;
+   int recovery_poc;
+
+  public:
+   Th264RandomAccess(TvideoCodecLibavcodec* Iparent);
+   int search(uint8_t* buf, int buf_size);
+   void onSeek(void);
+   void judgeUsability(int *got_picture_ptr);
+  } h264RandomAccess;
 };
 
 #endif
