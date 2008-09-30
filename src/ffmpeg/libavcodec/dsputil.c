@@ -427,7 +427,7 @@ int w97_32_c(void *v, uint8_t * pix1, uint8_t * pix2, int line_size, int h){
 
 /* draw the edges of width 'w' of an image of size width, height */
 //FIXME check that this is ok for mpeg4 interlaced
-static void draw_edges_c(uint8_t *buf, int wrap, int width, int height, int w)
+static void draw_edges_c(uint8_t *buf, int wrap, int width, int height, int w, int sides)
 {
     uint8_t *ptr, *last_line;
     int i;
@@ -435,8 +435,8 @@ static void draw_edges_c(uint8_t *buf, int wrap, int width, int height, int w)
     last_line = buf + (height - 1) * wrap;
     for(i=0;i<w;i++) {
         /* top and bottom */
-        memcpy(buf - (i + 1) * wrap, buf, width);
-        memcpy(last_line + (i + 1) * wrap, last_line, width);
+        if (sides&EDGE_TOP)    memcpy(buf - (i + 1) * wrap, buf, width);
+        if (sides&EDGE_BOTTOM) memcpy(last_line + (i + 1) * wrap, last_line, width);
     }
     /* left and right */
     ptr = buf;
@@ -447,10 +447,15 @@ static void draw_edges_c(uint8_t *buf, int wrap, int width, int height, int w)
     }
     /* corners */
     for(i=0;i<w;i++) {
-        memset(buf - (i + 1) * wrap - w, buf[0], w); /* top left */
-        memset(buf - (i + 1) * wrap + width, buf[width-1], w); /* top right */
-        memset(last_line + (i + 1) * wrap - w, last_line[0], w); /* top left */
-        memset(last_line + (i + 1) * wrap + width, last_line[width-1], w); /* top right */
+        if (sides&EDGE_TOP) {
+            memset(buf - (i + 1) * wrap - w, buf[0], w); /* top left */
+            memset(buf - (i + 1) * wrap + width, buf[width-1], w); /* top right */
+        }
+
+        if (sides&EDGE_BOTTOM) {
+            memset(last_line + (i + 1) * wrap - w, last_line[0], w); /* top left */
+            memset(last_line + (i + 1) * wrap + width, last_line[width-1], w); /* top right */
+        }
     }
 }
 
@@ -3689,7 +3694,7 @@ static int rd8x8_c(/*MpegEncContext*/ void *c, uint8_t *src1, uint8_t *src2, int
     const uint8_t *scantable= s->intra_scantable.permutated;
     DECLARE_ALIGNED_8 (uint64_t, aligned_temp[sizeof(DCTELEM)*64/8]);
     #if __STDC_VERSION__ >= 199901L
-    DECLARE_ALIGNED_8 (uint64_t,aligned_bak[stride]);
+    DECLARE_ALIGNED_8 (uint64_t, aligned_bak[stride]);
     #else
     uint64_t *aligned_bak=_alloca(sizeof(uint64_t)*stride);
     #endif

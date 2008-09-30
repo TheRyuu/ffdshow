@@ -416,8 +416,10 @@ typedef struct DSPContext {
 #define BASIS_SHIFT 16
 #define RECON_SHIFT 6
 
-    void (*draw_edges)(uint8_t *buf, int wrap, int width, int height, int w);
+    void (*draw_edges)(uint8_t *buf, int wrap, int width, int height, int w, int sides);
 #define EDGE_WIDTH 16
+#define EDGE_TOP    1
+#define EDGE_BOTTOM 2
 
     /* h264 functions */
     void (*h264_idct_add)(uint8_t *dst, DCTELEM *block, int stride);
@@ -644,6 +646,7 @@ static inline void ff_imdct_half(MDCTContext *s, FFTSample *output, const FFTSam
 }
 
 /**
+
  * Generate a sine window.
  * @param   window  pointer to half window
  * @param   n       size of half window
@@ -764,7 +767,6 @@ static inline void copy_block17(uint8_t *dst, uint8_t *src, int dstStride, int s
         src+=srcStride;
     }
 }
-
 const char* avcodec_get_current_idct_mmx(AVCodecContext *avctx,DSPContext *c);
 
 #endif /* FFMPEG_DSPUTIL_H */

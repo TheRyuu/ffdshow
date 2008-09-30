@@ -243,6 +243,9 @@ typedef struct MpegEncContext {
     Picture **input_picture;   ///< next pictures on display order for encoding
     Picture **reordered_input_picture; ///< pointer to the next pictures in codedorder for encoding
 
+    int picture_count;         ///< number of allocated pictures (MAX_PICTURE_COUNT * avctx->thread_count)
+    int picture_range_start, picture_range_end; ///< the part of picture that this context can allocate in
+
     int start_mb_y;            ///< start mb_y of this thread (so current thread should process start_mb_y <= row < end_mb_y)
     int end_mb_y;              ///< end   mb_y of this thread (so current thread should process start_mb_y <= row < end_mb_y)
     struct MpegEncContext *thread_context[MAX_THREADS];
@@ -632,6 +635,8 @@ typedef struct MpegEncContext {
     int swap_uv;//vcr2 codec is mpeg2 varint with UV swaped
     short * pblocks[12];
 
+    int edge_y; ///< lowest row draw_edges has been called on
+
     DCTELEM (*block)[64]; ///< points to one of the following blocks
     DCTELEM (*blocks)[8][64]; // for HQ mode we need to keep the best block
     int (*decode_mb)(struct MpegEncContext *s, DCTELEM block[6][64]); // used by some codecs to avoid a switch()
@@ -665,6 +670,7 @@ typedef struct MpegEncContext {
     void (*denoise_dct)(struct MpegEncContext *s, DCTELEM *block);
 } MpegEncContext;
 
+#define REBASE_PICTURE(pic, new_ctx, old_ctx) (pic ? &new_ctx->picture[pic - old_ctx->picture] : NULL)
 
 void MPV_decode_defaults(MpegEncContext *s);
 int MPV_common_init(MpegEncContext *s);
@@ -686,6 +692,9 @@ void ff_write_quant_matrix(PutBitContext *pb, uint16_t *matrix);
 int ff_find_unused_picture(MpegEncContext *s, int shared);
 void ff_denoise_dct(MpegEncContext *s, DCTELEM *block);
 void ff_update_duplicate_context(MpegEncContext *dst, MpegEncContext *src);
+int MPV_lowest_referenced_row(MpegEncContext *s, int dir);
+void MPV_report_decode_progress(MpegEncContext *s);
+int ff_mpeg_update_context(AVCodecContext *dst, AVCodecContext *src);
 const uint8_t *ff_find_start_code(const uint8_t *p, const uint8_t *end, uint32_t *state);
 
 void ff_er_frame_start(MpegEncContext *s);

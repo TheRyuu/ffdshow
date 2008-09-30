@@ -81,7 +81,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="User32.lib msvcrtd.lib kernel32.lib oldnames.lib $(NOINHERIT)"
+				AdditionalDependencies="User32.lib msvcrtd.lib kernel32.lib oldnames.lib pthreadVC2.lib $(NOINHERIT)"
 				OutputFile="../../bin/libavcodec.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="true"
@@ -286,7 +286,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="User32.lib msvcrt.lib kernel32.lib oldnames.lib $(NOINHERIT)"
+				AdditionalDependencies="User32.lib msvcrt.lib kernel32.lib oldnames.lib pthreadVC2.lib $(NOINHERIT)"
 				OutputFile="../../bin/libavcodec.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -830,6 +830,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\pthread.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\qdm2.c"
 				>
 			</File>
@@ -990,11 +994,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\vorbis_dec.c"
+				RelativePath=".\libavcodec\vorbis_data.c"
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\vorbis_data.c"
+				RelativePath=".\libavcodec\vorbis_dec.c"
 				>
 			</File>
 			<File
@@ -1019,10 +1023,6 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\vp6.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\w32thread.c"
 				>
 			</File>
 			<File
@@ -1348,6 +1348,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\swscale.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\thread.h"
 				>
 			</File>
 			<File

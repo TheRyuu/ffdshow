@@ -104,7 +104,10 @@ int avcodec_thread_init(AVCodecContext *s, int thread_count){
     ThreadContext *c;
     uint32_t threadid;
 
+    if(s->thread_opaque) return 0;
+
     s->thread_count= thread_count;
+    s->thread_algorithm= FF_THREAD_MULTISLICE;
 
     assert(!s->thread_opaque);
     c= av_mallocz(sizeof(ThreadContext)*thread_count);

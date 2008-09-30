@@ -31,6 +31,7 @@
 #include "h263_parser.h"
 #include "mpeg4video_parser.h"
 #include "msmpeg4.h"
+#include "thread.h"
 
 //#define DEBUG
 //#define PRINT_FRAME_TIME
@@ -226,6 +227,7 @@ static int decode_slice(MpegEncContext *s){
                     if(++s->mb_x >= s->mb_width){
                         s->mb_x=0;
                         ff_draw_horiz_band(s, s->mb_y*mb_size, mb_size);
+                        MPV_report_decode_progress(s);
                         s->mb_y++;
                     }
                     return 0;
@@ -246,6 +248,7 @@ static int decode_slice(MpegEncContext *s){
         }
 
         ff_draw_horiz_band(s, s->mb_y*mb_size, mb_size);
+        MPV_report_decode_progress(s);
 
         s->mb_x= 0;
     }
@@ -615,6 +618,8 @@ retry:
     if(MPV_frame_start(s, avctx) < 0)
         return -1;
 
+    if (!s->divx_packed) ff_report_predecode_done(avctx);
+
 #ifdef DEBUG
     av_log(avctx, AV_LOG_DEBUG, "qscale=%d\n", s->qscale);
 #endif
@@ -721,14 +726,17 @@ AVCodec mpeg4_decoder = {
     NULL,
     ff_h263_decode_end,
     ff_h263_decode_frame,
-    CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
+    CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY | CODEC_CAP_FRAME_THREADS,
     /*.next = */NULL,
     /*.flush = */ ff_mpeg_flush,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
     /*.long_name = */NULL_IF_CONFIG_SMALL("MPEG-4 part 2"),
+    /*.supported_samplerates = */NULL,
+    /*sample_fmts = */NULL,
+    /*.init_copy = */NULL,
+    /*.update_context= */ONLY_IF_THREADS_ENABLED(ff_mpeg_update_context)
 };
-
 AVCodec h263_decoder = {
     "h263",
     CODEC_TYPE_VIDEO,

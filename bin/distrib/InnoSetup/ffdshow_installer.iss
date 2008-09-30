@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2070
+#define tryout_revision = 2083
 #define buildyear = 2008
-#define buildmonth = '08'
-#define buildday = '11'
+#define buildmonth = '09'
+#define buildday = '30'
 
 ; Build specific options
 #define unicode_required = True
@@ -37,7 +37,7 @@
 #define VS2008SP1 = False
 
 ; Output settings
-#define filename_suffix = ''
+#define filename_suffix = '-mt'
 #define outputdir = '.'
 
 ; location of binaries

@@ -174,37 +174,6 @@ typedef struct MMCO{
 } MMCO;
 
 /**
- *
- */
-
-typedef struct H264mb {
-    int mb_x, mb_y;
-    int qscale;
-    int chroma_qp[2]; //QPc
-    int chroma_pred_mode;
-    int intra16x16_pred_mode;
-    unsigned int topleft_samples_available;
-    unsigned int topright_samples_available;
-    int8_t intra4x4_pred_mode_cache[5*8];
-
-    uint8_t non_zero_count_cache[6*8];
-
-    int16_t mv_cache[2][5*8][2];
-    int8_t ref_cache[2][5*8];
-
-    int cbp;
-    int top_mb_xy;
-    int left_mb_xy[2];
-    
-    int mb_xy;
-
-    unsigned int sub_mb_type[4];
-
-    DCTELEM mb[16*24];
-} H264mb;
-
-
-/**
  * H264Context
  */
 typedef struct H264Context{
@@ -218,7 +187,7 @@ typedef struct H264Context{
       * Used to parse AVC variant of h264
       */
     int is_avc; ///< this flag is != 0 if codec is avc1
-    int got_avcC; ///< flag used to parse avcC data only once
+    int got_extradata; ///< flag used to parse extradata only once
     int nal_length_size; ///< Number of bytes used for nal length (1, 2 or 4)
 
     int chroma_qp[2]; //QPc
@@ -379,6 +348,7 @@ typedef struct H264Context{
                                           according to picture reordering in slice header */
     int ref2frm[16][2][64];          ///< reference to frame number lists, used in the loop filter, the first 2 are for -2,-1
     Picture *delayed_pic[MAX_DELAYED_PIC_COUNT+2]; //FIXME size?
+    Picture *next_output_pic;
     int outputed_poc;
 
     /**
@@ -464,14 +434,6 @@ typedef struct H264Context{
 
     int mb_xy;
 
-    /* experimental */
-
-    int phaze;
-    int todecode;
-    H264mb *blocks[2];
-
-    /* ffdshow custom stuff */
-    int first_I_frame_detected;
 }H264Context;
 
 #endif /* FFMPEG_H264_H */

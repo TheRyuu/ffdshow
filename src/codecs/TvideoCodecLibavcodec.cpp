@@ -111,7 +111,7 @@ void TvideoCodecLibavcodec::end(void)
     }
    if (avctx->slice_offset) free(avctx->slice_offset);
    if (codecinited) libavcodec->avcodec_close(avctx);codecinited=false;
-   if (threadcount) libavcodec->avcodec_thread_free(avctx);
+   //if (threadcount) libavcodec->avcodec_thread_free(avctx);
    libavcodec->av_free(avctx);avctx=NULL;
    libavcodec->av_free(frame);frame=NULL;
   }
@@ -160,6 +160,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
  initialSkipLoopFilter= avctx->skip_loop_filter;
 
  avctx->debug_mv=1;//(deci->getParam2(IDFF_isVis) & deci->getParam2(IDFF_visMV));
+ avctx->thread_algorithm=1;
 
  avctx->idct_algo=limit(deci->getParam2(IDFF_idct),0,6);
  if (extradata) delete extradata;
@@ -500,7 +501,8 @@ bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
  segmentTimeStart=segmentStart;
  posB=1;b[0].rtStart=b[1].rtStart=b[0].rtStop=b[0].rtStop=0;b[0].srcSize=b[1].srcSize=0;
  if (ccDecoder) ccDecoder->onSeek();
- return avctx?(libavcodec->avcodec_flush_buffers(avctx),true):false;
+ //return avctx?(libavcodec->avcodec_flush_buffers(avctx),true):false;
+ return true;
 }
 bool TvideoCodecLibavcodec::onDiscontinuity(void)
 {

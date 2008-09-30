@@ -29,6 +29,7 @@
 #include "avcodec.h"
 #include "dsputil.h"
 #include "imgconvert.h"
+#include "thread.h"
 #include <stdarg.h>
 #include <limits.h>
 #include <float.h>
@@ -297,6 +298,7 @@ void avcodec_default_release_buffer(AVCodecContext *s, AVFrame *pic){
     assert(pic->type==FF_BUFFER_TYPE_INTERNAL);
     assert(s->internal_buffer_count);
 
+    if(s->internal_buffer){
     buf = NULL; /* avoids warning */
     for(i=0; i<s->internal_buffer_count; i++){ //just 3-5 checks so is not worth to optimize
         buf= &((InternalBuffer*)s->internal_buffer)[i];
@@ -308,6 +310,7 @@ void avcodec_default_release_buffer(AVCodecContext *s, AVFrame *pic){
     last = &((InternalBuffer*)s->internal_buffer)[s->internal_buffer_count];
 
     FFSWAP(InternalBuffer, *buf, *last);
+    }
 
     for(i=0; i<4; i++){
         pic->data[i]=NULL;
@@ -505,7 +508,17 @@ int attribute_align_arg avcodec_open(AVCodecContext *avctx, AVCodec *codec)
     avctx->codec = codec;
     avctx->codec_id = codec->id;
     avctx->frame_number = 0;
-    if(avctx->codec->init){
+
+    if (ENABLE_THREADS) {
+        ret = avcodec_thread_init(avctx, avctx->thread_count);
+        if (ret < 0) {
+            av_freep(&avctx->priv_data);
+            avctx->codec= NULL;
+            goto end;
+        }
+    }
+
+    if(avctx->codec->init && !USE_FRAME_THREADING(avctx)){
         ret = avctx->codec->init(avctx);
         if (ret < 0) {
             av_freep(&avctx->priv_data);
@@ -558,12 +571,15 @@ int attribute_align_arg avcodec_decode_video(AVCodecContext *avctx, AVFrame *pic
                          const uint8_t *buf, int buf_size)
 {
     int ret;
+    int threaded = USE_FRAME_THREADING(avctx);
 
     *got_picture_ptr= 0;
     if((avctx->coded_width||avctx->coded_height) && avcodec_check_dimensions(avctx,avctx->coded_width,avctx->coded_height))
         return -1;
-    if((avctx->codec->capabilities & CODEC_CAP_DELAY) || buf_size){
-        ret = avctx->codec->decode(avctx, picture, got_picture_ptr,
+    if((avctx->codec->capabilities & CODEC_CAP_DELAY) || buf_size || threaded){
+        if (threaded) ret = ff_decode_frame_threaded(avctx, picture,
+                                got_picture_ptr, buf, buf_size);
+        else ret = avctx->codec->decode(avctx, picture, got_picture_ptr,
                                 buf, buf_size);
 
         emms_c(); //needed to avoid an emms_c() call before every return;
@@ -613,6 +629,7 @@ int avcodec_decode_audio(AVCodecContext *avctx, int16_t *samples,
 
 int avcodec_close(AVCodecContext *avctx)
 {
+    int threaded = USE_FRAME_THREADING(avctx);
     /* ffdshow custom coment out */
     //entangled_thread_counter++;
     //if(entangled_thread_counter != 1){
@@ -621,12 +638,15 @@ int avcodec_close(AVCodecContext *avctx)
     //    return -1;
     //}
 
-    if (avctx->codec->close)
+    if (ENABLE_THREADS && avctx->thread_opaque)
+        avcodec_thread_free(avctx);
+    if (avctx->codec->close && !threaded)
         avctx->codec->close(avctx);
     avcodec_default_free_buffers(avctx);
     av_freep(&avctx->priv_data);
+    av_freep(&avctx->rc_eq);
     avctx->codec = NULL;
-    //entangled_thread_counter--; /* ffdshow custom coment out */
+    //entangled_thread_counter--;   /* ffdshow custom coment out */
     return 0;
 }
 
@@ -702,7 +722,9 @@ void avcodec_init(void)
 
 void avcodec_flush_buffers(AVCodecContext *avctx)
 {
-    if(avctx->codec->flush)
+    if(USE_FRAME_THREADING(avctx))
+        ff_frame_thread_flush(avctx);
+    else if(avctx->codec->flush)
         avctx->codec->flush(avctx);
 }
 

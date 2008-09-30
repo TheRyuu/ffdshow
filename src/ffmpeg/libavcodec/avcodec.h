@@ -225,6 +225,10 @@ typedef struct RcOverride{
  * This can be used to prevent truncation of the last audio samples.
  */
 #define CODEC_CAP_SMALL_LAST_FRAME 0x0040
+/**
+ * Codec supports frame-based multithreading.
+ */
+#define CODEC_CAP_FRAME_THREADS    0x0080
 
 //The following defines may change, don't expect compatibility if you use them.
 #define MB_TYPE_INTRA4x4   0x0001
@@ -492,7 +496,21 @@ typedef struct AVPanScan{
      * - encoding: Set by user.\
      * - decoding: Set by libavcodec.\
      */\
-    int8_t *ref_index[2];
+    int8_t *ref_index[2];\
+\
+    /**\
+     * context owning the internal buffers\
+     * - encoding: Set by libavcodec.\
+     * - decoding: Set by libavcodec.\
+     */\
+    struct AVCodecContext *avctx;\
+\
+    /**\
+     * Can be used by multithreading to track frames\
+     * - encoding: Set by libavcodec.\
+     * - decoding: Set by libavcodec.\
+     */\
+    void *thread_opaque;
 
 #define FF_QSCALE_TYPE_MPEG1 0
 #define FF_QSCALE_TYPE_MPEG2 1
@@ -649,7 +667,7 @@ typedef struct AVCodecContext {
      * If non NULL, 'draw_horiz_band' is called by the libavcodec
      * decoder to draw a horizontal band. It improves cache usage. Not
      * all codecs can do that. You must check the codec capabilities
-     * beforehand.
+     * beforehand. May be called by different threads at the same time.
      * - encoding: unused
      * - decoding: Set by user.
      * @param height the height of the slice
@@ -678,7 +696,7 @@ typedef struct AVCodecContext {
      * Samples per packet, initialized when calling 'init'.
      */
     int frame_size;
-    int frame_number;   ///< audio or video frame number
+    int frame_number;   ///< Number of audio or video frames returned so far
     int real_pict_num;  ///< Returns the real picture number of previous encoded frame.
 
     /**
@@ -888,6 +906,7 @@ typedef struct AVCodecContext {
      * If pic.reference is set then the frame will be read later by libavcodec.
      * avcodec_align_dimensions() should be used to find the required width and
      * height, as they normally need to be rounded up to the next multiple of 16.
+     * May be called by different threads, but not more than one at the same time.
      * - encoding: unused
      * - decoding: Set by libavcodec., user can override.
      */
@@ -897,6 +916,7 @@ typedef struct AVCodecContext {
      * Called to release buffers which were allocated with get_buffer.
      * A released buffer can be reused in get_buffer().
      * pic.data[*] must be set to NULL.
+     * May be called by different threads, but not more than one at the same time.
      * - encoding: unused
      * - decoding: Set by libavcodec., user can override.
      */
@@ -1072,7 +1092,7 @@ typedef struct AVCodecContext {
  * It uses the list "idctNames[]" found in Tlibavcodec.cpp.
  * The indexes of the items in that list should match with the values below.
  */
-#define FF_IDCT_AUTO         0
+#define FF_IDCT_AUTO          0
 #define FF_IDCT_LIBMPEG2MMX  1
 #define FF_IDCT_SIMPLEMMX    2
 #define FF_IDCT_XVIDMMX      3
@@ -1385,8 +1405,8 @@ typedef struct AVCodecContext {
      */
     int global_quality;
 
-#define FF_CODER_TYPE_VLC   0
-#define FF_CODER_TYPE_AC    1
+#define FF_CODER_TYPE_VLC       0
+#define FF_CODER_TYPE_AC        1
     /**
      * coder type
      * - encoding: Set by user.
@@ -1957,6 +1977,25 @@ typedef struct AVCodecContext {
      * - decoding: Set by user.
      */
     float drc_scale;
+
+    /**
+     * Whether this is a copy of the context which had init() called on it.
+     * This is used by multithreading - shared tables and picture pointers
+     * should be freed from the original context only.
+     * - encoding: Set by libavcodec.
+     * - decoding: Set by libavcodec.
+     */
+    int is_copy;
+
+    /**
+     * Which multithreading method to use, for codecs that support more than one.
+     * - encoding: Set by user, otherwise the default is used.
+     * - decoding: Set by user, otherwise the default is used.
+     */
+    int thread_algorithm;
+#define FF_THREAD_AUTO       0 //< Use the default. Will be changed by libavcodec after init.
+#define FF_THREAD_MULTIFRAME 1 //< Decode more than one frame at once
+#define FF_THREAD_MULTISLICE 2 //< Decode more than one part of a single frame at once
 } AVCodecContext;
 
 /**
@@ -1998,6 +2037,14 @@ typedef struct AVCodec {
     const char *long_name;
     const int *supported_samplerates;       ///< array of supported audio samplerates, or NULL if unknown, array is terminated by 0
     const enum SampleFormat *sample_fmts;   ///< array of supported sample formats, or NULL if unknown, array is terminated by -1
+
+    /**
+     * @defgroup multithreading Multithreading support functions.
+     * @{
+     */
+    int (*init_copy)(AVCodecContext *);     ///< called after copying initially, re-allocate all writable tables
+    int (*update_context)(AVCodecContext *, AVCodecContext *from); ///< copy everything needed from the last thread before every new frame
+    /** @} */
 } AVCodec;
 
 /**
@@ -2556,5 +2603,7 @@ extern unsigned int av_xiphlacing(unsigned char *s, unsigned int v);
 #define AVERROR_NOMEM       AVERROR(ENOMEM)  /**< not enough memory */
 #define AVERROR_NOFMT       AVERROR(EILSEQ)  /**< unknown format */
 #define AVERROR_NOTSUPP     AVERROR(ENOSYS)  /**< Operation not supported. */
+#define AVERROR_NOENT       AVERROR(ENOENT)  /**< No such file or directory. */
+#define AVERROR_PATCHWELCOME    -MKTAG('P','A','W','E') /**< Not yet implemented in FFmpeg. Patches welcome. */
 
 #endif /* FFMPEG_AVCODEC_H */

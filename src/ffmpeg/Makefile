@@ -3,7 +3,7 @@ LAVU_DIR=libavutil
 ZLIB_DIR=../zlib
 
 CFLAGS+= -I. -I.. -I$(LAVC_DIR) -I$(LAVU_DIR) -I../codecs -I../imgFilters -I$(ZLIB_DIR) \
-         -DHAVE_AV_CONFIG_H -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -std=gnu99 -fasm
+         -DHAVE_AV_CONFIG_H -std=gnu99 -fasm
 
 #CFLAGS+= -save-temps
 #CFLAGS+= -fverbose-asm
@@ -133,7 +133,7 @@ SRCS_C=\
       $(LAVC_DIR)/vp56.c \
       $(LAVC_DIR)/vp56data.c \
       $(LAVC_DIR)/vp6.c \
-      $(LAVC_DIR)/w32thread.c \
+      $(LAVC_DIR)/pthread.c \
       $(LAVC_DIR)/wma.c \
       $(LAVC_DIR)/wmadec.c \
       $(LAVC_DIR)/wmv2.c \
@@ -194,6 +194,8 @@ ifeq ($(64BIT),yes)
 else
     CFLAGS+=-DARCH_X86_32
 endif
+
+GCCLIBS=-lpthread
 
 SLIB=../../bin/libavcodec.dll
 DEF=libavcodec.def

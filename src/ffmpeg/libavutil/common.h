@@ -397,6 +397,10 @@ static inline long long read_time(void)
 #   define NULL_IF_CONFIG_SMALL(x) x
 #endif
 
+#if ENABLE_THREADS
+#   define ONLY_IF_THREADS_ENABLED(x) x
+#else
+#   define ONLY_IF_THREADS_ENABLED(x) NULL
+#endif
 #endif /* HAVE_AV_CONFIG_H */
-
 #endif /* FFMPEG_COMMON_H */

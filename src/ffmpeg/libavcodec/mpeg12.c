@@ -34,6 +34,7 @@
 #include "mpeg12data.h"
 #include "mpeg12decdata.h"
 #include "bytestream.h"
+#include "thread.h"
 
 //#undef NDEBUG
 //#include <assert.h>
@@ -1145,6 +1146,27 @@ static av_cold int mpeg_decode_init(AVCodecContext *avctx)
     return 0;
 }
 
+static int mpeg_decode_update_context(AVCodecContext *avctx, AVCodecContext *avctx_from)
+{
+    Mpeg1Context *ctx = avctx->priv_data, *ctx_from = avctx_from->priv_data;
+    MpegEncContext *s = &ctx->mpeg_enc_ctx, *s1 = &ctx_from->mpeg_enc_ctx;
+    int err;
+
+    if(!ctx_from->mpeg_enc_ctx_allocated || !s1->context_initialized)
+        return 0;
+
+    err = ff_mpeg_update_context(avctx, avctx_from);
+    if(err) return err;
+
+    if(!ctx->mpeg_enc_ctx_allocated)
+        memcpy(s + 1, s1 + 1, sizeof(Mpeg1Context) - sizeof(MpegEncContext));
+
+    if(!(s->pict_type == FF_B_TYPE || s->low_delay))
+        s->picture_number++;
+
+    return 0;
+}
+
 static void quant_matrix_rebuild(uint16_t *matrix, const uint8_t *old_perm,
                                      const uint8_t *new_perm){
     uint16_t temp_matrix[64];
@@ -1547,6 +1569,8 @@ static int mpeg_field_start(MpegEncContext *s){
         }
 
         *s->current_picture_ptr->pan_scan= s1->pan_scan;
+
+        if (USE_FRAME_THREADING(avctx)) ff_report_predecode_done(avctx);
     }else{ //second field
             int i;
 
@@ -1691,6 +1715,7 @@ static int mpeg_decode_slice(Mpeg1Context *s1, int mb_y,
             const int mb_size= 16>>s->avctx->lowres;
 
             ff_draw_horiz_band(s, mb_size*s->mb_y, mb_size);
+            MPV_report_decode_progress(s);
 
             s->mb_x = 0;
             s->mb_y++;
@@ -1837,7 +1862,7 @@ static int slice_end(AVCodecContext *avctx, AVFrame *pict)
             *pict= *(AVFrame*)s->current_picture_ptr;
             ff_print_debug_info(s, pict);
         } else {
-            s->picture_number++;
+            if (!USE_FRAME_THREADING(avctx)) s->picture_number++;
             /* latency of 1 frame for I and P frames */
             /* XXX: use another variable than picture_number */
             if (s->last_picture_ptr != NULL) {
@@ -1980,7 +2005,7 @@ static int vcr2_init_sequence(AVCodecContext *avctx)
     avctx->has_b_frames= 0; //true?
     s->low_delay= 1;
 
-    avctx->pix_fmt = avctx->get_format(avctx,pixfmt_yuv_420);
+        avctx->pix_fmt = avctx->get_format(avctx,pixfmt_yuv_420);
 
     if (MPV_common_init(s) < 0)
         return -1;
@@ -2203,7 +2228,7 @@ static int decode_chunks(AVCodecContext *avctx,
         buf_ptr = ff_find_start_code(buf_ptr,buf_end, &start_code);
         if (start_code > 0x1ff){
             if(s2->pict_type != FF_B_TYPE || avctx->skip_frame <= AVDISCARD_DEFAULT){
-                if(avctx->thread_count > 1){
+                if(USE_AVCODEC_EXECUTE(avctx)){
                     int i;
 
                     avctx->execute(avctx, slice_decode_thread,  (void**)&(s2->thread_context[0]), NULL, s->slice_count);
@@ -2288,7 +2313,7 @@ static int decode_chunks(AVCodecContext *avctx,
                     return -1;
                 }
 
-                if(avctx->thread_count > 1){
+                if(USE_AVCODEC_EXECUTE(avctx)){
                     int threshold= (s2->mb_height*s->slice_count + avctx->thread_count/2) / avctx->thread_count;
                     if(threshold <= mb_y){
                         MpegEncContext *thread_context= s2->thread_context[s->slice_count];
@@ -2338,12 +2363,13 @@ AVCodec mpeg1video_decoder = {
     /*.encode=*/NULL,
     /*.close=*/mpeg_decode_end,
     /*.decode=*/mpeg_decode_frame,
-    /*.capabilities=*/CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY,
+    /*.capabilities=*/CODEC_CAP_DRAW_HORIZ_BAND | CODEC_CAP_DR1 | CODEC_CAP_TRUNCATED | CODEC_CAP_DELAY | CODEC_CAP_FRAME_THREADS,
     /*.next=*/NULL,
     /*.flush=*/ff_mpeg_flush,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
     /*.long_name= */NULL_IF_CONFIG_SMALL("MPEG-1 video"),
+    /*.update_context= */ONLY_IF_THREADS_ENABLED(mpeg_decode_update_context)
 };
 
 AVCodec mpeg2video_decoder = {
@@ -2360,7 +2386,7 @@ AVCodec mpeg2video_decoder = {
     /*.flush=*/ff_mpeg_flush,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
-/*.long_name= */NULL_IF_CONFIG_SMALL("MPEG-2 video"),
+    /*.long_name= */NULL_IF_CONFIG_SMALL("MPEG-2 video"),
 };
 
 //legacy decoder

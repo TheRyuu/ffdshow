@@ -35,6 +35,7 @@
 #include "msmpeg4.h"
 #include "h263.h"
 #include "faandct.h"
+#include "thread.h"
 #include <limits.h>
 
 //#undef NDEBUG
@@ -561,7 +562,7 @@ av_cold int MPV_encode_init(AVCodecContext *avctx)
     case CODEC_ID_H263:
         if (!ENABLE_H263_ENCODER)  return -1;
         if (h263_get_picture_format(s->width, s->height) == 7) {
-            av_log(avctx, AV_LOG_ERROR, "The specified picture size of %dx%d is not valid for the H.263 codec.\nValid sizes are 128x96, 176x144, 352x288, 704x576, and 1408x1152. Try H.263+.\n", s->width, s->height);
+            av_log(avctx, AV_LOG_INFO, "The specified picture size of %dx%d is not valid for the H.263 codec.\nValid sizes are 128x96, 176x144, 352x288, 704x576, and 1408x1152. Try H.263+.\n", s->width, s->height);
             return -1;
         }
         s->out_format = FMT_H263;
@@ -1099,7 +1100,7 @@ static void select_input_picture(MpegEncContext *s){
                 }
             /*
             }else if(s->avctx->b_frame_strategy==2){
-                            b_frames= estimate_best_b_count(s);
+                b_frames= estimate_best_b_count(s);
                         }
             */
             }else{
@@ -1197,9 +1198,9 @@ int MPV_encode_picture(AVCodecContext *avctx,
 {
     MpegEncContext *s = avctx->priv_data;
     AVFrame *pic_arg = data;
-    int i, stuffing_count;
+    int i, stuffing_count, context_count = USE_AVCODEC_EXECUTE(avctx) ? avctx->thread_count : 1;
 
-    for(i=0; i<avctx->thread_count; i++){
+    for(i=0; i<context_count; i++){
         int start_y= s->thread_context[i]->start_mb_y;
         int   end_y= s->thread_context[i]->  end_mb_y;
         int h= s->mb_height;
@@ -1262,7 +1263,7 @@ vbv_retry:
                     s->last_non_b_time= s->time - s->pp_time;
                 }
 //                av_log(NULL, AV_LOG_ERROR, "R:%d ", s->next_lambda);
-                for(i=0; i<avctx->thread_count; i++){
+                for(i=0; i<context_count; i++){
                     PutBitContext *pb= &s->thread_context[i]->pb;
                     init_put_bits(pb, pb->buf, pb->buf_end - pb->buf);
                 }
@@ -2734,6 +2735,7 @@ static int encode_picture(MpegEncContext *s, int picture_number)
 {
     int i;
     int bits;
+    int context_count = USE_AVCODEC_EXECUTE(s->avctx) ? s->avctx->thread_count : 1;
 
     s->picture_number = picture_number;
 
@@ -2773,7 +2775,7 @@ static int encode_picture(MpegEncContext *s, int picture_number)
     }
 
     s->mb_intra=0; //for the rate distortion & bit compare functions
-    for(i=1; i<s->avctx->thread_count; i++){
+    for(i=1; i<context_count; i++){
         ff_update_duplicate_context(s->thread_context[i], s);
     }
 
@@ -2785,11 +2787,11 @@ static int encode_picture(MpegEncContext *s, int picture_number)
         s->lambda2= (s->lambda2* (int64_t)s->avctx->me_penalty_compensation + 128)>>8;
         if(s->pict_type != FF_B_TYPE && s->avctx->me_threshold==0){
             if((s->avctx->pre_me && s->last_non_b_pict_type==FF_I_TYPE) || s->avctx->pre_me==2){
-                s->avctx->execute(s->avctx, pre_estimate_motion_thread, (void**)&(s->thread_context[0]), NULL, s->avctx->thread_count);
+                s->avctx->execute(s->avctx, pre_estimate_motion_thread, (void**)&(s->thread_context[0]), NULL, context_count);
             }
         }
 
-        s->avctx->execute(s->avctx, estimate_motion_thread, (void**)&(s->thread_context[0]), NULL, s->avctx->thread_count);
+        s->avctx->execute(s->avctx, estimate_motion_thread, (void**)&(s->thread_context[0]), NULL, context_count);
     }else /* if(s->pict_type == FF_I_TYPE) */{
         /* I-Frame */
         for(i=0; i<s->mb_stride*s->mb_height; i++)
@@ -2797,10 +2799,10 @@ static int encode_picture(MpegEncContext *s, int picture_number)
 
         if(!s->fixed_qscale){
             /* finding spatial complexity for I-frame rate control */
-            s->avctx->execute(s->avctx, mb_var_thread, (void**)&(s->thread_context[0]), NULL, s->avctx->thread_count);
+            s->avctx->execute(s->avctx, mb_var_thread, (void**)&(s->thread_context[0]), NULL, context_count);
         }
     }
-    for(i=1; i<s->avctx->thread_count; i++){
+    for(i=1; i<context_count; i++){
         merge_context_after_me(s, s->thread_context[i]);
     }
     s->current_picture.mc_mb_var_sum= s->current_picture_ptr->mc_mb_var_sum= s->me.mc_mb_var_sum_temp;
@@ -2930,11 +2932,11 @@ static int encode_picture(MpegEncContext *s, int picture_number)
     bits= put_bits_count(&s->pb);
     s->header_bits= bits - s->last_bits;
 
-    for(i=1; i<s->avctx->thread_count; i++){
+    for(i=1; i<context_count; i++){
         update_duplicate_context_after_me(s->thread_context[i], s);
     }
-    s->avctx->execute(s->avctx, encode_thread, (void**)&(s->thread_context[0]), NULL, s->avctx->thread_count);
-    for(i=1; i<s->avctx->thread_count; i++){
+    s->avctx->execute(s->avctx, encode_thread, (void**)&(s->thread_context[0]), NULL, context_count);
+    for(i=1; i<context_count; i++){
         merge_context_after_encode(s, s->thread_context[i]);
     }
     emms_c();
