@@ -635,8 +635,6 @@ typedef struct MpegEncContext {
     int swap_uv;//vcr2 codec is mpeg2 varint with UV swaped
     short * pblocks[12];
 
-    int edge_y; ///< lowest row draw_edges has been called on
-
     DCTELEM (*block)[64]; ///< points to one of the following blocks
     DCTELEM (*blocks)[8][64]; // for HQ mode we need to keep the best block
     int (*decode_mb)(struct MpegEncContext *s, DCTELEM block[6][64]); // used by some codecs to avoid a switch()

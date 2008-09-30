@@ -56,7 +56,7 @@ const uint8_t ff_reverse[256]={
 0x0F,0x8F,0x4F,0xCF,0x2F,0xAF,0x6F,0xEF,0x1F,0x9F,0x5F,0xDF,0x3F,0xBF,0x7F,0xFF,
 };
 
-//static int volatile entangled_thread_counter=0; /* ffdshow custom coment out */
+static int volatile entangled_thread_counter=0;
 
 void *av_fast_realloc(void *ptr, unsigned int *size, unsigned int min_size)
 {
@@ -474,12 +474,11 @@ int attribute_align_arg avcodec_open(AVCodecContext *avctx, AVCodec *codec)
 {
     int ret= -1;
 
-    /* ffdshow custom coment out */
-    //entangled_thread_counter++;
-    //if(entangled_thread_counter != 1){
-    //    av_log(avctx, AV_LOG_ERROR, "insufficient thread locking around avcodec_open/close()\n");
-    //    goto end;
-    //}
+    entangled_thread_counter++;
+    if(entangled_thread_counter != 1){
+        av_log(avctx, AV_LOG_ERROR, "insufficient thread locking around avcodec_open/close()\n");
+        goto end;
+    }
 
     if(avctx->codec || !codec)
         goto end;
@@ -509,7 +508,7 @@ int attribute_align_arg avcodec_open(AVCodecContext *avctx, AVCodec *codec)
     avctx->codec_id = codec->id;
     avctx->frame_number = 0;
 
-    if (ENABLE_THREADS) {
+    if (ENABLE_THREADS && avctx->thread_count>1 && !avctx->thread_opaque) {
         ret = avcodec_thread_init(avctx, avctx->thread_count);
         if (ret < 0) {
             av_freep(&avctx->priv_data);
@@ -528,7 +527,7 @@ int attribute_align_arg avcodec_open(AVCodecContext *avctx, AVCodec *codec)
     }
     ret=0;
 end:
-    //entangled_thread_counter--; /* ffdshow custom coment out */
+    entangled_thread_counter--;
     return ret;
 }
 
@@ -629,24 +628,23 @@ int avcodec_decode_audio(AVCodecContext *avctx, int16_t *samples,
 
 int avcodec_close(AVCodecContext *avctx)
 {
-    int threaded = USE_FRAME_THREADING(avctx);
-    /* ffdshow custom coment out */
-    //entangled_thread_counter++;
-    //if(entangled_thread_counter != 1){
-    //    av_log(avctx, AV_LOG_ERROR, "insufficient thread locking around avcodec_open/close()\n");
-    //    entangled_thread_counter--;
-    //    return -1;
-    //}
+    entangled_thread_counter++;
+    if(entangled_thread_counter != 1){
+        av_log(avctx, AV_LOG_ERROR, "insufficient thread locking around avcodec_open/close()\n");
+        entangled_thread_counter--;
+        return -1;
+    }
 
     if (ENABLE_THREADS && avctx->thread_opaque)
         avcodec_thread_free(avctx);
-    if (avctx->codec->close && !threaded)
+    if (avctx->codec->close && !USE_FRAME_THREADING(avctx))
         avctx->codec->close(avctx);
     avcodec_default_free_buffers(avctx);
     av_freep(&avctx->priv_data);
     av_freep(&avctx->rc_eq);
     avctx->codec = NULL;
-    //entangled_thread_counter--;   /* ffdshow custom coment out */
+    avctx->active_thread_algorithm = 0;
+    entangled_thread_counter--;
     return 0;
 }
 
@@ -724,7 +722,7 @@ void avcodec_flush_buffers(AVCodecContext *avctx)
 {
     if(USE_FRAME_THREADING(avctx))
         ff_frame_thread_flush(avctx);
-    else if(avctx->codec->flush)
+    if(avctx->codec->flush)
         avctx->codec->flush(avctx);
 }
 

@@ -618,7 +618,7 @@ retry:
     if(MPV_frame_start(s, avctx) < 0)
         return -1;
 
-    if (!s->divx_packed) ff_report_predecode_done(avctx);
+    if (!s->divx_packed) ff_report_frame_setup_done(avctx);
 
 #ifdef DEBUG
     av_log(avctx, AV_LOG_DEBUG, "qscale=%d\n", s->qscale);
@@ -737,6 +737,7 @@ AVCodec mpeg4_decoder = {
     /*.init_copy = */NULL,
     /*.update_context= */ONLY_IF_THREADS_ENABLED(ff_mpeg_update_context)
 };
+
 AVCodec h263_decoder = {
     "h263",
     CODEC_TYPE_VIDEO,

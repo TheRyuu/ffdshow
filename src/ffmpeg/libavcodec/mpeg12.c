@@ -1570,7 +1570,7 @@ static int mpeg_field_start(MpegEncContext *s){
 
         *s->current_picture_ptr->pan_scan= s1->pan_scan;
 
-        if (USE_FRAME_THREADING(avctx)) ff_report_predecode_done(avctx);
+        if (USE_FRAME_THREADING(avctx)) ff_report_frame_setup_done(avctx);
     }else{ //second field
             int i;
 

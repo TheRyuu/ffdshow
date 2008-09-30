@@ -1465,6 +1465,46 @@ static void h264_luma_dc_dequant_idct_c(DCTELEM *block, int qp, int qmul){
     }
 }
 
+#if 0
+/**
+ * DCT transforms the 16 dc values.
+ * @param qp quantization parameter ??? FIXME
+ */
+static void h264_luma_dc_dct_c(DCTELEM *block/*, int qp*/){
+//    const int qmul= dequant_coeff[qp][0];
+    int i;
+    int temp[16]; //FIXME check if this is a good idea
+    static const int x_offset[4]={0, 1*stride, 4* stride,  5*stride};
+    static const int y_offset[4]={0, 2*stride, 8* stride, 10*stride};
+
+    for(i=0; i<4; i++){
+        const int offset= y_offset[i];
+        const int z0= block[offset+stride*0] + block[offset+stride*4];
+        const int z1= block[offset+stride*0] - block[offset+stride*4];
+        const int z2= block[offset+stride*1] - block[offset+stride*5];
+        const int z3= block[offset+stride*1] + block[offset+stride*5];
+
+        temp[4*i+0]= z0+z3;
+        temp[4*i+1]= z1+z2;
+        temp[4*i+2]= z1-z2;
+        temp[4*i+3]= z0-z3;
+    }
+
+    for(i=0; i<4; i++){
+        const int offset= x_offset[i];
+        const int z0= temp[4*0+i] + temp[4*2+i];
+        const int z1= temp[4*0+i] - temp[4*2+i];
+        const int z2= temp[4*1+i] - temp[4*3+i];
+        const int z3= temp[4*1+i] + temp[4*3+i];
+
+        block[stride*0 +offset]= (z0 + z3)>>1;
+        block[stride*2 +offset]= (z1 + z2)>>1;
+        block[stride*8 +offset]= (z1 - z2)>>1;
+        block[stride*10+offset]= (z0 - z3)>>1;
+    }
+}
+#endif
+
 #undef xStride
 #undef stride
 
@@ -1488,6 +1528,29 @@ static void chroma_dc_dequant_idct_c(DCTELEM *block, int qp, int qmul){
     block[stride*1 + xStride*0]= ((a-c)*qmul) >> 7;
     block[stride*1 + xStride*1]= ((e-b)*qmul) >> 7;
 }
+
+#if 0
+static void chroma_dc_dct_c(DCTELEM *block){
+    const int stride= 16*2;
+    const int xStride= 16;
+    int a,b,c,d,e;
+
+    a= block[stride*0 + xStride*0];
+    b= block[stride*0 + xStride*1];
+    c= block[stride*1 + xStride*0];
+    d= block[stride*1 + xStride*1];
+
+    e= a-b;
+    a= a+b;
+    b= c-d;
+    c= c+d;
+
+    block[stride*0 + xStride*0]= (a+c);
+    block[stride*0 + xStride*1]= (e+b);
+    block[stride*1 + xStride*0]= (a-c);
+    block[stride*1 + xStride*1]= (e-b);
+}
+#endif
 
 /**
  * gets the chroma qp.
@@ -1696,7 +1759,7 @@ static void avail_motion(H264Context *h){
     for(list=1; list>=0; list--){
         for(ref=0; ref<48; ref++){
             if(refs[list][ref] >= 0)
-                ff_await_decode_progress((AVFrame*)&h->ref_list[list][ref], FFMIN(refs[list][ref], pic_height-1));
+                ff_await_frame_progress((AVFrame*)&h->ref_list[list][ref], FFMIN(refs[list][ref], pic_height-1));
         }
     }
 }
@@ -2301,8 +2364,7 @@ static void copy_parameter_set(void **to, void **from, int count, int size)
         else if (from[i] && !to[i]) to[i] = av_malloc(size);
         else if (!from[i]) continue;
 
-        if (to[i] && from[i]) // ffdshow custom code
-            memcpy(to[i], from[i], size);
+        memcpy(to[i], from[i], size);
     }
 }
 
@@ -2429,6 +2491,90 @@ static int frame_start(H264Context *h){
     assert(s->current_picture_ptr->long_ref==0);
 
     return 0;
+}
+
+/**
+  * Run setup operations that must be run after slice header decoding.
+  * This includes finding the next displayed frame.
+  *
+  * @param h h264 master context
+  */
+static void decode_postinit(H264Context *h){
+    MpegEncContext * const s = &h->s;
+    Picture *out = s->current_picture_ptr;
+    Picture *cur = s->current_picture_ptr;
+    int i, pics, cross_idr, out_of_order, out_idx;
+
+    s->current_picture_ptr->qscale_type= FF_QSCALE_TYPE_H264;
+    s->current_picture_ptr->pict_type= s->pict_type;
+
+    // Don't do anything if it's the first field or we've already been called.
+    // FIXME the first field should call ff_report_frame_setup_done() even if it skips the rest
+    if (h->next_output_pic || cur->field_poc[0]==INT_MAX || cur->field_poc[1]==INT_MAX) return;
+
+    cur->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
+    /* Derive top_field_first from field pocs. */
+    cur->top_field_first = cur->field_poc[0] < cur->field_poc[1];
+
+    //FIXME do something with unavailable reference frames
+
+    /* Sort B-frames into display order */
+
+    if(h->sps.bitstream_restriction_flag
+       && s->avctx->has_b_frames < h->sps.num_reorder_frames){
+        s->avctx->has_b_frames = h->sps.num_reorder_frames;
+        s->low_delay = 0;
+    }
+
+    if(   s->avctx->strict_std_compliance >= FF_COMPLIANCE_STRICT
+       && !h->sps.bitstream_restriction_flag){
+        s->avctx->has_b_frames= MAX_DELAYED_PIC_COUNT;
+        s->low_delay= 0;
+    }
+
+    pics = 0;
+    while(h->delayed_pic[pics]) pics++;
+
+    assert(pics <= MAX_DELAYED_PIC_COUNT);
+
+    h->delayed_pic[pics++] = cur;
+    if(cur->reference == 0)
+        cur->reference = DELAYED_PIC_REF;
+
+    out = h->delayed_pic[0];
+    out_idx = 0;
+    for(i=1; h->delayed_pic[i] && h->delayed_pic[i]->poc; i++)
+        if(h->delayed_pic[i]->poc < out->poc){
+            out = h->delayed_pic[i];
+            out_idx = i;
+        }
+    cross_idr = !h->delayed_pic[0]->poc || !!h->delayed_pic[i];
+
+    out_of_order = !cross_idr && out->poc < h->outputed_poc;
+
+    if(h->sps.bitstream_restriction_flag && s->avctx->has_b_frames >= h->sps.num_reorder_frames)
+        { }
+    else if((out_of_order && pics-1 == s->avctx->has_b_frames && s->avctx->has_b_frames < MAX_DELAYED_PIC_COUNT)
+       || (s->low_delay &&
+        ((!cross_idr && out->poc > h->outputed_poc + 2)
+         || cur->pict_type == FF_B_TYPE)))
+    {
+        s->low_delay = 0;
+        s->avctx->has_b_frames++;
+    }
+
+    if(out_of_order || pics > s->avctx->has_b_frames){
+        out->reference &= ~DELAYED_PIC_REF;
+        for(i=out_idx; h->delayed_pic[i]; i++)
+            h->delayed_pic[i] = h->delayed_pic[i+1];
+    }
+    if(!out_of_order && pics > s->avctx->has_b_frames){
+        h->next_output_pic = out;
+    }else{
+        av_log(s->avctx, AV_LOG_DEBUG, "no picture\n");
+    }
+
+    ff_report_frame_setup_done(s->avctx);
 }
 
 static inline void backup_mb_border(H264Context *h, uint8_t *src_y, uint8_t *src_cb, uint8_t *src_cr, int linesize, int uvlinesize, int simple){
@@ -3934,7 +4080,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
             h->prev_frame_num++;
             h->prev_frame_num %= 1<<h->sps.log2_max_frame_num;
             s->current_picture_ptr->frame_num= h->prev_frame_num;
-            ff_report_decode_progress(s->current_picture_ptr, INT_MAX);
+            ff_report_frame_progress((AVFrame*)s->current_picture_ptr, INT_MAX);
             execute_ref_pic_marking(h, NULL, 0);
         }
 
@@ -4173,6 +4319,9 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
 
     h->emu_edge_width= (s->flags&CODEC_FLAG_EMU_EDGE) ? 0 : 16;
     h->emu_edge_height= (FRAME_MBAFF || FIELD_PICTURE) ? 0 : h->emu_edge_width;
+
+    if(!(s->flags2 & CODEC_FLAG2_CHUNKS) && h->slice_num==1)
+        decode_postinit(h);
 
     if(s->avctx->debug&FF_DEBUG_PICT_INFO){
         av_log(h->s.avctx, AV_LOG_DEBUG, "slice:%d %s mb:%d %c pps:%u frame:%d poc:%d/%d ref:%d/%d qp:%d loop:%d:%d:%d weight:%d%s %s\n",
@@ -6758,89 +6907,6 @@ static void filter_mb( H264Context *h, int mb_x, int mb_y, uint8_t *img_y, uint8
 }
 
 /**
-  * Run setup operations that must be run after slice header decoding.
-  * This includes finding the next displayed frame.
-  *
-  * @param h h264 master context
-  */
-static void decode_postinit(H264Context *h){
-    MpegEncContext * const s = &h->s;
-    Picture *out = s->current_picture_ptr;
-    Picture *cur = s->current_picture_ptr;
-    int i, pics, cross_idr, out_of_order, out_idx;
-
-    s->current_picture_ptr->qscale_type= FF_QSCALE_TYPE_H264;
-    s->current_picture_ptr->pict_type= s->pict_type;
-
-    // Don't do anything if it's the first field or we've already been called.
-    if (h->next_output_pic || cur->field_poc[0]==INT_MAX || cur->field_poc[1]==INT_MAX) return;
-
-    cur->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
-    /* Derive top_field_first from field pocs. */
-    cur->top_field_first = cur->field_poc[0] < cur->field_poc[1];
-
-    //FIXME do something with unavailable reference frames
-
-    /* Sort B-frames into display order */
-
-    if(h->sps.bitstream_restriction_flag
-       && s->avctx->has_b_frames < h->sps.num_reorder_frames){
-        s->avctx->has_b_frames = h->sps.num_reorder_frames;
-        s->low_delay = 0;
-    }
-
-    if(   s->avctx->strict_std_compliance >= FF_COMPLIANCE_STRICT
-       && !h->sps.bitstream_restriction_flag){
-        s->avctx->has_b_frames= MAX_DELAYED_PIC_COUNT;
-        s->low_delay= 0;
-    }
-
-    pics = 0;
-    while(h->delayed_pic[pics]) pics++;
-
-    assert(pics <= MAX_DELAYED_PIC_COUNT);
-
-    h->delayed_pic[pics++] = cur;
-    if(cur->reference == 0)
-        cur->reference = DELAYED_PIC_REF;
-
-    out = h->delayed_pic[0];
-    out_idx = 0;
-    for(i=1; h->delayed_pic[i] && h->delayed_pic[i]->poc; i++)
-        if(h->delayed_pic[i]->poc < out->poc){
-            out = h->delayed_pic[i];
-            out_idx = i;
-        }
-    cross_idr = !h->delayed_pic[0]->poc || !!h->delayed_pic[i];
-
-    out_of_order = !cross_idr && out->poc < h->outputed_poc;
-
-    if(h->sps.bitstream_restriction_flag && s->avctx->has_b_frames >= h->sps.num_reorder_frames)
-        { }
-    else if((out_of_order && pics-1 == s->avctx->has_b_frames && s->avctx->has_b_frames < MAX_DELAYED_PIC_COUNT)
-       || (s->low_delay &&
-        ((!cross_idr && out->poc > h->outputed_poc + 2)
-         || cur->pict_type == FF_B_TYPE)))
-    {
-        s->low_delay = 0;
-        s->avctx->has_b_frames++;
-    }
-
-    if(out_of_order || pics > s->avctx->has_b_frames){
-        out->reference &= ~DELAYED_PIC_REF;
-        for(i=out_idx; h->delayed_pic[i]; i++)
-            h->delayed_pic[i] = h->delayed_pic[i+1];
-    }
-    if(!out_of_order && pics > s->avctx->has_b_frames){
-        h->next_output_pic = out;
-    }else{
-        av_log(s->avctx, AV_LOG_DEBUG, "no picture\n");
-    }
-
-    ff_report_predecode_done(s->avctx);
-}
-
-/**
  * Report the last pixel row fully decoded.
  *
  * Lower rows than (last row of last MB - 3) might be changed in deblocking.
@@ -6851,7 +6917,7 @@ static void report_decode_progress(AVCodecContext *avctx, H264Context *h){
 
     if (s->dropable) return;
 
-    ff_report_decode_progress((AVFrame*)s->current_picture_ptr, (s->mb_y - rows) * 16 - 3);
+    ff_report_frame_progress((AVFrame*)s->current_picture_ptr, (s->mb_y - rows) * 16 - 3);
 }
 
 static int decode_slice(struct AVCodecContext *avctx, H264Context *h){
@@ -7523,8 +7589,6 @@ static void execute_decode_slices(H264Context *h, int context_count){
     H264Context *hx;
     int i;
 
-    if(!(s->flags2 & CODEC_FLAG2_CHUNKS)) decode_postinit(h);
-
     if(context_count == 1) {
         decode_slice(avctx, h);
     } else {
@@ -7850,7 +7914,7 @@ static int decode_frame(AVCodecContext *avctx,
         if(s->flags2 & CODEC_FLAG2_CHUNKS) decode_postinit(h);
 
         s->mb_y= 0;
-        ff_report_decode_progress((AVFrame*)s->current_picture_ptr, (16*s->mb_height >> s->first_field) - 1);
+        ff_report_frame_progress((AVFrame*)s->current_picture_ptr, (16*s->mb_height >> s->first_field) - 1);
 
         if(!USE_FRAME_THREADING(avctx)){
             if(!s->dropable) {
@@ -7921,181 +7985,6 @@ static inline void fill_mb_avail(H264Context *h){
 }
 #endif
 
-#ifdef TEST
-#undef printf
-#undef random
-#define COUNT 8000
-#define SIZE (COUNT*40)
-int main(void){
-    int i;
-    uint8_t temp[SIZE];
-    PutBitContext pb;
-    GetBitContext gb;
-//    int int_temp[10000];
-    DSPContext dsp;
-    AVCodecContext avctx;
-
-    dsputil_init(&dsp, &avctx);
-
-    init_put_bits(&pb, temp, SIZE);
-    printf("testing unsigned exp golomb\n");
-    for(i=0; i<COUNT; i++){
-        START_TIMER
-        set_ue_golomb(&pb, i);
-        STOP_TIMER("set_ue_golomb");
-    }
-    flush_put_bits(&pb);
-
-    init_get_bits(&gb, temp, 8*SIZE);
-    for(i=0; i<COUNT; i++){
-        int j, s;
-
-        s= show_bits(&gb, 24);
-
-        START_TIMER
-        j= get_ue_golomb(&gb);
-        if(j != i){
-            printf("mismatch! at %d (%d should be %d) bits:%6X\n", i, j, i, s);
-//            return -1;
-        }
-        STOP_TIMER("get_ue_golomb");
-    }
-
-
-    init_put_bits(&pb, temp, SIZE);
-    printf("testing signed exp golomb\n");
-    for(i=0; i<COUNT; i++){
-        START_TIMER
-        set_se_golomb(&pb, i - COUNT/2);
-        STOP_TIMER("set_se_golomb");
-    }
-    flush_put_bits(&pb);
-
-    init_get_bits(&gb, temp, 8*SIZE);
-    for(i=0; i<COUNT; i++){
-        int j, s;
-
-        s= show_bits(&gb, 24);
-
-        START_TIMER
-        j= get_se_golomb(&gb);
-        if(j != i - COUNT/2){
-            printf("mismatch! at %d (%d should be %d) bits:%6X\n", i, j, i, s);
-//            return -1;
-        }
-        STOP_TIMER("get_se_golomb");
-    }
-
-#if 0
-    printf("testing 4x4 (I)DCT\n");
-
-    DCTELEM block[16];
-    uint8_t src[16], ref[16];
-    uint64_t error= 0, max_error=0;
-
-    for(i=0; i<COUNT; i++){
-        int j;
-//        printf("%d %d %d\n", r1, r2, (r2-r1)*16);
-        for(j=0; j<16; j++){
-            ref[j]= random()%255;
-            src[j]= random()%255;
-        }
-
-        h264_diff_dct_c(block, src, ref, 4);
-
-        //normalize
-        for(j=0; j<16; j++){
-//            printf("%d ", block[j]);
-            block[j]= block[j]*4;
-            if(j&1) block[j]= (block[j]*4 + 2)/5;
-            if(j&4) block[j]= (block[j]*4 + 2)/5;
-        }
-//        printf("\n");
-
-        s->dsp.h264_idct_add(ref, block, 4);
-/*        for(j=0; j<16; j++){
-            printf("%d ", ref[j]);
-        }
-        printf("\n");*/
-
-        for(j=0; j<16; j++){
-            int diff= FFABS(src[j] - ref[j]);
-
-            error+= diff*diff;
-            max_error= FFMAX(max_error, diff);
-        }
-    }
-    printf("error=%f max_error=%d\n", ((float)error)/COUNT/16, (int)max_error );
-    printf("testing quantizer\n");
-    for(qp=0; qp<52; qp++){
-        for(i=0; i<16; i++)
-            src1_block[i]= src2_block[i]= random()%255;
-
-    }
-    printf("Testing NAL layer\n");
-
-    uint8_t bitstream[COUNT];
-    uint8_t nal[COUNT*2];
-    H264Context h;
-    memset(&h, 0, sizeof(H264Context));
-
-    for(i=0; i<COUNT; i++){
-        int zeros= i;
-        int nal_length;
-        int consumed;
-        int out_length;
-        uint8_t *out;
-        int j;
-
-        for(j=0; j<COUNT; j++){
-            bitstream[j]= (random() % 255) + 1;
-        }
-
-        for(j=0; j<zeros; j++){
-            int pos= random() % COUNT;
-            while(bitstream[pos] == 0){
-                pos++;
-                pos %= COUNT;
-            }
-            bitstream[pos]=0;
-        }
-
-        START_TIMER
-
-        nal_length= encode_nal(&h, nal, bitstream, COUNT, COUNT*2);
-        if(nal_length<0){
-            printf("encoding failed\n");
-            return -1;
-        }
-
-        out= decode_nal(&h, nal, &out_length, &consumed, nal_length);
-
-        STOP_TIMER("NAL")
-
-        if(out_length != COUNT){
-            printf("incorrect length %d %d\n", out_length, COUNT);
-            return -1;
-        }
-
-        if(consumed != nal_length){
-            printf("incorrect consumed length %d %d\n", nal_length, consumed);
-            return -1;
-        }
-
-        if(memcmp(bitstream, out, COUNT)){
-            printf("mismatch\n");
-            return -1;
-        }
-    }
-#endif
-
-    printf("Testing RBSP\n");
-
-
-    return 0;
-}
-#endif /* TEST */
-
 
 static av_cold int decode_end(AVCodecContext *avctx)
 {
@@ -8129,7 +8018,7 @@ AVCodec h264_decoder = {
     /*.pix_fmts = */NULL,
     /*.long_name = */NULL_IF_CONFIG_SMALL("H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10"),
     /*.supported_samplerates = */NULL,
-    /*sample_fmts = */NULL,
+    /*.sample_fmts = */NULL,
     /*.init_copy = */NULL,
     /*.update_context = */ONLY_IF_THREADS_ENABLED(decode_update_context)
 };

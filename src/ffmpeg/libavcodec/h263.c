@@ -3205,7 +3205,7 @@ static int mpeg4_decode_video_packet_header(MpegEncContext *s)
         int mb_x = 0, mb_y = 0;
 
         while(s->next_picture.mbskip_table[ s->mb_index2xy[ mb_num ] ]) {
-            if (!mb_x) ff_await_decode_progress((AVFrame*)s->next_picture_ptr, mb_y++);
+            if (!mb_x) ff_await_frame_progress((AVFrame*)s->next_picture_ptr, mb_y++);
             mb_num++;
             if (++mb_x == s->mb_width) mb_x = 0;
         }
@@ -4300,7 +4300,7 @@ int ff_mpeg4_decode_mb(MpegEncContext *s,
                 s->last_mv[i][1][1]= 0;
             }
 
-            ff_await_decode_progress((AVFrame*)s->next_picture_ptr, s->mb_y);
+            ff_await_frame_progress((AVFrame*)s->next_picture_ptr, s->mb_y);
         }
 
         /* if we skipped it in the future P Frame than skip it now too */
@@ -4482,7 +4482,7 @@ end:
             const int delta= s->mb_x + 1 == s->mb_width ? 2 : 1;
 
             if(s->pict_type==FF_B_TYPE){
-                ff_await_decode_progress((AVFrame*)s->next_picture_ptr,
+                ff_await_frame_progress((AVFrame*)s->next_picture_ptr,
                                          (s->mb_x + delta >= s->mb_width) ? FFMIN(s->mb_y+1, s->mb_height-1) : s->mb_y);
             }
 

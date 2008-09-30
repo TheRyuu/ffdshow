@@ -37,7 +37,7 @@
 #include "libavutil/avutil.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 51
-#define LIBAVCODEC_VERSION_MINOR 67
+#define LIBAVCODEC_VERSION_MINOR 65
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -499,14 +499,14 @@ typedef struct AVPanScan{
     int8_t *ref_index[2];\
 \
     /**\
-     * context owning the internal buffers\
+     * the AVCodecContext which ff_get_buffer was last called on\
      * - encoding: Set by libavcodec.\
      * - decoding: Set by libavcodec.\
      */\
-    struct AVCodecContext *avctx;\
+    struct AVCodecContext *owner;\
 \
     /**\
-     * Can be used by multithreading to track frames\
+     * used by multithreading to store frame-specific info\
      * - encoding: Set by libavcodec.\
      * - decoding: Set by libavcodec.\
      */\
@@ -906,7 +906,8 @@ typedef struct AVCodecContext {
      * If pic.reference is set then the frame will be read later by libavcodec.
      * avcodec_align_dimensions() should be used to find the required width and
      * height, as they normally need to be rounded up to the next multiple of 16.
-     * May be called by different threads, but not more than one at the same time.
+     * May be called by different threads if frame threading is enabled, but not
+     * by more than one at the same time.
      * - encoding: unused
      * - decoding: Set by libavcodec., user can override.
      */
@@ -915,8 +916,9 @@ typedef struct AVCodecContext {
     /**
      * Called to release buffers which were allocated with get_buffer.
      * A released buffer can be reused in get_buffer().
-     * pic.data[*] must be set to NULL.
-     * May be called by different threads, but not more than one at the same time.
+     * pic.data[*] must be set to NULL. May be called by different threads
+     * if frame threading is enabled, but not more than one at the same time.
+     *
      * - encoding: unused
      * - decoding: Set by libavcodec., user can override.
      */
@@ -1988,14 +1990,21 @@ typedef struct AVCodecContext {
     int is_copy;
 
     /**
-     * Which multithreading method to use, for codecs that support more than one.
+     * Which multithreading methods to use, for codecs that support more than one.
      * - encoding: Set by user, otherwise the default is used.
      * - decoding: Set by user, otherwise the default is used.
      */
     int thread_algorithm;
-#define FF_THREAD_AUTO       0 //< Use the default. Will be changed by libavcodec after init.
 #define FF_THREAD_MULTIFRAME 1 //< Decode more than one frame at once
 #define FF_THREAD_MULTISLICE 2 //< Decode more than one part of a single frame at once
+#define FF_THREAD_DEFAULT    3 //< Use both if possible.
+
+    /**
+     * Which multithreading methods are actually active at the moment.
+     * - encoding: Set by libavcodec.
+     * - decoding: Set by libavcodec.
+     */
+    int active_thread_algorithm;
 } AVCodecContext;
 
 /**
@@ -2039,11 +2048,23 @@ typedef struct AVCodec {
     const enum SampleFormat *sample_fmts;   ///< array of supported sample formats, or NULL if unknown, array is terminated by -1
 
     /**
-     * @defgroup multithreading Multithreading support functions.
+     * @defgroup framethreading Frame threading support functions.
      * @{
      */
-    int (*init_copy)(AVCodecContext *);     ///< called after copying initially, re-allocate all writable tables
-    int (*update_context)(AVCodecContext *, AVCodecContext *from); ///< copy everything needed from the last thread before every new frame
+    /**
+     * If the codec allocates writable tables in init(), define init_copy() to re-allocate
+     * them in the copied contexts. Before calling it, priv_data will be set to a copy of
+     * the original.
+     */
+    int (*init_copy)(AVCodecContext *);
+    /**
+     * Copy all necessary context variables from the last thread before starting the next one.
+     * If the codec doesn't define this, the next thread will start automatically; otherwise,
+     * the codec must call ff_report_frame_setup_done(). Do not assume anything about the
+     * contents of priv data except that it has been copied from the original some time after
+     * codec init. Will not be called if frame threading is disabled.
+     */
+    int (*update_context)(AVCodecContext *, AVCodecContext *from);
     /** @} */
 } AVCodec;
 
