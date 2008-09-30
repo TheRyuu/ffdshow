@@ -368,7 +368,7 @@ char* TstreamMem::fgets0(char *buf,int len) const
  int c=0;
  char *cs=buf;
  bool wasr=false;
- while (--len>0 && (c=getc())!=EOF)
+ while (len-->0 && (c=getc())!=EOF)
   {
    if (c=='\r') {if (crln) *cs++=(char)c;wasr=true;continue;}
    if (c=='\n') {if (utod &&!wasr) *cs++='\r';if (crln) *cs++=(char)c;break;}
