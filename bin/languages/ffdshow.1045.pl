@@ -1,324 +1,393 @@
 Polski
+; Zgodne z ffdshow tryouts revision 2099  Sep  3 2008 17:58:31 (icl 10, x86, unicode)
+; Lokalizacja:
+; Piotr Sokó³, VirtualMan_PL, Radzio
 
-============================================
-Translated by Virtual_ManPL (Artur Osiñski)
-e-mail: Virtual_ManPL@wp.pl
-Gadu-Gadu: 6361956
-Jabber: Virtual_ManPL@maszyna.pl
-Latest translated ffdshow : 1805
-Revision: 7
-============================================
-
-[115]
-0=Kodeki
-1837=W³¹cz w WMP11
-
-[182]
-1162=Resetuj
-1163=Pomoc
-1723=Resetuj u³o¿enie
-
-[192]
-2=Anuluj
-
-[101]
-2=Anuluj
-3=Zastosuj
-1835=Eksportuj ustawienia...
-1836=Wspomó¿
+[Font]
+horizontalScale9x=125
+horizontalScaleNT=125
 
 [-1]
-Decoder=Dekoder
-Details=Szczegó³y
-disabled=Wy³¹czony
-High accuracy mode is enabled for tremor.=Tryb wysokiej dok³adnoœci jest w³¹czony dla Termor.
-enabled=W³¹czony
-FLAC (Free Lossless Audio Codec);To play .flac files you also need a source filter.=Free Lossless Audio Codec; By odtwarzaæ pliki .flac potrzebujesz równie¿ filtra Ÿród³owego
-TTA (Lossless Audio Codec);To play .tta files you also need a source filter.=TTA (Lossless Audio Codec); By odtwarzaæ pliki .tta potrzebujesz równie¿ filtra Ÿród³owego
-Other ADPCM=Inne ADPCM
-all supported=Wszystkie obs³ugiwane
-Adaptive Multi-Rate in 3gp files (AMR)=Adaptive Multi-Rate w plikach 3gp
-not WMA9 pro, voice or lossless=Nie obs³uguje WMA9 pro, voice oraz lossless
-AVIS (AviSynth AVI files)=AVIS (pliki AviSynth AVI)
-Uncompressed=Nieskompresowany
-List of applications for which ffdshow should not load, separated by semicolons=Lista aplikacji dla których ffdshow nie ³aduje siê, oddzielone dwukropkiem
-List of applications which are compatible with ffdshow, separated by semicolons.=Lista aplikacji które s¹ kompatybilne z ffdshow, oddzielone dwukropkiem
-very high=Najwy¿szy
-ffdshow default=Domyœlnie
-preferred=Preferowany
-normal=Normalny
-unlikely=Niski
-do not use=Najni¿szy
-no limitations=W³¹czone - brak limitów
-only one - check previous filter only=Tylko jedno-sprawdŸ tylko poprzednie filtry
-only one - check all previous filters=Tylko jedno-sprawdŸ wszystkie poprzednie filtry
-only one - check all filters in graph=Tylko jedno-sprawdŸ wszystkie filtry na wykresie
-none - disabled=Wy³¹czone
-ATSC A-52 stream decoder=Dekoder strumienia ATSC A-52
-DTS Coherent Acoustics stream decoder=Dekoder strumienia DTS Coherent Acoustics
-Windows Media Audio compatible decoder=Kompatybilny dekoder Windows Media Audio
-DSP Group TrueSpeech compatible decoder=Kompatybilny dekoder DSP Group TrueSpeech
-QDM2 compatible decoder (incomplete)=Kompatybilny dekoder QDM2
-IMC compatible decoder=Kompatybilny dekoder IMC
-ATRAC3 compatible decoder=Kompatybilny dekoder ATRAC3
-Source file=ród³o pliku
-Input description=Parametry wejœciowe
-Output description=Parametry wyjœciowe
-Output speakers=Tryb g³oœników
-Current input bitrate=Aktualna wejœciowa szybkoœæ przesy³ania danych
-Host application=G³ówna aplikacja
-Source file name=Nazwa pliku Ÿród³owego
-Sample frequency=Czêstotliwoœæ próbki
-Number of channels=Iloœæ kana³ów
-Sample format=Format próbki
-CPU load=Obci¹¿enie procesora
-System time=Czas systemowy
-Movie length=D³ugoœæ filmu
-Encoder info=Informacja kodeka
-Short configuration description=Krótki opis konfiguracji
-File where to write statistics=Plik gdzie zapisuj¹ siê statystyki
-ffdshow audio decoder configuration=Konfiguracja dekodera dŸwiêku ffdshow
-Thank you!=Dziêkujê Tobie!
-Set all stable formats to libavcodec=Ustaw wszystkie stabilne formaty na libavcodec
-Set all supported formats to Xvid=Ustaw wszystkie obs³ugiwane formaty na Xvid
-Maximize SPDIF compatibility=Kompatybilnoœæ S/PDIF
-Dynamic range compression=Dynamiczny zakres kompresji
-Check for DTS in WAV=SprawdŸ DTS w WAV
-Use SPDIF when AC3 output set=U¿yj S/PDIF gdy jest ustawiony AC3
-Preset name=Nazwa
-left=W lewo
-top=W górê
+ffdshow video decoder configuration=Konfiguracja dekodera video ffdshow
+ffdshow audio decoder configuration=Konfiguracja dekodera audio ffdshow
+ffdshow video encoder configuration=Konfiguracja kodera video ffdshow
+ffdshow video processor configuration=Konfiguracja przetwarzania video ffdshow
+;
+ffdshow audio decoder=Dekoder audio ffdshow
+ffdshow video decoder=Dekoder video ffdshow
+ffdshow video encoder=Koder video ffdshow
+;
+off=wy³.
+No=Nie
 Reset=Resetuj
 Edit=Edytuj
+Edit trackbar value=Edytuj wartoœæ suwaka
+Enter value in range from %i to %i=Wpisz wartoœæ z zakresu od %i do %i 
+;
+Thank you!=Dziêkujê!
+Export ffdshow settings=Eksportuj ustawienia
+Settings have been succefully exported=Ustawienia zosta³y pomyœlnie wyeksportowane
+left=lewo
+center=œrodek
+right=prawo
+top=góra
+bottom=dó³
+;
+; Ustawienia DirectShow
+do not use=nie u¿ywaj
+unlikely=niski
+normal=normalny
+preferred=preferowany
+ffdshow default=domyœlnie
+very high=bardzo wysoki
+;
+no limitations=Nie limituj
+only one - check previous filter only=Tylko jedno - sprawdŸ tylko poprzedni filtr
+only one - check all previous filters=Tylko jedno - sprawdŸ wszystkie poprzednie filtry
+only one - check all filters in graph=Tylko jedno - sprawdŸ wszystkie filtry grafu
+none - disabled=Brak - wy³¹czone
+;
+List of applications for which ffdshow should not load, separated by semicolons=Lista aplikacji, które nie powinny u¿ywaæ ffdshow - rozdzielona œrednikami.
+List of applications which are compatible with ffdshow, separated by semicolons.=Lista aplikacji kompatybilnych z ffdshow - rozdzielona œrednikami.
+List the names of executable files which are incompatible with ffdshow or which you don't want to use ffdshow, one for each line.=Lista nazw plików wykonywalnych aplikacji niekompatybilnych z ffdshow, b¹dŸ których nie chcesz by u¿ywa³y ffdshow - jedna w ka¿dym wierszu.
+Add incompatible executable file=Wska¿ niekompatybilny plik wykonywalny
+Add compatible executable file=Wska¿ kompatybilny plik wykonywalny
+Load default settings=Przywróæ ustawienia domyœlne
+Are you sure?=Czy jesteœ pewny?
+;
+ffdshow will behave as if it were not installed.=ffdshow zachowa siê tak, jakby nie by³ zainstalowany.
+ffdshow will behave as if it were not installed.\r\nThe application will be added to "DirectShow control"->"Don't use ffdshow in".=ffdshow zachowa siê tak jakby nie by³ zainstalowany.\r\nAplikacja zostanie dodana do listy "Ustawienia DirectShow"->"Nie u¿ywaj ffdshow w:".
+ffdshow will be used if it is set to decode a format.=ffdshow zostanie u¿yty, o ile wczeœniej zosta³ skonfigurowany tak by dekodowaæ dany format.
+ffdshow will be used if it is set to decode a format.\r\nThe application will be added to "DirectShow control"->"Use ffdshow only in".=ffdshow zostanie u¿yty, o ile wczeœniej zosta³ skonfigurowany tak by dekodowaæ dany format. Aplikacja zostanie dodana do listy "Ustawienia DirectShow"->"U¿ywaj ffdshow w:".
+Thank you. We are gathering the list of compatible applications. Please send us the exe file name of this application and help us improving ffdshow.=Dziêkujemy. Gromadzimy listê kompatybilnych aplikacji. Prosimy - wyœlij nam nazwê pliku exe tej aplikacji i pomó¿ nam ulepszaæ ffdshow.
+ffdshow won't be used in unknown applications.\r\nTo enable this dialog again, check "DirectShow control"->"Show dialog when an unknown application tries to load ffdshow".=ffdshow nie bêdzie u¿ywany w nieznanych aplikacjach.\r\nBy wyœwietlaæ to okno ponownie, zaznacz "Ustawienia DirectShow"->"Wyœwietlaj dialog kiedy nieznana aplikacja próbuje za³adowaæ ffdshow".
+;
+; OSD
 New=Nowy
 Save as...=Zapisz jako...
+Save preset to...=Zapisz profil do...
+New preset...=Nowy profil
 Rename preset...=Zmieñ nazwê...
 Delete preset=Usuñ
-Show on startup=Pokazuj na starcie
+Show on startup=Poka¿ przy starcie
+Don't display, only save data to file=Nie pokazuj, jedynie zapisz dane do pliku
+File where to write statistics=Zapisz plik statystyk
+New preset name=Nazwa profilu
+Enter new preset name=Podaj nazwê profilu
+Do you really want to delete current OSD preset?=Czy na pewno chcesz usun¹æ bie¿¹cy profil OSD?
+Startup OSD preset=Profil OSD przy starcie
+Number of frames to show preset=Liczba klatek podczas trwania których profil OSD bêdzie aktywny
+;
+; Czcionka
+Default=Domyœlne
+Spacing - distance between characters.=Odstêpy - odleg³oœæ pomiêdzy znakami.
+Weight - most fonts supports only small subset of listed weights.=Styl czcionki - wiêkszoœæ czcionek wspiera tylko niewielk¹ grupê z podanego zestawu stylów.
+It is fast, but spaces between characters are not precise.=Dzia³a szybko, ale odstêpy miêdzy znakami nie s¹ precyzyjne.
+Works when the video has non-square pixel aspect ratio.=Dzia³a, gdy obraz ma nie-kwadratowe proporcje boków punktu.
+;
+thin=W¹ski
+extralight=Przewê¿ony
+light=£agodny
+normal=Normalny
+medium=Œredni
+semibold=Pó³wyt³uszczony
+bold=Wyt³uszczony
+extrabold=Ekstra wyt³uszczony
+heavy=Intensywny
+;
+Glowing shadow=Cieñ promienisty
+Gradient shadow=Cieñ gradientowy
+Classic shadow=Cieñ klasyczny
+Disabled=Wy³¹czony
+;
+; Ikony, œcie¿ki i konfiguracja
+Select ffdshow instalation directory=Wska¿ folder instalacji ffdshow
+Select directory with installed DScaler=Wska¿ folder instalacji DScaler
+;
+; Profile ustawieñ
 From default=Z domyœlnego
 From selected=Z zaznaczonego
 From file...=Z pliku...
-Load ffdshow preset=Za³aduj aktualne ffdshow
+;
+Load ffdshow preset=Otwórz profil ffdshow
+Save ffdshow preset=Zapisz profil ffdshow
 Rename=Zmieñ nazwê
 Insert file name=Wstaw nazwê pliku
-Insert exe file name=Wstaw nazwê pliku exe
-Preset '%s' will be autoloaded ...=Aktualne '%s' zostanie automatycznie za³adowane...
-on movie file name match with preset name=dopasowanie nazwy filmu z aktualn¹ nazw¹
-on movie file name match (with wildcards)=dopasowanie wymiaru filmu (z dzik¹ kart¹)
-on application exe file name match=dopasowanie nazwy pliku exe
-on volume name match=dopasowanie nazwy
-Names of DirectShow filters, wildcard allowed=Nazwy filtrów DirectShow, dzika karta dozwolona
-on number of channels match=dopasowanie iloœci kana³ów
-on sampling frequency match=dopasowanie czêstotliwoœci próbki
-on volume serial match=dopasowanie kolejnego wolumenu
-on decoder match=dopasowanie dekodera
-on a DirectShow filter presence=w czasie obecnoœci filtrów DirectShow
-Preset autoload condition help=Aktualne warunki automatycznego za³adowania pomocy
-none=Wy³¹czona
-light=Ma³a
-medium=Œrednia
-heavy=Du¿a
-mute=Wycisz
-solo=Solo
-Channel=Kana³
-File=Plik
-front left=Przedni lewy
-front right=Przedni prawy
-front center=Przedni centralny
-back left=Tylni lewy
-back right=Tylni prawy
-invalid=nieprawid³owy
-Winamp2 application directory, not plugin directory.=Katalog aplikacji WinAmp 2, a nie katalog wtyczek.
-Select Winamp 2 directory (not the plugins directory!)=Wybierz katalog WinAmp 2 (nie katalog z wtyczkami!)
-lowpass=Dolnoprzepustowy
-highpass=Górnoprzepustowy
-bandpass=Œrodkowoprzepustowy
-bandstop=Œrodkowozaporowy
-Select impulse file=Wybierz plik z impulsami
-higher than=wiêksze od
-lower than=mniejsze ni¿
-libavcodec normal quality=libavcodec najni¿sza jakoœæ
-libavcodec high quality=libavcodec œrednia jakoœæ
-libavcodec highest quality=libavcodec najwy¿sza jakoœæ
-libsamplerate sinc high quality=libsamplerate sinc najwy¿sza jakoœæ
-libsamplerate sinc medium quality=libsamplerate sinc œrednia jakoœæ
-libsamplerate sinc fastest=libsamplerate sinc najni¿sza jakoœæ
-back center=Tylni centralny
-same as input=Identyczny jak wejœciowy
-headphone virtual spatialization=Wirtualne przestrzenne s³uchawki
+Insert exe file name=Wstaw nazwê aplikacji
+Removing preset=Usuwanie profilu
+Do you really want to remove selected preset?=Czy na pewno chcesz usun¹æ zaznaczony profil?
+Preset name=Nazwa profilu
+;
+; O programie
 Library=Biblioteka
 Version=Wersja
-"not needed": no custom channel mapping="nie potrzebny": bez w³asnego mapowania kana³ów
-Useful for directly storing encoded ac3 to a file in graphedt with File Writer filter=Potrzebny do bezpoœredniego gromadzenia kodowanego AC3 dla pliku w GraphEdit z filtrem File Writer
-any filter=Ka¿dym filtrem
-ffdshow audio decoder=ffdshow dekoder dŸwiêku
-H264, X264, VSSH (incomplete), DAVC, PAVC, AVC1=H264, X264, VSSH, DAVC, PAVC, AVC1
-Other MPEG4=Inne MPEG4
-ffdshow and ffvfw internal FOURCCs=wewnêtrzny FOURCC ffdshow i ffvfw
-H263, L263, M263, U263, X263, S263 (in 3gp files)=H263, L263, M263, U263, X263, S263 (w plikach 3gp)
-Supported FOURCCs/remarks=Obs³ugiwane FOURCC
-ffdshow video decoder configuration=Konfiguracja dekodera obrazu ffdshow
+;
+; Konfiguracja dekodera video
+;   Kodeki
+Format=Format
+Decoder=Dekoder
+Details=Szczegó³y
+Supported FOURCCs/remarks=Obs³ugiwane kody FOURCC / uwagi
+;
+Set all stable formats to libavcodec=Ustaw wszystkie stabilne formaty na libavcodec
+Set all supported formats to Xvid=Ustaw wszystkie zgodne formaty na Xvid
+;
+enabled=W³¹czony
+disabled=Wy³¹czony
+all supported=Wszystkie
 all YUV=Wszystkie YUV
 all RGB=Wszystkie RGB
-8-bit palletized=8 bitowa paleta
-Enable in Vista WMP11=W³¹cz w WMP11 w Vista
-use speedup tricks=W³¹cz optymalizacjê
-DVD decoding (not working yet)=dekodowanie DVD
-Internal postprocessing=Wewnêtrzne przetwarzanie
-skip deblocking when safe=Pomiñ usuwanie bloków
-skip deblocking always=Zawsze pomiñ usuwanie bloków
-Input size and aspect ratio=Wielkoœæ wejœciowa i proporcja obrazu
-Input FOURCC=Wejœciowe FOURCC
-Movie FPS=Iloœæ klatek na sekundê
-Input bitrate=Wejœciowa szybkoœæ przesy³ania danych
-Output colorspace=Wyjœciowa paleta kolorów
-Current frame=Aktualna klatka
-MD5 sum=Suma MD5
-Input aspect ratio=Wejœciowa proporcja
-Output aspect ratio=Wyjœciowa proporcja
-Frame timestamps=Czas pocz¹tkowy i koñcowy klatki
-Frame duration=Czas trwania klatki
-Decoder FPS=Dekodowana szybkoœæ klatek na sekundê
-Queued samples=Oczekuj¹ce próbki
-Video delay=OpóŸnienie obrazu
-Time on ffdshow=Czas w ffdshow
-AviSynth info=Informacja AviSynth
-Accurate deblocking=Dok³adne usuwanie bloków
-Frame type=Typ klatki
-Subtitles delay=OpóŸnienie napisów
-Coded frame size=Wielkoœæ aktualnej klatki
-Input colorspace=Wejœciowa paleta kolorów
-Input size=Wejœciowa wielkoœæ obrazu
-Output size=Wyjœciowa wielkoœæ obrazu
-Frame mean quantizer=Kwantyzator aktualnej klatki
-Current playing time=Aktualny czas odtwarzania
-Remaining time=Pozosta³y czas do koñca
-GMC warp points=Iloœæ wektorów u¿ytych w globalnej kompensacji ruchu
-Default=Domyœlny
-Chinese=Chiñski
-Hebrew=Hebrajski
-Arabic=Arabski
-Greek=Grecki
-Turkish=Turecki
-Vietnamese=Wietnamski
-Thai=Tajski
-Easteurope=Wschodnioeuropejski
-Cyrillic=Cyrylica
-Baltic=Ba³tycki
-thin=Cieñka
-extralight=Ekstra ma³a
-semibold=Pó³wyt³uszczona
-bold=Wyt³uszczona
-extrabold=Ekstra wyt³uszczona
-Jitter=Szybkozmienna fluktuacja fazy
-3/0 - 3 front=3/0 - 3 przednie kana³y
-3/2 - 5 channels=3/2 - 5 kana³ów
-Select Winamp preset file=Wybierz plik z ustawieniami WinAmp
-MPEG1 codec=MPEG1
-MPEG2 codec=MPEG2
+8-bit palletized=8-bitowe
+;
+H264, X264, VSSH (incomplete), DAVC, PAVC, AVC1=H264, X264, VSSH (niekompletne), DAVC, PAVC, AVC1
+Other MPEG4=Inne MPEG4
+ffdshow and ffvfw internal FOURCCs=natywne FOURCC ffdshow i ffvfw
+H263, L263, M263, U263, X263, S263 (in 3gp files)=H263, L263, M263, U263, X263, S263 (w plikach 3gp)
+MPEG1 codec=kodek MPEG1
+MPEG2 codec=kodek MPEG2
 MPEG in AVI=MPEG w AVI
-Windows Media Video 9 Simple & Main Profiles (WMV3)=Windows Media Video 9 Profile Simple & Main (WMV3)
-Windows Media Video 9 Advanced Profile (WVC1)=Windows Media Video 9 Profil Advanced (WVC1)
+Other MPEG2=Inne MPEG2
 Huffyuv codec for libavcodec (HFYU, FFVH)=Huffyuv dla libavcodec (HFYU, FFVH)
 Other MJPEG=Inne MJPEG
-FFV1 codec for libavcodec (FFV1)=FFV1 dla libavcodec (FFV1)
 Other DV=Inne DV
-Chinese AVS video (AVS1-P2, JiZhun profile)=Chinese AVS video (AVS1-P2, profil JiZhun)
-Real Video (RV10, RV20, incomplete)=Real Video (RV10, RV20)
-Doesn't support 24-bit compression.=Nie obs³uguje kompresji 24 bitowej.
-Glowing shadow=Promienisty
-Gradient shadow=Gradientowy
-Classic shadow=Klasyczny
-Disabled=Wy³¹czony
-or=lub
-and=i
-on FOURCC match=dopasownie FOURCC
-on FOURCC from previous filter match=dopasownie FOURCC z poprzedniego filtra
-Useful when FFDShow is in raw mode, the compressed format (if any) is given by the previous filter in the chain.=U¿yteczne gdy ffdshow jest w trybie raw, skompresowany format (jeœli jest) jest u¿yty przez poprzedni filter w szeregu.
-on pixel aspect ratio match=dopasownie proporcji pikseli
-on picture aspect ratio match=dopasownie proporcji obrazu
-on frame rate match=dopasownie tempa klatek
-Action=Akcja
-Key=Klawisz
-Activation key 1=Klawisz aktywacji 1
-Activation key 2=Klawisz aktywacji 2
-Second function=Druga funkcja
-Seek forward=Szukaj w przód
-Weight - most fonts supports only small subset of listed weights.=Wielkoœæ- wiêkszoœæ czcionek obs³uguje tylko ma³e wielkoœci z listy wielkoœci.
-Spacing - distance between characters.=Odstêp - odleg³oœæ miedzy czcionk¹.
-Works when the video has non-square pixel aspect ratio.=Dzia³a kiedy obraz ma nie kwadratowe piksele wspó³czynnika.
-right arrow=Strza³ka w prawo
-Seek backward=Szukaj w ty³
-left arrow=Strza³ka w lewo
-Toggle OSD=Prze³¹cznik OSD
-Toggle visualizations=Prze³¹cznik wizualizacji
-Toggle crop/zoom=Prze³¹cznik kadrowania
-Toggle deinterlace=Prze³¹cznik przeplotu
-Toggle levels=Prze³¹cznik leweli
-Toggle noise=Prze³¹cznik szumu
-Toggle picture properties=Prze³¹cznik w³aœciwoœci
-Toggle postprocessing=Prze³¹cznik przetwarzania
-Toggle blur=Prze³¹cznik rozmywania
-Toggle resize=Prze³¹cznik rozmiaru
-Toggle subtitles=Prze³¹cznik napisów
-Toggle sharpen=Prze³¹cznik wyostrzania
-Toggle flip=Prze³¹cznik odbicia symetrycznego
-Toggle avisynth=Prze³¹cznik AviSynth
-closest=Autowybór
-center=Œrodek
-right=W prawo
-blend=Mieszania
-darken=Pociemniania
-lighten=Rozjaœniania
-add=Dodawania
-softlight=Pojaœniania
-exclusion=Wykluczania
-auto=Automatyczna
-none (fastest, most ugly)=Brak
-approximate=Przybli¿ona
-full (slowest)=Pe³na
-bilinear (fast and not too bad)=Dwuliniowa
-swscaler gaussian=Gauss'owski swscaler
+FFV1 codec for libavcodec (FFV1)=FFV1 dla libavcodec (FFV1)
+Real Video (RV10, RV20, incomplete)=Real Video (RV10, RV20, niekompletne)
+Doesn't support 24-bit compression.=Nie obs³uguje 24-bitowej kompresji.
+AVIS (AviSynth AVI files)=AVIS (pliki AVI AviSynth)
+Raw video=Nieskompresowany
+;
+skip deblocking when safe=Pomiñ deblocking gdy bezpiecznie
+skip deblocking always=Zawsze pomijaj deblocking
+Internal postprocessing=Natywne przetwarzanie
+use speedup tricks=Przyspiesz
+DVD decoding=Dekodowanie DVD
+discard telecine=Ignoruj telecine
+Enable in WMP11=W³¹cz w WMP11
+;
 all integer=Wszystkie sta³oprzecinkowe
 all float=Wszystkie zmiennoprzecinkowe
-8-bit integer=8 bitowy sta³oprzecinkowy
-16-bit integer=16 bitowy sta³oprzecinkowy
-24-bit integer=24 bitowy sta³oprzecinkowy
-32-bit integer=32 bitowy sta³oprzecinkowy
-32-bit float=32 bitowy zmiennoprzecinkowy
-64-bit float=64 bitowy zmiennoprzecinkowy
-box=Box
-triangle=Triangle
-hamming=Hamming
-hanning=Hanning
-blackman=Blackman
-flattop=Flattop
-kaiser=Kaiser
-IDCT(libavcodec)=Odwrotnoœæ dyskretnej kosinusowej transformaty (libavcodec)
+8-bit integer=8 bit sta³oprzecinkowy
+16-bit integer=16 bit sta³oprzecinkowy
+24-bit integer=24 bit sta³oprzecinkowy
+32-bit integer=32 bit sta³oprzecinkowy
+32-bit float=32 bit zmiennoprzecinkowy
+64-bit float=64 bit zmiennoprzecinkowy
+;
+;   Informacje i CPU & OSD
+Input description=Szczegó³y strumienia wejœcia
+Output description=Szczegó³y strumienia wyjœcia
+MD5 sum=Suma kontrolna MD5
+Input aspect ratio=Proporcje strumienia wejœcia
+Output aspect ratio=Proporcje strumienia wyjœcia
+Input size and aspect ratio=Rozmiar i proporcje strumienia wejœcia
+Frame timestamps=Znaczniki czasu klatki
+Active preset name=Nazwa bie¿¹cego profilu
+Frame duration=Czas trwania klatki
+Host application=Aplikacja
+Source file name=Nazwa pliku
+Current frame=Bie¿¹ca klatka
+Decoder FPS=Klatek/s dekodera
+Queued samples=Kolejkowanie próbek
+Video delay=OpóŸnienie strumienia video
+Time on ffdshow=Czas ffdshow
+AviSynth info=Informacja AviSynth
+Accurate deblocking=Precyzyjny deblocking
+Frame type=Typ klatki
+Subtitles delay=OpóŸnienie napisów
+Coded frame size=Rozmiar kodowanej klatki
+Input colorspace=Przestrzeñ kolorów wejœcia
+Input size=Rozmiar klatki wejœcia
+Output size=Rozmiar klatki wyjœcia
+CPU load=U¿ycie procesora
+System time=Czas systemowy
+Frame mean quantizer=Kwantyzator aktualnej klatki
+Current playing time=Czas odtwarzania
+Remaining time=Pozosta³y czas odtwarzania
+Movie length=Czas trwania filmu
+Input bitrate=Bitrate strumienia wejœcia
+Encoder info=Informacja kodera
+Short configuration description=Krótki opis konfiguracji
+GMC warp points=Iloœæ wektorów przesuniêcia w GMC
+Output colorspace=Przestrzeñ kolorów wyjœcia
+Movie FPS=Klatek/s filmu
+Source file=Nazwa pliku
+Input FOURCC=Kod FOURCC wejœcia
+;
+;   Klawisze i sterowanie
+Action=Akcja
+Key=Klawisz
+;
+Activation key 1=Klawisz aktywacji 1
+Activation key 2=Klawisz aktywacji 2
+Second function=Drugie polecenie
+Seek forward=Skocz w przód
+Seek backward=Skocz w ty³
+Toggle OSD=W³¹cz / Wy³¹cz OSD
+Toggle visualizations=W³¹cz / Wy³¹cz Wizualizacje
+Toggle crop/zoom=W³¹cz / Wy³¹cz Przycinanie
+Toggle deinterlace=W³¹cz / Wy³¹cz Usuñ przeplot
+Toggle levels=W³¹cz / Wy³¹cz Poziomy
+Toggle noise=W³¹cz / Wy³¹cz Szum
+Toggle picture properties=W³¹cz / Wy³¹cz W³aœciwoœci obrazu
+Toggle postprocessing=W³¹cz / Wy³¹cz Przetwarzanie
+Toggle blur=W³¹cz / Wy³¹cz Rozmywanie
+Toggle resize=W³¹cz / Wy³¹cz Zmiana rozmiaru
+Toggle subtitles=W³¹cz / Wy³¹cz Napisy
+Toggle sharpen=W³¹cz / Wy³¹cz Wyostrzanie
+Toggle flip=Przerzuæ w pionie
+Toggle avisynth=W³¹cz / Wy³¹cz AviSynth
+Toggle warpsharp=W³¹cz / Wy³¹cz Warpsharp
+Grab frame=Zrzuæ klatkê
+Subtitles delay/size decrease=Zmniejsz opóŸnienie / rozmiar napisów
+Subtitles delay/size increase=Zwiêksz opóŸnienie / rozmiar napisów
+Subtitles position decrease=Przesuñ napisy w dó³
+Subtitles position increase=Przesuñ napisy w górê
+Decrease video delay=Zmniejsz opóŸnienie video
+Increase video delay=Zwiêksz opóŸnienie video
+Previous preset=Poprzedni profil
+Next preset=Nastêpny profil
+;
+press key=naciœnij klawisz
+left arrow=strza³ka w lewo
+up arrow=strza³ka w górê
+right arrow=strza³ka w prawo
+down arrow=strza³ka w dó³
+left win=lewy Windows
+right win=prawy Windows
+menu key=klawisz menu
+;
+Select name of exported Girder file=Zapisz plik Grider'a
+;
+;   Profile ustawieñ \ ustawienia auto³adowania
+Preset '%s' will be autoloaded ...=Profil '%s' zostanie wczytany automatycznie...
+and=i
+or=lub
+;
+on movie file name match with preset name=dla nazwy pliku takiej samej jak nazwa profilu
+on movie file name match (with wildcards)=dla danej nazwy pliku (symbole wieloznaczne)
+on application exe file name match=dla danej nazwy aplikacji
+on volume name match=dla danej nazwy woluminu
+on volume serial match=dla danego numeru woluminu
+on decoder match=dla danego dekodera
+on a DirectShow filter presence=dla danego filtra DirectShow
+on FOURCC match=dla danego kodu FOURCC
+on FOURCC from previous filter match=dla kodu FOURCC poprzedniego filtra
+on pixel aspect ratio match=dla danych proporcji boków punktu
+on picture aspect ratio match=dla danych proporcji boków obrazu
+on frame rate match=dla danej liczby klatek/s
+;
+Preset autoload condition help=Pomoc ustawieñ auto³adowania
+Names of DirectShow filters, wildcard allowed=Nazwy filtrów DirectShow, symble wieloznaczne dozwolone
+Useful when FFDShow is in raw mode, the compressed format (if any) is given by the previous filter in the chain.=U¿yteczne kiedy ffdshow jest w trybie raw, format kompresji (jeœli jest) zwracany jest przez poprzedni filtr w ³añcuchu grafu.
+;
+;   Usuwanie logo
+Blur:=Rozmycie:
+Exponent:=Wyk³adnik:
+;
+Over video=Na obrazie
+Over top letterbox=Na górnej ramce
+Over top & left letterbox=Na górnej i lewej ramce
+Over top & right letterbox=Na górnej i prawej ramce
+Over bottom letterbox=Na dolnej ramce
+Over bottom & left letterbox=Na dolnej i lewej ramce
+Over bottom & right letterbox=Na dolnej i prawej ramce
+Over left letterbox=Na lewej ramce
+Over right letterbox=Na prawej ramce
+;
+Direct=Bezpoœrednio
+Opposite=Przeciwnie
+Interpolation=Interpolacja
+;
+;   Rozmywanie
+radius:=promieñ:
+luma blur:=luminancja:
+chroma blur:=chrominancja:
+time:=czas:
+luma:=luminancja:
+chroma:=chrominancja:
+;
+;   Wyostrzanie
+Unsharp masking threshold:=Zasiêg maski wyostrzaj¹cej:
+Adaptive sharpenning strength:=Si³a wyostrzania:
+Luminance sharpening:=Wyostrzanie luminancji:
+Chroma sharpening:=Wyostrzanie chrominancji:
+;
+;   Warpsharp
+downsampled=Wyrównanie w dó³
+independent=Niezale¿nie
+high quality 3-pass=Wysoka jakoœæ 3-przebiegi
+fast 3-pass=Szybki 3-przebiegi
+fast 1-pass=Szybki 1-przebieg
+;
+;   Filtr DScaler
+Select DScaler filter=Wska¿ filtr DScaler
+;
+;   Szum
+amplitude=amplituda
+frequency=czêstotliwoœæ
+duration=czas
+size=rozmiar
+opacity=przezroczystoœæ
+color=kolor
+black=czarny
+gray=szary
+white=bia³y
+;
+;   Zmiana rozmiaru
+greater than=wiêksza ni¿
+less than=mniejsza ni¿
+;
+default=domyœlnie
+Parameter=Parametr:
+Number of taps:=Liczba wspó³czynników:
+;
+2.40 (cinemascope, HD discs)=2.40 (cinemascope, p³yty HD)
+;
+;   Zmiana rozmiaru / Ramki
+Brightness x is interpreted as RGB(x,x,x) and converted to luma using the settings in RGB conversion page, if necessary.=Jasnoœæ x jest interpretowana jako RGB(x,x,x) a nastêpnie jeœli potrzeba, zamieniana na luminancje wed³ug ustawieñ na karcie "Konwersja RGB".
+;
+;   Korekcja perspektywy
+None=Brak
+;
+;   AviSynth
+Load Avisynth script=Otwórz skrypt AviSynth
+Save Avisynth script=Zapisz skrypt AviSynth
+;
+Ignore pulldown=Ignoruj pulldown
+Apply pulldown=Zastosuj pulldown
+Smooth timestamps=P³ynne znaczniki czasu
+;
+;   DTC
+Load quantization matrices=Otwórz matrycê kwantyzacji
+Save quantization matrices=Zapisz matrycê kwantyzacji
+;
+;   Nak³adaie bitmapy
+Load image file=Otwórz plik obrazu
+;
+blend=Mieszanie
+darken=Przyciemnienie
+lighten=Rozjaœnienie
+add=Dodanie
+softlight=Softlight
+exclusion=Wykluczenie
+;
+;   Napisy
+Select directory where subtitles are stored=Wska¿ folder, w którym przechowywane s¹ napisy
+Load subtitles file=Otwórz plik napisów
+Very incomplete and experimental.\nSend me samples which don't work.=Opcja niekompletna i eksperymentalna.\nWyœlij mi próbki z którymi nie dzia³a.
+;
+;   Napisy \ Text
+subtitle=dialog
+line=wiersz
+character=znak
+;
+Smart wrapping, lines are evenly broken=Sprytne dzielenie - wiersze ³amane s¹ równomiernie
+End-of-line word wrapping=Dzielenie s³ów na koñcu wiersza
+Smart wrapping, lower line gets wider=Sprytne dzielenie - dolny wiersz jest szerszy
+;
+;   Napisy \ VobSub
 English (may work with other languages)=Angielski (mo¿e dzia³aæ z innymi jêzykami)
-YCbCr <-> RGB conversion options=Opcje konwersji YCbCr <-> RGB
-Bob for video source\nWeave for film source\nIn most cases, Weave is the same as unchecked HW deinterlacing.=Bob dla Ÿród³a obrazu\nWeave dla Ÿród³a filmu\nW wiêkszoœci przypadków, w³¹czony Weave dzia³a tak samo jak wy³¹czone sprzêtowe usuwanie przeplotu.
-Connect only to:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  EVR\n  ffdshow=Po³¹cz tylko z:\n  Mikserem nak³adki\n  Miksuj¹cym rendererem obrazu 7\n  Miksuj¹cym rendererem obrazu 9\n  VobSub\n  Rendererem obrazu Haali\n  Ulepszonym miksuj¹cym rendererem obrazu\n  ffdshow
-Unchecked: Use classic connection method.\nChecked: Use an advanced connection method that includes pixel aspect ratio (SAR) and interlacing information when connecting with the next filter (usually a video renderer).\nIndeterminate/grayed: Try advanced connection method first and fall back to classic connection method if it fails.\n\n(formerly called "Use overlay mixer")=Niezaznaczony: U¿yj klasycznej metody po³¹czenia.\nZaznaczony: U¿yj zaawansowanej metody po³¹czenia która zawiera wspó³czynnik pikseli (SAR) oraz informacje o przeplocie kiedy ³¹czy siê z nastêpnym filtrem (zazwyczaj z rendererem obrazu).\nWpó³zaznaczony: Pierw u¿yj zaawansowanej metody i jeœli zawiedzie u¿yj klasycznej metody\n\n(Formalnie zwana nak³adk¹ obrazu)
-Send interlacing related information obtained from the input stream or ffdshow's internal decoders to the next filter. Some filters (like video renderers) will use this information to deinterlace the video if neccessary.\nThis is just for informing the downstream filters - the actual result will depend purely on the implementation of these filters.\n\n(formerly called "HW deinterlacing")=Wyœlij informacjê zwi¹zan¹ z przeplotem uzyskan¹ od wejœciowego strumienia lub wewnêtrznych dekoderów ffdshow do nastêpnego filtra. Niektóre filtry (jak renderery obrazu) w razie potrzeby u¿ywaj¹ tej informacji do usuwania bloków w obrazie.
-indeterminate state - connect to any filter, allows output format changes only if connected to supported filter.\n\nFilters known to support dynamic format change:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  EVR\n  ffdshow=Wpó³zaznaczony: po³¹cz do ka¿dego filtra, pozwól na zmianê wyjœciowego formatu tylko jeœli po³¹czono z obs³ugiwanym filtrem.\n\nZnane filtry które obs³uguj¹ dynamiczn¹ zmianê formatu\n  Mikserem nak³adki\n  Miksuj¹cym rendererem obrazu 7\n  Miksuj¹cym rendererem obrazu 9\n  VobSub\n  Rendererem obrazu Haali\n  Ulepszonym miksuj¹cym rendererem obrazu\n  ffdshow
-constant=sta³e
-mpeg1/2 decoder only=Tylko dekoder MPEG1/2
-Error=B³¹d
-bottom=Œrodek
-guess MVS=Przypuszczalne wektory ruchu
-deblock=Usuwanie bloków
-guess MVS + deblock=Obie wy¿ej wymienione metody
-simple MMX=prosta MMX
-simple=prosta
-integer=ca³oœciowa
-No quantization matrices available.=Matryce kwantyzatora s¹ niedostêpne.
-careful=Ostro¿na
-compliant=Uleg³a
-aggressive=Agresywna
-very aggressive=Najagresywniejsza
-default=Domyœlny
-(Afan) Oromo=Oromo
+(Afan) Oromo=(Afan) Oromo
 Abkhazian=Abchaski
 Albanian=Albañski
 Amharic=Amharski
@@ -419,870 +488,1326 @@ Uzbek=Uzbecki
 Welsh=Walijski
 Yiddish=Jidysz
 Yoruba=Joruba
-subtitle=napisów
-line=linii
-character=znaków
-End-of-line word wrapping=Przenosz¹c koñcowe wyrazy do nowej linijki
-Smart wrapping, lines are evenly broken=Dziel¹c je po równo
-Smart wrapping, lower line gets wider=Poszerzaj¹c ni¿sz¹ linijkê
-Load subtitles file=Za³aduj plik z napisami
-Very incomplete and experimental.\nSend me samples which don't work.=Opcja niekompletna i eksperymentalna.\nWyœlij mi próbki z którymi nie dzia³a.
-ffdshow searches subtitle files in the folders which are configured in the edit box above.\nFor video.avi, ffdshow searches video.utf, video.idx, video.sub,... and use the file which is found at the first time.\nEnumerate extensions in the order you like and separate them by semicolons.\n\nutf;idx;sub;srt;smi;rt;txt;ssa;aqt;mpl;usf is the default settings.=ffdshow przeszuka pliki z napisami w folderze który zosta³ ustawiony w opcji wy¿ej.\nDla pliku NAZWA.avi, ffdshow przeszuka pliki NAZWA.utf, NAZWA.idx, NAZWA.sub... oraz nastêpnie u¿yje pliku który ma wiêkszy piorytet w opcji.\n Zapisuj rozszerzenia plików z napisami w kolejnoœci w której maja byæ przeszukiwane oraz oddzielaj je przez znak ;\n\nutf;idx;sub;srt;smi;rt;txt;ssa;aqt;mpl;usf taka kolejnoœæ jest domyœlna.
-4x4 luma=4x4 Luminancja
-4x4 chroma=4x4 Chrominancja
-Smooth timestamps=P³ynne oznaczenia czasu
-Ignore pulldown=Ignoruj pulldown
-Apply pulldown=Zezwól na pulldown
-Number of frames to buffer ahead=Iloœæ klatek buforowanych z wyprzedzeniem
-Number of used frames to keep in buffer=Iloœæ zatrzymywanych klatek w buforze
-Select DScaler filter=Wybierz filtr DScaler
-None=Wy³¹czona
-Linear=Linearna
-Cubic=Szeœcienna
-Number of taps:=Iloœæ taps:
-gray=Szaroœæ
-color=Kolor
-opacity=PrzeŸ.
-size=Rozmiar
-frequency=Czêstotliwoœæ
-amplitude=Amplituda
-duration=Czas trwania
-chroma blur:=Chrominancja:
-radius:=Zasiêg:
-luma blur:=Luminancja:
-luma:=luminancja
-chroma:=chrominancja
-time:=czas
-original=Oryginalny
-off=Wy³¹czona
-curve=Wykres
-No=Brak
-XY=Poziom-Pion
-Solid fill=Sta³e wype³nienie
-Shape XY=WyraŸny Poziom-Pion
-Over video=Na obrazie
-Over top letterbox=Na górnej skrzynce
-Over top & left letterbox=Na górnej i lewej skrzynce
-Over top & right letterbox=Na górnej i prawej skrzynce
-Over bottom letterbox=Na dolnej skrzynce
-Over bottom & left letterbox=Na dolnej i lewej skrzynce
-Over bottom & right letterbox=Na dolnej i prawej skrzynce
-Over left letterbox=Na lewej skrzynce
-Over right letterbox=Na prawej skrzynce
-Direct=Bezpoœrednio
-Opposite=Przeciwstawnie
-Interpolation=Interpolacyjnie
-Select name of exported Girder file=Wybierz nazwê dla pliku eksportowanych komend
-Toggle warpsharp=Prze³¹cznik WarpSharp
-Grab frame=Zrzut klatki
-Subtitles delay/size decrease=Zmniejszenie opóŸnienia/wielkoœci napisów
-Subtitles delay/size increase=Zwiêkszenia opóŸnienia/wielkoœci napisów
-Subtitles position decrease=Zmniejszenie pozycji napisów
-Subtitles position increase=Zwiêkszenie pozycji napisów
-Decrease video delay=Zmniejszenie opóŸnienia obrazu
-Increase video delay=Zwiêkszenie opóŸnienia obrazu
-Previous preset=Poprzedni profil
-Next preset=Nastêpny profil
-Luminance sharpening:=Wyostrzanie luminancji:
-Chroma sharpening:=Wyostrzanie chrominancji:
-Unsharp masking threshold:=Si³a wyostrzaj¹cej warstwy:
-Adaptive sharpenning strength:=Si³a wyostrzania:
-independent=Wyrównana niezale¿nie
-downsampled=Wyrównana w dó³
-high quality 3-pass=Najlepsza - 3 stopniowa
-fast 3-pass=Œrednia - 3 stopniowa
-fast 1-pass=S³aba - 1 stopniowa
-Cubic interpolation=Przekszta³cenia szeœciennego
-Bypass=Obejœcia
-Linear interpolation=Przekszta³cenia linearnego
-Linear blending=Mieszania linearnego
-Cubic blending=Mieszania szeœciennego
-Median=Mediany
-Framerate doubler=Podwajania szybkoœci klatek
-ffmpeg deinterlacer=Usuwanie przeplotu ffmpeg
-Kernel deinterlacer=Usuwanie przeplotu Kernel'a
-Tolerance when scanning bars=Tolerancja podczas skanowania pasków
-Scan of bars will stop after this position. Set 0 to always scan for bars=Skanowanie pasków zakoñczy siê po tym po³o¿eniu. Ustaw 0 by zawsze skanowaæ paski
-Set the delay in ms to rescan for the bars=Ustaw opóŸnienie w ms do ponownego przeskanowania pasków
-greater than=wiêksza od
-less than=mniejsza ni¿
-Warped resize=Zwiêkszenie Warped
-Fast bilinear=Szybka dwuliniowa
-Bilinear=Dwuliniowa
-Bicubic=Dwuszeœcienna
-Point=Punktowa
-Area=Obszarowa
-Simple resize=Prosty
-Active preset name=Obecna aktywna nazwa
+;
+none (fastest, most ugly)=Brak (najszybciej, najbrzydziej)
+approximate=Aproksymacja
+full (slowest)=Pe³na (najwolniej)
+bilinear (fast and not too bad)=Dwuliniowa (szybka i niez³a)
+swscaler gaussian=swscaler rozmycie gaussa
+;
+;    Zrzut obrazu
+Select directory for storing images=Wska¿ folder przechowywania obrazów
+;
+;   Ustawienia dekodera
+Error=B³¹d
+No quantization matrices available.=Brak matryc kwantyzacji.
+mpeg1/2 decoder only=Tylko dekoder mpeg1/2
+;
+none=Brak
+careful=Ostro¿nie
+compliant=Adaptacyjnie
+aggressive=Agresywnie
+very aggressive=Bardzo agresywnie
+;
+guess MVS=Zgadnij MVS
+deblock=Deblocking
+guess MVS + deblock=Zgadnij MVS + deblocking
+;
+;   Kolejkowanie i inne
+constant=Sta³e
+start=Start
+;
+;   Strumieñ wyjœcia
+closest=Najbli¿szy
+Unchecked: Use classic connection method.\nChecked: Use an advanced connection method that includes pixel aspect ratio (SAR) and interlacing information when connecting with the next filter (usually a video renderer).\nIndeterminate/grayed: Try advanced connection method first and fall back to classic connection method if it fails.\n\n(formerly called "Use overlay mixer")=Odznaczony: u¿yj klasycznej metody ³¹czenia filtrów.\nZaznaczony: u¿yj zaawansowanej metody ³¹czenia, która uwzglêdnia proporcje boków punktu (SAR) i informacje o przeplocie podczas pod³¹czania do nastêpnego filtru (zazwyczaj renderera video).\nCzêœciowo zaznaczony:  najpierw próbuj u¿yæ zaawansowanej metody ³¹czenia filtrów a jeœli zawiedzie powróæ do metody klasycznej.\n\n(formalnie nazywane "Use overlay mixer")
+Send interlacing related information obtained from the input stream or ffdshow's internal decoders to the next filter. Some filters (like video renderers) will use this information to deinterlace the video if neccessary.\nThis is just for informing the downstream filters - the actual result will depend purely on the implementation of these filters.\n\n(formerly called "HW deinterlacing")=Wyœlij powi¹zan¹ informacje o przeplocie uzyskan¹ ze strumienia wejœciowego b¹dŸ wewnêtrznego dekodera ffdshow do nastêpnego filtra. Niektóre filtry (jak renderery video) u¿yj¹ tej informacji do usuniêcia przeplotu jeœli zajdzie taka koniecznoœæ.\nOpcja ta s³u¿y tylko do informowania filtrów grafu - rzeczywisty rezultat bêdzie zale¿a³ ca³kowicie od implementacji tych filtrów.\n\n(formalnie nazywane "HW deinterlacing")
+Bob for video source\nWeave for film source\nIn most cases, Weave is the same as unchecked HW deinterlacing.=Bob dla Ÿród³a video\nWeave dla Ÿród³a filmu\nW wiêkszoœci przypadków, Weave dzia³a tak samo jak odznaczony HW deinterlacing.
+indeterminate state - connect to any filter, allows output format changes only if connected to supported filter.\n\nFilters known to support dynamic format change:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  EVR\n  ffdshow=Czêœciowo zaznaczony: po³¹cz z jakimkolwiek filtrem. Umo¿liwia zmianê formatu wyjœciowego tylko jeœli po³¹czono z kompatybilnym filtrem.\n\nZnane filtry obs³uguj¹ce dynamiczn¹ zmianê formatu:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  EVR\n  ffdshow
+Connect only to:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  EVR\n  ffdshow=Po³¹cz tylko z:\n  Overlay Mixer\n  VMR\n  VMR9\n  VobSub\n  Haali's Video Renderer\n  EVR\n  ffdshow
+;
+; Konfiguracja dekodera audio
+;   Kodeki
+High accuracy mode is enabled for Tremor.=Tryb wysokiej dok³adnoœci jest w³¹czony dla Termor.
+Adaptive Multi-Rate in 3gp files (AMR)=Adaptive Multi-Rate w plikach 3gp (AMR)
+not WMA9 pro, voice or lossless=Nie obs³uguje WMA9 pro, voice oraz lossless
+Windows Media Audio compatible decoder=Kompatybilny dekoder Windows Media Audio
+Other ADPCM=Inne ADPCM
+FLAC (Free Lossless Audio Codec);To play .flac files you also need a source filter.=Free Lossless Audio Codec; By odtwarzaæ pliki .flac potrzebujesz równie¿ filtra Ÿród³owego
+TTA (Lossless Audio Codec);To play .tta files you also need a source filter.=TTA (Lossless Audio Codec); By odtwarzaæ pliki .tta potrzebujesz równie¿ filtra Ÿród³owego
+DSP Group TrueSpeech compatible decoder=Kompatybilny dekoder DSP Group TrueSpeech
+QDM2 compatible decoder (incomplete)=Kompatybilny dekoder QDM2 (niekompletny)
+IMC compatible decoder=Kompatybilny dekoder IMC
+ATRAC3 compatible decoder=Kompatybilny dekoder ATRAC3
+Uncompressed=Nieskompresowany
+;
+Use SPDIF when AC3 output set=U¿yj SPDIF gdy wybrano wyjœcie AC3
+Check for DTS in WAV=Szukaj DTS w WAV
+;
+;   Informacje i CPU & OSD
+Audio track=Strumieñ audio
+Sample frequency=Czêstotliwoœæ próbkowania
+Number of channels=Liczba kana³ów
+Jitter=Zak³ócenia
+Output speakers=G³oœniki
+Sample format=Format próbki
+Current input bitrate=Bie¿¹cy bitrate wejœcia
+;
+;   Profile ustawieñ \ ustawienia auto³adowania
+on number of channels match=dla danej liczby kana³ów
+on sampling frequency match=dla danej czêstotliwoœci próbkowania
+;
+;    G³oœnoœæ
+mute=wycisz
+;
+;   Korektor
+Select Winamp preset file=Otwórz plik ustawieñ Winamp'a
+;
+;   FIR Filter
+lowpass=Dolnoprzepustowy
+highpass=Górnoprzepustowy
+bandpass=Pasmowoprzepustowy
+bandstop=Pasmowozaporowy
+box=Prostok¹tne
+triangle=Trójk¹tne
+hamming=Hamming'a
+hanning=Hanning'a
+blackman=Blackman'a
+flattop=P³askie
+kaiser=Kaiser'a
+;
+;   Convolver
+Select impulse file=Wska¿ plik impulsu
+invalid=niepoprawny
+;
+Channel=Kana³
+File=Plik
+;
+;   DSP Winampa
+Winamp2 application directory, not plugin directory.=Folder instalacji Winamp'a - nie folder wtyczek.
+Select Winamp 2 directory (not the plugins directory!)=Wska¿ folder instalacji Winamp'a (ale nie folder wtyczek!)
+;
+;   Resampler
+libavcodec normal quality=libavcodec normalna jakoœæ
+libavcodec high quality=libavcodec wysoka jakoœæ
+libavcodec highest quality=libavcodec najwy¿sza jakoœæ
+libsamplerate sinc high quality=libsamplerate sinc wysoka jakoœæ
+libsamplerate sinc medium quality=libsamplerate sinc œrednia jakoœæ
+libsamplerate sinc fastest=libsamplerate sinc najszybszy
+higher than=wy¿sza ni¿
+lower than=ni¿sza ni¿
+;
+;   Zamiana kana³ów
+front left=Przedni lewy
+front center=Przedni centralny
+front right=Przedni prawy
 side left=Boczny lewy
 side right=Boczny prawy
-3/0/0 - 3 front=3/0/0 - 3 przednie
+back left=Tylny lewy
+back center=Tylny centralny
+back right=Tylny prawy
+;
+;    Mikser
+3/0/0 - 3 front=3/0/0 - 3 frontowe
+2/0/1 - surround=2/0/1 - przestrzenne
+3/0/1 - surround=3/0/1 - przestrzenne
+2/0/2 - quadro=2/0/2 - kwadrofoniczne
 3/0/2 - 5 channels=3/0/2 - 5 kana³ów
 3/2/1 - 6 channels=3/2/1 - 6 kana³ów
 3/2/2 - 7 channels=3/2/2 - 7 kana³ów
-Advanced Audio Coding (AAC)=Advanced Audio Coding
-XviD MMX=Xvid MMX
-Other MPEG2=Inne MPEG2
-High accuracy mode is enabled for Tremor.=Tryb wysokiej dok³adnoœci jest w³¹czony dla Termor
-VorbisGain=VorbisGain (wysoka jakoœæ)
-libmad=libmad (najwy¿sza jakoœæ)
-libfaad2=libfaad2 (najwy¿sza jakoœæ)
-Tremor=Tremor (najwy¿sza jakoœæ)
-Winamp2 directory can not be changed during playback.=Katalog WinAmp2 nie mo¿e zostaæ zmieniony podczas odtwarzania
-ffdshow video decoder=ffdshow dekoder obrazu
-Load Avisynth script=Za³aduj skrypt AviSynth
-Save Avisynth script=Zapisz skrypt AviSynth
-Enable in WMP11=W³¹cz w WMP11
-discard telecine=Odrzuæ telecine
-Raw video=Nieskompresowany
-DVD decoding=Dekodowanie DVD
-equal number of frames, equal framerate=równa iloœæ klatek, równa szybkoœæ klatek
-double number of frames, double framerate=podwójna iloœæ klatek, podwójna szybkoœæ klatek
-double number of frames, equal framerate=podwójna iloœæ klatek, równa szybkoœæ klatek
-No motion estimation - blend images=Brak oszacowania ruchu - wtopiony obraz
-Current location only=Tylko aktualna pozycja
-1 pixel motion, left & right=Ruch 1 piksela , lewo & prawo
-3x3 square=Kwadrat 3x3
-Blur:=Zamglenie:
-Exponent:=Wyk³adnik:
-Load image file=Za³aduj plik obrazu
-Select curve file=Wybierz plik z wykresem
-Brightness x is interpreted as RGB(x,x,x) and converted to luma using the settings in RGB conversion page, if necessary.=Jasnoœæ x jest interpretowana jako RGB (x,x,x) i konwertowana do luminancji u¿ywaj¹c ustawieñ z strony konwersji RGB, jeœli potrzebne.
+same as input=Jak na wejœciu
+Head-related transfer function (HRTF)=Funkcja przenoszenia zwi¹zana z g³ow¹ (HRTF)
+headphone virtual spatialization=Symulacja g³oœników w s³uchawkach
+;
+;    Strumieñ wyjœcia audio
+"not needed": no custom channel mapping="nie potrzeba": wy³¹czone niestandardowe mapowanie kana³ów
+any filter=Dowolny filtr
+Useful for directly storing encoded ac3 to a file in graphedt with File Writer filter=Przydatne przy zapisie kodowanej œcie¿ki ac3 bezpoœrednio do pliku w programie graphedit z filtrem File Writer
+;
+; Konfiguracja kodera video
+Bitrate (kbps)=Bitrate (kb/s):
+Quality=Jakoœæ:
+Quantizer=Kwantyzator:
+No settings=Brak ustawieñ
+Size (Kbytes)=Rozmiar (kB):
+;
+one pass - average bitrate=1 przebieg - œredni bitrate
+one pass - quality=1 przebieg - jakoœæ
+one pass - quantizer=1 przebieg - kwantyzator
+two passes - 1st pass=2 przebiegi - 1-szy przebieg
+two passes - 2nd pass int=2 przebiegi - 2-gi przebieg wewnêtrzny
+two passes - 2nd pass ext=2 przebiegi - 2-gi przebieg zewnêtrzny
+;
+Load all=Wczytaj wszystko
+Load page=Wczytaj okno dialogowe
+Save all=Zapisz wszystko
+Save page=Zapisz okno dialogowe
+Manage presets...=Zarz¹dzaj profilami...
+;
+Property=Atrybut
+Value=Wartoœæ
+;
+;   Ogólne
+Store global headers in extradata=Przechowuj nag³ówki globalne w dodatkowych danych
+Greyscale=U¿yj skali szaroœci
+Interlaced encoding=Koduj z przeplotem
+Top field first (for intelaced encoding only)=Ustaw górne pole pierwsze (tylko dla kodowania z przeplotem)
+Data partitioning=Partycjonuj dane
+Unlimited motion vector=Nie ograniczaj wektora ruchu
+Interlaced=U¿yj przeplotu
+Alternative inter vlc=Alternatywne inter vlc
+Loop filter=Zapêtlone filtrowanie
+Sliced structure=U¿yj trybu o strukturze plastrowej
+Generate access unit delimiters=Generuj separatory jednostek dostêpu
+Each MB partition can independently select a reference frame=Ka¿da partycja makrobloku mo¿e niezale¿nie wybraæ klatkê referencyjn¹
+Transform coefficient thresholding on P-frames=Ograniczaj wspó³czynniki transformacji klatek P
+Cabac=CABAC
+Reserve space for SVCD scan offset user data=Zarezerwuj przestrzeñ dla danych nawigacji formatu SVCD
+;
+;   Szacowanie ruchu
+simple=Prosty
+fewest bits=Najmniej bitów
+rate distortion=Zniekszta³cenie tempa
+;
+adaptive with size 3=adaptacyjny o rozmiarze 3
+adaptive with size 2=adaptacyjny o rozmiarze 2
+experimental=eksperymentalny
+size 1 diamond=normalny o rozmiarze 1
+size 2 diamond=normalny o rozmiarze 2
+size 3 diamond=normalny o rozmiarze 3
+size 4 diamond=normalny o rozmiarze 4
+size 5 diamond=normalny o rozmiarze 5
+size 6 diamond=normalny o rozmiarze 6
+;
+never=Nigdy
+after I frames=Tylko po klatce I
+always=Zawsze
+;
+Very low=Bardzo niska
+Low=Niska
+Medium=Œrednia
+High=Wysoka
+Very high=Bardzo wysoka
+Ultra high=Najwy¿sza
+;
+Off=Wy³¹czony
+Mode decision=Tryb decyzyjny
+Limited search=Ograniczona detekcja
+Medium search=Umiarkowana detekcja
+Full search=Pe³na detekcja
+1 iteration of qpel on the winner=fullpel na wszystkich MB, 1 iteracja qpel na zwyciêzcy
+2 iterations of qpel=fullpel na wszystkich MB, 2 iteracje qpel na zwyciêzcy
+halfpel on all MB types, qpel on the winner=halfpel na wszystkich typach MB, qpel na zwyciezcy
+qpel on all=szybkie qpel na wszystkich typach MB
+more iterations=wysoka jakoœæ qpel na wszystkich typach MB
+;
+spatial=Przestrzenne
+temporal=Czasowe
+auto=Automatyczne
+;
+diamond=Diament
+hexagonal=Szeœciok¹t
+;
+;   Kwantyzacja
+Custom=Niestandardowa
+Modulated=Przekszta³cona
+Modulated new=Przekszta³cona nowa
+;
+P frames=Klatki P
+All frames=Wszystkie klatki
+;
+automatic=Automatycznie
+disable=Wy³¹czony
+;
+8 bits=8 bitów
+9 bits=9 bitów
+10 bits=10 bitów
+11 bits=11 bitów
+;
+; 2 przebiegi - 2-gi przebieg
+%i%%: %i frame(s)=%i%%: %i klatek
+quantizer:%i, percentage:%i=kwantyzator:%i, procent:%i
+quantizer:%i, count:%i=kwantyzator:%i, liczba:%i
+no simulation yet=Jeszcze nie symulowano
+;
+; 2 przebiegi - 2-gi przebieg/Inna kompresja
+Low - cosine curve=Niska - krzywa cosinus
+Medium - linear=Œrednia - liniowa
+High - sine curve=Wysoka - krzywa sinus
+;
+;   Statystyki
+Select file for storing frames=Wska¿ plik do przechowywania klatek
+Select file with stored encoding statistics=Wska¿ plik do przechowywania statystyk kodowania
+;
+Raw frames=Klatki nieskompresowane
+OGG (works with Theora only)=OGM (dzia³a tylko z Theora)
+Pixel aspect ratio=Proporcje boków punktu
+Display aspect ratio=Proporcje boków obrazu
+;
+;   Strumieñ wyjœcia
+Square=Kwadrat
+rate-distortion optimized MB types=optymalizacja zniekszta³cenia tempa MB
+Flat=Macierz p³aska
+JVT=Macierz JVT
+
+[101]
+1=OK
+2=Anuluj
+3=&Zastosuj
+1835=&Eksportuj ustawienia
+1836=Wspomó¿
+
+[182]
+1162=Resetuj
+1163=Pomoc
+1723=Resetuj kolejnoœæ
+
+[115]
+0=Kodeki
 
 [116]
-0=DirectShow
+0=Ustawienia DirectShow
 1285=Ustawienia DirectShow
-1503=Piorytet:
-1502=Wielokrotne rz¹danie ffdshow
+1503=Priorytet:
+1502=Wiele wyst¹pieñ ffdshow:
 1935=Nie u¿ywaj ffdshow w:
-1970=U¿ywaj ffdshow tylko w:
 1973=Edytuj...
+1970=U¿ywaj ffdshow w:
 1974=Edytuj...
-2051=Pokazuj informacjê kiedy nieznana aplikacja próbuje za³adowaæ ffdshow
+2051=Wyœwietlaj okno dialogowe gdy nieznana aplikacja próbuje za³adowaæ ffdshow
+
+[295]
+0=Mened¿er kompatybilnoœci ffdshow
+2041=Aplikacja "
+2042=" podjê³a próbê uruchomienia ffdshow.\nTo okno dialogowe zosta³o wyœwietlone dlatego, ¿e aplikacja nie jest uwzglêdniona na bia³ej b¹dŸ czarnej liœcie ffdshow.
+2045=Nie u¿ywaj ffdshow. (tylko tym razem)
+2046=Nie u¿ywaj ffdshow. (zawsze)
+2047=U¿yj ffdshow. (tylko tym razem)
+2048=U¿yj ffdshow. (zawsze)
+2044=Raportuj ten plik exe anonimowo przez internet.
+2049=Objaœnienie
+2043=Nie pytaj mnie ponownie.
+
+[224]
+1972=Lista nazw plików wykonywalnych aplikacji kompatybilnych z ffdshow - jedna w ka¿dym wierszu.
+1975=Dodaj...
+1976=Resetuj
+2=Anuluj
 
 [2020]
-1284=Informacja
-0=Informacja
-1832=U¿yj nastêpuj¹cych instrukcji SIMD (jeœli s¹ obs³ugiwane przez CPU):
-2212=Wyjœciowe ³añcuchy do debuggera
+0=Informacje i CPU
+1284=Informacje
+1832=U¿yj nastêpuj¹cych zestawów instrukcji SIMD (jeœli s¹ obs³ugiwane przez CPU):
+2212=Przeœlij dane do debuggera
 
 [141]
-1774=Poziome po³o¿enie:
-1776=Pionowe po³o¿enie:
-1493=Zapisz w:
-1491=W³asne:
+0=OSD
+1182=OSD
+1774=Pozycja w poziomie:
+1776=Pozycja w pionie:
+1493=Zapisz do:
+1491=U¿ytkownika:
+
+[132]
+0=Czcionka
+1259=Czcionka
+1335=Autorozmiar
+1827=Renderuj szybciej 
+2081=Rozmyj
+2060=Dodaj t³o napisów
+1116=Odstêpy:
+1120=Skala X:
+2090=Skala Y:
+2087=Pomiñ skalowanie ASS/ASS2
+2088=Popraw proporcje
+1114=Kodowanie:
+1108=Styl czcionki:
+2065=Rozmiar, kolor i przezroczystoœæ
+1110=Rozmiar:
+1124=Kolor:
+1981=Przezroczystoœæ:
+2052=Cia³o:
+2053=Zarys:
+2054=Cieñ:
+1978=Typ cienia:
 
 [136]
-0=Tray, komunikat, œcie¿ki
-1257=Ustawienia ikon Tray
+0=Ikony, œcie¿ki i konfiguracja
+1257=Ikony obszaru powiadomieñ
+2019=Zestaw ikon:
 2016=Brak
-2017=Nowe
-2018=Stare
-1074=Rozszerzona informacja w tray
-1073=Dodaj ikonê menu tray do menu strumieni/napisów odtwarzacza
-1258=Ustawienia komunikatu
-1259=Ustawienia œcie¿ki
-1071=Zapamiêtuj ostatnie po³o¿enie
-1072=Poka¿ wskazówki
+2017=Nowszy
+2018=Starszy
+1074=Poka¿ informacje w etykiecie ikony
+1073=Dodaj menu ikon do menu strumienia / wersji jêzykowej odtwarzacza
+1258=Okna konfiguracyjne
+1071=Zapamiêtaj pozycjê
+1072=Pokazuj podpowiedzi
 1293=Jêzyk:
-2019=Ikony Tray:
-1143=Ikona Tray\r\n  podwójne klikniêcie otwiera okno konfiguracji\r\n  prawe klikniêcie otwiera menu z g³ównymi ustawieniami
+1259=Œcie¿ki
+1143=Zestaw ikon\r\nPokazuje ikony w obszarze powiadomieñ. Podwójne klikniêcie wyœwietla okno konfiguracyjne, klikniêcie prawym klawiszem myszy wyœwietla proste menu ustawieñ.\r\n\r\nZapamiêtaj pozycjê\r\nZapamiêtuje pozycjê okna konfiguracyjnego (nie dzia³a w GraphEdit).
 
-[248]
-0=Strumieñ
-1709=Prze³¹cznik strumienia
-1683=W³¹cz
-1710=Strumieñ
+[143]
+0=Klawisze skrótów
+1202=Klawiatura
+1329=Globalne klawisze skrótów
+1330=Poka¿ informacje OSD po naciœniêciu klawisza
+1416=Odleg³oœæ skoku (sek):
+1418=Odleg³oœæ skoku (sek) - drugie polecenie:
+1472=API zdalnego sterowania
+1537=U¿ytkownika:
+1539=Obs³uguj zapytania klawiatury
+1829=Eksportuj do pliku Grider'a
 
 [119]
-0=Profile
-1016=Nowy
-1278=Ustawienia profili
-1156=Importuj z pliku...
-1155=Eksportuj do pliku.
-1044=Usuñ
-1157=Warunki automatycznego ³adowania...
-1051=Automatyczne ³adowanie
-1080=Próbuj za³adowaæ profil z pliku
-1045=Zmieñ
+0=Profile ustawieñ
+1278=Profile
+1016=&Nowy
+1156=&Otwórz...
+1155=Z&apisz jako...
+1045=Zmieñ &nazwê
+1044=&Usuñ
+1051=Wczytaj ustawienia automatycznie
+1080=Najpierw wczytaj z pliku
+1157=Ustawienia automatycznego wczytywania...
+1018=6
 
 [171]
-1212=Aktualne '%s' zostanie automatycznie za³adowane...
-1277=<= wysokoœæ <=
-1276=<= szerokoœæ <=
-1211=dopasowanie wymiaru filmu
+0=Ustawienia auto³adowania
+2207=przy spe³nieniu jednego z warunków (OR),
+2208=przy spe³nieniu wszystkich warunków (AND).
+1211=dla danego rozmiaru klatki
+1276=<=szerokoœæ<=
+1277=<=wysokoœæ<=
+1888=Do rozdzielenia wielu wartoœci u¿yj ;
 8=Zamknij
-1888=Oddziel elementy znakiem ;
-1915=i
-2207=gdy przynajmniej 1 warunek jest spe³niony (OR)
-2208=gdy wszystkie warunki s¹ spe³nione (AND)
 
 [233]
-0=Filtry
-1473=Ukryte filtry:
-1474=Dostêpne filtry:
+0=Poka¿ / ukryj filtry
+1473=Dostêpne filtry:
+1474=Widoczne filtry:
+
+[102]
+0=O programie
+1849=Licencja
+1839=Szczegó³y wersji
+
+[193]
+0=Szczegó³y wersji
+2=Zamknij
+; Konfiguracja dekodera video
+
+[111]
+1164=&Przetwórz ca³y obraz
+1167=&Tylko praw¹ po³owê
+1162=Resetuj
+1163=Pomo&c
+1723=Resetuj kolejnoœæ
+
+[134]
+0=Przycinanie
+1137=Przycinanie i powiêkszanie
+1138=Powiêksz
+1139=Przytnij
+1105=Powiêkszenie w poziomie:
+1107=Powiêkszenie w pionie:
+1140=Blokuj
+1252=Góra
+1254=Lewo
+1255=Prawo
+1256=Dó³
+2091=Autoprzycinanie
+2098=Pionowo
+2099=Poziomo
+2100=Pionowo i poziomo
+2094=Tolerancja:
+2096=Odœwie¿anie (ms):
+2101=Nie skanuj po (ms):
+1109=Powiêkszenie
+1111=Pozycja w poziomie
+1113=Pozycja w pionie
+1143=Przytnij\r\nSzerkoœæ i wysokoœæ przyciêtego obszaru jest zaokr¹glana do wielokrotnoœci oœmiu. Jeœli podasz niew³aœciw¹ wartoœæ, pole edycyjne zmieni t³o na czerwone a wartoœæ nie zostanie zapisana. U¿ywaj¹c tego filtra prawdopodobnie bêdziesz musia³ poprawiæ proporcje boków obrazu.
+
+[140]
+0=Usuwanie przeplotu
+1167=Usuwanie przeplotu
+1523=Metoda:
+1209=Zamieñ pola
+
+[242]
+0=Usuwanie logo
+1552=Usuwanie logo
+1574=Tylko luminancja
+1555=Waga X-Y:
+1542=Lewo
+1544=Góra
+1551=Tryb:
+1546=Szerokoœæ
+1548=Wysokoœæ
+1558=Kolor:
+1854=Obraz logo:
+1559=Wczytaj profil filtra:
+1562=Zaawansowane:
+
+[120]
+0=Przetwarzanie
+1073=Przetwarzanie
+1027=Ustawienia standardowe
+1008=Ustawienia automatyczne
+1272=Deblock (poziomo)
+1273=Deblock (pionowo)
+1028=Ustawienia rêczne
+1270=Luminancja
+1271=Chroma
+1158=Si³a przetwarzania:
+1160=Metoda przetwarzania:
+1534=Precyzyjny deblocking
+1275=Popraw poziom
+1035=Luminancja
+1038=Pe³en zakres
+1457=Szybki deblocking SPP
+1456=Deblocking SPP
+1459=£agodny próg
+1328=Najpierw Nic's
+1242=Zasiêg X:
+1243=Zasiêg Y:
+
+[125]
+0=W³aœciwoœci obrazu
+1072=W³aœciwoœci obrazu
+1017=Wzmocnienie luminancji (kontrast):
+1932=Efekt "Scanline"
+1018=Przesuniêcie luminancji (jasnoœæ):
+1037=Korekcja gamma:
+1038=Korekcja gamma RGB:
+1025=Odcieñ:
+1026=Nasycenie:
+1781=Koloryzuj:
+1787=Tylko chrominancja
+1782=Si³a:
+1830=Popraw poziom luminancji
+1831=Pe³en zakres
+
+[270]
+1941=Próg:
+
+[142]
+0=Poziomy
+1170=Poziomy
+1707=Tryb:
+1179=Modyfikuj tylko luminancje
+1184=Poka¿ histogram
+1185=Pe³en zakres
+1291=Wejœcie
+1909=Automatycznie
+1267=Wyjœcie
+1181=Korekcja gamma:
+1189=Rozk³ad funkcji:
+
+[137]
+0=Przesuniêcie
+1148=Przesuniêcie
+1149=Przesuniêcie poziome luminancji:
+1151=Przesuniêcie pionowe luminancji:
+1153=Przesuniêcie poziome chrominancji:
+1120=Przesuniêcie pionowe chrominancji:
+1939=Przerzuæ w pionie
+1940=Przerzuæ w poziomie
+1143=Zmienia pozycjê planów luminancji i chrominancji.\r\nMo¿na u¿yæ do korekcji z³ych ujêæ
+
+[128]
+0=Rozmywanie
+1134=Rozmywanie i odszumianie
+1136=Zmiêkczanie:
+1137=Wyg³adzanie czasowe:
+1232=Uwzglêdniaj kolory
+1138=Wyg³adzanie luminancji:
+1139=Wyg³adzanie chrominancji:
+1140=Odszumianie stopniowe:
+1141=Czasowy odszumiacz mplayer'a:
+1142=swscaler rozmycie gaussa
+1415=wys. jakoœæ
+
+[127]
+0=Wyostrzanie
+1065=Wyostrzanie
+1216=Wysoka jakoœæ
+1215=Tylko maska
+1217=Wysoka jakoœæ filtracji bloków
+1019=Si³a:
+1021=Zasiêg:
+1023=Si³a wyostrzania bloków:
+1143=xsharpen\r\nFiltr ten wykonuje subtelne ale przydatne wyostrzanie. Zasada jego dzia³ania polega na wyœwietleniu ma³ego okna na klatce i ka¿dym centralnym pikselu, który zosta³ pominiêty (zale¿nie od ustawienia zakresu), albo zmapowany do najjaœniejszego lub najciemniejszego piksela w oknie, zale¿nie od tego który jest bli¿ej piksela centralnego. Jeœli zmapowany jest piksel centralny, jego przezroczystoœæ alfa przyjmuje wartoœæ zale¿n¹ od oryginalnej wartoœci piksela zgodnie z ustawieniami si³y. Rezultatem jest efekt wyostrzenia, który ponadto ¿e nie wzmacnia szumu, redukuje go.\r\n\r\nUnsharp masking\r\nFiltr ten wykorzystuje dobrze znan¹ technikê uwydatnienia kontrastu i wyostrzenia, nazywan¹ unsharp masking. Zasada jego dzia³ania polega na utworzeniu rozmytej kopii oryginalnego obrazu i odjêciu go od obrazu oryginalnego. Obraz wynikowy zyskuje wzmocnienie kontrastu wokó³ szczegó³ów umieszczonych na obrazie oryginalnym. Rezultatem jest bardzo przyjemny efekt wyostrzenia, który jest lepszy od prostego wyostrzania z j¹drem splotu b¹dŸ wysoko-pasmowym wzmocnieniem.\r\n\r\nmsharpen\r\nWyostrza wa¿ne krawêdzie obrazu bez wzmacniania szumu. Filtr wykrywa krawêdzie a potem u¿ywa j¹dra wyostrzaj¹cego w obszarze krawêdzi.\r\n\r\nOpis zosta³ skopiowany z ogryginalnej dokumentacji filtrów AviSynth i VirtualDub\r\nprawa autorskie (C) Donald Graft
+
+[181]
+1339=oryginalny warpsharp ffdshow
+1341=Tryb chrominancji:
+1343=Tryb rozmywania:
+1019=G³êbia:
+1021=Zasiêg:
+1023=Rozmywanie:
+1143=aWarpSharp implementuje oryginalne wyostrzanie wysokiej jakoœci. "Oryginalne" oznacza, ¿e algorytm ró¿ni siê w pewnym stopniu od innych filtrów wyostrzaj¹cych. Kod jest w pe³ni zopalizowany dla iSSE. aWarpSharp jest dobrze zoptymalizowany dla procesorów Athlon XP.\r\nMarc Fauconneau
+
+[176]
+0=Filtr DScaler
+1308=Filtr DScaler
+1309=Filtr:
+
+[126]
+0=Nak³adanie szumu
+1038=Nak³adanie szumu
+1067=Stary algorytm szumu
+1068=Nowy algorytm szumu (avih)
+1069=Algorytm mplayer'a
+1232=Uœredniony
+1039=Równomierny
+1231=Wzorzysty
+1041=Luminancja - si³a szumu:
+1049=Chrominancja - si³a szumu:
+1050=Migotanie:
+1051=Potrz¹sanie:
+1052=Pionowe linie:
+1054=Zadrapania:
+
+[133]
+0=Zmiana rozmiaru
+1083=Zmiana rozmiaru
+1986=Okreœl rozmiar poziomy i pionowy
+1987=Okreœl rozmiar poziomy
+1285=Rozmiar
+1186=Okreœl proporcje boków obrazu
+1286=Proporcje
+1187=Popraw do wielokrotnoœci
+1540=Mnó¿ prez:
+2086=Zmieñ do rozmiaru pulpitu
+1189=Zmieñ jeœli...
+1191=Zmieñ jeœli liczba pikseli jest...
+1188=Zmieniaj zawsze
+1988=Zmieñ proporcje boków punktu
+2084=Proporcje boków punktu:
+1289=Proporcje boków obrazu
+1100=Nie koryguj
+1101=Blokuj
+1102=Ustaw rêcznie:
+1234=Proporcje nak³adki:
+
+[261]
+0=Ramki
+1857=Ramki
+1860=Wewnêtrzne
+1861=Zewnêtrzne
+1858=Procent
+1859=Pikseli
+1862=Poziomo
+1199=Blokuj
+1863=Pionowo
+2067=Po³o¿enie obrazu
+2068=Lewo
+2069=Prawo
+2079=Poziomo
+2070=Góra
+2071=Dó³
+2080=Pionowo
+2209=Jasnoœæ
+
+[138]
+0=Ustawienia
+1282=Ustawienia zmiany rozmiaru
+1285=Metoda luma:
+1892=Blokuj
+1286=Metoda chroma:
+1098=Rozmywanie luminancji:
+1099=Rozmywanie chrominancji:
+1019=Wyostrzanie luminancji:
+1020=Wyostrzanie chrominancji:
+1021=Parametr:
+1023=Parametr:
+1100=Poziome odkszta³cenie:
+1022=Pionowe odkszta³cenie:
+1360=Uwzglêdnij przeplot
+1953=Zaokr¹glaj precyzyjnie 
+1143=Algorytmy zmiany rozmiaru:\r\nFast bilinear - szybki z akceptowaln¹ jakoœci¹,\r\nBilinear - jakoœæ odrobinê lepsza ni¿ w poprzednim, ale trochê wolniejszy,\r\nBicubic - wysoka jakoœæ, wolniejszy,\r\nPoint - najszybszy, najbrzydszy,\r\nArea - miejscowe uœrednianie,\r\nBicublin - luminancja bicubic, chrominancja bilinear,\r\nNone - dodaje tylko czarne ramki b¹dŸ przycina obraz,\r\nGaussian blur - podczas zmiany rozmiaru obraz mo¿e zostaæ odrobinê rozmyty, niezale¿nie od filtrów rozmywania,\r\nSharpen - wyostrza obraz podczas zmiany rozmiaru, niezale¿nie od filtrów wyostrzania.\r\n\r\nUwzglêdnij przeplot:\r\nodznaczone - klatki traktowane s¹ jak progresywne,\r\nzaznaczone - klatki traktowane s¹ jak pó³obrazy,\r\nczêœciowo zaznaczone - decyduje typ klatki na wejœciu (u¿ywane przy przetwarzaniu MPEG2 video).\r\n\r\nZaokr¹glaj precyzyjnie :\r\nodznaczone - czasami widoczne s¹ poziome linie,\r\nzaznaczone - wysoka jakoœæ, wolniejszy w niektórych przypadkach.
+
+[177]
+0=Korekcja perspektywy
+1317=Korekcja perspektywy
+1321=Zmieñ obszar na prostok¹tny
+1319=Interpolacja:
+1143=To nie jest finalna wersja filtru - na obrazie mog¹ pojawiæ siê czarne kropki.
+
+[180]
+2021=Dodaj Ÿród³o obrazu ffdshow
+2024=Przestrzenie kolorów:
+2029=Bufor w przód/ty³:
+2032=U¿yj bie¿¹cy
+2033=Otwórz
+2034=Zapisz
+
+[139]
+0=Wizualizacje
+1337=Wizualizacje
+1074=Poka¿ wektory przesuniêcia
+1075=Kwantyzatory
+1357=Graf
+1143=Spróbuj tego - wygl¹da ciekawie.
+
+[179]
+1325=Wspó³czynniki
+1919=Kwantyzacja H.263
+1922=Kwantyzacja MPEG
+1917=Matryca kwantyzacji
+1920=Kwantyzator:
+1143=DctFilter jest eksperymentalnym filtrem, który dla ka¿dego bloku 8x8 wykonuje dyskretn¹ transformatê cosinusow¹ (DCT), skaluje wybran¹ czêstotliwoœæ i odwraca proces wykonuj¹c odwrotn¹ dyskretn¹ transformatê cosinusow¹ (IDCT).\r\n\r\nPrawa autorskie (C) 2002 Tom Barry - trbarry@trbarry.com
+
+[267]
+0=Bie¿¹ce matryce kwantyzacji
+8=Zamknij
+
+[225]
+1840=Matryca intra:
+1763=Matryca inter:
+1828=Otwórz matrycê...
+1829=Zapisz matrycê...
+
+[255]
+0=Nak³adanie bitmapy
+1798=Nak³adanie bitmapy
+1799=Nazwa pliku:
+1802=Pozycja w poziomie:
+1803=Pozycja w pionie:
+1810=Wyrównanie:
+1361=Tryb:
+1807=Przezroczystoœæ:
+
+[113]
+0=Napisy
+1105=Napisy
+1279=Szukaj w:
+1837=Poszukiwania heurystyczne
+1968=Priorytety rozszerzeñ:
+1183=Plik:
+1414=ŒledŸ zmiany w pliku
+1244=Prze³aduj
+1787=Akceptuj osadzone napisy
+1789=Akceptuj napisy SSA, ASS i ASS2 (eksperymentalne)
+1788=Dekoduj napisy Closed Caption
+1122=Pozycja w poziomie:
+1126=Pozycja w pionie:
+1358=Letterbox:
+1280=Przesuñ o:
+1364=Kasuj
+1281=Szybkoœæ:
+1360=Wyrównanie:
+1683=Stereoskopowo
+1722=Paralaksa:
+
+[254]
+0=Tekst
+1793=Tekst napisów
+1571=Dziel d³ugie wiersze napisów
+1723=Interlinia:
+1572=Buforuj napisy o tym samych czasach
+1836=Marginesy po bokach:
+1775=pikseli
+1767=Wyœwietlaj
+1772=min. przez:
+1794=Poprawki:
+1787=Zamieñ podwójne ' na " a podwójne "" na "
+1788=Spróbuj poprawiæ I i l
+1790=Spróbuj poprawiæ znaki interpunkcyjne (?. -> ? ; !. -> ! itp.)
+1795=Spróbuj poprawiæ ortografiê
+1791=Spróbuj poprawiæ kapitaliki
+1792=Usuñ zbêdne odstêpy pomiêdzy cyframi
+1798=Usuñ napisy dla upoœledzonych s³uchowo
+
+[250]
+1725=W³¹cz
+1726=Preferowane jêzyki:
+1728=Bie¿¹cy jêzyk:
+1727=Metoda wyg³adzania:
+1730=Rozmywanie gauss'a:
+1729=Skala:
+1796=Zachowaj ustawienia pozycji z zak³adki Napisy
+
+[172]
+0=Zrzut obrazu
+1216=Zrzut obrazu
+1223=Wszystkie klatki
+1224=Jedna klatka:
+1226=Zakres:
+1740=Zrzucaj co:
+1741=klatek
+1232=Folder:
+1261=Prefix:
+1263=Iloœæ cyfr w nazwie:
+1262=Format:
+1228=&Zrzuæ obraz
+1230=Jakoœæ:
+
+[173]
+0=Nak³adka
+1235=Ustawienia nak³adki
+1236=Jasnoœæ:
+1137=Kontrast:
+1138=Odcieñ:
+1139=Nasycenie:
+1140=Ostroœæ:
+1141=Gamma:
+1143=Dzia³a tylko, gdy zaznaczono opcjê "Ustaw proporcje boków punktu w strumieniu wyjœciowym" w zak³adce "Strumieñ wyjœcia" i gdy sprzêt j¹ wspiera.\r\n\r\nKompatybilne z overlay mixer i VMR9 renderer w trybie windowed.
+
+[118]
+0=Ustawienia dekodera
+1283=Ustawienia libavcodec
+1045=IDCT
+1916=Bie¿¹ce matryce kwantyzacji
+1572=Iloœæ w¹tków dekodera:
+1314=Dekoduj w skali szaroœci
+1047=Pomiñ b³êdy kompresji:
+1307=Autodetekcja
+1309=B³¹d przeplotu starszego Xvid'a
+1313=B³¹d quarterpixel Xvid i DivX
+1315=KrawêdŸ
+1542=Czu³oœæ detekcji b³êdów:
+1544=Metoda ukrywania b³êdów:
+1946=Ustawienia wydajnoœci
+1943=Porzuæ klatkê przy opóŸnieniu
+1947=Pomiñ deblocking H264 przy opóŸnieniu
+1308=Starsze pliki lavc msmpeg4
+
+[121]
+0=Kolejkowanie i inne
+1944=Kolejkuj próbki na wyjœciu
+1958=Kolejkuj tylko w:
+2206=W³¹cz kolejkowanie w VMR9-YV12
+1365=Inne ustawienia
+1268=OpóŸnienie video:
+1764=Koniec
+1550=Ustaw przeplot na wejœciu jeœli wysokoœæ >
+1552=pikseli
+1143=Kolejkuj próbki na wyjœciu\r\nZadaniem kolejkowania jest zmniejszenie iloœci porzucanych klatek. U¿ycie tej opcji daje efekty gdy obci¹¿enie CPU jest du¿e i porzucanych jest kilka klatek na sekundê. Jeœli CPU zakoñczy pracê wczeœniej to zaoszczêdzony w ten sposób jego czas zostanie u¿yty w przypadku pojawienia siê ewentualnego opóŸnienia. Renderer video wykonywany jest przez inny w¹tek, dlatego efekt jest lepszy jeœli posiadasz Pentium4HT albo dwurdzeniowy CPU.\r\n\r\nKolejkuj tylko w\r\nKolejkowanie jest domyœlnie wy³¹czone ze wzglêdu na problemy zwi¹zane ze stabilnoœci¹ w aplikacjach innych ni¿ Media Player Classic. Jeœli chcesz spróbowaæ, odznacz lub dodaj nazwy plików wykonywalnych aplikacji video rozdzielone œrednikiem.\r\n\r\nW³¹cz kolejkowanie w VMR9-YV12\r\nKolejkowanie w VMR9-YV12 nie dzia³a z niektórymi zintegrowanymi kartami graficznymi Intel'a.\r\n\r\nInne ustawienia\r\nOpóŸnienie video: mo¿esz spróbowaæ tej opcji jeœli œcie¿ki audio i video s¹ nie zsynchronizowane.
+
+[231]
+0=Strumieñ wyjœcia
+1284=Obs³ugiwane wyjœciowe przestrzenie kolorów
+1052=Wysoka jakoœæ konwersji YV12 do RGB
+1036=Wybierz najbli¿ej pasuj¹c¹ przestrzeñ kolorów
+1031=Ustaw proporcje boków punktu w strumieniu wyjœciowym
+1033=Ustaw flagê przeplotu w strumieniu wyjœciowym
+1966=Metoda:
+1017=Umo¿liwiaj zmianê formatu wyjœciowego podczas odtwarzania
+1034=£¹cz tylko z kompatybilnymi filtrami
+1910=Profile:
+1016=Przerzuæ w pionie
+
+[2112]
+0=Konwersja RGB
+2123=Specyfikacja YCbCr
+2122=Kontrast
+2124=Standardowy ( Y : 16-235, chroma : 16-240 )
+2125=Pe³en zakres ( Y : 0-255, chroma : 1-255 )
+2126=Niestandardowy
+2118=Odciêcie czerni:
+2119=Odciêcie bieli:
+2121=Sprzê¿ chrominancje
+2120=Odciêcie chrominancji:
+
+[288]
+0=1. O dekoderze video ffdshow\r\n\r\nffdshow to oprogramowanie o otwartym kodzie Ÿród³owym w sk³ad którego wchodzi dekoder DirectShow i kodek VFW. S³u¿y ono do szybkiego dekodowania meteria³u audio i video zapisanego w ró¿nych formatach.\r\n\r\nffdshow posiada du¿¹ iloœæ filtrów przetwarzaj¹cych, które opcjonalnie mog¹ zostaæ w³¹czone by polepszyæ jakoœæ strumieni wyjœciowych audio i video. Niektóre z tych filtrów to: usuwanie bloków, zmiana rozmiaru, korekcja proporcji obrazu, wyostrzanie, wyœwietlanie napisów, usuwanie przeplotu, przycinanie i korekcja barwy.\r\n\r\n2. Cechy\r\n\r\n- szybka dekompresja video z u¿yciem kodu zoptymalizowanego dla instrukcji SIMD: MMX, SSE, SSE2, SSE3 i 3DNow!\r\n- obs³uga du¿ej iloœci formatów video: DivX, Xvid, H.264/AVC, Theora, MPEG1/2, VP3/5/6, FLV1/4, SVQ1/3 i wielu innych,\r\n- sprzêtowa obs³uga usuwania przeplotu z meteria³u nieskompresowanego,\r\n- potrafi zachowywaæ siê jak natywny filtr przetwarzaj¹cy do przetwarzania wyjœciowego materia³u nieskompresowanego innych dekoderów,\r\n- przetwarzanie obrazu umo¿liwiaj¹ce polepszenie jakoœci odtwarzania video,\r\n- automatyczne ustawienia jakoœci: automatycznie redukuje poziom przetwarzania w przypadku du¿ego obci¹¿enia mikroprocesora,\r\n- korekcja barwy, nasycenia i luminancji (zoptymalizowane dla MMX),\r\n- ikona obszaru powiadomieñ z menu i szybkim dostêpem do okna konfiguracyjnego,\r\n- wielow¹tkowa zmiana rozmiaru: szybsza zmiana rozmiaru na wielordzeniowych mikroprocesorach,\r\n- obs³uga napisów,\r\n- funkcjonalnoœæ "czarnej" i "bia³ej" listy umo¿liwiaj¹ca konfiguracjê uruchamiania ffdshow w okreœlonych aplikacjach,\r\n- ca³kowicie wolne oprogramowanie: ffdshow jest dystrybuowany na zasadach Powszechnej Licencji Publicznej GPL.\r\n\r\n3. ffdshow-tryouts\r\n\r\nffdshow pierwotnie zosta³ opracowany przez Milan'a Cutka. Od czasu gdy Milan Cutka zaprzesta³ aktualizowania w 2006 roku, uruchomiliœmy nowy projekt "ffdshow-tryouts".\r\n\r\n4. Odnoœniki\r\n\r\nffdshow-tryouts:\r\nhttp://ffdshow-tryout.sourceforge.net/\r\nhttp://sourceforge.net/project/showfiles.php?group_id=173941\r\n\r\nffdshow (stare):\r\nhttp://ffdshow.sourceforge.net/tikiwiki/\r\nhttp://sourceforge.net/projects/ffdshow/\r\n\r\nXvid:\r\nhttp://www.xvid.org/\r\n\r\nFFmpeg:\r\nhttp://ffmpeg.mplayerhq.hu/\r\n\r\nlibmpeg2:\r\nhttp://libmpeg2.sourceforge.net/\r\n\r\nMPlayer:\r\nhttp://www.mplayerhq.hu/\r\n\r\nkod xsharpen, unsharp mask, msharpen, barwa i nasycenie\r\nhttp://sauron.mordor.net/dgraft/index.html\r\n\r\nDoom9:\r\nhttp://forum.doom9.org/showthread.php?t=120465\r\n\r\nlub Wikipedia, wolna encyklopedia:\r\nhttp://en.wikipedia.org/wiki/Ffdshow\r\n\r\n5. Kopiowanie\r\n\r\nWszystkie u¿yte Ÿród³a (z wyj¹tkiem planu detekcji wykorzystania mikroprocesora) jak i sam ffdshow s¹ dystrybuowane na zasadach Powszechnej Licencji Publicznej GPL. Zobacz plik copying.txt.\r\n\r\nLokalizacja:\r\nPiotr Sokó³, VirtualMan_PL, Radzio <ffdshow-polish@googlegroups.com>
+; Konfiguracja dekodera audio
+
+[248]
+0=Strumienie
+1709=Strumienie
+1683=W³¹cz
+1710=Strumieñ:
 
 [259]
-1579=Obs³ugiwane wejœciowe formaty próbek:
-1578=Konwersja przetwarzania zmiennoprzecinkowego na sta³oprzecinkowe
-0=Wejœcie
-1580=16 bitowe sta³oprzecinkowe
-1585=32 bitowe sta³oprzecinkowe
-1586=32 bitowe zmiennoprzecinkowe
-1582=Redukcja szumu:
-1583=Dithering (redukcja zak³óceñ)
+0=Przetwarzanie
+1579=Przetwarzanie obs³ugiwanych formatów próbek audio
+1580=16 bit sta³oprzecinkowy
+1585=32 bit sta³oprzecinkowy
+1586=32 bit zmiennoprzecinkowy
+1578=Konwersja formatu zmiennoprzecinkowego na sta³oprzecinkowy
 
 [244]
-0=Dolby
+0=Dekoder Dolby
 1657=Dekoder Dolby
 1656=OpóŸnienie tylnych kana³ów:
 
 [188]
 0=G³oœnoœæ
 1377=G³oœnoœæ
-1375=G³ówna g³oœnoœæ:
+1937=U¿yj skali decybelowej
+1375=Regulacja g³oœnoœci:
+1650=P
+1651=TylnyL
+1652=TylnyP
+2194=BoczL
+2195=BoczP
+1653=LFE
+1922=W
+1924=W
+1926=W
+1928=W
+1930=W
+2202=W
+2201=W
+1932=W
 1457=Normalizuj
-1957=Resetuj po szukaniu
-1956=D³ugoœæBufora
-1641=Aktualny:
-1637=Max. wzmocnienie:
-1683=Poka¿ aktualne lewele g³oœnoœci
-1937=Skala w dB
+1637=Maks. wzmocnienie:
+1957=Resetuj podczas szukania
+1956=Bufor:
+1641=Aktualnie:
+1683=Pokazuj aktualny poziom g³oœnoœci
 
 [189]
-0=Ekualizer
+0=Korektor graficzny
 1378=Korektor graficzny
-1826=Ulepszony korektor graficzny
-1814=Za³aduj ustawienia z WinAmp...
-1401=Zak³ócenia
-1402=Zak³ócenia
-1403=Zak³ócenia
-1404=Zak³ócenia
-1405=Zak³ócenia
-1406=Zak³ócenia
-1407=Zak³ócenia
-1408=Zak³ócenia
-1409=Zak³ócenia
-1410=Zak³ócenia
-1465=dB
-1466=dB
+1814=Wczytaj ustawienia Winamp'a
 
 [246]
-0=FIR
-1686=Filtr o skoñczonej odpowiedzi impulsowej FIR
-1696=Czêstotliwoœæ:
-1700=Max. czêstotliwoœæ:
-1688=Iloœæ uderzeñ:
+0=Filtr FIR
+1686=Filtr FIR
+1688=Rz¹d filtru:
+1700=Maks. czêstotliwoœæ:
 1690=Typ filtra:
-1692=Typ wykresu:
-1698=Zakres:
+1696=Czêst. graniczna:
+1698=Szerokoœæ pasma:
+1692=Okno:
 1683=Poka¿ widmo
-1143=To jest bardzo nowa opcja dlatego te¿ opis oraz funkcjonalnoœæ mo¿e byæ niew³aœciwa.
+1143=To dla mnie nowa rzecz i ca³a ta zak³adka oraz jej funkcjonalnoœæ mo¿e byæ nieprawid³owa.
 
 [262]
-1891=Autodostosowanie
-1893=Poziom dostosowania:
-1889=Si³a miksuj¹ca:
-1881=Plik z impulsami:
-1905=Manualne mapowanie kana³u
-1897=Zak³ócenia
-1902=Wybierz plik...
+1881=Plik impulsu:
+1905=Rêczne mapowanie kana³ów:
+1902=Wybierz plik
 1903=Wyczyœæ
+1893=Regulacja poziomu:
+1891=Automatyczna regulacja
+1889=Si³a miksowania:
 
 [247]
-0=Szum
+0=Redukcja szumu
 1706=Redukcja szumu
 1704=Próg:
 
 [190]
-1401=Kliknij by zaznaczyæ katalog WinAmp 2...
+0=DSP Winamp'a
+1400=DSP Winamp'a
+1401=Wska¿ folder instalacji Winamp'a...
 1404=Konfiguruj
-1989=Pozwól na wielokana³owe przetwarzanie
-1400=WinAmp 2 DSP
+1989=Przetwarzaj dŸwiêk wielokana³owy
 
 [236]
-1485=Wielkoœæ pokoju:
+1485=Rozmiar pomieszczenia:
 1487=T³umienie:
-1490=Poziom mokroœci:
+1490=Poziom wilgotnoœci:
 1019=Poziom suchoœci:
-1038=Zakres:
-1484=Pog³os
-0=Pog³os
+1038=Szerokoœæ:
 
 [249]
 0=Krystalicznoœæ
 1711=Krystalicznoœæ
-1712=Rozszerzenie zakresu:
-1714=Filtrowanie górnoprzepustowe:
-1716=Wzmacniacz harmonizacji:
+1712=Poszerzenie pasma:
+1714=Filtr górnoprzepustowy:
+1716=Wzmocnienie harmonicznych:
 1718=G³oœnoœæ echa:
-1720=Powtarzalnoœæ echa:
+1720=Sprzê¿enie echa:
 1722=Uwydatnienie stereo:
 
 [237]
-0=Próbkowanie
-1497=Zmiana próbkowania próbki
-1498=Próbkowanie do...
+0=Resampler
+1497=Resampler
+1498=Resampluj do:
 1499=Tryb:
-1875=Zawsze zmieñ próbkowanie
-1876=Zmieñ próbkowanie jeœli...
-1877=wiêksze od
-1143=Opcja ta umo¿liwia zmianê próbkowania próbki do wybranej wartoœci.\r\nBiblioteka libsamplerate oferuje wy¿sz¹ jakoœæ zmiany próbkowania od biblioteki libavcodec.\r\nMaksymalne dostêpne próbkowanie to 100000 Hz.\r\nMaksymalne próbkowanie przy zmianie próbkowania to 192000 Hz.
+1875=Resampluj zawsze
+1876=Resampluj jeœli czêstotliwoœæ próbkowania jest...
+1143=Kliknij "Zastosuj" albo "OK", by zmieniæ czêstotliwoœæ próbkowania.
 
 [245]
 0=OpóŸnienie
-1676=OpóŸnienie kana³u:
-1658=Przedniego lewego:
-1663=Przedniego centralnego:
-1666=Przedniego prawego:
-2178=Bocznego lewego:
-2181=Bocznego prawego:
-1669=Tylnego lewego:
-2184=Tylnego centralnego:
-1672=Tylnego prawego:
+1676=OpóŸnienie
+1658=Przedni lewy:
+1663=Przedni centralny:
+1666=Przedni prawy:
+2178=Boczny lewy:
+2181=Boczny prawy:
+1669=Tylny lewy:
+2184=Tylny centralny:
+1672=Tylny prawy:
 1675=LFE:
 
 [252]
-0=LFE
-1733=Przenikanie LFE
-1734=Czêstotliwoœæ dolnoprzepustowa:
-1736=Przyrost:
+0=Emisja LFE
+1733=Emisja LFE
+1734=Czêstotliwoœæ graniczna:
+1736=Wzmocnienie:
 1741=Usuñ niskie czêstotliwoœci dodane do LFE z lewego i prawego kana³u
 
 [253]
-0=Kana³y
-1763=Zamieñ kana³y
+0=Zamiana kana³ów
+1763=Zamiana kana³ów
 1749=Przedni lewy
 1748=Przedni centralny
-1746=Tylni lewy
-1670=Tylni centralny
-1745=Tylni prawy
-1143=Kana³y mog¹ byæ zamienione przez u¿ycie Miksera (filtra miksuj¹cego), ale ten filtr robi to szybciej.
 1747=Przedni prawy
 2188=Boczny lewy
 2191=Boczny prawy
+1746=Tylny lewy
+1670=Tylny centralny
+1745=Tylny prawy
+1744=LFE
+1143=Kana³y mog¹ byæ tak¿e zamieniene przy pomocy filtra Mikser, ale ten jest szybszy.
 
 [191]
 0=Mikser
-1405=Mikser kana³ów
-1636=Macierz niestandardowa
+1405=Mikser
+1406=Konfiguracja g³oœników:
+1636=Dostosuj macierz
 1586=Normalizuj macierz
-1406=Tryb g³oœników:
-1701=Mowa:
-1588=Kontrola g³oœnoœci
+1596=P
+2172=BoczL
+2173=BoczP
+1597=TylnyL
+2176=TylnyC
+1598=TylnyP
+1635=P
+2174=BoczL
+2175=BoczP
+1632=TylnyL
+2177=TylnyC
+1633=TylnyP
+1588=Ustawienia g³osu
 1637=Uwydatnij stereo
+1701=G³os:
+1702=Otoczenie:
 1685=Rozpiêtoœæ s³uchawek:
-1704=Mowa:
 
 [243]
-0=Wyjœcie
-1574=16 bitowe sta³oprzecinkowe
-1575=24 bitowe sta³oprzecinkowe
-1576=32 bitowe sta³oprzecinkowe
-1577=32 bit zmiennoprzecinkowe
-1573=Obs³ugiwane wyjœciowe formaty próbek:
-1143=Dla lepszej wydajnoœci na s³abszych komputerach i dla zachowania kompatybilnoœci ze sterownikami zaleca siê zaznaczyæ tylko 16 bitowy sta³oprzecinkowy wyjœciowy format próbki.\r\nWyjœciowy format próbki LPCM jest potrzebny dla dŸwiêkowych dekoderów DVD takich jak np.: Cyberlink.
-1813=Zezwól na bezpoœredni zapis wyjœciowy do pliku
-1811=Nie u¿ywaj nag³ówka WAVEFORMATEXTENSIABLE gdy nie trzeba
-1846=Zastosuj tylko dla wyjœcia S/PDIF
-1845=Po³¹cz z:
-1985=Koduj tylko multikana³owe strumienie
-1984=Urz¹dzenie:
-1743=Transmisja:
-1587=AC3 (tryb kodowania S/PDIF)
+0=Strumieñ wyjœcia
+1573=Obs³ugiwane formaty próbek wyjœciowych
+1574=16 bit sta³oprzecinkowy
+1575=24 bit sta³oprzecinkowy
+1576=32 bit sta³oprzecinkowy
+1577=32 bit zmiennoprzecinkowy
+1587=AC3 (S/PDIF tryb kodowania)
+1985=Koduj tylko strumienie wielokana³owe
+1845=Po³¹cz z filtrem:
+1846=Zastosuj jedynie do wyjœcia S/PDIF
+1984=Urz¹dzenie wielokana³owe:
+1811=Nie u¿ywaj nag³ówka WAVEFORMATEXTENSIBLE gdy nie ma potrzeby
+1813=Zezwól na wyjœcie bezpoœrednio do pliku
+1143=Dla lepszej wydajnoœci na wolniejszych komputerach b¹dŸ w przypadku niekompatybilnych sterowników, odznacz wszystko z wyj¹tkiem 16 bit integer.\r\nOpcja LPCM jest przeznaczona do pod³¹czania filtrów dekoduj¹cych audio, jak np. filtr Cyberlink'a.
 
-[102]
-0=O programie
-1849=Licencja
-1839=Szczegó³y wersji
-1251=ffdshow dekoder obrazu
-1072=wersja ffdshow
+[289]
+0=1. O dekoderze audio ffdshow\r\n\r\nffdshow to oprogramowanie o otwartym kodzie Ÿród³owym w sk³ad którego wchodzi dekoder DirectShow i kodek VFW. S³u¿y ono do szybkiego dekodowania meteria³u audio i video zapisanego w ró¿nych formatach.\r\n\r\nPosiada mo¿liwoœæ przetwarzania strumieni audio przy pomocy takich filtrów jak korektor graficzny, g³oœnoœæ, dekoder Dolby, opóŸnienie, DSP Winamp'a i innych.\r\n\r\n2. Cechy\r\n\r\n- obs³uga du¿ej iloœci formatów audio: AC3, AAC, DTS, MP1/2/3, Vorbis, LPCM, TTA, QDM2, ADPCM, IMC,  ATRAC3 i wielu innych,\r\n- dekoder Dolby,\r\n- filtry audio: korektor graficzny, g³oœnoœæ, opóŸnienie, mikser i convolver,\r\n- wielokana³owe przetwarzanie przez komponenty Winamp'a,\r\n- obs³uga wyjœcia SPDIF.\r\n\r\n3. ffdshow-tryouts\r\n\r\nffdshow pierwotnie zosta³ opracowany przez Milan'a Cutka. Od czasu gdy Milan Cutka zaprzesta³ aktualizowania w 2006 roku, uruchomiliœmy nowy projekt "ffdshow-tryouts".\r\n\r\n4. Konfiguracja\r\n\r\nInstalator potrafi skonfigurowaæ ustawienia g³oœników. Domyœlnie ³adowane s¹ ustawienia systemu operacyjnego (z panelu sterowania).\r\n\r\n5. Odnoœniki\r\n\r\nffdshow-tryouts:\r\nhttp://ffdshow-tryout.sourceforge.net/\r\nhttp://sourceforge.net/project/showfiles.php?group_id=173941\r\n\r\nffdshow (stare):\r\nhttp://ffdshow.sourceforge.net/tikiwiki/\r\nhttp://sourceforge.net/projects/ffdshow/\r\n\r\nFFmpeg:\r\nhttp://ffmpeg.mplayerhq.hu/\r\nMPlayer:\r\n\r\nhttp://www.mplayerhq.hu/\r\n\r\nDoom9:\r\nhttp://forum.doom9.org/showthread.php?t=120465\r\n\r\nlub Wikipedia, wolna encyklopedia:\r\nhttp://en.wikipedia.org/wiki/Ffdshow\r\n\r\n5. Kopiowanie\r\n\r\nWszystkie u¿yte Ÿród³a (z wyj¹tkiem planu detekcji wykorzystania mikroprocesora) jak i sam ffdshow s¹ dystrybuowane na zasadach Powszechnej Licencji Publicznej GPL. Zobacz plik copying.txt.\r\n\r\nLokalizacja:\r\nPiotr Sokó³, VirtualMan_PL, Radzio <ffdshow-polish@googlegroups.com>
 
-[193]
-2=Zamknij
+; Konfiguracja kodera video VFW
 
-[231]
-0=Wyjœcie
-1910=Profil:
-1016=Symetryczne odbicie
-1034=Po³¹cz tylko z kompatybilnymi filtrami
-1017=Pozwól na zmianê wyjœciowego formatu podczas odtwarzania
-1966=Metoda:
-1036=Automatyczny wybór przestrzeni kolorów
-1031=Ustaw proporcjê pikseli
-1033=Ustaw flagê przeplotu
-1913=YUV:
-1912=YUV:
-1052=Wysoka jakoœæ konwersji z YV12 do RGB
-1284=Obs³ugiwane wyjœciowe przestrzenie barw:
+[200]
+0=Ogólne
+1420=Maksymalny odstêp klatek I:
+1422=Minimalny odstêp klateki I:
+1424=Klatki B
+1425=Maks. iloœæ kolejnych klatek B:
+1427=Dynamiczna
+1431=Udoskonal
+1428=Spakowany strumieñ bitów
+1429=Zamkniêty GOP
+1572=Iloœæ w¹tków kodera:
+1494=Inne opcje
 
-[132]
-0=Czcionka
-1259=Czcionka:
-1335=Autowielkoœæ
-1827=Szybsza
-2081=Zamglona
-2060=Obramowana
-1114=Typ:
-1108=Wielkoœæ:
-1116=Odstêp:
-1120=Rozci¹gniêcie poziome:
-1110=Wielkoœæ:
-1124=Kolor:
-1981=Kana³ alfa:
-1978=Typ cienia:
-2054=Cieñ:
-2065=Wielkoœæ, kolor i kana³ alfa
-2088=Automatycznie napraw proporcjê
-2087=Nadpisz wysokoœæ w SAA/ASS2
-2090=Rozci¹gniêcie pionowe:
-2053=Zarys:
-2052=T³o:
+[230]
+0=Mened¿er profili kodowania
+1467=Profil:
+1045=Zmieñ &nazwê
+1044=&Usuñ
+1468=Dane:
+1=Zamknij
 
-[113]
-0=Napisy
-1105=Napisy
-1279=Szukaj w:
-1183=Plik:
-1244=Odœwie¿
-1126=Pozycja w pionie:
-1122=Pozycja w poziomie:
-1360=Wyrównanie:
-1683=Napisy 3D
-1280=opóŸnienie
-1281=Prêdkoœæ:
-1837=Skanowanie heurystyczne
-1414=Obserwuj zmiany plików
-1722=G³êbia:
-1358=Proporcja:
-1787=W³¹cz napisy wbudowane w film
-1789=W³¹cz obs³ugê napisów SSA, ASS oraz ASS2
-1788=Dekoduj zamkniête napisy w filmie
-1968=Priorytet rozszerzenia:
+[232]
+0=Ogólne
+1470=Przestrzeñ kolorów:
 
-[111]
-1162=Resetuj
+[269]
+0=Ogólne
+1472=Profil:
+1572=Iloœæ w¹tków:
+
+[256]
+0=Ogólne
+1420=Maksymalny odstêp klatek kluczowych IDR:
+1422=Minimalny odstêp klatek kluczowych IDR:
+1424=Klatki B
+1425=Maks. iloœæ kolejnych klatek B:
+1427=Dynamiczna
+1431=Udoskonal
+1572=Iloœæ w¹tków:
+1494=Inne opcje
+1885=Stosuj klatki B jako referencyjne
+1886=Funkcja porównawcza optymalna pod wzglêdem zniekszta³ceñ tempa dla klatek B
+1827=Deblock alpha:
+1829=Deblock beta:
+
+[228]
+0=Ogólne
+1866=Zapisz klatki bezpoœrednio do pliku ASF
+1420=Odstêp klatek I (sek):
+1868=Z³o¿onoœæ:
+1870=Chropowatoœæ:
+1872=Usuñ przeplot
+
+[202]
+1446=Koder:
+1448=FOURCC:
+1450=Tryb:
+1453=Ustawienia:
 1163=Pomoc
-1164=Przetwórz ca³y obraz
-1167=Tylko praw¹ stronê
-1723=Resetuj u³o¿enie
+1459=Profile ustawieñ
+1460=Nie zapisuj ustawieñ do rejestru
 
-[120]
-0=Przetwarzanie
-1073=Przetwarzanie
-1158=Si³a przetwarzania:
-1160=Metoda przetwarzania:
-1270=Luminancja
-1271=Chroma
-1328=Nic's pierwszy
-1242=Zasiêg poziomy:
-1243=Zasiêg pionowy:
-1275=Popraw poziom:
-1035=Luminancji
-1038=Pe³en zakres
-1457=Szybkie usuwanie bloków SPP
-1459=P³ynny zasiêg
-1274=Odkszta³canie:
-1273=Usuñ bloki (V):
-1272=Usuñ bloki (H):
-1028=W³asne:
-1027=Standardowe:
-1008=Automatyczna kontrola jakoœci
-1534=Wysoka dok³adnoœæ
-1238=MPlayer'a
+[203]
+0=Napisy
+1461=Napisy na pocz¹tku filmu
+1462=Pierwsza klatka:
+1464=Ostatnia klatka:
+1466=Napisy na koñcu filmu
+1467=Pierwsza klatka:
+1469=Ostatnia klatka:
+1471=Tempo redukcji napisów
+1472=
+1474=Kwantyzator
+1475=Klatki I:
+1477=Klatki P:
+1479=Wielkoœæ (kB)
+1480=Pocz¹tek:
+1482=Koniec:
+1484=Napisy w odcieniach szaroœci
+1143=Jeœli film posiada napisy czo³owe, które wed³ug Ciebie nie potrzebuj¹ najlepszej jakoœci, wpisz numer pierwszej i ostatni¹ klatki w pola napisów czo³owych po zaznaczeniu "Napisy na pocz¹tku filmu".\r\nTo samo dotyczy napisów koñcowych. Jeœli myœlisz, ¿e napisy koñcowe potrzebuj¹ mniej bitów - które mo¿na spo¿ytkowaæ lepiej w g³ównej czêœci filmu, tymsamym polepszaj¹c jej jakoœæ - zaznacz "Napisy na koñcu filmu" oraz wpisz numer pierwszej i ostatniej klatki napisów koñcowych.\r\nWartoœæ % oznacza procent bitrate'u filmu. Tak wiêc jeœli film posiada œrednio 800kb/s a ustawiono 10%, napisy zakodowane zostan¹ z bitrate'em 80 kb/s.\r\nJe¿eli wybra³eœ kodowanie napisów z ustalonym kwantyzatorem, upewnij siê ¿e zrobi³eœ to tak¿e dla pierwszego przebiegu! W przeciwnym wypadku porz¹dany rozmiar nie zostanie uzyskany!\r\nJeœli chcesz uzyskaæ okreœlone rozmiary fragmentów filmu z napisami, koder w miarê mo¿liwoœci spróbuje je osi¹gn¹æ.
 
-[143]
-0=Skróty
-1202=Skróty klawiszowe
-1416=Odleg³oœæ wyszukania
-1418=Odleg³oœæ wyszukania (2 opcja):
-1472=Zdalna kontrola API
-1536=Zdalna wiadomoœæ ffdshow
-1537=W³asna
-1829=Eksportuj komendy...
-1539=Akceptuj komunikaty z klawiatury
-1330=Poka¿ komunikat OSD po naciœniêciu klawisza
-1329=Wykonaj naciœniecie klawisza nawet jeœli nie jest on ustawiony
+[204]
+0=Inna kompresja
+1485=U¿yj innej kompresji krzywych
+1486=Kompresja krzywej:
+1488=Wysoki odstêp od œredniej:
+1491=Niski odstêp od œredniej:
+1494=Automatyczna minimalna wzglêdna jakoœæ:
+1497=Rêczna minimalna wzglêdna jakoœæ:
+1500=Premia trybu bias:
 
-[127]
-0=Wyostrzanie
-1065=Wyostrzanie
-1217=Wysoka jakoœæ filtrowania bloków
-1216=Wysoka jakoœæ
-1019=Si³a:
-1021=Próg:
-1023=Wyostrzanie bloków:
-1215=Poka¿ maskê krawêdzi
-1143=xsharpen\r\n Filtr wykonuje subtelne ale przydatne wyostrzanie. Dzia³a to na zasadzie\r\n ma³ej ramki nad ka¿d¹ klatk¹ lub nad ka¿dym œrodkowym pikselem który\r\n jest pominiêty lub nieruszony (zale¿y od ustawienia progu) albo zmapowany\r\n do jednego z dwóch najjaœniejszych lub najciemniejszych pikseli w oknie\r\n zale¿nie od bliskoœci œrodkowego piksela. Je¿eli œrodkowy piksel jest\r\n zmapowany to równie¿ Alfa-Zamglenie z oryginaln¹ wartoœci¹ piksela\r\n u¿ywaj¹cy konfigurowalnego ustawienia si³y. Koñcowym efektem jest obraz\r\n który mo¿e zawieraæ szum jednak w bardzo ma³ym stopniu i filtr stara siê\r\n przeciwdzia³aæ temu.\r\n\r\nUnsharp mask\r\n Filtr wykorzystuje dobrze znane technikê uwydatnienia kontrastu\r\n i wyostrzania. G³ównym celem jest utworzenie wyg³adzonego obrazu\r\n oraz oryginalnego obrazu a nastêpnie odjêcie ich od siebie. Rezultatem tego\r\n bêdzie obraz o podwy¿szonym kontraœcie.\r\n\r\nmsharpen\r\n Filtr ostrzy wa¿ne krawêdzie obrazu bez wzmacniania szumu. Dzia³a\r\n na zasadzie wykrywania krawêdzi i u¿ywania Kernela zaostrzaj¹cego tylko\r\n na obszarze krawêdzi.\r\n\r\nasharp\r\n Jeden z najlepszych filtrów wyostrzaj¹cych który daje doskona³¹ jakoœæ\r\n obrazu wraz z w³¹czonym filtrem Przetwarzanie. Najlepsz¹ jakoœæ uzyskamy\r\n u¿ywaj¹c go z obrazem niskiej i œredniej jakoœci.\r\n\r\nswscaler\r\n Jeden z najlepszych filtrów wyostrzaj¹cych który daje doskona³¹ jakoœæ\r\n obrazu wraz z w³¹czonym filtrem Przetwarzanie. Najlepsz¹ jakoœæ uzyskamy\r\n u¿ywaj¹c go z obrazem wysokiej jakoœci.\r\n\r\nOpis xsharpen, unsharp mask oraz msharpen zosta³ skopiowany z oryginalnej dokumentacji filtrów AviSynth i VirtualDub\r\n Prawa autorskie Donald Graft\r\n\r\nOpis asharp oraz swscaler zosta³ napisany przez Artura Osiñskiego (Virtual_ManPL)
+[205]
+0=Kompresja krzywych
+1463=Sceny o wysokiej kompresji:
+1420=Sceny o niskiej kompresji:
+1422=OpóŸnienie zwrotu kompresji:
+1423=klatek
+1505=Zwrot z ukosem
+1506=Zwrot proporcjonalny
 
-[140]
-0=Przeplot
-1167=Usuwanie przeplotu
-1523=Metoda:
-1209=Zamieñ pola
+[206]
+0=2 przebiegi - 1-szy przebieg
+1424=Plik statystyk:
 
-[125]
-0=W³aœciwoœci
-1072=W³aœciwoœci obrazu
-1017=Luminancja (kontrast):
-1831=Pe³en zakres
-1018=Luminancja (jasnoœæ):
-1781=Barwa:
-1782=Si³a:
-1787=Tylko chrominancja
-1026=Nasycenie:
-1025=Odcieñ:
-1038=Korekcja gammy RGB:
-1037=Korekcja gammy:
-1932=Efekt skanu:
-1830=Poprawa poziomu luminancji
+[207]
+0=Ogólne
+1425=Przestrzeñ kolorów:
+1426=Typ kodera:
+1427=Model kontekstu:
+1420=Odstêp klatek I:
+1143=Kodek bezstratny o wysokim wspó³czynniku kompresji, alternatywny do huffyuv, z obs³ug¹ dodatkowych przestrzeni kolorów ale du¿o wolniejszy.
 
-[134]
-0=Kadrowanie
-1137=Powiêkszanie i przycinanie
-2091=Autoprzycinanie:
-1138=Powiêkszanie
-1139=Przycinanie
-1140=Blokuj
-1105=Poziome:
-1107=Pionowe:
-1252=Góra:
-1254=Lewo:
-1255=Prawo:
-1256=Dó³:
-2094=Tolerancja:
-2096=Odœwie¿ po:
-2101=Zakoñcz skanowanie po
-1143=Powiêkszanie\r\nPrzycinanie\r\n szerokoœæ i wysokoœæ przyciêtego obrazu s¹ zaokr¹glone do 8 razy jeœli\r\n podasz z³¹ wartoœæ linia bêdzie mia³a czerwone t³o i wartoœæ nie bêdzie\r\n zapisana\r\n u¿ywaj¹c tego filtra zapewne bêdziesz musia³ te¿ poprawiæ wspó³czynnik\r\n obrazu
-2098=Pionowe
-2099=Poziome
-2100=Pionowe i poziome
+[209]
+0=Ogólne
+1529=Przestrzeñ kolorów:
 
-[142]
-0=Poziomy
-1170=Poziomy
-1707=Typ:
-1185=Pe³en zakres
-1179=Tylko luminancja
-1184=Poka¿ histogram
-1909=Autokontrola
-1291=Wejœciowe
-1267=Wyjœciowe
-1189=Roz³o¿enie funkcji:
-1181=Korekcja gammy
-1933=Za³aduj wykres...
-2109=Czasowy pion
-2106=Próg pionu:
-2103=Max. delta Y:
+[210]
+0=Ogólne
+1420=Maksymalny odstêp klatek I:
+1422=Minimalny odstêp klatek I:
+1424=Próg ró¿nicy klatki kluczowej:
+1530=Wysoka jakoœæ
+1531=Porzucaj klatki
+1143=Tego kodeka u¿ywaj tylko do celów eksperymentalnych! W przysz³oœci mo¿e on zostaæ zmodyfikowany w sposób nie zapewniaj¹cy kompatybilnoœci.
 
-[242]
-0=Zamazywanie
-1552=Zamazywanie
-1574=Tylko luminancja
-1551=Typ:
-1542=Lewo:
-1544=Góra:
-1546=Wysokoœæ:
-1548=Szerokoœæ:
-1854=za³aduj obraz
-1553=Zamglenie:
-1555=Wysokoœæ X i Y:
-1559=Typ krawêdzi:
-1562=Kierunki i tryby pracy:
-1143=Filtr tez umo¿liwia zamazywanie wybranego obszaru obrazu.
-1558=Kolor:
+[211]
+0=Statystyki
+1531=Zapisz informacje do debuggera
+1533=Zapisz informacje do pliku
+1532=Poka¿ komunikaty b³êdów
+1738=Udostêpnij graf DirectShow dla programu GraphEdit
+1537=Poka¿ graf
+1538=Oblicz PSNR
+1541=Zakodowanych klatek:
+1542=kb/s:
+1543=Klatek/s:
+1544=Œredni PSNR:
+1545=Œredni kwantyzator:
 
-[139]
-0=Wizualizacje
-1337=Wizualizacje
-1075=Kwantyzatory
-1357=Wykres
-1074=Wektory ruchu
-1143=Wizualizacje urozmaicaj¹ce obraz.
+[212]
+0=Ogólne
+1428=Przestrzeñ kolorów:
+1429=Sposób przewidywania:
+1314=Skala szaroœci
+1315=U¿yj dostosowanych tablic Huffmana
 
-[126]
-0=Szum
-1038=Dodanie szumu
-1067=Stary algorytm
-1068=Nowy algorytm (avih)
-1054=Py³ i rysy:
-1051=Dr¿enie:
-1052=Linie pionowe:
-1050=Migotanie:
-1041=Si³a szumu luminancji:
-1049=Si³a szumu chrominancji:
-1069=Algorytm z MPlayer'a
-1039=Jednolity
-1232=Uœredniony
-1231=Odbiornikowy
-
-[176]
-0=DScaler
-1309=œcie¿ka
-1308=Filtr DScaler
-
-[137]
-0=Przesuniêcie
-1939=Symetryczne odbicie
-1149=Poziome wyrównanie luminancji:
-1151=Pionowe wyrównanie luminancji:
-1153=Poziome wyrównanie chrominancji:
-1120=Pionowe wyrównanie chrominancji:
-1940=Lustrzane odbicie
-1148=Przesuniêcie luminancji i chrominancji
-1143=Filtr ten umo¿liwia przesuwnie luminancji oraz chrominancji.
-
-[128]
-0=Wyg³adzanie
-1134=Wyg³adzanie obrazu oraz redukcja szumu
-1136=Zmiêkczanie:
-1232=Uwzglêdniaj kolory
-1137=P³ynne wyg³adzanie:
-1138=Wygadzanie luminancji:
-1139=Wyg³adzanie chrominancji:
-1140=Odszumianie stopniowe:
-1141=P³ynna redukcja szumu MPlayer'a
-1142=Rozmywanie poziomów
-1878=Odszumianie3D
-1415=Jakoœæ
-
-[133]
-0=Rozmiar
-1083=Rozmiar i proporcja
-1189=Zwiêksz rozmiar jeœli...
-1287=X
-1288=Y
-1191=Zwiêksz rozmiar jeœli iloœæ pikseli...
-1188=Zawsze zwiêksz rozmiar
-2086=Zwiêksz do rozdzielczoœci na pulpicie
-1289=Korekcja wspó³czynnika obrazu:
-1100=Wy³¹czona
-1101=Oryginalna
-1102=W³asna:
-1234=Wspó³czynnik nak³adki:
-1187=Rozszerz do wielokrotnoœci:
-1540=Zwielokrotnij do
-1986=Konkretny rozmiar H oraz V
-1987=Konkretny poziomy rozmiar:
-1285=Rozmiar:
-1186=Konkretny wspó³czynnik:
-1988=Wewnêtrzne przetwarzanie wspó³czynnika
-1286=Aspekt:
-2084=PAR wyjœciowego sprzêtu:
-
-[177]
-0=Perspektywa
-1317=Korekcja perspektywy
-1321=ród³owe prostok¹ty
-1319=Interpolacja:
-1143=Ten filtr jest w trakcie tworzenia dlatego na obrazie mog¹ pojawiaæ siê czarne kropki.\r\nNajlepsz¹ jakoœæ oferuje interpolacja szeœcienna, a nastêpnie linearna.
-
-[138]
-0=Metoda
-1892=Zablokuj
-1285=Algorytm lumy:
-1286=Algorytm chromy
-1282=Ustawienia rozmiaru:
-1019=Wyostrzanie luminancji:
-1020=Wyostrzanie chrominancji:
-1360=Z przeplotem
-1953=Wysoka dok³adnoœæ
-1098=Zamglenie luminancji:
-1099=Zamglenie chrominancji:
-1100=Poziome odkszta³cenie:
-1022=Pionowe odkszta³cenie:
-1143=Algorytmy zwiêkszania rozmiaru obrazu:\r\n najdok³adniejszym algorytmem który oferuje najlepsza jakoœæ obrazu jest\r\n Spline, a nastêpnie Lanczos\r\n\r\nZ przeplotem:\r\n zaznaczone - klatki traktowane s¹ jako klatki z przeplotem\r\n niezaznaczone - klatki s¹ traktowane jako klatki progresywne\r\n wpó³zaznaczone - decyduje typ wejœciowej klatki (u¿ywane podczas\r\n przetwarzania obrazu MPEG2)
-
-[254]
-0=Tekst
-1775=pikseli
-1788=Poprawiaj "I" oraz "i"
-1790=Poprawiaj interpunkcjê (np.: "?." -> "?" ; "!." -> "!" itd.)
-1795=Poprawiaj gramatykê
-1791=Poprawiaj wyrazy pisane ca³oœciowo tylko wielk¹ liter¹
-1792=Usuwaj niechciane spacje pomiêdzy cyframi
-1798=Usuwaj napisy dŸwiêkowe (np.: "bum", "bach", "a³a", "aha" itd.)
-1571=Podziel d³ugie linijki napisów:
-1767=Minimum:
-1772=przez okres:
-1787=Poprawiaj ' ' na " oraz " " na "
-1723=Odstêp miedzy liniami:
-1836=Odleg³oœæ napisów od krawêdzi:
-1572=Na³ó¿ na siebie napisy które s¹ wyœwietlane w tym samym czasie
-1793=Tekst
-
-[250]
-1725=W³¹cz
-1726=Preferowane jêzyki:
-1728=Aktualny jêzyk:
-1727=Metoda wyg³adzania:
-0=VobSub
-1724=VobSub
-1729=Skala:
-1730=Gauss'owskie zamglenie
-1796=Przestrzegaj ustawieñ pozycji napisów z zak³adki Napisy
-1143=Ustawienia zewnêtrznego dodatku.\r\nPierw musi byæ on zainstalowany ¿eby te opcje zadzia³a³y.
-
-[179]
-1324=Dyskretna kosinusowa transformata
-1143=Dyskretna kosinusowa transformata jest filtrem który dla ka¿dego bloku 8x8 zmniejsza wybrane czêstotliwoœci wartoœci oraz nastêpnie przeprowadza odwrotny proces do Odwrotnej dyskretnej kosinusowej transformaty (IDCT).\r\n\r\nPrawa autorskie (2002 rok) - Tom Barry  - trbarry@trbarry.com
-1917=Matryca kwantyzatora...
-1919=Kwantyzator H.263
-1922=Kwantyzator MPEG
-1920=Kwantyzator:
-1325=Wspó³czynniki
-
-[172]
-0=Zrzut
-1740=Zrzucaj co:
-1741=klatkê
-1216=Zrzut klatki
-1223=Ka¿dej
-1224=Pojedynczej:
-1226=Zakres:
-1228=Zrzuæ teraz
-1232=Folder
-1261=Prefiks:
-1262=Format:
-1230=Jakoœæ:
-1263=Iloœæ cyfr w nazwie:
-1143=Umo¿liwia zrzut klatek obrazu do pliku BMP, PNG oraz JPEG.
-
-[173]
-0=Nak³adka
-1235=Nak³adka
-1143=Dzia³a tyko gdy zaznaczona jest opcja "Ustaw proporcjê pikseli w wyjœciowym typie materia³u" w zak³adce "Wyjœcie" oraz sprzêt to obs³uguje.\r\n\r\nObs³uguje mikser nak³adki i miksuj¹cy renderer obrazu 9 w trybie okienkowym.
-1236=Jasnoœæ:
-1137=Kontrast:
-1138=Barwa:
-1139=Nasycenie:
-1140=Ostroœæ:
-
-[118]
-0=Defekty
-1307=Autowykrywanie
-1572=Iloœæ dekowanych w¹tków:
-1943=Pomiñ klatkê gdy opóŸnienie wynosi:
-1947=Pomiñ usuwanie bloków w H.264 po:
-1946=Kontrola jakoœci
-1916=Aktualne matryce kwantyzatora..
-1283=Opcje libavcodec
-1314=Dekoduj w skali szaroœci
-1544=Metoda ukrywania defektów:
-1542=Elastycznoœæ defektów:
-1047=Pomiñ b³êdy kompresji:
-1309=Stare b³êdy przeplotu w Xvid
-1308=Stare pliki lavc msMPEG4
-1311=B³êdy obramowania
-1316=B³êdy chroma przeplotu MC w DivX
-1315=B³êdy krawêdzi
-1312=B³êdy AMV
-1317=B³êdy DC CLIP
-1310=B³êdy UMP4
-1313=B³êdy qpel w Xvid oraz DivX
-
-[121]
-0=Kolejka
-1944=Kolejkowanie wyjœciowych próbek
-1958=U¿yj kolejkowania w:
-1268=OpóŸnienie video
-1365=Inne ustawienia
-1764=koniec:
-1765=pocz¹tek
-1550=Rozdziel wejœciowy przeplot jeœli wysokoœæ > :
+[213]
+0=Strumieñ wejœcia
+1548=Wymuœ wejœciow¹ paletê kolorów:
+1550=Ustaw przeplot na wejœciu jeœli wysokoœæ >
 1552=pikseli
-1143=Kolejkowanie wyjœciowych próbek\r\n G³ównym zadaniem tej opcji jest zmniejszenie pomijania klatek wskutek\r\n zarz¹dzania w¹tkami procesora\r\n Opcja ta dzia³a tylko wtedy kiedy procesor obs³uguje wielow¹tkowoœæ\r\n\r\nU¿yj kolejkowania w\r\n Kolejkowanie jest domyœlnie wy³¹czone ze wzglêdu na problemy ze\r\n stabilnoœci¹\r\n Jednak jeœli chcesz dodaæ aplikacjê wykorzystuj¹c¹ wielow¹tkowoœæ oddziel\r\n pliki znakiem ;\r\n\r\nInne ustawienia\r\n OpóŸnienie obrazu\r\n  Je¿eli odbiorca jest daleko od g³oœników, mo¿esz wypróbowaæ t¹ opcjê
-2206=W³¹cz kolejkowanie miksuj¹cego renderera obrazu 9 - YV12
+1016=Obróæ w pionie
+1554=Zezwól na przetwarzanie obrazu
+1555=Ustawienia
+1556=Redukcja szumu libavcodec/x264
+1460=Si³a redukcji szumu:
 
-[2112]
-0=Konwersja
-2123=Specyfikacja YCbCr:
-2122=Kolory:
-2125=Pe³ny zakres ( luminancja : 0-255, chrominancja : 1-255 )
-2124=Standard ( luminancja : 16-235, chrominancja : 16-240 )
-2126=W³asne
-2118=Obciêcie czerni:
-2119=Obciêcie bieli:
-2120=Obciêcie chrominancji:
-2121=Powi¹¿ z luminancj¹
+[214]
+0=Maskowanie
+1556=Maskowanie luminancji:
+1564=Maskowanie ciemnoœci:
+1567=Eliminacja pojedynczych wspó³czynników
+1568=Luminancja
+1572=Chrominancja
+1569=Próg:
+1573=Próg:
+1558=Maskowanie z³o¿onoœci czasowej:
+1560=Maskowanie z³o¿onoœci przestrzennej:
+1576=Maskowanie ramek:
+1566=Normalizacja kwantyzacji adaptacyjnej
+1571=tak¿e DC
+1575=tak¿e DC
+1562=Maskowanie bloków inter:
 
-[255]
-0=Nak³adka obrazu
-1798=Nak³adka obrazu
-1799=Œcie¿ka pliku
-1802=Poziome po³o¿enie:
-1803=Pionowe po³o¿enie:
-1810=Po³o¿enie:
-1361=Efekt:
-1807=PrzeŸroczystoœæ
+[220]
+0=Maskowanie
+1435=OpóŸnienie reakcji kodera:
+1436=Okres uœredniania:
+1437=Wyg³adzenie krzywej bitrate:
 
-[261]
-1858=Procenty:
-1859=Piksele:
-2068=Lewo:
-2069=Prawo:
-2070=Góra:
-2071=Dó³:
-2079=Poziomo:
-2080=Pionowo:
-1862=Poziomo:
-1863=Pionowo:
-1199=Zablokuj
-0=Krawêdzie
-1857=Krawêdzie:
-1860=Wewnêtrzne
-1861=Zewnêtrzne
-2067=Dzielenie krawêdzi:
-2209=Jasnoœæ:
+[215]
+0=Maskowanie
+1576=Maskowanie luminancji
+1577=Wstêpny filtr optymalizuj¹cy chrominancje
 
-[225]
-1829=Zapisz matrycê...
-1828=Za³aduj matrycê...
-1840=Intra matryca:
-1763=Inter matryca:
+[258]
+0=Maskowanie
+1840=Wyostrzanie:
+1842=Czu³oœæ szumu:
 
-[180]
-2021=Dodaj Ÿród³owy obraz ffdshow
-2029=Bufory klatek:
-2032=U¿yj obecnego
-2033=Za³aduj...
-2034=Zapisz...
-2024=Wejœciowe palety:
-2023=3:2 Pulldown:
+[219]
+0=Kontrola tempa
+1635=Tolerancja rozmiaru pliku:
+1637=Kompresja kwantyzatora:
+1639=Rozmycie kwantyzatora dla 1-szego przebiegu:
+1641=Rozmycie kwantyzatora dla 2-go przebiegu:
+1643=Maksymalna ró¿nica kwantyzatora:
+1646=Minimalny bitrate:
+1435=kb/s
+1648=Maksymalny bitrate:
+1445=kb/s
+1650=Rozmiar bufora strumienia dekodera:
+1446=bitów
+1645=U¿yj funkcji ci¹g³ej by ograniczyæ kwantyzator wartoœciami min. i maks.
+1143=Kompresja kwantyzatora\r\nJeœli ustawiono wartoœæ 100%, kwantyzator pozostanie prawie sta³y (sceny dynamiczne bêd¹ wygl¹da³y gorzej). Jeœli ustawiono 0%, kwantyzator bêdzie modyfikowany tak by rozmiary wszystkich klatek by³y w przybli¿eniu równe (sceny statyczne bêd¹ wygl¹da³y gorzej).\r\n\r\nRozmycie kwantyzatora\r\nRozmywa przebieg wartoœci kwantyzatora w czasie: 0% - brak rozmycia, 100% - uœrednia wszystkie przesz³e wartoœci kwantyzatora.\r\n\r\nMaksymalna ró¿nica kwantyzatora\r\nOgranicza maksymaln¹ ró¿nicê kwantyzatora pomiêdzy klatkami.\r\n\r\nMinimalny/Maksymalny bitrate\r\nNieograniczona jeœli ustawiono zero.\r\n\r\nRozmiar bufora strumienia dekodera\r\nDla MPEG1/2 ustawia tak¿e rozmiar bufora VBV.\r\n\r\nOpis Michael Niedermayer
 
-[270]
-1941=Próg:
+[222]
+0=Strumieñ wyjœcia
+1438=Strumieñ wyjœcia
+1654=Przechowuj klatki w pliku AVI
+1655=Przechowuj klatki w zewnêtrznym pliku
+1659=Statystyki libavcodec/x264:
+1660=Nie u¿ywaj
+1661=Zapisz
+1662=U¿yj
+1663=Zapisz i u¿yj
+1664=Bitrate
+1667=Zmieñ iloœæ klatek/s
+1143=Mo¿esz zapisaæ ka¿d¹ klatkê do oddzielnego pliku (przydatne z koderem MJPEG): wybierz przechowywanie klatek w pliku nieskompresowanym a w polu nazwy pliku wpisz %i (lub podobn¹ maskê formatowania).
 
-[181]
-0=WarpSharp
-1338=WarpSharp
-1339=Oryginalny WarpSharp ffdshow
-1341=Zmiana chrominancji:
-1343=Metoda wyg³adzania:
-1019=G³êbokoœæ warstwy:
-1021=Zasiêg:
-1023=Wyg³adzanie:
-1143=aWarpSharp jest filtrem warpsharp'uj¹cym który dzia³a inaczej ni¿ inne filtry wyostrzaj¹ce.\r\nPrawa autorskie - Marc Fauconneau
+[223]
+0=Kwantyzacja
+1441=Typ kwantyzacji:
+1699=U¿yj kwantyzacji kratowej
+1675=Klatki I
+1677=Klatki B
+1678=Makrobloki
+1442=Min. kwantyzator
+1443=Maks. kwantyzator
+1687=Mno¿nik klatek I
+1691=Mno¿nik klatek B
+1689=Offset klatek I
+1693=Offset klatek B
+1700=Algorytm DCT:
+1703=Noise shaping kwantyzatora:
+1707=Dok³adnoœæ MPEG2 DC:
+1695=Bias kwantyzatora inter:
+1697=Bias kwantyzatora intra:
 
-[267]
-8=Zamknij
+[226]
+0=2 przebiegi - 2-gi przebieg
+1847=Symulacja
+1424=Plik statystyk dla 1-szego przebiegu:
+1842=Nadpisz nowymi statystykami
+1844=Plik statystyk dla 2-go przebiegu:
+1444=Maksymalny bitrate:
+1446=Maks. poprawa kontroli przepe³nienia:
+1448=Maks. degradacja kontroli przepe³nienia:
+1445=kbit/s
+1462=Klatki I
+1450=Zwiêksz o
+1452=Je¿eli odleg³oœæ pomiêdzy klatkami I jest <
+1453=klatek...
+1454=... redukuj kompresjê klatek I o
 
-[239]
-1210=Pionowy filtr
-1207=Si³a szukania:
+[266]
+0=Niestandardowe matryce
 
-[251]
-1728=Tryb:
-1730=Próg:
-1727=Ochrona przed artefaktami
+[216]
+0=Szacowanie ruchu
+1604=Algorytm decyzyjny makrobloku:
+1578=4 wektory ruchu w ka¿dym makrobloku
+1579=Iteracyjne szacowanie ruchu
+1581=Funkcja porównania ruchu:
+1584=Funkcja porównania ruchu subpel:
+1587=Funkcja porównania makrobloków:
+1602=Jakoœæ udoskonalenia:
+1590=Typ i rozmiar diamentu:
+1594=Ocena ruchu wstêpnego przebiegu:
+1592=Przewidywanych ruchów z poprzedniej klatki:
+1596=Funkcja porównania ruchu:
+1599=Typ i rozmiar diamentu:
+1607=Optymalizacja zniekszta³cenia tempa dla CBP
+1606=Próbuj zawsze bez ruchu
 
-[240]
-1212=Si³a szukania:
-1367=Próg:
+[238]
+0=Szacowanie ruchu
+1779=Udoskonalenie subpel:
+1780=Przewidywanie ruchu klatek B:
+1782=Metoda szacowania ruchu:
+1528=Zakres szacowania ruchu:
+1519=Maksymalna iloœæ klatek referencyjnych:
+1525=Maksymalna d³ugoœæ wektora ruchu (w pikselach):
+1527=U¿yj informacji o chrominancji dla subpel i trybu decyzyjnego w klatkach P
+1506=Flagi analizatora intra:
+1508=Flagi analizatora inter:
 
-[241]
-1526=Próg:
-1528=Wyostrz
-1530=Mapuj
-1529=Dwustronnie
-1531=Po³¹cz luminancyjna i chrominancyjna maske ruchu
+[218]
+0=Szacowanie ruchu
+1614=U¿yj informacji o chrominancji
+1615=Profil precyzji detekcji ruchu:
+1626=Profil trybu VHQ:
+
+[227]
+0=Symulacja 2-go przebiegu
+1854=Analizuj
+1855=Symuluj
+1861=Bajtów:
+1862=Liczba klatek:
+1864=Œredni rozmiar klatki:
+1865=Œredni kwantyzator:
+1439=Udzia³ procentowy kwantyzatora
+1440=Udzia³ liczbowy kwantyzatora
+
+[268]
+1844=Si³a kwantyzacji adaptacyjnej:
+
+[290]
+0=1. O koderze video ffdshow\r\n\r\nKodek Video for Windows (VFW) i DirectShow. Do kompresji u¿ywa bibliotekê libavcodec z projektu FFmpeg. Kilka innych bibliotek kompresji takich jak xvidcore i libtheora jest tak¿e obs³ugiwanych.\r\n\r\n2. Cechy\r\n\r\n- ró¿ne metody kompresji:\r\n  H.264,\r\n  kompatybilne MPEG-4 (Xvid, DivX) z u¿yciem libavcodec lub Xvid,\r\n  kompatybilne Divx 3, MSMPEG4v2, MSMPEG4v1,\r\n  WMV1/7, WMV2/8,\r\n  H263, H263+,\r\n  HuffYUV w przestrzeni kolorów YV12,\r\n  MJPEG,\r\n  MPEG 1/2,\r\n  Theora (nie nadaje siê do regularnego u¿ytku, specyfikacja formatu nie jest jeszcze stabilna),\r\n\r\n- wszystkie typowe tryby kodowania: sta³y bitrate, ustalony kwantyzator, ustalona jakoœæ, dwu przebiegowe kodowanie (zale¿nie od w³aœciwoœci kompresora),\r\n- dla libavcodec i Xvid szczegó³owy wybór metody estymacji ruchu,\r\n- minimalna i maksymalna odleg³oœæ pomiêdzy klatkami I,\r\n- wybór minimalnego i maksymalnego kwantyzatora, typu kwantyzatora oraz kwantyzacji kratowej dla libavcodec,\r\n- kwantyzacja adaptacyjna (inaczej maskowanie) dla libavcodes i Xvid, eliminacja pojedynczych wspó³czynników,\r\n- wybór jakoœci kompresji dla czo³owych i koñcowych napisów,\r\n- dwa algorytmy kompresji krzywych dla 2-go stopnia kodowania dwu stopniowego dziêki twórcom Xvid'a,\r\n- symulacja drugiego przebiegu kodowania: pomimo ¿e ma³o precyzyjna, to nadal pomocna w doborze zaawansowanych parametrów kompresji krzywych,\r\n- mo¿liwoœæ u¿ycia natywnego kodowania libavcodec dla drugiego stopnia,\r\n- przetwarzanie obrazu z u¿yciem filtrów ffdshow,\r\n- graf podczas kodowania jeœli program koduj¹cy nie oferuje w³asnego,\r\n- obs³uga klatek typu B: od jednej do oœmiu nastêpuj¹cych po sobie klatek B,\r\n- obs³uga quarterpixel i GMC (Global Motion Compensation) dla MPEG4,\r\n- mo¿liwoœæ kodowania z przeplotem,\r\n- kodery libavcodec MPEG4/MPEG2/MPEG1, xvidcore 1.2 i x264 s¹ wielow¹tkowe,\r\n- kodery libavcodec posiadaj¹ mo¿liwoœæ wyœwietlania komunikatów o b³êdach,\r\n- dekompresja.\r\n\r\n3. ffdshow-tryouts\r\n\r\nffdshow pierwotnie zosta³ opracowany przez Milan'a Cutka. Od czasu gdy Milan Cutka zaprzesta³ aktualizowania w 2006 roku, uruchomiliœmy nowy projekt "ffdshow-tryouts".\r\n\r\n4. Odnoœniki\r\n\r\nffdshow-tryouts:\r\nhttp://ffdshow-tryout.sourceforge.net/\r\nhttp://sourceforge.net/project/showfiles.php?group_id=173941\r\n\r\nffdshow (stare):\r\nhttp://ffdshow.sourceforge.net/tikiwiki/\r\nhttp://sourceforge.net/projects/ffdshow/\r\n\r\nFFmpeg:\r\nhttp://ffmpeg.mplayerhq.hu/\r\n\r\nXvid:\r\nhttp://www.xvid.org/\r\n\r\nMPlayer:\r\nhttp://www.mplayerhq.hu/\r\n\r\nMJPEGtools:\r\nhttp://mjpeg.sourceforge.net/\r\n\r\nDoom9:\r\nhttp://forum.doom9.org/showthread.php?t=120465\r\n\r\nlub Wikipedia, wolna encyklopedia:\r\nhttp://en.wikipedia.org/wiki/Ffdshow\r\n\r\n5. Kopiowanie\r\n\r\nffdshow jest dystrybuowany na zasadach Powszechnej Licencji Publicznej GPL. Zobacz plik copying.txt.\r\n\r\nLokalizacja:\r\nPiotr Sokó³, VirtualMan_PL, Radzio <ffdshow-polish@googlegroups.com>
