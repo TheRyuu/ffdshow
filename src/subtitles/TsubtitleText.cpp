@@ -722,6 +722,12 @@ template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processHTML(const
    {
     words.add(l,l1,l2,props,7);props.isColor=false;props.size=0;props.fontname[0]='\0';
    }
+  else if (_strnicmp(l2,_L("{\\"),2)==0) // Remove unsupported tags
+  {
+	  const tchar *endTag=strchr(l2+2, '}');;
+	  if (endTag!=NULL)
+		words.add(l,l1,l2,props,endTag-l2);
+  }
   else
    l2++;
  words.add(l,l1,l2,props,0);
