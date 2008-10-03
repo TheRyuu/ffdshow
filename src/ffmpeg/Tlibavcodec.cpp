@@ -32,7 +32,7 @@ const char_t* Tlibavcodec::idctNames[]=
  _l("FAAN"),
  NULL
 };
-const char_t* Tlibavcodec::errorResiliences[]=
+const char_t* Tlibavcodec::errorRecognitions[]=
 {
  _l("none"),
  _l("careful"),
@@ -98,6 +98,7 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(avcodec_default_reget_buffer,"avcodec_default_reget_buffer");
  dll->loadFunction(avcodec_get_current_idct,"avcodec_get_current_idct");
  dll->loadFunction(avcodec_get_encoder_info,"avcodec_get_encoder_info");
+ dll->loadFunction(avcodec_h264_search_recovery_point,"avcodec_h264_search_recovery_point");
 
  if (!dec_only)
   {

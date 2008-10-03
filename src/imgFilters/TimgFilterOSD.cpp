@@ -399,7 +399,7 @@ TimgFilterOSD::TimgFilterOSD(IffdshowBase *Ideci,Tfilters *Iparent):
  TimgFilter(Ideci,Iparent),
  parent((TimgFiltersPlayer*)Iparent),
  fontUser(Ideci),
- subUser(0),
+ subUser(Ideci->getParam2(IDFF_OSD_userformat)),
  framecnt(0),
  oldFont((TfontSettingsOSD*)malloc(sizeof(TfontSettingsOSD))),
  trans(NULL),
@@ -448,6 +448,8 @@ bool TimgFilterOSD::is(const TffPictBase &pict,const TfilterSettingsVideo *cfg0)
 HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  const TOSDsettingsVideo *cfg=(const TOSDsettingsVideo*)cfg0;tempcfg=cfg;
+ if (subUser.subformat != cfg->userFormat)
+	 subUser.subformat = cfg->userFormat;
 
  init(pict,true,0);
  csProvider.Lock();
@@ -496,6 +498,7 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
        strcpy(oldLinesUser,cfg->user);
        strtok(cfg->user,_l("\n"),linesUser);
        subUser.set(linesUser);
+	   subUser.format(TsubtitleFormat(parent->config->getHtmlColors()));
       }
      TrenderedSubtitleLines::TprintPrefs printprefs(deci);
      printprefs.isOSD=true;
@@ -514,6 +517,7 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
      printprefs.csp=pict.csp & FF_CSPS_MASK;
      printprefs.cspBpp=pict.cspInfo.Bpp;
      printprefs.sar=pict.rectFull.sar;
+
      fontUser.print(&subUser,true,printprefs);
     }
   }

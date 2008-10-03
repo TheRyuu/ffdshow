@@ -262,6 +262,8 @@ struct x264_t
         int         i_frame_size;
     } out;
 
+    /**** thread synchronization starts here ****/
+
     /* frame number/poc */
     int             i_frame;
 
@@ -294,6 +296,8 @@ struct x264_t
     uint16_t        (*quant4_bias[4])[16];   /* [4][52][16] */
     uint16_t        (*quant8_bias[2])[64];   /* [2][52][64] */
 
+    const uint8_t   *chroma_qp_table; /* includes both the nonlinear luma->chroma mapping and chroma_qp_offset */
+
     DECLARE_ALIGNED_16( uint32_t nr_residual_sum[2][64] );
     DECLARE_ALIGNED_16( uint16_t nr_offset[2][64] );
     uint32_t        nr_count[2];
@@ -307,11 +311,11 @@ struct x264_t
     struct
     {
         /* Frames to be encoded (whose types have been decided) */
-        x264_frame_t *current[X264_BFRAME_MAX+3];
+        x264_frame_t *current[X264_BFRAME_MAX*4+3];
         /* Temporary buffer (frames types not yet decided) */
-        x264_frame_t *next[X264_BFRAME_MAX+3];
+        x264_frame_t *next[X264_BFRAME_MAX*4+3];
         /* Unused frames */
-        x264_frame_t *unused[X264_BFRAME_MAX + X264_THREAD_MAX*2 + 16+4];
+        x264_frame_t *unused[X264_BFRAME_MAX*4 + X264_THREAD_MAX*2 + 16+4];
         /* For adaptive B decision */
         x264_frame_t *last_nonb;
 
@@ -370,13 +374,15 @@ struct x264_t
         int     i_mb_xy;
         int     i_b8_xy;
         int     i_b4_xy;
-        
+
         /* Search parameters */
         int     i_me_method;
         int     i_subpel_refine;
         int     b_chroma_me;
         int     b_trellis;
         int     b_noise_reduction;
+        int     i_psy_rd; /* Psy RD strength--fixed point value*/
+        int     i_psy_trellis; /* Psy trellis strength--fixed point value*/
 
         int     b_interlaced;
 
@@ -395,12 +401,16 @@ struct x264_t
         unsigned int i_neighbour;
         unsigned int i_neighbour8[4];       /* neighbours of each 8x8 or 4x4 block that are available */
         unsigned int i_neighbour4[16];      /* at the time the block is coded */
-        int     i_mb_type_top; 
-        int     i_mb_type_left; 
-        int     i_mb_type_topleft; 
-        int     i_mb_type_topright; 
+        int     i_mb_type_top;
+        int     i_mb_type_left;
+        int     i_mb_type_topleft;
+        int     i_mb_type_topright;
         int     i_mb_prev_xy;
         int     i_mb_top_xy;
+
+        /**** thread synchronization ends here ****/
+        /* subsequent variables are either thread-local or constant,
+         * and won't be copied from one thread to another */
 
         /* mb table */
         int8_t  *type;                      /* mb type */
@@ -448,11 +458,21 @@ struct x264_t
             DECLARE_ALIGNED_16( uint8_t fenc_buf[24*FENC_STRIDE] );
             DECLARE_ALIGNED_16( uint8_t fdec_buf[27*FDEC_STRIDE] );
 
-            /* i4x4 and i8x8 backup data, for skipping the encode stage when possible */            
+            /* i4x4 and i8x8 backup data, for skipping the encode stage when possible */
             DECLARE_ALIGNED_16( uint8_t i4x4_fdec_buf[16*16] );
             DECLARE_ALIGNED_16( uint8_t i8x8_fdec_buf[16*16] );
             DECLARE_ALIGNED_16( int16_t i8x8_dct_buf[3][64] );
             DECLARE_ALIGNED_16( int16_t i4x4_dct_buf[15][16] );
+
+            /* Psy trellis DCT data */
+            DECLARE_ALIGNED_16( int16_t fenc_dct8[4][64] );
+            DECLARE_ALIGNED_16( int16_t fenc_dct4[16][16] );
+
+            /* Psy RD SATD scores */
+            int fenc_satd[4][4];
+            int fenc_satd_sum;
+            int fenc_sa8d[2][2];
+            int fenc_sa8d_sum;
 
             /* pointer over mb of the frame to be compressed */
             uint8_t *p_fenc[3];
@@ -524,11 +544,10 @@ struct x264_t
         /* Current frame stats */
         struct
         {
-            /* Headers bits (MV+Ref+MB Block Type */
-            int i_hdr_bits;
-            /* Texture bits (Intra/Predicted) */
-            int i_itex_bits;
-            int i_ptex_bits;
+            /* MV bits (MV+Ref+Block Type) */
+            int i_mv_bits;
+            /* Texture bits (DCT coefs) */
+            int i_tex_bits;
             /* ? */
             int i_misc_bits;
             /* MB type counts */
@@ -559,7 +578,7 @@ struct x264_t
         double  f_slice_qp[5];
         int     i_consecutive_bframes[X264_BFRAME_MAX+1];
         /* */
-        int64_t i_sqe_global[5];
+        int64_t i_ssd_global[5];
         double  f_psnr_average[5];
         double  f_psnr_mean_y[5];
         double  f_psnr_mean_u[5];

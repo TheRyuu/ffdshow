@@ -1,38 +1,65 @@
-CFLAGS+= -I. -I.. -I../.. -DUSE_ASM
+CFLAGS+= -I. -I.. -I../.. -I../../xiph -Idec -Ienc -DUSE_ASM
+
+SRCS_C=\
+  cpu.c \
+  comment.c \
+	huffman.c \
+	idct.c \
+	misc_common.c \
+	toplevel.c \
+	dec/decode.c \
+	dec/quant.c \
+	enc/blockmap.c \
+	enc/dct.c \
+  enc/dct_decode.c \
+	enc/dct_encode.c \
+	enc/dsp.c \
+	enc/encode.c \
+	enc/encoder_toplevel.c \
+	enc/frarray.c \
+	enc/frinit.c \
+	enc/mcomp.c \
+	enc/pb.c \
+	enc/pp.c \
+	enc/reconstruct.c \
+	enc/scan.c
+
+SRCS_C+=\
+	version.c
+	
+SRCS_C+=\
+	../../xiph/ogg/bitwise.c \
+	../../xiph/ogg/framing.c
 
 ifeq ($(64BIT),yes)
-	CFLAGS+=-Ix86_64
+SRCS_C+=\
+	enc/x86_64/recon_mmx.c \
+	enc/x86_64/dsp_mmx.c \
+	enc/x86_64/dsp_mmxext.c \
+	enc/x86_64/fdct_mmx.c \
+	enc/x86_64/idct_mmx.c \
+	enc/x86_64/dct_decode_mmx.c
 else
-	CFLAGS+=-Ix86_32
+SRCS_C+=\
+	enc/x86_32/recon_mmx.c \
+	enc/x86_32/dsp_mmx.c \
+	enc/x86_32/dsp_mmxext.c \
+	enc/x86_32/fdct_mmx.c \
+	enc/x86_32/idct_mmx.c \
+	enc/x86_32/dct_decode_mmx.c
 endif
 
-ifeq ($(64BIT),yes)
-SRCS_C=blockmap.c comment.c dct.c dct_decode.c \
-	dct_encode.c decode.c encode.c frarray.c frinit.c \
-	huffman.c idct.c mcomp.c misc_common.c pb.c pp.c \
-	quant.c reconstruct.c scan.c toplevel.c encoder_toplevel.c \
-	cpu.c dsp.c bitwise.c framing.c \
-	x86_64/recon_mmx.c x86_64/dsp_mmx.c x86_64/dsp_mmxext.c x86_64/fdct_mmx.c \
-	x86_64/idct_mmx.c x86_64/dct_decode_mmx.c
-else
-SRCS_C=blockmap.c comment.c dct.c dct_decode.c \
-	dct_encode.c decode.c encode.c frarray.c frinit.c \
-	huffman.c idct.c mcomp.c misc_common.c pb.c pp.c \
-	quant.c reconstruct.c scan.c toplevel.c encoder_toplevel.c \
-	cpu.c dsp.c bitwise.c framing.c \
-	x86_32/recon_mmx.c x86_32/dsp_mmx.c x86_32/dsp_mmxext.c x86_32/fdct_mmx.c \
-	x86_32/idct_mmx.c x86_32/dct_decode_mmx.c
-endif
 
 SLIB=../../../bin/ff_theora.dll
+
 DEF=ff_theora.def
 
 include ../../makefile_c.inc
 
 .all: $(SLIB)
 
-clean: 
-	rm -f *.o *~ $(SLIB) x86_32*.o *.d x86_32*.d x86_64*.o *.d x86_64*.d
+clean:
+	rm -f $(SLIB) *.o *.d dec/*.o dec/*.d enc/*.o enc/*.d enc/x86_32/*.o enc/x86_32/*.d enc/x86_64/*.o *.d enc/x86_64/*.d ../../xiph/ogg/*.o ../../xiph/ogg/*.d
 
 #
 # include dependency files if they exist

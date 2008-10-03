@@ -45,8 +45,7 @@ typedef struct
                       int mvx, int mvy,
                       int i_width, int i_height );
 
-    void (*avg[10])( uint8_t *dst, int, uint8_t *src, int );
-    void (*avg_weight[10])( uint8_t *dst, int, uint8_t *src, int, int i_weight );
+    void (*avg[10])( uint8_t *dst, int, uint8_t *src1, int, uint8_t *src2, int, int i_weight );
 
     /* only 16x16, 8x8, and 4x4 defined */
     void (*copy[7])( uint8_t *dst, int, uint8_t *src, int, int i_height );
@@ -62,7 +61,7 @@ typedef struct
                            uint8_t *pix_uv, int stride_uv, int mb_x );
     /* prefetch the next few macroblocks of a hpel reference frame */
     void (*prefetch_ref)( uint8_t *pix, int stride, int parity );
-    
+
     void *(*memcpy_aligned)( void *dst, const void *src, size_t n );
     void (*memzero_aligned)( void *dst, int n );
 

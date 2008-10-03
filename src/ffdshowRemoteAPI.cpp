@@ -614,7 +614,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
    switch (cds->dwData)
     {
      case COPY_PUTPARAMSTR:
-      return SUCCEEDED(deci->putParamStr(paramid,text<char_t>((const char*)cds->lpData)))?TRUE:FALSE;
+      return SUCCEEDED(deci->putParamStr(paramid,text<char_t>((const char_t*)cds->lpData)))?TRUE:FALSE;
      case COPY_GETPARAMSTR:
       {
        if (!cds->cbData) return false;

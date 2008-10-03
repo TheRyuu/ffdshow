@@ -468,7 +468,7 @@ static av_cold int truemotion1_decode_init(AVCodecContext *avctx)
     s->avctx = avctx;
 
     // FIXME: it may change ?
-//    if (avctx->bits_per_sample == 24)
+//    if (avctx->bits_per_coded_sample == 24)
 //        avctx->pix_fmt = PIX_FMT_RGB24;
 //    else
 //        avctx->pix_fmt = PIX_FMT_RGB555;

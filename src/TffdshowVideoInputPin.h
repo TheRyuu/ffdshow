@@ -17,7 +17,7 @@ private:
  bool usingOwnAllocator,rawDecode;
  TvideoCodecDec *video;
  char_t autosubflnm[MAX_PATH];bool oldSubHeuristic;char_t oldSubSearchDir[MAX_PATH];
- bool isMPC_matroska;
+ int connectedSplitter;
  bool wasVC1;
 protected:
  virtual bool init(const CMediaType &mt);
@@ -62,6 +62,14 @@ public:
  const char* get_current_idct(void){return video->get_current_idct();}
  bool isInterlacedRawVideo;
  IBaseFilter *pCompatibleFilter;
+ enum
+  {
+   MPC_matroska_splitter,
+   Haali_Media_splitter,
+   MPC_mpegSplitters,
+   DVBSourceFilter,
+   Unknown_Splitter
+  };
 };
 
 class TffdshowVideoEncInputPin :public IMixerPinConfig,public TffdshowVideoInputPin

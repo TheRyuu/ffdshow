@@ -434,6 +434,9 @@ typedef struct H264Context{
 
     int mb_xy;
 
+    /* ffdshow custom stuff */
+    int recovery_frame_cnt;
+
 }H264Context;
 
 #endif /* FFMPEG_H264_H */

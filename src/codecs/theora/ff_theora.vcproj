@@ -576,19 +576,19 @@
 			Name="ogg"
 			>
 			<File
-				RelativePath=".\bitwise.c"
+				RelativePath="..\..\xiph\ogg\bitwise.c"
 				>
 			</File>
 			<File
-				RelativePath=".\framing.c"
+				RelativePath="..\..\xiph\ogg\framing.c"
 				>
 			</File>
 			<File
-				RelativePath=".\ogg.h"
+				RelativePath="..\..\xiph\ogg\ogg.h"
 				>
 			</File>
 			<File
-				RelativePath=".\os_types.h"
+				RelativePath="..\..\xiph\ogg\os_types.h"
 				>
 			</File>
 			<File

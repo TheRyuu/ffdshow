@@ -62,6 +62,8 @@ typedef struct x264_frame_t
     /* motion data */
     int8_t  *mb_type;
     int16_t (*mv[2])[2];
+    int16_t (*lowres_mvs[2][X264_BFRAME_MAX+1])[2];
+    int     *lowres_mv_costs[2][X264_BFRAME_MAX+1];
     int8_t  *ref[2];
     int     i_ref[2];
     int     ref_poc[2][16];
@@ -71,18 +73,22 @@ typedef struct x264_frame_t
      * contains the SATD cost of the lowres frame encoded in various modes
      * FIXME: how big an array do we need? */
     int     i_cost_est[X264_BFRAME_MAX+2][X264_BFRAME_MAX+2];
+    int     i_cost_est_aq[X264_BFRAME_MAX+2][X264_BFRAME_MAX+2];
     int     i_satd; // the i_cost_est of the selected frametype
     int     i_intra_mbs[X264_BFRAME_MAX+2];
     int     *i_row_satds[X264_BFRAME_MAX+2][X264_BFRAME_MAX+2];
     int     *i_row_satd;
     int     *i_row_bits;
     int     *i_row_qp;
+    float   *f_qp_offset;
+    int     b_intra_calculated;
+    uint16_t *i_intra_cost;
 
     /* threading */
     int     i_lines_completed; /* in pixels */
     int     i_reference_count; /* number of threads using this frame (not necessarily the number of pointers) */
 #if defined(HAVE_PTHREAD)
-    x264_pthread_mutex_t mutex;      
+    x264_pthread_mutex_t mutex;
     x264_pthread_cond_t  cv;
 #endif
 

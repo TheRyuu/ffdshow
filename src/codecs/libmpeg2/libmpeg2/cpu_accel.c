@@ -43,11 +43,11 @@ static inline uint32_t arch_accel (uint32_t accel)
 
     return accel;
 }
-#endif /* ARCH_ALPHA */
+#endif /* ARCH_X86 || ARCH_X86_64 */
 
 uint32_t mpeg2_detect_accel (uint32_t accel)
 {
-#if defined (ARCH_X86) || defined (ARCH_X86_64) || defined (ARCH_PPC) || defined (ARCH_ALPHA) || defined (ARCH_SPARC)
+#if defined (ARCH_X86) || defined (ARCH_X86_64)
     accel = arch_accel (accel);
 #endif
     return accel;

@@ -29,3 +29,4 @@ EXPORTS
 
   avcodec_get_current_idct
   avcodec_get_encoder_info
+  avcodec_h264_search_recovery_point

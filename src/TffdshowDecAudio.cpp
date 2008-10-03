@@ -140,7 +140,7 @@ TffdshowDecAudio::TffdshowDecAudio(CLSID Iclsid,const char_t *className,const CL
  isAudioSwitcher=!!globalSettings->isAudioSwitcher;
  alwaysextensible=!!globalSettings->alwaysextensible;
  allowOutStream=!!globalSettings->allowOutStream;
- m_rtStartDec=m_rtStartProc=_I64_MAX/2;
+ m_rtStartDec = m_rtStartProc = REFTIME_INVALID;
  currentOutsf.reset();
  actual.cbBuffer=0;
  audioDeviceChanged=false;
@@ -646,6 +646,7 @@ HRESULT TffdshowDecAudio::NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,
 {
  DPRINTF(_l("TffdshowDecAudio::NewSegment"));
  CAutoLock cAutoLock(&m_csReceive);
+ m_rtStartDec=m_rtStartProc = REFTIME_INVALID;
  return TffdshowDec::NewSegment(tStart,tStop,dRate);
 }
 

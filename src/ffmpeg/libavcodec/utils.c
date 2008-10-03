@@ -416,7 +416,7 @@ void avcodec_get_context_defaults(AVCodecContext *s){
     s->i_quant_factor=-0.8;
     s->i_quant_offset=0.0;
     s->error_concealment= 3;
-    s->error_resilience= 1;
+    s->error_recognition= 1;
     s->workaround_bugs= FF_BUG_AUTODETECT;
     s->gop_size= 50;
     s->me_method= ME_EPZS;   
@@ -781,8 +781,6 @@ int av_get_bits_per_sample_format(enum SampleFormat sample_fmt) {
         return 8;
     case SAMPLE_FMT_S16:
         return 16;
-    case SAMPLE_FMT_S24:
-        return 24;
     case SAMPLE_FMT_S32:
     case SAMPLE_FMT_FLT:
         return 32;

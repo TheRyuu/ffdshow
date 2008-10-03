@@ -437,7 +437,7 @@ static int adpcm_decode_frame(AVCodecContext *avctx,
         if (avctx->block_align != 0 && buf_size > avctx->block_align)
             buf_size = avctx->block_align;
 
-//        samples_per_block= (block_align-4*chanels)*8 / (bits_per_sample * chanels) + 1;
+//        samples_per_block= (block_align-4*chanels)*8 / (bits_per_coded_sample * chanels) + 1;
 
         for(i=0; i<avctx->channels; i++){
             cs = &(c->status[i]);

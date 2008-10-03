@@ -104,7 +104,7 @@ LRESULT __declspec(align(16))(TvideoCodecX264::beginCompress(int cfgcomode,int c
    param.analyse.b_weighted_bipred=1;
    param.analyse.i_direct_mv_pred=coCfg->x264_i_direct_mv_pred;
    param.analyse.i_direct_8x8_inference=-1;
-   param.b_bframe_adaptive=coCfg->b_dynamic;
+   param.i_bframe_adaptive=coCfg->b_dynamic;
    param.b_bframe_pyramid=coCfg->x264_b_bframe_pyramid;
    param.analyse.b_bframe_rdo=coCfg->x264_b_rdo;
    param.analyse.b_bidir_me=coCfg->b_refine;
@@ -153,7 +153,7 @@ LRESULT __declspec(align(16))(TvideoCodecX264::beginCompress(int cfgcomode,int c
      if (coCfg->mode==ENC_MODE::VBR_QUAL)
      param.rc.i_rc_method=X264_RC_CRF;
       param.rc.f_rf_constant=float(50*(100-coCfg->qual)/100+1);
-      param.rc.i_aq_mode=X264_AQ_GLOBAL;
+      param.rc.i_aq_mode=X264_AQ_VARIANCE;
      param.rc.f_aq_strength=coCfg->x264_aq_strength100/100.0f;
     }
    else

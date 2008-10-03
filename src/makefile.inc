@@ -1,5 +1,8 @@
 all:.all
 
+#64BIT=yes
+#DEBUG=yes
+
 #if FFDSHOW_PREFIX is set, assume cross-compilation
 ifeq ($(FFDSHOW_PREFIX),)
     YASM=yasm.exe
@@ -39,11 +42,16 @@ ifeq ($(SSE2),yes)
     CFLAGS+=-msse2
 endif
 
+ifeq ($(DEBUG), yes)
+    CFLAGS+=-DDEBUG -D_DEBUG -g
+    OPTFLAGS=-O2 -fomit-frame-pointer
+    YASMFLAGS+=-g cv8
+else
+    CFLAGS+=-DNDEBUG -UDEBUG -DFFDEBUG=0
+    OPTFLAGS=-O3 -fomit-frame-pointer
+endif
 #CFLAGS+=-w
-CFLAGS+=-DNDEBUG -UDEBUG -DFFDEBUG=0
-#CFLAGS+=-DDEBUG -D_DEBUG
 
-OPTFLAGS=-O3 -fomit-frame-pointer
 ifeq ($(64BIT),yes)
     OPTFLAGS+=-m64
 else

@@ -108,6 +108,9 @@ void ff_release_buffer(AVCodecContext *avctx, AVFrame *f);
 ///True if calling AVCodecContext execute() will run in parallel.
 #define USE_AVCODEC_EXECUTE(avctx) (avctx->active_thread_algorithm == FF_THREAD_MULTISLICE)
 
+// ffdshow custom code. return pointer to the copied AVCodecContext for thread 0.
+AVCodecContext* get_thread0_avctx(AVCodecContext *avctx);
+
 #else
 
 //Stub out these functions for systems without pthreads

@@ -24,7 +24,7 @@
 #include "theora.h"
 #include "toplevel.h"
 #include "dsp.h"
-#include "../../compiler.h"
+
 static int _ilog(unsigned int v){
   int ret=0;
   while(v){
@@ -480,9 +480,4 @@ ogg_int64_t theora_granule_frame(theora_state *th,ogg_int64_t granulepos){
   }
 
   return(-1);
-}
-void __stdcall getVersion(char *ver,const char* *license)
-{
- strcpy(ver,VENDOR_STRING", build date "__DATE__" "__TIME__" ("COMPILER COMPILER_X64")");
- *license="Copyright (C) 2002-2007 Xiph.org Foundation";
 }

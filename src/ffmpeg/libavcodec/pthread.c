@@ -356,7 +356,7 @@ static int update_context_from_copy(AVCodecContext *dst, AVCodecContext *src, in
     COPY_FIELDS(mv_bits, opaque);
 
     COPY(has_b_frames);
-    COPY(bits_per_sample);
+    COPY(bits_per_coded_sample);
     COPY(sample_aspect_ratio);
     COPY(idct_algo);
     if (for_user) COPY(coded_frame);
@@ -492,8 +492,13 @@ int ff_decode_frame_threaded(AVCodecContext *avctx,
 
 void ff_report_field_progress(AVFrame *f, int n, int field)
 {
-    PerThreadContext *p = f->owner->thread_opaque;
-    int *progress = f->thread_opaque;
+    PerThreadContext *p;
+    int *progress;
+
+    if (!f->owner) return;
+
+    p = f->owner->thread_opaque;
+    progress = f->thread_opaque;
 
     if (progress[field] >= n) return;
 
@@ -608,6 +613,8 @@ void ff_frame_thread_flush(AVCodecContext *avctx)
 {
     FrameThreadContext *fctx = avctx->thread_opaque;
 
+    if (!fctx || !fctx->prev_thread) return; // ffdshow custom code
+
     park_frame_worker_threads(fctx, avctx->thread_count);
 
     if (fctx->prev_thread != fctx->threads)
@@ -706,4 +713,19 @@ void avcodec_thread_free(AVCodecContext *avctx)
         frame_thread_free(avctx);
     else
         thread_free(avctx);
+}
+
+// ffdshow custom code
+AVCodecContext* get_thread0_avctx(AVCodecContext *avctx)
+{
+    FrameThreadContext *fctx;
+    PerThreadContext * volatile p;
+
+    if (USE_FRAME_THREADING(avctx) && avctx->thread_opaque){
+        fctx = avctx->thread_opaque;
+        p = &fctx->threads[0];
+        return p->avctx;
+    } else {
+        return avctx;
+    }
 }

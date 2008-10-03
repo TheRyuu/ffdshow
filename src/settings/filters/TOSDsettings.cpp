@@ -209,13 +209,15 @@ TOSDsettingsVideo::TOSDsettingsVideo(TintStrColl *Icoll,TfilterIDFFs *filters):
      _l("OSDposX"),0,
    IDFF_OSDposY                   ,&TOSDsettingsVideo::posY          ,0,100,_l(""),0,
      _l("OSDposY"),0,
+   IDFF_OSD_userformat            ,&TOSDsettingsVideo::userFormat    ,0,100,_l(""),3,
+     _l("OSDuserFormat"),0,
    0
   };
  addOptions(iopts);
 
  static const TstrOption sopts[]=
   {
-   IDFF_OSDuser                   ,(TstrVal)&TOSDsettingsVideo::user ,256,0 ,_l(""),0,NULL,NULL,
+   IDFF_OSDuser                   ,(TstrVal)&TOSDsettingsVideo::user ,2048,0 ,_l(""),0,NULL,NULL,
    0
   };
  addOptions(sopts);

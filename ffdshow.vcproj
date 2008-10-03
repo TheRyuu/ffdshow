@@ -26,7 +26,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions=""
 				Optimization="0"
-				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters"
+				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc"
 				PreprocessorDefinitions="DEBUG;_DEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
 				ExceptionHandling="TRUE"
 				BasicRuntimeChecks="3"
@@ -109,7 +109,7 @@
 				EnableIntrinsicFunctions="TRUE"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters"
+				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc"
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
 				StringPooling="TRUE"
 				ExceptionHandling="TRUE"
@@ -192,7 +192,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions=""
 				Optimization="0"
-				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters"
+				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc"
 				PreprocessorDefinitions="DEBUG;_DEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
 				ExceptionHandling="TRUE"
 				BasicRuntimeChecks="3"
@@ -275,7 +275,7 @@
 				EnableIntrinsicFunctions="TRUE"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters"
+				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc"
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
 				StringPooling="TRUE"
 				ExceptionHandling="TRUE"
@@ -2715,6 +2715,12 @@
 				RelativePath=".\src\dialog\Ccrystality.h">
 			</File>
 			<File
+				RelativePath=".\src\dialog\CcspOptions.cpp">
+			</File>
+			<File
+				RelativePath=".\src\dialog\CcspOptions.h">
+			</File>
+			<File
 				RelativePath=".\src\dialog\CcurveAlt.cpp">
 			</File>
 			<File
@@ -3184,14 +3190,6 @@
 			</File>
 			<File
 				RelativePath="src\dialog\CresizeSettings.h">
-			</File>
-			<File
-				RelativePath=".\src\dialog\CcspOptions.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\CcspOptions.h"
-				>
 			</File>
 			<File
 				RelativePath=".\src\dialog\CsecondPass.cpp">
@@ -4153,12 +4151,10 @@
 				RelativePath=".\src\convert\Tconvert.h">
 			</File>
 			<File
-				RelativePath=".\src\convert\TrgbPrimaries.cpp"
-				>
+				RelativePath=".\src\convert\TrgbPrimaries.cpp">
 			</File>
 			<File
-				RelativePath=".\src\convert\TrgbPrimaries.h"
-				>
+				RelativePath=".\src\convert\TrgbPrimaries.h">
 			</File>
 			<File
 				RelativePath="src\convert\Tswscale.cpp">

@@ -6,6 +6,7 @@
 #include "Tsubreader.h"
 #include "TsubtitleText.h"
 #include "TOSDprovider.h"
+#include "Tconfig.h"
 
 struct TfontSettingsOSD;
 struct TOSDsettings;
@@ -111,7 +112,7 @@ private:
  unsigned int framecnt;
  Tfont fontUser;
  TsubtitleTextBase<char_t> subUser;
- char_t oldLinesUser[256];
+ char_t oldLinesUser[2048];
  strings linesUser;
 
  CCritSec cs;

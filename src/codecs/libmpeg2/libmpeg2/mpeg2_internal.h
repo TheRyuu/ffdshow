@@ -232,9 +232,6 @@ struct mpeg2dec_s {
 };
 
 typedef struct {
-#ifdef ARCH_PPC
-    uint8_t regv[12*16];
-#endif
     int dummy;
 } cpu_state_t;
 
@@ -281,21 +278,6 @@ void mpeg2_idct_add_mmx (int last, int16_t * block,
 			 uint8_t * dest, int stride);
 void mpeg2_idct_mmx_init (void);
 
-/* idct_altivec.c */
-void mpeg2_idct_copy_altivec (int16_t * block, uint8_t * dest, int stride);
-void mpeg2_idct_add_altivec (int last, int16_t * block,
-			     uint8_t * dest, int stride);
-void mpeg2_idct_altivec_init (void);
-
-/* idct_alpha.c */
-void mpeg2_idct_copy_mvi (int16_t * block, uint8_t * dest, int stride);
-void mpeg2_idct_add_mvi (int last, int16_t * block,
-			 uint8_t * dest, int stride);
-void mpeg2_idct_copy_alpha (int16_t * block, uint8_t * dest, int stride);
-void mpeg2_idct_add_alpha (int last, int16_t * block,
-			   uint8_t * dest, int stride);
-void mpeg2_idct_alpha_init (void);
-
 /* motion_comp.c */
 void mpeg2_mc_init (uint32_t accel);
 
@@ -315,9 +297,5 @@ extern mpeg2_mc_t mpeg2_mc_c;
 extern mpeg2_mc_t mpeg2_mc_mmx;
 extern mpeg2_mc_t mpeg2_mc_mmxext;
 extern mpeg2_mc_t mpeg2_mc_3dnow;
-extern mpeg2_mc_t mpeg2_mc_altivec;
-extern mpeg2_mc_t mpeg2_mc_alpha;
-extern mpeg2_mc_t mpeg2_mc_vis;
-extern mpeg2_mc_t mpeg2_mc_arm;
 
 #endif /* LIBMPEG2_MPEG2_INTERNAL_H */

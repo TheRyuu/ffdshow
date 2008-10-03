@@ -74,11 +74,17 @@ enum SampleFormat {
     SAMPLE_FMT_NONE = -1,
     SAMPLE_FMT_U8,              ///< unsigned 8 bits
     SAMPLE_FMT_S16,             ///< signed 16 bits
-    SAMPLE_FMT_S24,             ///< signed 24 bits @deprecated Deprecated in favor of SAMPLE_FMT_S32
     SAMPLE_FMT_S32,             ///< signed 32 bits
     SAMPLE_FMT_FLT,             ///< float
-    SAMPLE_FMT_DBL,             ///< double
-    SAMPLE_I=100,SAMPLE_P
+    SAMPLE_FMT_DBL              ///< double
+};
+
+/**
+ * Needed for CorePNG
+ */
+enum CorePNGFrameType {
+    SAMPLE_I,
+    SAMPLE_P
 };
 
 /* in bytes */
@@ -895,7 +901,7 @@ typedef struct AVCodecContext {
      * - encoding: unused
      * - decoding: Set by user.
      */
-    int error_resilience;
+    int error_recognition;
 #define FF_ER_CAREFUL         1
 #define FF_ER_COMPLIANT       2
 #define FF_ER_AGGRESSIVE      3
@@ -1155,7 +1161,7 @@ typedef struct AVCodecContext {
      * - encoding: Set by libavcodec.
      * - decoding: Set by user.
      */
-     int bits_per_sample;
+     int bits_per_coded_sample;
 
     /**
      * prediction method (needed for huffyuv)
@@ -2005,6 +2011,16 @@ typedef struct AVCodecContext {
      * - decoding: Set by libavcodec.
      */
     int active_thread_algorithm;
+
+    /* ffdshow custom stuffs (begin) */
+
+    int h264_poc_decoded;
+    int h264_poc_outputed;
+    int h264_frame_num_decoded;
+
+    enum CorePNGFrameType corepng_frame_type;    
+
+    /* ffdshow custom stuffs (end) */
 } AVCodecContext;
 
 /**
