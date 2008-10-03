@@ -2310,7 +2310,9 @@ static av_cold void common_init(H264Context *h){
 }
 
 // ffdshow custom code - adapted for DirectShow
-static av_cold int decode_init_is_avc(AVCodecContext *avctx, H264Context *h){
+static av_cold int decode_init_is_avc(AVCodecContext *avctx){
+    H264Context *h = avctx->priv_data;
+
     if(avctx->extradata_size > 0 && avctx->extradata &&
        (*(char *)avctx->extradata == 1 || (avctx->codec_tag == 0x31637661 || avctx->codec_tag == 0x31435641))){
         h->is_avc = 1;
@@ -2344,7 +2346,7 @@ static av_cold int decode_init(AVCodecContext *avctx){
 
     decode_init_vlc();
 
-    decode_init_is_avc(avctx, h); // ffdshow custom code
+    decode_init_is_avc(avctx); // ffdshow custom code
 
     h->thread_context[0] = h;
     h->outputed_poc = INT_MIN;
@@ -8031,6 +8033,7 @@ int avcodec_h264_search_recovery_point(AVCodecContext *avctx,
     int Islice_detected = 0;
     AVCodecContext *users_MpegEncContext_avctx;
 
+    decode_init_is_avc(avctx);
     avctx = get_thread0_avctx(avctx); // Next frame will start on thread 0, and we want to store SPS and PPS in the context of thread 0.
     h = avctx->priv_data;
     s = &h->s;
@@ -8038,7 +8041,6 @@ int avcodec_h264_search_recovery_point(AVCodecContext *avctx,
 
     if (s->avctx == NULL)
         s->avctx = avctx; // Hack, this function can be used before decoding, so we can't expect everything initialized.
-    decode_init_is_avc(avctx, h);
 
     h->nal_length_size = avctx->nal_length_size ? avctx->nal_length_size : 4;
 
