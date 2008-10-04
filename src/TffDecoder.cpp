@@ -826,7 +826,7 @@ HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
    insample_rtStop = REFTIME_INVALID;
   }
 
- if (late && pSample->IsSyncPoint()==S_OK) late=0;
+ if (m_bSampleSkipped && late>0) return S_OK;
  int codecId = inpin->getInCodecId2();
  if (presetSettings->dropOnDelay && !mpeg12_codec(codecId) && !vc1_codec(codecId) && late>presetSettings->dropDelayTime*10000)
   {
