@@ -40,11 +40,11 @@
 void ff_spatial_dwt(int *buffer, int width, int height, int stride, int type, int decomposition_count);
 #endif
 
-/* ac3dec.c */
-void ff_ac3_downmix_c(float (*samples)[256], float (*matrix)[2], int out_ch, int in_ch, int len);
-
 /* vorbis.c */
 void vorbis_inverse_coupling(float *mag, float *ang, int blocksize);
+
+/* ac3dec.c */
+void ff_ac3_downmix_c(float (*samples)[256], float (*matrix)[2], int out_ch, int in_ch, int len);
 
 /* pngdec.c */
 void ff_add_png_paeth_prediction(uint8_t *dst, uint8_t *src, uint8_t *top, int w, int bpp);
@@ -4466,6 +4466,11 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
     if (ENABLE_ANY_H263) {
         c->h263_h_loop_filter= h263_h_loop_filter_c;
         c->h263_v_loop_filter= h263_v_loop_filter_c;
+    }
+
+    if (ENABLE_VP3_DECODER || ENABLE_THEORA_DECODER) {
+        c->vp3_h_loop_filter= ff_vp3_h_loop_filter_c;
+        c->vp3_v_loop_filter= ff_vp3_v_loop_filter_c;
     }
 
     c->h261_loop_filter= h261_loop_filter_c;
