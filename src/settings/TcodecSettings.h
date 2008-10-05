@@ -226,7 +226,6 @@ public:
  int x264_b_bframe_pyramid;
  int x264_b_aud;
  int x264_mixed_ref;
- int x264_b_rdo;
  int x264_b_dct_decimate;
  int x264_aq_strength100;
  static const char_t *x264_me_methods[];

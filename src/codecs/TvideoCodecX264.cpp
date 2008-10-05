@@ -106,8 +106,6 @@ LRESULT __declspec(align(16))(TvideoCodecX264::beginCompress(int cfgcomode,int c
    param.analyse.i_direct_8x8_inference=-1;
    param.i_bframe_adaptive=coCfg->b_dynamic;
    param.b_bframe_pyramid=coCfg->x264_b_bframe_pyramid;
-   param.analyse.b_bframe_rdo=coCfg->x264_b_rdo;
-   param.analyse.b_bidir_me=coCfg->b_refine;
   }
 
  param.b_deblocking_filter=coCfg->codecId!=CODEC_ID_X264_LOSSLESS && (coCfg->H263Pflags&CODEC_FLAG_LOOP_FILTER)?1:0;

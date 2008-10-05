@@ -1498,7 +1498,6 @@
 #define IDFF_enc_x264_mixed_ref                   3359
 #define IDFF_enc_x264_aq_strength100              3360
 #define IDFF_enc_x264_b_dct_decimate              3361
-#define IDFF_enc_x264_b_rdo                       3362
 
 #define IDFF_enc_working               3198
 #define IDFF_enc_fpsRate               3206

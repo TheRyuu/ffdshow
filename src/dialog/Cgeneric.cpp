@@ -126,7 +126,7 @@ void TgenericPage::b2dlg(void)
  enable(is && sup_packedBitstream(codecId),IDC_CHB_PACKEDBITSTREAM);
  enable(is && sup_closedGop(codecId),IDC_CHB_DX50BVOP);
  enable(is && sup_adaptiveBframes(codecId),IDC_CHB_B_DYNAMIC);
- enable(is && (lavc_codec(codecId) || x264_codec(codecId)),IDC_CHB_B_REFINE);
+ enable(is && lavc_codec(codecId),IDC_CHB_B_REFINE);
 }
 
 INT_PTR TgenericPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -210,21 +210,18 @@ TgenericPage::TgenericPage(TffdshowPageEnc *Iparent):TconfPageEnc(Iparent)
   void TgenericX264page::b2dlg(void)
   {
    setCheck(IDC_CHB_B_PYRAMID,cfgGet(IDFF_enc_x264_b_bframe_pyramid));
-   setCheck(IDC_CHB_B_RDO,cfgGet(IDFF_enc_x264_b_rdo));
    TgenericPage::b2dlg();
   }
   TgenericX264page::TgenericX264page(TffdshowPageEnc *Iparent):TgenericPage(Iparent)
   {
    dialogId=IDD_GENERIC_X264;
-   static const int props[]={IDFF_enc_max_key_interval,IDFF_enc_min_key_interval,IDFF_enc_isBframes,IDFF_enc_max_b_frames,IDFF_enc_H263Pflags,IDFF_enc_b_dynamic,IDFF_enc_x264_i_deblocking_filter_alphac0,IDFF_enc_x264_i_deblocking_filter_beta,IDFF_enc_b_dynamic,IDFF_enc_b_refine,IDFF_enc_x264_b_bframe_pyramid,IDFF_enc_x264_b_aud,IDFF_numthreads,IDFF_enc_x264_b_rdo,0};
+   static const int props[]={IDFF_enc_max_key_interval,IDFF_enc_min_key_interval,IDFF_enc_isBframes,IDFF_enc_max_b_frames,IDFF_enc_H263Pflags,IDFF_enc_b_dynamic,IDFF_enc_x264_i_deblocking_filter_alphac0,IDFF_enc_x264_i_deblocking_filter_beta,IDFF_enc_b_dynamic,IDFF_enc_x264_b_bframe_pyramid,IDFF_enc_x264_b_aud,IDFF_numthreads,0};
    propsIDs=props;
    static const TbindCheckbox<TgenericX264page> chb[]=
     {
      IDC_CHB_B,IDFF_enc_isBframes,&TgenericX264page::b2dlg,
      IDC_CHB_B_DYNAMIC,IDFF_enc_b_dynamic,NULL,
      IDC_CHB_B_PYRAMID,IDFF_enc_x264_b_bframe_pyramid,NULL,
-     IDC_CHB_B_RDO,IDFF_enc_x264_b_rdo,NULL,
-     IDC_CHB_B_REFINE,IDFF_enc_b_refine,NULL,
      0,NULL,NULL
     };
    bindCheckboxes(chb);
