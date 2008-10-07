@@ -381,6 +381,11 @@ static void update_context_from_user(AVCodecContext *dst, AVCodecContext *src)
     COPY(hurry_up);
     COPY_FIELDS(skip_loop_filter, bidir_refine);
     COPY(frame_number);
+    /* ffdshow custom code (begin) */
+    COPY(reordered_opaque);
+    COPY(reordered_opaque2);
+    COPY(reordered_opaque3);
+    /* ffdshow custom code (end) */
 }
 
 /// Release all frames passed to ff_release_buffer()

@@ -505,6 +505,16 @@ typedef struct AVPanScan{
     int8_t *ref_index[2];\
 \
     /**\
+     * reordered opaque 64bit number (generally a PTS) from AVCodecContext.reordered_opaque\
+     * output in AVFrame.reordered_opaque\
+     * - encoding: unused\
+     * - decoding: Read by user.\
+     */\
+    int64_t reordered_opaque;\
+    int64_t reordered_opaque2; /* ffdshow custom code */\
+    int64_t reordered_opaque3; /* ffdshow custom code */\
+\
+    /**\
      * the AVCodecContext which ff_get_buffer was last called on\
      * - encoding: Set by libavcodec.\
      * - decoding: Set by libavcodec.\
@@ -1987,6 +1997,16 @@ typedef struct AVCodecContext {
     float drc_scale;
 
     /**
+     * opaque 64bit number (generally a PTS) that will be reordered and
+     * output in AVFrame.reordered_opaque
+     * - encoding: unused
+     * - decoding: Set by user.
+     */
+    int64_t reordered_opaque;
+    int64_t reordered_opaque2; /* ffdshow custom code */
+    int64_t reordered_opaque3; /* ffdshow custom code */
+
+    /**
      * Whether this is a copy of the context which had init() called on it.
      * This is used by multithreading - shared tables and picture pointers
      * should be freed from the original context only.
@@ -2591,18 +2611,6 @@ typedef struct AVCodecParser {
  * @see av_realloc
  */
 void *av_fast_realloc(void *ptr, unsigned int *size, unsigned int min_size);
-
-/* for static data only */
-
-/**
- * Frees all static arrays and resets their pointers to 0.
- * Call this function to release all statically allocated tables.
- *
- * @deprecated. Code which uses av_free_static is broken/misdesigned
- * and should correctly use static arrays
- *
- */
-attribute_deprecated void av_free_static(void);
 
 /**
  * Copy image 'src' to 'dst'.

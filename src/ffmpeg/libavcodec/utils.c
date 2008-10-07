@@ -72,17 +72,6 @@ void *av_fast_realloc(void *ptr, unsigned int *size, unsigned int min_size)
     return ptr;
 }
 
-static unsigned int last_static = 0;
-static void** array_static = NULL;
-
-void av_free_static(void)
-{
-    while(last_static){
-        av_freep(&array_static[--last_static]);
-    }
-    av_freep(&array_static);
-}
-
 /* encoder management */
 AVCodec *first_avcodec = NULL;
 
@@ -284,6 +273,10 @@ int avcodec_default_get_buffer(AVCodecContext *s, AVFrame *pic){
         pic->linesize[i]= buf->linesize[i];
     }
     s->internal_buffer_count++;
+
+    pic->reordered_opaque= s->reordered_opaque;
+    pic->reordered_opaque2= s->reordered_opaque2; /* ffdshow custom code */
+    pic->reordered_opaque3= s->reordered_opaque3; /* ffdshow custom code */
 
     if(s->debug&FF_DEBUG_BUFFERS)
         av_log(s, AV_LOG_DEBUG, "default_get_buffer called on pic %p, %d buffers used\n", pic, s->internal_buffer_count);
@@ -645,7 +638,7 @@ int avcodec_close(AVCodecContext *avctx)
     av_freep(&avctx->priv_data);
     av_freep(&avctx->rc_eq);
     avctx->codec = NULL;
-    avctx->active_thread_algorithm = 1;
+    avctx->active_thread_algorithm = 0;
     //entangled_thread_counter--;    /* ffdshow custom coment out */
     return 0;
 }

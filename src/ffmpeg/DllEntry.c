@@ -44,8 +44,6 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
    case DLL_PROCESS_DETACH:
     count--;
     //snprintf(pomS,40,"libavcodec: %i %i\n",count,hInstance);OutputDebugString(pomS);
-    if (count<=0)
-     av_free_static();
     DeleteCriticalSection( &g_csStaticDataLock );
     break;
   }
