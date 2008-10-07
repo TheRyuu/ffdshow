@@ -56,6 +56,7 @@ public:
  virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags)=0;
  virtual HRESULT decompress(const unsigned char *src,size_t srcLen,IMediaSample *pIn)=0;
  virtual bool onDiscontinuity(void) {return false;}
+ virtual HRESULT onEndOfStream(void) {return S_OK;}
 
  unsigned int quantsDx,quantsStride,quantsDy,quantBytes,quantType;
  void *quants;

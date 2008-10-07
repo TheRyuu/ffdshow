@@ -356,7 +356,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
    if (isSyncPoint)
     wasKey=true;
    else
-    return pIn && pIn->IsPreroll()==S_OK?S_FALSE:S_OK;
+    return S_OK;
 
  unsigned int skip=0;
  if (src && (codecId==CODEC_ID_RV10 || codecId==CODEC_ID_RV20) && avctx->sub_id)
@@ -409,12 +409,12 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
     }
   }
 
- if (h264onTS)
+ if (src && h264onTS)
   size = codedPictureBuffer.append(src, size);
 
  while (!src || size>0)
   {
-   int got_picture,used_bytes;
+   int used_bytes;
    avctx->parserRtStart=&rtStart;
    avctx->reordered_opaque = rtStart;
    avctx->reordered_opaque2 = rtStop;
@@ -444,11 +444,11 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
              memcpy(ffbuf,src,size);memset(ffbuf+size,0,FF_INPUT_BUFFER_PADDING_SIZE);
              used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,ffbuf,size);
              if (used_bytes < 0)
-              return S_FALSE;
+              return S_OK;
              h264RandomAccess.judgeUsability(&got_picture);
             }
            else
-            return S_FALSE;
+            return S_OK;
           }
         }
        else
@@ -461,7 +461,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
       used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,NULL,0);
     }
    if (used_bytes<0)
-    return S_FALSE;
+    return S_OK;
    if (got_picture && frame->data[0])
     {
      int frametype;
@@ -544,7 +544,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
    else
     if (!src)
      break;
-   if(!used_bytes && codecId==CODEC_ID_SVQ3) return S_FALSE;
+   if(!used_bytes && codecId==CODEC_ID_SVQ3) return S_OK;
    src+=used_bytes;
    size-=used_bytes;
   }
@@ -564,6 +564,17 @@ bool TvideoCodecLibavcodec::onDiscontinuity(void)
 {
  wasKey=false;
  return true;
+}
+
+// libavcodec may still have several frames if frame based multithreading is used.
+HRESULT TvideoCodecLibavcodec::onEndOfStream(void)
+{
+ HRESULT hr;
+ do
+  {
+   hr = decompress(NULL, 0, NULL);
+  } while(got_picture && hr == S_OK);
+ return hr;
 }
 
 const char_t* TvideoCodecLibavcodec::getName(void) const

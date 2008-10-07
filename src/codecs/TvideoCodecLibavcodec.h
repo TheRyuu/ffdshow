@@ -38,6 +38,7 @@ private:
  enum AVDiscard initialSkipLoopFilter;
  bool h264onTS; // H.264/AVC on mpeg2 trasport stream. Program stream is handled in the same way.
  bool isTSfile(void);
+ int got_picture;
 protected:
  virtual LRESULT beginCompress(int cfgcomode,int csp,const Trect &r);
  virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);
@@ -66,8 +67,7 @@ public:
  virtual bool drawMV(unsigned char *dst,unsigned int dx,stride_t stride,unsigned int dy) const;
  virtual void getEncoderInfo(char_t *buf,size_t buflen) const;
  virtual const char* get_current_idct(void);
- class TcodedPictureBuffer;
- friend class TcodedPictureBuffer;
+ virtual HRESULT onEndOfStream(void);
  class TcodedPictureBuffer
   {
   private:
