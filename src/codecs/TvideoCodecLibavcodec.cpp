@@ -306,7 +306,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
  if (avctx->sample_aspect_ratio.num && avctx->sample_aspect_ratio.den)
   pict.setSar(avctx->sample_aspect_ratio);
  containerSar=pict.rectFull.sar;
- neroavc=(sourceFlags&SOURCE_NEROAVC || avctx->codec_tag==FOURCC_MPG1 || avctx->codec_tag==FOURCC_MPG2) && avctx->codec_tag!=FOURCC_THEO;
+ dont_use_rtStop_from_upper_stream = (sourceFlags&SOURCE_NEROAVC || avctx->codec_tag==FOURCC_MPG1 || avctx->codec_tag==FOURCC_MPG2) && avctx->codec_tag!=FOURCC_THEO;
  avgTimePerFrame=-1;
  codecinited=true;
  wasKey=false;
@@ -511,7 +511,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
      pict.gmcWarpingPoints=frame->num_sprite_warping_points;pict.gmcWarpingPointsReal=frame->real_sprite_warping_points;
      if (h264onTS)
       codedPictureBuffer.get_pict_timestamps(&pict.rtStart, &pict.rtStop);
-     else if (neroavc)
+     else if (dont_use_rtStop_from_upper_stream)
       {
        pict.rtStart=frame->rtStart;
        if (pict.rtStart==REFTIME_INVALID)

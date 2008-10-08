@@ -22,7 +22,7 @@ private:
  int grayscale;
  bool isAdaptive;
  int threadcount;
- int neroavc,theorart;
+ int dont_use_rtStop_from_upper_stream, theorart;
  bool codecinited,ownmatrices;
  REFERENCE_TIME rtStart,rtStop,avgTimePerFrame,segmentTimeStart;
  struct

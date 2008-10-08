@@ -311,7 +311,7 @@ STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM
 
 bool TffdshowVideoInputPin::init(const CMediaType &mt)
 {
- bool neroavc=false,truncated=false;
+ bool dont_use_rtStop_from_upper_stream = false, truncated = false;
  isInterlacedRawVideo=false;
  if (mt.formattype==FORMAT_VideoInfo)
   {
@@ -356,7 +356,7 @@ bool TffdshowVideoInputPin::init(const CMediaType &mt)
    else
     {
      biIn.bmiHeader.biCompression=FCCupper(biIn.bmiHeader.biCompression);
-     neroavc=true;
+     dont_use_rtStop_from_upper_stream = true;
     }
   }
  else if (mt.formattype==FORMAT_TheoraIll)
@@ -493,11 +493,13 @@ again:
     {
      static const GUID CLSID_NeroDigitalParser={0xE206E4DE,0xA7EE,0x4A62,0xB3,0xE9,0x4F,0xBC,0x8F,0xE8,0x4C,0x73};
      static const GUID CLSID_HalliMatroskaFile={0x55DA30FC,0xF16B,0x49FC,0xBA,0xA5,0xAE,0x59,0xFC,0x65,0xF8,0x2D};
-     //neroavc=biIn.bmiHeader.biCompression==FOURCC_AVC1 && (searchPreviousFilter(this,CLSID_NeroDigitalParser) || searchPreviousFilter(this,CLSID_HalliMatroskaFile));
+     //dont_use_rtStop_from_upper_stream=biIn.bmiHeader.biCompression==FOURCC_AVC1 && (searchPreviousFilter(this,CLSID_NeroDigitalParser) || searchPreviousFilter(this,CLSID_HalliMatroskaFile));
      video->connectedSplitter = connectedSplitter;
      video->isInterlacedRawVideo=isInterlacedRawVideo;
      video->containerSar=pictIn.rectFull.sar;
-     if (!video->beginDecompress(pictIn,biIn.bmiHeader.biCompression,mt,(neroavc?TvideoCodecDec::SOURCE_NEROAVC:0)|(truncated?TvideoCodecDec::SOURCE_TRUNCATED:0)))
+     if (!video->beginDecompress(pictIn,
+                                 biIn.bmiHeader.biCompression,mt,
+                                 (dont_use_rtStop_from_upper_stream ? TvideoCodecDec::SOURCE_NEROAVC : 0) | (truncated ? TvideoCodecDec::SOURCE_TRUNCATED : 0)))
       {
        delete video;codec=video=NULL;
        return false;
