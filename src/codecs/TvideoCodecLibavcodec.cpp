@@ -457,7 +457,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
      else
       used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,NULL,0);
     }
-   if (used_bytes<0 || (used_bytes == 0 && got_picture == 0))
+   if (used_bytes<0)
     return S_OK;
    if (got_picture && frame->data[0])
     {
