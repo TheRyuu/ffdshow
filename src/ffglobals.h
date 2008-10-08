@@ -150,9 +150,42 @@ void fixMPEGinAVI(FOURCC &fcc);
 HWND createInvisibleWindow(HINSTANCE hi,const char_t *classname,const char_t *windowname,WNDPROC wndproc,void* lparam,ATOM *atom);
 void getCLSIDname(const CLSID &clsid,char_t *buf,size_t buflen);
 
-template<class T> inline T ff_abs(const T &x)
+
+// if T is char, ff_abs(0x80) returns -128. Users have to cast the result to unsinged char.
+// For this reason, I deleted this template function.
+// template<class T> inline T ff_abs(const T &x)
+// {
+//  return (x<0)?T(-x):T(x);
+// }
+
+inline unsigned char ff_abs(char x)
 {
- return (x<0)?T(-x):T(x);
+ return (unsigned char)((x<0) ? -x : x);
+}
+
+inline unsigned short ff_abs(short x)
+{
+ return (unsigned short)((x<0) ? -x : x);
+}
+
+inline unsigned int ff_abs(int x)
+{
+ return (unsigned int)((x<0) ? -x : x);
+}
+
+inline uint64_t ff_abs(int64_t x)
+{
+ return uint64_t((x<0) ? -x : x);
+}
+
+inline float ff_abs(float x)
+{
+ return (x<0) ? -x : x;
+}
+
+inline double ff_abs(double x)
+{
+ return (x<0) ? -x : x;
 }
 
 inline int ff_round(double x) {return int(x+(x>0.0?0.5:-0.5));}

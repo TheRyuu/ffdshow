@@ -478,7 +478,7 @@ HRESULT TffdshowDecVideo::CheckTransform(const CMediaType *mtIn, const CMediaTyp
   {
    BITMAPINFOHEADER biOut;
    ExtractBIH(*mtOut,&biOut);
-   if ((unsigned int)ff_abs(biOut.biWidth)>=oldRect.dx && (unsigned int)ff_abs(biOut.biHeight)==oldRect.dy)
+   if (ff_abs(biOut.biWidth)>=oldRect.dx && ff_abs(biOut.biHeight)==oldRect.dy)
     return S_OK;
    else
     return VFW_E_TYPE_NOT_ACCEPTED;
