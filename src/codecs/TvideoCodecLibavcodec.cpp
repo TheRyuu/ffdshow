@@ -345,13 +345,16 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
 {
  bool isSyncPoint = pIn && pIn->IsSyncPoint() == S_OK;
  if (codecId==CODEC_ID_FFV1) // libavcodec can crash or loop infinitely when first frame after seeking is not keyframe
-  if (!wasKey)
-   if (isSyncPoint)
-    wasKey=true;
-   else
-    return S_OK;
+  {
+   if (!wasKey)
+    if (isSyncPoint)
+     wasKey=true;
+    else
+     return S_OK;
+  }
 
  unsigned int skip=0;
+
  if (src && (codecId==CODEC_ID_RV10 || codecId==CODEC_ID_RV20) && avctx->sub_id)
   {
    avctx->slice_count=src[0]+1;
@@ -378,7 +381,9 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
    skip+=sizeof(_TheoraPacket);
    avctx->granulepos=packet->granulepos;
   }
+
  src+=skip;int size=int(srcLen0-skip);
+
  if (pIn)
   pIn->GetTime(&rtStart,&rtStop);
 
@@ -410,10 +415,12 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
  while (!src || size>0)
   {
    int got_picture,used_bytes;
+
    avctx->parserRtStart=&rtStart; // needed for mpeg1/2
    avctx->reordered_opaque = rtStart;
    avctx->reordered_opaque2 = rtStop;
    avctx->reordered_opaque3 = size;
+
    if (sendextradata)
     {
      used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,extradata->data,(int)extradata->size);
@@ -423,8 +430,10 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
    else
     {
      unsigned int neededsize=size+FF_INPUT_BUFFER_PADDING_SIZE;
+
      if (ffbuflen<neededsize)
       ffbuf=(unsigned char*)realloc(ffbuf,ffbuflen=neededsize);
+
      if (src)
       {
        if (codecId == CODEC_ID_H264)
@@ -455,30 +464,42 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
      else
       used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,NULL,0);
     }
+
    if (used_bytes<0)
     return S_OK;
+
    if (got_picture && frame->data[0])
     {
      int frametype;
      if (avctx->codec_id==CODEC_ID_H261)
-      frametype=FRAME_TYPE::I;
+      {
+       frametype=FRAME_TYPE::I;
+      }
      else
-      switch (frame->pict_type)
-       {
-        case FF_P_TYPE:frametype=FRAME_TYPE::P;break;
-        case FF_B_TYPE:frametype=FRAME_TYPE::B;break;
-        case FF_I_TYPE:frametype=FRAME_TYPE::I;break;
-        case FF_S_TYPE:frametype=FRAME_TYPE::GMC;break;
-        case FF_SI_TYPE:frametype=FRAME_TYPE::SI;break;
-        case FF_SP_TYPE:frametype=FRAME_TYPE::SP;break;
-        case 0:frametype=pIn && pIn->IsSyncPoint()==S_OK?FRAME_TYPE::I:FRAME_TYPE::P;break;
-        default:frametype=FRAME_TYPE::UNKNOWN;break;
+      {
+       switch (frame->pict_type)
+        {
+         case FF_P_TYPE:frametype=FRAME_TYPE::P;break;
+         case FF_B_TYPE:frametype=FRAME_TYPE::B;break;
+         case FF_I_TYPE:frametype=FRAME_TYPE::I;break;
+         case FF_S_TYPE:frametype=FRAME_TYPE::GMC;break;
+         case FF_SI_TYPE:frametype=FRAME_TYPE::SI;break;
+         case FF_SP_TYPE:frametype=FRAME_TYPE::SP;break;
+         case 0:frametype=pIn && pIn->IsSyncPoint()==S_OK?FRAME_TYPE::I:FRAME_TYPE::P;break;
+         default:frametype=FRAME_TYPE::UNKNOWN;break;
+        }
        }
+
      if (pIn && pIn->IsPreroll()==S_OK)
       return sinkD->deliverPreroll(frametype);
+
      int fieldtype=frame->interlaced_frame?(frame->top_field_first?FIELD_TYPE::INT_TFF:FIELD_TYPE::INT_BFF):FIELD_TYPE::PROGRESSIVE_FRAME;
-     if (frame->play_flags&CODEC_FLAG_QPEL) frametype|=FRAME_TYPE::QPEL;
+
+     if (frame->play_flags&CODEC_FLAG_QPEL)
+      frametype|=FRAME_TYPE::QPEL;
+
      int csp=csp_lavc2ffdshow(avctx->pix_fmt);
+
      if (grayscale) // workaround for green picture when decoding mpeg with CODEC_FLAG_GRAY, the problem is probably somewhere else
       {
        const TcspInfo* cspinfo=csp_getInfo(csp);
@@ -490,23 +511,26 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
           memset(frame->data[i],cspinfo->black[i],frame->linesize[i]*avctx->height>>cspinfo->shiftY[i]);
         }
       }
+
      Trect r(0,0,avctx->width,avctx->height);
+
      if (avctx->sample_aspect_ratio.num &&
          !(connectedSplitter == TffdshowVideoInputPin::MPC_matroska_splitter && avctx->sample_aspect_ratio.num==1 && avctx->sample_aspect_ratio.den==1)
         )  // With MPC's internal matroska splitter, AR is not reliable.
       r.sar=avctx->sample_aspect_ratio;
      else
       r.sar=containerSar;
+
      quants=frame->qscale_table;
      quantsStride=frame->qstride;
      quantType=frame->qscale_type;
-     h264.deblocking_filter=avctx->h264_deblocking_filter;
-     h264.slice_alpha_c0_offset=avctx->h264_slice_alpha_c0_offset;
-     h264.slice_beta_offset=avctx->h264_slice_beta_offset;
      quantsDx=(r.dx+15)>>4;quantsDy=(r.dy+15)>>4;
+
      const stride_t linesize[4]={frame->linesize[0],frame->linesize[1],frame->linesize[2],frame->linesize[3]};
+
      TffPict pict(csp,frame->data,linesize,r,true,frametype,fieldtype,srcLen0,pIn,avctx->palctrl); //TODO: src frame size
      pict.gmcWarpingPoints=frame->num_sprite_warping_points;pict.gmcWarpingPointsReal=frame->real_sprite_warping_points;
+
      if (dont_use_rtStop_from_upper_stream)
       {
        pict.rtStart = frame->reordered_opaque;
@@ -540,14 +564,20 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
         pict.rtStop = frame->reordered_opaque2;
         pict.srcSize = (size_t)frame->reordered_opaque3;
        }
+
      HRESULT hr=sinkD->deliverDecodedSample(pict);
      if (FAILED(hr) || (used_bytes && sinkD->acceptsManyFrames()!=S_OK) || avctx->codec_id==CODEC_ID_LOCO)
       return hr;
     }
    else
-    if (!src)
-     break;
-   if(!used_bytes && codecId==CODEC_ID_SVQ3) return S_OK;
+    {
+     if (!src)
+      break;
+    }
+
+   if(!used_bytes && codecId==CODEC_ID_SVQ3)
+    return S_OK;
+
    src+=used_bytes;
    size-=used_bytes;
   }
