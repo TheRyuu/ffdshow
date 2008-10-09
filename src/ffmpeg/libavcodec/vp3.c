@@ -62,6 +62,8 @@ typedef struct Vp3Fragment {
     int8_t motion_y;
 } Vp3Fragment;
 
+#define _ilog(i) av_log2(2*(i)) /* ffdshow custom code */
+
 #define SB_NOT_CODED        0
 #define SB_PARTIALLY_CODED  1
 #define SB_FULLY_CODED      2
@@ -232,6 +234,12 @@ typedef struct Vp3DecodeContext {
 
     uint8_t filter_limit_values[64];
     int bounding_values_array[256];
+
+    /* ffdshow custom stuffs (begin) */
+    int fps_numerator,fps_denumerator;
+    int64_t granulepos;
+    int keyframe_granule_shift,keyframe_frequency_force;
+    /* ffdshow custom stuffs (end) */
 } Vp3DecodeContext;
 
 /************************************************************************
@@ -1740,6 +1748,19 @@ static av_cold int vp3_decode_init(AVCodecContext *avctx)
     return 0;
 }
 
+/* ffdshow custom code (begin) */
+static int64_t theora_granule_frame(Vp3DecodeContext *s,int64_t granulepos) 	 
+{ 	 
+    if(granulepos>=0){
+        int64_t iframe=granulepos>>s->keyframe_granule_shift;
+        int64_t pframe=granulepos-(iframe<<s->keyframe_granule_shift);
+        return iframe+pframe;
+    }else{
+        return -1;
+    }
+}
+/* ffdshow custom code (end) */
+
 /*
  * This is the ffmpeg/libavcodec API frame decode function.
  */
@@ -1878,6 +1899,28 @@ static int vp3_decode_frame(AVCodecContext *avctx,
 
     apply_loop_filter(s);
 
+    /* ffdshow custom code (begin) */
+    if (s->theora && s->fps_numerator){
+        if (avctx->granulepos>-1){
+            s->granulepos=avctx->granulepos;
+        }else{
+            if (s->granulepos==-1)
+                s->granulepos=0;
+            else
+                if (s->keyframe){
+                    long frames= s->granulepos & ((1<<s->keyframe_granule_shift)-1);
+                    s->granulepos>>=s->keyframe_granule_shift;
+                    s->granulepos+=frames+1;
+                    s->granulepos<<=s->keyframe_granule_shift;
+                }else{
+                    s->granulepos++;
+                }
+        }
+        s->current_frame.reordered_opaque = 10000000LL * theora_granule_frame(s,s->granulepos) * s->fps_denumerator / s->fps_numerator;
+        s->current_frame.pict_type=s->keyframe?FF_I_TYPE:FF_P_TYPE;
+    }
+    /* ffdshow custom code (end) */
+
     *data_size=sizeof(AVFrame);
     *(AVFrame*)data= s->current_frame;
 
@@ -2011,13 +2054,15 @@ static int theora_decode_header(AVCodecContext *avctx, GetBitContext *gb)
         skip_bits(gb, 8); /* offset y */
     }
 
-    skip_bits(gb, 32); /* fps numerator */
-    skip_bits(gb, 32); /* fps denumerator */
-    skip_bits(gb, 24); /* aspect numerator */
-    skip_bits(gb, 24); /* aspect denumerator */
+    /* ffdshow custom code (begin) */
+    s->fps_numerator=get_bits(gb, 32); /* fps numerator */
+    s->fps_denumerator=get_bits(gb, 32); /* fps denumerator */
+    avctx->sample_aspect_ratio.num = get_bits(gb, 24); /* aspect numerator */
+    avctx->sample_aspect_ratio.den = get_bits(gb, 24); /* aspect denumerator */
+    /* ffdshow custom code (end) */
 
     if (s->theora < 0x030200)
-        skip_bits(gb, 5); /* keyframe frequency force */
+        s->keyframe_frequency_force=1<<get_bits(gb, 5); /* keyframe frequency force */ /* ffdshow custom code */
     skip_bits(gb, 8); /* colorspace */
     if (s->theora >= 0x030400)
         skip_bits(gb, 2); /* pixel format: 420,res,422,444 */
@@ -2027,11 +2072,12 @@ static int theora_decode_header(AVCodecContext *avctx, GetBitContext *gb)
 
     if (s->theora >= 0x030200)
     {
-        skip_bits(gb, 5); /* keyframe frequency force */
+        s->keyframe_frequency_force=1<<get_bits(gb, 5); /* keyframe frequency force */ /* ffdshow custom code */
 
         if (s->theora < 0x030400)
             skip_bits(gb, 5); /* spare bits */
     }
+    s->keyframe_granule_shift=_ilog(s->keyframe_frequency_force-1); // ffdshow custom code
 
 //    align_get_bits(gb);
 
@@ -2208,6 +2254,7 @@ static int theora_decode_init(AVCodecContext *avctx)
   }
 
     vp3_decode_init(avctx);
+    s->granulepos=-1; /* ffdshow custom code */
     return 0;
 }
 
