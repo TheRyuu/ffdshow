@@ -76,6 +76,7 @@ enum SampleFormat {
     SAMPLE_FMT_S32,             ///< signed 32 bits
     SAMPLE_FMT_FLT,             ///< float
     SAMPLE_FMT_DBL,             ///< double
+    SAMPLE_FMT_NB               ///< Number of sample formats. DO NOT USE if dynamically linking to libavcodec
 };
 
 /**
@@ -1635,6 +1636,10 @@ typedef struct AVCodecContext {
      */
      int profile;
 #define FF_PROFILE_UNKNOWN -99
+#define FF_PROFILE_AAC_MAIN 0
+#define FF_PROFILE_AAC_LOW  1
+#define FF_PROFILE_AAC_SSR  2
+#define FF_PROFILE_AAC_LTP  3
 
     /**
      * level
@@ -1984,7 +1989,6 @@ typedef struct AVCodecContext {
     int ac3mode,ac3lfe;
     int ac3channels[6];
     int nal_length_size;
-    int h264_deblocking_filter,h264_slice_alpha_c0_offset,h264_slice_beta_offset;
     int vorbis_header_size[3];
     int64_t granulepos;
     int64_t *parserRtStart;
@@ -2346,6 +2350,11 @@ int avcodec_decode_video(AVCodecContext *avctx, AVFrame *picture,
                          int *got_picture_ptr,
                          const uint8_t *buf, int buf_size);
 
+
+int avcodec_parse_frame(AVCodecContext *avctx, uint8_t **pdata,
+                        int *data_size_ptr,
+                        uint8_t *buf, int buf_size);
+
 /**
  * Encodes an audio frame from \p samples into \p buf.
  * The avcodec_encode_audio() function encodes an audio frame from the input
@@ -2469,6 +2478,20 @@ typedef struct AVCodecParser {
     struct AVCodecParser *next;
 } AVCodecParser;
 
+AVCodecParser *av_parser_next(AVCodecParser *c);
+
+void av_register_codec_parser(AVCodecParser *parser);
+AVCodecParserContext *av_parser_init(int codec_id);
+int av_parser_parse(AVCodecParserContext *s,
+                    AVCodecContext *avctx,
+                    uint8_t **poutbuf, int *poutbuf_size,
+                    const uint8_t *buf, int buf_size,
+                    int64_t pts, int64_t dts);
+int av_parser_change(AVCodecParserContext *s,
+                     AVCodecContext *avctx,
+                     uint8_t **poutbuf, int *poutbuf_size,
+                     const uint8_t *buf, int buf_size, int keyframe);
+void av_parser_close(AVCodecParserContext *s);
 
 /* memory */
 
@@ -2549,5 +2572,5 @@ int avcodec_h264_search_recovery_point(AVCodecContext *avctx,
 #define AVERROR_NOMEM       AVERROR(ENOMEM)  /**< not enough memory */
 #define AVERROR_NOFMT       AVERROR(EILSEQ)  /**< unknown format */
 #define AVERROR_NOTSUPP     AVERROR(ENOSYS)  /**< Operation not supported. */
-
+#define AVERROR_PATCHWELCOME    -MKTAG('P','A','W','E') /**< Not yet implemented in FFmpeg. Patches welcome. */
 #endif /* AVCODEC_AVCODEC_H */

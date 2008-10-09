@@ -51,6 +51,10 @@ public:
  int (*avcodec_decode_audio)(AVCodecContext *avctx, void *samples,
                              int *frame_size_ptr,
                              const uint8_t *buf, int buf_size);
+int (*avcodec_decode_audio2)(AVCodecContext *avctx, int16_t *samples,
+                         int *frame_size_ptr,
+                         const uint8_t *buf, int buf_size);
+
  int (*avcodec_encode_video)(AVCodecContext *avctx, uint8_t *buf, int buf_size, const AVFrame *pict);
  int (*avcodec_encode_audio)(AVCodecContext *avctx, uint8_t *buf, int buf_size, const short *samples);
  void (*avcodec_flush_buffers)(AVCodecContext *avctx);
@@ -71,6 +75,11 @@ public:
  void (*avcodec_get_encoder_info)(AVCodecContext *avctx,int *xvid_build,int *divx_version,int *divx_build,int *lavc_build);
 
  void (*av_free)(void *ptr);
+ 
+ AVCodecParserContext* (*av_parser_init)(int codec_id);
+ int (*av_parser_parse)(AVCodecParserContext *s,AVCodecContext *avctx,uint8_t **poutbuf, int *poutbuf_size,const uint8_t *buf, int buf_size,int64_t pts, int64_t dts);
+ void (*av_parser_close)(AVCodecParserContext *s);
+
  int (*avcodec_h264_search_recovery_point)(AVCodecContext *avctx,
                          const uint8_t *buf, int buf_size, int *recovery_frame_cnt);
 

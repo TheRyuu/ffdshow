@@ -85,6 +85,7 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(avcodec_alloc_frame,"avcodec_alloc_frame");
  dll->loadFunction(avcodec_decode_video,"avcodec_decode_video");
  dll->loadFunction(avcodec_decode_audio,"avcodec_decode_audio");
+ dll->loadFunction(avcodec_decode_audio2,"avcodec_decode_audio2");
  dll->loadFunction(avcodec_flush_buffers,"avcodec_flush_buffers");
  dll->loadFunction(avcodec_close0,"avcodec_close");
  //dll->loadFunction(av_free_static,"av_free_static");
@@ -98,6 +99,9 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(avcodec_default_reget_buffer,"avcodec_default_reget_buffer");
  dll->loadFunction(avcodec_get_current_idct,"avcodec_get_current_idct");
  dll->loadFunction(avcodec_get_encoder_info,"avcodec_get_encoder_info");
+ dll->loadFunction(av_parser_init,"av_parser_init"); 
+ dll->loadFunction(av_parser_parse,"av_parser_parse"); 
+ dll->loadFunction(av_parser_close,"av_parser_close"); 
  dll->loadFunction(avcodec_h264_search_recovery_point,"avcodec_h264_search_recovery_point");
 
  if (!dec_only)

@@ -11,7 +11,6 @@ CFLAGS+= -I. -I.. -I$(LAVC_DIR) -I$(LAVU_DIR) -I../codecs -I../imgFilters -I$(ZL
 SRCS_C=\
       DllEntry.c \
       $(LAVC_DIR)/8bps.c \
-      $(LAVC_DIR)/aactab.c \
       $(LAVC_DIR)/aasc.c \
       $(LAVC_DIR)/ac3.c \
       $(LAVC_DIR)/ac3enc.c \

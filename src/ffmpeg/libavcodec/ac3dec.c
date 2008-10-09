@@ -1281,13 +1281,14 @@ static av_cold int ac3_decode_end(AVCodecContext *avctx)
 }
 
 AVCodec ac3_decoder = {
-    .name = "ac3",
-    .type = CODEC_TYPE_AUDIO,
-    .id = CODEC_ID_AC3,
-    .priv_data_size = sizeof (AC3DecodeContext),
-    .init = ac3_decode_init,
-    .close = ac3_decode_end,
-    .decode = ac3_decode_frame,
+    /*.name = */"ac3",
+    /*.type = */CODEC_TYPE_AUDIO,
+    /*.id = */CODEC_ID_AC3,
+    /*.priv_data_size = */sizeof (AC3DecodeContext),
+    /*.init = */ac3_decode_init,
+    /*.encode = */NULL,
+    /*.close = */ac3_decode_end,
+    /*.decode = */ac3_decode_frame,
     /*.capabilities = */0,
     /*.next = */NULL,
     /*.flush = */NULL,
@@ -1297,13 +1298,14 @@ AVCodec ac3_decoder = {
 };
 
 AVCodec eac3_decoder = {
-    .name = "eac3",
-    .type = CODEC_TYPE_AUDIO,
-    .id = CODEC_ID_EAC3,
-    .priv_data_size = sizeof (AC3DecodeContext),
-    .init = ac3_decode_init,
-    .close = ac3_decode_end,
-    .decode = ac3_decode_frame,
+    /*.name = */"eac3",
+    /*.type = */CODEC_TYPE_AUDIO,
+    /*.id = */CODEC_ID_EAC3,
+    /*.priv_data_size = */sizeof (AC3DecodeContext),
+    /*.init = */ac3_decode_init,
+    /*.encode = */NULL,
+    /*.close = */ac3_decode_end,
+    /*.decode = */ac3_decode_frame,
     /*.capabilities = */0,
     /*.next = */NULL,
     /*.flush = */NULL,

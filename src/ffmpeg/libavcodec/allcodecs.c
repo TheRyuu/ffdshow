@@ -33,13 +33,18 @@
           extern AVCodec x##_decoder; \
           register_avcodec(&x##_decoder); }
 #define REGISTER_ENCDEC(x)  REGISTER_ENCODER(x); REGISTER_DECODER(x)
+#define REGISTER_PARSER(X,x) { \
+          extern AVCodecParser x##_parser; \
+          if(ENABLE_##X##_PARSER)  av_register_codec_parser(&x##_parser); }
 
 /**
- * Register all the codecs which were enabled at configuration time. 
- * If you do not call this function you can select exactly which formats
- * you want to support, by using the individual registration functions.
+ * Register all the codecs, parsers and bitstream filters which were enabled at
+ * configuration time. If you do not call this function you can select exactly
+ * which formats you want to support, by using the individual registration
+ * functions.
  *
  * @see register_avcodec
+ * @see av_register_codec_parser
  */
 void avcodec_register_all(void)
 {
@@ -134,6 +139,9 @@ void avcodec_register_all(void)
     REGISTER_DECODER	(imc);
     REGISTER_DECODER	(mace3);
     REGISTER_DECODER	(mace6);
+    //REGISTER_DECODER	(mlp);
+    //REGISTER_DECODER	(mp2);
+    //REGISTER_DECODER	(mp3);
     REGISTER_DECODER	(msgsm);
     REGISTER_DECODER 	(nellymoser);
     REGISTER_DECODER	(qdm2);
@@ -168,4 +176,12 @@ void avcodec_register_all(void)
     REGISTER_DECODER  (adpcm_swf);
     REGISTER_DECODER  (adpcm_xa);
     REGISTER_DECODER  (adpcm_yamaha);
+
+    /* parsers */
+    REGISTER_PARSER  (AAC, aac);
+    REGISTER_PARSER  (AC3, ac3);
+    REGISTER_PARSER  (DCA, dca);
+    REGISTER_PARSER  (MLP, mlp);
+    REGISTER_PARSER  (MPEGAUDIO, mpegaudio);
+    
 }

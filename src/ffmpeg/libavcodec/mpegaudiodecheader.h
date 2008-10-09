@@ -1,6 +1,6 @@
 /*
- * H.263 parser
- * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
+ * MPEG Audio header decoder
+ * Copyright (c) 2001, 2002 Fabrice Bellard.
  *
  * This file is part of FFmpeg.
  *
@@ -19,11 +19,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVCODEC_H263_PARSER_H
-#define AVCODEC_H263_PARSER_H
+/**
+ * @file mpegaudiodecheader.c
+ * MPEG Audio header decoder.
+ */
 
-#include "parser.h"
+#ifndef AVCODEC_MPEGAUDIODECHEADER_H
+#define AVCODEC_MPEGAUDIODECHEADER_H
 
-int ff_h263_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size);
+#include "libavutil/common.h"
+#include "mpegaudio.h"
 
-#endif /* AVCODEC_H263_PARSER_H */
+
+/* header decoding. MUST check the header before because no
+   consistency check is done there. Return 1 if free format found and
+   that the frame size must be computed externally */
+int ff_mpegaudio_decode_header(MPADecodeContext *s, uint32_t header);
+
+#endif /* AVCODEC_MPEGAUDIODECHEADER_H */

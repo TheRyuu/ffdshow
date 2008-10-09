@@ -20,8 +20,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef FFMPEG_PARSER_H
-#define FFMPEG_PARSER_H
+#ifndef AVCODEC_PARSER_H
+#define AVCODEC_PARSER_H
 
 #include "avcodec.h"
 
@@ -60,7 +60,11 @@ int ff_mpeg4video_split(AVCodecContext *avctx, const uint8_t *buf,
 void ff_parse_close(AVCodecParserContext *s);
 void ff_parse1_close(AVCodecParserContext *s);
 
-/* h263dec.c */
-int ff_mpeg4_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size);
+/**
+ * Fetches timestamps for a specific byte within the current access unit.
+ * @param off byte position within the access unit
+ * @param remove Found timestamps will be removed if set to 1, kept if set to 0.
+ */
+void ff_fetch_timestamp(AVCodecParserContext *s, int off, int remove);
 
-#endif /* FFMPEG_PARSER_H */
+#endif /* AVCODEC_PARSER_H */
