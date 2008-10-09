@@ -34,7 +34,7 @@ typedef struct ParseContext{
     int frame_start_found;
     int overread;               ///< the number of bytes which where irreversibly read from the next frame
     int overread_index;         ///< the index into ParseContext.buffer of the overread bytes
-    int64_t rtStart;
+    int64_t rtStart;            /* ffdshow custom code */
 } ParseContext;
 
 struct MpegEncContext;
@@ -42,12 +42,12 @@ struct MpegEncContext;
 typedef struct ParseContext1{
     ParseContext pc;
 /* XXX/FIXME PC1 vs. PC */
-    /* MPEG2 specific */
+    /* MPEG-2-specific */
     AVRational frame_rate;
     int progressive_sequence;
     int width, height;
 
-    /* XXX: suppress that, needed by MPEG4 */
+    /* XXX: suppress that, needed by MPEG-4 */
     struct MpegEncContext *enc;
     int first_picture;
 } ParseContext1;

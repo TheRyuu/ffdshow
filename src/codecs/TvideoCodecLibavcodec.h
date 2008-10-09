@@ -25,11 +25,6 @@ private:
  int dont_use_rtStop_from_upper_stream, theorart;
  bool codecinited,ownmatrices;
  REFERENCE_TIME rtStart,rtStop,avgTimePerFrame,segmentTimeStart;
- struct
-  {
-   REFERENCE_TIME rtStart,rtStop;
-   unsigned int srcSize;
-  } b[2];int posB;
  Textradata *extradata;bool sendextradata;
  TffPict oldpict;
  unsigned int mb_width,mb_height,mb_count;
@@ -80,8 +75,6 @@ public:
    int priorSize,outSampleSize,used_bytes;
    TvideoCodecLibavcodec* parent;
    REFERENCE_TIME prior_rtStart,prior_rtStop,out_rtStart,out_rtStop;
-   REFERENCE_TIME poc2rtStart[64];  // memorize POCs and corresponding timestamps. Use the lower 6 bit of POC, to save memory.
-   REFERENCE_TIME poc2rtStop[64];
 
   public:
    TcodedPictureBuffer(TvideoCodecLibavcodec* Iparent);
@@ -89,7 +82,6 @@ public:
    int append(const uint8_t *buf, int buf_size);
    int send(int *got_picture_ptr);
    void onSeek(void);
-   void get_pict_timestamps(REFERENCE_TIME *pict_rtStart, REFERENCE_TIME *pict_rtStop);
   } codedPictureBuffer;
  class Th264RandomAccess
   {

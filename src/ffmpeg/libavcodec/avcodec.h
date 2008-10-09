@@ -501,9 +501,10 @@ typedef struct AVPanScan{
      * - decoding: Read by user.\
      */\
     int64_t reordered_opaque;\
+    int64_t reordered_opaque2; /* ffdshow custom code */\
+    int64_t reordered_opaque3; /* ffdshow custom code */\
 \
     /* ffdshow custom code */\
-    int64_t rtStart;\
     int mb_width,mb_height,mb_stride,b8_stride;\
     int num_sprite_warping_points,real_sprite_warping_points;\
     int play_flags;
@@ -1951,6 +1952,8 @@ typedef struct AVCodecContext {
      * - decoding: Set by user.
      */
     int64_t reordered_opaque;
+    int64_t reordered_opaque2; /* ffdshow custom code */
+    int64_t reordered_opaque3; /* ffdshow custom code */
 
     /**
      * Bits per sample/pixel of internal libavcodec pixel/sample format.

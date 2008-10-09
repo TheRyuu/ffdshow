@@ -311,7 +311,6 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
  codecinited=true;
  wasKey=false;
  segmentTimeStart=0;
- posB=1;
  return true;
 }
 
@@ -327,9 +326,6 @@ bool TvideoCodecLibavcodec::isTSfile(void)
 
 void TvideoCodecLibavcodec::onGetBuffer(AVFrame *pic)
 {
- //DPRINTF("onGetBuffer");
- pic->rtStart=rtStart;
- //rtStart=REFTIME_INVALID;
 }
 
 void TvideoCodecLibavcodec::handle_user_data(const uint8_t *buf,int buf_len)
@@ -385,7 +381,6 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
  src+=skip;int size=int(srcLen0-skip);
  if (pIn)
   pIn->GetTime(&rtStart,&rtStop);
- b[posB].rtStart=rtStart;b[posB].rtStop=rtStop;b[posB].srcSize=size;posB=1-posB;
 
  if (codecId==CODEC_ID_H264)
   {
@@ -409,13 +404,16 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
     }
   }
 
- if (h264onTS)
+ if (src && h264onTS)
   size = codedPictureBuffer.append(src, size);
 
  while (!src || size>0)
   {
    int got_picture,used_bytes;
-   avctx->parserRtStart=&rtStart;
+   avctx->parserRtStart=&rtStart; // needed for mpeg1/2
+   avctx->reordered_opaque = rtStart;
+   avctx->reordered_opaque2 = rtStop;
+   avctx->reordered_opaque3 = size;
    if (sendextradata)
     {
      used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,extradata->data,(int)extradata->size);
@@ -509,31 +507,38 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
      const stride_t linesize[4]={frame->linesize[0],frame->linesize[1],frame->linesize[2],frame->linesize[3]};
      TffPict pict(csp,frame->data,linesize,r,true,frametype,fieldtype,srcLen0,pIn,avctx->palctrl); //TODO: src frame size
      pict.gmcWarpingPoints=frame->num_sprite_warping_points;pict.gmcWarpingPointsReal=frame->real_sprite_warping_points;
-     if (h264onTS)
-      codedPictureBuffer.get_pict_timestamps(&pict.rtStart, &pict.rtStop);
-     else if (dont_use_rtStop_from_upper_stream)
+     if (dont_use_rtStop_from_upper_stream)
       {
-       pict.rtStart=frame->rtStart;
+       pict.rtStart = frame->reordered_opaque;
+       pict.srcSize = (size_t)frame->reordered_opaque3; // FIXME this is not correct for MPEG-1/2 that use SOURCE_TRUNCATED. (Just for OSD, not that important bug)
+
        if (pict.rtStart==REFTIME_INVALID)
         pict.rtStart=oldpict.rtStop;
+
        if (avgTimePerFrame==-1)
         deciV->getAverageTimePerFrame(&avgTimePerFrame);
+
        if (avgTimePerFrame)
         pict.rtStop=pict.rtStart+avgTimePerFrame+frame->repeat_pict*avgTimePerFrame/2;
        else
         pict.rtStop=pict.rtStart+1;
+
        if (avctx->codec_tag==FOURCC_MPG1 || avctx->codec_tag==FOURCC_MPG2)
         pict.mediatimeStart=pict.mediatimeStop=REFTIME_INVALID;
+
        oldpict=pict;
       }
      else if (theorart)
-      pict.rtStop=(pict.rtStart=frame->rtStart-segmentTimeStart)+1;
+      {
+       pict.rtStart = frame->reordered_opaque - segmentTimeStart;
+       pict.rtStop  = pict.rtStart + 1;
+      }
      else
-      if (avctx->has_b_frames)
+      if (avctx->has_b_frames || h264onTS)
        {
-        pict.rtStart=b[posB].rtStart;
-        pict.rtStop=b[posB].rtStop;
-        pict.srcSize=b[posB].srcSize;
+        pict.rtStart = frame->reordered_opaque;
+        pict.rtStop = frame->reordered_opaque2;
+        pict.srcSize = (size_t)frame->reordered_opaque3;
        }
      HRESULT hr=sinkD->deliverDecodedSample(pict);
      if (FAILED(hr) || (used_bytes && sinkD->acceptsManyFrames()!=S_OK) || avctx->codec_id==CODEC_ID_LOCO)
@@ -553,7 +558,6 @@ bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
 {
  wasKey=false;
  segmentTimeStart=segmentStart;
- posB=1;b[0].rtStart=b[1].rtStart=b[0].rtStop=b[0].rtStop=0;b[0].srcSize=b[1].srcSize=0;
  if (ccDecoder) ccDecoder->onSeek();
  codedPictureBuffer.onSeek();
  h264RandomAccess.onSeek();
@@ -1240,8 +1244,6 @@ void TvideoCodecLibavcodec::TcodedPictureBuffer::onSeek(void)
 {
  used_bytes = outSampleSize = priorSize = 0;
  prior_rtStart = prior_rtStop = REFTIME_INVALID;
- for (int i = 0 ; i < 64 ; i++)
-  poc2rtStart[i] = poc2rtStop[i] = REFTIME_INVALID;
 }
 
 /*
@@ -1299,29 +1301,23 @@ int TvideoCodecLibavcodec::TcodedPictureBuffer::send(int *got_picture_ptr)
  if (outSampleSize < 4)
   return -1;
 
- if (parent->h264RandomAccess.search((uint8_t *)outBuf + used_bytes, outSampleSize - used_bytes) == 0)
+ int out_size = outSampleSize - used_bytes;
+ if (parent->h264RandomAccess.search((uint8_t *)outBuf + used_bytes, out_size) == 0)
   return -1;
 
- int used = parent->libavcodec->avcodec_decode_video(parent->avctx, parent->frame, got_picture_ptr, (uint8_t *)outBuf + used_bytes, outSampleSize - used_bytes);
+ parent->avctx->reordered_opaque = out_rtStart;
+ parent->avctx->reordered_opaque2 = out_rtStop;
+ parent->avctx->reordered_opaque3 = out_size;
+ int used = parent->libavcodec->avcodec_decode_video(parent->avctx, parent->frame, got_picture_ptr, (uint8_t *)outBuf + used_bytes, out_size);
 
  if (used < 0)
   return -1;
 
- int poc = parent->avctx->h264_poc_decoded; // retrieve POC of the sample that we have just sent. Not necesarily equal to POC of the picture we are going to show next.
- poc2rtStart[poc & 0x3f] = out_rtStart;
- poc2rtStop [poc & 0x3f] = out_rtStop;
 
  parent->h264RandomAccess.judgeUsability(got_picture_ptr);
 
  used_bytes += used;
  return used;
-}
-
-void TvideoCodecLibavcodec::TcodedPictureBuffer::get_pict_timestamps(REFERENCE_TIME *pict_rtStart, REFERENCE_TIME *pict_rtStop)
-{
- int poc = parent->avctx->h264_poc_outputed; // retrieve POC of the picture we are going to show next.
- *pict_rtStart = poc2rtStart[poc & 0x3f];
- *pict_rtStop  = poc2rtStop [poc & 0x3f];
 }
 
 TvideoCodecLibavcodec::Th264RandomAccess::Th264RandomAccess(TvideoCodecLibavcodec *Iparent):

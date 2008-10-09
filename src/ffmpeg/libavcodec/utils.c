@@ -298,6 +298,8 @@ int avcodec_default_get_buffer(AVCodecContext *s, AVFrame *pic){
     s->internal_buffer_count++;
 
     pic->reordered_opaque= s->reordered_opaque;
+    pic->reordered_opaque2= s->reordered_opaque2; /* ffdshow custom code */
+    pic->reordered_opaque3= s->reordered_opaque3; /* ffdshow custom code */
 
     if(s->debug&FF_DEBUG_BUFFERS)
         av_log(s, AV_LOG_DEBUG, "default_get_buffer called on pic %p, %d buffers used\n", pic, s->internal_buffer_count);
