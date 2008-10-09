@@ -172,7 +172,7 @@ static void backward_filter(float *hist, float *rec, const float *window,
                             float *lpc, const float *tab,
                             int order, int n, int non_rec, int move_size)
 {
-    float temp[order+1];
+    float *temp = _alloca((order + 1) * sizeof(float));
 
     do_hybrid_window(order, n, non_rec, temp, hist, rec, window);
 
