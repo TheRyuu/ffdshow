@@ -22,9 +22,18 @@ private:
  int grayscale;
  bool isAdaptive;
  int threadcount;
- int dont_use_rtStop_from_upper_stream, theorart;
+ bool dont_use_rtStop_from_upper_stream; // and reordering of timpestams is justified.
+ bool theorart;
  bool codecinited,ownmatrices;
  REFERENCE_TIME rtStart,rtStop,avgTimePerFrame,segmentTimeStart;
+
+ struct
+  {
+   REFERENCE_TIME rtStart,rtStop;
+   unsigned int srcSize;
+   } b[2];
+ int posB;
+
  Textradata *extradata;bool sendextradata;
  TffPict oldpict;
  unsigned int mb_width,mb_height,mb_count;
