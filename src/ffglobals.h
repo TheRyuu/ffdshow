@@ -173,6 +173,11 @@ inline unsigned int ff_abs(int x)
  return (unsigned int)((x<0) ? -x : x);
 }
 
+inline unsigned long ff_abs(long x)
+{
+ return (unsigned long)((x<0) ? -x : x);
+}
+
 inline uint64_t ff_abs(int64_t x)
 {
  return uint64_t((x<0) ? -x : x);
