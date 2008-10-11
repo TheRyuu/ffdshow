@@ -478,7 +478,7 @@ HRESULT TffdshowDecVideo::CheckTransform(const CMediaType *mtIn, const CMediaTyp
   {
    BITMAPINFOHEADER biOut;
    ExtractBIH(*mtOut,&biOut);
-   if ((unsigned int)ff_abs(biOut.biWidth)>=oldRect.dx && (unsigned int)ff_abs(biOut.biHeight)==oldRect.dy)
+   if (ff_abs(biOut.biWidth)>=oldRect.dx && ff_abs(biOut.biHeight)==oldRect.dy)
     return S_OK;
    else
     return VFW_E_TYPE_NOT_ACCEPTED;
@@ -826,7 +826,7 @@ HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
    insample_rtStop = REFTIME_INVALID;
   }
 
- if (late && pSample->IsSyncPoint()==S_OK) late=0;
+ if (m_bSampleSkipped && late>0) return S_OK;
  int codecId = inpin->getInCodecId2();
  if (presetSettings->dropOnDelay && !mpeg12_codec(codecId) && !vc1_codec(codecId) && late>presetSettings->dropDelayTime*10000)
   {

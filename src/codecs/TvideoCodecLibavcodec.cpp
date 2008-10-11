@@ -310,7 +310,7 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
  if (avctx->sample_aspect_ratio.num && avctx->sample_aspect_ratio.den)
   pict.setSar(avctx->sample_aspect_ratio);
  containerSar=pict.rectFull.sar;
- neroavc=(sourceFlags&SOURCE_NEROAVC || avctx->codec_tag==FOURCC_MPG1 || avctx->codec_tag==FOURCC_MPG2) && avctx->codec_tag!=FOURCC_THEO;
+ dont_use_rtStop_from_upper_stream = (sourceFlags&SOURCE_NEROAVC || avctx->codec_tag==FOURCC_MPG1 || avctx->codec_tag==FOURCC_MPG2) && avctx->codec_tag!=FOURCC_THEO;
  avgTimePerFrame=-1;
  codecinited=true;
  wasKey=false;
@@ -330,9 +330,6 @@ bool TvideoCodecLibavcodec::isTSfile(void)
 
 void TvideoCodecLibavcodec::onGetBuffer(AVFrame *pic)
 {
- //DPRINTF("onGetBuffer");
- pic->rtStart=rtStart;
- //rtStart=REFTIME_INVALID;
 }
 
 void TvideoCodecLibavcodec::handle_user_data(const uint8_t *buf,int buf_len)
@@ -352,13 +349,16 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
 {
  bool isSyncPoint = pIn && pIn->IsSyncPoint() == S_OK;
  if (codecId==CODEC_ID_FFV1) // libavcodec can crash or loop infinitely when first frame after seeking is not keyframe
-  if (!wasKey)
-   if (isSyncPoint)
-    wasKey=true;
-   else
-    return S_OK;
+  {
+   if (!wasKey)
+    if (isSyncPoint)
+     wasKey=true;
+    else
+     return S_OK;
+  }
 
  unsigned int skip=0;
+
  if (src && (codecId==CODEC_ID_RV10 || codecId==CODEC_ID_RV20) && avctx->sub_id)
   {
    avctx->slice_count=src[0]+1;
@@ -385,9 +385,16 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
    skip+=sizeof(_TheoraPacket);
    avctx->granulepos=packet->granulepos;
   }
+
  src+=skip;int size=int(srcLen0-skip);
+
  if (pIn)
   pIn->GetTime(&rtStart,&rtStop);
+
+ b[posB].rtStart=rtStart;
+ b[posB].rtStop=rtStop;
+ b[posB].srcSize=size;
+ posB=1-posB; /* posB++; if(posB==2) posB=0;*/
 
  if (codecId==CODEC_ID_H264)
   {
@@ -396,6 +403,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
      if(deciV->getLate()<=0)
       {
        avctx->skip_loop_filter= initialSkipLoopFilter;
+       //avctx->skip_frame = AVDISCARD_NONE;
        autoSkipingLoopFilter= false;
       }
     }
@@ -404,6 +412,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
      if(deciV->shouldSkipH264loopFilter())
       {
        avctx->skip_loop_filter=AVDISCARD_ALL;
+       //avctx->skip_frame = AVDISCARD_NONREF;
        autoSkipingLoopFilter= true;
       }
     }
@@ -415,7 +424,12 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
  while (!src || size>0)
   {
    int used_bytes;
-   avctx->parserRtStart=&rtStart;
+
+   avctx->parserRtStart=&rtStart; // needed for mpeg1/2
+   avctx->reordered_opaque = rtStart;
+   avctx->reordered_opaque2 = rtStop;
+   avctx->reordered_opaque3 = size;
+
    avctx->reordered_opaque = rtStart;
    avctx->reordered_opaque2 = rtStop;
    avctx->reordered_opaque3 = size;
@@ -428,8 +442,10 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
    else
     {
      unsigned int neededsize=size+FF_INPUT_BUFFER_PADDING_SIZE;
+
      if (ffbuflen<neededsize)
       ffbuf=(unsigned char*)realloc(ffbuf,ffbuflen=neededsize);
+
      if (src)
       {
        if (codecId == CODEC_ID_H264)
@@ -460,30 +476,42 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
      else
       used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,NULL,0);
     }
+
    if (used_bytes<0)
     return S_OK;
+
    if (got_picture && frame->data[0])
     {
      int frametype;
      if (avctx->codec_id==CODEC_ID_H261)
-      frametype=FRAME_TYPE::I;
+      {
+       frametype=FRAME_TYPE::I;
+      }
      else
-      switch (frame->pict_type)
-       {
-        case FF_P_TYPE:frametype=FRAME_TYPE::P;break;
-        case FF_B_TYPE:frametype=FRAME_TYPE::B;break;
-        case FF_I_TYPE:frametype=FRAME_TYPE::I;break;
-        case FF_S_TYPE:frametype=FRAME_TYPE::GMC;break;
-        case FF_SI_TYPE:frametype=FRAME_TYPE::SI;break;
-        case FF_SP_TYPE:frametype=FRAME_TYPE::SP;break;
-        case 0:frametype=pIn && pIn->IsSyncPoint()==S_OK?FRAME_TYPE::I:FRAME_TYPE::P;break;
-        default:frametype=FRAME_TYPE::UNKNOWN;break;
+      {
+       switch (frame->pict_type)
+        {
+         case FF_P_TYPE:frametype=FRAME_TYPE::P;break;
+         case FF_B_TYPE:frametype=FRAME_TYPE::B;break;
+         case FF_I_TYPE:frametype=FRAME_TYPE::I;break;
+         case FF_S_TYPE:frametype=FRAME_TYPE::GMC;break;
+         case FF_SI_TYPE:frametype=FRAME_TYPE::SI;break;
+         case FF_SP_TYPE:frametype=FRAME_TYPE::SP;break;
+         case 0:frametype=pIn && pIn->IsSyncPoint()==S_OK?FRAME_TYPE::I:FRAME_TYPE::P;break;
+         default:frametype=FRAME_TYPE::UNKNOWN;break;
+        }
        }
+
      if (pIn && pIn->IsPreroll()==S_OK)
       return sinkD->deliverPreroll(frametype);
+
      int fieldtype=frame->interlaced_frame?(frame->top_field_first?FIELD_TYPE::INT_TFF:FIELD_TYPE::INT_BFF):FIELD_TYPE::PROGRESSIVE_FRAME;
-     if (frame->play_flags&CODEC_FLAG_QPEL) frametype|=FRAME_TYPE::QPEL;
+
+     if (frame->play_flags&CODEC_FLAG_QPEL)
+      frametype|=FRAME_TYPE::QPEL;
+
      int csp=csp_lavc2ffdshow(avctx->pix_fmt);
+
      if (grayscale) // workaround for green picture when decoding mpeg with CODEC_FLAG_GRAY, the problem is probably somewhere else
       {
        const TcspInfo* cspinfo=csp_getInfo(csp);
@@ -495,56 +523,82 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
           memset(frame->data[i],cspinfo->black[i],frame->linesize[i]*avctx->height>>cspinfo->shiftY[i]);
         }
       }
+
      Trect r(0,0,avctx->width,avctx->height);
+
      if (avctx->sample_aspect_ratio.num &&
          !(connectedSplitter == TffdshowVideoInputPin::MPC_matroska_splitter && avctx->sample_aspect_ratio.num==1 && avctx->sample_aspect_ratio.den==1)
         )  // With MPC's internal matroska splitter, AR is not reliable.
       r.sar=avctx->sample_aspect_ratio;
      else
       r.sar=containerSar;
+
      quants=frame->qscale_table;
      quantsStride=frame->qstride;
      quantType=frame->qscale_type;
-     h264.deblocking_filter=avctx->h264_deblocking_filter;
-     h264.slice_alpha_c0_offset=avctx->h264_slice_alpha_c0_offset;
-     h264.slice_beta_offset=avctx->h264_slice_beta_offset;
      quantsDx=(r.dx+15)>>4;quantsDy=(r.dy+15)>>4;
+
      const stride_t linesize[4]={frame->linesize[0],frame->linesize[1],frame->linesize[2],frame->linesize[3]};
+
      TffPict pict(csp,frame->data,linesize,r,true,frametype,fieldtype,srcLen0,pIn,avctx->palctrl); //TODO: src frame size
      pict.gmcWarpingPoints=frame->num_sprite_warping_points;pict.gmcWarpingPointsReal=frame->real_sprite_warping_points;
-     if (neroavc)
+
+     if (h264onTS)
       {
        pict.rtStart = frame->reordered_opaque;
+       pict.rtStop = frame->reordered_opaque2;
        pict.srcSize = (size_t)frame->reordered_opaque3;
+      }
+     else if (dont_use_rtStop_from_upper_stream)
+      {
+       pict.rtStart = frame->reordered_opaque;
+       pict.srcSize = (size_t)frame->reordered_opaque3; // FIXME this is not correct for MPEG-1/2 that use SOURCE_TRUNCATED. (Just for OSD, not that important bug)
+
        if (pict.rtStart==REFTIME_INVALID)
         pict.rtStart=oldpict.rtStop;
+
        if (avgTimePerFrame==-1)
         deciV->getAverageTimePerFrame(&avgTimePerFrame);
+
        if (avgTimePerFrame)
         pict.rtStop=pict.rtStart+avgTimePerFrame+frame->repeat_pict*avgTimePerFrame/2;
        else
         pict.rtStop=pict.rtStart+1;
+
        if (avctx->codec_tag==FOURCC_MPG1 || avctx->codec_tag==FOURCC_MPG2)
         pict.mediatimeStart=pict.mediatimeStop=REFTIME_INVALID;
+
        oldpict=pict;
       }
      else if (theorart)
-      pict.rtStop=(pict.rtStart=frame->rtStart-segmentTimeStart)+1;
-     else
-      if (avctx->has_b_frames)
-       {
-        pict.rtStart = frame->reordered_opaque;
-        pict.rtStop = frame->reordered_opaque2;
-        pict.srcSize = (size_t)frame->reordered_opaque3;
-       }
+      {
+       pict.rtStart = frame->reordered_opaque - segmentTimeStart;
+       pict.rtStop  = pict.rtStart + 1;
+      }
+     else if (avctx->has_b_frames)
+      {
+       // do not reorder timestamps in this case.
+       // Timestamps simply increase. 
+       // ex: AVI files
+
+       pict.rtStart=b[posB].rtStart; 
+       pict.rtStop=b[posB].rtStop;
+       pict.srcSize=b[posB].srcSize;
+      }
+
      HRESULT hr=sinkD->deliverDecodedSample(pict);
      if (FAILED(hr) || (used_bytes && sinkD->acceptsManyFrames()!=S_OK) || avctx->codec_id==CODEC_ID_LOCO)
       return hr;
     }
    else
-    if (!src)
-     break;
-   if(!used_bytes && codecId==CODEC_ID_SVQ3) return S_OK;
+    {
+     if (!src)
+      break;
+    }
+
+   if(!used_bytes && codecId==CODEC_ID_SVQ3)
+    return S_OK;
+
    src+=used_bytes;
    size-=used_bytes;
   }
@@ -555,6 +609,8 @@ bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
 {
  wasKey=false;
  segmentTimeStart=segmentStart;
+ posB=1;
+ b[0].rtStart=b[1].rtStart=b[0].rtStop=b[0].rtStop=0;b[0].srcSize=b[1].srcSize=0;
  if (ccDecoder) ccDecoder->onSeek();
  codedPictureBuffer.onSeek();
  h264RandomAccess.onSeek();
@@ -563,7 +619,10 @@ bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
 bool TvideoCodecLibavcodec::onDiscontinuity(void)
 {
  wasKey=false;
- return true;
+ if (ccDecoder) ccDecoder->onSeek();
+ codedPictureBuffer.onSeek();
+ h264RandomAccess.onSeek();
+ return avctx?(libavcodec->avcodec_flush_buffers(avctx),true):false;
 }
 
 // libavcodec may still have several frames if frame based multithreading is used.

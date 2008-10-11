@@ -498,7 +498,8 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
        strcpy(oldLinesUser,cfg->user);
        strtok(cfg->user,_l("\n"),linesUser);
        subUser.set(linesUser);
-	   subUser.format(TsubtitleFormat(parent->config->getHtmlColors()));
+	   TsubtitleFormat subtitleFormat = TsubtitleFormat(parent->config->getHtmlColors());
+	   subUser.format(subtitleFormat);
       }
      TrenderedSubtitleLines::TprintPrefs printprefs(deci);
      printprefs.isOSD=true;
