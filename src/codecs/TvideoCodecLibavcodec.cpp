@@ -432,9 +432,6 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
    avctx->reordered_opaque2 = rtStop;
    avctx->reordered_opaque3 = size;
 
-   avctx->reordered_opaque = rtStart;
-   avctx->reordered_opaque2 = rtStop;
-   avctx->reordered_opaque3 = size;
    if (sendextradata)
     {
      used_bytes=libavcodec->avcodec_decode_video(avctx,frame,&got_picture,extradata->data,(int)extradata->size);
