@@ -29,6 +29,8 @@ OUTPUTFLAG=-MMD -o\
 
 CFLAGS+=-mno-cygwin -mdll -mthreads -pipe
 
+CFLAGS+=-fno-common
+
 ifeq ($(64BIT),yes)
     CFLAGS+=-DWIN64 -D_WIN64
 else
