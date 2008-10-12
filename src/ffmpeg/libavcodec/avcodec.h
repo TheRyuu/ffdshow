@@ -326,7 +326,6 @@ typedef struct AVPanScan{
      * - decoding: Set by libavcodec.\
      */\
     int64_t pts;\
-    int64_t rtStart;  /* FOXFIX: Now removed from lavc */\
 \
     /**\
      * picture number in bitstream order\

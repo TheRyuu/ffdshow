@@ -1553,7 +1553,7 @@ static int mpeg_field_start(MpegEncContext *s){
             return -1;
 
         ff_er_frame_start(s);
-        s->current_picture_ptr->rtStart=s->parse_context.rtStart;
+        s->current_picture_ptr->reordered_opaque = s->parse_context.rtStart; /* ffdshow custom code */
 
         /* first check if we must repeat the frame */
         s->current_picture_ptr->repeat_pict = 0;
@@ -2100,7 +2100,7 @@ static void mpeg_decode_gop(AVCodecContext *avctx,
  * finds the end of the current frame in the bitstream.
  * @return the position of the first byte of the next frame, or -1
  */
-int ff_mpeg1_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size, int64_t *rtStart)
+int ff_mpeg1_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size, int64_t *rtStart) /* rtStart: ffdshow custom code */
 {
     int i;
     uint32_t state= pc->state;
@@ -2133,8 +2133,8 @@ int ff_mpeg1_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size, 
                 i++;
                 pc->frame_start_found=4;
                 
-                pc->rtStart=*rtStart;
-                *rtStart=_I64_MIN;
+                pc->rtStart=*rtStart; /* ffdshow custom code */
+                *rtStart=_I64_MIN;    /* ffdshow custom code */
             }
             if(state == SEQ_END_CODE){
                 pc->state=-1;

@@ -34,7 +34,7 @@ typedef struct ParseContext{
     int frame_start_found;
     int overread;               ///< the number of bytes which where irreversibly read from the next frame
     int overread_index;         ///< the index into ParseContext.buffer of the overread bytes
-    int64_t rtStart;
+    int64_t rtStart;            /* ffdshow custom code */
 } ParseContext;
 
 struct MpegEncContext;

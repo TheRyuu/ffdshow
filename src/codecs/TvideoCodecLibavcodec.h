@@ -4,6 +4,8 @@
 #include "TvideoCodec.h"
 #include "Tlibavcodec.h"
 
+#define MAX_THREADS 8 // FIXME: This is defined in mpegvideo.h.
+
 struct Textradata;
 class TccDecoder;
 class TvideoCodecLibavcodec :public TvideoCodecDec,public TvideoCodecEnc,public TlibavcodecExt
@@ -31,8 +33,8 @@ private:
   {
    REFERENCE_TIME rtStart,rtStop;
    unsigned int srcSize;
-   } b[2];
- int posB;
+  } b[MAX_THREADS + 1];
+ int inPosB;
 
  Textradata *extradata;bool sendextradata;
  TffPict oldpict;

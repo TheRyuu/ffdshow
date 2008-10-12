@@ -391,10 +391,12 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
  if (pIn)
   pIn->GetTime(&rtStart,&rtStop);
 
- b[posB].rtStart=rtStart;
- b[posB].rtStop=rtStop;
- b[posB].srcSize=size;
- posB=1-posB; /* posB++; if(posB==2) posB=0;*/
+ b[inPosB].rtStart=rtStart;
+ b[inPosB].rtStop=rtStop;
+ b[inPosB].srcSize=size;
+ inPosB++;
+ if(inPosB >= countof(b))
+  inPosB = 0;
 
  if (codecId==CODEC_ID_H264)
   {
@@ -581,13 +583,25 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
        // Timestamps simply increase. 
        // ex: AVI files
 
-       pict.rtStart=b[posB].rtStart; 
-       pict.rtStop=b[posB].rtStop;
-       pict.srcSize=b[posB].srcSize;
+       int pos;
+       if (avctx->active_thread_algorithm == FF_THREAD_MULTIFRAME)
+        pos = inPosB - 1 - avctx->thread_count;
+       else
+        pos = inPosB - 2;
+
+       if (pos < 0)
+        pos += countof(b);
+
+       pict.rtStart=b[pos].rtStart; 
+       pict.rtStop=b[pos].rtStop;
+       pict.srcSize=b[pos].srcSize;
       }
 
      HRESULT hr=sinkD->deliverDecodedSample(pict);
-     if (FAILED(hr) || (used_bytes && sinkD->acceptsManyFrames()!=S_OK) || avctx->codec_id==CODEC_ID_LOCO)
+     if (FAILED(hr)
+         || (used_bytes && sinkD->acceptsManyFrames()!=S_OK)
+         || avctx->codec_id==CODEC_ID_LOCO
+         || avctx->active_thread_algorithm == FF_THREAD_MULTIFRAME)
       return hr;
     }
    else
@@ -609,8 +623,15 @@ bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
 {
  wasKey=false;
  segmentTimeStart=segmentStart;
- posB=1;
- b[0].rtStart=b[1].rtStart=b[0].rtStop=b[0].rtStop=0;b[0].srcSize=b[1].srcSize=0;
+ inPosB = 1;
+
+ for (int pos = 0 ; pos < countof(b) ; pos++)
+  {
+   b[pos].rtStart = REFTIME_INVALID;
+   b[pos].rtStop = REFTIME_INVALID;
+   b[pos].srcSize = 0;
+  }
+
  if (ccDecoder) ccDecoder->onSeek();
  codedPictureBuffer.onSeek();
  h264RandomAccess.onSeek();
