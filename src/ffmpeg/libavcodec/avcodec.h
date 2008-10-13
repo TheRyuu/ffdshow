@@ -525,7 +525,15 @@ typedef struct AVPanScan{
      * - encoding: Set by libavcodec.\
      * - decoding: Set by libavcodec.\
      */\
-    void *thread_opaque;
+    void *thread_opaque;\
+\
+    /* ffdshow custom stuffs (begin) */\
+\
+    int h264_poc_decoded;\
+    int h264_poc_outputed;\
+    int h264_frame_num_decoded;\
+\
+    /* ffdshow custom stuffs (end) */
 
 #define FF_QSCALE_TYPE_MPEG1 0
 #define FF_QSCALE_TYPE_MPEG2 1
@@ -2032,10 +2040,6 @@ typedef struct AVCodecContext {
     int active_thread_algorithm;
 
     /* ffdshow custom stuffs (begin) */
-
-    int h264_poc_decoded;
-    int h264_poc_outputed;
-    int h264_frame_num_decoded;
 
     enum CorePNGFrameType corepng_frame_type;    
 

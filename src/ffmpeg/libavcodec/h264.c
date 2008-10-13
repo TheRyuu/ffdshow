@@ -7973,9 +7973,9 @@ static int decode_frame(AVCodecContext *avctx,
 #endif
 
     /* start ffdshow custom code */
-    avctx->h264_poc_decoded = h->poc_lsb + h->poc_msb;
-    avctx->h264_poc_outputed = h->outputed_poc;
-    avctx->h264_frame_num_decoded = h-> frame_num;
+    ((AVFrame*)s->current_picture_ptr)->h264_poc_decoded = h->poc_lsb + h->poc_msb;
+    ((AVFrame*)s->current_picture_ptr)->h264_poc_outputed = h->outputed_poc;
+    ((AVFrame*)s->current_picture_ptr)->h264_frame_num_decoded = h-> frame_num;
     /* end ffdshow custom code */
 
     return get_consumed_bytes(s, buf_index, buf_size);
