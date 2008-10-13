@@ -27,7 +27,9 @@
 #ifndef AVCODEC_MPEGAUDIODECTAB_H
 #define AVCODEC_MPEGAUDIODECTAB_H
 
+#ifdef __GNUC__
 #include <stdint.h>
+#endif
 #include "mpegaudio.h"
 
 /*******************************************************/

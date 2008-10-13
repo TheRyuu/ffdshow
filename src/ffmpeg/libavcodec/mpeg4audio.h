@@ -22,7 +22,9 @@
 #ifndef AVCODEC_MPEG4AUDIO_H
 #define AVCODEC_MPEG4AUDIO_H
 
+#ifdef __GNUC__
 #include <stdint.h>
+#endif
 
 typedef struct {
     int object_type;

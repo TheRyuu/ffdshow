@@ -24,7 +24,9 @@
  * MLP parser
  */
 
+#ifdef __GNUC__
 #include <stdint.h>
+#endif
 
 #include "libavutil/crc.h"
 #include "bitstream.h"
