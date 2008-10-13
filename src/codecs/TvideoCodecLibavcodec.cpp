@@ -1444,12 +1444,12 @@ int TvideoCodecLibavcodec::Th264RandomAccess::search(uint8_t* buf, int buf_size)
 
 void TvideoCodecLibavcodec::Th264RandomAccess::judgeUsability(int *got_picture_ptr)
 {
- if (parent->codecId != CODEC_ID_H264)
+ if (parent->codecId != CODEC_ID_H264 || *got_picture_ptr == 0)
   return;
 
  if (recovery_mode ==1 || recovery_mode ==2)
   {
-   recovery_frame_cnt += parent->frame->h264_frame_num_decoded;
+   recovery_frame_cnt = (recovery_frame_cnt + parent->frame->h264_frame_num_decoded) % parent->frame->h264_max_frame_num;
    recovery_mode = 3;
   }
 
