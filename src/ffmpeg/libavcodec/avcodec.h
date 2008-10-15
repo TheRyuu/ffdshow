@@ -2028,17 +2028,17 @@ typedef struct AVCodecContext {
      * - encoding: Set by user, otherwise the default is used.
      * - decoding: Set by user, otherwise the default is used.
      */
-    int thread_algorithm;
-#define FF_THREAD_MULTIFRAME 1 //< Decode more than one frame at once
-#define FF_THREAD_MULTISLICE 2 //< Decode more than one part of a single frame at once
-#define FF_THREAD_DEFAULT    3 //< Use both if possible.
+    int thread_type;
+#define FF_THREAD_FRAME   1 //< Decode more than one frame at once
+#define FF_THREAD_SLICE   2 //< Decode more than one part of a single frame at once
+#define FF_THREAD_DEFAULT 3 //< Use both if possible.
 
     /**
      * Which multithreading methods are actually active at the moment.
      * - encoding: Set by libavcodec.
      * - decoding: Set by libavcodec.
      */
-    int active_thread_algorithm;
+    int active_thread_type;
 
     /* ffdshow custom stuffs (begin) */
 

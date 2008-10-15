@@ -1638,46 +1638,39 @@ static inline int quantize_c(DCTELEM *block, uint8_t *scantable, int qscale, int
     return last_non_zero;
 }
 
-static inline int mc_dir_part_y(H264Context *h, Picture *pic, int n, int delta, int list,
-                                 int src_y_offset){
-    MpegEncContext * const s = &h->s;
-    int my= h->mv_cache[list][ scan8[n] ][1] + src_y_offset*8;
+static inline int mc_dir_part_y(H264Context *h, Picture *pic, int n, int height,
+                                 int y_offset, int list){
+    int my= h->mv_cache[list][ scan8[n] ][1] + 4*y_offset;
     int filter_height= 6;
     int extra_height= h->emu_edge_height;
     const int full_my= my>>2;
 
     if(!pic->data[0]) return -1;
-    if(pic->reference != PICT_FRAME) return 16*s->mb_height-1;
 
     if(full_my < (extra_height + filter_height)){
         my = abs(my) + extra_height*4;
     }
 
-    /*
-    if(!ENABLE_GRAY && !(s->flags&CODEC_FLAG_GRAY)){
-        if(MB_FIELD){
-            const int pic_height = 16*s->mb_height >> MB_FIELD;
-            // chroma offset when predicting from a field of opposite parity
-            my += 2 * ((s->mb_y & 1) - (pic->reference - 1));
-            emu |= (my>>3) < 0 || (my>>3) + 8 >= (pic_height>>1);
-        }
-    }*/
-
-    return (my + delta * 4 + filter_height * 4 + 1) >> 2;
+    return (my + height * 4 + filter_height * 4 + 1) >> 2;
 }
 
-static inline void mc_part_y(H264Context *h, int refs[2][48], int n, int delta,
+static inline void mc_part_y(H264Context *h, int refs[2][48], int n, int height,
                                int y_offset, int list0, int list1){
     MpegEncContext * const s = &h->s;
     int my;
 
-    y_offset += 8*(s->mb_y >> MB_FIELD);
+    y_offset += 16*(s->mb_y >> FIELD_PICTURE);
 
     if(list0){
         int ref_n = h->ref_cache[0][ scan8[n] ], my;
         Picture *ref= &h->ref_list[0][ref_n];
-        if(ref->thread_opaque != s->current_picture_ptr->thread_opaque){
-            my = mc_dir_part_y(h, ref, n, delta, 0, y_offset);
+
+        // Error resilience puts the current picture in the ref list.
+        // Don't try to wait on these as it will cause a deadlock.
+        // Fields can wait on each other, though.
+        if(ref->thread_opaque != s->current_picture.thread_opaque ||
+           (ref->reference&3) != s->picture_structure) {
+            my = mc_dir_part_y(h, ref, n, height, y_offset, 0);
             refs[0][ref_n] = FFMAX(refs[0][ref_n], my);
         }
     }
@@ -1685,8 +1678,10 @@ static inline void mc_part_y(H264Context *h, int refs[2][48], int n, int delta,
     if(list1){
         int ref_n = h->ref_cache[1][ scan8[n] ];
         Picture *ref= &h->ref_list[1][ref_n];
-        if(ref->thread_opaque != s->current_picture_ptr->thread_opaque){
-            my = mc_dir_part_y(h, ref, n, delta, 1, y_offset);
+
+        if(ref->thread_opaque != s->current_picture.thread_opaque ||
+           (ref->reference&3) != s->picture_structure) {
+            my = mc_dir_part_y(h, ref, n, height, y_offset, 1);
             refs[1][ref_n] = FFMAX(refs[1][ref_n], my);
         }
     }
@@ -1703,22 +1698,21 @@ static void avail_motion(H264Context *h){
     const int mb_type= s->current_picture.mb_type[mb_xy];
     int refs[2][48];
     int ref, list;
-    int pic_height = 16*s->mb_height;
 
     memset(refs, -1, sizeof(refs));
 
     if(IS_16X16(mb_type)){
-        mc_part_y(h, refs, 0, 0, 0,
+        mc_part_y(h, refs, 0, 16, 0,
                   IS_DIR(mb_type, 0, 0), IS_DIR(mb_type, 0, 1));
     }else if(IS_16X8(mb_type)){
-        mc_part_y(h, refs, 0, 0, 0,
-                  IS_DIR(mb_type, 0, 0), IS_DIR(mb_type, 0, 1));
-        mc_part_y(h, refs, 8, 0, 4,
-                  IS_DIR(mb_type, 1, 0), IS_DIR(mb_type, 1, 1));
-    }else if(IS_8X16(mb_type)){
         mc_part_y(h, refs, 0, 8, 0,
                   IS_DIR(mb_type, 0, 0), IS_DIR(mb_type, 0, 1));
-        mc_part_y(h, refs, 4, 8, 0,
+        mc_part_y(h, refs, 8, 8, 8,
+                  IS_DIR(mb_type, 1, 0), IS_DIR(mb_type, 1, 1));
+    }else if(IS_8X16(mb_type)){
+        mc_part_y(h, refs, 0, 16, 0,
+                  IS_DIR(mb_type, 0, 0), IS_DIR(mb_type, 0, 1));
+        mc_part_y(h, refs, 4, 16, 0,
                   IS_DIR(mb_type, 1, 0), IS_DIR(mb_type, 1, 1));
     }else{
         int i;
@@ -1728,38 +1722,52 @@ static void avail_motion(H264Context *h){
         for(i=0; i<4; i++){
             const int sub_mb_type= h->sub_mb_type[i];
             const int n= 4*i;
-            int y_offset= (i&2)<<1;
+            int y_offset= (i&2)<<2;
 
             if(IS_SUB_8X8(sub_mb_type)){
-                mc_part_y(h, refs, n  , 0, y_offset,
+                mc_part_y(h, refs, n  , 8, y_offset,
                           IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1));
             }else if(IS_SUB_8X4(sub_mb_type)){
-                mc_part_y(h, refs, n  , 0, y_offset,
-                          IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1));
-                mc_part_y(h, refs, n+2, 0, y_offset+2,
-                          IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1));
-            }else if(IS_SUB_4X8(sub_mb_type)){
                 mc_part_y(h, refs, n  , 4, y_offset,
                           IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1));
-                mc_part_y(h, refs, n+1, 4, y_offset,
+                mc_part_y(h, refs, n+2, 4, y_offset+4,
+                          IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1));
+            }else if(IS_SUB_4X8(sub_mb_type)){
+                mc_part_y(h, refs, n  , 8, y_offset,
+                          IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1));
+                mc_part_y(h, refs, n+1, 8, y_offset,
                           IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1));
             }else{
                 int j;
                 assert(IS_SUB_4X4(sub_mb_type));
                 for(j=0; j<4; j++){
-                    int sub_y_offset= y_offset +   (j&2);
-                    mc_part_y(h, refs, n+j, 0, sub_y_offset,
+                    int sub_y_offset= y_offset + 2*(j&2);
+                    mc_part_y(h, refs, n+j, 4, sub_y_offset,
                               IS_DIR(sub_mb_type, 0, 0), IS_DIR(sub_mb_type, 0, 1));
                 }
             }
         }
     }
 
-    //L1 refs are closer than L0, so wait for them first
     for(list=1; list>=0; list--){
         for(ref=0; ref<48; ref++){
-            if(refs[list][ref] >= 0)
-                ff_await_frame_progress((AVFrame*)&h->ref_list[list][ref], FFMIN(refs[list][ref], pic_height-1));
+            int row = refs[list][ref];
+            if(row >= 0){
+                Picture *ref_pic = &h->ref_list[list][ref];
+                int pic_height = 16*s->mb_height >> ref_pic->field_picture;
+                int ref_field = ref_pic->reference - 1;
+
+                if(!FIELD_PICTURE && ref_pic->field_picture){ // frame referencing two fields
+                    ff_await_field_progress((AVFrame*)ref_pic, FFMIN((row >> 1) - !(row&1), pic_height-1), 1);
+                    ff_await_field_progress((AVFrame*)ref_pic, FFMIN((row >> 1)           , pic_height-1), 0);
+                }else if(FIELD_PICTURE && !ref_pic->field_picture){ // field referencing one field of a frame
+                    ff_await_field_progress((AVFrame*)ref_pic, FFMIN(row*2 + ref_field    , pic_height-1), 0);
+                }else if(FIELD_PICTURE){
+                    ff_await_field_progress((AVFrame*)ref_pic, FFMIN(row, pic_height-1), ref_field);
+                }else{
+                    ff_await_field_progress((AVFrame*)ref_pic, FFMIN(row, pic_height-1), 0);
+                }
+            }
         }
     }
 }
@@ -2371,8 +2379,7 @@ static void copy_parameter_set(void **to, void **from, int count, int size)
         else if (from[i] && !to[i]) to[i] = av_malloc(size);
         else if (!from[i]) continue;
 
-        if (to[i] && from[i])
-            memcpy(to[i], from[i], size);
+        memcpy(to[i], from[i], size);
     }
 }
 
@@ -2518,7 +2525,12 @@ static void decode_postinit(H264Context *h){
 
     // Don't do anything if it's the first field or we've already been called.
     // FIXME the first field should call ff_report_frame_setup_done() even if it skips the rest
-    if (h->next_output_pic || cur->field_poc[0]==INT_MAX || cur->field_poc[1]==INT_MAX) return;
+    if (h->next_output_pic) return;
+
+    if (cur->field_poc[0]==INT_MAX || cur->field_poc[1]==INT_MAX) {
+        ff_report_frame_setup_done(s->avctx);
+        return;
+    }
 
     cur->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
     /* Derive top_field_first from field pocs. */
@@ -4078,7 +4090,8 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     h->mb_field_decoding_flag= s->picture_structure != PICT_FRAME;
 
     if(h0->current_slice == 0){
-        if((h->prev_frame_num+1)%(1<<h->sps.log2_max_frame_num) < (h->frame_num - h->sps.ref_frame_count))
+        if(h->frame_num != h->prev_frame_num &&
+          (h->prev_frame_num+1)%(1<<h->sps.log2_max_frame_num) < (h->frame_num - h->sps.ref_frame_count))
             h->prev_frame_num = h->frame_num - h->sps.ref_frame_count - 1;
 
         while(h->frame_num !=  h->prev_frame_num &&
@@ -4088,7 +4101,8 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
             h->prev_frame_num++;
             h->prev_frame_num %= 1<<h->sps.log2_max_frame_num;
             s->current_picture_ptr->frame_num= h->prev_frame_num;
-            ff_report_frame_progress((AVFrame*)s->current_picture_ptr, INT_MAX);
+            ff_report_field_progress((AVFrame*)s->current_picture_ptr, INT_MAX, 0);
+            ff_report_field_progress((AVFrame*)s->current_picture_ptr, INT_MAX, 1);
             execute_ref_pic_marking(h, NULL, 0);
         }
 
@@ -4325,7 +4339,8 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
                           +(h->ref_list[j][i].reference&3);
     }
 
-    h->emu_edge_width= (s->flags&CODEC_FLAG_EMU_EDGE) ? 0 : 16;
+    //FIXME: fix draw_edges+PAFF+frame threads
+    h->emu_edge_width= (s->flags&CODEC_FLAG_EMU_EDGE || (!h->sps.frame_mbs_only_flag && USE_FRAME_THREADING(s->avctx))) ? 0 : 16;
     h->emu_edge_height= (FRAME_MBAFF || FIELD_PICTURE) ? 0 : h->emu_edge_width;
 
     if(!(s->flags2 & CODEC_FLAG2_CHUNKS) && h->slice_num==1)
@@ -6915,17 +6930,37 @@ static void filter_mb( H264Context *h, int mb_x, int mb_y, uint8_t *img_y, uint8
 }
 
 /**
- * Report the last pixel row fully decoded.
- *
- * Lower rows than (last row of last MB - 3) might be changed in deblocking.
+ * Draw edges and report progress for the last MB row.
  */
-static void report_decode_progress(AVCodecContext *avctx, H264Context *h){
+static void decode_finish_row(H264Context *h){
     MpegEncContext * const s = &h->s;
-    int rows = FIELD_OR_MBAFF_PICTURE ? 2 : 1;
+    int top = 16*(s->mb_y >> FIELD_PICTURE);
+    int height = 16 << FRAME_MBAFF;
+    int deblock_border = (16 + 4) << FRAME_MBAFF;
+    int pic_height = 16*s->mb_height >> FIELD_PICTURE;
+
+    if (h->deblocking_filter) {
+        if((top + height) >= pic_height)
+            height += deblock_border;
+
+        top -= deblock_border;
+    }
+
+    if (top >= pic_height || (top + height) < h->emu_edge_height)
+        return;
+
+    height = FFMIN(height, pic_height - top);
+    if (top < h->emu_edge_height) {
+        height = top+height;
+        top = 0;
+    }
+
+    ff_draw_horiz_band(s, top, height);
 
     if (s->dropable) return;
 
-    ff_report_frame_progress((AVFrame*)s->current_picture_ptr, (s->mb_y - rows) * 16 - 3);
+    ff_report_field_progress((AVFrame*)s->current_picture_ptr, top + height - 1,
+                             s->picture_structure==PICT_BOTTOM_FIELD);
 }
 
 static int decode_slice(struct AVCodecContext *avctx, H264Context *h){
@@ -6985,8 +7020,7 @@ static int decode_slice(struct AVCodecContext *avctx, H264Context *h){
 
             if( ++s->mb_x >= s->mb_width ) {
                 s->mb_x = 0;
-                ff_draw_horiz_band(s, 16*s->mb_y, (FIELD_OR_MBAFF_PICTURE && (s->mb_y + 1 < s->mb_height)) ? 32 : 16);
-                report_decode_progress(avctx, h);
+                decode_finish_row(h);
                 ++s->mb_y;
                 if(FIELD_OR_MBAFF_PICTURE) {
                     ++s->mb_y;
@@ -7023,8 +7057,7 @@ static int decode_slice(struct AVCodecContext *avctx, H264Context *h){
 
             if(++s->mb_x >= s->mb_width){
                 s->mb_x=0;
-                ff_draw_horiz_band(s, 16*s->mb_y, (FIELD_OR_MBAFF_PICTURE && (s->mb_y + 1 < s->mb_height)) ? 32 : 16);
-                report_decode_progress(avctx, h);
+                decode_finish_row(h);
                 ++s->mb_y;
                 if(FIELD_OR_MBAFF_PICTURE) {
                     ++s->mb_y;
@@ -7879,7 +7912,7 @@ static int decode_frame(AVCodecContext *avctx,
 #endif
         for (i = 0; i < cnt; i++) {
             nalsize = AV_RB16(p) + 2;
-            if(decode_nal_units(h, p, nalsize)  != nalsize) {
+            if(decode_nal_units(h, p, nalsize) < 0) {
                 av_log(avctx, AV_LOG_ERROR, "Decoding sps %d from avcC failed\n", i);
                 return -1;
             }
@@ -7922,7 +7955,8 @@ static int decode_frame(AVCodecContext *avctx,
         if(s->flags2 & CODEC_FLAG2_CHUNKS) decode_postinit(h);
 
         s->mb_y= 0;
-        ff_report_frame_progress((AVFrame*)s->current_picture_ptr, (16*s->mb_height >> s->first_field) - 1);
+        ff_report_field_progress((AVFrame*)s->current_picture_ptr, (16*s->mb_height >> FIELD_PICTURE) - 1,
+                                 s->picture_structure==PICT_BOTTOM_FIELD);
 
         if(!USE_FRAME_THREADING(avctx)){
             if(!s->dropable) {
@@ -8114,8 +8148,8 @@ int avcodec_h264_search_recovery_point(AVCodecContext *avctx,
             init_get_bits(&s->gb, ptr, bit_length);
             decode_seq_parameter_set(h);
 
-            if(s->flags& CODEC_FLAG_LOW_DELAY)
-                s->low_delay=1;
+
+
 
             if(avctx->has_b_frames < 2)
                 avctx->has_b_frames= !s->low_delay;

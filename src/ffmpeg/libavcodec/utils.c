@@ -638,7 +638,7 @@ int avcodec_close(AVCodecContext *avctx)
     av_freep(&avctx->priv_data);
     av_freep(&avctx->rc_eq);
     avctx->codec = NULL;
-    avctx->active_thread_algorithm = 0;
+    avctx->active_thread_type = 0;
     //entangled_thread_counter--;    /* ffdshow custom coment out */
     return 0;
 }

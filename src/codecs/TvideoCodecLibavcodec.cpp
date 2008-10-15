@@ -133,9 +133,9 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
 
  avctx=libavcodec->avcodec_alloc_context(this);
 #if 1
- avctx->thread_algorithm = FF_THREAD_MULTIFRAME;
+ avctx->thread_type = FF_THREAD_FRAME;
 #else
- avctx->thread_algorithm = FF_THREAD_MULTISLICE;
+ avctx->thread_type = FF_THREAD_SLICE;
 #endif
  int numthreads=deci->getParam2(IDFF_numLAVCdecThreads);
  if (numthreads>1 && sup_threads_dec(codecId))
@@ -581,7 +581,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
        // ex: AVI files
 
        int pos;
-       if (avctx->active_thread_algorithm == FF_THREAD_MULTIFRAME)
+       if (avctx->active_thread_type == FF_THREAD_FRAME)
         pos = inPosB - 1 - avctx->thread_count;
        else
         pos = inPosB - 2;
@@ -598,7 +598,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
      if (FAILED(hr)
          || (used_bytes && sinkD->acceptsManyFrames()!=S_OK)
          || avctx->codec_id==CODEC_ID_LOCO
-         || avctx->active_thread_algorithm == FF_THREAD_MULTIFRAME)
+         || avctx->active_thread_type == FF_THREAD_FRAME)
       return hr;
     }
    else

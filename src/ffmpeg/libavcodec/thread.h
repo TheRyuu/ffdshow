@@ -104,9 +104,9 @@ int ff_get_buffer(AVCodecContext *avctx, AVFrame *f);
 void ff_release_buffer(AVCodecContext *avctx, AVFrame *f);
 
 ///True if frame threading is active.
-#define USE_FRAME_THREADING(avctx) (avctx->active_thread_algorithm == FF_THREAD_MULTIFRAME)
+#define USE_FRAME_THREADING(avctx) (avctx->active_thread_type == FF_THREAD_FRAME)
 ///True if calling AVCodecContext execute() will run in parallel.
-#define USE_AVCODEC_EXECUTE(avctx) (avctx->active_thread_algorithm == FF_THREAD_MULTISLICE)
+#define USE_AVCODEC_EXECUTE(avctx) (avctx->active_thread_type == FF_THREAD_SLICE)
 
 // ffdshow custom code. return pointer to the copied AVCodecContext for thread 0.
 AVCodecContext* get_thread0_avctx(AVCodecContext *avctx);
@@ -132,7 +132,7 @@ static inline void ff_release_buffer(AVCodecContext *avctx, AVFrame *f)
 }
 
 #define USE_FRAME_THREADING(avctx) 0
-#define USE_AVCODEC_EXECUTE(avctx) (ENABLE_THREADS && avctx->active_thread_algorithm)
+#define USE_AVCODEC_EXECUTE(avctx) (ENABLE_THREADS && avctx->active_thread_type)
 
 #endif
 

@@ -54,7 +54,6 @@ typedef struct PerThreadContext {
 
     pthread_mutex_t mutex;          ///< Mutex used to protect the contents of the PerThreadContext.
     pthread_mutex_t progress_mutex; ///< Mutex used to protect frame progress values and progress_cond.
-    pthread_mutex_t buffer_mutex;   ///< Mutex used to protect get/release_buffer().
 
     AVCodecContext *avctx;          ///< Context used to decode frames passed to this thread.
 
@@ -96,6 +95,8 @@ typedef struct FrameThreadContext {
                                     * Set for the first N frames, where N is the number of threads.
                                     * While it is set, ff_en/decode_frame_threaded won't return any results.
                                     */
+
+    pthread_mutex_t buffer_mutex;  ///< Mutex used to protect get/release_buffer().
 
     int die;                       ///< Set to cause threads to exit.
 } FrameThreadContext;
@@ -281,6 +282,7 @@ static int frame_thread_init(AVCodecContext *avctx)
 
     avctx->thread_opaque = fctx = av_mallocz(sizeof(FrameThreadContext));
     fctx->delaying = 1;
+    pthread_mutex_init(&fctx->buffer_mutex, NULL);
 
     fctx->threads = av_mallocz(sizeof(PerThreadContext) * thread_count);
 
@@ -290,7 +292,6 @@ static int frame_thread_init(AVCodecContext *avctx)
 
         pthread_mutex_init(&p->mutex, NULL);
         pthread_mutex_init(&p->progress_mutex, NULL);
-        pthread_mutex_init(&p->buffer_mutex, NULL);
         pthread_cond_init(&p->input_cond, NULL);
         pthread_cond_init(&p->progress_cond, NULL);
         pthread_cond_init(&p->output_cond, NULL);
@@ -391,15 +392,16 @@ static void update_context_from_user(AVCodecContext *dst, AVCodecContext *src)
 /// Release all frames passed to ff_release_buffer()
 static void handle_delayed_releases(PerThreadContext *p)
 {
+    FrameThreadContext *fctx = p->parent;
+
     while (p->num_released_buffers > 0) {
         AVFrame *f = &p->released_buffers[--p->num_released_buffers];
-        PerThreadContext *owner = f->owner->thread_opaque;
 
         av_freep(&f->thread_opaque);
 
-        pthread_mutex_lock(&owner->buffer_mutex);
+        pthread_mutex_lock(&fctx->buffer_mutex);
         f->owner->release_buffer(f->owner, f);
-        pthread_mutex_unlock(&owner->buffer_mutex);
+        pthread_mutex_unlock(&fctx->buffer_mutex);
     }
 }
 
@@ -497,13 +499,8 @@ int ff_decode_frame_threaded(AVCodecContext *avctx,
 
 void ff_report_field_progress(AVFrame *f, int n, int field)
 {
-    PerThreadContext *p;
-    int *progress;
-
-    if (!f->owner) return;
-
-    p = f->owner->thread_opaque;
-    progress = f->thread_opaque;
+    PerThreadContext *p = f->owner->thread_opaque;
+    int *progress = f->thread_opaque;
 
     if (progress[field] >= n) return;
 
@@ -582,7 +579,7 @@ static void frame_thread_free(AVCodecContext *avctx)
         pthread_cond_signal(&p->input_cond);
         pthread_mutex_unlock(&p->mutex);
 
-        //if (p->thread)
+        //if (p->thread) /* ffdshow custom code */
             pthread_join(p->thread, NULL);
 
         if (codec->close)
@@ -598,7 +595,6 @@ static void frame_thread_free(AVCodecContext *avctx)
 
         pthread_mutex_destroy(&p->mutex);
         pthread_mutex_destroy(&p->progress_mutex);
-        pthread_mutex_destroy(&p->buffer_mutex);
         pthread_cond_destroy(&p->input_cond);
         pthread_cond_destroy(&p->progress_cond);
         pthread_cond_destroy(&p->output_cond);
@@ -611,6 +607,7 @@ static void frame_thread_free(AVCodecContext *avctx)
     }
 
     av_freep(&fctx->threads);
+    pthread_mutex_destroy(&fctx->buffer_mutex);
     av_freep(&avctx->thread_opaque);
 }
 
@@ -636,18 +633,20 @@ int ff_get_buffer(AVCodecContext *avctx, AVFrame *f)
     PerThreadContext *p = avctx->thread_opaque;
 
     f->owner = avctx;
-    f->thread_opaque = progress = av_malloc(sizeof(int));
+    f->thread_opaque = progress = av_malloc(sizeof(int)*2);
 
     if (!USE_FRAME_THREADING(avctx)) {
-        *progress = INT_MAX;
+        progress[0] =
+        progress[1] = INT_MAX;
         return avctx->get_buffer(avctx, f);
     }
 
-    *progress = -1;
+    progress[0] =
+    progress[1] = -1;
 
-    pthread_mutex_lock(&p->buffer_mutex);
+    pthread_mutex_lock(&p->parent->buffer_mutex);
     ret = avctx->get_buffer(avctx, f);
-    pthread_mutex_unlock(&p->buffer_mutex);
+    pthread_mutex_unlock(&p->parent->buffer_mutex);
 
     /*
      * The buffer list isn't shared between threads,
@@ -690,11 +689,11 @@ static void validate_thread_parameters(AVCodecContext *avctx)
                                 && !(avctx->flags & CODEC_FLAG_LOW_DELAY)
                                 && !(avctx->flags2 & CODEC_FLAG2_CHUNKS);
     if (avctx->thread_count <= 1)
-        avctx->active_thread_algorithm = 0;
-    else if (frame_threading_supported && (avctx->thread_algorithm & FF_THREAD_MULTIFRAME))
-        avctx->active_thread_algorithm = FF_THREAD_MULTIFRAME;
+        avctx->active_thread_type = 0;
+    else if (frame_threading_supported && (avctx->thread_type & FF_THREAD_FRAME))
+        avctx->active_thread_type = FF_THREAD_FRAME;
     else
-        avctx->active_thread_algorithm = FF_THREAD_MULTISLICE;
+        avctx->active_thread_type = FF_THREAD_SLICE;
 }
 
 int avcodec_thread_init(AVCodecContext *avctx, int thread_count)

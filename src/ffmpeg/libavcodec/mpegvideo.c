@@ -401,9 +401,10 @@ int ff_mpeg_update_context(AVCodecContext *dst, AVCodecContext *src)
     s->divx_packed          = s1->divx_packed;
 
     if(s1->bitstream_buffer){
-        s->bitstream_buffer       = av_fast_realloc(s->bitstream_buffer, &s->allocated_bitstream_buffer_size, s1->allocated_bitstream_buffer_size);
+        s->bitstream_buffer       = av_fast_realloc(s->bitstream_buffer, &s->allocated_bitstream_buffer_size, s1->allocated_bitstream_buffer_size+FF_INPUT_BUFFER_PADDING_SIZE);
         s->bitstream_buffer_size  = s1->bitstream_buffer_size;
         memcpy(s->bitstream_buffer, s1->bitstream_buffer, s1->bitstream_buffer_size);
+        memset(s->bitstream_buffer+s->bitstream_buffer_size, 0, FF_INPUT_BUFFER_PADDING_SIZE);
     }
 
     //MPEG2/interlacing info
@@ -943,6 +944,7 @@ alloc:
         s->current_picture_ptr= (Picture*)pic;
         s->current_picture_ptr->top_field_first= s->top_field_first; //FIXME use only the vars from current_pic
         s->current_picture_ptr->interlaced_frame= !s->progressive_frame && !s->progressive_sequence;
+        s->current_picture_ptr->field_picture= s->picture_structure != PICT_FRAME;
     }
 
     s->current_picture_ptr->pict_type= s->pict_type;
@@ -1019,9 +1021,9 @@ void MPV_frame_end(MpegEncContext *s)
     if(s->error_count && s->unrestricted_mv && s->current_picture.reference && !s->intra_only && !(s->flags&CODEC_FLAG_EMU_EDGE)) {
         int edges = EDGE_BOTTOM | EDGE_TOP, h = s->v_edge_pos;
 
-        s->dsp.draw_edges(s->current_picture.data[0], s->linesize  , s->h_edge_pos   , h   , EDGE_WIDTH  , edges);
-        s->dsp.draw_edges(s->current_picture.data[1], s->uvlinesize, s->h_edge_pos>>1, h>>1, EDGE_WIDTH/2, edges);
-        s->dsp.draw_edges(s->current_picture.data[2], s->uvlinesize, s->h_edge_pos>>1, h>>1, EDGE_WIDTH/2, edges);
+        s->dsp.draw_edges(s->current_picture_ptr->data[0], s->linesize  , s->h_edge_pos   , h   , EDGE_WIDTH  , edges);
+        s->dsp.draw_edges(s->current_picture_ptr->data[1], s->uvlinesize, s->h_edge_pos>>1, h>>1, EDGE_WIDTH/2, edges);
+        s->dsp.draw_edges(s->current_picture_ptr->data[2], s->uvlinesize, s->h_edge_pos>>1, h>>1, EDGE_WIDTH/2, edges);
     }
 
     emms_c();
@@ -1765,27 +1767,30 @@ void MPV_decode_mb(MpegEncContext *s, DCTELEM block[12][64]){
  * @param h is the normal height, this will be reduced automatically if needed for the last row
  */
 void ff_draw_horiz_band(MpegEncContext *s, int y, int h){
+    if(s->picture_structure != PICT_FRAME){
+        h <<= 1;
+        y <<= 1;
+    }
+
     if (s->unrestricted_mv && !s->intra_only && !(s->flags&CODEC_FLAG_EMU_EDGE)) {
-        int sides = 0;
+        int sides = 0, edge_h;
         if (y==0) sides |= EDGE_TOP;
         if (y + h >= s->v_edge_pos) sides |= EDGE_BOTTOM;
 
-        s->dsp.draw_edges(s->current_picture.data[0] +  y    *s->linesize  , s->linesize  , s->h_edge_pos   , h   , EDGE_WIDTH  , sides);
-        s->dsp.draw_edges(s->current_picture.data[1] + (y>>1)*s->uvlinesize, s->uvlinesize, s->h_edge_pos>>1, h>>1, EDGE_WIDTH/2, sides);
-        s->dsp.draw_edges(s->current_picture.data[2] + (y>>1)*s->uvlinesize, s->uvlinesize, s->h_edge_pos>>1, h>>1, EDGE_WIDTH/2, sides);
+        edge_h= FFMIN(h, s->v_edge_pos - y);
+
+        s->dsp.draw_edges(s->current_picture_ptr->data[0] +  y    *s->linesize  , s->linesize  , s->h_edge_pos   , edge_h   , EDGE_WIDTH  , sides);
+        s->dsp.draw_edges(s->current_picture_ptr->data[1] + (y>>1)*s->uvlinesize, s->uvlinesize, s->h_edge_pos>>1, edge_h>>1, EDGE_WIDTH/2, sides);
+        s->dsp.draw_edges(s->current_picture_ptr->data[2] + (y>>1)*s->uvlinesize, s->uvlinesize, s->h_edge_pos>>1, edge_h>>1, EDGE_WIDTH/2, sides);
     }
+
+    h= FFMIN(h, s->avctx->height - y);
+
+    if(s->picture_structure != PICT_FRAME && s->first_field && !(s->avctx->slice_flags&SLICE_FLAG_ALLOW_FIELD)) return;
 
     if (s->avctx->draw_horiz_band) {
         AVFrame *src;
         int offset[4];
-
-        if(s->picture_structure != PICT_FRAME){
-            h <<= 1;
-            y <<= 1;
-            if(s->first_field  && !(s->avctx->slice_flags&SLICE_FLAG_ALLOW_FIELD)) return;
-        }
-
-        h= FFMIN(h, s->avctx->height - y);
 
         if(s->pict_type==FF_B_TYPE || s->low_delay || (s->avctx->slice_flags&SLICE_FLAG_CODED_ORDER))
             src= (AVFrame*)s->current_picture_ptr;
