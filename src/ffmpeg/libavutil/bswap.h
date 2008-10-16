@@ -23,8 +23,8 @@
  * byte swapping routines
  */
 
-#ifndef FFMPEG_BSWAP_H
-#define FFMPEG_BSWAP_H
+#ifndef AVUTIL_BSWAP_H
+#define AVUTIL_BSWAP_H
 
 #ifdef __GNUC__
 #include <stdint.h>
@@ -32,14 +32,10 @@
 #include "config.h"
 #include "common.h"
 
-#ifdef HAVE_BYTESWAP_H
-#include <byteswap.h>
-#else
-
 static av_always_inline av_const uint16_t bswap_16(uint16_t x)
 {
 #if defined(ARCH_X86)
-    asm("rorw $8, %0" : "+r"(x));
+    __asm__("rorw $8, %0" : "+r"(x));
 #else
     x= (x>>8) | (x<<8);
 #endif
@@ -50,9 +46,9 @@ static av_always_inline av_const uint32_t bswap_32(uint32_t x)
 {
 #if defined(ARCH_X86)
 #ifdef HAVE_BSWAP
-    asm("bswap   %0" : "+r" (x));
+    __asm__("bswap   %0" : "+r" (x));
 #else
-    asm("rorw    $8,  %w0 \n\t"
+    __asm__("rorw    $8,  %w0 \n\t"
         "rorl    $16, %0  \n\t"
         "rorw    $8,  %w0"
         : "+r"(x));
@@ -71,7 +67,7 @@ static inline uint64_t av_const bswap_64(uint64_t x)
     x= ((x<<16)&0xFFFF0000FFFF0000ULL) | ((x>>16)&0x0000FFFF0000FFFFULL);
     return (x>>32) | (x<<32);
 #elif defined(ARCH_X86_64)
-  asm("bswap  %0": "=r" (x) : "0" (x));
+  __asm__("bswap  %0": "=r" (x) : "0" (x));
   return x;
 #else
     union {
@@ -84,8 +80,6 @@ static inline uint64_t av_const bswap_64(uint64_t x)
     return r.ll;
 #endif
 }
-
-#endif  /* !HAVE_BYTESWAP_H */
 
 // be2me ... BigEndian to MachineEndian
 // le2me ... LittleEndian to MachineEndian
@@ -106,4 +100,4 @@ static inline uint64_t av_const bswap_64(uint64_t x)
 #define le2me_64(x) (x)
 #endif
 
-#endif /* FFMPEG_BSWAP_H */
+#endif /* AVUTIL_BSWAP_H */

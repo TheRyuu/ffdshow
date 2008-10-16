@@ -64,6 +64,8 @@ int (*avcodec_decode_audio2)(AVCodecContext *avctx, int16_t *samples,
 
  void (*av_log_set_callback)(void (*)(AVCodecContext*, int, const char*, va_list));
  void* (*av_log_get_callback)(void);
+ int (*av_log_get_level)(void);
+ void (*av_log_set_level)(int);
 
  int (*avcodec_thread_init)(AVCodecContext *s, int thread_count);
  void (*avcodec_thread_free)(AVCodecContext *s);

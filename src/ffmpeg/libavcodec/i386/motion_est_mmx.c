@@ -36,7 +36,7 @@ DECLARE_ASM_CONST(8, uint64_t, bone)= 0x0101010101010101LL;
 static inline void sad8_1_mmx(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 {
     x86_reg len= -(stride*h);
-    asm volatile(
+    __asm__ volatile(
         ASMALIGN(4)
         "1:                             \n\t"
         "movq (%1, %%"REG_a"), %%mm0    \n\t"
@@ -71,7 +71,7 @@ static inline void sad8_1_mmx(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 
 static inline void sad8_1_mmx2(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 {
-    asm volatile(
+    __asm__ volatile(
         ASMALIGN(4)
         "1:                             \n\t"
         "movq (%1), %%mm0               \n\t"
@@ -93,7 +93,7 @@ static inline void sad8_1_mmx2(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 static int sad16_sse2(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)
 {
     int ret;
-    asm volatile(
+    __asm__ volatile(
         "pxor %%xmm6, %%xmm6            \n\t"
         ASMALIGN(4)
         "1:                             \n\t"
@@ -110,7 +110,7 @@ static int sad16_sse2(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)
         : "+r" (h), "+r" (blk1), "+r" (blk2)
         : "r" ((x86_reg)stride)
     );
-    asm volatile(
+    __asm__ volatile(
         "movhlps %%xmm6, %%xmm0         \n\t"
         "paddw   %%xmm0, %%xmm6         \n\t"
         "movd    %%xmm6, %0             \n\t"
@@ -122,7 +122,7 @@ static int sad16_sse2(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)
 
 static inline void sad8_x2a_mmx2(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 {
-    asm volatile(
+    __asm__ volatile(
         ASMALIGN(4)
         "1:                             \n\t"
         "movq (%1), %%mm0               \n\t"
@@ -144,7 +144,7 @@ static inline void sad8_x2a_mmx2(uint8_t *blk1, uint8_t *blk2, int stride, int h
 
 static inline void sad8_y2a_mmx2(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 {
-    asm volatile(
+    __asm__ volatile(
         "movq (%1), %%mm0               \n\t"
         "add %3, %1                     \n\t"
         ASMALIGN(4)
@@ -169,7 +169,7 @@ static inline void sad8_y2a_mmx2(uint8_t *blk1, uint8_t *blk2, int stride, int h
 
 static inline void sad8_4_mmx2(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 {
-    asm volatile(
+    __asm__ volatile(
         "movq "MANGLE(bone)", %%mm5     \n\t"
         "movq (%1), %%mm0               \n\t"
         "pavgb 1(%1), %%mm0             \n\t"
@@ -200,7 +200,7 @@ static inline void sad8_4_mmx2(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 static inline void sad8_2_mmx(uint8_t *blk1a, uint8_t *blk1b, uint8_t *blk2, int stride, int h)
 {
     x86_reg len= -(stride*h);
-    asm volatile(
+    __asm__ volatile(
         ASMALIGN(4)
         "1:                             \n\t"
         "movq (%1, %%"REG_a"), %%mm0    \n\t"
@@ -238,7 +238,7 @@ static inline void sad8_2_mmx(uint8_t *blk1a, uint8_t *blk1b, uint8_t *blk2, int
 static inline void sad8_4_mmx(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 {
     x86_reg len= -(stride*h);
-    asm volatile(
+    __asm__ volatile(
         "movq (%1, %%"REG_a"), %%mm0    \n\t"
         "movq 1(%1, %%"REG_a"), %%mm2   \n\t"
         "movq %%mm0, %%mm1              \n\t"
@@ -291,7 +291,7 @@ static inline void sad8_4_mmx(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 static inline int sum_mmx(void)
 {
     int ret;
-    asm volatile(
+    __asm__ volatile(
         "movq %%mm6, %%mm0              \n\t"
         "psrlq $32, %%mm6               \n\t"
         "paddw %%mm0, %%mm6             \n\t"
@@ -307,7 +307,7 @@ static inline int sum_mmx(void)
 static inline int sum_mmx2(void)
 {
     int ret;
-    asm volatile(
+    __asm__ volatile(
         "movd %%mm6, %0                 \n\t"
         : "=r" (ret)
     );
@@ -328,7 +328,7 @@ static inline void sad8_y2a_mmx(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 static int sad8_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)\
 {\
     assert(h==8);\
-    asm volatile("pxor %%mm7, %%mm7     \n\t"\
+    __asm__ volatile("pxor %%mm7, %%mm7     \n\t"\
                  "pxor %%mm6, %%mm6     \n\t":);\
 \
     sad8_1_ ## suf(blk1, blk2, stride, 8);\
@@ -338,7 +338,7 @@ static int sad8_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h
 static int sad8_x2_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)\
 {\
     assert(h==8);\
-    asm volatile("pxor %%mm7, %%mm7     \n\t"\
+    __asm__ volatile("pxor %%mm7, %%mm7     \n\t"\
                  "pxor %%mm6, %%mm6     \n\t"\
                  "movq %0, %%mm5        \n\t"\
                  :: "m"(round_tab[1]) \
@@ -352,7 +352,7 @@ static int sad8_x2_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, in
 static int sad8_y2_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)\
 {\
     assert(h==8);\
-    asm volatile("pxor %%mm7, %%mm7     \n\t"\
+    __asm__ volatile("pxor %%mm7, %%mm7     \n\t"\
                  "pxor %%mm6, %%mm6     \n\t"\
                  "movq %0, %%mm5        \n\t"\
                  :: "m"(round_tab[1]) \
@@ -366,7 +366,7 @@ static int sad8_y2_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, in
 static int sad8_xy2_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)\
 {\
     assert(h==8);\
-    asm volatile("pxor %%mm7, %%mm7     \n\t"\
+    __asm__ volatile("pxor %%mm7, %%mm7     \n\t"\
                  "pxor %%mm6, %%mm6     \n\t"\
                  ::);\
 \
@@ -377,7 +377,7 @@ static int sad8_xy2_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, i
 \
 static int sad16_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)\
 {\
-    asm volatile("pxor %%mm7, %%mm7     \n\t"\
+    __asm__ volatile("pxor %%mm7, %%mm7     \n\t"\
                  "pxor %%mm6, %%mm6     \n\t":);\
 \
     sad8_1_ ## suf(blk1  , blk2  , stride, h);\
@@ -387,7 +387,7 @@ static int sad16_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int 
 }\
 static int sad16_x2_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)\
 {\
-    asm volatile("pxor %%mm7, %%mm7     \n\t"\
+    __asm__ volatile("pxor %%mm7, %%mm7     \n\t"\
                  "pxor %%mm6, %%mm6     \n\t"\
                  "movq %0, %%mm5        \n\t"\
                  :: "m"(round_tab[1]) \
@@ -400,7 +400,7 @@ static int sad16_x2_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, i
 }\
 static int sad16_y2_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)\
 {\
-    asm volatile("pxor %%mm7, %%mm7     \n\t"\
+    __asm__ volatile("pxor %%mm7, %%mm7     \n\t"\
                  "pxor %%mm6, %%mm6     \n\t"\
                  "movq %0, %%mm5        \n\t"\
                  :: "m"(round_tab[1]) \
@@ -413,7 +413,7 @@ static int sad16_y2_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, i
 }\
 static int sad16_xy2_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)\
 {\
-    asm volatile("pxor %%mm7, %%mm7     \n\t"\
+    __asm__ volatile("pxor %%mm7, %%mm7     \n\t"\
                  "pxor %%mm6, %%mm6     \n\t"\
                  ::);\
 \

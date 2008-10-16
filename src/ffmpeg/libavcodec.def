@@ -23,6 +23,8 @@ EXPORTS
 
   av_log_set_callback
   av_log_get_callback
+  av_log_get_level
+  av_log_set_level
 
   avcodec_default_get_buffer
   avcodec_default_reget_buffer

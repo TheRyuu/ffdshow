@@ -191,7 +191,7 @@ static inline av_const int mid_pred(int a, int b, int c)
 {
 #ifdef HAVE_CMOV
     int i=b;
-    asm volatile(
+    __asm__ volatile(
         "cmp    %2, %1 \n\t"
         "cmovg  %1, %0 \n\t"
         "cmovg  %2, %1 \n\t"
@@ -365,7 +365,7 @@ static inline av_pure int ff_get_fourcc(const char *s){
 static inline uint64_t read_time(void)
 {
     uint64_t a, d;
-    asm volatile("rdtsc\n\t"
+    __asm__ volatile("rdtsc\n\t"
                  : "=a" (a), "=d" (d));
     return (d << 32) | (a & 0xffffffff);
 }
@@ -373,7 +373,7 @@ static inline uint64_t read_time(void)
 static inline long long read_time(void)
 {
     long long l;
-    asm volatile("rdtsc\n\t"
+    __asm__ volatile("rdtsc\n\t"
                  : "=A" (l));
     return l;
 }
