@@ -1298,7 +1298,10 @@ void TrenderedSubtitleLine::clear(void)
 //============================== TrenderedSubtitleLines ==============================
 void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
 {
- if ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SSA)
+	return printASS(prefs);
+ // Now SSA and SRT use the same renderer : both formats can hold SSA tags and HTML tags
+ if ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SSA
+	 || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER)
   return printASS(prefs);
  double y=0;
  if (empty()) return;

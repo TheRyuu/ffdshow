@@ -681,14 +681,10 @@ template<class tchar> DwString<tchar> TsubtitleFormat::getAttribute(const tchar 
    }
  return DwString<tchar>();
 }
-template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processHTML(const TsubtitleLine<tchar> &line)
+
+template<class tchar> void TsubtitleFormat::processHTMLTags(Twords &words, const tchar* &l, const tchar* &l1, const tchar* &l2)
 {
- Twords words;
- if (line.empty()) return words;
- const tchar *l=line[0];
- const tchar *l1=l,*l2=l;
- while (*l2)
-  if      (_strnicmp(l2,_L("<i>"),3)==0) {words.add(l,l1,l2,props,3);props.italic=true;}
+if (_strnicmp(l2,_L("<i>"),3)==0) {words.add(l,l1,l2,props,3);props.italic=true;}
   else if (_strnicmp(l2,_L("</i>"),4)==0) {words.add(l,l1,l2,props,4);props.italic=false;}
   else if (_strnicmp(l2,_L("<u>"),3)==0) {words.add(l,l1,l2,props,3);props.underline=true;}
   else if (_strnicmp(l2,_L("</u>"),4)==0) {words.add(l,l1,l2,props,4);props.underline=false;}
@@ -722,16 +718,20 @@ template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processHTML(const
    {
     words.add(l,l1,l2,props,7);props.isColor=false;props.size=0;props.fontname[0]='\0';
    }
-  else if (_strnicmp(l2,_L("{\\"),2)==0) // Remove unsupported tags
-  {
-	  const tchar *endTag=strchr(l2+2, '}');;
-	  if (endTag!=NULL)
-		words.add(l,l1,l2,props,endTag-l2);
-  }
   else
    l2++;
  words.add(l,l1,l2,props,0);
- return words;
+}
+
+template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processHTML(const TsubtitleLine<tchar> &line)
+{
+ Twords words;
+ if (line.empty()) return words;
+ const tchar *l=line[0];
+ const tchar *l1=l,*l2=l;
+ while (*l2)
+   processHTMLTags(words, l, l1, l2);
+  return words;
 }
 
 template<class tchar> void TsubtitleFormat::Tssa<tchar>::fontName(const tchar *start,const tchar *end)
@@ -1084,14 +1084,20 @@ template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processSSA(const 
  while (*l2)
   {
    if (l2[0]=='{' /*&& l2[1]=='\\'*/)
+   {
     if (const tchar *end=strchr(l2+1,'}'))
      {
       ssa.processTokens(l,l1 ,l2,end);
       l2=end+1;
       continue;
      }
-   l2++;
+	l2++;
+   }
+   else // Add HTML support within SSA
+	   processHTMLTags(words,l,l1,l2);
   }
+ 
+
  words.add(l,l1,l2,props,0);
  parent.defProps=props;
  return words;
@@ -1188,7 +1194,7 @@ template<class tchar> void TsubtitleLine<tchar>::applyWords(const TsubtitleForma
 }
 template<class tchar> void TsubtitleLine<tchar>::format(TsubtitleFormat &format,int sfmt,TsubtitleTextBase<tchar> &parent)
 {
- if (sfmt==Tsubreader::SUB_SSA)
+ if (sfmt==Tsubreader::SUB_SSA || sfmt==Tsubreader::SUB_SUBVIEWER)
   applyWords(format.processSSA(*this,parent));
  else
   applyWords(format.processHTML(*this));
