@@ -392,16 +392,13 @@ HRESULT TffdshowDecAudio::GetMediaType(int iPosition, CMediaType *mtOut)
 {
  if (!inpin->IsConnected()) return E_UNEXPECTED;
  if (iPosition<0) return E_INVALIDARG;
- // Work around Windows Media Encoder 9 crashes.
- const char_t *fileName= getExeflnm();
- if (_strnicmp(_l("wmenc.exe"),fileName,10)==0)
-  {
-   if (iPosition>(allowOutStream?0:1)) return VFW_S_NO_MORE_ITEMS;
-  }
- else
-  {
-   if (iPosition>(allowOutStream?1:0)) return VFW_S_NO_MORE_ITEMS;
-  }
+
+ // Work around Windows Media Encoder 9 crashes. I believe it's a bug in WME.
+ if (iPosition > 0 && allowOutStream && config.is_WMEncEng_loaded())
+  return VFW_S_NO_MORE_ITEMS;
+
+ if (iPosition>(allowOutStream ? 1 : 0)) return VFW_S_NO_MORE_ITEMS;
+
  switch (iPosition)
   {
    case 0:

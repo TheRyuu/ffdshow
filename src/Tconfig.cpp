@@ -71,6 +71,7 @@ extern "C"
 
 Tconfig::Tconfig(TintStrColl *Icoll):Toptions(Icoll),htmlcolors(NULL)
 {
+ kernel = NULL;
  static const TintOptionT<Tconfig> iopts[]=
   {
    IDFF_availableCpuFlags  ,&Tconfig::available_cpu_flags0,-1,-1,       _l(""),0,NULL,0,
@@ -84,9 +85,11 @@ Tconfig::Tconfig(TintStrColl *Icoll):Toptions(Icoll),htmlcolors(NULL)
    0
   };
  addOptions(sopts);
+ is_WMEncEng = done_WMEncEng = false;
 }
 Tconfig::Tconfig(HINSTANCE hInst,int allowedCpuGFlags):Toptions(NULL),htmlcolors(NULL)
 {
+ kernel = NULL;
  init1(hInst);
  initCPU(allowedCpuGFlags);
  init2();
@@ -94,6 +97,8 @@ Tconfig::Tconfig(HINSTANCE hInst,int allowedCpuGFlags):Toptions(NULL),htmlcolors
 Tconfig::~Tconfig()
 {
  if (htmlcolors) delete htmlcolors;
+ if (kernel)
+  delete kernel;
 }
 
 bool Tconfig::check(const char_t *dllname) const
@@ -145,6 +150,7 @@ void Tconfig::init1(HINSTANCE hi)
  gdiW.getTextExtentExPoint = GetTextExtentExPointW;
  gdiW.getTextExtentPoint32 = GetTextExtentPoint32W;
  gdiW.textOut = TextOutW;
+ is_WMEncEng = done_WMEncEng = false;
 }
 
 void Tconfig::init2(void)
@@ -260,16 +266,24 @@ const char_t* Tconfig::getExeflnm(void) const
  if (exeflnm[0]=='\0')
   {
    DWORD pid=GetCurrentProcessId();
-   Tdll kernel(_l("kernel32.dll"),this);
-   HANDLE (WINAPI *CreateToolhelp32Snapshot)(DWORD dwFlags,DWORD th32ProcessID);kernel.loadFunction(CreateToolhelp32Snapshot,"CreateToolhelp32Snapshot");
+
+   if (!kernel)
+    kernel = new Tdll(_l("kernel32.dll"), this);
+
+   HANDLE (WINAPI *CreateToolhelp32Snapshot)(DWORD dwFlags,DWORD th32ProcessID);
+   kernel->loadFunction(CreateToolhelp32Snapshot,"CreateToolhelp32Snapshot");
    if (!CreateToolhelp32Snapshot)  //Windows NT
     return _l("");
   #ifdef UNICODE
-   BOOL (WINAPI *Process32First)(HANDLE hSnapshot,LPPROCESSENTRY32W lppe);kernel.loadFunction(Process32First,"Process32FirstW");
-   BOOL (WINAPI *Process32Next)(HANDLE hSnapshot,LPPROCESSENTRY32W lppe);kernel.loadFunction(Process32Next,"Process32NextW");
+   BOOL (WINAPI *Process32First)(HANDLE hSnapshot,LPPROCESSENTRY32W lppe);
+   BOOL (WINAPI *Process32Next)(HANDLE hSnapshot,LPPROCESSENTRY32W lppe);
+   kernel->loadFunction(Process32First,"Process32FirstW");
+   kernel->loadFunction(Process32Next,"Process32NextW");
   #else
-   BOOL (WINAPI *Process32First)(HANDLE hSnapshot,LPPROCESSENTRY32 lppe);kernel.loadFunction(Process32First,"Process32First");
-   BOOL (WINAPI *Process32Next)(HANDLE hSnapshot,LPPROCESSENTRY32 lppe);kernel.loadFunction(Process32Next,"Process32Next");
+   BOOL (WINAPI *Process32First)(HANDLE hSnapshot,LPPROCESSENTRY32 lppe);
+   BOOL (WINAPI *Process32Next)(HANDLE hSnapshot,LPPROCESSENTRY32 lppe);
+   kernel->loadFunction(Process32First,"Process32First");
+   kernel->loadFunction(Process32Next,"Process32Next");
   #endif
    if (Process32First && Process32Next)
     {
@@ -314,4 +328,54 @@ ThtmlColors* Tconfig::getHtmlColors(void) const
 {
  if (!htmlcolors) htmlcolors=new ThtmlColors;
  return htmlcolors;
+}
+
+bool Tconfig::is_WMEncEng_loaded(void) const
+{
+ if (!done_WMEncEng)
+  {
+   done_WMEncEng = true;
+   DWORD pid = GetCurrentProcessId();
+   if (!kernel)
+    kernel = new Tdll(_l("kernel32.dll"), this);
+   HANDLE (WINAPI *CreateToolhelp32Snapshot)(DWORD dwFlags,DWORD th32ProcessID);
+
+   kernel->loadFunction(CreateToolhelp32Snapshot, "CreateToolhelp32Snapshot");
+
+   if (!CreateToolhelp32Snapshot)  //Windows NT
+    return false;
+
+#ifdef UNICODE
+   BOOL (WINAPI *Module32First)(HANDLE hSnapshot,LPMODULEENTRY32W lppe);
+   BOOL (WINAPI *Module32Next)(HANDLE hSnapshot,LPMODULEENTRY32W lppe);
+   kernel->loadFunction(Module32First, "Module32FirstW");
+   kernel->loadFunction(Module32Next, "Module32NextW");
+#else
+   BOOL (WINAPI *Module32First)(HANDLE hSnapshot,LPMODULEENTRY32 lppe);
+   BOOL (WINAPI *Module32Next)(HANDLE hSnapshot,LPMODULEENTRY32 lppe);
+   kernel->loadFunction(Module32First, "Module32First");
+   kernel->loadFunction(Module32Next, "Module32Next");
+#endif
+   if (Module32First && Module32Next)
+    {
+     HANDLE hs=CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, 0);
+     MODULEENTRY32 me32;
+     me32.dwSize = sizeof(me32);
+     BOOL ret = Module32First(hs, &me32);
+     while (ret == TRUE)
+      {
+       if (me32.th32ProcessID == pid)
+        {
+         if (stricmp(me32.szModule,_l("WMEncEng.dll")) == 0)
+          {
+           is_WMEncEng = true;
+           break;
+          }
+        }
+       ret = Module32Next(hs,&me32);
+      }
+     CloseHandle(hs);
+    }
+  }
+ return is_WMEncEng;
 }
