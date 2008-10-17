@@ -2375,7 +2375,10 @@ static void copy_parameter_set(void **to, void **from, int count, int size)
     int i;
 
     for (i=0; i<count; i++){
-        if (to[i] && !from[i]) av_freep(&to[i]);
+        if (to[i] && !from[i]){
+            av_freep(&to[i]);
+            continue;              // ffdshow custom code
+        }
         else if (from[i] && !to[i]) to[i] = av_malloc(size);
         else if (!from[i]) continue;
 
@@ -2445,6 +2448,9 @@ static int decode_update_context(AVCodecContext *dst, AVCodecContext *src){
     h->prev_frame_num_offset= h->frame_num_offset;
     h->prev_frame_num       = h->frame_num;
     if(h->next_output_pic) h->outputed_poc = h->next_output_pic->poc;
+
+    dst->width  = src->width;  // ffdshow custom code (1088 problem)
+    dst->height = src->height; // ffdshow custom code
 
     return 0;
 }

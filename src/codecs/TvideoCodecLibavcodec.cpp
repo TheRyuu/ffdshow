@@ -347,6 +347,8 @@ HRESULT TvideoCodecLibavcodec::flushDec(void)
 }
 HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen0,IMediaSample *pIn)
 {
+ HRESULT hr = S_OK;
+
  bool isSyncPoint = pIn && pIn->IsSyncPoint() == S_OK;
  if (codecId==CODEC_ID_FFV1) // libavcodec can crash or loop infinitely when first frame after seeking is not keyframe
   {
@@ -594,11 +596,10 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
        pict.srcSize=b[pos].srcSize;
       }
 
-     HRESULT hr=sinkD->deliverDecodedSample(pict);
+     hr=sinkD->deliverDecodedSample(pict);
      if (FAILED(hr)
          || (used_bytes && sinkD->acceptsManyFrames()!=S_OK)
-         || avctx->codec_id==CODEC_ID_LOCO
-         || avctx->active_thread_type == FF_THREAD_FRAME)
+         || avctx->codec_id==CODEC_ID_LOCO)
       return hr;
     }
    else
@@ -609,6 +610,9 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
 
    if(!used_bytes && codecId==CODEC_ID_SVQ3)
     return S_OK;
+
+   if (avctx->active_thread_type == FF_THREAD_FRAME)
+    return hr;
 
    src+=used_bytes;
    size-=used_bytes;
@@ -1404,13 +1408,19 @@ int TvideoCodecLibavcodec::TcodedPictureBuffer::send(int *got_picture_ptr)
 TvideoCodecLibavcodec::Th264RandomAccess::Th264RandomAccess(TvideoCodecLibavcodec *Iparent):
  parent(Iparent)
 {
- onSeek();
+ recovery_mode = 1;
+ recovery_frame_cnt = 0;
 }
 
 void TvideoCodecLibavcodec::Th264RandomAccess::onSeek(void)
 {
  recovery_mode = 1;
  recovery_frame_cnt = 0;
+
+ if (parent->avctx->active_thread_type == FF_THREAD_FRAME)
+  thread_delay = parent->avctx->thread_count;
+ else
+  thread_delay = 1;
 }
 
 // return 0:not found, don't send it to libavcodec, 1:send it anyway.
@@ -1439,12 +1449,15 @@ int TvideoCodecLibavcodec::Th264RandomAccess::search(uint8_t* buf, int buf_size)
     return 0;
   }
  else
-  return 1 ;
+  return 1;
 }
 
 void TvideoCodecLibavcodec::Th264RandomAccess::judgeUsability(int *got_picture_ptr)
 {
- if (parent->codecId != CODEC_ID_H264 || *got_picture_ptr == 0)
+ if (parent->codecId != CODEC_ID_H264)
+  return;
+
+ if (--thread_delay > 0 || parent->frame->h264_max_frame_num == 0)
   return;
 
  if (recovery_mode ==1 || recovery_mode ==2)

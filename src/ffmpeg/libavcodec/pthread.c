@@ -567,7 +567,7 @@ static void frame_thread_free(AVCodecContext *avctx)
 
     park_frame_worker_threads(fctx, avctx->thread_count);
 
-    if (fctx->prev_thread != fctx->threads)
+    if (fctx->prev_thread != fctx->threads && fctx->prev_thread)
         update_context_from_copy(fctx->threads->avctx, fctx->prev_thread->avctx, 0);
 
     fctx->die = 1;
@@ -579,7 +579,7 @@ static void frame_thread_free(AVCodecContext *avctx)
         pthread_cond_signal(&p->input_cond);
         pthread_mutex_unlock(&p->mutex);
 
-        //if (p->thread) /* ffdshow custom code */
+        if (p->thread.p) /* ffdshow custom code */
             pthread_join(p->thread, NULL);
 
         if (codec->close)
