@@ -102,7 +102,7 @@ public:
  TsubtitleFormat(const ThtmlColors *Ihtmlcolors):htmlcolors(Ihtmlcolors) {}
  template<class tchar> void processHTMLTags(Twords &words, const tchar* &l, const tchar* &l1, const tchar* &l2);
  template<class tchar> Twords processHTML(const TsubtitleLine<tchar> &line);
- template<class tchar> Twords processSSA(const TsubtitleLine<tchar> &line,TsubtitleTextBase<tchar> &parent);
+ template<class tchar> Twords processSSA(const TsubtitleLine<tchar> &line,int sfmt, TsubtitleTextBase<tchar> &parent);
  template<class tchar> void processMicroDVD(TsubtitleTextBase<tchar> &parent,typename std::vector< TsubtitleLine<tchar> >::iterator it);
  template<class tchar> void processMPL2(TsubtitleLine<tchar> &line);
  void resetProps(void){props.reset();}

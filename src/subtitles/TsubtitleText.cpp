@@ -115,16 +115,16 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
        //ME LOVES MAKARONl! (MY TO SLYSELl. (!?) [cz; no others affected])
        if (in(TrChar(+1),_L(".!?")) &&
            (TrChar(-1) == toupper(TrChar(-1))) &&
-           (TrChar(-1) != '.') && //ªpÅEn.l.´ at EoL case
+           (TrChar(-1) != '.') && //ªp?En.l.´ at EoL case
            (TrChar(-2) == toupper(TrChar(-2))))
         TakeI = true;
-       //UNlVERSAL, lnternet, lnspektion, lnternational;  not changed - lnÅE˝ [cz; no others affected]
+       //UNlVERSAL, lnternet, lnspektion, lnternational;  not changed - ln?E˝ [cz; no others affected]
        //contain  : _l_ case [no Fr!], XlX, Xl_, _lX
        //           V.l. Lenin, l.V. Lenin (initials of names)
        //safely   : -lx OR -_lx; [lx OR [_lx; "Ix OR "_Ix
        //dangerous: .lxxx
        if (((TrChar(-1) == toupper(TrChar(-1))) &&
-         (TrChar(-1) != '.') && //ªpÅEn.l.´ case [cz; no others affected]
+         (TrChar(-1) != '.') && //ªp?En.l.´ case [cz; no others affected]
          (TrChar(+1) == toupper(TrChar(+1))))
          ||
          ((in(TrChar(-1),_L(" #"))) && (TrChar(+1) == 'n') && (TrChar(+2) != '\354')))
@@ -270,7 +270,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
        if ((cfg.font.charset== ANSI_CHARSET) &&
            (in(TrChar(-1),_L("\xe6\xf8\xe5"))))
         Takel = true;
-       //_AIways AIden BIb BIouznit CIaire »IovÅE PIn˝ SIoûit UItra ZIost
+       //_AIways AIden BIb BIouznit CIaire »Iov?E PIn˝ SIoûit UItra ZIost
        if ((in(TrChar(-2),_L(" \"-c#"))) && //'c' for Mac/Mc (McCIoy)
            (in(TrChar(-1),_L("ABCDEFGHIJKLMNOPQRSTUVWXYZ\310\212\216\217\214"))) &&
            (in(TrChar(+1),_L("abcdefghijklmnopqrstuvwxyz\341\350\351\354\355\363\362\232\371\375"))))
@@ -302,7 +302,7 @@ template<class tchar> bool TtextFix<tchar>::process(ffstring &text,ffstring &fix
             (in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == 'o') &&
             !(in(TrChar(+2),_L("dlnwt .,!?"))))
         Takel = true;
-       //IodnÅEetc. vs Iodate Ioderma Iodic Iodoethanol [cz only, won't affect others]
+       //Iodn?Eetc. vs Iodate Ioderma Iodic Iodoethanol [cz only, won't affect others]
        if ((in(TrChar(-1),_L(" \"#"))) && (TrChar(+1) == 'o') && (TrChar(+2) == 'd') &&
             !(in(TrChar(+3),_L("aeio")) || TrChar(+3)=='\0'))
         Takel = true;
@@ -1073,7 +1073,7 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::processTokens(const tch
   }
 }
 
-template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processSSA(const TsubtitleLine<tchar> &line,TsubtitleTextBase<tchar> &parent)
+template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processSSA(const TsubtitleLine<tchar> &line, int sfmt, TsubtitleTextBase<tchar> &parent)
 {
  Twords words;
  if (line.empty()) return words;
@@ -1093,8 +1093,12 @@ template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processSSA(const 
      }
 	l2++;
    }
-   else // Add HTML support within SSA
+   // Temporary fix : subtitles in Shift JIS (ANSI/DBCS) garbles and makes crash eventually
+   // I enable SSA tags within SRT subs but disable HTML tags with SSA
+   else if (sfmt == Tsubreader::SUB_SUBVIEWER) // Add HTML support within SSA
 	   processHTMLTags(words,l,l1,l2);
+   else
+	   l2++;
   }
  
 
@@ -1195,7 +1199,7 @@ template<class tchar> void TsubtitleLine<tchar>::applyWords(const TsubtitleForma
 template<class tchar> void TsubtitleLine<tchar>::format(TsubtitleFormat &format,int sfmt,TsubtitleTextBase<tchar> &parent)
 {
  if (sfmt==Tsubreader::SUB_SSA || sfmt==Tsubreader::SUB_SUBVIEWER)
-  applyWords(format.processSSA(*this,parent));
+  applyWords(format.processSSA(*this, sfmt, parent));
  else
   applyWords(format.processHTML(*this));
 }template<class tchar> void TsubtitleLine<tchar>::fix(TtextFix<tchar> &fix)
