@@ -54,13 +54,13 @@ void TvolumePage::init(void)
    addHint(solos[i],_l("solo"));
    SendDlgItemMessage(m_hwnd,pbrs[i],PBM_SETRANGE,0,MAKELPARAM(0,50));
   }
-  for (int i=128;i<769;i+=128)
+ for (int i=128;i<769;i+=128)
   {
-	  char_t buf[5];
-	  tsprintf(buf,_l("%4d"),i);
-	  cbxAdd(IDC_CBX_NORMALIZE_BUFFER_LENGTH,buf,i);
+  char_t buf[5];
+  tsprintf(buf,_l("%4d"),i);
+  cbxAdd(IDC_CBX_NORMALIZE_BUFFER_LENGTH,buf,i);
   }
-  switchDb();
+ switchDb();
 }
 
 void TvolumePage::switchDb(void)
@@ -100,6 +100,7 @@ void TvolumePage::normalize2dlg(void)
  SetDlgItemInt(m_hwnd,IDC_ED_VOLUME_NORMALIZE_MAX,val,FALSE);
  cbxSetDataCurSel(IDC_CBX_NORMALIZE_BUFFER_LENGTH,cfgGet(IDFF_volumeNormalizeBufferLength));
  setCheck(IDC_CHB_NORMALIZE_RESETONSEEK,cfgGet(IDFF_volumeNormalizeResetOnSeek));
+ setCheck(IDC_CHB_NORMALIZE_REGAINVOLUME,cfgGet(IDFF_volumeNormalizeRegainVolume));
 }
 
 void TvolumePage::master2dlg(void)
@@ -378,6 +379,7 @@ TvolumePage::TvolumePage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):Tconf
    IDC_CHB_VOLUME_SHOWCURRENT,IDFF_showCurrentVolume,NULL,
    IDC_CHB_VOL_DB,IDFF_dlgVolumeDb,&TvolumePage::switchDb,
    IDC_CHB_NORMALIZE_RESETONSEEK,IDFF_volumeNormalizeResetOnSeek,NULL,
+   IDC_CHB_NORMALIZE_REGAINVOLUME,IDFF_volumeNormalizeRegainVolume,NULL,
    0,NULL,NULL
   };
  bindCheckboxes(chb);

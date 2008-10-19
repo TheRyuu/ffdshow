@@ -87,7 +87,9 @@ TvolumeSettings::TvolumeSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
    IDFF_volumeNormalizeBufferLength     ,&TvolumeSettings::nSamples,128,1024,_l(""),1,
      _l("volNormalizeBufferLength"),128,
    IDFF_volumeNormalizeResetOnSeek     ,&TvolumeSettings::normalizeResetOnSeek,0,0,_l(""),1,
-     _l("volNormalizeResetOnSeek"),1,
+     _l("volNormalizeResetOnSeek"),0,
+   IDFF_volumeNormalizeRegainVolume     ,&TvolumeSettings::normalizeRegainVolume,0,0,_l(""),1,
+     _l("volNormalizeRegainVolume"),0,
    0
   };
  addOptions(iopts);

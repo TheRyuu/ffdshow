@@ -30,7 +30,7 @@ private:
   } *mem;
  int idx;
 
- static const float MUL_INIT,MUL_MIN;//,MUL_MAX;
+ static const float MUL_INIT,MUL_MIN,MUL_MAX;
  float mul;
 
  template<unsigned int nchannels> struct Tmultiply
