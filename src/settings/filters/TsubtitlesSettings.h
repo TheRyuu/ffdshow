@@ -50,6 +50,7 @@ public:
  int splitBorder;
  int cc;
  int filtermode;
+ int extendedTags;
  static const int delayDef=0,speedDef=1000;
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;
  virtual void createPages(TffdshowPageDec *parent) const;

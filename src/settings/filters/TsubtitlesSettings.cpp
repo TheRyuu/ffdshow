@@ -690,6 +690,8 @@ TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters,
      _l("subCC"),1,
    IDFF_subWordWrap            ,&TsubtitlesSettings::wordWrap                ,0,2,_l(""),1,
      _l("subWordWrap"),0,
+   IDFF_subExtendedTags        ,&TsubtitlesSettings::extendedTags            ,0,0,_l(""),1,
+     _l("subExtendedTags"),0,
    0
   };
  addOptions(iopts);

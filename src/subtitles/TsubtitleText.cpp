@@ -1093,9 +1093,8 @@ template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processSSA(const 
      }
 	l2++;
    }
-   // Temporary fix : subtitles in Shift JIS (ANSI/DBCS) garbles and makes crash eventually
-   // I enable SSA tags within SRT subs but disable HTML tags with SSA
-   else if (sfmt == Tsubreader::SUB_SUBVIEWER) // Add HTML support within SSA
+   // Process HTML tags in SSA subs when extended tags option is checked
+   else if (sfmt == Tsubreader::SUB_SUBVIEWER && parent.defProps.extendedTags) // Add HTML support within SSA
 	   processHTMLTags(words,l,l1,l2);
    else
 	   l2++;
@@ -1198,7 +1197,10 @@ template<class tchar> void TsubtitleLine<tchar>::applyWords(const TsubtitleForma
 }
 template<class tchar> void TsubtitleLine<tchar>::format(TsubtitleFormat &format,int sfmt,TsubtitleTextBase<tchar> &parent)
 {
- if (sfmt==Tsubreader::SUB_SSA || sfmt==Tsubreader::SUB_SUBVIEWER)
+ // Use SSA parser for SRT subs when extended tags option is checked
+ // This option will be removed (and SSA parser applied to SUBVIEWER)
+ // when the garble issue with Shift JIS (ANSI/DBCS) subs will be resovled
+ if (sfmt==Tsubreader::SUB_SSA || (sfmt==Tsubreader::SUB_SUBVIEWER && parent.defProps.extendedTags))
   applyWords(format.processSSA(*this, sfmt, parent));
  else
   applyWords(format.processHTML(*this));

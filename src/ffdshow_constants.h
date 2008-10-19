@@ -492,6 +492,7 @@
 #define IDFF_subSplitBorder          855
 #define IDFF_subCC                   860
 #define IDFF_subWordWrap             3403
+#define IDFF_subExtendedTags         3492 // Enable HTML tags in SSA subs and SSA tags in SRT subs
 
 #define IDFF_fontName                820
 #define IDFF_fontCharset             802
