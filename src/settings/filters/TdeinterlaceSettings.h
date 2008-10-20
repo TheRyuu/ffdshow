@@ -31,6 +31,7 @@ public:
 
  TdeinterlaceSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
 
+ int deinterlaceAlways;
  int swapfields;
  int cfgId;
  static const int cfgIdDef=2;
