@@ -720,7 +720,6 @@ if (_strnicmp(l2,_L("<i>"),3)==0) {words.add(l,l1,l2,props,3);props.italic=true;
    }
   else
    l2++;
- words.add(l,l1,l2,props,0);
 }
 
 template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processHTML(const TsubtitleLine<tchar> &line)
@@ -731,7 +730,9 @@ template<class tchar> TsubtitleFormat::Twords TsubtitleFormat::processHTML(const
  const tchar *l1=l,*l2=l;
  while (*l2)
    processHTMLTags(words, l, l1, l2);
-  return words;
+ 
+ words.add(l,l1,l2,props,0);
+ return words;
 }
 
 template<class tchar> void TsubtitleFormat::Tssa<tchar>::fontName(const tchar *start,const tchar *end)
