@@ -59,6 +59,8 @@ TvideoCodecLibmpeg2::TvideoCodecLibmpeg2(IffdshowBase *Ideci,IdecVideoSink *Isin
   }
  mpeg2dec=NULL;info=NULL;quants=NULL;quantBytes=1;extradata=NULL;buffer=NULL;
  buffer=new Tbuffer();
+ oldflags = 0;
+ m_fFilm = false;
 }
 void TvideoCodecLibmpeg2::init(void)
 {
@@ -105,7 +107,8 @@ HRESULT __declspec(align(16))(TvideoCodecLibmpeg2::decompress(const unsigned cha
 
 HRESULT __declspec(align(16))(TvideoCodecLibmpeg2::decompressI(const unsigned char *src,size_t srcLen,IMediaSample *pIn))
 {
- //if (pIn->IsDiscontinuity()) onSeek();
+ //if (pIn->IsDiscontinuity() == S_OK)
+ // onSeek(0);
  REFERENCE_TIME rtStart=REFTIME_INVALID,rtStop=_I64_MIN;
  HRESULT hr=pIn->GetTime(&rtStart,&rtStop);
  if (FAILED(hr))
@@ -125,6 +128,8 @@ HRESULT __declspec(align(16))(TvideoCodecLibmpeg2::decompressI(const unsigned ch
         mpeg2_buffer(mpeg2dec,src,src+len);
         len=0;
        }
+      break;
+     case STATE_INVALID:
       break;
      case STATE_GOP:
       if(mpeg2dec->info.user_data_len > 4 && *(DWORD*)mpeg2dec->info.user_data == 0xf8014343)
@@ -167,13 +172,8 @@ HRESULT __declspec(align(16))(TvideoCodecLibmpeg2::decompressI(const unsigned ch
          }
         if (pIn->IsPreroll()==S_OK)
          return sinkD->deliverPreroll(frametype);
-        int fieldtype;
-        if(info->sequence->flags&SEQ_FLAG_PROGRESSIVE_SEQUENCE)
-         fieldtype = FIELD_TYPE::PROGRESSIVE_FRAME;
-        else if(info->display_picture->flags&PIC_FLAG_TOP_FIELD_FIRST)
-         fieldtype = FIELD_TYPE::INT_TFF;
-        else
-         fieldtype = FIELD_TYPE::INT_BFF;
+
+        int fieldtype = SetDeinterlaceMethod();
 
         if (sequenceFlag != FIELD_TYPE::SEQ_START || frametype == FRAME_TYPE::I)
          {
@@ -224,4 +224,55 @@ bool TvideoCodecLibmpeg2::onSeek(REFERENCE_TIME segmentStart)
  if (ccDecoder)
   ccDecoder->onSeek();
  return true;
+}
+
+/* 
+ *	Copyright (C) 2003-2006 Gabest
+ *	http://www.gabest.org
+ *
+ *      copied and modified from Mpeg2DecFilter.cpp
+ */
+int TvideoCodecLibmpeg2::SetDeinterlaceMethod(void)
+{
+    int di_method = FIELD_TYPE::PROGRESSIVE_FRAME; // weave
+
+    DWORD seqflags = info->sequence->flags;
+    DWORD newflags = info->display_picture->flags;
+
+    if(!(seqflags & SEQ_FLAG_PROGRESSIVE_SEQUENCE) 
+    && !(oldflags & PIC_FLAG_REPEAT_FIRST_FIELD)
+    && (newflags & PIC_FLAG_PROGRESSIVE_FRAME))
+    {
+        if(!m_fFilm && (newflags & PIC_FLAG_REPEAT_FIRST_FIELD))
+        {
+            m_fFilm = true;
+        }
+        else if(m_fFilm && !(newflags & PIC_FLAG_REPEAT_FIRST_FIELD))
+        {
+            m_fFilm = false;
+        }
+    }
+
+    if(seqflags & SEQ_FLAG_PROGRESSIVE_SEQUENCE)
+        di_method = FIELD_TYPE::PROGRESSIVE_FRAME; // hurray!
+    else if(m_fFilm)
+        di_method = FIELD_TYPE::PROGRESSIVE_FRAME; // we are lucky
+#if 1 // ffdshow custom code
+    else if(newflags & PIC_FLAG_TOP_FIELD_FIRST)
+        di_method = FIELD_TYPE::INT_TFF;
+    else
+        di_method = FIELD_TYPE::INT_BFF;
+
+#else // the (nearly) original code & comment
+    else if(!(oldflags & PIC_FLAG_PROGRESSIVE_FRAME))
+        di_method = DIBlend; // ok, clear thing
+    else
+        // big trouble here, the progressive_frame bit is not reliable :'(
+        // frames without temporal field diffs can be only detected when ntsc 
+        // uses the repeat field flag (signaled with m_fFilm), if it's not set 
+        // or we have pal then we might end up blending the fields unnecessarily...
+        di_method = DIBlend;
+#endif
+    oldflags = newflags;
+    return di_method;
 }
