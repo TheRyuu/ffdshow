@@ -23,8 +23,8 @@
  * common internal and external API header
  */
 
-#ifndef FFMPEG_COMMON_H
-#define FFMPEG_COMMON_H
+#ifndef AVUTIL_COMMON_H
+#define AVUTIL_COMMON_H
 
 #include <inttypes.h>
 
@@ -154,6 +154,7 @@ typedef uint64_t uint_fast64_t;
 #define FFMIN3(a,b,c) FFMIN(FFMIN(a,b),c)
 
 #define FFSWAP(type,a,b) do{type SWAP_tmp= b; b= a; a= SWAP_tmp;}while(0)
+#define FF_ARRAY_ELEMS(a) (sizeof(a) / sizeof((a)[0]))
 
 /* misc math functions */
 extern const uint8_t ff_log2_tab[256];
@@ -399,4 +400,4 @@ static inline long long read_time(void)
 
 #endif /* HAVE_AV_CONFIG_H */
 
-#endif /* FFMPEG_COMMON_H */
+#endif /* AVUTIL_COMMON_H */

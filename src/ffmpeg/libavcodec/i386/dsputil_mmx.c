@@ -63,7 +63,9 @@ DECLARE_ALIGNED_8 (const uint64_t, ff_pw_255) = 0x00ff00ff00ff00ffULL;
 DECLARE_ALIGNED_8 (const uint64_t, ff_pb_1  ) = 0x0101010101010101ULL;
 DECLARE_ALIGNED_8 (const uint64_t, ff_pb_3  ) = 0x0303030303030303ULL;
 DECLARE_ALIGNED_8 (const uint64_t, ff_pb_7  ) = 0x0707070707070707ULL;
+DECLARE_ALIGNED_8 (const uint64_t, ff_pb_1F ) = 0x1F1F1F1F1F1F1F1FULL;
 DECLARE_ALIGNED_8 (const uint64_t, ff_pb_3F ) = 0x3F3F3F3F3F3F3F3FULL;
+DECLARE_ALIGNED_8 (const uint64_t, ff_pb_81 ) = 0x8181818181818181ULL;
 DECLARE_ALIGNED_8 (const uint64_t, ff_pb_A1 ) = 0xA1A1A1A1A1A1A1A1ULL;
 DECLARE_ALIGNED_8 (const uint64_t, ff_pb_FC ) = 0xFCFCFCFCFCFCFCFCULL;
 
@@ -2236,9 +2238,8 @@ static void int32_to_float_fmul_scalar_sse2(float *dst, const int *src, float mu
     );
 }
 
-/* All the float_to_int16 stuff doesn't compile properly with MinGW64 */
-#ifndef ARCH_X86_64
 static void float_to_int16_3dnow(int16_t *dst, const float *src, long len){
+    x86_reg reglen = len;
     // not bit-exact: pf2id uses different rounding than C and SSE
     __asm__ volatile(
         "add        %0          , %0        \n\t"
@@ -2257,10 +2258,11 @@ static void float_to_int16_3dnow(int16_t *dst, const float *src, long len){
         "add        $16         , %0        \n\t"
         " js 1b                             \n\t"
         "femms                              \n\t"
-        :"+r"(len), "+r"(dst), "+r"(src)
+        :"+r"(reglen), "+r"(dst), "+r"(src)
     );
 }
 static void float_to_int16_sse(int16_t *dst, const float *src, long len){
+    x86_reg reglen = len;
     __asm__ volatile(
         "add        %0          , %0        \n\t"
         "lea         (%2,%0,2)  , %2        \n\t"
@@ -2278,11 +2280,12 @@ static void float_to_int16_sse(int16_t *dst, const float *src, long len){
         "add        $16         , %0        \n\t"
         " js 1b                             \n\t"
         "emms                               \n\t"
-        :"+r"(len), "+r"(dst), "+r"(src)
+        :"+r"(reglen), "+r"(dst), "+r"(src)
     );
 }
 
 static void float_to_int16_sse2(int16_t *dst, const float *src, long len){
+    x86_reg reglen = len;
     __asm__ volatile(
         "add        %0          , %0        \n\t"
         "lea         (%2,%0,2)  , %2        \n\t"
@@ -2295,7 +2298,7 @@ static void float_to_int16_sse2(int16_t *dst, const float *src, long len){
         "movdqa     %%xmm0      ,  (%1,%0)  \n\t"
         "add        $16         , %0        \n\t"
         " js 1b                             \n\t"
-        :"+r"(len), "+r"(dst), "+r"(src)
+        :"+r"(reglen), "+r"(dst), "+r"(src)
     );
 }
 
@@ -2326,6 +2329,7 @@ static void float_to_int16_interleave_##cpu(int16_t *dst, const float **src, lon
     if(channels==1)\
         float_to_int16_##cpu(dst, src[0], len);\
     else if(channels==2){\
+        x86_reg reglen = len; \
         const float *src0 = src[0];\
         const float *src1 = src[1];\
         __asm__ volatile(\
@@ -2335,7 +2339,7 @@ static void float_to_int16_interleave_##cpu(int16_t *dst, const float **src, lon
             "add %0, %3 \n"\
             "neg %0 \n"\
             body\
-            :"+r"(len), "+r"(dst), "+r"(src0), "+r"(src1)\
+            :"+r"(reglen), "+r"(dst), "+r"(src0), "+r"(src1)\
         );\
     }else if(channels==6){\
         ff_float_to_int16_interleave6_##cpu(dst, src, len);\
@@ -2397,7 +2401,6 @@ static void float_to_int16_interleave_3dn2(int16_t *dst, const float **src, long
     else
         float_to_int16_interleave_3dnow(dst, src, len, channels);
 }
-#endif
 
 
 #if 0 /* disable snow */
@@ -2561,6 +2564,11 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
                 c->put_no_rnd_pixels_tab[1][2] = put_no_rnd_pixels8_y2_mmx2;
                 c->avg_pixels_tab[0][3] = avg_pixels16_xy2_mmx2;
                 c->avg_pixels_tab[1][3] = avg_pixels8_xy2_mmx2;
+
+                if (ENABLE_VP3_DECODER || ENABLE_THEORA_DECODER) {
+                    c->vp3_v_loop_filter= ff_vp3_v_loop_filter_mmx2;
+                    c->vp3_h_loop_filter= ff_vp3_h_loop_filter_mmx2;
+                }
             }
 
 #define SET_QPEL_FUNCS(PFX, IDX, SIZE, CPU) \
@@ -2764,21 +2772,17 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         if(mm_flags & MM_3DNOW){
             c->vorbis_inverse_coupling = vorbis_inverse_coupling_3dnow;
             c->vector_fmul = vector_fmul_3dnow;
-            #ifndef ARCH_X86_64
             if(!(avctx->flags & CODEC_FLAG_BITEXACT)){
                 c->float_to_int16 = float_to_int16_3dnow;
                 c->float_to_int16_interleave = float_to_int16_interleave_3dnow;
             }
-            #endif
         }
         if(mm_flags & MM_3DNOWEXT){
             c->vector_fmul_reverse = vector_fmul_reverse_3dnow2;
             c->vector_fmul_window = vector_fmul_window_3dnow2;
-            #ifndef ARCH_X86_64
             if(!(avctx->flags & CODEC_FLAG_BITEXACT)){
                 c->float_to_int16_interleave = float_to_int16_interleave_3dn2;
             }
-            #endif
         }
         if(mm_flags & MM_SSE){
             c->vorbis_inverse_coupling = vorbis_inverse_coupling_sse;
@@ -2792,10 +2796,8 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             #if ENABLE_AC3_DECODER
             c->int32_to_float_fmul_scalar = int32_to_float_fmul_scalar_sse;
             #endif
-            #ifndef ARCH_X86_64
             c->float_to_int16 = float_to_int16_sse;
             c->float_to_int16_interleave = float_to_int16_interleave_sse;
-            #endif
         }
         if(mm_flags & MM_3DNOW)
             c->vector_fmul_add_add = vector_fmul_add_add_3dnow; // faster than sse
@@ -2803,10 +2805,8 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             #if ENABLE_AC3_DECODER
             c->int32_to_float_fmul_scalar = int32_to_float_fmul_scalar_sse2;
             #endif
-            #ifndef ARCH_X86_64
             c->float_to_int16 = float_to_int16_sse2;
             c->float_to_int16_interleave = float_to_int16_interleave_sse2;
-            #endif
         }
     }
 
