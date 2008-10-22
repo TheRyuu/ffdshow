@@ -240,10 +240,9 @@ int TvideoCodecLibmpeg2::SetDeinterlaceMethod(void)
     DWORD newflags = info->display_picture->flags;
 
     if(!(seqflags & SEQ_FLAG_PROGRESSIVE_SEQUENCE) 
-    && !(oldflags & PIC_FLAG_REPEAT_FIRST_FIELD)
-    && (newflags & PIC_FLAG_PROGRESSIVE_FRAME))
+    && !(oldflags & PIC_FLAG_REPEAT_FIRST_FIELD))
     {
-        if(!m_fFilm && (newflags & PIC_FLAG_REPEAT_FIRST_FIELD))
+        if(!m_fFilm && (newflags & PIC_FLAG_REPEAT_FIRST_FIELD) && (newflags & PIC_FLAG_PROGRESSIVE_FRAME))
         {
             m_fFilm = true;
         }
