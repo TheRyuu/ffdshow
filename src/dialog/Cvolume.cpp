@@ -23,6 +23,8 @@
 #include "ffdebug.h"
 #include "IffdshowParamsEnum.h"
 
+const int MAX_AMPLIFICATION=1000;
+
 const int TvolumePage::tbrs[8]={IDC_TBR_VOLUME_L,IDC_TBR_VOLUME_C,IDC_TBR_VOLUME_R,IDC_TBR_VOLUME_SL,IDC_TBR_VOLUME_SR,IDC_TBR_VOLUME_AL,IDC_TBR_VOLUME_AR,IDC_TBR_VOLUME_LFE};
 const int TvolumePage::lbls[8]={IDC_LBL_VOLUME_L2,IDC_LBL_VOLUME_C2,IDC_LBL_VOLUME_R2,IDC_LBL_VOLUME_SL2,IDC_LBL_VOLUME_SR2,IDC_LBL_VOLUME_AL2,IDC_LBL_VOLUME_AR2,IDC_LBL_VOLUME_LFE2};
 const int TvolumePage::pbrs[8]={IDC_PBR_VOLUME_L,IDC_PBR_VOLUME_C,IDC_PBR_VOLUME_R,IDC_PBR_VOLUME_SL,IDC_PBR_VOLUME_SR,IDC_PBR_VOLUME_AL,IDC_PBR_VOLUME_AR,IDC_PBR_VOLUME_LFE};
@@ -53,12 +55,6 @@ void TvolumePage::init(void)
    addHint(mutes[i],_l("mute"));
    addHint(solos[i],_l("solo"));
    SendDlgItemMessage(m_hwnd,pbrs[i],PBM_SETRANGE,0,MAKELPARAM(0,50));
-  }
- for (int i=128;i<769;i+=128)
-  {
-  char_t buf[5];
-  tsprintf(buf,_l("%4d"),i);
-  cbxAdd(IDC_CBX_NORMALIZE_BUFFER_LENGTH,buf,i);
   }
  switchDb();
 }
@@ -98,7 +94,6 @@ void TvolumePage::normalize2dlg(void)
  if (isdb)
   val=limit(ff_round(value2db(val/100.0)),0,30);
  SetDlgItemInt(m_hwnd,IDC_ED_VOLUME_NORMALIZE_MAX,val,FALSE);
- cbxSetDataCurSel(IDC_CBX_NORMALIZE_BUFFER_LENGTH,cfgGet(IDFF_volumeNormalizeBufferLength));
  setCheck(IDC_CHB_NORMALIZE_RESETONSEEK,cfgGet(IDFF_volumeNormalizeResetOnSeek));
  setCheck(IDC_CHB_NORMALIZE_REGAINVOLUME,cfgGet(IDFF_volumeNormalizeRegainVolume));
 }
@@ -201,7 +196,7 @@ INT_PTR TvolumePage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
                 }
               }
              else
-              eval(hed,0,3200,IDFF_maxNormalization);
+              eval(hed,0,MAX_AMPLIFICATION,IDFF_maxNormalization);
              break;
             }
           }
@@ -249,7 +244,7 @@ INT_PTR TvolumePage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
      switch (getId(hwnd))
       {
        case IDC_ED_VOLUME_NORMALIZE_MAX:
-        ok=eval(hwnd,0,isdb?30:3200);break;
+        ok=eval(hwnd,0,isdb?30:MAX_AMPLIFICATION);break;
        default:return FALSE;
       }
      if (!ok)
@@ -383,13 +378,6 @@ TvolumePage::TvolumePage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):Tconf
    0,NULL,NULL
   };
  bindCheckboxes(chb);
-
- static const TbindCombobox<TvolumePage> cbx[]=
- {
-	 IDC_CBX_NORMALIZE_BUFFER_LENGTH,IDFF_volumeNormalizeBufferLength,BINDCBX_DATA,NULL,
-	 0,NULL,BINDCBX_NONE,NULL
- };
- bindComboboxes(cbx);
 
  bindHtracks(htbr);
 }

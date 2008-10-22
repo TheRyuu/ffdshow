@@ -977,7 +977,7 @@
 #define IDFF_volumeLFEmute        2420
 #define IDFF_volumeNormalize      2404
 #define IDFF_maxNormalization     2406 //*100
-#define IDFF_volumeNormalizeBufferLength      3368
+//#define IDFF_volumeNormalizeBufferLength      3368
 #define IDFF_volumeNormalizeResetOnSeek       3369
 #define IDFF_volumeNormalizeRegainVolume      3492
 //#define IDFF_currentNormalization 2407 //*100

@@ -8,29 +8,12 @@
 class TaudioFilterVolume : public TaudioFilter, public IaudioFilterVolume
 _DECLARE_FILTER(TaudioFilterVolume,TaudioFilter)
 private:
- static const unsigned int NSAMPLES,MIN_SAMPLE_SIZE;
- int nSamples;
- // Some limits
- //static const int MIN_S16,MAX_S16;
- // "Ideal" level
- static const float MID_S16;
- // Silence level
- // FIXME: should be relative to the level of the samples
- static const float SIL_S16;
-
  TsampleFormat oldfmt;
  TvolumeSettings oldcfg;
  int volumes[8];
  bool isVol;
 
- struct Tmem
-  {
-   float avg;   // average level of the sample
-   size_t len; // sample size (weight)
-  } *mem;
- int idx;
-
- static const float MUL_INIT,MUL_MIN,MUL_MAX;
+ static const float MUL_INIT,MUL_MIN,MUL_MAX, MUL_STEP;
  float mul;
 
  template<unsigned int nchannels> struct Tmultiply
