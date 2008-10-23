@@ -24,12 +24,18 @@
 #include "IffdshowBase.h"
 #include "IffdshowDecAudio.h"
 
+// when regain volume is active:
+// we want to make sure that the current sound level (max * mul) will not rise above 
+// 'RegainThreshold', this will reserve some headroom for future peaks.
 const float RegainThreshold=0.75f;
 
 const float TaudioFilterVolume::MUL_INIT=1.0f;
 const float TaudioFilterVolume::MUL_MIN=0.1f;
 const float TaudioFilterVolume::MUL_MAX=10.0f; //this is the max amplification allowed
-const float TaudioFilterVolume::MUL_STEP=0.01f;
+// the actual 'mul' step is multiplied by ((float)numsamples / fmt.freq) in order to
+// achieve similar results with different sample rates / method call rates.
+// after the volume drop caused by the climax, the amplification will rise by 0.06f every second.
+const float TaudioFilterVolume::MUL_STEP=0.06f;
 
 template<class sample_t> void TaudioFilterVolume::volume(sample_t* const samples,size_t numsamples,const TsampleFormat &fmt,const TvolumeSettings *cfg)
 {
@@ -79,10 +85,21 @@ template<class sample_t> void TaudioFilterVolume::volume(sample_t* const samples
 	 {
       if (cfg->normalizeRegainVolume)
        {
-        float step = MUL_STEP * ((float)48000 / fmt.freq) * ((float)numsamples / 8000);
-        if (max < (TsampleFormatInfo<sample_t>::max() / mul) * RegainThreshold && mul + step <= cfg->normalizeMax/100.0f)
+		// here we make sure that the current sound level (max * mul) will not rise above 'RegainThreshold'.
+        if (max < (TsampleFormatInfo<sample_t>::max() / mul) * RegainThreshold)
          {
-		  mul += step;
+		  // note that in one second, in average, the sum of ((float)numsamples / fmt.freq) will be 1.
+	      float step = MUL_STEP * ((float)numsamples / fmt.freq);
+	      if (mul + step <= cfg->normalizeMax/100.0f)
+		   {
+		    mul += step;
+		   }
+		  else // mul + step > cfg->normalizeMax/100.0f
+		  {
+		   // make sure that the last increment will be performed, even if it's smaller than 'step'
+		   // otherwise, current amplification could be displayed as 399% instead of 400%, for example.
+           mul = cfg->normalizeMax/100.0f;
+		  }
          }
 	   }
 	 }

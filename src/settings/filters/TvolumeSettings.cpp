@@ -83,7 +83,7 @@ TvolumeSettings::TvolumeSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
    IDFF_volumeNormalize     ,&TvolumeSettings::normalize   ,0,0,_l(""),1,
      _l("volNormalize"),0,
    IDFF_maxNormalization    ,&TvolumeSettings::normalizeMax,0,3200,_l(""),1,
-     _l("volNormalizeMax"),500,
+     _l("volNormalizeMax"),400,
    IDFF_volumeNormalizeResetOnSeek     ,&TvolumeSettings::normalizeResetOnSeek,0,0,_l(""),1,
      _l("volNormalizeResetOnSeek"),0,
    IDFF_volumeNormalizeRegainVolume     ,&TvolumeSettings::normalizeRegainVolume,0,0,_l(""),1,

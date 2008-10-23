@@ -56,6 +56,7 @@ void TvolumePage::init(void)
    addHint(solos[i],_l("solo"));
    SendDlgItemMessage(m_hwnd,pbrs[i],PBM_SETRANGE,0,MAKELPARAM(0,50));
   }
+ addHint(IDC_CHB_NORMALIZE_REGAINVOLUME,_l("Unchecked: one-pass normalization will be performed.\n(this mode is used to reach the highest possible loudness\nwith minimum of possible artifacts)\n\nChecked: dynamic range compression will be performed.\n(quieter parts will be amplified more than louder parts,\nalso known as night mode)"));
  switchDb();
 }
 
