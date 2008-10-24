@@ -512,8 +512,11 @@ hexagonal=hexagonal
 exhaustive=exhaustif
 
 dummy=pseudo
+On one of the conditions match (OR)=Si l'une des conditions est remplie (OU)
+On all conditions match (AND)=Si toutes les conditions sont remplies (ET)
 on movie file name match=si le nom du film correspond
 on movie file name match (with wildcards)=si le nom du film (+ jokers) correspond
+on movie file name match with preset name=si le nom du film correspond au nom du Preset
 on application exe file name match=si l'EXE de l'application correspond
 on volume name match=si le nom du volume correspond
 on volume serial match=si le n° de série du volume correspond
@@ -1115,6 +1118,7 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 1787=Accepter les ST incorporés
 1788=Décoder les sous-titres fidèles
 1837=Recherche heuristique
+1789=Accepter les sous-titres SSA/ASS/SSA2 (expérimental)
 
 [115]
 0=Codecs
@@ -1139,7 +1143,7 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 1935=Ne pas utiliser ffdshow dans :
 
 [118]
-0=Divers
+0=Options décodeur
 1016=Retourner l'image
 1045=IDCT :
 1047=Contourner les bogues :
@@ -1164,6 +1168,11 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 1764=fin
 1765=constant
 1916=Matrices quantification actives
+1946=Contrôle de la qualité
+1947=Sauter le déblocage H264 sur 
+1943=Sauter des trames sur
+1572=Nb thread du décodeur
+
 
 [119]
 0=Configuration
@@ -1204,6 +1213,17 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 1459=Seuil doux
 1534=Déblocage précis
 1899=Déblocage H.264 :
+
+[121]
+0=Queue & divers
+1944=Multithreading des données en sorties
+1958=Utiliser les queues seulement dans:
+2206=Utiliser les queues avec VMR9-YV12
+1365=Autres options
+1268=Délai vidéo:
+1764=fin
+1550=Supposer l'entrée interlacée si la hauteur >
+1143=Multithreading des données en sorties\r\n L'objectif de la queue est de réduire le nombre d'images sautées, ce qui arrive quand la charge CPU est trop élevée (plusieurs images/sec sont alors sautées pour maintenir la fluidité).\r\n La queue conserve le temps gagné quand le CPU a fini plus tôt et l'utilise quand il est en retard. Parce que le moteur de rendu vidéo est exécuté dans une autre thread, l'effet  est meilleur si vous avez un Pentium4HT ou un CPU multicoeurs.\r\n\r\n Utiliser les queues seulement dans\r\n  La queue est désactivée par défaut à cause d'un problème de stabilité avec d'autres lecteurs que Media Player Classic\r\n  Si vous voulez essayer, décocher ou ajouter le nom des exécutables séparés par des point-virgules.\r\n\r\n Utiliser les queues avec VMR9-YV12\r\n  Avec certains composants vidéo Intel, la queue ne marche pas en VMR9-YV12.\r\n\r\n Autre options\r\n Délai vidéo:\r\n  Si le son et l'image sont décalés, vous pouvez positionner un délai  (positif ou négatif) correctif de l'image par rapport au son.
 
 [125]
 0=Propriétés de l'image
@@ -1284,6 +1304,17 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 1978=Mode d'ombrage
 1980=Taille de l'ombre
 1981=Opacité de l'ombre
+2081=Atténuer
+2060=Rectangle opaque
+2088=Corriger les proportions automatiquement
+2065=Taille, Couleurs et Transparence
+2052=Texte:
+2053=Contour:
+2054=Ombre:
+2087=Surcharger la mise à l'échelle ASS/ASS2
+2090=Echelle Y
+
+
 
 [133]
 0=Redimensionnement & Proportions
@@ -1315,6 +1346,7 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 1987=Spécifier la taille horizontale
 1988=Traiter l'aspect ratio en interne
 2086=Redimensionner à la résolution d'écran
+2084=Ratio de l'écran en sortie
 
 [134]
 0=Recadrage
@@ -1353,6 +1385,10 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 1258=Panneau de configuration
 1259=Emplacements
 1293=Langue :
+2019=Icônes notif.:
+2016=Aucun
+2017=Moderne
+2018=Classique
 
 [137]
 0=Décalage
@@ -1362,6 +1398,8 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 1149=Décalage de luminance X :
 1151=Décalage de luminance Y :
 1153=Décalage de chrominance X :
+1939=Retourner
+1940=Mirroir
 
 [138]
 0=Paramètres
@@ -1408,6 +1446,7 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 1367=Seuil :
 1178=Filtre DScaler
 1523=Méthode :
+2220=Traiter les trames taguées comme progressives
 
 [141]
 0=Infos à l'écran
@@ -1416,6 +1455,7 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 1776=Position verticale :
 1491=Perso. :
 1493=Sauveg. :
+2217=Format de l'OSD utilisateur :
 
 [142]
 0=Niveaux
@@ -1509,14 +1549,17 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 [180]
 0=AviSynth
 1330=AviSynth
-1333=Charger
-1334=Sauveg.
-1353=Ajouter la source vidéo ffdshow
-1352=Espace couleur source:
-1348=YV12
-1349=YUY2
-1350=RVB24
-1351=RVB32
+2033=Charger
+2034=Sauveg.
+2021=Ajouter la source vidéo ffdshow
+2024=Espace couleur source:
+2025=YV12
+2026=YUY2
+2027=RVB24
+2028=RVB32
+2029=Buffer avant/arrière:
+2032=Utiliser l'actuel
+
 
 [181]
 0=Profondeur de champ
@@ -1830,6 +1873,10 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 1860=Internes
 1857=Bords
 1859=Pixel
+2067=Division des bords
+-1=Eclaircissement des bords
+2209=Eclaircissement
+
 
 [262]
 0=Convolution
@@ -1845,6 +1892,9 @@ Thank you. We are gathering the list of compatible applications. Please send us 
 
 [267]
 8=Fermer
+
+[270]
+1941=Seuil:
 
 [295]
 0=Gestionnaire de compatibilié FFDShow
