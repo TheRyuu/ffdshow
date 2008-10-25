@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "ffImgfmt.h"
 
 //--------- codec's requirements (filled by the codec/vf) ---------
 
@@ -83,7 +84,7 @@ typedef struct mp_image_s {
     int width,height;  // stored dimensions
     int x,y,w,h;  // visible dimensions
     unsigned char* planes[MP_MAX_PLANES];
-    int stride[MP_MAX_PLANES];
+    stride_t stride[MP_MAX_PLANES];
     char * qscale;
     int qstride;
     int pict_type; // 0->unknown, 1->I, 2->P, 3->B

@@ -324,7 +324,7 @@ static void filter_line_c(YadifContext *yadctx, uint8_t *dst, uint8_t *prev, uin
     }
 }
 
-void yadif_filter(YadifContext *yadctx, uint8_t *dst[3], int dst_stride[3], int width, int height, int parity, int tff){
+void yadif_filter(YadifContext *yadctx, uint8_t *dst[3], stride_t dst_stride[3], int width, int height, int parity, int tff){
     int y, i;
 
     for(i=0; i<3; i++){

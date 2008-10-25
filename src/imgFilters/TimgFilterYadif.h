@@ -21,7 +21,7 @@ private:
  YadifContext* TimgFilterYadif::getContext(int mode, int parity);
  HRESULT put_image(mp_image_t *mpi, TffPict &pict);
  HRESULT continue_buffered_image(TffPict &pict);
- void store_ref(uint8_t *src[3], int src_stride[3], int width, int height);
+ void store_ref(uint8_t *src[3], stride_t src_stride[3], int width, int height);
  void vf_clone_mpi_attributes(mp_image_t* dst, mp_image_t* src);
  int config(TffPict &pict);
 

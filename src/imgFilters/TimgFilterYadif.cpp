@@ -56,7 +56,7 @@ static inline void * memcpy_pic(unsigned char * dst, unsigned char * src, int by
     return retval;
 }
 
-void TimgFilterYadif::store_ref(uint8_t *src[3], int src_stride[3], int width, int height)
+void TimgFilterYadif::store_ref(uint8_t *src[3], stride_t src_stride[3], int width, int height)
 {
     int i;
 
@@ -160,7 +160,7 @@ int TimgFilterYadif::config(TffPict &pict)
 
         for(i = 0 ; i < 3 ; i++){
             int is_chroma = !!i;
-            int ffdshow_w = ((pict.rectFull.dx >> is_chroma)/16 + 2) * 16; // from void TffPict::convertCSP(int Icsp,Tbuffer &buf,int edge)
+            stride_t ffdshow_w = ((pict.rectFull.dx >> is_chroma)/16 + 2) * 16; // from void TffPict::convertCSP(int Icsp,Tbuffer &buf,int edge)
             int w = std::max(pict.stride[i], ffdshow_w);
             int h = ((pict.rectFull.dy + 6 + 31) & (~31)) >> is_chroma;
 

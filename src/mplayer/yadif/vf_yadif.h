@@ -36,7 +36,7 @@ typedef struct vf_priv_s {
     int do_deinterlace;
 } YadifContext;
 
-void yadif_filter(YadifContext *p, uint8_t *dst[3], int dst_stride[3], int width, int height, int parity, int tff);
+void yadif_filter(YadifContext *p, uint8_t *dst[3], stride_t dst_stride[3], int width, int height, int parity, int tff);
 void yadif_init(void);
 
 #endif // _VF_YADIF_H_

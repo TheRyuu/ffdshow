@@ -103,7 +103,7 @@ public:
 
  /**
   * onEndOfStream
-  * Over-ride this function if your image filter needs backward temporal image processing.
+  * Over-ride this function if your image filter needs forward temporal image processing.
   * At the end of stream, output frames in your frame buffer on this function call.
   */
  virtual HRESULT onEndOfStream(void) {return E_NOTIMPL;}
