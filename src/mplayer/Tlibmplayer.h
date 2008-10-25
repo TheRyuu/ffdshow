@@ -3,6 +3,7 @@
 
 #include "postproc/postprocess.h"
 #include "TpostprocSettings.h"
+#include "yadif/vf_yadif.h"
 
 class Tdll;
 struct Tconfig;
@@ -63,6 +64,10 @@ public:
  void (*palette8tobgr15)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
  void (*decCPUCount)(void);
  void (*incCPUCount)(void);
+
+ void (*yadif_init)(void);
+ void (*yadif_filter)(YadifContext *p, uint8_t *dst[3], int dst_stride[3], int width, int height, int parity, int tff);
+
 
  static int swsCpuCaps(void);
  static void swsInitParams(SwsParams *params,int resizeMethod);

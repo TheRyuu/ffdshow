@@ -160,6 +160,7 @@
 #define IDD_QUEUEMSG_7                  293
 #define IDD_QUEUEMSG_8                  294
 #define IDD_COMPATIBILITY_MANAGER       295
+#define IDD_DEINTERLACE_YADIF           296
 #define IDC_TBR_ASPECT_USER             1002
 #define IDC_TBR_PPQUAL                  1002
 #define IDC_TBR_LUMGAIN                 1003
@@ -1911,6 +1912,10 @@
 #define IDC_LBL_OSD_USERFORMAT          2218
 #define IDC_CHB_NORMALIZE_REGAINVOLUME  2219
 #define IDC_CHB_DEINTERLACEALWAYS       2220
+#define IDC_CBX_YADIF_PARITY            2221
+#define IDC_LBL_YADIF_PARITY            2222
+#define IDC_CHB_YADIF_SKIP_CHECK        2223
+#define IDC_CHB_YADIF_DOUBLE_FRAMERATE  2224
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -1925,9 +1930,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        296
+#define _APS_NEXT_RESOURCE_VALUE        297
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2218
+#define _APS_NEXT_CONTROL_VALUE         2225
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

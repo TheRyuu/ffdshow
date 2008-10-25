@@ -129,6 +129,15 @@ void TimgFilters::adhocDVDsub(TfilterQueue::iterator it0,TffPict &pict)
   }
 }
 
+void TimgFilters::onEndOfStream(void)
+{
+ for (iterator f=begin();f!=end();f++)
+  {
+   TimgFilter *filter = (TimgFilter*)f->second;
+   filter->onEndOfStream();
+  }
+}
+
 bool TimgFilters::isAnyActiveDownstreamFilter(TfilterQueue::iterator it)
 {
  it++;

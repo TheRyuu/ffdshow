@@ -459,7 +459,22 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
-		<File
+		<Filter
+			Name="yadif"
+			>
+			<File
+				RelativePath=".\yadif\mp_image.h"
+				>
+			</File>
+			<File
+				RelativePath=".\yadif\vf_yadif.c"
+				>
+			</File>
+			<File
+				RelativePath=".\yadif\vf_yadif.h"
+				>
+			</File>
+		</Filter>		<File
 			RelativePath=".\libmplayer.def">
 		</File>
 	</Files>

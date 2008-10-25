@@ -192,6 +192,8 @@
 #define IDFF_dgbobMode                 1425
 #define IDFF_dgbobThreshold            1426
 #define IDFF_dgbobAP                   1427
+#define IDFF_yadifMode                 3494
+#define IDFF_yadifParity               3495
 
 #define IDFF_isDecimate            1410
 #define IDFF_decimateRatio         1411
@@ -1516,6 +1518,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3493
+//next:3496
 
 #endif

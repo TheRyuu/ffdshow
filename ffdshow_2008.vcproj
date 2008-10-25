@@ -4790,11 +4790,31 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\imgFilters\TimgFilterYadif.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\imgFilters\TimgFilterYadif.h"
+				>
+			</File>
+			<File
 				RelativePath="src\mplayer\Tlibmplayer.cpp"
 				>
 			</File>
 			<File
 				RelativePath="src\mplayer\Tlibmplayer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\imgFilters\Tmp_image.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\imgFilters\Tmp_image.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\mplayer\yadif\vf_yadif.h"
 				>
 			</File>
 			<Filter
@@ -5167,6 +5187,14 @@
 			</File>
 			<File
 				RelativePath=".\src\dialog\CdeinterlaceTomsMoComp.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dialog\CdeinterlaceYadif.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dialog\CdeinterlaceYadif.h"
 				>
 			</File>
 			<File

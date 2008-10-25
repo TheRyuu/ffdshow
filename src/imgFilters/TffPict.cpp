@@ -341,6 +341,10 @@ void TffPict::setCSP(int Icsp)
 {
  cspInfo=*csp_getInfo(csp=Icsp);
 }
+
+/**
+ * Prepare picture buffer for new image and fill it with converted image.
+ */
 void TffPict::convertCSP(int Icsp,Tbuffer &buf,Tconvert *convert,int edge)
 {
  if (csp&FF_CSP_FLAGS_YUV_ADJ)
@@ -356,6 +360,12 @@ void TffPict::convertCSP(int Icsp,Tbuffer &buf,Tconvert *convert,int edge)
  convertCSP(Icsp,buf,edge);
  convert->convert(csp0|((fieldtype&FIELD_TYPE::MASK_INT)?FF_CSP_FLAGS_INTERLACED:0),data0,stride0,csp,data,stride,&palette0);
 }
+
+/**
+ * Prepare picture buffer for new image.
+ * New picture is empty black image.
+ * No real color space conversion here.
+ */
 void TffPict::convertCSP(int Icsp,Tbuffer &buf,int edge)
 {
  cspInfo=*csp_getInfo(csp=Icsp);
@@ -371,7 +381,7 @@ void TffPict::convertCSP(int Icsp,Tbuffer &buf,int edge)
     }
    else
     {
-     stride[0]=(((rectFull.dx>>cspInfo.shiftX[0])+edge)/16+2)*16;
+     stride[0]=(((rectFull.dx>>cspInfo.shiftX[0])+edge)/16+2)*16; // If you change these 4 lines, please update TimgFilterYadif::config. (Don't change.)
      stride[1]=(((rectFull.dx>>cspInfo.shiftX[1])+edge)/16+2)*16;
      stride[2]=(((rectFull.dx>>cspInfo.shiftX[2])+edge)/16+2)*16;
      stride[3]=(((rectFull.dx>>cspInfo.shiftX[3])+edge)/16+2)*16;

@@ -55,6 +55,8 @@ Tlibmplayer::Tlibmplayer(const Tconfig *config):refcount(0)
  dll->loadFunction(palette8tobgr15,"palette8tobgr15");
  dll->loadFunction(decCPUCount,"decCPUCount");
  dll->loadFunction(incCPUCount,"incCPUCount");
+ dll->loadFunction(yadif_init,"yadif_init");
+ dll->loadFunction(yadif_filter,"yadif_filter");
 
  if (dll->ok)
   init_mplayer(Tconfig::cpu_flags&FF_CPU_MMX,

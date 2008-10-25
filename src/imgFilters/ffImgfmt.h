@@ -222,6 +222,7 @@ static __inline enum PixelFormat csp_ffdshow2lavc(int pix_fmt)
 
 #define IMGFMT_YVU9 0x39555659
 #define IMGFMT_IF09 0x39304649
+#define IMGFMT_IF09 0x39304649
 #define IMGFMT_YV12 0x32315659
 #define IMGFMT_YV16 0x36315659
 #define IMGFMT_I420 0x30323449
