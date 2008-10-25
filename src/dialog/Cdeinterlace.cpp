@@ -49,6 +49,7 @@ void TdeinterlacePage::cfg2dlg(void)
 }
 void TdeinterlacePage::deint2dlg(void)
 {
+ setCheck(IDC_CHB_DEINTERLACEALWAYS,cfgGet(IDFF_deinterlaceAlways));
  setCheck(IDC_CHB_SWAP_FIELDS,cfgGet(IDFF_swapFields));//enable(cfgGet(IDFF_isDeinterlace),IDC_CHB_SWAP_FIELDS);
 deint2dlgAgain:
  int method=cfgGet(IDFF_deinterlaceMethod);
@@ -170,6 +171,7 @@ TdeinterlacePage::TdeinterlacePage(TffdshowPageDec *Iparent,const TfilterIDFF *i
  resInter=IDC_CHB_DEINTERLACE;
  static const TbindCheckbox<TdeinterlacePage> chb[]=
   {
+   IDC_CHB_DEINTERLACEALWAYS,IDFF_deinterlaceAlways,NULL,
    IDC_CHB_SWAP_FIELDS,IDFF_swapFields,NULL,
    0,NULL,NULL
   };

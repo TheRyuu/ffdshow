@@ -32,9 +32,14 @@ private:
  TccDecoder *ccDecoder;
  void init(void);
  Tbuffer *buffer;
- virtual HRESULT decompressI(const unsigned char *src,size_t srcLen,IMediaSample *pIn);
+ HRESULT decompressI(const unsigned char *src,size_t srcLen,IMediaSample *pIn);
+ uint32_t oldflags;
+ bool m_fFilm;
+ int SetDeinterlaceMethod(void);
+
 protected:
  virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);
+
 public:
  TvideoCodecLibmpeg2(IffdshowBase *Ideci,IdecVideoSink *Isink);
  virtual ~TvideoCodecLibmpeg2();

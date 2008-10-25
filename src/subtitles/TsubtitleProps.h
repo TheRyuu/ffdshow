@@ -21,6 +21,7 @@ struct TSubtitleProps
  char_t fontname[LF_FACESIZE];
  int encoding; // -1 = default
  int version;  // -1 = default
+ int extendedTags; // 0 = default
  double spacing;  //INT_MIN = default
  void reset(void);
  HGDIOBJ toGdiFont(HDC hdc, LOGFONT &lf, const TfontSettings &fontSettings, unsigned int dx, unsigned int dy, unsigned int clipdy, const Rational& sar, TfontManager *fontManager) const;

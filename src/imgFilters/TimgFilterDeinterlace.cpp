@@ -33,6 +33,10 @@ TimgFilterDeinterlace::TimgFilterDeinterlace(IffdshowBase *Ideci,Tfilters *Ipare
 HRESULT TimgFilterDeinterlace::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
+ if (pict.fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME && !cfg->deinterlaceAlways)
+ {
+  return parent->deliverSample(++it,pict);
+ }
  if (cfg->swapfields)
   if (pict.fieldtype&FIELD_TYPE::INT_TFF)
    pict.fieldtype=(pict.fieldtype&~FIELD_TYPE::INT_TFF)|FIELD_TYPE::INT_BFF;
@@ -185,6 +189,10 @@ template<class Tsimd> void TimgFilterFramerateDoubler::Tinterpolate<Tsimd>::inte
 HRESULT TimgFilterFramerateDoubler::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
+ if (pict.fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME && !cfg->deinterlaceAlways)
+ {
+  return parent->deliverSample(++it,pict);
+ }
  init(pict,true,cfg->half);
  const unsigned char *src[4];
  bool cspChanged=getCur(FF_CSPS_MASK_YUV_PLANAR,pict,true,src);
@@ -241,6 +249,10 @@ void TimgFilterMplayerDeinterlace::done(void)
 HRESULT TimgFilterMplayerDeinterlace::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
+ if (pict.fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME && !cfg->deinterlaceAlways)
+ {
+  return parent->deliverSample(++it,pict);
+ }
  init(pict,cfg->full,cfg->half);
  bool cspChanged=false;
  const unsigned char *tempPict1[4];

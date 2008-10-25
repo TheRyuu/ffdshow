@@ -24,133 +24,131 @@
 #include "IffdshowBase.h"
 #include "IffdshowDecAudio.h"
 
-const unsigned int TaudioFilterVolume::NSAMPLES=128;
-
-// If summing all the mem[].len is lower than MIN_SAMPLE_SIZE bytes, then we
-// choose to ignore the computed value as it's not significant enough
-// FIXME: should depend on the frequency of the data (0.5s maybe)
-const unsigned int TaudioFilterVolume::MIN_SAMPLE_SIZE=32000;
+// when regain volume is active:
+// we want to make sure that the current sound level (max * mul) will not rise above 
+// 'RegainThreshold', this will reserve some headroom for future peaks.
+const float RegainThreshold=0.75f;
 
 const float TaudioFilterVolume::MUL_INIT=1.0f;
 const float TaudioFilterVolume::MUL_MIN=0.1f;
-//const float TaudioFilterVolume::MUL_MAX=5.0f;
-
-//const int TaudioFilterVolume::MIN_S16=-32768;
-//const int TaudioFilterVolume::MAX_S16= 32767;
-
-const float TaudioFilterVolume::MID_S16=/*MAX_S16**/0.25f;
-const float TaudioFilterVolume::SIL_S16=/*MAX_S16**/0.001f;
+const float TaudioFilterVolume::MUL_MAX=10.0f; //this is the max amplification allowed
+// the actual 'mul' step is multiplied by ((float)numsamples / fmt.freq) in order to
+// achieve similar results with different sample rates / method call rates.
+// after the volume drop caused by the climax, the amplification will rise by 0.06f every second.
+const float TaudioFilterVolume::MUL_STEP=0.06f;
 
 template<class sample_t> void TaudioFilterVolume::volume(sample_t* const samples,size_t numsamples,const TsampleFormat &fmt,const TvolumeSettings *cfg)
 {
  if (cfg->is)
-  if (!cfg->normalize)
-   {
-    if (isVol)
-     {
-      typedef void (*TprocessVol)(sample_t * const samples,size_t numsamples,const int *volumes);
-      static const TprocessVol processVol[9]=
-       {
-        NULL,
-        &Tmultiply<1>::processVol,
-        &Tmultiply<2>::processVol,
-        &Tmultiply<3>::processVol,
-        &Tmultiply<4>::processVol,
-        &Tmultiply<5>::processVol,
-        &Tmultiply<6>::processVol,
-        &Tmultiply<7>::processVol,
-        &Tmultiply<8>::processVol
-       };
-      processVol[fmt.nchannels](samples,numsamples,volumes);
-     }
-   }
-  else
-   {
-    if (!mem)
-     {
-      mem=new Tmem[nSamples=oldcfg.nSamples];
-      for (int i=0;i<nSamples;i++)
-       {
-        mem[i].len=0;
-        mem[i].avg=0;
-       }
-     }
+  {
+   if (!cfg->normalize)
+    {
+     if (isVol)
+      {
+       typedef void (*TprocessVol)(sample_t * const samples,size_t numsamples,const int *volumes);
+       static const TprocessVol processVol[9]=
+        {
+         NULL,
+         &Tmultiply<1>::processVol,
+         &Tmultiply<2>::processVol,
+         &Tmultiply<3>::processVol,
+         &Tmultiply<4>::processVol,
+         &Tmultiply<5>::processVol,
+         &Tmultiply<6>::processVol,
+         &Tmultiply<7>::processVol,
+         &Tmultiply<8>::processVol
+        };
+       processVol[fmt.nchannels](samples,numsamples,volumes);
+      }
+    }
+   else
+    {
+     size_t len=numsamples*fmt.nchannels;
 
-    size_t len=numsamples*fmt.nchannels;
-
-    // Evaluate current samples average level
-    float curavg=0.0f;
-    for (size_t i=0;i<len;i++)
+	 float max=0.0f;
+     for (size_t i=0;i<len;i++)
      {
       float tmp=float(samples[i]);
-      curavg+=tmp*tmp;
+      //max = max(max, tmp)
+      max = max > tmp ? max : tmp;
      }
-    curavg=sqrtf(curavg/float(len));
+	 //upper = min(mul, cfg->normalizeMax/100.0f)
+     float upper = mul > (cfg->normalizeMax/100.0f) ? (cfg->normalizeMax/100.0f) : mul;
 
-    // Evaluate an adequate 'mul' coefficient based on previous state, current samples level, etc
-    float avg=0.0f;
-    size_t totallen=0;
-    for (int i=0;i<nSamples;i++)
-     {
-      avg+=mem[i].avg*(float)mem[i].len;
-      totallen+=mem[i].len;
-     }
+     float curavg=0.0f;
+	 // Evaluate an adequate 'mul' coefficient based on previous state, current samples level, etc
+	 if (mul > TsampleFormatInfo<sample_t>::max()/max || mul > cfg->normalizeMax/100.0f)
+      {
+       mul=limit((float)(TsampleFormatInfo<sample_t>::max()/max),MUL_MIN, upper);
+      }
+	 else
+	 {
+      if (cfg->normalizeRegainVolume)
+       {
+		// here we make sure that the current sound level (max * mul) will not rise above 'RegainThreshold'.
+        if (max < (TsampleFormatInfo<sample_t>::max() / mul) * RegainThreshold)
+         {
+		  // note that in one second, in average, the sum of ((float)numsamples / fmt.freq) will be 1.
+	      float step = MUL_STEP * ((float)numsamples / fmt.freq);
+	      if (mul + step <= cfg->normalizeMax/100.0f)
+		   {
+		    mul += step;
+		   }
+		  else // mul + step > cfg->normalizeMax/100.0f
+		  {
+		   // make sure that the last increment will be performed, even if it's smaller than 'step'
+		   // otherwise, current amplification could be displayed as 399% instead of 400%, for example.
+           mul = cfg->normalizeMax/100.0f;
+		  }
+         }
+	   }
+	 }
 
-    if (totallen>MIN_SAMPLE_SIZE)
-     {
-      avg/=(float)totallen;
-      if (avg>=TsampleFormatInfo<sample_t>::max()*SIL_S16)
-       mul=limit((float)(TsampleFormatInfo<sample_t>::max()*MID_S16)/avg,MUL_MIN,cfg->normalizeMax/100.0f);
-     }
-
-    // Scale & clamp the samples
-    typedef void (*TprocessMul)(sample_t * const samples,size_t numsamples,const int *volumes,float mul);
-    static const TprocessMul processMul[9]=
-     {
-      NULL,
-      &Tmultiply<1>::processMul,
-      &Tmultiply<2>::processMul,
-      &Tmultiply<3>::processMul,
-      &Tmultiply<4>::processMul,
-      &Tmultiply<5>::processMul,
-      &Tmultiply<6>::processMul,
-      &Tmultiply<7>::processMul,
-      &Tmultiply<8>::processMul
-     };
-    processMul[fmt.nchannels](samples,numsamples,volumes,mul);
-
-    // Evaluation of newavg (not 100% accurate because of values clamping)
-    float newavg=mul*curavg;
-    // Stores computed values for future smoothing
-    mem[idx].len=len;
-    mem[idx].avg=newavg;
-    idx=(idx+1)%nSamples;
-   }
- if (numsamples>0 && deci->getParam2(IDFF_showCurrentVolume) && deci->getCfgDlgHwnd())
-  {
-   int64_t sum[8];memset(sum,0,sizeof(sum));
-   for (size_t i=0;i<numsamples*fmt.nchannels;)
-    for (unsigned int ch=0;ch<fmt.nchannels;ch++,i++)
-     sum[ch]+=int64_t((int64_t)65536*ff_abs(samples[i]));
-   CAutoLock lock(&csVolumes);
-   for (unsigned int i=0;i<fmt.nchannels;i++)
-    storedvolumes.volumes[i]=int((sum[i]/numsamples)/int64_t(TsampleFormatInfo<sample_t>::max()));
-   storedvolumes.have=true;
-  }
+     // Scale & clamp the samples
+     typedef void (*TprocessMul)(sample_t * const samples,size_t numsamples,const int *volumes,float mul);
+     static const TprocessMul processMul[9]=
+      {
+       NULL,
+       &Tmultiply<1>::processMul,
+       &Tmultiply<2>::processMul,
+       &Tmultiply<3>::processMul,
+       &Tmultiply<4>::processMul,
+       &Tmultiply<5>::processMul,
+       &Tmultiply<6>::processMul,
+       &Tmultiply<7>::processMul,
+       &Tmultiply<8>::processMul
+      };
+     processMul[fmt.nchannels](samples,numsamples,volumes,mul);
+    }
+   if (numsamples>0 && deci->getParam2(IDFF_showCurrentVolume) && deci->getCfgDlgHwnd())
+    {
+     int64_t sum[8];memset(sum,0,sizeof(sum));
+     for (size_t i=0;i<numsamples*fmt.nchannels;)
+      {
+       for (unsigned int ch=0;ch<fmt.nchannels;ch++,i++)
+        {
+         sum[ch]+=int64_t((int64_t)65536*ff_abs(samples[i]));
+        }
+      }
+     CAutoLock lock(&csVolumes);
+     for (unsigned int i=0;i<fmt.nchannels;i++)
+      {
+       storedvolumes.volumes[i]=int((sum[i]/numsamples)/int64_t(TsampleFormatInfo<sample_t>::max()));
+      }
+     storedvolumes.have=true;
+    }
+ }
 }
-
 TaudioFilterVolume::TaudioFilterVolume(IffdshowBase *Ideci,Tfilters *Iparent):TaudioFilter(Ideci,Iparent)
 {
- mem=NULL;
- mul=MUL_INIT;
- idx=0;
+ //initial value doesn't matter, as long as value >=oldcfg.normalizeMax, it will be resetted once input stream is played
+ mul = MUL_MAX;
  oldfmt.freq=0;
  oldcfg.vol=-100;
  storedvolumes.have=false;
 }
 TaudioFilterVolume::~TaudioFilterVolume()
 {
- if (mem) delete []mem;
 }
 
 bool TaudioFilterVolume::is(const TsampleFormat &fmt,const TfilterSettingsAudio *cfg)
@@ -166,7 +164,6 @@ HRESULT TaudioFilterVolume::process(TfilterQueue::iterator it,TsampleFormat &fmt
    //Kurosu: Yeah, struct packing made that a bug
    memcpy(&oldfmt, &fmt, sizeof(TsampleFormat));
    oldcfg=*cfg;
-   if (mem) delete []mem;mem=NULL;
    isVol=false;
    static const int speakers[]={SPEAKER_FRONT_LEFT,SPEAKER_FRONT_RIGHT,SPEAKER_FRONT_CENTER,SPEAKER_BACK_LEFT|SPEAKER_BACK_CENTER,SPEAKER_BACK_RIGHT,SPEAKER_LOW_FREQUENCY,SPEAKER_SIDE_LEFT,SPEAKER_SIDE_RIGHT};
    static const int TvolumeSettings::*cfgvols[]={&TvolumeSettings::volL,&TvolumeSettings::volR,&TvolumeSettings::volC,&TvolumeSettings::volSL,&TvolumeSettings::volSR,&TvolumeSettings::volLFE,&TvolumeSettings::volAL,&TvolumeSettings::volAR};
@@ -174,10 +171,10 @@ HRESULT TaudioFilterVolume::process(TfilterQueue::iterator it,TsampleFormat &fmt
    unsigned int solo=0;
    for (unsigned int i=0;i<countof(speakers);i++)
     if (cfg->*cfgmutes[i]==2)
-     {
-      solo=speakers[i];
-      break;
-     }
+      {
+       solo=speakers[i];
+       break;
+      }
    for (unsigned int i=0;i<fmt.nchannels;i++)
     {
      int v=100;
@@ -208,11 +205,9 @@ HRESULT TaudioFilterVolume::process(TfilterQueue::iterator it,TsampleFormat &fmt
 void TaudioFilterVolume::onSeek(void)
 {
  if (oldcfg.normalizeResetOnSeek)
- if (mem)
-  {
-   mul=MUL_INIT;
-   delete []mem;mem=NULL;
-  }
+ {
+  mul = MUL_MAX;
+ }
 }
 
 HRESULT TaudioFilterVolume::queryInterface(const IID &iid,void **ptr) const

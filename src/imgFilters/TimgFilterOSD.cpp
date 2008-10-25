@@ -480,7 +480,10 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
    char_t outputfourcc[20];
    deciV->getOutputFourcc(outputfourcc,20);
    if ((strncmp(outputfourcc,_l("RGB"),3)==0 && !parent->isAnyActiveDownstreamFilter(it)) || pict.csp==FF_CSP_RGB32)
-    getCurNext(FF_CSP_RGB32,pict,true,COPYMODE_FULL,dst);
+    {
+     int outcsp = (pict.fieldtype & FIELD_TYPE::MASK_INT) ? FF_CSP_RGB32 | FF_CSP_FLAGS_INTERLACED : FF_CSP_RGB32;
+     getCurNext(outcsp, pict, true, COPYMODE_FULL, dst);
+    }
    else
     getCurNext(FF_CSP_420P,pict,true,COPYMODE_FULL,dst);
 

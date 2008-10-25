@@ -45,6 +45,10 @@ void TimgFilterDGbob::done(void)
 HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it,TffPict &pict0,const TfilterSettingsVideo *cfg0)
 {
  const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
+ if (pict0.fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME && !cfg->deinterlaceAlways)
+ {
+  return parent->deliverSample(++it,pict0);
+ }
  init(pict0,cfg->full,0);
  const unsigned char *src_[4];
  bool cspChanged=getCur(FF_CSP_420P|FF_CSP_YUY2|FF_CSP_RGB32,pict0,cfg->full,src_);

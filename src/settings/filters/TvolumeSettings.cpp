@@ -83,11 +83,11 @@ TvolumeSettings::TvolumeSettings(TintStrColl *Icoll,TfilterIDFFs *filters):Tfilt
    IDFF_volumeNormalize     ,&TvolumeSettings::normalize   ,0,0,_l(""),1,
      _l("volNormalize"),0,
    IDFF_maxNormalization    ,&TvolumeSettings::normalizeMax,0,3200,_l(""),1,
-     _l("volNormalizeMax"),500,
-   IDFF_volumeNormalizeBufferLength     ,&TvolumeSettings::nSamples,128,1024,_l(""),1,
-     _l("volNormalizeBufferLength"),128,
+     _l("volNormalizeMax"),400,
    IDFF_volumeNormalizeResetOnSeek     ,&TvolumeSettings::normalizeResetOnSeek,0,0,_l(""),1,
-     _l("volNormalizeResetOnSeek"),1,
+     _l("volNormalizeResetOnSeek"),0,
+   IDFF_volumeNormalizeRegainVolume     ,&TvolumeSettings::normalizeRegainVolume,0,0,_l(""),1,
+     _l("volNormalizeRegainVolume"),0,
    0
   };
  addOptions(iopts);
@@ -109,7 +109,7 @@ const int* TvolumeSettings::getResets(unsigned int pageId)
  static const int idResets[]={
   IDFF_volume,
   IDFF_volumeL,IDFF_volumeC,IDFF_volumeR,IDFF_volumeSL,IDFF_volumeSR,IDFF_volumeAL,IDFF_volumeAR,IDFF_volumeLFE,
-  IDFF_volumeNormalize,IDFF_maxNormalization,IDFF_volumeNormalizeBufferLength,IDFF_volumeNormalizeResetOnSeek,
+  IDFF_volumeNormalize,IDFF_maxNormalization,IDFF_volumeNormalizeResetOnSeek,
   0};
  return idResets;
 }

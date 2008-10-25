@@ -92,6 +92,8 @@ TdeinterlaceSettings::TdeinterlaceSettings(TintStrColl *Icoll,TfilterIDFFs *filt
      _l("orderDeinterlace"),0,
    IDFF_fullDeinterlace          ,&TdeinterlaceSettings::full                     ,0,0,_l(""),1,
      _l("fullDeinterlace"),0,
+   IDFF_deinterlaceAlways        ,&TdeinterlaceSettings::deinterlaceAlways        ,0,0,_l(""),1,
+     _l("deinterlaceAlways"),0,
    IDFF_swapFields               ,&TdeinterlaceSettings::swapfields               ,0,0,_l(""),1,
      _l("swapFields"),0,
    IDFF_deinterlaceMethod        ,&TdeinterlaceSettings::cfgId                    ,0,13,_l(""),1,

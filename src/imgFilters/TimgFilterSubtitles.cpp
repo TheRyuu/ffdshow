@@ -335,7 +335,9 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
      unsigned char *dst[4];
      if (((strncmp(outputfourcc,_l("RGB"),3)==0 && !parent->isAnyActiveDownstreamFilter(it)) || pict.csp==FF_CSP_RGB32) && sub->isText())
       {
-       getCurNext(FF_CSP_RGB32,pict,cfg->full,COPYMODE_DEF,dst);
+       int outcsp = (pict.fieldtype & FIELD_TYPE::MASK_INT) ? FF_CSP_RGB32 | FF_CSP_FLAGS_INTERLACED : FF_CSP_RGB32;
+
+       getCurNext(outcsp, pict, cfg->full, COPYMODE_DEF, dst);
        everRGB = true;
       }
      else
@@ -390,7 +392,9 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
      unsigned char *dst[4];
      if (((strncmp(outputfourcc,_l("RGB"),3)==0 && !parent->isAnyActiveDownstreamFilter(it)) || pict.csp==FF_CSP_RGB32))
       {
-       getCurNext3(FF_CSP_RGB32,pict,cfg->full,COPYMODE_DEF,dst);
+       int outcsp = (pict.fieldtype & FIELD_TYPE::MASK_INT) ? FF_CSP_RGB32 | FF_CSP_FLAGS_INTERLACED : FF_CSP_RGB32;
+
+       getCurNext3(outcsp, pict, cfg->full, COPYMODE_DEF, dst);
        everRGB = true;
       }
      else
@@ -423,7 +427,9 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
  if (adhocMode != 1 && everRGB && pict.csp != FF_CSP_RGB32 && strncmp(outputfourcc,_l("RGB"),3)==0 && !parent->isAnyActiveDownstreamFilter(it))
   {
    unsigned char *dst[4];
-   getCurNext3(FF_CSP_RGB32,pict,cfg->full,COPYMODE_DEF,dst);
+   int outcsp = (pict.fieldtype & FIELD_TYPE::MASK_INT) ? FF_CSP_RGB32 | FF_CSP_FLAGS_INTERLACED : FF_CSP_RGB32;
+
+   getCurNext3(outcsp, pict, cfg->full, COPYMODE_DEF, dst);
   }
 
  if (adhocMode == 1)

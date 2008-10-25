@@ -36,6 +36,7 @@ void TsubtitlesPage::init(void)
  autosubfirsttime=true;
  addHint(IDC_CHB_SUBTEXTPIN_SSA,_l("Very incomplete and experimental.\nSend me samples which don't work."));
  addHint(IDC_ED_SUB_SEARCH_EXT,_l("ffdshow searches subtitle files in the folders which are configured in the edit box above.\nFor video.avi, ffdshow searches video.utf, video.idx, video.sub,... and use the file which is found at the first time.\nEnumerate extensions in the order you like and separate them by semicolons.\n\nutf;idx;sub;srt;smi;rt;txt;ssa;aqt;mpl;usf is the default settings."));
+ addHint(IDC_CHB_SUBEXTENDEDTAGS,_l("Experimental, may give garbled subtitles."));
  setFont(IDC_BT_SUBTITLES_EXPAND,parent->arrowsFont);
 }
 
@@ -48,6 +49,7 @@ void TsubtitlesPage::cfg2dlg(void)
  setCheck(IDC_CHB_SUBTEXTPIN,cfgGet(IDFF_subTextpin));
  setCheck(IDC_CHB_SUBCC,cfgGet(IDFF_subCC));
  setCheck(IDC_CHB_SUBTEXTPIN_SSA,cfgGet(IDFF_subTextpinSSA));
+ setCheck(IDC_CHB_SUBEXTENDEDTAGS,cfgGet(IDFF_subExtendedTags));
  enable((filterMode&IDFF_FILTERMODE_VFW)==0,idEmbedd);
  stereo2dlg();
 }
@@ -302,6 +304,7 @@ TsubtitlesPage::TsubtitlesPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff)
    IDC_CHB_SUBTITLES_EXPAND,IDFF_subIsExpand,&TsubtitlesPage::expand2dlg,
    IDC_CHB_SUBCC,IDFF_subCC,&TsubtitlesPage::cfg2dlg,
    IDC_CHB_SUBTEXTPIN_SSA,IDFF_subTextpinSSA,NULL,
+   IDC_CHB_SUBEXTENDEDTAGS,IDFF_subExtendedTags,NULL,
    0,NULL,NULL
   };
  bindCheckboxes(chb);

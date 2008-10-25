@@ -175,6 +175,7 @@
 #define IDFF_showDeinterlace           1418
 #define IDFF_orderDeinterlace          1424
 #define IDFF_fullDeinterlace           1402
+#define IDFF_deinterlaceAlways         3493
 #define IDFF_swapFields                1409
 #define IDFF_deinterlaceMethod         1403
 #define IDFF_tomocompSE                1407
@@ -491,6 +492,7 @@
 #define IDFF_subSplitBorder          855
 #define IDFF_subCC                   860
 #define IDFF_subWordWrap             3403
+#define IDFF_subExtendedTags         3492 // Enable HTML tags in SSA subs and SSA tags in SRT subs
 
 #define IDFF_fontName                820
 #define IDFF_fontCharset             802
@@ -975,8 +977,9 @@
 #define IDFF_volumeLFEmute        2420
 #define IDFF_volumeNormalize      2404
 #define IDFF_maxNormalization     2406 //*100
-#define IDFF_volumeNormalizeBufferLength      3368
+//#define IDFF_volumeNormalizeBufferLength      3368
 #define IDFF_volumeNormalizeResetOnSeek       3369
+#define IDFF_volumeNormalizeRegainVolume      3492
 //#define IDFF_currentNormalization 2407 //*100
 #define IDFF_showCurrentVolume    2414
 
@@ -1513,6 +1516,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3492
+//max:3493
 
 #endif

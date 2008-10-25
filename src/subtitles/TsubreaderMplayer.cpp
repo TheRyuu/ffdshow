@@ -39,6 +39,7 @@ template<class tchar> void TsubtitleParser<tchar>::trail_space(tchar *s) {
 
 template<class tchar> Tsubtitle* TsubtitleParser<tchar>::store(TsubtitleTextBase<tchar> &sub)
 {
+ sub.defProps.extendedTags=cfg->extendedTags;
  sub.format(textformat);
  sub.prepareKaraoke();
  sub.fix(textfix);

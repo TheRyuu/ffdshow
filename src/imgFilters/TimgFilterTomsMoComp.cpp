@@ -69,6 +69,10 @@ HRESULT TimgFilterTomsMoComp::process(TfilterQueue::iterator it,TffPict &pict,co
  if (is(pict,cfg0))
   {
    const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
+   if (pict.fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME && !cfg->deinterlaceAlways)
+   {
+    return parent->deliverSample(++it,pict);
+   }
    init(pict,cfg->full,cfg->half);
    const unsigned char *src[4];
    bool cspChanged=getCur(FF_CSP_420P|FF_CSP_YUY2,pict,cfg->full,src);
