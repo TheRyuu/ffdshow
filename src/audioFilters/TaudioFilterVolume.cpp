@@ -75,7 +75,6 @@ template<class sample_t> void TaudioFilterVolume::volume(sample_t* const samples
 	 //upper = min(mul, cfg->normalizeMax/100.0f)
      float upper = mul > (cfg->normalizeMax/100.0f) ? (cfg->normalizeMax/100.0f) : mul;
 
-     float curavg=0.0f;
 	 // Evaluate an adequate 'mul' coefficient based on previous state, current samples level, etc
 	 if (mul > TsampleFormatInfo<sample_t>::max()/max || mul > cfg->normalizeMax/100.0f)
       {
