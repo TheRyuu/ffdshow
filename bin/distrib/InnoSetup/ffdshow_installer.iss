@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2190
+#define tryout_revision = 2253
 #define buildyear = 2008
 #define buildmonth = '10'
-#define buildday = '08'
+#define buildday = '26'
 
 ; Build specific options
 #define unicode_required = True
@@ -52,6 +52,8 @@
 #define PREF_YAMAGATA = False
 #define PREF_XXL = False
 #define PREF_XXL_X64 = False
+#define PREF_ALBAIN = False
+#define PREF_ALBAIN_x64 = False
 #define PREF_X64_VS2005SP1 = False
 #define PREF_X64_VS2008SP1 = False
 
@@ -95,6 +97,15 @@
   #define include_info_before = True
   #define include_setup_icon = True
   #define filename_suffix = '_xxl_x64'
+#elif PREF_ALBAIN
+  #define VS2008SP1 = True
+  #define filename_suffix = '_dbt'
+#elif PREF_ALBAIN_X64
+  #define VS2008SP1 = True
+  #define is64bit = True
+  #define include_x264 = False
+  #define include_plugin_dscaler = False
+  #define filename_suffix = '_dbt_x64'
 #elif PREF_X64_VS2005SP1 | PREF_X64_VS2008SP1
   #define is64bit = True
   #define include_x264 = False
@@ -305,8 +316,11 @@ Name: video\other4; Description: CamStudio, ZMBV, Ultimotion, VIXL, AASC, IV32, 
 Name: video\rawv; Description: {cm:tsk_rawVideo}; Check: CheckTaskVideo('rawv', 1, False); Flags: dontinheritcheck; Components: ffdshow
 Name: video\rawv; Description: {cm:tsk_rawVideo}; Check: NOT CheckTaskVideo('rawv', 1, False); Flags: dontinheritcheck unchecked; Components: ffdshow
 Name: audio; Description: {cm:tsk_audioFormatsSelect}; GroupDescription: {cm:tsk_audioFormats}; Flags: unchecked; Components: ffdshow
-Name: audio\mp3; Description: MP3; Check: CheckTaskAudio('mp3', 7, True); Components: ffdshow
-Name: audio\mp3; Description: MP3; Check: NOT CheckTaskAudio('mp3', 7, True); Flags: unchecked; Components: ffdshow
+Name: audio\mp3; Description: MP3; Flags: unchecked; Components: ffdshow
+Name: audio\mp3\libmad; Description: libmad; Check: CheckTaskAudio('mp3', 7, True); Flags: exclusive; Components: ffdshow
+Name: audio\mp3\libmad; Description: libmad; Check: NOT CheckTaskAudio('mp3', 7, True); Flags: exclusive unchecked; Components: ffdshow
+Name: audio\mp3\libavcodec; Description: libavcodec; Check: CheckTaskAudio('mp3', 1, False); Flags: exclusive; Components: ffdshow
+Name: audio\mp3\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('mp3', 1, False); Flags: exclusive unchecked; Components: ffdshow
 Name: audio\aac; Description: AAC; Flags: unchecked; Components: ffdshow
 Name: audio\aac\libfaad2; Description: libfaad2; Check: CheckTaskAudio('aac', 8, True); Flags: exclusive; Components: ffdshow
 Name: audio\aac\libfaad2; Description: libfaad2; Check: NOT CheckTaskAudio('aac', 8, True); Flags: exclusive unchecked; Components: ffdshow
@@ -315,21 +329,28 @@ Name: audio\aac\libfaad2; Description: libfaad2; Check: NOT CheckTaskAudio('aac'
 Name: audio\ac3;        Description: AC3;                                                 Components: ffdshow; Flags: unchecked
 Name: audio\ac3\liba52; Description: liba52; Check:     CheckTaskAudio('ac3', 15, True);  Components: ffdshow; Flags: exclusive
 Name: audio\ac3\liba52; Description: liba52; Check: NOT CheckTaskAudio('ac3', 15, True);  Components: ffdshow; Flags: exclusive unchecked
-;Name: audio\ac3\libavcodec; Description: libavcodec; Check:     CheckTaskAudio('ac3', 1, False);  Components: ffdshow; Flags: exclusive
-;Name: audio\ac3\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('ac3', 1, False);  Components: ffdshow; Flags: exclusive unchecked
+Name: audio\ac3\libavcodec; Description: libavcodec; Check:     CheckTaskAudio('ac3', 1, False);  Components: ffdshow; Flags: exclusive
+Name: audio\ac3\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('ac3', 1, False);  Components: ffdshow; Flags: exclusive unchecked
 Name: audio\ac3\spdif;  Description: S/PDIF; Check:     CheckTaskAudio('ac3', 16, False); Components: ffdshow; Flags: exclusive
 Name: audio\ac3\spdif;  Description: S/PDIF; Check: NOT CheckTaskAudio('ac3', 16, False); Components: ffdshow; Flags: exclusive unchecked
+Name: audio\eac3; Description: EAC3 (Dolby Digital Plus); Check: CheckTaskAudio('eac3', 1, True); Components: ffdshow
+Name: audio\eac3; Description: EAC3 (Dolby Digital Plus); Check: NOT CheckTaskAudio('eac3', 1, True); Flags: unchecked; Components: ffdshow
+Name: audio\mlp; Description: MLP/Dolby TrueHD; Check: CheckTaskAudio('mlp', 1, True); Components: ffdshow
+Name: audio\mlp; Description: MLP/Dolby TrueHD; Check: NOT CheckTaskAudio('mlp', 1, True); Flags: unchecked; Components: ffdshow
 Name: audio\dts;        Description: DTS;                                                 Components: ffdshow; Flags: unchecked
 Name: audio\dts\libdts; Description: libdts; Check:     CheckTaskAudio('dts', 17, True);  Components: ffdshow; Flags: exclusive
 Name: audio\dts\libdts; Description: libdts; Check: NOT CheckTaskAudio('dts', 17, True);  Components: ffdshow; Flags: exclusive unchecked
-;Name: audio\dts\libavcodec; Description: libavcodec; Check:     CheckTaskAudio('dts', 1, False);  Components: ffdshow; Flags: exclusive
-;Name: audio\dts\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('dts', 1, False);  Components: ffdshow; Flags: exclusive unchecked
+Name: audio\dts\libavcodec; Description: libavcodec; Check:     CheckTaskAudio('dts', 1, False);  Components: ffdshow; Flags: exclusive
+Name: audio\dts\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('dts', 1, False);  Components: ffdshow; Flags: exclusive unchecked
 Name: audio\dts\spdif;  Description: S/PDIF; Check:     CheckTaskAudio('dts', 16, False); Components: ffdshow; Flags: exclusive
 Name: audio\dts\spdif;  Description: S/PDIF; Check: NOT CheckTaskAudio('dts', 16, False); Components: ffdshow; Flags: exclusive unchecked
 Name: audio\lpcm; Description: LPCM; Check: CheckTaskAudio('lpcm', 4, True); Components: ffdshow
 Name: audio\lpcm; Description: LPCM; Check: NOT CheckTaskAudio('lpcm', 4, True); Flags: unchecked; Components: ffdshow
-Name: audio\mp2; Description: MP1, MP2; Check: CheckTaskAudio('mp2', 7, True); Components: ffdshow
-Name: audio\mp2; Description: MP1, MP2; Check: NOT CheckTaskAudio('mp2', 7, True); Flags: unchecked; Components: ffdshow
+Name: audio\mp2; Description: MP1, MP2; Flags: unchecked; Components: ffdshow
+Name: audio\mp2\libmad; Description: libmad; Check: CheckTaskAudio('mp2', 7, True); Components: ffdshow; Flags: exclusive
+Name: audio\mp2\libmad; Description: libmad; Check: NOT CheckTaskAudio('mp2', 7, True); Flags: exclusive unchecked; Components: ffdshow
+Name: audio\mp2\libavcodec; Description: libavcodec; Check: CheckTaskAudio('mp2', 1, False); Components: ffdshow; Flags: exclusive
+Name: audio\mp2\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('mp2', 1, False); Flags: exclusive unchecked; Components: ffdshow
 Name: audio\vorbis; Description: Vorbis; Flags: unchecked; Components: ffdshow
 Name: audio\vorbis\tremor; Description: tremor; Check: CheckTaskAudio('vorbis', 18, True); Flags: exclusive; Components: ffdshow
 Name: audio\vorbis\tremor; Description: tremor; Check: NOT CheckTaskAudio('vorbis', 18, True); Flags: exclusive unchecked; Components: ffdshow

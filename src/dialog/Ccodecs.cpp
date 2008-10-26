@@ -530,32 +530,19 @@ void TcodecsPageAudio::fillCodecs(void)
 {
  if ((filterMode&IDFF_FILTERMODE_AUDIORAW)==0)
   {
-   static const int movie_mp23[]={IDFF_MOVIE_MPLAYER,IDFF_MOVIE_LIBMAD,IDFF_MOVIE_AUDX,0};
+   static const int movie_mp23[]={IDFF_MOVIE_MPLAYER,IDFF_MOVIE_LIBMAD,IDFF_MOVIE_LAVC,IDFF_MOVIE_AUDX,0};
    formats.push_back(Tformat(_l("MP3")         ,IDFF_mp3        ,movie_mp23,_l("MPEG-1 Audio Layer 3")));
    formats.push_back(Tformat(_l("MP1,MP2")     ,IDFF_mp2        ,movie_mp23,_l("MPEG-1 Audio Layer 1,2")));
-   static const Tformat::Toption options_ac3[]={{IDFF_MOVIE_LIBA52,_l("Dynamic range compression"),IDFF_ac3drc,1},{0,_l("Use SPDIF when AC3 output set"),IDFF_ac3SPDIF,1},{NULL,0}};
-#if INCLUDE_UNSTABLE_DECODERS
+   static const Tformat::Toption options_ac3[]={{0,_l("Dynamic range compression"),IDFF_ac3drc,1},{0,_l("Use SPDIF when AC3 output set"),IDFF_ac3SPDIF,1},{NULL,0}};
    static const int movie_ac3[]={IDFF_MOVIE_LIBA52,IDFF_MOVIE_LAVC,IDFF_MOVIE_SPDIF,0};
-   formats.push_back(Tformat(_l("AC3")         ,IDFF_ac3        ,movie_ac3,_l("ATSC A-52 (AC3) decoder. E-AC3 decoder (libavcodec only)."),options_ac3));
-#else
-   static const int movie_ac3[]={IDFF_MOVIE_LIBA52,IDFF_MOVIE_SPDIF,0};
    formats.push_back(Tformat(_l("AC3")         ,IDFF_ac3        ,movie_ac3,_l("ATSC A-52 (AC3) decoder"),options_ac3));
-#endif
-   //formats.push_back(Tformat(_l("E-AC3")       ,IDFF_eac3       ,IDFF_MOVIE_LAVC,_l("E-AC3 decoder")));
-#ifdef INCLUDE_UNSTABLE_DECODERS
-   static const int movie_dts[]={IDFF_MOVIE_LIBDTS,IDFF_MOVIE_SPDIF, IDFF_MOVIE_LAVC,0};
-#else
-   static const int movie_dts[]={IDFF_MOVIE_LIBDTS,IDFF_MOVIE_SPDIF,0};
-#endif
-   static const Tformat::Toption options_dts[]={{IDFF_MOVIE_LIBDTS,_l("Dynamic range compression"),IDFF_dtsdrc,1},{0,_l("Use SPDIF when AC3 output set"),IDFF_ac3SPDIF,1},{0,_l("Check for DTS in WAV"),IDFF_dtsinwav,1},{NULL,0}};
+   formats.push_back(Tformat(_l("E-AC3")       ,IDFF_eac3       ,IDFF_MOVIE_LAVC,_l("Extended AC3 decoder (Dolby Digital Plus). Works only if AC3 decoding is enabled!"),options_ac3));
+   formats.push_back(Tformat(_l("MLP")         ,IDFF_mlp        ,IDFF_MOVIE_LAVC,_l("Dolby TrueHD/MLP decoder. Works only if AC3 decoding is enabled!"),options_ac3));
+   static const int movie_dts[]={IDFF_MOVIE_LIBDTS,IDFF_MOVIE_LAVC,IDFF_MOVIE_SPDIF,0};
+   static const Tformat::Toption options_dts[]={{0,_l("Dynamic range compression"),IDFF_dtsdrc,1},{0,_l("Use SPDIF when AC3 output set"),IDFF_ac3SPDIF,1},{0,_l("Check for DTS in WAV"),IDFF_dtsinwav,1},{NULL,0}};
    formats.push_back(Tformat(_l("DTS")         ,IDFF_dts        ,movie_dts,_l("DTS Coherent Acoustics stream decoder"),options_dts));
-#ifdef INCLUDE_UNSTABLE_DECODERS
-   static const int movie_aac[]={IDFF_MOVIE_LIBFAAD, IDFF_MOVIE_REALAAC, IDFF_MOVIE_LAVC,0};
-   formats.push_back(Tformat(_l("AAC")         ,IDFF_aac        ,movie_aac,_l("Advanced Audio Coding (AAC). libavcodec does not support SBR and PS.")));
-#else
    static const int movie_aac[]={IDFF_MOVIE_LIBFAAD, IDFF_MOVIE_REALAAC,0};
    formats.push_back(Tformat(_l("AAC")         ,IDFF_aac        ,movie_aac,_l("Advanced Audio Coding (AAC)")));
-#endif
    static const int movie_vorbis[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_TREMOR,0};
    static const Tformat::Toption options_vorbis[]={{0,_l("VorbisGain"),IDFF_vorbisgain,1},{0,NULL,0}};
    formats.push_back(Tformat(_l("Vorbis")      ,IDFF_vorbis     ,movie_vorbis,_l("High accuracy mode is enabled for Tremor."),options_vorbis));

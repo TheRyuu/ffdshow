@@ -845,7 +845,7 @@
 #define IDFF_mp2                1030
 #define IDFF_mp3                1031
 #define IDFF_ac3                1032
-//#define IDFF_eac3               1088
+#define IDFF_eac3               1088
 #define IDFF_dts                1057
 #define IDFF_dtsinwav           1059
 #define IDFF_aac                1033
@@ -876,6 +876,7 @@
 #define IDFF_rawa               1036
 #define IDFF_avisV              1043
 #define IDFF_avisA              1048
+#define IDFF_mlp                1097
 
 #define IDFF_filterOutputVideo   1357
 #define IDFF_hwOverlayOld        1317

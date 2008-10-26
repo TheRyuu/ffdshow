@@ -8,6 +8,8 @@
 DECLARE_INTERFACE_(IdecAudioSink,IdecSink)
 {
  STDMETHOD (deliverDecodedSample)(void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain) PURE;
+ STDMETHOD (setCodecId)(CodecID codecId) PURE;
+ STDMETHOD (getCodecId)(CodecID *pCodecId) PURE;
 };
 
 class TaudioCodec :public TcodecDec

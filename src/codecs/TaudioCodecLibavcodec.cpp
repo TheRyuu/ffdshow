@@ -18,18 +18,21 @@
 
 #include "stdafx.h"
 #include "TaudioCodecLibavcodec.h"
+#include "Tlibmplayer.h"
 #include "IffdshowBase.h"
 #include "IffdshowDec.h"
 #include "IffdshowDecAudio.h"
 #include "dsutil.h"
 #include "ffdshow_mediaguids.h"
 #include "xiph/vorbis/vorbisformat.h"
+#include "ffdebug.h"
+
 
 TaudioCodecLibavcodec::TaudioCodecLibavcodec(IffdshowBase *deci,IdecAudioSink *Isink):
  Tcodec(deci),
  TaudioCodec(deci,Isink)
 {
- avctx=NULL;avcodec=NULL;codecinited=false;
+ avctx=NULL;avcodec=NULL;codecinited=false;contextinited=false;parser=NULL;src_ch_layout = AF_CHANNEL_LAYOUT_MPLAYER_DEFAULT;
 }
 
 bool TaudioCodecLibavcodec::init(const CMediaType &mt)
@@ -47,6 +50,25 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
    avctx=libavcodec->avcodec_alloc_context();
    avctx->sample_rate=fmt.freq;
    avctx->channels=fmt.nchannels;
+   avctx->codec_id=codecId;
+ 
+
+   // Dynamic range compression for AC3/DTS formats
+   if (codecId == CODEC_ID_AC3 || codecId == CODEC_ID_EAC3)
+	   if (deci->getParam2(IDFF_ac3drc))
+		   avctx->drc_scale=1.0;
+   if (codecId == CODEC_ID_DTS)
+	   if (deci->getParam2(IDFF_dtsdrc))
+		   avctx->drc_scale=1.0;
+
+   if (parser)
+   {
+	   libavcodec->av_parser_close(parser);
+	   parser = NULL;
+   }
+   parser=libavcodec->av_parser_init(codecId);
+
+
    if (mt.formattype==FORMAT_WaveFormatEx)
     {
      const WAVEFORMATEX *wfex=(const WAVEFORMATEX*)mt.pbFormat;
@@ -60,15 +82,18 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
      avctx->bits_per_coded_sample=fmt.bitsPerSample();
      avctx->block_align=fmt.blockAlign();
     }
+
+   bpssum=lastbps=avctx->bit_rate/1000;
+
    if (codecId==CODEC_ID_WMAV1 || codecId==CODEC_ID_WMAV2)
     {
-     bpssum=lastbps=avctx->bit_rate/1000;
+     //bpssum=lastbps=avctx->bit_rate/1000;
      numframes=1;
     }
    Textradata extradata(mt,FF_INPUT_BUFFER_PADDING_SIZE);
    if (codecId==CODEC_ID_FLAC && extradata.size>=4 && *(FOURCC*)extradata.data==mmioFOURCC('f','L','a','C')) // HACK
     {
-     avctx->extradata=extradata.data+8;
+     avctx->extradata=(uint8_t*)extradata.data+8;
      avctx->extradata_size=34;
     }
    else if (codecId==CODEC_ID_COOK && mt.formattype==FORMAT_WaveFormatEx && mt.pbFormat)
@@ -85,7 +110,7 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
     }
    else
     {
-     avctx->extradata=extradata.data;
+     avctx->extradata=(uint8_t*)extradata.data;
      avctx->extradata_size=(int)extradata.size;
     }
    if (codecId==CODEC_ID_VORBIS && mt.formattype==FORMAT_VorbisFormat2)
@@ -103,13 +128,27 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
      case SAMPLE_FMT_FLT:fmt.sf=TsampleFormat::SF_FLOAT32;break;
     }
    isGain=deci->getParam2(IDFF_vorbisgain);
+   if (fmt.nchannels >=5)
+	   updateChannelMapping();
+
+   libavcodec->av_log_set_level(AV_LOG_QUIET);
+
+   // Handle truncated streams
+   if(avctx->codec->capabilities & CODEC_CAP_TRUNCATED)
+        avctx->flags|=CODEC_FLAG_TRUNCATED;
+
    return true;
   }
  else
   return false;
 }
 TaudioCodecLibavcodec::~TaudioCodecLibavcodec()
-{
+{ 
+ if (parser)
+ {
+   libavcodec->av_parser_close(parser);
+   parser = NULL;
+ }
  if (avctx)
   {
    if (codecinited) libavcodec->avcodec_close(avctx);codecinited=false;
@@ -123,8 +162,15 @@ const char_t* TaudioCodecLibavcodec::getName(void) const
 }
 void TaudioCodecLibavcodec::getInputDescr1(char_t *buf,size_t buflen) const
 {
- if (avcodec)
-  strncpy(buf,text<char_t>(avcodec->name),buflen);
+ 
+if (avcodec)
+{
+	// Show dca as dts
+	if (!strcmp(text<char_t>(avcodec->name), _l("dca")))
+		strncpy(buf,_l("dts"),buflen);
+	else
+		strncpy(buf,text<char_t>(avcodec->name),buflen);
+}
  buf[buflen-1]='\0';
 }
 
@@ -132,20 +178,109 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
 {
  int size=(int)src0.size();
  unsigned char *src=&*src0.begin();
- while (size>0)
+ int maxLength=AVCODEC_MAX_AUDIO_FRAME_SIZE;
+ TbyteBuffer newsrcBuffer;
+
+ while (size>1) // >1 instead of >0 : workaround when skipping TrueHD in MPC
   {
    int dstLength=AVCODEC_MAX_AUDIO_FRAME_SIZE;
    void *dst=(void*)getDst(dstLength);
-   int ret=libavcodec->avcodec_decode_audio(avctx,dst,&dstLength,src,size);
-   if (ret<0 || (ret==0 && dstLength==0))
-    break;
-   HRESULT hr=sinkA->deliverDecodedSample(dst,dstLength/fmt.blockAlign(),fmt,isGain?avctx->postgain:1);
-   if (hr!=S_OK) return hr;
-   size-=ret;
-   src+=ret;
+   int dstLength2=AVCODEC_MAX_AUDIO_FRAME_SIZE;
+   void *dst2=buf2.alloc(dstLength);
+   
+   int ret=0,ret2=0;
+   // Use parser if available and do not use it for MLP/TrueHD stream
+   if (parser && codecId != CODEC_ID_MLP)
+   {
+	   // Parse the input buffer src(size) and returned parsed data into dst2(dstLength2)
+	   ret=libavcodec->av_parser_parse(parser, avctx, (uint8_t**)&dst2, &dstLength2,
+		   (const uint8_t*)src, size, AV_NOPTS_VALUE, AV_NOPTS_VALUE);
+	   // dstLength2==0 : nothing parsed
+	   if (ret<0 || (ret==0 && dstLength2==0))
+		   break;
+	   size-=ret;
+	   src+=ret;
+
+
+	   if (dstLength2 > 0) // This block could be parsed
+	   {
+          // Decode the parsed buffer dst2(dstLength2) into dst(dstLength)
+		  ret2=libavcodec->avcodec_decode_audio2(avctx,(int16_t*)dst,&dstLength,(const uint8_t*)dst2,dstLength2);
+		  // If nothing could be decoded, skip this data and continue
+		  if (ret2<0 || (ret2==0 &&dstLength==0))
+			continue;
+	   }
+	   else // The buffer could not be parsed
+			continue;
+   }
+   else
+   {
+	   ret=libavcodec->avcodec_decode_audio2(avctx,(int16_t*)dst,&dstLength,src,size);
+	   if (ret<0 || (ret==0 && dstLength==0))
+          break;
+	   size-=ret;
+	   src+=ret;
+   }
+
+   bpssum=lastbps=avctx->bit_rate/1000;
+
+   // Correct the input media type from what has been parsed
+   if (dstLength > 0)
+   {
+	   fmt.setChannels(avctx->channels);
+	   fmt.freq=avctx->sample_rate;
+	   fmt.sf=avctx->sample_fmt;
+   }
+
+  // Correct channel mapping
+  if (dstLength > 0 && fmt.nchannels >= 5)
+  {
+	 Tlibmplayer *libmplayer = NULL;
+	 this->deci->getPostproc(&libmplayer);
+	 if (libmplayer != NULL)
+	 {
+	 	 libmplayer->reorder_channel_nch(dst, 
+			 src_ch_layout,AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT,
+			 fmt.nchannels,
+			 dstLength / 2, 2);
+	 }
   }
+
+  if (dstLength > 0)
+  {
+	  HRESULT hr=sinkA->deliverDecodedSample(dst, dstLength/fmt.blockAlign(),fmt,isGain?avctx->postgain:1);
+	  if (hr!=S_OK) 
+		 return hr;
+  }
+ }
  src0.clear();
  return S_OK;
+}
+
+
+void TaudioCodecLibavcodec::updateChannelMapping()
+{
+	src_ch_layout = AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT;
+	if (!avctx->codec->name) return;
+	char_t codec[255];
+	strncpy(codec,text<char_t>(avctx->codec->name),255);
+	codec[254]='\0';
+
+	if (!stricmp(codec, _l("ac3")) || !stricmp(codec, _l("eac3")))
+	  src_ch_layout = AF_CHANNEL_LAYOUT_LAVC_AC3_DEFAULT;
+	else if (!stricmp(codec, _l("dca")))
+	  src_ch_layout = AF_CHANNEL_LAYOUT_LAVC_DCA_DEFAULT;
+	else if (!stricmp(codec, _l("libfaad"))
+		|| !stricmp(codec, _l("mpeg4aac")))
+	  src_ch_layout = AF_CHANNEL_LAYOUT_AAC_DEFAULT;
+	else if (!stricmp(codec, _l("liba52")))
+	  src_ch_layout = AF_CHANNEL_LAYOUT_LAVC_LIBA52_DEFAULT;
+	else if (!stricmp(codec, _l("vorbis")))
+	  src_ch_layout = AF_CHANNEL_LAYOUT_VORBIS_DEFAULT;
+	else if (!stricmp(codec, _l("mlp")))
+      src_ch_layout = AF_CHANNEL_LAYOUT_MLP_DEFAULT;
+	else
+	  src_ch_layout = AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT;
 }
 
 bool TaudioCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)

@@ -985,7 +985,8 @@ TglobalSettingsDecAudio::TglobalSettingsDecAudio(const Tconfig *Iconfig,int Imod
    IDFF_mp3                    ,&TglobalSettingsDecAudio::mp3                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_mp2                    ,&TglobalSettingsDecAudio::mp2                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_ac3                    ,&TglobalSettingsDecAudio::ac3                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
-   //IDFF_eac3                   ,&TglobalSettingsDecAudio::eac3                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+   IDFF_mlp                    ,&TglobalSettingsDecAudio::mlp                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+   IDFF_eac3                   ,&TglobalSettingsDecAudio::eac3                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_dts                    ,&TglobalSettingsDecAudio::dts                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_aac                    ,&TglobalSettingsDecAudio::aac                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_amr                    ,&TglobalSettingsDecAudio::amr                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
@@ -1067,9 +1068,10 @@ void TglobalSettingsDecAudio::reg_op_codec(TregOp &t,TregOp *t2)
  _reg_op_codec(IDFF_wma8      ,t,t2,_l("wma2")      ,wma2      ,0);
  _reg_op_codec(IDFF_mp2       ,t,t2,_l("mp2")       ,mp2       ,0);
  _reg_op_codec(IDFF_mp3       ,t,t2,_l("mp3")       ,mp3       ,0);
- _reg_op_codec(IDFF_ac3       ,t,t2,_l("ac3")       ,ac3       ,IDFF_MOVIE_LIBA52);
- //_reg_op_codec(IDFF_eac3      ,t,t2,_l("eac3")      ,eac3      ,0);
- _reg_op_codec(IDFF_dts       ,t,t2,_l("dts")       ,dts       ,IDFF_MOVIE_LIBDTS);
+ _reg_op_codec(IDFF_ac3       ,t,t2,_l("ac3")       ,ac3       ,0);
+ _reg_op_codec(IDFF_mlp       ,t,t2,_l("mlp")       ,mlp       ,0);
+ _reg_op_codec(IDFF_eac3      ,t,t2,_l("eac3")      ,eac3      ,0);
+ _reg_op_codec(IDFF_dts       ,t,t2,_l("dts")       ,dts       ,0);
  _reg_op_codec(IDFF_aac       ,t,t2,_l("aac")       ,aac       ,0);
  _reg_op_codec(IDFF_amr       ,t,t2,_l("amr")       ,amr       ,0);
  _reg_op_codec(IDFF_iadpcm    ,t,t2,_l("iadpcm")    ,iadpcm    ,IDFF_MOVIE_LAVC);
@@ -1098,11 +1100,11 @@ void TglobalSettingsDecAudio::load(void)
  fixMissing(wma1      ,IDFF_MOVIE_LAVC);
  fixMissing(wma2      ,IDFF_MOVIE_LAVC);
  fixMissing(amr       ,IDFF_MOVIE_LAVC);
- fixMissing(ac3       ,IDFF_MOVIE_LIBA52);
- //fixMissing(eac3      ,IDFF_MOVIE_LAVC);
- fixMissing(dts       ,IDFF_MOVIE_LIBDTS);
- fixMissing(mp2       ,IDFF_MOVIE_MPLAYER,IDFF_MOVIE_LIBMAD,IDFF_MOVIE_AUDX);
- fixMissing(mp3       ,IDFF_MOVIE_MPLAYER,IDFF_MOVIE_LIBMAD,IDFF_MOVIE_AUDX);
+ fixMissing(ac3       ,IDFF_MOVIE_LIBA52,IDFF_MOVIE_LAVC);
+ fixMissing(eac3      ,IDFF_MOVIE_LAVC);
+ fixMissing(dts       ,IDFF_MOVIE_LIBDTS,IDFF_MOVIE_LAVC);
+ fixMissing(mp2       ,IDFF_MOVIE_MPLAYER,IDFF_MOVIE_LIBMAD,IDFF_MOVIE_LAVC);
+ fixMissing(mp3       ,IDFF_MOVIE_MPLAYER,IDFF_MOVIE_LIBMAD,IDFF_MOVIE_LAVC);
  fixMissing(aac       ,IDFF_MOVIE_LIBFAAD,IDFF_MOVIE_REALAAC);
  fixMissing(avis      ,IDFF_MOVIE_AVIS);
  fixMissing(iadpcm    ,IDFF_MOVIE_LAVC);
@@ -1137,7 +1139,7 @@ void TglobalSettingsDecAudio::load(void)
  FF_WAVE_FORMAT_OP (MPEGLAYER3,mp3 & rawmask,c_mp123) \
  FF_WAVE_FORMAT_OP (MPEG   ,mp2    & rawmask,c_mp123) \
  FF_WAVE_FORMAT_OP (AC3_W  ,ac3    & rawmask,c_ac3) \
- /*FF_WAVE_FORMAT1_OP(EAC3   ,eac3   & rawmask,CODEC_ID_EAC3) \*/ \
+ FF_WAVE_FORMAT1_OP(EAC3   ,eac3   & rawmask,CODEC_ID_EAC3) \
  FF_WAVE_FORMAT_OP (DTS_W  ,dts    & rawmask,c_dts) \
  FF_WAVE_FORMAT_OP (AAC1   ,aac    & rawmask,c_aac) \
  FF_WAVE_FORMAT_OP (AAC2   ,aac    & rawmask,c_aac) \
@@ -1188,7 +1190,8 @@ void TglobalSettingsDecAudio::load(void)
  FF_WAVE_FORMAT1_OP(PCM24  ,rawa==IDFF_MOVIE_RAW || rawa==(TsampleFormat::SF_ALLINT<<8) || rawa==(TsampleFormat::SF_PCM24<<8),CODEC_ID_PCM) \
  FF_WAVE_FORMAT1_OP(PCM32  ,rawa==IDFF_MOVIE_RAW || rawa==(TsampleFormat::SF_ALLINT<<8) || rawa==(TsampleFormat::SF_PCM32<<8),CODEC_ID_PCM) \
  FF_WAVE_FORMAT1_OP(FLOAT32,rawa==IDFF_MOVIE_RAW || rawa==(TsampleFormat::SF_FLOAT32<<8) || rawa==(TsampleFormat::SF_ALLFLOAT<<8),CODEC_ID_PCM) \
- FF_WAVE_FORMAT1_OP(FLOAT64,rawa==IDFF_MOVIE_RAW || rawa==(TsampleFormat::SF_FLOAT64<<8) || rawa==(TsampleFormat::SF_ALLFLOAT<<8),CODEC_ID_PCM)
+ FF_WAVE_FORMAT1_OP(FLOAT64,rawa==IDFF_MOVIE_RAW || rawa==(TsampleFormat::SF_FLOAT64<<8) || rawa==(TsampleFormat::SF_ALLFLOAT<<8),CODEC_ID_PCM) \
+ FF_WAVE_FORMAT1_OP (MLP   ,mlp    & rawmask,CODEC_ID_MLP)
 
 const char_t *TglobalSettingsDecAudio::wave_formats[]=
 {
@@ -1207,7 +1210,7 @@ const char_t** TglobalSettingsDecAudio::getFOURCClist(void) const
 const CodecID TglobalSettingsDecAudio::c_mp123[IDFF_MOVIE_MAX+1]=
 {
  CODEC_ID_NONE,
- CODEC_ID_NONE,
+ CODEC_ID_MP3,
  CODEC_ID_NONE,
  CODEC_ID_NONE,
  CODEC_ID_NONE,

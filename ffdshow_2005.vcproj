@@ -1531,6 +1531,14 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="src\TaudioParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath="src\Tbitdata.cpp"
+				>
+			</File>
+			<File
 				RelativePath="src\TcpuUsage.cpp"
 				>
 			</File>
@@ -1945,6 +1953,14 @@
 			</File>
 			<File
 				RelativePath="src\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath="src\TaudioParser.h"
+				>
+			</File>
+			<File
+				RelativePath="src\Tbitdata.h"
 				>
 			</File>
 			<File

@@ -3,6 +3,7 @@
 
 #include "TinputPin.h"
 #include "TaudioCodec.h"
+#include "TaudioParser.h"
 
 class TffdshowDecAudio;
 class TffdshowDecAudioInputPin :public TinputPin,public IdecAudioSink
@@ -11,9 +12,10 @@ private:
  TffdshowDecAudio *filter;
  bool searchdts;
  CCritSec m_csReceive;
- TbyteBuffer buf;
+ TbyteBuffer buf,newSrcBuffer;
  int jitter;
  float prevpostgain;
+ TaudioParser *audioParser;
 protected:
  virtual bool init(const CMediaType &mt);
  virtual void done(void);
@@ -34,6 +36,8 @@ public:
  // IdecAudioSink
  STDMETHODIMP deliverDecodedSample(void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain);
  STDMETHODIMP flushDecodedSamples(void);
+ STDMETHODIMP setCodecId(CodecID codecId);
+ STDMETHODIMP getCodecId(CodecID *pCodecId);
 
  HRESULT getMovieSource(const TaudioCodec* *moviePtr);
  virtual HRESULT getInCodecString(char_t *buf,size_t buflen);
