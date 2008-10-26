@@ -70,7 +70,7 @@ const TdeinterlaceSettings::TframerateDoublerSEs TdeinterlaceSettings::frameRate
 
 const TdeinterlaceSettings::TframerateDoublerSEs TdeinterlaceSettings::yadifParitySEs[]=
 {
- _l("auto"), -1,
+ _l("Auto"), -1,
  _l("Top field first"), 0,
  _l("Bottom field first"), 1,
  NULL
