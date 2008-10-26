@@ -2,6 +2,7 @@
 #define _TLIBMPLAYER_H_
 
 #include "postproc/postprocess.h"
+#include "libaf/reorder_ch.h"
 #include "TpostprocSettings.h"
 
 class Tdll;
@@ -48,6 +49,7 @@ public:
  int (*sws_scale)(struct SwsContext *context, const uint8_t* src[], const stride_t srcStride[], int srcSliceY, int srcSliceH, uint8_t* dst[], stride_t dstStride[]);
  int (*sws_scale_ordered)(SwsContext *c, const uint8_t* src[], const stride_t srcStride[], int srcSliceY,int srcSliceH, uint8_t* dst[], stride_t dstStride[]);
  void (*sws_freeContext)(struct SwsContext *swsContext);
+ void (*reorder_channel_nch) (void *buf, int src_layout,int dest_layout,int chnum,int samples,int samplesize);
 
  mp3lib_ctx* (*MP3_Init)(int mono);
  int (*MP3_DecodeFrame)(mp3lib_ctx* ctx,const unsigned char *Isrc,unsigned int Isrclen,unsigned char *hova,short single,unsigned int *srcUsed);

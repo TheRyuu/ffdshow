@@ -55,6 +55,7 @@ Tlibmplayer::Tlibmplayer(const Tconfig *config):refcount(0)
  dll->loadFunction(palette8tobgr15,"palette8tobgr15");
  dll->loadFunction(decCPUCount,"decCPUCount");
  dll->loadFunction(incCPUCount,"incCPUCount");
+ dll->loadFunction(reorder_channel_nch,"reorder_channel_nch");
 
  if (dll->ok)
   init_mplayer(Tconfig::cpu_flags&FF_CPU_MMX,

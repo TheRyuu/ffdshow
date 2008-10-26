@@ -28,3 +28,4 @@ EXPORTS
   decCPUCount
   incCPUCount
   sws_getContextEx
+  reorder_channel_nch
