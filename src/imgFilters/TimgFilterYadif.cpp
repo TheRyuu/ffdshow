@@ -258,8 +258,8 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
     it = it0;
     cfg = (const TdeinterlaceSettings*)cfg0;
 
-    //if ((pict.fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME && !cfg->deinterlaceAlways) || !libmplayer)
-    //    return parent->deliverSample(++it,pict);
+    if ((pict.fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME && !cfg->deinterlaceAlways) || !libmplayer)
+        return parent->deliverSample(++it,pict);
 
     if (pict.rectClip != pict.rectFull && !cfg->full)
         parent->dirtyBorder=1;
