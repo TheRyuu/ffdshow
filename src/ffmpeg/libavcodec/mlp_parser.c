@@ -225,7 +225,6 @@ static int mlp_parse(AVCodecParserContext *s,
          * access unit header and all the 2- or 4-byte substream headers. */
         // Only check when this isn't a sync frame - syncs have a checksum.
 
-        /* FFDShow code : parity check disabled (uncompatible with interweaved streams AC3/MLP
         parity_bits = 0;
         for (i = -1; i < mp->num_substreams; i++) {
             parity_bits ^= buf[p++];
@@ -237,6 +236,7 @@ static int mlp_parse(AVCodecParserContext *s,
             }
         }
 
+        /* FFDShow code : parity check disabled (uncompatible with interweaved streams AC3/MLP
         if ((((parity_bits >> 4) ^ parity_bits) & 0xF) != 0xF) {
             av_log(avctx, AV_LOG_INFO, "mlpparse: Parity check failed.\n");
             goto lost_sync;

@@ -127,21 +127,21 @@ void avcodec_register_all(void)
     REGISTER_DECODER	(zmbv);
 
     /* audio codecs */
-    //REGISTER_DECODER	(ac3);
+    REGISTER_DECODER	(ac3);
     REGISTER_ENCODER	(ac3);
-    //REGISTER_DECODER	(eac3);
+    REGISTER_DECODER	(eac3);
     //REGISTER_DECODER	(aac);
     REGISTER_DECODER	(atrac3);
     REGISTER_DECODER	(libamr_nb);
     REGISTER_DECODER	(cook);
-    //REGISTER_DECODER	(dca);
+    REGISTER_DECODER	(dca);
     REGISTER_DECODER	(flac);
     REGISTER_DECODER	(imc);
     REGISTER_DECODER	(mace3);
     REGISTER_DECODER	(mace6);
-    //REGISTER_DECODER	(mlp);
-    //REGISTER_DECODER	(mp2);
-    //REGISTER_DECODER	(mp3);
+    REGISTER_DECODER	(mlp);
+    REGISTER_DECODER	(mp2);
+    REGISTER_DECODER	(mp3);
     REGISTER_DECODER	(msgsm);
     REGISTER_DECODER 	(nellymoser);
     REGISTER_DECODER	(qdm2);
@@ -178,7 +178,7 @@ void avcodec_register_all(void)
     REGISTER_DECODER  (adpcm_yamaha);
 
     /* parsers */
-    REGISTER_PARSER  (AAC, aac);
+    //REGISTER_PARSER  (AAC, aac);
     REGISTER_PARSER  (AC3, ac3);
     REGISTER_PARSER  (DCA, dca);
     REGISTER_PARSER  (MLP, mlp);

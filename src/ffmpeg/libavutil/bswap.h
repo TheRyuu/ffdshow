@@ -32,43 +32,34 @@
 #include "config.h"
 #include "common.h"
 
+#if defined(ARCH_X86)
+#   include "x86/bswap.h"
+#endif
+
+#ifndef bswap_16
 static av_always_inline av_const uint16_t bswap_16(uint16_t x)
 {
-#if defined(ARCH_X86)
-    __asm__("rorw $8, %0" : "+r"(x));
-#else
     x= (x>>8) | (x<<8);
-#endif
     return x;
 }
+#endif
 
+#ifndef bswap_32
 static av_always_inline av_const uint32_t bswap_32(uint32_t x)
 {
-#if defined(ARCH_X86)
-#ifdef HAVE_BSWAP
-    __asm__("bswap   %0" : "+r" (x));
-#else
-    __asm__("rorw    $8,  %w0 \n\t"
-        "rorl    $16, %0  \n\t"
-        "rorw    $8,  %w0"
-        : "+r"(x));
-#endif
-#else
     x= ((x<<8)&0xFF00FF00) | ((x>>8)&0x00FF00FF);
     x= (x>>16) | (x<<16);
-#endif
     return x;
 }
+#endif
 
+#ifndef bswap_64
 static inline uint64_t av_const bswap_64(uint64_t x)
 {
 #if 0
     x= ((x<< 8)&0xFF00FF00FF00FF00ULL) | ((x>> 8)&0x00FF00FF00FF00FFULL);
     x= ((x<<16)&0xFFFF0000FFFF0000ULL) | ((x>>16)&0x0000FFFF0000FFFFULL);
     return (x>>32) | (x<<32);
-#elif defined(ARCH_X86_64)
-  __asm__("bswap  %0": "=r" (x) : "0" (x));
-  return x;
 #else
     union {
         uint64_t ll;
@@ -80,6 +71,7 @@ static inline uint64_t av_const bswap_64(uint64_t x)
     return r.ll;
 #endif
 }
+#endif
 
 // be2me ... BigEndian to MachineEndian
 // le2me ... LittleEndian to MachineEndian

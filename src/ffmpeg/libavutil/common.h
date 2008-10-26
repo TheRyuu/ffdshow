@@ -362,23 +362,13 @@ static inline av_pure int ff_get_fourcc(const char *s){
 /*
 #if defined(ARCH_X86)
 #define AV_READ_TIME read_time
-#if defined(ARCH_X86_64)
 static inline uint64_t read_time(void)
 {
-    uint64_t a, d;
+    uint32_t a, d;
     __asm__ volatile("rdtsc\n\t"
                  : "=a" (a), "=d" (d));
-    return (d << 32) | (a & 0xffffffff);
+    return ((uint64_t)d << 32) + a;
 }
-#elif defined(ARCH_X86_32)
-static inline long long read_time(void)
-{
-    long long l;
-    __asm__ volatile("rdtsc\n\t"
-                 : "=A" (l));
-    return l;
-}
-#endif
 #elif defined(HAVE_GETHRTIME)
 #define AV_READ_TIME gethrtime
 #endif

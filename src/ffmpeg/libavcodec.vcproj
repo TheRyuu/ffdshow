@@ -180,9 +180,6 @@
 				RelativePath=".\libavcodec\ac3tab.c">
 			</File>
 			<File
-				RelativePath=".\libavcodec\acelp_filters.c">
-			</File>
-			<File
 				RelativePath=".\libavcodec\adpcm.c">
 			</File>
 			<File
@@ -211,6 +208,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\cavsdsp.c">
+			</File>
+			<File
+				RelativePath=".\libavcodec\celp_filters.c">
 			</File>
 			<File
 				RelativePath=".\libavcodec\cinepak.c">
@@ -621,9 +621,6 @@
 				RelativePath=".\libavcodec\ac3tab.h">
 			</File>
 			<File
-				RelativePath=".\libavcodec\acelp_filters.h">
-			</File>
-			<File
 				RelativePath=".\libavcodec\atrac3data.h">
 			</File>
 			<File
@@ -640,6 +637,9 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\cavsdata.h">
+			</File>
+			<File
+				RelativePath=".\libavcodec\celp_filters.h">
 			</File>
 			<File
 				RelativePath=".\config.h">
