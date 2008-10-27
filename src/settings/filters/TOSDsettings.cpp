@@ -209,8 +209,8 @@ TOSDsettingsVideo::TOSDsettingsVideo(TintStrColl *Icoll,TfilterIDFFs *filters):
      _l("OSDposX"),0,
    IDFF_OSDposY                   ,&TOSDsettingsVideo::posY          ,0,100,_l(""),0,
      _l("OSDposY"),0,
-   IDFF_OSD_userformat            ,&TOSDsettingsVideo::userFormat    ,0,100,_l(""),3,
-     _l("OSDuserFormat"),0,
+   IDFF_OSD_userformat            ,&TOSDsettingsVideo::userFormat    ,0,100,_l(""),0,
+     _l("OSDuserFormat"),3,
    0
   };
  addOptions(iopts);

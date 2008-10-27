@@ -321,6 +321,9 @@ void TresizeAspectPage::onResizeSizeMenu(void)
    _l("640x480"),
    _l("720x480"),
    _l("720x576"),
+   _l("1024x768"),
+   _l("1280x720"),
+   _l("1920x1080"),
    NULL
   };
  int cmd=selectFromMenu(pixels,IDC_BT_RESIZE_SIZE_MENU,false);
@@ -331,6 +334,9 @@ void TresizeAspectPage::onResizeSizeMenu(void)
    case 1:x=640;y=480;break;
    case 2:x=720;y=480;break;
    case 3:x=720;y=576;break;
+   case 4:x=1024;y=768;break;
+   case 5:x=1280;y=720;break;
+   case 6:x=1920;y=1080;break;
    default:return;
   }
  cfgSet(IDFF_resizeDx,x);cfgSet(IDFF_resizeDy,y);
