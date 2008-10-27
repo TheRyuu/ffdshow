@@ -13,7 +13,7 @@ private:
  int volumes[8];
  bool isVol;
 
- static const float MUL_INIT,MUL_MIN,MUL_MAX, MUL_STEP;
+ static const float MUL_MIN,MUL_MAX, MUL_STEP;
  float mul;
 
  template<unsigned int nchannels> struct Tmultiply
