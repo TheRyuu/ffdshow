@@ -1786,6 +1786,9 @@ static void ff_idct_xvid_mmx2_add(uint8_t *dest, int line_size, DCTELEM *block)
     add_pixels_clamped_mmx(block, dest, line_size);
 }
 
+/* disable audio related ASM stuff for 64-bit builds */
+#ifndef ARCH_X86_64
+
 static void vorbis_inverse_coupling_3dnow(float *mag, float *ang, int blocksize)
 {
     int i;
@@ -2401,6 +2404,7 @@ static void float_to_int16_interleave_3dn2(int16_t *dst, const float **src, long
     else
         float_to_int16_interleave_3dnow(dst, src, len, channels);
 }
+#endif /* ARCH_X86_64 */
 
 
 #if 0 /* disable snow */
@@ -2769,6 +2773,8 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 
 #endif /*GCC420_OR_NEWER*/
 
+/* disable audio related ASM for 64-bit builds */
+#ifndef ARCH_X86_64
         if(mm_flags & MM_3DNOW){
             c->vorbis_inverse_coupling = vorbis_inverse_coupling_3dnow;
             c->vector_fmul = vector_fmul_3dnow;
@@ -2786,28 +2792,23 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         }
         if(mm_flags & MM_SSE){
             c->vorbis_inverse_coupling = vorbis_inverse_coupling_sse;
-            #if ENABLE_AC3_DECODER
             c->ac3_downmix = ac3_downmix_sse;
-            #endif
             c->vector_fmul = vector_fmul_sse;
             c->vector_fmul_reverse = vector_fmul_reverse_sse;
             c->vector_fmul_add_add = vector_fmul_add_add_sse;
             c->vector_fmul_window = vector_fmul_window_sse;
-            #if ENABLE_AC3_DECODER
             c->int32_to_float_fmul_scalar = int32_to_float_fmul_scalar_sse;
-            #endif
             c->float_to_int16 = float_to_int16_sse;
             c->float_to_int16_interleave = float_to_int16_interleave_sse;
         }
         if(mm_flags & MM_3DNOW)
             c->vector_fmul_add_add = vector_fmul_add_add_3dnow; // faster than sse
         if(mm_flags & MM_SSE2){
-            #if ENABLE_AC3_DECODER
             c->int32_to_float_fmul_scalar = int32_to_float_fmul_scalar_sse2;
-            #endif
             c->float_to_int16 = float_to_int16_sse2;
             c->float_to_int16_interleave = float_to_int16_interleave_sse2;
         }
+#endif /* ARCH_X86_64 */
     }
 
     if (ENABLE_ENCODERS)

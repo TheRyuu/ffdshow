@@ -189,9 +189,6 @@ SRCS_C=\
       $(LAVC_DIR)/i386/dsputil_mmx.c \
       $(LAVC_DIR)/i386/dsputilenc_mmx.c \
       $(LAVC_DIR)/i386/fdct_mmx.c \
-      $(LAVC_DIR)/i386/fft_3dn.c \
-      $(LAVC_DIR)/i386/fft_3dn2.c \
-      $(LAVC_DIR)/i386/fft_sse.c \
       $(LAVC_DIR)/i386/idct_mmx.c \
       $(LAVC_DIR)/i386/idct_mmx_xvid.c \
       $(LAVC_DIR)/i386/idct_sse2_xvid.c \
@@ -203,9 +200,18 @@ SRCS_C=\
       $(LAVC_DIR)/i386/vp3dsp_mmx.c \
       $(LAVC_DIR)/i386/vp3dsp_sse2.c
 
+ifneq ($(64BIT),yes)
+SRCS_C+=\
+      $(LAVC_DIR)/i386/fft_3dn.c \
+      $(LAVC_DIR)/i386/fft_3dn2.c \
+      $(LAVC_DIR)/i386/fft_sse.c
+endif
+
+ifneq ($(64BIT),yes)
 SRCS_YASM=\
       $(LAVC_DIR)/i386/dsputil_yasm.asm \
       $(LAVC_DIR)/i386/fft_mmx.asm
+endif
 
 
 ifeq ($(64BIT),yes)

@@ -347,6 +347,7 @@
   #define EMULATE_FAST_INT
 #endif
 
+#define HAVE_6REGS 1
 #define HAVE_7REGS 1
 #define HAVE_EBX_AVAILABLE 1
 
