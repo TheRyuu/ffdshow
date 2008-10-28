@@ -111,6 +111,9 @@ typedef struct SubStream {
     //! Running XOR of all output samples.
     int32_t     lossless_check_data;
 
+    //! For each channel output by the matrix, the output channel to map it to
+    uint8_t     ch_assign[MAX_CHANNELS];
+
 } SubStream;
 
 typedef struct MLPDecodeContext {
@@ -378,16 +381,19 @@ static int read_restart_header(MLPDecodeContext *m, GetBitContext *gbp,
 
     skip_bits(gbp, 16);
 
+    memset(s->ch_assign, 0, sizeof(s->ch_assign));
+
     for (ch = 0; ch <= s->max_matrix_channel; ch++) {
         int ch_assign = get_bits(gbp, 6);
         dprintf(m->avctx, "ch_assign[%d][%d] = %d\n", substr, ch,
                 ch_assign);
-        if (ch_assign != ch) {
+        if (ch_assign > s->max_matrix_channel) {
             av_log(m->avctx, AV_LOG_ERROR,
-                   "Non-1:1 channel assignments are used in this stream. %s\n",
-                   sample_message);
+                   "Assignment of matrix channel %d to invalid output channel %d. %s\n",
+                   ch, ch_assign, sample_message);
             return -1;
         }
+        s->ch_assign[ch_assign] = ch;
     }
 
     checksum = ff_mlp_restart_checksum(buf, get_bits_count(gbp) - start_count);
@@ -837,8 +843,10 @@ static int output_data_internal(MLPDecodeContext *m, unsigned int substr,
 
     for (i = 0; i < s->blockpos; i++) {
         for (ch = 0; ch <= s->max_channel; ch++) {
-            int32_t sample = m->sample_buffer[i][ch] << s->output_shift[ch];
-            s->lossless_check_data ^= (sample & 0xffffff) << ch;
+            int mat_ch = s->ch_assign[ch];
+            int32_t sample = m->sample_buffer[i][mat_ch]
+                                << s->output_shift[mat_ch];
+            s->lossless_check_data ^= (sample & 0xffffff) << mat_ch;
             if (is32) *data_32++ = sample << 8;
             else      *data_16++ = sample >> 8;
         }
@@ -945,12 +953,11 @@ static int read_access_unit(AVCodecContext *avctx, void* data, int *data_size,
     parity_bits  = ff_mlp_calculate_parity(buf, 4);
     parity_bits ^= ff_mlp_calculate_parity(buf + header_size, substr_header_size);
 
-    /* disable parity check for ffdshow
+    /* FFDShow code
     if ((((parity_bits >> 4) ^ parity_bits) & 0xF) != 0xF) {
         av_log(avctx, AV_LOG_ERROR, "Parity check failed.\n");
         goto error;
-    }
-    */
+    }*/
 
     buf += header_size + substr_header_size;
 
