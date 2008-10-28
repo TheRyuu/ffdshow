@@ -1277,7 +1277,7 @@ DCT_SAD_FUNC(ssse3)
 #define SET_RND MOVQ_WONE
 #define SCALE_OFFSET 1
 
-#include "dsputil_mmx_qns.h"
+#include "dsputil_mmx_qns_template.c"
 
 #undef DEF
 #undef SET_RND
@@ -1291,7 +1291,7 @@ DCT_SAD_FUNC(ssse3)
     "pmulhrw " #s ", "#x "           \n\t"\
     "pmulhrw " #s ", "#y "           \n\t"
 
-#include "dsputil_mmx_qns.h"
+#include "dsputil_mmx_qns_template.c"
 
 #undef DEF
 #undef SET_RND
@@ -1310,7 +1310,7 @@ DCT_SAD_FUNC(ssse3)
     "pmulhrsw " #s ", "#x "          \n\t"\
     "pmulhrsw " #s ", "#y "          \n\t"
 
-#include "dsputil_mmx_qns.h"
+#include "dsputil_mmx_qns_template.c"
 
 #undef DEF
 #undef SET_RND
