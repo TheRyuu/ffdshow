@@ -192,6 +192,8 @@
 #define IDFF_dgbobMode                 1425
 #define IDFF_dgbobThreshold            1426
 #define IDFF_dgbobAP                   1427
+#define IDFF_yadifMode                 3494
+#define IDFF_yadifParity               3495
 
 #define IDFF_isDecimate            1410
 #define IDFF_decimateRatio         1411
@@ -493,6 +495,9 @@
 #define IDFF_subCC                   860
 #define IDFF_subWordWrap             3403
 #define IDFF_subExtendedTags         3492 // Enable HTML tags in SSA subs and SSA tags in SRT subs
+#define IDFF_subSSAOverridePlacement 3496
+#define IDFF_subSSAMaintainInside    3497
+#define IDFF_subSSAUseMovieDimensions 3498
 
 #define IDFF_fontName                820
 #define IDFF_fontCharset             802
@@ -901,6 +906,7 @@
 #define IDFF_setDeintInOutSample 1353
 #define IDFF_hwDeinterlace       1353 // deprecated.
 #define IDFF_hwDeintMethod       1361
+#define IDFF_hwDeintFieldOrder   3500
 #define IDFF_avisynthYV12_RGB    1355
 #define IDFF_cspOptionsIturBt            1362 // 0: 601, 1:709
 #define IDFF_cspOptionsBlackCutoff       3424
@@ -980,7 +986,7 @@
 #define IDFF_maxNormalization     2406 //*100
 //#define IDFF_volumeNormalizeBufferLength      3368
 #define IDFF_volumeNormalizeResetOnSeek       3369
-#define IDFF_volumeNormalizeRegainVolume      3492
+#define IDFF_volumeNormalizeRegainVolume      3499
 //#define IDFF_currentNormalization 2407 //*100
 #define IDFF_showCurrentVolume    2414
 
@@ -1517,6 +1523,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//max:3493
+//next:3501
 
 #endif
