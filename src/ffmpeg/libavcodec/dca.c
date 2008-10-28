@@ -1234,10 +1234,10 @@ static av_cold int dca_decode_end(AVCodecContext * avctx)
 }
 
 AVCodec dca_decoder = {
-    .name = "dca",
-    .type = CODEC_TYPE_AUDIO,
-    .id = CODEC_ID_DTS,
-    .priv_data_size = sizeof(DCAContext),
+    /*.name = */"dca",
+    /*.type = */CODEC_TYPE_AUDIO,
+    /*.id = */CODEC_ID_DTS,
+    /*.priv_data_size = */sizeof(DCAContext),
     /*.init = */dca_decode_init,
     /*.encode = */NULL,    
     /*.close = */dca_decode_end,

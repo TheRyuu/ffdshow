@@ -21,7 +21,9 @@
 #ifndef AVUTIL_MD5_H
 #define AVUTIL_MD5_H
 
+#ifdef __GNUC__
 #include <stdint.h>
+#endif
 
 extern const int av_md5_size;
 

@@ -462,6 +462,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\ac3dec.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\ac3dec_data.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\ac3enc.c"
 				>
 			</File>
@@ -534,6 +542,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\dca.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\dca_parser.c"
 				>
 			</File>
@@ -547,6 +559,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\dv.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\eac3dec.c"
 				>
 			</File>
 			<File
@@ -690,6 +706,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavutil\lfg.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\libamr.c"
 				>
 			</File>
@@ -703,6 +723,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mace.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\md5.c"
 				>
 			</File>
 			<File
@@ -735,6 +759,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mlp_parser.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\mlpdec.c"
 				>
 			</File>
 			<File
@@ -795,6 +823,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mpeg4video_parser.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\mpegaudio.c"
 				>
 			</File>
 			<File
@@ -1264,6 +1296,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\lcl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\lfg.h"
 				>
 			</File>
 			<File
