@@ -493,6 +493,14 @@ typedef struct H264Context{
 
     /* ffdshow custom stuff */
     int recovery_frame_cnt;
+    int pic_struct_present_flag;
+    int nal_hrd_parameters_present_flag;
+    int vcl_hrd_parameters_present_flag;
+    int cpb_removal_delay_length;
+    int dpb_output_delay_length;
+    int time_offset_length;
+    int pic_struct;
+    int top_field_first;
 }H264Context;
 
 #endif /* AVCODEC_H264_H */

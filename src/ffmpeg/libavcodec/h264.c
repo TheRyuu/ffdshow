@@ -6992,6 +6992,82 @@ static int decode_sei(H264Context *h){
         }while(get_bits(&s->gb, 8) == 255);
 
         switch(type){
+        case 1: // Picture timing SEI
+        {
+            int NumClockTS = 1;
+            int i;
+            if(h->nal_hrd_parameters_present_flag || h->vcl_hrd_parameters_present_flag){
+                get_bits(&s->gb, h->cpb_removal_delay_length); /* cpb_removal_delay */
+                get_bits(&s->gb, h->dpb_output_delay_length);  /* dpb_output_delay */
+            }
+            if(h->pic_struct_present_flag){
+                h->pic_struct = get_bits(&s->gb, 4);
+                switch(h->pic_struct){
+                case 0: /* frame */
+                case 1: /* top field */
+                case 2: /* bottom field */
+                    break;
+                case 3: /* top field, bottom field, in that order */
+                    NumClockTS = 2;
+                    h->top_field_first = 1;
+                    break;
+                case 4: /* bottom field, top field, in that order */
+                    NumClockTS = 2;
+                    h->top_field_first = 0;
+                    break;
+                case 5: /* top field, bottom field, top field repeated, in that order */
+                    NumClockTS = 3;
+                    h->top_field_first = 1;
+                    break;
+                case 6: /* bottom field, top field, bottom field repeated, in that order */
+                    NumClockTS = 3;
+                    h->top_field_first = 0;
+                    break;
+                case 7: /* frame doubling */
+                    NumClockTS = 2;
+                    break;
+                case 8: /* frame tripling */
+                    NumClockTS = 3;
+                    break;
+                }
+                // Just skip bits, maybe better to skip bytes SEI payloadSize.
+                for (i = 0 ; i < NumClockTS ; i++){
+                    int clock_timestamp_flag = get_bits(&s->gb, 1);
+                    if(clock_timestamp_flag){
+                        int full_timestamp_flag;
+                        get_bits(&s->gb, 2); /* ct_type */
+                        get_bits(&s->gb, 1); /* nuit_field_based_flag */
+                        get_bits(&s->gb, 5); /* counting_type */
+                        full_timestamp_flag = get_bits(&s->gb, 1);
+                        get_bits(&s->gb, 1); /* discontinuity_flag */
+                        get_bits(&s->gb, 1); /* cnt_dropped_flag */
+                        get_bits(&s->gb, 8); /* n_frames */
+                        if( full_timestamp_flag){
+                            get_bits(&s->gb, 6); /* seconds_value 0..59 */
+                            get_bits(&s->gb, 6); /* minutes_value 0..59 */
+                            get_bits(&s->gb, 5); /* hours_value 0..23 */
+                        }else{
+                            int seconds_flag = get_bits(&s->gb, 1);
+                            if( seconds_flag ){
+                                int minutes_flag;
+                                get_bits(&s->gb, 6); /* seconds_value range 0..59 */
+                                minutes_flag = get_bits(&s->gb, 1);
+                                if( minutes_flag ){
+                                    int hours_flag;
+                                    get_bits(&s->gb, 6); /* minutes_value 0..59 */
+                                    hours_flag = get_bits(&s->gb, 1);
+                                    if(hours_flag)
+                                        get_bits(&s->gb, 5); /* hours_value 0..23 */
+                                }
+                            }
+                        }
+                        if(h->time_offset_length > 0)
+                            get_bits(&s->gb, 5); /* time_offset */
+                    }
+                }
+            }
+            break;
+        }
         case 5:
             if(decode_unregistered_user_data(h, size) < 0)
                 return -1;
@@ -7025,16 +7101,15 @@ static inline void decode_hrd_parameters(H264Context *h, SPS *sps){
         get_bits1(&s->gb);     /* cbr_flag */
     }
     get_bits(&s->gb, 5); /* initial_cpb_removal_delay_length_minus1 */
-    get_bits(&s->gb, 5); /* cpb_removal_delay_length_minus1 */
-    get_bits(&s->gb, 5); /* dpb_output_delay_length_minus1 */
-    get_bits(&s->gb, 5); /* time_offset_length */
+    h->cpb_removal_delay_length = get_bits(&s->gb, 5) + 1;
+    h->dpb_output_delay_length = get_bits(&s->gb, 5) + 1;
+    h->time_offset_length = get_bits(&s->gb, 5);
 }
 
 static inline int decode_vui_parameters(H264Context *h, SPS *sps){
     MpegEncContext * const s = &h->s;
     int aspect_ratio_info_present_flag;
     unsigned int aspect_ratio_idc;
-    int nal_hrd_parameters_present_flag, vcl_hrd_parameters_present_flag;
 
     aspect_ratio_info_present_flag= get_bits1(&s->gb);
 
@@ -7081,15 +7156,15 @@ static inline int decode_vui_parameters(H264Context *h, SPS *sps){
         sps->fixed_frame_rate_flag = get_bits1(&s->gb);
     }
 
-    nal_hrd_parameters_present_flag = get_bits1(&s->gb);
-    if(nal_hrd_parameters_present_flag)
+    h->nal_hrd_parameters_present_flag = get_bits1(&s->gb);
+    if(h->nal_hrd_parameters_present_flag)
         decode_hrd_parameters(h, sps);
-    vcl_hrd_parameters_present_flag = get_bits1(&s->gb);
-    if(vcl_hrd_parameters_present_flag)
+    h->vcl_hrd_parameters_present_flag = get_bits1(&s->gb);
+    if(h->vcl_hrd_parameters_present_flag)
         decode_hrd_parameters(h, sps);
-    if(nal_hrd_parameters_present_flag || vcl_hrd_parameters_present_flag)
+    if(h->nal_hrd_parameters_present_flag || h->vcl_hrd_parameters_present_flag)
         get_bits1(&s->gb);     /* low_delay_hrd_flag */
-    get_bits1(&s->gb);         /* pic_struct_present_flag */
+    h->pic_struct_present_flag = get_bits1(&s->gb);
 
     sps->bitstream_restriction_flag = get_bits1(&s->gb);
     if(sps->bitstream_restriction_flag){
@@ -7811,7 +7886,10 @@ static int decode_frame(AVCodecContext *avctx,
         } else {
             cur->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
             /* Derive top_field_first from field pocs. */
-            cur->top_field_first = cur->field_poc[0] < cur->field_poc[1];
+            if (cur->field_poc[0] != cur->field_poc[1])
+                cur->top_field_first = cur->field_poc[0] < cur->field_poc[1];
+            else
+                cur->top_field_first = h->top_field_first;
 
         //FIXME do something with unavailable reference frames
 
