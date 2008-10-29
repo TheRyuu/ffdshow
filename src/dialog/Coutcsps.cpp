@@ -104,10 +104,13 @@ void ToutcspsPage::overlay2dlg(void)
  setCheck3(IDC_CHB_HWOVERLAY,isHW);
  enable(enabledHW && !dv,IDC_CHB_HWOVERLAY);
  int hwdeint=cfgGet(IDFF_setDeintInOutSample);
+ int hwdeintmethod=cfgGet(IDFF_hwDeintMethod);
  setCheck(IDC_CHB_HWDEINTERLACE,hwdeint);
  enable(enabledHW && !dv,IDC_CHB_HWDEINTERLACE);
  cbxSetCurSel(IDC_CBX_OUT_HWDEINT_METHOD,cfgGet(IDFF_hwDeintMethod));
+ cbxSetCurSel(IDC_CBX_OUT_HWDEINT_FIELDORDER,cfgGet(IDFF_hwDeintFieldOrder));
  enable(!dv && enabledHW && hwdeint,IDC_CBX_OUT_HWDEINT_METHOD);
+ enable(!dv && enabledHW && hwdeint,IDC_CBX_OUT_HWDEINT_FIELDORDER);
 }
 void ToutcspsPage::dfc2dlg(void)
 {
@@ -218,6 +221,7 @@ void ToutcspsPage::translate(void)
 
  cbxTranslate(IDC_CBX_OUT_DV_PROFILE,ToutputVideoSettings::dvNorms);
  cbxTranslate(IDC_CBX_OUT_HWDEINT_METHOD,ToutputVideoSettings::deintMethods);
+ cbxTranslate(IDC_CBX_OUT_HWDEINT_FIELDORDER,ToutputVideoSettings::deintFieldOrder);
 }
 
 ToutcspsPage::ToutcspsPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
@@ -241,6 +245,7 @@ ToutcspsPage::ToutcspsPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
  static const TbindCombobox<ToutcspsPage> cbx[]=
   {
    IDC_CBX_OUT_HWDEINT_METHOD,IDFF_hwDeintMethod,BINDCBX_SEL,NULL,
+   IDC_CBX_OUT_HWDEINT_FIELDORDER,IDFF_hwDeintFieldOrder,BINDCBX_SEL,NULL,
    IDC_CBX_OUT_DV_PROFILE,IDFF_outDVnorm,BINDCBX_SEL,NULL,
    0
   };

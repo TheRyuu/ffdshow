@@ -1187,20 +1187,52 @@ if (!outdv && hwDeinterlace)
      {
       // Set interlace information (every sample)
       outProp2.dwTypeSpecificFlags=AM_VIDEO_FLAG_INTERLEAVED_FRAME;
-      if (!(pict.fieldtype&FIELD_TYPE::MASK_INT))
+
+      // Force weave
+      if (presetSettings->output->hwDeintMethod == 1)
        {
         outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_WEAVE;
        }
-      else if (pict.fieldtype&FIELD_TYPE::INT_TFF)
+      // Force bob
+      else if (presetSettings->output->hwDeintMethod == 2)
        {
-        outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
-        if(presetSettings->output->hwDeintMethod ==1)
-         outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_WEAVE;
+        // force TFF
+        if (presetSettings->output->hwDeintFieldOrder == 1)
+         {
+          outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
+         }
+        // auto field order
+        else if (presetSettings->output->hwDeintFieldOrder == 0)
+         {
+          if (pict.fieldtype&FIELD_TYPE::INT_TFF)
+           {
+            outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
+           }
+         }
        }
-      else if (pict.fieldtype&FIELD_TYPE::INT_BFF)
+      // Auto
+      else
        {
-        if(presetSettings->output->hwDeintMethod ==1)
-         outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_WEAVE;
+        if (!(pict.fieldtype&FIELD_TYPE::MASK_INT))
+         {
+          outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_WEAVE;
+         }
+        else
+         {
+          // force TFF
+          if (presetSettings->output->hwDeintFieldOrder == 1)
+           {
+            outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
+           }
+          // auto field order
+          else if (presetSettings->output->hwDeintFieldOrder == 0)
+           {
+            if (pict.fieldtype&FIELD_TYPE::INT_TFF)
+             {
+              outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
+             }
+           }
+         }
        }
       pOut2->SetProperties(FIELD_OFFSET(AM_SAMPLE2_PROPERTIES,dwStreamId),(PBYTE)&outProp2);
      }
