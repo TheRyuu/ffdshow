@@ -111,8 +111,8 @@ typedef struct SubStream {
     //! Running XOR of all output samples.
     int32_t     lossless_check_data;
 
-    //! For each channel output by the matrix, the output channel to map it to
-    uint8_t     ch_assign[MAX_CHANNELS];
+    //! For each channel output by the matrix, the output channel to map it to.
+    uint8_t     ch_assign[MAX_CHANNELS]; /* ffdshow custom code */
 
 } SubStream;
 
@@ -381,6 +381,7 @@ static int read_restart_header(MLPDecodeContext *m, GetBitContext *gbp,
 
     skip_bits(gbp, 16);
 
+    /* ffdshow custom code (begin) */
     memset(s->ch_assign, 0, sizeof(s->ch_assign));
 
     for (ch = 0; ch <= s->max_matrix_channel; ch++) {
@@ -395,7 +396,8 @@ static int read_restart_header(MLPDecodeContext *m, GetBitContext *gbp,
         }
         s->ch_assign[ch_assign] = ch;
     }
-
+    /* ffdshow custom code (end) */
+    
     checksum = ff_mlp_restart_checksum(buf, get_bits_count(gbp) - start_count);
 
     if (checksum != get_bits(gbp, 8))
@@ -843,10 +845,12 @@ static int output_data_internal(MLPDecodeContext *m, unsigned int substr,
 
     for (i = 0; i < s->blockpos; i++) {
         for (ch = 0; ch <= s->max_channel; ch++) {
+            /* ffdshow custom code (begin) */
             int mat_ch = s->ch_assign[ch];
             int32_t sample = m->sample_buffer[i][mat_ch]
                                 << s->output_shift[mat_ch];
             s->lossless_check_data ^= (sample & 0xffffff) << mat_ch;
+            /* ffdshow custom code (end) */
             if (is32) *data_32++ = sample << 8;
             else      *data_16++ = sample >> 8;
         }
@@ -953,11 +957,12 @@ static int read_access_unit(AVCodecContext *avctx, void* data, int *data_size,
     parity_bits  = ff_mlp_calculate_parity(buf, 4);
     parity_bits ^= ff_mlp_calculate_parity(buf + header_size, substr_header_size);
 
-    /* FFDShow code
+    /* ffdshow custom code
     if ((((parity_bits >> 4) ^ parity_bits) & 0xF) != 0xF) {
         av_log(avctx, AV_LOG_ERROR, "Parity check failed.\n");
         goto error;
-    }*/
+    }
+    */
 
     buf += header_size + substr_header_size;
 
