@@ -150,6 +150,12 @@ typedef struct SPS{
     int scaling_matrix_present;
     uint8_t scaling_matrix4[6][16];
     uint8_t scaling_matrix8[2][64];
+    int nal_hrd_parameters_present_flag;
+    int vcl_hrd_parameters_present_flag;
+    int pic_struct_present_flag;
+    int time_offset_length;
+    int cpb_removal_delay_length;      ///< cpb_removal_delay_length_minus1 + 1
+    int dpb_output_delay_length;       ///< dpb_output_delay_length_minus1 + 1
 }SPS;
 
 /**
@@ -499,14 +505,22 @@ typedef struct H264Context{
 
     /* ffdshow custom stuff */
     int recovery_frame_cnt;
-    int pic_struct_present_flag;
-    int nal_hrd_parameters_present_flag;
-    int vcl_hrd_parameters_present_flag;
-    int cpb_removal_delay_length;
-    int dpb_output_delay_length;
-    int time_offset_length;
-    int pic_struct;
-    int top_field_first;
+
+    /**
+     * pic_struct in Picture timing SEI message
+     *  0: frame
+     *  1: top field
+     *  2: bottom field
+     *  3: top field, bottom field, in that order
+     *  4: bottom field, top field, in that order
+     *  5: top field, bottom field, top field repeated, in that order
+     *  6: bottom field, top field, bottom field repeated, in that order
+     *  7: frame doubling
+     *  8: frame tripling
+     */
+    int pic_struct;               // Confusing with pic_structure, but this is the formal name.
+    int pic_struct_valid_flag;    // For each frame
+    int has_ever_interlaced;      // Set to 1 if any interlaced picture is found in the stream.
 }H264Context;
 
 #endif /* AVCODEC_H264_H */

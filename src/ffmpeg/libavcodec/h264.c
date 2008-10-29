@@ -7003,32 +7003,28 @@ static int decode_sei(H264Context *h){
         {
             int NumClockTS = 1;
             int i;
-            if(h->nal_hrd_parameters_present_flag || h->vcl_hrd_parameters_present_flag){
-                get_bits(&s->gb, h->cpb_removal_delay_length); /* cpb_removal_delay */
-                get_bits(&s->gb, h->dpb_output_delay_length);  /* dpb_output_delay */
+            if(h->sps.nal_hrd_parameters_present_flag || h->sps.vcl_hrd_parameters_present_flag){
+                get_bits(&s->gb, h->sps.cpb_removal_delay_length); /* cpb_removal_delay */
+                get_bits(&s->gb, h->sps.dpb_output_delay_length);  /* dpb_output_delay */
             }
-            if(h->pic_struct_present_flag){
+            if(h->sps.pic_struct_present_flag){
+                h->pic_struct_valid_flag = 1;
                 h->pic_struct = get_bits(&s->gb, 4);
+
+                // Just to skip bits, maybe better to skip bytes using SEI payloadSize.
                 switch(h->pic_struct){
                 case 0: /* frame */
                 case 1: /* top field */
                 case 2: /* bottom field */
+                    // NumClockTS = 1;
                     break;
                 case 3: /* top field, bottom field, in that order */
-                    NumClockTS = 2;
-                    h->top_field_first = 1;
-                    break;
                 case 4: /* bottom field, top field, in that order */
                     NumClockTS = 2;
-                    h->top_field_first = 0;
                     break;
                 case 5: /* top field, bottom field, top field repeated, in that order */
-                    NumClockTS = 3;
-                    h->top_field_first = 1;
-                    break;
                 case 6: /* bottom field, top field, bottom field repeated, in that order */
                     NumClockTS = 3;
-                    h->top_field_first = 0;
                     break;
                 case 7: /* frame doubling */
                     NumClockTS = 2;
@@ -7036,8 +7032,9 @@ static int decode_sei(H264Context *h){
                 case 8: /* frame tripling */
                     NumClockTS = 3;
                     break;
+                default: /* broken stream or unknown type */
+                    return -1;
                 }
-                // Just skip bits, maybe better to skip bytes SEI payloadSize.
                 for (i = 0 ; i < NumClockTS ; i++){
                     int clock_timestamp_flag = get_bits(&s->gb, 1);
                     if(clock_timestamp_flag){
@@ -7068,7 +7065,7 @@ static int decode_sei(H264Context *h){
                                 }
                             }
                         }
-                        if(h->time_offset_length > 0)
+                        if(h->sps.time_offset_length > 0)
                             get_bits(&s->gb, 5); /* time_offset */
                     }
                 }
@@ -7110,9 +7107,9 @@ static inline void decode_hrd_parameters(H264Context *h, SPS *sps){
     }
     get_bits(&s->gb, 5); /* initial_cpb_removal_delay_length_minus1 */
     /* ffdshow custom code */    
-    h->cpb_removal_delay_length = get_bits(&s->gb, 5) + 1;
-    h->dpb_output_delay_length = get_bits(&s->gb, 5) + 1;
-    h->time_offset_length = get_bits(&s->gb, 5);
+    sps->cpb_removal_delay_length = get_bits(&s->gb, 5) + 1;
+    sps->dpb_output_delay_length = get_bits(&s->gb, 5) + 1;
+    sps->time_offset_length = get_bits(&s->gb, 5);
 }
 
 static inline int decode_vui_parameters(H264Context *h, SPS *sps){
@@ -7166,15 +7163,15 @@ static inline int decode_vui_parameters(H264Context *h, SPS *sps){
     }
 
     /* ffdshow custom code (begin) */
-    h->nal_hrd_parameters_present_flag = get_bits1(&s->gb);
-    if(h->nal_hrd_parameters_present_flag)
+    sps->nal_hrd_parameters_present_flag = get_bits1(&s->gb);
+    if(sps->nal_hrd_parameters_present_flag)
         decode_hrd_parameters(h, sps);
-    h->vcl_hrd_parameters_present_flag = get_bits1(&s->gb);
-    if(h->vcl_hrd_parameters_present_flag)
+    sps->vcl_hrd_parameters_present_flag = get_bits1(&s->gb);
+    if(sps->vcl_hrd_parameters_present_flag)
         decode_hrd_parameters(h, sps);
-    if(h->nal_hrd_parameters_present_flag || h->vcl_hrd_parameters_present_flag)
+    if(sps->nal_hrd_parameters_present_flag || sps->vcl_hrd_parameters_present_flag)
         get_bits1(&s->gb);     /* low_delay_hrd_flag */
-    h->pic_struct_present_flag = get_bits1(&s->gb);
+    sps->pic_struct_present_flag = get_bits1(&s->gb);
     /* ffdshow custom code (end) */
 
     sps->bitstream_restriction_flag = get_bits1(&s->gb);
@@ -7829,6 +7826,7 @@ static int decode_frame(AVCodecContext *avctx,
     }
     /* ffdshow custom code (end) */
 
+    h->pic_struct_valid_flag = 0; // ffdshow custom code
     buf_index=decode_nal_units(h, buf, buf_size);
     if(buf_index < 0)
         return -1;
@@ -7879,13 +7877,54 @@ static int decode_frame(AVCodecContext *avctx,
             *data_size = 0;
 
         } else {
-            cur->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
-            /* Derive top_field_first from field pocs. */
-            /* ffdshow custom code */
-            if (cur->field_poc[0] != cur->field_poc[1])
+            /* ffdshow custom code (begin) */
+            cur->repeat_pict = 0;
+
+            /* Dirty workaround to avoid judging badly encoded progressive video as interlaced. */
+            /* Some progressive video has pic_struct 3 or 4 (though it is rare). */
+            // Please remove this line if you don't care such rare files.
+            // Sample file: sky.movies.9.hd.ts
+            h->has_ever_interlaced |= FIELD_OR_MBAFF_PICTURE;
+
+            /* Signal interlacing information externally. */
+            /* Prioritize picture timing SEI information over used decoding process if it exists. */
+            if(h->pic_struct_valid_flag && h->has_ever_interlaced){
+                if(1 <= h->pic_struct && h->pic_struct <= 4){
+                    cur->interlaced_frame = 1;
+                }else if(h->pic_struct == 5){
+                    // Signal the possibility of telecine externally (pic_struct 5,6)
+                    // From these hints, let applications judge if the frame is interlaced.
+                    cur->repeat_pict = 4;
+                    cur->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
+                }
+                else if(h->pic_struct == 6){
+                    cur->repeat_pict = 2;
+                    cur->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
+                }else{
+                    // FIXME do something to signal frame doubling/tripling externally.
+                    cur->interlaced_frame = 0;
+                }
+            }else{
+                /* Derive interlacing flag from used decoding process. */
+                cur->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
+            }
+
+            if (cur->field_poc[0] != cur->field_poc[1]){
+                /* Derive top_field_first from field pocs. */
                 cur->top_field_first = cur->field_poc[0] < cur->field_poc[1];
-            else
-                cur->top_field_first = h->top_field_first;
+            }else{
+                if(cur->interlaced_frame || h->pic_struct_valid_flag){
+                    /* Use picture timing SEI information. Even if it is a information of a past frame, better than nothing. */
+                    if(h->pic_struct == 3 || h->pic_struct == 5)
+                        cur->top_field_first = 1;
+                    else
+                        cur->top_field_first = 0;
+                }else{
+                    /* Most likely progressive */
+                    cur->top_field_first = 0;
+                }
+            }
+            /* ffdshow custom code (end) */
 
         //FIXME do something with unavailable reference frames
 
