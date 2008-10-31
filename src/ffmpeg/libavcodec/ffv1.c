@@ -451,7 +451,7 @@ static void encode_plane(FFV1Context *s, uint8_t *src, int w, int h, int stride,
         for(i=0; i<ring_size; i++)
             sample[i]= sample_buffer[(h+i-y)%ring_size]+3;
 
-        sample[0][-1]= sample[1][0  ];
+        sample[0][-1]= sample[1][0  ];  // FIXME MSVC build crashes for obvious reason
         sample[1][ w]= sample[1][w-1];
 //{START_TIMER
         for(x=0; x<w; x++){
@@ -468,8 +468,8 @@ static void encode_rgb_frame(FFV1Context *s, uint32_t *src, int w, int h, int st
 #if __STDC_VERSION__ >= 199901L
     int_fast16_t sample_buffer[3][ring_size][w+6], *sample[3][ring_size];
 #else
-	int_fast16_t **sample_buffer = _alloca(3 * ring_size * (w+6) * sizeof(int_fast16_t));
-	int_fast16_t ***sample = _alloca(3 * ring_size * sizeof(int_fast16_t));
+	int_fast16_t ***sample_buffer = _alloca(3 * ring_size * (w+6) * sizeof(int_fast16_t));
+	int_fast16_t ***sample = _alloca(3 * ring_size * sizeof(int_fast16_t*));
 #endif
     s->run_index=0;
 
