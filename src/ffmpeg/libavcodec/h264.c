@@ -7001,44 +7001,26 @@ static int decode_sei(H264Context *h){
         /* ffdshow custom code (begin) */
         case 1: // Picture timing SEI
         {
-            int NumClockTS = 1;
-            int i;
             if(h->sps.nal_hrd_parameters_present_flag || h->sps.vcl_hrd_parameters_present_flag){
                 get_bits(&s->gb, h->sps.cpb_removal_delay_length); /* cpb_removal_delay */
                 get_bits(&s->gb, h->sps.dpb_output_delay_length);  /* dpb_output_delay */
             }
             if(h->sps.pic_struct_present_flag){
-                h->pic_struct_valid_flag = 1;
-                h->pic_struct = get_bits(&s->gb, 4);
+                unsigned int i, NumClockTS;
+                h->sei_pic_struct = get_bits(&s->gb, 4);
+
+                if (h->sei_pic_struct > SEI_PIC_STRUCT_FRAME_TRIPLING)
+                    return -1;
+
+                h->sei_pic_struct_valid_flag = 1;
 
                 // Just to skip bits, maybe better to skip bytes using SEI payloadSize.
-                switch(h->pic_struct){
-                case 0: /* frame */
-                case 1: /* top field */
-                case 2: /* bottom field */
-                    // NumClockTS = 1;
-                    break;
-                case 3: /* top field, bottom field, in that order */
-                case 4: /* bottom field, top field, in that order */
-                    NumClockTS = 2;
-                    break;
-                case 5: /* top field, bottom field, top field repeated, in that order */
-                case 6: /* bottom field, top field, bottom field repeated, in that order */
-                    NumClockTS = 3;
-                    break;
-                case 7: /* frame doubling */
-                    NumClockTS = 2;
-                    break;
-                case 8: /* frame tripling */
-                    NumClockTS = 3;
-                    break;
-                default: /* broken stream or unknown type */
-                    return -1;
-                }
+                NumClockTS = sei_NumClockTS_table[h->sei_pic_struct];
+
                 for (i = 0 ; i < NumClockTS ; i++){
-                    int clock_timestamp_flag = get_bits(&s->gb, 1);
+                    unsigned int clock_timestamp_flag = get_bits(&s->gb, 1);
                     if(clock_timestamp_flag){
-                        int full_timestamp_flag;
+                        unsigned int full_timestamp_flag;
                         get_bits(&s->gb, 2); /* ct_type */
                         get_bits(&s->gb, 1); /* nuit_field_based_flag */
                         get_bits(&s->gb, 5); /* counting_type */
@@ -7046,18 +7028,18 @@ static int decode_sei(H264Context *h){
                         get_bits(&s->gb, 1); /* discontinuity_flag */
                         get_bits(&s->gb, 1); /* cnt_dropped_flag */
                         get_bits(&s->gb, 8); /* n_frames */
-                        if( full_timestamp_flag){
+                        if(full_timestamp_flag){
                             get_bits(&s->gb, 6); /* seconds_value 0..59 */
                             get_bits(&s->gb, 6); /* minutes_value 0..59 */
                             get_bits(&s->gb, 5); /* hours_value 0..23 */
                         }else{
-                            int seconds_flag = get_bits(&s->gb, 1);
-                            if( seconds_flag ){
-                                int minutes_flag;
+                            unsigned int seconds_flag = get_bits(&s->gb, 1);
+                            if(seconds_flag){
+                                unsigned int minutes_flag;
                                 get_bits(&s->gb, 6); /* seconds_value range 0..59 */
                                 minutes_flag = get_bits(&s->gb, 1);
-                                if( minutes_flag ){
-                                    int hours_flag;
+                                if(minutes_flag){
+                                    unsigned int hours_flag;
                                     get_bits(&s->gb, 6); /* minutes_value 0..59 */
                                     hours_flag = get_bits(&s->gb, 1);
                                     if(hours_flag)
@@ -7826,7 +7808,7 @@ static int decode_frame(AVCodecContext *avctx,
     }
     /* ffdshow custom code (end) */
 
-    h->pic_struct_valid_flag = 0; // ffdshow custom code
+    h->sei_pic_struct_valid_flag = 0; // ffdshow custom code
     buf_index=decode_nal_units(h, buf, buf_size);
     if(buf_index < 0)
         return -1;
@@ -7880,24 +7862,29 @@ static int decode_frame(AVCodecContext *avctx,
             /* ffdshow custom code (begin) */
             cur->repeat_pict = 0;
 
+        #if 0
             /* Dirty workaround to avoid judging badly encoded progressive video as interlaced. */
             /* Some progressive video has pic_struct 3 or 4 (though it is rare). */
-            // Please remove this line if you don't care such rare files.
+            // Please remove all h->has_ever_interlaced if you don't care such rare files.
             // Sample file: sky.movies.9.hd.ts
             h->has_ever_interlaced |= FIELD_OR_MBAFF_PICTURE;
+        #else
+            h->has_ever_interlaced = 1;
+        #endif
 
             /* Signal interlacing information externally. */
             /* Prioritize picture timing SEI information over used decoding process if it exists. */
-            if(h->pic_struct_valid_flag && h->has_ever_interlaced){
-                if(1 <= h->pic_struct && h->pic_struct <= 4){
+            if(h->sei_pic_struct_valid_flag && h->has_ever_interlaced){
+                if(SEI_PIC_STRUCT_TOP_FIELD <= h->sei_pic_struct
+                  && h->sei_pic_struct <= SEI_PIC_STRUCT_BOTTOM_TOP){
                     cur->interlaced_frame = 1;
-                }else if(h->pic_struct == 5){
-                    // Signal the possibility of telecine externally (pic_struct 5,6)
-                    // From these hints, let applications judge if the frame is interlaced.
+                }else if(h->sei_pic_struct == SEI_PIC_STRUCT_TOP_BOTTOM_TOP){
+                    // Signal the possibility of telecined film externally (pic_struct 5,6)
+                    // From these hints, let the applications decide if they apply deinterlacing.
                     cur->repeat_pict = 4;
                     cur->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
                 }
-                else if(h->pic_struct == 6){
+                else if(h->sei_pic_struct == SEI_PIC_STRUCT_BOTTOM_TOP_BOTTOM){
                     cur->repeat_pict = 2;
                     cur->interlaced_frame = FIELD_OR_MBAFF_PICTURE;
                 }else{
@@ -7913,9 +7900,10 @@ static int decode_frame(AVCodecContext *avctx,
                 /* Derive top_field_first from field pocs. */
                 cur->top_field_first = cur->field_poc[0] < cur->field_poc[1];
             }else{
-                if(cur->interlaced_frame || h->pic_struct_valid_flag){
+                if(cur->interlaced_frame || h->sei_pic_struct_valid_flag){
                     /* Use picture timing SEI information. Even if it is a information of a past frame, better than nothing. */
-                    if(h->pic_struct == 3 || h->pic_struct == 5)
+                    if(h->sei_pic_struct == SEI_PIC_STRUCT_TOP_BOTTOM
+                      || h->sei_pic_struct == SEI_PIC_STRUCT_TOP_BOTTOM_TOP)
                         cur->top_field_first = 1;
                     else
                         cur->top_field_first = 0;
