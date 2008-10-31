@@ -22,7 +22,7 @@ protected:
  virtual Twidget* createDlgItem(int id,HWND h);
  virtual int getTbrIdff(int id,const TbindTrackbars bind);
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
- int idff_fontcharset,idff_fontname,idff_fontautosize,idff_fontautosizevideowindow,idff_fontsizep,idff_fontsizea,idff_fontspacing,idff_fontoutlinewidth,idff_fontweight,idff_fontcolor,idff_fontxscale,idff_fontyscale,idff_fontfast,idff_fontoverridescale,idff_fontaspectauto;
+ int idff_fontcharset,idff_fontname,idff_fontautosize,idff_fontautosizevideowindow,idff_fontsizep,idff_fontsizea,idff_fontspacing,idff_fontoutlinewidth,idff_fontweight,idff_fontcolor,idff_fontxscale,idff_fontyscale,idff_fontfast,idff_fontaspectauto;
  int idff_fontoutlinecolor,idff_fontshadowcolor,idff_fontbodyalpha,idff_fontoutlinealpha;
  int idff_fontshadowalpha,idff_fontshadowsize,idff_fontshadowmode;
  int idff_fontopaquebox,idff_fontblur;

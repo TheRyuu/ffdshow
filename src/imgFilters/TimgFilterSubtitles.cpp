@@ -360,6 +360,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
      TsubPrintPrefs printprefs(dst,stride2,dx1,dy1,deci,cfg,pict,clipdy,parent->config,!!isdvdproc);
      printprefs.csp=pict.csp & FF_CSPS_MASK;
      printprefs.rtStart=frameStart;
+	 deciV->getAVIdimensions(&(printprefs.xinput),&(printprefs.yinput));
      if (!cfg->stereoscopic || isdvdproc)
       {
        printprefs.sizeDx=sizeDx;
@@ -411,6 +412,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
      printprefs.csp=pict.csp & FF_CSPS_MASK;
      printprefs.sizeDx=pict.rectFull.dx;
      printprefs.sizeDy=pict.rectFull.dy;
+	 deciV->getAVIdimensions(&(printprefs.xinput),&(printprefs.yinput));
 
      if (memcmp(oldFontCCcfg->name,cfg2.font.name,sizeof(TfontSettingsSub)-sizeof(Toptions))!=0 || oldsplitborder!=cfg2.splitBorder)
       {

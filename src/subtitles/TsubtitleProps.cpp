@@ -32,6 +32,7 @@ void TSubtitleProps::reset(void)
  italic=underline=strikeout=false;
  isColor=false;
  isPos=false;
+ isMove=false;
  size=0;
  fontname[0]='\0';
  encoding=-1;
@@ -40,6 +41,7 @@ void TSubtitleProps::reset(void)
  alignment=-1;
  marginR=marginL=marginV=marginTop=marginBottom=-1;
  borderStyle=-1;
+ layer=0;
  outlineWidth=shadowDepth=-1;
  color=SecondaryColour=TertiaryColour=0xffffff;
  OutlineColour=ShadowColour=0;
@@ -56,6 +58,8 @@ void TSubtitleProps::reset(void)
  karaokeDuration = 0;
  karaokeNewWord = false;
  extendedTags=0;
+ x=0;
+ y=0;
 }
 
 HGDIOBJ TSubtitleProps::toGdiFont(HDC hdc, LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy,const Rational& sar, TfontManager *fontManager) const
@@ -128,26 +132,38 @@ int TSubtitleProps::get_spacing(unsigned int dy,unsigned int clipdy) const
   return int(spacing*4.0); 
 }
 
-int TSubtitleProps::get_marginR(unsigned int screenWidth) const
+int TSubtitleProps::get_marginR(unsigned int screenWidth,unsigned int lineWidth) const
 {
  // called only for SSA/ASS/ASS2
  int result;
- if (isPos)
+ 
+ // Revert the line size to the input dimension for calculation
+ if (refResX>0)
+	 lineWidth=lineWidth*refResX/screenWidth;
+
+ if (isPos||isMove)
   {
    switch (alignment)
     {
+	 case 1: // left(SSA)
+     case 5:
+     case 9:
+		 result=0;
+		 break;
      case 3: // right(SSA)
      case 7:
      case 11:
-      result=refResX-posx;
+		 result=refResX-posx; // Right alignment : posx anchors to the right of paragraph
       break;
      case 2: // center(SSA)
      case 6:
      case 10:
-      result=refResX-posx*2;
-      break;
-     default:
-      result=0;
+     default: 
+		 // Center alignment : posx anchors to the center of paragraph
+		 if (lineWidth == 0)
+			result=0;
+		 else
+            result=refResX-posx-(lineWidth)/2;
       break;
     }
   }
@@ -161,29 +177,35 @@ int TSubtitleProps::get_marginR(unsigned int screenWidth) const
  else
   return result;
 }
-int TSubtitleProps::get_marginL(unsigned int screenWidth) const
+int TSubtitleProps::get_marginL(unsigned int screenWidth, unsigned int lineWidth) const
 {
  // called only for SSA/ASS/ASS2
  int result;
- if (isPos)
+
+ // Revert the line size to the input dimension for calculation
+ if (refResX>0)
+	 lineWidth=lineWidth*refResX/screenWidth;
+
+ if (isPos||isMove)
   {
    switch (alignment)
     {
      case 1: // left(SSA)
      case 5:
      case 9:
-      result=posx;
+			result=posx; // Left alignment : posx anchors to the left part of paragraph
       break;
      case 3: // right(SSA)
      case 7:
      case 11:
-      result=0;
+		 result=0;
       break;
      case 2: // center(SSA)
      case 6:
      case 10:
      default:
-      result=posx*2-refResX;
+		// Center alignment : posx anchors to the center of the paragraph
+		result=posx-(lineWidth)/2;
       break;
     }
   }
@@ -197,10 +219,11 @@ int TSubtitleProps::get_marginL(unsigned int screenWidth) const
  else
   return result;
 }
+
 int TSubtitleProps::get_marginTop(unsigned int screenHeight) const
 {
  int result;
- if (isPos)
+ if (isPos||isMove)
   {
    switch (alignment)
     {
@@ -212,7 +235,7 @@ int TSubtitleProps::get_marginTop(unsigned int screenHeight) const
      case 9: // SSA mid
      case 10:
      case 11:
-      result=posy*2-refResY;
+      result=posy;
       break;
      case 1: // SSA bottom
      case 2:
@@ -237,7 +260,7 @@ int TSubtitleProps::get_marginTop(unsigned int screenHeight) const
 int TSubtitleProps::get_marginBottom(unsigned int screenHeight) const
 {
  int result;
- if (isPos)
+ if (isPos||isMove)
   {
    switch (alignment)
     {
@@ -249,7 +272,7 @@ int TSubtitleProps::get_marginBottom(unsigned int screenHeight) const
      case 9: // SSA mid
      case 10:
      case 11:
-      result=refResY-posy*2;
+		result=0;
       break;
      case 1: // SSA bottom
      case 2:
@@ -270,6 +293,30 @@ int TSubtitleProps::get_marginBottom(unsigned int screenHeight) const
   return result*screenHeight/refResY;
  else
   return result;
+}
+
+int TSubtitleProps::get_movedistanceV(unsigned int screenHeight) const
+{
+	if (!isMove || !refResY) return 0;
+	return (posy2-posy)*screenHeight/refResY;
+}
+
+int TSubtitleProps::get_movedistanceH(unsigned int screenWidth) const
+{
+	if (!isMove || !refResX) return 0;
+	return (posx2-posx)*screenWidth/refResX;
+}
+
+REFERENCE_TIME TSubtitleProps::get_moveStart() const
+{
+	return t1*10000+tStart;
+}
+
+REFERENCE_TIME TSubtitleProps::get_moveStop() const
+{
+	if (t2==0)
+		return tStop;
+	return t2*10000+tStart;
 }
 
 int TSubtitleProps::alignASS2SSA(int align)

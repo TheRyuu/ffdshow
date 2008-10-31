@@ -440,10 +440,10 @@ BEGIN
     PUSHBUTTON      "...",IDC_BT_SUB_LOADFILE,239,54,21,12
     CONTROL         "Watch for file changes",IDC_CHB_SUB_WATCH,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,120,71,98,10
     PUSHBUTTON      "Reload",IDC_BT_SUB_LOAD,219,69,41,13
-    CONTROL         "Accept embedded subtitles",IDC_CHB_SUBTEXTPIN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,3,82,122,10
+    CONTROL         "Accept embedded subtitles",IDC_CHB_SUBTEXTPIN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,82,122,10
     CONTROL         "Accept SSA, ASS and ASS2 subtitles (experimental)",IDC_CHB_SUBTEXTPIN_SSA,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,95,245,10
-    CONTROL         "Decode closed captions",IDC_CHB_SUBCC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,3,109,126,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,96,190,10
+    CONTROL         "Decode closed captions",IDC_CHB_SUBCC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,124,126,10
     LTEXT           "Delay:",IDC_LBL_SUB_DELAY,4,141,34,8
     EDITTEXT        IDC_ED_SUB_DELAY,40,139,41,12,ES_AUTOHSCROLL,WS_EX_RIGHT
     LTEXT           "ms",IDC_LBL_SUB_DELAYMS,83,141,13,8
@@ -468,8 +468,9 @@ BEGIN
     CONTROL         "",IDC_TBR_SUB_STEREOSCOPICPAR,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,135,220,125,10
     EDITTEXT        IDC_ED_SUB_SEARCH_EXT,120,36,139,12,ES_AUTOHSCROLL
     RTEXT           "Extensions priority",IDC_TXT_SERCH_ORDER,14,38,104,8
-    CONTROL         "Support for SSA tags in SRT subs and HTML tags in SSA subs (experimental)",IDC_CHB_SUBEXTENDEDTAGS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,3,124,257,10
+    CONTROL         "Support for SSA tags in SRT subs and HTML tags in SSA subs",IDC_CHB_SUBEXTENDEDTAGS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,109,246,10
+    PUSHBUTTON      "ASS/SSA config",IDC_BT_SUB_SSA_CONFIG,195,94,66,14
 END
 
 IDD_FONT DIALOGEX 0, 0, 267, 230
@@ -512,9 +513,7 @@ BEGIN
     LTEXT           "Scale Y:",IDC_LBL_FONT_YSCALE,8,72,110,8
     CONTROL         "",IDC_TBR_FONT_YSCALE,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,8,83,119,10
     CONTROL         "Correct aspect ratio automatically",IDC_CHB_FONT_ASPECT_AUTO,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,113,124,10
-    CONTROL         "Override ASS/ASS2 scaling",IDC_CHB_FONT_OVERRIDE_SCALING,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,98,124,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,107,124,10
     LTEXT           "Spacing:",IDC_LBL_FONT_SPACING,8,29,110,8
     CONTROL         "",IDC_TBR_FONT_SPACING,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,8,39,119,10
 END
@@ -728,7 +727,8 @@ FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     GROUPBOX        "",IDC_STATIC,0,0,266,230
     CONTROL         "Deinterlacing",IDC_CHB_DEINTERLACE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,0,71,10,WS_EX_ACCEPTFILES
-    CONTROL         "Process frames flagged as progressive",IDC_CHB_DEINTERLACEALWAYS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,83,0,100,10,WS_EX_ACCEPTFILES
+    CONTROL         "Process frames flagged as progressive",IDC_CHB_DEINTERLACEALWAYS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,83,0,100,10,WS_EX_ACCEPTFILES
     LTEXT           "Method:",IDC_LBL_DEINT_METHOD,6,14,27,8
     COMBOBOX        IDC_CBX_DEINT_METHOD,44,12,145,215,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     CONTROL         "Swap fields",IDC_CHB_SWAP_FIELDS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,196,14,65,10
@@ -1086,7 +1086,7 @@ BEGIN
     CONTROL         "Show current volume levels",IDC_CHB_VOLUME_SHOWCURRENT,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,191,145,10
     CONTROL         "Reset on seek",IDC_CHB_NORMALIZE_RESETONSEEK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,177,60,10
-	CONTROL         "Regain volume",IDC_CHB_NORMALIZE_REGAINVOLUME,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,163,60,10
+    CONTROL         "Regain volume",IDC_CHB_NORMALIZE_REGAINVOLUME,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,163,60,10
     CTEXT           "SideL",IDC_LBL_VOLUME_AL,172,38,20,8
     CONTROL         "",IDC_TBR_VOLUME_AL,"msctls_trackbar32",TBS_VERT | TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,170,48,10,63
     CONTROL         "",IDC_PBR_VOLUME_AL,"msctls_progress32",PBS_SMOOTH | PBS_VERTICAL | WS_DISABLED | WS_BORDER,184,51,10,56
@@ -2888,6 +2888,22 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,20,113,285,10
 END
 
+IDD_SUBTITLES_SSA DIALOGEX 0, 0, 313, 196
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_CAPTION
+CAPTION "Override SSA/ASS styles"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Close",IDCLOSE,258,179,50,14
+    CONTROL         "Override  placement with H/V sliders",IDC_CHB_SUB_SSA_OVERRIDE_POSITION,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,12,206,10
+    CONTROL         "Maintain outside text inside the picture",IDC_CHB_SUB_SSA_KEEP_TEXT_INSIDE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,26,192,10
+    CONTROL         "Use movie dimensions instead of ASS script information",IDC_CHB_SUB_SSA_USE_INPUT_DIMENSIONS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,41,192,10
+    CONTROL         "Override ASS/ASS2 scaling",IDC_CHB_SUB_SSA_OVERRIDE_SCALING,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,56,124,10
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -3152,6 +3168,13 @@ BEGIN
         RIGHTMARGIN, 305
         TOPMARGIN, 7
         BOTTOMMARGIN, 184
+    END
+
+    IDD_SUBTITLES_SSA, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 308
+        BOTTOMMARGIN, 193
     END
 END
 #endif    // APSTUDIO_INVOKED

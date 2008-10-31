@@ -1378,10 +1378,53 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
   }
 
  std::map<ParagraphKey,ParagraphValue> paragraphs;
- // pass 1: prepare paragraphs.
+ std::vector<ParagraphKey> sortedParagraphs; // Paragraphs sorted by reading order
+ std::map<int,std::vector<TrenderedSubtitleLine*>> sortedLines; // Lines sorted by layer
+
+ 
+
+ // pass 1: prepare paragraphs : a paragraph is a set of lines that have the same properties
+ // (same margins, alignment and position)
  for (const_iterator i=begin();i!=end();i++)
-  {
+ {
    (*i)->prepareKaraoke();
+   
+   // Store x position (has to be calculated into Pass 1 for collisions checks)
+   int x=0;
+   unsigned int cdx=(*i)->width();
+   // Left and right margins need to be recalculated according to the length of the line
+   int marginL=(*i)->props.get_marginL(prefsdx, cdx);
+   int marginR=(*i)->props.get_marginR(prefsdx, cdx);
+   int leftOverhang=(*i)->get_leftOverhang();
+   
+   switch ((*i)->props.alignment)
+    {
+     case 1: // left(SSA)
+     case 5:
+     case 9:
+		x=marginL - leftOverhang;
+      break;
+     case 3: // right(SSA)
+     case 7:
+     case 11:
+		x=prefsdx - cdx - marginR - leftOverhang;
+      break;
+     case 2: // center(SSA)
+     case 6:
+     case 10:
+		 // If the text is supposed to be placed at the center of the screen 
+		 // or has no horizontal alignment defined
+		 // then apply the horizontal position setting
+		 if (marginL==0 && prefs.deci->getParam2(IDFF_subSSAOverridePlacement))
+			 x=((double)prefs.xpos*prefsdx)/100.0 - (int)(cdx+marginR)/2 - leftOverhang;
+		 else if ((*i)->props.isPos) // If position defined, then marginL is relative to left border of the screen
+			 x=marginL-leftOverhang;
+		 else // else marginL is relative to the center of the screen
+			 x=((int)prefsdx - marginL - marginR - (int)cdx)/2 + marginL - leftOverhang;
+      break;
+    }
+   (*i)->props.x=x;
+
    ParagraphKey pkey;
    prepareKey(i,pkey,prefsdx,prefsdy);
    std::map<ParagraphKey,ParagraphValue>::iterator pi=paragraphs.find(pkey);
@@ -1390,6 +1433,12 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
      pi->second.topOverhang = std::min(pi->second.topOverhang ,double(pi->second.height-(*i)->get_topOverhang()));
      pi->second.bottomOverhang = std::max(pi->second.bottomOverhang ,double((*i)->get_bottomOverhang()));
      pi->second.height+=(*i)->charHeight();
+	 if ((*i)->width()>pi->second.width)
+		 pi->second.width=(*i)->width();
+	 if (x<pi->second.xmin)
+		 pi->second.xmin=x;
+	 if (pi->second.xmax < x+cdx)
+		 pi->second.xmax=x+cdx;
     }
    else
     {
@@ -1397,11 +1446,15 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
      pval.topOverhang = -(*i)->get_topOverhang();
      pval.bottomOverhang = (*i)->get_bottomOverhang();
      pval.height = (*i)->charHeight();
+	 pval.width = (*i)->width();
+	 pval.xmin=x;
+	 pval.xmax=x+cdx;
      paragraphs.insert(std::pair<ParagraphKey,ParagraphValue>(pkey,pval));
+	 sortedParagraphs.push_back(pkey);
     }
   }
 
- // pass 2: print
+ // pass 2: calculate placements and collision offsets
  for (const_iterator i=begin();i!=end();i++)
   {
    ParagraphKey pkey;
@@ -1429,41 +1482,121 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
          case 2:
          case 3:
          default:
-          pval.y=(double)prefsdy-pval.height - pkey.marginBottom + pval.topOverhang;
+			 // If the text is supposed to be placed at the bottom of the screen 
+			 // or has no vertical alignment defined
+			 // then apply the vertical position setting
+			 if (pkey.marginBottom == 0 && prefs.deci->getParam2(IDFF_subSSAOverridePlacement))
+				 pval.y=((double)prefs.ypos*prefsdy)/100.0-pval.height + pval.topOverhang;
+			 else
+				 pval.y=(double)prefsdy-pval.height - pkey.marginBottom + pval.topOverhang;
           break;
         }
-      }
-     y=pval.y;
-     pval.y += (*i)->charHeight();
-    }
+	   // y0 : upper position of paragraph, y : upper position of current line in paragraph
+	   pval.y0=pval.y;
 
-   if (y>=(double)prefsdy) break;
-   int x=0;
-   int marginL=(*i)->props.get_marginL(prefsdx);
-   int marginR=(*i)->props.get_marginR(prefsdx);
-   int leftOverhang=(*i)->get_leftOverhang();
-   unsigned int cdx=(*i)->width();
-   switch ((*i)->props.alignment)
-    {
-     case 1: // left(SSA)
-     case 5:
-     case 9:
-      x=marginL - leftOverhang;
-      break;
-     case 3: // right(SSA)
-     case 7:
-     case 11:
-      x=prefsdx - cdx - marginR - leftOverhang;
-      break;
-     case 2: // center(SSA)
-     case 6:
-     case 10:
-     default:
-      x=((int)prefsdx - marginL - marginR - (int)cdx)/2 + marginL - leftOverhang;
-      break;
-    }
-   if (x+cdx>=prefsdx && (*i)->props.alignment==-1 && prefs.xpos>=0) x=prefsdx-cdx-1;
-   (*i)->print(x,y,prefs,prefsdx,prefsdy); // print a line (=print words).
+	   // Check for collisions according to subtitles order
+	   // TODO : also according to layer (make a std::map<int layer,std::vector<ParagraphKey>>)
+	   for (std::vector<ParagraphKey>::iterator pk=sortedParagraphs.begin();
+		   pk!=sortedParagraphs.end();pk++)
+	   {
+		   std::map<ParagraphKey,ParagraphValue>::iterator pi2=paragraphs.find(*pk);
+		   // Reached current paragraph, stop treating collisions for this one
+		   if (&pi2->second==&pi->second) break;
+		   ParagraphValue &p=pi2->second;
+
+		   if (pi2->first.layer != pi->first.layer) continue;
+		   
+		   if (pval.checkCollision(p))
+		   {
+			   // Midle or top : put the text below, otherwise (bottom alignment) above
+			   switch (pkey.alignment)
+				{
+				 case 1: // bottom left
+				 case 2: // bottom center
+				 case 3: // bottom right
+					pval.yoffset=p.y0-pval.height-pval.y0;
+					if (pval.checkCollision(p))
+						pval.yoffset=p.y0+p.height-pval.y0;
+				  break;
+
+				 case 5: // top left
+				 case 6: // top center
+				 case 7: // top right
+				 case 9: // mid left
+				 case 10:// mid center
+				 case 11:// mid right
+				 default:
+					 pval.yoffset=p.y0+p.height-pval.y0;
+				  break;
+
+				}
+			   // Update position
+			   pval.y0+=pval.yoffset;
+		   }
+	   }
+	   pval.y=pval.y0;
+
+	   // Moving (scrolling text) : scroll from t1 to t2. Calculate vertical position
+	   if ((*i)->props.isMove && prefs.rtStart >= (*i)->props.get_moveStart())
+		{
+			// Stop scrolling if beyond t2
+			if (prefs.rtStart >= (*i)->props.get_moveStop())
+				pval.y+=(*i)->props.get_movedistanceV(prefsdy);
+			else
+				pval.y+=(*i)->props.get_movedistanceV(prefsdy)*
+				 (prefs.rtStart-(*i)->props.get_moveStart())/((*i)->props.get_moveStop()-(*i)->props.get_moveStart());
+		}
+      }
+     (*i)->props.y=pval.y;
+     pval.y += (*i)->charHeight();
+    } // if (pi != paragraphs.end())
+
+   if ((*i)->props.y>=(double)prefsdy) continue;
+   std::map<int,std::vector<TrenderedSubtitleLine*>>::iterator layerLinesI = sortedLines.find((*i)->props.layer);
+   if (layerLinesI == sortedLines.end())
+   {
+	   std::vector<TrenderedSubtitleLine*> layerLines;
+	   layerLines.push_back(*i);
+	   sortedLines.insert(std::pair<int,std::vector<TrenderedSubtitleLine*>>((*i)->props.layer,layerLines));
+   }
+   else
+	   layerLinesI->second.push_back(*i);   
+  }
+
+  // pass 3 : print lines layer by layer, starting from the lowest (in background)
+  for (std::map<int,std::vector<TrenderedSubtitleLine*>>::iterator l=sortedLines.begin();
+	  l!=sortedLines.end();l++)
+  {
+	  int layer=l->first;
+	  for (std::vector<TrenderedSubtitleLine*>::const_iterator i=l->second.begin();
+		  i!=l->second.end();i++)
+	  {
+		double x=(*i)->props.x;
+		double y=(*i)->props.y;
+		double cdx=(*i)->width();
+
+	    // Moving (scrolling text) : scroll from t1 to t2. Calculate horizontal position
+	    if ((*i)->props.isMove && prefs.rtStart >= (*i)->props.get_moveStart())
+	    {
+			// Stop scrolling if beyond t2
+			if (prefs.rtStart >= (*i)->props.get_moveStop())
+				x+=(*i)->props.get_movedistanceH(prefsdx);
+			else
+				x+=(*i)->props.get_movedistanceH(prefsdx)*
+				 (prefs.rtStart-(*i)->props.get_moveStart())/((*i)->props.get_moveStop()-(*i)->props.get_moveStart());
+	    }
+ 	    if ((*i)->props.y>=(double)prefsdy) continue;
+
+	    // If text goes outside and setting IDFF_subSSAMaintainInside is set, then correct its position (unless in scrolling mode)
+	    if (prefs.deci->getParam2(IDFF_subSSAMaintainInside) && !(*i)->props.isMove)
+	    {
+		   if (x+cdx>=prefsdx) x=prefsdx-cdx-1; // End of text outside the screen
+		   if (x<0) x=0; // Beginning of text outside the screen
+	    }
+
+		(*i)->print(x,y,prefs,prefsdx,prefsdy); // print a line (=print words).
+
+	  }
   }
 }
 
@@ -1475,6 +1608,7 @@ void TrenderedSubtitleLines::prepareKey(const_iterator i,ParagraphKey &pkey,unsi
  pkey.marginL = (*i)->props.get_marginL(prefsdx);
  pkey.marginR = (*i)->props.get_marginR(prefsdx);
  pkey.isPos = (*i)->props.isPos;
+ pkey.layer = (*i)->props.layer;
  if (pkey.isPos)
   {
    pkey.posx = (*i)->props.posx;
@@ -1873,6 +2007,8 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
 
      TrenderedSubtitleLine *line=NULL;
      int cx=0,cy=0;
+	 unsigned int refResX=prefs.xinput, refResY=prefs.yinput;
+	 bool firstLine=true;
      for (typename TsubtitleLine<tchar>::const_iterator w0=l->begin();w0!=l->end();w0++)
       {
        TsubtitleWord<tchar> w(*w0);
@@ -1882,7 +2018,27 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
        if (!line)
         {
          line=new TrenderedSubtitleLine(w.props);
+		 // Some properties are missing
+		 line->props.isPos=l->props.isPos;
+		 line->props.posx=l->props.posx;
+		 line->props.posy=l->props.posy;
+		 // Propagate input dimensions to the line properties 
+		 // (unless movie dimensions are filled in the script and parameter 
+		 // IDFF_subSSAUseMovieDimensions is not checked)
+		 if (line->props.refResX && line->props.refResY 
+			 && firstLine && !deci->getParam2(IDFF_subSSAUseMovieDimensions))
+		 {
+			 refResX=line->props.refResX;
+			 refResY=line->props.refResY;
+			 firstLine=false;
+		 }
+		 else
+		 {
+			 line->props.refResX=refResX;
+			 line->props.refResY=refResY;
+		 }
         }
+
        const tchar *p=w;
        if (*p) // drop empty words
         {
@@ -1902,10 +2058,15 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
               }
             }
            int strlenp=(int)strlen(p);
-           if (cx+strlenp-1<=wordWrap.getRightOfTheLine(cy))
+		   // If line goes out of screen, wraps it except if no wrap defined 
+		   if (cx+strlenp-1<=wordWrap.getRightOfTheLine(cy))
             {
              if (*p)
               {
+			   // Propagate the input dimensions to the TsubtitleWord props
+			   w.props.refResX=refResX;
+			   w.props.refResY=refResY;
+
                TrenderedTextSubtitleWord *rw=newWord(p,strlenp,prefs,&w,lf,w0+1==l->end());
                if (rw) line->push_back(rw);
                cx+=strlenp;
@@ -1929,6 +2090,10 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
               }
              if (*p)
               {
+		       // Propagate the input dimensions to the TsubtitleWord props
+			   w.props.refResX=refResX;
+			   w.props.refResY=refResY;
+
                TrenderedTextSubtitleWord *rw=newWord(p,n,prefs,&w,lf,true);
                w.props.karaokeNewWord = false;
                w.props.karaokeStart += w.props.karaokeDuration;
