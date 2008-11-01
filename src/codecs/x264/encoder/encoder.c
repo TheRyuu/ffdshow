@@ -527,7 +527,6 @@ static int x264_validate_parameters( x264_t *h )
                 while( l[1].level_idc && x264_validate_levels( h, 0 ) && l++ );
             if( h->param.rc.i_vbv_buffer_size <= 0 )
                 h->param.rc.i_vbv_max_bitrate = 0;
-            x264_log( h, X264_LOG_DEBUG, "level_idc: %d\n", h->param.i_level_idc );
         }
         else
         {
@@ -790,6 +789,12 @@ x264_t *x264_encoder_open   ( x264_param_t *param )
         }
     }
 
+    x264_log( h, X264_LOG_INFO, "profile %s, level %d.%d\n",
+        h->sps->i_profile_idc == PROFILE_BASELINE ? "Baseline" :
+        h->sps->i_profile_idc == PROFILE_MAIN ? "Main" :
+        h->sps->i_profile_idc == PROFILE_HIGH ? "High" :
+        "High 4:4:4 Predictive", h->sps->i_level_idc/10, h->sps->i_level_idc%10 );
+
     return h;
 }
 
@@ -818,6 +823,8 @@ int x264_encoder_reconfig( x264_t *h, x264_param_t *param )
     COPY( analyse.b_dct_decimate );
     COPY( analyse.b_fast_pskip );
     COPY( analyse.b_mixed_references );
+    COPY( analyse.f_psy_rd );
+    COPY( analyse.f_psy_trellis );
     // can only twiddle these if they were enabled to begin with:
     if( h->pps->b_transform_8x8_mode )
         COPY( analyse.b_transform_8x8 );
