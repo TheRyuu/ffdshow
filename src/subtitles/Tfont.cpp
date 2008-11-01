@@ -1379,7 +1379,7 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
 
  std::map<ParagraphKey,ParagraphValue> paragraphs;
  std::vector<ParagraphKey> sortedParagraphs; // Paragraphs sorted by reading order
- std::map<int,std::vector<TrenderedSubtitleLine*>> sortedLines; // Lines sorted by layer
+ std::map<int,std::vector<TrenderedSubtitleLine* > > sortedLines; // Lines sorted by layer
 
  
 
@@ -1552,19 +1552,19 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
     } // if (pi != paragraphs.end())
 
    if ((*i)->props.y>=(double)prefsdy) continue;
-   std::map<int,std::vector<TrenderedSubtitleLine*>>::iterator layerLinesI = sortedLines.find((*i)->props.layer);
+   std::map<int,std::vector<TrenderedSubtitleLine* > >::iterator layerLinesI = sortedLines.find((*i)->props.layer);
    if (layerLinesI == sortedLines.end())
    {
 	   std::vector<TrenderedSubtitleLine*> layerLines;
 	   layerLines.push_back(*i);
-	   sortedLines.insert(std::pair<int,std::vector<TrenderedSubtitleLine*>>((*i)->props.layer,layerLines));
+	   sortedLines.insert(std::pair<int,std::vector<TrenderedSubtitleLine* > > ((*i)->props.layer,layerLines));
    }
    else
 	   layerLinesI->second.push_back(*i);   
   }
 
   // pass 3 : print lines layer by layer, starting from the lowest (in background)
-  for (std::map<int,std::vector<TrenderedSubtitleLine*>>::iterator l=sortedLines.begin();
+  for (std::map<int,std::vector<TrenderedSubtitleLine* > >::iterator l=sortedLines.begin();
 	  l!=sortedLines.end();l++)
   {
 	  int layer=l->first;
