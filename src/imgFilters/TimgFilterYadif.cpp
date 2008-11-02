@@ -126,8 +126,15 @@ HRESULT TimgFilterYadif::continue_buffered_image(TffPict &pict)
 
         pict.fieldtype = (pict.fieldtype & ~FIELD_TYPE::MASK_PROG) | FIELD_TYPE::PROGRESSIVE_FRAME;
 
-        if (yadctx->mode & 1)
+        if (yadctx->mode & 1){
             pict.rtStop = pict.rtStart + (yadctx->frame_duration >> 1) - 1;
+            if (pict.rtStop <= pict.rtStart)
+                pict.rtStop = pict.rtStart + 1;
+        }
+
+        TffPict inputPicture;
+        if(yadctx->mode & 1)
+            inputPicture = pict;
 
         HRESULT hr = parent->deliverSample(++it, pict);
 
@@ -136,8 +143,9 @@ HRESULT TimgFilterYadif::continue_buffered_image(TffPict &pict)
 
         // only if frame doubler is used and it has just delivered the first image.
 
+        pict = inputPicture;
         --it;
-        if (pict.rtStart != REFTIME_INVALID)
+        if (pict.rtStart != REFTIME_INVALID && yadctx->frame_duration > 0)
             pict.rtStart += yadctx->frame_duration >> 1;
     }
     return hr;
@@ -258,8 +266,10 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
     it = it0;
     cfg = (const TdeinterlaceSettings*)cfg0;
 
-    if ((pict.fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME && !cfg->deinterlaceAlways) || !libmplayer)
+    if ((pict.fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME && !cfg->deinterlaceAlways) || !libmplayer){
+        done();
         return parent->deliverSample(++it,pict);
+    }
 
     if (pict.rectClip != pict.rectFull && !cfg->full)
         parent->dirtyBorder=1;
@@ -280,6 +290,14 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
     yadctx->parity = cfg->yadifParity;
 
     Tmp_image mpi(pict, cfg->full, src);  // convert to mplayer compatible picture
+
+    if (yadctx->do_deinterlace == 1){
+        REFERENCE_TIME rtStart = pict.rtStart,rtStop = pict.rtStop;
+        pict.rtStop = pict.rtStart + 1;
+        put_image(mpi, pict);
+        pict.rtStart = rtStart;
+        pict.rtStop = rtStop;
+    }
 
     return put_image(mpi, pict);
 }
