@@ -170,7 +170,7 @@ int TimgFilterYadif::config(TffPict &pict)
             int is_chroma = !!i;
             stride_t ffdshow_w = ((pict.rectFull.dx >> is_chroma)/16 + 2) * 16; // from void TffPict::convertCSP(int Icsp,Tbuffer &buf,int edge)
             int w = std::max(pict.stride[i], ffdshow_w);
-            int h = ((pict.rectFull.dy + 6 + 31) & (~31)) >> is_chroma;
+            int h = ((pict.rectFull.dy + (6 << is_chroma) + 31) & (~31)) >> is_chroma;
 
             yadctx->stride[i]= w;
             for(j = 0 ; j < 3 ; j++){
