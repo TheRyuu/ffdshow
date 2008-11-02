@@ -278,6 +278,9 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
     oldpict = pict;
     oldcfg = *cfg;
 
+    if(pict.fieldtype & FIELD_TYPE::MASK_SEQ)
+        done();
+
     const unsigned char *src[4];
     bool cspChanged = getCur(FF_CSP_420P, pict, cfg->full,src);
 
