@@ -1213,7 +1213,7 @@ if (!outdv && hwDeinterlace)
       // Auto
       else
        {
-        if (!(pict.fieldtype&FIELD_TYPE::MASK_INT))
+        if (pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME)
          {
           outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_WEAVE;
          }

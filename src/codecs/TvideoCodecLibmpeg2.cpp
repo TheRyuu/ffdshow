@@ -254,8 +254,15 @@ int TvideoCodecLibmpeg2::SetDeinterlaceMethod(void)
 
     if(seqflags & SEQ_FLAG_PROGRESSIVE_SEQUENCE)
         di_method = FIELD_TYPE::PROGRESSIVE_FRAME; // hurray!
-    else if(m_fFilm)
+    else if(m_fFilm){
         di_method = FIELD_TYPE::PROGRESSIVE_FRAME; // we are lucky
+
+        if(newflags & PIC_FLAG_TOP_FIELD_FIRST)
+            di_method |= FIELD_TYPE::INT_TFF;
+        else
+            di_method |= FIELD_TYPE::INT_BFF;
+
+    }
 #if 1 // ffdshow custom code
     else if(newflags & PIC_FLAG_TOP_FIELD_FIRST)
         di_method = FIELD_TYPE::INT_TFF;

@@ -102,7 +102,7 @@ bool TimgFilterDScalerDI::is(const TffPictBase &pict,const TfilterSettingsVideo 
 HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,const TfilterSettingsVideo *cfg0)
 {
  const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
- if (pict0.fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME && !cfg->deinterlaceAlways)
+ if ((pict0.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) && !cfg->deinterlaceAlways)
  {
   return parent->deliverSample(++it,pict0);
  }
