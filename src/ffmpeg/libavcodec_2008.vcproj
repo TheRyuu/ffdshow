@@ -446,10 +446,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\aac_parser.c"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\aasc.c"
 				>
 			</File>
@@ -494,6 +490,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\audioconvert.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\avs.c"
 				>
 			</File>
@@ -519,6 +519,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\celp_filters.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\celp_math.c"
 				>
 			</File>
 			<File
@@ -706,10 +710,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavutil\lfg.c"
-				>
-			</File>
-			<File
 				RelativePath=".\libavcodec\libamr.c"
 				>
 			</File>
@@ -722,11 +722,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\mace.c"
+				RelativePath=".\libavcodec\lpc.c"
 				>
 			</File>
 			<File
-				RelativePath=".\libavutil\md5.c"
+				RelativePath=".\libavcodec\mace.c"
 				>
 			</File>
 			<File
@@ -815,10 +815,6 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\mpeg12enc.c"
-				>
-			</File>
-			<File
-				RelativePath=".\libavcodec\mpeg4audio.c"
 				>
 			</File>
 			<File
@@ -1151,11 +1147,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\ac3dec_data.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\ac3tab.h"
 				>
 			</File>
 			<File
 				RelativePath=".\libavcodec\atrac3data.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\audioconvert.h"
 				>
 			</File>
 			<File
@@ -1183,11 +1187,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\celp_math.h"
+				>
+			</File>
+			<File
 				RelativePath=".\config.h"
 				>
 			</File>
 			<File
 				RelativePath=".\libavcodec\cookdata.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\dca.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\dcadata.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\dcahuff.h"
 				>
 			</File>
 			<File
@@ -1296,10 +1316,6 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\lcl.h"
-				>
-			</File>
-			<File
-				RelativePath=".\libavutil\lfg.h"
 				>
 			</File>
 			<File
@@ -1651,6 +1667,10 @@
 			Name="libavutil"
 			>
 			<File
+				RelativePath=".\libavutil\avstring.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavutil\avutil.h"
 				>
 			</File>
@@ -1683,6 +1703,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavutil\lfg.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\lfg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\lls.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\lls.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libavutil\log.c"
 				>
 			</File>
@@ -1700,6 +1736,14 @@
 			</File>
 			<File
 				RelativePath=".\libavutil\mathematics.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\md5.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\md5.h"
 				>
 			</File>
 			<File
@@ -1724,6 +1768,10 @@
 			</File>
 			<File
 				RelativePath=".\libavutil\rational.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\string.c"
 				>
 			</File>
 			<File

@@ -84,7 +84,6 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(avcodec_alloc_context0,"avcodec_alloc_context");
  dll->loadFunction(avcodec_alloc_frame,"avcodec_alloc_frame");
  dll->loadFunction(avcodec_decode_video,"avcodec_decode_video");
- dll->loadFunction(avcodec_decode_audio,"avcodec_decode_audio");
  dll->loadFunction(avcodec_decode_audio2,"avcodec_decode_audio2");
  dll->loadFunction(avcodec_flush_buffers,"avcodec_flush_buffers");
  dll->loadFunction(avcodec_close0,"avcodec_close");

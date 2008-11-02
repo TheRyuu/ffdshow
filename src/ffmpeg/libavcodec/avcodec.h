@@ -37,7 +37,7 @@
 #include "libavutil/avutil.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 52
-#define LIBAVCODEC_VERSION_MINOR  0
+#define LIBAVCODEC_VERSION_MINOR  2
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -67,6 +67,14 @@ enum CodecType {
 };
 
 /**
+ * Needed for CorePNG
+ */
+enum CorePNGFrameType {
+    SAMPLE_I,
+    SAMPLE_P
+};
+
+/**
  * all in native-endian format
  */
 enum SampleFormat {
@@ -79,13 +87,40 @@ enum SampleFormat {
     SAMPLE_FMT_NB               ///< Number of sample formats. DO NOT USE if dynamically linking to libavcodec
 };
 
-/**
- * Needed for CorePNG
- */
-enum CorePNGFrameType {
-    SAMPLE_I,
-    SAMPLE_P
-};
+/* Audio channel masks */
+#define CHANNEL_FRONT_LEFT             0x00000001
+#define CHANNEL_FRONT_RIGHT            0x00000002
+#define CHANNEL_FRONT_CENTER           0x00000004
+#define CHANNEL_LOW_FREQUENCY          0x00000008
+#define CHANNEL_BACK_LEFT              0x00000010
+#define CHANNEL_BACK_RIGHT             0x00000020
+#define CHANNEL_FRONT_LEFT_OF_CENTER   0x00000040
+#define CHANNEL_FRONT_RIGHT_OF_CENTER  0x00000080
+#define CHANNEL_BACK_CENTER            0x00000100
+#define CHANNEL_SIDE_LEFT              0x00000200
+#define CHANNEL_SIDE_RIGHT             0x00000400
+#define CHANNEL_TOP_CENTER             0x00000800
+#define CHANNEL_TOP_FRONT_LEFT         0x00001000
+#define CHANNEL_TOP_FRONT_CENTER       0x00002000
+#define CHANNEL_TOP_FRONT_RIGHT        0x00004000
+#define CHANNEL_TOP_BACK_LEFT          0x00008000
+#define CHANNEL_TOP_BACK_CENTER        0x00010000
+#define CHANNEL_TOP_BACK_RIGHT         0x00020000
+#define CHANNEL_STEREO_LEFT            0x20000000  ///< Stereo downmix.
+#define CHANNEL_STEREO_RIGHT           0x40000000  ///< See CHANNEL_STEREO_LEFT.
+
+/* Audio channel convenience macros */
+#define CHANNEL_LAYOUT_MONO              (CHANNEL_FRONT_CENTER)
+#define CHANNEL_LAYOUT_STEREO            (CHANNEL_FRONT_LEFT|CHANNEL_FRONT_RIGHT)
+#define CHANNEL_LAYOUT_SURROUND          (CHANNEL_LAYOUT_STEREO|CHANNEL_FRONT_CENTER)
+#define CHANNEL_LAYOUT_QUAD              (CHANNEL_LAYOUT_STEREO|CHANNEL_BACK_LEFT|CHANNEL_BACK_RIGHT)
+#define CHANNEL_LAYOUT_5POINT0           (CHANNEL_LAYOUT_SURROUND|CHANNEL_SIDE_LEFT|CHANNEL_SIDE_RIGHT)
+#define CHANNEL_LAYOUT_5POINT1           (CHANNEL_LAYOUT_5POINT0|CHANNEL_LOW_FREQUENCY)
+#define CHANNEL_LAYOUT_7POINT1           (CHANNEL_LAYOUT_5POINT1|CHANNEL_BACK_LEFT|CHANNEL_BACK_RIGHT)
+#define CHANNEL_LAYOUT_7POINT1_WIDE      (CHANNEL_LAYOUT_SURROUND|CHANNEL_LOW_FREQUENCY|\
+                                          CHANNEL_BACK_LEFT|CHANNEL_BACK_RIGHT|\
+                                          CHANNEL_FRONT_LEFT_OF_CENTER|CHANNEL_FRONT_RIGHT_OF_CENTER)
+#define CHANNEL_LAYOUT_STEREO_DOWNMIX    (CHANNEL_STEREO_LEFT|CHANNEL_STEREO_RIGHT)
 
 /* in bytes */
 #define AVCODEC_MAX_AUDIO_FRAME_SIZE 192000 // 1 second of 48khz 32bit audio
@@ -886,7 +921,7 @@ typedef struct AVCodecContext {
     float b_quant_offset;
 
     /**
-     * Error recognition; higher values will detect more errors but may
+     * Error recognization; higher values will detect more errors but may
      * misdetect some more or less valid parts as errors.
      * - encoding: unused
      * - decoding: Set by user.
@@ -1935,12 +1970,15 @@ typedef struct AVCodecContext {
      */
     int64_t timecode_frame_start;
 
+#if LIBAVCODEC_VERSION_MAJOR < 53
     /**
      * Decoder should decode to this many channels if it can (0 for default)
      * - encoding: unused
      * - decoding: Set by user.
+     * @deprecated Deprecated in favor of request_channel_layout.
      */
     int request_channels;
+#endif
 
     /**
      * Percentage of dynamic range compression to be applied by the decoder.
@@ -1967,8 +2005,22 @@ typedef struct AVCodecContext {
      * - decoding: set by libavcodec.
      */
     int bits_per_raw_sample;
+
+    /**
+     * Audio channel layout.
+     * - encoding: set by user.
+     * - decoding: set by libavcodec.
+     */
+    int64_t channel_layout;
+
+    /**
+     * Request decoder to use this channel layout if it can (0 for default)
+     * - encoding: unused
+     * - decoding: Set by user.
+     */
+    int64_t request_channel_layout;
     
-        
+    
     /* ffdshow custom stuff (begin) */
     
     /**
@@ -2041,6 +2093,7 @@ typedef struct AVCodec {
     const char *long_name;
     const int *supported_samplerates;       ///< array of supported audio samplerates, or NULL if unknown, array is terminated by 0
     const enum SampleFormat *sample_fmts;   ///< array of supported sample formats, or NULL if unknown, array is terminated by -1
+    const int64_t *channel_layouts;         ///< array of support channel layouts, or NULL if unknown. array is terminated by 0
 } AVCodec;
 
 /**
@@ -2267,13 +2320,6 @@ void avcodec_get_encoder_info(AVCodecContext *avctx,int *xvid_build,int *divx_ve
  * @see avcodec_alloc_context, avcodec_find_decoder, avcodec_find_encoder
  */
 int avcodec_open(AVCodecContext *avctx, AVCodec *codec);
-
-/**
- * @deprecated Use avcodec_decode_audio2() instead.
- */
-attribute_deprecated int avcodec_decode_audio(AVCodecContext *avctx, int16_t *samples,
-                         int *frame_size_ptr,
-                         const uint8_t *buf, int buf_size);
 
 /**
  * Decodes an audio frame from \p buf into \p samples.
@@ -2573,4 +2619,5 @@ int avcodec_h264_search_recovery_point(AVCodecContext *avctx,
 #define AVERROR_NOFMT       AVERROR(EILSEQ)  /**< unknown format */
 #define AVERROR_NOTSUPP     AVERROR(ENOSYS)  /**< Operation not supported. */
 #define AVERROR_PATCHWELCOME    -MKTAG('P','A','W','E') /**< Not yet implemented in FFmpeg. Patches welcome. */
+
 #endif /* AVCODEC_AVCODEC_H */

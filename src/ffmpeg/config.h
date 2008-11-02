@@ -351,6 +351,9 @@
 #define HAVE_7REGS 1
 #define HAVE_EBX_AVAILABLE 1
 
-/* CPU specific */
-//#define HAVE_FAST_CMOV 1
-//#define ENABLE_CMOV 1
+#ifdef ARCH_X86_64
+	#define ENABLE_CMOV 1
+	#define HAVE_CMOV 1
+	#define ENABLE_FAST_CMOV 1
+	#define HAVE_FAST_CMOV 1
+#endif

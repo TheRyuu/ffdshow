@@ -39,6 +39,10 @@
 #include "ac3dec.h"
 #include "ac3dec_data.h"
 
+#if _MSC_VER<1400
+#define powf pow
+#endif
+
 /** Large enough for maximum possible frame size when the specification limit is ignored */
 #define AC3_FRAME_BUFFER_SIZE 32768
 

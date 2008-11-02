@@ -48,9 +48,6 @@ public:
  int (*avcodec_decode_video)(AVCodecContext *avctx, AVFrame *picture,
                              int *got_picture_ptr,
                              const uint8_t *buf, int buf_size);
- int (*avcodec_decode_audio)(AVCodecContext *avctx, void *samples,
-                             int *frame_size_ptr,
-                             const uint8_t *buf, int buf_size);
 int (*avcodec_decode_audio2)(AVCodecContext *avctx, int16_t *samples,
                          int *frame_size_ptr,
                          const uint8_t *buf, int buf_size);

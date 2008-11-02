@@ -29,6 +29,7 @@
 #include "avcodec.h"
 #include "dsputil.h"
 #include "imgconvert.h"
+#include "audioconvert.h"
 #include <stdarg.h>
 #include <limits.h>
 #include <float.h>
@@ -619,13 +620,6 @@ int attribute_align_arg avcodec_decode_audio2(AVCodecContext *avctx, int16_t *sa
         *frame_size_ptr=0;
     }
     return ret;
-}
-
-int avcodec_decode_audio(AVCodecContext *avctx, int16_t *samples,
-                         int *frame_size_ptr,
-                         const uint8_t *buf, int buf_size){
-    *frame_size_ptr= AVCODEC_MAX_AUDIO_FRAME_SIZE;
-    return avcodec_decode_audio2(avctx, samples, frame_size_ptr, buf, buf_size);
 }
 
 int avcodec_close(AVCodecContext *avctx)

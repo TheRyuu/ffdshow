@@ -8,7 +8,6 @@ EXPORTS
   avcodec_alloc_frame
   avcodec_decode_video
   avcodec_encode_video
-  avcodec_decode_audio
   avcodec_decode_audio2
   avcodec_encode_audio
   avcodec_flush_buffers

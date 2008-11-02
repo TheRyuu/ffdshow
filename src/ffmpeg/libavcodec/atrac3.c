@@ -43,6 +43,10 @@
 
 #include "atrac3data.h"
 
+#if _MSC_VER<1400
+#define powf pow
+#endif
+
 #define JOINT_STEREO    0x12
 #define STEREO          0x2
 
@@ -1032,20 +1036,12 @@ static int atrac3_decode_init(AVCodecContext *avctx)
     /* Generate the scale factors. */
     for (i=0 ; i<64 ; i++)
         SFTable[i] = pow(2.0, (i - 15) / 3.0);
-    #ifdef __GNUC__
     /* Generate gain tables. */
     for (i=0 ; i<16 ; i++)
         gain_tab1[i] = powf (2.0, (4 - i));
 
     for (i=-15 ; i<16 ; i++)
         gain_tab2[i+15] = powf(2.0, i * -0.125);
-    #else
-    for (i=0 ; i<16 ; i++)
-        gain_tab1[i] = pow(2.0, (4 - i));
-
-    for (i=-15 ; i<16 ; i++)
-        gain_tab2[i+15] = pow(2.0, i * -0.125);
-    #endif
     /* init the joint-stereo decoding data */
     q->weighting_delay[0] = 0;
     q->weighting_delay[1] = 7;

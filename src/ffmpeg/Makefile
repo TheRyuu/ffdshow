@@ -20,10 +20,12 @@ SRCS_C=\
       $(LAVC_DIR)/ac3enc.c \
       $(LAVC_DIR)/ac3tab.c \
       $(LAVC_DIR)/celp_filters.c \
+      $(LAVC_DIR)/celp_math.c \
       $(LAVC_DIR)/adpcm.c \
       $(LAVC_DIR)/allcodecs.c \
       $(LAVC_DIR)/asv1.c \
       $(LAVC_DIR)/atrac3.c \
+      $(LAVC_DIR)/audioconvert.c \
       $(LAVC_DIR)/avs.c \
       $(LAVC_DIR)/bitstream.c \
       $(LAVC_DIR)/cabac.c \
@@ -169,6 +171,7 @@ SRCS_C=\
       $(LAVU_DIR)/mathematics.c \
       $(LAVU_DIR)/md5.c \
       $(LAVU_DIR)/mem.c \
+      $(LAVU_DIR)/string.c \
       $(LAVU_DIR)/random.c \
       $(LAVU_DIR)/rational.c \
     \
