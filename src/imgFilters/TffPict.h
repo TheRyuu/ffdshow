@@ -105,10 +105,12 @@ public:
  TffPict(int Icsp,unsigned char *data[4],const stride_t stride[4],const Trect &r,bool ro,IMediaSample *pIn,const Tpalette &Ipalette=Tpalette(),bool isInterlacedRawVideo=false);
  TffPict(int Icsp,const char_t *flnm,Tbuffer &buf,IffdshowBase *deci);
  void setTimestamps(IMediaSample *pIn);
+ void setDiscontinuity(IMediaSample *pIn);
  ~TffPict() {}
 
  TcspInfo cspInfo;
  int frametype,fieldtype;
+ bool discontinuity;
  REFERENCE_TIME rtStart,rtStop;
  LONGLONG mediatimeStart,mediatimeStop;
  int gmcWarpingPoints,gmcWarpingPointsReal;

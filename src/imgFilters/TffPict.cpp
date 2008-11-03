@@ -99,6 +99,7 @@ void TffPict::init(void)
  rtStart=rtStop=mediatimeStart=mediatimeStop=REFTIME_INVALID;
  gmcWarpingPoints=gmcWarpingPointsReal=0;
  edge=0;
+ discontinuity = false;
 }
 void TffPict::init(int Icsp,unsigned char *Idata[4],const stride_t Istride[4],const Trect &r,bool Iro,int Iframetype,int Ifieldtype,size_t IsrcSize,const Tpalette &Ipalette)
 {
@@ -124,16 +125,25 @@ void TffPict::init(int Icsp,unsigned char *Idata[4],const stride_t Istride[4],co
  gmcWarpingPoints=gmcWarpingPointsReal=0;
  srcSize=IsrcSize;
  edge=0;
+ discontinuity = false;
 }
 TffPict::TffPict(int Icsp,unsigned char *Idata[4],const stride_t Istride[4],const Trect &r,bool Iro,int Iframetype,int Ifieldtype,size_t IsrcSize,IMediaSample *pIn,const Tpalette &Ipalette)
 {
  init(Icsp,Idata,Istride,r,Iro,Iframetype,Ifieldtype,IsrcSize,Ipalette);
- if (pIn) setTimestamps(pIn);
+ if (pIn)
+  {
+   setTimestamps(pIn);
+   setDiscontinuity(pIn);
+  }
 }
 TffPict::TffPict(int Icsp,unsigned char *data[4],const stride_t stride[4],const Trect &r,bool ro,IMediaSample *pIn,const Tpalette &Ipalette,bool isInterlacedRawVideo)
 {
  init(Icsp,data,stride,r,ro,FRAME_TYPE::fromSample(pIn),FIELD_TYPE::fromSample(pIn,isInterlacedRawVideo),pIn?pIn->GetSize():0,Ipalette);
- if (pIn) setTimestamps(pIn);
+ if (pIn)
+  {
+   setTimestamps(pIn);
+   setDiscontinuity(pIn);
+  }
 }
 void TffPict::setTimestamps(IMediaSample *pIn)
 {
@@ -146,6 +156,11 @@ void TffPict::setTimestamps(IMediaSample *pIn)
   mediatimeStart=mediatimeStop=REFTIME_INVALID;
 }
 
+void TffPict::setDiscontinuity(IMediaSample *pIn)
+{
+ if (pIn->IsDiscontinuity() == S_OK)
+  discontinuity = true;
+}
 void TffPict::readLibavcodec(int Icsp,const char_t *flnm,const char_t *ext,Tbuffer &buf,IffdshowBase *deci)
 {
  Tlibavcodec *libavcodec;

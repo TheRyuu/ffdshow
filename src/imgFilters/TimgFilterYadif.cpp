@@ -149,6 +149,7 @@ HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4], i
         // only if frame doubler is used and it has just delivered the first image.
 
         pict = inputPicture;
+        pict.discontinuity = false;
         if (pict.rtStart != REFTIME_INVALID && yadctx->frame_duration > 0)
             pict.rtStart += yadctx->frame_duration >> 1;
     }
@@ -188,6 +189,7 @@ void TimgFilterYadif::done(void)
         }
         ::free(yadctx);
         yadctx = NULL;
+        hasImageInBuffer = false;
     }
 }
 
@@ -269,6 +271,16 @@ HRESULT TimgFilterYadif::onEndOfStream(void)
     return put_image(oldpict, src, oldcfg.full);
 }
 
+HRESULT TimgFilterYadif::onDiscontinuity(TffPict pict)
+{
+    if (!yadctx || !libmplayer)
+        return S_OK;
+
+    const unsigned char *src[4];
+    src[0] = src[1] = src[2] = src[3] = NULL;
+    return put_image(pict, src, cfg->full);
+}
+
 HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
     it = it0;
@@ -284,8 +296,10 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
         parent->dirtyBorder=1;
 
     init(pict,cfg->full,cfg->half);
-    //if(pict.fieldtype & FIELD_TYPE::MASK_SEQ)
-    //    done();
+    if(pict.discontinuity || (pict.fieldtype & FIELD_TYPE::MASK_SEQ)){
+        onDiscontinuity(pict);
+        done();
+    }
 
     const unsigned char *src[4];
     bool cspChanged = getCur(FF_CSP_420P, pict, cfg->full,src);

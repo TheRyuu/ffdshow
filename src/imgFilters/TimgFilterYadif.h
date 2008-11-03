@@ -17,6 +17,7 @@ private:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSP_420P | FF_CSP_YUY2;}
  virtual void onSizeChange(void);
+ HRESULT onDiscontinuity(TffPict pict);
 
  YadifContext* TimgFilterYadif::getContext(int mode, int parity);
  HRESULT put_image(TffPict &pict, const unsigned char *src[4], int full);
