@@ -29,8 +29,7 @@
 // 'RegainThreshold', this will reserve some headroom for future peaks.
 const float RegainThreshold=0.75f;
 
-const float TaudioFilterVolume::MUL_INIT=1.0f;
-const float TaudioFilterVolume::MUL_MIN=0.1f;
+const float TaudioFilterVolume::MUL_MIN=1.0f;
 const float TaudioFilterVolume::MUL_MAX=10.0f; //this is the max amplification allowed
 // the actual 'mul' step is multiplied by ((float)numsamples / fmt.freq) in order to
 // achieve similar results with different sample rates / method call rates.
@@ -75,7 +74,6 @@ template<class sample_t> void TaudioFilterVolume::volume(sample_t* const samples
 	 //upper = min(mul, cfg->normalizeMax/100.0f)
      float upper = mul > (cfg->normalizeMax/100.0f) ? (cfg->normalizeMax/100.0f) : mul;
 
-     float curavg=0.0f;
 	 // Evaluate an adequate 'mul' coefficient based on previous state, current samples level, etc
 	 if (mul > TsampleFormatInfo<sample_t>::max()/max || mul > cfg->normalizeMax/100.0f)
       {

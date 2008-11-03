@@ -52,6 +52,8 @@
 #define PREF_YAMAGATA = False
 #define PREF_XXL = False
 #define PREF_XXL_X64 = False
+#define PREF_ALBAIN = False
+#define PREF_ALBAIN_x64 = False
 #define PREF_X64_VS2005SP1 = False
 #define PREF_X64_VS2008SP1 = False
 
@@ -95,6 +97,15 @@
   #define include_info_before = True
   #define include_setup_icon = True
   #define filename_suffix = '_xxl_x64'
+#elif PREF_ALBAIN
+  #define VS2008SP1 = True
+  #define filename_suffix = '_dbt'
+#elif PREF_ALBAIN_X64
+  #define VS2008SP1 = True
+  #define is64bit = True
+  #define include_x264 = False
+  #define include_plugin_dscaler = False
+  #define filename_suffix = '_dbt_x64'
 #elif PREF_X64_VS2005SP1 | PREF_X64_VS2008SP1
   #define is64bit = True
   #define include_x264 = False

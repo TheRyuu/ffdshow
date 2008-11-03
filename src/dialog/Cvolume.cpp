@@ -294,7 +294,7 @@ void TvolumePage::TvolumeTbr::storeEditValue(const TffdshowParamInfo &info,int m
 
 void TvolumePage::onFrame(void)
 {
- int amp=filter?filter->getCurrentNormalization():100;
+ int amp=(filter && getCheck(IDC_CHB_VOLUME_NORMALIZE)&& getCheck(IDC_CHB_VOLUME))?filter->getCurrentNormalization():100;
  if (isdb)
   setText(IDC_LBL_VOLUME_NORMALIZE_CURRENT,_l("%s %4.1f db"),_(IDC_LBL_VOLUME_NORMALIZE_CURRENT),value2db(amp/100.0));
  else

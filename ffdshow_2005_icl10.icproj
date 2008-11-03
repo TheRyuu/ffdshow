@@ -1285,6 +1285,12 @@
 				</FileConfiguration>
 			</File>
 			<File 
+				RelativePath="src\TaudioParser.cpp">
+			</File>
+			<File 
+				RelativePath="src\Tbitdata.cpp">
+			</File>
+			<File 
 				RelativePath="src\TcpuUsage.cpp">
 			</File>
 			<File 
@@ -1599,6 +1605,12 @@
 			</File>
 			<File 
 				RelativePath="src\stdafx.h">
+			</File>
+			<File 
+				RelativePath="src\TaudioParser.h">
+			</File>
+			<File 
+				RelativePath="src\Tbitdata.h">
 			</File>
 			<File 
 				RelativePath="src\TcpuUsage.h">
@@ -4598,6 +4610,14 @@
 			</File>
 			<File 
 				RelativePath=".\src\dialog\ISpecifyPropertyPagesVE.h">
+			</File>
+			<File
+				RelativePath=".\src\dialog\TsubtitlesSSAConfig.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dialog\TsubtitlesSSAConfig.h"
+				>
 			</File>
 			<File 
 				RelativePath=".\src\dialog\TbitrateDlg.cpp">

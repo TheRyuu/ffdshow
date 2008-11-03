@@ -279,6 +279,17 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
    wFormatTag=TsampleFormat::getPCMformat(mt,wFormatTag);
   }
  CodecID codecId=globalSettings->getCodecId(wFormatTag,NULL);
+ // Codec Id returned is CODEC_ID_MP3 when input format is MP1,MP2 and libavcodec is selected (because same config table mp123[])
+ if (wFormatTag==WAVE_FORMAT_MPEG && codecId==CODEC_ID_MP3)
+ {
+	 MPEG1WAVEFORMAT *m1wf=(MPEG1WAVEFORMAT*)mt.pbFormat;
+     switch (m1wf->fwHeadLayer)
+      {
+       case ACM_MPEG_LAYER1:
+       case ACM_MPEG_LAYER2:codecId=CODEC_ID_MP2;
+		   break;
+	 }
+ }
  if (codecId==CODEC_ID_MP3LIB && _strnicmp(_l("vix.exe"),getExeflnm(),8)==0)
   return CODEC_ID_NONE;
  // use SPDIF pass through when AC3 output and 'Use SPDIF when AC3 output set' are checked.

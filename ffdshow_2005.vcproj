@@ -16,9 +16,6 @@
 	</Platforms>
 	<ToolFiles>
 		<ToolFile
-			RelativePath=".\yasm64.rules"
-		/>
-		<ToolFile
 			RelativePath=".\yasm.rules"
 		/>
 	</ToolFiles>
@@ -141,7 +138,7 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="yasm64"
+				Name="yasm"
 			/>
 			<Tool
 				Name="VCMIDLTool"
@@ -355,7 +352,7 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="yasm64"
+				Name="yasm"
 			/>
 			<Tool
 				Name="VCMIDLTool"
@@ -569,7 +566,7 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="yasm64"
+				Name="yasm"
 			/>
 			<Tool
 				Name="VCMIDLTool"
@@ -786,7 +783,7 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="yasm64"
+				Name="yasm"
 			/>
 			<Tool
 				Name="VCMIDLTool"
@@ -1066,7 +1063,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1074,7 +1071,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1082,7 +1079,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1090,7 +1087,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 			</File>
@@ -1133,28 +1130,28 @@
 					Name="Debug|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug Unicode|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release Unicode|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 			</File>
@@ -1357,28 +1354,28 @@
 					Name="Debug|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug Unicode|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release Unicode|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 			</File>
@@ -2195,28 +2192,28 @@
 					Name="Debug|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug Unicode|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release Unicode|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 			</File>
@@ -2576,7 +2573,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2584,7 +2581,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2592,7 +2589,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2600,7 +2597,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 			</File>
@@ -2680,7 +2677,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2688,7 +2685,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2696,7 +2693,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2704,7 +2701,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 			</File>
@@ -2744,7 +2741,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2752,7 +2749,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2760,7 +2757,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2768,7 +2765,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 			</File>
@@ -5929,6 +5926,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\dialog\TsubtitlesSSAConfig.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dialog\TsubtitlesSSAConfig.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\dialog\TbitrateDlg.cpp"
 				>
 			</File>
@@ -7112,7 +7117,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7128,7 +7133,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7144,7 +7149,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7160,7 +7165,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 			</File>
@@ -7200,7 +7205,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7208,7 +7213,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7216,7 +7221,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7224,7 +7229,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 			</File>
@@ -7243,7 +7248,7 @@
 					Name="Debug|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7258,7 +7263,7 @@
 					Name="Release|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7273,7 +7278,7 @@
 					Name="Debug Unicode|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7288,7 +7293,7 @@
 					Name="Release Unicode|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 			</File>
@@ -7503,28 +7508,28 @@
 					Name="Debug|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug Unicode|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release Unicode|x64"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 			</File>
@@ -7640,7 +7645,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7648,7 +7653,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7656,7 +7661,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7664,7 +7669,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 			</File>

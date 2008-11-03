@@ -25,6 +25,7 @@ public:
  static int get_cspOptionsChromaCutoffStatic(int blackCutoff, int whiteCutoff, int chromaCutoff, int lock);
  static const char_t *dvNorms[];
  static const char_t *deintMethods[];
+ static const char_t *deintFieldOrder[];
 
  struct ToutputColorspace
   {
@@ -37,7 +38,7 @@ public:
  int hwOverlay,hwOverlayAspect;
  int hwOverlayOld,hwDeinterlaceOld;
  int allowOutChange3, outChangeCompatOnly;
- int hwDeinterlace,hwDeintMethod;
+ int hwDeinterlace,hwDeintMethod, hwDeintFieldOrder;
  int avisynthYV12_RGB;
  int cspOptionsIturBt, cspOptionsCutoffMode;
  int cspOptionsBlackCutoff, cspOptionsWhiteCutoff, cspOptionsChromaCutoff;

@@ -22,7 +22,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".,..,../imgFilters,libvo"
+				AdditionalIncludeDirectories=".,..,../imgFilters,libaf,libvo"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -87,7 +87,7 @@
 				EnableIntrinsicFunctions="TRUE"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories=".,..,../imgFilters,libvo"
+				AdditionalIncludeDirectories=".,..,../imgFilters,libaf,libvo"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="TRUE"
 				ExceptionHandling="FALSE"
@@ -164,6 +164,27 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\ffdebug.c">
+			</File>
+			<File
+				RelativePath=".\postproc\isP4HT.c">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\ffmpeg\libavutil\mem.c">
+			</File>
+			<File
 				RelativePath=".\mplayer.c">
 			</File>
 			<File
@@ -183,6 +204,9 @@
 					<Tool
 						Name="VCCLCompilerTool"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\libaf\reorder_ch.c">
 			</File>
 			<File
 				RelativePath=".\postproc\rgb2rgb.c">
@@ -206,34 +230,6 @@
 				RelativePath=".\postproc\swscale.c">
 			</File>
 			<File
-				RelativePath="..\ffmpeg\libavutil\mem.c"
-				>
-			</File>
-			<File
-				RelativePath="..\ffdebug.c"
-				>
-			</File>
-			<File
-				RelativePath=".\postproc\w32thread.c">
-			</File>
-			<File
-				RelativePath=".\postproc\isP4HT.c">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\postproc\swscale_template.c">
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -247,6 +243,9 @@
 					<Tool
 						Name="VCCLCompilerTool"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\postproc\w32thread.c">
 			</File>
 			<File
 				RelativePath=".\postproc\yuv2rgb.c">
@@ -307,6 +306,9 @@
 				RelativePath=".\postproc\postprocfilters.h">
 			</File>
 			<File
+				RelativePath=".\libaf\reorder_ch.h">
+			</File>
+			<File
 				RelativePath=".\postproc\rgb2rgb.h">
 			</File>
 			<File
@@ -316,8 +318,7 @@
 				RelativePath=".\postproc\swscale_internal.h">
 			</File>
 			<File
-				RelativePath=".\postproc\swscale_multicpu.h"
-				>
+				RelativePath=".\postproc\swscale_multicpu.h">
 			</File>
 		</Filter>
 		<Filter

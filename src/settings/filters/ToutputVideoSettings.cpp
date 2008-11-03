@@ -42,8 +42,17 @@ const char_t* ToutputVideoSettings::dvNorms[]=
 
 const char_t* ToutputVideoSettings::deintMethods[]=
 {
- _l("Bob"),
- _l("Weave"),
+ _l("Auto"),
+ _l("Force weave"),
+ _l("Force bob"),
+ NULL
+};
+
+const char_t* ToutputVideoSettings::deintFieldOrder[]=
+{
+ _l("Auto"),
+ _l("Top field first"),
+ _l("Bottom field first"),
  NULL
 };
 
@@ -65,8 +74,10 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
      _l("hwDeinterlace"),0,
    IDFF_setDeintInOutSample,&ToutputVideoSettings::hwDeinterlace      ,0,0,_l(""),1,
      _l("setDeintInOutSample"),TintOption::DEF_DYN,
-   IDFF_hwDeintMethod      ,&ToutputVideoSettings::hwDeintMethod      ,0,1,_l(""),1,
+   IDFF_hwDeintMethod      ,&ToutputVideoSettings::hwDeintMethod      ,0,2,_l(""),1,
      _l("hwDeintMethod"),0,
+   IDFF_hwDeintFieldOrder  ,&ToutputVideoSettings::hwDeintFieldOrder  ,0,2,_l(""),1,
+     _l("hwDeintFieldOrder"),0,
 
    IDFF_outI420            ,&ToutputVideoSettings::i420               ,0,0,_l(""),0,
      _l("outI420"),0,
@@ -119,6 +130,8 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
  setParamList(IDFF_outDVnorm,&listDVnorm);
  static const TcreateParamList1 listDeintMethods(deintMethods);
  setParamList(IDFF_hwDeintMethod,&listDeintMethods);
+ static const TcreateParamList1 listDeintFieldOrder(deintFieldOrder);
+ setParamList(IDFF_hwDeintFieldOrder,&listDeintFieldOrder);
 }
 
 int ToutputVideoSettings::getDefault(int id)

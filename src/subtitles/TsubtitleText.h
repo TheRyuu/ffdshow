@@ -82,7 +82,10 @@ private:
    template<int TSubtitleProps::*offset,int min,int max> void intPropAn(const tchar *start,const tchar *end);
    template<double TSubtitleProps::*offset,int min,int max> void doubleProp(const tchar *start,const tchar *end);
    template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> bool intProp2(const tchar *start,const tchar *end);
+   template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int TSubtitleProps::*offset3,int TSubtitleProps::*offset4,unsigned int TSubtitleProps::*offset5,unsigned int TSubtitleProps::*offset6,int min,int max> bool intProp2(const tchar *start,const tchar *end);
    template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void pos(const tchar *start,const tchar *end);
+   template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int TSubtitleProps::*offset3,int TSubtitleProps::*offset4,
+	   unsigned int TSubtitleProps::*offset5,unsigned int TSubtitleProps::*offset6,int min,int max> void move(const tchar *start,const tchar *end);
    template<int TSubtitleProps::*offset1,int TSubtitleProps::*offset2,int min,int max> void fad(const tchar *start,const tchar *end);
    void fade(const tchar *start,const tchar *end);
    void karaoke_kf(const tchar *start,const tchar *end);

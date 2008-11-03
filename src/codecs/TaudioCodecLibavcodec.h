@@ -9,13 +9,13 @@ class TaudioCodecLibavcodec :public TaudioCodec
 private:
  Tlibavcodec *libavcodec;
  AVCodec *avcodec;mutable char codecName[100];
- AVCodecContext *avctx;
  bool codecinited;
  int isGain;
 protected:
  virtual bool init(const CMediaType &mt);
  virtual void getInputDescr1(char_t *buf,size_t buflen) const;
 public:
+ AVCodecContext *avctx;
  TaudioCodecLibavcodec(IffdshowBase *deci,IdecAudioSink *Isink);
  virtual ~TaudioCodecLibavcodec();
  virtual int getType(void) const {return IDFF_MOVIE_LAVC;}

@@ -466,7 +466,7 @@ template<class tchar>  TsubtitleParserSSA<tchar>::TsubtitleParserSSA(int Iformat
  strcpy(defprops.fontname, _l("Arial"));
  defprops.encoding = 0;
  defprops.isColor = true;
- defprops.marginR = defprops.marginL = defprops.marginV = 10;
+ defprops.marginR = defprops.marginL = defprops.marginV = 0;
  defprops.version = TsubtitleParserSSA::SSA;
 }
 
@@ -692,6 +692,8 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd, i
       {
        if (strnicmp(f->first,_L("name"),4)==0)
         styleFormat.push_back(&Tstyle::name);
+	   else if (strnicmp(f->first,_L("layer"),5)==0)
+        styleFormat.push_back(&Tstyle::layer);
        else if (strnicmp(f->first,_L("fontname"),8)==0)
         styleFormat.push_back(&Tstyle::fontname);
        else if (strnicmp(f->first,_L("fontsize"),8)==0)
@@ -797,6 +799,8 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd, i
       {
        if (strnicmp(f->first,_L("marked"),6)==0)
         eventFormat.push_back(&Tevent::marked);
+	   else if (strnicmp(f->first,_L("layer"),5)==0)
+		eventFormat.push_back(&Tevent::layer);
        else if (strnicmp(f->first,_L("start"),5)==0)
         {
          if (!isEmbedded) eventFormat.push_back(&Tevent::start);
@@ -877,6 +881,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd, i
          strToIntMargin(event.marginL,&current.defProps.marginL);
          strToIntMargin(event.marginR,&current.defProps.marginR);
          strToIntMargin(event.marginV,&current.defProps.marginV);
+		 strToInt(event.layer,&current.defProps.layer);
          if (flags&this->PARSETIME)
           {
            current.start=timer.den*this->hmsToTime(hour1,min1,sec1,hunsec1)/timer.num;
