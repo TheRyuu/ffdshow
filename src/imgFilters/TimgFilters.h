@@ -26,6 +26,7 @@ private:
  IimgFilterGrab *grab;
  TimgFilterOutput *output;
  bool firstprocess;
+ bool stopAtSubtitles;
 protected:
  TimgFilters(IffdshowBase *Ideci,IprocVideoSink *Isink);
  comptrQ<IffdshowDecVideo> deciV;
@@ -41,6 +42,7 @@ public:
  bool isAnyActiveDownstreamFilter(TfilterQueue::iterator it);
  void adhocDVDsub(TfilterQueue::iterator it,TffPict &pict);
  virtual void onEndOfStream(void);
+ bool pullImageFromSubtitlesFilter(TfilterQueue::iterator from);
 
  int dirtyBorder;
  REFERENCE_TIME subtitleResetTime;
@@ -56,6 +58,8 @@ public:
  virtual bool shortOSDmessage(const char_t *msg,unsigned int duration) {return false;}
  virtual HRESULT registerOSDprovider(IOSDprovider *provider,const char *name) {return E_NOTIMPL;}
  virtual HRESULT unregisterOSDprovider(IOSDprovider *provider) {return E_NOTIMPL;}
+ void setStopAtSubtitles(bool stop) {stopAtSubtitles = stop;}
+ bool getStopAtSubtitles(void) {return stopAtSubtitles;}
 
  void grabNow(void);
 };

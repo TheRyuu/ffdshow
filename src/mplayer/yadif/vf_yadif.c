@@ -34,7 +34,6 @@
 #endif
 
 #include "ffImgfmt.h"
-#include "mp_image.h"
 
 #include "libvo/fastmemcpy.h"
 #include "vf_yadif.h"

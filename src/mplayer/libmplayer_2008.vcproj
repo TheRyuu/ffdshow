@@ -1043,10 +1043,6 @@
 			Name="yadif"
 			>
 			<File
-				RelativePath=".\yadif\mp_image.h"
-				>
-			</File>
-			<File
 				RelativePath=".\yadif\vf_yadif.c"
 				>
 			</File>

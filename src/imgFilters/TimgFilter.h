@@ -108,6 +108,20 @@ public:
   */
  virtual HRESULT onEndOfStream(void) {return E_NOTIMPL;}
 
+ /**
+  * onPullImageFromSubtitlesFilter
+  * Over-ride this function if your image filter needs forward temporal image processing.
+  * This function is called on updating DVD menu from TimgFilterSubtitles::ctlSubtitles,
+  * if your filter is in the upper stream of subtitle filter where DVD menu handling is
+  * implemented.
+  * The back ground image of DVD menu may be a single image, so if your filter buffer it
+  * and does not deliver immediately, the menu will be drown on a wrong image.
+  *
+  * Send out only one image.
+  * @return true if your filter send out a image.
+  */
+ virtual bool onPullImageFromSubtitlesFilter(void) {return false;}
+
  enum
   {
    IMGFILTER_UNKNOWN,

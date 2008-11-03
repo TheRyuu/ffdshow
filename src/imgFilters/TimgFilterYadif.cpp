@@ -24,11 +24,10 @@
 #include "TimgFilterYadif.h"
 #include "yadif/vf_yadif.h"
 #include "IffdshowBase.h"
-#include "Tmp_image.h"
 #include "Tconfig.h"
 #include "ffdebug.h"
 
-static inline void * memcpy_pic(unsigned char * dst, unsigned char * src, int bytesPerLine, int height, int dstStride, int srcStride)
+static inline void * memcpy_pic(unsigned char * dst, const unsigned char * src, int bytesPerLine, int height, int dstStride, int srcStride)
 {
     int i;
     void *retval=dst;
@@ -56,7 +55,7 @@ static inline void * memcpy_pic(unsigned char * dst, unsigned char * src, int by
     return retval;
 }
 
-void TimgFilterYadif::store_ref(uint8_t *src[3], stride_t src_stride[3], int width, int height)
+void TimgFilterYadif::store_ref(const uint8_t *src[3], stride_t src_stride[3], int width, int height)
 {
     int i;
 
@@ -71,25 +70,39 @@ void TimgFilterYadif::store_ref(uint8_t *src[3], stride_t src_stride[3], int wid
 
             memcpy_pic(yadctx->ref[2][i], src[i], width>>is_chroma, height>>is_chroma, yadctx->stride[i], src_stride[i]);
         }
+    }else{
+        for(i=0; i<3; i++){
+            int is_chroma= !!i;
+
+            memcpy_pic(yadctx->ref[2][i], yadctx->ref[1][i], width>>is_chroma, height>>is_chroma, yadctx->stride[i], yadctx->stride[i]);
+        }
     }
 }
 
-HRESULT TimgFilterYadif::put_image(mp_image_t *mpi, TffPict &pict)
+HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4], int full)
 {
-    int tff;
+    int tff = 0;
 
     if(yadctx->parity < 0) {
-        if (mpi->fields & MP_IMGFIELD_ORDERED)
-            tff = !!(mpi->fields & MP_IMGFIELD_TOP_FIRST);
-        else
+        if (pict.fieldtype & FIELD_TYPE::INT_TFF)
             tff = 1;
     }
     else tff = (yadctx->parity&1)^1;
 
-    store_ref(mpi->planes, mpi->stride, mpi->w, mpi->h);
+    int dx,dy;
+    if (full)
+     {
+      dx = pict.rectFull.dx;
+      dy = pict.rectFull.dy;
+     }
+    else
+     {
+      dx = pict.rectClip.dx;
+      dy = pict.rectClip.dy;
+     }
 
-    yadctx->buffered_mpi = mpi;
-    yadctx->buffered_tff = tff;
+    store_ref(src, pict.stride, dx, dy);
+
     yadctx->frame_duration = pict.rtStart - yadctx->buffered_rtStart;
     std::swap(pict.rtStart, yadctx->buffered_rtStart);
     std::swap(pict.rtStop,  yadctx->buffered_rtStop);
@@ -99,29 +112,20 @@ HRESULT TimgFilterYadif::put_image(mp_image_t *mpi, TffPict &pict)
     else if(yadctx->do_deinterlace == 1){
         yadctx->do_deinterlace = 2;
         return S_OK;
-    }else
-        return continue_buffered_image(pict);
-}
+    }
 
-HRESULT TimgFilterYadif::continue_buffered_image(TffPict &pict)
-{
-    mp_image_t *mpi = yadctx->buffered_mpi;
-    int tff = yadctx->buffered_tff;
     REFERENCE_TIME pts = yadctx->buffered_rtStart;
     int i;
     int hr = S_OK;
 
     for(i = 0 ; i <= (yadctx->mode & 1); i++){
         unsigned char *dst[4];
-        bool cspChanged = getNext(csp1, pict, cfg->full, dst);
-
-        Tmp_image dmpi(pict, cfg->full, (const unsigned char **)dst);
-        vf_clone_mpi_attributes((mp_image_t *)dmpi, mpi);
+        bool cspChanged = getNext(csp1, pict, full, dst);
 
         libmplayer->yadif_filter(yadctx,
-                                 ((mp_image_t *)dmpi)->planes,
-                                 ((mp_image_t *)dmpi)->stride,
-                                 mpi->w, mpi->h,
+                                 dst,
+                                 pict.stride,
+                                 dx, dy,
                                  i ^ tff ^ 1, tff);
 
         pict.fieldtype = (pict.fieldtype & ~FIELD_TYPE::MASK_PROG) | FIELD_TYPE::PROGRESSIVE_FRAME;
@@ -137,6 +141,7 @@ HRESULT TimgFilterYadif::continue_buffered_image(TffPict &pict)
             inputPicture = pict;
 
         HRESULT hr = parent->deliverSample(++it, pict);
+        --it;
 
         if (i == (yadctx->mode & 1))
             break;
@@ -144,22 +149,10 @@ HRESULT TimgFilterYadif::continue_buffered_image(TffPict &pict)
         // only if frame doubler is used and it has just delivered the first image.
 
         pict = inputPicture;
-        --it;
         if (pict.rtStart != REFTIME_INVALID && yadctx->frame_duration > 0)
             pict.rtStart += yadctx->frame_duration >> 1;
     }
     return hr;
-}
-
-void TimgFilterYadif::vf_clone_mpi_attributes(mp_image_t* dst, mp_image_t* src)
-{
-    dst->pict_type= src->pict_type;
-    dst->fields = src->fields;
-    dst->qscale_type= src->qscale_type;
-    if(dst->width == src->width && dst->height == src->height){
-	dst->qstride= src->qstride;
-	dst->qscale= src->qscale;
-    }
 }
 
 int TimgFilterYadif::config(TffPict &pict)
@@ -220,10 +213,11 @@ YadifContext* TimgFilterYadif::getContext(int mode, int parity){
 
 TimgFilterYadif::TimgFilterYadif(IffdshowBase *Ideci,Tfilters *Iparent,bool Ibob):TimgFilter(Ideci,Iparent)
 {
-    //oldcfg.cfgId=-1;
+    hasImageInBuffer = false;
     deci->getPostproc(&libmplayer);
     if (libmplayer) libmplayer->yadif_init();
     yadctx = NULL;
+    // oldcfg.cfgId=-1;
 }
 
 TimgFilterYadif::~TimgFilterYadif()
@@ -247,6 +241,21 @@ void TimgFilterYadif::onSizeChange(void)
     done();
 }
 
+bool TimgFilterYadif::onPullImageFromSubtitlesFilter(void)
+{
+    if (!yadctx || !libmplayer || yadctx->do_deinterlace != 2 || !hasImageInBuffer)
+        return false;
+
+     for (int i=0 ; i<3 ; i++){
+        oldpict.data[i] = yadctx->ref[2][i];
+        oldpict.stride[i] = yadctx->stride[i];
+    }
+    hasImageInBuffer = false;
+    parent->setStopAtSubtitles(true);
+    parent->deliverSample(++it,oldpict);
+    return true;
+}
+
 HRESULT TimgFilterYadif::onEndOfStream(void)
 {
     if (!yadctx || !libmplayer)
@@ -257,14 +266,14 @@ HRESULT TimgFilterYadif::onEndOfStream(void)
     oldpict.rtStop += yadctx->frame_duration;
     const unsigned char *src[4];
     src[0] = src[1] = src[2] = src[3] = NULL;
-    Tmp_image mpi(oldpict, oldcfg.full, src);
-    return put_image(mpi, oldpict);
+    return put_image(oldpict, src, oldcfg.full);
 }
 
 HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
     it = it0;
     cfg = (const TdeinterlaceSettings*)cfg0;
+    hasImageInBuffer = false;
 
     if ((pict.fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME && !cfg->deinterlaceAlways) || !libmplayer){
         done();
@@ -275,11 +284,8 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
         parent->dirtyBorder=1;
 
     init(pict,cfg->full,cfg->half);
-    oldpict = pict;
-    oldcfg = *cfg;
-
-    if(pict.fieldtype & FIELD_TYPE::MASK_SEQ)
-        done();
+    //if(pict.fieldtype & FIELD_TYPE::MASK_SEQ)
+    //    done();
 
     const unsigned char *src[4];
     bool cspChanged = getCur(FF_CSP_420P, pict, cfg->full,src);
@@ -289,18 +295,20 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
         config(pict);
     }
 
+    oldpict = pict;
+    oldcfg = *cfg;
+
     yadctx->mode = cfg->yadifMode;
     yadctx->parity = cfg->yadifParity;
-
-    Tmp_image mpi(pict, cfg->full, src);  // convert to mplayer compatible picture
 
     if (yadctx->do_deinterlace == 1){
         REFERENCE_TIME rtStart = pict.rtStart,rtStop = pict.rtStop;
         pict.rtStop = pict.rtStart + 1;
-        put_image(mpi, pict);
+        put_image(pict, src, cfg->full);
         pict.rtStart = rtStart;
         pict.rtStop = rtStop;
     }
 
-    return put_image(mpi, pict);
+    hasImageInBuffer = true;
+    return put_image(pict, src, cfg->full);
 }

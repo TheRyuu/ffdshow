@@ -12,6 +12,14 @@ class TimgFilterSubtitleExpand;
 struct TfontSettingsSub;
 template<class tchar> struct TsubtitleTextBase;
 DECLARE_FILTER(TimgFilterSubtitles,public,TimgFilter)
+
+public:
+ typedef enum{
+  ADHOC_NORMAL,
+  ADHOC_ADHOC_DRAW_DVD_SUB_ONLY,
+  ADHOC_SECOND_DONT_DRAW_DVD_SUB
+ } AdhocMode;
+
 private:
  Trect oldRectClip;
  int isdvdproc;
@@ -29,7 +37,7 @@ private:
  unsigned int oldSizeDx,oldSizeDy;
  CCritSec csEmbedded,csCC;
  TfilterQueue::iterator prevIt;TffPict prevPict;const TfilterSettingsVideo *prevCfg;bool again;Tbuffer prevbuf;
- int prevAdhocMode;
+ AdhocMode prevAdhocMode;
  int subFlnmChanged;
  const char_t* findAutoSubFlnm(const TsubtitlesSettings *cfg);
 
@@ -43,7 +51,7 @@ private:
  TsubtitleTextBase<wchar_t> *cc;
  bool wasCCchange;
  bool everRGB;
- int adhocMode; // 0: normal, 1: adhoc! process only DVD sub/menu, 2: after adhoc, second call. process none DVD sub (cc decoder, etc).
+ AdhocMode adhocMode; // 0: normal, 1: adhoc! process only DVD sub/menu, 2: after adhoc, second call. process none DVD sub (cc decoder, etc).
 protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSP_420P;}

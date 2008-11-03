@@ -21,16 +21,12 @@
 #ifndef _VF_YADIF_H_
 #define _VF_YADIF_H_
 
-#include "mp_image.h"
-
 typedef struct vf_priv_s {
     int mode;
     int parity;
-    int buffered_tff;
     int64_t buffered_rtStart;
     int64_t buffered_rtStop;
     int64_t frame_duration;
-    mp_image_t *buffered_mpi;
     int stride[3];
     uint8_t *ref[4][3];
     int do_deinterlace;
