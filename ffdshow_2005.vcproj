@@ -4822,14 +4822,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\imgFilters\Tmp_image.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\imgFilters\Tmp_image.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\mplayer\yadif\vf_yadif.h"
 				>
 			</File>

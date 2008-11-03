@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="libmplayer"
 	ProjectGUID="{76569356-593F-417E-A8C5-108FF3F364D9}"
 	RootNamespace="libmplayer"
@@ -1053,10 +1053,6 @@
 		<Filter
 			Name="yadif"
 			>
-			<File
-				RelativePath=".\yadif\mp_image.h"
-				>
-			</File>
 			<File
 				RelativePath=".\yadif\vf_yadif.c"
 				>
