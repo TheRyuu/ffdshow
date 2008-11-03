@@ -276,9 +276,10 @@ HRESULT TimgFilterYadif::onDiscontinuity(TffPict pict)
     if (!yadctx || !libmplayer)
         return S_OK;
 
+    TffPict pict1 = pict;
     const unsigned char *src[4];
     src[0] = src[1] = src[2] = src[3] = NULL;
-    return put_image(pict, src, cfg->full);
+    return put_image(pict1, src, cfg->full);
 }
 
 HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const TfilterSettingsVideo *cfg0)
@@ -286,6 +287,8 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
     it = it0;
     cfg = (const TdeinterlaceSettings*)cfg0;
     hasImageInBuffer = false;
+    int fieldtype = pict.fieldtype;
+    bool start_and_end_frame = ((fieldtype & FIELD_TYPE::SEQ_START) && (fieldtype & FIELD_TYPE::SEQ_END));
 
     if ((pict.fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME && !cfg->deinterlaceAlways) || !libmplayer){
         done();
@@ -296,9 +299,19 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
         parent->dirtyBorder=1;
 
     init(pict,cfg->full,cfg->half);
-    if(pict.discontinuity || (pict.fieldtype & FIELD_TYPE::MASK_SEQ)){
+    if (  pict.discontinuity
+       || (fieldtype & FIELD_TYPE::SEQ_START)
+       || pict.rectFull != oldpict.rectFull 
+       || pict.rectClip != oldpict.rectClip
+       || pict.rectFull.sar != oldpict.rectFull.sar  // Changes sar would mean discontinuity.
+       || pict.rectClip.sar != oldpict.rectClip.sar){
+        // flush the last picture, if any.
         onDiscontinuity(pict);
         done();
+        if (start_and_end_frame){
+            // Only one frame in the sequence, means it is best to skip deinterlacing.
+            return parent->deliverSample(++it,pict);
+        }
     }
 
     const unsigned char *src[4];
@@ -315,6 +328,7 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
     yadctx->mode = cfg->yadifMode;
     yadctx->parity = cfg->yadifParity;
 
+    int old_do_deinterlace = yadctx->do_deinterlace;
     if (yadctx->do_deinterlace == 1){
         REFERENCE_TIME rtStart = pict.rtStart,rtStop = pict.rtStop;
         pict.rtStop = pict.rtStart + 1;
@@ -324,5 +338,12 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
     }
 
     hasImageInBuffer = true;
-    return put_image(pict, src, cfg->full);
+    HRESULT hr = put_image(pict, src, cfg->full);
+
+    if (old_do_deinterlace == 2 && (fieldtype & FIELD_TYPE::SEQ_END)){
+        onEndOfStream();
+        done();
+    }
+
+    return hr;
 }
