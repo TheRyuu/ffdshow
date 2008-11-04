@@ -7207,7 +7207,7 @@ static int decode_picture_timing(H264Context *h){
         unsigned int i, num_clock_ts;
         h->sei_pic_struct = get_bits(&s->gb, 4);
 
-        if ((unsigned int)h->sei_pic_struct > SEI_PIC_STRUCT_FRAME_TRIPLING)
+        if (h->sei_pic_struct > SEI_PIC_STRUCT_FRAME_TRIPLING)
             return -1;
 
         num_clock_ts = sei_num_clock_ts_table[h->sei_pic_struct];

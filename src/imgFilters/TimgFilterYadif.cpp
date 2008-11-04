@@ -150,8 +150,12 @@ HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4], i
 
         pict = inputPicture;
         pict.discontinuity = false;
-        if (pict.rtStart != REFTIME_INVALID && yadctx->frame_duration > 0)
-            pict.rtStart += yadctx->frame_duration >> 1;
+        if (yadctx->frame_duration > 0){
+            if (pict.rtStart != REFTIME_INVALID)
+                pict.rtStart += yadctx->frame_duration >> 1;
+            if (pict.rtStop != REFTIME_INVALID)
+                pict.rtStop += yadctx->frame_duration >> 1;
+        }
     }
     return hr;
 }
