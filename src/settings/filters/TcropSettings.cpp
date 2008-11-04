@@ -86,7 +86,7 @@ void TcropSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQ
  if (is && show)
   {
    if (!queue.temporary) setOnChange(IDFF_fullCropNzoom,filters,&Tfilters::onQueueChange);
-   if (full && mode < 3 && mode > 5) // Do expand only if not in AutoCrop (autocrop code is located in TimgFilterCrop class)
+   if (full && (mode < 3 || mode > 5)) // Do expand only if not in AutoCrop (autocrop code is located in TimgFilterCrop class)
     queueFilter<TimgFilterCropExpand>(filtersorder,filters,queue);
    else
     queueFilter<TimgFilterCrop>(filtersorder,filters,queue);
