@@ -88,39 +88,39 @@ enum SampleFormat {
 };
 
 /* Audio channel masks */
-#define CHANNEL_FRONT_LEFT             0x00000001
-#define CHANNEL_FRONT_RIGHT            0x00000002
-#define CHANNEL_FRONT_CENTER           0x00000004
-#define CHANNEL_LOW_FREQUENCY          0x00000008
-#define CHANNEL_BACK_LEFT              0x00000010
-#define CHANNEL_BACK_RIGHT             0x00000020
-#define CHANNEL_FRONT_LEFT_OF_CENTER   0x00000040
-#define CHANNEL_FRONT_RIGHT_OF_CENTER  0x00000080
-#define CHANNEL_BACK_CENTER            0x00000100
-#define CHANNEL_SIDE_LEFT              0x00000200
-#define CHANNEL_SIDE_RIGHT             0x00000400
-#define CHANNEL_TOP_CENTER             0x00000800
-#define CHANNEL_TOP_FRONT_LEFT         0x00001000
-#define CHANNEL_TOP_FRONT_CENTER       0x00002000
-#define CHANNEL_TOP_FRONT_RIGHT        0x00004000
-#define CHANNEL_TOP_BACK_LEFT          0x00008000
-#define CHANNEL_TOP_BACK_CENTER        0x00010000
-#define CHANNEL_TOP_BACK_RIGHT         0x00020000
-#define CHANNEL_STEREO_LEFT            0x20000000  ///< Stereo downmix.
-#define CHANNEL_STEREO_RIGHT           0x40000000  ///< See CHANNEL_STEREO_LEFT.
+#define CH_FRONT_LEFT             0x00000001
+#define CH_FRONT_RIGHT            0x00000002
+#define CH_FRONT_CENTER           0x00000004
+#define CH_LOW_FREQUENCY          0x00000008
+#define CH_BACK_LEFT              0x00000010
+#define CH_BACK_RIGHT             0x00000020
+#define CH_FRONT_LEFT_OF_CENTER   0x00000040
+#define CH_FRONT_RIGHT_OF_CENTER  0x00000080
+#define CH_BACK_CENTER            0x00000100
+#define CH_SIDE_LEFT              0x00000200
+#define CH_SIDE_RIGHT             0x00000400
+#define CH_TOP_CENTER             0x00000800
+#define CH_TOP_FRONT_LEFT         0x00001000
+#define CH_TOP_FRONT_CENTER       0x00002000
+#define CH_TOP_FRONT_RIGHT        0x00004000
+#define CH_TOP_BACK_LEFT          0x00008000
+#define CH_TOP_BACK_CENTER        0x00010000
+#define CH_TOP_BACK_RIGHT         0x00020000
+#define CH_STEREO_LEFT            0x20000000  ///< Stereo downmix.
+#define CH_STEREO_RIGHT           0x40000000  ///< See CH_STEREO_LEFT.
 
 /* Audio channel convenience macros */
-#define CHANNEL_LAYOUT_MONO              (CHANNEL_FRONT_CENTER)
-#define CHANNEL_LAYOUT_STEREO            (CHANNEL_FRONT_LEFT|CHANNEL_FRONT_RIGHT)
-#define CHANNEL_LAYOUT_SURROUND          (CHANNEL_LAYOUT_STEREO|CHANNEL_FRONT_CENTER)
-#define CHANNEL_LAYOUT_QUAD              (CHANNEL_LAYOUT_STEREO|CHANNEL_BACK_LEFT|CHANNEL_BACK_RIGHT)
-#define CHANNEL_LAYOUT_5POINT0           (CHANNEL_LAYOUT_SURROUND|CHANNEL_SIDE_LEFT|CHANNEL_SIDE_RIGHT)
-#define CHANNEL_LAYOUT_5POINT1           (CHANNEL_LAYOUT_5POINT0|CHANNEL_LOW_FREQUENCY)
-#define CHANNEL_LAYOUT_7POINT1           (CHANNEL_LAYOUT_5POINT1|CHANNEL_BACK_LEFT|CHANNEL_BACK_RIGHT)
-#define CHANNEL_LAYOUT_7POINT1_WIDE      (CHANNEL_LAYOUT_SURROUND|CHANNEL_LOW_FREQUENCY|\
-                                          CHANNEL_BACK_LEFT|CHANNEL_BACK_RIGHT|\
-                                          CHANNEL_FRONT_LEFT_OF_CENTER|CHANNEL_FRONT_RIGHT_OF_CENTER)
-#define CHANNEL_LAYOUT_STEREO_DOWNMIX    (CHANNEL_STEREO_LEFT|CHANNEL_STEREO_RIGHT)
+#define CH_LAYOUT_MONO              (CH_FRONT_CENTER)
+#define CH_LAYOUT_STEREO            (CH_FRONT_LEFT|CH_FRONT_RIGHT)
+#define CH_LAYOUT_SURROUND          (CH_LAYOUT_STEREO|CH_FRONT_CENTER)
+#define CH_LAYOUT_QUAD              (CH_LAYOUT_STEREO|CH_BACK_LEFT|CH_BACK_RIGHT)
+#define CH_LAYOUT_5POINT0           (CH_LAYOUT_SURROUND|CH_SIDE_LEFT|CH_SIDE_RIGHT)
+#define CH_LAYOUT_5POINT1           (CH_LAYOUT_5POINT0|CH_LOW_FREQUENCY)
+#define CH_LAYOUT_7POINT1           (CH_LAYOUT_5POINT1|CH_BACK_LEFT|CH_BACK_RIGHT)
+#define CH_LAYOUT_7POINT1_WIDE      (CH_LAYOUT_SURROUND|CH_LOW_FREQUENCY|\
+                                          CH_BACK_LEFT|CH_BACK_RIGHT|\
+                                          CH_FRONT_LEFT_OF_CENTER|CH_FRONT_RIGHT_OF_CENTER)
+#define CH_LAYOUT_STEREO_DOWNMIX    (CH_STEREO_LEFT|CH_STEREO_RIGHT)
 
 /* in bytes */
 #define AVCODEC_MAX_AUDIO_FRAME_SIZE 192000 // 1 second of 48khz 32bit audio
@@ -1166,16 +1166,14 @@ typedef struct AVCodecContext {
     unsigned dsp_mask;
 #define FF_MM_FORCE    0x80000000 /* Force usage of selected flags (OR) */
     /* lower 16 bits - CPU features */
-#ifdef HAVE_MMX /* to exclude SIMD stuff on MSVC builds */
-#define FF_MM_MMX      0x0001 /* standard MMX */
-#define FF_MM_3DNOW    0x0004 /* AMD 3DNOW */
-#define FF_MM_MMXEXT   0x0002 /* SSE integer functions or AMD MMX ext */
-#define FF_MM_SSE      0x0008 /* SSE functions */
-#define FF_MM_SSE2     0x0010 /* PIV SSE2 functions */
-#define FF_MM_3DNOWEXT 0x0020 /* AMD 3DNowExt */
-#define FF_MM_SSE3     0x0040 /* AMD64 & PIV SSE3 functions*/
-#define FF_MM_SSSE3    0x0080 /* PIV Core 2 SSSE3 functions*/
-#endif /* HAVE_MMX */
+#define FF_MM_MMX      0x0001 ///< standard MMX
+#define FF_MM_3DNOW    0x0004 ///< AMD 3DNOW
+#define FF_MM_MMXEXT   0x0002 ///< SSE integer functions or AMD MMX ext
+#define FF_MM_SSE      0x0008 ///< SSE functions
+#define FF_MM_SSE2     0x0010 ///< PIV SSE2 functions
+#define FF_MM_3DNOWEXT 0x0020 ///< AMD 3DNowExt
+#define FF_MM_SSE3     0x0040 ///< Prescott SSE3 functions
+#define FF_MM_SSSE3    0x0080 ///< Conroe SSSE3 functions
 
     /**
      * bits per sample/pixel from the demuxer (needed for huffyuv).
@@ -1876,7 +1874,7 @@ typedef struct AVCodecContext {
 #define X264_PART_B8X8 0x100  /* Analyze b16x8, b8x16 and b8x8 */
 
     /**
-     * direct MV prediction mode - 0 (none), 1 (spatial), 2 (temporal)
+     * direct MV prediction mode - 0 (none), 1 (spatial), 2 (temporal), 3 (auto)
      * - encoding: Set by user.
      * - decoding: unused
      */
