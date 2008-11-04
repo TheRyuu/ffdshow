@@ -14,7 +14,7 @@
 
  ********************************************************************/
 
-#include "codec_internal.h"
+#include "enc/codec_internal.h"
 
 extern ogg_uint32_t cpu_flags;
 

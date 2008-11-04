@@ -22,8 +22,8 @@
 # include "config.h"
 #endif
 
-#include "theora.h"
-#include "huffman.h"
+#include "../theora.h"
+#include "../huffman.h"
 #include "dsp.h"
 
 #ifndef LIBOGG2
