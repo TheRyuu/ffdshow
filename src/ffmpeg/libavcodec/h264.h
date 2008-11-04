@@ -84,16 +84,19 @@
 #define ENABLE_H264_ENCODER 0
 #endif
 
+/**
+ * pic_struct in picture timing SEI
+ */
 typedef enum {
-    SEI_PIC_STRUCT_FRAME             = 0, // *  0: frame
-    SEI_PIC_STRUCT_TOP_FIELD         = 1, // *  1: top field
-    SEI_PIC_STRUCT_BOTTOM_FIELD      = 2, // *  2: bottom field
-    SEI_PIC_STRUCT_TOP_BOTTOM        = 3, // *  3: top field, bottom field, in that order
-    SEI_PIC_STRUCT_BOTTOM_TOP        = 4, // *  4: bottom field, top field, in that order
-    SEI_PIC_STRUCT_TOP_BOTTOM_TOP    = 5, // *  5: top field, bottom field, top field repeated, in that order
-    SEI_PIC_STRUCT_BOTTOM_TOP_BOTTOM = 6, // *  6: bottom field, top field, bottom field repeated, in that order
-    SEI_PIC_STRUCT_FRAME_DOUBLING    = 7, // *  7: frame doubling
-    SEI_PIC_STRUCT_FRAME_TRIPLING    = 8  // *  8: frame tripling
+    SEI_PIC_STRUCT_FRAME             = 0, ///<  0: %frame
+    SEI_PIC_STRUCT_TOP_FIELD         = 1, ///<  1: top field
+    SEI_PIC_STRUCT_BOTTOM_FIELD      = 2, ///<  2: bottom field
+    SEI_PIC_STRUCT_TOP_BOTTOM        = 3, ///<  3: top field, bottom field, in that order
+    SEI_PIC_STRUCT_BOTTOM_TOP        = 4, ///<  4: bottom field, top field, in that order
+    SEI_PIC_STRUCT_TOP_BOTTOM_TOP    = 5, ///<  5: top field, bottom field, top field repeated, in that order
+    SEI_PIC_STRUCT_BOTTOM_TOP_BOTTOM = 6, ///<  6: bottom field, top field, bottom field repeated, in that order
+    SEI_PIC_STRUCT_FRAME_DOUBLING    = 7, ///<  7: %frame doubling
+    SEI_PIC_STRUCT_FRAME_TRIPLING    = 8  ///<  8: %frame tripling
 } SEI_PicStructType;
 
 /**

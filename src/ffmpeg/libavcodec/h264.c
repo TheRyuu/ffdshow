@@ -7237,7 +7237,7 @@ static int decode_picture_timing(H264Context *h){
                     }
                 }
                 if(h->sps.time_offset_length > 0)
-                    skip_bits(&s->gb, 5); /* time_offset */
+                    skip_bits(&s->gb, h->sps.time_offset_length); /* time_offset */
             }
         }
     }
