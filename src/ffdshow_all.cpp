@@ -34,3 +34,5 @@
 #include "isNotCalledFromBlackList.cpp"
 #include "TffOutputQ.cpp"
 #include "ffdshowRemoteAPI.cpp"
+#include "TaudioParser.cpp"
+#include "Tbitdata.cpp"
