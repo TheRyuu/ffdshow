@@ -110,17 +110,20 @@ enum {
     NAL_AUXILIARY_SLICE=19
 };
 
-enum {
-    SEI_PIC_STRUCT_FRAME             = 0, // *  0: frame
-    SEI_PIC_STRUCT_TOP_FIELD         = 1, // *  1: top field
-    SEI_PIC_STRUCT_BOTTOM_FIELD      = 2, // *  2: bottom field
-    SEI_PIC_STRUCT_TOP_BOTTOM        = 3, // *  3: top field, bottom field, in that order
-    SEI_PIC_STRUCT_BOTTOM_TOP        = 4, // *  4: bottom field, top field, in that order
-    SEI_PIC_STRUCT_TOP_BOTTOM_TOP    = 5, // *  5: top field, bottom field, top field repeated, in that order
-    SEI_PIC_STRUCT_BOTTOM_TOP_BOTTOM = 6, // *  6: bottom field, top field, bottom field repeated, in that order
-    SEI_PIC_STRUCT_FRAME_DOUBLING    = 7, // *  7: frame doubling
-    SEI_PIC_STRUCT_FRAME_TRIPLING    = 8  // *  8: frame tripling
-};
+/**
+ * pic_struct in picture timing SEI message
+ */
+typedef enum {
+    SEI_PIC_STRUCT_FRAME             = 0, ///<  0: %frame
+    SEI_PIC_STRUCT_TOP_FIELD         = 1, ///<  1: top field
+    SEI_PIC_STRUCT_BOTTOM_FIELD      = 2, ///<  2: bottom field
+    SEI_PIC_STRUCT_TOP_BOTTOM        = 3, ///<  3: top field, bottom field, in that order
+    SEI_PIC_STRUCT_BOTTOM_TOP        = 4, ///<  4: bottom field, top field, in that order
+    SEI_PIC_STRUCT_TOP_BOTTOM_TOP    = 5, ///<  5: top field, bottom field, top field repeated, in that order
+    SEI_PIC_STRUCT_BOTTOM_TOP_BOTTOM = 6, ///<  6: bottom field, top field, bottom field repeated, in that order
+    SEI_PIC_STRUCT_FRAME_DOUBLING    = 7, ///<  7: %frame doubling
+    SEI_PIC_STRUCT_FRAME_TRIPLING    = 8  ///<  8: %frame tripling
+} SEI_PicStructType;
 
 /**
  * Sequence parameter set
@@ -509,6 +512,11 @@ typedef struct H264Context{
     int mb_xy;
 
     uint32_t svq3_watermark_key;
+
+    /**
+     * pic_struct in picture timing SEI message
+     */
+    SEI_PicStructType sei_pic_struct;
     
     /* experimental */
     int phaze;
@@ -517,13 +525,6 @@ typedef struct H264Context{
 
     /* ffdshow custom stuff */
     int recovery_frame_cnt;
-
-    /**
-     * pic_struct in picture timing SEI message
-     */
-    unsigned int sei_pic_struct;            // The formal name is pic_struct.
-    int sei_pic_struct_valid_flag; // For each frame
-    int has_ever_interlaced;       // Set to 1 if any interlaced picture is found in the stream.
 }H264Context;
 
 #endif /* AVCODEC_H264_H */
