@@ -343,7 +343,7 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
         put_image(pict, src, cfg->full);
         if (rtStart != REFTIME_INVALID)
             pict.rtStart = rtStart + 2;
-        if (pict.rtStart > rtStop)
+        if (pict.rtStart > rtStop && rtStop != REFTIME_INVALID)
             pict.rtStart = rtStop;
         pict.rtStop = rtStop;
     }
