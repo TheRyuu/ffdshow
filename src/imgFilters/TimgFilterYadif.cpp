@@ -114,7 +114,6 @@ HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4], i
         return S_OK;
     }
 
-    REFERENCE_TIME pts = yadctx->buffered_rtStart;
     int i;
     int hr = S_OK;
 
@@ -140,6 +139,7 @@ HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4], i
         if(yadctx->mode & 1)
             inputPicture = pict;
 
+        // DPRINTF(_l("rtStart=%I64i rtStop=%I64i"), pict.rtStart, pict.rtStop);
         HRESULT hr = parent->deliverSample(++it, pict);
         --it;
 
@@ -333,16 +333,24 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
     yadctx->parity = cfg->yadifParity;
 
     int old_do_deinterlace = yadctx->do_deinterlace;
+    int mode = yadctx->mode;
     if (yadctx->do_deinterlace == 1){
+        // duplicate the first image to avoid black screen in case second image does not exist.
+        yadctx->mode &= 2; // avoid tripling the first image
         REFERENCE_TIME rtStart = pict.rtStart,rtStop = pict.rtStop;
-        pict.rtStop = pict.rtStart + 1;
+        if (rtStart != REFTIME_INVALID)
+            pict.rtStop = pict.rtStart + 1;
         put_image(pict, src, cfg->full);
-        pict.rtStart = rtStart;
+        if (rtStart != REFTIME_INVALID)
+            pict.rtStart = rtStart + 2;
+        if (pict.rtStart > rtStop)
+            pict.rtStart = rtStop;
         pict.rtStop = rtStop;
     }
 
     hasImageInBuffer = true;
     HRESULT hr = put_image(pict, src, cfg->full);
+    yadctx->mode = mode;
 
     if (old_do_deinterlace == 2 && (fieldtype & FIELD_TYPE::SEQ_END)){
         onEndOfStream();
