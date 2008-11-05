@@ -6,7 +6,7 @@
 #include "dsutil.h"
 #include "ffdshow_mediaguids.h"
 #include "ffdebug.h"
-
+#include "Tpresets.h"
 
 TaudioParser::TaudioParser(IffdshowBase *Ideci,IdecAudioSink *Isink):
  deci(Ideci),
@@ -20,14 +20,6 @@ TaudioParser::TaudioParser(IffdshowBase *Ideci,IdecAudioSink *Isink):
 
 void TaudioParser::init(void)
 {
-	// If we have AC3 frames use AC3 decoder if defined to SPDIF, or defined to any decoder and MLP decoder disabled
-	CodecID codecIDAC3=globalSettings->getCodecId(WAVE_FORMAT_AC3_W,NULL);
-	useAC3=(codecIDAC3==CODEC_ID_SPDIF_AC3
-		|| (codecIDAC3!=CODEC_ID_NONE && globalSettings->getCodecId(WAVE_FORMAT_MLP,NULL)==CODEC_ID_NONE));
-
-	// Use SPDIF for DTS frames if DTS codec set to SPDIF
-	useDTSSPDIF=(globalSettings->getCodecId(WAVE_FORMAT_DTS_W,NULL)==CODEC_ID_SPDIF_DTS);
-	
 	streamformat=UNDEFINED;channels=0;bit_rate=0;sample_rate=0;nbFormatChanges=0;
 	codecId=CODEC_ID_NONE;
 	wFormatTag=0;sample_format=0;
@@ -120,6 +112,16 @@ CodecID TaudioParser::parseStream(unsigned char *src, int size,
 
 CodecID TaudioParser::getCodecIdFromStream()
 {
+    CodecID codecIDAC3 = globalSettings->getCodecId(WAVE_FORMAT_AC3_W,NULL);
+	// Do not pass-through if MPL decoding is enabled
+    useAC3CoreOnly = (codecIDAC3 != CODEC_ID_NONE)
+        && (globalSettings->getCodecId(WAVE_FORMAT_MLP,NULL)==CODEC_ID_NONE);
+
+    useAC3Passthrough = (deci->getParam2(IDFF_aoutpassthroughAC3) == 1) && useAC3CoreOnly;
+
+	CodecID codecIDDTS = globalSettings->getCodecId(WAVE_FORMAT_DTS_W,NULL);
+	useDTSPassthrough = (codecIDDTS != CODEC_ID_NONE)
+		&& (deci->getParam2(IDFF_aoutpassthroughDTS) == 1);
 	// Don't allow more than 1 format change
 	if (nbFormatChanges==2)
 		return codecId;
@@ -128,7 +130,13 @@ CodecID TaudioParser::getCodecIdFromStream()
 
 	switch (streamformat)
 	{
-	case REGULAR_AC3:wFormatTag=WAVE_FORMAT_AC3_W;
+	case REGULAR_AC3:
+		wFormatTag=WAVE_FORMAT_AC3_W;
+		if (useAC3CoreOnly)
+		{
+			codecId=CODEC_ID_SPDIF_AC3;nbFormatChanges++;
+			return codecId;
+		}
 		break;
 	case EAC3:wFormatTag=WAVE_FORMAT_EAC3;
 		// TODO : if EAC3 decoder disabled, find a compatible EAC3 decoder and pull FFDShow Audio out of the graph
@@ -139,28 +147,29 @@ CodecID TaudioParser::getCodecIdFromStream()
 		// Problem : no MLP mediaguid exist
 		break;
 	case AC3_TRUEHD:
-		// If AC3 codec is set to SPDIF or MLP decoder disabled,
+		// If AC3 codec is set to SPDIF and MLP decoder disabled,
 		// then send AC3 frams in passthrough and throw away TrueHD frames
-		if (globalSettings->getCodecId(WAVE_FORMAT_MLP, NULL)==CODEC_ID_NONE)
-		{
-			// TODO : find a compatible MLP decoder and pull FFDShow Audio out of the graph
-			// Problem : no MLP mediaguid exist
-			useAC3=true;
-			wFormatTag=WAVE_FORMAT_AC3_W;
-		}
-		else if (useAC3)
+		if (useAC3Passthrough)
 		{
 			codecId=CODEC_ID_SPDIF_AC3;nbFormatChanges++;
 			return codecId;
 		}
+		else if (useAC3CoreOnly) //MLP Decoder is Disabled
+		{
+			// TODO : find a compatible MLP decoder and pull FFDShow Audio out of the graph
+			// Problem : no MLP mediaguid exist
+			wFormatTag=WAVE_FORMAT_AC3_W;
+		}
 		else
+		{
 			wFormatTag=WAVE_FORMAT_MLP;
+		}
 		break;
 	case DTS:
 	case DTS_HD:
-		// If DTS codec is set to SPDIF, then send DTS frames (or DTS core frames for DTS-HD stream)
-		// in passthrough (DTS-HD frames are thrown away for DTS-HD stream)
-		if (useDTSSPDIF)
+		// If DTS Pass-through is enabled, then send DTS frames (or DTS core frames for DTS-HD stream)
+        // in passthrough (DTS-HD frames are thrown away for DTS-HD stream)
+		if (useDTSPassthrough)
 		{
 			codecId=CODEC_ID_SPDIF_DTS;nbFormatChanges++;
 			return codecId;
@@ -460,7 +469,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
 			   if (sr_shift<0)
 				   sr_shift=0;
 
-			   if (streamformat==REGULAR_AC3 || useAC3)
+			   if (streamformat==REGULAR_AC3 || useAC3CoreOnly)
 			   {
 				sample_rate=ff_ac3_sample_rate_tab[sr_code] >> sr_shift;
 				bit_rate=(ff_ac3_bitrate_tab[frame_size_code>>1]*1000) >> sr_shift;
@@ -510,7 +519,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
 		   bitdata.bitindex=0;
 
 		   // If AC3 codec is SPDIF or MLP decoder disabled, we keep AC3 frames otherwise (MLP) we throw them avay
-		   if (useAC3 || streamformat != AC3_TRUEHD)
+		   if (useAC3CoreOnly || streamformat != AC3_TRUEHD)
 		   {
 			   // AC3 frame not complete in this buffer. 
 			   // Back it up for next pass
@@ -554,7 +563,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
 		   // Oops... current decoder is AC3 whereas we have MLP/TrueHD data =>
 		   // and AC3 codec is not set to SPDIF and MLP decoder is enabled. So drop AC3 frames and keep MLP/TrueHD only
 		   if ((streamformat==REGULAR_AC3 || streamformat==EAC3)
-			   && !useAC3)
+			   && !useAC3CoreOnly)
 			   newsrcBuffer->clear();
 		   
 		   // Save the start position and left length of the MLP/TrueHD block
@@ -582,7 +591,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
 		   {
 			   bitdata.getBits(32);
 			   int group1_bits=bitdata.getBits(4); // group1 bits
-			   if (!useAC3) // Don't update stream format with MLP config if we are in AC3 mode
+			   if (!useAC3CoreOnly) // Don't update stream format with MLP config if we are in AC3 mode
 			   {
 			   switch (group1_bits)
 				 {
@@ -598,14 +607,14 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
 			   int group2_bits=bitdata.getBits(4); // group2 bits
 			   ratebits=bitdata.getBits(4);
 			   group1_samplerate=(ratebits==0xF)?0:(ratebits & 8 ? 44100 : 48000) << (ratebits & 7);
-			   if (!useAC3) // Don't update stream format with MLP config if we are in AC3 mode
+			   if (!useAC3CoreOnly) // Don't update stream format with MLP config if we are in AC3 mode
 				sample_rate=group1_samplerate;
 			   
 			   uint32_t ratebits2=bitdata.getBits(4);
 			   group2_samplerate=(ratebits2==0xF)?0:(ratebits2 & 8 ? 44100 : 48000) << (ratebits2 & 7);
 			   bitdata.getBits(11); // Skip
 			   int channels_mlp=bitdata.getBits(5);
-			   if (!useAC3)
+			   if (!useAC3CoreOnly)
 			    channels=mlp_channels[channels_mlp];
 		   }
 		   else // Dolby TrueHD (0xba)
@@ -617,7 +626,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
 			   int group2_bits=0; // group2 bits
 			   ratebits=bitdata.getBits(4);
 			   group1_samplerate=(ratebits==0xF)?0:(ratebits & 8 ? 44100 : 48000) << (ratebits & 7);
-			   if (!useAC3) // Don't update stream format with MLP config if we are in AC3 mode
+			   if (!useAC3CoreOnly) // Don't update stream format with MLP config if we are in AC3 mode
 				sample_rate=group1_samplerate;
 
 			   group2_samplerate=0;
@@ -626,7 +635,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
 			   bitdata.getBits(2); // Skip
 			   int channels_thd_stream2=bitdata.getBits(13);
 
-			   if (!useAC3) // Don't update stream format with MLP config if we are in AC3 mode
+			   if (!useAC3CoreOnly) // Don't update stream format with MLP config if we are in AC3 mode
 			   {
 				   if (channels_thd_stream2)
 					   channels=truehd_channels(channels_thd_stream2);
@@ -642,7 +651,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
 		   int isVbr=bitdata.getBits(1);
 		   uint32_t peak_bitrate = (bitdata.getBits(15) * group1_samplerate + 8) >> 4;
 		   
-		   if (!useAC3) // Don't update stream format with MLP config if we are in AC3 mode
+		   if (!useAC3CoreOnly) // Don't update stream format with MLP config if we are in AC3 mode
 			bit_rate=peak_bitrate;
 
 		   int num_substreams = bitdata.getBits(4);
@@ -655,7 +664,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
 		   bitdata.wordpointer=backuppointer;
 
 		   // If codecId is AC3, throw avay the MLP/TrueHD block
-		   if (streamformat==AC3_TRUEHD && useAC3)
+		   if (streamformat==AC3_TRUEHD && useAC3CoreOnly)
 		   {
 			   bitdata.bitsleft-=frame_size*8;
 			   if (bitdata.bitsleft<0)
@@ -700,7 +709,7 @@ HRESULT TaudioParser::parseAC3(unsigned char *src, int size, TbyteBuffer *newsrc
 			   }
 			   
 			   // If the stream contains AC3 frames and AC3 is set to SPDIF throw avay the MLP/TrueHD block
-			   if (streamformat==AC3_TRUEHD && useAC3)
+			   if (streamformat==AC3_TRUEHD && useAC3CoreOnly)
 			   {
 				   bitdata.bitsleft-=frame_size*8;
 				   if (bitdata.bitsleft<0)

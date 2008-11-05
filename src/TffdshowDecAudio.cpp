@@ -295,21 +295,19 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
  }
  if (codecId==CODEC_ID_MP3LIB && _strnicmp(_l("vix.exe"),getExeflnm(),8)==0)
   return CODEC_ID_NONE;
- // use SPDIF pass through when AC3 output and 'Use SPDIF when AC3 output set' are checked.
+ // use SPDIF pass-through when AC3 / DTS pass-through are checked.
  if (   codecId == CODEC_ID_LIBA52
      && inpin && inpin->audio
      && (inpin->audio->codecId == CODEC_ID_LIBA52 || inpin->audio->codecId == CODEC_ID_SPDIF_AC3)
-     && globalSettings->ac3SPDIF
      && presetSettings && presetSettings->output
-     && (presetSettings->output->outsfs & TsampleFormat::SF_AC3)
+     && (presetSettings->output->passthroughAC3)
     )
   inpin->audio->codecId = codecId = CODEC_ID_SPDIF_AC3;
  if (   codecId == CODEC_ID_LIBDTS
      && inpin && inpin->audio
      && (inpin->audio->codecId == CODEC_ID_LIBDTS || inpin->audio->codecId == CODEC_ID_SPDIF_DTS)
-     && globalSettings->ac3SPDIF
      && presetSettings && presetSettings->output
-     && (presetSettings->output->outsfs & TsampleFormat::SF_AC3)
+     && (presetSettings->output->passthroughDTS)
     )
   inpin->audio->codecId = codecId = CODEC_ID_SPDIF_DTS;
  DPRINTF(_l("TffdshowDecAudio::getCodecId: codecId=%i"),codecId);

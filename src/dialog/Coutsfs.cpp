@@ -38,8 +38,8 @@ void ToutsfsPage::init(void)
   }
  Tlibavcodec *lavc;
  deci->getLibavcodec(&lavc);
- static const int ac3s[]={IDC_CHB_OUT_AC3,IDC_LBL_OUT_AC3,IDC_CBX_OUT_AC3,IDC_CHB_AOUT_AC3ENCODE_MODE,0};
- enable(lavc && lavc->ok && !lavc->dec_only,ac3s);
+ static const int spdifs[]={IDC_CHB_PASSTHROUGH_AC3, IDC_CHB_PASSTHROUGH_DTS, IDC_CHB_OUT_AC3,IDC_LBL_OUT_AC3,IDC_CBX_OUT_AC3,IDC_CHB_AOUT_AC3ENCODE_MODE,0};
+ enable(lavc && lavc->ok && !lavc->dec_only,spdifs);
  if (lavc) lavc->Release();
 
  addHint(IDC_CHB_ALWAYEXTENSIBLE,_l("\"not needed\": no custom channel mapping"));
@@ -68,6 +68,8 @@ void ToutsfsPage::multichanneldevice2dlg(void)
 
 void ToutsfsPage::cfg2dlg(void)
 {
+ setCheck(IDC_CHB_PASSTHROUGH_AC3  ,cfgGet(IDFF_aoutpassthroughAC3)==1  );
+ setCheck(IDC_CHB_PASSTHROUGH_DTS  ,cfgGet(IDFF_aoutpassthroughDTS)==1  );
  int outsfs=cfgGet(IDFF_outsfs);
  ac32dlg(outsfs);
  setCheck(IDC_CHB_OUT_PCM16  ,outsfs&TsampleFormat::SF_PCM16  );
@@ -110,6 +112,13 @@ INT_PTR ToutsfsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
    case WM_COMMAND:
     switch (LOWORD(wParam))
      {
+      case IDC_CHB_PASSTHROUGH_AC3:
+      case IDC_CHB_PASSTHROUGH_DTS:
+	   {
+        cfgSet(IDFF_aoutpassthroughAC3, getCheck(IDC_CHB_PASSTHROUGH_AC3));
+        cfgSet(IDFF_aoutpassthroughDTS, getCheck(IDC_CHB_PASSTHROUGH_DTS));
+        break;
+	   }
       case IDC_CHB_OUT_LPCM:
        setCheck(IDC_CHB_OUT_PCM16,0);
        setCheck(IDC_CHB_OUT_PCM24,0);

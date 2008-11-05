@@ -66,7 +66,7 @@
 #define IDFF_streamsOptionsMenu   75
 #define IDFF_dvdproc              76
 #define IDFF_ac3drc               79
-#define IDFF_ac3SPDIF             3386
+//#define IDFF_ac3SPDIF             3386
 #define IDFF_dtsdrc               80
 #define IDFF_supDVDdec            81
 //#define IDFF_neroavc              82
@@ -660,7 +660,7 @@
    #define IDFF_MOVIE_SKAL    13
    #define IDFF_MOVIE_X264    14
    #define IDFF_MOVIE_LIBA52  15
-   #define IDFF_MOVIE_SPDIF   16
+   //#define IDFF_MOVIE_SPDIF   16
    #define IDFF_MOVIE_LIBDTS  17
    #define IDFF_MOVIE_TREMOR  18
    #define IDFF_MOVIE_REALAAC 19
@@ -924,6 +924,8 @@
 #define IDFF_aoutMultichannelDevice 3377
 #define IDFF_aoutMultichannelDeviceId 3378
 #define IDFF_aoutAC3EncodeMode      3379
+#define IDFF_aoutpassthroughAC3     3501
+#define IDFF_aoutpassthroughDTS     3502
 
 #define IDFF_dithering          1311
 #define IDFF_noiseShaping       1312
@@ -1523,6 +1525,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3501
+//next:3503
 
 #endif
