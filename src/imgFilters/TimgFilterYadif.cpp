@@ -143,7 +143,7 @@ HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4], i
         HRESULT hr = parent->deliverSample(++it, pict);
         --it;
 
-        if (i == (yadctx->mode & 1))
+        if (i == (yadctx->mode & 1) || hr != S_OK)
             break;
 
         // only if frame doubler is used and it has just delivered the first image.
