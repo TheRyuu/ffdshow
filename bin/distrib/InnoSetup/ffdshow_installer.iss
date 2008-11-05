@@ -1,6 +1,6 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2292
+#define tryout_revision = 2298
 #define buildyear = 2008
 #define buildmonth = '11'
 #define buildday = '05'
@@ -369,10 +369,10 @@ Name: audio\adpcm; Description: ADPCM, MS GSM, Truespeech; Check: NOT IsUpdate; 
 Name: audio\rawa; Description: {cm:tsk_rawAudio}; Check: CheckTaskAudio('rawa', 4, False); Flags: dontinheritcheck; Components: ffdshow
 Name: audio\rawa; Description: {cm:tsk_rawAudio}; Check: NOT CheckTaskAudio('rawa', 4, False); Flags: dontinheritcheck unchecked; Components: ffdshow
 Name: filter; Description: {cm:tsk_filtersSelect}; GroupDescription: {cm:tsk_filters}; Flags: unchecked; Components: ffdshow
-Name: filter\passthroughac3; Description: {cm:tsk_ac3spdif}; Check: GetTaskPassthroughAC3(); Components: ffdshow
-Name: filter\passthroughac3; Description: {cm:tsk_ac3spdif}; Check: NOT GetTaskPassthroughAC3(); Flags: unchecked; Components: ffdshow
-Name: filter\passthroughdts; Description: {cm:tsk_dtsspdif}; Check: GetTaskPassthroughDTS(); Components: ffdshow
-Name: filter\passthroughdts; Description: {cm:tsk_dtsspdif}; Check: NOT GetTaskPassthroughDTS(); Flags: unchecked; Components: ffdshow
+Name: filter\passthroughac3; Description: {cm:tsk_passthroughac3}; Check: GetTaskPassthroughAC3(); Components: ffdshow
+Name: filter\passthroughac3; Description: {cm:tsk_passthroughac3}; Check: NOT GetTaskPassthroughAC3(); Flags: unchecked; Components: ffdshow
+Name: filter\passthroughdts; Description: {cm:tsk_passthroughdts}; Check: GetTaskPassthroughDTS(); Components: ffdshow
+Name: filter\passthroughdts; Description: {cm:tsk_passthroughdts}; Check: NOT GetTaskPassthroughDTS(); Flags: unchecked; Components: ffdshow
 Name: filter\normalize; Description: {cm:tsk_volumeNorm}; Check:     GetTaskVolNormalize(); Components: ffdshow
 Name: filter\normalize; Description: {cm:tsk_volumeNorm}; Check: NOT GetTaskVolNormalize(); Components: ffdshow; Flags: unchecked
 Name: filter\subtitles; Description: {cm:tsk_subtitles};  Check:     CheckTaskVideoInpreset('issubtitles', 1, False); Components: ffdshow
@@ -795,9 +795,9 @@ var
 begin
   Result := False;
   if CheckTaskAudioInpreset('passthroughAC3', 1, False) then
-  begin
-  	Result := True;
-  end;
+    begin
+  	  Result := True;
+    end;
   if CheckTaskAudio('ac3', 16, False) then
     begin
       Result := True;
@@ -837,9 +837,9 @@ var
 begin
   Result := False;
   if CheckTaskAudioInpreset('passthroughDTS', 1, False) then
-  begin
-  	Result := True;
-  end;
+    begin
+  	  Result := True;
+    end;
   if CheckTaskAudio('dts', 16, False) then
     begin
       Result := True;

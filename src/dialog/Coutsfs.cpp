@@ -38,8 +38,8 @@ void ToutsfsPage::init(void)
   }
  Tlibavcodec *lavc;
  deci->getLibavcodec(&lavc);
- static const int spdifs[]={IDC_CHB_PASSTHROUGH_AC3, IDC_CHB_PASSTHROUGH_DTS, IDC_CHB_OUT_AC3,IDC_LBL_OUT_AC3,IDC_CBX_OUT_AC3,IDC_CHB_AOUT_AC3ENCODE_MODE,0};
- enable(lavc && lavc->ok && !lavc->dec_only,spdifs);
+ static const int ac3s[]={IDC_CHB_OUT_AC3,IDC_LBL_OUT_AC3,IDC_CBX_OUT_AC3,IDC_CHB_AOUT_AC3ENCODE_MODE,0};
+ enable(lavc && lavc->ok && !lavc->dec_only,ac3s);
  if (lavc) lavc->Release();
 
  addHint(IDC_CHB_ALWAYEXTENSIBLE,_l("\"not needed\": no custom channel mapping"));
