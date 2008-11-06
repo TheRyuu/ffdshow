@@ -2380,9 +2380,7 @@ static void copy_parameter_set(void **to, void **from, int count, int size)
             continue;              // ffdshow custom code
         }
         else if (from[i] && !to[i]) to[i] = av_malloc(size);
-        else if (!from[i]) continue;
-
-        memcpy(to[i], from[i], size);
+        if (from[i]) memcpy(to[i], from[i], size);
     }
 }
 

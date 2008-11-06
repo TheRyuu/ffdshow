@@ -567,7 +567,7 @@ static void frame_thread_free(AVCodecContext *avctx)
 
     park_frame_worker_threads(fctx, avctx->thread_count);
 
-    if (fctx->prev_thread != fctx->threads && fctx->prev_thread)
+    if (fctx->prev_thread && fctx->prev_thread != fctx->threads)
         update_context_from_copy(fctx->threads->avctx, fctx->prev_thread->avctx, 0);
 
     fctx->die = 1;
@@ -619,7 +619,7 @@ void ff_frame_thread_flush(AVCodecContext *avctx)
 
     park_frame_worker_threads(fctx, avctx->thread_count);
 
-    if (fctx->prev_thread != fctx->threads)
+    if (fctx->prev_thread && fctx->prev_thread != fctx->threads)
         update_context_from_copy(fctx->threads->avctx, fctx->prev_thread->avctx, 0);
 
     fctx->next_decoding = fctx->next_finished = 0;

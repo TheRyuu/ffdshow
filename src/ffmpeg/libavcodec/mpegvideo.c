@@ -369,6 +369,8 @@ int ff_mpeg_update_context(AVCodecContext *dst, AVCodecContext *src)
 
     s->avctx->coded_height  = s1->avctx->coded_height;
     s->avctx->coded_width   = s1->avctx->coded_width;
+    s->avctx->width         = s1->avctx->width;
+    s->avctx->height        = s1->avctx->height;
     s->height               = s1->height;
     s->width                = s1->width;
 
