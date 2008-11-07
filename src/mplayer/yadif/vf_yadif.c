@@ -37,6 +37,7 @@
 
 #include "libvo/fastmemcpy.h"
 #include "vf_yadif.h"
+#include "../ffmpeg/libavutil/mem.h"
 
 #define MIN(a,b) ((a) > (b) ? (b) : (a))
 #define MAX(a,b) ((a) < (b) ? (b) : (a))
@@ -262,6 +263,22 @@ static void filter_line_mmx2(YadifContext *yadctx, uint8_t *dst, uint8_t *prev, 
 #undef CHECK2
 #undef FILTER
 
+// ================= SSE2 =================
+#define PABS(tmp,dst) \
+            "pxor     "#tmp", "#tmp" \n\t"\
+            "psubw    "#dst", "#tmp" \n\t"\
+            "pmaxsw   "#tmp", "#dst" \n\t"
+
+#define FILTER_LINE_FUNC_NAME filter_line_sse2
+#include "vf_yadif_template.c"
+
+// ================ SSSE3 =================
+#define PABS(tmp,dst) \
+            "pabsw     "#dst", "#dst" \n\t"
+
+#define FILTER_LINE_FUNC_NAME filter_line_ssse3
+#include "vf_yadif_template.c"
+
 #endif /* defined(HAVE_MMX) && defined(NAMED_ASM_ARGS) */
 
 static void filter_line_c(YadifContext *yadctx, uint8_t *dst, uint8_t *prev, uint8_t *cur, uint8_t *next, int w, int refs, int parity){
@@ -345,7 +362,7 @@ void yadif_filter(YadifContext *yadctx, uint8_t *dst[3], stride_t dst_stride[3],
         }
     }
 #if defined(HAVE_MMX) && defined(NAMED_ASM_ARGS)
-    if(gCpuCaps.hasMMX2) __asm__ volatile("emms \n\t" : : : "memory");
+    if(filter_line == filter_line_mmx2) __asm__ volatile("emms \n\t" : : : "memory");
 #endif
 }
 
@@ -353,7 +370,12 @@ void yadif_init(void){
 
     filter_line = filter_line_c;
 #if defined(HAVE_MMX) && defined(NAMED_ASM_ARGS)
-    if(gCpuCaps.hasMMX2) filter_line = filter_line_mmx2;
+    if(gCpuCaps.hasSSSE3)
+        filter_line = filter_line_ssse3;
+    else if(gCpuCaps.hasSSE2)
+        filter_line = filter_line_sse2;
+    else if(gCpuCaps.hasMMX2)
+        filter_line = filter_line_mmx2;
 #endif
 
 }

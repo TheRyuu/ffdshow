@@ -65,7 +65,8 @@ Tlibmplayer::Tlibmplayer(const Tconfig *config):refcount(0)
                Tconfig::cpu_flags&FF_CPU_3DNOW,
                Tconfig::cpu_flags&FF_CPU_3DNOWEXT,
                Tconfig::cpu_flags&FF_CPU_SSE,
-               Tconfig::cpu_flags&FF_CPU_SSE2);
+               Tconfig::cpu_flags&FF_CPU_SSE2,
+               Tconfig::cpu_flags&FF_CPU_SSSE3);
 }
 Tlibmplayer::~Tlibmplayer()
 {

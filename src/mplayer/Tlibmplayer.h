@@ -34,7 +34,7 @@ public:
   }
  static const char_t *dllname;
 
- void (*init_mplayer)(int mmx,int mmx2,int _3dnow,int _3dnowExt,int sse,int sse2);
+ void (*init_mplayer)(int mmx,int mmx2,int _3dnow,int _3dnowExt,int sse,int sse2,int ssse3);
 
  pp_context_t* (*pp_get_context)(int width, int height, int flags);
  void (*pp_postprocess)(const uint8_t * src[3], stride_t srcStride[3], uint8_t * dst[3], stride_t dstStride[3], int horizontalSize, int verticalSize, QP_STORE_T *QP_store,  int QP_stride, pp_mode_t *mode, pp_context_t *ppContext, int pict_type);
