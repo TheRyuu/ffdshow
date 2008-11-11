@@ -113,15 +113,13 @@ CodecID TaudioParser::parseStream(unsigned char *src, int size,
 CodecID TaudioParser::getCodecIdFromStream()
 {
     CodecID codecIDAC3 = globalSettings->getCodecId(WAVE_FORMAT_AC3_W,NULL);
-	// Do not pass-through if MPL decoding is enabled
     useAC3CoreOnly = (codecIDAC3 != CODEC_ID_NONE)
         && (globalSettings->getCodecId(WAVE_FORMAT_MLP,NULL)==CODEC_ID_NONE);
 
-    useAC3Passthrough = (deci->getParam2(IDFF_aoutpassthroughAC3) == 1) && useAC3CoreOnly;
+	useAC3Passthrough = (codecIDAC3 != CODEC_ID_NONE) && (deci->getParam2(IDFF_aoutpassthroughAC3) == 1);
 
 	CodecID codecIDDTS = globalSettings->getCodecId(WAVE_FORMAT_DTS_W,NULL);
-	useDTSPassthrough = (codecIDDTS != CODEC_ID_NONE)
-		&& (deci->getParam2(IDFF_aoutpassthroughDTS) == 1);
+	useDTSPassthrough = (codecIDDTS != CODEC_ID_NONE) && (deci->getParam2(IDFF_aoutpassthroughDTS) == 1);
 	// Don't allow more than 1 format change
 	if (nbFormatChanges==2)
 		return codecId;
@@ -132,7 +130,7 @@ CodecID TaudioParser::getCodecIdFromStream()
 	{
 	case REGULAR_AC3:
 		wFormatTag=WAVE_FORMAT_AC3_W;
-		if (useAC3CoreOnly)
+		if (useAC3Passthrough)
 		{
 			codecId=CODEC_ID_SPDIF_AC3;nbFormatChanges++;
 			return codecId;
@@ -149,16 +147,19 @@ CodecID TaudioParser::getCodecIdFromStream()
 	case AC3_TRUEHD:
 		// If AC3 codec is set to SPDIF and MLP decoder disabled,
 		// then send AC3 frams in passthrough and throw away TrueHD frames
-		if (useAC3Passthrough)
+		if (useAC3CoreOnly)
 		{
-			codecId=CODEC_ID_SPDIF_AC3;nbFormatChanges++;
-			return codecId;
-		}
-		else if (useAC3CoreOnly) //MLP Decoder is Disabled
-		{
-			// TODO : find a compatible MLP decoder and pull FFDShow Audio out of the graph
-			// Problem : no MLP mediaguid exist
-			wFormatTag=WAVE_FORMAT_AC3_W;
+			if (useAC3Passthrough)
+			{
+				codecId=CODEC_ID_SPDIF_AC3;nbFormatChanges++;
+				return codecId;
+			}
+			else //MLP decoder is disabled and AC3 pass-through is disabled
+			{
+				// TODO : find a compatible MLP decoder and pull FFDShow Audio out of the graph
+				// Problem : no MLP mediaguid exist
+				wFormatTag=WAVE_FORMAT_AC3_W;
+			}
 		}
 		else
 		{
