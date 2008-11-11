@@ -16,7 +16,7 @@ private:
  REFERENCE_TIME last_rtStop;
 
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
- virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSP_420P | FF_CSP_YUY2;}
+ virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSP_420P;}
  virtual void onSizeChange(void);
  HRESULT onDiscontinuity(TffPict &pict);
  bool checkSizeChange(TffPict &pict);
