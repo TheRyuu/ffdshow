@@ -5,6 +5,7 @@
 #include "ffcodecs.h"
 #include "Tlibavcodec.h"
 #include "IimgFilterGrab.h"
+#include "TffPict.h"
 
 class Tdll;
 struct Tconfig;
@@ -81,6 +82,8 @@ private:
  TimgExport *exp[3];
  unsigned char *dstbuf;unsigned int dstbuflen;
  volatile LONG now;
+ TffPict temp;
+ Tbuffer buffer;
 protected:
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const;
