@@ -1396,6 +1396,10 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
    int marginL=(*i)->props.get_marginL(prefsdx, cdx);
    int marginR=(*i)->props.get_marginR(prefsdx, cdx);
    int leftOverhang=(*i)->get_leftOverhang();
+
+   if ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER
+	   && (*i)->props.alignment == -1)
+	   (*i)->props.alignment = 2;
    
    switch ((*i)->props.alignment)
     {
