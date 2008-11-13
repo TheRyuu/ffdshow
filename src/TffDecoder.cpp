@@ -865,6 +865,7 @@ HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
   {
    m_dirtyStop = false;
    inpin->onSeek(0);
+   imgFilters->onSeek();
   }
 
  long srcLength;
@@ -1793,7 +1794,10 @@ HRESULT TffdshowDecVideo::initializeOutputSample(IMediaSample **ppOutSample)
  update_time_on_ffdshow2();
 
  if (FAILED(hr))
-  return hr;
+  {
+   DPRINTF(_l(" TffdshowDecVideo::initializeOutputSample GetDeliveryBuffer failed %x"),hr);
+   return hr;
+  }
  *ppOutSample=pOutSample;
 
  ASSERT(pOutSample);
