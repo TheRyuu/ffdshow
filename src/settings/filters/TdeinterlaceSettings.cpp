@@ -176,6 +176,13 @@ void TdeinterlaceSettings::createFilters(size_t filtersorder,Tfilters *filters,T
      default:queueFilter<TimgFilterMplayerDeinterlace>(filtersorder,filters,queue); return; //mplayer deinterlacers
     }
   }
+ if (getMethod(cfgId).id != YADIF || !is || !show)
+  {
+   // Inform yadif filter that it is no longer in the filter queue.
+   // FIXME create more generic function that call Tfilter::onRemoveFromFilterQueue.
+   TimgFilterYadif *imgFilterYadif = filters->getFilter<TimgFilterYadif>();
+   imgFilterYadif->done();
+  }
 }
 void TdeinterlaceSettings::createPages(TffdshowPageDec *parent) const
 {
