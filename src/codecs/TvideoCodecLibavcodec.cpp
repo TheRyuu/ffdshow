@@ -85,6 +85,7 @@ void TvideoCodecLibavcodec::create(void)
  ccDecoder=NULL;
  autoSkipingLoopFilter= false;
  h264onTS = false;
+ inPosB = 1;
 }
 
 TvideoCodecLibavcodec::~TvideoCodecLibavcodec()
