@@ -21,14 +21,25 @@
 #ifndef _VF_YADIF_H_
 #define _VF_YADIF_H_
 
-typedef struct vf_priv_s {
+/**
+ * YadifContext
+ */
+typedef struct {
     int mode;
     int parity;
     int64_t buffered_rtStart;
     int64_t buffered_rtStop;
     int64_t frame_duration;
-    int stride[3];
+    stride_t stride[3];
     uint8_t *ref[4][3];
+    /**
+     * do_deinterlace
+     * 0:not initialized
+     * 1:before buffuring the first frame
+     * 2:first frame buffered, input the first frame again
+     * 3:input the second frame
+     * 4:normal (running)
+     */
     int do_deinterlace;
 } YadifContext;
 

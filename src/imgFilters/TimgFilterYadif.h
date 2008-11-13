@@ -14,12 +14,12 @@ private:
  TfilterQueue::iterator it;
  bool hasImageInBuffer;
  REFERENCE_TIME last_rtStop;
+ bool dllok;
 
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSP_420P;}
  virtual void onSizeChange(void);
- HRESULT onDiscontinuity(TffPict &pict);
- bool checkSizeChange(TffPict &pict);
+ HRESULT onDiscontinuity(const TffPict &pict);
 
  YadifContext* TimgFilterYadif::getContext(int mode, int parity);
  HRESULT put_image(TffPict &pict, const unsigned char *src[4], int full);
@@ -27,6 +27,7 @@ private:
  int config(TffPict &pict);
 
  TffPict oldpict;
+
 public:
  TimgFilterYadif(IffdshowBase *Ideci,Tfilters *Iparent,bool Ibob=false);
  ~TimgFilterYadif();
