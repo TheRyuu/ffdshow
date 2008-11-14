@@ -30,6 +30,10 @@
 #include "libavutil/rational.h"
 #include "avcodec.h"
 
+#ifndef FF_ARRAY_ELEMS
+#define FF_ARRAY_ELEMS(a) (sizeof(a) / sizeof((a)[0]))
+#endif
+
 /* ffdshow custom code */
 enum  {
   DV_PROFILE_AUTO=-1
