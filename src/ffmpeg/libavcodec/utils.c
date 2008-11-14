@@ -72,6 +72,7 @@ void *av_fast_realloc(void *ptr, unsigned int *size, unsigned int min_size)
     return ptr;
 }
 
+/* ffdshow custom code (begin) */
 static unsigned int last_static = 0;
 static void** array_static = NULL;
 
@@ -82,6 +83,7 @@ void av_free_static(void)
     }
     av_freep(&array_static);
 }
+/* ffdshow custom code (end) */
 
 /* encoder management */
 static AVCodec *first_avcodec = NULL;
@@ -369,11 +371,11 @@ int avcodec_default_reget_buffer(AVCodecContext *s, AVFrame *pic){
     return 0;
 }
 
-int avcodec_default_execute(AVCodecContext *c, int (*func)(AVCodecContext *c2, void *arg2),void **arg, int *ret, int count){
+int avcodec_default_execute(AVCodecContext *c, int (*func)(AVCodecContext *c2, void *arg2),void *arg, int *ret, int count, int size){
     int i;
 
     for(i=0; i<count; i++){
-        int r= func(c, arg[i]);
+        int r= func(c, (char*)arg + i*size);
         if(ret) ret[i]= r;
     }
     return 0;
