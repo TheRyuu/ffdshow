@@ -14,6 +14,8 @@ protected:
  TdevicesList getDevices(void);
 public:
  ToutputAudioSettings(TintStrColl *Icoll=NULL,TfilterIDFFs *filters=NULL);
+ int passthroughAC3;
+ int passthroughDTS;
  int outsfs;
  int outAC3bitrate;
  int connectTo,connectToOnlySpdif;

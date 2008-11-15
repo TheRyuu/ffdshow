@@ -53,8 +53,10 @@ void ToutcspsPage::init(void)
  addHint(IDC_CHB_OUTCHANGECOMPATONLY,_l("Connect only to:\n")
                                      TOUTCSPSPAGE_RECONNECTABLE_FILTERS);
 
- addHint(IDC_CBX_OUT_HWDEINT_METHOD,_l("Bob for video source\nWeave for film source\n")
-                                    _l("In most cases, Weave is the same as unchecked HW deinterlacing."));
+ addHint(IDC_CBX_OUT_HWDEINT_METHOD,_l("Auto: according to source flags, bob for interlaced frames, weave for progressive frames.\n")
+                                    _l("Force weave: weave for each frame, regardless of source flags.\n")
+                                    _l("Force bob: bob for each frame, regardless of source flags.\n\n")
+                                    _l("Note: In most cases, Weave is the same as unchecked \"Set interlace flag in output media type\"."));
 }
 void ToutcspsPage::cfg2dlg(void)
 {

@@ -175,8 +175,9 @@ begin
   #endif
   #if VS2008SP1
   runtime.name := 'Microsoft.VC90.CRT';
-  SetArrayLength(runtime.version, 1);
+  SetArrayLength(runtime.version, 2);
   runtime.version[0] := '9.0.30729.1';
+  runtime.version[1] := '9.0.30729.17';
   runtime.majorversion := '9.0';
   runtime.msvcr_filename := 'msvcr90.dll';
   #endif

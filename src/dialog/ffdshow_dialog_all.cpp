@@ -108,3 +108,4 @@
 #include "TcompatibilityList.cpp"
 #include "TcompatibilityManager.cpp"
 #include "CcspOptions.cpp"
+#include "TsubtitlesSSAConfig.cpp"

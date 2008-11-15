@@ -108,7 +108,10 @@ class TaudioParser
 {
 private:
  TbyteBuffer backupbuf;
- int skipBytes;int includeBytes;bool hasMLPFrames;bool useAC3;bool useDTSSPDIF;
+ int skipBytes;int includeBytes;bool hasMLPFrames;
+ bool useAC3CoreOnly;
+ bool useAC3Passthrough;
+ bool useDTSPassthrough;
  StreamFormat streamformat;
  TglobalSettingsDecAudio *globalSettings;
  int nbFormatChanges;

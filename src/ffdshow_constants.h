@@ -924,6 +924,8 @@
 #define IDFF_aoutMultichannelDevice 3377
 #define IDFF_aoutMultichannelDeviceId 3378
 #define IDFF_aoutAC3EncodeMode      3379
+#define IDFF_aoutpassthroughAC3     3501
+#define IDFF_aoutpassthroughDTS     3502
 
 #define IDFF_dithering          1311
 #define IDFF_noiseShaping       1312
@@ -1523,6 +1525,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3501
+//next:3503
 
 #endif

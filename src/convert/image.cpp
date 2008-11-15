@@ -1507,6 +1507,7 @@ template<int CCIR> struct TpackedFuncPtrRGB
  static packedFuncPtr bgr_to_yv12;
  static packedFuncPtr bgra_to_yv12;
  static packedFuncPtr abgr_to_yv12;
+ static packedFuncPtr rgb_to_yv12;
  static packedFuncPtr rgba_to_yv12;
  static packedFuncPtr argb_to_yv12;
 
@@ -1515,6 +1516,7 @@ template<int CCIR> struct TpackedFuncPtrRGB
  static packedFuncPtr bgri_to_yv12;
  static packedFuncPtr bgrai_to_yv12;
  static packedFuncPtr abgri_to_yv12;
+ static packedFuncPtr rgbi_to_yv12;
  static packedFuncPtr rgbai_to_yv12;
  static packedFuncPtr argbi_to_yv12;
 
@@ -1523,6 +1525,7 @@ template<int CCIR> struct TpackedFuncPtrRGB
  static packedFuncPtr yv12_to_bgr;
  static packedFuncPtr yv12_to_bgra;
  static packedFuncPtr yv12_to_abgr;
+ static packedFuncPtr yv12_to_rgb;
  static packedFuncPtr yv12_to_rgba;
  static packedFuncPtr yv12_to_argb;
 
@@ -1531,6 +1534,7 @@ template<int CCIR> struct TpackedFuncPtrRGB
  static packedFuncPtr yv12_to_bgri;
  static packedFuncPtr yv12_to_bgrai;
  static packedFuncPtr yv12_to_abgri;
+ static packedFuncPtr yv12_to_rgbi;
  static packedFuncPtr yv12_to_rgbai;
  static packedFuncPtr yv12_to_argbi;
 
@@ -1541,6 +1545,7 @@ template<int CCIR> struct TpackedFuncPtrRGB
    bgr_to_yv12     = bgr_to_yv12_c;
    bgra_to_yv12    = bgra_to_yv12_c;
    abgr_to_yv12    = abgr_to_yv12_c;
+   rgb_to_yv12     = rgb_to_yv12_c;
    rgba_to_yv12    = rgba_to_yv12_c;
 
    rgb555i_to_yv12 = rgb555i_to_yv12_c;
@@ -1548,6 +1553,7 @@ template<int CCIR> struct TpackedFuncPtrRGB
    bgri_to_yv12    = bgri_to_yv12_c;
    bgrai_to_yv12   = bgrai_to_yv12_c;
    abgri_to_yv12   = abgri_to_yv12_c;
+   rgbi_to_yv12    = rgbi_to_yv12_c;
    rgbai_to_yv12   = rgbai_to_yv12_c;
 
    yv12_to_rgb555 = yv12_to_rgb555_c;
@@ -1555,6 +1561,7 @@ template<int CCIR> struct TpackedFuncPtrRGB
    yv12_to_bgr     = yv12_to_bgr_c;
    yv12_to_bgra    = yv12_to_bgra_c;
    yv12_to_abgr    = yv12_to_abgr_c;
+   yv12_to_rgb     = yv12_to_rgb_c;
    yv12_to_rgba    = yv12_to_rgba_c;
 
    yv12_to_rgb555i = yv12_to_rgb555i_c;
@@ -1562,6 +1569,7 @@ template<int CCIR> struct TpackedFuncPtrRGB
    yv12_to_bgri    = yv12_to_bgri_c;
    yv12_to_bgrai   = yv12_to_bgrai_c;
    yv12_to_abgri   = yv12_to_abgri_c;
+   yv12_to_rgbi    = yv12_to_rgbi_c;
    yv12_to_rgbai   = yv12_to_rgbai_c;
   }
  static void initMMX(void)
@@ -1601,6 +1609,12 @@ template<int CCIR> struct TpackedFuncPtrRGB
  {
   typedef TMAKE_COLORSPACE<4,2,2, intToVal<3>, 2,1,0,CCIR> TMAKE_COLORSPACE_yv12_to_abgr_c;
   TMAKE_COLORSPACE_yv12_to_abgr_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_abgr_c::YV12_TO_RGB());
+ }
+ //MAKE_COLORSPACE(yv12_to_rgb_c,     3,2,2, YV12_TO_RGB,    0,1,2, 0,CCIR)
+ static void yv12_to_rgb_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ {
+  typedef TMAKE_COLORSPACE<3,2,2, intToVal<0>, 1,2,0,CCIR> TMAKE_COLORSPACE_yv12_to_rgb_c;
+  TMAKE_COLORSPACE_yv12_to_rgb_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_rgb_c::YV12_TO_RGB());
  }
  //MAKE_COLORSPACE(yv12_to_rgba_c,    4,2,2, YV12_TO_RGB,    0,1,2,3,CCIR)
  static void yv12_to_rgba_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
@@ -1649,6 +1663,12 @@ template<int CCIR> struct TpackedFuncPtrRGB
   typedef TMAKE_COLORSPACE<4,2,4, intToVal<3>, 2,1,0,CCIR> TMAKE_COLORSPACE_yv12_to_abgri_c;
   TMAKE_COLORSPACE_yv12_to_abgri_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_abgri_c::YV12_TO_RGBI());
  }
+ //MAKE_COLORSPACE(yv12_to_rgbi_c,    3,2,4, YV12_TO_RGBI,   0,1,2,0,CCIR)
+ static void yv12_to_rgbi_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ {
+  typedef TMAKE_COLORSPACE<3,2,4, intToVal<0>, 1,2,0,CCIR> TMAKE_COLORSPACE_yv12_to_rgbi_c;
+  TMAKE_COLORSPACE_yv12_to_rgbi_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_rgbi_c::YV12_TO_RGBI());
+ }
  //MAKE_COLORSPACE(yv12_to_rgbai_c,   4,2,4, YV12_TO_RGBI,   0,1,2,3,CCIR)
  static void yv12_to_rgbai_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
  {
@@ -1696,6 +1716,12 @@ template<int CCIR> struct TpackedFuncPtrRGB
   typedef TMAKE_COLORSPACE<4,2,2, intToVal<3>, 2,1,0,CCIR> TMAKE_COLORSPACE_abgr_to_yv12_c;
   TMAKE_COLORSPACE_abgr_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_abgr_to_yv12_c::RGB_TO_YV12());
  }
+  //MAKE_COLORSPACE(rgb_to_yv12_c,     3,2,2, RGB_TO_YV12,    0,1,2, 0,CCIR)
+ static void rgb_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ {
+  typedef TMAKE_COLORSPACE<3,2,2, intToVal<0>, 1,2,0,CCIR> TMAKE_COLORSPACE_rgb_to_yv12_c;
+  TMAKE_COLORSPACE_rgb_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_rgb_to_yv12_c::RGB_TO_YV12());
+ }
  //MAKE_COLORSPACE(rgba_to_yv12_c,    4,2,2, RGB_TO_YV12,    0,1,2, 0,CCIR)
  static void rgba_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
  {
@@ -1739,6 +1765,12 @@ template<int CCIR> struct TpackedFuncPtrRGB
  {
   typedef TMAKE_COLORSPACE<4,2,4, intToVal<3>, 2,1,0,CCIR> TMAKE_COLORSPACE_abgri_to_yv12_c;
   TMAKE_COLORSPACE_abgri_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_abgri_to_yv12_c::RGBI_TO_YV12());
+ }
+  //MAKE_COLORSPACE(rgbi_to_yv12_c,    3,2,4, RGBI_TO_YV12,   0,1,2, 0,CCIR)
+ static void rgbi_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ {
+  typedef TMAKE_COLORSPACE<3,2,4, intToVal<0>, 1,2,0,CCIR> TMAKE_COLORSPACE_rgbi_to_yv12_c;
+  TMAKE_COLORSPACE_rgbi_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_rgbi_to_yv12_c::RGBI_TO_YV12());
  }
  //MAKE_COLORSPACE(rgbai_to_yv12_c,   4,2,4, RGBI_TO_YV12,   0,1,2, 0,CCIR)
  static void rgbai_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
@@ -1805,6 +1837,7 @@ template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::rgb565_to_yv12=NULL; template<
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::bgr_to_yv12=NULL;    template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::bgr_to_yv12=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::bgra_to_yv12=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::bgra_to_yv12=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::abgr_to_yv12=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::abgr_to_yv12=NULL;
+template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::rgb_to_yv12=NULL;    template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::rgb_to_yv12=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::rgba_to_yv12=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::rgba_to_yv12=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::argb_to_yv12=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::argb_to_yv12=NULL;
 
@@ -1813,6 +1846,7 @@ template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::rgb565i_to_yv12=NULL;template<
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::bgri_to_yv12=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::bgri_to_yv12=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::bgrai_to_yv12=NULL;  template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::bgrai_to_yv12=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::abgri_to_yv12=NULL;  template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::abgri_to_yv12=NULL;
+template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::rgbi_to_yv12=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::rgbi_to_yv12=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::rgbai_to_yv12=NULL;  template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::rgbai_to_yv12=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::argbi_to_yv12=NULL;  template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::argbi_to_yv12=NULL;
 
@@ -1821,6 +1855,7 @@ template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_rgb565=NULL; template<
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_bgr=NULL;    template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_bgr=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_bgra=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_bgra=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_abgr=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_abgr=NULL;
+template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_rgb=NULL;    template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_rgb=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_rgba=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_rgba=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_argb=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_argb=NULL;
 
@@ -1829,6 +1864,7 @@ template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_rgb565i=NULL;template<
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_bgri=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_bgri=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_bgrai=NULL;  template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_bgrai=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_abgri=NULL;  template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_abgri=NULL;
+template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_rgbi=NULL;   template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_rgbi=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_rgbai=NULL;  template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_rgbai=NULL;
 template<> packedFuncPtr TpackedFuncPtrRGB<CCIR>::yv12_to_argbi=NULL;  template<> packedFuncPtr TpackedFuncPtrRGB<JPEG>::yv12_to_argbi=NULL;
 
@@ -1914,6 +1950,14 @@ int image_input(IMAGE * image,
                         edged_width, edged_width2, width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::bgrai_to_yv12:TpackedFuncPtrRGB<CCIR>::bgrai_to_yv12)  :(jpeg?TpackedFuncPtrRGB<JPEG>::bgra_to_yv12:TpackedFuncPtrRGB<CCIR>::bgra_to_yv12),
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::bgrai_to_yv12_c:TpackedFuncPtrRGB<CCIR>::bgrai_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::bgra_to_yv12_c:TpackedFuncPtrRGB<CCIR>::bgra_to_yv12_c), 4);
+                break;
+
+        case FF_CSP_BGR24 :
+                safe_packed_conv(
+                        (uint8_t*)src, src_stride, image->y, image->u, image->v,
+                        edged_width, edged_width2, width, height,
+                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgbi_to_yv12:TpackedFuncPtrRGB<CCIR>::rgbi_to_yv12)  :(jpeg?TpackedFuncPtrRGB<JPEG>::rgb_to_yv12:TpackedFuncPtrRGB<CCIR>::rgb_to_yv12),
+                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgbi_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgbi_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::rgb_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgb_to_yv12_c), 3);
                 break;
 
         case FF_CSP_ABGR :
@@ -2029,6 +2073,14 @@ int image_output(IMAGE * image,
                         edged_width[0], edged_width[1], width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgrai:TpackedFuncPtrRGB<CCIR>::yv12_to_bgrai)  :(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgra:TpackedFuncPtrRGB<CCIR>::yv12_to_bgra),
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgrai_c:TpackedFuncPtrRGB<CCIR>::yv12_to_bgrai_c):(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgra_c:TpackedFuncPtrRGB<CCIR>::yv12_to_bgra_c), 4);
+                break;
+
+        case FF_CSP_BGR24:
+                safe_packed_conv(
+                        dst[0], dst_stride[0], image->y, image->u, image->v,
+                        edged_width[0], edged_width[1], width, height,
+                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgbi:TpackedFuncPtrRGB<CCIR>::yv12_to_rgbi)  :(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgb:TpackedFuncPtrRGB<CCIR>::yv12_to_rgb),
+                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgbi_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgbi_c):(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgb_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgb_c), 3);
                 break;
 
         case FF_CSP_ABGR:

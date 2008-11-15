@@ -51,6 +51,10 @@ ToutputAudioSettings::ToutputAudioSettings(TintStrColl *Icoll,TfilterIDFFs *filt
 {
  static const TintOptionT<ToutputAudioSettings> iopts[]=
   {
+   IDFF_aoutpassthroughAC3     ,&ToutputAudioSettings::passthroughAC3        ,0,1,_l(""),1,
+     _l("passthroughAC3"),0,
+   IDFF_aoutpassthroughDTS     ,&ToutputAudioSettings::passthroughDTS        ,0,1,_l(""),1,
+     _l("passthroughDTS"),0,
    IDFF_outsfs                 ,&ToutputAudioSettings::outsfs                ,1,1,_l(""),1,
      _l("outsfs"),TsampleFormat::SF_PCM16,
    IDFF_outAC3bitrate          ,&ToutputAudioSettings::outAC3bitrate         ,32,640,_l(""),1,
@@ -84,7 +88,7 @@ void ToutputAudioSettings::createFilters(size_t filtersorder,Tfilters *filters,T
 
 const int* ToutputAudioSettings::getResets(unsigned int pageId)
 {
- static const int idResets[]={IDFF_outsfs,IDFF_outAC3bitrate,IDFF_aoutConnectTo,IDFF_aoutConnectToOnlySpdif,0};
+ static const int idResets[]={IDFF_aoutpassthroughAC3, IDFF_aoutpassthroughDTS, IDFF_outsfs,IDFF_outAC3bitrate,IDFF_aoutConnectTo,IDFF_aoutConnectToOnlySpdif,0};
  return idResets;
 }
 

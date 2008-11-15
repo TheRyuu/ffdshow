@@ -5,7 +5,7 @@
 	Name="ffdshow"
 	ProjectGUID="{6DF9C5D2-5835-4C6D-A4CF-E17AA58D7C98}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
-	VCNestedProjectCRC32="1133766944"
+	VCNestedProjectCRC32="1343247651"
 	VCNestedProjectFileName="ffdshow_icl.vcproj">
 	<Configurations>
 		<Configuration 
@@ -495,7 +495,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -503,7 +503,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -511,7 +511,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -519,7 +519,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
@@ -605,7 +605,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -613,7 +613,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -621,7 +621,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -629,7 +629,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
@@ -1164,7 +1164,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -1172,7 +1172,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -1180,7 +1180,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -1188,7 +1188,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
@@ -1427,7 +1427,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -1435,7 +1435,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -1443,7 +1443,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -1451,7 +1451,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
@@ -1480,7 +1480,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DUSE32 -Dalloc -Dexec -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -DUSE32 -Dalloc -Dexec -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -1488,7 +1488,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DUSE32 -Dalloc -Dexec -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -DUSE32 -Dalloc -Dexec -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -1496,7 +1496,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DUSE32 -Dalloc -Dexec -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -DUSE32 -Dalloc -Dexec -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -1504,7 +1504,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -DUSE32 -Dalloc -Dexec -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -DUSE32 -Dalloc -Dexec -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
@@ -1515,7 +1515,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -1523,7 +1523,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -1531,7 +1531,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -1539,7 +1539,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
@@ -4050,7 +4050,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -4058,7 +4058,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -4066,7 +4066,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -4074,7 +4074,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
@@ -4182,7 +4182,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -4190,7 +4190,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -4198,7 +4198,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -4206,7 +4206,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
@@ -4283,7 +4283,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -4291,7 +4291,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -4299,7 +4299,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -4307,7 +4307,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
@@ -4828,5 +4828,4 @@
 		</File>
 	</Files>
 </VisualStudioProject>
-
 

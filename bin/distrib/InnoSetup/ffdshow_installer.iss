@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2083
+#define tryout_revision = 2324
 #define buildyear = 2008
-#define buildmonth = '09'
-#define buildday = '30'
+#define buildmonth = '11'
+#define buildday = '15'
 
 ; Build specific options
 #define unicode_required = True
@@ -49,7 +49,7 @@
 #define PREF_CLSID = False
 #define PREF_CLSID_ICL = False
 #define PREF_CLSID_X64 = False
-#define PREF_YAMAGATA = False
+#define PREF_YAMAGATA = True
 #define PREF_XXL = False
 #define PREF_XXL_X64 = False
 #define PREF_ALBAIN = False
@@ -79,8 +79,9 @@
   #define bindir = '..\..\x64'
   #define outputdir = '..\..\..\..\'
 #elif PREF_YAMAGATA
-  #define VS2008 = True
+  #define VS2008SP1 = True
   #define unicode_required = True
+  #define include_xvidcore = False
   #define filename_suffix = '_Q'
 #elif PREF_XXL
   #define VS2003SP1 = True
@@ -98,6 +99,7 @@
   #define include_setup_icon = True
   #define filename_suffix = '_xxl_x64'
 #elif PREF_ALBAIN
+  #define sse_required = False
   #define VS2008SP1 = True
   #define filename_suffix = '_dbt'
 #elif PREF_ALBAIN_X64
@@ -324,19 +326,19 @@ Name: audio\aac\libfaad2; Description: libfaad2; Check: NOT CheckTaskAudio('aac'
 ;Name: audio\aac\libavcodec; Description: libavcodec; Check: CheckTaskAudio('aac', 1, False); Flags: exclusive; Components: ffdshow
 ;Name: audio\aac\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('aac', 1, False); Flags: exclusive unchecked; Components: ffdshow
 Name: audio\ac3;        Description: AC3;                                                 Components: ffdshow; Flags: unchecked
-Name: audio\ac3\liba52; Description: liba52; Check:     CheckTaskAudio('ac3', 15, True);  Components: ffdshow; Flags: exclusive
-Name: audio\ac3\liba52; Description: liba52; Check: NOT CheckTaskAudio('ac3', 15, True);  Components: ffdshow; Flags: exclusive unchecked
+Name: audio\ac3\liba52; Description: liba52; Check:      CheckTaskAudio('ac3', 15, True) OR CheckTaskAudio('ac3', 16, True);  Components: ffdshow; Flags: exclusive
+Name: audio\ac3\liba52; Description: liba52; Check: NOT (CheckTaskAudio('ac3', 15, True)  OR CheckTaskAudio('ac3', 16, True));  Components: ffdshow; Flags: exclusive unchecked
 ;Name: audio\ac3\libavcodec; Description: libavcodec; Check:     CheckTaskAudio('ac3', 1, False);  Components: ffdshow; Flags: exclusive
 ;Name: audio\ac3\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('ac3', 1, False);  Components: ffdshow; Flags: exclusive unchecked
-Name: audio\ac3\spdif;  Description: S/PDIF; Check:     CheckTaskAudio('ac3', 16, False); Components: ffdshow; Flags: exclusive
-Name: audio\ac3\spdif;  Description: S/PDIF; Check: NOT CheckTaskAudio('ac3', 16, False); Components: ffdshow; Flags: exclusive unchecked
+;Name: audio\ac3\spdif;  Description: S/PDIF; Check:     CheckTaskAudio('ac3', 16, False); Components: ffdshow; Flags: exclusive
+;Name: audio\ac3\spdif;  Description: S/PDIF; Check: NOT CheckTaskAudio('ac3', 16, False); Components: ffdshow; Flags: exclusive unchecked
 Name: audio\dts;        Description: DTS;                                                 Components: ffdshow; Flags: unchecked
-Name: audio\dts\libdts; Description: libdts; Check:     CheckTaskAudio('dts', 17, True);  Components: ffdshow; Flags: exclusive
-Name: audio\dts\libdts; Description: libdts; Check: NOT CheckTaskAudio('dts', 17, True);  Components: ffdshow; Flags: exclusive unchecked
+Name: audio\dts\libdts; Description: libdts; Check:      CheckTaskAudio('dts', 17, True) OR CheckTaskAudio('dts', 17, True);  Components: ffdshow; Flags: exclusive
+Name: audio\dts\libdts; Description: libdts; Check: NOT (CheckTaskAudio('dts', 17, True) OR CheckTaskAudio('dts', 17, True));  Components: ffdshow; Flags: exclusive unchecked
 ;Name: audio\dts\libavcodec; Description: libavcodec; Check:     CheckTaskAudio('dts', 1, False);  Components: ffdshow; Flags: exclusive
 ;Name: audio\dts\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('dts', 1, False);  Components: ffdshow; Flags: exclusive unchecked
-Name: audio\dts\spdif;  Description: S/PDIF; Check:     CheckTaskAudio('dts', 16, False); Components: ffdshow; Flags: exclusive
-Name: audio\dts\spdif;  Description: S/PDIF; Check: NOT CheckTaskAudio('dts', 16, False); Components: ffdshow; Flags: exclusive unchecked
+;Name: audio\dts\spdif;  Description: S/PDIF; Check:     CheckTaskAudio('dts', 16, False); Components: ffdshow; Flags: exclusive
+;Name: audio\dts\spdif;  Description: S/PDIF; Check: NOT CheckTaskAudio('dts', 16, False); Components: ffdshow; Flags: exclusive unchecked
 Name: audio\lpcm; Description: LPCM; Check: CheckTaskAudio('lpcm', 4, True); Components: ffdshow
 Name: audio\lpcm; Description: LPCM; Check: NOT CheckTaskAudio('lpcm', 4, True); Flags: unchecked; Components: ffdshow
 Name: audio\mp2; Description: MP1, MP2; Check: CheckTaskAudio('mp2', 7, True); Components: ffdshow
@@ -358,6 +360,10 @@ Name: audio\adpcm; Description: ADPCM, MS GSM, Truespeech; Check: NOT IsUpdate; 
 Name: audio\rawa; Description: {cm:tsk_rawAudio}; Check: CheckTaskAudio('rawa', 4, False); Flags: dontinheritcheck; Components: ffdshow
 Name: audio\rawa; Description: {cm:tsk_rawAudio}; Check: NOT CheckTaskAudio('rawa', 4, False); Flags: dontinheritcheck unchecked; Components: ffdshow
 Name: filter; Description: {cm:tsk_filtersSelect}; GroupDescription: {cm:tsk_filters}; Flags: unchecked; Components: ffdshow
+Name: filter\passthroughac3; Description: {cm:tsk_passthroughac3}; Check: GetTaskPassthroughAC3(); Components: ffdshow
+Name: filter\passthroughac3; Description: {cm:tsk_passthroughac3}; Check: NOT GetTaskPassthroughAC3(); Flags: unchecked; Components: ffdshow
+Name: filter\passthroughdts; Description: {cm:tsk_passthroughdts}; Check: GetTaskPassthroughDTS(); Components: ffdshow
+Name: filter\passthroughdts; Description: {cm:tsk_passthroughdts}; Check: NOT GetTaskPassthroughDTS(); Flags: unchecked; Components: ffdshow
 Name: filter\normalize; Description: {cm:tsk_volumeNorm}; Check:     GetTaskVolNormalize(); Components: ffdshow
 Name: filter\normalize; Description: {cm:tsk_volumeNorm}; Check: NOT GetTaskVolNormalize(); Components: ffdshow; Flags: unchecked
 Name: filter\subtitles; Description: {cm:tsk_subtitles};  Check:     CheckTaskVideoInpreset('issubtitles', 1, False); Components: ffdshow
@@ -648,6 +654,13 @@ Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: do
 ; Registry keys for the audio/video formats:
 #include "reg_formats.iss"
 
+; Audio Pass-through upgrade path:
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: passthroughAC3;         ValueData: 0; Components: ffdshow; Tasks: NOT filter\passthroughac3
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: passthroughAC3;         ValueData: 1; Components: ffdshow; Tasks: filter\passthroughac3
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: passthroughDTS;         ValueData: 0; Components: ffdshow; Tasks: NOT filter\passthroughdts
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: passthroughDTS;         ValueData: 1; Components: ffdshow; Tasks: filter\passthroughdts
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\; ValueName: "ac3SPDIF"; Flags: deletevalue ; Components: ffdshow;
+
 [INI]
 #if !is64bit & !unicode_required
 Filename: {win}\system.ini; Section: drivers32; Key: vidc.ffds;  String: ff_vfw.dll; Flags: uninsdeleteentry; MinVersion: 4,0; Components: ffdshow\vfw
@@ -763,6 +776,90 @@ begin
   if CheckTaskAudioInpreset('isvolume', 1, False) then
     if CheckTaskAudioInpreset('volNormalize', 1, False) then
      Result := True;
+end;
+
+function GetTaskPassthroughAC3(): Boolean;
+var
+  regval: Cardinal;
+  presetList: TArrayOfString;
+  index: Integer;
+begin
+  Result := False;
+  if CheckTaskAudioInpreset('passthroughAC3', 1, False) then
+    begin
+  	  Result := True;
+    end;
+  if CheckTaskAudio('ac3', 16, False) then
+    begin
+      Result := True;
+    end
+  if RegGetSubkeyNames(HKCU, 'Software\GNU\ffdshow_audio\', presetList) then
+    begin
+      for index := 0 to GetArrayLength(presetList)-1 do
+        begin
+          if (presetList[index] <> 'default') then
+            begin
+              if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow_audio\' + presetList[index], 'outsfs', regval) then
+                begin
+                  // the second condition equals (regval & 16 > 0)
+                  if (Result) OR (CheckTaskAudio('ac3SPDIF', 1, False) AND (((regval / 16) MOD 2) = 1)) then
+                    begin
+                      RegWriteDWordValue(HKCU, 'Software\GNU\ffdshow_audio\' + presetList[index], 'passthroughAC3', 1)
+                    end
+                end
+            end
+        end
+    end
+  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow_audio\default', 'outsfs', regval) then
+  begin
+    // the second condition equals (regval & 16 > 0)
+    if CheckTaskAudio('ac3SPDIF', 1, False) AND (((regval / 16) MOD 2) = 1) then
+      begin
+        Result := True;
+      end
+  end
+end;
+
+function GetTaskPassthroughDTS(): Boolean;
+var
+  regval: Cardinal;
+  presetList: TArrayOfString;
+  index: Integer;
+begin
+  Result := False;
+  if CheckTaskAudioInpreset('passthroughDTS', 1, False) then
+    begin
+  	  Result := True;
+    end;
+  if CheckTaskAudio('dts', 16, False) then
+    begin
+      Result := True;
+    end
+  if RegGetSubkeyNames(HKCU, 'Software\GNU\ffdshow_audio\', presetList) then
+    begin
+      for index := 0 to GetArrayLength(presetList)-1 do
+        begin
+          if (presetList[index] <> 'default') then
+            begin
+              if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow_audio\' + presetList[index], 'outsfs', regval) then
+                begin
+                  // the second condition equals (regval & 16 > 0)
+                  if (Result) OR (CheckTaskAudio('ac3SPDIF', 1, False) AND (((regval / 16) MOD 2) = 1)) then
+                    begin
+                      RegWriteDWordValue(HKCU, 'Software\GNU\ffdshow_audio\' + presetList[index], 'passthroughDTS', 1)
+                    end
+                end
+            end
+        end
+    end
+  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow_audio\default', 'outsfs', regval) then
+  begin
+    // the second condition equals (regval & 16 > 0)
+    if CheckTaskAudio('ac3SPDIF', 1, False) AND (((regval / 16) MOD 2) = 1) then
+      begin
+        Result := True;
+      end
+  end
 end;
 
 #if include_plugin_avisynth

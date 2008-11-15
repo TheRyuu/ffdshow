@@ -299,10 +299,10 @@ Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: vor
 
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: aac;        ValueData: 8;  Components: ffdshow;                                  Tasks: audio\aac\libfaad2
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: ac3;        ValueData: 15; Components: ffdshow;                                  Tasks: audio\ac3\liba52
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: ac3;        ValueData: 16; Components: ffdshow;                                  Tasks: audio\ac3\spdif
+;Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: ac3;        ValueData: 16; Components: ffdshow;                                  Tasks: audio\ac3\spdif
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: amr;        ValueData: 1;  Components: ffdshow;                                  Tasks: audio\amr
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: dts;        ValueData: 17; Components: ffdshow;                                  Tasks: audio\dts\libdts
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: dts;        ValueData: 16; Components: ffdshow;                                  Tasks: audio\dts\spdif
+;Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: dts;        ValueData: 16; Components: ffdshow;                                  Tasks: audio\dts\spdif
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: flac;       ValueData: 1;  Components: ffdshow;                                  Tasks: audio\flac
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: gsm;        ValueData: 1;  Components: ffdshow;                                  Tasks: audio\adpcm
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: iadpcm;     ValueData: 1;  Components: ffdshow;                                  Tasks: audio\adpcm
@@ -322,10 +322,10 @@ Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: vor
 
 Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: aac;        ValueData: 8;  Components: ffdshow;                                  Tasks: audio\aac\libfaad2
 Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: ac3;        ValueData: 15; Components: ffdshow;                                  Tasks: audio\ac3\liba52
-Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: ac3;        ValueData: 16; Components: ffdshow;                                  Tasks: audio\ac3\spdif
+;Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: ac3;        ValueData: 16; Components: ffdshow;                                  Tasks: audio\ac3\spdif
 Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: amr;        ValueData: 1;  Components: ffdshow;                                  Tasks: audio\amr
 Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: dts;        ValueData: 17; Components: ffdshow;                                  Tasks: audio\dts\libdts
-Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: dts;        ValueData: 16; Components: ffdshow;                                  Tasks: audio\dts\spdif
+;Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: dts;        ValueData: 16; Components: ffdshow;                                  Tasks: audio\dts\spdif
 Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: flac;       ValueData: 1;  Components: ffdshow;                                  Tasks: audio\flac
 Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: gsm;        ValueData: 1;  Components: ffdshow;                                  Tasks: audio\adpcm
 Root: HKLM; Subkey: Software\GNU\ffdshow_audio; ValueType: dword; ValueName: iadpcm;     ValueData: 1;  Components: ffdshow;                                  Tasks: audio\adpcm
