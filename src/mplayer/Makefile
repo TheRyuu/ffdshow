@@ -27,6 +27,8 @@ endif
 
 ifneq ($(64BIT),yes)
     CFLAGS+=-DARCH_X86_32
+else
+    CFLAGS+=-DHAVE_FAST_64BIT
 endif
 
 ifeq ($(FFDEBUG),yes)
@@ -46,7 +48,7 @@ include ../makefile_c.inc
 .all: $(SLIB)
 
 clean:
-	rm -f *.o *.d postproc/*.o postproc/*.d yadif/*.o yadif/*.d libaf/*.o libaf/*.d libvo/*.o libvo/*.d mp3lib/*.o mp3lib/*.d $(SLIB)
+	rm -f *.o *.d postproc/*.o postproc/*.d yadif/*.o yadif/*.d libaf/*.o libaf/*.d libvo/*.o libvo/*.d mp3lib/*.o mp3lib/*.d ../ffmpeg/libavutil/mem.o $(SLIB)
 
 #
 # include dependency files if they exist

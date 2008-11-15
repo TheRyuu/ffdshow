@@ -50,7 +50,7 @@
 
 static void (*filter_line)(YadifContext *yadctx, uint8_t *dst, uint8_t *prev, uint8_t *cur, uint8_t *next, int w, int refs, int parity);
 
-#if defined(HAVE_MMX) && defined(NAMED_ASM_ARGS)
+#if defined(HAVE_FAST_64BIT) || (defined(HAVE_MMX) && defined(NAMED_ASM_ARGS))
 
 #define LOAD4(mem,dst) \
             "movd      "mem", "#dst" \n\t"\
@@ -229,8 +229,8 @@ static void filter_line_mmx2(YadifContext *yadctx, uint8_t *dst, uint8_t *prev, 
             :[prev] "r"(prev),\
              [cur]  "r"(cur),\
              [next] "r"(next),\
-             [prefs]"r"((long)refs),\
-             [mrefs]"r"((long)-refs),\
+             [prefs]"r"((stride_t)refs),\
+             [mrefs]"r"((stride_t)-refs),\
              [pw1]  "m"(pw_1),\
              [pb1]  "m"(pb_1),\
              [mode] "g"(mode)\
@@ -340,9 +340,25 @@ static void filter_line_c(YadifContext *yadctx, uint8_t *dst, uint8_t *prev, uin
     }
 }
 
-void yadif_filter(YadifContext *yadctx, uint8_t *dst[3], stride_t dst_stride[3], int width, int height, int parity, int tff){
+attribute_align_arg void yadif_filter(YadifContext *yadctx, uint8_t *dst[3], stride_t dst_stride[3], int width, int height, int parity, int tff){
     int y, i;
-
+#ifdef HAVE_FAST_64BIT
+    DECLARE_ALIGNED(16, uint8_t, regbuf[16*16]);
+    __asm__ volatile(
+        "movq    %[regbuf], %%rax \n\t"
+        "movdqa  %%xmm6,   6*16(%%rax) \n\t"
+        "movdqa  %%xmm7,   7*16(%%rax) \n\t"
+        "movdqa  %%xmm8,   8*16(%%rax) \n\t"
+        "movdqa  %%xmm9,   9*16(%%rax) \n\t"
+        "movdqa  %%xmm10, 10*16(%%rax) \n\t"
+        "movdqa  %%xmm11, 11*16(%%rax) \n\t"
+        "movdqa  %%xmm12, 12*16(%%rax) \n\t"
+        "movdqa  %%xmm13, 13*16(%%rax) \n\t"
+        "movdqa  %%xmm14, 14*16(%%rax) \n\t"
+        "movdqa  %%xmm15, 15*16(%%rax) \n\t"
+        ::[regbuf] "r"(regbuf)
+    );
+#endif
     for(i=0; i<3; i++){
         int is_chroma= !!i;
         int w= width >>is_chroma;
@@ -361,6 +377,22 @@ void yadif_filter(YadifContext *yadctx, uint8_t *dst[3], stride_t dst_stride[3],
             }
         }
     }
+#ifdef HAVE_FAST_64BIT
+    __asm__ volatile(
+        "movq    %[regbuf], %%rax \n\t"
+        "movdqa   6*16(%%rax),%%xmm6  \n\t"
+        "movdqa   7*16(%%rax),%%xmm7  \n\t"
+        "movdqa   8*16(%%rax),%%xmm8  \n\t"
+        "movdqa   9*16(%%rax),%%xmm9  \n\t"
+        "movdqa  10*16(%%rax),%%xmm10 \n\t"
+        "movdqa  11*16(%%rax),%%xmm11 \n\t"
+        "movdqa  12*16(%%rax),%%xmm12 \n\t"
+        "movdqa  13*16(%%rax),%%xmm13 \n\t"
+        "movdqa  14*16(%%rax),%%xmm14 \n\t"
+        "movdqa  15*16(%%rax),%%xmm15 \n\t"
+        ::[regbuf] "r"(regbuf)
+    );
+#endif
 #if defined(HAVE_MMX) && defined(NAMED_ASM_ARGS)
     if(filter_line == filter_line_mmx2) __asm__ volatile("emms \n\t" : : : "memory");
 #endif
@@ -369,7 +401,7 @@ void yadif_filter(YadifContext *yadctx, uint8_t *dst[3], stride_t dst_stride[3],
 void yadif_init(void){
 
     filter_line = filter_line_c;
-#if defined(HAVE_MMX) && defined(NAMED_ASM_ARGS)
+#if defined(HAVE_FAST_64BIT) || (defined(HAVE_MMX) && defined(NAMED_ASM_ARGS))
     if(gCpuCaps.hasSSSE3)
         filter_line = filter_line_ssse3;
     else if(gCpuCaps.hasSSE2)

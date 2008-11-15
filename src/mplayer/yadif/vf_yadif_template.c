@@ -202,8 +202,8 @@ static  attribute_align_arg void FILTER_LINE_FUNC_NAME(YadifContext *yadctx, uin
             :[prev] "r"(prev),\
              [cur]  "r"(cur),\
              [next] "r"(next),\
-             [prefs]"r"((long)refs),\
-             [mrefs]"r"((long)-refs),\
+             [prefs]"r"((stride_t)refs),\
+             [mrefs]"r"((stride_t)-refs),\
              [pw1]  "m"(*pw_1),\
              [pb1]  "m"(*pb_1),\
              [mode] "g"(mode)\
