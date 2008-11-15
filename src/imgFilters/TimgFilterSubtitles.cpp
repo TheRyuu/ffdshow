@@ -67,8 +67,8 @@ TimgFilterSubtitles::TimgFilterSubtitles(IffdshowBase *Ideci,Tfilters *Iparent):
  oldFontCfg((TfontSettingsSub*)malloc(sizeof(TfontSettingsSub))),
  oldFontCCcfg((TfontSettingsSub*)malloc(sizeof(TfontSettingsSub))),
  cc(NULL),wasCCchange(true),everRGB(false),
- adhocMode(0),
- prevAdhocMode(0)
+ adhocMode(ADHOC_NORMAL),
+ prevAdhocMode(ADHOC_NORMAL)
 {
  oldFontCfg->weight=oldFontCCcfg->weight=-1;oldstereo=oldsplitborder=-1;
  AVIfps=-1;
@@ -169,6 +169,12 @@ void TimgFilterSubtitles::resetSubtitles(int id)
  csEmbedded.Lock();
  e->second->resetSubtitles();
  csEmbedded.Unlock();
+ if(isdvdproc)
+  {
+   deciV->lockCSReceive();
+   parent->onSeek();
+   deciV->unlockCSReceive();
+  }
 }
 bool TimgFilterSubtitles::ctlSubtitles(int id,int type,unsigned int ctl_id,const void *ctl_data,unsigned int ctl_datalen)
 {
@@ -186,13 +192,16 @@ bool TimgFilterSubtitles::ctlSubtitles(int id,int type,unsigned int ctl_id,const
 
    deciV->lockCSReceive();
 
+   // Pull image out of yadif's next picture buffer.
+   parent->pullImageFromSubtitlesFilter(prevIt);
+
    TffPict pict=prevPict;
    pict.fieldtype|=FIELD_TYPE::SEQ_START|FIELD_TYPE::SEQ_END;
 
    again=true;
 
-   if (prevAdhocMode == 1)
-    adhocMode = 1;
+   if (prevAdhocMode == ADHOC_ADHOC_DRAW_DVD_SUB_ONLY)
+    adhocMode = ADHOC_ADHOC_DRAW_DVD_SUB_ONLY;
 
    process(prevIt,pict,prevCfg);
 
@@ -233,7 +242,10 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
 
  // Leter box. Expand rectFull and assign it to rectClip. So "Process whole image" is ignored.
  int clipdy=pict.rectClip.dy; // save clipdy
- if (cfg->isExpand && cfg->expandCode && !isdvdproc && adhocMode != 1)
+ if (cfg->isExpand 
+    && cfg->expandCode 
+    && !isdvdproc 
+    && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY)
   {
    Trect newExpandRect=cfg->full?pict.rectFull:pict.rectClip;
    if (expandSizeChanged || oldExpandCode!=cfg->expandCode || oldExpandRect!=newExpandRect || pict.rectClip!=oldRectClip)
@@ -263,7 +275,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
    subFlnmChanged=0;
   }
 
- if (isdvdproc && sequenceEnded && adhocMode != 2)
+ if (isdvdproc && sequenceEnded && adhocMode != ADHOC_SECOND_DONT_DRAW_DVD_SUB)
   {
    if (!again || !prevCfg)
     {
@@ -301,7 +313,10 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
    csEmbedded.Lock();
    int shownEmbedded=deci->getParam2(IDFF_subShowEmbedded);
    bool useembedded=!embedded.empty() && shownEmbedded;
-   if (useembedded && (adhocMode == 0 || (adhocMode ==1 && isdvdproc) || (adhocMode == 2 && !isdvdproc)))
+   if (useembedded 
+      && (adhocMode == ADHOC_NORMAL 
+      || (adhocMode == ADHOC_ADHOC_DRAW_DVD_SUB_ONLY && isdvdproc) 
+      || (adhocMode == ADHOC_SECOND_DONT_DRAW_DVD_SUB && !isdvdproc)))
     {
      Tembedded::iterator e=embedded.find(shownEmbedded);
      if (e!=embedded.end() && e->second)
@@ -318,7 +333,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
         sub=e->second->getSubtitle(cfg,frameStart+1,&forceChange);
       }
     }
-   if (!useembedded && adhocMode != 1)
+   if (!useembedded && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY)
     sub=subs.getSubtitle(cfg,frameStart,&forceChange);
 
    if (sub)
@@ -383,7 +398,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
    csEmbedded.Unlock();
   }
 
- if (cfg->cc && adhocMode != 1)
+ if (cfg->cc && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY)
   {
    csCC.Lock();
    if (cc && cc->numlines())
@@ -426,7 +441,10 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
    csCC.Unlock();
   }
 
- if (adhocMode != 1 && everRGB && pict.csp != FF_CSP_RGB32 && strncmp(outputfourcc,_l("RGB"),3)==0 && !parent->isAnyActiveDownstreamFilter(it))
+ if (adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY 
+    && everRGB && pict.csp != FF_CSP_RGB32 
+    && strncmp(outputfourcc,_l("RGB"),3)==0 
+    && !parent->isAnyActiveDownstreamFilter(it))
   {
    unsigned char *dst[4];
    int outcsp = (pict.fieldtype & FIELD_TYPE::MASK_INT) ? FF_CSP_RGB32 | FF_CSP_FLAGS_INTERLACED : FF_CSP_RGB32;
@@ -434,9 +452,9 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
    getCurNext3(outcsp, pict, cfg->full, COPYMODE_DEF, dst);
   }
 
- if (adhocMode == 1)
+ if (adhocMode == ADHOC_ADHOC_DRAW_DVD_SUB_ONLY)
   {
-   adhocMode = 2;
+   adhocMode = ADHOC_SECOND_DONT_DRAW_DVD_SUB;
    if (!again)
     return S_OK;
    else
@@ -444,7 +462,14 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
   }
  else
   {
-   adhocMode = 0;
+   adhocMode = ADHOC_NORMAL;
+  }
+
+ if (parent->getStopAtSubtitles())
+  {
+   // We just wanted to update prevPict.
+   parent->setStopAtSubtitles(false);
+   return S_OK;
   }
 
  return parent->deliverSample(++it,pict);
@@ -484,8 +509,8 @@ void TimgFilterSubtitles::hideClosedCaptions(void)
 
 bool TimgFilterSubtitles::enterAdhocMode(void)
 {
- if (adhocMode == 0)
-  adhocMode = 1;
+ if (adhocMode == ADHOC_NORMAL)
+  adhocMode = ADHOC_ADHOC_DRAW_DVD_SUB_ONLY;
  return !again;
 }
 

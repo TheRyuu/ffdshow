@@ -52,6 +52,7 @@ public:
  const char_t *findAutoSubflnm(IcheckSubtitle *checkSubtitle,const char_t *searchDir,const char_t *serchExt,bool heuristic);
 
  HRESULT decompress(IMediaSample *pSample,long *srcLen);
+ STDMETHODIMP EndOfStream(void);
 
  TffdshowDecVideoAllocator allocator;
  BITMAPINFO biIn;TffPictBase pictIn;

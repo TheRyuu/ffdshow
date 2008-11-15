@@ -43,7 +43,8 @@ TimgFilters::TimgFilters(IffdshowBase *Ideci,IprocVideoSink *Isink):
  dirtyBorder(2),
  firstprocess(true),
  subtitleResetTime(0),
- grab(NULL)
+ grab(NULL),
+ stopAtSubtitles(false)
 {
  subtitles=getFilter<TimgFilterSubtitles>();
  getFilter<TimgFilterHWoverlay>();
@@ -127,6 +128,26 @@ void TimgFilters::adhocDVDsub(TfilterQueue::iterator it0,TffPict &pict)
     }
    it++;
   }
+}
+
+void TimgFilters::onEndOfStream(void)
+{
+ for (iterator f=begin();f!=end();f++)
+  {
+   TimgFilter *filter = (TimgFilter*)f->second;
+   filter->onEndOfStream();
+  }
+}
+
+bool TimgFilters::pullImageFromSubtitlesFilter(TfilterQueue::iterator from)
+{
+ bool result = false;
+ for (TfilterQueue::iterator f = queue.begin() ; f != from ; f++)
+  {
+   TimgFilter *filter = (TimgFilter*)f->filter;
+   result |= filter->onPullImageFromSubtitlesFilter();
+  }
+ return result;
 }
 
 bool TimgFilters::isAnyActiveDownstreamFilter(TfilterQueue::iterator it)

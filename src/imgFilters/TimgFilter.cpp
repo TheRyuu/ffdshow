@@ -50,6 +50,7 @@ void TimgFilter::free(void)
 {
  own1.clear();if (convert1) delete convert1;convert1=NULL;
  own2.clear();if (convert2) delete convert2;convert2=NULL;
+ own3.clear();
 }
 
 void TimgFilter::init(const TffPict &pict,int full,int half)
@@ -86,16 +87,32 @@ bool TimgFilter::getOutputFmt(TffPictBase &pict,const TfilterSettingsVideo *cfg)
  return true;
 }
 
+/**
+ * get addresses of current picture buffer (Current picture is usually a picture to feed into image filter.)
+ * If color space conversion is necessary, own1 will be used.
+ * If color space conversion is not necessary, picture buffer will not be copied.
+ *
+ * @param[in] csp requested color space.
+ * @param[in,out] pict current picture (will be modifed if necessary)
+ * @param[in] full 
+ * @param[in,out] src[4] pointer to the array to receive the addresses
+ * *return true if color space is changed.
+ * stride will be set to TimgFilter::stride1
+ */
 bool TimgFilter::getCur(int csp,TffPict &pict,int full,const unsigned char **src[4])
 {
  int wasAdj=pict.csp&FF_CSP_FLAGS_YUV_ADJ;
- csp_yuv_adj_to_plane(pict.csp,&pict.cspInfo,pict.rectFull.dy,pict.data,pict.stride);csp_yuv_order(pict.csp,pict.data,pict.stride);
+ csp_yuv_adj_to_plane(pict.csp,&pict.cspInfo,pict.rectFull.dy,pict.data,pict.stride);
+ csp_yuv_order(pict.csp,pict.data,pict.stride);
+
+ // if color space is different or FF_CSP_FLAGS_YUV_ADJ is different
  if (((csp&FF_CSPS_MASK)&(pict.csp&FF_CSPS_MASK))==0 || ((csp&FF_CSP_FLAGS_YUV_ADJ) && !wasAdj))
   {
    if (!convert1) convert1=new Tconvert(deci,pict.rectFull.dx,pict.rectFull.dy);
    pict.convertCSP(csp_bestMatch(pict.csp,csp&FF_CSPS_MASK)|(csp&(FF_CSP_FLAGS_VFLIP|FF_CSP_FLAGS_YUV_ADJ|FF_CSP_FLAGS_YUV_ORDER)),own1,convert1);
    pict.setRO(false);
   }
+
  bool cspChanged=csp1!=pict.csp;
  csp1=pict.csp;
  const Trect &r=pictRect; //full?pict.rectFull:pict.rectClip;
@@ -109,6 +126,21 @@ bool TimgFilter::getCur(int csp,TffPict &pict,int full,const unsigned char **src
   }
  return cspChanged;
 }
+
+/**
+ * get addresses of next picture buffer (Next picture buffer is a picture to be written by image filter.)
+ * Image buffer is prepared for new picture (own2).
+ * Picture will not be copied unless it has borders that are not going to be processed or TimgFilter::pictHalf is set true.
+ *
+ * @param[in] csp requested color space.
+ * @param[in] pict current picture
+ * @param[out] pict next picture
+ * @param[in] full true: process whole image, false: process rectClip.
+ * @param[in,out] dst[4] pointer to the array to receive the addresses
+ * @param[in] rect2 If not NULL, pict.rectClip will be replaced by rect2.
+ * *return true if color space is changed.
+ * stride will be set to TimgFilter::stride2
+ */
 bool TimgFilter::getNext(int csp,TffPict &pict,int full,unsigned char **dst[4],const Trect *rect2)
 {
  if (rect2) pict.rectFull=pict.rectClip=*rect2;
@@ -150,6 +182,7 @@ bool TimgFilter::getNext(int csp,TffPict &pict,int full,unsigned char **dst[4],c
  csp2=pictN.csp;
  return cspChanged;
 }
+
 bool TimgFilter::getNext(int csp,TffPict &pict,const Trect &clipRect,unsigned char **dst[4],const Trect *rect2)
 {
  bool cspChanged=getNext(csp,pict,true,dst,rect2);
@@ -166,6 +199,23 @@ bool TimgFilter::getNext(int csp,TffPict &pict,const Trect &clipRect,unsigned ch
   }
  return cspChanged;
 }
+
+/**
+ * get addresses of next picture buffer (Next picture buffer is a picture to be written by image filter.)
+ * Image buffer is prepared for new picture (\p buf).
+ * Picture will be copied depending on \p copy.
+ *
+ * @param[in] csp requested color space.
+ * @param[in] pict current picture
+ * @param[out] pict next picture
+ * @param[in] full true: process whole image, false: process rectClip.
+ * @param[in] copy copy mode. See the header file.
+ * @param[in,out] dst[4] pointer to the array to receive the addresses
+ * @param buf[in] next picture buffer
+ * @param[in] rect2 If not NULL, pict.rectClip will be replaced by rect2.
+ * *return true if color space is changed.
+ * stride will be set to TimgFilter::stride2
+ */
 bool TimgFilter::getCurNext(int csp,TffPict &pict,int full,int copy,unsigned char **dst[4],Tbuffer &buf)
 {
  bool flip=false;
@@ -188,7 +238,7 @@ bool TimgFilter::getCurNext(int csp,TffPict &pict,int full,int copy,unsigned cha
    flip = !!((pict.csp ^ csp) & FF_CSP_FLAGS_VFLIP);
    if (flip)
     pictN.rectClip.y = pictN.rectFull.dy - pictN.rectClip.y - pictN.rectClip.dy;
-   pictN.convertCSP((pict.csp & ~FF_CSP_FLAGS_VFLIP) | (csp & (FF_CSP_FLAGS_YUV_ADJ | FF_CSP_FLAGS_VFLIP)),own2);
+   pictN.convertCSP((pict.csp & ~FF_CSP_FLAGS_VFLIP) | (csp & (FF_CSP_FLAGS_YUV_ADJ | FF_CSP_FLAGS_VFLIP)),buf);
   }
  const Trect r=pictRect;//=full?pict.rectFull:pict.rectClip;
  if (copy==COPYMODE_DEF)

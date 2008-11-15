@@ -1047,6 +1047,54 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
+		<Filter
+			Name="yadif"
+			>
+			<File
+				RelativePath=".\yadif\vf_yadif.c"
+				>
+			</File>
+			<File
+				RelativePath=".\yadif\vf_yadif.h"
+				>
+			</File>
+			<File
+				RelativePath=".\yadif\vf_yadif_template.c"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\libmplayer.def"
 			>

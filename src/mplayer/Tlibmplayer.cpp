@@ -55,6 +55,8 @@ Tlibmplayer::Tlibmplayer(const Tconfig *config):refcount(0)
  dll->loadFunction(palette8tobgr15,"palette8tobgr15");
  dll->loadFunction(decCPUCount,"decCPUCount");
  dll->loadFunction(incCPUCount,"incCPUCount");
+ dll->loadFunction(yadif_init,"yadif_init");
+ dll->loadFunction(yadif_filter,"yadif_filter");
  dll->loadFunction(reorder_channel_nch,"reorder_channel_nch");
 
  if (dll->ok)
@@ -63,7 +65,8 @@ Tlibmplayer::Tlibmplayer(const Tconfig *config):refcount(0)
                Tconfig::cpu_flags&FF_CPU_3DNOW,
                Tconfig::cpu_flags&FF_CPU_3DNOWEXT,
                Tconfig::cpu_flags&FF_CPU_SSE,
-               Tconfig::cpu_flags&FF_CPU_SSE2);
+               Tconfig::cpu_flags&FF_CPU_SSE2,
+               Tconfig::cpu_flags&FF_CPU_SSSE3);
 }
 Tlibmplayer::~Tlibmplayer()
 {

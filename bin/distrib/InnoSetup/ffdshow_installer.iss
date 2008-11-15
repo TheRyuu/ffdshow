@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2298
+#define tryout_revision = 2324
 #define buildyear = 2008
 #define buildmonth = '11'
-#define buildday = '05'
+#define buildday = '15'
 
 ; Build specific options
 #define unicode_required = True
@@ -79,8 +79,9 @@
   #define bindir = '..\..\x64'
   #define outputdir = '..\..\..\..\'
 #elif PREF_YAMAGATA
-  #define VS2008 = True
+  #define VS2008SP1 = True
   #define unicode_required = True
+  #define include_xvidcore = False
   #define filename_suffix = '_Q'
 #elif PREF_XXL
   #define VS2003SP1 = True

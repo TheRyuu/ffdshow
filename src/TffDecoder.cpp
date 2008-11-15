@@ -865,6 +865,7 @@ HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
   {
    m_dirtyStop = false;
    inpin->onSeek(0);
+   imgFilters->onSeek();
   }
 
  long srcLength;
@@ -1031,7 +1032,7 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
   {
    //DPRINTF(_l("still waiting for a keyframe"));
    m_rtStart += inpin->avgTimePerFrame;
-   return S_FALSE;
+   return S_OK;
   }
 
  //if (m_frame.srcLength==0) return S_FALSE;
@@ -1040,8 +1041,6 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
  int codecId = inpin->getInCodecId2();
  if (mpeg12_codec(codecId) && inpin->biIn.bmiHeader.biCompression!=FOURCC_MPEG)
   {
-   if (pict.rtStart<0)
-    return S_FALSE;
    frameTimeOk=S_OK;
   }
  else
@@ -1159,6 +1158,13 @@ STDMETHODIMP TffdshowDecVideo::deliverProcessedSample(TffPict &pict)
 {
  if (pict.csp==FF_CSP_NULL)
   return S_OK;
+
+ REFERENCE_TIME rtStart=pict.rtStart-segmentStart;
+ REFERENCE_TIME rtStop=rtStart+1;
+
+ int codecId = inpin->getInCodecId2();
+ if (mpeg12_codec(codecId) && inpin->biIn.bmiHeader.biCompression!=FOURCC_MPEG && rtStart < 0)
+  return S_OK; // work around compatibility issue with splitter?
 
  sendOnFrameMsg();
 
@@ -1306,8 +1312,6 @@ if (!outdv && hwDeinterlace)
  if (outOverlayMixer)
   pOut->SetDiscontinuity(TRUE);
 
- REFERENCE_TIME rtStart=pict.rtStart-segmentStart;
- REFERENCE_TIME rtStop=rtStart+1;
  if (rtStart!=REFTIME_INVALID)
   {
    rtStop=pict.rtStop-segmentStart;
@@ -1418,6 +1422,13 @@ HRESULT TffdshowDecVideo::NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,
  late=lastrtStart=0;
  frameCnt=0;bytesCnt=0;
  return TffdshowDec::NewSegment(tStart,tStop,dRate);
+}
+
+HRESULT TffdshowDecVideo::EndOfStream(void)
+{
+ if (imgFilters)
+  imgFilters->onEndOfStream();
+ return TffdshowDec::EndOfStream();
 }
 
 // not used. compatibitliy for IffdshowDecVideo
@@ -1783,7 +1794,10 @@ HRESULT TffdshowDecVideo::initializeOutputSample(IMediaSample **ppOutSample)
  update_time_on_ffdshow2();
 
  if (FAILED(hr))
-  return hr;
+  {
+   DPRINTF(_l(" TffdshowDecVideo::initializeOutputSample GetDeliveryBuffer failed %x"),hr);
+   return hr;
+  }
  *ppOutSample=pOutSample;
 
  ASSERT(pOutSample);

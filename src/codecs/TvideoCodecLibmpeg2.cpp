@@ -155,7 +155,7 @@ HRESULT __declspec(align(16))(TvideoCodecLibmpeg2::decompressI(const unsigned ch
       rtStart=REFTIME_INVALID;
       break;
      case STATE_END:
-      sequenceFlag=FIELD_TYPE::SEQ_END;
+      sequenceFlag |= FIELD_TYPE::SEQ_END;
 
      case STATE_SLICE:
       //if (info->display_fbuf && (!wait4Iframe || (info->display_picture->flags&PIC_MASK_CODING_TYPE)==PIC_FLAG_CODING_TYPE_I))

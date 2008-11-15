@@ -14,9 +14,9 @@ class TimgFilter :public Tfilter
 {
 private:
  void free(void);
- Tbuffer own1;
- Tbuffer own2;
- Tbuffer own3;
+ Tbuffer own1;  // getCur
+ Tbuffer own2;  // getNext, GetCurNext
+ Tbuffer own3;  // getCurNext3 which is used in TimgFilterSubtitles
  Tconvert *convert1,*convert2;
  bool getCur(int csp,TffPict &pict,int full,const unsigned char **src[4]);
  bool getNext(int csp,TffPict &pict,int full,unsigned char **dst[4],const Trect *rect2=NULL);
@@ -28,7 +28,8 @@ private:
 protected:
  Trect pictRect;
  unsigned int dx1[4],dy1[4],dx2[4],dy2[4];
- stride_t stride1[4],stride2[4];
+ stride_t stride1[4]; // call GetCur to fill.
+ stride_t stride2[4];
  int csp1,csp2;
  comptrQ<IffdshowDecVideo> deciV;
  TimgFilters *parent;
@@ -70,10 +71,10 @@ protected:
   }
  enum
   {
-   COPYMODE_NO  =0,
-   COPYMODE_CLIP=1,
-   COPYMODE_FULL=2,
-   COPYMODE_DEF =3
+   COPYMODE_NO  =0, // picture will be copied only if TimgFilter::pictHalf is set true.
+   COPYMODE_CLIP=1, // picture in rectClip will be copied
+   COPYMODE_FULL=2, // whole picture will be copied
+   COPYMODE_DEF =3  // In call to getCurNext, if full is ture, COPYMODE_FULL else COPYMODE_CLIP.
   };
  bool getCurNext(int csp,TffPict &pict,int full,int copy,unsigned char **dst0,unsigned char **dst1,unsigned char **dst2,unsigned char **dst3)
   {
@@ -99,6 +100,28 @@ public:
  virtual HRESULT process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)=0;
  virtual HRESULT flush(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0);
  virtual int getImgFilterID(void) {return IMGFILTER_UNKNOWN;}
+
+ /**
+  * onEndOfStream
+  * Over-ride this function if your image filter needs forward temporal image processing.
+  * At the end of stream, output frames in your frame buffer on this function call.
+  */
+ virtual HRESULT onEndOfStream(void) {return E_NOTIMPL;}
+
+ /**
+  * onPullImageFromSubtitlesFilter
+  * Over-ride this function if your image filter needs forward temporal image processing.
+  * This function is called on updating DVD menu from TimgFilterSubtitles::ctlSubtitles,
+  * if your filter is in the upper stream of subtitle filter where DVD menu handling is
+  * implemented.
+  * The back ground image of DVD menu may be a single image, so if your filter buffer it
+  * and does not deliver immediately, the menu will be drown on a wrong image.
+  *
+  * Send out only one image.
+  * @return true if your filter send out a image.
+  */
+ virtual bool onPullImageFromSubtitlesFilter(void) {return false;}
+
  enum
   {
    IMGFILTER_UNKNOWN,

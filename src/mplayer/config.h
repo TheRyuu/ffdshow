@@ -36,6 +36,7 @@
 #define HAVE_MMX2 1     // only define if you have MMX2 (Athlon/PIII/4/CelII)
 #define HAVE_SSE 1      // only define if you have SSE (Intel Pentium III/4 or Celeron II)
 #define HAVE_SSE2 1     // only define if you have SSE2 (Intel Pentium 4)
+#define NAMED_ASM_ARGS 1 // GCC 3.1 or later
 #endif
 #endif
 

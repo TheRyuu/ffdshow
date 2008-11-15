@@ -4,6 +4,7 @@
 #include "postproc/postprocess.h"
 #include "libaf/reorder_ch.h"
 #include "TpostprocSettings.h"
+#include "yadif/vf_yadif.h"
 
 class Tdll;
 struct Tconfig;
@@ -33,7 +34,7 @@ public:
   }
  static const char_t *dllname;
 
- void (*init_mplayer)(int mmx,int mmx2,int _3dnow,int _3dnowExt,int sse,int sse2);
+ void (*init_mplayer)(int mmx,int mmx2,int _3dnow,int _3dnowExt,int sse,int sse2,int ssse3);
 
  pp_context_t* (*pp_get_context)(int width, int height, int flags);
  void (*pp_postprocess)(const uint8_t * src[3], stride_t srcStride[3], uint8_t * dst[3], stride_t dstStride[3], int horizontalSize, int verticalSize, QP_STORE_T *QP_store,  int QP_stride, pp_mode_t *mode, pp_context_t *ppContext, int pict_type);
@@ -65,6 +66,10 @@ public:
  void (*palette8tobgr15)(const uint8_t *src, uint8_t *dst, long num_pixels, const uint8_t *palette);
  void (*decCPUCount)(void);
  void (*incCPUCount)(void);
+
+ void (*yadif_init)(void);
+ void (*yadif_filter)(YadifContext *p, uint8_t *dst[3], stride_t dst_stride[3], int width, int height, int parity, int tff);
+
 
  static int swsCpuCaps(void);
  static void swsInitParams(SwsParams *params,int resizeMethod);

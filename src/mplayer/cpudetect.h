@@ -45,6 +45,7 @@ typedef struct cpucaps_s {
     int has3DNowExt;
     int hasSSE;
     int hasSSE2;
+    int hasSSSE3;
     int isP4HT;      // -1: not initialized, 0: non P4Ht, ;1: p4HT
 } CpuCaps;
 

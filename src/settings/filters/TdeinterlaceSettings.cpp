@@ -23,11 +23,13 @@
 #include "CdeinterlaceFramedoubler.h"
 #include "CdeinterlaceKernel.h"
 #include "CdeinterlaceDGBob.h"
+#include "CdeinterlaceYadif.h"
 #include "TimgFilterDeinterlace.h"
 #include "TimgFilterDScalerDeinterlace.h"
 #include "TimgFilterTomsMoComp.h"
 #include "TimgFilterKernelDeint.h"
 #include "TimgFilterDGbob.h"
+#include "TimgFilterYadif.h"
 #include "Cdeinterlace.h"
 #include "TffdshowPageDec.h"
 
@@ -47,7 +49,8 @@ const TdeinterlaceSettings::TmethodProps TdeinterlaceSettings::methodProps[]=
  10,_l("5-tap lowpass")       ,LOWPASS5_DEINT_FILTER    ,NULL,
  11,_l("Kernel deinterlacer") ,KERNELDEINT              ,TdeinterlacePageKernel::create,
  13,_l("Kernel bob")          ,KERNELBOB                ,TdeinterlacePageKernel::create,
-  0,NULL                  ,0                        ,NULL
+ 14,_l("Yet Another DeInterlacing Filter (yadif)"),YADIF,TdeinterlacePageYadif::create,
+  0,NULL                      ,0                        ,NULL
 };
 const char_t* TdeinterlaceSettings::dgbobModes[]=
 {
@@ -63,6 +66,14 @@ const TdeinterlaceSettings::TframerateDoublerSEs TdeinterlaceSettings::frameRate
  _l("1 pixel motion, left & right"),3,
  _l("3x3 square"),9,
  NULL,0
+};
+
+const TdeinterlaceSettings::TframerateDoublerSEs TdeinterlaceSettings::yadifParitySEs[]=
+{
+ _l("Auto"), -1,
+ _l("Top field first"), 0,
+ _l("Bottom field first"), 1,
+ NULL
 };
 
 const TfilterIDFF TdeinterlaceSettings::idffs=
@@ -96,7 +107,7 @@ TdeinterlaceSettings::TdeinterlaceSettings(TintStrColl *Icoll,TfilterIDFFs *filt
      _l("deinterlaceAlways"),0,
    IDFF_swapFields               ,&TdeinterlaceSettings::swapfields               ,0,0,_l(""),1,
      _l("swapFields"),0,
-   IDFF_deinterlaceMethod        ,&TdeinterlaceSettings::cfgId                    ,0,13,_l(""),1,
+   IDFF_deinterlaceMethod        ,&TdeinterlaceSettings::cfgId                    ,0,14,_l(""),1,
      _l("deinterlaceMethod"),cfgIdDef,
    IDFF_tomocompSE               ,&TdeinterlaceSettings::tomsmocompSE             ,0,30,_l(""),1,
      _l("tomocompSE"),3,
@@ -122,6 +133,10 @@ TdeinterlaceSettings::TdeinterlaceSettings(TintStrColl *Icoll,TfilterIDFFs *filt
      _l("dgbobThreshold"),12,
    IDFF_dgbobAP                  ,&TdeinterlaceSettings::dgbobAP                  ,0,0,_l(""),1,
      _l("dgbobAP"),0,
+   IDFF_yadifMode                ,&TdeinterlaceSettings::yadifMode                ,0,3,_l(""),1,
+     _l("yadifMode"),0,
+   IDFF_yadifParity              ,&TdeinterlaceSettings::yadifParity              ,-1,1,_l(""),1,
+     _l("yadifParity"),-1,
    0
   };
  addOptions(iopts);
@@ -138,6 +153,7 @@ TdeinterlaceSettings::TdeinterlaceSettings(TintStrColl *Icoll,TfilterIDFFs *filt
  static const TcreateParamList2<TmethodProps> listMethod(methodProps,&TmethodProps::name);setParamList(IDFF_deinterlaceMethod,&listMethod);
  static const TcreateParamList2<TframerateDoublerSEs> listSE(frameRateDoublerSEs,&TframerateDoublerSEs::name);setParamList(IDFF_frameRateDoublerSE,&listSE);
  static const TcreateParamList1 listDGbobMode(dgbobModes);setParamList(IDFF_dgbobMode,&listDGbobMode);
+ static const TcreateParamList2<TframerateDoublerSEs> listYadifParity(yadifParitySEs,&TframerateDoublerSEs::name);setParamList(IDFF_yadifParity,&listYadifParity);
 }
 
 void TdeinterlaceSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const
@@ -156,8 +172,16 @@ void TdeinterlaceSettings::createFilters(size_t filtersorder,Tfilters *filters,T
      case DSCALER:queueFilter<TimgFilterDScalerDI>(filtersorder,filters,queue); return;
      case KERNELDEINT:queueFilter<TimgFilterKernelDeint2>(filtersorder,filters,queue); return;
      case KERNELBOB:queueFilter<TimgFilterKernelBob>(filtersorder,filters,queue); return;
+     case YADIF:queueFilter<TimgFilterYadif>(filtersorder,filters,queue); return;
      default:queueFilter<TimgFilterMplayerDeinterlace>(filtersorder,filters,queue); return; //mplayer deinterlacers
     }
+  }
+ if (getMethod(cfgId).id != YADIF || !is || !show)
+  {
+   // Inform yadif filter that it is no longer in the filter queue.
+   // FIXME create more generic function that call Tfilter::onRemoveFromFilterQueue.
+   TimgFilterYadif *imgFilterYadif = filters->getFilter<TimgFilterYadif>();
+   imgFilterYadif->done();
   }
 }
 void TdeinterlaceSettings::createPages(TffdshowPageDec *parent) const

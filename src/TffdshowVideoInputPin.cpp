@@ -607,6 +607,12 @@ HRESULT TffdshowVideoInputPin::decompress(IMediaSample *pSample,long *srcLen)
  return video->decompress(bitstream,*srcLen,pSample);
 }
 
+STDMETHODIMP TffdshowVideoInputPin::EndOfStream(void)
+{
+ video->onEndOfStream();
+ return TinputPin::EndOfStream();
+}
+
 HRESULT TffdshowVideoInputPin::getAVIfps(unsigned int *fps1000)
 {
  if (!fps1000 || avgTimePerFrame==0) return S_FALSE;

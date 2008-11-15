@@ -18,6 +18,7 @@ public:
    KERNELDEINT=3,
    BYPASS=4,
    KERNELBOB=5,
+   YADIF=6,
    DSCALER=0x1000000,
   };
  struct TmethodProps
@@ -47,10 +48,12 @@ public:
    int id;
   };
  static const TframerateDoublerSEs frameRateDoublerSEs[];
+ static const TframerateDoublerSEs yadifParitySEs[];
 
  int kernelThreshold,kernelSharp,kernelTwoway,kernelMap,kernelLinked;
 
  int dgbobMode,dgbobThreshold,dgbobAP;
+ int yadifMode,yadifParity;
  static const char_t *dgbobModes[];
 
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;

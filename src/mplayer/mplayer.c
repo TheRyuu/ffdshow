@@ -6,7 +6,7 @@
 
 CpuCaps gCpuCaps;
 
-void init_mplayer(int mmx,int mmx2,int _3dnow,int _3dnowExt,int sse,int sse2)
+void init_mplayer(int mmx,int mmx2,int _3dnow,int _3dnowExt,int sse,int sse2,int ssse3)
 {
  gCpuCaps.hasMMX=mmx;
  gCpuCaps.hasMMX2=mmx2;
@@ -14,6 +14,7 @@ void init_mplayer(int mmx,int mmx2,int _3dnow,int _3dnowExt,int sse,int sse2)
  gCpuCaps.has3DNowExt=_3dnowExt;
  gCpuCaps.hasSSE=sse;
  gCpuCaps.hasSSE2=sse2;
+ gCpuCaps.hasSSSE3=ssse3;
  init_fast_memcpy();
  // Avoid using multithread if the CPU is Pentium4-HT
  // because it is not faster at all and uses more CPU.

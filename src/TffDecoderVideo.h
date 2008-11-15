@@ -64,6 +64,7 @@ public:
  virtual HRESULT NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,double dRate);
  virtual STDMETHODIMP Run(REFERENCE_TIME tStart);
  virtual STDMETHODIMP Stop(void);
+ virtual HRESULT EndOfStream(void);
  HRESULT AlterQuality(Quality q);
 
  STDMETHODIMP_(int) getVersion2(void);
