@@ -24,8 +24,8 @@
  * H.261 tables.
  */
 
-#ifndef FFMPEG_H261DATA_H
-#define FFMPEG_H261DATA_H
+#ifndef AVCODEC_H261DATA_H
+#define AVCODEC_H261DATA_H
 
 #ifdef __GNUC__
 #include <stdint.h>
@@ -163,4 +163,4 @@ static RLTable h261_rl_tcoeff = {
     h261_tcoeff_level,
 };
 
-#endif /* FFMPEG_H261DATA_H */
+#endif /* AVCODEC_H261DATA_H */

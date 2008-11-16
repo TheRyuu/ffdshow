@@ -24,8 +24,8 @@
  * Various WMA tables.
  */
 
-#ifndef FFMPEG_WMADATA_H
-#define FFMPEG_WMADATA_H
+#ifndef AVCODEC_WMADATA_H
+#define AVCODEC_WMADATA_H
 
 #ifdef __GNUC__
 #include <stdint.h>
@@ -1440,4 +1440,4 @@ static const CoefVLCTable coef_vlcs[6] = {
     },
 };
 
-#endif /* FFMPEG_WMADATA_H */
+#endif /* AVCODEC_WMADATA_H */
