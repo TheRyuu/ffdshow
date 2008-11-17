@@ -6290,7 +6290,9 @@ static const DVprofile dv_profiles[] = {
       /*.audio_samples_dist = */{ 1920, 1920, 1920, 1920, 1920 },
       /*.audio_shuffle = */dv_audio_shuffle625,
       "SMPTE-314M - 625/50 (PAL) 50 Mbps",
-    },
+    }
+#if 0
+		,
     { /*.dsf = */0,
       /*.video_stype = */0x14,
       /*.frame_size = */480000,        /* SMPTE-370M - 1080i60 100 Mbps */
@@ -6375,6 +6377,7 @@ static const DVprofile dv_profiles[] = {
       /*.audio_shuffle = */dv_audio_shuffle525,
       "SMPTE-370M - 720p50 100 Mbps",
     }
+#endif
 };
 
 enum dv_section_type {
