@@ -5,7 +5,7 @@
 	Name="ffdshow"
 	ProjectGUID="{6DF9C5D2-5835-4C6D-A4CF-E17AA58D7C98}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
-	VCNestedProjectCRC32="1343247651"
+	VCNestedProjectCRC32="3461554607"
 	VCNestedProjectFileName="ffdshow_icl.vcproj">
 	<Configurations>
 		<Configuration 
@@ -495,7 +495,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm.exe.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -503,7 +503,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm.exe.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -1176,7 +1176,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -1184,7 +1184,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -1192,7 +1192,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -1200,7 +1200,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
@@ -2539,10 +2539,19 @@
 				RelativePath="src\imgFilters\TimgFilterWarpsharp.h">
 			</File>
 			<File 
+				RelativePath="src\imgFilters\TimgFilterYadif.cpp">
+			</File>
+			<File 
+				RelativePath="src\imgFilters\TimgFilterYadif.h">
+			</File>
+			<File 
 				RelativePath="src\mplayer\Tlibmplayer.cpp">
 			</File>
 			<File 
 				RelativePath="src\mplayer\Tlibmplayer.h">
+			</File>
+			<File 
+				RelativePath=".\src\mplayer\yadif\vf_yadif.h">
 			</File>
 			<Filter 
 				Name="com"
@@ -2714,6 +2723,12 @@
 				RelativePath=".\src\dialog\Ccrystality.h">
 			</File>
 			<File 
+				RelativePath=".\src\dialog\CcspOptions.cpp">
+			</File>
+			<File 
+				RelativePath=".\src\dialog\CcspOptions.h">
+			</File>
+			<File 
 				RelativePath=".\src\dialog\CcurveAlt.cpp">
 			</File>
 			<File 
@@ -2775,6 +2790,12 @@
 			</File>
 			<File 
 				RelativePath=".\src\dialog\CdeinterlaceTomsMoComp.h">
+			</File>
+			<File 
+				RelativePath=".\src\dialog\CdeinterlaceYadif.cpp">
+			</File>
+			<File 
+				RelativePath=".\src\dialog\CdeinterlaceYadif.h">
 			</File>
 			<File 
 				RelativePath=".\src\dialog\Cdelay.cpp">
@@ -3185,12 +3206,6 @@
 				RelativePath="src\dialog\CresizeSettings.h">
 			</File>
 			<File 
-				RelativePath=".\src\dialog\CcspOptions.cpp">
-			</File>
-			<File 
-				RelativePath=".\src\dialog\CcspOptions.h">
-			</File>
-			<File 
 				RelativePath=".\src\dialog\CsecondPass.cpp">
 			</File>
 			<File 
@@ -3256,13 +3271,11 @@
 			<File 
 				RelativePath=".\src\dialog\ISpecifyPropertyPagesVE.h">
 			</File>
-			<File
-				RelativePath=".\src\dialog\TsubtitlesSSAConfig.cpp"
-				>
+			<File 
+				RelativePath=".\src\dialog\TsubtitlesSSAConfig.cpp">
 			</File>
-			<File
-				RelativePath=".\src\dialog\TsubtitlesSSAConfig.h"
-				>
+			<File 
+				RelativePath=".\src\dialog\TsubtitlesSSAConfig.h">
 			</File>
 			<File 
 				RelativePath=".\src\dialog\TbitrateDlg.cpp">
@@ -4062,7 +4075,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -4070,7 +4083,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -4078,7 +4091,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration 
@@ -4086,7 +4099,7 @@
 					<Tool 
 						Name="CustomTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)&#xA;"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>

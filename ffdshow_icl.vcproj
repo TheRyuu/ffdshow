@@ -14,8 +14,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="debug_icl9"
-			IntermediateDirectory="debug_icl9"
+			OutputDirectory="debug_icl"
+			IntermediateDirectory="debug_icl"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			UseOfATL="0"
@@ -67,7 +67,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug_icl9/ffdshow.tlb"/>
+				TypeLibraryName=".\Debug_icl/ffdshow.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Registering output..."
@@ -94,8 +94,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="release_icl9"
-			IntermediateDirectory="release_icl9"
+			OutputDirectory="release_icl"
+			IntermediateDirectory="release_icl"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -124,9 +124,9 @@
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="StdAfx.h"
 				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
-				AssemblerListingLocation=".\Release_icl9/"
-				ObjectFile=".\Release_icl9/"
-				ProgramDataBaseFileName=".\Release_icl9/"
+				AssemblerListingLocation=".\Release_icl/"
+				ObjectFile=".\Release_icl/"
+				ProgramDataBaseFileName=".\Release_icl/"
 				WarningLevel="0"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="0"
@@ -156,7 +156,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release_icl9/ffdshow.tlb"/>
+				TypeLibraryName=".\Release_icl/ffdshow.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Registering output..."
@@ -183,8 +183,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug Unicode|Win32"
-			OutputDirectory="debug_unicode_icl9"
-			IntermediateDirectory="debug_unicode_icl9"
+			OutputDirectory="debug_unicode_icl"
+			IntermediateDirectory="debug_unicode_icl"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			UseOfATL="0"
@@ -236,7 +236,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug_icl9/ffdshow.tlb"/>
+				TypeLibraryName=".\Debug_icl/ffdshow.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Registering output..."
@@ -263,8 +263,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release Unicode|Win32"
-			OutputDirectory="release_unicode_icl9"
-			IntermediateDirectory="release_unicode_icl9"
+			OutputDirectory="release_unicode_icl"
+			IntermediateDirectory="release_unicode_icl"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -325,7 +325,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release_icl9/ffdshow.tlb"/>
+				TypeLibraryName=".\Release_icl/ffdshow.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Registering output..."
@@ -1182,8 +1182,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
-"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1191,8 +1190,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
-"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1200,8 +1198,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
-"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1209,8 +1206,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
-"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
@@ -2561,10 +2557,22 @@
 				RelativePath="src\imgFilters\TimgFilterWarpsharp.h">
 			</File>
 			<File
+				RelativePath="src\imgFilters\TimgFilterYadif.cpp"
+				>
+			</File>
+			<File
+				RelativePath="src\imgFilters\TimgFilterYadif.h"
+				>
+			</File>
+			<File
 				RelativePath="src\mplayer\Tlibmplayer.cpp">
 			</File>
 			<File
 				RelativePath="src\mplayer\Tlibmplayer.h">
+			</File>
+			<File
+				RelativePath=".\src\mplayer\yadif\vf_yadif.h"
+				>
 			</File>
 			<Filter
 				Name="com"
@@ -2736,6 +2744,12 @@
 				RelativePath=".\src\dialog\Ccrystality.h">
 			</File>
 			<File
+				RelativePath=".\src\dialog\CcspOptions.cpp">
+			</File>
+			<File
+				RelativePath=".\src\dialog\CcspOptions.h">
+			</File>
+			<File
 				RelativePath=".\src\dialog\CcurveAlt.cpp">
 			</File>
 			<File
@@ -2797,6 +2811,14 @@
 			</File>
 			<File
 				RelativePath=".\src\dialog\CdeinterlaceTomsMoComp.h">
+			</File>
+			<File
+				RelativePath=".\src\dialog\CdeinterlaceYadif.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dialog\CdeinterlaceYadif.h"
+				>
 			</File>
 			<File
 				RelativePath=".\src\dialog\Cdelay.cpp">
@@ -3205,14 +3227,6 @@
 			</File>
 			<File
 				RelativePath="src\dialog\CresizeSettings.h">
-			</File>
-			<File
-				RelativePath=".\src\dialog\CcspOptions.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\CcspOptions.h"
-				>
 			</File>
 			<File
 				RelativePath=".\src\dialog\CsecondPass.cpp">
@@ -4078,8 +4092,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
-"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4087,8 +4100,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
-"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4096,8 +4108,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
-"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -4105,8 +4116,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Assembling $(InputPath)"
-						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)
-"
+						CommandLine="yasm.exe -f win32 -DPREFIX -DWIN32 -I$(InputDir) -o $(IntDir)\$(InputName).obj $(InputPath)"
 						Outputs="$(IntDir)\$(InputName).obj"/>
 				</FileConfiguration>
 			</File>
@@ -4186,12 +4196,10 @@
 				RelativePath=".\src\convert\Tconvert.h">
 			</File>
 			<File
-				RelativePath=".\src\convert\TrgbPrimaries.cpp"
-				>
+				RelativePath=".\src\convert\TrgbPrimaries.cpp">
 			</File>
 			<File
-				RelativePath=".\src\convert\TrgbPrimaries.h"
-				>
+				RelativePath=".\src\convert\TrgbPrimaries.h">
 			</File>
 			<File
 				RelativePath="src\convert\Tswscale.cpp">
