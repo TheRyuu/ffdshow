@@ -102,6 +102,12 @@ begin
     end
 
     cpu_cores := CPUInfo.htInfo.nPhysicalProcs;
+    if cpu_cores > 8  then begin
+      cpu_cores := 8;
+    end
+    if cpu_cores < 1 then begin
+      cpu_cores := 1;
+    end
     
     cpu_family := CPUInfo.coreInfo.dwCPUFamily;
   end
