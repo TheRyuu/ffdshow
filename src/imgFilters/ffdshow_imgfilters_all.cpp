@@ -48,3 +48,4 @@
 #include "ThwOverlayControlOverlay.cpp"
 #include "ThwOverlayControlVMR9.cpp"
 #include "TimgFilterGradfun.cpp"
+#include "TimgFilterYadif.cpp"

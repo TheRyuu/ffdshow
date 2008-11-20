@@ -109,3 +109,4 @@
 #include "TcompatibilityManager.cpp"
 #include "CcspOptions.cpp"
 #include "TsubtitlesSSAConfig.cpp"
+#include "CdeinterlaceYadif.cpp"
