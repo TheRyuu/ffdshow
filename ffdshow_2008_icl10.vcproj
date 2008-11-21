@@ -37,12 +37,14 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="yasm"
+				Name="yasm64"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
 			/>
-
+			<Tool
+				Name="yasm"
+			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
 			/>
@@ -261,6 +263,9 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="yasm64"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -496,6 +501,9 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
+				Name="yasm64"
+			/>
+			<Tool
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
@@ -721,6 +729,9 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="yasm64"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -4643,11 +4654,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\imgFilters\TimgFilterYadif.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\imgFilters\TimgFilterYadif.h"
+				>
+			</File>
+			<File
 				RelativePath="src\mplayer\Tlibmplayer.cpp"
 				>
 			</File>
 			<File
 				RelativePath="src\mplayer\Tlibmplayer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\mplayer\yadif\vf_yadif.h"
 				>
 			</File>
 			<Filter
@@ -5020,6 +5043,14 @@
 			</File>
 			<File
 				RelativePath=".\src\dialog\CdeinterlaceTomsMoComp.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dialog\CdeinterlaceYadif.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dialog\CdeinterlaceYadif.h"
 				>
 			</File>
 			<File
@@ -5735,14 +5766,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\dialog\TsubtitlesSSAConfig.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\TsubtitlesSSAConfig.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\dialog\TbitrateDlg.cpp"
 				>
 			</File>
@@ -5888,6 +5911,14 @@
 			</File>
 			<File
 				RelativePath=".\src\dialog\TSpecifyPropertyPagesVE.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dialog\TsubtitlesSSAConfig.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dialog\TsubtitlesSSAConfig.h"
 				>
 			</File>
 			<File
