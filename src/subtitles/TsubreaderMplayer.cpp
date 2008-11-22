@@ -16,12 +16,12 @@
 //========================================= TsubtitleParser =========================================
 template<class tchar> TsubtitleParser<tchar>::TsubtitleParser(int Iformat,double Ifps,const TsubtitlesSettings *Icfg,const Tconfig *Iffcfg,Tsubreader *Isubreader):
  TsubtitleParserBase(Iformat,Ifps),
- cfg(Icfg),
  ffcfg(Iffcfg),
  textfix(Icfg,Iffcfg),
  subreader(Isubreader),
  textformat(Iffcfg->getHtmlColors())
 {
+ cfg = *Icfg;
 }
 
 template<class tchar> int TsubtitleParser<tchar>::eol(tchar p) {
@@ -39,7 +39,7 @@ template<class tchar> void TsubtitleParser<tchar>::trail_space(tchar *s) {
 
 template<class tchar> Tsubtitle* TsubtitleParser<tchar>::store(TsubtitleTextBase<tchar> &sub)
 {
- sub.defProps.extendedTags=cfg->extendedTags;
+ sub.defProps.extendedTags=cfg.extendedTags;
  sub.format(textformat);
  sub.prepareKaraoke();
  sub.fix(textfix);

@@ -32,7 +32,7 @@ template<class tchar> class TsubtitleParser :public TsubtitleParserBase
 {
 private:
  Tsubreader *subreader;
- const TsubtitlesSettings *cfg;
+ TsubtitlesSettings cfg;
  const Tconfig *ffcfg;
  TtextFix<tchar> textfix;
 protected:
