@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="ffdshow"
 	ProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
 	RootNamespace="ffdshow"
@@ -23,8 +23,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
+			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -136,8 +136,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
+			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -247,10 +247,10 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
+			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
-			UseOfMFC="0"
+			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			ManagedExtensions="0"
 			>
@@ -288,7 +288,7 @@
 				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
 				StringPooling="true"
 				ExceptionHandling="1"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="false"
 				RuntimeTypeInfo="false"
@@ -321,12 +321,12 @@
 				Name="VCLinkerTool"
 				RegisterOutput="false"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="unicows.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib msvcrt.lib msvcprt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib $(NOINHERIT)"
+				AdditionalDependencies="unicows.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib libcmt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib $(NOINHERIT)"
 				OutputFile="bin\ffdshow.ax"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=""
-				GenerateManifest="true"
+				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\src\ffdshow.def"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
@@ -364,8 +364,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(ConfigurationName)$(PlatformName)"
-			IntermediateDirectory="$(ConfigurationName)$(PlatformName)"
+			OutputDirectory="$(ConfigurationName)_$(PlatformName)_2008"
+			IntermediateDirectory="$(ConfigurationName)_$(PlatformName)_2008"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -479,8 +479,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug Unicode|Win32"
-			OutputDirectory="debug_unicode$(PlatformName)"
-			IntermediateDirectory="debug_unicode$(PlatformName)"
+			OutputDirectory="Debug_Unicode_$(PlatformName)_2008"
+			IntermediateDirectory="Debug_Unicode_$(PlatformName)_2008"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -592,8 +592,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug Unicode|x64"
-			OutputDirectory="debug_unicode$(PlatformName)"
-			IntermediateDirectory="debug_unicode$(PlatformName)"
+			OutputDirectory="Debug_Unicode_$(PlatformName)_2008"
+			IntermediateDirectory="Debug_Unicode_$(PlatformName)_2008"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -704,10 +704,10 @@
 		</Configuration>
 		<Configuration
 			Name="Release Unicode|Win32"
-			OutputDirectory="release_unicode$(PlatformName)"
-			IntermediateDirectory="release_unicode$(PlatformName)"
+			OutputDirectory="Release_Unicode_$(PlatformName)_2008"
+			IntermediateDirectory="Release_Unicode_$(PlatformName)_2008"
 			ConfigurationType="2"
-			UseOfMFC="0"
+			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			ManagedExtensions="0"
@@ -746,7 +746,7 @@
 				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
 				StringPooling="true"
 				ExceptionHandling="1"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="false"
 				RuntimeTypeInfo="false"
@@ -779,12 +779,12 @@
 				Name="VCLinkerTool"
 				RegisterOutput="false"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib msvcrt.lib msvcprt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib libcmt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib $(NOINHERIT)"
 				OutputFile="bin\ffdshow.ax"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=""
-				GenerateManifest="true"
+				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\src\ffdshow.def"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
@@ -822,8 +822,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release Unicode|x64"
-			OutputDirectory="release_unicode$(PlatformName)"
-			IntermediateDirectory="release_unicode$(PlatformName)"
+			OutputDirectory="Release_Unicode_$(PlatformName)_2008"
+			IntermediateDirectory="Release_Unicode_$(PlatformName)_2008"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -5835,14 +5835,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\dialog\TsubtitlesSSAConfig.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\dialog\TsubtitlesSSAConfig.h"
-				>
-			</File>			
-			<File
 				RelativePath=".\src\dialog\TbitrateDlg.cpp"
 				>
 			</File>
@@ -5988,6 +5980,14 @@
 			</File>
 			<File
 				RelativePath=".\src\dialog\TSpecifyPropertyPagesVE.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dialog\TsubtitlesSSAConfig.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dialog\TsubtitlesSSAConfig.h"
 				>
 			</File>
 			<File
