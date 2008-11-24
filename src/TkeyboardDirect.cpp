@@ -36,7 +36,7 @@ TdirectInput::TdirectInput(TintStrColl *Icoll,const char_t *Iname,const GUID &Id
  deci(Ideci),
  deviceId(IdeviceId),deviceFormat(IdeviceFormat)
 {
- tsprintf(classname,_l("ffdshow_%s_%i"),name,rand()%1000);
+ tsnprintf_s(classname, countof(classname), _TRUNCATE, _l("ffdshow_%s_%i"), name, rand()%1000);
  di=NULL;did=NULL;event=NULL;h=NULL;thr=0;
  inExplorer=deci->inExplorer()==S_OK;
 }
@@ -82,7 +82,8 @@ void TdirectInput::hook(void)
  if (!h) return;
  if (did->SetCooperativeLevel(h,DISCL_BACKGROUND|DISCL_NONEXCLUSIVE)!=S_OK) return;
  if (did->SetDataFormat(&deviceFormat)!=S_OK) return;
- char_t eventname[50];tsprintf(eventname,_l("ffdshow %s event"),name);
+ char_t eventname[50];
+ tsnprintf_s(eventname, countof(eventname), _TRUNCATE, _l("ffdshow %s event"), name);
  event=CreateEvent(NULL,FALSE,FALSE,eventname);if (!event) return;
  if (did->SetEventNotification(event)!=S_OK) return;
  if (did->Acquire()!=S_OK) return;
@@ -143,7 +144,7 @@ void Tkeyboard::reg_op(TregOp &t)
  TdirectInput::reg_op(t);
  char_t pomS[256];
  for (TkeysParams::iterator i=keysParams.begin();i!=keysParams.end();i++)
-  t._REG_OP_N(0,strcpyf(pomS,_l("key %s"),i->descr),i->key,i->key);
+  t._REG_OP_N(0,strncpyf(pomS, countof(pomS),_l("key %s"),i->descr),i->key,i->key);
 }
 
 void Tkeyboard::initKeysParam(void)
@@ -233,7 +234,7 @@ void Tkeyboard::keyProc(int code,bool remote)
               if (lang && lang[0])
                {
                 char_t msg[256];
-                tsprintf(msg,_l("subtitles language: %s"),lang);
+                tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("subtitles language: %s"), lang);
                 deciV->shortOSDmessage(msg,30);
                }
              }
@@ -246,7 +247,8 @@ void Tkeyboard::keyProc(int code,bool remote)
        deciD->saveActivePreset(NULL);
        if (shortosd)
         {
-         char_t msg[200];tsprintf(msg,_l("%s %s"),i->descr,deci->getParam2(i->idff)?_l("on"):_l("off"));
+         char_t msg[200];
+         tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("%s %s"), i->descr,deci->getParam2(i->idff) ? _l("on") : _l("off"));
          deciV->shortOSDmessage(msg,30);
         }
        return;
@@ -268,7 +270,7 @@ void Tkeyboard::keyProc(int code,bool remote)
               if (SUCCEEDED(deciD->seek(pos+sec)) && shortosd)
                {
                 char_t msg[100];
-                tsprintf(msg,_l("fast %s %i seconds"),sec<0?_l("backward"):_l("forward"),abs(sec));
+                tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("fast %s %i seconds"), sec < 0 ? _l("backward") : _l("forward"), abs(sec));
                 deciV->shortOSDmessage(msg,30);
                }
              }
@@ -285,7 +287,7 @@ void Tkeyboard::keyProc(int code,bool remote)
           if (shortosd)
            {
             char_t msg[256];
-            tsprintf(msg,_l("subtitles %s: %i"),isMod?_l("size"):_l("delay"),deci->getParam2(idff));
+            tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("subtitles %s: %i"), isMod ? _l("size") : _l("delay"), deci->getParam2(idff));
             deciV->shortOSDmessage(msg,30);
            }
           return;
@@ -297,7 +299,7 @@ void Tkeyboard::keyProc(int code,bool remote)
           if (shortosd)
            {
             char_t msg[256];
-            tsprintf(msg,_l("subtitles %s: %i"),isMod?_l("size"):_l("delay"),deci->getParam2(idff));
+            tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("subtitles %s: %i"), isMod ? _l("size") : _l("delay"), deci->getParam2(idff));
             deciV->shortOSDmessage(msg,30);
            }
           return;
@@ -309,7 +311,7 @@ void Tkeyboard::keyProc(int code,bool remote)
           if (shortosd)
            {
             char_t msg[256];
-            tsprintf(msg,_l("subtitles %s position : %i"),isMod?_l("horizontal"):_l("vertical"),deci->getParam2(idff));
+            tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("subtitles %s position : %i"), isMod ? _l("horizontal") : _l("vertical"), deci->getParam2(idff));
             deciV->shortOSDmessage(msg,30);
            }
           return;
@@ -321,7 +323,7 @@ void Tkeyboard::keyProc(int code,bool remote)
           if (shortosd)
            {
             char_t msg[256];
-            tsprintf(msg,_l("subtitles %s position : %i"),isMod?_l("horizontal"):_l("vertical"),deci->getParam2(idff));
+            tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("subtitles %s position : %i"), isMod ? _l("horizontal") : _l("vertical"), deci->getParam2(idff));
             deciV->shortOSDmessage(msg,30);
            }
           return;
@@ -335,7 +337,7 @@ void Tkeyboard::keyProc(int code,bool remote)
           if (shortosd)
            {
             char_t msg[256];
-            tsprintf(msg,_l("video delay: %i ms"),delay);
+            tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("video delay: %i ms"), delay);
             deciV->shortOSDmessage(msg,30);
            }
           return;
@@ -348,7 +350,7 @@ void Tkeyboard::keyProc(int code,bool remote)
            {
             char_t msg[256],preset[256];
             deciD->getActivePresetName(preset,256);
-            tsprintf(msg,_l("preset: %s"),preset);
+            tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("preset: %s"), preset);
             deciV->shortOSDmessage(msg,30);
            }
           return;

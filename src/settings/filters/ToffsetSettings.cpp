@@ -100,9 +100,9 @@ const int* ToffsetSettings::getResets(unsigned int pageId)
 
 bool ToffsetSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
- tsnprintf(tipS,len,_l("luma offset:[%i,%i] chroma offset:[%i,%i]"),Y_X,Y_Y,U_X,U_Y);
- if (flip) strncat(tipS,_l("\nflip"),len);
- if (mirror) strncat(tipS,_l("\nmirror"),len);
+ tsnprintf_s(tipS, len, _TRUNCATE,_l("luma offset:[%i,%i] chroma offset:[%i,%i]"),Y_X,Y_Y,U_X,U_Y);
+ if (flip) strncat_s(tipS, len, _l("\nflip"), _TRUNCATE);
+ if (mirror) strncat_s(tipS, len, _l("\nmirror"), _TRUNCATE);
  tipS[len-1]='\0';
  return true;
 }

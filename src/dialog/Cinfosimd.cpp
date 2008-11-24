@@ -124,9 +124,8 @@ INT_PTR TinfoPageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
             {
              case 0:
               {
-               const char_t *descr;
-               deciD->getKeyParamDescr(i,&descr);
-               tsprintf(nmdi->item.pszText,_l("%s: %s"),infoitems[i].translatedName,infoitems[i].val?infoitems[i].val:_l(""));
+               nmdi->item.pszText = pszTextBuf;
+               tsnprintf_s(pszTextBuf,countof(pszTextBuf),_TRUNCATE,_l("%s: %s"),infoitems[i].translatedName,infoitems[i].val?infoitems[i].val:_l(""));
                break;
               }
             }

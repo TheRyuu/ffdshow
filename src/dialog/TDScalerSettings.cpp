@@ -60,7 +60,7 @@ void TDScalerSettings::cfg2dlg(HWND m_hwnd)
       HWND hlbl=GetDlgItem(m_hwnd,i->first-1);
       char_t s[256];int x;
       x=*i->second->pValue;
-      tsprintf(s,_l("%s: %i"),(const char_t*)text<char_t>(i->second->szDisplayName),x);
+      tsnprintf_s(s, countof(s), _TRUNCATE, _l("%s: %i"), (const char_t*)text<char_t>(i->second->szDisplayName), x);
       SetWindowText(hlbl,s);
       SendMessage(hslider,TBM_SETPOS,TRUE,x);
       break;

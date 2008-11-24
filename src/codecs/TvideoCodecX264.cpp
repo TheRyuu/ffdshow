@@ -60,7 +60,7 @@ TvideoCodecX264::~TvideoCodecX264()
 
 const char_t* TvideoCodecX264::getName(void) const
 {
- tsprintf(codecName,_l("x264%s"),lossless?_l(" lossless"):_l(""));
+ tsnprintf_s(codecName, countof(codecName), _TRUNCATE, _l("x264%s"), lossless ? _l(" lossless") : _l(""));
  return codecName;
 }
 

@@ -100,7 +100,8 @@ protected:
    IffdshowDecVideo *deciV;
    char_t sizeStr[256],aspectStr[256];
    unsigned int oldDx,oldDy,oldSar1,oldSar2,oldDar1,oldDar2;
-   const char_t *getInputSize(char_t *s,bool &wasChange),*getInputAspect(char_t *s,bool &wasChange);
+   const char_t *getInputSize(char_t *s,bool &wasChange);
+   const char_t *getInputAspect(char_t *s, bool &wasChange, size_t buflen);
   protected:
    virtual const char_t *getVal0(bool &wasChange,bool &splitline);
   public:

@@ -70,12 +70,12 @@ void TOSDpageDec::pos2dlg(void)
  char_t s[260];int x;
 
  x=cfgGet(IDFF_OSDposX);
- TsubtitlesSettings::getPosHoriz(x,s,this,IDC_LBL_OSD_POSX);
+ TsubtitlesSettings::getPosHoriz(x, s, this, IDC_LBL_OSD_POSX, countof(s));
  setDlgItemText(m_hwnd,IDC_LBL_OSD_POSX,s);
  tbrSet(IDC_TBR_OSD_POSX,x);
 
  x=cfgGet(IDFF_OSDposY);
- TsubtitlesSettings::getPosVert(x,s,this,IDC_LBL_OSD_POSY);
+ TsubtitlesSettings::getPosVert(x, s, this, IDC_LBL_OSD_POSY, countof(s));
  setDlgItemText(m_hwnd,IDC_LBL_OSD_POSY,s);
  tbrSet(IDC_TBR_OSD_POSY,x);
 }
@@ -169,7 +169,7 @@ void TOSDpageDec::lv2osdFormat(void)
  int cnt=ListView_GetItemCount(hlv);
  for (int i=0;i<cnt;i++)
   if (ListView_GetCheckState(hlv,i))
-   strcatf(format,_l("%i "),lvGetItemParam(IDC_LV_OSD_LINES,i));
+   strncatf(format, countof(format), _l("%i "), lvGetItemParam(IDC_LV_OSD_LINES,i));
  if (format[strlen(format)-1]==' ') format[strlen(format)-1]='\0';
  deciD->setOSDpresetFormat(NULL,format);
  parent->setChange();
@@ -209,7 +209,7 @@ INT_PTR TOSDpageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          char_t ed[250];
          GetDlgItemText(m_hwnd,IDC_ED_OSD_USER,ed,250);
          char_t format[256];
-         tsnprintf(format,256,_l("user%s"),ed);format[255]='\0';
+         tsnprintf_s(format, 256, _TRUNCATE, _l("user%s"),ed);
          deciD->setOSDpresetFormat(NULL,format);
          parent->setChange();
         };
@@ -257,7 +257,7 @@ INT_PTR TOSDpageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
               if (shortcut && shortcut[0])
                {
                 char_t osd[240];
-                tsprintf(osd,_l("%%%s"),shortcut);
+                tsnprintf_s(osd, countof(osd), _TRUNCATE, _l("%%%s"), shortcut);
                 SendDlgItemMessage(m_hwnd,IDC_ED_OSD_USER,EM_REPLACESEL,TRUE,LPARAM(osd));
                }
              }
@@ -367,7 +367,8 @@ void TOSDpageDec::onPresets(void)
    cfgSet(IDFF_OSDsaveOnly,1-cfgGet(IDFF_OSDsaveOnly));
   else if (cmd>=IDC_MNI_OSD_PRESETS_SAVEAS)
    {
-    char_t format[256];strcpy(format,deciD->getOSDpresetFormat2(curPresetName));
+    char_t format[256];
+    ff_strncpy(format, deciD->getOSDpresetFormat2(curPresetName), countof(format));
     char_t newPreset[40];GetMenuString(hmSaveAs,cmd,newPreset,40,MF_BYCOMMAND);
     deciD->setOSDpresetFormat(newPreset,format);
    }
@@ -376,7 +377,8 @@ void TOSDpageDec::onPresets(void)
     {
      case IDC_MNI_OSD_PRESETS_RENAME:
       {
-       char_t newPresetName[40];strcpy(newPresetName,curPresetName);
+       char_t newPresetName[40];
+       ff_strncpy(newPresetName, curPresetName, countof(newPresetName));
        if (inputString(_(-IDD_OSD,_l("New preset name")),_(-IDD_OSD,_l("Enter new preset name")),newPresetName,40))
         if (newPresetName[0] && findPreset(newPresetName)==CB_ERR)
          {
@@ -392,11 +394,13 @@ void TOSDpageDec::onPresets(void)
       }
      case IDC_MNI_OSD_PRESETS_SAVEAS_NEW:
       {
-       char_t newPresetName[40];strcpy(newPresetName,curPresetName);
+       char_t newPresetName[40];
+       ff_strncpy(newPresetName,curPresetName,countof(newPresetName));
        if (inputString(_(-IDD_OSD,_l("New preset name")),_(-IDD_OSD,_l("Enter new preset name")),newPresetName,40))
         if (newPresetName[0] && findPreset(newPresetName)==CB_ERR)
          {
-          char_t format[256];strcpy(format,deciD->getOSDpresetFormat2(curPresetName));
+          char_t format[256];
+          ff_strncpy(format,deciD->getOSDpresetFormat2(curPresetName),countof(format));
           deciD->addOSDpreset(newPresetName,format);
           cfgSet(IDFF_OSDcurPreset,newPresetName);
           osds2dlg();

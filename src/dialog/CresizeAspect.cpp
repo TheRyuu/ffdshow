@@ -114,8 +114,11 @@ void TresizeAspectPage::aspect2dlg(void)
   setText(IDC_RBT_ASPECT_KEEP,_l("%s %3.2f:1"),_(IDC_RBT_ASPECT_KEEP),float(a1)/a2);
  int aspectI=cfgGet(IDFF_hwOverlayAspect);
  tbrSet(IDC_TBR_HWOVERLAY_ASPECT,aspectI/256);
- tsprintf(pomS,_l("%s "),_(IDC_LBL_HWOVERLAY_ASPECT));
- if (aspectI==0) strcat(pomS,_(IDC_LBL_HWOVERLAY_ASPECT,_l("default")));else strcatf(pomS,_l("%3.2f:1"),float(aspectI/65536.0));
+ tsnprintf_s(pomS, countof(pomS), _TRUNCATE, _l("%s "),_(IDC_LBL_HWOVERLAY_ASPECT));
+ if (aspectI==0)
+  strncat_s(pomS, countof(pomS), _(IDC_LBL_HWOVERLAY_ASPECT,_l("default")), _TRUNCATE);
+ else
+  strncatf(pomS, countof(pomS), _l("%3.2f:1"),float(aspectI/65536.0));
  setDlgItemText(m_hwnd,IDC_LBL_HWOVERLAY_ASPECT,pomS);
 }
 void TresizeAspectPage::userAspect2dlg(void)

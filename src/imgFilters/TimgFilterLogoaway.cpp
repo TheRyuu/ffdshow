@@ -708,7 +708,8 @@ HRESULT TimgFilterLogoaway::process(TfilterQueue::iterator it,TffPict &pict,cons
 
    if (cspChanged || logotemp.rectFull.dx!=(unsigned int)cfg->dx || logotemp.rectFull.dy!=(unsigned int)cfg->dy || !plane[0] || oldLumaOnly!=cfg->lumaonly || oldBlur!=cfg->blur || oldMode!=cfg->mode || stricmp(oldparambitmap,cfg->parambitmap)!=0)
     {
-     oldLumaOnly=cfg->lumaonly;oldBlur=cfg->blur;oldMode=cfg->mode;strcpy(oldparambitmap,cfg->parambitmap);
+     oldLumaOnly=cfg->lumaonly;oldBlur=cfg->blur;oldMode=cfg->mode;
+     ff_strncpy(oldparambitmap, cfg->parambitmap, countof(oldparambitmap));
      done();
      if (cfg->mode==TlogoawaySettings::MODE_SHAPEXY || cfg->mode==TlogoawaySettings::MODE_SHAPEUGLARM)
       {

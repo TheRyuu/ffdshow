@@ -97,7 +97,7 @@ TaudioCodecLiba52::~TaudioCodecLiba52()
 
 void TaudioCodecLiba52::getInputDescr1(char_t *buf,size_t buflen) const
 {
- strncpy(buf,_l("ac3"),buflen);
+ ff_strncpy(buf,_l("ac3"),buflen);
  buf[buflen-1]='\0';
 }
 

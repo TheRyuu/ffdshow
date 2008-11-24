@@ -319,10 +319,10 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
 bool TvideoCodecLibavcodec::isTSfile(void)
 {   
  const char_t *sourceFullFlnm;
- char_t sourceExt[MAX_PATH];
+ ffstring sourceExt;
  sourceFullFlnm = deci->getSourceName();
  extractfileext(sourceFullFlnm,sourceExt);
- return (stricmp(sourceExt,_l("ts"))==0 || stricmp(sourceExt,_l("m2ts"))==0 || stricmp(sourceExt,_l("m2t"))==0 || stricmp(sourceExt,_l("mts"))==0 || stricmp(sourceExt,_l("mpg"))==0  || stricmp(sourceExt,_l("mpeg"))==0);
+ return (sourceExt == _l("ts") || sourceExt == _l("m2ts") || sourceExt == _l("m2t") || sourceExt == _l("mts") || sourceExt == _l("mpg")  || sourceExt == _l("mpeg"));
 }
 
 void TvideoCodecLibavcodec::onGetBuffer(AVFrame *pic)
@@ -623,7 +623,7 @@ const char_t* TvideoCodecLibavcodec::getName(void) const
 {
  if (avcodec)
   {
-   tsprintf(codecName,_l("libavcodec %s"),(const char_t*)text<char_t>(avcodec->name));
+   tsnprintf_s(codecName, countof(codecName), _TRUNCATE, _l("libavcodec %s"), (const char_t*)text<char_t>(avcodec->name));
    return codecName;
   }
  else return _l("libavcodec");
@@ -635,16 +635,16 @@ void TvideoCodecLibavcodec::getEncoderInfo(char_t *buf,size_t buflen) const
   {
    libavcodec->avcodec_get_encoder_info(avctx,&xvid_build,&divx_version,&divx_build,&lavc_build);
    if (xvid_build)
-    tsnprintf(buf,buflen,_l("XviD build %i"),xvid_build);
+    tsnprintf_s(buf, buflen, _TRUNCATE, _l("XviD build %i"), xvid_build);
    else if (lavc_build)
-    tsnprintf(buf,buflen,_l("libavcodec build %i"),lavc_build);
+    tsnprintf_s(buf, buflen, _TRUNCATE, _l("libavcodec build %i"), lavc_build);
    else if (divx_version || divx_build)
-    tsnprintf(buf,buflen,_l("DivX version %i.%02i, build %i"),divx_version/100,divx_version%100,divx_build);
+    tsnprintf_s(buf, buflen, _TRUNCATE, _l("DivX version %i.%02i, build %i"), divx_version/100, divx_version%100, divx_build);
    else
-    strncpy(buf,_l("unknown"),buflen);
+    ff_strncpy(buf,_l("unknown"),buflen);
   }
  else
-  strncpy(buf,_l("unknown"),buflen);
+  ff_strncpy(buf,_l("unknown"),buflen);
  buf[buflen-1]='\0';
 }
 

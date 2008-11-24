@@ -9,7 +9,7 @@
 #ifdef UNICODE
  typedef wchar_t char_t;
  #define tsprintf swprintf
- #define tsnprintf _snwprintf
+ #define tsnprintf_s _snwprintf_s
  #define tfprintf fwprintf
  #define tsscanf swscanf
  #define __l(x) L ## x
@@ -17,7 +17,7 @@
 #else
  typedef char char_t;
  #define tsprintf sprintf
- #define tsnprintf _snprintf
+ #define tsnprintf_s _snprintf_s
  #define tfprintf fprintf
  #define tsscanf sscanf
  #define _l(x) x
@@ -31,12 +31,43 @@
   #endif
 #endif
 
+#if _MSC_VER < 1400  // MSVC 7.1
+ typedef int errno_t;
+ #if !defined(_TRUNCATE)
+  #define _TRUNCATE ((size_t)-1)
+ #endif
+ template<class tchar> tchar* ff_strncpy(tchar *dst, const tchar *src, size_t count);
+ template<class tchar> errno_t strncat_s(tchar *strDest, size_t numberOfElements, const tchar *strSource, size_t count);
+ template<class tchar> int vsnprintf_s(tchar *buffer, size_t sizeOfBuffer, size_t count, const tchar *format, va_list argptr);
+ template<class tchar> int tsnprintf_s(tchar *buffer, size_t sizeOfBuffer, size_t count, const tchar *format, ...);
+ errno_t _splitpath_s(const char_t *path, char_t *drive, size_t driveNumberOfElements, char_t *dir, size_t dirNumberOfElements, char_t *fname, size_t nameNumberOfElements, char_t *ext, size_t extNumberOfElements);
+ errno_t _makepath_s(char_t *path, size_t sizeInCharacters, const char_t *drive, const char_t *dir, const char_t *fname, const char_t *ext);
+#else // MSVC >= 8
+ static __forceinline errno_t strncat_s(wchar_t *a, size_t b, const wchar_t *c, size_t d) {return wcsncat_s(a,b,c,d);}
+ static __forceinline int vsnprintf_s(wchar_t *a, size_t b, size_t c, const wchar_t *d, va_list e){return _vsnwprintf_s(a,b,c,d,e);}
+ static __forceinline errno_t _splitpath_s(const wchar_t * a,
+    wchar_t * b, size_t c, wchar_t * d, size_t e,
+    wchar_t * f, size_t g, wchar_t * h, size_t i) {return _wsplitpath_s(a,b,c,d,e,f,g,h,i);};
+ static __forceinline errno_t _makepath_s(wchar_t *a, size_t b,
+    const wchar_t *c, const wchar_t *d,
+    const wchar_t *e, const wchar_t *f) {return _wmakepath_s(a,b,c,d,e,f);};
+ static __forceinline wchar_t* ff_strncpy(wchar_t *dst, const wchar_t *src, size_t count) 
+ {
+  wcsncpy_s(dst, count, src, _TRUNCATE);
+  return dst;
+ }
+ static __forceinline char* ff_strncpy(char *dst, const char *src, size_t count)
+ {
+  strncpy_s(dst, count, src, _TRUNCATE);
+  return dst;
+ }
+#endif // _MSC_VER
+
 static __forceinline wchar_t* strcat(wchar_t *a, const wchar_t *b) {return wcscat(a,b);}
-static __forceinline wchar_t* strncat(wchar_t *a, const wchar_t *b,size_t c) {return wcsncat(a,b,c);}
 static __forceinline int strcmp(const wchar_t *a, const wchar_t *b) {return wcscmp(a,b);}
 static __forceinline int strncmp(const wchar_t *a, const wchar_t *b, size_t c) {return wcsncmp(a,b,c);}
 static __forceinline int strnicmp(const wchar_t *a, const wchar_t *b,size_t c) {return _wcsnicmp(a,b,c);}
-static __forceinline wchar_t* strncpy(wchar_t *a, const wchar_t *b, size_t c) {return wcsncpy(a,b,c);}
+
 static __forceinline long strtol(const wchar_t *a, wchar_t **b, int c) {return wcstol(a,b,c);}
 static __forceinline wchar_t* strchr(const wchar_t *a, wchar_t b) {return (wchar_t*)wcschr(a,b);}
 static __forceinline int _strnicmp(const wchar_t *a, const wchar_t *b, size_t c) {return _wcsnicmp(a,b,c);}
@@ -50,8 +81,7 @@ static __forceinline unsigned long strtoul(const wchar_t *a,wchar_t **b,int c) {
 static __forceinline double strtod(const wchar_t *a, wchar_t **b) {return wcstod(a,b);}
 static __forceinline int vsprintf(wchar_t *a, const wchar_t *b, va_list c) {return vswprintf(a,b,c);}
 static __forceinline int _vsnprintf(wchar_t *a, size_t b, const wchar_t *c, va_list d) {return _vsnwprintf(a,b,c,d);}
-static __forceinline void _splitpath(const wchar_t *a, wchar_t *b, wchar_t *c, wchar_t *d, wchar_t *e) {_wsplitpath(a,b,c,d,e);}
-static __forceinline void _makepath(wchar_t *a, const wchar_t *b, const wchar_t *c, const wchar_t *d,const wchar_t *e) {_wmakepath(a,b,c,d,e);}
+
 static __forceinline FILE* fopen(const wchar_t *a, const wchar_t *b) {return _wfopen(a,b);}
 static __forceinline int fputs(const wchar_t *a, FILE *b) {return fputws(a,b);}
 static __forceinline int _stricoll(const wchar_t *a, const wchar_t *b) {return _wcsicoll(a,b);}
@@ -87,11 +117,21 @@ template<> template<> inline text<char>::text(const char *in,char *Ibuf):buf(str
 template<> template<> inline text<char>::text(const char *in,int inlen,char *Ibuf,size_t outlen):own(false)
 {
  if (inlen!=-1)
-  buf=strncpy(Ibuf,in,((size_t)inlen < outlen ? inlen : outlen));
+  {
+   buf=Ibuf;
+   if ((size_t)inlen < outlen)
+    {
+     ff_strncpy(Ibuf, in, inlen + 1);
+    }
+   else
+    {
+     ff_strncpy(Ibuf, in, outlen);
+    }
+  }
  else
   {
-   size_t inlen1=strlen(in)+1;
-   buf=strncpy(Ibuf,in,inlen1 < outlen ? inlen1 : outlen);
+   buf=Ibuf;
+   ff_strncpy(Ibuf, in, outlen);
   }
 }
 
@@ -101,11 +141,21 @@ template<> template<> inline text<wchar_t>::text(const wchar_t *in,wchar_t *Ibuf
 template<> template<> inline text<wchar_t>::text(const wchar_t *in,int inlen,wchar_t *Ibuf,size_t outlen):own(false)
 {
  if (inlen!=-1)
-  buf=strncpy(Ibuf,in,((size_t)inlen < outlen ? inlen : outlen));
+  {
+   buf=Ibuf;
+   if ((size_t)inlen < outlen)
+    {
+     ff_strncpy(Ibuf, in, inlen + 1);
+    }
+   else
+    {
+     ff_strncpy(Ibuf, in, outlen);
+    }
+  }
  else
   {
-   size_t inlen1=strlen(in)+1;
-   buf=strncpy(Ibuf,in,inlen1 < outlen ? inlen1 : outlen);
+   buf=Ibuf;
+   ff_strncpy(Ibuf, in, outlen);
   }
 }
 

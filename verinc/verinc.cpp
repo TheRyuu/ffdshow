@@ -33,7 +33,12 @@ int main(int argc,const char *argv[])
   }
  WIN32_FIND_DATA ffd;
  if (FindFirstFile(argv[1],&ffd)==INVALID_HANDLE_VALUE) return -4;
- char flnmO[260];strcpy(flnmO,argv[1]);strcat(flnmO,".verinc");remove(flnmO);
+ char flnmO[520];
+ strncpy(flnmO, argv[1], 260);
+ flnmO[259]=0;
+ strncat(flnmO, ".verinc", 260);
+ flnmO[259]=0;
+ remove(flnmO);
  FILE *fw=fopen(flnmO,"wt");if (!fw) return -3;
  while (!feof(fr))
   {

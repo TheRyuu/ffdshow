@@ -258,7 +258,7 @@ TaudioCodecTremor::~TaudioCodecTremor()
 
 void TaudioCodecTremor::getInputDescr1(char_t *buf,size_t buflen) const
 {
- strncpy(buf,_l("vorbis"),buflen);
+ ff_strncpy(buf,_l("vorbis"),buflen);
  buf[buflen-1]='\0';
 }
 

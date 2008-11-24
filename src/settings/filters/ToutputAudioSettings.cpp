@@ -124,7 +124,7 @@ TdevicesList ToutputAudioSettings::getDevices(void)
   {
 	  return devicesList;
   }
-  strncpy(default_deviceId, default_deviceIdp, 254);
+  ff_strncpy(default_deviceId, default_deviceIdp, 254);
   CoTaskMemFree(default_deviceIdp);
   defaultRenderer->Release();
 
@@ -155,7 +155,7 @@ TdevicesList ToutputAudioSettings::getDevices(void)
 	  WCHAR *deviceIdp = NULL;
 	  WCHAR deviceId[255] = L"";
 	  hr = device->GetId(&deviceIdp);
-	  strncpy(deviceId, deviceIdp, 254);
+	  ff_strncpy(deviceId, deviceIdp, 254);
 
 	  // Retrieve properties
 	  IPropertyStore* deviceProperties;
@@ -168,8 +168,8 @@ TdevicesList ToutputAudioSettings::getDevices(void)
 	  {
 		  if (value.pwszVal != NULL)
 		  {
-			strncpy(deviceName, value.pwszVal, 240);
-			strcat(deviceName, L" (default)");
+			ff_strncpy(deviceName, value.pwszVal, 240);
+			strncat_s(deviceName, countof(deviceName), L" (default)", _TRUNCATE);
 		  }
 		  else
 			wsprintfW(deviceName, L"Device %d (default)", i);
@@ -177,7 +177,7 @@ TdevicesList ToutputAudioSettings::getDevices(void)
 	  else
 	  {
 		  if (value.pwszVal != NULL)
-			strncpy(deviceName, value.pwszVal, 254);
+			ff_strncpy(deviceName, value.pwszVal, 254);
 		  else
 			wsprintfW(deviceName, L"Device %d", i);
 	  }

@@ -57,7 +57,8 @@ TOSDsettings::TOSDsettings(size_t IsizeofthisAll,TintStrColl *Icoll,TfilterIDFFs
 
 void TOSDsettings::savePresets(const char_t *reg_child)
 {
- char_t rkey[MAX_PATH];tsprintf(rkey,FFDSHOW_REG_PARENT _l("\\%s"),reg_child);
+ char_t rkey[MAX_PATH];
+ tsnprintf_s(rkey, countof(rkey), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s"), reg_child);
  TregOpRegWrite t(HKEY_CURRENT_USER,rkey);
  int size=(int)presets.size();
  t._REG_OP_N(0,_l("OSDpresetsCount"),size,0);
@@ -72,7 +73,8 @@ void TOSDsettings::savePresets(const char_t *reg_child)
 }
 void TOSDsettings::loadPresets(const char_t *reg_child)
 {
- char_t rkey[MAX_PATH];tsprintf(rkey,FFDSHOW_REG_PARENT _l("\\%s"),reg_child);
+ char_t rkey[MAX_PATH];
+ tsnprintf_s(rkey, countof(rkey), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s"), reg_child);
  TregOpRegRead t(HKEY_CURRENT_USER,rkey);
  int size;
  presets.clear();
@@ -181,7 +183,7 @@ bool TOSDsettings::cycle(void)
    {
     i++;
     if (i==presets.end()) i=presets.begin();
-    strcpy(curPreset,i->first.c_str());
+    ff_strncpy(curPreset,i->first.c_str(),countof(curPreset));
     changed=true;
     return true;
    }

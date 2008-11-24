@@ -144,11 +144,11 @@ bool TnoiseSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
  char_t flags[256]=_l("");
  if (uniform || pattern || averaged)
   {
-   tsprintf(flags,_l(" (%s%s%s"),uniform?_l("uniform, "):_l(""),pattern?_l("pattern, "):_l(""),averaged?_l("averaged, "):_l(""));
+   tsnprintf_s(flags, countof(flags), _TRUNCATE, _l(" (%s%s%s"), uniform ? _l("uniform, ") : _l(""), pattern ? _l("pattern, ") : _l(""), averaged ? _l("averaged, ") : _l(""));
    flags[strlen(flags)-2]='\0';
-   strcat(flags,_l(")"));
+   strncat_s(flags, countof(flags), _l(")"), _TRUNCATE);
   }
- tsnprintf(tipS,len,_l("method:%s%s\nluma strength:%i, chroma strength:%i%s%s%s%s"),methodsNames[method],flags,strength,strengthChroma,flickerA?_l("\nflickering"):_l(""),shakeA?_l("\nshaking"):_l(""),linesF?_l("\nlines"):_l(""),scratchesF?_l("\nscratches"):_l(""));
+ tsnprintf_s(tipS, len, _TRUNCATE, _l("method:%s%s\nluma strength:%i, chroma strength:%i%s%s%s%s"),methodsNames[method],flags,strength,strengthChroma,flickerA?_l("\nflickering"):_l(""),shakeA?_l("\nshaking"):_l(""),linesF?_l("\nlines"):_l(""),scratchesF?_l("\nscratches"):_l(""));
  tipS[len-1]='\0';
  return true;
 }

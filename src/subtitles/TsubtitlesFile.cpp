@@ -47,9 +47,11 @@ const char_t* TsubtitlesFile::mask=_l("Subtitles (*.utf;*.sub;*.srt;*.smi;*.rt;*
 
 bool TsubtitlesFile::extMatch(const char_t *flnm)
 {
- char_t ext[MAX_PATH];extractfileext(flnm,ext);strlwr(ext);
+ ffstring ext;
+ extractfileext(flnm,ext);
+ ext.ConvertToLowerCase();
  for (int i=0;exts[i];i++)
-  if (strcmp(ext,exts[i])==0)
+  if (ext == exts[i])
    return true;
  return false;
 }
@@ -59,7 +61,8 @@ static void fixRelativePaths(strings &dirs,const char_t *basepath)
  for (strings::iterator d=dirs.begin();d!=dirs.end();d++)
   if (PathIsRelative(d->c_str()))
    {
-    char_t absdir[MAX_PATH];_makepath(absdir,NULL,basepath,d->c_str(),NULL);
+    char_t absdir[MAX_PATH];
+    _makepath_s(absdir, countof(absdir), NULL, basepath, d->c_str(), NULL);
     char_t absdirC[MAX_PATH];
     PathCanonicalize(absdirC,absdir);
     *d=absdirC;
@@ -72,9 +75,9 @@ void TsubtitlesFile::findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,
  if (heuristic)
   {
    char_t aviDsk[MAX_PATH],aviDir[MAX_PATH],aviName[MAX_PATH];
-   _splitpath(aviFlnm,aviDsk,aviDir,aviName,NULL);
+   _splitpath_s(aviFlnm, aviDsk, countof(aviDsk), aviDir, countof(aviDir), aviName, countof(aviName), NULL, 0);
    char_t aviDskDirName[MAX_PATH];
-   _makepath(aviDskDirName,aviDsk,aviDir,aviName,NULL);
+   _makepath_s(aviDskDirName, countof(aviDskDirName), aviDsk, aviDir, aviName, NULL);
    strings subfiles;
    findPossibleSubtitles(aviFlnm,sdir,subfiles);
    int mindist=INT_MAX;
@@ -85,9 +88,9 @@ void TsubtitlesFile::findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,
    for (strings::const_iterator sf=subfiles.begin();sf!=subfiles.end();sf++)
     {
      char_t sfDsk[MAX_PATH],sfDir[MAX_PATH],sfName[MAX_PATH];
-     _splitpath(sf->c_str(),sfDsk,sfDir,sfName,NULL);
+     _splitpath_s(sf->c_str(), sfDsk, countof(sfDsk), sfDir, countof(sfDir), sfName, countof(sfName), NULL, 0);
      char_t sfDskDirName[MAX_PATH];
-     _makepath(sfDskDirName,sfDsk,sfDir,sfName,NULL);
+     _makepath_s(sfDskDirName, countof(sfDskDirName), sfDsk, sfDir, sfName, NULL);
      int newdist=dist.CalEditDistance(aviDskDirName,sfDskDirName,2*MAX_PATH);
      if (!checkSubtitle)
       {
@@ -106,7 +109,7 @@ void TsubtitlesFile::findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,
     {
      if (s!=subfiles.end())
       {
-       strncpy(subFlnm,s->c_str(),buflen);subFlnm[buflen-1]='\0';
+       ff_strncpy(subFlnm,s->c_str(),buflen);
        return;
       }
     }
@@ -116,7 +119,7 @@ void TsubtitlesFile::findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,
      for (TsubsDists::const_iterator sd=subdists.begin();sd!=subdists.end();sd++)
       if (checkSubtitle->checkSubtitle(sd->second.c_str()))
        {
-        strncpy(subFlnm,sd->second.c_str(),buflen);subFlnm[buflen-1]='\0';
+        ff_strncpy(subFlnm,sd->second.c_str(),buflen);
         return;
        }
     }
@@ -124,11 +127,13 @@ void TsubtitlesFile::findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,
  else
   {
    char_t dsk[MAX_PATH],dir[MAX_PATH],name[MAX_PATH],ext[MAX_PATH];
-   _splitpath(aviFlnm,dsk,dir,name,ext);
-   char_t fname[MAX_PATH];_makepath(fname,NULL,NULL,name,ext); //fname - movie file name with extension (without path)
+   _splitpath_s(aviFlnm, dsk, countof(dsk), dir, countof(dir), name, countof(name), ext, countof(ext));
+   char_t fname[MAX_PATH];
+   _makepath_s(fname, countof(fname), NULL, NULL, name, ext); //fname - movie file name with extension (without path)
    if (name[0])
     {
-     char_t path[MAX_PATH];_makepath(path,dsk,dir,NULL,NULL);    //path - directory where movie is stored
+     char_t path[MAX_PATH];
+     _makepath_s(path, countof(path), dsk, dir, NULL, NULL);    //path - directory where movie is stored
      strings dirs;strtok(sdir,_l(";"),dirs);
      fixRelativePaths(dirs,path);
      //exact match (only extension differs)
@@ -141,10 +146,10 @@ void TsubtitlesFile::findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,
 
        for (strings::const_iterator e=etensions.begin();e!=etensions.end();e++)
         {
-         _makepath(subFlnm0,NULL,d->c_str(),name,e->c_str());
+         _makepath_s(subFlnm0, countof(subFlnm0), NULL, d->c_str(), name, e->c_str());
          if (fileexists(subFlnm0) && (!checkSubtitle || checkSubtitle->checkSubtitle(subFlnm0)))
           {
-           strncpy(subFlnm,subFlnm0,buflen);subFlnm[buflen-1]='\0';
+           ff_strncpy(subFlnm,subFlnm0,buflen);
            return;
           }
         }
@@ -152,16 +157,19 @@ void TsubtitlesFile::findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,
      //movie.avi -> movie en.txt, movie.en.sub,....
      for (strings::const_iterator d=dirs.begin();d!=dirs.end();d++)
       {
-       _makepath(fname,NULL,d->c_str(),name,NULL);strcat(fname,_l("*")); //fname - c:\movies\movie*.*
+       _makepath_s(fname,MAX_PATH,NULL,d->c_str(),name,NULL);
+       strncat_s(fname, countof(fname), _l("*"), _TRUNCATE); //fname - c:\movies\movie*.*
        strings files;findFiles(fname,files);
        for (strings::const_iterator f=files.begin();f!=files.end();f++)
         {
-         char_t ext[MAX_PATH];extractfileext(f->c_str(),ext);strlwr(ext);
+         ffstring ext;
+         extractfileext(f->c_str(),ext);
+         ext.ConvertToLowerCase();
          strings etensions;strtok(sext,_l(";"),etensions);
          for (strings::const_iterator e=etensions.begin();e!=etensions.end();e++)
-          if (strcmp(ext,e->c_str())==0 && (!checkSubtitle || checkSubtitle->checkSubtitle(f->c_str())))
+          if (ext == *e && (!checkSubtitle || checkSubtitle->checkSubtitle(f->c_str())))
            {
-            strncpy(subFlnm,f->c_str(),buflen);subFlnm[buflen-1]='\0';
+            ff_strncpy(subFlnm,f->c_str(),buflen);subFlnm[buflen-1]='\0';
             return;
            }
         }
@@ -174,7 +182,7 @@ void TsubtitlesFile::findSubtitlesFile(const char_t *aviFlnm,const char_t *sdir,
 void TsubtitlesFile::findPossibleSubtitles(const char_t *dir,strings &files)
 {
  char_t autosubmask[MAX_PATH];
- _makepath(autosubmask,NULL,dir,/*name*/_l("*"),_l("*"));
+ _makepath_s(autosubmask,MAX_PATH,NULL,dir,/*name*/_l("*"),_l("*"));
  strings files0;
  findFiles(autosubmask,files0);
  for (strings::iterator f=files0.begin();f!=files0.end();f++)
@@ -189,8 +197,8 @@ void TsubtitlesFile::findPossibleSubtitles(const char_t *aviFlnm,const char_t *s
  if (aviFlnm[0])
   {
    char_t dsk[MAX_PATH],dir[MAX_PATH],name[MAX_PATH];
-   _splitpath(aviFlnm,dsk,dir,name,NULL);
-   _makepath(avidir,dsk,dir,NULL,NULL);
+   _splitpath_s(aviFlnm,dsk,MAX_PATH,dir,MAX_PATH,name,MAX_PATH,NULL,0);
+   _makepath_s(avidir, countof(avidir), dsk, dir, NULL, NULL);
   }
  else
   strcpy(avidir,_l("."));
@@ -222,7 +230,7 @@ bool TsubtitlesFile::init(const TsubtitlesSettings *cfg,const char_t *IsubFlnm,d
   return false;
 
  if (!IsubFlnm || (checkOnly==2 || stricmp(subFlnm,IsubFlnm)!=0))
-  strcpy(subFlnm,IsubFlnm?IsubFlnm:_l(""));
+  ff_strncpy(subFlnm, IsubFlnm ? IsubFlnm : _l(""), countof(subFlnm));
  if (checkOnly<2)
   {
    fps=Ifps;
@@ -264,11 +272,11 @@ bool TsubtitlesFile::init(const TsubtitlesSettings *cfg,const char_t *IsubFlnm,d
   {
    //subs->adjust_subs_time(6.0);
    Tsubtitles::init();
-   char_t subPath[MAX_PATH];
+   ffstring subPath;
    extractfilepath(subFlnm,subPath);
    if (watch)
     {
-     hwatch=FindFirstChangeNotification(subPath,FALSE,FILE_NOTIFY_CHANGE_LAST_WRITE|FILE_NOTIFY_CHANGE_SIZE);
+     hwatch=FindFirstChangeNotification(subPath.c_str(),FALSE,FILE_NOTIFY_CHANGE_LAST_WRITE|FILE_NOTIFY_CHANGE_SIZE);
      lastwritetime=fileLastWriteTime(subFlnm);
     }
   }

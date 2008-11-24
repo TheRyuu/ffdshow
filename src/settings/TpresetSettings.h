@@ -10,7 +10,7 @@ extern const char_t *FFPRESET_DEFAULT;
 struct TautoPresetProps
 {
 private:
- char_t sourceFullFlnm[MAX_PATH],sourceNameExt[MAX_PATH],sourceName[MAX_PATH];
+ ffstring sourceFullFlnm,sourceNameExt,sourceName;
  char_t volumeName[MAX_PATH],volumeSerial[10];
  BOOL wasVolume;
  void getSourceFlnm(void),getVolume(void);
@@ -61,7 +61,8 @@ private:
  void getOrders(Torders &orders,bool all=false) const;
  void fixOrder(void);
 public:
- static void normalizePresetName(char_t *dst,const char_t *src);
+ static void normalizePresetName(char_t *dst, const char_t *src, size_t bufsize);
+ static void normalizePresetName(ffstring &dst,const char_t *src);
  static bool isValidPresetName(const char_t *presetName);
  virtual bool autoloadSizeMatch(int AVIdx,int AVIdy) const {return false;};
  virtual bool is_autoloadSize(void) const {return false;}
@@ -82,7 +83,7 @@ protected:
 public:
  virtual ~Tpreset();
  virtual Tpreset* copy(void)=0;
- char_t presetName[260];
+ char_t presetName[MAX_PATH];
  void loadDefault(void);
  virtual void loadReg(void);
  void saveReg(void);

@@ -27,7 +27,7 @@ TinputPin::TinputPin(const char_t* objectName,CTransformFilter *filter,HRESULT* 
  codec(NULL)
 {
  strippacket=false;
- filesourceFlnm[0]='\0';wasGetSourceName=false;
+ wasGetSourceName=false;
 }
 
 HRESULT TinputPin::SetMediaType(const CMediaType* mt)
@@ -43,7 +43,8 @@ HRESULT TinputPin::Disconnect(void)
  if (hr==S_OK)
   {
    done();
-   filesourceFlnm[0]='\0';wasGetSourceName=false;
+   filesourceFlnm = _l("");
+   wasGetSourceName=false;
   }
  return hr;
 }
@@ -99,7 +100,8 @@ struct TpinFileSourceComp
 const char_t* TinputPin::getFileSourceName(void)
 {
  IFilterGraph *graph=m_pFilter->GetFilterGraph();
- if (!graph || wasGetSourceName || filesourceFlnm[0]!='\0') return filesourceFlnm;
+ if (!graph || wasGetSourceName || !filesourceFlnm.empty())
+  return filesourceFlnm.c_str();
  wasGetSourceName=true;
  comptr<IBaseFilter> filter;
  if (searchPrevNextFilter(PINDIR_INPUT,this,this,&filter,TpinFileSourceComp()) && filter)
@@ -109,13 +111,13 @@ const char_t* TinputPin::getFileSourceName(void)
    ifsf->GetCurFile(&aviNameL,NULL);
    if (aviNameL)
     {
-     strcpy(filesourceFlnm,text<char_t>(aviNameL));
+     filesourceFlnm = text<char_t>(aviNameL);
      CoTaskMemFree(aviNameL);
     }
    else
-    filesourceFlnm[0]='\0';
+    filesourceFlnm=_l("");
   }
- return filesourceFlnm;
+ return filesourceFlnm.c_str();
 }
 
 HRESULT TinputPin::getStreamName(char_t *buf,size_t buflen)
@@ -129,8 +131,8 @@ HRESULT TinputPin::getStreamName(char_t *buf,size_t buflen)
  if (FAILED(hr)) return hr;
  if (pname[0]=='\0') return S_OK;
  char_t buf2[256];
- tsnprintf(buf2,256,_l("%s - %s"),pname,buf);buf2[255]='\0';
- strncpy(buf,buf2,buflen);
+ tsnprintf_s(buf2, 256, _TRUNCATE,_l("%s - %s"),pname,buf);buf2[255]='\0';
+ ff_strncpy(buf,buf2,buflen);
  buf[buflen-1]='\0';
  return S_OK;
 }

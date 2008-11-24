@@ -27,7 +27,7 @@ TmuxerFile::TmuxerFile(IffdshowBase *Ideci):Tmuxer(Ideci)
  const char_t *storeExtFlnm=deci->getParamStr2(IDFF_enc_storeExtFlnm);
  if (strchr(storeExtFlnm,'%'))
   {
-   strcpy(flnmmask,storeExtFlnm);
+   ff_strncpy(flnmmask, storeExtFlnm, countof(flnmmask));
    f=NULL;
   }
  else
@@ -46,7 +46,7 @@ size_t TmuxerFile::write(const void *data,size_t len,int framenum)
  if (flnmmask[0])
   {
    char_t flnm[MAX_PATH];
-   tsprintf(flnm,flnmmask,framenum);
+   tsnprintf_s(flnm, countof(flnm), _TRUNCATE, flnmmask, framenum);
    FILE *f=fopen(flnm,_l("wb"));if (!f) return 0;
    len=fwrite(data,1,len,f);
    fclose(f);

@@ -302,7 +302,7 @@ const int* TmixerSettings::getResets(unsigned int pageId)
 
 bool TmixerSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
- tsnprintf(tipS,len,_l("%s%s%s%s%s"),chConfigs[out].name,(out!=17 && out!=18 && customMatrix)?_l("\ncustom matrix"):_l(""),(out!=17 && normalizeMatrix)?_l("\nnormalize matrix"):_l(""),(out!=17 && expandStereo && !customMatrix)?_l("\nexpand stereo"):_l(""),(out!=17 && voiceControl && !customMatrix)?_l("\nvoice control"):_l(""));
+ tsnprintf_s(tipS, len, _TRUNCATE, _l("%s%s%s%s%s"),chConfigs[out].name,(out!=17 && out!=18 && customMatrix)?_l("\ncustom matrix"):_l(""),(out!=17 && normalizeMatrix)?_l("\nnormalize matrix"):_l(""),(out!=17 && expandStereo && !customMatrix)?_l("\nexpand stereo"):_l(""),(out!=17 && voiceControl && !customMatrix)?_l("\nvoice control"):_l(""));
  return true;
 }
 

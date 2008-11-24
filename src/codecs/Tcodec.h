@@ -21,7 +21,7 @@ public:
  CodecID codecId;
  virtual int getType(void) const =0;
  virtual const char_t* getName(void) const {return getMovieSourceName(getType());}
- virtual void getEncoderInfo(char_t *buf,size_t buflen) const {strncpy(buf,_l("unknown"),buflen);buf[buflen-1]='\0';}
+ virtual void getEncoderInfo(char_t *buf,size_t buflen) const {ff_strncpy(buf,_l("unknown"),buflen);buf[buflen-1]='\0';}
  static const char_t* getMovieSourceName(int source);
 
  virtual HRESULT flush(void) {return S_OK;}

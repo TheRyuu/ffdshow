@@ -188,7 +188,8 @@ void Ttranslate::Tdialog::newTranslation(int dlgId,int item,const ffstring &newt
 //===================== Ttranslate::Tlanglist =======================
 Ttranslate::Tlanglist::Tlanglist(const char_t *Ipth):pth(Ipth)
 {
- char_t lngMask[MAX_PATH];_makepath(lngMask,NULL,pth,_l("languages\\ffdshow*.*"),_l("*"));
+ char_t lngMask[MAX_PATH];
+ _makepath_s(lngMask, countof(lngMask), NULL, pth, _l("languages\\ffdshow*.*"), _l("*"));
  strings files;
  findFiles(lngMask,files,false);
  for (strings::iterator i=files.begin();i!=files.end();i++)
@@ -205,10 +206,11 @@ void Ttranslate::Tlanglist::getLangName(const_iterator &lang,char_t *buf,size_t 
 {
  char_t ext[MAX_PATH];
  if (!lang->second)
-  strcpy(ext,lang->first.c_str());
+  ff_strncpy(ext, lang->first.c_str(), countof(ext));
  else
-  tsprintf(ext,_l("%s.%s"),lang->second.c_str(),lang->first.c_str());
- char_t flnm[MAX_PATH];_makepath(flnm,NULL,pth,_l("languages\\ffdshow"),ext);
+  tsnprintf_s(ext, countof(ext), _TRUNCATE, _l("%s.%s"), lang->second.c_str(), lang->first.c_str());
+ char_t flnm[MAX_PATH];
+ _makepath_s(flnm, countof(flnm), NULL, pth, _l("languages\\ffdshow"), ext);
  TstreamFile f(flnm,false,false);
  buf[0]='\0';
  if (f)
@@ -216,13 +218,13 @@ void Ttranslate::Tlanglist::getLangName(const_iterator &lang,char_t *buf,size_t 
    char_t line[256];f.fgets(line,256);
    if (line[0]!='[')
     {
-     strncpy(buf,line,buflen);
+     ff_strncpy(buf,line,buflen);
      buf[buflen-1]='\0';
      char_t *eoln=strchr(buf,'\n');
      if (eoln) *eoln='\0';
     }
   }
- if (buf[0]=='\0') strncpy(buf,lang->first.c_str(),buflen);
+ if (buf[0]=='\0') ff_strncpy(buf,lang->first.c_str(),buflen);
  //if (f) fclose(f);
 }
 
@@ -237,11 +239,14 @@ Ttranslate::Ttranslate(HINSTANCE Ihi,const char_t *Ipth):hi(Ihi),pth(Ipth),langl
 void Ttranslate::init(const char_t *newlang,int ItranslateMode)
 {
  if (strcmp(curlang,newlang)==0) return;
- strcpy(curlang,newlang?newlang:_l(""));
+ ff_strncpy(curlang, newlang ? newlang : _l(""), countof(curlang));
  done();
  if (curlang[0]=='\0') return;
  Tlanglist::const_iterator langId=langlist.find(newlang);
- _makepath(curflnm,NULL,pth,_l("languages\\ffdshow"),langId==langlist.end() || !langId->second?curlang:ffstring(langId->second+_l(".")+ffstring(curlang)).c_str());
+ _makepath_s(curflnm, countof(curflnm), NULL, pth, _l("languages\\ffdshow"),
+   langId==langlist.end() || !langId->second ?
+     curlang :
+     ffstring(langId->second+_l(".")+ffstring(curlang)).c_str());
  char_t sects[10240];
  Tinifile ini(curflnm);
  ini.getPrivateProfileSectionNames(sects,10240);

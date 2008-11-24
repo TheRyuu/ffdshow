@@ -113,13 +113,13 @@ bool TcropSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
  switch (mode)
   {
    case 0:if (magnificationLocked)
-           tsnprintf(tipS,len,_l("zoom: %i%%"),magnificationX);
+           tsnprintf_s(tipS, len, _TRUNCATE, _l("zoom: %i%%"), magnificationX);
           else
-           tsnprintf(tipS,len,_l("horizontal magnification: %i%%, vertical magnification: %i%%"),magnificationX,magnificationY);
+           tsnprintf_s(tipS, len, _TRUNCATE, _l("horizontal magnification: %i%%, vertical magnification: %i%%"), magnificationX,magnificationY);
           break;
-   case 1:tsnprintf(tipS,len,_l("crop: left:%i, top:%i, right:%i, bottom:%i"),cropLeft,cropTop,cropRight,cropBottom);
+   case 1:tsnprintf_s(tipS, len, _TRUNCATE, _l("crop: left:%i, top:%i, right:%i, bottom:%i"), cropLeft, cropTop, cropRight,cropBottom);
           break;
-   case 2:tsnprintf(tipS,len,_l("Pan & scan"));
+   case 2:tsnprintf_s(tipS, len, _TRUNCATE, _l("Pan & scan"));
           break;
    default:tipS[0]='\0';
   }

@@ -29,7 +29,7 @@
 strings TtextFixBase::getDicts(const Tconfig *cfg)
 {
  char_t msk[MAX_PATH];
- _makepath(msk,NULL,cfg->pth,_l("dict\\*"),_l("dic"));
+ _makepath_s(msk, countof(msk), NULL, cfg->pth, _l("dict\\*"), _l("dic"));
  strings dicts;
  findFiles(msk,dicts,false);
  for (strings::iterator d=dicts.begin();d!=dicts.end();d++)
@@ -45,7 +45,8 @@ template<class tchar> TtextFix<tchar>::TtextFix(const TsubtitlesSettings *scfg,c
  memcpy(&cfg,scfg,sizeof(TsubtitlesSettings));
  if (scfg->fix&fixOrtography)
   {
-   char_t dictflnm[MAX_PATH];_makepath(dictflnm,NULL,ffcfg->pth,(::ffstring(_l("dict\\"))+scfg->fixDict).c_str(),_l("dic"));
+   char_t dictflnm[MAX_PATH];
+   _makepath_s(dictflnm, countof(dictflnm), NULL, ffcfg->pth, (::ffstring(_l("dict\\"))+scfg->fixDict).c_str(), _l("dic"));
    TstreamFile fs(dictflnm,false,false);
    if (fs)
     {
@@ -700,7 +701,7 @@ if (_strnicmp(l2,_L("<i>"),3)==0) {words.add(l,l1,l2,props,3);props.italic=true;
       DwString<tchar> color=getAttribute(start,end,_L("color")).ConvertToLowerCase();
       DwString<tchar> size=getAttribute(start,end,_L("size"));
       words.add(l,l1,l2,props,end-l2+1);
-      if (!face.empty()) strncpy(props.fontname,text<char_t>(face.c_str()),countof(props.fontname));
+      if (!face.empty()) ff_strncpy(props.fontname, (const char_t *)text<char_t>(face.c_str()),countof(props.fontname));
       if (!color.empty() && ((color[0]=='#' && tchar_traits<tchar>::sscanf()(color.c_str()+1,_L("%x"),&props.color)) || (htmlcolors->getColor(color,&props.color,0xffffff),true)))
        {
         std::swap(((uint8_t*)&props.color)[0],((uint8_t*)&props.color)[2]);
@@ -743,7 +744,7 @@ template<class tchar> void TsubtitleFormat::Tssa<tchar>::fontName(const tchar *s
    text<char_t>(start, int(end-start), (char_t*)props.fontname, countof(props.fontname)-1);
   }
  else
-  strcpy(props.fontname,defprops.fontname);
+  ff_strncpy(props.fontname, defprops.fontname, countof(props.fontname));
 }
 template<class tchar> template<int TSubtitleProps::*offset,int min,int max> void TsubtitleFormat::Tssa<tchar>::intProp(const tchar *start,const tchar *end)
 {

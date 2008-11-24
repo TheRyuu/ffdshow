@@ -108,6 +108,6 @@ const int* TperspectiveSettings::getResets(unsigned int pageId)
 
 bool TperspectiveSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
- tsnprintf(tipS,len,_l("%s rectangle: [%i,%i] [%i,%i] [%i,%i] [%i,%i]\n%s interpolation"),isSrc?_l("Source"):_l("Destination"),x1,y1,x2,y2,x3,y3,x4,y4,interpolationNames[interpolation]);
+ tsnprintf_s(tipS, len, _TRUNCATE, _l("%s rectangle: [%i,%i] [%i,%i] [%i,%i] [%i,%i]\n%s interpolation"),isSrc?_l("Source"):_l("Destination"),x1,y1,x2,y2,x3,y3,x4,y4,interpolationNames[interpolation]);
  return true;
 }

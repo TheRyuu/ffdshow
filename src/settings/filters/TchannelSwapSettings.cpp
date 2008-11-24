@@ -87,7 +87,6 @@ const int* TchannelSwapSettings::getResets(unsigned int pageId)
 
 bool TchannelSwapSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
- tsnprintf(tipS,len,_l("%s -> %s\n%s -> %s\n%s -> %s\n%s -> %s\n%s -> %s\n%s -> %s\n%s -> %s"),TsampleFormat::getSpeakerName(SPEAKER_FRONT_LEFT),TsampleFormat::getSpeakerName(l),TsampleFormat::getSpeakerName(SPEAKER_FRONT_CENTER),TsampleFormat::getSpeakerName(c),TsampleFormat::getSpeakerName(SPEAKER_FRONT_RIGHT),TsampleFormat::getSpeakerName(r),TsampleFormat::getSpeakerName(SPEAKER_BACK_LEFT),TsampleFormat::getSpeakerName(sl),TsampleFormat::getSpeakerName(SPEAKER_BACK_CENTER),TsampleFormat::getSpeakerName(rear),TsampleFormat::getSpeakerName(SPEAKER_BACK_RIGHT),TsampleFormat::getSpeakerName(sr),TsampleFormat::getSpeakerName(SPEAKER_LOW_FREQUENCY),TsampleFormat::getSpeakerName(lfe));
- tipS[len-1]='\0';
+ tsnprintf_s(tipS, len, _TRUNCATE, _l("%s -> %s\n%s -> %s\n%s -> %s\n%s -> %s\n%s -> %s\n%s -> %s\n%s -> %s"),TsampleFormat::getSpeakerName(SPEAKER_FRONT_LEFT),TsampleFormat::getSpeakerName(l),TsampleFormat::getSpeakerName(SPEAKER_FRONT_CENTER),TsampleFormat::getSpeakerName(c),TsampleFormat::getSpeakerName(SPEAKER_FRONT_RIGHT),TsampleFormat::getSpeakerName(r),TsampleFormat::getSpeakerName(SPEAKER_BACK_LEFT),TsampleFormat::getSpeakerName(sl),TsampleFormat::getSpeakerName(SPEAKER_BACK_CENTER),TsampleFormat::getSpeakerName(rear),TsampleFormat::getSpeakerName(SPEAKER_BACK_RIGHT),TsampleFormat::getSpeakerName(sr),TsampleFormat::getSpeakerName(SPEAKER_LOW_FREQUENCY),TsampleFormat::getSpeakerName(lfe));
  return true;
 }

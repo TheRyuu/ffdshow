@@ -91,7 +91,7 @@ void TquantTablesPageBase::create(HWND parent)
  setPos(0,0);
  show(true);
  matrixflnm[0]='\0';
- _makepath(matrixdir,NULL,config->pth,_l("custom matrices"),NULL);
+ _makepath_s(matrixdir,MAX_PATH,NULL,config->pth,_l("custom matrices"),NULL);
  firstdir=true;
 }
 

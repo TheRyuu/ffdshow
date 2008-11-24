@@ -75,7 +75,6 @@ const int* TgradFunSettings::getResets(unsigned int pageId)
 
 bool TgradFunSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
- tsnprintf(tipS,len,_l("threshold: %.2f"),threshold/100.0f);
- tipS[len-1]='\0';
+ tsnprintf_s(tipS, len, _TRUNCATE, _l("threshold: %.2f"), threshold/100.0f);
  return true;
 }

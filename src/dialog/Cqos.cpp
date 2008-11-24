@@ -71,10 +71,12 @@ void TmiscPage::translate(void)
 
 void TmiscPage::getTip(char_t *tipS,size_t len)
 {
- tsprintf(tipS,_l("IDCT: %s"),Tlibavcodec::idctNames[cfgGet(IDFF_idct)]);
- if (cfgGet(IDFF_grayscale)) strcatf(tipS,_l("\nGrayscale"));
+ tsnprintf_s(tipS, len, _TRUNCATE, _l("IDCT: %s"), Tlibavcodec::idctNames[cfgGet(IDFF_idct)]);
+ if (cfgGet(IDFF_grayscale))
+  strncatf(tipS, len, _l("\nGrayscale"));
  int bugs=cfgGet(IDFF_workaroundBugs);
- if (bugs && bugs!=FF_BUG_AUTODETECT) strcatf(tipS,_l("\nBugs workaround"));
+ if (bugs && bugs!=FF_BUG_AUTODETECT)
+  strncatf(tipS, len, _l("\nBugs workaround"));
 }
 
 TqosPage::TqosPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)

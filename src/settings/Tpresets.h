@@ -28,7 +28,8 @@ public:
  void storePreset(Tpreset *preset);
  bool removePreset(const char_t *presetName);
  void saveRegAll(void);
- void nextUniqueName(Tpreset *preset),nextUniqueName(char_t *presetName);
+ void nextUniqueName(Tpreset *preset);
+ void nextUniqueName(char_t *presetName, size_t buflen);
 };
 
 struct TpresetVideo;

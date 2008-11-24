@@ -31,7 +31,8 @@ void TaudioSwitcherPage::init(void)
      char_t descr[250];
      if (deciA->getStreamDescr(i,descr,250)==S_OK)
       {
-       char_t stream[256];tsprintf(stream,_l("%u. %s"),i,descr);
+       char_t stream[256];
+       tsnprintf_s(stream, countof(stream), _TRUNCATE, _l("%u. %s"),i,descr);
        cbxAdd(IDC_CBX_AUDIOSWITCHER,stream);
       }
     }

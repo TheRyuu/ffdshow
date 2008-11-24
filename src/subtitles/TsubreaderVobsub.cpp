@@ -33,8 +33,8 @@ TsubreaderVobsub::TsubreaderVobsub(Tstream &f,const char_t *flnm,IffdshowBase *I
  if (flnm)
   {
    char_t dsk[MAX_PATH],dir[MAX_PATH],name[MAX_PATH];
-   _splitpath(flnm,dsk,dir,name,NULL);
-   _makepath(flnm2,dsk,dir,name,NULL);
+   _splitpath_s(flnm,dsk,MAX_PATH,dir,MAX_PATH,name,MAX_PATH,NULL,0);
+   _makepath_s(flnm2,MAX_PATH,dsk,dir,name,NULL);
   }
  else
   flnm2[0]='\0';
@@ -64,7 +64,7 @@ int TsubreaderVobsub::findlang(int langname)
  if (vobsub->ok && spu && langname!=0)
   {
    char_t langS[3]=_l("  ");
-   strncpy(langS,text<char_t>((const char*)&langname),2);
+   _tcsncpy(langS, (const char_t *)text<char_t>((const char*)&langname),2);
    for (unsigned int i=0;i<vobsub->spu_streams_size;i++)
     if (vobsub->spu_streams[i].id && stricmp(langS,vobsub->spu_streams[i].id)==0)
      return i;

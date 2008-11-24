@@ -99,10 +99,10 @@ bool TconvolverSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
  tipS[0]='\0';
  if (mappingMode==0)
-  if (file[0]) tsnprintf(tipS,len,_l("Impulse file: %s"),file);
+  if (file[0]) tsnprintf_s(tipS, len, _TRUNCATE, _l("Impulse file: %s"), file);
  else
   {
-   if (fileL[0]) tsnprintf(tipS,len,_l("%s channel impulse file: %s"),TsampleFormat::getSpeakerName(SPEAKER_FRONT_LEFT),fileL);
+   if (fileL[0]) tsnprintf_s(tipS, len, _TRUNCATE, _l("%s channel impulse file: %s"),TsampleFormat::getSpeakerName(SPEAKER_FRONT_LEFT),fileL);
    if (fileR[0]) strncatf(tipS,len,_l("\n%s channel impulse file: %s"),TsampleFormat::getSpeakerName(SPEAKER_FRONT_RIGHT),fileR);
    if (fileC[0]) strncatf(tipS,len,_l("\n%s channel impulse file: %s"),TsampleFormat::getSpeakerName(SPEAKER_FRONT_CENTER),fileC);
    if (fileLFE[0]) strncatf(tipS,len,_l("\n%s channel impulse file: %s"),TsampleFormat::getSpeakerName(SPEAKER_LOW_FREQUENCY),fileLFE);

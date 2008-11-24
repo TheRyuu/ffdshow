@@ -70,6 +70,6 @@ const int* TdolbyDecoderSettings::getResets(unsigned int pageId)
 
 bool TdolbyDecoderSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
- tsnprintf(tipS,len,_l("delay: %i ms"),delay);
+ tsnprintf_s(tipS, len, _TRUNCATE, _l("delay: %i ms"), delay);
  return true;
 }

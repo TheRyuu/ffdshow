@@ -26,7 +26,7 @@
 
 Tinifile::Tinifile(const char_t *Iflnm,int Iencoding):CurProfile(NULL)
 {
- strcpy(filename,Iflnm);
+ ff_strncpy(filename, Iflnm, countof(filename));
  encoding=Iencoding==-1?(sizeof(char_t)==sizeof(char)?Tstream::ENC_ASCII:Tstream::ENC_LE16):Iencoding;
 }
 Tinifile::~Tinifile()
@@ -344,7 +344,7 @@ void Tinifile::PROFILE_CopyEntry( LPTSTR buffer, LPCTSTR value, size_t len, BOOL
         if (value[1] && (value[strlen(value)-1] == *value)) quote = *value++;
     }
 
-    strncpy( buffer, value, len );
+    _tcsncpy( buffer, value, len );
     if (quote && (len >= (int)strlen(value))) buffer[strlen(buffer)-1] = '\0';
 }
 
@@ -647,7 +647,7 @@ INT Tinifile::PROFILE_GetSectionNames( LPTSTR buffer, size_t len )
             l = strlen(section->name)+1;
             if (l > f) {
                 if (f>0) {
-                    strncpy(buf, section->name, f-1);
+                    _tcsncpy(buf, section->name, f-1);
                     buf += f-1;
                     *buf++='\0';
                 }
@@ -724,7 +724,7 @@ int Tinifile::PROFILE_GetPrivateProfileString( LPCTSTR section, LPCTSTR entry,LP
             LPTSTR pp;
 
 	    pp = (LPTSTR)malloc((l + 1) * sizeof(char_t));
-	    strncpy(pp, def_val, l);
+	    _tcsncpy(pp, def_val, l);
 	    pp[l] = '\0';
             pDefVal = pp;
 	}
@@ -739,7 +739,7 @@ int Tinifile::PROFILE_GetPrivateProfileString( LPCTSTR section, LPCTSTR entry,LP
 	    /* PROFILE_GetString already handles the 'entry == NULL' case */
             ret = PROFILE_GetString( section, entry, pDefVal, buffer, len );
     } else {
-       strncpy( buffer, pDefVal, len );
+       _tcsncpy( buffer, pDefVal, len );
        ret = (INT)strlen( buffer );
     }
 

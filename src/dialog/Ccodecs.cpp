@@ -347,7 +347,7 @@ INT_PTR TcodecsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          {
           NMLVGETINFOTIP *nmit=(NMLVGETINFOTIP*)lParam;
           if (nmit->iItem!=-1 && nmit->iSubItem==0)
-           strncpy(nmit->pszText,formats[nmit->iItem].hint,nmit->cchTextMax);
+           ff_strncpy(nmit->pszText,formats[nmit->iItem].hint,nmit->cchTextMax);
           return TRUE;
          }
         case LVN_ITEMCHANGED:

@@ -443,7 +443,7 @@ STDMETHODIMP TffdshowDec::notifyParamsChanged(void)
 STDMETHODIMP TffdshowDec::renameActivePreset(const char_t *newName)
 {
  if (!newName) return E_POINTER;
- if (strlen(newName)>260) return E_OUTOFMEMORY;
+ if (strlen(newName)>MAX_PATH) return E_OUTOFMEMORY;
  int res=stricmp(presetSettings->presetName,globalSettings->defaultPreset);
  strcpy(presetSettings->presetName,newName);
  if (res==0) putParamStr(IDFF_defaultPreset,newName);
@@ -785,19 +785,19 @@ STDMETHODIMP TffdshowDec::getShortDescription(char_t *buf,int buflen)
    buf[0]='\0';
    return E_UNEXPECTED;
   }
- int len=tsnprintf(buf,buflen,_l("ffdshow %s: "),FFDSHOW_VER);
+ int len = tsnprintf_s(buf, buflen, _TRUNCATE, _l("ffdshow %s: "),FFDSHOW_VER);
  buf+=len;buflen-=len;
  const TfilterIDFFs *filters;getFilterIDFFs(activepresetname,&filters);
  for (TfilterIDFFs::const_iterator f=filters->begin();f!=filters->end() && buflen>0;f++)
   if (f->idff->is && getParam2(f->idff->is))
    {
-    len=tsnprintf(buf,buflen,_l("%s "),f->idff->name);
+    len=tsnprintf_s(buf, buflen, _TRUNCATE, _l("%s "),f->idff->name);
     buf+=len;buflen-=len;
    }
  for (const TfilterIDFF *f=getNextFilterIDFF();f && f->name && buflen>0;f++)
   if (f->is && getParam2(f->is))
    {
-    len=tsnprintf(buf,buflen,_l("%s "),f->name);
+    len=tsnprintf_s(buf, buflen, _TRUNCATE,_l("%s "),f->name);
     buf+=len;buflen-=len;
    }
  buf[-1]='\0';

@@ -240,7 +240,7 @@ HRESULT TimgFilterBitmap::process(TfilterQueue::iterator it,TffPict &pict,const 
 
    if (!bitmap || cspChanged || stricmp(oldflnm,cfg->flnm)!=0)
     {
-     strcpy(oldflnm,cfg->flnm);
+     ff_strncpy(oldflnm, cfg->flnm, countof(oldflnm));
      if (bitmap) delete bitmap;
      bitmap=new TffPict(csp2,cfg->flnm,bitmapbuf,deci);
      for (int i=0;i<3;i++)

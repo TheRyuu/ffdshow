@@ -288,9 +288,9 @@ STDMETHODIMP TffdshowDecVideo::drawOSD(int px,int py,const char_t *text)
  if (!text) return E_POINTER;
  globalSettings->osd.userPx=px;globalSettings->osd.userPy=py;
  if (strlen(text)>2048)
-  strncpy(globalSettings->osd.user,text,2048);
+  ff_strncpy(globalSettings->osd.user, text, countof(globalSettings->osd.user));
  else
-  strcpy(globalSettings->osd.user,text);
+  ff_strncpy(globalSettings->osd.user, text, countof(globalSettings->osd.user));
  return S_OK;
 }
 STDMETHODIMP TffdshowDecVideo::calcMeanQuant(float *quant)

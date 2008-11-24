@@ -123,8 +123,8 @@ INT_PTR TpresetAutoloadDlgBase::TitemsWindow::msgProc(UINT uMsg, WPARAM wParam, 
        if (idx>=0)
         {
          if (item.val[0]!='\0')
-          strncat(item.val,_l(";"),countof(item.val));
-         strncat(item.val,mitems[idx],countof(item.val));
+          strncat_s(item.val, countof(item.val), _l(";"), _TRUNCATE);
+         strncat_s(item.val, countof(item.val), mitems[idx], _TRUNCATE);
          HWND hed=GetDlgItem(m_hwnd,LOWORD(wParam)-1);
          SetWindowText(hed,item.val);
          size_t len=strlen(item.val);
@@ -181,7 +181,8 @@ void TpresetAutoloadDlgBase::init(void)
  translate();
  const char_t *capt=tr->translate(m_hwnd,dialogId,0,NULL);
  if (capt && capt[0]) setWindowText(m_hwnd,capt);
- char_t presetname[260];deciD->getActivePresetName(presetname,260);
+ char_t presetname[MAX_PATH];
+ deciD->getActivePresetName(presetname, countof(presetname));
  setText(IDC_LBL_AUTOLOAD,_(IDC_LBL_AUTOLOAD,_l("Preset '%s' will be autoloaded ...")),presetname);
 
  itemsw=new TitemsWindow(deci,m_hwnd,items);

@@ -9,6 +9,7 @@ class TinfoPageDec :public TconfPageDec
 private:
  HWND hlv;
  TinfoBase *info;
+ char_t pszTextBuf[1024];
  struct Titem
   {
    Titem(void):val(NULL),wasChange(1) {}

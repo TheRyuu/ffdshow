@@ -146,25 +146,29 @@ bool TpostprocSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
  if (isCustom)
   {
-   tsprintf(tipS,_l("custom: %s%s%s%s%s%s"),custom&LUM_V_DEBLOCK?_l("luma deblock (V),"):_l(""),custom&LUM_H_DEBLOCK?_l("luma deblock (H),"):_l(""),custom&CHROM_V_DEBLOCK?_l("chroma deblock (V),"):_l(""),custom&CHROM_H_DEBLOCK?_l("chroma deblock (H),"):_l(""),custom&LUM_DERING?_l("luma dering,"):_l(""),custom&CHROM_DERING?_l("chroma dering,"):_l(""));
-   char_t *c=strrchr(tipS,',');if (c) *c='\n'; else strcat(tipS,_l("\n"));
+   tsnprintf_s(tipS, len, _TRUNCATE,_l("custom: %s%s%s%s%s%s"),custom&LUM_V_DEBLOCK?_l("luma deblock (V),"):_l(""),custom&LUM_H_DEBLOCK?_l("luma deblock (H),"):_l(""),custom&CHROM_V_DEBLOCK?_l("chroma deblock (V),"):_l(""),custom&CHROM_H_DEBLOCK?_l("chroma deblock (H),"):_l(""),custom&LUM_DERING?_l("luma dering,"):_l(""),custom&CHROM_DERING?_l("chroma dering,"):_l(""));
+   char_t *c=strrchr(tipS,',');
+   if (c)
+    *c='\n';
+   else
+    strncat_s(tipS, len, _l("\n"), _TRUNCATE);
   }
  else
   {
-   strcpy(tipS,_l("presets: "));
-   strcatf(tipS,_l("strength %i"),qual);
-   if (autoq) strcat(tipS,_l(" automatic"));
-   strcat(tipS,_l("\n"));
+   ff_strncpy(tipS, _l("presets: "), len);
+   strncatf(tipS, len,_l("strength %i"),qual);
+   if (autoq)
+    strncat_s(tipS, len, _l(" automatic"), _TRUNCATE);
+   strncat_s(tipS, len, _l("\n"), _TRUNCATE);
   }
- //if (levelFixChrom || levelFixLum) strcat(tipS,_l("level fix\n"));
- strcatf(tipS,_l("processing strength: %i\n"),deblockStrength);
+ strncatf(tipS, len, _l("processing strength: %i\n"),deblockStrength);
  switch (method)
   {
-   case 0:strcat(tipS,_l("mplayer"));break;
-   case 1:strcat(tipS,_l("Nic's"));break;
-   case 2:strcat(tipS,nicFirst?_l("Nic's + mplayer"):_l("mplayer + Nic's"));break;
-   case 4:strcat(tipS,_l("SPP"));break;
-   case 5:strcat(tipS,_l("fast SPP"));break;
+   case 0:strncat_s(tipS, len, _l("mplayer"), _TRUNCATE);break;
+   case 1:strncat_s(tipS, len, _l("Nic's"), _TRUNCATE);break;
+   case 2:strncat_s(tipS, len, nicFirst ? _l("Nic's + mplayer") : _l("mplayer + Nic's"), _TRUNCATE);break;
+   case 4:strncat_s(tipS, len, _l("SPP"), _TRUNCATE);break;
+   case 5:strncat_s(tipS, len, _l("fast SPP"), _TRUNCATE);break;
   }
  return true;
 }

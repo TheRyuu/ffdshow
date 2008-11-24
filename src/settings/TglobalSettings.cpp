@@ -94,7 +94,7 @@ TglobalSettingsBase::TglobalSettingsBase(const Tconfig *Iconfig,int Imode,const 
 void TglobalSettingsBase::load(void)
 {
  char_t rkey[MAX_PATH];
- tsprintf(rkey,FFDSHOW_REG_PARENT _l("\\%s"),reg_child);
+ tsnprintf_s(rkey, countof(rkey), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s"), reg_child);
  TregOpRegRead tHKCU(HKEY_CURRENT_USER,rkey);
  reg_op(tHKCU);
  TregOpRegRead tHKLM(HKEY_LOCAL_MACHINE,rkey);
@@ -117,7 +117,8 @@ void TglobalSettingsBase::load(void)
 }
 void TglobalSettingsBase::save(void)
 {
- char_t rkey[MAX_PATH];tsprintf(rkey,FFDSHOW_REG_PARENT _l("\\%s"),reg_child);
+ char_t rkey[MAX_PATH];
+ tsnprintf_s(rkey, countof(rkey), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s"), reg_child);
  TregOpRegWrite tHKCU(HKEY_CURRENT_USER,rkey);
  reg_op(tHKCU);
  reg_op_codec(tHKCU,NULL);
@@ -255,7 +256,7 @@ void TglobalSettingsBase::addToCompatiblityList(char_t *list, const char_t *exe,
  ffstring result;
  for (strings::const_iterator b=listList.begin();b!=listList.end();b++)
   result+=*b+delimit;
- strncpy(list,result.c_str(),std::min<size_t>(MAX_COMPATIBILITYLIST_LENGTH,result.size()+1));
+ ff_strncpy(list, result.c_str(), MAX_COMPATIBILITYLIST_LENGTH);
  save();
 }
 
@@ -275,7 +276,7 @@ TglobalSettingsDec::TglobalSettingsDec(const Tconfig *Iconfig,int Imode,const ch
  addOptions(iopts);
  static const TstrOption sopts[]=
   {
-   IDFF_defaultPreset,(TstrVal)&TglobalSettingsDec::defaultPreset,260,0,_l(""),0,
+   IDFF_defaultPreset,(TstrVal)&TglobalSettingsDec::defaultPreset,MAX_PATH,0,_l(""),0,
      _l("activePreset"),FFPRESET_DEFAULT,
    0
   };
@@ -1035,7 +1036,7 @@ TglobalSettingsDecAudio::TglobalSettingsDecAudio(const Tconfig *Iconfig,int Imod
  addOptions(iopts);
  static const TstrOption sopts[]=
   {
-   IDFF_winamp2dir             ,(TstrVal)&TglobalSettingsDecAudio::winamp2dir    ,MAX_PATH,0     ,_l(""),0,
+   IDFF_winamp2dir             ,(TstrVal)&TglobalSettingsDecAudio::winamp2dir    ,MAX_PATH - 21 ,0     ,_l(""),0,
      _l("winamp2dir"),NULL,
    0
   };

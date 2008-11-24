@@ -308,56 +308,56 @@ bool TresizeAspectSettings::getTip(unsigned int pageId,char_t *buf,size_t len)
    switch (_if)
     {
      case 0:
-      strcat(tipS,_l("always"));
+      strncat_s(tipS, countof(tipS), _l("always"), _TRUNCATE);
       break;
      case 1:
-      strcatf(tipS,_l("if source width is %s %i %s source height is %s %i"),getXcondStr(xcond),xval,getXYcondStr(xycond),getXcondStr(ycond),yval);
+      strncatf(tipS, countof(tipS), _l("if source width is %s %i %s source height is %s %i"),getXcondStr(xcond),xval,getXYcondStr(xycond),getXcondStr(ycond),yval);
       break;
      case 2:
-      strcatf(tipS,_l("if number of pixels is %s %i"),getPixCondStr(pixcond),pixval);
+      strncatf(tipS, countof(tipS), _l("if number of pixels is %s %i"),getPixCondStr(pixcond),pixval);
       break;
     }
-   strcat(tipS,_l(" "));
+   strncat_s(tipS, countof(tipS), _l(" "), _TRUNCATE);
    switch (mode)
     {
      case 0:
-      strcatf(tipS,_l("to size %ix%i"),dx,dy);
+      strncatf(tipS, countof(tipS),_l("to size %ix%i"),dx,dy);
       break;
      case 1:
-      strcatf(tipS,_l("to aspect ratio %i:%i"),a1,a2);
+      strncatf(tipS, countof(tipS),_l("to aspect ratio %i:%i"),a1,a2);
       break;
      case 2:
-      strcatf(tipS,_l("to next multiply of %i"),multOf);
+      strncatf(tipS, countof(tipS),_l("to next multiply of %i"),multOf);
       break;
      case 3:
-      strcatf(tipS,_l("by %g"),mult1000/1000.0f);
+      strncatf(tipS, countof(tipS),_l("by %g"),mult1000/1000.0f);
       break;
      case 4:
-      strcatf(tipS,_l("to horizontal size %i,vertical size=auto"),dx);
+      strncatf(tipS, countof(tipS),_l("to horizontal size %i,vertical size=auto"),dx);
       break;
     }
-   strcat(tipS,_l("\nAspect ratio: "));
+   strncat_s(tipS, countof(tipS), _l("\nAspect ratio: "), _TRUNCATE);
    switch (isAspect)
     {
      case 0:
-      strcat(tipS,_l("no change"));
+      strncat_s(tipS, countof(tipS), _l("no change"), _TRUNCATE);
       break;
      case 1:
-      strcat(tipS,_l("keeping original aspect ratio"));
+      strncat_s(tipS, countof(tipS), _l("keeping original aspect ratio"), _TRUNCATE);
       break;
      case 2:
-      strcatf(tipS,_l("set to %3.2f:1"),aspectRatio/65536.0f);
+      strncatf(tipS, countof(tipS),_l("set to %3.2f:1"),aspectRatio/65536.0f);
       break;
     }
-   strncpy(buf,tipS,len);
+   ff_strncpy(buf,tipS,len);
    buf[len-1]='\0';
   }
  else if (pageId==2)
   {
    if (areBorders())
-    tsnprintf(buf,len,_l("%s borders %i%s,%i%s"),bordersInside?_l("Inside"):_l("Outside"),bordersUnits==0?bordersPercentX:bordersPixelsX,bordersUnits==0?_l("%"):_l(" pixels"),bordersUnits==0?bordersPercentY:bordersPixelsY,bordersUnits==0?_l("%"):_l(" pixels"));
+    tsnprintf_s(buf, len, _TRUNCATE, _l("%s borders %i%s,%i%s"), bordersInside?_l("Inside"):_l("Outside"),bordersUnits==0?bordersPercentX:bordersPixelsX,bordersUnits==0?_l("%"):_l(" pixels"),bordersUnits==0?bordersPercentY:bordersPixelsY,bordersUnits==0?_l("%"):_l(" pixels"));
    else
-    tsnprintf(buf,len,_l("No borders"));
+    tsnprintf_s(buf, len, _TRUNCATE,_l("No borders"));
    buf[len-1]='\0';
   }
  else if (pageId==3)
@@ -367,24 +367,24 @@ bool TresizeAspectSettings::getTip(unsigned int pageId,char_t *buf,size_t len)
      if (methodLuma==methodChroma || methodsLocked)
       {
        char_t algParam[256];
-       tsnprintf(buf,len,_l("Method: %s%s\n"),methodsProps[methodLuma].name,printSwsParams(algParam,methodLuma,bicubicLumaParam,gaussLumaParam,lanczosLumaParam));
+       tsnprintf_s(buf, len, _TRUNCATE,_l("Method: %s%s\n"),methodsProps[methodLuma].name,printSwsParams(algParam,methodLuma,bicubicLumaParam,gaussLumaParam,lanczosLumaParam));
       }
      else
       {
        char_t algParam[256];
-       tsnprintf(buf,len,_l("Luma method: %s%s\n"),methodsProps[methodLuma].name,printSwsParams(algParam,methodLuma,bicubicLumaParam,gaussLumaParam,lanczosLumaParam));
+       tsnprintf_s(buf, len, _TRUNCATE,_l("Luma method: %s%s\n"),methodsProps[methodLuma].name,printSwsParams(algParam,methodLuma,bicubicLumaParam,gaussLumaParam,lanczosLumaParam));
        strncatf(buf,len,_l("Chroma method: %s%s\n"),methodsProps[methodChroma].name,printSwsParams(algParam,methodChroma,bicubicChromaParam,gaussChromaParam,lanczosChromaParam));
       }
      strncatf(buf,len,_l("Luma gaussian blur:%3.2f, luma sharpen:%3.2f\nChroma gaussian blur:%3.2f, chroma sharpen:%3.2f"),GblurLum/100.0f,sharpenLum/100.0f,GblurChrom/100.0f,sharpenChrom/100.0f);
     }
    else if (methodsProps[methodLuma].library==LIB_SIMPLE)
     {
-     tsnprintf(buf,len,_l("Method: %s"),methodsProps[methodLuma].name);
+     tsnprintf_s(buf, len, _TRUNCATE,_l("Method: %s"),methodsProps[methodLuma].name);
      if (methodLuma==METHOD_WARPED)
       strncatf(buf,len,_l(", horizontal warp: %-5.3f, vertical warp: %-5.3f"),simpleWarpXparam/1000.0f,simpleWarpYparam/1000.0f);
     }
    else
-    tsnprintf(buf,len,_l("Method: %s"),methodsProps[methodLuma].name);
+    tsnprintf_s(buf, len, _TRUNCATE,_l("Method: %s"),methodsProps[methodLuma].name);
    buf[len-1]='\0';
   }
  return true;

@@ -134,9 +134,9 @@ void TresizeSettingsPage::param2dlg(const TparamsIDs &ids)
  SendDlgItemMessage(m_hwnd,ids.idc_tbr,TBM_SETPAGESIZE,0,step2);
  tbrSet(ids.idc_tbr,pos);
  if (realPos==0)
-  tsprintf(pomS,_l("%s %s"),_(ids.idc_lbl,name),_(ids.idc_lbl,_l("default")));
+  tsnprintf_s(pomS, countof(pomS), _TRUNCATE,_l("%s %s"),_(ids.idc_lbl,name),_(ids.idc_lbl,_l("default")));
  else
-  tsprintf(pomS,_l("%s %3.2f"),_(ids.idc_lbl,name),realPos);
+  tsnprintf_s(pomS, countof(pomS), _TRUNCATE, _l("%s %3.2f"), _(ids.idc_lbl,name), realPos);
  setDlgItemText(m_hwnd,ids.idc_lbl,pomS);
 }
 

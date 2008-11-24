@@ -67,14 +67,16 @@ void TdialogSettingsBase::reg_op(TregOp &t)
 void TdialogSettingsBase::load(const Tconfig *config)
 {
  loaded=true;
- char_t key[MAX_PATH];tsprintf(key,FFDSHOW_REG_PARENT _l("\\%s"),reg_child);
+ char_t key[MAX_PATH];
+ tsnprintf_s(key, countof(key), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s"), reg_child);
  TregOpRegRead t(HKEY_CURRENT_USER,key);
  reg_op(t);
  getUILanguage(config->pth,lang);
 }
 void TdialogSettingsBase::save(void)
 {
- char_t key[MAX_PATH];tsprintf(key,FFDSHOW_REG_PARENT _l("\\%s"),reg_child);
+ char_t key[MAX_PATH];
+ tsnprintf_s(key, countof(key), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s"), reg_child);
  TregOpRegWrite t(HKEY_CURRENT_USER,key);
  reg_op(t);
 
@@ -229,8 +231,9 @@ void getUILanguage(const char_t* pth, char_t* lang)
    TregOpRegRead tNSI(HKEY_LOCAL_MACHINE,FFDSHOW_REG_PARENT _l("\\") FFDSHOW);
    char_t langId[MAX_PATH];
    tNSI._REG_OP_S(0,_l("lang"),langId,MAX_PATH,_l("1033"));
-   char_t langfilesmask[MAX_PATH];tsprintf(langfilesmask,_l("%s.*"),langId);
-   char_t lngMask[MAX_PATH];_makepath(lngMask,NULL,pth,_l("languages\\ffdshow"),langfilesmask);
+   char_t langfilesmask[MAX_PATH];
+   tsnprintf_s(langfilesmask, countof(langfilesmask), _TRUNCATE, _l("%s.*"), langId);
+   char_t lngMask[MAX_PATH];_makepath_s(lngMask,MAX_PATH,NULL,pth,_l("languages\\ffdshow"),langfilesmask);
    strings langfiles;
    findFiles(lngMask,langfiles,false);
    if (langfiles.size()==0)

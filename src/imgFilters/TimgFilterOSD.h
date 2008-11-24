@@ -81,7 +81,7 @@ private:
  struct Tosds : public std::vector<TosdLine*>
   {
   private:
-   char_t name[260];
+   char_t name[MAX_PATH];
    FILE *f;int oldSave;char_t oldSaveFlnm[MAX_PATH];
    ffstring startupFormat;int startupDuration;
    char_t oldFormat[256];

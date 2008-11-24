@@ -74,6 +74,6 @@ const int* TlfeCrossoverSettings::getResets(unsigned int pageId)
 
 bool TlfeCrossoverSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
- tsnprintf(tipS,len,_l("lowpass frequency: %i\ngain: %.2f"),freq,gain/100.0f);
+ tsnprintf_s(tipS, len, _TRUNCATE, _l("lowpass frequency: %i\ngain: %.2f"), freq, gain/100.0f);
  return true;
 }

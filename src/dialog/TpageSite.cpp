@@ -102,7 +102,7 @@ INT_PTR TpageSite::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
      if (idcaption)
       {
        LoadString(hi,idcaption,caption,256);
-       strcat(caption,_l(" configuration"));
+       strncat_s(caption, countof(caption), _l(" configuration"), _TRUNCATE);
       }
      SendMessage(m_hwnd,WM_SETICON,ICON_BIG,(LPARAM)hicon);
      int sx=0,sy=0;

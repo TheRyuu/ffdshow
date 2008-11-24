@@ -25,13 +25,13 @@
 #include "ffdshow_mediaguids.h"
 
 // registry key info from RadLight Filter Manager v1.3 by RadScorpion
-static void getFilterReg(const CLSID &clsid,char_t *reg)
+static void getFilterReg(const CLSID &clsid,char_t *reg, size_t len)
 {
  LPOLESTR sclsidW;
  StringFromIID(clsid,&sclsidW);
  //char sclsid[MAX_PATH];
  //WideCharToMultiByte(CP_ACP,0,sclsidW,-1,sclsid,MAX_PATH,NULL,NULL);
- tsprintf(reg,_l("\\CLSID\\{083863F1-70DE-11d0-BD40-00A0C911CE86}\\Instance\\%s"),(const char_t*)text<char_t>(sclsidW));
+ tsnprintf_s(reg, len, _TRUNCATE, _l("\\CLSID\\{083863F1-70DE-11d0-BD40-00A0C911CE86}\\Instance\\%s"),(const char_t*)text<char_t>(sclsidW));
  CoTaskMemFree(sclsidW);
 }
 struct TfilterReg
@@ -61,7 +61,8 @@ HRESULT getFilterMerit(HKEY hive,const char_t *reg,DWORD *merit)
 HRESULT getFilterMerit(const CLSID &clsid,DWORD *merit)
 {
  if (!merit) return E_POINTER;
- char_t reg[MAX_PATH];getFilterReg(clsid,reg);
+ char_t reg[MAX_PATH];
+ getFilterReg(clsid, reg, countof(reg));
  return getFilterMerit(HKEY_CLASSES_ROOT,reg,merit);
 }
 
@@ -85,7 +86,8 @@ HRESULT setFilterMerit(HKEY hive,const char_t *reg,DWORD merit)
 }
 HRESULT setFilterMerit(const CLSID &clsid,DWORD merit)
 {
- char_t reg[MAX_PATH];getFilterReg(clsid,reg);
+ char_t reg[MAX_PATH];
+ getFilterReg(clsid, reg, countof(reg));
  return setFilterMerit(HKEY_CLASSES_ROOT,reg,merit);
 }
 

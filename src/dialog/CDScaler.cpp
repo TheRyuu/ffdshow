@@ -36,9 +36,9 @@ void TDScalerPageFlt::cfg2dlg(void)
   {
    cbxClear(IDC_CBX_DSCALER_FLTFLNM);
    char_t dsk[MAX_PATH],dir[MAX_PATH];
-   _splitpath(fltflnm,dsk,dir,NULL,NULL);
+   _splitpath_s(fltflnm,dsk,MAX_PATH,dir,MAX_PATH,NULL,0,NULL,0);
    char_t fltmask[MAX_PATH];
-   _makepath(fltmask,dsk,dir,_l("FLT_*"),_l("dll"));
+   _makepath_s(fltmask,MAX_PATH,dsk,dir,_l("FLT_*"),_l("dll"));
    strings fltflnms;
    findFiles(fltmask,fltflnms);
    for (strings::const_iterator i=fltflnms.begin();i!=fltflnms.end();i++)

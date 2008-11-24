@@ -76,7 +76,7 @@ bool Twinamp2settings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
  if (flnm[0] && modulename[0])
   {
-   tsnprintf(tipS,len,_l("%s: %s"),flnm,modulename);
+   tsnprintf_s(tipS, len, _TRUNCATE,_l("%s: %s"),flnm,modulename);
    return true;
   }
  else

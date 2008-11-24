@@ -26,9 +26,10 @@
 //============================== Twinamp2 ====================================
 Twinamp2::Twinamp2(const char_t *Iwinampdir)
 {
- strcpy(winampdir,Iwinampdir);
+ ff_strncpy(winampdir,Iwinampdir,countof(winampdir));
  strings files;
- char_t mask[MAX_PATH];_makepath(mask,NULL,winampdir,_l("plugins\\dsp*"),_l("dll"));
+ char_t mask[MAX_PATH];
+ _makepath_s(mask,MAX_PATH,NULL,winampdir,_l("plugins\\dsp*"),_l("dll"));
  findFiles(mask,files);
  for (strings::const_iterator flnm=files.begin();flnm!=files.end();flnm++)
   {
@@ -74,8 +75,8 @@ Twinamp2dspDll::Twinamp2dspDll(const ffstring &flnm):refcount(1)
  winampDSPGetHeaderType=NULL;
  hdr=NULL;
  char_t filename[MAX_PATH],name[MAX_PATH],ext[MAX_PATH];
- _splitpath(flnm.c_str(),NULL,NULL,name,ext);
- _makepath(filename,NULL,NULL,name,ext);
+ _splitpath_s(flnm.c_str(),NULL,0,NULL,0,name,MAX_PATH,ext,MAX_PATH);
+ _makepath_s(filename,MAX_PATH,NULL,NULL,name,ext);
  // DSP stacker, Adapt-X and Vst host are not compatible with ffdshow currently. Maybe ffdshow's bug, but I can't help...
  if (   _strnicmp(_l("dsp_stacker.dll"),filename,16)==0
      || _strnicmp(_l("dsp_adaptx.dll"),filename,15)==0
@@ -211,7 +212,8 @@ unsigned int __stdcall Twinamp2dsp::threadProc(void *self0)
  setThreadName(DWORD(-1),"winamp2");
 
  HINSTANCE hi=self->mod->hDllInstance;
- char_t windowName[80];tsprintf(windowName,_l("%s_window%i"),FFDSHOW_WINAMP_CLASS,rand());
+ char_t windowName[80];
+ tsnprintf_s(windowName, countof(windowName), _TRUNCATE, _l("%s_window%i"), FFDSHOW_WINAMP_CLASS, rand());
  HWND h=createInvisibleWindow(hi,FFDSHOW_WINAMP_CLASS,windowName,wndProc,self,NULL);
  self->mod->hwndParent=h;
  if (self->mod->Init(self->mod)==0)

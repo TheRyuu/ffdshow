@@ -115,7 +115,6 @@ const int* TpictPropSettings::getResets(unsigned int pageId)
 
 bool TpictPropSettings::getTip(unsigned int pageId,char_t *buf,size_t buflen)
 {
- tsnprintf(buf,buflen,_l("luma gain:%i, luma offset:%i, gamma:%5.2f, RGB gamma:%.2f,%.2f,%.2f, hue:%i, saturation:%i, colorize strength:%i%s"),lumGain,lumOffset,gammaCorrection/100.0f,gammaCorrectionR/100.0f,gammaCorrectionG/100.0f,gammaCorrectionB/100.0f,hue,saturation,colorizeStrength,levelfix?_l(", luma level fix"):_l(""));
- buf[buflen-1]='\0';
+ tsnprintf_s(buf, buflen, _TRUNCATE, _l("luma gain:%i, luma offset:%i, gamma:%5.2f, RGB gamma:%.2f,%.2f,%.2f, hue:%i, saturation:%i, colorize strength:%i%s"),lumGain,lumOffset,gammaCorrection/100.0f,gammaCorrectionR/100.0f,gammaCorrectionG/100.0f,gammaCorrectionB/100.0f,hue,saturation,colorizeStrength,levelfix?_l(", luma level fix"):_l(""));
  return true;
 }

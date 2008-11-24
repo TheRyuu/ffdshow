@@ -37,7 +37,8 @@ void Tpresets::listRegKeys(strings &l)
  l.clear();
 
  HKEY hKey;
- char_t rkey[MAX_PATH];tsprintf(rkey,FFDSHOW_REG_PARENT _l("\\%s"),reg_child);
+ char_t rkey[MAX_PATH];
+ tsnprintf_s(rkey, countof(rkey), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s"), reg_child);
  RegOpenKeyEx(HKEY_CURRENT_USER,rkey,0,KEY_READ,&hKey);
  for (int i=0,retCode=ERROR_SUCCESS;retCode==ERROR_SUCCESS;i++)
   {
@@ -119,7 +120,7 @@ Tpreset* Tpresets::getPreset(const char_t *presetName,bool create)
 void Tpresets::savePreset(Tpreset *preset,const char_t *presetName)
 {
  if (presetName)
-  strcpy(preset->presetName,presetName);
+  ff_strncpy(preset->presetName, presetName, countof(preset->presetName));
  preset->saveReg();
  storePreset(preset);
 }
@@ -145,19 +146,19 @@ bool Tpresets::removePreset(const char_t *presetName)
 
 void Tpresets::nextUniqueName(Tpreset *preset)
 {
- nextUniqueName(preset->presetName);
+ nextUniqueName(preset->presetName, countof(preset->presetName));
 }
-void Tpresets::nextUniqueName(char_t *presetName)
+void Tpresets::nextUniqueName(char_t *presetName, size_t buflen)
 {
  iterator i=findPreset(presetName);
  if (i==end()) return;
  for (int ii=1;;ii++)
   {
-   char_t pomS[260];
-   tsprintf(pomS,_l("%s %i"),presetName,ii);
+   char_t pomS[MAX_PATH];
+   tsnprintf_s(pomS, countof(pomS), _TRUNCATE, _l("%s %i"),presetName,ii);
    if (findPreset(pomS)==end())
     {
-     strcpy(presetName,pomS);
+     ff_strncpy(presetName, pomS, buflen);
      return;
     }
   }
@@ -174,7 +175,7 @@ void Tpresets::saveRegAll(void)
   if (i->c_str()[0]!='\0' && findPreset(i->c_str())==end())
    {
     char_t presetRegStr[256];
-    tsprintf(presetRegStr,FFDSHOW_REG_PARENT _l("\\%s\\%s"),reg_child,i->c_str());
+    tsnprintf_s(presetRegStr, countof(presetRegStr), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s\\%s"), reg_child, i->c_str());
     RegDeleteKey(HKEY_CURRENT_USER,presetRegStr);
    }
 }
@@ -189,15 +190,13 @@ Tpreset* Tpresets::getAutoPreset0(TautoPresetProps &aprops,bool filefirst)
  if (filefirst)
   {
    const char_t *AVIname=aprops.getSourceFullFlnm();
-   char_t drive[MAX_PATH],path[MAX_PATH],name[MAX_PATH];
-   _splitpath(AVIname,drive,path,name,NULL);
-   char_t presetFlnm[1024];
-   _makepath(presetFlnm,drive,path,name,presetext);
-   if (fileexists(presetFlnm))
+   ffstring presetFlnm;
+   changepathext(AVIname, presetext, presetFlnm);
+   if (fileexists(presetFlnm.c_str()))
     {
      Tpreset *preset=newPreset(AVIname);
-     preset->loadFile(presetFlnm);
-     Tpreset::normalizePresetName(preset->presetName,AVIname);
+     preset->loadFile(presetFlnm.c_str());
+     Tpreset::normalizePresetName(preset->presetName, AVIname, countof(preset->presetName));
      preset->autoLoadedFromFile=true;
      iterator i=findPreset(preset->presetName);
      if (i!=end() && (*i)->autoLoadedFromFile) removePreset(preset->presetName);

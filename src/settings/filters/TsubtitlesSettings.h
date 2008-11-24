@@ -21,7 +21,7 @@ public:
  int posX,posY;
  int align;
  static const char_t *alignments[];
- static void getPosHoriz(int x,char_t *s,Twindow *w,int id),getPosVert(int x,char_t *s,Twindow *w,int id);
+ static void getPosHoriz(int x, char_t *s, Twindow *w, int id, size_t len),getPosVert(int x, char_t *s, Twindow *w, int id, size_t len);
  int isExpand,expandCode;
  void getExpand(int *x,int *y) const;
  static void getExpand(int is,int code,int *x,int *y);

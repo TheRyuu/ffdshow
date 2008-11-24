@@ -243,7 +243,7 @@ TffPict::TffPict(int Icsp,const char_t *flnm,Tbuffer &buf,IffdshowBase *deci)
  init();
  if (!fileexists(flnm)) return;
  char_t ext[MAX_PATH];
- _splitpath(flnm,NULL,NULL,NULL,ext);
+ _splitpath_s(flnm,NULL,0,NULL,0,NULL,0,ext,MAX_PATH);
  if (stricmp(ext,_l(".jpg"))==0 || stricmp(ext,_l(".jpeg"))==0 || stricmp(ext,_l(".png"))==0)
   readLibavcodec(Icsp,flnm,ext,buf,deci);
  else if (stricmp(ext,_l(".bmp"))==0 || stricmp(ext,_l(".gif"))==0)

@@ -27,7 +27,7 @@ void TregOpRegRead::_REG_OP_S(short int id, const char_t *X, char_t *Y, size_t b
  DWORD size=(DWORD)(buflen*sizeof(char_t));
  if ((!hKey || RegQueryValueEx(hKey,X,0,0,(LPBYTE)Y,&size)!=ERROR_SUCCESS) && Z)
   {
-   strcpy(Y,Z);
+   ff_strncpy(Y, Z, buflen);
    return;
   }
  if (multipleLines)
@@ -39,7 +39,7 @@ void TregOpRegRead::_REG_OP_S(short int id, const char_t *X, char_t *Y, size_t b
    while (*bufMULTI_SZ && buf<bufend)
     {
      size_t len = strlen(bufMULTI_SZ);
-     strncpy(buf, bufMULTI_SZ, std::min<size_t>(bufend - buf, len + 1));
+     ff_strncpy(buf, bufMULTI_SZ, bufend - buf);
      bufMULTI_SZ += len + 1;
      buf += len;
      if (buf +2 < bufend)
@@ -49,7 +49,7 @@ void TregOpRegRead::_REG_OP_S(short int id, const char_t *X, char_t *Y, size_t b
    if (buf < bufend)
     *buf = 0;
    else
-    buf[buflen - 1] = 0;
+    Y[buflen - 1] = 0;
   }
 }
 
@@ -61,7 +61,7 @@ void TregOpRegWrite::_REG_OP_S(short int id, const char_t *X, char_t *Y, size_t 
   {
    // from _l("\r\n") to double null terminated strings.
    char_t *bufMULTI_SZ = (char_t *)alloca(sizeof(char_t) * (buflen + 1));
-   strncpy(bufMULTI_SZ, Y, buflen);
+   ff_strncpy(bufMULTI_SZ, Y, buflen);
    bufMULTI_SZ[buflen] = 0;
    strings lines;
    strtok(bufMULTI_SZ, _l("\r\n"), lines);
@@ -70,8 +70,9 @@ void TregOpRegWrite::_REG_OP_S(short int id, const char_t *X, char_t *Y, size_t 
    char_t *bufMULTI_SZend = bufMULTI_SZ + (buflen>0 ? buflen - 1 : 0);
    for (strings::const_iterator l = lines.begin() ; l != lines.end() && bufMULTI_SZpos < bufMULTI_SZend ; l++)
     {
-     strncpy(bufMULTI_SZpos, l->c_str(), std::min<size_t>(l->size(), bufMULTI_SZend - bufMULTI_SZpos));
+     ff_strncpy(bufMULTI_SZpos, l->c_str(), bufMULTI_SZend - bufMULTI_SZpos);
      bufMULTI_SZpos += l->size() + 1;
+     if (bufMULTI_SZend <= bufMULTI_SZpos) break;
     }
    RegSetValueEx(hKey,X,0,REG_MULTI_SZ,(LPBYTE)bufMULTI_SZ,DWORD((bufMULTI_SZpos - bufMULTI_SZ + 1)*sizeof(char_t)));
   }
@@ -137,7 +138,7 @@ void TregOpFileStreamReadBase::processMultipleLines(char_t *Y, size_t buflen, ch
 //============================ TregOpFileStreamWriteBase   ============================
 void TregOpFileStreamWriteBase::processMultipleLines(char_t *Y, size_t buflen, char_t *bufMULTI_SZ, size_t buflenMULTI_SZ)
 {
- strncpy(bufMULTI_SZ, Y, buflenMULTI_SZ - 1);
+ ff_strncpy(bufMULTI_SZ, Y, buflenMULTI_SZ - 1);
  bufMULTI_SZ[buflenMULTI_SZ - 1] = 0;
  strings lines1,lines2;
  strtok(bufMULTI_SZ, _l("%"), lines1,true);
@@ -201,7 +202,7 @@ TregOpStreamRead::TregOpStreamRead(const void *buf,size_t len,char_t sep,bool Il
    if (!s)
     s=end;
    char_t line[256];
-   strncpy(line,cur,s-cur);line[s-cur]='\0';
+   ff_strncpy(line,cur,s-cur);line[s-cur]='\0';
    char_t *ir=strchr(line,'=');
    if (ir)
     {
@@ -217,7 +218,7 @@ void TregOpStreamRead::_REG_OP_S(short int id, const char_t *X, char_t *Y, size_
  if (i==strs.end())
   {
    if (loaddef)
-    strncpy(Y,Z,buflen);
+    ff_strncpy(Y,Z,buflen);
   }
  else
   {
@@ -225,12 +226,12 @@ void TregOpStreamRead::_REG_OP_S(short int id, const char_t *X, char_t *Y, size_
     {
      size_t buflenMULTI_SZ = buflen * 2 + 1;
      char_t *bufMULTI_SZ = (char_t *)alloca(sizeof(char_t) * buflenMULTI_SZ);
-     strncpy(bufMULTI_SZ, i->second.c_str(), buflenMULTI_SZ);
+     ff_strncpy(bufMULTI_SZ, i->second.c_str(), buflenMULTI_SZ);
      processMultipleLines(Y, buflen, bufMULTI_SZ, buflenMULTI_SZ);
     }
    else
     {
-     strncpy(Y,i->second.c_str(),buflen);
+     ff_strncpy(Y,i->second.c_str(),buflen);
     }
   }
  Y[buflen-1]='\0';
@@ -316,7 +317,7 @@ void TregOpIDstreamRead::_REG_OP_S(short int id, const char_t *X, char_t *Y, siz
  Tvals::const_iterator i=vals.find(id);
  if (i == vals.end())
   {
-   strncpy(Y, Z, buflen);
+   ff_strncpy(Y, Z, buflen);
    Y[buflen-1]='\0';
    return;
   }
@@ -326,12 +327,12 @@ void TregOpIDstreamRead::_REG_OP_S(short int id, const char_t *X, char_t *Y, siz
    // To test. Enable image processing in ffdshow encoder and enter AviSynth script (preset name=ffdshowenc).
    size_t buflenMULTI_SZ = buflen * 2 + 1;
    char_t *bufMULTI_SZ = (char_t *)alloca(sizeof(char_t) * buflenMULTI_SZ);
-   strncpy(bufMULTI_SZ, i->second.s.c_str(), buflenMULTI_SZ);
+   ff_strncpy(bufMULTI_SZ, i->second.s.c_str(), buflenMULTI_SZ);
    processMultipleLines(Y, buflen, bufMULTI_SZ, buflenMULTI_SZ);
   }
  else
   {
-   strncpy(Y, i->second.s.c_str(), buflen);
+   ff_strncpy(Y, i->second.s.c_str(), buflen);
    Y[buflen-1]='\0';
   }
 }
@@ -399,7 +400,8 @@ bool regExport(Tstream &f,HKEY hive,const char_t *key,bool unicode)
  int i;
  for (i=0;RegEnumKey(hkey,i,subkey,256)==ERROR_SUCCESS;i++)
   {
-   char_t key2[256];tsprintf(key2,_l("%s\\%s"),key,subkey);
+   char_t key2[256];
+   tsnprintf_s(key2, countof(key2), _TRUNCATE, _l("%s\\%s"),key,subkey);
    regExport(f,hive,key2,unicode);
   }
  char_t valuename[256];DWORD valuenamelen=256;

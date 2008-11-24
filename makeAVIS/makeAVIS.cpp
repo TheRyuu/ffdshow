@@ -532,7 +532,8 @@ void convertToAVI(const AVS_VideoInfo* vi,AVS_Clip *clip,int len,const char *scr
     }
     else
     {
-      strcpy(aviflnm2,aviflnm);
+      strncpy(aviflnm2, aviflnm, MAX_PATH);
+      aviflnm2[MAX_PATH - 1] = 0;
       tempavi=false;
     }
     if (FAILED(AVIFileOpen(&avifile,aviflnm2,OF_CREATE|OF_WRITE,NULL))) throw EmakeAVIS(3);
@@ -1104,9 +1105,23 @@ int parsecl(int argc, char **argv)
       {
         switch(argv[i][1])
         {
-        case 'i': i++; strncpy(avsflnm, argv[i], MAX_PATH); bHasIn = true; break;
-        case 'v': i++; strncpy(aviflnm, argv[i], MAX_PATH); bHasOut = true; break;
-        case 'a': i++; strncpy(aviflnm, argv[i], MAX_PATH); bHasOut = true; break;
+        case 'i':
+         i++;
+         strncpy(avsflnm, argv[i], MAX_PATH);
+         avsflnm[MAX_PATH - 1] = 0;
+         bHasIn = true; break;
+        case 'v':
+         i++;
+         strncpy(aviflnm, argv[i], MAX_PATH);
+         aviflnm[MAX_PATH - 1] = 0;
+         bHasOut = true;
+         break;
+        case 'a':
+         i++;
+         strncpy(aviflnm, argv[i], MAX_PATH);
+         aviflnm[MAX_PATH - 1] = 0;
+         bHasOut = true;
+         break;
         case 'c':
           i++;
           isForceoutcsp = 1;

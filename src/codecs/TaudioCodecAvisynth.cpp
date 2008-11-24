@@ -42,7 +42,7 @@ TaudioCodecAvisynth::~TaudioCodecAvisynth()
 
 void TaudioCodecAvisynth::getInputDescr1(char_t *buf,size_t buflen) const
 {
- strncpy(buf,_l("avisynth"),buflen);
+ ff_strncpy(buf,_l("avisynth"),buflen);
  buf[buflen-1]='\0';
 }
 HRESULT TaudioCodecAvisynth::decode(TbyteBuffer &src)

@@ -183,8 +183,7 @@ TaudioCodecRealaac::~TaudioCodecRealaac()
 void TaudioCodecRealaac::getInputDescr1(char_t *buf,size_t buflen) const
 {
  if (!inited) return;
- tsnprintf(buf,buflen,_l("%sAAC"),sbr_present_flag==1?_l("SBR "):_l(""));
- buf[buflen-1]='\0';
+ tsnprintf_s(buf, buflen, _TRUNCATE, _l("%sAAC"), sbr_present_flag==1 ? _l("SBR ") : _l(""));
 }
 
 void TaudioCodecRealaac::reorderChannels(int16_t *pcmBuf, int nSamps, int nChans)

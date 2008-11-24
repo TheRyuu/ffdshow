@@ -164,7 +164,7 @@ public:
  virtual bool _REG_OP_N(short int id,const char_t *X,int &Y,const int)
   {
    char_t pomS[1024];
-   tsprintf(pomS,_l("%s=%i"),X,Y);
+   tsnprintf_s(pomS,countof(pomS), _TRUNCATE, _l("%s=%i"), X, Y);
    buf.append(pomS,strlen(pomS)*sizeof(char_t));
    buf.append(sep);
    return true;

@@ -94,7 +94,7 @@ void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,uns
  lf.lfClipPrecision=CLIP_DEFAULT_PRECIS;
  lf.lfQuality=ANTIALIASED_QUALITY;
  lf.lfPitchAndFamily=DEFAULT_PITCH|FF_DONTCARE;
- strncpy(lf.lfFaceName,fontname[0]?fontname:fontSettings.name,LF_FACESIZE);
+ ff_strncpy(lf.lfFaceName,fontname[0]?fontname:fontSettings.name,LF_FACESIZE);
 }
 
 void TSubtitleProps::fix_size(LOGFONT &lf, HDC hdc, TfontManager *fontManager) const

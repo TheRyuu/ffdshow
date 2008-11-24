@@ -72,7 +72,7 @@ typedef const TCHAR *PCTSTR;
 
 #define MAX_SUBTITLE_LENGTH 2000
 
-#define countof(array) (sizeof(array)/sizeof(array[0]))
+#define countof(array) (size_t)(sizeof(array)/sizeof(array[0]))
 
 #define STRINGIFY(s) TOSTRING(s)
 #define TOSTRING(s) #s
@@ -87,9 +87,7 @@ template<class tchar> struct Tstrpart : std::pair<const tchar*,size_t>
 typedef std::vector<int> ints;
 
 void* memsetd(void *dest,uint32_t c,size_t bytes);
-char_t* strcatf(char_t *dst,const char_t *fmt,...);
 char_t* strncatf(char_t *dst,size_t dstsize,const char_t *fmt,...);
-char_t* strcpyf(char_t *dst,const char_t *fmt,...);
 char_t* strncpyf(char_t *dst,size_t dstsize,const char_t *fmt,...);
 template<class tchar,class TlistElem> void strtok(const tchar *s,const tchar *delim,std::vector<TlistElem> &list,bool add_empty=false,size_t max_parts=std::numeric_limits<size_t>::max());
 template<class tchar> void strtok(const tchar *s,const tchar *delim,ints &list,bool add_empty=false,size_t max_parts=std::numeric_limits<size_t>::max());
@@ -111,9 +109,14 @@ inline bool operator !=(const FILETIME &t1,const FILETIME &t2)
 }
 FILETIME fileLastWriteTime(const char_t *flnm);
 void extractfilepath(const char_t *flnm,char_t *path);
+void extractfilepath(const char_t *flnm,ffstring &path);
 void extractfilename(const char_t *flnm,char_t *nameext);
+void extractfilename(const char_t *flnm,ffstring &nameext);
 void extractfilenameWOext(const char_t *flnm,char_t *name);
+void extractfilenameWOext(const char_t *flnm,ffstring &name);
 void extractfileext (const char_t *flnm,char_t *ext); //without the .
+void extractfileext(const char_t *flnm,ffstring &ext);
+void changepathext(const char_t *flnm, const char_t *ext, ffstring &path);
 int nCopyAnsiToWideChar(WCHAR *pWCStr,PCTSTR pAnsiIn,int cchAnsi=0);
 char *unicode16toAnsi(const WCHAR *data16,int data16len=-1,char *data8=NULL);
 char *utf8toAnsi(const char *data,int datalen=-1,char *data8=NULL);

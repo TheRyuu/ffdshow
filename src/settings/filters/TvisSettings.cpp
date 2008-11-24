@@ -84,7 +84,7 @@ const int* TvisSettings::getResets(unsigned int pageId)
 
 bool TvisSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
- tsnprintf(tipS,len,_l("%sshow motion vectors\n%sshow quantizers\n%sshow graph"),mv?_l(""):_l("do not "),quants?_l(""):_l("do not "),graph?_l(""):_l("do not "));
+ tsnprintf_s(tipS, len, _TRUNCATE, _l("%sshow motion vectors\n%sshow quantizers\n%sshow graph"),mv?_l(""):_l("do not "),quants?_l(""):_l("do not "),graph?_l(""):_l("do not "));
  return true;
 }
 

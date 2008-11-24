@@ -43,7 +43,7 @@ TconfPageBase::~TconfPageBase()
 const char_t* TconfPageBase::dialogName(void)
 {
  const char_t *name=tr->translate(dialogId);
- strcpy(dialogNameRes,name);
+ ff_strncpy(dialogNameRes, name, countof(dialogNameRes));
  return dialogNameRes;
 }
 

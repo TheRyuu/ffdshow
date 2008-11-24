@@ -936,7 +936,7 @@ STDMETHODIMP TffdshowEnc::getOutCodecString(char_t *buf,size_t buflen)
 {
  if (!buf) return E_POINTER;
  if (!enc) return E_UNEXPECTED;
- strncpy(buf,enc->getName(),buflen);
+ ff_strncpy(buf,enc->getName(),buflen);
  buf[buflen-1]='\0';
 
  return S_OK;

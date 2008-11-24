@@ -30,28 +30,27 @@ const char_t *FFPRESET_DEFAULT=_l("default");
 //============================ TautoPresetProps ===========================
 TautoPresetProps::TautoPresetProps(IffdshowBase *Ideci):deci(Ideci),deciD(Ideci),wasVolume(-1),decoder(NULL),graphPtr(NULL)
 {
- sourceName[0]='\0';
 }
 TautoPresetProps::~TautoPresetProps()
 {
 }
 const char_t* TautoPresetProps::getSourceFullFlnm(void)
 {
- if (sourceName[0]=='\0')
+ if (sourceName.empty())
   getSourceFlnm();
- return sourceFullFlnm;
+ return sourceFullFlnm.c_str();
 }
 const char_t* TautoPresetProps::getSourceName(void)
 {
- if (sourceName[0]=='\0')
+ if (sourceName.empty())
   getSourceFlnm();
- return sourceName;
+ return sourceName.c_str();
 }
 const char_t* TautoPresetProps::getSourceNameExt(void)
 {
- if (sourceName[0]=='\0')
+ if (sourceName.empty())
   getSourceFlnm();
- return sourceNameExt;
+ return sourceNameExt.c_str();
 }
 const char_t* TautoPresetProps::getExeflnm(void)
 {
@@ -74,17 +73,17 @@ void TautoPresetProps::getVolume(void)
 {
  const char_t *flnm=deci->getSourceName();
  char_t dsk[MAX_PATH];
- _splitpath(flnm,dsk,NULL,NULL,NULL);
+ _splitpath_s(flnm,dsk,MAX_PATH,NULL,0,NULL,0,NULL,0);
  DWORD serial,maximumComponentLength,volumeFlags;
  wasVolume=GetVolumeInformation(dsk,volumeName,256,&serial,&maximumComponentLength,&volumeFlags,NULL,0);
  if (wasVolume)
-  tsprintf(volumeSerial,_l("%X-%X"),(int)LOWORD(volumeSerial),(int)HIWORD(volumeSerial));
+  tsnprintf_s(volumeSerial, countof(volumeSerial), _TRUNCATE, _l("%X-%X"),(int)LOWORD(volumeSerial),(int)HIWORD(volumeSerial));
 }
 void TautoPresetProps::getSourceFlnm(void)
 {
  Tpreset::normalizePresetName(sourceFullFlnm,deci->getSourceName());
- extractfilename(sourceFullFlnm,sourceNameExt);
- extractfilenameWOext(sourceFullFlnm,sourceName);
+ extractfilename(sourceFullFlnm.c_str(),sourceNameExt);
+ extractfilenameWOext(sourceFullFlnm.c_str(),sourceName);
 }
 const char_t* TautoPresetProps::getVolumeName(void)
 {
@@ -111,13 +110,13 @@ const char_t* TautoPresetProps::getDecoderItem(IffdshowDec *deciD,unsigned int i
 }
 const char_t* TautoPresetProps::getPresetName(void)
 {
- if (sourceName[0]=='\0')
+ if (sourceName.empty())
   getSourceFlnm();
  return presetName;
 }
 bool TautoPresetProps::presetNameMatch(const char_t*,const char_t *presetName)
 {
- return _stricoll(presetName,sourceFullFlnm)==0 || _stricoll(presetName,sourceNameExt)==0 || _stricoll(presetName,sourceName)==0;
+ return _stricoll(presetName,sourceFullFlnm.c_str())==0 || _stricoll(presetName,sourceNameExt.c_str())==0 || _stricoll(presetName,sourceName.c_str())==0;
 }
 bool TautoPresetProps::wildcardmatch(const char_t *mask,const char_t *flnm)
 {
@@ -233,7 +232,7 @@ Tpreset::Tpreset(const char_t *Ireg_child, const char_t *IpresetName, int Imin_o
  filters(new TfilterIDFFs(Imin_order))
 {
  memset(presetName,0,sizeof(presetName));
- strcpy(presetName,IpresetName);
+ ff_strncpy(presetName, IpresetName, countof(presetName));
  autoLoadedFromFile=0;
  autoLoadLogic=0;
 
@@ -316,7 +315,7 @@ Tpreset& Tpreset::operator =(const Tpreset &src)
  min_order=src.min_order;
  reg_child=src.reg_child;
 
- strcpy(presetName,src.presetName);
+ ff_strncpy(presetName, src.presetName, countof(presetName));
  autoLoadedFromFile=src.autoLoadedFromFile;
  autoloadExtsNeedFix=src.autoloadExtsNeedFix;
  autoPresetItems=src.autoPresetItems;
@@ -348,14 +347,14 @@ void Tpreset::reg_op(TregOp &t)
 
 void Tpreset::loadDefault(void)
 {
- strcpy(presetName,FFPRESET_DEFAULT);
+ ff_strncpy(presetName, FFPRESET_DEFAULT, countof(presetName));
  loadReg();
 }
 
 void Tpreset::loadReg(void)
 {
  char_t presetRegStr[MAX_PATH];
- tsprintf(presetRegStr,FFDSHOW_REG_PARENT _l("\\%s\\%s"),reg_child,presetName);
+ tsnprintf_s(presetRegStr, countof(presetRegStr), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s\\%s"), reg_child, presetName);
  TregOpRegRead t(HKEY_CURRENT_USER,presetRegStr);
  reg_op(t);
  fixOrder();
@@ -363,7 +362,7 @@ void Tpreset::loadReg(void)
 void Tpreset::saveReg(void)
 {
  char_t presetRegStr[MAX_PATH];
- tsprintf(presetRegStr,FFDSHOW_REG_PARENT _l("\\%s\\%s"),reg_child,presetName);
+ tsnprintf_s(presetRegStr, countof(presetRegStr), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s\\%s"), reg_child, presetName);
  TregOpRegWrite t(HKEY_CURRENT_USER,presetRegStr);
  reg_op(t);
 }
@@ -375,7 +374,7 @@ bool Tpreset::loadFile(const char_t *flnm)
  Tinifile ini(flnm);
  ini.getPrivateProfileSectionNames(sections,4095);
  if (sections[0]=='\0') return false;
- _splitpath(flnm,NULL,NULL,presetName,NULL);
+ _splitpath_s(flnm,NULL,0,NULL,0,presetName,MAX_PATH,NULL,0);
  TregOpFileRead t(flnm,sections);
  reg_op(t);
  fixOrder();
@@ -389,15 +388,36 @@ bool Tpreset::saveFile(const char_t *flnm)
  return fileexists(flnm); //TODO: TregOpFileWrite should throw exception when writing fails
 }
 
-void Tpreset::normalizePresetName(char_t *dst,const char_t *src)
+void Tpreset::normalizePresetName(char_t *dst, const char_t *src, size_t bufsize)
 {
+ int i = 0;
  char_t c;
  do
  {
   c=*(src++);
   if (c=='\\') c='/';
-  *(dst++)=c;
+  dst[i++] = c;
+ } while (c && i < bufsize);
+ dst[bufsize - 1] = 0;
+}
+
+void Tpreset::normalizePresetName(ffstring &dst,const char_t *src)
+{
+ char_t c;
+ size_t len = strlen(src) + 1;
+ if (len > 4096)
+  {
+   dst = _l("");
+  }
+ char_t *dstbuf = (char_t *)_alloca(len * sizeof(char_t));
+ size_t i = 0;
+ do
+ {
+  c=*(src++);
+  if (c=='\\') c='/';
+  dstbuf[i++] = c;
  } while (c);
+ dst = dstbuf;
 }
 
 bool Tpreset::isValidPresetName(const char_t *presetName)

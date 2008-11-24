@@ -20,11 +20,11 @@ Tstream* Tvobsub::rar_open(const char_t *flnm)
  else
   {
    char_t dsk[MAX_PATH],dir[MAX_PATH],name[MAX_PATH],ext[MAX_PATH];
-   _splitpath(flnm,dsk,dir,name,ext);
+   _splitpath_s(flnm, dsk, countof(dsk), dir, countof(dir), name, countof(name), ext, countof(ext));
    char_t flnmrar[MAX_PATH];
-   _makepath(flnmrar,dsk,dir,name,_l("rar"));
+   _makepath_s(flnmrar, countof(flnmrar), dsk, dir, name, _l("rar"));
    char_t flnmrarsub[MAX_PATH];
-   _makepath(flnmrarsub,NULL,NULL,name,ext);
+   _makepath_s(flnmrarsub, countof(flnmrarsub), NULL, NULL, name, ext);
    return new TstreamRAR(flnmrar,flnmrarsub,config);
   }
 }
@@ -356,7 +356,7 @@ Tvobsub::PARSE_RES Tvobsub::vobsub_add_id( const char *id, size_t idlen, const u
         }
         //memcpy(spu_streams[index].id, id, idlen)
         //spu_streams[index].id[idlen] = 0;
-        text<char_t>(id, idlen, spu_streams[index].id, idlen + 1);//strncpy(spu_streams[index].id,id,idlen);// ;
+        text<char_t>(id, idlen, spu_streams[index].id, idlen + 1);//ff_strncpy(spu_streams[index].id,id,idlen);// ;
     }
     spu_streams_current = index;
     DPRINTF(_l("[vobsub] subtitle (vobsubid): %d language %s"),index, spu_streams[index].id);

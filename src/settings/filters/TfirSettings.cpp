@@ -106,6 +106,6 @@ bool TfirSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
  char_t widths[50]=_l("");
  if (type==BANDPASS || type==BANDSTOP)
   tsprintf(widths,_l(", width %i Hz"),width);
- tsnprintf(tipS,len,_l("%s at %iHz%s\n%i taps\n%s window"),types[type],freq,widths,taps,windows[window]);
+ tsnprintf_s(tipS, len, _TRUNCATE, _l("%s at %iHz%s\n%i taps\n%s window"), types[type], freq, widths, taps, windows[window]);
  return true;
 }

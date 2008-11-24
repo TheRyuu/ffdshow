@@ -294,8 +294,9 @@ void TlevelsPage::levels2dlg(void)
  int x=cfgGet(IDFF_levelsGamma);
  tbrSet(IDC_TBR_LEVELS_GAMMA,x);
  char_t pomS[256];
- tsprintf(pomS,_l("%s %3.2f"),_(IDC_LBL_LEVELS_GAMMA),float(x/100.0));
- if (x==100) strcatf(pomS,_l(" (%s)"),_(IDC_LBL_LEVELS_GAMMA,_l("off")));
+ tsnprintf_s(pomS, countof(pomS), _TRUNCATE, _l("%s %3.2f"), _(IDC_LBL_LEVELS_GAMMA), float(x/100.0));
+ if (x==100)
+  strncatf(pomS, countof(pomS), _l(" (%s)"),_(IDC_LBL_LEVELS_GAMMA,_l("off")));
  setDlgItemText(m_hwnd,IDC_LBL_LEVELS_GAMMA,pomS);
  tbrSet(IDC_TBR_LEVELS_POSTERIZE,cfgGet(IDFF_levelsPosterize),IDC_LBL_LEVELS_POSTERIZE);
  SetDlgItemInt(m_hwnd,IDC_ED_Y_MAX_DELTA ,deci->getParam2(IDFF_levelsYmaxDelta ),FALSE);

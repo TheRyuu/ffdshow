@@ -180,7 +180,7 @@ void TperfectDlg::drawGraph(void)
       cnt=-cnt;
      cnts[x]=cnt;
      ti.uId=x;
-     tsprintf(pomS,_drawgraphframe,int(percent+0.5+barWidth/2-100),abs(cnts[x]));
+     tsnprintf_s(pomS, countof(pomS), _TRUNCATE, _drawgraphframe, int(percent+0.5+barWidth/2-100), abs(cnts[x]));
      SendMessage(hTipgraph,TTM_UPDATETIPTEXT,0,LPARAM(&ti));
     }
    for (int x=0;x<gx;x++)
@@ -217,7 +217,7 @@ void TperfectDlg::initStatsRead(void)
  if (!statsRead || stricmp(oldStats1flnm,cfgGetStr(IDFF_enc_stats1flnm))!=0)
   {
    if (statsRead) delete statsRead;
-   statsRead=new TxvidStats(strcpy(oldStats1flnm,cfgGetStr(IDFF_enc_stats1flnm)),false);
+   statsRead=new TxvidStats(ff_strncpy(oldStats1flnm, cfgGetStr(IDFF_enc_stats1flnm), countof(oldStats1flnm)),false);
   }
  statsRead->resetRead();
 }
@@ -303,10 +303,10 @@ void TperfectDlg::simulate(void)
     {
      ti.uId=q;
      ti.hwnd=hqp;
-     tsprintf(pomS,_quantpercentage,q,pass.quant_threshs[q].percent);
+     tsnprintf_s(pomS, countof(pomS), _TRUNCATE, _quantpercentage, q,pass.quant_threshs[q].percent);
      SendMessage(hTipqp,TTM_UPDATETIPTEXT,0,LPARAM(&ti));
      ti.hwnd=hqcnt;
-     tsprintf(pomS,_quantcount,q,encstats.quantCount[q]);
+     tsnprintf_s(pomS, countof(pomS), _TRUNCATE, _quantcount, q, encstats.quantCount[q]);
      quantsum+=q*encstats.quantCount[q];quantcnt+=encstats.quantCount[q];
      SendMessage(hTipqcnt,TTM_UPDATETIPTEXT,0,LPARAM(&ti));
     }

@@ -42,7 +42,7 @@ const char_t* TimgFilterOSD::TosdLine::TosdValue::getVal(bool &wasChange,bool &s
      tsprintf(news,_l("%ux%u"),pict.rectFull.dx,pict.rectFull.dy);
      if (strcmp(news,s)!=0)
       {
-       strcpy(s,news);
+       ff_strncpy(s, news, countof(s));
        wasChange=true;
       }
      break;
@@ -59,9 +59,9 @@ const char_t* TimgFilterOSD::TosdLine::TosdValue::getVal(bool &wasChange,bool &s
        else
         tsprintf(s,_l("SAR: N/A, "));
        if (darOk)
-        strcatf(s,_l("DAR: %i/%i"),dar.num,dar.den);
+        strncatf(s, countof(s), _l("DAR: %i/%i"),dar.num,dar.den);
        else
-        strcatf(s,_l("DAR: N/A"));
+        strncatf(s, countof(s), _l("DAR: N/A"));
        wasChange=true;
       }
      oldSar=sar;oldDar=dar;
@@ -72,7 +72,7 @@ const char_t* TimgFilterOSD::TosdLine::TosdValue::getVal(bool &wasChange,bool &s
      const char_t *ipb0=FRAME_TYPE::name(pict.frametype&FRAME_TYPE::typemask);
      char_t ipb[30];
      strcpy(ipb,stricmp(ipb0,_l("s"))==0?_l("GMC"):ipb0);
-     tsprintf(s,_l("%s%s"),strupr(ipb),pict.frametype&FRAME_TYPE::QPEL?_l("\t QPEL"):_l(""));
+     tsnprintf_s(s, countof(s), _TRUNCATE, _l("%s%s"), strupr(ipb), pict.frametype & FRAME_TYPE::QPEL ? _l("\t QPEL") : _l(""));
      wasChange=true;
      break;
     }
@@ -113,7 +113,7 @@ const char_t* TimgFilterOSD::TosdLine::TosdValue::getVal(bool &wasChange,bool &s
      const char_t *val;int wasChangeI,splitlineI;
      if (provider->getInfoItemValue(type,&val,&wasChangeI,&splitlineI)==S_OK)
       {
-       strncpy(s,val,countof(s)-1);s[countof(s)-1]='\0';
+       ff_strncpy(s,val,countof(s)-1);s[countof(s)-1]='\0';
        wasChange=!!wasChangeI;splitline=!!splitlineI;
       }
      else
@@ -121,7 +121,7 @@ const char_t* TimgFilterOSD::TosdLine::TosdValue::getVal(bool &wasChange,bool &s
      break;
     }
   }
- strcpy(olds,s);
+ ff_strncpy(olds, s, countof(olds));
  return s;
 }
 
@@ -200,8 +200,8 @@ TimgFilterOSD::TosdLine::TosdLine(IffdshowBase *Ideci,IffdshowDec *IdeciD,Iffdsh
   {
    int type=atoi(format.c_str()+1);
    char_t valName[256];
-   strcpy(valName,provider->getInfoItemName(type));
-   strcat(valName,_l(": "));
+   ff_strncpy(valName, provider->getInfoItemName(type), countof(valName));
+   strncat_s(valName, countof(valName), _l(": "), _TRUNCATE);
    tokens.push_back(TosdToken(valName));
    tokens.push_back(TosdToken(type,provider));
   }
@@ -268,7 +268,7 @@ TimgFilterOSD::Tosds::Tosds(IOSDprovider *Iprovider,const char_t *Iname):f(NULL)
  oldSave=-1;oldSaveFlnm[0]='\0';
  if (Iname)
   {
-   strncpy(name,Iname,260);
+   ff_strncpy(name,Iname,MAX_PATH);
    name[259]='\0';
   }
  else
@@ -294,12 +294,13 @@ void TimgFilterOSD::Tosds::init(bool allowSave,IffdshowBase *deci,IffdshowDec *d
    int initSave=-1;
    if (oldSave!=cfgIsSave || stricmp(oldSaveFlnm,cfgSaveFlnm))
     {
-     oldSave=cfgIsSave;strcpy(oldSaveFlnm,cfgSaveFlnm);
+     oldSave=cfgIsSave;
+     ff_strncpy(oldSaveFlnm, cfgSaveFlnm, countof(oldSaveFlnm));
      initSave=allowSave && cfgIsSave && cfgSaveFlnm[0]!='\0'?1:0;
     }
    if (strcmp(oldFormat,format)!=0)
     {
-     strcpy(oldFormat,format);
+     ff_strncpy(oldFormat, format, countof(oldFormat));
      freeOsds();
      if (name)
       push_back(new TosdLine(deci,deciD,deciV,config,ffstring(_l("user"))+ffstring(name),oldFont,0,provider,true));
@@ -498,7 +499,7 @@ HRESULT TimgFilterOSD::process(TfilterQueue::iterator it,TffPict &pict,const Tfi
     {
      if (strcmp(oldLinesUser,cfg->user)!=0)
       {
-       strcpy(oldLinesUser,cfg->user);
+       ff_strncpy(oldLinesUser, cfg->user, countof(oldLinesUser));
        strtok(cfg->user,_l("\n"),linesUser);
        subUser.set(linesUser);
 	   TsubtitleFormat subtitleFormat = TsubtitleFormat(parent->config->getHtmlColors());

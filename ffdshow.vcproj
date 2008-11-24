@@ -482,6 +482,9 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
+				RelativePath=".\src\alternativeSecureString.cpp">
+			</File>
+			<File
 				RelativePath=".\src\cpuid.asm">
 				<FileConfiguration
 					Name="Debug|Win32">

@@ -160,8 +160,8 @@ LRESULT TtrayIconBase::processTrayMsg(HWND hwnd,WPARAM wprm,LPARAM lprm)
        {
         tipptr=nid.szTip;
         tiplen=128;
-        tsnprintf(inputS,40,_l("%s: "),tr->translate(_l("Input")));
-        tsnprintf(outputS,40,_l("%s: "),tr->translate(_l("Output")));
+        tsnprintf_s(inputS, 40, _TRUNCATE,_l("%s: "),tr->translate(_l("Input")));
+        tsnprintf_s(outputS, 40, _TRUNCATE,_l("%s: "),tr->translate(_l("Output")));
         sep1=sep2=_l("\n");
        }
       else
@@ -172,11 +172,11 @@ LRESULT TtrayIconBase::processTrayMsg(HWND hwnd,WPARAM wprm,LPARAM lprm)
         in[26]='\0';out[26]='\0';
        }
       if (in[0] && out[0])
-       tsnprintf(tipptr,tiplen,_l("%s: %s%s%s%s%s%s"),tip,sep1,inputS,in,sep2,outputS,out);
+       tsnprintf_s(tipptr, tiplen, _TRUNCATE,_l("%s: %s%s%s%s%s%s"),tip,sep1,inputS,in,sep2,outputS,out);
       else if (in[0])
-       tsnprintf(tipptr,tiplen,_l("%s: %s"),tip,in);
+       tsnprintf_s(tipptr, tiplen, _TRUNCATE,_l("%s: %s"),tip,in);
       else
-       tsnprintf(tipptr,tiplen,_l("%s"),tip);
+       tsnprintf_s(tipptr, tiplen, _TRUNCATE,_l("%s"),tip);
       nid.szTip[tiplen-1]='\0';
       Shell_NotifyIcon(NIM_MODIFY,(NOTIFYICONDATA*)&nid);
      }
@@ -228,7 +228,7 @@ void TtrayIconBase::init(void)
  nid.uFlags=NIF_ICON|NIF_TIP|NIF_MESSAGE;//|(nid.cbSize==sizeof(nid)?NIF_INFO:0);
  nid.hIcon=(HICON)LoadImage(hi,MAKEINTRESOURCE(icon),IMAGE_ICON,16,16,LR_DEFAULTCOLOR);
  nid.uCallbackMessage=MSG_TRAYICON;
- strcpy(nid.szTip,tip);
+ ff_strncpy(nid.szTip, tip, countof(nid.szTip));
 }
 void TtrayIconBase::show(void)
 {
@@ -458,9 +458,10 @@ HMENU TtrayIconDecVideo::makeSubtitlesMenu(void)
      deciV->getConnectedTextPinInfo(i,&textname,&id,&found);
      if (found)
       {
-       char_t s[256];strcpy(s,tr->translate(_l("embedded")));
+       char_t s[256];
+       ff_strncpy(s, tr->translate(_l("embedded")), countof(s));
        if (textname[0])
-        strcatf(s,_l(" (%s)"),textname);
+        strncatf(s, countof(s), _l(" (%s)"), textname);
        textpins.push_back(std::make_pair(ffstring(s),id));
       }
     }
@@ -557,7 +558,8 @@ HMENU TtrayIconDecAudio::createMenu(int &ord)
      char_t descr[250];
      if (deciA->getStreamDescr(i,descr,250)==S_OK)
       {
-       char_t stream[255];tsprintf(stream,_l("%u. %s"),i,descr);
+       char_t stream[255];
+       tsnprintf_s(stream, countof(stream), _TRUNCATE, _l("%u. %s"), i, descr);
        insertMenuItem(hm,ord,IDC_FIRST_STREAM+i,stream,false,i==cur,true);
       }
     }

@@ -35,7 +35,7 @@ public:
  static int getCharset(const char_t *name);
  bool getTip(char_t *buf,size_t len)
   {
-   tsnprintf(buf,len,_l("Font: %s, %s charset, %ssize:%i, %s, spacing:%i\noutline width:%i"),name,getCharset(charset),autosize?_l("auto"):_l(""),autosize?sizeA:sizeP,weights[weight/100-1].name,spacing,outlineWidth);
+   tsnprintf_s(buf, len, _TRUNCATE, _l("Font: %s, %s charset, %ssize:%i, %s, spacing:%i\noutline width:%i"),name,getCharset(charset),autosize?_l("auto"):_l(""),autosize?sizeA:sizeP,weights[weight/100-1].name,spacing,outlineWidth);
    return true;
   }
  int spacing,weight;

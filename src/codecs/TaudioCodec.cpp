@@ -84,8 +84,8 @@ void TaudioCodec::getInputDescr(char_t *buf,size_t buflen) const
  char_t samplefmt[255];fmt.description(samplefmt,255);
  char_t input[256];getInputDescr1(input,256);
  if (numframes && bpssum)
-  tsnprintf(buf,buflen,_l("%s %u kbps %s (%s)"),samplefmt,roundDiv(bpssum,numframes),input,getName());
+  tsnprintf_s(buf, buflen, _TRUNCATE, _l("%s %u kbps %s (%s)"), samplefmt, roundDiv(bpssum,numframes), input, getName());
  else
-  tsnprintf(buf,buflen,_l("%s %s (%s)"),samplefmt,input,getName());
+  tsnprintf_s(buf, buflen, _TRUNCATE, _l("%s %s (%s)"), samplefmt, input, getName());
  buf[buflen-1]='\0';
 }

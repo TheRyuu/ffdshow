@@ -776,21 +776,21 @@ void TsubtitlesSettings::createPages(TffdshowPageDec *parent) const
  parent->addFilterPage<TvobsubPage>(&idffs);
 }
 
-void TsubtitlesSettings::getPosHoriz(int x,char_t *s,Twindow *w,int id)
+void TsubtitlesSettings::getPosHoriz(int x, char_t *s, Twindow *w, int id, size_t len)
 {
  const char_t *posS;
  if (x<40) posS=_l("left");
  else if (x>60) posS=_l("right");
  else posS=_l("center");
- tsprintf(s,_l("%s %3i%% (%s)"),w?w->_(id):_l("Horizontal position:"),x,w?w->_(id,posS):posS);
+ tsnprintf_s(s, len, _TRUNCATE, _l("%s %3i%% (%s)"), w ? w->_(id) : _l("Horizontal position:"), x, w ? w->_(id,posS) : posS);
 }
-void TsubtitlesSettings::getPosVert(int x,char_t *s,Twindow *w,int id)
+void TsubtitlesSettings::getPosVert(int x, char_t *s, Twindow *w, int id, size_t len)
 {
  const char_t *posS;
  if (x<40) posS=_l("top");
  else if (x>60) posS=_l("bottom");
  else posS=_l("center");
- tsprintf(s,_l("%s %3i%% (%s)"),w?w->_(id):_l("Vertical position:"),x,w?w->_(id,posS):posS);
+ tsnprintf_s(s, len, _TRUNCATE, _l("%s %3i%% (%s)"), w ? w->_(id) : _l("Vertical position:"), x, w ? w->_(id,posS) : posS);
 }
 void TsubtitlesSettings::getExpand(int is,int code,int *x,int *y)
 {
@@ -812,13 +812,15 @@ bool TsubtitlesSettings::getTip(unsigned int pageId,char_t *buf,size_t len)
  if (pageId==1)
   {
    char_t tipS[256];
-   char_t horiz[256],vert[256];getPosHoriz(posX,horiz,NULL,0);getPosVert(posY,vert,NULL,0);
-   tsprintf(tipS,_l("%s, %s"),horiz,vert);
+   char_t horiz[256],vert[256];
+   getPosHoriz(posX, horiz, NULL, 0, countof(horiz));
+   getPosVert(posY, vert, NULL, 0, countof(vert));
+   tsnprintf_s(tipS, countof(tipS), _TRUNCATE, _l("%s, %s"), horiz, vert);
    if (delay!=delayDef)
-    strcatf(tipS,_l("\nDelay: %i ms"),delay);
+    strncatf(tipS, countof(tipS), _l("\nDelay: %i ms"),delay);
    if (speed!=speedDef || speed2!=speedDef)
-    strcatf(tipS,_l("\nSpeed: %i/%i"),speed,speed2);
-   strncpy(buf,tipS,len);
+    strncatf(tipS, countof(tipS), _l("\nSpeed: %i/%i"),speed,speed2);
+   ff_strncpy(buf,tipS,len);
    buf[len-1]='\0';
   }
  else if (pageId==2)

@@ -127,11 +127,11 @@ bool TdctSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
  switch (mode)
   {
    case 0:
-    tsnprintf(tipS,len,_l("coefficients: %g %g %g %g %g %g %g %g"),fac0/1000.0f,fac1/1000.0f,fac2/1000.0f,fac3/1000.0f,fac4/1000.0f,fac5/1000.0f,fac6/1000.0f,fac7/1000.0f);
+    tsnprintf_s(tipS, len, _TRUNCATE, _l("coefficients: %g %g %g %g %g %g %g %g"), fac0/1000.0f, fac1/1000.0f, fac2/1000.0f, fac3/1000.0f, fac4/1000.0f, fac5/1000.0f, fac6/1000.0f, fac7/1000.0f);
     break;
    case 1:
    case 2:
-    tsnprintf(tipS,len,_l("%s quantization by quantizer %i"),mode==1?_l("H.263"):_l("MPEG"),quant);
+    tsnprintf_s(tipS, len, _TRUNCATE, _l("%s quantization by quantizer %i"), mode == 1 ? _l("H.263") : _l("MPEG"), quant);
     break;
   }
  tipS[len-1]='\0';

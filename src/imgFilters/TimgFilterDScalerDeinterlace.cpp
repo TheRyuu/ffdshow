@@ -110,7 +110,7 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
   {
    if (flt) delete flt;
    done();
-   strcpy(oldfltflnm,cfg->dscalerFlnm);
+   ff_strncpy(oldfltflnm, cfg->dscalerFlnm, countof(oldfltflnm));
    char_t flnm[MAX_PATH];extractfilename(oldfltflnm,flnm);
    flt=stricmp(flnm,_l("DI_Adaptive.dll"))==0?NULL:new Tdscaler_DI(oldfltflnm,deci);
   }
@@ -118,7 +118,7 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
 
  if (strcmp(oldfltcfg,cfg->dscalerCfg)!=0)
   {
-   strcpy(oldfltcfg,cfg->dscalerCfg);
+   ff_strncpy(oldfltcfg, cfg->dscalerCfg, countof(oldfltcfg));
    flt->settings->str2cfg(oldfltcfg);
   }
 

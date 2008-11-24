@@ -100,14 +100,14 @@ HRESULT TimgFilterDScalerFLT::process(TfilterQueue::iterator it,TffPict &pict,co
   {
    if (flt) delete flt;
    done();
-   strcpy(oldfltflnm,cfg->fltflnm);
+   ff_strncpy(oldfltflnm, cfg->fltflnm, countof(oldfltflnm));
    flt=new Tdscaler_FLT(oldfltflnm,deci);
   }
  if (flt && flt->fm)
   {
    if (strcmp(oldfltcfg,cfg->cfg)!=0)
     {
-     strcpy(oldfltcfg,cfg->cfg);
+     ff_strncpy(oldfltcfg, cfg->cfg, countof(oldfltcfg));
      flt->settings->str2cfg(oldfltcfg);
     }
 

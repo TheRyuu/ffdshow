@@ -121,8 +121,8 @@ INT_PTR TpresetsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
           NMITEMACTIVATE *nmia=LPNMITEMACTIVATE(lParam);
           if (nmia->iItem==-1)
            {
-            char_t activePresetName[260];
-            deciD->getActivePresetName(activePresetName,260);
+            char_t activePresetName[MAX_PATH];
+            deciD->getActivePresetName(activePresetName, countof(activePresetName));
             applying=true;
             parent->selectPreset(activePresetName);
             cfg2dlg();
@@ -139,9 +139,9 @@ INT_PTR TpresetsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
           if (parent->localPresets->getPreset(nmdi->item.pszText,false)==NULL && Tpreset::isValidPresetName(nmdi->item.pszText))
            {
             setDlgResult(TRUE);
-            char_t presetName[260];
+            ffstring presetName;
             Tpreset::normalizePresetName(presetName,nmdi->item.pszText);
-            renamePreset(presetName);
+            renamePreset(presetName.c_str());
            }
           else
            setDlgResult(FALSE);
@@ -253,12 +253,13 @@ void TpresetsPage::onReadFromFile(void)
 {
  int i=lvGetSelItem(IDC_LV_PRESETS);
  char_t presetFlnm[MAX_PATH];
- _splitpath((*parent->localPresets)[i]->presetName,NULL,NULL,presetFlnm,NULL);
+ _splitpath_s((*parent->localPresets)[i]->presetName, NULL, 0, NULL, 0, presetFlnm, countof(presetFlnm), NULL, 0);
  if (dlgGetFile(false,m_hwnd,_(-IDD_PRESETS,_l("Load ffdshow preset")),presetfilter,presetext,presetFlnm,_l("."),0))
   {
-   char_t presetName[260];strcpy(presetName,(*parent->localPresets)[i]->presetName);
+   char_t presetName[MAX_PATH];
+   ff_strncpy(presetName,(*parent->localPresets)[i]->presetName,MAX_PATH);
    (*parent->localPresets)[i]->loadFile(presetFlnm);
-   strcpy((*parent->localPresets)[i]->presetName,presetName);
+   ff_strncpy((*parent->localPresets)[i]->presetName, presetName, countof((*parent->localPresets)[i]->presetName));
    parent->selectPreset(presetName);
    cfg2dlg();
    parent->setChange();
@@ -268,7 +269,7 @@ void TpresetsPage::onSaveToFile(void)
 {
  int i=lvGetSelItem(IDC_LV_PRESETS);
  char_t presetFlnm[MAX_PATH];
- _splitpath((*parent->localPresets)[i]->presetName,NULL,NULL,presetFlnm,NULL);
+ _splitpath_s((*parent->localPresets)[i]->presetName, NULL, 0, NULL, 0, presetFlnm, countof(presetFlnm), NULL, 0);
  if (dlgGetFile(true,m_hwnd,_(-IDD_PRESETS,_l("Save ffdshow preset")),presetfilter,presetext,presetFlnm,_l("."),0))
   (*parent->localPresets)[i]->saveFile(presetFlnm);
 }
@@ -322,15 +323,17 @@ void TpresetsPage::onRename(int menuCmd)
  int i=lvGetSelItem(IDC_LV_PRESETS);
  if (menuCmd==ID_MNI_PRESET_RENAMETOFILE)
   {
-   char_t presetName[260];Tpreset::normalizePresetName(presetName,AVIname);
-   parent->localPresets->nextUniqueName(presetName);
+   char_t presetName[MAX_PATH];
+   Tpreset::normalizePresetName(presetName, AVIname, countof(presetName));
+   parent->localPresets->nextUniqueName(presetName, countof(presetName));
    renamePreset(presetName);
    InvalidateRect(hlv,NULL,FALSE);
   }
  else if (menuCmd==ID_MNI_PRESET_RENAMETOEXE)
   {
-   char_t presetName[260];Tpreset::normalizePresetName(presetName,deci->getExeflnm());
-   parent->localPresets->nextUniqueName(presetName);
+   char_t presetName[MAX_PATH];
+   Tpreset::normalizePresetName(presetName, deci->getExeflnm(), countof(presetName));
+   parent->localPresets->nextUniqueName(presetName, countof(presetName));
    renamePreset(presetName);
    InvalidateRect(hlv,NULL,FALSE);
   }
@@ -350,8 +353,8 @@ void TpresetsPage::changePresetState(void)
   }
  else
   {
-   char_t presetName[260];
-   deciD->getActivePresetName(presetName,260);
+   char_t presetName[MAX_PATH];
+   deciD->getActivePresetName(presetName, countof(presetName));
    cfgSet(IDFF_defaultPreset,presetName);
    InvalidateRect(hlv,NULL,FALSE);
   }

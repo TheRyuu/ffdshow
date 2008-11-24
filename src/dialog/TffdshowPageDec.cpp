@@ -108,7 +108,7 @@ void TffdshowPageDec::onActivate(void)
  deciD->getPresetsPtr(&presets);
  localPresets=presets->newPresets();
  deciD->getPresets(localPresets);
- deciD->getActivePresetName(oldActivePresetName,260);
+ deciD->getActivePresetName(oldActivePresetName,MAX_PATH);
 
  TreeView_SetIndent(htv,24);
  //TreeView_SetItemHeight(htv,26);
@@ -138,7 +138,7 @@ void TffdshowPageDec::onApplyChanges(void)
   {
    deciD->setPresets(localPresets);
    deciD->savePresets();
-   strcpy(oldActivePresetName,cbxGetCurText(IDC_CBX_PRESETS));
+   ff_strncpy(oldActivePresetName, cbxGetCurText(IDC_CBX_PRESETS), countof(oldActivePresetName));
   }
 }
 
@@ -191,8 +191,8 @@ void TffdshowPageDec::fillPresetsCbx(void)
  cbxClear(IDC_CBX_PRESETS);
  for (Tpresets::iterator i=localPresets->begin();i!=localPresets->end();i++)
   cbxAdd(IDC_CBX_PRESETS,(*i)->presetName);
- char_t presetName[256];
- deciD->getActivePresetName(presetName,256);
+ char_t presetName[MAX_PATH];
+ deciD->getActivePresetName(presetName,MAX_PATH);
  cbxSetCurSel(IDC_CBX_PRESETS,cbxFindItem(IDC_CBX_PRESETS,presetName,true));
 }
 void TffdshowPageDec::selectPreset(const char_t *presetName)
@@ -307,7 +307,7 @@ INT_PTR TffdshowPageDec::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
            page->getTip(tipS,1023);
           if (tipS[0]=='\0') return FALSE;
           memset(nmtvit->pszText,0,nmtvit->cchTextMax);
-          strncpy(nmtvit->pszText,tipS,nmtvit->cchTextMax-1);
+          ff_strncpy(nmtvit->pszText,tipS,nmtvit->cchTextMax-1);
           return TRUE;
          }
         case NM_CUSTOMDRAW:

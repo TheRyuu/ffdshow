@@ -201,11 +201,11 @@ INT_PTR TcompatibilityManager::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
           ffstring instpath(cfgGetStr(IDFF_installPath));
           if (instpath.size() && instpath[instpath.size()-1]!='\\')
           instpath=instpath+_l("\\");
-          tsprintf(param, _l("\"%sopenIE.js\" \"%s\" %d %s"),instpath.c_str(),filename.c_str(),revision,targetlist.c_str());
+          tsnprintf_s(param, countof(param), _TRUNCATE, _l("\"%sopenIE.js\" \"%s\" %d %s"), instpath.c_str(), filename.c_str(), revision, targetlist.c_str());
           if ((int)ShellExecute(NULL, _l("open"),_l("wscript.exe") ,param , NULL, SW_SHOWDEFAULT)<=32)
            {
-            char_t url[MAX_PATH+80];
-            tsprintf(url,_l("http://ffdshow-tryout.sourceforge.net/compmgr.php?app=%s&rev=%d&type=%s"),filename.c_str(),revision,targetlist.c_str());
+            char_t url[2084];
+            tsnprintf_s(url, countof(url), _TRUNCATE, _l("http://ffdshow-tryout.sourceforge.net/compmgr.php?app=%s&rev=%d&type=%s"),filename.c_str(), revision, targetlist.c_str());
             ShellExecute(NULL, _l("open"),url , NULL, NULL, SW_HIDE);
            }
          }

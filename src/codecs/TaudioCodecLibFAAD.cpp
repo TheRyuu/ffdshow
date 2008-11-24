@@ -88,8 +88,7 @@ TaudioCodecLibFAAD::~TaudioCodecLibFAAD()
 void TaudioCodecLibFAAD::getInputDescr1(char_t *buf,size_t buflen) const
 {
  if (!inited) return;
- tsnprintf(buf,buflen,_l("%s%sAAC"),sbr?_l("SBR "):_l(""),ps?_l("PS "):_l(""));
- buf[buflen-1]='\0';
+ tsnprintf_s(buf, buflen, _TRUNCATE,_l("%s%sAAC"),sbr?_l("SBR "):_l(""),ps?_l("PS "):_l(""));
 }
 
 HRESULT TaudioCodecLibFAAD::decode(TbyteBuffer &src)

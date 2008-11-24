@@ -149,7 +149,7 @@ HMENU Twindow::_(HMENU hmn)
      mii.dwTypeData=capt;
      mii.cch=255;
      GetMenuItemInfo(hmn,i,TRUE,&mii);
-     strcpy(mii.dwTypeData,_(-dialogId,mii.dwTypeData));
+     ff_strncpy(mii.dwTypeData, _(-dialogId,mii.dwTypeData), countof(capt));
      SetMenuItemInfo(hmn,i,TRUE,&mii);
     }
   }
@@ -286,9 +286,9 @@ void Twindow::tbrSet(int id,int val,int lblId,const char_t *Icapt,float div)
    const char_t *capt=((Icapt && Icapt[0])?Icapt:_(lblId));
    char_t s[256];
    if (div==0)
-    tsprintf(s,_l("%s %i"),capt,val);
+    tsnprintf_s(s, countof(s), _TRUNCATE, _l("%s %i"), capt, val);
    else
-    tsprintf(s,_l("%s %g"),capt,float(val/div));
+    tsnprintf_s(s, countof(s), _TRUNCATE, _l("%s %g"), capt, float(val/div));
    setDlgItemText(m_hwnd,lblId,s);
   }
 }

@@ -86,6 +86,6 @@ const int* TdelaySettings::getResets(unsigned int pageId)
 
 bool TdelaySettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
- tsnprintf(tipS,len,_l("delays: L:%ims, C:%ims, R:%ims, SL:%ims, SR:%ims, LFE:%ims"),l,c,r,sl,sr,lfe);
+ tsnprintf_s(tipS, len, _TRUNCATE, _l("delays: L:%ims, C:%ims, R:%ims, SL:%ims, SR:%ims, LFE:%ims"), l, c, r, sl, sr, lfe);
  return true;
 }

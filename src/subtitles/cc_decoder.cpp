@@ -133,11 +133,11 @@ bool TccDecoder::cc_row_t::ccrow_render(cc_renderer_t *renderer, int rownum)
 
       const cc_attribute_t *attr = &this->cells[attr_pos].attributes;
       wchar_t sub[CC_COLUMNS*2]=L"";
-      if (attr->italic) strcat(sub,L"<i>");
-      if (attr->underline) strcat(sub,L"<u>");
-      strcat(sub,buf);
-      if (attr->italic) strcat(sub,L"</i>");
-      if (attr->underline) strcat(sub,L"</u>");
+      if (attr->italic) strncat_s(sub, countof(sub), L"<i>", _TRUNCATE);
+      if (attr->underline) strncat_s(sub, countof(sub), L"<u>", _TRUNCATE);
+      strncat_s(sub, countof(sub), buf, _TRUNCATE);
+      if (attr->italic) strncat_s(sub, countof(sub), L"</i>", _TRUNCATE);
+      if (attr->underline) strncat_s(sub, countof(sub), L"</u>", _TRUNCATE);
       renderer->deciV->addClosedCaption(sub);
       was=true;
       //ccrow_set_attributes(renderer, this, attr_pos);

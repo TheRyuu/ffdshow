@@ -8,7 +8,8 @@ class Tcodec;
 class TinputPin :public CDeCSSInputPin
 {
 private:
- char_t filesourceFlnm[MAX_PATH];bool wasGetSourceName;
+ ffstring filesourceFlnm;
+ bool wasGetSourceName;
 protected:
  virtual bool init(const CMediaType &mt)=0;
  virtual void done(void)=0;

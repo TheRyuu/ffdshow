@@ -39,7 +39,7 @@ bool isNotCalledFromBlackList(HINSTANCE hInstance)
 
  cmd= GetCommandLine();
  cmdCopy[MAX_PATH+2]='\0';
- strncpy(cmdCopy,cmd,MAX_PATH+2);
+ ff_strncpy(cmdCopy,cmd,MAX_PATH+2);
  if(cmdCopy[0]=='"')
   {
    cmdCopy++;

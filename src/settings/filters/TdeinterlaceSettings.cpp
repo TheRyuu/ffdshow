@@ -201,8 +201,7 @@ bool TdeinterlaceSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
  if (getMethod(cfgId).id!=DSCALER)
   {
-   tsnprintf(tipS,len,_l("Method: %s"),getMethod(cfgId).name);
-   tipS[len-1]='\0';
+   tsnprintf_s(tipS, len, _TRUNCATE, _l("Method: %s"), getMethod(cfgId).name);
    return true;
   }
  else

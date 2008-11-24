@@ -733,7 +733,7 @@ HRESULT TffdshowVideoInputPin::getInCodecString(char_t *buf,size_t buflen)
  if (video)
   {
    char_t name[60];
-   tsnprintf(buf,buflen,_l("%s (%s)"),fourcc2str(biIn.bmiHeader.biCompression,name,60),video->getName());
+   tsnprintf_s(buf, buflen, _TRUNCATE, _l("%s (%s)"),fourcc2str(biIn.bmiHeader.biCompression,name,60),video->getName());
    buf[buflen-1]='\0';
   }
  else
@@ -757,7 +757,8 @@ const char_t* TffdshowVideoInputPin::findAutoSubflnm(IcheckSubtitle *checkSubtit
  if (AVIname[0]=='\0') return _l("");
  if (autosubflnm[0]=='\0' || oldSubHeuristic!=heuristic || stricmp(oldSubSearchDir,searchDir)!=0)
   {
-   oldSubHeuristic=heuristic;strcpy(oldSubSearchDir,searchDir);
+   oldSubHeuristic=heuristic;
+   ff_strncpy(oldSubSearchDir, searchDir, countof(oldSubSearchDir));
    TsubtitlesFile::findSubtitlesFile(AVIname,searchDir,searchExt,autosubflnm,MAX_PATH,heuristic,checkSubtitle);
   }
  return autosubflnm;

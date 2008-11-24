@@ -69,6 +69,6 @@ const int* TaudioDenoiseSettings::getResets(unsigned int pageId)
 }
 bool TaudioDenoiseSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
- tsnprintf(tipS,len,_l("threshold: %i"),threshold);
+ tsnprintf_s(tipS, len, _TRUNCATE, _l("threshold: %i"), threshold);
  return true;
 }

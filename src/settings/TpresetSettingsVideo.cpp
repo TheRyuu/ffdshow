@@ -423,14 +423,16 @@ void TpresetVideo::loadReg(void)
  if (needOutcspsFix)
   {
    needOutcspsFix=0;
-   char_t rkey[MAX_PATH];tsprintf(rkey,FFDSHOW_REG_PARENT _l("\\%s"),reg_child);
+   char_t rkey[MAX_PATH];
+   tsnprintf_s(rkey, countof(rkey), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s"), reg_child);
    TregOpRegRead t(HKEY_LOCAL_MACHINE,rkey);
    output->reg_op_outcsps(t);
   }
  if (needGlobalFix)
   {
    needGlobalFix=0;
-   char_t rkey[MAX_PATH];tsprintf(rkey,FFDSHOW_REG_PARENT _l("\\%s"),reg_child);
+   char_t rkey[MAX_PATH];
+   tsnprintf_s(rkey, countof(rkey), _TRUNCATE, FFDSHOW_REG_PARENT _l("\\%s"), reg_child);
    TregOpRegRead t(HKEY_CURRENT_USER,rkey);
    vis->reg_op2(t);
    grab->reg_op2(t);

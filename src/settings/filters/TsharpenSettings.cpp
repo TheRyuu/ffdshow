@@ -147,11 +147,12 @@ bool TsharpenSettings::getTip(unsigned int pageId,char_t *buf,size_t len)
           vals[1]=mplayerChroma;
           break;
   }
- tsprintf(tipS,_l("method:%s\n"),name);
- if (capts[0]) strcatf(tipS,_l("%s: %i"),capts[0],vals[0]);
- if (capts[1]) strcatf(tipS,_l(", %s: %i"),capts[1],vals[1]);
- if (capts[2]) strcatf(tipS,_l(", %s: %i"),capts[2],vals[2]);
- strncpy(buf,tipS,len);buf[len-1]='\0';
+ tsnprintf_s(tipS, countof(tipS), _TRUNCATE, _l("method:%s\n"), name);
+ if (capts[0]) strncatf(tipS, countof(tipS), _l("%s: %i"),capts[0],vals[0]);
+ if (capts[1]) strncatf(tipS, countof(tipS), _l(", %s: %i"),capts[1],vals[1]);
+ if (capts[2]) strncatf(tipS, countof(tipS), _l(", %s: %i"),capts[2],vals[2]);
+
+ ff_strncpy(buf,tipS,len);
  return true;
 }
 

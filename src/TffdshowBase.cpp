@@ -154,7 +154,7 @@ STDMETHODIMP TffdshowBase::getParamStr(unsigned int paramID,char_t *buf,size_t b
  const char_t *bufPtr;
  if (getParamStr3(paramID,&bufPtr)==S_OK)
   {
-   strncpy(buf,bufPtr,buflen);
+   ff_strncpy(buf,bufPtr,buflen);
    buf[buflen-1]='\0';
    return S_OK;
   }
@@ -192,7 +192,7 @@ STDMETHODIMP TffdshowBase::getParamName(unsigned int paramID,char_t *buf,size_t 
  const char_t *namePtr;
  if (getParamName3(paramID,&namePtr)==S_OK)
   {
-   strncpy(buf,namePtr,buflen);
+   ff_strncpy(buf,namePtr,buflen);
    buf[buflen-1]='\0';
    return S_OK;
   }

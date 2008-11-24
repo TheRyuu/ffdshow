@@ -125,7 +125,8 @@ unsigned int __stdcall Tremote::threadProc(void *self0)
 
  Tremote *self=(Tremote*)self0;
  HINSTANCE hi=self->deci->getInstance2();
- char_t windowName[80];tsprintf(windowName,_l("%s_window%i"),FFDSHOW_REMOTE_CLASS,rand());
+ char_t windowName[80];
+ tsnprintf_s(windowName, countof(windowName), _TRUNCATE, _l("%s_window%i"), FFDSHOW_REMOTE_CLASS, rand());
  ATOM at=NULL;
  self->h=createInvisibleWindow(hi,_l(FFDSHOW_REMOTE_CLASS),windowName,remoteWndProc0,self,&at);
  if (self->h)
@@ -193,7 +194,7 @@ unsigned int __stdcall Tremote::ffwdThreadProc(void *self0)
 		hh = pos/3600;
 		mm = (pos - hh*3600)/60;
 		ss = pos - hh*3600 - mm*60;
-		tsprintf(msg,_l("%s %02i:%02i:%02i / %s"),mode<0?_l("<<"):_l(">>"), hh, mm, ss, duration_str);
+		tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("%s %02i:%02i:%02i / %s"),mode<0?_l("<<"):_l(">>"), hh, mm, ss, duration_str);
 		self->deciV->resetOSD();
 		self->deciV->drawOSD(self->OSDPositionX, self->OSDPositionY, msg);
 		//self->deciV->shortOSDmessage(msg,30);
@@ -528,7 +529,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			{
 				long streamNb = AudioStreamsNames[l].first;
 				char_t tmpStr[40];
-				tsprintf(tmpStr, _l("%ld"), streamNb);
+				tsnprintf_s(tmpStr, countof(tmpStr), _TRUNCATE, _l("%ld"), streamNb);
 				ffstring xmlString = _l("<stream><id>") + ffstring(tmpStr)+_l("</id><name>")+ffstring(AudioStreamsNames[l].second)
 					+_l("</name><language_name>")+ffstring(AudioStreamsLanguageNames[l].second)+_l("</language_name></stream>");
 
@@ -564,7 +565,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			{
 				long streamNb = SubtitleStreamsNames[l].first;
 				char_t tmpStr[40];
-				tsprintf(tmpStr, _l("%ld"), streamNb);
+				tsnprintf_s(tmpStr, countof(tmpStr), _TRUNCATE, _l("%ld"), streamNb);
 				ffstring xmlString = _l("<stream><id>") + ffstring(tmpStr)+_l("</id><name>")+ffstring(SubtitleStreamsNames[l].second)
 					+_l("</name><language_name>")+ffstring(SubtitleStreamsLanguageNames[l].second)+_l("</language_name></stream>");
 
@@ -642,7 +643,7 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
         ((char_t*)cds->lpData)[0]='\0';
        else
         {
-         strncpy((char_t*)cds->lpData,text<char_t>(files[subtitleIdx].c_str()),cds->cbData);
+         ff_strncpy((char_t*)cds->lpData, (const char_t *)text<char_t>(files[subtitleIdx].c_str()),cds->cbData);
          ((char_t*)cds->lpData)[cds->cbData-1]='\0';
          subtitleIdx++;
         }
@@ -739,7 +740,7 @@ void Tremote::getStreams(bool reload)
 				char_t languageName[256];
 				if (streamLanguageId == 0 || GetLocaleInfo(streamLanguageId, LOCALE_SLANGUAGE, languageName, 255) == 0)
 				{
-					tsprintf(languageName, _l("Undetermined (%ld)"), streamNb);
+					tsnprintf_s(languageName, countof(languageName), _TRUNCATE, _l("Undetermined (%ld)"), streamNb);
 				}
 
 				char_t streamName[256];
@@ -749,7 +750,7 @@ void Tremote::getStreams(bool reload)
 					//wcsncpy(streamName, pstreamName, 255);
 				}
 				else
-					tsprintf(streamName, _l("Undetermined (%ld)"), streamNb);
+					tsnprintf_s(streamName, countof(streamName), _TRUNCATE, _l("Undetermined (%ld)"), streamNb);
 
 				if (streamGroup == 1) // Audio
 				{

@@ -122,7 +122,7 @@ bool TresampleSettings::isResample(const TsampleFormat &fmt) const
 
 bool TresampleSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
- tsnprintf(tipS,len,_l("%s resampling to %i Hz"),getResamplerName(mode),freq);
+ tsnprintf_s(tipS, len, _TRUNCATE, _l("%s resampling to %i Hz"),getResamplerName(mode),freq);
  if (_if)
   strncatf(tipS,len,_l(" if sample rate is %s %i Hz"),getCondStr(cond),condFreq);
  return true;

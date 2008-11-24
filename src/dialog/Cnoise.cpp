@@ -91,7 +91,7 @@ const char_t* TnoisePage::nameGray(int id,int c)
    case 255:
     return _(id,_l("white"));
    default:
-    tsprintf(grayS,_l("%i%% %s"),100*c/255,_(id,_l("gray")));
+    tsnprintf_s(grayS, countof(grayS), _TRUNCATE, _l("%i%% %s"), 100*c/255, _(id,_l("gray")));
     return grayS;
   }
 }

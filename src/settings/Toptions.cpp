@@ -136,7 +136,7 @@ void Toptions::TstrOption::set(Toptions *self,const char_t *newval,const TsendOn
  if (buflen==0) return;
  char_t *val=&(self->*(this->val));
  int dif=strcmp(newval,val);
- strncpy(val,newval,buflen);
+ ff_strncpy(val,newval,buflen);
  val[buflen-1]='\0';
  if (dif!=0)
   {

@@ -183,9 +183,9 @@ HRESULT TimgFilterGrab::process(TfilterQueue::iterator it,TffPict &pict,const Tf
          if (len)
           {
            char_t name[MAX_PATH];
-           tsprintf(name,_l("%s%0*i.%s"),cfg->prefix,cfg->digits,framenum,TgrabSettings::formats[cfg->format].ext);
+           tsnprintf_s(name, countof(name), _TRUNCATE, _l("%s%0*i.%s"),cfg->prefix,cfg->digits,framenum,TgrabSettings::formats[cfg->format].ext);
            char_t flnm[MAX_PATH];
-           _makepath(flnm,NULL,cfg->path,name,NULL);
+           _makepath_s(flnm,MAX_PATH,NULL,cfg->path,name,NULL);
            FILE *f=fopen(flnm,_l("wb"));
            if (f)
             {

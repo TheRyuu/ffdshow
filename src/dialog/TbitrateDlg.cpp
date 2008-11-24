@@ -64,7 +64,7 @@ void TbitrateDlg::init(void)
  for (int i=0;mpeg12_frame_rate_tab[i][0];i++)
   {
    char_t pomS[30];
-   tsprintf(pomS,_l("%g"),float(mpeg12_frame_rate_tab[i][0])/mpeg12_frame_rate_tab[i][1]);
+   tsnprintf_s(pomS, countof(pomS), _TRUNCATE, _l("%g"), float(mpeg12_frame_rate_tab[i][0])/mpeg12_frame_rate_tab[i][1]);
    cbxAdd(IDC_CBX_BR_FPS,pomS,i);
   }
  setText(IDC_CBX_BR_FPS,_l("%g"),float(cfgGet(IDFF_dlgBpsFps1000)/1000.0));

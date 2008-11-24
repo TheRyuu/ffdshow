@@ -131,9 +131,9 @@ bool TeqSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
  char_t tip[200]=_l("");
  for (int i=0;i<10;i++)
-  strcatf(tip,_l("%.2f, "),((highdb-lowdb)*(&eq0)[i]/200+lowdb)/100.0f);
+  strncatf(tip, countof(tip), _l("%.2f, "),((highdb-lowdb)*(&eq0)[i]/200+lowdb)/100.0f);
  *strrchr(tip,',')='\0';
- tsnprintf(tipS,len,_l("%s%s"),tip,super?_l("\nSuperEQ"):_l(""));
+ tsnprintf_s(tipS, len, _TRUNCATE, _l("%s%s"), tip, super ? _l("\nSuperEQ") : _l(""));
  tipS[len-1]='\0';
  return true;
 }

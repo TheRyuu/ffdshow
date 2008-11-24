@@ -124,7 +124,8 @@ void TdeinterlacePage::fillDeinterlacers(void)
    dscalerstart=0;
    return;
   }
- char_t dsmask[MAX_PATH];_makepath(dsmask,NULL,dscalerDir,_l("DI_*"),_l("dll"));
+ char_t dsmask[MAX_PATH];
+ _makepath_s(dsmask,MAX_PATH,NULL,dscalerDir,_l("DI_*"),_l("dll"));
  strings dis;findFiles(dsmask,dis,true);
  dscalerstart=i-1;diflnms.clear();
  for (strings::const_iterator di=dis.begin();di!=dis.end();di++)
@@ -137,7 +138,7 @@ void TdeinterlacePage::fillDeinterlacers(void)
      Tdscaler_DI didll(di->c_str(),deci,true);
      if (didll.fm)
       {
-       tsprintf(diname,_l("DScaler: %s"),(const char_t*)text<char_t>(didll.fm->szName));
+       tsnprintf_s(diname, countof(diname), _TRUNCATE, _l("DScaler: %s"),(const char_t*)text<char_t>(didll.fm->szName));
        cbxAdd(IDC_CBX_DEINT_METHOD,diname,9);
        diflnms.push_back(*di);
       }
@@ -153,8 +154,7 @@ void TdeinterlacePage::translate(void)
 
 void TdeinterlacePage::getTip(char_t *tipS,size_t len)
 {
- tsnprintf(tipS,len,_l("Method: %s"),cbxGetItemCount(IDC_CBX_DEINT_METHOD)?cbxGetCurText(IDC_CBX_DEINT_METHOD):_l("DScaler"));
- tipS[len-1]='\0';
+ tsnprintf_s(tipS, len, _TRUNCATE, _l("Method: %s"), cbxGetItemCount(IDC_CBX_DEINT_METHOD) ? cbxGetCurText(IDC_CBX_DEINT_METHOD) : _l("DScaler"));
 }
 bool TdeinterlacePage::reset(bool testonly)
 {

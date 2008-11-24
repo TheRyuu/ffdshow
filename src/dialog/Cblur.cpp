@@ -63,30 +63,39 @@ void TblurPage::denoise3d2dlg(void)
  enable(isDenoise3d,IDC_CHB_BLUR_DENOISE3DHQ);setCheck(IDC_CHB_BLUR_DENOISE3DHQ,cfgGet(IDFF_denoise3Dhq));
 
  int x;char_t s[256];
- tsprintf(s,_l("%s - "),_(IDC_CHB_BLUR_DENOISE3D));
- x=cfgGet(IDFF_denoise3Dluma);strcatf(s,_l("%s%.2f"),_(IDC_CHB_BLUR_DENOISE3D,_l("luma:")),x/100.0f);tbrSet(IDC_TBR_BLUR_DENOISE3D_LUMA,x);
- x=cfgGet(IDFF_denoise3Dchroma);strcatf(s,_l(", %s%.2f"),_(IDC_CHB_BLUR_DENOISE3D,_l("chroma:")),x/100.0f);tbrSet(IDC_TBR_BLUR_DENOISE3D_CHROMA,x);
- x=cfgGet(IDFF_denoise3Dtime);strcatf(s,_l(", %s%.2f"),_(IDC_CHB_BLUR_DENOISE3D,_l("time:")),x/100.0f);tbrSet(IDC_TBR_BLUR_DENOISE3D_TIME,x);
+ tsnprintf_s(s, countof(s), _TRUNCATE, _l("%s - "), _(IDC_CHB_BLUR_DENOISE3D));
+ x=cfgGet(IDFF_denoise3Dluma);
+ strncatf(s, countof(s), _l("%s%.2f"),_(IDC_CHB_BLUR_DENOISE3D,_l("luma:")),x/100.0f);tbrSet(IDC_TBR_BLUR_DENOISE3D_LUMA,x);
+ x=cfgGet(IDFF_denoise3Dchroma);
+ strncatf(s, countof(s), _l(", %s%.2f"),_(IDC_CHB_BLUR_DENOISE3D,_l("chroma:")),x/100.0f);tbrSet(IDC_TBR_BLUR_DENOISE3D_CHROMA,x);
+ x=cfgGet(IDFF_denoise3Dtime);
+ strncatf(s, countof(s), _l(", %s%.2f"),_(IDC_CHB_BLUR_DENOISE3D,_l("time:")),x/100.0f);tbrSet(IDC_TBR_BLUR_DENOISE3D_TIME,x);
  setDlgItemText(m_hwnd,IDC_CHB_BLUR_DENOISE3D,s);
 }
 void TblurPage::mplayer2dlg(void)
 {
  setCheck(IDC_CHB_BLUR_MPLAYER,cfgGet(IDFF_blurIsMplayerTNR));
  int x;char_t s[256];
- tsprintf(s,_l("%s "),_(IDC_CHB_BLUR_MPLAYER));
- x=cfgGet(IDFF_mplayerTNR1);strcatf(s,_l("%i")  ,x);tbrSet(IDC_TBR_BLUR_MPLAYER1,x);
- x=cfgGet(IDFF_mplayerTNR2);strcatf(s,_l(", %i"),x);tbrSet(IDC_TBR_BLUR_MPLAYER2,x);
- x=cfgGet(IDFF_mplayerTNR3);strcatf(s,_l(", %i"),x);tbrSet(IDC_TBR_BLUR_MPLAYER3,x);
+ tsnprintf_s(s, countof(s), _TRUNCATE, _l("%s "), _(IDC_CHB_BLUR_MPLAYER));
+ x=cfgGet(IDFF_mplayerTNR1);
+ strncatf(s, countof(s), _l("%i")  ,x);tbrSet(IDC_TBR_BLUR_MPLAYER1,x);
+ x=cfgGet(IDFF_mplayerTNR2);
+ strncatf(s, countof(s), _l(", %i"),x);tbrSet(IDC_TBR_BLUR_MPLAYER2,x);
+ x=cfgGet(IDFF_mplayerTNR3);
+ strncatf(s, countof(s), _l(", %i"),x);tbrSet(IDC_TBR_BLUR_MPLAYER3,x);
  setDlgItemText(m_hwnd,IDC_CHB_BLUR_MPLAYER,s);
 }
 void TblurPage::swscaler2dlg(void)
 {
  setCheck(IDC_CHB_BLUR_SWSCALER,cfgGet(IDFF_blurIsMplayer));
  int x;char_t s[256];
- tsprintf(s,_l("%s - "),_(IDC_CHB_BLUR_SWSCALER));
- x=cfgGet(IDFF_mplayerBlurRadius);strcatf(s,_l("%s%i"),_(IDC_CHB_BLUR_SWSCALER,_l("radius:")),x);tbrSet(IDC_TBR_BLUR_SWSCALER_RADIUS,x);
- x=cfgGet(IDFF_mplayerBlurLuma);strcatf(s,_l(", %s%.2f"),_(IDC_CHB_BLUR_SWSCALER,_l("luma blur:")),x/100.0f);tbrSet(IDC_TBR_BLUR_SWSCALER_LUMA,x);
- x=cfgGet(IDFF_mplayerBlurChroma);strcatf(s,_l(", %s%.2f"),_(IDC_CHB_BLUR_SWSCALER,_l("chroma blur:")),x/100.0f);tbrSet(IDC_TBR_BLUR_SWSCALER_CHROMA,x);
+ tsnprintf_s(s, countof(s), _TRUNCATE, _l("%s - "), _(IDC_CHB_BLUR_SWSCALER));
+ x=cfgGet(IDFF_mplayerBlurRadius);
+ strncatf(s, countof(s),_l("%s%i"),_(IDC_CHB_BLUR_SWSCALER,_l("radius:")),x);tbrSet(IDC_TBR_BLUR_SWSCALER_RADIUS,x);
+ x=cfgGet(IDFF_mplayerBlurLuma);
+ strncatf(s, countof(s), _l(", %s%.2f"),_(IDC_CHB_BLUR_SWSCALER,_l("luma blur:")),x/100.0f);tbrSet(IDC_TBR_BLUR_SWSCALER_LUMA,x);
+ x=cfgGet(IDFF_mplayerBlurChroma);
+ strncatf(s, countof(s), _l(", %s%.2f"),_(IDC_CHB_BLUR_SWSCALER,_l("chroma blur:")),x/100.0f);tbrSet(IDC_TBR_BLUR_SWSCALER_CHROMA,x);
  setDlgItemText(m_hwnd,IDC_CHB_BLUR_SWSCALER,s);
 }
 void TblurPage::gradual2dlg(void)

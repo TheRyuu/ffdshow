@@ -180,6 +180,6 @@ const char_t* TlogoawaySettings::getModeDescr(int mode)
 
 bool TlogoawaySettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
- tsnprintf(tipS,len,_l("[%i,%i]-[%i,%i]\n%s"),x,y,x+dx-1,y+dy-1,getModeDescr(mode));
+ tsnprintf_s(tipS, len, _TRUNCATE, _l("[%i,%i]-[%i,%i]\n%s"),x,y,x+dx-1,y+dy-1,getModeDescr(mode));
  return true;
 }

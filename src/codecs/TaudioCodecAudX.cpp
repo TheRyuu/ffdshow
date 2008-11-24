@@ -69,10 +69,9 @@ TaudioCodecAudX::~TaudioCodecAudX()
 void TaudioCodecAudX::getInputDescr1(char_t *buf,size_t buflen) const
 {
  if (layer)
-  tsnprintf(buf,buflen,_l("mp%i"),layer);
+  tsnprintf_s(buf, buflen, _TRUNCATE,_l("mp%i"),layer);
  else
-  tsnprintf(buf,buflen,_l("mp1/2/3"));
- buf[buflen-1]='\0';
+  tsnprintf_s(buf, buflen, _TRUNCATE, _l("mp1/2/3"));
 }
 HRESULT TaudioCodecAudX::decode(TbyteBuffer &src0)
 {

@@ -50,10 +50,10 @@ const char_t* TinfoBase::TinfoValueBase::getVal0(bool &wasChange,bool &splitline
     {
      char_t news[50];
      char_t t[20];
-     tsprintf(news,_l("%s"),_strtime(t));
+     tsnprintf_s(news, countof(news), _TRUNCATE, _l("%s"), _strtime(t));
      if (strcmp(news,s)!=0)
       {
-       strcpy(s,news);
+       ff_strncpy(s, news, countof(s));
        wasChange=true;
       }
      return s;
@@ -65,14 +65,14 @@ const char_t* TinfoBase::TinfoValueBase::getVal0(bool &wasChange,bool &splitline
      tsprintf(news,_l("%02i:%02i:%02i"),val/3600,(val/60)%60,val%60);
      if (strcmp(news,s)!=0)
       {
-       strcpy(s,news);
+       ff_strncpy(s, news, countof(s));
        wasChange=true;
       }
      return s;
     }
    case IDFF_OSDtype_sourceFlnm:
     {
-     strcpy(s,deci->getSourceName());
+     ff_strncpy(s, deci->getSourceName(), countof(s));
      wasChange=strcmp(s,olds)!=0;
      return s;
     }
@@ -81,7 +81,7 @@ const char_t* TinfoBase::TinfoValueBase::getVal0(bool &wasChange,bool &splitline
      const char_t *flnm=deci->getSourceName();
      const char_t *pathend=strrchr(flnm,_l('\\'));
      if (!pathend) pathend=strrchr(flnm,_l('/'));
-     strcpy(s,pathend?pathend+1:flnm);
+     ff_strncpy(s, pathend ? pathend + 1 : flnm, countof(s));
      wasChange=strcmp(s,olds)!=0;
      return s;
     }
@@ -99,7 +99,7 @@ const char_t* TinfoBase::TinfoValueBase::getVal0(bool &wasChange,bool &splitline
     }
    case IDFF_OSDtype_exeflnm:
     {
-     strcpy(s,deci->getExeflnm());
+     ff_strncpy(s, deci->getExeflnm(), countof(s));
      wasChange=strcmp(s,olds)!=0;
      return s;
     }
@@ -119,7 +119,7 @@ const char_t* TinfoBase::TinfoValueBase::getVal0(bool &wasChange,bool &splitline
           csp_getName(val,s,countof(s));
           break;
          default:
-          tsprintf(s,_l("%i"),val);
+          tsnprintf_s(s, countof(s), _TRUNCATE, _l("%i"), val);
         }
        wasChange=true;
       }
@@ -131,7 +131,7 @@ const char_t* TinfoBase::TinfoValueBase::getVal(bool &wasChange,bool &splitline)
 {
  splitline=false;
  const char_t *s=getVal0(wasChange,splitline);
- strcpy(olds,s);
+ ff_strncpy(olds, s, countof(olds));
  return s;
 }
 
@@ -224,7 +224,7 @@ const char_t* TinfoDec::TinfoValueDec::getVal0(bool &wasChange,bool &splitline)
      {
       char_t encoder[100]=_l("unknown");
       deciD->getEncoderInfo(encoder,100);
-      tsprintf(s,_l("%s"),encoder);
+      tsnprintf_s(s, countof(s), _TRUNCATE, _l("%s"), encoder);
       wasChange=true;
      }
     return s;
@@ -234,7 +234,7 @@ const char_t* TinfoDec::TinfoValueDec::getVal0(bool &wasChange,bool &splitline)
     splitline=true;
     return s;
    case IDFF_OSDtype_movieSource:
-    strncpy(s,deciD->getDecoderName(),512);
+    ff_strncpy(s, deciD->getDecoderName(), countof(s));
     wasChange=strcmp(s,olds)!=0;
     return s;
    case IDFF_OSDtype_bps:
@@ -302,7 +302,7 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getInputSize(char_t *s,bool &wa
  oldDx=dx;oldDy=dy;
  return s;
 }
-const char_t* TinfoDecVideo::TinfoValueDecVideo::getInputAspect(char_t *s,bool &wasChange)
+const char_t* TinfoDecVideo::TinfoValueDecVideo::getInputAspect(char_t *s, bool &wasChange, size_t buflen)
 {
  unsigned int sar1=0,sar2=0,dar1=0,dar2=0;
  bool sarOk=deciV->getInputSAR(&sar1,&sar2)==S_OK;
@@ -313,10 +313,11 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getInputAspect(char_t *s,bool &
     tsprintf(s,_l("SAR: %u/%u, "),sar1,sar2);
    else
     tsprintf(s,_l("SAR: N/A, "));
+
    if (darOk)
-    strcatf(s,_l("DAR: %u/%u"),dar1,dar2);
+    strncatf(s, buflen,_l("DAR: %u/%u"),dar1,dar2);
    else
-    strcatf(s,_l("DAR: N/A"));
+    strncatf(s, buflen,_l("DAR: N/A"));
    wasChange=true;
   }
  oldSar1=sar1;oldSar2=sar2;oldDar1=dar1;oldDar2=dar2;
@@ -344,15 +345,15 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
    case IDFF_OSDtype_inputSize:
     return getInputSize(s,wasChange);
    case IDFF_OSDtype_inputAspect:
-    return getInputAspect(s,wasChange);
+    return getInputAspect(s, wasChange, countof(s));
    case IDFF_OSDtype_inputSizeAspect:
     {
      bool wasChangeSize=false;
      getInputSize(sizeStr,wasChangeSize);
      bool wasChangeAspect=false;
-     getInputAspect(aspectStr,wasChangeAspect);
+     getInputAspect(aspectStr, wasChangeAspect, countof(aspectStr));
      if (wasChange=(wasChangeSize || wasChangeAspect))
-      tsprintf(s,_l("%s, %s"),sizeStr,aspectStr);
+      tsnprintf_s(s, countof(s), _TRUNCATE, _l("%s, %s"), sizeStr, aspectStr);
      return s;
     }
    case IDFF_OSDtype_meanQuant:
@@ -362,10 +363,10 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
      if (deciV->calcMeanQuant(&q)==S_OK && q>0)
       tsprintf(news,_l("%-5.2f"),q);
      else
-      strcpy(news,_l("not available"));
+      ff_strncpy(news, _l("not available"), countof(news));
      if (strcmp(news,olds)!=0)
       {
-       strcpy(s,news);
+       ff_strncpy(s, news, countof(s));
        wasChange=true;
       }
      return s;
@@ -384,7 +385,7 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
       }
      else
       {
-       strcpy(s,_l("failed"));
+       strcpy(s, _l("failed"));
        wasChange=false;
       }
      return s;
@@ -399,7 +400,7 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
       }
      else
       {
-       strcpyf(s,_l("failed"));
+       strcpy(s, _l("failed"));
        wasChange=false;
       }
      return s;
@@ -445,12 +446,12 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
           case IDD_QUEUEMSG_5:
           case IDD_QUEUEMSG_6:
           case IDD_QUEUEMSG_7:
-           strcpyf(s,trans->translate(val));
+           ff_strncpy(s, trans->translate(val), countof(s));
            break;
           case IDD_QUEUEMSG_8:
            {
             int late=(int)((-1)*deciV->getLate()/10000);
-            tsprintf(s,_l("%s %4dms"),trans->translate(val),late>0?late:0);
+            tsnprintf_s(s, countof(s), _TRUNCATE, _l("%s %4dms"), trans->translate(val), late > 0 ? late : 0);
            }
         }
       }
@@ -469,7 +470,7 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
      if (idct0)
       {
        text<char_t> idct(idct0);
-       strncpy(s,(const char_t*)idct,countof(s));
+       ff_strncpy(s, (const char_t*)idct, countof(s));
       }
      else
       tsprintf(s,_l("unknown"));
@@ -481,7 +482,7 @@ const char_t* TinfoDecVideo::TinfoValueDecVideo::getVal0(bool &wasChange,bool &s
      if (info0)
       {
        text<char_t> info(info0);
-       strncpy(s,(const char_t*)info,countof(s));
+       ff_strncpy(s, (const char_t*)info, countof(s));
       }
      else
       tsprintf(s,_l("unavailable"));
@@ -539,7 +540,7 @@ const char_t* TinfoDecAudio::TinfoValueDecAudio::getVal0(bool &wasChange,bool &s
     {
      int sf;
      const char_t *sampleFormat=SUCCEEDED(deciA->currentSampleFormat(NULL,NULL,&sf))?TsampleFormat::descriptionPCM(sf):_l("unknown");
-     strcpy(s,sampleFormat);
+     ff_strncpy(s, sampleFormat, countof(s));
      wasChange=oldSampleFormat!=sampleFormat;
      oldSampleFormat=sampleFormat;
      return s;

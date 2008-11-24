@@ -65,7 +65,8 @@ INT_PTR TpresetsEncDlg::msgProc(UINT uMsg,WPARAM wParam,LPARAM lParam)
 void TpresetsEncDlg::onRename(void)
 {
  TpresetEnc *preset=(TpresetEnc*)cbxGetCurItemData(IDC_CBX_PRESETS);
- char_t presetName[MAX_PATH];strcpy(presetName,preset->name);
+ char_t presetName[MAX_PATH];
+ ff_strncpy(presetName, preset->name, countof(presetName));
  if (inputString(_(-IDD_PRESETSENC,_l("Rename preset")),_(-IDD_PRESETSENC,_l("Enter new preset name")),presetName,MAX_PATH) && presetName[0])
   {
    preset->rename(presetName);

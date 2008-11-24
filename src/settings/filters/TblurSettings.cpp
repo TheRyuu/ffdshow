@@ -167,14 +167,14 @@ bool TblurSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
  char_t tip[1000]=_l("");
  if (isSoften)       tsprintf(tip,_l("blur: %i\n"),soften);
- if (isTempSmooth)   strcatf(tip,_l("temporal smooth: %i\n"),tempSmooth);
- if (isSmoothLuma)   strcatf(tip,_l("luminance smoother: %i\n"),smoothStrengthLuma);
- if (isSmoothChroma) strcatf(tip,_l("chroma smoother %i\n"),smoothStrengthChroma);
- if (isGradual)      strcatf(tip,_l("gradual denoise: %i\n"),gradualStrength);
- if (isMplayerTNR)   strcatf(tip,_l("mplayer TNR: %i,%i,%i\n"),mplayerTNR1,mplayerTNR2,mplayerTNR3);
- if (isMplayerBlur)  strcatf(tip,_l("swscaler gaussian blur - radius:%i, luma:%.2f, chroma:%.2f\n"),mplayerBlurRadius,mplayerBlurLuma/100.0f,mplayerBlurChroma/100.0f);
- if (isDenoise3d)    strcatf(tip,_l("denoise 3d %s - luma:%.2f, chroma:%.2f, time:%.2f"),denoise3Dhq?_l("hq"):_l(""),denoise3Dluma/100.0f,denoise3Dchroma/100.0f,denoise3Dtime/100.0f);
+ if (isTempSmooth)   strncatf(tip,countof(tip),_l("temporal smooth: %i\n"),tempSmooth);
+ if (isSmoothLuma)   strncatf(tip,countof(tip),_l("luminance smoother: %i\n"),smoothStrengthLuma);
+ if (isSmoothChroma) strncatf(tip,countof(tip),_l("chroma smoother %i\n"),smoothStrengthChroma);
+ if (isGradual)      strncatf(tip,countof(tip),_l("gradual denoise: %i\n"),gradualStrength);
+ if (isMplayerTNR)   strncatf(tip,countof(tip),_l("mplayer TNR: %i,%i,%i\n"),mplayerTNR1,mplayerTNR2,mplayerTNR3);
+ if (isMplayerBlur)  strncatf(tip,countof(tip),_l("swscaler gaussian blur - radius:%i, luma:%.2f, chroma:%.2f\n"),mplayerBlurRadius,mplayerBlurLuma/100.0f,mplayerBlurChroma/100.0f);
+ if (isDenoise3d)    strncatf(tip,countof(tip),_l("denoise 3d %s - luma:%.2f, chroma:%.2f, time:%.2f"),denoise3Dhq?_l("hq"):_l(""),denoise3Dluma/100.0f,denoise3Dchroma/100.0f,denoise3Dtime/100.0f);
  if (tip[strlen(tip)-1]=='\n') tip[strlen(tip)-1]='\0';
- strncpy(tipS,tip,len);tipS[len-1]='\0';
+ ff_strncpy(tipS,tip,len);
  return true;
 }

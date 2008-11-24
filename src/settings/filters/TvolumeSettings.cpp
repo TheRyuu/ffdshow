@@ -117,6 +117,6 @@ const int* TvolumeSettings::getResets(unsigned int pageId)
 bool TvolumeSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
  static const char_t *ms[]={_l(""),_l("(muted) "),_l("(solo) ")};
- tsnprintf(tipS,len,_l("volume: %i%% (L:%i%%%s, C:%i%%%s, R:%i%%%s, SL:%i%%%s, SR:%i%%%s, LFE:%i%%%s)%s"),vol,volL,ms[volLmute],volC,ms[volCmute],volR,ms[volRmute],volSL,ms[volSLmute],volSR,ms[volSRmute],volLFE,ms[volLFEmute],normalize?_l(", normalizing"):_l(""));
+ tsnprintf_s(tipS, len, _TRUNCATE, _l("volume: %i%% (L:%i%%%s, C:%i%%%s, R:%i%%%s, SL:%i%%%s, SR:%i%%%s, LFE:%i%%%s)%s"),vol,volL,ms[volLmute],volC,ms[volCmute],volR,ms[volRmute],volSL,ms[volSLmute],volSR,ms[volSRmute],volLFE,ms[volLFEmute],normalize?_l(", normalizing"):_l(""));
  return true;
 }

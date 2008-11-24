@@ -133,6 +133,7 @@ void Twinamp2page::onDir(void)
  char_t dir[MAX_PATH];cfgGet(IDFF_winamp2dir,dir,MAX_PATH);
  if (dlgGetDir(m_hwnd,dir,_(-IDD_WINAMP2,_l("Select Winamp 2 directory (not the plugins directory!)"))))
   {
+   dir[MAX_PATH - 22] = 0; // to add "\plugins\dsp*.dll" and still not to exceed MAX_PATH.
    cfgSet(IDFF_winamp2dir,dir);
    deciA->getWinamp2(&winamp2);
    dir2dlg();

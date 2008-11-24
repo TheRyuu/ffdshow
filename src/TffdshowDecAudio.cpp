@@ -930,7 +930,7 @@ STDMETHODIMP TffdshowDecAudio::getOutCodecString(char_t *buf,size_t buflen)
  if (!buf) return E_POINTER;
  if ((inpin && inpin->is_spdif_codec()) || currentOutsf.sf==TsampleFormat::SF_AC3)
   {
-   tsnprintf(buf,buflen,_l("S/PDIF"));
+   tsnprintf_s(buf, buflen, _TRUNCATE, _l("S/PDIF"));
    buf[buflen-1]='\0';
   }
  else

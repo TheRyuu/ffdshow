@@ -61,8 +61,9 @@ void TpictPropPage::lumGain2dlg(void)
 {
  char_t s[256];int x;
  x=cfgGet(IDFF_lumGain);
- tsprintf(s,_l("%s %i"),_(IDC_LBL_LUMGAIN),x);
- if (x==TpictPropSettings::lumGainDef) strcatf(s,_l(" (%s)"),_(IDC_LBL_LUMGAIN,_l("off")));
+ tsnprintf_s(s, countof(s), _TRUNCATE, _l("%s %i"),_(IDC_LBL_LUMGAIN),x);
+ if (x==TpictPropSettings::lumGainDef)
+  strncatf(s, countof(s),_l(" (%s)"),_(IDC_LBL_LUMGAIN,_l("off")));
  setDlgItemText(m_hwnd,IDC_LBL_LUMGAIN,s);
  tbrSet(IDC_TBR_LUMGAIN,cfgGet(IDFF_lumGain));
 }
@@ -70,8 +71,9 @@ void TpictPropPage::lumOffset2dlg(void)
 {
  char_t s[256];int x;
  x=cfgGet(IDFF_lumOffset);
- tsprintf(s,_l("%s %i"),_(IDC_LBL_LUMOFFSET),x);
- if (x==TpictPropSettings::lumOffsetDef) strcatf(s,_l(" (%s)"),_(IDC_LBL_LUMOFFSET,_l("off")));
+ tsnprintf_s(s, countof(s), _TRUNCATE, _l("%s %i"), _(IDC_LBL_LUMOFFSET), x);
+ if (x==TpictPropSettings::lumOffsetDef)
+  strncatf(s, countof(s), _l(" (%s)"), _(IDC_LBL_LUMOFFSET, _l("off")));
  setDlgItemText(m_hwnd,IDC_LBL_LUMOFFSET,s);
  tbrSet(IDC_TBR_LUMOFFSET,cfgGet(IDFF_lumOffset));
 }
@@ -79,8 +81,9 @@ void TpictPropPage::gamma2dlg(void)
 {
  char_t s[256];int x;
  x=cfgGet(IDFF_gammaCorrection);
- tsprintf(s,_l("%s %3.2f"),_(IDC_LBL_GAMMA),float(x/100.0));
- if (x==TpictPropSettings::gammaCorrectionDef) strcatf(s,_l(" (%s)"),_(IDC_LBL_GAMMA,_l("off")));
+ tsnprintf_s(s, countof(s), _TRUNCATE, _l("%s %3.2f"),_(IDC_LBL_GAMMA),float(x/100.0));
+ if (x==TpictPropSettings::gammaCorrectionDef)
+  strncatf(s, countof(s), _l(" (%s)"), _(IDC_LBL_GAMMA, _l("off")));
  setDlgItemText(m_hwnd,IDC_LBL_GAMMA,s);
  tbrSet(IDC_TBR_GAMMA,cfgGet(IDFF_gammaCorrection));
 }
@@ -88,16 +91,19 @@ void TpictPropPage::gammaRGB2dlg(void)
 {
  char_t s[256];int x;
  x=cfgGet(IDFF_gammaCorrectionR);
- tsprintf(s,_l("%s %3.2f"),_(IDC_LBL_GAMMARGB),float(x/100.0));
- if (x==TpictPropSettings::gammaCorrectionDef) strcatf(s,_l(" (%s)"),_(IDC_LBL_GAMMARGB,_l("off")));
+ tsnprintf_s(s, countof(s), _TRUNCATE, _l("%s %3.2f"),_(IDC_LBL_GAMMARGB),float(x/100.0));
+ if (x==TpictPropSettings::gammaCorrectionDef)
+  strncatf(s, countof(s), _l(" (%s)"), _(IDC_LBL_GAMMARGB, _l("off")));
  tbrSet(IDC_TBR_GAMMAR,x);
  x=cfgGet(IDFF_gammaCorrectionG);
- strcatf(s,_l(", %3.2f"),float(x/100.0));
- if (x==TpictPropSettings::gammaCorrectionDef) strcatf(s,_l(" (%s)"),_(IDC_TBR_GAMMAR,_l("off")));
+ strncatf(s, countof(s), _l(", %3.2f"), float(x/100.0));
+ if (x==TpictPropSettings::gammaCorrectionDef)
+  strncatf(s, countof(s), _l(" (%s)"), _(IDC_TBR_GAMMAR, _l("off")));
  tbrSet(IDC_TBR_GAMMAG,x);
  x=cfgGet(IDFF_gammaCorrectionB);
- strcatf(s,_l(", %3.2f"),float(x/100.0));
- if (x==TpictPropSettings::gammaCorrectionDef) strcatf(s,_l(" (%s)"),_(IDC_TBR_GAMMAG,_l("off")));
+ strncatf(s, countof(s) ,_l(", %3.2f"), float(x/100.0));
+ if (x==TpictPropSettings::gammaCorrectionDef)
+  strncatf(s, countof(s), _l(" (%s)"),_(IDC_TBR_GAMMAG,_l("off")));
  setDlgItemText(m_hwnd,IDC_LBL_GAMMARGB,s);
  tbrSet(IDC_TBR_GAMMAB,x);
 }
@@ -105,8 +111,9 @@ void TpictPropPage::hue2dlg(void)
 {
  char_t s[256];int x;
  x=cfgGet(IDFF_hue);
- tsprintf(s,_l("%s %i"),_(IDC_LBL_HUE),x);
- if (x==TpictPropSettings::hueDef) strcatf(s,_l(" (%s)"),_(IDC_LBL_HUE,_l("off")));
+ tsnprintf_s(s, countof(s), _TRUNCATE, _l("%s %i"), _(IDC_LBL_HUE), x);
+ if (x==TpictPropSettings::hueDef)
+  strncatf(s, countof(s), _l(" (%s)"), _(IDC_LBL_HUE,_l("off")));
  setDlgItemText(m_hwnd,IDC_LBL_HUE,s);
  tbrSet(IDC_TBR_HUE,cfgGet(IDFF_hue));
 }
@@ -114,8 +121,9 @@ void TpictPropPage::saturation2dlg(void)
 {
  char_t s[256];int x;
  x=cfgGet(IDFF_saturation);
- tsprintf(s,_l("%s %i"),_(IDC_LBL_SATURATION),x);
- if (x==TpictPropSettings::saturationDef) strcatf(s,_l(" (%s)"),_(IDC_LBL_SATURATION,_l("off")));
+ tsnprintf_s(s, countof(s), _TRUNCATE, _l("%s %i"), _(IDC_LBL_SATURATION), x);
+ if (x==TpictPropSettings::saturationDef)
+  strncatf(s, countof(s), _l(" (%s)") ,_(IDC_LBL_SATURATION,_l("off")));
  setDlgItemText(m_hwnd,IDC_LBL_SATURATION,s);
  tbrSet(IDC_TBR_SATURATION,cfgGet(IDFF_saturation));
 }

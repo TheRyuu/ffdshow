@@ -55,11 +55,11 @@ void TpresetEnc::initBuiltin(void)
 void TpresetEnc::load(const char_t *Iname)
 {
  char_t key[MAX_PATH];strcpy(key,FFDSHOW_REG_PARENT _l("\\") FFDSHOWENC);
- strcpy(name,Iname?Iname:_l("Default"));
+ ff_strncpy(name, Iname ? Iname : _l("Default"), countof(name));
  if (Iname)
   {
-   strcat(key,_l("\\"));
-   strcat(key,name);
+   strncat_s(key, countof(key), _l("\\"), _TRUNCATE);
+   strncat_s(key, countof(key), name, _TRUNCATE);
   };
 
  struct TregOpPresetRegRead :public TregOp
@@ -103,7 +103,8 @@ void TpresetEnc::load(const char_t *Iname)
 void TpresetEnc::save(void)
 {
  char_t key[MAX_PATH];strcpy(key,FFDSHOW_REG_PARENT _l("\\") FFDSHOWENC);
- strcat(key,_l("\\"));strcat(key,name);
+ strncat_s(key, countof(key), _l("\\"), _TRUNCATE);
+ strncat_s(key, countof(key), name, _TRUNCATE);
  DWORD dispo;
  HKEY hKey=NULL;
  if (RegCreateKeyEx(HKEY_CURRENT_USER,key,0,FFDSHOW_REG_CLASS,REG_OPTION_NON_VOLATILE,KEY_WRITE,0,&hKey,&dispo)!=ERROR_SUCCESS) return;
@@ -154,7 +155,7 @@ void TpresetEnc::apply(TcoSettings *co,const int *propsIDs)
        TpresetEnc::Tvals::iterator val=preset->vals.find(X);
        if (val!=preset->vals.end())
         {
-         strncpy(Y,val->second.s.c_str(),buflen);
+         ff_strncpy(Y,val->second.s.c_str(),buflen);
          Y[buflen-1]='\0';
         }
       }
@@ -186,13 +187,15 @@ void TpresetEnc::store(TcoSettings *co,const int *propsIDs)
 void TpresetEnc::rename(const char_t *newname)
 {
  remove();
- strcpy(name,newname);
+ ff_strncpy(name, newname, countof(name));
  save();
 }
 void TpresetEnc::remove(void)
 {
  char_t key[MAX_PATH];
- strcpy(key,FFDSHOW_REG_PARENT _l("\\") FFDSHOWENC);strcat(key,_l("\\"));strcat(key,name);
+ strcpy(key,FFDSHOW_REG_PARENT _l("\\") FFDSHOWENC);
+ strncat_s(key, countof(key), _l("\\"), _TRUNCATE);
+ strncat_s(key, countof(key), name, _TRUNCATE);
  RegDeleteKey(HKEY_CURRENT_USER,key);
 }
 
@@ -238,7 +241,7 @@ void TpresetsEnc::init(void)
  if (!getPreset(preset_lavc_vcd_pal))
   {
    TpresetEnc pe;
-   strcpy(pe.name,preset_lavc_vcd_pal);
+   ff_strncpy(pe.name, preset_lavc_vcd_pal, countof(pe.name));
    TcoSettings co(new TintStrColl);
    co.mode=ENC_MODE::CBR;
    co.codecId=CODEC_ID_MPEG1VIDEO;
@@ -255,7 +258,7 @@ void TpresetsEnc::init(void)
  if (!getPreset(preset_lavc_vcd_ntsc))
   {
    TpresetEnc pe;
-   strcpy(pe.name,preset_lavc_vcd_ntsc);
+   ff_strncpy(pe.name, preset_lavc_vcd_ntsc, countof(pe.name));
    TcoSettings co(new TintStrColl);
    co.mode=ENC_MODE::CBR;
    co.codecId=CODEC_ID_MPEG1VIDEO;
@@ -272,7 +275,7 @@ void TpresetsEnc::init(void)
  if (!getPreset(preset_lavc_svcd_pal))
   {
    TpresetEnc pe;
-   strcpy(pe.name,preset_lavc_svcd_pal);
+   ff_strncpy(pe.name, preset_lavc_svcd_pal, countof(pe.name));
    TcoSettings co(new TintStrColl);
    co.mode=ENC_MODE::CBR;
    co.codecId=CODEC_ID_MPEG2VIDEO;
@@ -290,7 +293,7 @@ void TpresetsEnc::init(void)
  if (!getPreset(preset_lavc_svcd_ntsc))
   {
    TpresetEnc pe;
-   strcpy(pe.name,preset_lavc_svcd_ntsc);
+   ff_strncpy(pe.name, preset_lavc_svcd_ntsc, countof(pe.name));
    TcoSettings co(new TintStrColl);
    co.mode=ENC_MODE::CBR;
    co.codecId=CODEC_ID_MPEG2VIDEO;
@@ -308,7 +311,7 @@ void TpresetsEnc::init(void)
  if (!getPreset(preset_lavc_dvd_pal))
   {
    TpresetEnc pe;
-   strcpy(pe.name,preset_lavc_dvd_pal);
+   ff_strncpy(pe.name, preset_lavc_dvd_pal, countof(pe.name));
    TcoSettings co(new TintStrColl);
    co.mode=ENC_MODE::CBR;
    co.codecId=CODEC_ID_MPEG2VIDEO;
@@ -326,7 +329,7 @@ void TpresetsEnc::init(void)
  if (!getPreset(preset_lavc_dvd_ntsc))
   {
    TpresetEnc pe;
-   strcpy(pe.name,preset_lavc_dvd_ntsc);
+   ff_strncpy(pe.name, preset_lavc_dvd_ntsc, countof(pe.name));
    TcoSettings co(new TintStrColl);
    co.mode=ENC_MODE::CBR;
    co.codecId=CODEC_ID_MPEG2VIDEO;
@@ -357,7 +360,7 @@ TpresetEnc* TpresetsEnc::getPreset(const char_t *name)
 TpresetEnc* TpresetsEnc::createPreset(const char_t *name)
 {
  TpresetEnc preset;
- strcpy(preset.name,name);
+ ff_strncpy(preset.name, name, countof(preset.name));
  push_back(preset);
  return &*rbegin();
 }

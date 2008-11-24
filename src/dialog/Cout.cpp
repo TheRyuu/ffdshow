@@ -214,7 +214,8 @@ void ToutPage::onFps(void)
  strings mitems;
  for (int i=0;TbitrateDlg::mpeg12_frame_rate_tab[i][0];i++)
   {
-   char_t pomS[30];tsprintf(pomS,_l("%g"),float(TbitrateDlg::mpeg12_frame_rate_tab[i][0])/TbitrateDlg::mpeg12_frame_rate_tab[i][1]);
+   char_t pomS[30];
+   tsnprintf_s(pomS, countof(pomS), _TRUNCATE, _l("%g"), float(TbitrateDlg::mpeg12_frame_rate_tab[i][0])/TbitrateDlg::mpeg12_frame_rate_tab[i][1]);
    mitems.push_back(pomS);
   }
  int idx=selectFromMenu(mitems,IDC_BT_FPS,false,20);

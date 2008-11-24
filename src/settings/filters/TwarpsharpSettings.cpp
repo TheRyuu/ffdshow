@@ -116,9 +116,9 @@ bool TwarpsharpSettings::getTip(unsigned int pageId,char_t *buf,size_t buflen)
 {
  switch (method)
   {
-   case 0:tsnprintf(buf,buflen,_l("original warpsharp - depth:%i, threshold:%i"),warpsharpDepth,warpsharpThreshold);
+   case 0:tsnprintf_s(buf, buflen, _TRUNCATE, _l("original warpsharp - depth:%i, threshold:%i"),warpsharpDepth,warpsharpThreshold);
           break;
-   case 1:tsnprintf(buf,buflen,_l("aWarpSharp - depth:%g, threshold:%g, %i %s blur, chroma mode:%s"),awarpsharpDepth/100.0f,awarpsharpThresh/100.0f,awarpsharpBlur,bms[awarpsharpBM],cms[awarpsharpCM]);
+   case 1:tsnprintf_s(buf, buflen, _TRUNCATE, _l("aWarpSharp - depth:%g, threshold:%g, %i %s blur, chroma mode:%s"),awarpsharpDepth/100.0f,awarpsharpThresh/100.0f,awarpsharpBlur,bms[awarpsharpBM],cms[awarpsharpCM]);
           break;
   }
  buf[buflen-1]='\0';

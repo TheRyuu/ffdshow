@@ -222,7 +222,8 @@ void TkeysPage::keyChange(int newkey)
   {
    endKeyChange();
    ignoreNextKey=true;
-   char_t s[256];tsprintf(s,_l("%s %s"),_(-IDD_KEYS,_l("This key is already assigned to")),_(IDC_LV_KEYS,prevDescr));
+   char_t s[256];
+   tsnprintf_s(s, countof(s), _TRUNCATE, _l("%s %s"), _(-IDD_KEYS, _l("This key is already assigned to")), _(IDC_LV_KEYS,prevDescr));
    msg(s);
   }
 }

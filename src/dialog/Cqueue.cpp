@@ -95,7 +95,8 @@ void TqueuePage::translate(void)
 
 void TqueuePage::getTip(char_t *tipS,size_t len)
 {
- if (cfgGet(IDFF_videoDelay)) strcatf(tipS,_l("\nVideo delay: %i msec"),cfgGet(IDFF_videoDelay));
+ if (cfgGet(IDFF_videoDelay))
+  strncatf(tipS, len, _l("\nVideo delay: %i msec"),cfgGet(IDFF_videoDelay));
 }
 
 TqueuePage::TqueuePage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)

@@ -406,7 +406,7 @@ const int* TlevelsSettings::getResets(unsigned int pageId)
 
 bool TlevelsSettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
- tsnprintf(tipS,len,_l("%s\nInput min: %i, input max: %i, output min:%i, output max:%i\nGamma correction: %5.2f"),modes[mode],inMin,inMax,outMin,outMax,gamma/100.0f);
+ tsnprintf_s(tipS, len, _TRUNCATE, _l("%s\nInput min: %i, input max: %i, output min:%i, output max:%i\nGamma correction: %5.2f"),modes[mode],inMin,inMax,outMin,outMax,gamma/100.0f);
  if (posterize!=255)
   strncatf(tipS,len,_l("\nPosterizing to %i levels"),posterize);
  return true;

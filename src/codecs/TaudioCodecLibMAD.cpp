@@ -71,10 +71,9 @@ TaudioCodecLibMAD::~TaudioCodecLibMAD()
 void TaudioCodecLibMAD::getInputDescr1(char_t *buf,size_t buflen) const
 {
  if (frame.header.layer)
-  tsnprintf(buf,buflen,_l("mp%i"),frame.header.layer);
+  tsnprintf_s(buf, buflen, _TRUNCATE, _l("mp%i"), frame.header.layer);
  else
-  tsnprintf(buf,buflen,_l("mp1/2/3"));
- buf[buflen-1]='\0';
+  tsnprintf_s(buf, buflen, _TRUNCATE, _l("mp1/2/3"));
 }
 
 int32_t TaudioCodecLibMAD::scale(mad_fixed_t sample)

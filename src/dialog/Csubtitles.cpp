@@ -58,12 +58,12 @@ void TsubtitlesPage::sub2dlg(void)
  char_t s[260];int x;
 
  x=cfgGet(IDFF_subPosX);
- TsubtitlesSettings::getPosHoriz(x,s,this,IDC_LBL_SUB_POSX);
+ TsubtitlesSettings::getPosHoriz(x, s, this, IDC_LBL_SUB_POSX, countof(s));
  setDlgItemText(m_hwnd,IDC_LBL_SUB_POSX,s);
  tbrSet(IDC_TBR_SUB_POSX,x);
 
  x=cfgGet(IDFF_subPosY);
- TsubtitlesSettings::getPosVert(x,s,this,IDC_LBL_SUB_POSY);
+ TsubtitlesSettings::getPosVert(x, s, this, IDC_LBL_SUB_POSY, countof(s));
  setDlgItemText(m_hwnd,IDC_LBL_SUB_POSY,s);
  tbrSet(IDC_TBR_SUB_POSY,x);
 
@@ -257,7 +257,8 @@ void TsubtitlesPage::onSearchdir(void)
  if (dlgGetDir(m_hwnd,dir,_(-IDD_SUBTITLES,_l("Select directory where subtitles are stored"))))
   {
    char_t sdir[2*MAX_PATH];cfgGet(IDFF_subSearchDir,sdir,2*MAX_PATH);
-   strcat(sdir,_l(";"));strcat(sdir,dir);
+   strncat_s(sdir, countof(sdir), _l(";"), _TRUNCATE);
+   strncat_s(sdir, countof(sdir), dir, _TRUNCATE);
    cfgSet(IDFF_subSearchDir,sdir);
    sub2dlg();
   }

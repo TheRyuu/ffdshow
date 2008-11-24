@@ -64,7 +64,8 @@ LRESULT TwindowWidget::onContextMenu(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lP
       {
        case 0:
         {
-         char_t newtrans[1024];strcpy(newtrans,Ttranslate::eolnString2file(oldtrans).c_str());
+         char_t newtrans[1024];
+         ff_strncpy(newtrans, Ttranslate::eolnString2file(oldtrans).c_str(), countof(newtrans));
          if (self->inputString(_l("Translate"),oldtrans,newtrans,1024))
           {
            self->tr->newTranslation(self->dialogId,id,Ttranslate::eolnFile2string(newtrans));

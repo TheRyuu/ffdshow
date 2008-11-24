@@ -80,6 +80,6 @@ const int* TcrystalitySettings::getResets(unsigned int pageId)
 
 bool TcrystalitySettings::getTip(unsigned int pageId,char_t *tipS,size_t len)
 {
- tsnprintf(tipS,len,_l("Bandwidth extender: %i\nEcho level: %i\nExtra stereo: %i"),bext_level,echo_level,stereo_level);
+ tsnprintf_s(tipS, len, _TRUNCATE, _l("Bandwidth extender: %i\nEcho level: %i\nExtra stereo: %i"), bext_level, echo_level, stereo_level);
  return true;
 }

@@ -205,7 +205,7 @@ bool TffdshowPageBase::translateTV()
       {
        if (newtrans[0]=='\0')
         {
-         strcpy(newtrans,oldtrans);
+         ff_strncpy(newtrans, oldtrans, countof(newtrans));
          if (!inputString(_l("Translate"),oldtrans,newtrans,1024))
           break;
         }
@@ -240,12 +240,12 @@ void TffdshowPageBase::onHelp(void)
   {
    internet=true;
    const char_t *translatedURL=_(-1,page->helpURL);
-   strncpy(fullflnm,translatedURL,std::min<size_t>(strlen(translatedURL)+1,MAX_PATH));
+   ff_strncpy(fullflnm, translatedURL, countof(fullflnm));
   }
  else
   {
-   _makepath(fullflnm,NULL,config->pth,_l("help\\"),NULL);
-   strcat(fullflnm,page->helpURL);
+   _makepath_s(fullflnm,MAX_PATH,NULL,config->pth,_l("help\\"),NULL);
+   strncat_s(fullflnm, countof(fullflnm), page->helpURL, _TRUNCATE);
   }
  if (internet || fileexists(fullflnm))
   ShellExecute(m_hwnd,_l("open"),fullflnm,NULL,_l("."),SW_SHOWNORMAL);

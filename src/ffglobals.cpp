@@ -43,38 +43,22 @@ const char_t *FFDSHOW_VER=_l(__DATE__) _l(" ") _l(__TIME__) _l(" (") _l(COMPILER
 #undef COMPILER_SSE2
 #undef COMPILER_X64
 
-char_t* strcatf(char_t *dst,const char_t *fmt,...)
-{
- char_t pomS[1024];
- va_list va;
- va_start(va,fmt);
- vsprintf(pomS,fmt,va);
- va_end(va);
- return strcat(dst,pomS);
-}
 char_t* strncatf(char_t *dst,size_t dstlen,const char_t *fmt,...)
 {
- char_t pomS[1024];
+ char_t *pomS = (char_t *)_alloca(dstlen * sizeof(char_t));
  va_list va;
  va_start(va,fmt);
- vsprintf(pomS,fmt,va);
+ vsnprintf_s(pomS, dstlen , _TRUNCATE, fmt, va);
  va_end(va);
- return strncat(dst,pomS,dstlen);
-}
-
-char_t* strcpyf(char_t *dst,const char_t *fmt,...)
-{
- va_list va;
- va_start(va,fmt);
- vsprintf(dst,fmt,va);
- va_end(va);
+ strncat_s(dst, dstlen, pomS, _TRUNCATE);
  return dst;
 }
+
 char_t* strncpyf(char_t *dst,size_t dstlen,const char_t *fmt,...)
 {
  va_list va;
  va_start(va,fmt);
- _vsnprintf(dst,dstlen,fmt,va);
+ vsnprintf_s(dst, dstlen, _TRUNCATE, fmt, va);
  va_end(va);
  return dst;
 }
@@ -149,7 +133,8 @@ bool dlgGetDir(HWND owner,char_t *dir,const char_t *capt)
 {
  bool ret=false;
  IMalloc *g_pMalloc;CoGetMalloc(1,&g_pMalloc);
- LPTSTR lpBuffer=(LPTSTR)g_pMalloc->Alloc(MAX_PATH*sizeof(char_t));strcpy(lpBuffer,dir);
+ LPTSTR lpBuffer=(LPTSTR)g_pMalloc->Alloc(MAX_PATH*sizeof(char_t));
+ ff_strncpy(lpBuffer,dir,MAX_PATH);
  BROWSEINFO bi;
  bi.hwndOwner=owner;
  bi.pidlRoot=NULL;
@@ -176,7 +161,8 @@ bool dlgGetDir(HWND owner,char_t *dir,const char_t *capt)
 void findFiles(const char_t *mask,strings &lst,bool fullpaths)
 {
  lst.clear();
- char_t dsk[MAX_PATH],dir[MAX_PATH];_splitpath(mask,dsk,dir,NULL,NULL);
+ char_t dsk[MAX_PATH],dir[MAX_PATH];
+ _splitpath_s(mask,dsk,MAX_PATH,dir,MAX_PATH,NULL,0,NULL,0);
  WIN32_FIND_DATA ff;
  HANDLE hFind=FindFirstFile(mask,&ff);
  BOOL bOk=(hFind!=(HANDLE)-1);
@@ -185,7 +171,7 @@ void findFiles(const char_t *mask,strings &lst,bool fullpaths)
    if (fullpaths)
     {
      char_t flnm[MAX_PATH];
-     _makepath(flnm,dsk,dir,ff.cFileName,NULL);
+     _makepath_s(flnm,MAX_PATH,dsk,dir,ff.cFileName,NULL);
      lst.push_back(flnm);
     }
    else
@@ -207,26 +193,110 @@ bool directoryexists(const char_t *dir)
 void extractfilepath(const char_t *flnm,char_t *path)
 {
  char_t dsk[MAX_PATH],dir[MAX_PATH];
- _splitpath(flnm,dsk,dir,NULL,NULL);
- _makepath(path,dsk,dir,NULL,NULL);
+ _splitpath_s(flnm,dsk,MAX_PATH,dir,MAX_PATH,NULL,0,NULL,0);
+ _makepath_s(path,MAX_PATH,dsk,dir,NULL,NULL);
 }
+
+void extractfilepath(const char_t *flnm,ffstring &path)
+{
+ size_t len = strlen(flnm) + 1;
+ if (len > 4096)
+  {
+   path = _l("");
+   return;
+  }
+ char_t *dsk     = (char_t *)_alloca(len * sizeof(char_t));
+ char_t *dir     = (char_t *)_alloca(len * sizeof(char_t));
+ char_t *pathbuf = (char_t *)_alloca(len * sizeof(char_t));
+ _splitpath_s(flnm, dsk, len, dir, len, NULL, 0, NULL, 0);
+ _makepath_s(pathbuf, len, dsk,dir,NULL,NULL);
+ path = pathbuf;
+}
+
 void extractfilename(const char_t *flnm,char_t *nameext)
 {
  char_t nm[MAX_PATH],ext[MAX_PATH];
- _splitpath(flnm,NULL,NULL,nm,ext);
- _makepath(nameext,NULL,NULL,nm,ext);
+ _splitpath_s(flnm,NULL,0,NULL,0,nm,MAX_PATH,ext,MAX_PATH);
+ _makepath_s(nameext,MAX_PATH,NULL,NULL,nm,ext);
 }
+
+void extractfilename(const char_t *flnm,ffstring &nameext)
+{
+ size_t len = strlen(flnm) + 1;
+ if (len > 4096)
+  {
+   nameext = _l("");
+   return;
+  }
+ char_t *nm         = (char_t *)_alloca(len * sizeof(char_t));
+ char_t *ext        = (char_t *)_alloca(len * sizeof(char_t));
+ char_t *nameextbuf = (char_t *)_alloca(len * sizeof(char_t));
+ _splitpath_s(flnm, NULL, 0, NULL, 0, nm, len, ext, len);
+ _makepath_s(nameextbuf, len, NULL, NULL, nm, ext);
+ nameext = nameextbuf;
+}
+
 void extractfilenameWOext(const char_t *flnm,char_t *name)
 {
  char_t nm[MAX_PATH];
- _splitpath(flnm,NULL,NULL,nm,NULL);
- _makepath(name,NULL,NULL,nm,NULL);
+ _splitpath_s(flnm,NULL,0,NULL,0,nm,MAX_PATH,NULL,0);
+ _makepath_s(name,MAX_PATH,NULL,NULL,nm,NULL);
 }
+
+void extractfilenameWOext(const char_t *flnm, ffstring &name)
+{
+ size_t len = strlen(flnm) + 1;
+ if (len > 4096)
+  {
+   name = _l("");
+   return;
+  }
+ char_t *nm      = (char_t *)_alloca(len * sizeof(char_t));
+ char_t *namebuf = (char_t *)_alloca(len * sizeof(char_t));
+ _splitpath_s(flnm, NULL, 0, NULL,0, nm, len, NULL, 0);
+ _makepath_s(namebuf, len, NULL, NULL, nm, NULL);
+ name = namebuf;
+}
+
 void extractfileext(const char_t *flnm,char_t *ext)
 {
- _splitpath(flnm,NULL,NULL,NULL,ext);
+ _splitpath_s(flnm,NULL,0,NULL,0,NULL,0,ext,MAX_PATH);
  if (ext[0]) memmove(ext,ext+1,strlen(ext)*sizeof(char_t));
 }
+
+void extractfileext(const char_t *flnm,ffstring &ext)
+{
+ size_t len=strlen(flnm) + 1;
+ if (len > 4096)
+  {
+   ext = _l("");
+   return;
+  }
+ char_t *extbuf = (char_t *)_alloca(len * sizeof(char_t));
+ _splitpath_s(flnm,NULL,0,NULL,0,NULL,0,extbuf,len);
+ if (extbuf[0])
+  ext = extbuf + 1;
+ else
+  ext = _l("");
+}
+
+void changepathext(const char_t *flnm, const char_t *ext, ffstring &path)
+{
+ size_t len = strlen(flnm) + strlen(ext) + 1;
+ if (len > 4096)
+  {
+   path = _l("");
+   return;
+  }
+ char_t *drv        = (char_t *)_alloca(len * sizeof(char_t));
+ char_t *dir        = (char_t *)_alloca(len * sizeof(char_t));
+ char_t *nm         = (char_t *)_alloca(len * sizeof(char_t));
+ char_t *pathbuf    = (char_t *)_alloca(len * sizeof(char_t));
+ _splitpath_s(flnm, drv, len, dir, len, nm, len, NULL, 0);
+ _makepath_s(pathbuf, len, drv, dir, nm, ext);
+ path = pathbuf;
+}
+
 FILETIME fileLastWriteTime(const char_t *flnm)
 {
  WIN32_FIND_DATA fd;
@@ -245,9 +315,9 @@ FILETIME fileLastWriteTime(const char_t *flnm)
 
 int nCopyAnsiToWideChar(WCHAR *pWCStr,PCTSTR pAnsiIn,int cchAnsi)
 {
- if (!cchAnsi) cchAnsi = lstrlen(pAnsiIn);
+ if (!cchAnsi) cchAnsi = lstrlen(pAnsiIn) + 1;
 #ifdef UNICODE
- return (int)strlen(strncpy(pWCStr, pAnsiIn,cchAnsi)) + 1;
+ return (int)strlen(ff_strncpy(pWCStr, pAnsiIn,cchAnsi)) + 1;
 #else
  return MultiByteToWideChar(GetACP(), MB_PRECOMPOSED, pAnsiIn, cchAnsi, pWCStr, cchAnsi) + 1;
 #endif
@@ -307,7 +377,11 @@ bool dlgOpenFiles(HWND owner,const char_t *capt,const char_t *filter,const char_
  ofn.hwndOwner      =owner;
  ofn.lpstrFilter    =filter;
  ofn.lpstrInitialDir=initdir;
- char_t *flnm=(char_t*)malloc(65536*sizeof(char_t));if (files.empty()) flnm[0]='\0';else strcpy(flnm,files[0].c_str());
+ char_t *flnm=(char_t*)malloc(65536*sizeof(char_t));
+ if (files.empty())
+  flnm[0]='\0';
+ else
+  ff_strncpy(flnm, files[0].c_str(), 65536);
  ofn.lpstrFile      =LPTSTR(flnm);
  ofn.lpstrTitle     =capt;
  ofn.lpstrDefExt    =defext;
@@ -321,7 +395,7 @@ bool dlgOpenFiles(HWND owner,const char_t *capt,const char_t *filter,const char_
     while ((ofn.lpstrFile=strchr(ofn.lpstrFile,'\0')+1)!=NULL && ofn.lpstrFile[0])
      {
       char_t flnm1[MAX_PATH];
-      _makepath(flnm1,NULL,dir,ofn.lpstrFile,NULL);
+      _makepath_s(flnm1,MAX_PATH,NULL,dir,ofn.lpstrFile,NULL);
       files.push_back(flnm1);
      }
    else
@@ -1510,22 +1584,22 @@ const char_t *fourcc2str(FOURCC fcc,char_t *name,size_t namelength)
 {
  switch (fcc)
   {
-   case FOURCC_PAL1:strncpy(name,_l("2 colors"),namelength);break;
-   case FOURCC_PAL4:strncpy(name,_l("16 colors"),namelength);break;
-   case FOURCC_PAL8:strncpy(name,_l("256 colors"),namelength);break;
+   case FOURCC_PAL1:ff_strncpy(name,_l("2 colors"),namelength);break;
+   case FOURCC_PAL4:ff_strncpy(name,_l("16 colors"),namelength);break;
+   case FOURCC_PAL8:ff_strncpy(name,_l("256 colors"),namelength);break;
    case FOURCC_RGB15MPLAYER:
-   case FOURCC_RGB5:strncpy(name,_l("RGB555"),namelength);break;
+   case FOURCC_RGB5:ff_strncpy(name,_l("RGB555"),namelength);break;
    case FOURCC_RGB16MPLAYER:
-   case FOURCC_RGB6:strncpy(name,_l("RGB565"),namelength);break;
+   case FOURCC_RGB6:ff_strncpy(name,_l("RGB565"),namelength);break;
    case FOURCC_RGB24MPLAYER:
-   case FOURCC_RGB2:strncpy(name,_l("RGB24") ,namelength);break;
+   case FOURCC_RGB2:ff_strncpy(name,_l("RGB24") ,namelength);break;
    case FOURCC_RGB32MPLAYER:
-   case FOURCC_RGB3:strncpy(name,_l("RGB32") ,namelength);break;
-   case FOURCC_RLE4:strncpy(name,_l("MSRLE4"),namelength);break;
-   case FOURCC_RLE8:strncpy(name,_l("MSRLE8"),namelength);break;
-   case FOURCC_1001:strncpy(name,_l("MPEG1") ,namelength);break;
-   case FOURCC_1002:strncpy(name,_l("MPEG2") ,namelength);break;
-   case FOURCC_BITFIELDS:strncpy(name,_l("bitfields"),namelength);break;
+   case FOURCC_RGB3:ff_strncpy(name,_l("RGB32") ,namelength);break;
+   case FOURCC_RLE4:ff_strncpy(name,_l("MSRLE4"),namelength);break;
+   case FOURCC_RLE8:ff_strncpy(name,_l("MSRLE8"),namelength);break;
+   case FOURCC_1001:ff_strncpy(name,_l("MPEG1") ,namelength);break;
+   case FOURCC_1002:ff_strncpy(name,_l("MPEG2") ,namelength);break;
+   case FOURCC_BITFIELDS:ff_strncpy(name,_l("bitfields"),namelength);break;
    default:
     {
      char nameA[5];
@@ -1582,7 +1656,7 @@ void getCLSIDname(const CLSID &clsid,char_t *buf,size_t buflen)
  LPOLESTR sclsidW;
  StringFromIID(clsid,&sclsidW);
  char_t reg[MAX_PATH];
- tsprintf(reg,_l("\\CLSID\\%s"),(const char_t*)text<char_t>(sclsidW));
+ tsnprintf_s(reg, countof(reg), _TRUNCATE,_l("\\CLSID\\%s"),(const char_t*)text<char_t>(sclsidW));
  CoTaskMemFree(sclsidW);
  TregOpRegRead t(HKEY_CLASSES_ROOT,reg);
  t._REG_OP_S(0,_l(""),buf,buflen,_l(""));

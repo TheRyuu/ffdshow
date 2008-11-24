@@ -70,7 +70,7 @@ public:
    h264skipOnDelay=src.h264skipOnDelay;
    h264skipDelayTime=src.h264skipDelayTime;
    bordersBrightness=src.bordersBrightness;
-   strncpy(useQueueOnlyInList, src.useQueueOnlyInList, 256);
+   ff_strncpy(useQueueOnlyInList, src.useQueueOnlyInList, countof(useQueueOnlyInList));
 
    isDyInterlaced=src.isDyInterlaced;dyInterlaced=src.dyInterlaced;
    return *this;

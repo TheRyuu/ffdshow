@@ -83,15 +83,15 @@ TavisynthSettings::TavisynthSettings(TintStrColl *Icoll,TfilterIDFFs *filters):T
 
 void TavisynthSettings::reg_op(TregOp &t)
 {
- strncpy(scriptMULTI_SZ, script, std::min((size_t)MAX_AVISYNTH_SCRIPT_LENGTH, strlen(script) + 1)); // before save
+ ff_strncpy(scriptMULTI_SZ, script, MAX_AVISYNTH_SCRIPT_LENGTH); // before save
  TfilterSettingsVideo::reg_op(t);
- strncpy(script, scriptMULTI_SZ, std::min((size_t)MAX_AVISYNTH_SCRIPT_LENGTH, strlen(scriptMULTI_SZ) + 1)); // after load
+ ff_strncpy(script, scriptMULTI_SZ, MAX_AVISYNTH_SCRIPT_LENGTH); // after load
 }
 
 void TavisynthSettings::getDefaultStr(int id,char_t *buf,size_t buflen)
 {
  if (id == IDFF_avisynthScriptMULTI_SZ)
-  strncpy(buf, script, std::min(buflen, strlen(script) + 1));
+  ff_strncpy(buf, script, buflen);
  return TfilterSettingsVideo::getDefaultStr(id, buf, buflen);
 }
 

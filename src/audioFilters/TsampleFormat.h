@@ -179,11 +179,11 @@ public:
      case 1:chnls=_l("mono");break;
      case 2:chnls=_l("stereo");break;
      default:
-      tsnprintf(buf,buflen,_l("%u Hz, %u channels"),freq,nchannels);
+      tsnprintf_s(buf, buflen, _TRUNCATE, _l("%u Hz, %u channels"), freq, nchannels);
       buf[buflen-1]='\0';
       return;
     }
-   tsnprintf(buf,buflen,_l("%u Hz, %s"),freq,chnls);
+   tsnprintf_s(buf, buflen, _TRUNCATE, _l("%u Hz, %s"), freq, chnls);
    buf[buflen-1]='\0';
   }
  static const char_t *descriptionPCM(int sf,bool pcm_be=false)
@@ -209,12 +209,12 @@ public:
  void descriptionPCM(char_t *buf,size_t buflen) const
   {
    if (freq==0)
-    strncpy(buf,_l("none"),buflen);
+    ff_strncpy(buf,_l("none"),buflen);
    else
     {
      char_t *buf2=(char_t*)_alloca(buflen*sizeof(char_t));
      description(buf2,buflen);
-     tsnprintf(buf,buflen,_l("%s %s"),buf2,descriptionPCM());
+     tsnprintf_s(buf, buflen, _TRUNCATE, _l("%s %s"), buf2, descriptionPCM());
     }
    buf[buflen-1]='\0';
   }

@@ -1907,7 +1907,7 @@ void TffdshowDecVideo::getChapters(void)
 				if (markerName != NULL)
 				{
 					//char_t fMarkerName[MAX_PATH];
-					//strncpy(fMarkerName, markerName, strlen(fMarkerName));
+					//ff_strncpy(fMarkerName, markerName, strlen(fMarkerName));
  					
 					//strcpy(fMarkerName, markerName);
 					long markerTimeL = (long)markerTime;

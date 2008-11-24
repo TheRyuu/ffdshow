@@ -167,9 +167,9 @@ if (avcodec)
 {
 	// Show dca as dts
 	if (!strcmp(text<char_t>(avcodec->name), _l("dca")))
-		strncpy(buf,_l("dts"),buflen);
+		ff_strncpy(buf,_l("dts"),buflen);
 	else
-		strncpy(buf,text<char_t>(avcodec->name),buflen);
+		ff_strncpy(buf,(const char_t *)text<char_t>(avcodec->name),buflen);
 }
  buf[buflen-1]='\0';
 }
@@ -263,7 +263,7 @@ void TaudioCodecLibavcodec::updateChannelMapping()
 	src_ch_layout = AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT;
 	if (!avctx->codec->name) return;
 	char_t codec[255];
-	strncpy(codec,text<char_t>(avctx->codec->name),255);
+	ff_strncpy(codec,(const char_t *)text<char_t>(avctx->codec->name),255);
 	codec[254]='\0';
 
 	if (!stricmp(codec, _l("ac3")) || !stricmp(codec, _l("eac3")))

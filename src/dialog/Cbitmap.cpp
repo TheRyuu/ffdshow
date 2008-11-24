@@ -42,12 +42,12 @@ void TbitmapPage::pos2dlg(void)
  char_t s[260];int x;
 
  x=cfgGet(IDFF_bitmapPosx);
- TsubtitlesSettings::getPosHoriz(x,s,this,IDC_LBL_BITMAP_POSX);
+ TsubtitlesSettings::getPosHoriz(x, s, this, IDC_LBL_BITMAP_POSX, countof(s));
  setDlgItemText(m_hwnd,IDC_LBL_BITMAP_POSX,s);
  tbrSet(IDC_TBR_BITMAP_POSX,x);
 
  x=cfgGet(IDFF_bitmapPosy);
- TsubtitlesSettings::getPosVert(x,s,this,IDC_LBL_BITMAP_POSY);
+ TsubtitlesSettings::getPosVert(x, s, this, IDC_LBL_BITMAP_POSY, countof(s));
  setDlgItemText(m_hwnd,IDC_LBL_BITMAP_POSY,s);
  tbrSet(IDC_TBR_BITMAP_POSY,x);
 }

@@ -286,7 +286,7 @@ wchar_t* Tstream::fgets(wchar_t *buf0,int len) const
      if (eof) break;
      srcBuf[count]=0;
      int unicodeLen=MultiByteToWideChar(CP_UTF8,0,srcBuf,-1,unicodeBuf,MAX_SUBTITLE_LENGTH);
-     strncpy(buf0,unicodeBuf,unicodeLen<len ? unicodeLen : len);
+     ff_strncpy(buf0,unicodeBuf,unicodeLen<len ? unicodeLen : len);
      break;
     }
   }
@@ -436,9 +436,9 @@ TstreamRAR::TstreamRAR(const char_t *rarflnm,const char_t *flnm,const Tconfig *c
  RARHeaderDataEx HeaderDataEx;
  HeaderDataEx.CmtBuf=NULL;
  char_t ext[MAX_PATH];
- _splitpath(flnm,NULL,NULL,NULL,ext);
+ _splitpath_s(flnm,NULL,0,NULL,0,NULL,0,ext,MAX_PATH);
  char_t extpattern[MAX_PATH];
- _makepath(extpattern,NULL,NULL,_l("*"),ext);
+ _makepath_s(extpattern,MAX_PATH,NULL,NULL,_l("*"),ext);
  size_t bufsize=0;
  while(ReadHeaderEx(hrar, &HeaderDataEx) == 0)
   {
