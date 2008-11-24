@@ -56,6 +56,7 @@ Tlibmplayer::Tlibmplayer(const Tconfig *config):refcount(0)
  dll->loadFunction(decCPUCount,"decCPUCount");
  dll->loadFunction(incCPUCount,"incCPUCount");
  dll->loadFunction(yadif_init,"yadif_init");
+ dll->loadFunction(yadif_uninit,"yadif_uninit");
  dll->loadFunction(yadif_filter,"yadif_filter");
  dll->loadFunction(reorder_channel_nch,"reorder_channel_nch");
 

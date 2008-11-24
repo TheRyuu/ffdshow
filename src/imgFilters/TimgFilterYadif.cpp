@@ -85,11 +85,11 @@ HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4], i
     int frame_start_pos = 0;
     int double_frame_rate = yadctx->mode & 1;
 
-    if(yadctx->parity < 0) {
+    if(yadctx->field_order_mode < 0) {
         if (pict.fieldtype & FIELD_TYPE::INT_TFF)
             tff = 1;
     }
-    else tff = (yadctx->parity&1)^1;
+    else tff = (yadctx->field_order_mode&1)^1;
 
     int dx,dy;
     if (full)
@@ -224,6 +224,7 @@ void TimgFilterYadif::done(void)
     {
         int i;
 
+        libmplayer->yadif_uninit(yadctx);
         for(i=0; i<3*3; i++){
             uint8_t **p= &yadctx->ref[i%3][i/3];
             if(*p) ::free(*p - 3 * yadctx->stride[i/3]);
@@ -236,7 +237,7 @@ void TimgFilterYadif::done(void)
     last_rtStop = REFTIME_INVALID;
 }
 
-YadifContext* TimgFilterYadif::getContext(int mode, int parity){
+YadifContext* TimgFilterYadif::getContext(int mode, int field_order_mode){
 
     YadifContext *yadctx = (YadifContext*)malloc(sizeof(YadifContext));
     if (!yadctx) return yadctx;
@@ -245,7 +246,8 @@ YadifContext* TimgFilterYadif::getContext(int mode, int parity){
     yadctx->do_deinterlace=1;
 
     yadctx->mode = mode;
-    yadctx->parity = parity;
+    yadctx->field_order_mode = field_order_mode;
+    libmplayer->yadif_init(yadctx);
 
     return yadctx;
 }
@@ -263,7 +265,6 @@ TimgFilterYadif::TimgFilterYadif(IffdshowBase *Ideci,Tfilters *Iparent,bool Ibob
     dllok = libmplayer && libmplayer->yadif_filter && libmplayer->yadif_init;
     yadctx = NULL;
     last_rtStop = REFTIME_INVALID;
-    if (dllok) libmplayer->yadif_init();
 }
 
 TimgFilterYadif::~TimgFilterYadif()
@@ -367,14 +368,14 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
     bool cspChanged = getCur(FF_CSP_420P | FF_CSP_FLAGS_INTERLACED, pict, cfg->full,src);
 
     if (!yadctx){
-        yadctx = getContext(cfg->yadifMode, cfg->yadifParity);
+        yadctx = getContext(cfg->yadifMode, cfg->yadifFieldOrder);
         config(pict);
     }
 
     oldpict = pict;
     oldcfg = *cfg;
 
-    yadctx->parity = cfg->yadifParity;
+    yadctx->field_order_mode = cfg->yadifFieldOrder;
     yadctx->mode = cfg->yadifMode;
 
     int old_do_deinterlace = yadctx->do_deinterlace;

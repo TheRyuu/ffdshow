@@ -29,5 +29,6 @@ EXPORTS
   incCPUCount
   sws_getContextEx
   yadif_init
+  yadif_uninit
   yadif_filter
   reorder_channel_nch

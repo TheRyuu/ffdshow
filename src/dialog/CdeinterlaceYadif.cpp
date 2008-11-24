@@ -32,7 +32,7 @@ TdeinterlacePageYadif::TdeinterlacePageYadif(Twindow *parent):TdeinterlacePanel(
 {
  static const TbindCombobox<TdeinterlacePageYadif> cbx[]=
   {
-   IDC_CBX_YADIF_PARITY, IDFF_yadifParity, BINDCBX_DATA, &TdeinterlacePageYadif::cfg2dlg,
+   IDC_CBX_YADIF_PARITY, IDFF_yadifFieldOrder, BINDCBX_DATA, &TdeinterlacePageYadif::cfg2dlg,
    0
   };
  bindComboboxes(cbx);
@@ -62,7 +62,7 @@ void TdeinterlacePageYadif::cfg2dlg(void)
 {
  setCheck(IDC_CHB_YADIF_SKIP_CHECK, !!(cfgGet(IDFF_yadifMode) & 2));
  setCheck(IDC_CHB_YADIF_DOUBLE_FRAMERATE, cfgGet(IDFF_yadifMode) & 1);
- int se=cfgGet(IDFF_yadifParity);
+ int se=cfgGet(IDFF_yadifFieldOrder);
  cbxSetDataCurSel(IDC_CBX_YADIF_PARITY,se);
 }
 

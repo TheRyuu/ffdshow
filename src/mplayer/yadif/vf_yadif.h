@@ -21,12 +21,20 @@
 #ifndef _VF_YADIF_H_
 #define _VF_YADIF_H_
 
+typedef struct YadifThreadContext{
+    struct YadifContext *yadctx;
+    int plane_start;
+    int plane_end;
+    int y_start[3];
+    int y_end[3];
+} YadifThreadContext;
+
 /**
  * YadifContext
  */
-typedef struct {
+typedef struct YadifContext {
     int mode;
-    int parity;
+    int field_order_mode;
     int64_t buffered_rtStart;
     int64_t buffered_rtStop;
     int64_t frame_duration;
@@ -41,9 +49,29 @@ typedef struct {
      * 4:normal (running)
      */
     int do_deinterlace;
+
+    /*
+     * Thread stuffs
+     */
+    int thread_count;
+    void *thread_opaque;
+    int (*execute)(struct YadifContext *yadctx, int (*func)(YadifThreadContext *yadThreadCtx), int count);
+    YadifThreadContext *threadCtx;
+
+    /*
+     * temporary & private stuffs
+     * parameters to be handed to threads
+     */
+    uint8_t **dst;
+    stride_t *dst_stride;
+    int width;
+    int height;
+    int parity;
+    int tff;
 } YadifContext;
 
 void yadif_filter(YadifContext *p, uint8_t *dst[3], stride_t dst_stride[3], int width, int height, int parity, int tff);
-void yadif_init(void);
+void yadif_init(YadifContext *yadctx);
+void yadif_uninit(YadifContext *yadctx);
 
 #endif // _VF_YADIF_H_

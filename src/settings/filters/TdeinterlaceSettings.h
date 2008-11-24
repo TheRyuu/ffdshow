@@ -53,7 +53,7 @@ public:
  int kernelThreshold,kernelSharp,kernelTwoway,kernelMap,kernelLinked;
 
  int dgbobMode,dgbobThreshold,dgbobAP;
- int yadifMode,yadifParity;
+ int yadifMode,yadifFieldOrder;
  static const char_t *dgbobModes[];
 
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;

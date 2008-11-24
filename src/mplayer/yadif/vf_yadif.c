@@ -48,6 +48,14 @@
 
 //===========================================================================//
 
+static void yadif_default_execute(YadifContext *yadctx, int (*func)(YadifThreadContext *yadThreadCtx), int count){
+    int i;
+
+    for(i=0; i<count; i++){
+        func(&yadctx->threadCtx[i]);
+    }
+}
+
 static void (*filter_line)(YadifContext *yadctx, uint8_t *dst, uint8_t *prev, uint8_t *cur, uint8_t *next, int w, int refs, int parity);
 
 #if defined(HAVE_FAST_64BIT) || (defined(HAVE_MMX) && defined(NAMED_ASM_ARGS))
@@ -340,8 +348,48 @@ static void filter_line_c(YadifContext *yadctx, uint8_t *dst, uint8_t *prev, uin
     }
 }
 
+attribute_align_arg void yadif_threaded_filter(YadifThreadContext *yadThreadCtx){
+    int i,y;
+    YadifContext *yadctx = yadThreadCtx->yadctx;
+    uint8_t **dst = yadctx->dst;
+    stride_t *dst_stride = yadctx->dst_stride;
+    int width = yadctx->width;
+    int height = yadctx->height;
+    int parity = yadctx->parity;
+    int tff = yadctx->tff;
+
+    for(i = yadThreadCtx->plane_start ; i <= yadThreadCtx->plane_end ; i++){
+        int is_chroma= !!i;
+        int w= width >>is_chroma;
+        int h= yadThreadCtx->y_end[i];
+        int refs= yadctx->stride[i];
+
+        for(y=yadThreadCtx->y_start[i] ; y < h ; y++){
+            if((y ^ parity) & 1){
+                uint8_t *prev= &yadctx->ref[0][i][y*refs];
+                uint8_t *cur = &yadctx->ref[1][i][y*refs];
+                uint8_t *next= &yadctx->ref[2][i][y*refs];
+                uint8_t *dst2= &dst[i][y*dst_stride[i]];
+                filter_line(yadctx, dst2, prev, cur, next, w, refs, parity ^ tff);
+            }else{
+                memcpy(&dst[i][y*dst_stride[i]], &yadctx->ref[1][i][y*refs], w);
+            }
+        }
+    }
+}
+
 attribute_align_arg void yadif_filter(YadifContext *yadctx, uint8_t *dst[3], stride_t dst_stride[3], int width, int height, int parity, int tff){
-    int y, i;
+    int y, i, thread_num, pl;
+    int pixels_all,pixels_per_thread, residual_pixels;
+    int w[3],h[3];
+    int y_start,plane_start;
+    int thread_count = yadctx->thread_count;
+#if __STDC_VERSION__ >= 199901L
+    YadifThreadContext threads[thread_count];
+#else
+    YadifThreadContext *threads=_alloca(sizeof(YadifThreadContext) * thread_count);
+#endif
+
 #ifdef HAVE_FAST_64BIT
     DECLARE_ALIGNED(16, uint8_t, regbuf[16*16]);
     __asm__ volatile(
@@ -359,24 +407,50 @@ attribute_align_arg void yadif_filter(YadifContext *yadctx, uint8_t *dst[3], str
         ::[regbuf] "r"(regbuf)
     );
 #endif
-    for(i=0; i<3; i++){
-        int is_chroma= !!i;
-        int w= width >>is_chroma;
-        int h= height>>is_chroma;
-        int refs= yadctx->stride[i];
 
-        for(y=0; y<h; y++){
-            if((y ^ parity) & 1){
-                uint8_t *prev= &yadctx->ref[0][i][y*refs];
-                uint8_t *cur = &yadctx->ref[1][i][y*refs];
-                uint8_t *next= &yadctx->ref[2][i][y*refs];
-                uint8_t *dst2= &dst[i][y*dst_stride[i]];
-                filter_line(yadctx, dst2, prev, cur, next, w, refs, parity ^ tff);
-            }else{
-                memcpy(&dst[i][y*dst_stride[i]], &yadctx->ref[1][i][y*refs], w);
+    memset(threads, 0, sizeof(YadifThreadContext) * thread_count);
+
+    yadctx->threadCtx = threads;
+    yadctx->dst = dst;
+    yadctx->dst_stride = dst_stride;
+    yadctx->width = width;
+    yadctx->height = height;
+    yadctx->parity = parity;
+    yadctx->tff = tff;
+
+    for (i = 0 ; i < 3 ; i++){
+        int is_chroma= !!i;
+        w[i] = width  >> is_chroma;
+        h[i] = height >> is_chroma;
+    }
+
+    pixels_all = w[0] * h[0] + w[1] * h[1] + w[2] * h[2];
+    pixels_per_thread = pixels_all / thread_count;
+    y_start = 0;
+    plane_start = 0;
+    for (thread_num = 0 ; thread_num < thread_count ; thread_num++){
+        threads[thread_num].yadctx = yadctx;
+        threads[thread_num].plane_start = plane_start;
+        threads[thread_num].y_start[plane_start] = y_start;
+        residual_pixels = pixels_per_thread;
+        for (pl = plane_start ; pl < 3 ; pl++){
+            int lines = residual_pixels / w[pl];
+            if (threads[thread_num].y_start[pl] + lines <= h[pl]){
+                threads[thread_num].plane_end = pl;
+                y_start = threads[thread_num].y_end[pl] = threads[thread_num].y_start[pl] + lines;
+                break;
             }
+            plane_start++;
+            y_start = 0;
+            threads[thread_num].y_end[pl] = h[pl];
+            residual_pixels -= (h[pl] - threads[thread_num].y_start[pl]) * w[pl];
         }
     }
+
+    threads[thread_count - 1].plane_end = 2;
+    threads[thread_count - 1].y_end[2] = h[2];
+
+    yadctx->execute(yadctx, yadif_threaded_filter, yadctx->thread_count);
 #ifdef HAVE_FAST_64BIT
     __asm__ volatile(
         "movq    %[regbuf], %%rax \n\t"
@@ -398,7 +472,7 @@ attribute_align_arg void yadif_filter(YadifContext *yadctx, uint8_t *dst[3], str
 #endif
 }
 
-void yadif_init(void){
+void yadif_init(YadifContext *yadctx){
 
     filter_line = filter_line_c;
 #if defined(HAVE_FAST_64BIT) || (defined(HAVE_MMX) && defined(NAMED_ASM_ARGS))
@@ -409,5 +483,11 @@ void yadif_init(void){
     else if(gCpuCaps.hasMMX2)
         filter_line = filter_line_mmx2;
 #endif
+    yadctx->execute = yadif_default_execute;
+    if (yadif_thread_init(yadctx, GetCPUCount()) < 0)
+        yadctx->thread_count = 1;
+}
 
+void yadif_uninit(YadifContext *yadctx){
+    yadif_thread_free(yadctx);
 }

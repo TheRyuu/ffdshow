@@ -135,7 +135,7 @@ TdeinterlaceSettings::TdeinterlaceSettings(TintStrColl *Icoll,TfilterIDFFs *filt
      _l("dgbobAP"),0,
    IDFF_yadifMode                ,&TdeinterlaceSettings::yadifMode                ,0,3,_l(""),1,
      _l("yadifMode"),0,
-   IDFF_yadifParity              ,&TdeinterlaceSettings::yadifParity              ,-1,1,_l(""),1,
+   IDFF_yadifFieldOrder          ,&TdeinterlaceSettings::yadifFieldOrder          ,-1,1,_l(""),1,
      _l("yadifParity"),-1,
    0
   };
@@ -153,7 +153,7 @@ TdeinterlaceSettings::TdeinterlaceSettings(TintStrColl *Icoll,TfilterIDFFs *filt
  static const TcreateParamList2<TmethodProps> listMethod(methodProps,&TmethodProps::name);setParamList(IDFF_deinterlaceMethod,&listMethod);
  static const TcreateParamList2<TframerateDoublerSEs> listSE(frameRateDoublerSEs,&TframerateDoublerSEs::name);setParamList(IDFF_frameRateDoublerSE,&listSE);
  static const TcreateParamList1 listDGbobMode(dgbobModes);setParamList(IDFF_dgbobMode,&listDGbobMode);
- static const TcreateParamList2<TframerateDoublerSEs> listYadifParity(yadifParitySEs,&TframerateDoublerSEs::name);setParamList(IDFF_yadifParity,&listYadifParity);
+ static const TcreateParamList2<TframerateDoublerSEs> listYadifParity(yadifParitySEs,&TframerateDoublerSEs::name);setParamList(IDFF_yadifFieldOrder,&listYadifParity);
 }
 
 void TdeinterlaceSettings::createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const

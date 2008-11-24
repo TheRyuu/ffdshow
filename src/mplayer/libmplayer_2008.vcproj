@@ -1094,6 +1094,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\yadif\yadif_thread.c"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\libmplayer.def"

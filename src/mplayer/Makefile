@@ -1,4 +1,4 @@
-CFLAGS+=-I. -I.. -I../imgFilters -I../ffmpeg/libavutil -Ilibvo -Imp3lib -Ipostproc
+CFLAGS+=-I. -I.. -I../imgFilters -I../ffmpeg/libavutil -Ilibvo -Imp3lib -Ipostproc -std=gnu99
 
 SRCS_C=\
 		mplayer.c \
@@ -11,6 +11,7 @@ SRCS_C=\
 		libaf/reorder_ch.c \
 		libvo/aclib.c \
 		yadif/vf_yadif.c \
+		yadif/yadif_thread.c \
 		mp3lib/sr1.c
 		
 ifneq ($(64BIT),yes)
@@ -32,7 +33,7 @@ else
 endif
 
 ifeq ($(FFDEBUG),yes)
-SRCS_C+= ../ffdebug.c 
+    SRCS_C+= ../ffdebug.c 
     CFLAGS+= -DFFDEBUG=1
 else
     CFLAGS+= -DFFDEBUG=0
