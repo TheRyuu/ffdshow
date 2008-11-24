@@ -1,18 +1,11 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2324
+#define tryout_revision = 2359
 #define buildyear = 2008
 #define buildmonth = '11'
-#define buildday = '15'
+#define buildday = '24'
 
 ; Build specific options
-#define unicode_required = True
-
-#define sse_required = False
-#define sse2_required = False
-
-#define is64bit = False
-
 #define localize = True
 
 #define include_x264 = True
@@ -27,13 +20,18 @@
 #define include_setup_icon = False
 
 ; Compiler settings
-; (select the environment that you used for compiling ffdshow.ax)
-; (this information will be used by the installer to check if a user has the required runtime files installed)
-#define MINGW_GCC = False
-#define VS2003SP1 = False
-#define VS2005SP1 = False
-#define VS2008    = False
-#define VS2008SP1 = False
+#define unicode_required = True
+
+#define sse_required = False
+#define sse2_required = False
+
+#define is64bit = False
+
+; Set to True if you used VS2003 for compiling any of the included components
+#define requires_msvc71_runtime = False
+
+; Set to True if you used VS2008 + ICL for compiling any of the included components
+#define requires_msvc90_runtime = False
 
 ; Output settings
 #define filename_suffix = ''
@@ -54,23 +52,20 @@
 #define PREF_XXL_X64 = False
 #define PREF_ALBAIN = False
 #define PREF_ALBAIN_x64 = False
-#define PREF_X64_VS2005SP1 = False
-#define PREF_X64_VS2008SP1 = False
 
 #if PREF_CLSID
-  #define VS2003SP1 = True
   #define unicode_required = False
+  #define requires_msvc71_runtime = True
   #define filename_suffix = '_clsid'
   #define bindir = '..\..\x86'
   #define outputdir = '..\..\..\..\'
 #elif PREF_CLSID_ICL
-  #define VS2003SP1 = True
+  #define requires_msvc71_runtime = True
   #define sse_required = True
   #define filename_suffix = '_clsid_sse_icl10'
   #define bindir = '..\..\x86'
   #define outputdir = '..\..\..\..\'
 #elif PREF_CLSID_X64
-  #define VS2005SP1 = True
   #define is64bit = True
   #define include_x264 = False
   #define include_xvidcore = False
@@ -79,19 +74,17 @@
   #define bindir = '..\..\x64'
   #define outputdir = '..\..\..\..\'
 #elif PREF_YAMAGATA
-  #define VS2008SP1 = True
   #define unicode_required = True
   #define include_xvidcore = False
   #define filename_suffix = '_Q'
 #elif PREF_XXL
-  #define VS2003SP1 = True
+  #define requires_msvc71_runtime = True
   #define unicode_required = False
   #define localize = False
   #define include_info_before = True
   #define include_setup_icon = True
   #define filename_suffix = '_xxl'
 #elif PREF_XXL_X64
-  #define VS2005SP1 = True
   #define is64bit = True
   #define include_x264 = False
   #define include_plugin_dscaler = False
@@ -103,36 +96,13 @@
   #define VS2008SP1 = True
   #define filename_suffix = '_dbt'
 #elif PREF_ALBAIN_X64
-  #define VS2008SP1 = True
   #define is64bit = True
   #define include_x264 = False
   #define include_plugin_dscaler = False
   #define filename_suffix = '_dbt_x64'
-#elif PREF_X64_VS2005SP1 | PREF_X64_VS2008SP1
-  #define is64bit = True
-  #define include_x264 = False
-  #define include_xvidcore = False
-  #define include_plugin_dscaler = False
-  #define include_info_before = True
-  #define include_setup_icon = True
-  #define filename_suffix = '_x64'
-#endif
-#if PREF_X64_VS2005SP1
-  #define VS2005SP1 = True
-#elif PREF_X64_VS2008SP1
-  #define VS2008SP1 = True
 #endif
 
 ; Fail if no proper settings were chosen
-#if !MINGW_GCC & !VS2003SP1 & !VS2005SP1 & !VS2008 & !VS2008SP1
-You must configure your compiling environment!!!
-#endif
-#if (VS2008 | VS2008SP1) & !unicode_required
-VS2008 builds require Windows 2000 or above. You must set unicode_required to True!
-#endif
-#if is64bit & !VS2005SP1 & !VS2008 & !VS2008SP1 & !MINGW_GCC
-This can't be a 64-bit build.
-#endif
 #if is64bit & !unicode_required
 Unicode is required for 64-bit builds.
 #endif
@@ -172,24 +142,12 @@ InfoBeforeFile=infobefore.rtf
 #if include_gnu_license
 LicenseFile=gnu_license.txt
 #endif
-#if VS2005SP1
-	#if is64bit
+#if is64bit
 MinVersion=0,5.01
-  #elif unicode_required
+#elif unicode_required
 MinVersion=0,5.0
-  #else
-MinVersion=4.1,5.0
-  #endif
-#elif VS2008 | VS2008SP1
- #if is64bit
-MinVersion=0,5.01
-	#else
-MinVersion=0,5.0
-	#endif
 #else
-  #if unicode_required
-MinVersion=0,4
-  #endif
+MinVersion=4.1,4.0sp6
 #endif
 OutputBaseFilename=ffdshow_rev{#= tryout_revision}_{#= buildyear}{#= buildmonth}{#= buildday}{#= filename_suffix}
 OutputDir={#= outputdir}
@@ -406,13 +364,13 @@ Name: {group}\{cm:shrt_uninstall}; Filename: {uninstallexe}
 ; For speaker config
 Source: ffSpkCfg.dll; Flags: dontcopy
 
-#if VS2003SP1
+#if requires_msvc71_runtime
 Source: Runtimes\msvc71\msvcp71.dll; DestDir: {sys}; Flags: onlyifdoesntexist sharedfile uninsnosharedfileprompt
 Source: Runtimes\msvc71\msvcr71.dll; DestDir: {sys}; Flags: onlyifdoesntexist sharedfile uninsnosharedfileprompt
 #endif
 
 #if !unicode_required
-; Layer for Unicode on Windows 9x. installed only on Windows 9x (forced). The uninstaller does not remove this.
+; Layer for Unicode on Windows 9x. Installed only on Windows 9x (forced). The uninstaller does not remove this.
 ; Note Unicode build does not work on Windows 9x even with unicows.dll.
 Source: Runtimes\LayerForUnicode\unicows.dll ; DestDir: {sys}; Flags: sharedfile uninsnosharedfileprompt restartreplace uninsneveruninstall; MinVersion: 4,0; Components: ffdshow
 #endif
@@ -490,51 +448,6 @@ Source: {#= bindir}\ff_acm.acm; DestDir: {sys}; Flags: ignoreversion restartrepl
 Source: ..\..\languages\*.*; DestDir: {app}\languages; Flags: ignoreversion; Components: ffdshow
 Source: ..\..\custom matrices\*.*; DestDir: {app}\custom matrices; Flags: ignoreversion; Components: ffdshow\vfw
 Source: ..\..\openIE.js; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-
-#if VS2005SP1
-	#if is64bit
-Source: ..\..\manifest64\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
-	#else
-Source: ..\..\manifest32\msvc80\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
-	#endif
-#elif VS2008 | VS2008SP1
-	#if is64bit
-; ToDo
-	#else
-Source: ..\..\manifest32\msvc90\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
-	#endif
-#else
-Source: ..\..\manifest32\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow
-#endif
-
-#if VS2005SP1
-	#if is64bit
-Source: ..\..\manifest64\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03
-	#else
-Source: ..\..\manifest32\msvc80\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.02
-	#endif
-#elif VS2008 | VS2008SP1
-	#if is64bit
-; ToDo
-  #else
-; ToDo
-  #endif
-#else
-Source: ..\..\manifest32\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
-#endif
-
-#if include_makeavis
-  #if VS2003SP1 | MINGW_GCC
-Source: ..\..\manifest32\makeAVIS.exe.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
-  #endif
-  #if is64bit
-    #if VS2005SP1
-Source: ..\..\manifest64\makeAVIS.exe.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
-    #elif VS2008 | VS2008SP1
-; ToDo
-    #endif
-  #endif
-#endif
 
 [InstallDelete]
 ; Remove private assemblies
@@ -954,7 +867,7 @@ begin
 end;
 #endif
 
-#if VS2005SP1 | VS2008 | VS2008SP1
+#if requires_msvc90_runtime
 #include "msvc_runtime_detection.iss"
 #endif
 
@@ -986,7 +899,7 @@ begin
   end
   #endif
 
-  #if VS2005SP1 | VS2008 | VS2008SP1
+  #if requires_msvc90_runtime
   if Result then begin
     Result := CheckForRequiredRuntimes;
   end
