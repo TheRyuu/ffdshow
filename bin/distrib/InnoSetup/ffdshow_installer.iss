@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2359
+#define tryout_revision = 2361
 #define buildyear = 2008
 #define buildmonth = '11'
-#define buildday = '24'
+#define buildday = '25'
 
 ; Build specific options
 #define localize = True
@@ -20,12 +20,10 @@
 #define include_setup_icon = False
 
 ; Compiler settings
-#define unicode_required = True
+#define is64bit = False
 
 #define sse_required = False
 #define sse2_required = False
-
-#define is64bit = False
 
 ; Set to True if you used VS2003 for compiling any of the included components
 #define requires_msvc71_runtime = False
@@ -54,7 +52,6 @@
 #define PREF_ALBAIN_x64 = False
 
 #if PREF_CLSID
-  #define unicode_required = False
   #define requires_msvc71_runtime = True
   #define filename_suffix = '_clsid'
   #define bindir = '..\..\x86'
@@ -74,12 +71,10 @@
   #define bindir = '..\..\x64'
   #define outputdir = '..\..\..\..\'
 #elif PREF_YAMAGATA
-  #define unicode_required = True
   #define include_xvidcore = False
   #define filename_suffix = '_Q'
 #elif PREF_XXL
   #define requires_msvc71_runtime = True
-  #define unicode_required = False
   #define localize = False
   #define include_info_before = True
   #define include_setup_icon = True
@@ -103,9 +98,6 @@
 #endif
 
 ; Fail if no proper settings were chosen
-#if is64bit & !unicode_required
-Unicode is required for 64-bit builds.
-#endif
 #if is64bit & include_plugin_dscaler
 There is no 64-bit version of DScaler.
 #endif
@@ -144,10 +136,8 @@ LicenseFile=gnu_license.txt
 #endif
 #if is64bit
 MinVersion=0,5.01
-#elif unicode_required
-MinVersion=0,5.0
 #else
-MinVersion=4.1,4.0sp6
+MinVersion=0,5.0
 #endif
 OutputBaseFilename=ffdshow_rev{#= tryout_revision}_{#= buildyear}{#= buildmonth}{#= buildday}{#= filename_suffix}
 OutputDir={#= outputdir}
@@ -291,8 +281,6 @@ Name: audio\ac3\liba52; Description: liba52; Check:      CheckTaskAudio('ac3', 1
 Name: audio\ac3\liba52; Description: liba52; Check: NOT (CheckTaskAudio('ac3', 15, True)  OR CheckTaskAudio('ac3', 16, True));  Components: ffdshow; Flags: exclusive unchecked
 Name: audio\ac3\libavcodec; Description: libavcodec; Check:     CheckTaskAudio('ac3', 1, False);  Components: ffdshow; Flags: exclusive
 Name: audio\ac3\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('ac3', 1, False);  Components: ffdshow; Flags: exclusive unchecked
-;Name: audio\ac3\spdif;  Description: S/PDIF; Check:     CheckTaskAudio('ac3', 16, False); Components: ffdshow; Flags: exclusive
-;Name: audio\ac3\spdif;  Description: S/PDIF; Check: NOT CheckTaskAudio('ac3', 16, False); Components: ffdshow; Flags: exclusive unchecked
 Name: audio\eac3; Description: EAC3 (Dolby Digital Plus); Check: CheckTaskAudio('eac3', 1, True); Components: ffdshow
 Name: audio\eac3; Description: EAC3 (Dolby Digital Plus); Check: NOT CheckTaskAudio('eac3', 1, True); Flags: unchecked; Components: ffdshow
 Name: audio\mlp; Description: MLP/Dolby TrueHD; Check: CheckTaskAudio('mlp', 1, True); Components: ffdshow
@@ -302,8 +290,6 @@ Name: audio\dts\libdts; Description: libdts; Check:      CheckTaskAudio('dts', 1
 Name: audio\dts\libdts; Description: libdts; Check: NOT (CheckTaskAudio('dts', 17, True) OR CheckTaskAudio('dts', 17, True));  Components: ffdshow; Flags: exclusive unchecked
 Name: audio\dts\libavcodec; Description: libavcodec; Check:     CheckTaskAudio('dts', 1, False);  Components: ffdshow; Flags: exclusive
 Name: audio\dts\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('dts', 1, False);  Components: ffdshow; Flags: exclusive unchecked
-;Name: audio\dts\spdif;  Description: S/PDIF; Check:     CheckTaskAudio('dts', 16, False); Components: ffdshow; Flags: exclusive
-;Name: audio\dts\spdif;  Description: S/PDIF; Check: NOT CheckTaskAudio('dts', 16, False); Components: ffdshow; Flags: exclusive unchecked
 Name: audio\lpcm; Description: LPCM; Check: CheckTaskAudio('lpcm', 4, True); Components: ffdshow
 Name: audio\lpcm; Description: LPCM; Check: NOT CheckTaskAudio('lpcm', 4, True); Flags: unchecked; Components: ffdshow
 Name: audio\mp2; Description: MP1, MP2; Flags: unchecked; Components: ffdshow
@@ -369,12 +355,6 @@ Source: Runtimes\msvc71\msvcp71.dll; DestDir: {sys}; Flags: onlyifdoesntexist sh
 Source: Runtimes\msvc71\msvcr71.dll; DestDir: {sys}; Flags: onlyifdoesntexist sharedfile uninsnosharedfileprompt
 #endif
 
-#if !unicode_required
-; Layer for Unicode on Windows 9x. Installed only on Windows 9x (forced). The uninstaller does not remove this.
-; Note Unicode build does not work on Windows 9x even with unicows.dll.
-Source: Runtimes\LayerForUnicode\unicows.dll ; DestDir: {sys}; Flags: sharedfile uninsnosharedfileprompt restartreplace uninsneveruninstall; MinVersion: 4,0; Components: ffdshow
-#endif
-
 Source: {#= bindir}\libavcodec.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 Source: {#= bindir}\libmplayer.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 Source: {#= bindir}\ff_liba52.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
@@ -401,13 +381,8 @@ Source: {#= bindir}\TomsMoComp_ff.dll; DestDir: {app}; Flags: ignoreversion; Com
 Source: {#= bindir}\libmpeg2_ff.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow
 
 ; Single build:
-#if !PREF_CLSID && !PREF_CLSID_ICL
+#if !PREF_CLSID_ICL
 Source: {#= bindir}\ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; Components: ffdshow
-#endif
-; ANSI + Unicode:
-#if PREF_CLSID
-Source: {#= bindir}\ffdshow_ansi.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; MinVersion: 4,0; Components: ffdshow
-Source: {#= bindir}\ffdshow_unicode.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; MinVersion: 0,4; Components: ffdshow
 #endif
 #if PREF_CLSID_ICL
 Source: {#= bindir}\ffdshow_icl.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; MinVersion: 0,4; Components: ffdshow
@@ -417,15 +392,7 @@ Source: {#= bindir}\ffdshow_icl.ax; DestName: ffdshow.ax; DestDir: {app}; Flags:
 ;Source: {#= bindir}\ffdshow_sse.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_SSE_Supported AND NOT Is_SSE2_Supported; Components: ffdshow
 ;Source: {#= bindir}\ffdshow_sse2.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_SSE2_Supported; Components: ffdshow
 
-; Single build:
-#if !PREF_CLSID
 Source: {#= bindir}\ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-#endif
-; ANSI + Unicode:
-#if PREF_CLSID
-Source: {#= bindir}\ff_wmv9_ansi.dll; DestName: ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; MinVersion: 4,0; Components: ffdshow
-Source: {#= bindir}\ff_wmv9_unicode.dll; DestName: ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; MinVersion: 0,4; Components: ffdshow
-#endif
 
 Source: {#= bindir}\ff_vfw.dll; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
 
@@ -448,6 +415,16 @@ Source: {#= bindir}\ff_acm.acm; DestDir: {sys}; Flags: ignoreversion restartrepl
 Source: ..\..\languages\*.*; DestDir: {app}\languages; Flags: ignoreversion; Components: ffdshow
 Source: ..\..\custom matrices\*.*; DestDir: {app}\custom matrices; Flags: ignoreversion; Components: ffdshow\vfw
 Source: ..\..\openIE.js; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+
+#if is64bit
+Source: ..\..\manifest64\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow
+Source: ..\..\manifest64\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow\vfw
+Source: ..\..\manifest64\makeAVIS.exe.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow\makeavis
+#else
+Source: ..\..\manifest32\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow
+Source: ..\..\manifest32\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow\vfw
+Source: ..\..\manifest32\makeAVIS.exe.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow\makeavis
+#endif
 
 [InstallDelete]
 ; Remove private assemblies
@@ -583,14 +560,6 @@ Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueN
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: passthroughDTS;         ValueData: 0; Components: ffdshow; Tasks: NOT filter\passthroughdts
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: passthroughDTS;         ValueData: 1; Components: ffdshow; Tasks: filter\passthroughdts
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio\; ValueName: "ac3SPDIF"; Flags: deletevalue ; Components: ffdshow;
-
-[INI]
-#if !is64bit & !unicode_required
-Filename: {win}\system.ini; Section: drivers32; Key: vidc.ffds;  String: ff_vfw.dll; Flags: uninsdeleteentry; MinVersion: 4,0; Components: ffdshow\vfw
-  #if include_makeavis
-Filename: {win}\system.ini; Section: drivers32; Key: msacm.avis; String: ff_acm.acm; Flags: uninsdeleteentry; MinVersion: 4,0; Components: ffdshow\makeavis
-  #endif
-#endif
 
 [Run]
 Description: {cm:run_audioConfig}; Filename: {syswow64}\rundll32.exe; Parameters: ffdshow.ax,configureAudio;WorkingDir: {app}; Flags: postinstall nowait unchecked; MinVersion: 0,4; Components: ffdshow

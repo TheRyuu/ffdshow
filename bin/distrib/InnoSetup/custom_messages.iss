@@ -5,6 +5,7 @@ WelcomeLabel1=[name/ver]
 en.WelcomeLabel2=This will install [name] on your computer.%n%nIt is recommended that you close all other applications before continuing.
 en.FileAbortRetryIgnore=Quit the application using [name] and click Retry. If the problem persists, click Abort, restart your computer and setup again.
 en.FinishedRestartLabel=To complete the installation of [name], Setup must restart your computer. Would you like to restart now?%n%nHint: To avoid restarting computer from the next time, it may be effective to enable "DirectShow control" -> "Don't use ffdshow in:" -> "explorer.exe" in video decoder configuration.
+en.WinVersionTooLowError=This build of ffdshow requires Windows 2000 or newer. For Windows 98/ME you need to acquire ffdshow revision 2352 or older.
 
 #if localize
 ; Japanese
