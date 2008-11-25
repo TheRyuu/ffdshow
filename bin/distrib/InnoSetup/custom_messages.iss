@@ -45,17 +45,6 @@ sc.FinishedRestartLabel=安装程序需要重新启动计算机来完成 [name] 的安装过程。你想
 
 ; Add other languages here
 
-#if unicode_required
-en.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
-;jp.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
-de.WinVersionTooLowError=Diese [name]-Version ben鰐igt Windows 2000 oder neuer.
-;fr.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
-;ru.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
-pl.WinVersionTooLowError=Ta wersja [name] wymaga systemu Windows 2000 lub nowszego.
-;cz.WinVersionTooLowError=This version of [name] requires Windows 2000 or newer.
-sc.WinVersionTooLowError=这个版本的 [name] 需要 Windows 2000 或更高版本的系统。
-; Add other languages here
-#endif
 #endif
 
 [CustomMessages]
