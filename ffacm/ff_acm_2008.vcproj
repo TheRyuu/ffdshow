@@ -57,7 +57,7 @@
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="../src"
-				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;FFDEBUG=0"
+				PreprocessorDefinitions="WIN32;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;FFDEBUG=0"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
@@ -165,7 +165,7 @@
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="../src"
-				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;FFDEBUG=0"
+				PreprocessorDefinitions="WIN64;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;FFDEBUG=0"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
@@ -264,7 +264,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../src"
-				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="false"
@@ -364,7 +364,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../src"
-				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN64;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="false"
@@ -446,7 +446,7 @@
 						Name="VCCLCompilerTool"
 						Optimization="2"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;FFDEBUG=0;$(NoInherit)"
+						PreprocessorDefinitions="WIN32;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;FFDEBUG=0;$(NoInherit)"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -456,7 +456,7 @@
 						Name="VCCLCompilerTool"
 						Optimization="2"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;FFDEBUG=0;$(NoInherit)"
+						PreprocessorDefinitions="WIN32;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;FFDEBUG=0;$(NoInherit)"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -466,7 +466,7 @@
 						Name="VCCLCompilerTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;$(NoInherit)"
+						PreprocessorDefinitions="WIN32;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;$(NoInherit)"
 						BasicRuntimeChecks="3"
 					/>
 				</FileConfiguration>
@@ -492,7 +492,7 @@
 						Name="VCCLCompilerTool"
 						Optimization="2"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;FFDEBUG=0;$(NoInherit)"
+						PreprocessorDefinitions="WIN32;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;FFDEBUG=0;$(NoInherit)"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -512,7 +512,7 @@
 						Name="VCCLCompilerTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;$(NoInherit)"
+						PreprocessorDefinitions="WIN32;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;$(NoInherit)"
 						BasicRuntimeChecks="3"
 					/>
 				</FileConfiguration>
@@ -523,7 +523,7 @@
 						Name="VCCLCompilerTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;$(NoInherit)"
+						PreprocessorDefinitions="WIN32;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;$(NoInherit)"
 						BasicRuntimeChecks="3"
 					/>
 				</FileConfiguration>

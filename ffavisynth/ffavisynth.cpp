@@ -297,7 +297,7 @@ extern "C" __declspec(dllexport) const char* __stdcall avisynth_c_plugin_init(AV
  return "";
 }
 
-extern "C" BOOL WINAPI DllEntryPoint(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
+extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
  static int count=0;
  switch (dwReason)
