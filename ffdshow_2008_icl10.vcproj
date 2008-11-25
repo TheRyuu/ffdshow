@@ -17,477 +17,10 @@
 	</Platforms>
 	<ToolFiles>
 		<ToolFile
-			RelativePath=".\yasm64.rules"
-		/>
-		<ToolFile
 			RelativePath=".\yasm.rules"
 		/>
 	</ToolFiles>
 	<Configurations>
-		<Configuration
-			Name="Debug|Win32"
-			OutputDirectory="debug_2008_icl10"
-			IntermediateDirectory="debug_2008_icl10"
-			ConfigurationType="2"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="yasm64"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="yasm"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="true"
-				SuppressStartupBanner="true"
-				TargetEnvironment="1"
-				TypeLibraryName=".\debug_2008_icl10/ffdshow.tlb"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalOptions=""
-				Optimization="0"
-				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc"
-				PreprocessorDefinitions="DEBUG;_DEBUG;WIN32;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
-				ExceptionHandling="1"
-				BasicRuntimeChecks="3"
-				SmallerTypeCheck="false"
-				RuntimeLibrary="3"
-				BufferSecurityCheck="true"
-				EnableFunctionLevelLinking="true"
-				ForceConformanceInForLoopScope="true"
-				RuntimeTypeInfo="false"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="StdAfx.h"
-				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
-				AssemblerListingLocation="$(IntDir)\"
-				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
-				BrowseInformation="0"
-				WarningLevel="4"
-				SuppressStartupBanner="true"
-				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="4"
-				DisableSpecificWarnings="4996,4250"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-				Description="Increasing build version"
-				CommandLine="&quot;bin/verinc.exe&quot; src/version.ver"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				RegisterOutput="false"
-				IgnoreImportLibrary="true"
-				AdditionalDependencies="msvcrtd.lib msvcprtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
-				OutputFile="bin\ffdshow.ax"
-				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories=""
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
-				ModuleDefinitionFile=".\src\ffdshow.def"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
-				ImportLibrary="$(IntDir)/ffdshow.lib"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-				EmbedManifest="true"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-				Description="Registering output..."
-				CommandLine="bin/register.bat"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Debug|x64"
-			OutputDirectory="debug_2008_x64_icl10"
-			IntermediateDirectory="debug_2008_x64_icl10"
-			ConfigurationType="2"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="yasm64"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="yasm"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="true"
-				SuppressStartupBanner="true"
-				TargetEnvironment="3"
-				TypeLibraryName=".\debug_2008_x64_icl10/ffdshow.tlb"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalOptions=""
-				Optimization="0"
-				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc"
-				PreprocessorDefinitions="DEBUG;_DEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF;ARCH_IS_64BIT;ARCH_IS_GENERIC"
-				ExceptionHandling="1"
-				BasicRuntimeChecks="3"
-				SmallerTypeCheck="false"
-				RuntimeLibrary="3"
-				BufferSecurityCheck="true"
-				EnableFunctionLevelLinking="true"
-				ForceConformanceInForLoopScope="true"
-				RuntimeTypeInfo="false"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="StdAfx.h"
-				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
-				AssemblerListingLocation="$(IntDir)\"
-				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
-				BrowseInformation="0"
-				WarningLevel="4"
-				SuppressStartupBanner="true"
-				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="3"
-				DisableSpecificWarnings="4996,4250"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-				Description="Increasing build version"
-				CommandLine="&quot;bin/verinc.exe&quot; src/version.ver"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalDependencies="msvcrtd.lib msvcprtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
-				OutputFile="bin\ffdshow.ax"
-				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories=""
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
-				ModuleDefinitionFile=".\src\ffdshow.def"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
-				ImportLibrary="$(IntDir)/ffdshow.lib"
-				TargetMachine="17"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-				EmbedManifest="true"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-				Description="Registering output..."
-				CommandLine="bin/register.bat"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="release_2008_icl10"
-			IntermediateDirectory="release_2008_icl10"
-			ConfigurationType="2"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			ManagedExtensions="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="yasm64"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="yasm"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="true"
-				SuppressStartupBanner="true"
-				TargetEnvironment="1"
-				TypeLibraryName=".\release_2008_icl10/ffdshow.tlb"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="2"
-				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="true"
-				FavorSizeOrSpeed="1"
-				OmitFramePointers="true"
-				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc"
-				PreprocessorDefinitions="NDEBUG;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX;VISTA_SPDIF;ARCH_IS_32BIT;ARCH_IS_IA32"
-				StringPooling="true"
-				ExceptionHandling="1"
-				RuntimeLibrary="2"
-				BufferSecurityCheck="false"
-				EnableFunctionLevelLinking="false"
-				RuntimeTypeInfo="false"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="StdAfx.h"
-				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
-				AssemblerListingLocation="$(IntDir)\"
-				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
-				BrowseInformation="0"
-				WarningLevel="0"
-				SuppressStartupBanner="true"
-				CompileAs="0"
-				DisableSpecificWarnings="4996,4250"
-				OmitDefaultLibName="true"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-				Description="Increasing build version"
-				CommandLine="&quot;bin/verinc.exe&quot; src/version.ver"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				RegisterOutput="false"
-				IgnoreImportLibrary="true"
-				AdditionalDependencies="unicows.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib msvcrt.lib msvcprt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
-				OutputFile="bin\ffdshow.ax"
-				LinkIncremental="1"
-				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories=""
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
-				ModuleDefinitionFile=".\src\ffdshow.def"
-				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				ImportLibrary="$(IntDir)/ffdshow.lib"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-				AdditionalManifestFiles="bin\manifest32\ffdshow.ax.manifest"
-				EmbedManifest="true"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-				Description="Registering output..."
-				CommandLine="bin/register.bat"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release|x64"
-			OutputDirectory="release_2008_x64_icl10"
-			IntermediateDirectory="release_2008_x64_icl10"
-			ConfigurationType="2"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			ManagedExtensions="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="yasm64"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="yasm"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="true"
-				SuppressStartupBanner="true"
-				TargetEnvironment="3"
-				TypeLibraryName=".\release_2008_x64_icl10/ffdshow.tlb"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="2"
-				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="true"
-				FavorSizeOrSpeed="1"
-				OmitFramePointers="true"
-				AdditionalIncludeDirectories="src;src/baseclasses;src/settings;src/dialog;src/imgFilters;src/codecs;src/convert;src/subtitles;src/settings/filters;src/mplayer;src/audioFilters;src/ffmpeg;src/muxers;src/acm;src/filters;src/xiph;src/codecs/theora/enc"
-				PreprocessorDefinitions="NDEBUG;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_WINDOWS;UCLIBCPP;HAVE_MMX;ARCH_IS_64BIT;ARCH_IS_GENERIC"
-				StringPooling="true"
-				ExceptionHandling="1"
-				RuntimeLibrary="2"
-				BufferSecurityCheck="false"
-				EnableFunctionLevelLinking="false"
-				RuntimeTypeInfo="false"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="StdAfx.h"
-				PrecompiledHeaderFile="$(IntDir)/$(TargetName).pch"
-				AssemblerListingLocation="$(IntDir)\"
-				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\"
-				BrowseInformation="0"
-				WarningLevel="4"
-				SuppressStartupBanner="true"
-				CompileAs="0"
-				DisableSpecificWarnings="4996,4250"
-				OmitDefaultLibName="true"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-				Description="Increasing build version"
-				CommandLine="&quot;bin/verinc.exe&quot; src/version.ver"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib msvcrt.lib msvcprt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
-				OutputFile="bin\ffdshow.ax"
-				LinkIncremental="1"
-				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories=""
-				GenerateManifest="true"
-				IgnoreAllDefaultLibraries="true"
-				ModuleDefinitionFile=".\src\ffdshow.def"
-				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				ImportLibrary="$(IntDir)/ffdshow.lib"
-				TargetMachine="17"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-				AdditionalManifestFiles="bin\manifest64\ffdshow.ax.manifest"
-				EmbedManifest="true"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-				Description="Registering output..."
-				CommandLine="bin/register.bat"
-			/>
-		</Configuration>
 		<Configuration
 			Name="Debug Unicode|Win32"
 			OutputDirectory="debug_unicode_2008_icl10"
@@ -499,9 +32,6 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="yasm64"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -615,9 +145,6 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="yasm64"
-			/>
-			<Tool
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
@@ -722,16 +249,13 @@
 			OutputDirectory="release_unicode_2008_icl10"
 			IntermediateDirectory="release_unicode_2008_icl10"
 			ConfigurationType="2"
-			UseOfMFC="0"
+			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			ManagedExtensions="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="yasm64"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -799,12 +323,12 @@
 				Name="VCLinkerTool"
 				RegisterOutput="false"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib msvcrt.lib msvcprt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libircmt.lib libmmds.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib msvcrt.lib msvcprt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libircmt.lib libmmds.lib svml_dispmt.lib"
 				OutputFile="bin\ffdshow.ax"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=""
-				GenerateManifest="true"
+				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\src\ffdshow.def"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
@@ -843,16 +367,13 @@
 			OutputDirectory="release_unicode_2008_x64_icl10"
 			IntermediateDirectory="release_unicode_2008_x64_icl10"
 			ConfigurationType="2"
-			UseOfMFC="0"
+			UseOfMFC="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			ManagedExtensions="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="yasm64"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -919,12 +440,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib msvcrt.lib msvcprt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib msvcrt.lib msvcprt.lib winmm.lib comctl32.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib libircmt.lib libmmt.lib svml_dispmt.lib"
 				OutputFile="bin\ffdshow.ax"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=""
-				GenerateManifest="true"
+				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ModuleDefinitionFile=".\src\ffdshow.def"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
@@ -1115,7 +636,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1123,7 +644,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1131,7 +652,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -1139,7 +660,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 			</File>
@@ -2477,7 +1998,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2485,7 +2006,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2493,7 +2014,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2501,7 +2022,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 			</File>
@@ -2553,7 +2074,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2561,7 +2082,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2569,7 +2090,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2577,7 +2098,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 			</File>
@@ -2589,7 +2110,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2597,7 +2118,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2605,7 +2126,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -2613,7 +2134,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 			</File>
@@ -6957,7 +6478,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6973,7 +6494,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -6989,7 +6510,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7005,7 +6526,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 			</File>
@@ -7017,7 +6538,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7025,7 +6546,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7033,7 +6554,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7041,7 +6562,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 			</File>
@@ -7345,7 +6866,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7353,7 +6874,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7361,7 +6882,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -7369,7 +6890,7 @@
 					ExcludedFromBuild="true"
 					>
 					<Tool
-						Name="yasm64"
+						Name="yasm"
 					/>
 				</FileConfiguration>
 			</File>
