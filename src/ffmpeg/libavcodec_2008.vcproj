@@ -446,6 +446,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\aandcttab.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\aasc.c"
 				>
 			</File>
@@ -1136,6 +1140,10 @@
 			>
 			<File
 				RelativePath=".\libavcodec\aac_ac3_parser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\aandcttab.h"
 				>
 			</File>
 			<File
