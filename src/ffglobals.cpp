@@ -266,28 +266,26 @@ void extractfileext(const char_t *flnm,char_t *ext)
 
 void extractfileext(const char_t *flnm,ffstring &ext)
 {
+ ext = _l("");
+ if (!flnm)
+  return;
  size_t len=strlen(flnm) + 1;
- if (len > 4096)
-  {
-   ext = _l("");
-   return;
-  }
+ if (len > 4096 || !flnm[0])
+  return;
  char_t *extbuf = (char_t *)_alloca(len * sizeof(char_t));
  _splitpath_s(flnm,NULL,0,NULL,0,NULL,0,extbuf,len);
  if (extbuf[0])
   ext = extbuf + 1;
- else
-  ext = _l("");
 }
 
 void changepathext(const char_t *flnm, const char_t *ext, ffstring &path)
 {
+ path = _l("");
+ if (!flnm)
+  return;
  size_t len = strlen(flnm) + strlen(ext) + 1;
- if (len > 4096)
-  {
-   path = _l("");
-   return;
-  }
+ if (len > 4096 || !flnm[0])
+  return;
  char_t *drv        = (char_t *)_alloca(len * sizeof(char_t));
  char_t *dir        = (char_t *)_alloca(len * sizeof(char_t));
  char_t *nm         = (char_t *)_alloca(len * sizeof(char_t));
