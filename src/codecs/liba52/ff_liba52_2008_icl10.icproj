@@ -5,7 +5,7 @@
 	Name="ff_liba52"
 	ProjectGUID="{7043607F-0E04-457D-AC6E-AA0E1F886250}"
 	VCNestedProjectGUID="{7C4F2A8F-C1A6-4E75-AF26-285A1B70A066}"
-	VCNestedProjectCRC32="1406381707"
+	VCNestedProjectCRC32="678136551"
 	VCNestedProjectFileName="ff_liba52_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -21,7 +21,7 @@
 				OutputDirectory="release_2008_icl10"
 				IntermediateDirectory="release_2008_icl10"
 				ConfigurationType="2"
-				UseOfMFC="0"
+				UseOfMFC="1"
 				WholeProgramOptimization="1"/>
 			<Tool 
 				Name="CppCmplrTool"
@@ -33,16 +33,16 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="1"
 				AdditionalIncludeDirectories="../.."
-				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;ALT_BITSTREAM_READER"
 				StringPooling="1"
 				ExceptionHandling="0"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				BufferSecurityCheck="0"
 				EnableFunctionLevelLinking="1"
 				RuntimeTypeInfo="0"
 				AssemblerListingLocation="$(IntDir)\"
 				BrowseInformation="0"
-				WarningLevel="3"
+				WarningLevel="1"
 				SuppressStartupBanner="1"
 				DebugInformationFormat="0"
 				CompileAs="2"
@@ -54,17 +54,18 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="1"
 				IgnoreImportLibrary="1"
-				AdditionalDependencies="kernel32.lib msvcrt.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib libcmt.lib libircmt.lib libmmt.lib svml_dispmt.lib"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\ff_liba52.def"
-				GenerateManifest="1"
+				GenerateManifest="0"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				OptimizeForWindows98="1"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(IntDir)/ff_liba52.lib"
 				TargetMachine="1"
-				DelayImpLib=""/>
+				DelayImpLib="DelayImp.lib"/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -99,7 +100,7 @@
 				OutputDirectory="release_2008_x64_icl10"
 				IntermediateDirectory="release_2008_x64_icl10"
 				ConfigurationType="2"
-				UseOfMFC="0"
+				UseOfMFC="1"
 				WholeProgramOptimization="1"/>
 			<Tool 
 				Name="CppCmplrTool"
@@ -112,10 +113,10 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="1"
 				AdditionalIncludeDirectories="../.."
-				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;ALT_BITSTREAM_READER"
 				StringPooling="1"
 				ExceptionHandling="0"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				BufferSecurityCheck="0"
 				EnableFunctionLevelLinking="1"
 				RuntimeTypeInfo="0"
@@ -134,17 +135,16 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="1"
 				IgnoreImportLibrary="1"
-				AdditionalDependencies="kernel32.lib msvcrt.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib libcmt.lib libircmt.lib libmmt.lib svml_dispmt.lib"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\ff_liba52.def"
-				GenerateManifest="1"
+				GenerateManifest="0"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				OptimizeForWindows98="1"
 				ImportLibrary="$(IntDir)/ff_liba52.lib"
 				TargetMachine="17"
-				DelayImpLib=""/>
+				DelayImpLib="DelayImp.lib"/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -184,10 +184,10 @@
 				Name="CppCmplrTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../.."
-				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;ALT_BITSTREAM_READER;ARCH_X86"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				ForceConformanceInForLoopScope="1"
 				RuntimeTypeInfo="0"
 				AssemblerListingLocation="$(IntDir)\"
@@ -206,10 +206,12 @@
 				AdditionalDependencies="kernel32.lib msvcrtd.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\ff_liba52.def"
-				GenerateManifest="1"
+				GenerateManifest="0"
 				GenerateDebugInformation="1"
 				ProgramDatabaseFile="$(IntDir)/ff_liba52.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(IntDir)/ff_liba52.lib"
 				TargetMachine="1"
 				DelayImpLib=""/>
@@ -252,7 +254,7 @@
 				Name="CppCmplrTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../.."
-				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;ALT_BITSTREAM_READER;ARCH_X86"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -273,7 +275,7 @@
 				AdditionalDependencies="kernel32.lib msvcrtd.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\ff_liba52.def"
-				GenerateManifest="1"
+				GenerateManifest="0"
 				GenerateDebugInformation="1"
 				ProgramDatabaseFile="$(IntDir)/ff_liba52.pdb"
 				SubSystem="2"

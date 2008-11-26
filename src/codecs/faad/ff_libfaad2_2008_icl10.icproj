@@ -5,7 +5,7 @@
 	Name="ff_libfaad2"
 	ProjectGUID="{3DFCD606-291B-4765-9913-A6EC1D83F33F}"
 	VCNestedProjectGUID="{BF29FAFC-7E71-4671-A2F8-D510EF5C0685}"
-	VCNestedProjectCRC32="1467037070"
+	VCNestedProjectCRC32="2289667268"
 	VCNestedProjectFileName="ff_libfaad2_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -21,7 +21,7 @@
 				OutputDirectory="release_2008_icl10"
 				IntermediateDirectory="release_2008_icl10"
 				ConfigurationType="2"
-				UseOfMFC="0"
+				UseOfMFC="1"
 				WholeProgramOptimization="0"/>
 			<Tool 
 				Name="CppCmplrTool"
@@ -35,11 +35,11 @@
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;_USRDLL"
 				StringPooling="1"
 				ExceptionHandling="0"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				BufferSecurityCheck="0"
 				EnableFunctionLevelLinking="1"
 				BrowseInformation="0"
-				WarningLevel="4"
+				WarningLevel="1"
 				SuppressStartupBanner="1"
 				CompileAs="1"
 				DisableSpecificWarnings="4244;4100"
@@ -50,15 +50,17 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="1"
 				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmds.lib svml_dispmt.lib"
+				AdditionalDependencies="kernel32.lib libircmt.lib libmmds.lib svml_dispmt.lib libcmt.lib"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\ff_libfaad2.def"
-				GenerateManifest="1"
+				GenerateManifest="0"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(IntDir)/ff_libfaad2.lib"
 				TargetMachine="0"
-				DelayImpLib=""/>
+				DelayImpLib="DelayImp.lib"/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -93,7 +95,7 @@
 				OutputDirectory="release_2008_x64_icl10"
 				IntermediateDirectory="release_2008_x64_icl10"
 				ConfigurationType="2"
-				UseOfMFC="0"
+				UseOfMFC="1"
 				WholeProgramOptimization="0"/>
 			<Tool 
 				Name="CppCmplrTool"
@@ -108,7 +110,7 @@
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;_USRDLL"
 				StringPooling="1"
 				ExceptionHandling="0"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				BufferSecurityCheck="0"
 				EnableFunctionLevelLinking="1"
 				WarningLevel="0"
@@ -124,15 +126,15 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="1"
 				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib"
+				AdditionalDependencies="kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib libcmt.lib"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\ff_libfaad2.def"
-				GenerateManifest="1"
+				GenerateManifest="0"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				ImportLibrary="$(IntDir)/$(ProjectName).lib"
 				TargetMachine="17"
-				DelayImpLib=""/>
+				DelayImpLib="DelayImp.lib"/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -175,7 +177,7 @@
 				MinimalRebuild="1"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				ForceConformanceInForLoopScope="1"
 				BrowseInformation="0"
 				WarningLevel="3"
@@ -190,9 +192,11 @@
 				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\ff_libfaad2.def"
-				GenerateManifest="1"
+				GenerateManifest="0"
 				GenerateDebugInformation="1"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(IntDir)/ff_libfaad2.lib"
 				TargetMachine="0"
 				DelayImpLib=""/>
@@ -252,7 +256,7 @@
 				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\ff_libfaad2.def"
-				GenerateManifest="1"
+				GenerateManifest="0"
 				GenerateDebugInformation="1"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				ImportLibrary="$(IntDir)/$(ProjectName).lib"

@@ -5,7 +5,7 @@
 	Name="ff_libmad"
 	ProjectGUID="{997933F0-7FF5-4108-B514-C1DD9F87E71F}"
 	VCNestedProjectGUID="{B8000FD0-4A45-4D79-B320-1AFBE61C01C0}"
-	VCNestedProjectCRC32="3530222646"
+	VCNestedProjectCRC32="3983317404"
 	VCNestedProjectFileName="ff_libmad_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -30,7 +30,7 @@
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;FPM_DEFAULT,_LIB,HAVE_CONFIG_H,ASO_ZEROCHECK,WIN32,_DEBUG,DEBUG"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				BufferSecurityCheck="1"
 				ForceConformanceInForLoopScope="1"
 				RuntimeTypeInfo="0"
@@ -51,9 +51,11 @@
 				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="ff_libmad.def"
-				GenerateManifest="1"
+				GenerateManifest="0"
 				GenerateDebugInformation="1"
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(IntDir)\ff_libmad.lib"
 				AdditionalOptions=""
 				DelayImpLib=""/>
@@ -114,7 +116,7 @@
 				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="ff_libmad.def"
-				GenerateManifest="1"
+				GenerateManifest="0"
 				GenerateDebugInformation="1"
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
 				ImportLibrary="$(IntDir)\ff_libmad.lib"
@@ -150,7 +152,7 @@
 				OutputDirectory="release_2008_icl10"
 				IntermediateDirectory="release_2008_icl10"
 				ConfigurationType="2"
-				UseOfMFC="0"
+				UseOfMFC="1"
 				CharacterSet="0"
 				WholeProgramOptimization="1"/>
 			<Tool 
@@ -166,7 +168,7 @@
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG,FPM_INTEL,WIN32,_LIB,HAVE_CONFIG_H,ASO_ZEROCHECK"
 				StringPooling="1"
 				ExceptionHandling="0"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				BufferSecurityCheck="0"
 				EnableFunctionLevelLinking="0"
 				RuntimeTypeInfo="0"
@@ -183,17 +185,18 @@
 				OutputFile="../../../bin/ff_libmad.dll"
 				SuppressStartupBanner="1"
 				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib libcmt.lib"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="ff_libmad.def"
-				GenerateManifest="1"
+				GenerateManifest="0"
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				OptimizeForWindows98="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="$(IntDir)\ff_libmad.lib"
 				AdditionalOptions=""
-				DelayImpLib=""/>
+				DelayImpLib="DelayImp.lib"/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
@@ -222,7 +225,7 @@
 				OutputDirectory="release_2008_x64_icl10"
 				IntermediateDirectory="release_2008_x64_icl10"
 				ConfigurationType="2"
-				UseOfMFC="0"
+				UseOfMFC="1"
 				CharacterSet="0"
 				WholeProgramOptimization="1"/>
 			<Tool 
@@ -239,7 +242,7 @@
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG,FPM_INTEL,WIN64,_LIB,HAVE_CONFIG_H,ASO_ZEROCHECK"
 				StringPooling="1"
 				ExceptionHandling="0"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				BufferSecurityCheck="0"
 				EnableFunctionLevelLinking="0"
 				RuntimeTypeInfo="0"
@@ -257,18 +260,17 @@
 				OutputFile="../../../bin/ff_libmad.dll"
 				SuppressStartupBanner="1"
 				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrt.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib libcmt.lib"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile="ff_libmad.def"
-				GenerateManifest="1"
+				GenerateManifest="0"
 				ProgramDatabaseFile="$(IntDir)/$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				OptimizeForWindows98="2"
 				ImportLibrary="$(IntDir)\ff_libmad.lib"
 				TargetMachine="17"
 				AdditionalOptions=""
-				DelayImpLib=""/>
+				DelayImpLib="DelayImp.lib"/>
 			<Tool 
 				Name="LibrarianTool"/>
 			<Tool 
