@@ -199,12 +199,12 @@ void extractfilepath(const char_t *flnm,char_t *path)
 
 void extractfilepath(const char_t *flnm,ffstring &path)
 {
+ path = _l("");
+ if (!flnm || !flnm[0])
+  return;
  size_t len = strlen(flnm) + 1;
  if (len > 4096)
-  {
-   path = _l("");
-   return;
-  }
+  return;
  char_t *dsk     = (char_t *)_alloca(len * sizeof(char_t));
  char_t *dir     = (char_t *)_alloca(len * sizeof(char_t));
  char_t *pathbuf = (char_t *)_alloca(len * sizeof(char_t));
@@ -222,12 +222,12 @@ void extractfilename(const char_t *flnm,char_t *nameext)
 
 void extractfilename(const char_t *flnm,ffstring &nameext)
 {
+ nameext = _l("");
+ if (!flnm || !flnm[0])
+  return;
  size_t len = strlen(flnm) + 1;
  if (len > 4096)
-  {
-   nameext = _l("");
-   return;
-  }
+  return;
  char_t *nm         = (char_t *)_alloca(len * sizeof(char_t));
  char_t *ext        = (char_t *)_alloca(len * sizeof(char_t));
  char_t *nameextbuf = (char_t *)_alloca(len * sizeof(char_t));
@@ -245,12 +245,12 @@ void extractfilenameWOext(const char_t *flnm,char_t *name)
 
 void extractfilenameWOext(const char_t *flnm, ffstring &name)
 {
+ name = _l("");
+ if (!flnm || !flnm[0])
+  return;
  size_t len = strlen(flnm) + 1;
  if (len > 4096)
-  {
-   name = _l("");
-   return;
-  }
+  return;
  char_t *nm      = (char_t *)_alloca(len * sizeof(char_t));
  char_t *namebuf = (char_t *)_alloca(len * sizeof(char_t));
  _splitpath_s(flnm, NULL, 0, NULL,0, nm, len, NULL, 0);
@@ -267,10 +267,10 @@ void extractfileext(const char_t *flnm,char_t *ext)
 void extractfileext(const char_t *flnm,ffstring &ext)
 {
  ext = _l("");
- if (!flnm)
+ if (!flnm || !flnm[0])
   return;
  size_t len=strlen(flnm) + 1;
- if (len > 4096 || !flnm[0])
+ if (len > 4096)
   return;
  char_t *extbuf = (char_t *)_alloca(len * sizeof(char_t));
  _splitpath_s(flnm,NULL,0,NULL,0,NULL,0,extbuf,len);
@@ -281,10 +281,10 @@ void extractfileext(const char_t *flnm,ffstring &ext)
 void changepathext(const char_t *flnm, const char_t *ext, ffstring &path)
 {
  path = _l("");
- if (!flnm)
+ if (!flnm || !flnm[0])
   return;
  size_t len = strlen(flnm) + strlen(ext) + 1;
- if (len > 4096 || !flnm[0])
+ if (len > 4096)
   return;
  char_t *drv        = (char_t *)_alloca(len * sizeof(char_t));
  char_t *dir        = (char_t *)_alloca(len * sizeof(char_t));
