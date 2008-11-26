@@ -5,43 +5,50 @@ WelcomeLabel1=[name/ver]
 en.WelcomeLabel2=This will install [name] on your computer.%n%nIt is recommended that you close all other applications before continuing.
 en.FileAbortRetryIgnore=Quit the application using [name] and click Retry. If the problem persists, click Abort, restart your computer and setup again.
 en.FinishedRestartLabel=To complete the installation of [name], Setup must restart your computer. Would you like to restart now?%n%nHint: To avoid restarting computer from the next time, it may be effective to enable "DirectShow control" -> "Don't use ffdshow in:" -> "explorer.exe" in video decoder configuration.
-en.WinVersionTooLowError=This build of ffdshow requires Windows 2000 or newer. For Windows 98/ME you need to acquire ffdshow revision 2352 or older.
+en.WinVersionTooLowError=This build of [name] requires Windows 2000 or newer. Revision 2352 of [name] is the last one that works on Windows 98/ME.
 
 #if localize
 ; Japanese
 jp.WelcomeLabel2=‚±‚ÌƒvƒƒOƒ‰ƒ€‚Í‚²Žg—p‚ÌƒRƒ“ƒsƒ…[ƒ^‚Ö [name] ‚ðƒCƒ“ƒXƒg[ƒ‹‚µ‚Ü‚·B%n%n‘±s‚·‚é‘O‚É‘¼‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ð‚·‚×‚ÄI—¹‚µ‚Ä‚­‚¾‚³‚¢B
 jp.FileAbortRetryIgnore=ffdshow‚ðŽg—p’†‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ðI—¹‚µ‚ÄuÄŽŽsv‚ðƒNƒŠƒbƒN‚µ‚Ä‚­‚¾‚³‚¢B‰ðŒˆ‚µ‚È‚¢ê‡‚Íu’†Ž~v‚ðƒNƒŠƒbƒN‚µ‚ÄƒRƒ“ƒsƒ…[ƒ^‚ðÄ‹N“®ŒãA‚à‚¤ˆê“xƒZƒbƒgƒAƒbƒv‚ðŽÀs‚µ‚Ä‚­‚¾‚³‚¢B
 jp.FinishedRestartLabel=[name] ‚ÌƒCƒ“ƒXƒg[ƒ‹‚ðŠ®—¹‚·‚é‚½‚ß‚É‚ÍAƒRƒ“ƒsƒ…[ƒ^‚ðÄ‹N“®‚·‚é•K—v‚ª‚ ‚è‚Ü‚·B%n%n‚·‚®‚ÉÄ‹N“®‚µ‚Ü‚·‚©H%n%nƒqƒ“ƒgFƒrƒfƒIƒfƒR[ƒ_[Ý’è‚Ìuî•ñ‚ÆƒfƒoƒbƒOv‚ÌuDon't use ffdshow in:vuexplorer.exev‚ð—LŒø‚É‚µ‚Ä‚¨‚­‚ÆŽŸ‰ñ‚©‚çÄ‹N“®‚ª•s—v‚É‚È‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñB
+;jp.WinVersionTooLowError=This build of [name] requires Windows 2000 or newer. Revision 2352 of [name] is the last one that works on Windows 98/ME.
 
 ; German
 de.WelcomeLabel2=Dieser Assistent wird jetzt [name] auf Ihrem Computer installieren.%n%nSie sollten alle anderen Anwendungen beenden, bevor Sie mit dem Setup fortfahren.
 de.FileAbortRetryIgnore=Beenden Sie das Programm, das [name] verwendet und klicken Sie auf "Wiederholen". Sollte das Problem weiterhin bestehen, klicken Sie auf "Abbrechen", starten Sie Ihren Computer neu und führen Sie das Setup erneut aus.
 de.FinishedRestartLabel=Um die Installation von [name] zu fertig zu stellen, muss das Setup Ihren Computer neu starten. Soll jetzt neu gestartet werden?%n%nHinweis: Um ihren Computer beim nächsten Mal nicht neu starten zu müssen, kann es helfen, in der Videodekoder-Konfiguration unter "DirectShow-Optionen" -> "ffdshow nicht verwenden in:" zu aktivieren.
+de.WinVersionTooLowError=Dieses [name]-Build benötigt Windows 2000 oder neuer. ffdshow-Revision 2352 ist die letzte, die auf Windows 98/ME funktioniert.
 
 ; French
 fr.WelcomeLabel2=Ceci installera [name] sur votre ordinateur.%n%nIl est recommandé de fermer toutes les autres applications avant de continuer.
 fr.FileAbortRetryIgnore=Quitter l'application qui utilise [name] et cliquer sur Ressayer. Si le problème persiste, cliquer sur Annuler, redémarrer l'ordinateur et réinstaller de nouveau.
 fr.FinishedRestartLabel=Pour compléter l'installation de [name], l'installation doit redémarrer votre ordinateur. Voulez-vous le redémarrer maintenant ?%n%nHint : Pour éviter de redémarrer votre ordinateur la prochaine fois, il est conseiller d'activer l'option "ne pas utiliser ffdshow dans :"-"explorer.exe" dans « Infos & Debogage » du panneau configuration du décodeur vidéo ffdshow.
+;fr.WinVersionTooLowError=This build of [name] requires Windows 2000 or newer. Revision 2352 of [name] is the last one that works on Windows 98/ME.
 
 ; Russian
 ru.WelcomeLabel2=Ïðîãðàììà óñòàíîâèò [name] íà Âàø êîìïüþòåð.%n%nÐåêîìåíäóåòñÿ çàêðûòü âñå ïðî÷èå ïðèëîæåíèÿ ïåðåä òåì, êàê ïðîäîëæèòü.
 ru.FileAbortRetryIgnore=Çàêðîéòå âñå ïðèëîæåíèÿ, èñïîëüçóþùèå [name], è íàæìèòå "Ïîâòîð". Åñëè ñèòóàöèÿ ïîâòîðèòñÿ, íàæìèòå "Îòêàç", ïåðåçàãðóçèòå Âàø êîìïüþòåð è ïîïðîáóéòå åù¸ ðàç.
 ru.FinishedRestartLabel=Äëÿ çàâåðøåíèÿ óñòàíîâêè [name] òðåáóåòñÿ ïåðåçàãðóçèòü êîìïüþòåð. Ïðîèçâåñòè ïåðåçàãðóçêó ñåé÷àñ?%n%nÏîäñêàçêà: èçáåæàòü ïåðåçàãðóçêè êîìïüþòåðà â ñëåäóþùèé ðàç ìîæåò ïîìî÷ü âêëþ÷åíèå "Èíôîðìàöèÿ"-"Don't use ffdshow in:"-"explorer.exe" â êîíôèãóðàöèè âèäåîäåêîäåðà.
+;ru.WinVersionTooLowError=This build of [name] requires Windows 2000 or newer. Revision 2352 of [name] is the last one that works on Windows 98/ME.
 
 ; Polish
 pl.WelcomeLabel2=Instalator zainstaluje [name] na twoim komputerze.%n%nZaleca siê zamkniêcie wszystkich innych aplikacji przed kontynuowaniem procesu instalacji.
 pl.FileAbortRetryIgnore=Zamknij aplikacjê u¿ywaj¹c¹ [name] i wciœnij Ponów. Jeœli problem nie ustêpuje, wciœnij Przerwij, zrestartuj komputer i ponownie uruchom instalacjê.
 pl.FinishedRestartLabel=By zakoñczyæ instalacjê [name], instalator musi zrestartowaæ twój komputer. Czy chcia³byœ zrestartowaæ go teraz?%n%nPodpowiedŸ: By unikn¹æ restartowania komputera nastêpnym razem, zaznacz w zak³adce "Informacje" - "Nie u¿ywaj ffdshow w:" - "explorer.exe" w konfiguracji dekodera wideo.
+;pl.WinVersionTooLowError=This build of [name] requires Windows 2000 or newer. Revision 2352 of [name] is the last one that works on Windows 98/ME.
 
 ;Czech
 cz.WelcomeLabel2=Tento instalátor nainstaluje na váš poèítaè [name].%n%nPøedtím než spustíte instalaci je doporuèeno ukonèit všechny ostatní aplikace.
 cz.FileAbortRetryIgnore=Ukonèete aplikaci používající [name] a kliknìte na Opakovat. Pokud problém pøetrvává, ukonèete instalaci tlaèítkem Pøerušit, restartujte poèítaè a znovu spuste instalci.
 cz.FinishedRestartLabel=Aby mohla být instalace [name] dokonèena, musí instalátor restartovat poèítaè. Chcete poèítaè restartovat nyní?%n%nTip: Potøebì restartování se pro pøíštì mùžete vyhnout pokud v nastavení video dekodéru nastavíte "DirectShow"-"ffdshow nepoužívat v:"-"explorer.exe".
+;cz.WinVersionTooLowError=This build of [name] requires Windows 2000 or newer. Revision 2352 of [name] is the last one that works on Windows 98/ME.
 
 ; Chinese (Simplified)
 sc.WelcomeLabel2=¼´½«°²×° [name] µ½ÄúµÄµçÄÔÖÐ¡£%n%n½¨ÒéÄúÔÚ¼ÌÐø°²×°Ç°¹Ø±ÕËùÓÐÆäËûÓ¦ÓÃ³ÌÐò¡£
 sc.FileAbortRetryIgnore=ÍË³öÕýÔÚÊ¹ÓÃ [name] µÄÓ¦ÓÃ³ÌÐòÈ»ºóÖØÊÔ¡£Èç¹ûÎÊÌâÈÔÈ»³öÏÖ£¬µ¥»÷¡°ÖÐÖ¹¡±°´Å¥£¬²¢ÖØÐÂÆô¶¯¼ÆËã»úÈ»ºóÔÙÔËÐÐ°²×°³ÌÐò¡£
 sc.FinishedRestartLabel=°²×°³ÌÐòÐèÒªÖØÐÂÆô¶¯¼ÆËã»úÀ´Íê³É [name] µÄ°²×°¹ý³Ì¡£ÄãÏëÏÖÔÚÖØÐÂÆô¶¯Âð£¿%n%nÌáÊ¾£ºÈç¹ûÏÂ´Î°²×°²»ÏëÖØÐÂÆô¶¯¼ÆËã»ú£¬¿ÉÒÔ¹´Ñ¡¡°²»ÒªÔÚÏÂÁÐ³ÌÐòÖÐÊ¹ÓÃffdshow£º¡±¸´Ñ¡¿ò£¨Î»ÓÚ¡°ffdshowÊÓÆµ½âÂëÆ÷ÅäÖÃ¡±->¡°DirectShow¿ØÖÆ¡±£©£¬²¢°Ñ¡°explorer.exe¡±¼ÓÈëºóÃæµÄÁÐ±í¡£
+;sc.WinVersionTooLowError=This build of [name] requires Windows 2000 or newer. Revision 2352 of [name] is the last one that works on Windows 98/ME.
 
 ; Add other languages here
 
@@ -200,7 +207,7 @@ de.langid=1031
 de.msg_uninstallFirst=Sie müssen ihre alte ffdshow-Version erst deinstallieren.
 de.simd_msg_sse=Dieses ffdshow-Build benötigt einen Prozessor mit SSE-Unterstützung. Ihr Prozesser besitzt diese Eigenschaft nicht.
 de.simd_msg_sse2=Dieses ffdshow-Build benötigt einen Prozessor mit SSE2-Unterstützung. Ihr Prozesser besitzt diese Eigenschaft nicht.
-de.unsupported_cpu=Dieses ffdshow-Build benötigt einen Prozessor vom Typ i686 der neuer. Ihr Prozessor wird nicht unterstützt. Revision 1940 von ffdshow ist die letzte, die auf alten Prozessoren funktioniert.
+de.unsupported_cpu=Dieses ffdshow-Build benötigt einen Prozessor vom Typ i686 der neuer. Ihr Prozessor wird nicht unterstützt. ffdshow-Revision 1940 ist die letzte, die auf alten Prozessoren funktioniert.
 
 de.comp_ffdshowds=ffdshow-DirectShow-Filter
 de.comp_vfwInterface=VFW-Interface
