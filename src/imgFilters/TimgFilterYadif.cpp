@@ -66,15 +66,13 @@ void TimgFilterYadif::store_ref(const uint8_t *src[3], stride_t src_stride[3], i
     // src[0] == NULL, at the end of stream, means it's the last picture
     if(src[0]){
         for(i=0; i<3; i++){
-            int is_chroma= !!i;
-
-            memcpy_pic(yadctx->ref[2][i], src[i], width>>is_chroma, height>>is_chroma, yadctx->stride[i], src_stride[i]);
+            memcpy_pic(yadctx->ref[2][i], src[i], width >> yadctx->shiftX[i],
+                       height >> yadctx->shiftY[i], yadctx->stride[i], src_stride[i]);
         }
     }else{
         for(i=0; i<3; i++){
-            int is_chroma= !!i;
-
-            memcpy_pic(yadctx->ref[2][i], yadctx->ref[1][i], width>>is_chroma, height>>is_chroma, yadctx->stride[i], yadctx->stride[i]);
+            memcpy_pic(yadctx->ref[2][i], yadctx->ref[1][i], width >> yadctx->shiftX[i],
+                       height >> yadctx->shiftY[i], yadctx->stride[i], yadctx->stride[i]);
         }
     }
 }
@@ -203,15 +201,16 @@ int TimgFilterYadif::config(TffPict &pict)
         int i, j;
 
         for(i = 0 ; i < 3 ; i++){
-            int is_chroma = !!i;
-            stride_t ffdshow_w = ((pict.rectFull.dx >> is_chroma)/16 + 2) * 16; // from void TffPict::convertCSP(int Icsp,Tbuffer &buf,int edge)
-            int w = std::max(pict.stride[i], ffdshow_w);
-            int h = ((pict.rectFull.dy + (6 << is_chroma) + 31) & (~31)) >> is_chroma;
+            yadctx->shiftX[i] = pict.cspInfo.shiftX[i];
+            yadctx->shiftY[i] = pict.cspInfo.shiftY[i];
+            stride_t ffdshow_w = ((pict.rectFull.dx >> yadctx->shiftX[i])/16 + 2) * 16; // from void TffPict::convertCSP(int Icsp,Tbuffer &buf,int edge)
+            stride_t w = std::max(pict.stride[i], ffdshow_w);
+            int h = ((pict.rectFull.dy + (6 << yadctx->shiftY[i]) + 31) & (~31)) >> yadctx->shiftY[i];
 
             yadctx->stride[i]= w;
             for(j = 0 ; j < 3 ; j++){
                 yadctx->ref[j][i]= (uint8_t*)malloc(w * h * sizeof(uint8_t)) + 3 * w;
-                memset(yadctx->ref[j][i] - 3 * w, 128 * is_chroma, w * h * sizeof(uint8_t));
+                memset(yadctx->ref[j][i] - 3 * w, 128 * !!i, w * h * sizeof(uint8_t));
             }
         }
 
@@ -365,7 +364,7 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
     }
 
     const unsigned char *src[4];
-    bool cspChanged = getCur(FF_CSP_420P | FF_CSP_FLAGS_INTERLACED, pict, cfg->full,src);
+    bool cspChanged = getCur(FF_CSP_420P | FF_CSP_422P | FF_CSP_FLAGS_INTERLACED, pict, cfg->full,src);
 
     if (!yadctx){
         yadctx = getContext(cfg->yadifMode, cfg->yadifFieldOrder);

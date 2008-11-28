@@ -40,6 +40,8 @@ typedef struct YadifContext {
     int64_t frame_duration;
     stride_t stride[3];
     uint8_t *ref[4][3];
+    unsigned int shiftX[4],shiftY[4];
+
     /**
      * do_deinterlace
      * 0:not initialized

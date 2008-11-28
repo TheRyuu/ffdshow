@@ -359,8 +359,7 @@ attribute_align_arg void yadif_threaded_filter(YadifThreadContext *yadThreadCtx)
     int tff = yadctx->tff;
 
     for(i = yadThreadCtx->plane_start ; i <= yadThreadCtx->plane_end ; i++){
-        int is_chroma= !!i;
-        int w= width >>is_chroma;
+        int w= width >> yadctx->shiftX[i];
         int h= yadThreadCtx->y_end[i];
         int refs= yadctx->stride[i];
 
@@ -419,9 +418,8 @@ attribute_align_arg void yadif_filter(YadifContext *yadctx, uint8_t *dst[3], str
     yadctx->tff = tff;
 
     for (i = 0 ; i < 3 ; i++){
-        int is_chroma= !!i;
-        w[i] = width  >> is_chroma;
-        h[i] = height >> is_chroma;
+        w[i] = width  >> yadctx->shiftX[i];
+        h[i] = height >> yadctx->shiftY[i];
     }
 
     pixels_all = w[0] * h[0] + w[1] * h[1] + w[2] * h[2];

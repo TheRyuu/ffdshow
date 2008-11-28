@@ -17,7 +17,7 @@ private:
  bool dllok;
 
  virtual bool is(const TffPictBase &pict,const TfilterSettingsVideo *cfg);
- virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSP_420P;}
+ virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSP_420P | FF_CSP_422P;}
  virtual void onSizeChange(void);
  HRESULT onDiscontinuity(const TffPict &pict);
 
