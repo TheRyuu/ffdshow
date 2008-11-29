@@ -12,7 +12,7 @@ en.WinVersionTooLowError=This build of [name] requires Windows 2000 or newer. Re
 jp.WelcomeLabel2=このプログラムはご使用のコンピュータへ [name] をインストールします。%n%n続行する前に他のアプリケーションをすべて終了してください。
 jp.FileAbortRetryIgnore=ffdshowを使用中のアプリケーションを終了して「再試行」をクリックしてください。解決しない場合は「中止」をクリックしてコンピュータを再起動後、もう一度セットアップを実行してください。
 jp.FinishedRestartLabel=[name] のインストールを完了するためには、コンピュータを再起動する必要があります。%n%nすぐに再起動しますか？%n%nヒント：ビデオデコーダー設定の「情報とデバッグ」の「Don't use ffdshow in:」「explorer.exe」を有効にしておくと次回から再起動が不要になるかもしれません。
-;jp.WinVersionTooLowError=This build of [name] requires Windows 2000 or newer. Revision 2352 of [name] is the last one that works on Windows 98/ME.
+jp.WinVersionTooLowError=このバージョンのffdshowはWindows 2000以降が必要です。リビジョン2352より前のバージョンを御使用ください。
 
 ; German
 de.WelcomeLabel2=Dieser Assistent wird jetzt [name] auf Ihrem Computer installieren.%n%nSie sollten alle anderen Anwendungen beenden, bevor Sie mit dem Setup fortfahren.
@@ -131,37 +131,37 @@ en.shrt_uninstall=Uninstall ffdshow
 #if localize
 ; Japanese
 jp.langid=1041
-;jp.msg_uninstallFirst=You must first uninstall your old version of ffdshow.
-;jp.simd_msg_sse=This build of ffdshow requires a CPU with SSE extension support. Your CPU does not have those capabilities.
-;jp.simd_msg_sse2=This build of ffdshow requires a CPU with SSE2 extension support. Your CPU does not have those capabilities.
-;jp.unsupported_cpu=This build of ffdshow requires a CPU of type i686 or newer. Your CPU is not supported. Revision 1940 of ffdshow is the last one that works on old CPUs.
+jp.msg_uninstallFirst=古いバージョンのffdshowをアンインストールしてからインストールして下さい。
+jp.simd_msg_sse=このバージョンのffdshowはCPUのSSEサポートが必要です。お使いのCPUはこの条件を満たしません。
+jp.simd_msg_sse2=このバージョンのffdshowはCPUのSSE2サポートが必要です。お使いのCPUはこの条件を満たしません。
+jp.unsupported_cpu=このバージョンのffdshowはi686以降のCPUが必要です。リビジョン1940がこの古いCPUで動作する最後のビルドです。
 
 jp.comp_ffdshowds=ffdshow DirectShow フィルター
 jp.comp_vfwInterface=VFW インターフェース
 jp.comp_makeAvis=AviSynth スクリプトサービング
 jp.comp_appPlugins=アプリケーションプラグイン
-;jp.comp_msg_selectOneComp=You must select at least one component.
+jp.comp_msg_selectOneComp=少なくとも一つのコンポーネントを選択してください。
 
-;jp.tsk_settings=Settings
+jp.tsk_settings=設定
 jp.tsk_resetSettings=ffdshowのすべての設定を初期値に戻す
-;jp.tsk_videoFormats=Video formats
+jp.tsk_videoFormats=ビデオ・フォーマット
 jp.tsk_videoFormatsSelect=以下のすべてのビデオフォーマットをffdshowでデコードする
 ;jp.tsk_genericMpeg4=Generic MPEG-4
 ;jp.tsk_rawVideo=Raw Video
-;jp.tsk_audioFormats=Audio formats
+jp.tsk_audioFormats=オーディオ・フォーマット
 jp.tsk_audioFormatsSelect=以下のすべてのオーディオフォーマットをffdshowでデコードする
 ;jp.tsk_rawAudio=Raw Audio
-;jp.tsk_filters=Filter settings
+jp.tsk_filters=フィルターの設定
 jp.tsk_filtersSelect=以下のフィルターを有効にする
-;jp.tsk_passthroughac3=Enable AC3 pass-through (S/PDIF, HDMI)
-;jp.tsk_passthroughdts=Enable DTS pass-through (S/PDIF, HDMI)
+jp.tsk_passthroughac3=AC3をパス・スルーする(S/PDIF, HDMI)
+jp.tsk_passthroughdts=DTSをパス・スルーする(S/PDIF, HDMI)
 jp.tsk_volumeNorm=ボリューム ノーマライズ
 jp.tsk_subtitles=字幕
-;jp.tsk_tweaks=Tweaks
-;jp.tsk_skipInloop=Always skip H.264 inloop deblocking
-;jp.tsk_compatibilityManager=Compatibility Manager
-;jp.tsk_whitelist=Restrict ffdshow to be used only by whitelisted applications
-;jp.tsk_whitelistPrompt=Display Compatibility Manager window when an unknown application tries to load ffdshow
+jp.tsk_tweaks=小技
+jp.tsk_skipInloop=常にH.264のデブロッキングをスキップする
+jp.tsk_compatibilityManager=互換性管理プログラム
+jp.tsk_whitelist=ffdshowを確認された互換プログラムのみで用いる
+jp.tsk_whitelistPrompt=未知のアプリケーションがffdshowをロードしようとした時ダイアログを表示する
 
 jp.spk_Label1=スピーカーの設定
 jp.spk_Label2=現在のコンピュータ構成に最も近いスピーカーの種類を選んでください。%nインストール後に「ミキサー」の設定から変更することも出来ます。
