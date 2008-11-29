@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2361
+#define tryout_revision = 2391
 #define buildyear = 2008
 #define buildmonth = '11'
-#define buildday = '25'
+#define buildday = '29'
 
 ; Build specific options
 #define localize = True
@@ -24,12 +24,6 @@
 
 #define sse_required = False
 #define sse2_required = False
-
-; Set to True if you used VS2003 for compiling any of the included components
-#define requires_msvc71_runtime = False
-
-; Set to True if you used VS2008 + ICL for compiling any of the included components
-#define requires_msvc90_runtime = False
 
 ; Output settings
 #define filename_suffix = ''
@@ -52,12 +46,10 @@
 #define PREF_ALBAIN_x64 = False
 
 #if PREF_CLSID
-  #define requires_msvc71_runtime = True
   #define filename_suffix = '_clsid'
   #define bindir = '..\..\x86'
   #define outputdir = '..\..\..\..\'
 #elif PREF_CLSID_ICL
-  #define requires_msvc71_runtime = True
   #define sse_required = True
   #define filename_suffix = '_clsid_sse_icl10'
   #define bindir = '..\..\x86'
@@ -74,7 +66,6 @@
   #define include_xvidcore = False
   #define filename_suffix = '_Q'
 #elif PREF_XXL
-  #define requires_msvc71_runtime = True
   #define localize = False
   #define include_info_before = True
   #define include_setup_icon = True
@@ -349,11 +340,6 @@ Name: {group}\{cm:shrt_uninstall}; Filename: {uninstallexe}
 [Files]
 ; For speaker config
 Source: ffSpkCfg.dll; Flags: dontcopy
-
-#if requires_msvc71_runtime
-Source: Runtimes\msvc71\msvcp71.dll; DestDir: {sys}; Flags: onlyifdoesntexist sharedfile uninsnosharedfileprompt
-Source: Runtimes\msvc71\msvcr71.dll; DestDir: {sys}; Flags: onlyifdoesntexist sharedfile uninsnosharedfileprompt
-#endif
 
 Source: {#= bindir}\libavcodec.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
 Source: {#= bindir}\libmplayer.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
@@ -836,10 +822,6 @@ begin
 end;
 #endif
 
-#if requires_msvc90_runtime
-#include "msvc_runtime_detection.iss"
-#endif
-
 function InitializeSetup(): Boolean;
 begin
   Result := True;
@@ -865,12 +847,6 @@ begin
   #if !is64bit
   if Result then begin
     RemoveBuildUsingNSIS;
-  end
-  #endif
-
-  #if requires_msvc90_runtime
-  if Result then begin
-    Result := CheckForRequiredRuntimes;
   end
   #endif
 
