@@ -14,6 +14,7 @@ private:
  bool firsttime,dv;
  AVCodecContext *avctx;AVFrame *frame;int dvcsp;TffPict *dvpict;Tbuffer dvpictbuf;
 protected:
+ int old_cspOptionsRgbInterlaceMode, old_avisynthYV12_RGB;
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSPS_MASK;}
 public:
  TimgFilterOutput(IffdshowBase *Ideci,Tfilters *Iparent);

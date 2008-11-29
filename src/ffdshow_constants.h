@@ -410,6 +410,9 @@
 #define IDFF_resizeMethodsLocked       763
 #define IDFF_resizeInterlaced          748 // 0 - progressive, 1 - interlaced, 2 - use picture type information
 #define IDFF_resizeAccurateRounding    731
+#define IDFF_resizeBicubicParamSet     3503
+#define IDFF_resizeBicubicBurring      3504
+#define IDFF_resizeBicubicRinging      3505
 #define IDFF_resizeBicubicLumaParam    724
 #define IDFF_resizeBicubicChromaParam  760
 #define IDFF_resizeGaussLumaParam      726
@@ -418,8 +421,10 @@
 #define IDFF_resizeLanczosChromaParam  762
 #define IDFF_resizeGblurLum            708 // *100
 #define IDFF_resizeGblurChrom          709 // *100
-#define IDFF_resizeSharpenLum          710 // *100
-#define IDFF_resizeSharpenChrom        711 // *100
+#define IDFF_resizeSharpenLum         710 // *100
+#define IDFF_resizeSharpenChrom       711 // *100
+#define IDFF_resizeSharpenLum2         3506 // *100
+#define IDFF_resizeSharpenChrom2       3507 // *100
 #define IDFF_resizeSimpleWarpXparam    749 // simple warped resize X param *1000
 #define IDFF_resizeSimpleWarpYparam    750 // simple warped resize Y param *1000
 
@@ -914,6 +919,7 @@
 #define IDFF_cspOptionsChromaCutoff      3426
 #define IDFF_cspOptionsInterlockChroma   3427
 #define IDFF_cspOptionsCutoffMode        3428
+#define IDFF_cspOptionsRgbInterlaceMode  3508
 
 #define IDFF_filterOutputAudio      1314
 #define IDFF_outsfs                 1310
@@ -1525,6 +1531,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3503
+//next:3509
 
 #endif

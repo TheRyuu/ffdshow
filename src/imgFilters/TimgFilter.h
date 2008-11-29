@@ -26,6 +26,7 @@ private:
  int pictHalf;
  int oldBrightness;
 protected:
+ int old_cspOptionsRgbInterlaceMode;
  Trect pictRect;
  unsigned int dx1[4],dy1[4],dx2[4],dy2[4];
  stride_t stride1[4]; // call GetCur to fill.

@@ -26,6 +26,8 @@ void TcspOptionsPage::init(void)
  tbrSetRange(IDC_TBR_RGBCONV_BLACK, 0, 32, 1);
  tbrSetRange(IDC_TBR_RGBCONV_WHITE, 215, 255, 1);
  tbrSetRange(IDC_TBR_RGBCONV_CHROMA, 1, 32, 1);
+
+ addHint(IDC_CBX_RGB_INTERLACE_METHOD, _l("This setting also applies to YV12 <-> YUY2 conversion."));
 }
 
 void TcspOptionsPage::cfg2dlg(void)
@@ -64,6 +66,9 @@ void TcspOptionsPage::cfg2dlg(void)
    static const int chromas[] = {IDC_TBR_RGBCONV_CHROMA, IDC_TXT_RGBCONV_CHROMA, 0};
    enable(!lock, chromas);
   }
+
+ cbxSetCurSel(IDC_CBX_RGB_INTERLACE_METHOD,cfgGet(IDFF_cspOptionsRgbInterlaceMode));
+ setCheck(IDC_CHB_AVISYNTH_YV12_RGB,cfgGet(IDFF_avisynthYV12_RGB));
 }
 
 void TcspOptionsPage::getTip(char_t *tipS,size_t len)
@@ -75,6 +80,8 @@ void TcspOptionsPage::getTip(char_t *tipS,size_t len)
 void TcspOptionsPage::translate(void)
 {
  TconfPageDecVideo::translate();
+
+ cbxTranslate(IDC_CBX_RGB_INTERLACE_METHOD,ToutputVideoSettings::rgbInterlaceMethods);
 }
 
 bool TcspOptionsPage::reset(bool testonly)
@@ -118,7 +125,14 @@ TcspOptionsPage::TcspOptionsPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Ipa
  static const TbindCheckbox<TcspOptionsPage> chb[]=
   {
    IDC_CHB_RGBCONV_CHROMA_LOCK, IDFF_cspOptionsInterlockChroma, &TcspOptionsPage::cfg2dlg,
+   IDC_CHB_AVISYNTH_YV12_RGB,IDFF_avisynthYV12_RGB,NULL,
    0,NULL,NULL
   };
  bindCheckboxes(chb);
+ static const TbindCombobox<TcspOptionsPage> cbx[]=
+  {
+   IDC_CBX_RGB_INTERLACE_METHOD,IDFF_cspOptionsRgbInterlaceMode,BINDCBX_SEL,NULL,
+   0
+  };
+ bindComboboxes(cbx);
 }

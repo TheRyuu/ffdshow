@@ -224,8 +224,12 @@ bool TimgFilter::getCurNext(int csp,TffPict &pict,int full,int copy,unsigned cha
  if (((csp&FF_CSPS_MASK)&(pict.csp&FF_CSPS_MASK))==0)
   {
    bool flip1 = !!((pict.csp ^ csp) & FF_CSP_FLAGS_VFLIP);
-   if (!convert2)
-    convert2=new Tconvert(deci,pict.rectFull.dx,pict.rectFull.dy);
+   int cspOptionsRgbInterlaceMode = deci->getParam2(IDFF_cspOptionsRgbInterlaceMode);
+   if (!convert2 || cspOptionsRgbInterlaceMode != old_cspOptionsRgbInterlaceMode)
+    {
+     old_cspOptionsRgbInterlaceMode = cspOptionsRgbInterlaceMode;
+     convert2=new Tconvert(deci,pict.rectFull.dx,pict.rectFull.dy);
+    }
    pict.convertCSP((csp_bestMatch(pict.csp, csp & FF_CSPS_MASK) & ~FF_CSP_FLAGS_VFLIP) | (csp & (FF_CSP_FLAGS_YUV_ADJ | FF_CSP_FLAGS_INTERLACED)), buf, convert2);
    pict.setRO(false);
    pictN=pict;

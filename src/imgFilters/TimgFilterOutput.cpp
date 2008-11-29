@@ -63,8 +63,10 @@ HRESULT TimgFilterOutput::process(const TffPict &pict,int dstcsp,unsigned char *
      }
   }
 
- if (!convert || convert->dx!=pict.rectFull.dx || convert->dy!=pict.rectFull.dy)
+ if (!convert || convert->dx!=pict.rectFull.dx || convert->dy!=pict.rectFull.dy || old_cspOptionsRgbInterlaceMode != cfg->cspOptionsRgbInterlaceMode || old_avisynthYV12_RGB != cfg->avisynthYV12_RGB)
   {
+   old_avisynthYV12_RGB = cfg->avisynthYV12_RGB;
+   old_cspOptionsRgbInterlaceMode = cfg->cspOptionsRgbInterlaceMode;
    if (convert) delete convert;
    convert=new Tconvert(deci,pict.rectFull.dx,pict.rectFull.dy);
   }

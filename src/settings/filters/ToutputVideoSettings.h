@@ -26,6 +26,7 @@ public:
  static const char_t *dvNorms[];
  static const char_t *deintMethods[];
  static const char_t *deintFieldOrder[];
+ static const char_t *rgbInterlaceMethods[];
 
  struct ToutputColorspace
   {
@@ -43,6 +44,7 @@ public:
  int cspOptionsIturBt, cspOptionsCutoffMode;
  int cspOptionsBlackCutoff, cspOptionsWhiteCutoff, cspOptionsChromaCutoff;
  int cspOptionsInterlockChroma;
+ int cspOptionsRgbInterlaceMode;
  int flip;
 
  void reg_op_outcsps(TregOp &t);

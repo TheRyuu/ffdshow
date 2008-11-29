@@ -56,6 +56,14 @@ const char_t* ToutputVideoSettings::deintFieldOrder[]=
  NULL
 };
 
+const char_t* ToutputVideoSettings::rgbInterlaceMethods[]=
+{
+ _l("Auto"),
+ _l("Force progressive"),
+ _l("Force interlace"),
+ NULL
+};
+
 ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSettingsVideo(sizeof(*this),Icoll,filters,&idffs,false)
 {
  half=0;full=1;
@@ -123,6 +131,8 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
      _l("cspOptionsChromaCutoff"),16,
    IDFF_cspOptionsInterlockChroma       ,&ToutputVideoSettings::cspOptionsInterlockChroma  ,0,0,_l(""),1,
      _l("cspOptionsInterlockChroma"),1,
+   IDFF_cspOptionsRgbInterlaceMode      ,&ToutputVideoSettings::cspOptionsRgbInterlaceMode ,0,2,_l(""),1,
+     _l("cspOptionsRgbInterlaceMode"),0,
    0
   };
  addOptions(iopts);
@@ -132,6 +142,8 @@ ToutputVideoSettings::ToutputVideoSettings(TintStrColl *Icoll,TfilterIDFFs *filt
  setParamList(IDFF_hwDeintMethod,&listDeintMethods);
  static const TcreateParamList1 listDeintFieldOrder(deintFieldOrder);
  setParamList(IDFF_hwDeintFieldOrder,&listDeintFieldOrder);
+ static const TcreateParamList1 listRgbInterlaceMethods(rgbInterlaceMethods);
+ setParamList(IDFF_cspOptionsRgbInterlaceMode,&listRgbInterlaceMethods);
 }
 
 int ToutputVideoSettings::getDefault(int id)
