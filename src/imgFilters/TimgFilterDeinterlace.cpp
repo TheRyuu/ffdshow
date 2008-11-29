@@ -191,6 +191,7 @@ HRESULT TimgFilterFramerateDoubler::process(TfilterQueue::iterator it,TffPict &p
  const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
  if ((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) && !cfg->deinterlaceAlways)
  {
+  done();
   return parent->deliverSample(++it,pict);
  }
  init(pict,true,cfg->half);

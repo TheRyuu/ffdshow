@@ -27,6 +27,7 @@ TimgFilterDGbob::TimgFilterDGbob(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilt
  n=0;
  for (int i=0;i<countof(picts0);i++) picts0[i]=new TtempPict;
  picts=picts0+2;
+ do_deinterlace = 0;
 }
 TimgFilterDGbob::~TimgFilterDGbob()
 {
@@ -41,12 +42,14 @@ void TimgFilterDGbob::done(void)
 {
  for (int i=0;i<countof(picts0);i++) picts0[i]->done();
  n=0;
+ do_deinterlace = 0;
 }
 HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it,TffPict &pict0,const TfilterSettingsVideo *cfg0)
 {
  const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
  if ((pict0.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) && !cfg->deinterlaceAlways)
  {
+  done();
   return parent->deliverSample(++it,pict0);
  }
  init(pict0,cfg->full,0);
@@ -57,6 +60,12 @@ HRESULT TimgFilterDGbob::process(TfilterQueue::iterator it,TffPict &pict0,const 
 
  int order=pict0.fieldtype&FIELD_TYPE::INT_BFF?1:0,fcnt=cfg->dgbobMode==0?1:2;
  REFERENCE_TIME rtStart=pict0.rtStart,rtDuration=(pict0.rtStop-pict0.rtStart)/fcnt;
+ if (!do_deinterlace)
+  {
+   picts[SRC]->p.copyFrom(pict0,picts[SRC]->buf);
+   picts[NXT]->p.copyFrom(pict0,picts[NXT]->buf);
+   do_deinterlace = 1;
+  }
  for (int f=0;f<fcnt;f++,order=1-order)
   {
    TffPict pict=pict0;

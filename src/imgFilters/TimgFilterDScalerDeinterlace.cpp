@@ -72,6 +72,7 @@ TimgFilterDScalerDI::TimgFilterDScalerDI(IffdshowBase *Ideci,Tfilters *Iparent):
  di.CpuFeatureFlags=TDScalerSettings::dscalerCpu();
 
  for (int i=0;i<MAX_PICTURE_HISTORY;i++) di.PictureHistory[i]=NULL;
+ do_deinterlace = 0;
 }
 TimgFilterDScalerDI::~TimgFilterDScalerDI()
 {
@@ -79,6 +80,7 @@ TimgFilterDScalerDI::~TimgFilterDScalerDI()
 }
 void TimgFilterDScalerDI::done(void)
 {
+ do_deinterlace = 0;
  for (int i=0;i<MAX_PICTURE_HISTORY;i++)
   if (di.PictureHistory[i])
    {
@@ -103,9 +105,10 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
 {
  const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
  if ((pict0.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) && !cfg->deinterlaceAlways)
- {
-  return parent->deliverSample(++it,pict0);
- }
+  {
+   done();
+   return parent->deliverSample(++it,pict0);
+  }
  if (cfg->dscalerFlnm[0] && stricmp(oldfltflnm,cfg->dscalerFlnm)!=0)
   {
    if (flt) delete flt;
@@ -158,6 +161,9 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
      di.PictureHistory[0]->Flags=PICTURE_INTERLACED_ODD;
     }
 
+   if (!do_deinterlace)
+    TffPict::copy(di.PictureHistory[1]->pData,pict.stride[0],srcYUY2,2*pict.stride[0],di.LineLength,di.FieldHeight);
+
    TffPict::copy(di.PictureHistory[0]->pData,pict.stride[0],srcYUY2,2*pict.stride[0],di.LineLength,di.FieldHeight);
 
    unsigned char *dstYUV;
@@ -189,6 +195,7 @@ HRESULT TimgFilterDScalerDI::process(TfilterQueue::iterator it,TffPict &pict0,co
 // TODO: I'm assuming it'll clobber registers in x64 too
 #endif
 #endif
+   do_deinterlace = 1;
    deci->unlock(IDFF_lockDScaler);
    di.PictureHistory[0]->IsFirstInSeries=0;
    if (flt->fm->nFieldsRequired>1)

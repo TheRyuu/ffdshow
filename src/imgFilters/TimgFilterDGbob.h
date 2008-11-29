@@ -19,6 +19,7 @@ private:
    NXTNXT=2
   };
  int n,order;
+ int do_deinterlace;
 protected:
  virtual int getSupportedInputColorspaces(const TfilterSettingsVideo *cfg) const {return FF_CSP_420P|FF_CSP_YUY2|FF_CSP_RGB32;}
  virtual void onSizeChange(void);
