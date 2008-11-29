@@ -561,6 +561,8 @@ private:
  int waitForKeyframe;
  void setSampleSkipped(bool sendSkip);
  REFERENCE_TIME late,lastrtStart;
+ unsigned int count_decoded_frames;
+ REFERENCE_TIME decoded_rtStarts[4];
 
  IVideoWindow *videoWindow;bool wasVideoWindow;
  IBasicVideo *basicVideo;bool wasBasicVideo;

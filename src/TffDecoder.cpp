@@ -112,7 +112,8 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  m_rtStart(0),
  inSampleEverField1Repeat(false),
  m_NeedToPauseRun(false),
- searchInterfaceInGraph(NULL)
+ searchInterfaceInGraph(NULL),
+ count_decoded_frames(0)
 {
  DPRINTF(_l("TffdshowDecVideo::Constructor"));
 #ifdef OSDTIMETABALE
@@ -812,12 +813,12 @@ HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
   }
  // Now that we have noticed any format changes on the input sample, it's OK to discard it.
  REFERENCE_TIME rtStart,rtStop;
- if (pSample->GetTime(&rtStart,&rtStop)==S_OK)
+ if (pSample->GetTime(&rtStart,&rtStop)==S_OK) // memo: If VFW_S_NO_STOP_TIME is returned, rtStart is supoosed to be valid.
   {
    late-=ff_abs(rtStart-lastrtStart);
    lastrtStart=rtStart;
    insample_rtStart = rtStart;
-   insample_rtStop = rtStop;
+    insample_rtStop = rtStop;
   }
  else
   {
@@ -1151,6 +1152,9 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
 
  if (!imgFilters) imgFilters=createImgFilters();
  if (wasSubtitleResetTime) imgFilters->subtitleResetTime=pict.rtStart;
+ // buffer recent four timestamps for frame rate calculation
+ decoded_rtStarts[count_decoded_frames & 3] = pict.rtStart;
+ count_decoded_frames++;
  return imgFilters->process(pict,presetSettings);
 }
 
@@ -1416,6 +1420,7 @@ HRESULT TffdshowDecVideo::NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,
  vc1frameCnt = 0;
  vc1rtStart=0;
  m_rtStart = 0;
+ count_decoded_frames = 0;
  for (size_t i=0;i<textpins.size();i++)
   if (textpins[i]->needSegment)
    textpins[i]->NewSegment(tStart,tStop,dRate);

@@ -164,6 +164,20 @@ STDMETHODIMP TffdshowDecVideo::getOutputFourcc(char_t *buf,size_t len)
 }
 STDMETHODIMP TffdshowDecVideo::getAVIfps(unsigned int *fps1000)
 {
+ if (fps1000 && count_decoded_frames > 2)
+  {
+   int pos_current = (count_decoded_frames - 1) & 3;
+   int pos_prior_prior = (count_decoded_frames - 3) & 3;
+   REFERENCE_TIME avg = (decoded_rtStarts[pos_current] - decoded_rtStarts[pos_prior_prior]) >> 1;
+   if (avg > 0
+      && decoded_rtStarts[pos_current] != REFTIME_INVALID
+      && decoded_rtStarts[pos_prior_prior] != REFTIME_INVALID)
+    {
+     *fps1000=(unsigned int)(REF_SECOND_MULT*1000/avg);
+     return S_OK;
+    }
+  }
+
  return inpin->getAVIfps(fps1000);
 }
 STDMETHODIMP_(int) TffdshowDecVideo::getAVIfps1000_2(void)
