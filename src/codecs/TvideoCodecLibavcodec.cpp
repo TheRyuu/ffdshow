@@ -127,6 +127,7 @@ void TvideoCodecLibavcodec::end(void)
 //----------------------------- decompression -----------------------------
 bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const CMediaType &mt,int sourceFlags)
 {
+ oldpict.rtStop = 0;
  h264onTS = false;
  avcodec=libavcodec->avcodec_find_decoder(codecId);
  if (!avcodec) return false;
@@ -555,9 +556,20 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
         deciV->getAverageTimePerFrame(&avgTimePerFrame);
 
        if (avgTimePerFrame)
-        pict.rtStop=pict.rtStart+avgTimePerFrame+frame->repeat_pict*avgTimePerFrame/2;
+        {
+         pict.rtStop=pict.rtStart+avgTimePerFrame+frame->repeat_pict*avgTimePerFrame/2;
+        }
+       else if (avctx->time_base.num && avctx->time_base.den)
+        {
+         REFERENCE_TIME duration = REF_SECOND_MULT * avctx->time_base.num / avctx->time_base.den;
+         pict.rtStop = pict.rtStart + duration;
+         if (frame->repeat_pict)
+          pict.rtStop += duration >> 1;
+        }
        else
-        pict.rtStop=pict.rtStart+1;
+        {
+         pict.rtStop=pict.rtStart+1;
+        }
 
        if (avctx->codec_tag==FOURCC_MPG1 || avctx->codec_tag==FOURCC_MPG2)
         pict.mediatimeStart=pict.mediatimeStop=REFTIME_INVALID;
@@ -601,6 +613,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
 
 bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
 {
+oldpict.rtStop = 0;
  wasKey=false;
  segmentTimeStart=segmentStart;
  posB=1;
