@@ -14,7 +14,7 @@
 	_l("BearShare.exe;BePipe.exe;bestplayer.exe;bestplayer1.0.exe;BitComet.exe;BlazeDVD.exe;BoonPlayer.exe;bplay.exe;bsplay.exe;bsplayer.exe;BTVD3DShell.exe;Camfrog Video Chat.exe;CamRecorder.exe;CamtasiaStudio.exe;")\
 	_l("carom.exe;CEC_MAIN.exe;christv.exe;chrome.exe;cinemaplayer.exe;CinergyDVR.exe;CodecInstaller.exe;ConvertXtoDvd.exe;coolpro2.exe;CorePlayer.exe;Crystal.exe;crystalfree.exe;CrystalPro.exe;cscript.exe;CTCMS.exe;")\
 	_l("CTCMSU.exe;CTWave.exe;CTWave32.exe;cut_assistant.exe;dashboard.exe;demo32.exe;DivX Player.exe;DivxToDVD.exe;dllhost.exe;dpgenc.exe;Dr.DivX.exe;drdivx.exe;drdivx2.exe;DreamMaker.exe;DSBrws.exe;")\
-	_l("DScaler.exe;dv.exe;dvbdream.exe;dvbviewer.exe;DVD Shrink 3.2.exe;DVDAuthor.exe;dvdfab.exe;DVDMaker.exe;DVDMF.exe;dvdplay.exe;dvdSanta.exe;DXEffectTester.exe;DXEnum.exe;Easy RealMedia Tools.exe;")\
+	_l("DScaler.exe;dv.exe;dvbdream.exe;dvbviewer.exe;DVD Shrink 3.2.exe;DVDAuthor.exe;dvdfab.exe;DVDMaker.exe;DVDMF.exe;dvdplay.dll;dvdplay.exe;dvdSanta.exe;DXEffectTester.exe;DXEnum.exe;Easy RealMedia Tools.exe;")\
 	_l("ehExtHost.exe;ehshell.exe;Encode360.exe;explorer.exe;fenglei.exe;ffmpeg.exe;filtermanager.exe;firefox.exe;Flash.exe;FLVPlayer4Free.exe;FMRadio.exe;Fortius.exe;FreeStyle.exe;FSViewer.exe;Funshion.exe;FusionHDTV.exe;")\
 	_l("GDivX Player.exe;gdsmux.exe;GoldWave.exe;gom.exe;GomEnc.exe;GoogleDesktop.exe;GoogleDesktopCrawl.exe;graphedit.exe;graphedt.exe;GraphStudio.exe;gspot.exe;HBP.exe;HDVSplit.exe;honestechTV.exe;")\
 	_l("HPWUCli.exe;i_view32.exe;ICQ.exe;ICQLite.exe;iexplore.exe;IHT.exe;IncMail.exe;InfoTool.exe;infotv.exe;InstallChecker.exe;Internet TV.exe;iPlayer.exe;ipod_video_converter.exe;IPODConverter.exe;")\
@@ -32,7 +32,7 @@
 	_l("wscript.exe;x264.exe;XNVIEW.EXE;Xvid4PSP.exe;YahooMessenger.exe;YahooMusicEngine.exe;YahooWidgetEngine.exe;YahooWidgets.exe;zplayer.exe;Zune.exe;")
 	
 #define BLACKLIST_EXE_FILENAME \
-	_l("age3.exe;AvatarMP.exe;BeachSoccer.exe;Bully.exe;cm2008.exe;cmr4.exe;cmr5.exe;conflictdeniedops.exe;conquer.exe;crazy_taxi_pc.exe;dmc3se.exe;em3.exe;em4.exe;fable.exe;ff7.exe;fordorr.exe;game.exe;Grandia2.exe;gta-vc.exe;gta3.exe;gta_sa.exe;")\
+	_l("age3.exe;AvatarMP.exe;BeachSoccer.exe;Bully.exe;cm2008.exe;cmr4.exe;cmr5.exe;conflictdeniedops.exe;conquer.exe;crazy_taxi_pc.exe;dark_horizon.exe;DaybreakDX.exe;dmc3se.exe;em3.exe;em4.exe;fable.exe;fallout3.exe;ff7.exe;fordorr.exe;game.exe;Grandia2.exe;gta-vc.exe;gta3.exe;gta_sa.exe;")\
 	_l("gta-underground.exe;guildII.exe;hl.exe;hl2.exe;juiced.exe;juiced2_hin.exe;MassEffectLauncher.exe;maxpayne.exe;morrowind.exe;nations.exe;oblivion.exe;pes2008.exe;pes2009.exe;pes4.exe;pes5.exe;pes6.exe;powerdvd8.exe;premiere.exe;questviewer.exe;residentevil3.exe;")\
 	_l("rf.exe;rf_online.bin;RomeGame.exe;rometw.exe;sacred.exe;sega rally.exe;sh3.exe;sh4.exe;sims.exe;tw2008.exe;twoworlds.exe;wa.exe;war3.exe;worms 4 mayhem.exe;worms3d.exe;")
 
