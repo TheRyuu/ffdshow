@@ -202,7 +202,8 @@ TregOpStreamRead::TregOpStreamRead(const void *buf,size_t len,char_t sep,bool Il
    if (!s)
     s=end;
    char_t line[256];
-   ff_strncpy(line,cur,s-cur);line[s-cur]='\0';
+   if (s-cur > countof(line) -1) return;
+   _tcsncpy_s(line, countof(line), cur, s-cur);
    char_t *ir=strchr(line,'=');
    if (ir)
     {
