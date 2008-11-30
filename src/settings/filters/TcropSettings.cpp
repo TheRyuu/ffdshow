@@ -46,7 +46,7 @@ TcropSettings::TcropSettings(TintStrColl *Icoll,TfilterIDFFs *filters):TfilterSe
    IDFF_orderCropNzoom     ,&TcropSettings::order              ,1,1,_l(""),1,
      _l("orderCropNzoom"),0,
    IDFF_fullCropNzoom      ,&TcropSettings::full               ,1,1,_l(""),1,
-     _l("fullCropNzoom"),0,
+     _l("fullCropNzoom"),1,
    IDFF_cropNzoomMode      ,&TcropSettings::mode               ,0,5,_l(""),1,
      _l("isZoom"),0,
    IDFF_magnificationX     ,&TcropSettings::magnificationX     ,0,100,_l(""),1,
