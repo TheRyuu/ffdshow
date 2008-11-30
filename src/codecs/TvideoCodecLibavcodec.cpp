@@ -500,7 +500,11 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
      if (pIn && pIn->IsPreroll()==S_OK)
       return sinkD->deliverPreroll(frametype);
 
-     int fieldtype=frame->interlaced_frame?(frame->top_field_first?FIELD_TYPE::INT_TFF:FIELD_TYPE::INT_BFF):FIELD_TYPE::PROGRESSIVE_FRAME;
+     int fieldtype = frame->interlaced_frame ?
+                         (frame->top_field_first ?
+                             FIELD_TYPE::INT_TFF :
+                             FIELD_TYPE::INT_BFF):
+                         FIELD_TYPE::PROGRESSIVE_FRAME;
 
      if (frame->play_flags&CODEC_FLAG_QPEL)
       frametype|=FRAME_TYPE::QPEL;
