@@ -6878,10 +6878,11 @@ static int decode_slice2(struct AVCodecContext *avctx, void *arg){
     return 0;
 }
 
-#if 0
-static // if static is enabled, GCC 4.2.x fails to compile correctly.  
+#if __GNUC__
+static int decode_picture_timing(H264Context *h) __attribute__ ((noinline)); // workaround a bug of GCC 4.2.x
 #endif
-int decode_picture_timing(H264Context *h){
+
+static int decode_picture_timing(H264Context *h){
     MpegEncContext * const s = &h->s;
     if(h->sps.nal_hrd_parameters_present_flag || h->sps.vcl_hrd_parameters_present_flag){
         skip_bits(&s->gb, h->sps.cpb_removal_delay_length); /* cpb_removal_delay */
