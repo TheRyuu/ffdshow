@@ -485,7 +485,7 @@ void TglobalSettingsDecVideo::reg_op_codec(TregOp &t,TregOp *t2)
  _reg_op_codec(IDFF_cdvc,t,t2,_l("cdvc"),cdvc,0);
  _reg_op_codec(IDFF_hfyu,t,t2,_l("hfyu"),hfyu,0);
  _reg_op_codec(IDFF_cyuv,t,t2,_l("cyuv"),cyuv,0);
- _reg_op_codec(IDFF_theo,t,t2,_l("theo"),theo,IDFF_MOVIE_THEO);
+ _reg_op_codec(IDFF_theo,t,t2,_l("theo"),theo,0);
  _reg_op_codec(IDFF_fvfw,t,t2,_l("fvfw"),fvfw,IDFF_MOVIE_LAVC);
  _reg_op_codec(IDFF_asv1,t,t2,_l("asv1"),asv1,0);
  _reg_op_codec(IDFF_vcr1,t,t2,_l("vcr1"),vcr1,0);
@@ -1073,7 +1073,7 @@ void TglobalSettingsDecAudio::reg_op_codec(TregOp &t,TregOp *t2)
  _reg_op_codec(IDFF_dts       ,t,t2,_l("dts")       ,dts       ,0);
  _reg_op_codec(IDFF_aac       ,t,t2,_l("aac")       ,aac       ,0);
  _reg_op_codec(IDFF_amr       ,t,t2,_l("amr")       ,amr       ,0);
- _reg_op_codec(IDFF_iadpcm    ,t,t2,_l("iadpcm")    ,iadpcm    ,IDFF_MOVIE_LAVC);
+ _reg_op_codec(IDFF_iadpcm    ,t,t2,_l("iadpcm")    ,iadpcm    ,0);
  _reg_op_codec(IDFF_msadpcm   ,t,t2,_l("msadpcm")   ,msadpcm   ,0);
  _reg_op_codec(IDFF_otherAdpcm,t,t2,_l("otherAdpcm"),otherAdpcm,0);
  _reg_op_codec(IDFF_law       ,t,t2,_l("law")       ,law       ,0);
