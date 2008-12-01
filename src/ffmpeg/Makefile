@@ -126,6 +126,9 @@ SRCS_C=\
       $(LAVC_DIR)/rpza.c \
       $(LAVC_DIR)/rtjpeg.c \
       $(LAVC_DIR)/rv10.c \
+      $(LAVC_DIR)/rv34.c \
+      $(LAVC_DIR)/rv40.c \
+      $(LAVC_DIR)/rv40dsp.c \
       $(LAVC_DIR)/simple_idct.c \
       $(LAVC_DIR)/snow.c \
       $(LAVC_DIR)/sp5xdec.c \

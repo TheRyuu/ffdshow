@@ -37,7 +37,7 @@
 #include "libavutil/avutil.h"
 
 #define LIBAVCODEC_VERSION_MAJOR 52
-#define LIBAVCODEC_VERSION_MINOR  3
+#define LIBAVCODEC_VERSION_MINOR  5
 #define LIBAVCODEC_VERSION_MICRO  0
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
@@ -2017,7 +2017,20 @@ typedef struct AVCodecContext {
      * - decoding: Set by user.
      */
     int64_t request_channel_layout;
-    
+
+    /**
+     * Ratecontrol attempt to use, at maximum, <value> of what can be used without an underflow.
+     * - encoding: Set by user.
+     * - decoding: unused.
+     */
+    float rc_max_available_vbv_use;
+
+    /**
+     * Ratecontrol attempt to use, at least, <value> times the amount needed to prevent a vbv overflow.
+     * - encoding: Set by user.
+     * - decoding: unused.
+     */
+    float rc_min_vbv_overflow_use;
     
     /* ffdshow custom stuff (begin) */
     

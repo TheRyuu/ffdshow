@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="libavcodec"
 	OwnerKey="{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}"
 	ProjectGUID="{5CAF881C-9349-4EE2-9697-982C10795033}"
@@ -942,6 +942,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\rv34.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\rv40.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\rv40dsp.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\simple_idct.c"
 				>
 			</File>
@@ -1444,6 +1456,26 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\rtjpeg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\rv34.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\rv34data.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\rv34vlc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\rv40data.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\rv40vlc2.h"
 				>
 			</File>
 			<File

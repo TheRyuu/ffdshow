@@ -2736,6 +2736,23 @@ void ff_intrax8dsp_init(DSPContext* c, AVCodecContext *avctx);
 /* H264 specific */
 void ff_h264dspenc_init(DSPContext* c, AVCodecContext *avctx);
 
+#if defined(CONFIG_RV40_DECODER)
+static void put_rv40_qpel16_mc33_c(uint8_t *dst, uint8_t *src, int stride){
+    put_pixels16_xy2_c(dst, src, stride, 16);
+}
+static void avg_rv40_qpel16_mc33_c(uint8_t *dst, uint8_t *src, int stride){
+    avg_pixels16_xy2_c(dst, src, stride, 16);
+}
+static void put_rv40_qpel8_mc33_c(uint8_t *dst, uint8_t *src, int stride){
+    put_pixels8_xy2_c(dst, src, stride, 8);
+}
+static void avg_rv40_qpel8_mc33_c(uint8_t *dst, uint8_t *src, int stride){
+    avg_pixels8_xy2_c(dst, src, stride, 8);
+}
+
+void ff_rv40dsp_init(DSPContext* c, AVCodecContext *avctx);
+#endif /* CONFIG_RV40_DECODER */
+
 static void wmv2_mspel8_v_lowpass(uint8_t *dst, uint8_t *src, int dstStride, int srcStride, int w){
     uint8_t *cm = ff_cropTbl + MAX_NEG_CROP;
     int i;
@@ -4401,6 +4418,13 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
 #endif
 #if defined(CONFIG_WMV2_DECODER) || defined(CONFIG_VC1_DECODER) || defined(CONFIG_WMV3_DECODER)
     ff_intrax8dsp_init(c,avctx);
+#endif
+#if defined(CONFIG_RV40_DECODER)
+    ff_rv40dsp_init(c,avctx);
+    c->put_rv40_qpel_pixels_tab[0][15] = put_rv40_qpel16_mc33_c;
+    c->avg_rv40_qpel_pixels_tab[0][15] = avg_rv40_qpel16_mc33_c;
+    c->put_rv40_qpel_pixels_tab[1][15] = put_rv40_qpel8_mc33_c;
+    c->avg_rv40_qpel_pixels_tab[1][15] = avg_rv40_qpel8_mc33_c;
 #endif
 
     c->put_mspel_pixels_tab[0]= put_mspel8_mc00_c;

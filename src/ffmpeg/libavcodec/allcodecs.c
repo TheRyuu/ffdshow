@@ -100,6 +100,7 @@ void avcodec_register_all(void)
     REGISTER_DECODER	(rpza);
     REGISTER_DECODER	(rv10);
     REGISTER_DECODER	(rv20);
+    REGISTER_DECODER  (rv40);
     //#if __STDC_VERSION__ >= 199901L
     //REGISTER_ENCDEC		(snow);
     //#endif

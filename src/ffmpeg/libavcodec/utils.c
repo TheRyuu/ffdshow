@@ -458,6 +458,8 @@ void avcodec_get_context_defaults(AVCodecContext *s){
     s->max_partition_order = -1;
     s->intra_quant_bias= FF_DEFAULT_QUANT_BIAS;
     s->inter_quant_bias= FF_DEFAULT_QUANT_BIAS;
+    s->rc_max_available_vbv_use = 1.0/3;
+    s->rc_min_vbv_overflow_use = 3;
 }
 
 AVCodecContext *avcodec_alloc_context(void){
