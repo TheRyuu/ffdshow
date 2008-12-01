@@ -169,6 +169,8 @@ DEFINE_GUID(FORMAT_RLTheora , 0xe69b30d1, 0x7d65, 0x4166, 0xb9, 0x90, 0x10, 0x3d
 //real
 #define FOURCC_RV10 mmioFOURCC('R','V','1','0')
 #define FOURCC_RV20 mmioFOURCC('R','V','2','0')
+#define FOURCC_RV30 mmioFOURCC('R','V','3','0')
+#define FOURCC_RV40 mmioFOURCC('R','V','4','0')
 
 //uncompressed
 #define FOURCC_YUY2 mmioFOURCC('Y','U','Y','2')

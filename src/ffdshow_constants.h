@@ -887,6 +887,7 @@
 #define IDFF_avisV              1043
 #define IDFF_avisA              1048
 #define IDFF_mlp                1097
+#define IDFF_rv40               1332
 
 #define IDFF_filterOutputVideo   1357
 #define IDFF_hwOverlayOld        1317

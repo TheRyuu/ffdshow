@@ -302,10 +302,14 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
    rvinfo *info=(rvinfo*)extradata->data;
    avctx->sub_id=info->type2;bswap(avctx->sub_id);
   }
- if (libavcodec->avcodec_open(avctx,avcodec)<0) return false;
+  
+ if (libavcodec->avcodec_open(avctx,avcodec)<0) {
+ 	return false;
+ }
  pict.csp=avctx->pix_fmt!=PIX_FMT_NONE?csp_lavc2ffdshow(avctx->pix_fmt):FF_CSP_420P;
- if (avctx->sample_aspect_ratio.num && avctx->sample_aspect_ratio.den)
+ if (avctx->sample_aspect_ratio.num && avctx->sample_aspect_ratio.den) {
   pict.setSar(avctx->sample_aspect_ratio);
+ }
  containerSar=pict.rectFull.sar;
  dont_use_rtStop_from_upper_stream = (sourceFlags&SOURCE_NEROAVC || avctx->codec_tag==FOURCC_MPG1 || avctx->codec_tag==FOURCC_MPG2) && avctx->codec_tag!=FOURCC_THEO;
  avgTimePerFrame=-1;
