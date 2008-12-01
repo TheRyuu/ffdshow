@@ -31,8 +31,8 @@ Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mss2;    
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mszh;     ValueData: 0;  Components: ffdshow; Flags: createvalueifdoesntexist; Tasks: NOT video\other3
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: png1;     ValueData: 0;  Components: ffdshow; Flags: createvalueifdoesntexist; Tasks: NOT video\other2
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qpeg;     ValueData: 0;  Components: ffdshow; Flags: createvalueifdoesntexist; Tasks: NOT video\other3
-Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qtrle;    ValueData: 1;  Components: ffdshow;                                  Tasks: NOT video\qt
-Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qtrpza;   ValueData: 1;  Components: ffdshow;                                  Tasks: NOT video\qt
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qtrle;    ValueData: 0;  Components: ffdshow;                                  Tasks: NOT video\qt
+Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qtrpza;   ValueData: 0;  Components: ffdshow;                                  Tasks: NOT video\qt
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rawv;     ValueData: 0;  Components: ffdshow;                                  Tasks: NOT video\rawv
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rle;      ValueData: 0;  Components: ffdshow; Flags: createvalueifdoesntexist; Tasks: NOT video\other2
 Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rt21;     ValueData: 0;  Components: ffdshow; Flags: createvalueifdoesntexist; Tasks: NOT video\other4
@@ -90,8 +90,8 @@ Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mss2;    
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: mszh;     ValueData: 0;  Components: ffdshow; Flags: createvalueifdoesntexist; Tasks: NOT video\other3
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: png1;     ValueData: 0;  Components: ffdshow; Flags: createvalueifdoesntexist; Tasks: NOT video\other2
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qpeg;     ValueData: 0;  Components: ffdshow; Flags: createvalueifdoesntexist; Tasks: NOT video\other3
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qtrle;    ValueData: 1;  Components: ffdshow;                                  Tasks: NOT video\qt
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qtrpza;   ValueData: 1;  Components: ffdshow;                                  Tasks: NOT video\qt
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qtrle;    ValueData: 0;  Components: ffdshow;                                  Tasks: NOT video\qt
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: qtrpza;   ValueData: 0;  Components: ffdshow;                                  Tasks: NOT video\qt
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rawv;     ValueData: 0;  Components: ffdshow;                                  Tasks: NOT video\rawv
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rle;      ValueData: 0;  Components: ffdshow; Flags: createvalueifdoesntexist; Tasks: NOT video\other2
 Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: rt21;     ValueData: 0;  Components: ffdshow; Flags: createvalueifdoesntexist; Tasks: NOT video\other4
