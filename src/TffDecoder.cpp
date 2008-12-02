@@ -1214,7 +1214,9 @@ if (!outdv && hwDeinterlace)
         // auto field order
         else if (presetSettings->output->hwDeintFieldOrder == 0)
          {
-          if (pict.fieldtype&FIELD_TYPE::INT_TFF)
+          if (pict.fieldtype&FIELD_TYPE::INT_TFF 
+             && !(pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) // avoid sending rapidly alternating TFF and BFF if telecine is detected.
+             )
            {
             outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
            }
