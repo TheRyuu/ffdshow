@@ -3841,6 +3841,7 @@ static av_cold int encode_init(AVCodecContext *avctx)
     s->m.flags   = avctx->flags;
     s->m.bit_rate= avctx->bit_rate;
 
+    s->m.me.temp      =
     s->m.me.scratchpad= av_mallocz((avctx->width+64)*2*16*2*sizeof(uint8_t));
     s->m.me.map       = av_mallocz(ME_MAP_SIZE*sizeof(uint32_t));
     s->m.me.score_map = av_mallocz(ME_MAP_SIZE*sizeof(uint32_t));
@@ -4260,6 +4261,7 @@ static av_cold void common_end(SnowContext *s){
     av_freep(&s->spatial_dwt_buffer);
     av_freep(&s->spatial_idwt_buffer);
 
+    s->m.me.temp= NULL;
     av_freep(&s->m.me.scratchpad);
     av_freep(&s->m.me.map);
     av_freep(&s->m.me.score_map);
