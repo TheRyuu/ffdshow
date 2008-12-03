@@ -697,7 +697,7 @@ TsubtitlesSettings::TsubtitlesSettings(TintStrColl *Icoll,TfilterIDFFs *filters,
    IDFF_subSSAMaintainInside   ,&TsubtitlesSettings::SSAMaintainInside       ,0,0,_l(""),1,
      _l("subSSAMaintainInside"),0,
    IDFF_subSSAUseMovieDimensions,&TsubtitlesSettings::SSAUseMovieDimensions  ,0,0,_l(""),1,
-     _l("subSSAUseMovieDimensions"),1,
+     _l("subSSAUseMovieDimensions"),0,
    0
   };
  addOptions(iopts);
