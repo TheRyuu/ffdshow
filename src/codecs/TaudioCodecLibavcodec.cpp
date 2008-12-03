@@ -181,8 +181,10 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
  int maxLength=AVCODEC_MAX_AUDIO_FRAME_SIZE;
  TbyteBuffer newsrcBuffer;
 
- while (size>1) // >1 instead of >0 : workaround when skipping TrueHD in MPC
+ while (size > 0)
   {
+   if (codecId == CODEC_ID_MLP && size == 1)
+       break;  // workaround when skipping TrueHD in MPC?
    int dstLength=AVCODEC_MAX_AUDIO_FRAME_SIZE;
    void *dst=(void*)getDst(dstLength);
    int dstLength2=AVCODEC_MAX_AUDIO_FRAME_SIZE;
