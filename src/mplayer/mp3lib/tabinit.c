@@ -1,6 +1,6 @@
 real mp3lib_decwin[(512+32)];
 static real cos64[32], cos32[16], cos16[8], cos8[4], cos4[2];
-static const real *mp3lib_pnts[]={ cos64,cos32,cos16,cos8,cos4 };
+real *mp3lib_pnts[]={ cos64,cos32,cos16,cos8,cos4 };
 
 static int intwinbase[] = {
      0,    -1,    -1,    -1,    -1,    -1,    -1,    -2,    -2,    -2,
@@ -39,8 +39,8 @@ static void make_decode_tables(long scaleval)
   for(i=0;i<5;i++)
   {
     kr=0x10>>i; divv=0x40>>i;
-    costab = (real*)mp3lib_pnts[i];
-    for(k=0;k<kr;k++) costab[k] = (real)(1.0 / (2.0 * cos(M_PI * ((double) k * 2.0 + 1.0) / (double) divv)));
+    costab = mp3lib_pnts[i];
+    for(k=0;k<kr;k++) costab[k] = 1.0 / (2.0 * cos(M_PI * ((double) k * 2.0 + 1.0) / (double) divv));
   }
 
   table = mp3lib_decwin;
@@ -48,7 +48,7 @@ static void make_decode_tables(long scaleval)
   for(i=0,j=0;i<256;i++,j++,table+=32)
   {
     if(table < mp3lib_decwin+512+16)
-      table[16] = table[0] = (real)((double) intwinbase[j] / 65536.0 * (double) scaleval);
+      table[16] = table[0] = (double) intwinbase[j] / 65536.0 * (double) scaleval;
     if(i % 32 == 31)
       table -= 1023;
     if(i % 64 == 63)
@@ -58,10 +58,12 @@ static void make_decode_tables(long scaleval)
   for( /* i=256 */ ;i<512;i++,j--,table+=32)
   {
     if(table < mp3lib_decwin+512+16)
-      table[16] = table[0] = (real)((double) intwinbase[j] / 65536.0 * (double) scaleval);
+      table[16] = table[0] = (double) intwinbase[j] / 65536.0 * (double) scaleval;
     if(i % 32 == 31)
       table -= 1023;
     if(i % 64 == 63)
       scaleval = - scaleval;
   }
 }
+
+

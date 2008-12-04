@@ -26,10 +26,6 @@
 #ifndef FFMPEG_BSWAP_H
 #define FFMPEG_BSWAP_H
 
-#ifdef HAVE_BYTESWAP_H
-#include <byteswap.h>
-#else
-
 #ifdef ARCH_X86_64
 #  define LEGACY_REGS "=Q"
 #else
@@ -90,8 +86,6 @@ static inline uint64_t bswap_64(uint64_t x)
     return r.ll;
 #endif
 }
-
-#endif  /* !HAVE_BYTESWAP_H */
 
 // be2me ... BigEndian to MachineEndian
 // le2me ... LittleEndian to MachineEndian
