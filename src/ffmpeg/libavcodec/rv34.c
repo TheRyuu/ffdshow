@@ -726,7 +726,8 @@ static void rv34_mc_2mv(RV34DecContext *r, const int block_type)
     rv34_mc(r, block_type, 0, 0, 0, 2, 2, 0, r->rv30,
             r->rv30 ? r->s.dsp.put_rv30_tpel_pixels_tab
                     : r->s.dsp.put_rv40_qpel_pixels_tab,
-            r->s.dsp.put_h264_chroma_pixels_tab);
+            r->rv30 ? r->s.dsp.put_h264_chroma_pixels_tab
+                    : r->s.dsp.put_rv40_chroma_pixels_tab);
     rv34_mc(r, block_type, 0, 0, 0, 2, 2, 1, r->rv30,
             r->rv30 ? r->s.dsp.avg_rv30_tpel_pixels_tab
                     : r->s.dsp.avg_rv40_qpel_pixels_tab,
@@ -1105,7 +1106,7 @@ static int rv34_set_deblock_coef(RV34DecContext *r)
         for(i = 0; i < 2; i++){
             if(is_mv_diff_gt_3(motion_val + i, 1))
                 vmvmask |= 0x11 << (j + i*2);
-            if(is_mv_diff_gt_3(motion_val + i, s->b8_stride))
+            if((j || s->mb_y) && is_mv_diff_gt_3(motion_val + i, s->b8_stride))
                 hmvmask |= 0x03 << (j + i*2);
         }
         motion_val += s->b8_stride;

@@ -732,9 +732,10 @@ static void decode_band_structure(GetBitContext *gbc, int blk, int eac3,
                                   int ecpl, int start_subband, int end_subband,
                                   const uint8_t *default_band_struct,
                                   uint8_t *band_struct, int *num_subbands,
-                                  int *num_bands, int *band_sizes)
+                                  int *num_bands, uint8_t *band_sizes)
 {
-    int subbnd, bnd, n_subbands, n_bands, bnd_sz[22];
+    int subbnd, bnd, n_subbands, n_bands=0;
+    uint8_t bnd_sz[22];
 
     n_subbands = end_subband - start_subband;
 
@@ -753,8 +754,8 @@ static void decode_band_structure(GetBitContext *gbc, int blk, int eac3,
     /* calculate number of bands and band sizes based on band structure.
        note that the first 4 subbands in enhanced coupling span only 6 bins
        instead of 12. */
-    n_bands = n_subbands;
     if (num_bands || band_sizes ) {
+        n_bands = n_subbands;
         bnd_sz[0] = ecpl ? 6 : 12;
         for (bnd = 0, subbnd = 1; subbnd < n_subbands; subbnd++) {
             int subbnd_size = (ecpl && subbnd < 4) ? 6 : 12;
@@ -773,7 +774,7 @@ static void decode_band_structure(GetBitContext *gbc, int blk, int eac3,
     if (num_bands)
         *num_bands = n_bands;
     if (band_sizes)
-        memcpy(band_sizes, bnd_sz, sizeof(int)*n_bands);
+        memcpy(band_sizes, bnd_sz, n_bands);
 }
 
 /**
@@ -1399,6 +1400,7 @@ static int ac3_decode_frame(AVCodecContext * avctx, void *data, int *data_size,
     #endif
         if (!err && decode_audio_block(s, blk)) {
             av_log(avctx, AV_LOG_ERROR, "error decoding the audio block\n");
+            err = 1;
         }
         for (ch = 0; ch < s->out_channels; ch++)
             output[ch] = s->output[ch];

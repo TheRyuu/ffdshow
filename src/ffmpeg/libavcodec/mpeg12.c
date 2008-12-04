@@ -2048,8 +2048,10 @@ static void mpeg_decode_user_data(AVCodecContext *avctx,
                 return;
             avctx->dtg_active_format = p[0] & 0x0f;
         }
-    } else if (avctx->handle_user_data)
-        avctx->handle_user_data(avctx,buf,buf_size);
+    }
+    /* ffdshow custom code */
+    else if (avctx->handle_user_data)
+      avctx->handle_user_data(avctx,buf,buf_size);
 }
 
 static void mpeg_decode_gop(AVCodecContext *avctx,
