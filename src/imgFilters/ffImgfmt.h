@@ -2,6 +2,16 @@
 #define _FFIMGFMT_H_
 
 //================================ ffdshow ==================================
+// the RGB related values in this enum refers to the "memory byte order" (byte order as stored in memory).
+// under x86 architecture (little endians), the byte order is stored reversed (comparing to the write order),
+// this means RGB will be stored in the memory as BGR.
+// When working with DirectShow in the Red-Green-Blue colorspace, DirectShow always
+// expects RGB at the "memory byte order", so RGB should be selected.
+// When working with files, we are interested in the "write order", which is the opposite
+// of the "memory byte order" (under x86), so you should select the opposite from the
+// destination byte order for the file.
+// (e.g. PNG images uses RGB order, so select BGR order
+// BMP image uses BGR order, so select RGB order)
 enum
 {
  FF_CSP_NULL       =     0,
@@ -297,6 +307,8 @@ static __inline int csp_mplayercsp2Bpp(int mplayercsp)
   }
 }
 
+// libmplayer refers to the write order, FF_CSP_ enum refers to the "memory byte order", 
+// which under x86 is reversed, see the comment above the FF_CSP_ enum definition.
 static __inline int csp_ffdshow2mplayer(int csp)
 {
  switch (csp&FF_CSPS_MASK)
@@ -321,15 +333,15 @@ static __inline int csp_ffdshow2mplayer(int csp)
    case FF_CSP_ABGR :return IMGFMT_RGB32;
    case FF_CSP_RGBA :return IMGFMT_RGB32;
 
-   case FF_CSP_RGB15:return IMGFMT_BGR15;
-   case FF_CSP_RGB16:return IMGFMT_BGR16;
-   case FF_CSP_RGB24:return IMGFMT_BGR24;
-   case FF_CSP_RGB32:return IMGFMT_BGR32;
+   case FF_CSP_RGB15:return IMGFMT_BGR15; // see the comment above
+   case FF_CSP_RGB16:return IMGFMT_BGR16; // see the comment above
+   case FF_CSP_RGB24:return IMGFMT_BGR24; // see the comment above
+   case FF_CSP_RGB32:return IMGFMT_BGR32; // see the comment above
 
-   case FF_CSP_BGR15:return IMGFMT_RGB15;
-   case FF_CSP_BGR16:return IMGFMT_RGB16;
-   case FF_CSP_BGR24:return IMGFMT_RGB24;
-   case FF_CSP_BGR32:return IMGFMT_RGB32;
+   case FF_CSP_BGR15:return IMGFMT_RGB15; // see the comment above
+   case FF_CSP_BGR16:return IMGFMT_RGB16; // see the comment above
+   case FF_CSP_BGR24:return IMGFMT_RGB24; // see the comment above
+   case FF_CSP_BGR32:return IMGFMT_RGB32; // see the comment above
 
    case FF_CSP_Y800 :return IMGFMT_Y800;
    case FF_CSP_NV12 :return csp&FF_CSP_FLAGS_YUV_ORDER?IMGFMT_NV12:IMGFMT_NV21;

@@ -64,7 +64,8 @@ TimgFilterAvisynth::Tffdshow_source::Tffdshow_source(Tinput *Iinput,VideoInfo &I
  vi.fps_numerator=input->fpsnum;
  vi.fps_denominator=input->fpsden;
  vi.num_frames=NUM_FRAMES;
-
+ // RGB values: avisynth refers to the write order, FF_CSP_ enum refers to the "memory byte order", 
+ // which under x86 is reversed, see the comment above the FF_CSP_ enum definition.
  if      (input->csp & FF_CSP_420P)  vi.pixel_type=AVS_CS_YV12;
  else if (input->csp & FF_CSP_YUY2)  vi.pixel_type=AVS_CS_YUY2;
  else if (input->csp & FF_CSP_RGB32) vi.pixel_type=AVS_CS_BGR32;

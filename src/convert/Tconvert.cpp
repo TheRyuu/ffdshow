@@ -315,6 +315,8 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
       case FF_CSP_PAL8:
        switch (outcsp1)
         {
+         // libmplayer refers to the write order, FF_CSP_ enum refers to the "memory byte order", 
+         // which under x86 is reversed, see the comment above the FF_CSP_ enum definition.
          case FF_CSP_RGB32:palette8torgb=libmplayer->palette8tobgr32;break;
          case FF_CSP_BGR32:palette8torgb=libmplayer->palette8torgb32;break;
          case FF_CSP_RGB24:palette8torgb=libmplayer->palette8tobgr24;break;

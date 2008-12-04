@@ -65,6 +65,8 @@ private:
      return 3;
     }
   public:
+   // We are interesting in writing RGB24 (as required by PNG), so we have to select FF_CSP_BGR24.
+   // see the comment above the FF_CSP_ enum definition.
    TimgExportPNG(const Tconfig *config,IffdshowBase *deci):TimgExportLibavcodec(config,deci,CODEC_ID_PNG) {}
    virtual int requiredCSP() {return FF_CSP_BGR24;}
   };
@@ -76,6 +78,8 @@ private:
   public:
    TimgExportBMP(void);
    virtual void init(unsigned int dx,unsigned int dy);
+   // We are interesting in writing BGR24 (as required for BMP), so we have to select FF_CSP_RGB24.
+   // see the comment above the FF_CSP_ enum definition.
    virtual int requiredCSP() {return FF_CSP_RGB24|FF_CSP_FLAGS_VFLIP;}
    virtual int compress(const unsigned char *src[4],stride_t stride[4],unsigned char *dst,unsigned int dstlen,int qual);
   };

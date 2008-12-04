@@ -1935,7 +1935,8 @@ int image_input(IMAGE * image,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgb565i_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgb565i_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::rgb565_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgb565_to_yv12_c), 2);
                 break;
 
-
+        // RGB Values: the xvid library refers to the write order, FF_CSP_ enum refers to the "memory byte order",
+        // which under x86 is reversed, see the comment above the FF_CSP_ enum definition.
         case FF_CSP_RGB24:
                 safe_packed_conv(
                         (uint8_t*)src, src_stride, image->y, image->u, image->v,
@@ -1944,6 +1945,8 @@ int image_input(IMAGE * image,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::bgri_to_yv12_c:TpackedFuncPtrRGB<CCIR>::bgri_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::bgr_to_yv12_c:TpackedFuncPtrRGB<CCIR>::bgr_to_yv12_c), 3);
                 break;
 
+        // RGB Values: the xvid library refers to the write order, FF_CSP_ enum refers to the "memory byte order",
+        // which under x86 is reversed, see the comment above the FF_CSP_ enum definition.
         case FF_CSP_RGB32:
                 safe_packed_conv(
                         (uint8_t*)src, src_stride, image->y, image->u, image->v,
@@ -1952,6 +1955,8 @@ int image_input(IMAGE * image,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::bgrai_to_yv12_c:TpackedFuncPtrRGB<CCIR>::bgrai_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::bgra_to_yv12_c:TpackedFuncPtrRGB<CCIR>::bgra_to_yv12_c), 4);
                 break;
 
+        // RGB Values: the xvid library refers to the write order, FF_CSP_ enum refers to the "memory byte order",
+        // which under x86 is reversed, see the comment above the FF_CSP_ enum definition.
         case FF_CSP_BGR24 :
                 safe_packed_conv(
                         (uint8_t*)src, src_stride, image->y, image->u, image->v,
@@ -2059,6 +2064,8 @@ int image_output(IMAGE * image,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgb565i_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgb565i_c):(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgb565_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgb565_c), 2);
                 break;
 
+        // RGB Values: the xvid library refers to the write order, FF_CSP_ enum refers to the "memory byte order",
+        // which under x86 is reversed, see the comment above the FF_CSP_ enum definition.
         case FF_CSP_RGB24:
                 safe_packed_conv(
                         dst[0], dst_stride[0], image->y, image->u, image->v,
@@ -2067,6 +2074,8 @@ int image_output(IMAGE * image,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgri_c:TpackedFuncPtrRGB<CCIR>::yv12_to_bgri_c):(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgr_c:TpackedFuncPtrRGB<CCIR>::yv12_to_bgr_c), 3);
                 break;
 
+        // RGB Values: the xvid library refers to the write order, FF_CSP_ enum refers to the "memory byte order",
+        // which under x86 is reversed, see the comment above the FF_CSP_ enum definition.
         case FF_CSP_RGB32:
                 safe_packed_conv(
                         dst[0], dst_stride[0], image->y, image->u, image->v,
@@ -2075,6 +2084,8 @@ int image_output(IMAGE * image,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgrai_c:TpackedFuncPtrRGB<CCIR>::yv12_to_bgrai_c):(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgra_c:TpackedFuncPtrRGB<CCIR>::yv12_to_bgra_c), 4);
                 break;
 
+        // RGB Values: the xvid library refers to the write order, FF_CSP_ enum refers to the "memory byte order",
+        // which under x86 is reversed, see the comment above the FF_CSP_ enum definition.
         case FF_CSP_BGR24:
                 safe_packed_conv(
                         dst[0], dst_stride[0], image->y, image->u, image->v,
