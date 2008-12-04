@@ -109,7 +109,7 @@ private:
    Tstyle(int playResX,int playResY,int version,int wrapStyle):props(playResX,playResY,wrapStyle) {this->version=version;props.version=version;}
    ffstring name,fontname,fontsize,primaryColour,bold,italic,underline,strikeout,encoding,spacing,fontScaleX,fontScaleY;
    ffstring secondaryColour,tertiaryColour,outlineColour,backgroundColour,alignment;
-   ffstring angleZ,borderStyle,outlineWidth,shadowDepth,marginLeft,marginRight,marginV,marginTop,marginBottom,alpha,relativeTo,layer;
+   ffstring angleZ,borderStyle,outlineWidth,shadowDepth,marginLeft,marginRight,marginV,marginTop,marginBottom,alpha,relativeTo;
    TSubtitleProps props;
    void toProps(void);
    bool toCOLORREF(const ffstring &colourStr,COLORREF &colour,int &alpha);

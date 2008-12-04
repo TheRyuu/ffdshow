@@ -132,6 +132,9 @@ void TfontPage::font2dlg(void)
  fillCharsets();
  setCheck(IDC_CHB_FONT_BLUR,cfgGet(idff_fontblur));
  setCheck(IDC_CHB_FONT_ASPECT_AUTO,cfgGet(idff_fontaspectauto));
+ if (idff_fontoverridescale)
+  setCheck(IDC_CHB_FONT_OVERRIDE_SCALING,cfgGet(idff_fontoverridescale));
+ enable (!!idff_fontoverridescale,IDC_CHB_FONT_OVERRIDE_SCALING);
  selectCharset(cfgGet(idff_fontcharset));
  setCheck(IDC_CHB_FONT_FAST,cfgGet(idff_fontfast));
  int opaquebox=cfgGet(idff_fontopaquebox);
@@ -375,6 +378,8 @@ bool TfontPage::reset(bool testonly)
    deci->resetParam(idff_fontshadowalpha);
    deci->resetParam(idff_fontopaquebox);
    deci->resetParam(idff_fontaspectauto);
+   if (idff_fontoverridescale)
+    deci->resetParam(idff_fontoverridescale);
   }
  return true;
 }
@@ -443,6 +448,7 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
  idff_fontcolor=IDFF_fontColor;
  idff_fontxscale=IDFF_fontXscale;
  idff_fontyscale=IDFF_fontYscale;
+ idff_fontoverridescale=IDFF_fontOverrideScale;
  idff_fontaspectauto=IDFF_fontAspectAuto;
  idff_fontfast=IDFF_fontFast;
  idff_fontshadowmode=IDFF_fontShadowMode;
@@ -460,6 +466,7 @@ TfontPageSubtitles::TfontPageSubtitles(TffdshowPageDec *Iparent,const TfilterIDF
    IDC_CHB_FONT_FAST,idff_fontfast,NULL,
    IDC_FONT_OPAQUE_BOX,idff_fontopaquebox,&TfontPageSubtitles::font2dlg,
    IDC_CHB_FONT_BLUR,idff_fontblur,&TfontPageSubtitles::font2dlg,
+   IDC_CHB_FONT_OVERRIDE_SCALING,idff_fontoverridescale,&TfontPageSubtitles::font2dlg,
    IDC_CHB_FONT_ASPECT_AUTO,idff_fontaspectauto,&TfontPageSubtitles::font2dlg,
    0,NULL,NULL
   };
@@ -503,6 +510,7 @@ TfontPageOSD::TfontPageOSD(TffdshowPageDec *Iparent):TfontPage(Iparent)
  idff_fontcolor=IDFF_OSDfontColor;
  idff_fontxscale=IDFF_OSDfontXscale;
  idff_fontyscale=IDFF_OSDfontYscale;
+ idff_fontoverridescale=0;
  idff_fontaspectauto=IDFF_OSDfontAspectAuto;
  idff_fontfast=IDFF_OSDfontFast;
  idff_fontoutlinecolor=IDFF_OSDfontOutlineColor;

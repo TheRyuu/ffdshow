@@ -1447,10 +1447,6 @@
 		<File 
 			RelativePath=".\src\dialog\TSpecifyPropertyPagesVE.h"/>
 		<File 
-			RelativePath=".\src\dialog\TsubtitlesSSAConfig.cpp"/>
-		<File 
-			RelativePath=".\src\dialog\TsubtitlesSSAConfig.h"/>
-		<File 
 			RelativePath=".\src\dialog\TversionsDlg.cpp"/>
 		<File 
 			RelativePath=".\src\dialog\TversionsDlg.h"/>
