@@ -416,6 +416,7 @@ Source: ..\..\manifest32\makeAVIS.exe.manifest; DestDir: {app}; Flags: ignorever
 ; Remove private assemblies
 Type: files; Name: {app}\msvcr80.dll;                   Components: ffdshow
 Type: files; Name: {app}\microsoft.vc80.crt.manifest;   Components: ffdshow
+Type: files; Name: {app}\languages\ffdshow.1041.jp;     Components: ffdshow
 #if localize
 ; Localized shortcuts
 Type: files; Name: {group}\Video decoder configuration.lnk; Components: ffdshow
