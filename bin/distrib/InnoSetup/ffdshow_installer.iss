@@ -405,11 +405,15 @@ Source: ..\..\openIE.js; DestDir: {app}; Flags: ignoreversion; Components: ffdsh
 #if is64bit
 Source: ..\..\manifest64\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow
 Source: ..\..\manifest64\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow\vfw
+  #if include_makeavis
 Source: ..\..\manifest64\makeAVIS.exe.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow\makeavis
+  #endif
 #else
 Source: ..\..\manifest32\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow
 Source: ..\..\manifest32\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow\vfw
+  #if include_makeavis
 Source: ..\..\manifest32\makeAVIS.exe.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow\makeavis
+  #endif
 #endif
 
 [InstallDelete]
