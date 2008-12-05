@@ -5,8 +5,6 @@
  * and mp3lib/dct64_mmx.c
  */
 
-#include "../../ffmpeg/libavutil/mem.h"
-
 typedef float real;
 
 extern float __attribute__((aligned(16))) costab_mmx[];
@@ -22,8 +20,8 @@ static const int nnnn[4] __attribute__((aligned(16))) =
 
 void dct64_sse(short *out0,short *out1,real *c)
 {
-    DECLARE_ALIGNED(16, real, b1[0x20]);
-    DECLARE_ALIGNED(16, real, b2[0x20]);
+    static real __attribute__ ((aligned(16))) b1[0x20];
+    static real __attribute__ ((aligned(16))) b2[0x20];
     static real const one = 1.f;
 
     {
@@ -35,9 +33,9 @@ void dct64_sse(short *out0,short *out1,real *c)
             __asm__(
                 "movaps    %2, %%xmm3\n\t"
                 "shufps    $27, %%xmm3, %%xmm3\n\t"
-                "movaps    %3, %%xmm1\n\t"
+                "movups    %3, %%xmm1\n\t"
                 "movaps    %%xmm1, %%xmm4\n\t"
-                "movaps    %4, %%xmm2\n\t"
+                "movups    %4, %%xmm2\n\t"
                 "shufps    $27, %%xmm4, %%xmm4\n\t"
                 "movaps    %%xmm2, %%xmm0\n\t"
                 "shufps    $27, %%xmm0, %%xmm0\n\t"
