@@ -125,7 +125,9 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
    switch (avctx->sample_fmt)
     {
      case SAMPLE_FMT_S16:fmt.sf=TsampleFormat::SF_PCM16;break;
+     case SAMPLE_FMT_S32:fmt.sf=TsampleFormat::SF_PCM32;break;
      case SAMPLE_FMT_FLT:fmt.sf=TsampleFormat::SF_FLOAT32;break;
+     case SAMPLE_FMT_DBL:fmt.sf=TsampleFormat::SF_FLOAT64;break;
     }
    isGain=deci->getParam2(IDFF_vorbisgain);
    updateChannelMapping();
@@ -230,7 +232,13 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
    {
 	   fmt.setChannels(avctx->channels);
 	   fmt.freq=avctx->sample_rate;
-	   fmt.sf=avctx->sample_fmt;
+	   switch (avctx->sample_fmt)
+		{
+		 case SAMPLE_FMT_S16:fmt.sf=TsampleFormat::SF_PCM16;break;
+		 case SAMPLE_FMT_S32:fmt.sf=TsampleFormat::SF_PCM32;break;
+		 case SAMPLE_FMT_FLT:fmt.sf=TsampleFormat::SF_FLOAT32;break;
+		 case SAMPLE_FMT_DBL:fmt.sf=TsampleFormat::SF_FLOAT64;break;
+		}
    }
 
   // Correct channel mapping

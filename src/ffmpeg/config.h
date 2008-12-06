@@ -54,6 +54,8 @@
 #define ENABLE_SMALL 0
 
 #define ENABLE_GRAY 1
+	
+#define CONFIG_AUDIO_NONSHORT 1
 
 
 #define CONFIG_AASC_DECODER 1
