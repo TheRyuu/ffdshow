@@ -1,7 +1,7 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = 2391
-#define buildyear = 2008
+#define tryout_revision = '2391'
+#define buildyear = '2008'
 #define buildmonth = '11'
 #define buildday = '29'
 
@@ -119,12 +119,6 @@ DefaultGroupName=ffdshow64
 DefaultGroupName=ffdshow
 #endif
 DirExistsWarning=no
-#if include_info_before
-InfoBeforeFile=infobefore.rtf
-#endif
-#if include_gnu_license
-LicenseFile=gnu_license.txt
-#endif
 #if is64bit
 MinVersion=0,5.01
 #else
@@ -151,28 +145,102 @@ WizardImageFile=MicrosoftModern01.bmp
 WizardSmallImageFile=SetupModernSmall26.bmp
 
 [Languages]
+#if !include_gnu_license & !include_info_before
 Name: en; MessagesFile: compiler:Default.isl
-#if localize
+  #if localize
 Name: ba; MessagesFile: compiler:Languages\Basque.isl
 Name: br; MessagesFile: compiler:Languages\BrazilianPortuguese.isl
 Name: ca; MessagesFile: compiler:Languages\Catalan.isl
-Name: cz; MessagesFile: compiler:Languages\Czech.isl; LicenseFile: ../../../copying.cz.txt
+Name: cz; MessagesFile: compiler:Languages\Czech.isl
 Name: da; MessagesFile: compiler:Languages\Danish.isl
 Name: du; MessagesFile: compiler:Languages\Dutch.isl
 Name: fi; MessagesFile: compiler:Languages\Finnish.isl
 Name: fr; MessagesFile: compiler:Languages\French.isl
-Name: de; MessagesFile: compiler:Languages\German.isl; LicenseFile: ../../../copying.de.txt; InfoBeforeFile: infobefore\infobefore.de.rtf
+Name: de; MessagesFile: compiler:Languages\German.isl
 Name: hu; MessagesFile: compiler:Languages\Hungarian.isl
 Name: it; MessagesFile: compiler:Languages\Italian.isl
-Name: jp; MessagesFile:          languages\Japanese.isl; LicenseFile: ../../../copying.jp.txt
+Name: jp; MessagesFile:          languages\Japanese.isl
 Name: no; MessagesFile: compiler:Languages\Norwegian.isl
-Name: pl; MessagesFile: compiler:Languages\Polish.isl; LicenseFile: ../../../copying.pl.txt; InfoBeforeFile: infobefore\infobefore.pl.rtf
+Name: pl; MessagesFile: compiler:Languages\Polish.isl
 Name: pr; MessagesFile: compiler:Languages\Portuguese.isl
-Name: ru; MessagesFile: compiler:Languages\Russian.isl; LicenseFile: ../../../copying.ru.txt
+Name: ru; MessagesFile: compiler:Languages\Russian.isl
 Name: sc; MessagesFile:          languages\ChineseSimp.isl;
-Name: sk; MessagesFile: compiler:Languages\Slovak.isl; LicenseFile: ../../../copying.sk.txt
+Name: sk; MessagesFile: compiler:Languages\Slovak.isl
 Name: sn; MessagesFile: compiler:Languages\Slovenian.isl
 Name: sp; MessagesFile: compiler:Languages\Spanish.isl
+  #endif
+#elif include_gnu_license & !include_info_before
+Name: en; MessagesFile: compiler:Default.isl;                       LicenseFile: gnu_license.txt
+  #if localize
+Name: ba; MessagesFile: compiler:Languages\Basque.isl
+Name: br; MessagesFile: compiler:Languages\BrazilianPortuguese.isl
+Name: ca; MessagesFile: compiler:Languages\Catalan.isl
+Name: cz; MessagesFile: compiler:Languages\Czech.isl;               LicenseFile: ../../../copying.cz.txt
+Name: da; MessagesFile: compiler:Languages\Danish.isl
+Name: du; MessagesFile: compiler:Languages\Dutch.isl
+Name: fi; MessagesFile: compiler:Languages\Finnish.isl
+Name: fr; MessagesFile: compiler:Languages\French.isl
+Name: de; MessagesFile: compiler:Languages\German.isl;              LicenseFile: ../../../copying.de.txt
+Name: hu; MessagesFile: compiler:Languages\Hungarian.isl
+Name: it; MessagesFile: compiler:Languages\Italian.isl
+Name: jp; MessagesFile:          languages\Japanese.isl;            LicenseFile: ../../../copying.jp.txt
+Name: no; MessagesFile: compiler:Languages\Norwegian.isl
+Name: pl; MessagesFile: compiler:Languages\Polish.isl;              LicenseFile: ../../../copying.pl.txt
+Name: pr; MessagesFile: compiler:Languages\Portuguese.isl
+Name: ru; MessagesFile: compiler:Languages\Russian.isl;             LicenseFile: ../../../copying.ru.txt
+Name: sc; MessagesFile:          languages\ChineseSimp.isl;
+Name: sk; MessagesFile: compiler:Languages\Slovak.isl;              LicenseFile: ../../../copying.sk.txt
+Name: sn; MessagesFile: compiler:Languages\Slovenian.isl
+Name: sp; MessagesFile: compiler:Languages\Spanish.isl
+  #endif
+#elif !include_gnu_license & include_info_before
+Name: en; MessagesFile: compiler:Default.isl;                       InfoBeforeFile: infobefore.rtf
+  #if localize
+Name: ba; MessagesFile: compiler:Languages\Basque.isl
+Name: br; MessagesFile: compiler:Languages\BrazilianPortuguese.isl
+Name: ca; MessagesFile: compiler:Languages\Catalan.isl
+Name: cz; MessagesFile: compiler:Languages\Czech.isl
+Name: da; MessagesFile: compiler:Languages\Danish.isl
+Name: du; MessagesFile: compiler:Languages\Dutch.isl
+Name: fi; MessagesFile: compiler:Languages\Finnish.isl
+Name: fr; MessagesFile: compiler:Languages\French.isl
+Name: de; MessagesFile: compiler:Languages\German.isl;              InfoBeforeFile: infobefore\infobefore.de.rtf
+Name: hu; MessagesFile: compiler:Languages\Hungarian.isl
+Name: it; MessagesFile: compiler:Languages\Italian.isl
+Name: jp; MessagesFile:          languages\Japanese.isl
+Name: no; MessagesFile: compiler:Languages\Norwegian.isl
+Name: pl; MessagesFile: compiler:Languages\Polish.isl;              InfoBeforeFile: infobefore\infobefore.pl.rtf
+Name: pr; MessagesFile: compiler:Languages\Portuguese.isl
+Name: ru; MessagesFile: compiler:Languages\Russian.isl
+Name: sc; MessagesFile:          languages\ChineseSimp.isl;
+Name: sk; MessagesFile: compiler:Languages\Slovak.isl
+Name: sn; MessagesFile: compiler:Languages\Slovenian.isl
+Name: sp; MessagesFile: compiler:Languages\Spanish.isl
+  #endif
+#else
+Name: en; MessagesFile: compiler:Default.isl;                       LicenseFile: gnu_license.txt;         InfoBeforeFile: infobefore.rtf
+  #if localize
+Name: ba; MessagesFile: compiler:Languages\Basque.isl
+Name: br; MessagesFile: compiler:Languages\BrazilianPortuguese.isl
+Name: ca; MessagesFile: compiler:Languages\Catalan.isl
+Name: cz; MessagesFile: compiler:Languages\Czech.isl;               LicenseFile: ../../../copying.cz.txt
+Name: da; MessagesFile: compiler:Languages\Danish.isl
+Name: du; MessagesFile: compiler:Languages\Dutch.isl
+Name: fi; MessagesFile: compiler:Languages\Finnish.isl
+Name: fr; MessagesFile: compiler:Languages\French.isl
+Name: de; MessagesFile: compiler:Languages\German.isl;              LicenseFile: ../../../copying.de.txt; InfoBeforeFile: infobefore\infobefore.de.rtf
+Name: hu; MessagesFile: compiler:Languages\Hungarian.isl
+Name: it; MessagesFile: compiler:Languages\Italian.isl
+Name: jp; MessagesFile:          languages\Japanese.isl;            LicenseFile: ../../../copying.jp.txt
+Name: no; MessagesFile: compiler:Languages\Norwegian.isl
+Name: pl; MessagesFile: compiler:Languages\Polish.isl;              LicenseFile: ../../../copying.pl.txt; InfoBeforeFile: infobefore\infobefore.pl.rtf
+Name: pr; MessagesFile: compiler:Languages\Portuguese.isl
+Name: ru; MessagesFile: compiler:Languages\Russian.isl;             LicenseFile: ../../../copying.ru.txt
+Name: sc; MessagesFile:          languages\ChineseSimp.isl;
+Name: sk; MessagesFile: compiler:Languages\Slovak.isl;              LicenseFile: ../../../copying.sk.txt
+Name: sn; MessagesFile: compiler:Languages\Slovenian.isl
+Name: sp; MessagesFile: compiler:Languages\Spanish.isl
+  #endif
 #endif
 
 [Types]
