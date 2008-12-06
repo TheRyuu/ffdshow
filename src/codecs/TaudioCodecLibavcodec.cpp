@@ -128,8 +128,7 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
      case SAMPLE_FMT_FLT:fmt.sf=TsampleFormat::SF_FLOAT32;break;
     }
    isGain=deci->getParam2(IDFF_vorbisgain);
-   if (fmt.nchannels >=5)
-	   updateChannelMapping();
+   updateChannelMapping();
 
    libavcodec->av_log_set_level(AV_LOG_QUIET);
 
