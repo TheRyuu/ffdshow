@@ -264,7 +264,7 @@ void TaudioCodecLibavcodec::updateChannelMapping()
 	src_ch_layout = AF_CHANNEL_LAYOUT_FFDSHOW_DEFAULT;
 	if (!avctx->codec->name) return;
 	char_t codec[255];
-	ff_strncpy(codec,(const char_t *)text<char_t>(avctx->codec->name),255);
+	ff_strncpy(codec, (const char_t *)text<char_t>(avctx->codec->name), countof(codec));
 	codec[254]='\0';
 
 	if (!stricmp(codec, _l("ac3")) || !stricmp(codec, _l("eac3")))
