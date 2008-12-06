@@ -69,17 +69,17 @@ protected:
  struct TquantTables :public TquantTablesPageBase
   {
   protected:
-   uint8_t *inter,*intra,*inter4luma,*inter4chroma,*intra4luma,*intra4chroma;
+   uint8_t *inter,*intra;
    virtual int getCodecId(void);
    virtual HRESULT getCustomQuantMatrixes(uint8_t* *intra8,uint8_t* *inter8,uint8_t* *intra4Y,uint8_t* *inter4Y,uint8_t* *intra4C,uint8_t* *inter4C);
    virtual void setChange(void) {}
   public:
-   TquantTables(IffdshowBase *Ideci,uint8_t *Iinter,uint8_t *Iintra,uint8_t *inter4luma,uint8_t *inter4chroma,uint8_t *intra4luma,uint8_t *intra4chroma);
+   TquantTables(IffdshowBase *Ideci,uint8_t *Iinter,uint8_t *Iintra);
    virtual void cfg2dlg(void);
   } *base;
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 public:
- TcurrentQuantDlg(HWND hParent,IffdshowBase *Ideci,uint8_t *Iinter,uint8_t *Iintra,uint8_t *inter4luma,uint8_t *inter4chroma,uint8_t *intra4luma,uint8_t *intra4chroma,TquantTables *Ibase=NULL);
+ TcurrentQuantDlg(HWND hParent,IffdshowBase *Ideci,uint8_t *Iinter,uint8_t *Iintra,TquantTables *Ibase=NULL);
  virtual ~TcurrentQuantDlg();
  void show(void);
  virtual void init(void);

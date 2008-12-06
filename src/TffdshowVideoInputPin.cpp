@@ -685,7 +685,7 @@ HRESULT TffdshowVideoInputPin::quantsAvailable(void)
  if (!video) return E_FAIL;
  return video->quants?S_OK:S_FALSE;
 }
-HRESULT TffdshowVideoInputPin::getQuantMatrices(uint8_t intra8[64],uint8_t inter8[64],uint8_t intra4luma[16],uint8_t intra4chroma[16],uint8_t inter4luma[16],uint8_t inter4chroma[16])
+HRESULT TffdshowVideoInputPin::getQuantMatrices(uint8_t intra8[64],uint8_t inter8[64])
 {
  if (!intra8 || !inter8) return E_POINTER;
  if (!video) return E_FAIL;
@@ -700,30 +700,6 @@ HRESULT TffdshowVideoInputPin::getQuantMatrices(uint8_t intra8[64],uint8_t inter
    intra8[i]=(uint8_t)video->intra_matrix[i];
  else
    memset(intra8,0,64);
- if (inter4luma)
-  if (video->inter_matrix_luma)
-   for (int i=0;i<16;i++)
-    inter4luma[i]=(uint8_t)video->inter_matrix_luma[i];
-  else
-   memset(inter4luma,0,16);
- if (inter4chroma)
-  if (video->inter_matrix_chroma)
-   for (int i=0;i<16;i++)
-    inter4chroma[i]=(uint8_t)video->inter_matrix_chroma[i];
-  else
-   memset(inter4chroma,0,16);
- if (intra4luma)
-  if (video->intra_matrix_luma)
-   for (int i=0;i<16;i++)
-    intra4luma[i]=(uint8_t)video->intra_matrix_luma[i];
-  else
-   memset(intra4luma,0,16);
- if (intra4chroma)
-  if (video->intra_matrix_chroma)
-   for (int i=0;i<16;i++)
-    intra4chroma[i]=(uint8_t)video->intra_matrix_chroma[i];
-  else
-   memset(intra4chroma,0,16);
  return S_OK;
 }
 

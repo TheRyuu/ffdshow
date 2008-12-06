@@ -46,7 +46,7 @@ public:
  HRESULT getFrameTimeMS(unsigned int framenum,unsigned int *msec);
  HRESULT calcMeanQuant(float *quant);
  HRESULT quantsAvailable(void);
- HRESULT getQuantMatrices(uint8_t intra8[64],uint8_t inter8[64],uint8_t intra4luma[16],uint8_t intra4chroma[16],uint8_t inter4luma[16],uint8_t inter4chroma[16]);
+ HRESULT getQuantMatrices(uint8_t intra8[64],uint8_t inter8[64]);
  virtual HRESULT getInCodecString(char_t *buf,size_t buflen);
  HRESULT getAverageTimePerFrame(int64_t *avg);
  const char_t *findAutoSubflnm(IcheckSubtitle *checkSubtitle,const char_t *searchDir,const char_t *serchExt,bool heuristic);

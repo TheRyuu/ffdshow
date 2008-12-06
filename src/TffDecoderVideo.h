@@ -146,7 +146,7 @@ public:
  STDMETHODIMP getRemainingFrameTime(unsigned int *sec);
  STDMETHODIMP getInputSAR(unsigned int *a1,unsigned int *a2);
  STDMETHODIMP getInputDAR(unsigned int *a1,unsigned int *a2);
- STDMETHODIMP getQuantMatrices(unsigned char intra8[64],unsigned char inter8[64],unsigned char intra4luma[16],unsigned char intra4chroma[16],unsigned char inter4luma[16],unsigned char inter4chroma[16]);
+ STDMETHODIMP getQuantMatrices(unsigned char intra8[64],unsigned char inter8[64]);
  STDMETHODIMP_(const char_t*) findAutoSubflnms(IcheckSubtitle *checkSubtitle);
  STDMETHODIMP addClosedCaption(const wchar_t* line);
  STDMETHODIMP hideClosedCaptions(void);
@@ -461,7 +461,7 @@ private:
    STDMETHODIMP getRemainingFrameTime(unsigned int *sec) {return deciV->getRemainingFrameTime(sec);}
    STDMETHODIMP getInputSAR(unsigned int *a1,unsigned int *a2) {return deciV->getInputSAR(a1,a2);}
    STDMETHODIMP getInputDAR(unsigned int *a1,unsigned int *a2) {return deciV->getInputDAR(a1,a2);}
-   STDMETHODIMP getQuantMatrices(unsigned char intra8[64],unsigned char inter8[64],unsigned char intra4luma[16],unsigned char intra4chroma[16],unsigned char inter4luma[16],unsigned char inter4chroma[16]) {return deciV->getQuantMatrices(intra8,inter8,intra4luma,intra4chroma,inter4luma,inter4chroma);}
+   STDMETHODIMP getQuantMatrices(unsigned char intra8[64],unsigned char inter8[64]) {return deciV->getQuantMatrices(intra8,inter8);}
    STDMETHODIMP_(const tchar*) findAutoSubflnms(IcheckSubtitle *checkSubtitle)
     {
      return NULL;

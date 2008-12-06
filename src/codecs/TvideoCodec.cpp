@@ -71,7 +71,7 @@ TvideoCodecDec::TvideoCodecDec(IffdshowBase *Ideci,IdecVideoSink *Isink):
  sinkD(Isink),
  deciV(Ideci),
  quantsDx(0),quantsDy(0),quants(NULL),quantType(FF_QSCALE_TYPE_MPEG1),
- inter_matrix(NULL),intra_matrix(NULL),intra_matrix_luma(NULL),intra_matrix_chroma(NULL),inter_matrix_luma(NULL),inter_matrix_chroma(NULL)
+ inter_matrix(NULL),intra_matrix(NULL)
 {
 }
 TvideoCodecDec::~TvideoCodecDec()

@@ -60,10 +60,7 @@ public:
 
  unsigned int quantsDx,quantsStride,quantsDy,quantBytes,quantType;
  void *quants;
- /* fixme: all code concerning "*intra_matrix_luma,*intra_matrix_chroma,*inter_matrix_luma,*inter_matrix_chroma" in
-  * ffdshow does not seems to be doing anything useful. Remove all the relevant code if that is really the case.
-  */ 
- uint16_t *intra_matrix,*inter_matrix,*intra_matrix_luma,*intra_matrix_chroma,*inter_matrix_luma,*inter_matrix_chroma;
+ uint16_t *intra_matrix,*inter_matrix;
 
  float calcMeanQuant(void);
  virtual bool drawMV(unsigned char *dst,unsigned int dx,stride_t stride,unsigned int dy) const {return false;}

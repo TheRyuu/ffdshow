@@ -438,9 +438,9 @@ void TquantTablesPage::TquantTables::setChange(void)
 }
 
 //============================================ TcurrentQuantDlg ============================================
-TcurrentQuantDlg::TcurrentQuantDlg(HWND IhParent,IffdshowBase *Ideci,uint8_t *Iinter,uint8_t *Iintra,uint8_t *inter4luma,uint8_t *inter4chroma,uint8_t *intra4luma,uint8_t *intra4chroma,TquantTables *Ibase):
+TcurrentQuantDlg::TcurrentQuantDlg(HWND IhParent,IffdshowBase *Ideci,uint8_t *Iinter,uint8_t *Iintra,TquantTables *Ibase):
  TdlgWindow(IDD_QUANT_CURRENT,Ideci),
- base(Ibase?Ibase:new TquantTables(Ideci,Iinter,Iintra,inter4luma,inter4chroma,intra4luma,intra4chroma)),
+ base(Ibase?Ibase:new TquantTables(Ideci,Iinter,Iintra)),
  hParent(IhParent)
 {
 }
@@ -481,8 +481,8 @@ INT_PTR TcurrentQuantDlg::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
  return TdlgWindow::msgProc(uMsg,wParam,lParam);
 }
 
-TcurrentQuantDlg::TquantTables::TquantTables(IffdshowBase *Ideci,uint8_t *Iinter,uint8_t *Iintra,uint8_t *Iinter4luma,uint8_t *Iinter4chroma,uint8_t *Iintra4luma,uint8_t *Iintra4chroma):
- inter(Iinter),intra(Iintra),inter4luma(Iinter4luma),inter4chroma(Iinter4chroma),intra4luma(Iintra4luma),intra4chroma(Iintra4chroma),
+TcurrentQuantDlg::TquantTables::TquantTables(IffdshowBase *Ideci,uint8_t *Iinter,uint8_t *Iintra):
+ inter(Iinter),intra(Iintra),
  TquantTablesPageBase(Ideci)
 {
 }
@@ -494,10 +494,6 @@ HRESULT TcurrentQuantDlg::TquantTables::getCustomQuantMatrixes(uint8_t* *intra8,
 {
  if (intra8) *intra8=intra;
  if (inter8) *inter8=inter;
- if (intra4C) *intra4C=intra4chroma;
- if (intra4Y) *intra4Y=intra4luma;
- if (inter4C) *inter4C=inter4chroma;
- if (inter4Y) *inter4Y=inter4luma;
  return S_OK;
 }
 void TcurrentQuantDlg::TquantTables::cfg2dlg(void)
@@ -513,7 +509,7 @@ void TcurrentQuantDlg::TquantTables::cfg2dlg(void)
 //============================================== TdctQuantDlg ==============================================
 const int TdctQuantDlg::idffs[16]={IDFF_dctMatrix0,IDFF_dctMatrix1,IDFF_dctMatrix2,IDFF_dctMatrix3,IDFF_dctMatrix4,IDFF_dctMatrix5,IDFF_dctMatrix6,IDFF_dctMatrix7,IDFF_dctMatrix8,IDFF_dctMatrix9,IDFF_dctMatrix10,IDFF_dctMatrix11,IDFF_dctMatrix12,IDFF_dctMatrix13,IDFF_dctMatrix14,IDFF_dctMatrix15};
 
-TdctQuantDlg::TdctQuantDlg(HWND hParent,IffdshowBase *Ideci):TcurrentQuantDlg(hParent,Ideci,NULL,NULL,NULL,NULL,NULL,NULL,new TdctQuantTables(Ideci,inter,NULL))
+TdctQuantDlg::TdctQuantDlg(HWND hParent,IffdshowBase *Ideci):TcurrentQuantDlg(hParent,Ideci,NULL,NULL,new TdctQuantTables(Ideci,inter,NULL))
 {
  uint8_t *m=inter;
  for (int i=0;i<16;i++,m+=4)
@@ -523,7 +519,7 @@ TdctQuantDlg::TdctQuantDlg(HWND hParent,IffdshowBase *Ideci):TcurrentQuantDlg(hP
   }
 }
 
-TdctQuantDlg::TdctQuantTables::TdctQuantTables(IffdshowBase *Ideci,uint8_t *Iinter,uint8_t *Iintra):TquantTables(Ideci,Iinter,Iintra,NULL,NULL,NULL,NULL)
+TdctQuantDlg::TdctQuantTables::TdctQuantTables(IffdshowBase *Ideci,uint8_t *Iinter,uint8_t *Iintra):TquantTables(Ideci,Iinter,Iintra)
 {
 }
 void TdctQuantDlg::TdctQuantTables::cfg2dlg(void)

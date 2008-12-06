@@ -85,7 +85,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
  STDMETHOD (getRemainingFrameTime)(unsigned int *sec) PURE;
  STDMETHOD (getInputSAR)(unsigned int *a1,unsigned int *a2) PURE;
  STDMETHOD (getInputDAR)(unsigned int *a1,unsigned int *a2) PURE;
- STDMETHOD (getQuantMatrices)(unsigned char intra8[64],unsigned char inter8[64],unsigned char intra4luma[16],unsigned char intra4chroma[16],unsigned char inter4luma[16],unsigned char inter4chroma[16]) PURE;
+ STDMETHOD (getQuantMatrices)(unsigned char intra8[64],unsigned char inter8[64]) PURE;
  STDMETHOD_(const tchar*,findAutoSubflnms)(IcheckSubtitle *checkSubtitle) PURE;
  STDMETHOD (addClosedCaption)(const wchar_t* line) PURE;
  STDMETHOD (hideClosedCaptions)(void) PURE;

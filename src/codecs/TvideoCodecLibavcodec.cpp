@@ -109,10 +109,6 @@ void TvideoCodecLibavcodec::end(void)
     {
      if (avctx->intra_matrix) free(avctx->intra_matrix);
      if (avctx->inter_matrix) free(avctx->inter_matrix);
-     if (avctx->intra_matrix_luma) free(avctx->intra_matrix_luma);
-     if (avctx->intra_matrix_chroma) free(avctx->intra_matrix_chroma);
-     if (avctx->inter_matrix_luma) free(avctx->inter_matrix_luma);
-     if (avctx->inter_matrix_chroma) free(avctx->inter_matrix_chroma);
      ownmatrices=false;
     }
    if (avctx->slice_offset) free(avctx->slice_offset);
@@ -145,10 +141,6 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
  avctx->height=pict.rectFull.dy;
  intra_matrix=avctx->intra_matrix=(uint16_t*)calloc(sizeof(uint16_t),64);
  inter_matrix=avctx->inter_matrix=(uint16_t*)calloc(sizeof(uint16_t),64);
- intra_matrix_luma=avctx->intra_matrix_luma=(uint16_t*)calloc(sizeof(uint16_t),16);
- intra_matrix_chroma=avctx->intra_matrix_chroma=(uint16_t*)calloc(sizeof(uint16_t),16);
- inter_matrix_luma=avctx->inter_matrix_luma=(uint16_t*)calloc(sizeof(uint16_t),16);
- inter_matrix_chroma=avctx->inter_matrix_chroma=(uint16_t*)calloc(sizeof(uint16_t),16);
  ownmatrices=true;
 
  grayscale=deci->getParam2(IDFF_grayscale);

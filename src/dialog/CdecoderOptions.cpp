@@ -137,13 +137,13 @@ void TmiscPage::getTip(char_t *tipS,size_t len)
 
 void TmiscPage::onMatrixExport(void)
 {
- uint8_t inter[64],intra[64],intra4luma[16],intra4chroma[16],inter4luma[16],inter4chroma[16];
- if (deciV->getQuantMatrices(intra,inter,intra4luma,intra4chroma,inter4luma,inter4chroma)!=S_OK)
+ uint8_t inter[64],intra[64];
+ if (deciV->getQuantMatrices(intra,inter)!=S_OK)
   {
    err(_(-IDD_DECODEROPTIONS,_l("No quantization matrices available.")));
    return;
   }
- TcurrentQuantDlg dlg(m_hwnd,deci,inter,intra,inter4luma,inter4chroma,intra4luma,intra4chroma);
+ TcurrentQuantDlg dlg(m_hwnd,deci,inter,intra);
  dlg.show();
 }
 
