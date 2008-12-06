@@ -29,7 +29,7 @@
 #define filename_suffix = ''
 #define outputdir = '.'
 
-; location of binaries
+; Location of binaries
 #define bindir = '..\..'
 
 ; Other
@@ -179,22 +179,22 @@ Name: sp; MessagesFile: compiler:Languages\Spanish.isl
 Name: Normal; Description: Normal; Flags: iscustom
 
 [Components]
-Name: ffdshow; Description: {cm:comp_ffdshowds}; Types: Normal
-Name: ffdshow\vfw; Description: {cm:comp_vfwInterface}; Types: Normal
+Name: ffdshow;                    Description: {cm:comp_ffdshowds};    Types: Normal
+Name: ffdshow\vfw;                Description: {cm:comp_vfwInterface}; Types: Normal
 #if include_makeavis
-Name: ffdshow\makeavis; Description: {cm:comp_makeAvis}; Flags: dontinheritcheck
+Name: ffdshow\makeavis;           Description: {cm:comp_makeAvis};                    Flags: dontinheritcheck
 #endif
 #if include_plugin_avisynth | include_plugin_virtualdub | include_plugin_dscaler
-Name: ffdshow\plugins; Description: {cm:comp_appPlugins}; Flags: dontinheritcheck
+Name: ffdshow\plugins;            Description: {cm:comp_appPlugins};                  Flags: dontinheritcheck
 #endif
 #if include_plugin_avisynth
-Name: ffdshow\plugins\avisynth; Description: AviSynth
+Name: ffdshow\plugins\avisynth;   Description: AviSynth
 #endif
 #if include_plugin_virtualdub
 Name: ffdshow\plugins\virtualdub; Description: VirtualDub
 #endif
 #if include_plugin_dscaler
-Name: ffdshow\plugins\dscaler; Description: DScaler
+Name: ffdshow\plugins\dscaler;    Description: DScaler
 #endif
 
 ; CPU detection code
@@ -203,224 +203,224 @@ Name: ffdshow\plugins\dscaler; Description: DScaler
 #endif
 
 [Tasks]
-Name: resetsettings; Description: {cm:tsk_resetSettings}; GroupDescription: {cm:tsk_settings}; Flags: unchecked; Components: ffdshow
-Name: video; Description: {cm:tsk_videoFormatsSelect}; GroupDescription: {cm:tsk_videoFormats}; Flags: unchecked; Components: ffdshow
-Name: video\h264; Description: H.264 / AVC; Check: CheckTaskVideo('h264', 1, True); Components: ffdshow
-Name: video\h264; Description: H.264 / AVC; Check: NOT CheckTaskVideo('h264', 1, True); Components: ffdshow; Flags: unchecked
-Name: video\divx; Description: DivX; Check: CheckTaskVideo2('dx50', True); Components: ffdshow
-Name: video\divx; Description: DivX; Check: NOT CheckTaskVideo2('dx50', True); Components: ffdshow; Flags: unchecked
-Name: video\xvid; Description: Xvid; Check: CheckTaskVideo2('xvid', True); Components: ffdshow
-Name: video\xvid; Description: Xvid; Check: NOT CheckTaskVideo2('xvid', True); Components: ffdshow; Flags: unchecked
-Name: video\mpeg4; Description: {cm:tsk_genericMpeg4}; Check: CheckTaskVideo2('mp4v', True); Components: ffdshow
-Name: video\mpeg4; Description: {cm:tsk_genericMpeg4}; Check: NOT CheckTaskVideo2('mp4v', True); Components: ffdshow; Flags: unchecked
-Name: video\flv; Description: FLV1, FLV4; Check: CheckTaskVideo('flv1', 1, True); Components: ffdshow
-Name: video\flv; Description: FLV1, FLV4; Check: NOT CheckTaskVideo('flv1', 1, True); Components: ffdshow; Flags: unchecked
-Name: video\h263; Description: H.263; Check: CheckTaskVideo('h263', 1, True); Components: ffdshow
-Name: video\h263; Description: H.263; Check: NOT CheckTaskVideo('h263', 1, True); Components: ffdshow; Flags: unchecked
-Name: video\mpeg1; Description: MPEG-1; Components: ffdshow; Flags: unchecked
-Name: video\mpeg1\libmpeg2; Description: libmpeg2; Check: CheckTaskVideo('mpg1', 5, False); Components: ffdshow; Flags: exclusive
-Name: video\mpeg1\libmpeg2; Description: libmpeg2; Check: NOT CheckTaskVideo('mpg1', 5, False); Components: ffdshow; Flags: exclusive unchecked
-Name: video\mpeg1\libavcodec; Description: libavcodec; Check: CheckTaskVideo('mpg1', 1, False); Components: ffdshow; Flags: exclusive
-Name: video\mpeg1\libavcodec; Description: libavcodec; Check: NOT CheckTaskVideo('mpg1', 1, False); Components: ffdshow; Flags: exclusive unchecked
-Name: video\mpeg2; Description: MPEG-2; Components: ffdshow; Flags: unchecked
-Name: video\mpeg2\libmpeg2; Description: libmpeg2; Check: CheckTaskVideo('mpg2', 5, False); Components: ffdshow; Flags: exclusive
-Name: video\mpeg2\libmpeg2; Description: libmpeg2; Check: NOT CheckTaskVideo('mpg2', 5, False); Components: ffdshow; Flags: exclusive unchecked
-Name: video\mpeg2\libavcodec; Description: libavcodec; Check: CheckTaskVideo('mpg2', 1, False); Components: ffdshow; Flags: exclusive
-Name: video\mpeg2\libavcodec; Description: libavcodec; Check: NOT CheckTaskVideo('mpg2', 1, False); Components: ffdshow; Flags: exclusive unchecked
-Name: video\huffyuv; Description: Huffyuv; Check: CheckTaskVideo('hfyu', 1, True); Components: ffdshow
-Name: video\huffyuv; Description: Huffyuv; Check: NOT CheckTaskVideo('hfyu', 1, True); Components: ffdshow; Flags: unchecked
-Name: video\qt; Description: SVQ1, SVQ3, Cinepak, RPZA, QTRLE; Check: CheckTaskVideo('svq3', 1, True); Components: ffdshow
-Name: video\qt; Description: SVQ1, SVQ3, Cinepak, RPZA, QTRLE; Check: NOT CheckTaskVideo('svq3', 1, True); Components: ffdshow; Flags: unchecked
-Name: video\vp56; Description: VP5, VP6; Check: CheckTaskVideo('vp6', 1, True); Components: ffdshow
-Name: video\vp56; Description: VP5, VP6; Check: NOT CheckTaskVideo('vp6', 1, True); Components: ffdshow; Flags: unchecked
-Name: video\vc1; Description: VC-1; Components: ffdshow; Flags: unchecked
-Name: video\vc1\wmv9; Description: wmv9; Check: CheckTaskVideo('wvc1', 12, False); Components: ffdshow; Flags: exclusive
-Name: video\vc1\wmv9; Description: wmv9; Check: NOT CheckTaskVideo('wvc1', 12, False); Components: ffdshow; Flags: exclusive unchecked
-Name: video\vc1\libavcodec; Description: libavcodec; Check: CheckTaskVideo('wvc1', 1, False); Components: ffdshow; Flags: exclusive
-Name: video\vc1\libavcodec; Description: libavcodec; Check: NOT CheckTaskVideo('wvc1', 1, False); Components: ffdshow; Flags: exclusive unchecked
-Name: video\wmv1; Description: WMV1; Check: CheckTaskVideo2('wmv1', False); Components: ffdshow
-Name: video\wmv1; Description: WMV1; Check: NOT CheckTaskVideo2('wmv1', False); Flags: dontinheritcheck unchecked; Components: ffdshow
-Name: video\wmv2; Description: WMV2; Check: CheckTaskVideo2('wmv2', False); Components: ffdshow
-Name: video\wmv2; Description: WMV2; Check: NOT CheckTaskVideo2('wmv2', False); Flags: dontinheritcheck unchecked; Components: ffdshow
-Name: video\wmv3; Description: WMV3; Check: CheckTaskVideo2('wmv3', False); Components: ffdshow
-Name: video\wmv3; Description: WMV3; Check: NOT CheckTaskVideo2('wmv3', False); Flags: dontinheritcheck unchecked; Components: ffdshow
-Name: video\wvp2; Description: WMVP, WVP2; Check: CheckTaskVideo('wvp2', 12, False); Components: ffdshow
-Name: video\wvp2; Description: WMVP, WVP2; Check: NOT CheckTaskVideo('wvp2', 12, False); Flags: dontinheritcheck unchecked; Components: ffdshow
-Name: video\mss2; Description: MSS1, MSS2; Check: CheckTaskVideo('mss2', 12, False); Components: ffdshow
-Name: video\mss2; Description: MSS1, MSS2; Check: NOT CheckTaskVideo('mss2', 12, False); Flags: dontinheritcheck unchecked; Components: ffdshow
-Name: video\dvsd; Description: DV; Check: CheckTaskVideo('dvsd', 1, False); Components: ffdshow
-Name: video\dvsd; Description: DV; Check: NOT CheckTaskVideo('dvsd', 1, False); Flags: dontinheritcheck unchecked; Components: ffdshow
-Name: video\other1; Description: H.261, MJPEG, Theora, VP3; Check: NOT IsUpdate; Components: ffdshow
-Name: video\other2; Description: CorePNG, MS Video 1, MSRLE, Techsmith, Truemotion; Check: NOT IsUpdate; Components: ffdshow
-Name: video\other3; Description: ASV1/2, CYUV, ZLIB, 8BPS, LOCO, MSZH, QPEG, WNV1, VCR1; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
-Name: video\other4; Description: CamStudio, ZMBV, Ultimotion, VIXL, AASC, IV32, FPS1, RT21; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
-Name: video\rawv; Description: {cm:tsk_rawVideo}; Check: CheckTaskVideo('rawv', 1, False); Flags: dontinheritcheck; Components: ffdshow
-Name: video\rawv; Description: {cm:tsk_rawVideo}; Check: NOT CheckTaskVideo('rawv', 1, False); Flags: dontinheritcheck unchecked; Components: ffdshow
-Name: audio; Description: {cm:tsk_audioFormatsSelect}; GroupDescription: {cm:tsk_audioFormats}; Flags: unchecked; Components: ffdshow
-Name: audio\mp3; Description: MP3; Flags: unchecked; Components: ffdshow
-Name: audio\mp3\libmad; Description: libmad; Check: CheckTaskAudio('mp3', 7, True); Flags: exclusive; Components: ffdshow
-Name: audio\mp3\libmad; Description: libmad; Check: NOT CheckTaskAudio('mp3', 7, True); Flags: exclusive unchecked; Components: ffdshow
-Name: audio\mp3\libavcodec; Description: libavcodec; Check: CheckTaskAudio('mp3', 1, False); Flags: exclusive; Components: ffdshow
-Name: audio\mp3\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('mp3', 1, False); Flags: exclusive unchecked; Components: ffdshow
-Name: audio\aac; Description: AAC; Flags: unchecked; Components: ffdshow
-Name: audio\aac\libfaad2; Description: libfaad2; Check: CheckTaskAudio('aac', 8, True); Flags: exclusive; Components: ffdshow
-Name: audio\aac\libfaad2; Description: libfaad2; Check: NOT CheckTaskAudio('aac', 8, True); Flags: exclusive unchecked; Components: ffdshow
-;Name: audio\aac\libavcodec; Description: libavcodec; Check: CheckTaskAudio('aac', 1, False); Flags: exclusive; Components: ffdshow
-;Name: audio\aac\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('aac', 1, False); Flags: exclusive unchecked; Components: ffdshow
-Name: audio\ac3;        Description: AC3;                                                 Components: ffdshow; Flags: unchecked
-Name: audio\ac3\liba52; Description: liba52; Check:      CheckTaskAudio('ac3', 15, True) OR CheckTaskAudio('ac3', 16, True);  Components: ffdshow; Flags: exclusive
-Name: audio\ac3\liba52; Description: liba52; Check: NOT (CheckTaskAudio('ac3', 15, True)  OR CheckTaskAudio('ac3', 16, True));  Components: ffdshow; Flags: exclusive unchecked
-Name: audio\ac3\libavcodec; Description: libavcodec; Check:     CheckTaskAudio('ac3', 1, False);  Components: ffdshow; Flags: exclusive
-Name: audio\ac3\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('ac3', 1, False);  Components: ffdshow; Flags: exclusive unchecked
-Name: audio\eac3; Description: EAC3 (Dolby Digital Plus); Check: CheckTaskAudio('eac3', 1, True); Components: ffdshow
-Name: audio\eac3; Description: EAC3 (Dolby Digital Plus); Check: NOT CheckTaskAudio('eac3', 1, True); Flags: unchecked; Components: ffdshow
-Name: audio\mlp; Description: MLP/Dolby TrueHD; Check: CheckTaskAudio('mlp', 1, True); Components: ffdshow
-Name: audio\mlp; Description: MLP/Dolby TrueHD; Check: NOT CheckTaskAudio('mlp', 1, True); Flags: unchecked; Components: ffdshow
-Name: audio\dts;        Description: DTS;                                                 Components: ffdshow; Flags: unchecked
-Name: audio\dts\libdts; Description: libdts; Check:      CheckTaskAudio('dts', 17, True) OR CheckTaskAudio('dts', 17, True);  Components: ffdshow; Flags: exclusive
-Name: audio\dts\libdts; Description: libdts; Check: NOT (CheckTaskAudio('dts', 17, True) OR CheckTaskAudio('dts', 17, True));  Components: ffdshow; Flags: exclusive unchecked
-Name: audio\dts\libavcodec; Description: libavcodec; Check:     CheckTaskAudio('dts', 1, False);  Components: ffdshow; Flags: exclusive
-Name: audio\dts\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('dts', 1, False);  Components: ffdshow; Flags: exclusive unchecked
-Name: audio\lpcm; Description: LPCM; Check: CheckTaskAudio('lpcm', 4, True); Components: ffdshow
-Name: audio\lpcm; Description: LPCM; Check: NOT CheckTaskAudio('lpcm', 4, True); Flags: unchecked; Components: ffdshow
-Name: audio\mp2; Description: MP1, MP2; Flags: unchecked; Components: ffdshow
-Name: audio\mp2\libmad; Description: libmad; Check: CheckTaskAudio('mp2', 7, True); Components: ffdshow; Flags: exclusive
-Name: audio\mp2\libmad; Description: libmad; Check: NOT CheckTaskAudio('mp2', 7, True); Flags: exclusive unchecked; Components: ffdshow
-Name: audio\mp2\libavcodec; Description: libavcodec; Check: CheckTaskAudio('mp2', 1, False); Components: ffdshow; Flags: exclusive
-Name: audio\mp2\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('mp2', 1, False); Flags: exclusive unchecked; Components: ffdshow
-Name: audio\vorbis; Description: Vorbis; Flags: unchecked; Components: ffdshow
-Name: audio\vorbis\tremor; Description: tremor; Check: CheckTaskAudio('vorbis', 18, True); Flags: exclusive; Components: ffdshow
-Name: audio\vorbis\tremor; Description: tremor; Check: NOT CheckTaskAudio('vorbis', 18, True); Flags: exclusive unchecked; Components: ffdshow
-Name: audio\vorbis\libavcodec; Description: libavcodec; Check: CheckTaskAudio('vorbis', 1, False); Flags: exclusive; Components: ffdshow
-Name: audio\vorbis\libavcodec; Description: libavcodec; Check: NOT CheckTaskAudio('vorbis', 1, False); Flags: exclusive unchecked; Components: ffdshow
-Name: audio\flac; Description: FLAC; Check: CheckTaskAudio('flac', 1, False); Components: ffdshow
-Name: audio\flac; Description: FLAC; Check: NOT CheckTaskAudio('flac', 1, False); Flags: unchecked; Components: ffdshow
-Name: audio\tta; Description: True Audio; Check: CheckTaskAudio('tta', 1, True); Components: ffdshow
-Name: audio\tta; Description: True Audio; Check: NOT CheckTaskAudio('tta', 1, True); Flags: unchecked; Components: ffdshow
-Name: audio\amr; Description: AMR; Check: CheckTaskAudio('amr', 1, True); Components: ffdshow
-Name: audio\amr; Description: AMR; Check: NOT CheckTaskAudio('amr', 1, True); Flags: unchecked; Components: ffdshow
-Name: audio\qt; Description: QDM2, MACE; Check: CheckTaskAudio('qdm2', 1, True); Components: ffdshow
-Name: audio\qt; Description: QDM2, MACE; Check: NOT CheckTaskAudio('qdm2', 1, True); Flags: unchecked; Components: ffdshow
-Name: audio\adpcm; Description: ADPCM, MS GSM, Truespeech; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
-Name: audio\rawa; Description: {cm:tsk_rawAudio}; Check: CheckTaskAudio('rawa', 4, False); Flags: dontinheritcheck; Components: ffdshow
-Name: audio\rawa; Description: {cm:tsk_rawAudio}; Check: NOT CheckTaskAudio('rawa', 4, False); Flags: dontinheritcheck unchecked; Components: ffdshow
-Name: filter; Description: {cm:tsk_filtersSelect}; GroupDescription: {cm:tsk_filters}; Flags: unchecked; Components: ffdshow
-Name: filter\passthroughac3; Description: {cm:tsk_passthroughac3}; Check: GetTaskPassthroughAC3(); Components: ffdshow
-Name: filter\passthroughac3; Description: {cm:tsk_passthroughac3}; Check: NOT GetTaskPassthroughAC3(); Flags: unchecked; Components: ffdshow
-Name: filter\passthroughdts; Description: {cm:tsk_passthroughdts}; Check: GetTaskPassthroughDTS(); Components: ffdshow
-Name: filter\passthroughdts; Description: {cm:tsk_passthroughdts}; Check: NOT GetTaskPassthroughDTS(); Flags: unchecked; Components: ffdshow
-Name: filter\normalize; Description: {cm:tsk_volumeNorm}; Check:     GetTaskVolNormalize(); Components: ffdshow
-Name: filter\normalize; Description: {cm:tsk_volumeNorm}; Check: NOT GetTaskVolNormalize(); Components: ffdshow; Flags: unchecked
-Name: filter\subtitles; Description: {cm:tsk_subtitles};  Check:     CheckTaskVideoInpreset('issubtitles', 1, False); Components: ffdshow
-Name: filter\subtitles; Description: {cm:tsk_subtitles};  Check: NOT CheckTaskVideoInpreset('issubtitles', 1, False); Components: ffdshow; Flags: unchecked;
+Name: resetsettings;           Description: {cm:tsk_resetSettings};                                                          GroupDescription: {cm:tsk_settings};                          Components: ffdshow; Flags: unchecked
+Name: video;                   Description: {cm:tsk_videoFormatsSelect};                                                     GroupDescription: {cm:tsk_videoFormats};                      Components: ffdshow; Flags: unchecked
+Name: video\h264;              Description: H.264 / AVC;                                               Check:      CheckTaskVideo(  'h264',  1, True);                                     Components: ffdshow
+Name: video\h264;              Description: H.264 / AVC;                                               Check: NOT  CheckTaskVideo(  'h264',  1, True);                                     Components: ffdshow; Flags: unchecked
+Name: video\divx;              Description: DivX;                                                      Check:      CheckTaskVideo2( 'dx50',     True);                                     Components: ffdshow
+Name: video\divx;              Description: DivX;                                                      Check: NOT  CheckTaskVideo2( 'dx50',     True);                                     Components: ffdshow; Flags: unchecked
+Name: video\xvid;              Description: Xvid;                                                      Check:      CheckTaskVideo2( 'xvid',     True);                                     Components: ffdshow
+Name: video\xvid;              Description: Xvid;                                                      Check: NOT  CheckTaskVideo2( 'xvid',     True);                                     Components: ffdshow; Flags: unchecked
+Name: video\mpeg4;             Description: {cm:tsk_genericMpeg4};                                     Check:      CheckTaskVideo2( 'mp4v',     True);                                     Components: ffdshow
+Name: video\mpeg4;             Description: {cm:tsk_genericMpeg4};                                     Check: NOT  CheckTaskVideo2( 'mp4v',     True);                                     Components: ffdshow; Flags: unchecked
+Name: video\flv;               Description: FLV1, FLV4;                                                Check:      CheckTaskVideo(  'flv1',  1, True);                                     Components: ffdshow
+Name: video\flv;               Description: FLV1, FLV4;                                                Check: NOT  CheckTaskVideo(  'flv1',  1, True);                                     Components: ffdshow; Flags: unchecked
+Name: video\h263;              Description: H.263;                                                     Check:      CheckTaskVideo(  'h263',  1, True);                                     Components: ffdshow
+Name: video\h263;              Description: H.263;                                                     Check: NOT  CheckTaskVideo(  'h263',  1, True);                                     Components: ffdshow; Flags: unchecked
+Name: video\mpeg1;             Description: MPEG-1;                                                                                                                                        Components: ffdshow; Flags: unchecked
+Name: video\mpeg1\libmpeg2;    Description: libmpeg2;                                                  Check:      CheckTaskVideo(  'mpg1',  5, False);                                    Components: ffdshow; Flags: exclusive
+Name: video\mpeg1\libmpeg2;    Description: libmpeg2;                                                  Check: NOT  CheckTaskVideo(  'mpg1',  5, False);                                    Components: ffdshow; Flags: exclusive unchecked
+Name: video\mpeg1\libavcodec;  Description: libavcodec;                                                Check:      CheckTaskVideo(  'mpg1',  1, False);                                    Components: ffdshow; Flags: exclusive
+Name: video\mpeg1\libavcodec;  Description: libavcodec;                                                Check: NOT  CheckTaskVideo(  'mpg1',  1, False);                                    Components: ffdshow; Flags: exclusive unchecked
+Name: video\mpeg2;             Description: MPEG-2;                                                                                                                                        Components: ffdshow; Flags: unchecked
+Name: video\mpeg2\libmpeg2;    Description: libmpeg2;                                                  Check:      CheckTaskVideo(  'mpg2',  5, False);                                    Components: ffdshow; Flags: exclusive
+Name: video\mpeg2\libmpeg2;    Description: libmpeg2;                                                  Check: NOT  CheckTaskVideo(  'mpg2',  5, False);                                    Components: ffdshow; Flags: exclusive unchecked
+Name: video\mpeg2\libavcodec;  Description: libavcodec;                                                Check:      CheckTaskVideo(  'mpg2',  1, False);                                    Components: ffdshow; Flags: exclusive
+Name: video\mpeg2\libavcodec;  Description: libavcodec;                                                Check: NOT  CheckTaskVideo(  'mpg2',  1, False);                                    Components: ffdshow; Flags: exclusive unchecked
+Name: video\huffyuv;           Description: Huffyuv;                                                   Check:      CheckTaskVideo(  'hfyu',  1, True);                                     Components: ffdshow
+Name: video\huffyuv;           Description: Huffyuv;                                                   Check: NOT  CheckTaskVideo(  'hfyu',  1, True);                                     Components: ffdshow; Flags: unchecked
+Name: video\qt;                Description: SVQ1, SVQ3, Cinepak, RPZA, QTRLE;                          Check:      CheckTaskVideo(  'svq3',  1, True);                                     Components: ffdshow
+Name: video\qt;                Description: SVQ1, SVQ3, Cinepak, RPZA, QTRLE;                          Check: NOT  CheckTaskVideo(  'svq3',  1, True);                                     Components: ffdshow; Flags: unchecked
+Name: video\vp56;              Description: VP5, VP6;                                                  Check:      CheckTaskVideo(   'vp6',  1, True);                                     Components: ffdshow
+Name: video\vp56;              Description: VP5, VP6;                                                  Check: NOT  CheckTaskVideo(   'vp6',  1, True);                                     Components: ffdshow; Flags: unchecked
+Name: video\vc1;               Description: VC-1;                                                                                                                                          Components: ffdshow; Flags: unchecked
+Name: video\vc1\wmv9;          Description: wmv9;                                                      Check:      CheckTaskVideo(  'wvc1', 12, False);                                    Components: ffdshow; Flags: exclusive
+Name: video\vc1\wmv9;          Description: wmv9;                                                      Check: NOT  CheckTaskVideo(  'wvc1', 12, False);                                    Components: ffdshow; Flags: exclusive unchecked
+Name: video\vc1\libavcodec;    Description: libavcodec;                                                Check:      CheckTaskVideo(  'wvc1',  1, False);                                    Components: ffdshow; Flags: exclusive
+Name: video\vc1\libavcodec;    Description: libavcodec;                                                Check: NOT  CheckTaskVideo(  'wvc1',  1, False);                                    Components: ffdshow; Flags: exclusive unchecked
+Name: video\wmv1;              Description: WMV1;                                                      Check:      CheckTaskVideo2( 'wmv1',     False);                                    Components: ffdshow
+Name: video\wmv1;              Description: WMV1;                                                      Check: NOT  CheckTaskVideo2( 'wmv1',     False);                                    Components: ffdshow; Flags: dontinheritcheck unchecked
+Name: video\wmv2;              Description: WMV2;                                                      Check:      CheckTaskVideo2( 'wmv2',     False);                                    Components: ffdshow
+Name: video\wmv2;              Description: WMV2;                                                      Check: NOT  CheckTaskVideo2( 'wmv2',     False);                                    Components: ffdshow; Flags: dontinheritcheck unchecked
+Name: video\wmv3;              Description: WMV3;                                                      Check:      CheckTaskVideo2( 'wmv3',     False);                                    Components: ffdshow
+Name: video\wmv3;              Description: WMV3;                                                      Check: NOT  CheckTaskVideo2( 'wmv3',     False);                                    Components: ffdshow; Flags: dontinheritcheck unchecked
+Name: video\wvp2;              Description: WMVP, WVP2;                                                Check:      CheckTaskVideo(  'wvp2', 12, False);                                    Components: ffdshow
+Name: video\wvp2;              Description: WMVP, WVP2;                                                Check: NOT  CheckTaskVideo(  'wvp2', 12, False);                                    Components: ffdshow; Flags: dontinheritcheck unchecked
+Name: video\mss2;              Description: MSS1, MSS2;                                                Check:      CheckTaskVideo(  'mss2', 12, False);                                    Components: ffdshow
+Name: video\mss2;              Description: MSS1, MSS2;                                                Check: NOT  CheckTaskVideo(  'mss2', 12, False);                                    Components: ffdshow; Flags: dontinheritcheck unchecked
+Name: video\dvsd;              Description: DV;                                                        Check:      CheckTaskVideo(  'dvsd',  1, False);                                    Components: ffdshow
+Name: video\dvsd;              Description: DV;                                                        Check: NOT  CheckTaskVideo(  'dvsd',  1, False);                                    Components: ffdshow; Flags: dontinheritcheck unchecked
+Name: video\other1;            Description: H.261, MJPEG, Theora, VP3;                                 Check: NOT  IsUpdate;                                                               Components: ffdshow
+Name: video\other2;            Description: CorePNG, MS Video 1, MSRLE, Techsmith, Truemotion;         Check: NOT  IsUpdate;                                                               Components: ffdshow
+Name: video\other3;            Description: ASV1/2, CYUV, ZLIB, 8BPS, LOCO, MSZH, QPEG, WNV1, VCR1;    Check: NOT  IsUpdate;                                                               Components: ffdshow; Flags: unchecked
+Name: video\other4;            Description: CamStudio, ZMBV, Ultimotion, VIXL, AASC, IV32, FPS1, RT21; Check: NOT  IsUpdate;                                                               Components: ffdshow; Flags: unchecked
+Name: video\rawv;              Description: {cm:tsk_rawVideo};                                         Check:      CheckTaskVideo(  'rawv',  1, False);                                    Components: ffdshow; Flags: dontinheritcheck
+Name: video\rawv;              Description: {cm:tsk_rawVideo};                                         Check: NOT  CheckTaskVideo(  'rawv',  1, False);                                    Components: ffdshow; Flags: dontinheritcheck unchecked
+Name: audio;                   Description: {cm:tsk_audioFormatsSelect};                                                     GroupDescription: {cm:tsk_audioFormats};                      Components: ffdshow; Flags: unchecked
+Name: audio\mp3;               Description: MP3;                                                                                                                                           Components: ffdshow; Flags: unchecked
+Name: audio\mp3\libmad;        Description: libmad;                                                    Check:      CheckTaskAudio(   'mp3',  7, True);                                     Components: ffdshow; Flags: exclusive
+Name: audio\mp3\libmad;        Description: libmad;                                                    Check: NOT  CheckTaskAudio(   'mp3',  7, True);                                     Components: ffdshow; Flags: exclusive unchecked
+Name: audio\mp3\libavcodec;    Description: libavcodec;                                                Check:      CheckTaskAudio(   'mp3',  1, False);                                    Components: ffdshow; Flags: exclusive
+Name: audio\mp3\libavcodec;    Description: libavcodec;                                                Check: NOT  CheckTaskAudio(   'mp3',  1, False);                                    Components: ffdshow; Flags: exclusive unchecked
+Name: audio\aac;               Description: AAC;                                                                                                                                           Components: ffdshow; Flags: unchecked
+Name: audio\aac\libfaad2;      Description: libfaad2;                                                  Check:      CheckTaskAudio(   'aac',  8, True);                                     Components: ffdshow; Flags: exclusive
+Name: audio\aac\libfaad2;      Description: libfaad2;                                                  Check: NOT  CheckTaskAudio(   'aac',  8, True);                                     Components: ffdshow; Flags: exclusive unchecked
+;Name: audio\aac\libavcodec;    Description: libavcodec;                                                Check:      CheckTaskAudio(   'aac',  1, False);                                    Components: ffdshow; Flags: exclusive
+;Name: audio\aac\libavcodec;    Description: libavcodec;                                                Check: NOT  CheckTaskAudio(   'aac',  1, False);                                    Components: ffdshow; Flags: exclusive unchecked
+Name: audio\ac3;               Description: AC3;                                                                                                                                           Components: ffdshow;  Flags: unchecked
+Name: audio\ac3\liba52;        Description: liba52;                                                    Check:      CheckTaskAudio(   'ac3', 15, True) OR CheckTaskAudio('ac3', 16, True);  Components: ffdshow; Flags: exclusive
+Name: audio\ac3\liba52;        Description: liba52;                                                    Check: NOT (CheckTaskAudio(   'ac3', 15, True) OR CheckTaskAudio('ac3', 16, True)); Components: ffdshow; Flags: exclusive unchecked
+Name: audio\ac3\libavcodec;    Description: libavcodec;                                                Check:      CheckTaskAudio(   'ac3',  1, False);                                    Components: ffdshow; Flags: exclusive
+Name: audio\ac3\libavcodec;    Description: libavcodec;                                                Check: NOT  CheckTaskAudio(   'ac3',  1, False);                                    Components: ffdshow; Flags: exclusive unchecked
+Name: audio\eac3;              Description: EAC3 (Dolby Digital Plus);                                 Check:      CheckTaskAudio(  'eac3',  1, True);                                     Components: ffdshow
+Name: audio\eac3;              Description: EAC3 (Dolby Digital Plus);                                 Check: NOT  CheckTaskAudio(  'eac3',  1, True);                                     Components: ffdshow; Flags: unchecked
+Name: audio\mlp;               Description: MLP/Dolby TrueHD;                                          Check:      CheckTaskAudio(   'mlp',  1, True);                                     Components: ffdshow
+Name: audio\mlp;               Description: MLP/Dolby TrueHD;                                          Check: NOT  CheckTaskAudio(   'mlp',  1, True);                                     Components: ffdshow; Flags: unchecked
+Name: audio\dts;               Description: DTS;                                                                                                                                           Components: ffdshow; Flags: unchecked
+Name: audio\dts\libdts;        Description: libdts;                                                    Check:      CheckTaskAudio(   'dts', 17, True) OR CheckTaskAudio('dts', 17, True);  Components: ffdshow; Flags: exclusive
+Name: audio\dts\libdts;        Description: libdts;                                                    Check: NOT (CheckTaskAudio(   'dts', 17, True) OR CheckTaskAudio('dts', 17, True)); Components: ffdshow; Flags: exclusive unchecked
+Name: audio\dts\libavcodec;    Description: libavcodec;                                                Check:      CheckTaskAudio(   'dts',  1, False);                                    Components: ffdshow; Flags: exclusive
+Name: audio\dts\libavcodec;    Description: libavcodec;                                                Check: NOT  CheckTaskAudio(   'dts',  1, False);                                    Components: ffdshow; Flags: exclusive unchecked
+Name: audio\lpcm;              Description: LPCM;                                                      Check:      CheckTaskAudio(  'lpcm',  4, True);                                     Components: ffdshow
+Name: audio\lpcm;              Description: LPCM;                                                      Check: NOT  CheckTaskAudio(  'lpcm',  4, True);                                     Components: ffdshow; Flags: unchecked
+Name: audio\mp2;               Description: MP1, MP2;                                                                                                                                      Components: ffdshow; Flags: unchecked
+Name: audio\mp2\libmad;        Description: libmad;                                                    Check:      CheckTaskAudio(   'mp2',  7, True);                                     Components: ffdshow; Flags: exclusive
+Name: audio\mp2\libmad;        Description: libmad;                                                    Check: NOT  CheckTaskAudio(   'mp2',  7, True);                                     Components: ffdshow; Flags: exclusive unchecked
+Name: audio\mp2\libavcodec;    Description: libavcodec;                                                Check:      CheckTaskAudio(   'mp2',  1, False);                                    Components: ffdshow; Flags: exclusive
+Name: audio\mp2\libavcodec;    Description: libavcodec;                                                Check: NOT  CheckTaskAudio(   'mp2',  1, False);                                    Components: ffdshow; Flags: exclusive unchecked
+Name: audio\vorbis;            Description: Vorbis;                                                                                                                                        Components: ffdshow; Flags: unchecked
+Name: audio\vorbis\tremor;     Description: tremor;                                                    Check:      CheckTaskAudio('vorbis', 18, True);                                     Components: ffdshow; Flags: exclusive;
+Name: audio\vorbis\tremor;     Description: tremor;                                                    Check: NOT  CheckTaskAudio('vorbis', 18, True);                                     Components: ffdshow; Flags: exclusive unchecked
+Name: audio\vorbis\libavcodec; Description: libavcodec;                                                Check:      CheckTaskAudio('vorbis',  1, False);                                    Components: ffdshow; Flags: exclusive
+Name: audio\vorbis\libavcodec; Description: libavcodec;                                                Check: NOT  CheckTaskAudio('vorbis',  1, False);                                    Components: ffdshow; Flags: exclusive unchecked
+Name: audio\flac;              Description: FLAC;                                                      Check:      CheckTaskAudio(  'flac',  1, False);                                    Components: ffdshow
+Name: audio\flac;              Description: FLAC;                                                      Check: NOT  CheckTaskAudio(  'flac',  1, False);                                    Components: ffdshow; Flags: unchecked
+Name: audio\tta;               Description: True Audio;                                                Check:      CheckTaskAudio(   'tta',  1, True);                                     Components: ffdshow
+Name: audio\tta;               Description: True Audio;                                                Check: NOT  CheckTaskAudio(   'tta',  1, True);                                     Components: ffdshow; Flags: unchecked
+Name: audio\amr;               Description: AMR;                                                       Check:      CheckTaskAudio(   'amr',  1, True);                                     Components: ffdshow
+Name: audio\amr;               Description: AMR;                                                       Check: NOT  CheckTaskAudio(   'amr',  1, True);                                     Components: ffdshow; Flags: unchecked
+Name: audio\qt;                Description: QDM2, MACE;                                                Check:      CheckTaskAudio(  'qdm2',  1, True);                                     Components: ffdshow
+Name: audio\qt;                Description: QDM2, MACE;                                                Check: NOT  CheckTaskAudio(  'qdm2',  1, True);                                     Components: ffdshow; Flags: unchecked
+Name: audio\adpcm;             Description: ADPCM, MS GSM, Truespeech;                                 Check: NOT  IsUpdate;                                                               Components: ffdshow; Flags: unchecked
+Name: audio\rawa;              Description: {cm:tsk_rawAudio};                                         Check:      CheckTaskAudio(  'rawa',  4, False);                                    Components: ffdshow; Flags: dontinheritcheck
+Name: audio\rawa;              Description: {cm:tsk_rawAudio};                                         Check: NOT  CheckTaskAudio(  'rawa',  4, False);                                    Components: ffdshow; Flags: dontinheritcheck unchecked
+Name: filter;                  Description: {cm:tsk_filtersSelect};                                                          GroupDescription: {cm:tsk_filters};                           Components: ffdshow; Flags: unchecked
+Name: filter\passthroughac3;   Description: {cm:tsk_passthroughac3};                                   Check:      GetTaskPassthroughAC3();                                                Components: ffdshow
+Name: filter\passthroughac3;   Description: {cm:tsk_passthroughac3};                                   Check: NOT  GetTaskPassthroughAC3();                                                Components: ffdshow; Flags: unchecked
+Name: filter\passthroughdts;   Description: {cm:tsk_passthroughdts};                                   Check:      GetTaskPassthroughDTS();                                                Components: ffdshow
+Name: filter\passthroughdts;   Description: {cm:tsk_passthroughdts};                                   Check: NOT  GetTaskPassthroughDTS();                                                Components: ffdshow; Flags: unchecked
+Name: filter\normalize;        Description: {cm:tsk_volumeNorm};                                       Check:      GetTaskVolNormalize();                                                  Components: ffdshow
+Name: filter\normalize;        Description: {cm:tsk_volumeNorm};                                       Check: NOT  GetTaskVolNormalize();                                                  Components: ffdshow; Flags: unchecked
+Name: filter\subtitles;        Description: {cm:tsk_subtitles};                                        Check:      CheckTaskVideoInpreset('issubtitles', 1, False);                        Components: ffdshow
+Name: filter\subtitles;        Description: {cm:tsk_subtitles};                                        Check: NOT  CheckTaskVideoInpreset('issubtitles', 1, False);                        Components: ffdshow; Flags: unchecked
 #if !PREF_YAMAGATA
-Name: skiph264inloop; Description: {cm:tsk_skipInloop}; GroupDescription: {cm:tsk_tweaks}; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
+Name: skiph264inloop;          Description: {cm:tsk_skipInloop};                                       Check: NOT  IsUpdate; GroupDescription: {cm:tsk_tweaks};                            Components: ffdshow; Flags: unchecked
 #endif
-Name: whitelist; Description: {cm:tsk_whitelist}; GroupDescription: {cm:tsk_compatibilityManager}; Check: NOT IsUpdate; Flags: unchecked; Components: ffdshow
-Name: whitelist\prompt; Description: {cm:tsk_whitelistPrompt}; Flags: unchecked; Components: ffdshow
+Name: whitelist;               Description: {cm:tsk_whitelist};                                        Check: NOT  IsUpdate; GroupDescription: {cm:tsk_compatibilityManager};              Components: ffdshow; Flags: unchecked
+Name: whitelist\prompt;        Description: {cm:tsk_whitelistPrompt};                                                                                                                      Components: ffdshow; Flags: unchecked
 
 [Icons]
 #if is64bit
-Name: {group}\{cm:shrt_audioConfig}; Filename: {sys}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; Components: ffdshow
-Name: {group}\{cm:shrt_videoConfig}; Filename: {sys}\rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; Components: ffdshow
-Name: {group}\{cm:shrt_vfwConfig};   Filename: {sys}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {sys}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; Components: ffdshow\vfw
+Name: {group}\{cm:shrt_audioConfig}; Filename: {sys}\rundll32.exe;      Parameters: ffdshow.ax,configureAudio; WorkingDir: {app};      IconFilename: {app}\ffdshow.ax; IconIndex: 4; Components: ffdshow
+Name: {group}\{cm:shrt_videoConfig}; Filename: {sys}\rundll32.exe;      Parameters: ffdshow.ax,configure;      WorkingDir: {app};      IconFilename: {app}\ffdshow.ax; IconIndex: 3; Components: ffdshow
+Name: {group}\{cm:shrt_vfwConfig};   Filename: {sys}\rundll32.exe;      Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {sys};      IconFilename: {app}\ffdshow.ax; IconIndex: 5; Components: ffdshow\vfw
 #else
-Name: {group}\{cm:shrt_audioConfig}; Filename: {syswow64}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; MinVersion: 0,4; Components: ffdshow
-Name: {group}\{cm:shrt_audioConfig}; Filename: {win}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 4; MinVersion: 4,0; Components: ffdshow
-Name: {group}\{cm:shrt_videoConfig}; Filename: {syswow64}\rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; MinVersion: 0,4; Components: ffdshow
-Name: {group}\{cm:shrt_videoConfig}; Filename: {win}\rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app}; IconFilename: {app}\ffdshow.ax; IconIndex: 3; MinVersion: 4,0; Components: ffdshow
-Name: {group}\{cm:shrt_vfwConfig};   Filename: {syswow64}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {syswow64}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; MinVersion: 0,4; Components: ffdshow\vfw
-Name: {group}\{cm:shrt_vfwConfig};   Filename: {win}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {sys}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; MinVersion: 4,0; Components: ffdshow\vfw
+Name: {group}\{cm:shrt_audioConfig}; Filename: {syswow64}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app};      IconFilename: {app}\ffdshow.ax; IconIndex: 4; Components: ffdshow;     MinVersion: 0,4
+Name: {group}\{cm:shrt_audioConfig}; Filename: {win}\rundll32.exe;      Parameters: ffdshow.ax,configureAudio; WorkingDir: {app};      IconFilename: {app}\ffdshow.ax; IconIndex: 4; Components: ffdshow;     MinVersion: 4,0
+Name: {group}\{cm:shrt_videoConfig}; Filename: {syswow64}\rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app};      IconFilename: {app}\ffdshow.ax; IconIndex: 3; Components: ffdshow;     MinVersion: 0,4
+Name: {group}\{cm:shrt_videoConfig}; Filename: {win}\rundll32.exe;      Parameters: ffdshow.ax,configure;      WorkingDir: {app};      IconFilename: {app}\ffdshow.ax; IconIndex: 3; Components: ffdshow;     MinVersion: 4,0
+Name: {group}\{cm:shrt_vfwConfig};   Filename: {syswow64}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {syswow64}; IconFilename: {app}\ffdshow.ax; IconIndex: 5; Components: ffdshow\vfw; MinVersion: 0,4
+Name: {group}\{cm:shrt_vfwConfig};   Filename: {win}\rundll32.exe;      Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {sys};      IconFilename: {app}\ffdshow.ax; IconIndex: 5; Components: ffdshow\vfw; MinVersion: 4,0
 #endif
 #if include_makeavis
-Name: {group}\makeAVIS; Filename: {app}\makeAVIS.exe; Components: ffdshow\makeavis
+Name: {group}\makeAVIS;              Filename: {app}\makeAVIS.exe; Components: ffdshow\makeavis
 #endif
-Name: {group}\{cm:shrt_uninstall}; Filename: {uninstallexe}
+Name: {group}\{cm:shrt_uninstall};   Filename: {uninstallexe}
 
 [Files]
 ; For speaker config
 Source: ffSpkCfg.dll; Flags: dontcopy
 
-Source: {#= bindir}\libavcodec.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: {#= bindir}\libmplayer.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: {#= bindir}\ff_liba52.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: {#= bindir}\ff_libdts.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: {#= bindir}\ff_libfaad2.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: {#= bindir}\ff_libmad.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: {#= bindir}\ff_tremor.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: {#= bindir}\ff_unrar.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: {#= bindir}\ff_samplerate.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: {#= bindir}\ff_theora.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: {#= bindir}\libavcodec.dll;                       DestDir: {app}; Components: ffdshow;     Flags: ignoreversion
+Source: {#= bindir}\libmplayer.dll;                       DestDir: {app}; Components: ffdshow;     Flags: ignoreversion
+Source: {#= bindir}\ff_liba52.dll;                        DestDir: {app}; Components: ffdshow;     Flags: ignoreversion
+Source: {#= bindir}\ff_libdts.dll;                        DestDir: {app}; Components: ffdshow;     Flags: ignoreversion
+Source: {#= bindir}\ff_libfaad2.dll;                      DestDir: {app}; Components: ffdshow;     Flags: ignoreversion
+Source: {#= bindir}\ff_libmad.dll;                        DestDir: {app}; Components: ffdshow;     Flags: ignoreversion
+Source: {#= bindir}\ff_tremor.dll;                        DestDir: {app}; Components: ffdshow;     Flags: ignoreversion
+Source: {#= bindir}\ff_unrar.dll;                         DestDir: {app}; Components: ffdshow;     Flags: ignoreversion
+Source: {#= bindir}\ff_samplerate.dll;                    DestDir: {app}; Components: ffdshow;     Flags: ignoreversion
+Source: {#= bindir}\ff_theora.dll;                        DestDir: {app}; Components: ffdshow;     Flags: ignoreversion
 #if include_x264
-Source: {#= bindir}\ff_x264.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow\vfw
+Source: {#= bindir}\ff_x264.dll;                          DestDir: {app}; Components: ffdshow\vfw; Flags: ignoreversion
   #if !is64bit
-Source: Runtimes\pthreadGC2\x86\pthreadGC2.dll; DestDir: {sys}; Flags: sharedfile uninsnosharedfileprompt restartreplace uninsrestartdelete; Components: ffdshow\vfw
+Source: Runtimes\pthreadGC2\x86\pthreadGC2.dll;           DestDir: {sys}; Components: ffdshow\vfw; Flags: sharedfile uninsnosharedfileprompt restartreplace uninsrestartdelete
   #else
-Source: Runtimes\pthreadGC2\x64\pthreadGC2-64.dll; DestDir: {sys}; Flags: sharedfile uninsnosharedfileprompt restartreplace uninsrestartdelete; Components: ffdshow\vfw
+Source: Runtimes\pthreadGC2\x64\pthreadGC2-64.dll;        DestDir: {sys}; Components: ffdshow\vfw; Flags: sharedfile uninsnosharedfileprompt restartreplace uninsrestartdelete
   #endif
 #endif
 #if include_xvidcore
-Source: {#= bindir}\xvidcore.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: {#= bindir}\xvidcore.dll;                         DestDir: {app}; Components: ffdshow;     Flags: ignoreversion
 #endif
-Source: {#= bindir}\ff_kernelDeint.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: {#= bindir}\TomsMoComp_ff.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
-Source: {#= bindir}\libmpeg2_ff.dll; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow
+Source: {#= bindir}\ff_kernelDeint.dll;                   DestDir: {app}; Components: ffdshow;     Flags: ignoreversion
+Source: {#= bindir}\TomsMoComp_ff.dll;                    DestDir: {app}; Components: ffdshow;     Flags: ignoreversion
+Source: {#= bindir}\libmpeg2_ff.dll;                      DestDir: {app}; Components: ffdshow;     Flags: ignoreversion restartreplace uninsrestartdelete
 
 ; Single build:
 #if !PREF_CLSID_ICL
-Source: {#= bindir}\ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; Components: ffdshow
+Source: {#= bindir}\ffdshow.ax;                           DestDir: {app}; Components: ffdshow;     Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror
 #endif
 #if PREF_CLSID_ICL
-Source: {#= bindir}\ffdshow_icl.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; MinVersion: 0,4; Components: ffdshow
+Source: {#= bindir}\ffdshow_icl.ax; DestName: ffdshow.ax; DestDir: {app}; Components: ffdshow;     Flags: ignoreversion regserver restartreplace uninsrestartdelete noregerror; MinVersion: 0,4
 #endif
 ; Multi build example (requires cpu detection to be enabled):
-;Source: {#= bindir}\ffdshow_generic.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_MMX_Supported AND NOT Is_SSE_Supported; Components: ffdshow
-;Source: {#= bindir}\ffdshow_sse.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_SSE_Supported AND NOT Is_SSE2_Supported; Components: ffdshow
-;Source: {#= bindir}\ffdshow_sse2.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_SSE2_Supported; Components: ffdshow
+;Source: {#= bindir}\ffdshow_generic.ax; DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_MMX_Supported AND NOT Is_SSE_Supported;  Components: ffdshow
+;Source: {#= bindir}\ffdshow_sse.ax;     DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_SSE_Supported AND NOT Is_SSE2_Supported; Components: ffdshow
+;Source: {#= bindir}\ffdshow_sse2.ax;    DestName: ffdshow.ax; DestDir: {app}; Flags: ignoreversion regserver restartreplace uninsrestartdelete; Check: Is_SSE2_Supported;                          Components: ffdshow
 
-Source: {#= bindir}\ff_wmv9.dll; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: {#= bindir}\ff_wmv9.dll;     DestDir: {app};                       Components: ffdshow;                    Flags: ignoreversion
 
-Source: {#= bindir}\ff_vfw.dll; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\vfw
+Source: {#= bindir}\ff_vfw.dll;      DestDir: {sys};                       Components: ffdshow\vfw;                Flags: ignoreversion restartreplace uninsrestartdelete
 
 #if include_plugin_avisynth
-Source: ..\..\ffavisynth.avsi ; DestDir: {code:GetAviSynthPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\avisynth
-Source: {#= bindir}\ffavisynth.dll; DestDir: {code:GetAviSynthPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\avisynth
+Source: ..\..\ffavisynth.avsi ;      DestDir: {code:GetAviSynthPluginDir}; Components: ffdshow\plugins\avisynth;   Flags: ignoreversion restartreplace uninsrestartdelete
+Source: {#= bindir}\ffavisynth.dll;  DestDir: {code:GetAviSynthPluginDir}; Components: ffdshow\plugins\avisynth;   Flags: ignoreversion restartreplace uninsrestartdelete
 #endif
 #if include_plugin_virtualdub
-Source: {#= bindir}\ffvdub.vdf; DestDir: {code:GetVdubPluginDir}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\virtualdub
+Source: {#= bindir}\ffvdub.vdf;      DestDir: {code:GetVdubPluginDir};     Components: ffdshow\plugins\virtualdub; Flags: ignoreversion restartreplace uninsrestartdelete
 #endif
 #if include_plugin_dscaler
-Source: {#= bindir}\FLT_ffdshow.dll; DestDir: {code:GetDScalerDir|}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\plugins\dscaler
+Source: {#= bindir}\FLT_ffdshow.dll; DestDir: {code:GetDScalerDir|};       Components: ffdshow\plugins\dscaler;    Flags: ignoreversion restartreplace uninsrestartdelete
 #endif
 
 #if include_makeavis
-Source: {#= bindir}\makeAVIS.exe; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
-Source: {#= bindir}\ff_acm.acm; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; Components: ffdshow\makeavis
+Source: {#= bindir}\makeAVIS.exe;    DestDir: {app};                       Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete
+Source: {#= bindir}\ff_acm.acm;      DestDir: {sys};                       Components: ffdshow\makeavis;           Flags: ignoreversion restartreplace uninsrestartdelete
 #endif
 
-Source: ..\..\languages\*.*; DestDir: {app}\languages; Flags: ignoreversion; Components: ffdshow
-Source: ..\..\custom matrices\*.*; DestDir: {app}\custom matrices; Flags: ignoreversion; Components: ffdshow\vfw
-Source: ..\..\openIE.js; DestDir: {app}; Flags: ignoreversion; Components: ffdshow
+Source: ..\..\languages\*.*;         DestDir: {app}\languages;             Components: ffdshow;                    Flags: ignoreversion
+Source: ..\..\custom matrices\*.*;   DestDir: {app}\custom matrices;       Components: ffdshow\vfw;                Flags: ignoreversion
+Source: ..\..\openIE.js;             DestDir: {app};                       Components: ffdshow;                    Flags: ignoreversion
 
 #if is64bit
-Source: ..\..\manifest64\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow
-Source: ..\..\manifest64\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow\vfw
+Source: ..\..\manifest64\ffdshow.ax.manifest;   DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow
+Source: ..\..\manifest64\ff_vfw.dll.manifest;   DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow\vfw
   #if include_makeavis
 Source: ..\..\manifest64\makeAVIS.exe.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow\makeavis
   #endif
 #else
-Source: ..\..\manifest32\ffdshow.ax.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow
-Source: ..\..\manifest32\ff_vfw.dll.manifest; DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow\vfw
+Source: ..\..\manifest32\ffdshow.ax.manifest;   DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow
+Source: ..\..\manifest32\ff_vfw.dll.manifest;   DestDir: {sys}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow\vfw
   #if include_makeavis
 Source: ..\..\manifest32\makeAVIS.exe.manifest; DestDir: {app}; Flags: ignoreversion restartreplace uninsrestartdelete; MinVersion: 0,5.01; OnlyBelowVersion: 0,5.03; Components: ffdshow\makeavis
   #endif
 #endif
 
 [InstallDelete]
-; Remove private assemblies
-Type: files; Name: {app}\msvcr80.dll;                   Components: ffdshow
-Type: files; Name: {app}\microsoft.vc80.crt.manifest;   Components: ffdshow
-Type: files; Name: {app}\languages\ffdshow.1041.jp;     Components: ffdshow
+; Private assemblies
+Type: files; Name: {app}\msvcr80.dll;                       Components: ffdshow
+Type: files; Name: {app}\microsoft.vc80.crt.manifest;       Components: ffdshow
+Type: files; Name: {app}\languages\ffdshow.1041.jp;         Components: ffdshow
 #if localize
 ; Localized shortcuts
 Type: files; Name: {group}\Video decoder configuration.lnk; Components: ffdshow
@@ -429,10 +429,10 @@ Type: files; Name: {group}\Uninstall ffdshow.lnk;           Components: ffdshow
 Type: files; Name: {group}\VFW configuration.lnk;           Components: ffdshow\vfw
 #endif
 #if !include_x264
-Type: files; Name: {app}\ff_x264.dll;                   Components: ffdshow
+Type: files; Name: {app}\ff_x264.dll;                       Components: ffdshow
 #endif
 #if !include_xvidcore
-Type: files; Name: {app}\xvidcore.dll;                  Components: ffdshow
+Type: files; Name: {app}\xvidcore.dll;                      Components: ffdshow
 #endif
 
 
@@ -462,106 +462,106 @@ Root: HKLM; Subkey: Software\GNU\ffdshow_enc;       Flags: deletekey; Components
 Root: HKLM; Subkey: Software\GNU\ffdshow_vfw;       Flags: deletekey; Components: ffdshow\vfw; Tasks: resetsettings
 
 ; Path
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: string; ValueName: pth; ValueData: {app}; Components: ffdshow
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueName: pthPriority; Flags: deletevalue; Components: ffdshow
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: string; ValueName: pth;           ValueData: {app}; Components: ffdshow
+Root: HKLM; Subkey: Software\GNU\ffdshow;                    ValueName: pthPriority;                     Components: ffdshow;   Flags: deletevalue
 #if include_plugin_avisynth
-Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: string; ValueName: pthAvisynth;   ValueData: {code:GetAviSynthPluginDir}; Flags: uninsclearvalue; Components: ffdshow\plugins\avisynth
+Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: string; ValueName: pthAvisynth;   ValueData: {code:GetAviSynthPluginDir};  Flags: uninsclearvalue; Components: ffdshow\plugins\avisynth
 #endif
 #if include_plugin_virtualdub
-Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: string; ValueName: pthVirtualDub; ValueData: {code:GetVdubPluginDir};     Flags: uninsclearvalue; Components: ffdshow\plugins\virtualdub
+Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: string; ValueName: pthVirtualDub; ValueData: {code:GetVdubPluginDir};      Flags: uninsclearvalue; Components: ffdshow\plugins\virtualdub
 #endif
 #if include_plugin_dscaler
-Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: string; ValueName: dscalerPth;    ValueData: {code:GetDScalerDir|};       Flags: uninsclearvalue; Components: ffdshow\plugins\dscaler
+Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: string; ValueName: dscalerPth;    ValueData: {code:GetDScalerDir|};        Flags: uninsclearvalue; Components: ffdshow\plugins\dscaler
 #endif
 
 ; Version info
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: revision;  ValueData: {#= tryout_revision};                       Components: ffdshow
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: builddate; ValueData: {#= buildyear}{#= buildmonth}{#= buildday}; Components: ffdshow
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: revision;       ValueData: {#= tryout_revision};                       Components: ffdshow
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: builddate;      ValueData: {#= buildyear}{#= buildmonth}{#= buildday}; Components: ffdshow
 
 ; Language
 #if localize
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: string; ValueName: lang; ValueData: {cm:langid}; Components: ffdshow
+Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: string; ValueName: lang;          ValueData: {cm:langid}; Components: ffdshow
 #endif
 
 ; Register VFW interface
-Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc;     ValueType: string; ValueName: ff_vfw.dll;   ValueData: ffdshow video encoder; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
-Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32;        ValueType: string; ValueName: VIDC.FFDS;    ValueData: ff_vfw.dll;            MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; MinVersion: 0,4; Flags: uninsdeletekey; Components: ffdshow\vfw
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Description;  ValueData: ffdshow video encoder; MinVersion: 0,4; Components: ffdshow\vfw
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: Driver;       ValueData: ff_vfw.dll;            MinVersion: 0,4; Components: ffdshow\vfw
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS; ValueType: string; ValueName: FriendlyName; ValueData: ffdshow video encoder; MinVersion: 0,4; Components: ffdshow\vfw
+Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc;      ValueType: string; ValueName: ff_vfw.dll;   ValueData: ffdshow video encoder; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
+Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32;         ValueType: string; ValueName: VIDC.FFDS;    ValueData: ff_vfw.dll;            MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\vfw
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS;                                                                                MinVersion: 0,4; Flags: uninsdeletekey;   Components: ffdshow\vfw
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS;  ValueType: string; ValueName: Description;  ValueData: ffdshow video encoder; MinVersion: 0,4;                          Components: ffdshow\vfw
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS;  ValueType: string; ValueName: Driver;       ValueData: ff_vfw.dll;            MinVersion: 0,4;                          Components: ffdshow\vfw
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\icm\VIDC.FFDS;  ValueType: string; ValueName: FriendlyName; ValueData: ffdshow video encoder; MinVersion: 0,4;                          Components: ffdshow\vfw
 
 #if include_makeavis
-Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc;      ValueType: string; ValueName: ff_acm.acm;   ValueData: ffdshow ACM codec; MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\makeavis
-Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32;         ValueType: string; ValueName: msacm.avis;   ValueData: ff_acm.acm;        MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\makeavis
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; MinVersion: 0,4;   Flags: uninsdeletekey;   Components: ffdshow\makeavis
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: Description;  ValueData: ffdshow ACM codec; MinVersion: 0,4; Components: ffdshow\makeavis
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: Driver;       ValueData: ff_acm.acm;        MinVersion: 0,4; Components: ffdshow\makeavis
-Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: FriendlyName; ValueData: ffdshow ACM codec; MinVersion: 0,4; Components: ffdshow\makeavis
+Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\drivers.desc;      ValueType: string; ValueName: ff_acm.acm;   ValueData: ffdshow ACM codec;     MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\makeavis
+Root: HKLM; Subkey: SOFTWARE\Microsoft\Windows NT\CurrentVersion\Drivers32;         ValueType: string; ValueName: msacm.avis;   ValueData: ff_acm.acm;            MinVersion: 0,4; Flags: uninsdeletevalue; Components: ffdshow\makeavis
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis;                                                                               MinVersion: 0,4; Flags: uninsdeletekey;   Components: ffdshow\makeavis
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: Description;  ValueData: ffdshow ACM codec;     MinVersion: 0,4;                          Components: ffdshow\makeavis
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: Driver;       ValueData: ff_acm.acm;            MinVersion: 0,4;                          Components: ffdshow\makeavis
+Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.avis; ValueType: string; ValueName: FriendlyName; ValueData: ffdshow ACM codec;     MinVersion: 0,4;                          Components: ffdshow\makeavis
 #endif
 
 ; Recommended settings
-Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: postprocH264mode;    ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: resizeMethod;        ValueData: 9; Flags: createvalueifdoesntexist; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow\default;       ValueType: dword;  ValueName: postprocH264mode;     ValueData: 0;                  Components: ffdshow; Flags: createvalueifdoesntexist;
+Root: HKCU; Subkey: Software\GNU\ffdshow\default;       ValueType: dword;  ValueName: resizeMethod;         ValueData: 9;                  Components: ffdshow; Flags: createvalueifdoesntexist;
 
 #if !PREF_YAMAGATA
-Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: fastH264; ValueData: 0; Components: ffdshow; Tasks: NOT skiph264inloop; Flags: createvalueifdoesntexist
-Root: HKCU; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: fastH264; ValueData: 2; Components: ffdshow; Tasks:     skiph264inloop;
+Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: dword;  ValueName: fastH264;             ValueData: 0;                  Components: ffdshow; Flags: createvalueifdoesntexist; Tasks: NOT skiph264inloop
+Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: dword;  ValueName: fastH264;             ValueData: 2;                  Components: ffdshow;                                  Tasks:     skiph264inloop
 #endif
 
-Root: HKCU; Subkey: Software\GNU\ffdshow;         ValueType: dword; ValueName: subTextpin;    ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow;         ValueType: dword; ValueName: subTextpinSSA; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: subIsExpand;   ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: isSubtitles;   ValueData: 0; Components: ffdshow; Tasks: NOT filter\subtitles
-Root: HKCU; Subkey: Software\GNU\ffdshow\default; ValueType: dword; ValueName: isSubtitles;   ValueData: 1; Components: ffdshow; Tasks: filter\subtitles
+Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: dword;  ValueName: subTextpin;           ValueData: 1;                  Components: ffdshow; Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: dword;  ValueName: subTextpinSSA;        ValueData: 1;                  Components: ffdshow; Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: Software\GNU\ffdshow\default;       ValueType: dword;  ValueName: subIsExpand;          ValueData: 0;                  Components: ffdshow; Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: Software\GNU\ffdshow\default;       ValueType: dword;  ValueName: isSubtitles;          ValueData: 0;                  Components: ffdshow;                                  Tasks: NOT filter\subtitles
+Root: HKCU; Subkey: Software\GNU\ffdshow\default;       ValueType: dword;  ValueName: isSubtitles;          ValueData: 1;                  Components: ffdshow;                                  Tasks: filter\subtitles
 
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerNormalizeMatrix; ValueData: 0; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: volNormalize;         ValueData: 0; Components: ffdshow; Tasks: NOT filter\normalize
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: isvolume;             ValueData: 1; Components: ffdshow; Tasks:     filter\normalize
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: volNormalize;         ValueData: 1; Components: ffdshow; Tasks:     filter\normalize
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword;  ValueName: mixerNormalizeMatrix; ValueData: 0;                  Components: ffdshow; Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword;  ValueName: volNormalize;         ValueData: 0;                  Components: ffdshow;                                  Tasks: NOT filter\normalize
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword;  ValueName: isvolume;             ValueData: 1;                  Components: ffdshow;                                  Tasks:     filter\normalize
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword;  ValueName: volNormalize;         ValueData: 1;                  Components: ffdshow;                                  Tasks:     filter\normalize
 
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: ismixer;  ValueData: {code:GetIsMixer};  Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: mixerOut; ValueData: {code:GetMixerOut}; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword;  ValueName: ismixer;              ValueData: {code:GetIsMixer};  Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword;  ValueName: mixerOut;             ValueData: {code:GetMixerOut}; Components: ffdshow
 
 ; Blacklist
-Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: isBlacklist; ValueData: 1; Flags: createvalueifdoesntexist; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: String; ValueName: blacklist;   ValueData: "oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist; OnlyBelowVersion: 0,6; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: String; ValueName: blacklist;   ValueData: "oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist; MinVersion: 0,6;       Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: isBlacklist; ValueData: 1;                             Flags: createvalueifdoesntexist;                        Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: blacklist;   ValueData: "oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist; OnlyBelowVersion: 0,6; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: String; ValueName: blacklist;   ValueData: "oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist; MinVersion: 0,6;       Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: dword;  ValueName: isBlacklist;          ValueData: 1;                             Flags: createvalueifdoesntexist;                        Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: String; ValueName: blacklist;            ValueData: "oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist; OnlyBelowVersion: 0,6; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: String; ValueName: blacklist;            ValueData: "oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist;       MinVersion: 0,6; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio;         ValueType: dword;  ValueName: isBlacklist;          ValueData: 1;                             Flags: createvalueifdoesntexist;                        Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio;         ValueType: String; ValueName: blacklist;            ValueData: "oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist; OnlyBelowVersion: 0,6; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio;         ValueType: String; ValueName: blacklist;            ValueData: "oblivion.exe;morrowind.exe;"; Flags: createvalueifdoesntexist;       MinVersion: 0,6; Components: ffdshow
 
 ; Compatibility list
-Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: isWhitelist; ValueData: 0; Check: NOT IsUpdate; Components: ffdshow; Tasks: NOT whitelist
-Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: isWhitelist; ValueData: 1; Check: NOT IsUpdate; Components: ffdshow; Tasks: whitelist
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: isWhitelist; ValueData: 0; Check: NOT IsUpdate; Components: ffdshow; Tasks: NOT whitelist
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: isWhitelist; ValueData: 1; Check: NOT IsUpdate; Components: ffdshow; Tasks: whitelist
+Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: dword;  ValueName: isWhitelist;          ValueData: 0; Components: ffdshow; Tasks: NOT whitelist; Check: NOT IsUpdate
+Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: dword;  ValueName: isWhitelist;          ValueData: 1; Components: ffdshow; Tasks: whitelist;     Check: NOT IsUpdate
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio;         ValueType: dword;  ValueName: isWhitelist;          ValueData: 0; Components: ffdshow; Tasks: NOT whitelist; Check: NOT IsUpdate
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio;         ValueType: dword;  ValueName: isWhitelist;          ValueData: 1; Components: ffdshow; Tasks: whitelist;     Check: NOT IsUpdate
 
-Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: dontaskComp; ValueData: 0; Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
-Root: HKCU; Subkey: Software\GNU\ffdshow;       ValueType: dword;  ValueName: dontaskComp; ValueData: 1; Components: ffdshow; Tasks: whitelist AND whitelist\prompt
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: dontaskComp; ValueData: 0; Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio; ValueType: dword;  ValueName: dontaskComp; ValueData: 1; Components: ffdshow; Tasks: whitelist AND whitelist\prompt
+Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: dword;  ValueName: dontaskComp;          ValueData: 0; Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
+Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: dword;  ValueName: dontaskComp;          ValueData: 1; Components: ffdshow; Tasks: whitelist AND whitelist\prompt
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio;         ValueType: dword;  ValueName: dontaskComp;          ValueData: 0; Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio;         ValueType: dword;  ValueName: dontaskComp;          ValueData: 1; Components: ffdshow; Tasks: whitelist AND whitelist\prompt
 
 ; Registry keys for the audio/video formats:
 #include "reg_formats.iss"
 
-; Audio Pass-through upgrade path:
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: passthroughAC3;         ValueData: 0; Components: ffdshow; Tasks: NOT filter\passthroughac3
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: passthroughAC3;         ValueData: 1; Components: ffdshow; Tasks: filter\passthroughac3
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: passthroughDTS;         ValueData: 0; Components: ffdshow; Tasks: NOT filter\passthroughdts
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: passthroughDTS;         ValueData: 1; Components: ffdshow; Tasks: filter\passthroughdts
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\; ValueName: "ac3SPDIF"; Flags: deletevalue ; Components: ffdshow;
+; Audio pass-through upgrade path:
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: passthroughAC3;        ValueData: 0; Components: ffdshow; Tasks: NOT filter\passthroughac3
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: passthroughAC3;        ValueData: 1; Components: ffdshow; Tasks:     filter\passthroughac3
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: passthroughDTS;        ValueData: 0; Components: ffdshow; Tasks: NOT filter\passthroughdts
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: passthroughDTS;        ValueData: 1; Components: ffdshow; Tasks:     filter\passthroughdts
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\;                          ValueName: "ac3SPDIF";                          Components: ffdshow;                                   Flags: deletevalue
 
 [Run]
-Description: {cm:run_audioConfig}; Filename: {syswow64}\rundll32.exe; Parameters: ffdshow.ax,configureAudio;WorkingDir: {app}; Flags: postinstall nowait unchecked; MinVersion: 0,4; Components: ffdshow
-Description: {cm:run_audioConfig}; Filename: {win}\rundll32.exe; Parameters: ffdshow.ax,configureAudio;     WorkingDir: {app}; Flags: postinstall nowait unchecked; MinVersion: 4,0; Components: ffdshow
-Description: {cm:run_videoConfig}; Filename: {syswow64}\rundll32.exe; Parameters: ffdshow.ax,configure;     WorkingDir: {app}; Flags: postinstall nowait unchecked; MinVersion: 0,4; Components: ffdshow
-Description: {cm:run_videoConfig}; Filename: {win}\rundll32.exe; Parameters: ffdshow.ax,configure;          WorkingDir: {app}; Flags: postinstall nowait unchecked; MinVersion: 4,0; Components: ffdshow
+Description: {cm:run_audioConfig}; Filename: {syswow64}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app};      Flags: postinstall nowait unchecked; MinVersion: 0,4; Components: ffdshow
+Description: {cm:run_audioConfig}; Filename: {win}\rundll32.exe;      Parameters: ffdshow.ax,configureAudio; WorkingDir: {app};      Flags: postinstall nowait unchecked; MinVersion: 4,0; Components: ffdshow
+Description: {cm:run_videoConfig}; Filename: {syswow64}\rundll32.exe; Parameters: ffdshow.ax,configure;      WorkingDir: {app};      Flags: postinstall nowait unchecked; MinVersion: 0,4; Components: ffdshow
+Description: {cm:run_videoConfig}; Filename: {win}\rundll32.exe;      Parameters: ffdshow.ax,configure;      WorkingDir: {app};      Flags: postinstall nowait unchecked; MinVersion: 4,0; Components: ffdshow
 #if is64bit
-Description: {cm:run_vfwConfig};   Filename: {sys}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;       WorkingDir: {sys}; Flags: postinstall nowait unchecked; Components: ffdshow\vfw
+Description: {cm:run_vfwConfig};   Filename: {sys}\rundll32.exe;      Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {sys};      Flags: postinstall nowait unchecked;                  Components: ffdshow\vfw
 #else
-Description: {cm:run_vfwConfig};   Filename: {syswow64}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;  WorkingDir: {syswow64}; Flags: postinstall nowait unchecked; MinVersion: 0,4; Components: ffdshow\vfw
-Description: {cm:run_vfwConfig};   Filename: {win}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;       WorkingDir: {sys}; Flags: postinstall nowait unchecked; MinVersion: 4,0; Components: ffdshow\vfw
+Description: {cm:run_vfwConfig};   Filename: {syswow64}\rundll32.exe; Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {syswow64}; Flags: postinstall nowait unchecked; MinVersion: 0,4; Components: ffdshow\vfw
+Description: {cm:run_vfwConfig};   Filename: {win}\rundll32.exe;      Parameters: ff_vfw.dll,configureVFW;   WorkingDir: {sys};      Flags: postinstall nowait unchecked; MinVersion: 4,0; Components: ffdshow\vfw
 #endif
 
 ; All custom strings in the installer:
@@ -958,14 +958,14 @@ begin
     CustomMessage('spk_Label2'),
     CustomMessage('spk_Label3'),
     True, False);
-  SpeakerPage.Add('1.0 (' + CustomMessage('spk_mono') + ')');                                            // 0
-  SpeakerPage.Add('2.0 (' + CustomMessage('spk_headPhone') + ')');                                       // 17
-  SpeakerPage.Add('2.0 (' + CustomMessage('spk_stereo') + ')');                                          // 1
-  SpeakerPage.Add('3.0 (' + CustomMessage('spk_front_3ch') + ')');                                       // 2
-  SpeakerPage.Add('4.1 (' + CustomMessage('spk_quadro') + ' + ' + CustomMessage('spk_subwoofer') + ')'); // 12
-  SpeakerPage.Add('5.0 (' + CustomMessage('spk_5ch') + ')');                                             // 6
-  SpeakerPage.Add('5.1 (' + CustomMessage('spk_5ch') + ' + ' + CustomMessage('spk_subwoofer') + ')');    // 13
-  SpeakerPage.Add('7.1 (' + CustomMessage('spk_7ch') + ' + ' + CustomMessage('spk_subwoofer') + ')');    // 24
+  SpeakerPage.Add('1.0 (' + CustomMessage('spk_mono')      + ')');                                          // 0
+  SpeakerPage.Add('2.0 (' + CustomMessage('spk_headPhone') + ')');                                          // 17
+  SpeakerPage.Add('2.0 (' + CustomMessage('spk_stereo')    + ')');                                          // 1
+  SpeakerPage.Add('3.0 (' + CustomMessage('spk_front_3ch') + ')');                                          // 2
+  SpeakerPage.Add('4.1 (' + CustomMessage('spk_quadro')    + ' + ' + CustomMessage('spk_subwoofer') + ')'); // 12
+  SpeakerPage.Add('5.0 (' + CustomMessage('spk_5ch')       + ')');                                          // 6
+  SpeakerPage.Add('5.1 (' + CustomMessage('spk_5ch')       + ' + ' + CustomMessage('spk_subwoofer') + ')'); // 13
+  SpeakerPage.Add('7.1 (' + CustomMessage('spk_7ch')       + ' + ' + CustomMessage('spk_subwoofer') + ')'); // 24
   if  RegQueryDWordValue(HKCU, 'Software\GNU\ffdshow_audio\default', 'mixerOut', reg_mixerOut)
   and RegQueryDWordValue(HKCU, 'Software\GNU\ffdshow_audio\default', 'ismixer' , reg_ismixer)
   and RegQueryDWordValue(HKLM, 'Software\GNU\ffdshow_audio'        , 'isSpkCfg', reg_isSpkCfg) then
@@ -990,41 +990,41 @@ begin
         SpeakerPage.Values[7] := True
       else begin
         if reg_mixerOut = 3 then
-          SpeakerPage.Add('2+1 (' + CustomMessage('spk_front_2ch') + ' + ' + CustomMessage('spk_rear_1ch') + ')')
+          SpeakerPage.Add('2+1 ('   + CustomMessage('spk_front_2ch') + ' + ' + CustomMessage('spk_rear_1ch')  + ')')
         else if reg_mixerOut = 4 then
-          SpeakerPage.Add('3+1 (' + CustomMessage('spk_front_3ch') + ' + ' + CustomMessage('spk_rear_1ch') + ')')
+          SpeakerPage.Add('3+1 ('   + CustomMessage('spk_front_3ch') + ' + ' + CustomMessage('spk_rear_1ch')  + ')')
         else if reg_mixerOut = 5 then
-          SpeakerPage.Add('4.0 (' + CustomMessage('spk_front_2ch') + ' + ' + CustomMessage('spk_rear_2ch') + ')')
+          SpeakerPage.Add('4.0 ('   + CustomMessage('spk_front_2ch') + ' + ' + CustomMessage('spk_rear_2ch')  + ')')
         else if reg_mixerOut = 7 then
-          SpeakerPage.Add('1.1 (' + CustomMessage('spk_mono') + ' + ' + CustomMessage('spk_subwoofer') + ')')
+          SpeakerPage.Add('1.1 ('   + CustomMessage('spk_mono')      + ' + ' + CustomMessage('spk_subwoofer') + ')')
         else if reg_mixerOut = 8 then
-          SpeakerPage.Add('2.1 (' + CustomMessage('spk_front_2ch') + ' + ' + CustomMessage('spk_subwoofer') + ')')
+          SpeakerPage.Add('2.1 ('   + CustomMessage('spk_front_2ch') + ' + ' + CustomMessage('spk_subwoofer') + ')')
         else if reg_mixerOut = 9 then
-          SpeakerPage.Add('3.1 (' + CustomMessage('spk_front_3ch') + ' + ' + CustomMessage('spk_subwoofer') + ')')
+          SpeakerPage.Add('3.1 ('   + CustomMessage('spk_front_3ch') + ' + ' + CustomMessage('spk_subwoofer') + ')')
         else if reg_mixerOut = 10 then
-          SpeakerPage.Add('2+1.1 (' + CustomMessage('spk_front_2ch') + ' + ' + CustomMessage('spk_rear_1ch') + ' + ' + CustomMessage('spk_subwoofer') + ')')
+          SpeakerPage.Add('2+1.1 (' + CustomMessage('spk_front_2ch') + ' + ' + CustomMessage('spk_rear_1ch')  + ' + ' + CustomMessage('spk_subwoofer') + ')')
         else if reg_mixerOut = 11 then
-          SpeakerPage.Add('3+1.1 (' + CustomMessage('spk_front_3ch') + ' + ' + CustomMessage('spk_rear_1ch') + ' + ' + CustomMessage('spk_subwoofer') + ')')
+          SpeakerPage.Add('3+1.1 (' + CustomMessage('spk_front_3ch') + ' + ' + CustomMessage('spk_rear_1ch')  + ' + ' + CustomMessage('spk_subwoofer') + ')')
         else if reg_mixerOut = 14 then
-          SpeakerPage.Add(CustomMessage('spk_dolby1'))
+          SpeakerPage.Add(            CustomMessage('spk_dolby1'))
         else if reg_mixerOut = 19 then
-          SpeakerPage.Add(CustomMessage('spk_dolby1') + ' + ' + CustomMessage('spk_subwoofer'))
+          SpeakerPage.Add(            CustomMessage('spk_dolby1')    + ' + ' + CustomMessage('spk_subwoofer'))
         else if reg_mixerOut = 15 then
-          SpeakerPage.Add(CustomMessage('spk_dolby2'))
+          SpeakerPage.Add(            CustomMessage('spk_dolby2'))
         else if reg_mixerOut = 20 then
-          SpeakerPage.Add(CustomMessage('spk_dolby2') + ' + ' + CustomMessage('spk_subwoofer'))
+          SpeakerPage.Add(            CustomMessage('spk_dolby2')    + ' + ' + CustomMessage('spk_subwoofer'))
         else if reg_mixerOut = 16 then
-          SpeakerPage.Add(CustomMessage('spk_sameAsInput'))
+          SpeakerPage.Add(            CustomMessage('spk_sameAsInput'))
         else if reg_mixerOut = 18 then
-          SpeakerPage.Add(CustomMessage('spk_hrtf'))
+          SpeakerPage.Add(            CustomMessage('spk_hrtf'))
         else if reg_mixerOut = 21 then
-          SpeakerPage.Add('6.0 (' + CustomMessage('spk_front_3ch') + ' + ' + CustomMessage('spk_side_2ch') + ' + ' + CustomMessage('spk_rear_1ch') + ')')
+          SpeakerPage.Add('6.0 ('   + CustomMessage('spk_front_3ch') + ' + ' + CustomMessage('spk_side_2ch')  + ' + ' + CustomMessage('spk_rear_1ch')  + ')')
         else if reg_mixerOut = 22 then
-          SpeakerPage.Add('6.1 (' + CustomMessage('spk_front_3ch') + ' + ' + CustomMessage('spk_side_2ch') + ' + ' + CustomMessage('spk_rear_1ch') + ' + ' + CustomMessage('spk_subwoofer') + ')')
+          SpeakerPage.Add('6.1 ('   + CustomMessage('spk_front_3ch') + ' + ' + CustomMessage('spk_side_2ch')  + ' + ' + CustomMessage('spk_rear_1ch')  + ' + ' + CustomMessage('spk_subwoofer') + ')')
         else if reg_mixerOut = 23 then
-          SpeakerPage.Add('7.0 (' + CustomMessage('spk_front_3ch') + ' + ' + CustomMessage('spk_side_2ch') + ' + ' + CustomMessage('spk_rear_2ch') + ')')
+          SpeakerPage.Add('7.0 ('   + CustomMessage('spk_front_3ch') + ' + ' + CustomMessage('spk_side_2ch')  + ' + ' + CustomMessage('spk_rear_2ch')  + ')')
         else if reg_mixerOut > 24 then
-          SpeakerPage.Add(CustomMessage('spk_unknownSpk'));
+          SpeakerPage.Add(           CustomMessage('spk_unknownSpk'));
         SpeakerPage.Values[8] := True;
         isMajorType := False;
       end
@@ -1042,7 +1042,7 @@ begin
     reg_mixerOut := 1;
     is8DisableMixer := True;
     systemSpeakerConfig := getSpeakerConfig(); // read the setting of control panel(requires directX 8)
-    SpeakerPage.Values[2] := True;       // default 2.0 (Stereo)
+    SpeakerPage.Values[2] := True;             // default 2.0 (Stereo)
 
     if      systemSpeakerConfig = 2 then // DSSPEAKER_MONO
       SpeakerPage.Values[0] := True
