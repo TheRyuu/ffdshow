@@ -60,7 +60,6 @@ void TOSDpageDec::cfg2dlg(void)
   {
    format=(int)cbxGetItemData(IDC_CBX_OSD_USERFORMAT,0);
    cfgSet(IDFF_OSD_userformat,format);
-   parent->setChange();
    cbxSetCurSel(IDC_CBX_OSD_USERFORMAT,0);
   }
 }
