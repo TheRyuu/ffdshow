@@ -20,7 +20,7 @@ public:
  int codecsLvWidth0,codecsLvWidth1,codecsLvWidth2;
  int codecsLastSel;
  int showHints;
- char_t lang[20];
+ char_t lang[MAX_PATH];
  int translate;
  void load(const Tconfig *config),save(void);
 };
