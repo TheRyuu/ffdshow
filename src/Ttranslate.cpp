@@ -249,7 +249,7 @@ void Ttranslate::init(const char_t *newlang,int ItranslateMode)
      ffstring(langId->second+_l(".")+ffstring(curlang)).c_str());
  char_t sects[10240];
  Tinifile ini(curflnm);
- ini.getPrivateProfileSectionNames(sects,10240);
+ ini.getPrivateProfileSectionNames(sects, countof(sects));
  for (char_t *sect=sects;*sect;sect=strchr(sect,'\0')+1)
   if (strcmp(sect,_l("-1"))==0)
    strs.init(ini);
