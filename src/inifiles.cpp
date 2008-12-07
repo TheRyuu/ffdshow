@@ -235,7 +235,10 @@ Tinifile::PROFILESECTION* Tinifile::PROFILE_Load(HANDLE hFile0)
     prev_key     = NULL;
     //szLineEnd = szFile - 1; /* will be increased to correct value in loop */
 
-    char_t *szLineStart=(char_t*)alloca((dwFileSize+3)*sizeof(char_t));
+    char_t *szLineStart0 = (char_t*)malloc((dwFileSize+30)*sizeof(char_t));
+    char_t *szLineStart = szLineStart0;
+    if (!szLineStart) return NULL;
+
     while (hFile.fgets(szLineStart,dwFileSize))
     {
         const char_t *szLineEnd=strchr(szLineStart,'\0');
@@ -330,6 +333,7 @@ Tinifile::PROFILESECTION* Tinifile::PROFILE_Load(HANDLE hFile0)
     //if (szFile != pBuffer)
         //free(szFile);
     free(pBuffer);
+    free(szLineStart0);
     return first_section;
 }
 
