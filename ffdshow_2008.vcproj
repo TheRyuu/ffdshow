@@ -105,6 +105,7 @@
 				ModuleDefinitionFile=".\src\ffdshow.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
+				EntryPointSymbol="_DllMainCRTStartup@12"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 				ImportLibrary="$(IntDir)/ffdshow.lib"
@@ -218,6 +219,7 @@
 				ModuleDefinitionFile=".\src\ffdshow.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
+				EntryPointSymbol="_DllMainCRTStartup@12"
 				ImportLibrary="$(IntDir)/ffdshow.lib"
 				TargetMachine="17"
 			/>
@@ -334,6 +336,7 @@
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				EntryPointSymbol="_DllMainCRTStartup@12"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 				ImportLibrary="$(IntDir)/ffdshow.lib"
@@ -451,6 +454,7 @@
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				EntryPointSymbol="_DllMainCRTStartup@12"
 				ImportLibrary="$(IntDir)/ffdshow.lib"
 				TargetMachine="17"
 			/>
