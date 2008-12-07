@@ -48,8 +48,8 @@ void Ttranslate::Tfont::init(Tinifile &ini)
 //====================== Ttranslate::Tstrs ==========================
 void Ttranslate::Tstrs::init(Tinifile &ini)
 {
- char_t vals[65536];
- ini.getPrivateProfileSection(_l("-1"),vals,65536);
+ char_t* vals=new char_t[65536 * 4];
+ ini.getPrivateProfileSection(_l("-1"),vals,65536 * 4);
  for (char_t *val=vals;*val;val=strchr(strchr(val,'\0')+1,'\0')+1)
   {
    char_t *eq=strchr(val,'=');
@@ -57,6 +57,7 @@ void Ttranslate::Tstrs::init(Tinifile &ini)
    eq[0]='\0';
    (*this)[eolnFile2string(val)]=eolnFile2string(eq+1);
   }
+ delete vals;
 }
 const char_t* Ttranslate::Tstrs::translate(const char_t *s) const
 {
