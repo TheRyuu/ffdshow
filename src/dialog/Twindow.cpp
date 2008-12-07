@@ -633,7 +633,7 @@ template<class Tret,class TcreateFunc1,class TcreateFunc2> Tret Twindow::createD
  HINSTANCE hi=this->hi?this->hi:g_hInst;//HACK!!
  if (!tr || !tr->isCustomFont())
   {
-   char_t lang[20],pth[MAX_PATH];
+   char_t lang[MAX_PATH],pth[MAX_PATH];
    getpth(pth);
    getUILanguage(pth,lang);
    Ttranslate tr1(g_hInst,pth); // Create temporary translator to calculate window size.

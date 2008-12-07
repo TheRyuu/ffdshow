@@ -52,7 +52,7 @@ TdialogSettingsBase::TdialogSettingsBase(const char_t *Ireg_child,TintStrColl *I
  addOptions(iopts);
  static const TstrOption sopts[]=
   {
-   IDFF_lang               ,(TstrVal)&TdialogSettingsBase::lang   ,20,0,_l(""),0,
+   IDFF_lang               ,(TstrVal)&TdialogSettingsBase::lang   ,MAX_PATH,0,_l(""),0,
      NULL,NULL,
    0
   };
