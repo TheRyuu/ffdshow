@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="ff_liba52"
 	ProjectGUID="{7C4F2A8F-C1A6-4E75-AF26-285A1B70A066}"
 	RootNamespace="ff_liba52"
@@ -362,7 +362,7 @@
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;ALT_BITSTREAM_READER;ARCH_X86"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)\"
@@ -387,7 +387,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib libcmt.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib libcmtd.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_liba52.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"

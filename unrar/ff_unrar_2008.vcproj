@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="ff_unrar"
 	ProjectGUID="{82199D65-5E04-48FB-99B5-9396D55566AE}"
 	RootNamespace="ff_unrar"
@@ -136,7 +136,7 @@
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;RARDLL;NOCRYPT;SILENT;NOVOLUME;SFX_MODULE;SHELL_EXT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
@@ -158,7 +158,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="libcmt.lib kernel32.lib user32.lib oldnames.lib $(NOINHERIT)"
+				AdditionalDependencies="libcmtd.lib kernel32.lib user32.lib oldnames.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_unrar.dll"
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"

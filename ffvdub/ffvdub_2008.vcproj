@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="ffvdub"
 	ProjectGUID="{FC61766A-BC95-4F23-ACB0-D09AD463AA53}"
 	RootNamespace="ffvdub"
@@ -141,7 +141,7 @@
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="0"
 				BufferSecurityCheck="true"
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="false"
@@ -164,7 +164,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
 				AdditionalOptions=""
-				AdditionalDependencies="libcmt.lib kernel32.lib user32.lib ole32.lib uuid.lib advapi32.lib oleaut32.lib winmm.lib $(NOINHERIT)"
+				AdditionalDependencies="libcmtd.lib kernel32.lib user32.lib ole32.lib uuid.lib advapi32.lib oleaut32.lib winmm.lib $(NOINHERIT)"
 				OutputFile="../bin/ffvdub.vdf"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"

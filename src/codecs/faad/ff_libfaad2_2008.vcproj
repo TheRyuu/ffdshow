@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="ff_libfaad2"
 	ProjectGUID="{BF29FAFC-7E71-4671-A2F8-D510EF5C0685}"
 	RootNamespace="ff_libfaad2"
@@ -345,7 +345,7 @@
 				MinimalRebuild="true"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				ForceConformanceInForLoopScope="true"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
@@ -366,7 +366,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="libcmt.lib kernel32.lib"
+				AdditionalDependencies="libcmtd.lib kernel32.lib"
 				OutputFile="../../../bin/ff_libfaad2.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"

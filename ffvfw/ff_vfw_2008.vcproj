@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="ff_vfw"
 	ProjectGUID="{1EBF3292-5911-4B07-A06C-E33A72CD62EB}"
 	RootNamespace="ff_vfw"
@@ -154,7 +154,7 @@
 				AdditionalIncludeDirectories="../src"
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)\"
@@ -181,7 +181,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib ole32.lib libcmt.lib winmm.lib comctl32.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib ole32.lib libcmtd.lib winmm.lib comctl32.lib $(NOINHERIT)"
 				OutputFile="../bin/ff_vfw.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"

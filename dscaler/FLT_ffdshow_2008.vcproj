@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="FLT_ffdshow"
 	ProjectGUID="{F196E6C7-B12F-4F8E-BAB7-A448CBA0B278}"
 	RootNamespace="FLT_ffdshow"
@@ -357,7 +357,7 @@
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;UCLIBCPP"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="false"
 				AssemblerListingLocation="$(IntDir)\"
@@ -383,7 +383,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="libcmt.lib kernel32.lib ole32.lib $(NOINHERIT)"
+				AdditionalDependencies="libcmtd.lib kernel32.lib ole32.lib $(NOINHERIT)"
 				OutputFile="../bin/FLT_ffdshow.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"

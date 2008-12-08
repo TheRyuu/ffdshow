@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="ff_wmv9"
 	ProjectGUID="{22DA8FA3-50B3-49A9-AFD0-19CAAC924C23}"
 	RootNamespace="ff_wmv9"
@@ -142,7 +142,7 @@
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS;DEBUG;SUPPORT_INTERLACE;FFDEBUG=0;UCLIBCPP"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				BufferSecurityCheck="true"
 				EnableFunctionLevelLinking="true"
 				ForceConformanceInForLoopScope="true"
@@ -166,7 +166,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
 				AdditionalOptions=""
-				AdditionalDependencies="msvcrtd.lib kernel32.lib uuid.lib oleaut32.lib ole32.lib oldnames.lib $(NOINHERIT)"
+				AdditionalDependencies="libcmtd.lib kernel32.lib uuid.lib oleaut32.lib ole32.lib oldnames.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_wmv9.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -423,42 +423,6 @@
 				RelativePath="stdafx.cpp"
 				>
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Debug Unicode|Win32"
 					>
 					<Tool
@@ -487,6 +451,42 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release Unicode|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalOptions=""
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalOptions=""
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalOptions=""
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalOptions=""
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"

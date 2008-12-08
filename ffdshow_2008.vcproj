@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="ffdshow"
 	ProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
 	RootNamespace="ffdshow"
@@ -176,7 +176,7 @@
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="false"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				BufferSecurityCheck="true"
 				EnableFunctionLevelLinking="true"
 				ForceConformanceInForLoopScope="true"
@@ -209,7 +209,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="msvcrtd.lib msvcprtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib $(NOINHERIT)"
+				AdditionalDependencies="libcmtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib $(NOINHERIT)"
 				OutputFile="bin\ffdshow.ax"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -219,7 +219,7 @@
 				ModuleDefinitionFile=".\src\ffdshow.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
-				EntryPointSymbol="_DllMainCRTStartup@12"
+				EntryPointSymbol="_DllMainCRTStartup"
 				ImportLibrary="$(IntDir)/ffdshow.lib"
 				TargetMachine="17"
 			/>
@@ -454,7 +454,7 @@
 				ProgramDatabaseFile="$(IntDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				EntryPointSymbol="_DllMainCRTStartup@12"
+				EntryPointSymbol="_DllMainCRTStartup"
 				ImportLibrary="$(IntDir)/ffdshow.lib"
 				TargetMachine="17"
 			/>
@@ -684,22 +684,6 @@
 				RelativePath=".\src\ffdebug.c"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Debug Unicode|Win32"
 					>
 					<Tool
@@ -725,6 +709,22 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release Unicode|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -744,22 +744,6 @@
 				RelativePath=".\src\ffmpeg\libavcodec\golomb.c"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Debug Unicode|Win32"
 					>
 					<Tool
@@ -785,6 +769,22 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release Unicode|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -1576,22 +1576,6 @@
 				RelativePath=".\src\subtitles\TsubtitleDVD.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release Unicode|Win32"
 					>
 					<Tool
@@ -1601,6 +1585,22 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release Unicode|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -1760,22 +1760,6 @@
 				RelativePath="src\imgFilters\SimpleResize.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release Unicode|Win32"
 					>
 					<Tool
@@ -1785,6 +1769,22 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release Unicode|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -2216,22 +2216,6 @@
 				RelativePath="src\imgFilters\TimgFilterDenoise3d.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release Unicode|Win32"
 					>
 					<Tool
@@ -2241,6 +2225,22 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release Unicode|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -2472,22 +2472,6 @@
 				RelativePath=".\src\imgFilters\TimgFilterLogoaway.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release Unicode|Win32"
 					>
 					<Tool
@@ -2497,6 +2481,22 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release Unicode|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -3071,22 +3071,6 @@
 					RelativePath="src\imgFilters\nic\nic_postProcess.cpp"
 					>
 					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							AssemblerOutput="4"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							AssemblerOutput="4"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Release Unicode|Win32"
 						>
 						<Tool
@@ -3096,6 +3080,22 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Release Unicode|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							AssemblerOutput="4"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							AssemblerOutput="4"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -3131,22 +3131,6 @@
 					RelativePath="src\imgFilters\asharp\asharp.cpp"
 					>
 					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							AssemblerOutput="4"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							AssemblerOutput="4"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Release Unicode|Win32"
 						>
 						<Tool
@@ -3156,6 +3140,22 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Release Unicode|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							AssemblerOutput="4"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							AssemblerOutput="4"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -3848,22 +3848,6 @@
 				RelativePath="src\dialog\Cperspective.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release Unicode|Win32"
 					>
 					<Tool
@@ -3873,6 +3857,22 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release Unicode|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -4368,22 +4368,6 @@
 				RelativePath="src\settings\TpresetSettingsVideo.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release Unicode|Win32"
 					>
 					<Tool
@@ -4393,6 +4377,22 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release Unicode|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -4422,22 +4422,6 @@
 						RelativePath="src\settings\filters\TavisynthSettings.cpp"
 						>
 						<FileConfiguration
-							Name="Release|Win32"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-								AssemblerOutput="4"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|x64"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-								AssemblerOutput="4"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
 							Name="Release Unicode|Win32"
 							>
 							<Tool
@@ -4447,6 +4431,22 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Release Unicode|x64"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								AssemblerOutput="4"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								AssemblerOutput="4"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|x64"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -5272,7 +5272,7 @@
 				RelativePath="src\convert\image.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Release Unicode|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -5280,7 +5280,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release Unicode|Win32"
+					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -5296,22 +5296,6 @@
 				RelativePath="src\convert\Tconvert.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release Unicode|Win32"
 					>
 					<Tool
@@ -5321,6 +5305,22 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release Unicode|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -5412,22 +5412,6 @@
 				RelativePath="src\audioFilters\TaudioFilter.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release Unicode|Win32"
 					>
 					<Tool
@@ -5437,6 +5421,22 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release Unicode|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -5480,22 +5480,6 @@
 				RelativePath=".\src\audioFilters\TaudioFilterConvolver.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release Unicode|Win32"
 					>
 					<Tool
@@ -5505,6 +5489,22 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release Unicode|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -5600,22 +5600,6 @@
 				RelativePath="src\audioFilters\TaudioFilterMixer.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release Unicode|Win32"
 					>
 					<Tool
@@ -5625,6 +5609,22 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release Unicode|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -5672,22 +5672,6 @@
 				RelativePath="src\audioFilters\TaudioFilterVolume.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AssemblerOutput="4"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release Unicode|Win32"
 					>
 					<Tool
@@ -5697,6 +5681,22 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release Unicode|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AssemblerOutput="4"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -5771,22 +5771,6 @@
 					RelativePath=".\src\audioFilters\resample\resample2.cpp"
 					>
 					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							AssemblerOutput="4"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							AssemblerOutput="4"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Release Unicode|Win32"
 						>
 						<Tool
@@ -5796,6 +5780,22 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Release Unicode|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							AssemblerOutput="4"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							AssemblerOutput="4"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
