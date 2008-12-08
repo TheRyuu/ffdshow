@@ -1735,7 +1735,8 @@ template<class tchar> TrenderedTextSubtitleWord* Tfont::newWord(const tchar *s,s
     shadowYUV1.A=256*sqrt((double)shadowYUV1.A/256.0);
   }
  prefs.outlineBlur=w->props.blur ? true : false;
- if (fontSettings->blur || w->props.version >= TsubtitleParserSSA<tchar>::ASS)
+
+ if (fontSettings->blur || (w->props.version >= TsubtitleParserSSA<tchar>::ASS && lf.lfHeight > 150)) // FIXME: messy. just trying to resemble vsfilter.
   prefs.blur=true;
  else
   prefs.blur=false;
