@@ -446,7 +446,7 @@ void TcodecsPageVideo::fillCodecs(void)
    formats.push_back(Tformat(_l("WMV3/9")        ,IDFF_wmv3,movies_wmv3,_l("Windows Media Video 9 Simple & Main Profiles (WMV3)"),NULL,LAVC_UNSTABLE));
    static const int movies_wvc1[]={IDFF_MOVIE_LAVC,IDFF_MOVIE_WMV9,0};
    static const Tformat::Toption options_vc1[]={{0,_l("discard telecine"),IDFF_autodetect24P,1},{0,NULL,0,0}};
-   formats.push_back(Tformat(_l("VC-1")          ,IDFF_wvc1,movies_wvc1,_l("Windows Media Video 9 Advanced Profile (WVC1)"),options_vc1,LAVC_UNSTABLE));
+   formats.push_back(Tformat(_l("VC-1")          ,IDFF_wvc1,movies_wvc1,_l("Windows Media Video 9 Advanced Profile (WVC1, WMVA)"),options_vc1,LAVC_UNSTABLE));
    formats.push_back(Tformat(_l("WMVP")          ,IDFF_wvp2,IDFF_MOVIE_WMV9,_l("Windows Media Video 9 Image (WMVP, WVP2)")));
    formats.push_back(Tformat(_l("MSS1/2")        ,IDFF_mss2,IDFF_MOVIE_WMV9,_l("Windows Screen Codecs (MSS1, MSS2)")));
    formats.push_back(Tformat(_l("H.261")         ,IDFF_h261,IDFF_MOVIE_LAVC,_l("H261, M261")));

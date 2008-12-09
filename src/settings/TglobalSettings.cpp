@@ -638,6 +638,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(WVP2,wvp2 & rawmask,CODEC_ID_WMV9_LIB) \
  FF_FOURCC1_OP(WMVP,wvp2 & rawmask,CODEC_ID_WMV9_LIB) \
  FF_FOURCC_OP (WVC1,wvc1 & rawmask,c_wvc1) \
+ FF_FOURCC_OP (WMVA,wvc1 & rawmask,c_wvc1) \
  FF_FOURCC1_OP(VP50,vp5 & rawmask,CODEC_ID_VP5) \
  FF_FOURCC1_OP(VP60,vp6 & rawmask,CODEC_ID_VP6) \
  FF_FOURCC1_OP(VP61,vp6 & rawmask,CODEC_ID_VP6) \
