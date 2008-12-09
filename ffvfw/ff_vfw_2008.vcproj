@@ -81,7 +81,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib ole32.lib msvcrtd.lib winmm.lib comctl32.lib"
+				AdditionalDependencies="kernel32.lib ole32.lib libcmtd.lib winmm.lib comctl32.lib"
 				OutputFile="../bin/ff_vfw.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"

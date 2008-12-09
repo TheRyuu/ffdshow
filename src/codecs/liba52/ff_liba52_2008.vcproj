@@ -289,7 +289,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrtd.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib libcmtd.lib $(NOINHERIT)"
 				OutputFile="../../../bin/ff_liba52.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"

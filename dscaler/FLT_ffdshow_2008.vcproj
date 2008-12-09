@@ -284,7 +284,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrtd.lib ole32.lib"
+				AdditionalDependencies="kernel32.lib libcmtd.lib ole32.lib"
 				OutputFile="../bin/FLT_ffdshow.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"

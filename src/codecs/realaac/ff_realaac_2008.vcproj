@@ -70,7 +70,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrtd.lib"
+				AdditionalDependencies="kernel32.lib libcmtd.lib"
 				OutputFile="../../../bin/ff_realaac.dll"
 				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"

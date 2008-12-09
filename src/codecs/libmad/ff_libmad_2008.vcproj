@@ -79,7 +79,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
 				AdditionalOptions=""
-				AdditionalDependencies="kernel32.lib msvcrtd.lib"
+				AdditionalDependencies="kernel32.lib libcmtd.lib"
 				OutputFile="../../../bin/ff_libmad.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"

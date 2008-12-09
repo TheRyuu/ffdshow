@@ -74,7 +74,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
 				AdditionalOptions=""
-				AdditionalDependencies="kernel32.lib msvcrtd.lib uuid.lib oleaut32.lib ole32.lib oldnames.lib"
+				AdditionalDependencies="kernel32.lib libcmtd.lib uuid.lib oleaut32.lib ole32.lib oldnames.lib"
 				OutputFile="../../../bin/ff_wmv9.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"

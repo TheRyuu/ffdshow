@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="ffavisynth"
 	ProjectGUID="{9C87D880-7BB9-4F92-8AA6-B513298CDE82}"
 	RootNamespace="ffavisynth"
@@ -288,7 +288,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrtd.lib ole32.lib"
+				AdditionalDependencies="kernel32.lib libcmtd.lib ole32.lib"
 				OutputFile="../bin/ffavisynth.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -360,7 +360,7 @@
 				AdditionalIncludeDirectories="../src"
 				PreprocessorDefinitions="WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;UCLIBCPP"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				BufferSecurityCheck="true"
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="false"
@@ -387,7 +387,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrtd.lib ole32.lib $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib libcmtd.lib ole32.lib $(NOINHERIT)"
 				OutputFile="../bin/ffavisynth.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"

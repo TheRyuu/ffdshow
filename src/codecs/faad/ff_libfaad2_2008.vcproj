@@ -273,7 +273,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib msvcrtd.lib"
+				AdditionalDependencies="kernel32.lib libcmtd.lib"
 				OutputFile="../../../bin/ff_libfaad2.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
