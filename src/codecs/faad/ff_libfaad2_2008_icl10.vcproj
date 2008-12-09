@@ -83,7 +83,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="kernel32.lib libircmt.lib libmmds.lib svml_dispmt.lib libcmt.lib"
+				AdditionalDependencies="kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib libcmt.lib"
 				OutputFile="../../../bin/ff_libfaad2.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -276,7 +276,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib"
+				AdditionalDependencies="libcmtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib"
 				OutputFile="../../../bin/ff_libfaad2.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -369,7 +369,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib"
+				AdditionalDependencies="libcmtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib"
 				OutputFile="../../../bin/ff_libfaad2.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"

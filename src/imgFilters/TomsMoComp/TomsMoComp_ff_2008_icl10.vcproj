@@ -281,7 +281,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib"
+				AdditionalDependencies="libcmtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib"
 				OutputFile="../../../bin/TomsMoComp_ff.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"
@@ -379,7 +379,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib"
+				AdditionalDependencies="libcmtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib"
 				OutputFile="../../../bin/TomsMoComp_ff.dll"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"

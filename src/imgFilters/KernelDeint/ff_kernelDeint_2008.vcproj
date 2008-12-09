@@ -214,7 +214,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/Oa&#x0D;&#x0A;"
+				AdditionalOptions="/Oa"
 				Optimization="4"
 				InlineFunctionExpansion="0"
 				FavorSizeOrSpeed="2"
@@ -305,7 +305,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/Oa&#x0D;&#x0A;"
+				AdditionalOptions="/Oa"
 				Optimization="4"
 				InlineFunctionExpansion="0"
 				FavorSizeOrSpeed="2"
