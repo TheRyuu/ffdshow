@@ -113,7 +113,7 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  inSampleEverField1Repeat(false),
  m_NeedToPauseRun(false),
  searchInterfaceInGraph(NULL),
- count_decoded_frames(0)
+ count_decoded_frames_for_framerate_calculation(0)
 {
  DPRINTF(_l("TffdshowDecVideo::Constructor"));
 #ifdef OSDTIMETABALE
@@ -836,6 +836,7 @@ HRESULT TffdshowDecVideo::ReceiveI(IMediaSample *pSample)
    DPRINTF_SAMPLE_TIME(pSample);
    //late=0;
    waitForKeyframe=1000;
+   count_decoded_frames_for_framerate_calculation = 0;
    return S_OK;
   }
 
@@ -1153,8 +1154,10 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
  if (!imgFilters) imgFilters=createImgFilters();
  if (wasSubtitleResetTime) imgFilters->subtitleResetTime=pict.rtStart;
  // buffer recent four timestamps for frame rate calculation
- decoded_rtStarts[count_decoded_frames & 3] = pict.rtStart;
- count_decoded_frames++;
+ decoded_rtStarts[count_decoded_frames_for_framerate_calculation & 3] = pict.rtStart;
+ if (count_decoded_frames_for_framerate_calculation == 7)
+  eighth_decoded_rtStart = pict.rtStart;
+ count_decoded_frames_for_framerate_calculation++;
  return imgFilters->process(pict,presetSettings);
 }
 
@@ -1422,7 +1425,7 @@ HRESULT TffdshowDecVideo::NewSegment(REFERENCE_TIME tStart,REFERENCE_TIME tStop,
  vc1frameCnt = 0;
  vc1rtStart=0;
  m_rtStart = 0;
- count_decoded_frames = 0;
+ count_decoded_frames_for_framerate_calculation = 0;
  for (size_t i=0;i<textpins.size();i++)
   if (textpins[i]->needSegment)
    textpins[i]->NewSegment(tStart,tStop,dRate);

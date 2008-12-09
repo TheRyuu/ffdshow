@@ -164,21 +164,25 @@ STDMETHODIMP TffdshowDecVideo::getOutputFourcc(char_t *buf,size_t len)
 }
 STDMETHODIMP TffdshowDecVideo::getAVIfps(unsigned int *fps1000)
 {
- if (fps1000 && count_decoded_frames > 2)
+ HRESULT hr = inpin->getAVIfps(fps1000);
+ if (hr != S_OK) return hr;
+
+ if (fps1000
+     // After seeking, a few frames may have incorrect timestamps.
+     && count_decoded_frames_for_framerate_calculation > 9)
   {
-   int pos_current = (count_decoded_frames - 1) & 3;
-   int pos_prior_prior = (count_decoded_frames - 3) & 3;
-   REFERENCE_TIME avg = (decoded_rtStarts[pos_current] - decoded_rtStarts[pos_prior_prior]) >> 1;
-   if (avg > 0
-      && decoded_rtStarts[pos_current] != REFTIME_INVALID
-      && decoded_rtStarts[pos_prior_prior] != REFTIME_INVALID)
+   int pos_current_even = (count_decoded_frames_for_framerate_calculation - 1) & ~1;
+   REFERENCE_TIME avg = (decoded_rtStarts[pos_current_even & 3] - eighth_decoded_rtStart) / (pos_current_even - 7);
+   if (avg > 0)
     {
-     *fps1000=(unsigned int)(REF_SECOND_MULT*1000/avg);
+     unsigned int fps1000_tmp = (unsigned int)(REF_SECOND_MULT*1000/avg);
+     if (ff_abs((int)fps1000_tmp - (int)*fps1000) > 300) // Some splitters (matroska, flv) round the timestamps to milli-seconds. Thus there is some error in this calculation. Container's averave duration may be more reliable in this case.
+      *fps1000 = fps1000_tmp;
      return S_OK;
     }
   }
 
- return inpin->getAVIfps(fps1000);
+ return S_OK;
 }
 STDMETHODIMP_(int) TffdshowDecVideo::getAVIfps1000_2(void)
 {
