@@ -30,6 +30,7 @@
 #include "Cpresets.h"
 #include "ChideShow.h"
 #include "Cprocsfs.h"
+#include "audio/CaudioDecoderOptions.h"
 #include "Coutsfs.h"
 #include "CaudioSwitcher.h"
 #include "COSD.h"
@@ -113,6 +114,7 @@ void TffdshowPageDecAudio::onActivate(void)
  if (activePresetName)
   deciD->createPresetPages(activePresetName,this);
 */
+ addTI(&tvis,new TaudioDecoderOptionsPage(this));
  addTI(&tvis,new TprocsfsPage(this));
  addTI(&tvis,new ToutsfsPage(this));
  tvis.hParent=NULL;

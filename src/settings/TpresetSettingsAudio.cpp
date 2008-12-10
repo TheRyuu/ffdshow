@@ -88,6 +88,8 @@ TpresetAudio::TpresetAudio(const char_t *IpresetName,const char_t *Ireg_child,in
      _l("dithering"),0,
    IDFF_noiseShaping ,&TpresetAudio::noiseShaping ,0,3,_l(""),1,
      _l("noiseShaping"),0,
+   IDFF_audio_decoder_DRC,&TpresetAudio::decoderDRC   ,0,0,_l(""),1,
+     _l("decoderDRC")  ,0,
    0
   };
  addOptions(iopts);

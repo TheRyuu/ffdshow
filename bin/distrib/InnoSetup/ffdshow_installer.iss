@@ -1,9 +1,9 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = '2391'
+#define tryout_revision = '2466'
 #define buildyear = '2008'
-#define buildmonth = '11'
-#define buildday = '29'
+#define buildmonth = '12'
+#define buildday = '10'
 
 ; Build specific options
 #define localize = True
@@ -610,11 +610,17 @@ Root: HKCU; Subkey: Software\GNU\ffdshow_audio;         ValueType: dword;  Value
 #include "reg_formats.iss"
 
 ; Audio pass-through upgrade path:
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: passthroughAC3;        ValueData: 0; Components: ffdshow; Tasks: NOT filter\passthroughac3
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: passthroughAC3;        ValueData: 1; Components: ffdshow; Tasks:     filter\passthroughac3
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: passthroughDTS;        ValueData: 0; Components: ffdshow; Tasks: NOT filter\passthroughdts
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: passthroughDTS;        ValueData: 1; Components: ffdshow; Tasks:     filter\passthroughdts
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: "passthroughAC3";        ValueData: 0; Components: ffdshow; Tasks: NOT filter\passthroughac3
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: "passthroughAC3";        ValueData: 1; Components: ffdshow; Tasks:     filter\passthroughac3
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: "passthroughDTS";        ValueData: 0; Components: ffdshow; Tasks: NOT filter\passthroughdts
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: "passthroughDTS";        ValueData: 1; Components: ffdshow; Tasks:     filter\passthroughdts
 Root: HKCU; Subkey: Software\GNU\ffdshow_audio\;                          ValueName: "ac3SPDIF";                          Components: ffdshow;                                   Flags: deletevalue
+
+; DRC upgrade path:
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: "decoderDRC"; ValueData: 1; Check: GetDecoderDRC;     Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: "decoderDRC"; ValueData: 0; Check: NOT GetDecoderDRC; Components: ffdshow
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\;                          ValueName: "ac3DRC";                                           Components: ffdshow; Flags: deletevalue
+Root: HKCU; Subkey: Software\GNU\ffdshow_audio\;                          ValueName: "dtsDRC";                                           Components: ffdshow; Flags: deletevalue
 
 [Run]
 Description: {cm:run_audioConfig}; Filename: {syswow64}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app};      Flags: postinstall nowait unchecked; MinVersion: 0,4; Components: ffdshow
@@ -807,6 +813,39 @@ begin
         Result := True;
       end
   end
+end;
+
+function GetDecoderDRC(): Boolean;
+var
+  presetList: TArrayOfString;
+  index: Integer;
+begin
+  Result := False;
+  if CheckTaskAudio('ac3DRC', 1, False) then
+    begin
+      Result := True;
+    end
+  if CheckTaskAudio('dtsDRC', 1, False) then
+    begin
+      Result := True;
+    end
+if (Result) then
+  begin
+    if RegGetSubkeyNames(HKCU, 'Software\GNU\ffdshow_audio\', presetList) then
+      begin
+        for index := 0 to GetArrayLength(presetList)-1 do
+          begin
+            if (presetList[index] <> 'default') then
+              begin
+                RegWriteDWordValue(HKCU, 'Software\GNU\ffdshow_audio\' + presetList[index], 'decoderDRC', 1)
+              end
+          end
+      end
+  end
+  if CheckTaskAudioInpreset('decoderDRC', 1, False) then
+    begin
+  	  Result := True;
+    end;
 end;
 
 #if include_plugin_avisynth

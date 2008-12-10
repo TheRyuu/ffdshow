@@ -151,7 +151,6 @@ TmiscPage::TmiscPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
 {
  dialogId=IDD_DECODEROPTIONS;
  inPreset=1;
- idffOrder=maxOrder+2;
  static const TbindCheckbox<TmiscPage> chb[]=
   {
    IDC_CHB_GRAY,IDFF_grayscale,NULL,

@@ -3423,6 +3423,18 @@
 			<File
 				RelativePath="src\dialog\Twindow.h">
 			</File>
+			<Filter
+				Name="audio"
+				>
+				<File
+					RelativePath=".\src\dialog\audio\CaudioDecoderOptions.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\dialog\audio\CaudioDecoderOptions.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="settings"

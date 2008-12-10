@@ -79,7 +79,6 @@ bool TaudioCodecLiba52::init(const CMediaType &mt)
   {
    state=a52_init(Tconfig::cpu_flags);
    fmt.sf=TsampleFormat::SF_FLOAT32;
-   drc=deci->getParam2(IDFF_ac3drc);
    inited=true;
    return true;
   }
@@ -129,6 +128,8 @@ HRESULT TaudioCodecLiba52::decode(TbyteBuffer &src)
          if (a52_frame(state,p,&flags,&level,bias)==0)
           {
            bpssum+=(lastbps=bit_rate/1000);numframes++;
+           // Dynamic range compression
+           drc=deci->getParam2(IDFF_audio_decoder_DRC);
            if (drc==0)
             a52_dynrng(state,NULL,NULL);
            int scmapidx=std::min(flags&A52_CHANNEL_MASK,int(countof(scmaps)/2));

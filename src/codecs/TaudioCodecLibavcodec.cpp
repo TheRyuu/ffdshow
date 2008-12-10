@@ -51,15 +51,6 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
    avctx->sample_rate=fmt.freq;
    avctx->channels=fmt.nchannels;
    avctx->codec_id=codecId;
- 
-
-   // Dynamic range compression for AC3/DTS formats
-   if (codecId == CODEC_ID_AC3 || codecId == CODEC_ID_EAC3)
-	   if (deci->getParam2(IDFF_ac3drc))
-		   avctx->drc_scale=1.0;
-   if (codecId == CODEC_ID_DTS)
-	   if (deci->getParam2(IDFF_dtsdrc))
-		   avctx->drc_scale=1.0;
 
    if (parser)
    {
@@ -177,6 +168,13 @@ if (avcodec)
 
 HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
 {
+ // Dynamic range compression for AC3/DTS formats
+ if (codecId == CODEC_ID_AC3 || codecId == CODEC_ID_EAC3 || codecId == CODEC_ID_DTS)
+   if (deci->getParam2(IDFF_audio_decoder_DRC))
+	   avctx->drc_scale=1.0;
+   else
+	   avctx->drc_scale=0.0;
+
  int size=(int)src0.size();
  unsigned char *src=&*src0.begin();
  int maxLength=AVCODEC_MAX_AUDIO_FRAME_SIZE;
