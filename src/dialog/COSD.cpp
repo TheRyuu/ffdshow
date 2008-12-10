@@ -215,7 +215,12 @@ INT_PTR TOSDpageDec::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
        break;
       case IDC_ED_OSD_SAVE:
        if (HIWORD(wParam)==EN_CHANGE && !isSetWindowText)
-        parent->setChange();
+        {
+         char_t saveflnm[MAX_PATH];
+         GetDlgItemText(m_hwnd,IDC_ED_OSD_SAVE,saveflnm,MAX_PATH);
+         cfgSet(IDFF_OSDsaveFlnm, saveflnm);
+         return TRUE;
+        }
        return TRUE;
      }
     break;
