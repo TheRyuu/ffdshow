@@ -94,6 +94,7 @@ bool TcspOptionsPage::reset(bool testonly)
    deci->resetParam(IDFF_cspOptionsWhiteCutoff);
    deci->resetParam(IDFF_cspOptionsChromaCutoff);
    deci->resetParam(IDFF_cspOptionsInterlockChroma);
+   deci->resetParam(IDFF_cspOptionsRgbInterlaceMode);
   }
  return true;
 }
