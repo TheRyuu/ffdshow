@@ -226,14 +226,10 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
   }
  else
   sendextradata=false;
- if (codecId == CODEC_ID_H264 && connectedSplitter != TffdshowVideoInputPin::MPC_mpegSplitters && connectedSplitter != TffdshowVideoInputPin::Haali_Media_splitter)
-  {
-   if (connectedSplitter == TffdshowVideoInputPin::DVBSourceFilter || isTSfile())
-    {
-     h264onTS = true;
-     codedPictureBuffer.init();
-    }
-  }
+
+ if (codecId == CODEC_ID_H264)
+  codedPictureBuffer.init();
+
  if (fcc==FOURCC_RLE4 || fcc==FOURCC_RLE8 || fcc==FOURCC_CSCD || sup_palette(codecId))
   {
    BITMAPINFOHEADER bih;ExtractBIH(mt,&bih);
@@ -310,16 +306,6 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
  segmentTimeStart=0;
  posB=1;
  return true;
-}
-
-// return true for TS and PS files.
-bool TvideoCodecLibavcodec::isTSfile(void)
-{   
- const char_t *sourceFullFlnm;
- ffstring sourceExt;
- sourceFullFlnm = deci->getSourceName();
- extractfileext(sourceFullFlnm,sourceExt);
- return (sourceExt == _l("ts") || sourceExt == _l("m2ts") || sourceExt == _l("m2t") || sourceExt == _l("mts") || sourceExt == _l("mpg")  || sourceExt == _l("mpeg"));
 }
 
 void TvideoCodecLibavcodec::onGetBuffer(AVFrame *pic)
@@ -412,8 +398,19 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
     }
   }
 
- if (src && h264onTS)
-  size = codedPictureBuffer.append(src, size);
+ // H.264 NAL type auto detection
+ if (src && codecId == CODEC_ID_H264)
+  {
+   int size_h264ts = 0;
+   if (h264onTS || h264RandomAccess.recovery_mode == 1)
+    size_h264ts = codedPictureBuffer.append(src, size);
+
+   if (size_h264ts > 0 || h264onTS)
+    {
+     h264onTS = true;
+     size = size_h264ts;
+    }
+  }
 
  while (!src || size>0)
   {
