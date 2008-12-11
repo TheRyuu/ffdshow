@@ -46,15 +46,9 @@ void ToutsfsPage::init(void)
  addHint(IDC_CHB_ALLOWOUTSTREAM,_l("Useful for directly storing encoded ac3 to a file in graphedt with File Writer filter"));
  
  devicesList = &ToutputAudioSettings::devicesList;
- char_t deviceId[255] = _l("");
- cfgGet(IDFF_aoutMultichannelDeviceId, deviceId, 254);
- int selection = 0;
  for (TdevicesList::iterator i=devicesList->begin();i!=devicesList->end();i++)
  {
 	 cbxAdd(IDC_CBX_AOUT_MULTICHANNEL_DEVICE, i->first.c_str());
-	 if (!strcmp(deviceId, i->second.c_str()))
-		 cbxSetCurSel(IDC_CBX_AOUT_MULTICHANNEL_DEVICE, selection);
-	 selection ++;
  }
 }
 
@@ -81,7 +75,15 @@ void ToutsfsPage::cfg2dlg(void)
  setCheck(IDC_CHB_ALWAYEXTENSIBLE,!cfgGet(IDFF_alwaysextensible));
  setCheck(IDC_CHB_ALLOWOUTSTREAM,cfgGet(IDFF_allowOutStream));
  
-
+ char_t deviceId[255] = _l("");
+ cfgGet(IDFF_aoutMultichannelDeviceId, deviceId, 254);
+ int selection = 0;
+ for (TdevicesList::iterator i=devicesList->begin();i!=devicesList->end();i++)
+ {
+	 if (!strcmp(deviceId, i->second.c_str()))
+		 cbxSetCurSel(IDC_CBX_AOUT_MULTICHANNEL_DEVICE, selection);
+	 selection ++;
+ }
  connect2dlg();
 }
 void ToutsfsPage::ac32dlg(int &outsfs)
