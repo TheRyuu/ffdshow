@@ -1,12 +1,21 @@
 #ifndef _FFGLOBALS_H_
 #define _FFGLOBALS_H_
 
+#ifdef WIN64
+#define FFDSHOW            _l("ffdshow64")
+#define FFDSHOWDECVIDEO    _l("ffdshow64")
+#define FFDSHOWDECVIDEOVFW _l("ffdshow64_vfw")
+#define FFDSHOWDECAUDIO    _l("ffdshow64_audio")
+#define FFDSHOWDECAUDIORAW _l("ffdshow64_audio_raw")
+#define FFDSHOWENC         _l("ffdshow64_enc")
+#else
 #define FFDSHOW            _l("ffdshow")
 #define FFDSHOWDECVIDEO    _l("ffdshow")
 #define FFDSHOWDECVIDEOVFW _l("ffdshow_vfw")
 #define FFDSHOWDECAUDIO    _l("ffdshow_audio")
 #define FFDSHOWDECAUDIORAW _l("ffdshow_audio_raw")
 #define FFDSHOWENC         _l("ffdshow_enc")
+#endif
 
 extern const char_t *FFDSHOW_VER;
 

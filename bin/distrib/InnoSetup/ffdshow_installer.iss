@@ -504,51 +504,61 @@ Type: files; Name: {app}\xvidcore.dll;                      Components: ffdshow
 #endif
 
 
+#if is64bit
+#define ff_reg_base       'Software\GNU\ffdshow64'
+#define ff_reg_base_audio 'Software\GNU\ffdshow64_audio'
+#define ff_reg_base_vfw   'Software\GNU\ffdshow64_vfw'
+#else
+#define ff_reg_base       'Software\GNU\ffdshow'
+#define ff_reg_base_audio 'Software\GNU\ffdshow_audio'
+#define ff_reg_base_vfw   'Software\GNU\ffdshow_vfw'
+#endif
+
 [Registry]
 ; Cleanup of settings
-Root: HKCU; Subkey: Software\GNU;                   Flags: uninsdeletekeyifempty; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow;           Flags: uninsdeletekey;        Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio;     Flags: uninsdeletekey;        Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio_raw; Flags: uninsdeletekey;        Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_enc;       Flags: uninsdeletekey;        Components: ffdshow\vfw
-Root: HKCU; Subkey: Software\GNU\ffdshow_vfw;       Flags: uninsdeletekey;        Components: ffdshow\vfw
-Root: HKLM; Subkey: Software\GNU;                   Flags: uninsdeletekeyifempty; Components: ffdshow
-Root: HKLM; Subkey: Software\GNU\ffdshow;           Flags: uninsdeletekey;        Components: ffdshow
-Root: HKLM; Subkey: Software\GNU\ffdshow_audio;     Flags: uninsdeletekey;        Components: ffdshow
-Root: HKLM; Subkey: Software\GNU\ffdshow_enc;       Flags: uninsdeletekey;        Components: ffdshow\vfw
-Root: HKLM; Subkey: Software\GNU\ffdshow_vfw;       Flags: uninsdeletekey;        Components: ffdshow\vfw
+Root: HKCU; Subkey: Software\GNU;               Flags: uninsdeletekeyifempty; Components: ffdshow
+Root: HKCU; Subkey: {#= ff_reg_base};           Flags: uninsdeletekey;        Components: ffdshow
+Root: HKCU; Subkey: {#= ff_reg_base_audio};     Flags: uninsdeletekey;        Components: ffdshow
+Root: HKCU; Subkey: {#= ff_reg_base}_audio_raw; Flags: uninsdeletekey;        Components: ffdshow
+Root: HKCU; Subkey: {#= ff_reg_base}_enc;       Flags: uninsdeletekey;        Components: ffdshow
+Root: HKCU; Subkey: {#= ff_reg_base_vfw};       Flags: uninsdeletekey;        Components: ffdshow\vfw
+Root: HKLM; Subkey: Software\GNU;               Flags: uninsdeletekeyifempty; Components: ffdshow
+Root: HKLM; Subkey: {#= ff_reg_base};           Flags: uninsdeletekey;        Components: ffdshow
+Root: HKLM; Subkey: {#= ff_reg_base_audio};     Flags: uninsdeletekey;        Components: ffdshow
+Root: HKLM; Subkey: {#= ff_reg_base}_enc;       Flags: uninsdeletekey;        Components: ffdshow
+Root: HKLM; Subkey: {#= ff_reg_base_vfw};       Flags: uninsdeletekey;        Components: ffdshow\vfw
 
 ; Reset settings
-Root: HKCU; Subkey: Software\GNU\ffdshow;           Flags: deletekey; Components: ffdshow;     Tasks: resetsettings
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio;     Flags: deletekey; Components: ffdshow;     Tasks: resetsettings
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio_raw; Flags: deletekey; Components: ffdshow;     Tasks: resetsettings
-Root: HKCU; Subkey: Software\GNU\ffdshow_enc;       Flags: deletekey; Components: ffdshow\vfw; Tasks: resetsettings
-Root: HKCU; Subkey: Software\GNU\ffdshow_vfw;       Flags: deletekey; Components: ffdshow\vfw; Tasks: resetsettings
-Root: HKLM; Subkey: Software\GNU\ffdshow;           Flags: deletekey; Components: ffdshow;     Tasks: resetsettings
-Root: HKLM; Subkey: Software\GNU\ffdshow_audio;     Flags: deletekey; Components: ffdshow;     Tasks: resetsettings
-Root: HKLM; Subkey: Software\GNU\ffdshow_enc;       Flags: deletekey; Components: ffdshow\vfw; Tasks: resetsettings
-Root: HKLM; Subkey: Software\GNU\ffdshow_vfw;       Flags: deletekey; Components: ffdshow\vfw; Tasks: resetsettings
+Root: HKCU; Subkey: {#= ff_reg_base};           Flags: deletekey; Components: ffdshow;     Tasks: resetsettings
+Root: HKCU; Subkey: {#= ff_reg_base_audio};     Flags: deletekey; Components: ffdshow;     Tasks: resetsettings
+Root: HKCU; Subkey: {#= ff_reg_base}_audio_raw; Flags: deletekey; Components: ffdshow;     Tasks: resetsettings
+Root: HKCU; Subkey: {#= ff_reg_base}_enc;       Flags: deletekey; Components: ffdshow;     Tasks: resetsettings
+Root: HKCU; Subkey: {#= ff_reg_base_vfw};       Flags: deletekey; Components: ffdshow\vfw; Tasks: resetsettings
+Root: HKLM; Subkey: {#= ff_reg_base};           Flags: deletekey; Components: ffdshow;     Tasks: resetsettings
+Root: HKLM; Subkey: {#= ff_reg_base_audio};     Flags: deletekey; Components: ffdshow;     Tasks: resetsettings
+Root: HKLM; Subkey: {#= ff_reg_base}_enc;       Flags: deletekey; Components: ffdshow;     Tasks: resetsettings
+Root: HKLM; Subkey: {#= ff_reg_base_vfw};       Flags: deletekey; Components: ffdshow\vfw; Tasks: resetsettings
 
 ; Path
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: string; ValueName: pth;           ValueData: {app}; Components: ffdshow
-Root: HKLM; Subkey: Software\GNU\ffdshow;                    ValueName: pthPriority;                     Components: ffdshow;   Flags: deletevalue
+Root: HKLM; Subkey: {#= ff_reg_base}; ValueType: string; ValueName: pth;           ValueData: {app}; Components: ffdshow
+Root: HKLM; Subkey: {#= ff_reg_base};                    ValueName: pthPriority;                     Components: ffdshow;   Flags: deletevalue
 #if include_plugin_avisynth
-Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: string; ValueName: pthAvisynth;   ValueData: {code:GetAviSynthPluginDir};  Flags: uninsclearvalue; Components: ffdshow\plugins\avisynth
+Root: HKLM; SubKey: {#= ff_reg_base}; ValueType: string; ValueName: pthAvisynth;   ValueData: {code:GetAviSynthPluginDir};  Flags: uninsclearvalue; Components: ffdshow\plugins\avisynth
 #endif
 #if include_plugin_virtualdub
-Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: string; ValueName: pthVirtualDub; ValueData: {code:GetVdubPluginDir};      Flags: uninsclearvalue; Components: ffdshow\plugins\virtualdub
+Root: HKLM; SubKey: {#= ff_reg_base}; ValueType: string; ValueName: pthVirtualDub; ValueData: {code:GetVdubPluginDir};      Flags: uninsclearvalue; Components: ffdshow\plugins\virtualdub
 #endif
 #if include_plugin_dscaler
-Root: HKLM; SubKey: Software\GNU\ffdshow; ValueType: string; ValueName: dscalerPth;    ValueData: {code:GetDScalerDir|};        Flags: uninsclearvalue; Components: ffdshow\plugins\dscaler
+Root: HKLM; SubKey: {#= ff_reg_base}; ValueType: string; ValueName: dscalerPth;    ValueData: {code:GetDScalerDir|};        Flags: uninsclearvalue; Components: ffdshow\plugins\dscaler
 #endif
 
 ; Version info
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: revision;       ValueData: {#= tryout_revision};                       Components: ffdshow
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: dword; ValueName: builddate;      ValueData: {#= buildyear}{#= buildmonth}{#= buildday}; Components: ffdshow
+Root: HKLM; Subkey: {#= ff_reg_base}; ValueType: dword; ValueName: revision;       ValueData: {#= tryout_revision};                       Components: ffdshow
+Root: HKLM; Subkey: {#= ff_reg_base}; ValueType: dword; ValueName: builddate;      ValueData: {#= buildyear}{#= buildmonth}{#= buildday}; Components: ffdshow
 
 ; Language
 #if localize
-Root: HKLM; Subkey: Software\GNU\ffdshow; ValueType: string; ValueName: lang;          ValueData: {cm:langid}; Components: ffdshow
+Root: HKLM; Subkey: {#= ff_reg_base}; ValueType: string; ValueName: lang;          ValueData: {cm:langid}; Components: ffdshow
 #endif
 
 ; Register VFW interface
@@ -569,58 +579,58 @@ Root: HKLM; Subkey: SYSTEM\CurrentControlSet\Control\MediaResources\acm\msacm.av
 #endif
 
 ; Recommended settings
-Root: HKCU; Subkey: Software\GNU\ffdshow\default;       ValueType: dword;  ValueName: postprocH264mode;     ValueData: 0;                  Components: ffdshow; Flags: createvalueifdoesntexist;
-Root: HKCU; Subkey: Software\GNU\ffdshow\default;       ValueType: dword;  ValueName: resizeMethod;         ValueData: 9;                  Components: ffdshow; Flags: createvalueifdoesntexist;
+Root: HKCU; Subkey: {#= ff_reg_base}\default;       ValueType: dword;  ValueName: postprocH264mode;     ValueData: 0;                  Components: ffdshow; Flags: createvalueifdoesntexist;
+Root: HKCU; Subkey: {#= ff_reg_base}\default;       ValueType: dword;  ValueName: resizeMethod;         ValueData: 9;                  Components: ffdshow; Flags: createvalueifdoesntexist;
 
 #if !PREF_YAMAGATA
-Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: dword;  ValueName: fastH264;             ValueData: 0;                  Components: ffdshow; Flags: createvalueifdoesntexist; Tasks: NOT skiph264inloop
-Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: dword;  ValueName: fastH264;             ValueData: 2;                  Components: ffdshow;                                  Tasks:     skiph264inloop
+Root: HKCU; Subkey: {#= ff_reg_base};               ValueType: dword;  ValueName: fastH264;             ValueData: 0;                  Components: ffdshow; Flags: createvalueifdoesntexist; Tasks: NOT skiph264inloop
+Root: HKCU; Subkey: {#= ff_reg_base};               ValueType: dword;  ValueName: fastH264;             ValueData: 2;                  Components: ffdshow;                                  Tasks:     skiph264inloop
 #endif
 
-Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: dword;  ValueName: subTextpin;           ValueData: 1;                  Components: ffdshow; Flags: createvalueifdoesntexist
-Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: dword;  ValueName: subTextpinSSA;        ValueData: 1;                  Components: ffdshow; Flags: createvalueifdoesntexist
-Root: HKCU; Subkey: Software\GNU\ffdshow\default;       ValueType: dword;  ValueName: subIsExpand;          ValueData: 0;                  Components: ffdshow; Flags: createvalueifdoesntexist
-Root: HKCU; Subkey: Software\GNU\ffdshow\default;       ValueType: dword;  ValueName: isSubtitles;          ValueData: 0;                  Components: ffdshow;                                  Tasks: NOT filter\subtitles
-Root: HKCU; Subkey: Software\GNU\ffdshow\default;       ValueType: dword;  ValueName: isSubtitles;          ValueData: 1;                  Components: ffdshow;                                  Tasks: filter\subtitles
+Root: HKCU; Subkey: {#= ff_reg_base};               ValueType: dword;  ValueName: subTextpin;           ValueData: 1;                  Components: ffdshow; Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: {#= ff_reg_base};               ValueType: dword;  ValueName: subTextpinSSA;        ValueData: 1;                  Components: ffdshow; Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: {#= ff_reg_base}\default;       ValueType: dword;  ValueName: subIsExpand;          ValueData: 0;                  Components: ffdshow; Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: {#= ff_reg_base}\default;       ValueType: dword;  ValueName: isSubtitles;          ValueData: 0;                  Components: ffdshow;                                  Tasks: NOT filter\subtitles
+Root: HKCU; Subkey: {#= ff_reg_base}\default;       ValueType: dword;  ValueName: isSubtitles;          ValueData: 1;                  Components: ffdshow;                                  Tasks: filter\subtitles
 
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword;  ValueName: mixerNormalizeMatrix; ValueData: 0;                  Components: ffdshow; Flags: createvalueifdoesntexist
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword;  ValueName: volNormalize;         ValueData: 0;                  Components: ffdshow;                                  Tasks: NOT filter\normalize
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword;  ValueName: isvolume;             ValueData: 1;                  Components: ffdshow;                                  Tasks:     filter\normalize
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword;  ValueName: volNormalize;         ValueData: 1;                  Components: ffdshow;                                  Tasks:     filter\normalize
+Root: HKCU; Subkey: {#= ff_reg_base_audio}\default; ValueType: dword;  ValueName: mixerNormalizeMatrix; ValueData: 0;                  Components: ffdshow; Flags: createvalueifdoesntexist
+Root: HKCU; Subkey: {#= ff_reg_base_audio}\default; ValueType: dword;  ValueName: volNormalize;         ValueData: 0;                  Components: ffdshow;                                  Tasks: NOT filter\normalize
+Root: HKCU; Subkey: {#= ff_reg_base_audio}\default; ValueType: dword;  ValueName: isvolume;             ValueData: 1;                  Components: ffdshow;                                  Tasks:     filter\normalize
+Root: HKCU; Subkey: {#= ff_reg_base_audio}\default; ValueType: dword;  ValueName: volNormalize;         ValueData: 1;                  Components: ffdshow;                                  Tasks:     filter\normalize
 
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword;  ValueName: ismixer;              ValueData: {code:GetIsMixer};  Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword;  ValueName: mixerOut;             ValueData: {code:GetMixerOut}; Components: ffdshow
+Root: HKCU; Subkey: {#= ff_reg_base_audio}\default; ValueType: dword;  ValueName: ismixer;              ValueData: {code:GetIsMixer};  Components: ffdshow
+Root: HKCU; Subkey: {#= ff_reg_base_audio}\default; ValueType: dword;  ValueName: mixerOut;             ValueData: {code:GetMixerOut}; Components: ffdshow
 
 ; Blacklist
-Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: dword;  ValueName: isBlacklist;          ValueData: 1;                             Flags: createvalueifdoesntexist;                        Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio;         ValueType: dword;  ValueName: isBlacklist;          ValueData: 1;                             Flags: createvalueifdoesntexist;                        Components: ffdshow
+Root: HKCU; Subkey: {#= ff_reg_base};               ValueType: dword;  ValueName: isBlacklist;          ValueData: 1;                             Flags: createvalueifdoesntexist;                        Components: ffdshow
+Root: HKCU; Subkey: {#= ff_reg_base_audio};         ValueType: dword;  ValueName: isBlacklist;          ValueData: 1;                             Flags: createvalueifdoesntexist;                        Components: ffdshow
 
 ; Compatibility list
-Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: dword;  ValueName: isWhitelist;          ValueData: 0; Components: ffdshow; Tasks: NOT whitelist; Check: NOT IsUpdate
-Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: dword;  ValueName: isWhitelist;          ValueData: 1; Components: ffdshow; Tasks: whitelist;     Check: NOT IsUpdate
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio;         ValueType: dword;  ValueName: isWhitelist;          ValueData: 0; Components: ffdshow; Tasks: NOT whitelist; Check: NOT IsUpdate
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio;         ValueType: dword;  ValueName: isWhitelist;          ValueData: 1; Components: ffdshow; Tasks: whitelist;     Check: NOT IsUpdate
+Root: HKCU; Subkey: {#= ff_reg_base};               ValueType: dword;  ValueName: isWhitelist;          ValueData: 0; Components: ffdshow; Tasks: NOT whitelist; Check: NOT IsUpdate
+Root: HKCU; Subkey: {#= ff_reg_base};               ValueType: dword;  ValueName: isWhitelist;          ValueData: 1; Components: ffdshow; Tasks: whitelist;     Check: NOT IsUpdate
+Root: HKCU; Subkey: {#= ff_reg_base_audio};         ValueType: dword;  ValueName: isWhitelist;          ValueData: 0; Components: ffdshow; Tasks: NOT whitelist; Check: NOT IsUpdate
+Root: HKCU; Subkey: {#= ff_reg_base_audio};         ValueType: dword;  ValueName: isWhitelist;          ValueData: 1; Components: ffdshow; Tasks: whitelist;     Check: NOT IsUpdate
 
-Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: dword;  ValueName: dontaskComp;          ValueData: 0; Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
-Root: HKCU; Subkey: Software\GNU\ffdshow;               ValueType: dword;  ValueName: dontaskComp;          ValueData: 1; Components: ffdshow; Tasks: whitelist AND whitelist\prompt
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio;         ValueType: dword;  ValueName: dontaskComp;          ValueData: 0; Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio;         ValueType: dword;  ValueName: dontaskComp;          ValueData: 1; Components: ffdshow; Tasks: whitelist AND whitelist\prompt
+Root: HKCU; Subkey: {#= ff_reg_base};               ValueType: dword;  ValueName: dontaskComp;          ValueData: 0; Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
+Root: HKCU; Subkey: {#= ff_reg_base};               ValueType: dword;  ValueName: dontaskComp;          ValueData: 1; Components: ffdshow; Tasks: whitelist AND whitelist\prompt
+Root: HKCU; Subkey: {#= ff_reg_base_audio};         ValueType: dword;  ValueName: dontaskComp;          ValueData: 0; Components: ffdshow; Tasks: whitelist AND NOT whitelist\prompt
+Root: HKCU; Subkey: {#= ff_reg_base_audio};         ValueType: dword;  ValueName: dontaskComp;          ValueData: 1; Components: ffdshow; Tasks: whitelist AND whitelist\prompt
 
 ; Registry keys for the audio/video formats:
 #include "reg_formats.iss"
 
 ; Audio pass-through upgrade path:
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: "passthroughAC3";        ValueData: 0; Components: ffdshow; Tasks: NOT filter\passthroughac3
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: "passthroughAC3";        ValueData: 1; Components: ffdshow; Tasks:     filter\passthroughac3
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: "passthroughDTS";        ValueData: 0; Components: ffdshow; Tasks: NOT filter\passthroughdts
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: "passthroughDTS";        ValueData: 1; Components: ffdshow; Tasks:     filter\passthroughdts
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\;                          ValueName: "ac3SPDIF";                          Components: ffdshow;                                   Flags: deletevalue
+Root: HKCU; Subkey: {#= ff_reg_base_audio}\default; ValueType: dword; ValueName: "passthroughAC3";        ValueData: 0; Components: ffdshow; Tasks: NOT filter\passthroughac3
+Root: HKCU; Subkey: {#= ff_reg_base_audio}\default; ValueType: dword; ValueName: "passthroughAC3";        ValueData: 1; Components: ffdshow; Tasks:     filter\passthroughac3
+Root: HKCU; Subkey: {#= ff_reg_base_audio}\default; ValueType: dword; ValueName: "passthroughDTS";        ValueData: 0; Components: ffdshow; Tasks: NOT filter\passthroughdts
+Root: HKCU; Subkey: {#= ff_reg_base_audio}\default; ValueType: dword; ValueName: "passthroughDTS";        ValueData: 1; Components: ffdshow; Tasks:     filter\passthroughdts
+Root: HKCU; Subkey: {#= ff_reg_base_audio}\;                          ValueName: "ac3SPDIF";                          Components: ffdshow;                                   Flags: deletevalue
 
 ; DRC upgrade path:
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: "decoderDRC"; ValueData: 1; Check: GetDecoderDRC;     Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\default; ValueType: dword; ValueName: "decoderDRC"; ValueData: 0; Check: NOT GetDecoderDRC; Components: ffdshow
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\;                          ValueName: "ac3DRC";                                           Components: ffdshow; Flags: deletevalue
-Root: HKCU; Subkey: Software\GNU\ffdshow_audio\;                          ValueName: "dtsDRC";                                           Components: ffdshow; Flags: deletevalue
+Root: HKCU; Subkey: {#= ff_reg_base_audio}\default; ValueType: dword; ValueName: "decoderDRC"; ValueData: 1; Check: GetDecoderDRC;     Components: ffdshow
+Root: HKCU; Subkey: {#= ff_reg_base_audio}\default; ValueType: dword; ValueName: "decoderDRC"; ValueData: 0; Check: NOT GetDecoderDRC; Components: ffdshow
+Root: HKCU; Subkey: {#= ff_reg_base_audio}\;                          ValueName: "ac3DRC";                                           Components: ffdshow; Flags: deletevalue
+Root: HKCU; Subkey: {#= ff_reg_base_audio}\;                          ValueName: "dtsDRC";                                           Components: ffdshow; Flags: deletevalue
 
 [Run]
 Description: {cm:run_audioConfig}; Filename: {syswow64}\rundll32.exe; Parameters: ffdshow.ax,configureAudio; WorkingDir: {app};      Flags: postinstall nowait unchecked; MinVersion: 0,4; Components: ffdshow
@@ -652,11 +662,11 @@ var
   regval: Cardinal;
 begin
   Result := False;
-  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow', name, regval) then begin
+  if RegQueryDwordValue(HKCU, '{#= ff_reg_base}', name, regval) then begin
     Result := (regval = value);
   end
   else begin
-    if RegQueryDwordValue(HKLM, 'Software\GNU\ffdshow', name, regval) then begin
+    if RegQueryDwordValue(HKLM, '{#= ff_reg_base}', name, regval) then begin
       Result := (regval = value);
     end
     else begin
@@ -670,11 +680,11 @@ var
   regval: Cardinal;
 begin
   Result := False;
-  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow', name, regval) then begin
+  if RegQueryDwordValue(HKCU, '{#= ff_reg_base}', name, regval) then begin
     Result := (regval > 0);
   end
   else begin
-    if RegQueryDwordValue(HKLM, 'Software\GNU\ffdshow', name, regval) then begin
+    if RegQueryDwordValue(HKLM, '{#= ff_reg_base}', name, regval) then begin
       Result := (regval > 0);
     end
     else begin
@@ -688,11 +698,11 @@ var
   regval: Cardinal;
 begin
   Result := False;
-  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow_audio', name, regval) then begin
+  if RegQueryDwordValue(HKCU, '{#= ff_reg_base_audio}', name, regval) then begin
     Result := (regval = value);
   end
   else begin
-    if RegQueryDwordValue(HKLM, 'Software\GNU\ffdshow_audio', name, regval) then begin
+    if RegQueryDwordValue(HKLM, '{#= ff_reg_base_audio}', name, regval) then begin
       Result := (regval = value);
     end
     else begin
@@ -706,7 +716,7 @@ var
   regval: Cardinal;
 begin
   Result := False;
-  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow\default', name, regval) then
+  if RegQueryDwordValue(HKCU, '{#= ff_reg_base}\default', name, regval) then
     Result := (regval = value)
   else
     Result := showbydefault;
@@ -717,7 +727,7 @@ var
   regval: Cardinal;
 begin
   Result := False;
-  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow_audio\default', name, regval) then
+  if RegQueryDwordValue(HKCU, '{#= ff_reg_base_audio}\default', name, regval) then
     Result := (regval = value)
   else
     Result := showbydefault;
@@ -746,24 +756,24 @@ begin
     begin
       Result := True;
     end
-  if RegGetSubkeyNames(HKCU, 'Software\GNU\ffdshow_audio\', presetList) then
+  if RegGetSubkeyNames(HKCU, '{#= ff_reg_base_audio}\', presetList) then
     begin
       for index := 0 to GetArrayLength(presetList)-1 do
         begin
           if (presetList[index] <> 'default') then
             begin
-              if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow_audio\' + presetList[index], 'outsfs', regval) then
+              if RegQueryDwordValue(HKCU, '{#= ff_reg_base_audio}\' + presetList[index], 'outsfs', regval) then
                 begin
                   // the second condition equals (regval & 16 > 0)
                   if (Result) OR (CheckTaskAudio('ac3SPDIF', 1, False) AND (((regval / 16) MOD 2) = 1)) then
                     begin
-                      RegWriteDWordValue(HKCU, 'Software\GNU\ffdshow_audio\' + presetList[index], 'passthroughAC3', 1)
+                      RegWriteDWordValue(HKCU, '{#= ff_reg_base_audio}\' + presetList[index], 'passthroughAC3', 1)
                     end
                 end
             end
         end
     end
-  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow_audio\default', 'outsfs', regval) then
+  if RegQueryDwordValue(HKCU, '{#= ff_reg_base_audio}\default', 'outsfs', regval) then
   begin
     // the second condition equals (regval & 16 > 0)
     if CheckTaskAudio('ac3SPDIF', 1, False) AND (((regval / 16) MOD 2) = 1) then
@@ -788,24 +798,24 @@ begin
     begin
       Result := True;
     end
-  if RegGetSubkeyNames(HKCU, 'Software\GNU\ffdshow_audio\', presetList) then
+  if RegGetSubkeyNames(HKCU, '{#= ff_reg_base_audio}\', presetList) then
     begin
       for index := 0 to GetArrayLength(presetList)-1 do
         begin
           if (presetList[index] <> 'default') then
             begin
-              if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow_audio\' + presetList[index], 'outsfs', regval) then
+              if RegQueryDwordValue(HKCU, '{#= ff_reg_base_audio}\' + presetList[index], 'outsfs', regval) then
                 begin
                   // the second condition equals (regval & 16 > 0)
                   if (Result) OR (CheckTaskAudio('ac3SPDIF', 1, False) AND (((regval / 16) MOD 2) = 1)) then
                     begin
-                      RegWriteDWordValue(HKCU, 'Software\GNU\ffdshow_audio\' + presetList[index], 'passthroughDTS', 1)
+                      RegWriteDWordValue(HKCU, '{#= ff_reg_base_audio}\' + presetList[index], 'passthroughDTS', 1)
                     end
                 end
             end
         end
     end
-  if RegQueryDwordValue(HKCU, 'Software\GNU\ffdshow_audio\default', 'outsfs', regval) then
+  if RegQueryDwordValue(HKCU, '{#= ff_reg_base_audio}\default', 'outsfs', regval) then
   begin
     // the second condition equals (regval & 16 > 0)
     if CheckTaskAudio('ac3SPDIF', 1, False) AND (((regval / 16) MOD 2) = 1) then
@@ -831,13 +841,13 @@ begin
     end
 if (Result) then
   begin
-    if RegGetSubkeyNames(HKCU, 'Software\GNU\ffdshow_audio\', presetList) then
+    if RegGetSubkeyNames(HKCU, '{#= ff_reg_base_audio}\', presetList) then
       begin
         for index := 0 to GetArrayLength(presetList)-1 do
           begin
             if (presetList[index] <> 'default') then
               begin
-                RegWriteDWordValue(HKCU, 'Software\GNU\ffdshow_audio\' + presetList[index], 'decoderDRC', 1)
+                RegWriteDWordValue(HKCU, '{#= ff_reg_base_audio}\' + presetList[index], 'decoderDRC', 1)
               end
           end
       end
@@ -905,7 +915,7 @@ end;
 
 function GetDefaultInstallDir(dummy: String): String;
 begin
-  if NOT RegQueryStringValue(HKLM, 'Software\GNU\ffdshow', 'pth', Result) OR (Length(Result) = 0) OR NOT DirExists(Result) then begin
+  if NOT RegQueryStringValue(HKLM, '{#= ff_reg_base}', 'pth', Result) OR (Length(Result) = 0) OR NOT DirExists(Result) then begin
     Result := ExpandConstant('{pf}\ffdshow');
   end
 end;
@@ -971,8 +981,8 @@ end;
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssPostInstall then begin
-    if IsTaskSelected('resetsettings') OR NOT RegValueExists(HKCU, 'Software\GNU\ffdshow\default', 'threadsnum') then begin
-      RegWriteDwordValue(HKCU, 'Software\GNU\ffdshow\default', 'threadsnum', GetNumberOfCores);
+    if IsTaskSelected('resetsettings') OR NOT RegValueExists(HKCU, '{#= ff_reg_base}\default', 'threadsnum') then begin
+      RegWriteDwordValue(HKCU, '{#= ff_reg_base}\default', 'threadsnum', GetNumberOfCores);
     end
   end
 end;
@@ -1029,7 +1039,7 @@ begin
     Result := '24'
   else if SpeakerPage.Values[8] = True then
     Result := IntToStr(reg_mixerOut);
-  RegWriteDWordValue(HKLM, 'Software\GNU\ffdshow_audio', 'isSpkCfg', 1);
+  RegWriteDWordValue(HKLM, '{#= ff_reg_base_audio}', 'isSpkCfg', 1);
 end;
 
 function GetIsMixer(dummy: String): String;
@@ -1069,9 +1079,9 @@ begin
   SpeakerPage.Add('5.0 (' + CustomMessage('spk_5ch')       + ')');                                          // 6
   SpeakerPage.Add('5.1 (' + CustomMessage('spk_5ch')       + ' + ' + CustomMessage('spk_subwoofer') + ')'); // 13
   SpeakerPage.Add('7.1 (' + CustomMessage('spk_7ch')       + ' + ' + CustomMessage('spk_subwoofer') + ')'); // 24
-  if  RegQueryDWordValue(HKCU, 'Software\GNU\ffdshow_audio\default', 'mixerOut', reg_mixerOut)
-  and RegQueryDWordValue(HKCU, 'Software\GNU\ffdshow_audio\default', 'ismixer' , reg_ismixer)
-  and RegQueryDWordValue(HKLM, 'Software\GNU\ffdshow_audio'        , 'isSpkCfg', reg_isSpkCfg) then
+  if  RegQueryDWordValue(HKCU, '{#= ff_reg_base_audio}\default', 'mixerOut', reg_mixerOut)
+  and RegQueryDWordValue(HKCU, '{#= ff_reg_base_audio}\default', 'ismixer' , reg_ismixer)
+  and RegQueryDWordValue(HKLM, '{#= ff_reg_base_audio}'        , 'isSpkCfg', reg_isSpkCfg) then
   begin
     if reg_ismixer = 1 then begin
       isMajorType := True;
@@ -1191,7 +1201,7 @@ begin
   if PageID = VdubDirPage.ID then begin
     if IsComponentSelected('ffdshow\plugins\virtualdub') then begin
       if VdubDirPage.Values[0] = '' then begin
-        if RegQueryStringValue(HKLM, 'Software\GNU\ffdshow', 'pthVirtualDub', regval)
+        if RegQueryStringValue(HKLM, '{#= ff_reg_base}', 'pthVirtualDub', regval)
         and not (regval = ExpandConstant('{app}')) and not (regval = '') then
           VdubDirPage.Values[0] := regval
         else if FileOrDirExists(ExpandConstant('{pf}\VirtualDub\plugins')) then
