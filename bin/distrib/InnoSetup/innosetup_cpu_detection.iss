@@ -1,6 +1,6 @@
 [Files]
 ; For CPU detection
-Source: WinCPUID.dll; Flags: dontcopy noencryption;
+Source: "WinCPUID.dll"; Flags: dontcopy noencryption;
 
 [Code]
 Type
@@ -94,8 +94,8 @@ begin
 		// something went wrong
   end
   else begin
-    if (CPUInfo.bSSE_Supported = 1) then begin
-      cpu_sse := true;
+    if (CPUInfo.bSSE_Supported  = 1) then begin
+      cpu_sse  := true;
     end
     if (CPUInfo.bSSE2_Supported = 1) then begin
       cpu_sse2 := true;
@@ -108,7 +108,7 @@ begin
     if cpu_cores < 1 then begin
       cpu_cores := 1;
     end
-    
+
     cpu_family := CPUInfo.coreInfo.dwCPUFamily;
   end
 
