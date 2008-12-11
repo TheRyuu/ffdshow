@@ -5,7 +5,7 @@
 	Name="ffdshow"
 	ProjectGUID="{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
-	VCNestedProjectCRC32="1709467307"
+	VCNestedProjectCRC32="781670134"
 	VCNestedProjectFileName="ffdshow_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -3268,6 +3268,15 @@
 			<File 
 				RelativePath="src\dialog\Twindow.h">
 			</File>
+			<Filter 
+				Name="audio">
+				<File 
+					RelativePath=".\src\dialog\audio\CaudioDecoderOptions.cpp">
+				</File>
+				<File 
+					RelativePath=".\src\dialog\audio\CaudioDecoderOptions.h">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter 
 			Name="settings">
