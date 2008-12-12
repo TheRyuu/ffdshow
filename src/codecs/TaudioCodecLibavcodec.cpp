@@ -170,10 +170,17 @@ HRESULT TaudioCodecLibavcodec::decode(TbyteBuffer &src0)
 {
  // Dynamic range compression for AC3/DTS formats
  if (codecId == CODEC_ID_AC3 || codecId == CODEC_ID_EAC3 || codecId == CODEC_ID_DTS)
+  {
    if (deci->getParam2(IDFF_audio_decoder_DRC))
-	   avctx->drc_scale=1.0;
+    {
+     float drcLevel=(float)deci->getParam2(IDFF_audio_decoder_DRC_Level) / 100;
+     avctx->drc_scale=drcLevel;
+    }
    else
-	   avctx->drc_scale=0.0;
+    {
+     avctx->drc_scale=0.0;
+    }
+  }
 
  int size=(int)src0.size();
  unsigned char *src=&*src0.begin();

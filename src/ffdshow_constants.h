@@ -937,6 +937,7 @@
 #define IDFF_dithering          1311
 #define IDFF_noiseShaping       1312
 #define IDFF_audio_decoder_DRC  3509
+#define IDFF_audio_decoder_DRC_Level 3510
 
 #define IDFF_filterDScaler        2200
 #define IDFF_isDScaler            2201
@@ -1533,6 +1534,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3510
+//next:3511
 
 #endif

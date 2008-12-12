@@ -45,6 +45,7 @@ struct a52_state_s {
     sample_t bias;		/* output bias */
 
     int dynrnge;		/* apply dynamic range */
+    sample_t dynrngclevel;  /* compression level - ffdshow custom variable */
     sample_t dynrng;		/* dynamic range */
     void * dynrngdata;		/* dynamic range callback funtion and data */
     sample_t (* dynrngcall) (sample_t range, void * dynrngdata);

@@ -271,6 +271,20 @@ void a52_dynrng (a52_state_t * state,
     }
 }
 
+/* ffdshow custom function */
+void a52_dynrngsetlevel (a52_state_t * state, sample_t compressionlevel)
+{
+    if (compressionlevel == 0)
+    {
+        state->dynrnge = 0;
+    }
+    else
+    {
+        state->dynrnge = 1;
+    }
+    state->dynrngclevel = compressionlevel;
+}
+
 static int parse_exponents (a52_state_t * state, int expstr, int ngrps,
 			    uint8_t exponent, uint8_t * dest)
 {
@@ -624,7 +638,7 @@ int a52_block (a52_state_t * state)
             if (state->rfmode && state->compre)
                 range = state->compr;
 
-		state->dynrng = state->level * range;
+		state->dynrng = state->level * ((range - 1.0) * state->dynrngclevel + 1.0); //ffdshow custom code
 	    }
 	}
     } while (chaninfo--);

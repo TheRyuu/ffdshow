@@ -71,6 +71,7 @@ bool TaudioCodecLiba52::init(const CMediaType &mt)
  dll->loadFunction(a52_samples,"a52_samples");
  dll->loadFunction(a52_syncinfo,"a52_syncinfo");
  dll->loadFunction(a52_dynrng,"a52_dynrng");
+ dll->loadFunction(a52_dynrngsetlevel,"a52_dynrngsetlevel");
  dll->loadFunction(a52_frame,"a52_frame");
  dll->loadFunction(a52_block,"a52_block");
  dll->loadFunction(a52_free,"a52_free");
@@ -129,9 +130,15 @@ HRESULT TaudioCodecLiba52::decode(TbyteBuffer &src)
           {
            bpssum+=(lastbps=bit_rate/1000);numframes++;
            // Dynamic range compression
-           drc=deci->getParam2(IDFF_audio_decoder_DRC);
-           if (drc==0)
-            a52_dynrng(state,NULL,NULL);
+           if (deci->getParam2(IDFF_audio_decoder_DRC))
+		   {
+            liba52::sample_t drcLevel = ((liba52::sample_t)deci->getParam2(IDFF_audio_decoder_DRC_Level) / 100);
+			a52_dynrngsetlevel(state, drcLevel);
+		   }
+           else
+		   {
+			a52_dynrngsetlevel(state, 0.0);
+		   }
            int scmapidx=std::min(flags&A52_CHANNEL_MASK,int(countof(scmaps)/2));
            const Tscmap &scmap=scmaps[scmapidx+((flags&A52_LFE)?(countof(scmaps)/2):0)];
            float *dst0,*dst;dst0=dst=(float*)getDst(6*256*scmap.nchannels*sizeof(float));

@@ -17,6 +17,7 @@ private:
  liba52::sample_t* (*a52_samples)(liba52::a52_state_t * state);
  int (*a52_syncinfo)(uint8_t * buf, int * flags, int * sample_rate, int * bit_rate);
  void (*a52_dynrng)(liba52::a52_state_t * state,liba52::sample_t (* call) (liba52::sample_t, void *), void * data);
+ void (*a52_dynrngsetlevel)(liba52::a52_state_t * state,liba52::sample_t compressionlevel);
  int (*a52_frame)(liba52::a52_state_t * state, uint8_t * buf, int * flags, liba52::sample_t * level, liba52::sample_t bias);
  int (*a52_block)(liba52::a52_state_t * state);
  void (*a52_free)(liba52::a52_state_t * state);

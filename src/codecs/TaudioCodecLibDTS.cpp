@@ -133,10 +133,19 @@ HRESULT TaudioCodecLibDTS::decode(TbyteBuffer &src)
          if (dca_frame(state,p,&flags,&level,bias)==0)
           {
            bpssum+=(lastbps=bit_rate/1000);numframes++;
-           // Dynamic range compression
-           drc=deci->getParam2(IDFF_audio_decoder_DRC);
-           if (drc==0)
-            dca_dynrng(state,NULL,NULL);
+           // Dynamic range compression - Not suppored yet by libdts
+           if (deci->getParam2(IDFF_audio_decoder_DRC))
+            {
+             libdca::sample_t drcLevel = ((libdca::sample_t)deci->getParam2(IDFF_audio_decoder_DRC_Level) / 100);
+             if (drcLevel <= 0.5)
+			 {
+              dca_dynrng(state,NULL,NULL);
+             }
+            }
+           else
+            {
+             dca_dynrng(state,NULL,NULL);
+            }
            int scmapidx=std::min(flags&DCA_CHANNEL_MASK,int(countof(scmaps)/2));
            const Tscmap &scmap=scmaps[scmapidx+((flags&DCA_LFE)?(countof(scmaps)/2):0)];
            int blocks=dca_blocks_num(state);

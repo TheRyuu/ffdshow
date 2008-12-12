@@ -56,6 +56,7 @@ int a52_frame (a52_state_t * state, uint8_t * buf, int * flags,
 	       sample_t * level, sample_t bias);
 void a52_dynrng (a52_state_t * state,
 		 sample_t (* call) (sample_t, void *), void * data);
+void a52_dynrngsetlevel (a52_state_t * state, sample_t compressionlevel);
 int a52_block (a52_state_t * state);
 void a52_free (a52_state_t * state);
 

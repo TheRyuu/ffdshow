@@ -29,13 +29,14 @@ public:
    preferredsfs=src.preferredsfs;
    dithering=src.dithering;noiseShaping=src.noiseShaping;
    decoderDRC = src.decoderDRC;
+   decoderDRCLevel = src.decoderDRCLevel;
 
    return *this;
   }
  virtual Tpreset* copy(void) {return new_copy(this);}
 
  int preferredsfs;
- int dithering,noiseShaping,decoderDRC;
+ int dithering,noiseShaping,decoderDRC,decoderDRCLevel;
 
  ToutputAudioSettings *output;
 };
