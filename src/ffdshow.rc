@@ -2591,7 +2591,7 @@ EXSTYLE WS_EX_CONTROLPARENT
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
 	GROUPBOX        "Dynamic range compression",IDC_STATIC,0,0,266,39
-    CONTROL         "Apply dynamic range compression if available (AC3, DTS decoders)",IDC_CHB_AUDIO_DECODER_DRC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,11,230,10
+    CONTROL         "Apply dynamic range compression if available (AC3, E-AC3 decoders)",IDC_CHB_AUDIO_DECODER_DRC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,11,236,10
     LTEXT           "Compression level:",IDC_STATIC,16,22,100,8
     CONTROL         "",IDC_TBR_DECODER_DRC_LEVEL,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,90,22,89,10
 	LTEXT           "%",IDC_LBL_DECODER_DRC_LEVEL,180,22,30,8
