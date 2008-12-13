@@ -320,6 +320,7 @@ bool TvideoCodecLibavcodec::isTSfile(void)
  ffstring sourceExt;
  sourceFullFlnm = deci->getSourceName();
  extractfileext(sourceFullFlnm,sourceExt);
+ sourceExt.ConvertToLowerCase();
  return (sourceExt == _l("ts") || sourceExt == _l("m2ts") || sourceExt == _l("m2t") || sourceExt == _l("mts") || sourceExt == _l("mpg")  || sourceExt == _l("mpeg") || sourceExt == _l(""));
 }
 
