@@ -81,6 +81,7 @@ int (*avcodec_decode_audio2)(AVCodecContext *avctx, int16_t *samples,
 
  int (*avcodec_h264_search_recovery_point)(AVCodecContext *avctx,
                          const uint8_t *buf, int buf_size, int *recovery_frame_cnt);
+ int (*avcodec_h264_decode_init_is_avc)(AVCodecContext *avctx);
 
  static const char_t *idctNames[],*errorRecognitions[],*errorConcealments[];
  struct Tdia_size

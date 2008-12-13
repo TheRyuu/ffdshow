@@ -2062,6 +2062,16 @@ static av_cold void common_init(H264Context *h){
     memset(h->pps.scaling_matrix8, 16, 2*64*sizeof(uint8_t));
 }
 
+// ffdshow custom code - adapted for DirectShow
+av_cold int avcodec_h264_decode_init_is_avc(AVCodecContext *avctx){
+    if(avctx->extradata_size > 0 && avctx->extradata &&
+       (*(char *)avctx->extradata == 1 || (avctx->codec_tag == 0x31637661 || avctx->codec_tag == 0x31435641))){
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 static av_cold int decode_init(AVCodecContext *avctx){
     H264Context *h= avctx->priv_data;
     MpegEncContext * const s = &h->s;
@@ -2086,13 +2096,10 @@ static av_cold int decode_init(AVCodecContext *avctx){
 
     decode_init_vlc();
 
-    if(avctx->extradata_size > 0 && avctx->extradata &&
-       (*(char *)avctx->extradata == 1 || (avctx->codec_tag == 0x31637661 || avctx->codec_tag == 0x31435641))){ /* ffdshow custom code */
-        h->is_avc = 1;
-        h->got_avcC = 0;
-    } else {
-        h->is_avc = 0;
-    }
+    /* ffdshow custom code begin */
+    h->is_avc = avcodec_h264_decode_init_is_avc(avctx);
+    h->got_avcC = 0;
+    /* ffdshow custom code end */
 
     h->thread_context[0] = h;
     h->outputed_poc = INT_MIN;

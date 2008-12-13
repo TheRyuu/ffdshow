@@ -104,6 +104,7 @@ Tlibavcodec::Tlibavcodec(const Tconfig *config):refcount(0)
  dll->loadFunction(av_parser_parse,"av_parser_parse"); 
  dll->loadFunction(av_parser_close,"av_parser_close"); 
  dll->loadFunction(avcodec_h264_search_recovery_point,"avcodec_h264_search_recovery_point");
+ dll->loadFunction(avcodec_h264_decode_init_is_avc,"avcodec_h264_decode_init_is_avc");
 
  if (!dec_only)
   {

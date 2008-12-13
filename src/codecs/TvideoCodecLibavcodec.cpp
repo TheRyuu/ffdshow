@@ -84,7 +84,7 @@ void TvideoCodecLibavcodec::create(void)
  codecName[0]='\0';
  ccDecoder=NULL;
  autoSkipingLoopFilter= false;
- h264onTS = false;
+ h264_has_start_code = false;
 }
 
 TvideoCodecLibavcodec::~TvideoCodecLibavcodec()
@@ -124,7 +124,7 @@ void TvideoCodecLibavcodec::end(void)
 bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const CMediaType &mt,int sourceFlags)
 {
  oldpict.rtStop = 0;
- h264onTS = false;
+ h264_has_start_code = false;
  avcodec=libavcodec->avcodec_find_decoder(codecId);
  if (!avcodec) return false;
 
@@ -227,9 +227,6 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
  else
   sendextradata=false;
 
- if (codecId == CODEC_ID_H264)
-  codedPictureBuffer.init();
-
  if (fcc==FOURCC_RLE4 || fcc==FOURCC_RLE8 || fcc==FOURCC_CSCD || sup_palette(codecId))
   {
    BITMAPINFOHEADER bih;ExtractBIH(mt,&bih);
@@ -294,6 +291,14 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
  if (libavcodec->avcodec_open(avctx,avcodec)<0) {
  	return false;
  }
+ if (codecId == CODEC_ID_H264
+    && !libavcodec->avcodec_h264_decode_init_is_avc(avctx)
+    && isTSfile())
+  h264_has_start_code = true;
+
+ if (h264_has_start_code)
+  codedPictureBuffer.init();
+
  pict.csp=avctx->pix_fmt!=PIX_FMT_NONE?csp_lavc2ffdshow(avctx->pix_fmt):FF_CSP_420P;
  if (avctx->sample_aspect_ratio.num && avctx->sample_aspect_ratio.den) {
   pict.setSar(avctx->sample_aspect_ratio);
@@ -306,6 +311,16 @@ bool TvideoCodecLibavcodec::beginDecompress(TffPictBase &pict,FOURCC fcc,const C
  segmentTimeStart=0;
  posB=1;
  return true;
+}
+
+// return true for TS, PS files and no extension (DVBSource etc).
+bool TvideoCodecLibavcodec::isTSfile(void)
+{   
+ const char_t *sourceFullFlnm;
+ ffstring sourceExt;
+ sourceFullFlnm = deci->getSourceName();
+ extractfileext(sourceFullFlnm,sourceExt);
+ return (sourceExt == _l("ts") || sourceExt == _l("m2ts") || sourceExt == _l("m2t") || sourceExt == _l("mts") || sourceExt == _l("mpg")  || sourceExt == _l("mpeg") || sourceExt == _l(""));
 }
 
 void TvideoCodecLibavcodec::onGetBuffer(AVFrame *pic)
@@ -398,19 +413,8 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
     }
   }
 
- // H.264 NAL type auto detection
- if (src && codecId == CODEC_ID_H264)
-  {
-   int size_h264ts = 0;
-   if (h264onTS || h264RandomAccess.recovery_mode == 1)
-    size_h264ts = codedPictureBuffer.append(src, size);
-
-   if (size_h264ts > 0 || h264onTS)
-    {
-     h264onTS = true;
-     size = size_h264ts;
-    }
-  }
+ if (src && h264_has_start_code)
+  size = codedPictureBuffer.append(src, size);
 
  while (!src || size>0)
   {
@@ -438,7 +442,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
       {
        if (codecId == CODEC_ID_H264)
         {
-         if (h264onTS)
+         if (h264_has_start_code)
           used_bytes = codedPictureBuffer.send(&got_picture);
          else
           {
@@ -535,7 +539,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
      TffPict pict(csp,frame->data,linesize,r,true,frametype,fieldtype,srcLen0,pIn,avctx->palctrl); //TODO: src frame size
      pict.gmcWarpingPoints=frame->num_sprite_warping_points;pict.gmcWarpingPointsReal=frame->real_sprite_warping_points;
 
-     if (h264onTS)
+     if (h264_has_start_code)
       {
        pict.rtStart = frame->reordered_opaque;
        pict.rtStop = frame->reordered_opaque2;

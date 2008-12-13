@@ -45,7 +45,8 @@ private:
  TccDecoder *ccDecoder;
  bool autoSkipingLoopFilter;
  enum AVDiscard initialSkipLoopFilter;
- bool h264onTS; // H.264/AVC on mpeg2 trasport stream. Program stream is handled in the same way.
+ bool h264_has_start_code; // H.264/AVC on mpeg2 trasport stream. Program stream is handled in the same way.
+ bool isTSfile(void);
 protected:
  virtual LRESULT beginCompress(int cfgcomode,int csp,const Trect &r);
  virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);
