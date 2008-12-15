@@ -179,7 +179,7 @@ HRESULT TaudioFilterOutput::process(TfilterQueue::iterator it,TsampleFormat &fmt
      TbyteBuffer::iterator inputsamples=ac3inputbuf.begin();
      int inputsize=(int)ac3inputbuf.size();
      int ac3framesize=avctx->frame_size*fmt.blockAlign();
-     while (inputsize>ac3framesize)
+     while (inputsize>=ac3framesize)
       {
        int ret=libavcodec->avcodec_encode_audio(avctx,ac3buf,AC3_MAX_CODED_FRAME_SIZE,(const short*)&*inputsamples);
        HRESULT hr;
