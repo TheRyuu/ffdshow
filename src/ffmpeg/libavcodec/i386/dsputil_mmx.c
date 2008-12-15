@@ -47,13 +47,13 @@ DECLARE_ALIGNED_16(const uint64_t, ff_pdw_80000000[2]) =
 
 DECLARE_ALIGNED_8 (const uint64_t, ff_pw_3  ) = 0x0003000300030003ULL;
 DECLARE_ALIGNED_8 (const uint64_t, ff_pw_4  ) = 0x0004000400040004ULL;
-DECLARE_ALIGNED_16(const xmm_t,    ff_pw_5  ) = {0x0005000500050005ULL, 0x0005000500050005ULL};
-DECLARE_ALIGNED_16(const xmm_t,    ff_pw_8  ) = {0x0008000800080008ULL, 0x0008000800080008ULL};
+DECLARE_ALIGNED_16(const xmm_reg,  ff_pw_5  ) = {0x0005000500050005ULL, 0x0005000500050005ULL};
+DECLARE_ALIGNED_16(const xmm_reg,  ff_pw_8  ) = {0x0008000800080008ULL, 0x0008000800080008ULL};
 DECLARE_ALIGNED_8 (const uint64_t, ff_pw_15 ) = 0x000F000F000F000FULL;
-DECLARE_ALIGNED_16(const xmm_t,    ff_pw_16 ) = {0x0010001000100010ULL, 0x0010001000100010ULL};
+DECLARE_ALIGNED_16(const xmm_reg,  ff_pw_16 ) = {0x0010001000100010ULL, 0x0010001000100010ULL};
 DECLARE_ALIGNED_8 (const uint64_t, ff_pw_20 ) = 0x0014001400140014ULL;
-DECLARE_ALIGNED_16(const xmm_t,    ff_pw_28 ) = {0x001C001C001C001CULL, 0x001C001C001C001CULL};
-DECLARE_ALIGNED_16(const xmm_t,    ff_pw_32 ) = {0x0020002000200020ULL, 0x0020002000200020ULL};
+DECLARE_ALIGNED_16(const xmm_reg,  ff_pw_28 ) = {0x001C001C001C001CULL, 0x001C001C001C001CULL};
+DECLARE_ALIGNED_16(const xmm_reg,  ff_pw_32 ) = {0x0020002000200020ULL, 0x0020002000200020ULL};
 DECLARE_ALIGNED_8 (const uint64_t, ff_pw_42 ) = 0x002A002A002A002AULL;
 DECLARE_ALIGNED_8 (const uint64_t, ff_pw_64 ) = 0x0040004000400040ULL;
 DECLARE_ALIGNED_8 (const uint64_t, ff_pw_96 ) = 0x0060006000600060ULL;
@@ -464,21 +464,42 @@ static void avg_pixels16_sse2(uint8_t *block, const uint8_t *pixels, int line_si
         );
 }
 
-static void clear_blocks_mmx(DCTELEM *blocks)
+#define CLEAR_BLOCKS(name,n) \
+static void name(DCTELEM *blocks)\
+{\
+    __asm__ volatile(\
+                "pxor %%mm7, %%mm7              \n\t"\
+                "mov     %1, %%"REG_a"          \n\t"\
+                "1:                             \n\t"\
+                "movq %%mm7, (%0, %%"REG_a")    \n\t"\
+                "movq %%mm7, 8(%0, %%"REG_a")   \n\t"\
+                "movq %%mm7, 16(%0, %%"REG_a")  \n\t"\
+                "movq %%mm7, 24(%0, %%"REG_a")  \n\t"\
+                "add $32, %%"REG_a"             \n\t"\
+                " js 1b                         \n\t"\
+                : : "r" (((uint8_t *)blocks)+128*n),\
+                    "i" (-128*n)\
+                : "%"REG_a\
+        );\
+}
+CLEAR_BLOCKS(clear_blocks_mmx, 6)
+CLEAR_BLOCKS(clear_block_mmx, 1)
+
+static void clear_block_sse(DCTELEM *block)
 {
     __asm__ volatile(
-                "pxor %%mm7, %%mm7              \n\t"
-                "mov $-128*6, %%"REG_a"         \n\t"
-                "1:                             \n\t"
-                "movq %%mm7, (%0, %%"REG_a")    \n\t"
-                "movq %%mm7, 8(%0, %%"REG_a")   \n\t"
-                "movq %%mm7, 16(%0, %%"REG_a")  \n\t"
-                "movq %%mm7, 24(%0, %%"REG_a")  \n\t"
-                "add $32, %%"REG_a"             \n\t"
-                " js 1b                         \n\t"
-                : : "r" (((uint8_t *)blocks)+128*6)
-                : "%"REG_a
-        );
+        "xorps  %%xmm0, %%xmm0  \n"
+        "movaps %%xmm0,    (%0) \n"
+        "movaps %%xmm0,  16(%0) \n"
+        "movaps %%xmm0,  32(%0) \n"
+        "movaps %%xmm0,  48(%0) \n"
+        "movaps %%xmm0,  64(%0) \n"
+        "movaps %%xmm0,  80(%0) \n"
+        "movaps %%xmm0,  96(%0) \n"
+        "movaps %%xmm0, 112(%0) \n"
+        :: "r"(block)
+        : "memory"
+    );
 }
 
 static void add_bytes_mmx(uint8_t *dst, uint8_t *src, int w){
@@ -2502,7 +2523,10 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         c->put_pixels_clamped = put_pixels_clamped_mmx;
         c->put_signed_pixels_clamped = put_signed_pixels_clamped_mmx;
         c->add_pixels_clamped = add_pixels_clamped_mmx;
+        c->clear_block  = clear_block_mmx;
         c->clear_blocks = clear_blocks_mmx;
+        if (mm_flags & FF_MM_SSE)
+            c->clear_block = clear_block_sse;
 
 #define SET_HPEL_FUNCS(PFX, IDX, SIZE, CPU) \
         c->PFX ## _pixels_tab[IDX][0] = PFX ## _pixels ## SIZE ## _ ## CPU; \

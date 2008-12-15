@@ -2733,9 +2733,6 @@ void ff_put_vc1_mspel_mc00_c(uint8_t *dst, uint8_t *src, int stride, int rnd) {
 
 void ff_intrax8dsp_init(DSPContext* c, AVCodecContext *avctx);
 
-/* H264 specific */
-void ff_h264dspenc_init(DSPContext* c, AVCodecContext *avctx);
-
 #if defined(CONFIG_RV40_DECODER)
 static void put_rv40_qpel16_mc33_c(uint8_t *dst, uint8_t *src, int stride){
     put_pixels16_xy2_c(dst, src, stride, 16);
@@ -3413,6 +3410,11 @@ void ff_set_cmp(DSPContext* c, me_cmp_func *cmp, int type){
     }
 }
 
+static void clear_block_c(DCTELEM *block)
+{
+    memset(block, 0, sizeof(DCTELEM)*64);
+}
+
 /**
  * memset(blocks, 0, sizeof(DCTELEM)*6*64)
  */
@@ -4002,28 +4004,6 @@ void ff_float_to_int16_interleave_c(int16_t *dst, const float **src, long len, i
     }
 }
 
-static void add_int16_c(int16_t * v1, int16_t * v2, int order)
-{
-    while (order--)
-       *v1++ += *v2++;
-}
-
-static void sub_int16_c(int16_t * v1, int16_t * v2, int order)
-{
-    while (order--)
-        *v1++ -= *v2++;
-}
-
-static int32_t scalarproduct_int16_c(int16_t * v1, int16_t * v2, int order, int shift)
-{
-    int res = 0;
-
-    while (order--)
-        res += (*v1++ * *v2++) >> shift;
-
-    return res;
-}
-
 #define W0 2048
 #define W1 2841 /* 2048*sqrt (2)*cos (1*pi/16) */
 #define W2 2676 /* 2048*sqrt (2)*cos (2*pi/16) */
@@ -4282,6 +4262,7 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
     c->sum_abs_dctelem = sum_abs_dctelem_c;
     c->gmc1 = gmc1_c;
     c->gmc = ff_gmc_c;
+    c->clear_block = clear_block_c;
     c->clear_blocks = clear_blocks_c;
     c->pix_sum = pix_sum_c;
     c->pix_norm1 = pix_norm1_c;
@@ -4516,9 +4497,6 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
 #ifdef CONFIG_AC3_DECODER
     c->ac3_downmix = ff_ac3_downmix_c;
 #endif
-#ifdef CONFIG_FLAC_ENCODER
-    c->flac_compute_autocorr = ff_flac_compute_autocorr;
-#endif
     c->vector_fmul = vector_fmul_c;
     c->vector_fmul_reverse = vector_fmul_reverse_c;
     c->vector_fmul_add_add = ff_vector_fmul_add_add_c;
@@ -4526,9 +4504,6 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
     c->int32_to_float_fmul_scalar = int32_to_float_fmul_scalar_c;
     c->float_to_int16 = ff_float_to_int16_c;
     c->float_to_int16_interleave = ff_float_to_int16_interleave_c;
-    c->add_int16 = add_int16_c;
-    c->sub_int16 = sub_int16_c;
-    c->scalarproduct_int16 = scalarproduct_int16_c;
 
     c->shrink[0]= ff_img_copy_plane;
     c->shrink[1]= ff_shrink22;

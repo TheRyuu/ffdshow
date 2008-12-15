@@ -200,6 +200,7 @@ typedef struct DSPContext {
      */
     void (*gmc )(uint8_t *dst/*align 8*/, uint8_t *src/*align 1*/, int stride, int h, int ox, int oy,
                     int dxx, int dxy, int dyx, int dyy, int shift, int r, int width, int height);
+    void (*clear_block)(DCTELEM *block/*align 16*/);
     void (*clear_blocks)(DCTELEM *blocks/*align 16*/);
     int (*pix_sum)(uint8_t * pix, int line_size);
     int (*pix_norm1)(uint8_t * pix, int line_size);
@@ -367,8 +368,6 @@ typedef struct DSPContext {
     /* assume len is a multiple of 4, and arrays are 16-byte aligned */
     void (*vorbis_inverse_coupling)(float *mag, float *ang, int blocksize);
     void (*ac3_downmix)(float (*samples)[256], float (*matrix)[2], int out_ch, int in_ch, int len);
-    /* no alignment needed */
-    void (*flac_compute_autocorr)(const int32_t *data, int len, int lag, double *autoc);
     /* assume len is a multiple of 8, and arrays are 16-byte aligned */
     void (*vector_fmul)(float *dst, const float *src, int len);
     void (*vector_fmul_reverse)(float *dst, const float *src0, const float *src1, int len);
@@ -467,24 +466,6 @@ typedef struct DSPContext {
     void (*x8_spatial_compensation[12])(uint8_t *src , uint8_t *dst, int linesize);
     void (*x8_setup_spatial_compensation)(uint8_t *src, uint8_t *dst, int linesize,
            int * range, int * sum,  int edges);
-
-    /* ape functions */
-    /**
-     * Add contents of the second vector to the first one.
-     * @param len length of vectors, should be multiple of 16
-     */
-    void (*add_int16)(int16_t *v1/*align 16*/, int16_t *v2, int len);
-    /**
-     * Add contents of the second vector to the first one.
-     * @param len length of vectors, should be multiple of 16
-     */
-    void (*sub_int16)(int16_t *v1/*align 16*/, int16_t *v2, int len);
-    /**
-     * Calculate scalar product of two vectors.
-     * @param len length of vectors, should be multiple of 16
-     * @param shift number of bits to discard from product
-     */
-    int32_t (*scalarproduct_int16)(int16_t *v1, int16_t *v2/*align 16*/, int len, int shift);
 
     /* rv30 functions */
     qpel_mc_func put_rv30_tpel_pixels_tab[4][16];

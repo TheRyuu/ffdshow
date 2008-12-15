@@ -810,7 +810,7 @@ static inline int get_p_cbp(MpegEncContext * s,
         for (i = 0; i < 6; i++) {
             if (s->block_last_index[i] >= 0 && ((cbp >> (5 - i))&1)==0 ){
                 s->block_last_index[i]= -1;
-                memset(s->block[i], 0, sizeof(DCTELEM)*64);
+                s->dsp.clear_block(s->block[i]);
             }
         }
     }else{
@@ -853,7 +853,7 @@ static inline int get_b_cbp(MpegEncContext * s, DCTELEM block[6][64],
         for (i = 0; i < 6; i++) {
             if (s->block_last_index[i] >= 0 && ((cbp >> (5 - i))&1)==0 ){
                 s->block_last_index[i]= -1;
-                memset(s->block[i], 0, sizeof(DCTELEM)*64);
+                s->dsp.clear_block(s->block[i]);
             }
         }
     }else{
@@ -1485,17 +1485,17 @@ void ff_h263_loop_filter(MpegEncContext * s){
         qp_c= 0;
 
     if(s->mb_y){
-        int qp_dt, qp_t, qp_tc;
+        int qp_dt, qp_tt, qp_tc;
 
         if(IS_SKIP(s->current_picture.mb_type[xy-s->mb_stride]))
-            qp_t=0;
+            qp_tt=0;
         else
-            qp_t= s->current_picture.qscale_table[xy-s->mb_stride];
+            qp_tt= s->current_picture.qscale_table[xy-s->mb_stride];
 
         if(qp_c)
             qp_tc= qp_c;
         else
-            qp_tc= qp_t;
+            qp_tc= qp_tt;
 
         if(qp_tc){
             const int chroma_qp= s->chroma_qscale_table[qp_tc];
@@ -1506,12 +1506,12 @@ void ff_h263_loop_filter(MpegEncContext * s){
             s->dsp.h263_v_loop_filter(dest_cr , uvlinesize, chroma_qp);
         }
 
-        if(qp_t)
-            s->dsp.h263_h_loop_filter(dest_y-8*linesize+8  ,   linesize, qp_t);
+        if(qp_tt)
+            s->dsp.h263_h_loop_filter(dest_y-8*linesize+8  ,   linesize, qp_tt);
 
         if(s->mb_x){
-            if(qp_t || IS_SKIP(s->current_picture.mb_type[xy-1-s->mb_stride]))
-                qp_dt= qp_t;
+            if(qp_tt || IS_SKIP(s->current_picture.mb_type[xy-1-s->mb_stride]))
+                qp_dt= qp_tt;
             else
                 qp_dt= s->current_picture.qscale_table[xy-1-s->mb_stride];
 
@@ -4651,7 +4651,7 @@ retry:
                 rl = &rl_intra_aic;
                 i = 0;
                 s->gb= gb;
-                memset(block, 0, sizeof(DCTELEM)*64);
+                s->dsp.clear_block(block);
                 goto retry;
             }
             av_log(s->avctx, AV_LOG_ERROR, "run overflow at %dx%d i:%d\n", s->mb_x, s->mb_y, s->mb_intra);

@@ -37,15 +37,6 @@
           extern AVCodecParser x##_parser; \
           if(ENABLE_##X##_PARSER)  av_register_codec_parser(&x##_parser); }
 
-/**
- * Register all the codecs, parsers and bitstream filters which were enabled at
- * configuration time. If you do not call this function you can select exactly
- * which formats you want to support, by using the individual registration
- * functions.
- *
- * @see register_avcodec
- * @see av_register_codec_parser
- */
 void avcodec_register_all(void)
 {
     static int initialized;

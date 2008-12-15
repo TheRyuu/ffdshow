@@ -38,7 +38,7 @@
 
 #define LIBAVCODEC_VERSION_MAJOR 52
 #define LIBAVCODEC_VERSION_MINOR  6
-#define LIBAVCODEC_VERSION_MICRO  1
+#define LIBAVCODEC_VERSION_MICRO  3
 
 #define LIBAVCODEC_VERSION_INT  AV_VERSION_INT(LIBAVCODEC_VERSION_MAJOR, \
                                                LIBAVCODEC_VERSION_MINOR, \
@@ -2212,7 +2212,12 @@ unsigned avcodec_version(void);
  */
 void avcodec_init(void);
 
-void register_avcodec(AVCodec *format);
+/**
+ * Register the codec \p codec and initialize libavcodec.
+ *
+ * @see avcodec_init()
+ */
+void register_avcodec(AVCodec *codec);
 
 /**
  * Finds a registered encoder with a matching codec ID.
@@ -2455,6 +2460,16 @@ int avcodec_encode_video(AVCodecContext *avctx, uint8_t *buf, int buf_size,
 
 int avcodec_close(AVCodecContext *avctx);
 
+/**
+ * Register all the codecs, parsers and bitstream filters which were enabled at
+ * configuration time. If you do not call this function you can select exactly
+ * which formats you want to support, by using the individual registration
+ * functions.
+ *
+ * @see register_avcodec
+ * @see av_register_codec_parser
+ * @see av_register_bitstream_filter
+ */
 void avcodec_register_all(void);
 
 /**
