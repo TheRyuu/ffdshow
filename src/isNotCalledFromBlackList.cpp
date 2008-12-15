@@ -37,6 +37,7 @@ bool isNotCalledFromBlackList(HINSTANCE hInstance)
  char_t* cmd;
  char_t* endOfCmd;
 
+ /* get filename of calling application */
  cmd= GetCommandLine();
  cmdCopy[MAX_PATH+2]='\0';
  ff_strncpy(cmdCopy,cmd,MAX_PATH+2);
@@ -73,11 +74,20 @@ bool isNotCalledFromBlackList(HINSTANCE hInstance)
       }
     }
   }
+
+ /* some applications/games that are always blacklisted */
  blacklistList2.push_back(_l("oblivion.exe"));
  blacklistList2.push_back(_l("morrowind.exe"));
  blacklistList2.push_back(_l("YSO_WIN.exe"));
  blacklistList2.push_back(_l("WORMS 4 MAYHEM.EXE"));
  blacklistList2.push_back(_l("sh3.exe"));
+ blacklistList2.push_back(_l("fallout3.exe"));
+ blacklistList2.push_back(_l("hl2.exe"));
+ blacklistList2.push_back(_l("gta_sa.exe"));
+ blacklistList2.push_back(_l("age3.exe"));
+ blacklistList2.push_back(_l("pes2008.exe"));
+ blacklistList2.push_back(_l("pes2009.exe"));
+ 
  for (strings::const_iterator b=blacklistList2.begin();b!=blacklistList2.end();b++)
   {
    if (DwStrcasecmp(*b,fileName)==0)
