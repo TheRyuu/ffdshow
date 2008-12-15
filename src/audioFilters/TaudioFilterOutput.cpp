@@ -183,7 +183,7 @@ HRESULT TaudioFilterOutput::process(TfilterQueue::iterator it,TsampleFormat &fmt
       {
        int ret=libavcodec->avcodec_encode_audio(avctx,ac3buf,AC3_MAX_CODED_FRAME_SIZE,(const short*)&*inputsamples);
        HRESULT hr;
-       if ((hr=deciA->deliverSampleSPDIF(ac3buf,ret,avctx->bit_rate,0x0001,false))!=S_OK)
+	   if ((hr=deciA->deliverSampleSPDIF(ac3buf,ret,avctx->bit_rate, avctx->sample_rate,0x0001,false))!=S_OK)
         {
          numsamples=0;
          return hr;

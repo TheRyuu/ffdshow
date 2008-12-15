@@ -54,7 +54,7 @@ public:
  STDMETHODIMP processBuffer(void *buf,size_t numsamples,TsampleFormat *fmt);
  STDMETHODIMP storeMixerMatrixData_(const double matrix[6][6]) {return E_NOTIMPL;}
  STDMETHODIMP getMixerMatrixData_(double matrix[6][6]) {return E_NOTIMPL;}
- STDMETHODIMP deliverSampleSPDIF(void *buf,size_t bufsize,int bit_rate,BYTE type,int incRtDec);
+ STDMETHODIMP deliverSampleSPDIF(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,BYTE type,int incRtDec);
  STDMETHODIMP storeVolumeData_(unsigned int nchannels,const int channels[],const int volumes[]) {return E_NOTIMPL;}
  STDMETHODIMP getVolumeData_(unsigned int *nchannels,int channels[],int volumes[]) {return E_NOTIMPL;}
  STDMETHODIMP storeFFTdata_(unsigned int num,const float *fft) {return E_NOTIMPL;}
@@ -112,7 +112,7 @@ private:
    STDMETHODIMP deliverSample_(void *buf,size_t numsamples,const TsampleFormat &fmt,float postgain) {return deciA->deliverSample_(buf,numsamples,fmt,postgain);}
    STDMETHODIMP storeMixerMatrixData_(const double matrix[6][6]) {return deciA->storeMixerMatrixData_(matrix);}
    STDMETHODIMP getMixerMatrixData_(double matrix[6][6]) {return deciA->getMixerMatrixData_(matrix);}
-   STDMETHODIMP deliverSampleSPDIF(void *buf,size_t bufsize,int bit_rate,BYTE type,int incRtDec) {return deciA->deliverSampleSPDIF(buf,bufsize,bit_rate,type,incRtDec);}
+   STDMETHODIMP deliverSampleSPDIF(void *buf,size_t bufsize,int bit_rate,unsigned int sample_rate,BYTE type,int incRtDec) {return deciA->deliverSampleSPDIF(buf,bufsize,bit_rate,sample_rate,type,incRtDec);}
    STDMETHODIMP storeVolumeData_(unsigned int nchannels,const int channels[],const int volumes[]) {return deciA->storeVolumeData_(nchannels,channels,volumes);}
    STDMETHODIMP getVolumeData_(unsigned int *nchannels,int channels[],int volumes[]) {return deciA->getVolumeData_(nchannels,channels,volumes);}
    STDMETHODIMP storeFFTdata_(unsigned int num,const float *fft) {return deciA->storeFFTdata_(num,fft);}

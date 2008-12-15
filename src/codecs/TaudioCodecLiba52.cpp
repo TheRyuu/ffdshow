@@ -118,7 +118,7 @@ HRESULT TaudioCodecLiba52::decode(TbyteBuffer &src)
        if (codecId==CODEC_ID_SPDIF_AC3)
         {
          bpssum+=(lastbps=bit_rate/1000);numframes++;
-         HRESULT hr=deciA->deliverSampleSPDIF(p,size,bit_rate,0x0001,true);
+		 HRESULT hr=deciA->deliverSampleSPDIF(p,size,bit_rate,sample_rate,0x0001,true);
          if (hr!=S_OK)
           return hr;
         }

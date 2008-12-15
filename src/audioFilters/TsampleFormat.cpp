@@ -311,9 +311,13 @@ CMediaType TsampleFormat::toCMediaType(bool alwaysextensible) const
  return mt;
 }
 
-CMediaType TsampleFormat::createMediaTypeSPDIF(void)
+CMediaType TsampleFormat::createMediaTypeSPDIF(unsigned int frequency)
 {
- CMediaType mt=TsampleFormat(SF_PCM16,48000,2).toCMediaType();
+ // S/PDIF mode mandates 2 Channels and 16 bits per sample, regardless of the underlying format.
+ // S/PDIF interface supports three standard sample rates: 48 kHz, 44.1 kHz and 32 kHz..
+ // the underlying format can have different number of bits per sample or different sample rate, such in the case of DTS 96/24, (transferred over S/PDIF link at 48kHz, 16 bits per sample)
+ // if possible, it's best to select S/PDIF sample rate based on the underlying sample rate.
+ CMediaType mt=TsampleFormat(SF_PCM16,frequency,2).toCMediaType();
  ((WAVEFORMATEX*)mt.pbFormat)->wFormatTag=WAVE_FORMAT_DOLBY_AC3_SPDIF;
  return mt;
 }

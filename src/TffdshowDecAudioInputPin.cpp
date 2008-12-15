@@ -310,7 +310,7 @@ bool TffdshowDecAudioInputPin::getsf(TsampleFormat &outsf)
  else
   if (spdif_codec(audio->codecId))
    {
-    outsf=TsampleFormat::createMediaTypeSPDIF();
+    outsf=TsampleFormat::createMediaTypeSPDIF(audio->getInputSF().freq);
     return true;
    }
   else

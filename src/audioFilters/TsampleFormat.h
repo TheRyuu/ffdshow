@@ -41,7 +41,7 @@ public:
    dolby=DOLBY_NO;
   }
  CMediaType toCMediaType(bool alwaysextensible=true) const;
- static CMediaType createMediaTypeSPDIF(void);
+ static CMediaType createMediaTypeSPDIF(unsigned int frequency);
  WAVEFORMATEXTENSIBLE toWAVEFORMATEXTENSIBLE(bool alwaysextensible=true) const;
 
  enum

@@ -368,13 +368,13 @@ TsampleFormat TffdshowDecAudio::getOutsf(void)
 HRESULT TffdshowDecAudio::getMediaType(CMediaType *mtOut)
 {
   if (inpin->is_spdif_codec())
-  *mtOut=TsampleFormat::createMediaTypeSPDIF();
+  *mtOut=TsampleFormat::createMediaTypeSPDIF(inpin->audio->getInputSF().freq);
  else
   {
    if (!presetSettings) initPreset();
    TsampleFormat outsf=getOutsf();
    if (outsf.sf==TsampleFormat::SF_AC3)
-    *mtOut=TsampleFormat::createMediaTypeSPDIF();
+    *mtOut=TsampleFormat::createMediaTypeSPDIF(outsf.freq);
    else
     *mtOut=outsf.toCMediaType(alwaysextensible);
    char_t descS[256];
@@ -758,12 +758,12 @@ STDMETHODIMP TffdshowDecAudio::deliverProcessedSample(const void *buf,size_t num
  return m_pOutput->Deliver(pOut);
 }
 
-STDMETHODIMP TffdshowDecAudio::deliverSampleSPDIF(void *buf,size_t size,int bit_rate,BYTE type,int incRtDec)
+STDMETHODIMP TffdshowDecAudio::deliverSampleSPDIF(void *buf,size_t size,int bit_rate,unsigned int sample_rate,BYTE type,int incRtDec)
 {
  HRESULT hr=S_OK;;
  currentOutsf.sf=TsampleFormat::SF_AC3;
 
- CMediaType mt=TsampleFormat::createMediaTypeSPDIF();
+ CMediaType mt=TsampleFormat::createMediaTypeSPDIF(sample_rate);
  WAVEFORMATEX *wfe=(WAVEFORMATEX*)mt.Format();
 
  size_t length;
