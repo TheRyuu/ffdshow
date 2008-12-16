@@ -5,6 +5,7 @@
  * and mp3lib/dct64_mmx.c
  */
 
+#include "mem.h"
 typedef float real;
 
 extern float __attribute__((aligned(16))) costab_mmx[];
@@ -18,10 +19,10 @@ static const int pnpn[4] __attribute__((aligned(16))) =
 static const int nnnn[4] __attribute__((aligned(16))) =
 { 1 << 31, 1 << 31, 1 << 31, 1 << 31 };
 
-void dct64_sse(short *out0,short *out1,real *c)
+attribute_align_arg void dct64_sse(short *out0,short *out1,real *c)
 {
-    static real __attribute__ ((aligned(16))) b1[0x20];
-    static real __attribute__ ((aligned(16))) b2[0x20];
+    DECLARE_ALIGNED(16, real, b1[0x20]);
+    DECLARE_ALIGNED(16, real, b2[0x20]);
     static real const one = 1.f;
 
     {
