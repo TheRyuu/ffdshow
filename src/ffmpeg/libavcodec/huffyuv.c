@@ -287,7 +287,7 @@ static void generate_len_table(uint8_t *dst, uint64_t *stats, int size){
     int up[2*size];
     int len[2*size];
 #else
-    HeapElem *h=_alloca(sizeof(heap_elem_t)*size);
+    HeapElem *h=_alloca(sizeof(HeapElem)*size);
     int *up=_alloca(sizeof(int)*2*size);
     int *len=_alloca(sizeof(int)*2*size);
 #endif
