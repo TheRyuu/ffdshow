@@ -42,6 +42,7 @@ void ToutsfsPage::init(void)
  enable(lavc && lavc->ok && !lavc->dec_only,ac3s);
  if (lavc) lavc->Release();
 
+ addHint(IDC_CHB_OUT_AC3, _l("AC3 encoder currently supports the following sample rates: 32kHz and 48kHz.\nother sample rates should be resampled to one of the supported sample rates,\nthis can be done using the \"Resample\" filter."));
  addHint(IDC_CHB_ALWAYEXTENSIBLE,_l("\"not needed\": no custom channel mapping"));
  addHint(IDC_CHB_ALLOWOUTSTREAM,_l("Useful for directly storing encoded ac3 to a file in graphedt with File Writer filter"));
  
