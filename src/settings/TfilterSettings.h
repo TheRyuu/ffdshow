@@ -85,7 +85,7 @@ public:
   }
  virtual void copy(const TfilterSettings *src) {}
 
- int is,order,show,decoderDRC;
+ int is,order,show;
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const =0;
  virtual void createPages(TffdshowPageDec *parent) const =0;
  bool hasReset(unsigned int pageId=0);
