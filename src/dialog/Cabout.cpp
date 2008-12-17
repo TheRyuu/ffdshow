@@ -114,7 +114,7 @@ void TaboutPage::onDonate(void)
 TaboutPage::TaboutPage(TffdshowPageBase *Iparent):TconfPageBase(Iparent)
 {
  dialogId=IDD_ABOUT;
- helpURL=_l("http://ffdshow-tryout.sourceforge.net/html/en/credits.htm");
+ helpURL=_l("http://ffdshow-tryout.wiki.sourceforge.net/Credits");
  strcpy(regflnm,_l("ffdshow.reg"));
  static const TbindButton<TaboutPage> bt[]=
   {

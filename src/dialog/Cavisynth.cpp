@@ -41,7 +41,7 @@ int bufferControlIDs[]=
 
 void TavisynthPage::init(void)
 {
- helpURL=_l("http://ffdshow-tryout.sourceforge.net/html/en/avisynth.htm");
+ helpURL=_l("http://ffdshow-tryout.wiki.sourceforge.net/AviSynth");
 
  static const TanchorInfo ainfo[]=
   {
