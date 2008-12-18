@@ -2407,39 +2407,39 @@ static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple){
                             idct_dc_add = s->dsp.h264_idct_dc_add;
                             idct_add    = s->dsp.h264_idct_add;
                         }
-                    for(i=0; i<16; i++){
-                        uint8_t * const ptr= dest_y + block_offset[i];
-                        const int dir= h->intra4x4_pred_mode_cache[ scan8[i] ];
+                        for(i=0; i<16; i++){
+                            uint8_t * const ptr= dest_y + block_offset[i];
+                            const int dir= h->intra4x4_pred_mode_cache[ scan8[i] ];
 
-                        if(transform_bypass && h->sps.profile_idc==244 && dir<=1){
-                            h->hpc.pred4x4_add[dir](ptr, h->mb + i*16, linesize);
-                        }else{
-                            uint8_t *topright;
-                            int nnz, tr;
-                            if(dir == DIAG_DOWN_LEFT_PRED || dir == VERT_LEFT_PRED){
-                                const int topright_avail= (h->topright_samples_available<<i)&0x8000;
-                                assert(mb_y || linesize <= block_offset[i]);
-                                if(!topright_avail){
-                                    tr= ptr[3 - linesize]*0x01010101;
-                                    topright= (uint8_t*) &tr;
+                            if(transform_bypass && h->sps.profile_idc==244 && dir<=1){
+                                h->hpc.pred4x4_add[dir](ptr, h->mb + i*16, linesize);
+                            }else{
+                                uint8_t *topright;
+                                int nnz, tr;
+                                if(dir == DIAG_DOWN_LEFT_PRED || dir == VERT_LEFT_PRED){
+                                    const int topright_avail= (h->topright_samples_available<<i)&0x8000;
+                                    assert(mb_y || linesize <= block_offset[i]);
+                                    if(!topright_avail){
+                                        tr= ptr[3 - linesize]*0x01010101;
+                                        topright= (uint8_t*) &tr;
+                                    }else
+                                        topright= ptr + 4 - linesize;
                                 }else
-                                    topright= ptr + 4 - linesize;
-                            }else
-                                topright= NULL;
+                                    topright= NULL;
 
-                            h->hpc.pred4x4[ dir ](ptr, topright, linesize);
-                            nnz = h->non_zero_count_cache[ scan8[i] ];
-                            if(nnz){
-                                if(is_h264){
-                                    if(nnz == 1 && h->mb[i*16])
-                                        idct_dc_add(ptr, h->mb + i*16, linesize);
-                                    else
-                                        idct_add   (ptr, h->mb + i*16, linesize);
-                                }else
-                                    svq3_add_idct_c(ptr, h->mb + i*16, linesize, s->qscale, 0);
+                                h->hpc.pred4x4[ dir ](ptr, topright, linesize);
+                                nnz = h->non_zero_count_cache[ scan8[i] ];
+                                if(nnz){
+                                    if(is_h264){
+                                        if(nnz == 1 && h->mb[i*16])
+                                            idct_dc_add(ptr, h->mb + i*16, linesize);
+                                        else
+                                            idct_add   (ptr, h->mb + i*16, linesize);
+                                    }else
+                                        svq3_add_idct_c(ptr, h->mb + i*16, linesize, s->qscale, 0);
+                                }
                             }
                         }
-                    }
                     }
                 }
             }else{
@@ -2505,30 +2505,34 @@ static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple){
         if((simple || !ENABLE_GRAY || !(s->flags&CODEC_FLAG_GRAY)) && (h->cbp&0x30)){
             uint8_t *dest[2] = {dest_cb, dest_cr};
             if(transform_bypass){
-                idct_add = idct_dc_add = s->dsp.add_pixels4;
-            }else{
-                idct_add = s->dsp.h264_idct_add;
-                idct_dc_add = s->dsp.h264_idct_dc_add;
-                chroma_dc_dequant_idct_c(h->mb + 16*16, h->chroma_qp[0], h->dequant4_coeff[IS_INTRA(mb_type) ? 1:4][h->chroma_qp[0]][0]);
-                chroma_dc_dequant_idct_c(h->mb + 16*16+4*16, h->chroma_qp[1], h->dequant4_coeff[IS_INTRA(mb_type) ? 2:5][h->chroma_qp[1]][0]);
-            }
-            if(is_h264){
-                if(transform_bypass && IS_INTRA(mb_type) && h->sps.profile_idc==244 && (h->chroma_pred_mode==VERT_PRED8x8 || h->chroma_pred_mode==HOR_PRED8x8)){
+                if(IS_INTRA(mb_type) && h->sps.profile_idc==244 && (h->chroma_pred_mode==VERT_PRED8x8 || h->chroma_pred_mode==HOR_PRED8x8)){
                     h->hpc.pred8x8_add[h->chroma_pred_mode](dest[0], block_offset + 16, h->mb + 16*16, uvlinesize);
                     h->hpc.pred8x8_add[h->chroma_pred_mode](dest[1], block_offset + 20, h->mb + 20*16, uvlinesize);
                 }else{
+                    idct_add = s->dsp.add_pixels4;
+                    for(i=16; i<16+8; i++){
+                        if(h->non_zero_count_cache[ scan8[i] ] || h->mb[i*16])
+                            idct_add   (dest[(i&4)>>2] + block_offset[i], h->mb + i*16, uvlinesize);
+                    }
+                }
+            }else{
+                chroma_dc_dequant_idct_c(h->mb + 16*16, h->chroma_qp[0], h->dequant4_coeff[IS_INTRA(mb_type) ? 1:4][h->chroma_qp[0]][0]);
+                chroma_dc_dequant_idct_c(h->mb + 16*16+4*16, h->chroma_qp[1], h->dequant4_coeff[IS_INTRA(mb_type) ? 2:5][h->chroma_qp[1]][0]);
+                if(is_h264){
+                    idct_add = s->dsp.h264_idct_add;
+                    idct_dc_add = s->dsp.h264_idct_dc_add;
                     for(i=16; i<16+8; i++){
                         if(h->non_zero_count_cache[ scan8[i] ])
                             idct_add   (dest[(i&4)>>2] + block_offset[i], h->mb + i*16, uvlinesize);
                         else if(h->mb[i*16])
                             idct_dc_add(dest[(i&4)>>2] + block_offset[i], h->mb + i*16, uvlinesize);
                     }
-                }
-            }else{
-                for(i=16; i<16+8; i++){
-                    if(h->non_zero_count_cache[ scan8[i] ] || h->mb[i*16]){
-                        uint8_t * const ptr= dest[(i&4)>>2] + block_offset[i];
-                        svq3_add_idct_c(ptr, h->mb + i*16, uvlinesize, chroma_qp[s->qscale + 12] - 12, 2);
+                }else{
+                    for(i=16; i<16+8; i++){
+                        if(h->non_zero_count_cache[ scan8[i] ] || h->mb[i*16]){
+                            uint8_t * const ptr= dest[(i&4)>>2] + block_offset[i];
+                            svq3_add_idct_c(ptr, h->mb + i*16, uvlinesize, chroma_qp[s->qscale + 12] - 12, 2);
+                        }
                     }
                 }
             }
@@ -4075,11 +4079,13 @@ static int decode_residual(H264Context *h, GetBitContext *gb, DCTELEM *block, in
     tprintf(h->s.avctx, "trailing:%d, total:%d\n", trailing_ones, total_coeff);
     assert(total_coeff<=16);
 
-    for(i=0; i<trailing_ones; i++){
-        level[i]= 1 - 2*get_bits1(gb);
-    }
+    i = show_bits(gb, 3);
+    skip_bits(gb, trailing_ones);
+    level[0] = 1-((i&4)>>1);
+    level[1] = 1-((i&2)   );
+    level[2] = 1-((i&1)<<1);
 
-    if(i<total_coeff) {
+    if(trailing_ones<total_coeff) {
         int level_code, mask;
         int suffix_length = total_coeff > 10 && trailing_ones < 3;
         int prefix= get_level_prefix(gb);
@@ -4108,11 +4114,10 @@ static int decode_residual(H264Context *h, GetBitContext *gb, DCTELEM *block, in
         if(level_code > 5)
             suffix_length++;
         mask= -(level_code&1);
-        level[i]= (((2+level_code)>>1) ^ mask) - mask;
-        i++;
+        level[trailing_ones]= (((2+level_code)>>1) ^ mask) - mask;
 
         //remaining coefficients have suffix_length > 0
-        for(;i<total_coeff;i++) {
+        for(i=trailing_ones+1;i<total_coeff;i++) {
             static const int suffix_limit[7] = {0,5,11,23,47,95,INT_MAX };
             prefix = get_level_prefix(gb);
             if(prefix<15){
@@ -6484,16 +6489,16 @@ static void filter_mb( H264Context *h, int mb_x, int mb_y, uint8_t *img_y, uint8
 
         if(IS_8x8DCT(mb_type)){
             h->non_zero_count_cache[scan8[0   ]]= h->non_zero_count_cache[scan8[1   ]]=
-            h->non_zero_count_cache[scan8[2   ]]= h->non_zero_count_cache[scan8[3   ]]= h->cbp_table[mb_xy] & 1;
+            h->non_zero_count_cache[scan8[2   ]]= h->non_zero_count_cache[scan8[3   ]]= h->cbp & 1;
 
             h->non_zero_count_cache[scan8[0+ 4]]= h->non_zero_count_cache[scan8[1+ 4]]=
-            h->non_zero_count_cache[scan8[2+ 4]]= h->non_zero_count_cache[scan8[3+ 4]]= h->cbp_table[mb_xy] & 2;
+            h->non_zero_count_cache[scan8[2+ 4]]= h->non_zero_count_cache[scan8[3+ 4]]= h->cbp & 2;
 
             h->non_zero_count_cache[scan8[0+ 8]]= h->non_zero_count_cache[scan8[1+ 8]]=
-            h->non_zero_count_cache[scan8[2+ 8]]= h->non_zero_count_cache[scan8[3+ 8]]= h->cbp_table[mb_xy] & 4;
+            h->non_zero_count_cache[scan8[2+ 8]]= h->non_zero_count_cache[scan8[3+ 8]]= h->cbp & 4;
 
             h->non_zero_count_cache[scan8[0+12]]= h->non_zero_count_cache[scan8[1+12]]=
-            h->non_zero_count_cache[scan8[2+12]]= h->non_zero_count_cache[scan8[3+12]]= h->cbp_table[mb_xy] & 8;
+            h->non_zero_count_cache[scan8[2+12]]= h->non_zero_count_cache[scan8[3+12]]= h->cbp & 8;
         }
     }
 
