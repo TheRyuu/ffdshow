@@ -217,7 +217,8 @@ endif
 ifneq ($(64BIT),yes)
 SRCS_YASM=\
       $(LAVC_DIR)/i386/dsputil_yasm.asm \
-      $(LAVC_DIR)/i386/fft_mmx.asm
+      $(LAVC_DIR)/i386/fft_mmx.asm \
+      $(LAVC_DIR)/i386/h264_deblock_sse2.asm
 endif
 
 
