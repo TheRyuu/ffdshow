@@ -16,7 +16,7 @@
 	_l("CTCMSU.exe;CTWave.exe;CTWave32.exe;cut_assistant.exe;dashboard.exe;demo32.exe;DivX Player.exe;DivxToDVD.exe;dllhost.exe;dpgenc.exe;Dr.DivX.exe;drdivx.exe;drdivx2.exe;DreamMaker.exe;DSBrws.exe;")\
 	_l("DScaler.exe;dv.exe;dvbdream.exe;dvbviewer.exe;DVD Shrink 3.2.exe;DVDAuthor.exe;dvdfab.exe;DVDMaker.exe;DVDMF.exe;dvdplay.dll;dvdplay.exe;dvdSanta.exe;DXEffectTester.exe;DXEnum.exe;Easy RealMedia Tools.exe;")\
 	_l("ehExtHost.exe;ehshell.exe;Encode360.exe;explorer.exe;fenglei.exe;ffmpeg.exe;filtermanager.exe;firefox.exe;Flash.exe;FLVPlayer4Free.exe;FMRadio.exe;Fortius.exe;FreeStyle.exe;FSViewer.exe;Funshion.exe;FusionHDTV.exe;")\
-	_l("gameex.exe;GDivX Player.exe;gdsmux.exe;GoldWave.exe;gom.exe;GomEnc.exe;GoogleDesktop.exe;GoogleDesktopCrawl.exe;graphedit.exe;graphedt.exe;GraphStudio.exe;gspot.exe;HBP.exe;HDVSplit.exe;honestechTV.exe;")\
+	_l("gameex.exe;GDivX Player.exe;gdsmux.exe;GoldWave.exe;gom.exe;GomEnc.exe;GoogleDesktop.exe;GoogleDesktopCrawl.exe;graphedit.exe;graphedt.exe;GraphStudio.exe;GraphStudio64.exe;gspot.exe;HBP.exe;HDVSplit.exe;honestechTV.exe;")\
 	_l("HPWUCli.exe;i_view32.exe;ICQ.exe;ICQLite.exe;iexplore.exe;IHT.exe;IncMail.exe;InfoTool.exe;infotv.exe;InstallChecker.exe;Internet TV.exe;iPlayer.exe;ipod_video_converter.exe;IPODConverter.exe;")\
 	_l("JetAudio.exe;jwBrowser.exe;kmplayer.exe;KwMusic.exe;LA.exe;LifeCam.exe;LifeFrame.exe;Lilith.exe;makeAVIS.exe;MatroskaDiag.exe;Maxthon.exe;MDirect.exe;Media Center 12.exe;Media Jukebox.exe;Media Player Classic.exe;")\
 	_l("MediaLife.exe;MediaPortal.exe;MEDIAREVOLUTION.EXE;MediaServer.exe;megui.exe;mencoder.exe;Metacafe.exe;MMPlayer.exe;MovieMaker.exe;moviemk.exe;moviethumb.exe;MP4Converter.exe;Mp4Player.exe;mpcstar.exe;MpegVideoWizard.exe;")\
