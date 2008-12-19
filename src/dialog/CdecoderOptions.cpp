@@ -23,7 +23,7 @@
 #include "CquantTables.h"
 #include "Ttranslate.h"
 
-const TmiscPage::Tworkaround TmiscPage::workarounds[]=
+const TdecoderOptionsPage::Tworkaround TdecoderOptionsPage::workarounds[]=
 {
  FF_BUG_AUTODETECT ,IDC_CHB_WORKAROUND_AUTODETECT,
  FF_BUG_OLD_MSMPEG4,IDC_CHB_WORKAROUND_OLDMSMPEG4,
@@ -38,22 +38,24 @@ const TmiscPage::Tworkaround TmiscPage::workarounds[]=
  0,0
 };
 
-void TmiscPage::init(void)
+void TdecoderOptionsPage::init(void)
 {
  const TvideoCodecDec *movie;deciV->getMovieSource(&movie);
  int source=movie?movie->getType():0;
  islavc=((filterMode&IDFF_FILTERMODE_PLAYER) && source==IDFF_MOVIE_LAVC) || (filterMode&(IDFF_FILTERMODE_CONFIG|IDFF_FILTERMODE_VFW));
  for (int i=0;workarounds[i].ff_bug;i++)
   enable(islavc,workarounds[i].idc_chb);
- static const int idLavc[]={IDC_LBL_IDCT,IDC_CBX_IDCT,IDC_CHB_GRAY,IDC_LBL_BUGS,IDC_LBL_ERROR_CONCEALMENT,IDC_CBX_ERROR_CONCEALMENT,IDC_LBL_ERROR_RECOGNITION,IDC_CBX_ERROR_RECOGNITION,IDC_BT_QUANTMATRIX_EXPORT,IDC_ED_NUMTHREADS,IDC_CHB_H264_SKIP_ON_DELAY,IDC_ED_H264SKIP_ON_DELAY_TIME,0};
+ static const int idLavc[]={IDC_LBL_IDCT,IDC_CHB_SOFT_TELECINE,IDC_CBX_IDCT,IDC_CHB_GRAY,IDC_LBL_BUGS,IDC_LBL_ERROR_CONCEALMENT,IDC_CBX_ERROR_CONCEALMENT,IDC_LBL_ERROR_RECOGNITION,IDC_CBX_ERROR_RECOGNITION,IDC_BT_QUANTMATRIX_EXPORT,IDC_ED_NUMTHREADS,IDC_CHB_H264_SKIP_ON_DELAY,IDC_ED_H264SKIP_ON_DELAY_TIME,IDC_LBL_NUMTHREADS,0};
  enable(islavc,idLavc);
  addHint(IDC_ED_NUMTHREADS,_l("H.264 and MPEG-1/2 decoder only"));
+ addHint(IDC_CHB_SOFT_TELECINE,_l("Checked: If soft telecine is detected, frames are flagged as progressive.\n\nYou may want to unckeck if you have interlaced TV."));
 }
 
-void TmiscPage::cfg2dlg(void)
+void TdecoderOptionsPage::cfg2dlg(void)
 {
  if (islavc)
   {
+   setCheck(IDC_CHB_SOFT_TELECINE, cfgGet(IDFF_softTelecine));
    setCheck(IDC_CHB_GRAY,cfgGet(IDFF_grayscale));
    cbxSetCurSel(IDC_CBX_IDCT,cfgGet(IDFF_idct));
 
@@ -70,7 +72,7 @@ void TmiscPage::cfg2dlg(void)
  SetDlgItemInt(m_hwnd,IDC_ED_DROP_ON_DELAY_TIME,cfgGet(IDFF_dropOnDelayTime),FALSE);
 }
 
-INT_PTR TmiscPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR TdecoderOptionsPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
  switch (uMsg)
   {
@@ -99,11 +101,12 @@ INT_PTR TmiscPage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
   }
  return TconfPageDecVideo::msgProc(uMsg,wParam,lParam);
 }
-bool TmiscPage::reset(bool testonly)
+bool TdecoderOptionsPage::reset(bool testonly)
 {
  if (!testonly)
   {
    deci->resetParam(IDFF_idct);
+   deci->resetParam(IDFF_softTelecine);
    deci->resetParam(IDFF_workaroundBugs);
    deci->resetParam(IDFF_errorConcealment);
    deci->resetParam(IDFF_errorRecognition);
@@ -116,7 +119,7 @@ bool TmiscPage::reset(bool testonly)
  return true;
 }
 
-void TmiscPage::translate(void)
+void TdecoderOptionsPage::translate(void)
 {
  TconfPageBase::translate();
 
@@ -125,7 +128,7 @@ void TmiscPage::translate(void)
  cbxTranslate(IDC_CBX_ERROR_RECOGNITION,Tlibavcodec::errorRecognitions);
 }
 
-void TmiscPage::getTip(char_t *tipS,size_t len)
+void TdecoderOptionsPage::getTip(char_t *tipS,size_t len)
 {
  tsnprintf_s(tipS, len, _TRUNCATE, _l("IDCT: %s"),Tlibavcodec::idctNames[cfgGet(IDFF_idct)]);
  if (cfgGet(IDFF_grayscale))
@@ -135,7 +138,7 @@ void TmiscPage::getTip(char_t *tipS,size_t len)
   strncatf(tipS, len, _l("\nBugs workaround"));
 }
 
-void TmiscPage::onMatrixExport(void)
+void TdecoderOptionsPage::onMatrixExport(void)
 {
  uint8_t inter[64],intra[64];
  if (deciV->getQuantMatrices(intra,inter)!=S_OK)
@@ -147,19 +150,20 @@ void TmiscPage::onMatrixExport(void)
  dlg.show();
 }
 
-TmiscPage::TmiscPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
+TdecoderOptionsPage::TdecoderOptionsPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
 {
  dialogId=IDD_DECODEROPTIONS;
  inPreset=1;
- static const TbindCheckbox<TmiscPage> chb[]=
+ static const TbindCheckbox<TdecoderOptionsPage> chb[]=
   {
    IDC_CHB_GRAY,IDFF_grayscale,NULL,
    IDC_CHB_DROP_ON_DELAY,IDFF_dropOnDelay,NULL,
    IDC_CHB_H264_SKIP_ON_DELAY,IDFF_h264skipOnDelay,NULL,
+   IDC_CHB_SOFT_TELECINE,IDFF_softTelecine,NULL,
    0,NULL,NULL
   };
  bindCheckboxes(chb);
- static const TbindEditInt<TmiscPage> edInt[]=
+ static const TbindEditInt<TdecoderOptionsPage> edInt[]=
   {
    IDC_ED_NUMTHREADS,1,8,IDFF_numLAVCdecThreads,NULL,
    IDC_ED_DROP_ON_DELAY_TIME,0,20000,IDFF_dropOnDelayTime,NULL,
@@ -167,7 +171,7 @@ TmiscPage::TmiscPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
    0,NULL,NULL
   };
  bindEditInts(edInt);
- static const TbindCombobox<TmiscPage> cbx[]=
+ static const TbindCombobox<TdecoderOptionsPage> cbx[]=
   {
    IDC_CBX_IDCT,IDFF_idct,BINDCBX_SEL,NULL,
    IDC_CBX_ERROR_RECOGNITION,IDFF_errorRecognition,BINDCBX_SEL,NULL,
@@ -175,9 +179,9 @@ TmiscPage::TmiscPage(TffdshowPageDec *Iparent):TconfPageDecVideo(Iparent)
    0
   };
  bindComboboxes(cbx);
- static const TbindButton<TmiscPage> bt[]=
+ static const TbindButton<TdecoderOptionsPage> bt[]=
   {
-   IDC_BT_QUANTMATRIX_EXPORT,&TmiscPage::onMatrixExport,
+   IDC_BT_QUANTMATRIX_EXPORT,&TdecoderOptionsPage::onMatrixExport,
    0,NULL
   };
  bindButtons(bt);

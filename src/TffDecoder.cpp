@@ -1055,7 +1055,7 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
  if (frameTimeOk != S_OK)
   frameTimeOk=(pict.rtStart!=REFTIME_INVALID) ? S_OK : S_FALSE;
 
- if (globalSettings->autodetect24P && vc1_codec(codecId) && inSampleEverField1Repeat && inpin->avgTimePerFrame == 333666)
+ if (presetSettings->softTelecine && vc1_codec(codecId) && inSampleEverField1Repeat && inpin->avgTimePerFrame == 333666)
   {
    if (insample_rtStart != REFTIME_INVALID)
     {
@@ -1218,7 +1218,8 @@ if (!outdv && hwDeinterlace)
         else if (presetSettings->output->hwDeintFieldOrder == 0)
          {
           if (pict.fieldtype&FIELD_TYPE::INT_TFF 
-             && !(pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) // avoid sending rapidly alternating TFF and BFF if telecine is detected.
+             && !(pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME
+             && !pict.film) // avoid sending rapidly alternating TFF and BFF if telecine is detected.
              )
            {
             outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
@@ -1228,7 +1229,19 @@ if (!outdv && hwDeinterlace)
       // Auto
       else
        {
-        if (pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME)
+        if (pict.film)
+         {
+          if (presetSettings->softTelecine)
+           outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_WEAVE;
+          else
+           {
+            if (pict.repeat_first_field)
+             outProp2.dwTypeSpecificFlags |= AM_VIDEO_FLAG_REPEAT_FIELD;
+            if (pict.fieldtype&FIELD_TYPE::INT_TFF)
+             outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_FIELD1FIRST;
+           }
+         }
+        else if (pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME)
          {
           outProp2.dwTypeSpecificFlags|=AM_VIDEO_FLAG_WEAVE;
          }

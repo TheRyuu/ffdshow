@@ -256,7 +256,7 @@ void TimgFilterKernelDeint2::done(void)
 HRESULT TimgFilterKernelDeint2::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
- if ((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) && !cfg->deinterlaceAlways)
+ if (((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict.film) && !cfg->deinterlaceAlways)
  {
   return parent->deliverSample(++it,pict);
  }

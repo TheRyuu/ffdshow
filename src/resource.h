@@ -1938,6 +1938,7 @@
 #define IDC_CHB_AUDIO_DECODER_DRC       2245
 #define IDC_TBR_DECODER_DRC_LEVEL       2246
 #define IDC_LBL_DECODER_DRC_LEVEL       2247
+#define IDC_CHB_SOFT_TELECINE           2248
 #define ID_MNI_PRESET_NEWFROMDEFAULT    40004
 #define ID_MNI_PRESET_NEWFROMSELECTED   40005
 #define ID_MNI_PRESET_NEW_FROMFILE      40006
@@ -1954,7 +1955,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        297
 #define _APS_NEXT_COMMAND_VALUE         40015
-#define _APS_NEXT_CONTROL_VALUE         2244
+#define _APS_NEXT_CONTROL_VALUE         2249
 #define _APS_NEXT_SYMED_VALUE           107
 #endif
 #endif

@@ -33,7 +33,7 @@ TimgFilterDeinterlace::TimgFilterDeinterlace(IffdshowBase *Ideci,Tfilters *Ipare
 HRESULT TimgFilterDeinterlace::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
- if ((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) && !cfg->deinterlaceAlways)
+ if (((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict.film) && !cfg->deinterlaceAlways)
  {
   return parent->deliverSample(++it,pict);
  }
@@ -189,7 +189,7 @@ template<class Tsimd> void TimgFilterFramerateDoubler::Tinterpolate<Tsimd>::inte
 HRESULT TimgFilterFramerateDoubler::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
- if ((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) && !cfg->deinterlaceAlways)
+ if (((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict.film) && !cfg->deinterlaceAlways)
  {
   done();
   return parent->deliverSample(++it,pict);
@@ -250,7 +250,7 @@ void TimgFilterMplayerDeinterlace::done(void)
 HRESULT TimgFilterMplayerDeinterlace::process(TfilterQueue::iterator it,TffPict &pict,const TfilterSettingsVideo *cfg0)
 {
  const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
- if ((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) && !cfg->deinterlaceAlways)
+ if (((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict.film) && !cfg->deinterlaceAlways)
  {
   return parent->deliverSample(++it,pict);
  }

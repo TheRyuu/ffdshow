@@ -3,7 +3,7 @@
 
 #include "TconfPageDecVideo.h"
 
-class TmiscPage :public TconfPageDecVideo
+class TdecoderOptionsPage :public TconfPageDecVideo
 {
 private:
  bool islavc;
@@ -17,7 +17,7 @@ private:
 protected:
  virtual INT_PTR msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 public:
- TmiscPage(TffdshowPageDec *Iparent);
+ TdecoderOptionsPage(TffdshowPageDec *Iparent);
  virtual void init(void);
  virtual void cfg2dlg(void);
  virtual void getTip(char_t *tipS,size_t len);

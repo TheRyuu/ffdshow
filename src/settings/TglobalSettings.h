@@ -119,7 +119,6 @@ public:
  int supdvddec;
  int fastMpeg2,fastH264,libtheoraPostproc;
  int alternateUncompressed;
- int autodetect24P;
 
  virtual void load(void);
  TOSDsettingsVideo osd;

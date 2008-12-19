@@ -342,7 +342,7 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
         return parent->deliverSample(++it,pict);
     }
 
-    if ((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) && !cfg->deinterlaceAlways){
+    if (((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict.film) && !cfg->deinterlaceAlways){
         onDiscontinuity(pict);
         done();
         return parent->deliverSample(++it,pict);

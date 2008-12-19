@@ -260,6 +260,8 @@ TpresetVideo::TpresetVideo(const char_t *Ireg_child, const char_t *IpresetName, 
 
    IDFF_idct               ,&TpresetVideo::idct               ,0,6,_l(""),1,
      _l("idct"),0,
+   IDFF_softTelecine       ,&TpresetVideo::softTelecine       ,0,0,_l(""),1,
+     _l("softTelecine"),1,
    IDFF_videoDelay         ,&TpresetVideo::videoDelay         ,1,1,_l(""),1,
      _l("videoDelay"),0,
    IDFF_isVideoDelayEnd    ,&TpresetVideo::isVideoDelayEnd    ,0,0,_l(""),1,

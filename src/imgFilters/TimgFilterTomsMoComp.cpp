@@ -69,7 +69,7 @@ HRESULT TimgFilterTomsMoComp::process(TfilterQueue::iterator it,TffPict &pict,co
  if (is(pict,cfg0))
   {
    const TdeinterlaceSettings *cfg=(const TdeinterlaceSettings*)cfg0;
-   if ((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) && !cfg->deinterlaceAlways)
+   if (((pict.fieldtype & FIELD_TYPE::PROGRESSIVE_FRAME) || pict.film)&& !cfg->deinterlaceAlways)
    {
     return parent->deliverSample(++it,pict);
    }

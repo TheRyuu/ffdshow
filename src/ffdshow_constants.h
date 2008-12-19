@@ -39,7 +39,7 @@
 #define IDFF_errorRecognition      71
 #define IDFF_fastMpeg2            90
 #define IDFF_fastH264             91
-#define IDFF_autodetect24P       3490
+//#define IDFF_autodetect24P       3490
 #define IDFF_libtheoraPostproc    92
 //#define IDFF_subCurrentFlnm       29
 //#define IDFF_lastFrameLength      41
@@ -262,6 +262,7 @@
 
 #define IDFF_flip                301 //should output video be flipped?
 #define IDFF_idct                601 //IDCT function user (0 - libavcodec simple 16383, 1 - libavcodec normal, 2 - reference, 3 - skal's)
+#define IDFF_softTelecine       3511
 #define IDFF_videoDelay         1801 //video delay in ms
 #define IDFF_isVideoDelayEnd    1802
 #define IDFF_videoDelayEnd      1803
@@ -1534,6 +1535,6 @@
 #define IDFF_dlgEncGraph    3219
 #define IDFF_dlgEncAbout    3220
 
-//next:3511
+//next:3512
 
 #endif

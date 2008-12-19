@@ -136,7 +136,7 @@ void TffdshowPageDecVideo::onActivate(void)
  if ((filterMode&IDFF_FILTERMODE_PROC)==0)
   {
    if ((filterMode&IDFF_FILTERMODE_VIDEOSUBTITLES)==0)
-    addTI(&tvis,new TmiscPage(this));
+    addTI(&tvis,new TdecoderOptionsPage(this));
    addTI(&tvis,new TqueuePage(this));
    addTI(&tvis,new ToutcspsPage(this));
    addTI(&tvis,new TcspOptionsPage(this));

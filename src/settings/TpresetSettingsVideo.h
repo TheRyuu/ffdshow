@@ -57,6 +57,7 @@ public:
 
    videoDelay=src.videoDelay;isVideoDelayEnd=src.isVideoDelayEnd;videoDelayEnd=src.videoDelayEnd;
    idct=src.idct;
+   softTelecine=src.softTelecine;
    workaroundBugs=src.workaroundBugs;errorRecognition=src.errorRecognition;errorConcealment=src.errorConcealment;
    lavcDecThreads=src.lavcDecThreads;
    grayscale=src.grayscale;
@@ -85,6 +86,7 @@ public:
 
  int videoDelay,isVideoDelayEnd,videoDelayEnd;
  int idct;
+ int softTelecine;
  int workaroundBugs,errorRecognition,errorConcealment;
  int lavcDecThreads;
  int grayscale;

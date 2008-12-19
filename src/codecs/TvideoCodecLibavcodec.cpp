@@ -40,7 +40,8 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IdecVideoSink *
  TvideoCodecDec(Ideci,IsinkD),
  TvideoCodecEnc(Ideci,NULL),
  codedPictureBuffer(this),
- h264RandomAccess(this)
+ h264RandomAccess(this),
+ telecineManager(this)
 {
  create();
 }
@@ -50,7 +51,8 @@ TvideoCodecLibavcodec::TvideoCodecLibavcodec(IffdshowBase *Ideci,IencVideoSink *
  TvideoCodecDec(Ideci,NULL),
  TvideoCodecEnc(Ideci,IsinkE),
  codedPictureBuffer(this),
- h264RandomAccess(this)
+ h264RandomAccess(this),
+ telecineManager(this)
 {
  create();
  if (ok && !libavcodec->dec_only)
@@ -594,6 +596,14 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
        pict.srcSize=b[posB].srcSize;
       }
 
+     // soft telecine detection
+     // if "Detect soft telecine and average frame durations" is enabled,
+     // flames are flagged as progressive, frame durations are averaged.
+     // pict.film is valid even if the setting is disabled.
+     telecineManager.new_frame(fieldtype, frame->top_field_first, frame->repeat_pict, pict.rtStart, pict.rtStop);
+     telecineManager.get_fieldtype(pict);
+     telecineManager.get_timestamps(pict);
+
      HRESULT hr=sinkD->deliverDecodedSample(pict);
      if (FAILED(hr) || (used_bytes && sinkD->acceptsManyFrames()!=S_OK) || avctx->codec_id==CODEC_ID_LOCO)
       return hr;
@@ -623,6 +633,7 @@ oldpict.rtStop = 0;
  if (ccDecoder) ccDecoder->onSeek();
  codedPictureBuffer.onSeek();
  h264RandomAccess.onSeek();
+ telecineManager.onSeek();
  return avctx?(libavcodec->avcodec_flush_buffers(avctx),true):false;
 }
 bool TvideoCodecLibavcodec::onDiscontinuity(void)
@@ -1453,4 +1464,103 @@ void TvideoCodecLibavcodec::Th264RandomAccess::judgeUsability(int *got_picture_p
 
  if (recovery_mode != 0)
   *got_picture_ptr = 0;
+}
+
+TvideoCodecLibavcodec::TtelecineManager::TtelecineManager(TvideoCodecLibavcodec* Iparent):
+ parent(Iparent)
+{
+ onSeek();
+}
+
+void TvideoCodecLibavcodec::TtelecineManager::onSeek(void)
+{
+ segment_count = pos_in_group = -1;
+ group_rtStart = average_duration = REFTIME_INVALID;
+ film = false;
+}
+
+void TvideoCodecLibavcodec::TtelecineManager::new_frame(int fieldtype, int top_field_first, int repeat_pict, const REFERENCE_TIME &rtStart, const REFERENCE_TIME &rtStop)
+{
+ segment_count++;
+ int pos = segment_count & 3;
+ if (parent->codecId == CODEC_ID_H264)
+  {
+   group[pos].fieldtype = fieldtype;
+  }
+ else // tested with MPEG-2
+  {
+   if (repeat_pict == 1)
+    group[pos].fieldtype = FIELD_TYPE::PROGRESSIVE_FRAME;
+   else
+    group[pos].fieldtype = top_field_first ? FIELD_TYPE::INT_TFF : FIELD_TYPE::INT_BFF;
+  }
+
+ group[pos].repeat_pict = repeat_pict;
+ film = false;
+
+ if (segment_count >= 4)
+  {
+   int i = 0;
+   for (; i < 4 ; i++)
+    {
+     if (group[i].fieldtype == FIELD_TYPE::INT_TFF)
+      {
+       if (   group[(i + 1) & 3].fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME
+           && group[(i + 2) & 3].fieldtype == FIELD_TYPE::INT_BFF
+           && group[(i + 3) & 3].fieldtype == FIELD_TYPE::PROGRESSIVE_FRAME
+           && group[ i      & 3].repeat_pict == 0
+           && group[(i + 1) & 3].repeat_pict == 1
+           && group[(i + 2) & 3].repeat_pict == 0
+           && group[(i + 3) & 3].repeat_pict == 1)
+        {
+         film = true;
+         if (rtStart != REFTIME_INVALID && group[pos].rtStart != REFTIME_INVALID)
+          average_duration = (rtStart - group[pos].rtStart) >> 2;
+         break;
+        }
+      }
+    }
+  }
+ group[pos].rtStart = rtStart;
+
+ if (film)
+  pos_in_group++;
+ else
+  pos_in_group = -1;
+
+ if (film && (pos_in_group == 0 || pos_in_group >= 4) && rtStart != REFTIME_INVALID)
+  {
+   pos_in_group = 0;
+   group_rtStart = rtStart;
+  }
+ cfg_softTelecine = parent->deci->getParam2(IDFF_softTelecine);
+}
+
+void TvideoCodecLibavcodec::TtelecineManager::get_fieldtype(TffPict &pict)
+{
+ if (!film)
+  return;
+
+ pict.film = true;
+ if (cfg_softTelecine)
+  pict.fieldtype = FIELD_TYPE::PROGRESSIVE_FRAME;
+ else
+  {
+   pict.repeat_first_field = group[segment_count & 3].repeat_pict;
+   if (pict.repeat_first_field)
+    {
+     pict.fieldtype = group[(segment_count-1) & 3].fieldtype;
+    }
+   else
+    pict.fieldtype = group[segment_count & 3].fieldtype;
+  }
+}
+
+void TvideoCodecLibavcodec::TtelecineManager::get_timestamps(TffPict &pict)
+{
+ if (!film || !cfg_softTelecine || average_duration == REFTIME_INVALID || group_rtStart == REFTIME_INVALID)
+  return;
+
+ pict.rtStart = group_rtStart + average_duration * pos_in_group;
+ pict.rtStop = group_rtStart + average_duration * (pos_in_group + 1) - 1;
 }

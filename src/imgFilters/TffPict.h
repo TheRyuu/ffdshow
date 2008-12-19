@@ -110,6 +110,7 @@ public:
 
  TcspInfo cspInfo;
  int frametype,fieldtype;
+ bool film,repeat_first_field;
  bool discontinuity;
  REFERENCE_TIME rtStart,rtStop;
  LONGLONG mediatimeStart,mediatimeStop;

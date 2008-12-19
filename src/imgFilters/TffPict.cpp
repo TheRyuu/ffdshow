@@ -100,6 +100,7 @@ void TffPict::init(void)
  gmcWarpingPoints=gmcWarpingPointsReal=0;
  edge=0;
  discontinuity = false;
+ film = repeat_first_field = false;
 }
 void TffPict::init(int Icsp,unsigned char *Idata[4],const stride_t Istride[4],const Trect &r,bool Iro,int Iframetype,int Ifieldtype,size_t IsrcSize,const Tpalette &Ipalette)
 {
@@ -126,6 +127,7 @@ void TffPict::init(int Icsp,unsigned char *Idata[4],const stride_t Istride[4],co
  srcSize=IsrcSize;
  edge=0;
  discontinuity = false;
+ film = repeat_first_field = false;
 }
 TffPict::TffPict(int Icsp,unsigned char *Idata[4],const stride_t Istride[4],const Trect &r,bool Iro,int Iframetype,int Ifieldtype,size_t IsrcSize,IMediaSample *pIn,const Tpalette &Ipalette)
 {
