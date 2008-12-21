@@ -947,6 +947,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavcodec\rv30.c"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\rv30dsp.c"
+				>
+			</File>
+			<File
 				RelativePath=".\libavcodec\rv34.c"
 				>
 			</File>
@@ -1461,6 +1469,10 @@
 			</File>
 			<File
 				RelativePath=".\libavcodec\rtjpeg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavcodec\rv30data.h"
 				>
 			</File>
 			<File

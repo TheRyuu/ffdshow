@@ -2733,6 +2733,10 @@ void ff_put_vc1_mspel_mc00_c(uint8_t *dst, uint8_t *src, int stride, int rnd) {
 
 void ff_intrax8dsp_init(DSPContext* c, AVCodecContext *avctx);
 
+#if defined(CONFIG_RV30_DECODER)
+void ff_rv30dsp_init(DSPContext* c, AVCodecContext *avctx);
+#endif /* CONFIG_RV30_DECODER */
+
 #if defined(CONFIG_RV40_DECODER)
 static void put_rv40_qpel16_mc33_c(uint8_t *dst, uint8_t *src, int stride){
     put_pixels16_xy2_c(dst, src, stride, 16);
@@ -4460,6 +4464,9 @@ void attribute_align_arg dsputil_init(DSPContext* c, AVCodecContext *avctx)
 #endif
 #if defined(CONFIG_WMV2_DECODER) || defined(CONFIG_VC1_DECODER) || defined(CONFIG_WMV3_DECODER)
     ff_intrax8dsp_init(c,avctx);
+#endif
+#if defined(CONFIG_RV30_DECODER)
+    ff_rv30dsp_init(c,avctx);
 #endif
 #if defined(CONFIG_RV40_DECODER)
     ff_rv40dsp_init(c,avctx);

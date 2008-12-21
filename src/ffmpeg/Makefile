@@ -126,6 +126,8 @@ SRCS_C=\
       $(LAVC_DIR)/rpza.c \
       $(LAVC_DIR)/rtjpeg.c \
       $(LAVC_DIR)/rv10.c \
+      $(LAVC_DIR)/rv30.c \
+      $(LAVC_DIR)/rv30dsp.c \
       $(LAVC_DIR)/rv34.c \
       $(LAVC_DIR)/rv40.c \
       $(LAVC_DIR)/rv40dsp.c \

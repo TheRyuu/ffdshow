@@ -27,7 +27,9 @@
 #ifndef AVCODEC_RV30DATA_H
 #define AVCODEC_RV30DATA_H
 
+#ifdef __GNUC__
 #include <stdint.h>
+#endif
 
 /** DC quantizer mapping for RV30 */
 static const uint8_t rv30_luma_dc_quant[32] = {
