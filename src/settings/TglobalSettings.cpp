@@ -392,6 +392,7 @@ TglobalSettingsDecVideo::TglobalSettingsDecVideo(const Tconfig *Iconfig,int Imod
    IDFF_iv32           ,&TglobalSettingsDecVideo::iv32           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_cvid           ,&TglobalSettingsDecVideo::cvid           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_rv10           ,&TglobalSettingsDecVideo::rv10           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+   IDFF_rv30           ,&TglobalSettingsDecVideo::rv30           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_rv40           ,&TglobalSettingsDecVideo::rv40           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_ffv1           ,&TglobalSettingsDecVideo::ffv1           ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_vp3            ,&TglobalSettingsDecVideo::vp3            ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
@@ -496,6 +497,7 @@ void TglobalSettingsDecVideo::reg_op_codec(TregOp &t,TregOp *t2)
  _reg_op_codec(IDFF_iv32,t,t2,_l("iv32"),iv32,0);
  _reg_op_codec(IDFF_cvid,t,t2,_l("cvid"),cvid,0);
  _reg_op_codec(IDFF_rv10,t,t2,_l("rv10"),rv10,0);
+ _reg_op_codec(IDFF_rv30,t,t2,_l("rv30"),rv30,0);
  _reg_op_codec(IDFF_rv40,t,t2,_l("rv40"),rv40,0);
  _reg_op_codec(IDFF_ffv1,t,t2,_l("ffv1"),ffv1,IDFF_MOVIE_LAVC);
  _reg_op_codec(IDFF_vp3 ,t,t2,_l("vp3") ,vp3 ,0);
@@ -583,6 +585,7 @@ void TglobalSettingsDecVideo::load(void)
  fixMissing(iv32,IDFF_MOVIE_LAVC);
  fixMissing(cvid,IDFF_MOVIE_LAVC);
  fixMissing(rv10,IDFF_MOVIE_LAVC);
+ fixMissing(rv30,IDFF_MOVIE_LAVC);
  fixMissing(rv40,IDFF_MOVIE_LAVC);
  fixMissing(ffv1,IDFF_MOVIE_LAVC);
  fixMissing(vp3 ,IDFF_MOVIE_LAVC);
@@ -712,6 +715,7 @@ void TglobalSettingsDecVideo::load(void)
  FF_FOURCC1_OP(CVID,cvid & rawmask,CODEC_ID_CINEPAK) \
  FF_FOURCC1_OP(RV10,rv10 & rawmask,CODEC_ID_RV10) \
  FF_FOURCC1_OP(RV20,rv10 & rawmask,CODEC_ID_RV20) \
+ FF_FOURCC1_OP(RV30,rv30 & rawmask,CODEC_ID_RV30) \
  FF_FOURCC1_OP(RV40,rv40 & rawmask,CODEC_ID_RV40) \
  FF_FOURCC1_OP(8BPS,_8bps& rawmask,CODEC_ID_8BPS) \
  FF_FOURCC1_OP(QRLE,qtrle& rawmask,CODEC_ID_QTRLE) \

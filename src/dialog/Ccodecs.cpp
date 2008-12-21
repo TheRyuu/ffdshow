@@ -481,6 +481,7 @@ void TcodecsPageVideo::fillCodecs(void)
    formats.push_back(Tformat(_l("MS RLE")        ,IDFF_rle ,IDFF_MOVIE_LAVC,_l("MS RLE Video (MRLE)")));
    formats.push_back(Tformat(_l("Q-Team QPEG")   ,IDFF_qpeg,IDFF_MOVIE_LAVC,_l("Q-Team (QPEG, Q1.0, Q1.1)")));
    formats.push_back(Tformat(_l("Real Video 1,2"),IDFF_rv10,IDFF_MOVIE_LAVC,_l("Real Video (RV10, RV20)")));
+   formats.push_back(Tformat(_l("Real Video 3")  ,IDFF_rv30,IDFF_MOVIE_LAVC,_l("Real Video (RV30)"),NULL,LAVC_UNSTABLE));
    formats.push_back(Tformat(_l("Real Video 4")  ,IDFF_rv40,IDFF_MOVIE_LAVC,_l("Real Video (RV40)"),NULL,LAVC_UNSTABLE));
    formats.push_back(Tformat(_l("Truemotion 1,2"),IDFF_duck,IDFF_MOVIE_LAVC,_l("Doesn't support 24-bit compression.")));
    formats.push_back(Tformat(_l("Ultimotion")    ,IDFF_ulti,IDFF_MOVIE_LAVC,_l("IBM Ultimotion Video (ULTI)")));
