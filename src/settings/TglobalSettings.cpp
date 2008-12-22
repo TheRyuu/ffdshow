@@ -1013,6 +1013,7 @@ TglobalSettingsDecAudio::TglobalSettingsDecAudio(const Tconfig *Iconfig,int Imod
    IDFF_ra                     ,&TglobalSettingsDecAudio::ra                     ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_imc                    ,&TglobalSettingsDecAudio::imc                    ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_atrac3                 ,&TglobalSettingsDecAudio::atrac3                 ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
+   //IDFF_cook                   ,&TglobalSettingsDecAudio::cook                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_nellymoser             ,&TglobalSettingsDecAudio::nellymoser             ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_avisA                  ,&TglobalSettingsDecAudio::avis                   ,0,IDFF_MOVIE_MAX,_l(""),0,NULL,0,
    IDFF_rawa                   ,&TglobalSettingsDecAudio::rawa                   ,0,0             ,_l(""),0,NULL,0,
@@ -1091,6 +1092,7 @@ void TglobalSettingsDecAudio::reg_op_codec(TregOp &t,TregOp *t2)
  _reg_op_codec(IDFF_ra        ,t,t2,_l("ra")        ,ra        ,0);
  _reg_op_codec(IDFF_imc       ,t,t2,_l("imc")       ,imc       ,0);
  _reg_op_codec(IDFF_atrac3    ,t,t2,_l("atrac3")    ,atrac3    ,0);
+ //_reg_op_codec(IDFF_cook      ,t,t2,_l("cook")      ,cook      ,0);
  _reg_op_codec(IDFF_nellymoser,t,t2,_l("nellymoser"),nellymoser,0);
  _reg_op_codec(IDFF_avisA     ,t,t2,_l("avis")      ,avis      ,IDFF_MOVIE_AVIS);
  _reg_op_codec(IDFF_rawa      ,t,t2,filtermode&IDFF_FILTERMODE_AUDIORAW?_l("raw_rawa"):_l("rawa"),rawa,filtermode&IDFF_FILTERMODE_AUDIORAW?IDFF_MOVIE_RAW:0);
@@ -1123,6 +1125,7 @@ void TglobalSettingsDecAudio::load(void)
  fixMissing(ra        ,IDFF_MOVIE_LAVC);
  fixMissing(imc       ,IDFF_MOVIE_LAVC);
  fixMissing(atrac3    ,IDFF_MOVIE_LAVC);
+ //fixMissing(cook      ,IDFF_MOVIE_LAVC);
  fixMissing(nellymoser,IDFF_MOVIE_LAVC);
 }
 
@@ -1171,11 +1174,12 @@ void TglobalSettingsDecAudio::load(void)
  FF_WAVE_FORMAT1_OP(MAC3   ,mace   & rawmask,CODEC_ID_MACE3) \
  FF_WAVE_FORMAT1_OP(MAC6   ,mace   & rawmask,CODEC_ID_MACE6) \
  FF_WAVE_FORMAT1_OP(DSPGROUP_TRUESPEECH,truespeech & rawmask,CODEC_ID_TRUESPEECH) \
- /*FF_WAVE_FORMAT1_OP(COOK   ,1   & rawmask,CODEC_ID_COOK)*/ \
- FF_WAVE_FORMAT1_OP(14_4  ,ra & rawmask,CODEC_ID_RA_144) \
- FF_WAVE_FORMAT1_OP(28_8  ,ra & rawmask,CODEC_ID_RA_288) \
- FF_WAVE_FORMAT1_OP(IMC  ,imc & rawmask,CODEC_ID_IMC) \
- FF_WAVE_FORMAT1_OP(ATRAC3  ,atrac3 & rawmask,CODEC_ID_ATRAC3) \
+ FF_WAVE_FORMAT1_OP(14_4   ,ra     & rawmask,CODEC_ID_RA_144) \
+ FF_WAVE_FORMAT1_OP(28_8   ,ra     & rawmask,CODEC_ID_RA_288) \
+ FF_WAVE_FORMAT1_OP(IMC    ,imc    & rawmask,CODEC_ID_IMC) \
+ FF_WAVE_FORMAT1_OP(ATRAC3 ,atrac3 & rawmask,CODEC_ID_ATRAC3) \
+ /*FF_WAVE_FORMAT1_OP(COOK1  ,cook   & rawmask,CODEC_ID_COOK)*/ \
+ /*FF_WAVE_FORMAT1_OP(COOK2  ,cook   & rawmask,CODEC_ID_COOK)*/ \
  FF_WAVE_FORMAT1_OP(NELLYMOSER,nellymoser & rawmask,CODEC_ID_NELLYMOSER) \
  FF_WAVE_FORMAT_OP (VORBIS  ,vorbis & rawmask,c_vorbis) \
  FF_WAVE_FORMAT_OP (FFVORBIS,vorbis & rawmask,c_vorbis) \

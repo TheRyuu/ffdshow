@@ -89,6 +89,7 @@ bool TaudioCodecLibavcodec::init(const CMediaType &mt)
     }
    else if (codecId==CODEC_ID_COOK && mt.formattype==FORMAT_WaveFormatEx && mt.pbFormat)
     {
+     /* this code needs fixing */
      avctx->extradata=mt.pbFormat+sizeof(WAVEFORMATEX);
      avctx->extradata_size=mt.cbFormat-sizeof(WAVEFORMATEX);
      for (;avctx->extradata_size;avctx->extradata=(uint8_t*)avctx->extradata+1,avctx->extradata_size--)

@@ -153,7 +153,7 @@ protected:
 public:
  TglobalSettingsDecAudio(const Tconfig *Iconfig,int Imode,TintStrColl *Icoll,const char_t *Ireg_child=FFDSHOWDECAUDIO);
  TOSDsettingsAudio osd;
- int wma1,wma2,mp2,mp3,ac3,aac,amr,rawa,avis,iadpcm,msadpcm,flac,lpcm,dts,vorbis,law,gsm,tta,otherAdpcm,qdm2,truespeech,mace,ra,imc,atrac3,nellymoser,eac3,mlp;
+ int wma1,wma2,mp2,mp3,ac3,aac,amr,rawa,avis,iadpcm,msadpcm,flac,lpcm,dts,vorbis,law,gsm,tta,otherAdpcm,qdm2,truespeech,mace,ra,imc,atrac3,nellymoser,eac3,mlp,cook;
  int dtsinwav;
  int ac3drc,dtsdrc;
  int SPDIFCompatibility;

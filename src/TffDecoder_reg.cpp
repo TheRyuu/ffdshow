@@ -428,6 +428,8 @@ const AMOVIESETUP_MEDIATYPE TffdshowDecAudio::inputMediaTypes[]=
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_28_8       },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_IMC        },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_ATRAC3     },
+ //{ &MEDIATYPE_Audio , &MEDIASUBTYPE_COOK1      },
+ //{ &MEDIATYPE_Audio , &MEDIASUBTYPE_COOK2      },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_NELLYMOSER },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_Vorbis     },
  { &MEDIATYPE_Audio , &MEDIASUBTYPE_Vorbis2    },
