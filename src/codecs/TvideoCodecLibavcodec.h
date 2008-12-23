@@ -47,6 +47,7 @@ private:
  enum AVDiscard initialSkipLoopFilter;
  bool h264_has_start_code; // H.264/AVC on mpeg2 trasport stream. Program stream is handled in the same way.
  bool isTSfile(void);
+ bool firstSeek; // firstSeek means start of palyback.
 protected:
  virtual LRESULT beginCompress(int cfgcomode,int csp,const Trect &r);
  virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);

@@ -87,6 +87,7 @@ void TvideoCodecLibavcodec::create(void)
  ccDecoder=NULL;
  autoSkipingLoopFilter= false;
  h264_has_start_code = false;
+ firstSeek = true;
 }
 
 TvideoCodecLibavcodec::~TvideoCodecLibavcodec()
@@ -625,7 +626,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
 
 bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
 {
-oldpict.rtStop = 0;
+ oldpict.rtStop = 0;
  wasKey=false;
  segmentTimeStart=segmentStart;
  posB=1;
@@ -634,6 +635,10 @@ oldpict.rtStop = 0;
  codedPictureBuffer.onSeek();
  h264RandomAccess.onSeek();
  telecineManager.onSeek();
+ if (!firstSeek && avctx && connectedSplitter == TffdshowVideoInputPin::Haali_Media_splitter)
+  avctx->h264_has_to_drop_first_non_ref = 1;
+ else
+  firstSeek = false;
  return avctx?(libavcodec->avcodec_flush_buffers(avctx),true):false;
 }
 bool TvideoCodecLibavcodec::onDiscontinuity(void)

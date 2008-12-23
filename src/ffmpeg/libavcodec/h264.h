@@ -530,8 +530,9 @@ typedef struct H264Context{
     int todecode;
     H264mb *blocks[2];
 
-    /* ffdshow custom stuff */
+    /* ffdshow custom stuffs */
     int recovery_frame_cnt;
+    int has_to_drop_first_non_ref;    // Workaround Haali's media splitter (http://forum.doom9.org/showthread.php?p=1226434#post1226434)
 }H264Context;
 
 #endif /* AVCODEC_H264_H */

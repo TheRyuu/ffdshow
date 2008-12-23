@@ -3018,6 +3018,7 @@ static void flush_dpb(AVCodecContext *avctx){
     if(h->s.current_picture_ptr)
         h->s.current_picture_ptr->reference= 0;
     h->s.first_field= 0;
+    h->has_to_drop_first_non_ref = avctx->h264_has_to_drop_first_non_ref;
     ff_mpeg_flush(avctx);
 }
 
@@ -3681,7 +3682,7 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
             s->avctx->sample_aspect_ratio.den = 1;
 
         if(h->sps.timing_info_present_flag){
-        		#if __STDC_VERSION__ >= 199901L
+            #if __STDC_VERSION__ >= 199901L
             s->avctx->time_base= (AVRational){h->sps.num_units_in_tick * 2, h->sps.time_scale};
             #else
             s->avctx->time_base.num = h->sps.num_units_in_tick * 2;
@@ -3711,6 +3712,30 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
     }
     h->mb_field_decoding_flag= s->picture_structure != PICT_FRAME;
 
+    /* ffdshow custom code begin */
+    //
+    // Workaround Haali's media splitter (http://forum.doom9.org/showthread.php?p=1226434#post1226434)
+    //
+    // Disallow unpaired field referencing just after seeking.
+    // This rule is applied only if h->has_to_drop_first_non_ref == 3.
+    // This is wrong because an unpaired field is allowed to be a reference field.
+    // And that's why this is optional and tried to be minimized.
+    if (h->has_to_drop_first_non_ref == 1 && s->dropable){
+        if (FIELD_PICTURE){
+            h->has_to_drop_first_non_ref = 2;
+        }else{
+            h->has_to_drop_first_non_ref = 0;
+        }
+    } else if (h->has_to_drop_first_non_ref == 2){
+        if (FIELD_PICTURE && !s->dropable)
+            h->has_to_drop_first_non_ref = 3;
+        else if (!FIELD_PICTURE)
+            h->has_to_drop_first_non_ref = 0;
+    } else if (h->has_to_drop_first_non_ref == 3){
+        h->has_to_drop_first_non_ref = 0;
+    }
+    /* ffdshow custom code end */
+
     if(h0->current_slice == 0){
         while(h->frame_num !=  h->prev_frame_num &&
               h->frame_num != (h->prev_frame_num+1)%(1<<h->sps.log2_max_frame_num)){
@@ -3738,9 +3763,10 @@ static int decode_slice_header(H264Context *h, H264Context *h0){
                 s0->first_field = FIELD_PICTURE;
 
             } else {
-                if (h->nal_ref_idc &&
+                if ((h->nal_ref_idc &&
                         s0->current_picture_ptr->reference &&
-                        s0->current_picture_ptr->frame_num != h->frame_num) {
+                        s0->current_picture_ptr->frame_num != h->frame_num)
+                 || h->has_to_drop_first_non_ref == 3 /* ffdshow custom code */) {
                     /*
                      * This and previous field were reference, but had
                      * different frame_nums. Consider this field first in

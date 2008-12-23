@@ -2059,6 +2059,7 @@ typedef struct AVCodecContext {
     int h264_poc_decoded;
     int h264_poc_outputed;
     int h264_frame_num_decoded;
+    int h264_has_to_drop_first_non_ref;    // Workaround Haali's media splitter (http://forum.doom9.org/showthread.php?p=1226434#post1226434)
 
     enum CorePNGFrameType corepng_frame_type;    
     
