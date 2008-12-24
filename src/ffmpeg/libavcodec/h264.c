@@ -2527,7 +2527,7 @@ static av_always_inline void hl_decode_mb_internal(H264Context *h, int simple){
             }
         }
     }
-    if(h->cbp || IS_INTRA(mb_type))
+    if((s->avctx->thread_count < 2) && (h->cbp || IS_INTRA(mb_type))) /* ffdshow custom code */
         s->dsp.clear_blocks(h->mb);
 
     if(h->deblocking_filter) {
@@ -4267,6 +4267,11 @@ static int decode_mb_cavlc(H264Context *h){
 
     mb_xy = h->mb_xy = s->mb_x + s->mb_y*s->mb_stride;
 
+    /* ffdshow custom code */
+    if(s->avctx->thread_count > 1) {
+    	s->dsp.clear_blocks(h->mb);
+    }
+
     tprintf(s->avctx, "pic:%d mb:%d/%d\n", h->frame_num, s->mb_x, s->mb_y);
     cbp = 0; /* avoid warning. FIXME: find a solution without slowing
                 down the code */
@@ -5320,6 +5325,11 @@ static int decode_mb_cabac(H264Context *h) {
     int dct8x8_allowed= h->pps.transform_8x8_mode;
 
     mb_xy = h->mb_xy = s->mb_x + s->mb_y*s->mb_stride;
+
+    /* ffdshow custom code */
+    if(s->avctx->thread_count > 1) {
+    	s->dsp.clear_blocks(h->mb);
+    }
 
     tprintf(s->avctx, "pic:%d mb:%d/%d\n", h->frame_num, s->mb_x, s->mb_y);
     if( h->slice_type_nos != FF_I_TYPE ) {
