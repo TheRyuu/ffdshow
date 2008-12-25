@@ -6828,9 +6828,9 @@ static void copy_mb_to_context(H264Context *dst, H264mb *src)
     memcpy(dst->non_zero_count_cache,     src->non_zero_count_cache,     sizeof(src->non_zero_count_cache));
 
     if(dst->slice_type != FF_I_TYPE && dst->slice_type != FF_SI_TYPE) {
-    memcpy(dst->sub_mb_type,              src->sub_mb_type,              sizeof(src->sub_mb_type));
-    memcpy(dst->mv_cache,                 src->mv_cache,                 sizeof(src->mv_cache));
-    memcpy(dst->ref_cache,                src->ref_cache,                sizeof(src->ref_cache));
+        memcpy(dst->sub_mb_type,              src->sub_mb_type,              sizeof(src->sub_mb_type));
+        memcpy(dst->mv_cache,                 src->mv_cache,                 sizeof(src->mv_cache));
+        memcpy(dst->ref_cache,                src->ref_cache,                sizeof(src->ref_cache));
     }
 
     /* Needed for deblocking */
@@ -6854,38 +6854,38 @@ static int decode_mb_parallelized(struct AVCodecContext *avctx, void *arg)
     int i, ret;
 
     if(h0 == h) {
-    /* first thread does entropy decode */
+        /* first thread does entropy decode */
 
-    for(i = 0; i < MAXBLOCKS; i++) {
-        ret = decode_mb_cabac(h);
-        if(ret < 0 || h->cabac.bytestream > h->cabac.bytestream_end + 2) {
-        av_log(h->s.avctx, AV_LOG_ERROR,
-           "error while decoding MB %d %d, bytestream (%td)\n",
-               s->mb_x, s->mb_y, h->cabac.bytestream_end - h->cabac.bytestream);
-        ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x, s->mb_y,
-                (AC_ERROR|DC_ERROR|MV_ERROR)&part_mask);
-        return -1;
+        for(i = 0; i < MAXBLOCKS; i++) {
+            ret = decode_mb_cabac(h);
+            if(ret < 0 || h->cabac.bytestream > h->cabac.bytestream_end + 2) {
+                av_log(h->s.avctx, AV_LOG_ERROR,
+                   "error while decoding MB %d %d, bytestream (%td)\n",
+                   s->mb_x, s->mb_y, h->cabac.bytestream_end - h->cabac.bytestream);
+                ff_er_add_slice(s, s->resync_mb_x, s->resync_mb_y, s->mb_x, s->mb_y,
+                    (AC_ERROR|DC_ERROR|MV_ERROR)&part_mask);
+                return -1;
+            }
+
+            copy_context_to_mb(h->blocks[h->phaze] + i, h);
+            if(++s->mb_x >= s->mb_width) {
+                s->mb_x = 0;
+                ++s->mb_y;
+            }
+
+            if(get_cabac_terminate(&h->cabac) || s->mb_y >= s->mb_height)
+                return i + 1;
         }
-
-        copy_context_to_mb(h->blocks[h->phaze] + i, h);
-        if(++s->mb_x >= s->mb_width) {
-        s->mb_x = 0;
-        ++s->mb_y;
-        }
-
-        if(get_cabac_terminate(&h->cabac) || s->mb_y >= s->mb_height)
-        return i + 1;
-    }
-    return 0;
+        return 0;
 
     } else {
-    /* second thread does hl decode */
+        /* second thread does hl decode */
 
-    for(i = 0; i < h0->todecode; i++) {
-        copy_mb_to_context(h, h0->blocks[!h0->phaze] + i);
-        hl_decode_mb(h);
-    }
-    return 0;
+        for(i = 0; i < h0->todecode; i++) {
+            copy_mb_to_context(h, h0->blocks[!h0->phaze] + i);
+            hl_decode_mb(h);
+        }
+        return 0;
     }
 }
 
