@@ -174,6 +174,7 @@ void Twinamp2dsp::done(void)
   {
    SendMessage(h,WM_CLOSE,0,0);
    WaitForSingleObject(hThread,INFINITE);
+   CloseHandle(hThread);
    hThread = NULL;
    h = NULL;
    release();
