@@ -70,6 +70,7 @@ void yadif_thread_free(YadifContext *yadctx){
         WaitForSingleObject(threadAPIContext[i].thread, INFINITE);
         if(threadAPIContext[i].work_sem) CloseHandle(threadAPIContext[i].work_sem);
         if(threadAPIContext[i].done_sem) CloseHandle(threadAPIContext[i].done_sem);
+        if(threadAPIContext[i].thread)   CloseHandle(threadAPIContext[i].thread); 
     }
 
     av_freep(&yadctx->thread_opaque);
