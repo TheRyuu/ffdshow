@@ -543,8 +543,12 @@ typedef struct AVPanScan{
     /* ffdshow custom code */\
     int mb_width,mb_height,mb_stride,b8_stride;\
     int num_sprite_warping_points,real_sprite_warping_points;\
-    int play_flags;
-
+    int play_flags;\
+\
+    int h264_poc_decoded;\
+    int h264_poc_outputed;\
+    int h264_frame_num_decoded;\
+    int h264_max_frame_num;
 
 #define FF_QSCALE_TYPE_MPEG1 0
 #define FF_QSCALE_TYPE_MPEG2 1
@@ -2056,9 +2060,6 @@ typedef struct AVCodecContext {
     int64_t granulepos;
     int64_t *parserRtStart;
     void (*handle_user_data)(struct AVCodecContext *c,const uint8_t *buf,int buf_size);
-    int h264_poc_decoded;
-    int h264_poc_outputed;
-    int h264_frame_num_decoded;
     int h264_has_to_drop_first_non_ref;    // Workaround Haali's media splitter (http://forum.doom9.org/showthread.php?p=1226434#post1226434)
 
     enum CorePNGFrameType corepng_frame_type;    

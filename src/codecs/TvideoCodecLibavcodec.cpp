@@ -1446,22 +1446,22 @@ void TvideoCodecLibavcodec::Th264RandomAccess::judgeUsability(int *got_picture_p
 
  if (recovery_mode ==1 || recovery_mode ==2)
   {
-   recovery_frame_cnt += parent->avctx->h264_frame_num_decoded;
+   recovery_frame_cnt = (recovery_frame_cnt + parent->frame->h264_frame_num_decoded) % parent->frame->h264_max_frame_num;
    recovery_mode = 3;
   }
 
  if (recovery_mode == 3)
   {
-   if (recovery_frame_cnt <= parent->avctx->h264_frame_num_decoded)
+   if (recovery_frame_cnt <= parent->frame->h264_frame_num_decoded)
     {
-     recovery_poc = parent->avctx->h264_poc_decoded;
+     recovery_poc = parent->frame->h264_poc_decoded;
      recovery_mode = 4;
     }
   }
 
  if (recovery_mode == 4)
   {
-   if (parent->avctx->h264_poc_outputed >= recovery_poc)
+   if (parent->frame->h264_poc_outputed >= recovery_poc)
     {
      recovery_mode = 0;
     }
