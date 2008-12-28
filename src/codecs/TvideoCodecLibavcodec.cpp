@@ -342,7 +342,12 @@ void TvideoCodecLibavcodec::handle_user_data(const uint8_t *buf,int buf_len)
 
 HRESULT TvideoCodecLibavcodec::flushDec(void)
 {
- return decompress(NULL,0,NULL);
+ HRESULT hr;
+ do
+  {
+   hr = decompress(NULL, 0, NULL);
+  } while(got_picture && hr == S_OK);
+ return hr;
 }
 HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen0,IMediaSample *pIn)
 {
@@ -422,7 +427,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
 
  while (!src || size>0)
   {
-   int got_picture,used_bytes;
+   int used_bytes;
 
    avctx->parserRtStart=&rtStart; // needed for mpeg1/2
    avctx->reordered_opaque = rtStart;
