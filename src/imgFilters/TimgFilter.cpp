@@ -228,6 +228,8 @@ bool TimgFilter::getCurNext(int csp,TffPict &pict,int full,int copy,unsigned cha
    if (!convert2 || cspOptionsRgbInterlaceMode != old_cspOptionsRgbInterlaceMode)
     {
      old_cspOptionsRgbInterlaceMode = cspOptionsRgbInterlaceMode;
+     if (convert2)
+      delete convert2;
      convert2=new Tconvert(deci,pict.rectFull.dx,pict.rectFull.dy);
     }
    pict.convertCSP((csp_bestMatch(pict.csp, csp & FF_CSPS_MASK) & ~FF_CSP_FLAGS_VFLIP) | (csp & (FF_CSP_FLAGS_YUV_ADJ | FF_CSP_FLAGS_INTERLACED)), buf, convert2);
