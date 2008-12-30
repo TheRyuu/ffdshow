@@ -215,7 +215,7 @@ HRESULT TimgFilterKernelDeint::process(TfilterQueue::iterator it,TffPict &pict,c
    TffPict::copy(prv.data[plane],prv.stride[plane],src[plane],stride1[plane],w,dy1[plane]);
   }
  n++;
- pict.fieldtype=(pict.fieldtype & ~(FIELD_TYPE::MASK_PROG | FIELD_TYPE::MASK_INT)) | FIELD_TYPE::PROGRESSIVE_FRAME;
+ pict.fieldtype=(pict.fieldtype & ~(FIELD_TYPE::MASK_PROG_INT)) | FIELD_TYPE::PROGRESSIVE_FRAME;
  return parent->deliverSample(++it,pict);
 }
 void TimgFilterKernelDeint::onSeek(void)
@@ -288,7 +288,7 @@ HRESULT TimgFilterKernelDeint2::process(TfilterQueue::iterator it,TffPict &pict,
 
    oldOrder=order;
 
-   pict.fieldtype=(pict.fieldtype & ~(FIELD_TYPE::MASK_PROG | FIELD_TYPE::MASK_INT)) | FIELD_TYPE::PROGRESSIVE_FRAME;
+   pict.fieldtype=(pict.fieldtype & ~(FIELD_TYPE::MASK_INT_PROG)) | FIELD_TYPE::PROGRESSIVE_FRAME;
    if (bob)
     {
      kernel->getFrame(src,stride1,dst,stride2,0);
@@ -296,6 +296,7 @@ HRESULT TimgFilterKernelDeint2::process(TfilterQueue::iterator it,TffPict &pict,
      REFERENCE_TIME rtDur=pict.rtStop-pict.rtStart;
      pict0.rtStop=pict.rtStart+rtDur/2;
 
+     pict0.csp &= ~FF_CSP_FLAGS_INTERLACED;
      parent->deliverSample(++it,pict0);
      --it;
      getNext(csp1,pict,cfg->full,dst);
@@ -307,6 +308,7 @@ HRESULT TimgFilterKernelDeint2::process(TfilterQueue::iterator it,TffPict &pict,
  if (pict.rectClip != pict.rectFull)
   parent->dirtyBorder=1;
 
+ pict.csp &= ~FF_CSP_FLAGS_INTERLACED;
  return parent->deliverSample(++it,pict);
 }
 

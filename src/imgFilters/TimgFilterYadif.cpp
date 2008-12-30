@@ -157,7 +157,8 @@ HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4], i
                                  dx, dy,
                                  frame_pos ^ tff ^ 1, tff);
 
-        pict.fieldtype = (pict.fieldtype & ~FIELD_TYPE::MASK_PROG) | FIELD_TYPE::PROGRESSIVE_FRAME;
+        pict.fieldtype = (pict.fieldtype & ~FIELD_TYPE::MASK_INT_PROG) | FIELD_TYPE::PROGRESSIVE_FRAME;
+        pict.csp &= ~FF_CSP_FLAGS_INTERLACED;
 
         if (double_frame_rate){
             pict.rtStop = pict.rtStart + (yadctx->frame_duration >> 1) - 1;
