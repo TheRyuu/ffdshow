@@ -173,8 +173,7 @@ HRESULT TimgFilterGrab::process(TfilterQueue::iterator it,TffPict &pict,const Tf
        if (exp[cfg->format]->ok)
         {
          const unsigned char *src[4];
-         Trect tempR(pictRect.x,pictRect.y,pictRect.dx,pictRect.dy);
-         temp.copyFrom(pict, buffer, &tempR);
+         temp.copyFrom(pict, buffer);
          getCur(exp[cfg->format]->requiredCSP(),temp,cfg->full,src);
 
          if (!dstbuf) dstbuf=(unsigned char*)malloc(dstbuflen=pictRect.dx*pictRect.dy*4+1024);
