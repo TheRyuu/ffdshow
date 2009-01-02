@@ -22,6 +22,7 @@
 #include "TaudioFilter.h"
 #include "ffdebug.h"
 #include "IffdshowParamsEnum.h"
+#include "TffdshowPageDec.h"
 
 const int MAX_AMPLIFICATION=1000;
 
@@ -183,25 +184,8 @@ INT_PTR TvolumePage::msgProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
          HWND hed=GetDlgItem(m_hwnd,LOWORD(wParam));
          if (hed!=GetFocus()) return FALSE;
          repaint(hed);
-         switch (LOWORD(wParam))
-          {
-           case IDC_ED_VOLUME_NORMALIZE_MAX:
-            {
-             if (isdb)
-              {
-               int db;
-               if (eval(hed,0,30,&db))
-                {
-                 db=ff_round(db2value((double)db)*100);
-                 cfgSet(IDFF_maxNormalization,db);
-                }
-              }
-             else
-              eval(hed,0,MAX_AMPLIFICATION,IDFF_maxNormalization);
-             break;
-            }
-          }
-         return TRUE;
+         parent->setChange();
+         break;
         }
        break;
       case IDC_CHB_VOLUME_L_MUTE:
@@ -364,6 +348,22 @@ void TvolumePage::onFrame(void)
   }
  for (int i=0;i<6;i++)
   SendDlgItemMessage(m_hwnd,pbrs[i],PBM_SETPOS,0,0);
+}
+
+void TvolumePage::applySettings(void)
+{
+ HWND hed=GetDlgItem(m_hwnd,IDC_ED_VOLUME_NORMALIZE_MAX);
+ if (isdb)
+  {
+   int db;
+   if (eval(hed,0,30,&db))
+    {
+     db=ff_round(db2value((double)db)*100);
+     cfgSet(IDFF_maxNormalization,db);
+    }
+  }
+ else
+  eval(hed,0,MAX_AMPLIFICATION,IDFF_maxNormalization);
 }
 
 TvolumePage::TvolumePage(TffdshowPageDec *Iparent,const TfilterIDFF *idff):TconfPageDecAudio(Iparent,idff),filter(NULL)
