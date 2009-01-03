@@ -1,15 +1,16 @@
 ; Requires Inno Setup (http://www.innosetup.com) and ISPP (http://sourceforge.net/projects/ispp/)
 
-#define tryout_revision = '2466'
-#define buildyear  = '2008'
-#define buildmonth = '12'
-#define buildday   = '10'
+#define tryout_revision = '2569'
+#define buildyear  = '2009'
+#define buildmonth = '01'
+#define buildday   = '03'
 
 ; Build specific options
 #define localize = True
 
 #define include_x264              = True
 #define include_xvidcore          = True
+#define include_libtheora         = False
 #define include_makeavis          = True
 #define include_plugin_avisynth   = True
 #define include_plugin_virtualdub = True
@@ -417,8 +418,10 @@ Source: "{#= bindir}\ff_libfaad2.dll";                            DestDir: "{app
 Source: "{#= bindir}\ff_libmad.dll";                              DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ff_tremor.dll";                              DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ff_unrar.dll";                               DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
-Source: "{#= bindir}\ff_samplerate.dll";                          DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\ff_samplerate.dll";                         DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
+#if include_libtheora
 Source: "{#= bindir}\ff_theora.dll";                              DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
+#endif
 #if include_x264
 Source: "{#= bindir}\ff_x264.dll";                                DestDir: "{app}";                       Components: ffdshow\vfw;                Flags: ignoreversion
   #if !is64bit
