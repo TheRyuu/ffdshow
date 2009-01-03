@@ -18,7 +18,7 @@
 	</Platforms>
 	<ToolFiles>
 		<ToolFile
-			RelativePath="..\..\..\nasm.rules"
+			RelativePath="..\..\..\yasm.rules"
 		/>
 	</ToolFiles>
 	<Configurations>
@@ -36,7 +36,7 @@
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
-				Name="Nasm"
+				Name="Yasm"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -130,7 +130,7 @@
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
-				Name="Nasm"
+				Name="Yasm"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -224,7 +224,7 @@
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
-				Name="Nasm"
+				Name="Yasm"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -326,7 +326,7 @@
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
-				Name="Nasm"
+				Name="Yasm"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
