@@ -336,7 +336,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
    if (!useembedded && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY)
     sub=subs.getSubtitle(cfg,frameStart,&forceChange);
 
-   if (sub)
+   if (sub && (isdvdproc || cfg->is))
     {
      init(pict,cfg->full,cfg->half);
 
@@ -397,7 +397,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
    csEmbedded.Unlock();
   }
 
- if (cfg->cc && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY)
+ if (cfg->cc && cfg->is && adhocMode != ADHOC_ADHOC_DRAW_DVD_SUB_ONLY)
   {
    csCC.Lock();
    if (cc && cc->numlines())
