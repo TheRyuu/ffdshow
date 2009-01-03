@@ -170,7 +170,7 @@ HRESULT TimgFilterYadif::put_image(TffPict &pict, const unsigned char *src[4], i
         if(double_frame_rate)
             inputPicture = pict;
 
-        if (pict.rtStart < last_rtStop){
+        if (pict.rtStop < last_rtStop){
             DPRINTF(_l("yadif timestamp error, discarding a frame"));
             return S_OK;
         }
