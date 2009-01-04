@@ -364,6 +364,14 @@ HRESULT TimgFilterYadif::process(TfilterQueue::iterator it0,TffPict &pict,const 
         }
     }
 
+    if (pict.rtStart != REFTIME_INVALID && pict.rtStop != REFTIME_INVALID && pict.rtStop - pict.rtStart >= 610000) {
+        // if frame duration is 61ms or longer, then do not deinterlace.
+        // Besides it is not likely to be intalaced, bufferring a frame with long duration will make a mess.
+        onDiscontinuity(pict);
+        done();
+        return parent->deliverSample(++it,pict);
+    }
+
     const unsigned char *src[4];
     bool cspChanged = getCur(FF_CSP_420P | FF_CSP_422P | FF_CSP_FLAGS_INTERLACED, pict, cfg->full,src);
 
