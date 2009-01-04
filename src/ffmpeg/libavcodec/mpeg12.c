@@ -1209,7 +1209,10 @@ static int mpeg_decode_postinit(AVCodecContext *avctx){
             if(s->aspect_ratio_info > 1){
                 //we ignore the spec here as reality does not match the spec, see for example
                 // res_change_ffmpeg_aspect.ts and sequence-display-aspect.mpg
-                if( (s1->pan_scan.width == 0 )||(s1->pan_scan.height == 0) || 1){
+
+                /* ffdshow custom code - we do not want to ignore spec. Comment out "// 1". 
+                   DVD plays better. It breaks the playback of res_change_ffmpeg_aspect.ts though. */
+                if( (s1->pan_scan.width == 0 )||(s1->pan_scan.height == 0) /*|| 1*/){ 
                     AVRational r={s->width, s->height};
                     s->avctx->sample_aspect_ratio=
                         av_div_q(
