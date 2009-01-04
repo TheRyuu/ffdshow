@@ -2227,6 +2227,21 @@ static int decode_chunks(AVCodecContext *avctx,
                 if (slice_end(avctx, picture)) {
                     if(s2->last_picture_ptr || s2->low_delay) //FIXME merge with the stuff in mpeg_decode_slice
                         *data_size = sizeof(AVPicture);
+                    /* ffdshow custom code begin */
+                    // If this is the first and last frame of a sequence (only one picture in a sequence)
+                    // Output this immediately.
+                    // This helps DVD playback.
+                    else if (buf_ptr == buf_end && buf_ptr -4 > buf && AV_RB32(buf_ptr - 4) == SEQ_END_CODE) {
+                        // FIXME: duplicated (copied from mpeg_decode_frame)
+                        /* special case for last picture */
+                        if (s2->low_delay==0 && s2->next_picture_ptr) {
+                            *picture= *(AVFrame*)s2->next_picture_ptr;
+                            s2->next_picture_ptr= NULL;
+
+                            *data_size = sizeof(AVFrame);
+                        }
+                    }
+                    /* ffdshow custom code end */
                 }
             }
             s2->pict_type= 0;
