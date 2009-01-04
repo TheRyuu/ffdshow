@@ -132,7 +132,6 @@ SRCS_C=\
       $(LAVC_DIR)/rv40.c \
       $(LAVC_DIR)/rv40dsp.c \
       $(LAVC_DIR)/simple_idct.c \
-      $(LAVC_DIR)/snow.c \
       $(LAVC_DIR)/sp5xdec.c \
       $(LAVC_DIR)/svq1.c \
       $(LAVC_DIR)/svq1dec.c \
@@ -204,7 +203,6 @@ SRCS_C=\
       $(LAVC_DIR)/x86/motion_est_mmx.c \
       $(LAVC_DIR)/x86/mpegvideo_mmx.c \
       $(LAVC_DIR)/x86/simple_idct_mmx.c \
-      $(LAVC_DIR)/x86/snowdsp_mmx.c \
       $(LAVC_DIR)/x86/vc1dsp_mmx.c \
       $(LAVC_DIR)/x86/vp3dsp_mmx.c \
       $(LAVC_DIR)/x86/vp3dsp_sse2.c

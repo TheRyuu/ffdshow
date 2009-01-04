@@ -93,9 +93,6 @@ void avcodec_register_all(void)
     REGISTER_DECODER	(rv20);
     REGISTER_DECODER	(rv30);
     REGISTER_DECODER  (rv40);
-    //#if __STDC_VERSION__ >= 199901L
-    //REGISTER_ENCDEC		(snow);
-    //#endif
     REGISTER_DECODER	(sp5x);
     REGISTER_DECODER	(svq1);
     REGISTER_DECODER	(svq3);

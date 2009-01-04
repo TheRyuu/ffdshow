@@ -601,7 +601,7 @@ static void  denoise_dct_sse2(MpegEncContext *s, DCTELEM *block){
 #define RENAMEl(a) a ## _mmx2
 #include "mpegvideo_mmx_template.c"
 
-#if GCC420_OR_NEWER
+#if AV_GCC_VERSION_AT_LEAST(4,2)
 #define HAVE_SSE2
 #undef RENAME
 #undef RENAMEl
@@ -610,7 +610,7 @@ static void  denoise_dct_sse2(MpegEncContext *s, DCTELEM *block){
 #include "mpegvideo_mmx_template.c"
 #endif
 
-#if GCC420_OR_NEWER
+#if AV_GCC_VERSION_AT_LEAST(4,2)
 #ifdef HAVE_SSSE3_BAK
 #define HAVE_SSSE3
 #undef RENAME
@@ -634,7 +634,7 @@ void MPV_common_init_mmx(MpegEncContext *s)
             s->dct_unquantize_mpeg2_intra = dct_unquantize_mpeg2_intra_mmx;
         s->dct_unquantize_mpeg2_inter = dct_unquantize_mpeg2_inter_mmx;
 
-#if GCC420_OR_NEWER
+#if AV_GCC_VERSION_AT_LEAST(4,2)
         if (mm_flags & FF_MM_SSE2) {
             s->denoise_dct= denoise_dct_sse2;
         } else {
@@ -645,7 +645,7 @@ void MPV_common_init_mmx(MpegEncContext *s)
 #endif
 
         if(dct_algo==FF_DCT_AUTO || dct_algo==FF_DCT_MMX){
-#if GCC420_OR_NEWER
+#if AV_GCC_VERSION_AT_LEAST(4,2)
 #ifdef HAVE_SSSE3 
             if(mm_flags & FF_MM_SSSE3){
                 s->dct_quantize= dct_quantize_SSSE3;

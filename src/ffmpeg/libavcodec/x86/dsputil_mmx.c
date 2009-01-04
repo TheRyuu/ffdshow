@@ -1733,6 +1733,7 @@ PREFETCH(prefetch_3dnow, prefetch)
 #undef PREFETCH
 
 #include "h264dsp_mmx.c"
+#include "rv40dsp_mmx.c"
 
 /* CAVS specific */
 void ff_cavsdsp_init_mmx2(DSPContext* c, AVCodecContext *avctx);
@@ -2441,17 +2442,6 @@ static void float_to_int16_interleave_3dn2(int16_t *dst, const float **src, long
 #endif /* ARCH_X86_64 */
 
 
-#if 0 /* disable snow */
-void ff_snow_horizontal_compose97i_sse2(IDWTELEM *b, int width);
-void ff_snow_horizontal_compose97i_mmx(IDWTELEM *b, int width);
-void ff_snow_vertical_compose97i_sse2(IDWTELEM *b0, IDWTELEM *b1, IDWTELEM *b2, IDWTELEM *b3, IDWTELEM *b4, IDWTELEM *b5, int width);
-void ff_snow_vertical_compose97i_mmx(IDWTELEM *b0, IDWTELEM *b1, IDWTELEM *b2, IDWTELEM *b3, IDWTELEM *b4, IDWTELEM *b5, int width);
-void ff_snow_inner_add_yblock_sse2(const uint8_t *obmc, const int obmc_stride, uint8_t * * block, int b_w, int b_h,
-                                   int src_x, int src_y, int src_stride, slice_buffer * sb, int add, uint8_t * dst8);
-void ff_snow_inner_add_yblock_mmx(const uint8_t *obmc, const int obmc_stride, uint8_t * * block, int b_w, int b_h,
-                                  int src_x, int src_y, int src_stride, slice_buffer * sb, int add, uint8_t * dst8);
-#endif
-
 void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 {
     mm_flags = mm_support();
@@ -2571,6 +2561,9 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
         c->put_h264_chroma_pixels_tab[1]= put_h264_chroma_mc4_mmx;
         c->put_no_rnd_h264_chroma_pixels_tab[0]= put_h264_chroma_mc8_mmx_nornd;
 
+        c->put_rv40_chroma_pixels_tab[0]= put_rv40_chroma_mc8_mmx;
+        c->put_rv40_chroma_pixels_tab[1]= put_rv40_chroma_mc4_mmx;
+
         c->h264_idct_dc_add=
         c->h264_idct_add= ff_h264_idct_add_mmx;
         c->h264_idct8_dc_add=
@@ -2655,6 +2648,9 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             SET_QPEL_FUNCS(put_2tap_qpel, 1, 8, mmx2);
             SET_QPEL_FUNCS(avg_2tap_qpel, 0, 16, mmx2);
             SET_QPEL_FUNCS(avg_2tap_qpel, 1, 8, mmx2);
+
+            c->avg_rv40_chroma_pixels_tab[0]= avg_rv40_chroma_mc8_mmx2;
+            c->avg_rv40_chroma_pixels_tab[1]= avg_rv40_chroma_mc4_mmx2;
 
             c->avg_h264_chroma_pixels_tab[0]= avg_h264_chroma_mc8_mmx2_rnd;
             c->avg_h264_chroma_pixels_tab[1]= avg_h264_chroma_mc4_mmx2;
@@ -2741,11 +2737,14 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->avg_h264_chroma_pixels_tab[0]= avg_h264_chroma_mc8_3dnow_rnd;
             c->avg_h264_chroma_pixels_tab[1]= avg_h264_chroma_mc4_3dnow;
 
+            c->avg_rv40_chroma_pixels_tab[0]= avg_rv40_chroma_mc8_3dnow;
+            c->avg_rv40_chroma_pixels_tab[1]= avg_rv40_chroma_mc4_3dnow;
+
             if (ENABLE_CAVS_DECODER)
                 ff_cavsdsp_init_3dnow(c, avctx);
         }
 
-#if GCC420_OR_NEWER
+#if AV_GCC_VERSION_AT_LEAST(4,2)
 #define H264_QPEL_FUNCS(x, y, CPU)\
             c->put_h264_qpel_pixels_tab[0][x+y*4] = put_h264_qpel16_mc##x##y##_##CPU;\
             c->put_h264_qpel_pixels_tab[1][x+y*4] = put_h264_qpel8_mc##x##y##_##CPU;\
@@ -2822,26 +2821,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 #endif
 #endif /* ARCH_X86_64 */
 
-#ifdef CONFIG_SNOW_DECODER
-        if(mm_flags & FF_MM_SSE2 & 0){
-            c->horizontal_compose97i = ff_snow_horizontal_compose97i_sse2;
-#ifdef HAVE_7REGS
-            c->vertical_compose97i = ff_snow_vertical_compose97i_sse2;
-#endif
-            c->inner_add_yblock = ff_snow_inner_add_yblock_sse2;
-        }
-        else{
-            if(mm_flags & FF_MM_MMXEXT){
-            c->horizontal_compose97i = ff_snow_horizontal_compose97i_mmx;
-#ifdef HAVE_7REGS
-            c->vertical_compose97i = ff_snow_vertical_compose97i_mmx;
-#endif
-            }
-            c->inner_add_yblock = ff_snow_inner_add_yblock_mmx;
-        }
-#endif
-
-#endif /*GCC420_OR_NEWER*/
+#endif /* AV_GCC_VERSION_AT_LEAST(4,2) */
 
 /* disable audio related ASM for 64-bit builds */
 #ifndef ARCH_X86_64

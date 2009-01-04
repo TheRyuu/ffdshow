@@ -1175,14 +1175,14 @@ HADAMARD8_DIFF_MMX(mmx)
 #define MMABS_SUM_8x8      MMABS_SUM_8x8_SSE2
 #define HSUM(a,t,dst)      HSUM_MMX2(a,t,dst)
 HADAMARD8_DIFF_MMX(mmx2)
-#if GCC420_OR_NEWER
+#if AV_GCC_VERSION_AT_LEAST(4,2)
 HADAMARD8_DIFF_SSE2(sse2)
 #endif
 #undef MMABS
 #undef MMABS_SUM_8x8
 #undef HSUM
 
-#if GCC420_OR_NEWER
+#if AV_GCC_VERSION_AT_LEAST(4,2)
 #ifdef HAVE_SSSE3
 #define MMABS(a,z)         MMABS_SSSE3(a,z)
 #define MMABS_SUM_8x8      MMABS_SUM_8x8_NOSPILL
@@ -1372,7 +1372,7 @@ void dsputilenc_init_mmx(DSPContext* c, AVCodecContext *avctx)
 
             c->sub_hfyu_median_prediction= sub_hfyu_median_prediction_mmx2;
         }
-#if GCC420_OR_NEWER
+#if AV_GCC_VERSION_AT_LEAST(4,2)
         if(mm_flags & FF_MM_SSE2){
             c->get_pixels = get_pixels_sse2;
             c->sum_abs_dctelem= sum_abs_dctelem_sse2;
@@ -1391,7 +1391,7 @@ void dsputilenc_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->hadamard8_diff[1]= hadamard8_diff_ssse3;
         }
 #endif
-#endif /* GCC420_OR_NEWER */
+#endif /* AV_GCC_VERSION_AT_LEAST(4,2) */
         if(mm_flags & FF_MM_3DNOW){
             if(!(avctx->flags & CODEC_FLAG_BITEXACT)){
                 c->try_8x8basis= try_8x8basis_3dnow;
