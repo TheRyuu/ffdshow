@@ -1212,7 +1212,7 @@ static int mpeg_decode_postinit(AVCodecContext *avctx){
 
                 /* ffdshow custom code - we do not want to ignore spec. Comment out "// 1". 
                    DVD plays better. It breaks the playback of res_change_ffmpeg_aspect.ts though. */
-                if( (s1->pan_scan.width == 0 )||(s1->pan_scan.height == 0) /*|| 1*/){ 
+                if( (s1->pan_scan.width == 0 )||(s1->pan_scan.height == 0) /*|| 1*/){
                     AVRational r={s->width, s->height};
                     s->avctx->sample_aspect_ratio=
                         av_div_q(
@@ -2168,6 +2168,7 @@ static int mpeg_decode_frame(AVCodecContext *avctx,
         if (s2->low_delay==0 && s2->next_picture_ptr) {
             *picture= *(AVFrame*)s2->next_picture_ptr;
             s2->next_picture_ptr= NULL;
+            picture->mpeg2_sequence_end_flag = 1;
 
             *data_size = sizeof(AVFrame);
         }
@@ -2240,6 +2241,7 @@ static int decode_chunks(AVCodecContext *avctx,
                         if (s2->low_delay==0 && s2->next_picture_ptr) {
                             *picture= *(AVFrame*)s2->next_picture_ptr;
                             s2->next_picture_ptr= NULL;
+                            picture->mpeg2_sequence_end_flag = 1;
 
                             *data_size = sizeof(AVFrame);
                         }

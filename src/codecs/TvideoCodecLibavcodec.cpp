@@ -88,6 +88,7 @@ void TvideoCodecLibavcodec::create(void)
  autoSkipingLoopFilter= false;
  h264_on_MPEG2_system = false;
  firstSeek = true;
+ mpeg2_new_sequence = true;
 }
 
 TvideoCodecLibavcodec::~TvideoCodecLibavcodec()
@@ -514,6 +515,21 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
                              FIELD_TYPE::INT_BFF):
                          FIELD_TYPE::PROGRESSIVE_FRAME;
 
+    if (codecId == CODEC_ID_MPEG2VIDEO)
+     {
+      if (mpeg2_new_sequence)
+       fieldtype |= FIELD_TYPE::SEQ_START;
+
+      if (frame->mpeg2_sequence_end_flag)
+       {
+        fieldtype |= FIELD_TYPE::SEQ_END;
+        mpeg2_new_sequence = true;
+        frame->mpeg2_sequence_end_flag = 0;
+       }
+      else
+       mpeg2_new_sequence = false;
+     }
+
      if (frame->play_flags&CODEC_FLAG_QPEL)
       frametype|=FRAME_TYPE::QPEL;
 
@@ -642,11 +658,19 @@ bool TvideoCodecLibavcodec::onSeek(REFERENCE_TIME segmentStart)
  codedPictureBuffer.onSeek();
  h264RandomAccess.onSeek();
  telecineManager.onSeek();
- if (!firstSeek && avctx && connectedSplitter == TffdshowVideoInputPin::Haali_Media_splitter)
-  avctx->h264_has_to_drop_first_non_ref = 1;
- else
-  firstSeek = false;
- return avctx?(libavcodec->avcodec_flush_buffers(avctx),true):false;
+ mpeg2_new_sequence = true;
+
+ if (avctx)
+  {
+   if (!firstSeek && connectedSplitter == TffdshowVideoInputPin::Haali_Media_splitter)
+    avctx->h264_has_to_drop_first_non_ref = 1;
+   else
+    firstSeek = false;
+
+   libavcodec->avcodec_flush_buffers(avctx);
+   return true;
+  }
+ return false;
 }
 bool TvideoCodecLibavcodec::onDiscontinuity(void)
 {

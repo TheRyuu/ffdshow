@@ -49,6 +49,7 @@ private:
  bool isMPEG2system(void);
  int got_picture;
  bool firstSeek; // firstSeek means start of palyback.
+ bool mpeg2_new_sequence;
 protected:
  virtual LRESULT beginCompress(int cfgcomode,int csp,const Trect &r);
  virtual bool beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags);
