@@ -507,10 +507,7 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
        }
 
      if (pIn && pIn->IsPreroll()==S_OK)
-      {
-       sinkD->deliverPreroll(frametype);
-       continue;
-      }
+      sinkD->deliverPreroll(frametype);
 
      int fieldtype = frame->interlaced_frame ?
                          (frame->top_field_first ?
