@@ -36,7 +36,8 @@ int image_output(IMAGE * image,
                  uint8_t * dst[4],
                  stride_t dst_stride[4],
                  int csp,
-                 int interlaced,int jpeg);
+                 int interlaced,int jpeg,
+                 bool vram_indirect=false);
 
 extern "C" {
 #ifndef WIN64

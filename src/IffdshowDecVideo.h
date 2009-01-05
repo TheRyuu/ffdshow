@@ -108,6 +108,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
  STDMETHOD_(ToutputVideoSettings*,getToutputVideoSettings)(void) PURE;
  STDMETHOD_(int,getBordersBrightness)(void) PURE;
  STDMETHOD (getChaptersList)(void **ppChaptersList) PURE;
+ STDMETHOD (get_CurrentTime)(__int64 *time) PURE;
 };
 
 struct IffdshowDecVideoA :IffdshowDecVideoT<char> {};

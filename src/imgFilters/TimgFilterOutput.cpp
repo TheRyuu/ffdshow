@@ -23,11 +23,14 @@
 #include "ToutputVideoSettings.h"
 #include "IffdshowBase.h"
 #include "Tlibavcodec.h"
+#include "IffdshowDecVideo.h"
+#include "ffdebug.h"
 
 TimgFilterOutput::TimgFilterOutput(IffdshowBase *Ideci,Tfilters *Iparent):TimgFilter(Ideci,Iparent),
  convert(NULL),
  libavcodec(NULL),avctx(NULL),dv(false),frame(NULL),dvpict(NULL),
- firsttime(true)
+ firsttime(true),
+ vramBenchmark(this)
 {
 }
 TimgFilterOutput::~TimgFilterOutput()
@@ -68,6 +71,7 @@ HRESULT TimgFilterOutput::process(const TffPict &pict,int dstcsp,unsigned char *
    old_avisynthYV12_RGB = cfg->avisynthYV12_RGB;
    old_cspOptionsRgbInterlaceMode = cfg->cspOptionsRgbInterlaceMode;
    if (convert) delete convert;
+   vramBenchmark.init();
    convert=new Tconvert(deci,pict.rectFull.dx,pict.rectFull.dy);
   }
  stride_t cspstride[4];unsigned char *cspdst[4];
@@ -90,7 +94,14 @@ HRESULT TimgFilterOutput::process(const TffPict &pict,int dstcsp,unsigned char *
  const TffPict *dvp;
  if (!dv || pict.csp!=dvcsp)
   {
-   int cspret=convert->convert(pict,((dv?dvcsp:dstcsp)^(cfg->flip?FF_CSP_FLAGS_VFLIP:0))|((pict.fieldtype&FIELD_TYPE::MASK_INT)?FF_CSP_FLAGS_INTERLACED:0),dv?dvpict->data:cspdst,dv?dvpict->stride:cspstride);
+   if (convert->m_wasChange)
+    vramBenchmark.onChange();
+   int cspret=convert->convert(pict,
+                               ((dv ? dvcsp : dstcsp) ^ (cfg->flip ? FF_CSP_FLAGS_VFLIP : 0)) | ((pict.fieldtype & FIELD_TYPE::MASK_INT) ? FF_CSP_FLAGS_INTERLACED : 0),
+                               dv ? dvpict->data : cspdst,
+                               dv ? dvpict->stride : cspstride,
+                               vramBenchmark.get_vram_indirect());
+   vramBenchmark.update();
    if (!dv) return cspret?S_OK:E_FAIL;
    dvp=dvpict;
   }
@@ -108,6 +119,68 @@ HRESULT TimgFilterOutput::process(const TffPict &pict,int dstcsp,unsigned char *
   {
    dstSize=ret;
    return S_FALSE;
+  }
+}
+
+void TimgFilterOutput::TvramBenchmark::init(void)
+{
+ vram_indirect = false;
+ frame_count = 0;
+}
+
+TimgFilterOutput::TvramBenchmark::TvramBenchmark(TimgFilterOutput *Iparent) : parent(Iparent)
+{
+ init();
+}
+
+bool TimgFilterOutput::TvramBenchmark::get_vram_indirect(void)
+{
+ if (frame_count < BENCHMARK_FRAMES * 2)
+  {
+   parent->deciV->get_CurrentTime(&t1);
+   return !(frame_count & 1);
+  }
+ return vram_indirect;
+}
+
+void TimgFilterOutput::TvramBenchmark::update(void)
+{
+ if (frame_count < BENCHMARK_FRAMES * 2)
+  {
+   REFERENCE_TIME t_indirect=0,t_direct=0;
+   unsigned int frame_count_half = frame_count >> 1;
+   parent->deciV->get_CurrentTime(&t2);
+
+   if (frame_count & 1)
+    time_on_convert_direct[frame_count_half] = t2 - t1;
+   else
+    time_on_convert_indirect[frame_count_half] = t2 - t1;
+
+   if (frame_count & 1)
+    {
+     for (unsigned int i = 0 ; i <= frame_count_half ; i++)
+      {
+       t_indirect += time_on_convert_indirect[i];
+       t_direct   += time_on_convert_direct[i];
+      }
+
+     // Judge the benchmark result.
+     // Indirect mode has penalty : 1ms per frame.
+     // For the 1st pair, if indirect mode is 5x faster, indirect wins.
+     // For the average upto 2nd pair, if indirect mode is 4x faster, indirect wins.
+     // ...
+     // For the average upto 5th pair, if indirect mode is 1x faster, indirect wins.
+     if ((t_indirect + (frame_count_half + 1) * 10000 /* 1ms */) * (BENCHMARK_FRAMES - frame_count_half) < t_direct)
+      {
+       frame_count = BENCHMARK_FRAMES * 2; // stop updating, as result is known.
+       vram_indirect = true;
+      }
+     else
+      vram_indirect = false;
+    }
+   frame_count++;
+   if (frame_count == BENCHMARK_FRAMES * 2)
+    DPRINTF(_l("TimgFilterOutput::process V-RAM access is %s, t_indirect = %I64i, t_direct = %I64i"),vram_indirect ? _l("Indirect") : _l("Direct"),t_indirect,t_direct);
   }
 }
 

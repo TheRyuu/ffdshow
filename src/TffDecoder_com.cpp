@@ -656,3 +656,18 @@ STDMETHODIMP_(int) TffdshowDecVideo::getBordersBrightness(void)
 {
  return presetSettings->bordersBrightness;
 }
+
+STDMETHODIMP TffdshowDecVideo::get_CurrentTime(REFERENCE_TIME *time)
+{
+ if (!time)
+  return E_POINTER;
+ if (m_pClock)
+  {
+   return m_pClock->GetTime(time);
+  }
+ else
+  {
+   *time = 0;
+   return E_FAIL;
+  }
+};

@@ -65,12 +65,13 @@ private:
  #endif
  void freeTmpConvert(void);
 public:
+ bool m_wasChange;
  Tconvert(IffdshowBase *deci,unsigned int Idx,unsigned int Idy);
  Tconvert(Tlibmplayer *Ilibmplayer,bool IavisynthYV12_RGB,unsigned int Idx,unsigned int Idy,const TrgbPrimaries &IrgbPrimaries, int rgbInterlaceMode);
  ~Tconvert();
  unsigned int dx,dy,outdy;
- int convert(int incsp,const uint8_t*const src[],const stride_t srcStride[],int outcsp,uint8_t* dst[],stride_t dstStride[],const Tpalette *srcpal);
- int convert(const TffPict &pict,int outcsp,uint8_t* dst[],stride_t dstStride[]);
+ int convert(int incsp,const uint8_t*const src[],const stride_t srcStride[],int outcsp,uint8_t* dst[],stride_t dstStride[],const Tpalette *srcpal,bool vram_indirect=false);
+ int convert(const TffPict &pict,int outcsp,uint8_t* dst[],stride_t dstStride[],bool vram_indirect=false);
 };
 
 class TffColorspaceConvert :public CUnknown,

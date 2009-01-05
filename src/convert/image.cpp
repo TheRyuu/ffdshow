@@ -43,7 +43,8 @@ typedef void (packedFunc)(uint8_t * x_ptr,
                           stride_t y_stride,
                           stride_t uv_stride,
                           int width,
-                          int height);
+                          int height,
+                          bool vram_indirect);
 typedef packedFunc *packedFuncPtr;
 
 static packedFuncPtr yuyv_to_yv12;
@@ -647,27 +648,76 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
  template<class TFUNC> static __forceinline void MAKE_COLORSPACE(uint8_t * x_ptr, stride_t x_stride,
                                    uint8_t * y_ptr, uint8_t * u_ptr, uint8_t * v_ptr,
                                    stride_t y_stride, stride_t uv_stride,
-                                   int width, int height,const TFUNC &FUNC)
+                                   int width, int height,const TFUNC &FUNC, bool vram_indirect)
   {
-        int fixed_width = (width + 1) & ~1;
-        stride_t x_dif = x_stride - (SIZE)*fixed_width;
-        stride_t y_dif = y_stride - fixed_width;
-        stride_t uv_dif = uv_stride - (fixed_width / 2);
-        for (int y = 0; y < height; y+=(VPIXELS)) {
-                int r[4], g[4], b[4];
-                FUNC.ROW(r,g,b);
-                for (int x = 0; x < fixed_width; x+=(PIXELS)) {
-                        FUNC.PROCESS(x_ptr,x_stride,y_ptr,y_stride,u_ptr,v_ptr,uv_stride,r,g,b,y+VPIXELS<=height);
-                        x_ptr += (PIXELS)*(SIZE);
-                        y_ptr += (PIXELS);
-                        u_ptr += (PIXELS)/2;
-                        v_ptr += (PIXELS)/2;
-                }
-                x_ptr += x_dif + (VPIXELS-1)*x_stride;
-                y_ptr += y_dif + (VPIXELS-1)*y_stride;
-                u_ptr += uv_dif + ((VPIXELS/2)-1)*uv_stride;
-                v_ptr += uv_dif + ((VPIXELS/2)-1)*uv_stride;
-        }
+   if (vram_indirect) {
+       // buffered indirect write to V-RAM because random access is very slow and sequential write is required.
+       // See TimgFilterOutput.cpp vram_indirect.
+       int fixed_width = (width + 1) & ~1;
+       stride_t x_dif = x_stride - (SIZE)*fixed_width;
+       stride_t y_dif = y_stride - fixed_width;
+       stride_t uv_dif = uv_stride - (fixed_width / 2);
+       size_t buf_size = VPIXELS * ff_abs(x_stride);
+       bool full_width = unsigned int(fixed_width * SIZE) == unsigned int(ff_abs(x_stride));
+       uint8_t *vram_buf = (uint8_t *)aligned_malloc(buf_size);
+       uint8_t *vram_first_line_ptr = (x_stride > 0) ?
+                                vram_buf :
+                                vram_buf - (VPIXELS-1) * x_stride;
+       for (int y = 0; y < height; y+=(VPIXELS)) {
+           int r[4], g[4], b[4];
+           int vpixels = y + VPIXELS <= height ?
+                             VPIXELS :
+                             height - y;
+           uint8_t *vram_current_ptr = (vpixels == VPIXELS || x_stride > 0) ?
+                                   vram_first_line_ptr:
+                                   vram_buf - ((vpixels-1) * x_stride);
+           uint8_t *vram_current_first_line_ptr = vram_current_ptr;
+           FUNC.ROW(r,g,b);
+           for (int x = 0; x < fixed_width; x+=(PIXELS)) {
+               FUNC.PROCESS(vram_current_ptr,x_stride,y_ptr,y_stride,u_ptr,v_ptr,uv_stride,r,g,b,y+VPIXELS<=height);
+               vram_current_ptr += (PIXELS)*(SIZE);
+               y_ptr += (PIXELS);
+               u_ptr += (PIXELS)/2;
+               v_ptr += (PIXELS)/2;
+           }
+           if (full_width) {
+               if (x_stride > 0)
+                   memcpy(x_ptr, vram_buf, x_stride * vpixels);
+               else
+                   memcpy(x_ptr + ((vpixels-1) * x_stride), vram_buf, (-x_stride) * vpixels);
+           } else {
+               for (int i = 0; i < vpixels; i++) {
+                   memcpy(x_ptr + x_stride * i, vram_current_first_line_ptr + x_stride * i, SIZE * fixed_width);
+               }
+           }
+           x_ptr += VPIXELS * x_stride;
+           y_ptr += y_dif + (VPIXELS-1)*y_stride;
+           u_ptr += uv_dif + ((VPIXELS/2)-1)*uv_stride;
+           v_ptr += uv_dif + ((VPIXELS/2)-1)*uv_stride;
+       }
+       aligned_free(vram_buf);
+   } else {
+       // no problem, good video card or main memory. Direct write.
+       int fixed_width = (width + 1) & ~1;
+       stride_t x_dif = x_stride - (SIZE)*fixed_width;
+       stride_t y_dif = y_stride - fixed_width;
+       stride_t uv_dif = uv_stride - (fixed_width / 2);
+       for (int y = 0; y < height; y+=(VPIXELS)) {
+           int r[4], g[4], b[4];
+           FUNC.ROW(r,g,b);
+           for (int x = 0; x < fixed_width; x+=(PIXELS)) {
+               FUNC.PROCESS(x_ptr,x_stride,y_ptr,y_stride,u_ptr,v_ptr,uv_stride,r,g,b,y+VPIXELS<=height);
+               x_ptr += (PIXELS)*(SIZE);
+               y_ptr += (PIXELS);
+               u_ptr += (PIXELS)/2;
+               v_ptr += (PIXELS)/2;
+           }
+           x_ptr += x_dif + (VPIXELS-1)*x_stride;
+           y_ptr += y_dif + (VPIXELS-1)*y_stride;
+           u_ptr += uv_dif + ((VPIXELS/2)-1)*uv_stride;
+           v_ptr += uv_dif + ((VPIXELS/2)-1)*uv_stride;
+       }
+   }
   }
 };
 
@@ -675,54 +725,54 @@ template<int SIZE,int PIXELS,int VPIXELS,class C1,int C2,int C3,int C4,int CCIR>
 
 //===================================== YUY2 ============================
 //MAKE_COLORSPACE(yv12_to_yuyv_c,    2,2,2, YV12_TO_YUYV,   0,1,2,3,CCIR)
-static void yv12_to_yuyv_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+static void yv12_to_yuyv_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
 {
  typedef TMAKE_COLORSPACE<2,2,2, intToVal<0>, 1,2,3,CCIR> TMAKE_COLORSPACE_yv12_to_yuyv_c;
- TMAKE_COLORSPACE_yv12_to_yuyv_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yv12_to_yuyv_c::YV12_TO_YUYV());
+ TMAKE_COLORSPACE_yv12_to_yuyv_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yv12_to_yuyv_c::YV12_TO_YUYV(),vram_indirect);
 }
 //MAKE_COLORSPACE(yv12_to_uyvy_c,    2,2,2, YV12_TO_YUYV,   1,0,3,2,CCIR)
-static void yv12_to_uyvy_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+static void yv12_to_uyvy_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
 {
  typedef TMAKE_COLORSPACE<2,2,2, intToVal<1>, 0,3,2,CCIR> TMAKE_COLORSPACE_yv12_to_uyvy_c;
- TMAKE_COLORSPACE_yv12_to_uyvy_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yv12_to_uyvy_c::YV12_TO_YUYV());
+ TMAKE_COLORSPACE_yv12_to_uyvy_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yv12_to_uyvy_c::YV12_TO_YUYV(),vram_indirect);
 }
 //MAKE_COLORSPACE(yv12_to_yuyvi_c,   2,2,4, YV12_TO_YUYVI,  0,1,2,3,CCIR)
-static void yv12_to_yuyvi_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+static void yv12_to_yuyvi_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
 {
  typedef TMAKE_COLORSPACE<2,2,4, intToVal<0>, 1,2,3,CCIR> TMAKE_COLORSPACE_yv12_to_yuyvi_c;
- TMAKE_COLORSPACE_yv12_to_yuyvi_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yv12_to_yuyvi_c::YV12_TO_YUYVI());
+ TMAKE_COLORSPACE_yv12_to_yuyvi_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yv12_to_yuyvi_c::YV12_TO_YUYVI(),vram_indirect);
 }
 //MAKE_COLORSPACE(yv12_to_uyvyi_c,   2,2,4, YV12_TO_YUYVI,  1,0,3,2,CCIR)
-static void yv12_to_uyvyi_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+static void yv12_to_uyvyi_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
 {
  typedef TMAKE_COLORSPACE<2,2,4, intToVal<1>, 0,3,2,CCIR> TMAKE_COLORSPACE_yv12_to_uyvyi_c;
- TMAKE_COLORSPACE_yv12_to_uyvyi_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yv12_to_uyvyi_c::YV12_TO_YUYVI());
+ TMAKE_COLORSPACE_yv12_to_uyvyi_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yv12_to_uyvyi_c::YV12_TO_YUYVI(),vram_indirect);
 }
 
 //---------------------------------------------
 //MAKE_COLORSPACE(yuyv_to_yv12_c,    2,2,2, YUYV_TO_YV12,   0,1,2,3,CCIR)
-static void yuyv_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+static void yuyv_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
 {
  typedef TMAKE_COLORSPACE<2,2,2, intToVal<0>, 1,2,3,CCIR> TMAKE_COLORSPACE_yuyv_to_yv12_c;
- TMAKE_COLORSPACE_yuyv_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yuyv_to_yv12_c::YUYV_TO_YV12());
+ TMAKE_COLORSPACE_yuyv_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yuyv_to_yv12_c::YUYV_TO_YV12(),vram_indirect);
 }
 //MAKE_COLORSPACE(uyvy_to_yv12_c,    2,2,2, YUYV_TO_YV12,   1,0,3,2,CCIR)
-static void uyvy_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+static void uyvy_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
 {
  typedef TMAKE_COLORSPACE<2,2,2, intToVal<1>, 0,3,2,CCIR> TMAKE_COLORSPACE_uyvy_to_yv12_c;
- TMAKE_COLORSPACE_uyvy_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_uyvy_to_yv12_c::YUYV_TO_YV12());
+ TMAKE_COLORSPACE_uyvy_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_uyvy_to_yv12_c::YUYV_TO_YV12(),vram_indirect);
 }
 //MAKE_COLORSPACE(yuyvi_to_yv12_c,   2,2,4, YUYVI_TO_YV12,  0,1,2,3,CCIR)
-static void yuyvi_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+static void yuyvi_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
 {
  typedef TMAKE_COLORSPACE<2,2,4, intToVal<0>, 1,2,3,CCIR> TMAKE_COLORSPACE_yuyvi_to_yv12_c;
- TMAKE_COLORSPACE_yuyvi_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yuyvi_to_yv12_c::YUYVI_TO_YV12());
+ TMAKE_COLORSPACE_yuyvi_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yuyvi_to_yv12_c::YUYVI_TO_YV12(),vram_indirect);
 }
 //MAKE_COLORSPACE(uyvyi_to_yv12_c,    2,2,2, YUYV_TO_YV12,   1,0,3,2,CCIR)
-static void uyvyi_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+static void uyvyi_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
 {
  typedef TMAKE_COLORSPACE<2,2,4, intToVal<1>, 0,3,2,CCIR> TMAKE_COLORSPACE_uyvyi_to_yv12_c;
- TMAKE_COLORSPACE_uyvyi_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_uyvyi_to_yv12_c::YUYVI_TO_YV12());
+ TMAKE_COLORSPACE_uyvyi_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_uyvyi_to_yv12_c::YUYVI_TO_YV12(),vram_indirect);
 }
 
 //============================================ MMX =============================================
@@ -1457,44 +1507,44 @@ template<class Tsimd,int BYTES,int PIXELS,int VPIXELS,int ARG1,int ARG2,int CCIR
   }
 };
 
-static void yuyv_to_yv12_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
+static void yuyv_to_yv12_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
 {
  typedef TMAKE_COLORSPACE_SIMD<Tmmx, 2,8,2, 0,0, CCIR> TMAKE_COLORSPACE_yuyv_to_yv12_mmx;
  TMAKE_COLORSPACE_yuyv_to_yv12_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yuyv_to_yv12_mmx::YUYV_TO_YV12());
 }
-static void yuyv_to_yv12_xmm(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
+static void yuyv_to_yv12_xmm(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
 {
  typedef TMAKE_COLORSPACE_SIMD<Tmmxext, 2,8,2, 0,1, CCIR> TMAKE_COLORSPACE_yuyv_to_yv12_mmxext;
  TMAKE_COLORSPACE_yuyv_to_yv12_mmxext::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yuyv_to_yv12_mmxext::YUYV_TO_YV12());
 }
-static void uyvy_to_yv12_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
+static void uyvy_to_yv12_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
 {
  typedef TMAKE_COLORSPACE_SIMD<Tmmx, 2,8,2, 1,0, CCIR> TMAKE_COLORSPACE_uyvy_to_yv12_mmx;
  TMAKE_COLORSPACE_uyvy_to_yv12_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_uyvy_to_yv12_mmx::YUYV_TO_YV12());
 }
-static void uyvy_to_yv12_xmm(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
+static void uyvy_to_yv12_xmm(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
 {
  typedef TMAKE_COLORSPACE_SIMD<Tmmxext, 2,8,2, 1,1, CCIR> TMAKE_COLORSPACE_uyvy_to_yv12_mmxext;
  TMAKE_COLORSPACE_uyvy_to_yv12_mmxext::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_uyvy_to_yv12_mmxext::YUYV_TO_YV12());
 }
 
-static void yv12_to_yuyv_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
+static void yv12_to_yuyv_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
 {
  typedef TMAKE_COLORSPACE_SIMD<Tmmx, 2,8,2, 0,-1, CCIR> TMAKE_COLORSPACE_yv12_to_yuyv_mmx;
  TMAKE_COLORSPACE_yv12_to_yuyv_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yv12_to_yuyv_mmx::YV12_TO_YUYV());
 }
-static void yv12_to_uyvy_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
+static void yv12_to_uyvy_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
 {
  typedef TMAKE_COLORSPACE_SIMD<Tmmx, 2,8,2, 1,-1, CCIR> TMAKE_COLORSPACE_yv12_to_uyvy_mmx;
  TMAKE_COLORSPACE_yv12_to_uyvy_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yv12_to_uyvy_mmx::YV12_TO_YUYV());
 }
 
-static void yv12_to_yuyvi_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
+static void yv12_to_yuyvi_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
 {
  typedef TMAKE_COLORSPACE_SIMD<Tmmx, 2,8,4, 0,-1, CCIR> TMAKE_COLORSPACE_yv12_to_yuyvi_mmx;
  TMAKE_COLORSPACE_yv12_to_yuyvi_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yv12_to_yuyvi_mmx::YV12_TO_YUYVI());
 }
-static void yv12_to_uyvyi_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
+static void yv12_to_uyvyi_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
 {
  typedef TMAKE_COLORSPACE_SIMD<Tmmx, 2,8,4, 1,-1, CCIR> TMAKE_COLORSPACE_yv12_to_uyvyi_mmx;
  TMAKE_COLORSPACE_yv12_to_uyvyi_mmx::MAKE_COLORSPACE(x_ptr,x_stride,y_src,v_src,u_src,y_stride,uv_stride,width,height,TMAKE_COLORSPACE_yv12_to_uyvyi_mmx::YV12_TO_YUYVI());
@@ -1581,213 +1631,213 @@ template<int CCIR> struct TpackedFuncPtrRGB
   }
 
  //MAKE_COLORSPACE(yv12_to_rgb555_c,  2,2,2, YV12_TO_RGB16,  MK_RGB555, 0,0,0,CCIR)
- static void yv12_to_rgb555_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void yv12_to_rgb555_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<2,2,2, RGB555, 0,0,0,CCIR> TMAKE_COLORSPACE_yv12_to_rgb555_c;
-  TMAKE_COLORSPACE_yv12_to_rgb555_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_rgb555_c::YV12_TO_RGB16());
+  TMAKE_COLORSPACE_yv12_to_rgb555_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_rgb555_c::YV12_TO_RGB16(),vram_indirect);
  }
  //MAKE_COLORSPACE(yv12_to_rgb565_c,  2,2,2, YV12_TO_RGB16,  MK_RGB565, 0,0,0,CCIR)
- static void yv12_to_rgb565_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void yv12_to_rgb565_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<2,2,2, RGB565, 0,0,0,CCIR> TMAKE_COLORSPACE_yv12_to_rgb565_c;
-  TMAKE_COLORSPACE_yv12_to_rgb565_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_rgb565_c::YV12_TO_RGB16());
+  TMAKE_COLORSPACE_yv12_to_rgb565_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_rgb565_c::YV12_TO_RGB16(),vram_indirect);
  }
  //MAKE_COLORSPACE(yv12_to_bgr_c,     3,2,2, YV12_TO_RGB,    2,1,0, 0,CCIR)
- static void yv12_to_bgr_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void yv12_to_bgr_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<3,2,2, intToVal<2>, 1,0,0,CCIR> TMAKE_COLORSPACE_yv12_to_bgr_c;
-  TMAKE_COLORSPACE_yv12_to_bgr_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_bgr_c::YV12_TO_RGB());
+  TMAKE_COLORSPACE_yv12_to_bgr_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_bgr_c::YV12_TO_RGB(),vram_indirect);
  }
  //MAKE_COLORSPACE(yv12_to_bgra_c,    4,2,2, YV12_TO_RGB,    2,1,0,3,CCIR)
- static void yv12_to_bgra_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void yv12_to_bgra_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<4,2,2, intToVal<2>, 1,0,3,CCIR> TMAKE_COLORSPACE_yv12_to_bgra_c;
-  TMAKE_COLORSPACE_yv12_to_bgra_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_bgra_c::YV12_TO_RGB());
+  TMAKE_COLORSPACE_yv12_to_bgra_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_bgra_c::YV12_TO_RGB(),vram_indirect);
  }
  //MAKE_COLORSPACE(yv12_to_abgr_c,    4,2,2, YV12_TO_RGB,    3,2,1,0,CCIR)
- static void yv12_to_abgr_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void yv12_to_abgr_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<4,2,2, intToVal<3>, 2,1,0,CCIR> TMAKE_COLORSPACE_yv12_to_abgr_c;
-  TMAKE_COLORSPACE_yv12_to_abgr_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_abgr_c::YV12_TO_RGB());
+  TMAKE_COLORSPACE_yv12_to_abgr_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_abgr_c::YV12_TO_RGB(),vram_indirect);
  }
  //MAKE_COLORSPACE(yv12_to_rgb_c,     3,2,2, YV12_TO_RGB,    0,1,2, 0,CCIR)
- static void yv12_to_rgb_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void yv12_to_rgb_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<3,2,2, intToVal<0>, 1,2,0,CCIR> TMAKE_COLORSPACE_yv12_to_rgb_c;
-  TMAKE_COLORSPACE_yv12_to_rgb_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_rgb_c::YV12_TO_RGB());
+  TMAKE_COLORSPACE_yv12_to_rgb_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_rgb_c::YV12_TO_RGB(),vram_indirect);
  }
  //MAKE_COLORSPACE(yv12_to_rgba_c,    4,2,2, YV12_TO_RGB,    0,1,2,3,CCIR)
- static void yv12_to_rgba_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void yv12_to_rgba_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<4,2,2, intToVal<0>, 1,2,3,CCIR> TMAKE_COLORSPACE_yv12_to_rgba_c;
-  TMAKE_COLORSPACE_yv12_to_rgba_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_rgba_c::YV12_TO_RGB());
+  TMAKE_COLORSPACE_yv12_to_rgba_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_rgba_c::YV12_TO_RGB(),vram_indirect);
  }
  /*
  //MAKE_COLORSPACE(yv12_to_argb_c,    4,2,2, YV12_TO_RGB,    1,2,3,0,CCIR)
- static void yv12_to_argb_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void yv12_to_argb_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<4,2,2, intToVal<1>, 2,3,0,CCIR> TMAKE_COLORSPACE_yv12_to_argb_c;
-  TMAKE_COLORSPACE_yv12_to_argb_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_argb_c::YV12_TO_RGB());
+  TMAKE_COLORSPACE_yv12_to_argb_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_argb_c::YV12_TO_RGB(),vram_indirect);
  }
  */
 
  //============================ interlaced ============================
 
  //MAKE_COLORSPACE(yv12_to_rgb555i_c, 2,2,4, YV12_TO_RGB16I, MK_RGB555, 0,0,0,CCIR)
- static void yv12_to_rgb555i_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void yv12_to_rgb555i_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<2,2,4, RGB555, 0,0,0,CCIR> TMAKE_COLORSPACE_yv12_to_rgb555i_c;
-  TMAKE_COLORSPACE_yv12_to_rgb555i_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_rgb555i_c::YV12_TO_RGB16I());
+  TMAKE_COLORSPACE_yv12_to_rgb555i_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_rgb555i_c::YV12_TO_RGB16I(),vram_indirect);
  }
  //MAKE_COLORSPACE(yv12_to_rgb565i_c, 2,2,4, YV12_TO_RGB16I, MK_RGB565, 0,0,0,CCIR)
- static void yv12_to_rgb565i_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void yv12_to_rgb565i_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<2,2,4, RGB565, 0,0,0,CCIR> TMAKE_COLORSPACE_yv12_to_rgb565i_c;
-  TMAKE_COLORSPACE_yv12_to_rgb565i_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_rgb565i_c::YV12_TO_RGB16I());
+  TMAKE_COLORSPACE_yv12_to_rgb565i_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_rgb565i_c::YV12_TO_RGB16I(),vram_indirect);
  }
  //MAKE_COLORSPACE(yv12_to_bgri_c,    3,2,4, YV12_TO_RGBI,   2,1,0,0,CCIR)
- static void yv12_to_bgri_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void yv12_to_bgri_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<3,2,4, intToVal<2>, 1,0,0,CCIR> TMAKE_COLORSPACE_yv12_to_bgri_c;
-  TMAKE_COLORSPACE_yv12_to_bgri_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_bgri_c::YV12_TO_RGBI());
+  TMAKE_COLORSPACE_yv12_to_bgri_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_bgri_c::YV12_TO_RGBI(),vram_indirect);
  }
  //MAKE_COLORSPACE(yv12_to_bgrai_c,   4,2,4, YV12_TO_RGBI,   2,1,0,3,CCIR)
- static void yv12_to_bgrai_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void yv12_to_bgrai_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<4,2,4, intToVal<2>, 1,0,3,CCIR> TMAKE_COLORSPACE_yv12_to_bgrai_c;
-  TMAKE_COLORSPACE_yv12_to_bgrai_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_bgrai_c::YV12_TO_RGBI());
+  TMAKE_COLORSPACE_yv12_to_bgrai_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_bgrai_c::YV12_TO_RGBI(),vram_indirect);
  }
  //MAKE_COLORSPACE(yv12_to_abgri_c,   4,2,4, YV12_TO_RGBI,   3,2,1,0,CCIR)
- static void yv12_to_abgri_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void yv12_to_abgri_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<4,2,4, intToVal<3>, 2,1,0,CCIR> TMAKE_COLORSPACE_yv12_to_abgri_c;
-  TMAKE_COLORSPACE_yv12_to_abgri_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_abgri_c::YV12_TO_RGBI());
+  TMAKE_COLORSPACE_yv12_to_abgri_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_abgri_c::YV12_TO_RGBI(),vram_indirect);
  }
  //MAKE_COLORSPACE(yv12_to_rgbi_c,    3,2,4, YV12_TO_RGBI,   0,1,2,0,CCIR)
- static void yv12_to_rgbi_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void yv12_to_rgbi_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<3,2,4, intToVal<0>, 1,2,0,CCIR> TMAKE_COLORSPACE_yv12_to_rgbi_c;
-  TMAKE_COLORSPACE_yv12_to_rgbi_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_rgbi_c::YV12_TO_RGBI());
+  TMAKE_COLORSPACE_yv12_to_rgbi_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_rgbi_c::YV12_TO_RGBI(),vram_indirect);
  }
  //MAKE_COLORSPACE(yv12_to_rgbai_c,   4,2,4, YV12_TO_RGBI,   0,1,2,3,CCIR)
- static void yv12_to_rgbai_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void yv12_to_rgbai_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<4,2,4, intToVal<0>, 1,2,3,CCIR> TMAKE_COLORSPACE_yv12_to_rgbai_c;
-  TMAKE_COLORSPACE_yv12_to_rgbai_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_rgbai_c::YV12_TO_RGBI());
+  TMAKE_COLORSPACE_yv12_to_rgbai_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_rgbai_c::YV12_TO_RGBI(),vram_indirect);
  }
  /*
  //MAKE_COLORSPACE(yv12_to_argbi_c,   4,2,4, YV12_TO_RGBI,   1,2,3,0,CCIR)
- static void yv12_to_argbi_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void yv12_to_argbi_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<4,2,4, intToVal<1>, 2,3,0,CCIR> TMAKE_COLORSPACE_yv12_to_argbi_c;
-  TMAKE_COLORSPACE_yv12_to_argbi_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_argbi_c::YV12_TO_RGBI());
+  TMAKE_COLORSPACE_yv12_to_argbi_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_yv12_to_argbi_c::YV12_TO_RGBI(),vram_indirect);
  }
  */
 
 
  //=======================================================================================
  //MAKE_COLORSPACE(rgb555_to_yv12_c,  2,2,2, RGB16_TO_YV12,  MK_RGB555, 0,0,0,CCIR)
- static void rgb555_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void rgb555_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<2,2,2, RGB555, 0,0,0,CCIR> TMAKE_COLORSPACE_rgb555_to_yv12_c;
-  TMAKE_COLORSPACE_rgb555_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_rgb555_to_yv12_c::RGB16_TO_YV12());
+  TMAKE_COLORSPACE_rgb555_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_rgb555_to_yv12_c::RGB16_TO_YV12(),vram_indirect);
  }
  //MAKE_COLORSPACE(rgb565_to_yv12_c,  2,2,2, RGB16_TO_YV12,  MK_RGB565, 0,0,0,CCIR)
- static void rgb565_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void rgb565_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<2,2,2, RGB565, 0,0,0,CCIR> TMAKE_COLORSPACE_rgb565_to_yv12_c;
-  TMAKE_COLORSPACE_rgb565_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_rgb565_to_yv12_c::RGB16_TO_YV12());
+  TMAKE_COLORSPACE_rgb565_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_rgb565_to_yv12_c::RGB16_TO_YV12(),vram_indirect);
  }
  //MAKE_COLORSPACE(bgr_to_yv12_c,     3,2,2, RGB_TO_YV12,    2,1,0, 0,CCIR)
- static void bgr_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void bgr_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<3,2,2, intToVal<2>, 1,0,0,CCIR> TMAKE_COLORSPACE_bgr_to_yv12_c;
-  TMAKE_COLORSPACE_bgr_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_bgr_to_yv12_c::RGB_TO_YV12());
+  TMAKE_COLORSPACE_bgr_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_bgr_to_yv12_c::RGB_TO_YV12(),vram_indirect);
  }
  //MAKE_COLORSPACE(bgra_to_yv12_c,    4,2,2, RGB_TO_YV12,    2,1,0, 0,CCIR)
- static void bgra_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void bgra_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<4,2,2, intToVal<2>, 1,0,0,CCIR> TMAKE_COLORSPACE_bgra_to_yv12_c;
-  TMAKE_COLORSPACE_bgra_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_bgra_to_yv12_c::RGB_TO_YV12());
+  TMAKE_COLORSPACE_bgra_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_bgra_to_yv12_c::RGB_TO_YV12(),vram_indirect);
  }
  //MAKE_COLORSPACE(abgr_to_yv12_c,    4,2,2, RGB_TO_YV12,    3,2,1, 0,CCIR)
- static void abgr_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void abgr_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<4,2,2, intToVal<3>, 2,1,0,CCIR> TMAKE_COLORSPACE_abgr_to_yv12_c;
-  TMAKE_COLORSPACE_abgr_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_abgr_to_yv12_c::RGB_TO_YV12());
+  TMAKE_COLORSPACE_abgr_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_abgr_to_yv12_c::RGB_TO_YV12(),vram_indirect);
  }
   //MAKE_COLORSPACE(rgb_to_yv12_c,     3,2,2, RGB_TO_YV12,    0,1,2, 0,CCIR)
- static void rgb_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void rgb_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<3,2,2, intToVal<0>, 1,2,0,CCIR> TMAKE_COLORSPACE_rgb_to_yv12_c;
-  TMAKE_COLORSPACE_rgb_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_rgb_to_yv12_c::RGB_TO_YV12());
+  TMAKE_COLORSPACE_rgb_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_rgb_to_yv12_c::RGB_TO_YV12(),vram_indirect);
  }
  //MAKE_COLORSPACE(rgba_to_yv12_c,    4,2,2, RGB_TO_YV12,    0,1,2, 0,CCIR)
- static void rgba_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void rgba_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<4,2,2, intToVal<0>, 0,1,2,CCIR> TMAKE_COLORSPACE_rgba_to_yv12_c;
-  TMAKE_COLORSPACE_rgba_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_rgba_to_yv12_c::RGB_TO_YV12());
+  TMAKE_COLORSPACE_rgba_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_rgba_to_yv12_c::RGB_TO_YV12(),vram_indirect);
  }
  /*
  //MAKE_COLORSPACE(argb_to_yv12_c,    4,2,2, RGB_TO_YV12,    1,2,3, 0,CCIR)
- static void argb_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void argb_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<4,2,2, intToVal<1>, 2,3,0,CCIR> TMAKE_COLORSPACE_argb_to_yv12_c;
-  TMAKE_COLORSPACE_argb_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_argb_to_yv12_c::RGB_TO_YV12());
+  TMAKE_COLORSPACE_argb_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_argb_to_yv12_c::RGB_TO_YV12(),vram_indirect);
  }
  */
  //MAKE_COLORSPACE(rgb555i_to_yv12_c, 2,2,4, RGB16I_TO_YV12, MK_RGB555, 0,0,0,CCIR)
- static void rgb555i_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void rgb555i_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<2,2,4, RGB555, 0,0,0,CCIR> TMAKE_COLORSPACE_rgb555i_to_yv12_c;
-  TMAKE_COLORSPACE_rgb555i_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_rgb555i_to_yv12_c::RGB16I_TO_YV12());
+  TMAKE_COLORSPACE_rgb555i_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_rgb555i_to_yv12_c::RGB16I_TO_YV12(),vram_indirect);
  }
  //MAKE_COLORSPACE(rgb565i_to_yv12_c, 2,2,4, RGB16I_TO_YV12, MK_RGB565, 0,0,0,CCIR)
- static void rgb565i_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void rgb565i_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<2,2,4, RGB565, 0,0,0,CCIR> TMAKE_COLORSPACE_rgb565i_to_yv12_c;
-  TMAKE_COLORSPACE_rgb565i_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_rgb565i_to_yv12_c::RGB16I_TO_YV12());
+  TMAKE_COLORSPACE_rgb565i_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_rgb565i_to_yv12_c::RGB16I_TO_YV12(),vram_indirect);
  }
  //MAKE_COLORSPACE(bgri_to_yv12_c,    3,2,4, RGBI_TO_YV12,   2,1,0, 0,CCIR)
- static void bgri_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void bgri_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<3,2,4, intToVal<2>, 1,0,0,CCIR> TMAKE_COLORSPACE_bgri_to_yv12_c;
-  TMAKE_COLORSPACE_bgri_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_bgri_to_yv12_c::RGBI_TO_YV12());
+  TMAKE_COLORSPACE_bgri_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_bgri_to_yv12_c::RGBI_TO_YV12(),vram_indirect);
  }
  //MAKE_COLORSPACE(bgrai_to_yv12_c,   4,2,4, RGBI_TO_YV12,   2,1,0, 0,CCIR)
- static void bgrai_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void bgrai_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<4,2,4, intToVal<2>, 1,0,0,CCIR> TMAKE_COLORSPACE_bgrai_to_yv12_c;
-  TMAKE_COLORSPACE_bgrai_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_bgrai_to_yv12_c::RGBI_TO_YV12());
+  TMAKE_COLORSPACE_bgrai_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_bgrai_to_yv12_c::RGBI_TO_YV12(),vram_indirect);
  }
  //MAKE_COLORSPACE(abgri_to_yv12_c,   4,2,4, RGBI_TO_YV12,   3,2,1, 0,CCIR)
- static void abgri_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void abgri_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<4,2,4, intToVal<3>, 2,1,0,CCIR> TMAKE_COLORSPACE_abgri_to_yv12_c;
-  TMAKE_COLORSPACE_abgri_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_abgri_to_yv12_c::RGBI_TO_YV12());
+  TMAKE_COLORSPACE_abgri_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_abgri_to_yv12_c::RGBI_TO_YV12(),vram_indirect);
  }
   //MAKE_COLORSPACE(rgbi_to_yv12_c,    3,2,4, RGBI_TO_YV12,   0,1,2, 0,CCIR)
- static void rgbi_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void rgbi_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<3,2,4, intToVal<0>, 1,2,0,CCIR> TMAKE_COLORSPACE_rgbi_to_yv12_c;
-  TMAKE_COLORSPACE_rgbi_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_rgbi_to_yv12_c::RGBI_TO_YV12());
+  TMAKE_COLORSPACE_rgbi_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_rgbi_to_yv12_c::RGBI_TO_YV12(),vram_indirect);
  }
  //MAKE_COLORSPACE(rgbai_to_yv12_c,   4,2,4, RGBI_TO_YV12,   0,1,2, 0,CCIR)
- static void rgbai_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void rgbai_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<4,2,4, intToVal<0>, 1,2,0,CCIR> TMAKE_COLORSPACE_rgbai_to_yv12_c;
-  TMAKE_COLORSPACE_rgbai_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_rgbai_to_yv12_c::RGBI_TO_YV12());
+  TMAKE_COLORSPACE_rgbai_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_rgbai_to_yv12_c::RGBI_TO_YV12(),vram_indirect);
  }
  /*
  //MAKE_COLORSPACE(argbi_to_yv12_c,   4,2,4, RGBI_TO_YV12,   1,2,3, 0,CCIR)
- static void argbi_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void argbi_to_yv12_c(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_ptr,uint8_t * u_ptr,uint8_t * v_ptr,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
   typedef TMAKE_COLORSPACE<4,2,4, intToVal<1>, 2,3,0,CCIR> TMAKE_COLORSPACE_argbi_to_yv12_c;
-  TMAKE_COLORSPACE_argbi_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_argbi_to_yv12_c::RGBI_TO_YV12());
+  TMAKE_COLORSPACE_argbi_to_yv12_c::MAKE_COLORSPACE(x_ptr,x_stride,y_ptr,u_ptr,v_ptr,y_stride,uv_stride,width,height,typename TMAKE_COLORSPACE_argbi_to_yv12_c::RGBI_TO_YV12(),vram_indirect);
  }
  */
 
- static void bgr_to_yv12_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void bgr_to_yv12_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
 #ifndef WIN64
   bgr_to_yv12_mmx_asm(x_ptr,x_stride,y_src,u_src,v_src,y_stride,uv_stride,width,height,false);
@@ -1795,7 +1845,7 @@ template<int CCIR> struct TpackedFuncPtrRGB
   bgr_to_yv12_win64_sse2(x_ptr,x_stride,y_src,u_src,v_src,y_stride,uv_stride,width,height,false);
 #endif
  }
- static void bgra_to_yv12_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void bgra_to_yv12_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
 #ifndef WIN64
   bgra_to_yv12_mmx_asm(x_ptr,x_stride,y_src,u_src,v_src,y_stride,uv_stride,width,height,false);
@@ -1804,7 +1854,7 @@ template<int CCIR> struct TpackedFuncPtrRGB
 #endif
  }
 
- static void yv12_to_bgr_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void yv12_to_bgr_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
 #ifndef WIN64
   // WIN32
@@ -1817,7 +1867,7 @@ template<int CCIR> struct TpackedFuncPtrRGB
    yv12_to_bgr_win64_sse2a(x_ptr,x_stride,y_src,u_src,v_src,y_stride,uv_stride,width,height,false); // faster
 #endif
  }
- static void yv12_to_bgra_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height)
+ static void yv12_to_bgra_mmx(uint8_t * x_ptr,stride_t x_stride,uint8_t * y_src,uint8_t * u_src,uint8_t * v_src,stride_t y_stride,stride_t uv_stride,int width,int height,bool vram_indirect)
  {
 #ifndef WIN64
   // WIN32
@@ -1878,7 +1928,7 @@ static void safe_packed_conv(uint8_t * x_ptr, stride_t x_stride,
                              uint8_t * y_ptr, uint8_t * u_ptr, uint8_t * v_ptr,
                              stride_t y_stride, stride_t uv_stride,
                              int width, int height,
-                             packedFunc * func_opt, packedFunc func_c, int size)
+                             packedFunc * func_opt, packedFunc func_c, int size, bool vram_indirect)
 {
         int width_opt, width_c;
 
@@ -1896,13 +1946,13 @@ static void safe_packed_conv(uint8_t * x_ptr, stride_t x_stride,
 
         func_opt(x_ptr, x_stride,
                         y_ptr, u_ptr, v_ptr, y_stride, uv_stride,
-                        width_opt, height&~1);
+                        width_opt, height&~1, vram_indirect);
         if (width_c)
         {
                 _mm_empty();
                 func_c(x_ptr + size*width_opt, x_stride,
                         y_ptr + width_opt, u_ptr + width_opt/2, v_ptr + width_opt/2,
-                        y_stride, uv_stride, width_c, height&~1);
+                        y_stride, uv_stride, width_c, height&~1, vram_indirect);
         }
 }
 
@@ -1924,7 +1974,8 @@ int image_input(IMAGE * image,
                         (uint8_t*)src, src_stride, image->y, image->u, image->v,
                         edged_width, edged_width2, width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgb555i_to_yv12:TpackedFuncPtrRGB<CCIR>::rgb555i_to_yv12)  :(jpeg?TpackedFuncPtrRGB<JPEG>::rgb555_to_yv12:TpackedFuncPtrRGB<CCIR>::rgb555_to_yv12),
-                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgb555i_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgb555i_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::rgb555_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgb555_to_yv12_c), 2);
+                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgb555i_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgb555i_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::rgb555_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgb555_to_yv12_c),
+                        2, false);
                 break;
 
         case FF_CSP_RGB16:
@@ -1932,7 +1983,8 @@ int image_input(IMAGE * image,
                         (uint8_t*)src, src_stride, image->y, image->u, image->v,
                         edged_width, edged_width2, width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgb565i_to_yv12:TpackedFuncPtrRGB<CCIR>::rgb565i_to_yv12)  :(jpeg?TpackedFuncPtrRGB<JPEG>::rgb565_to_yv12:TpackedFuncPtrRGB<CCIR>::rgb565_to_yv12),
-                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgb565i_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgb565i_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::rgb565_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgb565_to_yv12_c), 2);
+                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgb565i_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgb565i_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::rgb565_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgb565_to_yv12_c),
+                        2, false);
                 break;
 
         // RGB Values: the xvid library refers to the write order, FF_CSP_ enum refers to the "memory byte order",
@@ -1942,7 +1994,8 @@ int image_input(IMAGE * image,
                         (uint8_t*)src, src_stride, image->y, image->u, image->v,
                         edged_width, edged_width2, width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::bgri_to_yv12:TpackedFuncPtrRGB<CCIR>::bgri_to_yv12)  :(jpeg?TpackedFuncPtrRGB<JPEG>::bgr_to_yv12:TpackedFuncPtrRGB<CCIR>::bgr_to_yv12),
-                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::bgri_to_yv12_c:TpackedFuncPtrRGB<CCIR>::bgri_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::bgr_to_yv12_c:TpackedFuncPtrRGB<CCIR>::bgr_to_yv12_c), 3);
+                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::bgri_to_yv12_c:TpackedFuncPtrRGB<CCIR>::bgri_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::bgr_to_yv12_c:TpackedFuncPtrRGB<CCIR>::bgr_to_yv12_c),
+                        3, false);
                 break;
 
         // RGB Values: the xvid library refers to the write order, FF_CSP_ enum refers to the "memory byte order",
@@ -1952,7 +2005,8 @@ int image_input(IMAGE * image,
                         (uint8_t*)src, src_stride, image->y, image->u, image->v,
                         edged_width, edged_width2, width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::bgrai_to_yv12:TpackedFuncPtrRGB<CCIR>::bgrai_to_yv12)  :(jpeg?TpackedFuncPtrRGB<JPEG>::bgra_to_yv12:TpackedFuncPtrRGB<CCIR>::bgra_to_yv12),
-                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::bgrai_to_yv12_c:TpackedFuncPtrRGB<CCIR>::bgrai_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::bgra_to_yv12_c:TpackedFuncPtrRGB<CCIR>::bgra_to_yv12_c), 4);
+                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::bgrai_to_yv12_c:TpackedFuncPtrRGB<CCIR>::bgrai_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::bgra_to_yv12_c:TpackedFuncPtrRGB<CCIR>::bgra_to_yv12_c),
+                        4, false);
                 break;
 
         // RGB Values: the xvid library refers to the write order, FF_CSP_ enum refers to the "memory byte order",
@@ -1962,7 +2016,8 @@ int image_input(IMAGE * image,
                         (uint8_t*)src, src_stride, image->y, image->u, image->v,
                         edged_width, edged_width2, width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgbi_to_yv12:TpackedFuncPtrRGB<CCIR>::rgbi_to_yv12)  :(jpeg?TpackedFuncPtrRGB<JPEG>::rgb_to_yv12:TpackedFuncPtrRGB<CCIR>::rgb_to_yv12),
-                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgbi_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgbi_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::rgb_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgb_to_yv12_c), 3);
+                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgbi_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgbi_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::rgb_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgb_to_yv12_c),
+                        3, false);
                 break;
 
         case FF_CSP_ABGR :
@@ -1970,7 +2025,8 @@ int image_input(IMAGE * image,
                         (uint8_t*)src, src_stride, image->y, image->u, image->v,
                         edged_width, edged_width2, width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::abgri_to_yv12:TpackedFuncPtrRGB<CCIR>::abgri_to_yv12)  :(jpeg?TpackedFuncPtrRGB<JPEG>::abgr_to_yv12:TpackedFuncPtrRGB<CCIR>::abgr_to_yv12),
-                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::abgri_to_yv12_c:TpackedFuncPtrRGB<CCIR>::abgri_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::abgr_to_yv12_c:TpackedFuncPtrRGB<CCIR>::abgr_to_yv12_c), 4);
+                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::abgri_to_yv12_c:TpackedFuncPtrRGB<CCIR>::abgri_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::abgr_to_yv12_c:TpackedFuncPtrRGB<CCIR>::abgr_to_yv12_c),
+                        4, false);
                 break;
 
         case FF_CSP_RGBA :
@@ -1978,7 +2034,8 @@ int image_input(IMAGE * image,
                         (uint8_t*)src, src_stride, image->y, image->u, image->v,
                         edged_width, edged_width2, width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgbai_to_yv12:TpackedFuncPtrRGB<CCIR>::rgbai_to_yv12)  :(jpeg?TpackedFuncPtrRGB<JPEG>::rgba_to_yv12:TpackedFuncPtrRGB<CCIR>::rgba_to_yv12),
-                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgbai_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgbai_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::rgba_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgba_to_yv12_c), 4);
+                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::rgbai_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgbai_to_yv12_c):(jpeg?TpackedFuncPtrRGB<JPEG>::rgba_to_yv12_c:TpackedFuncPtrRGB<CCIR>::rgba_to_yv12_c),
+                        4, false);
                 break;
 
         case FF_CSP_YUY2:
@@ -1986,7 +2043,8 @@ int image_input(IMAGE * image,
                         (uint8_t*)src, src_stride, image->y, image->u, image->v,
                         edged_width, edged_width2, width, height,
                         interlacing?yuyvi_to_yv12  :yuyv_to_yv12,
-                        interlacing?yuyvi_to_yv12_c:yuyv_to_yv12_c, 2);
+                        interlacing?yuyvi_to_yv12_c:yuyv_to_yv12_c,
+                        2, false);
                 break;
 
         case FF_CSP_YVYU:               /* u/v swapped */
@@ -1994,7 +2052,8 @@ int image_input(IMAGE * image,
                         (uint8_t*)src, src_stride, image->y, image->v, image->u,
                         edged_width, edged_width2, width, height,
                         interlacing?yuyvi_to_yv12  :yuyv_to_yv12,
-                        interlacing?yuyvi_to_yv12_c:yuyv_to_yv12_c, 2);
+                        interlacing?yuyvi_to_yv12_c:yuyv_to_yv12_c,
+                        2, false);
                 break;
 
         case FF_CSP_UYVY:
@@ -2002,7 +2061,8 @@ int image_input(IMAGE * image,
                         (uint8_t*)src, src_stride, image->y, image->u, image->v,
                         edged_width, edged_width2, width, height,
                         interlacing?uyvyi_to_yv12  :uyvy_to_yv12,
-                        interlacing?uyvyi_to_yv12_c:uyvy_to_yv12_c, 2);
+                        interlacing?uyvyi_to_yv12_c:uyvy_to_yv12_c,
+                        2, false);
                 break;
 
         case FF_CSP_VYUY:   /* u/v swapped */
@@ -2010,7 +2070,8 @@ int image_input(IMAGE * image,
                 (uint8_t*)src, src_stride, image->y, image->v, image->u,
                 edged_width, edged_width2, width, height,
                 interlacing?uyvyi_to_yv12  :uyvy_to_yv12,
-                interlacing?uyvyi_to_yv12_c:uyvy_to_yv12_c, 2);
+                interlacing?uyvyi_to_yv12_c:uyvy_to_yv12_c,
+                2, false);
                break;
 /*
         case FF_CSP_I420:
@@ -2044,7 +2105,8 @@ int image_output(IMAGE * image,
                  uint8_t * dst[4],
                  stride_t dst_stride[4],
                  int csp,
-                 int interlacing,int jpeg)
+                 int interlacing,int jpeg,
+                 bool vram_indirect)
 {
 
         switch (csp & FF_CSPS_MASK) {
@@ -2053,7 +2115,8 @@ int image_output(IMAGE * image,
                         dst[0], dst_stride[0], image->y, image->u, image->v,
                         edged_width[0], edged_width[1], width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgb555i:TpackedFuncPtrRGB<CCIR>::yv12_to_rgb555i)  :(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgb555:TpackedFuncPtrRGB<CCIR>::yv12_to_rgb555),
-                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgb555i_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgb555i_c):(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgb555_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgb555_c), 2);
+                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgb555i_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgb555i_c):(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgb555_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgb555_c),
+                        2, vram_indirect);
                 break;
 
         case FF_CSP_RGB16:
@@ -2061,7 +2124,8 @@ int image_output(IMAGE * image,
                         dst[0], dst_stride[0], image->y, image->u, image->v,
                         edged_width[0], edged_width[1], width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgb565i:TpackedFuncPtrRGB<CCIR>::yv12_to_rgb565i)  :(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgb565:TpackedFuncPtrRGB<CCIR>::yv12_to_rgb565),
-                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgb565i_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgb565i_c):(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgb565_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgb565_c), 2);
+                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgb565i_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgb565i_c):(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgb565_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgb565_c),
+                        2, vram_indirect);
                 break;
 
         // RGB Values: the xvid library refers to the write order, FF_CSP_ enum refers to the "memory byte order",
@@ -2071,7 +2135,8 @@ int image_output(IMAGE * image,
                         dst[0], dst_stride[0], image->y, image->u, image->v,
                         edged_width[0], edged_width[1], width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgri:TpackedFuncPtrRGB<CCIR>::yv12_to_bgri)  :(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgr:TpackedFuncPtrRGB<CCIR>::yv12_to_bgr),
-                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgri_c:TpackedFuncPtrRGB<CCIR>::yv12_to_bgri_c):(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgr_c:TpackedFuncPtrRGB<CCIR>::yv12_to_bgr_c), 3);
+                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgri_c:TpackedFuncPtrRGB<CCIR>::yv12_to_bgri_c):(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgr_c:TpackedFuncPtrRGB<CCIR>::yv12_to_bgr_c),
+                        3, vram_indirect);
                 break;
 
         // RGB Values: the xvid library refers to the write order, FF_CSP_ enum refers to the "memory byte order",
@@ -2081,7 +2146,8 @@ int image_output(IMAGE * image,
                         dst[0], dst_stride[0], image->y, image->u, image->v,
                         edged_width[0], edged_width[1], width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgrai:TpackedFuncPtrRGB<CCIR>::yv12_to_bgrai)  :(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgra:TpackedFuncPtrRGB<CCIR>::yv12_to_bgra),
-                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgrai_c:TpackedFuncPtrRGB<CCIR>::yv12_to_bgrai_c):(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgra_c:TpackedFuncPtrRGB<CCIR>::yv12_to_bgra_c), 4);
+                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgrai_c:TpackedFuncPtrRGB<CCIR>::yv12_to_bgrai_c):(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_bgra_c:TpackedFuncPtrRGB<CCIR>::yv12_to_bgra_c),
+                        4, vram_indirect);
                 break;
 
         // RGB Values: the xvid library refers to the write order, FF_CSP_ enum refers to the "memory byte order",
@@ -2091,7 +2157,8 @@ int image_output(IMAGE * image,
                         dst[0], dst_stride[0], image->y, image->u, image->v,
                         edged_width[0], edged_width[1], width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgbi:TpackedFuncPtrRGB<CCIR>::yv12_to_rgbi)  :(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgb:TpackedFuncPtrRGB<CCIR>::yv12_to_rgb),
-                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgbi_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgbi_c):(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgb_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgb_c), 3);
+                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgbi_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgbi_c):(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgb_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgb_c),
+                        3, vram_indirect);
                 break;
 
         case FF_CSP_ABGR:
@@ -2099,7 +2166,8 @@ int image_output(IMAGE * image,
                         dst[0], dst_stride[0], image->y, image->u, image->v,
                         edged_width[0], edged_width[1], width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_abgri:TpackedFuncPtrRGB<CCIR>::yv12_to_abgri)  :(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_abgr:TpackedFuncPtrRGB<CCIR>::yv12_to_abgr),
-                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_abgri_c:TpackedFuncPtrRGB<CCIR>::yv12_to_abgri_c):(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_abgr_c:TpackedFuncPtrRGB<CCIR>::yv12_to_abgr_c), 4);
+                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_abgri_c:TpackedFuncPtrRGB<CCIR>::yv12_to_abgri_c):(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_abgr_c:TpackedFuncPtrRGB<CCIR>::yv12_to_abgr_c),
+                        4, vram_indirect);
                 break;
 
         case FF_CSP_RGBA:
@@ -2107,7 +2175,8 @@ int image_output(IMAGE * image,
                         dst[0], dst_stride[0], image->y, image->u, image->v,
                         edged_width[0], edged_width[1], width, height,
                         interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgbai:TpackedFuncPtrRGB<CCIR>::yv12_to_rgbai)  :(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgba:TpackedFuncPtrRGB<CCIR>::yv12_to_rgba),
-                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgbai_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgbai_c):(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgba_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgba_c), 4);
+                        interlacing?(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgbai_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgbai_c):(jpeg?TpackedFuncPtrRGB<JPEG>::yv12_to_rgba_c:TpackedFuncPtrRGB<CCIR>::yv12_to_rgba_c),
+                        4, vram_indirect);
                 break;
 
         case FF_CSP_YUY2:
@@ -2115,7 +2184,8 @@ int image_output(IMAGE * image,
                         dst[0], dst_stride[0], image->y, image->u, image->v,
                         edged_width[0], edged_width[1], width, height,
                         interlacing?yv12_to_yuyvi  :yv12_to_yuyv,
-                        interlacing?yv12_to_yuyvi_c:yv12_to_yuyv_c, 2);
+                        interlacing?yv12_to_yuyvi_c:yv12_to_yuyv_c,
+                        2, vram_indirect);
                 break;
 
         case FF_CSP_YVYU:               // u,v swapped
@@ -2123,7 +2193,8 @@ int image_output(IMAGE * image,
                         dst[0], dst_stride[0], image->y, image->v, image->u,
                         edged_width[0], edged_width[1], width, height,
                         interlacing?yv12_to_yuyvi  :yv12_to_yuyv,
-                        interlacing?yv12_to_yuyvi_c:yv12_to_yuyv_c, 2);
+                        interlacing?yv12_to_yuyvi_c:yv12_to_yuyv_c,
+                        2, vram_indirect);
                 break;
 
         case FF_CSP_UYVY:
@@ -2131,7 +2202,8 @@ int image_output(IMAGE * image,
                         dst[0], dst_stride[0], image->y, image->u, image->v,
                         edged_width[0], edged_width[1], width, height,
                         interlacing?yv12_to_uyvyi  :yv12_to_uyvy,
-                        interlacing?yv12_to_uyvyi_c:yv12_to_uyvy_c, 2);
+                        interlacing?yv12_to_uyvyi_c:yv12_to_uyvy_c,
+                        2, vram_indirect);
                 break;
 
         case FF_CSP_VYUY:       // u,v swapped
@@ -2139,7 +2211,8 @@ int image_output(IMAGE * image,
                         dst[0], dst_stride[0], image->y, image->v, image->u,
                         edged_width[0], edged_width[1], width, height,
                         interlacing?yv12_to_uyvyi  :yv12_to_uyvy,
-                        interlacing?yv12_to_uyvyi_c:yv12_to_uyvy_c, 2);
+                        interlacing?yv12_to_uyvyi_c:yv12_to_uyvy_c,
+                        2, vram_indirect);
                 break;
 
         case FF_CSP_420P:

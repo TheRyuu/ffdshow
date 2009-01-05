@@ -318,6 +318,7 @@ public:
  STDMETHODIMP unlockCSReceive(void) { unlockReceive(); return S_OK; }
  STDMETHODIMP_(ToutputVideoSettings*) getToutputVideoSettings(void);
  STDMETHODIMP_(int) getBordersBrightness(void);
+ STDMETHODIMP get_CurrentTime(REFERENCE_TIME *time);
 #ifdef OSDTIMETABALE
  STDMETHODIMP_(int) getOSDtime(void){return (int)OSDtime3;}
 #else
@@ -490,6 +491,7 @@ private:
    STDMETHODIMP_(ToutputVideoSettings*) getToutputVideoSettings(void) {return deciV->getToutputVideoSettings();}
    STDMETHODIMP_(int) getBordersBrightness(void){return deciV->getBordersBrightness();}
    STDMETHODIMP getChaptersList(void **ppChaptersList) { return E_NOTIMPL; };
+   STDMETHODIMP get_CurrentTime(REFERENCE_TIME *time) {return deciV->get_CurrentTime(time);};
  } decVideo_char;
  template<class Tinterface> Tinterface* getDecVideoInterface(void);
  void ConnectCompatibleFilter(void);

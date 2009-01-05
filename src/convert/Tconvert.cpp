@@ -35,7 +35,8 @@
 
 //======================================= Tconvert =======================================
 Tconvert::Tconvert(IffdshowBase *deci,unsigned int Idx,unsigned int Idy) :
- TrgbPrimaries(deci)
+ TrgbPrimaries(deci),
+ m_wasChange(false)
 {
  Tlibmplayer *libmplayer;
  deci->getPostproc(&libmplayer);
@@ -44,7 +45,8 @@ Tconvert::Tconvert(IffdshowBase *deci,unsigned int Idx,unsigned int Idy) :
  init(libmplayer, avisynthYV12_RGB, Idx, Idy, rgbInterlaceMode);
 }
 Tconvert::Tconvert(Tlibmplayer *Ilibmplayer, bool IavisynthYV12_RGB, unsigned int Idx, unsigned int Idy, const TrgbPrimaries &IrgbPrimaries, int rgbInterlaceMode) :
- TrgbPrimaries(IrgbPrimaries)
+ TrgbPrimaries(IrgbPrimaries),
+ m_wasChange(false)
 {
  Ilibmplayer->AddRef();
  init(Ilibmplayer,IavisynthYV12_RGB,Idx,Idy,rgbInterlaceMode);
@@ -104,9 +106,10 @@ void Tconvert::freeTmpConvert(void)
  if (tmpConvert2) delete tmpConvert2;tmpConvert2=NULL;
 }
 
-int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcStride0[],int outcsp0,uint8_t* dst0[],stride_t dstStride0[],const Tpalette *srcpal)
+int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcStride0[],int outcsp0,uint8_t* dst0[],stride_t dstStride0[],const Tpalette *srcpal,bool vram_indirect)
 {
  bool wasChange;
+ m_wasChange = false;
  int incsp=incsp0,outcsp=outcsp0;
  if (rgbInterlaceMode == 1) // Force Interlace
   {
@@ -146,6 +149,7 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
 
  if (wasChange || oldincsp!=incsp || oldoutcsp!=outcsp)
   {
+   m_wasChange = true;
    oldincsp=incsp;oldoutcsp=outcsp;
    freeTmpConvert();
    incsp1=incsp&FF_CSPS_MASK;outcsp1=outcsp&FF_CSPS_MASK;
@@ -407,9 +411,15 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
      writeToXvidYuv2RgbMatrix(&yv12_to_bgr_mmx_data);
      IMAGE srcPict;srcPict.y=(unsigned char*)src[0];srcPict.u=(unsigned char*)src[1];srcPict.v=(unsigned char*)src[2];
      image_output(&srcPict,
-                  dx,outdy,srcStride,
-                  dst,dstStride,
-                  outcsp&~FF_CSP_FLAGS_INTERLACED,outcsp&FF_CSP_FLAGS_INTERLACED,(incsp|outcsp)&FF_CSP_FLAGS_YUV_JPEG);
+                  dx,
+                  outdy,
+                  srcStride,
+                  dst,
+                  dstStride,
+                  outcsp & ~FF_CSP_FLAGS_INTERLACED,
+                  outcsp & FF_CSP_FLAGS_INTERLACED,
+                  (incsp|outcsp) & FF_CSP_FLAGS_YUV_JPEG,
+                  vram_indirect);
      return outdy;
     }
    case MODE_avisynth_yuy2_to_yv12:
@@ -515,9 +525,9 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
     return 0;
   }
 }
-int Tconvert::convert(const TffPict &pict,int outcsp,uint8_t* dst[],stride_t dstStride[])
+int Tconvert::convert(const TffPict &pict,int outcsp,uint8_t* dst[],stride_t dstStride[],bool vram_indirect)
 {
- return convert(pict.csp|((pict.fieldtype&FIELD_TYPE::MASK_INT)?FF_CSP_FLAGS_INTERLACED:0),pict.data,pict.stride,outcsp,dst,dstStride,&pict.palette);
+ return convert(pict.csp|((pict.fieldtype&FIELD_TYPE::MASK_INT)?FF_CSP_FLAGS_INTERLACED:0),pict.data,pict.stride,outcsp,dst,dstStride,&pict.palette,vram_indirect);
 }
 
 //================================= TffColorspaceConvert =================================
