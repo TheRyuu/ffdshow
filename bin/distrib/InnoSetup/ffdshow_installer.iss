@@ -418,7 +418,7 @@ Source: "{#= bindir}\ff_libfaad2.dll";                            DestDir: "{app
 Source: "{#= bindir}\ff_libmad.dll";                              DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ff_tremor.dll";                              DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 Source: "{#= bindir}\ff_unrar.dll";                               DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
-Source: "{#= bindir}\ff_samplerate.dll";                         DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
+Source: "{#= bindir}\ff_samplerate.dll";                          DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 #if include_libtheora
 Source: "{#= bindir}\ff_theora.dll";                              DestDir: "{app}";                       Components: ffdshow;                    Flags: ignoreversion
 #endif
