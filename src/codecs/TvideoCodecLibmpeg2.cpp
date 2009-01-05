@@ -170,6 +170,8 @@ HRESULT __declspec(align(16))(TvideoCodecLibmpeg2::decompressI(const unsigned ch
           default:
           case PIC_FLAG_CODING_TYPE_P:frametype=FRAME_TYPE::P;break;
          }
+        if (frametype==FRAME_TYPE::I)
+         wait4Iframe=false;
         if (pIn->IsPreroll()==S_OK)
          return sinkD->deliverPreroll(frametype);
 
@@ -197,8 +199,6 @@ HRESULT __declspec(align(16))(TvideoCodecLibmpeg2::decompressI(const unsigned ch
         if (pict.rtStart==REFTIME_INVALID) pict.rtStart=oldpict.rtStop;
         pict.rtStop=pict.rtStart+avgTimePerFrame*info->display_picture->nb_fields/(info->display_picture_2nd?1:2);
         oldpict=pict;
-        if (frametype==FRAME_TYPE::I)
-         wait4Iframe=false;
         if (!wait4Iframe)
          {
           hr=sinkD->deliverDecodedSample(pict);
