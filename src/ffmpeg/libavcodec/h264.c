@@ -7663,8 +7663,9 @@ static int decode_nal_units(H264Context *h, const uint8_t *buf, int buf_size){
                && (avctx->skip_frame < AVDISCARD_NONREF || hx->nal_ref_idc)
                && (avctx->skip_frame < AVDISCARD_BIDIR  || hx->slice_type_nos!=FF_B_TYPE)
                && (avctx->skip_frame < AVDISCARD_NONKEY || hx->slice_type_nos==FF_I_TYPE)
-               && avctx->skip_frame < AVDISCARD_ALL)
-                context_count++;
+               && avctx->skip_frame < AVDISCARD_ALL){
+                    context_count++;
+            }
             break;
         case NAL_DPA:
             init_get_bits(&hx->s.gb, ptr, bit_length);

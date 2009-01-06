@@ -932,7 +932,11 @@ void MPV_frame_end(MpegEncContext *s)
     int i;
     /* draw edge for correct motion prediction if outside */
 
-    if(s->unrestricted_mv && s->current_picture.reference && !s->intra_only && !(s->flags&CODEC_FLAG_EMU_EDGE)) {
+    if(1
+       && s->unrestricted_mv
+       && s->current_picture.reference
+       && !s->intra_only
+       && !(s->flags&CODEC_FLAG_EMU_EDGE)) {
             s->dsp.draw_edges(s->current_picture.data[0], s->linesize  , s->h_edge_pos   , s->v_edge_pos   , EDGE_WIDTH  );
             s->dsp.draw_edges(s->current_picture.data[1], s->uvlinesize, s->h_edge_pos>>1, s->v_edge_pos>>1, EDGE_WIDTH/2);
             s->dsp.draw_edges(s->current_picture.data[2], s->uvlinesize, s->h_edge_pos>>1, s->v_edge_pos>>1, EDGE_WIDTH/2);

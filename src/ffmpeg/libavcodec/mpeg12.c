@@ -1152,6 +1152,18 @@ static void quant_matrix_rebuild(uint16_t *matrix, const uint8_t *old_perm,
     }
 }
 
+static enum PixelFormat mpeg_set_pixelformat(AVCodecContext *avctx){
+    Mpeg1Context *s1 = avctx->priv_data;
+    MpegEncContext *s = &s1->mpeg_enc_ctx;
+
+        if(s->chroma_format <  2)
+            return PIX_FMT_YUV420P;
+        else if(s->chroma_format == 2)
+            return PIX_FMT_YUV422P;
+        else
+            return PIX_FMT_YUV444P;
+}
+
 /* Call this function when we know all parameters.
  * It may be called in different places for MPEG-1 and MPEG-2. */
 static int mpeg_decode_postinit(AVCodecContext *avctx){
@@ -1233,15 +1245,7 @@ static int mpeg_decode_postinit(AVCodecContext *avctx){
             }
         }//MPEG-2
 
-            if(s->chroma_format <  2){
-                avctx->pix_fmt = PIX_FMT_YUV420P;
-            }else
-            if(s->chroma_format == 2){
-                avctx->pix_fmt = PIX_FMT_YUV422P;
-            }else
-            if(s->chroma_format >  2){
-                avctx->pix_fmt = PIX_FMT_YUV444P;
-            }
+        avctx->pix_fmt = mpeg_set_pixelformat(avctx);
 
         /* Quantization matrices may need reordering
          * if DCT permutation is changed. */
@@ -1995,7 +1999,7 @@ static int vcr2_init_sequence(AVCodecContext *avctx)
     avctx->has_b_frames= 0; //true?
     s->low_delay= 1;
 
-    avctx->pix_fmt = PIX_FMT_YUV420P;
+    avctx->pix_fmt = mpeg_set_pixelformat(avctx);
 
     if (MPV_common_init(s) < 0)
         return -1;
@@ -2174,7 +2178,7 @@ static int mpeg_decode_frame(AVCodecContext *avctx,
         if (s2->low_delay==0 && s2->next_picture_ptr) {
             *picture= *(AVFrame*)s2->next_picture_ptr;
             s2->next_picture_ptr= NULL;
-            picture->mpeg2_sequence_end_flag = 1;
+            picture->mpeg2_sequence_end_flag = 1; /* ffdshow custom code */
 
             *data_size = sizeof(AVFrame);
         }
@@ -2237,7 +2241,6 @@ static int decode_chunks(AVCodecContext *avctx,
                 if (slice_end(avctx, picture)) {
                     if(s2->last_picture_ptr || s2->low_delay) //FIXME merge with the stuff in mpeg_decode_slice
                         *data_size = sizeof(AVPicture);
-
                 }
             }
             s2->pict_type= 0;
