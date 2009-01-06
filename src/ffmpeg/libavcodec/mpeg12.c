@@ -2053,8 +2053,11 @@ static void mpeg_decode_user_data(AVCodecContext *avctx,
         }
     }
     /* ffdshow custom code */
-    else if (avctx->handle_user_data)
-      avctx->handle_user_data(avctx,buf,buf_size);
+    else if (avctx->handle_user_data) {
+        uint32_t state;
+        uint8_t *user_data_end = ff_find_start_code(buf, buf + buf_size, &state);
+        avctx->handle_user_data(avctx, buf, user_data_end - buf);
+    }
 }
 
 static void mpeg_decode_gop(AVCodecContext *avctx,
