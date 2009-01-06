@@ -507,130 +507,134 @@ HRESULT TvideoCodecLibavcodec::decompress(const unsigned char *src,size_t srcLen
        }
 
      if (pIn && pIn->IsPreroll()==S_OK)
-      sinkD->deliverPreroll(frametype);
-
-     int fieldtype = frame->interlaced_frame ?
-                         (frame->top_field_first ?
-                             FIELD_TYPE::INT_TFF :
-                             FIELD_TYPE::INT_BFF):
-                         FIELD_TYPE::PROGRESSIVE_FRAME;
-
-    if (codecId == CODEC_ID_MPEG2VIDEO)
-     {
-      if (mpeg2_new_sequence)
-       fieldtype |= FIELD_TYPE::SEQ_START;
-
-      if (frame->mpeg2_sequence_end_flag)
-       {
-        fieldtype |= FIELD_TYPE::SEQ_END;
-        mpeg2_new_sequence = true;
-        frame->mpeg2_sequence_end_flag = 0;
-       }
-      else
-       mpeg2_new_sequence = false;
-     }
-
-     if (frame->play_flags&CODEC_FLAG_QPEL)
-      frametype|=FRAME_TYPE::QPEL;
-
-     int csp=csp_lavc2ffdshow(avctx->pix_fmt);
-
-     if (grayscale) // workaround for green picture when decoding mpeg with CODEC_FLAG_GRAY, the problem is probably somewhere else
       {
-       const TcspInfo* cspinfo=csp_getInfo(csp);
-       for (unsigned int i=1;i<cspinfo->numPlanes;i++)
-        {
-         if (frame->data[i][0]!=cspinfo->black[i]
-             || (codecId!=CODEC_ID_MPEG4 && codecId!=CODEC_ID_MPEG2VIDEO && codecId!=CODEC_ID_MPEG1VIDEO && codecId!=CODEC_ID_VC1 && codecId!=CODEC_ID_WMV3 && codecId!=CODEC_ID_SVQ3 && codecId!=CODEC_ID_HUFFYUV)
-            )
-          memset(frame->data[i],cspinfo->black[i],frame->linesize[i]*avctx->height>>cspinfo->shiftY[i]);
-        }
+       sinkD->deliverPreroll(frametype);
       }
-
-     Trect r(0,0,avctx->width,avctx->height);
-
-     if (avctx->sample_aspect_ratio.num &&
-         !(connectedSplitter == TffdshowVideoInputPin::MPC_matroska_splitter && avctx->sample_aspect_ratio.num==1 && avctx->sample_aspect_ratio.den==1)
-        )  // With MPC's internal matroska splitter, AR is not reliable.
-      r.sar=avctx->sample_aspect_ratio;
      else
-      r.sar=containerSar;
-
-     quants=frame->qscale_table;
-     quantsStride=frame->qstride;
-     quantType=frame->qscale_type;
-     quantsDx=(r.dx+15)>>4;quantsDy=(r.dy+15)>>4;
-
-     const stride_t linesize[4]={frame->linesize[0],frame->linesize[1],frame->linesize[2],frame->linesize[3]};
-
-     TffPict pict(csp,frame->data,linesize,r,true,frametype,fieldtype,srcLen0,pIn,avctx->palctrl); //TODO: src frame size
-     pict.gmcWarpingPoints=frame->num_sprite_warping_points;pict.gmcWarpingPointsReal=frame->real_sprite_warping_points;
-
-     if (h264_on_MPEG2_system)
       {
-       pict.rtStart = frame->reordered_opaque;
-       pict.rtStop = frame->reordered_opaque2;
-       pict.srcSize = (size_t)frame->reordered_opaque3;
-      }
-     else if (dont_use_rtStop_from_upper_stream)
-      {
-       pict.rtStart = frame->reordered_opaque;
-       pict.srcSize = (size_t)frame->reordered_opaque3; // FIXME this is not correct for MPEG-1/2 that use SOURCE_TRUNCATED. (Just for OSD, not that important bug)
+       int fieldtype = frame->interlaced_frame ?
+                           (frame->top_field_first ?
+                               FIELD_TYPE::INT_TFF :
+                               FIELD_TYPE::INT_BFF):
+                           FIELD_TYPE::PROGRESSIVE_FRAME;
 
-       if (pict.rtStart==REFTIME_INVALID)
-        pict.rtStart=oldpict.rtStop;
-
-       if (avgTimePerFrame==-1)
-        deciV->getAverageTimePerFrame(&avgTimePerFrame);
-
-       if (avgTimePerFrame)
+       if (codecId == CODEC_ID_MPEG2VIDEO)
         {
-         pict.rtStop=pict.rtStart+avgTimePerFrame+frame->repeat_pict*avgTimePerFrame/2;
+         if (mpeg2_new_sequence)
+          fieldtype |= FIELD_TYPE::SEQ_START;
+
+         if (frame->mpeg2_sequence_end_flag)
+          {
+           fieldtype |= FIELD_TYPE::SEQ_END;
+           mpeg2_new_sequence = true;
+           frame->mpeg2_sequence_end_flag = 0;
+          }
+         else
+          mpeg2_new_sequence = false;
         }
-       else if (avctx->time_base.num && avctx->time_base.den)
+
+       if (frame->play_flags&CODEC_FLAG_QPEL)
+        frametype|=FRAME_TYPE::QPEL;
+
+       int csp=csp_lavc2ffdshow(avctx->pix_fmt);
+
+       if (grayscale) // workaround for green picture when decoding mpeg with CODEC_FLAG_GRAY, the problem is probably somewhere else
         {
-         REFERENCE_TIME duration = REF_SECOND_MULT * avctx->time_base.num / avctx->time_base.den;
-         pict.rtStop = pict.rtStart + duration;
-         if (frame->repeat_pict)
-          pict.rtStop += (duration >> 1) * frame->repeat_pict;
+         const TcspInfo* cspinfo=csp_getInfo(csp);
+         for (unsigned int i=1;i<cspinfo->numPlanes;i++)
+          {
+           if (frame->data[i][0]!=cspinfo->black[i]
+               || (codecId!=CODEC_ID_MPEG4 && codecId!=CODEC_ID_MPEG2VIDEO && codecId!=CODEC_ID_MPEG1VIDEO && codecId!=CODEC_ID_VC1 && codecId!=CODEC_ID_WMV3 && codecId!=CODEC_ID_SVQ3 && codecId!=CODEC_ID_HUFFYUV)
+              )
+            memset(frame->data[i],cspinfo->black[i],frame->linesize[i]*avctx->height>>cspinfo->shiftY[i]);
+          }
         }
+
+       Trect r(0,0,avctx->width,avctx->height);
+
+       if (avctx->sample_aspect_ratio.num &&
+           !(connectedSplitter == TffdshowVideoInputPin::MPC_matroska_splitter && avctx->sample_aspect_ratio.num==1 && avctx->sample_aspect_ratio.den==1)
+          )  // With MPC's internal matroska splitter, AR is not reliable.
+        r.sar=avctx->sample_aspect_ratio;
        else
+        r.sar=containerSar;
+
+       quants=frame->qscale_table;
+       quantsStride=frame->qstride;
+       quantType=frame->qscale_type;
+       quantsDx=(r.dx+15)>>4;quantsDy=(r.dy+15)>>4;
+
+       const stride_t linesize[4]={frame->linesize[0],frame->linesize[1],frame->linesize[2],frame->linesize[3]};
+
+       TffPict pict(csp,frame->data,linesize,r,true,frametype,fieldtype,srcLen0,pIn,avctx->palctrl); //TODO: src frame size
+       pict.gmcWarpingPoints=frame->num_sprite_warping_points;pict.gmcWarpingPointsReal=frame->real_sprite_warping_points;
+
+       if (h264_on_MPEG2_system)
         {
-         pict.rtStop=pict.rtStart+1;
+         pict.rtStart = frame->reordered_opaque;
+         pict.rtStop = frame->reordered_opaque2;
+         pict.srcSize = (size_t)frame->reordered_opaque3;
+        }
+       else if (dont_use_rtStop_from_upper_stream)
+        {
+         pict.rtStart = frame->reordered_opaque;
+         pict.srcSize = (size_t)frame->reordered_opaque3; // FIXME this is not correct for MPEG-1/2 that use SOURCE_TRUNCATED. (Just for OSD, not that important bug)
+
+         if (pict.rtStart==REFTIME_INVALID)
+          pict.rtStart=oldpict.rtStop;
+
+         if (avgTimePerFrame==-1)
+          deciV->getAverageTimePerFrame(&avgTimePerFrame);
+
+         if (avgTimePerFrame)
+          {
+           pict.rtStop=pict.rtStart+avgTimePerFrame+frame->repeat_pict*avgTimePerFrame/2;
+          }
+         else if (avctx->time_base.num && avctx->time_base.den)
+          {
+           REFERENCE_TIME duration = REF_SECOND_MULT * avctx->time_base.num / avctx->time_base.den;
+           pict.rtStop = pict.rtStart + duration;
+           if (frame->repeat_pict)
+            pict.rtStop += (duration >> 1) * frame->repeat_pict;
+          }
+         else
+          {
+           pict.rtStop=pict.rtStart+1;
+          }
+
+         if (avctx->codec_tag==FOURCC_MPG1 || avctx->codec_tag==FOURCC_MPG2)
+          pict.mediatimeStart=pict.mediatimeStop=REFTIME_INVALID;
+
+         oldpict=pict;
+        }
+       else if (theorart)
+        {
+         pict.rtStart = frame->reordered_opaque - segmentTimeStart;
+         pict.rtStop  = pict.rtStart + 1;
+        }
+       else if (avctx->has_b_frames)
+        {
+         // do not reorder timestamps in this case.
+         // Timestamps simply increase. 
+         // ex: AVI files
+
+         pict.rtStart=b[posB].rtStart; 
+         pict.rtStop=b[posB].rtStop;
+         pict.srcSize=b[posB].srcSize;
         }
 
-       if (avctx->codec_tag==FOURCC_MPG1 || avctx->codec_tag==FOURCC_MPG2)
-        pict.mediatimeStart=pict.mediatimeStop=REFTIME_INVALID;
+       // soft telecine detection
+       // if "Detect soft telecine and average frame durations" is enabled,
+       // flames are flagged as progressive, frame durations are averaged.
+       // pict.film is valid even if the setting is disabled.
+       telecineManager.new_frame(fieldtype, frame->top_field_first, frame->repeat_pict, pict.rtStart, pict.rtStop);
+       telecineManager.get_fieldtype(pict);
+       telecineManager.get_timestamps(pict);
 
-       oldpict=pict;
+       HRESULT hr=sinkD->deliverDecodedSample(pict);
+       if (FAILED(hr) || (used_bytes && sinkD->acceptsManyFrames()!=S_OK) || avctx->codec_id==CODEC_ID_LOCO)
+        return hr;
       }
-     else if (theorart)
-      {
-       pict.rtStart = frame->reordered_opaque - segmentTimeStart;
-       pict.rtStop  = pict.rtStart + 1;
-      }
-     else if (avctx->has_b_frames)
-      {
-       // do not reorder timestamps in this case.
-       // Timestamps simply increase. 
-       // ex: AVI files
-
-       pict.rtStart=b[posB].rtStart; 
-       pict.rtStop=b[posB].rtStop;
-       pict.srcSize=b[posB].srcSize;
-      }
-
-     // soft telecine detection
-     // if "Detect soft telecine and average frame durations" is enabled,
-     // flames are flagged as progressive, frame durations are averaged.
-     // pict.film is valid even if the setting is disabled.
-     telecineManager.new_frame(fieldtype, frame->top_field_first, frame->repeat_pict, pict.rtStart, pict.rtStop);
-     telecineManager.get_fieldtype(pict);
-     telecineManager.get_timestamps(pict);
-
-     HRESULT hr=sinkD->deliverDecodedSample(pict);
-     if (FAILED(hr) || (used_bytes && sinkD->acceptsManyFrames()!=S_OK) || avctx->codec_id==CODEC_ID_LOCO)
-      return hr;
     }
    else
     {
