@@ -59,14 +59,15 @@ Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),Toptions(Ic
  inExplorer=deci->inExplorer()==S_OK;
  OSDPositionX=0; // Horizontal position of the DrawOSD (default : Left of screen)
  OSDPositionY=10; // Vertical position of the DrawOSD (default : Top + 10px)
- currentSubtitleStream=0, currentAudioStream=0;
  streamsLoaded=false;
  foundHaali=false;
+ tr=NULL;
 }
 Tremote::~Tremote()
 {
  stop();
  if (keys) delete keys;
+ if (tr) tr->release();
 }
 
 void Tremote::load(void)
@@ -94,6 +95,7 @@ void Tremote::start(void)
  if (hThread) return;
  deciD=deci;
  deciV=deci;
+ if (!tr) deci->getTranslator(&tr);
  remotemsg=messageMode==0?RegisterWindowMessage(_l(FFDSHOW_REMOTE_MESSAGE)):messageUser;
  paramid=0;subtitleIdx=0;
  unsigned threadID;
@@ -339,16 +341,16 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 	case WPRM_SET_OSDY:
 		OSDPositionY=(int)lprm;
 		return TRUE;
-	case WPRM_SET_STREAM:
+	case WPRM_SET_AUDIO_STREAM:
 		getStreams(false);
-		setStream((long)lprm);
+		setStream(1,(long)lprm);
+        getStreams(true);
 		return TRUE;
-	case WPRM_GET_CURRENT_AUDIO_STREAM:
-		getStreams(true);
-		return currentAudioStream;
-	case WPRM_GET_CURRENT_SUBTITLE_STREAM:
-		getStreams(true);
-		return currentSubtitleStream;
+	case WPRM_SET_SUBTITLE_STREAM:
+		getStreams(false);
+		setStream(2,(long)lprm);
+        getStreams(true);
+		return TRUE;
 	case WPRM_GET_FRAMERATE:
 		if (deciV != NULL)
 		{
@@ -525,13 +527,19 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			strcpy(stringList, _l(""));
 			getStreams(false);
 			
-			for (long l = 0; l<(long)AudioStreamsNames.size(); l++)
+			for (long l = 0; l<(long)audioStreams.size(); l++)
 			{
-				long streamNb = AudioStreamsNames[l].first;
+				long streamNb = audioStreams[l].streamNb;
 				char_t tmpStr[40];
 				tsnprintf_s(tmpStr, countof(tmpStr), _TRUNCATE, _l("%ld"), streamNb);
-				ffstring xmlString = _l("<stream><id>") + ffstring(tmpStr)+_l("</id><name>")+ffstring(AudioStreamsNames[l].second)
-					+_l("</name><language_name>")+ffstring(AudioStreamsLanguageNames[l].second)+_l("</language_name></stream>");
+                char_t enabled[6];
+                if (audioStreams[l].enabled)
+                    strcpy(enabled, _l("true"));
+                else
+                    strcpy(enabled, _l("false"));
+				ffstring xmlString = _l("<stream><id>") + ffstring(tmpStr)+_l("</id><name>")+ffstring(audioStreams[l].streamName)
+					+_l("</name><language_name>")+ffstring(audioStreams[l].streamLanguageName)+_l("</language_name><enabled>")
+                    +ffstring(enabled)+_l("</enabled></stream>");
 
 				// Resize the string if needed
 				if (strlen(stringList)+strlen(xmlString.c_str())+ 10 >= string_size)
@@ -561,13 +569,19 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 			strcpy(stringList, _l(""));
 			getStreams(false);
 			
-			for (long l = 0; l<(long)SubtitleStreamsNames.size(); l++)
+			for (long l = 0; l<(long)subtitleStreams.size(); l++)
 			{
-				long streamNb = SubtitleStreamsNames[l].first;
+				long streamNb = subtitleStreams[l].streamNb;
 				char_t tmpStr[40];
+                char_t enabled[6];
+                if (subtitleStreams[l].enabled)
+                    strcpy(enabled, _l("true"));
+                else
+                    strcpy(enabled, _l("false"));
 				tsnprintf_s(tmpStr, countof(tmpStr), _TRUNCATE, _l("%ld"), streamNb);
-				ffstring xmlString = _l("<stream><id>") + ffstring(tmpStr)+_l("</id><name>")+ffstring(SubtitleStreamsNames[l].second)
-					+_l("</name><language_name>")+ffstring(SubtitleStreamsLanguageNames[l].second)+_l("</language_name></stream>");
+				ffstring xmlString = _l("<stream><id>") + ffstring(tmpStr)+_l("</id><name>")+ffstring(subtitleStreams[l].streamName)
+					+_l("</name><language_name>")+ffstring(subtitleStreams[l].streamLanguageName)+_l("</language_name><enabled>")
+                    +ffstring(enabled)+_l("</enabled></stream>");
 
 				// Resize the string if needed
 				if (strlen(stringList)+strlen(xmlString.c_str())+ 10 >= string_size)
@@ -666,12 +680,8 @@ void Tremote::getStreams(bool reload)
 	if (streamsLoaded && !reload)
 		return;
 	
-	AudioStreamsNames.clear();
-	AudioStreamsLanguageNames.clear();
-	SubtitleStreamsNames.clear();
-	SubtitleStreamsLanguageNames.clear();
-	currentAudioStream = 0;
-	currentSubtitleStream = 0;
+	audioStreams.clear();
+	subtitleStreams.clear();
 
 	comptr<IEnumFilters> eff;
 	IFilterGraph    *m_pGraph = NULL;
@@ -689,12 +699,6 @@ void Tremote::getStreams(bool reload)
 			if (filterinfo.pGraph)
 				filterinfo.pGraph->Release();
 
-			/*if (!strcmp(_l("ffdshow Video Decoder"), filtername)
-				|| !strcmp(_l("ffdshow raw video filter"), filtername)
-				|| !strcmp(_l("ffdshow VFW decoder helper"), filtername)
-				|| !strcmp(_l("ffdshow subtitles filter"), filtername)
-				|| !strcmp(_l("ffdshow Audio Decoder"), filtername))
-				continue;*/
 			IAMStreamSelect *pAMStreamSelect = NULL;
 			bff->QueryInterface(IID_IAMStreamSelect, (void**) &pAMStreamSelect);
 			if (pAMStreamSelect == NULL)
@@ -705,12 +709,8 @@ void Tremote::getStreams(bool reload)
 			// Haali splitter
 			if (!strcmp(filtername, fileName))
 			{
-				AudioStreamsNames.clear();
-				AudioStreamsLanguageNames.clear();
-				SubtitleStreamsNames.clear();
-				SubtitleStreamsLanguageNames.clear();
-				currentAudioStream = 0;
-				currentSubtitleStream = 0;
+				audioStreams.clear();
+	            subtitleStreams.clear();
 				foundHaali = true;
 			}
 
@@ -752,27 +752,25 @@ void Tremote::getStreams(bool reload)
 				else
 					tsnprintf_s(streamName, countof(streamName), _TRUNCATE, _l("Undetermined (%ld)"), streamNb);
 
-				if (streamGroup == 1) // Audio
+				Tstream stream;
+                stream.filterName = ffstring(filtername);
+                stream.streamNb = streamNb;
+				if (streamSelect == AMSTREAMSELECTINFO_ENABLED ||
+					streamSelect == AMSTREAMSELECTINFO_EXCLUSIVE || 
+					streamSelect == (AMSTREAMSELECTINFO_ENABLED | AMSTREAMSELECTINFO_EXCLUSIVE))
+                    stream.enabled = true;
+                else stream.enabled = false;
+
+                stream.streamName = ffstring(streamName);
+                stream.streamLanguageName = ffstring(languageName);
+                
+                if (streamGroup == 1) // Audio
 				{
-					if (streamSelect == AMSTREAMSELECTINFO_ENABLED ||
-						streamSelect == AMSTREAMSELECTINFO_EXCLUSIVE || 
-						streamSelect == (AMSTREAMSELECTINFO_ENABLED | AMSTREAMSELECTINFO_EXCLUSIVE))
-						currentAudioStream = streamNb;
-					std::pair<long, ffstring> pair = std::make_pair<long, ffstring>(streamNb, streamName);
-					AudioStreamsNames.push_back(pair);
-					std::pair<long, ffstring> pair2 = std::make_pair<long, ffstring>(streamNb, languageName);
-					AudioStreamsLanguageNames.push_back(pair2);
+                    audioStreams.push_back(stream);
 				}
 				else // Subtitles
 				{
-					if (streamSelect == AMSTREAMSELECTINFO_ENABLED ||
-						streamSelect == AMSTREAMSELECTINFO_EXCLUSIVE || 
-						streamSelect == (AMSTREAMSELECTINFO_ENABLED | AMSTREAMSELECTINFO_EXCLUSIVE))
-						currentSubtitleStream = streamNb;
-					std::pair<long, ffstring> pair = std::make_pair<long, ffstring>(streamNb, streamName);
-					SubtitleStreamsNames.push_back(pair);
-					std::pair<long, ffstring> pair2 = std::make_pair<long, ffstring>(streamNb, languageName);
-					SubtitleStreamsLanguageNames.push_back(pair2);
+                    subtitleStreams.push_back(stream);
 				}
 				if (pstreamName != NULL)
 					CoTaskMemFree(pstreamName);
@@ -783,37 +781,107 @@ void Tremote::getStreams(bool reload)
 				break;
 		}
 	}
+
+    // If subtitles streams already found somewhere else skip next step
+    if (subtitleStreams.size() > 0)
+    {
+        streamsLoaded = true;
+        return;
+    }
+
+    // Now add subtitle streams connected to FFDShow input text pin if any
+    int textpinconnectedCnt=deciV->getConnectedTextPinCnt();
+    if (!textpinconnectedCnt)
+    {
+        streamsLoaded = true;
+        return;
+    }
+
+    int currentEmbeddedStream = deci->getParam2(IDFF_subShowEmbedded);
+    for (int i=0;i<textpinconnectedCnt;i++)
+    {
+        const char_t *textname;int found,id;
+        deciV->getConnectedTextPinInfo(i,&textname,&id,&found);
+        if (found)
+        {
+           char_t s[256];
+           ff_strncpy(s, tr->translate(_l("embedded")), countof(s));
+           if (textname[0])
+            strncatf(s, countof(s), _l(" (%s)"), textname);
+           else
+            strncatf(s, countof(s), _l(" (%d)"), id);
+
+            Tstream stream;
+            stream.filterName = ffstring(_l("FFDSHOW"));
+            stream.streamNb = id;
+			if (currentEmbeddedStream == id)
+                stream.enabled = true;
+            else stream.enabled = false;
+
+            stream.streamName = ffstring(s);
+            stream.streamLanguageName = ffstring(s);
+            subtitleStreams.push_back(stream);
+        }
+    }
 	streamsLoaded = true;
 }
 
-void Tremote::setStream(long streamNb)
+void Tremote::setStream(int group, long streamNb)
 {
+    std::vector<Tstream> *pStreams = NULL;
+    Tstream *pStream = NULL;
+    if (group == 1) // Audio   
+        pStreams = &audioStreams;
+    else // Subtitles
+        pStreams = &subtitleStreams;
 
-	comptr<IEnumFilters> eff;
-	IFilterGraph    *m_pGraph = NULL;
-	deci->getGraph(&m_pGraph); // Graph we belong to
-	if (m_pGraph->EnumFilters(&eff)==S_OK)
+    for (long l = 0; l<(long)pStreams->size(); l++)
 	{
-		eff->Reset();
-		const char_t *fileName = deci->getSourceName();
-		for (comptr<IBaseFilter> bff;eff->Next(1,&bff,NULL)==S_OK;bff=NULL)
-		{
-			char_t name[MAX_PATH],filtername[MAX_PATH];
-			getFilterName(bff,name,filtername,countof(filtername));
+        if ((*pStreams)[l].streamNb == streamNb)
+        {
+            pStream = &(*pStreams)[l];
+            break;
+        }
+    }
+    if (pStream == NULL) return;
 
-			IAMStreamSelect *pAMStreamSelect = NULL;
-			bff->QueryInterface(IID_IAMStreamSelect, (void**) &pAMStreamSelect);
-			if (pAMStreamSelect == NULL)
-				continue;
-			
-			if (foundHaali && strcmp(filtername, fileName))
-			{
-				pAMStreamSelect->Release();
-				continue;
-			}
-			pAMStreamSelect->Enable(streamNb, AMSTREAMSELECTENABLE_ENABLE);
-			pAMStreamSelect->Release();
-			break;
-		}
-	}
+
+    // Embedded subtitles within FFDShow
+    if (!strcmp(pStream->filterName.c_str(), _l("FFDSHOW")))
+    {
+        int oldId=deci->getParam2(IDFF_subShowEmbedded);
+        deci->putParam(IDFF_subShowEmbedded,streamNb==oldId?0:streamNb);
+    }
+    else
+    {
+	    comptr<IEnumFilters> eff;
+	    IFilterGraph    *m_pGraph = NULL;
+	    deci->getGraph(&m_pGraph); // Graph we belong to
+	    if (m_pGraph->EnumFilters(&eff)==S_OK)
+	    {
+		    eff->Reset();
+		    const char_t *fileName = deci->getSourceName();
+		    for (comptr<IBaseFilter> bff;eff->Next(1,&bff,NULL)==S_OK;bff=NULL)
+		    {
+			    char_t name[MAX_PATH],filtername[MAX_PATH];
+			    getFilterName(bff,name,filtername,countof(filtername));
+
+                if (strcmp(pStream->filterName.c_str(), filtername)) continue;
+
+			    IAMStreamSelect *pAMStreamSelect = NULL;
+			    bff->QueryInterface(IID_IAMStreamSelect, (void**) &pAMStreamSelect);
+			    if (pAMStreamSelect == NULL)
+				    continue;
+    			
+			    /*if (foundHaali && strcmp(filtername, fileName))
+			    {
+				    pAMStreamSelect->Release();
+				    continue;
+			    }*/
+			    pAMStreamSelect->Enable(streamNb, AMSTREAMSELECTENABLE_ENABLE);
+			    pAMStreamSelect->Release();
+			    break;
+		    }
+	    }
+    }
 }

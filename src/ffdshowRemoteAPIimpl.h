@@ -5,10 +5,19 @@
 #include "ffdshowRemoteAPI.h"
 #include "interfaces.h"
 
+class Ttranslate;
 class Tkeyboard;
 class Tremote : public Toptions
 {
 private:
+ struct Tstream
+ {
+     ffstring filterName;
+     ffstring streamName;
+     ffstring streamLanguageName;
+     long streamNb;
+     bool enabled;
+ };
  int is,messageMode,messageUser,acceptKeys;
  IffdshowBase *deci;comptrQ<IffdshowDec> deciD;comptrQ<IffdshowDecVideo> deciV;
  UINT remotemsg;
@@ -29,18 +38,17 @@ private:
  bool inExplorer;
  DWORD pdwROT;
  int OSDPositionX, OSDPositionY;
- std::vector<std::pair<long, ffstring> > AudioStreamsNames, AudioStreamsLanguageNames,
-	 SubtitleStreamsNames, SubtitleStreamsLanguageNames;
- long currentSubtitleStream, currentAudioStream;
+ std::vector<Tstream> audioStreams, subtitleStreams;
  bool streamsLoaded;
  bool foundHaali;
+ Ttranslate *tr;
 public:
  Tremote(TintStrColl *Icoll,IffdshowBase *Ideci);
  ~Tremote();
  void load(void),save(void);
  void onChange(int id,int val);
  void getStreams(bool reload);
- void setStream(long streamNb);
+ void setStream(int group, long streamNb);
 };
 
 #endif
