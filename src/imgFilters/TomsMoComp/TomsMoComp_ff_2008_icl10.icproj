@@ -5,7 +5,7 @@
 	Name="TomsMoComp_ff"
 	ProjectGUID="{06857671-5A30-41CE-A44B-CA09B1E5E7B7}"
 	VCNestedProjectGUID="{864F0D43-412C-44DF-98AD-E8C24B230D5C}"
-	VCNestedProjectCRC32="2083796460"
+	VCNestedProjectCRC32="2790172566"
 	VCNestedProjectFileName="TomsMoComp_ff_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -24,6 +24,8 @@
 				UseOfMFC="1"/>
 			<Tool 
 				Name="CppCmplrTool"
+				Optimization="1000"
+				GlobalOptimizations="1"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="1"
 				FavorSizeOrSpeed="1"
@@ -40,7 +42,8 @@
 				BrowseInformation="0"
 				WarningLevel="3"
 				SuppressStartupBanner="1"
-				DisableSpecificWarnings="4996"/>
+				DisableSpecificWarnings="4996"
+				AdditionalOptions="/Qip"/>
 			<Tool 
 				Name="LinkerTool"
 				OutputFile="../../../bin/TomsMoComp_ff.dll"
@@ -184,7 +187,7 @@
 				OutputFile="../../../bin/TomsMoComp_ff.dll"
 				SuppressStartupBanner="1"
 				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib"
+				AdditionalDependencies="libcmtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\TomsMoComp_ff.def"
 				GenerateManifest="0"
@@ -252,7 +255,7 @@
 				OutputFile="../../../bin/TomsMoComp_ff.dll"
 				SuppressStartupBanner="1"
 				IgnoreImportLibrary="1"
-				AdditionalDependencies="msvcrtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib"
+				AdditionalDependencies="libcmtd.lib kernel32.lib libircmt.lib libmmt.lib svml_dispmt.lib"
 				IgnoreAllDefaultLibraries="1"
 				ModuleDefinitionFile=".\TomsMoComp_ff.def"
 				GenerateManifest="0"
