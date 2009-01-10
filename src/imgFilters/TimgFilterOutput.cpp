@@ -97,7 +97,7 @@ HRESULT TimgFilterOutput::process(const TffPict &pict,int dstcsp,unsigned char *
    if (convert->m_wasChange)
     vramBenchmark.onChange();
    int cspret=convert->convert(pict,
-                               ((dv ? dvcsp : dstcsp) ^ (cfg->flip ? FF_CSP_FLAGS_VFLIP : 0)) | ((pict.fieldtype & FIELD_TYPE::MASK_INT) ? FF_CSP_FLAGS_INTERLACED : 0),
+                               ((dv ? dvcsp : dstcsp) ^ (cfg->flip ? FF_CSP_FLAGS_VFLIP : 0)) | ((!pict.film && (pict.fieldtype & FIELD_TYPE::MASK_INT)) ? FF_CSP_FLAGS_INTERLACED : 0),
                                dv ? dvpict->data : cspdst,
                                dv ? dvpict->stride : cspstride,
                                vramBenchmark.get_vram_indirect());

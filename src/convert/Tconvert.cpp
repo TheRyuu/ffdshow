@@ -527,7 +527,14 @@ int Tconvert::convert(int incsp0,const uint8_t*const src0[],const stride_t srcSt
 }
 int Tconvert::convert(const TffPict &pict,int outcsp,uint8_t* dst[],stride_t dstStride[],bool vram_indirect)
 {
- return convert(pict.csp|((pict.fieldtype&FIELD_TYPE::MASK_INT)?FF_CSP_FLAGS_INTERLACED:0),pict.data,pict.stride,outcsp,dst,dstStride,&pict.palette,vram_indirect);
+ return convert(pict.csp | ( (!pict.film && (pict.fieldtype & FIELD_TYPE::MASK_INT)) ? FF_CSP_FLAGS_INTERLACED : 0),
+                pict.data,
+                pict.stride,
+                outcsp,
+                dst,
+                dstStride,
+                &pict.palette,
+                vram_indirect);
 }
 
 //================================= TffColorspaceConvert =================================
