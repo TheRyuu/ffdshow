@@ -68,6 +68,7 @@ void TvideoCodecLibmpeg2::init(void)
  info=mpeg2_info(mpeg2dec);
  wait4Iframe=true;
  sequenceFlag=FIELD_TYPE::SEQ_START;
+ m_fFilm = false;
 }
 bool TvideoCodecLibmpeg2::beginDecompress(TffPictBase &pict,FOURCC infcc,const CMediaType &mt,int sourceFlags)
 {
@@ -195,6 +196,7 @@ HRESULT __declspec(align(16))(TvideoCodecLibmpeg2::decompressI(const unsigned ch
           case 0:csp=FF_CSP_420P;break;
          }
         TffPict pict(csp,data,stride,Trect(0,0,info->sequence->picture_width,info->sequence->picture_height,info->sequence->pixel_width,info->sequence->pixel_height),true,frametype,fieldtype,srcLen,NULL); //TODO: src frame size
+        pict.film = m_fFilm;
         pict.rtStart=info->display_picture->rtStart;
         if (pict.rtStart==REFTIME_INVALID) pict.rtStart=oldpict.rtStop;
         pict.rtStop=pict.rtStart+avgTimePerFrame*info->display_picture->nb_fields/(info->display_picture_2nd?1:2);
@@ -263,22 +265,15 @@ int TvideoCodecLibmpeg2::SetDeinterlaceMethod(void)
             di_method |= FIELD_TYPE::INT_BFF;
 
     }
-#if 1 // ffdshow custom code
+    else if(info->display_picture->flags & PIC_FLAG_PROGRESSIVE_FRAME)
+        // Controversial. At least the frame was encoded using the progressive algorithm.
+        // It is possible to encode a interlaced image using the progressive algorithm.
+        di_method = FIELD_TYPE::PROGRESSIVE_FRAME;
     else if(newflags & PIC_FLAG_TOP_FIELD_FIRST)
         di_method = FIELD_TYPE::INT_TFF;
     else
         di_method = FIELD_TYPE::INT_BFF;
 
-#else // the (nearly) original code & comment
-    else if(!(oldflags & PIC_FLAG_PROGRESSIVE_FRAME))
-        di_method = DIBlend; // ok, clear thing
-    else
-        // big trouble here, the progressive_frame bit is not reliable :'(
-        // frames without temporal field diffs can be only detected when ntsc 
-        // uses the repeat field flag (signaled with m_fFilm), if it's not set 
-        // or we have pal then we might end up blending the fields unnecessarily...
-        di_method = DIBlend;
-#endif
     oldflags = newflags;
     return di_method;
 }
