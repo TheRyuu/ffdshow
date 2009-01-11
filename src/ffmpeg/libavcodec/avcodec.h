@@ -140,6 +140,7 @@ enum SampleFormat {
  */
 #define FF_MIN_BUFFER_SIZE 16384
 
+
 /**
  * motion estimation type.
  */
@@ -2401,6 +2402,9 @@ int avcodec_decode_audio2(AVCodecContext *avctx, int16_t *samples,
  * be 16 byte aligned unless the CPU doesn't need it (AltiVec and SSE do). If
  * the linesize is not a multiple of 16 then there's no sense in aligning the
  * start of the buffer to 16.
+ *
+ * @note Some codecs have a delay between input and output, these need to be
+ * feeded with buf=NULL, buf_size=0 at the end to return the remaining frames.
  *
  * @param avctx the codec context
  * @param[out] picture The AVFrame in which the decoded video frame will be stored.

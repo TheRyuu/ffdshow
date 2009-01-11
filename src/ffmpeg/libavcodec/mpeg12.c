@@ -1152,7 +1152,7 @@ static void quant_matrix_rebuild(uint16_t *matrix, const uint8_t *old_perm,
     }
 }
 
-static enum PixelFormat mpeg_set_pixelformat(AVCodecContext *avctx){
+static enum PixelFormat mpeg_get_pixelformat(AVCodecContext *avctx){
     Mpeg1Context *s1 = avctx->priv_data;
     MpegEncContext *s = &s1->mpeg_enc_ctx;
 
@@ -1245,7 +1245,7 @@ static int mpeg_decode_postinit(AVCodecContext *avctx){
             }
         }//MPEG-2
 
-        avctx->pix_fmt = mpeg_set_pixelformat(avctx);
+        avctx->pix_fmt = mpeg_get_pixelformat(avctx);
 
         /* Quantization matrices may need reordering
          * if DCT permutation is changed. */
@@ -1999,7 +1999,7 @@ static int vcr2_init_sequence(AVCodecContext *avctx)
     avctx->has_b_frames= 0; //true?
     s->low_delay= 1;
 
-    avctx->pix_fmt = mpeg_set_pixelformat(avctx);
+    avctx->pix_fmt = mpeg_get_pixelformat(avctx);
 
     if (MPV_common_init(s) < 0)
         return -1;
