@@ -111,7 +111,7 @@ HRESULT TffdshowVideoInputPin::CheckMediaType(const CMediaType* mt)
 	FFDShow raw video decoder for postprocessing on uncompressed.
 	So instead of saying "Media Type not supported", we says it is but only if there is an existing filter that can
 	take this format in charge, and then FFDShow will be plugged after this codec (plug is done by TffdshowDecVideo::ConnectCompatibleFilter). */
- int res = fv->getVideoCodecId(hdr,&mt->subtype,NULL);
+ int res = getVideoCodecId(hdr,&mt->subtype,NULL);
  
   OSVERSIONINFO osvi;
  ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
@@ -267,6 +267,8 @@ STDMETHODIMP TffdshowVideoInputPin::ReceiveConnection(IPin* pConnector, const AM
   connectedSplitter = MPC_mpegSplitters;
  else if (ref == CLSID_DVBSourceFilter)
   connectedSplitter = DVBSourceFilter;
+ else if (ref == CLSID_PBDA_DTFilter)
+  connectedSplitter = PBDA_DTFilter;
  
 #if 0
  PIN_INFO pininfo;
@@ -438,7 +440,7 @@ again:
      codec=video=NULL;
     }
   }
- codecId=(CodecID)fv->getVideoCodecId(&biIn.bmiHeader,&mt.subtype,&biIn.bmiHeader.biCompression);
+ codecId=(CodecID)getVideoCodecId(&biIn.bmiHeader,&mt.subtype,&biIn.bmiHeader.biCompression);
  if (codecId==CODEC_ID_NONE) 
  {
 	 if (pCompatibleFilter!=NULL)
@@ -738,6 +740,20 @@ const char_t* TffdshowVideoInputPin::findAutoSubflnm(IcheckSubtitle *checkSubtit
    TsubtitlesFile::findSubtitlesFile(AVIname,searchDir,searchExt,autosubflnm,MAX_PATH,heuristic,checkSubtitle);
   }
  return autosubflnm;
+}
+
+int TffdshowVideoInputPin::getVideoCodecId(const BITMAPINFOHEADER *hdr,const GUID *subtype,FOURCC *AVIfourcc)
+{
+ // Microsoft's wtv files are recognized as "MPEG in AVI" in ffdshow.
+ // ffdshow tried to decode it and fails.
+ // Here, ffdshow rejects connection to PBDA DTFilter if the four CC is 'MPEG'.
+ FOURCC fourcc;
+ int id = fv->getVideoCodecId(hdr, subtype, &fourcc);
+ if (connectedSplitter == PBDA_DTFilter && fourcc == FOURCC_MPEG)
+  return CODEC_ID_NONE;
+ if (AVIfourcc)
+  *AVIfourcc = fourcc;
+ return id;
 }
 
 //================================ TffdshowVideoEncInputPin ================================

@@ -22,6 +22,8 @@ private:
 protected:
  virtual bool init(const CMediaType &mt);
  virtual void done(void);
+ int getVideoCodecId(const BITMAPINFOHEADER *hdr,const GUID *subtype,FOURCC *AVIfourcc);
+
 public:
  TffdshowVideoInputPin(TCHAR *objectName,TffdshowVideo *pFilter,HRESULT *phr);
  virtual ~TffdshowVideoInputPin();
@@ -69,6 +71,7 @@ public:
    Haali_Media_splitter,
    MPC_mpegSplitters,
    DVBSourceFilter,
+   PBDA_DTFilter,
    Unknown_Splitter
   };
 };
