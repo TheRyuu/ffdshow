@@ -184,30 +184,34 @@ const Tmmx_ConvertRGBtoYUY2matrix* TrgbPrimaries::getAvisynthRgb2YuvMatrix(void)
 
 const unsigned char* TrgbPrimaries::getAvisynthYuv2RgbMatrix(void)
 {
- static const int64_t avisynthMmxMatrixConstants[4]=
+ static const int64_t avisynthMmxMatrixConstants[8]=
   {
-   0x00080008000800080LL,
-   0x000FF00FF00FF00FFLL,
-   0x00000200000002000LL,
-   0x0FF000000FF000000LL
+   0x00080008000800080LL, 0x00080008000800080LL,
+   0x000FF00FF00FF00FFLL, 0x000FF00FF00FF00FFLL,
+   0x00000200000002000LL, 0x00000200000002000LL,
+   0x0FF000000FF000000LL, 0x0FF000000FF000000LL
   };
 
  toYuv2RgbDataI
  // Avisynth YUY2->RGB
+ short *avisynthMmxMatrix = (short*)getAlignedPtr(avisynthMmxMatrixBuf);
+
  int cy =short(y_mul * 16384 + 0.5);
  short crv=short(vr_mul * 8192 + 0.5);
  short cgu=short(-ug_mul * 8192 - 0.5);
  short cgv=short(-vg_mul * 8192 - 0.5);
  short cbu=short(ub_mul * 8192 + 0.5);
- memcpy(&avisynthMmxMatrix[4], avisynthMmxMatrixConstants, 32); // common part
+ memcpy(&avisynthMmxMatrix[8], avisynthMmxMatrixConstants, 64); // common part
  int *avisynthMmxMatrixInt = (int*)avisynthMmxMatrix;
- avisynthMmxMatrix[0] = avisynthMmxMatrix[1] = short(cspOptionsBlackCutoff);
- avisynthMmxMatrixInt[1] = 0;
- avisynthMmxMatrixInt[10] = avisynthMmxMatrixInt[11] = cy;
- avisynthMmxMatrixInt[12] = avisynthMmxMatrixInt[13] = crv << 16;
- avisynthMmxMatrix[29] = avisynthMmxMatrix[31] = cgv;
- avisynthMmxMatrix[28] = avisynthMmxMatrix[30] = cgu;
- avisynthMmxMatrixInt[16] = avisynthMmxMatrixInt[17] = cbu;
+ avisynthMmxMatrix[0] = avisynthMmxMatrix[1] = 
+ avisynthMmxMatrix[2] = avisynthMmxMatrix[3] = // This is wrong for mmx ([2] and [3] should be 0). Fortunately, these bytes are ignored.
+  short(cspOptionsBlackCutoff);
+ avisynthMmxMatrixInt[2] = avisynthMmxMatrixInt[3] = 0;
+ avisynthMmxMatrixInt[20] = avisynthMmxMatrixInt[21] = avisynthMmxMatrixInt[22] = avisynthMmxMatrixInt[23] = cy;
+ avisynthMmxMatrixInt[24] = avisynthMmxMatrixInt[25] = avisynthMmxMatrixInt[26] = avisynthMmxMatrixInt[27] = crv << 16;
+ avisynthMmxMatrix[56] = avisynthMmxMatrix[58] = avisynthMmxMatrix[60] = avisynthMmxMatrix[62] = cgu;
+ avisynthMmxMatrix[57] = avisynthMmxMatrix[59] = avisynthMmxMatrix[61] = avisynthMmxMatrix[63] = cgv;
+ avisynthMmxMatrixInt[32] = avisynthMmxMatrixInt[33] = avisynthMmxMatrixInt[34] = avisynthMmxMatrixInt[35] = cbu;
  return (const unsigned char*)avisynthMmxMatrix;
 }
 

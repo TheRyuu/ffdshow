@@ -172,13 +172,14 @@ template<bool RGB24,bool DUPL> struct Tmmx_ConvertRGBtoYUY2
 template<int uyvy,int rgb32> struct Tmmx_ConvertYUY2toRGB
 {
 private:
+// ======================================================================== MMX ========================================================================
  static __forceinline void GET_Y(__m64 &mma,int _uyvy,const unsigned char* const edx)
   {
    if (_uyvy)
     psrlw (mma,8);
    else
     {
-     static const int ofs_x00FF_00FF_00FF_00FF=16;
+     static const int ofs_x00FF_00FF_00FF_00FF=32;
      pand (mma,edx+ofs_x00FF_00FF_00FF_00FF);
     }
   }
@@ -186,7 +187,7 @@ private:
   {
    GET_Y(mma,1-_uyvy,edx);
   }
- static __forceinline bool YUV2RGB_INNER_LOOP(int no_next_pixel,const unsigned char* &esi,const unsigned char* const ecx,unsigned char* &edi,const unsigned char* const edx,__m64 &mm0,__m64 &mm1,__m64 &mm2,__m64 &mm3,__m64 &mm4,__m64 &mm5,__m64 &mm6,__m64 &mm7)
+ static __forceinline bool YUV2RGB_INNER_LOOP(int no_next_pixel,const unsigned char* &esi,const unsigned char* const ecx,unsigned char* &edi,const unsigned char* const edx)
   {
    //This YUV422->RGB conversion code uses only four MMX registers per
    //source dword, so I convert two dwords in parallel.  Lines corresponding
@@ -194,14 +195,15 @@ private:
    //overlap, except at the end and in the three lines marked ***.
    //revised 4july,2002 to properly set alpha in rgb32 to default "on" & other small memory optimizations
    static const int ofs_x0000_0000_0010_0010=0;
-   static const int ofs_x0080_0080_0080_0080=8;
-   static const int ofs_x00002000_00002000=24;
-   static const int ofs_xFF000000_FF000000=32;
-   static const int ofs_cy=40;
-   static const int ofs_crv=48;
-   static const int ofs_cgu_cgv=56;
-   static const int ofs_cbu=64;
+   static const int ofs_x0080_0080_0080_0080=16;
+   static const int ofs_x00002000_00002000=48;
+   static const int ofs_xFF000000_FF000000=64;
+   static const int ofs_cy=80;
+   static const int ofs_crv=96;
+   static const int ofs_cgu_cgv=112;
+   static const int ofs_cbu=128;
    bool ret;
+   __m64 mm0,mm1,mm2,mm3,mm4,mm5,mm6,mm7;
 
    movd           (mm0,esi);
     movd          ( mm5,esi+4);
@@ -306,9 +308,182 @@ private:
     }
    return ret;
   }
+// ======================================================================== SSE2 ========================================================================
+ static __forceinline void GET_Y_SSE2(__m128i &xmma,int _uyvy,const unsigned char* const edx)
+  {
+   if (_uyvy)
+    psrlw (xmma,8);
+   else
+    {
+     static const int ofs_x00FF_00FF_00FF_00FF=32;
+     pand (xmma,edx+ofs_x00FF_00FF_00FF_00FF);
+    }
+  }
+ static __forceinline void GET_UV_SSE2(__m128i &xmma,int _uyvy,const unsigned char* const edx)
+  {
+   GET_Y_SSE2(xmma,1-_uyvy,edx);
+  }
+ static __forceinline bool YUV2RGB_INNER_LOOP_SSE2(int no_next_pixel,const unsigned char* &esi,const unsigned char* const ecx,unsigned char* &edi,const unsigned char* const edx)
+  {
+   //SSE2 optimization by h.yamagata
+   //This YUV422->RGB conversion code uses only four SSE2 registers per
+   //source qword, so I convert two qwords in parallel.  Lines corresponding
+   //to the "second pipe" are indented an extra space.  There's almost no
+   //overlap, except at the end and in the three lines marked ***.
+   //revised 4july,2002 to properly set alpha in rgb32 to default "on" & other small memory optimizations
+   static const int ofs_x0000_0000_0010_0010=0;
+   static const int ofs_x0080_0080_0080_0080=16;
+   static const int ofs_x00002000_00002000=48;
+   static const int ofs_xFF000000_FF000000=64;
+   static const int ofs_cy=80;
+   static const int ofs_crv=96;
+   static const int ofs_cgu_cgv=112;
+   static const int ofs_cbu=128;
+   bool ret;
+   __m128i xmm0,xmm1,xmm2,xmm3,xmm4,xmm5,xmm6,xmm7;
+
+   xmm0 = _mm_loadl_epi64((const __m128i*)esi);
+    xmm2 = _mm_loadl_epi64((const __m128i*)(esi + 4));
+   xmm1 = xmm0;
+   pxor           (xmm7,xmm7);
+   xmm3 = _mm_set_epi32(0xff00ff00,0xff00ff00,0xff00ff00,0xff00ff00);
+   GET_Y_SSE2          (xmm0,uyvy,edx);       // xmm0 = __________________Y3__Y2__Y1__Y0
+    xmm4 = _mm_loadl_epi64((const __m128i*)(esi + 8));
+   GET_UV_SSE2         (xmm1,uyvy,edx);       // xmm1 = __________________V2__U2__V0__U0
+   xmm5 = xmm4;
+    GET_Y_SSE2         ( xmm4,uyvy,edx);      // xmm4 = __________________Y7__Y6__Y5__Y4
+    GET_UV_SSE2        ( xmm2,uyvy,edx);      // xmm2 = __________________V4__U4__V2__U2
+   psubw          (xmm0,edx+ofs_x0000_0000_0010_0010);      // (Y-16)
+    xmm6 = _mm_loadl_epi64((const __m128i*)(esi + 12 - 4 * (no_next_pixel)));
+    if (no_next_pixel)
+     {
+      __m128i xmm8 = xmm5;
+      __m128i xmm9 = _mm_set_epi32(0,0,0,0xffffffff);
+      xmm6 = xmm5;
+      pand        (xmm6,xmm9);
+      psllq       (xmm6,32);
+      pand        (xmm8,xmm9);
+      por         (xmm6,xmm8);
+     }
+    else
+     xmm6 = _mm_loadl_epi64((const __m128i*)(esi + 12));
+   GET_UV_SSE2         (xmm5,uyvy,edx);       // xmm5 = __________________V6__U6__V4__U4
+    psubw         ( xmm4,edx+ofs_x0000_0000_0010_0010);     // (Y-16)
+   paddw          (xmm2,xmm1);           // xmm2=  2*UV3,2*UV1 = UV2+UV4, UV0+UV2
+    GET_UV_SSE2        ( xmm6,uyvy,edx);      // xmm6 = __________________V8__U8__V6__U6
+   psubw          (xmm1,edx+ofs_x0080_0080_0080_0080);      // (UV-128).
+    paddw         ( xmm6,xmm5);          // xmm6=  2*UV7,2*UV5 = UV6+UV8, UV4+UV6
+   punpckldq      (xmm2,xmm7);           // xmm2=  _________2V3_2U3_________2V1_2U1
+   psllq          (xmm2,32);             // xmm2=  _2V3_2U3_________2V1_2U1________
+    psubw         ( xmm5,edx+ofs_x0080_0080_0080_0080);     // (UV-128)
+   punpcklwd      (xmm0,xmm7);           // xmm0= ______Y3______Y2______Y1______Y0
+    punpckldq      (xmm6,xmm7);          // xmm6= _________2V7_2U7_________2V5_2U5
+    psllq          (xmm6,32);            // xmm6=  _2V7_2U7_________2V5_2U5________
+   pmaddwd        (xmm0,edx+ofs_cy);     // (Y-16)*(255./219.)<<14
+    punpcklwd     ( xmm4,xmm7);
+   paddw          (xmm1,xmm1);           // xmm1= _________________2V2_2U2_2V0_2U0
+    pmaddwd       ( xmm4,edx+ofs_cy);
+    paddw         ( xmm5,xmm5);          // xmm5= _________________2V4_2U4_2V2_2U2
+   punpckldq      (xmm1,xmm3);           // xmm1= -256    , -256    , 2*V2, 2*U2, -256    ,     -256, 2*V0, 2*U0
+   paddw          (xmm1,xmm2);           // xmm1= 2*V3-256, 2*U3-256, 2*V2, 2*U2 ,2*V1-256, 2*U1-256, 2*V0, 2*U0
+   paddd          (xmm0,edx+ofs_x00002000_00002000);        // +=0.5<<14
+   punpckldq      (xmm5,xmm3);           // xmm5= _________2V6_2U6_________2V4_2U4
+    paddw         ( xmm5,xmm6);          // m5= _2V7_2U7_2V6_2U6_2V5_2U5_2V4_2U4
+   xmm2 = xmm1;
+    paddd         ( xmm4,edx+ofs_x00002000_00002000);       // +=0.5<<14
+   xmm3 = xmm1;
+    xmm6 = xmm5;
+   pmaddwd        (xmm1,edx+ofs_crv);
+    xmm7 = xmm5;
+   paddd          (xmm1,xmm0);
+    pmaddwd       ( xmm5,edx+ofs_crv);
+   psrad          (xmm1,14);          // xmm1 = RRRRRRRRrrrrrrrr
+    paddd         ( xmm5,xmm4);
+   pmaddwd        (xmm2,edx+ofs_cgu_cgv);
+    psrad         ( xmm5,14);
+   paddd          (xmm2,xmm0);
+    pmaddwd       ( xmm6,edx+ofs_cgu_cgv);
+   psrad          (xmm2,14);          // xmm2 = GGGGGGGGgggggggg
+    paddd         ( xmm6,xmm4);
+   pmaddwd        (xmm3,edx+ofs_cbu);
+    psrad         ( xmm6,14);
+   paddd          (xmm3,xmm0);
+    pmaddwd       ( xmm7,edx+ofs_cbu);
+   esi += 16;
+   edi += 24 + 8 * rgb32;
+   if (!no_next_pixel)
+    ret=esi<ecx;//cmp             esi,ecx
+   else
+    ret=true;
+   psrad           (xmm3,14  );        // xmm3 = BBBBBBBBbbbbbbbb
+    paddd          ( xmm7,xmm4);
+   pxor            (xmm0,xmm0 );
+    psrad          ( xmm7,14 );
+   packssdw        (xmm3,xmm2 );// xmm3 = GGGGggggBBBBbbbb
+    packssdw       ( xmm7,xmm6);
+   packssdw        (xmm1,xmm0 );// xmm1 = ________RRRRrrrr
+    packssdw       ( xmm5,xmm0);        // *** avoid pxor xmm4,xmm4
+   xmm2 = xmm3;
+    movq           ( xmm6,xmm7);
+   punpcklwd       (xmm2,xmm1 );// xmm2 = RRRRBBBBrrrrbbbb
+    punpcklwd      ( xmm6,xmm5);
+   punpckhwd       (xmm3,xmm1 );// xmm3 = ____GGGG____gggg
+    punpckhwd      ( xmm7,xmm5);
+   xmm0 = xmm2;
+    xmm4 = xmm6;
+   punpcklwd       (xmm0,xmm3 );// xmm0 = ____rrrrggggbbbb
+    punpcklwd      ( xmm4,xmm7);
+   //if (!rgb32)
+   // {
+   //   xmm0 = _mm_slli_si128(xmm0,2);
+   //    xmm4 = _mm_slli_si128(xmm4,2);
+   // }
+   punpckhwd       (xmm2,xmm3 );// xmm2 = ____RRRRGGGGBBBB
+    punpckhwd      ( xmm6,xmm7);
+   packuswb        (xmm0,xmm2 );// xmm0 = __RRGGBB__rrggbb <- ta dah!
+    packuswb       ( xmm4,xmm6);
+
+   if (rgb32)
+    {
+     por (xmm0, edx+ofs_xFF000000_FF000000);         // set alpha channels "on"
+      por (xmm4, edx+ofs_xFF000000_FF000000);
+     _mm_storeu_si128((__m128i *)(edi - 32),xmm0);
+      _mm_storeu_si128((__m128i *)(edi - 16),xmm4);
+    }
+   else
+    {
+     __align16(uint8_t, rgbbuf[32]);
+     *(int *)(rgbbuf) = _mm_cvtsi128_si32 (xmm0);
+     xmm0 = _mm_srli_si128(xmm0,4);
+     *(int *)(rgbbuf+3) = _mm_cvtsi128_si32 (xmm0);
+     xmm0 = _mm_srli_si128(xmm0,4);
+     *(int *)(rgbbuf+6) = _mm_cvtsi128_si32 (xmm0);
+     xmm0 = _mm_srli_si128(xmm0,4);
+     *(int *)(rgbbuf+9) = _mm_cvtsi128_si32 (xmm0);
+
+     *(int *)(rgbbuf+12) = _mm_cvtsi128_si32 (xmm4);
+     xmm4 = _mm_srli_si128(xmm4,4);
+     *(int *)(rgbbuf+15) = _mm_cvtsi128_si32 (xmm4);
+     xmm4 = _mm_srli_si128(xmm4,4);
+     *(int *)(rgbbuf+18) = _mm_cvtsi128_si32 (xmm4);
+     xmm4 = _mm_srli_si128(xmm4,4);
+     *(int *)(rgbbuf+21) = _mm_cvtsi128_si32 (xmm4);
+     xmm0 = _mm_load_si128((const __m128i *)rgbbuf);
+     xmm4 = _mm_loadl_epi64((const __m128i *)(rgbbuf+16));
+     _mm_storeu_si128((__m128i *)(edi - 24),xmm0);
+     _mm_storel_epi64((__m128i *)(edi - 8),xmm4);
+    }
+   return ret;
+  }
 
 public:
- static void mmx_ConvertYUY2toRGB(const BYTE* src,BYTE* dst,const BYTE* src_end,stride_t src_pitch,stride_t dst_pitch,int row_size,const unsigned char* Imatrix)
+ static void mmx_ConvertYUY2toRGB(const BYTE* src,
+                                  BYTE* dst,
+                                  const BYTE* src_end,
+                                  stride_t src_pitch,
+                                  stride_t dst_pitch,
+                                  int row_size,
+                                  const unsigned char* Imatrix)
   {
    /*
    static const int64_t yuv2rgb_constants[4][9]=
@@ -355,16 +530,33 @@ public:
     };
    const unsigned char *edx=(const unsigned char*)yuv2rgb_constants[matrix];
    */
-   __m64 mm0,mm1,mm2,mm3,mm4,mm5,mm6,mm7;
-   for (;src!=src_end;src+=src_pitch,dst+=dst_pitch)
+   if (Tconfig::cpu_flags&FF_CPU_SSE2)
     {
-     const unsigned char *srcLn=src,*srcLnEnd=srcLn+row_size-8;
-     unsigned char *dstLn=dst;
-     while (YUV2RGB_INNER_LOOP(0,srcLn,srcLnEnd,dstLn,Imatrix,mm0,mm1,mm2,mm3,mm4,mm5,mm6,mm7))
-      ;
-     YUV2RGB_INNER_LOOP(1,srcLn,srcLnEnd,dstLn,Imatrix,mm0,mm1,mm2,mm3,mm4,mm5,mm6,mm7);
+     for (;src!=src_end;src+=src_pitch,dst+=dst_pitch)
+      {
+       const unsigned char *srcLn=src,*srcLnEnd = srcLn + row_size - 16;
+       unsigned char *dstLn = dst;
+       while (YUV2RGB_INNER_LOOP_SSE2(0,srcLn,srcLnEnd,dstLn,Imatrix))
+        ;
+       srcLn = srcLnEnd;
+       dstLn = dst + row_size + (rgb32 ? row_size - 32: (row_size >>1) - 24);
+       YUV2RGB_INNER_LOOP_SSE2(1,srcLn,srcLnEnd,dstLn,Imatrix);
+      }
     }
-   _mm_empty();
+   else
+    {
+     for (;src!=src_end;src+=src_pitch,dst+=dst_pitch)
+      {
+       const unsigned char *srcLn=src,*srcLnEnd=srcLn+row_size-8;
+       unsigned char *dstLn=dst;
+       while (YUV2RGB_INNER_LOOP(0,srcLn,srcLnEnd,dstLn,Imatrix))
+        ;
+       srcLn = srcLnEnd;
+       dstLn = dst + row_size + (rgb32 ? row_size - 16: (row_size >>1) - 12);
+       YUV2RGB_INNER_LOOP(1,srcLn,srcLnEnd,dstLn,Imatrix);
+      }
+     _mm_empty();
+    }
   }
 };
 

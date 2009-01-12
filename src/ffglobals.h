@@ -161,7 +161,7 @@ FOURCC hdr2fourcc(const BITMAPINFOHEADER *hdr,const GUID *subtype);
 void fixMPEGinAVI(FOURCC &fcc);
 HWND createInvisibleWindow(HINSTANCE hi,const char_t *classname,const char_t *windowname,WNDPROC wndproc,void* lparam,ATOM *atom);
 void getCLSIDname(const CLSID &clsid,char_t *buf,size_t buflen);
-
+void *getAlignedPtr(void *ptr);
 
 // if T is char, ff_abs(0x80) returns -128. Users have to cast the result to unsinged char.
 // For this reason, I deleted this template function.

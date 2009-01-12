@@ -2,6 +2,7 @@
 #define _TRGBPRIMARIES_H_
 
 #include "interfaces.h"
+#include "simd_common.h"
 
 struct ToutputVideoSettings;
 typedef struct 
@@ -16,7 +17,7 @@ typedef struct
 class TrgbPrimaries
 {
 private:
- short avisynthMmxMatrix[36];
+ short avisynthMmxMatrixBuf[72+8];
  int32_t swscaleTable[6];
  Tmmx_ConvertRGBtoYUY2matrix mmx_ConvertRGBtoYUY2matrix;
 

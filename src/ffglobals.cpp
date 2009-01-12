@@ -1659,6 +1659,11 @@ void getCLSIDname(const CLSID &clsid,char_t *buf,size_t buflen)
  TregOpRegRead t(HKEY_CLASSES_ROOT,reg);
  t._REG_OP_S(0,_l(""),buf,buflen,_l(""));
 }
+void *getAlignedPtr(void *ptr)
+{
+ ptrdiff_t p = intptr_t(ptr);
+ return (void*)((p+15) & ~0x0f);
+}
 
 const TmultipleInstances multipleInstances[]=
 {
