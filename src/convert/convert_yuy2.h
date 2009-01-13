@@ -187,7 +187,7 @@ private:
   {
    GET_Y(mma,1-_uyvy,edx);
   }
- static __forceinline bool YUV2RGB_INNER_LOOP(int no_next_pixel,const unsigned char* &esi,const unsigned char* const ecx,unsigned char* &edi,const unsigned char* const edx)
+ template<int no_next_pixel> static __forceinline bool YUV2RGB_INNER_LOOP(const unsigned char* &esi,const unsigned char* const ecx,unsigned char* &edi,const unsigned char* const edx)
   {
    //This YUV422->RGB conversion code uses only four MMX registers per
    //source dword, so I convert two dwords in parallel.  Lines corresponding
@@ -323,7 +323,7 @@ private:
   {
    GET_Y_SSE2(xmma,1-_uyvy,edx);
   }
- static __forceinline bool YUV2RGB_INNER_LOOP_SSE2(int no_next_pixel,const unsigned char* &esi,const unsigned char* const ecx,unsigned char* &edi,const unsigned char* const edx)
+ template<int no_next_pixel> static __forceinline bool YUV2RGB_INNER_LOOP_SSE2(const unsigned char* &esi,const unsigned char* const ecx,unsigned char* &edi,const unsigned char* const edx)
   {
    //SSE2 optimization by h.yamagata
    //This YUV422->RGB conversion code uses only four SSE2 registers per
@@ -536,11 +536,11 @@ public:
       {
        const unsigned char *srcLn=src,*srcLnEnd = srcLn + row_size - 16;
        unsigned char *dstLn = dst;
-       while (YUV2RGB_INNER_LOOP_SSE2(0,srcLn,srcLnEnd,dstLn,Imatrix))
+       while (YUV2RGB_INNER_LOOP_SSE2<0>(srcLn,srcLnEnd,dstLn,Imatrix))
         ;
        srcLn = srcLnEnd;
        dstLn = dst + row_size + (rgb32 ? row_size - 32: (row_size >>1) - 24);
-       YUV2RGB_INNER_LOOP_SSE2(1,srcLn,srcLnEnd,dstLn,Imatrix);
+       YUV2RGB_INNER_LOOP_SSE2<1>(srcLn,srcLnEnd,dstLn,Imatrix);
       }
     }
    else
@@ -549,11 +549,11 @@ public:
       {
        const unsigned char *srcLn=src,*srcLnEnd=srcLn+row_size-8;
        unsigned char *dstLn=dst;
-       while (YUV2RGB_INNER_LOOP(0,srcLn,srcLnEnd,dstLn,Imatrix))
+       while (YUV2RGB_INNER_LOOP<0>(srcLn,srcLnEnd,dstLn,Imatrix))
         ;
        srcLn = srcLnEnd;
        dstLn = dst + row_size + (rgb32 ? row_size - 16: (row_size >>1) - 12);
-       YUV2RGB_INNER_LOOP(1,srcLn,srcLnEnd,dstLn,Imatrix);
+       YUV2RGB_INNER_LOOP<1>(srcLn,srcLnEnd,dstLn,Imatrix);
       }
      _mm_empty();
     }
