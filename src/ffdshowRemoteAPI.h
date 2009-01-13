@@ -55,11 +55,10 @@
 #define WPRM_CAPTUREIMAGE 18
 #define WPRM_SET_OSDX 19 // Set OSD Position
 #define WPRM_SET_OSDY 20 // Set OSD Position
-//#define WPRM_GET_CURRENT_AUDIO_STREAM 22 // Get active audio stream
-//#define WPRM_GET_CURRENT_SUBTITLE_STREAM 23 // Get active audio stream
 #define WPRM_GET_FRAMERATE 24 // Get frame rate
 #define WPRM_SET_AUDIO_STREAM 25 // Set active audio stream
 #define WPRM_SET_SUBTITLE_STREAM 26 // Set active audio stream
+#define WPRM_SET_FFRW_NO_OSD 27 // No OSD when FF/RW
 
 /* Following values : if MSG != ID of the remoteAPI */
 

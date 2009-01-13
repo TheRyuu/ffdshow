@@ -41,6 +41,7 @@ private:
  std::vector<Tstream> audioStreams, subtitleStreams;
  bool streamsLoaded;
  bool foundHaali;
+ bool noFFRWOSD;
  Ttranslate *tr;
 public:
  Tremote(TintStrColl *Icoll,IffdshowBase *Ideci);

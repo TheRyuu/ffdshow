@@ -61,6 +61,7 @@ Tremote::Tremote(TintStrColl *Icoll,IffdshowBase *Ideci):deci(Ideci),Toptions(Ic
  OSDPositionY=10; // Vertical position of the DrawOSD (default : Top + 10px)
  streamsLoaded=false;
  foundHaali=false;
+ noFFRWOSD=false;
  tr=NULL;
 }
 Tremote::~Tremote()
@@ -105,11 +106,11 @@ void Tremote::stop(void)
 {
 if (fThread)
 {
-	SetEvent(fEvent);
-	WaitForSingleObject(fThread, 3000);
-	CloseHandle(fEvent);
-	CloseHandle(fThread);
-	fThread = NULL; fEvent = NULL;
+    SetEvent(fEvent);
+    WaitForSingleObject(fThread, 3000);
+    CloseHandle(fEvent);
+    CloseHandle(fThread);
+    fThread = NULL; fEvent = NULL;
  }
 
 if (h)
@@ -144,10 +145,10 @@ unsigned int __stdcall Tremote::threadProc(void *self0)
  UnregisterClass(_l(FFDSHOW_REMOTE_CLASS),hi);
  if (self->pdwROT)
  {
-	comptr<IRunningObjectTable> pROT;
-	if (SUCCEEDED(GetRunningObjectTable(0,&pROT)))
-		pROT->Revoke(self->pdwROT);
-	self->pdwROT=0;
+    comptr<IRunningObjectTable> pROT;
+    if (SUCCEEDED(GetRunningObjectTable(0,&pROT)))
+        pROT->Revoke(self->pdwROT);
+    self->pdwROT=0;
  }
  self->h=NULL;
  _endthreadex(0);
@@ -165,52 +166,56 @@ unsigned int __stdcall Tremote::ffwdThreadProc(void *self0)
  comptrQ<IMediaControl> _pMC=m_pGraph;
  if (self->deci != NULL && _pMC != NULL)
  {
-	_pMC->Run();
-	int seconds = self->fSeconds;
-	int mode = self->fMode;
-	seconds *= mode;
-	seconds /= 5;
-	if (seconds == 0)
-		seconds = 1;
-	int pos;
-	int duration = self->deci->getParam2(IDFF_movieDuration);
-	int hh, mm, ss;
-	char_t msg[100];
-	char_t duration_str[30];
-	hh = duration/3600;
-	mm = (duration - hh*3600)/60;
-	ss = duration - hh*3600 - mm*60;
-	tsprintf(duration_str,_l("%02i:%02i:%02i"), hh, mm, ss);
+    _pMC->Run();
+    int seconds = self->fSeconds;
+    int mode = self->fMode;
+    seconds *= mode;
+    seconds /= 5;
+    if (seconds == 0)
+        seconds = 1;
+    int pos;
+    int duration = self->deci->getParam2(IDFF_movieDuration);
+    int hh, mm, ss;
+    bool noFFRWOSD=self->noFFRWOSD;
+    char_t msg[100];
+    char_t duration_str[30];
+    hh = duration/3600;
+    mm = (duration - hh*3600)/60;
+    ss = duration - hh*3600 - mm*60;
+    tsprintf(duration_str,_l("%02i:%02i:%02i"), hh, mm, ss);
 
-	self->deci->tell(&pos);
-	DWORD currentTime, elapsedTime;
-	if (pos!=-1 && duration >0)
-	 while(WaitForSingleObject(fEvent, 0) != WAIT_OBJECT_0)
-	 {
-		currentTime = GetTickCount();
-		pos+=seconds;
-		if (pos<0 || pos >= duration)// || self->deci->getState2()!=State_Running)
-			break;
-		if (!SUCCEEDED(self->deci->seek(pos)))
-			break;
-		hh = pos/3600;
-		mm = (pos - hh*3600)/60;
-		ss = pos - hh*3600 - mm*60;
-		tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("%s %02i:%02i:%02i / %s"),mode<0?_l("<<"):_l(">>"), hh, mm, ss, duration_str);
-		self->deciV->resetOSD();
-		self->deciV->drawOSD(self->OSDPositionX, self->OSDPositionY, msg);
-		//self->deciV->shortOSDmessage(msg,30);
-		elapsedTime = GetTickCount() - currentTime;
-		if (elapsedTime < 200 && elapsedTime > 0)
-			Sleep(200 - elapsedTime);
-		else
-			Sleep(100);
-	 }
-	 self->deciV->drawOSD(self->OSDPositionX, self->OSDPositionY, _l(""));
+    self->deci->tell(&pos);
+    DWORD currentTime, elapsedTime;
+    if (pos!=-1 && duration >0)
+     while(WaitForSingleObject(fEvent, 0) != WAIT_OBJECT_0)
+     {
+        currentTime = GetTickCount();
+        pos+=seconds;
+        if (pos<0 || pos >= duration)// || self->deci->getState2()!=State_Running)
+            break;
+        if (!SUCCEEDED(self->deci->seek(pos)))
+            break;
+        if (!noFFRWOSD)
+        {
+         hh = pos/3600;
+         mm = (pos - hh*3600)/60;
+         ss = pos - hh*3600 - mm*60;
+         tsnprintf_s(msg, countof(msg), _TRUNCATE, _l("%s %02i:%02i:%02i / %s"),mode<0?_l("<<"):_l(">>"), hh, mm, ss, duration_str);
+         self->deciV->resetOSD();
+         self->deciV->drawOSD(self->OSDPositionX, self->OSDPositionY, msg);
+        }
+        elapsedTime = GetTickCount() - currentTime;
+        if (elapsedTime < 200 && elapsedTime > 0)
+            Sleep(200 - elapsedTime);
+        else
+            Sleep(100);
+     }
+     if (!noFFRWOSD)
+        self->deciV->drawOSD(self->OSDPositionX, self->OSDPositionY, _l(""));
  }
 
  //self->fThread=NULL;
- /* Albain FIX : when using _endthreadex in a subthread created inside a thread then the class is not
+ /* when using _endthreadex in a subthread created inside a thread then the class is not
     unloaded */
  //_endthreadex(0);
  return 0;
@@ -248,10 +253,10 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
     case WPRM_RUN:
      return SUCCEEDED(deciD->run())?TRUE:FALSE;
     case WPRM_GETSTATE:
-		if (fThread)
-			return 3;
-		else
-			return deciD->getState2();
+        if (fThread)
+            return 3;
+        else
+            return deciD->getState2();
     case WPRM_GETDURATION:
      return deci->getParam2(IDFF_movieDuration);
     case WPRM_GETCURTIME:
@@ -260,348 +265,352 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
      return SUCCEEDED(deciD->cyclePresets(-1))?TRUE:FALSE;
     case WPRM_NEXTPRESET:
      return SUCCEEDED(deciD->cyclePresets(+1))?TRUE:FALSE;
-	case WPRM_SETCURTIME:
+    case WPRM_SETCURTIME:
      return SUCCEEDED(deciD->seek((int)lprm))?TRUE:FALSE;
-	case WPRM_SETADDTOROT:
-		if ((int)lprm == 1) // 1 = Register to running object table (ROT) 0 = unregister
-		{
-			if (!pdwROT)
-			{
-				comptr<IRunningObjectTable> pROT;
-				if (SUCCEEDED(GetRunningObjectTable(0,&pROT)))
-				{
-					IFilterGraph *pGraph = NULL;
-					deci->getGraph(&pGraph);
-					WCHAR entryName[256];
-					wsprintfW(entryName, L"FilterGraph %08p pid %08x (ffdshow)", (DWORD_PTR)pGraph,GetCurrentProcessId());
-					comptr<IMoniker> pMoniker;
-					if (SUCCEEDED(CreateItemMoniker(L"!",entryName,&pMoniker)))
-					{
-						pROT->Register(ROTFLAGS_REGISTRATIONKEEPSALIVE && ROTFLAGS_ALLOWANYCLIENT,(IUnknown*)pGraph,pMoniker,&pdwROT);
-						//pMoniker->Release();
-						return TRUE;
-					}
-					pROT->Release();
-				}
-			}
-			return FALSE;
-		}
-		else
-		{
-			if (pdwROT)
-			{
-				comptr<IRunningObjectTable> pROT;
-				if (SUCCEEDED(GetRunningObjectTable(0,&pROT)))
-				{
-					pROT->Revoke(pdwROT);
-					pROT->Release();
-				}
-				pdwROT=0;
-				return TRUE;
-			}
-			return FALSE;
-		}
-	case WPRM_FASTFORWARD:
-	case WPRM_FASTREWIND:
-		fMode=(wprm==WPRM_FASTFORWARD)?1:-1;
-		fSeconds = (int) lprm; // Update the step size in seconds
-		if (fThread != NULL)
-		{
-			SetEvent(fEvent);
-			WaitForSingleObject(fThread, 3000);
+    case WPRM_SETADDTOROT:
+        if ((int)lprm == 1) // 1 = Register to running object table (ROT) 0 = unregister
+        {
+            if (!pdwROT)
+            {
+                comptr<IRunningObjectTable> pROT;
+                if (SUCCEEDED(GetRunningObjectTable(0,&pROT)))
+                {
+                    IFilterGraph *pGraph = NULL;
+                    deci->getGraph(&pGraph);
+                    WCHAR entryName[256];
+                    wsprintfW(entryName, L"FilterGraph %08p pid %08x (ffdshow)", (DWORD_PTR)pGraph,GetCurrentProcessId());
+                    comptr<IMoniker> pMoniker;
+                    if (SUCCEEDED(CreateItemMoniker(L"!",entryName,&pMoniker)))
+                    {
+                        pROT->Register(ROTFLAGS_REGISTRATIONKEEPSALIVE && ROTFLAGS_ALLOWANYCLIENT,(IUnknown*)pGraph,pMoniker,&pdwROT);
+                        //pMoniker->Release();
+                        return TRUE;
+                    }
+                    pROT->Release();
+                }
+            }
+            return FALSE;
+        }
+        else
+        {
+            if (pdwROT)
+            {
+                comptr<IRunningObjectTable> pROT;
+                if (SUCCEEDED(GetRunningObjectTable(0,&pROT)))
+                {
+                    pROT->Revoke(pdwROT);
+                    pROT->Release();
+                }
+                pdwROT=0;
+                return TRUE;
+            }
+            return FALSE;
+        }
+    case WPRM_FASTFORWARD:
+    case WPRM_FASTREWIND:
+        fMode=(wprm==WPRM_FASTFORWARD)?1:-1;
+        fSeconds = (int) lprm; // Update the step size in seconds
+        if (fThread != NULL)
+        {
+            SetEvent(fEvent);
+            WaitForSingleObject(fThread, 3000);
 
-			CloseHandle(fEvent);
-			CloseHandle(fThread);
-			fThread = NULL; fEvent = NULL;
-			deciV->drawOSD(OSDPositionX, OSDPositionY, _l(""));
-		}
-		if (fSeconds != 0)
-		{
-			unsigned threadID;
-			// Create a manual-reset nonsignaled unnamed event
-			fEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-			fThread=(HANDLE)_beginthreadex(NULL,65536,ffwdThreadProc,this,NULL,&threadID);
-		}
-		return TRUE;
-	case WPRM_GET_FASTFORWARD:
-		if (fThread == NULL)
-			return 0;
-		else
-			return fSeconds*fMode;
-	case WPRM_CAPTUREIMAGE:
-		if (deciV != NULL)
-		{
-			deciV->grabNow();
-			return TRUE;
-		}
-		return FALSE;
-	case WPRM_SET_OSDX:
-		OSDPositionX=(int)lprm;
-		return TRUE;
-	case WPRM_SET_OSDY:
-		OSDPositionY=(int)lprm;
-		return TRUE;
-	case WPRM_SET_AUDIO_STREAM:
-		getStreams(false);
-		setStream(1,(long)lprm);
+            CloseHandle(fEvent);
+            CloseHandle(fThread);
+            fThread = NULL; fEvent = NULL;
+            if (!noFFRWOSD)
+                deciV->drawOSD(OSDPositionX, OSDPositionY, _l(""));
+        }
+        if (fSeconds != 0)
+        {
+            unsigned threadID;
+            // Create a manual-reset nonsignaled unnamed event
+            fEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+            fThread=(HANDLE)_beginthreadex(NULL,65536,ffwdThreadProc,this,NULL,&threadID);
+        }
+        return TRUE;
+    case WPRM_GET_FASTFORWARD:
+        if (fThread == NULL)
+            return 0;
+        else
+            return fSeconds*fMode;
+    case WPRM_CAPTUREIMAGE:
+        if (deciV != NULL)
+        {
+            deciV->grabNow();
+            return TRUE;
+        }
+        return FALSE;
+    case WPRM_SET_OSDX:
+        OSDPositionX=(int)lprm;
+        return TRUE;
+    case WPRM_SET_OSDY:
+        OSDPositionY=(int)lprm;
+        return TRUE;
+    case WPRM_SET_FFRW_NO_OSD:
+        noFFRWOSD=(int)lprm==1?true:false;
+        return TRUE;
+    case WPRM_SET_AUDIO_STREAM:
+        getStreams(false);
+        setStream(1,(long)lprm);
         getStreams(true);
-		return TRUE;
-	case WPRM_SET_SUBTITLE_STREAM:
-		getStreams(false);
-		setStream(2,(long)lprm);
+        return TRUE;
+    case WPRM_SET_SUBTITLE_STREAM:
+        getStreams(false);
+        setStream(2,(long)lprm);
         getStreams(true);
-		return TRUE;
-	case WPRM_GET_FRAMERATE:
-		if (deciV != NULL)
-		{
-			unsigned int fps1000 = 0;
-			deciV->getAVIfps(&fps1000);
-			return fps1000;
-		}
-		return FALSE;
+        return TRUE;
+    case WPRM_GET_FRAMERATE:
+        if (deciV != NULL)
+        {
+            unsigned int fps1000 = 0;
+            deciV->getAVIfps(&fps1000);
+            return fps1000;
+        }
+        return FALSE;
  }
 
  switch(msg)
  {
-	 case MSG_GETPARAMSTR:
-		{
-			COPYDATASTRUCT cd;
-			cd.dwData = (int)lprm;
-			const char_t *paramStr = deci->getParamStr2((unsigned int)lprm);
-			if (paramStr == NULL)
-				return FALSE;
-			cd.lpData = alloca(sizeof(char_t)*(strlen(paramStr)+1));
-			text<char_t>(paramStr, (char_t*)cd.lpData);
-			cd.cbData = sizeof(char_t)*(strlen(paramStr)+1);
-			DWORD_PTR ret = 0;
-			SendMessageTimeout((HWND)wprm, WM_COPYDATA, lprm, (LPARAM)&cd, 
-				SMTO_ABORTIFHUNG, 1500, &ret);
-			return TRUE;
-		}
-	case MSG_GET_CURRENT_SUBTITLES:
-		{
-			COPYDATASTRUCT cd;
-			cd.dwData = (int)MSG_GET_CURRENT_SUBTITLES;
-			if (!deciV) return FALSE;
-			const char_t *paramStr = deciV->getCurrentSubFlnm();
-			if (paramStr == NULL)
-				return FALSE;
-			cd.lpData = alloca(sizeof(char_t)*(strlen(paramStr)+1));
-			text<char_t>(paramStr, (char_t*)cd.lpData);
-			cd.cbData = sizeof(char_t)*(strlen(paramStr)+1);
-			DWORD_PTR ret = 0;
-			SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_CURRENT_SUBTITLES, (LPARAM)&cd, 
-				SMTO_ABORTIFHUNG, 1500, &ret);
-			return TRUE;
-		}
-	case MSG_GET_PRESETLIST:
-		{
-			COPYDATASTRUCT cd;
-			cd.dwData = MSG_GET_PRESETLIST;
-			Tpresets *presets;
-			deciD->getPresetsPtr(&presets);
-			int presetsNum = presets->size();
-			size_t string_size = 2048;
-			char_t *presetList = (char_t*)alloca(sizeof(char_t)*string_size);
-			strcpy(presetList, _l(""));
-			for (int i=0; i<presetsNum; i++)
-			{
-				Tpreset *preset = presets->at(i);
-				const char_t *presetName = preset->presetName;
-				// Resize the string if needed
-				if (strlen(presetList)+strlen(presetName)+ 10 >= string_size)
-				{
-					string_size += 2048;
-					char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
-					strcpy(tmpStr, presetList);
-					presetList = tmpStr;
-				}
-				strcat(presetList, presetName);
-				if (i != presetsNum - 1)
-					strcat(presetList, _l(";"));
-			}
-			cd.lpData = alloca(sizeof(char_t)*(strlen(presetList)+1));
-			text<char_t>(presetList, (char_t*)cd.lpData);
-			cd.cbData = sizeof(char_t)*(strlen(presetList)+1);
-			DWORD_PTR ret = 0;
-			SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_PRESETLIST, (LPARAM)&cd, 
-				SMTO_ABORTIFHUNG, 1500, &ret);
-			return TRUE;
-		}
-	case MSG_GET_SOURCEFILE:
-	  {
-		COPYDATASTRUCT cd;
-		cd.dwData = MSG_GET_SOURCEFILE;
-		const char_t *fileName = deci->getSourceName();
-		cd.lpData = alloca(sizeof(char_t)*(strlen(fileName)+1));
-		text<char_t>(fileName, (char_t*)cd.lpData);
-		cd.cbData = sizeof(char_t)*(strlen(fileName)+1);
-		DWORD_PTR ret = 0;
-		SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_SOURCEFILE, (LPARAM)&cd, 
-			SMTO_ABORTIFHUNG, 2000, &ret);
-		return TRUE;
-	  }
-	case MSG_GET_SUBTITLEFILESLIST:
-	  {
-		COPYDATASTRUCT cd;
-		cd.dwData = MSG_GET_SUBTITLEFILESLIST;
-		if (!deciV) return FALSE;
+     case MSG_GETPARAMSTR:
+        {
+            COPYDATASTRUCT cd;
+            cd.dwData = (int)lprm;
+            const char_t *paramStr = deci->getParamStr2((unsigned int)lprm);
+            if (paramStr == NULL)
+                return FALSE;
+            cd.lpData = alloca(sizeof(char_t)*(strlen(paramStr)+1));
+            text<char_t>(paramStr, (char_t*)cd.lpData);
+            cd.cbData = sizeof(char_t)*(strlen(paramStr)+1);
+            DWORD_PTR ret = 0;
+            SendMessageTimeout((HWND)wprm, WM_COPYDATA, lprm, (LPARAM)&cd, 
+                SMTO_ABORTIFHUNG, 1500, &ret);
+            return TRUE;
+        }
+    case MSG_GET_CURRENT_SUBTITLES:
+        {
+            COPYDATASTRUCT cd;
+            cd.dwData = (int)MSG_GET_CURRENT_SUBTITLES;
+            if (!deciV) return FALSE;
+            const char_t *paramStr = deciV->getCurrentSubFlnm();
+            if (paramStr == NULL)
+                return FALSE;
+            cd.lpData = alloca(sizeof(char_t)*(strlen(paramStr)+1));
+            text<char_t>(paramStr, (char_t*)cd.lpData);
+            cd.cbData = sizeof(char_t)*(strlen(paramStr)+1);
+            DWORD_PTR ret = 0;
+            SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_CURRENT_SUBTITLES, (LPARAM)&cd, 
+                SMTO_ABORTIFHUNG, 1500, &ret);
+            return TRUE;
+        }
+    case MSG_GET_PRESETLIST:
+        {
+            COPYDATASTRUCT cd;
+            cd.dwData = MSG_GET_PRESETLIST;
+            Tpresets *presets;
+            deciD->getPresetsPtr(&presets);
+            int presetsNum = presets->size();
+            size_t string_size = 2048;
+            char_t *presetList = (char_t*)alloca(sizeof(char_t)*string_size);
+            strcpy(presetList, _l(""));
+            for (int i=0; i<presetsNum; i++)
+            {
+                Tpreset *preset = presets->at(i);
+                const char_t *presetName = preset->presetName;
+                // Resize the string if needed
+                if (strlen(presetList)+strlen(presetName)+ 10 >= string_size)
+                {
+                    string_size += 2048;
+                    char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
+                    strcpy(tmpStr, presetList);
+                    presetList = tmpStr;
+                }
+                strcat(presetList, presetName);
+                if (i != presetsNum - 1)
+                    strcat(presetList, _l(";"));
+            }
+            cd.lpData = alloca(sizeof(char_t)*(strlen(presetList)+1));
+            text<char_t>(presetList, (char_t*)cd.lpData);
+            cd.cbData = sizeof(char_t)*(strlen(presetList)+1);
+            DWORD_PTR ret = 0;
+            SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_PRESETLIST, (LPARAM)&cd, 
+                SMTO_ABORTIFHUNG, 1500, &ret);
+            return TRUE;
+        }
+    case MSG_GET_SOURCEFILE:
+      {
+        COPYDATASTRUCT cd;
+        cd.dwData = MSG_GET_SOURCEFILE;
+        const char_t *fileName = deci->getSourceName();
+        cd.lpData = alloca(sizeof(char_t)*(strlen(fileName)+1));
+        text<char_t>(fileName, (char_t*)cd.lpData);
+        cd.cbData = sizeof(char_t)*(strlen(fileName)+1);
+        DWORD_PTR ret = 0;
+        SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_SOURCEFILE, (LPARAM)&cd, 
+            SMTO_ABORTIFHUNG, 2000, &ret);
+        return TRUE;
+      }
+    case MSG_GET_SUBTITLEFILESLIST:
+      {
+        COPYDATASTRUCT cd;
+        cd.dwData = MSG_GET_SUBTITLEFILESLIST;
+        if (!deciV) return FALSE;
         strings files;
         TsubtitlesFile::findPossibleSubtitles(deci->getSourceName(),deci->getParamStr2(IDFF_subSearchDir),files);
         if (files.size() == 0)
-		{
-			return FALSE;
-		}
-		else
         {
-			size_t string_size = 2048;
-			char_t *filesList = (char_t*)alloca(sizeof(char_t)*string_size);
-			text<char_t>(_l(""), filesList);
-			for (UINT i=0; i<files.size(); i++)
-			{
-				const char_t *fileName = files[i].c_str();
-				// Resize the string if needed
-				if (strlen(filesList)+strlen(fileName)+ 10 >= string_size)
-				{
-					string_size += 2048;
-					char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
-					strcpy(tmpStr, filesList);
-					filesList = tmpStr;
-				}
-				strcat(filesList, fileName);
-				if (i != files.size() - 1)
-					strcat(filesList, _l(";"));
-			}
-			cd.lpData = alloca(sizeof(char_t)*(strlen(filesList)+1));
-			text<char_t>(filesList, (char_t*)cd.lpData);
-			cd.cbData = sizeof(char_t)*(strlen(filesList)+1);
-			DWORD_PTR ret = 0;
-			SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_SUBTITLEFILESLIST, (LPARAM)&cd, 
-				SMTO_ABORTIFHUNG, 1500, &ret);
-			//SendMessage((HWND)wprm, WM_COPYDATA, MSG_GET_SUBTITLEFILESLIST, (LPARAM)&cd);
+            return FALSE;
         }
-		return TRUE;
-	  }
-		case MSG_GET_CHAPTERSLIST:
-		{
-			COPYDATASTRUCT cd;
-			cd.dwData = MSG_GET_CHAPTERSLIST;
-			size_t string_size = 2048;
-			char_t *stringList = (char_t*)alloca(sizeof(char_t)*string_size);
-			strcpy(stringList, _l(""));
-			std::vector<std::pair<long, ffstring> > *pChaptersList = NULL;
-			deciV->getChaptersList((void**)&pChaptersList);
-			
-			for (long l = 0; l<(long) pChaptersList->size(); l++)
-			{
-				long markerTime = (*pChaptersList)[l].first;
-				char_t tmpStr[40];
-				wsprintf(tmpStr, _l("%ld"), markerTime);
-				ffstring chapterString = _l("<chapter><time>") + ffstring(tmpStr)+_l("</time><name>")+ffstring((*pChaptersList)[l].second)
-					+_l("</name></chapter>");
+        else
+        {
+            size_t string_size = 2048;
+            char_t *filesList = (char_t*)alloca(sizeof(char_t)*string_size);
+            text<char_t>(_l(""), filesList);
+            for (UINT i=0; i<files.size(); i++)
+            {
+                const char_t *fileName = files[i].c_str();
+                // Resize the string if needed
+                if (strlen(filesList)+strlen(fileName)+ 10 >= string_size)
+                {
+                    string_size += 2048;
+                    char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
+                    strcpy(tmpStr, filesList);
+                    filesList = tmpStr;
+                }
+                strcat(filesList, fileName);
+                if (i != files.size() - 1)
+                    strcat(filesList, _l(";"));
+            }
+            cd.lpData = alloca(sizeof(char_t)*(strlen(filesList)+1));
+            text<char_t>(filesList, (char_t*)cd.lpData);
+            cd.cbData = sizeof(char_t)*(strlen(filesList)+1);
+            DWORD_PTR ret = 0;
+            SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_SUBTITLEFILESLIST, (LPARAM)&cd, 
+                SMTO_ABORTIFHUNG, 1500, &ret);
+            //SendMessage((HWND)wprm, WM_COPYDATA, MSG_GET_SUBTITLEFILESLIST, (LPARAM)&cd);
+        }
+        return TRUE;
+      }
+        case MSG_GET_CHAPTERSLIST:
+        {
+            COPYDATASTRUCT cd;
+            cd.dwData = MSG_GET_CHAPTERSLIST;
+            size_t string_size = 2048;
+            char_t *stringList = (char_t*)alloca(sizeof(char_t)*string_size);
+            strcpy(stringList, _l(""));
+            std::vector<std::pair<long, ffstring> > *pChaptersList = NULL;
+            deciV->getChaptersList((void**)&pChaptersList);
+            
+            for (long l = 0; l<(long) pChaptersList->size(); l++)
+            {
+                long markerTime = (*pChaptersList)[l].first;
+                char_t tmpStr[40];
+                wsprintf(tmpStr, _l("%ld"), markerTime);
+                ffstring chapterString = _l("<chapter><time>") + ffstring(tmpStr)+_l("</time><name>")+ffstring((*pChaptersList)[l].second)
+                    +_l("</name></chapter>");
 
-				// Resize the string if needed
-				if (strlen(stringList)+strlen(chapterString.c_str())+ 10 >= string_size)
-				{
-					string_size += 2048;
-					char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
-					strcpy(tmpStr, stringList);
-					stringList = tmpStr;
-				}
-				strcat(stringList, chapterString.c_str());
-			}
-			cd.lpData = alloca(sizeof(char_t)*(strlen(stringList)+1));
-			text<char_t>(stringList, (char_t*)cd.lpData);
-			cd.cbData = sizeof(char_t)*(strlen(stringList)+1);
-			DWORD_PTR ret = 0;
-			SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_CHAPTERSLIST, (LPARAM)&cd, 
-				SMTO_ABORTIFHUNG, 1500, &ret);
-			return TRUE;
-		}
-		case MSG_GET_AUDIOSTREAMSLIST:
-		{
-			COPYDATASTRUCT cd;
-			cd.dwData = MSG_GET_AUDIOSTREAMSLIST;
-			size_t string_size = 2048;
-			char_t *stringList = (char_t*)alloca(sizeof(char_t)*string_size);
-			strcpy(stringList, _l(""));
-			getStreams(false);
-			
-			for (long l = 0; l<(long)audioStreams.size(); l++)
-			{
-				long streamNb = audioStreams[l].streamNb;
-				char_t tmpStr[40];
-				tsnprintf_s(tmpStr, countof(tmpStr), _TRUNCATE, _l("%ld"), streamNb);
+                // Resize the string if needed
+                if (strlen(stringList)+strlen(chapterString.c_str())+ 10 >= string_size)
+                {
+                    string_size += 2048;
+                    char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
+                    strcpy(tmpStr, stringList);
+                    stringList = tmpStr;
+                }
+                strcat(stringList, chapterString.c_str());
+            }
+            cd.lpData = alloca(sizeof(char_t)*(strlen(stringList)+1));
+            text<char_t>(stringList, (char_t*)cd.lpData);
+            cd.cbData = sizeof(char_t)*(strlen(stringList)+1);
+            DWORD_PTR ret = 0;
+            SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_CHAPTERSLIST, (LPARAM)&cd, 
+                SMTO_ABORTIFHUNG, 1500, &ret);
+            return TRUE;
+        }
+        case MSG_GET_AUDIOSTREAMSLIST:
+        {
+            COPYDATASTRUCT cd;
+            cd.dwData = MSG_GET_AUDIOSTREAMSLIST;
+            size_t string_size = 2048;
+            char_t *stringList = (char_t*)alloca(sizeof(char_t)*string_size);
+            strcpy(stringList, _l(""));
+            getStreams(false);
+            
+            for (long l = 0; l<(long)audioStreams.size(); l++)
+            {
+                long streamNb = audioStreams[l].streamNb;
+                char_t tmpStr[40];
+                tsnprintf_s(tmpStr, countof(tmpStr), _TRUNCATE, _l("%ld"), streamNb);
                 char_t enabled[6];
                 if (audioStreams[l].enabled)
                     strcpy(enabled, _l("true"));
                 else
                     strcpy(enabled, _l("false"));
-				ffstring xmlString = _l("<stream><id>") + ffstring(tmpStr)+_l("</id><name>")+ffstring(audioStreams[l].streamName)
-					+_l("</name><language_name>")+ffstring(audioStreams[l].streamLanguageName)+_l("</language_name><enabled>")
+                ffstring xmlString = _l("<stream><id>") + ffstring(tmpStr)+_l("</id><name>")+ffstring(audioStreams[l].streamName)
+                    +_l("</name><language_name>")+ffstring(audioStreams[l].streamLanguageName)+_l("</language_name><enabled>")
                     +ffstring(enabled)+_l("</enabled></stream>");
 
-				// Resize the string if needed
-				if (strlen(stringList)+strlen(xmlString.c_str())+ 10 >= string_size)
-				{
-					string_size += 2048;
-					char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
-					strcpy(tmpStr, stringList);
-					stringList = tmpStr;
-				}
-				strcat(stringList, xmlString.c_str());
-			}
-			cd.lpData = alloca(sizeof(char_t)*(strlen(stringList)+1));
-			text<char_t>(stringList, (char_t*)cd.lpData);
-			cd.cbData = sizeof(char_t)*(strlen(stringList)+1);
-			DWORD_PTR ret = 0;
-			DPRINTF(_l("Sending : %s"), stringList);
-			SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_AUDIOSTREAMSLIST, (LPARAM)&cd, 
-				SMTO_ABORTIFHUNG, 1500, &ret);
-			return TRUE;
-		}
-		case MSG_GET_SUBTITLESTREAMSLIST:
-		{
-			COPYDATASTRUCT cd;
-			cd.dwData = MSG_GET_SUBTITLESTREAMSLIST;
-			size_t string_size = 2048;
-			char_t *stringList = (char_t*)alloca(sizeof(char_t)*string_size);
-			strcpy(stringList, _l(""));
-			getStreams(false);
-			
-			for (long l = 0; l<(long)subtitleStreams.size(); l++)
-			{
-				long streamNb = subtitleStreams[l].streamNb;
-				char_t tmpStr[40];
+                // Resize the string if needed
+                if (strlen(stringList)+strlen(xmlString.c_str())+ 10 >= string_size)
+                {
+                    string_size += 2048;
+                    char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
+                    strcpy(tmpStr, stringList);
+                    stringList = tmpStr;
+                }
+                strcat(stringList, xmlString.c_str());
+            }
+            cd.lpData = alloca(sizeof(char_t)*(strlen(stringList)+1));
+            text<char_t>(stringList, (char_t*)cd.lpData);
+            cd.cbData = sizeof(char_t)*(strlen(stringList)+1);
+            DWORD_PTR ret = 0;
+            DPRINTF(_l("Sending : %s"), stringList);
+            SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_AUDIOSTREAMSLIST, (LPARAM)&cd, 
+                SMTO_ABORTIFHUNG, 1500, &ret);
+            return TRUE;
+        }
+        case MSG_GET_SUBTITLESTREAMSLIST:
+        {
+            COPYDATASTRUCT cd;
+            cd.dwData = MSG_GET_SUBTITLESTREAMSLIST;
+            size_t string_size = 2048;
+            char_t *stringList = (char_t*)alloca(sizeof(char_t)*string_size);
+            strcpy(stringList, _l(""));
+            getStreams(false);
+            
+            for (long l = 0; l<(long)subtitleStreams.size(); l++)
+            {
+                long streamNb = subtitleStreams[l].streamNb;
+                char_t tmpStr[40];
                 char_t enabled[6];
                 if (subtitleStreams[l].enabled)
                     strcpy(enabled, _l("true"));
                 else
                     strcpy(enabled, _l("false"));
-				tsnprintf_s(tmpStr, countof(tmpStr), _TRUNCATE, _l("%ld"), streamNb);
-				ffstring xmlString = _l("<stream><id>") + ffstring(tmpStr)+_l("</id><name>")+ffstring(subtitleStreams[l].streamName)
-					+_l("</name><language_name>")+ffstring(subtitleStreams[l].streamLanguageName)+_l("</language_name><enabled>")
+                tsnprintf_s(tmpStr, countof(tmpStr), _TRUNCATE, _l("%ld"), streamNb);
+                ffstring xmlString = _l("<stream><id>") + ffstring(tmpStr)+_l("</id><name>")+ffstring(subtitleStreams[l].streamName)
+                    +_l("</name><language_name>")+ffstring(subtitleStreams[l].streamLanguageName)+_l("</language_name><enabled>")
                     +ffstring(enabled)+_l("</enabled></stream>");
 
-				// Resize the string if needed
-				if (strlen(stringList)+strlen(xmlString.c_str())+ 10 >= string_size)
-				{
-					string_size += 2048;
-					char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
-					strcpy(tmpStr, stringList);
-					stringList = tmpStr;
-				}
-				strcat(stringList, xmlString.c_str());
-			}
-			cd.lpData = alloca(sizeof(char_t)*(strlen(stringList)+1));
-			text<char_t>(stringList, (char_t*)cd.lpData);
-			cd.cbData = sizeof(char_t)*(strlen(stringList)+1);
-			DWORD_PTR ret = 0;
-			DPRINTF(_l("Sending : %s"), stringList);
-			SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_SUBTITLESTREAMSLIST, (LPARAM)&cd, 
-				SMTO_ABORTIFHUNG, 1500, &ret);
-			return TRUE;
-		}
+                // Resize the string if needed
+                if (strlen(stringList)+strlen(xmlString.c_str())+ 10 >= string_size)
+                {
+                    string_size += 2048;
+                    char_t *tmpStr = (char_t*)alloca(sizeof(char_t)*string_size);
+                    strcpy(tmpStr, stringList);
+                    stringList = tmpStr;
+                }
+                strcat(stringList, xmlString.c_str());
+            }
+            cd.lpData = alloca(sizeof(char_t)*(strlen(stringList)+1));
+            text<char_t>(stringList, (char_t*)cd.lpData);
+            cd.cbData = sizeof(char_t)*(strlen(stringList)+1);
+            DWORD_PTR ret = 0;
+            DPRINTF(_l("Sending : %s"), stringList);
+            SendMessageTimeout((HWND)wprm, WM_COPYDATA, MSG_GET_SUBTITLESTREAMSLIST, (LPARAM)&cd, 
+                SMTO_ABORTIFHUNG, 1500, &ret);
+            return TRUE;
+        }
  }
 
  if (acceptKeys && (msg==WM_SYSKEYDOWN || msg==WM_SYSKEYUP || msg==WM_KEYDOWN || msg==WM_KEYUP))
@@ -637,8 +646,8 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
        if (SUCCEEDED(deci->getParamStr(paramid,buft,cds->cbData)))
         {
          text<char_t>(buft, cds->cbData, (char_t*)cds->lpData, cds->cbData);
-		 ((COPYDATASTRUCT*)lprm)->dwData = paramid;
-		 SendMessage((HWND)wprm, WM_COPYDATA, paramid, lprm);
+         ((COPYDATASTRUCT*)lprm)->dwData = paramid;
+         SendMessage((HWND)wprm, WM_COPYDATA, paramid, lprm);
          return TRUE;
         }
        return FALSE;
@@ -661,14 +670,14 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
          ((char_t*)cds->lpData)[cds->cbData-1]='\0';
          subtitleIdx++;
         }
-	   SendMessage((HWND)wprm, WM_COPYDATA, paramid, lprm);
+       SendMessage((HWND)wprm, WM_COPYDATA, paramid, lprm);
        return TRUE;
       }
-	  case COPY_SET_SHORTOSD_MSG:
-		  return SUCCEEDED(deciV->shortOSDmessage(text<char_t>((const char_t*)cds->lpData), 25))?TRUE:FALSE;
-	  case COPY_SET_OSD_MSG:
-		  deciV->resetOSD();
-		  return SUCCEEDED(deciV->drawOSD(OSDPositionX, OSDPositionY, text<char_t>((const char_t*)cds->lpData)))?TRUE:FALSE;
+      case COPY_SET_SHORTOSD_MSG:
+          return SUCCEEDED(deciV->shortOSDmessage(text<char_t>((const char_t*)cds->lpData), 25))?TRUE:FALSE;
+      case COPY_SET_OSD_MSG:
+          deciV->resetOSD();
+          return SUCCEEDED(deciV->drawOSD(OSDPositionX, OSDPositionY, text<char_t>((const char_t*)cds->lpData)))?TRUE:FALSE;
     }
   }
  return DefWindowProc(hwnd,msg,wprm,lprm);
@@ -677,87 +686,87 @@ LRESULT CALLBACK Tremote::remoteWndProc(HWND hwnd, UINT msg, WPARAM wprm, LPARAM
 
 void Tremote::getStreams(bool reload)
 {
-	if (streamsLoaded && !reload)
-		return;
-	
-	audioStreams.clear();
-	subtitleStreams.clear();
+    if (streamsLoaded && !reload)
+        return;
+    
+    audioStreams.clear();
+    subtitleStreams.clear();
 
-	comptr<IEnumFilters> eff;
-	IFilterGraph    *m_pGraph = NULL;
-	deci->getGraph(&m_pGraph); // Graph we belong to
-	if (m_pGraph->EnumFilters(&eff)==S_OK)
-	{
-		eff->Reset();
-		const char_t *fileName = deci->getSourceName();
-		for (comptr<IBaseFilter> bff;eff->Next(1,&bff,NULL)==S_OK;bff=NULL)
-		{
-			char_t name[MAX_PATH],filtername[MAX_PATH];
-			getFilterName(bff,name,filtername,countof(filtername));
-			FILTER_INFO filterinfo;
-			bff->QueryFilterInfo(&filterinfo);
-			if (filterinfo.pGraph)
-				filterinfo.pGraph->Release();
+    comptr<IEnumFilters> eff;
+    IFilterGraph    *m_pGraph = NULL;
+    deci->getGraph(&m_pGraph); // Graph we belong to
+    if (m_pGraph->EnumFilters(&eff)==S_OK)
+    {
+        eff->Reset();
+        const char_t *fileName = deci->getSourceName();
+        for (comptr<IBaseFilter> bff;eff->Next(1,&bff,NULL)==S_OK;bff=NULL)
+        {
+            char_t name[MAX_PATH],filtername[MAX_PATH];
+            getFilterName(bff,name,filtername,countof(filtername));
+            FILTER_INFO filterinfo;
+            bff->QueryFilterInfo(&filterinfo);
+            if (filterinfo.pGraph)
+                filterinfo.pGraph->Release();
 
-			IAMStreamSelect *pAMStreamSelect = NULL;
-			bff->QueryInterface(IID_IAMStreamSelect, (void**) &pAMStreamSelect);
-			if (pAMStreamSelect == NULL)
-				continue;
-			
-			foundHaali = false;
+            IAMStreamSelect *pAMStreamSelect = NULL;
+            bff->QueryInterface(IID_IAMStreamSelect, (void**) &pAMStreamSelect);
+            if (pAMStreamSelect == NULL)
+                continue;
+            
+            foundHaali = false;
 
-			// Haali splitter
-			if (!strcmp(filtername, fileName))
-			{
-				audioStreams.clear();
-	            subtitleStreams.clear();
-				foundHaali = true;
-			}
+            // Haali splitter
+            if (!strcmp(filtername, fileName))
+            {
+                audioStreams.clear();
+                subtitleStreams.clear();
+                foundHaali = true;
+            }
 
-			DWORD cStreams = 0;
-			pAMStreamSelect->Count(&cStreams);
-			for (long streamNb=0; streamNb<(long)cStreams; streamNb++)
-			{
-				DWORD streamSelect = 0;
-				LCID streamLanguageId = 0;
-				DWORD streamGroup = 0;
-				WCHAR *pstreamName = NULL;
-				HRESULT hr = pAMStreamSelect->Info(streamNb, NULL, &streamSelect, 
-					&streamLanguageId, &streamGroup, &pstreamName, NULL, NULL);
+            DWORD cStreams = 0;
+            pAMStreamSelect->Count(&cStreams);
+            for (long streamNb=0; streamNb<(long)cStreams; streamNb++)
+            {
+                DWORD streamSelect = 0;
+                LCID streamLanguageId = 0;
+                DWORD streamGroup = 0;
+                WCHAR *pstreamName = NULL;
+                HRESULT hr = pAMStreamSelect->Info(streamNb, NULL, &streamSelect, 
+                    &streamLanguageId, &streamGroup, &pstreamName, NULL, NULL);
 
-				if (hr != S_OK)
-					continue;
+                if (hr != S_OK)
+                    continue;
 
-				// Not audio or subtitles
-				if (streamGroup != 1 && streamGroup != 2 && streamGroup != 6590033)
-				{
-					if (pstreamName != NULL)
-						CoTaskMemFree(pstreamName);
-					continue;
-				}
+                // Not audio or subtitles
+                if (streamGroup != 1 && streamGroup != 2 && streamGroup != 6590033)
+                {
+                    if (pstreamName != NULL)
+                        CoTaskMemFree(pstreamName);
+                    continue;
+                }
 
-				// Get language name
-				char_t languageName[256];
-				if (streamLanguageId == 0 || GetLocaleInfo(streamLanguageId, LOCALE_SLANGUAGE, languageName, 255) == 0)
-				{
-					tsnprintf_s(languageName, countof(languageName), _TRUNCATE, _l("Undetermined (%ld)"), streamNb);
-				}
+                // Get language name
+                char_t languageName[256];
+                if (streamLanguageId == 0 || GetLocaleInfo(streamLanguageId, LOCALE_SLANGUAGE, languageName, 255) == 0)
+                {
+                    tsnprintf_s(languageName, countof(languageName), _TRUNCATE, _l("Undetermined (%ld)"), streamNb);
+                }
 
-				char_t streamName[256];
-				if (pstreamName != NULL)
-				{
-					text<char_t>(pstreamName, -1, streamName, 255);
-					//wcsncpy(streamName, pstreamName, 255);
-				}
-				else
-					tsnprintf_s(streamName, countof(streamName), _TRUNCATE, _l("Undetermined (%ld)"), streamNb);
+                char_t streamName[256];
+                if (pstreamName != NULL)
+                {
+                    text<char_t>(pstreamName, -1, streamName, 255);
+                    //wcsncpy(streamName, pstreamName, 255);
+                }
+                else
+                    tsnprintf_s(streamName, countof(streamName), _TRUNCATE, _l("Undetermined (%ld)"), streamNb);
 
-				Tstream stream;
+                Tstream stream;
                 stream.filterName = ffstring(filtername);
                 stream.streamNb = streamNb;
-				if (streamSelect == AMSTREAMSELECTINFO_ENABLED ||
-					streamSelect == AMSTREAMSELECTINFO_EXCLUSIVE || 
-					streamSelect == (AMSTREAMSELECTINFO_ENABLED | AMSTREAMSELECTINFO_EXCLUSIVE))
+                if (streamSelect == AMSTREAMSELECTINFO_ENABLED ||
+                    streamSelect == AMSTREAMSELECTINFO_EXCLUSIVE || 
+                    streamSelect == (AMSTREAMSELECTINFO_ENABLED | AMSTREAMSELECTINFO_EXCLUSIVE))
                     stream.enabled = true;
                 else stream.enabled = false;
 
@@ -765,22 +774,22 @@ void Tremote::getStreams(bool reload)
                 stream.streamLanguageName = ffstring(languageName);
                 
                 if (streamGroup == 1) // Audio
-				{
+                {
                     audioStreams.push_back(stream);
-				}
-				else // Subtitles
-				{
+                }
+                else // Subtitles
+                {
                     subtitleStreams.push_back(stream);
-				}
-				if (pstreamName != NULL)
-					CoTaskMemFree(pstreamName);
-			}
-			
-			pAMStreamSelect->Release();
-			if (foundHaali)
-				break;
-		}
-	}
+                }
+                if (pstreamName != NULL)
+                    CoTaskMemFree(pstreamName);
+            }
+            
+            pAMStreamSelect->Release();
+            if (foundHaali)
+                break;
+        }
+    }
 
     // If subtitles streams already found somewhere else skip next step
     if (subtitleStreams.size() > 0)
@@ -814,7 +823,7 @@ void Tremote::getStreams(bool reload)
             Tstream stream;
             stream.filterName = ffstring(_l("FFDSHOW"));
             stream.streamNb = id;
-			if (currentEmbeddedStream == id)
+            if (currentEmbeddedStream == id)
                 stream.enabled = true;
             else stream.enabled = false;
 
@@ -823,7 +832,7 @@ void Tremote::getStreams(bool reload)
             subtitleStreams.push_back(stream);
         }
     }
-	streamsLoaded = true;
+    streamsLoaded = true;
 }
 
 void Tremote::setStream(int group, long streamNb)
@@ -836,7 +845,7 @@ void Tremote::setStream(int group, long streamNb)
         pStreams = &subtitleStreams;
 
     for (long l = 0; l<(long)pStreams->size(); l++)
-	{
+    {
         if ((*pStreams)[l].streamNb == streamNb)
         {
             pStream = &(*pStreams)[l];
@@ -854,34 +863,34 @@ void Tremote::setStream(int group, long streamNb)
     }
     else
     {
-	    comptr<IEnumFilters> eff;
-	    IFilterGraph    *m_pGraph = NULL;
-	    deci->getGraph(&m_pGraph); // Graph we belong to
-	    if (m_pGraph->EnumFilters(&eff)==S_OK)
-	    {
-		    eff->Reset();
-		    const char_t *fileName = deci->getSourceName();
-		    for (comptr<IBaseFilter> bff;eff->Next(1,&bff,NULL)==S_OK;bff=NULL)
-		    {
-			    char_t name[MAX_PATH],filtername[MAX_PATH];
-			    getFilterName(bff,name,filtername,countof(filtername));
+        comptr<IEnumFilters> eff;
+        IFilterGraph    *m_pGraph = NULL;
+        deci->getGraph(&m_pGraph); // Graph we belong to
+        if (m_pGraph->EnumFilters(&eff)==S_OK)
+        {
+            eff->Reset();
+            const char_t *fileName = deci->getSourceName();
+            for (comptr<IBaseFilter> bff;eff->Next(1,&bff,NULL)==S_OK;bff=NULL)
+            {
+                char_t name[MAX_PATH],filtername[MAX_PATH];
+                getFilterName(bff,name,filtername,countof(filtername));
 
                 if (strcmp(pStream->filterName.c_str(), filtername)) continue;
 
-			    IAMStreamSelect *pAMStreamSelect = NULL;
-			    bff->QueryInterface(IID_IAMStreamSelect, (void**) &pAMStreamSelect);
-			    if (pAMStreamSelect == NULL)
-				    continue;
-    			
-			    /*if (foundHaali && strcmp(filtername, fileName))
-			    {
-				    pAMStreamSelect->Release();
-				    continue;
-			    }*/
-			    pAMStreamSelect->Enable(streamNb, AMSTREAMSELECTENABLE_ENABLE);
-			    pAMStreamSelect->Release();
-			    break;
-		    }
-	    }
+                IAMStreamSelect *pAMStreamSelect = NULL;
+                bff->QueryInterface(IID_IAMStreamSelect, (void**) &pAMStreamSelect);
+                if (pAMStreamSelect == NULL)
+                    continue;
+                
+                /*if (foundHaali && strcmp(filtername, fileName))
+                {
+                    pAMStreamSelect->Release();
+                    continue;
+                }*/
+                pAMStreamSelect->Enable(streamNb, AMSTREAMSELECTENABLE_ENABLE);
+                pAMStreamSelect->Release();
+                break;
+            }
+        }
     }
 }
