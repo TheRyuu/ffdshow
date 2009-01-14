@@ -925,13 +925,12 @@ STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | DS_CENTER | WS_CHILD
 EXSTYLE WS_EX_CONTROLPARENT
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "",IDC_STATIC,0,0,266,170
+    GROUPBOX        "",IDC_STATIC,0,0,266,230
     CONTROL         "Perspective correction",IDC_CHB_PERSPECTIVE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,0,99,10,WS_EX_ACCEPTFILES
     CONTROL         "Source rectangle",IDC_CHB_PERSPECTIVE_ISSRC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,9,168,10
     CONTROL         "",IDC_BMP_PERSPECTIVE,"Static",SS_OWNERDRAW | SS_NOTIFY,4,19,258,130,WS_EX_STATICEDGE
     LTEXT           "Interpolation",IDC_LBL_PERSPECTIVE_INTERPOLATION,5,154,66,8,NOT WS_GROUP
     COMBOBOX        IDC_CBX_PERSPECTIVE_INTERPOLATION,73,152,189,45,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    EDITTEXT        IDC_ED_HELP,0,175,266,55,ES_MULTILINE | ES_READONLY | NOT WS_BORDER | WS_VSCROLL
 END
 
 IDD_DCT DIALOGEX 0, 0, 267, 230
@@ -2979,7 +2978,7 @@ IDD_SHOWMV              TEXT                    "helpShowMV.txt"
 IDD_DEINTERLACE         TEXT                    "helpDeinterlace.txt"
 IDD_LEVELS              TEXT                    "helpLevels.txt"
 IDD_OVERLAY             TEXT                    "helpOverlay.txt"
-IDD_PERSPECTIVE         TEXT                    "helpPerspective.txt"
+
 IDD_DCT                 TEXT                    "helpDCT.txt"
 IDD_WARPSHARP           TEXT                    "helpWarpsharp.txt"
 IDD_CREDITS             TEXT                    "helpCredits.txt"
