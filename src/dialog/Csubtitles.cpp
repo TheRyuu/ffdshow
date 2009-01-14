@@ -285,6 +285,14 @@ void TsubtitlesPage::onExpandClick(void)
  expand2dlg();
 }
 
+void TsubtitlesPage::onSSAConfigClick(void)
+{
+     TsubtitlesSSAConfig *dlg=new TsubtitlesSSAConfig(deci,m_hwnd,10,10);
+ if (dlg->show())
+  parent->setChange();
+ delete dlg;
+}
+
 void TsubtitlesPage::translate(void)
 {
  TconfPageBase::translate();
@@ -343,7 +351,9 @@ TsubtitlesPage::TsubtitlesPage(TffdshowPageDec *Iparent,const TfilterIDFF *idff)
    IDC_BT_SUB_LOADFILE,&TsubtitlesPage::onLoadfile,
    IDC_BT_SUB_SEARCHDIR,&TsubtitlesPage::onSearchdir,
    IDC_BT_SUBTITLES_EXPAND,&TsubtitlesPage::onExpandClick,
+   IDC_BT_SUB_SSA_CONFIG, &TsubtitlesPage::onSSAConfigClick,
    0,NULL
   };
  bindButtons(bt);
 }
+

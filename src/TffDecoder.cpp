@@ -113,7 +113,8 @@ TffdshowDecVideo::TffdshowDecVideo(CLSID Iclsid,const char_t *className,const CL
  inSampleEverField1Repeat(false),
  m_NeedToPauseRun(false),
  searchInterfaceInGraph(NULL),
- count_decoded_frames_for_framerate_calculation(0)
+ count_decoded_frames_for_framerate_calculation(0),
+ decodedPict()
 {
  DPRINTF(_l("TffdshowDecVideo::Constructor"));
 #ifdef OSDTIMETABALE
@@ -1158,6 +1159,9 @@ STDMETHODIMP TffdshowDecVideo::deliverDecodedSample(TffPict &pict)
  if (count_decoded_frames_for_framerate_calculation == 7)
   eighth_decoded_rtStart = pict.rtStart;
  count_decoded_frames_for_framerate_calculation++;
+ // Store the decoded picture dimensions (used by some imgFilters)
+ decodedPict = Trect(pict.rectFull, pict.rectFull.sar);
+
  return imgFilters->process(pict,presetSettings);
 }
 

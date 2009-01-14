@@ -51,6 +51,10 @@ public:
  int cc;
  int filtermode;
  int extendedTags;
+ int SSAOverridePlacement;
+ int SSAMaintainInside;
+ int SSAUseMovieDimensions;
+ int SSAoverrideScale;
  static const int delayDef=0,speedDef=1000;
  virtual void createFilters(size_t filtersorder,Tfilters *filters,TfilterQueue &queue) const;
  virtual void createPages(TffdshowPageDec *parent) const;

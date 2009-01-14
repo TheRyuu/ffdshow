@@ -39,6 +39,8 @@ public:
     opaqueBox(false),
     subformat(-1),
     isOSD(false),
+    /*xinput(0),
+    yinput(0),*/
     rtStart(REFTIME_INVALID)
     {
     }
@@ -68,6 +70,7 @@ public:
    bool opaqueBox;
    int subformat;
    REFERENCE_TIME rtStart;
+   unsigned int xinput,yinput;
   };
  TrenderedSubtitleLines(void) {}
  TrenderedSubtitleLines(TrenderedSubtitleLine *ln) {push_back(ln);}
@@ -86,8 +89,9 @@ private:
     short marginL,marginR;
     short isPos;
     short posx,posy;
+    short layer;
 
-    ParagraphKey(): alignment(-1), marginTop(-1), marginBottom(-1), marginL(-1), marginR(-1), isPos(false), posx(-1),posy(-1){};
+    ParagraphKey(): layer(0),alignment(-1), marginTop(-1), marginBottom(-1), marginL(-1), marginR(-1), isPos(false), posx(-1),posy(-1){};
   };
  friend bool operator < (const TrenderedSubtitleLines::ParagraphKey &a, const TrenderedSubtitleLines::ParagraphKey &b);
 
@@ -95,10 +99,21 @@ private:
   {
    public:
     double topOverhang,bottomOverhang;
-    double height,y;
+    double width,height,y;
+    double xmin,xmax,y0,xoffset,yoffset;
     bool firstuse;
 
-    ParagraphValue(): topOverhang(0), bottomOverhang(0), height(0), y(0), firstuse(true) {};
+    bool checkCollision(ParagraphValue pVal)
+    {
+        if (((y0+yoffset >= pVal.y0 && y0+yoffset < pVal.y0+pVal.height)
+               || (y0+yoffset<pVal.y0 &&  y0+yoffset+height>pVal.y0)) &&
+               ((xmin+xoffset >= pVal.xmin && xmin+xoffset < pVal.xmax)
+               || (xmin+xoffset<pVal.xmin && xmax+xoffset>pVal.xmin)))
+               return true;
+        return false;
+    }
+
+    ParagraphValue(): topOverhang(0), bottomOverhang(0),width(0),height(0), y(0), xmin(-1),xmax(-1),y0(0),xoffset(0),yoffset(0), firstuse(true) {};
   };
  void prepareKey(const_iterator i,ParagraphKey &pkey,unsigned int prefsdx,unsigned int prefsdy);
 };

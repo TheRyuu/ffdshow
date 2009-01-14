@@ -61,6 +61,8 @@ public:
   }
  HRESULT processPict(TffPict &pict)
   {
+   // Store the decoded picture dimensions (used by some imgFilters)
+   decodedPict = Trect(pict.rectFull, pict.rectFull.sar);
    if (!imgFilters) imgFilters=createImgFilters();
    return imgFilters->process(pict,presetSettings);
   }

@@ -1300,8 +1300,8 @@ void TrenderedSubtitleLines::print(const TprintPrefs &prefs)
 {
  // Use the same renderer for SSA and SRT if extended tags option is checked (both formats can hold SSA tags and HTML tags)
  if ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SSA
-	 || ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER) 
-	 && prefs.deci->getParam2(IDFF_subExtendedTags))
+     || ((prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER) 
+     && prefs.deci->getParam2(IDFF_subExtendedTags))
   return printASS(prefs);
  double y=0;
  if (empty()) return;
@@ -1378,12 +1378,14 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
   }
 
  std::map<ParagraphKey,ParagraphValue> paragraphs;
- // pass 1: prepare paragraphs.
+ 
 
+
+ // pass 1: prepare paragraphs : a paragraph is a set of lines that have the same properties
+ // (same margins, alignment and position)
  for (const_iterator i=begin();i!=end();i++)
-  {
+ {
    (*i)->prepareKaraoke();
-
    ParagraphKey pkey;
    prepareKey(i,pkey,prefsdx,prefsdy);
    std::map<ParagraphKey,ParagraphValue>::iterator pi=paragraphs.find(pkey);
@@ -1431,8 +1433,25 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
          case 2:
          case 3:
          default:
-          pval.y=(double)prefsdy-pval.height - pkey.marginBottom + pval.topOverhang;
+             // If the text is supposed to be placed at the bottom of the screen 
+             // or has no vertical alignment defined
+             // then apply the vertical position setting
+             if (pkey.marginBottom == 0 && prefs.deci->getParam2(IDFF_subSSAOverridePlacement))
+              pval.y=((double)prefs.ypos*prefsdy)/100.0-pval.height + pval.topOverhang;
+             else
+              pval.y=(double)prefsdy-pval.height - pkey.marginBottom + pval.topOverhang;
           break;
+        }
+
+       // Moving (scrolling text) : scroll from t1 to t2. Calculate vertical position
+       if ((*i)->props.isMove && prefs.rtStart >= (*i)->props.get_moveStart())
+       {
+        // Stop scrolling if beyond t2
+        if (prefs.rtStart >= (*i)->props.get_moveStop())
+         pval.y+=(*i)->props.get_movedistanceV(prefsdy);
+        else
+         pval.y+=(*i)->props.get_movedistanceV(prefsdy)*
+           (prefs.rtStart-(*i)->props.get_moveStart())/((*i)->props.get_moveStop()-(*i)->props.get_moveStart());
         }
       }
      y=pval.y;
@@ -1441,12 +1460,14 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
 
    if (y>=(double)prefsdy) break;
    int x=0;
-   int marginL=(*i)->props.get_marginL(prefsdx);
-   int marginR=(*i)->props.get_marginR(prefsdx);
-   int leftOverhang=(*i)->get_leftOverhang();
    unsigned int cdx=(*i)->width();
+   // Left and right margins need to be recalculated according to the length of the line
+   int marginL=(*i)->props.get_marginL(prefsdx, cdx);
+   int marginR=(*i)->props.get_marginR(prefsdx, cdx);
+   int leftOverhang=(*i)->get_leftOverhang();
+   
    switch ((*i)->props.alignment)
-    {
+   {
      case 1: // left(SSA)
      case 5:
      case 9:
@@ -1461,14 +1482,32 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
      case 6:
      case 10:
      default:
-      x=((int)prefsdx - marginL - marginR - (int)cdx)/2 + marginL - leftOverhang;
+      // If the text is supposed to be placed at the center of the screen 
+      // or has no horizontal alignment defined
+      // then apply the horizontal position setting
+      if (marginL==0 && prefs.deci->getParam2(IDFF_subSSAOverridePlacement))
+       x=((double)prefs.xpos*prefsdx)/100.0 - (int)(cdx+marginR)/2 - leftOverhang;
+      else if ((*i)->props.isPos) // If position defined, then marginL is relative to left border of the screen
+       x=marginL-leftOverhang;
+      else // else marginL is relative to the center of the screen
+        x=((int)prefsdx - marginL - marginR - (int)cdx)/2 + marginL - leftOverhang;
       break;
-    }
-   if (x+cdx>=prefsdx && (*i)->props.alignment==-1 && prefs.xpos>=0) x=prefsdx-cdx-1;
-   (*i)->print(x,y,prefs,prefsdx,prefsdy); // print a line (=print words).
-
   }
 
+ 
+  // Moving (scrolling text) : scroll from t1 to t2. Calculate horizontal position
+  if ((*i)->props.isMove && prefs.rtStart >= (*i)->props.get_moveStart())
+  {
+    // Stop scrolling if beyond t2
+    if (prefs.rtStart >= (*i)->props.get_moveStop())
+     x+=(*i)->props.get_movedistanceH(prefsdx);
+    else
+     x+=(*i)->props.get_movedistanceH(prefsdx)*
+       (prefs.rtStart-(*i)->props.get_moveStart())/((*i)->props.get_moveStop()-(*i)->props.get_moveStart());
+   }
+
+   (*i)->print(x,y,prefs,prefsdx,prefsdy); // print a line (=print words).
+  }
 }
 
 void TrenderedSubtitleLines::prepareKey(const_iterator i,ParagraphKey &pkey,unsigned int prefsdx,unsigned int prefsdy)
@@ -1479,6 +1518,8 @@ void TrenderedSubtitleLines::prepareKey(const_iterator i,ParagraphKey &pkey,unsi
  pkey.marginL = (*i)->props.get_marginL(prefsdx);
  pkey.marginR = (*i)->props.get_marginR(prefsdx);
  pkey.isPos = (*i)->props.isPos;
+ //pkey.layer = (*i)->props.layer; // TODO : uncomment when layers implemented
+ pkey.layer = 0;
  if (pkey.isPos)
   {
    pkey.posx = (*i)->props.posx;
@@ -1779,8 +1820,10 @@ template<class tchar> TrenderedTextSubtitleWord* Tfont::newWord(const tchar *s,s
 
 template<class tchar> int Tfont::get_splitdx_for_new_line(const TsubtitleWord<tchar> &w,int splitdx,int dx) const
 {
+ // This method calculates the maximum length of the line considering the left/right margin
+ // So we call the get_marginR and get_marginL methods providing the screen width and the maximum length (also equal to screen width)
  if (w.props.marginR!=-1 || w.props.marginL!=-1)
-  return (dx- w.props.get_marginR(dx) - w.props.get_marginL(dx))*4;
+     return w.props.get_maxWidth(dx, deci)*4;
  else
   return splitdx;
 }
@@ -1878,6 +1921,8 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
 
      TrenderedSubtitleLine *line=NULL;
      int cx=0,cy=0;
+     unsigned int refResX=prefs.xinput, refResY=prefs.yinput;
+     bool firstLine=true;
      for (typename TsubtitleLine<tchar>::const_iterator w0=l->begin();w0!=l->end();w0++)
       {
        TsubtitleWord<tchar> w(*w0);
@@ -1887,7 +1932,23 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
        if (!line)
         {
          line=new TrenderedSubtitleLine(w.props);
+         // Propagate input dimensions to the line properties 
+         // (unless movie dimensions are filled in the script and parameter 
+         // IDFF_subSSAUseMovieDimensions is not checked)
+         if (line->props.refResX && line->props.refResY 
+             && firstLine && !deci->getParam2(IDFF_subSSAUseMovieDimensions))
+         {
+          refResX=line->props.refResX;
+          refResY=line->props.refResY;
+          firstLine=false;
+         }
+         else
+         {
+          line->props.refResX=refResX;
+          line->props.refResY=refResY;
+         }
         }
+
        const tchar *p=w;
        if (*p) // drop empty words
         {
@@ -1907,10 +1968,15 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
               }
             }
            int strlenp=(int)strlen(p);
+           // If line goes out of screen, wraps it except if no wrap defined 
            if (cx+strlenp-1<=wordWrap.getRightOfTheLine(cy))
             {
              if (*p)
               {
+               // Propagate the input dimensions to the TsubtitleWord props
+               w.props.refResX=refResX;
+               w.props.refResY=refResY;
+
                TrenderedTextSubtitleWord *rw=newWord(p,strlenp,prefs,&w,lf,w0+1==l->end());
                if (rw) line->push_back(rw);
                cx+=strlenp;
@@ -1934,6 +2000,10 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
               }
              if (*p)
               {
+               // Propagate the input dimensions to the TsubtitleWord props
+               w.props.refResX=refResX;
+               w.props.refResY=refResY;
+
                TrenderedTextSubtitleWord *rw=newWord(p,n,prefs,&w,lf,true);
                w.props.karaokeNewWord = false;
                w.props.karaokeStart += w.props.karaokeDuration;

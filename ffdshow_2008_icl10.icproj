@@ -5,7 +5,7 @@
 	Name="ffdshow"
 	ProjectGUID="{0C1CDCBB-5886-42B4-A928-F4B82DD3FD17}"
 	VCNestedProjectGUID="{30A21C7F-035D-41E2-95BE-B4FFA5F5176B}"
-	VCNestedProjectCRC32="781670134"
+	VCNestedProjectCRC32="783908849"
 	VCNestedProjectFileName="ffdshow_2008_icl10.vcproj">
 	<Platforms>
 		<Platform 
@@ -3249,6 +3249,12 @@
 			</File>
 			<File 
 				RelativePath=".\src\dialog\TSpecifyPropertyPagesVE.h">
+			</File>
+			<File 
+				RelativePath=".\src\dialog\TsubtitlesSSAConfig.cpp">
+			</File>
+			<File 
+				RelativePath=".\src\dialog\TsubtitlesSSAConfig.h">
 			</File>
 			<File 
 				RelativePath=".\src\dialog\TversionsDlg.cpp">

@@ -11,6 +11,7 @@ struct IcheckSubtitle;
 struct IOSDprovider;
 struct IhwOverlayControl;
 struct ToutputVideoSettings;
+struct Trect;
 
 template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
 {
@@ -109,6 +110,7 @@ template<class tchar> DECLARE_INTERFACE_(IffdshowDecVideoT,IUnknown)
  STDMETHOD_(int,getBordersBrightness)(void) PURE;
  STDMETHOD (getChaptersList)(void **ppChaptersList) PURE;
  STDMETHOD (get_CurrentTime)(__int64 *time) PURE;
+ STDMETHOD_(Trect*,getDecodedPictdimensions)(void) PURE;
 };
 
 struct IffdshowDecVideoA :IffdshowDecVideoT<char> {};

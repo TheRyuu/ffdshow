@@ -199,6 +199,12 @@ STDMETHODIMP TffdshowDecVideo::getAVIdimensions(unsigned int *x,unsigned int *y)
 {
  return inpin->getAVIdimensions(x,y);
 }
+STDMETHODIMP_(Trect*) TffdshowDecVideo::getDecodedPictdimensions(void)
+{
+ if (decodedPict.x==decodedPict.y==decodedPict.dx==decodedPict.dy==0)
+     return NULL;
+ return &decodedPict;
+}
 STDMETHODIMP TffdshowDecVideo::getOutputDimensions(unsigned int *x,unsigned int *y)
 {
  return calcNewSize(inpin->pictIn.rectFull/*.dx,inpin->pictIn.rectFull.dy*/,x,y);

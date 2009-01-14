@@ -65,7 +65,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSami<tchar>::parse(Tstream &fd,i
 
         case 0: /* find "START=" or "Slacktime:" */
             slacktime_s = stristr (s, _L("Slacktime:"));
-	    if (slacktime_s)
+        if (slacktime_s)
                 sub_slacktime = strtol (slacktime_s+10, NULL, 0) / 10;
 
             s = (tchar*)stristr (s, _L("Start="));
@@ -79,16 +79,16 @@ template<class tchar> Tsubtitle* TsubtitleParserSami<tchar>::parse(Tstream &fd,i
             }
             break;
 
-	case 1: /* find (optionnal) "<P", skip other TAGs */
-	    for  (; *s == ' ' || *s == '\t'; s++); /* strip blanks, if any */
-	    if (*s == '\0') break;
-	    if (*s != '<') { state = 3; p = text; continue; } /* not a TAG */
-	    s++;
-	    if (*s == 'P' || *s == 'p') { s++; state = 2; continue; } /* found '<P' */
-	    for (; *s != '>' && *s != '\0'; s++); /* skip remains of non-<P> TAG */
-	    if (s == '\0')
-	      break;
-	    s++;
+    case 1: /* find (optionnal) "<P", skip other TAGs */
+        for  (; *s == ' ' || *s == '\t'; s++); /* strip blanks, if any */
+        if (*s == '\0') break;
+        if (*s != '<') { state = 3; p = text; continue; } /* not a TAG */
+        s++;
+        if (*s == 'P' || *s == 'p') { s++; state = 2; continue; } /* found '<P' */
+        for (; *s != '>' && *s != '\0'; s++); /* skip remains of non-<P> TAG */
+        if (s == '\0')
+          break;
+        s++;
             continue;
 
         case 2: /* find ">" */
@@ -103,7 +103,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSami<tchar>::parse(Tstream &fd,i
                     current.add(text);
                 s += 4;
             }
-	    else if ((*s == '{') && !sub_no_text_pp) { state = 5; ++s; continue; }
+        else if ((*s == '{') && !sub_no_text_pp) { state = 5; ++s; continue; }
             else if (*s == '<') { state = 4; }
             else if (!_strnicmp (s, _L("&nbsp;"), 6)) { *p++ = ' '; s += 6; }
             else if (*s == '\t') { *p++ = ' '; s++; }
@@ -115,8 +115,8 @@ template<class tchar> Tsubtitle* TsubtitleParserSami<tchar>::parse(Tstream &fd,i
 
             continue;
 
-	case 4: /* get current->end or skip <TAG> */
-	    q = (tchar*)stristr (s, _L("Start="));
+    case 4: /* get current->end or skip <TAG> */
+        q = (tchar*)stristr (s, _L("Start="));
             if (q) {
                 int sec1000=strtol (q + 6, &q, 0);
                 current.stop = this->hmsToTime(0,0, sec1000/1000,(sec1000%1000)/10-1);
@@ -130,7 +130,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSami<tchar>::parse(Tstream &fd,i
             if (s) { s++; state = 3; continue; }
             break;
        case 5: /* get rid of {...} text, but read the alignment code */
-	    if ((*s == '\\') && (*(s + 1) == 'a') && !sub_no_text_pp) {
+        if ((*s == '\\') && (*(s + 1) == 'a') && !sub_no_text_pp) {
                if (stristr(s, _L("\\a1")) != NULL) {
                    //current->alignment = SUB_ALIGNMENT_BOTTOMLEFT;
                    s = s + 3;
@@ -160,10 +160,10 @@ template<class tchar> Tsubtitle* TsubtitleParserSami<tchar>::parse(Tstream &fd,i
                    //current->alignment = SUB_ALIGNMENT_MIDDLERIGHT;
                    s = s + 4;
                }
-	    }
-	    if (*s == '}') state = 3;
-	    ++s;
-	    continue;
+        }
+        if (*s == '}') state = 3;
+        ++s;
+        continue;
         }
 
         /* read next line */
@@ -287,7 +287,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSubviewer<tchar>::parse(Tstream 
          {
           if (!fd.fgets (line, this->LINE_LEN)) return NULL;
           int li;
-	  if ((len=tchar_traits<tchar>::sscanf() (line, _L("%d:%d:%d%[,.:]%d --> %d:%d:%d%[,.:]%d"),&a1,&a2,&a3,&li,&a4,&b1,&b2,&b3,&li,&b4)) < 10)
+      if ((len=tchar_traits<tchar>::sscanf() (line, _L("%d:%d:%d%[,.:]%d --> %d:%d:%d%[,.:]%d"),&a1,&a2,&a3,&li,&a4,&b1,&b2,&b3,&li,&b4)) < 10)
            continue;
           current.start = this->hmsToTime(a1,a2,a3,a4/10);
           current.stop  = this->hmsToTime(b1,b2,b3,b4/10);
@@ -298,25 +298,25 @@ template<class tchar> Tsubtitle* TsubtitleParserSubviewer<tchar>::parse(Tstream 
             for (p=line; *p!='\n' && *p!='\r' && *p; p++,len++);
             if (len) {
                 int j=0,skip=0;
-		tchar *curptr0,*curptr=curptr0=(tchar*)_alloca((len+1)*sizeof(tchar));
+        tchar *curptr0,*curptr=curptr0=(tchar*)_alloca((len+1)*sizeof(tchar));
                 for(; j<len; j++) {
-		    /* let's filter html tags ::atmos */
+            /* let's filter html tags ::atmos */
                     /*
-		    if(line[j]=='>') {
-			skip=0;
-			continue;
-		    }
-		    if(line[j]=='<') {
-			skip=1;
-			continue;
-		    }*/
-		    if(skip) {
-			continue;
-		    }
-		    *curptr=line[j];
-		    curptr++;
-		}
-		*curptr='\0';
+            if(line[j]=='>') {
+            skip=0;
+            continue;
+            }
+            if(line[j]=='<') {
+            skip=1;
+            continue;
+            }*/
+            if(skip) {
+            continue;
+            }
+            *curptr=line[j];
+            curptr++;
+        }
+        *curptr='\0';
                 current.add(curptr0);
             } else {
                 break;
@@ -422,24 +422,24 @@ template<class tchar> Tsubtitle* TsubtitleParserRt<tchar>::parse(Tstream &fd,int
         //if ((len=tchar_traits<tchar>::sscanf() (line, "<Time Begin=\"%d:%d:%d.%d\" End=\"%d:%d:%d.%d\"",&a1,&a2,&a3,&a4,&b1,&b2,&b3,&b4)) < 8)
         plen=a1=a2=a3=a4=b1=b2=b3=b4=0;
         if (
-	(tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d.%d\" %*[Ee]nd=\"%d.%d\"%*[^<]<clear/>%n"),&a3,&a4,&b3,&b4,&plen) < 4) &&
-	(tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d.%d\" %*[Ee]nd=\"%d:%d.%d\"%*[^<]<clear/>%n"),&a3,&a4,&b2,&b3,&b4,&plen) < 5) &&
+    (tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d.%d\" %*[Ee]nd=\"%d.%d\"%*[^<]<clear/>%n"),&a3,&a4,&b3,&b4,&plen) < 4) &&
+    (tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d.%d\" %*[Ee]nd=\"%d:%d.%d\"%*[^<]<clear/>%n"),&a3,&a4,&b2,&b3,&b4,&plen) < 5) &&
         (tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d:%d\" %*[Ee]nd=\"%d:%d\"%*[^<]<clear/>%n"),&a2,&a3,&b2,&b3,&plen) < 4) &&
         (tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d:%d\" %*[Ee]nd=\"%d:%d.%d\"%*[^<]<clear/>%n"),&a2,&a3,&b2,&b3,&b4,&plen) < 5) &&
 //      (tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d:%d.%d\" %*[Ee]nd=\"%d:%d\"%*[^<]<clear/>%n"),&a2,&a3,&a4,&b2,&b3,&plen) < 5) &&
         (tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d:%d.%d\" %*[Ee]nd=\"%d:%d.%d\"%*[^<]<clear/>%n"),&a2,&a3,&a4,&b2,&b3,&b4,&plen) < 6) &&
-	(tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d:%d:%d.%d\" %*[Ee]nd=\"%d:%d:%d.%d\"%*[^<]<clear/>%n"),&a1,&a2,&a3,&a4,&b1,&b2,&b3,&b4,&plen) < 8) &&
-	//now try it without end time
-	(tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d.%d\"%*[^<]<clear/>%n"),&a3,&a4,&plen) < 2) &&
-	(tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d:%d\"%*[^<]<clear/>%n"),&a2,&a3,&plen) < 2) &&
-	(tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d:%d.%d\"%*[^<]<clear/>%n"),&a2,&a3,&a4,&plen) < 3) &&
-	(tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d:%d:%d.%d\"%*[^<]<clear/>%n"),&a1,&a2,&a3,&a4,&plen) < 4)
+    (tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d:%d:%d.%d\" %*[Ee]nd=\"%d:%d:%d.%d\"%*[^<]<clear/>%n"),&a1,&a2,&a3,&a4,&b1,&b2,&b3,&b4,&plen) < 8) &&
+    //now try it without end time
+    (tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d.%d\"%*[^<]<clear/>%n"),&a3,&a4,&plen) < 2) &&
+    (tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d:%d\"%*[^<]<clear/>%n"),&a2,&a3,&plen) < 2) &&
+    (tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d:%d.%d\"%*[^<]<clear/>%n"),&a2,&a3,&a4,&plen) < 3) &&
+    (tchar_traits<tchar>::sscanf() (line, _L("<%*[tT]ime %*[bB]egin=\"%d:%d:%d.%d\"%*[^<]<clear/>%n"),&a1,&a2,&a3,&a4,&plen) < 4)
         )
             continue;
         current.start = this->hmsToTime(a1,a2,a3,a4);
         current.stop  = this->hmsToTime(a1,a2,a3,a4);
-	if (b1 == 0 && b2 == 0 && b3 == 0 && b4 == 0)
-	  current.stop = current.start+this->frameToTime(200);
+    if (b1 == 0 && b2 == 0 && b3 == 0 && b4 == 0)
+      current.stop = current.start+this->frameToTime(200);
         p=line; p+=plen;
         // TODO: I don't know what kind of convention is here for marking multiline subs, maybe <br/> like in xml?
         next = strstr(line,_L("<clear/>"));
@@ -466,7 +466,7 @@ template<class tchar>  TsubtitleParserSSA<tchar>::TsubtitleParserSSA(int Iformat
  strcpy(defprops.fontname, _l("Arial"));
  defprops.encoding = 0;
  defprops.isColor = true;
- defprops.marginR = defprops.marginL = defprops.marginV = 10;
+ defprops.marginR = defprops.marginL = defprops.marginV = 0;
  defprops.version = TsubtitleParserSSA::SSA;
 }
 
@@ -694,6 +694,8 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd, i
       {
        if (strnicmp(f->first,_L("name"),4)==0)
         styleFormat.push_back(&Tstyle::name);
+       else if (strnicmp(f->first,_L("layer"),5)==0)
+        styleFormat.push_back(&Tstyle::layer);
        else if (strnicmp(f->first,_L("fontname"),8)==0)
         styleFormat.push_back(&Tstyle::fontname);
        else if (strnicmp(f->first,_L("fontsize"),8)==0)
@@ -795,16 +797,27 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd, i
      const tchar *l=line+7;
      strtok(l,_L(","),fields);
      eventFormat.clear();
+
+     // On embedded streams, read order is added as first column
+     if (isEmbedded)
+        eventFormat.push_back(&Tevent::readorder);
+
      for (typename Tparts::const_iterator f=fields.begin();f!=fields.end();f++)
       {
        if (strnicmp(f->first,_L("marked"),6)==0)
         eventFormat.push_back(&Tevent::marked);
+       else if (strnicmp(f->first,_L("layer"),5)==0)
+        eventFormat.push_back(&Tevent::layer);
        else if (strnicmp(f->first,_L("start"),5)==0)
         {
+         // On embedded subtitles time is removed
          if (!isEmbedded) eventFormat.push_back(&Tevent::start);
         }
        else if (strnicmp(f->first,_L("end"),3)==0)
-        eventFormat.push_back(&Tevent::end);
+       {
+         // On embedded subtitles time is removed
+         if (!isEmbedded) eventFormat.push_back(&Tevent::end);
+       }
        else if (strnicmp(f->first,_L("style"),5)==0)
         eventFormat.push_back(&Tevent::style);
        else if (strnicmp(f->first,_L("name"),4)==0)
@@ -879,6 +892,7 @@ template<class tchar> Tsubtitle* TsubtitleParserSSA<tchar>::parse(Tstream &fd, i
          strToIntMargin(event.marginL,&current.defProps.marginL);
          strToIntMargin(event.marginR,&current.defProps.marginR);
          strToIntMargin(event.marginV,&current.defProps.marginV);
+         strToInt(event.layer,&current.defProps.layer);
          if (flags&this->PARSETIME)
           {
            current.start=timer.den*this->hmsToTime(hour1,min1,sec1,hunsec1)/timer.num;
@@ -1075,10 +1089,10 @@ template<class tchar> Tsubtitle* TsubtitleParserMPL2<tchar>::parse(Tstream &fd,i
     int start=0,end=0;
 
     do {
-	if (!fd.fgets (line, this->LINE_LEN)) return NULL;
+    if (!fd.fgets (line, this->LINE_LEN)) return NULL;
     } while ((tchar_traits<tchar>::sscanf() (line,
-		      _L("[%ld][%ld]%[^\r\n]"),
-		      &start, &end, line2) < 3));
+              _L("[%ld][%ld]%[^\r\n]"),
+              &start, &end, line2) < 3));
     TsubtitleTextBase<tchar> current(this->format);
     current.start = (REFERENCE_TIME)start*1000000;
     current.stop = (REFERENCE_TIME)end*1000000;

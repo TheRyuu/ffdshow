@@ -1,5 +1,8 @@
 #ifndef _TSUBTITLEPROPS_H_
 #define _TSUBTITLEPROPS_H_
+
+#include "interfaces.h"
+
 struct TfontSettings;
 struct Rational;
 class TfontManager;
@@ -15,6 +18,8 @@ struct TSubtitleProps
  int colorA,SecondaryColourA, TertiaryColourA, OutlineColourA, ShadowColourA;
  bool isPos;int posx,posy;
  unsigned int refResX,refResY;
+ bool isMove;int posx2,posy2;
+ unsigned int t1,t2;
  int wrapStyle; // -1 = default
  int size;
  int scaleX,scaleY; //in percents, -1 = default
@@ -23,6 +28,8 @@ struct TSubtitleProps
  int version;  // -1 = default
  int extendedTags; // 0 = default
  double spacing;  //INT_MIN = default
+ double x; // Calculated x position
+ double y; // Calculated y position
  void reset(void);
  HGDIOBJ toGdiFont(HDC hdc, LOGFONT &lf, const TfontSettings &fontSettings, unsigned int dx, unsigned int dy, unsigned int clipdy, const Rational& sar, TfontManager *fontManager) const;
  void toLOGFONT(LOGFONT &lf, const TfontSettings &fontSettings, unsigned int dx, unsigned int dy, unsigned int clipdy, const Rational& sar) const;
@@ -38,13 +45,19 @@ struct TSubtitleProps
  int marginR,marginL,marginV,marginTop,marginBottom; // -1 = default
  int borderStyle; // -1 = default
  double outlineWidth,shadowDepth; // -1 = default
+ int layer; // 0 = default
  int get_spacing(unsigned int dy,unsigned int clipdy) const;
- int get_marginR(unsigned int screenWidth) const;
- int get_marginL(unsigned int screenWidth) const;
+ int get_marginR(unsigned int screenWidth,unsigned int lineWidth=0) const;
+ int get_marginL(unsigned int screenWidth,unsigned int lineWidth=0) const;
  int get_marginTop(unsigned int screenHeight) const;
  int get_marginBottom(unsigned int screenHeight) const;
  int get_xscale(int Ixscale,const Rational& sar,int aspectAuto,int overrideScale) const;
  int get_yscale(int Iyscale,const Rational& sar,int aspectAuto,int overrideScale) const;
+ int get_movedistanceV(unsigned int screenHeight) const;
+ int get_movedistanceH(unsigned int screenWidth) const;
+ int get_maxWidth(unsigned int screenWidth, IffdshowBase *deci) const;
+ REFERENCE_TIME get_moveStart(void) const;
+ REFERENCE_TIME get_moveStop(void) const;
  static int alignASS2SSA(int align);
  mutable int m_ascent64,m_descent64; // multiple 64 to lfHeight. Get TextMetrics and plus 4 to tmAscent or tmDescent and divid by 8 for vsfilter compatibility.
  int tmpFadT1,tmpFadT2;

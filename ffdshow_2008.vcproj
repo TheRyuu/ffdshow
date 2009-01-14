@@ -4209,6 +4209,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\dialog\TsubtitlesSSAConfig.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\dialog\TsubtitlesSSAConfig.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\dialog\TversionsDlg.cpp"
 				>
 			</File>
