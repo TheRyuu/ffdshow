@@ -725,6 +725,8 @@ void Tremote::getStreams(bool reload)
 
             DWORD cStreams = 0;
             pAMStreamSelect->Count(&cStreams);
+            std::vector<Tstream> localAudioStreams;
+
             for (long streamNb=0; streamNb<(long)cStreams; streamNb++)
             {
                 DWORD streamSelect = 0;
@@ -775,7 +777,7 @@ void Tremote::getStreams(bool reload)
                 
                 if (streamGroup == 1) // Audio
                 {
-                    audioStreams.push_back(stream);
+                    localAudioStreams.push_back(stream);
                 }
                 else // Subtitles
                 {
@@ -783,6 +785,16 @@ void Tremote::getStreams(bool reload)
                 }
                 if (pstreamName != NULL)
                     CoTaskMemFree(pstreamName);
+            }
+
+            // Only one filter may handle audio streams switching
+            if (audioStreams.size() < localAudioStreams.size())
+            {
+                audioStreams.clear();
+                for (int i=0;i<localAudioStreams.size();i++)
+                {
+                    audioStreams.push_back(localAudioStreams[i]);
+                }
             }
             
             pAMStreamSelect->Release();
