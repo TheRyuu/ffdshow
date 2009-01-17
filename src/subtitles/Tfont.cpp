@@ -1640,7 +1640,7 @@ void TrenderedVobsubWord::print(int startx, int starty /* not used */, unsigned 
      dstLn[0][x]=(unsigned char)c;
     }
   }
- __m64 m128=_mm_set1_pi8((char)128),m0=_mm_setzero_si64(),mAdd=shiftChroma?m128:m0;
+ __m64 m128=_mm_set1_pi8((char)-128/* 0x80 */),m0=_mm_setzero_si64(),mAdd=shiftChroma?m128:m0;
  int add=shiftChroma?128:0;
  int sdx7=sdx[1]-7;
  for (unsigned int y=0;y<dy[1];y++,dstLn[1]+=stride[1],dstLn[2]+=stride[2],msk[1]+=bmpmskstride[1],bmp[1]+=bmpmskstride[1],bmp[2]+=bmpmskstride[2])
