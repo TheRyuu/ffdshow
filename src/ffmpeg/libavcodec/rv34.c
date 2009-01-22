@@ -28,6 +28,7 @@
 #include "dsputil.h"
 #include "mpegvideo.h"
 #include "golomb.h"
+#include "mathops.h"
 #include "rectangle.h"
 
 #include "rv34vlc.h"
@@ -70,14 +71,14 @@ static void rv34_gen_vlc(const uint8_t *bits, int size, VLC *vlc, const uint8_t 
 {
     int i;
     int counts[17] = {0}, codes[17];
-	#if __STDC_VERSION__ >= 199901L
+    #if __STDC_VERSION__ >= 199901L
     uint16_t cw[size], syms[size];
     uint8_t bits2[size];
-	#else
-	uint16_t *cw = _alloca(sizeof(uint16_t) * size);
-	uint16_t *syms = _alloca(sizeof(uint16_t) * size);
-	uint8_t *bits2 = _alloca(sizeof(uint8_t) * size);
-	#endif
+    #else
+    uint16_t *cw = _alloca(sizeof(uint16_t) * size);
+    uint16_t *syms = _alloca(sizeof(uint16_t) * size);
+    uint8_t *bits2 = _alloca(sizeof(uint8_t) * size);
+    #endif
     int maxbits = 0, realsize = 0;
 
     for(i = 0; i < size; i++){

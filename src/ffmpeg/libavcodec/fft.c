@@ -1,7 +1,7 @@
 /*
  * FFT/IFFT transforms
  * Copyright (c) 2008 Loren Merritt
- * Copyright (c) 2002 Fabrice Bellard.
+ * Copyright (c) 2002 Fabrice Bellard
  * Partly based on libdjbfft by D. J. Bernstein
  *
  * This file is part of FFmpeg.
@@ -58,11 +58,7 @@ static int split_radix_permutation(int i, int n, int inverse)
     else                  return split_radix_permutation(i, m, inverse)*4 - 1;
 }
 
-/**
- * The size of the FFT is 2^nbits. If inverse is TRUE, inverse FFT is
- * done
- */
-int ff_fft_init(FFTContext *s, int nbits, int inverse)
+av_cold int ff_fft_init(FFTContext *s, int nbits, int inverse)
 {
     int i, j, m, n;
     float alpha, c1, s1, s2;
@@ -91,9 +87,8 @@ int ff_fft_init(FFTContext *s, int nbits, int inverse)
     s->imdct_half = ff_imdct_half_c;
     s->exptab1 = NULL;
 
-#if defined HAVE_MMX && defined HAVE_YASM
+#if HAVE_MMX && HAVE_YASM && ARCH_X86_32
 /* causes crashes on 64-bit Windows */	
-#ifndef ARCH_X86_64
     has_vectors = mm_support();
     if (has_vectors & FF_MM_SSE) {
         /* SSE for P3/P4/K8 */
@@ -113,7 +108,6 @@ int ff_fft_init(FFTContext *s, int nbits, int inverse)
         s->imdct_half = ff_imdct_half_3dn;
         s->fft_calc = ff_fft_calc_3dn;
     }
-#endif
 #endif
 
     if (split_radix) {
@@ -183,9 +177,6 @@ int ff_fft_init(FFTContext *s, int nbits, int inverse)
     return -1;
 }
 
-/**
- * Do the permutation needed BEFORE calling ff_fft_calc()
- */
 void ff_fft_permute_c(FFTContext *s, FFTComplex *z)
 {
     int j, k, np;
@@ -334,7 +325,7 @@ static void fft8(FFTComplex *z)
     TRANSFORM(z[1],z[3],z[5],z[7],sqrthalf,sqrthalf);
 }
 
-#ifndef CONFIG_SMALL
+#if !CONFIG_SMALL
 static void fft16(FFTComplex *z)
 {
     FFTSample t1, t2, t3, t4, t5, t6;
@@ -356,7 +347,7 @@ DECL_FFT(64,32,16)
 DECL_FFT(128,64,32)
 DECL_FFT(256,128,64)
 DECL_FFT(512,256,128)
-#ifndef CONFIG_SMALL
+#if !CONFIG_SMALL
 #define pass pass_big
 #endif
 DECL_FFT(1024,512,256)
@@ -372,11 +363,6 @@ static void (*fft_dispatch[])(FFTComplex*) = {
     fft2048, fft4096, fft8192, fft16384, fft32768, fft65536,
 };
 
-/**
- * Do a complex FFT with the parameters defined in ff_fft_init(). The
- * input data must be permuted before with s->revtab table. No
- * 1.0/sqrt(n) normalization is done.
- */
 void ff_fft_calc_c(FFTContext *s, FFTComplex *z)
 {
     fft_dispatch[s->nbits-2](z);

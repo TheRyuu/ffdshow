@@ -59,9 +59,9 @@ static inline void store_mvs(AVSContext *h) {
     h->col_mv[(h->mby*h->mb_width + h->mbx)*4 + 3] = h->mv[MV_FWD_X3];
 }
 
-static inline void mv_pred_direct(AVSContext *h, vector_t *pmv_fw,
-                                  vector_t *col_mv) {
-    vector_t *pmv_bw = pmv_fw + MV_BWD_OFFS;
+static inline void mv_pred_direct(AVSContext *h, cavs_vector *pmv_fw,
+                                  cavs_vector *col_mv) {
+    cavs_vector *pmv_bw = pmv_fw + MV_BWD_OFFS;
     int den = h->direct_den[col_mv->ref];
     int m = col_mv->x >> 31;
 
@@ -77,8 +77,8 @@ static inline void mv_pred_direct(AVSContext *h, vector_t *pmv_fw,
     pmv_bw->y = m-(((den+(den*col_mv->y*pmv_bw->dist^m)-m-1)>>14)^m);
 }
 
-static inline void mv_pred_sym(AVSContext *h, vector_t *src, enum block_t size) {
-    vector_t *dst = src + MV_BWD_OFFS;
+static inline void mv_pred_sym(AVSContext *h, cavs_vector *src, enum cavs_block size) {
+    cavs_vector *dst = src + MV_BWD_OFFS;
 
     /* backward mv is the scaled and negated forward mv */
     dst->x = -((src->x * h->sym_factor + 256) >> 9);
@@ -252,7 +252,7 @@ static int decode_mb_i(AVSContext *h, int cbp_code) {
     return 0;
 }
 
-static void decode_mb_p(AVSContext *h, enum mb_t mb_type) {
+static void decode_mb_p(AVSContext *h, enum cavs_mb mb_type) {
     GetBitContext *gb = &h->s.gb;
     int ref[4];
 
@@ -296,9 +296,9 @@ static void decode_mb_p(AVSContext *h, enum mb_t mb_type) {
     *h->col_type = mb_type;
 }
 
-static void decode_mb_b(AVSContext *h, enum mb_t mb_type) {
+static void decode_mb_b(AVSContext *h, enum cavs_mb mb_type) {
     int block;
-    enum sub_mb_t sub_type[4];
+    enum cavs_sub_mb sub_type[4];
     int flags;
 
     ff_cavs_init_mb(h);
@@ -447,7 +447,7 @@ static inline void check_for_slice(AVSContext *h) {
 static int decode_pic(AVSContext *h) {
     MpegEncContext *s = &h->s;
     int skip_count;
-    enum mb_t mb_type;
+    enum cavs_mb mb_type;
 
     if (!s->context_initialized) {
         s->avctx->idct_algo = FF_IDCT_CAVS;
@@ -567,8 +567,8 @@ static int decode_pic(AVSContext *h) {
     if(h->pic_type != FF_B_TYPE) {
         if(h->DPB[1].data[0])
             s->avctx->release_buffer(s->avctx, (AVFrame *)&h->DPB[1]);
-        memcpy(&h->DPB[1], &h->DPB[0], sizeof(Picture));
-        memcpy(&h->DPB[0], &h->picture, sizeof(Picture));
+        h->DPB[1] = h->DPB[0];
+        h->DPB[0] = h->picture;
         memset(&h->picture,0,sizeof(Picture));
     }
     return 0;

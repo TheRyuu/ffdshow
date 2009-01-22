@@ -24,6 +24,7 @@
  * Miro VideoXL codec.
  */
 
+#include "libavutil/intreadwrite.h"
 #include "avcodec.h"
 
 typedef struct VideoXLContext{
@@ -139,5 +140,5 @@ AVCodec xl_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
-    /*.long_name = */"Miro VideoXL",
+    /*.long_name = */NULL_IF_CONFIG_SMALL("Miro VideoXL"),
 };

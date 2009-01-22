@@ -1,7 +1,7 @@
 /*
  * MPEG Audio parser
- * Copyright (c) 2003 Fabrice Bellard.
- * Copyright (c) 2003 Michael Niedermayer.
+ * Copyright (c) 2003 Fabrice Bellard
+ * Copyright (c) 2003 Michael Niedermayer
  *
  * This file is part of FFmpeg.
  *
@@ -58,13 +58,16 @@ int ff_mpa_decode_header(AVCodecContext *avctx, uint32_t head, int *sample_rate,
 
     switch(s->layer) {
     case 1:
+        avctx->codec_id = CODEC_ID_MP1;
         *frame_size = 384;
         break;
     case 2:
+        avctx->codec_id = CODEC_ID_MP2;
         *frame_size = 1152;
         break;
     default:
     case 3:
+        avctx->codec_id = CODEC_ID_MP3;
         if (s->lsf)
             *frame_size = 576;
         else
@@ -248,7 +251,7 @@ static int mpegaudio_parse(AVCodecParserContext *s1,
 
 
 AVCodecParser mpegaudio_parser = {
-    { CODEC_ID_MP2, CODEC_ID_MP3 },
+    { CODEC_ID_MP1, CODEC_ID_MP2, CODEC_ID_MP3 },
     sizeof(MpegAudioParseContext),
     mpegaudio_parse_init,
     mpegaudio_parse,

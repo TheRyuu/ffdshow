@@ -65,7 +65,7 @@
 
 #include "avcodec.h"
 
-#ifdef CONFIG_LIBAMR_NB_FIXED
+#if CONFIG_LIBAMR_NB_FIXED
 
 #define MMS_IO
 
@@ -138,7 +138,7 @@ static void amr_decode_fix_avctx(AVCodecContext * avctx)
     avctx->sample_fmt = SAMPLE_FMT_S16;
 }
 
-#ifdef CONFIG_LIBAMR_NB_FIXED
+#if CONFIG_LIBAMR_NB_FIXED
 /* fixed point version*/
 /* frame size in serial bitstream file (frame type + serial stream + flags) */
 #define SERIAL_FRAMESIZE (1+MAX_SERIAL_SIZE+5)
@@ -349,6 +349,8 @@ static int amr_nb_decode_frame(AVCodecContext * avctx,
 
 #endif
 
+#if CONFIG_LIBAMR_NB || CONFIG_LIBAMR_NB_FIXED
+
 AVCodec libamr_nb_decoder =
 {
     "libamr_nb",
@@ -366,3 +368,4 @@ AVCodec libamr_nb_decoder =
     /*.pix_fmts = */NULL,
     /*.long_name = */NULL_IF_CONFIG_SMALL("libamr-nb Adaptive Multi-Rate (AMR) Narrow-Band"),
 };
+#endif

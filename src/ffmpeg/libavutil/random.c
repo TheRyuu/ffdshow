@@ -1,6 +1,6 @@
 /*
  * Mersenne Twister Random Algorithm
- * Copyright (c) 2006 Ryan Martell.
+ * Copyright (c) 2006 Ryan Martell
  * Based on A C-program for MT19937, with initialization improved 2002/1/26. Coded by
  * Takuji Nishimura and Makoto Matsumoto.
  *
@@ -36,7 +36,7 @@ see http://en.wikipedia.org/wiki/Mersenne_twister for an explanation of this alg
 #define LOWER_MASK 0x7fffffff /* least significant r bits */
 
 /** initializes mt[AV_RANDOM_N] with a seed */
-void av_init_random(unsigned int seed, AVRandomState *state)
+void av_random_init(AVRandomState *state, unsigned int seed)
 {
     int index;
 

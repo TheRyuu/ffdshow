@@ -1,6 +1,6 @@
 /*
  * Mersenne Twister Random Algorithm
- * Copyright (c) 2006 Ryan Martell.
+ * Copyright (c) 2006 Ryan Martell
  * Based on A C-program for MT19937, with initialization improved 2002/1/26. Coded by
  * Takuji Nishimura and Makoto Matsumoto.
  *
@@ -26,13 +26,16 @@
 
 #define AV_RANDOM_N 624
 
+#include "avutil.h"
+#include "common.h"
+
 typedef struct {
     unsigned int mt[AV_RANDOM_N]; ///< the array for the state vector
     int index; ///< Current untempered value we use as the base.
 } AVRandomState;
 
 
-void av_init_random(unsigned int seed, AVRandomState *state); ///< To be inlined, the struct must be visible. So it does not make sense to try and keep it opaque with malloc/free-like calls.
+void av_random_init(AVRandomState *state, unsigned int seed); ///< To be inlined, the struct must be visible. So it does not make sense to try and keep it opaque with malloc/free-like calls.
 void av_random_generate_untempered_numbers(AVRandomState *state); ///< Regenerate the untempered numbers (must be done every 624 iterations, or it will loop).
 
 #if defined(_MSC_VER) & !defined(__cplusplus)

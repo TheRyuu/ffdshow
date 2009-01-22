@@ -25,12 +25,12 @@
  * FF Video Codec 1 (an experimental lossless codec)
  */
 
-#include "common.h"
 #include "avcodec.h"
 #include "bitstream.h"
 #include "dsputil.h"
 #include "rangecoder.h"
 #include "golomb.h"
+#include "mathops.h"
 
 #ifndef __GNUC__
 #include <malloc.h>
@@ -355,7 +355,7 @@ static inline int get_vlc_symbol(GetBitContext *gb, VlcState * const state, int 
     return ret;
 }
 
-#ifdef CONFIG_FFV1_ENCODER
+#if CONFIG_FFV1_ENCODER
 static inline int encode_line(FFV1Context *s, int w, int_fast16_t *sample[2], int plane_index, int bits){
     PlaneContext * const p= &s->plane[plane_index];
     RangeCoder * const c= &s->c;
@@ -468,8 +468,8 @@ static void encode_rgb_frame(FFV1Context *s, uint32_t *src, int w, int h, int st
 #if __STDC_VERSION__ >= 199901L
     int_fast16_t sample_buffer[3][ring_size][w+6], *sample[3][ring_size];
 #else
-	int_fast16_t ***sample_buffer = _alloca(3 * ring_size * (w+6) * sizeof(int_fast16_t));
-	int_fast16_t ***sample = _alloca(3 * ring_size * sizeof(int_fast16_t*));
+    int_fast16_t ***sample_buffer = _alloca(3 * ring_size * (w+6) * sizeof(int_fast16_t));
+    int_fast16_t ***sample = _alloca(3 * ring_size * sizeof(int_fast16_t*));
 #endif
     s->run_index=0;
 
@@ -558,7 +558,7 @@ static av_cold int common_init(AVCodecContext *avctx){
     return 0;
 }
 
-#ifdef CONFIG_FFV1_ENCODER
+#if CONFIG_FFV1_ENCODER
 static av_cold int encode_init(AVCodecContext *avctx)
 {
     FFV1Context *s = avctx->priv_data;
@@ -647,7 +647,7 @@ static void clear_state(FFV1Context *f){
     }
 }
 
-#ifdef CONFIG_FFV1_ENCODER
+#if CONFIG_FFV1_ENCODER
 static int encode_frame(AVCodecContext *avctx, unsigned char *buf, int buf_size, void *data){
     FFV1Context *f = avctx->priv_data;
     RangeCoder * const c= &f->c;
@@ -1051,7 +1051,7 @@ AVCodec ffv1_decoder = {
     /*.long_name= */NULL_IF_CONFIG_SMALL("FFmpeg codec #1"),
 };
 
-#ifdef CONFIG_FFV1_ENCODER
+#if CONFIG_FFV1_ENCODER
 AVCodec ffv1_encoder = {
     "ffv1",
     CODEC_TYPE_VIDEO,

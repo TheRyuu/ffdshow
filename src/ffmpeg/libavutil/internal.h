@@ -36,9 +36,10 @@
 #include <stddef.h>
 #include <assert.h>
 #include "common.h"
+#include "timer.h"
 
 #ifndef attribute_align_arg
-#if AV_GCC_VERSION_AT_LEAST(4,2)
+#if (!defined(__ICC) || __ICC > 1100) && AV_GCC_VERSION_AT_LEAST(4,2)
 #    define attribute_align_arg __attribute__((force_align_arg_pointer))
 #else
 #    define attribute_align_arg
@@ -98,8 +99,6 @@
 #endif
 
 #include "config.h"
-#include "intreadwrite.h"
-#include "bswap.h"
 
 #ifndef offsetof
 #    define offsetof(T,F) ((unsigned int)((char *)&((T *)0)->F))
@@ -113,7 +112,7 @@
 #endif
 
 // Use rip-relative addressing if compiling PIC code on x86-64.
-#if defined(ARCH_X86_64) && defined(PIC)
+#if ARCH_X86_64 && defined(PIC)
 #    define LOCAL_MANGLE(a) #a "(%%rip)"
 #else
 #    define LOCAL_MANGLE(a) #a
@@ -140,7 +139,7 @@
 
 extern const uint32_t ff_inverse[256];
 
-#if defined(ARCH_X86)
+#if ARCH_X86
 #    define FASTDIV(a,b) \
     ({\
         int ret,dmy;\
@@ -151,7 +150,7 @@ extern const uint32_t ff_inverse[256];
             );\
         ret;\
     })
-#elif defined(CONFIG_FASTDIV)
+#elif CONFIG_FASTDIV
 #    define FASTDIV(a,b)   ((uint32_t)((((uint64_t)a)*ff_inverse[b])>>32))
 #else
 #    define FASTDIV(a,b)   ((a)/(b))
@@ -167,7 +166,7 @@ static inline av_const unsigned int ff_sqrt(unsigned int a)
 
     if(a<255) return (ff_sqrt_tab[a+1]-1)>>4;
     else if(a<(1<<12)) b= ff_sqrt_tab[a>>4 ]>>2;
-#ifndef CONFIG_SMALL
+#if !CONFIG_SMALL
     else if(a<(1<<14)) b= ff_sqrt_tab[a>>6 ]>>1;
     else if(a<(1<<16)) b= ff_sqrt_tab[a>>8 ]   ;
 #endif
@@ -181,7 +180,7 @@ static inline av_const unsigned int ff_sqrt(unsigned int a)
     return b - (a<b*b);
 }
 
-#if defined(ARCH_X86)
+#if ARCH_X86
 #define MASK_ABS(mask, level)\
             __asm__ volatile(\
                 "cltd                   \n\t"\
@@ -195,7 +194,7 @@ static inline av_const unsigned int ff_sqrt(unsigned int a)
             level= (level^mask)-mask;
 #endif
 
-#ifdef HAVE_CMOV
+#if HAVE_CMOV
 #define COPY3_IF_LT(x,y,a,b,c,d)\
 __asm__ volatile (\
     "cmpl %0, %3        \n\t"\
@@ -226,7 +225,7 @@ if((y)<(x)){\
 #undef  rand
 #define rand rand_is_forbidden_due_to_state_trashing_use_av_random
 #undef  srand
-#define srand srand_is_forbidden_due_to_state_trashing_use_av_init_random
+#define srand srand_is_forbidden_due_to_state_trashing_use_av_random_init
 #undef  random
 #define random random_is_forbidden_due_to_state_trashing_use_av_random
 #undef  sprintf
@@ -293,6 +292,25 @@ static av_always_inline av_const float roundf(float x)
     return (x > 0) ? floor(x + 0.5) : ceil(x - 0.5);
 }
 #endif
+
+#ifndef truncf
+static av_always_inline av_const float truncf(float x)
+{
+    return (x > 0) ? floor(x) : ceil(x);
+}
+#endif
+
 #endif /* __GNUC__ */
+
+/**
+ * Returns NULL if CONFIG_SMALL is true otherwise the argument
+ * without modifications, used to disable the definition of strings
+ * (for example AVCodec long_names).
+ */
+#if CONFIG_SMALL
+#   define NULL_IF_CONFIG_SMALL(x) NULL
+#else
+#   define NULL_IF_CONFIG_SMALL(x) x
+#endif
 
 #endif /* AVUTIL_INTERNAL_H */

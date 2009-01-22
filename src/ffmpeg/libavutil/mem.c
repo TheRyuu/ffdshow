@@ -1,6 +1,6 @@
 /*
  * default memory allocator for libavutil
- * Copyright (c) 2002 Fabrice Bellard.
+ * Copyright (c) 2002 Fabrice Bellard
  *
  * This file is part of FFmpeg.
  *
@@ -25,15 +25,13 @@
  */
 
 #include "common.h"
-#include <string.h>
-#include <malloc.h>
 
 /* here we can use OS dependent allocation functions */
 #undef malloc
 #undef free
 #undef realloc
 
-#ifdef HAVE_MALLOC_H
+#if HAVE_MALLOC_H
 #include <malloc.h>
 #endif
 
@@ -100,11 +98,11 @@ void av_free(void *ptr)
 {
     /* XXX: this test should not be needed on most libcs */
     if (ptr)
- #ifndef __GNUC__
+#ifndef __GNUC__
         _aligned_free(ptr);
- #else
+#else
         __mingw_aligned_free(ptr);
- #endif
+#endif
 }
 
 void av_freep(void *arg)

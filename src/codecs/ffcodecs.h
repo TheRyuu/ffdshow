@@ -131,6 +131,7 @@
  CODEC_OP(CODEC_ID_EAC3              ,146,"eac3") \
  CODEC_OP(CODEC_ID_MP3ADU            ,147,"mp3adu") \
  CODEC_OP(CODEC_ID_MLP               ,148,"mlp/true hd") \
+ CODEC_OP(CODEC_ID_MP1               ,149,"mp1") \
  \
  /* Raw formats */ \
  CODEC_OP(CODEC_ID_RAW           ,300,"raw") \

@@ -30,6 +30,8 @@
 #include "bitstream.h"
 #include "dsputil.h"
 
+#define CONFIG_AUDIO_NONSHORT 0
+
 /* max frame size, in samples */
 #define MPA_FRAME_SIZE 1152
 
@@ -51,10 +53,7 @@
 
 #define MP3_MASK 0xFFFE0CCF
 
-/* define USE_HIGHPRECISION to have a bit exact (but slower) mpeg
-   audio decoder */
-
-#ifdef USE_HIGHPRECISION
+#if CONFIG_MPEGAUDIO_HP
 #define FRAC_BITS   23   /* fractional bits for sb_samples and dct */
 #define WFRAC_BITS  16   /* fractional bits for window */
 #else
@@ -66,16 +65,18 @@
 
 #define FIX(a)   ((int)((a) * FRAC_ONE))
 
-#if defined(USE_HIGHPRECISION) && defined(CONFIG_AUDIO_NONSHORT)
+#if CONFIG_MPEGAUDIO_HP && CONFIG_AUDIO_NONSHORT
 typedef int32_t OUT_INT;
 #define OUT_MAX INT32_MAX
 #define OUT_MIN INT32_MIN
 #define OUT_SHIFT (WFRAC_BITS + FRAC_BITS - 31)
+#define OUT_FMT SAMPLE_FMT_S32
 #else
 typedef int16_t OUT_INT;
 #define OUT_MAX INT16_MAX
 #define OUT_MIN INT16_MIN
 #define OUT_SHIFT (WFRAC_BITS + FRAC_BITS - 15)
+#define OUT_FMT SAMPLE_FMT_S16
 #endif
 
 #if FRAC_BITS <= 15

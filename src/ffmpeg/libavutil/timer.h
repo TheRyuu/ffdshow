@@ -1,6 +1,8 @@
-/*
- * MPEG Audio common code
- * Copyright (c) 2001, 2002 Fabrice Bellard
+/**
+ * @file timer.h
+ * high precision timer, useful to profile code
+ *
+ * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
  *
  * This file is part of FFmpeg.
  *
@@ -19,32 +21,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-/**
- * @file mpegaudio.c
- * MPEG Audio common code.
- */
+#ifndef AVUTIL_TIMER_H
+#define AVUTIL_TIMER_H
 
-#include "mpegaudio.h"
+#include <stdlib.h>
+#ifdef __GNUC__
+#include <stdint.h>
+#endif
+#include "config.h"
 
-
-/* bitrate is in kb/s */
-int ff_mpa_l2_select_table(int bitrate, int nb_channels, int freq, int lsf)
+/*
+#if defined(ARCH_X86)
+#define AV_READ_TIME read_time
+static inline uint64_t read_time(void)
 {
-    int ch_bitrate, table;
-
-    ch_bitrate = bitrate / nb_channels;
-    if (!lsf) {
-        if ((freq == 48000 && ch_bitrate >= 56) ||
-            (ch_bitrate >= 56 && ch_bitrate <= 80))
-            table = 0;
-        else if (freq != 48000 && ch_bitrate >= 96)
-            table = 1;
-        else if (freq != 32000 && ch_bitrate <= 48)
-            table = 2;
-        else
-            table = 3;
-    } else {
-        table = 4;
-    }
-    return table;
+    uint32_t a, d;
+    __asm__ volatile("rdtsc\n\t"
+                 : "=a" (a), "=d" (d));
+    return ((uint64_t)d << 32) + a;
 }
+#elif defined(HAVE_GETHRTIME)
+#define AV_READ_TIME gethrtime
+#endif
+*/
+
+#define START_TIMER
+#define STOP_TIMER(id) {}
+
+#endif /* AVUTIL_TIMER_H */

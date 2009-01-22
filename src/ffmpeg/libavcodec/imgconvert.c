@@ -1,6 +1,6 @@
 /*
  * Misc image conversion routines
- * Copyright (c) 2001, 2002, 2003 Fabrice Bellard.
+ * Copyright (c) 2001, 2002, 2003 Fabrice Bellard
  *
  * This file is part of FFmpeg.
  *
@@ -33,7 +33,7 @@
 #include "avcodec.h"
 #include "dsputil.h"
 
-#ifdef HAVE_MMX
+#if HAVE_MMX
 #include "x86/mmx.h"
 #include "x86/dsputil_mmx.h"
 #endif

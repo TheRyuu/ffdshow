@@ -1,6 +1,6 @@
 /*
  * utils for libavcodec
- * Copyright (c) 2001 Fabrice Bellard.
+ * Copyright (c) 2001 Fabrice Bellard
  * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
  *
  * This file is part of FFmpeg.
@@ -25,11 +25,14 @@
  * utils.
  */
 
+#include "libavutil/avstring.h"
 #include "libavutil/crc.h"
 #include "avcodec.h"
 #include "dsputil.h"
 #include "imgconvert.h"
 #include "audioconvert.h"
+#include "internal.h"
+#include <stdlib.h>
 #include <stdarg.h>
 #include <limits.h>
 #include <float.h>
@@ -56,7 +59,7 @@ const uint8_t ff_reverse[256]={
 0x0F,0x8F,0x4F,0xCF,0x2F,0xAF,0x6F,0xEF,0x1F,0x9F,0x5F,0xDF,0x3F,0xBF,0x7F,0xFF,
 };
 
-//static int volatile entangled_thread_counter=0; /* ffdshow custom coment out */
+//static int volatile entangled_thread_counter=0; /* ffdshow custom comment out */
 
 void *av_fast_realloc(void *ptr, unsigned int *size, unsigned int min_size)
 {
@@ -252,7 +255,7 @@ int avcodec_default_get_buffer(AVCodecContext *s, AVFrame *pic){
 //we could change STRIDE_ALIGN to 16 for x86/sse but it would increase the
 //picture size unneccessarily in some cases. The solution here is not
 //pretty and better ideas are welcome!
-#ifdef HAVE_MMX
+#if HAVE_MMX
             if(s->codec_id == CODEC_ID_SVQ1)
                 stride_align[i]= 16;
             else
@@ -494,7 +497,7 @@ int attribute_align_arg avcodec_open(AVCodecContext *avctx, AVCodec *codec)
 {
     int ret= -1;
 
-    /* ffdshow custom coment out */
+    /* ffdshow custom comment out */
     //entangled_thread_counter++;
     //if(entangled_thread_counter != 1){
     //    av_log(avctx, AV_LOG_ERROR, "insufficient thread locking around avcodec_open/close()\n");
@@ -538,7 +541,7 @@ int attribute_align_arg avcodec_open(AVCodecContext *avctx, AVCodec *codec)
     }
     ret=0;
 end:
-    //entangled_thread_counter--; /* ffdshow custom coment out */
+    //entangled_thread_counter--; /* ffdshow custom comment out */
     return ret;
 }
 
@@ -644,7 +647,7 @@ int avcodec_close(AVCodecContext *avctx)
     avcodec_default_free_buffers(avctx);
     av_freep(&avctx->priv_data);
     avctx->codec = NULL;
-    //entangled_thread_counter--; /* ffdshow custom coment out */
+    //entangled_thread_counter--; /* ffdshow custom comment out */
     return 0;
 }
 
@@ -791,7 +794,7 @@ int av_get_bits_per_sample_format(enum SampleFormat sample_fmt) {
     }
 }
 
-#if !defined(HAVE_THREADS)
+#if !HAVE_THREADS
 int avcodec_thread_init(AVCodecContext *s, int thread_count){
     return -1;
 }
@@ -818,8 +821,16 @@ void ff_log_missing_feature(void *avc, const char *feature, int want_sample)
             "occurs, it means that your file has a feature which has not "
             "been implemented.", feature);
     if(want_sample)
-        av_log(avc, AV_LOG_WARNING, " If you want to help, upload a sample "
-                "of this file to ftp://upload.ffmpeg.org/MPlayer/incoming/ "
-                "and contact the ffmpeg-devel mailing list.");
-    av_log(avc, AV_LOG_WARNING, "\n");
+        ff_log_ask_for_sample(avc, NULL);
+    else
+        av_log(avc, AV_LOG_WARNING, "\n");
+}
+
+void ff_log_ask_for_sample(void *avc, const char *msg)
+{
+    if (msg)
+        av_log(avc, AV_LOG_WARNING, "%s ", msg);
+    av_log(avc, AV_LOG_WARNING, "If you want to help, upload a sample "
+            "of this file to ftp://upload.ffmpeg.org/MPlayer/incoming/ "
+            "and contact the ffmpeg-devel mailing list.\n");
 }

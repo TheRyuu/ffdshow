@@ -80,7 +80,7 @@
 #endif
 
 #ifndef av_cold
-#if AV_GCC_VERSION_AT_LEAST(4,3)
+#if (!defined(__ICC) || __ICC > 1100) && AV_GCC_VERSION_AT_LEAST(4,3)
 #    define av_cold __attribute__((cold))
 #else
 #    define av_cold
@@ -189,47 +189,6 @@ static inline av_const int av_log2_16bit(unsigned int v)
     return n;
 }
 
-/* median of 3 */
-static inline av_const int mid_pred(int a, int b, int c)
-{
-#ifdef HAVE_CMOV
-    int i=b;
-    __asm__ volatile(
-        "cmp    %2, %1 \n\t"
-        "cmovg  %1, %0 \n\t"
-        "cmovg  %2, %1 \n\t"
-        "cmp    %3, %1 \n\t"
-        "cmovl  %3, %1 \n\t"
-        "cmp    %1, %0 \n\t"
-        "cmovg  %1, %0 \n\t"
-        :"+&r"(i), "+&r"(a)
-        :"r"(b), "r"(c)
-    );
-    return i;
-#elif 0
-    int t= (a-b)&((a-b)>>31);
-    a-=t;
-    b+=t;
-    b-= (b-c)&((b-c)>>31);
-    b+= (a-b)&((a-b)>>31);
-
-    return b;
-#else
-    if(a>b){
-        if(c>b){
-            if(c>a) b=a;
-            else    b=c;
-        }
-    }else{
-        if(b>c){
-            if(c>a) b=c;
-            else    b=a;
-        }
-    }
-    return b;
-#endif
-}
-
 /**
  * clip a signed integer value into the amin-amax range
  * @param a value to clip
@@ -278,20 +237,6 @@ static inline av_const float av_clipf(float a, float amin, float amax)
     if      (a < amin) return amin;
     else if (a > amax) return amax;
     else               return a;
-}
-
-/* math */
-int64_t av_const ff_gcd(int64_t a, int64_t b);
-
-/**
- * converts fourcc string to int
- */
-static inline av_pure int ff_get_fourcc(const char *s){
-#ifdef HAVE_AV_CONFIG_H
-    assert( strlen(s)==4 );
-#endif
-
-    return (s[0]) + (s[1]<<8) + (s[2]<<16) + (s[3]<<24);
 }
 
 #define MKTAG(a,b,c,d) (a | (b << 8) | (c << 16) | (d << 24))
@@ -360,35 +305,6 @@ static inline av_pure int ff_get_fourcc(const char *s){
             }\
         }\
     }
-
-/*
-#if defined(ARCH_X86)
-#define AV_READ_TIME read_time
-static inline uint64_t read_time(void)
-{
-    uint32_t a, d;
-    __asm__ volatile("rdtsc\n\t"
-                 : "=a" (a), "=d" (d));
-    return ((uint64_t)d << 32) + a;
-}
-#elif defined(HAVE_GETHRTIME)
-#define AV_READ_TIME gethrtime
-#endif
-*/
-
-#define START_TIMER
-#define STOP_TIMER(id) {}
-
-/**
- * Returns NULL if CONFIG_SMALL is defined otherwise the argument
- * without modifications, used to disable the definition of strings
- * (for example AVCodec long_names).
- */
-#ifdef CONFIG_SMALL
-#   define NULL_IF_CONFIG_SMALL(x) NULL
-#else
-#   define NULL_IF_CONFIG_SMALL(x) x
-#endif
 
 #endif /* HAVE_AV_CONFIG_H */
 

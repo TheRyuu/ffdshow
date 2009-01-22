@@ -1,6 +1,6 @@
 /*
  * MMX optimized DSP utils
- * Copyright (c) 2000, 2001 Fabrice Bellard.
+ * Copyright (c) 2000, 2001 Fabrice Bellard
  * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
  *
  * This file is part of FFmpeg.
@@ -620,7 +620,7 @@ static void add_bytes_l2_mmx(uint8_t *dst, uint8_t *src1, uint8_t *src2, int w){
         "paddb %%mm1, %%mm6             \n\t"
 
 static void h263_v_loop_filter_mmx(uint8_t *src, int stride, int qscale){
-    if(ENABLE_ANY_H263) {
+    if(CONFIG_ANY_H263) {
     const int strength= ff_h263_loop_filter_strength[qscale];
 
     __asm__ volatile(
@@ -670,7 +670,7 @@ static inline void transpose4x4(uint8_t *dst, uint8_t *src, int dst_stride, int 
 }
 
 static void h263_h_loop_filter_mmx(uint8_t *src, int stride, int qscale){
-    if(ENABLE_ANY_H263) {
+    if(CONFIG_ANY_H263) {
     const int strength= ff_h263_loop_filter_strength[qscale];
     DECLARE_ALIGNED(8, uint64_t, temp[4]);
     uint8_t *btemp= (uint8_t*)temp;
@@ -880,7 +880,7 @@ static void add_png_paeth_prediction_##cpu(uint8_t *dst, uint8_t *src, uint8_t *
         "pabsw     %%mm5, %%mm5 \n"
 
 PAETH(mmx2, ABS3_MMX2)
-#ifdef HAVE_SSSE3
+#if HAVE_SSSE3
 PAETH(ssse3, ABS3_SSSE3)
 #endif
 
@@ -1765,7 +1765,7 @@ void ff_mmxext_idct(DCTELEM *block);
 
 /* XXX: those functions should be suppressed ASAP when all IDCTs are
    converted */
-#ifdef CONFIG_GPL
+#if CONFIG_GPL
 static void ff_libmpeg2mmx_idct_put(uint8_t *dest, int line_size, DCTELEM *block)
 {
     ff_mmx_idct (block);
@@ -1809,7 +1809,7 @@ static void ff_idct_xvid_mmx2_add(uint8_t *dest, int line_size, DCTELEM *block)
 }
 
 /* disable audio related ASM and YASM based ASM for 64-bit builds */
-#ifndef ARCH_X86_64
+#if ARCH_X86_32
 
 static void vorbis_inverse_coupling_3dnow(float *mag, float *ang, int blocksize)
 {
@@ -2150,7 +2150,7 @@ static void vector_fmul_add_add_sse(float *dst, const float *src0, const float *
 
 static void vector_fmul_window_3dnow2(float *dst, const float *src0, const float *src1,
                                       const float *win, float add_bias, int len){
-#ifdef HAVE_6REGS
+#if HAVE_6REGS
     if(add_bias == 0){
         x86_reg i = -len*4;
         x86_reg j = len*4-8;
@@ -2185,7 +2185,7 @@ static void vector_fmul_window_3dnow2(float *dst, const float *src0, const float
 
 static void vector_fmul_window_sse(float *dst, const float *src0, const float *src1,
                                    const float *win, float add_bias, int len){
-#ifdef HAVE_6REGS
+#if HAVE_6REGS
     if(add_bias == 0){
         x86_reg i = -len*4;
         x86_reg j = len*4-16;
@@ -2327,7 +2327,7 @@ static void float_to_int16_sse2(int16_t *dst, const float *src, long len){
     );
 }
 
-#ifdef HAVE_YASM
+#if HAVE_YASM
 void ff_float_to_int16_interleave6_sse(int16_t *dst, const float **src, int len);
 void ff_float_to_int16_interleave6_3dnow(int16_t *dst, const float **src, int len);
 void ff_float_to_int16_interleave6_3dn2(int16_t *dst, const float **src, int len);
@@ -2335,7 +2335,7 @@ void ff_x264_deblock_v_luma_sse2(uint8_t *pix, int stride, int alpha, int beta, 
 void ff_x264_deblock_h_luma_sse2(uint8_t *pix, int stride, int alpha, int beta, int8_t *tc0);
 void ff_x264_deblock_v8_luma_intra_mmxext(uint8_t *pix, int stride, int alpha, int beta);
 void ff_x264_deblock_h_luma_intra_mmxext(uint8_t *pix, int stride, int alpha, int beta);
-#ifdef ARCH_X86_32
+#if ARCH_X86_32
 static void ff_x264_deblock_v_luma_intra_mmxext(uint8_t *pix, int stride, int alpha, int beta)
 {
     ff_x264_deblock_v8_luma_intra_mmxext(pix+0, stride, alpha, beta);
@@ -2439,7 +2439,7 @@ static void float_to_int16_interleave_3dn2(int16_t *dst, const float **src, long
     else
         float_to_int16_interleave_3dnow(dst, src, len, channels);
 }
-#endif /* ARCH_X86_64 */
+#endif /* ARCH_X86_32 */
 
 
 void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
@@ -2477,7 +2477,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
                 c->idct_add= ff_simple_idct_add_mmx;
                 c->idct    = ff_simple_idct_mmx;
                 c->idct_permutation_type= FF_SIMPLE_IDCT_PERM;
-#ifdef CONFIG_GPL
+#if CONFIG_GPL
             }else if(idct_algo==FF_IDCT_LIBMPEG2MMX){
                 if(mm_flags & FF_MM_MMXEXT){
                     c->idct_put= ff_libmpeg2mmx2_idct_put;
@@ -2490,7 +2490,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
                 }
                 c->idct_permutation_type= FF_LIBMPEG2_IDCT_PERM;
 #endif
-            }else if((ENABLE_VP3_DECODER || ENABLE_VP5_DECODER || ENABLE_VP6_DECODER || ENABLE_THEORA_DECODER) &&
+            }else if((CONFIG_VP3_DECODER || CONFIG_VP5_DECODER || CONFIG_VP6_DECODER || CONFIG_THEORA_DECODER) &&
                      idct_algo==FF_IDCT_VP3){
                 if(mm_flags & FF_MM_SSE2){
                     c->idct_put= ff_vp3_idct_put_sse2;
@@ -2553,7 +2553,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 
         c->draw_edges = draw_edges_mmx;
 
-        if (ENABLE_ANY_H263) {
+        if (CONFIG_ANY_H263) {
             c->h263_v_loop_filter= h263_v_loop_filter_mmx;
             c->h263_h_loop_filter= h263_h_loop_filter_mmx;
         }
@@ -2606,7 +2606,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
                 c->avg_pixels_tab[0][3] = avg_pixels16_xy2_mmx2;
                 c->avg_pixels_tab[1][3] = avg_pixels8_xy2_mmx2;
 
-                if (ENABLE_VP3_DECODER || ENABLE_THEORA_DECODER) {
+                if (CONFIG_VP3_DECODER || CONFIG_THEORA_DECODER) {
                     c->vp3_v_loop_filter= ff_vp3_v_loop_filter_mmx2;
                     c->vp3_h_loop_filter= ff_vp3_h_loop_filter_mmx2;
                 }
@@ -2682,10 +2682,10 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->biweight_h264_pixels_tab[6]= ff_h264_biweight_4x4_mmx2;
             c->biweight_h264_pixels_tab[7]= ff_h264_biweight_4x2_mmx2;
 
-            if (ENABLE_CAVS_DECODER)
+            if (CONFIG_CAVS_DECODER)
                 ff_cavsdsp_init_mmx2(c, avctx);
 
-            if (ENABLE_VC1_DECODER || ENABLE_WMV3_DECODER)
+            if (CONFIG_VC1_DECODER || CONFIG_WMV3_DECODER)
                 ff_vc1dsp_init_mmx(c, avctx);
 
             c->add_png_paeth_prediction= add_png_paeth_prediction_mmx2;
@@ -2740,7 +2740,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->avg_rv40_chroma_pixels_tab[0]= avg_rv40_chroma_mc8_3dnow;
             c->avg_rv40_chroma_pixels_tab[1]= avg_rv40_chroma_mc4_3dnow;
 
-            if (ENABLE_CAVS_DECODER)
+            if (CONFIG_CAVS_DECODER)
                 ff_cavsdsp_init_3dnow(c, avctx);
         }
 
@@ -2775,7 +2775,7 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             H264_QPEL_FUNCS(3, 2, sse2);
             H264_QPEL_FUNCS(3, 3, sse2);
         }
-#ifdef HAVE_SSSE3
+#if HAVE_SSSE3
         if(mm_flags & FF_MM_SSSE3){
             H264_QPEL_FUNCS(1, 0, ssse3);
             H264_QPEL_FUNCS(1, 1, ssse3);
@@ -2799,15 +2799,15 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
 #endif
 
 /* disable YASM based ASM for 64-bit builds */
-#ifndef ARCH_X86_64
-#if defined(CONFIG_GPL) && defined(HAVE_YASM)
+#if ARCH_X86_32
+#if CONFIG_GPL && HAVE_YASM
         if( mm_flags&FF_MM_MMXEXT ){
-#ifdef ARCH_X86_32
+#if ARCH_X86_32
             c->h264_v_loop_filter_luma_intra = ff_x264_deblock_v_luma_intra_mmxext;
             c->h264_h_loop_filter_luma_intra = ff_x264_deblock_h_luma_intra_mmxext;
 #endif
             if( mm_flags&FF_MM_SSE2 ){
-#if defined(ARCH_X86_64) || !defined(__ICC) || __ICC > 1100
+#if ARCH_X86_64 || !defined(__ICC) || __ICC > 1100
                 c->h264_v_loop_filter_luma = ff_x264_deblock_v_luma_sse2;
                 c->h264_h_loop_filter_luma = ff_x264_deblock_h_luma_sse2;
                 c->h264_v_loop_filter_luma_intra = ff_x264_deblock_v_luma_intra_sse2;
@@ -2819,12 +2819,12 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             }
         }
 #endif
-#endif /* ARCH_X86_64 */
+#endif /* ARCH_X86_32 */
 
 #endif /* AV_GCC_VERSION_AT_LEAST(4,2) */
 
 /* disable audio related ASM for 64-bit builds */
-#ifndef ARCH_X86_64
+#if ARCH_X86_32
         if(mm_flags & FF_MM_3DNOW){
             c->vorbis_inverse_coupling = vorbis_inverse_coupling_3dnow;
             c->vector_fmul = vector_fmul_3dnow;
@@ -2858,10 +2858,10 @@ void dsputil_init_mmx(DSPContext* c, AVCodecContext *avctx)
             c->float_to_int16 = float_to_int16_sse2;
             c->float_to_int16_interleave = float_to_int16_interleave_sse2;
         }
-#endif /* ARCH_X86_64 */
+#endif /* ARCH_X86_32 */
     }
 
-    if (ENABLE_ENCODERS)
+    if (CONFIG_ENCODERS)
         dsputilenc_init_mmx(c, avctx);
 }
 

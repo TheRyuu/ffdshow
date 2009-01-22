@@ -32,7 +32,7 @@
 #include "config.h"
 #include "common.h"
 
-#if defined(ARCH_X86)
+#if ARCH_X86
 #   include "x86/bswap.h"
 #endif
 

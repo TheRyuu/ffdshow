@@ -1,10 +1,10 @@
 /*
  * DV decoder
- * Copyright (c) 2002 Fabrice Bellard.
- * Copyright (c) 2004 Roman Shaposhnik.
+ * Copyright (c) 2002 Fabrice Bellard
+ * Copyright (c) 2004 Roman Shaposhnik
  *
  * DV encoder
- * Copyright (c) 2003 Roman Shaposhnik.
+ * Copyright (c) 2003 Roman Shaposhnik
  *
  * 50 Mbps (DVCPRO50) support
  * Copyright (c) 2006 Daniel Maas <dmaas@maasdigital.com>
@@ -62,7 +62,7 @@ typedef struct DVVideoContext {
 
 #define TEX_VLC_BITS 9
 
-#if ENABLE_SMALL
+#if CONFIG_SMALL
 #define DV_VLC_MAP_RUN_SIZE 15
 #define DV_VLC_MAP_LEV_SIZE 23
 #else
@@ -326,7 +326,7 @@ static av_cold int dvvideo_init(AVCodecContext *avctx)
         for (i = 0; i < NB_DV_VLC - 1; i++) {
            if (dv_vlc_run[i] >= DV_VLC_MAP_RUN_SIZE)
                continue;
-#if ENABLE_SMALL
+#if CONFIG_SMALL
            if (dv_vlc_level[i] >= DV_VLC_MAP_LEV_SIZE)
                continue;
 #endif
@@ -340,7 +340,7 @@ static av_cold int dvvideo_init(AVCodecContext *avctx)
                dv_vlc_len[i] + (!!dv_vlc_level[i]);
         }
         for (i = 0; i < DV_VLC_MAP_RUN_SIZE; i++) {
-#if ENABLE_SMALL
+#if CONFIG_SMALL
            for (j = 1; j < DV_VLC_MAP_LEV_SIZE; j++) {
               if (dv_vlc_map[i][j].size == 0) {
                   dv_vlc_map[i][j].vlc = dv_vlc_map[0][j].vlc |
@@ -692,7 +692,7 @@ static int dv_decode_video_segment(AVCodecContext *avctx, DVwork_chunk *work_chu
     return 0;
 }
 
-#if ENABLE_SMALL
+#if CONFIG_SMALL
 /* Converts run and level (where level != 0) pair into vlc, returning bit size */
 static av_always_inline int dv_rl2vlc(int run, int level, int sign, uint32_t* vlc)
 {
@@ -1123,7 +1123,7 @@ static int dv_encode_video_segment(AVCodecContext *avctx, DVwork_chunk *work_chu
     return 0;
 }
 
-#ifdef CONFIG_DVVIDEO_DECODER
+#if CONFIG_DVVIDEO_DECODER
 /* NOTE: exactly one frame must be given (120000 bytes for NTSC,
    144000 bytes for PAL - or twice those for 50Mbps) */
 static int dvvideo_decode_frame(AVCodecContext *avctx,
@@ -1240,7 +1240,7 @@ static inline int dv_write_pack(enum dv_pack_type pack_id, DVVideoContext *c,
     return 5;
 }
 
-#ifdef CONFIG_DVVIDEO_ENCODER
+#if CONFIG_DVVIDEO_ENCODER
 static void dv_format_frame(DVVideoContext* c, uint8_t* buf)
 {
     int chan, i, j, k;
@@ -1328,7 +1328,7 @@ static int dvvideo_close(AVCodecContext *c)
 }
 
 
-#ifdef CONFIG_DVVIDEO_ENCODER
+#if CONFIG_DVVIDEO_ENCODER
 AVCodec dvvideo_encoder = {
     "dvvideo",
     CODEC_TYPE_VIDEO,
@@ -1351,7 +1351,7 @@ AVCodec dvvideo_encoder = {
 };
 #endif // CONFIG_DVVIDEO_ENCODER
 
-#ifdef CONFIG_DVVIDEO_DECODER
+#if CONFIG_DVVIDEO_DECODER
 AVCodec dvvideo_decoder = {
     "dvvideo",
     CODEC_TYPE_VIDEO,

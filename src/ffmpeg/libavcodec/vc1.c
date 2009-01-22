@@ -34,6 +34,7 @@
 #include "msmpeg4data.h"
 #include "unary.h"
 #include "simple_idct.h"
+#include "mathops.h"
 
 #undef NDEBUG
 #include <assert.h>
@@ -314,30 +315,39 @@ static int bitplane_decoding(uint8_t* data, int *raw_flag, VC1Context *v)
  * @return whether other 3 pairs should be filtered or not
  * @see 8.6
  */
-static int vc1_filter_line(uint8_t* src, int stride, int pq){
-    int a0, a1, a2, a3, d, clip, filt3 = 0;
+static int av_always_inline vc1_filter_line(uint8_t* src, int stride, int pq){
     uint8_t *cm = ff_cropTbl + MAX_NEG_CROP;
 
-    a0     = (2*(src[-2*stride] - src[ 1*stride]) - 5*(src[-1*stride] - src[ 0*stride]) + 4) >> 3;
-    if(FFABS(a0) < pq){
-        a1 = (2*(src[-4*stride] - src[-1*stride]) - 5*(src[-3*stride] - src[-2*stride]) + 4) >> 3;
-        a2 = (2*(src[ 0*stride] - src[ 3*stride]) - 5*(src[ 1*stride] - src[ 2*stride]) + 4) >> 3;
-        a3 = FFMIN(FFABS(a1), FFABS(a2));
-        if(a3 < FFABS(a0)){
-            d = 5 * ((a0 >=0 ? a3 : -a3) - a0) / 8;
-            clip = (src[-1*stride] - src[ 0*stride])/2;
+    int a0 = (2*(src[-2*stride] - src[ 1*stride]) - 5*(src[-1*stride] - src[ 0*stride]) + 4) >> 3;
+    int a0_sign = a0 >> 31;        /* Store sign */
+    a0 = (a0 ^ a0_sign) - a0_sign; /* a0 = FFABS(a0); */
+    if(a0 < pq){
+        int a1 = FFABS((2*(src[-4*stride] - src[-1*stride]) - 5*(src[-3*stride] - src[-2*stride]) + 4) >> 3);
+        int a2 = FFABS((2*(src[ 0*stride] - src[ 3*stride]) - 5*(src[ 1*stride] - src[ 2*stride]) + 4) >> 3);
+        if(a1 < a0 || a2 < a0){
+            int clip = src[-1*stride] - src[ 0*stride];
+            int clip_sign = clip >> 31;
+            clip = ((clip ^ clip_sign) - clip_sign)>>1;
             if(clip){
-                filt3 = 1;
-                if(clip > 0)
-                    d = av_clip(d, 0, clip);
-                else
-                    d = av_clip(d, clip, 0);
-                src[-1*stride] = cm[src[-1*stride] - d];
-                src[ 0*stride] = cm[src[ 0*stride] + d];
+                int a3 = FFMIN(a1, a2);
+                int d = 5 * (a3 - a0);
+                int d_sign = (d >> 31);
+                d = ((d ^ d_sign) - d_sign) >> 3;
+                d_sign ^= a0_sign;
+
+                if( d_sign ^ clip_sign )
+                    d = 0;
+                else{
+                    d = FFMIN(d, clip);
+                    d = (d ^ d_sign) - d_sign;          /* Restore sign */
+                    src[-1*stride] = cm[src[-1*stride] - d];
+                    src[ 0*stride] = cm[src[ 0*stride] + d];
+                }
+                return 1;
             }
         }
     }
-    return filt3;
+    return 0;
 }
 
 /**
@@ -1007,8 +1017,8 @@ static int decode_sequence_header_adv(VC1Context *v, GetBitContext *gb)
     if(get_bits1(gb)) { //Display Info - decoding is not affected by it
         int w, h, ar = 0;
         av_log(v->s.avctx, AV_LOG_DEBUG, "Display extended info:\n");
-        v->s.avctx->width  = v->s.width  = w = get_bits(gb, 14) + 1;
-        v->s.avctx->height = v->s.height = h = get_bits(gb, 14) + 1;
+        v->s.avctx->coded_width  = w = get_bits(gb, 14) + 1;
+        v->s.avctx->coded_height = h = get_bits(gb, 14) + 1;
         av_log(v->s.avctx, AV_LOG_DEBUG, "Display dimensions: %ix%i\n", w, h);
         if(get_bits1(gb))
             ar = get_bits(gb, 4);
@@ -1019,6 +1029,7 @@ static int decode_sequence_header_adv(VC1Context *v, GetBitContext *gb)
             h = get_bits(gb, 8);
             v->s.avctx->sample_aspect_ratio.num = w; v->s.avctx->sample_aspect_ratio.den = h;
         }
+        av_log(v->s.avctx, AV_LOG_DEBUG, "Aspect: %i:%i\n", v->s.avctx->sample_aspect_ratio.num, v->s.avctx->sample_aspect_ratio.den);
 
         if(get_bits1(gb)){ //framerate stuff
             if(get_bits1(gb)) {
@@ -3205,8 +3216,8 @@ static int vc1_decode_p_mb(VC1Context *v)
                             left_cbp = v->cbp[s->mb_x - 1]            >> (i * 4);
                             top_cbp  = v->cbp[s->mb_x - s->mb_stride] >> (i * 4);
                         }else{
-                            left_cbp = (i & 1) ? (pat >> ((i-1)*4)) : (v->cbp[s->mb_x - 1]           >> ((i+1)*4));
-                            top_cbp  = (i & 2) ? (pat >> ((i-2)*4)) : (v->cbp[s->mb_x - s->mb_stride] >> ((i+2)*4));
+                            left_cbp = (i & 1) ? (cbp >> ((i-1)*4)) : (v->cbp[s->mb_x - 1]           >> ((i+1)*4));
+                            top_cbp  = (i & 2) ? (cbp >> ((i-2)*4)) : (v->cbp[s->mb_x - s->mb_stride] >> ((i+2)*4));
                         }
                         if(left_cbp & 0xC)
                             vc1_loop_filter(s->dest[dst_idx] + off, 1, i & 4 ? s->uvlinesize : s->linesize, 8, mquant);
@@ -3222,9 +3233,13 @@ static int vc1_decode_p_mb(VC1Context *v)
                             left_cbp = v->cbp[s->mb_x - 1]            >> (i * 4);
                             top_cbp  = v->cbp[s->mb_x - s->mb_stride] >> (i * 4);
                         }else{
-                            left_cbp = (i & 1) ? (pat >> ((i-1)*4)) : (v->cbp[s->mb_x - 1]           >> ((i+1)*4));
-                            top_cbp  = (i & 2) ? (pat >> ((i-2)*4)) : (v->cbp[s->mb_x - s->mb_stride] >> ((i+2)*4));
+                            left_cbp = (i & 1) ? (cbp >> ((i-1)*4)) : (v->cbp[s->mb_x - 1]           >> ((i+1)*4));
+                            top_cbp  = (i & 2) ? (cbp >> ((i-2)*4)) : (v->cbp[s->mb_x - s->mb_stride] >> ((i+2)*4));
                         }
+                        if(left_cbp & 0xC)
+                            vc1_loop_filter(s->dest[dst_idx] + off, 1, i & 4 ? s->uvlinesize : s->linesize, 8, mquant);
+                        if(top_cbp  & 0xA)
+                            vc1_loop_filter(s->dest[dst_idx] + off, i & 4 ? s->uvlinesize : s->linesize, 1, 8, mquant);
                     }
                     pat = vc1_decode_p_block(v, s->block[i], i, mquant, ttmb, first_block, s->dest[dst_idx] + off, (i&4)?s->uvlinesize:s->linesize, (i&4) && (s->flags & CODEC_FLAG_GRAY), filter, left_cbp, top_cbp);
                     block_cbp |= pat << (i << 2);
@@ -3332,8 +3347,8 @@ static int vc1_decode_p_mb(VC1Context *v)
                             left_cbp = v->cbp[s->mb_x - 1]            >> (i * 4);
                             top_cbp  = v->cbp[s->mb_x - s->mb_stride] >> (i * 4);
                         }else{
-                            left_cbp = (i & 1) ? (pat >> ((i-1)*4)) : (v->cbp[s->mb_x - 1]           >> ((i+1)*4));
-                            top_cbp  = (i & 2) ? (pat >> ((i-2)*4)) : (v->cbp[s->mb_x - s->mb_stride] >> ((i+2)*4));
+                            left_cbp = (i & 1) ? (cbp >> ((i-1)*4)) : (v->cbp[s->mb_x - 1]           >> ((i+1)*4));
+                            top_cbp  = (i & 2) ? (cbp >> ((i-2)*4)) : (v->cbp[s->mb_x - s->mb_stride] >> ((i+2)*4));
                         }
                         if(left_cbp & 0xC)
                             vc1_loop_filter(s->dest[dst_idx] + off, 1, i & 4 ? s->uvlinesize : s->linesize, 8, mquant);
@@ -3349,9 +3364,13 @@ static int vc1_decode_p_mb(VC1Context *v)
                             left_cbp = v->cbp[s->mb_x - 1]            >> (i * 4);
                             top_cbp  = v->cbp[s->mb_x - s->mb_stride] >> (i * 4);
                         }else{
-                            left_cbp = (i & 1) ? (pat >> ((i-1)*4)) : (v->cbp[s->mb_x - 1]           >> ((i+1)*4));
-                            top_cbp  = (i & 2) ? (pat >> ((i-2)*4)) : (v->cbp[s->mb_x - s->mb_stride] >> ((i+2)*4));
+                            left_cbp = (i & 1) ? (cbp >> ((i-1)*4)) : (v->cbp[s->mb_x - 1]           >> ((i+1)*4));
+                            top_cbp  = (i & 2) ? (cbp >> ((i-2)*4)) : (v->cbp[s->mb_x - s->mb_stride] >> ((i+2)*4));
                         }
+                        if(left_cbp & 0xC)
+                            vc1_loop_filter(s->dest[dst_idx] + off, 1, i & 4 ? s->uvlinesize : s->linesize, 8, mquant);
+                        if(top_cbp  & 0xA)
+                            vc1_loop_filter(s->dest[dst_idx] + off, i & 4 ? s->uvlinesize : s->linesize, 1, 8, mquant);
                     }
                     pat = vc1_decode_p_block(v, s->block[i], i, mquant, ttmb, first_block, s->dest[dst_idx] + off, (i&4)?s->uvlinesize:s->linesize, (i&4) && (s->flags & CODEC_FLAG_GRAY), filter, left_cbp, top_cbp);
                     block_cbp |= pat << (i << 2);
@@ -4237,14 +4256,14 @@ static int vc1_decode_frame(AVCodecContext *avctx,
     s->me.qpel_put= s->dsp.put_qpel_pixels_tab;
     s->me.qpel_avg= s->dsp.avg_qpel_pixels_tab;
 
-    ff_er_frame_start(s);
+        ff_er_frame_start(s);
 
-    v->bits = buf_size * 8;
-    vc1_decode_blocks(v);
+        v->bits = buf_size * 8;
+        vc1_decode_blocks(v);
 //av_log(s->avctx, AV_LOG_INFO, "Consumed %i/%i bits\n", get_bits_count(&s->gb), buf_size*8);
 //  if(get_bits_count(&s->gb) > buf_size * 8)
 //      return -1;
-    ff_er_frame_end(s);
+        ff_er_frame_end(s);
 
     MPV_frame_end(s);
 
