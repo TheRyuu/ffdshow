@@ -2,7 +2,7 @@
 #include <windows.h>
 #include "Tconfig.h"
 #include "TglobalSettings.h"
-#include "isNotCalledFromBlackList.h"
+#include "checkHardCodedBlackList.h"
 #include "TcompatibilityManager.h"
 #include "ffdebug.h"
 
@@ -10,10 +10,10 @@
 // That causes annoying error on re-install that one have to log off.
 // With this patch, ffdshow.ax avoids to be loaded by returning false on DllMain
 // if the caller is included in BlackList("Don't use ffdshow in:").
-bool isNotCalledFromBlackList(HINSTANCE hInstance)
+bool checkHardCodedBlackList(HINSTANCE hInstance)
 {
  TcompatibilityManager::s_mode=0;
- bool result= true;
+ bool result= false;
  strings blacklistList2;
  HKEY hKey= NULL;
  LONG regErr;
@@ -27,33 +27,35 @@ bool isNotCalledFromBlackList(HINSTANCE hInstance)
  tHKCU_global._REG_OP_N(IDFF_allowDPRINTF,_l("allowDPRINTF"),allowDPRINTF,0);
 
  DWORD type;
- DWORD isBlacklist;
- DWORD isWhitelist;
- DWORD cbData=sizeof(isBlacklist);
  char_t blacklist[MAX_COMPATIBILITYLIST_LENGTH];
- char_t fileName[MAX_PATH+2];
- char_t cmdBuf[MAX_PATH+3];
- char_t* cmdCopy=cmdBuf;
- char_t* cmd;
- char_t* endOfCmd;
-
+ ffstring fileName;
  /* get filename of calling application */
- cmd= GetCommandLine();
- cmdCopy[MAX_PATH+2]='\0';
- ff_strncpy(cmdCopy,cmd,MAX_PATH+2);
- if(cmdCopy[0]=='"')
+ ffstring cmd(GetCommandLine());
+ //DPRINTF(_l("cmd %s"),cmd.c_str());
+
+ // skip heading spaces
+ while(cmd.at(0)==' ')
+  cmd.erase(0,1);
+
+ if(cmd.at(0)=='"')
   {
-   cmdCopy++;
-   if(cmdCopy[0]!=NULL)
-    {
-     endOfCmd= _tcschr(cmdCopy, '"');
-     if(endOfCmd && endOfCmd <= &(cmdCopy[MAX_PATH+1]))
-      *endOfCmd= '\0';
-    }
+   cmd.erase(0,1);
+   size_t pos = cmd.find(_l("\""));
+   if (pos != ffstring::npos)
+    cmd.erase(pos,cmd.length());
   }
- extractfilename(cmdCopy,fileName);
+ else
+  {
+   size_t pos = cmd.find(_l(" "));
+   if (pos != ffstring::npos)
+    cmd.erase(pos,cmd.length());
+  }
+ extractfilename(cmd.c_str(), fileName);
+ // DPRINTF(_l("fileName %s"),fileName.c_str());
 
  // FIXME: use TregOpRegRead
+ DWORD isBlacklist;
+ DWORD cbData=sizeof(isBlacklist);
  regErr= RegQueryValueEx(hKey, _l("isBlacklist"), NULL, &type, (LPBYTE)&isBlacklist, &cbData);
  if(regErr==ERROR_SUCCESS && isBlacklist)
   {
@@ -92,16 +94,20 @@ bool isNotCalledFromBlackList(HINSTANCE hInstance)
   {
    if (DwStrcasecmp(*b,fileName)==0)
     {
-     result= false;
+     result= true;
      break;
     }
   }
- if (result && stricmp(fileName,_l("explorer.exe"))==0)
+
+#if 0
+ // explorer.exe may be present in both blacklist and whitelist. In this case, whitelist is prioritized (if you enable this block).
+ if (!result && DwStrcasecmp(fileName,_l("explorer.exe"))==0)
   {
+   DWORD isWhitelist;
    regErr= RegQueryValueEx(hKey, _l("isWhitelist"), NULL, &type, (LPBYTE)&isWhitelist, &cbData);
    if(regErr==ERROR_SUCCESS && isWhitelist)
     {
-     result=false;
+     result=true;
      cbData= sizeof(blacklist);
      regErr= RegQueryValueEx(hKey, _l("whitelist"), NULL, &type, (LPBYTE)blacklist, &cbData);
      if (regErr==ERROR_SUCCESS)
@@ -113,13 +119,15 @@ bool isNotCalledFromBlackList(HINSTANCE hInstance)
         {
          if (DwStrcasecmp(*b,_l("explorer.exe"))==0)
           {
-           result=true;
+           result=false;
            break;
           }
         }
       }
     }
   }
+#endif
+
  if(hKey)
   RegCloseKey(hKey);
  return result;

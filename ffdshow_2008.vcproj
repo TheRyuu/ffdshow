@@ -96,7 +96,7 @@
 				Name="VCLinkerTool"
 				RegisterOutput="false"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="libcmtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib $(NOINHERIT)"
+				AdditionalDependencies="libcmtd.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib dinput.lib dxguid.lib oldnames.lib shlwapi.lib Secur32.lib $(NOINHERIT)"
 				OutputFile="bin\ffdshow.ax"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=""
@@ -797,7 +797,7 @@
 				>
 			</File>
 			<File
-				RelativePath="src\isNotCalledFromBlackList.cpp"
+				RelativePath="src\checkHardCodedBlackList.cpp"
 				>
 			</File>
 			<File
@@ -1194,7 +1194,7 @@
 				>
 			</File>
 			<File
-				RelativePath="src\isNotCalledFromBlackList.h"
+				RelativePath="src\checkHardCodedBlackList.h"
 				>
 			</File>
 			<File

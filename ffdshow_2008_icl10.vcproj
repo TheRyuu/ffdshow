@@ -800,7 +800,7 @@
 				>
 			</File>
 			<File
-				RelativePath="src\isNotCalledFromBlackList.cpp"
+				RelativePath="src\checkHardCodedBlackList.cpp"
 				>
 			</File>
 			<File
@@ -1197,7 +1197,7 @@
 				>
 			</File>
 			<File
-				RelativePath="src\isNotCalledFromBlackList.h"
+				RelativePath="src\checkHardCodedBlackList.h"
 				>
 			</File>
 			<File

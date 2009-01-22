@@ -10,7 +10,7 @@
 
 #include "stdafx.h"
 #include <initguid.h>
-#include "isNotCalledFromBlackList.h"
+#include "checkHardCodedBlackList.h"
 
 #ifdef DEBUG
 #ifdef UNICODE
@@ -258,7 +258,7 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, ULONG ulReason, LPVOID pv);
 
 BOOL WINAPI DllMain(HINSTANCE hInstance, ULONG ulReason, LPVOID pv)
 {
- BOOL result= true;
+ BOOL blacklisted= false;
 #ifdef DEBUG
     extern bool g_fDbgInDllEntryPoint;
     g_fDbgInDllEntryPoint = true;
@@ -270,7 +270,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, ULONG ulReason, LPVOID pv)
     case DLL_PROCESS_ATTACH:
         DisableThreadLibraryCalls(hInstance);
         DbgInitialise(hInstance);
-        result= isNotCalledFromBlackList(hInstance);
+        blacklisted= checkHardCodedBlackList(hInstance);
 
     	{
     	    // The platform identifier is used to work out whether
@@ -332,7 +332,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, ULONG ulReason, LPVOID pv)
 #ifdef DEBUG
     g_fDbgInDllEntryPoint = false;
 #endif
-    return result;
+    return !blacklisted;
 }
 
 

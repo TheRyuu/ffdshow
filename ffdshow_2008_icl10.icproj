@@ -661,7 +661,7 @@
 				RelativePath=".\src\inifiles.cpp">
 			</File>
 			<File 
-				RelativePath="src\isNotCalledFromBlackList.cpp">
+				RelativePath="src\checkHardCodedBlackList.cpp">
 			</File>
 			<File 
 				RelativePath="src\mem_align.cpp">
@@ -970,7 +970,7 @@
 				RelativePath="src\inttypes.h">
 			</File>
 			<File 
-				RelativePath="src\isNotCalledFromBlackList.h">
+				RelativePath="src\checkHardCodedBlackList.h">
 			</File>
 			<File 
 				RelativePath="src\IVMRffdshow9.h">
