@@ -1536,7 +1536,12 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
          case 9: // SSA mid
          case 10:
          case 11:
-          pval.y=((double)prefsdy - pkey.marginTop - pkey.marginBottom - pval.height)/2.0 + pkey.marginTop;
+          // With middle alignment and position/move tag we position the paragraph to the requested
+          // position basing on the anchor point set at the middle
+          if (pkey.isPos || pkey.isMove)
+           pval.y=pkey.marginTop-pval.height/2.0;
+          else // otherwise put the paragraph on the center of the screen (vertical margin is ignored)
+           pval.y=(prefsdy - pval.height)/2.0;
           break;
          case 5: // SSA top
          case 6:
@@ -1550,7 +1555,8 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
              // If the text is supposed to be placed at the bottom of the screen 
              // or has no vertical alignment defined
              // then apply the vertical position setting
-             if (pkey.marginBottom == 0 && prefs.deci->getParam2(IDFF_subSSAOverridePlacement))
+             if (pkey.marginBottom == 0 && (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
+                  || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER))
               pval.y=((double)prefs.ypos*prefsdy)/100.0-pval.height + pval.topOverhang;
              else
               pval.y=(double)prefsdy-pval.height - pkey.marginBottom + pval.topOverhang;
@@ -1599,7 +1605,8 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
       // If the text is supposed to be placed at the center of the screen 
       // or has no horizontal alignment defined
       // then apply the horizontal position setting
-      if (marginL==0 && prefs.deci->getParam2(IDFF_subSSAOverridePlacement))
+      if (marginL==0 && (prefs.deci->getParam2(IDFF_subSSAOverridePlacement)
+           || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER))
        x=((double)prefs.xpos*prefsdx)/100.0 - (int)(cdx+marginR)/2 - leftOverhang;
       else if ((*i)->props.isPos) // If position defined, then marginL is relative to left border of the screen
        x=marginL-leftOverhang;
@@ -1632,9 +1639,11 @@ void TrenderedSubtitleLines::prepareKey(const_iterator i,ParagraphKey &pkey,unsi
  pkey.marginL = (*i)->props.get_marginL(prefsdx);
  pkey.marginR = (*i)->props.get_marginR(prefsdx);
  pkey.isPos = (*i)->props.isPos;
+ pkey.isMove = (*i)->props.isMove;
+
  //pkey.layer = (*i)->props.layer; // TODO : uncomment when layers implemented
  pkey.layer = 0;
- if (pkey.isPos)
+ if (pkey.isPos || pkey.isMove)
   {
    pkey.posx = (*i)->props.posx;
    pkey.posy = (*i)->props.posy;
@@ -1949,14 +1958,11 @@ template<class tchar> TrenderedTextSubtitleWord* Tfont::newWord(const tchar *s,s
   }
 }
 
-template<class tchar> int Tfont::get_splitdx_for_new_line(const TsubtitleWord<tchar> &w,int splitdx,int dx) const
+template<class tchar> int Tfont::get_splitdx_for_new_line(const TsubtitleWord<tchar> &w,int splitdx,int dx, const TrenderedSubtitleLines::TprintPrefs &prefs) const
 {
- // This method calculates the maximum length of the line considering the left/right margin
- // So we call the get_marginR and get_marginL methods providing the screen width and the maximum length (also equal to screen width)
- if (w.props.marginR!=-1 || w.props.marginL!=-1)
-     return w.props.get_maxWidth(dx, deci) * gdi_font_scale;
- else
-  return splitdx;
+ // This method calculates the maximum length of the line considering the left/right margin and eventually
+ // basing on the position set through a position tag
+ return w.props.get_maxWidth(dx, prefs.subformat, deci) * gdi_font_scale;
 }
 
 template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange)
@@ -2018,7 +2024,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
         {
          int xscale=w->props.get_xscale(fontSettings->xscale,prefs.sar,fontSettings->aspectAuto,fontSettings->overrideScale)*100/w->props.get_yscale(fontSettings->yscale,prefs.sar,fontSettings->aspectAuto,fontSettings->overrideScale);
          wordWrapMode=w->props.wrapStyle;
-         splitdxMax=get_splitdx_for_new_line(*w,splitdx0,dx);
+         splitdxMax=get_splitdx_for_new_line(*w,splitdx0,dx, prefs);
          allStr+=p;
          pwidths=(int*)width.resize((allStr.size()+1)*sizeof(int));
          left=nextleft;

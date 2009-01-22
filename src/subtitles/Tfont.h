@@ -41,8 +41,8 @@ public:
     opaqueBox(false),
     subformat(-1),
     isOSD(false),
-    /*xinput(0),
-    yinput(0),*/
+    xinput(0),
+    yinput(0),
     rtStart(REFTIME_INVALID)
     {
     }
@@ -90,6 +90,7 @@ private:
     short marginTop,marginBottom;
     short marginL,marginR;
     short isPos;
+    short isMove;
     short posx,posy;
     short layer;
 
@@ -298,7 +299,7 @@ private:
  YUVcolorA yuvcolor,outlineYUV,shadowYUV;
  short matrix[5][5];
  template<class tchar> void prepareC(const TsubtitleTextBase<tchar> *sub,const TrenderedSubtitleLines::TprintPrefs &prefs,bool forceChange);
- template<class tchar> int get_splitdx_for_new_line(const TsubtitleWord<tchar> &w,int splitdx,int dx) const;
+ template<class tchar> int get_splitdx_for_new_line(const TsubtitleWord<tchar> &w,int splitdx,int dx, const TrenderedSubtitleLines::TprintPrefs &prefs) const;
  TcharsChache *charsCache;
  template<class tchar> TrenderedTextSubtitleWord* newWord(const tchar *s,size_t slen,TrenderedSubtitleLines::TprintPrefs prefs,const TsubtitleWord<tchar> *w,const LOGFONT &lf,bool trimRightSpaces=false);
 public:

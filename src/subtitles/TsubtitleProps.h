@@ -55,7 +55,7 @@ struct TSubtitleProps
  int get_yscale(int Iyscale,const Rational& sar,int aspectAuto,int overrideScale) const;
  int get_movedistanceV(unsigned int screenHeight) const;
  int get_movedistanceH(unsigned int screenWidth) const;
- int get_maxWidth(unsigned int screenWidth, IffdshowBase *deci) const;
+ int get_maxWidth(unsigned int screenWidth, int subFormat, IffdshowBase *deci) const;
  REFERENCE_TIME get_moveStart(void) const;
  REFERENCE_TIME get_moveStop(void) const;
  static int alignASS2SSA(int align);

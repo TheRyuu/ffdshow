@@ -23,6 +23,7 @@
 #include "TsubtitlesSettings.h"
 #include "rational.h"
 #include "TfontManager.h"
+#include "Tsubreader.h"
 #include <locale.h>
 #include "Tfont.h"
 
@@ -288,14 +289,22 @@ int TSubtitleProps::get_marginBottom(unsigned int screenHeight) const
  return result*screenHeight/resY;
 }
 
-int TSubtitleProps::get_maxWidth(unsigned int screenWidth, IffdshowBase *deci) const
+int TSubtitleProps::get_maxWidth(unsigned int screenWidth, int subFormat, IffdshowBase *deci) const
 {
   int result = 0;
   int resX = (refResX>0) ? refResX:screenWidth;
+  int mL = marginL == -1 ? 0 : marginL;
+  int mR = marginR == -1 ? 0 : marginR;
 
 
-  // Calculate the maximum width of line according to the position to be set
-  if (isPos && deci->getParam2(IDFF_subSSAMaintainInside))
+  /* Calculate the maximum width of line according to the position to be set
+   Take the position into account for calculation if :
+    - A position is set (through position tag) and :
+     - The option "Maintain outside text inside picture" is set
+     - Or if the subtitles are SRT
+   */
+  if (isPos && (deci->getParam2(IDFF_subSSAMaintainInside)
+      || (subFormat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER))
   {
    switch (alignment)
     {
@@ -306,7 +315,7 @@ int TSubtitleProps::get_maxWidth(unsigned int screenWidth, IffdshowBase *deci) c
       if (posx<0) 
        break;
       else
-       result=resX-posx-marginR;
+       result=resX-posx-mR;
       break;
      case 3: // right(SSA) : right alignment, right margin is ignored
      case 7:
@@ -315,7 +324,7 @@ int TSubtitleProps::get_maxWidth(unsigned int screenWidth, IffdshowBase *deci) c
       if (posx<0) 
        break;
       else
-       result=posx-marginL;
+       result=posx-mL;
       break;
      case 2: // center(SSA)
      case 6:
@@ -326,7 +335,6 @@ int TSubtitleProps::get_maxWidth(unsigned int screenWidth, IffdshowBase *deci) c
       if (posx > 0 && posx < resX)
        {
         // We try to calculate the maximum margin around the anchor point (at center)
-        int mL = marginL, mR = marginR;
         if (mL > posx) mL = posx; // MarginL should not exceed posX
         if (mR > resX-posx) mR = resX-posx; // MarginR should not exceed posX
         int margin = std::min(posx-mL, resX-mR-posx);
@@ -339,7 +347,7 @@ int TSubtitleProps::get_maxWidth(unsigned int screenWidth, IffdshowBase *deci) c
     }
   }
  else // If no position tag is set let's take the margins into account
-  result=resX-marginL-marginR;
+  result=resX-mL-mR;
 
  if (result<0) result=0;
  if (screenWidth>result*screenWidth/resX)

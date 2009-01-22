@@ -791,7 +791,7 @@ void Tremote::getStreams(bool reload)
             if (audioStreams.size() < localAudioStreams.size())
             {
                 audioStreams.clear();
-                for (int i=0;i<localAudioStreams.size();i++)
+                for (unsigned int i=0;i<localAudioStreams.size();i++)
                 {
                     audioStreams.push_back(localAudioStreams[i]);
                 }
