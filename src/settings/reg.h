@@ -7,6 +7,15 @@
 #define FFDSHOW_REG_PARENT _l("Software\\GNU")
 #define FFDSHOW_REG_CLASS _l("config")
 
+static bool is_user_SYSTEM(void)
+{
+ char_t username[1024];
+ ULONG len = 1024;
+ if (GetUserName(username, &len) && strcmp(username,_l("SYSTEM"))==0)
+  return true;
+ return false;
+}
+
 struct TregOp
 {
 public:
@@ -22,6 +31,11 @@ public:
  TregOpRegRead(HKEY hive,const char_t *key)
   {
    hKey=NULL;
+   if (is_user_SYSTEM())
+    {
+     RegOpenKeyEx(HKEY_LOCAL_MACHINE,key,0,KEY_READ,&hKey);
+     return;
+    }
    RegOpenKeyEx(hive,key,0,KEY_READ,&hKey);
   }
  virtual ~TregOpRegRead()
@@ -59,6 +73,11 @@ public:
  TregOpRegWrite(HKEY hive,const char_t *key)
   {
    DWORD dispo;
+   if (is_user_SYSTEM())
+    {
+     if (RegCreateKeyEx(HKEY_LOCAL_MACHINE,key,0,FFDSHOW_REG_CLASS,REG_OPTION_NON_VOLATILE,KEY_WRITE,0,&hKey,&dispo)!=ERROR_SUCCESS) hKey=NULL;
+     return;
+    }
    if (RegCreateKeyEx(hive,key,0,FFDSHOW_REG_CLASS,REG_OPTION_NON_VOLATILE,KEY_WRITE,0,&hKey,&dispo)!=ERROR_SUCCESS) hKey=NULL;
   }
  virtual ~TregOpRegWrite()
