@@ -106,7 +106,9 @@ template<class tchar> TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
                        const TrenderedSubtitleLines::TprintPrefs &Iprefs,
                        LOGFONT lf,
                        double xscale,
-                       TSubtitleProps Iprops):
+                       TSubtitleProps Iprops,
+                       unsigned int gdi_font_scale,
+                       unsigned int GDI_rendering_window):
  TrenderedSubtitleWordBase(true),
  props(Iprops),
  m_bodyYUV(YUV),
@@ -149,43 +151,50 @@ template<class tchar> TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
    else
     if (otm.otmTextMetrics.tmItalic)
      sz1.cx+=sz1.cy*0.35;
-   m_shadowSize = getShadowSize(otm.otmTextMetrics.tmHeight);
+   m_shadowSize = getShadowSize(otm.otmTextMetrics.tmHeight, gdi_font_scale);
   }
  else
   { // non true-type
    baseline=sz1.cy*0.8;
-   m_shadowSize = getShadowSize(lf.lfHeight);
+   m_shadowSize = getShadowSize(lf.lfHeight, gdi_font_scale);
    if (lf.lfItalic)
     sz1.cx+=sz1.cy*0.35;
   }
- dx[0]=(sz1.cx/4+2)*4;dy[0]=sz1.cy+4;
- unsigned char *bmp16=(unsigned char*)aligned_calloc3(dx[0]*4,dy[0],32,16);
+ dx[0] = ((sz1.cx + GDI_rendering_window) / gdi_font_scale + 1) * gdi_font_scale;
+ dy[0] = sz1.cy + GDI_rendering_window;
+ unsigned char *bmp16=(unsigned char*)aligned_calloc3(dx[0] * size_of_rgb32,dy[0], 32, 16);
  HBITMAP hbmp=CreateCompatibleBitmap(hdc,dx[0],dy[0]);
  HGDIOBJ old=SelectObject(hdc,hbmp);
  RECT r={0,0,dx[0],dy[0]};
  FillRect(hdc,&r,(HBRUSH)GetStockObject(BLACK_BRUSH));
  SetTextColor(hdc,RGB(255,255,255));
  SetBkColor(hdc,RGB(0,0,0));
- int x=2;
+ int x=GDI_rendering_window/2;
  ints::const_iterator cx=cxs.begin();
  for (typename strings::const_iterator s=s1.begin();s!=s1.end();s++,cx++)
   {
    const char *t=(const char *)s->c_str();
    int sz=(int)s->size();
-   prefs.config->getGDI<tchar>().textOut(hdc,x,2,s->c_str(),sz/*(int)s->size()*/);
+   prefs.config->getGDI<tchar>().textOut(hdc,x,GDI_rendering_window/2,s->c_str(),sz/*(int)s->size()*/);
    x+=*cx;
   }
- drawShadow(hdc,hbmp,bmp16,old,xscale,sz);
+ if (gdi_font_scale == 4)
+  drawShadow<4>(hdc,hbmp,bmp16,old,xscale,sz,gdi_font_scale);  // sharp and fast, good for OSD.
+ else
+  drawShadow<16>(hdc,hbmp,bmp16,old,xscale,sz,gdi_font_scale); // anti aliased, good for subtitles.
 }
-void TrenderedTextSubtitleWord::drawShadow(
+template<int GDI_rendering_window> void TrenderedTextSubtitleWord::drawShadow(
       HDC hdc,
       HBITMAP hbmp,
       unsigned char *bmp16,
       HGDIOBJ old,
       double xscale,
-      const SIZE &sz
-     )
+      const SIZE &sz,
+      unsigned int gdi_font_scale
+      )
 {
+ // if GDI_rendering_window > gdi_font_scale, blur is applied.
+ // gdi_font_scale is set by the constructor of Tfont.
  m_outlineWidth=1;
  double outlineWidth_double = prefs.outlineWidth;
  //if (props.refResY && prefs.clipdy)
@@ -259,12 +268,13 @@ void TrenderedTextSubtitleWord::drawShadow(
  bottomOverhang=getBottomOverhang();
  leftOverhang=getLeftOverhang();
  rightOverhang=getRightOverhang();
- _dx    =xscale*dx[0]/400+leftOverhang+ rightOverhang;
- _dxCore=xscale*dx[0]/400+leftOverhang+ m_outlineWidth;
- _dy    =dy[0]/4+topOverhang + bottomOverhang;
- _dyCore=dy[0]/4+topOverhang + m_outlineWidth;
- dxCharY=xscale*sz.cx/400;dyCharY=sz.cy/4;
- baseline=baseline/4+2;
+ _dx      = xscale * dx[0] / (size_of_rgb32 * 100) + leftOverhang + rightOverhang;
+ _dxCore  = xscale * dx[0] / (size_of_rgb32 * 100) + leftOverhang + m_outlineWidth;
+ _dy      = dy[0] / gdi_font_scale + topOverhang + bottomOverhang;
+ _dyCore  = dy[0] / gdi_font_scale + topOverhang + m_outlineWidth;
+ dxCharY  = xscale * sz.cx / (gdi_font_scale * 100);
+ dyCharY  = sz.cy / gdi_font_scale;
+ baseline = baseline / gdi_font_scale + GDI_rendering_window/2;
 
  unsigned int al=csp==FF_CSP_420P ? alignXsize : 8; // swscaler requires multiple of 8.
  _dx=((_dx+al-1)/al)*al;
@@ -279,21 +289,123 @@ void TrenderedTextSubtitleWord::drawShadow(
  outline[0]=(unsigned char*)aligned_calloc3(_dx,_dy,16,16);
  shadow[0]=(unsigned char*)aligned_calloc3(_dx,_dy,16,16);
 
- for (unsigned int y=2;y<dy[0]-2;y+=4)
+ // Here we scale to 1/gdi_font_scale.
+ // For OSD, gdi_font_scale is 4. The simplest way is to average 4 x 4.
+ // But in that case, it will have only 16 gradation becasue the bitmap from GDI has only 0 or 0xffffff.
+ // 4x5 for OSD, 16x16 for subtitles seems to look nice.
+ unsigned int xstep = xscale == 100 ?
+                          gdi_font_scale * 65536 :
+                          gdi_font_scale * 100 * 65536 / xscale;
+ unsigned int gdi_rendering_window_width = std::max<unsigned int>(
+                      xscale == 100 ?
+                          GDI_rendering_window :
+                          GDI_rendering_window * 100 / xscale
+                          , 1);
+ // coeff calculation
+ // To averave gdi_rendering_window_width * GDI_rendering_window pixels, add them all and
+ // multiply (65536 / (gdi_rendering_window_width * GDI_rendering_window))
+ // and shift right 16 bits is just fine.
+ // One problem, it make the body a little thin and darker, if blur is applied (GDI_rendering_window > gdi_font_scale).
+ // To avoid this, for subtitles, if only one of the overhanging edge is not filled, consider it is fully filled.
+ unsigned int coeff;
+ if (GDI_rendering_window == 4) // OSD
+  coeff = 65536.0 / (gdi_rendering_window_width * 5);
+ else // subtitles
   {
-   unsigned char *dstBmpY=bmp[0]+(y/4 + topOverhang + m_outlineWidth) * extra_dx + leftOverhang + m_outlineWidth;
-   for (unsigned int xstep = xscale==100 ? 4*65536 : 400*65536/xscale,x=(2<<16)+xstep;x<((dx[0]-2)<<16);x+=xstep,dstBmpY++)
+   if (GDI_rendering_window > gdi_font_scale)
+    coeff = 65536.0 / ((gdi_rendering_window_width - (gdi_rendering_window_width - (gdi_font_scale * 100 / xscale))/2) * GDI_rendering_window);
+   else
+    coeff = 65536.0 / (gdi_rendering_window_width * GDI_rendering_window);
+  }
+ int dx0_mult_4 = dx[0] * size_of_rgb32;
+ unsigned int xstep_sse2 = xstep * 8;
+ unsigned int startx = (GDI_rendering_window/2 << 16) + xstep;
+ unsigned int endx = (dx[0] - GDI_rendering_window/2) << 16;
+ __m128i xmm0,xmm1,xmm2,xmm3,xmm_sum,xmm_000000ff,xmm_00000000;
+ if (Tconfig::cpu_flags & FF_CPU_SSE2 && GDI_rendering_window == 16)
+  {
+   xmm_000000ff = _mm_set1_epi32(0xff);
+   pxor(xmm_00000000,xmm_00000000);
+  }
+ for (unsigned int y = GDI_rendering_window/2 ; y < dy[0] - (GDI_rendering_window == 4 ? 3 : GDI_rendering_window/2) ; y += gdi_font_scale)
+  {
+   unsigned char *dstBmpY = bmp[0] + (y/gdi_font_scale + topOverhang + m_outlineWidth) * extra_dx + leftOverhang + m_outlineWidth;
+   unsigned int x = startx;
+   const unsigned char *bmp16srcLineStart = bmp16 + ((y - GDI_rendering_window/2) * dx[0]) * size_of_rgb32;
+   const unsigned char *bmp16srcEnd;
+   if (GDI_rendering_window == 4)
+    bmp16srcEnd = bmp16srcLineStart + (GDI_rendering_window+1) * dx0_mult_4;
+   else
+    bmp16srcEnd = bmp16srcLineStart + GDI_rendering_window * dx0_mult_4;
+   for (; x < endx ; x += xstep, dstBmpY++)
     {
-     unsigned int sum=0;
-     for (const unsigned char *bmp16src=bmp16+((y-2)*dx[0]+((x>>16)-2))*4,*bmp16srcEnd=bmp16src+5*dx[0]*4;bmp16src!=bmp16srcEnd;bmp16src+=dx[0]*4)
+     unsigned int sum;
+     const unsigned char *bmp16src = bmp16srcLineStart + ((x >> 16) - GDI_rendering_window/2) * size_of_rgb32;
+
+     if (xscale == 100)
       {
-       for (int i=0;i<=12;i+=4)
-         sum+=bmp16src[i];
+       if (Tconfig::cpu_flags & FF_CPU_SSE2 && GDI_rendering_window == 16)
+        {
+         pxor(xmm_sum, xmm_sum);
+         for (; bmp16src < bmp16srcEnd ; bmp16src += dx0_mult_4)
+          {
+           xmm0 = _mm_loadu_si128((__m128i *)bmp16src);
+           xmm1 = _mm_loadu_si128((__m128i *)(bmp16src+16));
+           pand(xmm0,xmm_000000ff);
+           xmm2 = _mm_loadu_si128((__m128i *)(bmp16src+32));
+           pand(xmm1,xmm_000000ff);
+           paddd(xmm_sum,xmm0);
+           xmm3 = _mm_loadu_si128((__m128i *)(bmp16src+48));
+           pand(xmm2,xmm_000000ff);
+           paddd(xmm_sum,xmm1);
+           pand(xmm3,xmm_000000ff);
+           paddd(xmm_sum,xmm2);
+           paddd(xmm_sum,xmm3);
+          }
+
+         sum = _mm_cvtsi128_si32(xmm_sum);
+         xmm_sum = _mm_srli_si128(xmm_sum, size_of_rgb32);
+         sum += _mm_cvtsi128_si32(xmm_sum);
+         xmm_sum = _mm_srli_si128(xmm_sum, size_of_rgb32);
+         sum += _mm_cvtsi128_si32(xmm_sum);
+         xmm_sum = _mm_srli_si128(xmm_sum, size_of_rgb32);
+         sum += _mm_cvtsi128_si32(xmm_sum);
+        }
+       else
+        {
+         sum = 0;
+         for (; bmp16src < bmp16srcEnd ; bmp16src += dx0_mult_4)
+          {
+           // a bit of optimization: Only one if block will be compiled. Loops are unrolled.
+           if (GDI_rendering_window == 4)
+            sum += bmp16src[0] + bmp16src[4] + bmp16src[8] + bmp16src[12];
+           else if (GDI_rendering_window == 16)
+            sum += bmp16src[0] + bmp16src[4] + bmp16src[8] + bmp16src[12] + bmp16src[16] + bmp16src[20] + bmp16src[24] + bmp16src[28]
+                 + bmp16src[32] + bmp16src[36] + bmp16src[40] + bmp16src[44] + bmp16src[48] + bmp16src[52] + bmp16src[56] + bmp16src[60];
+           else
+            for (unsigned int i = 0 ; i < size_of_rgb32 * GDI_rendering_window ; i += size_of_rgb32) // not used
+             sum += bmp16src[i];
+          }
+        }
+
+       sum = (sum * coeff) >> 16;
+       *dstBmpY = (unsigned char)std::min<unsigned int>(sum,255);
       }
-     sum/=20; // average of 5x4=20pixels
-     *dstBmpY=(unsigned char)sum;
+     else
+      {
+       sum = 0;
+       for (; bmp16src < bmp16srcEnd ; bmp16src += dx0_mult_4)
+        {
+         for (unsigned int i = 0 ; i < size_of_rgb32 * gdi_rendering_window_width ; i += size_of_rgb32) // not used
+          sum += bmp16src[i];
+        }
+       sum = (sum * coeff) >> 16;
+       *dstBmpY = (unsigned char)std::min<unsigned int>(sum,255);
+      }
+
     }
   }
+
  if (prefs.blur)
   {
    int startx=leftOverhang + m_outlineWidth - 1;
@@ -420,7 +532,7 @@ void TrenderedTextSubtitleWord::drawShadow(
  else
   {
    //RGB32
-   dx[1]=dx[0]*4;
+   dx[1]=dx[0] * size_of_rgb32;
    dy[1]=dy[0];
    bmp[1]     = (unsigned char*)aligned_malloc(dx[1]*dy[1]+16,16);
    outline[1] = (unsigned char*)aligned_malloc(dx[1]*dy[1]+16,16);
@@ -628,7 +740,7 @@ TrenderedTextSubtitleWord::~TrenderedTextSubtitleWord()
   delete secondaryColoredWord;
 }
 
-unsigned int TrenderedTextSubtitleWord::getShadowSize(LONG fontHeight)
+unsigned int TrenderedTextSubtitleWord::getShadowSize(LONG fontHeight, unsigned int gdi_font_scale)
 {
  if (prefs.shadowSize==0 || prefs.shadowMode==3)
   return 0;
@@ -640,7 +752,7 @@ unsigned int TrenderedTextSubtitleWord::getShadowSize(LONG fontHeight)
     return -1 * prefs.shadowSize;
   }
 
- unsigned int shadowSize = prefs.shadowSize*fontHeight/180.0+2.6;
+ unsigned int shadowSize = prefs.shadowSize*fontHeight/(gdi_font_scale * 45)+2.6;
  if (prefs.shadowMode==0)
   shadowSize*=0.6;
  else if (prefs.shadowMode==1)
@@ -746,7 +858,9 @@ template<class tchar> TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
                        const tchar *s,size_t strlens,
                        const TrenderedSubtitleLines::TprintPrefs &Iprefs,
                        const LOGFONT &lf,
-                       TSubtitleProps Iprops):
+                       TSubtitleProps Iprops,
+                       unsigned int gdi_font_scale,
+                       unsigned int GDI_rendering_window):
  TrenderedSubtitleWordBase(true),
  props(Iprops),
  prefs(Iprefs),
@@ -765,7 +879,7 @@ template<class tchar> TrenderedTextSubtitleWord::TrenderedTextSubtitleWord(
  baseline=0;
  for (size_t i=0;i<strlens;i++)
   {
-   chars[i]=charsChache->getChar(&s[i],prefs,lf,props);
+   chars[i]=charsChache->getChar(&s[i],prefs,lf,props,gdi_font_scale,GDI_rendering_window);
    dx[0]+=chars[i]->dxCharY+1;
    if (s[i]=='\t')
     {
@@ -1583,24 +1697,32 @@ TcharsChache::~TcharsChache()
  for (Tchars::iterator c=chars.begin();c!=chars.end();c++)
   delete c->second;
 }
-template<> const TrenderedTextSubtitleWord* TcharsChache::getChar(const wchar_t *s,const TrenderedSubtitleLines::TprintPrefs &prefs,const LOGFONT &lf,TSubtitleProps props)
+template<> const TrenderedTextSubtitleWord* TcharsChache::getChar(const wchar_t *s,
+    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const LOGFONT &lf,TSubtitleProps props,
+    unsigned int gdi_font_scale,
+    unsigned int GDI_rendering_window)
 {
  int key=(int)*s;
  Tchars::iterator l=chars.find(key);
  if (l!=chars.end()) return l->second;
- TrenderedTextSubtitleWord *ln=new TrenderedTextSubtitleWord(hdc,s,1,yuv,outlineYUV,shadowYUV,prefs,lf,xscale*100/yscale,props);
+ TrenderedTextSubtitleWord *ln=new TrenderedTextSubtitleWord(hdc,s,1,yuv,outlineYUV,shadowYUV,prefs,lf,xscale*100/yscale,props,gdi_font_scale,GDI_rendering_window);
  chars[key]=ln;
  return ln;
 }
 
-template<> const TrenderedTextSubtitleWord* TcharsChache::getChar(const char *s,const TrenderedSubtitleLines::TprintPrefs &prefs,const LOGFONT &lf,TSubtitleProps props)
+template<> const TrenderedTextSubtitleWord* TcharsChache::getChar(const char *s,
+    const TrenderedSubtitleLines::TprintPrefs &prefs,
+    const LOGFONT &lf,TSubtitleProps props,
+    unsigned int gdi_font_scale,
+    unsigned int GDI_rendering_window)
 {
  if(_mbclen((unsigned char *)s)==1)
   {
    int key=(int)*s;
    Tchars::iterator l=chars.find(key);
    if (l!=chars.end()) return l->second;
-   TrenderedTextSubtitleWord *ln=new TrenderedTextSubtitleWord(hdc,s,1,yuv,outlineYUV,shadowYUV,prefs,lf,xscale*100/yscale,props);
+   TrenderedTextSubtitleWord *ln=new TrenderedTextSubtitleWord(hdc,s,1,yuv,outlineYUV,shadowYUV,prefs,lf,xscale*100/yscale,props,gdi_font_scale,GDI_rendering_window);
    chars[key]=ln;
    return ln;
   }
@@ -1610,7 +1732,7 @@ template<> const TrenderedTextSubtitleWord* TcharsChache::getChar(const char *s,
    int key=(int)*mbcs;
    Tchars::iterator l=chars.find(key);
    if (l!=chars.end()) return l->second;
-   TrenderedTextSubtitleWord *ln=new TrenderedTextSubtitleWord(hdc,s,2,yuv,outlineYUV,shadowYUV,prefs,lf,xscale*100/yscale,props);
+   TrenderedTextSubtitleWord *ln=new TrenderedTextSubtitleWord(hdc,s,2,yuv,outlineYUV,shadowYUV,prefs,lf,xscale*100/yscale,props,gdi_font_scale,GDI_rendering_window);
    chars[key]=ln;
    return ln;
   }
@@ -1692,14 +1814,15 @@ void TrenderedVobsubWord::print(int startx, int starty /* not used */, unsigned 
 }
 
 //==================================== Tfont ====================================
-Tfont::Tfont(IffdshowBase *Ideci):
+Tfont::Tfont(IffdshowBase *Ideci, unsigned int Igdi_font_scale):
  fontManager(NULL),
  deci(Ideci),
  oldsub(NULL),
  hdc(NULL),oldFont(NULL),
  charsCache(NULL),
  height(0),
- fontSettings((TfontSettings*)malloc(sizeof(TfontSettings)))
+ fontSettings((TfontSettings*)malloc(sizeof(TfontSettings))),
+ gdi_font_scale(Igdi_font_scale)
 {
 }
 Tfont::~Tfont()
@@ -1762,6 +1885,7 @@ template<class tchar> TrenderedTextSubtitleWord* Tfont::newWord(const tchar *s,s
  prefs.alignSSA=w->props.alignment;
  prefs.outlineWidth=w->props.outlineWidth==-1 ? fontSettings->outlineWidth : w->props.outlineWidth;
 
+ unsigned int gdi_rendering_window = gdi_font_scale == 4 ? 4 : 16; // 4: OSD, 16: subtitles
  if (prefs.shadowMode==-1) // OSD
   {
    prefs.shadowMode=fontSettings->shadowMode;
@@ -1777,7 +1901,7 @@ template<class tchar> TrenderedTextSubtitleWord* Tfont::newWord(const tchar *s,s
   }
  prefs.outlineBlur=w->props.blur ? true : false;
 
- if (fontSettings->blur || (w->props.version >= TsubtitleParserSSA<tchar>::ASS && lf.lfHeight > 150)) // FIXME: messy. just trying to resemble vsfilter.
+ if (fontSettings->blur || (w->props.version >= TsubtitleParserSSA<tchar>::ASS && lf.lfHeight > int(37 * gdi_font_scale))) // FIXME: messy. just trying to resemble vsfilter.
   prefs.blur=true;
  else
   prefs.blur=false;
@@ -1789,10 +1913,15 @@ template<class tchar> TrenderedTextSubtitleWord* Tfont::newWord(const tchar *s,s
   }
 
  TrenderedTextSubtitleWord *rw;
- if (!w->props.isColor && fontSettings->fast && !lf.lfItalic && (prefs.shadowSize==0 || prefs.shadowMode>=2) && prefs.csp==FF_CSP_420P && !prefs.opaqueBox)
+ if (!w->props.isColor
+  && fontSettings->fast
+  && !lf.lfItalic
+  && (prefs.shadowSize==0 || prefs.shadowMode>=2)
+  && prefs.csp==FF_CSP_420P
+  && !prefs.opaqueBox)
   {
    // fast rendering
-   rw=new TrenderedTextSubtitleWord(charsCache,s1.c_str(),slen,prefs,lf,w->props);
+   rw=new TrenderedTextSubtitleWord(charsCache,s1.c_str(),slen,prefs,lf,w->props,gdi_font_scale,gdi_rendering_window);
   }
  else
   {
@@ -1807,7 +1936,9 @@ template<class tchar> TrenderedTextSubtitleWord* Tfont::newWord(const tchar *s,s
                                 prefs,
                                 lf,
                                 xscale,
-                                w->props);
+                                w->props,
+                                gdi_font_scale,
+                                gdi_rendering_window);
   }
  if (rw->dxCharY && rw->dyCharY)
   return rw;
@@ -1823,7 +1954,7 @@ template<class tchar> int Tfont::get_splitdx_for_new_line(const TsubtitleWord<tc
  // This method calculates the maximum length of the line considering the left/right margin
  // So we call the get_marginR and get_marginL methods providing the screen width and the maximum length (also equal to screen width)
  if (w.props.marginR!=-1 || w.props.marginL!=-1)
-     return w.props.get_maxWidth(dx, deci)*4;
+     return w.props.get_maxWidth(dx, deci) * gdi_font_scale;
  else
   return splitdx;
 }
@@ -1853,7 +1984,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
    if (!fontManager)
     comptrQ<IffdshowDecVideo>(deci)->getFontManager(&fontManager);
    bool nosplit=!fontSettings->split && !(prefs.fontchangesplit && prefs.fontsplit);
-   int splitdx0=nosplit ? 0 : ((int)dx-prefs.textBorderLR<1 ? 1 : dx-prefs.textBorderLR)*4;
+   int splitdx0=nosplit ? 0 : ((int)dx-prefs.textBorderLR<1 ? 1 : dx-prefs.textBorderLR) * gdi_font_scale;
 
    int *pwidths=NULL;
    Tbuffer width;
@@ -1869,7 +2000,7 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
      if (l->empty())
       {
        LOGFONT lf;
-       HGDIOBJ old = l->props.toGdiFont(hdc, lf, *fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager);
+       HGDIOBJ old = l->props.toGdiFont(hdc, lf, *fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager, gdi_font_scale);
        if (!oldFont) oldFont=old;
        TrenderedSubtitleLine *line=new TrenderedSubtitleLine(l->props);
        lines.add(line,&height);
@@ -1879,9 +2010,9 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
      for (typename TsubtitleLine<tchar>::const_iterator w=l->begin();w!=l->end();w++)
       {
        LOGFONT lf;
-       HGDIOBJ old = w->props.toGdiFont(hdc, lf, *fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager);
+       HGDIOBJ old = w->props.toGdiFont(hdc, lf, *fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager, gdi_font_scale);
        if (!oldFont) oldFont=old;
-       SetTextCharacterExtra(hdc,w->props.spacing==INT_MIN ? fontSettings->spacing : w->props.get_spacing(dy,prefs.clipdy));
+       SetTextCharacterExtra(hdc,w->props.spacing==INT_MIN ? fontSettings->spacing : w->props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
        const tchar *p=*w;
        if (*p) // drop empty words
         {
@@ -1927,8 +2058,8 @@ template<class tchar> void Tfont::prepareC(const TsubtitleTextBase<tchar> *sub,c
       {
        TsubtitleWord<tchar> w(*w0);
        LOGFONT lf;
-       HGDIOBJ old = w.props.toGdiFont(hdc, lf, *fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager);
-       SetTextCharacterExtra(hdc,w.props.spacing==INT_MIN ? fontSettings->spacing : w.props.get_spacing(dy,prefs.clipdy));
+       HGDIOBJ old = w.props.toGdiFont(hdc, lf, *fontSettings, dx, dy, prefs.clipdy, prefs.sar, fontManager, gdi_font_scale);
+       SetTextCharacterExtra(hdc,w.props.spacing==INT_MIN ? fontSettings->spacing : w.props.get_spacing(dy, prefs.clipdy, gdi_font_scale));
        if (!line)
         {
          line=new TrenderedSubtitleLine(w.props);

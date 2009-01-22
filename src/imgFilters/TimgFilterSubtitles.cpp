@@ -62,7 +62,8 @@ TimgFilterSubtitles::TsubPrintPrefs::TsubPrintPrefs(unsigned char *Idst[4],strid
 
 TimgFilterSubtitles::TimgFilterSubtitles(IffdshowBase *Ideci,Tfilters *Iparent):
  TimgFilter(Ideci,Iparent),
- font(Ideci),fontCC(Ideci),
+ // Initialize Tfont. gdi_font_scale = 12, a little blur is applied.
+ font(Ideci,12),fontCC(Ideci,12),
  subs(Ideci),
  oldFontCfg((TfontSettingsSub*)malloc(sizeof(TfontSettingsSub))),
  oldFontCCcfg((TfontSettingsSub*)malloc(sizeof(TfontSettingsSub))),
@@ -375,7 +376,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
      TsubPrintPrefs printprefs(dst,stride2,dx1,dy1,deci,cfg,pict,clipdy,parent->config,!!isdvdproc);
      printprefs.csp=pict.csp & FF_CSPS_MASK;
      printprefs.rtStart=frameStart;
-     Trect *decodedPict = deciV->getDecodedPictdimensions();
+     const Trect *decodedPict = deciV->getDecodedPictdimensions();
      if (decodedPict!=NULL)
      {
       printprefs.xinput = decodedPict->dx;
@@ -433,7 +434,7 @@ HRESULT TimgFilterSubtitles::process(TfilterQueue::iterator it,TffPict &pict,con
      printprefs.sizeDx=pict.rectFull.dx;
      printprefs.sizeDy=pict.rectFull.dy;
 
-     Trect *decodedPict = deciV->getDecodedPictdimensions();
+     const Trect *decodedPict = deciV->getDecodedPictdimensions();
      if (decodedPict!=NULL)
      {
       printprefs.xinput = decodedPict->dx;

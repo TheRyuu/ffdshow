@@ -6,6 +6,8 @@
 #include "TsubtitleProps.h"
 #include "rational.h"
 
+#define size_of_rgb32 4
+
 enum
 {
  ALIGN_FFDSHOW=0,
@@ -136,7 +138,7 @@ public:
  const YUVcolorA& getOutlineYUV(void) const {return outlineYUV;}
  const YUVcolorA& getShadowYUV(void) const {return shadowYUV;}
  TcharsChache(HDC Ihdc,const YUVcolorA &Iyuv,const YUVcolorA &Ioutline,const YUVcolorA &Ishadow,int Ixscale,int Iyscale,IffdshowBase *Ideci);
- template<class tchar> const TrenderedTextSubtitleWord *getChar(tchar *s,const TrenderedSubtitleLines::TprintPrefs &prefs,const LOGFONT &lf,TSubtitleProps props);
+ template<class tchar> const TrenderedTextSubtitleWord *getChar(tchar *s,const TrenderedSubtitleLines::TprintPrefs &prefs,const LOGFONT &lf,TSubtitleProps props,unsigned int gdi_font_scale,unsigned int GDI_rendering_window);
  ~TcharsChache();
 };
 
@@ -190,16 +192,18 @@ private:
  int dstOffset;
  mutable int oldFader;
  mutable unsigned int oldBodyYUVa,oldOutlineYUVa;
- void drawShadow(       HDC hdc,
+ template<int GDI_rendering_window> void drawShadow(
+                        HDC hdc,
                         HBITMAP hbmp,
                         unsigned char *bmp16,
                         HGDIOBJ old,
                         double xscale,
-                        const SIZE &sz
-                       );
+                        const SIZE &sz,
+                        unsigned int gdi_font_scale
+                        );
  void updateMask(int fader = 1 << 16, int create = 1) const; // create: 0=update, 1=new, 2=update after copy (karaoke)
  unsigned char* blur(unsigned char *src,stride_t Idx,stride_t Idy,int startx,int starty,int endx, int endy, bool mild);
- unsigned int getShadowSize(LONG fontHeight);
+ unsigned int getShadowSize(LONG fontHeight, unsigned int gdi_font_scale);
  unsigned int getBottomOverhang(void);
  unsigned int getRightOverhang(void);
  unsigned int getTopOverhang(void);
@@ -217,7 +221,10 @@ public:
                         const TrenderedSubtitleLines::TprintPrefs &prefs,
                         LOGFONT lf,
                         double xscale,
-                        TSubtitleProps Iprops);
+                        TSubtitleProps Iprops,
+                        unsigned int gdi_font_scale,
+                        unsigned int GDI_rendering_window                  // Only 4 and 6 are supported (easy to add).
+                        );
  // secondary (for karaoke)
  TrenderedTextSubtitleWord(
                         const TrenderedTextSubtitleWord &parent,
@@ -229,7 +236,9 @@ public:
                         const tchar *s,size_t strlens,
                         const TrenderedSubtitleLines::TprintPrefs &prefs,
                         const LOGFONT &lf,
-                        TSubtitleProps Iprops);
+                        TSubtitleProps Iprops,
+                        unsigned int gdi_font_scale,
+                        unsigned int GDI_rendering_window);
  ~TrenderedTextSubtitleWord();
  virtual void print(int startx, int starty, unsigned int dx[3],int dy[3],unsigned char *dstLn[3],const stride_t stride[3],const unsigned char *bmp[3],const unsigned char *msk[3],REFERENCE_TIME rtStart=REFTIME_INVALID) const;
  unsigned int alignXsize;
@@ -278,6 +287,7 @@ class Tfont
 {
 private:
  IffdshowBase *deci;
+ unsigned int gdi_font_scale;
  TfontManager *fontManager;
  TfontSettings *fontSettings;
  HDC hdc;HGDIOBJ oldFont;
@@ -292,7 +302,9 @@ private:
  TcharsChache *charsCache;
  template<class tchar> TrenderedTextSubtitleWord* newWord(const tchar *s,size_t slen,TrenderedSubtitleLines::TprintPrefs prefs,const TsubtitleWord<tchar> *w,const LOGFONT &lf,bool trimRightSpaces=false);
 public:
- Tfont(IffdshowBase *Ideci);
+ // gdi_font_scale: 4: for OSD. rendering_window is 4x5.
+ //                 8-16: for subtitles. 16:very sharp (slow), 12:soft & sharp, (moderately slow) 8:blurry (fast)
+ Tfont(IffdshowBase *Ideci, unsigned int Igdi_font_scale);
  ~Tfont();
  void init(const TfontSettings *IfontSettings);
  template<class tchar> void print(const TsubtitleTextBase<tchar> *sub,bool forceChange,const TrenderedSubtitleLines::TprintPrefs &prefs,unsigned int *y=NULL);

@@ -24,6 +24,7 @@
 #include "rational.h"
 #include "TfontManager.h"
 #include <locale.h>
+#include "Tfont.h"
 
 void TSubtitleProps::reset(void)
 {
@@ -63,19 +64,19 @@ void TSubtitleProps::reset(void)
  y=0;
 }
 
-HGDIOBJ TSubtitleProps::toGdiFont(HDC hdc, LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy,const Rational& sar, TfontManager *fontManager) const
+HGDIOBJ TSubtitleProps::toGdiFont(HDC hdc, LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy,const Rational& sar, TfontManager *fontManager,unsigned int gdi_font_scale) const
 {
- toLOGFONT(lf,fontSettings,dx,dy,clipdy,sar);
+ toLOGFONT(lf,fontSettings,dx,dy,clipdy,sar,gdi_font_scale);
  HFONT font=fontManager->getFont(lf);
  HGDIOBJ old=SelectObject(hdc,font);
- fix_size(lf,hdc,fontManager);
+ fix_size(lf,hdc,fontManager,gdi_font_scale);
  return old;
 }
 
-void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy,const Rational& sar) const
+void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,unsigned int dx,unsigned int dy,unsigned int clipdy,const Rational& sar,unsigned int gdi_font_scale) const
 {
  memset(&lf,0,sizeof(lf));
- lf.lfHeight=(LONG)limit(size?size:fontSettings.getSize(dx,dy),3U,255U)*4;
+ lf.lfHeight=(LONG)limit(size?size:fontSettings.getSize(dx,dy),3U,255U) * gdi_font_scale;
  if (refResY && dy)
   lf.lfHeight=(clipdy ? clipdy : dy)*lf.lfHeight/refResY;
  int yscale=get_yscale(fontSettings.yscale,sar,fontSettings.aspectAuto,fontSettings.overrideScale);
@@ -98,23 +99,23 @@ void TSubtitleProps::toLOGFONT(LOGFONT &lf,const TfontSettings &fontSettings,uns
  ff_strncpy(lf.lfFaceName,fontname[0]?fontname:fontSettings.name,LF_FACESIZE);
 }
 
-void TSubtitleProps::fix_size(LOGFONT &lf, HDC hdc, TfontManager *fontManager) const
+void TSubtitleProps::fix_size(LOGFONT &lf, HDC hdc, TfontManager *fontManager, unsigned int gdi_font_scale) const
 {
  // for ASS compatibility.
  // vsfilter multiple 64 to lfHeight when it rasterizes the font.
- // ffdshow multiple 4. This is not compatible, so here we want to correct.
+ // ffdshow multiple 4 or 16 (gdi_font_scale). This is not compatible, so here we want to correct.
  TEXTMETRIC tm4, tm64;
  if (GetTextMetrics(hdc,&tm4))
   {
-   lf.lfHeight*=16;
+   lf.lfHeight *= 64/gdi_font_scale;
    HFONT font=fontManager->getFont(lf);
    SelectObject(hdc,font);
    GetTextMetrics(hdc,&tm64);
-   double r4=(double)(tm4.tmHeight-tm4.tmInternalLeading)*16/lf.lfHeight;
-   double r64=(double)(tm64.tmHeight-tm64.tmInternalLeading)/lf.lfHeight;
+   double r4=(double)(tm4.tmHeight - tm4.tmInternalLeading) * (64/gdi_font_scale) / lf.lfHeight;
+   double r64=(double)(tm64.tmHeight-tm64.tmInternalLeading) / lf.lfHeight;
    m_ascent64=(tm64.tmAscent + 4) >> 3;
    m_descent64=(tm64.tmDescent + 4) >> 3;
-   lf.lfHeight=LONG((double)lf.lfHeight*r64/r4/16);
+   lf.lfHeight=LONG((double)lf.lfHeight * r64 / r4 / (64/gdi_font_scale));
    font=fontManager->getFont(lf);
    SelectObject(hdc,font);
   }
@@ -125,12 +126,12 @@ void TSubtitleProps::fix_size(LOGFONT &lf, HDC hdc, TfontManager *fontManager) c
   }
 }
 
-int TSubtitleProps::get_spacing(unsigned int dy,unsigned int clipdy) const
+int TSubtitleProps::get_spacing(unsigned int dy, unsigned int clipdy, unsigned int gdi_font_scale) const
 {
  if (refResY)
-  return int(spacing*4.0*(clipdy ? clipdy : dy)/refResY);
+  return int(spacing * gdi_font_scale * (clipdy ? clipdy : dy) / refResY);
  else
-  return int(spacing*4.0); 
+  return int(spacing * gdi_font_scale); 
 }
 
 int TSubtitleProps::get_marginR(unsigned int screenWidth,unsigned int lineWidth) const

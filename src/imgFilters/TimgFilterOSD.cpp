@@ -140,7 +140,7 @@ const char_t* TimgFilterOSD::TosdLine::TosdToken::getName(void) const
 TimgFilterOSD::TosdLine::TosdLine(IffdshowBase *Ideci,IffdshowDec *IdeciD,IffdshowDecVideo *IdeciV,const Tconfig *Iconfig,const ffstring &format,const TfontSettings *fontSettings,unsigned int Iduration,IOSDprovider *Iprovider,bool Iitalic):
 // deci(Ideci),
  config(Iconfig),
- font(Ideci),
+ font(Ideci,4),
  sub(0,TSubtitleProps(Iitalic,false)),
  provider(Iprovider)
 {
@@ -399,7 +399,7 @@ bool TimgFilterOSD::TprovOSDs::empty(void) const
 TimgFilterOSD::TimgFilterOSD(IffdshowBase *Ideci,Tfilters *Iparent):
  TimgFilter(Ideci,Iparent),
  parent((TimgFiltersPlayer*)Iparent),
- fontUser(Ideci),
+ fontUser(Ideci,4),
  subUser(Ideci->getParam2(IDFF_OSD_userformat)),
  framecnt(0),
  oldFont((TfontSettingsOSD*)malloc(sizeof(TfontSettingsOSD))),

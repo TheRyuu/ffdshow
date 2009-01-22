@@ -31,9 +31,9 @@ struct TSubtitleProps
  double x; // Calculated x position
  double y; // Calculated y position
  void reset(void);
- HGDIOBJ toGdiFont(HDC hdc, LOGFONT &lf, const TfontSettings &fontSettings, unsigned int dx, unsigned int dy, unsigned int clipdy, const Rational& sar, TfontManager *fontManager) const;
- void toLOGFONT(LOGFONT &lf, const TfontSettings &fontSettings, unsigned int dx, unsigned int dy, unsigned int clipdy, const Rational& sar) const;
- void fix_size(LOGFONT &lf, HDC hdc, TfontManager *fontManager) const;
+ HGDIOBJ toGdiFont(HDC hdc, LOGFONT &lf, const TfontSettings &fontSettings, unsigned int dx, unsigned int dy, unsigned int clipdy, const Rational& sar, TfontManager *fontManager,unsigned int gdi_font_scale) const;
+ void toLOGFONT(LOGFONT &lf, const TfontSettings &fontSettings, unsigned int dx, unsigned int dy, unsigned int clipdy, const Rational& sar, unsigned int gdi_font_scale) const;
+ void fix_size(LOGFONT &lf, HDC hdc, TfontManager *fontManager, unsigned int gdi_font_scale) const;
 
  // Alignment. This sets how text is "justified" within the Left/Right onscreen margins,
  // and also the vertical placing. Values may be 1=Left, 2=Centered, 3=Right.
@@ -46,7 +46,7 @@ struct TSubtitleProps
  int borderStyle; // -1 = default
  double outlineWidth,shadowDepth; // -1 = default
  int layer; // 0 = default
- int get_spacing(unsigned int dy,unsigned int clipdy) const;
+ int get_spacing(unsigned int dy, unsigned int clipdy, unsigned int gdi_font_scale) const;
  int get_marginR(unsigned int screenWidth,unsigned int lineWidth=0) const;
  int get_marginL(unsigned int screenWidth,unsigned int lineWidth=0) const;
  int get_marginTop(unsigned int screenHeight) const;
