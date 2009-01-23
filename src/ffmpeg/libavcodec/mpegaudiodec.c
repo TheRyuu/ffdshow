@@ -2222,7 +2222,7 @@ retry:
         goto retry;
     }
 
-    if (ff_mpegaudio_decode_header(s, header) == 1) {
+    if (ff_mpegaudio_decode_header((MPADecodeHeader *)s, header) == 1) {
         /* free format: prepare to compute frame size */
         s->frame_size = -1;
         return -1;
