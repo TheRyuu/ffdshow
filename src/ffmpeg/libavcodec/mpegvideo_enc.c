@@ -3736,7 +3736,7 @@ AVCodec h263_encoder = {
 #else
     /*.pix_fmts = */NULL,
 #endif
-    /*.long_name= */NULL_IF_CONFIG_SMALL("H.263"),
+    /*.long_name= */NULL_IF_CONFIG_SMALL("H.263 / H.263-1996"),
 };
 
 AVCodec h263p_encoder = {
@@ -3757,7 +3757,7 @@ AVCodec h263p_encoder = {
 #else
     /*.pix_fmts = */NULL,
 #endif
-    /*.long_name= */NULL_IF_CONFIG_SMALL("H.263+ / H.263 version 2"),
+    /*.long_name= */NULL_IF_CONFIG_SMALL("H.263+ / H.263-1998 / H.263 version 2"),
 };
 
 AVCodec flv_encoder = {

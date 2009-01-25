@@ -49,7 +49,7 @@ SRCS_C=\
       $(LAVC_DIR)/faanidct.c \
       $(LAVC_DIR)/fft.c \
       $(LAVC_DIR)/ffv1.c \
-      $(LAVC_DIR)/flac.c \
+      $(LAVC_DIR)/flacdec.c \
       $(LAVC_DIR)/fraps.c \
       $(LAVC_DIR)/g726.c \
       $(LAVC_DIR)/golomb.c \

@@ -740,7 +740,7 @@ AVCodec h263_decoder = {
     /*.flush = */ff_mpeg_flush,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("H.263"),
+    /*.long_name = */NULL_IF_CONFIG_SMALL("H.263 / H.263-1996, H.263+ / H.263-1998"),
 };
 
 AVCodec msmpeg4v1_decoder = {
@@ -825,7 +825,7 @@ AVCodec h263i_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("H.263i"),
+    /*.long_name = */NULL_IF_CONFIG_SMALL("H.263 Intel"),
 };
 
 AVCodec flv_decoder = {

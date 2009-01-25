@@ -603,7 +603,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\libavcodec\flac.c"
+				RelativePath=".\libavcodec\flacdec.c"
 				>
 			</File>
 			<File

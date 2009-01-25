@@ -158,8 +158,6 @@ extern const uint32_t ff_inverse[256];
 
 extern const uint8_t ff_sqrt_tab[256];
 
-static inline int av_log2_16bit(unsigned int v);
-
 static inline av_const unsigned int ff_sqrt(unsigned int a)
 {
     unsigned int b;
@@ -251,6 +249,23 @@ if((y)<(x)){\
         goto fail;\
     }\
 }
+
+#if defined(__ICC) || defined(__SUNPRO_C)
+    #define DECLARE_ALIGNED(n,t,v)      t v __attribute__ ((aligned (n)))
+    #define DECLARE_ASM_CONST(n,t,v)    const t __attribute__ ((aligned (n))) v
+#elif defined(__GNUC__)
+    #define DECLARE_ALIGNED(n,t,v)      t v __attribute__ ((aligned (n)))
+    #define DECLARE_ASM_CONST(n,t,v)    static const t v attribute_used __attribute__ ((aligned (n)))
+#elif defined(_MSC_VER)
+    #define DECLARE_ALIGNED(n,t,v)      __declspec(align(n)) t v
+    #define DECLARE_ASM_CONST(n,t,v)    __declspec(align(n)) static const t v
+#elif HAVE_INLINE_ASM
+    #error The asm code needs alignment, but we do not know how to do it for this compiler.
+#else
+    #define DECLARE_ALIGNED(n,t,v)      t v
+    #define DECLARE_ASM_CONST(n,t,v)    static const t v
+#endif
+
 
 #ifndef __GNUC__
 
