@@ -1563,6 +1563,15 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
           break;
         }
 
+       // If option is checked (or if subs are SUBVIEWER), correct vertical placement if text goes out of the screen
+       if ((prefs.deci->getParam2(IDFF_subSSAMaintainInside) 
+           || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER) && !(*i)->props.isMove)
+       {
+        if (pval.y+pval.height>prefsdy) pval.y=prefsdy-pval.height;
+        if (pval.y<0) pval.y=0;
+       }
+
+
        // Moving (scrolling text) : scroll from t1 to t2. Calculate vertical position
        if ((*i)->props.isMove && prefs.rtStart >= (*i)->props.get_moveStart())
        {
@@ -1614,6 +1623,14 @@ void TrenderedSubtitleLines::printASS(const TprintPrefs &prefs)
         x=((int)prefsdx - marginL - marginR - (int)cdx)/2 + marginL - leftOverhang;
       break;
   }
+
+   // If option is checked (or if subs are SUBVIEWER), correct horizontal placement if text goes out of the screen
+   if ((prefs.deci->getParam2(IDFF_subSSAMaintainInside) 
+     || (prefs.subformat & Tsubreader::SUB_FORMATMASK) == Tsubreader::SUB_SUBVIEWER) && !(*i)->props.isMove)
+   {
+    if (x+cdx>prefsdx) x=prefsdx-cdx;
+    if (x < 0) x=0;
+   }
 
  
   // Moving (scrolling text) : scroll from t1 to t2. Calculate horizontal position

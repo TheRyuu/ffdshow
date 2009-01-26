@@ -1146,6 +1146,7 @@ void TglobalSettingsDecAudio::load(void)
  FF_WAVE_FORMAT_OP (AC3_W  ,ac3    & rawmask,c_ac3) \
  FF_WAVE_FORMAT1_OP(EAC3   ,eac3   & rawmask,CODEC_ID_EAC3) \
  FF_WAVE_FORMAT_OP (DTS_W  ,dts    & rawmask,c_dts) \
+ FF_WAVE_FORMAT_OP (DTS_HD ,dts    & rawmask,c_dts) \
  FF_WAVE_FORMAT_OP (AAC1   ,aac    & rawmask,c_aac) \
  FF_WAVE_FORMAT_OP (AAC2   ,aac    & rawmask,c_aac) \
  FF_WAVE_FORMAT_OP (AAC3   ,aac    & rawmask,c_aac) \

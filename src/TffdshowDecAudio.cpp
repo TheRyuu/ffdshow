@@ -230,9 +230,13 @@ CodecID TffdshowDecAudio::getCodecId(const CMediaType &mt)
 	wFormatTag=WAVE_FORMAT_ADPCM_SWF;
  else if (mt.subtype==MEDIASUBTYPE_NELLYMOSER)
 	wFormatTag=WAVE_FORMAT_NELLYMOSER;
- else if (mt.subtype==MEDIASUBTYPE_NERO_MLP || mt.subtype==MEDIASUBTYPE_ARCSOFT_MLP ||
-	 mt.subtype==MEDIASUBTYPE_SONIC_MLP)
+ else if (mt.subtype==MEDIASUBTYPE_DOLBY_TRUEHD || mt.subtype==MEDIASUBTYPE_NERO_MLP 
+     || mt.subtype==MEDIASUBTYPE_ARCSOFT_MLP || mt.subtype==MEDIASUBTYPE_SONIC_MLP)
 	wFormatTag=WAVE_FORMAT_MLP;
+ else if (mt.subtype==MEDIASUBTYPE_DOLBY_DDPLUS)
+     wFormatTag=WAVE_FORMAT_EAC3;
+ else if (mt.subtype==MEDIASUBTYPE_DTS_HD)
+     wFormatTag=WAVE_FORMAT_DTS_HD; // TODO : define a separate codecId for DTSHD when available
  else
   {
    const WAVEFORMATEX *wfex=(const WAVEFORMATEX*)mt.pbFormat;
