@@ -38,7 +38,7 @@
 
 #include "libvo/fastmemcpy.h"
 #include "vf_yadif.h"
-#include "../ffmpeg/libavutil/mem.h"
+#include "libavutil/mem.h"
 
 #define MIN(a,b) ((a) > (b) ? (b) : (a))
 #define MAX(a,b) ((a) < (b) ? (b) : (a))

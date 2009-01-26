@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="libmplayer"
 	ProjectGUID="{76569356-593F-417E-A8C5-108FF3F364D9}"
 	RootNamespace="libmplayer"
@@ -49,7 +49,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".,..,../imgFilters,libaf,libvo"
+				AdditionalIncludeDirectories=".,..,../imgFilters,libaf,libvo,libavutil"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -233,7 +233,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories=".,..,../imgFilters,libaf,libvo"
+				AdditionalIncludeDirectories=".,..,../imgFilters,libaf,libvo,libavutil"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_WINDOWS"
 				StringPooling="true"
 				ExceptionHandling="0"
@@ -478,7 +478,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\ffmpeg\libavutil\mem.c"
+				RelativePath=".\libavutil\mem.c"
 				>
 			</File>
 			<File
@@ -659,7 +659,7 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\bswap.h"
+				RelativePath=".\libavutil\bswap.h"
 				>
 			</File>
 			<File
@@ -683,11 +683,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\libavutil\internal.h"
+				>
+			</File>
+			<File
 				RelativePath="..\inttypes.h"
 				>
 			</File>
 			<File
 				RelativePath=".\mangle.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\mem.h"
 				>
 			</File>
 			<File
@@ -724,6 +732,10 @@
 			</File>
 			<File
 				RelativePath=".\postproc\swscale_multicpu.h"
+				>
+			</File>
+			<File
+				RelativePath=".\libavutil\x86_cpu.h"
 				>
 			</File>
 		</Filter>

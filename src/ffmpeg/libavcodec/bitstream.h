@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #endif
-#include "libavutil/bswap.h"
+#include "../libavutil/bswap.h"
 #include "libavutil/common.h"
 #include "libavutil/intreadwrite.h"
 #include "libavutil/log.h"

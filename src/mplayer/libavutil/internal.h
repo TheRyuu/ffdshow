@@ -91,36 +91,6 @@
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
 
-/* avoid usage of various functions */
-#undef  malloc
-#define malloc please_use_av_malloc
-#undef  free
-#define free please_use_av_free
-#undef  realloc
-#define realloc please_use_av_realloc
-#undef  time
-#define time time_is_forbidden_due_to_security_issues
-#undef  rand
-#define rand rand_is_forbidden_due_to_state_trashing_use_av_random
-#undef  srand
-#define srand srand_is_forbidden_due_to_state_trashing_use_av_random_init
-#undef  random
-#define random random_is_forbidden_due_to_state_trashing_use_av_random
-#undef  sprintf
-#define sprintf sprintf_is_forbidden_due_to_security_issues_use_snprintf
-#undef  strcat
-#define strcat strcat_is_forbidden_due_to_security_issues_use_av_strlcat
-#undef  exit
-#define exit exit_is_forbidden
-#undef  printf
-#define printf please_use_av_log
-#undef  fprintf
-#define fprintf please_use_av_log
-#undef  puts
-#define puts please_use_av_log
-#undef  perror
-#define perror please_use_av_log_instead_of_perror
-
 #define CHECKED_ALLOCZ(p, size)\
 {\
     p= av_mallocz(size);\
@@ -145,56 +115,5 @@
     #define DECLARE_ALIGNED(n,t,v)      t v
     #define DECLARE_ASM_CONST(n,t,v)    static const t v
 #endif
-
-
-#ifndef __GNUC__
-
-#ifndef rint
-#define rint(x) (int)(x+0.5)
-#endif
-
-#ifndef llrint
-static av_always_inline av_const long long llrint(double x)
-{
-    return rint(x);
-}
-#endif
-
-#ifndef lrint
-static av_always_inline av_const long int lrint(double x)
-{
-    return rint(x);
-}
-#endif
-
-#ifndef lrintf
-static av_always_inline av_const long int lrintf(float x)
-{
-    return (int)(rint(x));
-}
-#endif
-
-#ifndef round
-static av_always_inline av_const double round(double x)
-{
-    return (x > 0) ? floor(x + 0.5) : ceil(x - 0.5);
-}
-#endif
-
-#ifndef roundf
-static av_always_inline av_const float roundf(float x)
-{
-    return (x > 0) ? floor(x + 0.5) : ceil(x - 0.5);
-}
-#endif
-
-#ifndef truncf
-static av_always_inline av_const float truncf(float x)
-{
-    return (x > 0) ? floor(x) : ceil(x);
-}
-#endif
-
-#endif /* __GNUC__ */
 
 #endif /* AVUTIL_INTERNAL_H */

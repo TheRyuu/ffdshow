@@ -67,15 +67,17 @@ untested special converters
 #include <math.h>
 #include <stdio.h>
 #include "config.h"
-#include "../mangle.h"
+#include "mangle.h"
 #include <assert.h>
+#include <malloc.h>
+#include "libavutil/mem.h"
 #include "swscale.h"
 #include "swscale_internal.h"
-#include "../ffmpeg/libavutil/x86_cpu.h"
-#include "../bswap.h"
+#include "libavutil/x86_cpu.h"
+#include "bswap.h"
 #include "ffImgfmt.h"
 #include "rgb2rgb.h"
-#include "../libvo/fastmemcpy.h"
+#include "libvo/fastmemcpy.h"
 #include "ffdebug.h"
 
 #undef MOVNTQ

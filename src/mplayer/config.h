@@ -35,6 +35,10 @@
 #define HAVE_MMX2 1
 #define HAVE_SSE 1
 #define HAVE_SSE2 1
+
+#define HAVE_EBP_AVAILABLE 1
+#define HAVE_EBX_AVAILABLE 1
+
 #define NAMED_ASM_ARGS 1 // GCC 3.1 or later
  #endif
 #endif
@@ -47,14 +51,9 @@
  #pragma warning (disable:4002)
  #define attribute_used
  #define always_inline __forceinline
- #include <malloc.h>
- #define malloc(x) _aligned_malloc(x,16)
  #define memalign(a,b) _aligned_malloc(b,a)
- #define free(x) _aligned_free(x)
 #else
  #define attribute_used __attribute__((used))
  #define always_inline __attribute__((__always_inline__)) inline
- #define malloc(x) __mingw_aligned_malloc(x,16)
  #define memalign(a,b) __mingw_aligned_malloc(b,a)
- #define free(x) __mingw_aligned_free(x)
 #endif

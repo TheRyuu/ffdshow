@@ -25,7 +25,7 @@
  */
 
 #include "avutil.h"
-#include "stdio.h"
+#include "log.h"
 
 int av_log_level = AV_LOG_INFO;
 
@@ -37,7 +37,7 @@ void av_log_default_callback(void* ptr, int level, const char* fmt, va_list vl)
         return;
 #undef fprintf
     if(print_prefix && avc) {
-            fprintf(stderr, "[%s @ %p]", avc->item_name(ptr), ptr);
+        fprintf(stderr, "[%s @ %p]", avc->item_name(ptr), ptr);
     }
 #define fprintf please_use_av_log
 

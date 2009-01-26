@@ -30,6 +30,7 @@
 #    define NDEBUG
 #endif
 
+#include <limits.h>
 #ifdef __GNUC__
 #include <stdint.h>
 #endif
@@ -233,11 +234,11 @@ if((y)<(x)){\
 #undef  exit
 #define exit exit_is_forbidden
 #undef  printf
-#define printf please_use_av_log
+#define printf please_use_av_log_instead_of_printf
 #undef  fprintf
-#define fprintf please_use_av_log
+#define fprintf please_use_av_log_instead_of_fprintf
 #undef  puts
-#define puts please_use_av_log
+#define puts please_use_av_log_instead_of_puts
 #undef  perror
 #define perror please_use_av_log_instead_of_perror
 
