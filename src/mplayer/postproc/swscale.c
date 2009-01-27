@@ -69,8 +69,6 @@ untested special converters
 #include "config.h"
 #include "mangle.h"
 #include <assert.h>
-#include <malloc.h>
-#include "libavutil/mem.h"
 #include "swscale.h"
 #include "swscale_internal.h"
 #include "libavutil/x86_cpu.h"

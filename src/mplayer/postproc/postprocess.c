@@ -75,7 +75,6 @@ try to unroll inner for(x=0 ... loop to avoid these damn if(x ... checks
 #include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
-#include <malloc.h>
 //#undef HAVE_MMX2
 //#define HAVE_3DNOW
 //#undef HAVE_MMX

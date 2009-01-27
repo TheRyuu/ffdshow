@@ -50,10 +50,15 @@
  #endif
  #pragma warning (disable:4002)
  #define attribute_used
+ #include <malloc.h>
  #define always_inline __forceinline
+ #define malloc(x) _aligned_malloc(x,16)
  #define memalign(a,b) _aligned_malloc(b,a)
+ #define free(x) _aligned_free(x)
 #else
  #define attribute_used __attribute__((used))
  #define always_inline __attribute__((__always_inline__)) inline
+ #define malloc(x) __mingw_aligned_malloc(x,16)
  #define memalign(a,b) __mingw_aligned_malloc(b,a)
+ #define free(x) __mingw_aligned_free(x)
 #endif
