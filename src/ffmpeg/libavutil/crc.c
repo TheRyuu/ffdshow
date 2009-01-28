@@ -94,7 +94,7 @@ int av_crc_init(AVCRC *ctx, int le, int bits, uint32_t poly, int ctx_size){
 }
 
 /**
- * Get an initialized standard CRC table.
+ * Gets an initialized standard CRC table.
  * @param crc_id ID of a standard CRC
  * @return a pointer to the CRC table or NULL on failure
  */
@@ -112,8 +112,8 @@ const AVCRC *av_crc_get_table(AVCRCId crc_id){
 }
 
 /**
- * Calculate the CRC of a block
- * @param crc CRC of previous blocks if any or initial value for CRC.
+ * Calculates the CRC of a block.
+ * @param crc CRC of previous blocks if any or initial value for CRC
  * @return CRC updated with the data from the given block
  *
  * @see av_crc_init() "le" parameter

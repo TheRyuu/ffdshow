@@ -57,11 +57,11 @@
 /**
  * Pixel format. Notes:
  *
- * PIX_FMT_RGB32 is handled in an endian-specific manner. A RGBA
+ * PIX_FMT_RGB32 is handled in an endian-specific manner. An RGBA
  * color is put together as:
  *  (A << 24) | (R << 16) | (G << 8) | B
- * This is stored as BGRA on little endian CPU architectures and ARGB on
- * big endian CPUs.
+ * This is stored as BGRA on little-endian CPU architectures and ARGB on
+ * big-endian CPUs.
  *
  * When the pixel format is palettized RGB (PIX_FMT_PAL8), the palettized
  * image data is stored in AVFrame.data[0]. The palette is transported in

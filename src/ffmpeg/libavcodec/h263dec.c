@@ -825,7 +825,7 @@ AVCodec h263i_decoder = {
     /*.flush = */NULL,
     /*.supported_framerates = */NULL,
     /*.pix_fmts = */NULL,
-    /*.long_name = */NULL_IF_CONFIG_SMALL("H.263 Intel"),
+    /*.long_name = */NULL_IF_CONFIG_SMALL("Intel H.263"),
 };
 
 AVCodec flv_decoder = {
