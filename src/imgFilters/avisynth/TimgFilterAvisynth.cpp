@@ -64,7 +64,7 @@ TimgFilterAvisynth::Tffdshow_source::Tffdshow_source(Tinput *Iinput,VideoInfo &I
  vi.fps_numerator=input->fpsnum;
  vi.fps_denominator=input->fpsden;
  vi.num_frames=NUM_FRAMES;
- // RGB values: avisynth refers to the write order, FF_CSP_ enum refers to the "memory byte order", 
+ // RGB values: avisynth refers to the write order, FF_CSP_ enum refers to the "memory byte order",
  // which under x86 is reversed, see the comment above the FF_CSP_ enum definition.
  if      (input->csp & FF_CSP_420P)  vi.pixel_type=AVS_CS_YV12;
  else if (input->csp & FF_CSP_YUY2)  vi.pixel_type=AVS_CS_YUY2;
@@ -463,7 +463,7 @@ void TimgFilterAvisynth::Tavisynth::init(const TavisynthSettings &oldcfg, Tinput
 void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueue::iterator& it,TffPict &pict,const TavisynthSettings *cfg)
 {
  bool sequenceStart=(pict.fieldtype & FIELD_TYPE::MASK_SEQ) == FIELD_TYPE::SEQ_START;
- bool sequenceEnd=(pict.fieldtype & FIELD_TYPE::MASK_SEQ) == FIELD_TYPE::SEQ_END;
+ bool sequenceEnd=(pict.fieldtype & FIELD_TYPE::SEQ_END) == FIELD_TYPE::SEQ_END; // If the sequence starts & stops in the same frame, give stop precedence (again)
  bool isYV12=((pict.csp&FF_CSPS_MASK) == FF_CSP_420P);
  Tinput* input=self->input;
 
@@ -590,7 +590,7 @@ void TimgFilterAvisynth::Tavisynth::process(TimgFilterAvisynth *self,TfilterQueu
          buffers[bufNo].data[planeNo]=newBuffer-pitch[planeNo]*(height[planeNo]-1);
         else
          buffers[bufNo].data[planeNo]=newBuffer;
-         
+
         newBuffer+=size[planeNo];
        }
     }
@@ -1236,7 +1236,7 @@ bool TimgFilterAvisynth::getOutputFmt(TffPictBase &pict,const TfilterSettingsVid
    try
     {
      Trect r=pict.getRect(cfg->full,cfg->half);
-     
+
      if (!outFmtInput)
       outFmtInput=new Tinput();
 
