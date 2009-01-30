@@ -74,6 +74,10 @@ void TregOpRegWrite::_REG_OP_S(short int id, const char_t *X, char_t *Y, size_t 
      bufMULTI_SZpos += l->size() + 1;
      if (bufMULTI_SZend <= bufMULTI_SZpos) break;
     }
+   if (bufMULTI_SZpos <= bufMULTI_SZend)
+    *bufMULTI_SZpos = 0;
+   else
+    *bufMULTI_SZend = 0;
    RegSetValueEx(hKey,X,0,REG_MULTI_SZ,(LPBYTE)bufMULTI_SZ,DWORD((bufMULTI_SZpos - bufMULTI_SZ + 1)*sizeof(char_t)));
   }
  else
