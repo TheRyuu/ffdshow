@@ -43,7 +43,7 @@ const TdeinterlaceSettings::TmethodProps TdeinterlaceSettings::methodProps[]=
   4,_l("Median")              ,MEDIAN_DEINT_FILTER      ,NULL,
   5,_l("TomsMoComp")          ,TOMSMOCOMP_DEINT_FILTER  ,TdeinterlacePageTomsMoComp::create,
   6,_l("DGBob")               ,DGBOB_DEINT_FILTER       ,TdeinterlacePageDGbob::create,
-  //7,_l("Framerate doubler")   ,FRAMERATEDOUBLER         ,TdeinterlacePageFramedoubler::create,
+  7,_l("Framerate doubler")   ,FRAMERATEDOUBLER         ,TdeinterlacePageFramedoubler::create,
   8,_l("ffmpeg deinterlacer") ,FFMPEG_DEINT_FILTER      ,NULL,
   9,_l("DScaler plugin")      ,DSCALER                  ,NULL,
  10,_l("5-tap lowpass")       ,LOWPASS5_DEINT_FILTER    ,NULL,
